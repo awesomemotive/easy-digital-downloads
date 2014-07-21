@@ -126,6 +126,11 @@ function edd_register_styles() {
 	}
 
 	wp_enqueue_style( 'edd-styles', $url, array(), EDD_VERSION );
+
+	if( edd_is_checkout() && is_ssl() ) {
+		// Dashicons are used to show the padlock icon on the credit card form
+		wp_enqueue_style( 'dashicons' );
+	}
 }
 add_action( 'wp_enqueue_scripts', 'edd_register_styles' );
 
