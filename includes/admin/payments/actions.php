@@ -67,7 +67,7 @@ function edd_update_payment_details( $data ) {
 		foreach( $updated_downloads as $download ) {
 			$item             = array();
 			$item['id']       = absint( $download['id'] );
-			$item['quantity'] = absint( $download['quantity'] );
+			$item['quantity'] = absint( $download['quantity'] ) > 0 ? absint( $download['quantity'] ) : 1;
 			$price_id         = (int) $download['price_id'];
 
 			if( $price_id !== false && edd_has_variable_prices( $item['id'] ) ) {
@@ -80,12 +80,14 @@ function edd_update_payment_details( $data ) {
 			$cart_item   = array();
 			$cart_item['item_number'] = $item;
 
+			$item_price = round( $download['amount'] / $item['quantity'], 2 );
+
 			$cart_details[$i] = array(
 				'name'        => get_the_title( $download['id'] ),
 				'id'          => $download['id'],
 				'item_number' => $item,
 				'price'       => $download['amount'],
-				'item_price'  => round( $download['amount'] / $download['quantity'], 2 ),
+				'item_price'  => $item_price,
 				'quantity'    => $download['quantity'],
 				'discount'    => 0,
 				'tax'         => 0,
