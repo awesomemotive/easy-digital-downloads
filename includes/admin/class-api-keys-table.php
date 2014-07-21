@@ -80,6 +80,9 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function column_user( $item ) {
+
+		$actions = array();
+
 		if( apply_filters( 'edd_api_log_requests', true ) ) {
 			$actions['view'] = sprintf(
 				'<a href="%s">%s</a>',
@@ -223,8 +226,6 @@ class EDD_API_Keys_Table extends WP_List_Table {
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
 		$data = $this->query();
-
-		$current_page = $this->get_pagenum();
 
 		$total_items = $this->total_items();
 

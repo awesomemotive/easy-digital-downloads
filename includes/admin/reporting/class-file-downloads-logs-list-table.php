@@ -145,10 +145,20 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 *
 	 * @access public
 	 * @since 1.4
-	 * @return mixed int If User ID, string If Email/Login
+	 * @return mixed int If User ID, string If Email/Login, false if not present
 	 */
 	public function get_filtered_user() {
-		return isset( $_GET['user'] ) ? absint( $_GET['user'] ) : false;
+		$ret = false;
+
+		if( isset( $_GET['user'] ) ) {
+			if( is_numeric( $_GET['user'] ) ) {
+				$ret = absint( $_GET['user'] );
+			} else {
+				$ret = sanitize_text_field( $_GET['user'] );
+			}
+		}
+
+		return $ret;
 	}
 
 	/**
@@ -178,10 +188,10 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 *
 	 * @access public
 	 * @since 1.4
-	 * @return mixed string If search is present, false otherwise
+	 * @return String The search string
 	 */
 	public function get_search() {
-		return ! empty( $_GET['s'] ) ? urldecode( trim( $_GET['s'] ) ) : false;
+		return ! empty( $_GET['s'] ) ? urldecode( trim( $_GET['s'] ) ) : '';
 	}
 
 	/**
@@ -200,10 +210,18 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 		if ( $user ) {
 			// Show only logs from a specific user
-			$meta_query[] = array(
-				'key'   => '_edd_log_user_id',
-				'value' => $user
-			);
+			if( is_numeric( $user ) ) {
+				$meta_query[] = array(
+					'key'   => '_edd_log_user_id',
+					'value' => $user
+				);
+			} else {
+				$meta_query[] = array(
+					'key'     => '_edd_log_user_info',
+					'value'   => $user,
+					'compare' => 'LIKE'
+				);
+			}
 		}
 
 		if ( $payment ) {
@@ -216,7 +234,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 		$search = $this->get_search();
 
-		if ( $search ) {
+		if ( ! empty( $search ) ) {
 			if ( filter_var( $search, FILTER_VALIDATE_IP ) ) {
 				// This is an IP address search
 				$key     = '_edd_log_ip';

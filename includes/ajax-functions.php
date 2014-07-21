@@ -434,9 +434,9 @@ function edd_check_for_download_price_variations() {
 					$ajax_response .= '<option value="' . esc_attr( $key ) . '">' . esc_html( $price['name'] )  . '</option>';
 				}
 			$ajax_response .= '</select>';
+			echo $ajax_response;
 		}
 
-		echo $ajax_response;
 	}
 
 	edd_die();

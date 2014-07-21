@@ -263,7 +263,7 @@ function edd_before_download_content( $content ) {
 	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() && !post_password_required() ) {
 		ob_start();
 		do_action( 'edd_before_download_content', $post->ID );
-		$content .= ob_get_clean();
+		$content = ob_get_clean() . $content;
 	}
 
 	return $content;

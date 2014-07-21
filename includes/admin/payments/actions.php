@@ -26,7 +26,7 @@ function edd_update_payment_details( $data ) {
 	}
 
 	check_admin_referer( 'edd_update_payment_details_nonce' );
-	
+
 	// Retrieve the payment ID
 	$payment_id = absint( $data['edd_payment_id'] );
 
@@ -85,7 +85,10 @@ function edd_update_payment_details( $data ) {
 				'id'          => $download['id'],
 				'item_number' => $item,
 				'price'       => $download['amount'],
+				'item_price'  => round( $download['amount'] / $download['quantity'], 2 ),
 				'quantity'    => $download['quantity'],
+				'discount'    => 0,
+				'tax'         => 0,
 			);
 			$i++;
 		}
@@ -106,8 +109,8 @@ function edd_update_payment_details( $data ) {
 	// Check for payment notes
 	if ( ! empty( $data['edd-payment-note'] ) ) {
 
-		$note    = wp_kses( $data['edd-payment-note'], array() );
-		$note_id = edd_insert_payment_note( $payment_id, $note );
+		$note  = wp_kses( $data['edd-payment-note'], array() );
+		edd_insert_payment_note( $payment_id, $note );
 
 	}
 
@@ -244,6 +247,6 @@ function edd_ajax_generate_file_download_link() {
 	}
 
 	die( $file_urls );
-	
+
 }
 add_action( 'wp_ajax_edd_get_file_download_link', 'edd_ajax_generate_file_download_link' );

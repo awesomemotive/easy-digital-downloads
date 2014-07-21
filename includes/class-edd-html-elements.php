@@ -68,8 +68,8 @@ class EDD_HTML_Elements {
 					$options[$item] = get_the_title( $item );
 				}
 			}
-		} else {
-			if( ! in_array( $args['selected'], $options ) ) {
+		} elseif ( is_numeric( $args['selected'] ) && $args['selected'] !== 0 ) {
+			if ( ! in_array( $args['selected'], $options ) ) {
 				$options[$args['selected']] = get_the_title( $args['selected'] );
 			}
 		}
@@ -168,6 +168,7 @@ class EDD_HTML_Elements {
 		$current  = date( 'Y' );
 		$year     = $current - 5;
 		$selected = empty( $selected ) ? date( 'Y' ) : $selected;
+		$options  = array();
 
 		while ( $year <= $current ) {
 			$options[ absint( $year ) ] = $year;
@@ -352,7 +353,7 @@ class EDD_HTML_Elements {
 		}
 
 		$output = '<span id="edd-' . sanitize_key( $args[ 'name' ] ) . '-wrap">';
-			
+
 			$output .= '<label class="edd-label" for="edd-' . sanitize_key( $args[ 'name' ] ) . '">' . esc_html( $args[ 'label' ] ) . '</label>';
 
 			if ( ! empty( $args[ 'desc' ] ) ) {
@@ -434,7 +435,7 @@ class EDD_HTML_Elements {
 
 		$args['class'] = 'edd-ajax-user-search ' . $args['class'];
 
-		$output  = '<span class="edd_user_search_wrap">'; 
+		$output  = '<span class="edd_user_search_wrap">';
 			$output .= $this->text( $args );
 			$output .= '<span class="edd_user_search_results"></span>';
 		$output .= '</span>';

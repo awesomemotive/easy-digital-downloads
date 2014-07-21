@@ -28,7 +28,7 @@ class EDD_Session {
 	 * @access private
 	 * @since 1.5
 	 */
-	private $session = array();
+	private $session;
 
 
 	/**
@@ -157,15 +157,18 @@ class EDD_Session {
 	 * @return mixed Session variable
 	 */
 	public function set( $key, $value ) {
+
 		$key = sanitize_key( $key );
 
-		if ( is_array( $value ) )
+		if ( is_array( $value ) ) {
 			$this->session[ $key ] = serialize( $value );
-		else
+		} else {
 			$this->session[ $key ] = $value;
+		}
 
-		if( $this->use_php_sessions )
+		if( $this->use_php_sessions ) {
 			$_SESSION['edd'] = $this->session;
+		}
 
 		return $this->session[ $key ];
 	}

@@ -112,15 +112,17 @@ function edd_register_styles() {
 	// Also look for the min version first, followed by non minified version, even if SCRIPT_DEBUG is not enabled.
 	// This allows users to copy just edd.css to their theme
 	if ( file_exists( $child_theme_style_sheet ) || ( ! empty( $suffix ) && ( $nonmin = file_exists( $child_theme_style_sheet_2 ) ) ) ) {
-		if( ! empty( $nonmin ) )
+		if( ! empty( $nonmin ) ) {
 			$url = trailingslashit( get_stylesheet_directory_uri() ) . $templates_dir . 'edd.css';
-		else
+		} else {
 			$url = trailingslashit( get_stylesheet_directory_uri() ) . $templates_dir . $file;
+		}
 	} elseif ( file_exists( $parent_theme_style_sheet ) || ( ! empty( $suffix ) && ( $nonmin = file_exists( $parent_theme_style_sheet_2 ) ) ) ) {
-		if( ! empty( $nonmin ) )
+		if( ! empty( $nonmin ) ) {
 			$url = trailingslashit( get_template_directory_uri() ) . $templates_dir . 'edd.css';
-		else
+		} else {
 			$url = trailingslashit( get_template_directory_uri() ) . $templates_dir . $file;
+		}
 	} elseif ( file_exists( $edd_plugin_style_sheet ) || file_exists( $edd_plugin_style_sheet ) ) {
 		$url = trailingslashit( edd_get_templates_url() ) . $file;
 	}
@@ -150,7 +152,7 @@ function edd_load_admin_scripts( $hook ) {
 		return;
 	}
 
-	global $wp_version;
+	global $wp_version, $post;
 
 	$js_dir  = EDD_PLUGIN_URL . 'assets/js/';
 	$css_dir = EDD_PLUGIN_URL . 'assets/css/';
