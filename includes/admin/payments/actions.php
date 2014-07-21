@@ -65,6 +65,11 @@ function edd_update_payment_details( $data ) {
 		$cart_details = array();
 		$i = 0;
 		foreach( $updated_downloads as $download ) {
+
+			if( empty( $download['amount'] ) ) {
+				$download['amount'] = '0.00';
+			}
+
 			$item             = array();
 			$item['id']       = absint( $download['id'] );
 			$item['quantity'] = absint( $download['quantity'] ) > 0 ? absint( $download['quantity'] ) : 1;
