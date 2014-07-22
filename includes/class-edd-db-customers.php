@@ -78,7 +78,58 @@ class EDD_DB_Customers extends EDD_DB  {
 	*/
 	public function exists( $email = '' ) {
 
-		return (bool) $this->get_by( 'email', $email );
+		return $this->get_column_by( 'id', 'email', $email );
+
+	}
+
+	/**
+	 * Attaches a payment ID to a customer
+	 *
+	 * @access  public
+	 * @since   2.1
+	*/
+	public function attach_payment( $customer_id = 0, $payment_id = 0 ) {
+
+		$customer = $this->get( $customer_id );
+
+		if( ! $customer ) {
+			return false;
+		}
+
+		if( empty( $customer->payment_ids ) ) {
+
+			$customer->payment_ids = $payment_id;
+		
+		} else {
+
+			$payment_ids   = array_map( 'absint', explode( ',', $customer->payment_ids ) );
+			$payment_ids[] = $payment_id;
+			$customer->payment_ids = implode( ',', array_unique( array_values( $payment_ids ) ) );
+
+		}
+
+		return $this->update( $customer_id, (array) $customer );
+
+	}
+
+	/**
+	 * Increments customer purchase stats
+	 *
+	 * @access  public
+	 * @since   2.1
+	*/
+	public function increment_stats( $customer_id = 0, $amount = '' ) {
+
+		$customer = $this->get( $customer_id );
+
+		if( ! $customer ) {
+			return false;
+		}
+
+		$customer->purchase_count += 1;
+		$customer->purchase_value += $amount;
+
+		return $this->update( $customer_id, (array) $customer );
 
 	}
 
