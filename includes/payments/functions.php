@@ -156,23 +156,13 @@ function edd_insert_payment( $payment_data = array() ) {
 			$payment_data['price'] = '0.00';
 		}
 
-		$customer_id = EDD()->customers->exists( $payment_data['user_email'] );
-
-		// Create the customer if none exists. Update customer if exists
-		if( ! $customer_id ) {
-
-			$customer_id = EDD()->customers->add( array(
-				'name'        => $payment_data['user_info']['first_name'] . ' ' . $payment_data['user_info']['last_name'],
-				'email'       => $payment_data['user_email'],
-				'user_id'     => $payment_data['user_info']['id'],
-				'payment_ids' => $payment
-			) );
-
-		} else {
-
-			EDD()->customers->attach_payment( $customer_id, $payment );
-
-		}
+		// Create or update a customer
+		$customer_id = EDD()->customers->add( array(
+			'name'        => $payment_data['user_info']['first_name'] . ' ' . $payment_data['user_info']['last_name'],
+			'email'       => $payment_data['user_email'],
+			'user_id'     => $payment_data['user_info']['id'],
+			'payment_id'  => $payment
+		) );
 
 		// Record the payment details
 		update_post_meta( $payment, '_edd_payment_meta',         apply_filters( 'edd_payment_meta', $payment_meta, $payment_data ) );
