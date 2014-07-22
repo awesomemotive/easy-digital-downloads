@@ -66,7 +66,43 @@ class EDD_DB_Customers extends EDD_DB  {
 
 		$args = wp_parse_args( $data, $defaults );
 
-		return $this->insert( $args, 'customer' );
+		if( empty( $args['email'] ) ) {
+			return false;
+		}
+
+		$customer = $this->get_by( 'email', $args['email'] );
+
+		if( $customer ) {
+			// update an existing customer
+
+			// Update the payment IDs attached to the customer
+			if( ! empty( $args['payment_id'] ) ) {
+
+				if( empty( $customer->payment_ids ) ) {
+
+					$customer->payment_ids = absint( $args['payment_id'] );
+				
+				} else {
+
+					$payment_ids   = array_map( 'absint', explode( ',', $customer->payment_ids ) );
+					$payment_ids[] = absint( $args['payment_id'] );
+					$customer->payment_ids = implode( ',', array_unique( array_values( $payment_ids ) ) );
+
+				}
+
+				$args['payment_ids'] = $customer->payment_ids;
+
+			}
+
+			$this->update( $customer->id, $args );
+
+			return $customer->id;
+
+		} else {
+
+			return $this->insert( $args, 'customer' );
+
+		}
 
 	}
 
