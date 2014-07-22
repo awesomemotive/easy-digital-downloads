@@ -156,9 +156,28 @@ function edd_insert_payment( $payment_data = array() ) {
 			$payment_data['price'] = '0.00';
 		}
 
+		$customer_id = EDD()->customers->exists( $payment_data['user_email'] );
+
+		// Create the customer if none exists. Update customer if exists
+		if( ! $customer_id ) {
+
+			$customer_id = EDD()->customers->add( array(
+				'name'        => $payment_data['user_info']['first_name'] . ' ' . $payment_data['user_info']['last_name'],
+				'email'       => $payment_data['user_email'],
+				'user_id'     => $payment_data['user_info']['id'],
+				'payment_ids' => $payment
+			) );
+
+		} else {
+
+			EDD()->customers->attach_payment( $customer_id, $payment );
+
+		}
+
 		// Record the payment details
 		update_post_meta( $payment, '_edd_payment_meta',         apply_filters( 'edd_payment_meta', $payment_meta, $payment_data ) );
 		update_post_meta( $payment, '_edd_payment_user_id',      $payment_data['user_info']['id'] );
+		update_post_meta( $payment, '_edd_payment_customer_id',  $customer_id );
 		update_post_meta( $payment, '_edd_payment_user_email',   $payment_data['user_email'] );
 		update_post_meta( $payment, '_edd_payment_user_ip',      edd_get_ip() );
 		update_post_meta( $payment, '_edd_payment_purchase_key', $payment_data['purchase_key'] );
@@ -862,6 +881,19 @@ function edd_get_payment_user_id( $payment_id ) {
 	$user_id = get_post_meta( $payment_id, '_edd_payment_user_id', true );
 
 	return apply_filters( 'edd_payment_user_id', $user_id );
+}
+
+/**
+ * Get the customer ID associated with a payment
+ *
+ * @since 2.1
+ * @param int $payment_id Payment ID
+ * @return string $customer_id Customer ID
+ */
+function edd_get_payment_customer_id( $payment_id ) {
+	$customer_id = get_post_meta( $payment_id, '_edd_payment_customer_id', true );
+
+	return apply_filters( 'edd_payment_customer_id', $customer_id );
 }
 
 /**
