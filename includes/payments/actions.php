@@ -78,6 +78,9 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 		delete_transient( md5( 'edd_earnings_todaytoday' ) );
 	}
 
+	// Increase the customer's purchase stats
+	EDD()->customers->increment_stats( $customer_id, $amount );
+
 	// Check for discount codes and increment their use counts
 	if ( isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ) {
 
