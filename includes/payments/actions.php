@@ -34,6 +34,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 	$completed_date = edd_get_payment_completed_date( $payment_id );
 	$user_info      = edd_get_payment_meta_user_info( $payment_id );
+	$customer_id    = edd_get_payment_customer_id( $payment_id );
 	$amount         = edd_get_payment_amount( $payment_id );
 	$cart_details   = edd_get_payment_meta_cart_details( $payment_id );
 
