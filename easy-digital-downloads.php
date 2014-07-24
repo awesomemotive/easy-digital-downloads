@@ -99,14 +99,6 @@ final class Easy_Digital_Downloads {
 	public $email_tags;
 
 	/**
-	 * EDD Customers DB Object
-	 *
-	 * @var object
-	 * @since 2.1
-	 */
-	public $customers;
-
-	/**
 	 * Main Easy_Digital_Downloads Instance
 	 *
 	 * Insures that only one instance of Easy_Digital_Downloads exists in memory at any one
@@ -133,7 +125,6 @@ final class Easy_Digital_Downloads {
 			self::$instance->session    = new EDD_Session();
 			self::$instance->html       = new EDD_HTML_Elements();
 			self::$instance->email_tags = new EDD_Email_Template_Tags();
-			self::$instance->customers  = new EDD_DB_Customers();
 		}
 		return self::$instance;
 	}
@@ -173,7 +164,7 @@ final class Easy_Digital_Downloads {
 	 * @return void
 	 */
 	private function setup_constants() {
-		
+
 		// Plugin version
 		if ( ! defined( 'EDD_VERSION' ) ) {
 			define( 'EDD_VERSION', '2.0.4' );
@@ -218,8 +209,9 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/cart/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-api.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-customers.php';
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			require_once EDD_PLUGIN_DIR . 'includes/class-edd-cli.php';
+		}
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cache-helper.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cron.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-fees.php';
@@ -247,11 +239,10 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/scripts.php';
 		require_once EDD_PLUGIN_DIR . 'includes/post-types.php';
 		require_once EDD_PLUGIN_DIR . 'includes/plugin-compatibility.php';
-		require_once EDD_PLUGIN_DIR . 'includes/emails/class-edd-emails.php';
-		require_once EDD_PLUGIN_DIR . 'includes/emails/class-edd-email-tags.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/actions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/emails/email-tags.php';
 		require_once EDD_PLUGIN_DIR . 'includes/error-tracking.php';
 		require_once EDD_PLUGIN_DIR . 'includes/user-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/query-filters.php';
