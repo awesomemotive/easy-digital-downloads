@@ -139,7 +139,22 @@ class Test_Cart extends EDD_UnitTestCase {
 		$this->assertEquals( 1, edd_get_cart_item_quantity( $this->_post->ID, $options ) );
 
 		// Cleanup
-		edd_remove_from_cart( 1 )
+		edd_remove_from_cart( 1 );
+	}
+
+	public function test_set_cart_item_quantity() {
+
+		$options = array(
+			'price_id' => 0,
+			'name' => 'Simple',
+			'amount' => 20,
+			'quantity' => 1
+		);
+
+		edd_set_cart_item_quantity( $this->_post->ID, 3, $options );
+
+		$this->assertEquals( 3, edd_get_cart_item_quantity( $this->_post->ID, $options ) );
+
 	}
 
 	public function test_remove_from_cart() {
