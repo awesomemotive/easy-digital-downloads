@@ -207,7 +207,12 @@ class EDD_CLI extends WP_CLI_Command {
 					}
 
 					foreach( $product['pricing'] as $price => $value ) {
-						$pricing[] = $price . ':' . edd_currency_filter( edd_format_amount( $value ) );
+
+						if( 'amount' == $price ) {
+							continue;
+						}
+
+						$pricing[] = $price . ':' . edd_format_amount( $value );
 					}
 
 					$pricing = implode( ', ', $pricing );
@@ -219,7 +224,7 @@ class EDD_CLI extends WP_CLI_Command {
 					WP_CLI::line( sprintf( __( 'Tags: %s', 'edd' ), ( is_array( $tags ) ? '' : $tags ) ) );
 					WP_CLI::line( sprintf( __( 'Pricing: %s', 'edd' ), $pricing ) );
 					WP_CLI::line( sprintf( __( 'Sales: %s', 'edd' ), $product['stats']['total']['sales'] ) );
-					WP_CLI::line( sprintf( __( 'Earnings: %s', 'edd' ), edd_currency_filter( edd_format_amount( $product['stats']['total']['earnings'] ) ) ) );
+					WP_CLI::line( sprintf( __( 'Earnings: %s', 'edd' ), edd_format_amount( $product['stats']['total']['earnings'] ) ) );
 
 					if( $verbose ) {
 						WP_CLI::line( '' );
