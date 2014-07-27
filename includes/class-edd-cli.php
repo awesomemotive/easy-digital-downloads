@@ -227,77 +227,44 @@ class EDD_CLI extends WP_CLI_Command {
 	 * wp edd customers --id=103 --raw
 	 */
 	public function customers( $args, $assoc_args ) {
-		$verbose	= ( array_key_exists( 'verbose', $assoc_args ) ? true : false );
-		$raw		= ( array_key_exists( 'raw', $assoc_args ) ? true : false );
-		$curr_pos	= edd_get_option( 'currency_position', 'before' );
-
-		if( isset( $assoc_args ) && array_key_exists( 'id', $assoc_args ) && !empty( $assoc_args['id'] ) ) {
-			$customers = $this->api->get_customers( $assoc_args['id'] );
-
-			if( isset( $customers['error'] ) ) {
-				WP_CLI::error( $customers['error'] );
-			} else {
-				$customer = $customers['customers'][0];
-
-				if( $raw ) {
-					print_r( $customer );
-				} else {
-					WP_CLI::line( WP_CLI::colorize( '%G' . $customer['info']['email'] . '%N' ) );
-					WP_CLI::line( sprintf( __( 'Customer ID: %s', 'edd' ), $customer['info']['id'] ) );
-					WP_CLI::line( sprintf( __( 'Username: %s', 'edd' ), $customer['info']['username'] ) );
-					WP_CLI::line( sprintf( __( 'Display Name: %s', 'edd' ), $customer['info']['display_name'] ) );
-
-					if( array_key_exists( 'first_name', $customer ) ) {
-						WP_CLI::line( sprintf( __( 'First Name: %s', 'edd' ), $customer['info']['first_name'] ) );
-					}
-
-					if( array_key_exists( 'last_name', $customer ) ) {
-						WP_CLI::line( sprintf( __( 'Last Name: %s', 'edd' ), $customer['info']['last_name'] ) );
-					}
-
-					WP_CLI::line( sprintf( __( 'Email: %s', 'edd' ), $customer['info']['email'] ) );
-
-					if( $verbose ) {
-						WP_CLI::line( '' );
-						WP_CLI::line( sprintf( __( 'Purchases: %s', 'edd' ), $customer['stats']['total_purchases'] ) );
-						WP_CLI::line( sprintf( __( 'Total Spent: %s', 'edd' ), ( $curr_pos == 'before' ? edd_get_currency() . ' ' : '' ) . edd_format_amount( $customer['stats']['total_spent'] ) . ( $curr_pos == 'after' ? ' ' . edd_get_currency() : '' ) ) );
-						WP_CLI::line( sprintf( __( 'Total Downloads: %s', 'edd' ), $customer['stats']['total_downloads'] ) );
-					}
-				}
-			}
-		} else {
-			$customers = $this->api->get_customers();
-
-			if( $raw ) {
-				print_r( $customers );
-			} else {
-				foreach( $customers['customers'] as $customer ) {
-					WP_CLI::line( WP_CLI::colorize( '%G' . $customer['info']['email'] . '%N' ) );
-					WP_CLI::line( sprintf( __( 'Customer ID: %s', 'edd' ), $customer['info']['id'] ) );
-					WP_CLI::line( sprintf( __( 'Username: %s', 'edd' ), $customer['info']['username'] ) );
-					WP_CLI::line( sprintf( __( 'Display Name: %s', 'edd' ), $customer['info']['display_name'] ) );
-
-					if( array_key_exists( 'first_name', $customer ) ) {
-						WP_CLI::line( sprintf( __( 'First Name: %s', 'edd' ), $customer['info']['first_name'] ) );
-					}
-
-					if( array_key_exists( 'last_name', $customer ) ) {
-						WP_CLI::line( sprintf( __( 'Last Name: %s', 'edd' ), $customer['info']['last_name'] ) );
-					}
-
-					WP_CLI::line( sprintf( __( 'Email: %s', 'edd' ), $customer['info']['email'] ) );
-
-					if( $verbose ) {
-						WP_CLI::line( '' );
-						WP_CLI::line( sprintf( __( 'Purchases: %s', 'edd' ), $customer['stats']['total_purchases'] ) );
-						WP_CLI::line( sprintf( __( 'Total Spent: %s', 'edd' ), ( $curr_pos == 'before' ? edd_get_currency() . ' ' : '' ) . edd_format_amount( $customer['stats']['total_spent'] ) . ( $curr_pos == 'after' ? ' ' . edd_get_currency() : '' ) ) );
-						WP_CLI::line( sprintf( __( 'Total Downloads: %s', 'edd' ), $customer['stats']['total_downloads'] ) );
-					}
-
-					WP_CLI::line( '' );
-				}
-			}
+	
+		$customer_id = isset( $assoc_args ) && array_key_exists( 'id', $assoc_args ) ? absint( $assoc_args['id'] ) : false;
+		$customers  = $this->api->get_customers( $assoc_args['id'] );
+		
+		if( isset( $customers['error'] ) ) {
+			WP_CLI::error( $customers['error'] );
 		}
+
+		if( empty( $customers ) ) {
+			WP_CLI::error( __( 'No customers found', 'edd' ) );
+		}
+
+		foreach( $customers['customers'] as $customer ) {
+			WP_CLI::line( WP_CLI::colorize( '%G' . $customer['info']['email'] . '%N' ) );
+			WP_CLI::line( sprintf( __( 'Customer ID: %s', 'edd' ), $customer['info']['id'] ) );
+			WP_CLI::line( sprintf( __( 'Username: %s', 'edd' ), $customer['info']['username'] ) );
+			WP_CLI::line( sprintf( __( 'Display Name: %s', 'edd' ), $customer['info']['display_name'] ) );
+
+			if( array_key_exists( 'first_name', $customer ) ) {
+				WP_CLI::line( sprintf( __( 'First Name: %s', 'edd' ), $customer['info']['first_name'] ) );
+			}
+
+			if( array_key_exists( 'last_name', $customer ) ) {
+				WP_CLI::line( sprintf( __( 'Last Name: %s', 'edd' ), $customer['info']['last_name'] ) );
+			}
+
+			WP_CLI::line( sprintf( __( 'Email: %s', 'edd' ), $customer['info']['email'] ) );
+
+			if( $verbose ) {
+				WP_CLI::line( '' );
+				WP_CLI::line( sprintf( __( 'Purchases: %s', 'edd' ), $customer['stats']['total_purchases'] ) );
+				WP_CLI::line( sprintf( __( 'Total Spent: %s', 'edd' ), ( $curr_pos == 'before' ? edd_get_currency() . ' ' : '' ) . edd_format_amount( $customer['stats']['total_spent'] ) . ( $curr_pos == 'after' ? ' ' . edd_get_currency() : '' ) ) );
+				WP_CLI::line( sprintf( __( 'Total Downloads: %s', 'edd' ), $customer['stats']['total_downloads'] ) );
+			}
+
+			WP_CLI::line( '' );
+		}
+
 	}
 
 
