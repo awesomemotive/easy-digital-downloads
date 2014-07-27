@@ -315,7 +315,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 				foreach( $sale['products'] as $product ) {
 					$price_name = ! empty( $product['price_name'] ) ? ' (' . $product['price_name'] . ')' : '';
-					WP_CLI::line( sprintf( __( '  Product: %s - %s %s', 'edd' ), $product['name'], edd_format_amount( $product['price'] ) . ' ' . edd_get_currency() . $price_name ) );
+					WP_CLI::line( sprintf( __( '  Product: %s - %s', 'edd' ), $product['name'], edd_format_amount( $product['price'] ) . ' ' . edd_get_currency() . $price_name ) );
 				}
 			}
 
