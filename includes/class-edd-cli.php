@@ -219,27 +219,23 @@ class EDD_CLI extends WP_CLI_Command {
 
 					WP_CLI::line( WP_CLI::colorize( '%G' . $product['info']['title'] . '%N' ) );
 					WP_CLI::line( sprintf( __( 'ID: %d', 'edd' ), $product['info']['id'] ) );
+					WP_CLI::line( sprintf( __( 'Status: %s', 'edd' ), $product['info']['status'] ) );
 					WP_CLI::line( sprintf( __( 'Posted: %s', 'edd' ), $product['info']['create_date'] ) );
 					WP_CLI::line( sprintf( __( 'Categories: %s', 'edd' ), $categories ) );
 					WP_CLI::line( sprintf( __( 'Tags: %s', 'edd' ), ( is_array( $tags ) ? '' : $tags ) ) );
 					WP_CLI::line( sprintf( __( 'Pricing: %s', 'edd' ), $pricing ) );
 					WP_CLI::line( sprintf( __( 'Sales: %s', 'edd' ), $product['stats']['total']['sales'] ) );
 					WP_CLI::line( sprintf( __( 'Earnings: %s', 'edd' ), edd_format_amount( $product['stats']['total']['earnings'] ) ) ) . ' ' . edd_get_currency();
+					WP_CLI::line( '' );
+					WP_CLI::line( sprintf( __( 'Slug: %s', 'edd' ), $product['info']['slug'] ) );
+					WP_CLI::line( sprintf( __( 'Permalink: %s', 'edd' ), $product['info']['link'] ) );
 
-					if( $verbose ) {
+					if( array_key_exists( 'files', $product ) ) {
 						WP_CLI::line( '' );
-						WP_CLI::line( sprintf( __( 'Download ID: %s', 'edd' ), $product['info']['id'] ) );
-						WP_CLI::line( sprintf( __( 'Download Slug: %s', 'edd' ), $product['info']['slug'] ) );
-						WP_CLI::line( sprintf( __( 'Download Status: %s', 'edd' ), $product['info']['status'] ) );
-						WP_CLI::line( sprintf( __( 'Download Link: %s', 'edd' ), $product['info']['link'] ) );
+						WP_CLI::line( __( 'Download Files:', 'edd' ) );
 
-						if( array_key_exists( 'files', $product ) ) {
-							WP_CLI::line( '' );
-							WP_CLI::line( __( 'Download Files:', 'edd' ) );
-
-							foreach( $product['files'] as $file ) {
-								WP_CLI::line( '  ' . sprintf( __( 'File: %s (%s)', 'edd' ), $file['name'], $file['file'] ) );
-							}
+						foreach( $product['files'] as $file ) {
+							WP_CLI::line( '  ' . sprintf( __( 'File: %s (%s)', 'edd' ), $file['name'], $file['file'] ) );
 						}
 					}
 
