@@ -240,7 +240,7 @@ class EDD_CLI extends WP_CLI_Command {
 	
 							if( isset( $file['condition'] ) && 'all' !== $file['condition'] ) {
 
-								WP_CLI::line( sprintf( __( 'Price Assignment: %s', 'edd' ), $file['condition'] ) );
+								WP_CLI::line( '  ' . sprintf( __( 'Price Assignment: %s', 'edd' ), $file['condition'] ) );
 	
 							}
 						}
