@@ -120,7 +120,7 @@ class Test_Cart extends EDD_UnitTestCase {
 		);
 		edd_add_to_cart( $this->_post->ID, $options );
 		
-		$this->assertEquals( 1, edd_get_cart_item_quantity( $this->_post->ID ) );
+		$this->assertEquals( 1, edd_get_cart_item_quantity( $this->_post->ID, $options ) );
 
 		// Add the item to the cart again
 		edd_add_to_cart( $this->_post->ID, $options );
