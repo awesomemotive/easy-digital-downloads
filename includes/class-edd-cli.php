@@ -183,6 +183,7 @@ class EDD_CLI extends WP_CLI_Command {
 				}
 			}
 		} else {
+
 			$products = $this->api->get_products();
 
 			if( $raw ) {
@@ -206,17 +207,19 @@ class EDD_CLI extends WP_CLI_Command {
 					}
 
 					foreach( $product['pricing'] as $price => $value ) {
-						$pricing[] = ( $price != 'amount' ? ucwords( $price ) . ' - ' : '' ) . ( $curr_pos == 'before' ? edd_get_currency() . ' ' : '' ) . edd_format_amount( $value ) . ( $curr_pos == 'after' ? ' ' . edd_get_currency() : '' );
+						$pricing[] = $price . ':' . edd_currency_filter( edd_format_amount( $value ) );
 					}
+
 					$pricing = implode( ', ', $pricing );
 
 					WP_CLI::line( WP_CLI::colorize( '%G' . $product['info']['title'] . '%N' ) );
+					WP_CLI::line( sprintf( __( 'ID: %d', 'edd' ), $product['info']['id'] ) );
 					WP_CLI::line( sprintf( __( 'Posted: %s', 'edd' ), $product['info']['create_date'] ) );
 					WP_CLI::line( sprintf( __( 'Categories: %s', 'edd' ), $categories ) );
 					WP_CLI::line( sprintf( __( 'Tags: %s', 'edd' ), ( is_array( $tags ) ? '' : $tags ) ) );
 					WP_CLI::line( sprintf( __( 'Pricing: %s', 'edd' ), $pricing ) );
 					WP_CLI::line( sprintf( __( 'Sales: %s', 'edd' ), $product['stats']['total']['sales'] ) );
-					WP_CLI::line( sprintf( __( 'Earnings: %s', 'edd' ), ( $curr_pos == 'before' ? edd_get_currency() . ' ' : '' ) . edd_format_amount( $product['stats']['total']['earnings'] ) . ( $curr_pos == 'after' ? ' ' .edd_get_currency() : '' ) ) );
+					WP_CLI::line( sprintf( __( 'Earnings: %s', 'edd' ), edd_currency_filter( edd_format_amount( $product['stats']['total']['earnings'] ) ) ) );
 
 					if( $verbose ) {
 						WP_CLI::line( '' );
