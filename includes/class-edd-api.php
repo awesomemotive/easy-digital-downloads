@@ -1171,6 +1171,11 @@ class EDD_API {
 			$discounts = edd_get_discounts( array( 'posts_per_page' => $per_page, 'paged' => $paged ) );
 			$count     = 0;
 
+			if( empty( $discounts ) ) {
+				$error['error'] = __( 'No disocunts found!', 'edd' );
+				return $error;
+			}
+
 			foreach ( $discounts as $discount ) {
 
 				$discount_list['discounts'][$count]['ID']                    = $discount->ID;
