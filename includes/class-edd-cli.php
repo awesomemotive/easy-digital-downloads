@@ -212,7 +212,7 @@ class EDD_CLI extends WP_CLI_Command {
 							$price = $price . ' - ';
 						}
 
-						$pricing[] = $price . ':' . edd_format_amount( $value );
+						$pricing[] = $price . ': ' . edd_format_amount( $value ) . ' ' . edd_currency_filter('');
 					}
 
 					$pricing = implode( ', ', $pricing );
