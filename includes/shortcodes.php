@@ -157,10 +157,18 @@ add_shortcode( 'edd_login', 'edd_login_form_shortcode' );
  * @return string
  */
 function edd_register_form_shortcode( $atts, $content = null ) {
+<<<<<<< HEAD
 	$args = shortcode_atts( array(
 		'redirect' => '',
 	), $atts, 'edd_register' );
 	return edd_register_form( $args['redirect'] );
+=======
+	$atts = shortcode_atts( array(
+		'redirect' => '',
+	), $atts, 'edd_register' );
+
+	return edd_register_form( $atts['redirect'] );
+>>>>>>> Remove extract, fix SNAFU
 }
 add_shortcode( 'edd_register', 'edd_register_form_shortcode' );
 
@@ -223,7 +231,11 @@ add_shortcode( 'download_discounts', 'edd_discounts_shortcode' );
 function edd_purchase_collection_shortcode( $atts, $content = null ) {
 	global $edd_options;
 
+<<<<<<< HEAD
 	$args = shortcode_atts( array(
+=======
+	$atts = shortcode_atts( array(
+>>>>>>> Remove extract, fix SNAFU
 		'taxonomy'	=> '',
 		'terms'		=> '',
 		'text'		=> __('Purchase All Items', 'edd'),
@@ -232,9 +244,15 @@ function edd_purchase_collection_shortcode( $atts, $content = null ) {
 		'class'		=> 'edd-submit'
 	), $atts, 'purchase_collection' );
 
+<<<<<<< HEAD
 	$button_display = implode( ' ', array( $args['style'], $args['color'], $args['class'] ) );
 
 	return '<a href="' . add_query_arg( array( 'edd_action' => 'purchase_collection', 'taxonomy' => $args['taxonomy'], 'terms' => $args['terms'] ) ) . '" class="' . $button_display . '">' . $args['text'] . '</a>';
+=======
+	$button_display = implode( ' ', array( $atts['style'], $atts['color'], $atts['class'] ) );
+
+	return '<a href="' . add_query_arg( array( 'edd_action' => 'purchase_collection', 'taxonomy' => $atts['taxonomy'], 'terms' => $atts['terms'] ) ) . '" class="' . $atts['button_display'] . '">' . $atts['text'] . '</a>';
+>>>>>>> Remove extract, fix SNAFU
 }
 add_shortcode( 'purchase_collection', 'edd_purchase_collection_shortcode' );
 
@@ -253,7 +271,10 @@ add_shortcode( 'purchase_collection', 'edd_purchase_collection_shortcode' );
  * @return string $display Output generated from the downloads queried
  */
 function edd_downloads_query( $atts, $content = null ) {
+<<<<<<< HEAD
 
+=======
+>>>>>>> Remove extract, fix SNAFU
 	$atts = shortcode_atts( array(
 		'category'         => '',
 		'exclude_category' => '',
@@ -329,13 +350,13 @@ function edd_downloads_query( $atts, $content = null ) {
 					$term_id = $term->term_id;
 				}
 
-				$_tax_cats[] = $term_id;
+				$_tax_tags[] = $term_id;
 			}
 
 			$query['tax_query'][] = array(
 				'taxonomy' => 'download_tag',
 				'field'    => 'term_id',
-				'terms'    => $_tax_cats
+				'terms'    => $_tax_tags
 			);
 		}
 
@@ -542,9 +563,14 @@ function edd_download_price_shortcode( $atts, $content = null ) {
 		'id' => NULL,
 	), $atts, 'edd_price' );
 
+<<<<<<< HEAD
 	if ( is_null( $atts['id'] ) ) {
 		$id = get_the_ID();
 	}
+=======
+	if ( is_null( $atts['id'] ) )
+		$atts['id'] = get_the_ID();
+>>>>>>> Remove extract, fix SNAFU
 
 	return edd_price( $atts['id'], false );
 }
