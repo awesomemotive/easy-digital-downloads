@@ -121,135 +121,88 @@ class EDD_CLI extends WP_CLI_Command {
 	 * wp edd products --id=103 --raw
 	 */
 	public function products( $args, $assoc_args ) {
-		$verbose	= ( array_key_exists( 'verbose', $assoc_args ) ? true : false );
-		$raw		= ( array_key_exists( 'raw', $assoc_args ) ? true : false );
-		$curr_pos	= edd_get_option( 'currency_position', 'before' );
 
-		if( isset( $assoc_args ) && array_key_exists( 'id', $assoc_args ) && !empty( $assoc_args['id'] ) ) {
-			$products = $this->api->get_products( $assoc_args['id'] );
+		$product_id = isset( $assoc_args ) && array_key_exists( 'id', $assoc_args ) ? absint( $assoc_args['id'] ) : false;
+		$products   = $this->api->get_products( $product_id );
 
-			if( isset( $products['error'] ) ) {
-				WP_CLI::error( $products['error'] );
-			} else {
-				$product	= $products['products'][0];
-				$categories	= array();
-				$tags		= array();
-				$pricing	= array();
-
-				if( $raw ) {
-					print_r( $product );
-				} else {
-					foreach( $product['info']['category'] as $category ) {
-						$categories[] = $category->name;
-					}
-					$categories = implode( ', ', $categories );
-
-					if( is_array( $product['info']['tags'] ) ) {
-						foreach( $product['info']['tags'] as $tag ) {
-							$tags[] = $tag->name;
-						}
-						$tags = implode( ', ', $tags );
-					}
-
-					foreach( $product['pricing'] as $price => $value ) {
-						$pricing[] = ( $price != 'amount' ? ucwords( $price ) . ' - ' : '' ) . ( $curr_pos == 'before' ? edd_get_currency() . ' ' : '' ) . edd_format_amount( $value ) . ( $curr_pos == 'after' ? ' ' . edd_get_currency() : '' );
-					}
-					$pricing = implode( ', ', $pricing );
-
-					WP_CLI::line( WP_CLI::colorize( '%G' . $product['info']['title'] . '%N' ) );
-					WP_CLI::line( sprintf( __( 'Posted: %s', 'edd' ), $product['info']['create_date'] ) );
-					WP_CLI::line( sprintf( __( 'Categories: %s', 'edd' ), $categories ) );
-					WP_CLI::line( sprintf( __( 'Tags: %s', 'edd' ), ( is_array( $tags ) ? '' : $tags ) ) );
-					WP_CLI::line( sprintf( __( 'Pricing: %s', 'edd' ), $pricing ) );
-					WP_CLI::line( sprintf( __( 'Sales: %s', 'edd' ), $product['stats']['total']['sales'] ) );
-					WP_CLI::line( sprintf( __( 'Earnings: %s', 'edd' ), ( $curr_pos == 'before' ? edd_get_currency() . ' ' : '' ) . edd_format_amount( $product['stats']['total']['earnings'] ) . ( $curr_pos == 'after' ? ' ' .edd_get_currency() : '' ) ) );
-
-					if( $verbose ) {
-						WP_CLI::line( '' );
-						WP_CLI::line( sprintf( __( 'Download ID: %s', 'edd' ), $product['info']['id'] ) );
-						WP_CLI::line( sprintf( __( 'Download Slug: %s', 'edd' ), $product['info']['slug'] ) );
-						WP_CLI::line( sprintf( __( 'Download Status: %s', 'edd' ), $product['info']['status'] ) );
-						WP_CLI::line( sprintf( __( 'Download Link: %s', 'edd' ), $product['info']['link'] ) );
-
-						if( array_key_exists( 'files', $product ) ) {
-							WP_CLI::line( '' );
-							WP_CLI::line( __( 'Download Files:', 'edd' ) );
-
-							foreach( $product['files'] as $file ) {
-								WP_CLI::line( '  ' . sprintf( __( 'File: %s (%s)', 'edd' ), $file['name'], $file['file'] ) );
-							}
-						}
-					}
-				}
-			}
-		} else {
-
-			$products = $this->api->get_products();
-
-			if( $raw ) {
-				print_r( $products );
-			} else {
-				foreach( $products['products'] as $product ) {
-					$categories	= array();
-					$tags		= array();
-					$pricing	= array();
-
-					foreach( $product['info']['category'] as $category ) {
-						$categories[] = $category->name;
-					}
-					$categories = implode( ', ', $categories );
-
-					if( is_array( $product['info']['tags'] ) ) {
-						foreach( $product['info']['tags'] as $tag ) {
-							$tags[] = $tag->name;
-						}
-						$tags = implode( ', ', $tags );
-					}
-
-					foreach( $product['pricing'] as $price => $value ) {
-
-						if( 'amount' != $price ) {
-							$price = $price . ' - ';
-						}
-
-						$pricing[] = $price . ': ' . edd_format_amount( $value ) . ' ' . edd_get_currency();
-					}
-
-					$pricing = implode( ', ', $pricing );
-
-					WP_CLI::line( WP_CLI::colorize( '%G' . $product['info']['title'] . '%N' ) );
-					WP_CLI::line( sprintf( __( 'ID: %d', 'edd' ), $product['info']['id'] ) );
-					WP_CLI::line( sprintf( __( 'Status: %s', 'edd' ), $product['info']['status'] ) );
-					WP_CLI::line( sprintf( __( 'Posted: %s', 'edd' ), $product['info']['create_date'] ) );
-					WP_CLI::line( sprintf( __( 'Categories: %s', 'edd' ), $categories ) );
-					WP_CLI::line( sprintf( __( 'Tags: %s', 'edd' ), ( is_array( $tags ) ? '' : $tags ) ) );
-					WP_CLI::line( sprintf( __( 'Pricing: %s', 'edd' ), $pricing ) );
-					WP_CLI::line( sprintf( __( 'Sales: %s', 'edd' ), $product['stats']['total']['sales'] ) );
-					WP_CLI::line( sprintf( __( 'Earnings: %s', 'edd' ), edd_format_amount( $product['stats']['total']['earnings'] ) ) ) . ' ' . edd_get_currency();
-					WP_CLI::line( '' );
-					WP_CLI::line( sprintf( __( 'Slug: %s', 'edd' ), $product['info']['slug'] ) );
-					WP_CLI::line( sprintf( __( 'Permalink: %s', 'edd' ), $product['info']['link'] ) );
-
-					if( array_key_exists( 'files', $product ) ) {
-						WP_CLI::line( '' );
-						WP_CLI::line( __( 'Download Files:', 'edd' ) );
-
-						foreach( $product['files'] as $file ) {
-	
-							WP_CLI::line( '  ' . sprintf( __( 'File: %s (%s)', 'edd' ), $file['name'], $file['file'] ) );
-	
-							if( isset( $file['condition'] ) && 'all' !== $file['condition'] ) {
-
-								WP_CLI::line( '  ' . sprintf( __( 'Price Assignment: %s', 'edd' ), $file['condition'] ) );
-	
-							}
-						}
-					}
-
-					WP_CLI::line( '' );
-				}
-			}
+		if( isset( $products['error'] ) ) {
+			WP_CLI::error( $products['error'] );
 		}
+
+		if( empty( $products ) ) {
+			WP_CLI::error( __( 'No Downloads found', 'edd' ) );
+		}
+
+		foreach( $products['products'] as $product ) {
+		
+			$categories	= array();
+			$tags		= array();
+			$pricing	= array();
+
+			foreach( $product['info']['category'] as $category ) {
+				$categories[] = $category->name;
+			}
+
+			$categories = implode( ', ', $categories );
+
+			if( is_array( $product['info']['tags'] ) ) {
+			
+				foreach( $product['info']['tags'] as $tag ) {
+			
+					$tags[] = $tag->name;
+			
+				}
+			
+				$tags = implode( ', ', $tags );
+			
+			}
+
+			foreach( $product['pricing'] as $price => $value ) {
+
+				if( 'amount' != $price ) {
+					$price = $price . ' - ';
+				}
+
+				$pricing[] = $price . ': ' . edd_format_amount( $value ) . ' ' . edd_get_currency();
+			}
+
+			$pricing = implode( ', ', $pricing );
+
+			WP_CLI::line( WP_CLI::colorize( '%G' . $product['info']['title'] . '%N' ) );
+			WP_CLI::line( sprintf( __( 'ID: %d', 'edd' ), $product['info']['id'] ) );
+			WP_CLI::line( sprintf( __( 'Status: %s', 'edd' ), $product['info']['status'] ) );
+			WP_CLI::line( sprintf( __( 'Posted: %s', 'edd' ), $product['info']['create_date'] ) );
+			WP_CLI::line( sprintf( __( 'Categories: %s', 'edd' ), $categories ) );
+			WP_CLI::line( sprintf( __( 'Tags: %s', 'edd' ), ( is_array( $tags ) ? '' : $tags ) ) );
+			WP_CLI::line( sprintf( __( 'Pricing: %s', 'edd' ), $pricing ) );
+			WP_CLI::line( sprintf( __( 'Sales: %s', 'edd' ), $product['stats']['total']['sales'] ) );
+			WP_CLI::line( sprintf( __( 'Earnings: %s', 'edd' ), edd_format_amount( $product['stats']['total']['earnings'] ) ) ) . ' ' . edd_get_currency();
+			WP_CLI::line( '' );
+			WP_CLI::line( sprintf( __( 'Slug: %s', 'edd' ), $product['info']['slug'] ) );
+			WP_CLI::line( sprintf( __( 'Permalink: %s', 'edd' ), $product['info']['link'] ) );
+
+			if( array_key_exists( 'files', $product ) ) {
+			
+				WP_CLI::line( '' );
+				WP_CLI::line( __( 'Download Files:', 'edd' ) );
+
+				foreach( $product['files'] as $file ) {
+
+					WP_CLI::line( '  ' . sprintf( __( 'File: %s (%s)', 'edd' ), $file['name'], $file['file'] ) );
+
+					if( isset( $file['condition'] ) && 'all' !== $file['condition'] ) {
+
+						WP_CLI::line( '  ' . sprintf( __( 'Price Assignment: %s', 'edd' ), $file['condition'] ) );
+
+					}
+				
+				}
+
+			}
+
+			WP_CLI::line( '' );
+		}
+
 	}
 
 
