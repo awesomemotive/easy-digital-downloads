@@ -136,6 +136,9 @@ function edd_install() {
 	$roles->add_roles();
 	$roles->add_caps();
 
+	// Check for PHP Session support, and enable if available
+	EDD()->session->use_php_sessions();
+
 	// Bail if activating from network, or bulk
 	if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
 		return;
