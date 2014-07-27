@@ -112,16 +112,17 @@ class Test_Cart extends EDD_UnitTestCase {
 
 	public function test_get_cart_item_quantity() {
 
-		$this->assertEquals( 1, edd_get_cart_item_quantity( $this->_post->ID ) );
-
-		// Add the item to the cart again
-
 		$options = array(
 			'price_id' => 0,
 			'name' => 'Simple',
 			'amount' => 20,
 			'quantity' => 1
 		);
+		edd_add_to_cart( $this->_post->ID, $options );
+		
+		$this->assertEquals( 1, edd_get_cart_item_quantity( $this->_post->ID ) );
+
+		// Add the item to the cart again
 		edd_add_to_cart( $this->_post->ID, $options );
 
 		$this->assertEquals( 2, edd_get_cart_item_quantity( $this->_post->ID, $options ) );
@@ -155,9 +156,28 @@ class Test_Cart extends EDD_UnitTestCase {
 
 		$this->assertEquals( 3, edd_get_cart_item_quantity( $this->_post->ID, $options ) );
 
+		edd_set_cart_item_quantity( $this->_post->ID, 1, $options );
+
+		$this->assertEquals( 1, edd_get_cart_item_quantity( $this->_post->ID, $options ) );
+
+		edd_set_cart_item_quantity( $this->_post->ID, 4, $options );
+
+		$this->assertEquals( 4, edd_get_cart_item_quantity( $this->_post->ID, $options ) );
+
 	}
 
 	public function test_remove_from_cart() {
+
+		edd_empty_cart();
+
+		$options = array(
+			'price_id' => 1,
+			'name' => 'Simple',
+			'amount' => 20,
+			'quantity' => 1
+		);
+		edd_add_to_cart( $this->_post->ID, $options );
+
 		$expected = array();
 		$this->assertEquals( $expected, edd_remove_from_cart( 0 ) );
 	}
