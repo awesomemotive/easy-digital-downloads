@@ -124,6 +124,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 		if( empty( $products ) ) {
 			WP_CLI::error( __( 'No Downloads found', 'edd' ) );
+			return;
 		}
 
 		foreach( $products['products'] as $product ) {
@@ -225,6 +226,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 		if( empty( $customers ) ) {
 			WP_CLI::error( __( 'No customers found', 'edd' ) );
+			return;
 		}
 
 		foreach( $customers['customers'] as $customer ) {
@@ -272,6 +274,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 		if( empty( $sales ) ) {
 			WP_CLI::error( __( 'No sales found', 'edd' ) );
+			return;
 		}
 
 		foreach( $sales['sales'] as $sale ) {
@@ -331,6 +334,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 		if( empty( $discounts ) ) {
 			WP_CLI::error( __( 'No discounts found', 'edd' ) );
+			return;
 		}
 
 		foreach( $discounts['discounts'] as $discount ) {
