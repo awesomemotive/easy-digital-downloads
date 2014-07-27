@@ -249,6 +249,7 @@ td.edd_order_price { text-align: right; }
 .chosen-container-multi .chosen-choices input{ margin:2px; height:27px!important; border-color: #dfdfdf; }
 .chosen-container .chosen-drop { border-color: #aaa; -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); }
 .chosen-container .search-field { width: 50%; }
+.chosen-container .search-field input { width: 90%!important; }
 .chosen-container-active .chosen-choices { -webkit-border-top-left-radius: 3px; border-top-left-radius: 3px; -webkit-border-top-right-radius: 3px; border-top-right-radius: 3px; -webkit-border-bottom-left-radius: 0; border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-color: #aaa; -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); }
 .download_page_edd-tools .tablenav .actions { overflow: visible; }
 .edd_user_search_wrap { position: relative; overflow: visible; }
