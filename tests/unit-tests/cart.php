@@ -145,14 +145,16 @@ class Test_Cart extends EDD_UnitTestCase {
 
 	public function test_set_cart_item_quantity() {
 
+		edd_empty_cart();
+		
 		$options = array(
 			'price_id' => 0,
 			'name' => 'Simple',
 			'amount' => 20,
-			'quantity' => 1
+			'quantity' => 3
 		);
 
-		edd_set_cart_item_quantity( $this->_post->ID, 3, $options );
+		edd_add_to_cart( $this->_post->ID, $options );
 
 		$this->assertEquals( 3, edd_get_cart_item_quantity( $this->_post->ID, $options ) );
 
