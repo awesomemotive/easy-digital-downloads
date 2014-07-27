@@ -226,22 +226,30 @@ class EDD_Session {
 	 * @return bool $ret True if we are using PHP sessions, false otherwise
 	 */
 	public function use_php_sessions() {
+
 		$ret = false;
 
 		// If the database variable is already set, no need to run autodetection
-		$edd_use_php_sessions = get_option( 'edd_use_php_sessions' );
+		$edd_use_php_sessions = (bool) get_option( 'edd_use_php_sessions' );
+
 		if( ! $edd_use_php_sessions ) {
+
 			// Attempt to detect if the server supports PHP sessions
 			if( function_exists( 'session_start' ) ) {
+
 				$this->set( 'edd_use_php_sessions', 1 );
 
 				if( $this->get( 'edd_use_php_sessions' ) ) {
+
 					$ret = true;
 
 					// Set the database option
 					update_option( 'edd_use_php_sessions', true );
+
 				}
+
 			}
+
 		} else {
 			$ret = $edd_use_php_sessions;
 		}
