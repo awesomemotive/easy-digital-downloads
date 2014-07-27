@@ -139,11 +139,15 @@ class EDD_CLI extends WP_CLI_Command {
 			$tags		= array();
 			$pricing	= array();
 
-			foreach( $product['info']['category'] as $category ) {
-				$categories[] = $category->name;
-			}
+			if( is_array( $product['info']['category'] ) ) {
 
-			$categories = implode( ', ', $categories );
+				foreach( $product['info']['category'] as $category ) {
+					$categories[] = $category->name;
+				}
+
+				$categories = implode( ', ', $categories );
+
+			}
 
 			if( is_array( $product['info']['tags'] ) ) {
 			
