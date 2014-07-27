@@ -235,7 +235,14 @@ class EDD_CLI extends WP_CLI_Command {
 						WP_CLI::line( __( 'Download Files:', 'edd' ) );
 
 						foreach( $product['files'] as $file ) {
+	
 							WP_CLI::line( '  ' . sprintf( __( 'File: %s (%s)', 'edd' ), $file['name'], $file['file'] ) );
+	
+							if( isset( $file['condition'] ) && 'all' !== $file['condition'] ) {
+
+								WP_CLI::line( sprintf( __( 'Price Assignment: %s', 'edd' ), $file['condition'] ) );
+	
+							}
 						}
 					}
 
