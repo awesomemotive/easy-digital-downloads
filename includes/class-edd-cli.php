@@ -90,9 +90,6 @@ class EDD_CLI extends WP_CLI_Command {
 	 * --startdate=<date>: The start date of a date range to retrieve stats for
 	 * --enddate=<date>: The end date of a date range to retrieve stats for
 	 *
-	 * --verbose: Print detailed stats
-	 * --raw: Dump the relevant stats array
-	 *
 	 * ## EXAMPLES
 	 *
 	 * wp edd stats --type=sales --date=this_month
@@ -111,14 +108,10 @@ class EDD_CLI extends WP_CLI_Command {
 	 *
 	 * --id=<product_id>: A specific product ID to retrieve
 	 *
-	 * --verbose: Print detailed product info
-	 * --raw: Dump the relevant product array
 	 *
 	 * ## EXAMPLES
 	 *
 	 * wp edd products --id=103
-	 * wp edd products --id=103 --verbose
-	 * wp edd products --id=103 --raw
 	 */
 	public function products( $args, $assoc_args ) {
 
@@ -217,14 +210,9 @@ class EDD_CLI extends WP_CLI_Command {
 	 *
 	 * --id=<customer_id>: A specific customer ID to retrieve
 	 *
-	 * verbose: Print detailed customer info
-	 * raw: Dump the relevant customer array
-	 *
 	 * ## EXAMPLES
 	 *
 	 * wp edd customers --id=103
-	 * wp edd customers --id=103 --verbose
-	 * wp edd customers --id=103 --raw
 	 */
 	public function customers( $args, $assoc_args ) {
 	
@@ -273,14 +261,10 @@ class EDD_CLI extends WP_CLI_Command {
 	 *
 	 * ## OPTIONS
 	 *
-	 * --verbose: Print detailed customer info
-	 * --raw: Dump the relevant customer array
 	 *
 	 * ## EXAMPLES
 	 *
 	 * wp edd sales
-	 * wp edd sales --verbose
-	 * wp edd sales --raw
 	 */
 	public function sales( $args, $assoc_args ) {
 
