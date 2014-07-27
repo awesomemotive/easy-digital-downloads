@@ -313,112 +313,60 @@ class EDD_CLI extends WP_CLI_Command {
 	 *
 	 * ## OPTIONS
 	 *
-	 * --id=<product_id>: A specific discount ID to retrieve
-	 *
-	 * --verbose: Print detailed discount info
-	 * --raw: Dump the relevant discount array
+	 * --id=<discount_id>: A specific discount ID to retrieve
 	 *
 	 * ## EXAMPLES
 	 *
 	 * wp edd discounts --id=103
-	 * wp edd discounts --id=103 --verbose
-	 * wp edd discounts --id=103 --raw
 	 */
 	public function discounts( $args, $assoc_args ) {
-		$verbose	= ( array_key_exists( 'verbose', $assoc_args ) ? true : false );
-		$raw		= ( array_key_exists( 'raw', $assoc_args ) ? true : false );
-		$curr_pos	= edd_get_option( 'currency_position', 'before' );
+		
+		$discount_id = isset( $assoc_args ) && array_key_exists( 'id', $assoc_args ) ? absint( $assoc_args['id'] ) : false;
+		
+		$discounts = $this->api->get_discounts( $assoc_args['id'] );
 
-		if( isset( $assoc_args ) && array_key_exists( 'id', $assoc_args ) && !empty( $assoc_args['id'] ) ) {
-			$discounts = $this->api->get_discounts( $assoc_args['id'] );
+		if( isset( $discounts['error'] ) ) {
+			WP_CLI::error( $discounts['error'] );
+		}
 
-			if( isset( $discounts['error'] ) ) {
-				WP_CLI::error( $discounts['error'] );
+		if( empty( $discounts ) ) {
+			WP_CLI::error( __( 'No discounts found', 'edd' ) );
+		}
+
+		foreach( $discounts['discounts'] as $discount ) {
+			WP_CLI::line( WP_CLI::colorize( '%G' . $discount['ID'] . '%N' ) );
+			WP_CLI::line( sprintf( __( 'Name: %s', 'edd' ), $discount['name'] ) );
+			WP_CLI::line( sprintf( __( 'Code: %s', 'edd' ), $discount['code'] ) );
+
+			if( $discount['type'] == 'percent' ) {
+				$amount = $discount['amount'] . '%';
 			} else {
-				$discounts = $discounts['discounts'][0];
+				$amount = edd_format_amount( $discount['amount'] ) . ' ' . edd_get_currency();
+			}
 
-				if( $raw ) {
-					print_r( $discounts );
-				} else {
-					WP_CLI::line( WP_CLI::colorize( '%G' . $discounts['ID'] . '%N' ) );
-					WP_CLI::line( sprintf( __( 'Name: %s', 'edd' ), $discounts['name'] ) );
-					WP_CLI::line( sprintf( __( 'Code: %s', 'edd' ), $discounts['code'] ) );
+			WP_CLI::line( sprintf( __( 'Amount: %s', 'edd' ), $amount ) );
+			WP_CLI::line( sprintf( __( 'Uses: %s', 'edd' ), $discount['uses'] ) );
+			WP_CLI::line( sprintf( __( 'Max Uses: %s', 'edd' ), ( $discount['max_uses'] == '0' ? __( 'Unlimited', 'edd' ) : $discount['max_uses'] ) ) );
+			WP_CLI::line( sprintf( __( 'Start Date: %s', 'edd' ), ( empty( $discount['start_date'] ) ? __( 'No Start Date', 'edd' ) : $discount['start_date'] ) ) );
+			WP_CLI::line( sprintf( __( 'Expiration Date: %s', 'edd' ), ( empty( $discount['exp_date'] ) ? __( 'No Expiration', 'edd' ) : $discount['exp_date'] ) ) );
+			WP_CLI::line( sprintf( __( 'Status: %s', 'edd' ), ucwords( $discount['status'] ) ) );
 
-					if( $discounts['type'] == 'percent' ) {
-						$amount = $discounts['amount'] . '%';
-					} else {
-						$amount = ( $curr_pos == 'before' ? edd_get_currency() . ' ' : '' ) . edd_format_amount( $discounts['amount'] ) . ( $curr_pos == 'after' ? ' ' . edd_get_currency() : '' );
-					}
+			WP_CLI::line( '' );
 
-					WP_CLI::line( sprintf( __( 'Amount: %s', 'edd' ), $amount ) );
-					WP_CLI::line( sprintf( __( 'Uses: %s', 'edd' ), $discounts['uses'] ) );
-					WP_CLI::line( sprintf( __( 'Max Uses: %s', 'edd' ), ( $discounts['max_uses'] == '0' ? __( 'Unlimited', 'edd' ) : $discounts['max_uses'] ) ) );
-					WP_CLI::line( sprintf( __( 'Start Date: %s', 'edd' ), ( empty( $discounts['start_date'] ) ? __( 'No Start Date', 'edd' ) : $discounts['start_date'] ) ) );
-					WP_CLI::line( sprintf( __( 'Expiration Date: %s', 'edd' ), ( empty( $discounts['exp_date'] ) ? __( 'No Expiration', 'edd' ) : $discounts['exp_date'] ) ) );
-					WP_CLI::line( sprintf( __( 'Status: %s', 'edd' ), ucwords( $discounts['status'] ) ) );
+			if( array_key_exists( 0, $discount['product_requirements'] ) ) {
+				WP_CLI::line( __( 'Product Requirements:', 'edd' ) );
 
-					if( $verbose ) {
-						WP_CLI::line( '' );
-						if( array_key_exists( 0, $discounts['product_requirements'] ) ) {
-							WP_CLI::line( __( 'Product Requirements:', 'edd' ) );
-
-							foreach( $discounts['product_requirements'] as $req => $req_id ) {
-								WP_CLI::line( sprintf( __( '  Product: %s', 'edd' ), $req_id ) );
-							}
-						}
-
-						WP_CLI::line( '' );
-
-						WP_CLI::line( sprintf( __( 'Global Discount: %s', 'edd' ), ( empty( $discounts['global_discount'] ) ? 'False' : 'True' ) ) );
-						WP_CLI::line( sprintf( __( 'Single Use: %s', 'edd' ), ( empty( $discounts['single_use'] ) ? 'False' : 'True' ) ) );
-
-					}
+				foreach( $discount['product_requirements'] as $req => $req_id ) {
+					WP_CLI::line( sprintf( __( '  Product: %s', 'edd' ), $req_id ) );
 				}
 			}
-		} else {
-			$discounts = $this->api->get_discounts();
 
-			if( $raw ) {
-				print_r( $discounts );
-			} else {
-				foreach( $discounts['discounts'] as $discount ) {
-					WP_CLI::line( WP_CLI::colorize( '%G' . $discount['ID'] . '%N' ) );
-					WP_CLI::line( sprintf( __( 'Name: %s', 'edd' ), $discount['name'] ) );
-					WP_CLI::line( sprintf( __( 'Code: %s', 'edd' ), $discount['code'] ) );
+			WP_CLI::line( '' );
 
-					if( $discount['type'] == 'percent' ) {
-						$amount = $discount['amount'] . '%';
-					} else {
-						$amount = ( $curr_pos == 'before' ? edd_get_currency() . ' ' : '' ) . edd_format_amount( $discount['amount'] ) . ( $curr_pos == 'after' ? ' ' . edd_get_currency() : '' );
-					}
+			WP_CLI::line( sprintf( __( 'Global Discount: %s', 'edd' ), ( empty( $discount['global_discount'] ) ? 'False' : 'True' ) ) );
+			WP_CLI::line( sprintf( __( 'Single Use: %s', 'edd' ), ( empty( $discount['single_use'] ) ? 'False' : 'True' ) ) );
 
-					WP_CLI::line( sprintf( __( 'Amount: %s', 'edd' ), $amount ) );
-					WP_CLI::line( sprintf( __( 'Uses: %s', 'edd' ), $discount['uses'] ) );
-					WP_CLI::line( sprintf( __( 'Max Uses: %s', 'edd' ), ( $discount['max_uses'] == '0' ? __( 'Unlimited', 'edd' ) : $discount['max_uses'] ) ) );
-					WP_CLI::line( sprintf( __( 'Start Date: %s', 'edd' ), ( empty( $discount['start_date'] ) ? __( 'No Start Date', 'edd' ) : $discount['start_date'] ) ) );
-					WP_CLI::line( sprintf( __( 'Expiration Date: %s', 'edd' ), ( empty( $discount['exp_date'] ) ? __( 'No Expiration', 'edd' ) : $discount['exp_date'] ) ) );
-					WP_CLI::line( sprintf( __( 'Status: %s', 'edd' ), ucwords( $discount['status'] ) ) );
-
-					if( $verbose ) {
-						WP_CLI::line( '' );
-
-						if( array_key_exists( 0, $discount['product_requirements'] ) ) {
-							WP_CLI::line( __( 'Product Requirements:', 'edd' ) );
-
-							foreach( $discount['product_requirements'] as $req => $req_id ) {
-								WP_CLI::line( sprintf( __( '  Product: %s', 'edd' ), $req_id ) );
-							}
-						}
-
-						WP_CLI::line( '' );
-
-						WP_CLI::line( sprintf( __( 'Global Discount: %s', 'edd' ), ( empty( $discount['global_discount'] ) ? 'False' : 'True' ) ) );
-						WP_CLI::line( sprintf( __( 'Single Use: %s', 'edd' ), ( empty( $discount['single_use'] ) ? 'False' : 'True' ) ) );
-					}
-
-					WP_CLI::line( '' );
-				}
-			}
+			WP_CLI::line( '' );
 		}
 	}
 }
