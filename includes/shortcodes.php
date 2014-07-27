@@ -24,21 +24,20 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_download_shortcode( $atts, $content = null ) {
 	global $post, $edd_options;
-	
-	$post_id = is_object( $post ) ? $post->ID : 0;
 
-	$atts = shortcode_atts( array(
-		'id' 	        => $post_id,
-		'sku'			=> '',
-		'price'         => '1',
-		'paypal_direct' => '0',
-		'text'	        => isset( $edd_options[ 'add_to_cart_text' ] )  && $edd_options[ 'add_to_cart_text' ]    != '' ? $edd_options[ 'add_to_cart_text' ] : __( 'Purchase', 'edd' ),
-		'style'         => isset( $edd_options[ 'button_style' ] ) 	 	? $edd_options[ 'button_style' ] 		: 'button',
-		'color'         => isset( $edd_options[ 'checkout_color' ] ) 	? $edd_options[ 'checkout_color' ] 		: 'blue',
-		'class'         => 'edd-submit',
-		'form_id'       => ''
-	),
-	$atts, 'purchase_link' );
+	extract( shortcode_atts( array(
+			'id' 	        => $post->ID,
+			'sku'			=> '',
+			'price'         => '1',
+			'paypal_direct' => '0',
+			'text'	        => isset( $edd_options[ 'add_to_cart_text' ] )  && $edd_options[ 'add_to_cart_text' ]    != '' ? $edd_options[ 'add_to_cart_text' ] : __( 'Purchase', 'edd' ),
+			'style'         => isset( $edd_options[ 'button_style' ] ) 	 	? $edd_options[ 'button_style' ] 		: 'button',
+			'color'         => isset( $edd_options[ 'checkout_color' ] ) 	? $edd_options[ 'checkout_color' ] 		: 'blue',
+			'class'         => 'edd-submit',
+			'form_id'       => ''
+		),
+		$atts, 'purchase_link' )
+	);
 
 	// Override color if color == inherit
 	if( isset( $atts['color'] )	)
@@ -138,10 +137,11 @@ add_shortcode( 'download_cart', 'edd_cart_shortcode' );
  * @return string
  */
 function edd_login_form_shortcode( $atts, $content = null ) {
-	$args = shortcode_atts( array(
-		'redirect' => '',
-	), $atts, 'edd_login' );
-	return edd_login_form( $args['redirect'] );
+	extract( shortcode_atts( array(
+			'redirect' => '',
+		), $atts, 'edd_login' )
+	);
+	return edd_login_form( $redirect );
 }
 add_shortcode( 'edd_login', 'edd_login_form_shortcode' );
 
@@ -157,18 +157,11 @@ add_shortcode( 'edd_login', 'edd_login_form_shortcode' );
  * @return string
  */
 function edd_register_form_shortcode( $atts, $content = null ) {
-<<<<<<< HEAD
-	$args = shortcode_atts( array(
-		'redirect' => '',
-	), $atts, 'edd_register' );
-	return edd_register_form( $args['redirect'] );
-=======
-	$atts = shortcode_atts( array(
-		'redirect' => '',
-	), $atts, 'edd_register' );
-
-	return edd_register_form( $atts['redirect'] );
->>>>>>> Remove extract, fix SNAFU
+	extract( shortcode_atts( array(
+			'redirect' => '',
+		), $atts, 'edd_register' )
+	);
+	return edd_register_form( $redirect );
 }
 add_shortcode( 'edd_register', 'edd_register_form_shortcode' );
 
@@ -231,28 +224,19 @@ add_shortcode( 'download_discounts', 'edd_discounts_shortcode' );
 function edd_purchase_collection_shortcode( $atts, $content = null ) {
 	global $edd_options;
 
-<<<<<<< HEAD
-	$args = shortcode_atts( array(
-=======
-	$atts = shortcode_atts( array(
->>>>>>> Remove extract, fix SNAFU
-		'taxonomy'	=> '',
-		'terms'		=> '',
-		'text'		=> __('Purchase All Items', 'edd'),
-		'style'		=> isset( $edd_options['button_style'] ) ? $edd_options['button_style'] : 'button',
-		'color'		=> isset( $edd_options['checkout_color'] ) ? $edd_options['checkout_color'] : 'blue',
-		'class'		=> 'edd-submit'
-	), $atts, 'purchase_collection' );
+	extract( shortcode_atts( array(
+			'taxonomy'	=> '',
+			'terms'		=> '',
+			'text'		=> __('Purchase All Items', 'edd'),
+			'style'		=> isset( $edd_options['button_style'] ) ? $edd_options['button_style'] : 'button',
+			'color'		=> isset( $edd_options['checkout_color'] ) ? $edd_options['checkout_color'] : 'blue',
+			'class'		=> 'edd-submit'
+		), $atts, 'purchase_collection' )
+	);
 
-<<<<<<< HEAD
-	$button_display = implode( ' ', array( $args['style'], $args['color'], $args['class'] ) );
+	$button_display = implode( ' ', array( $style, $color, $class ) );
 
-	return '<a href="' . add_query_arg( array( 'edd_action' => 'purchase_collection', 'taxonomy' => $args['taxonomy'], 'terms' => $args['terms'] ) ) . '" class="' . $button_display . '">' . $args['text'] . '</a>';
-=======
-	$button_display = implode( ' ', array( $atts['style'], $atts['color'], $atts['class'] ) );
-
-	return '<a href="' . add_query_arg( array( 'edd_action' => 'purchase_collection', 'taxonomy' => $atts['taxonomy'], 'terms' => $atts['terms'] ) ) . '" class="' . $atts['button_display'] . '">' . $atts['text'] . '</a>';
->>>>>>> Remove extract, fix SNAFU
+	return '<a href="' . add_query_arg( array( 'edd_action' => 'purchase_collection', 'taxonomy' => $taxonomy, 'terms' => $terms ) ) . '" class="' . $button_display . '">' . $text . '</a>';
 }
 add_shortcode( 'purchase_collection', 'edd_purchase_collection_shortcode' );
 
@@ -271,42 +255,39 @@ add_shortcode( 'purchase_collection', 'edd_purchase_collection_shortcode' );
  * @return string $display Output generated from the downloads queried
  */
 function edd_downloads_query( $atts, $content = null ) {
-<<<<<<< HEAD
-
-=======
->>>>>>> Remove extract, fix SNAFU
-	$atts = shortcode_atts( array(
-		'category'         => '',
-		'exclude_category' => '',
-		'tags'             => '',
-		'exclude_tags'     => '',
-		'relation'         => 'AND',
-		'number'           => 10,
-		'price'            => 'no',
-		'excerpt'          => 'yes',
-		'full_content'     => 'no',
-		'buy_button'       => 'yes',
-		'columns'          => 3,
-		'thumbnails'       => 'true',
-		'orderby'          => 'post_date',
-		'order'            => 'DESC',
-		'ids'              => ''
-	), $atts, 'downloads' );
+	extract( shortcode_atts( array(
+			'category'         => '',
+			'exclude_category' => '',
+			'tags'             => '',
+			'exclude_tags'     => '',
+			'relation'         => 'AND',
+			'number'           => 10,
+			'price'            => 'no',
+			'excerpt'          => 'yes',
+			'full_content'     => 'no',
+			'buy_button'       => 'yes',
+			'columns'          => 3,
+			'thumbnails'       => 'true',
+			'orderby'          => 'post_date',
+			'order'            => 'DESC',
+			'ids'              => ''
+		), $atts, 'downloads' )
+	);
 
 	$query = array(
 		'post_type'      => 'download',
-		'posts_per_page' => (int) $atts['number'],
-		'orderby'        => $atts['orderby'],
-		'order'          => $atts['order']
+		'posts_per_page' => (int) $number,
+		'orderby'        => $orderby,
+		'order'          => $order
 	);
 
 	if ( $query['posts_per_page'] < -1 ) {
 		$query['posts_per_page'] = abs( $query['posts_per_page'] );
 	}
 
-	switch ( $atts['orderby'] ) {
+	switch ( $orderby ) {
 		case 'price':
-			$atts['orderby']   = 'meta_value';
+			$orderby           = 'meta_value';
 			$query['meta_key'] = 'edd_price';
 			$query['orderby']  = 'meta_value_num';
 		break;
@@ -328,13 +309,13 @@ function edd_downloads_query( $atts, $content = null ) {
 		break;
 	}
 
-	if ( $atts['tags'] || $atts['category'] || $atts['exclude_category'] || $atts['exclude_tags'] ) {
+	if ( $tags || $category || $exclude_category || $exclude_tags ) {
 		$query['tax_query'] = array(
-			'relation'     => $atts['relation']
+			'relation'     => $relation
 		);
 
-		if ( $atts['tags'] ) {
-			$tag_list	= explode( ',', $atts['tags'] );
+		if ( $tags ) {
+			$tag_list	= explode( ',', $tags );
 			$_tax_tags	= array();
 
 			foreach( $tag_list as $tag ) {
@@ -350,18 +331,18 @@ function edd_downloads_query( $atts, $content = null ) {
 					$term_id = $term->term_id;
 				}
 
-				$_tax_tags[] = $term_id;
+				$_tax_cats[] = $term_id;
 			}
 
 			$query['tax_query'][] = array(
 				'taxonomy' => 'download_tag',
 				'field'    => 'term_id',
-				'terms'    => $_tax_tags
+				'terms'    => $_tax_cats
 			);
 		}
 
-		if ( $atts['category'] ) {
-			$categories = explode( ',', $atts['category'] );
+		if ( $category ) {
+			$categories = explode( ',', $category );
 			$_tax_cats	= array();
 
 			foreach( $categories as $category ) {
@@ -387,8 +368,8 @@ function edd_downloads_query( $atts, $content = null ) {
 			);
 		}
 
-		if ( $atts['exclude_category'] ) {
-			$categories = explode( ',', $atts['exclude_category'] );
+		if ( $exclude_category ) {
+			$categories = explode( ',', $category );
 			$_tax_cats	= array();
 
 			foreach( $categories as $category ) {
@@ -415,8 +396,8 @@ function edd_downloads_query( $atts, $content = null ) {
 			);
 		}
 
-		if ( $atts['exclude_tags'] ) {
-			$tag_list	= explode( ',', $atts['exclude_tags'] );
+		if ( $exclude_tags ) {
+			$tag_list	= explode( ',', $tags );
 			$_tax_tags	= array();
 
 			foreach( $tag_list as $tag ) {
@@ -432,7 +413,7 @@ function edd_downloads_query( $atts, $content = null ) {
 					$term_id = $term->term_id;
 				}
 
-				$_tax_tags[] = $term_id;
+				$_tax_cats[] = $term_id;
 			}
 
 			$query['tax_query'][] = array(
@@ -444,8 +425,8 @@ function edd_downloads_query( $atts, $content = null ) {
 		}
 	}
 
-	if( ! empty( $atts['ids'] ) )
-		$query['post__in'] = explode( ',', $atts['ids'] );
+	if( ! empty( $ids ) )
+		$query['post__in'] = explode( ',', $ids );
 
 	if ( get_query_var( 'paged' ) )
 		$query['paged'] = get_query_var('paged');
@@ -454,7 +435,7 @@ function edd_downloads_query( $atts, $content = null ) {
 	else
 		$query['paged'] = 1;
 
-	switch( intval( $atts['columns'] ) ) :
+	switch( intval( $columns ) ) :
 	    case 0:
 	        $column_width = 'inherit'; break;
 		case 1:
@@ -477,7 +458,7 @@ function edd_downloads_query( $atts, $content = null ) {
 	$downloads = new WP_Query( $query );
 	if ( $downloads->have_posts() ) :
 		$i = 1;
-		$wrapper_class = 'edd_download_columns_' . $atts['columns'];
+		$wrapper_class = 'edd_download_columns_' . $columns;
 		ob_start(); ?>
 		<div class="edd_downloads_list <?php echo apply_filters( 'edd_downloads_list_wrapper_class', $wrapper_class, $atts ); ?>">
 			<?php while ( $downloads->have_posts() ) : $downloads->the_post(); ?>
@@ -487,21 +468,21 @@ function edd_downloads_query( $atts, $content = null ) {
 
 						do_action( 'edd_download_before' );
 
-						if ( 'false' != $atts['thumbnails'] ) :
+						if ( 'false' != $thumbnails ) :
 							edd_get_template_part( 'shortcode', 'content-image' );
 						endif;
 
 						edd_get_template_part( 'shortcode', 'content-title' );
 
-						if ( $atts['excerpt'] == 'yes' && $atts['full_content'] != 'yes' )
+						if ( $excerpt == 'yes' && $full_content != 'yes' )
 							edd_get_template_part( 'shortcode', 'content-excerpt' );
-						else if ( $atts['full_content'] == 'yes' )
+						else if ( $full_content == 'yes' )
 							edd_get_template_part( 'shortcode', 'content-full' );
 
-						if ( $atts['price'] == 'yes' )
+						if ( $price == 'yes' )
 							edd_get_template_part( 'shortcode', 'content-price' );
 
-						if ( $atts['buy_button'] == 'yes' )
+						if ( $buy_button == 'yes' )
 							edd_get_template_part( 'shortcode', 'content-cart-button' );
 
 						do_action( 'edd_download_after' );
@@ -509,7 +490,7 @@ function edd_downloads_query( $atts, $content = null ) {
 						?>
 					</div>
 				</div>
-				<?php if ( $atts['columns'] != 0 && $i % $atts['columns'] == 0 ) { ?><div style="clear:both;"></div><?php } ?>
+				<?php if ( $columns != 0 && $i % $columns == 0 ) { ?><div style="clear:both;"></div><?php } ?>
 			<?php $i++; endwhile; ?>
 
 			<div style="clear:both;"></div>
@@ -544,7 +525,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		$display = sprintf( _x( 'No %s found', 'download post type name', 'edd' ), edd_get_label_plural() );
 	endif;
 
-	return apply_filters( 'downloads_shortcode', $display, $atts, $atts['buy_button'], $atts['columns'], $column_width, $downloads, $atts['excerpt'], $atts['full_content'], $atts['price'], $atts['thumbnails'], $query );
+	return apply_filters( 'downloads_shortcode', $display, $atts, $buy_button, $columns, $column_width, $downloads, $excerpt, $full_content, $price, $thumbnails, $query );
 }
 add_shortcode( 'downloads', 'edd_downloads_query' );
 
@@ -559,20 +540,15 @@ add_shortcode( 'downloads', 'edd_downloads_query' );
  * @return string
  */
 function edd_download_price_shortcode( $atts, $content = null ) {
-	$atts = shortcode_atts( array(
-		'id' => NULL,
-	), $atts, 'edd_price' );
+	extract( shortcode_atts( array(
+			'id' => NULL,
+		), $atts, 'edd_price' )
+	);
 
-<<<<<<< HEAD
-	if ( is_null( $atts['id'] ) ) {
+	if ( is_null( $id ) )
 		$id = get_the_ID();
-	}
-=======
-	if ( is_null( $atts['id'] ) )
-		$atts['id'] = get_the_ID();
->>>>>>> Remove extract, fix SNAFU
 
-	return edd_price( $atts['id'], false );
+	return edd_price( $id, false );
 }
 add_shortcode( 'edd_price', 'edd_download_price_shortcode' );
 
