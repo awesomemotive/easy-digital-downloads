@@ -208,8 +208,8 @@ class EDD_CLI extends WP_CLI_Command {
 
 					foreach( $product['pricing'] as $price => $value ) {
 
-						if( 'amount' == $price ) {
-							continue;
+						if( 'amount' != $price ) {
+							$price = $price . ' - ';
 						}
 
 						$pricing[] = $price . ':' . edd_format_amount( $value );
