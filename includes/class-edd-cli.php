@@ -241,7 +241,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 		foreach( $customers['customers'] as $customer ) {
 			WP_CLI::line( WP_CLI::colorize( '%G' . $customer['info']['email'] . '%N' ) );
-			WP_CLI::line( sprintf( __( 'Customer ID: %s', 'edd' ), $customer['info']['id'] ) );
+			WP_CLI::line( sprintf( __( 'Customer User ID: %s', 'edd' ), $customer['info']['id'] ) );
 			WP_CLI::line( sprintf( __( 'Username: %s', 'edd' ), $customer['info']['username'] ) );
 			WP_CLI::line( sprintf( __( 'Display Name: %s', 'edd' ), $customer['info']['display_name'] ) );
 
