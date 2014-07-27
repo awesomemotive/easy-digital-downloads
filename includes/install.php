@@ -107,6 +107,9 @@ function edd_install() {
 		$options['failure_page']          = $failed;
 		$options['purchase_history_page'] = $history;
 
+		// Add a temporary option to note that EDD pages have been created
+		set_transient( '_edd_installed', $options, 30 );
+
 	}
 
 	// Populate some default values
@@ -133,8 +136,8 @@ function edd_install() {
 	$roles->add_roles();
 	$roles->add_caps();
 
-	// Add a temporary option to note that EDD pages have been created
-	set_transient( '_edd_installed', $options, 30 );
+	// Check for PHP Session support, and enable if available
+	EDD()->session->use_php_sessions();
 
 	// Bail if activating from network, or bulk
 	if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
@@ -167,9 +170,6 @@ function edd_after_install() {
 	if ( false === $edd_options ) {
 		return;
 	}
-
-	// Create the customers database
-	@EDD()->customers->create_table();
 
 	// Delete the transient
 	delete_transient( '_edd_installed' );
