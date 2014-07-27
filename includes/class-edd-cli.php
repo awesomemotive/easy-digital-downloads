@@ -283,48 +283,43 @@ class EDD_CLI extends WP_CLI_Command {
 	 * wp edd sales --raw
 	 */
 	public function sales( $args, $assoc_args ) {
-		$verbose	= ( array_key_exists( 'verbose', $assoc_args ) ? true : false );
-		$raw		= ( array_key_exists( 'raw', $assoc_args ) ? true : false );
-		$curr_pos	= edd_get_option( 'currency_position', 'before' );
 
 		$sales = $this->api->get_recent_sales();
 
-		if( $raw ) {
-			print_r( $sales );
-		} else {
-			foreach( $sales['sales'] as $sale ) {
-				WP_CLI::line( WP_CLI::colorize( '%G' . $sale['ID'] . '%N' ) );
-				WP_CLI::line( sprintf( __( 'Purchase Key: %s', 'edd' ), $sale['key'] ) );
-				WP_CLI::line( sprintf( __( 'Email: %s', 'edd' ), $sale['email'] ) );
-				WP_CLI::line( sprintf( __( 'Date: %s', 'edd' ), $sale['date'] ) );
-				WP_CLI::line( sprintf( __( 'Subtotal: %s', 'edd' ), ( $curr_pos == 'before' ? edd_get_currency() . ' ' : '' ) . edd_format_amount( $sale['subtotal'] ) . ( $curr_pos == 'after' ? ' ' . edd_get_currency() : '' ) ) );
-				WP_CLI::line( sprintf( __( 'Tax: %s', 'edd' ), ( $curr_pos == 'before' ? edd_get_currency() . ' ' : '' ) . edd_format_amount( $sale['tax'] ) . ( $curr_pos == 'after' ? ' ' . edd_get_currency() : '' ) ) );
+		if( empty( $sales ) ) {
+			WP_CLI::error( __( 'No sales found', 'edd' ) );
+		}
 
-				if( array_key_exists( 0, $sale['fees'] ) ) {
-					WP_CLI::line( __( 'Fees:', 'edd' ) );
+		foreach( $sales['sales'] as $sale ) {
+			WP_CLI::line( WP_CLI::colorize( '%G' . $sale['ID'] . '%N' ) );
+			WP_CLI::line( sprintf( __( 'Purchase Key: %s', 'edd' ), $sale['key'] ) );
+			WP_CLI::line( sprintf( __( 'Email: %s', 'edd' ), $sale['email'] ) );
+			WP_CLI::line( sprintf( __( 'Date: %s', 'edd' ), $sale['date'] ) );
+			WP_CLI::line( sprintf( __( 'Subtotal: %s', 'edd' ), edd_format_amount( $sale['subtotal'] ) . ' ' . edd_get_currency() ) );
+			WP_CLI::line( sprintf( __( 'Tax: %s', 'edd' ), edd_format_amount( $sale['tax'] ) . ' ' . edd_get_currency() ) );
 
-					foreach( $sale['fees'] as $fee ) {
-						WP_CLI::line( sprintf( __( '  Fee: %s - %s', 'edd' ), $fee['label'], ( $curr_pos == 'before' ? edd_get_currency() . ' ' : '' ) . edd_format_amount( $fee['amount'] ) . ( $curr_pos == 'after' ? ' ' . edd_get_currency() : '' ) ) );
-					}
+			if( array_key_exists( 0, $sale['fees'] ) ) {
+				WP_CLI::line( __( 'Fees:', 'edd' ) );
+
+				foreach( $sale['fees'] as $fee ) {
+					WP_CLI::line( sprintf( __( '  Fee: %s - %s', 'edd' ), edd_format_amount( $fee['amount'] ) . ' ' . edd_get_currency() ) );
 				}
-
-				WP_CLI::line( sprintf( __( 'Total: %s', 'edd' ), ( $curr_pos == 'before' ? edd_get_currency() . ' ' : '' ) . edd_format_amount( $sale['total'] ) . ( $curr_pos == 'after' ? ' ' . edd_get_currency() : '' ) ) );
-
-				if( $verbose ) {
-					WP_CLI::line( '' );
-					WP_CLI::line( sprintf( __( 'Gateway: %s', 'edd' ), $sale['gateway'] ) );
-
-					if( array_key_exists( 0, $sale['products'] ) ) {
-						WP_CLI::line( __( 'Products:', 'edd' ) );
-
-						foreach( $sale['products'] as $product ) {
-							WP_CLI::line( sprintf( __( '  Product: %s - %s %s', 'edd' ), $product['name'], ( $curr_pos == 'before' ? edd_get_currency() . ' ' : '' ) . edd_format_amount( $product['price'] ) . ( $curr_pos == 'after' ? ' ' . edd_get_currency() : '' ), !empty( $product['price_name'] ) ? '(' . $product['price_name'] . ')' : '' ) );
-						}
-					}
-				}
-
-				WP_CLI::line( '' );
 			}
+
+			WP_CLI::line( sprintf( __( 'Total: %s', 'edd' ), edd_format_amount( $sale['total'] ) . ' ' . edd_get_currency() ) );
+			WP_CLI::line( '' );
+			WP_CLI::line( sprintf( __( 'Gateway: %s', 'edd' ), $sale['gateway'] ) );
+
+			if( array_key_exists( 0, $sale['products'] ) ) {
+				WP_CLI::line( __( 'Products:', 'edd' ) );
+
+				foreach( $sale['products'] as $product ) {
+					$price_name = ! empty( $product['price_name'] ) ? ' (' . $product['price_name'] . ')' : '';
+					WP_CLI::line( sprintf( __( '  Product: %s - %s %s', 'edd' ), $product['name'], edd_format_amount( $product['price'] ) . ' ' . edd_get_currency() . $price_name ) );
+				}
+			}
+
+			WP_CLI::line( '' );
 		}
 	}
 
