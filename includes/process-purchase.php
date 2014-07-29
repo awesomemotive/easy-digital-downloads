@@ -320,16 +320,18 @@ function edd_purchase_form_validate_agree_to_terms() {
  * @return      array
  */
 function edd_purchase_form_required_fields() {
-	$required_fields = array(
-		'edd_email' => array(
+	$required_fields = array();
+
+	if ( ! is_user_logged_in() ) {
+		$required_fields['edd_email'] = array(
 			'error_id' => 'invalid_email',
 			'error_message' => __( 'Please enter a valid email address', 'edd' )
-		),
-		'edd_first' => array(
+		);
+		$required_fields['edd_first'] = array(
 			'error_id' => 'invalid_first_name',
 			'error_message' => __( 'Please enter your first name', 'edd' )
-		)
-	);
+		);
+	}
 
 	// Let payment gateways and other extensions determine if address fields should be required
 	$require_address = apply_filters( 'edd_require_billing_address', edd_use_taxes() && edd_get_cart_total() );
@@ -391,7 +393,7 @@ function edd_purchase_form_validate_logged_in_user() {
 				'user_id'    => $user_ID,
 				'user_email' => isset( $_POST['edd_email'] ) ? sanitize_email( $_POST['edd_email'] ) : $user_data->user_email,
 				'user_first' => isset( $_POST['edd_first'] ) && ! empty( $_POST['edd_first'] ) ? sanitize_text_field( $_POST['edd_first'] ) : $user_data->first_name,
-				'user_last'  => isset( $_POST['edd_last'] ) && ! empty( $_POST['edd_last']  ) ? sanitize_text_field( $_POST['edd_last']  ) : $user_data->last_name,
+				'user_last'  => isset( $_POST['edd_last'] ) && ! empty( $_POST['edd_last'] ) ? sanitize_text_field( $_POST['edd_last'] ) : $user_data->last_name
 			);
 
 			if ( ! is_email( $valid_user_data['user_email'] ) ) {
