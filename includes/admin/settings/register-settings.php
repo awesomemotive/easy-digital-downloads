@@ -810,7 +810,7 @@ function edd_get_settings_tabs() {
 	$tabs['styles']   = __( 'Styles', 'edd' );
 	$tabs['taxes']    = __( 'Taxes', 'edd' );
 
-	if( ! empty( $settings['extensions'] ) ) {
+	if( ! empty( $settings['extensions'] ) || has_action( 'edd_settings_tab_section_extensions' ) ) {
 		$tabs['extensions'] = __( 'Extensions', 'edd' );
 	}
 	if( ! empty( $settings['licenses'] ) ) {
@@ -820,6 +820,28 @@ function edd_get_settings_tabs() {
 	$tabs['misc']      = __( 'Misc', 'edd' );
 
 	return apply_filters( 'edd_settings_tabs', $tabs );
+}
+
+/**
+ * Retrieve settings tab sections
+ *
+ * @since 2.1
+ * @param string $tab The active tab
+ * @return array $sections The sections for this tab
+ */
+function edd_get_settings_tabs_sections( $tab ) {
+
+	$sections = array();
+
+	foreach( edd_get_settings_tabs() as $tab_id => $tab_name ) {
+		$sections[$tab_id] = array();
+	}
+
+	$sections['extensions']['general'] = __( 'General', 'edd' );
+
+	$sections = apply_filters( 'edd_settings_tab_sections', $sections );
+
+	return apply_filters( 'edd_settings_tab_section_' . $tab, $sections[$tab] );
 }
 
 /**
@@ -918,17 +940,17 @@ function edd_payment_icons_callback( $args ) {
 
 	if ( ! empty( $args['options'] ) ) {
 		foreach( $args['options'] as $key => $option ) {
-			
-			if( isset( $edd_options[$args['id']][$key] ) ) { 
+
+			if( isset( $edd_options[$args['id']][$key] ) ) {
 				$enabled = $option;
 			} else {
-				$enabled = NULL; 
+				$enabled = NULL;
 			}
-			
-			echo '<label for="edd_settings[' . $args['id'] . '][' . $key . ']" style="margin-right:10px;line-height:16px;height:16px;display:inline-block;">'; 
-			
+
+			echo '<label for="edd_settings[' . $args['id'] . '][' . $key . ']" style="margin-right:10px;line-height:16px;height:16px;display:inline-block;">';
+
 				echo '<input name="edd_settings[' . $args['id'] . '][' . $key . ']" id="edd_settings[' . $args['id'] . '][' . $key . ']" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked( $option, $enabled, false ) . '/>&nbsp;';
-				
+
 				if( edd_string_is_image_url( $option ) ) {
 
 					echo '<img class="payment-icon" src="' . esc_url( $option ) . '" style="width:32px;height:24px;"/>';
@@ -963,7 +985,7 @@ function edd_payment_icons_callback( $args ) {
 
 
 			echo $option . '</label>';
-		
+
 		}
 		echo '<p class="description" style="margin-top:16px;">' . $args['desc'] . '</p>';
 	}

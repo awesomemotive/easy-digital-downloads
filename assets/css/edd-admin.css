@@ -226,6 +226,15 @@ td.edd_order_price { text-align: right; }
 #edd_tax_rates .edd_tax_rate { width: 80px; }
 #edd_tax_rates th { padding: 15px 10px; }
 
+/* Settings tab settings styles
+-------------------------------------------------------------- */
+.nav-section-wrapper { margin: 8px 0 0; padding: 0; font-size: 13px; list-style: none; }
+.nav-section-wrapper li { float: left; }
+.nav-section-wrapper li:after { content: " | "; }
+.nav-section-wrapper li:last-child:after { content: none; }
+.nav-section-wrapper a.nav-section { line-height: 2; padding: .2em; text-decoration: none; }
+.nav-section-wrapper a.nav-section-active { font-weight: 600; }
+
 /* Taxonomy styles
 -------------------------------------------------------------- */
 .post-type-download .fixed .column-name { width: 27%; }

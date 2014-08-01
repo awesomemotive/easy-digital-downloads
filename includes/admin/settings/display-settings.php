@@ -47,10 +47,36 @@ function edd_options_page() {
 			?>
 		</h2>
 		<div id="tab_container">
+			<?php $sections = edd_get_settings_tabs_sections( $active_tab ); ?>
+			<?php if( ! empty( $sections ) ) { ?>
+				<?php $active_section = isset( $_GET['section'] ) && array_key_exists( $_GET['section'], $sections ) ? $_GET['section'] : 'general'; ?>
+				<div class="nav-section-wrapper">
+					<?php
+					foreach( $sections as $section_id => $section_name ) {
+						$section_url = add_query_arg( array(
+							'settings-updated' => false,
+							'section' => $section_id
+						) );
+
+						$active = $active_section == $section_id ? ' nav-section-active' : '';
+
+						echo '<li>';
+						echo '<a href="' . esc_url( $section_url ) . '" title="' . esc_attr( $section_name ) . '" class="nav-section' . $active . '">';
+						echo esc_html( $section_name );
+						echo '</a>';
+						echo '</li>';
+					}
+					?>
+				</div>
+			<?php } ?>
 			<form method="post" action="options.php">
 				<table class="form-table">
 				<?php
 				settings_fields( 'edd_settings' );
+				if( ! empty( $sections ) ) {
+					$settings = edd_get_registered_settings();
+					do_settings_fields( 'edd_settings_' . $active_tab, 'edd_settings_' . $active_tab . '_' . $active_section );
+				}
 				do_settings_fields( 'edd_settings_' . $active_tab, 'edd_settings_' . $active_tab );
 				?>
 				</table>
