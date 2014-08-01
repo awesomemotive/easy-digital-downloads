@@ -48,7 +48,7 @@ function edd_options_page() {
 		</h2>
 		<div id="tab_container">
 			<?php $sections = edd_get_settings_tabs_sections( $active_tab ); ?>
-			<?php if( ! empty( $sections ) ) { ?>
+			<?php if( is_array( $sections ) && count( $sections ) > 1 ) { ?>
 				<?php $active_section = isset( $_GET['section'] ) && array_key_exists( $_GET['section'], $sections ) ? $_GET['section'] : 'general'; ?>
 				<div class="nav-section-wrapper">
 					<?php
@@ -73,11 +73,11 @@ function edd_options_page() {
 				<table class="form-table">
 				<?php
 				settings_fields( 'edd_settings' );
-				if( ! empty( $sections ) ) {
-					$settings = edd_get_registered_settings();
-					do_settings_fields( 'edd_settings_' . $active_tab, 'edd_settings_' . $active_tab . '_' . $active_section );
+				if( is_array( $sections ) && count( $sections ) > 1 && $active_section != 'general' ) {
+					do_settings_fields( 'edd_settings_' . $active_tab, 'edd_settings_' . $active_tab );
+				} else {
+					do_settings_fields( 'edd_settings_' . $active_tab, 'edd_settings_' . $active_tab );
 				}
-				do_settings_fields( 'edd_settings_' . $active_tab, 'edd_settings_' . $active_tab );
 				?>
 				</table>
 				<?php submit_button(); ?>

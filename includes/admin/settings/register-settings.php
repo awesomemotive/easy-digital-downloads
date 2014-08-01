@@ -835,9 +835,8 @@ function edd_get_settings_tabs_sections( $tab ) {
 
 	foreach( edd_get_settings_tabs() as $tab_id => $tab_name ) {
 		$sections[$tab_id] = array();
+		$sections[$tab_id]['general'] = __( 'General', 'edd' );
 	}
-
-	$sections['extensions']['general'] = __( 'General', 'edd' );
 
 	$sections = apply_filters( 'edd_settings_tab_sections', $sections );
 
