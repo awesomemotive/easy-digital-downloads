@@ -327,6 +327,9 @@ function edd_purchase_form_required_fields() {
 			'error_id' => 'invalid_email',
 			'error_message' => __( 'Please enter a valid email address', 'edd' )
 		);
+	}
+
+	if ( ! is_user_logged_in() || ! wp_get_current_user()->user_firstname ) {
 		$required_fields['edd_first'] = array(
 			'error_id' => 'invalid_first_name',
 			'error_message' => __( 'Please enter your first name', 'edd' )
