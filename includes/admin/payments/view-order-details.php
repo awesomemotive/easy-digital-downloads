@@ -32,13 +32,14 @@ if ( !is_object( $item ) || $item->post_type != 'edd_payment' ) {
     wp_die( __( 'The specified ID does not belong to a payment. Please try again', 'edd' ), __( 'Error', 'edd' ) );
 }
 
-$payment_meta = edd_get_payment_meta( $payment_id );
-$cart_items   = edd_get_payment_meta_cart_details( $payment_id );
-$user_id      = edd_get_payment_user_id( $payment_id );
-$payment_date = strtotime( $item->post_date );
-$unlimited    = edd_payment_has_unlimited_downloads( $payment_id );
-$user_info    = edd_get_payment_meta_user_info( $payment_id );
-$address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array( 'line1' => '', 'line2' => '', 'city' => '', 'country' => '', 'state' => '', 'zip' => '' );
+$payment_meta   = edd_get_payment_meta( $payment_id );
+$transaction_id = edd_get_payment_transaction_id( $payment_id );
+$cart_items     = edd_get_payment_meta_cart_details( $payment_id );
+$user_id        = edd_get_payment_user_id( $payment_id );
+$payment_date   = strtotime( $item->post_date );
+$unlimited      = edd_payment_has_unlimited_downloads( $payment_id );
+$user_info      = edd_get_payment_meta_user_info( $payment_id );
+$address        = ! empty( $user_info['address'] ) ? $user_info['address'] : array( 'line1' => '', 'line2' => '', 'city' => '', 'country' => '', 'state' => '', 'zip' => '' );
 ?>
 <div class="wrap edd-wrap">
 	<h2><?php printf( __( 'Payment %s', 'edd' ), $number ); ?></h2>
@@ -105,7 +106,7 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 							<div id="edd-order-update" class="postbox edd-order-data">
 								
 								<h3 class="hndle">
-									<span><?php _e( 'Update Payment', 'edd' ); ?></span>
+									<span><?php _e( 'Payment Details', 'edd' ); ?></span>
 								</h3>
 								<div class="inside">
 									<div class="edd-admin-box">
@@ -130,9 +131,33 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 												<strong><?php _e( 'IP:', 'edd' ); ?></strong>&nbsp;
 												<span><?php esc_attr_e( edd_get_payment_user_ip( $payment_id )); ?></span>
 											</p>
-	
+
+											<?php
+											if ( $transaction_id ) { ?>
+											<p>
+												<strong><?php _e( 'Transaction ID:', 'edd' ); ?></strong>&nbsp;
+												<span><?php echo esc_attr_e( $transaction_id ); ?></span>
+											</p>
+											<?php } ?>
+
 										</div>
-	
+
+										<?php do_action( 'edd_view_order_details_update_inner', $payment_id ); ?>
+
+									</div><!-- /.column-container -->
+
+								</div><!-- /.inside -->
+
+							</div><!-- /#edd-order-data -->
+
+							<div id="edd-order-update" class="postbox edd-order-data">
+
+								<h3 class="hndle">
+									<span><?php _e( 'Update Payment', 'edd' ); ?></span>
+								</h3>
+								<div class="inside">
+									<div class="edd-admin-box">
+
 										<div class="edd-admin-box-inside">
 											<p>
 												<span class="label"><?php _e( 'Status:', 'edd' ); ?></span>&nbsp;
