@@ -393,6 +393,7 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 
 		if ( $payment_status == 'completed' || edd_is_test_mode() ) {
 			edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'edd' ) , $data['txn_id'] ) );
+			edd_set_payment_transaction_id( $payment_id, $data['txn_id'] );
 			edd_update_payment_status( $payment_id, 'publish' );
 		}
 	}
