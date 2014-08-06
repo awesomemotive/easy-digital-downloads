@@ -696,7 +696,7 @@ function edd_get_total_earnings() {
 		$total = 0; // Don't ever show negative earnings
 	}
 
-	return apply_filters( 'edd_total_earnings', round( $total, 2 ) );
+	return apply_filters( 'edd_total_earnings', round( $total, edd_currency_decimal_filter() ) );
 }
 
 /**
