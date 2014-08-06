@@ -18,7 +18,7 @@ class EDD_Cache_Helper {
 	 */
 	public function __construct() {
 
-		add_action( 'init', array( $this, 'init' ) );
+		add_action( 'init', array( $this, 'init' ), 0 );
 		add_action( 'admin_notices', array( $this, 'notices' ) );
 	}
 
