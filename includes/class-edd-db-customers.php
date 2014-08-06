@@ -371,7 +371,8 @@ class EDD_DB_Customers extends EDD_DB  {
 		`payment_ids` longtext NOT NULL,
 		`notes` longtext NOT NULL,
 		`date_created` datetime NOT NULL,
-		PRIMARY KEY  (id)
+		PRIMARY KEY  (id),
+		UNIQUE KEY user_id (user_id)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
 
 		dbDelta( $sql );
