@@ -66,13 +66,14 @@ function edd_get_ajax_url() {
  */
 function edd_ajax_remove_from_cart() {
 	if ( isset( $_POST['cart_item'] ) ) {
-
+		
 		edd_remove_from_cart( $_POST['cart_item'] );
 
 		$return = array(
 			'removed'  => 1,
 			'subtotal' => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
-			'total'    => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ), ENT_COMPAT, 'UTF-8' )
+			'total'    => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ), ENT_COMPAT, 'UTF-8' ),
+			'cart_quantity' => html_entity_decode( edd_get_cart_quantity() ),
 		);
 
 		echo json_encode( $return );
@@ -434,9 +435,9 @@ function edd_check_for_download_price_variations() {
 					$ajax_response .= '<option value="' . esc_attr( $key ) . '">' . esc_html( $price['name'] )  . '</option>';
 				}
 			$ajax_response .= '</select>';
-			echo $ajax_response;
 		}
 
+		echo $ajax_response;
 	}
 
 	edd_die();
