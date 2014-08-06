@@ -108,10 +108,23 @@ function edd_reports_graph() {
 
 			$i = $month_start;
 			while ( $i <= $month_end ) :
+
 				if ( $day_by_day ) :
-					$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $y );
-					$d 				= 1;
+
+					if( $i == $month_end ) {
+
+						$num_of_days = $dates['day_end'];
+
+					} else {
+
+						$num_of_days = cal_days_in_month( CAL_GREGORIAN, $i, $y );
+	
+					}
+
+					$d = $dates['day'];
+					
 					while ( $d <= $num_of_days ) :
+
 						$sales = edd_get_sales_by_date( $d, $i, $y );
 						$sales_totals += $sales;
 
@@ -121,20 +134,36 @@ function edd_reports_graph() {
 						$date = mktime( 0, 0, 0, $i, $d, $y ) * 1000;
 						$sales_data[] = array( $date, $sales );
 						$earnings_data[] = array( $date, $earnings );
-					$d++;
+						$d++;
+
 					endwhile;
+
 				else :
+
 					$sales = edd_get_sales_by_date( null, $i, $y );
 					$sales_totals += $sales;
 
 					$earnings = edd_get_earnings_by_date( null, $i, $y );
 					$earnings_totals += $earnings;
 
-					$date = mktime( 0, 0, 0, $i, 1, $y ) * 1000;
+					if( $i == $month_end ) {
+
+						$num_of_days = cal_days_in_month( CAL_GREGORIAN, $i, $y );
+
+					} else {
+
+						$num_of_days = 1;
+						
+					}
+
+					$date = mktime( 0, 0, 0, $i, $num_of_days, $y ) * 1000;
 					$sales_data[] = array( $date, $sales );
 					$earnings_data[] = array( $date, $earnings );
+
 				endif;
+
 				$i++;
+
 			endwhile;
 
 			$y++;
@@ -294,12 +323,24 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 
 			$i = $month_start;
 			while ( $i <= $month_end ) :
+
 				if ( $day_by_day ) :
-					$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $y );
-					$d 				= 1;
+
+					if( $i == $month_end ) {
+
+						$num_of_days = $dates['day_end'];
+
+					} else {
+
+						$num_of_days = cal_days_in_month( CAL_GREGORIAN, $i, $y );
+	
+					}
+
+					$d = $dates['day'];
 					while ( $d <= $num_of_days ) :
+
 						$date      = mktime( 0, 0, 0, $i, $d, $y );
-						$end_date  = mktime( 0, 0, 0, $i, $d + 1, $y );
+						$end_date  = mktime( 0, 0, 0, $i, $num_of_days, $y );
 			
 						$sales = $stats->get_sales( $download_id, $date, $end_date );
 						$sales_totals += $sales;
@@ -310,11 +351,16 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 						$sales_data[] = array( $date * 1000, $sales );
 						$earnings_data[] = array( $date * 1000, $earnings );
 					$d++;
+
 					endwhile;
+
 				else :
-					$date      = mktime( 0, 0, 0, $i, 1, $y );
-					$end_date  = mktime( 0, 0, 0, $i + 1, 1, $y );
-			
+
+					$num_of_days = cal_days_in_month( CAL_GREGORIAN, $i, $y );
+
+					$date        = mktime( 0, 0, 0, $i, 1, $y );
+					$end_date    = mktime( 0, 0, 0, $i + 1, $num_of_days, $y );
+
 					$sales = $stats->get_sales( $download_id, $date, $end_date );
 					$sales_totals += $sales;
 			
@@ -324,7 +370,9 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 					$sales_data[] = array( $date * 1000, $sales );
 					$earnings_data[] = array( $date * 1000, $earnings );
 				endif;
+
 				$i++;
+
 			endwhile;
 
 			$y++;
