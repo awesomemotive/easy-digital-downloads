@@ -133,6 +133,9 @@ function edd_install() {
 	$roles->add_roles();
 	$roles->add_caps();
 
+	// Create the customers database
+	@EDD()->customers->create_table();
+
 	// Add a temporary option to note that EDD pages have been created
 	set_transient( '_edd_installed', $options, 30 );
 
@@ -168,7 +171,7 @@ function edd_after_install() {
 		return;
 	}
 
-	// Create the customers database
+	// Create the customers database (this ensures it creates it on multisite instances where it is network activated)
 	@EDD()->customers->create_table();
 
 	// Delete the transient
