@@ -259,7 +259,20 @@ class EDD_DB_Customers extends EDD_DB  {
 
 		}
 
-		// Customers created for on specific date or in a date range
+		//specific customers by email
+		if( ! empty( $args['email'] ) ) {
+
+			if( is_array( $args['email'] ) ) {
+				$emails = "'" . implode( "', '", $args['email'] ) . "'";
+			} else {
+				$emails = "'" . $args['email'] . "'";
+			}	
+
+			$where .= "WHERE `email` IN( {$emails} ) ";
+
+		}
+
+		// Customers created for a specific date or in a date range
 		if( ! empty( $args['date'] ) ) {
 
 			if( is_array( $args['date'] ) ) {
