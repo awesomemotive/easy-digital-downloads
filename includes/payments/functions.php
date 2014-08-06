@@ -1220,7 +1220,7 @@ function edd_get_payment_transaction_id( $payment_id = 0 ) {
  * @param int payment_id Payment ID
  * @param string transaction_id The transaciton ID from the gateway
  */
-function edd_set_payment_transaction_id( $payment_id = 0, $transaction_id = false ) {
+function edd_set_payment_transaction_id( $payment_id = 0, $transaction_id = '' ) {
 
 	if ( empty( $payment_id ) || empty( $transaction_id ) ) {
 		return false;
