@@ -169,23 +169,6 @@ add_action( 'edd_update_payment_status', 'edd_undo_purchase_on_refund', 100, 3 )
 
 
 /**
- * Trigger a Purchase Deletion
- *
- * @since 1.3.4
- * @param $data Arguments passed
- * @return void
- */
-function edd_trigger_purchase_delete( $data ) {
-	if ( wp_verify_nonce( $data['_wpnonce'], 'edd_payment_nonce' ) ) {
-		$payment_id = absint( $data['purchase_id'] );
-		edd_delete_purchase( $payment_id );
-		wp_redirect( admin_url( '/edit.php?post_type=download&page=edd-payment-history&edd-message=payment_deleted' ) );
-		edd_die();
-	}
-}
-add_action( 'edd_delete_payment', 'edd_trigger_purchase_delete' );
-
-/**
  * Flushes the current user's purchase history transient when a payment status
  * is updated
  *
