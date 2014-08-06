@@ -195,7 +195,18 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		$offset = $this->per_page * ( $paged - 1 );
 		$search = $this->get_search();
 
-		$customers = EDD()->customers->get_customers( array( 'number' => $this->per_page, 'offset' => $offset ) );
+		$args   = array(
+			'number' => $this->per_page,
+			'offset' => $offset
+		);
+
+		if( is_email( $search ) ) {
+			$args['email'] = $search;
+		} elseif( is_numeric( $search ) ) {
+			$args['id']    = $search;
+		}
+
+		$customers = EDD()->customers->get_customers( $args );
 
 		if ( $customers ) {
 
