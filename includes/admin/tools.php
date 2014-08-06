@@ -404,7 +404,7 @@ function edd_tools_sysinfo_get() {
 	$return .= 'Symlinks:                 ' . ( apply_filters( 'edd_symlink_file_downloads', isset( $edd_options['symlink_file_downloads'] ) ) && function_exists( 'symlink' ) ? "Enabled\n" : "Disabled\n" );
 	$return .= 'Download Method:          ' . ucfirst( edd_get_file_download_method() ) . "\n";
 	$return .= 'Currency Code:            ' . edd_get_currency() . "\n";
-	$return .= 'Currency Position:        ' . ( isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before' ) . "\n";
+	$return .= 'Currency Position:        ' . edd_get_option( 'currency_position', 'before' ) . "\n";
 	$return .= 'Decimal Separator:        ' . edd_get_option( 'decimal_separator', '.' ) . "\n";
 	$return .= 'Thousands Separator:      ' . edd_get_option( 'thousands_separator', ',' ) . "\n";
 
