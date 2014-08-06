@@ -508,3 +508,25 @@ function edd_paypal_success_page_content( $content ) {
 
 }
 add_filter( 'edd_payment_confirm_paypal', 'edd_paypal_success_page_content' );
+
+/**
+ * Given a Payment ID, extract the transaction ID
+ *
+ * @since  2.1
+ * @param  string $payment_id       Payment ID
+ * @return string                   Transaction ID
+ */
+function edd_paypal_get_payment_transaction_id( $payment_id ) {
+
+	$notes = edd_get_payment_notes( $payment_id );
+
+	foreach ( $notes as $note ) {
+		if ( preg_match( '/^PayPal Transaction ID: ([^\s]+)/', $note->comment_content, $match ) ) {
+			$transaction_id = $match[1];
+			continue;
+		}
+	}
+
+	return apply_filters( 'edd_paypal_set_payment_transaction_id', $transaction_id, $payment_id );
+}
+add_filter( 'edd_get_payment_transaction_id-paypal', 'edd_paypal_get_payment_transaction_id', 10, 1 );

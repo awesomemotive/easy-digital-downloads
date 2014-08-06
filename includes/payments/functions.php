@@ -1200,8 +1200,15 @@ function edd_get_payment_fees( $payment_id = 0, $type = 'all' ) {
  * @return string The Transaction ID
  */
 function edd_get_payment_transaction_id( $payment_id = 0 ) {
+	$transaction_id = false;
 
 	$transaction_id = get_post_meta( $payment_id, '_edd_payment_transaction_id', true );
+
+	if ( empty( $transaction_id ) ) {
+		$gateway = edd_get_payment_gateway( $payment_id );
+
+		$transaction_id = apply_filters( 'edd_get_payment_transaction_id-' . $gateway, $payment_id );
+	}
 
 	return apply_filters( 'edd_get_payment_transaction_id', $transaction_id, $payment_id );
 }
