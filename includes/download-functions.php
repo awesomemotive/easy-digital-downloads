@@ -52,6 +52,7 @@ function edd_get_download( $download ) {
  * @return bool $is_free True if the product is free, false if the product is not free or the check fails
  */
 function edd_is_free_download( $download_id = 0, $price_id = false ) {
+
 	$is_free = false;
 	$variable_pricing = edd_has_variable_prices( $download_id );
 
@@ -65,7 +66,7 @@ function edd_is_free_download( $download_id = 0, $price_id = false ) {
 		$is_free = true;
 	}
 
-	return (bool) $is_free;
+	return (bool) apply_filters( 'edd_is_free_download', $is_free, $download_id, $price_id );
 }
 
 /**
