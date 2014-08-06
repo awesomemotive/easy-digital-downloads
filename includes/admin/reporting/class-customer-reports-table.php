@@ -194,15 +194,8 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		$paged  = $this->get_paged();
 		$offset = $this->per_page * ( $paged - 1 );
 		$search = $this->get_search();
-		$where  = "WHERE meta_key = '_edd_payment_user_email'";
-
-		if ( $search ) {
-			$where .= " AND meta_value LIKE '%$search%'";
-		}
 
 		$customers = EDD()->customers->get_customers( array( 'number' => $this->per_page, 'offset' => $offset ) );
-
-		//$customers = $wpdb->get_col( "SELECT DISTINCT meta_value FROM $wpdb->postmeta $where ORDER BY meta_id DESC LIMIT $this->per_page OFFSET $offset" );
 
 		if ( $customers ) {
 
@@ -210,7 +203,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 			foreach ( $customers as $customer ) {
 
-				$wp_user = get_user_by( 'email', $customer->email );
 				$user_id = ! empty( $customer->user_id ) ? absint( $customer->user_id ) : 0;
 
 				$data[] = array(
