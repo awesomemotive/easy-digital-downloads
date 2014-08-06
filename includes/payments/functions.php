@@ -271,6 +271,14 @@ function edd_delete_purchase( $payment_id = 0 ) {
 
 	do_action( 'edd_payment_delete', $payment_id );
 
+	// Remove the payment ID from the customer
+	$customer_id = edd_get_payment_customer_id( $payment_id );
+	if( $customer_id ){
+
+		EDD()->customers->remove_payment( $customer_id, $payment_id );
+
+	}
+
 	// Remove the payment
 	wp_delete_post( $payment_id, true );
 

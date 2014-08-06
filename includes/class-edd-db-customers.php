@@ -149,6 +149,44 @@ class EDD_DB_Customers extends EDD_DB  {
 	}
 
 	/**
+	 * Removes a payment ID from a customer
+	 *
+	 * @access  public
+	 * @since   2.1
+	*/
+	public function remove_payment( $customer_id = 0, $payment_id = 0 ) {
+
+		$customer = $this->get( $customer_id );
+
+		if( ! $customer ) {
+			return false;
+		}
+
+		if( ! $payment_id ) {
+			return false;
+		}
+
+		if( ! empty( $customer->payment_ids ) ) {
+
+			$payment_ids = array_map( 'absint', explode( ',', $customer->payment_ids ) );
+
+			$pos = array_search( $payment_id, $payment_ids );
+			if ( false === $pos ) {
+				return false;
+			}
+
+			array_splice( $payment_ids, $pos, 1 );
+			$payment_ids = array_filter( $payment_ids );
+
+			$customer->payment_ids = implode( ',', array_unique( array_values( $payment_ids ) ) );
+
+		}
+
+		return $this->update( $customer_id, (array) $customer );
+
+	}
+
+	/**
 	 * Increments customer purchase stats
 	 *
 	 * @access  public
