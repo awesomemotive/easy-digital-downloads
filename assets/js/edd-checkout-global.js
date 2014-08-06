@@ -290,7 +290,7 @@ jQuery(document).ready(function($) {
             url: edd_global_vars.ajaxurl,
             success: function (response) {
 
-                $('span.edd_cart_subtotal').each(function() {
+                $('.edd_cart_subtotal_amount').each(function() {
                     $(this).text(response.subtotal);
                 });
 
