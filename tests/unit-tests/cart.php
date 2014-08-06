@@ -112,6 +112,8 @@ class Test_Cart extends EDD_UnitTestCase {
 
 	public function test_get_cart_item_quantity() {
 
+		edd_empty_cart();
+
 		$options = array(
 			'price_id' => 0,
 			'quantity' => 1
@@ -135,8 +137,6 @@ class Test_Cart extends EDD_UnitTestCase {
 
 		$this->assertEquals( 1, edd_get_cart_item_quantity( $this->_post->ID, $options ) );
 
-		// Cleanup
-		edd_remove_from_cart( 1 );
 	}
 
 	public function test_set_cart_item_quantity() {
