@@ -52,17 +52,17 @@ function edd_get_cart_content_details() {
 
 		$subtotal   = $item_price * $quantity;
 		$tax        = $tax * $quantity;
-		$total      = round( ( $subtotal - $discount + $tax ), 2 );
+		$total      = round( ( $subtotal - $discount + $tax ), edd_currency_decimal_filter() );
 
 		$details[ $key ]  = array(
 			'name'        => get_the_title( $item['id'] ),
 			'id'          => $item['id'],
 			'item_number' => $item,
-			'item_price'  => round( $item_price, 2 ),
+			'item_price'  => round( $item_price, edd_currency_decimal_filter() ),
 			'quantity'    => $quantity,
-			'discount'    => round( $discount, 2 ),
-			'subtotal'    => round( $subtotal, 2 ),
-			'tax'         => round( $tax, 2 ),
+			'discount'    => round( $discount, edd_currency_decimal_filter() ),
+			'subtotal'    => round( $subtotal, edd_currency_decimal_filter() ),
+			'tax'         => round( $tax, edd_currency_decimal_filter() ),
 			'price'       => $total,
 			'fees'        => $fees
 		);
