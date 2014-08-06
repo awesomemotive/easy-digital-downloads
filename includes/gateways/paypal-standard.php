@@ -518,6 +518,7 @@ add_filter( 'edd_payment_confirm_paypal', 'edd_paypal_success_page_content' );
  */
 function edd_paypal_get_payment_transaction_id( $payment_id ) {
 
+	$transaction_id = '';
 	$notes = edd_get_payment_notes( $payment_id );
 
 	foreach ( $notes as $note ) {
