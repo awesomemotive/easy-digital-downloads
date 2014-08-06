@@ -136,6 +136,23 @@ function edd_update_payment_details( $data ) {
 }
 add_action( 'edd_update_payment_details', 'edd_update_payment_details' );
 
+/**
+ * Trigger a Purchase Deletion
+ *
+ * @since 1.3.4
+ * @param $data Arguments passed
+ * @return void
+ */
+function edd_trigger_purchase_delete( $data ) {
+	if ( wp_verify_nonce( $data['_wpnonce'], 'edd_payment_nonce' ) ) {
+		$payment_id = absint( $data['purchase_id'] );
+		edd_delete_purchase( $payment_id );
+		wp_redirect( admin_url( '/edit.php?post_type=download&page=edd-payment-history&edd-message=payment_deleted' ) );
+		edd_die();
+	}
+}
+add_action( 'edd_delete_payment', 'edd_trigger_purchase_delete' );
+
 function edd_ajax_store_payment_note() {
 
 	$payment_id = absint( $_POST['payment_id'] );
