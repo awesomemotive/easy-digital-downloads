@@ -132,8 +132,7 @@ $address        = ! empty( $user_info['address'] ) ? $user_info['address'] : arr
 												<span><?php esc_attr_e( edd_get_payment_user_ip( $payment_id )); ?></span>
 											</p>
 
-											<?php
-											if ( $transaction_id ) { ?>
+											<?php if ( $transaction_id ) { ?>
 											<p>
 												<strong><?php _e( 'Transaction ID:', 'edd' ); ?></strong>&nbsp;
 												<span><?php echo esc_attr_e( $transaction_id ); ?></span>
