@@ -634,64 +634,74 @@ class EDD_API {
 			return $customers;
 		}
 
-		if ( $customer == null ) {
-			global $wpdb;
+		global $wpdb;
 
-			$paged    = $this->get_paged();
-			$per_page = $this->per_page();
-			$offset   = $per_page * ( $paged - 1 );
-			$customer_list_query = $wpdb->get_col( "SELECT DISTINCT meta_value FROM $wpdb->postmeta where meta_key = '_edd_payment_user_email' ORDER BY meta_id DESC LIMIT $per_page OFFSET $offset" );
-			$customer_count = 0;
+		$paged    = $this->get_paged();
+		$per_page = $this->per_page();
+		$offset   = $per_page * ( $paged - 1 );
 
-			foreach ( $customer_list_query as $customer_email ) {
-				$customer_info = get_user_by( 'email', $customer_email );
+		if( is_numeric( $customer ) ) {
+			$field = 'id';
+		} else {
+			$field = 'email';
+		}
 
-				if ( $customer_info ) {
-					// Customer with registered account
-					$customers['customers'][$customer_count]['info']['id']           = $customer_info->ID;
-					$customers['customers'][$customer_count]['info']['username']     = $customer_info->user_login;
-					$customers['customers'][$customer_count]['info']['display_name'] = $customer_info->display_name;
-					$customers['customers'][$customer_count]['info']['first_name']   = $customer_info->user_firstname;
-					$customers['customers'][$customer_count]['info']['last_name']    = $customer_info->user_lastname;
-					$customers['customers'][$customer_count]['info']['email']        = $customer_info->user_email;
-				} else {
-					// Guest customer
-					$customers['customers'][$customer_count]['info']['id']           = -1;
-					$customers['customers'][$customer_count]['info']['username']     = __( 'Guest', 'edd' );
-					$customers['customers'][$customer_count]['info']['display_name'] = __( 'Guest', 'edd' );
-					$customers['customers'][$customer_count]['info']['first_name']   = __( 'Guest', 'edd' );
-					$customers['customers'][$customer_count]['info']['last_name']    = __( 'Guest', 'edd' );
-					$customers['customers'][$customer_count]['info']['email']        = $customer_email;
+		$customer_query = EDD()->customers->get_customers( array( 'number' => $per_page, $field => $customer ) );
+		$customer_count = 0;
+
+		if( $customer_query ) {
+
+			foreach ( $customer_query as $customer_obj ) {
+
+				$names      = explode( ' ', $customer_obj->name );
+				$first_name = ! empty( $names[0] ) ? $names[0] : '';
+				$last_name  = '';
+				if( ! empty( $names[1] ) ) {
+					unset( $names[0] );
+					$last_name = implode( ' ', $names );
 				}
 
-				$customers['customers'][$customer_count]['stats']['total_purchases'] = edd_count_purchases_of_customer( $customer_email );
-				$customers['customers'][$customer_count]['stats']['total_spent']     = edd_purchase_total_of_user( $customer_email );
-				$customers['customers'][$customer_count]['stats']['total_downloads'] = edd_count_file_downloads_of_user( $customer_email );
+				$customers['customers'][$customer_count]['info']['id']           = '';
+				$customers['customers'][$customer_count]['info']['user_id']      = '';
+				$customers['customers'][$customer_count]['info']['username']     = '';
+				$customers['customers'][$customer_count]['info']['display_name'] = '';
+				$customers['customers'][$customer_count]['info']['customer_id']  = $customer_obj->id;
+				$customers['customers'][$customer_count]['info']['first_name']   = $first_name;
+				$customers['customers'][$customer_count]['info']['last_name']    = $last_name;
+				$customers['customers'][$customer_count]['info']['email']        = $customer_obj->email;
+
+				if ( ! empty( $customer_obj->user_id ) ) {
+				
+					$user_data = get_userdata( $customer_obj->user_id );
+
+					// Customer with registered account
+
+					// id is going to get deprecated in the future, user user_id or customer_id instead
+					$customers['customers'][$customer_count]['info']['id']           = $customer_obj->user_id;
+					$customers['customers'][$customer_count]['info']['user_id']      = $customer_obj->user_id;
+					$customers['customers'][$customer_count]['info']['username']     = $user_data->user_login;
+					$customers['customers'][$customer_count]['info']['display_name'] = $user_data->display_name;
+
+				}
+
+				$customers['customers'][$customer_count]['stats']['total_purchases'] = $customer_obj->purchase_count;
+				$customers['customers'][$customer_count]['stats']['total_spent']     = $customer_obj->purchase_value;
+				$customers['customers'][$customer_count]['stats']['total_downloads'] = edd_count_file_downloads_of_user( $customer_obj->email );
 
 				$customer_count++;
+
 			}
+
+		} elseif( $customer ) {
+
+			$error['error'] = sprintf( __( 'Customer %s not found!', 'edd' ), $customer );
+			return $error;
+
 		} else {
-			if ( is_numeric( $customer ) ) {
-				$customer_info = get_userdata( $customer );
-			} else {
-				$customer_info = get_user_by( 'email', $customer );
-			}
 
-			if ( $customer_info && edd_has_purchases( $customer_info->ID ) ) {
-				$customers['customers'][0]['info']['id']               = $customer_info->ID;
-				$customers['customers'][0]['info']['username']         = $customer_info->user_login;
-				$customers['customers'][0]['info']['display_name']     = $customer_info->display_name;
-				$customers['customers'][0]['info']['first_name']       = $customer_info->user_firstname;
-				$customers['customers'][0]['info']['last_name']        = $customer_info->user_lastname;
-				$customers['customers'][0]['info']['email']            = $customer_info->user_email;
+			$error['error'] = __( 'No customers found!', 'edd' );
+			return $error;
 
-				$customers['customers'][0]['stats']['total_purchases'] = edd_count_purchases_of_customer( $customer );
-				$customers['customers'][0]['stats']['total_spent']     = edd_purchase_total_of_user( $customer );
-				$customers['customers'][0]['stats']['total_downloads'] = edd_count_file_downloads_of_user( $customer );
-			} else {
-				$error['error'] = sprintf( __( 'Customer %s not found!', 'edd' ), $customer );
-				return $error;
-			}
 		}
 
 		return $customers;
