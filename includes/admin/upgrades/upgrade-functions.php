@@ -472,7 +472,7 @@ function edd_v21_upgrade_customers_db() {
 				'user'    => $email,
 				'order'   => 'ASC',
 				'orderby' => 'ID',
-				'number'  => $number,
+				'number'  => -1,
 				'page'    => $step
 			);
 
