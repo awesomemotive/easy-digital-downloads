@@ -232,11 +232,11 @@ class EDD_DB_Customers extends EDD_DB  {
 
 					if( ! empty( $where ) ) {
 
-						$where .= " AND `date` >= '{$start}'";
+						$where .= " AND `date_created` >= '{$start}'";
 					
 					} else {
 						
-						$where .= " WHERE `date` >= '{$start}'";
+						$where .= " WHERE `date_created` >= '{$start}'";
 		
 					}
 
@@ -248,11 +248,11 @@ class EDD_DB_Customers extends EDD_DB  {
 
 					if( ! empty( $where ) ) {
 
-						$where .= " AND `date` <= '{$end}'";
+						$where .= " AND `date_created` <= '{$end}'";
 					
 					} else {
 						
-						$where .= " WHERE `date` <= '{$end}'";
+						$where .= " WHERE `date_created` <= '{$end}'";
 		
 					}
 
@@ -310,11 +310,11 @@ class EDD_DB_Customers extends EDD_DB  {
 
 				if( empty( $where ) ) {
 
-					$where .= " WHERE `date` >= '{$start}' AND `date` <= '{$end}'";
+					$where .= " WHERE `date_created` >= '{$start}' AND `date_created` <= '{$end}'";
 				
 				} else {
 					
-					$where .= " AND `date` >= '{$start}' AND `date` <= '{$end}'";
+					$where .= " AND `date_created` >= '{$start}' AND `date_created` <= '{$end}'";
 	
 				}
 
