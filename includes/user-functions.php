@@ -29,6 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return bool|object List of all user purchases
  */
 function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, $status = 'complete' ) {
+
 	if ( empty( $user ) ) {
 		$user = get_current_user_id();
 	}
@@ -55,6 +56,24 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 		$args['page'] = $paged;
 	else
 		$args['nopaging'] = true;
+
+
+	if( is_email( $user ) ) {
+
+		$field = 'user_id';
+
+	} else {
+		
+		$field = 'email';
+		
+	}
+	
+	$payment_ids = EDD()->customers->get_column_by( 'payment_ids', 'user_id', $user );
+
+	if( ! empty( $payment_ids ) ) {
+		unset( $args['user'] );
+		$args['post__in'] = array_map( 'absint', explode( ',', $payment_ids ) );
+	}
 
 	$purchases = edd_get_payments( $args );
 
