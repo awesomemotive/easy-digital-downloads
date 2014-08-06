@@ -372,6 +372,7 @@ class EDD_DB_Customers extends EDD_DB  {
 		`notes` longtext NOT NULL,
 		`date_created` datetime NOT NULL,
 		PRIMARY KEY  (id),
+		UNIQUE KEY email (email),
 		INDEX user_id (user_id),
 		INDEX email (email)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
