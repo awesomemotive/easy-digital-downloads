@@ -364,7 +364,7 @@ class EDD_DB_Customers extends EDD_DB  {
 		$sql = "CREATE TABLE " . $this->table_name . " (
 		`id` bigint(20) NOT NULL AUTO_INCREMENT,
 		`user_id` bigint(20) NOT NULL,
-		`email` mediumtext NOT NULL,
+		`email` varchar(50) NOT NULL,
 		`name` mediumtext NOT NULL,
 		`purchase_value` mediumtext NOT NULL,
 		`purchase_count` bigint(20) NOT NULL,
@@ -372,7 +372,9 @@ class EDD_DB_Customers extends EDD_DB  {
 		`notes` longtext NOT NULL,
 		`date_created` datetime NOT NULL,
 		PRIMARY KEY  (id),
-		UNIQUE KEY user_id (user_id)
+		UNIQUE KEY user_id (user_id),
+		INDEX user_id (user_id),
+		INDEX email (email)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
 
 		dbDelta( $sql );
