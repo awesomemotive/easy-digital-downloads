@@ -496,7 +496,11 @@ function edd_v21_upgrade_customers_db() {
 					'date_created'   => $payments[0]->date
 				);
 
-				EDD()->customers->add( $args );
+				$customer_id = EDD()->customers->add( $args );
+
+				foreach( $ids as $id ) {
+					update_post_meta( $id, '_edd_payment_customer_id', $customer_id );
+				}
 
 			}
 
