@@ -228,7 +228,7 @@ class EDD_API {
 
 		$user = get_transient( md5( 'edd_api_user_' . $key ) );
 
-		if ( ! $user ) {
+		if ( false === $user ) {
 			$user = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'edd_user_public_key' AND meta_value = %s LIMIT 1", $key ) );
 			set_transient( md5( 'edd_api_user_' . $key ) , $user, DAY_IN_SECONDS );
 		}
