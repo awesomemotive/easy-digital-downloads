@@ -248,7 +248,7 @@ function edd_get_purchase_stats_by_user( $user = '' ) {
 
 		if( $purchases ) {
 			$stats['purchases']   = count( $purchases );
-			$stats['total_spent'] = round( array_sum( $purchases ), 2 );
+			$stats['total_spent'] = round( array_sum( $purchases ), edd_currency_decimal_filter() );
 		}
 
 		wp_cache_set( $user, $stats, 'customers' );
