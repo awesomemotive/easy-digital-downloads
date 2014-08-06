@@ -34,8 +34,9 @@ class EDD_Cache_Helper {
 
 			global $edd_options;
 
-			if( empty( $edd_options['purchase_page'] ) | empty( $edd_options['success_page'] ) )
+			if( empty( $edd_options['purchase_page'] ) || empty( $edd_options['success_page'] ) ) {
 				return;
+			}
 
 			$page_uris   = array();
 
