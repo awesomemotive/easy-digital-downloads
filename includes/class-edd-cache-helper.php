@@ -64,6 +64,22 @@ class EDD_Cache_Helper {
 				}
 			}
 		}
+
+		if( function_exists( 'wp_suspend_cache_addition' ) ) {
+
+			add_action('edd_pre_update_discount',         array( $this, 'w3tc_suspend_cache_addition_pre' ) );
+			add_action('edd_pre_insert_discount',         array( $this, 'w3tc_suspend_cache_addition_pre' ) );
+			add_action('edd_pre_delete_discount',         array( $this, 'w3tc_suspend_cache_addition_pre' ) );
+			add_action('edd_pre_update_discount_status',  array( $this, 'w3tc_suspend_cache_addition_pre' ) );
+			add_action('edd_pre_remove_cart_discount',    array( $this, 'w3tc_suspend_cache_addition_pre' ) );
+
+			add_action('edd_post_update_discount',        array( $this, 'w3tc_suspend_cache_addition_post' ) );
+			add_action('edd_post_insert_discount',        array( $this, 'w3tc_suspend_cache_addition_post' ) );
+			add_action('edd_post_delete_discount',        array( $this, 'w3tc_suspend_cache_addition_post' ) );
+			add_action('edd_post_update_discount_status', array( $this, 'w3tc_suspend_cache_addition_post' ) );
+			add_action('edd_post_remove_cart_discount',   array( $this, 'w3tc_suspend_cache_addition_post' ) );
+
+		}
 	}
 
 	/**
@@ -103,6 +119,26 @@ class EDD_Cache_Helper {
 			}
 		}
 
+	}
+
+	/**
+	 * Prevents W3TC from adding to the cache prior to modifying data
+	 *
+	 * @access public
+	 * @return void
+	 */
+	function w3tc_suspend_cache_addition_pre() {
+		wp_suspend_cache_addition(true);
+	}
+
+	/**
+	 * Prevents W3TC from adding to the cache after modifying data
+	 *
+	 * @access public
+	 * @return void
+	 */
+	function w3tc_suspend_cache_addition_post() {
+		wp_suspend_cache_addition();
 	}
 }
 
