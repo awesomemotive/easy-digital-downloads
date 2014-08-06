@@ -16,6 +16,7 @@ require_once dirname( $config_file_path ) . '/includes/functions.php';
 
 // Force WP_ADMIN to be true
 define( 'WP_ADMIN', true );
+define( 'EDD_USE_PHP_SESSIONS', false );
 
 // Load EDD
 function _load_edd() {
