@@ -362,7 +362,7 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 		update_post_meta( $payment_id, '_edd_payment_meta', $payment_meta );
 	}
 
-	if ( $payment_status == 'refunded' ) {
+	if ( $payment_status == 'refunded' || $payment_status == 'reversed' ) {
 
 		// Process a refund
 		edd_process_paypal_refund( $data );
