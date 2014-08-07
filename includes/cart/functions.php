@@ -32,7 +32,7 @@ function edd_get_cart_contents() {
  * @since 1.0
  * @return array $details Cart content details
  */
-function edd_get_cart_content_details() {
+function edd_get_cart_content_details( $include_taxes = false ) {
 
 	$cart_items = edd_get_cart_contents();
 
@@ -44,7 +44,7 @@ function edd_get_cart_content_details() {
 
 	foreach( $cart_items as $key => $item ) {
 
-		$item_price = edd_get_cart_item_price( $item['id'], $item['options'] );
+		$item_price = edd_get_cart_item_price( $item['id'], $item['options'], $include_taxes );
 		$discount   = apply_filters( 'edd_get_cart_content_details_item_discount_amount', edd_get_cart_item_discount_amount( $item ), $item );
 		$tax        = edd_get_cart_item_tax( $item );
 		$quantity   = edd_get_cart_item_quantity( $item['id'], $item['options'] );
@@ -571,11 +571,11 @@ function edd_cart_subtotal() {
  * @global $edd_options Array of all the EDD Options
  * @return float Total amount before taxes
  */
-function edd_get_cart_subtotal() {
+function edd_get_cart_subtotal( $include_taxes = false ) {
 	global $edd_options;
 
 	$subtotal = 0.00;
-	$items    = edd_get_cart_content_details();
+	$items    = edd_get_cart_content_details( $include_taxes );
 
 	if( $items ) {
 
@@ -609,11 +609,12 @@ function edd_get_cart_subtotal() {
 function edd_get_cart_total( $discounts = false ) {
 	global $edd_options;
 
-	$subtotal = edd_get_cart_subtotal();
+	$subtotal = edd_get_cart_subtotal( true );
 	$fees     = edd_get_cart_fee_total();
 	$cart_tax = edd_get_cart_tax();
 	$discount = edd_get_cart_discounted_amount();
-	$total    = $subtotal + $fees + $cart_tax - $discount;
+
+	$total    = $subtotal + $fees - $discount;
 
 	if( $total < 0 )
 		$total = 0.00;
