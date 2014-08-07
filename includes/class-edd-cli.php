@@ -245,12 +245,10 @@ class EDD_CLI extends WP_CLI_Command {
 
 			WP_CLI::line( sprintf( __( 'Email: %s', 'edd' ), $customer['info']['email'] ) );
 
-			if( $verbose ) {
-				WP_CLI::line( '' );
-				WP_CLI::line( sprintf( __( 'Purchases: %s', 'edd' ), $customer['stats']['total_purchases'] ) );
-				WP_CLI::line( sprintf( __( 'Total Spent: %s', 'edd' ), ( $curr_pos == 'before' ? edd_get_currency() . ' ' : '' ) . edd_format_amount( $customer['stats']['total_spent'] ) . ( $curr_pos == 'after' ? ' ' . edd_get_currency() : '' ) ) );
-				WP_CLI::line( sprintf( __( 'Total Downloads: %s', 'edd' ), $customer['stats']['total_downloads'] ) );
-			}
+			WP_CLI::line( '' );
+			WP_CLI::line( sprintf( __( 'Purchases: %s', 'edd' ), $customer['stats']['total_purchases'] ) );
+			WP_CLI::line( sprintf( __( 'Total Spent: %s', 'edd' ), edd_format_amount( $customer['stats']['total_spent'] ) . ' ' . edd_get_currency() ) );
+			WP_CLI::line( sprintf( __( 'Total Downloads: %s', 'edd' ), $customer['stats']['total_downloads'] ) );
 
 			WP_CLI::line( '' );
 		}
