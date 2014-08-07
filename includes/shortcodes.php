@@ -283,7 +283,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		$query['posts_per_page'] = abs( $query['posts_per_page'] );
 	}
 
-	switch ( $orderby ) {
+	switch ( $atts['orderby'] ) {
 		case 'price':
 			$atts['orderby']   = 'meta_value';
 			$query['meta_key'] = 'edd_price';
@@ -308,8 +308,9 @@ function edd_downloads_query( $atts, $content = null ) {
 	}
 
 	if ( $atts['tags'] || $atts['category'] || $atts['exclude_category'] || $atts['exclude_tags'] ) {
+
 		$query['tax_query'] = array(
-			'relation'     => $atts['relation']
+			'relation' => $atts['relation']
 		);
 
 		if ( $atts['tags'] ) {
@@ -335,7 +336,7 @@ function edd_downloads_query( $atts, $content = null ) {
 			$query['tax_query'][] = array(
 				'taxonomy' => 'download_tag',
 				'field'    => 'term_id',
-				'terms'    => $_tax_cats
+				'terms'    => $_tax_tags
 			);
 		}
 
@@ -417,7 +418,7 @@ function edd_downloads_query( $atts, $content = null ) {
 			$query['tax_query'][] = array(
 				'taxonomy' => 'download_tag',
 				'field'    => 'term_id',
-				'terms'    => $_tax_cats,
+				'terms'    => $_tax_tags,
 				'operator' => 'NOT IN'
 			);
 		}
@@ -523,7 +524,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		$display = sprintf( _x( 'No %s found', 'download post type name', 'edd' ), edd_get_label_plural() );
 	endif;
 
-	return apply_filters( 'downloads_shortcode', $display, $atts, $buy_button, $columns, $column_width, $downloads, $excerpt, $full_content, $price, $thumbnails, $query );
+	return apply_filters( 'downloads_shortcode', $display, $atts, $atts['buy_button'], $atts['columns'], $column_width, $downloads, $atts['excerpt'], $atts['full_content'], $atts['price'], $atts['thumbnails'], $query );
 }
 add_shortcode( 'downloads', 'edd_downloads_query' );
 
