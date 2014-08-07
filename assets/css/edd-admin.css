@@ -114,7 +114,7 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 #edd-edit-order-form .column .description { padding-right: 10px; }
 #edd-edit-order-form .column,
 #edd-purchased-files .row > ul > li,
-#edd-purchased-files .inside > ul > li { display: inline-block; position: relative; vertical-align: top; }
+#edd-purchased-files .inside > ul > li { display: inline-block; position: relative; vertical-align: top; margin-right: 5%; }
 #edd-purchased-files li.actions { text-align: right; }
 #edd-purchased-files ul li.remove { text-align: right; }
 #edd-purchased-files .row { padding: 12px; border-bottom: 1px solid #eee; }

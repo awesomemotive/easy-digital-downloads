@@ -24,9 +24,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_download_shortcode( $atts, $content = null ) {
 	global $post, $edd_options;
+	
+	$post_id = is_object( $post ) ? $post->ID : 0;
 
 	$atts = shortcode_atts( array(
-		'id' 	        => $post->ID,
+		'id' 	        => $post_id,
 		'sku'			=> '',
 		'price'         => '1',
 		'paypal_direct' => '0',

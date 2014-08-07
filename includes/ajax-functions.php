@@ -211,6 +211,7 @@ function edd_ajax_update_cart_item_quantity() {
 		$return = array(
 			'download_id' => $download_id,
 			'quantity'    => $quantity,
+			'taxes'       => html_entity_decode( edd_cart_tax(), ENT_COMPAT, 'UTF-8' ),
 			'subtotal'    => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
 			'total'       => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' )
 		);
