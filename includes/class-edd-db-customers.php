@@ -179,7 +179,7 @@ class EDD_DB_Customers extends EDD_DB  {
 				return false;
 			}
 
-			array_splice( $payment_ids, $pos, 1 );
+			unset( $payment_ids[$pos] );
 			$payment_ids = array_filter( $payment_ids );
 
 			$customer->payment_ids = implode( ',', array_unique( array_values( $payment_ids ) ) );
@@ -206,6 +206,27 @@ class EDD_DB_Customers extends EDD_DB  {
 
 		$customer->purchase_count = intval( $customer->purchase_count ) + 1;
 		$customer->purchase_value = floatval( $customer->purchase_value ) + $amount;
+
+		return $this->update( $customer_id, (array) $customer );
+
+	}
+
+	/**
+	 * Decrements customer purchase stats
+	 *
+	 * @access  public
+	 * @since   2.1
+	*/
+	public function decrement_stats( $customer_id = 0, $amount = '' ) {
+
+		$customer = $this->get( $customer_id );
+
+		if( ! $customer ) {
+			return false;
+		}
+
+		$customer->purchase_count = intval( $customer->purchase_count ) - 1;
+		$customer->purchase_value = floatval( $customer->purchase_value ) - $amount;
 
 		return $this->update( $customer_id, (array) $customer );
 
