@@ -84,20 +84,40 @@ class EDD_CLI extends WP_CLI_Command {
 	 *
 	 * ## OPTIONS
 	 *
-	 * --type=[sales|earnings|customers]: The type of stats to retrieve
-	 * --product=[all|<product_id>]: The ID of a specific product to retrieve stats for, or all
+	 * --product=<product_id>: The ID of a specific product to retrieve stats for, or all
 	 * --date=[range|this_month|last_month|today|yesterday|this_quarter|last_quarter|this_year|last_year]: A specific date range to retrieve stats for
 	 * --startdate=<date>: The start date of a date range to retrieve stats for
 	 * --enddate=<date>: The end date of a date range to retrieve stats for
 	 *
 	 * ## EXAMPLES
 	 *
-	 * wp edd stats --type=sales --date=this_month
-	 * wp edd stats --type=earnings --date=last_year
-	 * wp edd stats --type=customers
+	 * wp edd stats --date=this_month
+	 * wp edd stats --start-date=01/02/2014 --end-date=02/23/2014
+	 * wp edd stats --date=last_year
+	 * wp edd stats --date=last_year --product=15
 	 */
 	public function stats( $args, $assoc_args ) {
-		WP_CLI::error( __( 'Pending EDD_API 2.0', 'edd' ) );
+
+		$stats      = new EDD_Payment_Stats;
+		$date       = isset( $assoc_args ) && array_key_exists( 'date', $assoc_args )      ? $assoc_args['date']      : false;
+		$start_date = isset( $assoc_args ) && array_key_exists( 'startdate', $assoc_args ) ? $assoc_args['startdate'] : false;
+		$end_date   = isset( $assoc_args ) && array_key_exists( 'enddate', $assoc_args )   ? $assoc_args['enddate']   : false;
+		$download   = isset( $assoc_args ) && array_key_exists( 'product', $assoc_args )   ? $assoc_args['product']   : 0;
+
+		if( ! empty( $date ) ) {
+			$start_date = $date;
+			$end_date   = false;
+		} elseif( empty( $date ) && empty( $startdate ) ) {
+			$start_date = 'this_month';
+			$end_date   = false;
+		}
+
+		$earnings   = $stats->get_earnings( $download, $start_date, $end_date );
+		$sales      = $stats->get_sales( $download, $start_date, $end_date );
+
+		WP_CLI::line( sprintf( __( 'Earnings: %s', 'edd' ), $earnings ) );
+		WP_CLI::line( sprintf( __( 'Sales: %s', 'edd' ), $sales ) );
+
 	}
 
 
