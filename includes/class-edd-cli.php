@@ -326,7 +326,7 @@ class EDD_CLI extends WP_CLI_Command {
 		
 		$discount_id = isset( $assoc_args ) && array_key_exists( 'id', $assoc_args ) ? absint( $assoc_args['id'] ) : false;
 		
-		$discounts = $this->api->get_discounts( $assoc_args['id'] );
+		$discounts = $this->api->get_discounts( $discount_id );
 
 		if( isset( $discounts['error'] ) ) {
 			WP_CLI::error( $discounts['error'] );
