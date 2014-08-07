@@ -346,7 +346,7 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 		// This runs when a Buy Now purchase was made. It bypasses checkout so no personal info is collected until PayPal
 
 		// No email associated with purchase, so store from PayPal
-		update_post_meta( $payment_id, '_edd_payment_user_email', $data['payer_email'] );
+		edd_update_payment_meta( $payment_id, '_edd_payment_user_email', $data['payer_email'] );
 
 		// Setup and store the customers's details
 		$address = array();
@@ -367,7 +367,7 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 
 		$payment_meta = get_post_meta( $payment_id, '_edd_payment_meta', true );
 		$payment_meta['user_info'] = $user_info;
-		update_post_meta( $payment_id, '_edd_payment_meta', $payment_meta );
+		edd_update_payment_meta( $payment_id, '_edd_payment_meta', $payment_meta );
 	}
 
 	if ( $payment_status == 'refunded' || $payment_status == 'reversed' ) {

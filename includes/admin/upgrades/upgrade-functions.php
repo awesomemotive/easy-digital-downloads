@@ -405,7 +405,7 @@ function edd_v20_upgrade_sequential_payment_numbers() {
 			// Re-add the prefix and postfix
 			$payment_number = $prefix . $number . $postfix;
 
-			update_post_meta( $payment->ID, '_edd_payment_number', $payment_number );
+			edd_update_payment_meta( $payment->ID, '_edd_payment_number', $payment_number );
 
 			// Increment the payment number
 			$number++;

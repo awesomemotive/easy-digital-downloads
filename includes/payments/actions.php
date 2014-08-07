@@ -99,7 +99,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 	if( empty( $completed_date ) ) {
 
 		// Save the completed date
-		update_post_meta( $payment_id, '_edd_completed_date', current_time( 'mysql' ) );
+		edd_update_payment_meta( $payment_id, '_edd_completed_date', current_time( 'mysql' ) );
 
 		do_action( 'edd_complete_purchase', $payment_id );
 	}
@@ -224,7 +224,7 @@ function edd_update_old_payments_with_totals( $data ) {
 	if ( $payments ) {
 		foreach ( $payments as $payment ) {
 			$meta = edd_get_payment_meta( $payment->ID );
-			update_post_meta( $payment->ID, '_edd_payment_total', $meta['amount'] );
+			edd_update_payment_meta( $payment->ID, '_edd_payment_total', $meta['amount'] );
 		}
 	}
 
