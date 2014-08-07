@@ -218,7 +218,7 @@ class EDD_CLI extends WP_CLI_Command {
 	public function customers( $args, $assoc_args ) {
 	
 		$customer_id = isset( $assoc_args ) && array_key_exists( 'id', $assoc_args ) ? absint( $assoc_args['id'] ) : false;
-		$customers  = $this->api->get_customers( $assoc_args['id'] );
+		$customers   = $this->api->get_customers( $customer_id );
 		
 		if( isset( $customers['error'] ) ) {
 			WP_CLI::error( $customers['error'] );
