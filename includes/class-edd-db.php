@@ -83,8 +83,10 @@ abstract class EDD_DB {
 
 		// Row ID must be positive integer
 		$row_id = absint( $row_id );
-		if( empty( $row_id ) )
+
+		if( empty( $row_id ) ) {
 			return false;
+		}
 
 		if( empty( $where ) ) {
 			$where = $this->primary_key;
@@ -94,7 +96,7 @@ abstract class EDD_DB {
 		$column_formats = $this->get_columns();
 
 		// Force fields to lower case
-		$data = array_change_key_case ( $data );
+		$data = array_change_key_case( $data );
 
 		// White list columns
 		$data = array_intersect_key( $data, $column_formats );
@@ -117,8 +119,9 @@ abstract class EDD_DB {
 		// Row ID must be positive integer
 		$row_id = absint( $row_id );
 
-		if( empty( $row_id ) )
+		if( empty( $row_id ) ) {
 			return false;
+		}
 
 		if ( false === $wpdb->query( $wpdb->prepare( "DELETE FROM $this->table_name WHERE $this->primary_key = %d", $row_id ) ) ) {
 			return false;
