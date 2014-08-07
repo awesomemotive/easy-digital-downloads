@@ -222,7 +222,7 @@ class Tests_Payments extends EDD_UnitTestCase {
 
 		$this->assertEquals( 'EDD-1', edd_get_payment_number( $this->_payment_id ) );
 		$this->assertEquals( 'EDD-2', edd_get_next_payment_number() );
-		
+
 		// Now disable sequential and ensure values come back as expected
 		unset( $edd_options['enable_sequential'] );
 		update_option( 'edd_settings', $edd_options );
@@ -230,12 +230,12 @@ class Tests_Payments extends EDD_UnitTestCase {
 		$this->assertEquals( $this->_payment_id, edd_get_payment_number( $this->_payment_id ) );
 	}
 
-	public function test_get_payment_transaction_id_legacy() {
+	public function test_get_payment_transaction_id() {
 		$this->assertEquals( $this->_transaction_id, edd_get_payment_transaction_id( $this->_payment_id ) );
 	}
 
-	public function test_get_payment_transaction_id() {
-		$this->assertEquals( $this->_transaction_id, edd_paypal_get_payment_transaction_id( $this->payment_id ) );
+	public function test_get_payment_transaction_id_legacy() {
+		$this->assertEquals( $this->_transaction_id, edd_paypal_get_payment_transaction_id( $this->_payment_id ) );
 	}
 
 }
