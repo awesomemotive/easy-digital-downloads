@@ -75,7 +75,7 @@
 			<tr class="edd_cart_footer_row edd_cart_subtotal_row"<?php if ( ! edd_is_cart_taxed() ) echo ' style="display:none;"'; ?>>
 				<?php do_action( 'edd_checkout_table_subtotal_first' ); ?>
 				<th colspan="<?php echo edd_checkout_cart_columns(); ?>" class="edd_cart_subtotal">
-					<?php _e( 'Subtotal', 'edd' ); ?>:&nbsp;<span class="edd_cart_subtotal"><?php echo edd_cart_subtotal(); ?></span>
+					<?php _e( 'Subtotal', 'edd' ); ?>:&nbsp;<span class="edd_cart_subtotal_amount"><?php echo edd_cart_subtotal(); ?></span>
 				</th>
 				<?php do_action( 'edd_checkout_table_subtotal_last' ); ?>
 			</tr>

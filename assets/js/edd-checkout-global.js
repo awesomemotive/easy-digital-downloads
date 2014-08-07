@@ -289,7 +289,16 @@ jQuery(document).ready(function($) {
             dataType: "json",
             url: edd_global_vars.ajaxurl,
             success: function (response) {
-                 $('.edd_cart_amount').each(function() {
+
+                $('.edd_cart_subtotal_amount').each(function() {
+                    $(this).text(response.subtotal);
+                });
+
+                $('.edd_cart_tax_amount').each(function() {
+                    $(this).text(response.taxes);
+                });
+
+                $('.edd_cart_amount').each(function() {
                     $(this).text(response.total);
                     $('body').trigger('edd_quantity_updated', [ response ]);
                 });

@@ -696,7 +696,7 @@ function edd_get_total_earnings() {
 		$total = 0; // Don't ever show negative earnings
 	}
 
-	return apply_filters( 'edd_total_earnings', round( $total, 2 ) );
+	return apply_filters( 'edd_total_earnings', round( $total, edd_currency_decimal_filter() ) );
 }
 
 /**
@@ -1162,6 +1162,46 @@ function edd_get_payment_fees( $payment_id = 0, $type = 'all' ) {
 	}
 
 	return apply_filters( 'edd_get_payment_fees', $fees, $payment_id );
+}
+
+/**
+ * Retrieves the transaction ID for the given payment
+ *
+ * @since  2.1
+ * @param int payment_id Payment ID
+ * @return string The Transaction ID
+ */
+function edd_get_payment_transaction_id( $payment_id = 0 ) {
+
+	$transaction_id = false;
+	$transaction_id = get_post_meta( $payment_id, '_edd_payment_transaction_id', true );
+
+	if ( empty( $transaction_id ) ) {
+
+		$gateway        = edd_get_payment_gateway( $payment_id );
+		$transaction_id = apply_filters( 'edd_get_payment_transaction_id-' . $gateway, $payment_id );
+
+	}
+
+	return apply_filters( 'edd_get_payment_transaction_id', $transaction_id, $payment_id );
+}
+
+/**
+ * Sets a Transaction ID in post meta for the given Payment ID
+ *
+ * @since  2.1
+ * @param int payment_id Payment ID
+ * @param string transaction_id The transaciton ID from the gateway
+ */
+function edd_set_payment_transaction_id( $payment_id = 0, $transaction_id = '' ) {
+
+	if ( empty( $payment_id ) || empty( $transaction_id ) ) {
+		return false;
+	}
+
+	$transaction_id = apply_filters( 'edd_set_payment_transaction_id', $transaction_id, $payment_id );
+
+	return update_post_meta( $payment_id, '_edd_payment_transaction_id', $transaction_id );
 }
 
 /**
