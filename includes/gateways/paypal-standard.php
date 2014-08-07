@@ -416,8 +416,8 @@ function edd_process_paypal_refund( $data ) {
 		return; // Only refund payments once
 	}
 
-	edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Payment #%s Refunded', 'edd' ) , $data['parent_txn_id'] ) );
-	edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Refund Transaction ID: %s', 'edd' ) , $data['txn_id'] ) );
+	edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Payment #%s Refunded for reason: %s', 'edd' ), $data['parent_txn_id'], $data['reason_code'] ) );
+	edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Refund Transaction ID: %s', 'edd' ), $data['txn_id'] ) );
 	edd_update_payment_status( $payment_id, 'refunded' );
 }
 
