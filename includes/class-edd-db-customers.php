@@ -60,9 +60,7 @@ class EDD_DB_Customers extends EDD_DB  {
 	public function add( $data = array() ) {
 
 		$defaults = array(
-			'purchase_value' => 0,
-			'purchase_count' => 0,
-			'payment_ids'    => array()
+			'payment_ids' => array()
 		);
 
 		$args = wp_parse_args( $data, $defaults );
@@ -206,8 +204,8 @@ class EDD_DB_Customers extends EDD_DB  {
 			return false;
 		}
 
-		$customer->purchase_count += 1;
-		$customer->purchase_value += $amount;
+		$customer->purchase_count = intval( $customer->purchase_count ) + 1;
+		$customer->purchase_value = floatval( $customer->purchase_value ) + $amount;
 
 		return $this->update( $customer_id, (array) $customer );
 
