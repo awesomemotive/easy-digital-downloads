@@ -196,7 +196,7 @@ class EDD_DB_Customers extends EDD_DB  {
 	 * @access  public
 	 * @since   2.1
 	*/
-	public function increment_stats( $customer_id = 0, $amount = '' ) {
+	public function increment_stats( $customer_id = 0, $amount = 0.00 ) {
 
 		$customer = $this->get( $customer_id );
 
@@ -217,7 +217,7 @@ class EDD_DB_Customers extends EDD_DB  {
 	 * @access  public
 	 * @since   2.1
 	*/
-	public function decrement_stats( $customer_id = 0, $amount = '' ) {
+	public function decrement_stats( $customer_id = 0, $amount = 0.00 ) {
 
 		$customer = $this->get( $customer_id );
 
