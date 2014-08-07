@@ -85,7 +85,7 @@ function edd_update_payment_details( $data ) {
 			$cart_item   = array();
 			$cart_item['item_number'] = $item;
 
-			$item_price = round( $download['amount'] / $item['quantity'], 2 );
+			$item_price = round( $download['amount'] / $item['quantity'], edd_currency_decimal_filter() );
 
 			$cart_details[$i] = array(
 				'name'        => get_the_title( $download['id'] ),

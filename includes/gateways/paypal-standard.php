@@ -144,7 +144,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
 
 		// Add taxes to the cart
 		if ( edd_use_taxes() ) {
-			$paypal_args['tax_cart'] = round( $purchase_data['tax'], 2 );
+			$paypal_args['tax_cart'] = round( $purchase_data['tax'], edd_currency_decimal_filter() );
 		}
 
 		$paypal_args = apply_filters( 'edd_paypal_redirect_args', $paypal_args, $purchase_data );
@@ -278,6 +278,13 @@ function edd_process_paypal_ipn() {
 	if ( ! is_array( $encoded_data_array ) && !empty( $encoded_data_array ) )
 		return;
 
+	$defaults = array(
+		'txn_type'       => '',
+		'payment_status' => ''
+	);
+
+	$encoded_data_array = wp_parse_args( $encoded_data_array, $defaults );
+
 	if ( has_action( 'edd_paypal_' . $encoded_data_array['txn_type'] ) ) {
 		// Allow PayPal IPN types to be processed separately
 		do_action( 'edd_paypal_' . $encoded_data_array['txn_type'], $encoded_data_array );
@@ -300,8 +307,9 @@ add_action( 'edd_verify_paypal_ipn', 'edd_process_paypal_ipn' );
 function edd_process_paypal_web_accept_and_cart( $data ) {
 	global $edd_options;
 
-	if ( $data['txn_type'] != 'web_accept' && $data['txn_type'] != 'cart' )
+	if ( $data['txn_type'] != 'web_accept' && $data['txn_type'] != 'cart' && $data['payment_status'] != 'Refunded' ) {
 		return;
+	}
 
 	// Collect payment details
 	$payment_id     = $data['custom'];
@@ -362,7 +370,7 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 		update_post_meta( $payment_id, '_edd_payment_meta', $payment_meta );
 	}
 
-	if ( $payment_status == 'refunded' ) {
+	if ( $payment_status == 'refunded' || $payment_status == 'reversed' ) {
 
 		// Process a refund
 		edd_process_paypal_refund( $data );
@@ -404,12 +412,10 @@ add_action( 'edd_paypal_web_accept', 'edd_process_paypal_web_accept_and_cart' );
  * Process PayPal IPN Refunds
  *
  * @since 1.3.4
- * @global $edd_options Array of all the EDD Options
  * @param array   $data IPN Data
  * @return void
  */
 function edd_process_paypal_refund( $data ) {
-	global $edd_options;
 
 	// Collect payment details
 	$payment_id = intval( $data['custom'] );
@@ -418,8 +424,8 @@ function edd_process_paypal_refund( $data ) {
 		return; // Only refund payments once
 	}
 
-	edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Payment #%s Refunded', 'edd' ) , $data['parent_txn_id'] ) );
-	edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Refund Transaction ID: %s', 'edd' ) , $data['txn_id'] ) );
+	edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Payment #%s Refunded for reason: %s', 'edd' ), $data['parent_txn_id'], $data['reason_code'] ) );
+	edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Refund Transaction ID: %s', 'edd' ), $data['txn_id'] ) );
 	edd_update_payment_status( $payment_id, 'refunded' );
 }
 
@@ -518,6 +524,7 @@ add_filter( 'edd_payment_confirm_paypal', 'edd_paypal_success_page_content' );
  */
 function edd_paypal_get_payment_transaction_id( $payment_id ) {
 
+	$transaction_id = '';
 	$notes = edd_get_payment_notes( $payment_id );
 
 	foreach ( $notes as $note ) {

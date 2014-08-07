@@ -130,6 +130,10 @@ class Tests_Payments extends EDD_UnitTestCase {
 
 		$this->_payment_id = $payment_id;
 		$this->_key = $purchase_data['purchase_key'];
+
+		$this->_transaction_id = 'FIR3SID3';
+		edd_set_payment_transaction_id( $payment_id, $this->_transaction_id );
+		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'edd' ) , $this->_transaction_id ) );
 	}
 
 	public function test_get_payments() {
@@ -224,6 +228,14 @@ class Tests_Payments extends EDD_UnitTestCase {
 		update_option( 'edd_settings', $edd_options );
 
 		$this->assertEquals( $this->_payment_id, edd_get_payment_number( $this->_payment_id ) );
+	}
+
+	public function test_get_payment_transaction_id_legacy() {
+		$this->assertEquals( $this->_transaction_id, edd_get_payment_transaction_id( $this->_payment_id ) );
+	}
+
+	public function test_get_payment_transaction_id() {
+		$this->assertEquals( $this->_transaction_id, edd_paypal_get_payment_transaction_id( $this->payment_id ) );
 	}
 
 }

@@ -929,9 +929,9 @@ function edd_payment_icons_callback( $args ) {
 			
 				echo '<input name="edd_settings[' . $args['id'] . '][' . $key . ']" id="edd_settings[' . $args['id'] . '][' . $key . ']" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked( $option, $enabled, false ) . '/>&nbsp;';
 				
-				if( edd_string_is_image_url( $option ) ) {
+				if( edd_string_is_image_url( $key ) ) {
 
-					echo '<img class="payment-icon" src="' . esc_url( $option ) . '" style="width:32px;height:24px;"/>';
+					echo '<img class="payment-icon" src="' . esc_url( $key ) . '" style="width:32px;height:24px;position:relative;top:6px;margin-right:5px;"/>';
 
 				} else {
 

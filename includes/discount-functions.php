@@ -1265,21 +1265,36 @@ function edd_multiple_discounts_allowed() {
  */
 function edd_listen_for_cart_discount() {
 
-	if( ! edd_is_checkout() ) {
-		return;
-	}
-
-	if( empty( $_REQUEST['discount'] ) ) {
+	if ( empty( $_REQUEST['discount'] ) ) {
 		return;
 	}
 
 	$code = sanitize_text_field( $_REQUEST['discount'] );
 
-	if( ! edd_is_discount_valid( $code ) ) {
+	EDD()->session->set( 'preset_discount', $code );
+}
+add_action( 'init', 'edd_listen_for_cart_discount', 500 );
+
+/**
+ * When adding to cart, checks if a session is set for a preset discount
+ * @param  int $download_id The Download ID
+ * @param  array $options   options
+ * @return void
+ */
+function edd_apply_preset_discount( $download_id = 0, $options = array() ) {
+
+	$code = sanitize_text_field( EDD()->session->get( 'preset_discount' ) );
+
+	if ( ! $code ) {
 		return;
 	}
 
-	edd_set_cart_discount( $code );
+	if ( ! edd_is_discount_valid( $code ) ) {
+		return;
+	}
 
+	$code = apply_filters( 'edd_apply_preset_discount', $code, $download_id, $options );
+
+	edd_set_cart_discount( $code );
 }
-add_action( 'template_redirect', 'edd_listen_for_cart_discount', 500 );
+add_action( 'edd_post_add_to_cart', 'edd_apply_preset_discount', 10, 2 );
