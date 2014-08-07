@@ -278,6 +278,13 @@ function edd_process_paypal_ipn() {
 	if ( ! is_array( $encoded_data_array ) && !empty( $encoded_data_array ) )
 		return;
 
+	$defaults = array(
+		'txn_type'       => '',
+		'payment_status' => ''
+	);
+
+	$encoded_data_array = wp_parse_args( $encoded_data_array, $defaults );
+
 	if ( has_action( 'edd_paypal_' . $encoded_data_array['txn_type'] ) ) {
 		// Allow PayPal IPN types to be processed separately
 		do_action( 'edd_paypal_' . $encoded_data_array['txn_type'], $encoded_data_array );
@@ -300,8 +307,9 @@ add_action( 'edd_verify_paypal_ipn', 'edd_process_paypal_ipn' );
 function edd_process_paypal_web_accept_and_cart( $data ) {
 	global $edd_options;
 
-	if ( $data['txn_type'] != 'web_accept' && $data['txn_type'] != 'cart' )
+	if ( $data['txn_type'] != 'web_accept' && $data['txn_type'] != 'cart' && $data['payment_status'] != 'Refunded' ) {
 		return;
+	}
 
 	// Collect payment details
 	$payment_id     = $data['custom'];
