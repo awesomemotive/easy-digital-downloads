@@ -55,7 +55,7 @@ function edd_process_download() {
 
 		// Payment has been verified, setup the download
 		$download_files = edd_get_download_files( $args['download'] );
-		$attachment_id  = ! empty( $download_files[ $file_key ]['attachment_id'] ) ? absint( $download_files[ $args['file_key'] ]['attachment_id'] ) : false;
+		$attachment_id  = ! empty( $download_files[ $args['file_key'] ]['attachment_id'] ) ? absint( $download_files[ $args['file_key'] ]['attachment_id'] ) : false;
 
 		/*
 		 * If we have an attachment ID stored, use get_attached_file() to retrieve absolute URL
