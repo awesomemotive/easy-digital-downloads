@@ -117,7 +117,7 @@ function edd_insert_payment( $payment_data = array() ) {
 		$discount = edd_get_discount_by( 'code', $payment_data['user_info']['discount'] );
 	}
 
-	// Find the next payment number, if enabled
+	// Find the next payment number, if enabled 
 	if( edd_get_option( 'enable_sequential' ) ) {
 		$number = edd_get_next_payment_number();
 	}
@@ -156,30 +156,21 @@ function edd_insert_payment( $payment_data = array() ) {
 			$payment_data['price'] = '0.00';
 		}
 
-		// Create or update a customer
-		$customer_id = EDD()->customers->add( array(
-			'name'        => $payment_data['user_info']['first_name'] . ' ' . $payment_data['user_info']['last_name'],
-			'email'       => $payment_data['user_email'],
-			'user_id'     => $payment_data['user_info']['id'],
-			'payment_ids' => $payment
-		) );
-
 		// Record the payment details
-		update_post_meta( $payment, '_edd_payment_meta',         apply_filters( 'edd_payment_meta', $payment_meta, $payment_data ) );
-		update_post_meta( $payment, '_edd_payment_user_id',      $payment_data['user_info']['id'] );
-		update_post_meta( $payment, '_edd_payment_customer_id',  $customer_id );
-		update_post_meta( $payment, '_edd_payment_user_email',   $payment_data['user_email'] );
-		update_post_meta( $payment, '_edd_payment_user_ip',      edd_get_ip() );
-		update_post_meta( $payment, '_edd_payment_purchase_key', $payment_data['purchase_key'] );
-		update_post_meta( $payment, '_edd_payment_total',        $payment_data['price'] );
-		update_post_meta( $payment, '_edd_payment_mode',         $mode );
-		update_post_meta( $payment, '_edd_payment_gateway',      $gateway );
+		edd_update_payment_meta( $payment, '_edd_payment_meta',         apply_filters( 'edd_payment_meta', $payment_meta, $payment_data ) );
+		edd_update_payment_meta( $payment, '_edd_payment_user_id',      $payment_data['user_info']['id'] );
+		edd_update_payment_meta( $payment, '_edd_payment_user_email',   $payment_data['user_email'] );
+		edd_update_payment_meta( $payment, '_edd_payment_user_ip',      edd_get_ip() );
+		edd_update_payment_meta( $payment, '_edd_payment_purchase_key', $payment_data['purchase_key'] );
+		edd_update_payment_meta( $payment, '_edd_payment_total',        $payment_data['price'] );
+		edd_update_payment_meta( $payment, '_edd_payment_mode',         $mode );
+		edd_update_payment_meta( $payment, '_edd_payment_gateway',      $gateway );
 		if ( ! empty( $discount ) ) {
-			update_post_meta( $payment, '_edd_payment_discount_id',  $discount->ID );
+			edd_update_payment_meta( $payment, '_edd_payment_discount_id',  $discount->ID );
 		}
 
 		if( edd_get_option( 'enable_sequential' ) ) {
-			update_post_meta( $payment, '_edd_payment_number', $number );
+			edd_update_payment_meta( $payment, '_edd_payment_number', $number );
 		}
 
 		// Clear the user's purchased cache
@@ -270,14 +261,6 @@ function edd_delete_purchase( $payment_id = 0 ) {
 	}
 
 	do_action( 'edd_payment_delete', $payment_id );
-
-	// Remove the payment ID from the customer
-	$customer_id = edd_get_payment_customer_id( $payment_id );
-	if( $customer_id ){
-
-		EDD()->customers->remove_payment( $customer_id, $payment_id );
-
-	}
 
 	// Remove the payment
 	wp_delete_post( $payment_id, true );
@@ -608,9 +591,9 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 
 	if ( ! empty( $hour ) )
 		$args['hour'] = $hour;
-
+	
 	$args = apply_filters( 'edd_get_sales_by_date_args', $args  );
-
+	
 	$key   = md5( serialize( $args ) );
 	$count = get_transient( $key, 'edd' );
 
@@ -752,22 +735,59 @@ function edd_decrease_total_earnings( $amount = 0 ) {
  *
  * @since 1.2
  * @param int $payment_id Payment ID
- * @return array $meta Payment Meta
+ * @param string $meta_key The meta key to pull
+ * @param bool $single Pull single meta entry or as an object
+ * @return mixed $meta Payment Meta
  */
-function edd_get_payment_meta( $payment_id ) {
-	$meta = get_post_meta( $payment_id, '_edd_payment_meta', true );
+function edd_get_payment_meta( $payment_id = 0, $meta_key = '_edd_payment_meta', $single = true ) {
 
-	// Payment meta was simplified in EDD v1.5, so these are here for backwards compatibility
-	if ( ! isset( $meta['key'] ) )
-		$meta['key'] = edd_get_payment_key( $payment_id );
+	$meta = get_post_meta( $payment_id, $meta_key, $single );
 
-	if ( ! isset( $meta['email'] ) )
-		$meta['email'] = edd_get_payment_user_email( $payment_id );
+	if ( $meta_key === '_edd_payment_meta' ) {
 
-	if ( ! isset( $meta['date'] ) )
-		$meta['date'] = get_post_field( 'post_date', $payment_id );
+		// Payment meta was simplified in EDD v1.5, so these are here for backwards compatibility
+		if ( ! isset( $meta['key'] ) ) {
+			$meta['key'] = edd_get_payment_key( $payment_id );
+		}
 
-	return apply_filters( 'edd_get_payment_meta', $meta, $payment_id );
+		if ( ! isset( $meta['email'] ) ) {
+			$meta['email'] = edd_get_payment_user_email( $payment_id );
+		}
+
+		if ( ! isset( $meta['date'] ) ) {
+			$meta['date'] = get_post_field( 'post_date', $payment_id );
+		}
+	}
+
+	$meta = apply_filters( 'edd_get_payment_meta_' . $meta_key, $meta, $payment_id );
+
+	return apply_filters( 'edd_get_payment_meta', $meta, $payment_id, $meta_key );
+}
+
+/**
+ * Update the meta for a payment
+ * @param  integer $payment_id Payment ID
+ * @param  string  $meta_key   Meta key to update
+ * @param  string  $meta_value Value to udpate to
+ * @param  string  $prev_value Previous value
+ * @return mixed               Meta ID if successful, false if unsuccessful
+ */
+function edd_update_payment_meta( $payment_id = 0, $meta_key = '', $meta_value = '', $prev_value = '' ) {
+	if ( empty( $payment_id ) || empty( $meta_key ) ) {
+		return;
+	}
+
+	if ( $meta_key == 'key' || $meta_key == 'email' || $meta_key == 'date' ) {
+		$current_meta = edd_get_payment_meta( $payment_id );
+		$current_meta[$meta_key] = $meta_value;
+
+		$meta_key = '_edd_payment_meta';
+		$meta_value = $current_meta;
+	}
+
+	$meta_value = apply_filters( 'edd_edd_update_payment_meta_' . $meta_key, $meta_value, $payment_id );
+
+	return update_post_meta( $payment_id, $meta_key, $meta_value, $prev_value );
 }
 
 /**
@@ -882,19 +902,6 @@ function edd_get_payment_user_id( $payment_id ) {
 }
 
 /**
- * Get the customer ID associated with a payment
- *
- * @since 2.1
- * @param int $payment_id Payment ID
- * @return string $customer_id Customer ID
- */
-function edd_get_payment_customer_id( $payment_id ) {
-	$customer_id = get_post_meta( $payment_id, '_edd_payment_customer_id', true );
-
-	return apply_filters( 'edd_payment_customer_id', $customer_id );
-}
-
-/**
  * Get the status of the unlimited downloads flag
  *
  * @since 2.0
@@ -982,13 +989,13 @@ function edd_get_payment_number( $payment_id = 0 ) {
 		$number = get_post_meta( $payment_id, '_edd_payment_number', true );
 
 		if( ! $number ) {
-
+		
 			$number = $payment_id;
-
+	
 		}
-
+	
 	}
-
+	
 	return apply_filters( 'edd_payment_number', $number, $payment_id );
 }
 
@@ -1012,10 +1019,10 @@ function edd_get_next_payment_number() {
 
 	$payments     = new EDD_Payments_Query( array( 'number' => 1, 'order' => 'DESC', 'orderby' => 'ID', 'output' => 'posts', 'fields' => 'ids' ) );
 
-	$last_payment = $payments->get_payments();
+	$last_payment = $payments->get_payments(); 
 
 	if( $last_payment ) {
-
+		
 		$number = edd_get_payment_number( $last_payment[0] );
 
 		if( empty( $number ) ) {
@@ -1115,13 +1122,7 @@ function edd_payment_subtotal( $payment_id = 0 ) {
 function edd_get_payment_subtotal( $payment_id = 0) {
 	global $edd_options;
 
-	$payment_meta = get_post_meta( $payment_id, '_edd_payment_meta', true );
-
-	$subtotal = 0;
-
-	foreach ( $payment_meta['cart_details'] as $item ) {
-		$subtotal += $item['subtotal'];
-	}
+	$subtotal = edd_get_payment_amount( $payment_id );
 
 	$tax = edd_use_taxes() ? edd_get_payment_tax( $payment_id ) : 0;
 	$subtotal -= $tax;
@@ -1237,7 +1238,7 @@ function edd_set_payment_transaction_id( $payment_id = 0, $transaction_id = '' )
 
 	$transaction_id = apply_filters( 'edd_set_payment_transaction_id', $transaction_id, $payment_id );
 
-	return update_post_meta( $payment_id, '_edd_payment_transaction_id', $transaction_id );
+	return edd_update_payment_meta( $payment_id, '_edd_payment_transaction_id', $transaction_id );
 }
 
 /**
