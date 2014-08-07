@@ -61,7 +61,8 @@ class EDD_DB_Customers extends EDD_DB  {
 
 		$defaults = array(
 			'purchase_value' => 0,
-			'purchase_count' => 0
+			'purchase_count' => 0,
+			'payment_ids'    => array()
 		);
 
 		$args = wp_parse_args( $data, $defaults );
@@ -70,22 +71,27 @@ class EDD_DB_Customers extends EDD_DB  {
 			return false;
 		}
 
+		if( ! empty( $args['payment_ids'] ) && is_array( $args['payment_ids'] ) ) {
+			$args['payment_ids'] = implode( ',', array_unique( array_values( $args['payment_ids'] ) ) );
+		}
+
 		$customer = $this->get_by( 'email', $args['email'] );
 
 		if( $customer ) {
 			// update an existing customer
 
 			// Update the payment IDs attached to the customer
-			if( ! empty( $args['payment_id'] ) ) {
+			if( ! empty( $args['payment_ids'] ) ) {
 
 				if( empty( $customer->payment_ids ) ) {
 
-					$customer->payment_ids = absint( $args['payment_id'] );
+					$customer->payment_ids = $args['payment_ids'];
 				
 				} else {
 
-					$payment_ids   = array_map( 'absint', explode( ',', $customer->payment_ids ) );
-					$payment_ids[] = absint( $args['payment_id'] );
+					$existing_ids = array_map( 'absint', explode( ',', $customer->payment_ids ) );
+					$payment_ids  = array_map( 'absint', explode( ',', $args['payment_ids'] ) );
+					$payment_ids  = array_merge( $payment_ids, $existing_ids );
 					$customer->payment_ids = implode( ',', array_unique( array_values( $payment_ids ) ) );
 
 				}
