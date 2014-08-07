@@ -161,7 +161,7 @@ function edd_insert_payment( $payment_data = array() ) {
 			'name'        => $payment_data['user_info']['first_name'] . ' ' . $payment_data['user_info']['last_name'],
 			'email'       => $payment_data['user_email'],
 			'user_id'     => $payment_data['user_info']['id'],
-			'payment_id'  => $payment
+			'payment_ids' => $payment
 		) );
 
 		// Record the payment details
