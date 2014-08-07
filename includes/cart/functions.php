@@ -52,17 +52,17 @@ function edd_get_cart_content_details() {
 
 		$subtotal   = $item_price * $quantity;
 		$tax        = $tax * $quantity;
-		$total      = round( ( $subtotal - $discount + $tax ), 2 );
+		$total      = round( ( $subtotal - $discount + $tax ), edd_currency_decimal_filter() );
 
 		$details[ $key ]  = array(
 			'name'        => get_the_title( $item['id'] ),
 			'id'          => $item['id'],
 			'item_number' => $item,
-			'item_price'  => round( $item_price, 2 ),
+			'item_price'  => round( $item_price, edd_currency_decimal_filter() ),
 			'quantity'    => $quantity,
-			'discount'    => round( $discount, 2 ),
-			'subtotal'    => round( $subtotal, 2 ),
-			'tax'         => round( $tax, 2 ),
+			'discount'    => round( $discount, edd_currency_decimal_filter() ),
+			'subtotal'    => round( $subtotal, edd_currency_decimal_filter() ),
+			'tax'         => round( $tax, edd_currency_decimal_filter() ),
 			'price'       => $total,
 			'fees'        => $fees
 		);
@@ -883,28 +883,6 @@ function edd_remove_cart_fee_url( $fee_id = '') {
 
 	return apply_filters( 'edd_remove_fee_url', $remove_url );
 }
-
-/**
- * Show Added To Cart Messages
- *
- * @since 1.0
- * @param int $download_id Download (Post) ID
- * @return void
- */
-function edd_show_added_to_cart_messages( $download_id ) {
-	if ( isset( $_POST['edd_action'] ) && $_POST['edd_action'] == 'add_to_cart' ) {
-		if ( $download_id != absint( $_POST['download_id'] ) )
-			$download_id = absint( $_POST['download_id'] );
-
-		$alert = '<div class="edd_added_to_cart_alert">'
-		. sprintf( __('You have successfully added %s to your shopping cart.', 'edd'), get_the_title( $download_id ) )
-		. ' <a href="' . edd_get_checkout_uri() . '" class="edd_alert_checkout_link">' . __('Checkout.', 'edd') . '</a>'
-		. '</div>';
-
-		echo apply_filters( 'edd_show_added_to_cart_messages', $alert );
-	}
-}
-add_action('edd_after_download_content', 'edd_show_added_to_cart_messages');
 
 /**
  * Empties the Cart
