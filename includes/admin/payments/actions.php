@@ -132,11 +132,11 @@ function edd_update_payment_details( $data ) {
 	// Set new status
 	edd_update_payment_status( $payment_id, $status );
 
-	edd_update_payment_meta( $payment_id, '_edd_payment_user_id',             $user_id );
-	edd_update_payment_meta( $payment_id, '_edd_payment_user_email',          $email   );
-	edd_update_payment_meta( $payment_id, '_edd_payment_meta',                $meta    );
-	edd_update_payment_meta( $payment_id, '_edd_payment_total',               $total   );
-	edd_update_payment_meta( $payment_id, '_edd_payment_downloads',           $total   );
+	edd_update_payment_meta( $payment_id, '_edd_payment_user_id',             $user_id   );
+	edd_update_payment_meta( $payment_id, '_edd_payment_user_email',          $email     );
+	edd_update_payment_meta( $payment_id, '_edd_payment_meta',                $meta      );
+	edd_update_payment_meta( $payment_id, '_edd_payment_total',               $total     );
+	edd_update_payment_meta( $payment_id, '_edd_payment_downloads',           $total     );
 	edd_update_payment_meta( $payment_id, '_edd_payment_unlimited_downloads', $unlimited );
 
 	do_action( 'edd_updated_edited_purchase', $payment_id );
