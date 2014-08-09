@@ -257,4 +257,28 @@ class Tests_Payments extends EDD_UnitTestCase {
 
 	}
 
+	public function test_update_payment_meta() {
+
+		$old_value = $this->_payment_key;
+		$this->assertEquals( $old_value, edd_get_payment_meta( $this->_payment_id, '_edd_payment_purchase_key' ) );
+
+		$new_value = 'test12345';
+		$this->assertNotEquals( $old_value, $new_value );
+
+		$ret = edd_update_payment_meta( $this->_payment_id, '_edd_payment_purchase_key', $new_value );
+
+		$this->assertTrue( $ret );
+
+		$this->assertEquals( $new_value, edd_get_payment_meta( $this->_payment_id, '_edd_payment_purchase_key' ) );
+
+		$ret = edd_update_payment_meta( $this->_payment_id, 'email', 'test@test.com' );
+
+		$this->assertTrue( $ret );
+
+		$user_info = edd_get_payment_meta_user_info( $this->_payment_id );
+		$this->assertEquals( $user_info['email'], edd_get_payment_meta( $this->_payment_id, 'email' ) );
+		$this->assertEquals( $user_info['email'], 'john@test.com' );
+
+	}
+
 }
