@@ -200,13 +200,12 @@ class EDD_Emails {
 
 		ob_start();
 
-		edd_get_template_part( 'emails/header.php' );
 		do_action( 'edd_email_header', $this );
 
-		edd_get_template_part( sprintf( 'emails/%s-body.php', $this->template ) );
+		edd_get_template_part( sprintf( 'emails/%s-body', $this->template ) );
 		do_action( 'edd_email_body', $this );
 
-		edd_get_template_part( 'emails/footer.php' );
+		edd_get_template_part( 'emails/footer' );
 		do_action( 'edd_email_footer', $this );
 
 		$body    = ob_get_clean();
