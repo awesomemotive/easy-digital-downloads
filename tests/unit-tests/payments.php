@@ -252,7 +252,7 @@ class Tests_Payments extends EDD_UnitTestCase {
 		$this->assertEquals( $this->_transaction_id, edd_get_payment_meta( $this->_payment_id, '_edd_payment_transaction_id' ) );
 
 		$user_info = edd_get_payment_meta_user_info( $this->_payment_id );
-		$this->assertEquals( $user_info['email'], edd_get_payment_meta( $this->_payment_id, 'email' ) );
+		$this->assertEquals( $user_info['email'], edd_get_payment_meta( $this->_payment_id, '_edd_payment_user_email' ) );
 		$this->assertEquals( $user_info['key'], $this->_payment_key );		
 
 	}
@@ -271,13 +271,12 @@ class Tests_Payments extends EDD_UnitTestCase {
 
 		$this->assertEquals( $new_value, edd_get_payment_meta( $this->_payment_id, '_edd_payment_purchase_key' ) );
 
-		$ret = edd_update_payment_meta( $this->_payment_id, 'email', 'test@test.com' );
+		$ret = edd_update_payment_meta( $this->_payment_id, '_edd_payment_user_email', 'test@test.com' );
 
 		$this->assertTrue( $ret );
 
 		$user_info = edd_get_payment_meta_user_info( $this->_payment_id );
-		$this->assertEquals( $user_info['email'], edd_get_payment_meta( $this->_payment_id, 'email' ) );
-		$this->assertEquals( $user_info['email'], 'john@test.com' );
+		$this->assertEquals( 'john@test.com', edd_get_payment_meta( $this->_payment_id, '_edd_payment_user_email' ) );
 
 	}
 
