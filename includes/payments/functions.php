@@ -886,7 +886,7 @@ function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files =
  * @return string $email User Email
  */
 function edd_get_payment_user_email( $payment_id ) {
-	$email = get_post_meta( $payment_id, '_edd_payment_user_email', true );
+	$email = edd_get_payment_meta( $payment_id, '_edd_payment_user_email', true );
 
 	return apply_filters( 'edd_payment_user_email', $email );
 }
@@ -899,7 +899,7 @@ function edd_get_payment_user_email( $payment_id ) {
  * @return string $user_id User ID
  */
 function edd_get_payment_user_id( $payment_id ) {
-	$user_id = get_post_meta( $payment_id, '_edd_payment_user_id', true );
+	$user_id = edd_get_payment_meta( $payment_id, '_edd_payment_user_id', true );
 
 	return apply_filters( 'edd_payment_user_id', $user_id );
 }
@@ -912,7 +912,7 @@ function edd_get_payment_user_id( $payment_id ) {
  * @return bool $unlimited
  */
 function edd_payment_has_unlimited_downloads( $payment_id ) {
-	$unlimited = (bool) get_post_meta( $payment_id, '_edd_payment_unlimited_downloads', true );
+	$unlimited = (bool) edd_get_payment_meta( $payment_id, '_edd_payment_unlimited_downloads', true );
 
 	return apply_filters( 'edd_payment_unlimited_downloads', $unlimited );
 }
@@ -925,7 +925,7 @@ function edd_payment_has_unlimited_downloads( $payment_id ) {
  * @return string $ip User IP
  */
 function edd_get_payment_user_ip( $payment_id ) {
-	$ip = get_post_meta( $payment_id, '_edd_payment_user_ip', true );
+	$ip = edd_get_payment_meta( $payment_id, '_edd_payment_user_ip', true );
 	return apply_filters( 'edd_payment_user_ip', $ip );
 }
 
@@ -944,7 +944,7 @@ function edd_get_payment_completed_date( $payment_id = 0 ) {
 		return false; // This payment was never completed
 	}
 
-	$date = ( $date = get_post_meta( $payment_id, '_edd_completed_date', true ) ) ? $date : $payment->modified_date;
+	$date = ( $date = edd_get_payment_meta( $payment_id, '_edd_completed_date', true ) ) ? $date : $payment->modified_date;
 
 	return apply_filters( 'edd_payment_completed_date', $date, $payment_id );
 }
@@ -957,7 +957,7 @@ function edd_get_payment_completed_date( $payment_id = 0 ) {
  * @return string $gateway Gateway
  */
 function edd_get_payment_gateway( $payment_id ) {
-	$gateway = get_post_meta( $payment_id, '_edd_payment_gateway', true );
+	$gateway = edd_get_payment_meta( $payment_id, '_edd_payment_gateway', true );
 
 	return apply_filters( 'edd_payment_gateway', $gateway );
 }
@@ -970,7 +970,7 @@ function edd_get_payment_gateway( $payment_id ) {
  * @return string $key Purchase key
  */
 function edd_get_payment_key( $payment_id = 0 ) {
-	$key = get_post_meta( $payment_id, '_edd_payment_purchase_key', true );
+	$key = edd_get_payment_meta( $payment_id, '_edd_payment_purchase_key', true );
 	return apply_filters( 'edd_payment_key', $key, $payment_id );
 }
 
@@ -989,7 +989,7 @@ function edd_get_payment_number( $payment_id = 0 ) {
 
 	if( edd_get_option( 'enable_sequential' ) ) {
 
-		$number = get_post_meta( $payment_id, '_edd_payment_number', true );
+		$number = edd_get_payment_meta( $payment_id, '_edd_payment_number', true );
 
 		if( ! $number ) {
 		
@@ -1080,10 +1080,10 @@ function edd_payment_amount( $payment_id = 0 ) {
  */
 function edd_get_payment_amount( $payment_id ) {
 
-	$amount = get_post_meta( $payment_id, '_edd_payment_total', true );
+	$amount = edd_get_payment_meta( $payment_id, '_edd_payment_total', true );
 
 	if ( empty( $amount ) && '0.00' != $amount ) {
-		$meta   = get_post_meta( $payment_id, '_edd_payment_meta', true );
+		$meta   = edd_get_payment_meta( $payment_id, '_edd_payment_meta', true );
 		$meta   = maybe_unserialize( $meta );
 
 		if ( isset( $meta['amount'] ) ) {
@@ -1214,7 +1214,7 @@ function edd_get_payment_fees( $payment_id = 0, $type = 'all' ) {
 function edd_get_payment_transaction_id( $payment_id = 0 ) {
 
 	$transaction_id = false;
-	$transaction_id = get_post_meta( $payment_id, '_edd_payment_transaction_id', true );
+	$transaction_id = edd_get_payment_meta( $payment_id, '_edd_payment_transaction_id', true );
 
 	if ( empty( $transaction_id ) ) {
 
