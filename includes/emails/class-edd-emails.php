@@ -202,16 +202,19 @@ class EDD_Emails {
 
 		do_action( 'edd_email_header', $this );
 
-		edd_get_template_part( sprintf( 'emails/%s-body', $this->template ) );
+		edd_get_template_part( 'emails/header', null, true );
+		do_action( 'edd_email_header', $this );
+
+		edd_get_template_part( 'emails/%s', $this->get_template(), null, true );
 		do_action( 'edd_email_body', $this );
 
-		edd_get_template_part( 'emails/footer' );
+		edd_get_template_part( 'emails/footer', null, true );
 		do_action( 'edd_email_footer', $this );
 
 		$body    = ob_get_clean();
 
 		$message = str_replace( '{email}', $body, $message );
-		$message = apply_filters( 'edd_purchase_receipt_' . $this->template, wpautop( wptexturize( $message ) ) );
+		$message = apply_filters( 'edd_purchase_receipt_' . $this->get_template(), wpautop( wptexturize( $message ) ) );
 
 		return $message;
 	}
