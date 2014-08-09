@@ -9,6 +9,7 @@ class Tests_Payments extends EDD_UnitTestCase {
 	protected $_payment_id = null;
 	protected $_key = null;
 	protected $_post = null;
+	protected $_payment_key = null;
 
 	public function setUp() {
 
@@ -111,10 +112,12 @@ class Tests_Payments extends EDD_UnitTestCase {
 			)
 		);
 
+		$this->_payment_key = strtolower( md5( uniqid() ) );
+
 		$purchase_data = array(
 			'price' => number_format( (float) $total, 2 ),
 			'date' => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
-			'purchase_key' => strtolower( md5( uniqid() ) ),
+			'purchase_key' => $this->_payment_key,
 			'user_email' => $user_info['email'],
 			'user_info' => $user_info,
 			'currency' => 'USD',
@@ -236,6 +239,22 @@ class Tests_Payments extends EDD_UnitTestCase {
 
 	public function test_get_payment_transaction_id_legacy() {
 		$this->assertEquals( $this->_transaction_id, edd_paypal_get_payment_transaction_id( $this->_payment_id ) );
+	}
+
+	public function test_get_payment_meta() {
+
+		// Test by getting the payment key with three different methods
+		$this->assertEquals( $this->_payment_key, edd_get_payment_meta( $this->_payment_id, '_edd_payment_purchase_key' ) );
+		$this->assertEquals( $this->_payment_key, get_post_meta( $this->_payment_id, '_edd_payment_purchase_key', true ) );
+		$this->assertEquals( $this->_payment_key, edd_get_payment_key( $this->_payment_id ) );
+
+		// Try and retrieve the transaction ID
+		$this->assertEquals( $this->_transaction_id, edd_get_payment_meta( $this->_payment_id, '_edd_payment_transaction_id' ) );
+
+		$user_info = edd_get_payment_meta_user_info( $this->_payment_id );
+		$this->assertEquals( $user_info['email'], edd_get_payment_meta( $this->_payment_id, 'email' ) );
+		$this->assertEquals( $user_info['key'], $this->_payment_key );		
+
 	}
 
 }
