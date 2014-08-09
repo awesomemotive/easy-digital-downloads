@@ -773,16 +773,19 @@ function edd_get_payment_meta( $payment_id = 0, $meta_key = '_edd_payment_meta',
  * @return mixed               Meta ID if successful, false if unsuccessful
  */
 function edd_update_payment_meta( $payment_id = 0, $meta_key = '', $meta_value = '', $prev_value = '' ) {
+
 	if ( empty( $payment_id ) || empty( $meta_key ) ) {
 		return;
 	}
 
 	if ( $meta_key == 'key' || $meta_key == 'email' || $meta_key == 'date' ) {
+
 		$current_meta = edd_get_payment_meta( $payment_id );
 		$current_meta[$meta_key] = $meta_value;
 
-		$meta_key = '_edd_payment_meta';
-		$meta_value = $current_meta;
+		$meta_key     = '_edd_payment_meta';
+		$meta_value   = $current_meta;
+
 	}
 
 	$meta_value = apply_filters( 'edd_edd_update_payment_meta_' . $meta_key, $meta_value, $payment_id );
