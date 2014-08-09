@@ -240,7 +240,7 @@ class Test_Misc extends EDD_UnitTestCase {
 			'MS' => 'Montserrat',
 			'MT' => 'Malta',
 			'MU' => 'Mauritius',
-			'Mv' => 'Maldives',
+			'MV' => 'Maldives',
 			'MW' => 'Malawi',
 			'MX' => 'Mexico',
 			'MY' => 'Malaysia',
