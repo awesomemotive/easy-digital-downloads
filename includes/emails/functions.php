@@ -31,6 +31,8 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	$from_email   = edd_get_option( 'from_name', get_bloginfo( 'admin_email' ) );
 	$from_email   = apply_filters( 'edd_purchase_from_address', $from_email, $payment_id, $payment_data );
 
+	$to_email     = edd_get_payment_user_email( $payment_id );
+
 	$subject      = edd_get_option( 'purchase_subject', __( 'Purchase Receipt', 'edd' ) );
 	$subject      = apply_filters( 'edd_purchase_subject', wp_strip_all_tags( $subject ), $payment_id );
 	$subject      = edd_do_email_tags( $subject, $payment_id );
@@ -46,7 +48,7 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	$headers = apply_filters( 'edd_receipt_headers', $emails->get_headers(), $payment_id, $payment_data );
 	$emails->__set( 'headers', $headers );
 
-	$emails->send( $email, $subject, $message );
+	$emails->send( $to_email, $subject, $message );
 
 	if ( $admin_notice && ! edd_admin_notices_disabled( $payment_id ) ) {
 		do_action( 'edd_admin_sale_notice', $payment_id, $payment_data );

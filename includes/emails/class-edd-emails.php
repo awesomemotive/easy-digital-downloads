@@ -194,6 +194,7 @@ class EDD_Emails {
 	 * @since 2.0
 	 */
 	public function build_email( $message ) {
+
 		if ( false === $this->html )
 			return $message;
 
@@ -229,9 +230,12 @@ class EDD_Emails {
 
 		$message = $this->build_email( $message );
 
-		wp_mail( $to, $subject, $message, $this->get_headers(), $this->get_attachments() );
+		$sent = wp_mail( $to, $subject, $message, $this->get_headers(), $this->get_attachments() );
 
 		do_action( 'edd_email_send_after', $this );
+
+		return $sent;
+
 	}
 
 	/**
