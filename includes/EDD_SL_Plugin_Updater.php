@@ -67,6 +67,9 @@ class EDD_SL_Plugin_Updater {
 	 * @return array Modified update array with custom plugin data.
 	 */
 	function pre_set_site_transient_update_plugins_filter( $_transient_data ) {
+
+		static $api_response = null;
+
 		if( empty( $_transient_data ) || ! $this->do_check ) {
 
 			// This ensures that the custom API request only runs on the second time that WP fires the update check
@@ -75,9 +78,10 @@ class EDD_SL_Plugin_Updater {
 			return $_transient_data;
 		}
 
-		$to_send = array( 'slug' => $this->slug );
-
-		$api_response = $this->api_request( 'plugin_latest_version', $to_send );
+		if ( empty( $api_response ) || is_wp_error( $api_response ) ) {
+			$to_send = array( 'slug' => $this->slug );
+			$api_response = $this->api_request( 'plugin_latest_version', $to_send );
+		}
 
 		if( false !== $api_response && is_object( $api_response ) && isset( $api_response->new_version ) ) {
 
@@ -85,6 +89,7 @@ class EDD_SL_Plugin_Updater {
 				$_transient_data->response[$this->name] = $api_response;
 			}
 		}
+
 		return $_transient_data;
 	}
 
