@@ -183,13 +183,15 @@ class EDD_License {
 		);
 
 		// Call the API
-		$response = wp_remote_get(
-			add_query_arg( $api_params, $this->api_url ),
+		$response = wp_remote_post(
+			$this->api_url,
 			array(
 				'timeout'   => 15,
-				'sslverify' => false
+				'sslverify' => false,
+				'body'      => $api_params
 			)
 		);
+		//echo '<pre>'; print_R( $response ); echo '</pre>'; exit;
 
 		// Make sure there are no errors
 		if ( is_wp_error( $response ) )
@@ -235,11 +237,12 @@ class EDD_License {
 			);
 
 			// Call the API
-			$response = wp_remote_get(
-				add_query_arg( $api_params, $this->api_url ),
+			$response = wp_remote_post(
+				$this->api_url,
 				array(
 					'timeout'   => 15,
-					'sslverify' => false
+					'sslverify' => false,
+					'body'      => $api_params
 				)
 			);
 
