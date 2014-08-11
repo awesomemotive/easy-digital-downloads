@@ -89,7 +89,7 @@ class EDD_License {
 		add_action( 'admin_init', array( $this, 'deactivate_license' ) );
 
 		// Updater
-		add_action( 'plugins_loaded', array( $this, 'auto_updater' ) );
+		add_action( 'admin_init', array( $this, 'auto_updater' ), 0 );
 	}
 
 	/**
