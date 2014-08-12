@@ -26,7 +26,7 @@ function edd_update_payment_details( $data ) {
 	}
 
 	check_admin_referer( 'edd_update_payment_details_nonce' );
-	
+
 	// Retrieve the payment ID
 	$payment_id = absint( $data['edd_payment_id'] );
 
@@ -65,9 +65,14 @@ function edd_update_payment_details( $data ) {
 		$cart_details = array();
 		$i = 0;
 		foreach( $updated_downloads as $download ) {
+
+			if( empty( $download['amount'] ) ) {
+				$download['amount'] = '0.00';
+			}
+
 			$item             = array();
 			$item['id']       = absint( $download['id'] );
-			$item['quantity'] = absint( $download['quantity'] );
+			$item['quantity'] = absint( $download['quantity'] ) > 0 ? absint( $download['quantity'] ) : 1;
 			$price_id         = (int) $download['price_id'];
 
 			if( $price_id !== false && edd_has_variable_prices( $item['id'] ) ) {
@@ -80,12 +85,17 @@ function edd_update_payment_details( $data ) {
 			$cart_item   = array();
 			$cart_item['item_number'] = $item;
 
+			$item_price = round( $download['amount'] / $item['quantity'], edd_currency_decimal_filter() );
+
 			$cart_details[$i] = array(
 				'name'        => get_the_title( $download['id'] ),
 				'id'          => $download['id'],
 				'item_number' => $item,
 				'price'       => $download['amount'],
+				'item_price'  => $item_price,
 				'quantity'    => $download['quantity'],
+				'discount'    => 0,
+				'tax'         => 0,
 			);
 			$i++;
 		}
@@ -127,8 +137,8 @@ function edd_update_payment_details( $data ) {
 	// Check for payment notes
 	if ( ! empty( $data['edd-payment-note'] ) ) {
 
-		$note    = wp_kses( $data['edd-payment-note'], array() );
-		$note_id = edd_insert_payment_note( $payment_id, $note );
+		$note  = wp_kses( $data['edd-payment-note'], array() );
+		edd_insert_payment_note( $payment_id, $note );
 
 	}
 
@@ -143,12 +153,12 @@ function edd_update_payment_details( $data ) {
 	// Set new status
 	edd_update_payment_status( $payment_id, $status );
 
-	update_post_meta( $payment_id, '_edd_payment_user_id',             $user_id );
-	update_post_meta( $payment_id, '_edd_payment_user_email',          $email   );
-	update_post_meta( $payment_id, '_edd_payment_meta',                $meta    );
-	update_post_meta( $payment_id, '_edd_payment_total',               $total   );
-	update_post_meta( $payment_id, '_edd_payment_downloads',           $total   );
-	update_post_meta( $payment_id, '_edd_payment_unlimited_downloads', $unlimited );
+	edd_update_payment_meta( $payment_id, '_edd_payment_user_id',             $user_id   );
+	edd_update_payment_meta( $payment_id, '_edd_payment_user_email',          $email     );
+	edd_update_payment_meta( $payment_id, '_edd_payment_meta',                $meta      );
+	edd_update_payment_meta( $payment_id, '_edd_payment_total',               $total     );
+	edd_update_payment_meta( $payment_id, '_edd_payment_downloads',           $total     );
+	edd_update_payment_meta( $payment_id, '_edd_payment_unlimited_downloads', $unlimited );
 
 	do_action( 'edd_updated_edited_purchase', $payment_id );
 
@@ -282,6 +292,6 @@ function edd_ajax_generate_file_download_link() {
 	}
 
 	die( $file_urls );
-	
+
 }
 add_action( 'wp_ajax_edd_get_file_download_link', 'edd_ajax_generate_file_download_link' );

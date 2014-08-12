@@ -22,8 +22,8 @@ $product_reqs      = edd_get_discount_product_reqs( $discount_id );
 $excluded_products = edd_get_discount_excluded_products( $discount_id );
 $condition         = edd_get_discount_product_condition( $discount_id );
 $single_use        = edd_discount_is_single_use( $discount_id );
-$flat_display      = edd_get_discount_type( $discount_id ) == 'percentage' ? '' : ' style="display:none;"';
-$percent_display   = edd_get_discount_type( $discount_id ) == 'percentage' ? ' style="display:none;"' : '';
+$flat_display      = edd_get_discount_type( $discount_id ) == 'flat' ? '' : ' style="display:none;"';
+$percent_display   = edd_get_discount_type( $discount_id ) == 'percent' ? '' : ' style="display:none;"';
 $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 ?>
 <h2><?php _e( 'Edit Discount', 'edd' ); ?> - <a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-discounts' ); ?>" class="button-secondary"><?php _e( 'Go Back', 'edd' ); ?></a></h2>

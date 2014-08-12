@@ -133,6 +133,9 @@ function edd_install() {
 	$roles->add_roles();
 	$roles->add_caps();
 
+	// Check for PHP Session support, and enable if available
+	EDD()->session->use_php_sessions();
+
 	// Create the customers database
 	@EDD()->customers->create_table();
 

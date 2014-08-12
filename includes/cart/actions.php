@@ -147,7 +147,7 @@ add_action( 'edd_update_cart', 'edd_process_cart_update' );
 function edd_process_cart_save( $data ) {
 
 	$cart = edd_save_cart();
-	if( ! is_wp_error( $cart ) ) {
+	if( ! $cart ) {
 		wp_redirect( edd_get_checkout_uri() ); exit;
 	}
 

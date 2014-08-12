@@ -332,8 +332,9 @@ function edd_default_email_styling( $email_body ) {
 		$email_body = substr_replace( $email_body, '<p style="font-size: 14px; margin-top:0;">', $first_p, 3 );
 	}
 	$email_body = str_replace( '<p>', '<p style="font-size: 14px; line-height: 150%">', $email_body );
-	$email_body = str_replace( '<ul>', '<ul style="margin: 0 0 10px 0; padding: 0;">', $email_body );
-	$email_body = str_replace( '<li>', '<li style="font-size: 14px; line-height: 150%; display:block; margin: 0 0 4px 0;">', $email_body );
+	$email_body = str_replace( '<ul>', '<ul style="margin: 0 0 10px 25px; padding: 0;">', $email_body );
+	$email_body = str_replace( '<ol>', '<ol style="margin: 0 0 10px 25px; padding: 0;">', $email_body );
+	$email_body = str_replace( '<li>', '<li style="font-size: 14px; line-height: 150%; margin: 0 0 4px 0;">', $email_body );
 
 	return $email_body;
 }

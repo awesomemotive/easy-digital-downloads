@@ -226,12 +226,18 @@ class EDD_API {
 			return false;
 		}
 
-		$user = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'edd_user_public_key' AND meta_value = %s LIMIT 1", $key ) );
+		$user = get_transient( md5( 'edd_api_user_' . $key ) );
+
+		if ( false === $user ) {
+			$user = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'edd_user_public_key' AND meta_value = %s LIMIT 1", $key ) );
+			set_transient( md5( 'edd_api_user_' . $key ) , $user, DAY_IN_SECONDS );
+		}
 
 		if ( $user != NULL ) {
 			$this->user_id = $user;
 			return $user;
 		}
+
 		return false;
 	}
 
@@ -846,6 +852,7 @@ class EDD_API {
 		$stats    = array();
 		$earnings = array();
 		$sales    = array();
+		$error    = array();
 
 		if( ! user_can( $this->user_id, 'view_shop_reports' ) && ! $this->override ) {
 			return $stats;
@@ -1132,8 +1139,8 @@ class EDD_API {
 						$price = edd_get_download_final_price( $item_id, $user_info, null );
 					}
 
+					$price_name = '';
 					if ( isset( $item['item_number'] ) && isset( $item['item_number']['options'] ) ) {
-						$price_name     = '';
 						$price_options  = $item['item_number']['options'];
 						if ( isset( $price_options['price_id'] ) ) {
 							$price_name = edd_get_price_option_name( $item['id'], $price_options['price_id'], $payment->ID );
@@ -1179,6 +1186,11 @@ class EDD_API {
 			$per_page  = $this->per_page();
 			$discounts = edd_get_discounts( array( 'posts_per_page' => $per_page, 'paged' => $paged ) );
 			$count     = 0;
+
+			if( empty( $discounts ) ) {
+				$error['error'] = __( 'No disocunts found!', 'edd' );
+				return $error;
+			}
 
 			foreach ( $discounts as $discount ) {
 
@@ -1420,7 +1432,7 @@ class EDD_API {
 					delete_transient( 'edd-total-api-keys' );
 					wp_redirect( add_query_arg( 'edd-message', 'api-key-generated', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) ); exit();
 				} else {
-					wp_redirect( add_query_arg( 'edd-message', 'api-key-exists', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) ); exit();	
+					wp_redirect( add_query_arg( 'edd-message', 'api-key-exists', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) ); exit();
 				}
 				break;
 			case 'regenerate':
@@ -1475,6 +1487,7 @@ class EDD_API {
 		$user = get_userdata( $user_id );
 
 		if ( ! empty( $user->edd_user_public_key ) ) {
+			delete_transient( md5( 'edd_api_user_' . $user->edd_user_public_key ) );
 			delete_user_meta( $user_id, 'edd_user_public_key' );
 			delete_user_meta( $user_id, 'edd_user_secret_key' );
 		} else {
@@ -1505,8 +1518,7 @@ class EDD_API {
 				update_user_meta( $user_id, 'edd_user_public_key', $this->generate_public_key( $user->user_email ) );
 				update_user_meta( $user_id, 'edd_user_secret_key', $this->generate_private_key( $user->ID ) );
 			} else {
-				delete_user_meta( $user_id, 'edd_user_public_key' );
-				delete_user_meta( $user_id, 'edd_user_secret_key' );
+				$this->revoke_api_key( $user_id );
 			}
 		}
 	}

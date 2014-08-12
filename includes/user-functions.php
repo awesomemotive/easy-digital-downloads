@@ -63,11 +63,11 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 		$field = 'user_id';
 
 	} else {
-		
+
 		$field = 'email';
-		
+
 	}
-	
+
 	$payment_ids = EDD()->customers->get_column_by( 'payment_ids', 'user_id', $user );
 
 	if( ! empty( $payment_ids ) ) {
@@ -90,10 +90,10 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
  * Returns a list of unique products purchased by a specific user
  *
  * @since  2.0
- * 
+ *
  * @param int    $user User ID or email address
  * @param string $status
- * 
+ *
  * @return bool|object List of unique products purchased by user
  */
 function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
@@ -134,9 +134,9 @@ function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
 	$product_ids = array_unique( $purchased_products );
 
 	// Make sure we still have some products and a first item
-	if ( empty ( $product_ids ) || ! isset( $product_ids[0] ) ) 
+	if ( empty ( $product_ids ) || ! isset( $product_ids[0] ) )
 		return false;
-	
+
 	$post_type 	 = get_post_type( $product_ids[0] );
 
 	$args = apply_filters( 'edd_get_users_purchased_products_args', array(
@@ -233,13 +233,13 @@ function edd_has_purchases( $user_id = null ) {
 function edd_get_purchase_stats_by_user( $user = '' ) {
 
 	if ( is_email( $user ) ) {
-	
+
 		$field = 'email';
-	
+
 	} elseif ( is_numeric( $user ) ) {
-	
+
 		$field = 'user_id';
-	
+
 	}
 
 	$customer = EDD()->customers->get_by( $field, $user );
@@ -347,7 +347,7 @@ function edd_add_past_purchases_to_new_user( $user_id ) {
 	$email    = get_the_author_meta( 'user_email', $user_id );
 
 	$payments = edd_get_payments( array( 's' => $email ) );
-	
+
 	if( $payments ) {
 		foreach( $payments as $payment ) {
 			if( intval( edd_get_payment_user_id( $payment->ID ) ) > 0 )
@@ -359,8 +359,8 @@ function edd_add_past_purchases_to_new_user( $user_id ) {
 			$meta['user_info']       = $meta['user_info'];
 
 			// Store the updated user ID in the payment meta
-			update_post_meta( $payment->ID, '_edd_payment_meta', $meta );
-			update_post_meta( $payment->ID, '_edd_payment_user_id', $user_id );
+			edd_update_payment_meta( $payment->ID, '_edd_payment_meta', $meta );
+			edd_update_payment_meta( $payment->ID, '_edd_payment_user_id', $user_id );
 		}
 	}
 
