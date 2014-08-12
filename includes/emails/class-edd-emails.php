@@ -130,7 +130,7 @@ class EDD_Emails {
 	 */
 	public function get_headers() {
 		if ( ! $this->headers ) {
-			
+
 			$this->headers  = "From: {$this->get_from_name()} <{$this->get_from_address()}>\r\n";
 			$this->headers .= "Reply-To: {$this->get_from_address()}\r\n";
 			$this->headers .= "Content-Type: {$this->get_content_type()}; charset=utf-8\r\n";
@@ -163,7 +163,7 @@ class EDD_Emails {
 			'default' => __( 'Default Template', 'edd' ),
 			'none'    => __( 'No template, plain text only', 'edd' )
 		);
- 
+
 		return apply_filters( 'edd_email_templates', $templates );
 	}
 
@@ -195,8 +195,11 @@ class EDD_Emails {
 	 */
 	public function build_email( $message ) {
 
-		if ( false === $this->html )
+		if ( false === $this->html ) {
+
 			return $message;
+
+		}
 
 		ob_start();
 
