@@ -104,6 +104,27 @@ function edd_update_payment_details( $data ) {
 		$meta['cart_details'] = $cart_details;
 	}
 
+	if ( $user_id !== $user_info['id'] || $email !== $user_info['email'] ) {
+
+		$user = get_user_by( 'id', $user_id );
+		if ( ! empty( $user ) && strtolower( $user->data->user_email ) !== strtolower( $email ) ) {
+			// protect a purcahse from being assigned to a customer with a user ID and Email that belong to different users
+			wp_die( 'User ID and User Email do not match.' );
+			exit;
+		}
+
+		// Remove the stats and payment from the previous customer
+		$previous_customer = EDD()->customers->get_by( 'email', $user_info['email'] );
+		EDD()->customers->remove_payment( $previous_customer->id, $payment_id );
+		EDD()->customers->decrement_stats( $previous_customer->id, $total );
+
+		// Attribute the payment to the new customer and update the payment post meta
+		$new_customer      = EDD()->customers->get_by( 'email', $email );
+		EDD()->customers->attach_payment( $new_customer->id, $payment_id );
+		EDD()->customers->increment_stats( $new_customer->id, $total );
+		update_post_meta( $payment_id, '_edd_payment_customer_id',  $new_customer->id );
+	}
+
 	// Set new meta values
 	$user_info['id']         = $user_id;
 	$user_info['email']      = $email;
@@ -145,6 +166,23 @@ function edd_update_payment_details( $data ) {
 	exit;
 }
 add_action( 'edd_update_payment_details', 'edd_update_payment_details' );
+
+/**
+ * Trigger a Purchase Deletion
+ *
+ * @since 1.3.4
+ * @param $data Arguments passed
+ * @return void
+ */
+function edd_trigger_purchase_delete( $data ) {
+	if ( wp_verify_nonce( $data['_wpnonce'], 'edd_payment_nonce' ) ) {
+		$payment_id = absint( $data['purchase_id'] );
+		edd_delete_purchase( $payment_id );
+		wp_redirect( admin_url( '/edit.php?post_type=download&page=edd-payment-history&edd-message=payment_deleted' ) );
+		edd_die();
+	}
+}
+add_action( 'edd_delete_payment', 'edd_trigger_purchase_delete' );
 
 function edd_ajax_store_payment_note() {
 

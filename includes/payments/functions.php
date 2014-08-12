@@ -117,7 +117,7 @@ function edd_insert_payment( $payment_data = array() ) {
 		$discount = edd_get_discount_by( 'code', $payment_data['user_info']['discount'] );
 	}
 
-	// Find the next payment number, if enabled 
+	// Find the next payment number, if enabled
 	if( edd_get_option( 'enable_sequential' ) ) {
 		$number = edd_get_next_payment_number();
 	}
@@ -156,15 +156,25 @@ function edd_insert_payment( $payment_data = array() ) {
 			$payment_data['price'] = '0.00';
 		}
 
+		// Create or update a customer
+		$customer_id = EDD()->customers->add( array(
+			'name'        => $payment_data['user_info']['first_name'] . ' ' . $payment_data['user_info']['last_name'],
+			'email'       => $payment_data['user_email'],
+			'user_id'     => $payment_data['user_info']['id'],
+			'payment_ids' => $payment
+		) );
+
 		// Record the payment details
 		edd_update_payment_meta( $payment, '_edd_payment_meta',         apply_filters( 'edd_payment_meta', $payment_meta, $payment_data ) );
 		edd_update_payment_meta( $payment, '_edd_payment_user_id',      $payment_data['user_info']['id'] );
+		edd_update_payment_meta( $payment, '_edd_payment_customer_id',  $customer_id );
 		edd_update_payment_meta( $payment, '_edd_payment_user_email',   $payment_data['user_email'] );
 		edd_update_payment_meta( $payment, '_edd_payment_user_ip',      edd_get_ip() );
 		edd_update_payment_meta( $payment, '_edd_payment_purchase_key', $payment_data['purchase_key'] );
 		edd_update_payment_meta( $payment, '_edd_payment_total',        $payment_data['price'] );
 		edd_update_payment_meta( $payment, '_edd_payment_mode',         $mode );
 		edd_update_payment_meta( $payment, '_edd_payment_gateway',      $gateway );
+
 		if ( ! empty( $discount ) ) {
 			edd_update_payment_meta( $payment, '_edd_payment_discount_id',  $discount->ID );
 		}
@@ -261,6 +271,14 @@ function edd_delete_purchase( $payment_id = 0 ) {
 	}
 
 	do_action( 'edd_payment_delete', $payment_id );
+
+	// Remove the payment ID from the customer
+	$customer_id = edd_get_payment_customer_id( $payment_id );
+	if( $customer_id ){
+
+		EDD()->customers->remove_payment( $customer_id, $payment_id );
+
+	}
 
 	// Remove the payment
 	wp_delete_post( $payment_id, true );
@@ -591,9 +609,9 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 
 	if ( ! empty( $hour ) )
 		$args['hour'] = $hour;
-	
+
 	$args = apply_filters( 'edd_get_sales_by_date_args', $args  );
-	
+
 	$key   = md5( serialize( $args ) );
 	$count = get_transient( $key, 'edd' );
 
@@ -905,6 +923,19 @@ function edd_get_payment_user_id( $payment_id ) {
 }
 
 /**
+ * Get the customer ID associated with a payment
+ *
+ * @since 2.1
+ * @param int $payment_id Payment ID
+ * @return string $customer_id Customer ID
+ */
+function edd_get_payment_customer_id( $payment_id ) {
+	$customer_id = get_post_meta( $payment_id, '_edd_payment_customer_id', true );
+
+	return apply_filters( 'edd_payment_customer_id', $customer_id );
+}
+
+/**
  * Get the status of the unlimited downloads flag
  *
  * @since 2.0
@@ -992,13 +1023,13 @@ function edd_get_payment_number( $payment_id = 0 ) {
 		$number = edd_get_payment_meta( $payment_id, '_edd_payment_number', true );
 
 		if( ! $number ) {
-		
+
 			$number = $payment_id;
-	
+
 		}
-	
+
 	}
-	
+
 	return apply_filters( 'edd_payment_number', $number, $payment_id );
 }
 
@@ -1022,10 +1053,10 @@ function edd_get_next_payment_number() {
 
 	$payments     = new EDD_Payments_Query( array( 'number' => 1, 'order' => 'DESC', 'orderby' => 'ID', 'output' => 'posts', 'fields' => 'ids' ) );
 
-	$last_payment = $payments->get_payments(); 
+	$last_payment = $payments->get_payments();
 
 	if( $last_payment ) {
-		
+
 		$number = edd_get_payment_number( $last_payment[0] );
 
 		if( empty( $number ) ) {

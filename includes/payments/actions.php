@@ -34,6 +34,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 	$completed_date = edd_get_payment_completed_date( $payment_id );
 	$user_info      = edd_get_payment_meta_user_info( $payment_id );
+	$customer_id    = edd_get_payment_customer_id( $payment_id );
 	$amount         = edd_get_payment_amount( $payment_id );
 	$cart_details   = edd_get_payment_meta_cart_details( $payment_id );
 
@@ -76,6 +77,9 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
 		delete_transient( md5( 'edd_earnings_todaytoday' ) );
 	}
+
+	// Increase the customer's purchase stats
+	EDD()->customers->increment_stats( $customer_id, $amount );
 
 	// Check for discount codes and increment their use counts
 	if ( isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ) {
@@ -163,23 +167,6 @@ function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
 }
 add_action( 'edd_update_payment_status', 'edd_undo_purchase_on_refund', 100, 3 );
 
-
-/**
- * Trigger a Purchase Deletion
- *
- * @since 1.3.4
- * @param $data Arguments passed
- * @return void
- */
-function edd_trigger_purchase_delete( $data ) {
-	if ( wp_verify_nonce( $data['_wpnonce'], 'edd_payment_nonce' ) ) {
-		$payment_id = absint( $data['purchase_id'] );
-		edd_delete_purchase( $payment_id );
-		wp_redirect( admin_url( '/edit.php?post_type=download&page=edd-payment-history&edd-message=payment_deleted' ) );
-		edd_die();
-	}
-}
-add_action( 'edd_delete_payment', 'edd_trigger_purchase_delete' );
 
 /**
  * Flushes the current user's purchase history transient when a payment status
