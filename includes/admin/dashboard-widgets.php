@@ -41,50 +41,94 @@ function edd_dashboard_sales_widget() {
 	$stats = new EDD_Payment_Stats; ?>
 	<div class="edd_dashboard_widget">
 		<div class="table table_left table_current_month">
-			<p class="sub"><?php _e( 'Current Month', 'edd' ) ?></p>
 			<table>
+				<thead>
+					<tr>
+						<td colspan="2"><?php _e( 'Current Month', 'edd' ) ?></td>
+					</tr>
+				</thead>
 				<tbody>
-					<tr class="first">
-						<td class="first b b-earnings"><?php echo edd_currency_filter( edd_format_amount( $stats->get_earnings( 0, 'this_month' ) ) ); ?></td>
-						<td class="t monthly_earnings"><?php _e( 'Earnings', 'edd' ); ?></td>
+					<tr>
+						<td class="first t monthly_earnings"><?php _e( 'Earnings', 'edd' ); ?></td>
+						<td class="b b-earnings"><?php echo edd_currency_filter( edd_format_amount( $stats->get_earnings( 0, 'this_month' ) ) ); ?></td>
 					</tr>
 					<tr>
 						<?php $monthly_sales = $stats->get_sales( 0, 'this_month', false, array( 'publish', 'revoked' ) ); ?>
-						<td class="first b b-sales"><?php echo $monthly_sales; ?></td>
-						<td class="t monthly_sales"><?php echo _n( 'Sale', 'Sales', $monthly_sales, 'edd' ); ?></td>
+						<td class="first t monthly_sales"><?php echo _n( 'Sale', 'Sales', $monthly_sales, 'edd' ); ?></td>
+						<td class="b b-sales"><?php echo $monthly_sales; ?></td>
 					</tr>
 				</tbody>
 			</table>
-			<p class="label_heading"><?php _e( 'Last Month', 'edd' ) ?></p>
-			<div>
-				<?php echo __( 'Earnings', 'edd' ) . ':&nbsp;<span class="edd_price_label">' . edd_currency_filter( edd_format_amount( $stats->get_earnings( 0, 'last_month' ) ) ) . '</span>'; ?>
-			</div>
-			<div>
-				<?php $last_month_sales = $stats->get_sales( 0, 'last_month', false, array( 'publish', 'revoked' ) ); ?>
-				<?php echo _n( 'Sale', 'Sales', $last_month_sales, 'edd' ) . ':&nbsp;' . '<span class="edd_price_label">' . $last_month_sales . '</span>'; ?>
-			</div>
-		</div>
-		<div class="table table_right table_totals">
-			<p class="sub"><?php _e( 'Totals', 'edd' ) ?></p>
 			<table>
+				<thead>
+					<tr>
+						<td colspan="2"><?php _e( 'Last Month', 'edd' ) ?></td>
+					</tr>
+				</thead>
 				<tbody>
-					<tr class="first">
-						<td class="b b-earnings"><?php echo edd_currency_filter( edd_format_amount( edd_get_total_earnings() ) ); ?></td>
-						<td class="last t earnings"><?php _e( 'Total Earnings', 'edd' ); ?></td>
+					<tr>
+						<td class="first t earnings"><?php echo __( 'Earnings', 'edd' ); ?></td>
+						<td class="b b-last-month-earnings"><?php echo edd_currency_filter( edd_format_amount( $stats->get_earnings( 0, 'last_month' ) ) ); ?></td>
 					</tr>
 					<tr>
-						<td class="b b-sales"><?php echo edd_get_total_sales(); ?></td>
-						<td class="last t sales"><?php _e( 'Total Sales', 'edd' ); ?></td>
+						<td class="first t sales">
+							<?php $last_month_sales = $stats->get_sales( 0, 'last_month', false, array( 'publish', 'revoked' ) ); ?>
+							<?php echo _n( 'Sale', 'Sales', $last_month_sales, 'edd' ); ?>
+						</td>
+						<td class="b b-last-month-sales">
+							<?php echo $last_month_sales; ?>
+						</td>
 					</tr>
 				</tbody>
 			</table>
-			<?php
-			$best_selling = $stats->get_best_selling( 1 );
-			if ( ! empty( $best_selling ) ) {
-				foreach( $best_selling as $top_seller ) { ?>
-					<p class="lifetime_best_selling label_heading"><?php _e('Lifetime Best Selling', 'edd') ?></p>
-					<p><span class="lifetime_best_selling_label"><?php echo $top_seller->sales; ?></span> <a href="<?php echo get_permalink( $top_seller->download_id ); ?>"><?php echo get_the_title( $top_seller->download_id ); ?></a></p>
-			<?php } } ?>
+		</div>
+		<div class="table table_right table_today">
+			<table>
+				<thead>
+					<tr>
+						<td colspan="2">
+							<?php _e( 'Today', 'edd' ); ?>
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="t sales"><?php _e( 'Earnings', 'edd' ); ?></td>
+						<td class="last b b-earnings">
+							<?php $earnings_today = $stats->get_earnings( 0, 'today', false ); ?>
+							<?php echo edd_currency_filter( edd_format_amount( $earnings_today ) ); ?>
+						</td>
+					</tr>
+					<tr>
+						<td class="t sales">
+							<?php _e( 'Sales', 'edd' ); ?>
+						</td>
+						<td class="last b b-sales">
+							<?php $sales_today = $stats->get_sales( 0, 'today', false, array( 'publish', 'revoked' ) ); ?>
+							<?php echo edd_format_amount( $sales_today, false ); ?>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="table table_right table_totals">
+			<table>
+				<thead>
+					<tr>
+						<td colspan="2"><?php _e( 'Totals', 'edd' ) ?></td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="t earnings"><?php _e( 'Total Earnings', 'edd' ); ?></td>
+						<td class="last b b-earnings"><?php echo edd_currency_filter( edd_format_amount( edd_get_total_earnings() ) ); ?></td>
+					</tr>
+					<tr>
+						<td class="t sales"><?php _e( 'Total Sales', 'edd' ); ?></td>
+						<td class="last b b-sales"><?php echo edd_format_amount( edd_get_total_sales(), false ); ?></td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 		<div style="clear: both"></div>
 		<?php
@@ -96,21 +140,36 @@ function edd_dashboard_sales_widget() {
 		$payments = $p_query->get_payments();
 
 		if ( $payments ) { ?>
-		<p class="edd_dashboard_widget_subheading">
-			<?php _e( 'Recent Purchases', 'edd' ); ?>
-			<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>">&nbsp;&ndash;&nbsp;<?php _e( 'View All', 'edd' ); ?></a>
-		</p>
 		<div class="table recent_purchases">
 			<table>
+				<thead>
+					<tr>
+						<td colspan="2">
+							<?php _e( 'Recent Purchases', 'edd' ); ?>
+							<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>">&nbsp;&ndash;&nbsp;<?php _e( 'View All', 'edd' ); ?></a>
+						</td>
+					</tr>
+				</thead>
 				<tbody>
 					<?php
 					foreach ( $payments as $payment ) { ?>
 						<tr>
-							<td>
-								<span class="edd-recent-title"><?php echo get_the_title( $payment->ID ) ?></span>
-								<span class="edd-recent-email">&nbsp;&ndash;&nbsp;(<?php echo $payment->user_info['email'] ?>)&nbsp;&ndash;&nbsp;</span>
-								<span class="edd-recent-amount"><?php echo edd_currency_filter( edd_format_amount( $payment->total ) ); ?></span>
-								<a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>" title="<?php printf( __( 'Purchase Details for Payment #%s', 'edd' ), $payment->ID ); ?> "><?php _e( 'View Order Details', 'edd' ); ?></a>
+							<td class="edd_order_label">
+								<a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>" title="<?php printf( __( 'Purchase Details for Payment #%s', 'edd' ), $payment->ID ); ?> ">
+									<?php echo get_the_title( $payment->ID ) ?>
+									&mdash; <?php echo $payment->user_info['email'] ?>
+								</a>
+								<?php if ( $payment->user_info['id'] > 0 ) {
+									$user = get_user_by( 'id', $payment->user_info['id'] );
+									if ( $user ) {
+										echo "(" . $user->data->user_login . ")";
+									}
+								} ?>
+							</td>
+							<td class="edd_order_price">
+								<a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>" title="<?php printf( __( 'Purchase Details for Payment #%s', 'edd' ), $payment->ID ); ?> ">
+									<span class="edd_price_label"><?php echo edd_currency_filter( edd_format_amount( $payment->total ) ); ?></span>
+								</a>
 							</td>
 						</tr>
 						<?php
@@ -122,3 +181,31 @@ function edd_dashboard_sales_widget() {
 	</div>
 	<?php
 }
+
+/**
+ * Add download count to At a glance widget
+ *
+ * @author Daniel J Griffiths
+ * @since 2.1
+ * @return void
+ */
+function edd_dashboard_at_a_glance_widget( $items ) {
+	$num_posts = wp_count_posts( 'download' );
+
+	if ( $num_posts && $num_posts->publish ) {
+		$text = _n( '%s ' . edd_get_label_singular(), '%s ' . edd_get_label_plural(), $num_posts->publish );
+
+		$text = sprintf( $text, number_format_i18n( $num_posts->publish ) );
+
+		if ( current_user_can( 'edit_products' ) ) {
+			$text = sprintf( '<a class="download-count" href="edit.php?post_type=download">%1$s</a>', $text );
+		} else {
+			$text = sprintf( '<span class="download-count">%1$s</span>', $text );
+		}
+
+		$items[] = $text;
+	}
+
+	return $items;
+}
+add_filter( 'dashboard_glance_items', 'edd_dashboard_at_a_glance_widget', 1 );

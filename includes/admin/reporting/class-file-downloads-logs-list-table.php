@@ -113,6 +113,8 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 				return '<a href="' . add_query_arg( 'download', $item[ $column_name ] ) . '" >' . get_the_title( $item[ $column_name ] ) . '</a>';
 			case 'user_id' :
 				return '<a href="' . add_query_arg( 'user', $item[ $column_name ] ) . '">' . $item[ 'user_name' ] . '</a>';
+			case 'payment_id' :
+				return '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item[ 'payment_id' ] ) . '">' . edd_get_payment_number( $item[ 'payment_id' ] ) . '</a>';
 			default:
 				return $item[ $column_name ];
 		}
@@ -143,10 +145,20 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 *
 	 * @access public
 	 * @since 1.4
-	 * @return mixed int If User ID, string If Email/Login
+	 * @return mixed int If User ID, string If Email/Login, false if not present
 	 */
 	public function get_filtered_user() {
-		return isset( $_GET['user'] ) ? absint( $_GET['user'] ) : false;
+		$ret = false;
+
+		if( isset( $_GET['user'] ) ) {
+			if( is_numeric( $_GET['user'] ) ) {
+				$ret = absint( $_GET['user'] );
+			} else {
+				$ret = sanitize_text_field( $_GET['user'] );
+			}
+		}
+
+		return $ret;
 	}
 
 	/**
@@ -161,14 +173,25 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Retrieves the ID of the payment we're filtering logs by
+	 *
+	 * @access public
+	 * @since 2.0
+	 * @return int Payment ID
+	 */
+	public function get_filtered_payment() {
+		return ! empty( $_GET['payment'] ) ? absint( $_GET['payment'] ) : false;
+	}
+
+	/**
 	 * Retrieves the search query string
 	 *
 	 * @access public
 	 * @since 1.4
-	 * @return mixed string If search is present, false otherwise
+	 * @return String The search string
 	 */
 	public function get_search() {
-		return ! empty( $_GET['s'] ) ? urldecode( trim( $_GET['s'] ) ) : false;
+		return ! empty( $_GET['s'] ) ? urldecode( trim( $_GET['s'] ) ) : '';
 	}
 
 	/**
@@ -181,21 +204,37 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @return array $meta_query
 	 */
 	public function get_meta_query() {
-		$user = $this->get_filtered_user();
-
+		$user       = $this->get_filtered_user();
+		$payment    = $this->get_filtered_payment();
 		$meta_query = array();
 
 		if ( $user ) {
 			// Show only logs from a specific user
+			if( is_numeric( $user ) ) {
+				$meta_query[] = array(
+					'key'   => '_edd_log_user_id',
+					'value' => $user
+				);
+			} else {
+				$meta_query[] = array(
+					'key'     => '_edd_log_user_info',
+					'value'   => $user,
+					'compare' => 'LIKE'
+				);
+			}
+		}
+
+		if ( $payment ) {
+			// Show only logs from a specific payment
 			$meta_query[] = array(
-				'key'   => '_edd_log_user_id',
-				'value' => $user
+				'key'   => '_edd_log_payment_id',
+				'value' => $payment
 			);
 		}
 
 		$search = $this->get_search();
 
-		if ( $search ) {
+		if ( ! empty( $search ) ) {
 			if ( filter_var( $search, FILTER_VALIDATE_IP ) ) {
 				// This is an IP address search
 				$key     = '_edd_log_ip';

@@ -182,7 +182,6 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function category_filter() {
-		$current_view = isset( $_GET[ 'view' ] ) ? $_GET[ 'view' ] : 'earnings';
 		if( get_terms( 'download_category' ) ) {
 			echo EDD()->html->category_dropdown( 'category', $this->get_category() );
 		}
@@ -236,6 +235,8 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 				$args['meta_key'] = '_edd_download_earnings';
 				break;
 		endswitch;
+
+		$args = apply_filters( 'edd_download_reports_prepare_items_args', $args, $this );
 
 		$this->products = new WP_Query( $args );
 
@@ -292,8 +293,6 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
 		$data = $this->reports_data();
-
-		$current_page = $this->get_pagenum();
 
 		$total_items = $this->get_total_downloads();
 

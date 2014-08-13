@@ -41,7 +41,6 @@ function edd_get_email_templates() {
  * @return string $message Fully formatted message
  */
 function edd_email_template_tags( $message, $payment_data, $payment_id, $admin_notice = false ) {
-
 	return edd_do_email_tags( $message, $payment_id );
 }
 
@@ -81,11 +80,14 @@ function edd_email_preview_template_tags( $message ) {
 
 	$payment_id = rand(1, 100);
 
+	$user     = wp_get_current_user();
+	$usermeta = get_user_meta( get_current_user_id() );
+
 	$message = str_replace( '{download_list}', $download_list, $message );
 	$message = str_replace( '{file_urls}', $file_urls, $message );
-	$message = str_replace( '{name}', 'John', $message );
-	$message = str_replace( '{fullname}', 'John Doe', $message );
-	$message = str_replace( '{username}', 'john-doe', $message );
+	$message = str_replace( '{name}', ( !empty( $usermeta['first_name'][0] ) ? $usermeta['first_name'][0] : 'John' ), $message );
+ 	$message = str_replace( '{fullname}', ( !empty( $usermeta['first_name'][0] ) ? $usermeta['first_name'][0] : 'John' ) . ( !empty( $usermeta['last_name'][0] ) ? ' ' . $usermeta['last_name'][0] : ' Doe' ), $message );
+ 	$message = str_replace( '{username}', $user->user_login, $message );
 	$message = str_replace( '{date}', date( get_option( 'date_format' ), current_time( 'timestamp' ) ), $message );
 	$message = str_replace( '{subtotal}', $sub_total, $message );
 	$message = str_replace( '{tax}', $tax, $message );
@@ -157,7 +159,7 @@ function edd_get_email_body_header() {
 	<head>
 		<style type="text/css">#outlook a { padding: 0; }</style>
 	</head>
-	<body>
+	<body dir="<?php echo is_rtl() ? 'rtl' : 'ltr'; ?>">
 	<?php
 	do_action( 'edd_email_body_header' );
 	return ob_get_clean();
@@ -306,9 +308,10 @@ add_filter( 'edd_purchase_receipt', 'edd_apply_email_template', 20, 3 );
  * @since 1.0.8.2
  */
 function edd_default_email_template() {
+	$text_align = is_rtl() ? 'right' : 'left';
 	echo '<div style="margin: 0; background-color: #fafafa; width: auto; padding: 30px;"><center>';
 		echo '<div style="border: 1px solid #ddd; width: 660px; background: #f0f0f0; padding: 8px; margin: 0;">';
-			echo '<div id="edd-email-content" style="background: #fff; border: 1px solid #ddd; padding: 15px; text-align: left !important;">';
+			echo '<div id="edd-email-content" style="background: #fff; border: 1px solid #ddd; padding: 15px; text-align: ' . $text_align . ' !important;">';
 				echo '{email}'; // This tag is required in order for the contents of the email to be shown
 			echo '</div>';
 		echo '</div>';
@@ -329,8 +332,9 @@ function edd_default_email_styling( $email_body ) {
 		$email_body = substr_replace( $email_body, '<p style="font-size: 14px; margin-top:0;">', $first_p, 3 );
 	}
 	$email_body = str_replace( '<p>', '<p style="font-size: 14px; line-height: 150%">', $email_body );
-	$email_body = str_replace( '<ul>', '<ul style="margin: 0 0 10px 0; padding: 0;">', $email_body );
-	$email_body = str_replace( '<li>', '<li style="font-size: 14px; line-height: 150%; display:block; margin: 0 0 4px 0;">', $email_body );
+	$email_body = str_replace( '<ul>', '<ul style="margin: 0 0 10px 25px; padding: 0;">', $email_body );
+	$email_body = str_replace( '<ol>', '<ol style="margin: 0 0 10px 25px; padding: 0;">', $email_body );
+	$email_body = str_replace( '<li>', '<li style="font-size: 14px; line-height: 150%; margin: 0 0 4px 0;">', $email_body );
 
 	return $email_body;
 }

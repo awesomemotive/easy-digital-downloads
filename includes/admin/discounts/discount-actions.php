@@ -34,13 +34,19 @@ function edd_add_discount( $data ) {
 			}
 		}
 
-		// Set the discount code's default status to active
-		$posted['status'] = 'active';
-		if ( edd_store_discount( $posted ) ) {
-			wp_redirect( add_query_arg( 'edd-message', 'discount_added', $data['edd-redirect'] ) ); edd_die();
+		// Ensure this discount doesn't already exist
+		if ( ! edd_get_discount_by_code( $posted['code'] ) ) {
+
+			// Set the discount code's default status to active
+			$posted['status'] = 'active';
+			if ( edd_store_discount( $posted ) ) {
+				wp_redirect( add_query_arg( 'edd-message', 'discount_added', $data['edd-redirect'] ) ); edd_die();
+			} else {
+				wp_redirect( add_query_arg( 'edd-message', 'discount_add_failed', $data['edd-redirect'] ) ); edd_die();
+			}
 		} else {
-			wp_redirect( add_query_arg( 'edd-message', 'discount_add_failed', $data['edd-redirect'] ) ); edd_die();
-		}		
+			wp_redirect( add_query_arg( 'edd-message', 'discount_exists', $data['edd-redirect'] ) ); edd_die();
+		}
 	}
 }
 add_action( 'edd_add_discount', 'edd_add_discount' );
@@ -66,7 +72,7 @@ function edd_edit_discount( $data ) {
 			}
 		}
 
-		$old_discount = edd_get_discount_by_code( $data['code'] );
+		$old_discount = edd_get_discount_by( 'code', $data['code'] );
 		$discount['uses'] = edd_get_discount_uses( $old_discount->ID );
 
 		if ( edd_store_discount( $discount, $data['discount-id'] ) ) {
@@ -107,7 +113,7 @@ add_action( 'edd_delete_discount', 'edd_delete_discount' );
  * @return void
  */
 function edd_activate_discount( $data ) {
-	$id = $data['discount'];
+	$id = absint( $data['discount'] );
 	edd_update_discount_status( $id, 'active' );
 }
 add_action( 'edd_activate_discount', 'edd_activate_discount' );
@@ -123,7 +129,7 @@ add_action( 'edd_activate_discount', 'edd_activate_discount' );
  * @return void
 */
 function edd_deactivate_discount( $data) {
-	$id = $data['discount'];
+	$id = absint( $data['discount'] );
 	edd_update_discount_status( $id, 'inactive' );
 }
 add_action( 'edd_deactivate_discount', 'edd_deactivate_discount' );

@@ -110,7 +110,68 @@ class Test_Cart extends EDD_UnitTestCase {
 		$this->assertEquals( '&#036;0.00' , edd_cart_item_price( 0 ) );
 	}
 
+	public function test_get_cart_item_quantity() {
+
+		edd_empty_cart();
+
+		$options = array(
+			'price_id' => 0,
+			'quantity' => 1
+		);
+		edd_add_to_cart( $this->_post->ID, $options );
+		
+		$this->assertEquals( 1, edd_get_cart_item_quantity( $this->_post->ID, $options ) );
+
+		// Add the item to the cart again
+		edd_add_to_cart( $this->_post->ID, $options );
+
+		$this->assertEquals( 2, edd_get_cart_item_quantity( $this->_post->ID, $options ) );
+
+		// Now add a different price option to the cart
+
+		$options = array(
+			'price_id' => 1,
+			'quantity' => 1
+		);
+		edd_add_to_cart( $this->_post->ID, $options );
+
+		$this->assertEquals( 1, edd_get_cart_item_quantity( $this->_post->ID, $options ) );
+
+	}
+
+	public function test_set_cart_item_quantity() {
+
+		edd_empty_cart();
+		
+		$options = array(
+			'price_id' => 0,
+			'quantity' => 3
+		);
+
+		edd_add_to_cart( $this->_post->ID, $options );
+
+		$this->assertEquals( 3, edd_get_cart_item_quantity( $this->_post->ID, $options ) );
+
+		edd_set_cart_item_quantity( $this->_post->ID, 1, $options );
+
+		$this->assertEquals( 1, edd_get_cart_item_quantity( $this->_post->ID, $options ) );
+
+		edd_set_cart_item_quantity( $this->_post->ID, 4, $options );
+
+		$this->assertEquals( 4, edd_get_cart_item_quantity( $this->_post->ID, $options ) );
+
+	}
+
 	public function test_remove_from_cart() {
+
+		edd_empty_cart();
+
+		$options = array(
+			'price_id' => 1,
+			'quantity' => 1
+		);
+		edd_add_to_cart( $this->_post->ID, $options );
+
 		$expected = array();
 		$this->assertEquals( $expected, edd_remove_from_cart( 0 ) );
 	}
@@ -124,10 +185,12 @@ class Test_Cart extends EDD_UnitTestCase {
 	}
 
 	public function test_cart_saving_disabled() {
-		$this->assertFalse( edd_is_cart_saving_disabled() );
+		$this->assertTrue( edd_is_cart_saving_disabled() );
 	}
 
 	public function test_is_cart_saved() {
+
+		global $edd_options;
 
 		// Test for no saved cart
 		$this->assertFalse( edd_is_cart_saved() );
@@ -146,6 +209,8 @@ class Test_Cart extends EDD_UnitTestCase {
 			)
 		);
 		update_user_meta( get_current_user_id(), 'edd_saved_cart', $cart );
+		$edd_options['enable_cart_saving'] = '1';
+		update_option( 'edd_settings', $edd_options );
 
 		$this->assertTrue( edd_is_cart_saved() );
 	}

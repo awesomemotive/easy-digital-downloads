@@ -45,9 +45,10 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 	}
 
 	$args = apply_filters( 'edd_get_users_purchases_args', array(
-		'user'   => $user,
-		'number' => $number,
-		'status' => $status
+		'user'    => $user,
+		'number'  => $number,
+		'status'  => $status,
+		'orderby' => 'date'
 	) );
 
 	if ( $pagination )
@@ -247,7 +248,7 @@ function edd_get_purchase_stats_by_user( $user = '' ) {
 
 		if( $purchases ) {
 			$stats['purchases']   = count( $purchases );
-			$stats['total_spent'] = round( array_sum( $purchases ), 2 );
+			$stats['total_spent'] = round( array_sum( $purchases ), edd_currency_decimal_filter() );
 		}
 
 		wp_cache_set( $user, $stats, 'customers' );
@@ -274,7 +275,7 @@ function edd_count_purchases_of_customer( $user = null ) {
 
 	$stats = edd_get_purchase_stats_by_user( $user );
 
-	return $stats['purchases'];
+	return isset( $stats['purchases'] ) ? $stats['purchases'] : 0;
 }
 
 /**
@@ -363,11 +364,11 @@ function edd_add_past_purchases_to_new_user( $user_id ) {
 			$meta                    = edd_get_payment_meta( $payment->ID );
 			$meta['user_info']       = maybe_unserialize( $meta['user_info'] );
 			$meta['user_info']['id'] = $user_id;
-			$meta['user_info']       = serialize( $meta['user_info'] );
+			$meta['user_info']       = $meta['user_info'];
 
 			// Store the updated user ID in the payment meta
-			update_post_meta( $payment->ID, '_edd_payment_meta', $meta );
-			update_post_meta( $payment->ID, '_edd_payment_user_id', $user_id );
+			edd_update_payment_meta( $payment->ID, '_edd_payment_meta', $meta );
+			edd_update_payment_meta( $payment->ID, '_edd_payment_user_id', $user_id );
 		}
 	}
 

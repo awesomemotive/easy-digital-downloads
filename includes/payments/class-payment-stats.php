@@ -119,14 +119,14 @@ class EDD_Payment_Stats extends EDD_Stats {
 				'update_post_term_cache' => false,
 				'suppress_filters'       => false,
 				'start_date'             => $this->start_date, // These dates are not valid query args, but they are used for cache keys
-				'end_date'               => $this->end_date
+				'end_date'               => $this->end_date,
+				'edd_transient_type'     => 'edd_earnings', // This is not a valid query arg, but is used for cache keying
 			);
 
-			$args = apply_filters( 'edd_stats_earnings_args', $args );
+			$args     = apply_filters( 'edd_stats_earnings_args', $args );
+			$key      = md5( serialize( $args ) );
 
-			$key = md5( 'edd_earnings_' . $start_date . $start_date );
 			$earnings = get_transient( $key );
-
 			if( false === $earnings ) {
 				$sales = get_posts( $args );
 				$earnings = 0;
@@ -145,17 +145,18 @@ class EDD_Payment_Stats extends EDD_Stats {
 			global $edd_logs, $wpdb;
 
 			$args = array(
-				'post_parent'      => $download_id,
-				'nopaging'         => true,
-				'log_type'         => 'sale',
-				'fields'           => 'ids',
-				'suppress_filters' => false,
-				'start_date'       => $this->start_date, // These dates are not valid query args, but they are used for cache keys
-				'end_date'         => $this->end_date
+				'post_parent'        => $download_id,
+				'nopaging'           => true,
+				'log_type'           => 'sale',
+				'fields'             => 'ids',
+				'suppress_filters'   => false,
+				'start_date'         => $this->start_date, // These dates are not valid query args, but they are used for cache keys
+				'end_date'           => $this->end_date,
+				'edd_transient_type' => 'edd_earnings', // This is not a valid query arg, but is used for cache keying
 			);
 
-			$args = apply_filters( 'edd_stats_earnings_args', $args );
-			$key  = md5( serialize( $args ) );
+			$args     = apply_filters( 'edd_stats_earnings_args', $args );
+			$key      = md5( serialize( $args ) );
 
 			$earnings = get_transient( $key );
 			if( false === $earnings ) {
@@ -185,7 +186,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 
 		remove_filter( 'posts_where', array( $this, 'payments_where' ) );
 
-		return round( $earnings, 2 );
+		return round( $earnings, edd_currency_decimal_filter() );
 
 	}
 

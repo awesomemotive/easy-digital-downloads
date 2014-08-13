@@ -138,7 +138,7 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 			echo '<p><strong>' . __( 'API User:', 'edd' ) . '</strong></p>';
 			echo '<div>' . get_post_meta( $item['ID'], '_edd_log_user', true ) . '</div>';
 			echo '<p><strong>' . __( 'API Key:', 'edd' ) . '</strong></p>';
-			echo '<div>' . get_post_meta( $item['ID'], '_edd_log_api_key', true ) . '</div>';
+			echo '<div>' . get_post_meta( $item['ID'], '_edd_log_key', true ) . '</div>';
 			echo '<p><strong>' . __( 'Request Date:', 'edd' ) . '</strong></p>';
 			echo '<div>' . get_post_field( 'post_date', $item['ID'] ) . '</div>';
 			?>
@@ -177,10 +177,29 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 				$key = '_edd_log_request_ip';
 			} else if ( is_email( $search ) ) {
 				// This is an email search
+				$userdata = get_user_by( 'email', $search );
+				
+				if( $userdata ) { 
+					$search = $userdata->ID;
+				}
+
 				$key = '_edd_log_user';
-			} else {
+			} elseif( strlen( $search ) == 32 ) {
 				// Look for an API key
-				$key = '_edd_log_api_key';
+				$key = '_edd_log_key';
+			} elseif( stristr( $search, 'token:' ) ) {
+				// Look for an API token
+				$search = str_ireplace( 'token:', '', $search );
+				$key = '_edd_log_token';
+			} else {
+				// This is (probably) a user ID search
+				$userdata = get_userdata( $search );
+
+				if( $userdata ) {
+					$search = $userdata->ID;
+				}
+
+				$key = '_edd_log_user';
 			}
 
 			// Setup the meta query
@@ -272,7 +291,6 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 		$hidden                = array(); // No hidden columns
 		$sortable              = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-		$current_page          = $this->get_pagenum();
 		$this->items           = $this->get_logs();
 		$total_items           = $edd_logs->get_log_count( 0, 'api_requests' );
 

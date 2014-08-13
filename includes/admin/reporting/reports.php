@@ -288,93 +288,113 @@ add_action( 'edd_reports_view_taxes', 'edd_reports_taxes' );
  */
 function edd_reports_tab_export() {
 	?>
-	<div class="metabox-holder">
-		<div id="post-body">
-			<div id="post-body-content">
+	<div id="edd-dashboard-widgets-wrap">
+		<div class="metabox-holder">
+			<div id="post-body">
+				<div id="post-body-content">
+	
+					<?php do_action( 'edd_reports_tab_export_content_top' ); ?>
+	
+					<div class="postbox">
+						<h3><span><?php _e( 'Export PDF of Sales and Earnings', 'edd' ); ?></span></h3>
+						<div class="inside">
+							<p><?php _e( 'Download a PDF of Sales and Earnings reports for all products for the current year.', 'edd' ); ?> <?php _e( 'Date range reports will be coming soon.', 'edd' ); ?></p>
+							<p><a class="button" href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'generate_pdf' ) ), 'edd_generate_pdf' ); ?>"><?php _e( 'Generate PDF', 'edd' ); ?></a></p>
+						</div><!-- .inside -->
+					</div><!-- .postbox -->
+	
+					<div class="postbox">
+						<h3><span><?php _e( 'Export Earnings and Sales Stats', 'edd' ); ?></span></h3>
+						<div class="inside">
+							<p><?php _e( 'Download a CSV of earnings and sales over time.', 'edd' ); ?></p>
+							<p>
+								<form method="post">
+									<?php echo EDD()->html->year_dropdown( 'start_year' ); ?>
+									<?php echo EDD()->html->month_dropdown( 'start_month' ); ?>
+									<?php echo _x( 'to', 'Date one to date two', 'edd' ); ?>
+									<?php echo EDD()->html->year_dropdown( 'end_year' ); ?>
+									<?php echo EDD()->html->month_dropdown( 'end_month' ); ?>
+									<input type="hidden" name="edd-action" value="earnings_export"/>
+									<input type="submit" value="<?php _e( 'Generate CSV', 'edd' ); ?>" class="button-secondary"/>
+								</form>
+							</p>
+						</div><!-- .inside -->
+					</div><!-- .postbox -->
 
-				<?php do_action( 'edd_reports_tab_export_content_top' ); ?>
-
-				<div class="postbox">
-					<h3><span><?php _e( 'Export PDF of Sales and Earnings', 'edd' ); ?></span></h3>
-					<div class="inside">
-						<p><?php _e( 'Download a PDF of Sales and Earnings reports for all products for the current year.', 'edd' ); ?> <?php _e( 'Date range reports will be coming soon.', 'edd' ); ?></p>
-						<p><a class="button" href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'generate_pdf' ) ), 'edd_generate_pdf' ); ?>"><?php _e( 'Generate PDF', 'edd' ); ?></a></p>
-					</div><!-- .inside -->
-				</div><!-- .postbox -->
-
-				<div class="postbox">
-					<h3><span><?php _e('Export Payment History', 'edd'); ?></span></h3>
-					<div class="inside">
-						<p><?php _e( 'Download a CSV of all payments recorded.', 'edd' ); ?></p>
-						<p>
-							<form method="post">
-								<?php echo EDD()->html->year_dropdown(); ?>
-								<?php echo EDD()->html->month_dropdown(); ?>
-								<select name="edd_export_payment_status">
-									<option value="0"><?php _e( 'All Statuses', 'edd' ); ?></option>
-									<?php
-									$statuses = edd_get_payment_statuses();
-									foreach( $statuses as $status => $label ) {
-										echo '<option value="' . $status . '">' . $label . '</option>';
-									}
-									?>
-								</select>
-								<input type="hidden" name="edd-action" value="payment_export"/>
-								<input type="submit" value="<?php _e( 'Generate CSV', 'edd' ); ?>" class="button-secondary"/>
-							</form>
-						</p>
-					</div><!-- .inside -->
-				</div><!-- .postbox -->
-
-				<div class="postbox">
-					<h3><span><?php _e('Export Customers in CSV', 'edd'); ?></span></h3>
-					<div class="inside">
-						<p><?php _e( 'Download a CSV of all customer emails. Optionally export only customers that have purchased a particular product. Note, if you have a large number of customers, exporting the purchase stats may fail.', 'edd' ); ?></p>
-						<p>
-							<form method="post" id="edd_customer_export">
-								<select name="edd_export_download" id="edd_customer_export_download">
-									<option value="0"><?php printf( __( 'All %s', 'edd' ), edd_get_label_plural() ); ?></option>
-									<?php
-									$downloads = get_posts( array( 'post_type' => 'download', 'posts_per_page' => -1 ) );
-									if( $downloads ) {
-										foreach( $downloads as $download ) {
-											echo '<option value="' . $download->ID . '">' . get_the_title( $download->ID ) . '</option>';
+					<div class="postbox">
+						<h3><span><?php _e('Export Payment History', 'edd'); ?></span></h3>
+						<div class="inside">
+							<p><?php _e( 'Download a CSV of all payments recorded.', 'edd' ); ?></p>
+							<p>
+								<form method="post">
+									<?php echo EDD()->html->year_dropdown(); ?>
+									<?php echo EDD()->html->month_dropdown(); ?>
+									<select name="edd_export_payment_status">
+										<option value="0"><?php _e( 'All Statuses', 'edd' ); ?></option>
+										<?php
+										$statuses = edd_get_payment_statuses();
+										foreach( $statuses as $status => $label ) {
+											echo '<option value="' . $status . '">' . $label . '</option>';
 										}
-									}
-									?>
-								</select>
-								<select name="edd_export_option" id="edd_customer_export_option">
-									<option value="emails"><?php _e( 'Emails', 'edd' ); ?></option>
-									<option value="emails_and_names"><?php _e( 'Emails and Names', 'edd' ); ?></option>
-									<option value="full"><?php _e( 'Emails, Names, and Purchase Stats', 'edd' ); ?></option>
-								</select>
-								<input type="hidden" name="edd-action" value="email_export"/>
-								<input type="submit" value="<?php _e( 'Generate CSV', 'edd' ); ?>" class="button-secondary"/>
-							</form>
-						</p>
-					</div><!-- .inside -->
-				</div><!-- .postbox -->
-
-				<div class="postbox">
-					<h3><span><?php _e('Export Download History in CSV', 'edd'); ?></span></h3>
-					<div class="inside">
-						<p><?php _e( 'Download a CSV of all file downloads for a specific month and year.', 'edd' ); ?></p>
-						<p>
-							<form method="post">
-								<?php echo EDD()->html->year_dropdown(); ?>
-								<?php echo EDD()->html->month_dropdown(); ?>
-								<input type="hidden" name="edd-action" value="downloads_history_export"/>
-								<input type="submit" value="<?php _e( 'Generate CSV', 'edd' ); ?>" class="button-secondary"/>
-							</form>
-						</p>
-					</div><!-- .inside -->
-				</div><!-- .postbox -->
-
-				<?php do_action( 'edd_reports_tab_export_content_bottom' ); ?>
-
-			</div><!-- .post-body-content -->
-		</div><!-- .post-body -->
-	</div><!-- .metabox-holder -->
+										?>
+									</select>
+									<input type="hidden" name="edd-action" value="payment_export"/>
+									<input type="submit" value="<?php _e( 'Generate CSV', 'edd' ); ?>" class="button-secondary"/>
+								</form>
+							</p>
+						</div><!-- .inside -->
+					</div><!-- .postbox -->
+	
+					<div class="postbox">
+						<h3><span><?php _e('Export Customers in CSV', 'edd'); ?></span></h3>
+						<div class="inside">
+							<p><?php _e( 'Download a CSV of all customer emails. Optionally export only customers that have purchased a particular product. Note, if you have a large number of customers, exporting the purchase stats may fail.', 'edd' ); ?></p>
+							<p>
+								<form method="post" id="edd_customer_export">
+									<select name="edd_export_download" id="edd_customer_export_download">
+										<option value="0"><?php printf( __( 'All %s', 'edd' ), edd_get_label_plural() ); ?></option>
+										<?php
+										$downloads = get_posts( array( 'post_type' => 'download', 'posts_per_page' => -1 ) );
+										if( $downloads ) {
+											foreach( $downloads as $download ) {
+												echo '<option value="' . $download->ID . '">' . get_the_title( $download->ID ) . '</option>';
+											}
+										}
+										?>
+									</select>
+									<select name="edd_export_option" id="edd_customer_export_option">
+										<option value="emails"><?php _e( 'Emails', 'edd' ); ?></option>
+										<option value="emails_and_names"><?php _e( 'Emails and Names', 'edd' ); ?></option>
+										<option value="full"><?php _e( 'Emails, Names, and Purchase Stats', 'edd' ); ?></option>
+									</select>
+									<input type="hidden" name="edd-action" value="email_export"/>
+									<input type="submit" value="<?php _e( 'Generate CSV', 'edd' ); ?>" class="button-secondary"/>
+								</form>
+							</p>
+						</div><!-- .inside -->
+					</div><!-- .postbox -->
+	
+					<div class="postbox">
+						<h3><span><?php _e('Export Download History in CSV', 'edd'); ?></span></h3>
+						<div class="inside">
+							<p><?php _e( 'Download a CSV of all file downloads for a specific month and year.', 'edd' ); ?></p>
+							<p>
+								<form method="post">
+									<?php echo EDD()->html->year_dropdown(); ?>
+									<?php echo EDD()->html->month_dropdown(); ?>
+									<input type="hidden" name="edd-action" value="downloads_history_export"/>
+									<input type="submit" value="<?php _e( 'Generate CSV', 'edd' ); ?>" class="button-secondary"/>
+								</form>
+							</p>
+						</div><!-- .inside -->
+					</div><!-- .postbox -->
+	
+					<?php do_action( 'edd_reports_tab_export_content_bottom' ); ?>
+	
+				</div><!-- .post-body-content -->
+			</div><!-- .post-body -->
+		</div><!-- .metabox-holder -->
+	</div><!-- #edd-dashboard-widgets-wrap -->
 	<?php
 }
 add_action( 'edd_reports_tab_export', 'edd_reports_tab_export' );
@@ -405,24 +425,31 @@ add_action( 'edd_reports_tab_logs', 'edd_reports_tab_logs' );
  * @return array
  */
 function edd_estimated_monthly_stats() {
+
 	$estimated = get_transient( 'edd_estimated_monthly_stats' );
 
 	if ( false === $estimated ) {
+
 		$estimated = array(
 			'earnings' => 0,
 			'sales'    => 0
 		);
 
-		$products = get_posts( array( 'post_type' => 'download', 'posts_per_page' => -1, 'fields' => 'ids' ) );
-		if ( $products ) {
-			foreach ( $products as $download ) {
-				$estimated['earnings'] += edd_get_average_monthly_download_earnings( $download );
-				$estimated['sales']    += number_format( edd_get_average_monthly_download_sales( $download ), 0 );
-			}
-		}
+		$stats = new EDD_Payment_Stats;
+
+		$to_date_earnings = $stats->get_earnings( 0, 'this_month' );
+		$to_date_sales    = $stats->get_sales( 0, 'this_month' );
+
+		$current_day      = date( 'd', current_time( 'timestamp' ) );
+		$current_month    = date( 'n', current_time( 'timestamp' ) );
+		$current_year     = date( 'Y', current_time( 'timestamp' ) );
+		$days_in_month    = cal_days_in_month( CAL_GREGORIAN, $current_month, $current_year );
+
+		$estimated['earnings'] = ( $to_date_earnings / $current_day ) * $days_in_month;
+		$estimated['sales']    = ( $to_date_sales / $current_day ) * $days_in_month;
 
 		// Cache for one day
-		set_transient( 'edd_estimated_monthly_stats', serialize( $estimated ), 86400 );
+		set_transient( 'edd_estimated_monthly_stats', $estimated, 86400 );
 	}
 
 	return maybe_unserialize( $estimated );

@@ -199,7 +199,8 @@ class EDD_Logging {
 	 * @return bool True if successful, false otherwise
 	 */
 	public function update_log( $log_data = array(), $log_meta = array() ) {
-		do_action( 'edd_pre_update_log', $log_id, $log_data, $log_meta );
+
+		do_action( 'edd_pre_update_log', $log_data, $log_meta );
 
 		$defaults = array(
 			'post_type' 	=> 'edd_log',

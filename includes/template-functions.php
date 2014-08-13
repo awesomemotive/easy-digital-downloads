@@ -55,10 +55,12 @@ function edd_get_purchase_link( $args = array() ) {
 		return false;
 	}
 
+	$post_id = is_object( $post ) ? $post->ID : 0;
+
 	$defaults = apply_filters( 'edd_purchase_link_defaults', array(
-		'download_id' => $post->ID,
+		'download_id' => $post_id,
 		'price'       => (bool) true,
-		'direct'      => edd_get_download_button_behavior( $post->ID ) == 'direct' ? true : false,
+		'direct'      => edd_get_download_button_behavior( $post_id ) == 'direct' ? true : false,
 		'text'        => ! empty( $edd_options[ 'add_to_cart_text' ] ) ? $edd_options[ 'add_to_cart_text' ] : __( 'Purchase', 'edd' ),
 		'style'       => isset( $edd_options[ 'button_style' ] ) 	   ? $edd_options[ 'button_style' ]     : 'button',
 		'color'       => isset( $edd_options[ 'checkout_color' ] ) 	   ? $edd_options[ 'checkout_color' ] 	: 'blue',
@@ -98,20 +100,32 @@ function edd_get_purchase_link( $args = array() ) {
 		$checkout_display = 'style="display:none;"';
 	}
 
+	global $edd_displayed_form_ids;
+	// Collect any form IDs we've displayed already so we can avoid duplicate IDs
+	if ( isset( $edd_displayed_form_ids[$args['download_id']] ) ) {
+		$edd_displayed_form_ids[$args['download_id']]++;
+	} else {
+		$edd_displayed_form_ids[$args['download_id']] = 1;
+	}
+
 	$form_id = ! empty( $args['form_id'] ) ? $args['form_id'] : 'edd_purchase_' . $args['download_id'];
-	
+
+	// If we've already generated a form ID for this download ID, apped -#
+	if ( $edd_displayed_form_ids[$args['download_id']] > 1 ) {
+		$form_id .= '-' . $edd_displayed_form_ids[$args['download_id']];
+	}
+
 	$args = apply_filters( 'edd_purchase_link_args', $args );
 
 	ob_start();
 ?>
-	<!--dynamic-cached-content-->
 	<form id="<?php echo $form_id; ?>" class="edd_download_purchase_form" method="post">
 
-		<?php do_action( 'edd_purchase_link_top', $args['download_id'] ); ?>
+		<?php do_action( 'edd_purchase_link_top', $args['download_id'], $args ); ?>
 
 		<div class="edd_purchase_submit_wrapper">
 			<?php
-			 if ( edd_is_ajax_enabled() ) {
+			 if ( ! edd_is_ajax_disabled() ) {
 				printf(
 					'<a href="#" class="edd-add-to-cart %1$s" data-action="edd_add_to_cart" data-download-id="%3$s" %4$s %5$s %6$s><span class="edd-add-to-cart-label">%2$s</span> <span class="edd-loading"><i class="edd-icon-spinner edd-icon-spin"></i></span></a>',
 					implode( ' ', array( $args['style'], $args['color'], trim( $args['class'] ) ) ),
@@ -142,7 +156,7 @@ function edd_get_purchase_link( $args = array() ) {
 			);
 			?>
 
-			<?php if ( edd_is_ajax_enabled() ) : ?>
+			<?php if ( ! edd_is_ajax_disabled() ) : ?>
 				<span class="edd-cart-ajax-alert">
 					<span class="edd-cart-added-alert" style="display: none;">
 						<?php printf(
@@ -168,10 +182,9 @@ function edd_get_purchase_link( $args = array() ) {
 			<input type="hidden" name="edd_action" class="edd_action_input" value="add_to_cart">
 		<?php } ?>
 
-		<?php do_action( 'edd_purchase_link_end', $args['download_id'] ); ?>
+		<?php do_action( 'edd_purchase_link_end', $args['download_id'], $args ); ?>
 
-	</form><!--end #edd_purchase_<?php echo esc_attr( $args['download_id'] ); ?>-->
-	<!--/dynamic-cached-content-->
+	</form><!--end #<?php echo esc_attr( $form_id ); ?>-->
 <?php
 	$purchase_form = ob_get_clean();
 
@@ -208,7 +221,7 @@ function edd_purchase_variable_pricing( $download_id = 0 ) {
 			<?php
 			if ( $prices ) :
 				foreach ( $prices as $key => $price ) :
-					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . '">';
+					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . '" itemprop="offers" itemscope itemtype="http://schema.org/Offer">';
 					printf(
 						'<label for="%3$s"><input type="%2$s" %1$s name="edd_options[price_id][]" id="%3$s" class="%4$s" value="%5$s" %7$s/> %6$s</label>',
 						checked( apply_filters( 'edd_price_option_checked', 0, $download_id, $key ), $key, false ),
@@ -216,7 +229,7 @@ function edd_purchase_variable_pricing( $download_id = 0 ) {
 						esc_attr( 'edd_price_option_' . $download_id . '_' . $key ),
 						esc_attr( 'edd_price_option_' . $download_id ),
 						esc_attr( $key ),
-						'<span class="edd_price_option_name">' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price">' . edd_currency_filter( edd_format_amount( $price[ 'amount' ] ) ) . '</span>',
+						'<span class="edd_price_option_name" itemprop="description">' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price" itemprop="price">' . edd_currency_filter( edd_format_amount( $price[ 'amount' ] ) ) . '</span>',
 						checked( isset( $_GET['price_option'] ), $key, false )
 					);
 					do_action( 'edd_after_price_option', $key, $price, $download_id );
@@ -249,8 +262,8 @@ function edd_before_download_content( $content ) {
 
 	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() && !post_password_required() ) {
 		ob_start();
-		$content .= ob_get_clean();
 		do_action( 'edd_before_download_content', $post->ID );
+		$content = ob_get_clean() . $content;
 	}
 
 	return $content;
@@ -611,3 +624,136 @@ function edd_microdata_wrapper( $content ) {
 	return $content;
 }
 add_filter( 'the_content', 'edd_microdata_wrapper', 10 );
+
+/**
+ * Add no-index and no-follow to EDD checkout and purchase confirmation pages
+ *
+ * @since 2.0
+ *
+ * @return void
+ */
+function edd_checkout_meta_tags() {
+
+	$pages   = array();
+	$pages[] = edd_get_option( 'success_page' );
+	$pages[] = edd_get_option( 'failure_page' );
+	$pages[] = edd_get_option( 'purchase_history_page' );
+
+	if( ! edd_is_checkout() && ! is_page( $pages ) ) {
+		return;
+	}
+
+	echo '<meta name="robots" content="noindex,nofollow" />' . "\n";
+}
+add_action( 'wp_head', 'edd_checkout_meta_tags' );
+
+/**
+ * Adds EDD Version to the <head> tag
+ *
+ * @since 1.4.2
+ * @return void
+*/
+function edd_version_in_header(){
+	echo '<meta name="generator" content="Easy Digital Downloads v' . EDD_VERSION . '" />' . "\n";
+}
+add_action( 'wp_head', 'edd_version_in_header' );
+
+/**
+ * Determines if we're currently on the Purchase History page.
+ *
+ * @since 2.1
+ * @return bool True if on the Purchase History page, false otherwise.
+ */
+function edd_is_purchase_history_page() {
+	global $edd_options;
+	$ret = isset( $edd_options['purchase_history_page'] ) ? is_page( $edd_options['purchase_history_page'] ) : false;
+	return apply_filters( 'edd_is_purchase_history_page', $ret );
+}
+
+/**
+ * Adds body classes for EDD pages
+ *
+ * @since 2.1
+ * @param array $classes current classes
+ * @return array Modified array of classes
+ */
+function edd_add_body_classes( $class ) {
+	$classes = (array) $class;
+
+	if( edd_is_checkout() ) {
+		$classes[] = 'edd-checkout';
+		$classes[] = 'edd-page';
+	}
+
+	if( edd_is_success_page() ) {
+		$classes[] = 'edd-success';
+		$classes[] = 'edd-page';
+	}
+
+	if( edd_is_failed_transaction_page() ) {
+		$classes[] = 'edd-failed-transaction';
+		$classes[] = 'edd-page';
+	}
+
+	if( edd_is_purchase_history_page() ) {
+		$classes[] = 'edd-purchase-history';
+		$classes[] = 'edd-page';
+	}
+
+	if( edd_is_test_mode() ) {
+		$classes[] = 'edd-test-mode';
+		$classes[] = 'edd-page';
+	}
+
+	return array_unique( $classes );
+}
+add_filter( 'body_class', 'edd_add_body_classes' );
+
+/**
+ * Adds post classes for downloads
+ *
+ * @since 2.1
+ * @param array $classes Current classes
+ * @param string|array $class
+ * @param int $post_id The ID of the current post
+ * @return array Modified array of classes
+ */
+function edd_add_download_post_classes( $classes, $class = '', $post_id = false ) {
+	if( ! $post_id || get_post_type( $post_id ) !== 'download' || is_admin() ) {
+		return $classes;
+	}
+
+	$download = edd_get_download( $post_id );
+
+	if( $download ) {
+		$classes[] = 'edd-download';
+
+		// Add category slugs
+		$categories = get_the_terms( $post_id, 'download_category' );
+		if( ! empty( $categories ) ) {
+			foreach( $categories as $key => $value ) {
+				$classes[] = 'edd-download-cat-' . $value->slug;
+			}
+		}
+
+		// Add tag slugs
+		$tags = get_the_terms( $post_id, 'download_tag' );
+		if( ! empty( $tags ) ) {
+			foreach( $tags as $key => $value ) {
+				$classes[] = 'edd-download-tag-' . $value->slug;
+			}
+		}
+
+		// Add edd-download
+		if( is_singular( 'download' ) ) {
+			$classes[] = 'edd-download';
+		}
+	}
+
+	if( ( $key = array_search( 'hentry', $classes ) ) !== false ) {
+		unset( $classes[ $key ] );
+	}
+
+	return $classes;
+}
+add_filter( 'post_class', 'edd_add_download_post_classes', 20, 3 );

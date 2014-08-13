@@ -167,7 +167,7 @@ add_action( 'edd_admin_sale_notice', 'edd_admin_email_notice', 10, 2 );
  *
  * @since 1.0
  * @global $edd_options Array of all the EDD Options
- * @return void
+ * @return mixed
  */
 function edd_get_admin_notice_emails() {
 	global $edd_options;
@@ -184,7 +184,7 @@ function edd_get_admin_notice_emails() {
  * @since 1.5.2
  *
  * @param int $payment_id
- * @return mixed|void
+ * @return mixed
  */
 function edd_admin_notices_disabled( $payment_id = 0 ) {
 	global $edd_options;
