@@ -193,8 +193,9 @@ function edd_sanitize_variable_prices_save( $prices ) {
 
 	}
 
+
 	// Make sure all prices are rekeyed starting at 0
-	return array_values( $prices );
+	return $prices;
 }
 add_filter( 'edd_metabox_save_edd_variable_prices', 'edd_sanitize_variable_prices_save' );
 
