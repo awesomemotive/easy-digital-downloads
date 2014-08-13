@@ -49,9 +49,6 @@ jQuery(document).ready(function ($) {
 		},
 
 		move : function() {
-			
-			if( ! $('.edd_repeatable_table').length )
-				return;
 
 			$(".edd_repeatable_table tbody").sortable({
 				handle: '.edd_draghandle', items: '.edd_repeatable_row', opacity: 0.6, cursor: 'move', axis: 'y', update: function() {
