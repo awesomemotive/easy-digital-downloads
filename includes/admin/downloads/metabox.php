@@ -179,8 +179,6 @@ add_filter( 'edd_metabox_save_edd_price', 'edd_sanitize_price_save' );
  */
 function edd_sanitize_variable_prices_save( $prices ) {
 
-	global $post;
-
 	foreach( $prices as $id => $price ) {
 
 		if( empty( $price['amount'] ) ) {
@@ -192,7 +190,6 @@ function edd_sanitize_variable_prices_save( $prices ) {
 		$prices[ $id ]['amount'] = edd_sanitize_amount( $price['amount'] );
 
 	}
-
 
 	// Make sure all prices are rekeyed starting at 0
 	return $prices;
