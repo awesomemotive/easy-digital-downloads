@@ -32,9 +32,10 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 	if ( $new_status != 'publish' && $new_status != 'complete' )
 		return;
 
-	$user_info    = edd_get_payment_meta_user_info( $payment_id );
-	$amount       = edd_get_payment_amount( $payment_id );
-	$cart_details = edd_get_payment_meta_cart_details( $payment_id );
+	$completed_date = edd_get_payment_completed_date( $payment_id );
+	$user_info      = edd_get_payment_meta_user_info( $payment_id );
+	$amount         = edd_get_payment_amount( $payment_id );
+	$cart_details   = edd_get_payment_meta_cart_details( $payment_id );
 
 	do_action( 'edd_pre_complete_purchase', $payment_id );
 
@@ -45,6 +46,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 			// "bundle" or "default"
 			$download_type = edd_get_download_type( $download['id'] );
+			$price_id      = isset( $download['options']['price_id'] ) ? (int) $download['options']['price_id'] : false;
 
 			$price_id      = isset( $download['options']['price_id'] ) ? (int) $download['options']['price_id'] : false;
 
@@ -59,7 +61,10 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 				}
 
-				do_action( 'edd_complete_download_purchase', $download['id'], $payment_id, $download_type, $download );
+				if( empty( $completed_date ) ) {
+					// Ensure this action only runs once ever
+					do_action( 'edd_complete_download_purchase', $download['id'], $payment_id, $download_type, $download );
+				}
 
 			}
 
@@ -69,6 +74,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 		delete_transient( 'edd_earnings_total' );
 		// Clear the This Month earnings (this_monththis_month is NOT a typo)
 		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
+		delete_transient( md5( 'edd_earnings_todaytoday' ) );
 	}
 
 	// Check for discount codes and increment their use counts
@@ -89,7 +95,14 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 	edd_increase_total_earnings( $amount );
 
-	do_action( 'edd_complete_purchase', $payment_id );
+	// Ensure this action only runs once ever
+	if( empty( $completed_date ) ) {
+
+		// Save the completed date
+		edd_update_payment_meta( $payment_id, '_edd_completed_date', current_time( 'mysql' ) );
+
+		do_action( 'edd_complete_purchase', $payment_id );
+	}
 
 	// Empty the shopping cart
 	edd_empty_cart();
@@ -144,7 +157,7 @@ function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
 	// Decrease store earnings
 	$amount = edd_get_payment_amount( $payment_id );
 	edd_decrease_total_earnings( $amount );
-	
+
 	// Clear the This Month earnings (this_monththis_month is NOT a typo)
 	delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
 }
@@ -211,7 +224,7 @@ function edd_update_old_payments_with_totals( $data ) {
 	if ( $payments ) {
 		foreach ( $payments as $payment ) {
 			$meta = edd_get_payment_meta( $payment->ID );
-			update_post_meta( $payment->ID, '_edd_payment_total', $meta['amount'] );
+			edd_update_payment_meta( $payment->ID, '_edd_payment_total', $meta['amount'] );
 		}
 	}
 

@@ -5,12 +5,22 @@ use \EDD_Payments_Query;
  * @group edd_payments
  */
 class Tests_Payments extends EDD_UnitTestCase {
-	protected $_payment_id = null;
 
+	protected $_payment_id = null;
+	protected $_key = null;
 	protected $_post = null;
+	protected $_payment_key = null;
 
 	public function setUp() {
+
+		global $edd_options;
+
 		parent::setUp();
+
+		// Enable a few options
+		$edd_options['enable_sequential'] = '1';
+		$edd_options['sequential_prefix'] = 'EDD-';
+		update_option( 'edd_settings', $edd_options );
 
 		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
 
@@ -102,10 +112,12 @@ class Tests_Payments extends EDD_UnitTestCase {
 			)
 		);
 
+		$this->_payment_key = strtolower( md5( uniqid() ) );
+
 		$purchase_data = array(
 			'price' => number_format( (float) $total, 2 ),
 			'date' => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
-			'purchase_key' => strtolower( md5( uniqid() ) ),
+			'purchase_key' => $this->_payment_key,
 			'user_email' => $user_info['email'],
 			'user_info' => $user_info,
 			'currency' => 'USD',
@@ -120,6 +132,11 @@ class Tests_Payments extends EDD_UnitTestCase {
 		$payment_id = edd_insert_payment( $purchase_data );
 
 		$this->_payment_id = $payment_id;
+		$this->_key = $purchase_data['purchase_key'];
+
+		$this->_transaction_id = 'FIR3SID3';
+		edd_set_payment_transaction_id( $payment_id, $this->_transaction_id );
+		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'edd' ) , $this->_transaction_id ) );
 	}
 
 	public function test_get_payments() {
@@ -139,20 +156,32 @@ class Tests_Payments extends EDD_UnitTestCase {
 		$this->assertArrayHasKey( 'user_info', (array) $out[0] );
 	}
 
+	public function test_edd_get_payment_by() {
+		$this->assertObjectHasAttribute( 'ID', edd_get_payment_by( 'id', $this->_payment_id ) );
+		$this->assertObjectHasAttribute( 'ID', edd_get_payment_by( 'key', $this->_key ) );
+	}
 
 	public function test_fake_insert_payment() {
 		$this->assertFalse( edd_insert_payment() );
 	}
 
+	public function test_payment_completd_flag_not_exists() {
+
+		$completed_date = edd_get_payment_completed_date( $this->_payment_id );
+		$this->assertEmpty( $completed_date );
+
+	}
+
 	public function test_update_payment_status() {
-		edd_update_payment_status( $this->_payment_id );
+		edd_update_payment_status( $this->_payment_id, 'publish' );
 
 		$out = edd_get_payments();
 		$this->assertEquals( 'publish', $out[0]->post_status );
 	}
 
 	public function test_check_for_existing_payment() {
-		$this->assertTrue( edd_check_for_existing_payment( $this->_post->ID ) );
+		edd_update_payment_status( $this->_payment_id, 'publish' );
+		$this->assertTrue( edd_check_for_existing_payment( $this->_payment_id ) );
 	}
 
 	public function test_get_payment_statuses() {
@@ -181,4 +210,74 @@ class Tests_Payments extends EDD_UnitTestCase {
 		$cart = edd_get_payments();
 		$this->assertTrue( empty( $cart ) );
 	}
+
+	public function test_get_payment_completed_date() {
+
+		edd_update_payment_status( $this->_payment_id, 'publish' );
+		$completed_date = edd_get_payment_completed_date( $this->_payment_id );
+		$this->assertInternalType( 'string', $completed_date );
+		$this->assertEquals( date( 'Y-m-d' ), date( 'Y-m-d', strtotime( $completed_date ) ) );
+
+	}
+
+	public function test_get_payment_number() {
+		global $edd_options;
+
+		$this->assertEquals( 'EDD-1', edd_get_payment_number( $this->_payment_id ) );
+		$this->assertEquals( 'EDD-2', edd_get_next_payment_number() );
+
+		// Now disable sequential and ensure values come back as expected
+		unset( $edd_options['enable_sequential'] );
+		update_option( 'edd_settings', $edd_options );
+
+		$this->assertEquals( $this->_payment_id, edd_get_payment_number( $this->_payment_id ) );
+	}
+
+	public function test_get_payment_transaction_id() {
+		$this->assertEquals( $this->_transaction_id, edd_get_payment_transaction_id( $this->_payment_id ) );
+	}
+
+	public function test_get_payment_transaction_id_legacy() {
+		$this->assertEquals( $this->_transaction_id, edd_paypal_get_payment_transaction_id( $this->_payment_id ) );
+	}
+
+	public function test_get_payment_meta() {
+
+		// Test by getting the payment key with three different methods
+		$this->assertEquals( $this->_payment_key, edd_get_payment_meta( $this->_payment_id, '_edd_payment_purchase_key' ) );
+		$this->assertEquals( $this->_payment_key, get_post_meta( $this->_payment_id, '_edd_payment_purchase_key', true ) );
+		$this->assertEquals( $this->_payment_key, edd_get_payment_key( $this->_payment_id ) );
+
+		// Try and retrieve the transaction ID
+		$this->assertEquals( $this->_transaction_id, edd_get_payment_meta( $this->_payment_id, '_edd_payment_transaction_id' ) );
+
+		$user_info = edd_get_payment_meta_user_info( $this->_payment_id );
+		$this->assertEquals( $user_info['email'], edd_get_payment_meta( $this->_payment_id, '_edd_payment_user_email' ) );
+		$this->assertEquals( $user_info['key'], $this->_payment_key );		
+
+	}
+
+	public function test_update_payment_meta() {
+
+		$old_value = $this->_payment_key;
+		$this->assertEquals( $old_value, edd_get_payment_meta( $this->_payment_id, '_edd_payment_purchase_key' ) );
+
+		$new_value = 'test12345';
+		$this->assertNotEquals( $old_value, $new_value );
+
+		$ret = edd_update_payment_meta( $this->_payment_id, '_edd_payment_purchase_key', $new_value );
+
+		$this->assertTrue( $ret );
+
+		$this->assertEquals( $new_value, edd_get_payment_meta( $this->_payment_id, '_edd_payment_purchase_key' ) );
+
+		$ret = edd_update_payment_meta( $this->_payment_id, '_edd_payment_user_email', 'test@test.com' );
+
+		$this->assertTrue( $ret );
+
+		$user_info = edd_get_payment_meta_user_info( $this->_payment_id );
+		$this->assertEquals( 'john@test.com', edd_get_payment_meta( $this->_payment_id, '_edd_payment_user_email' ) );
+
+	}
+
 }

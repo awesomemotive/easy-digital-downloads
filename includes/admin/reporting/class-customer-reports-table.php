@@ -252,8 +252,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
-		$current_page = $this->get_pagenum();
-
 		$this->items = $this->reports_data();
 
 		$this->total = edd_count_total_customers();

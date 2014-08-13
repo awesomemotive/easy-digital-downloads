@@ -13,8 +13,7 @@ jQuery(document).ready(function ($) {
             id     = $this.data('download-id'),
             data   = {
                 action: action,
-                cart_item: item,
-                nonce: edd_scripts.ajax_nonce
+                cart_item: item
             };
 
          $.ajax({
@@ -39,8 +38,12 @@ jQuery(document).ready(function ($) {
 	                }
 
 	                $('span.edd-cart-quantity').each(function() {
-	                    var quantity = parseInt($(this).text(), 10) - 1;
-	                    $(this).text(quantity);
+	                    var quantity = parseInt( $(this).text(), 10 ) - 1;
+	                    if( quantity < 1 ) {
+	                    	quantity = 0;
+	                    }
+	                    $(this).text( quantity );
+	                    $('body').trigger('edd_quantity_updated', [ quantity ]);
 	                });
 
 	                $('.cart_item.edd_subtotal span').html( response.subtotal );
@@ -49,6 +52,8 @@ jQuery(document).ready(function ($) {
 	                    $('.cart_item.edd_subtotal,.edd-cart-number-of-items,.cart_item.edd_checkout').hide();
 	                    $('.edd-cart').append('<li class="cart_item empty">' + edd_scripts.empty_cart_message + '</li>');
 	                }
+
+                    $('body').trigger('edd_cart_item_removed', [ response ]);
 	            }
 	        }
         }).fail(function (response) {
@@ -116,7 +121,6 @@ jQuery(document).ready(function ($) {
             action: action,
             download_id: download,
             price_ids : item_price_ids,
-            nonce: edd_scripts.ajax_nonce,
             post_data: $(form).serialize()
         };
 
@@ -148,6 +152,7 @@ jQuery(document).ready(function ($) {
 	                $('span.edd-cart-quantity').each(function() {
 	                    var quantity = parseInt($(this).text(), 10) + 1;
 	                    $(this).text(quantity);
+	                    $('body').trigger('edd_quantity_updated', [ quantity ]);
 	                });
 
 	                // Show the "number of items in cart" message
@@ -167,9 +172,9 @@ jQuery(document).ready(function ($) {
 	                }
 	                
 	                // Update all buttons for same download
-									if( $( '.edd_download_purchase_form' ).length ) {
-										var parent_form = $('.edd_download_purchase_form *[data-download-id="' + download + '"]').parents('form');
-										$( 'a.edd-add-to-cart', parent_form ).hide();
+					if( $( '.edd_download_purchase_form' ).length ) {
+						var parent_form = $('.edd_download_purchase_form *[data-download-id="' + download + '"]').parents('form');
+						$( 'a.edd-add-to-cart', parent_form ).hide();
 	                	$( '.edd_go_to_checkout', parent_form ).show().removeAttr( 'data-edd-loading' );
 	               	}
 
@@ -180,6 +185,9 @@ jQuery(document).ready(function ($) {
 	                        $('.edd-cart-added-alert', container).fadeOut();
 	                    }, 3000);
 	                }
+
+                    $('body').trigger('edd_cart_item_added', [ response ]);
+
 	            }
 	        }
         }).fail(function (response) {
@@ -196,10 +204,8 @@ jQuery(document).ready(function ($) {
     // Show the login form on the checkout page
     $('#edd_checkout_form_wrap').on('click', '.edd_checkout_register_login', function () {
         var $this = $(this),
-            action = $this.data('action'),
             data = {
-                action: action,
-                nonce: edd_scripts.ajax_nonce
+                action: $this.data('action')
             };
         // Show the ajax loader
         $('.edd-cart-ajax').show();
@@ -228,8 +234,8 @@ jQuery(document).ready(function ($) {
             action : 'edd_process_checkout_login',
             edd_ajax : 1,
             edd_user_login : $('#edd_login_fields #edd_user_login').val(),
-            edd_user_pass : $('#edd_login_fields #edd_user_pass').val(),
-        }
+            edd_user_pass : $('#edd_login_fields #edd_user_pass').val()
+        };
 
         $.post(edd_global_vars.ajaxurl, data, function(data) {
 
@@ -281,7 +287,7 @@ jQuery(document).ready(function ($) {
                 $('.edd_errors').remove();
                 $('#edd_purchase_form').submit();
             } else {
-                $('#edd_purchase_form input[type=submit]').val(complete_purchase_val);
+                $('#edd_purchase_form #edd-purchase-button').val(complete_purchase_val);
                 $('.edd-cart-ajax').remove();
                 $('.edd_errors').remove();
                 $('#edd_purchase_submit').before(data);

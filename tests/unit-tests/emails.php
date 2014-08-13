@@ -196,7 +196,7 @@ class Tests_Emails extends EDD_UnitTestCase {
 		edd_remove_email_tag( 'sample_tag' );
 		$this->assertFalse( edd_email_tag_exists( 'sample_tag' ) );
 	}
-	
+
 	public function test_email_tags_first_name() {
 		$this->assertEquals( 'Network', edd_email_tag_first_name( $this->_payment_id ) );
 	}
@@ -218,15 +218,15 @@ class Tests_Emails extends EDD_UnitTestCase {
 	}
 
 	public function test_email_tags_subtotal() {
-		$this->assertEquals( '&#36;100.00', edd_email_tag_subtotal( $this->_payment_id ) );
+		$this->assertEquals( '$100.00', edd_email_tag_subtotal( $this->_payment_id ) );
 	}
 
 	public function test_email_tags_tax() {
-		$this->assertEquals( '&#36;0.00', edd_email_tag_tax( $this->_payment_id ) );
+		$this->assertEquals( '$0.00', edd_email_tag_tax( $this->_payment_id ) );
 	}
 
 	public function test_email_tags_price() {
-		$this->assertEquals( '&#36;100.00', edd_email_tag_price( $this->_payment_id ) );
+		$this->assertEquals( '$100.00', edd_email_tag_price( $this->_payment_id ) );
 	}
 
 	public function test_email_tags_payment_id() {

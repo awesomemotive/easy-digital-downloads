@@ -56,7 +56,7 @@ function edd_setup_edd_post_types() {
 		'map_meta_cap'      => true,
 		'has_archive' 		=> $archives,
 		'hierarchical' 		=> false,
-		'supports' 			=> apply_filters( 'edd_download_supports', array( 'title', 'editor', 'thumbnail', 'excerpt', 'revisions' ) ),
+		'supports' 			=> apply_filters( 'edd_download_supports', array( 'title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'author' ) ),
 	);
 	register_post_type( 'download', apply_filters( 'edd_download_post_type_args', $download_args ) );
 
@@ -210,6 +210,7 @@ function edd_setup_download_taxonomies() {
 		'add_new_item' 		=> __( 'Add New Category', 'edd'  ),
 		'new_item_name' 	=> __( 'New Category Name', 'edd'  ),
 		'menu_name' 		=> __( 'Categories', 'edd'  ),
+		'choose_from_most_used' => sprintf( __( 'Choose from most used %s categories', 'edd'  ), edd_get_label_singular() ),
 	);
 
 	$category_args = apply_filters( 'edd_download_category_args', array(
@@ -237,6 +238,7 @@ function edd_setup_download_taxonomies() {
 		'add_new_item' 		=> __( 'Add New Tag', 'edd'  ),
 		'new_item_name' 	=> __( 'New Tag Name', 'edd'  ),
 		'menu_name' 		=> __( 'Tags', 'edd'  ),
+		'choose_from_most_used' => sprintf( __( 'Choose from most used %s tags', 'edd'  ), edd_get_label_singular() ),
 	);
 
 	$tag_args = apply_filters( 'edd_download_tag_args', array(

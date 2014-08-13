@@ -51,24 +51,25 @@ class EDD_Payments_Query extends EDD_Stats {
 	 */
 	public function __construct( $args = array() ) {
 		$defaults = array(
-			'output'     => 'payments', // Use 'posts' to get standard post objects
-			'post_type'  => array( 'edd_payment' ),
-			'start_date' => false,
-			'end_date'   => false,
-			'number'     => 20,
-			'page'       => null,
-			'orderby'    => 'ID',
-			'order'      => 'DESC',
-			'user'       => null,
-			'status'     => 'any',
-			'meta_key'   => null,
-			'year'       => null,
-			'month'      => null,
-			'day'        => null,
-			's'          => null,
-			'children'   => false,
-			'fields'     => null,
-			'download'   => null
+			'output'          => 'payments', // Use 'posts' to get standard post objects
+			'post_type'       => array( 'edd_payment' ),
+			'start_date'      => false,
+			'end_date'        => false,
+			'number'          => 20,
+			'page'            => null,
+			'orderby'         => 'ID',
+			'order'           => 'DESC',
+			'user'            => null,
+			'status'          => 'any',
+			'meta_key'        => null,
+			'year'            => null,
+			'month'           => null,
+			'day'             => null,
+			's'               => null,
+			'search_in_notes' => false,
+			'children'        => false,
+			'fields'          => null,
+			'download'        => null
 		);
 
 		$this->args = wp_parse_args( $args, $defaults );
@@ -140,8 +141,9 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		$query = new WP_Query( $this->args );
 
-		if ( 'payments' != $this->args[ 'output' ] )
+		if ( 'payments' != $this->args[ 'output' ] ) {
 			return $query->posts;
+		}
 
 		if ( $query->have_posts() ) {
 			while ( $query->have_posts() ) {
@@ -163,8 +165,14 @@ class EDD_Payments_Query extends EDD_Stats {
 				$details->user_info    = edd_get_payment_meta_user_info( $payment_id );
 				$details->cart_details = edd_get_payment_meta_cart_details( $payment_id, true );
 
+				if( edd_get_option( 'enable_sequential' ) ) {
+					$details->payment_number = edd_get_payment_number( $payment_id );
+				}
+
 				$this->payments[] = apply_filters( 'edd_payment', $details, $payment_id, $this );
 			}
+
+			wp_reset_postdata();
 		}
 
 		do_action( 'edd_post_get_payments', $this );
@@ -180,8 +188,9 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * @return void
 	 */
 	public function date_filter_pre() {
-		if( ! ( $this->args[ 'start_date' ] || $this->args[ 'end_date' ] ) )
+		if( ! ( $this->args[ 'start_date' ] || $this->args[ 'end_date' ] ) ) {
 			return;
+		}
 
 		$this->setup_dates( $this->args[ 'start_date' ], $this->args[ 'end_date' ] );
 
@@ -197,8 +206,9 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * @return void
 	 */
 	public function date_filter_post() {
-		if ( ! ( $this->args[ 'start_date' ] || $this->args[ 'end_date' ] ) )
+		if ( ! ( $this->args[ 'start_date' ] || $this->args[ 'end_date' ] ) ) {
 			return;
+		}
 
 		remove_filter( 'posts_where', array( $this, 'payments_where' ) );
 	}
@@ -211,8 +221,9 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * @return void
 	 */
 	public function status() {
-		if ( ! isset ( $this->args[ 'status' ] ) )
+		if ( ! isset ( $this->args[ 'status' ] ) ) {
 			return;
+		}
 
 		$this->__set( 'post_status', $this->args[ 'status' ] );
 		$this->__unset( 'status' );
@@ -226,8 +237,9 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * @return void
 	 */
 	public function page() {
-		if ( ! isset ( $this->args[ 'page' ] ) )
+		if ( ! isset ( $this->args[ 'page' ] ) ) {
 			return;
+		}
 
 		$this->__set( 'paged', $this->args[ 'page' ] );
 		$this->__unset( 'page' );
@@ -242,13 +254,16 @@ class EDD_Payments_Query extends EDD_Stats {
 	 */
 	public function per_page() {
 
-		if( ! isset( $this->args[ 'number' ] ) )
+		if( ! isset( $this->args[ 'number' ] ) ){
 			return;
+		}
 
-		if ( $this->args[ 'number' ] == -1 )
+		if ( $this->args[ 'number' ] == -1 ) {
 			$this->__set( 'nopaging', true );
-		else
+		}
+		else{
 			$this->__set( 'posts_per_page', $this->args[ 'number' ] );
+		}
 
 		$this->__unset( 'number' );
 	}
@@ -261,8 +276,9 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * @return void
 	 */
 	public function month() {
-		if ( ! isset ( $this->args[ 'month' ] ) )
+		if ( ! isset ( $this->args[ 'month' ] ) ) {
 			return;
+		}
 
 		$this->__set( 'monthnum', $this->args[ 'month' ] );
 		$this->__unset( 'month' );
@@ -295,8 +311,9 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * @return void
 	 */
 	public function user() {
-		if ( is_null( $this->args[ 'user' ] ) )
+		if ( is_null( $this->args[ 'user' ] ) ) {
 			return;
+		}
 
 		if ( is_numeric( $this->args[ 'user' ] ) ) {
 			$user_key = '_edd_payment_user_id';
@@ -319,15 +336,33 @@ class EDD_Payments_Query extends EDD_Stats {
 	 */
 	public function search() {
 
+		if( ! isset( $this->args[ 's' ] ) ) {
+			return;
+		}
+		
 		$search = trim( $this->args[ 's' ] );
 
-		if( empty( $search ) )
+		if( empty( $search ) ) {
 			return;
+		}
 
         $is_email = is_email( $search ) || strpos( $search, '@' ) !== false;
 		$is_user  = strpos( $search, strtolower( 'user:' ) ) !== false;
 
-		if ( $is_email || strlen( $search ) == 32 ) {
+		if ( ! empty( $this->args[ 'search_in_notes' ] ) ) {
+
+			$notes = edd_get_payment_notes( 0, $search );
+
+			if( ! empty( $notes ) ) {
+
+				$payment_ids = wp_list_pluck( (array) $notes, 'comment_post_ID' );
+
+				$this->__set( 'post__in', $payment_ids );
+			}
+
+			$this->__unset( 's' );
+
+		} elseif ( $is_email || strlen( $search ) == 32 ) {
 
 			$key = $is_email ? '_edd_payment_user_email' : '_edd_payment_purchase_key';
 			$search_meta = array(
@@ -344,6 +379,38 @@ class EDD_Payments_Query extends EDD_Stats {
 			$search_meta = array(
 				'key'   => '_edd_payment_user_id',
 				'value' => trim( str_replace( 'user:', '', strtolower( $search ) ) )
+			);
+
+			$this->__set( 'meta_query', $search_meta );
+
+			if( edd_get_option( 'enable_sequential' ) ) {
+
+				$search_meta = array(
+					'key'     => '_edd_payment_number',
+					'value'   => $search,
+					'compare' => 'LIKE'
+				);
+
+				$this->__set( 'meta_query', $search_meta );
+
+				$this->args['meta_query']['relation'] = 'OR';
+
+			}
+
+			$this->__unset( 's' );
+
+		} elseif ( 
+			edd_get_option( 'enable_sequential' ) && 
+			(
+				false !== strpos( $search, edd_get_option( 'sequential_prefix' ) ) ||
+				false !== strpos( $search, edd_get_option( 'sequential_postfix' ) ) 
+			)
+		) {
+
+			$search_meta = array(
+				'key'     => '_edd_payment_number',
+				'value'   => $search,
+				'compare' => 'LIKE'
 			);
 
 			$this->__set( 'meta_query', $search_meta );
@@ -367,7 +434,6 @@ class EDD_Payments_Query extends EDD_Stats {
 			$this->__unset( 's' );
 
 		} else {
-
 			$this->__set( 's', $search );
 
 		}

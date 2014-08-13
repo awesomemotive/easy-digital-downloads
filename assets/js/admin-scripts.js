@@ -132,7 +132,7 @@ jQuery(document).ready(function ($) {
 		},
 
 		files : function() {
-			if( typeof wp == "undefined" || edd_vars.new_media_ui != '1' ){
+			if( typeof wp === "undefined" || '1' !== edd_vars.new_media_ui ){
 				//Old Thickbox uploader
 				if ( $( '.edd_upload_file_button' ).length > 0 ) {
 					window.formfield = '';
@@ -162,7 +162,7 @@ jQuery(document).ready(function ($) {
 						window.send_to_editor = window.edd_send_to_editor;
 						window.formfield = '';
 						window.imagefield = false;
-					}
+					};
 				}
 			} else {
 				// WP 3.5+ uploader
@@ -181,33 +181,33 @@ jQuery(document).ready(function ($) {
 					if ( file_frame ) {
 						//file_frame.uploader.uploader.param( 'post_id', set_to_post_id );
 						file_frame.open();
-					  return;
+						return;
 					}
 
 					// Create the media frame.
-					file_frame = wp.media.frames.file_frame = wp.media({
+					file_frame = wp.media.frames.file_frame = wp.media( {
 						frame: 'post',
 						state: 'insert',
 						title: button.data( 'uploader_title' ),
 						button: {
-							text: button.data( 'uploader_button_text' ),
+							text: button.data( 'uploader_button_text' )
 						},
-						multiple: $(this).data('multiple') == '0' ? false : true  // Set to true to allow multiple files to be selected
-					});
+						multiple: $( this ).data( 'multiple' ) == '0' ? false : true  // Set to true to allow multiple files to be selected
+					} );
 
-					file_frame.on( 'menu:render:default', function(view) {
-				        // Store our views in an object.
-				        var views = {};
+					file_frame.on( 'menu:render:default', function( view ) {
+						// Store our views in an object.
+						var views = {};
 
-				        // Unset default menu items
-				        view.unset('library-separator');
-				        view.unset('gallery');
-				        view.unset('featured-image');
-				        view.unset('embed');
+						// Unset default menu items
+						view.unset( 'library-separator' );
+						view.unset( 'gallery' );
+						view.unset( 'featured-image' );
+						view.unset( 'embed' );
 
-				        // Initialize the views in our view object.
-				        view.set(views);
-				    });
+						// Initialize the views in our view object.
+						view.set( views );
+					} );
 
 					// When an image is selected, run a callback.
 					file_frame.on( 'insert', function() {
@@ -215,19 +215,22 @@ jQuery(document).ready(function ($) {
 						var selection = file_frame.state().get('selection');
 						selection.each( function( attachment, index ) {
 							attachment = attachment.toJSON();
-							if(index == 0){
+							if ( 0 === index ) {
 								// place first attachment in field
-								window.formfield.find('.edd_repeatable_upload_field').val(attachment.url);
-								window.formfield.find('.edd_repeatable_name_field').val(attachment.title);
-							} else{
+								window.formfield.find( '.edd_repeatable_attachment_id_field' ).val( attachment.id );
+								window.formfield.find( '.edd_repeatable_upload_field' ).val( attachment.url );
+								window.formfield.find( '.edd_repeatable_name_field' ).val( attachment.title );
+							} else {
 								// Create a new row for all additional attachments
 								var row = window.formfield,
-								clone = EDD_Download_Configuration.clone_repeatable(row);
-								clone.find('.edd_repeatable_upload_field').val(attachment.url);
-								if(attachment.title.length > 0){
-									clone.find('.edd_repeatable_name_field').val(attachment.title);
-								}else{
-									clone.find('.edd_repeatable_name_field').val(attachment.filename);
+									clone = EDD_Download_Configuration.clone_repeatable( row );
+
+								clone.find( '.edd_repeatable_attachment_id_field' ).val( attachment.id );
+								clone.find( '.edd_repeatable_upload_field' ).val( attachment.url );
+								if ( attachment.title.length > 0 ) {
+									clone.find( '.edd_repeatable_name_field' ).val( attachment.title );
+								} else {
+									clone.find( '.edd_repeatable_name_field' ).val( attachment.filename );
 								}
 								clone.insertAfter( row );
 							}
@@ -246,36 +249,37 @@ jQuery(document).ready(function ($) {
 
 		},
 
-		updatePrices : function() {
+		updatePrices: function() {
 			$( '#edd_price_fields' ).on( 'keyup', '.edd_variable_prices_name', function() {
 
-				var key  = $(this).parents( 'tr' ).index(),
-				    name = $( this ).val();
+				var key = $( this ).parents( 'tr' ).index(),
+					name = $( this ).val(),
+					field_option = $( '.edd_repeatable_condition_field option[value=' + key + ']' );
 
-				if ( $( '.edd_repeatable_condition_field option[value=' + key + ']' ).length > 0 ) {
-					$( '.edd_repeatable_condition_field option[value=' + key + ']' ).text( name );
+				if ( field_option.length > 0 ) {
+					field_option.text( name );
 				} else {
 					$( '.edd_repeatable_condition_field' ).append(
 						$( '<option></option>' )
-						.attr( 'value', key )
-						.text( name )
+							.attr( 'value', key )
+							.text( name )
 					);
 				}
-			});
+			} );
 		}
 
-	}
+	};
 
 	EDD_Download_Configuration.init();
 
 	//$('#edit-slug-box').remove();
 
 	// Date picker
-	if ($('.edd_datepicker').length > 0) {
+	if ( $( '.edd_datepicker' ).length > 0 ) {
 		var dateFormat = 'mm/dd/yy';
-		$('.edd_datepicker').datepicker({
+		$( '.edd_datepicker' ).datepicker( {
 			dateFormat: dateFormat
-		});
+		} );
 	}
 
 	/**
@@ -289,10 +293,10 @@ jQuery(document).ready(function ($) {
 			this.add_download();
 			this.recalculate_total();
 			this.variable_prices_check();
-			this.status_change();
 			this.add_note();
 			this.remove_note();
 			this.resend_receipt();
+			this.copy_download_link();
 		},
 
 
@@ -357,10 +361,9 @@ jQuery(document).ready(function ($) {
 					amount = '0.00';
 				}
 
-				if( edd_vars.currency_pos == 'before' ) {
-					var formatted_amount = edd_vars.currency_sign + amount; 
-				} else {
-					var formatted_amount = edd_vars.currency_sign + amount; 
+				var formatted_amount = amount + edd_vars.currency_sign;
+				if ( 'before' === edd_vars.currency_pos ) {
+					formatted_amount = edd_vars.currency_sign + amount;
 				}
 
 				if( price_name ) {
@@ -370,7 +373,8 @@ jQuery(document).ready(function ($) {
 				var count = $('#edd-purchased-files div.row').length;
 				var clone = $('#edd-purchased-files div.row:last').clone();
 
-				clone.find( '.download span' ).text( download_title );
+				clone.find( '.download span' ).html( '<a href="post.php?post=' + download_id + '&action=edit"></a>' );
+				clone.find( '.download span a' ).text( download_title );
 				clone.find( '.price' ).text( formatted_amount );
 				clone.find( '.quantity span' ).text( quantity );
 				clone.find( 'input.edd-payment-details-download-id' ).val( download_id );
@@ -402,13 +406,21 @@ jQuery(document).ready(function ($) {
 			$('#edd-order-recalc-total').on('click', function(e) {
 				e.preventDefault();
 				var total = 0;
-				$('#edd-purchased-files .edd-payment-details-download-amount').each(function() {
-					var quantity = $(this).next().val();
-					total += ( parseFloat( $(this).val() ) * parseInt( quantity ) );
-				});
-				$('.edd-payment-fees span.fee-amount').each(function() {
-					total += parseFloat( $(this).data('fee') );
-				});
+				if( $('#edd-purchased-files .row .edd-payment-details-download-amount').length ) {
+					$('#edd-purchased-files .row .edd-payment-details-download-amount').each(function() {
+						var quantity = $(this).next().val();
+						if( quantity ) {
+							total += ( parseFloat( $(this).val() ) * parseInt( quantity ) );
+						} else {
+							total += parseFloat( $(this).val() );
+						}
+					});
+				}
+				if( $('.edd-payment-fees').length ) {
+					$('.edd-payment-fees span.fee-amount').each(function() {
+						total += parseFloat( $(this).data('fee') );
+					});
+				}
 				$('input[name=edd-payment-total]').val( total );
 			});
 
@@ -426,7 +438,7 @@ jQuery(document).ready(function ($) {
 						action : 'edd_check_for_download_price_variations',
 						download_id: download_id
 					};
-					
+
 					$.ajax({
 						type: "POST",
 						data: postData,
@@ -446,19 +458,6 @@ jQuery(document).ready(function ($) {
 
 		},
 
-		status_change : function() {
-
-			// Show / hide the send purchase receipt check box on the Edit payment screen
-			$('#edd_payment_status').change(function() {
-				if( $('#edd_payment_status option:selected').val() == 'publish' ) {
-					$('#edd_payment_notification').slideDown();
-				} else {
-					$('#edd_payment_notification').slideUp();
-				}
-			});
-
-		},
-
 		add_note : function() {
 
 			$('#edd-add-payment-note').on('click', function(e) {
@@ -468,7 +467,7 @@ jQuery(document).ready(function ($) {
 					payment_id : $(this).data('payment-id'),
 					note : $('#edd-payment-note').val()
 				};
-				
+
 				if( postData.note ) {
 
 					$.ajax({
@@ -505,13 +504,13 @@ jQuery(document).ready(function ($) {
 				e.preventDefault();
 
 				if( confirm( edd_vars.delete_payment_note) ) {
-					
+
 					var postData = {
 						action : 'edd_delete_payment_note',
 						payment_id : $(this).data('payment-id'),
 						note_id : $(this).data('note-id')
 					};
-					
+
 					$.ajax({
 						type: "POST",
 						data: postData,
@@ -536,22 +535,86 @@ jQuery(document).ready(function ($) {
 		},
 
 		resend_receipt : function() {
+			$( 'body' ).on( 'click', '#edd-resend-receipt', function( e ) {
+				return confirm( edd_vars.resend_receipt );
+			} );
+		},
 
-			$('body').on('click', '#edd-resend-receipt', function(e) {
+		copy_download_link : function() {
+			$( 'body' ).on( 'click', '.edd-copy-download-link', function( e ) {
+				e.preventDefault();
+				var $this    = $(this);
+				var postData = {
+					action      : 'edd_get_file_download_link',
+					payment_id  : $('input[name="edd_payment_id"]').val(),
+					download_id : $this.data('download-id'),
+					price_id    : $this.data('price-id')
+				};
 
-				if( confirm( edd_vars.resend_receipt ) ) {
-					
-					return true;
-				}
+				$.ajax({
+					type: "POST",
+					data: postData,
+					url: ajaxurl,
+					success: function (link) {
+						$( "#edd-download-link" ).dialog({
+							width: 400
+						}).html( '<textarea rows="10" cols="40" id="edd-download-link-textarea">' + link + '</textarea>' );
+						$( "#edd-download-link-textarea" ).focus().select();
+						return false;
+					}
+				}).fail(function (data) {
+					if ( window.console && window.console.log ) {
+						console.log( data );
+					}
+				});
 
-				return false;
+			} );
+		}
+
+	};
+	EDD_Edit_Payment.init();
+
+
+	/**
+	 * Discount add / edit screen JS
+	 */
+	var EDD_Discount = {
+
+		init : function() {
+			this.type_select();
+			this.product_requirements();
+		},
+
+		type_select : function() {
+
+			$('#edd-edit-discount #edd-type, #edd-add-discount #edd-type').change(function() {
+
+				$('.edd-amount-description').toggle();
 
 			});
 
-		}
+		},
 
-	}
-	EDD_Edit_Payment.init();
+		product_requirements : function() {
+
+			$('#products').change(function() {
+
+				if( $(this).val() ) {
+
+					$('#edd-discount-product-conditions').show();
+
+				} else {
+
+					$('#edd-discount-product-conditions').hide();
+					
+				}
+
+			});
+
+		},
+
+	};
+	EDD_Discount.init();
 
 
 	/**
@@ -569,7 +632,7 @@ jQuery(document).ready(function ($) {
 			// Show hide extended date options
 			$( '#edd-graphs-date-options' ).change( function() {
 				var $this = $(this);
-				if( $this.val() == 'other' ) {
+				if ( 'other' === $this.val() ) {
 					$( '#edd-date-range-options' ).show();
 				} else {
 					$( '#edd-date-range-options' ).hide();
@@ -583,17 +646,33 @@ jQuery(document).ready(function ($) {
 			// Show / hide Download option when exporting customers
 
 			$( '#edd_customer_export_download' ).change( function() {
-				var $this = $(this);
-				if( $this.val() == '0' ) {
+
+				var $this = $(this), download_id = $('option:selected', $this).val();
+
+				if ( '0' === $this.val() ) {
 					$( '#edd_customer_export_option' ).show();
 				} else {
 					$( '#edd_customer_export_option' ).hide();
+				}
+
+				// On Download Select, Check if Variable Prices Exist
+				if ( parseInt( download_id ) != 0 ) {
+					var data = {
+						action : 'edd_check_for_download_price_variations',
+						download_id: download_id
+					};
+					$.post(ajaxurl, data, function(response) {
+						$('.edd_price_options_select').remove();
+						$this.after( response );
+					});
+				} else {
+					$('.edd_price_options_select').remove();
 				}
 			});
 
 		}
 
-	}
+	};
 	EDD_Reports.init();
 
 
@@ -615,8 +694,8 @@ jQuery(document).ready(function ($) {
 				$('.edd-color-picker').wpColorPicker();
 			}
 
-		    // Settings Upload field JS
-		    if( typeof wp == "undefined" || edd_vars.new_media_ui != '1' ){
+			// Settings Upload field JS
+			if ( typeof wp === "undefined" || '1' !== edd_vars.new_media_ui ) {
 				//Old Thickbox uploader
 				if ( $( '.edd_settings_upload_button' ).length > 0 ) {
 					window.formfield = '';
@@ -627,7 +706,7 @@ jQuery(document).ready(function ($) {
 						window.tbframe_interval = setInterval(function() {
 							jQuery('#TB_iframeContent').contents().find('.savesend .button').val(edd_vars.use_this_file).end().find('#insert-gallery, .wp-post-thumbnail').hide();
 						}, 2000);
-						tb_show(edd_vars.add_new_download, 'media-upload.php?TB_iframe=true');
+						tb_show( edd_vars.add_new_download, 'media-upload.php?TB_iframe=true' );
 					});
 
 					window.edd_send_to_editor = window.send_to_editor;
@@ -643,7 +722,7 @@ jQuery(document).ready(function ($) {
 						window.send_to_editor = window.edd_send_to_editor;
 						window.formfield = '';
 						window.imagefield = false;
-					}
+					};
 				}
 			} else {
 				// WP 3.5+ uploader
@@ -662,7 +741,7 @@ jQuery(document).ready(function ($) {
 					if ( file_frame ) {
 						//file_frame.uploader.uploader.param( 'post_id', set_to_post_id );
 						file_frame.open();
-					  return;
+						return;
 					}
 
 					// Create the media frame.
@@ -671,24 +750,24 @@ jQuery(document).ready(function ($) {
 						state: 'insert',
 						title: button.data( 'uploader_title' ),
 						button: {
-							text: button.data( 'uploader_button_text' ),
+							text: button.data( 'uploader_button_text' )
 						},
 						multiple: false
 					});
 
-					file_frame.on( 'menu:render:default', function(view) {
-				        // Store our views in an object.
-				        var views = {};
+					file_frame.on( 'menu:render:default', function( view ) {
+						// Store our views in an object.
+						var views = {};
 
-				        // Unset default menu items
-				        view.unset('library-separator');
-				        view.unset('gallery');
-				        view.unset('featured-image');
-				        view.unset('embed');
+						// Unset default menu items
+						view.unset( 'library-separator' );
+						view.unset( 'gallery' );
+						view.unset( 'featured-image' );
+						view.unset( 'embed' );
 
-				        // Initialize the views in our view object.
-				        view.set(views);
-				    });
+						// Initialize the views in our view object.
+						view.set( views );
+					} );
 
 					// When an image is selected, run a callback.
 					file_frame.on( 'insert', function() {
@@ -713,6 +792,10 @@ jQuery(document).ready(function ($) {
 		},
 
 		taxes : function() {
+
+			if( $('select.edd-no-states').length ) {
+				$('select.edd-no-states').closest('tr').hide();
+			}
 
 			// Update base state field based on selected base country
 			$('select[name="edd_settings[base_country]"]').change(function() {
@@ -892,9 +975,21 @@ jQuery(document).ready(function ($) {
 		var lastKey = e.which;
 
 		// Don't fire if short or is a modifier key (shift, ctrl, apple command key, or arrow keys)
-		if(val.length <= 3 || (e.which == 16 || e.which == 13 || e.which == 91 || e.which == 17 || 
-			                   e.which == 37 || e.which == 38 || e.which == 39 || e.which == 40))
+		if(
+			val.length <= 3 ||
+			(
+				e.which == 16 ||
+				e.which == 13 ||
+				e.which == 91 ||
+				e.which == 17 ||
+				e.which == 37 ||
+				e.which == 38 ||
+				e.which == 39 ||
+				e.which == 40
+			)
+		) {
 			return;
+		}
 		
 		clearTimeout(typingTimer);
 		typingTimer = setTimeout(
@@ -911,13 +1006,13 @@ jQuery(document).ready(function ($) {
 						$('ul.chosen-results').empty();
 					},
 					success: function( data ) {
-						 $.each( data, function( key, item ) {
-						 	// Remove all options but those that are selected
-						 	$('#' + menu_id + ' option:not(:selected)').remove();
-							
+
+						// Remove all options but those that are selected
+					 	$('#' + menu_id + ' option:not(:selected)').remove();
+						$.each( data, function( key, item ) {
 						 	// Add any option that doesn't already exist
 							if( ! $('#' + menu_id + ' option[value="' + item.id + '"]').length ) {
-								$('#' + menu_id).append( '<option value="' + item.id + '">' + item.name + '</option>' );
+								$('#' + menu_id).prepend( '<option value="' + item.id + '">' + item.name + '</option>' );
 							}
 						});
 						 // Update the options
@@ -932,12 +1027,68 @@ jQuery(document).ready(function ($) {
 
 		        });
 			},
-			doneTypingInterval);
+			doneTypingInterval
+		);
 	});
 
 	// This fixes the Chosen box being 0px wide when the thickbox is opened
-	$('.edd-thickbox').on('click', function() {
-		$('#choose-download .edd-select-chosen').css('width', '100%');
+	$( '#post' ).on( 'click', '.edd-thickbox', function() {
+		$( '.edd-select-chosen', '#choose-download' ).css( 'width', '100%' );
+	});
+
+	/**
+	 * Tools screen JS
+	 */
+	var EDD_Tools = {
+
+		init : function() {
+			this.revoke_api_key();
+			this.regenerate_api_key();
+		},
+
+		revoke_api_key : function() {
+			$( 'body' ).on( 'click', '.edd-revoke-api-key', function( e ) {
+				return confirm( edd_vars.revoke_api_key );
+			} );
+		},
+		regenerate_api_key : function() {
+			$( 'body' ).on( 'click', '.edd-regenerate-api-key', function( e ) {
+				return confirm( edd_vars.regenerate_api_key );
+			} );
+		},
+	};
+	EDD_Tools.init();
+
+	// Ajax user search
+	$('.edd-ajax-user-search').keyup(function() {
+		var user_search = $(this).val();
+		$('.edd-ajax').show();
+		data = {
+			action: 'edd_search_users',
+			user_name: user_search
+		};
+		
+		document.body.style.cursor = 'wait';
+
+		$.ajax({
+			type: "POST",
+			data: data,
+			dataType: "json",
+			url: ajaxurl,
+			success: function (search_response) {
+
+				$('.edd-ajax').hide();
+				$('.edd_user_search_results').html('');
+				$(search_response.results).appendTo('.edd_user_search_results');
+				document.body.style.cursor = 'default';
+			}
+		});
+	});
+	$('body').on('click.eddSelectUser', '.edd_user_search_results a', function(e) {
+		e.preventDefault();
+		var login = $(this).data('login');
+		$('.edd-ajax-user-search').val(login);
+		$('.edd_user_search_results').html('');
 	});
 
 });

@@ -30,6 +30,10 @@ function edd_admin_messages() {
 		add_settings_error( 'edd-notices', 'edd-discount-add-fail', __( 'There was a problem adding your discount code, please try again.', 'edd' ), 'error' );
 	}
 
+	if ( isset( $_GET['edd-message'] ) && 'discount_exists' == $_GET['edd-message'] && current_user_can( 'manage_shop_discounts' ) ) {
+		add_settings_error( 'edd-notices', 'edd-discount-exists', __( 'A discount with that code already exists, please use a different code.', 'edd' ), 'error' );
+	}
+
 	if ( isset( $_GET['edd-message'] ) && 'discount_updated' == $_GET['edd-message'] && current_user_can( 'manage_shop_discounts' ) ) {
 		 add_settings_error( 'edd-notices', 'edd-discount-updated', __( 'Discount code updated.', 'edd' ), 'updated' );
 	}
@@ -71,6 +75,22 @@ function edd_admin_messages() {
 
 	if ( isset( $_GET['edd-message'] ) && 'payment-updated' == $_GET['edd-message'] && current_user_can( 'edit_shop_payments' ) ) {
 		add_settings_error( 'edd-notices', 'edd-payment-updated', __( 'The payment has been successfully updated.', 'edd' ), 'updated' );
+	}
+
+	if ( isset( $_GET['edd-message'] ) && 'api-key-generated' == $_GET['edd-message'] && current_user_can( 'manage_shop_settings' ) ) {
+		add_settings_error( 'edd-notices', 'edd-api-key-generated', __( 'API keys successfully generated.', 'edd' ), 'updated' );
+	}
+
+	if ( isset( $_GET['edd-message'] ) && 'api-key-exists' == $_GET['edd-message'] && current_user_can( 'manage_shop_settings' ) ) {
+		add_settings_error( 'edd-notices', 'edd-api-key-exists', __( 'The specified user already has API keys.', 'edd' ), 'error' );
+	}
+
+	if ( isset( $_GET['edd-message'] ) && 'api-key-regenerated' == $_GET['edd-message'] && current_user_can( 'manage_shop_settings' ) ) {
+		add_settings_error( 'edd-notices', 'edd-api-key-regenerated', __( 'API keys successfully regenerated.', 'edd' ), 'updated' );
+	}
+
+	if ( isset( $_GET['edd-message'] ) && 'api-key-revoked' == $_GET['edd-message'] && current_user_can( 'manage_shop_settings' ) ) {
+		add_settings_error( 'edd-notices', 'edd-api-key-revoked', __( 'API keys successfully revoked.', 'edd' ), 'updated' );
 	}
 
     if( ! edd_htaccess_exists() && ! get_user_meta( get_current_user_id(), '_edd_htaccess_missing_dismissed', true ) ) {

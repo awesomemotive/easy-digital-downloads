@@ -56,6 +56,7 @@ function edd_payments_contextual_help() {
 				<li>' . __( 'You can enter the customer\'s name or ID prefexed by \'user:\'', 'edd' ) . '</li>
 				<li>' . __( 'You can enter the 32-character purchase key', 'edd' ) . '</li>
 				<li>' . __( 'You can enter the purchase ID', 'edd' ) . '</li>
+				<li>' . __( 'You can enter a transaction ID prefixed by \'txn:\'', 'edd' ) . '</li>
 				<li>' . sprintf( __( 'You can enter the %s ID prefixed by \'#\'', 'edd' ), edd_get_label_singular() ) . '</li>
 			</ul>'
 	) );

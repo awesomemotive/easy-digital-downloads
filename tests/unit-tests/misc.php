@@ -88,6 +88,7 @@ class Test_Misc extends EDD_UnitTestCase {
 
 	public function test_get_countries() {
 		$expected = array(
+			'0'  => 'Choose',
 			'US' => 'United States',
 			'CA' => 'Canada',
 			'GB' => 'United Kingdom',
@@ -219,7 +220,7 @@ class Test_Misc extends EDD_UnitTestCase {
 			'LR' => 'Liberia',
 			'LS' => 'Lesotho',
 			'LT' => 'Lithuania',
-			'LU' => 'Luxembourgh',
+			'LU' => 'Luxembourg',
 			'LV' => 'Latvia',
 			'LY' => 'Libyan Arab Jamahiriya',
 			'MA' => 'Morocco',
@@ -239,7 +240,7 @@ class Test_Misc extends EDD_UnitTestCase {
 			'MS' => 'Montserrat',
 			'MT' => 'Malta',
 			'MU' => 'Mauritius',
-			'Mv' => 'Maldives',
+			'MV' => 'Maldives',
 			'MW' => 'Malawi',
 			'MX' => 'Mexico',
 			'MY' => 'Malaysia',
@@ -340,6 +341,7 @@ class Test_Misc extends EDD_UnitTestCase {
 
 	public function test_states_list() {
 		$expected = array(
+			'0'  => 'Choose',
 			'AL' => 'Alabama',
 			'AK' => 'Alaska',
 			'AZ' => 'Arizona',
@@ -413,6 +415,7 @@ class Test_Misc extends EDD_UnitTestCase {
 
 	public function test_provinces_list() {
 		$expected = array(
+			'0'  => 'Choose',
 			'AB' => 'Alberta',
 			'BC' => 'British Columbia',
 			'MB' => 'Manitoba',
@@ -452,5 +455,19 @@ class Test_Misc extends EDD_UnitTestCase {
 
 	public function test_use_skus() {
 		$this->assertFalse( edd_use_skus() );
+	}
+
+	public function test_edd_is_host() {
+		$this->assertFalse( edd_is_host( 'wpengine' ) );
+		$this->assertFalse( edd_is_host( 'wp engine' ) );
+		$this->assertFalse( edd_is_host( 'WP Engine' ) );
+		$this->assertFalse( edd_is_host( 'WPEngine' ) );
+
+		define( 'WPE_APIKEY', 'testkey' );
+
+		$this->assertTrue( edd_is_host( 'wpengine' ) );
+		$this->assertTrue( edd_is_host( 'wp engine' ) );
+		$this->assertTrue( edd_is_host( 'WP Engine' ) );
+		$this->assertTrue( edd_is_host( 'WPEngine' ) );
 	}
 }
