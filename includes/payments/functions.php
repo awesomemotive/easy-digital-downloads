@@ -252,22 +252,29 @@ function edd_delete_purchase( $payment_id = 0 ) {
 		}
 	}
 
-	$amount = edd_get_payment_amount( $payment_id );
-	$status = get_post( $payment_id )->post_status;
+	$amount      = edd_get_payment_amount( $payment_id );
+	$status      = get_post( $payment_id )->post_status;
+	$customer_id = edd_get_payment_customer_id( $payment_id );
 
 	if( $status == 'revoked' || $status == 'publish' ) {
 		// Only decrease earnings if they haven't already been decreased (or were never increased for this payment)
 		edd_decrease_total_earnings( $amount );
 		// Clear the This Month earnings (this_monththis_month is NOT a typo)
 		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
+
+		if( $customer_id ) {
+
+			// Decrement the stats for the customer
+			EDD()->customers->decrement_stats( $customer_id, $amount );
+	
+		}
 	}
 
 	do_action( 'edd_payment_delete', $payment_id );
 
-	// Remove the payment ID from the customer
-	$customer_id = edd_get_payment_customer_id( $payment_id );
 	if( $customer_id ){
 
+		// Remove the payment ID from the customer
 		EDD()->customers->remove_payment( $customer_id, $payment_id );
 
 	}
