@@ -121,7 +121,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 			case 'file_downloads' :
 				$user = ! empty( $item['user_id'] ) ? $item['user_id'] : $item['email'];
-				$value = '<a href="' . esc_url( admin_url( '/edit.php?post_type=download&page=edd-reports&tab=logs&user=' . urlencode( $user ) ) ) . '" target="_blank">' . __( 'View download log', 'edd' ) . '</a>';
+				$value = '<a href="' . esc_url( admin_url( '/edit.php?post_type=download&page=edd-reports&tab=logs&user=' . urlencode( $user ) ) ) . '">' . __( 'View download log', 'edd' ) . '</a>';
 				break;
 			default:
 				$value = isset( $item[ $column_name ] ) ? $item[ $column_name ] : null;
