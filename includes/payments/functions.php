@@ -310,22 +310,23 @@ function edd_undo_purchase( $download_id, $payment_id ) {
 	if ( edd_is_test_mode() )
         return;
 
-	$payment = get_post( $payment_id );
 	$cart_details = edd_get_payment_meta_cart_details( $payment_id );
+	$user_info    = edd_get_payment_meta_user_info( $payment_id );
 
 	if ( is_array( $cart_details ) ) {
+
 		foreach ( $cart_details as $item ) {
+
 			// Decrease earnings/sales and fire action once per quantity number
 			for( $i = 0; $i < $item['quantity']; $i++ ) {
-				$user_info = edd_get_payment_meta_user_info( $payment_id );
 
 				// get the item's price
  				$amount = isset( $item['price'] ) ? $item['price'] : false;
 
  				// variable priced downloads
 				if ( edd_has_variable_prices( $download_id ) ) {
-					$price_id 	= isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
-					$amount 	= ! isset( $item['price'] ) && 0 !== $item['price'] ? edd_get_price_option_amount( $download_id, $price_id ) : $item['price'];
+					$price_id = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
+					$amount   = ! isset( $item['price'] ) && 0 !== $item['price'] ? edd_get_price_option_amount( $download_id, $price_id ) : $item['price'];
 				}
 
  				if ( ! $amount ) {
@@ -339,8 +340,11 @@ function edd_undo_purchase( $download_id, $payment_id ) {
 				// decrease purchase count
 				edd_decrease_purchase_count( $download_id );
 			}
+
 		}
+
 	}
+
 }
 
 
