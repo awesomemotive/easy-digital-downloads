@@ -118,18 +118,26 @@ function edd_update_payment_details( $data ) {
 		EDD()->customers->remove_payment( $previous_customer->id, $payment_id );
 
 		// Attribute the payment to the new customer and update the payment post meta
-		$new_customer = EDD()->customers->get_by( 'email', $email );
-		EDD()->customers->attach_payment( $new_customer->id, $payment_id );
+		$new_customer_id = EDD()->customers->get_column_by( 'id', 'email', $email );
+
+		if( ! $new_customer ) {
+
+			// No customer exists for the given email so create one			
+			$new_customer_id = EDD()->customers->add( array( 'email' => $email, 'name' => $first_name . ' ' . $last_name ) );
+	
+		}
+
+		EDD()->customers->attach_payment( $new_customer_id, $payment_id );
 
 		// If purchase was completed and not ever refunded, adjust stats of customers
 		if( 'revoked' == $status || 'publish' == $status ) {
 
 			EDD()->customers->decrement_stats( $previous_customer->id, $total );
-			EDD()->customers->increment_stats( $new_customer->id, $total );
+			EDD()->customers->increment_stats( $new_customer_id, $total );
 	
 		}
 		
-		update_post_meta( $payment_id, '_edd_payment_customer_id',  $new_customer->id );
+		update_post_meta( $payment_id, '_edd_payment_customer_id',  $new_customer_id );
 	}
 
 	// Set new meta values
