@@ -472,7 +472,7 @@ function edd_v21_upgrade_customers_db() {
 	if( $emails ) {
 
 		foreach( $emails as $email ) {
-			
+
 			$args = array(
 				'user'    => $email,
 				'order'   => 'ASC',
@@ -486,8 +486,22 @@ function edd_v21_upgrade_customers_db() {
 
 			if( $payments ) {
 
-				$amounts  = wp_list_pluck( $payments, 'total' );
-				$ids      = wp_list_pluck( $payments, 'ID' );
+				$total_value = 0.00;
+				$total_count = 0;
+
+				foreach( $payments as $payment ) {
+
+					$status = get_post_status( $payment->ID );
+					if( 'revoked' == $status || 'publish' == $status ) {
+
+						$total_value += $payment->total;
+						$total_count += 1;
+
+					}
+
+				}
+
+				$ids  = wp_list_pluck( $payments, 'ID' );
 
 				$user = get_user_by( 'email', $email );
 
@@ -495,8 +509,8 @@ function edd_v21_upgrade_customers_db() {
 					'email'          => $email,
 					'user_id'        => $user ? $user->ID : 0,
 					'name'           => $user ? $user->display_name : '',
-					'purchase_count' => count( $payments ),
-					'purchase_value' => round( array_sum( $amounts ), 2 ),
+					'purchase_count' => $total_count,
+					'purchase_value' => round( $total_value, 2 ),
 					'payment_ids'    => implode( ',', array_map( 'absint', $ids ) ),
 					'date_created'   => $payments[0]->date
 				);
