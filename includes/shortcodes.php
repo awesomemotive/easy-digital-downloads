@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_download_shortcode( $atts, $content = null ) {
 	global $post, $edd_options;
-	
+
 	$post_id = is_object( $post ) ? $post->ID : 0;
 
 	$atts = shortcode_atts( array(
@@ -253,7 +253,7 @@ add_shortcode( 'purchase_collection', 'edd_purchase_collection_shortcode' );
  * @return string $display Output generated from the downloads queried
  */
 function edd_downloads_query( $atts, $content = null ) {
-	
+
 	$atts = shortcode_atts( array(
 		'category'         => '',
 		'exclude_category' => '',
@@ -499,6 +499,8 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 		'payment_id'      => true
 	), $atts, 'edd_receipt' );
 
+	$template = 'receipt';
+
 	$session = edd_get_purchase_session();
 	if ( isset( $_GET[ 'payment_key' ] ) ) {
 		$payment_key = urldecode( $_GET[ 'payment_key' ] );
@@ -509,30 +511,31 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	}
 
 	// No key found
-	if ( ! isset( $payment_key ) )
-		return $edd_receipt_args[ 'error' ];
-
-	$edd_receipt_args[ 'id' ] = edd_get_purchase_id_by_key( $payment_key );
-	$customer_id              = edd_get_payment_user_id( $edd_receipt_args[ 'id' ] );
-
-	/*
-	 * Check if the user has permission to view the receipt
-	 *
-	 * If user is logged in, user ID is compared to user ID of ID stored in payment meta
-	 *
-	 * Or if user is logged out and purchase was made as a guest, the purchase session is checked for
-	 *
-	 * Or if user is logged in and the user can view sensitive shop data
-	 *
-	 */
-
-	$user_can_view = ( is_user_logged_in() && $customer_id == get_current_user_id() ) || ( ( $customer_id == 0 || $customer_id == '-1' ) && ! is_user_logged_in() && edd_get_purchase_session() ) || current_user_can( 'view_shop_sensitive_data' );
-
-	$template = 'receipt';
-	
-	if ( ! apply_filters( 'edd_user_can_view_receipt', $user_can_view, $edd_receipt_args ) ) {
+	if ( ! isset( $payment_key ) ) :
 		$template = 'receipt-error';
-	}
+
+	// Key found
+	else :
+		$edd_receipt_args[ 'id' ] = edd_get_purchase_id_by_key( $payment_key );
+		$customer_id              = edd_get_payment_user_id( $edd_receipt_args[ 'id' ] );
+
+		/*
+		 * Check if the user has permission to view the receipt
+		 *
+		 * If user is logged in, user ID is compared to user ID of ID stored in payment meta
+		 *
+		 * Or if user is logged out and purchase was made as a guest, the purchase session is checked for
+		 *
+		 * Or if user is logged in and the user can view sensitive shop data
+		 *
+		 */
+
+		$user_can_view = ( is_user_logged_in() && $customer_id == get_current_user_id() ) || ( ( $customer_id == 0 || $customer_id == '-1' ) && ! is_user_logged_in() && edd_get_purchase_session() ) || current_user_can( 'view_shop_sensitive_data' );
+
+		if ( ! apply_filters( 'edd_user_can_view_receipt', $user_can_view, $edd_receipt_args ) ) {
+			$template = 'receipt-error';
+		}
+	endif;
 
 	ob_start();
 
