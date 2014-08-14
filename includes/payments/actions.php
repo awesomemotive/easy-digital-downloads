@@ -162,6 +162,15 @@ function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
 	$amount = edd_get_payment_amount( $payment_id );
 	edd_decrease_total_earnings( $amount );
 
+	// Decrement the stats for the customer
+	$customer_id = edd_get_payment_customer_id( $payment_id );
+
+	if( $customer_id ) {
+
+		EDD()->customers->decrement_stats( $customer_id, $amount );
+
+	}
+
 	// Clear the This Month earnings (this_monththis_month is NOT a typo)
 	delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
 }
