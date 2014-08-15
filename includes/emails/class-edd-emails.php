@@ -216,7 +216,7 @@ class EDD_Emails {
 
 		$body    = ob_get_clean();
 		$message = str_replace( '{email}', $message, $body );
-
+		//echo $message; exit;
 		return $message;
 	}
 
