@@ -46,8 +46,6 @@ class Tests_Taxes extends WP_UnitTestCase {
 			)
 		);
 
-		$total += $item_price;
-
 		$cart_details = array();
 		$cart_details[] = array(
 			'name' => 'Test Download',
@@ -59,8 +57,9 @@ class Tests_Taxes extends WP_UnitTestCase {
 			'subtotal' => '10',
 			'discount' => '0',
 			'tax'      => '0.36',
+			'item_price'=> '10',
 			'price'    => '10.36',
-			'quantity' => 1
+			'quantity' => 1,
 		);
 
 		$purchase_data = array(
