@@ -101,6 +101,8 @@ class Tests_Shortcode extends WP_UnitTestCase {
 					)
 				),
 				'price' =>  100,
+				'item_price' => 100,
+				'tax' => 0,
 				'quantity' => 1
 			)
 		);
@@ -159,18 +161,18 @@ class Tests_Shortcode extends WP_UnitTestCase {
 	}
 
 	public function test_checkout_form_shortcode() {
-		$this->assertInternalType( 'string', edd_checkout_form_shortcode() );
-		$this->assertContains( '<div id="edd_checkout_wrap">', edd_checkout_form_shortcode() );
+		$this->assertInternalType( 'string', edd_checkout_form_shortcode( array() ) );
+		$this->assertContains( '<div id="edd_checkout_wrap">', edd_checkout_form_shortcode( array() ) );
 	}
 
 	public function test_cart_shortcode() {
-		$this->assertInternalType( 'string', edd_cart_shortcode() );
-		$this->assertContains( '<ul class="edd-cart">', edd_cart_shortcode() );
+		$this->assertInternalType( 'string', edd_cart_shortcode( array() ) );
+		$this->assertContains( '<ul class="edd-cart">', edd_cart_shortcode( array() ) );
 	}
 
 	public function test_login_form() {
-		$this->assertInternalType( 'string', edd_login_form_shortcode() );
-		$this->assertContains( '<p class="edd-logged-in">You are already logged in</p>', edd_login_form_shortcode() );
+		$this->assertInternalType( 'string', edd_login_form_shortcode( array() ) );
+		$this->assertContains( '<p class="edd-logged-in">You are already logged in</p>', edd_login_form_shortcode( array() ) );
 	}
 
 	public function test_discounts_shortcode() {
@@ -199,15 +201,15 @@ class Tests_Shortcode extends WP_UnitTestCase {
 	}
 
 	public function test_purchase_collection_shortcode() {
-		$this->assertInternalType( 'string', edd_purchase_collection_shortcode() );
-		$this->assertEquals( '<a href="?edd_action=purchase_collection&taxonomy&terms" class="button blue edd-submit">Purchase All Items</a>', edd_purchase_collection_shortcode() );
+		$this->assertInternalType( 'string', edd_purchase_collection_shortcode( array() ) );
+		$this->assertEquals( '<a href="?edd_action=purchase_collection&taxonomy&terms" class="button blue edd-submit">Purchase All Items</a>', edd_purchase_collection_shortcode( array() ) );
 	}
 
 	public function test_downloads_query() {
 		$post_id = $this->factory->post->create( array( 'post_type' => 'download', 'post_status' => 'publish' ) );
-		$this->assertInternalType( 'string', edd_downloads_query() );
-		$this->assertContains( '<div class="edd_downloads_list', edd_downloads_query() );
-		$this->assertContains( '<div class="edd_download_inner">', edd_downloads_query() ); // edd_download_inner will only be found if products were returned successfully
+		$this->assertInternalType( 'string', edd_downloads_query( array() ) );
+		$this->assertContains( '<div class="edd_downloads_list', edd_downloads_query( array() ) );
+		$this->assertContains( '<div class="edd_download_inner">', edd_downloads_query( array() ) ); // edd_download_inner will only be found if products were returned successfully
 	}
 
 	public function test_download_price_shortcode() {
@@ -232,7 +234,7 @@ class Tests_Shortcode extends WP_UnitTestCase {
 	}
 
 	public function test_profile_shortcode() {
-		$this->assertInternalType( 'string', edd_profile_editor_shortcode() );
-		$this->assertContains( '<form id="edd_profile_editor_form" class="edd_form" action="', edd_profile_editor_shortcode() );
+		$this->assertInternalType( 'string', edd_profile_editor_shortcode( array() ) );
+		$this->assertContains( '<form id="edd_profile_editor_form" class="edd_form" action="', edd_profile_editor_shortcode( array() ) );
 	}
 }
