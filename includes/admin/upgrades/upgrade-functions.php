@@ -455,7 +455,7 @@ function edd_v21_upgrade_customers_db() {
 	ignore_user_abort( true );
 
 	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
-		set_time_limit( 0 );
+		@set_time_limit(0);
 	}
 
 	if( ! get_option( 'edd_upgrade_customers_db_version' ) ) {
