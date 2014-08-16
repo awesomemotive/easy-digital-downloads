@@ -21,8 +21,10 @@ class Tests_Login_Register extends WP_UnitTestCase {
      */
 	public function test_log_user_in() {
 		$this->markTestIncomplete( 'Causes headers already sent errors');
+		/*
 		wp_logout();
 		edd_log_user_in( 1 );
 		$this->assertTrue( is_user_logged_in() );
+		*/
 	}
 }
