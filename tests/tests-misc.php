@@ -48,7 +48,7 @@ class Test_Misc extends WP_UnitTestCase {
 	}
 
 	public function test_get_ip() {
-		$this->assertEquals( '10.0.0.0', edd_get_ip() );
+		$this->assertEquals( '127.0.0.1', edd_get_ip() );
 	}
 
 	public function test_get_currencies() {
