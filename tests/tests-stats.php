@@ -76,7 +76,9 @@ class Tests_Stats extends WP_UnitTestCase {
 			array(
 				'name'        => 'Test Download',
 				'id'          => $this->_post->ID,
-				'price'       =>  100,
+				'item_price'  => 100,
+				'tax'         => 0,
+				'price'       => 100,
 				'quantity'    => 1,
 				'item_number' => array(
 					'id'      => $this->_post->ID,
