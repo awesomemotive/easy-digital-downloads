@@ -91,7 +91,8 @@ class Tests_Discounts extends WP_UnitTestCase {
 			'expiration' => '12/31/2050 00:00:00',
 			'max' => 10,
 			'uses' => 54,
-			'min_price' => 128
+			'min_price' => 128,
+			'status' => 'active'
 		);
 
 		$updated_post_id = edd_store_discount( $post, $this->_post_id );
