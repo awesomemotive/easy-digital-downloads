@@ -101,6 +101,8 @@ class Tests_Emails extends WP_UnitTestCase {
 					)
 				),
 				'price' =>  100,
+				'item_price' => 100,
+				'tax' => 0,
 				'quantity' => 1
 			)
 		);
@@ -121,7 +123,7 @@ class Tests_Emails extends WP_UnitTestCase {
 			'amount' => number_format( (float) $total, 2 ),
 		);
 
-		$_SERVER['REMOTE_ADDR'] = '10.0.0.0';
+		$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 		$_SERVER['SERVER_NAME'] = 'edd_virtual';
 
 		$this->_payment_id = edd_insert_payment( $purchase_data );
