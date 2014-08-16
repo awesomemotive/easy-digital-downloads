@@ -428,7 +428,7 @@ function edd_render_price_field( $post_id ) {
 						else :
 					?>
 						<tr class="edd_variable_prices_wrapper edd_repeatable_row">
-							<?php do_action( 'edd_render_price_row', 0, array(), $post_id, 0 ); ?>
+							<?php do_action( 'edd_render_price_row', 1, array(), $post_id, 1 ); ?>
 						</tr>
 					<?php endif; ?>
 
