@@ -108,6 +108,8 @@ class Tests_Payments extends WP_UnitTestCase {
 					)
 				),
 				'price' =>  100,
+				'item_price' => 100,
+				'tax' => 0,
 				'quantity' => 1
 			)
 		);
@@ -253,7 +255,6 @@ class Tests_Payments extends WP_UnitTestCase {
 
 		$user_info = edd_get_payment_meta_user_info( $this->_payment_id );
 		$this->assertEquals( $user_info['email'], edd_get_payment_meta( $this->_payment_id, '_edd_payment_user_email' ) );
-		$this->assertEquals( $user_info['key'], $this->_payment_key );		
 
 	}
 
@@ -276,7 +277,7 @@ class Tests_Payments extends WP_UnitTestCase {
 		$this->assertTrue( $ret );
 
 		$user_info = edd_get_payment_meta_user_info( $this->_payment_id );
-		$this->assertEquals( 'john@test.com', edd_get_payment_meta( $this->_payment_id, '_edd_payment_user_email' ) );
+		$this->assertEquals( 'test@test.com', edd_get_payment_meta( $this->_payment_id, '_edd_payment_user_email' ) );
 
 	}
 
