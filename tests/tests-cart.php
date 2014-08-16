@@ -120,8 +120,6 @@ class Test_Cart extends WP_UnitTestCase {
 
 		$this->assertEquals( 1, edd_get_cart_item_quantity( $this->_post->ID, $options ) );
 
-		// Cleanup
-		edd_remove_from_cart( 1 );
 	}
 
 	public function test_set_cart_item_quantity() {
