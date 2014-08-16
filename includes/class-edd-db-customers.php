@@ -1,5 +1,24 @@
 <?php
+/**
+ * Customers DB class
+ *
+ * This class is for interacting with the customers' database table
+ *
+ * @package     EDD
+ * @subpackage  Classes/DB Customers
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       2.1
+ */
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+/**
+ * EDD_DB_Customers Class
+ *
+ * @since 2.1
+ */
 class EDD_DB_Customers extends EDD_DB  {
 
 	/**
