@@ -1,5 +1,7 @@
 <?php
 
+/* These tests do not currently run */
+
 
 /**
  * @group edd_ajax
