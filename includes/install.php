@@ -30,6 +30,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_install() {
 	global $wpdb, $edd_options, $wp_version;
 
+	if( ! function_exists( 'edd_create_protection_files' ) ) {
+		require_once EDD_PLUGIN_DIR . 'includes/admin/upload-functions.php';
+	}
+
 	// Setup the Downloads Custom Post Type
 	edd_setup_edd_post_types();
 
