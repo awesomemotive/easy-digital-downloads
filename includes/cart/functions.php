@@ -915,7 +915,7 @@ function edd_empty_cart() {
  *
  * @uses EDD()->session->set()
  */
-function edd_set_purchase_session( $purchase_data ) {
+function edd_set_purchase_session( $purchase_data = array() ) {
 	EDD()->session->set( 'edd_purchase', $purchase_data );
 }
 
