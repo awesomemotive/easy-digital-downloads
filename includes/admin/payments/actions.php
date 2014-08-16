@@ -53,6 +53,7 @@ function edd_update_payment_details( $data ) {
 	// Setup first and last name from input values
 	$names      = explode( ' ', $names );
 	$first_name = ! empty( $names[0] ) ? $names[0] : '';
+	$last_name  = '';
 	if( ! empty( $names[1] ) ) {
 		unset( $names[0] );
 		$last_name = implode( ' ', $names );
