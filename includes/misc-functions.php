@@ -181,13 +181,16 @@ function edd_string_is_image_url( $str ) {
  * @return string $ip User's IP address
  */
 function edd_get_ip() {
+
+	$ip = '127.0.0.1';
+
 	if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
 		//check ip from share internet
 		$ip = $_SERVER['HTTP_CLIENT_IP'];
 	} elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
 		//to check ip is pass from proxy
 		$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-	} else {
+	} elseif( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
 		$ip = $_SERVER['REMOTE_ADDR'];
 	}
 	return apply_filters( 'edd_get_ip', $ip );
