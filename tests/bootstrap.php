@@ -1,16 +1,24 @@
 <?php
 
-ini_set('display_errors','on');
-error_reporting(E_ALL);
-define( 'EDD_PLUGIN_DIR', dirname( dirname( __FILE__ ) ) . '/'  );
+$_tests_dir = getenv('WP_TESTS_DIR');
+if ( !$_tests_dir ) $_tests_dir = '/tmp/wordpress-tests-lib';
 
-require_once dirname( __FILE__ ) . '/../tmp/wordpress-tests/includes/functions.php';
+require_once $_tests_dir . '/includes/functions.php';
 
-function _install_and_load_edd() {
-	require dirname( __FILE__ ) . '/includes/loader.php';
+function _manually_load_plugin() {
+	require dirname( __FILE__ ) . '/../easy-digital-downloads.php';
 }
-tests_add_filter( 'muplugins_loaded', '_install_and_load_edd' );
+tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
-require dirname( __FILE__ ) . '/../tmp/wordpress-tests/includes/bootstrap.php';
+require $_tests_dir . '/includes/bootstrap.php';
 
-require dirname( __FILE__ ) . '/framework/testcase.php';
+activate_plugin( 'easy-digital-downloads/easy-digital-downloads.php' );
+
+echo "Installing Easy Digital Downloads...\n";
+
+// Install Easy Digital Downloads
+edd_install();
+
+global $current_user;
+$current_user = new WP_User(1);
+$current_user->set_role('administrator');
