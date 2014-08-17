@@ -331,7 +331,8 @@ function edd_get_currencies() {
 		'INR'  => __( 'Indian Rupee (&#8377;)', 'edd' ),
 		'TRY'  => __( 'Turkish Lira (&#8378;)', 'edd' ),
 		'RIAL' => __( 'Iranian Rial (&#65020;)', 'edd' ),
-		'RUB'  => __( 'Russian Rubles', 'edd' )
+		'RUB'  => __( 'Russian Rubles', 'edd' ),
+		'NGN'  => __( 'Nigerian Naira (&#8358;)', 'edd' )
 	);
 
 	return apply_filters( 'edd_currencies', $currencies );

@@ -60,10 +60,10 @@ function edd_sanitize_amount( $amount ) {
  * Returns a nicely formatted amount.
  *
  * @since 1.0
- * 
+ *
  * @param string $amount   Price amount to format
  * @param string $decimals Whether or not to use decimals.  Useful when set to false for non-currency numbers.
- * 
+ *
  * @return string $amount Newly formatted amount or Price Not Available
  */
 function edd_format_amount( $amount, $decimals = true ) {
@@ -92,7 +92,7 @@ function edd_format_amount( $amount, $decimals = true ) {
 	if ( empty( $amount ) ) {
 		$amount = 0;
 	}
-	
+
 	$decimals  = apply_filters( 'edd_format_amount_decimals', $decimals ? 2 : 0, $amount );
 	$formatted = number_format( $amount, $decimals, $decimal_sep, $thousands_sep );
 
@@ -142,6 +142,9 @@ function edd_currency_filter( $price ) {
 			case "JPY" :
 				$formatted = '&yen;' . $price;
 				break;
+			case "NGN" :
+				$formatted = '&#8358;' . $price;
+				break;
 			default :
 			    $formatted = $currency . ' ' . $price;
 				break;
@@ -168,6 +171,9 @@ function edd_currency_filter( $price ) {
 				break;
 			case "JPY" :
 				$formatted = $price . '&yen;';
+				break;
+			case "NGN" :
+				$formatted = $price . '&#8358;';
 				break;
 			default :
 			    $formatted = $price . ' ' . $currency;

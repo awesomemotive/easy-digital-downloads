@@ -79,7 +79,8 @@ class Test_Misc extends EDD_UnitTestCase {
 			'INR'  => __( 'Indian Rupee (&#8377;)', 'edd' ),
 			'TRY'  => __( 'Turkish Lira (&#8378;)', 'edd' ),
 			'RIAL' => __( 'Iranian Rial (&#65020;)', 'edd' ),
-			'RUB'  => __( 'Russian Rubles', 'edd' )
+			'RUB'  => __( 'Russian Rubles', 'edd' ),
+			'NGN'  => __( 'Nigerian Naira (&#8358;)', 'edd' )
 		);
 
 		$this->assertEquals( $expected, edd_get_currencies() );
