@@ -121,7 +121,7 @@ function edd_get_purchase_link( $args = array() ) {
 ?>
 	<form id="<?php echo $form_id; ?>" class="edd_download_purchase_form" method="post">
 
-		<?php do_action( 'edd_purchase_link_top', $args['download_id'] ); ?>
+		<?php do_action( 'edd_purchase_link_top', $args['download_id'], $args ); ?>
 
 		<div class="edd_purchase_submit_wrapper">
 			<?php
@@ -182,7 +182,7 @@ function edd_get_purchase_link( $args = array() ) {
 			<input type="hidden" name="edd_action" class="edd_action_input" value="add_to_cart">
 		<?php } ?>
 
-		<?php do_action( 'edd_purchase_link_end', $args['download_id'] ); ?>
+		<?php do_action( 'edd_purchase_link_end', $args['download_id'], $args ); ?>
 
 	</form><!--end #<?php echo esc_attr( $form_id ); ?>-->
 <?php
@@ -263,7 +263,7 @@ function edd_before_download_content( $content ) {
 	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() && !post_password_required() ) {
 		ob_start();
 		do_action( 'edd_before_download_content', $post->ID );
-		$content .= ob_get_clean();
+		$content = ob_get_clean() . $content;
 	}
 
 	return $content;

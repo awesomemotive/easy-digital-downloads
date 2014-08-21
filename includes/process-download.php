@@ -40,10 +40,8 @@ function edd_process_download() {
 		return false;
 	}
 
-    extract( $args );
-
     // Verify the payment
-	$payment = edd_verify_download_link( $download, $key, $email, $expire, $file_key );
+	$payment = edd_verify_download_link( $args['download'], $args['key'], $args['email'], $args['expire'], $args['file_key'] );
 
 	// Determine the download method set in settings
 	$method  = edd_get_file_download_method();
@@ -53,11 +51,11 @@ function edd_process_download() {
 
 	//$has_access = ( edd_logged_in_only() && is_user_logged_in() ) || !edd_logged_in_only() ? true : false;
 	if ( $payment && $has_access ) {
-		do_action( 'edd_process_verified_download', $download, $email, $payment );
+		do_action( 'edd_process_verified_download', $args['download'], $args['email'], $payment );
 
 		// Payment has been verified, setup the download
-		$download_files = edd_get_download_files( $download );
-		$attachment_id  = ! empty( $download_files[ $file_key ]['attachment_id'] ) ? absint( $download_files[ $file_key ]['attachment_id'] ) : false;
+		$download_files = edd_get_download_files( $args['download'] );
+		$attachment_id  = ! empty( $download_files[ $args['file_key'] ]['attachment_id'] ) ? absint( $download_files[ $args['file_key'] ]['attachment_id'] ) : false;
 
 		/*
 		 * If we have an attachment ID stored, use get_attached_file() to retrieve absolute URL
@@ -72,28 +70,28 @@ function edd_process_download() {
 
 		// If we didn't find a file from the attachment, grab the given URL
 		if( ! isset( $requested_file ) ) {
-			$requested_file = $download_files[ $file_key ]['file'];
+			$requested_file = isset( $download_files[ $args['file_key'] ]['file'] ) ? $download_files[ $args['file_key'] ]['file'] : '';
 		}
 
 		// Allow the file to be altered before any headers are sent
-		$requested_file = apply_filters( 'edd_requested_file', $requested_file, $download_files, $file_key );
+		$requested_file = apply_filters( 'edd_requested_file', $requested_file, $download_files, $args['file_key'] );
 
 		// Record this file download in the log
 		$user_info = array();
-		$user_info['email'] = $email;
+		$user_info['email'] = $args['email'];
 		if ( is_user_logged_in() ) {
 			$user_data         = get_userdata( get_current_user_id() );
 			$user_info['id']   = get_current_user_id();
 			$user_info['name'] = $user_data->display_name;
 		}
-		edd_record_download_in_log( $download, $file_key, $user_info, edd_get_ip(), $payment, $args['price_id'] );
+		edd_record_download_in_log( $args['download'], $args['file_key'], $user_info, edd_get_ip(), $payment, $args['price_id'] );
 
 		$file_extension = edd_get_file_extension( $requested_file );
 		$ctype          = edd_get_file_ctype( $file_extension );
 
 
 		if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
-			set_time_limit(0);
+			@set_time_limit(0);
 		}
 		if ( function_exists( 'get_magic_quotes_runtime' ) && get_magic_quotes_runtime() ) {
 			set_magic_quotes_runtime(0);
@@ -105,7 +103,7 @@ function edd_process_download() {
 		}
 		@ini_set( 'zlib.output_compression', 'Off' );
 
-		do_action( 'edd_process_download_headers', $requested_file, $download, $email, $payment );
+		do_action( 'edd_process_download_headers', $requested_file, $args['download'], $args['email'], $payment );
 
 		nocache_headers();
 		header("Robots: none");

@@ -48,6 +48,14 @@ final class Easy_Digital_Downloads {
 	private static $instance;
 
 	/**
+	 * EDD Roles Object
+	 *
+	 * @var object
+	 * @since 1.5
+	 */
+	public $roles;
+
+	/**
 	 * EDD Cart Fees Object
 	 *
 	 * @var object
@@ -165,7 +173,7 @@ final class Easy_Digital_Downloads {
 	 * @return void
 	 */
 	private function setup_constants() {
-		
+
 		// Plugin version
 		if ( ! defined( 'EDD_VERSION' ) ) {
 			define( 'EDD_VERSION', '2.0.4' );
@@ -213,6 +221,9 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-customers.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cache-helper.php';
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			require_once EDD_PLUGIN_DIR . 'includes/class-edd-cli.php';
+		}
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cron.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-fees.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-html-elements.php';

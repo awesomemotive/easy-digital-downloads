@@ -1,4 +1,4 @@
-# [Easy Digital Downloads](http://easydigitaldownloads.com) [![Build Status](https://secure.travis-ci.org/easydigitaldownloads/Easy-Digital-Downloads.png?branch=master)](http://travis-ci.org/easydigitaldownloads/Easy-Digital-Downloads) [![Coverage Status](https://coveralls.io/repos/easydigitaldownloads/Easy-Digital-Downloads/badge.png)](https://coveralls.io/r/easydigitaldownloads/Easy-Digital-Downloads) #
+# [Easy Digital Downloads](http://easydigitaldownloads.com) [![Build Status](https://secure.travis-ci.org/easydigitaldownloads/Easy-Digital-Downloads.png?branch=master)](http://travis-ci.org/easydigitaldownloads/Easy-Digital-Downloads) [![Coverage Status](https://coveralls.io/repos/easydigitaldownloads/Easy-Digital-Downloads/badge.png)](https://coveralls.io/r/easydigitaldownloads/Easy-Digital-Downloads) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/easydigitaldownloads/Easy-Digital-Downloads/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/easydigitaldownloads/Easy-Digital-Downloads/?branch=master) #
 
 ### Welcome to our GitHub Repository
 

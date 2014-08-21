@@ -291,7 +291,6 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 		$hidden                = array(); // No hidden columns
 		$sortable              = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-		$current_page          = $this->get_pagenum();
 		$this->items           = $this->get_logs();
 		$total_items           = $edd_logs->get_log_count( 0, 'api_requests' );
 
