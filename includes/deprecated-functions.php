@@ -350,3 +350,23 @@ function edd_get_sale_notification_template_tags() {
 
 	return apply_filters( 'edd_sale_notification_template_tags_description', $tags );
 }
+
+/**
+ * Checks if the user has enabled the option to calculate taxes after discounts
+ * have been entered
+ *
+ * @since 1.4.1
+ * @deprecated 2.1
+ * @global $edd_options
+ * @return bool Whether or not taxes are calculated after discount
+ */
+function edd_taxes_after_discounts() {
+
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '2.1', 'none', $backtrace );
+
+	global $edd_options;
+	$ret = isset( $edd_options['taxes_after_discounts'] ) && edd_use_taxes();
+	return apply_filters( 'edd_taxes_after_discounts', $ret );
+}
