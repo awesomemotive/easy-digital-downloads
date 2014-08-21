@@ -181,7 +181,12 @@ function edd_sanitize_variable_prices_save( $prices ) {
 
 	foreach( $prices as $id => $price ) {
 
-		if( empty( $price['amount'] ) ) {
+		if( empty( $price['amount'] ) && empty( $price['name'] ) ) {
+
+			unset( $prices[ $id ] );
+			continue;
+
+		} elseif( empty( $price['amount'] ) ) {
 
 			$price['amount'] = 0;
 
@@ -191,7 +196,6 @@ function edd_sanitize_variable_prices_save( $prices ) {
 
 	}
 
-	// Make sure all prices are rekeyed starting at 0
 	return $prices;
 }
 add_filter( 'edd_metabox_save_edd_variable_prices', 'edd_sanitize_variable_prices_save' );
