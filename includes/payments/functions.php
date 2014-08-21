@@ -174,12 +174,13 @@ function edd_insert_payment( $payment_data = array() ) {
 		update_post_meta( $payment, '_edd_payment_total',        $payment_data['price'] );
 		update_post_meta( $payment, '_edd_payment_mode',         $mode );
 		update_post_meta( $payment, '_edd_payment_gateway',      $gateway );
+
 		if ( ! empty( $discount ) ) {
-			update_post_meta( $payment, '_edd_payment_discount_id',  $discount->ID );
+			edd_update_payment_meta( $payment, '_edd_payment_discount_id',  $discount->ID );
 		}
 
 		if( edd_get_option( 'enable_sequential' ) ) {
-			update_post_meta( $payment, '_edd_payment_number', $number );
+			edd_update_payment_meta( $payment, '_edd_payment_number', $number );
 		}
 
 		// Clear the user's purchased cache
@@ -202,19 +203,26 @@ function edd_insert_payment( $payment_data = array() ) {
  * @return void
  */
 function edd_update_payment_status( $payment_id, $new_status = 'publish' ) {
+
 	if ( $new_status == 'completed' || $new_status == 'complete' ) {
 		$new_status = 'publish';
 	}
 
+	if( empty( $payment_id ) ) {
+		return;
+	}
+
 	$payment = get_post( $payment_id );
 
-	if ( is_wp_error( $payment ) || !is_object( $payment ) )
+	if ( is_wp_error( $payment ) || ! is_object( $payment ) ) {
 		return;
+	}
 
 	$old_status = $payment->post_status;
 
-	if ( $old_status === $new_status )
+	if ( $old_status === $new_status ) {
 		return; // Don't permit status changes that aren't changes
+	}
 
 	$do_change = apply_filters( 'edd_should_update_payment_status', true, $payment_id, $new_status, $old_status );
 
@@ -717,7 +725,7 @@ function edd_get_total_earnings() {
 		$total = 0; // Don't ever show negative earnings
 	}
 
-	return apply_filters( 'edd_total_earnings', round( $total, 2 ) );
+	return apply_filters( 'edd_total_earnings', round( $total, edd_currency_decimal_filter() ) );
 }
 
 /**
@@ -756,22 +764,62 @@ function edd_decrease_total_earnings( $amount = 0 ) {
  *
  * @since 1.2
  * @param int $payment_id Payment ID
- * @return array $meta Payment Meta
+ * @param string $meta_key The meta key to pull
+ * @param bool $single Pull single meta entry or as an object
+ * @return mixed $meta Payment Meta
  */
-function edd_get_payment_meta( $payment_id ) {
-	$meta = get_post_meta( $payment_id, '_edd_payment_meta', true );
+function edd_get_payment_meta( $payment_id = 0, $meta_key = '_edd_payment_meta', $single = true ) {
 
-	// Payment meta was simplified in EDD v1.5, so these are here for backwards compatibility
-	if ( ! isset( $meta['key'] ) )
-		$meta['key'] = edd_get_payment_key( $payment_id );
+	$meta = get_post_meta( $payment_id, $meta_key, $single );
 
-	if ( ! isset( $meta['email'] ) )
-		$meta['email'] = edd_get_payment_user_email( $payment_id );
+	if ( $meta_key === '_edd_payment_meta' ) {
 
-	if ( ! isset( $meta['date'] ) )
-		$meta['date'] = get_post_field( 'post_date', $payment_id );
+		// Payment meta was simplified in EDD v1.5, so these are here for backwards compatibility
+		if ( ! isset( $meta['key'] ) ) {
+			$meta['key'] = edd_get_payment_key( $payment_id );
+		}
 
-	return apply_filters( 'edd_get_payment_meta', $meta, $payment_id );
+		if ( ! isset( $meta['email'] ) ) {
+			$meta['email'] = edd_get_payment_user_email( $payment_id );
+		}
+
+		if ( ! isset( $meta['date'] ) ) {
+			$meta['date'] = get_post_field( 'post_date', $payment_id );
+		}
+	}
+
+	$meta = apply_filters( 'edd_get_payment_meta_' . $meta_key, $meta, $payment_id );
+
+	return apply_filters( 'edd_get_payment_meta', $meta, $payment_id, $meta_key );
+}
+
+/**
+ * Update the meta for a payment
+ * @param  integer $payment_id Payment ID
+ * @param  string  $meta_key   Meta key to update
+ * @param  string  $meta_value Value to udpate to
+ * @param  string  $prev_value Previous value
+ * @return mixed               Meta ID if successful, false if unsuccessful
+ */
+function edd_update_payment_meta( $payment_id = 0, $meta_key = '', $meta_value = '', $prev_value = '' ) {
+
+	if ( empty( $payment_id ) || empty( $meta_key ) ) {
+		return;
+	}
+
+	if ( $meta_key == 'key' || $meta_key == 'email' || $meta_key == 'date' ) {
+
+		$current_meta = edd_get_payment_meta( $payment_id );
+		$current_meta[$meta_key] = $meta_value;
+
+		$meta_key     = '_edd_payment_meta';
+		$meta_value   = $current_meta;
+
+	}
+
+	$meta_value = apply_filters( 'edd_edd_update_payment_meta_' . $meta_key, $meta_value, $payment_id );
+
+	return update_post_meta( $payment_id, $meta_key, $meta_value, $prev_value );
 }
 
 /**
@@ -867,7 +915,7 @@ function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files =
  * @return string $email User Email
  */
 function edd_get_payment_user_email( $payment_id ) {
-	$email = get_post_meta( $payment_id, '_edd_payment_user_email', true );
+	$email = edd_get_payment_meta( $payment_id, '_edd_payment_user_email', true );
 
 	return apply_filters( 'edd_payment_user_email', $email );
 }
@@ -880,7 +928,7 @@ function edd_get_payment_user_email( $payment_id ) {
  * @return string $user_id User ID
  */
 function edd_get_payment_user_id( $payment_id ) {
-	$user_id = get_post_meta( $payment_id, '_edd_payment_user_id', true );
+	$user_id = edd_get_payment_meta( $payment_id, '_edd_payment_user_id', true );
 
 	return apply_filters( 'edd_payment_user_id', $user_id );
 }
@@ -906,7 +954,7 @@ function edd_get_payment_customer_id( $payment_id ) {
  * @return bool $unlimited
  */
 function edd_payment_has_unlimited_downloads( $payment_id ) {
-	$unlimited = (bool) get_post_meta( $payment_id, '_edd_payment_unlimited_downloads', true );
+	$unlimited = (bool) edd_get_payment_meta( $payment_id, '_edd_payment_unlimited_downloads', true );
 
 	return apply_filters( 'edd_payment_unlimited_downloads', $unlimited );
 }
@@ -919,7 +967,7 @@ function edd_payment_has_unlimited_downloads( $payment_id ) {
  * @return string $ip User IP
  */
 function edd_get_payment_user_ip( $payment_id ) {
-	$ip = get_post_meta( $payment_id, '_edd_payment_user_ip', true );
+	$ip = edd_get_payment_meta( $payment_id, '_edd_payment_user_ip', true );
 	return apply_filters( 'edd_payment_user_ip', $ip );
 }
 
@@ -938,7 +986,7 @@ function edd_get_payment_completed_date( $payment_id = 0 ) {
 		return false; // This payment was never completed
 	}
 
-	$date = ( $date = get_post_meta( $payment_id, '_edd_completed_date', true ) ) ? $date : $payment->modified_date;
+	$date = ( $date = edd_get_payment_meta( $payment_id, '_edd_completed_date', true ) ) ? $date : $payment->modified_date;
 
 	return apply_filters( 'edd_payment_completed_date', $date, $payment_id );
 }
@@ -951,7 +999,7 @@ function edd_get_payment_completed_date( $payment_id = 0 ) {
  * @return string $gateway Gateway
  */
 function edd_get_payment_gateway( $payment_id ) {
-	$gateway = get_post_meta( $payment_id, '_edd_payment_gateway', true );
+	$gateway = edd_get_payment_meta( $payment_id, '_edd_payment_gateway', true );
 
 	return apply_filters( 'edd_payment_gateway', $gateway );
 }
@@ -964,7 +1012,7 @@ function edd_get_payment_gateway( $payment_id ) {
  * @return string $key Purchase key
  */
 function edd_get_payment_key( $payment_id = 0 ) {
-	$key = get_post_meta( $payment_id, '_edd_payment_purchase_key', true );
+	$key = edd_get_payment_meta( $payment_id, '_edd_payment_purchase_key', true );
 	return apply_filters( 'edd_payment_key', $key, $payment_id );
 }
 
@@ -983,7 +1031,7 @@ function edd_get_payment_number( $payment_id = 0 ) {
 
 	if( edd_get_option( 'enable_sequential' ) ) {
 
-		$number = get_post_meta( $payment_id, '_edd_payment_number', true );
+		$number = edd_get_payment_meta( $payment_id, '_edd_payment_number', true );
 
 		if( ! $number ) {
 		
@@ -1074,10 +1122,10 @@ function edd_payment_amount( $payment_id = 0 ) {
  */
 function edd_get_payment_amount( $payment_id ) {
 
-	$amount = get_post_meta( $payment_id, '_edd_payment_total', true );
+	$amount = edd_get_payment_meta( $payment_id, '_edd_payment_total', true );
 
 	if ( empty( $amount ) && '0.00' != $amount ) {
-		$meta   = get_post_meta( $payment_id, '_edd_payment_meta', true );
+		$meta   = edd_get_payment_meta( $payment_id, '_edd_payment_meta', true );
 		$meta   = maybe_unserialize( $meta );
 
 		if ( isset( $meta['amount'] ) ) {
@@ -1196,6 +1244,46 @@ function edd_get_payment_fees( $payment_id = 0, $type = 'all' ) {
 	}
 
 	return apply_filters( 'edd_get_payment_fees', $fees, $payment_id );
+}
+
+/**
+ * Retrieves the transaction ID for the given payment
+ *
+ * @since  2.1
+ * @param int payment_id Payment ID
+ * @return string The Transaction ID
+ */
+function edd_get_payment_transaction_id( $payment_id = 0 ) {
+
+	$transaction_id = false;
+	$transaction_id = edd_get_payment_meta( $payment_id, '_edd_payment_transaction_id', true );
+
+	if ( empty( $transaction_id ) ) {
+
+		$gateway        = edd_get_payment_gateway( $payment_id );
+		$transaction_id = apply_filters( 'edd_get_payment_transaction_id-' . $gateway, $payment_id );
+
+	}
+
+	return apply_filters( 'edd_get_payment_transaction_id', $transaction_id, $payment_id );
+}
+
+/**
+ * Sets a Transaction ID in post meta for the given Payment ID
+ *
+ * @since  2.1
+ * @param int payment_id Payment ID
+ * @param string transaction_id The transaciton ID from the gateway
+ */
+function edd_set_payment_transaction_id( $payment_id = 0, $transaction_id = '' ) {
+
+	if ( empty( $payment_id ) || empty( $transaction_id ) ) {
+		return false;
+	}
+
+	$transaction_id = apply_filters( 'edd_set_payment_transaction_id', $transaction_id, $payment_id );
+
+	return edd_update_payment_meta( $payment_id, '_edd_payment_transaction_id', $transaction_id );
 }
 
 /**

@@ -30,6 +30,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_install() {
 	global $wpdb, $edd_options, $wp_version;
 
+	if( ! function_exists( 'edd_create_protection_files' ) ) {
+		require_once EDD_PLUGIN_DIR . 'includes/admin/upload-functions.php';
+	}
+
 	// Setup the Downloads Custom Post Type
 	edd_setup_edd_post_types();
 
@@ -135,6 +139,9 @@ function edd_install() {
 
 	// Create the customers database
 	@EDD()->customers->create_table();
+
+	// Check for PHP Session support, and enable if available
+	EDD()->session->use_php_sessions();
 
 	// Add a temporary option to note that EDD pages have been created
 	set_transient( '_edd_installed', $options, 30 );

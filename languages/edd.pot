@@ -1,19 +1,30 @@
-# Copyright (C) 2014 Easy Digital Downloads
+# Copyright (C) 2014 Pippin Williamson
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 1.9.8\n"
-"Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/easy-digital-"
-"downloads\n"
-"POT-Creation-Date: 2014-03-11 10:48:31+00:00\n"
+"Project-Id-Version: Easy Digital Downloads 2.0.4\n"
+"Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
+"POT-Creation-Date: 2014-07-18 18:18:44+00:00\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "PO-Revision-Date: 2014-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Last-Translator: WP-Translations (http://wp-translations.org/)\n"
+"Language-Team: WP-Translations "
+"(http://www.transifex.com/projects/p/wp-translations/)\n"
+"X-Generator: grunt-wp-i18n 0.4.5\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Language: English\n"
+"X-Poedit-Country: UNITED STATES\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-KeywordsList: "
+"__;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c;_nc:4c,1,2;_"
+"x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;\n"
+"X-Textdomain-Support: yes\n"
 
-#: easy-digital-downloads.php:136 easy-digital-downloads.php:148
+#: easy-digital-downloads.php:144 easy-digital-downloads.php:156
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
@@ -72,8 +83,8 @@ msgstr ""
 
 #: includes/admin/admin-notices.php:54
 msgid ""
-"Note: Test Mode is enabled, only test payments are shown below. <a href=\"%s"
-"\">Settings</a>."
+"Note: Test Mode is enabled, only test payments are shown below. <a "
+"href=\"%s\">Settings</a>."
 msgstr ""
 
 #: includes/admin/admin-notices.php:59 includes/template-functions.php:53
@@ -82,7 +93,7 @@ msgid ""
 "set one."
 msgstr ""
 
-#: includes/admin/admin-notices.php:60 includes/admin/admin-notices.php:84
+#: includes/admin/admin-notices.php:60 includes/admin/admin-notices.php:100
 msgid "Dismiss Notice"
 msgstr ""
 
@@ -98,141 +109,202 @@ msgstr ""
 msgid "The payment has been successfully updated."
 msgstr ""
 
-#: includes/admin/admin-notices.php:81
-msgid ""
-"The Easy Digital Downloads .htaccess file is missing from <strong>%s</"
-"strong>!"
+#: includes/admin/admin-notices.php:77
+msgid "API keys successfully generated."
 msgstr ""
 
-#: includes/admin/admin-notices.php:82
+#: includes/admin/admin-notices.php:81
+msgid "The specified user already has API keys."
+msgstr ""
+
+#: includes/admin/admin-notices.php:85
+msgid "API keys successfully regenerated."
+msgstr ""
+
+#: includes/admin/admin-notices.php:89
+msgid "API keys successfully revoked."
+msgstr ""
+
+#: includes/admin/admin-notices.php:97
+msgid ""
+"The Easy Digital Downloads .htaccess file is missing from "
+"<strong>%s</strong>!"
+msgstr ""
+
+#: includes/admin/admin-notices.php:98
 msgid ""
 "First, please resave the Misc settings tab a few times. If this warning "
-"continues to appear, create a file called \".htaccess\" in the <strong>%s</"
-"strong> directory, and copy the following into it:"
+"continues to appear, create a file called \".htaccess\" in the "
+"<strong>%s</strong> directory, and copy the following into it:"
 msgstr ""
 
-#: includes/admin/admin-notices.php:99
+#: includes/admin/admin-notices.php:115
 msgid ""
 "There seems to be an issue with the server. Please try again in a few "
 "minutes."
 msgstr ""
 
 #: includes/admin/admin-pages.php:35
-#: includes/admin/payments/payments-history.php:35 includes/post-types.php:78
-msgid "Payment History"
-msgstr ""
-
-#: includes/admin/admin-pages.php:36
 #: includes/admin/discounts/discount-codes.php:35
 msgid "Discount Codes"
 msgstr ""
 
-#: includes/admin/admin-pages.php:37
+#: includes/admin/admin-pages.php:36
 msgid "Earnings and Sales Reports"
 msgstr ""
 
-#: includes/admin/admin-pages.php:37
+#: includes/admin/admin-pages.php:36
 #: includes/admin/reporting/contextual-help.php:42
 #: includes/admin/reporting/reports.php:32
 msgid "Reports"
 msgstr ""
 
-#: includes/admin/admin-pages.php:38
+#: includes/admin/admin-pages.php:37
 msgid "Easy Digital Download Settings"
 msgstr ""
 
-#: includes/admin/admin-pages.php:38
+#: includes/admin/admin-pages.php:37
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/admin-pages.php:39
-msgid "Easy Digital Download Tools"
+#: includes/admin/admin-pages.php:38
+msgid "Easy Digital Download Info and Tools"
 msgstr ""
 
-#: includes/admin/admin-pages.php:39 includes/admin/tools.php:30
+#: includes/admin/admin-pages.php:38
 msgid "Tools"
 msgstr ""
 
-#: includes/admin/admin-pages.php:40
-msgid "Easy Digital Download System Info"
-msgstr ""
-
-#: includes/admin/admin-pages.php:40
-msgid "System Info"
-msgstr ""
-
-#: includes/admin/admin-pages.php:41
+#: includes/admin/admin-pages.php:39
 msgid "Easy Digital Download Add Ons"
 msgstr ""
 
-#: includes/admin/admin-pages.php:41 includes/admin/plugins.php:51
+#: includes/admin/admin-pages.php:39 includes/admin/plugins.php:51
 msgid "Add Ons"
 msgstr ""
 
-#: includes/admin/admin-pages.php:42
+#: includes/admin/admin-pages.php:40
 msgid "EDD Upgrades"
+msgstr ""
+
+#: includes/admin/class-api-keys-table.php:52
+msgid "API Key"
+msgstr ""
+
+#: includes/admin/class-api-keys-table.php:53 includes/admin/tools.php:69
+#: includes/admin/welcome.php:244
+msgid "API Keys"
+msgstr ""
+
+#: includes/admin/class-api-keys-table.php:90
+msgid "View API Log"
+msgstr ""
+
+#: includes/admin/class-api-keys-table.php:97
+msgid "Reissue"
+msgstr ""
+
+#: includes/admin/class-api-keys-table.php:102
+msgid "Revoke"
+msgstr ""
+
+#: includes/admin/class-api-keys-table.php:119
+#: includes/checkout/template.php:408 includes/checkout/template.php:414
+#: includes/checkout/template.php:480 templates/shortcode-login.php:12
+#: templates/shortcode-login.php:13 templates/shortcode-register.php:15
+#: templates/shortcode-register.php:16
+msgid "Username"
+msgstr ""
+
+#: includes/admin/class-api-keys-table.php:120
+msgid "Public Key"
+msgstr ""
+
+#: includes/admin/class-api-keys-table.php:121
+msgid "Secret Key"
+msgstr ""
+
+#: includes/admin/class-api-keys-table.php:122
+msgid "Token"
+msgstr ""
+
+#: includes/admin/class-api-keys-table.php:147
+msgid "Generate New API Keys"
 msgstr ""
 
 #: includes/admin/dashboard-widgets.php:24
 msgid "Easy Digital Downloads Sales Summary"
 msgstr ""
 
-#: includes/admin/dashboard-widgets.php:44
+#: includes/admin/dashboard-widgets.php:47
 msgid "Current Month"
 msgstr ""
 
-#: includes/admin/dashboard-widgets.php:49
-#: includes/admin/dashboard-widgets.php:60
+#: includes/admin/dashboard-widgets.php:52
+#: includes/admin/dashboard-widgets.php:70
+#: includes/admin/dashboard-widgets.php:96
 #: includes/admin/downloads/dashboard-columns.php:33
 #: includes/admin/reporting/class-download-reports-table.php:100
+#: includes/admin/reporting/class-export-earnings.php:64
 #: includes/admin/reporting/graphing.php:146
-#: includes/admin/reporting/graphing.php:331
+#: includes/admin/reporting/graphing.php:332
 #: includes/admin/reporting/pdf-reports.php:203
 #: includes/admin/reporting/reports.php:57
 msgid "Earnings"
 msgstr ""
 
-#: includes/admin/dashboard-widgets.php:54
-#: includes/admin/dashboard-widgets.php:64
+#: includes/admin/dashboard-widgets.php:57
+#: includes/admin/dashboard-widgets.php:76
 msgid "Sale"
 msgid_plural "Sales"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/admin/dashboard-widgets.php:58
-#: includes/admin/reporting/graphing.php:370 includes/class-edd-stats.php:87
+#: includes/admin/dashboard-widgets.php:65
+#: includes/admin/reporting/graphing.php:373 includes/class-edd-stats.php:87
 msgid "Last Month"
 msgstr ""
 
-#: includes/admin/dashboard-widgets.php:68
+#: includes/admin/dashboard-widgets.php:90
+#: includes/admin/reporting/graphing.php:368 includes/class-edd-stats.php:82
+msgid "Today"
+msgstr ""
+
+#: includes/admin/dashboard-widgets.php:104
+#: includes/admin/downloads/dashboard-columns.php:32
+#: includes/admin/reporting/class-download-reports-table.php:99
+#: includes/admin/reporting/class-export-earnings.php:63
+#: includes/admin/reporting/graphing.php:147
+#: includes/admin/reporting/graphing.php:333
+#: includes/admin/reporting/logs.php:125
+#: includes/admin/reporting/pdf-reports.php:220
+msgid "Sales"
+msgstr ""
+
+#: includes/admin/dashboard-widgets.php:118
 msgid "Totals"
 msgstr ""
 
-#: includes/admin/dashboard-widgets.php:73
+#: includes/admin/dashboard-widgets.php:123
 msgid "Total Earnings"
 msgstr ""
 
-#: includes/admin/dashboard-widgets.php:77
+#: includes/admin/dashboard-widgets.php:127
 #: includes/admin/reporting/class-gateways-reports-table.php:84
 msgid "Total Sales"
 msgstr ""
 
-#: includes/admin/dashboard-widgets.php:85
-msgid "Lifetime Best Selling"
-msgstr ""
-
-#: includes/admin/dashboard-widgets.php:99
+#: includes/admin/dashboard-widgets.php:148
 msgid "Recent Purchases"
 msgstr ""
 
-#: includes/admin/dashboard-widgets.php:107
-msgid "Purchase Details for Payment #%s"
+#: includes/admin/dashboard-widgets.php:149
+msgid "View All"
 msgstr ""
 
-#: includes/admin/dashboard-widgets.php:107
-#: includes/admin/payments/class-payments-table.php:275
-#: includes/admin/payments/payments-history.php:90
-msgid "View Order Details"
+#: includes/admin/dashboard-widgets.php:158
+#: includes/admin/dashboard-widgets.php:170
+msgid "Purchase Details for Payment #%s"
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:16 includes/post-types.php:99
@@ -240,193 +312,196 @@ msgid "Add New Discount"
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:16
-#: includes/admin/discounts/edit-discount.php:26
+#: includes/admin/discounts/edit-discount.php:29
 #: includes/admin/reporting/reports.php:172
 msgid "Go Back"
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:23
 #: includes/admin/discounts/class-discount-codes-table.php:145
-#: includes/admin/discounts/edit-discount.php:33
+#: includes/admin/discounts/edit-discount.php:36
 #: includes/admin/downloads/dashboard-columns.php:28
 #: includes/admin/reporting/class-customer-reports-table.php:137
-#: includes/admin/reporting/class-export-customers.php:66
-#: includes/admin/reporting/class-export-customers.php:75
-#: templates/shortcode-receipt.php:107
+#: includes/admin/reporting/class-export-customers.php:76
+#: templates/shortcode-receipt.php:112
 msgid "Name"
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:27
-#: includes/admin/discounts/edit-discount.php:37
+#: includes/admin/discounts/edit-discount.php:40
 msgid "The name of this discount"
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:32
 #: includes/admin/discounts/class-discount-codes-table.php:146
-#: includes/admin/discounts/edit-discount.php:42
+#: includes/admin/discounts/edit-discount.php:45
 msgid "Code"
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:36
-#: includes/admin/discounts/edit-discount.php:46
+#: includes/admin/discounts/edit-discount.php:49
 msgid "Enter a code for this discount, such as 10PERCENT"
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:41
-#: includes/admin/discounts/edit-discount.php:51
+#: includes/admin/discounts/edit-discount.php:54
 msgid "Type"
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:45
-#: includes/admin/discounts/edit-discount.php:55
+#: includes/admin/discounts/edit-discount.php:58
 msgid "Percentage"
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:46
-#: includes/admin/discounts/edit-discount.php:56
+#: includes/admin/discounts/edit-discount.php:59
 msgid "Flat amount"
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:48
-#: includes/admin/discounts/edit-discount.php:58
+#: includes/admin/discounts/edit-discount.php:61
 msgid "The kind of discount to apply for this discount."
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:53
 #: includes/admin/discounts/class-discount-codes-table.php:147
-#: includes/admin/discounts/edit-discount.php:63
+#: includes/admin/discounts/edit-discount.php:66
 #: includes/admin/payments/class-payments-table.php:224
-#: includes/admin/payments/view-order-details.php:377
-#: includes/admin/reporting/class-export-payments.php:69
+#: includes/admin/reporting/class-export-payments.php:75
 #: templates/history-purchases.php:11
 msgid "Amount"
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:57
-#: includes/admin/discounts/edit-discount.php:67
-msgid "The amount of this discount code."
+#: includes/admin/discounts/edit-discount.php:70
+msgid "Enter the discount amount in %s"
 msgstr ""
 
-#: includes/admin/discounts/add-discount.php:62
-#: includes/admin/discounts/edit-discount.php:72
+#: includes/admin/discounts/add-discount.php:58
+#: includes/admin/discounts/edit-discount.php:71
+msgid "Enter the discount percentage. 10 = 10%"
+msgstr ""
+
+#: includes/admin/discounts/add-discount.php:63
+#: includes/admin/discounts/edit-discount.php:76
 msgid "%s Requirements"
 msgstr ""
 
-#: includes/admin/discounts/add-discount.php:67
-#: includes/admin/discounts/edit-discount.php:77
-msgid "All Selected %s"
+#: includes/admin/discounts/add-discount.php:77
+#: includes/admin/discounts/edit-discount.php:91
+msgid "Cart must contain all selected %s"
 msgstr ""
 
-#: includes/admin/discounts/add-discount.php:68
-#: includes/admin/discounts/edit-discount.php:78
-msgid "Any Selected %s"
+#: includes/admin/discounts/add-discount.php:78
+#: includes/admin/discounts/edit-discount.php:92
+msgid "Cart needs one or more of the selected %s"
 msgstr ""
 
-#: includes/admin/discounts/add-discount.php:70
-#: includes/admin/discounts/edit-discount.php:80
-msgid "Condition"
+#: includes/admin/discounts/add-discount.php:84
+#: includes/admin/discounts/edit-discount.php:98
+msgid "Apply discount to entire purchase."
 msgstr ""
 
-#: includes/admin/discounts/add-discount.php:80
-#: includes/admin/discounts/edit-discount.php:89
-msgid "%s required to be purchased for this discount."
-msgstr ""
-
-#: includes/admin/discounts/add-discount.php:85
-#: includes/admin/discounts/edit-discount.php:93
-msgid "Apply discount only to selected %s?"
+#: includes/admin/discounts/add-discount.php:88
+#: includes/admin/discounts/edit-discount.php:102
+msgid "Apply discount only to selected %s."
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:92
-#: includes/admin/discounts/edit-discount.php:100
+#: includes/admin/discounts/edit-discount.php:106
+msgid "Select %s relevant to this discount."
+msgstr ""
+
+#: includes/admin/discounts/add-discount.php:97
+#: includes/admin/discounts/edit-discount.php:111
 msgid "Excluded %s"
 msgstr ""
 
-#: includes/admin/discounts/add-discount.php:102
-#: includes/admin/discounts/edit-discount.php:110
+#: includes/admin/discounts/add-discount.php:107
+#: includes/admin/discounts/edit-discount.php:121
 msgid "%s that this discount code cannot be applied to."
 msgstr ""
 
-#: includes/admin/discounts/add-discount.php:107
-#: includes/admin/discounts/edit-discount.php:115
+#: includes/admin/discounts/add-discount.php:112
+#: includes/admin/discounts/edit-discount.php:126
 msgid "Start date"
 msgstr ""
 
-#: includes/admin/discounts/add-discount.php:111
-#: includes/admin/discounts/edit-discount.php:119
+#: includes/admin/discounts/add-discount.php:116
+#: includes/admin/discounts/edit-discount.php:130
 msgid ""
-"Enter the start date for this discount code in the format of mm/dd/yyyy. For "
-"no start date, leave blank. If entered, the discount can only be used after "
-"or on this date."
+"Enter the start date for this discount code in the format of mm/dd/yyyy. "
+"For no start date, leave blank. If entered, the discount can only be used "
+"after or on this date."
 msgstr ""
 
-#: includes/admin/discounts/add-discount.php:116
-#: includes/admin/discounts/edit-discount.php:124
+#: includes/admin/discounts/add-discount.php:121
+#: includes/admin/discounts/edit-discount.php:135
 msgid "Expiration date"
 msgstr ""
 
-#: includes/admin/discounts/add-discount.php:120
-#: includes/admin/discounts/edit-discount.php:128
+#: includes/admin/discounts/add-discount.php:125
+#: includes/admin/discounts/edit-discount.php:139
 msgid ""
-"Enter the expiration date for this discount code in the format of mm/dd/"
-"yyyy. For no expiration, leave blank"
+"Enter the expiration date for this discount code in the format of "
+"mm/dd/yyyy. For no expiration, leave blank"
 msgstr ""
 
-#: includes/admin/discounts/add-discount.php:125
-#: includes/admin/discounts/edit-discount.php:142
+#: includes/admin/discounts/add-discount.php:130
+#: includes/admin/discounts/edit-discount.php:153
 msgid "Minimum Amount"
 msgstr ""
 
-#: includes/admin/discounts/add-discount.php:129
-#: includes/admin/discounts/edit-discount.php:146
+#: includes/admin/discounts/add-discount.php:134
+#: includes/admin/discounts/edit-discount.php:157
 msgid ""
 "The minimum amount that must be purchased before this discount can be used. "
 "Leave blank for no minimum."
 msgstr ""
 
-#: includes/admin/discounts/add-discount.php:134
+#: includes/admin/discounts/add-discount.php:139
 #: includes/admin/discounts/class-discount-codes-table.php:149
-#: includes/admin/discounts/edit-discount.php:133
+#: includes/admin/discounts/edit-discount.php:144
 msgid "Max Uses"
 msgstr ""
 
-#: includes/admin/discounts/add-discount.php:138
-#: includes/admin/discounts/edit-discount.php:137
+#: includes/admin/discounts/add-discount.php:143
+#: includes/admin/discounts/edit-discount.php:148
 msgid ""
 "The maximum number of times this discount can be used. Leave blank for "
 "unlimited."
 msgstr ""
 
-#: includes/admin/discounts/add-discount.php:143
-#: includes/admin/discounts/edit-discount.php:163
+#: includes/admin/discounts/add-discount.php:148
+#: includes/admin/discounts/edit-discount.php:174
 msgid "Use Once Per Customer"
 msgstr ""
 
-#: includes/admin/discounts/add-discount.php:147
-#: includes/admin/discounts/edit-discount.php:167
+#: includes/admin/discounts/add-discount.php:152
+#: includes/admin/discounts/edit-discount.php:178
 msgid "Limit this discount to a single-use per customer?"
 msgstr ""
 
-#: includes/admin/discounts/add-discount.php:157
+#: includes/admin/discounts/add-discount.php:162
 msgid "Add Discount Code"
 msgstr ""
 
 #: includes/admin/discounts/class-discount-codes-table.php:127
 #: includes/admin/payments/class-payments-table.php:199
-#: includes/admin/reporting/class-file-downloads-logs-list-table.php:297
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:336
 #: includes/admin/reporting/class-sales-logs-list-table.php:255
 msgid "All"
 msgstr ""
 
 #: includes/admin/discounts/class-discount-codes-table.php:128
 #: includes/admin/discounts/class-discount-codes-table.php:250
-#: includes/admin/discounts/edit-discount.php:155
+#: includes/admin/discounts/edit-discount.php:166
 msgid "Active"
 msgstr ""
 
 #: includes/admin/discounts/class-discount-codes-table.php:129
 #: includes/admin/discounts/class-discount-codes-table.php:246
-#: includes/admin/discounts/edit-discount.php:156
+#: includes/admin/discounts/edit-discount.php:167
 msgid "Inactive"
 msgstr ""
 
@@ -443,32 +518,31 @@ msgid "Expiration"
 msgstr ""
 
 #: includes/admin/discounts/class-discount-codes-table.php:152
-#: includes/admin/discounts/edit-discount.php:151
+#: includes/admin/discounts/edit-discount.php:162
 #: includes/admin/payments/class-payments-table.php:227
-#: includes/admin/reporting/class-export-payments.php:76
+#: includes/admin/reporting/class-export-payments.php:82
 msgid "Status"
 msgstr ""
 
-#: includes/admin/discounts/class-discount-codes-table.php:202
-#: includes/admin/payments/class-payments-table.php:297
+#: includes/admin/discounts/class-discount-codes-table.php:201
 msgid "Edit"
 msgstr ""
 
-#: includes/admin/discounts/class-discount-codes-table.php:205
+#: includes/admin/discounts/class-discount-codes-table.php:204
 #: includes/admin/discounts/class-discount-codes-table.php:276
 msgid "Deactivate"
 msgstr ""
 
-#: includes/admin/discounts/class-discount-codes-table.php:207
+#: includes/admin/discounts/class-discount-codes-table.php:206
 #: includes/admin/discounts/class-discount-codes-table.php:275
 msgid "Activate"
 msgstr ""
 
 #: includes/admin/discounts/class-discount-codes-table.php:209
 #: includes/admin/discounts/class-discount-codes-table.php:277
-#: includes/admin/payments/class-payments-table.php:304
-#: includes/admin/payments/class-payments-table.php:365
-#: includes/payments/functions.php:1082
+#: includes/admin/payments/class-payments-table.php:302
+#: includes/admin/payments/class-payments-table.php:375
+#: includes/payments/functions.php:1298
 msgid "Delete"
 msgstr ""
 
@@ -480,19 +554,19 @@ msgstr ""
 msgid "No discounts found."
 msgstr ""
 
-#: includes/admin/discounts/class-discount-codes-table.php:363
+#: includes/admin/discounts/class-discount-codes-table.php:361
 msgid "unlimited"
 msgstr ""
 
-#: includes/admin/discounts/class-discount-codes-table.php:365
+#: includes/admin/discounts/class-discount-codes-table.php:363
 msgid "Unlimited"
 msgstr ""
 
-#: includes/admin/discounts/class-discount-codes-table.php:373
+#: includes/admin/discounts/class-discount-codes-table.php:371
 msgid "No start date"
 msgstr ""
 
-#: includes/admin/discounts/class-discount-codes-table.php:379
+#: includes/admin/discounts/class-discount-codes-table.php:377
 msgid "No expiration"
 msgstr ""
 
@@ -520,13 +594,14 @@ msgstr ""
 #: includes/admin/reporting/contextual-help.php:32
 #: includes/admin/settings/contextual-help.php:32
 msgid ""
-"<a href=\"%s\">Post an issue</a> on <a href=\"%s\">GitHub</a>. View <a href="
-"\"%s\">extensions</a> or <a href=\"%s\">themes</a>."
+"<a href=\"%s\">Post an issue</a> on <a href=\"%s\">GitHub</a>. View <a "
+"href=\"%s\">extensions</a> or <a href=\"%s\">themes</a>."
 msgstr ""
 
 #: includes/admin/discounts/contextual-help.php:38
 #: includes/admin/settings/contextual-help.php:42
-#: includes/admin/settings/register-settings.php:770
+#: includes/admin/settings/register-settings.php:807
+#: includes/admin/tools.php:68
 msgid "General"
 msgstr ""
 
@@ -543,7 +618,8 @@ msgstr ""
 #: includes/admin/discounts/contextual-help.php:42
 msgid ""
 "Discount codes are setup to only be used only one time by each customer. If "
-"a customer attempts to use a code a second time, they will be given an error."
+"a customer attempts to use a code a second time, they will be given an "
+"error."
 msgstr ""
 
 #: includes/admin/discounts/contextual-help.php:47
@@ -635,16 +711,17 @@ msgstr ""
 #: includes/admin/discounts/discount-actions.php:92
 #: includes/admin/discounts/edit-discount.php:16
 #: includes/admin/payments/actions.php:25
-#: includes/admin/payments/actions.php:165
-#: includes/admin/payments/actions.php:186
+#: includes/admin/payments/actions.php:171
+#: includes/admin/payments/actions.php:192
 #: includes/admin/payments/view-order-details.php:22
+#: includes/admin/payments/view-order-details.php:32
 #: includes/admin/reporting/class-api-requests-logs-list-table.php:135
 #: includes/admin/reporting/class-export.php:173
 #: includes/admin/reporting/class-gateway-error-logs-list-table.php:119
-#: includes/cart/functions.php:985 includes/cart/functions.php:1000
-#: includes/download-functions.php:911 includes/download-functions.php:921
-#: includes/download-functions.php:931 includes/emails/template.php:351
-#: includes/error-tracking.php:36 includes/gateways/functions.php:203
+#: includes/cart/functions.php:1063 includes/cart/functions.php:1078
+#: includes/download-functions.php:980 includes/download-functions.php:990
+#: includes/download-functions.php:1000 includes/emails/template.php:354
+#: includes/error-tracking.php:36 includes/gateways/functions.php:202
 #: includes/query-filters.php:48
 msgid "Error"
 msgstr ""
@@ -665,15 +742,15 @@ msgstr ""
 msgid "Something went wrong."
 msgstr ""
 
-#: includes/admin/discounts/edit-discount.php:26 includes/post-types.php:100
+#: includes/admin/discounts/edit-discount.php:29 includes/post-types.php:100
 msgid "Edit Discount"
 msgstr ""
 
-#: includes/admin/discounts/edit-discount.php:158
+#: includes/admin/discounts/edit-discount.php:169
 msgid "The status of this discount code."
 msgstr ""
 
-#: includes/admin/discounts/edit-discount.php:178
+#: includes/admin/discounts/edit-discount.php:189
 msgid "Update Discount Code"
 msgstr ""
 
@@ -698,8 +775,8 @@ msgstr ""
 #: includes/admin/downloads/contextual-help.php:47
 msgid ""
 "<strong>Button Options</strong> - Disable the automatic output the purchase "
-"button. If disabled, no button will be added to the download page unless the "
-"<code>[purchase_link]</code> shortcode is used."
+"button. If disabled, no button will be added to the download page unless "
+"the <code>[purchase_link]</code> shortcode is used."
 msgstr ""
 
 #: includes/admin/downloads/contextual-help.php:52
@@ -784,37 +861,28 @@ msgstr ""
 #: includes/admin/downloads/contextual-help.php:93
 msgid ""
 "For more information, see <a href=\"%s\">using Shortcodes</a> on the "
-"WordPress.org Codex or <a href=\"%s\">Easy Digital Downloads Documentation</"
-"a>"
+"WordPress.org Codex or <a href=\"%s\">Easy Digital Downloads "
+"Documentation</a>"
 msgstr ""
 
 #: includes/admin/downloads/dashboard-columns.php:29
 #: includes/admin/reporting/pdf-reports.php:64 includes/post-types.php:212
-#: includes/widgets.php:144
+#: includes/widgets.php:161
 msgid "Categories"
 msgstr ""
 
 #: includes/admin/downloads/dashboard-columns.php:30
-#: includes/admin/reporting/pdf-reports.php:65 includes/post-types.php:239
-#: includes/widgets.php:145
+#: includes/admin/reporting/pdf-reports.php:65 includes/post-types.php:240
+#: includes/widgets.php:162
 msgid "Tags"
 msgstr ""
 
 #: includes/admin/downloads/dashboard-columns.php:31
-#: includes/admin/downloads/dashboard-columns.php:226
-#: includes/admin/downloads/metabox.php:365
+#: includes/admin/downloads/dashboard-columns.php:230
+#: includes/admin/downloads/metabox.php:412
 #: includes/admin/reporting/pdf-reports.php:63
-#: templates/shortcode-receipt.php:114
+#: templates/shortcode-receipt.php:119
 msgid "Price"
-msgstr ""
-
-#: includes/admin/downloads/dashboard-columns.php:32
-#: includes/admin/reporting/class-download-reports-table.php:99
-#: includes/admin/reporting/graphing.php:147
-#: includes/admin/reporting/graphing.php:332
-#: includes/admin/reporting/logs.php:125
-#: includes/admin/reporting/pdf-reports.php:220
-msgid "Sales"
 msgstr ""
 
 #: includes/admin/downloads/dashboard-columns.php:34
@@ -825,32 +893,33 @@ msgstr ""
 #: includes/admin/payments/class-payments-table.php:225
 #: includes/admin/reporting/class-api-requests-logs-list-table.php:92
 #: includes/admin/reporting/class-export-download-history.php:64
-#: includes/admin/reporting/class-export-payments.php:74
+#: includes/admin/reporting/class-export-earnings.php:62
+#: includes/admin/reporting/class-export-payments.php:80
 #: includes/admin/reporting/class-export.php:70
-#: includes/admin/reporting/class-file-downloads-logs-list-table.php:136
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:138
 #: includes/admin/reporting/class-gateway-error-logs-list-table.php:122
 #: includes/admin/reporting/class-sales-logs-list-table.php:100
-#: templates/history-purchases.php:10 templates/shortcode-receipt.php:30
+#: templates/history-purchases.php:10 templates/shortcode-receipt.php:48
 msgid "Date"
 msgstr ""
 
 #: includes/admin/downloads/dashboard-columns.php:57
-#: includes/admin/settings/register-settings.php:623
-#: includes/admin/thickbox.php:62 includes/checkout/template.php:713
-#: includes/scripts.php:57 includes/shortcodes.php:32
-#: includes/template-functions.php:62
+#: includes/admin/settings/register-settings.php:654
+#: includes/admin/thickbox.php:62 includes/checkout/template.php:747
+#: includes/scripts.php:55 includes/shortcodes.php:33
+#: includes/template-functions.php:64
 msgid "Purchase"
 msgstr ""
 
-#: includes/admin/downloads/dashboard-columns.php:188
+#: includes/admin/downloads/dashboard-columns.php:192
 msgid "Show all categories"
 msgstr ""
 
-#: includes/admin/downloads/dashboard-columns.php:199
+#: includes/admin/downloads/dashboard-columns.php:203
 msgid "Show all tags"
 msgstr ""
 
-#: includes/admin/downloads/dashboard-columns.php:224
+#: includes/admin/downloads/dashboard-columns.php:228
 msgid "%s Configuration"
 msgstr ""
 
@@ -874,149 +943,149 @@ msgstr ""
 msgid "%1$s Stats"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:319
+#: includes/admin/downloads/metabox.php:366
 msgid "Pricing Options:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:325
+#: includes/admin/downloads/metabox.php:372
 msgid "Enable variable pricing"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:355
+#: includes/admin/downloads/metabox.php:402
 msgid ""
-"Enable multi-option purchase mode. Allows multiple price options to be added "
-"to your cart at once"
+"Enable multi-option purchase mode. Allows multiple price options to be "
+"added to your cart at once"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:364
-#: includes/admin/downloads/metabox.php:438
+#: includes/admin/downloads/metabox.php:411
+#: includes/admin/downloads/metabox.php:485
 msgid "Option Name"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:393
+#: includes/admin/downloads/metabox.php:440
 msgid "Add New Price"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:484
+#: includes/admin/downloads/metabox.php:531
 msgid "Product Type Options:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:495
+#: includes/admin/downloads/metabox.php:542
 msgid "Select a product type"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:517
+#: includes/admin/downloads/metabox.php:564
 msgid "Bundled %s:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:565
+#: includes/admin/downloads/metabox.php:612
 msgid "File Downloads:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:577
-#: includes/admin/downloads/metabox.php:657
+#: includes/admin/downloads/metabox.php:624
+#: includes/admin/downloads/metabox.php:706
 msgid "File Name"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:578
+#: includes/admin/downloads/metabox.php:625
 msgid "File URL"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:579
+#: includes/admin/downloads/metabox.php:626
 msgid "Price Assignment"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:607
+#: includes/admin/downloads/metabox.php:655
 msgid "Add New File"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:667
+#: includes/admin/downloads/metabox.php:716
 msgid "Upload or enter the file URL"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:672
+#: includes/admin/downloads/metabox.php:721
 msgid "Insert"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:672
+#: includes/admin/downloads/metabox.php:721
 msgid "Upload a File"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:727
+#: includes/admin/downloads/metabox.php:776
 msgid "File Download Limit:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:734
-msgid "Blank or 0 for unlimited"
+#: includes/admin/downloads/metabox.php:783
+msgid "Leave blank for global setting or 0 for unlimited"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:758
+#: includes/admin/downloads/metabox.php:807
 msgid "Ignore Tax:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:764
+#: includes/admin/downloads/metabox.php:813
 msgid "Mark this product as exclusive of tax"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:786
+#: includes/admin/downloads/metabox.php:835
 msgid "Accounting Options:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:794
+#: includes/admin/downloads/metabox.php:843
 msgid "Enter an SKU for this %s."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:813
+#: includes/admin/downloads/metabox.php:862
 msgid "Button Options:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:820
+#: includes/admin/downloads/metabox.php:869
 msgid "Disable the automatic output of the purchase button"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:829
-#: includes/admin/settings/register-settings.php:630
+#: includes/admin/downloads/metabox.php:878
+#: includes/admin/settings/register-settings.php:661
 #: includes/admin/thickbox.php:100
 msgid "Add to Cart"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:830
+#: includes/admin/downloads/metabox.php:879
 msgid "Buy Now"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:836
+#: includes/admin/downloads/metabox.php:885
 msgid "Purchase button behavior"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:876
+#: includes/admin/downloads/metabox.php:925
 msgid ""
-"Special notes or instructions for this product. These notes will be added to "
-"the purchase receipt."
+"Special notes or instructions for this product. These notes will be added "
+"to the purchase receipt."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:899
+#: includes/admin/downloads/metabox.php:952
 msgid "Sales:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:900
+#: includes/admin/downloads/metabox.php:953
 msgid "View Sales Log"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:904
+#: includes/admin/downloads/metabox.php:957
 msgid "Earnings:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:911
+#: includes/admin/downloads/metabox.php:964
 msgid "View File Download Log"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:914
+#: includes/admin/downloads/metabox.php:967
 msgid "View Detailed Earnings Report"
 msgstr ""
 
 #: includes/admin/payments/actions.php:25
-#: includes/admin/payments/actions.php:165
-#: includes/admin/payments/actions.php:186
+#: includes/admin/payments/actions.php:171
+#: includes/admin/payments/actions.php:192
 msgid "You do not have permission to edit this payment record"
 msgstr ""
 
@@ -1042,27 +1111,27 @@ msgid "Completed"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:201
-#: includes/payments/functions.php:419
+#: includes/payments/functions.php:500
 msgid "Pending"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:202
-#: includes/payments/functions.php:421
+#: includes/payments/functions.php:502
 msgid "Refunded"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:203
-#: includes/payments/functions.php:424
+#: includes/payments/functions.php:505
 msgid "Revoked"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:204
-#: includes/payments/functions.php:422
+#: includes/payments/functions.php:503
 msgid "Failed"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:205
-#: includes/payments/functions.php:423
+#: includes/payments/functions.php:504
 msgid "Abandoned"
 msgstr ""
 
@@ -1075,9 +1144,10 @@ msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:222
 #: includes/admin/reporting/class-customer-reports-table.php:138
-#: includes/admin/reporting/class-export-customers.php:67
-#: includes/admin/reporting/class-export-customers.php:78
+#: includes/admin/reporting/class-export-customers.php:68
+#: includes/admin/reporting/class-export-customers.php:79
 #: includes/admin/reporting/class-export-payments.php:64
+#: templates/shortcode-register.php:20
 msgid "Email"
 msgstr ""
 
@@ -1087,59 +1157,64 @@ msgid "Details"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:226
-#: includes/admin/reporting/class-export-payments.php:75
-#: includes/admin/reporting/class-file-downloads-logs-list-table.php:132
+#: includes/admin/reporting/class-export-payments.php:81
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:134
 #: includes/admin/reporting/class-sales-logs-list-table.php:96
 msgid "User"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:300
+#: includes/admin/payments/class-payments-table.php:275
+#: includes/admin/payments/payments-history.php:92
+msgid "View Order Details"
+msgstr ""
+
+#: includes/admin/payments/class-payments-table.php:298
 msgid "Resend Purchase Receipt"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:309
+#: includes/admin/payments/class-payments-table.php:307
 msgid "(unknown)"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:347
-#: includes/admin/payments/class-payments-table.php:349
-#: includes/admin/reporting/class-export-payments.php:174
+#: includes/admin/payments/class-payments-table.php:357
+#: includes/admin/payments/class-payments-table.php:359
+#: includes/admin/reporting/class-export-payments.php:186
 msgid "guest"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:366
+#: includes/admin/payments/class-payments-table.php:376
 msgid "Set To Completed"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:367
+#: includes/admin/payments/class-payments-table.php:377
 msgid "Set To Pending"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:368
+#: includes/admin/payments/class-payments-table.php:378
 msgid "Set To Refunded"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:369
+#: includes/admin/payments/class-payments-table.php:379
 msgid "Set To Revoked"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:370
+#: includes/admin/payments/class-payments-table.php:380
 msgid "Set To Failed"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:371
+#: includes/admin/payments/class-payments-table.php:381
 msgid "Set To Abandoned"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:372
+#: includes/admin/payments/class-payments-table.php:382
 msgid "Set To Preapproval"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:373
+#: includes/admin/payments/class-payments-table.php:383
 msgid "Set To Cancelled"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:374
+#: includes/admin/payments/class-payments-table.php:384
 msgid "Resend Email Receipts"
 msgstr ""
 
@@ -1175,60 +1250,73 @@ msgid "You can enter the customer's email address"
 msgstr ""
 
 #: includes/admin/payments/contextual-help.php:56
-msgid "You can enter the customer's name"
+msgid "You can enter the customer's name or ID prefexed by 'user:'"
 msgstr ""
 
 #: includes/admin/payments/contextual-help.php:57
 msgid "You can enter the 32-character purchase key"
 msgstr ""
 
-#: includes/admin/payments/contextual-help.php:63
+#: includes/admin/payments/contextual-help.php:58
+msgid "You can enter the purchase ID"
+msgstr ""
+
+#: includes/admin/payments/contextual-help.php:59
+msgid "You can enter a transaction ID prefixed by 'txn:'"
+msgstr ""
+
+#: includes/admin/payments/contextual-help.php:60
+msgid "You can enter the %s ID prefixed by '#'"
+msgstr ""
+
+#: includes/admin/payments/contextual-help.php:66
 msgid "Payment Details"
 msgstr ""
 
-#: includes/admin/payments/contextual-help.php:65
-msgid ""
-"Each payment can be further inspected by clicking the corresponding <em>View "
-"Order Details</em> link. This will provide more information including:"
-msgstr ""
-
 #: includes/admin/payments/contextual-help.php:68
-msgid "The file associated with the purchase."
-msgstr ""
-
-#: includes/admin/payments/contextual-help.php:69
-msgid "The exact date and time the payment was completed."
-msgstr ""
-
-#: includes/admin/payments/contextual-help.php:70
-msgid "If a coupon or discount was used during the checkout process."
+msgid ""
+"Each payment can be further inspected by clicking the corresponding "
+"<em>View Order Details</em> link. This will provide more information "
+"including:"
 msgstr ""
 
 #: includes/admin/payments/contextual-help.php:71
-msgid "The buyer's name."
+msgid "The file associated with the purchase."
 msgstr ""
 
 #: includes/admin/payments/contextual-help.php:72
-msgid "The buyer's email address."
+msgid "The exact date and time the payment was completed."
 msgstr ""
 
 #: includes/admin/payments/contextual-help.php:73
-msgid "Any customer-specific notes related to the payment."
+msgid "If a coupon or discount was used during the checkout process."
 msgstr ""
 
 #: includes/admin/payments/contextual-help.php:74
-msgid "The name of the payment gateway used to complete the payment."
+msgid "The buyer's name."
 msgstr ""
 
 #: includes/admin/payments/contextual-help.php:75
+msgid "The buyer's email address."
+msgstr ""
+
+#: includes/admin/payments/contextual-help.php:76
+msgid "Any customer-specific notes related to the payment."
+msgstr ""
+
+#: includes/admin/payments/contextual-help.php:77
+msgid "The name of the payment gateway used to complete the payment."
+msgstr ""
+
+#: includes/admin/payments/contextual-help.php:78
 msgid "A unique key used to identify the payment."
 msgstr ""
 
-#: includes/admin/payments/payments-history.php:64
+#: includes/admin/payments/payments-history.php:66
 msgid "Get the EDD Sales / Earnings tracker for iOS"
 msgstr ""
 
-#: includes/admin/payments/payments-history.php:93 includes/post-types.php:70
+#: includes/admin/payments/payments-history.php:95 includes/post-types.php:70
 msgid "Edit Payment"
 msgstr ""
 
@@ -1236,180 +1324,183 @@ msgstr ""
 msgid "Payment ID not supplied. Please try again"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:36
-msgid "Payment #%d"
+#: includes/admin/payments/view-order-details.php:32
+msgid "The specified ID does not belong to a payment. Please try again"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:48
+#: includes/admin/payments/view-order-details.php:44
+msgid "Payment %s"
+msgstr ""
+
+#: includes/admin/payments/view-order-details.php:57
 msgid "Payment Totals"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:55
-#: includes/admin/reporting/class-export-payments.php:71
+#: includes/admin/payments/view-order-details.php:64
+#: includes/admin/reporting/class-export-payments.php:77
 msgid "Discount Code"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:56
+#: includes/admin/payments/view-order-details.php:65
+#: includes/admin/settings/register-settings.php:520
 msgid "None"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:62
-#: includes/admin/reporting/class-export-payments.php:70
-#: templates/checkout_cart.php:79 templates/shortcode-receipt.php:64
+#: includes/admin/payments/view-order-details.php:71
+#: includes/admin/reporting/class-export-payments.php:76
+#: templates/checkout_cart.php:85 templates/shortcode-receipt.php:79
 msgid "Tax"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:71
-#: templates/shortcode-receipt.php:40
+#: includes/admin/payments/view-order-details.php:80
+#: templates/shortcode-receipt.php:55
 msgid "Fees"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:81
-#: templates/shortcode-receipt.php:69 templates/shortcode-receipt.php:221
+#: includes/admin/payments/view-order-details.php:90
+#: templates/shortcode-receipt.php:94
 msgid "Total Price"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:87
+#: includes/admin/payments/view-order-details.php:96
 msgid "Recalculate Totals"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:88
+#: includes/admin/payments/view-order-details.php:97
 msgid "Recalculate"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:99
+#: includes/admin/payments/view-order-details.php:108
 msgid "Update Payment"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:110
+#: includes/admin/payments/view-order-details.php:119
 msgid "Gateway:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:116
+#: includes/admin/payments/view-order-details.php:125
 msgid "Key:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:121
+#: includes/admin/payments/view-order-details.php:130
 msgid "IP:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:129
+#: includes/admin/payments/view-order-details.php:138
 msgid "Status:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:140
+#: includes/admin/payments/view-order-details.php:149
 msgid "Date:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:147
+#: includes/admin/payments/view-order-details.php:156
 msgid "Time:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:163
+#: includes/admin/payments/view-order-details.php:164
+msgid ""
+"Grants the customer unlimited file downloads for this purchase, regardless "
+"of other limits set."
+msgstr ""
+
+#: includes/admin/payments/view-order-details.php:166
+msgid "Unlimited file downloads"
+msgstr ""
+
+#: includes/admin/payments/view-order-details.php:180
 msgid "Save Payment"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:165
+#: includes/admin/payments/view-order-details.php:182
 msgid "Resend Receipt"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:186
-msgid "Customer Details"
-msgstr ""
-
-#: includes/admin/payments/view-order-details.php:192
-msgid "Name:"
-msgstr ""
-
-#: includes/admin/payments/view-order-details.php:194
-msgid "Customer name, as shown on purchase receipts"
-msgstr ""
-
-#: includes/admin/payments/view-order-details.php:197
-msgid "Email:"
-msgstr ""
-
-#: includes/admin/payments/view-order-details.php:199
-msgid "Customer email address that purchase receipts are sent to"
+#: includes/admin/payments/view-order-details.php:195
+#: includes/admin/reporting/reports.php:36 includes/class-edd-logging.php:48
+msgid "Logs"
 msgstr ""
 
 #: includes/admin/payments/view-order-details.php:202
-msgid "User ID:"
+msgid "View file download log for purchase"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:204
-msgid "User ID of the customer"
+#: includes/admin/payments/view-order-details.php:226
+msgid "Customer Details"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:219
-#: includes/checkout/template.php:259
-msgid "Billing Address"
+#: includes/admin/payments/view-order-details.php:232
+msgid "Name:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:229
-msgid "Street Address Line 1:"
-msgstr ""
-
-#: includes/admin/payments/view-order-details.php:233
-msgid "Street Address Line 2:"
+#: includes/admin/payments/view-order-details.php:236
+msgid "Email:"
 msgstr ""
 
 #: includes/admin/payments/view-order-details.php:240
-msgctxt "Address City"
-msgid "City:"
+msgid "User ID:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:245
-msgctxt "Zip / Postal code of address"
-msgid "Zip / Postal Code:"
+#: includes/admin/payments/view-order-details.php:258
+#: includes/checkout/template.php:266
+msgid "Billing Address"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:252
-msgctxt "Address country"
-msgid "Country:"
+#: includes/admin/payments/view-order-details.php:268
+msgid "Street Address Line 1:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:264
-msgctxt "State / province of address"
-msgid "State / Province:"
+#: includes/admin/payments/view-order-details.php:272
+msgid "Street Address Line 2:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:295
+#: includes/admin/payments/view-order-details.php:334
 msgid "Purchased %s"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:339
+#: includes/admin/payments/view-order-details.php:379
 msgid "Quantity:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:348
-#: includes/admin/settings/register-settings.php:1261 includes/scripts.php:177
-#: templates/checkout_cart.php:40
+#: includes/admin/payments/view-order-details.php:389
+#: includes/admin/payments/view-order-details.php:485
+#: includes/admin/welcome.php:225
+msgid "Copy Download Link(s)"
+msgstr ""
+
+#: includes/admin/payments/view-order-details.php:391
+#: includes/admin/settings/register-settings.php:1298 includes/scripts.php:184
+#: templates/checkout_cart.php:40 templates/checkout_cart.php:55
 msgid "Remove"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:371
-#: templates/shortcode-receipt.php:112
+#: includes/admin/payments/view-order-details.php:410
+#: templates/shortcode-receipt.php:117
 msgid "Quantity"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:380
-msgid "Enter amount"
+#: includes/admin/payments/view-order-details.php:418
+#: includes/emails/functions.php:211 includes/emails/template.php:237
+msgid "Amount: "
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:387
+#: includes/admin/payments/view-order-details.php:425
 msgid "Add %s to Payment"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:400
+#: includes/admin/payments/view-order-details.php:435
+msgid "No %s included with this purchase"
+msgstr ""
+
+#: includes/admin/payments/view-order-details.php:443
 msgid "Payment Notes"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:415
+#: includes/admin/payments/view-order-details.php:458
 msgid "No payment notes"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:421
+#: includes/admin/payments/view-order-details.php:464
 msgid "Add Note"
 msgstr ""
 
@@ -1417,12 +1508,12 @@ msgstr ""
 msgid "General Settings"
 msgstr ""
 
-#: includes/admin/plugins.php:50 includes/admin/welcome.php:137
+#: includes/admin/plugins.php:50 includes/admin/welcome.php:152
 msgid "Getting Started"
 msgstr ""
 
 #: includes/admin/reporting/class-api-requests-logs-list-table.php:89
-#: includes/admin/reporting/class-file-downloads-logs-list-table.php:130
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:132
 #: includes/admin/reporting/class-gateway-error-logs-list-table.php:117
 #: includes/admin/reporting/class-sales-logs-list-table.php:95
 msgid "Log ID"
@@ -1486,10 +1577,9 @@ msgid "Files Downloaded"
 msgstr ""
 
 #: includes/admin/reporting/class-customer-reports-table.php:224
-#: includes/admin/reporting/class-export-customers.php:125
-#: includes/admin/reporting/class-export-customers.php:141
-#: includes/class-edd-api.php:646 includes/class-edd-api.php:647
-#: includes/class-edd-api.php:648 includes/class-edd-api.php:649
+#: includes/admin/reporting/class-export-customers.php:150
+#: includes/class-edd-api.php:660 includes/class-edd-api.php:661
+#: includes/class-edd-api.php:662 includes/class-edd-api.php:663
 msgid "Guest"
 msgstr ""
 
@@ -1509,15 +1599,27 @@ msgstr ""
 msgid "Detailed Report"
 msgstr ""
 
-#: includes/admin/reporting/class-export-customers.php:68
+#: includes/admin/reporting/class-export-customers.php:66
+#: includes/admin/reporting/class-export-payments.php:65
+#: includes/checkout/template.php:149 templates/shortcode-profile-editor.php:29
+msgid "First Name"
+msgstr ""
+
+#: includes/admin/reporting/class-export-customers.php:67
+#: includes/admin/reporting/class-export-payments.php:66
+#: includes/checkout/template.php:159 templates/shortcode-profile-editor.php:32
+msgid "Last Name"
+msgstr ""
+
+#: includes/admin/reporting/class-export-customers.php:69
 msgid "Date Purchased"
 msgstr ""
 
-#: includes/admin/reporting/class-export-customers.php:81
+#: includes/admin/reporting/class-export-customers.php:82
 msgid "Total Purchases"
 msgstr ""
 
-#: includes/admin/reporting/class-export-customers.php:82
+#: includes/admin/reporting/class-export-customers.php:83
 msgid "Total Purchased"
 msgstr ""
 
@@ -1526,7 +1628,7 @@ msgid "Downloaded by"
 msgstr ""
 
 #: includes/admin/reporting/class-export-download-history.php:66
-#: includes/admin/reporting/class-file-downloads-logs-list-table.php:135
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:137
 msgid "IP Address"
 msgstr ""
 
@@ -1535,41 +1637,56 @@ msgid "Product"
 msgstr ""
 
 #: includes/admin/reporting/class-export-download-history.php:68
-#: includes/admin/reporting/class-file-downloads-logs-list-table.php:134
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:136
 msgid "File"
 msgstr ""
 
-#: includes/admin/reporting/class-export-payments.php:65
-#: includes/checkout/template.php:142
-#: templates/shortcode-profile-editor.php:29
-msgid "First Name"
-msgstr ""
-
-#: includes/admin/reporting/class-export-payments.php:66
-#: includes/checkout/template.php:152
-#: templates/shortcode-profile-editor.php:32
-msgid "Last Name"
-msgstr ""
-
 #: includes/admin/reporting/class-export-payments.php:67
-#: templates/shortcode-receipt.php:103
-msgid "Products"
+msgid "Address"
 msgstr ""
 
 #: includes/admin/reporting/class-export-payments.php:68
-msgid "SKUs"
+msgid "Address (Line 2)"
+msgstr ""
+
+#: includes/admin/reporting/class-export-payments.php:69
+#: includes/checkout/template.php:292 templates/shortcode-profile-editor.php:63
+msgid "City"
+msgstr ""
+
+#: includes/admin/reporting/class-export-payments.php:70
+msgid "State"
+msgstr ""
+
+#: includes/admin/reporting/class-export-payments.php:71
+#: includes/admin/settings/register-settings.php:1294
+#: templates/shortcode-profile-editor.php:69
+msgid "Country"
 msgstr ""
 
 #: includes/admin/reporting/class-export-payments.php:72
-#: templates/shortcode-receipt.php:83
-msgid "Payment Method"
+msgid "Zip Code"
 msgstr ""
 
 #: includes/admin/reporting/class-export-payments.php:73
+#: templates/shortcode-receipt.php:108
+msgid "Products"
+msgstr ""
+
+#: includes/admin/reporting/class-export-payments.php:74
+msgid "SKUs"
+msgstr ""
+
+#: includes/admin/reporting/class-export-payments.php:78
+#: templates/shortcode-receipt.php:42
+msgid "Payment Method"
+msgstr ""
+
+#: includes/admin/reporting/class-export-payments.php:79
 msgid "Purchase Key"
 msgstr ""
 
-#: includes/admin/reporting/class-export-payments.php:170
+#: includes/admin/reporting/class-export-payments.php:182
 msgid "none"
 msgstr ""
 
@@ -1577,7 +1694,7 @@ msgstr ""
 msgid "You do not have permission to export data."
 msgstr ""
 
-#: includes/admin/reporting/class-file-downloads-logs-list-table.php:133
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:135
 #: includes/admin/reporting/class-gateway-error-logs-list-table.php:118
 #: includes/admin/reporting/class-sales-logs-list-table.php:99
 msgid "Payment ID"
@@ -1624,7 +1741,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/reporting/contextual-help.php:48
-#: includes/admin/reporting/reports.php:34 includes/admin/tools.php:42
+#: includes/admin/reporting/reports.php:34 includes/admin/tools.php:179
 msgid "Export"
 msgstr ""
 
@@ -1644,8 +1761,8 @@ msgstr ""
 msgid ""
 "<strong>Payment History</strong> - This report exports all of payments you "
 "have received on your EDD store in a CSV format.  The report includes the "
-"contact details of the customer, the products they have purchased as well as "
-"any discount codes they have used and the final price they have paid."
+"contact details of the customer, the products they have purchased as well "
+"as any discount codes they have used and the final price they have paid."
 msgstr ""
 
 #: includes/admin/reporting/contextual-help.php:53
@@ -1658,10 +1775,10 @@ msgstr ""
 
 #: includes/admin/reporting/contextual-help.php:54
 msgid ""
-"<strong>Download History</strong> - This report exports all of the downloads "
-"you have received in the current month into a CSV. It exports the date the "
-"file was downloaded, the customer it was downloaded by, their IP address, "
-"the name of the product and the file they downloaded."
+"<strong>Download History</strong> - This report exports all of the "
+"downloads you have received in the current month into a CSV. It exports the "
+"date the file was downloaded, the customer it was downloaded by, their IP "
+"address, the name of the product and the file they downloaded."
 msgstr ""
 
 #: includes/admin/reporting/contextual-help.php:60
@@ -1685,12 +1802,12 @@ msgid "Earnings Over Time"
 msgstr ""
 
 #: includes/admin/reporting/graphing.php:167
-#: includes/admin/reporting/graphing.php:348
+#: includes/admin/reporting/graphing.php:349
 msgid "Total earnings for period shown: "
 msgstr ""
 
 #: includes/admin/reporting/graphing.php:168
-#: includes/admin/reporting/graphing.php:349
+#: includes/admin/reporting/graphing.php:350
 msgid "Total sales for period shown: "
 msgstr ""
 
@@ -1702,64 +1819,68 @@ msgstr ""
 msgid "Estimated monthly sales: "
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:338
+#: includes/admin/reporting/graphing.php:339
 msgid "Earnings Over Time for %s"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:365 includes/class-edd-stats.php:82
-msgid "Today"
+#: includes/admin/reporting/graphing.php:351
+msgid "Average monthly earnings: %s"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:366 includes/class-edd-stats.php:83
+#: includes/admin/reporting/graphing.php:352
+msgid "Average monthly sales: %s"
+msgstr ""
+
+#: includes/admin/reporting/graphing.php:369 includes/class-edd-stats.php:83
 msgid "Yesterday"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:367 includes/class-edd-stats.php:84
+#: includes/admin/reporting/graphing.php:370 includes/class-edd-stats.php:84
 msgid "This Week"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:368 includes/class-edd-stats.php:85
+#: includes/admin/reporting/graphing.php:371 includes/class-edd-stats.php:85
 msgid "Last Week"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:369 includes/class-edd-stats.php:86
+#: includes/admin/reporting/graphing.php:372 includes/class-edd-stats.php:86
 msgid "This Month"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:371 includes/class-edd-stats.php:88
+#: includes/admin/reporting/graphing.php:374 includes/class-edd-stats.php:88
 msgid "This Quarter"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:372
+#: includes/admin/reporting/graphing.php:375
 msgid "Last Quarter"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:373 includes/class-edd-stats.php:90
+#: includes/admin/reporting/graphing.php:376 includes/class-edd-stats.php:90
 msgid "This Year"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:374 includes/class-edd-stats.php:91
+#: includes/admin/reporting/graphing.php:377 includes/class-edd-stats.php:91
 msgid "Last Year"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:375
+#: includes/admin/reporting/graphing.php:378
 msgid "Custom"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:406
+#: includes/admin/reporting/graphing.php:409
 msgid "From"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:417
+#: includes/admin/reporting/graphing.php:420
 msgid "To"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:431
+#: includes/admin/reporting/graphing.php:434
 msgid "Filter"
 msgstr ""
 
 #: includes/admin/reporting/logs.php:124
-#: includes/admin/settings/register-settings.php:539
+#: includes/admin/settings/register-settings.php:544
 msgid "File Downloads"
 msgstr ""
 
@@ -1784,10 +1905,7 @@ msgstr ""
 msgid "Sales and earnings reports for the current year for all products"
 msgstr ""
 
-#. #-#-#-#-#  edd.pot (Easy Digital Downloads 1.9.8)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
-#: includes/admin/reporting/pdf-reports.php:39
-#: includes/admin/reporting/pdf-reports.php:40
 msgid "Easy Digital Downloads"
 msgstr ""
 
@@ -1871,17 +1989,13 @@ msgstr ""
 msgid "Dec"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:36 includes/class-edd-logging.php:48
-msgid "Logs"
-msgstr ""
-
 #: includes/admin/reporting/reports.php:60
 msgid "Payment Methods"
 msgstr ""
 
 #: includes/admin/reporting/reports.php:61
 #: includes/admin/settings/contextual-help.php:71
-#: includes/admin/settings/register-settings.php:774
+#: includes/admin/settings/register-settings.php:811
 msgid "Taxes"
 msgstr ""
 
@@ -1899,95 +2013,106 @@ msgstr ""
 
 #: includes/admin/reporting/reports.php:263
 msgid ""
-"This report shows the total amount collected in sales tax for the given year."
+"This report shows the total amount collected in sales tax for the given "
+"year."
 msgstr ""
 
 #: includes/admin/reporting/reports.php:274
 msgid "Submit"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:298
+#: includes/admin/reporting/reports.php:299
 msgid "Export PDF of Sales and Earnings"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:300
+#: includes/admin/reporting/reports.php:301
 msgid ""
 "Download a PDF of Sales and Earnings reports for all products for the "
 "current year."
 msgstr ""
 
-#: includes/admin/reporting/reports.php:300
+#: includes/admin/reporting/reports.php:301
 msgid "Date range reports will be coming soon."
 msgstr ""
 
-#: includes/admin/reporting/reports.php:301
+#: includes/admin/reporting/reports.php:302
 msgid "Generate PDF"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:306
-msgid "Export Payment History"
+#: includes/admin/reporting/reports.php:307
+msgid "Export Earnings and Sales Stats"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:308
-msgid "Download a CSV of all payments recorded."
+#: includes/admin/reporting/reports.php:309
+msgid "Download a CSV of earnings and sales over time."
 msgstr ""
 
-#: includes/admin/reporting/reports.php:314
-msgid "All Statuses"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:323
-#: includes/admin/reporting/reports.php:352
-#: includes/admin/reporting/reports.php:367
+#: includes/admin/reporting/reports.php:318
+#: includes/admin/reporting/reports.php:342
+#: includes/admin/reporting/reports.php:371
+#: includes/admin/reporting/reports.php:386
 msgid "Generate CSV"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:330
-msgid "Export Customers in CSV"
+#: includes/admin/reporting/reports.php:325
+msgid "Export Payment History"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:332
-msgid ""
-"Download a CSV of all customer emails. Optionally export only customers that "
-"have purchased a particular product. Note, if you have a large number of "
-"customers, exporting the purchase stats may fail."
+#: includes/admin/reporting/reports.php:327
+msgid "Download a CSV of all payments recorded."
 msgstr ""
 
-#: includes/admin/reporting/reports.php:336
-msgid "All %s"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:347
-#: includes/admin/settings/contextual-help.php:57
-#: includes/admin/settings/register-settings.php:772
-msgid "Emails"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:348
-msgid "Emails and Names"
+#: includes/admin/reporting/reports.php:333
+msgid "All Statuses"
 msgstr ""
 
 #: includes/admin/reporting/reports.php:349
+msgid "Export Customers in CSV"
+msgstr ""
+
+#: includes/admin/reporting/reports.php:351
+msgid ""
+"Download a CSV of all customer emails. Optionally export only customers "
+"that have purchased a particular product. Note, if you have a large number "
+"of customers, exporting the purchase stats may fail."
+msgstr ""
+
+#: includes/admin/reporting/reports.php:355
+msgid "All %s"
+msgstr ""
+
+#: includes/admin/reporting/reports.php:366
+#: includes/admin/settings/contextual-help.php:57
+#: includes/admin/settings/register-settings.php:809
+msgid "Emails"
+msgstr ""
+
+#: includes/admin/reporting/reports.php:367
+msgid "Emails and Names"
+msgstr ""
+
+#: includes/admin/reporting/reports.php:368
 msgid "Emails, Names, and Purchase Stats"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:359
+#: includes/admin/reporting/reports.php:378
 msgid "Export Download History in CSV"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:361
+#: includes/admin/reporting/reports.php:380
 msgid "Download a CSV of all file downloads for a specific month and year."
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:43
 msgid ""
-"This screen provides the most basic settings for configuring your store. You "
-"can set the currency, page templates, and turn <em>Test Mode</em> on and off."
+"This screen provides the most basic settings for configuring your store. "
+"You can set the currency, page templates, and turn <em>Test Mode</em> on "
+"and off."
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:48
 #: includes/admin/settings/register-settings.php:241
-#: includes/admin/settings/register-settings.php:771
+#: includes/admin/settings/register-settings.php:808
 msgid "Payment Gateways"
 msgstr ""
 
@@ -2010,28 +2135,28 @@ msgstr ""
 msgid ""
 "<strong>PayPal</strong> - A PayPal payment gateway is included as standard "
 "with Easy Digital Downloads. To test the PayPal gateway, you need a Sandbox "
-"account for PayPal and the site must be placed in Test Mode from the General "
-"settings tab. Please remember to enter your PayPal account email address in "
-"order for payments to get processed."
+"account for PayPal and the site must be placed in Test Mode from the "
+"General settings tab. Please remember to enter your PayPal account email "
+"address in order for payments to get processed."
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:59
 msgid ""
 "This screen allows you to customize how emails act throughout your store. "
-"You can choose a premade template, set the sender's name, email address, and "
-"subject."
+"You can choose a premade template, set the sender's name, email address, "
+"and subject."
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:60
 msgid ""
 "A set of email tags has also been provided to allow the creation of "
-"personalized emails. A tag consists of a keyword surrounded by curly braces: "
-"<code>{tag}</code>. A description of each of these tags appear below the "
-"editor."
+"personalized emails. A tag consists of a keyword surrounded by curly "
+"braces: <code>{tag}</code>. A description of each of these tags appear "
+"below the editor."
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:65
-#: includes/admin/settings/register-settings.php:773
+#: includes/admin/settings/register-settings.php:810
 msgid "Styles"
 msgstr ""
 
@@ -2059,16 +2184,16 @@ msgstr ""
 
 #: includes/admin/settings/contextual-help.php:76
 msgid ""
-"<strong>Base Country</strong>: This determines the country that is loaded by "
-"default on the checkout screen for customers that do not have an address "
+"<strong>Base Country</strong>: This determines the country that is loaded "
+"by default on the checkout screen for customers that do not have an address "
 "stored in their account."
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:77
 msgid ""
-"<strong>Base State / Province</strong>: This determines the state / province "
-"that is loaded by default on the checkout screen for customers that do not "
-"have an address stored in their account."
+"<strong>Base State / Province</strong>: This determines the state / "
+"province that is loaded by default on the checkout screen for customers "
+"that do not have an address stored in their account."
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:78
@@ -2088,17 +2213,17 @@ msgstr ""
 
 #: includes/admin/settings/contextual-help.php:80
 msgid ""
-"<strong>Display During Checkout</strong>: This determines whether prices are "
-"shown with taxes or without taxes on checkout. If set to Including Tax, a "
-"$10 product with a 10% tax will be shown as $11."
+"<strong>Display During Checkout</strong>: This determines whether prices "
+"are shown with taxes or without taxes on checkout. If set to Including Tax, "
+"a $10 product with a 10% tax will be shown as $11."
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:81
 msgid ""
-"<strong>Calculate Tax After Discounts</strong>: If enabled, this option will "
-"make it so that tax is calucated on the after-discount amount. If a purchase "
-"of $20 is made and a 20% discount is applied, tax will be calcuated off of "
-"$16 instead of $20."
+"<strong>Calculate Tax After Discounts</strong>: If enabled, this option "
+"will make it so that tax is calucated on the after-discount amount. If a "
+"purchase of $20 is made and a 20% discount is applied, tax will be "
+"calcuated off of $16 instead of $20."
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:82
@@ -2108,14 +2233,14 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:87
-#: includes/admin/settings/register-settings.php:777
+#: includes/admin/settings/register-settings.php:814
 msgid "Extensions"
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:88
 msgid ""
-"This screen provides access to settings added by most Easy Digital Downloads "
-"extensions."
+"This screen provides access to settings added by most Easy Digital "
+"Downloads extensions."
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:93
@@ -2139,8 +2264,8 @@ msgstr ""
 #: includes/admin/settings/register-settings.php:134
 msgid ""
 "While in test mode no live transactions are processed. To fully use test "
-"mode, you must have a sandbox (test) account for the payment gateway you are "
-"testing."
+"mode, you must have a sandbox (test) account for the payment gateway you "
+"are testing."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:139
@@ -2259,9 +2384,9 @@ msgstr ""
 msgid ""
 "Allow Easy Digital Downloads to anonymously track how this plugin is used "
 "and help us make the plugin better. Opt-in and receive a 20% discount code "
-"for any purchase from the <a href=\"https://easydigitaldownloads.com/"
-"extensions\" target=\"_blank\">Easy Digital Downloads store</a>. Your "
-"discount code will be emailed to you."
+"for any purchase from the <a "
+"href=\"https://easydigitaldownloads.com/extensions\" target=\"_blank\">Easy "
+"Digital Downloads store</a>. Your discount code will be emailed to you."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:230
@@ -2386,14 +2511,14 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:337
-#: includes/emails/functions.php:84 includes/emails/template.php:125
-#: includes/emails/template.php:177
+#: includes/emails/functions.php:84 includes/emails/template.php:127
+#: includes/emails/template.php:179
 msgid "Dear"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:337
-#: includes/emails/functions.php:85 includes/emails/template.php:126
-#: includes/emails/template.php:178
+#: includes/emails/functions.php:85 includes/emails/template.php:128
+#: includes/emails/template.php:180
 msgid ""
 "Thank you for your purchase. Please click on the link(s) below to download "
 "your files."
@@ -2422,8 +2547,8 @@ msgstr ""
 #: includes/admin/settings/register-settings.php:355
 #: includes/deprecated-functions.php:334
 msgid ""
-"Enter the email that is sent to sale notification emails after completion of "
-"a purchase. HTML is accepted. Available template tags:"
+"Enter the email that is sent to sale notification emails after completion "
+"of a purchase. HTML is accepted. Available template tags:"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:361
@@ -2441,8 +2566,7 @@ msgid "Disable Admin Notifications"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:369
-msgid ""
-"Check this box if you do not want to receive emails when new sales are made."
+msgid "Check this box if you do not want to receive emails when new sales are made."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:379
@@ -2487,346 +2611,372 @@ msgstr ""
 msgid "Check this to enable taxes on purchases."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:417
+#: includes/admin/settings/register-settings.php:416
 msgid "Default Tax Rate"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:418
+#: includes/admin/settings/register-settings.php:417
 msgid ""
-"Enter a percentage, such as 6.5. Customers not in a specific rate below will "
-"be charged this rate."
+"Enter a percentage, such as 6.5. Customers not in a specific rate below "
+"will be charged this rate."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:424
+#: includes/admin/settings/register-settings.php:423
 msgid "Base Country"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:425
+#: includes/admin/settings/register-settings.php:424
 msgid "Where does your store operate from?"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:431
+#: includes/admin/settings/register-settings.php:430
 msgid "Base State / Province"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:432
+#: includes/admin/settings/register-settings.php:431
 msgid "What state / province does your store operate from?"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:437
+#: includes/admin/settings/register-settings.php:436
 msgid "Prices entered with tax"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:438
+#: includes/admin/settings/register-settings.php:437
 msgid "This option affects how you enter prices."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:442
+#: includes/admin/settings/register-settings.php:441
 msgid "Yes, I will enter prices inclusive of tax"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:443
+#: includes/admin/settings/register-settings.php:442
 msgid "No, I will enter prices exclusive of tax"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:448
+#: includes/admin/settings/register-settings.php:447
 msgid "Display Tax Rate on Prices"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:449
+#: includes/admin/settings/register-settings.php:448
 msgid "Some countries require a notice when product prices include tax."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:455
+#: includes/admin/settings/register-settings.php:453
 msgid "Display during checkout"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:456
+#: includes/admin/settings/register-settings.php:454
 msgid "Should prices on the checkout page be shown with or without tax?"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:460
+#: includes/admin/settings/register-settings.php:458
 msgid "Including tax"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:461
+#: includes/admin/settings/register-settings.php:459
 msgid "Excluding tax"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:466
+#: includes/admin/settings/register-settings.php:464
 msgid "Calculate Tax After Discounts?"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:467
+#: includes/admin/settings/register-settings.php:465
 msgid ""
 "Check this if you would like taxes calculated after discounts. By default "
 "taxes are calculated before discounts are applied."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:473
+#: includes/admin/settings/register-settings.php:470
 msgid "Additional Tax Rates"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:474
+#: includes/admin/settings/register-settings.php:471
 msgid "Specify additional tax rates for other regions."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:491
-msgid "Disable Ajax"
+#: includes/admin/settings/register-settings.php:488
+msgid "Enable Ajax"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:492
-msgid "Check this to disable AJAX for the shopping cart."
+#: includes/admin/settings/register-settings.php:489
+msgid "Check this to enable AJAX for the shopping cart."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:497
+#: includes/admin/settings/register-settings.php:495
 msgid "Redirect to Checkout"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:498
+#: includes/admin/settings/register-settings.php:496
 msgid "Immediately redirect to checkout after adding an item to the cart?"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:503
-msgid "Disable Live Credit Card Validation"
+#: includes/admin/settings/register-settings.php:501
+msgid "Enforce SSL on Checkout"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:504
+#: includes/admin/settings/register-settings.php:502
 msgid ""
-"Live credit card validation means that the card type and number will be "
-"validated as the customer enters the number."
+"Check this to force users to be redirected to the secure checkout page. You "
+"must have an SSL certificate installed to use this option."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:509
+#: includes/admin/settings/register-settings.php:507
 msgid "Disable Guest Checkout"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:510
+#: includes/admin/settings/register-settings.php:508
 msgid "Require that users be logged-in to purchase files."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:515
+#: includes/admin/settings/register-settings.php:513
 msgid "Show Register / Login Form?"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:516
+#: includes/admin/settings/register-settings.php:514
 msgid ""
-"Display the registration and login forms on the checkout page for non-logged-"
-"in users."
+"Display the registration and login forms on the checkout page for "
+"non-logged-in users."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:521
+#: includes/admin/settings/register-settings.php:517
+msgid "Registration and Login Forms"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:518
+msgid "Registration Form Only"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:519
+msgid "Login Form Only"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:526
 msgid "Item Quantities"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:522
+#: includes/admin/settings/register-settings.php:527
 msgid "Allow item quantities to be changed at checkout."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:527
+#: includes/admin/settings/register-settings.php:532
 msgid "Multiple Discounts"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:528
+#: includes/admin/settings/register-settings.php:533
 msgid "Allow customers to use multiple discounts on the same purchase?"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:533
-msgid "Disable Cart Saving"
+#: includes/admin/settings/register-settings.php:538
+msgid "Enable Cart Saving"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:534
-msgid "Check this to disable cart saving on the checkout"
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:545
-msgid "Download Method"
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:546
-msgid ""
-"Select the file download method. Note, not all methods work on all servers."
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:549
-msgid "Forced"
+#: includes/admin/settings/register-settings.php:539
+msgid "Check this to enable cart saving on the checkout"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:550
-msgid "Redirect"
+msgid "Download Method"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:551
+msgid "Select the file download method. Note, not all methods work on all servers."
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:554
+msgid "Forced"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:555
+msgid "Redirect"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:560
 msgid "Symlink File Downloads?"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:556
+#: includes/admin/settings/register-settings.php:561
 msgid ""
 "Check this if you are delivering really large files or having problems with "
 "file downloads completing."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:561
+#: includes/admin/settings/register-settings.php:566
 msgid "File Download Limit"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:562
+#: includes/admin/settings/register-settings.php:567
 msgid ""
 "The maximum number of times files can be downloaded for purchases. Can be "
 "overwritten for each %s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:568
+#: includes/admin/settings/register-settings.php:573
 msgid "Download Link Expiration"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:569
+#: includes/admin/settings/register-settings.php:574
 msgid ""
 "How long should download links be valid for? Default is 24 hours from the "
 "time they are generated. Enter a time in hours."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:577
+#: includes/admin/settings/register-settings.php:582
 msgid "Disable Redownload?"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:578
+#: includes/admin/settings/register-settings.php:583
 msgid ""
 "Check this if you do not want to allow users to redownload items from their "
 "purchase history."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:583
+#: includes/admin/settings/register-settings.php:588
 msgid "Accounting Settings"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:589
+#: includes/admin/settings/register-settings.php:594
 msgid "Enable SKU Entry"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:590
+#: includes/admin/settings/register-settings.php:595
 msgid ""
 "Check this box to allow entry of product SKUs. SKUs will be shown on "
 "purchase receipt and exported purchase histories."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:595
-msgid "Terms of Agreement"
+#: includes/admin/settings/register-settings.php:600
+#: includes/admin/welcome.php:179
+msgid "Sequential Order Numbers"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:601
+msgid "Check this box to sequential order numbers."
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:606
+msgid "Sequential Starting Number"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:607
+msgid "The number that sequential order numbers should start at."
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:614
+msgid "Sequential Number Prefix"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:615
+msgid "A prefix to prepend to all sequential order numbers."
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:620
+msgid "Sequential Number Postfix"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:621
+msgid "A postfix to append to all sequential order numbers."
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:626
+msgid "Terms of Agreement"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:632
 msgid "Agree to Terms"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:602
+#: includes/admin/settings/register-settings.php:633
 msgid ""
 "Check this to show an agree to terms on the checkout that users must agree "
 "to before purchasing."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:607
+#: includes/admin/settings/register-settings.php:638
 msgid "Agree to Terms Label"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:608
+#: includes/admin/settings/register-settings.php:639
 msgid "Label shown next to the agree to terms check box."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:614
+#: includes/admin/settings/register-settings.php:645
 msgid "Agreement Text"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:615
+#: includes/admin/settings/register-settings.php:646
 msgid "If Agree to Terms is checked, enter the agreement terms here."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:620
+#: includes/admin/settings/register-settings.php:651
 msgid "Complete Purchase Text"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:621
+#: includes/admin/settings/register-settings.php:652
 msgid "The button label for completing a purchase."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:627
+#: includes/admin/settings/register-settings.php:658
 msgid "Add to Cart Text"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:628
+#: includes/admin/settings/register-settings.php:659
 msgid "Text shown on the Add to Cart Buttons"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:701
+#: includes/admin/settings/register-settings.php:732
 msgid "Settings updated."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:780
+#: includes/admin/settings/register-settings.php:817
 msgid "Licenses"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:783
+#: includes/admin/settings/register-settings.php:820
 msgid "Misc"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1061
-msgid ""
-"The callback function used for the <strong>%s</strong> setting is missing."
+#: includes/admin/settings/register-settings.php:1098
+msgid "The callback function used for the <strong>%s</strong> setting is missing."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1177
+#: includes/admin/settings/register-settings.php:1214
 msgid "Upload File"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1257
-#: templates/shortcode-profile-editor.php:69
-msgid "Country"
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:1258
-#: includes/checkout/template.php:346
-#: templates/shortcode-profile-editor.php:75
+#: includes/admin/settings/register-settings.php:1295
+#: includes/checkout/template.php:353 templates/shortcode-profile-editor.php:76
 msgid "State / Province"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1259
+#: includes/admin/settings/register-settings.php:1296
 msgid "Apply rate to whole country, regardless of state / province"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1259
+#: includes/admin/settings/register-settings.php:1296
 msgid "Country Wide"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1260
+#: includes/admin/settings/register-settings.php:1297
 msgid "Rate"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1297
-#: includes/admin/settings/register-settings.php:1320
+#: includes/admin/settings/register-settings.php:1336
+#: includes/admin/settings/register-settings.php:1361
 msgid "Apply to whole country"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1300
-#: includes/admin/settings/register-settings.php:1323
+#: includes/admin/settings/register-settings.php:1339
+#: includes/admin/settings/register-settings.php:1364
 msgid "Remove Rate"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1328
+#: includes/admin/settings/register-settings.php:1369
 msgid "Add Tax Rate"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1357
-#: includes/class-edd-license-handler.php:253
+#: includes/admin/settings/register-settings.php:1397
 msgid "Deactivate License"
-msgstr ""
-
-#: includes/admin/system-info.php:54
-msgid "System Information"
-msgstr ""
-
-#: includes/admin/system-info.php:56
-msgid ""
-"To copy the system info, click below then press Ctrl + C (PC) or Cmd + C "
-"(Mac)."
 msgstr ""
 
 #: includes/admin/thickbox.php:29 includes/admin/thickbox.php:33
@@ -2870,41 +3020,72 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: includes/admin/tools.php:34
+#: includes/admin/tools.php:70
+msgid "System Info"
+msgstr ""
+
+#: includes/admin/tools.php:71
+msgid "Import/Export"
+msgstr ""
+
+#: includes/admin/tools.php:87 includes/admin/welcome.php:252
+msgid "Banned Emails"
+msgstr ""
+
+#: includes/admin/tools.php:89
+msgid "Emails placed in the box below will not be allowed to make purchases."
+msgstr ""
+
+#: includes/admin/tools.php:93
+msgid "Enter emails to disallow, one per line"
+msgstr ""
+
+#: includes/admin/tools.php:98
+msgid "Save"
+msgstr ""
+
+#: includes/admin/tools.php:127
+msgid ""
+"These API keys allow you to use the <a href=\"%s\">EDD REST API</a> to "
+"retrieve store data in JSON or XML for external applications or devices, "
+"such as the <a href=\"%s\">EDD mobile apps</a>."
+msgstr ""
+
+#: includes/admin/tools.php:171
 msgid "Export Settings"
 msgstr ""
 
-#: includes/admin/tools.php:36
+#: includes/admin/tools.php:173
 msgid ""
 "Export the Easy Digital Downloads settings for this site as a .json file. "
 "This allows you to easily import the configuration into another site."
 msgstr ""
 
-#: includes/admin/tools.php:37
+#: includes/admin/tools.php:174
 msgid ""
-"To export shop data (purchases, customers, etc), visit the <a href=\"%s"
-"\">Reports</a> page."
+"To export shop data (purchases, customers, etc), visit the <a "
+"href=\"%s\">Reports</a> page."
 msgstr ""
 
-#: includes/admin/tools.php:49
+#: includes/admin/tools.php:186
 msgid "Import Settings"
 msgstr ""
 
-#: includes/admin/tools.php:51
+#: includes/admin/tools.php:188
 msgid ""
 "Import the Easy Digital Downloads settings from a .json file. This file can "
 "be obtained by exporting the settings on another site using the form above."
 msgstr ""
 
-#: includes/admin/tools.php:59
+#: includes/admin/tools.php:196
 msgid "Import"
 msgstr ""
 
-#: includes/admin/tools.php:124
+#: includes/admin/tools.php:261
 msgid "Please upload a valid .json file"
 msgstr ""
 
-#: includes/admin/tools.php:130
+#: includes/admin/tools.php:267
 msgid "Please upload a file to import"
 msgstr ""
 
@@ -2912,8 +3093,8 @@ msgstr ""
 msgid ""
 "Allow Easy Digital Downloads to track plugin usage? Opt-in to tracking and "
 "our newsletter and immediately be emailed a 20% discount to the shop for <a "
-"href=\"https://easydigitaldownloads.com/extensions\" target=\"_blank"
-"\">Extensions and Themes</a>. No sensitive data is tracked."
+"href=\"https://easydigitaldownloads.com/extensions\" "
+"target=\"_blank\">Extensions and Themes</a>. No sensitive data is tracked."
 msgstr ""
 
 #: includes/admin/tracking.php:250
@@ -2924,48 +3105,60 @@ msgstr ""
 msgid "Do not allow"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:38
+#: includes/admin/upgrades/upgrade-functions.php:40
 msgid "The Payment History needs to be updated. %s"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:38
+#: includes/admin/upgrades/upgrade-functions.php:40
 msgid "Click to Upgrade"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:44
+#: includes/admin/upgrades/upgrade-functions.php:46
 msgid ""
-"The Purchase and File Download History in Easy Digital Downloads needs to be "
-"upgraded, click %shere%s to start the upgrade."
+"The Purchase and File Download History in Easy Digital Downloads needs to "
+"be upgraded, click %shere%s to start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:52
+#: includes/admin/upgrades/upgrade-functions.php:54
 msgid ""
 "Easy Digital Downloads needs to upgrade the plugin pages, click %shere%s to "
 "start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:60
+#: includes/admin/upgrades/upgrade-functions.php:62
+#: includes/admin/upgrades/upgrade-functions.php:70
 msgid ""
 "Easy Digital Downloads needs to upgrade the database, click %shere%s to "
 "start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:202 includes/install.php:78
+#: includes/admin/upgrades/upgrade-functions.php:78
+msgid ""
+"Easy Digital Downloads needs to upgrade past order numbers to make them "
+"sequential, click <a href=\"%s\">here</a> to start the upgrade."
+msgstr ""
+
+#: includes/admin/upgrades/upgrade-functions.php:224 includes/install.php:81
 msgid "Transaction Failed"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:203 includes/install.php:79
+#: includes/admin/upgrades/upgrade-functions.php:225 includes/install.php:82
 msgid "Your transaction failed, please try again or contact site support."
 msgstr ""
 
-#: includes/admin/upgrades/upgrades.php:24
+#: includes/admin/upgrades/upgrades.php:29
 msgid "Easy Digital Downloads - Upgrades"
 msgstr ""
 
-#: includes/admin/upgrades/upgrades.php:27
+#: includes/admin/upgrades/upgrades.php:34
+#: includes/admin/upgrades/upgrades.php:47
 msgid ""
 "The upgrade process has started, please be patient. This could take several "
 "minutes. You will be automatically redirected when the upgrade is finished."
+msgstr ""
+
+#: includes/admin/upgrades/upgrades.php:36
+msgid "Step %d of approximately %d running"
 msgstr ""
 
 #: includes/admin/welcome.php:51 includes/admin/welcome.php:52
@@ -2973,885 +3166,871 @@ msgid "Welcome to Easy Digital Downloads"
 msgstr ""
 
 #: includes/admin/welcome.php:60 includes/admin/welcome.php:61
-msgid "Getting started with Easy Digital Downloads"
+#: includes/admin/welcome.php:288
+msgid "Easy Digital Downloads Changelog"
 msgstr ""
 
 #: includes/admin/welcome.php:69 includes/admin/welcome.php:70
+msgid "Getting started with Easy Digital Downloads"
+msgstr ""
+
+#: includes/admin/welcome.php:78 includes/admin/welcome.php:79
 msgid "The people that build Easy Digital Downloads"
 msgstr ""
 
-#: includes/admin/welcome.php:134
+#: includes/admin/welcome.php:149
 msgid "What's New"
 msgstr ""
 
-#: includes/admin/welcome.php:140
+#: includes/admin/welcome.php:155
 msgid "Credits"
 msgstr ""
 
-#: includes/admin/welcome.php:157 includes/admin/welcome.php:277
-#: includes/admin/welcome.php:396
+#: includes/admin/welcome.php:172 includes/admin/welcome.php:320
+#: includes/admin/welcome.php:439
 msgid "Welcome to Easy Digital Downloads %s"
 msgstr ""
 
-#: includes/admin/welcome.php:158 includes/admin/welcome.php:278
-#: includes/admin/welcome.php:397
+#: includes/admin/welcome.php:173 includes/admin/welcome.php:289
+msgid ""
+"Thank you for updating to the latest version! Easy Digital Downloads %s is "
+"ready to make your online store faster, safer, and better!"
+msgstr ""
+
+#: includes/admin/welcome.php:174 includes/admin/welcome.php:290
+#: includes/admin/welcome.php:322 includes/admin/welcome.php:441
+msgid "Version %s"
+msgstr ""
+
+#: includes/admin/welcome.php:185
+msgid "Prefix, Postfix, and Starting Number"
+msgstr ""
+
+#: includes/admin/welcome.php:186
+msgid ""
+"Sequential order numbers are now supported out of the box. Simply go to <a "
+"href=\"%s\">Settings &rarr; Misc</a> to enable them. The starting number, "
+"prefix, and postfix for order numbers can all be easily configured."
+msgstr ""
+
+#: includes/admin/welcome.php:188
+msgid "Upgrade Routine"
+msgstr ""
+
+#: includes/admin/welcome.php:189
+msgid ""
+"Sequential order numbers are important for some and even mandatory for "
+"others, so we want to ensure that all users can make use of them. For this "
+"reason, we have provided a one-click upgrade routine that will update all "
+"previous purchase records with sequential order numbers matching your "
+"settings."
+msgstr ""
+
+#: includes/admin/welcome.php:195
+msgid "Improved Checkout Experience"
+msgstr ""
+
+#: includes/admin/welcome.php:201
+msgid "Registration / Login Forms"
+msgstr ""
+
+#: includes/admin/welcome.php:202
+msgid ""
+"The registration and login form options for the checkout form have been "
+"further refined in version 2.0. They now include granular control that let "
+"you determine exactly which forms are displayed. You can have just a login "
+"form, just a registration form, both forms, or neither. The choice is yours."
+msgstr ""
+
+#: includes/admin/welcome.php:204
+msgid "Live Item Quantity Updates"
+msgstr ""
+
+#: includes/admin/welcome.php:205
+msgid ""
+"Cart item quantities are now updated on the fly when customers adjust them, "
+"meaning customers no longer need to click Update Cart and wait for the page "
+"to reload to see their new purchase total. This creates a more fluid and "
+"rapid checkout experience."
+msgstr ""
+
+#: includes/admin/welcome.php:207
+msgid "100% Discounts and Credit Cards"
+msgstr ""
+
+#: includes/admin/welcome.php:208
+msgid ""
+"Many users choose to offer 100% discount codes to customers, perhaps as "
+"part of a promotion or giveaway. As of version 2.0, 100% discount codes now "
+"work perfectly even when using a credit card processing payment gateway."
+msgstr ""
+
+#: includes/admin/welcome.php:212
+msgid "Redeeming Discount Code"
+msgstr ""
+
+#: includes/admin/welcome.php:213
+msgid ""
+"The discount code redemption proceess during checkout is now smoother and "
+"more intuitive. Simpler checkout processes for customers means more "
+"successful sales for you."
+msgstr ""
+
+#: includes/admin/welcome.php:214
+msgid ""
+"In version 2.0, customers are given the opportunity to redeem their "
+"discount code before selecting their payment method, if the site has AJAX "
+"processing disabled."
+msgstr ""
+
+#: includes/admin/welcome.php:221
+msgid "Payment History Enhancements"
+msgstr ""
+
+#: includes/admin/welcome.php:226
+msgid ""
+"The Purchased Downloads section of the order details screen now includes an "
+"option to copy secure download links for any file purchased, letting you "
+"easily copy-and-paste new file download links for customers."
+msgstr ""
+
+#: includes/admin/welcome.php:228
+msgid "Transaction ID Searching"
+msgstr ""
+
+#: includes/admin/welcome.php:229
+msgid ""
+"Version 2.0 now supports searching for payment records by the transaction "
+"ID from the payment processor. Have you refunded a purchase in PayPal and "
+"now need to locate it in your store's history? Now it is even easier."
+msgstr ""
+
+#: includes/admin/welcome.php:233
+msgid "Unlimited File Downloads"
+msgstr ""
+
+#: includes/admin/welcome.php:234
+msgid ""
+"Several versions ago, EDD supported giving specific customers unlimited "
+"file downloads for a particular purchase. This option was accidentially "
+"removed but has now been brought back from the sad, sad grave. It is now a "
+"happy feature. You can use this option to bypass the standard file download "
+"limits imposed on purchases."
+msgstr ""
+
+#: includes/admin/welcome.php:240
+msgid "Additional Updates"
+msgstr ""
+
+#: includes/admin/welcome.php:245
+msgid ""
+"EDD has a complete REST API for interfacing with 3rd party systems, such as "
+"mobile devices. Granting users access to the API data was always a bit "
+"cumbersome, so in version 2.0 we have introduced a completely new API Keys "
+"table under the Tools page."
+msgstr ""
+
+#: includes/admin/welcome.php:247
+msgid "Tools Page"
+msgstr ""
+
+#: includes/admin/welcome.php:248
+msgid ""
+"As more and more tools have been developed to assist with managing your "
+"store, the Tools page got a bit cluttered. We have now taken the time to "
+"introduce a proper tabbed interface to keep things neat and tidy."
+msgstr ""
+
+#: includes/admin/welcome.php:253
+msgid ""
+"Along with the new Tools page, we have introduced a new tool that allows "
+"you to blacklist specific email addresses. Emails placed on this list will "
+"not be allowed to make purchases. This is useful for combatting fraud."
+msgstr ""
+
+#: includes/admin/welcome.php:255
+msgid "Shortcode: [edd_register]"
+msgstr ""
+
+#: includes/admin/welcome.php:256
+msgid ""
+"Many users have asked for an option to give potential customers a way to "
+"register an account on the site without being required to go through the "
+"checkout screen. The new [edd_register] shortcode lets you place a "
+"stand-alone registration form on any page."
+msgstr ""
+
+#: includes/admin/welcome.php:260
+msgid "Export Earnings / Sales Over Time"
+msgstr ""
+
+#: includes/admin/welcome.php:261
+msgid ""
+"The export options have been improved in version 2.0. You can now export a "
+"CSV file of earnings and sales over time. Want to have a CSV that shows "
+"earnings and sale counts for the last six months? Now you can."
+msgstr ""
+
+#: includes/admin/welcome.php:263
+msgid "Improved Discount Edit Screen"
+msgstr ""
+
+#: includes/admin/welcome.php:264
+msgid ""
+"We try and live up to our name and make all aspects of running your store "
+"easy. Unfortunately, the options available when creating discount codes "
+"have never been <em>easy</em>. Version 2.0 introduces several refinements "
+"to the discount edit screen that make it dramatically more intuitive."
+msgstr ""
+
+#: includes/admin/welcome.php:270 includes/admin/welcome.php:303
+msgid "Go to Easy Digital Downloads Settings"
+msgstr ""
+
+#: includes/admin/welcome.php:271
+msgid "View the Full Changelog"
+msgstr ""
+
+#: includes/admin/welcome.php:295
+msgid "Full Changelog"
+msgstr ""
+
+#: includes/admin/welcome.php:321 includes/admin/welcome.php:440
 msgid ""
 "Thank you for updating to the latest version! Easy Digital Downloads %s is "
 "ready to make your online store faster, safer and better!"
 msgstr ""
 
-#: includes/admin/welcome.php:159 includes/admin/welcome.php:279
-#: includes/admin/welcome.php:398
-msgid "Version %s"
-msgstr ""
-
-#: includes/admin/welcome.php:164
-msgid "Improved Order Editing"
-msgstr ""
-
-#: includes/admin/welcome.php:170
-msgid "Combined View and Edit Screens"
-msgstr ""
-
-#: includes/admin/welcome.php:171
-msgid ""
-"The View and Edit payment screens have been combined into a single, more "
-"efficient, user-friendly screen. Add or remove products to an order, adjust "
-"amounts, add notes, or resend purchase receipts all at one time from the "
-"same screen."
-msgstr ""
-
-#: includes/admin/welcome.php:172
-msgid ""
-"All data associated with a payment can now be edited as well, including the "
-"customer's billing address."
-msgstr ""
-
-#: includes/admin/welcome.php:174
-msgid "Responsive and Mobile Friendly"
-msgstr ""
-
-#: includes/admin/welcome.php:175
-msgid ""
-"We have followed the introduction of a responsive Dashboard in WordPress 3.8 "
-"and made our own view/edit screen for orders fully responsive and easy to "
-"use on mobile devices."
-msgstr ""
-
-#: includes/admin/welcome.php:181
-msgid "Per-Products Sales and Earnings Graphs"
-msgstr ""
-
-#: includes/admin/welcome.php:187
-msgid "See Earnings and Sales for Any Time Period"
-msgstr ""
-
-#: includes/admin/welcome.php:188
-msgid ""
-"With 1.9 we have introduced beautiful graphs for individual products that "
-"allows you to view earnings and sales over any time period. Easily see "
-"earnings / sales for monthly, yearly, quarterly, or any other date range for "
-"any product in your store."
-msgstr ""
-
-#: includes/admin/welcome.php:190
-msgid "Easily Access Reports"
-msgstr ""
-
-#: includes/admin/welcome.php:191
-msgid ""
-"Per-product earnings / sales graphs can be accessed from <em>%s &rarr; "
-"Reports &rarr; %s</em> or from the <em>Stats</em> section of the Edit screen "
-"for any %s."
-msgstr ""
-
-#: includes/admin/welcome.php:198
-msgid "Dramatically Improved Taxes"
-msgstr ""
-
-#: includes/admin/welcome.php:204
-msgid "Mark Products Exclusive of Tax"
-msgstr ""
-
-#: includes/admin/welcome.php:205
-msgid ""
-"Products in your store can now be marked as exclusive of tax, meaning "
-"customers will never have to pay tax on these products during checkout."
-msgstr ""
-
-#: includes/admin/welcome.php:207
-msgid "Re-written Tax API"
-msgstr ""
-
-#: includes/admin/welcome.php:208
-msgid ""
-"The tax system in EDD has been plagued with bugs since it was first "
-"introduced, so in 1.9 we have completely rewritten the entire system from "
-"the ground up to ensure it is reliable and bug free."
-msgstr ""
-
-#: includes/admin/welcome.php:209
-msgid ""
-"It can be difficult to completely delete an entire section of old code, but "
-"we are confident the rewrite will be worth every minute of the time spent on "
-"it."
-msgstr ""
-
-#: includes/admin/welcome.php:210
-msgid ""
-"We are determined to continue to provide you a reliable, easy system to sell "
-"your digital products. In order to do that, sometimes we just have to "
-"swallow our pride and start over."
-msgstr ""
-
-#: includes/admin/welcome.php:216
-msgid "Better Support for Large Stores"
-msgstr ""
-
-#: includes/admin/welcome.php:220
-msgid "Live Search Product Drop Downs"
-msgstr ""
-
-#: includes/admin/welcome.php:221
-msgid ""
-"Every product drop down menu used in Easy Digital Downloads has been "
-"replaced with a much more performant version that includes a live Ajax "
-"search, meaning stores that have a large number of products will see a "
-"significant improvement for page load times in the WordPress Dashboard."
-msgstr ""
-
-#: includes/admin/welcome.php:223
-msgid "Less Memory Intensive Log Pages"
-msgstr ""
-
-#: includes/admin/welcome.php:224
-msgid ""
-"The File Download log pages have long been memory intensive to load. By "
-"putting them through intensive memory load tests and query optimization, we "
-"were able to reduce the number of queries and amount of memory used by a "
-"huge degree, making these pages much, much faster.."
-msgstr ""
-
-#: includes/admin/welcome.php:230
-msgid "Additional Updates"
-msgstr ""
-
-#: includes/admin/welcome.php:234
-msgid "Improved Product Creation / Editing"
-msgstr ""
-
-#: includes/admin/welcome.php:235
-msgid ""
-"The interface for creating / editing Download products has been dramatically "
-"improved by separating the UI out into sections that are easier to use and "
-"less cluttered."
-msgstr ""
-
-#: includes/admin/welcome.php:237
-msgid "EDD_Graph Class"
-msgstr ""
-
-#: includes/admin/welcome.php:238
-msgid ""
-"Along with per-product earnings / sales graphs, we have introduced an "
-"EDD_Graph class that makes it exceptionally simple to generate your own "
-"custom graphs. Simply build an array of data and let the class work its "
-"magic."
-msgstr ""
-
-#: includes/admin/welcome.php:242
-msgid "Payment Date Filters"
-msgstr ""
-
-#: includes/admin/welcome.php:243
-msgid ""
-"A new section has been added to the Payment History screen that allows you "
-"to filter payments by date, making it much easier to locate payments for a "
-"particular period."
-msgstr ""
-
-#: includes/admin/welcome.php:245
-msgid "EDD_Email_Template_Tags Class"
-msgstr ""
-
-#: includes/admin/welcome.php:246
-msgid ""
-"A new API has been introduced for easily adding new template tags to "
-"purchase receipts and admin sale notifications."
-msgstr ""
-
-#: includes/admin/welcome.php:250
-msgid "Resend Purchase Receipts in Bulk"
-msgstr ""
-
-#: includes/admin/welcome.php:251
-msgid ""
-"A new action has been added to the Bulk Actions menu in the Payment History "
-"screen that allows you to resend purchase receipt emails in bulk."
-msgstr ""
-
-#: includes/admin/welcome.php:253
-msgid "Exclude Products from Discounts"
-msgstr ""
-
-#: includes/admin/welcome.php:254
-msgid ""
-"Along with being able to assign discounts to specific products, you can also "
-"now exclude products from discount codes."
-msgstr ""
-
-#: includes/admin/welcome.php:260
-msgid "Go to Easy Digital Downloads Settings"
-msgstr ""
-
-#: includes/admin/welcome.php:283
+#: includes/admin/welcome.php:326
 msgid ""
 "Use the tips below to get started using Easy Digital Downloads. You will be "
 "up and running in no time!"
 msgstr ""
 
-#: includes/admin/welcome.php:286
+#: includes/admin/welcome.php:329
 msgid "Creating Your First Download Product"
 msgstr ""
 
-#: includes/admin/welcome.php:292
+#: includes/admin/welcome.php:335
 msgid "<a href=\"%s\">%s &rarr; Add New</a>"
 msgstr ""
 
-#: includes/admin/welcome.php:293
+#: includes/admin/welcome.php:336
 msgid ""
 "The %s menu is your access point for all aspects of your Easy Digital "
 "Downloads product creation and setup. To create your first product, simply "
 "click Add New and then fill out the product details."
 msgstr ""
 
-#: includes/admin/welcome.php:295
+#: includes/admin/welcome.php:338
 msgid "Product Price"
 msgstr ""
 
-#: includes/admin/welcome.php:296
+#: includes/admin/welcome.php:339
 msgid ""
 "Products can have simple prices or variable prices if you wish to have more "
 "than one price point for a product. For a single price, simply enter the "
-"price. For multiple price points, click <em>Enable variable pricing</em> and "
-"enter the options."
+"price. For multiple price points, click <em>Enable variable pricing</em> "
+"and enter the options."
 msgstr ""
 
-#: includes/admin/welcome.php:298
+#: includes/admin/welcome.php:341
 msgid "Download Files"
 msgstr ""
 
-#: includes/admin/welcome.php:299
+#: includes/admin/welcome.php:342
 msgid ""
 "Uploading the downloadable files is simple. Click <em>Upload File</em> in "
 "the Download Files section and choose your download file. To add more than "
 "one file, simply click the <em>Add New</em> button."
 msgstr ""
 
-#: includes/admin/welcome.php:305
+#: includes/admin/welcome.php:348
 msgid "Display a Product Grid"
 msgstr ""
 
-#: includes/admin/welcome.php:311
+#: includes/admin/welcome.php:354
 msgid "Flexible Product Grids"
 msgstr ""
 
-#: includes/admin/welcome.php:312
+#: includes/admin/welcome.php:355
 msgid ""
-"The [downloads] short code will display a product grid that works with any "
+"The [downloads] shortcode will display a product grid that works with any "
 "theme, no matter the size. It is even responsive!"
 msgstr ""
 
-#: includes/admin/welcome.php:314
+#: includes/admin/welcome.php:357
 msgid "Change the Number of Columns"
 msgstr ""
 
-#: includes/admin/welcome.php:315
+#: includes/admin/welcome.php:358
 msgid ""
 "You can easily change the number of columns by adding the columns=\"x\" "
 "parameter:"
 msgstr ""
 
-#: includes/admin/welcome.php:318
-msgid "Additional Display Options"
-msgstr ""
-
-#: includes/admin/welcome.php:319
-msgid ""
-"The product grids can be customized in any way you wish and there is <a href="
-"\"%s\">extensive documentation</a> to assist you."
-msgstr ""
-
-#: includes/admin/welcome.php:324
-msgid "Purchase Buttons Anywhere"
-msgstr ""
-
-#: includes/admin/welcome.php:330
-msgid "The <em>[purchase_link]</em> Short Code"
-msgstr ""
-
-#: includes/admin/welcome.php:331
-msgid ""
-"With easily accessible short codes to display purchase buttons, you can add "
-"a Buy Now or Add to Cart button for any product anywhere on your site in "
-"seconds."
-msgstr ""
-
-#: includes/admin/welcome.php:333
-msgid "Buy Now Buttons"
-msgstr ""
-
-#: includes/admin/welcome.php:334
-msgid ""
-"Purchase buttons can behave as either Add to Cart or Buy Now buttons. With "
-"Buy Now buttons customers are taken straight to PayPal, giving them the most "
-"frictionless purchasing experience possible."
-msgstr ""
-
-#: includes/admin/welcome.php:340
-msgid "Need Help?"
-msgstr ""
-
-#: includes/admin/welcome.php:344
-msgid "Phenomenal Support"
-msgstr ""
-
-#: includes/admin/welcome.php:345
-msgid ""
-"We do our best to provide the best support we can. If you encounter a "
-"problem or have a question, post a question in the <a href=\"https://"
-"easydigitaldownloads.com/support\">support forums</a>."
-msgstr ""
-
-#: includes/admin/welcome.php:347
-msgid "Need Even Faster Support?"
-msgstr ""
-
-#: includes/admin/welcome.php:348
-msgid ""
-"Our <a href=\"https://easydigitaldownloads.com/support/pricing/\">Priority "
-"Support forums</a> are there for customers that need faster and/or more in-"
-"depth assistance."
-msgstr ""
-
-#: includes/admin/welcome.php:354
-msgid "Stay Up to Date"
-msgstr ""
-
-#: includes/admin/welcome.php:358
-msgid "Get Notified of Extension Releases"
-msgstr ""
-
-#: includes/admin/welcome.php:359
-msgid ""
-"New extensions that make Easy Digital Downloads even more powerful are "
-"released nearly every single week. Subscribe to the newsletter to stay up to "
-"date with our latest releases. <a href=\"http://eepurl.com/kaerz\" target="
-"\"_blank\">Signup now</a> to ensure you do not miss a release!"
-msgstr ""
-
 #: includes/admin/welcome.php:361
-msgid "Get Alerted About New Tutorials"
+msgid "Additional Display Options"
 msgstr ""
 
 #: includes/admin/welcome.php:362
 msgid ""
-"<a href=\"http://eepurl.com/kaerz\" target=\"_blank\">Signup now</a> to hear "
-"about the latest tutorial releases that explain how to take Easy Digital "
-"Downloads further."
+"The product grids can be customized in any way you wish and there is <a "
+"href=\"%s\">extensive documentation</a> to assist you."
 msgstr ""
 
-#: includes/admin/welcome.php:368
-msgid "Extensions for Everything"
-msgstr ""
-
-#: includes/admin/welcome.php:372
-msgid "Over 190 Extensions"
+#: includes/admin/welcome.php:367
+msgid "Purchase Buttons Anywhere"
 msgstr ""
 
 #: includes/admin/welcome.php:373
-msgid ""
-"Add-on plugins are available that greatly extend the default functionality "
-"of Easy Digital Downloads. There are extensions for payment processors, such "
-"as Stripe and PayPal, extensions for newsletter integrations, and many, many "
-"more."
+msgid "The <em>[purchase_link]</em> Shortcode"
 msgstr ""
 
-#: includes/admin/welcome.php:375
-msgid "Visit the Extension Store"
+#: includes/admin/welcome.php:374
+msgid ""
+"With easily accessible shortcodes to display purchase buttons, you can add "
+"a Buy Now or Add to Cart button for any product anywhere on your site in "
+"seconds."
 msgstr ""
 
 #: includes/admin/welcome.php:376
+msgid "Buy Now Buttons"
+msgstr ""
+
+#: includes/admin/welcome.php:377
 msgid ""
-"<a href=\"https://easydigitaldownloads.com/extensions\" target=\"_blank"
-"\">The Extensions store</a> has a list of all available extensions, "
-"including convenient category filters so you can find exactly what you are "
-"looking for."
+"Purchase buttons can behave as either Add to Cart or Buy Now buttons. With "
+"Buy Now buttons customers are taken straight to PayPal, giving them the "
+"most frictionless purchasing experience possible."
+msgstr ""
+
+#: includes/admin/welcome.php:383
+msgid "Need Help?"
+msgstr ""
+
+#: includes/admin/welcome.php:387
+msgid "Phenomenal Support"
+msgstr ""
+
+#: includes/admin/welcome.php:388
+msgid ""
+"We do our best to provide the best support we can. If you encounter a "
+"problem or have a question, post a question in the <a "
+"href=\"https://easydigitaldownloads.com/support\">support forums</a>."
+msgstr ""
+
+#: includes/admin/welcome.php:390
+msgid "Need Even Faster Support?"
+msgstr ""
+
+#: includes/admin/welcome.php:391
+msgid ""
+"Our <a href=\"https://easydigitaldownloads.com/support/pricing/\">Priority "
+"Support forums</a> are there for customers that need faster and/or more "
+"in-depth assistance."
+msgstr ""
+
+#: includes/admin/welcome.php:397
+msgid "Stay Up to Date"
+msgstr ""
+
+#: includes/admin/welcome.php:401
+msgid "Get Notified of Extension Releases"
 msgstr ""
 
 #: includes/admin/welcome.php:402
+msgid ""
+"New extensions that make Easy Digital Downloads even more powerful are "
+"released nearly every single week. Subscribe to the newsletter to stay up "
+"to date with our latest releases. <a href=\"http://eepurl.com/kaerz\" "
+"target=\"_blank\">Signup now</a> to ensure you do not miss a release!"
+msgstr ""
+
+#: includes/admin/welcome.php:404
+msgid "Get Alerted About New Tutorials"
+msgstr ""
+
+#: includes/admin/welcome.php:405
+msgid ""
+"<a href=\"http://eepurl.com/kaerz\" target=\"_blank\">Signup now</a> to "
+"hear about the latest tutorial releases that explain how to take Easy "
+"Digital Downloads further."
+msgstr ""
+
+#: includes/admin/welcome.php:411
+msgid "Extensions for Everything"
+msgstr ""
+
+#: includes/admin/welcome.php:415
+msgid "Over 250 Extensions"
+msgstr ""
+
+#: includes/admin/welcome.php:416
+msgid ""
+"Add-on plugins are available that greatly extend the default functionality "
+"of Easy Digital Downloads. There are extensions for payment processors, "
+"such as Stripe and PayPal, extensions for newsletter integrations, and "
+"many, many more."
+msgstr ""
+
+#: includes/admin/welcome.php:418
+msgid "Visit the Extension Store"
+msgstr ""
+
+#: includes/admin/welcome.php:419
+msgid ""
+"<a href=\"https://easydigitaldownloads.com/extensions\" "
+"target=\"_blank\">The Extensions store</a> has a list of all available "
+"extensions, including convenient category filters so you can find exactly "
+"what you are looking for."
+msgstr ""
+
+#: includes/admin/welcome.php:445
 msgid ""
 "Easy Digital Downloads is created by a worldwide team of developers who aim "
 "to provide the #1 eCommerce platform for selling digital goods through "
 "WordPress."
 msgstr ""
 
-#: includes/admin/welcome.php:429
+#: includes/admin/welcome.php:463
+msgid "No valid changlog was found."
+msgstr ""
+
+#: includes/admin/welcome.php:500
 msgid "View %s"
 msgstr ""
 
-#: includes/ajax-functions.php:168
-msgid "The discount you entered is invalid"
-msgstr ""
-
-#: includes/ajax-functions.php:341
+#: includes/ajax-functions.php:392
 msgid "No results found"
 msgstr ""
 
-#: includes/cart/functions.php:343
+#: includes/ajax-functions.php:471
+msgid "No users found"
+msgstr ""
+
+#: includes/cart/functions.php:352
 msgid "includes %s tax"
 msgstr ""
 
-#: includes/cart/functions.php:345
+#: includes/cart/functions.php:354
 msgid "excludes %s tax"
 msgstr ""
 
-#: includes/cart/functions.php:802
+#: includes/cart/functions.php:874
 msgid "You have successfully added %s to your shopping cart."
 msgstr ""
 
-#: includes/cart/functions.php:803
+#: includes/cart/functions.php:875
 msgid "Checkout."
 msgstr ""
 
-#: includes/cart/functions.php:953 includes/cart/functions.php:1013
+#: includes/cart/functions.php:1025 includes/cart/functions.php:1091
 #: templates/shortcode-profile-editor.php:20
 msgid "Success"
 msgstr ""
 
-#: includes/cart/functions.php:954
+#: includes/cart/functions.php:1026
 msgid "Cart saved successfully. You can restore your cart using this URL:"
 msgstr ""
 
-#: includes/cart/functions.php:985 includes/cart/functions.php:1000
+#: includes/cart/functions.php:1063 includes/cart/functions.php:1078
 msgid "Cart restoration failed. Invalid token."
 msgstr ""
 
-#: includes/cart/functions.php:988 includes/cart/functions.php:1003
+#: includes/cart/functions.php:1066 includes/cart/functions.php:1081
 msgid "The cart cannot be restored. Invalid token."
 msgstr ""
 
-#: includes/cart/functions.php:1013
+#: includes/cart/functions.php:1091
 msgid "Cart restored successfully."
 msgstr ""
 
-#: includes/cart/template.php:64
-msgid "Number of items in cart"
-msgstr ""
-
-#: includes/cart/template.php:142
+#: includes/cart/template.php:117
 msgid "Your cart is empty."
 msgstr ""
 
-#: includes/cart/template.php:187
+#: includes/cart/template.php:162
 msgid "Restore Previous Cart"
 msgstr ""
 
-#: includes/cart/template.php:189
+#: includes/cart/template.php:164
 msgid "Save Cart"
 msgstr ""
 
-#: includes/cart/template.php:205
+#: includes/cart/template.php:180
 msgid "Restore Previous Cart."
 msgstr ""
 
-#: includes/cart/template.php:226
+#: includes/cart/template.php:201
 msgid "Update Cart"
 msgstr ""
 
-#: includes/checkout/template.php:127
+#: includes/checkout/template.php:134
 msgid "Personal Info"
 msgstr ""
 
-#: includes/checkout/template.php:131
-#: templates/shortcode-profile-editor.php:52
+#: includes/checkout/template.php:138 templates/shortcode-profile-editor.php:52
+#: templates/shortcode-register.php:21
 msgid "Email Address"
 msgstr ""
 
-#: includes/checkout/template.php:136
+#: includes/checkout/template.php:143
 msgid "We will send the purchase receipt to this address."
 msgstr ""
 
-#: includes/checkout/template.php:137
+#: includes/checkout/template.php:144
 msgid "Email address"
 msgstr ""
 
-#: includes/checkout/template.php:147
+#: includes/checkout/template.php:154
 msgid "We will use this to personalize your account experience."
 msgstr ""
 
-#: includes/checkout/template.php:148
+#: includes/checkout/template.php:155
 msgid "First name"
 msgstr ""
 
-#: includes/checkout/template.php:157
+#: includes/checkout/template.php:164
 msgid "We will use this as well to personalize your account experience."
 msgstr ""
 
-#: includes/checkout/template.php:158
+#: includes/checkout/template.php:165
 msgid "Last name"
 msgstr ""
 
-#: includes/checkout/template.php:179
+#: includes/checkout/template.php:186
 msgid "Credit Card Info"
 msgstr ""
 
-#: includes/checkout/template.php:183
+#: includes/checkout/template.php:190
 msgid "This is a secure SSL encrypted payment."
 msgstr ""
 
-#: includes/checkout/template.php:188
+#: includes/checkout/template.php:195
 msgid "Card Number"
 msgstr ""
 
-#: includes/checkout/template.php:192
+#: includes/checkout/template.php:199
 msgid "The (typically) 16 digits on the front of your credit card."
 msgstr ""
 
-#: includes/checkout/template.php:193
+#: includes/checkout/template.php:200
 msgid "Card number"
 msgstr ""
 
-#: includes/checkout/template.php:197
+#: includes/checkout/template.php:204
 msgid "CVC"
 msgstr ""
 
-#: includes/checkout/template.php:200
+#: includes/checkout/template.php:207
 msgid "The 3 digit (back) or 4 digit (front) value on your card."
 msgstr ""
 
-#: includes/checkout/template.php:201
+#: includes/checkout/template.php:208
 msgid "Security code"
 msgstr ""
 
-#: includes/checkout/template.php:205
+#: includes/checkout/template.php:212
 msgid "Name on the Card"
 msgstr ""
 
-#: includes/checkout/template.php:208
+#: includes/checkout/template.php:215
 msgid "The name printed on the front of your credit card."
 msgstr ""
 
-#: includes/checkout/template.php:209
+#: includes/checkout/template.php:216
 msgid "Card name"
 msgstr ""
 
-#: includes/checkout/template.php:214
+#: includes/checkout/template.php:221
 msgid "Expiration (MM/YY)"
 msgstr ""
 
-#: includes/checkout/template.php:217
+#: includes/checkout/template.php:224
 msgid "The date your credit card expires, typically on the front of the card."
 msgstr ""
 
-#: includes/checkout/template.php:255
+#: includes/checkout/template.php:262
 msgid "Billing Details"
 msgstr ""
 
-#: includes/checkout/template.php:264
+#: includes/checkout/template.php:271
 msgid "The primary billing address for your credit card."
 msgstr ""
 
-#: includes/checkout/template.php:265
+#: includes/checkout/template.php:272
 msgid "Address line 1"
 msgstr ""
 
-#: includes/checkout/template.php:269
+#: includes/checkout/template.php:276
 msgid "Billing Address Line 2 (optional)"
 msgstr ""
 
-#: includes/checkout/template.php:274
+#: includes/checkout/template.php:281
 msgid "The suite, apt no, PO box, etc, associated with your billing address."
 msgstr ""
 
-#: includes/checkout/template.php:275
+#: includes/checkout/template.php:282
 msgid "Address line 2"
 msgstr ""
 
-#: includes/checkout/template.php:279
+#: includes/checkout/template.php:286
 msgid "Billing City"
 msgstr ""
 
-#: includes/checkout/template.php:284
+#: includes/checkout/template.php:291
 msgid "The city for your billing address."
 msgstr ""
 
-#: includes/checkout/template.php:285
-#: templates/shortcode-profile-editor.php:63
-msgid "City"
-msgstr ""
-
-#: includes/checkout/template.php:289
+#: includes/checkout/template.php:296
 msgid "Billing Zip / Postal Code"
 msgstr ""
 
-#: includes/checkout/template.php:294
+#: includes/checkout/template.php:301
 msgid "The zip or postal code for your billing address."
 msgstr ""
 
-#: includes/checkout/template.php:295
+#: includes/checkout/template.php:302
 msgid "Zip / Postal code"
 msgstr ""
 
-#: includes/checkout/template.php:299
+#: includes/checkout/template.php:306
 msgid "Billing Country"
 msgstr ""
 
-#: includes/checkout/template.php:304
+#: includes/checkout/template.php:311
 msgid "The country for your billing address."
 msgstr ""
 
-#: includes/checkout/template.php:323
+#: includes/checkout/template.php:330
 msgid "Billing State / Province"
 msgstr ""
 
-#: includes/checkout/template.php:328
+#: includes/checkout/template.php:335
 msgid "The state or province for your billing address."
 msgstr ""
 
-#: includes/checkout/template.php:388
+#: includes/checkout/template.php:398
 msgid "Already have an account?"
 msgstr ""
 
-#: includes/checkout/template.php:388 includes/checkout/template.php:474
-#: includes/login-register.php:53
+#: includes/checkout/template.php:398 includes/checkout/template.php:489
 msgid "Login"
 msgstr ""
 
-#: includes/checkout/template.php:393
+#: includes/checkout/template.php:404
 msgid "Create an account"
 msgstr ""
 
-#: includes/checkout/template.php:393
+#: includes/checkout/template.php:404
 msgid "(optional)"
 msgstr ""
 
-#: includes/checkout/template.php:397 includes/checkout/template.php:403
-#: includes/checkout/template.php:465 includes/login-register.php:42
-#: includes/login-register.php:43
-msgid "Username"
-msgstr ""
-
-#: includes/checkout/template.php:402
+#: includes/checkout/template.php:413
 msgid "The username you will use to log into your account."
 msgstr ""
 
-#: includes/checkout/template.php:407 includes/checkout/template.php:413
-#: includes/checkout/template.php:469 includes/login-register.php:46
+#: includes/checkout/template.php:418 includes/checkout/template.php:424
+#: includes/checkout/template.php:484 templates/shortcode-login.php:16
+#: templates/shortcode-register.php:25
 msgid "Password"
 msgstr ""
 
-#: includes/checkout/template.php:412
+#: includes/checkout/template.php:423
 msgid "The password used to access your account."
 msgstr ""
 
-#: includes/checkout/template.php:417
+#: includes/checkout/template.php:428
 msgid "Password Again"
 msgstr ""
 
-#: includes/checkout/template.php:422
+#: includes/checkout/template.php:433
 msgid "Confirm your password."
 msgstr ""
 
-#: includes/checkout/template.php:423
+#: includes/checkout/template.php:434
 msgid "Confirm password"
 msgstr ""
 
-#: includes/checkout/template.php:458
+#: includes/checkout/template.php:472
 msgid "Need to create an account?"
 msgstr ""
 
-#: includes/checkout/template.php:460
+#: includes/checkout/template.php:474 templates/shortcode-register.php:41
 msgid "Register"
 msgstr ""
 
-#: includes/checkout/template.php:460
+#: includes/checkout/template.php:474
 msgid "or checkout as a guest."
 msgstr ""
 
-#: includes/checkout/template.php:466
+#: includes/checkout/template.php:481
 msgid "Your username"
 msgstr ""
 
-#: includes/checkout/template.php:470
+#: includes/checkout/template.php:485
 msgid "Your password"
 msgstr ""
 
-#: includes/checkout/template.php:502
+#: includes/checkout/template.php:517
 msgid "Select Payment Method"
 msgstr ""
 
-#: includes/checkout/template.php:584
+#: includes/checkout/template.php:616
 msgid "Have a discount code?"
 msgstr ""
 
-#: includes/checkout/template.php:584
-msgctxt "Entering a discount code"
-msgid "Click to enter it"
-msgstr ""
-
-#: includes/checkout/template.php:588
+#: includes/checkout/template.php:620
 msgid "Discount"
 msgstr ""
 
-#: includes/checkout/template.php:591
+#: includes/checkout/template.php:623
 msgid "Enter a coupon code if you have one."
 msgstr ""
 
-#: includes/checkout/template.php:592 includes/process-purchase.php:258
-#: includes/scripts.php:52
+#: includes/checkout/template.php:624 includes/process-purchase.php:268
+#: includes/scripts.php:50
 msgid "Enter discount"
 msgstr ""
 
-#: includes/checkout/template.php:622
+#: includes/checkout/template.php:656
 msgid "Show Terms"
 msgstr ""
 
-#: includes/checkout/template.php:623
+#: includes/checkout/template.php:657
 msgid "Hide Terms"
 msgstr ""
 
-#: includes/checkout/template.php:625
+#: includes/checkout/template.php:659
 msgid "Agree to Terms?"
 msgstr ""
 
-#: includes/checkout/template.php:642
+#: includes/checkout/template.php:676
 msgid "Purchase Total:"
 msgstr ""
 
-#: includes/checkout/template.php:668
+#: includes/checkout/template.php:702
 msgid "Go back"
 msgstr ""
 
-#: includes/checkout/template.php:693
+#: includes/checkout/template.php:727
 msgid "Next"
 msgstr ""
 
-#: includes/checkout/template.php:715
+#: includes/checkout/template.php:749
 msgid "Free Download"
 msgstr ""
 
-#: includes/class-edd-api.php:238
+#: includes/class-edd-api.php:248
 msgid "You must specify both a token and API key!"
 msgstr ""
 
-#: includes/class-edd-api.php:254
+#: includes/class-edd-api.php:264
 msgid "Your request could not be authenticated!"
 msgstr ""
 
-#: includes/class-edd-api.php:271
+#: includes/class-edd-api.php:281
 msgid "Invalid API key!"
 msgstr ""
 
-#: includes/class-edd-api.php:386
+#: includes/class-edd-api.php:400
 msgid "Invalid query!"
 msgstr ""
 
-#: includes/class-edd-api.php:678
+#: includes/class-edd-api.php:692
 msgid "Customer %s not found!"
 msgstr ""
 
-#: includes/class-edd-api.php:783 includes/class-edd-api.php:916
-#: includes/class-edd-api.php:1018
+#: includes/class-edd-api.php:803 includes/class-edd-api.php:937
+#: includes/class-edd-api.php:1039
 msgid "Product %s not found!"
 msgstr ""
 
-#: includes/class-edd-api.php:833 includes/class-edd-api.php:933
+#: includes/class-edd-api.php:854 includes/class-edd-api.php:954
 msgid "The end date must be later than the start date!"
 msgstr ""
 
-#: includes/class-edd-api.php:838 includes/class-edd-api.php:938
+#: includes/class-edd-api.php:859 includes/class-edd-api.php:959
 msgid "Invalid or no date range specified!"
 msgstr ""
 
-#: includes/class-edd-api.php:1184
+#: includes/class-edd-api.php:1217
 msgid "Discount %s not found!"
 msgstr ""
 
-#: includes/class-edd-api.php:1325
+#: includes/class-edd-api.php:1364
 msgid "Easy Digital Downloads API Keys"
 msgstr ""
 
-#: includes/class-edd-api.php:1330
+#: includes/class-edd-api.php:1369
 msgid "Generate API Key"
 msgstr ""
 
-#: includes/class-edd-api.php:1332
+#: includes/class-edd-api.php:1371
 msgid "Public key:"
 msgstr ""
 
-#: includes/class-edd-api.php:1333
+#: includes/class-edd-api.php:1372
 msgid "Secret key:"
 msgstr ""
 
-#: includes/class-edd-api.php:1334
+#: includes/class-edd-api.php:1373
 msgid "Token:"
 msgstr ""
 
-#: includes/class-edd-api.php:1336
+#: includes/class-edd-api.php:1375
 msgid "Revoke API Keys"
+msgstr ""
+
+#: includes/class-edd-api.php:1403 includes/class-edd-api.php:1405
+msgid "You do not have permission to %s API keys for this user"
 msgstr ""
 
 #: includes/class-edd-cache-helper.php:99
 msgid ""
 "In order for <strong>database caching</strong> to work with Easy Digital "
-"Downloads you must add <code>_wp_session_</code> to the \"Ignored query stems"
-"\" option in W3 Total Cache settings <a href=\"%s\">here</a>."
+"Downloads you must add <code>_wp_session_</code> to the \"Ignored query "
+"stems\" option in W3 Total Cache settings <a href=\"%s\">here</a>."
 msgstr ""
 
-#: includes/class-edd-cron.php:43
+#: includes/class-edd-cron.php:46
 msgid "Once Weekly"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:60
+#: includes/class-edd-html-elements.php:61
 msgid "No products found"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:115 includes/shortcodes.php:177
+#: includes/class-edd-html-elements.php:116 includes/shortcodes.php:201
 msgid "No discounts found"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:150 includes/post-types.php:205
+#: includes/class-edd-html-elements.php:151 includes/post-types.php:205
 msgid "All Categories"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:234
-msgctxt "all dropdown items"
-msgid "All"
+#: includes/class-edd-html-elements.php:426
+msgid "Enter username"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:235
-msgctxt "no dropdown items"
-msgid "None"
-msgstr ""
-
-#: includes/class-edd-license-handler.php:125
+#: includes/class-edd-license-handler.php:132
 msgid "%1$s License Key"
 msgstr ""
 
-#: includes/class-edd-roles.php:39
+#: includes/class-edd-roles.php:42
 msgid "Shop Manager"
 msgstr ""
 
-#: includes/class-edd-roles.php:70
+#: includes/class-edd-roles.php:73
 msgid "Shop Accountant"
 msgstr ""
 
-#: includes/class-edd-roles.php:76
+#: includes/class-edd-roles.php:79
 msgid "Shop Worker"
 msgstr ""
 
-#: includes/class-edd-roles.php:83
+#: includes/class-edd-roles.php:86
 msgid "Shop Vendor"
 msgstr ""
 
@@ -3863,7 +4042,13 @@ msgstr ""
 msgid "Improper date provided."
 msgstr ""
 
-#: includes/country-functions.php:113
+#: includes/country-functions.php:113 includes/country-functions.php:372
+#: includes/country-functions.php:453 includes/country-functions.php:480
+#: includes/country-functions.php:502 includes/country-functions.php:543
+#: includes/country-functions.php:560 includes/country-functions.php:594
+#: includes/country-functions.php:640 includes/country-functions.php:669
+#: includes/country-functions.php:717 includes/country-functions.php:766
+#: includes/country-functions.php:796 includes/country-functions.php:819
 msgid "Choose"
 msgstr ""
 
@@ -3948,35 +4133,75 @@ msgstr ""
 
 #: includes/deprecated-functions.php:317 includes/emails/email-tags.php:345
 msgid ""
-"Adds a link so users can view their receipt directly on your website if they "
-"are unable to view it in the browser correctly."
+"Adds a link so users can view their receipt directly on your website if "
+"they are unable to view it in the browser correctly."
 msgstr ""
 
-#: includes/download-functions.php:302
+#: includes/discount-functions.php:344
+msgid "This discount is expired."
+msgstr ""
+
+#: includes/discount-functions.php:350
+msgid "This discount is not active."
+msgstr ""
+
+#: includes/discount-functions.php:577
+msgid "This discount is not active yet."
+msgstr ""
+
+#: includes/discount-functions.php:608
+msgid "This discount has reached it's maximum usage."
+msgstr ""
+
+#: includes/discount-functions.php:637
+msgid "Minimum order of %s not met."
+msgstr ""
+
+#: includes/discount-functions.php:684 includes/discount-functions.php:704
+msgid "The product requirements for this discount are not met."
+msgstr ""
+
+#: includes/discount-functions.php:715
+msgid "This discount is not valid for the cart contents."
+msgstr ""
+
+#: includes/discount-functions.php:784
+msgid "This discount has already been redeemed."
+msgstr ""
+
+#: includes/discount-functions.php:824
+msgid "This discount is invalid."
+msgstr ""
+
+#: includes/download-functions.php:369
 msgid "Default"
 msgstr ""
 
-#: includes/download-functions.php:303
+#: includes/download-functions.php:370
 msgid "Bundle"
 msgstr ""
 
-#: includes/download-functions.php:911
+#: includes/download-functions.php:980
 msgid "Sorry but you have hit your download limit for this file."
 msgstr ""
 
-#: includes/download-functions.php:921
+#: includes/download-functions.php:990
 msgid "Sorry but your download link has expired."
 msgstr ""
 
-#: includes/download-functions.php:931
+#: includes/download-functions.php:1000
 msgid "No payments matching your request were found."
 msgstr ""
 
-#: includes/emails/email-tags.php:392 templates/shortcode-receipt.php:109
+#: includes/emails/email-tags.php:350
+msgid "Adds a list of any discount codes applied to this purchase"
+msgstr ""
+
+#: includes/emails/email-tags.php:397 templates/shortcode-receipt.php:114
 msgid "SKU"
 msgstr ""
 
-#: includes/emails/email-tags.php:681 includes/emails/template.php:98
+#: includes/emails/email-tags.php:689 includes/emails/template.php:100
 msgid "%1$sView it in your browser.%2$s"
 msgstr ""
 
@@ -3984,31 +4209,27 @@ msgstr ""
 msgid "New download purchase - Order #%1$s"
 msgstr ""
 
-#: includes/emails/functions.php:207 includes/emails/template.php:231
+#: includes/emails/functions.php:207 includes/emails/template.php:233
 msgid "Hello"
 msgstr ""
 
-#: includes/emails/functions.php:207 includes/emails/template.php:231
+#: includes/emails/functions.php:207 includes/emails/template.php:233
 msgid "A %s purchase has been made"
 msgstr ""
 
-#: includes/emails/functions.php:208 includes/emails/template.php:232
+#: includes/emails/functions.php:208 includes/emails/template.php:234
 msgid "%s sold:"
 msgstr ""
 
-#: includes/emails/functions.php:210 includes/emails/template.php:234
+#: includes/emails/functions.php:210 includes/emails/template.php:236
 msgid "Purchased by: "
 msgstr ""
 
-#: includes/emails/functions.php:211 includes/emails/template.php:235
-msgid "Amount: "
-msgstr ""
-
-#: includes/emails/functions.php:212 includes/emails/template.php:236
+#: includes/emails/functions.php:212 includes/emails/template.php:238
 msgid "Payment Method: "
 msgstr ""
 
-#: includes/emails/functions.php:213 includes/emails/template.php:237
+#: includes/emails/functions.php:213 includes/emails/template.php:239
 msgid "Thank you"
 msgstr ""
 
@@ -4020,43 +4241,43 @@ msgstr ""
 msgid "No template, plain text only"
 msgstr ""
 
-#: includes/emails/template.php:60
+#: includes/emails/template.php:59
 msgid "Sample Product Title"
 msgstr ""
 
-#: includes/emails/template.php:63
+#: includes/emails/template.php:62
 msgid "Sample Download File Name"
 msgstr ""
 
-#: includes/emails/template.php:63
+#: includes/emails/template.php:62
 msgid "Optional notes about this download."
 msgstr ""
 
-#: includes/emails/template.php:76
+#: includes/emails/template.php:75
 msgid "These are some sample notes added to a product."
 msgstr ""
 
-#: includes/emails/template.php:133
+#: includes/emails/template.php:135
 msgid "Purchase Receipt Preview"
 msgstr ""
 
-#: includes/emails/template.php:133
+#: includes/emails/template.php:135
 msgid "Preview Purchase Receipt"
 msgstr ""
 
-#: includes/emails/template.php:134
+#: includes/emails/template.php:136
 msgid "This will send a demo purchase receipt to the emails listed below."
 msgstr ""
 
-#: includes/emails/template.php:134
+#: includes/emails/template.php:136
 msgid "Send Test Email"
 msgstr ""
 
-#: includes/emails/template.php:351
+#: includes/emails/template.php:354
 msgid "Missing purchase key."
 msgstr ""
 
-#: includes/emails/template.php:359
+#: includes/emails/template.php:362
 msgid "Receipt"
 msgstr ""
 
@@ -4076,11 +4297,11 @@ msgstr ""
 msgid "Test Payment"
 msgstr ""
 
-#: includes/gateways/functions.php:104 includes/gateways/functions.php:123
+#: includes/gateways/functions.php:102 includes/gateways/functions.php:121
 msgid "Free Purchase"
 msgstr ""
 
-#: includes/gateways/functions.php:203
+#: includes/gateways/functions.php:202
 msgid "The requested price ID does not exist."
 msgstr ""
 
@@ -4091,16 +4312,15 @@ msgid ""
 msgstr ""
 
 #: includes/gateways/paypal-standard.php:53
-msgid ""
-"Payment creation failed before sending buyer to PayPal. Payment data: %s"
+msgid "Payment creation failed before sending buyer to PayPal. Payment data: %s"
 msgstr ""
 
 #: includes/gateways/paypal-standard.php:266
 #: includes/gateways/paypal-standard.php:271
 #: includes/gateways/paypal-standard.php:321
-#: includes/gateways/paypal-standard.php:329
-#: includes/gateways/paypal-standard.php:379
-#: includes/gateways/paypal-standard.php:385
+#: includes/gateways/paypal-standard.php:330
+#: includes/gateways/paypal-standard.php:381
+#: includes/gateways/paypal-standard.php:388
 msgid "IPN Error"
 msgstr ""
 
@@ -4113,204 +4333,234 @@ msgstr ""
 msgid "Invalid business email in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:329
+#: includes/gateways/paypal-standard.php:323
+msgid "Payment failed due to invalid PayPal business email."
+msgstr ""
+
+#: includes/gateways/paypal-standard.php:330
 msgid "Invalid currency in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:379
+#: includes/gateways/paypal-standard.php:332
+msgid "Payment failed due to invalid currency in PayPal IPN."
+msgstr ""
+
+#: includes/gateways/paypal-standard.php:381
 msgid "Invalid payment amount in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:385
+#: includes/gateways/paypal-standard.php:383
+msgid "Payment failed due to invalid amount in PayPal IPN."
+msgstr ""
+
+#: includes/gateways/paypal-standard.php:388
 msgid "Invalid purchase key in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:391
+#: includes/gateways/paypal-standard.php:390
+msgid "Payment failed due to invalid purchase key in PayPal IPN."
+msgstr ""
+
+#: includes/gateways/paypal-standard.php:395
 msgid "PayPal Transaction ID: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:416
+#: includes/gateways/paypal-standard.php:420
 msgid "PayPal Payment #%s Refunded"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:417
+#: includes/gateways/paypal-standard.php:421
 msgid "PayPal Refund Transaction ID: %s"
 msgstr ""
 
-#: includes/install.php:53 includes/template-functions.php:137
+#: includes/install.php:56 includes/template-functions.php:151
 #: templates/widget-cart-checkout.php:2 templates/widget-cart-empty.php:3
 msgid "Checkout"
 msgstr ""
 
-#: includes/install.php:65
+#: includes/install.php:68
 msgid "Purchase Confirmation"
 msgstr ""
 
-#: includes/install.php:66
+#: includes/install.php:69
 msgid "Thank you for your purchase! [edd_receipt]"
 msgstr ""
 
-#: includes/install.php:91
+#: includes/install.php:94
 msgid "Purchase History"
 msgstr ""
 
-#: includes/login-register.php:39
-msgid "Log into Your Account"
-msgstr ""
-
-#: includes/login-register.php:56 includes/process-purchase.php:533
-msgid "Lost Password"
-msgstr ""
-
-#: includes/login-register.php:57
-msgid "Lost Password?"
-msgstr ""
-
-#: includes/login-register.php:65
-msgid "You are already logged in"
-msgstr ""
-
-#: includes/login-register.php:89
+#: includes/login-register.php:86
 msgid "The password you entered is incorrect"
 msgstr ""
 
-#: includes/login-register.php:92 includes/process-purchase.php:555
+#: includes/login-register.php:89 includes/process-purchase.php:570
 msgid "The username you entered does not exist"
 msgstr ""
 
-#: includes/misc-functions.php:208 tests/unit-tests/misc.php:56
+#: includes/login-register.php:142 includes/login-register.php:150
+#: includes/process-purchase.php:458
+msgid "Invalid username"
+msgstr ""
+
+#: includes/login-register.php:146 includes/process-purchase.php:451
+msgid "Username already taken"
+msgstr ""
+
+#: includes/login-register.php:154
+msgid "Email address already taken"
+msgstr ""
+
+#: includes/login-register.php:158 includes/process-purchase.php:398
+#: includes/process-purchase.php:473 includes/process-purchase.php:603
+msgid "Invalid email"
+msgstr ""
+
+#: includes/login-register.php:162
+msgid "Invalid payment email"
+msgstr ""
+
+#: includes/login-register.php:166
+msgid "Please enter a password"
+msgstr ""
+
+#: includes/login-register.php:170
+msgid "Passwords do not match"
+msgstr ""
+
+#: includes/misc-functions.php:308 tests/unit-tests/misc.php:56
 msgid "US Dollars (&#36;)"
 msgstr ""
 
-#: includes/misc-functions.php:209 tests/unit-tests/misc.php:57
+#: includes/misc-functions.php:309 tests/unit-tests/misc.php:57
 msgid "Euros (&euro;)"
 msgstr ""
 
-#: includes/misc-functions.php:210 tests/unit-tests/misc.php:58
+#: includes/misc-functions.php:310 tests/unit-tests/misc.php:58
 msgid "Pounds Sterling (&pound;)"
 msgstr ""
 
-#: includes/misc-functions.php:211 tests/unit-tests/misc.php:59
+#: includes/misc-functions.php:311 tests/unit-tests/misc.php:59
 msgid "Australian Dollars (&#36;)"
 msgstr ""
 
-#: includes/misc-functions.php:212 tests/unit-tests/misc.php:60
+#: includes/misc-functions.php:312 tests/unit-tests/misc.php:60
 msgid "Brazilian Real (R&#36;)"
 msgstr ""
 
-#: includes/misc-functions.php:213 tests/unit-tests/misc.php:61
+#: includes/misc-functions.php:313 tests/unit-tests/misc.php:61
 msgid "Canadian Dollars (&#36;)"
 msgstr ""
 
-#: includes/misc-functions.php:214 tests/unit-tests/misc.php:62
+#: includes/misc-functions.php:314 tests/unit-tests/misc.php:62
 msgid "Czech Koruna"
 msgstr ""
 
-#: includes/misc-functions.php:215 tests/unit-tests/misc.php:63
+#: includes/misc-functions.php:315 tests/unit-tests/misc.php:63
 msgid "Danish Krone"
 msgstr ""
 
-#: includes/misc-functions.php:216 tests/unit-tests/misc.php:64
+#: includes/misc-functions.php:316 tests/unit-tests/misc.php:64
 msgid "Hong Kong Dollar (&#36;)"
 msgstr ""
 
-#: includes/misc-functions.php:217 tests/unit-tests/misc.php:65
+#: includes/misc-functions.php:317 tests/unit-tests/misc.php:65
 msgid "Hungarian Forint"
 msgstr ""
 
-#: includes/misc-functions.php:218 tests/unit-tests/misc.php:66
+#: includes/misc-functions.php:318 tests/unit-tests/misc.php:66
 msgid "Israeli Shekel (&#8362;)"
 msgstr ""
 
-#: includes/misc-functions.php:219 tests/unit-tests/misc.php:67
+#: includes/misc-functions.php:319 tests/unit-tests/misc.php:67
 msgid "Japanese Yen (&yen;)"
 msgstr ""
 
-#: includes/misc-functions.php:220 tests/unit-tests/misc.php:68
+#: includes/misc-functions.php:320 tests/unit-tests/misc.php:68
 msgid "Malaysian Ringgits"
 msgstr ""
 
-#: includes/misc-functions.php:221 tests/unit-tests/misc.php:69
+#: includes/misc-functions.php:321 tests/unit-tests/misc.php:69
 msgid "Mexican Peso (&#36;)"
 msgstr ""
 
-#: includes/misc-functions.php:222 tests/unit-tests/misc.php:70
+#: includes/misc-functions.php:322 tests/unit-tests/misc.php:70
 msgid "New Zealand Dollar (&#36;)"
 msgstr ""
 
-#: includes/misc-functions.php:223 tests/unit-tests/misc.php:71
+#: includes/misc-functions.php:323 tests/unit-tests/misc.php:71
 msgid "Norwegian Krone"
 msgstr ""
 
-#: includes/misc-functions.php:224 tests/unit-tests/misc.php:72
+#: includes/misc-functions.php:324 tests/unit-tests/misc.php:72
 msgid "Philippine Pesos"
 msgstr ""
 
-#: includes/misc-functions.php:225 tests/unit-tests/misc.php:73
+#: includes/misc-functions.php:325 tests/unit-tests/misc.php:73
 msgid "Polish Zloty"
 msgstr ""
 
-#: includes/misc-functions.php:226 tests/unit-tests/misc.php:74
+#: includes/misc-functions.php:326 tests/unit-tests/misc.php:74
 msgid "Singapore Dollar (&#36;)"
 msgstr ""
 
-#: includes/misc-functions.php:227 tests/unit-tests/misc.php:75
+#: includes/misc-functions.php:327 tests/unit-tests/misc.php:75
 msgid "Swedish Krona"
 msgstr ""
 
-#: includes/misc-functions.php:228 tests/unit-tests/misc.php:76
+#: includes/misc-functions.php:328 tests/unit-tests/misc.php:76
 msgid "Swiss Franc"
 msgstr ""
 
-#: includes/misc-functions.php:229 tests/unit-tests/misc.php:77
+#: includes/misc-functions.php:329 tests/unit-tests/misc.php:77
 msgid "Taiwan New Dollars"
 msgstr ""
 
-#: includes/misc-functions.php:230 tests/unit-tests/misc.php:78
+#: includes/misc-functions.php:330 tests/unit-tests/misc.php:78
 msgid "Thai Baht (&#3647;)"
 msgstr ""
 
-#: includes/misc-functions.php:231 tests/unit-tests/misc.php:79
+#: includes/misc-functions.php:331 tests/unit-tests/misc.php:79
 msgid "Indian Rupee (&#8377;)"
 msgstr ""
 
-#: includes/misc-functions.php:232 tests/unit-tests/misc.php:80
+#: includes/misc-functions.php:332 tests/unit-tests/misc.php:80
 msgid "Turkish Lira (&#8378;)"
 msgstr ""
 
-#: includes/misc-functions.php:233 tests/unit-tests/misc.php:81
+#: includes/misc-functions.php:333 tests/unit-tests/misc.php:81
 msgid "Iranian Rial (&#65020;)"
 msgstr ""
 
-#: includes/misc-functions.php:234 tests/unit-tests/misc.php:82
+#: includes/misc-functions.php:334 tests/unit-tests/misc.php:82
 msgid "Russian Rubles"
 msgstr ""
 
-#: includes/misc-functions.php:337
+#: includes/misc-functions.php:437
 msgid ""
 "%1$s is <strong>deprecated</strong> since Easy Digital Downloads version "
 "%2$s! Use %3$s instead."
 msgstr ""
 
-#: includes/misc-functions.php:342
+#: includes/misc-functions.php:442
 msgid ""
 "%1$s is <strong>deprecated</strong> since Easy Digital Downloads version "
 "%2$s with no alternative available."
 msgstr ""
 
-#: includes/payments/actions.php:116
+#: includes/payments/actions.php:129
 msgid "Status changed from %s to %s"
 msgstr ""
 
-#: includes/payments/functions.php:420
+#: includes/payments/functions.php:501
 msgid "Complete"
 msgstr ""
 
-#: includes/payments/functions.php:1067
+#: includes/payments/functions.php:1283
 msgid "EDD Bot"
 msgstr ""
 
-#: includes/payments/functions.php:1082
+#: includes/payments/functions.php:1298
 msgid "Delete this payment note"
 msgstr ""
 
@@ -4360,16 +4610,6 @@ msgstr ""
 msgid "%2$s"
 msgstr ""
 
-#: includes/post-types.php:66
-msgctxt "post type general name"
-msgid "Payments"
-msgstr ""
-
-#: includes/post-types.php:67
-msgctxt "post type singular name"
-msgid "Payment"
-msgstr ""
-
 #: includes/post-types.php:69
 msgid "Add New Payment"
 msgstr ""
@@ -4394,14 +4634,8 @@ msgstr ""
 msgid "No Payments found in Trash"
 msgstr ""
 
-#: includes/post-types.php:96
-msgctxt "post type general name"
-msgid "Discounts"
-msgstr ""
-
-#: includes/post-types.php:97
-msgctxt "post type singular name"
-msgid "Discount"
+#: includes/post-types.php:78
+msgid "Payment History"
 msgstr ""
 
 #: includes/post-types.php:101
@@ -4444,16 +4678,6 @@ msgstr ""
 msgid "Enter %s title here"
 msgstr ""
 
-#: includes/post-types.php:202
-msgctxt "taxonomy general name"
-msgid "%s Categories"
-msgstr ""
-
-#: includes/post-types.php:203
-msgctxt "taxonomy singular name"
-msgid "Category"
-msgstr ""
-
 #: includes/post-types.php:204
 msgid "Search Categories"
 msgstr ""
@@ -4482,420 +4706,383 @@ msgstr ""
 msgid "New Category Name"
 msgstr ""
 
-#: includes/post-types.php:229
-msgctxt "taxonomy general name"
-msgid "%s Tags"
-msgstr ""
-
-#: includes/post-types.php:230
-msgctxt "taxonomy singular name"
-msgid "Tag"
-msgstr ""
-
-#: includes/post-types.php:231
-msgid "Search Tags"
+#: includes/post-types.php:213
+msgid "Choose from most used %s categories"
 msgstr ""
 
 #: includes/post-types.php:232
-msgid "All Tags"
+msgid "Search Tags"
 msgstr ""
 
 #: includes/post-types.php:233
-msgid "Parent Tag"
+msgid "All Tags"
 msgstr ""
 
 #: includes/post-types.php:234
-msgid "Parent Tag:"
+msgid "Parent Tag"
 msgstr ""
 
 #: includes/post-types.php:235
-msgid "Edit Tag"
+msgid "Parent Tag:"
 msgstr ""
 
 #: includes/post-types.php:236
-msgid "Update Tag"
+msgid "Edit Tag"
 msgstr ""
 
 #: includes/post-types.php:237
-msgid "Add New Tag"
+msgid "Update Tag"
 msgstr ""
 
 #: includes/post-types.php:238
+msgid "Add New Tag"
+msgstr ""
+
+#: includes/post-types.php:239
 msgid "New Tag Name"
 msgstr ""
 
-#: includes/post-types.php:267
-msgctxt "Refunded payment status"
-msgid "Refunded"
+#: includes/post-types.php:241
+msgid "Choose from most used %s tags"
 msgstr ""
 
-#: includes/post-types.php:272
+#: includes/post-types.php:274
 msgid "Refunded <span class=\"count\">(%s)</span>"
 msgid_plural "Refunded <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/post-types.php:275
-msgctxt "Failed payment status"
-msgid "Failed"
-msgstr ""
-
-#: includes/post-types.php:280
+#: includes/post-types.php:282
 msgid "Failed <span class=\"count\">(%s)</span>"
 msgid_plural "Failed <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/post-types.php:283
-msgctxt "Revoked payment status"
-msgid "Revoked"
-msgstr ""
-
-#: includes/post-types.php:288
+#: includes/post-types.php:290
 msgid "Revoked <span class=\"count\">(%s)</span>"
 msgid_plural "Revoked <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/post-types.php:291
-msgctxt "Abandoned payment status"
-msgid "Abandoned"
-msgstr ""
-
-#: includes/post-types.php:296
+#: includes/post-types.php:298
 msgid "Abandoned <span class=\"count\">(%s)</span>"
 msgid_plural "Abandoned <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/post-types.php:301
-msgctxt "Active discount code status"
-msgid "Active"
-msgstr ""
-
-#: includes/post-types.php:306
+#: includes/post-types.php:308
 msgid "Active <span class=\"count\">(%s)</span>"
 msgid_plural "Active <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/post-types.php:309
-msgctxt "Inactive discount code status"
-msgid "Inactive"
-msgstr ""
-
-#: includes/post-types.php:314
+#: includes/post-types.php:316
 msgid "Inactive <span class=\"count\">(%s)</span>"
 msgid_plural "Inactive <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/post-types.php:336 includes/post-types.php:337
+#: includes/post-types.php:338 includes/post-types.php:339
 msgid "%2$s updated. %1$sView %2$s%3$s."
 msgstr ""
 
-#: includes/post-types.php:338
+#: includes/post-types.php:340
 msgid "%2$s published. %1$sView %2$s%3$s."
 msgstr ""
 
-#: includes/post-types.php:339
+#: includes/post-types.php:341
 msgid "%2$s saved. %1$sView %2$s%3$s."
 msgstr ""
 
-#: includes/post-types.php:340
+#: includes/post-types.php:342
 msgid "%2$s submitted. %1$sView %2$s%3$s."
 msgstr ""
 
-#: includes/process-download.php:166
+#: includes/process-download.php:202
 msgid "You do not have permission to download this file"
 msgstr ""
 
-#: includes/process-download.php:167
+#: includes/process-download.php:203
 msgid "Purchase Verification Failed"
 msgstr ""
 
-#: includes/process-purchase.php:29 includes/scripts.php:71
+#: includes/process-purchase.php:29 includes/scripts.php:68
 msgid "Your cart is empty"
 msgstr ""
 
-#: includes/process-purchase.php:234
-msgid "The selected gateway is not active"
-msgstr ""
-
-#: includes/process-purchase.php:236
-msgid "No gateway has been selected"
-msgstr ""
-
-#: includes/process-purchase.php:284
+#: includes/process-purchase.php:294
 msgid "One or more of the discounts you entered is invalid"
 msgstr ""
 
-#: includes/process-purchase.php:301
+#: includes/process-purchase.php:311
 msgid "You must agree to the terms of use"
 msgstr ""
 
-#: includes/process-purchase.php:316
+#: includes/process-purchase.php:326
 msgid "Please enter a valid email address"
 msgstr ""
 
-#: includes/process-purchase.php:320
+#: includes/process-purchase.php:330
 msgid "Please enter your first name"
 msgstr ""
 
-#: includes/process-purchase.php:330
+#: includes/process-purchase.php:340
 msgid "Please enter your zip / postal code"
 msgstr ""
 
-#: includes/process-purchase.php:334
+#: includes/process-purchase.php:344
 msgid "Please enter your billing city"
 msgstr ""
 
-#: includes/process-purchase.php:338
+#: includes/process-purchase.php:348
 msgid "Please select your billing country"
 msgstr ""
 
-#: includes/process-purchase.php:342
+#: includes/process-purchase.php:352
 msgid "Please enter billing state / province"
 msgstr ""
 
-#: includes/process-purchase.php:388
+#: includes/process-purchase.php:403
 msgid "The user information is invalid"
 msgstr ""
 
-#: includes/process-purchase.php:436
-msgid "Username already taken"
-msgstr ""
-
-#: includes/process-purchase.php:441
+#: includes/process-purchase.php:456
 msgid "Invalid username. Only lowercase letters (a-z) and numbers are allowed"
 msgstr ""
 
-#: includes/process-purchase.php:443
-msgid "Invalid username"
-msgstr ""
-
-#: includes/process-purchase.php:450
+#: includes/process-purchase.php:465
 msgid "You must register or login to complete your purchase"
 msgstr ""
 
-#: includes/process-purchase.php:458 includes/process-purchase.php:588
-msgid "Invalid email"
-msgstr ""
-
-#: includes/process-purchase.php:461
+#: includes/process-purchase.php:476
 msgid "Email already used"
 msgstr ""
 
-#: includes/process-purchase.php:468 includes/process-purchase.php:595
+#: includes/process-purchase.php:483 includes/process-purchase.php:610
 msgid "Enter an email"
 msgstr ""
 
-#: includes/process-purchase.php:476
+#: includes/process-purchase.php:491
 msgid "Passwords don't match"
 msgstr ""
 
-#: includes/process-purchase.php:485 includes/process-purchase.php:551
+#: includes/process-purchase.php:500 includes/process-purchase.php:566
 msgid "Enter a password"
 msgstr ""
 
-#: includes/process-purchase.php:488
+#: includes/process-purchase.php:503
 msgid "Enter the password confirmation"
 msgstr ""
 
-#: includes/process-purchase.php:512
+#: includes/process-purchase.php:527
 msgid "You must login or register to complete your purchase"
 msgstr ""
 
-#: includes/process-purchase.php:532
+#: includes/process-purchase.php:547
 msgid "The password you entered is incorrect. %sReset Password%s"
 msgstr ""
 
-#: includes/process-purchase.php:577
+#: includes/process-purchase.php:548 templates/shortcode-login.php:26
+msgid "Lost Password"
+msgstr ""
+
+#: includes/process-purchase.php:592
 msgid "You must be logged into an account to purchase"
 msgstr ""
 
-#: includes/process-purchase.php:758
-msgid "The zip code you entered for your credit card is invalid"
+#: includes/process-purchase.php:773
+msgid "The zip / postal code you entered for your billing address is invalid"
+msgstr ""
+
+#: includes/process-purchase.php:1035
+msgid "An internal error has occurred, please try again or contact support."
 msgstr ""
 
 #: includes/query-filters.php:48
 msgid "You do not have permission to view this file."
 msgstr ""
 
-#: includes/scripts.php:50
+#: includes/scripts.php:48
 msgid "Please select a payment method"
 msgstr ""
 
-#: includes/scripts.php:51
+#: includes/scripts.php:49
 msgid "Please enter a discount code"
 msgstr ""
 
-#: includes/scripts.php:53
+#: includes/scripts.php:51
 msgid "Discount Applied"
 msgstr ""
 
-#: includes/scripts.php:54
+#: includes/scripts.php:52
 msgid "Please enter an email address before applying a discount code"
 msgstr ""
 
-#: includes/scripts.php:55
+#: includes/scripts.php:53
 msgid "Please enter a username before applying a discount code"
 msgstr ""
 
-#: includes/scripts.php:56
+#: includes/scripts.php:54
 msgid "Please Wait..."
 msgstr ""
 
-#: includes/scripts.php:70
+#: includes/scripts.php:67
 msgid "You have already added this item to your cart"
 msgstr ""
 
-#: includes/scripts.php:72
+#: includes/scripts.php:69
 msgid "Loading"
 msgstr ""
 
-#: includes/scripts.php:73
+#: includes/scripts.php:70
 msgid "Please select an option"
 msgstr ""
 
-#: includes/scripts.php:161
+#: includes/scripts.php:165
 msgid "Add New Download"
 msgstr ""
 
-#: includes/scripts.php:162
+#: includes/scripts.php:166
 msgid "Use This File"
 msgstr ""
 
-#: includes/scripts.php:163
+#: includes/scripts.php:167
 msgid "Sorry, not available for variable priced products."
 msgstr ""
 
-#: includes/scripts.php:164
+#: includes/scripts.php:168
 msgid "Are you sure you wish to delete this payment?"
 msgstr ""
 
-#: includes/scripts.php:165
+#: includes/scripts.php:169
 msgid "Are you sure you wish to delete this note?"
 msgstr ""
 
-#: includes/scripts.php:166
+#: includes/scripts.php:170
 msgid "Are you sure you wish to delete this tax rate?"
 msgstr ""
 
-#: includes/scripts.php:167
-msgid "Are you sure you wish to resend the purchase receipt?"
-msgstr ""
-
-#: includes/scripts.php:168
-msgid "Are you sure you wish to delete this %s?"
-msgstr ""
-
-#: includes/scripts.php:169
-msgid "You must have at least one price"
-msgstr ""
-
-#: includes/scripts.php:170
-msgid "You must have at least one file"
-msgstr ""
-
 #: includes/scripts.php:171
-msgid "You must have at least one field"
+msgid "Are you sure you wish to revoke this API key?"
 msgstr ""
 
 #: includes/scripts.php:172
-msgid "Choose a %s"
+msgid "Are you sure you wish to regenerate this API key?"
 msgstr ""
 
 #: includes/scripts.php:173
+msgid "Are you sure you wish to resend the purchase receipt?"
+msgstr ""
+
+#: includes/scripts.php:174
+msgid "Copy these links to your clip board and give them to your customer"
+msgstr ""
+
+#: includes/scripts.php:175
+msgid "Are you sure you wish to delete this %s?"
+msgstr ""
+
+#: includes/scripts.php:176
+msgid "You must have at least one price"
+msgstr ""
+
+#: includes/scripts.php:177
+msgid "You must have at least one file"
+msgstr ""
+
+#: includes/scripts.php:178
+msgid "You must have at least one field"
+msgstr ""
+
+#: includes/scripts.php:179
+msgid "Choose a %s"
+msgstr ""
+
+#: includes/scripts.php:180
 msgid "Choose one or more %s"
 msgstr ""
 
-#: includes/shortcodes.php:203
+#: includes/shortcodes.php:227
 msgid "Purchase All Items"
 msgstr ""
 
-#: includes/shortcodes.php:418
-msgctxt "download post type name"
-msgid "No %s found"
-msgstr ""
-
-#: includes/shortcodes.php:462
+#: includes/shortcodes.php:489
 msgid "Sorry, trouble retrieving payment receipt."
 msgstr ""
 
-#: includes/shortcodes.php:602
+#: includes/shortcodes.php:629
 msgid "The passwords you entered do not match. Please try again."
 msgstr ""
 
-#: includes/shortcodes.php:611
+#: includes/shortcodes.php:638
 msgid "The email you entered belongs to another user. Please use another."
 msgstr ""
 
-#: includes/template-functions.php:87
+#: includes/template-functions.php:89
 msgid "Free"
 msgstr ""
 
-#: includes/template-functions.php:149
+#: includes/template-functions.php:163
 msgid "<i class=\"edd-icon-ok\"></i> Added to cart"
 msgstr ""
 
-#: includes/template-functions.php:150
+#: includes/template-functions.php:164
 msgid "Go to Checkout"
 msgstr ""
 
-#: includes/template-functions.php:158
+#: includes/template-functions.php:172
 msgid "Includes %1$s&#37; tax"
 msgstr ""
 
-#: includes/template-functions.php:160
+#: includes/template-functions.php:174
 msgid "Excluding %1$s&#37; tax"
 msgstr ""
 
-#: includes/template-functions.php:296
+#: includes/template-functions.php:309
 msgid "White"
 msgstr ""
 
-#: includes/template-functions.php:300
+#: includes/template-functions.php:313
 msgid "Gray"
 msgstr ""
 
-#: includes/template-functions.php:304
+#: includes/template-functions.php:317
 msgid "Blue"
 msgstr ""
 
-#: includes/template-functions.php:308
+#: includes/template-functions.php:321
 msgid "Red"
 msgstr ""
 
-#: includes/template-functions.php:312
+#: includes/template-functions.php:325
 msgid "Green"
 msgstr ""
 
-#: includes/template-functions.php:316
+#: includes/template-functions.php:329
 msgid "Yellow"
 msgstr ""
 
-#: includes/template-functions.php:320
+#: includes/template-functions.php:333
 msgid "Orange"
 msgstr ""
 
-#: includes/template-functions.php:324
+#: includes/template-functions.php:337
 msgid "Dark Gray"
 msgstr ""
 
-#: includes/template-functions.php:328
+#: includes/template-functions.php:341
 msgid "Inherit"
 msgstr ""
 
-#: includes/template-functions.php:346
+#: includes/template-functions.php:359
 msgid "Button"
 msgstr ""
 
-#: includes/template-functions.php:347
+#: includes/template-functions.php:360
 msgid "Plain Text"
 msgstr ""
 
-#: includes/user-functions.php:385
+#: includes/user-functions.php:450
 msgid "[Password entered at checkout]"
 msgstr ""
 
@@ -4907,59 +5094,67 @@ msgstr ""
 msgid "Display the downloads shopping cart"
 msgstr ""
 
-#: includes/widgets.php:69 includes/widgets.php:137 includes/widgets.php:251
+#: includes/widgets.php:78 includes/widgets.php:154 includes/widgets.php:285
 msgid "Title:"
 msgstr ""
 
-#: includes/widgets.php:89
+#: includes/widgets.php:97
 msgid "Downloads Categories / Tags"
 msgstr ""
 
-#: includes/widgets.php:89
+#: includes/widgets.php:97
 msgid "Display the downloads categories or tags"
 msgstr ""
 
-#: includes/widgets.php:142
+#: includes/widgets.php:159
 msgid "Taxonomy:"
 msgstr ""
 
-#: includes/widgets.php:166 includes/widgets.php:239
+#: includes/widgets.php:166
+msgid "Show Count:"
+msgstr ""
+
+#: includes/widgets.php:170
+msgid "Hide Empty Categories:"
+msgstr ""
+
+#: includes/widgets.php:192 includes/widgets.php:273
 msgid "%s Details"
 msgstr ""
 
-#: includes/widgets.php:168
+#: includes/widgets.php:194
 msgid "Display the details of a specific %s"
 msgstr ""
 
-#: includes/widgets.php:218
+#: includes/widgets.php:251
 msgid "Categories: %1$s"
 msgstr ""
 
-#: includes/widgets.php:221
+#: includes/widgets.php:254
 msgid "Tags: %2$s"
 msgstr ""
 
-#: includes/widgets.php:265
+#: includes/widgets.php:299
 msgid "%s"
 msgstr ""
 
-#: includes/widgets.php:267
+#: includes/widgets.php:301
 msgid "Use current"
 msgstr ""
 
-#: includes/widgets.php:277
+#: includes/widgets.php:311
 msgid "Show Title"
 msgstr ""
 
-#: includes/widgets.php:283
+#: includes/widgets.php:317
 msgid "Show Purchase Button"
 msgstr ""
 
-#: includes/widgets.php:289
+#: includes/widgets.php:323
 msgid "Show Categories"
 msgstr ""
 
-#: includes/widgets.php:295
+#: includes/widgets.php:329
 msgid "Show Tags"
 msgstr ""
 
@@ -4975,11 +5170,11 @@ msgstr ""
 msgid "Actions"
 msgstr ""
 
-#: templates/checkout_cart.php:72 templates/shortcode-receipt.php:57
+#: templates/checkout_cart.php:78 templates/shortcode-receipt.php:87
 msgid "Subtotal"
 msgstr ""
 
-#: templates/checkout_cart.php:96
+#: templates/checkout_cart.php:102
 msgid "Total"
 msgstr ""
 
@@ -4991,7 +5186,7 @@ msgstr ""
 msgid "Files"
 msgstr ""
 
-#: templates/history-downloads.php:67 templates/shortcode-receipt.php:189
+#: templates/history-downloads.php:67 templates/shortcode-receipt.php:195
 msgid "No downloadable files found."
 msgstr ""
 
@@ -5007,7 +5202,7 @@ msgstr ""
 msgid "View Details and Downloads"
 msgstr ""
 
-#: templates/history-purchases.php:49
+#: templates/history-purchases.php:50
 msgid "You have not made any purchases"
 msgstr ""
 
@@ -5015,6 +5210,22 @@ msgstr ""
 msgid ""
 "Your purchase is processing. This page will reload automatically in 8 "
 "seconds. If it does not, click <a href=\"%s\">here</a>."
+msgstr ""
+
+#: templates/shortcode-login.php:9
+msgid "Log into Your Account"
+msgstr ""
+
+#: templates/shortcode-login.php:23
+msgid "Log In"
+msgstr ""
+
+#: templates/shortcode-login.php:27
+msgid "Lost Password?"
+msgstr ""
+
+#: templates/shortcode-login.php:34
+msgid "You are already logged in"
 msgstr ""
 
 #: templates/shortcode-profile-editor.php:16
@@ -5053,27 +5264,27 @@ msgstr ""
 msgid "Zip / Postal Code"
 msgstr ""
 
-#: templates/shortcode-profile-editor.php:79
+#: templates/shortcode-profile-editor.php:80
 msgid "Change your Password"
 msgstr ""
 
-#: templates/shortcode-profile-editor.php:81
+#: templates/shortcode-profile-editor.php:82
 msgid "New Password"
 msgstr ""
 
-#: templates/shortcode-profile-editor.php:84
+#: templates/shortcode-profile-editor.php:85
 msgid "Re-enter Password"
 msgstr ""
 
-#: templates/shortcode-profile-editor.php:87
+#: templates/shortcode-profile-editor.php:88
 msgid "Please note after changing your password, you must log back in."
 msgstr ""
 
-#: templates/shortcode-profile-editor.php:92
+#: templates/shortcode-profile-editor.php:93
 msgid "Save Changes"
 msgstr ""
 
-#: templates/shortcode-profile-editor.php:98
+#: templates/shortcode-profile-editor.php:99
 msgid "You need to login to edit your profile."
 msgstr ""
 
@@ -5081,20 +5292,28 @@ msgstr ""
 msgid "Payment"
 msgstr ""
 
-#: templates/shortcode-receipt.php:35
+#: templates/shortcode-receipt.php:29
 msgid "Payment Status"
 msgstr ""
 
-#: templates/shortcode-receipt.php:76
-msgid "Discount(s)"
-msgstr ""
-
-#: templates/shortcode-receipt.php:90
+#: templates/shortcode-receipt.php:35
 msgid "Payment Key"
 msgstr ""
 
-#: templates/shortcode-receipt.php:180
+#: templates/shortcode-receipt.php:72
+msgid "Discount(s)"
+msgstr ""
+
+#: templates/shortcode-receipt.php:186
 msgid "No downloadable files found for this bundled item."
+msgstr ""
+
+#: templates/shortcode-register.php:10
+msgid "Register New Account"
+msgstr ""
+
+#: templates/shortcode-register.php:30
+msgid "Confirm Password"
 msgstr ""
 
 #: templates/widget-cart-checkout.php:1 templates/widget-cart-empty.php:2
@@ -5103,6 +5322,10 @@ msgstr ""
 
 #: templates/widget-cart-item.php:4
 msgid "remove"
+msgstr ""
+
+#: templates/widget-cart.php:6
+msgid "Number of items in cart"
 msgstr ""
 
 #. Plugin URI of the plugin/theme
@@ -5119,4 +5342,124 @@ msgstr ""
 
 #. Author URI of the plugin/theme
 msgid "http://pippinsplugins.com"
+msgstr ""
+
+#: includes/admin/payments/view-order-details.php:279
+msgctxt "Address City"
+msgid "City:"
+msgstr ""
+
+#: includes/admin/payments/view-order-details.php:284
+msgctxt "Zip / Postal code of address"
+msgid "Zip / Postal Code:"
+msgstr ""
+
+#: includes/admin/payments/view-order-details.php:291
+msgctxt "Address country"
+msgid "Country:"
+msgstr ""
+
+#: includes/admin/payments/view-order-details.php:303
+msgctxt "State / province of address"
+msgid "State / Province:"
+msgstr ""
+
+#: includes/admin/reporting/reports.php:314
+msgctxt "Date one to date two"
+msgid "to"
+msgstr ""
+
+#: includes/checkout/template.php:616
+msgctxt "Entering a discount code"
+msgid "Click to enter it"
+msgstr ""
+
+#: includes/checkout/template.php:625
+msgctxt "Apply discount at checkout"
+msgid "Apply"
+msgstr ""
+
+#: includes/class-edd-html-elements.php:237
+msgctxt "all dropdown items"
+msgid "All"
+msgstr ""
+
+#: includes/class-edd-html-elements.php:238
+msgctxt "no dropdown items"
+msgid "None"
+msgstr ""
+
+#: includes/post-types.php:66
+msgctxt "post type general name"
+msgid "Payments"
+msgstr ""
+
+#: includes/post-types.php:96
+msgctxt "post type general name"
+msgid "Discounts"
+msgstr ""
+
+#: includes/post-types.php:67
+msgctxt "post type singular name"
+msgid "Payment"
+msgstr ""
+
+#: includes/post-types.php:97
+msgctxt "post type singular name"
+msgid "Discount"
+msgstr ""
+
+#: includes/post-types.php:202
+msgctxt "taxonomy general name"
+msgid "%s Categories"
+msgstr ""
+
+#: includes/post-types.php:230
+msgctxt "taxonomy general name"
+msgid "%s Tags"
+msgstr ""
+
+#: includes/post-types.php:203
+msgctxt "taxonomy singular name"
+msgid "Category"
+msgstr ""
+
+#: includes/post-types.php:231
+msgctxt "taxonomy singular name"
+msgid "Tag"
+msgstr ""
+
+#: includes/post-types.php:269
+msgctxt "Refunded payment status"
+msgid "Refunded"
+msgstr ""
+
+#: includes/post-types.php:277
+msgctxt "Failed payment status"
+msgid "Failed"
+msgstr ""
+
+#: includes/post-types.php:285
+msgctxt "Revoked payment status"
+msgid "Revoked"
+msgstr ""
+
+#: includes/post-types.php:293
+msgctxt "Abandoned payment status"
+msgid "Abandoned"
+msgstr ""
+
+#: includes/post-types.php:303
+msgctxt "Active discount code status"
+msgid "Active"
+msgstr ""
+
+#: includes/post-types.php:311
+msgctxt "Inactive discount code status"
+msgid "Inactive"
+msgstr ""
+
+#: includes/shortcodes.php:445
+msgctxt "download post type name"
+msgid "No %s found"
 msgstr ""
