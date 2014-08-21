@@ -29,6 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return bool|object List of all user purchases
  */
 function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, $status = 'complete' ) {
+
 	if ( empty( $user ) ) {
 		$user = get_current_user_id();
 	}
@@ -55,6 +56,24 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 		$args['page'] = $paged;
 	else
 		$args['nopaging'] = true;
+
+
+	if( is_email( $user ) ) {
+
+		$field = 'user_id';
+
+	} else {
+		
+		$field = 'email';
+		
+	}
+	
+	$payment_ids = EDD()->customers->get_column_by( 'payment_ids', 'user_id', $user );
+
+	if( ! empty( $payment_ids ) ) {
+		unset( $args['user'] );
+		$args['post__in'] = array_map( 'absint', explode( ',', $payment_ids ) );
+	}
 
 	$purchases = edd_get_payments( $args );
 
@@ -213,47 +232,20 @@ function edd_has_purchases( $user_id = null ) {
  */
 function edd_get_purchase_stats_by_user( $user = '' ) {
 
-	global $wpdb;
-
-	$stats = array(
-		'purchases'   => 0,
-		'total_spent' => 0
-	);
-
-	if( is_email( $user ) )
+	if ( is_email( $user ) ) {
+	
 		$field = 'email';
-	elseif( is_numeric( $user ) )
-		$field = 'id';
-	else
-		return $stats;
-
-	$stats = wp_cache_get( $user, 'customers' );
-
-	if( false == $stats ) {
-
-		$query = "SELECT {$wpdb->prefix}meta_1.meta_value AS payment_total
-			FROM {$wpdb->prefix}postmeta {$wpdb->prefix}meta_1
-			LEFT JOIN {$wpdb->prefix}postmeta {$wpdb->prefix}meta_2
-				ON {$wpdb->prefix}meta_1.post_id = {$wpdb->prefix}meta_2.post_id
-				AND {$wpdb->prefix}meta_1.meta_key = '_edd_payment_total'
-			INNER JOIN {$wpdb->prefix}posts
-				ON {$wpdb->prefix}posts.ID = {$wpdb->prefix}meta_2.post_id
-				AND {$wpdb->prefix}posts.post_status = 'publish'
-			WHERE {$wpdb->prefix}meta_2.meta_key = '_edd_payment_user_{$field}'
-			AND {$wpdb->prefix}meta_2.meta_value = '%s'";
-
-		$purchases = $wpdb->get_col( $wpdb->prepare( $query, $user ) );
-
-		$purchases = array_filter( $purchases );
-
-		if( $purchases ) {
-			$stats['purchases']   = count( $purchases );
-			$stats['total_spent'] = round( array_sum( $purchases ), edd_currency_decimal_filter() );
-		}
-
-		wp_cache_set( $user, $stats, 'customers' );
-
+	
+	} elseif ( is_numeric( $user ) ) {
+	
+		$field = 'user_id';
+	
 	}
+
+	$customer = EDD()->customers->get_by( $field, $user );
+
+	$stats['purchases']   = absint( $customer->purchase_count );
+	$stats['total_spent'] = edd_sanitize_amount( $customer->purchase_value );
 
 	return (array) apply_filters( 'edd_purchase_stats_by_user', $stats, $user );
 }
@@ -381,26 +373,10 @@ add_action( 'user_register', 'edd_add_past_purchases_to_new_user' );
  *
  * @access 		public
  * @since 		1.7
- * @global object $wpdb Used to query the database using the WordPress
- *   Database API
  * @return 		int - The total number of customers.
  */
 function edd_count_total_customers() {
-	global $wpdb;
-
-	$count = wp_cache_get( 'customer_count', 'customers' );
-
-	if( false == $count ) {
-	
-		$count = $wpdb->get_col( "SELECT COUNT(DISTINCT meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email'" );
-
-		$count = $count[0];
-
-		wp_cache_set( 'customer_count', $count, 'customers', 3600 );
-
-	}
-
-	return $count;
+	return EDD()->customers->count();
 }
 
 
