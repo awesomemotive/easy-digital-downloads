@@ -70,7 +70,7 @@ function edd_process_download() {
 
 		// If we didn't find a file from the attachment, grab the given URL
 		if( ! isset( $requested_file ) ) {
-			$requested_file = $download_files[ $args['file_key'] ]['file'];
+			$requested_file = isset( $download_files[ $args['file_key'] ]['file'] ) ? $download_files[ $args['file_key'] ]['file'] : '';
 		}
 
 		// Allow the file to be altered before any headers are sent
