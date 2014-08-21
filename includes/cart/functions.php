@@ -50,11 +50,11 @@ function edd_get_cart_content_details() {
 		$fees       = edd_get_cart_fees( 'fee', $item['id'] );
 		$subtotal   = ( $item_price * $quantity ) - $discount;
 		$tax        = edd_get_cart_item_tax( $item, $subtotal );
-		
+
 		if( edd_prices_include_tax() ) {
 			$subtotal -= $tax;
 		}
-		
+
 		$total      = round( ( $subtotal + $tax ), edd_currency_decimal_filter() );
 
 		$details[ $key ]  = array(
@@ -176,7 +176,7 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		$cart[] = $to_add;
 
 	}
-		
+
 
 	EDD()->session->set( 'edd_cart', $cart );
 
@@ -801,7 +801,7 @@ function edd_add_collection_to_cart( $taxonomy, $terms ) {
  * @return string $remove_url URL to remove the cart item
  */
 function edd_remove_item_url( $cart_key, $post, $ajax = false ) {
-	
+
 	global $wp_query;
 
 	if ( defined('DOING_AJAX') ){
