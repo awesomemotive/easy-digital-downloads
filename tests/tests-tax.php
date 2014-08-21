@@ -102,10 +102,6 @@ class Tests_Taxes extends WP_UnitTestCase {
 		$this->assertTrue( edd_use_taxes() );
 	}
 
-	public function test_taxes_after_discounts() {
-		$this->assertFalse( edd_taxes_after_discounts() );
-	}
-
 	public function test_get_tax_rates() {
 		$this->assertInternalType( 'array', edd_get_tax_rates() );
 	}
