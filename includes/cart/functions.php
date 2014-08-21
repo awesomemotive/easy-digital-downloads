@@ -445,9 +445,7 @@ function edd_get_cart_item_tax( $item = array() ) {
 			$price = edd_get_download_price( $item['id'] );
 		}
 
-		if( edd_taxes_after_discounts() ) {
-			$price -= apply_filters( 'edd_get_cart_item_tax_item_discount_amount', edd_get_cart_item_discount_amount( $item ), $item ) / $item['quantity'];
-		}
+		 $price -= apply_filters( 'edd_get_cart_item_tax_item_discount_amount', edd_get_cart_item_discount_amount( $item ), $item ) / $item['quantity'];
 
 		$country = ! empty( $_POST['billing_country'] ) ? $_POST['billing_country'] : false;
 		$state   = ! empty( $_POST['card_state'] )      ? $_POST['card_state']      : false;
