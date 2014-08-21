@@ -32,7 +32,7 @@ function edd_get_cart_contents() {
  * @since 1.0
  * @return array $details Cart content details
  */
-function edd_get_cart_content_details( $include_taxes = false ) {
+function edd_get_cart_content_details() {
 
 	$cart_items = edd_get_cart_contents();
 
@@ -44,12 +44,11 @@ function edd_get_cart_content_details( $include_taxes = false ) {
 
 	foreach( $cart_items as $key => $item ) {
 
-		$item_price = edd_get_cart_item_price( $item['id'], $item['options'], $include_taxes );
+		$item_price = edd_get_cart_item_price( $item['id'], $item['options'] );
 		$discount   = apply_filters( 'edd_get_cart_content_details_item_discount_amount', edd_get_cart_item_discount_amount( $item ), $item );
 		$tax        = edd_get_cart_item_tax( $item );
 		$quantity   = edd_get_cart_item_quantity( $item['id'], $item['options'] );
 		$fees       = edd_get_cart_fees( 'fee', $item['id'] );
-
 		$subtotal   = $item_price * $quantity;
 		$tax        = $tax * $quantity;
 		$total      = round( ( $subtotal - $discount + $tax ), edd_currency_decimal_filter() );
@@ -68,6 +67,8 @@ function edd_get_cart_content_details( $include_taxes = false ) {
 		);
 
 	}
+
+	//echo '<pre>'; print_r( $details ); echo '</pre>';
 
 	return $details;
 }
@@ -544,15 +545,15 @@ function edd_cart_subtotal() {
  * @global $edd_options Array of all the EDD Options
  * @return float Total amount before taxes
  */
-function edd_get_cart_subtotal( $include_taxes = false ) {
+function edd_get_cart_subtotal() {
 	global $edd_options;
 
 	$subtotal = 0.00;
-	$items    = edd_get_cart_content_details( $include_taxes );
+	$items    = edd_get_cart_content_details();
 
 	if( $items ) {
 
-		$prices   = wp_list_pluck( $items, 'subtotal' );
+		$prices = wp_list_pluck( $items, 'subtotal' );
 
 		if( is_array( $prices ) ) {
 			$subtotal = array_sum( $prices );
@@ -582,12 +583,11 @@ function edd_get_cart_subtotal( $include_taxes = false ) {
 function edd_get_cart_total( $discounts = false ) {
 	global $edd_options;
 
-	$subtotal = edd_get_cart_subtotal( true );
-	$fees     = edd_get_cart_fee_total();
+	$subtotal = edd_get_cart_subtotal();
 	$cart_tax = edd_get_cart_tax();
+	$fees     = edd_get_cart_fee_total();
 	$discount = edd_get_cart_discounted_amount();
-
-	$total    = $subtotal + $fees - $discount;
+	$total    = $subtotal + $cart_tax + $fees - $discount;
 
 	if( $total < 0 )
 		$total = 0.00;
@@ -732,7 +732,7 @@ function edd_get_cart_tax() {
 
 	if( $items ) {
 
-		$taxes    = wp_list_pluck( $items, 'tax' );
+		$taxes = wp_list_pluck( $items, 'tax' );
 
 		if( is_array( $taxes ) ) {
 			$cart_tax = array_sum( $taxes );
