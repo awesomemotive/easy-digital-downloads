@@ -67,7 +67,6 @@ class EDD_CLI extends WP_CLI_Command {
 		WP_CLI::line( sprintf( __( 'Failure URL is: %s', 'edd' ), ( ! empty( $edd_options['failure_page'] ) ? get_permalink( $edd_options['failure_page'] ) : __( 'Undefined', 'edd' ) ) ) );
 		WP_CLI::line( sprintf( __( 'Downloads slug is: %s', 'edd' ), ( defined( 'EDD_SLUG' ) ? '/' . EDD_SLUG : '/downloads' ) ) );
 		WP_CLI::line( "\n" . sprintf( __( 'Taxes are: %s', 'edd' ), ( edd_use_taxes() ? __( 'Enabled', 'edd' ) : __( 'Disabled', 'edd' ) ) ) );
-		WP_CLI::line( sprintf( __( 'Taxes are handled: %s', 'edd' ), ( edd_taxes_after_discounts() ? __( 'After discounts', 'edd' ) : __( 'Before discounts', 'edd' ) ) ) );
 		WP_CLI::line( sprintf( __( 'Tax rate is: %s', 'edd' ), edd_get_tax_rate() * 100 . '%' ) );
 
 		$rates = edd_get_tax_rates();
