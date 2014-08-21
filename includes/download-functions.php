@@ -220,9 +220,11 @@ function edd_get_download_final_price( $download_id, $user_purchase_info, $amoun
  * @param int $download_id ID of the download
  * @return array Variable prices
  */
-function edd_get_variable_prices( $download_id ) {
-	$variable_prices = get_post_meta( $download_id, 'edd_variable_prices', true );
-	return apply_filters( 'edd_get_variable_prices', $variable_prices, $download_id );
+function edd_get_variable_prices( $download_id = 0 ) {
+
+	$prices = get_post_meta( $download_id, 'edd_variable_prices', true );
+	return apply_filters( 'edd_get_variable_prices', $prices, $download_id );
+
 }
 
 /**

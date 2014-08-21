@@ -22,7 +22,7 @@ jQuery(document).ready(function ($) {
 				$( this ).val( row.find( 'select[name="' + $( this ).attr( 'name' ) + '"]' ).val() );
 			});
 
-			var count  = row.parent().find( 'tr' ).length - 1;
+			var count = row.parent().find( 'tr' ).length;
 
 			clone.removeClass( 'edd_add_blank' );
 
@@ -49,25 +49,19 @@ jQuery(document).ready(function ($) {
 		},
 
 		move : function() {
-			/*
-			* Disabled until we can work out a way to solve the issues raised here: https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/1066
-			if( ! $('.edd_repeatable_table').length )
-				return;
 
 			$(".edd_repeatable_table tbody").sortable({
 				handle: '.edd_draghandle', items: '.edd_repeatable_row', opacity: 0.6, cursor: 'move', axis: 'y', update: function() {
 					var count  = 0;
 					$(this).find( 'tr' ).each(function() {
-						$(this).find( 'input, select' ).each(function() {
-							var name   = $( this ).attr( 'name' );
-							name       = name.replace( /\[(\d+)\]/, '[' + count + ']');
-							$( this ).attr( 'name', name ).attr( 'id', name );
+						$(this).find( 'input.edd_repeatable_index' ).each(function() {
+							$( this ).val( count );
 						});
 						count++;
 					});
 				}
 			});
-			*/
+			
 		},
 
 		remove : function() {
