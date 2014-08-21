@@ -99,6 +99,14 @@ final class Easy_Digital_Downloads {
 	public $email_tags;
 
 	/**
+	 * EDD Customers DB Object
+	 *
+	 * @var object
+	 * @since 2.1
+	 */
+	public $customers;
+
+	/**
 	 * Main Easy_Digital_Downloads Instance
 	 *
 	 * Insures that only one instance of Easy_Digital_Downloads exists in memory at any one
@@ -125,6 +133,7 @@ final class Easy_Digital_Downloads {
 			self::$instance->session    = new EDD_Session();
 			self::$instance->html       = new EDD_HTML_Elements();
 			self::$instance->email_tags = new EDD_Email_Template_Tags();
+			self::$instance->customers  = new EDD_DB_Customers();
 		}
 		return self::$instance;
 	}
@@ -209,6 +218,8 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/cart/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-api.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-customers.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cache-helper.php';
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			require_once EDD_PLUGIN_DIR . 'includes/class-edd-cli.php';
