@@ -450,11 +450,9 @@ function edd_tools_sysinfo_get() {
 	// EDD Taxes
 	$return .= "\n" . '-- EDD Tax Configuration' . "\n\n";
 	$return .= 'Taxes:                    ' . ( edd_use_taxes() ? "Enabled\n" : "Disabled\n" );
-	$return .= 'Taxes Applied:            ' . ( edd_taxes_after_discounts() ? "After Discounts\n" : "Before Discounts\n" );
 	$return .= 'Tax Rate:                 ' . edd_get_tax_rate() * 100 . "\n";
 	$return .= 'Display On Checkout:      ' . ( !empty( $edd_options['checkout_include_tax'] ) ? "Displayed\n" : "Not Displayed\n" );
 	$return .= 'Prices Include Tax:       ' . ( edd_prices_include_tax() ? "Yes\n" : "No\n" );
-	$return .= 'Taxes After Discounts:    ' . ( edd_taxes_after_discounts() ? "Yes\n" : "No\n" );
 
 	$rates = edd_get_tax_rates();
 	if( !empty( $rates ) ) {
