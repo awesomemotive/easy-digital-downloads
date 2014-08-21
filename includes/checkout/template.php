@@ -29,7 +29,7 @@ function edd_checkout_form() {
 
 	ob_start();
 		echo '<div id="edd_checkout_wrap">';
-		if ( edd_get_cart_contents() || edd_get_cart_fees() ) :
+		if ( edd_get_cart_contents() || edd_cart_has_fees() ) :
 
 			edd_checkout_cart();
 ?>
