@@ -113,10 +113,6 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		$options['price_id'] = '0';
 	}
 
-	$item     = array();
-	$to_add   = array();
-	$new_item = array();
-
 	if( isset( $options['quantity'] ) ) {
 		$quantity = absint( preg_replace( '/[^0-9\.]/', '', $options['quantity'] ) );
 		unset( $options['quantity'] );
@@ -159,46 +155,23 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 	}
 
 	$to_add = apply_filters( 'edd_add_to_cart_item', $item );
-
 	if ( ! is_array( $to_add ) )
 		return;
 
 	if ( ! isset( $to_add['id'] ) || empty( $to_add['id'] ) )
 		return;
 
-	$new_item[0] = $to_add;
+	if( edd_item_in_cart( $to_add['id'], $to_add['options'] ) ) {
 
-	if ( edd_item_quantities_enabled() && is_array( $cart ) ) {
-
-		foreach( $cart as $key => $item ) {
-
-			if( $new_item[0]['id'] == $item['id'] ) {
-
-				if( isset( $new_item[0]['options']['price_id'] ) && isset( $item['options']['price_id'] ) ) {
-
-					if( $new_item[0]['options']['price_id'] != $item['options']['price_id'] ) {
-						continue;
-					}
-				}
-
-				$cart[$key]['quantity']++;
-				$new_item = array();
-
-			}
-
-		}
-
-		$cart = array_merge( $cart, $new_item );
-
-	} elseif( is_array( $cart ) ) {
-
-		$cart = array_merge( $cart, $new_item );
+		$key = edd_get_item_position_in_cart( $to_add['id'], $to_add['options'] );
+		$cart[ $key ]['quantity']++;
 
 	} else {
 
-		$cart = $new_item;
-	
+		$cart[] = $to_add;
+
 	}
+		
 
 	EDD()->session->set( 'edd_cart', $cart );
 
@@ -915,7 +888,7 @@ function edd_empty_cart() {
  *
  * @uses EDD()->session->set()
  */
-function edd_set_purchase_session( $purchase_data ) {
+function edd_set_purchase_session( $purchase_data = array() ) {
 	EDD()->session->set( 'edd_purchase', $purchase_data );
 }
 
