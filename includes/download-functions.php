@@ -95,26 +95,40 @@ function edd_get_download_price( $download_id = 0 ) {
  * @return void
  */
 function edd_price( $download_id, $echo = true ) {
+
 	if ( edd_has_variable_prices( $download_id ) ) {
+
 		$prices = edd_get_variable_prices( $download_id );
+
 		// Return the lowest price
 		$price_float = 0;
-        foreach ($prices as $key => $value)
-            if ( ( ( (float)$prices[ $key ]['amount'] ) < $price_float ) or ( $price_float == 0 ) )
-                $price_float = (float)$prices[ $key ]['amount'];
-            $price = edd_sanitize_amount( $price_float );
-	} else {
+		foreach ( $prices as $key => $value ) {
+
+			if ( ( ( (float)$prices[ $key ]['amount'] ) < $price_float ) or ( $price_float == 0 ) ) {
+
+				$price_float = (float)$prices[ $key ]['amount'];
+
+			}
+
+			$price = edd_sanitize_amount( $price_float );
+
+			}
+
+		} else {
+
 		$price = edd_get_download_price( $download_id );
+
 	}
 
 	$price           = apply_filters( 'edd_download_price', edd_sanitize_amount( $price ), $download_id );
 	$formatted_price = '<span class="edd_price" id="edd_price_' . $download_id . '">' . $price . '</span>';
 	$formatted_price = apply_filters( 'edd_download_price_after_html', $formatted_price, $download_id, $price );
 
-	if ( $echo )
+	if ( $echo ) {
 		echo $formatted_price;
-	else
+	} else {
 		return $formatted_price;
+	}
 }
 add_filter( 'edd_download_price', 'edd_format_amount', 10 );
 add_filter( 'edd_download_price', 'edd_currency_filter', 20 );
