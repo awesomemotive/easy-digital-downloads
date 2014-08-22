@@ -459,12 +459,6 @@ function edd_get_registered_settings() {
 						'no'  => __( 'Excluding tax', 'edd' )
 					)
 				),
-				'taxes_after_discounts' => array(
-					'id' => 'taxes_after_discounts',
-					'name' => __( 'Calculate Tax After Discounts?', 'edd' ),
-					'desc' => __( 'Check this if you would like taxes calculated after discounts. By default taxes are calculated before discounts are applied.', 'edd' ),
-					'type' => 'checkbox'
-				),
 				'tax_rates' => array(
 					'id' => 'tax_rates',
 					'name' => '<strong>' . __( 'Additional Tax Rates', 'edd' ) . '</strong>',
