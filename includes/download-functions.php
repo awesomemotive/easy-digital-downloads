@@ -173,16 +173,14 @@ function edd_price( $download_id, $echo = true ) {
 		$price = edd_get_download_price( $download_id );
 	}
 
-	$price = apply_filters( 'edd_download_price', edd_sanitize_amount( $price ), $download_id );
-
-	$price = '<span class="edd_price" id="edd_price_' . $download_id . '">' . $price . '</span>';
-	
-	$price = apply_filters( 'edd_download_price_after_html', $price, $download_id );
+	$price           = apply_filters( 'edd_download_price', edd_sanitize_amount( $price ), $download_id );
+	$formatted_price = '<span class="edd_price" id="edd_price_' . $download_id . '">' . $price . '</span>';
+	$formatted_price = apply_filters( 'edd_download_price_after_html', $formatted_price, $download_id, $price );
 
 	if ( $echo )
-		echo $price;
+		echo $formatted_price;
 	else
-		return $price;
+		return $formatted_price;
 }
 add_filter( 'edd_download_price', 'edd_format_amount', 10 );
 add_filter( 'edd_download_price', 'edd_currency_filter', 20 );
