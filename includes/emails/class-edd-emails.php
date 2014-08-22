@@ -7,8 +7,8 @@
  * @package     EDD
  * @subpackage  Classes/Emails
  * @copyright   Copyright (c) 2014, Pippin Williamson
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       2.0
+ * @license     http://opensource.org/licenses/gpl-2.1.php GNU Public License
+ * @since       2.1
  */
 
 // Exit if accessed directly
@@ -17,56 +17,56 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * EDD_Emails Class
  *
- * @since 2.0
+ * @since 2.1
  */
 class EDD_Emails {
 
 	/**
 	 * Holds the from address
 	 *
-	 * @since 2.0
+	 * @since 2.1
 	 */
 	private $from_address;
 
 	/**
 	 * Holds the from name
 	 *
-	 * @since 2.0
+	 * @since 2.1
 	 */
 	private $from_name;
 
 	/**
 	 * Holds the email content type
 	 *
-	 * @since 2.0
+	 * @since 2.1
 	 */
 	private $content_type;
 
 	/**
 	 * Holds the email headers
 	 *
-	 * @since 2.0
+	 * @since 2.1
 	 */
 	private $headers;
 
 	/**
 	 * Whether to send email in HTML
 	 *
-	 * @since 2.0
+	 * @since 2.1
 	 */
 	private $html = true;
 
 	/**
 	 * The email template to use
 	 *
-	 * @since 2.0
+	 * @since 2.1
 	 */
 	private $template;
 
 	/**
 	 * Get things going
 	 *
-	 * @since 2.0
+	 * @since 2.1
 	 */
 	public function __construct() {
 		add_action( 'edd_email_send_before', array( $this, 'send_before' ) );
@@ -76,7 +76,7 @@ class EDD_Emails {
 	/**
 	 * Set a property
 	 *
-	 * @since 2.0
+	 * @since 2.1
 	 */
 	public function __set( $key, $value ) {
 		$this->$key = $value;
@@ -85,7 +85,7 @@ class EDD_Emails {
 	/**
 	 * Get the email from name
 	 *
-	 * @since 2.0
+	 * @since 2.1
 	 */
 	public function get_from_name() {
 		if ( ! $this->from_name ) {
@@ -98,7 +98,7 @@ class EDD_Emails {
 	/**
 	 * Get the email from address
 	 *
-	 * @since 2.0
+	 * @since 2.1
 	 */
 	public function get_from_address() {
 		if ( ! $this->from_address ) {
@@ -111,7 +111,7 @@ class EDD_Emails {
 	/**
 	 * Get the email content type
 	 *
-	 * @since 2.0
+	 * @since 2.1
 	 */
 	public function get_content_type() {
 		if ( ! $this->content_type && $this->html ) {
@@ -126,7 +126,7 @@ class EDD_Emails {
 	/**
 	 * Get the email headers
 	 *
-	 * @since 2.0
+	 * @since 2.1
 	 */
 	public function get_headers() {
 		if ( ! $this->headers ) {
@@ -143,7 +143,7 @@ class EDD_Emails {
 	/**
 	 * Get the email attachments
 	 *
-	 * @since 2.0
+	 * @since 2.1
 	 */
 	public function get_attachments() {
 		if ( ! $this->headers ) {
@@ -156,7 +156,7 @@ class EDD_Emails {
 	/**
 	 * Retrieve email templates
 	 *
-	 * @since 2.0
+	 * @since 2.1
 	 */
 	public function get_templates() {
 		$templates = array(
@@ -170,7 +170,7 @@ class EDD_Emails {
 	/**
 	 * Get the enabled email template
 	 *
-	 * @since 2.0
+	 * @since 2.1
 	 */
 	public function get_template() {
 		if ( ! $this->template ) {
@@ -182,7 +182,7 @@ class EDD_Emails {
 	/**
 	 * Parse email template tags
 	 *
-	 * @since 2.0
+	 * @since 2.1
 	 */
 	public function parse_tags( $content ) {
 		return $content; // Do something with email tags once complete.
@@ -191,7 +191,7 @@ class EDD_Emails {
 	/**
 	 * Build the final email
 	 *
-	 * @since 2.0
+	 * @since 2.1
 	 */
 	public function build_email( $message ) {
 
@@ -223,7 +223,7 @@ class EDD_Emails {
 	/**
 	 * Send the email
 	 *
-	 * @since 2.0
+	 * @since 2.1
 	 */
 	public function send( $to, $subject, $message ) {
 		do_action( 'edd_email_send_before', $this );
@@ -232,7 +232,7 @@ class EDD_Emails {
 		$message = $this->parse_tags( $message );
 
 		$message = $this->build_email( $message );
-
+		echo $message; exit;
 		$sent = wp_mail( $to, $subject, $message, $this->get_headers(), $this->get_attachments() );
 
 		do_action( 'edd_email_send_after', $this );
@@ -244,7 +244,7 @@ class EDD_Emails {
 	/**
 	 * Add filters / actions before the email is sent
 	 *
-	 * @since 2.0
+	 * @since 2.1
 	 */
 	public function send_before() {
 		add_filter( 'wp_mail_from', array( $this, 'get_from_address' ) );
@@ -255,7 +255,7 @@ class EDD_Emails {
 	/**
 	 * Remove filters / actions after the email is sent
 	 *
-	 * @since 2.0
+	 * @since 2.1
 	 */
 	public function send_after() {
 		remove_filter( 'wp_mail_from', array( $this, 'get_from_address' ) );
