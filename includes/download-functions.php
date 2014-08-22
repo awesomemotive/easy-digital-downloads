@@ -176,6 +176,8 @@ function edd_price( $download_id, $echo = true ) {
 	$price = apply_filters( 'edd_download_price', edd_sanitize_amount( $price ), $download_id );
 
 	$price = '<span class="edd_price" id="edd_price_' . $download_id . '">' . $price . '</span>';
+	
+	$price = apply_filters( 'edd_download_price_after_html', $price, $download_id );
 
 	if ( $echo )
 		echo $price;
