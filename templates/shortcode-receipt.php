@@ -122,6 +122,11 @@ $status    = edd_get_payment_status( $payment, true );
 		<tbody>
 		<?php if( $cart ) : ?>
 			<?php foreach ( $cart as $key => $item ) : ?>
+
+				<?php if( ! apply_filters( 'edd_user_can_view_receipt_item', true, $item ) ) : ?>
+					<?php continue; // Skip this item if can't view it ?>
+				<?php endif; ?>
+
 				<?php if( empty( $item['in_bundle'] ) ) : ?>
 				<tr>
 					<td>
