@@ -393,15 +393,6 @@ function edd_get_cart_item_price( $download_id = 0, $options = array() ) {
 		$price = edd_get_download_price( $download_id );
 	}
 
-	if( ! edd_download_is_tax_exclusive( $download_id ) ) {
-
-		if( edd_prices_include_tax() ) {
-			// If price is entered with tax, we have to deduct the taxed amount from the price to determine the actual price
-			//$price -= edd_calculate_tax( $price );
-		}
-
-	}
-
 	return apply_filters( 'edd_cart_item_price', $price, $download_id, $options );
 }
 
