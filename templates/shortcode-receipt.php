@@ -151,7 +151,7 @@ $status    = edd_get_payment_status( $payment, true );
 						if( edd_is_payment_complete( $payment->ID ) && edd_receipt_show_download_files( $item['id'], $edd_receipt_args ) ) : ?>
 						<ul class="edd_purchase_receipt_files">
 							<?php
-							if ( $download_files && is_array( $download_files ) ) :
+							if ( ! empty( $download_files ) && is_array( $download_files ) ) :
 
 								foreach ( $download_files as $filekey => $file ) :
 
