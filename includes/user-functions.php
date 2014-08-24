@@ -52,10 +52,15 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 		'orderby' => 'date'
 	) );
 
-	if ( $pagination )
+	if ( $pagination ) {
+
 		$args['page'] = $paged;
-	else
+
+	} else {
+
 		$args['nopaging'] = true;
+
+	}
 
 
 	if( is_email( $user ) ) {
@@ -63,11 +68,11 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 		$field = 'user_id';
 
 	} else {
-		
+
 		$field = 'email';
-		
+
 	}
-	
+
 	$payment_ids = EDD()->customers->get_column_by( 'payment_ids', $field, $user );
 
 	if( ! empty( $payment_ids ) ) {
@@ -90,10 +95,10 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
  * Returns a list of unique products purchased by a specific user
  *
  * @since  2.0
- * 
+ *
  * @param int    $user User ID or email address
  * @param string $status
- * 
+ *
  * @return bool|object List of unique products purchased by user
  */
 function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
@@ -134,9 +139,9 @@ function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
 	$product_ids = array_unique( $purchased_products );
 
 	// Make sure we still have some products and a first item
-	if ( empty ( $product_ids ) || ! isset( $product_ids[0] ) ) 
+	if ( empty ( $product_ids ) || ! isset( $product_ids[0] ) )
 		return false;
-	
+
 	$post_type 	 = get_post_type( $product_ids[0] );
 
 	$args = apply_filters( 'edd_get_users_purchased_products_args', array(
@@ -232,47 +237,20 @@ function edd_has_purchases( $user_id = null ) {
  */
 function edd_get_purchase_stats_by_user( $user = '' ) {
 
-	global $wpdb;
+	if ( is_email( $user ) ) {
 
-	$stats = array(
-		'purchases'   => 0,
-		'total_spent' => 0
-	);
-
-	if( is_email( $user ) )
 		$field = 'email';
-	elseif( is_numeric( $user ) )
-		$field = 'id';
-	else
-		return $stats;
 
-	$stats = wp_cache_get( $user, 'customers' );
+	} elseif ( is_numeric( $user ) ) {
 
-	if( false == $stats ) {
-
-		$query = "SELECT {$wpdb->prefix}meta_1.meta_value AS payment_total
-			FROM {$wpdb->prefix}postmeta {$wpdb->prefix}meta_1
-			LEFT JOIN {$wpdb->prefix}postmeta {$wpdb->prefix}meta_2
-				ON {$wpdb->prefix}meta_1.post_id = {$wpdb->prefix}meta_2.post_id
-				AND {$wpdb->prefix}meta_1.meta_key = '_edd_payment_total'
-			INNER JOIN {$wpdb->prefix}posts
-				ON {$wpdb->prefix}posts.ID = {$wpdb->prefix}meta_2.post_id
-				AND {$wpdb->prefix}posts.post_status = 'publish'
-			WHERE {$wpdb->prefix}meta_2.meta_key = '_edd_payment_user_{$field}'
-			AND {$wpdb->prefix}meta_2.meta_value = '%s'";
-
-		$purchases = $wpdb->get_col( $wpdb->prepare( $query, $user ) );
-
-		$purchases = array_filter( $purchases );
-
-		if( $purchases ) {
-			$stats['purchases']   = count( $purchases );
-			$stats['total_spent'] = round( array_sum( $purchases ), edd_currency_decimal_filter() );
-		}
-
-		wp_cache_set( $user, $stats, 'customers' );
+		$field = 'user_id';
 
 	}
+
+	$customer = EDD()->customers->get_by( $field, $user );
+
+	$stats['purchases']   = absint( $customer->purchase_count );
+	$stats['total_spent'] = edd_sanitize_amount( $customer->purchase_value );
 
 	return (array) apply_filters( 'edd_purchase_stats_by_user', $stats, $user );
 }
@@ -374,7 +352,7 @@ function edd_add_past_purchases_to_new_user( $user_id ) {
 	$email    = get_the_author_meta( 'user_email', $user_id );
 
 	$payments = edd_get_payments( array( 's' => $email ) );
-	
+
 	if( $payments ) {
 		foreach( $payments as $payment ) {
 			if( intval( edd_get_payment_user_id( $payment->ID ) ) > 0 )
@@ -400,26 +378,10 @@ add_action( 'user_register', 'edd_add_past_purchases_to_new_user' );
  *
  * @access 		public
  * @since 		1.7
- * @global object $wpdb Used to query the database using the WordPress
- *   Database API
  * @return 		int - The total number of customers.
  */
 function edd_count_total_customers() {
-	global $wpdb;
-
-	$count = wp_cache_get( 'customer_count', 'customers' );
-
-	if( false == $count ) {
-	
-		$count = $wpdb->get_col( "SELECT COUNT(DISTINCT meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email'" );
-
-		$count = $count[0];
-
-		wp_cache_set( 'customer_count', $count, 'customers', 3600 );
-
-	}
-
-	return $count;
+	return EDD()->customers->count();
 }
 
 
