@@ -139,12 +139,14 @@ class Tests_API extends WP_UnitTestCase {
 			'currency' => 'USD',
 			'downloads' => $download_details,
 			'cart_details' => $cart_details,
-			'status' => 'publish'
+			'status' => 'pending'
 		);
 
 		$_SERVER['REMOTE_ADDR'] = '10.0.0.0';
 
 		$payment_id = edd_insert_payment( $purchase_data );
+
+		edd_update_payment_status( $payment_id, 'complete' );
 
 		$this->_api_output = EDD()->api->get_products();
 		$this->_api_output_sales = EDD()->api->get_recent_sales();
