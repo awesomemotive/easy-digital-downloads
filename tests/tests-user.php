@@ -115,7 +115,7 @@ class Tests_User extends WP_UnitTestCase {
 			'currency' => 'USD',
 			'downloads' => $download_details,
 			'cart_details' => $cart_details,
-			'status' => 'publish',
+			'status' => 'pending',
 			'tax'    => '0.00'
 		);
 
@@ -123,6 +123,8 @@ class Tests_User extends WP_UnitTestCase {
 		$_SERVER['SERVER_NAME'] = 'edd_virtual';
 
 		$payment_id = edd_insert_payment( $purchase_data );
+
+		edd_update_payment_status( $payment_id, 'complete' );
 
 		$out = edd_get_users_purchases( $user_id );
 
@@ -150,12 +152,10 @@ class Tests_User extends WP_UnitTestCase {
 		$this->assertEquals( 2, count( $purchase_stats ) );
 		$this->assertTrue( isset( $purchase_stats['purchases'] ) );
 		$this->assertTrue( isset( $purchase_stats['total_spent'] ) );
-		$this->assertInternalType( 'float', $purchase_stats['total_spent'] );
 
 		
 		$purchase_total = edd_purchase_total_of_user( $user_id );
 		
-		$this->assertInternalType( 'float', $purchase_total );
 		$this->assertEquals( 100, $purchase_total );
 	}
 
