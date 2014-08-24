@@ -148,10 +148,9 @@ class EDD_Export {
 				// Make sure the column is valid
 				if ( array_key_exists( $col_id, $cols ) ) {
 					echo '"' . $column . '"';
-					echo $i == count( $cols ) + 1 ? '' : ',';
+					echo $i == count( $cols ) ? '' : ',';
+					$i++;
 				}
-
-				$i++;
 			}
 			echo "\r\n";
 		}
