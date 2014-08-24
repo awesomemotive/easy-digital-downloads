@@ -407,15 +407,18 @@ function edd_email_tag_download_list( $payment_id ) {
 
 			$files = edd_get_download_files( $item['id'], $price_id );
 
-			if ( $files ) {
+			if ( ! empty( $files ) ) {
+
 				foreach ( $files as $filekey => $file ) {
+
 					$download_list .= '<li>';
 					$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $item['id'], $price_id );
 					$download_list .= '<a href="' . esc_url( $file_url ) . '">' . edd_get_file_name( $file ) . '</a>';
 					$download_list .= '</li>';
+
 				}
-			}
-			elseif ( edd_is_bundled_product( $item['id'] ) ) {
+
+			} elseif ( edd_is_bundled_product( $item['id'] ) ) {
 
 				$bundled_products = edd_get_bundled_products( $item['id'] );
 
