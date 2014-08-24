@@ -49,7 +49,7 @@ function edd_get_cart_content_details() {
 		$quantity   = edd_get_cart_item_quantity( $item['id'], $item['options'] );
 		$fees       = edd_get_cart_fees( 'fee', $item['id'] );
 		$subtotal   = ( $item_price * $quantity ) - $discount;
-		$tax        = edd_get_cart_item_tax( $item, $subtotal );
+		$tax        = edd_get_cart_item_tax( $item['id'], $item['options'], $subtotal );
 
 		if( edd_prices_include_tax() ) {
 			$subtotal -= $tax;
@@ -345,11 +345,17 @@ function edd_get_cart_item_quantity( $download_id = 0, $options = array() ) {
 function edd_cart_item_price( $item_id = 0, $options = array() ) {
 	global $edd_options;
 
-	$tax_on_prices = edd_prices_show_tax_on_checkout();
-
-	$price = edd_get_cart_item_price( $item_id, $options, $tax_on_prices );
-	$price = edd_currency_filter( edd_format_amount( $price ) );
+	$price = edd_get_cart_item_price( $item_id, $options );
 	$label = '';
+
+	if( ! edd_prices_show_tax_on_checkout() ) {
+
+		$price -= edd_get_cart_item_tax( $item_id, $options, $price );		
+		
+	}
+
+	$price = edd_currency_filter( edd_format_amount( $price ) );
+
 	if( edd_display_tax_rate() ) {
 		$label = '&nbsp;&ndash;&nbsp;';
 		if( edd_prices_show_tax_on_checkout() ) {
@@ -415,25 +421,26 @@ function edd_get_cart_item_final_price( $item_key = 0 ) {
  * Get cart item tax
  *
  * @since 1.9
- * @param array $item Cart item array
+ * @param array $item Download ID
+ * @param array $options Cart item options
  * @param float $subtotal Cart item subtotal
  * @return float Tax amount
  */
-function edd_get_cart_item_tax( $item = array(), $subtotal = '' ) {
+function edd_get_cart_item_tax( $download_id = 0, $options = array(), $subtotal = '' ) {
 
 	$tax = 0;
-	if( ! edd_download_is_tax_exclusive( $item['id'] ) ) {
+	if( ! edd_download_is_tax_exclusive( $download_id ) ) {
 
 		$country = ! empty( $_POST['billing_country'] ) ? $_POST['billing_country'] : false;
 		$state   = ! empty( $_POST['card_state'] )      ? $_POST['card_state']      : false;
 
 		$tax = edd_calculate_tax( $subtotal, $country, $state );
 
-		$tax = $tax * $item['quantity'];
+		$tax = $tax * edd_get_cart_item_quantity( $download_id, $options );
 
 	}
 
-	return apply_filters( 'edd_get_cart_item_tax', $tax, $item['id'], $item, $subtotal );
+	return apply_filters( 'edd_get_cart_item_tax', $tax, $download_id, $options, $subtotal );
 }
 
 /**
