@@ -430,7 +430,7 @@ function edd_email_tag_download_list( $payment_id ) {
 
 					foreach ( $files as $filekey => $file ) {
 						$download_list .= '<li>';
-						$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $bundle_item, $price_id );
+						$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $bundle_item );
 						$download_list .= '<a href="' . esc_url( $file_url ) . '">' . $file['name'] . '</a>';
 						$download_list .= '</li>';
 					}
