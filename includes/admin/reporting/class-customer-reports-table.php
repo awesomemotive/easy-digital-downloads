@@ -148,6 +148,23 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		);
 
 		return apply_filters( 'edd_report_customer_columns', $columns );
+
+	}
+
+	/**
+	 * Get the sortable columns
+	 *
+	 * @access public
+	 * @since 2.1
+	 * @return array Array of all the sortable columns
+	 */
+	public function get_sortable_columns() {
+		return array(
+			'id' 	        => array( 'id', true ),
+			'name' 	        => array( 'name', true ),
+			'num_purchases' => array( 'purchase_count', false ),
+			'amount_spent' 	=> array( 'purchase_value', false ),
+		);
 	}
 
 	/**
@@ -196,14 +213,18 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	public function reports_data() {
 		global $wpdb;
 
-		$data   = array();
-		$paged  = $this->get_paged();
-		$offset = $this->per_page * ( $paged - 1 );
-		$search = $this->get_search();
+		$data    = array();
+		$paged   = $this->get_paged();
+		$offset  = $this->per_page * ( $paged - 1 );
+		$search  = $this->get_search();
+		$order   = isset( $_GET['order'] )   ? sanitize_text_field( $_GET['order'] )   : 'DESC';
+		$orderby = isset( $_GET['orderby'] ) ? sanitize_text_field( $_GET['orderby'] ) : 'id';
 
-		$args   = array(
-			'number' => $this->per_page,
-			'offset' => $offset
+		$args    = array(
+			'number'  => $this->per_page,
+			'offset'  => $offset,
+			'order'   => $order,
+			'orderby' => $orderby
 		);
 
 		if( is_email( $search ) ) {
