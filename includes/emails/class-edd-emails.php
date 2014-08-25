@@ -232,7 +232,6 @@ class EDD_Emails {
 		$message = $this->parse_tags( $message );
 
 		$message = $this->build_email( $message );
-		echo $message; exit;
 		$sent = wp_mail( $to, $subject, $message, $this->get_headers(), $this->get_attachments() );
 
 		do_action( 'edd_email_send_after', $this );

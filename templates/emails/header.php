@@ -59,6 +59,7 @@ $header_content_h1 = "
 	font-weight: 500;
 	line-height: 1.2;
 ";
+$header_img = edd_get_option( 'email_logo', '' );
 ?>
 <!DOCTYPE html>
 <html>
@@ -71,11 +72,11 @@ $header_content_h1 = "
         	<table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%">
             	<tr>
                 	<td align="center" valign="top">
-						<div id="template_header_image">
-	                		<?php
-	                			//echo '<p style="margin-top:0;"><img src="' . esc_url( $img ) . '" alt="' . get_bloginfo( 'name' ) . '" /></p>';
-	                		?>
-						</div>
+	                	<?php if( ! empty( $header_img ) ) : ?>
+							<div id="template_header_image">
+		                		<?php echo '<p style="margin-top:0;"><img src="' . esc_url( $header_img ) . '" alt="' . get_bloginfo( 'name' ) . '" /></p>'; ?>
+							</div>
+						<?php endif; ?>
                     	<table border="0" cellpadding="0" cellspacing="0" width="520" id="template_container" style="<?php echo $template_container; ?>">
                         	<tr>
                             	<td align="center" valign="top">
