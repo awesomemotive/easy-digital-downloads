@@ -260,7 +260,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		$this->total = edd_count_total_customers();
 
 		$this->set_pagination_args( array(
-			'total_items' => $this->count,
+			'total_items' => $this->total,
 			'per_page'    => $this->per_page,
 			'total_pages' => ceil( $this->total / $this->per_page )
 		) );
