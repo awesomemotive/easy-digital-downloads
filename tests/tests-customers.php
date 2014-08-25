@@ -255,6 +255,14 @@ class Tests_Customers extends WP_UnitTestCase {
 
 	}
 
+	public function test_get_customers() {
+
+		$customers = EDD()->customers->get_customers();
+
+		$this->assertEquals( 1, count( $customers ) );
+
+	}
+
 	public function test_users_purchases() {
 
 		$out = edd_get_users_purchases( $this->_user_id );
