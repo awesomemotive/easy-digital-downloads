@@ -56,7 +56,7 @@ function edd_setup_edd_post_types() {
 		'map_meta_cap'      => true,
 		'has_archive' 		=> $archives,
 		'hierarchical' 		=> false,
-		'supports' 			=> apply_filters( 'edd_download_supports', array( 'title', 'editor', 'thumbnail', 'excerpt', 'revisions' ) ),
+		'supports' 			=> apply_filters( 'edd_download_supports', array( 'title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'author' ) ),
 	);
 	register_post_type( 'download', apply_filters( 'edd_download_post_type_args', $download_args ) );
 
@@ -207,7 +207,7 @@ function edd_setup_download_taxonomies() {
 		'parent_item_colon' => __( 'Parent Category:', 'edd'  ),
 		'edit_item' 		=> __( 'Edit Category', 'edd'  ),
 		'update_item' 		=> __( 'Update Category', 'edd'  ),
-		'add_new_item' 		=> __( 'Add New Category', 'edd'  ),
+		'add_new_item' 		=> sprintf( __( 'Add New %s Category', 'edd'  ), edd_get_label_singular() ),
 		'new_item_name' 	=> __( 'New Category Name', 'edd'  ),
 		'menu_name' 		=> __( 'Categories', 'edd'  ),
 		'choose_from_most_used' => sprintf( __( 'Choose from most used %s categories', 'edd'  ), edd_get_label_singular() ),

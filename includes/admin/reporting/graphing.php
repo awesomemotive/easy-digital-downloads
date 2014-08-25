@@ -108,10 +108,23 @@ function edd_reports_graph() {
 
 			$i = $month_start;
 			while ( $i <= $month_end ) :
+
 				if ( $day_by_day ) :
-					$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $y );
-					$d 				= 1;
+
+					if( $i == $month_end ) {
+
+						$num_of_days = $dates['day_end'];
+
+					} else {
+
+						$num_of_days = cal_days_in_month( CAL_GREGORIAN, $i, $y );
+	
+					}
+
+					$d = $dates['day'];
+					
 					while ( $d <= $num_of_days ) :
+
 						$sales = edd_get_sales_by_date( $d, $i, $y );
 						$sales_totals += $sales;
 
@@ -121,20 +134,36 @@ function edd_reports_graph() {
 						$date = mktime( 0, 0, 0, $i, $d, $y ) * 1000;
 						$sales_data[] = array( $date, $sales );
 						$earnings_data[] = array( $date, $earnings );
-					$d++;
+						$d++;
+
 					endwhile;
+
 				else :
+
 					$sales = edd_get_sales_by_date( null, $i, $y );
 					$sales_totals += $sales;
 
 					$earnings = edd_get_earnings_by_date( null, $i, $y );
 					$earnings_totals += $earnings;
 
-					$date = mktime( 0, 0, 0, $i, 1, $y ) * 1000;
+					if( $i == $month_end ) {
+
+						$num_of_days = cal_days_in_month( CAL_GREGORIAN, $i, $y );
+
+					} else {
+
+						$num_of_days = 1;
+						
+					}
+
+					$date = mktime( 0, 0, 0, $i, $num_of_days, $y ) * 1000;
 					$sales_data[] = array( $date, $sales );
 					$earnings_data[] = array( $date, $earnings );
+
 				endif;
+
 				$i++;
+
 			endwhile;
 
 			$y++;
@@ -161,13 +190,17 @@ function edd_reports_graph() {
 					$graph->set( 'multiple_y_axes', true );
 					$graph->display();
 					
-					$estimated = edd_estimated_monthly_stats();
+					if( 'this_month' == $dates['range'] ) {
+						$estimated = edd_estimated_monthly_stats();
+					}
 					?>
 					
 					<p class="edd_graph_totals"><strong><?php _e( 'Total earnings for period shown: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $earnings_totals ) ); ?></strong></p>
 					<p class="edd_graph_totals"><strong><?php _e( 'Total sales for period shown: ', 'edd' ); echo edd_format_amount( $sales_totals, false ); ?></strong></p>
-					<p class="edd_graph_totals"><strong><?php _e( 'Estimated monthly earnings: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $estimated['earnings'] ) ); ?></strong></p>
-					<p class="edd_graph_totals"><strong><?php _e( 'Estimated monthly sales: ', 'edd' ); echo edd_format_amount( $estimated['sales'], false ); ?></strong></p>
+					<?php if( 'this_month' == $dates['range'] ) : ?>
+						<p class="edd_graph_totals"><strong><?php _e( 'Estimated monthly earnings: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $estimated['earnings'] ) ); ?></strong></p>
+						<p class="edd_graph_totals"><strong><?php _e( 'Estimated monthly sales: ', 'edd' ); echo edd_format_amount( $estimated['sales'], false ); ?></strong></p>
+					<?php endif; ?>
 				</div>
 			</div>
 		</div>
@@ -290,12 +323,24 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 
 			$i = $month_start;
 			while ( $i <= $month_end ) :
+
 				if ( $day_by_day ) :
-					$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $y );
-					$d 				= 1;
+
+					if( $i == $month_end ) {
+
+						$num_of_days = $dates['day_end'];
+
+					} else {
+
+						$num_of_days = cal_days_in_month( CAL_GREGORIAN, $i, $y );
+	
+					}
+
+					$d = $dates['day'];
 					while ( $d <= $num_of_days ) :
+
 						$date      = mktime( 0, 0, 0, $i, $d, $y );
-						$end_date  = mktime( 0, 0, 0, $i, $d + 1, $y );
+						$end_date  = mktime( 0, 0, 0, $i, $num_of_days, $y );
 			
 						$sales = $stats->get_sales( $download_id, $date, $end_date );
 						$sales_totals += $sales;
@@ -306,11 +351,16 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 						$sales_data[] = array( $date * 1000, $sales );
 						$earnings_data[] = array( $date * 1000, $earnings );
 					$d++;
+
 					endwhile;
+
 				else :
-					$date      = mktime( 0, 0, 0, $i, 1, $y );
-					$end_date  = mktime( 0, 0, 0, $i + 1, 1, $y );
-			
+
+					$num_of_days = cal_days_in_month( CAL_GREGORIAN, $i, $y );
+
+					$date        = mktime( 0, 0, 0, $i, 1, $y );
+					$end_date    = mktime( 0, 0, 0, $i + 1, $num_of_days, $y );
+
 					$sales = $stats->get_sales( $download_id, $date, $end_date );
 					$sales_totals += $sales;
 			
@@ -320,7 +370,9 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 					$sales_data[] = array( $date * 1000, $sales );
 					$earnings_data[] = array( $date * 1000, $earnings );
 				endif;
+
 				$i++;
+
 			endwhile;
 
 			$y++;
@@ -348,6 +400,8 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 				?>
 				<p class="edd_graph_totals"><strong><?php _e( 'Total earnings for period shown: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $earnings_totals ) ); ?></strong></p>
 				<p class="edd_graph_totals"><strong><?php _e( 'Total sales for period shown: ', 'edd' ); echo $sales_totals; ?></strong></p>
+				<p class="edd_graph_totals"><strong><?php printf( __( 'Average monthly earnings: %s', 'edd' ), edd_currency_filter( edd_format_amount( edd_get_average_monthly_download_earnings( $download_id ) ) ) ); ?>
+				<p class="edd_graph_totals"><strong><?php printf( __( 'Average monthly sales: %s', 'edd' ), number_format( edd_get_average_monthly_download_sales( $download_id ), 0 ) ); ?>
 			</div>
 		</div>
 	</div>
@@ -376,60 +430,71 @@ function edd_reports_graph_controls() {
 		'other'			=> __( 'Custom', 'edd' )
 	) );
 
-	$dates = edd_get_report_dates();
-
+	$dates   = edd_get_report_dates();
 	$display = $dates['range'] == 'other' ? '' : 'style="display:none;"';
+	$view    = edd_get_reporting_view();
 
-	$view = edd_get_reporting_view();
+	if( empty( $dates['day_end'] ) ) {
+		$dates['day_end'] = cal_days_in_month( CAL_GREGORIAN, date( 'n' ), date( 'Y' ) );
+	}
+
+	//echo '<pre>'; print_r( $dates ); echo '</pre>';
 
 	?>
 	<form id="edd-graphs-filter" method="get">
 		<div class="tablenav top">
 			<div class="alignleft actions">
 
-		       	<input type="hidden" name="post_type" value="download"/>
-		       	<input type="hidden" name="page" value="edd-reports"/>
-		       	<input type="hidden" name="view" value="<?php echo esc_attr( $view ); ?>"/>
+				<input type="hidden" name="post_type" value="download"/>
+				<input type="hidden" name="page" value="edd-reports"/>
+				<input type="hidden" name="view" value="<?php echo esc_attr( $view ); ?>"/>
 
-		       	<?php if( isset( $_GET['download-id'] ) ) : ?>
-		       		<input type="hidden" name="download-id" value="<?php echo absint( $_GET['download-id'] ); ?>"/>
-		       	<?php endif; ?>
+				<?php if( isset( $_GET['download-id'] ) ) : ?>
+					<input type="hidden" name="download-id" value="<?php echo absint( $_GET['download-id'] ); ?>"/>
+				<?php endif; ?>
 
-		       	<select id="edd-graphs-date-options" name="range">
-		       		<?php
-		       		foreach ( $date_options as $key => $option ) {
-		       			echo '<option value="' . esc_attr( $key ) . '" ' . selected( $key, $dates['range'] ) . '>' . esc_html( $option ) . '</option>';
-		       		}
-		       		?>
-		       	</select>
-
-		       	<div id="edd-date-range-options" <?php echo $display; ?>>
+				<select id="edd-graphs-date-options" name="range">
+				<?php foreach ( $date_options as $key => $option ) : ?>
+						<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $dates['range'] ); ?>><?php echo esc_html( $option ); ?></option>
+					<?php endforeach; ?>
+				</select>
+				<div id="edd-date-range-options" <?php echo $display; ?>>
 					<span><?php _e( 'From', 'edd' ); ?>&nbsp;</span>
-			       	<select id="edd-graphs-month-start" name="m_start">
-			       		<?php for ( $i = 1; $i <= 12; $i++ ) : ?>
-			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_start'] ); ?>><?php echo edd_month_num_to_name( $i ); ?></option>
-				       	<?php endfor; ?>
-			       	</select>
-			       	<select id="edd-graphs-year" name="year">
-			       		<?php for ( $i = 2007; $i <= date( 'Y' ); $i++ ) : ?>
-			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['year'] ); ?>><?php echo $i; ?></option>
-				       	<?php endfor; ?>
-			       	</select>
-			       	<span><?php _e( 'To', 'edd' ); ?>&nbsp;</span>
-			       	<select id="edd-graphs-month-start" name="m_end">
-			       		<?php for ( $i = 1; $i <= 12; $i++ ) : ?>
-			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_end'] ); ?>><?php echo edd_month_num_to_name( $i ); ?></option>
-				       	<?php endfor; ?>
-			       	</select>
-			       	<select id="edd-graphs-year" name="year_end">
-			       		<?php for ( $i = 2007; $i <= date( 'Y' ); $i++ ) : ?>
-			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['year_end'] ); ?>><?php echo $i; ?></option>
-				       	<?php endfor; ?>
-			       	</select>
-			    </div>
+					<select id="edd-graphs-month-start" name="m_start">
+						<?php for ( $i = 1; $i <= 12; $i++ ) : ?>
+							<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_start'] ); ?>><?php echo edd_month_num_to_name( $i ); ?></option>
+						<?php endfor; ?>
+					</select>
+					<select id="edd-graphs-day-start" name="day">
+						<?php for ( $i = 1; $i <= 31; $i++ ) : ?>
+							<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['day'] ); ?>><?php echo $i; ?></option>
+						<?php endfor; ?>
+					</select>
+					<select id="edd-graphs-year-start" name="year">
+						<?php for ( $i = 2007; $i <= date( 'Y' ); $i++ ) : ?>
+							<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['year'] ); ?>><?php echo $i; ?></option>
+						<?php endfor; ?>
+					</select>
+					<span><?php _e( 'To', 'edd' ); ?>&nbsp;</span>
+					<select id="edd-graphs-month-end" name="m_end">
+						<?php for ( $i = 1; $i <= 12; $i++ ) : ?>
+							<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_end'] ); ?>><?php echo edd_month_num_to_name( $i ); ?></option>
+						<?php endfor; ?>
+					</select>
+					<select id="edd-graphs-day-end" name="day_end">
+						<?php for ( $i = 1; $i <= 31; $i++ ) : ?>
+							<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['day_end'] ); ?>><?php echo $i; ?></option>
+						<?php endfor; ?>
+					</select>
+					<select id="edd-graphs-year-end" name="year_end">
+						<?php for ( $i = 2007; $i <= date( 'Y' ); $i++ ) : ?>
+						<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['year_end'] ); ?>><?php echo $i; ?></option>
+						<?php endfor; ?>
+					</select>
+				</div>
 
-			    <input type="hidden" name="edd_action" value="filter_reports" />
-		       	<input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'edd' ); ?>"/>
+				<input type="hidden" name="edd_action" value="filter_reports" />
+				<input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'edd' ); ?>"/>
 			</div>
 		</div>
 	</form>
@@ -443,7 +508,7 @@ function edd_reports_graph_controls() {
  * selected date-range (if any)
  *
  * @since 1.3
- * @return void
+ * @return array
 */
 function edd_get_report_dates() {
 	$dates = array();
@@ -451,19 +516,21 @@ function edd_get_report_dates() {
 	$current_time = current_time( 'timestamp' );
 
 	$dates['range']      = isset( $_GET['range'] )   ? $_GET['range']   : 'this_month';
-	$dates['day']        = isset( $_GET['day'] )     ? $_GET['day']     : null;
-	$dates['m_start']    = isset( $_GET['m_start'] ) ? $_GET['m_start'] : 1;
-	$dates['m_end']      = isset( $_GET['m_end'] )   ? $_GET['m_end']   : 12;
 	$dates['year']       = isset( $_GET['year'] )    ? $_GET['year']    : date( 'Y' );
 	$dates['year_end']   = isset( $_GET['year_end'] )? $_GET['year_end']: date( 'Y' );
+	$dates['m_start']    = isset( $_GET['m_start'] ) ? $_GET['m_start'] : 1;
+	$dates['m_end']      = isset( $_GET['m_end'] )   ? $_GET['m_end']   : 12;
+	$dates['day']        = isset( $_GET['day'] )     ? $_GET['day']     : 1;
+	$dates['day_end']    = isset( $_GET['day_end'] ) ? $_GET['day_end'] : cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] );
 		
 	// Modify dates based on predefined ranges
 	switch ( $dates['range'] ) :
 
 		case 'this_month' :
-			$dates['m_start'] 	= date( 'n', $current_time );
-			$dates['m_end']		= date( 'n', $current_time );
-			$dates['year']		= date( 'Y', $current_time );
+			$dates['m_start'] = date( 'n', $current_time );
+			$dates['m_end']   = date( 'n', $current_time );
+			$dates['day']     = 1;
+			$dates['day_end'] = cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] );
 		break;
 
 		case 'last_month' :

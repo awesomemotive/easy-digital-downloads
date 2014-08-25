@@ -405,15 +405,18 @@ function edd_email_tag_download_list( $payment_id ) {
 
 			$files = edd_get_download_files( $item['id'], $price_id );
 
-			if ( $files ) {
+			if ( ! empty( $files ) ) {
+
 				foreach ( $files as $filekey => $file ) {
+
 					$download_list .= '<div>';
 						$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $item['id'], $price_id );
 						$download_list .= '<a href="' . esc_url( $file_url ) . '">' . edd_get_file_name( $file ) . '</a>';
 					$download_list .= '</div>';
+
 				}
-			}
-			elseif ( edd_is_bundled_product( $item['id'] ) ) {
+
+			} elseif ( edd_is_bundled_product( $item['id'] ) ) {
 
 				$bundled_products = edd_get_bundled_products( $item['id'] );
 
@@ -603,7 +606,8 @@ function edd_email_tag_date( $payment_id ) {
  * @return string subtotal
  */
 function edd_email_tag_subtotal( $payment_id ) {
-	return edd_currency_filter( edd_format_amount( edd_get_payment_subtotal( $payment_id ) ) );
+	$subtotal = edd_currency_filter( edd_format_amount( edd_get_payment_subtotal( $payment_id ) ) );
+	return html_entity_decode( $subtotal, ENT_COMPAT, 'UTF-8' );
 }
 
 /**
@@ -615,7 +619,8 @@ function edd_email_tag_subtotal( $payment_id ) {
  * @return string tax
  */
 function edd_email_tag_tax( $payment_id ) {
-	return edd_currency_filter( edd_format_amount( edd_get_payment_tax( $payment_id ) ) );
+	$tax = edd_currency_filter( edd_format_amount( edd_get_payment_tax( $payment_id ) ) );
+	return html_entity_decode( $tax, ENT_COMPAT, 'UTF-8' );
 }
 
 /**
@@ -627,7 +632,8 @@ function edd_email_tag_tax( $payment_id ) {
  * @return string price
  */
 function edd_email_tag_price( $payment_id ) {
-	return edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ) );
+	$price = edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ) );
+	return html_entity_decode( $price, ENT_COMPAT, 'UTF-8' );
 }
 
 /**
@@ -639,7 +645,7 @@ function edd_email_tag_price( $payment_id ) {
  * @return int payment_id
  */
 function edd_email_tag_payment_id( $payment_id ) {
-	return $payment_id;
+	return edd_get_payment_number( $payment_id );
 }
 
 /**

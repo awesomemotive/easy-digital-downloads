@@ -12,7 +12,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) die();
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * Checks whether AJAX is enabled.
@@ -46,7 +46,8 @@ function edd_is_ajax_disabled() {
  * @return string
 */
 function edd_get_ajax_url() {
-	$scheme      = force_ssl_admin() && is_ssl() ? 'https' : 'http';
+	$scheme = defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN ? 'https' : 'admin';
+
 	$current_url = edd_get_current_page_url();
 	$ajax_url    = admin_url( 'admin-ajax.php', $scheme );
 
@@ -65,12 +66,13 @@ function edd_get_ajax_url() {
  */
 function edd_ajax_remove_from_cart() {
 	if ( isset( $_POST['cart_item'] ) ) {
-		
+
 		edd_remove_from_cart( $_POST['cart_item'] );
 
 		$return = array(
 			'removed'  => 1,
 			'subtotal' => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
+			'total'    => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ), ENT_COMPAT, 'UTF-8' )
 		);
 
 		echo json_encode( $return );
@@ -89,8 +91,6 @@ add_action( 'wp_ajax_nopriv_edd_remove_from_cart', 'edd_ajax_remove_from_cart' )
  */
 function edd_ajax_add_to_cart() {
 	if ( isset( $_POST['download_id'] ) ) {
-		global $post;
-
 		$to_add = array();
 
 		if ( isset( $_POST['price_ids'] ) && is_array( $_POST['price_ids'] ) ) {
@@ -120,6 +120,7 @@ function edd_ajax_add_to_cart() {
 
 		$return = array(
 			'subtotal'  => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
+			'total'     => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ), ENT_COMPAT, 'UTF-8' ),
 			'cart_item' => $items
 		);
 
@@ -210,6 +211,8 @@ function edd_ajax_update_cart_item_quantity() {
 		$return = array(
 			'download_id' => $download_id,
 			'quantity'    => $quantity,
+			'taxes'       => html_entity_decode( edd_cart_tax(), ENT_COMPAT, 'UTF-8' ),
+			'subtotal'    => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
 			'total'       => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' )
 		);
 		echo json_encode($return);
@@ -363,7 +366,6 @@ add_action( 'wp_ajax_nopriv_edd_get_shop_states', 'edd_ajax_get_states_field' );
  * @return void
  */
 function edd_ajax_download_search() {
-
 	global $wpdb;
 
 	$search  = esc_sql( sanitize_text_field( $_GET['s'] ) );
@@ -413,7 +415,6 @@ add_action( 'wp_ajax_nopriv_edd_download_search', 'edd_ajax_download_search' );
  * @return void
  */
 function edd_check_for_download_price_variations() {
-
 	if( ! current_user_can( 'edit_products' ) ) {
 		die( '-1' );
 	}
@@ -429,16 +430,52 @@ function edd_check_for_download_price_variations() {
 		$variable_prices = edd_get_variable_prices( $download_id );
 
 		if ( $variable_prices ) {
-			$ajax_response = '<select class="edd_price_options_select edd-select edd-select">';
+			$ajax_response = '<select class="edd_price_options_select edd-select edd-select" name="edd_price_option">';
 				foreach ( $variable_prices as $key => $price ) {
 					$ajax_response .= '<option value="' . esc_attr( $key ) . '">' . esc_html( $price['name'] )  . '</option>';
 				}
 			$ajax_response .= '</select>';
+			echo $ajax_response;
 		}
 
-		echo $ajax_response;
 	}
 
 	edd_die();
 }
 add_action( 'wp_ajax_edd_check_for_download_price_variations', 'edd_check_for_download_price_variations' );
+
+
+/**
+ * Searches for users via ajax and returns a list of results
+ *
+ * @since 2.0
+ * @return void
+ */
+function edd_ajax_search_users() {
+
+	if( current_user_can( 'manage_shop_settings' ) ) {
+
+		$search_query = trim( $_POST['user_name'] );
+
+		$found_users = get_users( array(
+				'number' => 9999,
+				'search' => $search_query . '*'
+			)
+		);
+
+		$user_list = '<ul>';
+		if( $found_users ) {
+			foreach( $found_users as $user ) {
+				$user_list .= '<li><a href="#" data-login="' . esc_attr( $user->user_login ) . '">' . esc_html( $user->user_login ) . '</a></li>';
+			}
+		} else {
+			$user_list .= '<li>' . __( 'No users found', 'edd' ) . '</li>';
+		}
+		$user_list .= '</ul>';
+
+		echo json_encode( array( 'results' => $user_list ) );
+
+	}
+	die();
+}
+add_action( 'wp_ajax_edd_search_users', 'edd_ajax_search_users' );

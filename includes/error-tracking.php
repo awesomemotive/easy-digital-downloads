@@ -93,7 +93,7 @@ function edd_clear_errors() {
  * @since 1.3.4
  * @uses EDD_Session::set()
  * @param int $error_id ID of the error being set
- * @return void
+ * @return string
  */
 function edd_unset_error( $error_id ) {
 	$errors = edd_get_errors();

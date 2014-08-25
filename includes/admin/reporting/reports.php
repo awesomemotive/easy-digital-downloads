@@ -304,6 +304,24 @@ function edd_reports_tab_export() {
 					</div><!-- .postbox -->
 	
 					<div class="postbox">
+						<h3><span><?php _e( 'Export Earnings and Sales Stats', 'edd' ); ?></span></h3>
+						<div class="inside">
+							<p><?php _e( 'Download a CSV of earnings and sales over time.', 'edd' ); ?></p>
+							<p>
+								<form method="post">
+									<?php echo EDD()->html->year_dropdown( 'start_year' ); ?>
+									<?php echo EDD()->html->month_dropdown( 'start_month' ); ?>
+									<?php echo _x( 'to', 'Date one to date two', 'edd' ); ?>
+									<?php echo EDD()->html->year_dropdown( 'end_year' ); ?>
+									<?php echo EDD()->html->month_dropdown( 'end_month' ); ?>
+									<input type="hidden" name="edd-action" value="earnings_export"/>
+									<input type="submit" value="<?php _e( 'Generate CSV', 'edd' ); ?>" class="button-secondary"/>
+								</form>
+							</p>
+						</div><!-- .inside -->
+					</div><!-- .postbox -->
+
+					<div class="postbox">
 						<h3><span><?php _e('Export Payment History', 'edd'); ?></span></h3>
 						<div class="inside">
 							<p><?php _e( 'Download a CSV of all payments recorded.', 'edd' ); ?></p>
@@ -407,24 +425,31 @@ add_action( 'edd_reports_tab_logs', 'edd_reports_tab_logs' );
  * @return array
  */
 function edd_estimated_monthly_stats() {
+
 	$estimated = get_transient( 'edd_estimated_monthly_stats' );
 
 	if ( false === $estimated ) {
+
 		$estimated = array(
 			'earnings' => 0,
 			'sales'    => 0
 		);
 
-		$products = get_posts( array( 'post_type' => 'download', 'posts_per_page' => -1, 'fields' => 'ids' ) );
-		if ( $products ) {
-			foreach ( $products as $download ) {
-				$estimated['earnings'] += edd_get_average_monthly_download_earnings( $download );
-				$estimated['sales']    += number_format( edd_get_average_monthly_download_sales( $download ), 0 );
-			}
-		}
+		$stats = new EDD_Payment_Stats;
+
+		$to_date_earnings = $stats->get_earnings( 0, 'this_month' );
+		$to_date_sales    = $stats->get_sales( 0, 'this_month' );
+
+		$current_day      = date( 'd', current_time( 'timestamp' ) );
+		$current_month    = date( 'n', current_time( 'timestamp' ) );
+		$current_year     = date( 'Y', current_time( 'timestamp' ) );
+		$days_in_month    = cal_days_in_month( CAL_GREGORIAN, $current_month, $current_year );
+
+		$estimated['earnings'] = ( $to_date_earnings / $current_day ) * $days_in_month;
+		$estimated['sales']    = ( $to_date_sales / $current_day ) * $days_in_month;
 
 		// Cache for one day
-		set_transient( 'edd_estimated_monthly_stats', serialize( $estimated ), 86400 );
+		set_transient( 'edd_estimated_monthly_stats', $estimated, 86400 );
 	}
 
 	return maybe_unserialize( $estimated );

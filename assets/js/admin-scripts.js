@@ -22,7 +22,7 @@ jQuery(document).ready(function ($) {
 				$( this ).val( row.find( 'select[name="' + $( this ).attr( 'name' ) + '"]' ).val() );
 			});
 
-			var count  = row.parent().find( 'tr' ).length - 1;
+			var count = row.parent().find( 'tr' ).length;
 
 			clone.removeClass( 'edd_add_blank' );
 
@@ -49,25 +49,19 @@ jQuery(document).ready(function ($) {
 		},
 
 		move : function() {
-			/*
-			* Disabled until we can work out a way to solve the issues raised here: https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/1066
-			if( ! $('.edd_repeatable_table').length )
-				return;
 
 			$(".edd_repeatable_table tbody").sortable({
 				handle: '.edd_draghandle', items: '.edd_repeatable_row', opacity: 0.6, cursor: 'move', axis: 'y', update: function() {
 					var count  = 0;
 					$(this).find( 'tr' ).each(function() {
-						$(this).find( 'input, select' ).each(function() {
-							var name   = $( this ).attr( 'name' );
-							name       = name.replace( /\[(\d+)\]/, '[' + count + ']');
-							$( this ).attr( 'name', name ).attr( 'id', name );
+						$(this).find( 'input.edd_repeatable_index' ).each(function() {
+							$( this ).val( count );
 						});
 						count++;
 					});
 				}
 			});
-			*/
+			
 		},
 
 		remove : function() {
@@ -220,12 +214,15 @@ jQuery(document).ready(function ($) {
 							attachment = attachment.toJSON();
 							if ( 0 === index ) {
 								// place first attachment in field
+								window.formfield.find( '.edd_repeatable_attachment_id_field' ).val( attachment.id );
 								window.formfield.find( '.edd_repeatable_upload_field' ).val( attachment.url );
 								window.formfield.find( '.edd_repeatable_name_field' ).val( attachment.title );
 							} else {
 								// Create a new row for all additional attachments
 								var row = window.formfield,
 									clone = EDD_Download_Configuration.clone_repeatable( row );
+
+								clone.find( '.edd_repeatable_attachment_id_field' ).val( attachment.id );
 								clone.find( '.edd_repeatable_upload_field' ).val( attachment.url );
 								if ( attachment.title.length > 0 ) {
 									clone.find( '.edd_repeatable_name_field' ).val( attachment.title );
@@ -269,7 +266,7 @@ jQuery(document).ready(function ($) {
 		}
 
 	};
-	
+
 	EDD_Download_Configuration.init();
 
 	//$('#edit-slug-box').remove();
@@ -293,7 +290,6 @@ jQuery(document).ready(function ($) {
 			this.add_download();
 			this.recalculate_total();
 			this.variable_prices_check();
-			this.status_change();
 			this.add_note();
 			this.remove_note();
 			this.resend_receipt();
@@ -407,13 +403,21 @@ jQuery(document).ready(function ($) {
 			$('#edd-order-recalc-total').on('click', function(e) {
 				e.preventDefault();
 				var total = 0;
-				$('#edd-purchased-files .edd-payment-details-download-amount').each(function() {
-					var quantity = $(this).next().val();
-					total += ( parseFloat( $(this).val() ) * parseInt( quantity ) );
-				});
-				$('.edd-payment-fees span.fee-amount').each(function() {
-					total += parseFloat( $(this).data('fee') );
-				});
+				if( $('#edd-purchased-files .row .edd-payment-details-download-amount').length ) {
+					$('#edd-purchased-files .row .edd-payment-details-download-amount').each(function() {
+						var quantity = $(this).next().val();
+						if( quantity ) {
+							total += ( parseFloat( $(this).val() ) * parseInt( quantity ) );
+						} else {
+							total += parseFloat( $(this).val() );
+						}
+					});
+				}
+				if( $('.edd-payment-fees').length ) {
+					$('.edd-payment-fees span.fee-amount').each(function() {
+						total += parseFloat( $(this).data('fee') );
+					});
+				}
 				$('input[name=edd-payment-total]').val( total );
 			});
 
@@ -431,7 +435,7 @@ jQuery(document).ready(function ($) {
 						action : 'edd_check_for_download_price_variations',
 						download_id: download_id
 					};
-					
+
 					$.ajax({
 						type: "POST",
 						data: postData,
@@ -451,19 +455,6 @@ jQuery(document).ready(function ($) {
 
 		},
 
-		status_change : function() {
-
-			// Show / hide the send purchase receipt check box on the Edit payment screen
-			$('#edd_payment_status').change(function() {
-				if ( 'publish' === $( '#edd_payment_status option:selected' ).val() ) {
-					$( '#edd_payment_notification' ).slideDown();
-				} else {
-					$( '#edd_payment_notification' ).slideUp();
-				}
-			});
-
-		},
-
 		add_note : function() {
 
 			$('#edd-add-payment-note').on('click', function(e) {
@@ -473,7 +464,7 @@ jQuery(document).ready(function ($) {
 					payment_id : $(this).data('payment-id'),
 					note : $('#edd-payment-note').val()
 				};
-				
+
 				if( postData.note ) {
 
 					$.ajax({
@@ -510,13 +501,13 @@ jQuery(document).ready(function ($) {
 				e.preventDefault();
 
 				if( confirm( edd_vars.delete_payment_note) ) {
-					
+
 					var postData = {
 						action : 'edd_delete_payment_note',
 						payment_id : $(this).data('payment-id'),
 						note_id : $(this).data('note-id')
 					};
-					
+
 					$.ajax({
 						type: "POST",
 						data: postData,
@@ -556,15 +547,16 @@ jQuery(document).ready(function ($) {
 					download_id : $this.data('download-id'),
 					price_id    : $this.data('price-id')
 				};
-				
+
 				$.ajax({
 					type: "POST",
 					data: postData,
 					url: ajaxurl,
 					success: function (link) {
-						
-						alert( edd_vars.copy_download_link_text + "\n\n" + link );
-
+						$( "#edd-download-link" ).dialog({
+							width: 400
+						}).html( '<textarea rows="10" cols="40" id="edd-download-link-textarea">' + link + '</textarea>' );
+						$( "#edd-download-link-textarea" ).focus().select();
 						return false;
 					}
 				}).fail(function (data) {
@@ -587,14 +579,32 @@ jQuery(document).ready(function ($) {
 
 		init : function() {
 			this.type_select();
+			this.product_requirements();
 		},
-
 
 		type_select : function() {
 
 			$('#edd-edit-discount #edd-type, #edd-add-discount #edd-type').change(function() {
 
-				$('.edd-amount-description').toggle();			
+				$('.edd-amount-description').toggle();
+
+			});
+
+		},
+
+		product_requirements : function() {
+
+			$('#products').change(function() {
+
+				if( $(this).val() ) {
+
+					$('#edd-discount-product-conditions').show();
+
+				} else {
+
+					$('#edd-discount-product-conditions').hide();
+					
+				}
 
 			});
 
@@ -633,11 +643,27 @@ jQuery(document).ready(function ($) {
 			// Show / hide Download option when exporting customers
 
 			$( '#edd_customer_export_download' ).change( function() {
-				var $this = $(this);
+
+				var $this = $(this), download_id = $('option:selected', $this).val();
+
 				if ( '0' === $this.val() ) {
 					$( '#edd_customer_export_option' ).show();
 				} else {
 					$( '#edd_customer_export_option' ).hide();
+				}
+
+				// On Download Select, Check if Variable Prices Exist
+				if ( parseInt( download_id ) != 0 ) {
+					var data = {
+						action : 'edd_check_for_download_price_variations',
+						download_id: download_id
+					};
+					$.post(ajaxurl, data, function(response) {
+						$('.edd_price_options_select').remove();
+						$this.after( response );
+					});
+				} else {
+					$('.edd_price_options_select').remove();
 				}
 			});
 
@@ -763,6 +789,10 @@ jQuery(document).ready(function ($) {
 		},
 
 		taxes : function() {
+
+			if( $('select.edd-no-states').length ) {
+				$('select.edd-no-states').closest('tr').hide();
+			}
 
 			// Update base state field based on selected base country
 			$('select[name="edd_settings[base_country]"]').change(function() {
@@ -945,13 +975,13 @@ jQuery(document).ready(function ($) {
 		if(
 			val.length <= 3 ||
 			(
-				e.which == 16 || 
-				e.which == 13 || 
-				e.which == 91 || 
-				e.which == 17 || 
-				e.which == 37 || 
-				e.which == 38 || 
-				e.which == 39 || 
+				e.which == 16 ||
+				e.which == 13 ||
+				e.which == 91 ||
+				e.which == 17 ||
+				e.which == 37 ||
+				e.which == 38 ||
+				e.which == 39 ||
 				e.which == 40
 			)
 		) {
@@ -973,6 +1003,7 @@ jQuery(document).ready(function ($) {
 						$('ul.chosen-results').empty();
 					},
 					success: function( data ) {
+
 						// Remove all options but those that are selected
 					 	$('#' + menu_id + ' option:not(:selected)').remove();
 						$.each( data, function( key, item ) {
@@ -998,8 +1029,8 @@ jQuery(document).ready(function ($) {
 	});
 
 	// This fixes the Chosen box being 0px wide when the thickbox is opened
-	$('.edd-thickbox').on('click', function() {
-		$('#choose-download .edd-select-chosen').css('width', '100%');
+	$( '#post' ).on( 'click', '.edd-thickbox', function() {
+		$( '.edd-select-chosen', '#choose-download' ).css( 'width', '100%' );
 	});
 
 	/**
@@ -1024,5 +1055,37 @@ jQuery(document).ready(function ($) {
 		},
 	};
 	EDD_Tools.init();
+
+	// Ajax user search
+	$('.edd-ajax-user-search').keyup(function() {
+		var user_search = $(this).val();
+		$('.edd-ajax').show();
+		data = {
+			action: 'edd_search_users',
+			user_name: user_search
+		};
+		
+		document.body.style.cursor = 'wait';
+
+		$.ajax({
+			type: "POST",
+			data: data,
+			dataType: "json",
+			url: ajaxurl,
+			success: function (search_response) {
+
+				$('.edd-ajax').hide();
+				$('.edd_user_search_results').html('');
+				$(search_response.results).appendTo('.edd_user_search_results');
+				document.body.style.cursor = 'default';
+			}
+		});
+	});
+	$('body').on('click.eddSelectUser', '.edd_user_search_results a', function(e) {
+		e.preventDefault();
+		var login = $(this).data('login');
+		$('.edd-ajax-user-search').val(login);
+		$('.edd_user_search_results').html('');
+	});
 
 });

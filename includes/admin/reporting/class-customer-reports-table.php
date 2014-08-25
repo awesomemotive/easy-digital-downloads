@@ -108,21 +108,26 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 */
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
-			case 'name' :
-				return '<a href="' .
-						admin_url( '/edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $item['email'] )
-					) . '">' . esc_html( $item[ $column_name ] ) . '</a>';
+	
+			case 'num_purchases' :
+				$value = '<a href="' .
+					admin_url( '/edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $item['email'] )
+				) . '">' . esc_html( $item['num_purchases'] ) . '</a>';
+				break;
 
 			case 'amount_spent' :
-				return edd_currency_filter( edd_format_amount( $item[ $column_name ] ) );
+				$value = edd_currency_filter( edd_format_amount( $item[ $column_name ] ) );
+				break;
 
 			case 'file_downloads' :
-					return '<a href="' . admin_url( '/edit.php?post_type=download&page=edd-reports&tab=logs&user=' . urlencode( ! empty( $item['ID'] ) ? $item['ID'] : $item['email'] ) ) . '" target="_blank">' . __( 'View download log', 'edd' ) . '</a>';
-
+				$user = ! empty( $item['user_id'] ) ? $item['user_id'] : $item['email'];
+				$value = '<a href="' . esc_url( admin_url( '/edit.php?post_type=download&page=edd-reports&tab=logs&user=' . urlencode( $user ) ) ) . '">' . __( 'View download log', 'edd' ) . '</a>';
+				break;
 			default:
 				$value = isset( $item[ $column_name ] ) ? $item[ $column_name ] : null;
-				return apply_filters( 'edd_report_column_' . $column_name, $value, $item['ID'] );
+				break;
 		}
+		return apply_filters( 'edd_report_column_' . $column_name, $value, $item['id'] );
 	}
 
 	/**
@@ -135,6 +140,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	public function get_columns() {
 		$columns = array(
 			'name'     		=> __( 'Name', 'edd' ),
+			'id'     		=> __( 'ID', 'edd' ),
 			'email'     	=> __( 'Email', 'edd' ),
 			'num_purchases' => __( 'Purchases', 'edd' ),
 			'amount_spent'  => __( 'Total Spent', 'edd' ),
@@ -142,6 +148,23 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		);
 
 		return apply_filters( 'edd_report_customer_columns', $columns );
+
+	}
+
+	/**
+	 * Get the sortable columns
+	 *
+	 * @access public
+	 * @since 2.1
+	 * @return array Array of all the sortable columns
+	 */
+	public function get_sortable_columns() {
+		return array(
+			'id' 	        => array( 'id', true ),
+			'name' 	        => array( 'name', true ),
+			'num_purchases' => array( 'purchase_count', false ),
+			'amount_spent' 	=> array( 'purchase_value', false ),
+		);
 	}
 
 	/**
@@ -151,7 +174,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @since 1.5
 	 * @return void
 	 */
-	public function bulk_actions() {
+	public function bulk_actions( $which = '' ) {
 		// These aren't really bulk actions but this outputs the markup in the right place
 		edd_report_views();
 	}
@@ -190,41 +213,43 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	public function reports_data() {
 		global $wpdb;
 
-		$data   = array();
-		$paged  = $this->get_paged();
-		$offset = $this->per_page * ( $paged - 1 );
-		$search = $this->get_search();
-		$where  = "WHERE meta_key = '_edd_payment_user_email'";
+		$data    = array();
+		$paged   = $this->get_paged();
+		$offset  = $this->per_page * ( $paged - 1 );
+		$search  = $this->get_search();
+		$order   = isset( $_GET['order'] )   ? sanitize_text_field( $_GET['order'] )   : 'DESC';
+		$orderby = isset( $_GET['orderby'] ) ? sanitize_text_field( $_GET['orderby'] ) : 'id';
 
-		if ( $search ) {
-			$where .= " AND meta_value LIKE '%$search%'";
+		$args    = array(
+			'number'  => $this->per_page,
+			'offset'  => $offset,
+			'order'   => $order,
+			'orderby' => $orderby
+		);
+
+		if( is_email( $search ) ) {
+			$args['email'] = $search;
+		} elseif( is_numeric( $search ) ) {
+			$args['id']    = $search;
 		}
 
-		$customers = $wpdb->get_col( "SELECT DISTINCT meta_value FROM $wpdb->postmeta $where ORDER BY meta_id DESC LIMIT $this->per_page OFFSET $offset" );
+		$customers = EDD()->customers->get_customers( $args );
 
 		if ( $customers ) {
 
 			$this->count = count( $customers );
 
-			foreach ( $customers as $customer_email ) {
-				$wp_user = get_user_by( 'email', $customer_email );
+			foreach ( $customers as $customer ) {
 
-				$user_id = $wp_user ? $wp_user->ID : 0;
-
-				if( $wp_user ) {
-					$user = $user_id;
-				} else {
-					$user = $customer_email;
-				}
-
-				$stats   = edd_get_purchase_stats_by_user( $user );
+				$user_id = ! empty( $customer->user_id ) ? absint( $customer->user_id ) : 0;
 
 				$data[] = array(
-					'ID' 			=> $user_id,
-					'name' 			=> $wp_user ? $wp_user->display_name : __( 'Guest', 'edd' ),
-					'email' 		=> $customer_email,
-					'num_purchases'	=> $stats['purchases'],
-					'amount_spent'	=> $stats['total_spent']
+					'id'            => $customer->id,
+					'user_id'       => $user_id,
+					'name'          => $customer->name,
+					'email'         => $customer->email,
+					'num_purchases'	=> $customer->purchase_count,
+					'amount_spent'	=> $customer->purchase_value
 				);
 			}
 		}
@@ -244,24 +269,21 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function prepare_items() {
-		$columns = $this->get_columns();
 
-		$hidden = array(); // No hidden columns
-
+		$columns  = $this->get_columns();
+		$hidden   = array(); // No hidden columns
 		$sortable = $this->get_sortable_columns();
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-
-		$current_page = $this->get_pagenum();
 
 		$this->items = $this->reports_data();
 
 		$this->total = edd_count_total_customers();
 
 		$this->set_pagination_args( array(
-			'total_items' => $this->count,                  	// WE have to calculate the total number of items
-			'per_page'    => $this->per_page,                     	// WE have to determine how many items to show on a page
-			'total_pages' => ceil( $this->total / $this->per_page )   // WE have to calculate the total number of pages
+			'total_items' => $this->total,
+			'per_page'    => $this->per_page,
+			'total_pages' => ceil( $this->total / $this->per_page )
 		) );
 	}
 }

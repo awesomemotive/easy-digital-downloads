@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return      void
  */
 function edd_tools_page() {
-	$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'tools';
+	$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'general';
 ?>
 	<div class="wrap">
 		<?php screen_icon(); ?>
@@ -87,7 +87,7 @@ function edd_tools_banned_emails_display() {
 		<h3><span><?php _e( 'Banned Emails', 'edd' ); ?></span></h3>
 		<div class="inside">
 			<p><?php _e( 'Emails placed in the box below will not be allowed to make purchases.', 'edd' ); ?></p>
-			<form method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=tools' ); ?>">
+			<form method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ); ?>">
 				<p>
 					<textarea name="banned_emails" rows="10" class="large-text"><?php echo implode( "\n", edd_get_banned_emails() ); ?></textarea>
 					<span class="description"><?php _e( 'Enter emails to disallow, one per line', 'edd' ); ?></span>
@@ -102,6 +102,7 @@ function edd_tools_banned_emails_display() {
 	</div><!-- .postbox -->
 <?php
 	do_action( 'edd_tools_banned_emails_after' );
+	do_action( 'edd_tools_after' );
 }
 add_action( 'edd_tools_tab_general', 'edd_tools_banned_emails_display' );
 
@@ -120,8 +121,15 @@ function edd_tools_api_keys_display() {
 	$api_keys_table = new EDD_API_Keys_Table();
 	$api_keys_table->prepare_items();
 	$api_keys_table->display();
-
-	echo '<p class="description">' . __( 'To generate new API keys, visit the Edit Profile page for a given user.', 'edd' ) . '</p>';
+?>
+	<p>
+	<?php printf(
+		__( 'These API keys allow you to use the <a href="%s">EDD REST API</a> to retrieve store data in JSON or XML for external applications or devices, such as the <a href="%s">EDD mobile apps</a>.', 'edd' ),
+		'https://easydigitaldownloads.com/docs/edd-api-reference/',
+		'https://easydigitaldownloads.com/blog/extensions/categories/mobile/'
+	); ?>
+	</p>
+<?php
 
 	do_action( 'edd_tools_api_keys_after' );
 }
@@ -223,7 +231,7 @@ function edd_tools_import_export_process_export() {
 
 	nocache_headers();
 	header( 'Content-Type: application/json; charset=utf-8' );
-	header( 'Content-Disposition: attachment; filename=edd-settings-export-' . date( 'm-d-Y' ) . '.json' );
+	header( 'Content-Disposition: attachment; filename=' . apply_filters( 'edd_settings_export_filename', 'edd-settings-export-' . date( 'm-d-Y' ) ) . '.json' );
 	header( "Expires: 0" );
 
 	echo json_encode( $settings );
@@ -346,6 +354,7 @@ function edd_tools_sysinfo_get() {
 	// WordPress configuration
 	$return .= "\n" . '-- WordPress Configuration' . "\n\n";
 	$return .= 'Version:                  ' . get_bloginfo( 'version' ) . "\n";
+	$return .= 'Language:                 ' . ( defined( 'WPLANG' ) && WPLANG ? WPLANG : 'en_US' ) . "\n";
 	$return .= 'Permalink Structure:      ' . ( get_option( 'permalink_structure' ) ? get_option( 'permalink_structure' ) : 'Default' ) . "\n";
 	$return .= 'Active Theme:             ' . $theme . "\n";
 	$return .= 'Show On Front:            ' . get_option( 'show_on_front' ) . "\n";
@@ -394,6 +403,10 @@ function edd_tools_sysinfo_get() {
 	$return .= 'Guest Checkout:           ' . ( edd_no_guest_checkout() ? "Disabled\n" : "Enabled\n" );
 	$return .= 'Symlinks:                 ' . ( apply_filters( 'edd_symlink_file_downloads', isset( $edd_options['symlink_file_downloads'] ) ) && function_exists( 'symlink' ) ? "Enabled\n" : "Disabled\n" );
 	$return .= 'Download Method:          ' . ucfirst( edd_get_file_download_method() ) . "\n";
+	$return .= 'Currency Code:            ' . edd_get_currency() . "\n";
+	$return .= 'Currency Position:        ' . edd_get_option( 'currency_position', 'before' ) . "\n";
+	$return .= 'Decimal Separator:        ' . edd_get_option( 'decimal_separator', '.' ) . "\n";
+	$return .= 'Thousands Separator:      ' . edd_get_option( 'thousands_separator', ',' ) . "\n";
 
 	$return  = apply_filters( 'edd_sysinfo_after_edd_config', $return );
 
@@ -415,7 +428,7 @@ function edd_tools_sysinfo_get() {
 		$default_gateway_is_active = edd_is_gateway_active( edd_get_default_gateway() );
 		if( $default_gateway_is_active ) {
 			$default_gateway = edd_get_default_gateway();
-			$default_gateway = $active_gateways[$default_geteway]['admin_label'];
+			$default_gateway = $active_gateways[$default_gateway]['admin_label'];
 		} else {
 			$default_gateway = 'Test Payment';
 		}
@@ -437,12 +450,10 @@ function edd_tools_sysinfo_get() {
 	// EDD Taxes
 	$return .= "\n" . '-- EDD Tax Configuration' . "\n\n";
 	$return .= 'Taxes:                    ' . ( edd_use_taxes() ? "Enabled\n" : "Disabled\n" );
-	$return .= 'Taxes Applied:            ' . ( edd_taxes_after_discounts() ? "After Discounts\n" : "Before Discounts\n" );
 	$return .= 'Tax Rate:                 ' . edd_get_tax_rate() * 100 . "\n";
 	$return .= 'Display On Checkout:      ' . ( !empty( $edd_options['checkout_include_tax'] ) ? "Displayed\n" : "Not Displayed\n" );
 	$return .= 'Prices Include Tax:       ' . ( edd_prices_include_tax() ? "Yes\n" : "No\n" );
-	$return .= 'Taxes After Discounts:    ' . ( edd_taxes_after_discounts() ? "Yes\n" : "No\n" );
-			
+
 	$rates = edd_get_tax_rates();
 	if( !empty( $rates ) ) {
 		$return .= 'Country / State Rates:    ' . "\n";
@@ -461,13 +472,13 @@ function edd_tools_sysinfo_get() {
 		foreach( glob( $dir ) as $file ) {
 			$return .= 'Filename:                 ' . basename( $file ) . "\n";
 		}
-		
+
 		$return  = apply_filters( 'edd_sysinfo_after_edd_templates', $return );
 	}
 
 	// WordPress active plugins
 	$return .= "\n" . '-- WordPress Active Plugins' . "\n\n";
-	
+
 	$plugins = get_plugins();
 	$active_plugins = get_option( 'active_plugins', array() );
 
@@ -515,7 +526,7 @@ function edd_tools_sysinfo_get() {
 	// Server configuration (really just versioning)
 	$return .= "\n" . '-- Webserver Configuration' . "\n\n";
 	$return .= 'PHP Version:              ' . PHP_VERSION . "\n";
-	$return .= 'MySQL Version:            ' . mysqli_get_client_version() . "\n";
+	$return .= 'MySQL Version:            ' . $wpdb->db_version() . "\n";
 	$return .= 'Webserver Info:           ' . $_SERVER['SERVER_SOFTWARE'] . "\n";
 
 	$return  = apply_filters( 'edd_sysinfo_after_webserver_config', $return );
@@ -544,7 +555,7 @@ function edd_tools_sysinfo_get() {
 
 	// Session stuff
 	$return .= "\n" . '-- Session Configuration' . "\n\n";
-	$return .= 'EDD Use Sessions:         ' . ( defined( 'EDD_USE_PHP_SESSIONS' ) ? 'Enabled' : 'Disabled' ) . "\n";
+	$return .= 'EDD Use Sessions:         ' . ( defined( 'EDD_USE_PHP_SESSIONS' ) && EDD_USE_PHP_SESSIONS ? 'Enforced' : ( EDD()->session->use_php_sessions() ? 'Enabled' : 'Disabled' ) ) . "\n";
 	$return .= 'Session:                  ' . ( isset( $_SESSION ) ? 'Enabled' : 'Disabled' ) . "\n";
 
 	// The rest of this is only relevant is session is enabled
