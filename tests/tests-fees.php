@@ -8,9 +8,13 @@ class Tests_Fee extends WP_UnitTestCase {
 	protected $_post = null;
 
 	public function setUp() {
+
 		parent::setUp();
 		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );;
 		$this->_post = get_post( $post_id );
+
+		edd_add_to_cart( $this->_post->ID );
+
 	}
 
 	public function test_adding_fees() {
