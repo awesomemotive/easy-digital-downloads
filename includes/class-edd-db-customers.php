@@ -137,7 +137,7 @@ class EDD_DB_Customers extends EDD_DB  {
 	*/
 	public function exists( $email = '' ) {
 
-		return $this->get_column_by( 'id', 'email', $email );
+		return (bool) $this->get_column_by( 'id', 'email', $email );
 
 	}
 
