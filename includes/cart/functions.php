@@ -666,7 +666,12 @@ function edd_get_cart_fee_tax() {
 				continue;
 			}
 
+			// Fees must (at this time) be exclusive of tax
+			add_filter( 'edd_prices_include_tax', '__return_false' );
+
 			$tax += edd_calculate_tax( $fee['amount'] );
+
+			remove_filter( 'edd_prices_include_tax', '__return_false' );
 
 		}
 	}
