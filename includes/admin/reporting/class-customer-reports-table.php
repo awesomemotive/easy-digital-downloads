@@ -157,7 +157,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @since 1.5
 	 * @return void
 	 */
-	public function bulk_actions() {
+	public function bulk_actions( $which = '' ) {
 		// These aren't really bulk actions but this outputs the markup in the right place
 		edd_report_views();
 	}
