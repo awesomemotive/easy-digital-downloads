@@ -22,6 +22,9 @@ jQuery(document).ready(function ($) {
             data: data,
             dataType: "json",
             url: edd_scripts.ajaxurl,
+            xhrFields: {
+                withCredentials: true
+            },
             success: function (response) {
             	if (response.removed) {
 	                if ( parseInt( edd_scripts.position_in_cart, 10 ) === parseInt( item, 10 ) ) {
@@ -131,6 +134,9 @@ jQuery(document).ready(function ($) {
             data: data,
             dataType: "json",
             url: edd_scripts.ajaxurl,
+            xhrFields: {
+                withCredentials: true
+            },
             success: function (response) {
 
             	if( edd_scripts.redirect_to_checkout == '1' ) {
