@@ -64,7 +64,7 @@ class Tests_Customers extends WP_UnitTestCase {
 
 		$user_info = array(
 			'id' => $user->ID,
-			'email' => $user->user_email,
+			'email' => 'testadmin@domain.com',
 			'first_name' => $user->first_name,
 			'last_name' => $user->last_name,
 			'discount' => 'none'
@@ -130,7 +130,7 @@ class Tests_Customers extends WP_UnitTestCase {
 		parent::tearDown();
 	}
 
-	public function test_get_columns() {
+	public function test_get_customer_columns() {
 		$columns = array(
 			'id'             => '%d',
 			'user_id'        => '%d',
@@ -144,6 +144,35 @@ class Tests_Customers extends WP_UnitTestCase {
 		);
 
 		$this->assertEquals( $columns, EDD()->customers->get_columns() );
+	}
+
+	public function test_add_customer() {
+
+		$args = array(
+			'email' => 'testaccount@domain.com'
+		);
+
+		$this->_customer_id = EDD()->customers->add( $args );
+
+		$this->assertInternalType( 'int', $this->_customer_id );
+
+	}
+
+	public function test_get_by() {
+
+		$customer = EDD()->customers->get_by( 'email', 'testadmin@domain.com' );
+
+		$this->assertInternalType( 'object', $customer );
+		$this->assertObjectHasAttribute( 'email', $customer );
+
+	}
+
+	public function test_get_column_by() {
+
+		$customer_id = EDD()->customers->get_column_by( 'id', 'email', 'testadmin@domain.com' );
+
+		$this->assertGreaterThan( 0, $customer_id );
+
 	}
 
 
