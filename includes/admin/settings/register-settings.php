@@ -305,7 +305,7 @@ function edd_get_registered_settings() {
 				'email_logo' => array(
 					'id' => 'email_logo',
 					'name' => __( 'Logo', 'edd' ),
-					'desc' => __( 'Upload or choose a logo to be displayed at the top of the purchase receipt emails.', 'edd' ),
+					'desc' => __( 'Upload or choose a logo to be displayed at the top of the purchase receipt emails. Displayed on HTML emails only.', 'edd' ),
 					'type' => 'upload'
 				),
 				'email_settings' => array(
