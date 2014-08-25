@@ -79,7 +79,7 @@ class EDD_DB_Customers extends EDD_DB  {
 	public function add( $data = array() ) {
 
 		$defaults = array(
-			'payment_ids' => array()
+			'payment_ids' => ''
 		);
 
 		$args = wp_parse_args( $data, $defaults );
