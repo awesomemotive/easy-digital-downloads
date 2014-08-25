@@ -537,6 +537,9 @@ function edd_v21_upgrade_customers_db() {
 	} else {
 
 		// No more customers found, finish up
+
+		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+
 		wp_redirect( admin_url() ); exit;
 	}
 
