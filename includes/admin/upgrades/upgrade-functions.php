@@ -473,6 +473,10 @@ function edd_v21_upgrade_customers_db() {
 
 		foreach( $emails as $email ) {
 
+			if( EDD()->customers->exists( $email ) ) {
+				continue; // Allow the upgrade routine to be safely re-run in the case of failure
+			}
+
 			$args = array(
 				'user'    => $email,
 				'order'   => 'ASC',
