@@ -175,6 +175,11 @@ class Tests_Customers extends WP_UnitTestCase {
 
 	}
 
+	public function test_exists() {
+
+		$this->assertTrue( EDD()->customers->exists( 'testadmin@domain.com' ) );
+
+	}
 
 	public function test_users_purchases() {
 
