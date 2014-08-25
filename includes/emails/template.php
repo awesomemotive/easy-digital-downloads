@@ -145,7 +145,7 @@ function edd_get_email_body_content( $payment_id = 0, $payment_data = array() ) 
 
 	$email = isset( $edd_options['purchase_receipt'] ) ? stripslashes( $edd_options['purchase_receipt'] ) : $default_email_body;
 
-	$email_body = edd_do_email_tags( $email, $payment_id );
+	$email_body = wpautop( edd_do_email_tags( $email, $payment_id ) );
 
 	$email_body = apply_filters( 'edd_purchase_receipt_' . $emails->get_template(), $email_body, $payment_id, $payment_data );
 
