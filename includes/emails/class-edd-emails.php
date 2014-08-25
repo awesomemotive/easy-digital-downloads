@@ -185,7 +185,11 @@ class EDD_Emails {
 	 * @since 2.1
 	 */
 	public function parse_tags( $content ) {
-		return $content; // Do something with email tags once complete.
+
+		// The email tags are parsed during setup for purchase receipts and sale notifications
+		// Onoce tags are not restricted to payments, we'll expand this. See https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/2151
+
+		return $content;
 	}
 
 	/**
