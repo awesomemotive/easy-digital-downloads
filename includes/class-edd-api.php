@@ -30,7 +30,7 @@ class EDD_API {
 	/**
 	 * API Version
 	 */
-	const VERSION = '1.2';
+	const VERSION = '1.3';
 
 	/**
 	 * Pretty Print?
@@ -226,12 +226,18 @@ class EDD_API {
 			return false;
 		}
 
-		$user = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'edd_user_public_key' AND meta_value = %s LIMIT 1", $key ) );
+		$user = get_transient( md5( 'edd_api_user_' . $key ) );
+
+		if ( false === $user ) {
+			$user = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'edd_user_public_key' AND meta_value = %s LIMIT 1", $key ) );
+			set_transient( md5( 'edd_api_user_' . $key ) , $user, DAY_IN_SECONDS );
+		}
 
 		if ( $user != NULL ) {
 			$this->user_id = $user;
 			return $user;
 		}
+
 		return false;
 	}
 
@@ -634,64 +640,74 @@ class EDD_API {
 			return $customers;
 		}
 
-		if ( $customer == null ) {
-			global $wpdb;
+		global $wpdb;
 
-			$paged    = $this->get_paged();
-			$per_page = $this->per_page();
-			$offset   = $per_page * ( $paged - 1 );
-			$customer_list_query = $wpdb->get_col( "SELECT DISTINCT meta_value FROM $wpdb->postmeta where meta_key = '_edd_payment_user_email' ORDER BY meta_id DESC LIMIT $per_page OFFSET $offset" );
-			$customer_count = 0;
+		$paged    = $this->get_paged();
+		$per_page = $this->per_page();
+		$offset   = $per_page * ( $paged - 1 );
 
-			foreach ( $customer_list_query as $customer_email ) {
-				$customer_info = get_user_by( 'email', $customer_email );
+		if( is_numeric( $customer ) ) {
+			$field = 'id';
+		} else {
+			$field = 'email';
+		}
 
-				if ( $customer_info ) {
-					// Customer with registered account
-					$customers['customers'][$customer_count]['info']['id']           = $customer_info->ID;
-					$customers['customers'][$customer_count]['info']['username']     = $customer_info->user_login;
-					$customers['customers'][$customer_count]['info']['display_name'] = $customer_info->display_name;
-					$customers['customers'][$customer_count]['info']['first_name']   = $customer_info->user_firstname;
-					$customers['customers'][$customer_count]['info']['last_name']    = $customer_info->user_lastname;
-					$customers['customers'][$customer_count]['info']['email']        = $customer_info->user_email;
-				} else {
-					// Guest customer
-					$customers['customers'][$customer_count]['info']['id']           = -1;
-					$customers['customers'][$customer_count]['info']['username']     = __( 'Guest', 'edd' );
-					$customers['customers'][$customer_count]['info']['display_name'] = __( 'Guest', 'edd' );
-					$customers['customers'][$customer_count]['info']['first_name']   = __( 'Guest', 'edd' );
-					$customers['customers'][$customer_count]['info']['last_name']    = __( 'Guest', 'edd' );
-					$customers['customers'][$customer_count]['info']['email']        = $customer_email;
+		$customer_query = EDD()->customers->get_customers( array( 'number' => $per_page, $field => $customer ) );
+		$customer_count = 0;
+
+		if( $customer_query ) {
+
+			foreach ( $customer_query as $customer_obj ) {
+
+				$names      = explode( ' ', $customer_obj->name );
+				$first_name = ! empty( $names[0] ) ? $names[0] : '';
+				$last_name  = '';
+				if( ! empty( $names[1] ) ) {
+					unset( $names[0] );
+					$last_name = implode( ' ', $names );
 				}
 
-				$customers['customers'][$customer_count]['stats']['total_purchases'] = edd_count_purchases_of_customer( $customer_email );
-				$customers['customers'][$customer_count]['stats']['total_spent']     = edd_purchase_total_of_user( $customer_email );
-				$customers['customers'][$customer_count]['stats']['total_downloads'] = edd_count_file_downloads_of_user( $customer_email );
+				$customers['customers'][$customer_count]['info']['id']           = '';
+				$customers['customers'][$customer_count]['info']['user_id']      = '';
+				$customers['customers'][$customer_count]['info']['username']     = '';
+				$customers['customers'][$customer_count]['info']['display_name'] = '';
+				$customers['customers'][$customer_count]['info']['customer_id']  = $customer_obj->id;
+				$customers['customers'][$customer_count]['info']['first_name']   = $first_name;
+				$customers['customers'][$customer_count]['info']['last_name']    = $last_name;
+				$customers['customers'][$customer_count]['info']['email']        = $customer_obj->email;
+
+				if ( ! empty( $customer_obj->user_id ) ) {
+				
+					$user_data = get_userdata( $customer_obj->user_id );
+
+					// Customer with registered account
+
+					// id is going to get deprecated in the future, user user_id or customer_id instead
+					$customers['customers'][$customer_count]['info']['id']           = $customer_obj->user_id;
+					$customers['customers'][$customer_count]['info']['user_id']      = $customer_obj->user_id;
+					$customers['customers'][$customer_count]['info']['username']     = $user_data->user_login;
+					$customers['customers'][$customer_count]['info']['display_name'] = $user_data->display_name;
+
+				}
+
+				$customers['customers'][$customer_count]['stats']['total_purchases'] = $customer_obj->purchase_count;
+				$customers['customers'][$customer_count]['stats']['total_spent']     = $customer_obj->purchase_value;
+				$customers['customers'][$customer_count]['stats']['total_downloads'] = edd_count_file_downloads_of_user( $customer_obj->email );
 
 				$customer_count++;
+
 			}
+
+		} elseif( $customer ) {
+
+			$error['error'] = sprintf( __( 'Customer %s not found!', 'edd' ), $customer );
+			return $error;
+
 		} else {
-			if ( is_numeric( $customer ) ) {
-				$customer_info = get_userdata( $customer );
-			} else {
-				$customer_info = get_user_by( 'email', $customer );
-			}
 
-			if ( $customer_info && edd_has_purchases( $customer_info->ID ) ) {
-				$customers['customers'][0]['info']['id']               = $customer_info->ID;
-				$customers['customers'][0]['info']['username']         = $customer_info->user_login;
-				$customers['customers'][0]['info']['display_name']     = $customer_info->display_name;
-				$customers['customers'][0]['info']['first_name']       = $customer_info->user_firstname;
-				$customers['customers'][0]['info']['last_name']        = $customer_info->user_lastname;
-				$customers['customers'][0]['info']['email']            = $customer_info->user_email;
+			$error['error'] = __( 'No customers found!', 'edd' );
+			return $error;
 
-				$customers['customers'][0]['stats']['total_purchases'] = edd_count_purchases_of_customer( $customer );
-				$customers['customers'][0]['stats']['total_spent']     = edd_purchase_total_of_user( $customer );
-				$customers['customers'][0]['stats']['total_downloads'] = edd_count_file_downloads_of_user( $customer );
-			} else {
-				$error['error'] = sprintf( __( 'Customer %s not found!', 'edd' ), $customer );
-				return $error;
-			}
 		}
 
 		return $customers;
@@ -731,6 +747,7 @@ class EDD_API {
 					$products['products'][$i]['info']['status']                       = $product_info->post_status;
 					$products['products'][$i]['info']['link']                         = html_entity_decode( $product_info->guid );
 					$products['products'][$i]['info']['content']                      = $product_info->post_content;
+					$products['products'][$i]['info']['excerpt']                      = $product_info->post_excerpt;
 					$products['products'][$i]['info']['thumbnail']                    = wp_get_attachment_url( get_post_thumbnail_id( $product_info->ID ) );
 					$products['products'][$i]['info']['category']                     = get_the_terms( $product_info, 'download_category' );
 					$products['products'][$i]['info']['tags']                         = get_the_terms( $product_info, 'download_tag' );
@@ -835,6 +852,7 @@ class EDD_API {
 		$stats    = array();
 		$earnings = array();
 		$sales    = array();
+		$error    = array();
 
 		if( ! user_can( $this->user_id, 'view_shop_reports' ) && ! $this->override ) {
 			return $stats;
@@ -1095,7 +1113,7 @@ class EDD_API {
 				$user_info    = edd_get_payment_meta_user_info( $payment->ID );
 				$cart_items   = edd_get_payment_meta_cart_details( $payment->ID );
 
-				$sales['sales'][ $i ]['ID']       = $payment->ID;
+				$sales['sales'][ $i ]['ID']       = edd_get_payment_number( $payment->ID );
 				$sales['sales'][ $i ]['key']      = edd_get_payment_key( $payment->ID );
 				$sales['sales'][ $i ]['discount'] = isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ? explode( ',', $user_info['discount'] ) : array();
 				$sales['sales'][ $i ]['subtotal'] = edd_get_payment_subtotal( $payment->ID );
@@ -1121,8 +1139,8 @@ class EDD_API {
 						$price = edd_get_download_final_price( $item_id, $user_info, null );
 					}
 
+					$price_name = '';
 					if ( isset( $item['item_number'] ) && isset( $item['item_number']['options'] ) ) {
-						$price_name     = '';
 						$price_options  = $item['item_number']['options'];
 						if ( isset( $price_options['price_id'] ) ) {
 							$price_name = edd_get_price_option_name( $item['id'], $price_options['price_id'], $payment->ID );
@@ -1168,6 +1186,11 @@ class EDD_API {
 			$per_page  = $this->per_page();
 			$discounts = edd_get_discounts( array( 'posts_per_page' => $per_page, 'paged' => $paged ) );
 			$count     = 0;
+
+			if( empty( $discounts ) ) {
+				$error['error'] = __( 'No disocunts found!', 'edd' );
+				return $error;
+			}
 
 			foreach ( $discounts as $discount ) {
 
@@ -1388,23 +1411,38 @@ class EDD_API {
 	 * @return void
 	 */
 	public function process_api_key( $args ) {
-		$user_id	= isset( $args['user_id'] ) ? absint( $args['user_id'] ) : get_current_user_id();
+
+		if( is_numeric( $args['user_id'] ) ) {
+			$user_id    = isset( $args['user_id'] ) ? absint( $args['user_id'] ) : get_current_user_id();
+		} else {
+			$userdata   = get_user_by( 'login', $args['user_id'] );
+			$user_id    = $userdata->ID;
+		}
 		$process    = isset( $args['edd_api_process'] ) ? strtolower( $args['edd_api_process'] ) : false;
+
+		if( $user_id == get_current_user_id() && ! edd_get_option( 'allow_user_api_keys' ) && ! current_user_can( 'manage_shop_settings' ) ) {
+			wp_die( sprintf( __( 'You do not have permission to %s API keys for this user', 'edd' ), $process ) );
+		} elseif( ! current_user_can( 'manage_shop_settings' ) ) {
+			wp_die( sprintf( __( 'You do not have permission to %s API keys for this user', 'edd' ), $process ) );
+		}
 
 		switch( $process ) {
 			case 'generate':
-				$this->generate_api_key( $user_id );
-				if( get_transient( 'edd-total-api-keys' ) ) delete_transient( 'edd-total-api-keys' );
-				wp_redirect( add_query_arg( 'edd-message', 'api-key-generated', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) ); exit();
+				if( $this->generate_api_key( $user_id ) ) {
+					delete_transient( 'edd-total-api-keys' );
+					wp_redirect( add_query_arg( 'edd-message', 'api-key-generated', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) ); exit();
+				} else {
+					wp_redirect( add_query_arg( 'edd-message', 'api-key-exists', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) ); exit();
+				}
 				break;
 			case 'regenerate':
 				$this->generate_api_key( $user_id, true );
-				if( get_transient( 'edd-total-api-keys' ) ) delete_transient( 'edd-total-api-keys' );
+				delete_transient( 'edd-total-api-keys' );
 				wp_redirect( add_query_arg( 'edd-message', 'api-key-regenerated', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) ); exit();
 				break;
 			case 'revoke':
 				$this->revoke_api_key( $user_id );
-				if( get_transient( 'edd-total-api-keys' ) ) delete_transient( 'edd-total-api-keys' );
+				delete_transient( 'edd-total-api-keys' );
 				wp_redirect( add_query_arg( 'edd-message', 'api-key-revoked', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) ); exit();
 				break;
 			default;
@@ -1421,25 +1459,20 @@ class EDD_API {
 	 * @return string
 	 */
 	public function generate_api_key( $user_id, $regenerate = false ) {
-		if ( current_user_can( 'edit_user', $user_id ) ) {
+		$user = get_userdata( $user_id );
 
-			$user = get_userdata( $user_id );
-
-			if ( empty( $user->edd_user_public_key ) ) {
-				update_user_meta( $user_id, 'edd_user_public_key', $this->generate_public_key( $user->user_email ) );
-				update_user_meta( $user_id, 'edd_user_secret_key', $this->generate_private_key( $user->ID ) );
-			} elseif( $regenerate == true ) {
-				$this->revoke_api_key( $user->ID );
-				update_user_meta( $user_id, 'edd_user_public_key', $this->generate_public_key( $user->user_email ) );
-				update_user_meta( $user_id, 'edd_user_secret_key', $this->generate_private_key( $user->ID ) );
-			} else {
-				return false;
-			}
-
-			return true;
+		if ( empty( $user->edd_user_public_key ) ) {
+			update_user_meta( $user_id, 'edd_user_public_key', $this->generate_public_key( $user->user_email ) );
+			update_user_meta( $user_id, 'edd_user_secret_key', $this->generate_private_key( $user->ID ) );
+		} elseif( $regenerate == true ) {
+			$this->revoke_api_key( $user->ID );
+			update_user_meta( $user_id, 'edd_user_public_key', $this->generate_public_key( $user->user_email ) );
+			update_user_meta( $user_id, 'edd_user_secret_key', $this->generate_private_key( $user->ID ) );
+		} else {
+			return false;
 		}
 
-		return false;
+		return true;
 	}
 
 	/**
@@ -1451,21 +1484,17 @@ class EDD_API {
 	 * @return string
 	 */
 	public function revoke_api_key( $user_id ) {
-		if ( current_user_can( 'edit_user', $user_id ) ) {
+		$user = get_userdata( $user_id );
 
-			$user = get_userdata( $user_id );
-
-			if ( ! empty( $user->edd_user_public_key ) ) {
-				delete_user_meta( $user_id, 'edd_user_public_key' );
-				delete_user_meta( $user_id, 'edd_user_secret_key' );
-			} else {
-				return false;
-			}
-
-			return true;
+		if ( ! empty( $user->edd_user_public_key ) ) {
+			delete_transient( md5( 'edd_api_user_' . $user->edd_user_public_key ) );
+			delete_user_meta( $user_id, 'edd_user_public_key' );
+			delete_user_meta( $user_id, 'edd_user_secret_key' );
+		} else {
+			return false;
 		}
 
-		return false;
+		return true;
 	}
 
 
@@ -1489,8 +1518,7 @@ class EDD_API {
 				update_user_meta( $user_id, 'edd_user_public_key', $this->generate_public_key( $user->user_email ) );
 				update_user_meta( $user_id, 'edd_user_secret_key', $this->generate_private_key( $user->ID ) );
 			} else {
-				delete_user_meta( $user_id, 'edd_user_public_key' );
-				delete_user_meta( $user_id, 'edd_user_secret_key' );
+				$this->revoke_api_key( $user_id );
 			}
 		}
 	}

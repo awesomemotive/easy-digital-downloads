@@ -112,20 +112,27 @@ function edd_register_styles() {
 	// Also look for the min version first, followed by non minified version, even if SCRIPT_DEBUG is not enabled.
 	// This allows users to copy just edd.css to their theme
 	if ( file_exists( $child_theme_style_sheet ) || ( ! empty( $suffix ) && ( $nonmin = file_exists( $child_theme_style_sheet_2 ) ) ) ) {
-		if( ! empty( $nonmin ) )
+		if( ! empty( $nonmin ) ) {
 			$url = trailingslashit( get_stylesheet_directory_uri() ) . $templates_dir . 'edd.css';
-		else
+		} else {
 			$url = trailingslashit( get_stylesheet_directory_uri() ) . $templates_dir . $file;
+		}
 	} elseif ( file_exists( $parent_theme_style_sheet ) || ( ! empty( $suffix ) && ( $nonmin = file_exists( $parent_theme_style_sheet_2 ) ) ) ) {
-		if( ! empty( $nonmin ) )
+		if( ! empty( $nonmin ) ) {
 			$url = trailingslashit( get_template_directory_uri() ) . $templates_dir . 'edd.css';
-		else
+		} else {
 			$url = trailingslashit( get_template_directory_uri() ) . $templates_dir . $file;
+		}
 	} elseif ( file_exists( $edd_plugin_style_sheet ) || file_exists( $edd_plugin_style_sheet ) ) {
 		$url = trailingslashit( edd_get_templates_url() ) . $file;
 	}
 
 	wp_enqueue_style( 'edd-styles', $url, array(), EDD_VERSION );
+
+	if( edd_is_checkout() && is_ssl() ) {
+		// Dashicons are used to show the padlock icon on the credit card form
+		wp_enqueue_style( 'dashicons' );
+	}
 }
 add_action( 'wp_enqueue_scripts', 'edd_register_styles' );
 
@@ -145,7 +152,7 @@ function edd_load_admin_scripts( $hook ) {
 		return;
 	}
 
-	global $wp_version;
+	global $wp_version, $post;
 
 	$js_dir  = EDD_PLUGIN_URL . 'assets/js/';
 	$css_dir = EDD_PLUGIN_URL . 'assets/css/';
@@ -192,6 +199,7 @@ function edd_load_admin_scripts( $hook ) {
 	}
 	wp_enqueue_script( 'jquery-flot', $js_dir . 'jquery.flot' . $suffix . '.js' );
 	wp_enqueue_script( 'jquery-ui-datepicker' );
+	wp_enqueue_script( 'jquery-ui-dialog' );
 	$ui_style = ( 'classic' == get_user_option( 'admin_color' ) ) ? 'classic' : 'fresh';
 	wp_enqueue_style( 'jquery-ui-css', $css_dir . 'jquery-ui-' . $ui_style . $suffix . '.css' );
 	wp_enqueue_script( 'media-upload' );
@@ -223,7 +231,8 @@ function edd_admin_downloads_icon() {
 	?>
     <style type="text/css" media="screen">
         <?php if( version_compare( $wp_version, '3.8-RC', '>=' ) || version_compare( $wp_version, '3.8', '>=' ) ) { ?>
-            #adminmenu #menu-posts-download .wp-menu-image:before {
+            #adminmenu #menu-posts-download .wp-menu-image:before,
+            #dashboard_right_now .download-count:before {
                 content: '<?php echo $menu_icon; ?>';
             }
         <?php } else { ?>

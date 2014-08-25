@@ -329,6 +329,18 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Render the ID column
+	 *
+	 * @access public
+	 * @since 2.0
+	 * @param array $payment Contains all the data for the checkbox column
+	 * @return string Displays a checkbox
+	 */
+	public function column_ID( $payment ) {
+		return edd_get_payment_number( $payment->ID );
+	}
+
+	/**
 	 * Render the User Column
 	 *
 	 * @access public
@@ -488,15 +500,10 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * @return array $payment_data Array of all the data for the payments
 	 */
 	public function payments_data() {
-		$payments_data = array();
-
-		$page = isset( $_GET['paged'] ) ? $_GET['paged'] : 1;
 
 		$per_page       = $this->per_page;
 		$orderby 		= isset( $_GET['orderby'] )     ? urldecode( $_GET['orderby'] )              : 'ID';
 		$order 			= isset( $_GET['order'] )       ? $_GET['order']                             : 'DESC';
-		$order_inverse 	= $order == 'DESC'              ? 'ASC'                                      : 'DESC';
-		$order_class 	= strtolower( $order_inverse );
 		$user 			= isset( $_GET['user'] )        ? $_GET['user']                              : null;
 		$status 		= isset( $_GET['status'] )      ? $_GET['status']                            : 'any';
 		$meta_key		= isset( $_GET['meta_key'] )    ? $_GET['meta_key']                          : null;

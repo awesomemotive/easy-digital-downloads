@@ -21,6 +21,9 @@ jQuery(document).ready(function ($) {
             data: data,
             dataType: "json",
             url: edd_scripts.ajaxurl,
+            xhrFields: {
+                withCredentials: true
+            },
             success: function (response) {
             	if (response.removed) {
 	                if ( parseInt( edd_scripts.position_in_cart, 10 ) === parseInt( item, 10 ) ) {
@@ -129,6 +132,9 @@ jQuery(document).ready(function ($) {
             data: data,
             dataType: "json",
             url: edd_scripts.ajaxurl,
+            xhrFields: {
+                withCredentials: true
+            },
             success: function (response) {
 
             	if( edd_scripts.redirect_to_checkout == '1' ) {
@@ -287,7 +293,7 @@ jQuery(document).ready(function ($) {
                 $('.edd_errors').remove();
                 $('#edd_purchase_form').submit();
             } else {
-                $('#edd_purchase_form input[type=submit]').val(complete_purchase_val);
+                $('#edd_purchase_form #edd-purchase-button').val(complete_purchase_val);
                 $('.edd-cart-ajax').remove();
                 $('.edd_errors').remove();
                 $('#edd_purchase_submit').before(data);

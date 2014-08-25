@@ -80,6 +80,9 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function column_user( $item ) {
+
+		$actions = array();
+
 		if( apply_filters( 'edd_api_log_requests', true ) ) {
 			$actions['view'] = sprintf(
 				'<a href="%s">%s</a>',
@@ -120,6 +123,31 @@ class EDD_API_Keys_Table extends WP_List_Table {
 		);
 
 		return $columns;
+	}
+
+	/**
+	 * Display the key generation form
+	 *
+	 * @access public
+	 * @since 1.5
+	 * @return void
+	 */
+	function bulk_actions( $which = '' ) {
+		// These aren't really bulk actions but this outputs the markup in the right place
+		static $edd_api_is_bottom;
+
+		if( $edd_api_is_bottom ) {
+			return;
+		}
+		?>
+		<form method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ); ?>">
+			<input type="hidden" name="edd_action" value="process_api_key" />
+			<input type="hidden" name="edd_api_process" value="generate" />
+			<?php echo EDD()->html->ajax_user_search(); ?>
+			<?php submit_button( __( 'Generate New API Keys', 'edd' ), 'secondary', 'submit', false ); ?>
+		</form>
+		<?php
+		$edd_api_is_bottom = true;
 	}
 
 	/**
@@ -198,8 +226,6 @@ class EDD_API_Keys_Table extends WP_List_Table {
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
 		$data = $this->query();
-
-		$current_page = $this->get_pagenum();
 
 		$total_items = $this->total_items();
 

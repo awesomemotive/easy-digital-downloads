@@ -76,7 +76,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 				return edd_currency_filter( edd_format_amount( $item['amount'] ) );
 
 			case 'payment_id' :
-				return '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item[ 'payment_id' ] ) . '">' . $item[ 'payment_id' ] . '</a>';
+				return '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item[ 'payment_id' ] ) . '">' . edd_get_payment_number( $item[ 'payment_id' ] ) . '</a>';
 
 			default:
 				return $item[ $column_name ];
@@ -226,7 +226,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	 * @since 1.4
 	 * @return void
 	 */
-	function bulk_actions() {
+	function bulk_actions( $which = '' ) {
 		// These aren't really bulk actions but this outputs the markup in the right place
 		edd_log_views();
 	}

@@ -116,7 +116,7 @@ function edd_get_checkout_uri( $args = array() ) {
 	$ajax_url = admin_url( 'admin-ajax.php', $scheme );
 
 	if ( ( ! preg_match( '/^https/', $uri ) && preg_match( '/^https/', $ajax_url ) ) || edd_is_ssl_enforced() ) {
-		$uri = preg_replace( '/^http/', 'https', $uri );
+		$uri = preg_replace( '/^http:/', 'https:', $uri );
 	}
 
 	if ( isset( $edd_options['no_cache_checkout'] ) && edd_is_caching_plugin_active() )
@@ -193,6 +193,18 @@ function edd_get_failed_transaction_uri( $extras = false ) {
 }
 
 /**
+ * Determines if we're currently on the Failed Transaction page.
+ *
+ * @since 2.1
+ * @return bool True if on the Failed Transaction page, false otherwise.
+ */
+function edd_is_failed_transaction_page() {
+	global $edd_options;
+	$ret = isset( $edd_options['failure_page'] ) ? is_page( $edd_options['failure_page'] ) : false;
+	return apply_filters( 'edd_is_failure_page', $ret );
+}
+
+/**
  * Mark payments as Failed when returning to the Failed Transaction page
  *
  * @access      public
@@ -201,7 +213,9 @@ function edd_get_failed_transaction_uri( $extras = false ) {
 */
 function edd_listen_for_failed_payments() {
 	
-	if( is_page( edd_get_option( 'failure_page', 0 ) ) && ! empty( $_GET['payment-id'] ) ) {
+	$failed_page = edd_get_option( 'failure_page', 0 );
+
+	if( ! empty( $failed_page ) && is_page( $failed_page ) && ! empty( $_GET['payment-id'] ) ) {
 
 		$payment_id = absint( $_GET['payment-id'] );
 		edd_update_payment_status( $payment_id, 'failed' );
@@ -272,10 +286,14 @@ function edd_is_ssl_enforced() {
  * @return void
  */
 function edd_enforced_ssl_redirect_handler() {
-	if ( ! edd_is_ssl_enforced() || ! edd_is_checkout() || is_admin() ) {
+	if ( ! edd_is_ssl_enforced() || ! edd_is_checkout() || is_admin() || is_ssl() ) {
 		return;
 	}
  
+	if ( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" ) {
+		return;
+	}
+
 	$uri = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 	wp_safe_redirect( $uri );
@@ -324,10 +342,42 @@ add_action( 'template_redirect', 'edd_enforced_ssl_asset_handler' );
  * @return mixed
  */
 function edd_enforced_ssl_asset_filter( $content ) {
+
 	if ( is_array( $content ) ) {
+
 		$content = array_map( 'edd_enforced_ssl_asset_filter', $content );
+
 	} else {
-		$content = str_replace( 'http:', 'https:', $content );
+
+		// Detect if URL ends in a common domain suffix. We want to only affect assets
+		$extension = untrailingslashit( edd_get_file_extension( $content ) );
+		$suffixes  = array(
+			'br',
+			'ca',
+			'cn',
+			'com',
+			'de',
+			'dev',
+			'edu',
+			'fr',
+			'in',
+			'info',
+			'jp',
+			'local',
+			'mobi',
+			'name',
+			'net',
+			'nz',
+			'org',
+			'ru',
+		);
+
+		if( ! in_array( $extension, $suffixes ) ) {
+
+			$content = str_replace( 'http:', 'https:', $content );
+
+		}
+
 	}
 
 	return $content;

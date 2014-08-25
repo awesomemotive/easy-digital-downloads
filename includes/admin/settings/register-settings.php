@@ -254,7 +254,7 @@ function edd_get_registered_settings() {
 					'id' => 'accepted_cards',
 					'name' => __( 'Accepted Payment Method Icons', 'edd' ),
 					'desc' => __( 'Display icons for the selected payment methods', 'edd' ) . '<br/>' . __( 'You will also need to configure your gateway settings if you are accepting credit cards', 'edd' ),
-					'type' => 'multicheck',
+					'type' => 'payment_icons',
 					'options' => apply_filters('edd_accepted_payment_icons', array(
 							'mastercard' => 'Mastercard',
 							'visa' => 'Visa',
@@ -465,12 +465,6 @@ function edd_get_registered_settings() {
 						'no'  => __( 'Excluding tax', 'edd' )
 					)
 				),
-				'taxes_after_discounts' => array(
-					'id' => 'taxes_after_discounts',
-					'name' => __( 'Calculate Tax After Discounts?', 'edd' ),
-					'desc' => __( 'Check this if you would like taxes calculated after discounts. By default taxes are calculated before discounts are applied.', 'edd' ),
-					'type' => 'checkbox'
-				),
 				'tax_rates' => array(
 					'id' => 'tax_rates',
 					'name' => '<strong>' . __( 'Additional Tax Rates', 'edd' ) . '</strong>',
@@ -505,7 +499,7 @@ function edd_get_registered_settings() {
 				'enforce_ssl' => array(
 					'id' => 'enforce_ssl',
 					'name' => __( 'Enforce SSL on Checkout', 'edd' ),
-					'desc' => __( 'Check this to force users to be redirected to the secure checkout page.', 'edd' ),
+					'desc' => __( 'Check this to force users to be redirected to the secure checkout page. You must have an SSL certificate installed to use this option.', 'edd' ),
 					'type' => 'checkbox'
 				),
 				'logged_in_only' => array(
@@ -600,6 +594,32 @@ function edd_get_registered_settings() {
 					'name' => __( 'Enable SKU Entry', 'edd' ),
 					'desc' => __( 'Check this box to allow entry of product SKUs. SKUs will be shown on purchase receipt and exported purchase histories.', 'edd' ),
 					'type' => 'checkbox'
+				),
+				'enable_sequential' => array(
+					'id' => 'enable_sequential',
+					'name' => __( 'Sequential Order Numbers', 'edd' ),
+					'desc' => __( 'Check this box to sequential order numbers.', 'edd' ),
+					'type' => 'checkbox'
+				),
+				'sequential_start' => array(
+					'id' => 'sequential_start',
+					'name' => __( 'Sequential Starting Number', 'edd' ),
+					'desc' => __( 'The number that sequential order numbers should start at.', 'edd' ),
+					'type' => 'number',
+					'size' => 'small',
+					'std'  => '1'
+				),
+				'sequential_prefix' => array(
+					'id' => 'sequential_prefix',
+					'name' => __( 'Sequential Number Prefix', 'edd' ),
+					'desc' => __( 'A prefix to prepend to all sequential order numbers.', 'edd' ),
+					'type' => 'text'
+				),
+				'sequential_postfix' => array(
+					'id' => 'sequential_postfix',
+					'name' => __( 'Sequential Number Postfix', 'edd' ),
+					'desc' => __( 'A postfix to append to all sequential order numbers.', 'edd' ),
+					'type' => 'text',
 				),
 				'terms' => array(
 					'id' => 'terms',
@@ -730,6 +750,13 @@ function edd_settings_sanitize_misc( $input ) {
 		edd_create_protection_files( true, $input['download_method'] );
 	}
 
+	if( ! empty( $input['enable_sequential'] ) && ! edd_get_option( 'enable_sequential' ) ) {
+
+		// Shows an admin notice about upgrading previous order numbers
+		EDD()->session->set( 'upgrade_sequential', '1' );
+
+	}
+
 	return $input;
 }
 add_filter( 'edd_settings_misc_sanitize', 'edd_settings_sanitize_misc' );
@@ -770,8 +797,7 @@ add_filter( 'edd_settings_sanitize_text', 'edd_sanitize_text_field' );
  * Retrieve settings tabs
  *
  * @since 1.8
- * @param array $input The field value
- * @return string $input Sanitizied value
+ * @return array $tabs
  */
 function edd_get_settings_tabs() {
 
@@ -876,6 +902,70 @@ function edd_multicheck_callback( $args ) {
 			echo '<label for="edd_settings[' . $args['id'] . '][' . $key . ']">' . $option . '</label><br/>';
 		endforeach;
 		echo '<p class="description">' . $args['desc'] . '</p>';
+	}
+}
+
+/**
+ * Payment method icons callback
+ *
+ * @since 2.1
+ * @param array $args Arguments passed by the setting
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_payment_icons_callback( $args ) {
+	global $edd_options;
+
+	if ( ! empty( $args['options'] ) ) {
+		foreach( $args['options'] as $key => $option ) {
+			
+			if( isset( $edd_options[$args['id']][$key] ) ) { 
+				$enabled = $option;
+			} else {
+				$enabled = NULL; 
+			}
+			
+			echo '<label for="edd_settings[' . $args['id'] . '][' . $key . ']" style="margin-right:10px;line-height:16px;height:16px;display:inline-block;">'; 
+			
+				echo '<input name="edd_settings[' . $args['id'] . '][' . $key . ']" id="edd_settings[' . $args['id'] . '][' . $key . ']" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked( $option, $enabled, false ) . '/>&nbsp;';
+				
+				if( edd_string_is_image_url( $key ) ) {
+
+					echo '<img class="payment-icon" src="' . esc_url( $key ) . '" style="width:32px;height:24px;position:relative;top:6px;margin-right:5px;"/>';
+
+				} else {
+
+					$card = strtolower( str_replace( ' ', '', $option ) );
+
+					if( has_filter( 'edd_accepted_payment_' . $card . '_image' ) ) {
+
+						$image = apply_filters( 'edd_accepted_payment_' . $card . '_image', '' );
+
+					} else {
+
+						$image       = edd_locate_template( 'images' . DIRECTORY_SEPARATOR . 'icons' . DIRECTORY_SEPARATOR . $card . '.gif', false );
+						$content_dir = WP_CONTENT_DIR;
+
+						if( function_exists( 'wp_normalize_path' ) ) {
+
+							// Replaces backslashes with forward slashes for Windows systems
+							$image = wp_normalize_path( $image );
+							$content_dir = wp_normalize_path( $content_dir );
+
+						}
+
+						$image = str_replace( $content_dir, WP_CONTENT_URL, $image );
+
+					}
+
+					echo '<img class="payment-icon" src="' . esc_url( $image ) . '" style="width:32px;height:24px;position:relative;top:6px;margin-right:5px;"/>';
+				}
+
+
+			echo $option . '</label>';
+		
+		}
+		echo '<p class="description" style="margin-top:16px;">' . $args['desc'] . '</p>';
 	}
 }
 
@@ -1027,7 +1117,6 @@ function edd_textarea_callback( $args ) {
 	else
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 
-	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
 	$html = '<textarea class="large-text" cols="50" rows="5" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
 	$html .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
 
@@ -1232,9 +1321,9 @@ function edd_color_callback( $args ) {
 function edd_shop_states_callback($args) {
 	global $edd_options;
 
-	$html = '<select id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']"/>';
-
 	$states = edd_get_shop_states();
+	$class  = empty( $states ) ? ' class="edd-no-states"' : '';
+	$html   = '<select id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']"' . $class . '/>';
 
 	foreach ( $states as $option => $name ) :
 		$selected = isset( $edd_options[ $args['id'] ] ) ? selected( $option, $edd_options[$args['id']], false ) : '';
@@ -1299,7 +1388,9 @@ function edd_tax_rates_callback($args) {
 							'show_option_none' => false
 						) );
 					} else {
-						echo EDD()->html->text( 'tax_rates[' . $key . '][state]', $rate['state'] );
+						echo EDD()->html->text( array(
+							'name'             => 'tax_rates[' . $key . '][state]', $rate['state']
+						) );
 					}
 					?>
 				</td>
@@ -1324,7 +1415,9 @@ function edd_tax_rates_callback($args) {
 					) ); ?>
 				</td>
 				<td class="edd_tax_state">
-					<?php echo EDD()->html->text( 'tax_rates[0][state]' ); ?>
+					<?php echo EDD()->html->text( array(
+						'name'             => 'tax_rates[0][state]'
+					) ); ?>
 				</td>
 				<td class="edd_tax_global">
 					<input type="checkbox" name="tax_rates[0][global]" value="1"/>

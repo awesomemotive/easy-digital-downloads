@@ -121,7 +121,7 @@ function edd_get_purchase_link( $args = array() ) {
 ?>
 	<form id="<?php echo $form_id; ?>" class="edd_download_purchase_form" method="post">
 
-		<?php do_action( 'edd_purchase_link_top', $args['download_id'] ); ?>
+		<?php do_action( 'edd_purchase_link_top', $args['download_id'], $args ); ?>
 
 		<div class="edd_purchase_submit_wrapper">
 			<?php
@@ -182,7 +182,7 @@ function edd_get_purchase_link( $args = array() ) {
 			<input type="hidden" name="edd_action" class="edd_action_input" value="add_to_cart">
 		<?php } ?>
 
-		<?php do_action( 'edd_purchase_link_end', $args['download_id'] ); ?>
+		<?php do_action( 'edd_purchase_link_end', $args['download_id'], $args ); ?>
 
 	</form><!--end #<?php echo esc_attr( $form_id ); ?>-->
 <?php
@@ -263,7 +263,7 @@ function edd_before_download_content( $content ) {
 	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() && !post_password_required() ) {
 		ob_start();
 		do_action( 'edd_before_download_content', $post->ID );
-		$content .= ob_get_clean();
+		$content = ob_get_clean() . $content;
 	}
 
 	return $content;
@@ -657,3 +657,103 @@ function edd_version_in_header(){
 	echo '<meta name="generator" content="Easy Digital Downloads v' . EDD_VERSION . '" />' . "\n";
 }
 add_action( 'wp_head', 'edd_version_in_header' );
+
+/**
+ * Determines if we're currently on the Purchase History page.
+ *
+ * @since 2.1
+ * @return bool True if on the Purchase History page, false otherwise.
+ */
+function edd_is_purchase_history_page() {
+	global $edd_options;
+	$ret = isset( $edd_options['purchase_history_page'] ) ? is_page( $edd_options['purchase_history_page'] ) : false;
+	return apply_filters( 'edd_is_purchase_history_page', $ret );
+}
+
+/**
+ * Adds body classes for EDD pages
+ *
+ * @since 2.1
+ * @param array $classes current classes
+ * @return array Modified array of classes
+ */
+function edd_add_body_classes( $class ) {
+	$classes = (array) $class;
+
+	if( edd_is_checkout() ) {
+		$classes[] = 'edd-checkout';
+		$classes[] = 'edd-page';
+	}
+
+	if( edd_is_success_page() ) {
+		$classes[] = 'edd-success';
+		$classes[] = 'edd-page';
+	}
+
+	if( edd_is_failed_transaction_page() ) {
+		$classes[] = 'edd-failed-transaction';
+		$classes[] = 'edd-page';
+	}
+
+	if( edd_is_purchase_history_page() ) {
+		$classes[] = 'edd-purchase-history';
+		$classes[] = 'edd-page';
+	}
+
+	if( edd_is_test_mode() ) {
+		$classes[] = 'edd-test-mode';
+		$classes[] = 'edd-page';
+	}
+
+	return array_unique( $classes );
+}
+add_filter( 'body_class', 'edd_add_body_classes' );
+
+/**
+ * Adds post classes for downloads
+ *
+ * @since 2.1
+ * @param array $classes Current classes
+ * @param string|array $class
+ * @param int $post_id The ID of the current post
+ * @return array Modified array of classes
+ */
+function edd_add_download_post_classes( $classes, $class = '', $post_id = false ) {
+	if( ! $post_id || get_post_type( $post_id ) !== 'download' || is_admin() ) {
+		return $classes;
+	}
+
+	$download = edd_get_download( $post_id );
+
+	if( $download ) {
+		$classes[] = 'edd-download';
+
+		// Add category slugs
+		$categories = get_the_terms( $post_id, 'download_category' );
+		if( ! empty( $categories ) ) {
+			foreach( $categories as $key => $value ) {
+				$classes[] = 'edd-download-cat-' . $value->slug;
+			}
+		}
+
+		// Add tag slugs
+		$tags = get_the_terms( $post_id, 'download_tag' );
+		if( ! empty( $tags ) ) {
+			foreach( $tags as $key => $value ) {
+				$classes[] = 'edd-download-tag-' . $value->slug;
+			}
+		}
+
+		// Add edd-download
+		if( is_singular( 'download' ) ) {
+			$classes[] = 'edd-download';
+		}
+	}
+
+	if( ( $key = array_search( 'hentry', $classes ) ) !== false ) {
+		unset( $classes[ $key ] );
+	}
+
+	return $classes;
+}
+add_filter( 'post_class', 'edd_add_download_post_classes', 20, 3 );

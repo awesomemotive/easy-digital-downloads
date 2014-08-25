@@ -96,15 +96,17 @@ class EDD_Roles {
 	 *
 	 * @access public
 	 * @since  1.4.4
-	 * @global obj $wp_roles
+	 * @global WP_Roles $wp_roles
 	 * @return void
 	 */
 	public function add_caps() {
 		global $wp_roles;
 
-		if ( class_exists('WP_Roles') )
-			if ( ! isset( $wp_roles ) )
+		if ( class_exists('WP_Roles') ) {
+			if ( ! isset( $wp_roles ) ) {
 				$wp_roles = new WP_Roles();
+			}
+		}
 
 		if ( is_object( $wp_roles ) ) {
 			$wp_roles->add_cap( 'shop_manager', 'view_shop_reports' );
@@ -226,9 +228,14 @@ class EDD_Roles {
 	 * @return void
 	 */
 	public function remove_caps() {
-		if ( class_exists( 'WP_Roles' ) )
-			if ( ! isset( $wp_roles ) )
+		
+		global $wp_roles;
+
+		if ( class_exists( 'WP_Roles' ) ) {
+			if ( ! isset( $wp_roles ) ) {
 				$wp_roles = new WP_Roles();
+			}
+		}
 
 		if ( is_object( $wp_roles ) ) {
 			/** Shop Manager Capabilities */
