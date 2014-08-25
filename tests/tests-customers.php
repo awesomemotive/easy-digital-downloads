@@ -156,6 +156,9 @@ class Tests_Customers extends WP_UnitTestCase {
 		$this->assertTrue( edd_has_purchases( $this->_user_id ) );
 		$this->assertEquals( 1, edd_count_purchases_of_customer( $this->_user_id ) );
 
+	}
+
+	public function test_users_purchased_product() {
 		
 		$out2 = edd_get_users_purchased_products( $this->_user_id );
 		
@@ -164,11 +167,17 @@ class Tests_Customers extends WP_UnitTestCase {
 		$this->assertInternalType( 'object', $out2[0] );
 		$this->assertEquals( $out2[0]->post_type, 'download' );
 
+	}
+		
+	public function test_has_user_purchased() {
 		
 		$this->assertTrue( edd_has_user_purchased( $this->_user_id, array( $this->_post_id ), 1 ) );
 		$this->assertFalse( edd_has_user_purchased( $this->_user_id, array( 99 ), 1 ) );
 
-		
+	}
+
+	public function test_get_purchase_stats_by_user() {
+
 		$purchase_stats = edd_get_purchase_stats_by_user( $this->_user_id );
 		
 		$this->assertInternalType( 'array', $purchase_stats );
@@ -176,6 +185,9 @@ class Tests_Customers extends WP_UnitTestCase {
 		$this->assertTrue( isset( $purchase_stats['purchases'] ) );
 		$this->assertTrue( isset( $purchase_stats['total_spent'] ) );
 
+	}
+
+	public function test_get_purchase_total_of_user() {
 		
 		$purchase_total = edd_purchase_total_of_user( $this->_user_id );
 		
