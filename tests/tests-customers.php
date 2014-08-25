@@ -263,6 +263,21 @@ class Tests_Customers extends WP_UnitTestCase {
 
 	}
 
+	public function test_count_customers() {
+
+		$this->assertEquals( 1, EDD()->customers->count() );
+
+		$args = array(
+			'date' => array(
+				'start' => 'January 1 ' . date( 'Y' ) + 1,
+				'end'   => 'January 1 ' . date( 'Y' ) + 2,
+			)
+		);
+
+		$this->assertEquals( 0, EDD()->customers->count( $args ) );
+
+	}
+
 	public function test_users_purchases() {
 
 		$out = edd_get_users_purchases( $this->_user_id );
