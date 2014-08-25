@@ -370,6 +370,10 @@ class EDD_DB_Customers extends EDD_DB  {
 
 		}
 
+		if( 'purchase_value' == $args['orderby'] ) {
+			$args['orderby'] = 'purchase_value+0';
+		}
+
 		$cache_key = md5( 'edd_customers_' . serialize( $args ) );
 
 		$customers = wp_cache_get( $cache_key, 'customers' );
