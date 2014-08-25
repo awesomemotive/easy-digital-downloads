@@ -109,21 +109,32 @@ function edd_email_template_preview() {
 
 	ob_start();
 	?>
-	<a href="#email-preview" id="open-email-preview" class="button-secondary" title="<?php _e( 'Purchase Receipt Preview', 'edd' ); ?> "><?php _e( 'Preview Purchase Receipt', 'edd' ); ?></a>
+	<a href="<?php echo esc_url( add_query_arg( array( 'edd_action' => 'preview_email' ), home_url() ) ); ?>" class="button-secondary" target="_blank" title="<?php _e( 'Purchase Receipt Preview', 'edd' ); ?> "><?php _e( 'Preview Purchase Receipt', 'edd' ); ?></a>
 	<a href="<?php echo wp_nonce_url( add_query_arg( array( 'edd_action' => 'send_test_email' ) ), 'edd-test-email' ); ?>" title="<?php _e( 'This will send a demo purchase receipt to the emails listed below.', 'edd' ); ?>" class="button-secondary"><?php _e( 'Send Test Email', 'edd' ); ?></a>
-
-	<div id="email-preview-wrap" style="display:none;">
-		<div id="email-preview">
-			<?php
-			$emails = new EDD_Emails;
-			echo $emails->build_email( edd_get_email_body_content() );
-			?>
-		</div>
-	</div>
 	<?php
 	echo ob_get_clean();
 }
 add_action( 'edd_email_settings', 'edd_email_template_preview' );
+
+function edd_display_email_template_preview() {
+	
+	if( empty( $_GET['edd_action'] ) ) {
+		return;
+	}
+
+	if( 'preview_email' !== $_GET['edd_action'] ) {
+		return;
+	}
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
+	$emails = new EDD_Emails;
+	echo $emails->build_email( edd_email_preview_template_tags( edd_get_email_body_content( 0, array() ) ) );exit;
+
+}
+add_action( 'template_redirect', 'edd_display_email_template_preview' );
 
 /**
  * Email Template Body
