@@ -130,8 +130,7 @@ function edd_display_email_template_preview() {
 		return;
 	}
 
-	$emails = new EDD_Emails;
-	echo $emails->build_email( edd_email_preview_template_tags( edd_get_email_body_content( 0, array() ) ) );exit;
+	echo EDD()->emails->build_email( edd_email_preview_template_tags( edd_get_email_body_content( 0, array() ) ) );exit;
 
 }
 add_action( 'template_redirect', 'edd_display_email_template_preview' );
@@ -152,13 +151,11 @@ function edd_get_email_body_content( $payment_id = 0, $payment_data = array() ) 
 	$default_email_body .= "{download_list}\n\n";
 	$default_email_body .= "{sitename}";
 
-	$emails = new EDD_Emails;
-
 	$email = isset( $edd_options['purchase_receipt'] ) ? stripslashes( $edd_options['purchase_receipt'] ) : $default_email_body;
 
 	$email_body = wpautop( edd_do_email_tags( $email, $payment_id ) );
 
-	$email_body = apply_filters( 'edd_purchase_receipt_' . $emails->get_template(), $email_body, $payment_id, $payment_data );
+	$email_body = apply_filters( 'edd_purchase_receipt_' . EDD()->emails->get_template(), $email_body, $payment_id, $payment_data );
 
 	return apply_filters( 'edd_purchase_receipt', $email_body, $payment_id, $payment_data );
 }
