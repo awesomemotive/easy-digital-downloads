@@ -78,13 +78,12 @@ function edd_email_preview_template_tags( $message ) {
 
 	$payment_id = rand(1, 100);
 
-	$user     = wp_get_current_user();
-	$usermeta = get_user_meta( get_current_user_id() );
+	$user = wp_get_current_user();
 
 	$message = str_replace( '{download_list}', $download_list, $message );
 	$message = str_replace( '{file_urls}', $file_urls, $message );
-	$message = str_replace( '{name}', ( !empty( $usermeta['first_name'][0] ) ? $usermeta['first_name'][0] : 'John' ), $message );
- 	$message = str_replace( '{fullname}', ( !empty( $usermeta['first_name'][0] ) ? $usermeta['first_name'][0] : 'John' ) . ( !empty( $usermeta['last_name'][0] ) ? ' ' . $usermeta['last_name'][0] : ' Doe' ), $message );
+	$message = str_replace( '{name}', $user->display_name, $message );
+	$message = str_replace( '{fullname}', $user->display_name, $message );
  	$message = str_replace( '{username}', $user->user_login, $message );
 	$message = str_replace( '{date}', date( get_option( 'date_format' ), current_time( 'timestamp' ) ), $message );
 	$message = str_replace( '{subtotal}', $sub_total, $message );
@@ -162,7 +161,7 @@ function edd_get_email_body_content( $payment_id = 0, $payment_data = array() ) 
 
 	$email = isset( $edd_options['purchase_receipt'] ) ? stripslashes( $edd_options['purchase_receipt'] ) : $default_email_body;
 
-	$email_body = wpautop( edd_do_email_tags( $email, $payment_id ) );
+	$email_body = wpautop( $email );
 
 	$email_body = apply_filters( 'edd_purchase_receipt_' . EDD()->emails->get_template(), $email_body, $payment_id, $payment_data );
 

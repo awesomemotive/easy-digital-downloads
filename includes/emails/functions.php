@@ -38,7 +38,7 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	$subject      = edd_do_email_tags( $subject, $payment_id );
 
 	$attachments  = apply_filters( 'edd_receipt_attachments', array(), $payment_id, $payment_data );
-	$message      = edd_get_email_body_content( $payment_id, $payment_data );
+	$message      = edd_do_email_tags( edd_get_email_body_content( $payment_id, $payment_data ), $payment_id );
 
 	$emails = EDD()->emails;
 	$emails->__set( 'from_name', $from_name );
@@ -76,7 +76,7 @@ function edd_email_test_purchase_receipt() {
 
 	$attachments = apply_filters( 'edd_receipt_attachments', array(), 0, array() );
 
-	$message     = edd_get_email_body_content( 0, array() );
+	$message     = edd_do_email_tags( edd_get_email_body_content( 0, array() ), 0 );
 
 	$emails = EDD()->emails;
 	$emails->__set( 'from_name', $from_name );
