@@ -55,11 +55,10 @@ function edd_email_preview_template_tags( $message ) {
 
 	$download_list = '<ul>';
 	$download_list .= '<li>' . __( 'Sample Product Title', 'edd' ) . '<br />';
-	$download_list .= '<ul>';
-	$download_list .= '<li>';
+	$download_list .= '<div>';
 	$download_list .= '<a href="#">' . __( 'Sample Download File Name', 'edd' ) . '</a> - <small>' . __( 'Optional notes about this download.', 'edd' ) . '</small>';
+	$download_list .= '</div>';
 	$download_list .= '</li>';
-	$download_list .= '</ul></li>';
 	$download_list .= '</ul>';
 
 	$file_urls = esc_html( trailingslashit( get_site_url() ) . 'test.zip?test=key&key=123' );
