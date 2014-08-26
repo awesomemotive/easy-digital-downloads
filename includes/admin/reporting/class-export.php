@@ -35,7 +35,7 @@ class EDD_Export {
 	 * @return bool Whether we can export or not
 	 */
 	public function can_export() {
-		return (bool) apply_filters( 'edd_export_capability', current_user_can( 'manage_options' ) );
+		return (bool) apply_filters( 'edd_export_capability', current_user_can( 'export_shop_reports' ) );
 	}
 
 	/**
