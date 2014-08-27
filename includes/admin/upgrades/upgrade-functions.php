@@ -465,7 +465,7 @@ function edd_v21_upgrade_customers_db() {
 
 	$step   = isset( $_GET['step'] ) ? absint( $_GET['step'] ) : 1;
 	$number = 20;
-	$offset = $step == 1 ? 0 : $step * 20; 
+	$offset = $step == 1 ? 0 : ( $step - 1 ) * $number; 
 
 	$emails = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email' LIMIT %d,%d;", $offset, $number ) );
 
