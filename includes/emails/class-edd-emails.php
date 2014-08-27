@@ -248,8 +248,8 @@ class EDD_Emails {
 	 */
 	public function send( $to, $subject, $message ) {
 
-		if ( ! did_action( 'plugins_loaded' ) ) {
-			_doing_it_wrong( __FUNCTION__, __( 'You cannot send email with EDD_Emails until plugins_loaded has been reached', 'edd' ), null );
+		if ( ! did_action( 'init' ) && ! did_action( 'admin_init' ) ) {
+			_doing_it_wrong( __FUNCTION__, __( 'You cannot send email with EDD_Emails until init/admin_init has been reached', 'edd' ), null );
 			return false;
 		}
 
