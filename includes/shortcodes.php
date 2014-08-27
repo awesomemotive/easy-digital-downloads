@@ -501,20 +501,20 @@ function edd_downloads_query( $atts, $content = null ) {
 			<div id="edd_download_pagination" class="navigation">
 				<?php
 				if ( is_single() ) {
-					echo paginate_links( array(
+					echo paginate_links( apply_filters( 'edd_download_pagination_args', array(
 						'base'    => get_permalink() . '%#%',
 						'format'  => '?paged=%#%',
 						'current' => max( 1, $query['paged'] ),
 						'total'   => $downloads->max_num_pages
-					) );
+					), $atts, $downloads, $query ) );
 				} else {
 					$big = 999999;
-					echo paginate_links( array(
+					echo paginate_links( apply_filters( 'edd_download_pagination_args', array(
 						'base'    => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
 						'format'  => '?paged=%#%',
 						'current' => max( 1, $query['paged'] ),
 						'total'   => $downloads->max_num_pages
-					) );
+					), $atts, $downloads, $query ) );
 				}
 				?>
 			</div>
