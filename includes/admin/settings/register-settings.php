@@ -254,7 +254,7 @@ function edd_get_registered_settings() {
 					'id' => 'accepted_cards',
 					'name' => __( 'Accepted Payment Method Icons', 'edd' ),
 					'desc' => __( 'Display icons for the selected payment methods', 'edd' ) . '<br/>' . __( 'You will also need to configure your gateway settings if you are accepting credit cards', 'edd' ),
-					'type' => 'multicheck',
+					'type' => 'payment_icons',
 					'options' => apply_filters('edd_accepted_payment_icons', array(
 							'mastercard' => 'Mastercard',
 							'visa' => 'Visa',
@@ -301,6 +301,12 @@ function edd_get_registered_settings() {
 					'desc' => __( 'Choose a template. Click "Save Changes" then "Preview Purchase Receipt" to see the new template.', 'edd' ),
 					'type' => 'select',
 					'options' => edd_get_email_templates()
+				),
+				'email_logo' => array(
+					'id' => 'email_logo',
+					'name' => __( 'Logo', 'edd' ),
+					'desc' => __( 'Upload or choose a logo to be displayed at the top of the purchase receipt emails. Displayed on HTML emails only.', 'edd' ),
+					'type' => 'upload'
 				),
 				'email_settings' => array(
 					'id' => 'email_settings',
@@ -458,12 +464,6 @@ function edd_get_registered_settings() {
 						'yes' => __( 'Including tax', 'edd' ),
 						'no'  => __( 'Excluding tax', 'edd' )
 					)
-				),
-				'taxes_after_discounts' => array(
-					'id' => 'taxes_after_discounts',
-					'name' => __( 'Calculate Tax After Discounts?', 'edd' ),
-					'desc' => __( 'Check this if you would like taxes calculated after discounts. By default taxes are calculated before discounts are applied.', 'edd' ),
-					'type' => 'checkbox'
 				),
 				'tax_rates' => array(
 					'id' => 'tax_rates',
@@ -902,6 +902,70 @@ function edd_multicheck_callback( $args ) {
 			echo '<label for="edd_settings[' . $args['id'] . '][' . $key . ']">' . $option . '</label><br/>';
 		endforeach;
 		echo '<p class="description">' . $args['desc'] . '</p>';
+	}
+}
+
+/**
+ * Payment method icons callback
+ *
+ * @since 2.1
+ * @param array $args Arguments passed by the setting
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_payment_icons_callback( $args ) {
+	global $edd_options;
+
+	if ( ! empty( $args['options'] ) ) {
+		foreach( $args['options'] as $key => $option ) {
+			
+			if( isset( $edd_options[$args['id']][$key] ) ) { 
+				$enabled = $option;
+			} else {
+				$enabled = NULL; 
+			}
+			
+			echo '<label for="edd_settings[' . $args['id'] . '][' . $key . ']" style="margin-right:10px;line-height:16px;height:16px;display:inline-block;">'; 
+			
+				echo '<input name="edd_settings[' . $args['id'] . '][' . $key . ']" id="edd_settings[' . $args['id'] . '][' . $key . ']" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked( $option, $enabled, false ) . '/>&nbsp;';
+				
+				if( edd_string_is_image_url( $key ) ) {
+
+					echo '<img class="payment-icon" src="' . esc_url( $key ) . '" style="width:32px;height:24px;position:relative;top:6px;margin-right:5px;"/>';
+
+				} else {
+
+					$card = strtolower( str_replace( ' ', '', $option ) );
+
+					if( has_filter( 'edd_accepted_payment_' . $card . '_image' ) ) {
+
+						$image = apply_filters( 'edd_accepted_payment_' . $card . '_image', '' );
+
+					} else {
+
+						$image       = edd_locate_template( 'images' . DIRECTORY_SEPARATOR . 'icons' . DIRECTORY_SEPARATOR . $card . '.gif', false );
+						$content_dir = WP_CONTENT_DIR;
+
+						if( function_exists( 'wp_normalize_path' ) ) {
+
+							// Replaces backslashes with forward slashes for Windows systems
+							$image = wp_normalize_path( $image );
+							$content_dir = wp_normalize_path( $content_dir );
+
+						}
+
+						$image = str_replace( $content_dir, WP_CONTENT_URL, $image );
+
+					}
+
+					echo '<img class="payment-icon" src="' . esc_url( $image ) . '" style="width:32px;height:24px;position:relative;top:6px;margin-right:5px;"/>';
+				}
+
+
+			echo $option . '</label>';
+		
+		}
+		echo '<p class="description" style="margin-top:16px;">' . $args['desc'] . '</p>';
 	}
 }
 

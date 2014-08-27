@@ -132,7 +132,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	 * @since 1.5
 	 * @return void
 	 */
-	function bulk_actions() {
+	function bulk_actions( $which = '' ) {
 		// These aren't really bulk actions but this outputs the markup in the right place
 		static $edd_api_is_bottom;
 

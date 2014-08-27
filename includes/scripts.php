@@ -128,6 +128,11 @@ function edd_register_styles() {
 	}
 
 	wp_enqueue_style( 'edd-styles', $url, array(), EDD_VERSION );
+
+	if( edd_is_checkout() && is_ssl() ) {
+		// Dashicons are used to show the padlock icon on the credit card form
+		wp_enqueue_style( 'dashicons' );
+	}
 }
 add_action( 'wp_enqueue_scripts', 'edd_register_styles' );
 
@@ -226,7 +231,8 @@ function edd_admin_downloads_icon() {
 	?>
     <style type="text/css" media="screen">
         <?php if( version_compare( $wp_version, '3.8-RC', '>=' ) || version_compare( $wp_version, '3.8', '>=' ) ) { ?>
-            #adminmenu #menu-posts-download .wp-menu-image:before {
+            #adminmenu #menu-posts-download .wp-menu-image:before,
+            #dashboard_right_now .download-count:before {
                 content: '<?php echo $menu_icon; ?>';
             }
         <?php } else { ?>

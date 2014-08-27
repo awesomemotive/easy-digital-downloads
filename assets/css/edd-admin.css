@@ -114,7 +114,7 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 #edd-edit-order-form .column .description { padding-right: 10px; }
 #edd-edit-order-form .column,
 #edd-purchased-files .row > ul > li,
-#edd-purchased-files .inside > ul > li { display: inline-block; position: relative; vertical-align: top; }
+#edd-purchased-files .inside > ul > li { display: inline-block; position: relative; vertical-align: top; margin-right: 5%; }
 #edd-purchased-files li.actions { text-align: right; }
 #edd-purchased-files ul li.remove { text-align: right; }
 #edd-purchased-files .row { padding: 12px; border-bottom: 1px solid #eee; }
@@ -127,7 +127,7 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 .edd_repeatable_upload_wrapper .pricing select, .edd_repeatable_product_wrapper .edd-select,
 #edd_products .edd-select { min-width: 100%; max-width: 200px; }
 .edd_repeatable_product_wrapper td { overflow: visible; }
-@media screen and ( max-width: 782px ) { 
+@media screen and ( max-width: 782px ) {
 	.order-data-column input[type="email"] {
 		padding: 6px 10px;
 	}
@@ -179,7 +179,7 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 @media screen and ( max-width: 1284px ) {
 	#edd-edit-order-form .column strong {
 		display:block;
-	} 
+	}
 }
 
 /** Stats */
@@ -248,6 +248,8 @@ td.edd_order_price { text-align: right; }
 .chosen-container-multi .chosen-choices{ -webkit-border-radius: 3px; border-radius: 3px; border-color: #dfdfdf; background-image:none; }
 .chosen-container-multi .chosen-choices input{ margin:2px; height:27px!important; border-color: #dfdfdf; }
 .chosen-container .chosen-drop { border-color: #aaa; -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); }
+.chosen-container .search-field { width: 50%; }
+.chosen-container .search-field input { width: 90%!important; }
 .chosen-container-active .chosen-choices { -webkit-border-top-left-radius: 3px; border-top-left-radius: 3px; -webkit-border-top-right-radius: 3px; border-top-right-radius: 3px; -webkit-border-bottom-left-radius: 0; border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-color: #aaa; -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); }
 .download_page_edd-tools .tablenav .actions { overflow: visible; }
 .edd_user_search_wrap { position: relative; overflow: visible; }

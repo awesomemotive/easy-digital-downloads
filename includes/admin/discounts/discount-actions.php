@@ -34,13 +34,19 @@ function edd_add_discount( $data ) {
 			}
 		}
 
-		// Set the discount code's default status to active
-		$posted['status'] = 'active';
-		if ( edd_store_discount( $posted ) ) {
-			wp_redirect( add_query_arg( 'edd-message', 'discount_added', $data['edd-redirect'] ) ); edd_die();
+		// Ensure this discount doesn't already exist
+		if ( ! edd_get_discount_by_code( $posted['code'] ) ) {
+
+			// Set the discount code's default status to active
+			$posted['status'] = 'active';
+			if ( edd_store_discount( $posted ) ) {
+				wp_redirect( add_query_arg( 'edd-message', 'discount_added', $data['edd-redirect'] ) ); edd_die();
+			} else {
+				wp_redirect( add_query_arg( 'edd-message', 'discount_add_failed', $data['edd-redirect'] ) ); edd_die();
+			}
 		} else {
-			wp_redirect( add_query_arg( 'edd-message', 'discount_add_failed', $data['edd-redirect'] ) ); edd_die();
-		}		
+			wp_redirect( add_query_arg( 'edd-message', 'discount_exists', $data['edd-redirect'] ) ); edd_die();
+		}
 	}
 }
 add_action( 'edd_add_discount', 'edd_add_discount' );
