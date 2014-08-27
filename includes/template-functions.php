@@ -518,10 +518,15 @@ function edd_locate_template( $template_names, $load = false, $require_once = tr
 
 		// try locating this template file by looping through the template paths
 		foreach( edd_get_theme_template_paths() as $template_path ) {
+
 			if( file_exists( $template_path . $template_name ) ) {
 				$located = $template_path . $template_name;
 				break;
 			}
+		}
+
+		if( $located ) {
+			break;
 		}
 	}
 
