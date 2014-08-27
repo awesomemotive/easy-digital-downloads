@@ -91,6 +91,14 @@ final class Easy_Digital_Downloads {
 	public $html;
 
 	/**
+	 * EDD Emails Object
+	 *
+	 * @var object
+	 * @since 2.1
+	 */
+	public $emails;
+	
+	/**
 	 * EDD Email Template Tags Object
 	 *
 	 * @var object
@@ -132,6 +140,7 @@ final class Easy_Digital_Downloads {
 			self::$instance->api        = new EDD_API();
 			self::$instance->session    = new EDD_Session();
 			self::$instance->html       = new EDD_HTML_Elements();
+			self::$instance->emails     = new EDD_Emails();
 			self::$instance->email_tags = new EDD_Email_Template_Tags();
 			self::$instance->customers  = new EDD_DB_Customers();
 		}
@@ -250,10 +259,11 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/scripts.php';
 		require_once EDD_PLUGIN_DIR . 'includes/post-types.php';
 		require_once EDD_PLUGIN_DIR . 'includes/plugin-compatibility.php';
+		require_once EDD_PLUGIN_DIR . 'includes/emails/class-edd-emails.php';
+		require_once EDD_PLUGIN_DIR . 'includes/emails/class-edd-email-tags.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/actions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/emails/email-tags.php';
 		require_once EDD_PLUGIN_DIR . 'includes/error-tracking.php';
 		require_once EDD_PLUGIN_DIR . 'includes/user-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/query-filters.php';
