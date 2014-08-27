@@ -124,7 +124,7 @@ add_action( 'edd_email_settings', 'edd_email_template_preview' );
  * @return void
  */
 function edd_display_email_template_preview() {
-	
+
 	if( empty( $_GET['edd_action'] ) ) {
 		return;
 	}
