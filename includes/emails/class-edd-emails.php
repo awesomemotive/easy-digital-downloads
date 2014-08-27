@@ -226,11 +226,11 @@ class EDD_Emails {
 		} else {
 
 			edd_get_template_part( 'emails/body', $this->get_template(), true );
-	
+
 		}
-		
+
 		do_action( 'edd_email_body', $this );
-		
+
 		edd_get_template_part( 'emails/footer', $this->get_template(), true );
 
 		do_action( 'edd_email_footer', $this );
@@ -247,6 +247,12 @@ class EDD_Emails {
 	 * @since 2.1
 	 */
 	public function send( $to, $subject, $message ) {
+
+		if ( ! did_action( 'plugins_loaded' ) ) {
+			_doing_it_wrong( __FUNCTION__, __( 'You cannot send email with EDD_Emails until plugins_loaded has been reached', 'edd' ), null );
+			return false;
+		}
+
 		do_action( 'edd_email_send_before', $this );
 
 		$subject = $this->parse_tags( $subject );
