@@ -57,10 +57,7 @@ class EDD_Session {
 
 			// Use PHP SESSION (must be enabled via the EDD_USE_PHP_SESSIONS constant or
 			// activated during the installer after support autodetection)
-
-			if( ! session_id() ) {
-				add_action( 'init', 'session_start', -2 );
-			}
+			add_action( 'init', array( $this, 'maybe_start_session'), -2 );
 
 		} else {
 
@@ -262,5 +259,14 @@ class EDD_Session {
 		}
 
 		return (bool) apply_filters( 'edd_use_php_sessions', $ret );
+	}
+
+	/**
+	 * Starts a new session if one hasn't started yet.
+	 */
+	public function maybe_start_session() {
+		if( ! session_id() ) {
+			session_start();
+		}
 	}
 }
