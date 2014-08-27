@@ -58,10 +58,7 @@ class EDD_Session {
 		if( $this->use_php_sessions ) {
 
 			// Use PHP SESSION (must be enabled via the EDD_USE_PHP_SESSIONS constant)
-
-			if( ! session_id() ) {
-				add_action( 'init', 'session_start', -2 );
-			}
+			add_action( 'init', array( $this, 'maybe_start_session' ), -2 );
 
 		} else {
 
@@ -92,7 +89,6 @@ class EDD_Session {
 		}
 
 	}
-
 
 	/**
 	 * Setup the WP_Session instance
@@ -215,5 +211,16 @@ class EDD_Session {
 	 */
 	public function set_expiration_time( $exp ) {
 		return ( 30 * 60 * 24 );
+	}
+
+	/**
+	 * Starts a new session if one hasn't started yet.
+	 *
+	 * @return null
+	 */
+	public function maybe_start_session() {
+		if( ! session_id() ) {
+			session_start();
+		}
 	}
 }
