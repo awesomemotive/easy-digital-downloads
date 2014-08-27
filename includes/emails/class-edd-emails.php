@@ -176,6 +176,11 @@ class EDD_Emails {
 		if ( ! $this->template ) {
 			$this->template = edd_get_option( 'email_template', 'default' );
 		}
+
+		if( 'none' === $this->template ) {
+			$this->html = false;
+		}
+
 		return apply_filters( 'edd_email_template', $this->template );
 	}
 
@@ -201,7 +206,7 @@ class EDD_Emails {
 
 		if ( false === $this->html ) {
 
-			return $message;
+			return wp_strip_all_tags( $message );
 
 		}
 
