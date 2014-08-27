@@ -69,6 +69,11 @@ class EDD_Emails {
 	 * @since 2.1
 	 */
 	public function __construct() {
+
+		if( 'none' === $this->get_template() ) {
+			$this->html = false;
+		}
+
 		add_action( 'edd_email_send_before', array( $this, 'send_before' ) );
 		add_action( 'edd_email_send_after', array( $this, 'send_after' ) );
 	}
@@ -175,10 +180,6 @@ class EDD_Emails {
 	public function get_template() {
 		if ( ! $this->template ) {
 			$this->template = edd_get_option( 'email_template', 'default' );
-		}
-
-		if( 'none' === $this->template ) {
-			$this->html = false;
 		}
 
 		return apply_filters( 'edd_email_template', $this->template );
