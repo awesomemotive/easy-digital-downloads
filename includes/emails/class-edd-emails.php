@@ -209,13 +209,13 @@ class EDD_Emails {
 
 		do_action( 'edd_email_header', $this );
 
-		edd_get_template_part( sprintf( 'emails/header-%s', $this->get_template() ), null, true );
+		edd_get_template_part( 'emails/header', $this->get_template(), true );
 		do_action( 'edd_email_header', $this );
 
-		edd_get_template_part( sprintf( 'emails/body-%s', $this->get_template() ), null, true );
+		edd_get_template_part( 'emails/body', $this->get_template(), true );
 		do_action( 'edd_email_body', $this );
 
-		edd_get_template_part( sprintf( 'emails/footer-%s', $this->get_template() ), null, true );
+		edd_get_template_part( 'emails/footer', $this->get_template(), true );
 		do_action( 'edd_email_footer', $this );
 
 		$body    = ob_get_clean();
