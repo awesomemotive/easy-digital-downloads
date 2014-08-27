@@ -64,6 +64,13 @@ class EDD_Emails {
 	private $template;
 
 	/**
+	 * The attachments to the email
+	 *
+	 * @since  2.1
+	 */
+	private $attachments;
+
+	/**
 	 * Get things going
 	 *
 	 * @since 2.1
@@ -152,7 +159,7 @@ class EDD_Emails {
 	 * @since 2.1
 	 */
 	public function get_attachments() {
-		if ( ! $this->headers ) {
+		if ( ! $this->attachments ) {
 			$this->attachments = apply_filters( 'edd_email_default_attachments', '' );
 		}
 
