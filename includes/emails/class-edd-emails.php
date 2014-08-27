@@ -76,6 +76,7 @@ class EDD_Emails {
 
 		add_action( 'edd_email_send_before', array( $this, 'send_before' ) );
 		add_action( 'edd_email_send_after', array( $this, 'send_after' ) );
+		add_filter( 'edd_email_message', array( $this, 'text_to_html' ), 10, 2 );
 	}
 
 	/**
@@ -207,7 +208,7 @@ class EDD_Emails {
 
 		if ( false === $this->html ) {
 
-			return wp_strip_all_tags( $message );
+			return apply_filters( 'edd_email_message', wp_strip_all_tags( $message ), $this );
 
 		}
 
@@ -237,7 +238,7 @@ class EDD_Emails {
 		$body    = ob_get_clean();
 		$message = str_replace( '{email}', $message, $body );
 
-		return $message;
+		return apply_filters( 'edd_email_message', $message, $this );
 	}
 
 	/**
@@ -280,6 +281,20 @@ class EDD_Emails {
 		remove_filter( 'wp_mail_from', array( $this, 'get_from_address' ) );
 		remove_filter( 'wp_mail_from_name', array( $this, 'get_from_name' ) );
 		remove_filter( 'wp_mail_content_type', array( $this, 'get_content_type' ) );
+	}
+
+	/**
+	 * Converts text to formatted HTML. This is primarily for turning line breaks into <p> and <br/> tags.
+	 *
+	 * @since 2.1
+	 */
+	public function text_to_html( $message, $class_object ) {
+
+		if( 'html' == $this->content_type ) {
+			$message = wpautop( $message );
+		}
+
+		return $message;
 	}
 
 }
