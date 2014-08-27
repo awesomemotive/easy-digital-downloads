@@ -170,7 +170,7 @@ function edd_reports_graph() {
 					<p class="edd_graph_totals"><strong><?php _e( 'Estimated monthly sales: ', 'edd' ); echo edd_format_amount( $estimated['sales'], false ); ?></strong></p>
 			
 					<?php 
-					do_action('edd_reports_graph_additional_stats' , $dates , $sales_data , $earnings_data ); 
+					do_action('edd_reports_graph_additional_stats' , $dates , $data ); 
 					?>
 			
 				</div>
