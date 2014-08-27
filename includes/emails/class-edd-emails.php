@@ -64,13 +64,20 @@ class EDD_Emails {
 	private $template;
 
 	/**
+	 * The attachments to the email
+	 *
+	 * @since  2.1
+	 */
+	private $attachments;
+
+	/**
 	 * Get things going
 	 *
 	 * @since 2.1
 	 */
 	public function __construct() {
 
-		if( 'none' === $this->get_template() ) {
+		if ( 'none' === $this->get_template() ) {
 			$this->html = false;
 		}
 
@@ -136,11 +143,9 @@ class EDD_Emails {
 	 */
 	public function get_headers() {
 		if ( ! $this->headers ) {
-
 			$this->headers  = "From: {$this->get_from_name()} <{$this->get_from_address()}>\r\n";
 			$this->headers .= "Reply-To: {$this->get_from_address()}\r\n";
 			$this->headers .= "Content-Type: {$this->get_content_type()}; charset=utf-8\r\n";
-
 		}
 
 		return apply_filters( 'edd_email_headers', $this->headers, $this );
@@ -152,7 +157,7 @@ class EDD_Emails {
 	 * @since 2.1
 	 */
 	public function get_attachments() {
-		if ( ! $this->headers ) {
+		if ( ! $this->attachments ) {
 			$this->attachments = apply_filters( 'edd_email_default_attachments', '' );
 		}
 
@@ -207,9 +212,7 @@ class EDD_Emails {
 	public function build_email( $message ) {
 
 		if ( false === $this->html ) {
-
 			return apply_filters( 'edd_email_message', wp_strip_all_tags( $message ), $this );
-
 		}
 
 		ob_start();
@@ -219,18 +222,14 @@ class EDD_Emails {
 
 		do_action( 'edd_email_header', $this );
 
-		if( has_action( 'edd_email_template_' . $this->get_template() ) ) {
-
+		if ( has_action( 'edd_email_template_' . $this->get_template() ) ) {
 			do_action( 'edd_email_template_' . $this->get_template() );
-
 		} else {
-
 			edd_get_template_part( 'emails/body', $this->get_template(), true );
-	
 		}
-		
+
 		do_action( 'edd_email_body', $this );
-		
+
 		edd_get_template_part( 'emails/footer', $this->get_template(), true );
 
 		do_action( 'edd_email_footer', $this );
@@ -247,6 +246,12 @@ class EDD_Emails {
 	 * @since 2.1
 	 */
 	public function send( $to, $subject, $message ) {
+
+		if ( ! did_action( 'init' ) && ! did_action( 'admin_init' ) ) {
+			_doing_it_wrong( __FUNCTION__, __( 'You cannot send email with EDD_Emails until init/admin_init has been reached', 'edd' ), null );
+			return false;
+		}
+
 		do_action( 'edd_email_send_before', $this );
 
 		$subject = $this->parse_tags( $subject );
@@ -290,7 +295,7 @@ class EDD_Emails {
 	 */
 	public function text_to_html( $message, $class_object ) {
 
-		if( 'html' == $this->content_type ) {
+		if ( 'html' == $this->content_type ) {
 			$message = wpautop( $message );
 		}
 
