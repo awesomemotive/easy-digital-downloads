@@ -742,7 +742,7 @@ function edd_get_cart_tax() {
 
 	$cart_tax += edd_get_cart_fee_tax();
 
-	return apply_filters( 'edd_get_cart_tax', $cart_tax );
+	return apply_filters( 'edd_get_cart_tax', edd_sanitize_amount( $cart_tax ) );
 }
 
 /**
