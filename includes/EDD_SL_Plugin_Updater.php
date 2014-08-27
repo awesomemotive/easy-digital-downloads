@@ -76,6 +76,8 @@ class EDD_SL_Plugin_Updater {
 			return $_transient_data;
 		}
 
+		$to_send = array( 'slug' => $this->slug );
+
 		$api_response = $this->api_request( 'plugin_latest_version', $to_send );
 
 		if( false !== $api_response && is_object( $api_response ) && isset( $api_response->new_version ) ) {
