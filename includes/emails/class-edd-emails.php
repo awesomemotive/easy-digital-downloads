@@ -212,8 +212,18 @@ class EDD_Emails {
 		edd_get_template_part( 'emails/header', $this->get_template(), true );
 		do_action( 'edd_email_header', $this );
 
-		edd_get_template_part( 'emails/body', $this->get_template(), true );
+		if( has_action( 'edd_email_template_' . $this->get_template() ) ) {
+
+			do_action( 'edd_email_template_' . $this->get_template() );
+
+		} else {
+
+			edd_get_template_part( 'emails/body', $this->get_template(), true );
+	
+		}
+		
 		do_action( 'edd_email_body', $this );
+		
 
 		edd_get_template_part( 'emails/footer', $this->get_template(), true );
 		do_action( 'edd_email_footer', $this );
