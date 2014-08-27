@@ -207,9 +207,9 @@ class EDD_Emails {
 
 		ob_start();
 
-		do_action( 'edd_email_header', $this );
 
 		edd_get_template_part( 'emails/header', $this->get_template(), true );
+
 		do_action( 'edd_email_header', $this );
 
 		if( has_action( 'edd_email_template_' . $this->get_template() ) ) {
@@ -224,8 +224,8 @@ class EDD_Emails {
 		
 		do_action( 'edd_email_body', $this );
 		
-
 		edd_get_template_part( 'emails/footer', $this->get_template(), true );
+
 		do_action( 'edd_email_footer', $this );
 
 		$body    = ob_get_clean();
