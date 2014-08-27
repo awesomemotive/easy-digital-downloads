@@ -77,7 +77,7 @@ class EDD_Emails {
 	 */
 	public function __construct() {
 
-		if( 'none' === $this->get_template() ) {
+		if ( 'none' === $this->get_template() ) {
 			$this->html = false;
 		}
 
@@ -143,11 +143,9 @@ class EDD_Emails {
 	 */
 	public function get_headers() {
 		if ( ! $this->headers ) {
-
 			$this->headers  = "From: {$this->get_from_name()} <{$this->get_from_address()}>\r\n";
 			$this->headers .= "Reply-To: {$this->get_from_address()}\r\n";
 			$this->headers .= "Content-Type: {$this->get_content_type()}; charset=utf-8\r\n";
-
 		}
 
 		return apply_filters( 'edd_email_headers', $this->headers, $this );
@@ -214,9 +212,7 @@ class EDD_Emails {
 	public function build_email( $message ) {
 
 		if ( false === $this->html ) {
-
 			return apply_filters( 'edd_email_message', wp_strip_all_tags( $message ), $this );
-
 		}
 
 		ob_start();
@@ -226,14 +222,10 @@ class EDD_Emails {
 
 		do_action( 'edd_email_header', $this );
 
-		if( has_action( 'edd_email_template_' . $this->get_template() ) ) {
-
+		if ( has_action( 'edd_email_template_' . $this->get_template() ) ) {
 			do_action( 'edd_email_template_' . $this->get_template() );
-
 		} else {
-
 			edd_get_template_part( 'emails/body', $this->get_template(), true );
-
 		}
 
 		do_action( 'edd_email_body', $this );
@@ -303,7 +295,7 @@ class EDD_Emails {
 	 */
 	public function text_to_html( $message, $class_object ) {
 
-		if( 'html' == $this->content_type ) {
+		if ( 'html' == $this->content_type ) {
 			$message = wpautop( $message );
 		}
 
