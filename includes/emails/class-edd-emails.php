@@ -189,14 +189,13 @@ class EDD_Emails {
 	 *
 	 * @since 2.1
 	 */
-	public function build_email( $message ) {
+	public function build_email( $message, $heading ) {
 
 		if ( false === $this->html ) {
 			return apply_filters( 'edd_email_message', wp_strip_all_tags( $message ), $this );
 		}
 
 		ob_start();
-
 
 		edd_get_template_part( 'emails/header', $this->get_template(), true );
 
@@ -216,20 +215,31 @@ class EDD_Emails {
 
 		$body    = ob_get_clean();
 		$message = str_replace( '{email}', $message, $body );
+		$message = str_replace( '{heading}', $heading, $message );
 
 		return apply_filters( 'edd_email_message', $message, $this );
 	}
 
 	/**
 	 * Send the email
-	 *
+	 * @param  string  $to               The To address to send to.
+	 * @param  string  $subject          The subject line of the email to send.
+	 * @param  string  $message          The body of the email to send.
+	 * @param  string  $heading          A heading to use at the top of the email body. If you pass an
+	 *                                   empty string (the default), then the subject will be used. To
+	 *                                   have no heading at all, pass NULL.
+	 * @param  string|array $attachments Attachments to the email in a format supported by wp_mail()
 	 * @since 2.1
 	 */
-	public function send( $to, $subject, $message, $attachments = '' ) {
+	public function send( $to, $subject, $message, $heading = '', $attachments = '' ) {
 
 		if ( ! did_action( 'init' ) && ! did_action( 'admin_init' ) ) {
 			_doing_it_wrong( __FUNCTION__, __( 'You cannot send email with EDD_Emails until init/admin_init has been reached', 'edd' ), null );
 			return false;
+		}
+
+		if ( !is_null( $heading ) && empty( $heading ) ) {
+			$heading = $subject;
 		}
 
 		do_action( 'edd_email_send_before', $this );
@@ -237,7 +247,7 @@ class EDD_Emails {
 		$subject = $this->parse_tags( $subject );
 		$message = $this->parse_tags( $message );
 
-		$message = $this->build_email( $message );
+		$message = $this->build_email( $message, $heading );
 		if ( empty( $attachments ) ) {
 			$attachments = apply_filters( 'edd_email_default_attachments', '' );
 		}
