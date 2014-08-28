@@ -240,7 +240,12 @@ function edd_update_payment_status( $payment_id, $new_status = 'publish' ) {
  */
 function edd_delete_purchase( $payment_id = 0 ) {
 	global $edd_logs;
+	
+	$post = get_post( $payment_id );
 
+	if( !$post )
+		return;
+		
 	$downloads = edd_get_payment_meta_downloads( $payment_id );
 
 	if ( is_array( $downloads ) ) {
@@ -251,7 +256,7 @@ function edd_delete_purchase( $payment_id = 0 ) {
 	}
 
 	$amount = edd_get_payment_amount( $payment_id );
-	$status = get_post( $payment_id )->post_status;
+	$status = $post->post_status;
 
 	if( $status == 'revoked' || $status == 'publish' ) {
 		// Only decrease earnings if they haven't already been decreased (or were never increased for this payment)
