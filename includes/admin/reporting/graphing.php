@@ -254,7 +254,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 
 	$earnings_data = array();
 	$sales_data    = array();
-	$stats          = new EDD_Payment_Stats;
+	$stats         = new EDD_Payment_Stats;
 
 	if( $dates['range'] == 'today' || $dates['range'] == 'yesterday' ) {
 		// Hour by hour
@@ -340,7 +340,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 					while ( $d <= $num_of_days ) :
 
 						$date      = mktime( 0, 0, 0, $i, $d, $y );
-						$end_date  = mktime( 0, 0, 0, $i, $num_of_days, $y );
+						$end_date  = mktime( 23, 59, 59, $i, $d, $y );
 			
 						$sales = $stats->get_sales( $download_id, $date, $end_date );
 						$sales_totals += $sales;
