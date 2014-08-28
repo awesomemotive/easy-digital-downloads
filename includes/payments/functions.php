@@ -156,18 +156,9 @@ function edd_insert_payment( $payment_data = array() ) {
 			$payment_data['price'] = '0.00';
 		}
 
-		// Create or update a customer
-		$customer_id = EDD()->customers->add( array(
-			'name'        => $payment_data['user_info']['first_name'] . ' ' . $payment_data['user_info']['last_name'],
-			'email'       => $payment_data['user_email'],
-			'user_id'     => $payment_data['user_info']['id'],
-			'payment_ids' => $payment
-		) );
-
 		// Record the payment details
 		update_post_meta( $payment, '_edd_payment_meta',         apply_filters( 'edd_payment_meta', $payment_meta, $payment_data ) );
 		update_post_meta( $payment, '_edd_payment_user_id',      $payment_data['user_info']['id'] );
-		update_post_meta( $payment, '_edd_payment_customer_id',  $customer_id );
 		update_post_meta( $payment, '_edd_payment_user_email',   $payment_data['user_email'] );
 		update_post_meta( $payment, '_edd_payment_user_ip',      edd_get_ip() );
 		update_post_meta( $payment, '_edd_payment_purchase_key', $payment_data['purchase_key'] );
@@ -202,19 +193,26 @@ function edd_insert_payment( $payment_data = array() ) {
  * @return void
  */
 function edd_update_payment_status( $payment_id, $new_status = 'publish' ) {
+
 	if ( $new_status == 'completed' || $new_status == 'complete' ) {
 		$new_status = 'publish';
 	}
 
+	if( empty( $payment_id ) ) {
+		return;
+	}
+
 	$payment = get_post( $payment_id );
 
-	if ( is_wp_error( $payment ) || !is_object( $payment ) )
+	if ( is_wp_error( $payment ) || ! is_object( $payment ) ) {
 		return;
+	}
 
 	$old_status = $payment->post_status;
 
-	if ( $old_status === $new_status )
+	if ( $old_status === $new_status ) {
 		return; // Don't permit status changes that aren't changes
+	}
 
 	$do_change = apply_filters( 'edd_should_update_payment_status', true, $payment_id, $new_status, $old_status );
 
@@ -242,7 +240,12 @@ function edd_update_payment_status( $payment_id, $new_status = 'publish' ) {
  */
 function edd_delete_purchase( $payment_id = 0 ) {
 	global $edd_logs;
+	
+	$post = get_post( $payment_id );
 
+	if( !$post )
+		return;
+		
 	$downloads = edd_get_payment_meta_downloads( $payment_id );
 
 	if ( is_array( $downloads ) ) {
@@ -252,32 +255,17 @@ function edd_delete_purchase( $payment_id = 0 ) {
 		}
 	}
 
-	$amount      = edd_get_payment_amount( $payment_id );
-	$status      = get_post( $payment_id )->post_status;
-	$customer_id = edd_get_payment_customer_id( $payment_id );
+	$amount = edd_get_payment_amount( $payment_id );
+	$status = $post->post_status;
 
 	if( $status == 'revoked' || $status == 'publish' ) {
 		// Only decrease earnings if they haven't already been decreased (or were never increased for this payment)
 		edd_decrease_total_earnings( $amount );
 		// Clear the This Month earnings (this_monththis_month is NOT a typo)
 		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
-
-		if( $customer_id ) {
-
-			// Decrement the stats for the customer
-			EDD()->customers->decrement_stats( $customer_id, $amount );
-	
-		}
 	}
 
 	do_action( 'edd_payment_delete', $payment_id );
-
-	if( $customer_id ){
-
-		// Remove the payment ID from the customer
-		EDD()->customers->remove_payment( $customer_id, $payment_id );
-
-	}
 
 	// Remove the payment
 	wp_delete_post( $payment_id, true );
@@ -310,23 +298,22 @@ function edd_undo_purchase( $download_id, $payment_id ) {
 	if ( edd_is_test_mode() )
         return;
 
+	$payment = get_post( $payment_id );
 	$cart_details = edd_get_payment_meta_cart_details( $payment_id );
-	$user_info    = edd_get_payment_meta_user_info( $payment_id );
 
 	if ( is_array( $cart_details ) ) {
-
 		foreach ( $cart_details as $item ) {
-
 			// Decrease earnings/sales and fire action once per quantity number
 			for( $i = 0; $i < $item['quantity']; $i++ ) {
+				$user_info = edd_get_payment_meta_user_info( $payment_id );
 
 				// get the item's price
  				$amount = isset( $item['price'] ) ? $item['price'] : false;
 
  				// variable priced downloads
 				if ( edd_has_variable_prices( $download_id ) ) {
-					$price_id = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
-					$amount   = ! isset( $item['price'] ) && 0 !== $item['price'] ? edd_get_price_option_amount( $download_id, $price_id ) : $item['price'];
+					$price_id 	= isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
+					$amount 	= ! isset( $item['price'] ) && 0 !== $item['price'] ? edd_get_price_option_amount( $download_id, $price_id ) : $item['price'];
 				}
 
  				if ( ! $amount ) {
@@ -340,11 +327,8 @@ function edd_undo_purchase( $download_id, $payment_id ) {
 				// decrease purchase count
 				edd_decrease_purchase_count( $download_id );
 			}
-
 		}
-
 	}
-
 }
 
 
@@ -883,19 +867,6 @@ function edd_get_payment_user_id( $payment_id ) {
 	$user_id = get_post_meta( $payment_id, '_edd_payment_user_id', true );
 
 	return apply_filters( 'edd_payment_user_id', $user_id );
-}
-
-/**
- * Get the customer ID associated with a payment
- *
- * @since 2.1
- * @param int $payment_id Payment ID
- * @return string $customer_id Customer ID
- */
-function edd_get_payment_customer_id( $payment_id ) {
-	$customer_id = get_post_meta( $payment_id, '_edd_payment_customer_id', true );
-
-	return apply_filters( 'edd_payment_customer_id', $customer_id );
 }
 
 /**
