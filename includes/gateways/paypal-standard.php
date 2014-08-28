@@ -224,7 +224,7 @@ function edd_process_paypal_ipn() {
 			// Nothing to do
 			return;
 		} else {
-			// Loop trough each POST
+			// Loop through each POST
 			foreach ( $_POST as $key => $value ) {
 				// Encode the value and append the data
 				$encoded_data .= $arg_separator."$key=" . urlencode( $value );
