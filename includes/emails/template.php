@@ -124,7 +124,7 @@ add_action( 'edd_email_settings', 'edd_email_template_preview' );
  * @return void
  */
 function edd_display_email_template_preview() {
-	
+
 	if( empty( $_GET['edd_action'] ) ) {
 		return;
 	}
@@ -137,7 +137,8 @@ function edd_display_email_template_preview() {
 		return;
 	}
 
-	echo EDD()->emails->build_email( edd_email_preview_template_tags( edd_get_email_body_content( 0, array() ) ) );exit;
+	echo EDD()->emails->build_email( edd_email_preview_template_tags( edd_get_email_body_content( 0, array() ) ), _e( 'Purchase Receipt', 'edd' ) );
+	exit;
 
 }
 add_action( 'template_redirect', 'edd_display_email_template_preview' );
