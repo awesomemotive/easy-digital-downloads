@@ -100,7 +100,9 @@ class Tests_Emails extends WP_UnitTestCase {
 						'price_id' => 1
 					)
 				),
-				'price' =>  100,
+				'discount' => 0,
+				'subtotal' => 100,
+				'price' => 100,
 				'item_price' => 100,
 				'tax' => 0,
 				'quantity' => 1
@@ -161,6 +163,11 @@ class Tests_Emails extends WP_UnitTestCase {
 		);
 
 		$this->assertEquals( $expected, edd_get_email_templates() );
+	}
+
+	public function test_get_template() {
+
+		$this->assertEquals( 'default', EDD()->emails->get_template() );
 	}
 
 	public function test_edd_get_default_sale_notification_email() {
@@ -249,6 +256,50 @@ class Tests_Emails extends WP_UnitTestCase {
 
 	public function test_email_tags_receipt_link() {
 		$this->assertContains( 'View it in your browser.', edd_email_tag_receipt_link( $this->_payment_id ) );
+	}
+
+	public function test_get_from_name() {
+		$this->assertEquals( get_bloginfo( 'name' ), EDD()->emails->get_from_name() );
+	}
+
+	public function test_get_from_address() {
+		$this->assertEquals( get_bloginfo( 'admin_email' ), EDD()->emails->get_from_address() );
+	}
+
+	public function test_get_content_type() {
+		$this->assertEquals( 'text/html', EDD()->emails->get_content_type() );
+
+		EDD()->emails->content_type = 'text/plain';
+
+		$this->assertEquals( 'text/plain', EDD()->emails->get_content_type() );
+
+	}
+
+	public function test_get_headers() {
+
+		$from_name = EDD()->emails->get_from_name();
+		$from_address = EDD()->emails->get_from_address();
+		$this->assertContains( "From: {$from_name} <{$from_address}>", EDD()->emails->get_headers() );
+
+	}
+
+	public function test_get_attachments() {
+
+		$this->assertEquals( '', EDD()->emails->get_attachments() );
+	}
+
+	public function test_text_to_html() {
+
+		$message  = "Hello, this is plain text that I am going to convert to HTML\r\n";
+		$message .= "Line breaks should become BR tags.\r\n";
+
+		$expected  = wpautop( $message );
+
+		$emails = EDD()->emails;
+		$emails->content_type = 'text/html';
+		$message = $emails->text_to_html( $message, EDD()->emails );
+
+		$this->assertEquals( $expected, $message );
 	}
 
 }
