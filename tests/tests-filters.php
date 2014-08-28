@@ -306,25 +306,9 @@ class Tests_Filters extends WP_UnitTestCase {
 		$this->assertarrayHasKey( 'edd_admin_email_notice', $wp_filter['edd_admin_sale_notice'][10] );
 	}
 
-	public function test_edd_purchase_receipt() {
-		global $wp_filter;
-		$this->assertarrayHasKey( 'edd_email_default_formatting', $wp_filter['edd_purchase_receipt'][10] );
-		$this->assertarrayHasKey( 'edd_apply_email_template', $wp_filter['edd_purchase_receipt'][20] );
-	}
-
 	public function test_edd_email_settings() {
 		global $wp_filter;
 		$this->assertarrayHasKey( 'edd_email_template_preview', $wp_filter['edd_email_settings'][10] );
-	}
-
-	public function test_edd_email_template_default() {
-		global $wp_filter;
-		$this->assertarrayHasKey( 'edd_default_email_template', $wp_filter['edd_email_template_default'][10] );
-	}
-
-	public function test_edd_purchase_receipt_default() {
-		global $wp_filter;
-		$this->assertarrayHasKey( 'edd_default_email_styling', $wp_filter['edd_purchase_receipt_default'][10] );
 	}
 
 	public function test_edd_view_receipt() {
