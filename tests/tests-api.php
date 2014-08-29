@@ -123,6 +123,8 @@ class Tests_API extends WP_UnitTestCase {
 						'price_id' => 1
 					)
 				),
+				'item_price' =>  100,
+				'subtotal' =>  100,
 				'price' =>  100,
 				'item_price' => 100,
 				'tax' => 0,
