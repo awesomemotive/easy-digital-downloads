@@ -664,7 +664,7 @@ function edd_get_registered_settings() {
 		)
 	);
 
-	return $edd_settings;
+	return apply_filters( 'edd_registered_settings', $edd_settings );
 }
 
 /**
