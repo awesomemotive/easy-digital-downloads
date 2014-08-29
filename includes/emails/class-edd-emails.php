@@ -64,8 +64,6 @@ class EDD_Emails {
 	private $template;
 
 	/**
-<<<<<<< HEAD
-=======
 	 * The attachments to the email
 	 *
 	 * @since  2.1
@@ -80,7 +78,6 @@ class EDD_Emails {
 	private $heading = '';
 
 	/**
->>>>>>> Add new heading option for emails. #1810
 	 * Get things going
 	 *
 	 * @since 2.1
@@ -93,7 +90,7 @@ class EDD_Emails {
 
 		add_action( 'edd_email_send_before', array( $this, 'send_before' ) );
 		add_action( 'edd_email_send_after', array( $this, 'send_after' ) );
-		add_filter( 'edd_email_message', array( $this, 'text_to_html' ), 10, 2 );
+
 	}
 
 	/**
@@ -162,6 +159,19 @@ class EDD_Emails {
 	}
 
 	/**
+	 * Get the email attachments
+	 *
+	 * @since 2.1
+	 */
+	public function get_attachments() {
+		if ( ! $this->attachments ) {
+			$this->attachments = apply_filters( 'edd_email_default_attachments', '' );
+		}
+
+		return apply_filters( 'edd_email_attachments', $this->attachments, $this );
+	}
+
+	/**
 	 * Retrieve email templates
 	 *
 	 * @since 2.1
@@ -215,11 +225,13 @@ class EDD_Emails {
 	 *
 	 * @since 2.1
 	 */
-	public function build_email( $message, $heading ) {
+	public function build_email( $message ) {
 
 		if ( false === $this->html ) {
 			return apply_filters( 'edd_email_message', wp_strip_all_tags( $message ), $this );
 		}
+
+		$message = $this->text_to_html( $message );
 
 		ob_start();
 
@@ -241,31 +253,20 @@ class EDD_Emails {
 
 		$body    = ob_get_clean();
 		$message = str_replace( '{email}', $message, $body );
-		$message = str_replace( '{heading}', $heading, $message );
 
 		return apply_filters( 'edd_email_message', $message, $this );
 	}
 
 	/**
 	 * Send the email
-	 * @param  string  $to               The To address to send to.
-	 * @param  string  $subject          The subject line of the email to send.
-	 * @param  string  $message          The body of the email to send.
-	 * @param  string  $heading          A heading to use at the top of the email body. If you pass an
-	 *                                   empty string (the default), then the subject will be used. To
-	 *                                   have no heading at all, pass NULL.
-	 * @param  string|array $attachments Attachments to the email in a format supported by wp_mail()
+	 *
 	 * @since 2.1
 	 */
-	public function send( $to, $subject, $message, $heading = '', $attachments = '' ) {
+	public function send( $to, $subject, $message ) {
 
 		if ( ! did_action( 'init' ) && ! did_action( 'admin_init' ) ) {
 			_doing_it_wrong( __FUNCTION__, __( 'You cannot send email with EDD_Emails until init/admin_init has been reached', 'edd' ), null );
 			return false;
-		}
-
-		if ( !is_null( $heading ) && empty( $heading ) ) {
-			$heading = $subject;
 		}
 
 		do_action( 'edd_email_send_before', $this );
@@ -273,13 +274,8 @@ class EDD_Emails {
 		$subject = $this->parse_tags( $subject );
 		$message = $this->parse_tags( $message );
 
-		$message = $this->build_email( $message, $heading );
-		if ( empty( $attachments ) ) {
-			$attachments = apply_filters( 'edd_email_default_attachments', '' );
-		}
-		$attachments = apply_filters( 'edd_email_attachments', $attachments, $this );
-
-		$sent = wp_mail( $to, $subject, $message, $this->get_headers(), $attachments );
+		$message = $this->build_email( $message );
+		$sent = wp_mail( $to, $subject, $message, $this->get_headers(), $this->get_attachments() );
 
 		do_action( 'edd_email_send_after', $this );
 
@@ -314,7 +310,7 @@ class EDD_Emails {
 	 *
 	 * @since 2.1
 	 */
-	public function text_to_html( $message, $class_object ) {
+	public function text_to_html( $message ) {
 
 		if ( 'text/html' == $this->content_type || true === $this->html ) {
 			$message = wpautop( $message );
