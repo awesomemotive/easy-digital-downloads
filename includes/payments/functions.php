@@ -1095,7 +1095,13 @@ function edd_get_payment_subtotal( $payment_id = 0) {
 	$subtotal = 0;
 
 	foreach ( $payment_meta['cart_details'] as $item ) {
-		$subtotal += $item['subtotal'];
+
+		if( isset( $item['subtotal'] ) ) {
+
+			$subtotal += $item['subtotal'];
+
+		}
+
 	}
 
 	$tax = edd_use_taxes() ? edd_get_payment_tax( $payment_id ) : 0;
