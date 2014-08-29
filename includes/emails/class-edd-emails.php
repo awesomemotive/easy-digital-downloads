@@ -90,7 +90,7 @@ class EDD_Emails {
 
 		add_action( 'edd_email_send_before', array( $this, 'send_before' ) );
 		add_action( 'edd_email_send_after', array( $this, 'send_after' ) );
-		add_filter( 'edd_email_message', array( $this, 'text_to_html' ), 10, 2 );
+
 	}
 
 	/**
@@ -231,8 +231,9 @@ class EDD_Emails {
 			return apply_filters( 'edd_email_message', wp_strip_all_tags( $message ), $this );
 		}
 
-		ob_start();
+		$message = $this->text_to_html( $message );
 
+		ob_start();
 
 		edd_get_template_part( 'emails/header', $this->get_template(), true );
 
@@ -309,7 +310,7 @@ class EDD_Emails {
 	 *
 	 * @since 2.1
 	 */
-	public function text_to_html( $message, $class_object ) {
+	public function text_to_html( $message ) {
 
 		if ( 'text/html' == $this->content_type || true === $this->html ) {
 			$message = wpautop( $message );
