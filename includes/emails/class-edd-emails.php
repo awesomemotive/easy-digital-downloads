@@ -71,6 +71,13 @@ class EDD_Emails {
 	private $attachments;
 
 	/**
+	 * The header text for the email
+	 *
+	 * @since  2.1
+	 */
+	private $heading = '';
+
+	/**
 	 * Get things going
 	 *
 	 * @since 2.1
@@ -189,6 +196,15 @@ class EDD_Emails {
 		}
 
 		return apply_filters( 'edd_email_template', $this->template );
+	}
+
+	/**
+	 * Get the header text for the email
+	 *
+	 * @since 2.1
+	 */
+	public function get_heading() {
+		return apply_filters( 'edd_email_heading', $this->heading );
 	}
 
 	/**
