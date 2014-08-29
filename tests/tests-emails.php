@@ -288,6 +288,13 @@ class Tests_Emails extends WP_UnitTestCase {
 		$this->assertEquals( '', EDD()->emails->get_attachments() );
 	}
 
+	public function test_get_heading() {
+
+		EDD()->emails->__set( 'heading', 'Purchase Receipt' );
+
+		$this->assertEquals( 'Purchase Receipt', EDD()->emails->get_heading() );
+	}
+
 	public function test_text_to_html() {
 
 		$message  = "Hello, this is plain text that I am going to convert to HTML\r\n";
