@@ -65,11 +65,11 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 
 	if( is_email( $user ) ) {
 
-		$field = 'user_id';
+		$field = 'email';
 
 	} else {
 
-		$field = 'email';
+		$field = 'user_id';
 
 	}
 
