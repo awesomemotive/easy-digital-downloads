@@ -64,6 +64,23 @@ class EDD_Emails {
 	private $template;
 
 	/**
+<<<<<<< HEAD
+=======
+	 * The attachments to the email
+	 *
+	 * @since  2.1
+	 */
+	private $attachments;
+
+	/**
+	 * The header text for the email
+	 *
+	 * @since  2.1
+	 */
+	private $heading = '';
+
+	/**
+>>>>>>> Add new heading option for emails. #1810
 	 * Get things going
 	 *
 	 * @since 2.1
@@ -169,6 +186,15 @@ class EDD_Emails {
 		}
 
 		return apply_filters( 'edd_email_template', $this->template );
+	}
+
+	/**
+	 * Get the header text for the email
+	 *
+	 * @since 2.1
+	 */
+	public function get_heading() {
+		return apply_filters( 'edd_email_heading', $this->heading );
 	}
 
 	/**

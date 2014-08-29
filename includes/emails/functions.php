@@ -43,6 +43,11 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	$emails = EDD()->emails;
 	$emails->__set( 'from_name', $from_name );
 	$emails->__set( 'from_email', $from_email );
+<<<<<<< HEAD
+=======
+	$emails->__set( 'attachments', $attachments );
+	$emails->__set( 'heading', __( 'Purchase Receipt', 'edd' ) );
+>>>>>>> Add new heading option for emails. #1810
 
 	$headers = apply_filters( 'edd_receipt_headers', $emails->get_headers(), $payment_id, $payment_data );
 	$emails->__set( 'headers', $headers );
@@ -80,6 +85,11 @@ function edd_email_test_purchase_receipt() {
 	$emails = EDD()->emails;
 	$emails->__set( 'from_name', $from_name );
 	$emails->__set( 'from_email', $from_email );
+<<<<<<< HEAD
+=======
+	$emails->__set( 'attachments', $attachments );
+	$emails->__set( 'heading', __( 'Purchase Receipt', 'edd' ) );
+>>>>>>> Add new heading option for emails. #1810
 
 	$headers = apply_filters( 'edd_receipt_headers', $emails->get_headers(), 0, array() );
 	$emails->__set( 'headers', $headers );
@@ -122,6 +132,11 @@ function edd_admin_email_notice( $payment_id = 0, $payment_data = array() ) {
 	$emails->__set( 'from_name', $from_name );
 	$emails->__set( 'from_email', $from_email );
 	$emails->__set( 'headers', $headers );
+<<<<<<< HEAD
+=======
+	$emails->__set( 'attachments', $attachments );
+	$emails->__set( 'heading', __( 'New Sale!', 'edd' ) );
+>>>>>>> Add new heading option for emails. #1810
 
 	$emails->send( edd_get_admin_notice_emails(), $subject, $message, $subject, $attachments );
 

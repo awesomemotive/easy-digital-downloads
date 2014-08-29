@@ -84,7 +84,11 @@ $header_img = edd_get_option( 'email_logo', '' );
 								<table border="0" cellpadding="0" cellspacing="0" width="520" id="template_header" style="<?php echo $template_header; ?>" bgcolor="#ffffff">
 									<tr>
 										<td>
+<<<<<<< HEAD
 											<h1 style="<?php echo $header_content_h1; ?>">{heading}</h1>
+=======
+											<h1 style="<?php echo $header_content_h1; ?>"><?php echo EDD()->emails->get_heading(); ?></h1>
+>>>>>>> Add new heading option for emails. #1810
 										</td>
 									</tr>
 								</table>
