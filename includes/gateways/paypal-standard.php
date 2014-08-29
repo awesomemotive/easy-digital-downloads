@@ -109,12 +109,14 @@ function edd_process_paypal_purchase( $purchase_data ) {
 				$item['name'] .= ' - ' . edd_get_cart_item_price_name( $item );
 			}
 
-			$paypal_args['item_name_' . $i ]       = stripslashes_deep( html_entity_decode( wp_strip_all_tags( $item['name'] ), ENT_COMPAT, 'UTF-8' ) );
-			$paypal_args['quantity_' . $i ]        = $item['quantity'];
-			$paypal_args['amount_' . $i ]          = $item['subtotal'];
+			$paypal_args['item_name_' . $i ]      = stripslashes_deep( html_entity_decode( wp_strip_all_tags( $item['name'] ), ENT_COMPAT, 'UTF-8' ) );
+			$paypal_args['quantity_' . $i ]       = $item['quantity'];
+			$paypal_args['amount_' . $i ]         = $item['subtotal'];
+
 			if ( edd_use_skus() ) {
 				$paypal_args['item_number_' . $i ] = edd_get_download_sku( $item['id'] );
 			}
+
 			$i++;
 
 		}
@@ -129,7 +131,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
 					// this is a positive fee
 					$paypal_args['item_name_' . $i ] = stripslashes_deep( html_entity_decode( wp_strip_all_tags( $fee['label'] ), ENT_COMPAT, 'UTF-8' ) );
 					$paypal_args['quantity_' . $i ]  = '1';
-					$paypal_args['amount_' . $i ]    = $fee['amount'];
+					$paypal_args['amount_' . $i ]    = edd_sanitize_amount( $fee['amount'] );
 					$i++;
 				} else {
 					// This is a negative fee (discount)
@@ -139,12 +141,14 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		}
 
 		if ( $discounted_amount > '0' ) {
-			$paypal_args['discount_amount_cart'] = $discounted_amount;
+			$paypal_args['discount_amount_cart'] = edd_sanitize_amount( $discounted_amount );
 		}
 
 		// Add taxes to the cart
 		if ( edd_use_taxes() ) {
-			$paypal_args['tax_cart'] = round( $purchase_data['tax'], edd_currency_decimal_filter() );
+
+			$paypal_args['tax_cart'] = edd_sanitize_amount( $purchase_data['tax'] );
+
 		}
 
 		$paypal_args = apply_filters( 'edd_paypal_redirect_args', $paypal_args, $purchase_data );
