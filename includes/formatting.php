@@ -107,10 +107,16 @@ function edd_format_amount( $amount, $decimals = true ) {
  * @param string $price Price
  * @return array $currency Currencies displayed correctly
  */
-function edd_currency_filter( $price ) {
+function edd_currency_filter( $price, $payment_id = null ) {
 	global $edd_options;
 
-	$currency = edd_get_currency();
+    if( $payment_id ) {
+        $payment_meta = edd_get_payment_meta( $payment_id );
+        $currency = $payment_meta['currency'];
+    } else {
+        $currency = edd_get_currency();
+    }
+
 	$position = isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before';
 
 	$negative = $price < 0;

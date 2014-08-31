@@ -257,11 +257,11 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 *
 	 * @return string Column Name
 	 */
-	public function column_default( $payment, $column_name ) {
+    public function column_default( $payment, $column_name ) {
 		switch ( $column_name ) {
 			case 'amount' :
 				$amount  = ! empty( $payment->total ) ? $payment->total : 0;
-				$value   = edd_currency_filter( edd_format_amount( $amount ) );
+				$value   = edd_currency_filter( edd_format_amount( $amount ), $payment->ID );
 				break;
 			case 'date' :
 				$date    = strtotime( $payment->date );

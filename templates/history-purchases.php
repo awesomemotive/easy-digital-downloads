@@ -20,7 +20,7 @@ if ( $purchases ) : ?>
 				<td class="edd_purchase_id">#<?php echo edd_get_payment_number( $post->ID ); ?></td>
 				<td class="edd_purchase_date"><?php echo date_i18n( get_option('date_format'), strtotime( get_post_field( 'post_date', $post->ID ) ) ); ?></td>
 				<td class="edd_purchase_amount">
-					<span class="edd_purchase_amount"><?php echo edd_currency_filter( edd_format_amount( edd_get_payment_amount( $post->ID ) ) ); ?></span>
+					<span class="edd_purchase_amount"><?php echo edd_currency_filter( edd_format_amount( edd_get_payment_amount( $post->ID ) ), $post->ID ); ?></span>
 				</td>
 				<td class="edd_purchase_details">
 					<?php if( $post->post_status != 'publish' ) : ?>

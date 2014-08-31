@@ -381,7 +381,7 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 											<?php endif; ?>
 	
 											<li class="price">
-												<?php echo edd_currency_filter( edd_format_amount( $price ) ); ?>
+												<?php echo edd_currency_filter( edd_format_amount( $price ), $payment_id ); ?>
 											</li>
 	
 											<li class="actions">
