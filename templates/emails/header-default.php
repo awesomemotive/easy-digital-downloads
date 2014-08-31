@@ -84,7 +84,7 @@ $header_img = edd_get_option( 'email_logo', '' );
 								<table border="0" cellpadding="0" cellspacing="0" width="520" id="template_header" style="<?php echo $template_header; ?>" bgcolor="#ffffff">
 									<tr>
 										<td>
-											<h1 style="<?php echo $header_content_h1; ?>">{heading}</h1>
+											<h1 style="<?php echo $header_content_h1; ?>"><?php _e( 'Purchase Receipt', 'edd' ); ?></h1>
 										</td>
 									</tr>
 								</table>
