@@ -137,14 +137,8 @@ function edd_display_email_template_preview() {
 		return;
 	}
 
-<<<<<<< HEAD
-	echo EDD()->emails->build_email( edd_email_preview_template_tags( edd_get_email_body_content( 0, array() ) ), _e( 'Purchase Receipt', 'edd' ) );
+	echo EDD()->emails->build_email( edd_email_preview_template_tags( edd_get_email_body_content( 0, array() ) ) );
 	exit;
-=======
-	EDD()->emails->heading = __( 'Purchase Receipt', 'edd' );
-
-	echo EDD()->emails->build_email( edd_email_preview_template_tags( edd_get_email_body_content( 0, array() ) ) );exit;
->>>>>>> Add new heading option for emails. #1810
 
 }
 add_action( 'template_redirect', 'edd_display_email_template_preview' );
