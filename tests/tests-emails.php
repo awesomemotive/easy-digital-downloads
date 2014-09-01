@@ -283,11 +283,6 @@ class Tests_Emails extends WP_UnitTestCase {
 
 	}
 
-	public function test_get_attachments() {
-
-		$this->assertEquals( '', EDD()->emails->get_attachments() );
-	}
-
 	public function test_get_heading() {
 
 		EDD()->emails->__set( 'heading', 'Purchase Receipt' );
