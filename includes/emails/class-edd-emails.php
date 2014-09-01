@@ -240,9 +240,7 @@ class EDD_Emails {
 		$message = $this->parse_tags( $message );
 
 		$message = $this->build_email( $message );
-		if ( empty( $attachments ) ) {
-			$attachments = apply_filters( 'edd_email_default_attachments', '' );
-		}
+
 		$attachments = apply_filters( 'edd_email_attachments', $attachments, $this );
 
 		$sent = wp_mail( $to, $subject, $message, $this->get_headers(), $attachments );
