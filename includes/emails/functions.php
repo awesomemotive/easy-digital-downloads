@@ -41,15 +41,16 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	$message      = edd_do_email_tags( edd_get_email_body_content( $payment_id, $payment_data ), $payment_id );
 
 	$emails = EDD()->emails;
+
 	$emails->__set( 'from_name', $from_name );
 	$emails->__set( 'from_email', $from_email );
-	$emails->__set( 'attachments', $attachments );
 	$emails->__set( 'heading', __( 'Purchase Receipt', 'edd' ) );
+
 
 	$headers = apply_filters( 'edd_receipt_headers', $emails->get_headers(), $payment_id, $payment_data );
 	$emails->__set( 'headers', $headers );
 
-	$emails->send( $to_email, $subject, $message );
+	$emails->send( $to_email, $subject, $message, $attachments );
 
 	if ( $admin_notice && ! edd_admin_notices_disabled( $payment_id ) ) {
 		do_action( 'edd_admin_sale_notice', $payment_id, $payment_data );
@@ -82,13 +83,12 @@ function edd_email_test_purchase_receipt() {
 	$emails = EDD()->emails;
 	$emails->__set( 'from_name', $from_name );
 	$emails->__set( 'from_email', $from_email );
-	$emails->__set( 'attachments', $attachments );
 	$emails->__set( 'heading', __( 'Purchase Receipt', 'edd' ) );
 
 	$headers = apply_filters( 'edd_receipt_headers', $emails->get_headers(), 0, array() );
 	$emails->__set( 'headers', $headers );
 
-	$emails->send( edd_get_admin_notice_emails(), $subject, $message );
+	$emails->send( edd_get_admin_notice_emails(), $subject, $message, $attachments );
 
 }
 
@@ -126,10 +126,9 @@ function edd_admin_email_notice( $payment_id = 0, $payment_data = array() ) {
 	$emails->__set( 'from_name', $from_name );
 	$emails->__set( 'from_email', $from_email );
 	$emails->__set( 'headers', $headers );
-	$emails->__set( 'attachments', $attachments );
 	$emails->__set( 'heading', __( 'New Sale!', 'edd' ) );
 
-	$emails->send( edd_get_admin_notice_emails(), $subject, $message );
+	$emails->send( edd_get_admin_notice_emails(), $subject, $message, $attachments );
 
 }
 add_action( 'edd_admin_sale_notice', 'edd_admin_email_notice', 10, 2 );
