@@ -204,8 +204,9 @@ function edd_ajax_update_cart_item_quantity() {
 
 		$download_id = absint( $_POST['download_id'] );
 		$quantity    = absint( $_POST['quantity'] );
+		$options     = maybe_unserialize( stripslashes( $_POST['options'] ) );
 
-		edd_set_cart_item_quantity( $download_id, absint( $_POST['quantity'] ) );
+		edd_set_cart_item_quantity( $download_id, absint( $_POST['quantity'] ), $options );
 		$total = edd_get_cart_total();
 
 		$return = array(
