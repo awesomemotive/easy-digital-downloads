@@ -446,7 +446,7 @@ function edd_get_cart_item_tax( $item = array() ) {
 		}
 
 		if( edd_taxes_after_discounts() ) {
-			$price -= apply_filters( 'edd_get_cart_item_tax_item_discount_amount', edd_get_cart_item_discount_amount( $item ), $item );
+			$price -= apply_filters( 'edd_get_cart_item_tax_item_discount_amount', edd_get_cart_item_discount_amount( $item ), $item ) / $item['quantity'];
 		}
 
 		$country = ! empty( $_POST['billing_country'] ) ? $_POST['billing_country'] : false;
@@ -742,7 +742,7 @@ function edd_get_cart_tax() {
 
 	$cart_tax += edd_get_cart_fee_tax();
 
-	return apply_filters( 'edd_get_cart_tax', $cart_tax );
+	return apply_filters( 'edd_get_cart_tax', edd_sanitize_amount( $cart_tax ) );
 }
 
 /**
