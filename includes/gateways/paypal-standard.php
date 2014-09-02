@@ -428,6 +428,16 @@ function edd_process_paypal_refund( $data ) {
 		return; // Only refund payments once
 	}
 
+	$payment_amount = edd_get_payment_amount( $payment_id );
+	$refund_amount  = $data['payment_gross'] * -1;
+
+	if ( number_format( (float) $refund_amount, 2 ) < number_format( (float) $payment_amount, 2 ) ) {
+		
+		edd_insert_payment_note( $payment_id, sprintf( __( 'Partial PayPal refund processed: %s', 'edd' ), $data['parent_txn_id'] ) );
+		return; // This is a partial refund
+	
+	}
+
 	edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Payment #%s Refunded for reason: %s', 'edd' ), $data['parent_txn_id'], $data['reason_code'] ) );
 	edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Refund Transaction ID: %s', 'edd' ), $data['txn_id'] ) );
 	edd_update_payment_status( $payment_id, 'refunded' );
