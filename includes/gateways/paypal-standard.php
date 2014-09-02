@@ -83,7 +83,8 @@ function edd_process_paypal_purchase( $purchase_data ) {
 			'cancel_return' => edd_get_failed_transaction_uri( '?payment-id=' . $payment ),
 			'notify_url'    => $listener_url,
 			'page_style'    => edd_get_paypal_page_style(),
-			'cbt'   => get_bloginfo( 'name' ),
+			'cbt'           => get_bloginfo( 'name' ),
+			'bn'            => 'EasyDigitalDownloads_SP'
 		);
 
 		if ( ! empty( $purchase_data['user_info']['address'] ) ) {
