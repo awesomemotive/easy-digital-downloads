@@ -289,6 +289,9 @@ class EDD_Emails {
 		remove_filter( 'wp_mail_from', array( $this, 'get_from_address' ) );
 		remove_filter( 'wp_mail_from_name', array( $this, 'get_from_name' ) );
 		remove_filter( 'wp_mail_content_type', array( $this, 'get_content_type' ) );
+
+		// Reset heading to an empty string
+		$this->heading = '';
 	}
 
 	/**
