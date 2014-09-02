@@ -1236,14 +1236,17 @@ function edd_color_select_callback( $args ) {
 function edd_rich_editor_callback( $args ) {
 	global $edd_options, $wp_version;
 
-	if ( isset( $edd_options[ $args['id'] ] ) )
+	if ( isset( $edd_options[ $args['id'] ] ) ) {
 		$value = $edd_options[ $args['id'] ];
-	else
+	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
+	}
+
+	$rows = isset( $args['size'] ) ? $args['size'] : 20;
 
 	if ( $wp_version >= 3.3 && function_exists( 'wp_editor' ) ) {
 		ob_start();
-		wp_editor( stripslashes( $value ), 'edd_settings_' . $args['id'], array( 'textarea_name' => 'edd_settings[' . $args['id'] . ']' ) );
+		wp_editor( stripslashes( $value ), 'edd_settings_' . $args['id'], array( 'textarea_name' => 'edd_settings[' . $args['id'] . ']', 'textarea_rows' => $rows ) );
 		$html = ob_get_clean();
 	} else {
 		$html = '<textarea class="large-text" rows="10" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
