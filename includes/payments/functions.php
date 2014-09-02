@@ -117,7 +117,7 @@ function edd_insert_payment( $payment_data = array() ) {
 		$discount = edd_get_discount_by( 'code', $payment_data['user_info']['discount'] );
 	}
 
-	// Find the next payment number, if enabled 
+	// Find the next payment number, if enabled
 	if( edd_get_option( 'enable_sequential' ) ) {
 		$number = edd_get_next_payment_number();
 	}
@@ -240,7 +240,12 @@ function edd_update_payment_status( $payment_id, $new_status = 'publish' ) {
  */
 function edd_delete_purchase( $payment_id = 0 ) {
 	global $edd_logs;
+	
+	$post = get_post( $payment_id );
 
+	if( !$post )
+		return;
+		
 	$downloads = edd_get_payment_meta_downloads( $payment_id );
 
 	if ( is_array( $downloads ) ) {
@@ -251,7 +256,7 @@ function edd_delete_purchase( $payment_id = 0 ) {
 	}
 
 	$amount = edd_get_payment_amount( $payment_id );
-	$status = get_post( $payment_id )->post_status;
+	$status = $post->post_status;
 
 	if( $status == 'revoked' || $status == 'publish' ) {
 		// Only decrease earnings if they haven't already been decreased (or were never increased for this payment)
@@ -591,9 +596,9 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 
 	if ( ! empty( $hour ) )
 		$args['hour'] = $hour;
-	
+
 	$args = apply_filters( 'edd_get_sales_by_date_args', $args  );
-	
+
 	$key   = md5( serialize( $args ) );
 	$count = get_transient( $key, 'edd' );
 
@@ -952,13 +957,13 @@ function edd_get_payment_number( $payment_id = 0 ) {
 		$number = get_post_meta( $payment_id, '_edd_payment_number', true );
 
 		if( ! $number ) {
-		
+
 			$number = $payment_id;
-	
+
 		}
-	
+
 	}
-	
+
 	return apply_filters( 'edd_payment_number', $number, $payment_id );
 }
 
@@ -982,10 +987,10 @@ function edd_get_next_payment_number() {
 
 	$payments     = new EDD_Payments_Query( array( 'number' => 1, 'order' => 'DESC', 'orderby' => 'ID', 'output' => 'posts', 'fields' => 'ids' ) );
 
-	$last_payment = $payments->get_payments(); 
+	$last_payment = $payments->get_payments();
 
 	if( $last_payment ) {
-		
+
 		$number = edd_get_payment_number( $last_payment[0] );
 
 		if( empty( $number ) ) {
@@ -1085,7 +1090,19 @@ function edd_payment_subtotal( $payment_id = 0 ) {
 function edd_get_payment_subtotal( $payment_id = 0) {
 	global $edd_options;
 
-	$subtotal = edd_get_payment_amount( $payment_id );
+	$payment_meta = get_post_meta( $payment_id, '_edd_payment_meta', true );
+
+	$subtotal = 0;
+
+	foreach ( $payment_meta['cart_details'] as $item ) {
+
+		if( isset( $item['subtotal'] ) ) {
+
+			$subtotal += $item['subtotal'];
+
+		}
+
+	}
 
 	$tax = edd_use_taxes() ? edd_get_payment_tax( $payment_id ) : 0;
 	$subtotal -= $tax;
