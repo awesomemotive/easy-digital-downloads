@@ -99,7 +99,10 @@ function edd_register_settings() {
 					'section' => $tab,
 					'size'    => isset( $option['size'] ) ? $option['size'] : null,
 					'options' => isset( $option['options'] ) ? $option['options'] : '',
-					'std'     => isset( $option['std'] ) ? $option['std'] : ''
+                    'std'     => isset( $option['std'] ) ? $option['std'] : '',
+                    'min'     => isset( $option['min'] ) ? $option['min'] : null,
+                    'max'     => isset( $option['max'] ) ? $option['max'] : null,
+                    'step'    => isset( $option['step'] ) ? $option['step'] : null
 				)
 			);
 		}
@@ -1082,8 +1085,8 @@ function edd_text_callback( $args ) {
  */
 function edd_number_callback( $args ) {
 	global $edd_options;
-
-	if ( isset( $edd_options[ $args['id'] ] ) )
+    
+    if ( isset( $edd_options[ $args['id'] ] ) )
 		$value = $edd_options[ $args['id'] ];
 	else
 		$value = isset( $args['std'] ) ? $args['std'] : '';
