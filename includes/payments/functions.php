@@ -1171,7 +1171,6 @@ function edd_payment_subtotal( $payment_id = 0 ) {
  * @return float $subtotal Subtotal for payment (non formatted)
  */
 function edd_get_payment_subtotal( $payment_id = 0) {
-	global $edd_options;
 
 	$subtotal     = 0;
 	$cart_details = edd_get_payment_meta_cart_details( $payment_id );
