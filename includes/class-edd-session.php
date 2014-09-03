@@ -34,8 +34,6 @@ class EDD_Session {
 	/**
 	 * Whether to use PHP $_SESSION or WP_Session
 	 *
-	 * PHP $_SESSION is opt-in only by defining the EDD_USE_PHP_SESSIONS constant
-	 *
 	 * @var bool
 	 * @access private
 	 * @since 1.5,1
@@ -52,16 +50,14 @@ class EDD_Session {
 	 * @since 1.5
 	 */
 	public function __construct() {
-		
-		$this->use_php_sessions = defined( 'EDD_USE_PHP_SESSIONS' ) && EDD_USE_PHP_SESSIONS;
+
+		$this->use_php_sessions = $this->use_php_sessions();
 
 		if( $this->use_php_sessions ) {
 
-			// Use PHP SESSION (must be enabled via the EDD_USE_PHP_SESSIONS constant)
-
-			if( ! session_id() ) {
-				add_action( 'init', 'session_start', -2 );
-			}
+			// Use PHP SESSION (must be enabled via the EDD_USE_PHP_SESSIONS constant or
+			// activated during the installer after support autodetection)
+			add_action( 'init', array( $this, 'maybe_start_session'), -2 );
 
 		} else {
 
@@ -79,9 +75,9 @@ class EDD_Session {
 				require_once EDD_PLUGIN_DIR . 'includes/libraries/class-wp-session.php';
 				require_once EDD_PLUGIN_DIR . 'includes/libraries/wp-session.php';
 			}
-	
-			//add_filter( 'wp_session_expiration_variant', array( $this, 'set_expiration_variant_time' ), 99999 );
-			//add_filter( 'wp_session_expiration', array( $this, 'set_expiration_time' ), 99999 );
+
+			add_filter( 'wp_session_expiration_variant', array( $this, 'set_expiration_variant_time' ), 99999 );
+			add_filter( 'wp_session_expiration', array( $this, 'set_expiration_time' ), 99999 );
 
 		}
 
@@ -215,5 +211,62 @@ class EDD_Session {
 	 */
 	public function set_expiration_time( $exp ) {
 		return ( 30 * 60 * 24 );
+	}
+
+	/**
+	 * Checks to see if the server supports PHP sessions
+	 * or if the EDD_USE_PHP_SESSIONS constant is defined
+	 *
+	 * @access public
+	 * @since 2.1
+	 * @author Daniel J Griffiths
+	 * @return bool $ret True if we are using PHP sessions, false otherwise
+	 */
+	public function use_php_sessions() {
+
+		$ret = false;
+
+		// If the database variable is already set, no need to run autodetection
+		$edd_use_php_sessions = (bool) get_option( 'edd_use_php_sessions' );
+
+		if ( ! $edd_use_php_sessions ) {
+
+			// Attempt to detect if the server supports PHP sessions
+			if( function_exists( 'session_start' ) ) {
+
+				$this->set( 'edd_use_php_sessions', 1 );
+
+				if( $this->get( 'edd_use_php_sessions' ) ) {
+
+					$ret = true;
+
+					// Set the database option
+					update_option( 'edd_use_php_sessions', true );
+
+				}
+
+			}
+
+		} else {
+			$ret = $edd_use_php_sessions;
+		}
+
+		// Enable or disable PHP Sessions based on the EDD_USE_PHP_SESSIONS constant
+		if ( defined( 'EDD_USE_PHP_SESSIONS' ) && EDD_USE_PHP_SESSIONS ) {
+			$ret = true;
+		} else if ( defined( 'EDD_USE_PHP_SESSIONS' ) && ! EDD_USE_PHP_SESSIONS ) {
+			$ret = false;
+		}
+
+		return (bool) apply_filters( 'edd_use_php_sessions', $ret );
+	}
+
+	/**
+	 * Starts a new session if one hasn't started yet.
+	 */
+	public function maybe_start_session() {
+		if( ! session_id() ) {
+			session_start();
+		}
 	}
 }

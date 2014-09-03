@@ -204,13 +204,15 @@ function edd_ajax_update_cart_item_quantity() {
 
 		$download_id = absint( $_POST['download_id'] );
 		$quantity    = absint( $_POST['quantity'] );
+		$options     = maybe_unserialize( stripslashes( $_POST['options'] ) );
 
-		edd_set_cart_item_quantity( $download_id, absint( $_POST['quantity'] ) );
+		edd_set_cart_item_quantity( $download_id, absint( $_POST['quantity'] ), $options );
 		$total = edd_get_cart_total();
 
 		$return = array(
 			'download_id' => $download_id,
 			'quantity'    => $quantity,
+			'taxes'       => html_entity_decode( edd_cart_tax(), ENT_COMPAT, 'UTF-8' ),
 			'subtotal'    => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
 			'total'       => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' )
 		);
