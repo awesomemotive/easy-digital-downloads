@@ -222,7 +222,7 @@ class EDD_Welcome {
 
 					<div>
 						<h4><?php _e( 'Better Reporting', 'edd' );?></h4>
-						<p><?php _e( 'Along with the new Tools page, we have introduced a new tool that allows you to blacklist specific email addresses. Emails placed on this list will not be allowed to make purchases. This is useful for combatting fraud.' ,'edd' );?></p>
+						<p><?php _e( 'We have added a new option to the “Custom” date selection that lets you specify a start day and an end day, along with the month and year, allowing you to get exact numbers for precise date ranges.' ,'edd' );?></p>
 
 						<h4><?php _e( 'More Accurate Estimates', 'edd' );?></h4>
 						<p><?php _e( 'We have improved the calculations for the Estimated monthly earnings and Estimated monthly sales statistics. The estimated values shown are now much, much more accurate and should represent a realistic estimate of how your store is expected to perform for the current month.', 'edd' );?></p>
