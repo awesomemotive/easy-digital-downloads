@@ -184,6 +184,73 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
+= 2.1, September 3, 2014 =
+
+* New: Redesigned email templates powered by the new EDD_Emails class
+* New: Customers API and database layer that dramatically improves performance of customer-related queries
+* New: Improved customer reports table that includes column filtering
+* New: Improved transaction ID tracking and display
+* New: Added support for WP CLI
+* New: Drag-and-drop ordering for variable prices
+* New: Admin sale notifications are now sent with same HTML template as purchase receipts
+* New: edd_update_payment_meta() function for easily adding and updating meta values for payment records
+* New: edd_update_payment_meta() function for easily adding and updating meta values for payment records
+* New: Hooks introduced at the bottom and top of the Discount edit screen
+* New: Added an option to hide the cart widget when on the checkout page
+* New: Introduced a function to detect if a download product is free, edd_is_free_download()
+* New: Introduced edd_get_payment_transaction_id() and edd_set_payment_transaction_id()
+* New: Introduced edd_user_can_view_receipt_item filter
+
+* Tweak: [downloads] short code now accepts slugs or term IDs for category and tag attributes
+* Tweak: Estimated earnings are more accurate
+* Tweak: Custom date ranges for report graphs now include a day option
+* Tweak: Added EDD-specific classes to the body tag when appropriate
+* Tweak: Improved responsiveness of the View Order Details screen
+* Tweak: Added "download" attribute to file download links
+* Tweak: Parameters for edd_get_download_file_url() now passed through urlencode()
+* Tweak: Product excerpts now available in the JSON/XML API
+* Tweak: Improved display of the payment method icons in settings
+* Tweak: Removed all instances of the extract() function
+* Tweak: PHP sessions now automatically enabled when the hosting account supports it
+* Tweak: Added Download post type to the At a Glance widget
+* Tweak: Improved SSL URL filtering of assets and non-checkout pages
+* Tweak: Replaced padlock icon on checkout with icon font
+* Tweak: Added currency settings to the System Info
+* Tweak: Prevent W3 Total Cache from caching discount codes
+* Tweak: Added caching to the get_user() method in the EDD_API
+* Tweak: Added a "size" parameter to the edd_rich_editor_callback() function
+
+* Fix: Sales column linked incorrectly to the File Downloads log
+* Fix: "yesterday" date range failed for EDD_Stats when the current day was the first day of the month
+* Fix: The shop_manager role could not export reports
+* Fix: Non-item fees were incorrectly allowed to be in the cart when the cart was empty
+* Fix: Errors when default CSV columns removed
+* Fix: Undefined index in process-download.php
+* Fix: Undefined index when updating a payment record with no last name
+* Fix: Fatal error on some hosts that disallow set_time_limit()
+* Fix: Incorrect label in Discount edit screen for flat rate discounts
+* Fix: Conflict with WooCommerce's SSL option when Enforce SSL on Checkout is enabled
+* Fix: Incorrect postal code validation for Argentina
+* Fix: Incorrect postal code validation for Canada
+* Fix: Discount code not properly set in cart when passed in a URL
+* Fix: Incorrect tax amounts when a discount code is used and item quantity is greater than 1
+* Fix: Incorrect tax amount on fees when prices are inclusive of tax
+* Fix: Incorrect item amounts due to rounding amounts too early
+* Fix: Duplicated Personal Information sections sometimes displayed on checkout due to non-strict comparison
+* Fix: Notices displayed in Download Categories / Tags widget upon save
+* Fix: Multiple discounts with the same code could be created
+* Fix: Invalid CSS properties
+* Fix: Filtering the File Downloads log did not work
+* Fix: edd_before_download_content action ran after the download content
+* Fix: Download links could not be copied on View Order Details in some versions of Chrome
+* Fix: Incorrect number of decimal places for some cart amounts
+* Fix: Incorrect tax amounts when taxes are calculated after discounts
+* Fix: Adding duplicate items to the cart does not increase cart item quantity
+* Fix: Division by zero error when saving a payment record with an amount of zero
+* Fix: Empty cart problems when FORCE_SSL_ADMIN is set to true
+* Fix: Improper display of the Products field for Bundle products
+* Fix: Refunds and disputes not picked up by PayPal's IPN listener
+
 = 2.0.4, June 23, 2014 =
 
 * Fix: Problem with file download URLs when using the Redirect download method
