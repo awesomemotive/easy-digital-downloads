@@ -278,7 +278,7 @@ function edd_process_paypal_ipn() {
 	if ( ! is_array( $encoded_data_array ) && !empty( $encoded_data_array ) )
 		return;
 
-	if ( has_action( 'edd_paypal_' . $encoded_data_array['txn_type'] ) ) {
+	if ( isset( $encoded_data_array['txn_type'] ) && has_action( 'edd_paypal_' . $encoded_data_array['txn_type'] ) ) {
 		// Allow PayPal IPN types to be processed separately
 		do_action( 'edd_paypal_' . $encoded_data_array['txn_type'], $encoded_data_array );
 	} else {
