@@ -83,7 +83,8 @@ function edd_process_paypal_purchase( $purchase_data ) {
 			'cancel_return' => edd_get_failed_transaction_uri( '?payment-id=' . $payment ),
 			'notify_url'    => $listener_url,
 			'page_style'    => edd_get_paypal_page_style(),
-			'cbt'   => get_bloginfo( 'name' ),
+			'cbt'           => get_bloginfo( 'name' ),
+			'bn'            => 'EasyDigitalDownloads_SP'
 		);
 
 		if ( ! empty( $purchase_data['user_info']['address'] ) ) {
@@ -426,6 +427,16 @@ function edd_process_paypal_refund( $data ) {
 
 	if ( get_post_status( $payment_id ) == 'refunded' ) {
 		return; // Only refund payments once
+	}
+
+	$payment_amount = edd_get_payment_amount( $payment_id );
+	$refund_amount  = $data['payment_gross'] * -1;
+
+	if ( number_format( (float) $refund_amount, 2 ) < number_format( (float) $payment_amount, 2 ) ) {
+		
+		edd_insert_payment_note( $payment_id, sprintf( __( 'Partial PayPal refund processed: %s', 'edd' ), $data['parent_txn_id'] ) );
+		return; // This is a partial refund
+	
 	}
 
 	edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Payment #%s Refunded for reason: %s', 'edd' ), $data['parent_txn_id'], $data['reason_code'] ) );

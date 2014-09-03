@@ -50,6 +50,7 @@ function edd_get_cart_content_details() {
 		$fees       = edd_get_cart_fees( 'fee', $item['id'] );
 		$subtotal   = ( $item_price * $quantity ) - $discount;
 		$tax        = edd_get_cart_item_tax( $item['id'], $item['options'], $subtotal );
+		$tax        = $tax * $quantity;
 
 		if( edd_prices_include_tax() ) {
 			$subtotal -= $tax;
@@ -435,8 +436,6 @@ function edd_get_cart_item_tax( $download_id = 0, $options = array(), $subtotal 
 		$state   = ! empty( $_POST['card_state'] )      ? $_POST['card_state']      : false;
 
 		$tax = edd_calculate_tax( $subtotal, $country, $state );
-
-		$tax = $tax * edd_get_cart_item_quantity( $download_id, $options );
 
 	}
 
