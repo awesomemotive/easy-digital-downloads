@@ -1177,13 +1177,21 @@ function edd_get_payment_subtotal( $payment_id = 0) {
 
 	$subtotal = 0;
 
-	foreach ( $payment_meta['cart_details'] as $item ) {
+	if( isset( $payment_meta['cart_details'] ) ) {
 
-		if( isset( $item['subtotal'] ) ) {
+		foreach ( $payment_meta['cart_details'] as $item ) {
 
-			$subtotal += $item['subtotal'];
+			if( isset( $item['subtotal'] ) ) {
+
+				$subtotal += $item['subtotal'];
+
+			}
 
 		}
+
+	} else {
+
+		$subtotal = edd_get_payment_amount( $payment_id );
 
 	}
 
