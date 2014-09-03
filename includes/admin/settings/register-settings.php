@@ -93,16 +93,16 @@ function edd_register_settings() {
 				'edd_settings_' . $tab,
 				'edd_settings_' . $tab,
 				array(
-					'id'      => isset( $option['id'] ) ? $option['id'] : null,
-					'desc'    => ! empty( $option['desc'] ) ? $option['desc'] : '',
-					'name'    => isset( $option['name'] ) ? $option['name'] : null,
 					'section' => $tab,
-					'size'    => isset( $option['size'] ) ? $option['size'] : null,
+					'id'      => isset( $option['id'] )      ? $option['id']      : null,
+					'desc'    => ! empty( $option['desc'] )  ? $option['desc']    : '',
+					'name'    => isset( $option['name'] )    ? $option['name']    : null,
+					'size'    => isset( $option['size'] )    ? $option['size']    : null,
 					'options' => isset( $option['options'] ) ? $option['options'] : '',
-                    'std'     => isset( $option['std'] ) ? $option['std'] : '',
-                    'min'     => isset( $option['min'] ) ? $option['min'] : null,
-                    'max'     => isset( $option['max'] ) ? $option['max'] : null,
-                    'step'    => isset( $option['step'] ) ? $option['step'] : null
+					'std'     => isset( $option['std'] )     ? $option['std']     : '',
+					'min'     => isset( $option['min'] )     ? $option['min']     : null,
+					'max'     => isset( $option['max'] )     ? $option['max']     : null,
+					'step'    => isset( $option['step'] )    ? $option['step']    : null
 				)
 			);
 		}
