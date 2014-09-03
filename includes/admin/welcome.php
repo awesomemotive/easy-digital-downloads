@@ -214,7 +214,7 @@ class EDD_Welcome {
 					<div>
 		
 						<h4><?php _e( 'Drag-and-Drop Variable Prices', 'edd' );?></h4>
-						<p><?php _e( 'We have added a new option to the “Custom” date selection that lets you specify a start day and an end day, along with the month and year.', 'edd' );?></p>
+						<p><?php _e( 'In version 2.1, we have introduced the ability to reorder variable prices into the exact order you want them displayed on the frontend with a simple drag-and-drop interface.', 'edd' );?></p>
 
 						<h4><?php _e( 'Transaction ID Tracking', 'edd' );?></h4>
 						<p><?php _e( 'A new set of functions have been introduced to allow payment gateways to better track transaction IDs. The transaction IDs, if present, are now prominently displayed on the Viwe Order Details screen.', 'edd' );?></p>
