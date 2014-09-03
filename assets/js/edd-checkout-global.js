@@ -285,12 +285,15 @@ jQuery(document).ready(function($) {
 
         var $this = $(this),
             quantity = $this.val(),
-            download_id = $this.closest('tr.edd_cart_item').data('download-id');
+            key = $this.data('key'),
+            download_id = $this.closest('tr.edd_cart_item').data('download-id'),
+            options = $this.parent().find('input[name="edd-cart-download-' + key + '-options"]').val();
 
         var postData = {
             action: 'edd_update_quantity',
             quantity: quantity,
-            download_id: download_id
+            download_id: download_id,
+            options: options
         };
 
         //edd_discount_loader.show();
@@ -304,7 +307,17 @@ jQuery(document).ready(function($) {
                 withCredentials: true
             },
             success: function (response) {
-                 $('.edd_cart_amount').each(function() {
+
+                console.log( response );
+                $('.edd_cart_subtotal_amount').each(function() {
+                    $(this).text(response.subtotal);
+                });
+
+                $('.edd_cart_tax_amount').each(function() {
+                    $(this).text(response.taxes);
+                });
+
+                $('.edd_cart_amount').each(function() {
                     $(this).text(response.total);
                     $('body').trigger('edd_quantity_updated', [ response ]);
                 });

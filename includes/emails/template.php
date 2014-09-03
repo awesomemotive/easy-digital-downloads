@@ -16,16 +16,14 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * Gets all the email templates that have been registerd. The list is extendable
  * and more templates can be added.
  *
+ * As of 2.0, this is simply a wrapper to EDD_Email_Templates->get_templates()
+ *
  * @since 1.0.8.2
  * @return array $templates All the registered email templates
  */
 function edd_get_email_templates() {
-	$templates = array(
-		'default' => __( 'Default Template', 'edd' ),
-		'none'    => __( 'No template, plain text only', 'edd' )
-	);
-
-	return apply_filters( 'edd_email_templates', $templates );
+	$templates = new EDD_Emails;
+	return $templates->get_templates();
 }
 
 /**
@@ -57,11 +55,10 @@ function edd_email_preview_template_tags( $message ) {
 
 	$download_list = '<ul>';
 	$download_list .= '<li>' . __( 'Sample Product Title', 'edd' ) . '<br />';
-	$download_list .= '<ul>';
-	$download_list .= '<li>';
+	$download_list .= '<div>';
 	$download_list .= '<a href="#">' . __( 'Sample Download File Name', 'edd' ) . '</a> - <small>' . __( 'Optional notes about this download.', 'edd' ) . '</small>';
+	$download_list .= '</div>';
 	$download_list .= '</li>';
-	$download_list .= '</ul></li>';
 	$download_list .= '</ul>';
 
 	$file_urls = esc_html( trailingslashit( get_site_url() ) . 'test.zip?test=key&key=123' );
@@ -80,13 +77,12 @@ function edd_email_preview_template_tags( $message ) {
 
 	$payment_id = rand(1, 100);
 
-	$user     = wp_get_current_user();
-	$usermeta = get_user_meta( get_current_user_id() );
+	$user = wp_get_current_user();
 
 	$message = str_replace( '{download_list}', $download_list, $message );
 	$message = str_replace( '{file_urls}', $file_urls, $message );
-	$message = str_replace( '{name}', ( !empty( $usermeta['first_name'][0] ) ? $usermeta['first_name'][0] : 'John' ), $message );
- 	$message = str_replace( '{fullname}', ( !empty( $usermeta['first_name'][0] ) ? $usermeta['first_name'][0] : 'John' ) . ( !empty( $usermeta['last_name'][0] ) ? ' ' . $usermeta['last_name'][0] : ' Doe' ), $message );
+	$message = str_replace( '{name}', $user->display_name, $message );
+	$message = str_replace( '{fullname}', $user->display_name, $message );
  	$message = str_replace( '{username}', $user->user_login, $message );
 	$message = str_replace( '{date}', date( get_option( 'date_format' ), current_time( 'timestamp' ) ), $message );
 	$message = str_replace( '{subtotal}', $sub_total, $message );
@@ -103,18 +99,6 @@ function edd_email_preview_template_tags( $message ) {
 }
 
 /**
- * Email Default Formatting
- *
- * @since 1.0
- * @param string $message Message without <p> tags
- * @return string $message Formatted message with <p> tags added
- */
-function edd_email_default_formatting( $message ) {
-	return wpautop( stripslashes( $message ) );
-}
-add_filter( 'edd_purchase_receipt', 'edd_email_default_formatting' );
-
-/**
  * Email Template Preview
  *
  * @access private
@@ -124,46 +108,44 @@ add_filter( 'edd_purchase_receipt', 'edd_email_default_formatting' );
 function edd_email_template_preview() {
 	global $edd_options;
 
-	$default_email_body = __( "Dear", "edd" ) . " {name},\n\n";
-	$default_email_body .= __( "Thank you for your purchase. Please click on the link(s) below to download your files.", "edd" ) . "\n\n";
-	$default_email_body .= "{download_list}\n\n";
-	$default_email_body .= "{sitename}";
-
-	$email_body = isset( $edd_options['purchase_receipt'] ) ? stripslashes( $edd_options['purchase_receipt'] ) : $default_email_body;
 	ob_start();
 	?>
-	<a href="#email-preview" id="open-email-preview" class="button-secondary" title="<?php _e( 'Purchase Receipt Preview', 'edd' ); ?> "><?php _e( 'Preview Purchase Receipt', 'edd' ); ?></a>
+	<a href="<?php echo esc_url( add_query_arg( array( 'edd_action' => 'preview_email' ), home_url() ) ); ?>" class="button-secondary" target="_blank" title="<?php _e( 'Purchase Receipt Preview', 'edd' ); ?> "><?php _e( 'Preview Purchase Receipt', 'edd' ); ?></a>
 	<a href="<?php echo wp_nonce_url( add_query_arg( array( 'edd_action' => 'send_test_email' ) ), 'edd-test-email' ); ?>" title="<?php _e( 'This will send a demo purchase receipt to the emails listed below.', 'edd' ); ?>" class="button-secondary"><?php _e( 'Send Test Email', 'edd' ); ?></a>
-
-	<div id="email-preview-wrap" style="display:none;">
-		<div id="email-preview">
-			<?php echo edd_apply_email_template( $email_body, null, null ); ?>
-		</div>
-	</div>
 	<?php
 	echo ob_get_clean();
 }
 add_action( 'edd_email_settings', 'edd_email_template_preview' );
 
 /**
- * Email Template Header
+ * Displays the email preview
  *
- * @access private
- * @since 1.0.8.2
- * @return string Email template header
+ * @since 2.1
+ * @return void
  */
-function edd_get_email_body_header() {
-	ob_start();
-	?>
-	<html>
-	<head>
-		<style type="text/css">#outlook a { padding: 0; }</style>
-	</head>
-	<body dir="<?php echo is_rtl() ? 'rtl' : 'ltr'; ?>">
-	<?php
-	do_action( 'edd_email_body_header' );
-	return ob_get_clean();
+function edd_display_email_template_preview() {
+
+	if( empty( $_GET['edd_action'] ) ) {
+		return;
+	}
+
+	if( 'preview_email' !== $_GET['edd_action'] ) {
+		return;
+	}
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
+
+	EDD()->emails->heading = __( 'Purchase Receipt', 'edd' );
+
+	echo EDD()->emails->build_email( edd_email_preview_template_tags( edd_get_email_body_content( 0, array() ) ) );
+
+	exit;
+
 }
+add_action( 'template_redirect', 'edd_display_email_template_preview' );
 
 /**
  * Email Template Body
@@ -183,7 +165,9 @@ function edd_get_email_body_content( $payment_id = 0, $payment_data = array() ) 
 
 	$email = isset( $edd_options['purchase_receipt'] ) ? stripslashes( $edd_options['purchase_receipt'] ) : $default_email_body;
 
-	$email_body = edd_do_email_tags( $email, $payment_id );
+	$email_body = wpautop( $email );
+
+	$email_body = apply_filters( 'edd_purchase_receipt_' . EDD()->emails->get_template(), $email_body, $payment_id, $payment_data );
 
 	return apply_filters( 'edd_purchase_receipt', $email_body, $payment_id, $payment_data );
 }
@@ -245,99 +229,6 @@ function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data 
 
 	return apply_filters( 'edd_sale_notification', wpautop( $email_body ), $payment_id, $payment_data );
 }
-
-/**
- * Email Template Footer
- *
- * @since 1.0.8.2
- * @return string Email template footer
- */
-function edd_get_email_body_footer() {
-	ob_start();
-	do_action( 'edd_email_body_footer' );
-	?>
-	</body>
-	</html>
-	<?php
-	return ob_get_clean();
-}
-
-/**
- * Applies the Chosen Email Template
- *
- * @since 1.0.8.2
- * @param string $body The contents of the receipt email
- * @param int $payment_id The ID of the payment we are sending a receipt for
- * @param array $payment_data An array of meta information for the payment
- * @return string $email Formatted email with the template applied
- */
-function edd_apply_email_template( $body, $payment_id, $payment_data=array() ) {
-	global $edd_options;
-
-	$template_name = isset( $edd_options['email_template'] ) ? $edd_options['email_template'] : 'default';
-	$template_name = apply_filters( 'edd_email_template', $template_name, $payment_id );
-
-	if ( $template_name == 'none' ) {
-		if ( is_admin() )
-			$body = edd_email_preview_template_tags( $body );
-
-		return $body; // Return the plain email with no template
-	}
-
-	ob_start();
-
-	do_action( 'edd_email_template_' . $template_name );
-
-	$template = ob_get_clean();
-
-	if ( is_admin() )
-		$body = edd_email_preview_template_tags( $body );
-
-	$body = apply_filters( 'edd_purchase_receipt_' . $template_name, $body );
-
-	$email = str_replace( '{email}', $body, $template );
-
-	return $email;
-}
-add_filter( 'edd_purchase_receipt', 'edd_apply_email_template', 20, 3 );
-
-/**
- * Default Email Template
- *
- * @access private
- * @since 1.0.8.2
- */
-function edd_default_email_template() {
-	$text_align = is_rtl() ? 'right' : 'left';
-	echo '<div style="margin: 0; background-color: #fafafa; width: auto; padding: 30px;"><center>';
-		echo '<div style="border: 1px solid #ddd; width: 660px; background: #f0f0f0; padding: 8px; margin: 0;">';
-			echo '<div id="edd-email-content" style="background: #fff; border: 1px solid #ddd; padding: 15px; text-align: ' . $text_align . ' !important;">';
-				echo '{email}'; // This tag is required in order for the contents of the email to be shown
-			echo '</div>';
-		echo '</div>';
-	echo '</center></div>';
-}
-add_action( 'edd_email_template_default', 'edd_default_email_template' );
-
-/**
- * Default Email Template Styling Extras
- *
- * @since 1.0.9.1
- * @param string $email_body Email template without styling
- * @return string $email_body Email template with styling
- */
-function edd_default_email_styling( $email_body ) {
-	$first_p  = strpos( $email_body, '<p style="font-size: 14px;">' );
-	if( $first_p ) {
-		$email_body = substr_replace( $email_body, '<p style="font-size: 14px; margin-top:0;">', $first_p, 3 );
-	}
-	$email_body = str_replace( '<p>', '<p style="font-size: 14px; line-height: 150%">', $email_body );
-	$email_body = str_replace( '<ul>', '<ul style="margin: 0 0 10px 0; padding: 0;">', $email_body );
-	$email_body = str_replace( '<li>', '<li style="font-size: 14px; line-height: 150%; display:block; margin: 0 0 4px 0;">', $email_body );
-
-	return $email_body;
-}
-add_filter( 'edd_purchase_receipt_default', 'edd_default_email_styling' );
 
 /**
  * Render Receipt in the Browser
