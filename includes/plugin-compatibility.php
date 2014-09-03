@@ -107,3 +107,14 @@ function edd_disable_woo_ssl_on_checkout() {
 	}
 }
 add_action( 'template_redirect', 'edd_disable_woo_ssl_on_checkout', 9 );
+
+/**
+ * Disables the mandrill_nl2br filter while sending EDD emails
+ *
+ * @since 2.1
+ * @return void
+ */
+function edd_disable_mandrill_nl2br() {
+	add_filter( 'mandrill_nl2br', '__return_false' );
+}
+add_action( 'edd_email_send_before', 'edd_disable_mandrill_nl2br');
