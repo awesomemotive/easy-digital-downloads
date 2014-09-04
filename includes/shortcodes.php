@@ -444,6 +444,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		case 2:
 			$column_width = '50%'; break;
 		case 3:
+		default:
 			$column_width = '33%'; break;
 		case 4:
 			$column_width = '25%'; break;
