@@ -349,7 +349,11 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
 	$price = edd_get_cart_item_price( $item_id, $options );
 	$label = '';
 
-	if( ! edd_prices_show_tax_on_checkout() ) {
+	if( edd_prices_show_tax_on_checkout() && ! edd_prices_include_tax() ) {
+		
+		$price += edd_get_cart_item_tax( $item_id, $options, $price );		
+
+	} if( ! edd_prices_show_tax_on_checkout() && edd_prices_include_tax() ) {
 
 		$price -= edd_get_cart_item_tax( $item_id, $options, $price );		
 		
