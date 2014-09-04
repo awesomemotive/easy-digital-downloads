@@ -913,7 +913,7 @@ function edd_get_spain_states_list() {
 	$states = array(
 		'0'   => __( 'Choose', 'edd' ),
 	    'C' => __('A Coru&ntilde;a', 'woocommerce'),
-	    'VI' => __('Araba/&Aacute;lava', 'woocommerce'),
+	    'VI' => __('Araba', 'woocommerce'),
 	    'AB' => __('Albacete', 'woocommerce'),
 	    'A' => __('Alicante', 'woocommerce'),
 	    'AL' => __('Almer&iacute;a', 'woocommerce'),
