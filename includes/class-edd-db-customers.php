@@ -66,7 +66,8 @@ class EDD_DB_Customers extends EDD_DB  {
 	public function get_column_defaults() {
 		return array(
 			'user_id'      => 0,
-			'date_created' => date( 'Y-m-d H:i:s' )
+			'date_created' => date( 'Y-m-d H:i:s' ),
+			'notes'        => '',
 		);
 	}
 
@@ -79,7 +80,8 @@ class EDD_DB_Customers extends EDD_DB  {
 	public function add( $data = array() ) {
 
 		$defaults = array(
-			'payment_ids' => ''
+			'payment_ids' => '',
+			'notes'       => ''
 		);
 
 		$args = wp_parse_args( $data, $defaults );
