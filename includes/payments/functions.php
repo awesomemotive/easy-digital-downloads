@@ -1106,12 +1106,12 @@ function edd_get_payment_subtotal( $payment_id = 0) {
 
 	} else {
 
-		$subtotal = edd_get_payment_amount( $payment_id );
+		$subtotal  = edd_get_payment_amount( $payment_id );
+		$tax       = edd_use_taxes() ? edd_get_payment_tax( $payment_id ) : 0;
+		$subtotal -= $tax;
 
 	}
 
-	$tax = edd_use_taxes() ? edd_get_payment_tax( $payment_id ) : 0;
-	$subtotal -= $tax;
 
 	return apply_filters( 'edd_get_payment_subtotal', $subtotal, $payment_id );
 }
