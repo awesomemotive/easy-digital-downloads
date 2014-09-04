@@ -268,7 +268,7 @@ function edd_setup_email_tags() {
 		array(
 			'tag'         => 'download_list',
 			'description' => __( 'A list of download links for each download purchased', 'edd' ),
-			'function'    => 'edd_email_tag_download_list'
+			'function'    => 'text/html' == EDD()->emails->get_content_type() ? 'edd_email_tag_download_list' : 'edd_email_tag_download_list_plain'
 		),
 		array(
 			'tag'         => 'file_urls',
@@ -444,6 +444,88 @@ function edd_email_tag_download_list( $payment_id ) {
 		}
 	}
 	$download_list .= '</ul>';
+
+	return $download_list;
+}
+
+/**
+ * Email template tag: download_list
+ * A list of download links for each download purchased in plaintext
+ *
+ * @since 2.1.1
+ * @param int $payment_id
+ *
+ * @return string download_list
+ */
+function edd_email_tag_download_list_plain( $payment_id ) {
+
+	$payment_data  = edd_get_payment_meta( $payment_id );
+	$cart_items    = edd_get_payment_meta_cart_details( $payment_id );
+	$email         = edd_get_payment_user_email( $payment_id );
+
+	if ( $cart_items ) {
+		$show_names = apply_filters( 'edd_email_show_names', true );
+
+		foreach ( $cart_items as $item ) {
+
+			if ( edd_use_skus() ) {
+				$sku = edd_get_download_sku( $item['id'] );
+			}
+
+			$price_id = edd_get_cart_item_price_id( $item );
+			if ( $show_names ) {
+
+				$title = get_the_title( $item['id'] );
+
+				if ( ! empty( $sku ) ) {
+					$title .= __( 'SKU', 'edd' ) . ': ' . $sku;
+				}
+
+				if ( $price_id !== null ) {
+					$title .= edd_get_price_option_name( $item['id'], $price_id );
+				}
+
+				$download_list .= "\n";
+
+				$download_list .= apply_filters( 'edd_email_receipt_download_title', $title, $item, $price_id, $payment_id )  . "\n";
+			}
+
+			$files = edd_get_download_files( $item['id'], $price_id );
+
+			if ( ! empty( $files ) ) {
+
+				foreach ( $files as $filekey => $file ) {
+
+					$download_list .= "\n";
+					$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $item['id'], $price_id );
+					$download_list .= edd_get_file_name( $file ) . ': ' . $file_url . "\n";
+
+				}
+
+			} elseif ( edd_is_bundled_product( $item['id'] ) ) {
+
+				$bundled_products = edd_get_bundled_products( $item['id'] );
+
+				foreach ( $bundled_products as $bundle_item ) {
+
+					$download_list .= '<div class="edd_bundled_product"><strong>' . get_the_title( $bundle_item ) . '</strong></div>';
+
+					$files = edd_get_download_files( $bundle_item );
+
+					foreach ( $files as $filekey => $file ) {
+						$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $bundle_item, $price_id );
+						$download_list .= $file['name'] . ': ' . $file_url . "\n";
+					}
+				}
+			}
+
+
+			if ( '' != edd_get_product_notes( $item['id'] ) ) {
+				$download_list .= "\n";
+				$download_list .= edd_get_product_notes( $item['id'] ) . "\n";
+			}
+		}
+	}
 
 	return $download_list;
 }
