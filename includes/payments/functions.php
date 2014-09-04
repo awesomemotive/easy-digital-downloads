@@ -1173,17 +1173,24 @@ function edd_payment_subtotal( $payment_id = 0 ) {
 function edd_get_payment_subtotal( $payment_id = 0) {
 	global $edd_options;
 
-	$payment_meta = get_post_meta( $payment_id, '_edd_payment_meta', true );
+	$subtotal     = 0;
+	$cart_details = edd_get_payment_meta_cart_details( $payment_id );
 
-	$subtotal = 0;
+	if( is_array( $cart_details ) ) {
 
-	foreach ( $payment_meta['cart_details'] as $item ) {
+		foreach ( $cart_details as $item ) {
 
-		if( isset( $item['subtotal'] ) ) {
+			if( isset( $item['subtotal'] ) ) {
 
-			$subtotal += $item['subtotal'];
+				$subtotal += $item['subtotal'];
+
+			}
 
 		}
+
+	} else {
+
+		$subtotal = edd_get_payment_amount( $payment_id );
 
 	}
 
