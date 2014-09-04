@@ -62,7 +62,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	 *
 	 * @return string Column Name
 	 */
-	public function column_default( $item, $column_name ) {
+    public function column_default( $item, $column_name ) {
 		switch ( $column_name ){
 			case 'download' :
 				return '<a href="' . add_query_arg( 'download', $item[ $column_name ] ) . '" >' . get_the_title( $item[ $column_name ] ) . '</a>';
@@ -73,7 +73,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 					 '">' . $item[ 'user_name' ] . '</a>';
 
 			case 'amount' :
-				return edd_currency_filter( edd_format_amount( $item['amount'] ) );
+				return edd_currency_filter( edd_format_amount( $item['amount'] ), $item[ 'payment_id' ] );
 
 			case 'payment_id' :
 				return '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item[ 'payment_id' ] ) . '">' . edd_get_payment_number( $item[ 'payment_id' ] ) . '</a>';
