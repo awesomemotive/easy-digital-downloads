@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.7
 Tested up to: 4.0
 
-Stable Tag: 2.1
+Stable Tag: 2.1.1
 
 License: GNU Version 2 or Any Later Version
 
@@ -183,6 +183,16 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.1.1, September 4, 2014 =
+
+* Fix: Full image URL in Logo upload field in email settings not displaying
+* Fix: Fatal error with PHP Sessions for hosts with safe_mode enabled
+* Fix: Incorrect item price on checkout when taxes are enabled
+* Fix: Incorrect subtotal displayed on purchase receipt when taxes are enabled
+* Fix: Customer records not getting created due to SQL syntax error
+* Fix: Aposthrophes in site name not being decoded in emails
+* Fix: card_state class not kept on select when when switching countries on checkout 
 
 = 2.1, September 3, 2014 =
 
