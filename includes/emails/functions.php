@@ -25,7 +25,7 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 
 	$payment_data = edd_get_payment_meta( $payment_id );
 
-	$from_name    = edd_get_option( 'from_name', get_bloginfo( 'name' ) );
+	$from_name    = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
 	$from_name    = apply_filters( 'edd_purchase_from_name', $from_name, $payment_id, $payment_data );
 
 	$from_email   = edd_get_option( 'from_name', get_bloginfo( 'admin_email' ) );
@@ -66,7 +66,7 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
  */
 function edd_email_test_purchase_receipt() {
 
-	$from_name   = edd_get_option( 'from_name', get_bloginfo( 'name' ) );
+	$from_name   = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
 	$from_name   = apply_filters( 'edd_purchase_from_name', $from_name, 0, array() );
 
 	$from_email  = edd_get_option( 'from_name', get_bloginfo( 'admin_email' ) );
@@ -102,7 +102,7 @@ function edd_email_test_purchase_receipt() {
  */
 function edd_admin_email_notice( $payment_id = 0, $payment_data = array() ) {
 
-	$from_name   = edd_get_option( 'from_name', get_bloginfo( 'name' ) );
+	$from_name   = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
 	$from_name   = apply_filters( 'edd_purchase_from_name', $from_name, $payment_id, $payment_data );
 
 	$from_email  = edd_get_option( 'from_name', get_bloginfo( 'admin_email' ) );
