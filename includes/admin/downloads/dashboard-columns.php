@@ -73,7 +73,7 @@ function edd_render_download_columns( $column_name, $post_id ) {
 				break;
 			case 'sales':
 				if ( current_user_can( 'view_product_stats', $post_id ) ) {
-					echo '<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-reports&tab=logs&download=' . $post_id ) ) . '">';
+					echo '<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-reports&tab=logs&view=sales&download=' . $post_id ) ) . '">';
 						echo edd_get_download_sales_stats( $post_id );
 					echo '</a>';
 				} else {
@@ -211,6 +211,28 @@ function edd_add_download_filters() {
 
 }
 add_action( 'restrict_manage_posts', 'edd_add_download_filters', 100 );
+
+/**
+ * Remove Download Month Filter
+ *
+ * Removes the drop down filter for downloads by date.
+ *
+ * @author Daniel J Griffiths
+ * @since 2.1
+ * @param array $dates The preset array of dates
+ * @global $typenow The post type we are viewing
+ * @return array Empty array disables the dropdown
+ */
+function edd_remove_month_filter( $dates ) {
+	global $typenow;
+
+	if ( $typenow == 'download' ) {
+		$dates = array();
+	}
+
+	return $dates;
+}
+add_filter( 'months_dropdown_results', 'edd_remove_month_filter', 99 );
 
 /**
  * Adds price field to Quick Edit options

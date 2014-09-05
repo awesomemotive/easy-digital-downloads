@@ -18,6 +18,7 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 	<?php do_action( 'edd_add_discount_form_top' ); ?>
 	<table class="form-table">
 		<tbody>
+			<?php do_action( 'edd_add_discount_form_before_name' ); ?>
 			<tr>
 				<th scope="row" valign="top">
 					<label for="edd-name"><?php _e( 'Name', 'edd' ); ?></label>
@@ -27,6 +28,7 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 					<p class="description"><?php _e( 'The name of this discount', 'edd' ); ?></p>
 				</td>
 			</tr>
+			<?php do_action( 'edd_add_discount_form_before_code' ); ?>
 			<tr>
 				<th scope="row" valign="top">
 					<label for="edd-code"><?php _e( 'Code', 'edd' ); ?></label>
@@ -36,6 +38,7 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 					<p class="description"><?php _e( 'Enter a code for this discount, such as 10PERCENT', 'edd' ); ?></p>
 				</td>
 			</tr>
+			<?php do_action( 'edd_add_discount_form_before_type' ); ?>
 			<tr>
 				<th scope="row" valign="top">
 					<label for="edd-type"><?php _e( 'Type', 'edd' ); ?></label>
@@ -48,6 +51,7 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 					<p class="description"><?php _e( 'The kind of discount to apply for this discount.', 'edd' ); ?></p>
 				</td>
 			</tr>
+			<?php do_action( 'edd_add_discount_form_before_amount' ); ?>
 			<tr>
 				<th scope="row" valign="top">
 					<label for="edd-amount"><?php _e( 'Amount', 'edd' ); ?></label>
@@ -58,6 +62,7 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 					<p class="description edd-amount-description"><?php _e( 'Enter the discount percentage. 10 = 10%', 'edd' ); ?></p>
 				</td>
 			</tr>
+			<?php do_action( 'edd_add_discount_form_before_products' ); ?>
 			<tr>
 				<th scope="row" valign="top">
 					<label for="edd-products"><?php printf( __( '%s Requirements', 'edd' ), edd_get_label_singular() ); ?></label>
@@ -92,6 +97,7 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 					<p class="description"><?php printf( __( 'Select %s relevant to this discount.', 'edd' ), edd_get_label_plural() ); ?></p>
 				</td>
 			</tr>
+			<?php do_action( 'edd_add_discount_form_before_excluded_products' ); ?>
 			<tr>
 				<th scope="row" valign="top">
 					<label for="edd-excluded-products"><?php printf( __( 'Excluded %s', 'edd' ), edd_get_label_plural() ); ?></label>
@@ -107,6 +113,7 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 					<p class="description"><?php printf( __( '%s that this discount code cannot be applied to.', 'edd' ), edd_get_label_plural() ); ?></p>
 				</td>
 			</tr>
+			<?php do_action( 'edd_add_discount_form_before_start' ); ?>
 			<tr>
 				<th scope="row" valign="top">
 					<label for="edd-start"><?php _e( 'Start date', 'edd' ); ?></label>
@@ -116,6 +123,7 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 					<p class="description"><?php _e( 'Enter the start date for this discount code in the format of mm/dd/yyyy. For no start date, leave blank. If entered, the discount can only be used after or on this date.', 'edd' ); ?></p>
 				</td>
 			</tr>
+			<?php do_action( 'edd_add_discount_form_before_expiration' ); ?>
 			<tr>
 				<th scope="row" valign="top">
 					<label for="edd-expiration"><?php _e( 'Expiration date', 'edd' ); ?></label>
@@ -125,6 +133,7 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 					<p class="description"><?php _e( 'Enter the expiration date for this discount code in the format of mm/dd/yyyy. For no expiration, leave blank', 'edd' ); ?></p>
 				</td>
 			</tr>
+			<?php do_action( 'edd_add_discount_form_before_min_cart_amount' ); ?>
 			<tr>
 				<th scope="row" valign="top">
 					<label for="edd-min-cart-amount"><?php _e( 'Minimum Amount', 'edd' ); ?></label>
@@ -134,6 +143,7 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 					<p class="description"><?php _e( 'The minimum amount that must be purchased before this discount can be used. Leave blank for no minimum.', 'edd' ); ?></p>
 				</td>
 			</tr>
+			<?php do_action( 'edd_add_discount_form_before_max_uses' ); ?>
 			<tr>
 				<th scope="row" valign="top">
 					<label for="edd-max-uses"><?php _e( 'Max Uses', 'edd' ); ?></label>
@@ -143,6 +153,7 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 					<p class="description"><?php _e( 'The maximum number of times this discount can be used. Leave blank for unlimited.', 'edd' ); ?></p>
 				</td>
 			</tr>
+			<?php do_action( 'edd_add_discount_form_before_use_once' ); ?>
 			<tr>
 				<th scope="row" valign="top">
 					<label for="edd-use-once"><?php _e( 'Use Once Per Customer', 'edd' ); ?></label>

@@ -33,7 +33,7 @@ function edd_upgrades_screen() {
 			<div id="edd-upgrade-status">
 				<p><?php _e( 'The upgrade process has started, please be patient. This could take several minutes. You will be automatically redirected when the upgrade is finished.', 'edd' ); ?></p>
 				<?php if( ! empty( $total ) ) : ?>
-					<p><strong><?php printf( __( 'Step %d of approximately %d running', 'edd' ), $step, $steps ); ?>
+					<p><strong><?php printf( __( 'Step %d of approximately %d running', 'edd' ), $step, $steps ); ?></strong></p>
 				<?php endif; ?>
 			</div>
 			<script type="text/javascript">
