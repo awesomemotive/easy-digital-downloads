@@ -50,7 +50,6 @@ function edd_get_cart_content_details() {
 		$fees       = edd_get_cart_fees( 'fee', $item['id'] );
 		$subtotal   = ( $item_price * $quantity ) - $discount;
 		$tax        = edd_get_cart_item_tax( $item['id'], $item['options'], $subtotal );
-		$tax        = $tax * $quantity;
 
 		if( edd_prices_include_tax() ) {
 			$subtotal -= $tax;
@@ -72,8 +71,6 @@ function edd_get_cart_content_details() {
 		);
 
 	}
-
-	//echo '<pre>'; print_r( $details ); echo '</pre>'; exit;
 
 	return $details;
 }
