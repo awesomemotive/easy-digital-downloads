@@ -1,3 +1,4 @@
+<?php echo '<pre>'; print_r( edd_get_cart_content_details() ); echo '</pre>'; ?>
 <?php global $post; ?>
 <table id="edd_checkout_cart" <?php if ( ! edd_is_ajax_disabled() ) { echo 'class="ajaxed"'; } ?>>
 	<thead>

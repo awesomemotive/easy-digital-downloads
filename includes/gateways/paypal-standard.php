@@ -112,7 +112,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
 
 			$paypal_args['item_name_' . $i ]      = stripslashes_deep( html_entity_decode( wp_strip_all_tags( $item['name'] ), ENT_COMPAT, 'UTF-8' ) );
 			$paypal_args['quantity_' . $i ]       = $item['quantity'];
-			$paypal_args['amount_' . $i ]         = $item['subtotal'];
+			$paypal_args['amount_' . $i ]         = round( $item['subtotal'] / $item['quantity'], 2 );
 
 			if ( edd_use_skus() ) {
 				$paypal_args['item_number_' . $i ] = edd_get_download_sku( $item['id'] );
