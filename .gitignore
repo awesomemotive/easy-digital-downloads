@@ -25,3 +25,6 @@ $RECYCLE.BIN/
 build/
 tmp/
 tests/clover.xml
+
+# Grunt
+node_modules
