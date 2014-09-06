@@ -728,10 +728,6 @@ function edd_add_download_post_classes( $classes, $class = '', $post_id = false 
 		}
 	}
 
-	if( ( $key = array_search( 'hentry', $classes ) ) !== false ) {
-		unset( $classes[ $key ] );
-	}
-
 	return $classes;
 }
 add_filter( 'post_class', 'edd_add_download_post_classes', 20, 3 );
