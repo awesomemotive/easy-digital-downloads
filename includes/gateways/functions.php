@@ -301,7 +301,7 @@ function edd_show_gateways() {
 
 	if ( count( $gateways ) > 1 && ! isset( $_GET['payment-mode'] ) ) {
 		$show_gateways = true;
-		if ( edd_get_cart_subtotal() <= 0 ) {
+		if ( edd_get_cart_total() <= 0 ) {
 			$show_gateways = false;
 		}
 	}
