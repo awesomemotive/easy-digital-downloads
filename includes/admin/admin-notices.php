@@ -30,6 +30,10 @@ function edd_admin_messages() {
 		add_settings_error( 'edd-notices', 'edd-discount-add-fail', __( 'There was a problem adding your discount code, please try again.', 'edd' ), 'error' );
 	}
 
+	if ( isset( $_GET['edd-message'] ) && 'discount_exists' == $_GET['edd-message'] && current_user_can( 'manage_shop_discounts' ) ) {
+		add_settings_error( 'edd-notices', 'edd-discount-exists', __( 'A discount with that code already exists, please use a different code.', 'edd' ), 'error' );
+	}
+
 	if ( isset( $_GET['edd-message'] ) && 'discount_updated' == $_GET['edd-message'] && current_user_can( 'manage_shop_discounts' ) ) {
 		 add_settings_error( 'edd-notices', 'edd-discount-updated', __( 'Discount code updated.', 'edd' ), 'updated' );
 	}

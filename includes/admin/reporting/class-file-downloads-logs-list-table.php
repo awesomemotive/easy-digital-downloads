@@ -307,7 +307,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @since 1.4
 	 * @return void
 	 */
-	public function bulk_actions() {
+	public function bulk_actions( $which = '' ) {
 		// These aren't really bulk actions but this outputs the markup in the right place
 		edd_log_views();
 	}
