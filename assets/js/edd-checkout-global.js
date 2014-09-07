@@ -1,5 +1,6 @@
 jQuery(document).ready(function($) {
     var $body = $('body'),
+		$form = $("#edd_purchase_form"),
         $edd_cart_amount = $('.edd_cart_amount');
 
     // Update state/province field on checkout page
@@ -22,12 +23,12 @@ jQuery(document).ready(function($) {
                     withCredentials: true
                 },
                 success: function (response) {
-                    if( 'nostates' == response ) {
-                        var text_field = '<input type="text" name="card_state" class="cart-state edd-input required" value=""/>';
-                        $this.parent().next().find('input,select').replaceWith( text_field );
-                    } else {
-                        $this.parent().next().find('input,select').replaceWith( response );
-                    }
+					if( 'nostates' == response ) {
+						var text_field = '<input type="text" name="card_state" class="cart-state edd-input required" value=""/>';
+						$form.find('input.card_state, select.card_state').replaceWith( text_field );
+					} else {
+						$form.find('input.card_state, select.card_state').replaceWith( response );
+					}
                     $('body').trigger('edd_cart_billing_address_updated', [ response ]);
                 }
             }).fail(function (data) {
