@@ -212,11 +212,9 @@ class EDD_Session {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * Starts a new session if one hasn't started yet.
 	 *
 	 * @return null
-=======
 	 * Checks to see if the server supports PHP sessions
 	 * or if the EDD_USE_PHP_SESSIONS constant is defined
 	 *
@@ -266,15 +264,12 @@ class EDD_Session {
 
 	/**
 	 * Starts a new session if one hasn't started yet.
->>>>>>> e912ec8a581473cd83f274ec543f37098e04da72
 	 */
 	public function maybe_start_session() {
-		if( ! session_id() ) {
+		if( ! session_id() && ! headers_sent() ) {
 			session_start();
 		}
 	}
-<<<<<<< HEAD
+
 }
-=======
-}
->>>>>>> e912ec8a581473cd83f274ec543f37098e04da72
+
