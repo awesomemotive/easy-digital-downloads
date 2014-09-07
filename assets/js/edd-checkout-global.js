@@ -25,9 +25,9 @@ jQuery(document).ready(function($) {
                 success: function (response) {
 					if( 'nostates' == response ) {
 						var text_field = '<input type="text" name="card_state" class="cart-state edd-input required" value=""/>';
-						$form.find('input.card_state, select.card_state').replaceWith( text_field );
+						$form.find('input[name="card_state"], select[name="card_state"]').replaceWith( text_field );
 					} else {
-						$form.find('input.card_state, select.card_state').replaceWith( response );
+						$form.find('input[name="card_state"], select[name="card_state"]').replaceWith( response );
 					}
                     $('body').trigger('edd_cart_billing_address_updated', [ response ]);
                 }
