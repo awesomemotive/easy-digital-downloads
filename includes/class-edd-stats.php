@@ -194,16 +194,15 @@ class EDD_Stats {
 						// If current month is 1
 						if( 1 == $month ) {
 
-							$year -= 1; // Today is January 1, so skip back to December
-							$month -= 1;
-
-							// Get the last day of the month
-							$day = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+							$year -= 1; // Today is January 1, so skip back to last day of December
+							$month = 12;
+							$day   = cal_days_in_month( CAL_GREGORIAN, $month, $year );
 
 						} else {
 
-							// Get the last day of the month
-							$day = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+							// Go back one month and get the last day of the month
+							$month -= 1;
+							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
 
 						}
 					}
