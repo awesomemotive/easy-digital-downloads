@@ -56,7 +56,7 @@ if ( $purchases ) :
 
 											<div class="edd_download_file">
 												<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link">
-													<?php echo esc_html( $file['name'] ); ?>
+													<?php echo isset( $file['name'] ) ? esc_html( $file['name'] ) : esc_html( $name ); ?>
 												</a>
 											</div>
 
