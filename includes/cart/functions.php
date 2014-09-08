@@ -44,6 +44,8 @@ function edd_get_cart_content_details() {
 
 	foreach( $cart_items as $key => $item ) {
 
+		$item['quantity'] = edd_item_quantities_enabled() ? absint( $item['quantity'] ) : 1;
+
 		$item_price = edd_get_cart_item_price( $item['id'], $item['options'] );
 		$discount   = apply_filters( 'edd_get_cart_content_details_item_discount_amount', edd_get_cart_item_discount_amount( $item ), $item );
 		$quantity   = edd_get_cart_item_quantity( $item['id'], $item['options'] );
