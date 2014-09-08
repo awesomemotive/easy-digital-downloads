@@ -53,7 +53,7 @@ With add-ons for [Mail Chimp](http://easydigitaldownloads.com/extension/mail-chi
 
 **Languages**
 
-Easy Digital Downloads as been translated into the following languages:
+Easy Digital Downloads has been translated into the following languages:
 
 1. English (and British English)
 2. German
