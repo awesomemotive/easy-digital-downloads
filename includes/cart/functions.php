@@ -166,7 +166,7 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 	if ( ! isset( $to_add['id'] ) || empty( $to_add['id'] ) )
 		return;
 
-	if( edd_item_in_cart( $to_add['id'], $to_add['options'] ) ) {
+	if( edd_item_in_cart( $to_add['id'], $to_add['options'] ) && edd_item_quantities_enabled() ) {
 
 		$key = edd_get_item_position_in_cart( $to_add['id'], $to_add['options'] );
 		$cart[ $key ]['quantity']++;
