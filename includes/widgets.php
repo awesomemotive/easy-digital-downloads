@@ -39,7 +39,7 @@ class edd_cart_widget extends WP_Widget {
 	/** @see WP_Widget::widget */
 	function widget( $args, $instance ) {
 
-		if ( $instance['hide_on_checkout'] && edd_is_checkout() ) {
+		if ( isset( $instance['hide_on_checkout'] ) && edd_is_checkout() ) {
 			return;
 		}
 
