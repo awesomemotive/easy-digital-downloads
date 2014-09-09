@@ -530,14 +530,17 @@ function edd_get_download_sales_stats( $download_id ) {
  * @param int $download_id Download ID
  * @param int $payment_id Payment ID
  * @param bool|int $price_id Price ID, if any
+ * @param string|null $sale_date The date of the sale
  * @return void
 */
-function edd_record_sale_in_log( $download_id, $payment_id, $price_id = false ) {
+function edd_record_sale_in_log( $download_id, $payment_id, $price_id = false, $sale_date = null ) {
 	global $edd_logs;
 
 	$log_data = array(
-		'post_parent' 	=> $download_id,
-		'log_type'		=> 'sale'
+		'post_parent'   => $download_id,
+		'log_type'      => 'sale',
+		'post_date'     => isset( $sale_date ) ? $sale_date : null,
+		'post_date_gmt' => isset( $sale_date ) ? $sale_date : null
 	);
 
 	$log_meta = array(
