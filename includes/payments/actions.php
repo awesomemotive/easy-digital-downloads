@@ -32,6 +32,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 	if ( $new_status != 'publish' && $new_status != 'complete' )
 		return;
 
+	$creation_date  = get_post_field( 'post_date', $payment_id, 'raw' );
 	$completed_date = edd_get_payment_completed_date( $payment_id );
 	$user_info      = edd_get_payment_meta_user_info( $payment_id );
 	$customer_id    = edd_get_payment_customer_id( $payment_id );
@@ -49,21 +50,20 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 			$download_type = edd_get_download_type( $download['id'] );
 			$price_id      = isset( $download['options']['price_id'] ) ? (int) $download['options']['price_id'] : false;
 
-			$price_id      = isset( $download['options']['price_id'] ) ? (int) $download['options']['price_id'] : false;
-
 			// Increase earnings and fire actions once per quantity number
 			for( $i = 0; $i < $download['quantity']; $i++ ) {
 
-				if ( ! edd_is_test_mode() || apply_filters( 'edd_log_test_payment_stats', false ) ) {
-
-					edd_record_sale_in_log( $download['id'], $payment_id, $price_id );
-					edd_increase_purchase_count( $download['id'] );
-					edd_increase_earnings( $download['id'], $download['price'] );
-
-				}
-
+				// Ensure these actions only run once, ever
 				if( empty( $completed_date ) ) {
-					// Ensure this action only runs once ever
+
+					if ( ! edd_is_test_mode() || apply_filters( 'edd_log_test_payment_stats', false ) ) {
+
+						edd_record_sale_in_log( $download['id'], $payment_id, $price_id, $creation_date );
+						edd_increase_purchase_count( $download['id'] );
+						edd_increase_earnings( $download['id'], $download['price'] );
+
+					}
+
 					do_action( 'edd_complete_download_purchase', $download['id'], $payment_id, $download_type, $download );
 				}
 
