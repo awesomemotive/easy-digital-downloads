@@ -55,9 +55,8 @@ class EDD_Session {
 
 		if( $this->use_php_sessions ) {
 
-			// Use PHP SESSION (must be enabled via the EDD_USE_PHP_SESSIONS constant or
-			// activated during the installer after support autodetection)
-			add_action( 'init', array( $this, 'maybe_start_session'), -2 );
+			// Use PHP SESSION (must be enabled via the EDD_USE_PHP_SESSIONS constant)
+			add_action( 'init', array( $this, 'maybe_start_session' ), -2 );
 
 		} else {
 
@@ -88,7 +87,6 @@ class EDD_Session {
 		}
 
 	}
-
 
 	/**
 	 * Setup the WP_Session instance
@@ -214,6 +212,9 @@ class EDD_Session {
 	}
 
 	/**
+	 * Starts a new session if one hasn't started yet.
+	 *
+	 * @return null
 	 * Checks to see if the server supports PHP sessions
 	 * or if the EDD_USE_PHP_SESSIONS constant is defined
 	 *
@@ -265,8 +266,10 @@ class EDD_Session {
 	 * Starts a new session if one hasn't started yet.
 	 */
 	public function maybe_start_session() {
-		if( ! session_id() ) {
+		if( ! session_id() && ! headers_sent() ) {
 			session_start();
 		}
 	}
+
 }
+
