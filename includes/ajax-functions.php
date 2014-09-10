@@ -106,6 +106,9 @@ function edd_ajax_add_to_cart() {
 			if( $_POST['download_id'] == $options['price_id'] )
 				$options = array();
 
+			parse_str( $_POST['post_data'], $post_data );
+			$options['quantity'] = $post_data['edd_download_quantity'];
+
 			$key = edd_add_to_cart( $_POST['download_id'], $options );
 
 			$item = array(
