@@ -172,7 +172,7 @@ class EDD_Payments_Export extends EDD_Export {
 
 			$data[] = array(
 				'id'       => $payment->ID,
-				'pid'      => edd_get_payment_number( $payment->ID ),		
+				'seq_id'   => edd_get_payment_number( $payment->ID ),		
 				'email'    => $payment_meta['email'],
 				'first'    => $user_info['first_name'],
                 'last'     => $user_info['last_name'],
