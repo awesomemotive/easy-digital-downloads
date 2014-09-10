@@ -145,6 +145,10 @@ function edd_get_purchase_link( $args = array() ) {
 
 		<?php do_action( 'edd_purchase_link_top', $download->ID, $args ); ?>
 
+		<?php if ( edd_item_quantities_enabled() ) : ?>
+			<input type="number" min="1" step="1" name="edd_download_quantity" class="edd-input edd-item-quantity" value="1" />
+		<?php endif; ?>
+
 		<div class="edd_purchase_submit_wrapper">
 			<?php
 			$class = implode( ' ', array( $args['style'], $args['color'], trim( $args['class'] ) ) );
