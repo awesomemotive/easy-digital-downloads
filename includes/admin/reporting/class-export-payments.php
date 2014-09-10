@@ -61,7 +61,7 @@ class EDD_Payments_Export extends EDD_Export {
 
 		$cols = array(
 			'id'       => __( 'ID',   'edd' ), // unaltered payment ID (use for querying)
-			'seq_id'   => __( 'Sequential Payment ID',   'edd' ), // sequential payment ID
+			'seq_id'   => __( 'Payment Number',   'edd' ), // sequential payment ID
 			'email'    => __( 'Email', 'edd' ),
 			'first'    => __( 'First Name', 'edd' ),
 			'last'     => __( 'Last Name', 'edd' ),
@@ -87,7 +87,7 @@ class EDD_Payments_Export extends EDD_Export {
 		if( ! edd_use_skus() ){
 			unset( $cols['skus'] );
 		}
-		if ( ! edd_get_option( 'enable_sequential' ) ){
+		if ( ! edd_get_option( 'enable_sequential' ) ) {
 			unset( $cols['seq_id'] );			
 		}
 
@@ -195,13 +195,6 @@ class EDD_Payments_Export extends EDD_Export {
 				'status'   => edd_get_payment_status( $payment, true )
 			);
 
-			if( ! edd_use_skus() ) {
-				unset( $data['skus'] );
-			}
-
-			if ( ! edd_get_option( 'enable_sequential' ) ){
-				unset( $cols['seq_id'] );			
-			}
 		}
 
 		$data = apply_filters( 'edd_export_get_data', $data );
