@@ -1441,6 +1441,18 @@ function edd_tax_rates_callback($args) {
 	echo ob_get_clean();
 }
 
+/**
+ * Descriptive text callback.
+ *
+ * Renders descriptive text onto the settings field.
+ *
+ * @since 2.1
+ * @param array $args Arguments passed by the setting
+ * @return void
+ */
+function edd_descriptive_text_callback( $args ) {
+	echo esc_html( $args['desc'] );
+}
 
 /**
  * Registers the license field callback for Software Licensing
