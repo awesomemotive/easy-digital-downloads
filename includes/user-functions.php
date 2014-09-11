@@ -167,6 +167,10 @@ function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
  */
 function edd_has_user_purchased( $user_id, $downloads, $variable_price_id = null ) {
 
+	if( empty( $user_id ) ) {
+		return false;
+	}
+
 	$users_purchases = edd_get_users_purchases( $user_id );
 
 	$return = false;
