@@ -1446,7 +1446,7 @@ function edd_tax_rates_callback($args) {
  *
  * Renders descriptive text onto the settings field.
  *
- * @since 2.1
+ * @since 2.1.3
  * @param array $args Arguments passed by the setting
  * @return void
  */
