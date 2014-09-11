@@ -160,27 +160,35 @@ function edd_get_download_price( $download_id = 0 ) {
  * @param bool $echo Whether to echo or return the results
  * @return void
  */
-function edd_price( $download_id, $echo = true ) {
+function edd_price( $download_id = 0, $echo = true ) {
+
+	if( empty( $download_id ) ) {
+		$download_id = get_the_ID();
+	}
 
 	if ( edd_has_variable_prices( $download_id ) ) {
 
 		$prices = edd_get_variable_prices( $download_id );
 
 		// Return the lowest price
-		$price_float = 0;
+		$i = 0;
 		foreach ( $prices as $key => $value ) {
 
-			if ( ( ( (float)$prices[ $key ]['amount'] ) < $price_float ) or ( $price_float == 0 ) ) {
-
-				$price_float = (float)$prices[ $key ]['amount'];
-
+			if( $i < 1 ) {
+				$price = $value['amount'];
 			}
 
-			$price = edd_sanitize_amount( $price_float );
+			if ( (float) $value['amount'] < (float) $price ) {
+
+				$price = (float) $value['amount'];
 
 			}
+			$i++;
+		}
 
-		} else {
+		$price = edd_sanitize_amount( $price );
+
+	} else {
 
 		$price = edd_get_download_price( $download_id );
 
