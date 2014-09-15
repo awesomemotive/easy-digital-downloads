@@ -5,9 +5,9 @@ Contributors: mordauk, sunnyratilal, chriscct7, section214, sumobi, sksmatt, Spe
 Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.7
-Tested up to: 4.0
+Tested up to: 4.1
 
-Stable Tag: 2.1.2
+Stable Tag: 2.1.3
 
 License: GNU Version 2 or Any Later Version
 
@@ -183,6 +183,19 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.1.3, September 15, 2014 =
+
+* Fix: edd_has_user_purchased() returning true improperly
+* Fix: Pre-set discount URL parameter not working reliably
+* Fix: Duplicate checkout buttons showing up
+* Fix: First price option not checked by default
+* Fix: edd_record_sale_in_log() not respecting purchase date for imported sales
+* Fix: Undefined index notice in the cart widget
+* Fix: No file name displayed in download history when one isn't set
+* Fix: Corrected some strict SQL standards with the customer table creation SQL
+* Fix: Restored the .hentry class
+* Tweak: Modified the CSV Payments export to allow easier data manipulation 
 
 = 2.1.2, September 4, 2014 =
 
