@@ -79,6 +79,19 @@ function edd_get_payment_by( $field = '', $value = '' ) {
 			}
 
 			break;
+			
+		case 'payment_number':
+			$payment = edd_get_payments( array(
+				'meta_key'       => '_edd_payment_number',
+				'meta_value'     => $value,
+				'posts_per_page' => 1
+			) );
+
+			if( $payment ) {
+				$payment = $payment[0];
+			}
+
+			break;
 
 		default:
 			return false;
