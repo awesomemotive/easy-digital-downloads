@@ -25,7 +25,7 @@ function edd_setup_edd_post_types() {
 	$rewrite  = defined( 'EDD_DISABLE_REWRITE' ) && EDD_DISABLE_REWRITE ? false : array('slug' => $slug, 'with_front' => false);
 
 	$download_labels =  apply_filters( 'edd_download_labels', array(
-		'name' 				=> '%2$s',
+		'name' 			=> '%2$s',
 		'singular_name' 	=> '%1$s',
 		'add_new' 		=> __( 'Add New', 'edd' ),
 		'add_new_item' 		=> __( 'Add New %1$s', 'edd' ),
