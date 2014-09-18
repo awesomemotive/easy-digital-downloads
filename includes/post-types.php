@@ -27,16 +27,16 @@ function edd_setup_edd_post_types() {
 	$download_labels =  apply_filters( 'edd_download_labels', array(
 		'name' 				=> '%2$s',
 		'singular_name' 	=> '%1$s',
-		'add_new' 			=> __( 'Add New', 'edd' ),
+		'add_new' 		=> __( 'Add New', 'edd' ),
 		'add_new_item' 		=> __( 'Add New %1$s', 'edd' ),
 		'edit_item' 		=> __( 'Edit %1$s', 'edd' ),
-		'new_item' 			=> __( 'New %1$s', 'edd' ),
+		'new_item' 		=> __( 'New %1$s', 'edd' ),
 		'all_items' 		=> __( 'All %2$s', 'edd' ),
 		'view_item' 		=> __( 'View %1$s', 'edd' ),
 		'search_items' 		=> __( 'Search %2$s', 'edd' ),
 		'not_found' 		=> __( 'No %2$s found', 'edd' ),
-		'not_found_in_trash'=> __( 'No %2$s found in Trash', 'edd' ),
-		'parent_item_colon' => '',
+		'not_found_in_trash'	=> __( 'No %2$s found in Trash', 'edd' ),
+		'parent_item_colon' 	=> '',
 		'menu_name' 		=> __( '%2$s', 'edd' )
 	) );
 
@@ -45,47 +45,47 @@ function edd_setup_edd_post_types() {
 	}
 
 	$download_args = array(
-		'labels' 			=> $download_labels,
-		'public' 			=> true,
-		'publicly_queryable'=> true,
-		'show_ui' 			=> true,
+		'labels' 		=> $download_labels,
+		'public' 		=> true,
+		'publicly_queryable'	=> true,
+		'show_ui' 		=> true,
 		'show_in_menu' 		=> true,
 		'query_var' 		=> true,
-		'rewrite' 			=> $rewrite,
+		'rewrite' 		=> $rewrite,
 		'capability_type' 	=> 'product',
-		'map_meta_cap'      => true,
+		'map_meta_cap'      	=> true,
 		'has_archive' 		=> $archives,
 		'hierarchical' 		=> false,
-		'supports' 			=> apply_filters( 'edd_download_supports', array( 'title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'author' ) ),
+		'supports' 		=> apply_filters( 'edd_download_supports', array( 'title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'author' ) ),
 	);
 	register_post_type( 'download', apply_filters( 'edd_download_post_type_args', $download_args ) );
 
 
 	/** Payment Post Type */
 	$payment_labels = array(
-		'name' 				=> _x('Payments', 'post type general name', 'edd' ),
+		'name' 			=> _x('Payments', 'post type general name', 'edd' ),
 		'singular_name' 	=> _x('Payment', 'post type singular name', 'edd' ),
-		'add_new' 			=> __( 'Add New', 'edd' ),
+		'add_new' 		=> __( 'Add New', 'edd' ),
 		'add_new_item' 		=> __( 'Add New Payment', 'edd' ),
 		'edit_item' 		=> __( 'Edit Payment', 'edd' ),
-		'new_item' 			=> __( 'New Payment', 'edd' ),
+		'new_item' 		=> __( 'New Payment', 'edd' ),
 		'all_items' 		=> __( 'All Payments', 'edd' ),
 		'view_item' 		=> __( 'View Payment', 'edd' ),
 		'search_items' 		=> __( 'Search Payments', 'edd' ),
 		'not_found' 		=>  __( 'No Payments found', 'edd' ),
-		'not_found_in_trash'=> __( 'No Payments found in Trash', 'edd' ),
-		'parent_item_colon' => '',
+		'not_found_in_trash'	=> __( 'No Payments found in Trash', 'edd' ),
+		'parent_item_colon' 	=> '',
 		'menu_name' 		=> __( 'Payment History', 'edd' )
 	);
 
 	$payment_args = array(
-		'labels' 			=> apply_filters( 'edd_payment_labels', $payment_labels ),
-		'public' 			=> false,
+		'labels' 		=> apply_filters( 'edd_payment_labels', $payment_labels ),
+		'public' 		=> false,
 		'query_var' 		=> false,
-		'rewrite' 			=> false,
+		'rewrite' 		=> false,
 		'capability_type' 	=> 'shop_payment',
-		'map_meta_cap'      => true,
-		'supports' 			=> array( 'title' ),
+		'map_meta_cap'      	=> true,
+		'supports' 		=> array( 'title' ),
 		'can_export'		=> true
 	);
 	register_post_type( 'edd_payment', $payment_args );
@@ -93,30 +93,30 @@ function edd_setup_edd_post_types() {
 
 	/** Discounts Post Type */
 	$discount_labels = array(
-		'name' 				=> _x( 'Discounts', 'post type general name', 'edd' ),
+		'name' 			=> _x( 'Discounts', 'post type general name', 'edd' ),
 		'singular_name' 	=> _x( 'Discount', 'post type singular name', 'edd' ),
-		'add_new' 			=> __( 'Add New', 'edd' ),
+		'add_new' 		=> __( 'Add New', 'edd' ),
 		'add_new_item' 		=> __( 'Add New Discount', 'edd' ),
 		'edit_item' 		=> __( 'Edit Discount', 'edd' ),
-		'new_item' 			=> __( 'New Discount', 'edd' ),
+		'new_item' 		=> __( 'New Discount', 'edd' ),
 		'all_items' 		=> __( 'All Discounts', 'edd' ),
 		'view_item' 		=> __( 'View Discount', 'edd' ),
 		'search_items' 		=> __( 'Search Discounts', 'edd' ),
 		'not_found' 		=> __( 'No Discounts found', 'edd' ),
-		'not_found_in_trash'=> __( 'No Discounts found in Trash', 'edd' ),
-		'parent_item_colon' => '',
+		'not_found_in_trash'	=> __( 'No Discounts found in Trash', 'edd' ),
+		'parent_item_colon' 	=> '',
 		'menu_name' 		=> __( 'Discounts', 'edd' )
 	);
 
 	$discount_args = array(
-		'labels' 			=> apply_filters( 'edd_discount_labels', $discount_labels ),
-		'public' 			=> false,
+		'labels' 		=> apply_filters( 'edd_discount_labels', $discount_labels ),
+		'public' 		=> false,
 		'query_var' 		=> false,
-		'rewrite' 			=> false,
-		'show_ui'           => false,
+		'rewrite' 		=> false,
+		'show_ui'           	=> false,
 		'capability_type' 	=> 'shop_discount',
-		'map_meta_cap'      => true,
-		'supports' 			=> array( 'title' ),
+		'map_meta_cap'      	=> true,
+		'supports' 		=> array( 'title' ),
 		'can_export'		=> true
 	);
 	register_post_type( 'edd_discount', $discount_args );
@@ -131,8 +131,8 @@ add_action( 'init', 'edd_setup_edd_post_types', 1 );
  */
 function edd_get_default_labels() {
 	$defaults = array(
-	   'singular' => __( 'Download', 'edd' ),
-	   'plural' => __( 'Downloads', 'edd')
+	   'singular' 	=> __( 'Download', 'edd' ),
+	   'plural' 	=> __( 'Downloads', 'edd')
 	);
 	return apply_filters( 'edd_default_downloads_name', $defaults );
 }
@@ -199,12 +199,12 @@ function edd_setup_download_taxonomies() {
 
 	/** Categories */
 	$category_labels = array(
-		'name' 				=> sprintf( _x( '%s Categories', 'taxonomy general name', 'edd' ), edd_get_label_singular() ),
+		'name' 			=> sprintf( _x( '%s Categories', 'taxonomy general name', 'edd' ), edd_get_label_singular() ),
 		'singular_name' 	=> _x( 'Category', 'taxonomy singular name', 'edd' ),
 		'search_items' 		=> __( 'Search Categories', 'edd'  ),
 		'all_items' 		=> __( 'All Categories', 'edd'  ),
 		'parent_item' 		=> __( 'Parent Category', 'edd'  ),
-		'parent_item_colon' => __( 'Parent Category:', 'edd'  ),
+		'parent_item_colon' 	=> __( 'Parent Category:', 'edd'  ),
 		'edit_item' 		=> __( 'Edit Category', 'edd'  ),
 		'update_item' 		=> __( 'Update Category', 'edd'  ),
 		'add_new_item' 		=> sprintf( __( 'Add New %s Category', 'edd'  ), edd_get_label_singular() ),
@@ -215,10 +215,10 @@ function edd_setup_download_taxonomies() {
 
 	$category_args = apply_filters( 'edd_download_category_args', array(
 			'hierarchical' 	=> true,
-			'labels' 		=> apply_filters('edd_download_category_labels', $category_labels),
-			'show_ui' 		=> true,
+			'labels' 	=> apply_filters('edd_download_category_labels', $category_labels),
+			'show_ui' 	=> true,
 			'query_var' 	=> 'download_category',
-			'rewrite' 		=> array('slug' => $slug . '/category', 'with_front' => false, 'hierarchical' => true ),
+			'rewrite' 	=> array('slug' => $slug . '/category', 'with_front' => false, 'hierarchical' => true ),
 			'capabilities'  => array( 'manage_terms' => 'manage_product_terms','edit_terms' => 'edit_product_terms','assign_terms' => 'assign_product_terms','delete_terms' => 'delete_product_terms' )
 		)
 	);
@@ -227,12 +227,12 @@ function edd_setup_download_taxonomies() {
 
 	/** Tags */
 	$tag_labels = array(
-		'name' 				=> sprintf( _x( '%s Tags', 'taxonomy general name', 'edd' ), edd_get_label_singular() ),
+		'name' 			=> sprintf( _x( '%s Tags', 'taxonomy general name', 'edd' ), edd_get_label_singular() ),
 		'singular_name' 	=> _x( 'Tag', 'taxonomy singular name', 'edd' ),
 		'search_items' 		=> __( 'Search Tags', 'edd'  ),
 		'all_items' 		=> __( 'All Tags', 'edd'  ),
 		'parent_item' 		=> __( 'Parent Tag', 'edd'  ),
-		'parent_item_colon' => __( 'Parent Tag:', 'edd'  ),
+		'parent_item_colon' 	=> __( 'Parent Tag:', 'edd'  ),
 		'edit_item' 		=> __( 'Edit Tag', 'edd'  ),
 		'update_item' 		=> __( 'Update Tag', 'edd'  ),
 		'add_new_item' 		=> __( 'Add New Tag', 'edd'  ),
@@ -243,10 +243,10 @@ function edd_setup_download_taxonomies() {
 
 	$tag_args = apply_filters( 'edd_download_tag_args', array(
 			'hierarchical' 	=> false,
-			'labels' 		=> apply_filters( 'edd_download_tag_labels', $tag_labels ),
-			'show_ui' 		=> true,
+			'labels' 	=> apply_filters( 'edd_download_tag_labels', $tag_labels ),
+			'show_ui' 	=> true,
 			'query_var' 	=> 'download_tag',
-			'rewrite' 		=> array( 'slug' => $slug . '/tag', 'with_front' => false, 'hierarchical' => true  ),
+			'rewrite' 	=> array( 'slug' => $slug . '/tag', 'with_front' => false, 'hierarchical' => true  ),
 			'capabilities'  => array( 'manage_terms' => 'manage_product_terms','edit_terms' => 'edit_product_terms','assign_terms' => 'assign_product_terms','delete_terms' => 'delete_product_terms' )
 
 		)
