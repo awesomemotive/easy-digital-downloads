@@ -202,6 +202,11 @@ final class Easy_Digital_Downloads {
 		if ( ! defined( 'EDD_PLUGIN_FILE' ) ) {
 			define( 'EDD_PLUGIN_FILE', __FILE__ );
 		}
+
+		// Make sure CAL_GREGORIAN is defined
+		if ( ! defined( 'CAL_GREGORIAN' ) ) {
+			define( 'CAL_GREGORIAN', 1 );
+		}
 	}
 
 	/**

@@ -1030,12 +1030,14 @@ function edd_restore_cart() {
 
 			$messages['edd_cart_restoration_failed'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Error', 'edd' ), __( 'Cart restoration failed. Invalid token.', 'edd' ) );
 			EDD()->session->set( 'edd_cart_messages', $messages );
-
-			return new WP_Error( 'invalid_cart_token', __( 'The cart cannot be restored. Invalid token.', 'edd' ) );
 		}
 
 		delete_user_meta( $user_id, 'edd_saved_cart' );
 		delete_user_meta( $user_id, 'edd_cart_token' );
+
+		if ( isset( $_GET['edd_cart_token'] ) && $_GET['edd_cart_token'] != $token ) {
+			return new WP_Error( 'invalid_cart_token', __( 'The cart cannot be restored. Invalid token.', 'edd' ) );
+		}
 
 	} elseif ( ! is_user_logged_in() && isset( $_COOKIE['edd_saved_cart'] ) && $token ) {
 
