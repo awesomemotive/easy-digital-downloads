@@ -250,7 +250,7 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 		$logs_data = array();
 		$paged     = $this->get_paged();
 		$log_query = array(
-			'log_type'    => 'api_requests',
+			'log_type'    => 'api_request',
 			'paged'       => $paged,
 			'meta_query'  => $this->get_meta_query()
 		);
