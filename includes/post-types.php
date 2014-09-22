@@ -63,8 +63,8 @@ function edd_setup_edd_post_types() {
 
 	/** Payment Post Type */
 	$payment_labels = array(
-		'name'               => _x('Payments', 'post type general name', 'edd' ),
-		'singular_name'      => _x('Payment', 'post type singular name', 'edd' ),
+		'name'               => _x( 'Payments', 'post type general name', 'edd' ),
+		'singular_name'      => _x( 'Payment', 'post type singular name', 'edd' ),
 		'add_new'            => __( 'Add New', 'edd' ),
 		'add_new_item'       => __( 'Add New Payment', 'edd' ),
 		'edit_item'          => __( 'Edit Payment', 'edd' ),
@@ -201,48 +201,49 @@ function edd_setup_download_taxonomies() {
 	$category_labels = array(
 		'name'                  => sprintf( _x( '%s Categories', 'taxonomy general name', 'edd' ), edd_get_label_singular() ),
 		'singular_name'         => _x( 'Category', 'taxonomy singular name', 'edd' ),
-		'search_items'          => __( 'Search Categories', 'edd'  ),
-		'all_items'             => __( 'All Categories', 'edd'  ),
-		'parent_item'           => __( 'Parent Category', 'edd'  ),
-		'parent_item_colon'     => __( 'Parent Category:', 'edd'  ),
-		'edit_item'             => __( 'Edit Category', 'edd'  ),
-		'update_item'           => __( 'Update Category', 'edd'  ),
-		'add_new_item'          => sprintf( __( 'Add New %s Category', 'edd'  ), edd_get_label_singular() ),
-		'new_item_name'         => __( 'New Category Name', 'edd'  ),
-		'menu_name'             => __( 'Categories', 'edd'  ),
-		'choose_from_most_used' => sprintf( __( 'Choose from most used %s categories', 'edd'  ), edd_get_label_singular() ),
+		'search_items'          => __( 'Search Categories', 'edd' ),
+		'all_items'             => __( 'All Categories', 'edd' ),
+		'parent_item'           => __( 'Parent Category', 'edd' ),
+		'parent_item_colon'     => __( 'Parent Category:', 'edd' ),
+		'edit_item'             => __( 'Edit Category', 'edd' ),
+		'update_item'           => __( 'Update Category', 'edd' ),
+		'add_new_item'          => sprintf( __( 'Add New %s Category', 'edd' ), edd_get_label_singular() ),
+		'new_item_name'         => __( 'New Category Name', 'edd' ),
+		'menu_name'             => __( 'Categories', 'edd' ),
+		'choose_from_most_used' => sprintf( __( 'Choose from most used %s categories', 'edd' ), edd_get_label_singular() ),
 	);
 
 	$category_args = apply_filters( 'edd_download_category_args', array(
 			'hierarchical' => true,
-			'labels'       => apply_filters('edd_download_category_labels', $category_labels),
+			'labels'       => apply_filters( 'edd_download_category_labels', $category_labels ),
 			'show_ui'      => true,
 			'query_var'    => 'download_category',
 			'rewrite'      => array( 'slug' => $slug . '/category', 'with_front' => false, 'hierarchical' => true ),
 			'capabilities' => array(
-                                'manage_terms' => 'manage_product_terms',
-                                'edit_terms'   => 'edit_product_terms',
-                                'assign_terms' => 'assign_product_terms',
-                                'delete_terms' => 'delete_product_terms' )
+                'manage_terms' => 'manage_product_terms',
+                'edit_terms'   => 'edit_product_terms',
+                'assign_terms' => 'assign_product_terms',
+                'delete_terms' => 'delete_product_terms'
+            )
 		)
 	);
-	register_taxonomy( 'download_category', array('download'), $category_args );
+	register_taxonomy( 'download_category', array( 'download' ), $category_args );
 	register_taxonomy_for_object_type( 'download_category', 'download' );
 
 	/** Tags */
 	$tag_labels = array(
 		'name'                  => sprintf( _x( '%s Tags', 'taxonomy general name', 'edd' ), edd_get_label_singular() ),
 		'singular_name'         => _x( 'Tag', 'taxonomy singular name', 'edd' ),
-		'search_items'          => __( 'Search Tags', 'edd'  ),
-		'all_items'             => __( 'All Tags', 'edd'  ),
-		'parent_item'           => __( 'Parent Tag', 'edd'  ),
-		'parent_item_colon'     => __( 'Parent Tag:', 'edd'  ),
-		'edit_item'             => __( 'Edit Tag', 'edd'  ),
-		'update_item'           => __( 'Update Tag', 'edd'  ),
-		'add_new_item'          => __( 'Add New Tag', 'edd'  ),
-		'new_item_name'         => __( 'New Tag Name', 'edd'  ),
-		'menu_name'             => __( 'Tags', 'edd'  ),
-		'choose_from_most_used' => sprintf( __( 'Choose from most used %s tags', 'edd'  ), edd_get_label_singular() ),
+		'search_items'          => __( 'Search Tags', 'edd' ),
+		'all_items'             => __( 'All Tags', 'edd' ),
+		'parent_item'           => __( 'Parent Tag', 'edd' ),
+		'parent_item_colon'     => __( 'Parent Tag:', 'edd' ),
+		'edit_item'             => __( 'Edit Tag', 'edd' ),
+		'update_item'           => __( 'Update Tag', 'edd' ),
+		'add_new_item'          => __( 'Add New Tag', 'edd' ),
+		'new_item_name'         => __( 'New Tag Name', 'edd' ),
+		'menu_name'             => __( 'Tags', 'edd' ),
+		'choose_from_most_used' => sprintf( __( 'Choose from most used %s tags', 'edd' ), edd_get_label_singular() ),
 	);
 
 	$tag_args = apply_filters( 'edd_download_tag_args', array(
@@ -250,12 +251,13 @@ function edd_setup_download_taxonomies() {
 			'labels'       => apply_filters( 'edd_download_tag_labels', $tag_labels ),
 			'show_ui'      => true,
 			'query_var'    => 'download_tag',
-			'rewrite'      => array( 'slug' => $slug . '/tag', 'with_front' => false, 'hierarchical' => true  ),
+			'rewrite'      => array( 'slug' => $slug . '/tag', 'with_front' => false, 'hierarchical' => true ),
 			'capabilities' => array(
-                                'manage_terms' => 'manage_product_terms',
-                                'edit_terms'   => 'edit_product_terms',
-                                'assign_terms' => 'assign_product_terms',
-                                'delete_terms' => 'delete_product_terms' )
+                'manage_terms' => 'manage_product_terms',
+                'edit_terms'   => 'edit_product_terms',
+                'assign_terms' => 'assign_product_terms',
+                'delete_terms' => 'delete_product_terms'
+            )
 		)
 	);
 	register_taxonomy( 'download_tag', array( 'download' ), $tag_args );
@@ -287,7 +289,7 @@ function edd_register_post_type_statuses() {
 		'show_in_admin_all_list'    => true,
 		'show_in_admin_status_list' => true,
 		'label_count'               => _n_noop( 'Failed <span class="count">(%s)</span>', 'Failed <span class="count">(%s)</span>', 'edd' )
-	)  );
+	) );
 	register_post_status( 'revoked', array(
 		'label'                     => _x( 'Revoked', 'Revoked payment status', 'edd' ),
 		'public'                    => true,
@@ -295,7 +297,7 @@ function edd_register_post_type_statuses() {
 		'show_in_admin_all_list'    => true,
 		'show_in_admin_status_list' => true,
 		'label_count'               => _n_noop( 'Revoked <span class="count">(%s)</span>', 'Revoked <span class="count">(%s)</span>', 'edd' )
-	)  );
+	) );
 	register_post_status( 'abandoned', array(
 		'label'                     => _x( 'Abandoned', 'Abandoned payment status', 'edd' ),
 		'public'                    => true,
@@ -303,7 +305,7 @@ function edd_register_post_type_statuses() {
 		'show_in_admin_all_list'    => true,
 		'show_in_admin_status_list' => true,
 		'label_count'               => _n_noop( 'Abandoned <span class="count">(%s)</span>', 'Abandoned <span class="count">(%s)</span>', 'edd' )
-	)  );
+	) );
 
 	// Discount Code Statuses
 	register_post_status( 'active', array(
@@ -313,7 +315,7 @@ function edd_register_post_type_statuses() {
 		'show_in_admin_all_list'    => true,
 		'show_in_admin_status_list' => true,
 		'label_count'               => _n_noop( 'Active <span class="count">(%s)</span>', 'Active <span class="count">(%s)</span>', 'edd' )
-	)  );
+	) );
 	register_post_status( 'inactive', array(
 		'label'                     => _x( 'Inactive', 'Inactive discount code status', 'edd' ),
 		'public'                    => true,
@@ -321,7 +323,7 @@ function edd_register_post_type_statuses() {
 		'show_in_admin_all_list'    => true,
 		'show_in_admin_status_list' => true,
 		'label_count'               => _n_noop( 'Inactive <span class="count">(%s)</span>', 'Inactive <span class="count">(%s)</span>', 'edd' )
-	)  );
+	) );
 }
 add_action( 'init', 'edd_register_post_type_statuses' );
 
