@@ -141,6 +141,10 @@ function wp_session_cleanup() {
 				// Get the session ID by parsing the option_name
 				$session_id = substr( $expiration->option_name, 20 );
 
+				if( (int) -1 === (int) $session_id ) {
+					continue;
+				}
+
 				$expired_sessions[] = $expiration->option_name;
 				$expired_sessions[] = "_wp_session_$session_id";
 			}
