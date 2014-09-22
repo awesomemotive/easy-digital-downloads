@@ -166,7 +166,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 		<input type="hidden" name="download_id" value="<?php echo esc_attr( $args['download_id'] ); ?>">
 		<?php if ( $variable_pricing && isset( $prices[$price_id] ) ): ?>
-			<input type="hidden" checked="checked" name="edd_options[price_id][]" id="edd_price_option_<?php echo $args['download_id']; ?>_1" class="edd_price_option_<?php echo $args['download_id']; ?>" value="<?php echo $price_id; ?>">
+			<input type="hidden" name="edd_options[price_id][]" id="edd_price_option_<?php echo $args['download_id']; ?>_1" class="edd_price_option_<?php echo $args['download_id']; ?>" value="<?php echo $price_id; ?>">
 		<?php endif; ?>
 		<?php if( ! empty( $args['direct'] ) ) { ?>
 			<input type="hidden" name="edd_action" class="edd_action_input" value="straight_to_gateway">
