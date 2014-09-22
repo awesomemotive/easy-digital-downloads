@@ -218,7 +218,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Incorrect item price on checkout when taxes are enabled
 * Fix: Incorrect subtotal displayed on purchase receipt when taxes are enabled
 * Fix: Customer records not getting created due to SQL syntax error
-* Fix: Aposthrophes in site name not being decoded in emails
+* Fix: Apostrophes in site name not being decoded in emails
 * Fix: card_state class not kept on select when when switching countries on checkout 
 
 = 2.1, September 3, 2014 =
