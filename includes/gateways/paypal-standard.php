@@ -355,22 +355,22 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 
 		// Setup and store the customers's details
 		$address = array();
-		$address['line1']   = ! empty( $data['address_street']       ) ? $data['address_street']       : false;
-		$address['city']    = ! empty( $data['address_city']         ) ? $data['address_city']         : false;
-		$address['state']   = ! empty( $data['address_state']        ) ? $data['address_state']        : false;
-		$address['country'] = ! empty( $data['address_country_code'] ) ? $data['address_country_code'] : false;
-		$address['zip']     = ! empty( $data['address_zip']          ) ? $data['address_zip']          : false;
+		$address['line1']   = ! empty( $data['address_street']       ) ? sanitize_text_field( $data['address_street'] )       : false;
+		$address['city']    = ! empty( $data['address_city']         ) ? sanitize_text_field( $data['address_city'] )         : false;
+		$address['state']   = ! empty( $data['address_state']        ) ? sanitize_text_field( $data['address_state'] )        : false;
+		$address['country'] = ! empty( $data['address_country_code'] ) ? sanitize_text_field( $data['address_country_code'] ) : false;
+		$address['zip']     = ! empty( $data['address_zip']          ) ? sanitize_text_field( $data['address_zip'] )          : false;
 
 		$user_info = array(
 			'id'         => '-1',
-			'email'      => $data['payer_email'],
-			'first_name' => $data['first_name'],
-			'last_name'  => $data['last_name'],
+			'email'      => sanitize_text_field( $data['payer_email'] ),
+			'first_name' => sanitize_text_field( $data['first_name'] ),
+			'last_name'  => sanitize_text_field( $data['last_name'] ),
 			'discount'   => '',
 			'address'    => $address
 		);
 
-		$payment_meta = get_post_meta( $payment_id, '_edd_payment_meta', true );
+		$payment_meta = edd_get_payment_meta( $payment_id );
 		$payment_meta['user_info'] = $user_info;
 		edd_update_payment_meta( $payment_id, '_edd_payment_meta', $payment_meta );
 	}
