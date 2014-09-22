@@ -179,7 +179,7 @@ $status    = edd_get_payment_status( $payment, true );
 
 												foreach ( $download_files as $filekey => $file ) :
 
-													$download_url = edd_get_download_file_url( $meta['key'], $email, $filekey, $bundle_item ); ?>
+													$download_url = edd_get_download_file_url( $meta['key'], $email, $filekey, $bundle_item, $price_id ); ?>
 													<li class="edd_download_file">
 														<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link"><?php echo esc_html( $file['name'] ); ?></a>
 													</li>
