@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Easy Digital Downloads
+ * Plugin Name: Easy Digital Downloads - change here.
  * Plugin URI: http://easydigitaldownloads.com
  * Description: Serve Digital Downloads Through WordPress
  * Author: Pippin Williamson
