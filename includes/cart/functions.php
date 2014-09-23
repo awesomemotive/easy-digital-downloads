@@ -560,7 +560,7 @@ function edd_get_cart_subtotal() {
  *
  * @since 1.4.1
  * @global $edd_options Array of all the EDD Options
- * @param bool/array $discounts Array of discounts to apply (needed during AJAX calls)
+ * @param bool $discounts Array of discounts to apply (needed during AJAX calls)
  * @return float Cart amount
  */
 function edd_get_cart_total( $discounts = false ) {
@@ -574,7 +574,7 @@ function edd_get_cart_total( $discounts = false ) {
 	if( $total < 0 )
 		$total = 0.00;
 
-	return (float) apply_filters( 'edd_get_cart_total', $total, $discounts );
+	return (float) apply_filters( 'edd_get_cart_total', $total );
 }
 
 
