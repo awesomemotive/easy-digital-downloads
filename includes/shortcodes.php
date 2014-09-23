@@ -546,13 +546,15 @@ add_shortcode( 'downloads', 'edd_downloads_query' );
 function edd_download_price_shortcode( $atts, $content = null ) {
 	extract( shortcode_atts( array(
 			'id' => NULL,
+			'price_id' => false,
 		), $atts, 'edd_price' )
 	);
 
-	if ( is_null( $id ) )
+	if ( is_null( $id ) ) {
 		$id = get_the_ID();
+	}
 
-	return edd_price( $id, false );
+	return edd_price( $id, false, $price_id );
 }
 add_shortcode( 'edd_price', 'edd_download_price_shortcode' );
 
