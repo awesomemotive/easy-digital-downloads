@@ -348,27 +348,30 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
 	$price = edd_get_cart_item_price( $item_id, $options );
 	$label = '';
 
-	if( edd_prices_show_tax_on_checkout() && ! edd_prices_include_tax() ) {
-		
-		$price += edd_get_cart_item_tax( $item_id, $options, $price );		
+	if ( '0.00' !== $price ) {
 
-	} if( ! edd_prices_show_tax_on_checkout() && edd_prices_include_tax() ) {
+		if( edd_prices_show_tax_on_checkout() && ! edd_prices_include_tax() ) {
 
-		$price -= edd_get_cart_item_tax( $item_id, $options, $price );		
-		
+			$price += edd_get_cart_item_tax( $item_id, $options, $price );
+
+		} if( ! edd_prices_show_tax_on_checkout() && edd_prices_include_tax() ) {
+
+			$price -= edd_get_cart_item_tax( $item_id, $options, $price );
+
+		}
+
+		if( edd_display_tax_rate() ) {
+			$label = '&nbsp;&ndash;&nbsp;';
+			if( edd_prices_show_tax_on_checkout() ) {
+				$label .= sprintf( __( 'includes %s tax', 'edd' ), edd_get_formatted_tax_rate() );
+			} else {
+				$label .= sprintf( __( 'excludes %s tax', 'edd' ), edd_get_formatted_tax_rate() );
+			}
+
+		}
 	}
 
 	$price = edd_currency_filter( edd_format_amount( $price ) );
-
-	if( edd_display_tax_rate() ) {
-		$label = '&nbsp;&ndash;&nbsp;';
-		if( edd_prices_show_tax_on_checkout() ) {
-			$label .= sprintf( __( 'includes %s tax', 'edd' ), edd_get_formatted_tax_rate() );
-		} else {
-			$label .= sprintf( __( 'excludes %s tax', 'edd' ), edd_get_formatted_tax_rate() );
-		}
-
-	}
 
 	return esc_html( $price . $label );
 }
