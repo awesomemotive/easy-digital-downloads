@@ -348,7 +348,9 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
 	$price = edd_get_cart_item_price( $item_id, $options );
 	$label = '';
 
-	if ( '0.00' !== $price ) {
+	$price_id = isset( $options['price_id'] ) ? $options['price_id'] : false;
+
+	if ( ! edd_is_free_download( $item_id, $price_id ) ) {
 
 		if( edd_prices_show_tax_on_checkout() && ! edd_prices_include_tax() ) {
 
