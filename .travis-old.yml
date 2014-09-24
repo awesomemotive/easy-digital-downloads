@@ -23,8 +23,8 @@ before_script:
     - mkdir -p tmp
     - WP_CORE_DIR=tmp/wordpress/
     - WP_TESTS_DIR=tmp/wordpress-tests/
-    - svn co --ignore-externals http://core.svn.wordpress.org/$WP_VERSION tmp/wordpress/
-    - svn co --ignore-externals http://unit-tests.svn.wordpress.org/trunk/ tmp/wordpress-tests/
+    - svn co --ignore-externals https://core.svn.wordpress.org/$WP_VERSION tmp/wordpress/
+    - svn co --ignore-externals https://unit-tests.svn.wordpress.org/trunk/ tmp/wordpress-tests/
     - cp tmp/wordpress-tests/wp-tests-config-sample.php tmp/wordpress-tests/wp-tests-config.php
     - cp -fr tests/bootstrap-wordpress-unit-test-suite.php tmp/wordpress-tests/includes/bootstrap.php
     - sed -i "s:dirname( __FILE__ ) . '/wordpress/':'$WP_CORE_DIR':" tmp/wordpress-tests/wp-tests-config.php
