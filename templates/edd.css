@@ -358,7 +358,7 @@ input[type="submit"].edd-submit:focus,
   border-color: #ac2925;
 }
 
-.edd-submit.button.red:active, {
+.edd-submit.button.red:active {
   background-image: none;
 }
 
