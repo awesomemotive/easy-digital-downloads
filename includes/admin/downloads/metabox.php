@@ -410,6 +410,7 @@ function edd_render_price_field( $post_id ) {
 						<th style="width: 20px"></th>
 						<th><?php _e( 'Option Name', 'edd' ); ?></th>
 						<th style="width: 100px"><?php _e( 'Price', 'edd' ); ?></th>
+						<th style="width: 15px"><?php _e( 'ID', 'edd' ); ?></th>
 						<?php do_action( 'edd_download_price_table_head', $post_id ); ?>
 						<th style="width: 2%"></th>
 					</tr>
@@ -502,6 +503,10 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 			<?php echo EDD()->html->text( $price_args ); ?>
 			<?php echo edd_currency_filter( '' ); ?>
 		<?php endif; ?>
+	</td>
+
+	<td>
+		<span><?php echo $key; ?></span>
 	</td>
 
 	<?php do_action( 'edd_download_price_table_row', $post_id, $key, $args ); ?>
