@@ -750,6 +750,22 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 }
 add_action( 'edd_render_file_row', 'edd_render_file_row', 10, 3 );
 
+function edd_download_media_strings( $strings ) {
+	global $post;
+
+	if ( $post->post_type !== 'download' ) {
+		return $strings;
+	}
+
+	$downloads_object = get_post_type_object( 'download' );
+	$labels = $downloads_object->labels;
+
+	$strings['insertIntoPost'] = sprintf( __( 'Insert into %s', 'edd' ), strtolower( $labels->singular_name ) );
+
+	return $strings;
+}
+add_filter( 'media_view_strings', 'edd_download_media_strings', 10, 1 );
+
 
 /**
  * File Download Limit Row
