@@ -60,6 +60,7 @@ function edd_get_purchase_link( $args = array() ) {
 	$defaults = apply_filters( 'edd_purchase_link_defaults', array(
 		'download_id' => $post_id,
 		'price'       => (bool) true,
+		'price_id'    => isset( $args['price_id'] ) ? $args['price_id'] : false,
 		'direct'      => edd_get_download_button_behavior( $post_id ) == 'direct' ? true : false,
 		'text'        => ! empty( $edd_options[ 'add_to_cart_text' ] ) ? $edd_options[ 'add_to_cart_text' ] : __( 'Purchase', 'edd' ),
 		'style'       => isset( $edd_options[ 'button_style' ] ) 	   ? $edd_options[ 'button_style' ]     : 'button',
@@ -165,7 +166,7 @@ function edd_get_purchase_link( $args = array() ) {
 		</div><!--end .edd_purchase_submit_wrapper-->
 
 		<input type="hidden" name="download_id" value="<?php echo esc_attr( $args['download_id'] ); ?>">
-		<?php if ( $variable_pricing && isset( $prices[$price_id] ) ): ?>
+		<?php if ( $variable_pricing && isset( $price_id ) && isset( $prices[$price_id] ) ): ?>
 			<input type="hidden" name="edd_options[price_id][]" id="edd_price_option_<?php echo $args['download_id']; ?>_1" class="edd_price_option_<?php echo $args['download_id']; ?>" value="<?php echo $price_id; ?>">
 		<?php endif; ?>
 		<?php if( ! empty( $args['direct'] ) ) { ?>
