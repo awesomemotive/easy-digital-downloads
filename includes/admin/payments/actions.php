@@ -105,6 +105,18 @@ function edd_update_payment_details( $data ) {
 		$meta['cart_details'] = $cart_details;
 	}
 
+	do_action( 'edd_update_edited_purchase', $payment_id );
+
+	// Update main payment record
+	$updated = wp_update_post( array(
+		'ID'        => $payment_id,
+		'post_date' => $date
+	) );
+
+	if ( 0 === $updated ) {
+		wp_die( __( 'Error Updating Payment', 'edd' ) );
+	}
+
 	if ( $user_id !== $user_info['id'] || $email !== $user_info['email'] ) {
 
 		$user = get_user_by( 'id', $user_id );
@@ -156,18 +168,6 @@ function edd_update_payment_details( $data ) {
 		$note  = wp_kses( $data['edd-payment-note'], array() );
 		edd_insert_payment_note( $payment_id, $note );
 
-	}
-
-	do_action( 'edd_update_edited_purchase', $payment_id );
-
-	// Update main payment record
-	$updated = wp_update_post( array(
-		'ID'        => $payment_id,
-		'post_date' => $date
-	) );
-
-	if ( 0 === $updated ) {
-		wp_die( __( 'Error Updating Payment', 'edd' ) );
 	}
 
 	// Set new status
