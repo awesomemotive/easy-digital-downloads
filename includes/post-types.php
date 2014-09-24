@@ -22,7 +22,7 @@ function edd_setup_edd_post_types() {
 
 	$archives = defined( 'EDD_DISABLE_ARCHIVE' ) && EDD_DISABLE_ARCHIVE ? false : true;
 	$slug     = defined( 'EDD_SLUG' ) ? EDD_SLUG : 'downloads';
-	$rewrite  = defined( 'EDD_DISABLE_REWRITE' ) && EDD_DISABLE_REWRITE ? false : array('slug' => $slug, 'with_front' => false);
+	$rewrite  = defined( 'EDD_DISABLE_REWRITE' ) && EDD_DISABLE_REWRITE ? false : array( 'slug' => $slug, 'with_front' => false );
 
 	$download_labels = apply_filters( 'edd_download_labels', array(
 		'name'               => '%2$s',
@@ -132,7 +132,7 @@ add_action( 'init', 'edd_setup_edd_post_types', 1 );
 function edd_get_default_labels() {
 	$defaults = array(
 	   'singular' => __( 'Download', 'edd' ),
-	   'plural'   => __( 'Downloads', 'edd')
+	   'plural'   => __( 'Downloads', 'edd' )
 	);
 	return apply_filters( 'edd_default_downloads_name', $defaults );
 }
@@ -147,7 +147,7 @@ function edd_get_default_labels() {
  */
 function edd_get_label_singular( $lowercase = false ) {
 	$defaults = edd_get_default_labels();
-	return ($lowercase) ? strtolower( $defaults['singular'] ) : $defaults['singular'];
+	return ( $lowercase ) ? strtolower( $defaults['singular'] ) : $defaults['singular'];
 }
 
 /**
@@ -195,7 +195,7 @@ add_filter( 'enter_title_here', 'edd_change_default_title' );
 */
 function edd_setup_download_taxonomies() {
 
-	$slug     = defined( 'EDD_SLUG' ) ? EDD_SLUG : 'downloads';
+	$slug = defined( 'EDD_SLUG' ) ? EDD_SLUG : 'downloads';
 
 	/** Categories */
 	$category_labels = array(
@@ -214,17 +214,12 @@ function edd_setup_download_taxonomies() {
 	);
 
 	$category_args = apply_filters( 'edd_download_category_args', array(
-			'hierarchical' => true,
-			'labels'       => apply_filters( 'edd_download_category_labels', $category_labels ),
-			'show_ui'      => true,
-			'query_var'    => 'download_category',
-			'rewrite'      => array( 'slug' => $slug . '/category', 'with_front' => false, 'hierarchical' => true ),
-			'capabilities' => array(
-                'manage_terms' => 'manage_product_terms',
-                'edit_terms'   => 'edit_product_terms',
-                'assign_terms' => 'assign_product_terms',
-                'delete_terms' => 'delete_product_terms'
-            )
+        'hierarchical'  => true,
+        'labels'        => apply_filters( 'edd_download_category_labels', $category_labels ),
+        'show_ui'       => true,
+        'query_var'     => 'download_category',
+        'rewrite'       => array( 'slug' => $slug . '/category', 'with_front' => false, 'hierarchical' => true ),
+        'capabilities'  => array( 'manage_terms' => 'manage_product_terms', 'edit_terms' => 'edit_product_terms', 'assign_terms' => 'assign_product_terms', 'delete_terms' => 'delete_product_terms' )
 		)
 	);
 	register_taxonomy( 'download_category', array( 'download' ), $category_args );
@@ -247,17 +242,12 @@ function edd_setup_download_taxonomies() {
 	);
 
 	$tag_args = apply_filters( 'edd_download_tag_args', array(
-			'hierarchical' => false,
-			'labels'       => apply_filters( 'edd_download_tag_labels', $tag_labels ),
-			'show_ui'      => true,
-			'query_var'    => 'download_tag',
-			'rewrite'      => array( 'slug' => $slug . '/tag', 'with_front' => false, 'hierarchical' => true ),
-			'capabilities' => array(
-                'manage_terms' => 'manage_product_terms',
-                'edit_terms'   => 'edit_product_terms',
-                'assign_terms' => 'assign_product_terms',
-                'delete_terms' => 'delete_product_terms'
-            )
+        'hierarchical' 	=> false,
+        'labels'        => apply_filters( 'edd_download_tag_labels', $tag_labels ),
+        'show_ui'       => true,
+        'query_var'     => 'download_tag',
+        'rewrite'       => array( 'slug' => $slug . '/tag', 'with_front' => false, 'hierarchical' => true ),
+        'capabilities'  => array( 'manage_terms' => 'manage_product_terms', 'edit_terms' => 'edit_product_terms', 'assign_terms' => 'assign_product_terms', 'delete_terms' => 'delete_product_terms' )
 		)
 	);
 	register_taxonomy( 'download_tag', array( 'download' ), $tag_args );
@@ -273,6 +263,7 @@ add_action( 'init', 'edd_setup_download_taxonomies', 0 );
  * @return void
  */
 function edd_register_post_type_statuses() {
+
 	// Payment Statuses
 	register_post_status( 'refunded', array(
 		'label'                     => _x( 'Refunded', 'Refunded payment status', 'edd' ),
@@ -282,6 +273,7 @@ function edd_register_post_type_statuses() {
 		'show_in_admin_status_list' => true,
 		'label_count'               => _n_noop( 'Refunded <span class="count">(%s)</span>', 'Refunded <span class="count">(%s)</span>', 'edd' )
 	) );
+
 	register_post_status( 'failed', array(
 		'label'                     => _x( 'Failed', 'Failed payment status', 'edd' ),
 		'public'                    => true,
@@ -290,6 +282,7 @@ function edd_register_post_type_statuses() {
 		'show_in_admin_status_list' => true,
 		'label_count'               => _n_noop( 'Failed <span class="count">(%s)</span>', 'Failed <span class="count">(%s)</span>', 'edd' )
 	) );
+
 	register_post_status( 'revoked', array(
 		'label'                     => _x( 'Revoked', 'Revoked payment status', 'edd' ),
 		'public'                    => true,
@@ -298,7 +291,8 @@ function edd_register_post_type_statuses() {
 		'show_in_admin_status_list' => true,
 		'label_count'               => _n_noop( 'Revoked <span class="count">(%s)</span>', 'Revoked <span class="count">(%s)</span>', 'edd' )
 	) );
-	register_post_status( 'abandoned', array(
+
+    register_post_status( 'abandoned', array(
 		'label'                     => _x( 'Abandoned', 'Abandoned payment status', 'edd' ),
 		'public'                    => true,
 		'exclude_from_search'       => false,
@@ -316,6 +310,7 @@ function edd_register_post_type_statuses() {
 		'show_in_admin_status_list' => true,
 		'label_count'               => _n_noop( 'Active <span class="count">(%s)</span>', 'Active <span class="count">(%s)</span>', 'edd' )
 	) );
+
 	register_post_status( 'inactive', array(
 		'label'                     => _x( 'Inactive', 'Inactive discount code status', 'edd' ),
 		'public'                    => true,
