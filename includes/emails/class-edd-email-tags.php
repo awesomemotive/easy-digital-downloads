@@ -779,7 +779,7 @@ function edd_email_tag_payment_method( $payment_id ) {
  * @return string sitename
  */
 function edd_email_tag_sitename( $payment_id ) {
-	return get_bloginfo( 'name' );
+	return wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
 }
 
 /**
