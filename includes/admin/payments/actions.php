@@ -123,9 +123,9 @@ function edd_update_payment_details( $data ) {
 
 		if( ! $new_customer ) {
 
-			// No customer exists for the given email so create one			
+			// No customer exists for the given email so create one
 			$new_customer_id = EDD()->customers->add( array( 'email' => $email, 'name' => $first_name . ' ' . $last_name ) );
-	
+
 		}
 
 		EDD()->customers->attach_payment( $new_customer_id, $payment_id );
@@ -135,9 +135,9 @@ function edd_update_payment_details( $data ) {
 
 			EDD()->customers->decrement_stats( $previous_customer->id, $total );
 			EDD()->customers->increment_stats( $new_customer_id, $total );
-	
+
 		}
-		
+
 		update_post_meta( $payment_id, '_edd_payment_customer_id',  $new_customer_id );
 	}
 
@@ -161,10 +161,14 @@ function edd_update_payment_details( $data ) {
 	do_action( 'edd_update_edited_purchase', $payment_id );
 
 	// Update main payment record
-	wp_update_post( array(
+	$updated = wp_update_post( array(
 		'ID'        => $payment_id,
 		'post_date' => $date
 	) );
+
+	if ( 0 === $updated ) {
+		wp_die( __( 'Error Updating Payment', 'edd' ) );
+	}
 
 	// Set new status
 	edd_update_payment_status( $payment_id, $status );
