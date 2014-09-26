@@ -1192,9 +1192,9 @@ function edd_get_payment_subtotal( $payment_id = 0) {
 
 		foreach ( $cart_details as $item ) {
 
-			if( isset( $item['subtotal'] ) ) {
+			if( isset( $item['item_price'] ) ) {
 
-				$subtotal += $item['subtotal'];
+				$subtotal += $item['item_price'];
 
 			}
 
