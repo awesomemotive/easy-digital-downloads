@@ -923,7 +923,7 @@ function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files =
 
 	}
 
-	return apply_filters( 'edd_payment_meta_cart_details', $cart_details );
+	return apply_filters( 'edd_payment_meta_cart_details', $cart_details, $payment_id );
 }
 
 /**
