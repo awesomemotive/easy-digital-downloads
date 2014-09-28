@@ -44,7 +44,7 @@ function edd_update_payment_details( $data ) {
 	$names      = sanitize_text_field( $data['edd-payment-user-name'] );
 	$address    = array_map( 'trim', $data['edd-payment-address'][0] );
 
-	$curr_total = edd_get_payment_meta( $payment_id, '_edd_payment_total' );
+	$curr_total = edd_sanitize_amount( edd_get_payment_amount( $payment_id ) );
 	$new_total  = edd_sanitize_amount( $_POST['edd-payment-total'] );
 	$tax        = isset( $_POST['edd-payment-tax'] ) ? edd_sanitize_amount( $_POST['edd-payment-tax'] ) : 0;
 
