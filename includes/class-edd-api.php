@@ -1113,17 +1113,18 @@ class EDD_API {
 				$user_info    = edd_get_payment_meta_user_info( $payment->ID );
 				$cart_items   = edd_get_payment_meta_cart_details( $payment->ID );
 
-				$sales['sales'][ $i ]['ID']       = edd_get_payment_number( $payment->ID );
-				$sales['sales'][ $i ]['key']      = edd_get_payment_key( $payment->ID );
-				$sales['sales'][ $i ]['discount'] = isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ? explode( ',', $user_info['discount'] ) : array();
-				$sales['sales'][ $i ]['subtotal'] = edd_get_payment_subtotal( $payment->ID );
-				$sales['sales'][ $i ]['tax']      = edd_get_payment_tax( $payment->ID );
-				$sales['sales'][ $i ]['fees']     = edd_get_payment_fees( $payment->ID );
-				$sales['sales'][ $i ]['total']    = edd_get_payment_amount( $payment->ID );
-				$sales['sales'][ $i ]['gateway']  = edd_get_payment_gateway( $payment->ID );
-				$sales['sales'][ $i ]['email']    = edd_get_payment_user_email( $payment->ID );
-				$sales['sales'][ $i ]['date']     = $payment->post_date;
-				$sales['sales'][ $i ]['products'] = array();
+				$sales['sales'][ $i ]['ID']             = edd_get_payment_number( $payment->ID );
+				$sales['sales'][ $i ]['transaction_id'] = edd_get_payment_transaction_id( $payment->ID );
+				$sales['sales'][ $i ]['key']            = edd_get_payment_key( $payment->ID );
+				$sales['sales'][ $i ]['discount']       = isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ? explode( ',', $user_info['discount'] ) : array();
+				$sales['sales'][ $i ]['subtotal']       = edd_get_payment_subtotal( $payment->ID );
+				$sales['sales'][ $i ]['tax']            = edd_get_payment_tax( $payment->ID );
+				$sales['sales'][ $i ]['fees']           = edd_get_payment_fees( $payment->ID );
+				$sales['sales'][ $i ]['total']          = edd_get_payment_amount( $payment->ID );
+				$sales['sales'][ $i ]['gateway']        = edd_get_payment_gateway( $payment->ID );
+				$sales['sales'][ $i ]['email']          = edd_get_payment_user_email( $payment->ID );
+				$sales['sales'][ $i ]['date']           = $payment->post_date;
+				$sales['sales'][ $i ]['products']       = array();
 
 				$c = 0;
 
