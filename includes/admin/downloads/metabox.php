@@ -750,10 +750,17 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 }
 add_action( 'edd_render_file_row', 'edd_render_file_row', 10, 3 );
 
+/**
+ * Alter the Add to post button in the media manager for downloads
+ *
+ * @since  2.1.5
+ * @param  array $strings Array of default strings for media manager
+ * @return array          The altered array of strings for media manager
+ */
 function edd_download_media_strings( $strings ) {
 	global $post;
 
-	if ( $post->post_type !== 'download' ) {
+	if ( ! $post || $post->post_type !== 'download' ) {
 		return $strings;
 	}
 
