@@ -44,15 +44,18 @@ function edd_download_shortcode( $atts, $content = null ) {
 	if( isset( $atts['color'] )	)
 		$atts['color'] = ( $atts['color'] == 'inherit' ) ? '' : $atts['color'];
 
-	if( isset( $atts['id'] ) ) {
+	if( isset( $atts['sku'] ) ) {
+
+		$download = edd_get_download_by( 'sku', $atts['sku'] );
+		$atts['download_id'] = $download->ID;
+
+	} elseif( isset( $atts['id'] ) ) {
+
 		// Edd_get_purchase_link() expects the ID to be download_id since v1.3
 		$atts['download_id'] = $atts['id'];
 
 		$download = edd_get_download( $atts['download_id'] );
-	} elseif( isset( $atts['sku'] ) ) {
-		$download = edd_get_download_by( 'sku', $atts['sku'] );
 
-		$atts['download_id'] = $download->ID;
 	}
 
 	if ( $download ) {
