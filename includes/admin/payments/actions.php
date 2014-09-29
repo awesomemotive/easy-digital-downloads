@@ -178,10 +178,15 @@ function edd_update_payment_details( $data ) {
 	edd_update_payment_meta( $payment_id, '_edd_payment_user_email',          $email     );
 	edd_update_payment_meta( $payment_id, '_edd_payment_meta',                $meta      );
 	edd_update_payment_meta( $payment_id, '_edd_payment_total',               $new_total );
-	if ( $new_total !== $curr_total ) {
+
+	// Adjust total store earnings if the payment total has been changed
+	if ( $new_total !== $curr_total && ( 'publish' == $status || 'revoked' == $status ) ) {
+	
 		$total_earnings = get_option( 'edd_earnings_total' ) - $curr_total + $new_total;
 		update_option( 'edd_earnings_total', $total_earnings );
+
 	}
+
 	edd_update_payment_meta( $payment_id, '_edd_payment_downloads',           $new_total );
 	edd_update_payment_meta( $payment_id, '_edd_payment_unlimited_downloads', $unlimited );
 
