@@ -44,7 +44,8 @@ function edd_update_payment_details( $data ) {
 	$names      = sanitize_text_field( $data['edd-payment-user-name'] );
 	$address    = array_map( 'trim', $data['edd-payment-address'][0] );
 
-	$total      = edd_sanitize_amount( $_POST['edd-payment-total'] );
+	$curr_total = edd_sanitize_amount( edd_get_payment_amount( $payment_id ) );
+	$new_total  = edd_sanitize_amount( $_POST['edd-payment-total'] );
 	$tax        = isset( $_POST['edd-payment-tax'] ) ? edd_sanitize_amount( $_POST['edd-payment-tax'] ) : 0;
 
 	// Setup date from input values
@@ -176,8 +177,12 @@ function edd_update_payment_details( $data ) {
 	edd_update_payment_meta( $payment_id, '_edd_payment_user_id',             $user_id   );
 	edd_update_payment_meta( $payment_id, '_edd_payment_user_email',          $email     );
 	edd_update_payment_meta( $payment_id, '_edd_payment_meta',                $meta      );
-	edd_update_payment_meta( $payment_id, '_edd_payment_total',               $total     );
-	edd_update_payment_meta( $payment_id, '_edd_payment_downloads',           $total     );
+	edd_update_payment_meta( $payment_id, '_edd_payment_total',               $new_total );
+	if ( $new_total !== $curr_total ) {
+		$total_earnings = get_option( 'edd_earnings_total' ) - $curr_total + $new_total;
+		update_option( 'edd_earnings_total', $total_earnings );
+	}
+	edd_update_payment_meta( $payment_id, '_edd_payment_downloads',           $new_total );
 	edd_update_payment_meta( $payment_id, '_edd_payment_unlimited_downloads', $unlimited );
 
 	do_action( 'edd_updated_edited_purchase', $payment_id );
