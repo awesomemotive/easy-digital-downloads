@@ -32,8 +32,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 */
 class edd_cart_widget extends WP_Widget {
 	/** Constructor */
-	function edd_cart_widget() {
-		parent::WP_Widget( false, __( 'Downloads Cart', 'edd' ), array( 'description' => __( 'Display the downloads shopping cart', 'edd' ) ) );
+	function __construct() {
+		parent::__construct( 'edd_cart_widget', __( 'Downloads Cart', 'edd' ), array( 'description' => __( 'Display the downloads shopping cart', 'edd' ) ) );
 	}
 
 	/** @see WP_Widget::widget */
@@ -110,8 +110,8 @@ class edd_cart_widget extends WP_Widget {
 */
 class edd_categories_tags_widget extends WP_Widget {
 	/** Constructor */
-	function edd_categories_tags_widget() {
-		parent::WP_Widget( false, __( 'Downloads Categories / Tags', 'edd' ), array( 'description' => __( 'Display the downloads categories or tags', 'edd' ) ) );
+	function __construct() {
+		parent::__construct( 'edd_categories_tags_widget', __( 'Downloads Categories / Tags', 'edd' ), array( 'description' => __( 'Display the downloads categories or tags', 'edd' ) ) );
 	}
 
 	/** @see WP_Widget::widget */
