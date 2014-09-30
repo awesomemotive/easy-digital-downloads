@@ -115,16 +115,15 @@ class edd_categories_tags_widget extends WP_Widget {
 
 	/** @see WP_Widget::widget */
 	function widget( $args, $instance ) {
-		
-		if( ! isset( $args['id'] ) ) {
-			$args['id'] = 'edd_categories_tags_widget';
-		}
+		// Set defaults
+		$args['id']           = ( isset( $args['id'] ) ) ? $args['id'] : 'edd_categories_tags_widget';
+		$instance['title']    = ( isset( $instance['title'] ) ) ? $instance['title'] : '';
+		$instance['taxonomy'] = ( isset( $instance['taxonomy'] ) ) ? $instance['taxonomy'] : 'download_category';
 
 		$title      = apply_filters( 'widget_title', $instance[ 'title' ], $instance, $args['id'] );
 		$tax        = $instance['taxonomy'];
 		$count      = isset( $instance['count'] ) && $instance['count'] == 'on' ? 1 : 0;
 		$hide_empty = isset( $instance['hide_empty'] ) && $instance['hide_empty'] == 'on' ? 1 : 0;
-
 
 		global $post, $edd_options;
 
