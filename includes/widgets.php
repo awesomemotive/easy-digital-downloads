@@ -214,12 +214,9 @@ class EDD_Product_Details_Widget extends WP_Widget {
 
     /** @see WP_Widget::widget */
     public function widget( $args, $instance ) {
+		$args['id'] = ( isset( $args['id'] ) ) ? $args['id'] : 'edd_download_details_widget';
 
-    	if( ! isset( $args['id'] ) ) {
-			$args['id'] = 'edd_download_details_widget';
-		}
-
-        if ( 'current' == $instance['download_id'] && ! is_singular( 'download' ) ) {
+        if ( ! isset( $instance['download_id'] ) || ( 'current' == $instance['download_id'] && ! is_singular( 'download' ) ) ) {
         	return;
         }
 
