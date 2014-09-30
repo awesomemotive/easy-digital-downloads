@@ -43,9 +43,8 @@ class edd_cart_widget extends WP_Widget {
 			return;
 		}
 
-		if ( ! isset( $args['id'] ) ) {
-			$args['id'] = 'edd_cart_widget';
-		}		
+		$args['id']        = ( isset( $args['id'] ) ) ? $args['id'] : 'edd_cart_widget';
+		$instance['title'] = ( isset( $instance['title'] ) ) ? $instance['title'] : '';
 
 		$title = apply_filters( 'widget_title', $instance[ 'title' ], $instance, $args['id'] );
 
@@ -116,16 +115,15 @@ class edd_categories_tags_widget extends WP_Widget {
 
 	/** @see WP_Widget::widget */
 	function widget( $args, $instance ) {
-		
-		if( ! isset( $args['id'] ) ) {
-			$args['id'] = 'edd_categories_tags_widget';
-		}
+		// Set defaults
+		$args['id']           = ( isset( $args['id'] ) ) ? $args['id'] : 'edd_categories_tags_widget';
+		$instance['title']    = ( isset( $instance['title'] ) ) ? $instance['title'] : '';
+		$instance['taxonomy'] = ( isset( $instance['taxonomy'] ) ) ? $instance['taxonomy'] : 'download_category';
 
 		$title      = apply_filters( 'widget_title', $instance[ 'title' ], $instance, $args['id'] );
 		$tax        = $instance['taxonomy'];
 		$count      = isset( $instance['count'] ) && $instance['count'] == 'on' ? 1 : 0;
 		$hide_empty = isset( $instance['hide_empty'] ) && $instance['hide_empty'] == 'on' ? 1 : 0;
-
 
 		global $post, $edd_options;
 
@@ -214,12 +212,9 @@ class EDD_Product_Details_Widget extends WP_Widget {
 
     /** @see WP_Widget::widget */
     public function widget( $args, $instance ) {
+		$args['id'] = ( isset( $args['id'] ) ) ? $args['id'] : 'edd_download_details_widget';
 
-    	if( ! isset( $args['id'] ) ) {
-			$args['id'] = 'edd_download_details_widget';
-		}
-
-        if ( 'current' == $instance['download_id'] && ! is_singular( 'download' ) ) {
+        if ( ! isset( $instance['download_id'] ) || ( 'current' == $instance['download_id'] && ! is_singular( 'download' ) ) ) {
         	return;
         }
 
