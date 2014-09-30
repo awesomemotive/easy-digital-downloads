@@ -66,11 +66,82 @@ class EDD_Payment {
 	 *
 	 * @since 2.2
 	 * @param int $download_id The download to add
-	 * @param int $price_id A price ID for the download
+	 * @param int $args Other arguments to pass to the function
 	 * @return void
 	 */
-	public function add_download( $download_id, $price_id = false ) {
+	public function add_download( $download_id, $args = array() ) {
+		// Bail if no download ID specified
+		if( ! $download_id ) {
+			return false;
+		}
 
+		$download = get_post( $download_id );
+
+		// Bail if this post isn't a download
+		if( $download->post_type !== 'download' ) {
+			return false;
+		}
+
+		// Set some defaults
+		$defaults = array(
+			'quantity'    => 1,
+			'price_id'    => false,
+			'amount'      => '0.00',
+			'tax'         => 0,
+			'fees'        => 0
+		);
+
+		$args = wp_parse_args( apply_filters( 'edd_payment_add_download_args', $args ), $defaults );
+
+		// Deal with variable pricing
+		if( edd_has_variable_prices( $download_id ) ) {
+			$prices = get_post_meta( $download_id, 'edd_variable_prices', true );
+
+			if( $args['price_id'] && array_key_exists( $args['price_id'], (array) $prices ) ) {
+				$item_price = $prices[$args['price_id']]['amount'];
+			} else {
+				// Variably priced item with no price ID can't be added
+				return false;
+			}
+		} else {
+			$item_price = edd_get_download_price( $download_id );
+		}
+
+		// Silly item_number array
+		$item_number = array(
+			'id'        => $download_id,
+			'quantity'  => $args['quantity'],
+			'options'   => array(
+				'price_id'  => $args['price_id'],
+				'quantity'  => $args['quantity']
+			)
+		);
+
+		$cart_details[0] = array(
+			'name'          => $download->post_title,
+			'id'		    => $download_id,
+			'item_number'   => $item_number,
+			'price'         => edd_sanitize_amount( $item_price ),
+			'quantity'      => $args['quantity'],
+			'tax'           => $args['tax']
+		);
+
+		$purchase_data = array(
+			'downloads'     => (array) $download,
+			'cart_details'  => $cart_details,
+		);
+
+		// Retrieve the current meta
+		$meta = get_post_meta( $download_id, '_edd_payment_meta' );
+
+		$new_meta = array(
+			'downloads'    = array( $download ),
+			'cart_details' = $cart_details
+		);
+
+		edd_update_payment_meta( $this->payment_id, '_edd_payment_meta', array_merge( $meta, $new_meta ) );
+
+		// TODO: Still need to update purchase_data... I don't see anywhere that's being done?
 	}
 
 
