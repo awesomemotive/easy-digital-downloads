@@ -133,8 +133,10 @@ final class Easy_Digital_Downloads {
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Easy_Digital_Downloads ) ) {
 			self::$instance = new Easy_Digital_Downloads;
 			self::$instance->setup_constants();
+
+			add_action( 'plugins_loaded', array( self::$instance, 'load_textdomain' ) );
+
 			self::$instance->includes();
-			self::$instance->load_textdomain();
 			self::$instance->roles      = new EDD_Roles();
 			self::$instance->fees       = new EDD_Fees();
 			self::$instance->api        = new EDD_API();
