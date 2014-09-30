@@ -43,9 +43,8 @@ class edd_cart_widget extends WP_Widget {
 			return;
 		}
 
-		if ( ! isset( $args['id'] ) ) {
-			$args['id'] = 'edd_cart_widget';
-		}		
+		$args['id']        = ( isset( $args['id'] ) ) ? $args['id'] : 'edd_cart_widget';
+		$instance['title'] = ( isset( $instance['title'] ) ) ? $instance['title'] : '';
 
 		$title = apply_filters( 'widget_title', $instance[ 'title' ], $instance, $args['id'] );
 
