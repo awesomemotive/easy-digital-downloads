@@ -141,8 +141,10 @@ class EDD_Payment {
 		);
 
 		// Retrieve the current meta
+		$downloads   = edd_get_payment_meta_downloads( $download_id );
+		$downloads[] = $download;
+
 		$meta = edd_get_payment_meta( $download_id );
-		$meta['downloads'][] = array( $download );
 
 		$new_meta = array(
 			'cart_details' = $cart_details
