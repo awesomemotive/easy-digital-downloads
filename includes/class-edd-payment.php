@@ -86,26 +86,34 @@ class EDD_Payment {
 		$defaults = array(
 			'quantity'    => 1,
 			'price_id'    => false,
-			'amount'      => '0.00',
+			'amount'      => false,
 			'tax'         => 0,
 			'fees'        => 0
 		);
 
 		$args = wp_parse_args( apply_filters( 'edd_payment_add_download_args', $args ), $defaults );
 
-		// Deal with variable pricing
-		if( edd_has_variable_prices( $download_id ) ) {
-			$prices = get_post_meta( $download_id, 'edd_variable_prices', true );
-
-			if( $args['price_id'] && array_key_exists( $args['price_id'], (array) $prices ) ) {
-				$item_price = $prices[$args['price_id']]['amount'];
-			} else {
-				// Variably priced item with no price ID can't be added
-				return false;
-			}
+		// Allow overriding the price
+		if( $args['amount'] ) {
+			$item_price = $args['amount'];
 		} else {
-			$item_price = edd_get_download_price( $download_id );
+			// Deal with variable pricing
+			if( edd_has_variable_prices( $download_id ) ) {
+				$prices = get_post_meta( $download_id, 'edd_variable_prices', true );
+
+				if( $args['price_id'] && array_key_exists( $args['price_id'], (array) $prices ) ) {
+					$item_price = $prices[$args['price_id']]['amount'];
+				} else {
+					$item_price = edd_get_lowest_price_option( $download_id );
+					$args['price_id'] = edd_get_lowest_price_id( $download_id );
+				}
+			} else {
+				$item_price = edd_get_download_price( $download_id );
+			}
 		}
+
+		// Sanitizing the price here so we don't have a dozen calls later
+		$item_price = edd_sanitize_amoun( $item_price );
 
 		// Silly item_number array
 		$item_number = array(
@@ -117,13 +125,14 @@ class EDD_Payment {
 			)
 		);
 
-		$cart_details[0] = array(
+		$cart_details[] = array(
 			'name'          => $download->post_title,
 			'id'		    => $download_id,
 			'item_number'   => $item_number,
-			'price'         => edd_sanitize_amount( $item_price ),
+			'price'         => $item_price,
 			'quantity'      => $args['quantity'],
-			'tax'           => $args['tax']
+			'tax'           => $args['tax'],
+			'subtotal'      => ( $item_price * $args['quantity'] )
 		);
 
 		$purchase_data = array(
@@ -132,7 +141,7 @@ class EDD_Payment {
 		);
 
 		// Retrieve the current meta
-		$meta = get_post_meta( $download_id, '_edd_payment_meta' );
+		$meta = edd_get_payment_meta( $download_id );
 
 		$new_meta = array(
 			'downloads'    = array( $download ),
