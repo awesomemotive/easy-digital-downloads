@@ -5,7 +5,7 @@
  * This class is for working with payments in EDD.
  *
  * @package     EDD
- * @subpackage  Classes/Payments
+ * @subpackage  Classes/Payment
  * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.2
@@ -17,11 +17,11 @@ if( ! defined( 'ABSPATH' ) ) exit;
 
 
 /**
- * EDD_Payments Class
+ * EDD_Payment Class
  *
  * @since 2.2
  */
-class EDD_Payments {
+class EDD_Payment {
 
 	/**
 	 * The Payment we are working with
