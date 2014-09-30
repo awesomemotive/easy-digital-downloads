@@ -344,6 +344,48 @@ function edd_get_lowest_price_option( $download_id = 0 ) {
 }
 
 /**
+ * Retrieves the ID for the cheapest price option of a variable priced download
+ *
+ * @since 2.2
+ * @param int $download_id ID of the download
+ * @return int ID of the lowest price
+ */
+function edd_get_lowest_price_id( $download_id = 0 ) {
+	if ( empty( $download_id ) )
+		$download_id = get_the_ID();
+
+	if ( ! edd_has_variable_prices( $download_id ) ) {
+		return edd_get_download_price( $download_id );
+	}
+
+	$prices = edd_get_variable_prices( $download_id );
+
+	$low = 0.00;
+
+	if ( ! empty( $prices ) ) {
+
+		foreach ( $prices as $key => $price ) {
+
+			if ( empty( $price['amount'] ) ) {
+				continue;
+			}
+
+			if ( ! isset( $min ) ) {
+				$min = $price['amount'];
+			} else {
+				$min = min( $min, $price['amount'] );
+			}
+
+			if ( $price['amount'] == $min ) {
+				$min_id = $key;
+			}
+		}
+	}
+
+	return (int) $$min_id;
+}
+
+/**
  * Retrieves most expensive price option of a variable priced download
  *
  * @since 1.4.4
