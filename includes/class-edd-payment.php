@@ -88,7 +88,7 @@ class EDD_Payment {
 			'price_id'    => false,
 			'amount'      => false,
 			'tax'         => 0,
-			'fees'        => 0
+			'fees'        => array()
 		);
 
 		$args = wp_parse_args( apply_filters( 'edd_payment_add_download_args', $args ), $defaults );
@@ -142,9 +142,9 @@ class EDD_Payment {
 
 		// Retrieve the current meta
 		$meta = edd_get_payment_meta( $download_id );
+		$meta['downloads'][] = array( $download );
 
 		$new_meta = array(
-			'downloads'    = array( $download ),
 			'cart_details' = $cart_details
 		);
 
