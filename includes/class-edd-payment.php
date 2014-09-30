@@ -212,8 +212,13 @@ class EDD_Payment {
 	 * @param string $note The note to add
 	 * @return void
 	 */
-	public function add_note( $note = '' ) {
+	public function add_note( $note = false ) {
+		// Bail if no note specified
+		if( ! $note ) {
+			return false;
+		}
 
+		edd_insert_payment_note( $this->payment_id, $note );
 	}
 
 
