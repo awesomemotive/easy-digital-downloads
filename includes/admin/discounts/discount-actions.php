@@ -152,6 +152,11 @@ add_action( 'edd_delete_discount', 'edd_delete_discount' );
  * @return void
  */
 function edd_activate_discount( $data ) {
+
+	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'edd_discount_nonce' ) ) {
+		wp_die( __( 'Trying to cheat or something?', 'edd' ), __( 'Error', 'edd' ) );
+	}
+
 	$id = absint( $data['discount'] );
 	edd_update_discount_status( $id, 'active' );
 }
@@ -167,7 +172,12 @@ add_action( 'edd_activate_discount', 'edd_activate_discount' );
  * @uses edd_update_discount_status()
  * @return void
 */
-function edd_deactivate_discount( $data) {
+function edd_deactivate_discount( $data ) {
+
+	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'edd_discount_nonce' ) ) {
+		wp_die( __( 'Trying to cheat or something?', 'edd' ), __( 'Error', 'edd' ) );
+	}
+	
 	$id = absint( $data['discount'] );
 	edd_update_discount_status( $id, 'inactive' );
 }
