@@ -79,28 +79,45 @@ add_action( 'edd_add_discount', 'edd_add_discount' );
  * @return void
  */
 function edd_edit_discount( $data ) {
-	if ( isset( $data['edd-discount-nonce'] ) && wp_verify_nonce( $data['edd-discount-nonce'], 'edd_discount_nonce' ) ) {
-		// Setup the discount code details
-		$discount = array();
 
-		foreach ( $data as $key => $value ) {
-			if ( $key != 'edd-discount-nonce' && $key != 'edd-action' && $key != 'discount-id' && $key != 'edd-redirect' ) {
-				if ( is_string( $value ) || is_int( $value ) )
-					$discount[ $key ] = strip_tags( addslashes( $value ) );
-				elseif ( is_array( $value ) )
-					$discount[ $key ] = array_map( 'absint', $value );
-			}
-		}
-
-		$old_discount = edd_get_discount_by( 'code', $data['code'] );
-		$discount['uses'] = edd_get_discount_uses( $old_discount->ID );
-
-		if ( edd_store_discount( $discount, $data['discount-id'] ) ) {
-			wp_redirect( add_query_arg( 'edd-message', 'discount_updated', $data['edd-redirect'] ) ); edd_die();
-		} else {
-			wp_redirect( add_query_arg( 'edd-message', 'discount_update_failed', $data['edd-redirect'] ) ); edd_die();
-		}
+	if ( ! isset( $data['edd-discount-nonce'] ) || ! wp_verify_nonce( $data['edd-discount-nonce'], 'edd_discount_nonce' ) ) {
+		return;
 	}
+
+	// Setup the discount code details
+	$discount = array();
+
+	foreach ( $data as $key => $value ) {
+
+		if ( $key != 'edd-discount-nonce' && $key != 'edd-action' && $key != 'discount-id' && $key != 'edd-redirect' ) {
+
+			if ( is_string( $value ) || is_int( $value ) ) {
+
+				$discount[ $key ] = strip_tags( addslashes( $value ) );
+
+			} elseif ( is_array( $value ) ) {
+
+				$discount[ $key ] = array_map( 'absint', $value );
+
+			}
+
+		}
+
+	}
+
+	$old_discount     = edd_get_discount_by( 'code', $data['code'] );
+	$discount['uses'] = edd_get_discount_uses( $old_discount->ID );
+
+	if ( edd_store_discount( $discount, $data['discount-id'] ) ) {
+
+		wp_redirect( add_query_arg( 'edd-message', 'discount_updated', $data['edd-redirect'] ) ); edd_die();
+
+	} else {
+
+		wp_redirect( add_query_arg( 'edd-message', 'discount_update_failed', $data['edd-redirect'] ) ); edd_die();
+
+	}
+
 }
 add_action( 'edd_edit_discount', 'edd_edit_discount' );
 
