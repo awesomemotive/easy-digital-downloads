@@ -44,7 +44,7 @@ function edd_download_shortcode( $atts, $content = null ) {
 	if( isset( $atts['color'] )	)
 		$atts['color'] = ( $atts['color'] == 'inherit' ) ? '' : $atts['color'];
 
-	if( isset( $atts['sku'] ) ) {
+	if( ! empty( $atts['sku'] ) ) {
 
 		$download = edd_get_download_by( 'sku', $atts['sku'] );
 		$atts['download_id'] = $download->ID;
