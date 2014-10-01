@@ -97,7 +97,7 @@ class EDD_Export {
 		$i = 1;
 		foreach( $cols as $col_id => $column ) {
 			echo '"' . $column . '"';
-			echo $i == count( $cols ) ? '' : ',';
+			echo $i == count( $cols ) ? '' : ';';
 			$i++;
 		}
 		echo "\r\n";
@@ -148,7 +148,7 @@ class EDD_Export {
 				// Make sure the column is valid
 				if ( array_key_exists( $col_id, $cols ) ) {
 					echo '"' . $column . '"';
-					echo $i == count( $cols ) ? '' : ',';
+					echo $i == count( $cols ) ? '' : ';';
 					$i++;
 				}
 			}
