@@ -358,7 +358,7 @@ $address        = ! empty( $user_info['address'] ) ? $user_info['address'] : arr
 									<span><?php printf( __( 'Purchased %s', 'edd' ), edd_get_label_plural() ); ?></span>
 								</h3>
 								
-								<?php if ( $cart_items ) :
+								<?php if ( is_array( $cart_items ) ) :
 									$i = 0;
 									foreach ( $cart_items as $key => $cart_item ) : ?>
 									<div class="row">
