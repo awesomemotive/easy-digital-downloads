@@ -143,10 +143,17 @@ add_action( 'edd_tools_tab_api_keys', 'edd_tools_api_keys_display' );
  * @return      void
  */
 function edd_tools_banned_emails_save() {
-	if( !wp_verify_nonce( $_POST['edd_banned_emails_nonce'], 'edd_banned_emails_nonce' ) )
-		return;
 
 	global $edd_options;
+
+	if( ! wp_verify_nonce( $_POST['edd_banned_emails_nonce'], 'edd_banned_emails_nonce' ) ) {
+		return;
+	}
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
 
 	// Sanitize the input
 	$emails = array_map( 'trim', explode( "\n", $_POST['banned_emails'] ) );
