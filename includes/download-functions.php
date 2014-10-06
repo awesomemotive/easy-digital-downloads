@@ -282,7 +282,7 @@ function edd_get_price_option_name( $download_id = 0, $price_id = 0, $payment_id
 			$price_name = $prices[ $price_id ]['name'];
 	}
 
-	return apply_filters( 'edd_get_price_option_name', $price_name, $download_id, $payment_id );
+	return apply_filters( 'edd_get_price_option_name', $price_name, $download_id, $payment_id, $price_id );
 }
 
 /**
