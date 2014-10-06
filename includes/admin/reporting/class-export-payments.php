@@ -150,7 +150,7 @@ class EDD_Payments_Export extends EDD_Export {
 						$price_options = $downloads[ $key ]['item_number']['options'];
 
 						if ( isset( $price_options['price_id'] ) ) {
-							$products .= edd_get_price_option_name( $id, $price_options['price_id'] ) . ' - ';
+							$products .= edd_get_price_option_name( $id, $price_options['price_id'], $payment->ID ) . ' - ';
 						}
 					}
 					$products .= html_entity_decode( edd_currency_filter( $price ) );
