@@ -289,6 +289,10 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 */
 	public function process_bulk_action() {
 
+		if( empty( $_REQUEST['_wpnonce'] ) ) {
+			return;
+		}
+
 		if( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-discounts' ) ) {
 			return;
 		}
