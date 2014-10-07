@@ -49,14 +49,12 @@ function edd_get_cart_content_details() {
 		$item_price = edd_get_cart_item_price( $item['id'], $item['options'] );
 		$discount   = apply_filters( 'edd_get_cart_content_details_item_discount_amount', edd_get_cart_item_discount_amount( $item ), $item );
 		$quantity   = edd_get_cart_item_quantity( $item['id'], $item['options'] );
-		$subtotal   = ( $item_price * $quantity ) - $discount;
-		$tax        = edd_get_cart_item_tax( $item['id'], $item['options'], $subtotal );
+		$subtotal   = $item_price * $quantity;
+		$tax        = edd_get_cart_item_tax( $item['id'], $item['options'], $subtotal - $discount );
 
 		if( edd_prices_include_tax() ) {
 			$subtotal -= $tax;
 		}
-
-		$total      = round( ( $subtotal + $tax ), edd_currency_decimal_filter() );
 
 		$details[ $key ]  = array(
 			'name'        => get_the_title( $item['id'] ),
@@ -68,7 +66,7 @@ function edd_get_cart_content_details() {
 			'subtotal'    => round( $subtotal, edd_currency_decimal_filter() ),
 			'tax'         => round( $tax, edd_currency_decimal_filter() ),
 			'fees'        => array(),
-			'price'       => $total
+			'price'       => round( ( $subtotal - $discount + $tax ), edd_currency_decimal_filter() )
 		);
 
 	}
@@ -573,10 +571,11 @@ function edd_get_cart_subtotal() {
 function edd_get_cart_total( $discounts = false ) {
 	global $edd_options;
 
-	$subtotal = edd_get_cart_subtotal();
-	$cart_tax = edd_get_cart_tax();
-	$fees     = edd_get_cart_fee_total();
-	$total    = $subtotal + $cart_tax + $fees;
+	$subtotal  = edd_get_cart_subtotal();
+	$discounts = edd_get_cart_discounted_amount();
+	$cart_tax  = edd_get_cart_tax();
+	$fees      = edd_get_cart_fee_total();
+	$total     = $subtotal - $discounts + $cart_tax + $fees;
 
 	if( $total < 0 )
 		$total = 0.00;
