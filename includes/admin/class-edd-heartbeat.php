@@ -122,7 +122,7 @@ class EDD_Heartbeat {
 				// Only proceed if our EDD data is present
 				if ( ! data['edd-total-payments'] )
 					return;
-				console.log('tick');
+
 				// Update sale count and bold it to provide a highlight
 				$('.edd_dashboard_widget .table_totals .b.b-earnings').text( data['edd-total-earnings'] ).css( 'font-weight', 'bold' );
 				$('.edd_dashboard_widget .table_totals .b.b-sales').text( data['edd-total-payments'] ).css( 'font-weight', 'bold' );
