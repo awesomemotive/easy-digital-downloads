@@ -506,7 +506,7 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 	</td>
 
 	<td>
-		<span><?php echo $key; ?></span>
+		<span class="edd_price_id"><?php echo $key; ?></span>
 	</td>
 
 	<?php do_action( 'edd_download_price_table_row', $post_id, $key, $args ); ?>

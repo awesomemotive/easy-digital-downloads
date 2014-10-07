@@ -28,11 +28,15 @@ jQuery(document).ready(function ($) {
 
 			clone.find( 'td input, td select' ).val( '' );
 			clone.find( 'input, select' ).each(function() {
-				var name 	= $( this ).attr( 'name' );
+				var name = $( this ).attr( 'name' );
 
 				name = name.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
 
 				$( this ).attr( 'name', name ).attr( 'id', name );
+			});
+
+			clone.find( 'span.edd_price_id' ).each(function() {
+				$( this ).text( parseInt( count ) );
 			});
 
 			return clone;
