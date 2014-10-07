@@ -578,7 +578,7 @@ function edd_email_tag_file_urls( $payment_id ) {
 		}
 		elseif ( edd_is_bundled_product( $item['id'] ) ) {
 
-			$bundled_products = edd_get_bundled_products( $item['id'] );
+			$bundled_products = apply_filters( 'edd_email_tag_bundled_products', edd_get_bundled_products( $item['id'] ), $item, $payment_id, 'file_urls' );
 
 			foreach ( $bundled_products as $bundle_item ) {
 
