@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.7
 Tested up to: 4.1
 
-Stable Tag: 2.1.4
+Stable Tag: 2.1.5
 
 License: GNU Version 2 or Any Later Version
 
@@ -183,6 +183,26 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.1.5, October 8, 2014 =
+
+* Fix: Flat rate discounts can result in negative amounts in PayPal, causing the purchase to be rejected
+* Fix: Cart items that are tax exclusive still display the tax rate
+* Fix: console.log() left erroneously in Heartbeat API integration
+* Fix: microdata tag was missing from the shortcode-content-price.php template
+* Fix: Plugin text domain loaded too early, needed to be done on plugins_loaded
+* Fix: Cart fees incorrectly attached to all cart items
+* Fix: edd_settings_sanitize filter returning incorrect value
+* Fix: HTML encoding issue with email subjects
+* Fix: Subtotal should be amount before discounts, not after
+* Fix: Incorrect item amount on the Sales log tag
+* Fix: Item quantities not displayed on email purchase receipts
+* Tweak: Introduced edd_email_tag_bundled_products filter
+* Tweak: Pass the payment ID to the edd_get_price_option_name function() calls
+* Tweak: Add the price ID to the edd_get_price_option_name filter
+* Tweak: Added the transaction ID to the sales endpoint for the REST API
+* Tweak: Display the Price ID on each row of variable prices
+* Tweak: Verify payment update was successful during edd_update_payment_details
 
 = 2.1.4, September 22, 2014 =
 
