@@ -76,7 +76,7 @@
 #edd_checkout_cart td:last-child,
 #edd_checkout_cart th.edd_cart_total { text-align: right; }
 #edd_checkout_cart td img { float: left; margin: 0 8px 0 0; background: none; padding: 0; border: none; }
-#edd_checkout_cart input.edd-item-quantity { width: 3em; max-height: 90%; padding: 2px; }
+#edd_checkout_cart input.edd-item-quantity { width: 3em; padding: 2px; }
 #edd_checkout_cart .edd_discount { display: inline-block; margin-left: 5px; }
 .edd_discount_remove { display: inline-block; width: 10px; height: 11px; background: url( images/xit.gif ) 0 0 no-repeat; position: relative; top: 3px; }
 .edd_discount_remove:hover { background-position: -10px 0; }
