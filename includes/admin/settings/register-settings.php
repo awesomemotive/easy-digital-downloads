@@ -706,7 +706,7 @@ function edd_settings_sanitize( $input = array() ) {
 
 		if ( $type ) {
 			// Field type specific filter
-			$input[$key] = apply_filters( 'edd_settings_sanitize_' . $type, $value, $key );
+			$value = apply_filters( 'edd_settings_sanitize_' . $type, $value, $key );
 		}
 
 		// General filter
