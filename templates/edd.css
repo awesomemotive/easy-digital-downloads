@@ -76,7 +76,7 @@
 #edd_checkout_cart td:last-child,
 #edd_checkout_cart th.edd_cart_total { text-align: right; }
 #edd_checkout_cart td img { float: left; margin: 0 8px 0 0; background: none; padding: 0; border: none; }
-#edd_checkout_cart input.edd-item-quantity { width: 3em; max-height: 90%; padding: 2px; }
+#edd_checkout_cart input.edd-item-quantity { width: 3em; padding: 2px; }
 #edd_checkout_cart .edd_discount { display: inline-block; margin-left: 5px; }
 .edd_discount_remove { display: inline-block; width: 10px; height: 11px; background: url( images/xit.gif ) 0 0 no-repeat; position: relative; top: 3px; }
 .edd_discount_remove:hover { background-position: -10px 0; }
@@ -194,8 +194,8 @@ table#edd_purchase_receipt .edd_receipt_payment_status.cancelled,
 table#edd_purchase_receipt .edd_receipt_payment_status.revoked,
 table#edd_purchase_receipt .edd_receipt_payment_status.failed { color: #f73f2e; }
 table#edd_purchase_receipt_products li { list-style: none; margin: 0 0 8px 10px; }
-table#edd_purchase_receipt ul, table#edd_purchase_receipt_products ul { margin: 0; padding: 0; }
-table#edd_purchase_receipt li { list-style: none; margin: 0 0 8px 0; }
+table#edd_purchase_receipt ul, table#edd_purchase_receipt_products ul.edd_purchase_receipt_files { margin: 0; padding: 0; }
+table#edd_purchase_receipt li.edd_download_file { list-style: none; margin: 0 0 8px 0; }
 table#edd_purchase_receipt_products .edd_purchase_receipt_product_notes { font-style: italic; }
 table#edd_purchase_receipt_products .edd_purchase_receipt_product_name { font-weight: bold; }
 table#edd_purchase_receipt_products .edd_bundled_product_name { font-style: italic; font-weight: bold; }
