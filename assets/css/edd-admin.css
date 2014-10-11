@@ -263,3 +263,59 @@ td.edd_order_price { text-align: right; }
 /* API Table Styles
 -------------------------------------------------------------- */
 .download_page_edd-tools .apikeys .column-user { width: 192px; }
+
+/* CSS for Tabs */
+
+#tab_container ul {
+list-style: none;
+margin: 0;
+padding: 0;
+background: #f1f1f1;
+float: left;
+max-width:200px;
+padding-top: 20px;
+/*list-style-type: square;*/
+}
+
+#tab_container ul li:first-child.selected-tab {
+border-top: none;
+}
+
+#tab_container ul li a.selected-tab {
+font-weight: bold;
+text-decoration: none;
+}
+
+#tab_container ul li a {
+text-decoration: none;
+}
+
+#tab_container ul li {
+margin-bottom:10px;
+}
+
+#tab_container .panel-container {
+padding:10px;
+overflow:auto;
+}
+
+#tab_container .row{ 
+    padding-top:10px; 
+    padding-bottom:12px;
+}
+
+#tab_container .col-title{
+    float:left;
+    min-width:180px;
+    max-width:180px;
+}
+
+#tab_container .col-title strong{
+    white-space: pre;
+}
+
+@media (max-width:680px) {
+    #tab_container ul {
+        float:none;
+    }
+}
