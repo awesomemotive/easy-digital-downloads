@@ -860,9 +860,10 @@ function edd_get_pages( $force = false ) {
  * @since 1.0
  * @param array $args Arguments passed by the setting
  * @return void
+ * @deprecated not used any longer. Fallback function
  */
 function edd_header_callback( $args ) {
-	echo '<hr/>';
+	echo '&nbsp;';
 }
 
 /**
