@@ -40,7 +40,7 @@ jQuery(document).ready(function ($) {
 			});
 
 			clone.find( '.edd_repeatable_default_input' ).each( function() {
-				$( this ).val( parseInt( count ) );
+				$( this ).val( parseInt( count ) ).removeAttr('checked');
 			})
 
 			return clone;
