@@ -281,7 +281,6 @@ function edd_get_default_variable_price( $download_id ) {
 	$default_price_id = get_post_meta( $download_id, '_edd_default_price_id', true );
 
 	if ( $default_price_id === '' ||  ! isset( $prices[$default_price_id] ) ) {
-		ksort( $prices );
 		$default_price_id = current( array_keys( $prices ) );
 	}
 
