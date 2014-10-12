@@ -39,6 +39,10 @@ jQuery(document).ready(function ($) {
 				$( this ).text( parseInt( count ) );
 			});
 
+			clone.find( '.edd_repeatable_default_input' ).each( function() {
+				$( this ).val( parseInt( count ) );
+			})
+
 			return clone;
 		},
 

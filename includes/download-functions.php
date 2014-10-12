@@ -265,6 +265,31 @@ function edd_has_variable_prices( $download_id ) {
 }
 
 /**
+ * Returns the default price ID for variable pricing, or the first
+ * price if none is set
+ *
+ * @param  int $download_id ID number of the download to check
+ * @return int              The Price ID to select by default
+ */
+function edd_get_default_variable_price( $download_id ) {
+
+	if ( ! edd_has_variable_prices( $download_id ) ) {
+		return false;
+	}
+
+	$prices = edd_get_variable_prices( $download_id );
+	$default_price_id = get_post_meta( $download_id, '_edd_default_price_id', true );
+
+	if ( $default_price_id === '' ||  ! isset( $prices[$default_price_id] ) ) {
+		ksort( $prices );
+		$default_price_id = current( array_keys( $prices ) );
+	}
+
+	return apply_filters( 'edd_variable_default_price_id', absint( $default_price_id ), $download_id );
+
+}
+
+/**
  * Retrieves the name of a variable price option
  *
  * @since 1.0.9
