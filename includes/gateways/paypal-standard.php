@@ -558,3 +558,21 @@ function edd_paypal_get_payment_transaction_id( $payment_id ) {
 	return apply_filters( 'edd_paypal_set_payment_transaction_id', $transaction_id, $payment_id );
 }
 add_filter( 'edd_get_payment_transaction_id-paypal', 'edd_paypal_get_payment_transaction_id', 10, 1 );
+
+/**
+ * Given a transaction ID, generate a link to the PayPal transaction ID details
+ *
+ * @since  2.2
+ * @param  string $transaction_id The Transaction ID
+ * @param  int    $payment_id     The payment ID for this transaction
+ * @return string                 A link to the PayPal transaction details
+ */
+function edd_paypal_link_transaction_id( $transaction_id, $payment_id ) {
+
+	$paypal_base_url = 'https://history.paypal.com/cgi-bin/webscr?cmd=_history-details-from-hub&id=';
+	$transaction_url = '<a href="' . $paypal_base_url . $transaction_id . '" target="_blank">' . $transaction_id . '</a>';
+
+	return apply_filters( 'edd_paypal_link_payment_details_transaction_id', $transaction_url );
+
+}
+add_filter( 'edd_payment_details_transaction_id-paypal', 'edd_paypal_link_transaction_id', 10, 2 );
