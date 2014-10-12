@@ -116,6 +116,13 @@ class Tests_Downloads extends WP_UnitTestCase {
 		$this->assertTrue( edd_has_variable_prices( $this->_post->ID ) );
 	}
 
+	public function test_default_variable_price() {
+		$this->assertEquals( 0, edd_get_default_variable_price( $this->_post->ID ) );
+
+		update_post_meta( $this->_post->ID, '_edd_default_price_id', 1 );
+		$this->assertEquals( 1, edd_get_default_variable_price( $this->_post->ID ) );
+	}
+
 	public function test_get_price_option_name() {
 		$this->assertEquals( 'Simple', edd_get_price_option_name( $this->_post->ID, 0 ) );
 		$this->assertEquals( 'Advanced', edd_get_price_option_name( $this->_post->ID, 1 ) );
