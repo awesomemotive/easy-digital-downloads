@@ -88,7 +88,7 @@
 #edd_checkout_form_wrap label { font-weight: bold; display:block; position: relative; line-height: 100%; font-size: 95%; margin: 0 0 5px; }
 #edd_checkout_form_wrap label:after { display: block; visibility: hidden; float: none; clear: both; height: 0; text-indent: -9999px; content: "."; }
 #edd_checkout_form_wrap span.edd-description { color: #666; font-size: 80%; display: block; margin: 0 0 5px; }
-#edd_checkout_form_wrap input.edd-input, #edd_checkout_form_wrap textarea.edd-input { display:block; width: 80%; }
+#edd_checkout_form_wrap input.edd-input, #edd_checkout_form_wrap textarea.edd-input { display: inline-block; width: 70%; }
 #edd_checkout_form_wrap select.edd-select { display:block; width: 60%; }
 #edd_checkout_form_wrap select.edd-select.edd-select-small { display:inline; width: auto; }
 #edd_checkout_form_wrap input.edd-input.error, #edd_checkout_form_wrap textarea.edd-input.error { border-color: #c4554e; }
@@ -111,12 +111,15 @@
 #edd_checkout_form_wrap #edd-login-account-wrap,
 #edd_checkout_form_wrap #edd-new-account-wrap,
 #edd_checkout_form_wrap #edd_show_discount,
+#edd_checkout_form_wrap .edd-cart-adjustment,
+#edd_checkout_form_wrap #edd_final_total_wrap { background: #fafafa; color: #666; padding: 0.5em 1.387em; }
 #edd_checkout_form_wrap #edd-discount-code-wrap,
-#edd_checkout_form_wrap #edd_final_total_wrap { background: #fafafa; border: 1px solid #eee; color: #666; padding: 0.5em 1.387em; }
-#edd_checkout_form_wrap #edd-discount-code-wrap { padding: 1.387em; }
-#edd_checkout_form_wrap #edd-discount-code-wrap input.edd-input,
-#edd_checkout_form_wrap #edd-discount-code-wrap input.edd-submit { display: inline-block; }
-#edd_checkout_form_wrap #edd-discount-code-wrap input.edd-submit { padding: 3px 12px; margin-bottom: 2px; }
+#edd_checkout_form_wrap #edd_final_total_wrap,
+#edd_checkout_form_wrap #edd_show_discount { border: 1px solid #eee; }
+#edd_checkout_form_wrap .edd-cart-adjustment { padding: 1.387em; }
+#edd_checkout_form_wrap .edd-cart-adjustment input.edd-input,
+#edd_checkout_form_wrap .edd-cart-adjustment input.edd-submit { display: inline-block; }
+#edd_checkout_form_wrap .edd-cart-adjustment input.edd-submit { padding: 3px 12px; margin-bottom: 2px; }
 #edd_checkout_form_wrap #edd-discount-error-wrap { width: 100%; display: inline-block; margin: 1em 0 0; }
 #edd_checkout_form_wrap #edd-new-account-wrap,
 #edd_checkout_form_wrap #edd-login-account-wrap { margin: -1.387em -1.387em 21px -1.387em; border-left: none; border-right: none; border-top: none; }
