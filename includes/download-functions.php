@@ -268,6 +268,7 @@ function edd_has_variable_prices( $download_id ) {
  * Returns the default price ID for variable pricing, or the first
  * price if none is set
  *
+ * @since  2.2
  * @param  int $download_id ID number of the download to check
  * @return int              The Price ID to select by default
  */
