@@ -22,7 +22,7 @@ jQuery(document).ready(function ($) {
 				$( this ).val( row.find( 'select[name="' + $( this ).attr( 'name' ) + '"]' ).val() );
 			});
 
-			var count = row.parent().find( 'tr' ).length;
+			var count = row.parent().find( 'tr' ).length +1;
 
 			clone.removeClass( 'edd_add_blank' );
 
