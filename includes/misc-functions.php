@@ -299,6 +299,23 @@ function edd_is_host( $host = false ) {
 }
 
 
+/**
+ * Check if AJAX works as expected
+ *
+ * @since 2.2
+ * @return bool True if AJAX works, false otherwise
+ */
+function edd_has_ajax() {
+	$params = array(
+		'sslverify'     => false,
+		'timeout'       => 60
+	);
+
+	$ajax = wp_remote_retrieve_body( wp_remote_get( admin_url( 'admin-ajax.php' ), $params ) );
+
+	return ( $ajax == 0 ? true : false );
+}
+
 
 /**
  * Get Currencies
