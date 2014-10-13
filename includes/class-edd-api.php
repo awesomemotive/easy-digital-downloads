@@ -48,7 +48,7 @@ class EDD_API {
 	 * @access private
 	 * @since 1.5
 	 */
-	private $log_requests = true;
+	public $log_requests = true;
 
 	/**
 	 * Is this a valid request?
