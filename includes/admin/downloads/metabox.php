@@ -409,9 +409,9 @@ function edd_render_price_field( $post_id ) {
 				<thead>
 					<tr>
 						<th style="width: 20px"></th>
-						<th class="edd_repeatable_default"><?php _e( 'Default', 'edd' ); ?></th>
 						<th><?php _e( 'Option Name', 'edd' ); ?></th>
 						<th style="width: 100px"><?php _e( 'Price', 'edd' ); ?></th>
+						<th class="edd_repeatable_default"><?php _e( 'Default', 'edd' ); ?></th>
 						<?php do_action( 'edd_download_price_table_head', $post_id ); ?>
 						<th style="width: 2%"></th>
 					</tr>
@@ -480,9 +480,6 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 		<span class="edd_draghandle"></span>
 		<input type="hidden" name="edd_variable_prices[<?php echo $key; ?>][index]" class="edd_repeatable_index" value="<?php echo $index; ?>"/>
 	</td>
-	<td class="edd_repeatable_default_wrapper">
-		<input type="radio" <?php checked( $default_price_id, $key, true ); ?> class="edd_repeatable_default_input" name="_edd_default_price_id" value="<?php echo $key; ?>" />
-	</td>
 	<td>
 		<?php echo EDD()->html->text( array(
 			'name'  => 'edd_variable_prices[' . $key . '][name]',
@@ -509,6 +506,10 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 			<?php echo EDD()->html->text( $price_args ); ?>
 			<?php echo edd_currency_filter( '' ); ?>
 		<?php endif; ?>
+	</td>
+
+	<td class="edd_repeatable_default_wrapper">
+		<input type="radio" <?php checked( $default_price_id, $key, true ); ?> class="edd_repeatable_default_input" name="_edd_default_price_id" value="<?php echo $key; ?>" />
 	</td>
 
 	<?php do_action( 'edd_download_price_table_row', $post_id, $key, $args ); ?>
