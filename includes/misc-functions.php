@@ -295,6 +295,10 @@ function edd_is_host( $host = false ) {
 				if( strpos( DB_HOST, '.sysfix.eu' ) !== false )
 					$return = true;
 				break;
+			case 'flywheel':
+				if( strpos( $_SERVER['SERVER_NAME'], 'Flywheel' ) !== false )
+					$return = true;
+				break;
 			default:
 				$return = false;
 		}
