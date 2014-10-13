@@ -1387,8 +1387,8 @@ class EDD_API {
 						</th>
 						<td>
 							<?php if ( empty( $user->edd_user_public_key ) ) { ?>
-							<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
-							<span class="description"><?php _e( 'Generate API Key', 'edd' ); ?></span>
+								<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
+								<span class="description"><?php _e( 'Generate API Key', 'edd' ); ?></span>
 							<?php } else { ?>
 								<strong><?php _e( 'Public key:', 'edd' ); ?>&nbsp;</strong><span id="publickey"><?php echo $user->edd_user_public_key; ?></span><br/>
 								<strong><?php _e( 'Secret key:', 'edd' ); ?>&nbsp;</strong><span id="privatekey"><?php echo $user->edd_user_secret_key; ?></span><br/>
@@ -1412,6 +1412,12 @@ class EDD_API {
 	 * @return void
 	 */
 	public function process_api_key( $args ) {
+
+		if( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'edd-api-nonce' ) ) {
+
+			wp_die( __( 'Nonce verification failed', 'edd' ) );
+
+		}
 
 		if( is_numeric( $args['user_id'] ) ) {
 			$user_id    = isset( $args['user_id'] ) ? absint( $args['user_id'] ) : get_current_user_id();
