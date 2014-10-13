@@ -105,6 +105,14 @@ function edd_admin_messages() {
 		echo '</div>';
 	}
 
+	if( ! edd_has_ajax() && ! get_user_meta( get_current_user_id(), '_edd_admin_ajax_inaccessible_dismissed', true ) && current_user_can( 'manage_shop_settings' ) ) {
+		echo '<div class="error">';
+			echo '<p>' . __( 'Your site appears to be blocking the WordPress ajax interface. This may causes issues with your store.', 'edd' ) . '</p>';
+			echo '<p>' . sprintf( __( 'Please see <a href="%s" target="_blank">this reference</a> for possible solutions.', 'edd' ), 'https://easydigitaldownloads.com/docs/host-is-blocking-admin-ajax' ) . '</p>';
+			echo '<p><a href="' . add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'admin_ajax_inaccessible' ) ) . '">' . __( 'Dismiss Notice', 'edd' ) . '</a></p>';
+		echo '</div>';
+	}
+
 	settings_errors( 'edd-notices' );
 }
 add_action( 'admin_notices', 'edd_admin_messages' );

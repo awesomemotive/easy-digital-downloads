@@ -308,7 +308,6 @@ function edd_is_host( $host = false ) {
 }
 
 
-
 /**
  * Get Currencies
  *
