@@ -478,7 +478,7 @@ class EDD_CLI extends WP_CLI_Command {
 			'discount'      => 'none'
 		);
 
-		// No specied product
+		// No specified product
 		if( ! $id ) {
 
 			// Build an array of $number products
