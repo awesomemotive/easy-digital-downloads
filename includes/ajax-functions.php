@@ -33,15 +33,33 @@ function edd_is_ajax_enabled() {
  * @since 2.2
  * @return bool True if AJAX works, false otherwise
  */
-function edd_has_ajax() {
+function edd_test_ajax_works() {
+
 	$params = array(
 		'sslverify'     => false,
-		'timeout'       => 60
+		'timeout'       => 60,
 	);
 
-	$ajax = wp_remote_retrieve_body( wp_remote_get( admin_url( 'admin-ajax.php' ), $params ) );
+	$ajax  = wp_remote_get( add_query_arg( 'action', 'edd_test_ajax', edd_get_ajax_url() ), $params );
+	$works = true;
 
-	return ( $ajax == 0 ? true : false );
+	if( empty( $ajax['response'] ) ) {
+		$works = false;
+	}
+
+	if( empty( $ajax['response']['code'] ) || 200 !== (int) $ajax['response']['code'] ) {
+		$works = false;
+	}
+
+	if( empty( $ajax['response']['message'] ) || 'OK' !== $ajax['response']['message'] ) {
+		$works = false;
+	}
+
+	if( ! isset( $ajax['body'] ) || 0 !== (int) $ajax['body'] ) {
+		$works = false;
+	}
+
+	return $works;
 }
 
 /**
