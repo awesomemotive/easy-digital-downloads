@@ -509,12 +509,12 @@ class EDD_CLI extends WP_CLI_Command {
 		foreach( $products as $key => $download ) {
 			// Deal with variable pricing
 			if( edd_has_variable_prices( $download->ID ) ) {
-				$prices		= get_post_meta( $download->ID, 'edd_variable_prices', true );
+				$prices = get_post_meta( $download->ID, 'edd_variable_prices', true );
 				
 				if( $id && $price_id && array_key_exists( $price_id, (array) $prices ) ) {
 					$item_price = $prices[$price_id]['amount'];
 				} else {
-					$item_price	= $prices[0]['amount'];
+					$item_price = $prices[0]['amount'];
 				}
 			} else {
 				$item_price = edd_get_download_price( $download->ID );
