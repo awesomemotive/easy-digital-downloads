@@ -35,6 +35,14 @@ jQuery(document).ready(function ($) {
 				$( this ).attr( 'name', name ).attr( 'id', name );
 			});
 
+			clone.find( 'span.edd_price_id' ).each(function() {
+				$( this ).text( parseInt( count ) );
+			});
+
+			clone.find( '.edd_repeatable_default_input' ).each( function() {
+				$( this ).val( parseInt( count ) ).removeAttr('checked');
+			})
+
 			return clone;
 		},
 
