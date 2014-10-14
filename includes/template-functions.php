@@ -103,7 +103,10 @@ function edd_get_purchase_link( $args = array() ) {
 
 	global $edd_displayed_form_ids;
 
-	$form_id = ! empty( $args['form_id'] ) ? 'id="'.$args['form_id'].'" ' : '';
+
+
+	$form_id = isset( $args['form_id'] ) ? ( ! empty( $args['form_id'] ) ? 'id="' . $args['form_id'] . '" ' : '' ) : 'id="edd_purchase_' . $args['download_id'] . '" ';
+
 
 	$args = apply_filters( 'edd_purchase_link_args', $args );
 
@@ -157,7 +160,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 		<?php do_action( 'edd_purchase_link_end', $args['download_id'], $args ); ?>
 
-	</form><!--end #<?php echo esc_attr( $form_id ); ?>-->
+	</form><!--end .edd_download_purchase_form.edd_purchase_<?php echo $args['download_id']; ?>-->
 <?php
 	$purchase_form = ob_get_clean();
 
