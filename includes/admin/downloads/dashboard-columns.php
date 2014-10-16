@@ -161,6 +161,38 @@ function edd_sort_downloads( $vars ) {
 }
 
 /**
+ * Sets restrictions on author of Downloads List Table
+ *
+ * @since  2.2
+ * @param  array $vars Array of all sort varialbes
+ * @return array       Array of all sort variables
+ */
+function edd_filter_downloads( $vars ) {
+	if ( isset( $vars['post_type'] ) && 'download' == $vars['post_type'] ) {
+
+		// If an author ID was passed, use it
+		if ( isset( $_REQUEST['author'] ) && ! current_user_can( 'view_shop_reports' ) ) {
+
+			$author_id = $_REQUEST['author'];
+			if ( (int) $author_id !== get_current_user_id() ) {
+				// Tried to view the products of another person, sorry
+				wp_die( __( 'You do not have permission to view this data.', 'edd' ), __( 'Error', 'edd' ) );
+			}
+			$vars = array_merge(
+				$vars,
+				array(
+					'author' => get_current_user_id()
+				)
+			);
+
+		}
+
+	}
+
+	return $vars;
+}
+
+/**
  * Download Load
  *
  * Sorts the downloads.
@@ -170,6 +202,7 @@ function edd_sort_downloads( $vars ) {
  */
 function edd_download_load() {
 	add_filter( 'request', 'edd_sort_downloads' );
+	add_filter( 'request', 'edd_filter_downloads' );
 }
 add_action( 'load-edit.php', 'edd_download_load', 9999 );
 
@@ -206,6 +239,13 @@ function edd_add_download_filters() {
 					echo '<option value="' . esc_attr( $term->slug ) . '"' . $selected . '>' . esc_html( $term->name ) .' (' . $term->count .')</option>';
 				}
 			echo "</select>";
+		}
+
+		if ( isset( $_REQUEST['all_posts'] ) && '1' === $_REQUEST['all_posts'] ) {
+			echo '<input type="hidden" name="all_posts" value="1" />';
+		} else if ( ! current_user_can( 'view_shop_reports' ) ) {
+			$author_id = get_current_user_id();
+			echo '<input type="hidden" name="author" value="' . $author_id . '" />';
 		}
 	}
 
