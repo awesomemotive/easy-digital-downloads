@@ -1582,6 +1582,7 @@ class EDD_API {
 
 		// Default sales return
 
+		$sales['sales']['today']         = $this->stats->get_sales( 0, 'today' );
 		$sales['sales']['current_month'] = $this->stats->get_sales( 0, 'this_month' );
 		$sales['sales']['last_month']    = $this->stats->get_sales( 0, 'last_month' );
 		$sales['sales']['totals']        = edd_get_total_sales();
@@ -1600,6 +1601,7 @@ class EDD_API {
 
 		// Default earnings return
 
+		$earnings['earnings']['today']         = $this->stats->get_earnings( 0, 'today' );
 		$earnings['earnings']['current_month'] = $this->stats->get_earnings( 0, 'this_month' );
 		$earnings['earnings']['last_month']    = $this->stats->get_earnings( 0, 'last_month' );
 		$earnings['earnings']['totals']        = edd_get_total_earnings();
