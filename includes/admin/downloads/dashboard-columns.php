@@ -245,7 +245,7 @@ function edd_add_download_filters() {
 			echo '<input type="hidden" name="all_posts" value="1" />';
 		} else if ( ! current_user_can( 'view_shop_reports' ) ) {
 			$author_id = get_current_user_id();
-			echo '<input type="hidden" name="author" value="' . $author_id . '" />';
+			echo '<input type="hidden" name="author" value="' . esc_attr( $author_id ) . '" />';
 		}
 	}
 
