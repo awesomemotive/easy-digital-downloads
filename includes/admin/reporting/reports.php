@@ -374,7 +374,7 @@ function edd_reports_tab_export() {
 						</div><!-- .inside -->
 					</div><!-- .postbox -->
 	
-					<div class="postbox">
+					<div class="postbox edd-export-download-history">
 						<h3><span><?php _e('Export Download History in CSV', 'edd'); ?></span></h3>
 						<div class="inside">
 							<p><?php _e( 'Download a CSV of all file downloads for a specific month and year.', 'edd' ); ?></p>
