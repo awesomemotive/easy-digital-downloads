@@ -329,6 +329,8 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 	$payment_status = strtolower( $data['payment_status'] );
 	$currency_code  = strtolower( $data['mc_currency'] );
 	$business_email = isset( $data['business'] ) && is_email( $data['business'] ) ? trim( $data['business'] ) : trim( $data['receiver_email'] );
+	$payment_meta = edd_get_payment_meta( $payment_id );
+
 
 	if ( edd_get_payment_gateway( $payment_id ) != 'paypal' ) {
 		return; // this isn't a PayPal standard IPN
@@ -344,7 +346,7 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 	}
 
 	// Verify payment currency
-	if ( $currency_code != strtolower( edd_get_currency() ) ) {
+	if ( $currency_code != $payment_meta['currency'] ) {
 
 		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid currency in IPN response. IPN data: %s', 'edd' ), json_encode( $data ) ), $payment_id );
 		edd_update_payment_status( $payment_id, 'failed' );
@@ -376,7 +378,6 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 			'address'    => $address
 		);
 
-		$payment_meta = edd_get_payment_meta( $payment_id );
 		$payment_meta['user_info'] = $user_info;
 		edd_update_payment_meta( $payment_id, '_edd_payment_meta', $payment_meta );
 	}
@@ -439,10 +440,10 @@ function edd_process_paypal_refund( $data ) {
 	$refund_amount  = $data['payment_gross'] * -1;
 
 	if ( number_format( (float) $refund_amount, 2 ) < number_format( (float) $payment_amount, 2 ) ) {
-		
+
 		edd_insert_payment_note( $payment_id, sprintf( __( 'Partial PayPal refund processed: %s', 'edd' ), $data['parent_txn_id'] ) );
 		return; // This is a partial refund
-	
+
 	}
 
 	edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Payment #%s Refunded for reason: %s', 'edd' ), $data['parent_txn_id'], $data['reason_code'] ) );
