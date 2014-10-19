@@ -193,9 +193,9 @@ jQuery(document).ready(function ($) {
 					file_frame = wp.media.frames.file_frame = wp.media( {
 						frame: 'post',
 						state: 'insert',
-						title: button.data( 'uploader_title' ),
+						title: button.data( 'uploader-title' ),
 						button: {
-							text: button.data( 'uploader_button_text' )
+							text: button.data( 'uploader-button-text' )
 						},
 						multiple: $( this ).data( 'multiple' ) == '0' ? false : true  // Set to true to allow multiple files to be selected
 					} );
