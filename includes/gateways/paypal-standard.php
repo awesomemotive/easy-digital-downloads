@@ -329,7 +329,7 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 	$payment_status = strtolower( $data['payment_status'] );
 	$currency_code  = strtolower( $data['mc_currency'] );
 	$business_email = isset( $data['business'] ) && is_email( $data['business'] ) ? trim( $data['business'] ) : trim( $data['receiver_email'] );
-	$payment_meta = edd_get_payment_meta( $payment_id );
+	$payment_meta   = edd_get_payment_meta( $payment_id );
 
 
 	if ( edd_get_payment_gateway( $payment_id ) != 'paypal' ) {
