@@ -761,7 +761,7 @@ add_action( 'edd_render_file_row', 'edd_render_file_row', 10, 3 );
 /**
  * Alter the Add to post button in the media manager for downloads
  *
- * @since  2.1.5
+ * @since  2.2
  * @param  array $strings Array of default strings for media manager
  * @return array          The altered array of strings for media manager
  */
