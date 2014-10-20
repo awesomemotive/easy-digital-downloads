@@ -81,6 +81,7 @@ grunt.initConfig({
           '!.gitignore',
           '!.gitmodules',
           '!.tx/**',
+          '!tests/**',
           '!**/Gruntfile.js',
           '!**/package.json',
           '!**/README.md',
