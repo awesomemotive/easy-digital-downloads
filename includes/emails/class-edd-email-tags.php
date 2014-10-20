@@ -387,10 +387,18 @@ function edd_email_tag_download_list( $payment_id ) {
 				$sku = edd_get_download_sku( $item['id'] );
 			}
 
+			if ( edd_item_quantities_enabled() ) {
+				$quantity = $item['quantity'];
+			}
+
 			$price_id = edd_get_cart_item_price_id( $item );
 			if ( $show_names ) {
 
 				$title = '<strong>' . get_the_title( $item['id'] ) . '</strong>';
+
+				if ( ! empty( $quantity ) && $quantity > 1 ) {
+					$title .= "&nbsp;&ndash;&nbsp;" . __( 'Quantity', 'edd' ) . ': ' . $quantity;
+				}
 
 				if ( ! empty( $sku ) ) {
 					$title .= "&nbsp;&ndash;&nbsp;" . __( 'SKU', 'edd' ) . ': ' . $sku;
@@ -475,10 +483,18 @@ function edd_email_tag_download_list_plain( $payment_id ) {
 				$sku = edd_get_download_sku( $item['id'] );
 			}
 
+			if ( edd_item_quantities_enabled() ) {
+				$quantity = $item['quantity'];
+			}
+
 			$price_id = edd_get_cart_item_price_id( $item );
 			if ( $show_names ) {
 
 				$title = get_the_title( $item['id'] );
+
+				if ( ! empty( $quantity ) && $quantity > 1 ) {
+					$title .= __( 'Quantity', 'edd' ) . ': ' . $quantity;
+				}
 
 				if ( ! empty( $sku ) ) {
 					$title .= __( 'SKU', 'edd' ) . ': ' . $sku;

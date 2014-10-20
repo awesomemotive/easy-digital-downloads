@@ -158,11 +158,13 @@ function edd_get_purchase_link( $args = array() ) {
 					</span>
 				</span>
 			<?php endif; ?>
-			<?php if ( edd_display_tax_rate() && edd_prices_include_tax() ) {
-				echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Includes %1$s&#37; tax', 'edd' ), edd_get_tax_rate() * 100 ) . '</span>';
-			} elseif ( edd_display_tax_rate() && ! edd_prices_include_tax() ) {
-				echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Excluding %1$s&#37; tax', 'edd' ), edd_get_tax_rate() * 100 ) . '</span>';
-			} ?>
+			<?php if( ! edd_is_free_download( $args['download_id'], $args['price_id'] ) ): ?>
+				<?php if ( edd_display_tax_rate() && edd_prices_include_tax() ) {
+					echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Includes %1$s&#37; tax', 'edd' ), edd_get_tax_rate() * 100 ) . '</span>';
+				} elseif ( edd_display_tax_rate() && ! edd_prices_include_tax() ) {
+					echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Excluding %1$s&#37; tax', 'edd' ), edd_get_tax_rate() * 100 ) . '</span>';
+				} ?>
+			<?php endif; ?>
 		</div><!--end .edd_purchase_submit_wrapper-->
 
 		<input type="hidden" name="download_id" value="<?php echo esc_attr( $args['download_id'] ); ?>">
@@ -213,7 +215,7 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 		<ul>
 			<?php
 			if ( $prices ) :
-				$checked_key = isset( $_GET['price_option'] ) ? absint( $_GET['price_option'] ) : 1;
+				$checked_key = isset( $_GET['price_option'] ) ? absint( $_GET['price_option'] ) : edd_get_default_variable_price( $download_id );
 				foreach ( $prices as $key => $price ) :
 					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . '" itemprop="offers" itemscope itemtype="http://schema.org/Offer">';
 						echo '<label for="'	. esc_attr( 'edd_price_option_' . $download_id . '_' . $key ) . '">';

@@ -68,7 +68,8 @@ function edd_download_metabox_fields() {
 			'_edd_hide_purchase_link',
 			'_edd_download_tax_exclusive',
 			'_edd_button_behavior',
-			'edd_product_notes'
+			'edd_product_notes',
+			'_edd_default_price_id'
 		);
 
 	if ( current_user_can( 'manage_shop_settings' ) ) {
@@ -410,6 +411,7 @@ function edd_render_price_field( $post_id ) {
 						<th style="width: 20px"></th>
 						<th><?php _e( 'Option Name', 'edd' ); ?></th>
 						<th style="width: 100px"><?php _e( 'Price', 'edd' ); ?></th>
+						<th class="edd_repeatable_default"><?php _e( 'Default', 'edd' ); ?></th>
 						<?php do_action( 'edd_download_price_table_head', $post_id ); ?>
 						<th style="width: 2%"></th>
 					</tr>
@@ -471,6 +473,8 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 
 	$args = wp_parse_args( $args, $defaults );
 
+	$default_price_id = edd_get_default_variable_price( $post_id );
+	$default_price_id = $default_price_id ? edd_get_default_variable_price( $post_id ) : 1;
 ?>
 	<td>
 		<span class="edd_draghandle"></span>
@@ -502,6 +506,10 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 			<?php echo EDD()->html->text( $price_args ); ?>
 			<?php echo edd_currency_filter( '' ); ?>
 		<?php endif; ?>
+	</td>
+
+	<td class="edd_repeatable_default_wrapper">
+		<input type="radio" <?php checked( $default_price_id, $key, true ); ?> class="edd_repeatable_default_input" name="_edd_default_price_id" value="<?php echo $key; ?>" />
 	</td>
 
 	<?php do_action( 'edd_download_price_table_row', $post_id, $key, $args ); ?>
