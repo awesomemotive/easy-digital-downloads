@@ -652,7 +652,7 @@ class EDD_API {
 			$field = 'email';
 		}
 
-		$customer_query = EDD()->customers->get_customers( array( 'number' => $per_page, $field => $customer ) );
+		$customer_query = EDD()->customers->get_customers( array( 'number' => $per_page, 'offset' => $offet, $field => $customer ) );
 		$customer_count = 0;
 
 		if( $customer_query ) {
