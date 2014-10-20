@@ -81,16 +81,32 @@ function edd_get_purchase_link( $args = array() ) {
 	$data_variable    = $variable_pricing ? ' data-variable-price="yes"' : 'data-variable-price="no"';
 	$type             = edd_single_price_option_mode( $args['download_id'] ) ? 'data-price-mode=multi' : 'data-price-mode=single';
 
-	if ( $args['price'] && $args['price'] !== 'no' && ! $variable_pricing ) {
-		$price = edd_get_download_price( $args['download_id'] );
+	if ( $args['price'] && $args['price'] !== 'no' ) {
 
-		$button_text = ! empty( $args['text'] ) ? '&nbsp;&ndash;&nbsp;' . $args['text'] : '';
+		if ( $variable_pricing && false !== $args['price_id'] ) {
+
+			$price_id = $args['price_id'];
+			$prices   = edd_get_variable_prices( $args['download_id'] );
+
+			$price = isset( $prices[$price_id] ) ? $prices[$price_id]['amount'] : false;
+
+		} elseif ( ! $variable_pricing ) {
+
+			$price = edd_get_download_price( $args['download_id'] );
+
+		}
+	}
+
+	$button_text = ! empty( $args['text'] ) ? '&nbsp;&ndash;&nbsp;' . $args['text'] : '';
+
+	if ( isset( $price ) && false !== $price ) {
 
 		if ( 0 == $price ) {
 			$args['text'] = __( 'Free', 'edd' ) . $button_text;
 		} else {
 			$args['text'] = edd_currency_filter( edd_format_amount( $price ) ) . $button_text;
 		}
+
 	}
 
 	if ( edd_item_in_cart( $args['download_id'] ) && ! $variable_pricing ) {
@@ -152,6 +168,9 @@ function edd_get_purchase_link( $args = array() ) {
 		</div><!--end .edd_purchase_submit_wrapper-->
 
 		<input type="hidden" name="download_id" value="<?php echo esc_attr( $args['download_id'] ); ?>">
+		<?php if ( $variable_pricing && isset( $price_id ) && isset( $prices[$price_id] ) ): ?>
+			<input type="hidden" name="edd_options[price_id][]" id="edd_price_option_<?php echo $args['download_id']; ?>_1" class="edd_price_option_<?php echo $args['download_id']; ?>" value="<?php echo $price_id; ?>">
+		<?php endif; ?>
 		<?php if( ! empty( $args['direct'] ) ) { ?>
 			<input type="hidden" name="edd_action" class="edd_action_input" value="straight_to_gateway">
 		<?php } else { ?>
@@ -179,15 +198,16 @@ function edd_get_purchase_link( $args = array() ) {
  * @param int $download_id Download ID
  * @return void
  */
-function edd_purchase_variable_pricing( $download_id = 0 ) {
+function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 	global $edd_options;
 
 	$variable_pricing = edd_has_variable_prices( $download_id );
-
-	if ( ! $variable_pricing )
-		return;
-
 	$prices = apply_filters( 'edd_purchase_variable_prices', edd_get_variable_prices( $download_id ), $download_id );
+
+	if ( ! $variable_pricing || ( false !== $args['price_id'] && isset( $prices[$args['price_id']] ) ) ) {
+		return;
+	}
+
 	$type   = edd_single_price_option_mode( $download_id ) ? 'checkbox' : 'radio';
 
 	do_action( 'edd_before_price_options', $download_id ); ?>
@@ -213,7 +233,7 @@ function edd_purchase_variable_pricing( $download_id = 0 ) {
 <?php
 	do_action( 'edd_after_price_options', $download_id );
 }
-add_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing', 10 );
+add_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing', 10, 2 );
 
 /**
  * Before Download Content
