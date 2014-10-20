@@ -16,7 +16,7 @@ jQuery(document).ready(function ($) {
 		clone_repeatable : function(row) {
 
 			// Retrieve the highest current key
-			var key = highest = 0;
+			var key = highest = 1;
 			row.parent().find( 'tr.edd_repeatable_row' ).each(function() {
 				var current = $(this).data( 'key' );
 				if( parseInt( current ) > highest ) {
