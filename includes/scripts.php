@@ -160,9 +160,6 @@ function edd_load_admin_scripts( $hook ) {
 	// Use minified libraries if SCRIPT_DEBUG is turned off
 	$suffix  = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
-	$downloads_object = get_post_type_object( 'download' );
-	$labels = $downloads_object->labels;
-
 	// These have to be global
 	wp_enqueue_style( 'jquery-chosen', $css_dir . 'chosen' . $suffix . '.css', array(), EDD_VERSION );
 	wp_enqueue_script( 'jquery-chosen', $js_dir . 'chosen.jquery' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
@@ -190,7 +187,7 @@ function edd_load_admin_scripts( $hook ) {
 		'currency_pos'            => isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
 		'new_media_ui'            => apply_filters( 'edd_use_35_media_ui', 1 ),
 		'remove_text'             => __( 'Remove', 'edd' ),
-		'type_to_search'          => __( 'Type to search ' . $labels->name, 'edd' )
+		'type_to_search'          => sprintf( __( 'Type to search %s', 'edd' ), edd_get_label_plural() )
 	));
 
 	wp_enqueue_style( 'wp-color-picker' );
