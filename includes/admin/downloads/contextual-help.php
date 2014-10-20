@@ -90,7 +90,7 @@ function edd_downloads_contextual_help() {
 				<li><strong>color</strong> - <em>' . implode( '</em> | <em>', $colors ) . '</em></li>
 				<li><strong>class</strong> - ' . __( 'One or more custom CSS classes you want applied to the button.', 'edd' ) . '</li>
 			</ul>' .
-			'<p>' . sprintf( __( 'For more information, see <a href="%s">using Shortcodes</a> on the WordPress.org Codex or <a href="%s">Easy Digital Downloads Documentation</a>', 'edd' ), 'http://codex.wordpress.org/Shortcode', 'https://easydigitaldownloads.com/docs/display-purchase-buttons-purchase_link/' ) . '</p>'
+			'<p>' . sprintf( __( 'For more information, see <a href="%s">using Shortcodes</a> on the WordPress.org Codex or <a href="%s">Easy Digital Downloads Documentation</a>', 'edd' ), 'https://codex.wordpress.org/Shortcode', 'https://easydigitaldownloads.com/docs/display-purchase-buttons-purchase_link/' ) . '</p>'
 	) );
 
 	do_action( 'edd_downloads_contextual_help', $screen );

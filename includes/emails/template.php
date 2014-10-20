@@ -108,6 +108,10 @@ function edd_email_preview_template_tags( $message ) {
 function edd_email_template_preview() {
 	global $edd_options;
 
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
 	ob_start();
 	?>
 	<a href="<?php echo esc_url( add_query_arg( array( 'edd_action' => 'preview_email' ), home_url() ) ); ?>" class="button-secondary" target="_blank" title="<?php _e( 'Purchase Receipt Preview', 'edd' ); ?> "><?php _e( 'Preview Purchase Receipt', 'edd' ); ?></a>

@@ -73,12 +73,14 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 
 	}
 
+	/*
 	$payment_ids = EDD()->customers->get_column_by( 'payment_ids', $field, $user );
 	
 	if( ! empty( $payment_ids ) ) {
 		unset( $args['user'] );
 		$args['post__in'] = array_map( 'absint', explode( ',', $payment_ids ) );
 	}
+	*/
 
 	$purchases = edd_get_payments( $args );
 

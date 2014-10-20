@@ -405,7 +405,7 @@ function edd_email_tag_download_list( $payment_id ) {
 				}
 
 				if ( $price_id !== null ) {
-					$title .= "&nbsp;&ndash;&nbsp;" . edd_get_price_option_name( $item['id'], $price_id );
+					$title .= "&nbsp;&ndash;&nbsp;" . edd_get_price_option_name( $item['id'], $price_id, $payment_id );
 				}
 
 				$download_list .= '<li>' . apply_filters( 'edd_email_receipt_download_title', $title, $item, $price_id, $payment_id ) . '<br/>';
@@ -426,7 +426,7 @@ function edd_email_tag_download_list( $payment_id ) {
 
 			} elseif ( edd_is_bundled_product( $item['id'] ) ) {
 
-				$bundled_products = edd_get_bundled_products( $item['id'] );
+				$bundled_products = apply_filters( 'edd_email_tag_bundled_products', edd_get_bundled_products( $item['id'] ), $item, $payment_id, 'download_list' );
 
 				foreach ( $bundled_products as $bundle_item ) {
 
@@ -501,7 +501,7 @@ function edd_email_tag_download_list_plain( $payment_id ) {
 				}
 
 				if ( $price_id !== null ) {
-					$title .= edd_get_price_option_name( $item['id'], $price_id );
+					$title .= edd_get_price_option_name( $item['id'], $price_id, $payment_id );
 				}
 
 				$download_list .= "\n";
@@ -523,7 +523,7 @@ function edd_email_tag_download_list_plain( $payment_id ) {
 
 			} elseif ( edd_is_bundled_product( $item['id'] ) ) {
 
-				$bundled_products = edd_get_bundled_products( $item['id'] );
+				$bundled_products = apply_filters( 'edd_email_tag_bundled_products', edd_get_bundled_products( $item['id'] ), $item, $payment_id, 'download_list' );
 
 				foreach ( $bundled_products as $bundle_item ) {
 
@@ -578,7 +578,7 @@ function edd_email_tag_file_urls( $payment_id ) {
 		}
 		elseif ( edd_is_bundled_product( $item['id'] ) ) {
 
-			$bundled_products = edd_get_bundled_products( $item['id'] );
+			$bundled_products = apply_filters( 'edd_email_tag_bundled_products', edd_get_bundled_products( $item['id'] ), $item, $payment_id, 'file_urls' );
 
 			foreach ( $bundled_products as $bundle_item ) {
 
@@ -779,7 +779,7 @@ function edd_email_tag_payment_method( $payment_id ) {
  * @return string sitename
  */
 function edd_email_tag_sitename( $payment_id ) {
-	return get_bloginfo( 'name' );
+	return wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
 }
 
 /**
