@@ -710,7 +710,7 @@ function edd_settings_sanitize( $input = array() ) {
 		}
 
 		// General filter
-		$input[$key] = apply_filters( 'edd_settings_sanitize', $value, $key );
+		$input[$key] = apply_filters( 'edd_settings_sanitize', $input[$key], $key );
 	}
 
 	// Loop through the whitelist and unset any that are empty for the tab being saved

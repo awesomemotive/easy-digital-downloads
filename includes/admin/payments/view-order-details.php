@@ -33,13 +33,14 @@ if ( !is_object( $item ) || $item->post_type != 'edd_payment' ) {
 }
 
 $payment_meta   = edd_get_payment_meta( $payment_id );
-$transaction_id = edd_get_payment_transaction_id( $payment_id );
+$transaction_id = esc_attr( edd_get_payment_transaction_id( $payment_id ) );
 $cart_items     = edd_get_payment_meta_cart_details( $payment_id );
 $user_id        = edd_get_payment_user_id( $payment_id );
 $payment_date   = strtotime( $item->post_date );
 $unlimited      = edd_payment_has_unlimited_downloads( $payment_id );
 $user_info      = edd_get_payment_meta_user_info( $payment_id );
 $address        = ! empty( $user_info['address'] ) ? $user_info['address'] : array( 'line1' => '', 'line2' => '', 'city' => '', 'country' => '', 'state' => '', 'zip' => '' );
+$gateway        = edd_get_payment_gateway( $payment_id );
 ?>
 <div class="wrap edd-wrap">
 	<h2><?php printf( __( 'Payment %s', 'edd' ), $number ); ?></h2>
@@ -135,7 +136,7 @@ $address        = ! empty( $user_info['address'] ) ? $user_info['address'] : arr
 											<?php if ( $transaction_id ) { ?>
 											<p>
 												<strong><?php _e( 'Transaction ID:', 'edd' ); ?></strong>&nbsp;
-												<span><?php echo esc_attr_e( $transaction_id ); ?></span>
+												<span><?php echo apply_filters( 'edd_payment_details_transaction_id-' . $gateway, $transaction_id, $payment_id ); ?></span>
 											</p>
 											<?php } ?>
 
@@ -358,7 +359,7 @@ $address        = ! empty( $user_info['address'] ) ? $user_info['address'] : arr
 									<span><?php printf( __( 'Purchased %s', 'edd' ), edd_get_label_plural() ); ?></span>
 								</h3>
 								
-								<?php if ( $cart_items ) :
+								<?php if ( is_array( $cart_items ) ) :
 									$i = 0;
 									foreach ( $cart_items as $key => $cart_item ) : ?>
 									<div class="row">

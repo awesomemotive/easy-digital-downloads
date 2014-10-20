@@ -48,7 +48,7 @@ class EDD_API {
 	 * @access private
 	 * @since 1.5
 	 */
-	private $log_requests = true;
+	public $log_requests = true;
 
 	/**
 	 * Is this a valid request?
@@ -1113,17 +1113,18 @@ class EDD_API {
 				$user_info    = edd_get_payment_meta_user_info( $payment->ID );
 				$cart_items   = edd_get_payment_meta_cart_details( $payment->ID );
 
-				$sales['sales'][ $i ]['ID']       = edd_get_payment_number( $payment->ID );
-				$sales['sales'][ $i ]['key']      = edd_get_payment_key( $payment->ID );
-				$sales['sales'][ $i ]['discount'] = isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ? explode( ',', $user_info['discount'] ) : array();
-				$sales['sales'][ $i ]['subtotal'] = edd_get_payment_subtotal( $payment->ID );
-				$sales['sales'][ $i ]['tax']      = edd_get_payment_tax( $payment->ID );
-				$sales['sales'][ $i ]['fees']     = edd_get_payment_fees( $payment->ID );
-				$sales['sales'][ $i ]['total']    = edd_get_payment_amount( $payment->ID );
-				$sales['sales'][ $i ]['gateway']  = edd_get_payment_gateway( $payment->ID );
-				$sales['sales'][ $i ]['email']    = edd_get_payment_user_email( $payment->ID );
-				$sales['sales'][ $i ]['date']     = $payment->post_date;
-				$sales['sales'][ $i ]['products'] = array();
+				$sales['sales'][ $i ]['ID']             = edd_get_payment_number( $payment->ID );
+				$sales['sales'][ $i ]['transaction_id'] = edd_get_payment_transaction_id( $payment->ID );
+				$sales['sales'][ $i ]['key']            = edd_get_payment_key( $payment->ID );
+				$sales['sales'][ $i ]['discount']       = isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ? explode( ',', $user_info['discount'] ) : array();
+				$sales['sales'][ $i ]['subtotal']       = edd_get_payment_subtotal( $payment->ID );
+				$sales['sales'][ $i ]['tax']            = edd_get_payment_tax( $payment->ID );
+				$sales['sales'][ $i ]['fees']           = edd_get_payment_fees( $payment->ID );
+				$sales['sales'][ $i ]['total']          = edd_get_payment_amount( $payment->ID );
+				$sales['sales'][ $i ]['gateway']        = edd_get_payment_gateway( $payment->ID );
+				$sales['sales'][ $i ]['email']          = edd_get_payment_user_email( $payment->ID );
+				$sales['sales'][ $i ]['date']           = $payment->post_date;
+				$sales['sales'][ $i ]['products']       = array();
 
 				$c = 0;
 
@@ -1386,8 +1387,8 @@ class EDD_API {
 						</th>
 						<td>
 							<?php if ( empty( $user->edd_user_public_key ) ) { ?>
-							<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
-							<span class="description"><?php _e( 'Generate API Key', 'edd' ); ?></span>
+								<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
+								<span class="description"><?php _e( 'Generate API Key', 'edd' ); ?></span>
 							<?php } else { ?>
 								<strong><?php _e( 'Public key:', 'edd' ); ?>&nbsp;</strong><span id="publickey"><?php echo $user->edd_user_public_key; ?></span><br/>
 								<strong><?php _e( 'Secret key:', 'edd' ); ?>&nbsp;</strong><span id="privatekey"><?php echo $user->edd_user_secret_key; ?></span><br/>
@@ -1411,6 +1412,12 @@ class EDD_API {
 	 * @return void
 	 */
 	public function process_api_key( $args ) {
+
+		if( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'edd-api-nonce' ) ) {
+
+			wp_die( __( 'Nonce verification failed', 'edd' ) );
+
+		}
 
 		if( is_numeric( $args['user_id'] ) ) {
 			$user_id    = isset( $args['user_id'] ) ? absint( $args['user_id'] ) : get_current_user_id();
@@ -1575,6 +1582,7 @@ class EDD_API {
 
 		// Default sales return
 
+		$sales['sales']['today']         = $this->stats->get_sales( 0, 'today' );
 		$sales['sales']['current_month'] = $this->stats->get_sales( 0, 'this_month' );
 		$sales['sales']['last_month']    = $this->stats->get_sales( 0, 'last_month' );
 		$sales['sales']['totals']        = edd_get_total_sales();
@@ -1593,6 +1601,7 @@ class EDD_API {
 
 		// Default earnings return
 
+		$earnings['earnings']['today']         = $this->stats->get_earnings( 0, 'today' );
 		$earnings['earnings']['current_month'] = $this->stats->get_earnings( 0, 'this_month' );
 		$earnings['earnings']['last_month']    = $this->stats->get_earnings( 0, 'last_month' );
 		$earnings['earnings']['totals']        = edd_get_total_earnings();

@@ -412,6 +412,7 @@ function edd_render_price_field( $post_id ) {
 						<th><?php _e( 'Option Name', 'edd' ); ?></th>
 						<th style="width: 100px"><?php _e( 'Price', 'edd' ); ?></th>
 						<th class="edd_repeatable_default"><?php _e( 'Default', 'edd' ); ?></th>
+						<th style="width: 15px"><?php _e( 'ID', 'edd' ); ?></th>
 						<?php do_action( 'edd_download_price_table_head', $post_id ); ?>
 						<th style="width: 2%"></th>
 					</tr>
@@ -507,9 +508,10 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 			<?php echo edd_currency_filter( '' ); ?>
 		<?php endif; ?>
 	</td>
-
 	<td class="edd_repeatable_default_wrapper">
 		<input type="radio" <?php checked( $default_price_id, $key, true ); ?> class="edd_repeatable_default_input" name="_edd_default_price_id" value="<?php echo $key; ?>" />
+	<td>
+		<span class="edd_price_id"><?php echo $key; ?></span>
 	</td>
 
 	<?php do_action( 'edd_download_price_table_row', $post_id, $key, $args ); ?>
@@ -724,7 +726,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 			) ); ?>
 
 			<span class="edd_upload_file">
-				<a href="#" data-uploader_title="" data-uploader_button_text="<?php _e( 'Insert', 'edd' ); ?>" class="edd_upload_file_button" onclick="return false;"><?php _e( 'Upload a File', 'edd' ); ?></a>
+				<a href="#" data-uploader-title="<?php _e( 'Insert File', 'edd' ); ?>" data-uploader-button-text="<?php _e( 'Insert', 'edd' ); ?>" class="edd_upload_file_button" onclick="return false;"><?php _e( 'Upload a File', 'edd' ); ?></a>
 			</span>
 		</div>
 	</td>
@@ -757,6 +759,29 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 <?php
 }
 add_action( 'edd_render_file_row', 'edd_render_file_row', 10, 3 );
+
+/**
+ * Alter the Add to post button in the media manager for downloads
+ *
+ * @since  2.2
+ * @param  array $strings Array of default strings for media manager
+ * @return array          The altered array of strings for media manager
+ */
+function edd_download_media_strings( $strings ) {
+	global $post;
+
+	if ( ! $post || $post->post_type !== 'download' ) {
+		return $strings;
+	}
+
+	$downloads_object = get_post_type_object( 'download' );
+	$labels = $downloads_object->labels;
+
+	$strings['insertIntoPost'] = sprintf( __( 'Insert into %s', 'edd' ), strtolower( $labels->singular_name ) );
+
+	return $strings;
+}
+add_filter( 'media_view_strings', 'edd_download_media_strings', 10, 1 );
 
 
 /**
