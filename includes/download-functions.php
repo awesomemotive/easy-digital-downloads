@@ -174,21 +174,7 @@ function edd_price( $download_id = 0, $echo = true, $price_id = false ) {
 		if ( false !== $price_id && isset( $prices[$price_id] ) ) {
 			$price = (float) $prices[$price_id]['amount'];
 		} else {
-			// Return the lowest price
-			$i = 0;
-			foreach ( $prices as $key => $value ) {
-
-				if( $i < 1 ) {
-					$price = $value['amount'];
-				}
-
-				if ( (float) $value['amount'] < (float) $price ) {
-
-					$price = (float) $value['amount'];
-
-				}
-				$i++;
-			}
+			$price = edd_get_lowest_price_option( $download_id );
 		}
 
 		$price = edd_sanitize_amount( $price );
