@@ -346,7 +346,7 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 	}
 
 	// Verify payment currency
-	if ( $currency_code != $payment_meta['currency'] ) {
+	if ( $currency_code != strtolower( $payment_meta['currency'] ) ) {
 
 		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid currency in IPN response. IPN data: %s', 'edd' ), json_encode( $data ) ), $payment_id );
 		edd_update_payment_status( $payment_id, 'failed' );
