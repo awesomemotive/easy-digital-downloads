@@ -1277,7 +1277,7 @@ add_action( 'init', 'edd_listen_for_cart_discount', 0 );
 
 /**
  * Applies the preset discount, if any. This is separated from edd_listen_for_cart_discount() in order to allow items to be
- * added to the cart and for it to presist across page loads if necessary
+ * added to the cart and for it to persist across page loads if necessary
  *
  * @return void
  */

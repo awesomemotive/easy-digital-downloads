@@ -22,13 +22,13 @@ jQuery(document).ready(function ($) {
 				$( this ).val( row.find( 'select[name="' + $( this ).attr( 'name' ) + '"]' ).val() );
 			});
 
-			var count = row.parent().find( 'tr' ).length;
+			var count = row.parent().find( 'tr' ).length +1;
 
 			clone.removeClass( 'edd_add_blank' );
 
 			clone.find( 'td input, td select' ).val( '' );
 			clone.find( 'input, select' ).each(function() {
-				var name 	= $( this ).attr( 'name' );
+				var name = $( this ).attr( 'name' );
 
 				name = name.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
 
