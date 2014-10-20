@@ -187,6 +187,7 @@ function edd_load_admin_scripts( $hook ) {
 		'currency_pos'            => isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
 		'new_media_ui'            => apply_filters( 'edd_use_35_media_ui', 1 ),
 		'remove_text'             => __( 'Remove', 'edd' ),
+		'type_to_search'          => sprintf( __( 'Type to search %s', 'edd' ), edd_get_label_plural() )
 	));
 
 	wp_enqueue_style( 'wp-color-picker' );
