@@ -881,7 +881,7 @@ function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files =
 	$payment_meta = edd_get_payment_meta( $payment_id );
 	$cart_details = ! empty( $payment_meta['cart_details'] ) ? maybe_unserialize( $payment_meta['cart_details'] ) : array();
 
-	if( ! empty( $cart_details ) ) {
+	if( ! empty( $cart_details ) && is_array( $cart_details ) ) {
 
 		foreach( $cart_details as $key => $cart_item ) {
 
@@ -923,7 +923,7 @@ function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files =
 
 	}
 
-	return apply_filters( 'edd_payment_meta_cart_details', $cart_details );
+	return apply_filters( 'edd_payment_meta_cart_details', $cart_details, $payment_id );
 }
 
 /**
@@ -1260,7 +1260,7 @@ function edd_get_payment_fees( $payment_id = 0, $type = 'all' ) {
 	$fees = array();
 	$payment_fees = isset( $payment_meta['fees'] ) ? $payment_meta['fees'] : false;
 
-	if ( ! empty( $payment_fees ) ) {
+	if ( ! empty( $payment_fees ) && is_array( $payment_fees ) ) {
 
 		foreach ( $payment_fees as $fee_id => $fee ) {
 

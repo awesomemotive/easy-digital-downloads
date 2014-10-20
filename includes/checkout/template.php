@@ -640,7 +640,7 @@ function edd_discount_field() {
 			<p id="edd_show_discount" style="display:none;">
 				<?php _e( 'Have a discount code?', 'edd' ); ?> <a href="#" class="edd_discount_link"><?php echo _x( 'Click to enter it', 'Entering a discount code', 'edd' ); ?></a>
 			</p>
-			<p id="edd-discount-code-wrap">
+			<p id="edd-discount-code-wrap" class="edd-cart-adjustment">
 				<label class="edd-label" for="edd-discount">
 					<?php _e( 'Discount', 'edd' ); ?>
 					<img src="<?php echo EDD_PLUGIN_URL; ?>assets/images/loading.gif" id="edd-discount-loader" style="display:none;"/>
