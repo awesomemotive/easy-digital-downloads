@@ -371,7 +371,7 @@ $gateway        = edd_get_payment_gateway( $payment_id );
 											$price_id = isset( $cart_item['item_number']['options']['price_id'] ) ? $cart_item['item_number']['options']['price_id'] : null;
 											$quantity = isset( $cart_item['quantity'] ) && $cart_item['quantity'] > 0 ? $cart_item['quantity'] : 1;
 	
-											if( ! $price ) {
+											if( false === $price ) {
 												// This function is only used on payments with near 1.0 cart data structure
 												$price = edd_get_download_final_price( $item_id, $user_info, null );
 											}
