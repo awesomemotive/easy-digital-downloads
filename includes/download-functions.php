@@ -158,9 +158,10 @@ function edd_get_download_price( $download_id = 0 ) {
  * @since 1.0
  * @param int $download_id ID of the download price to show
  * @param bool $echo Whether to echo or return the results
+ * @param int $price_id Optional price id for variable pricing
  * @return void
  */
-function edd_price( $download_id = 0, $echo = true ) {
+function edd_price( $download_id = 0, $echo = true, $price_id = false ) {
 
 	if( empty( $download_id ) ) {
 		$download_id = get_the_ID();
@@ -170,20 +171,24 @@ function edd_price( $download_id = 0, $echo = true ) {
 
 		$prices = edd_get_variable_prices( $download_id );
 
-		// Return the lowest price
-		$i = 0;
-		foreach ( $prices as $key => $value ) {
+		if ( false !== $price_id && isset( $prices[$price_id] ) ) {
+			$price = (float) $prices[$price_id]['amount'];
+		} else {
+			// Return the lowest price
+			$i = 0;
+			foreach ( $prices as $key => $value ) {
 
-			if( $i < 1 ) {
-				$price = $value['amount'];
+				if( $i < 1 ) {
+					$price = $value['amount'];
+				}
+
+				if ( (float) $value['amount'] < (float) $price ) {
+
+					$price = (float) $value['amount'];
+
+				}
+				$i++;
 			}
-
-			if ( (float) $value['amount'] < (float) $price ) {
-
-				$price = (float) $value['amount'];
-
-			}
-			$i++;
 		}
 
 		$price = edd_sanitize_amount( $price );
