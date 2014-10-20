@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.7
 Tested up to: 4.1
 
-Stable Tag: 2.1.3
+Stable Tag: 2.1.4
 
 License: GNU Version 2 or Any Later Version
 
@@ -184,6 +184,15 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
+= 2.1.4, September 22, 2014 =
+
+* Fix: New sale notification emails not sending for some users
+* Fix: direct="true" not working in the [purchase_link] short code
+* Fix: User meta for saved carts not properly cleaned out after a cart is restored
+* Fix: SQL errors related to WP Session garbage collection
+* Fix: API Request logs table showing log entries from other log types
+* Fix: Invalid payment meta data related to special characters in PayPal customer info
+
 = 2.1.3, September 15, 2014 =
 
 * Fix: edd_has_user_purchased() returning true improperly
@@ -209,7 +218,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Incorrect item price on checkout when taxes are enabled
 * Fix: Incorrect subtotal displayed on purchase receipt when taxes are enabled
 * Fix: Customer records not getting created due to SQL syntax error
-* Fix: Aposthrophes in site name not being decoded in emails
+* Fix: Apostrophes in site name not being decoded in emails
 * Fix: card_state class not kept on select when when switching countries on checkout 
 
 = 2.1, September 3, 2014 =

@@ -84,6 +84,7 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 .edd-price-field { width: 80px; }
 .edd_repeatable_upload_wrapper .pricing select, .edd_repeatable_product_wrapper .edd-select { min-width: 100%; }
 #edd_product_notes_field { width: 98%; margin: 0; height: 4em; }
+.edd_repeatable_default_wrapper { text-align: center; width: 25px; }
 
 /* Payment Details
 -------------------------------------------------------------- */

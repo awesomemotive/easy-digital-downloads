@@ -228,6 +228,11 @@ function edd_get_host() {
 		$host = 'Rackspace Cloud';
 	} elseif( strpos( DB_HOST, '.sysfix.eu' ) !== false ) {
 		$host = 'SysFix.eu Power Hosting';
+	} elseif( strpos( $_SERVER['SERVER_NAME'], 'Flywheel' ) !== false ) {
+		$host = 'Flywheel';
+	} else {
+		// Adding a general fallback for data gathering
+		$host = 'DBH: ' . DB_HOST . ', SRV: ' . $_SERVER['SERVER_NAME'];
 	}
 
 	return $host;
@@ -290,6 +295,10 @@ function edd_is_host( $host = false ) {
 				if( strpos( DB_HOST, '.sysfix.eu' ) !== false )
 					$return = true;
 				break;
+			case 'flywheel':
+				if( strpos( $_SERVER['SERVER_NAME'], 'Flywheel' ) !== false )
+					$return = true;
+				break;
 			default:
 				$return = false;
 		}
@@ -297,7 +306,6 @@ function edd_is_host( $host = false ) {
 
 	return $return;
 }
-
 
 
 /**
