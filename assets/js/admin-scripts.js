@@ -968,6 +968,11 @@ jQuery(document).ready(function ($) {
     	placeholder_text_multiple: edd_vars.one_or_more_option,
     });
 
+    // Add placeholders for Chosen input fields
+    $( '.chosen-choices' ).on( 'click', function () {
+        $(this).children('li').children('input').attr( 'placeholder', edd_vars.type_to_search );
+    });
+
 	// Variables for setting up the typing timer
 	var typingTimer;               // Timer identifier
 	var doneTypingInterval = 342;  // Time in ms, Slow - 521ms, Moderate - 342ms, Fast - 300ms
