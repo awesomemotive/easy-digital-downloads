@@ -427,7 +427,7 @@ function edd_render_price_field( $post_id ) {
 								$index  = isset( $value['index'] )  ? $value['index']  : $key;
 								$args = apply_filters( 'edd_price_row_args', compact( 'name', 'amount' ), $value );
 								?>
-								<tr class="edd_variable_prices_wrapper edd_repeatable_row">
+								<tr class="edd_variable_prices_wrapper edd_repeatable_row" data-key="<?php echo esc_attr( $key ); ?>">
 									<?php do_action( 'edd_render_price_row', $key, $args, $post_id, $index ); ?>
 								</tr>
 							<?php
@@ -647,7 +647,7 @@ function edd_render_files_field( $post_id = 0 ) {
 
 							$args = apply_filters( 'edd_file_row_args', compact( 'name', 'file', 'condition', 'attachment_id' ), $value );
 				?>
-						<tr class="edd_repeatable_upload_wrapper edd_repeatable_row">
+						<tr class="edd_repeatable_upload_wrapper edd_repeatable_row" data-key="<?php echo esc_attr( $key ); ?>">
 							<?php do_action( 'edd_render_file_row', $key, $args, $post_id ); ?>
 						</tr>
 				<?php
