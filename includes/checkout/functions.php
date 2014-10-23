@@ -84,7 +84,9 @@ function edd_send_to_success_page( $query_string = null ) {
 	if ( $query_string )
 		$redirect .= $query_string;
 
-	wp_redirect( apply_filters('edd_success_page_redirect', $redirect, $_POST['edd-gateway'], $query_string) );
+	$gateway = isset( $_REQUEST['edd-gateway'] ) ? $_REQUEST['edd-gateway'] : '';
+
+	wp_redirect( apply_filters('edd_success_page_redirect', $redirect, $gateway, $query_string) );
 	edd_die();
 }
 
