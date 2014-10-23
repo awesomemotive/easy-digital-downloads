@@ -652,7 +652,7 @@ class EDD_API {
 			$field = 'email';
 		}
 
-		$customer_query = EDD()->customers->get_customers( array( 'number' => $per_page, $field => $customer ) );
+		$customer_query = EDD()->customers->get_customers( array( 'number' => $per_page, 'offset' => $offset, $field => $customer ) );
 		$customer_count = 0;
 
 		if( $customer_query ) {
@@ -677,7 +677,7 @@ class EDD_API {
 				$customers['customers'][$customer_count]['info']['email']        = $customer_obj->email;
 
 				if ( ! empty( $customer_obj->user_id ) ) {
-				
+
 					$user_data = get_userdata( $customer_obj->user_id );
 
 					// Customer with registered account

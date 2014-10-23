@@ -47,13 +47,20 @@ function edd_get_cart_content_details() {
 		$item['quantity'] = edd_item_quantities_enabled() ? absint( $item['quantity'] ) : 1;
 
 		$item_price = edd_get_cart_item_price( $item['id'], $item['options'] );
-		$discount   = apply_filters( 'edd_get_cart_content_details_item_discount_amount', edd_get_cart_item_discount_amount( $item ), $item );
+		$discount   = edd_get_cart_item_discount_amount( $item );
+		$discount   = apply_filters( 'edd_get_cart_content_details_item_discount_amount', $discount, $item );
 		$quantity   = edd_get_cart_item_quantity( $item['id'], $item['options'] );
 		$subtotal   = $item_price * $quantity;
 		$tax        = edd_get_cart_item_tax( $item['id'], $item['options'], $subtotal - $discount );
+		$total      = $subtotal - $discount + $tax;
 
 		if( edd_prices_include_tax() ) {
 			$subtotal -= $tax;
+		}
+
+		// Do not allow totals to go negatve
+		if( $total < 0 ) {
+			$total = 0;
 		}
 
 		$details[ $key ]  = array(
@@ -66,7 +73,7 @@ function edd_get_cart_content_details() {
 			'subtotal'    => round( $subtotal, edd_currency_decimal_filter() ),
 			'tax'         => round( $tax, edd_currency_decimal_filter() ),
 			'fees'        => array(),
-			'price'       => round( ( $subtotal - $discount + $tax ), edd_currency_decimal_filter() )
+			'price'       => round( $total, edd_currency_decimal_filter() )
 		);
 
 	}

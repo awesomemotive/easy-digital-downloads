@@ -15,6 +15,16 @@ jQuery(document).ready(function ($) {
 		},
 		clone_repeatable : function(row) {
 
+			// Retrieve the highest current key
+			var key = highest = 1;
+			row.parent().find( 'tr.edd_repeatable_row' ).each(function() {
+				var current = $(this).data( 'key' );
+				if( parseInt( current ) > highest ) {
+					highest = current;
+				}
+			});
+			key = highest += 1;
+
 			clone = row.clone();
 
 			/** manually update any select box values */
@@ -22,21 +32,20 @@ jQuery(document).ready(function ($) {
 				$( this ).val( row.find( 'select[name="' + $( this ).attr( 'name' ) + '"]' ).val() );
 			});
 
-			var count = row.parent().find( 'tr' ).length +1;
-
 			clone.removeClass( 'edd_add_blank' );
 
+			clone.data( 'key', key );
 			clone.find( 'td input, td select' ).val( '' );
 			clone.find( 'input, select' ).each(function() {
 				var name = $( this ).attr( 'name' );
 
-				name = name.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
+				name = name.replace( /\[(\d+)\]/, '[' + parseInt( key ) + ']');
 
 				$( this ).attr( 'name', name ).attr( 'id', name );
 			});
 
 			clone.find( 'span.edd_price_id' ).each(function() {
-				$( this ).text( parseInt( count ) );
+				$( this ).text( parseInt( key ) );
 			});
 
 			clone.find( '.edd_repeatable_default_input' ).each( function() {

@@ -1097,6 +1097,7 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 						$discounted_amount = edd_get_discount_amount( $code_id );
 						$discounted_amount = ( $discounted_amount / edd_get_cart_quantity() );
 						$discounted_price -= $discounted_amount;
+
 					} else {
 
 						$discounted_price -= $price - edd_get_discounted_amount( $discount, $price );
