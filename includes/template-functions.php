@@ -135,7 +135,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 	ob_start();
 ?>
-	<form id="<?php echo $form_id; ?>" class="edd_download_purchase_form edd_purchase_<?php echo absint( $args['download_id' ); ?>" method="post">
+	<form id="<?php echo $form_id; ?>" class="edd_download_purchase_form edd_purchase_<?php echo absint( $args['download_id'] ); ?>" method="post">
 
 		<?php do_action( 'edd_purchase_link_top', $args['download_id'], $args ); ?>
 
