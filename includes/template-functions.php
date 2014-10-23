@@ -47,7 +47,7 @@ add_action( 'edd_after_download_content', 'edd_append_purchase_link' );
  * @return string $purchase_form
  */
 function edd_get_purchase_link( $args = array() ) {
-	global $edd_options, $post;
+	global $edd_options, $post, $edd_displayed_form_ids;
 
 	if ( ! isset( $edd_options['purchase_page'] ) || $edd_options['purchase_page'] == 0 ) {
 		edd_set_error( 'set_checkout', sprintf( __( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-settings' ) ) );
@@ -117,12 +117,19 @@ function edd_get_purchase_link( $args = array() ) {
 		$checkout_display = 'style="display:none;"';
 	}
 
-	global $edd_displayed_form_ids;
-
-
+	// Collect any form IDs we've displayed already so we can avoid duplicate IDs
+	if ( isset( $edd_displayed_form_ids[ $args['download_id'] ] ) ) {
+		$edd_displayed_form_ids[ $args['download_id'] ]++;
+	} else {
+		$edd_displayed_form_ids[ $args['download_id'] ] = 1;
+	}
 
 	$form_id = ! empty( $args['form_id'] ) ? $args['form_id'] : 'edd_purchase_' . $args['download_id'];
 
+	// If we've already generated a form ID for this download ID, apped -#
+	if ( $edd_displayed_form_ids[ $args['download_id'] ] > 1 ) {
+		$form_id .= '-' . $edd_displayed_form_ids[ $args['download_id'] ];
+	}
 
 	$args = apply_filters( 'edd_purchase_link_args', $args );
 
