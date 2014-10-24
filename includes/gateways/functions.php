@@ -247,7 +247,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 		'email'      => is_user_logged_in() ? $current_user->user_email     : '',
 		'first_name' => is_user_logged_in() ? $current_user->user_firstname : '',
 		'last_name'  => is_user_logged_in() ? $current_user->user_lastname  : '',
-		'discount'   => '',
+		'discount'   => 'none',
 		'address'    => array()
 	);
 
