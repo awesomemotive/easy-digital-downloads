@@ -800,7 +800,7 @@ function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
  * @param string $user User info
  * @return bool
  */
-function edd_is_discount_valid( $code = '', $user = '' ) {
+function edd_is_discount_valid( $code = '', $user = '', $set_error = true ) {
 
 
 	$return      = false;
@@ -820,7 +820,7 @@ function edd_is_discount_valid( $code = '', $user = '' ) {
 			) {
 				$return = true;
 			}
-		} else {
+		} elseif( $set_error ) {
 			edd_set_error( 'edd-discount-error', __( 'This discount is invalid.', 'edd' ) );
 		}
 
@@ -1290,7 +1290,7 @@ function edd_apply_preset_discount() {
 		return;
 	}
 
-	if ( ! edd_is_discount_valid( $code ) ) {
+	if ( ! edd_is_discount_valid( $code, '', false ) ) {
 		return;
 	}
 
