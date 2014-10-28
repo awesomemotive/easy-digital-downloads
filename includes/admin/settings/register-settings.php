@@ -433,6 +433,12 @@ function edd_get_registered_settings() {
 					'desc' => __( 'Check this to enable taxes on purchases.', 'edd' ),
 					'type' => 'checkbox',
 				),
+				'tax_rates' => array(
+					'id' => 'tax_rates',
+					'name' => '<strong>' . __( 'Tax Rates', 'edd' ) . '</strong>',
+					'desc' => __( 'Specify additional tax rates for other regions.', 'edd' ),
+					'type' => 'tax_rates'
+				),
 				'tax_rate' => array(
 					'id' => 'tax_rate',
 					'name' => __( 'Default Tax Rate', 'edd' ),
@@ -467,12 +473,6 @@ function edd_get_registered_settings() {
 						'yes' => __( 'Including tax', 'edd' ),
 						'no'  => __( 'Excluding tax', 'edd' )
 					)
-				),
-				'tax_rates' => array(
-					'id' => 'tax_rates',
-					'name' => '<strong>' . __( 'Additional Tax Rates', 'edd' ) . '</strong>',
-					'desc' => __( 'Specify additional tax rates for other regions.', 'edd' ),
-					'type' => 'tax_rates'
 				)
 			)
 		),
