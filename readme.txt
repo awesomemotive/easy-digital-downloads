@@ -188,6 +188,8 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 * Fix: Incorrect item amounts displayed on the purchase confirmation page when prices are inclusive of tax
 * Fix: Discount Invalid error message getting erroneously displayed on checkout when using a preset discount code
+* Fix: Invalid CSS comment in minified admin CSS
+* Tweak: Updated language files
 
 = 2.1.7, October 20, 2014 =
 
