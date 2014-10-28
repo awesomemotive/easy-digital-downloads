@@ -436,7 +436,7 @@ function edd_get_registered_settings() {
 				'tax_rates' => array(
 					'id' => 'tax_rates',
 					'name' => '<strong>' . __( 'Tax Rates', 'edd' ) . '</strong>',
-					'desc' => __( 'Specify additional tax rates for other regions.', 'edd' ),
+					'desc' => __( 'Enter tax rates for specific regions.', 'edd' ),
 					'type' => 'tax_rates'
 				),
 				'tax_rate' => array(
