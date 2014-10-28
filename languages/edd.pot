@@ -4,14 +4,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 2.1.7\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2014-10-21 11:07:36+00:00\n"
+"POT-Creation-Date: 2014-10-28 14:31:55+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "PO-Revision-Date: 2014-MO-DA HO:MI+ZONE\n"
 "Last-Translator: WP-Translations (http://wp-translations.org/)\n"
 "Language-Team: WP-Translations <wpt@wp-translations.org>\n"
-"X-Generator: grunt-wp-i18n 0.4.9\n"
+"X-Generator: grunt-wp-i18n 0.4.8\n"
 "X-Poedit-KeywordsList: "
 "__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
 "attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
@@ -26,6 +26,23 @@ msgstr ""
 
 #: easy-digital-downloads.php:164 easy-digital-downloads.php:176
 msgid "Cheatin&#8217; huh?"
+msgstr ""
+
+#: includes/EDD_SL_Plugin_Updater.php:167
+msgid ""
+"There is a new version of %1$s available. <a target=\"_blank\" "
+"class=\"thickbox\" href=\"%2$s\">View version %3$s details</a>."
+msgstr ""
+
+#: includes/EDD_SL_Plugin_Updater.php:174
+msgid ""
+"There is a new version of %1$s available. <a target=\"_blank\" "
+"class=\"thickbox\" href=\"%2$s\">View version %3$s details</a> or <a "
+"href=\"%4$s\">update now</a>."
+msgstr ""
+
+#: includes/EDD_SL_Plugin_Updater.php:306
+msgid "You do not have permission to install plugin updates"
 msgstr ""
 
 #: includes/admin/add-ons.php:42
@@ -726,7 +743,7 @@ msgstr ""
 #: includes/admin/reporting/class-api-requests-logs-list-table.php:135
 #: includes/admin/reporting/class-export.php:172
 #: includes/admin/reporting/class-gateway-error-logs-list-table.php:119
-#: includes/cart/functions.php:1041 includes/cart/functions.php:1058
+#: includes/cart/functions.php:1042 includes/cart/functions.php:1059
 #: includes/download-functions.php:1054 includes/download-functions.php:1064
 #: includes/download-functions.php:1074 includes/emails/template.php:249
 #: includes/error-tracking.php:36 includes/gateways/functions.php:202
@@ -3591,32 +3608,32 @@ msgstr ""
 msgid "No users found"
 msgstr ""
 
-#: includes/cart/functions.php:372
+#: includes/cart/functions.php:373
 msgid "includes %s tax"
 msgstr ""
 
-#: includes/cart/functions.php:374
+#: includes/cart/functions.php:375
 msgid "excludes %s tax"
 msgstr ""
 
-#: includes/cart/functions.php:1003 includes/cart/functions.php:1071
+#: includes/cart/functions.php:1004 includes/cart/functions.php:1072
 #: templates/shortcode-profile-editor.php:20
 msgid "Success"
 msgstr ""
 
-#: includes/cart/functions.php:1004
+#: includes/cart/functions.php:1005
 msgid "Cart saved successfully. You can restore your cart using this URL:"
 msgstr ""
 
-#: includes/cart/functions.php:1041 includes/cart/functions.php:1058
+#: includes/cart/functions.php:1042 includes/cart/functions.php:1059
 msgid "Cart restoration failed. Invalid token."
 msgstr ""
 
-#: includes/cart/functions.php:1049 includes/cart/functions.php:1061
+#: includes/cart/functions.php:1050 includes/cart/functions.php:1062
 msgid "The cart cannot be restored. Invalid token."
 msgstr ""
 
-#: includes/cart/functions.php:1071
+#: includes/cart/functions.php:1072
 msgid "Cart restored successfully."
 msgstr ""
 
