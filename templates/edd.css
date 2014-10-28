@@ -237,6 +237,8 @@ table#edd_purchase_receipt_products .edd_bundled_product_name { font-style: ital
 -------------------------------------------------------------- */
 input.edd_submit_plain { background: none !important; border: none !important; padding: 0 !important; display: inline; cursor: pointer; }
 .single-download .edd_download_purchase_form { margin-bottom: 1.387em; }
+.edd_download_purchase_form .edd_download_quantity_wrapper { margin: 0 0 0.5em; }
+.edd_download_purchase_form .edd_download_quantity_wrapper .edd-item-quantity { width: 45px; }
 .edd_download_purchase_form .edd_price_options { margin: 0 0 15px; }
 .edd_download_purchase_form .edd_price_options ul { margin: 0; padding: 0; list-style: none; }
 .edd_download_purchase_form .edd_price_options li { display: block; padding: 0; margin: 0; }
