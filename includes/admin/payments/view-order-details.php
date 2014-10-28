@@ -298,13 +298,9 @@ $gateway        = edd_get_payment_gateway( $payment_id );
 								<h3 class="hndle">
 									<span><?php printf( __( 'Purchased %s', 'edd' ), edd_get_label_plural() ); ?></span>
 								</h3>
-<<<<<<< HEAD
 								
 								<?php if ( is_array( $cart_items ) ) :
-=======
 
-								<?php if ( $cart_items ) :
->>>>>>> dd46066bd79d41695ce6280798ff85979099ca8e
 									$i = 0;
 									foreach ( $cart_items as $key => $cart_item ) : ?>
 									<div class="row">
@@ -315,13 +311,9 @@ $gateway        = edd_get_payment_gateway( $payment_id );
 											$price    = isset( $cart_item['price'] ) ? $cart_item['price'] : false;
 											$price_id = isset( $cart_item['item_number']['options']['price_id'] ) ? $cart_item['item_number']['options']['price_id'] : null;
 											$quantity = isset( $cart_item['quantity'] ) && $cart_item['quantity'] > 0 ? $cart_item['quantity'] : 1;
-<<<<<<< HEAD
 	
 											if( false === $price ) {
-=======
 
-											if( ! $price ) {
->>>>>>> dd46066bd79d41695ce6280798ff85979099ca8e
 												// This function is only used on payments with near 1.0 cart data structure
 												$price = edd_get_download_final_price( $item_id, $user_info, null );
 											}
