@@ -142,7 +142,7 @@ class EDD_HTML_Elements {
 			'name'             => $args['name'],
 			'selected'         => $args['selected'],
 			'id'               => $args['id'],
-			'class'            => $args['class'],
+			'class'            => $args['class'] . ' edd-customer-select',
 			'options'          => $options,
 			'multiple'         => $args['multiple'],
 			'chosen'           => $args['chosen'],
