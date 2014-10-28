@@ -54,51 +54,7 @@ $gateway        = edd_get_payment_gateway( $payment_id );
 						<div id="side-sortables" class="meta-box-sortables ui-sortable">
 
 							<?php do_action( 'edd_view_order_details_sidebar_before', $payment_id ); ?>
-
-							<div id="edd-customer-details" class="postbox">
-								<h3 class="hndle">
-									<span><?php _e( 'Customer Details', 'edd' ); ?></span>
-								</h3>
-								<div class="inside">
-
-									<div class="edd-order-totals-box edd-admin-box">
-										<div class="edd-order-customer edd-admin-box-inside">
-											<p>
-												<strong><?php _e( 'Name:', 'edd' ); ?></strong>&nbsp;
-												<input type="text" name="edd-payment-user-name" value="<?php esc_attr_e( $user_info['first_name'] . ' ' . $user_info['last_name'] ); ?>" class="medium-text"/>
-											</p>
-											<p>
-												<strong><?php _e( 'Email:', 'edd' ); ?></strong>&nbsp;
-												<input type="email" name="edd-payment-user-email" value="<?php esc_attr_e( edd_get_payment_user_email( $payment_id ) ); ?>" class="medium-text"/>
-											</p>
-											<p>
-												<strong><?php _e( 'User ID:', 'edd' ); ?></strong>&nbsp;
-												<input type="number" step="1" min="-1" name="edd-payment-user-id" value="<?php esc_attr_e( $user_id ); ?>" class="small-text"/>
-											</p>
-										</div>
-										<div class="edd-order-customer-links edd-admin-box-inside">
-											<p>
-												<?php $purchase_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' . esc_attr( edd_get_payment_user_email( $payment_id ) ) ); ?>
-												<a href="<?php echo $purchase_url; ?>"><?php _e( 'View All Customer Purchases', 'edd' ); ?></a>
-											</p>
-											<p>
-												<?php $download_log_url = admin_url( 'edit.php?post_type=download&page=edd-reports&tab=logs&user=' . $user_id ); ?>
-												<a href="<?php echo $download_log_url; ?>"><?php _e( 'View User Download Log', 'edd' ); ?></a>
-											</p>
-										</div>
-									</div>
-
-									<?php
-									// The edd_payment_personal_details_list hook is left here for backwards compatibility
-									do_action( 'edd_payment_personal_details_list', $payment_meta, $user_info );
-									do_action( 'edd_payment_view_details', $payment_id );
-									?>
-
-								</div><!-- /.inside -->
-							</div><!-- /#edd-customer-details -->
-
-							<?php do_action( 'edd_view_order_details_order_totals_before', $payment_id ); ?>
-
+							
 							<div id="edd-order-totals" class="postbox">
 								<h3 class="hndle">
 									<span><?php _e( 'Payment Totals', 'edd' ); ?></span>
@@ -148,52 +104,6 @@ $gateway        = edd_get_payment_gateway( $payment_id );
 									</div><!-- /.edd-order-totals-box -->
 								</div><!-- /.inside -->
 							</div><!-- /#edd-order-totals -->
-
-							<div id="edd-order-update" class="postbox edd-order-data">
-
-								<h3 class="hndle">
-									<span><?php _e( 'Payment Details', 'edd' ); ?></span>
-								</h3>
-								<div class="inside">
-									<div class="edd-admin-box">
-
-										<div class="edd-admin-box-inside">
-
-											<?php
-											$gateway = edd_get_payment_gateway( $payment_id );
-											if ( $gateway ) { ?>
-											<p>
-												<strong><?php _e( 'Gateway:', 'edd' ); ?></strong>&nbsp;
-												<span><?php echo edd_get_gateway_admin_label( $gateway ); ?></span>
-											</p>
-											<?php } ?>
-
-											<p>
-												<strong><?php _e( 'Key:', 'edd' ); ?></strong>&nbsp;
-												<span><?php echo edd_get_payment_key( $payment_id ); ?></span>
-											</p>
-
-											<p>
-												<strong><?php _e( 'IP:', 'edd' ); ?></strong>&nbsp;
-												<span><?php esc_attr_e( edd_get_payment_user_ip( $payment_id )); ?></span>
-											</p>
-
-											<?php if ( $transaction_id ) { ?>
-											<p>
-												<strong><?php _e( 'Transaction ID:', 'edd' ); ?></strong>&nbsp;
-												<span><?php echo apply_filters( 'edd_payment_details_transaction_id-' . $gateway, $transaction_id, $payment_id ); ?></span>
-											</p>
-											<?php } ?>
-
-										</div>
-
-										<?php do_action( 'edd_view_order_details_update_inner', $payment_id ); ?>
-
-									</div><!-- /.column-container -->
-
-								</div><!-- /.inside -->
-
-							</div><!-- /#edd-order-data -->
 
 							<div id="edd-order-update" class="postbox edd-order-data">
 
@@ -259,6 +169,54 @@ $gateway        = edd_get_payment_gateway( $payment_id );
 
 							</div><!-- /#edd-order-data -->
 
+							<div id="edd-customer-details" class="postbox">
+								<h3 class="hndle">
+									<span><?php _e( 'Customer Details', 'edd' ); ?></span>
+								</h3>
+								<div class="inside">
+
+									<div class="edd-order-totals-box edd-admin-box">
+										<div class="edd-order-customer edd-admin-box-inside">
+											
+											<p>
+												<?php echo EDD()->html->customer_dropdown(); ?>
+											</p>
+											<!--
+											<p>
+												<strong><?php _e( 'Name:', 'edd' ); ?></strong>&nbsp;
+												<input type="text" name="edd-payment-user-name" value="<?php esc_attr_e( $user_info['first_name'] . ' ' . $user_info['last_name'] ); ?>" class="medium-text"/>
+											</p>
+											<p>
+												<strong><?php _e( 'Email:', 'edd' ); ?></strong>&nbsp;
+												<input type="email" name="edd-payment-user-email" value="<?php esc_attr_e( edd_get_payment_user_email( $payment_id ) ); ?>" class="medium-text"/>
+											</p>
+											<p>
+												<strong><?php _e( 'User ID:', 'edd' ); ?></strong>&nbsp;
+												<input type="number" step="1" min="-1" name="edd-payment-user-id" value="<?php esc_attr_e( $user_id ); ?>" class="small-text"/>
+											</p>
+											-->
+										</div>
+										<div class="edd-order-customer-links edd-admin-box-inside">
+											<p>
+												<?php $purchase_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' . esc_attr( edd_get_payment_user_email( $payment_id ) ) ); ?>
+												<a href="<?php echo $purchase_url; ?>"><?php _e( 'View All Customer Purchases', 'edd' ); ?></a>
+											</p>
+											<p>
+												<?php $download_log_url = admin_url( 'edit.php?post_type=download&page=edd-reports&tab=logs&user=' . $user_id ); ?>
+												<a href="<?php echo $download_log_url; ?>"><?php _e( 'View User Download Log', 'edd' ); ?></a>
+											</p>
+										</div>
+									</div>
+
+									<?php
+									// The edd_payment_personal_details_list hook is left here for backwards compatibility
+									do_action( 'edd_payment_personal_details_list', $payment_meta, $user_info );
+									
+									?>
+
+								</div><!-- /.inside -->
+							</div><!-- /#edd-customer-details -->
+
 							<div id="edd-order-logs" class="postbox edd-order-logs">
 
 								<h3 class="hndle">
@@ -289,9 +247,56 @@ $gateway        = edd_get_payment_gateway( $payment_id );
 					<div id="postbox-container-2" class="postbox-container">
 						<div id="normal-sortables" class="meta-box-sortables ui-sortable">
 
+							<?php do_action( 'edd_payment_view_details', $payment_id ); // This is an old hook left here for backwards compatibility ?>
+
 							<?php do_action( 'edd_view_order_details_main_before', $payment_id ); ?>
 
-							<?php do_action( 'edd_view_order_details_billing_after', $payment_id ); ?>
+							<div id="edd-order-details" class="postbox edd-order-data">
+
+								<h3 class="hndle">
+									<span><?php _e( 'Payment Details', 'edd' ); ?></span>
+								</h3>
+								<div class="inside">
+									<div class="edd-admin-box">
+
+										<div class="column">
+
+											<?php
+											$gateway = edd_get_payment_gateway( $payment_id );
+											if ( $gateway ) { ?>
+											<p>
+												<strong><?php _e( 'Gateway:', 'edd' ); ?></strong>&nbsp;
+												<span><?php echo edd_get_gateway_admin_label( $gateway ); ?></span>
+											</p>
+											<?php } ?>
+
+											<p>
+												<strong><?php _e( 'Key:', 'edd' ); ?></strong>&nbsp;
+												<span><?php echo edd_get_payment_key( $payment_id ); ?></span>
+											</p>
+										</div>
+										<div class="column">
+											<p>
+												<strong><?php _e( 'IP:', 'edd' ); ?></strong>&nbsp;
+												<span><?php esc_attr_e( edd_get_payment_user_ip( $payment_id )); ?></span>
+											</p>
+
+											<?php if ( $transaction_id ) { ?>
+											<p>
+												<strong><?php _e( 'Transaction ID:', 'edd' ); ?></strong>&nbsp;
+												<span><?php echo apply_filters( 'edd_payment_details_transaction_id-' . $gateway, $transaction_id, $payment_id ); ?></span>
+											</p>
+											<?php } ?>
+
+										</div>
+
+										<?php do_action( 'edd_view_order_details_update_inner', $payment_id ); ?>
+
+									</div><!-- /.column-container -->
+
+								</div><!-- /.inside -->
+
+							</div><!-- /#edd-order-data -->
 
 							<?php $column_count = edd_item_quantities_enabled() ? 'columns-4' : 'columns-3'; ?>
 							<div id="edd-purchased-files" class="postbox <?php echo $column_count; ?>">
@@ -509,6 +514,8 @@ $gateway        = edd_get_payment_gateway( $payment_id );
 
 								</div><!-- /.inside -->
 							</div><!-- /#edd-billing-details -->
+
+							<?php do_action( 'edd_view_order_details_billing_after', $payment_id ); ?>
 
 							<?php do_action( 'edd_view_order_details_main_after', $payment_id ); ?>
 						</div><!-- /#normal-sortables -->
