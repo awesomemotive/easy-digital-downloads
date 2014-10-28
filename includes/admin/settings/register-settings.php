@@ -441,7 +441,7 @@ function edd_get_registered_settings() {
 				),
 				'tax_rate' => array(
 					'id' => 'tax_rate',
-					'name' => __( 'Default Tax Rate', 'edd' ),
+					'name' => __( 'Fallback Tax Rate', 'edd' ),
 					'desc' => __( 'Enter a percentage, such as 6.5. Customers not in a specific rate below will be charged this rate.', 'edd' ),
 					'type' => 'text',
 					'size' => 'small'
