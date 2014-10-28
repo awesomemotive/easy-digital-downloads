@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.7
 Tested up to: 4.1
 
-Stable Tag: 2.1.7
+Stable Tag: 2.1.8
 
 License: GNU Version 2 or Any Later Version
 
@@ -183,6 +183,13 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.1.8, October 28, 2014 =
+
+* Fix: Incorrect item amounts displayed on the purchase confirmation page when prices are inclusive of tax
+* Fix: Discount Invalid error message getting erroneously displayed on checkout when using a preset discount code
+* Fix: Invalid CSS comment in minified admin CSS
+* Tweak: Updated language files
 
 = 2.1.7, October 20, 2014 =
 
