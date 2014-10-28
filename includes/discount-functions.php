@@ -1294,7 +1294,7 @@ function edd_apply_preset_discount() {
 		return;
 	}
 
-	$code = apply_filters( 'edd_apply_preset_discount', $code, $download_id, $options );
+	$code = apply_filters( 'edd_apply_preset_discount', $code );
 
 	edd_set_cart_discount( $code );
 
