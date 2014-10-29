@@ -1472,9 +1472,11 @@ function edd_get_payment_note_html( $note, $payment_id = 0 ) {
  * @return array $clauses Updated comment clauses
  */
 function edd_hide_payment_notes( $clauses, $wp_comment_query ) {
-    global $wpdb;
+    global $wpdb, $wp_version;
 
-	$clauses['where'] .= ' AND comment_type != "edd_payment_note"';
+	if( version_compare( floatval( $wp_version ), '4.1', '<' ) ) {
+		$clauses['where'] .= ' AND comment_type != "edd_payment_note"';
+	}
     return $clauses;
 }
 add_filter( 'comments_clauses', 'edd_hide_payment_notes', 10, 2 );
