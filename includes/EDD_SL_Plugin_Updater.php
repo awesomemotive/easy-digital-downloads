@@ -48,7 +48,7 @@ class EDD_SL_Plugin_Updater {
      */
     public function init() {
 
-        add_filter( 'site_transient_update_plugins', array( $this, 'check_update' ) );
+        add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_update' ) );
         add_filter( 'plugins_api', array( $this, 'plugins_api_filter' ), 10, 3 );
 
         add_action( 'after_plugin_row_' . $this->name, array( $this, 'show_update_notification' ), 10, 2 );
@@ -129,16 +129,17 @@ class EDD_SL_Plugin_Updater {
         if ( empty( $update_cache->response ) || empty( $update_cache->response[ $this->name ] ) ) {
 
             $version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
-            $update_cache->response[ $this->name ] = $version_info;
+
+            if( version_compare( $this->version, $version_info->new_version, '<' ) ) {
+            
+                $update_cache->response[ $this->name ] = $version_info;
+            
+            }
 
             $update_cache->last_checked = time();
             $update_cache->checked[ $this->name ] = $this->version;
 
             set_site_transient( 'update_plugins', $update_cache );
-
-        } else {
-
-            $version_info = $update_cache->response[ $this->name ];
 
         }
 
