@@ -77,15 +77,19 @@ class EDD_SL_Plugin_Updater {
             $_transient_data = new stdClass;
         }
 
-        if ( empty( $_transient_data->response ) || empty( $_transient_data->response[ $this->name ] ) ) {
-            
+        if ( empty( $_transient_data->response ) ) {
+
             $version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
 
             if ( false !== $version_info && is_object( $version_info ) && isset( $version_info->new_version ) ) {
 
                 $this->did_check = true;
 
-                $_transient_data->response[ $this->name ] = $version_info;
+                version_compare( $this->version, $version_info->new_version, '<' ) {
+
+                    $_transient_data->response[ $this->name ] = $version_info;
+
+                }
 
                 // Small trick to ensure the updates get shown in the network admin
                 if ( is_multisite() && ! is_main_site() ) {
@@ -114,16 +118,15 @@ class EDD_SL_Plugin_Updater {
             return;
         }
 
-
         if ( $this->name != $file ) {
             return;
         }
 
         // Remove our filter on the site transient
         remove_filter( 'pre_site_transient_update_plugins', array( $this, 'check_update' ), 10 );
-      
+
         $update_cache = get_site_transient( 'update_plugins' );
-      
+
         if ( empty( $update_cache->response ) || empty( $update_cache->response[ $this->name ] ) ) {
 
             $version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
@@ -302,7 +305,7 @@ class EDD_SL_Plugin_Updater {
         }
 
         $response = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
-        
+
         if( $response && isset( $response->sections['changelog'] ) ) {
             echo '<div style="background:#fff;padding:10px;">' . $response->sections['changelog'] . '</div>';
         }
