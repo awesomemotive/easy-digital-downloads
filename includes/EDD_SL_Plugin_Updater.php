@@ -85,7 +85,7 @@ class EDD_SL_Plugin_Updater {
 
                 $this->did_check = true;
 
-                version_compare( $this->version, $version_info->new_version, '<' ) {
+                if( version_compare( $this->version, $version_info->new_version, '<' ) ) {
 
                     $_transient_data->response[ $this->name ] = $version_info;
 
