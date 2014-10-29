@@ -7,7 +7,7 @@
  * Allows plugins to use their own update API.
  *
  * @author Pippin Williamson
- * @version 1.3
+ * @version 1.4
  */
 class EDD_SL_Plugin_Updater {
     private $api_url   = '';
@@ -48,12 +48,8 @@ class EDD_SL_Plugin_Updater {
      */
     public function init() {
 
-        //add_filter( 'pre_set_transient_update_plugins', array( $this, 'check_update' ) );
-        //add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_update' ) );
-        add_filter( 'pre_site_transient_update_plugins', array( $this, 'check_update' ) );
-
+        add_filter( 'site_transient_update_plugins', array( $this, 'check_update' ) );
         add_filter( 'plugins_api', array( $this, 'plugins_api_filter' ), 10, 3 );
-        //add_filter( 'http_request_args', array( $this, 'http_request_args' ), 10, 2 );
 
         add_action( 'after_plugin_row_' . $this->name, array( $this, 'show_update_notification' ), 10, 2 );
     }
@@ -82,28 +78,20 @@ class EDD_SL_Plugin_Updater {
         }
 
         if ( empty( $_transient_data->response ) || empty( $_transient_data->response[ $this->name ] ) ) {
-
+            
             $version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
 
             if ( false !== $version_info && is_object( $version_info ) && isset( $version_info->new_version ) ) {
 
                 $this->did_check = true;
 
-                if ( version_compare( $this->version, $version_info->new_version, '>=' ) ) {
+                $_transient_data->response[ $this->name ] = $version_info;
 
-                    unset( $_transient_data->response[ $this->name ] );
+                // Small trick to ensure the updates get shown in the network admin
+                if ( is_multisite() && ! is_main_site() ) {
 
-                } else {
-
-                    $_transient_data->response[ $this->name ] = $version_info;
-
-                    // Small trick to ensure the updates get shown in the network admin
-                    if ( is_multisite() && ! is_main_site() ) {
-
-                        $_transient_data->last_checked = time();
-                        $_transient_data->checked[ $this->name ] = $this->version;
-
-                    }
+                    $_transient_data->last_checked = time();
+                    $_transient_data->checked[ $this->name ] = $this->version;
 
                 }
 
@@ -126,25 +114,23 @@ class EDD_SL_Plugin_Updater {
             return;
         }
 
+
         if ( $this->name != $file ) {
             return;
         }
 
-        // cache API call, to prevent requesting it over and over
+        // Remove our filter on the site transient
+        remove_filter( 'pre_site_transient_update_plugins', array( $this, 'check_update' ), 10 );
+      
         $update_cache = get_site_transient( 'update_plugins' );
-
+      
         if ( empty( $update_cache->response ) || empty( $update_cache->response[ $this->name ] ) ) {
 
             $version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
             $update_cache->response[ $this->name ] = $version_info;
 
-            // Small trick to ensure the updates get shown in the network admin
-            if ( is_multisite() && ! is_main_site() ) {
-
-                $update_cache->last_checked = time();
-                $update_cache->checked[ $this->name ] = $this->version;
-
-            }
+            $update_cache->last_checked = time();
+            $update_cache->checked[ $this->name ] = $this->version;
 
             set_site_transient( 'update_plugins', $update_cache );
 
@@ -153,6 +139,9 @@ class EDD_SL_Plugin_Updater {
             $version_info = $update_cache->response[ $this->name ];
 
         }
+
+        // Restore our filter
+        add_filter( 'pre_site_transient_update_plugins', array( $this, 'check_update' ) );
 
         if ( ! empty( $update_cache->response[ $this->name ] ) && version_compare( $this->version, $version_info->new_version, '<' ) ) {
 
@@ -279,16 +268,20 @@ class EDD_SL_Plugin_Updater {
             'author'     => $data['author'],
             'url'        => home_url()
         );
+
         $request = wp_remote_post( $this->api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
 
-        if ( ! is_wp_error( $request ) ):
+        if ( ! is_wp_error( $request ) ) {
             $request = json_decode( wp_remote_retrieve_body( $request ) );
-        if ( $request && isset( $request->sections ) )
+        }
+
+        if ( $request && isset( $request->sections ) ) {
             $request->sections = maybe_unserialize( $request->sections );
+        } else {
+            $request = false;
+        }
+
         return $request;
-        else:
-            return false;
-        endif;
     }
 
     public function show_changelog() {
