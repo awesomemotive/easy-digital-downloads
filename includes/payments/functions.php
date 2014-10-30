@@ -1467,11 +1467,33 @@ function edd_get_payment_note_html( $note, $payment_id = 0 ) {
  * Comments widgets
  *
  * @since 1.4.1
+ * @param obj $query WordPress Comment Query Object
+ * @return void
+ */
+function edd_hide_payment_notes( $query ) {
+    global $wp_version;
+
+	if( version_compare( floatval( $wp_version ), '4.1', '>=' ) ) {
+		$types = $query->query_vars['type__not_in'];
+		if( ! is_array( $types ) ) {
+			$types = array();
+		}
+		$types[] = 'edd_payment_note';
+		$query->query_vars['type__not_in'] = $types;
+	}
+}
+add_action( 'pre_get_comments', 'edd_hide_payment_notes', 10 );
+
+/**
+ * Exclude notes (comments) on edd_payment post type from showing in Recent
+ * Comments widgets
+ *
+ * @since 2.2
  * @param array $clauses Comment clauses for comment query
  * @param obj $wp_comment_query WordPress Comment Query Object
  * @return array $clauses Updated comment clauses
  */
-function edd_hide_payment_notes( $clauses, $wp_comment_query ) {
+function edd_hide_payment_notes_pre_41( $clauses, $wp_comment_query ) {
     global $wpdb, $wp_version;
 
 	if( version_compare( floatval( $wp_version ), '4.1', '<' ) ) {
@@ -1479,7 +1501,7 @@ function edd_hide_payment_notes( $clauses, $wp_comment_query ) {
 	}
     return $clauses;
 }
-add_filter( 'comments_clauses', 'edd_hide_payment_notes', 10, 2 );
+add_filter( 'comments_clauses', 'edd_hide_payment_notes_pre_41', 10, 2 );
 
 
 /**
