@@ -1357,11 +1357,13 @@ function edd_get_payment_notes( $payment_id = 0, $search = '' ) {
 		return false;
 	}
 
-	remove_filter( 'comments_clauses', 'edd_hide_payment_notes', 10, 2 );
+	remove_action( 'pre_get_comments', 'edd_hide_payment_notes', 10 );
+	remove_filter( 'comments_clauses', 'edd_hide_payment_notes_pre_41', 10, 2 );
 
 	$notes = get_comments( array( 'post_id' => $payment_id, 'order' => 'ASC', 'search' => $search ) );
 
-	add_filter( 'comments_clauses', 'edd_hide_payment_notes', 10, 2 );
+	add_action( 'pre_get_comments', 'edd_hide_payment_notes', 10 );
+	add_filter( 'comments_clauses', 'edd_hide_payment_notes_pre_41', 10, 2 );
 
 	return $notes;
 }
