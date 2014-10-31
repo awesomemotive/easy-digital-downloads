@@ -44,6 +44,10 @@ function edd_resend_purchase_receipt( $data ) {
 		return;
 	}
 
+	if( ! current_user_can( 'edit_shop_payment', $purchase_id ) ) {
+		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ) );
+	}
+
 	edd_email_purchase_receipt( $purchase_id, false );
 
 	// Grab all downloads of the purchase and update their file download limits, if needed

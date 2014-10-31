@@ -100,6 +100,11 @@ add_action( 'admin_notices', 'edd_show_upgrade_notices' );
  * @return void
 */
 function edd_trigger_upgrades() {
+
+	if( ! current_user_can( 'manage_shop_options' ) ) {
+		wp_die( __( 'You do not have permission to do shop upgrades', 'edd' ) );
+	}
+	
 	$edd_version = get_option( 'edd_version' );
 
 	if ( ! $edd_version ) {
@@ -376,6 +381,10 @@ function edd_v20_upgrades() {
  */
 function edd_v20_upgrade_sequential_payment_numbers() {
 
+	if( ! current_user_can( 'manage_shop_options' ) ) {
+		wp_die( __( 'You do not have permission to do shop upgrades', 'edd' ) );
+	}
+
 	ignore_user_abort( true );
 
 	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
@@ -451,6 +460,10 @@ add_action( 'edd_upgrade_sequential_payment_numbers', 'edd_v20_upgrade_sequentia
 function edd_v21_upgrade_customers_db() {
 
 	global $wpdb;
+
+	if( ! current_user_can( 'manage_shop_options' ) ) {
+		wp_die( __( 'You do not have permission to do shop upgrades', 'edd' ) );
+	}
 
 	ignore_user_abort( true );
 

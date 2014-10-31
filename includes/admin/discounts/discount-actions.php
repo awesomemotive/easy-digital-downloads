@@ -26,6 +26,10 @@ function edd_add_discount( $data ) {
 		return;
 	}
 
+	if( ! current_user_can( 'manage_shop_discounts' ) ) {
+		wp_die( __( 'You do not have permission to create discount codes', 'edd' ) );
+	}
+
 	// Setup the discount code details
 	$posted = array();
 
@@ -84,6 +88,10 @@ function edd_edit_discount( $data ) {
 		return;
 	}
 
+	if( ! current_user_can( 'manage_shop_discounts' ) ) {
+		wp_die( __( 'You do not have permission to edit discount codes', 'edd' ) );
+	}
+
 	// Setup the discount code details
 	$discount = array();
 
@@ -136,6 +144,10 @@ function edd_delete_discount( $data ) {
 		wp_die( __( 'Trying to cheat or something?', 'edd' ), __( 'Error', 'edd' ) );
 	}
 
+	if( ! current_user_can( 'manage_shop_discounts' ) ) {
+		wp_die( __( 'You do not have permission to delete discount codes', 'edd' ) );
+	}
+
 	$discount_id = $data['discount'];
 	edd_remove_discount( $discount_id );
 }
@@ -157,6 +169,10 @@ function edd_activate_discount( $data ) {
 		wp_die( __( 'Trying to cheat or something?', 'edd' ), __( 'Error', 'edd' ) );
 	}
 
+	if( ! current_user_can( 'manage_shop_discounts' ) ) {
+		wp_die( __( 'You do not have permission to edit discount codes', 'edd' ) );
+	}
+
 	$id = absint( $data['discount'] );
 	edd_update_discount_status( $id, 'active' );
 }
@@ -176,6 +192,10 @@ function edd_deactivate_discount( $data ) {
 
 	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'edd_discount_nonce' ) ) {
 		wp_die( __( 'Trying to cheat or something?', 'edd' ), __( 'Error', 'edd' ) );
+	}
+	
+	if( ! current_user_can( 'manage_shop_discounts' ) ) {
+		wp_die( __( 'You do not have permission to create discount codes', 'edd' ) );
 	}
 	
 	$id = absint( $data['discount'] );
