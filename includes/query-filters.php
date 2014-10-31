@@ -56,7 +56,7 @@ add_action( 'template_redirect', 'edd_block_attachments' );
  * @return string
  */
 function edd_redirect_canonical( $redirect_url, $requested_url ) {
-	
+
 	if( ! is_front_page() ) {
 		return $redirect_url;
 	}
