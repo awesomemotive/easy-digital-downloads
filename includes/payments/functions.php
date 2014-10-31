@@ -1476,9 +1476,9 @@ function edd_hide_payment_notes( $query ) {
     global $wp_version;
 
 	if( version_compare( floatval( $wp_version ), '4.1', '>=' ) ) {
-		$types = $query->query_vars['type__not_in'];
+		$types = isset( $query->query_vars['type__not_in'] ) ? $query->query_vars['type__not_in'] : array();
 		if( ! is_array( $types ) ) {
-			$types = array();
+			$types = array( $types );
 		}
 		$types[] = 'edd_payment_note';
 		$query->query_vars['type__not_in'] = $types;
