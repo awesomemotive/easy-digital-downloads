@@ -206,7 +206,13 @@ add_action( 'edd_update_payment_details', 'edd_update_payment_details' );
  */
 function edd_trigger_purchase_delete( $data ) {
 	if ( wp_verify_nonce( $data['_wpnonce'], 'edd_payment_nonce' ) ) {
+
 		$payment_id = absint( $data['purchase_id'] );
+
+		if( ! current_user_can( 'edit_shop_payment', $payment_id ) ) {
+			wp_die( __( 'You do not have permission to edit this payment record', 'edd' ) );
+		}
+
 		edd_delete_purchase( $payment_id );
 		wp_redirect( admin_url( '/edit.php?post_type=download&page=edd-payment-history&edd-message=payment_deleted' ) );
 		edd_die();
@@ -218,6 +224,10 @@ function edd_ajax_store_payment_note() {
 
 	$payment_id = absint( $_POST['payment_id'] );
 	$note       = wp_kses( $_POST['note'], array() );
+	
+	if( ! current_user_can( 'edit_shop_payment', $payment_id ) ) {
+		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ) );
+	}
 
 	if( empty( $payment_id ) )
 		die( '-1' );
