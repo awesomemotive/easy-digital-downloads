@@ -408,7 +408,7 @@ function edd_get_cart_item_price( $download_id = 0, $options = array() ) {
 		}
 	}
 
-	if( ! $price ) {
+	if( false === $price ) {
 		// Get the standard Download price if not using variable prices
 		$price = edd_get_download_price( $download_id );
 	}
