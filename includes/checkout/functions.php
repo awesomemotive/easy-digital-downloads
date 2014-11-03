@@ -24,11 +24,11 @@ function edd_is_checkout() {
 	$home_shows = get_option( 'show_on_front' );
 	$home_id    = get_option( 'page_on_front' );
 
-	if( 'page' === $home_shows && (int) $checkout === (int) $home_id ) {
+	if( 'page' === $home_shows && (int) $checkout === (int) $home_id && is_front_page() ) {
 
 		$is_checkout = true;
 
-	} elseif( 'page' === $home_shows ) {
+	} elseif( 'page' === $home_shows && is_front_page() ) {
 
 		$is_checkout = false;
 
