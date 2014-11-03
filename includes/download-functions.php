@@ -997,7 +997,9 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id, $price
 
 	$params = apply_filters( 'edd_download_file_url_args', $params );
 
-	$download_url = add_query_arg( $params, home_url( 'index.php' ) );
+	$edd_custom_homeurl = home_url( 'index.php' );
+ 	$edd_custom_homeurl = apply_filters( 'edd_home_url_customize',$edd_custom_homeurl);
+	$download_url = add_query_arg( $params, $edd_custom_homeurl );
 
 	return $download_url;
 }
