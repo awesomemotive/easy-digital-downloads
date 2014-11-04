@@ -7,14 +7,13 @@
  * Allows plugins to use their own update API.
  *
  * @author Pippin Williamson
- * @version 1.4
+ * @version 1.5
  */
 class EDD_SL_Plugin_Updater {
     private $api_url   = '';
     private $api_data  = array();
     private $name      = '';
     private $slug      = '';
-    private $did_check = false;
 
     /**
      * Class constructor.
@@ -68,10 +67,6 @@ class EDD_SL_Plugin_Updater {
      * @return array Modified update array with custom plugin data.
      */
     function check_update( $_transient_data ) {
-
-        if ( $this->did_check ) {
-            return $_transient_data;
-        }
 
         if( ! is_object( $_transient_data ) ) {
             $_transient_data = new stdClass;
@@ -259,8 +254,8 @@ class EDD_SL_Plugin_Updater {
             return;
 
         if( $this->api_url == home_url() ) {
-			return false; // Don't allow a plugin to ping itself
-		}
+            return false; // Don't allow a plugin to ping itself
+        }
 
         $api_params = array(
             'edd_action' => 'get_version',
