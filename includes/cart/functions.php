@@ -397,18 +397,31 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
  * @return float|bool Price for this item
  */
 function edd_get_cart_item_price( $download_id = 0, $options = array() ) {
-	global $edd_options;
 
 	$price = 0;
+	$variable_prices = edd_has_variable_prices( $download_id );
 
-	if ( edd_has_variable_prices( $download_id ) && ! empty( $options ) ) {
+	if ( $variable_prices ) {
+
 		$prices = edd_get_variable_prices( $download_id );
+
 		if ( $prices ) {
-			$price = isset( $prices[ $options['price_id'] ] ) ? $prices[ $options['price_id'] ]['amount'] : 0;
+
+			if( ! empty( $options ) ) {
+
+				$price = isset( $prices[ $options['price_id'] ] ) ? $prices[ $options['price_id'] ]['amount'] : false;
+
+			} else {
+
+				$price = false;
+
+			}
+
 		}
+
 	}
 
-	if( false === $price ) {
+	if( ! $variable_prices || false === $price ) {
 		// Get the standard Download price if not using variable prices
 		$price = edd_get_download_price( $download_id );
 	}
