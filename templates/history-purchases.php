@@ -23,12 +23,15 @@ if ( $purchases ) : ?>
 					<span class="edd_purchase_amount"><?php echo edd_currency_filter( edd_format_amount( edd_get_payment_amount( $post->ID ) ) ); ?></span>
 				</td>
 				<td class="edd_purchase_details">
-					<?php if( $post->post_status != 'publish' ) : ?>
-					<span class="edd_purchase_status <?php echo $post->post_status; ?>"><?php echo edd_get_payment_status( $post, true ); ?></span>
-					<a href="<?php echo add_query_arg( 'payment_key', edd_get_payment_key( $post->ID ), edd_get_success_page_uri() ); ?>">&raquo;</a>
-					<?php else: ?>
-					<a href="<?php echo add_query_arg( 'payment_key', edd_get_payment_key( $post->ID ), edd_get_success_page_uri() ); ?>"><?php _e( 'View Details and Downloads', 'edd' ); ?></a>
-					<?php endif; ?>
+				<?php if( $post->post_status != 'publish' ) : ?>
+					<a href="<?php echo add_query_arg( 'payment_key', edd_get_payment_key( $post->ID ), edd_get_success_page_uri() ); ?>"><?php 
+						echo apply_filters( 'edd_purchase_details_downloads_link_text', edd_get_payment_status( $post, true ) . ' &raquo;', $post->post_status ); 
+					?></a>
+				<?php else: ?>
+					<a href="<?php echo add_query_arg( 'payment_key', edd_get_payment_key( $post->ID ), edd_get_success_page_uri() ); ?>"><?php 
+						echo apply_filters( 'edd_purchase_details_downloads_link_text', __( 'View Details and Downloads', 'edd' ), $post->post_status ); 
+					?></a>
+				<?php endif; ?>
 				</td>
 				<?php do_action( 'edd_purchase_history_row_end', $post->ID, $purchase_data ); ?>
 			</tr>
