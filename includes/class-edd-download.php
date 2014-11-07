@@ -97,7 +97,8 @@ class EDD_Download {
 	}
 
 	public function get_prices() {
-
+		$prices = get_post_meta( $this->ID, 'edd_variable_prices', true );
+		return apply_filters( 'edd_get_variable_prices', $prices, $this->ID );
 	}
 
 	public function get_price_mode() {
