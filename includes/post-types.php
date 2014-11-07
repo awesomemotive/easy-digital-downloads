@@ -172,7 +172,7 @@ function edd_change_default_title( $title ) {
      // If a frontend plugin uses this filter (check extensions before changing this function)
      if ( !is_admin() ) {
      	$label = edd_get_label_singular();
-        $title = sprintf( __( 'Enter %s title here', 'edd' ), $label );
+        $title = sprintf( __( 'Enter %s Name here', 'edd' ), $label );
      	return $title;
      }
      
@@ -180,7 +180,7 @@ function edd_change_default_title( $title ) {
 
      if  ( 'download' == $screen->post_type ) {
      	$label = edd_get_label_singular();
-        $title = sprintf( __( 'Enter %s title here', 'edd' ), $label );
+        $title = sprintf( __( 'Enter %s Name here', 'edd' ), $label );
      }
 
      return $title;
