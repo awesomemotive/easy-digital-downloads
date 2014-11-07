@@ -813,20 +813,8 @@ function edd_get_file_downloaded_count( $download_id = 0, $file_key = 0, $paymen
  * @return int $limit File download limit
  */
 function edd_get_file_download_limit( $download_id = 0 ) {
-	global $edd_options;
-
-	$ret    = 0;
-	$limit  = get_post_meta( $download_id, '_edd_download_limit', true );
-	$global = edd_get_option( 'file_download_limit', 0 );
-
-	if ( ! empty( $limit ) || ( is_numeric( $limit ) && (int)$limit == 0 ) ) {
-		// Download specific limit
-		$ret = absint( $limit );
-	} else {
-		// Global limit
-		$ret = strlen( $limit ) == 0  || $global ? $global : 0;
-	}
-	return apply_filters( 'edd_file_download_limit', $ret, $download_id );
+	$download = new EDD_Download( $download_id );
+	return $download->get_file_download_limit();
 }
 
 /**
