@@ -447,10 +447,8 @@ function edd_get_download_types() {
  * @return string $type Download type
  */
 function edd_get_download_type( $download_id ) {
-	$type = get_post_meta( $download_id, '_edd_product_type', true );
-	if( empty( $type ) )
-		$type = 'default';
-	return apply_filters( 'edd_get_download_type', $type, $download_id );
+	$download = new EDD_Download( $download_id );
+	return $download->type;
 }
 
 /**
