@@ -205,12 +205,16 @@ class EDD_Download {
 
 	}
 
-	public function  get_earnings() {
+	public function get_earnings() {
 
 	}
 
 	public function get_notes() {
-
+	
+		$notes = get_post_meta( $this->ID, 'edd_product_notes', true );		
+	
+		return (string) apply_filters( 'edd_product_notes', $notes, $this->ID );
+	
 	}
 
 	public function get_sku() {
