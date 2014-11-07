@@ -426,12 +426,14 @@ function edd_price_range( $download_id = 0 ) {
  * @return bool
  */
 function edd_single_price_option_mode( $download_id = 0 ) {
-	if ( empty( $download_id ) )
+
+	if ( empty( $download_id ) ) {
 		$download_id = get_the_ID();
+	}
 
-	$ret = get_post_meta( $download_id, '_edd_price_options_mode', true );
+	$download = new EDD_Download( $download_id );
+	return $download->is_single_price_mode();
 
-	return (bool) apply_filters( 'edd_single_price_option_mode', $ret, $download_id );
 }
 
 /**

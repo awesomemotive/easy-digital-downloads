@@ -102,7 +102,11 @@ class EDD_Download {
 	
 	}
 
-	public function get_price_mode() {
+	public function is_single_price_mode() {
+
+		$ret = get_post_meta( $this->ID, '_edd_price_options_mode', true );
+
+		return (bool) apply_filters( 'edd_single_price_option_mode', $ret, $this->ID );
 
 	}
 
