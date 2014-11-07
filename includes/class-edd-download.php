@@ -61,21 +61,25 @@ class EDD_Download {
 
 		$download = WP_Post::get_instance( $_id );
 
-		foreach ( $download as $key => $value ) {
+		if( $download ) {
 
-			$this->$key = $value;
+			foreach ( $download as $key => $value ) {
 
-		}
-
-		foreach ( get_object_vars( $this ) as $key => $value ) {
-
-			if( method_exists( $this, 'get_' . $key ) ) {
-
-				$value = call_user_func( array( $this, 'get_' . $key ) );
+				$this->$key = $value;
 
 			}
 
-			$this->$key = $value;
+			foreach ( get_object_vars( $this ) as $key => $value ) {
+
+				if( method_exists( $this, 'get_' . $key ) ) {
+
+					$value = call_user_func( array( $this, 'get_' . $key ) );
+
+				}
+
+				$this->$key = $value;
+
+			}
 
 		}
 
