@@ -325,7 +325,22 @@ class EDD_Download {
 
 	}
 
-	public function is_free() {
+	public function is_free( $price_id = false ) {
+
+		$is_free = false;
+		$variable_pricing = edd_has_variable_prices( $this->ID );
+
+		if ( $variable_pricing && ! is_null( $price_id ) && $price_id !== false ) {
+			$price = edd_get_price_option_amount( $this->ID, $price_id );
+		} elseif( ! $variable_pricing ) {
+			$price = get_post_meta( $this->ID, 'edd_price', true );
+		}
+
+		if( isset( $price ) && (float) $price == 0 ) {
+			$is_free = true;
+		}
+
+		return (bool) apply_filters( 'edd_is_free_download', $is_free, $this->ID, $price_id );
 
 	}
 
