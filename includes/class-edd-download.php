@@ -22,6 +22,8 @@ class EDD_Download {
 
 	public $files;
 
+	public $file_download_limit;
+
 	public $type;
 
 	public $bundled_downloads;
@@ -84,11 +86,11 @@ class EDD_Download {
 		if ( $price ) {
 
 			$price = edd_sanitize_amount( $price );
-		
+
 		} else {
-		
+
 			$price = 0;
-		
+
 		}
 
 		return apply_filters( 'edd_get_download_price', $price, $this->ID );
@@ -97,9 +99,9 @@ class EDD_Download {
 	public function get_prices() {
 
 		$prices = get_post_meta( $this->ID, 'edd_variable_prices', true );
-		
+
 		return apply_filters( 'edd_get_variable_prices', $prices, $this->ID );
-	
+
 	}
 
 	public function is_single_price_mode() {
@@ -113,13 +115,13 @@ class EDD_Download {
 	public function has_variable_prices() {
 
 		$ret = get_post_meta( $this->ID, '_variable_pricing', true );
-	
+
 		return (bool) apply_filters( 'edd_has_variable_prices', $ret, $this->ID );
-	
+
 	}
 
 	public function get_files( $variable_price_id = null ) {
-		
+
 		$files = array();
 
 		// Bundled products are not allowed to have files
@@ -131,17 +133,17 @@ class EDD_Download {
 
 		if ( $download_files ) {
 
-			
+
 			if ( ! is_null( $variable_price_id ) && $this->has_variable_prices() ) {
-			
+
 				foreach ( $download_files as $key => $file_info ) {
-				
+
 					if ( isset( $file_info['condition'] ) ) {
-						
+
 						if ( $file_info['condition'] == $variable_price_id || 'all' === $file_info['condition'] ) {
-						
+
 							$files[ $key ] = $file_info;
-						
+
 						}
 
 					}
@@ -157,6 +159,28 @@ class EDD_Download {
 		}
 
 		return apply_filters( 'edd_download_files', $files, $this->ID, $variable_price_id );
+
+	}
+
+	public function get_file_download_limit() {
+
+		$ret    = 0;
+		$limit  = get_post_meta( $this->ID, '_edd_download_limit', true );
+		$global = edd_get_option( 'file_download_limit', 0 );
+
+		if ( ! empty( $limit ) || ( is_numeric( $limit ) && (int)$limit == 0 ) ) {
+
+			// Download specific limit
+			$ret = absint( $limit );
+
+		} else {
+
+			// Global limit
+			$ret = strlen( $limit ) == 0  || $global ? $global : 0;
+
+		}
+
+		return absint( apply_filters( 'edd_file_download_limit', $ret, $this->ID ) );
 
 	}
 
