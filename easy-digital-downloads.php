@@ -236,6 +236,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-api.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-customers.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-download.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cache-helper.php';
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			require_once EDD_PLUGIN_DIR . 'includes/class-edd-cli.php';
