@@ -16,8 +16,6 @@
  */
 class EDD_Download {
 
-	public $ID;
-
 	public $price;
 
 	public $prices;
@@ -60,10 +58,6 @@ class EDD_Download {
 	}
 
 	public function has_variable_prices() {
-
-	}
-
-	public function get_files() {
 
 	}
 
