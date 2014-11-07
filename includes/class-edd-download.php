@@ -118,7 +118,45 @@ class EDD_Download {
 	
 	}
 
-	public function get_files() {
+	public function get_files( $variable_price_id = null ) {
+		
+		$files = array();
+
+		// Bundled products are not allowed to have files
+		if( edd_is_bundled_product( $this->ID ) ) {
+			return $files;
+		}
+
+		$download_files = get_post_meta( $this->ID, 'edd_download_files', true );
+
+		if ( $download_files ) {
+
+			
+			if ( ! is_null( $variable_price_id ) && $this->has_variable_prices() ) {
+			
+				foreach ( $download_files as $key => $file_info ) {
+				
+					if ( isset( $file_info['condition'] ) ) {
+						
+						if ( $file_info['condition'] == $variable_price_id || 'all' === $file_info['condition'] ) {
+						
+							$files[ $key ] = $file_info;
+						
+						}
+
+					}
+
+				}
+
+			} else {
+
+				$files = $download_files;
+
+			}
+
+		}
+
+		return apply_filters( 'edd_download_files', $files, $this->ID, $variable_price_id );
 
 	}
 
