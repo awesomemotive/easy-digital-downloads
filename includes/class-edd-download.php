@@ -112,9 +112,9 @@ class EDD_Download {
 
 	public function has_variable_prices() {
 
-		$ret = (bool )get_post_meta( $this->ID, '_variable_pricing', true );
+		$ret = get_post_meta( $this->ID, '_variable_pricing', true );
 	
-		return apply_filters( 'edd_has_variable_prices', $ret, $this->ID );
+		return (bool) apply_filters( 'edd_has_variable_prices', $ret, $this->ID );
 	
 	}
 
