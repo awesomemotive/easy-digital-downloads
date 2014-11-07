@@ -459,7 +459,8 @@ function edd_get_download_type( $download_id ) {
  * @return bool
  */
 function edd_is_bundled_product( $download_id = 0 ) {
-	return 'bundle' === edd_get_download_type( $download_id );
+	$download = new EDD_Download( $download_id );
+	return $download->is_bundled_download();
 }
 
 
@@ -471,8 +472,8 @@ function edd_is_bundled_product( $download_id = 0 ) {
  * @return array $products Products in the bundle
  */
 function edd_get_bundled_products( $download_id = 0 ) {
-	$products = get_post_meta( $download_id, '_edd_bundled_products', true );
-	return apply_filters( 'edd_get_bundled_products', $products, $download_id );
+	$download = new EDD_Download( $download_id );
+	return $download->bundled_downloads;
 }
 
 /**
