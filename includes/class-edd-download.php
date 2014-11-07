@@ -187,15 +187,23 @@ class EDD_Download {
 	}
 
 	public function get_file_price_condition( $file_key = 0 ) {
-	
+
 		$files    = edd_get_download_files( $this->ID );
 		$condition = isset( $files[ $file_key ]['condition']) ? $files[ $file_key ]['condition'] : 'all';
 
 		return apply_filters( 'edd_get_file_price_condition', $condition, $this->ID, $files );
-	
+
 	}
 
 	public function get_type() {
+
+		$type = get_post_meta( $this->ID, '_edd_product_type', true );
+
+		if( empty( $type ) ) {
+			$type = 'default';
+		}
+
+		return apply_filters( 'edd_get_download_type', $type, $this->ID );
 
 	}
 
@@ -204,11 +212,11 @@ class EDD_Download {
 	}
 
 	public function get_notes() {
-	
-		$notes = get_post_meta( $this->ID, 'edd_product_notes', true );		
+
+		$notes = get_post_meta( $this->ID, 'edd_product_notes', true );
 
 		return (string) apply_filters( 'edd_product_notes', $notes, $this->ID );
-	
+
 	}
 
 	public function get_sku() {
@@ -238,7 +246,7 @@ class EDD_Download {
 	}
 
 	public function get_sales() {
-	
+
 		if ( '' == get_post_meta( $this->ID, '_edd_download_sales', true ) ) {
 			add_post_meta( $this->ID, '_edd_download_sales', 0 );
 		} // End if
@@ -258,7 +266,7 @@ class EDD_Download {
 
 		$sales = edd_get_download_sales_stats( $this->ID );
 		$sales = $sales + 1;
-		
+
 		if ( update_post_meta( $this->ID, '_edd_download_sales', $sales ) ) {
 			return $sales;
 		}
@@ -267,7 +275,7 @@ class EDD_Download {
 	}
 
 	public function decrease_sales() {
-	
+
 		$sales = edd_get_download_sales_stats( $this->ID );
 		if ( $sales > 0 ) // Only decrease if not already zero
 			$sales = $sales - 1;
@@ -277,11 +285,11 @@ class EDD_Download {
 		}
 
 		return false;
-	
+
 	}
 
 	public function get_earnings() {
-	
+
 		if ( '' == get_post_meta( $this->ID, '_edd_download_earnings', true ) ) {
 			add_post_meta( $this->ID, '_edd_download_earnings', 0 );
 		}
@@ -298,7 +306,7 @@ class EDD_Download {
 	}
 
 	public function increase_earnings( $amount = 0 ) {
-	
+
 		$earnings = edd_get_download_earnings_stats( $this->ID );
 		$earnings = $earnings + (float) $amount;
 
@@ -307,7 +315,7 @@ class EDD_Download {
 		}
 
 		return false;
-	
+
 	}
 
 	public function decrease_earnings( $amount ) {
