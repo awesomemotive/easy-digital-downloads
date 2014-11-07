@@ -1082,11 +1082,8 @@ function edd_get_download_sku( $download_id = 0 ) {
  * @return mixed|void Add to Cart or Direct
  */
 function edd_get_download_button_behavior( $download_id = 0 ) {
-	$behavior = get_post_meta( $download_id, '_edd_button_behavior', true );
-	if( empty( $behavior ) ) {
-		$behavior = 'add_to_cart';
-	}
-	return apply_filters( 'edd_get_download_button_behavior', $behavior, $download_id );
+	$download = new EDD_Download( $download_id );
+	return $download->button_behavior;
 }
 
 /**
