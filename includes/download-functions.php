@@ -118,21 +118,8 @@ function edd_get_download( $download ) {
  * @return bool $is_free True if the product is free, false if the product is not free or the check fails
  */
 function edd_is_free_download( $download_id = 0, $price_id = false ) {
-
-	$is_free = false;
-	$variable_pricing = edd_has_variable_prices( $download_id );
-
-	if ( $variable_pricing && ! is_null( $price_id ) && $price_id !== false ) {
-		$price = edd_get_price_option_amount( $download_id, $price_id );
-	} elseif( ! $variable_pricing ) {
-		$price = get_post_meta( $download_id, 'edd_price', true );
-	}
-
-	if( isset( $price ) && (float) $price == 0 ) {
-		$is_free = true;
-	}
-
-	return (bool) apply_filters( 'edd_is_free_download', $is_free, $download_id, $price_id );
+	$download = new EDD_Download( $download_id );
+	return $download->is_free( $price_id );
 }
 
 /**
