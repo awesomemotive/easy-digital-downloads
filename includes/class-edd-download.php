@@ -16,26 +16,81 @@
  */
 class EDD_Download {
 
+	/**
+	 * The download price
+	 *
+	 * @since 2.2
+	 */
 	public $price;
 
+	/**
+	 * The download prices, if Variable Prices are enabled
+	 *
+	 * @since 2.2
+	 */
 	public $prices;
 
+	/**
+	 * The download files
+	 *
+	 * @since 2.2
+	 */
 	public $files;
 
+	/**
+	 * The download's file download limit
+	 *
+	 * @since 2.2
+	 */
 	public $file_download_limit;
 
+	/**
+	 * The download type, default or bundle
+	 *
+	 * @since 2.2
+	 */
 	public $type;
 
+	/**
+	 * The bundled downloads, if this is a bundle type
+	 *
+	 * @since 2.2
+	 */
 	public $bundled_downloads;
 
+	/**
+	 * The download's sale count
+	 *
+	 * @since 2.2
+	 */
 	public $sales;
 
+	/**
+	 * The download's total earnings
+	 *
+	 * @since 2.2
+	 */
 	public $earnings;
 
+	/**
+	 * The download's notes
+	 *
+	 * @since 2.2
+	 */
 	public $notes;
 
+	/**
+	 * The download sku
+	 *
+	 * @since 2.2
+	 */
 	public $sku;
 
+	/**
+	 * The download's purchase button behavior
+	 *
+	 * @since 2.2
+	 */
 	public $button_behavior;
 
 	/**
@@ -85,6 +140,12 @@ class EDD_Download {
 
 	}
 
+	/**
+	 * Retrieve the price
+	 *
+	 * @since 2.2
+	 * @return float
+	 */
 	public function get_price() {
 
 		$price = get_post_meta( $this->ID, 'edd_price', true );
@@ -102,6 +163,12 @@ class EDD_Download {
 		return apply_filters( 'edd_get_download_price', $price, $this->ID );
 	}
 
+	/**
+	 * Retrieve the variable prices
+	 *
+	 * @since 2.2
+	 * @return array
+	 */
 	public function get_prices() {
 
 		$prices = get_post_meta( $this->ID, 'edd_variable_prices', true );
@@ -110,6 +177,12 @@ class EDD_Download {
 
 	}
 
+	/**
+	 * Determine if single price mode is enabled or disabled
+	 *
+	 * @since 2.2
+	 * @return bool
+	 */
 	public function is_single_price_mode() {
 
 		$ret = get_post_meta( $this->ID, '_edd_price_options_mode', true );
@@ -118,6 +191,12 @@ class EDD_Download {
 
 	}
 
+	/**
+	 * Determine if the download has variable prices enabled
+	 *
+	 * @since 2.2
+	 * @return bool
+	 */
 	public function has_variable_prices() {
 
 		$ret = get_post_meta( $this->ID, '_variable_pricing', true );
@@ -126,6 +205,12 @@ class EDD_Download {
 
 	}
 
+	/**
+	 * Retrieve the file downloads
+	 *
+	 * @since 2.2
+	 * @return array
+	 */
 	public function get_files( $variable_price_id = null ) {
 
 		$files = array();
@@ -168,6 +253,12 @@ class EDD_Download {
 
 	}
 
+	/**
+	 * Retrieve the file download limit
+	 *
+	 * @since 2.2
+	 * @return int
+	 */
 	public function get_file_download_limit() {
 
 		$ret    = 0;
@@ -190,6 +281,12 @@ class EDD_Download {
 
 	}
 
+	/**
+	 * Retrieve the price option that has access to the specified file
+	 *
+	 * @since 2.2
+	 * @return int|string
+	 */
 	public function get_file_price_condition( $file_key = 0 ) {
 	
 		$files    = edd_get_download_files( $this->ID );
@@ -199,6 +296,12 @@ class EDD_Download {
 	
 	}
 
+	/**
+	 * Retrieve the download type, default or bundle
+	 *
+	 * @since 2.2
+	 * @return string
+	 */
 	public function get_type() {
 	
 		$type = get_post_meta( $this->ID, '_edd_product_type', true );
@@ -211,6 +314,12 @@ class EDD_Download {
 	
 	}
 
+	/**
+	 * Determine if this is a bundled download
+	 *
+	 * @since 2.2
+	 * @return bool
+	 */
 	public function is_bundled_download() {
 		return 'bundle' === $this->type;
 	}
@@ -223,6 +332,12 @@ class EDD_Download {
 
 	}
 
+	/**
+	 * Retrieve the download notes
+	 *
+	 * @since 2.2
+	 * @return string
+	 */
 	public function get_notes() {
 	
 		$notes = get_post_meta( $this->ID, 'edd_product_notes', true );		
@@ -231,6 +346,12 @@ class EDD_Download {
 	
 	}
 
+	/**
+	 * Retrieve the download sku
+	 *
+	 * @since 2.2
+	 * @return string
+	 */
 	public function get_sku() {
 
 		$sku = get_post_meta( $this->ID, 'edd_sku', true );
@@ -243,6 +364,12 @@ class EDD_Download {
 
 	}
 
+	/**
+	 * Retrieve the purchase button behavior
+	 *
+	 * @since 2.2
+	 * @return string
+	 */
 	public function get_button_behavior() {
 
 		$behavior = get_post_meta( $this->ID, '_edd_button_behavior', true );
@@ -257,6 +384,12 @@ class EDD_Download {
 
 	}
 
+	/**
+	 * Retrieve the sale count for the download
+	 *
+	 * @since 2.2
+	 * @return int
+	 */
 	public function get_sales() {
 	
 		if ( '' == get_post_meta( $this->ID, '_edd_download_sales', true ) ) {
@@ -274,6 +407,12 @@ class EDD_Download {
 
 	}
 
+	/**
+	 * Increment the sale count by one
+	 *
+	 * @since 2.2
+	 * @return int|false
+	 */
 	public function increase_sales() {
 
 		$sales = edd_get_download_sales_stats( $this->ID );
@@ -286,6 +425,12 @@ class EDD_Download {
 		return false;
 	}
 
+	/**
+	 * Decrement the sale count by one
+	 *
+	 * @since 2.2
+	 * @return int|false
+	 */
 	public function decrease_sales() {
 	
 		$sales = edd_get_download_sales_stats( $this->ID );
@@ -300,6 +445,12 @@ class EDD_Download {
 	
 	}
 
+	/**
+	 * Retrieve the total earnings for the download
+	 *
+	 * @since 2.2
+	 * @return float
+	 */
 	public function get_earnings() {
 	
 		if ( '' == get_post_meta( $this->ID, '_edd_download_earnings', true ) ) {
@@ -317,6 +468,12 @@ class EDD_Download {
 
 	}
 
+	/**
+	 * Increase the earnings by the given amount
+	 *
+	 * @since 2.2
+	 * @return float|false
+	 */
 	public function increase_earnings( $amount = 0 ) {
 	
 		$earnings = edd_get_download_earnings_stats( $this->ID );
@@ -330,6 +487,12 @@ class EDD_Download {
 	
 	}
 
+	/**
+	 * Decrease the earnings by the given amount
+	 *
+	 * @since 2.2
+	 * @return float|false
+	 */
 	public function decrease_earnings( $amount ) {
 
 		$earnings = edd_get_download_earnings_stats( $this->ID );
@@ -345,6 +508,12 @@ class EDD_Download {
 
 	}
 
+	/**
+	 * Determine if the download is free or if the given price ID is free
+	 *
+	 * @since 2.2
+	 * @return bool
+	 */
 	public function is_free( $price_id = false ) {
 
 		$is_free = false;
