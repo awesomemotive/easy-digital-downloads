@@ -43,10 +43,26 @@ class EDD_Download {
 	 */
 	public function __construct( $_id = false, $_args = array() ) {
 
+		if( empty( $_id ) ) {
+
+			$defaults = array(
+				'post_type'   => 'download',
+				'post_status' => 'draft',
+				'post_title'  => __( 'New Download Product', 'edd' )
+			);
+
+			$args = wp_parse_args( $_args, $defaults );
+
+			$_id  = wp_insert_post( $args, true );
+
+		}
+
+		return WP_Post::get_instance( $_id );
+
 	}
 
 	public function get_price() {
-
+		return get_post_meta( $this->ID, 'edd_price', true );
 	}
 
 	public function get_prices() {
