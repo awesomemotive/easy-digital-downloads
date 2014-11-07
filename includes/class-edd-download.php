@@ -212,12 +212,20 @@ class EDD_Download {
 	public function get_notes() {
 	
 		$notes = get_post_meta( $this->ID, 'edd_product_notes', true );		
-	
+
 		return (string) apply_filters( 'edd_product_notes', $notes, $this->ID );
 	
 	}
 
 	public function get_sku() {
+
+		$sku = get_post_meta( $this->ID, 'edd_sku', true );
+
+		if ( empty( $sku ) ) {
+			$sku = '-';
+		}
+
+		return apply_filters( 'edd_get_download_sku', $sku, $this->ID );
 
 	}
 
