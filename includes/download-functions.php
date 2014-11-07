@@ -498,19 +498,8 @@ function edd_get_bundled_products( $download_id = 0 ) {
  * @return int $earnings Earnings for a certain download
  */
 function edd_get_download_earnings_stats( $download_id ) {
-
-	if ( '' == get_post_meta( $download_id, '_edd_download_earnings', true ) ) {
-		add_post_meta( $download_id, '_edd_download_earnings', 0 );
-	}
-
-	$earnings = get_post_meta( $download_id, '_edd_download_earnings', true );
-
-	if( $earnings < 0 ) {
-		// Never let earnings be less than zero
-		$earnings = 0;
-	}
-
-	return $earnings;
+	$download = new EDD_Download( $download_id );
+	return $download->earnings;
 }
 
 /**
@@ -521,19 +510,8 @@ function edd_get_download_earnings_stats( $download_id ) {
  * @return int $sales Amount of sales for a certain download
  */
 function edd_get_download_sales_stats( $download_id ) {
-
-	if ( '' == get_post_meta( $download_id, '_edd_download_sales', true ) ) {
-		add_post_meta( $download_id, '_edd_download_sales', 0 );
-	} // End if
-
-	$sales = get_post_meta( $download_id, '_edd_download_sales', true );
-
-	if ( $sales < 0 ) {
-		// Never let sales be less than zero
-		$sales = 0;
-	}
-
-	return $sales;
+	$download = new EDD_Download( $download_id );
+	return $download->sales;
 }
 
 /**
@@ -634,12 +612,8 @@ add_action( 'delete_post', 'edd_remove_download_logs_on_delete' );
  * @return bool|int
  */
 function edd_increase_purchase_count( $download_id ) {
-	$sales = edd_get_download_sales_stats( $download_id );
-	$sales = $sales + 1;
-	if ( update_post_meta( $download_id, '_edd_download_sales', $sales ) )
-		return $sales;
-
-	return false;
+	$download = new EDD_Download( $download_id );
+	return $download->increase_sales();
 }
 
 /**
@@ -651,14 +625,8 @@ function edd_increase_purchase_count( $download_id ) {
  * @return bool|int
  */
 function edd_decrease_purchase_count( $download_id ) {
-	$sales = edd_get_download_sales_stats( $download_id );
-	if ( $sales > 0 ) // Only decrease if not already zero
-		$sales = $sales - 1;
-
-	if ( update_post_meta( $download_id, '_edd_download_sales', $sales ) )
-		return $sales;
-
-	return false;
+	$download = new EDD_Download( $download_id );
+	return $download->decrease_sales();	
 }
 
 /**
@@ -670,13 +638,8 @@ function edd_decrease_purchase_count( $download_id ) {
  * @return bool|int
  */
 function edd_increase_earnings( $download_id, $amount ) {
-	$earnings = edd_get_download_earnings_stats( $download_id );
-	$earnings = $earnings + $amount;
-
-	if ( update_post_meta( $download_id, '_edd_download_earnings', $earnings ) )
-		return $earnings;
-
-	return false;
+	$download = new EDD_Download( $download_id );
+	return $download->increase_earnings( $amount );	
 }
 
 /**
@@ -688,15 +651,8 @@ function edd_increase_earnings( $download_id, $amount ) {
  * @return bool|int
  */
 function edd_decrease_earnings( $download_id, $amount ) {
-	$earnings = edd_get_download_earnings_stats( $download_id );
-
-	if ( $earnings > 0 ) // Only decrease if greater than zero
-		$earnings = $earnings - $amount;
-
-	if ( update_post_meta( $download_id, '_edd_download_earnings', $earnings ) )
-		return $earnings;
-
-	return false;
+	$download = new EDD_Download( $download_id );
+	return $download->decrease_earnings( $amount );	
 }
 
 /**

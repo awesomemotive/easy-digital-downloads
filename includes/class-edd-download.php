@@ -203,14 +203,6 @@ class EDD_Download {
 
 	}
 
-	public function get_sales() {
-
-	}
-
-	public function get_earnings() {
-
-	}
-
 	public function get_notes() {
 	
 		$notes = get_post_meta( $this->ID, 'edd_product_notes', true );		
@@ -245,19 +237,91 @@ class EDD_Download {
 
 	}
 
-	public function increase_earnings() {
+	public function get_sales() {
+	
+		if ( '' == get_post_meta( $this->ID, '_edd_download_sales', true ) ) {
+			add_post_meta( $this->ID, '_edd_download_sales', 0 );
+		} // End if
 
-	}
+		$sales = get_post_meta( $this->ID, '_edd_download_sales', true );
 
-	public function decrease_earnings() {
+		if ( $sales < 0 ) {
+			// Never let sales be less than zero
+			$sales = 0;
+		}
+
+		return $sales;
 
 	}
 
 	public function increase_sales() {
 
+		$sales = edd_get_download_sales_stats( $this->ID );
+		$sales = $sales + 1;
+		
+		if ( update_post_meta( $this->ID, '_edd_download_sales', $sales ) ) {
+			return $sales;
+		}
+
+		return false;
 	}
 
 	public function decrease_sales() {
+	
+		$sales = edd_get_download_sales_stats( $this->ID );
+		if ( $sales > 0 ) // Only decrease if not already zero
+			$sales = $sales - 1;
+
+		if ( update_post_meta( $this->ID, '_edd_download_sales', $sales ) ) {
+			return $sales;
+		}
+
+		return false;
+	
+	}
+
+	public function get_earnings() {
+	
+		if ( '' == get_post_meta( $this->ID, '_edd_download_earnings', true ) ) {
+			add_post_meta( $this->ID, '_edd_download_earnings', 0 );
+		}
+
+		$earnings = get_post_meta( $this->ID, '_edd_download_earnings', true );
+
+		if( $earnings < 0 ) {
+			// Never let earnings be less than zero
+			$earnings = 0;
+		}
+
+		return $earnings;
+
+	}
+
+	public function increase_earnings( $amount = 0 ) {
+	
+		$earnings = edd_get_download_earnings_stats( $this->ID );
+		$earnings = $earnings + (float) $amount;
+
+		if ( update_post_meta( $this->ID, '_edd_download_earnings', $earnings ) ) {
+			return $earnings;
+		}
+
+		return false;
+	
+	}
+
+	public function decrease_earnings( $amount ) {
+
+		$earnings = edd_get_download_earnings_stats( $this->ID );
+
+		if ( $earnings > 0 ) // Only decrease if greater than zero
+			$earnings = $earnings - (float) $amount;
+
+		if ( update_post_meta( $this->ID, '_edd_download_earnings', $earnings ) ) {
+			return $earnings;
+		}
+
+		return false;
 
 	}
 
