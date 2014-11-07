@@ -36,6 +36,8 @@ class EDD_Download {
 
 	public $sku;
 
+	public $button_behavior;
+
 	/**
 	 * Get things going
 	 *
@@ -226,6 +228,20 @@ class EDD_Download {
 		}
 
 		return apply_filters( 'edd_get_download_sku', $sku, $this->ID );
+
+	}
+
+	public function get_button_behavior() {
+
+		$behavior = get_post_meta( $this->ID, '_edd_button_behavior', true );
+
+		if( empty( $behavior ) ) {
+
+			$behavior = 'add_to_cart';
+
+		}
+
+		return apply_filters( 'edd_get_download_button_behavior', $behavior, $this->ID );
 
 	}
 
