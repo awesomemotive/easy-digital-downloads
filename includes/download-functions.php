@@ -927,14 +927,8 @@ function edd_is_file_at_download_limit( $download_id = 0, $payment_id = 0, $file
  * @return string - the price ID if restricted, "all" otherwise
  */
 function edd_get_file_price_condition( $download_id, $file_key ) {
-	$files = edd_get_download_files( $download_id );
-
-	if ( ! $files )
-		return false;
-
-	$condition = isset( $files[ $file_key ]['condition']) ? $files[ $file_key ]['condition'] : 'all';
-
-	return $condition;
+	$download = new EDD_Download( $download_id );
+	return $download->get_file_price_condition( $file_key );
 }
 
 /**

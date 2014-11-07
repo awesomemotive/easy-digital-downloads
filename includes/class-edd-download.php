@@ -184,8 +184,13 @@ class EDD_Download {
 
 	}
 
-	public function get_file_price_condition() {
+	public function get_file_price_condition( $file_key = 0 ) {
+	
+		$files    = edd_get_download_files( $this->ID );
+		$condition = isset( $files[ $file_key ]['condition']) ? $files[ $file_key ]['condition'] : 'all';
 
+		return apply_filters( 'edd_get_file_price_condition', $condition, $this->ID, $files );
+	
 	}
 
 	public function get_type() {
