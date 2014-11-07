@@ -1054,12 +1054,8 @@ function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $ex
  * @return string $notes Product notes
  */
 function edd_get_product_notes( $download_id ) {
-	$notes = get_post_meta( $download_id, 'edd_product_notes', true );
-
-	if ( $notes )
-		return (string) apply_filters( 'edd_product_notes', $notes, $download_id );
-
-	return '';
+	$download = new EDD_Download( $download_id );
+	return $download->notes;
 }
 
 /**
