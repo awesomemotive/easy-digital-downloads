@@ -241,11 +241,8 @@ function edd_get_variable_prices( $download_id = 0 ) {
  * @return bool true if has variable prices, false otherwise
  */
 function edd_has_variable_prices( $download_id ) {
-	if ( get_post_meta( $download_id, '_variable_pricing', true ) ) {
-		return true;
-	}
-
-	return false;
+	$download = new EDD_Download( $download_id );
+	return $download->has_variable_prices();
 }
 
 /**

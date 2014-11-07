@@ -20,8 +20,6 @@ class EDD_Download {
 
 	public $prices;
 
-	public $is_variable;
-
 	public $files;
 
 	public $type;
@@ -97,8 +95,11 @@ class EDD_Download {
 	}
 
 	public function get_prices() {
+
 		$prices = get_post_meta( $this->ID, 'edd_variable_prices', true );
+		
 		return apply_filters( 'edd_get_variable_prices', $prices, $this->ID );
+	
 	}
 
 	public function get_price_mode() {
@@ -107,6 +108,10 @@ class EDD_Download {
 
 	public function has_variable_prices() {
 
+		$ret = (bool )get_post_meta( $this->ID, '_variable_pricing', true );
+	
+		return apply_filters( 'edd_has_variable_prices', $ret, $this->ID );
+	
 	}
 
 	public function get_files() {
