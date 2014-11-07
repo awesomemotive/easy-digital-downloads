@@ -143,13 +143,8 @@ function edd_is_free_download( $download_id = 0, $price_id = false ) {
  * @return mixed string|int Price of the download
  */
 function edd_get_download_price( $download_id = 0 ) {
-	$price = get_post_meta( $download_id, 'edd_price', true );
-	if ( $price )
-		$price = edd_sanitize_amount( $price );
-	else
-		$price = 0;
-
-	return apply_filters( 'edd_get_download_price', $price, $download_id );
+	$download = new EDD_Download( $download_id );
+	return $download->price;
 }
 
 /**

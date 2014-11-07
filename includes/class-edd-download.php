@@ -80,7 +80,20 @@ class EDD_Download {
 	}
 
 	public function get_price() {
-		return get_post_meta( $this->ID, 'edd_price', true );
+
+		$price = get_post_meta( $this->ID, 'edd_price', true );
+
+		if ( $price ) {
+
+			$price = edd_sanitize_amount( $price );
+		
+		} else {
+		
+			$price = 0;
+		
+		}
+
+		return apply_filters( 'edd_get_download_price', $price, $this->ID );
 	}
 
 	public function get_prices() {
