@@ -368,12 +368,16 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
 		}
 
 		if( edd_display_tax_rate() ) {
+
 			$label = '&nbsp;&ndash;&nbsp;';
+
 			if( edd_prices_show_tax_on_checkout() ) {
 				$label .= sprintf( __( 'includes %s tax', 'edd' ), edd_get_formatted_tax_rate() );
 			} else {
 				$label .= sprintf( __( 'excludes %s tax', 'edd' ), edd_get_formatted_tax_rate() );
 			}
+
+			$label = apply_filters( 'edd_cart_item_tax_description', $label, $item_id, $options );
 
 		}
 	}
