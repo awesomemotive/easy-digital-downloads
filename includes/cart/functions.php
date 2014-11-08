@@ -384,7 +384,7 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
 
 	$price = edd_currency_filter( edd_format_amount( $price ) );
 
-	return esc_html( $price . $label );
+	return $price . $label;
 }
 
 /**
