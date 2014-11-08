@@ -163,8 +163,6 @@ function edd_load_admin_scripts( $hook ) {
 	// These have to be global
 	wp_enqueue_style( 'edd-select2', $css_dir . 'select2' . $suffix . '.css', array(), EDD_VERSION );
 	wp_enqueue_script( 'edd-select2', $js_dir . 'select2' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
-	wp_enqueue_style( 'jquery-chosen', $css_dir . 'chosen' . $suffix . '.css', array(), EDD_VERSION );
-	wp_enqueue_script( 'jquery-chosen', $js_dir . 'chosen.jquery' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
 	wp_enqueue_script( 'edd-admin-scripts', $js_dir . 'admin-scripts' . $suffix . '.js', array( 'jquery' ), EDD_VERSION, false );
 	wp_localize_script( 'edd-admin-scripts', 'edd_vars', array(
 		'post_id'                 => isset( $post->ID ) ? $post->ID : null,
@@ -183,8 +181,6 @@ function edd_load_admin_scripts( $hook ) {
 		'one_price_min'           => __( 'You must have at least one price', 'edd' ),
 		'one_file_min'            => __( 'You must have at least one file', 'edd' ),
 		'one_field_min'           => __( 'You must have at least one field', 'edd' ),
-		'one_option'              => sprintf( __( 'Choose a %s', 'edd' ), edd_get_label_singular() ),
-		'one_or_more_option'      => sprintf( __( 'Choose one or more %s', 'edd' ), edd_get_label_plural() ),
 		'currency_sign'           => edd_currency_filter(''),
 		'currency_pos'            => isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
 		'new_media_ui'            => apply_filters( 'edd_use_35_media_ui', 1 ),

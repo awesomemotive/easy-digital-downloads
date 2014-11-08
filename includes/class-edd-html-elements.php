@@ -38,7 +38,6 @@ class EDD_HTML_Elements {
 			'class'       => '',
 			'multiple'    => false,
 			'selected'    => 0,
-			'chosen'      => false,
 			'select2'     => false,
 			'placeholder' => sprintf( __( 'Select a %s', 'edd' ), edd_get_label_singular() ),
 			'number'      => 30
@@ -83,7 +82,6 @@ class EDD_HTML_Elements {
 			'class'            => $args['class'],
 			'options'          => $options,
 			'multiple'         => $args['multiple'],
-			'chosen'           => $args['chosen'],
 			'select2'          => $args['select2'],
 			'placeholder'      => $args['placeholder'],
 			'show_option_all'  => false,
@@ -236,7 +234,6 @@ class EDD_HTML_Elements {
 			'class'            => '',
 			'id'               => '',
 			'selected'         => 0,
-			'chosen'           => false,
 			'select2'          => false,
 			'placeholder'      => null,
 			'multiple'         => false,
@@ -251,10 +248,6 @@ class EDD_HTML_Elements {
 			$multiple = ' MULTIPLE';
 		} else {
 			$multiple = '';
-		}
-
-		if( $args['chosen'] ) {
-			$args['class'] .= ' edd-select-chosen';
 		}
 
 		if( $args['select2'] ) {
