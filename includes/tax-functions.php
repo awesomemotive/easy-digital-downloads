@@ -31,20 +31,6 @@ function edd_use_taxes() {
 }
 
 /**
- * Checks if the user has enabled the option to calculate taxes after discounts
- * have been entered
- *
- * @since 1.4.1
- * @global $edd_options
- * @return bool Whether or not taxes are calculated after discount
- */
-function edd_taxes_after_discounts() {
-	global $edd_options;
-	$ret = isset( $edd_options['taxes_after_discounts'] ) && edd_use_taxes();
-	return apply_filters( 'edd_taxes_after_discounts', $ret );
-}
-
-/**
  * Retrieve tax rates
  *
  * @since 1.6

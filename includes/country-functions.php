@@ -92,6 +92,9 @@ function edd_get_shop_states( $country = null ) {
 		case 'ZA' :
 			$states = edd_get_south_african_states_list();
 			break;
+		case 'ES' :
+			$states = edd_get_spain_states_list();
+			break;
 		default :
 			$states = array();
 			break;
@@ -244,7 +247,7 @@ function edd_get_country_list() {
 		'MG' => 'Madagascar',
 		'MW' => 'Malawi',
 		'MY' => 'Malaysia',
-		'Mv' => 'Maldives',
+		'MV' => 'Maldives',
 		'ML' => 'Mali',
 		'MT' => 'Malta',
 		'MH' => 'Marshall Islands',
@@ -897,4 +900,70 @@ function edd_get_thailand_states_list() {
 	);
 
 	return apply_filters( 'edd_thailand_states', $states );
+}
+
+/**
+ * Get Spain States
+ *
+ * @since 2.2
+ * @return array $states A list of states
+ */
+function edd_get_spain_states_list() {
+	$states = array(
+		'0'  => __( 'Choose', 'edd' ),
+	    'C'  => __( 'A Coru&ntilde;a', 'edd' ),
+	    'VI' => __( 'Araba', 'edd' ),
+	    'AB' => __( 'Albacete', 'edd' ),
+	    'A'  => __( 'Alicante', 'edd' ),
+	    'AL' => __( 'Almer&iacute;a', 'edd' ),
+	    'O'  => __( 'Asturias', 'edd' ),
+	    'AV' => __( '&Aacute;vila', 'edd' ),
+	    'BA' => __( 'Badajoz', 'edd' ),
+	    'PM' => __( 'Baleares', 'edd' ),
+	    'B'  => __( 'Barcelona', 'edd' ),
+	    'BU' => __( 'Burgos', 'edd' ),
+	    'CC' => __( 'C&aacute;ceres', 'edd' ),
+	    'CA' => __( 'C&aacute;diz', 'edd' ),
+	    'S'  => __( 'Cantabria', 'edd' ),
+	    'CS' => __( 'Castell&oacute;n', 'edd' ),
+	    'CE' => __( 'Ceuta', 'edd' ),
+	    'CR' => __( 'Ciudad Real', 'edd' ),
+	    'CO' => __( 'C&oacute;rdoba', 'edd' ),
+	    'CU' => __( 'Cuenca', 'edd' ),
+	    'GI' => __( 'Girona', 'edd' ),
+	    'GR' => __( 'Granada', 'edd' ),
+	    'GU' => __( 'Guadalajara', 'edd' ),
+	    'SS' => __( 'Gipuzkoa', 'edd' ),
+	    'H'  => __( 'Huelva', 'edd' ),
+	    'HU' => __( 'Huesca', 'edd' ),
+	    'J'  => __( 'Ja&eacute;n', 'edd' ),
+	    'LO' => __( 'La Rioja', 'edd' ),
+	    'GC' => __( 'Las Palmas', 'edd' ),
+	    'LE' => __( 'Le&oacute;n', 'edd' ),
+	    'L'  => __( 'Lleida', 'edd' ),
+	    'LU' => __( 'Lugo', 'edd' ),
+	    'M'  => __( 'Madrid', 'edd' ),
+	    'MA' => __( 'M&aacute;laga', 'edd' ),
+	    'ML' => __( 'Melilla', 'edd' ),
+	    'MU' => __( 'Murcia', 'edd' ),
+	    'NA' => __( 'Navarra', 'edd' ),
+	    'OR' => __( 'Ourense', 'edd' ),
+	    'P'  => __( 'Palencia', 'edd' ),
+	    'PO' => __( 'Pontevedra', 'edd' ),
+	    'SA' => __( 'Salamanca', 'edd' ),
+	    'TF' => __( 'Santa Cruz de Tenerife', 'edd' ),
+	    'SG' => __( 'Segovia', 'edd' ),
+	    'SE' => __( 'Sevilla', 'edd' ),
+	    'SO' => __( 'Soria', 'edd' ),
+	    'T'  => __( 'Tarragona', 'edd' ),
+	    'TE' => __( 'Teruel', 'edd' ),
+	    'TO' => __( 'Toledo', 'edd' ),
+	    'V'  => __( 'Valencia', 'edd' ),
+	    'VA' => __( 'Valladolid', 'edd' ),
+	    'BI' => __( 'Bizkaia', 'edd' ),
+	    'ZA' => __( 'Zamora', 'edd' ),
+	    'Z'  => __('Zaragoza', 'edd' )
+	); 	
+
+	return apply_filters( 'edd_spain_states', $states );
 }

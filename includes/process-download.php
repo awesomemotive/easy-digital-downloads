@@ -40,8 +40,6 @@ function edd_process_download() {
 		return false;
 	}
 
-    extract( $args );
-
     // Verify the payment
 	$payment = edd_verify_download_link( $args['download'], $args['key'], $args['email'], $args['expire'], $args['file_key'] );
 
@@ -57,7 +55,7 @@ function edd_process_download() {
 
 		// Payment has been verified, setup the download
 		$download_files = edd_get_download_files( $args['download'] );
-		$attachment_id  = ! empty( $download_files[ $file_key ]['attachment_id'] ) ? absint( $download_files[ $args['file_key'] ]['attachment_id'] ) : false;
+		$attachment_id  = ! empty( $download_files[ $args['file_key'] ]['attachment_id'] ) ? absint( $download_files[ $args['file_key'] ]['attachment_id'] ) : false;
 
 		/*
 		 * If we have an attachment ID stored, use get_attached_file() to retrieve absolute URL
@@ -72,7 +70,7 @@ function edd_process_download() {
 
 		// If we didn't find a file from the attachment, grab the given URL
 		if( ! isset( $requested_file ) ) {
-			$requested_file = $download_files[ $args['file_key'] ]['file'];
+			$requested_file = isset( $download_files[ $args['file_key'] ]['file'] ) ? $download_files[ $args['file_key'] ]['file'] : '';
 		}
 
 		// Allow the file to be altered before any headers are sent
@@ -91,11 +89,10 @@ function edd_process_download() {
 		$file_extension = edd_get_file_extension( $requested_file );
 		$ctype          = edd_get_file_ctype( $file_extension );
 
-
 		if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
-			set_time_limit(0);
+			@set_time_limit(0);
 		}
-		if ( function_exists( 'get_magic_quotes_runtime' ) && get_magic_quotes_runtime() ) {
+		if ( function_exists( 'get_magic_quotes_runtime' ) && get_magic_quotes_runtime() && version_compare( phpversion(), '5.4', '<' ) ) {
 			set_magic_quotes_runtime(0);
 		}
 

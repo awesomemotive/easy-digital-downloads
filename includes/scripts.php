@@ -52,7 +52,7 @@ function edd_load_scripts() {
 			'no_email'           => __( 'Please enter an email address before applying a discount code', 'edd' ),
 			'no_username'        => __( 'Please enter a username before applying a discount code', 'edd' ),
 			'purchase_loading'   => __( 'Please Wait...', 'edd' ),
-			'complete_purchasse' => __( 'Purchase', 'edd' ),
+			'complete_purchase'  => __( 'Purchase', 'edd' ),
 			'taxes_enabled'      => edd_use_taxes() ? '1' : '0',
 			'edd_version'        => EDD_VERSION
 		));
@@ -128,6 +128,11 @@ function edd_register_styles() {
 	}
 
 	wp_enqueue_style( 'edd-styles', $url, array(), EDD_VERSION );
+
+	if( edd_is_checkout() && is_ssl() ) {
+		// Dashicons are used to show the padlock icon on the credit card form
+		wp_enqueue_style( 'dashicons' );
+	}
 }
 add_action( 'wp_enqueue_scripts', 'edd_register_styles' );
 
@@ -171,7 +176,7 @@ function edd_load_admin_scripts( $hook ) {
 		'revoke_api_key'          => __( 'Are you sure you wish to revoke this API key?', 'edd' ),
 		'regenerate_api_key'      => __( 'Are you sure you wish to regenerate this API key?', 'edd' ),
 		'resend_receipt'          => __( 'Are you sure you wish to resend the purchase receipt?', 'edd' ),
-		'copy_download_link_text' => __( 'Copy these links to your clip board and give them to your customer', 'edd' ),
+		'copy_download_link_text' => __( 'Copy these links to your clipboard and give them to your customer', 'edd' ),
 		'delete_payment_download' => sprintf( __( 'Are you sure you wish to delete this %s?', 'edd' ), edd_get_label_singular() ),
 		'one_price_min'           => __( 'You must have at least one price', 'edd' ),
 		'one_file_min'            => __( 'You must have at least one file', 'edd' ),
@@ -182,6 +187,7 @@ function edd_load_admin_scripts( $hook ) {
 		'currency_pos'            => isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
 		'new_media_ui'            => apply_filters( 'edd_use_35_media_ui', 1 ),
 		'remove_text'             => __( 'Remove', 'edd' ),
+		'type_to_search'          => sprintf( __( 'Type to search %s', 'edd' ), edd_get_label_plural() )
 	));
 
 	wp_enqueue_style( 'wp-color-picker' );
@@ -226,7 +232,8 @@ function edd_admin_downloads_icon() {
 	?>
     <style type="text/css" media="screen">
         <?php if( version_compare( $wp_version, '3.8-RC', '>=' ) || version_compare( $wp_version, '3.8', '>=' ) ) { ?>
-            #adminmenu #menu-posts-download .wp-menu-image:before {
+            #adminmenu #menu-posts-download .wp-menu-image:before,
+            #dashboard_right_now .download-count:before {
                 content: '<?php echo $menu_icon; ?>';
             }
         <?php } else { ?>

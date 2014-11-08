@@ -29,7 +29,7 @@ function edd_checkout_form() {
 
 	ob_start();
 		echo '<div id="edd_checkout_wrap">';
-		if ( edd_get_cart_contents() || edd_get_cart_fees() ) :
+		if ( edd_get_cart_contents() || edd_cart_has_fees() ) :
 
 			edd_checkout_cart();
 ?>
@@ -397,7 +397,7 @@ function edd_get_register_fields() {
 		<?php if( $show_register_form == 'both' ) { ?>
 			<p id="edd-login-account-wrap"><?php _e( 'Already have an account?', 'edd' ); ?> <a href="<?php echo add_query_arg('login', 1); ?>" class="edd_checkout_register_login" data-action="checkout_login"><?php _e( 'Login', 'edd' ); ?></a></p>
 		<?php } ?>
-		
+
 		<?php do_action('edd_register_fields_before'); ?>
 
 		<fieldset id="edd_register_account_fields">
@@ -552,40 +552,65 @@ add_action( 'edd_payment_mode_select', 'edd_payment_mode_select' );
  * then outputting the icons.
  *
  * @since 1.0
- * @global $edd_options Array of all the EDD Options
  * @return void
 */
 function edd_show_payment_icons() {
-	global $edd_options;
 
-	if( edd_show_gateways() && did_action( 'edd_payment_mode_top' ) )
+	if( edd_show_gateways() && did_action( 'edd_payment_mode_top' ) ) {
 		return;
+	}
 
-	if ( isset( $edd_options['accepted_cards'] ) ) {
-		echo '<div class="edd-payment-icons">';
-		foreach( $edd_options['accepted_cards'] as $key => $card ) {
-			if( edd_string_is_image_url( $key ) ) {
-				echo '<img class="payment-icon" src="' . esc_url( $key ) . '"/>';
+	$payment_methods = edd_get_option( 'accepted_cards', array() );
+
+	if( empty( $payment_methods ) ) {
+		return;
+	}
+
+	echo '<div class="edd-payment-icons">';
+
+	foreach( $payment_methods as $key => $card ) {
+
+		if( edd_string_is_image_url( $key ) ) {
+
+			echo '<img class="payment-icon" src="' . esc_url( $key ) . '"/>';
+
+		} else {
+
+			$card = strtolower( str_replace( ' ', '', $card ) );
+
+			if( has_filter( 'edd_accepted_payment_' . $card . '_image' ) ) {
+
+				$image = apply_filters( 'edd_accepted_payment_' . $card . '_image', '' );
+
 			} else {
-                $image = edd_locate_template( 'images' . DIRECTORY_SEPARATOR . 'icons' . DIRECTORY_SEPARATOR . strtolower( str_replace( ' ', '', $card ) ) . '.gif', false );
-                $content_dir = WP_CONTENT_DIR;
+
+				$image       = edd_locate_template( 'images' . DIRECTORY_SEPARATOR . 'icons' . DIRECTORY_SEPARATOR . $card . '.gif', false );
+				$content_dir = WP_CONTENT_DIR;
 
 				if( function_exists( 'wp_normalize_path' ) ) {
+
 					// Replaces backslashes with forward slashes for Windows systems
 					$image = wp_normalize_path( $image );
 					$content_dir = wp_normalize_path( $content_dir );
+
 				}
+
 				$image = str_replace( $content_dir, WP_CONTENT_URL, $image );
 
-				if( edd_is_ssl_enforced() || is_ssl() ) {
-					$image = edd_enforced_ssl_asset_filter( $image );
-				}
-
-				echo '<img class="payment-icon" src="' . esc_url( $image ) . '"/>';
 			}
+
+			if( edd_is_ssl_enforced() || is_ssl() ) {
+
+				$image = edd_enforced_ssl_asset_filter( $image );
+
+			}
+
+			echo '<img class="payment-icon" src="' . esc_url( $image ) . '"/>';
 		}
-		echo '</div>';
+
 	}
+
+	echo '</div>';
 }
 add_action( 'edd_payment_mode_top', 'edd_show_payment_icons' );
 add_action( 'edd_checkout_form_top', 'edd_show_payment_icons' );
@@ -615,7 +640,7 @@ function edd_discount_field() {
 			<p id="edd_show_discount" style="display:none;">
 				<?php _e( 'Have a discount code?', 'edd' ); ?> <a href="#" class="edd_discount_link"><?php echo _x( 'Click to enter it', 'Entering a discount code', 'edd' ); ?></a>
 			</p>
-			<p id="edd-discount-code-wrap">
+			<p id="edd-discount-code-wrap" class="edd-cart-adjustment">
 				<label class="edd-label" for="edd-discount">
 					<?php _e( 'Discount', 'edd' ); ?>
 					<img src="<?php echo EDD_PLUGIN_URL; ?>assets/images/loading.gif" id="edd-discount-loader" style="display:none;"/>

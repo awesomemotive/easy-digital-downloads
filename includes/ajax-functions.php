@@ -28,6 +28,41 @@ function edd_is_ajax_enabled() {
 }
 
 /**
+ * Check if AJAX works as expected
+ *
+ * @since 2.2
+ * @return bool True if AJAX works, false otherwise
+ */
+function edd_test_ajax_works() {
+
+	$params = array(
+		'sslverify'     => false,
+		'timeout'       => 60,
+	);
+
+	$ajax  = wp_remote_get( add_query_arg( 'action', 'edd_test_ajax', edd_get_ajax_url() ), $params );
+	$works = true;
+
+	if( empty( $ajax['response'] ) ) {
+		$works = false;
+	}
+
+	if( empty( $ajax['response']['code'] ) || 200 !== (int) $ajax['response']['code'] ) {
+		$works = false;
+	}
+
+	if( empty( $ajax['response']['message'] ) || 'OK' !== $ajax['response']['message'] ) {
+		$works = false;
+	}
+
+	if( ! isset( $ajax['body'] ) || 0 !== (int) $ajax['body'] ) {
+		$works = false;
+	}
+
+	return $works;
+}
+
+/**
  * Checks whether AJAX is disabled.
  *
  * @since 2.0
@@ -204,13 +239,15 @@ function edd_ajax_update_cart_item_quantity() {
 
 		$download_id = absint( $_POST['download_id'] );
 		$quantity    = absint( $_POST['quantity'] );
+		$options     = maybe_unserialize( stripslashes( $_POST['options'] ) );
 
-		edd_set_cart_item_quantity( $download_id, absint( $_POST['quantity'] ) );
+		edd_set_cart_item_quantity( $download_id, absint( $_POST['quantity'] ), $options );
 		$total = edd_get_cart_total();
 
 		$return = array(
 			'download_id' => $download_id,
 			'quantity'    => $quantity,
+			'taxes'       => html_entity_decode( edd_cart_tax(), ENT_COMPAT, 'UTF-8' ),
 			'subtotal'    => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
 			'total'       => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' )
 		);
@@ -339,6 +376,7 @@ function edd_ajax_get_states_field() {
 		$args = array(
 			'name'    => $_POST['field_name'],
 			'id'      => $_POST['field_name'],
+			'class'   => $_POST['field_name'] . '  edd-select',
 			'options' => edd_get_shop_states( $_POST['country'] ),
 			'show_option_all'  => false,
 			'show_option_none' => false

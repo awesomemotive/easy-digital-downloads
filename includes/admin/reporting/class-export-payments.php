@@ -60,7 +60,8 @@ class EDD_Payments_Export extends EDD_Export {
 		global $edd_options;
 
 		$cols = array(
-			'id'       => __( 'ID',   'edd' ),
+			'id'       => __( 'ID',   'edd' ), // unaltered payment ID (use for querying)
+			'seq_id'   => __( 'Payment Number',   'edd' ), // sequential payment ID
 			'email'    => __( 'Email', 'edd' ),
 			'first'    => __( 'First Name', 'edd' ),
 			'last'     => __( 'Last Name', 'edd' ),
@@ -76,14 +77,19 @@ class EDD_Payments_Export extends EDD_Export {
 			'tax'      => __( 'Tax', 'edd' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')',
 			'discount' => __( 'Discount Code', 'edd' ),
 			'gateway'  => __( 'Payment Method', 'edd' ),
+			'trans_id' => __( 'Transaction ID', 'edd' ),
 			'key'      => __( 'Purchase Key', 'edd' ),
 			'date'     => __( 'Date', 'edd' ),
 			'user'     => __( 'User', 'edd' ),
 			'status'   => __( 'Status', 'edd' )
 		);
 
-		if( ! edd_use_skus() )
+		if( ! edd_use_skus() ){
 			unset( $cols['skus'] );
+		}
+		if ( ! edd_get_option( 'enable_sequential' ) ) {
+			unset( $cols['seq_id'] );			
+		}
 
 		return $cols;
 	}
@@ -144,7 +150,7 @@ class EDD_Payments_Export extends EDD_Export {
 						$price_options = $downloads[ $key ]['item_number']['options'];
 
 						if ( isset( $price_options['price_id'] ) ) {
-							$products .= edd_get_price_option_name( $id, $price_options['price_id'] ) . ' - ';
+							$products .= edd_get_price_option_name( $id, $price_options['price_id'], $payment->ID ) . ' - ';
 						}
 					}
 					$products .= html_entity_decode( edd_currency_filter( $price ) );
@@ -165,7 +171,8 @@ class EDD_Payments_Export extends EDD_Export {
 			}
 
 			$data[] = array(
-				'id'       => edd_get_payment_number( $payment->ID ),
+				'id'       => $payment->ID,
+				'seq_id'   => edd_get_payment_number( $payment->ID ),		
 				'email'    => $payment_meta['email'],
 				'first'    => $user_info['first_name'],
                 'last'     => $user_info['last_name'],
@@ -181,15 +188,13 @@ class EDD_Payments_Export extends EDD_Export {
 				'tax'      => html_entity_decode( edd_get_payment_tax( $payment->ID, $payment_meta ) ),
 				'discount' => isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ? $user_info['discount'] : __( 'none', 'edd' ),
 				'gateway'  => edd_get_gateway_admin_label( get_post_meta( $payment->ID, '_edd_payment_gateway', true ) ),
+				'trans_id' => edd_get_payment_transaction_id( $payment->ID ),
 				'key'      => $payment_meta['key'],
 				'date'     => $payment->post_date,
 				'user'     => $user ? $user->display_name : __( 'guest', 'edd' ),
 				'status'   => edd_get_payment_status( $payment, true )
 			);
 
-			if( !edd_use_skus() ) {
-				unset( $data['skus'] );
-			}
 		}
 
 		$data = apply_filters( 'edd_export_get_data', $data );
