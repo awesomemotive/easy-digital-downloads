@@ -321,7 +321,8 @@ $gateway        = edd_get_payment_gateway( $payment_id );
 															'selected'         => $address['country'],
 															'show_option_all'  => false,
 															'show_option_none' => false,
-															'select2'          => true
+															'select2'          => true,
+															'placeholder'      => __( 'Select a country', 'edd' )
 														) );
 														?>
 													</p>
@@ -336,7 +337,8 @@ $gateway        = edd_get_payment_gateway( $payment_id );
 																'selected'         => $address['state'],
 																'show_option_all'  => false,
 																'show_option_none' => false,
-																'select2'          => true
+																'select2'          => true,
+																'placeholder'      => __( 'Select a state', 'edd' )
 															) );
 														} else { ?>
 															<input type="text" name="edd-payment-address[0][state]" value="<?php esc_attr_e( $address['state'] ); ?>" class="medium-text"/>
