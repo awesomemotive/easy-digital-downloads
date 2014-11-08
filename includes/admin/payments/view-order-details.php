@@ -320,7 +320,8 @@ $gateway        = edd_get_payment_gateway( $payment_id );
 															'name'             => 'edd-payment-address[0][country]',
 															'selected'         => $address['country'],
 															'show_option_all'  => false,
-															'show_option_none' => false
+															'show_option_none' => false,
+															'select2'          => true
 														) );
 														?>
 													</p>
@@ -334,7 +335,8 @@ $gateway        = edd_get_payment_gateway( $payment_id );
 																'name'             => 'edd-payment-address[0][state]',
 																'selected'         => $address['state'],
 																'show_option_all'  => false,
-																'show_option_none' => false
+																'show_option_none' => false,
+																'select2'          => true
 															) );
 														} else { ?>
 															<input type="text" name="edd-payment-address[0][state]" value="<?php esc_attr_e( $address['state'] ); ?>" class="medium-text"/>
@@ -426,7 +428,7 @@ $gateway        = edd_get_payment_gateway( $payment_id );
 												<?php echo EDD()->html->product_dropdown( array(
 													'name'   => 'edd-order-download-select',
 													'id'     => 'edd-order-download-select',
-													'chosen' => true
+													'select2'=> true
 												) ); ?>
 											</li>
 		

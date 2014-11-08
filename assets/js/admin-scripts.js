@@ -982,6 +982,17 @@ jQuery(document).ready(function ($) {
         $(this).children('li').children('input').attr( 'placeholder', edd_vars.type_to_search );
     });
 
+	// Setup Select2
+	if ($('.edd-select2').attr('multiple')) {
+		$('.edd-select2').select2({
+			dropdownAutoWidth: true,
+		});
+	} else {
+		$('.edd-select2').select2({
+			dropdownAutoWidth: true,
+		});
+	}
+
 	// Variables for setting up the typing timer
 	var typingTimer;               // Timer identifier
 	var doneTypingInterval = 342;  // Time in ms, Slow - 521ms, Moderate - 342ms, Fast - 300ms
