@@ -44,7 +44,8 @@ function edd_update_payment_details( $data ) {
 	$names      = sanitize_text_field( $data['edd-payment-user-name'] );
 	$address    = array_map( 'trim', $data['edd-payment-address'][0] );
 
-	$total      = edd_sanitize_amount( $_POST['edd-payment-total'] );
+	$curr_total = edd_sanitize_amount( edd_get_payment_amount( $payment_id ) );
+	$new_total  = edd_sanitize_amount( $_POST['edd-payment-total'] );
 	$tax        = isset( $_POST['edd-payment-tax'] ) ? edd_sanitize_amount( $_POST['edd-payment-tax'] ) : 0;
 
 	// Setup date from input values
@@ -53,6 +54,7 @@ function edd_update_payment_details( $data ) {
 	// Setup first and last name from input values
 	$names      = explode( ' ', $names );
 	$first_name = ! empty( $names[0] ) ? $names[0] : '';
+	$last_name  = '';
 	if( ! empty( $names[1] ) ) {
 		unset( $names[0] );
 		$last_name = implode( ' ', $names );
@@ -65,9 +67,14 @@ function edd_update_payment_details( $data ) {
 		$cart_details = array();
 		$i = 0;
 		foreach( $updated_downloads as $download ) {
+
+			if( empty( $download['amount'] ) ) {
+				$download['amount'] = '0.00';
+			}
+
 			$item             = array();
 			$item['id']       = absint( $download['id'] );
-			$item['quantity'] = absint( $download['quantity'] );
+			$item['quantity'] = absint( $download['quantity'] ) > 0 ? absint( $download['quantity'] ) : 1;
 			$price_id         = (int) $download['price_id'];
 
 			if( $price_id !== false && edd_has_variable_prices( $item['id'] ) ) {
@@ -80,12 +87,14 @@ function edd_update_payment_details( $data ) {
 			$cart_item   = array();
 			$cart_item['item_number'] = $item;
 
+			$item_price = round( $download['amount'] / $item['quantity'], edd_currency_decimal_filter() );
+
 			$cart_details[$i] = array(
 				'name'        => get_the_title( $download['id'] ),
 				'id'          => $download['id'],
 				'item_number' => $item,
 				'price'       => $download['amount'],
-				'item_price'  => round( $download['amount'] / $download['quantity'], 2 ),
+				'item_price'  => $item_price,
 				'quantity'    => $download['quantity'],
 				'discount'    => 0,
 				'tax'         => 0,
@@ -95,6 +104,54 @@ function edd_update_payment_details( $data ) {
 
 		$meta['downloads']    = $downloads;
 		$meta['cart_details'] = $cart_details;
+	}
+
+	do_action( 'edd_update_edited_purchase', $payment_id );
+
+	// Update main payment record
+	$updated = wp_update_post( array(
+		'ID'        => $payment_id,
+		'post_date' => $date
+	) );
+
+	if ( 0 === $updated ) {
+		wp_die( __( 'Error Updating Payment', 'edd' ) );
+	}
+
+	if ( $user_id !== $user_info['id'] || $email !== $user_info['email'] ) {
+
+		$user = get_user_by( 'id', $user_id );
+		if ( ! empty( $user ) && strtolower( $user->data->user_email ) !== strtolower( $email ) ) {
+			// protect a purcahse from being assigned to a customer with a user ID and Email that belong to different users
+			wp_die( 'User ID and User Email do not match.' );
+			exit;
+		}
+
+		// Remove the stats and payment from the previous customer
+		$previous_customer = EDD()->customers->get_by( 'email', $user_info['email'] );
+		EDD()->customers->remove_payment( $previous_customer->id, $payment_id );
+
+		// Attribute the payment to the new customer and update the payment post meta
+		$new_customer_id = EDD()->customers->get_column_by( 'id', 'email', $email );
+
+		if( ! $new_customer ) {
+
+			// No customer exists for the given email so create one
+			$new_customer_id = EDD()->customers->add( array( 'email' => $email, 'name' => $first_name . ' ' . $last_name ) );
+
+		}
+
+		EDD()->customers->attach_payment( $new_customer_id, $payment_id );
+
+		// If purchase was completed and not ever refunded, adjust stats of customers
+		if( 'revoked' == $status || 'publish' == $status ) {
+
+			EDD()->customers->decrement_stats( $previous_customer->id, $total );
+			EDD()->customers->increment_stats( $new_customer_id, $total );
+
+		}
+
+		update_post_meta( $payment_id, '_edd_payment_customer_id',  $new_customer_id );
 	}
 
 	// Set new meta values
@@ -114,23 +171,24 @@ function edd_update_payment_details( $data ) {
 
 	}
 
-	do_action( 'edd_update_edited_purchase', $payment_id );
-
-	// Update main payment record
-	wp_update_post( array(
-		'ID'        => $payment_id,
-		'post_date' => $date
-	) );
-
 	// Set new status
 	edd_update_payment_status( $payment_id, $status );
 
-	update_post_meta( $payment_id, '_edd_payment_user_id',             $user_id );
-	update_post_meta( $payment_id, '_edd_payment_user_email',          $email   );
-	update_post_meta( $payment_id, '_edd_payment_meta',                $meta    );
-	update_post_meta( $payment_id, '_edd_payment_total',               $total   );
-	update_post_meta( $payment_id, '_edd_payment_downloads',           $total   );
-	update_post_meta( $payment_id, '_edd_payment_unlimited_downloads', $unlimited );
+	edd_update_payment_meta( $payment_id, '_edd_payment_user_id',             $user_id   );
+	edd_update_payment_meta( $payment_id, '_edd_payment_user_email',          $email     );
+	edd_update_payment_meta( $payment_id, '_edd_payment_meta',                $meta      );
+	edd_update_payment_meta( $payment_id, '_edd_payment_total',               $new_total );
+
+	// Adjust total store earnings if the payment total has been changed
+	if ( $new_total !== $curr_total && ( 'publish' == $status || 'revoked' == $status ) ) {
+	
+		$total_earnings = get_option( 'edd_earnings_total' ) - $curr_total + $new_total;
+		update_option( 'edd_earnings_total', $total_earnings );
+
+	}
+
+	edd_update_payment_meta( $payment_id, '_edd_payment_downloads',           $new_total );
+	edd_update_payment_meta( $payment_id, '_edd_payment_unlimited_downloads', $unlimited );
 
 	do_action( 'edd_updated_edited_purchase', $payment_id );
 
@@ -139,10 +197,37 @@ function edd_update_payment_details( $data ) {
 }
 add_action( 'edd_update_payment_details', 'edd_update_payment_details' );
 
+/**
+ * Trigger a Purchase Deletion
+ *
+ * @since 1.3.4
+ * @param $data Arguments passed
+ * @return void
+ */
+function edd_trigger_purchase_delete( $data ) {
+	if ( wp_verify_nonce( $data['_wpnonce'], 'edd_payment_nonce' ) ) {
+
+		$payment_id = absint( $data['purchase_id'] );
+
+		if( ! current_user_can( 'edit_shop_payment', $payment_id ) ) {
+			wp_die( __( 'You do not have permission to edit this payment record', 'edd' ) );
+		}
+
+		edd_delete_purchase( $payment_id );
+		wp_redirect( admin_url( '/edit.php?post_type=download&page=edd-payment-history&edd-message=payment_deleted' ) );
+		edd_die();
+	}
+}
+add_action( 'edd_delete_payment', 'edd_trigger_purchase_delete' );
+
 function edd_ajax_store_payment_note() {
 
 	$payment_id = absint( $_POST['payment_id'] );
 	$note       = wp_kses( $_POST['note'], array() );
+	
+	if( ! current_user_can( 'edit_shop_payment', $payment_id ) ) {
+		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ) );
+	}
 
 	if( empty( $payment_id ) )
 		die( '-1' );

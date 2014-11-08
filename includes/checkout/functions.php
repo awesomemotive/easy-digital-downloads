@@ -19,8 +19,25 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return bool True if on the Checkout page, false otherwise
  */
 function edd_is_checkout() {
-	global $edd_options;
-	$is_checkout = isset( $edd_options['purchase_page'] ) ? is_page( $edd_options['purchase_page'] ) : false;
+
+	$checkout   = edd_get_option( 'purchase_page' );
+	$home_shows = get_option( 'show_on_front' );
+	$home_id    = get_option( 'page_on_front' );
+
+	if( 'page' === $home_shows && (int) $checkout === (int) $home_id && is_front_page() ) {
+
+		$is_checkout = true;
+
+	} elseif( 'page' === $home_shows && is_front_page() ) {
+
+		$is_checkout = false;
+
+	} else {
+
+		$is_checkout = $checkout && is_page( $checkout );
+
+	}
+
 	return apply_filters( 'edd_is_checkout', $is_checkout );
 }
 
@@ -84,7 +101,9 @@ function edd_send_to_success_page( $query_string = null ) {
 	if ( $query_string )
 		$redirect .= $query_string;
 
-	wp_redirect( apply_filters('edd_success_page_redirect', $redirect, $_POST['edd-gateway'], $query_string) );
+	$gateway = isset( $_REQUEST['edd-gateway'] ) ? $_REQUEST['edd-gateway'] : '';
+
+	wp_redirect( apply_filters('edd_success_page_redirect', $redirect, $gateway, $query_string) );
 	edd_die();
 }
 
@@ -190,6 +209,18 @@ function edd_get_failed_transaction_uri( $extras = false ) {
 		$uri .= $extras;
 
 	return apply_filters( 'edd_get_failed_transaction_uri', $uri );
+}
+
+/**
+ * Determines if we're currently on the Failed Transaction page.
+ *
+ * @since 2.1
+ * @return bool True if on the Failed Transaction page, false otherwise.
+ */
+function edd_is_failed_transaction_page() {
+	global $edd_options;
+	$ret = isset( $edd_options['failure_page'] ) ? is_page( $edd_options['failure_page'] ) : false;
+	return apply_filters( 'edd_is_failure_page', $ret );
 }
 
 /**
@@ -330,10 +361,42 @@ add_action( 'template_redirect', 'edd_enforced_ssl_asset_handler' );
  * @return mixed
  */
 function edd_enforced_ssl_asset_filter( $content ) {
+
 	if ( is_array( $content ) ) {
+
 		$content = array_map( 'edd_enforced_ssl_asset_filter', $content );
+
 	} else {
-		$content = str_replace( 'http:', 'https:', $content );
+
+		// Detect if URL ends in a common domain suffix. We want to only affect assets
+		$extension = untrailingslashit( edd_get_file_extension( $content ) );
+		$suffixes  = array(
+			'br',
+			'ca',
+			'cn',
+			'com',
+			'de',
+			'dev',
+			'edu',
+			'fr',
+			'in',
+			'info',
+			'jp',
+			'local',
+			'mobi',
+			'name',
+			'net',
+			'nz',
+			'org',
+			'ru',
+		);
+
+		if( ! in_array( $extension, $suffixes ) ) {
+
+			$content = str_replace( 'http:', 'https:', $content );
+
+		}
+
 	}
 
 	return $content;

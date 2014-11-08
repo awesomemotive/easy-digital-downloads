@@ -93,3 +93,28 @@ function edd_qtranslate_content( $content ) {
 }
 add_filter( 'edd_downloads_content', 'edd_qtranslate_content' );
 add_filter( 'edd_downloads_excerpt', 'edd_qtranslate_content' );
+
+/**
+ * Disable the WooCommerce 'Un-force SSL when leaving checkout' option on EDD checkout
+ * to prevent redirect loops
+ *
+ * @since 2.1
+ * @return void
+ */
+function edd_disable_woo_ssl_on_checkout() {
+	if( edd_is_checkout() && edd_is_ssl_enforced() ) {
+		remove_action( 'template_redirect', array( 'WC_HTTPS', 'unforce_https_template_redirect' ) );
+	}
+}
+add_action( 'template_redirect', 'edd_disable_woo_ssl_on_checkout', 9 );
+
+/**
+ * Disables the mandrill_nl2br filter while sending EDD emails
+ *
+ * @since 2.1
+ * @return void
+ */
+function edd_disable_mandrill_nl2br() {
+	add_filter( 'mandrill_nl2br', '__return_false' );
+}
+add_action( 'edd_email_send_before', 'edd_disable_mandrill_nl2br');

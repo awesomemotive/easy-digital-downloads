@@ -132,6 +132,15 @@ class EDD_Fees {
 	 * @return bool
 	 */
 	public function has_fees( $type = 'fee' ) {
+
+		if( 'all' == $type || 'fee' == $type ) {
+		
+			if( ! edd_get_cart_contents() ) {
+				$type = 'item';
+			}
+
+		}
+
 		$fees = $this->get_fees( $type );
 		return ! empty( $fees ) && is_array( $fees );
 	}
@@ -149,10 +158,14 @@ class EDD_Fees {
 	public function get_fees( $type = 'fee', $download_id = 0 ) {
 		
 		$fees = EDD()->session->get( 'edd_cart_fees' );
-		
+
+		if( ! edd_get_cart_contents() ) {
+			// We can only get item type fees when the cart is empty
+			$type = 'item';
+		}
+
 		if( ! empty( $fees ) && ! empty( $type ) && 'all' !== $type ) {
-			
-			// Remove fees not of the specified type
+
 			foreach( $fees as $key => $fee ) {
 				
 				if( ! empty( $fee['type'] ) && $type != $fee['type'] ) {

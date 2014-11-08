@@ -93,12 +93,12 @@ class EDD_API_Keys_Table extends WP_List_Table {
 
 		$actions['reissue'] = sprintf(
 			'<a href="%s" class="edd-regenerate-api-key">%s</a>',
-			esc_url( add_query_arg( array( 'user_id' => $item['id'], 'edd_action' => 'process_api_key', 'edd_api_process' => 'regenerate' ) ) ),
+			esc_url( wp_nonce_url( add_query_arg( array( 'user_id' => $item['id'], 'edd_action' => 'process_api_key', 'edd_api_process' => 'regenerate' ) ), 'edd-api-nonce' ) ),
 			__( 'Reissue', 'edd' )
 		);
 		$actions['revoke'] = sprintf(
 			'<a href="%s" class="edd-revoke-api-key edd-delete">%s</a>',
-			esc_url( add_query_arg( array( 'user_id' => $item['id'], 'edd_action' => 'process_api_key', 'edd_api_process' => 'revoke' ) ) ),
+			esc_url( wp_nonce_url( add_query_arg( array( 'user_id' => $item['id'], 'edd_action' => 'process_api_key', 'edd_api_process' => 'revoke' ) ), 'edd-api-nonce' ) ),
 			__( 'Revoke', 'edd' )
 		);
 
@@ -132,7 +132,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	 * @since 1.5
 	 * @return void
 	 */
-	function bulk_actions() {
+	function bulk_actions( $which = '' ) {
 		// These aren't really bulk actions but this outputs the markup in the right place
 		static $edd_api_is_bottom;
 
@@ -143,6 +143,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 		<form method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ); ?>">
 			<input type="hidden" name="edd_action" value="process_api_key" />
 			<input type="hidden" name="edd_api_process" value="generate" />
+			<?php wp_nonce_field( 'edd-api-nonce' ); ?>
 			<?php echo EDD()->html->ajax_user_search(); ?>
 			<?php submit_button( __( 'Generate New API Keys', 'edd' ), 'secondary', 'submit', false ); ?>
 		</form>

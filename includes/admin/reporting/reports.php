@@ -295,7 +295,7 @@ function edd_reports_tab_export() {
 	
 					<?php do_action( 'edd_reports_tab_export_content_top' ); ?>
 	
-					<div class="postbox">
+					<div class="postbox edd-export-pdf-sales-earnings">
 						<h3><span><?php _e( 'Export PDF of Sales and Earnings', 'edd' ); ?></span></h3>
 						<div class="inside">
 							<p><?php _e( 'Download a PDF of Sales and Earnings reports for all products for the current year.', 'edd' ); ?> <?php _e( 'Date range reports will be coming soon.', 'edd' ); ?></p>
@@ -303,7 +303,7 @@ function edd_reports_tab_export() {
 						</div><!-- .inside -->
 					</div><!-- .postbox -->
 	
-					<div class="postbox">
+					<div class="postbox edd-export-sales-earnings">
 						<h3><span><?php _e( 'Export Earnings and Sales Stats', 'edd' ); ?></span></h3>
 						<div class="inside">
 							<p><?php _e( 'Download a CSV of earnings and sales over time.', 'edd' ); ?></p>
@@ -321,7 +321,7 @@ function edd_reports_tab_export() {
 						</div><!-- .inside -->
 					</div><!-- .postbox -->
 
-					<div class="postbox">
+					<div class="postbox edd-export-payment-history">
 						<h3><span><?php _e('Export Payment History', 'edd'); ?></span></h3>
 						<div class="inside">
 							<p><?php _e( 'Download a CSV of all payments recorded.', 'edd' ); ?></p>
@@ -345,7 +345,7 @@ function edd_reports_tab_export() {
 						</div><!-- .inside -->
 					</div><!-- .postbox -->
 	
-					<div class="postbox">
+					<div class="postbox edd-export-customers">
 						<h3><span><?php _e('Export Customers in CSV', 'edd'); ?></span></h3>
 						<div class="inside">
 							<p><?php _e( 'Download a CSV of all customer emails. Optionally export only customers that have purchased a particular product. Note, if you have a large number of customers, exporting the purchase stats may fail.', 'edd' ); ?></p>
@@ -374,7 +374,7 @@ function edd_reports_tab_export() {
 						</div><!-- .inside -->
 					</div><!-- .postbox -->
 	
-					<div class="postbox">
+					<div class="postbox edd-export-download-history">
 						<h3><span><?php _e('Export Download History in CSV', 'edd'); ?></span></h3>
 						<div class="inside">
 							<p><?php _e( 'Download a CSV of all file downloads for a specific month and year.', 'edd' ); ?></p>
@@ -425,24 +425,31 @@ add_action( 'edd_reports_tab_logs', 'edd_reports_tab_logs' );
  * @return array
  */
 function edd_estimated_monthly_stats() {
+
 	$estimated = get_transient( 'edd_estimated_monthly_stats' );
 
 	if ( false === $estimated ) {
+
 		$estimated = array(
 			'earnings' => 0,
 			'sales'    => 0
 		);
 
-		$products = get_posts( array( 'post_type' => 'download', 'posts_per_page' => -1, 'fields' => 'ids' ) );
-		if ( $products ) {
-			foreach ( $products as $download ) {
-				$estimated['earnings'] += edd_get_average_monthly_download_earnings( $download );
-				$estimated['sales']    += number_format( edd_get_average_monthly_download_sales( $download ), 0 );
-			}
-		}
+		$stats = new EDD_Payment_Stats;
+
+		$to_date_earnings = $stats->get_earnings( 0, 'this_month' );
+		$to_date_sales    = $stats->get_sales( 0, 'this_month' );
+
+		$current_day      = date( 'd', current_time( 'timestamp' ) );
+		$current_month    = date( 'n', current_time( 'timestamp' ) );
+		$current_year     = date( 'Y', current_time( 'timestamp' ) );
+		$days_in_month    = cal_days_in_month( CAL_GREGORIAN, $current_month, $current_year );
+
+		$estimated['earnings'] = ( $to_date_earnings / $current_day ) * $days_in_month;
+		$estimated['sales']    = ( $to_date_sales / $current_day ) * $days_in_month;
 
 		// Cache for one day
-		set_transient( 'edd_estimated_monthly_stats', serialize( $estimated ), 86400 );
+		set_transient( 'edd_estimated_monthly_stats', $estimated, 86400 );
 	}
 
 	return maybe_unserialize( $estimated );

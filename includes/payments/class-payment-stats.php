@@ -186,7 +186,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 
 		remove_filter( 'posts_where', array( $this, 'payments_where' ) );
 
-		return round( $earnings, 2 );
+		return round( $earnings, edd_currency_decimal_filter() );
 
 	}
 
