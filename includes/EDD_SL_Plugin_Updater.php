@@ -121,7 +121,7 @@ class EDD_SL_Plugin_Updater {
 
         $update_cache = get_site_transient( 'update_plugins' );
 
-        if ( empty( $update_cache->response ) || empty( $update_cache->response[ $this->name ] ) ) {
+        if ( ! is_object( $update_cache ) || empty( $update_cache->response ) || empty( $update_cache->response[ $this->name ] ) ) {
 
             $version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
 
