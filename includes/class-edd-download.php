@@ -17,6 +17,13 @@
 class EDD_Download {
 
 	/**
+	 * The download ID
+	 *
+	 * @since 2.2
+	 */
+	public $ID = 0;
+
+	/**
 	 * The download price
 	 *
 	 * @since 2.2
