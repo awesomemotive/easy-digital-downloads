@@ -1,6 +1,5 @@
 <?php
 /**
- * 
  * This template is used to display the Downloads cart widget.
  */ 
 $cart_items    = edd_get_cart_contents();
