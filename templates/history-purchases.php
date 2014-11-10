@@ -1,6 +1,6 @@
 <?php
 /**
- * Template of Purchase history for the current user.
+ * This template is used to display the purchase history of the current user.
  */
 $purchases = edd_get_users_purchases( get_current_user_id(), 20, true, 'any' );
 if ( $purchases ) : ?>
