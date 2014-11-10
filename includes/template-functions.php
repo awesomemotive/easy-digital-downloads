@@ -221,7 +221,7 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 		return;
 	}
 
-	$type   = edd_single_price_option_mode( $download_id ) ? 'checkbox' : 'radio';
+	$type = edd_single_price_option_mode( $download_id ) ? 'checkbox' : 'radio';
 
 	do_action( 'edd_before_price_options', $download_id ); ?>
 	<div class="edd_price_options">
