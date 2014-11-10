@@ -125,6 +125,10 @@ class EDD_SL_Plugin_Updater {
 
             $version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
 
+            if( ! is_object( $version_info ) ) {
+                return;
+            }
+
             if( version_compare( $this->version, $version_info->new_version, '<' ) ) {
             
                 $update_cache->response[ $this->name ] = $version_info;
