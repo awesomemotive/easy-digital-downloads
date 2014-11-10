@@ -73,12 +73,14 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 
 	}
 
+	/*
 	$payment_ids = EDD()->customers->get_column_by( 'payment_ids', $field, $user );
 	
 	if( ! empty( $payment_ids ) ) {
 		unset( $args['user'] );
 		$args['post__in'] = array_map( 'absint', explode( ',', $payment_ids ) );
 	}
+	*/
 
 	$purchases = edd_get_payments( $args );
 
@@ -166,6 +168,10 @@ function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
  * @return      boolean - true if has purchased, false otherwise
  */
 function edd_has_user_purchased( $user_id, $downloads, $variable_price_id = null ) {
+
+	if( empty( $user_id ) ) {
+		return false;
+	}
 
 	$users_purchases = edd_get_users_purchases( $user_id );
 

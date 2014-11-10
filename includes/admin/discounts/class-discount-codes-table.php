@@ -70,9 +70,9 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		global $status, $page;
 
 		parent::__construct( array(
-			'singular'  => edd_get_label_singular(),    // Singular name of the listed records
-			'plural'    => edd_get_label_plural(),    	// Plural name of the listed records
-			'ajax'      => false             			// Does this table support ajax?
+			'singular'  => 'discount',  // Singular name of the listed records
+			'plural'    => 'discounts', // Plural name of the listed records
+			'ajax'      => false        // Does this table support ajax?
 		) );
 
 		$this->get_discount_code_counts();
@@ -201,12 +201,12 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$row_actions['edit'] = '<a href="' . add_query_arg( array( 'edd-action' => 'edit_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Edit', 'edd' ) . '</a>';
 
 		if( strtolower( $item['status'] ) == 'active' ) {
-			$row_actions['deactivate'] = '<a href="' . add_query_arg( array( 'edd-action' => 'deactivate_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Deactivate', 'edd' ) . '</a>';
+			$row_actions['deactivate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array( 'edd-action' => 'deactivate_discount', 'discount' => $discount->ID ) ), 'edd_discount_nonce' ) ) . '">' . __( 'Deactivate', 'edd' ) . '</a>';
 		} elseif( strtolower( $item['status'] ) == 'inactive' ) {
-			$row_actions['activate'] = '<a href="' . add_query_arg( array( 'edd-action' => 'activate_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Activate', 'edd' ) . '</a>';
+			$row_actions['activate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array( 'edd-action' => 'activate_discount', 'discount' => $discount->ID ) ), 'edd_discount_nonce' ) ) . '">' . __( 'Activate', 'edd' ) . '</a>';
 		}
 
-		$row_actions['delete'] = '<a href="' . wp_nonce_url( add_query_arg( array( 'edd-action' => 'delete_discount', 'discount' => $discount->ID ) ), 'edd_discount_nonce' ) . '">' . __( 'Delete', 'edd' ) . '</a>';
+		$row_actions['delete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array( 'edd-action' => 'delete_discount', 'discount' => $discount->ID ) ), 'edd_discount_nonce' ) ) . '">' . __( 'Delete', 'edd' ) . '</a>';
 
 		$row_actions = apply_filters( 'edd_discount_row_actions', $row_actions, $discount );
 
@@ -288,10 +288,20 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function process_bulk_action() {
+
+		if( empty( $_REQUEST['_wpnonce'] ) ) {
+			return;
+		}
+
+		if( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-discounts' ) ) {
+			return;
+		}
+
 		$ids = isset( $_GET['discount'] ) ? $_GET['discount'] : false;
 
 		if ( ! is_array( $ids ) )
 			$ids = array( $ids );
+
 
 		foreach ( $ids as $id ) {
 			if ( 'delete' === $this->current_action() ) {

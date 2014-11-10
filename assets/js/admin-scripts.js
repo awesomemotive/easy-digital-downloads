@@ -15,6 +15,16 @@ jQuery(document).ready(function ($) {
 		},
 		clone_repeatable : function(row) {
 
+			// Retrieve the highest current key
+			var key = highest = 1;
+			row.parent().find( 'tr.edd_repeatable_row' ).each(function() {
+				var current = $(this).data( 'key' );
+				if( parseInt( current ) > highest ) {
+					highest = current;
+				}
+			});
+			key = highest += 1;
+
 			clone = row.clone();
 
 			/** manually update any select box values */
@@ -22,18 +32,25 @@ jQuery(document).ready(function ($) {
 				$( this ).val( row.find( 'select[name="' + $( this ).attr( 'name' ) + '"]' ).val() );
 			});
 
-			var count = row.parent().find( 'tr' ).length;
-
 			clone.removeClass( 'edd_add_blank' );
 
+			clone.data( 'key', key );
 			clone.find( 'td input, td select' ).val( '' );
 			clone.find( 'input, select' ).each(function() {
-				var name 	= $( this ).attr( 'name' );
+				var name = $( this ).attr( 'name' );
 
-				name = name.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
+				name = name.replace( /\[(\d+)\]/, '[' + parseInt( key ) + ']');
 
 				$( this ).attr( 'name', name ).attr( 'id', name );
 			});
+
+			clone.find( 'span.edd_price_id' ).each(function() {
+				$( this ).text( parseInt( key ) );
+			});
+
+			clone.find( '.edd_repeatable_default_input' ).each( function() {
+				$( this ).val( parseInt( count ) ).removeAttr('checked');
+			})
 
 			return clone;
 		},
@@ -185,9 +202,9 @@ jQuery(document).ready(function ($) {
 					file_frame = wp.media.frames.file_frame = wp.media( {
 						frame: 'post',
 						state: 'insert',
-						title: button.data( 'uploader_title' ),
+						title: button.data( 'uploader-title' ),
 						button: {
-							text: button.data( 'uploader_button_text' )
+							text: button.data( 'uploader-button-text' )
 						},
 						multiple: $( this ).data( 'multiple' ) == '0' ? false : true  // Set to true to allow multiple files to be selected
 					} );
@@ -958,6 +975,11 @@ jQuery(document).ready(function ($) {
     	inherit_select_classes: true,
     	placeholder_text_single: edd_vars.one_option,
     	placeholder_text_multiple: edd_vars.one_or_more_option,
+    });
+
+    // Add placeholders for Chosen input fields
+    $( '.chosen-choices' ).on( 'click', function () {
+        $(this).children('li').children('input').attr( 'placeholder', edd_vars.type_to_search );
     });
 
 	// Variables for setting up the typing timer

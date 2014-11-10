@@ -28,7 +28,7 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	$from_name    = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
 	$from_name    = apply_filters( 'edd_purchase_from_name', $from_name, $payment_id, $payment_data );
 
-	$from_email   = edd_get_option( 'from_name', get_bloginfo( 'admin_email' ) );
+	$from_email   = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
 	$from_email   = apply_filters( 'edd_purchase_from_address', $from_email, $payment_id, $payment_data );
 
 	$to_email     = edd_get_payment_user_email( $payment_id );
@@ -69,7 +69,7 @@ function edd_email_test_purchase_receipt() {
 	$from_name   = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
 	$from_name   = apply_filters( 'edd_purchase_from_name', $from_name, 0, array() );
 
-	$from_email  = edd_get_option( 'from_name', get_bloginfo( 'admin_email' ) );
+	$from_email  = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
 	$from_email  = apply_filters( 'edd_purchase_from_address', $from_email, 0, array() );
 
 	$subject     = edd_get_option( 'purchase_subject', __( 'Purchase Receipt', 'edd' ) );
@@ -105,7 +105,7 @@ function edd_admin_email_notice( $payment_id = 0, $payment_data = array() ) {
 	$from_name   = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
 	$from_name   = apply_filters( 'edd_purchase_from_name', $from_name, $payment_id, $payment_data );
 
-	$from_email  = edd_get_option( 'from_name', get_bloginfo( 'admin_email' ) );
+	$from_email  = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
 	$from_email  = apply_filters( 'edd_purchase_from_address', $from_email, $payment_id, $payment_data );
 
 	$subject     = edd_get_option( 'sale_notification_subject', sprintf( __( 'New download purchase - Order #%1$s', 'edd' ), $payment_id ) );

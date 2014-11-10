@@ -1,232 +1,217 @@
 # Copyright (C) 2014 Pippin Williamson
 # This file is distributed under the same license as the Easy Digital Downloads package.
+# Translators:
+# exploit <36488963@qq.com>, 2014
+# cgtianyi <wuguangyuan@188.com>, 2014
+# Wang Yun <mogita@live.com>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.1.7\n"
+"Project-Id-Version: Easy Digital Downloads\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2014-10-28 14:31:55+00:00\n"
+"POT-Creation-Date: 2014-10-21 10:40:39+00:00\n"
+"PO-Revision-Date: 2014-10-21 10:40+0000\n"
+"Last-Translator: FxB <fxb@wp-translations.org>\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/easy-digital-downloads/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2014-MO-DA HO:MI+ZONE\n"
-"Last-Translator: WP-Translations (http://wp-translations.org/)\n"
-"Language-Team: WP-Translations <wpt@wp-translations.org>\n"
-"X-Generator: grunt-wp-i18n 0.4.8\n"
-"X-Poedit-KeywordsList: "
-"__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
-"attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
-"Language: en_US\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Poedit-Country: United States\n"
-"X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-Basepath: ../\n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: grunt-wp-i18n 0.4.5\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Country: UNITED STATES\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c;_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;\n"
+"X-Poedit-Language: English\n"
 "X-Poedit-SearchPath-0: .\n"
-"X-Poedit-Bookmarks: \n"
+"X-Poedit-SourceCharset: utf-8\n"
 "X-Textdomain-Support: yes\n"
 
 #: easy-digital-downloads.php:164 easy-digital-downloads.php:176
 msgid "Cheatin&#8217; huh?"
-msgstr ""
-
-#: includes/EDD_SL_Plugin_Updater.php:167
-msgid ""
-"There is a new version of %1$s available. <a target=\"_blank\" "
-"class=\"thickbox\" href=\"%2$s\">View version %3$s details</a>."
-msgstr ""
-
-#: includes/EDD_SL_Plugin_Updater.php:174
-msgid ""
-"There is a new version of %1$s available. <a target=\"_blank\" "
-"class=\"thickbox\" href=\"%2$s\">View version %3$s details</a> or <a "
-"href=\"%4$s\">update now</a>."
-msgstr ""
-
-#: includes/EDD_SL_Plugin_Updater.php:306
-msgid "You do not have permission to install plugin updates"
-msgstr ""
+msgstr "开玩笑，呵？"
 
 #: includes/admin/add-ons.php:42
 msgid "Add Ons for Easy Digital Downloads"
-msgstr ""
+msgstr "Easy Digital Download 扩展插件"
 
 #: includes/admin/add-ons.php:43
 msgid "Browse All Extensions"
-msgstr ""
+msgstr "浏览所有扩展插件"
 
 #: includes/admin/add-ons.php:45
 msgid "These add-ons extend the functionality of Easy Digital Downloads."
-msgstr ""
+msgstr "扩展插件可以额外的为 Easy Digital Downloads 添加新的功能。"
 
 #: includes/admin/add-ons.php:69
 msgid ""
 "There was an error retrieving the extensions list from the server. Please "
 "try again later."
-msgstr ""
+msgstr "从服务器获取扩展插件列表时出现错误，请稍后重试。"
 
 #: includes/admin/admin-footer.php:27
 msgid ""
 "Thank you for using <a href=\"%1$s\" target=\"_blank\">Easy Digital "
 "Downloads</a>! Please <a href=\"%2$s\" target=\"_blank\">rate us</a> on <a "
 "href=\"%2$s\" target=\"_blank\">WordPress.org</a>"
-msgstr ""
+msgstr "感谢您使用 <a href=\"%1$s\" target=\"_blank\">Easy Digital Downloads</a>！请在 <a href=\"%2$s\" target=\"_blank\">WordPress.org</a> 上为我们<a href=\"%2$s\" target=\"_blank\">评价</a>"
 
 #: includes/admin/admin-notices.php:26
 msgid "Discount code added."
-msgstr ""
+msgstr "优惠码已添加。"
 
 #: includes/admin/admin-notices.php:30
 msgid "There was a problem adding your discount code, please try again."
-msgstr ""
+msgstr "添加优惠码时出错，请重试。"
 
 #: includes/admin/admin-notices.php:34
 msgid "A discount with that code already exists, please use a different code."
-msgstr ""
+msgstr "此代码已在其他优惠中使用，请另选一个代码。"
 
 #: includes/admin/admin-notices.php:38
 msgid "Discount code updated."
-msgstr ""
+msgstr "优惠码已更新。"
 
 #: includes/admin/admin-notices.php:42
 msgid "There was a problem updating your discount code, please try again."
-msgstr ""
+msgstr "更新优惠码时出错，请重试。"
 
 #: includes/admin/admin-notices.php:46
 msgid "The payment has been deleted."
-msgstr ""
+msgstr "此支付操作已经被删除。"
 
 #: includes/admin/admin-notices.php:50
 msgid "The purchase receipt has been resent."
-msgstr ""
+msgstr "购买发票已经被重新发送。"
 
 #: includes/admin/admin-notices.php:54
 msgid "The payment note has been deleted."
-msgstr ""
+msgstr "支付说明已经被删除。"
 
 #: includes/admin/admin-notices.php:58
 msgid ""
 "Note: Test Mode is enabled, only test payments are shown below. <a "
 "href=\"%s\">Settings</a>."
-msgstr ""
+msgstr "注意：测试模式已启用，下面仅显示测试支付的条目。<a href=\"%s\">设置</a>。"
 
 #: includes/admin/admin-notices.php:63 includes/template-functions.php:53
 msgid ""
 "No checkout page has been configured. Visit <a href=\"%s\">Settings</a> to "
 "set one."
-msgstr ""
+msgstr "未配置结算页面。访问<a href=\"%s\">设置</a>页面来进行配置。"
 
 #: includes/admin/admin-notices.php:64 includes/admin/admin-notices.php:104
 msgid "Dismiss Notice"
-msgstr ""
+msgstr "清除通知"
 
 #: includes/admin/admin-notices.php:69
 msgid "The settings have been imported."
-msgstr ""
+msgstr "设置导入成功。"
 
 #: includes/admin/admin-notices.php:73
 msgid "The payment note has been added successfully."
-msgstr ""
+msgstr "成功添加支付说明。"
 
 #: includes/admin/admin-notices.php:77
 msgid "The payment has been successfully updated."
-msgstr ""
+msgstr "成功更新支付。"
 
 #: includes/admin/admin-notices.php:81
 msgid "API keys successfully generated."
-msgstr ""
+msgstr "成功生成 API 密钥。"
 
 #: includes/admin/admin-notices.php:85
 msgid "The specified user already has API keys."
-msgstr ""
+msgstr "指定用户已有 API 密钥。"
 
 #: includes/admin/admin-notices.php:89
 msgid "API keys successfully regenerated."
-msgstr ""
+msgstr "重新生成 API 密钥成功。"
 
 #: includes/admin/admin-notices.php:93
 msgid "API keys successfully revoked."
-msgstr ""
+msgstr "成功废除 API 密钥。"
 
 #: includes/admin/admin-notices.php:101
 msgid ""
 "The Easy Digital Downloads .htaccess file is missing from "
 "<strong>%s</strong>!"
-msgstr ""
+msgstr "Easy Digital Downloads 的 .htaccess 文件丢失！应在 <strong>%s</strong>。"
 
 #: includes/admin/admin-notices.php:102
 msgid ""
 "First, please resave the Misc settings tab a few times. If this warning "
 "continues to appear, create a file called \".htaccess\" in the "
 "<strong>%s</strong> directory, and copy the following into it:"
-msgstr ""
+msgstr "请先反复保存几次杂项设置标签页。如果仍旧出现警告，请在 <strong>%s</strong> 目录中创建一个「.htaccess」文件，并将以下内容复制到其中："
 
 #: includes/admin/admin-notices.php:119
 msgid ""
 "There seems to be an issue with the server. Please try again in a few "
 "minutes."
-msgstr ""
+msgstr "服务器似乎有些问题，请稍后重试。"
 
 #: includes/admin/admin-pages.php:35
 #: includes/admin/discounts/discount-codes.php:35
 msgid "Discount Codes"
-msgstr ""
+msgstr "优惠码"
 
 #: includes/admin/admin-pages.php:36
 msgid "Earnings and Sales Reports"
-msgstr ""
+msgstr "收入和售出报表"
 
 #: includes/admin/admin-pages.php:36
 #: includes/admin/reporting/contextual-help.php:42
 #: includes/admin/reporting/reports.php:32
 msgid "Reports"
-msgstr ""
+msgstr "报表"
 
 #: includes/admin/admin-pages.php:37
 msgid "Easy Digital Download Settings"
-msgstr ""
+msgstr "Easy Digital Download 设置"
 
 #: includes/admin/admin-pages.php:37
 msgid "Settings"
-msgstr ""
+msgstr "设置"
 
 #: includes/admin/admin-pages.php:38
 msgid "Easy Digital Download Info and Tools"
-msgstr ""
+msgstr "Easy Digital Download 信息和工具"
 
 #: includes/admin/admin-pages.php:38
 msgid "Tools"
-msgstr ""
+msgstr "工具"
 
 #: includes/admin/admin-pages.php:39
 msgid "Easy Digital Download Add Ons"
-msgstr ""
+msgstr "Easy Digital Download 扩展插件"
 
 #: includes/admin/admin-pages.php:39 includes/admin/plugins.php:51
 msgid "Add Ons"
-msgstr ""
+msgstr "扩展插件"
 
 #: includes/admin/admin-pages.php:40
 msgid "EDD Upgrades"
-msgstr ""
+msgstr "EDD 更新"
 
 #: includes/admin/class-api-keys-table.php:52
 msgid "API Key"
-msgstr ""
+msgstr "API 密钥"
 
 #: includes/admin/class-api-keys-table.php:53 includes/admin/tools.php:69
 msgid "API Keys"
-msgstr ""
+msgstr "API 密钥"
 
 #: includes/admin/class-api-keys-table.php:90
 msgid "View API Log"
-msgstr ""
+msgstr "查看 API 日志"
 
 #: includes/admin/class-api-keys-table.php:97
 msgid "Reissue"
-msgstr ""
+msgstr "重新分发"
 
 #: includes/admin/class-api-keys-table.php:102
 msgid "Revoke"
-msgstr ""
+msgstr "废除"
 
 #: includes/admin/class-api-keys-table.php:119
 #: includes/checkout/template.php:408 includes/checkout/template.php:414
@@ -234,31 +219,31 @@ msgstr ""
 #: templates/shortcode-login.php:13 templates/shortcode-register.php:15
 #: templates/shortcode-register.php:16
 msgid "Username"
-msgstr ""
+msgstr "用户名"
 
 #: includes/admin/class-api-keys-table.php:120
 msgid "Public Key"
-msgstr ""
+msgstr "公钥"
 
 #: includes/admin/class-api-keys-table.php:121
 msgid "Secret Key"
-msgstr ""
+msgstr "私钥"
 
 #: includes/admin/class-api-keys-table.php:122
 msgid "Token"
-msgstr ""
+msgstr "令牌"
 
 #: includes/admin/class-api-keys-table.php:148
 msgid "Generate New API Keys"
-msgstr ""
+msgstr "生成新 API 密钥"
 
 #: includes/admin/dashboard-widgets.php:24
 msgid "Easy Digital Downloads Sales Summary"
-msgstr ""
+msgstr "Easy Digital Downloads 销售概况"
 
 #: includes/admin/dashboard-widgets.php:47
 msgid "Current Month"
-msgstr ""
+msgstr "本月"
 
 #: includes/admin/dashboard-widgets.php:52
 #: includes/admin/dashboard-widgets.php:70
@@ -271,24 +256,23 @@ msgstr ""
 #: includes/admin/reporting/pdf-reports.php:208
 #: includes/admin/reporting/reports.php:57
 msgid "Earnings"
-msgstr ""
+msgstr "收入"
 
 #: includes/admin/dashboard-widgets.php:57
 #: includes/admin/dashboard-widgets.php:76
 msgid "Sale"
 msgid_plural "Sales"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "售出"
 
 #: includes/admin/dashboard-widgets.php:65
 #: includes/admin/reporting/graphing.php:431 includes/class-edd-stats.php:87
 msgid "Last Month"
-msgstr ""
+msgstr "最近一个月"
 
 #: includes/admin/dashboard-widgets.php:90
 #: includes/admin/reporting/graphing.php:426 includes/class-edd-stats.php:82
 msgid "Today"
-msgstr ""
+msgstr "今天"
 
 #: includes/admin/dashboard-widgets.php:104
 #: includes/admin/downloads/dashboard-columns.php:32
@@ -299,43 +283,43 @@ msgstr ""
 #: includes/admin/reporting/logs.php:125
 #: includes/admin/reporting/pdf-reports.php:225
 msgid "Sales"
-msgstr ""
+msgstr "售出"
 
 #: includes/admin/dashboard-widgets.php:118
 msgid "Totals"
-msgstr ""
+msgstr "总计"
 
 #: includes/admin/dashboard-widgets.php:123
 msgid "Total Earnings"
-msgstr ""
+msgstr "总计收入"
 
 #: includes/admin/dashboard-widgets.php:127
 #: includes/admin/reporting/class-gateways-reports-table.php:84
 msgid "Total Sales"
-msgstr ""
+msgstr "总计售出"
 
 #: includes/admin/dashboard-widgets.php:148
 msgid "Recent Purchases"
-msgstr ""
+msgstr "最近的购买"
 
 #: includes/admin/dashboard-widgets.php:149
 msgid "View All"
-msgstr ""
+msgstr "查看所有"
 
 #: includes/admin/dashboard-widgets.php:158
 #: includes/admin/dashboard-widgets.php:170
 msgid "Purchase Details for Payment #%s"
-msgstr ""
+msgstr "#%s 的交易详细信息"
 
 #: includes/admin/discounts/add-discount.php:16 includes/post-types.php:99
 msgid "Add New Discount"
-msgstr ""
+msgstr "添加新优惠码"
 
 #: includes/admin/discounts/add-discount.php:16
 #: includes/admin/discounts/edit-discount.php:29
 #: includes/admin/reporting/reports.php:172
 msgid "Go Back"
-msgstr ""
+msgstr "返回"
 
 #: includes/admin/discounts/add-discount.php:24
 #: includes/admin/discounts/class-discount-codes-table.php:145
@@ -345,43 +329,43 @@ msgstr ""
 #: includes/admin/reporting/class-export-customers.php:76
 #: templates/shortcode-receipt.php:112
 msgid "Name"
-msgstr ""
+msgstr "名称"
 
 #: includes/admin/discounts/add-discount.php:28
 #: includes/admin/discounts/edit-discount.php:41
 msgid "The name of this discount"
-msgstr ""
+msgstr "优惠码名称"
 
 #: includes/admin/discounts/add-discount.php:34
 #: includes/admin/discounts/class-discount-codes-table.php:146
 #: includes/admin/discounts/edit-discount.php:47
 msgid "Code"
-msgstr ""
+msgstr "代码"
 
 #: includes/admin/discounts/add-discount.php:38
 #: includes/admin/discounts/edit-discount.php:51
 msgid "Enter a code for this discount, such as 10PERCENT"
-msgstr ""
+msgstr "输入一段字符串作为优惠码，例如：10PERCENT"
 
 #: includes/admin/discounts/add-discount.php:44
 #: includes/admin/discounts/edit-discount.php:57
 msgid "Type"
-msgstr ""
+msgstr "类型"
 
 #: includes/admin/discounts/add-discount.php:48
 #: includes/admin/discounts/edit-discount.php:61
 msgid "Percentage"
-msgstr ""
+msgstr "百分比"
 
 #: includes/admin/discounts/add-discount.php:49
 #: includes/admin/discounts/edit-discount.php:62
 msgid "Flat amount"
-msgstr ""
+msgstr "固定金额"
 
 #: includes/admin/discounts/add-discount.php:51
 #: includes/admin/discounts/edit-discount.php:64
 msgid "The kind of discount to apply for this discount."
-msgstr ""
+msgstr "此优惠码的优惠方法"
 
 #: includes/admin/discounts/add-discount.php:57
 #: includes/admin/discounts/class-discount-codes-table.php:147
@@ -390,173 +374,173 @@ msgstr ""
 #: includes/admin/reporting/class-export-payments.php:76
 #: templates/history-purchases.php:11
 msgid "Amount"
-msgstr ""
+msgstr "金额"
 
 #: includes/admin/discounts/add-discount.php:61
 #: includes/admin/discounts/edit-discount.php:74
 msgid "Enter the discount amount in %s"
-msgstr ""
+msgstr "在 %s 输入优惠数额"
 
 #: includes/admin/discounts/add-discount.php:62
 #: includes/admin/discounts/edit-discount.php:75
 msgid "Enter the discount percentage. 10 = 10%"
-msgstr ""
+msgstr "请输入折扣百分比。输入 10 代表 10%"
 
 #: includes/admin/discounts/add-discount.php:68
 #: includes/admin/discounts/edit-discount.php:81
 msgid "%s Requirements"
-msgstr ""
+msgstr "#%s 需求"
 
 #: includes/admin/discounts/add-discount.php:82
 #: includes/admin/discounts/edit-discount.php:96
 msgid "Cart must contain all selected %s"
-msgstr ""
+msgstr "购物车内须含所有选定的 %s"
 
 #: includes/admin/discounts/add-discount.php:83
 #: includes/admin/discounts/edit-discount.php:97
 msgid "Cart needs one or more of the selected %s"
-msgstr ""
+msgstr "购物车内须含一个或多个选定的 %s"
 
 #: includes/admin/discounts/add-discount.php:89
 #: includes/admin/discounts/edit-discount.php:103
 msgid "Apply discount to entire purchase."
-msgstr ""
+msgstr "优惠码对整个订单都有效。"
 
 #: includes/admin/discounts/add-discount.php:93
 #: includes/admin/discounts/edit-discount.php:107
 msgid "Apply discount only to selected %s."
-msgstr ""
+msgstr "优惠码仅对所选的 %s 有效。"
 
 #: includes/admin/discounts/add-discount.php:97
 #: includes/admin/discounts/edit-discount.php:111
 msgid "Select %s relevant to this discount."
-msgstr ""
+msgstr "选择与此优惠码有关的 %s。"
 
 #: includes/admin/discounts/add-discount.php:103
 #: includes/admin/discounts/edit-discount.php:117
 msgid "Excluded %s"
-msgstr ""
+msgstr "已排除 %s"
 
 #: includes/admin/discounts/add-discount.php:113
 #: includes/admin/discounts/edit-discount.php:127
 msgid "%s that this discount code cannot be applied to."
-msgstr ""
+msgstr "此优惠码不能被用于 %s。"
 
 #: includes/admin/discounts/add-discount.php:119
 #: includes/admin/discounts/edit-discount.php:133
 msgid "Start date"
-msgstr ""
+msgstr "开始日期"
 
 #: includes/admin/discounts/add-discount.php:123
 #: includes/admin/discounts/edit-discount.php:137
 msgid ""
-"Enter the start date for this discount code in the format of mm/dd/yyyy. "
-"For no start date, leave blank. If entered, the discount can only be used "
-"after or on this date."
-msgstr ""
+"Enter the start date for this discount code in the format of mm/dd/yyyy. For"
+" no start date, leave blank. If entered, the discount can only be used after"
+" or on this date."
+msgstr "输入优惠码生效的开始日期，格式：mm/dd/yyyy。若不设开始日期请留空。 一旦设置开始日期，优惠活动将从该日期起。"
 
 #: includes/admin/discounts/add-discount.php:129
 #: includes/admin/discounts/edit-discount.php:143
 msgid "Expiration date"
-msgstr ""
+msgstr "失效日期"
 
 #: includes/admin/discounts/add-discount.php:133
 #: includes/admin/discounts/edit-discount.php:147
 msgid ""
 "Enter the expiration date for this discount code in the format of "
 "mm/dd/yyyy. For no expiration, leave blank"
-msgstr ""
+msgstr "输入优惠码的失效日期，格式：mm/dd/yyyy。若不设失效日期请留空。"
 
 #: includes/admin/discounts/add-discount.php:139
 #: includes/admin/discounts/edit-discount.php:163
 msgid "Minimum Amount"
-msgstr ""
+msgstr "最小金额"
 
 #: includes/admin/discounts/add-discount.php:143
 #: includes/admin/discounts/edit-discount.php:167
 msgid ""
 "The minimum amount that must be purchased before this discount can be used. "
 "Leave blank for no minimum."
-msgstr ""
+msgstr "使用此优惠码的最低消费金额。若不设最低金额限制请留空。"
 
 #: includes/admin/discounts/add-discount.php:149
 #: includes/admin/discounts/class-discount-codes-table.php:149
 #: includes/admin/discounts/edit-discount.php:153
 msgid "Max Uses"
-msgstr ""
+msgstr "最大使用次数"
 
 #: includes/admin/discounts/add-discount.php:153
 #: includes/admin/discounts/edit-discount.php:157
 msgid ""
 "The maximum number of times this discount can be used. Leave blank for "
 "unlimited."
-msgstr ""
+msgstr "此优惠码的最大使用次数。若不限次数请留空。"
 
 #: includes/admin/discounts/add-discount.php:159
 #: includes/admin/discounts/edit-discount.php:186
 msgid "Use Once Per Customer"
-msgstr ""
+msgstr "每个用户只能使用一次"
 
 #: includes/admin/discounts/add-discount.php:163
 #: includes/admin/discounts/edit-discount.php:190
 msgid "Limit this discount to a single-use per customer?"
-msgstr ""
+msgstr "限制单个用户的使用次数"
 
 #: includes/admin/discounts/add-discount.php:173
 msgid "Add Discount Code"
-msgstr ""
+msgstr "添加优惠码"
 
 #: includes/admin/discounts/class-discount-codes-table.php:127
 #: includes/admin/payments/class-payments-table.php:199
 #: includes/admin/reporting/class-file-downloads-logs-list-table.php:336
 #: includes/admin/reporting/class-sales-logs-list-table.php:255
 msgid "All"
-msgstr ""
+msgstr "全部"
 
 #: includes/admin/discounts/class-discount-codes-table.php:128
 #: includes/admin/discounts/class-discount-codes-table.php:250
 #: includes/admin/discounts/edit-discount.php:177
 msgid "Active"
-msgstr ""
+msgstr "启用"
 
 #: includes/admin/discounts/class-discount-codes-table.php:129
 #: includes/admin/discounts/class-discount-codes-table.php:246
 #: includes/admin/discounts/edit-discount.php:178
 msgid "Inactive"
-msgstr ""
+msgstr "禁用"
 
 #: includes/admin/discounts/class-discount-codes-table.php:148
 msgid "Uses"
-msgstr ""
+msgstr "使用次数"
 
 #: includes/admin/discounts/class-discount-codes-table.php:150
 msgid "Start Date"
-msgstr ""
+msgstr "开始时间"
 
 #: includes/admin/discounts/class-discount-codes-table.php:151
 msgid "Expiration"
-msgstr ""
+msgstr "失效"
 
 #: includes/admin/discounts/class-discount-codes-table.php:152
 #: includes/admin/discounts/edit-discount.php:173
 #: includes/admin/payments/class-payments-table.php:227
 #: includes/admin/reporting/class-export-payments.php:84
 msgid "Status"
-msgstr ""
+msgstr "状态"
 
 #: includes/admin/discounts/class-discount-codes-table.php:201
 msgid "Edit"
-msgstr ""
+msgstr "编辑"
 
 #: includes/admin/discounts/class-discount-codes-table.php:204
 #: includes/admin/discounts/class-discount-codes-table.php:276
 msgid "Deactivate"
-msgstr ""
+msgstr "停用"
 
 #: includes/admin/discounts/class-discount-codes-table.php:206
 #: includes/admin/discounts/class-discount-codes-table.php:275
 msgid "Activate"
-msgstr ""
+msgstr "启用"
 
 #: includes/admin/discounts/class-discount-codes-table.php:209
 #: includes/admin/discounts/class-discount-codes-table.php:277
@@ -564,32 +548,32 @@ msgstr ""
 #: includes/admin/payments/class-payments-table.php:375
 #: includes/payments/functions.php:1457
 msgid "Delete"
-msgstr ""
+msgstr "删除"
 
 #: includes/admin/discounts/class-discount-codes-table.php:243
 msgid "Expired"
-msgstr ""
+msgstr "已失效"
 
 #: includes/admin/discounts/class-discount-codes-table.php:263
 msgid "No discounts found."
-msgstr ""
+msgstr "未找到优惠码。"
 
 #: includes/admin/discounts/class-discount-codes-table.php:371
 msgid "unlimited"
-msgstr ""
+msgstr "无限制"
 
 #: includes/admin/discounts/class-discount-codes-table.php:373
 #: includes/class-edd-cli.php:372
 msgid "Unlimited"
-msgstr ""
+msgstr "无限制"
 
 #: includes/admin/discounts/class-discount-codes-table.php:381
 msgid "No start date"
-msgstr ""
+msgstr "无开始日期"
 
 #: includes/admin/discounts/class-discount-codes-table.php:387
 msgid "No expiration"
-msgstr ""
+msgstr "无失效日期"
 
 #: includes/admin/discounts/contextual-help.php:25
 #: includes/admin/downloads/contextual-help.php:28
@@ -597,7 +581,7 @@ msgstr ""
 #: includes/admin/reporting/contextual-help.php:29
 #: includes/admin/settings/contextual-help.php:29
 msgid "For more information:"
-msgstr ""
+msgstr "更多信息："
 
 #: includes/admin/discounts/contextual-help.php:26
 #: includes/admin/downloads/contextual-help.php:29
@@ -607,7 +591,7 @@ msgstr ""
 msgid ""
 "Visit the <a href=\"%s\">documentation</a> on the Easy Digital Downloads "
 "website."
-msgstr ""
+msgstr "请在 Easy Digital Downloads 网站查看<a href=\"%s\">文档</a>。"
 
 #: includes/admin/discounts/contextual-help.php:28
 #: includes/admin/downloads/contextual-help.php:31
@@ -617,119 +601,119 @@ msgstr ""
 msgid ""
 "<a href=\"%s\">Post an issue</a> on <a href=\"%s\">GitHub</a>. View <a "
 "href=\"%s\">extensions</a> or <a href=\"%s\">themes</a>."
-msgstr ""
+msgstr "在 <a href=\"%s\">GitHub</a> 上<a href=\"%s\">提交 issue</a>。查看<a href=\"%s\">扩展插件</a>或<a href=\"%s\">主题</a>。"
 
 #: includes/admin/discounts/contextual-help.php:38
 #: includes/admin/settings/contextual-help.php:42
 #: includes/admin/settings/register-settings.php:810
 #: includes/admin/tools.php:68
 msgid "General"
-msgstr ""
+msgstr "常规"
 
 #: includes/admin/discounts/contextual-help.php:40
 msgid ""
 "Discount codes allow you to offer buyers special discounts by having them "
 "enter predefined codes during checkout."
-msgstr ""
+msgstr "优惠码允许您给顾客提供一个指定的折扣，顾客可在支付时使用。"
 
 #: includes/admin/discounts/contextual-help.php:41
 msgid "Discount codes that are set to \"inactive\" cannot be redeemed."
-msgstr ""
+msgstr "不能兑换被设为「未激活」的优惠码。"
 
 #: includes/admin/discounts/contextual-help.php:42
 msgid ""
 "Discount codes are setup to only be used only one time by each customer. If "
 "a customer attempts to use a code a second time, they will be given an "
 "error."
-msgstr ""
+msgstr "优惠码仅可以给每位顾客使用一次。如果顾客再次使用，则会看到出错提示。"
 
 #: includes/admin/discounts/contextual-help.php:47
 msgid "Adding Discounts"
-msgstr ""
+msgstr "正在添加优惠码"
 
 #: includes/admin/discounts/contextual-help.php:49
 msgid "You can create any number of discount codes easily from this page."
-msgstr ""
+msgstr "在本页面您可以创建任意数量的优惠码。"
 
 #: includes/admin/discounts/contextual-help.php:50
 msgid "Discount codes have several options:"
-msgstr ""
+msgstr "优惠码的一些选项："
 
 #: includes/admin/discounts/contextual-help.php:52
 msgid ""
 "<strong>Name</strong> - this is the name given to the discount. Used "
 "primarily for administrative purposes."
-msgstr ""
+msgstr "<strong>名称</strong> - 优惠码的名称，用于管理员区别于其他的优惠码。"
 
 #: includes/admin/discounts/contextual-help.php:53
 msgid ""
 "<strong>Code</strong> - this is the unique code that customers will enter "
 "during checkout to redeem the code."
-msgstr ""
+msgstr "<strong>代码</strong> - 优惠码是一个唯一的字符串，顾客在结算时输入以获得折扣。"
 
 #: includes/admin/discounts/contextual-help.php:54
 msgid "<strong>Type</strong> - this is the type of discount this code awards."
-msgstr ""
+msgstr "<strong>种类</strong> - 使用优惠码时所获得的折扣类型"
 
 #: includes/admin/discounts/contextual-help.php:55
 msgid ""
 "<strong>Amount</strong> - this discount amount provided by this code. For "
 "percentage based discounts, enter a number such as 70 for 70%. Do not enter "
 "a percent sign."
-msgstr ""
+msgstr "<strong>金额</strong> - 优惠码所提供的折扣数额。若使用百分比形式的折扣，输入 70 则代表七折（70%）。请不要输入百分号（%）。"
 
 #: includes/admin/discounts/contextual-help.php:56
 msgid ""
 "<strong>Requirements</strong> - This allows you to select the product(s) "
 "that are required to be purchased in order for a discount to be applied."
-msgstr ""
+msgstr "<strong>需要满足的条件</strong> - 可以指定必须购买的商品，以此作为优惠码的生效条件。"
 
 #: includes/admin/discounts/contextual-help.php:57
 msgid ""
 "- <strong>Condition</strong> - This lets you set whether all selected "
 "products must be in the cart, or just a minimum of one."
-msgstr ""
+msgstr "- <strong>条件</strong> - 规定购物车内必须包含全部所选商品，还是仅需包含最少一个即可。"
 
 #: includes/admin/discounts/contextual-help.php:58
 msgid ""
 "- <strong>Apply discount only to selected Downloads?</strong> - If this box "
 "is checked, only the prices of the required products will be discounted. If "
 "left unchecked, the discount will apply to all products in the cart."
-msgstr ""
+msgstr "- <strong>仅对所选的下载给予优惠？</strong> - 若选中此项，则只有所指定的产品价格会产生折扣。如果不选中，购物车里的商品总价将产生折扣。"
 
 #: includes/admin/discounts/contextual-help.php:59
 msgid ""
 "<strong>Start Date</strong> - this is the date that this code becomes "
 "available. If a customer attempts to redeem the code prior to this date, "
 "they will be given an error. This is optional."
-msgstr ""
+msgstr "<strong>开始日期</strong> - 优惠码生效的起始日期。若顾客在此日期之前尝试兑换优惠码，则会看到出错提示。开始日期是可选项。"
 
 #: includes/admin/discounts/contextual-help.php:60
 msgid ""
 "<strong>Expiration Date</strong> - this is the end date for the discount. "
 "After this date, the code will no longer be able to be used. This is "
 "optional."
-msgstr ""
+msgstr "<strong>失效日期</strong> - 优惠码失效的日期。在此日期之后，优惠码将不可用。失效日期是可选项。"
 
 #: includes/admin/discounts/contextual-help.php:61
 msgid ""
 "<strong>Minimum Amount</strong> - this is the minimum purchase amount "
 "required to use this code. If a customer has less than this amount in their "
 "cart, they will be given an error. This is optional."
-msgstr ""
+msgstr "<strong>最小金额</strong> - 要使用优惠码，至少要达到此购物金额。如果顾客的购物车总金额小于最小金额，则会看到出错提示。最小金额是可选项。"
 
 #: includes/admin/discounts/contextual-help.php:62
 msgid ""
 "<strong>Max Uses</strong> - this is the maximum number of times this "
 "discount can be redeemed. Once this number is reached, no more customers "
 "will be allowed to use it."
-msgstr ""
+msgstr "<strong>最大使用次数</strong> - 设定此优惠码最多可以被使用多少次。一旦达到所限次数，后来的顾客均无法使用此优惠码。"
 
 #: includes/admin/discounts/discount-actions.php:136
 #: includes/admin/discounts/discount-actions.php:157
 #: includes/admin/discounts/discount-actions.php:178
 msgid "Trying to cheat or something?"
-msgstr ""
+msgstr "这是要作弊么？"
 
 #: includes/admin/discounts/discount-actions.php:136
 #: includes/admin/discounts/discount-actions.php:157
@@ -743,45 +727,45 @@ msgstr ""
 #: includes/admin/reporting/class-api-requests-logs-list-table.php:135
 #: includes/admin/reporting/class-export.php:172
 #: includes/admin/reporting/class-gateway-error-logs-list-table.php:119
-#: includes/cart/functions.php:1042 includes/cart/functions.php:1059
+#: includes/cart/functions.php:1041 includes/cart/functions.php:1058
 #: includes/download-functions.php:1054 includes/download-functions.php:1064
 #: includes/download-functions.php:1074 includes/emails/template.php:249
 #: includes/error-tracking.php:36 includes/gateways/functions.php:202
 #: includes/query-filters.php:48
 msgid "Error"
-msgstr ""
+msgstr "错误"
 
 #: includes/admin/discounts/discount-codes.php:35 includes/post-types.php:30
 #: includes/post-types.php:68 includes/post-types.php:98
 msgid "Add New"
-msgstr ""
+msgstr "新增"
 
 #: includes/admin/discounts/discount-codes.php:38
 #: includes/admin/payments/class-payments-table.php:143
 #: includes/admin/reporting/logs.php:52 includes/admin/reporting/logs.php:102
 #: includes/admin/reporting/reports.php:198
 msgid "Search"
-msgstr ""
+msgstr "搜索"
 
 #: includes/admin/discounts/edit-discount.php:16
 msgid "Something went wrong."
-msgstr ""
+msgstr "出错啦。"
 
 #: includes/admin/discounts/edit-discount.php:29 includes/post-types.php:100
 msgid "Edit Discount"
-msgstr ""
+msgstr "编辑优惠码"
 
 #: includes/admin/discounts/edit-discount.php:180
 msgid "The status of this discount code."
-msgstr ""
+msgstr "此优惠码的状态。"
 
 #: includes/admin/discounts/edit-discount.php:201
 msgid "Update Discount Code"
-msgstr ""
+msgstr "更新优惠码"
 
 #: includes/admin/downloads/contextual-help.php:41
 msgid "%s Settings"
-msgstr ""
+msgstr "%s 设置"
 
 #: includes/admin/downloads/contextual-help.php:43
 msgid ""
@@ -789,41 +773,41 @@ msgid ""
 "allowed to download their purchased files. Leave at 0 for unlimited. "
 "Resending the purchase receipt will permit the customer one additional "
 "download if their limit has already been reached."
-msgstr ""
+msgstr "<strong>文件下载次数限制</strong> - 限定顾客的已购买商品文件的最大下载次数。填 0 代表不设限。顾客的下载次数已达上限时，重新发送购物收据能给予顾客一次额外的下载机会。"
 
 #: includes/admin/downloads/contextual-help.php:45
 msgid ""
 "<strong>Accounting Options</strong> - If enabled, define an individual SKU "
 "or product number for this download."
-msgstr ""
+msgstr "<strong>会计选项</strong> - 如果启用，请为此下载指定特有的最小存货单位或产品数量。"
 
 #: includes/admin/downloads/contextual-help.php:47
 msgid ""
 "<strong>Button Options</strong> - Disable the automatic output the purchase "
-"button. If disabled, no button will be added to the download page unless "
-"the <code>[purchase_link]</code> shortcode is used."
-msgstr ""
+"button. If disabled, no button will be added to the download page unless the"
+" <code>[purchase_link]</code> shortcode is used."
+msgstr "<strong>按钮选项</strong> - 禁用自动显示购买按钮。如果被禁用，则使用 <code>[purchase_link]</code> 短代码之后才会在下载页上显示按钮。"
 
 #: includes/admin/downloads/contextual-help.php:52
 msgid "%s Prices"
-msgstr ""
+msgstr "%s 价格"
 
 #: includes/admin/downloads/contextual-help.php:54
 msgid ""
 "<strong>Enable variable pricing</strong> - By enabling variable pricing, "
 "multiple download options and prices can be configured."
-msgstr ""
+msgstr "<strong>启用可变价格</strong> - 启用可变价格后，可以配置多个下载选项和价格。"
 
 #: includes/admin/downloads/contextual-help.php:56
 msgid ""
 "<strong>Enable multi-option purchases</strong> - By enabling multi-option "
 "purchases customers can add multiple variable price items to their cart at "
 "once."
-msgstr ""
+msgstr "<strong>启用多选择购买</strong> - 启用多选择购买后，顾客可以一次性向购物车添加多个可变价格商品。"
 
 #: includes/admin/downloads/contextual-help.php:61
 msgid "%s Files"
-msgstr ""
+msgstr "%s 文件"
 
 #: includes/admin/downloads/contextual-help.php:63
 msgid ""
@@ -894,13 +878,13 @@ msgstr ""
 #: includes/admin/reporting/pdf-reports.php:70 includes/post-types.php:212
 #: includes/widgets.php:175
 msgid "Categories"
-msgstr ""
+msgstr "分类目录"
 
 #: includes/admin/downloads/dashboard-columns.php:30
 #: includes/admin/reporting/pdf-reports.php:71 includes/post-types.php:240
 #: includes/widgets.php:176
 msgid "Tags"
-msgstr ""
+msgstr "标签"
 
 #: includes/admin/downloads/dashboard-columns.php:31
 #: includes/admin/downloads/dashboard-columns.php:252
@@ -908,11 +892,11 @@ msgstr ""
 #: includes/admin/reporting/pdf-reports.php:69
 #: templates/shortcode-receipt.php:119
 msgid "Price"
-msgstr ""
+msgstr "价格"
 
 #: includes/admin/downloads/dashboard-columns.php:34
 msgid "Purchase Short Code"
-msgstr ""
+msgstr "购买短代码"
 
 #: includes/admin/downloads/dashboard-columns.php:35
 #: includes/admin/payments/class-payments-table.php:225
@@ -926,7 +910,7 @@ msgstr ""
 #: includes/admin/reporting/class-sales-logs-list-table.php:100
 #: templates/history-purchases.php:10 templates/shortcode-receipt.php:48
 msgid "Date"
-msgstr ""
+msgstr "日期"
 
 #: includes/admin/downloads/dashboard-columns.php:57
 #: includes/admin/settings/register-settings.php:657
@@ -934,15 +918,15 @@ msgstr ""
 #: includes/scripts.php:55 includes/shortcodes.php:35
 #: includes/template-functions.php:65
 msgid "Purchase"
-msgstr ""
+msgstr "购买"
 
 #: includes/admin/downloads/dashboard-columns.php:192
 msgid "Show all categories"
-msgstr ""
+msgstr "显示所有分类目录"
 
 #: includes/admin/downloads/dashboard-columns.php:203
 msgid "Show all tags"
-msgstr ""
+msgstr "显示所有标签"
 
 #: includes/admin/downloads/dashboard-columns.php:250
 msgid "%s Configuration"
@@ -978,14 +962,14 @@ msgstr ""
 
 #: includes/admin/downloads/metabox.php:404
 msgid ""
-"Enable multi-option purchase mode. Allows multiple price options to be "
-"added to your cart at once"
+"Enable multi-option purchase mode. Allows multiple price options to be added"
+" to your cart at once"
 msgstr ""
 
 #: includes/admin/downloads/metabox.php:411
 #: includes/admin/downloads/metabox.php:484
 msgid "Option Name"
-msgstr ""
+msgstr "选项名称"
 
 #: includes/admin/downloads/metabox.php:413
 #: includes/admin/payments/class-payments-table.php:221
@@ -994,11 +978,11 @@ msgstr ""
 #: includes/admin/reporting/class-export.php:69
 #: templates/history-purchases.php:9
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: includes/admin/downloads/metabox.php:442
 msgid "Add New Price"
-msgstr ""
+msgstr "新增价格"
 
 #: includes/admin/downloads/metabox.php:534
 msgid "Product Type Options:"
@@ -1019,11 +1003,11 @@ msgstr ""
 #: includes/admin/downloads/metabox.php:627
 #: includes/admin/downloads/metabox.php:709
 msgid "File Name"
-msgstr ""
+msgstr "文件名称"
 
 #: includes/admin/downloads/metabox.php:628
 msgid "File URL"
-msgstr ""
+msgstr "文件 URL"
 
 #: includes/admin/downloads/metabox.php:629
 msgid "Price Assignment"
@@ -1031,7 +1015,7 @@ msgstr ""
 
 #: includes/admin/downloads/metabox.php:658
 msgid "Add New File"
-msgstr ""
+msgstr "新增文件"
 
 #: includes/admin/downloads/metabox.php:719
 msgid "Upload or enter the file URL"
@@ -1039,15 +1023,15 @@ msgstr ""
 
 #: includes/admin/downloads/metabox.php:724
 msgid "Insert"
-msgstr ""
+msgstr "插入"
 
 #: includes/admin/downloads/metabox.php:724
 msgid "Upload a File"
-msgstr ""
+msgstr "上传文件"
 
 #: includes/admin/downloads/metabox.php:779
 msgid "File Download Limit:"
-msgstr ""
+msgstr "限制下载次数："
 
 #: includes/admin/downloads/metabox.php:786
 msgid "Leave blank for global setting or 0 for unlimited"
@@ -1081,11 +1065,11 @@ msgstr ""
 #: includes/admin/settings/register-settings.php:664
 #: includes/admin/thickbox.php:100
 msgid "Add to Cart"
-msgstr ""
+msgstr "添加到购物车"
 
 #: includes/admin/downloads/metabox.php:882
 msgid "Buy Now"
-msgstr ""
+msgstr "立即购买"
 
 #: includes/admin/downloads/metabox.php:888
 msgid "Purchase button behavior"
@@ -1093,25 +1077,25 @@ msgstr ""
 
 #: includes/admin/downloads/metabox.php:928
 msgid ""
-"Special notes or instructions for this product. These notes will be added "
-"to the purchase receipt."
+"Special notes or instructions for this product. These notes will be added to"
+" the purchase receipt."
 msgstr ""
 
 #: includes/admin/downloads/metabox.php:955
 msgid "Sales:"
-msgstr ""
+msgstr "售出："
 
 #: includes/admin/downloads/metabox.php:956
 msgid "View Sales Log"
-msgstr ""
+msgstr "查看售出记录"
 
 #: includes/admin/downloads/metabox.php:960
 msgid "Earnings:"
-msgstr ""
+msgstr "收入："
 
 #: includes/admin/downloads/metabox.php:967
 msgid "View File Download Log"
-msgstr ""
+msgstr "查看文件下载记录"
 
 #: includes/admin/downloads/metabox.php:970
 msgid "View Detailed Earnings Report"
@@ -1138,7 +1122,7 @@ msgstr ""
 #: includes/admin/payments/class-payments-table.php:135
 #: includes/admin/reporting/logs.php:159
 msgid "Apply"
-msgstr ""
+msgstr "应用"
 
 #: includes/admin/payments/class-payments-table.php:141
 msgid "Clear Filter"
@@ -1146,12 +1130,12 @@ msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:200
 msgid "Completed"
-msgstr ""
+msgstr "已完成"
 
 #: includes/admin/payments/class-payments-table.php:201
 #: includes/payments/functions.php:548
 msgid "Pending"
-msgstr ""
+msgstr "待审"
 
 #: includes/admin/payments/class-payments-table.php:202
 #: includes/payments/functions.php:550
@@ -1166,7 +1150,7 @@ msgstr ""
 #: includes/admin/payments/class-payments-table.php:204
 #: includes/payments/functions.php:551
 msgid "Failed"
-msgstr ""
+msgstr "失败"
 
 #: includes/admin/payments/class-payments-table.php:205
 #: includes/payments/functions.php:552
@@ -1180,24 +1164,24 @@ msgstr ""
 #: includes/admin/reporting/class-export-payments.php:65
 #: templates/shortcode-register.php:20
 msgid "Email"
-msgstr ""
+msgstr "电子邮件"
 
 #: includes/admin/payments/class-payments-table.php:223
 #: templates/history-purchases.php:12
 msgid "Details"
-msgstr ""
+msgstr "详细信息"
 
 #: includes/admin/payments/class-payments-table.php:226
 #: includes/admin/reporting/class-export-payments.php:83
 #: includes/admin/reporting/class-file-downloads-logs-list-table.php:134
 #: includes/admin/reporting/class-sales-logs-list-table.php:96
 msgid "User"
-msgstr ""
+msgstr "用户"
 
 #: includes/admin/payments/class-payments-table.php:275
 #: includes/admin/payments/payments-history.php:92
 msgid "View Order Details"
-msgstr ""
+msgstr "查看订单详细信息"
 
 #: includes/admin/payments/class-payments-table.php:298
 msgid "Resend Purchase Receipt"
@@ -1251,7 +1235,7 @@ msgstr ""
 
 #: includes/admin/payments/contextual-help.php:42
 msgid "Overview"
-msgstr ""
+msgstr "概述"
 
 #: includes/admin/payments/contextual-help.php:44
 msgid "This screen provides access to all of your store's transactions."
@@ -1307,9 +1291,8 @@ msgstr ""
 
 #: includes/admin/payments/contextual-help.php:68
 msgid ""
-"Each payment can be further inspected by clicking the corresponding "
-"<em>View Order Details</em> link. This will provide more information "
-"including:"
+"Each payment can be further inspected by clicking the corresponding <em>View"
+" Order Details</em> link. This will provide more information including:"
 msgstr ""
 
 #: includes/admin/payments/contextual-help.php:71
@@ -1371,18 +1354,18 @@ msgstr ""
 #: includes/admin/payments/view-order-details.php:66
 #: includes/admin/reporting/class-export-payments.php:78
 msgid "Discount Code"
-msgstr ""
+msgstr "优惠码"
 
 #: includes/admin/payments/view-order-details.php:67
 #: includes/admin/settings/register-settings.php:523
 msgid "None"
-msgstr ""
+msgstr "无"
 
 #: includes/admin/payments/view-order-details.php:73
 #: includes/admin/reporting/class-export-payments.php:77
 #: templates/checkout_cart.php:96 templates/shortcode-receipt.php:79
 msgid "Tax"
-msgstr ""
+msgstr "税"
 
 #: includes/admin/payments/view-order-details.php:82
 #: templates/shortcode-receipt.php:55
@@ -1412,7 +1395,7 @@ msgstr ""
 
 #: includes/admin/payments/view-order-details.php:132
 msgid "IP:"
-msgstr ""
+msgstr "IP："
 
 #: includes/admin/payments/view-order-details.php:138
 msgid "Transaction ID:"
@@ -1424,15 +1407,15 @@ msgstr ""
 
 #: includes/admin/payments/view-order-details.php:163
 msgid "Status:"
-msgstr ""
+msgstr "状态："
 
 #: includes/admin/payments/view-order-details.php:174
 msgid "Date:"
-msgstr ""
+msgstr "日期："
 
 #: includes/admin/payments/view-order-details.php:181
 msgid "Time:"
-msgstr ""
+msgstr "时间："
 
 #: includes/admin/payments/view-order-details.php:189
 msgid ""
@@ -1467,11 +1450,11 @@ msgstr ""
 
 #: includes/admin/payments/view-order-details.php:257
 msgid "Name:"
-msgstr ""
+msgstr "名称："
 
 #: includes/admin/payments/view-order-details.php:261
 msgid "Email:"
-msgstr ""
+msgstr "电子邮箱："
 
 #: includes/admin/payments/view-order-details.php:265
 msgid "User ID:"
@@ -1496,7 +1479,7 @@ msgstr ""
 
 #: includes/admin/payments/view-order-details.php:404
 msgid "Quantity:"
-msgstr ""
+msgstr "数量："
 
 #: includes/admin/payments/view-order-details.php:414
 #: includes/admin/payments/view-order-details.php:510
@@ -1507,7 +1490,7 @@ msgstr ""
 #: includes/admin/settings/register-settings.php:1367 includes/scripts.php:189
 #: templates/checkout_cart.php:40 templates/checkout_cart.php:55
 msgid "Remove"
-msgstr ""
+msgstr "移除"
 
 #: includes/admin/payments/view-order-details.php:435
 #: includes/emails/class-edd-email-tags.php:400
@@ -1543,11 +1526,11 @@ msgstr ""
 
 #: includes/admin/plugins.php:27
 msgid "General Settings"
-msgstr ""
+msgstr "常规设置"
 
 #: includes/admin/plugins.php:50 includes/admin/welcome.php:152
 msgid "Getting Started"
-msgstr ""
+msgstr "起步"
 
 #: includes/admin/reporting/class-api-requests-logs-list-table.php:89
 #: includes/admin/reporting/class-file-downloads-logs-list-table.php:132
@@ -1631,15 +1614,17 @@ msgstr ""
 
 #: includes/admin/reporting/class-export-customers.php:66
 #: includes/admin/reporting/class-export-payments.php:66
-#: includes/checkout/template.php:149 templates/shortcode-profile-editor.php:29
+#: includes/checkout/template.php:149
+#: templates/shortcode-profile-editor.php:29
 msgid "First Name"
-msgstr ""
+msgstr "名字"
 
 #: includes/admin/reporting/class-export-customers.php:67
 #: includes/admin/reporting/class-export-payments.php:67
-#: includes/checkout/template.php:159 templates/shortcode-profile-editor.php:32
+#: includes/checkout/template.php:159
+#: templates/shortcode-profile-editor.php:32
 msgid "Last Name"
-msgstr ""
+msgstr "姓氏"
 
 #: includes/admin/reporting/class-export-customers.php:69
 msgid "Date Purchased"
@@ -1669,7 +1654,7 @@ msgstr ""
 #: includes/admin/reporting/class-export-download-history.php:68
 #: includes/admin/reporting/class-file-downloads-logs-list-table.php:136
 msgid "File"
-msgstr ""
+msgstr "文件"
 
 #: includes/admin/reporting/class-export-payments.php:64
 msgid "Payment Number"
@@ -1677,14 +1662,15 @@ msgstr ""
 
 #: includes/admin/reporting/class-export-payments.php:68
 msgid "Address"
-msgstr ""
+msgstr "地址"
 
 #: includes/admin/reporting/class-export-payments.php:69
 msgid "Address (Line 2)"
 msgstr ""
 
 #: includes/admin/reporting/class-export-payments.php:70
-#: includes/checkout/template.php:292 templates/shortcode-profile-editor.php:63
+#: includes/checkout/template.php:292
+#: templates/shortcode-profile-editor.php:63
 msgid "City"
 msgstr ""
 
@@ -1726,7 +1712,7 @@ msgstr ""
 
 #: includes/admin/reporting/class-export-payments.php:189
 msgid "none"
-msgstr ""
+msgstr "无"
 
 #: includes/admin/reporting/class-export.php:172
 msgid "You do not have permission to export data."
@@ -1781,10 +1767,11 @@ msgstr ""
 #: includes/admin/reporting/contextual-help.php:48
 #: includes/admin/reporting/reports.php:34 includes/admin/tools.php:186
 msgid "Export"
-msgstr ""
+msgstr "导出"
 
 #: includes/admin/reporting/contextual-help.php:50
-msgid "This screen allows you to export your reports into a PDF or CSV format."
+msgid ""
+"This screen allows you to export your reports into a PDF or CSV format."
 msgstr ""
 
 #: includes/admin/reporting/contextual-help.php:51
@@ -1799,8 +1786,8 @@ msgstr ""
 msgid ""
 "<strong>Payment History</strong> - This report exports all of payments you "
 "have received on your EDD store in a CSV format.  The report includes the "
-"contact details of the customer, the products they have purchased as well "
-"as any discount codes they have used and the final price they have paid."
+"contact details of the customer, the products they have purchased as well as"
+" any discount codes they have used and the final price they have paid."
 msgstr ""
 
 #: includes/admin/reporting/contextual-help.php:53
@@ -1813,10 +1800,10 @@ msgstr ""
 
 #: includes/admin/reporting/contextual-help.php:54
 msgid ""
-"<strong>Download History</strong> - This report exports all of the "
-"downloads you have received in the current month into a CSV. It exports the "
-"date the file was downloaded, the customer it was downloaded by, their IP "
-"address, the name of the product and the file they downloaded."
+"<strong>Download History</strong> - This report exports all of the downloads"
+" you have received in the current month into a CSV. It exports the date the "
+"file was downloaded, the customer it was downloaded by, their IP address, "
+"the name of the product and the file they downloaded."
 msgstr ""
 
 #: includes/admin/reporting/contextual-help.php:60
@@ -1875,39 +1862,39 @@ msgstr ""
 
 #: includes/admin/reporting/graphing.php:428 includes/class-edd-stats.php:84
 msgid "This Week"
-msgstr ""
+msgstr "本周"
 
 #: includes/admin/reporting/graphing.php:429 includes/class-edd-stats.php:85
 msgid "Last Week"
-msgstr ""
+msgstr "上周"
 
 #: includes/admin/reporting/graphing.php:430 includes/class-edd-stats.php:86
 msgid "This Month"
-msgstr ""
+msgstr "本月"
 
 #: includes/admin/reporting/graphing.php:432 includes/class-edd-stats.php:88
 msgid "This Quarter"
-msgstr ""
+msgstr "本季度"
 
 #: includes/admin/reporting/graphing.php:433
 msgid "Last Quarter"
-msgstr ""
+msgstr "上个季度"
 
 #: includes/admin/reporting/graphing.php:434 includes/class-edd-stats.php:90
 msgid "This Year"
-msgstr ""
+msgstr "本年"
 
 #: includes/admin/reporting/graphing.php:435 includes/class-edd-stats.php:91
 msgid "Last Year"
-msgstr ""
+msgstr "去年"
 
 #: includes/admin/reporting/graphing.php:436
 msgid "Custom"
-msgstr ""
+msgstr "自定义"
 
 #: includes/admin/reporting/graphing.php:468
 msgid "From"
-msgstr ""
+msgstr "表"
 
 #: includes/admin/reporting/graphing.php:484
 msgid "To"
@@ -1915,24 +1902,24 @@ msgstr ""
 
 #: includes/admin/reporting/graphing.php:503
 msgid "Filter"
-msgstr ""
+msgstr "筛选"
 
 #: includes/admin/reporting/logs.php:124
 #: includes/admin/settings/register-settings.php:547
 msgid "File Downloads"
-msgstr ""
+msgstr "文件下载"
 
 #: includes/admin/reporting/logs.php:126
 msgid "Payment Errors"
-msgstr ""
+msgstr "付款方式错误"
 
 #: includes/admin/reporting/logs.php:127
 msgid "API Requests"
-msgstr ""
+msgstr "API请求"
 
 #: includes/admin/reporting/logs.php:147
 msgid "Log Type"
-msgstr ""
+msgstr "日志类型"
 
 #: includes/admin/reporting/pdf-reports.php:29
 msgid "You do not have permission to generate PDF sales reports"
@@ -1949,27 +1936,27 @@ msgstr ""
 #: includes/admin/reporting/pdf-reports.php:44
 #: includes/admin/reporting/pdf-reports.php:55
 msgid "Sales and earnings reports for the current year for all products"
-msgstr ""
+msgstr "产品年销售报告"
 
 #. Plugin Name of the plugin/theme
 msgid "Easy Digital Downloads"
-msgstr ""
+msgstr "简单数字下载"
 
 #: includes/admin/reporting/pdf-reports.php:60
 msgid "Date Range: "
-msgstr ""
+msgstr "日期范围"
 
 #: includes/admin/reporting/pdf-reports.php:64
 msgid "Table View"
-msgstr ""
+msgstr "表格视图"
 
 #: includes/admin/reporting/pdf-reports.php:68
 msgid "Product Name"
-msgstr ""
+msgstr "产品名称"
 
 #: includes/admin/reporting/pdf-reports.php:72
 msgid "Number of Sales"
-msgstr ""
+msgstr "分栏数目："
 
 #: includes/admin/reporting/pdf-reports.php:73
 msgid "Earnings to Date"
@@ -1989,51 +1976,51 @@ msgstr ""
 
 #: includes/admin/reporting/pdf-reports.php:240
 msgid "Jan"
-msgstr ""
+msgstr "一月"
 
 #: includes/admin/reporting/pdf-reports.php:241
 msgid "Feb"
-msgstr ""
+msgstr "二月"
 
 #: includes/admin/reporting/pdf-reports.php:242
 msgid "Mar"
-msgstr ""
+msgstr "三月"
 
 #: includes/admin/reporting/pdf-reports.php:243
 msgid "Apr"
-msgstr ""
+msgstr "四月"
 
 #: includes/admin/reporting/pdf-reports.php:244
 msgid "May"
-msgstr ""
+msgstr "五月"
 
 #: includes/admin/reporting/pdf-reports.php:245
 msgid "June"
-msgstr ""
+msgstr "六月"
 
 #: includes/admin/reporting/pdf-reports.php:246
 msgid "July"
-msgstr ""
+msgstr "七月"
 
 #: includes/admin/reporting/pdf-reports.php:247
 msgid "Aug"
-msgstr ""
+msgstr "八月"
 
 #: includes/admin/reporting/pdf-reports.php:248
 msgid "Sept"
-msgstr ""
+msgstr "九月"
 
 #: includes/admin/reporting/pdf-reports.php:249
 msgid "Oct"
-msgstr ""
+msgstr "十月"
 
 #: includes/admin/reporting/pdf-reports.php:250
 msgid "Nov"
-msgstr ""
+msgstr "十一月"
 
 #: includes/admin/reporting/pdf-reports.php:251
 msgid "Dec"
-msgstr ""
+msgstr "十二月"
 
 #: includes/admin/reporting/reports.php:60
 msgid "Payment Methods"
@@ -2043,7 +2030,7 @@ msgstr ""
 #: includes/admin/settings/contextual-help.php:71
 #: includes/admin/settings/register-settings.php:814
 msgid "Taxes"
-msgstr ""
+msgstr "税"
 
 #: includes/admin/reporting/reports.php:120
 msgid "Report Type"
@@ -2051,7 +2038,7 @@ msgstr ""
 
 #: includes/admin/reporting/reports.php:130
 msgid "Show"
-msgstr ""
+msgstr "显示"
 
 #: includes/admin/reporting/reports.php:261
 msgid "Tax Report"
@@ -2065,7 +2052,7 @@ msgstr ""
 
 #: includes/admin/reporting/reports.php:274
 msgid "Submit"
-msgstr ""
+msgstr "提交"
 
 #: includes/admin/reporting/reports.php:299
 msgid "Export PDF of Sales and Earnings"
@@ -2083,7 +2070,7 @@ msgstr ""
 
 #: includes/admin/reporting/reports.php:302
 msgid "Generate PDF"
-msgstr ""
+msgstr "生成 PDF"
 
 #: includes/admin/reporting/reports.php:307
 msgid "Export Earnings and Sales Stats"
@@ -2118,9 +2105,9 @@ msgstr ""
 
 #: includes/admin/reporting/reports.php:351
 msgid ""
-"Download a CSV of all customer emails. Optionally export only customers "
-"that have purchased a particular product. Note, if you have a large number "
-"of customers, exporting the purchase stats may fail."
+"Download a CSV of all customer emails. Optionally export only customers that"
+" have purchased a particular product. Note, if you have a large number of "
+"customers, exporting the purchase stats may fail."
 msgstr ""
 
 #: includes/admin/reporting/reports.php:355
@@ -2131,7 +2118,7 @@ msgstr ""
 #: includes/admin/settings/contextual-help.php:57
 #: includes/admin/settings/register-settings.php:812
 msgid "Emails"
-msgstr ""
+msgstr "电子邮件"
 
 #: includes/admin/reporting/reports.php:367
 msgid "Emails and Names"
@@ -2151,9 +2138,9 @@ msgstr ""
 
 #: includes/admin/settings/contextual-help.php:43
 msgid ""
-"This screen provides the most basic settings for configuring your store. "
-"You can set the currency, page templates, and turn <em>Test Mode</em> on "
-"and off."
+"This screen provides the most basic settings for configuring your store. You"
+" can set the currency, page templates, and turn <em>Test Mode</em> on and "
+"off."
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:48
@@ -2181,30 +2168,30 @@ msgstr ""
 msgid ""
 "<strong>PayPal</strong> - A PayPal payment gateway is included as standard "
 "with Easy Digital Downloads. To test the PayPal gateway, you need a Sandbox "
-"account for PayPal and the site must be placed in Test Mode from the "
-"General settings tab. Please remember to enter your PayPal account email "
-"address in order for payments to get processed."
+"account for PayPal and the site must be placed in Test Mode from the General"
+" settings tab. Please remember to enter your PayPal account email address in"
+" order for payments to get processed."
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:59
 msgid ""
 "This screen allows you to customize how emails act throughout your store. "
-"You can choose a premade template, set the sender's name, email address, "
-"and subject."
+"You can choose a premade template, set the sender's name, email address, and"
+" subject."
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:60
 msgid ""
 "A set of email tags has also been provided to allow the creation of "
-"personalized emails. A tag consists of a keyword surrounded by curly "
-"braces: <code>{tag}</code>. A description of each of these tags appear "
-"below the editor."
+"personalized emails. A tag consists of a keyword surrounded by curly braces:"
+" <code>{tag}</code>. A description of each of these tags appear below the "
+"editor."
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:65
 #: includes/admin/settings/register-settings.php:813
 msgid "Styles"
-msgstr ""
+msgstr "样式"
 
 #: includes/admin/settings/contextual-help.php:66
 msgid ""
@@ -2230,16 +2217,16 @@ msgstr ""
 
 #: includes/admin/settings/contextual-help.php:76
 msgid ""
-"<strong>Base Country</strong>: This determines the country that is loaded "
-"by default on the checkout screen for customers that do not have an address "
+"<strong>Base Country</strong>: This determines the country that is loaded by"
+" default on the checkout screen for customers that do not have an address "
 "stored in their account."
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:77
 msgid ""
-"<strong>Base State / Province</strong>: This determines the state / "
-"province that is loaded by default on the checkout screen for customers "
-"that do not have an address stored in their account."
+"<strong>Base State / Province</strong>: This determines the state / province"
+" that is loaded by default on the checkout screen for customers that do not "
+"have an address stored in their account."
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:78
@@ -2259,17 +2246,17 @@ msgstr ""
 
 #: includes/admin/settings/contextual-help.php:80
 msgid ""
-"<strong>Display During Checkout</strong>: This determines whether prices "
-"are shown with taxes or without taxes on checkout. If set to Including Tax, "
-"a $10 product with a 10% tax will be shown as $11."
+"<strong>Display During Checkout</strong>: This determines whether prices are"
+" shown with taxes or without taxes on checkout. If set to Including Tax, a "
+"$10 product with a 10% tax will be shown as $11."
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:81
 msgid ""
-"<strong>Calculate Tax After Discounts</strong>: If enabled, this option "
-"will make it so that tax is calucated on the after-discount amount. If a "
-"purchase of $20 is made and a 20% discount is applied, tax will be "
-"calcuated off of $16 instead of $20."
+"<strong>Calculate Tax After Discounts</strong>: If enabled, this option will"
+" make it so that tax is calucated on the after-discount amount. If a "
+"purchase of $20 is made and a 20% discount is applied, tax will be calcuated"
+" off of $16 instead of $20."
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:82
@@ -2285,13 +2272,13 @@ msgstr ""
 
 #: includes/admin/settings/contextual-help.php:88
 msgid ""
-"This screen provides access to settings added by most Easy Digital "
-"Downloads extensions."
+"This screen provides access to settings added by most Easy Digital Downloads"
+" extensions."
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:93
 msgid "Miscellaneous"
-msgstr ""
+msgstr "杂项"
 
 #: includes/admin/settings/contextual-help.php:95
 msgid ""
@@ -2300,18 +2287,19 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:96
-msgid "A description of all the options are provided beside their input boxes."
+msgid ""
+"A description of all the options are provided beside their input boxes."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:136
 msgid "Test Mode"
-msgstr ""
+msgstr "测试模式"
 
 #: includes/admin/settings/register-settings.php:137
 msgid ""
 "While in test mode no live transactions are processed. To fully use test "
-"mode, you must have a sandbox (test) account for the payment gateway you "
-"are testing."
+"mode, you must have a sandbox (test) account for the payment gateway you are"
+" testing."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:142
@@ -2364,7 +2352,7 @@ msgstr ""
 
 #: includes/admin/settings/register-settings.php:176
 msgid "Currency"
-msgstr ""
+msgstr "货币"
 
 #: includes/admin/settings/register-settings.php:177
 msgid ""
@@ -2517,7 +2505,7 @@ msgstr ""
 
 #: includes/admin/settings/register-settings.php:310
 msgid "Logo"
-msgstr ""
+msgstr "标志"
 
 #: includes/admin/settings/register-settings.php:311
 msgid ""
@@ -2603,8 +2591,8 @@ msgstr ""
 #: includes/admin/settings/register-settings.php:364
 #: includes/deprecated-functions.php:334
 msgid ""
-"Enter the email that is sent to sale notification emails after completion "
-"of a purchase. HTML is accepted. Available template tags:"
+"Enter the email that is sent to sale notification emails after completion of"
+" a purchase. HTML is accepted. Available template tags:"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:370
@@ -2622,7 +2610,8 @@ msgid "Disable Admin Notifications"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:378
-msgid "Check this box if you do not want to receive emails when new sales are made."
+msgid ""
+"Check this box if you do not want to receive emails when new sales are made."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:388
@@ -2673,8 +2662,8 @@ msgstr ""
 
 #: includes/admin/settings/register-settings.php:426
 msgid ""
-"Enter a percentage, such as 6.5. Customers not in a specific rate below "
-"will be charged this rate."
+"Enter a percentage, such as 6.5. Customers not in a specific rate below will"
+" be charged this rate."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:432
@@ -2781,8 +2770,8 @@ msgstr ""
 
 #: includes/admin/settings/register-settings.php:517
 msgid ""
-"Display the registration and login forms on the checkout page for "
-"non-logged-in users."
+"Display the registration and login forms on the checkout page for non-"
+"logged-in users."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:520
@@ -2826,7 +2815,8 @@ msgid "Download Method"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:554
-msgid "Select the file download method. Note, not all methods work on all servers."
+msgid ""
+"Select the file download method. Note, not all methods work on all servers."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:557
@@ -2982,7 +2972,8 @@ msgid "Misc"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:1164
-msgid "The callback function used for the <strong>%s</strong> setting is missing."
+msgid ""
+"The callback function used for the <strong>%s</strong> setting is missing."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:1283
@@ -2990,7 +2981,8 @@ msgid "Upload File"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:1364
-#: includes/checkout/template.php:353 templates/shortcode-profile-editor.php:76
+#: includes/checkout/template.php:353
+#: templates/shortcode-profile-editor.php:76
 msgid "State / Province"
 msgstr ""
 
@@ -3004,7 +2996,7 @@ msgstr ""
 
 #: includes/admin/settings/register-settings.php:1366
 msgid "Rate"
-msgstr ""
+msgstr "汇率"
 
 #: includes/admin/settings/register-settings.php:1405
 #: includes/admin/settings/register-settings.php:1430
@@ -3063,11 +3055,11 @@ msgstr ""
 
 #: includes/admin/thickbox.php:135
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 
 #: includes/admin/tools.php:70
 msgid "System Info"
-msgstr ""
+msgstr "系统信息"
 
 #: includes/admin/tools.php:71
 msgid "Import/Export"
@@ -3087,7 +3079,7 @@ msgstr ""
 
 #: includes/admin/tools.php:98
 msgid "Save"
-msgstr ""
+msgstr "保存"
 
 #: includes/admin/tools.php:127
 msgid ""
@@ -3124,7 +3116,7 @@ msgstr ""
 
 #: includes/admin/tools.php:203
 msgid "Import"
-msgstr ""
+msgstr "导入"
 
 #: includes/admin/tools.php:268
 msgid "Please upload a valid .json file"
@@ -3144,11 +3136,11 @@ msgstr ""
 
 #: includes/admin/tracking.php:250
 msgid "Allow"
-msgstr ""
+msgstr "允许"
 
 #: includes/admin/tracking.php:251
 msgid "Do not allow"
-msgstr ""
+msgstr "不允许"
 
 #: includes/admin/upgrades/upgrade-functions.php:40
 msgid "The Payment History needs to be updated. %s"
@@ -3160,8 +3152,8 @@ msgstr ""
 
 #: includes/admin/upgrades/upgrade-functions.php:46
 msgid ""
-"The Purchase and File Download History in Easy Digital Downloads needs to "
-"be upgraded, click %shere%s to start the upgrade."
+"The Purchase and File Download History in Easy Digital Downloads needs to be"
+" upgraded, click %shere%s to start the upgrade."
 msgstr ""
 
 #: includes/admin/upgrades/upgrade-functions.php:54
@@ -3235,7 +3227,7 @@ msgstr ""
 
 #: includes/admin/welcome.php:155
 msgid "Credits"
-msgstr ""
+msgstr "鸣谢"
 
 #: includes/admin/welcome.php:172 includes/admin/welcome.php:292
 #: includes/admin/welcome.php:411
@@ -3251,7 +3243,7 @@ msgstr ""
 #: includes/admin/welcome.php:174 includes/admin/welcome.php:262
 #: includes/admin/welcome.php:294 includes/admin/welcome.php:413
 msgid "Version %s"
-msgstr ""
+msgstr "版本 %s"
 
 #: includes/admin/welcome.php:179
 msgid "New Email Templates"
@@ -3263,8 +3255,8 @@ msgstr ""
 
 #: includes/admin/welcome.php:186
 msgid ""
-"The new default email template in version 2.1 is clean, simple, elegant, "
-"and so much better than before."
+"The new default email template in version 2.1 is clean, simple, elegant, and"
+" so much better than before."
 msgstr ""
 
 #: includes/admin/welcome.php:188
@@ -3288,8 +3280,8 @@ msgstr ""
 #: includes/admin/welcome.php:199
 msgid ""
 "In version 2.1, the underlying API that tracks customer data has been "
-"dramatically improved. It is now more efficient, more accurate, and far "
-"more powerful."
+"dramatically improved. It is now more efficient, more accurate, and far more"
+" powerful."
 msgstr ""
 
 #: includes/admin/welcome.php:201 includes/admin/welcome.php:224
@@ -3355,9 +3347,9 @@ msgstr ""
 #: includes/admin/welcome.php:228
 msgid ""
 "We have improved the calculations for the Estimated monthly earnings and "
-"Estimated monthly sales statistics. The estimated values shown are now "
-"much, much more accurate and should represent a realistic estimate of how "
-"your store is expected to perform for the current month."
+"Estimated monthly sales statistics. The estimated values shown are now much,"
+" much more accurate and should represent a realistic estimate of how your "
+"store is expected to perform for the current month."
 msgstr ""
 
 #: includes/admin/welcome.php:232
@@ -3429,8 +3421,8 @@ msgstr ""
 msgid ""
 "Products can have simple prices or variable prices if you wish to have more "
 "than one price point for a product. For a single price, simply enter the "
-"price. For multiple price points, click <em>Enable variable pricing</em> "
-"and enter the options."
+"price. For multiple price points, click <em>Enable variable pricing</em> and"
+" enter the options."
 msgstr ""
 
 #: includes/admin/welcome.php:313
@@ -3488,8 +3480,8 @@ msgstr ""
 
 #: includes/admin/welcome.php:346
 msgid ""
-"With easily accessible shortcodes to display purchase buttons, you can add "
-"a Buy Now or Add to Cart button for any product anywhere on your site in "
+"With easily accessible shortcodes to display purchase buttons, you can add a"
+" Buy Now or Add to Cart button for any product anywhere on your site in "
 "seconds."
 msgstr ""
 
@@ -3500,8 +3492,8 @@ msgstr ""
 #: includes/admin/welcome.php:349
 msgid ""
 "Purchase buttons can behave as either Add to Cart or Buy Now buttons. With "
-"Buy Now buttons customers are taken straight to PayPal, giving them the "
-"most frictionless purchasing experience possible."
+"Buy Now buttons customers are taken straight to PayPal, giving them the most"
+" frictionless purchasing experience possible."
 msgstr ""
 
 #: includes/admin/welcome.php:355
@@ -3526,8 +3518,8 @@ msgstr ""
 #: includes/admin/welcome.php:363
 msgid ""
 "Our <a href=\"https://easydigitaldownloads.com/support/pricing/\">Priority "
-"Support forums</a> are there for customers that need faster and/or more "
-"in-depth assistance."
+"Support forums</a> are there for customers that need faster and/or more in-"
+"depth assistance."
 msgstr ""
 
 #: includes/admin/welcome.php:369
@@ -3541,8 +3533,8 @@ msgstr ""
 #: includes/admin/welcome.php:374
 msgid ""
 "New extensions that make Easy Digital Downloads even more powerful are "
-"released nearly every single week. Subscribe to the newsletter to stay up "
-"to date with our latest releases. <a href=\"http://eepurl.com/kaerz\" "
+"released nearly every single week. Subscribe to the newsletter to stay up to"
+" date with our latest releases. <a href=\"http://eepurl.com/kaerz\" "
 "target=\"_blank\">Signup now</a> to ensure you do not miss a release!"
 msgstr ""
 
@@ -3552,9 +3544,9 @@ msgstr ""
 
 #: includes/admin/welcome.php:377
 msgid ""
-"<a href=\"http://eepurl.com/kaerz\" target=\"_blank\">Signup now</a> to "
-"hear about the latest tutorial releases that explain how to take Easy "
-"Digital Downloads further."
+"<a href=\"http://eepurl.com/kaerz\" target=\"_blank\">Signup now</a> to hear"
+" about the latest tutorial releases that explain how to take Easy Digital "
+"Downloads further."
 msgstr ""
 
 #: includes/admin/welcome.php:383
@@ -3563,14 +3555,14 @@ msgstr ""
 
 #: includes/admin/welcome.php:387
 msgid "Over 250 Extensions"
-msgstr ""
+msgstr "超过 250 个扩展插件"
 
 #: includes/admin/welcome.php:388
 msgid ""
 "Add-on plugins are available that greatly extend the default functionality "
-"of Easy Digital Downloads. There are extensions for payment processors, "
-"such as Stripe and PayPal, extensions for newsletter integrations, and "
-"many, many more."
+"of Easy Digital Downloads. There are extensions for payment processors, such"
+" as Stripe and PayPal, extensions for newsletter integrations, and many, "
+"many more."
 msgstr ""
 
 #: includes/admin/welcome.php:390
@@ -3606,34 +3598,34 @@ msgstr ""
 
 #: includes/ajax-functions.php:474
 msgid "No users found"
-msgstr ""
+msgstr "未找到用户"
 
-#: includes/cart/functions.php:373
+#: includes/cart/functions.php:372
 msgid "includes %s tax"
 msgstr ""
 
-#: includes/cart/functions.php:375
+#: includes/cart/functions.php:374
 msgid "excludes %s tax"
 msgstr ""
 
-#: includes/cart/functions.php:1004 includes/cart/functions.php:1072
+#: includes/cart/functions.php:1003 includes/cart/functions.php:1071
 #: templates/shortcode-profile-editor.php:20
 msgid "Success"
 msgstr ""
 
-#: includes/cart/functions.php:1005
+#: includes/cart/functions.php:1004
 msgid "Cart saved successfully. You can restore your cart using this URL:"
 msgstr ""
 
-#: includes/cart/functions.php:1042 includes/cart/functions.php:1059
+#: includes/cart/functions.php:1041 includes/cart/functions.php:1058
 msgid "Cart restoration failed. Invalid token."
 msgstr ""
 
-#: includes/cart/functions.php:1050 includes/cart/functions.php:1062
+#: includes/cart/functions.php:1049 includes/cart/functions.php:1061
 msgid "The cart cannot be restored. Invalid token."
 msgstr ""
 
-#: includes/cart/functions.php:1072
+#: includes/cart/functions.php:1071
 msgid "Cart restored successfully."
 msgstr ""
 
@@ -3669,7 +3661,8 @@ msgstr ""
 msgid "Personal Info"
 msgstr ""
 
-#: includes/checkout/template.php:138 templates/shortcode-profile-editor.php:52
+#: includes/checkout/template.php:138
+#: templates/shortcode-profile-editor.php:52
 #: templates/shortcode-register.php:21
 msgid "Email Address"
 msgstr ""
@@ -3680,7 +3673,7 @@ msgstr ""
 
 #: includes/checkout/template.php:144
 msgid "Email address"
-msgstr ""
+msgstr "电子邮箱地址"
 
 #: includes/checkout/template.php:154
 msgid "We will use this to personalize your account experience."
@@ -3816,7 +3809,7 @@ msgstr ""
 
 #: includes/checkout/template.php:398 includes/checkout/template.php:489
 msgid "Login"
-msgstr ""
+msgstr "登入"
 
 #: includes/checkout/template.php:404
 msgid "Create an account"
@@ -3834,7 +3827,7 @@ msgstr ""
 #: includes/checkout/template.php:484 templates/shortcode-login.php:16
 #: templates/shortcode-register.php:25
 msgid "Password"
-msgstr ""
+msgstr "密码"
 
 #: includes/checkout/template.php:423
 msgid "The password used to access your account."
@@ -3858,7 +3851,7 @@ msgstr ""
 
 #: includes/checkout/template.php:474 templates/shortcode-register.php:41
 msgid "Register"
-msgstr ""
+msgstr "注册"
 
 #: includes/checkout/template.php:474
 msgid "or checkout as a guest."
@@ -3911,11 +3904,11 @@ msgstr ""
 
 #: includes/checkout/template.php:727
 msgid "Go back"
-msgstr ""
+msgstr "返回"
 
 #: includes/checkout/template.php:752
 msgid "Next"
-msgstr ""
+msgstr "下一个"
 
 #: includes/checkout/template.php:774
 msgid "Free Download"
@@ -4013,7 +4006,7 @@ msgstr ""
 #: includes/class-edd-cli.php:62 includes/class-edd-cli.php:63
 #: includes/class-edd-cli.php:69
 msgid "Enabled"
-msgstr ""
+msgstr "已启用"
 
 #: includes/class-edd-cli.php:60 includes/class-edd-cli.php:61
 #: includes/class-edd-cli.php:62 includes/class-edd-cli.php:63
@@ -4039,11 +4032,11 @@ msgstr ""
 
 #: includes/class-edd-cli.php:64
 msgid "Valid"
-msgstr ""
+msgstr "有效"
 
 #: includes/class-edd-cli.php:64
 msgid "Invalid"
-msgstr ""
+msgstr "无效"
 
 #: includes/class-edd-cli.php:65
 msgid "Checkout URL is: %s"
@@ -4120,7 +4113,7 @@ msgstr ""
 
 #: includes/class-edd-cli.php:201
 msgid "Permalink: %s"
-msgstr ""
+msgstr "固定链接：%s"
 
 #: includes/class-edd-cli.php:206
 msgid "Download Files:"
@@ -4144,7 +4137,7 @@ msgstr ""
 
 #: includes/class-edd-cli.php:256
 msgid "Username: %s"
-msgstr ""
+msgstr "用户名：%s"
 
 #: includes/class-edd-cli.php:257
 msgid "Display Name: %s"
@@ -4285,11 +4278,11 @@ msgstr ""
 
 #: includes/class-edd-html-elements.php:151 includes/post-types.php:205
 msgid "All Categories"
-msgstr ""
+msgstr "所有分类目录"
 
 #: includes/class-edd-html-elements.php:426
 msgid "Enter username"
-msgstr ""
+msgstr "输入用户名"
 
 #: includes/class-edd-license-handler.php:132
 msgid "%1$s License Key"
@@ -4411,21 +4404,21 @@ msgstr ""
 #: includes/deprecated-functions.php:317
 #: includes/emails/class-edd-email-tags.php:345
 msgid ""
-"Adds a link so users can view their receipt directly on your website if "
-"they are unable to view it in the browser correctly."
+"Adds a link so users can view their receipt directly on your website if they"
+" are unable to view it in the browser correctly."
 msgstr ""
 
 #: includes/discount-functions.php:344
 msgid "This discount is expired."
-msgstr ""
+msgstr "此优惠码已失效。"
 
 #: includes/discount-functions.php:350
 msgid "This discount is not active."
-msgstr ""
+msgstr "此优惠码未启用。"
 
 #: includes/discount-functions.php:577
 msgid "This discount is not active yet."
-msgstr ""
+msgstr "此优惠码还未被启用。"
 
 #: includes/discount-functions.php:608
 msgid "This discount has reached it's maximum usage."
@@ -4445,15 +4438,15 @@ msgstr ""
 
 #: includes/discount-functions.php:784
 msgid "This discount has already been redeemed."
-msgstr ""
+msgstr "此优惠码已经被兑换。"
 
 #: includes/discount-functions.php:824
 msgid "This discount is invalid."
-msgstr ""
+msgstr "此优惠码无效。"
 
 #: includes/download-functions.php:440
 msgid "Default"
-msgstr ""
+msgstr "默认"
 
 #: includes/download-functions.php:441
 msgid "Bundle"
@@ -4481,20 +4474,22 @@ msgstr ""
 msgid "SKU"
 msgstr ""
 
-#: includes/emails/class-edd-email-tags.php:794 includes/emails/template.php:96
+#: includes/emails/class-edd-email-tags.php:794
+#: includes/emails/template.php:96
 msgid "%1$sView it in your browser.%2$s"
 msgstr ""
 
 #: includes/emails/class-edd-emails.php:161
 msgid "Default Template"
-msgstr ""
+msgstr "默认模板"
 
 #: includes/emails/class-edd-emails.php:162
 msgid "No template, plain text only"
 msgstr ""
 
 #: includes/emails/class-edd-emails.php:251
-msgid "You cannot send email with EDD_Emails until init/admin_init has been reached"
+msgid ""
+"You cannot send email with EDD_Emails until init/admin_init has been reached"
 msgstr ""
 
 #: includes/emails/functions.php:111
@@ -4600,7 +4595,8 @@ msgid ""
 msgstr ""
 
 #: includes/gateways/paypal-standard.php:53
-msgid "Payment creation failed before sending buyer to PayPal. Payment data: %s"
+msgid ""
+"Payment creation failed before sending buyer to PayPal. Payment data: %s"
 msgstr ""
 
 #: includes/gateways/paypal-standard.php:277
@@ -4701,7 +4697,7 @@ msgstr ""
 
 #: includes/login-register.php:154
 msgid "Email address already taken"
-msgstr ""
+msgstr "邮箱地址已经被占用"
 
 #: includes/login-register.php:158 includes/process-purchase.php:398
 #: includes/process-purchase.php:473 includes/process-purchase.php:603
@@ -4710,15 +4706,15 @@ msgstr ""
 
 #: includes/login-register.php:162
 msgid "Invalid payment email"
-msgstr ""
+msgstr "支付邮箱地址无效"
 
 #: includes/login-register.php:166
 msgid "Please enter a password"
-msgstr ""
+msgstr "请输入密码"
 
 #: includes/login-register.php:170
 msgid "Passwords do not match"
-msgstr ""
+msgstr "密码不匹配"
 
 #: includes/misc-functions.php:311 tests/tests-misc.php:56
 msgid "US Dollars (&#36;)"
@@ -4872,7 +4868,7 @@ msgstr ""
 
 #: includes/post-types.php:32
 msgid "Edit %1$s"
-msgstr ""
+msgstr "编辑 %1$s"
 
 #: includes/post-types.php:33
 msgid "New %1$s"
@@ -4928,7 +4924,7 @@ msgstr ""
 
 #: includes/post-types.php:78
 msgid "Payment History"
-msgstr ""
+msgstr "支付记录"
 
 #: includes/post-types.php:101
 msgid "New Discount"
@@ -4960,7 +4956,7 @@ msgstr ""
 
 #: includes/post-types.php:134
 msgid "Download"
-msgstr ""
+msgstr "下载"
 
 #: includes/post-types.php:135
 msgid "Downloads"
@@ -4972,23 +4968,23 @@ msgstr ""
 
 #: includes/post-types.php:204
 msgid "Search Categories"
-msgstr ""
+msgstr "搜索分类目录"
 
 #: includes/post-types.php:206
 msgid "Parent Category"
-msgstr ""
+msgstr "上一级分类目录"
 
 #: includes/post-types.php:207
 msgid "Parent Category:"
-msgstr ""
+msgstr "上一级分类目录："
 
 #: includes/post-types.php:208
 msgid "Edit Category"
-msgstr ""
+msgstr "编辑分类目录"
 
 #: includes/post-types.php:209
 msgid "Update Category"
-msgstr ""
+msgstr "更新分类目录"
 
 #: includes/post-types.php:210
 msgid "Add New %s Category"
@@ -4996,7 +4992,7 @@ msgstr ""
 
 #: includes/post-types.php:211
 msgid "New Category Name"
-msgstr ""
+msgstr "新分类目录名称"
 
 #: includes/post-types.php:213
 msgid "Choose from most used %s categories"
@@ -5004,11 +5000,11 @@ msgstr ""
 
 #: includes/post-types.php:232
 msgid "Search Tags"
-msgstr ""
+msgstr "搜索标签"
 
 #: includes/post-types.php:233
 msgid "All Tags"
-msgstr ""
+msgstr "所有标签"
 
 #: includes/post-types.php:234
 msgid "Parent Tag"
@@ -5020,19 +5016,19 @@ msgstr ""
 
 #: includes/post-types.php:236
 msgid "Edit Tag"
-msgstr ""
+msgstr "编辑标签"
 
 #: includes/post-types.php:237
 msgid "Update Tag"
-msgstr ""
+msgstr "更新标签"
 
 #: includes/post-types.php:238
 msgid "Add New Tag"
-msgstr ""
+msgstr "新增标签"
 
 #: includes/post-types.php:239
 msgid "New Tag Name"
-msgstr ""
+msgstr "新标签名称"
 
 #: includes/post-types.php:241
 msgid "Choose from most used %s tags"
@@ -5042,37 +5038,31 @@ msgstr ""
 msgid "Refunded <span class=\"count\">(%s)</span>"
 msgid_plural "Refunded <span class=\"count\">(%s)</span>"
 msgstr[0] ""
-msgstr[1] ""
 
 #: includes/post-types.php:282
 msgid "Failed <span class=\"count\">(%s)</span>"
 msgid_plural "Failed <span class=\"count\">(%s)</span>"
 msgstr[0] ""
-msgstr[1] ""
 
 #: includes/post-types.php:290
 msgid "Revoked <span class=\"count\">(%s)</span>"
 msgid_plural "Revoked <span class=\"count\">(%s)</span>"
 msgstr[0] ""
-msgstr[1] ""
 
 #: includes/post-types.php:298
 msgid "Abandoned <span class=\"count\">(%s)</span>"
 msgid_plural "Abandoned <span class=\"count\">(%s)</span>"
 msgstr[0] ""
-msgstr[1] ""
 
 #: includes/post-types.php:308
 msgid "Active <span class=\"count\">(%s)</span>"
 msgid_plural "Active <span class=\"count\">(%s)</span>"
 msgstr[0] ""
-msgstr[1] ""
 
 #: includes/post-types.php:316
 msgid "Inactive <span class=\"count\">(%s)</span>"
 msgid_plural "Inactive <span class=\"count\">(%s)</span>"
 msgstr[0] ""
-msgstr[1] ""
 
 #: includes/post-types.php:338 includes/post-types.php:339
 msgid "%2$s updated. %1$sView %2$s%3$s."
@@ -5176,7 +5166,7 @@ msgstr ""
 
 #: includes/process-purchase.php:548 templates/shortcode-login.php:26
 msgid "Lost Password"
-msgstr ""
+msgstr "忘记密码"
 
 #: includes/process-purchase.php:592
 msgid "You must be logged into an account to purchase"
@@ -5260,7 +5250,7 @@ msgstr ""
 
 #: includes/scripts.php:177
 msgid "Are you sure you wish to regenerate this API key?"
-msgstr ""
+msgstr "确定重新生成此 API 密钥？"
 
 #: includes/scripts.php:178
 msgid "Are you sure you wish to resend the purchase receipt?"
@@ -5292,7 +5282,7 @@ msgstr ""
 
 #: includes/scripts.php:185
 msgid "Choose one or more %s"
-msgstr ""
+msgstr "选择一个或多个 %s"
 
 #: includes/shortcodes.php:234
 msgid "Purchase All Items"
@@ -5332,31 +5322,31 @@ msgstr ""
 
 #: includes/template-functions.php:279
 msgid "White"
-msgstr ""
+msgstr "白色"
 
 #: includes/template-functions.php:283
 msgid "Gray"
-msgstr ""
+msgstr "灰色"
 
 #: includes/template-functions.php:287
 msgid "Blue"
-msgstr ""
+msgstr "蓝色"
 
 #: includes/template-functions.php:291
 msgid "Red"
-msgstr ""
+msgstr "红色"
 
 #: includes/template-functions.php:295
 msgid "Green"
-msgstr ""
+msgstr "绿色"
 
 #: includes/template-functions.php:299
 msgid "Yellow"
-msgstr ""
+msgstr "黄色"
 
 #: includes/template-functions.php:303
 msgid "Orange"
-msgstr ""
+msgstr "橙色"
 
 #: includes/template-functions.php:307
 msgid "Dark Gray"
@@ -5388,7 +5378,7 @@ msgstr ""
 
 #: includes/widgets.php:88 includes/widgets.php:169 includes/widgets.php:296
 msgid "Title:"
-msgstr ""
+msgstr "标题："
 
 #: includes/widgets.php:95
 msgid "Hide on Checkout Page"
@@ -5404,15 +5394,15 @@ msgstr ""
 
 #: includes/widgets.php:173
 msgid "Taxonomy:"
-msgstr ""
+msgstr "分类法："
 
 #: includes/widgets.php:180
 msgid "Show Count:"
-msgstr ""
+msgstr "显示数量："
 
 #: includes/widgets.php:184
 msgid "Hide Empty Categories:"
-msgstr ""
+msgstr "隐藏空分类："
 
 #: includes/widgets.php:206 includes/widgets.php:284
 msgid "%s Details"
@@ -5464,7 +5454,7 @@ msgstr ""
 
 #: templates/checkout_cart.php:8
 msgid "Actions"
-msgstr ""
+msgstr "操作"
 
 #: templates/checkout_cart.php:78 templates/shortcode-receipt.php:87
 msgid "Subtotal"
@@ -5514,7 +5504,7 @@ msgstr ""
 
 #: templates/shortcode-login.php:23
 msgid "Log In"
-msgstr ""
+msgstr "登入"
 
 #: templates/shortcode-login.php:27
 msgid "Lost Password?"
@@ -5542,7 +5532,7 @@ msgstr ""
 
 #: templates/shortcode-profile-editor.php:36
 msgid "Display Name"
-msgstr ""
+msgstr "显示名字"
 
 #: templates/shortcode-profile-editor.php:55
 msgid "Change your Billing Address"
@@ -5566,7 +5556,7 @@ msgstr ""
 
 #: templates/shortcode-profile-editor.php:82
 msgid "New Password"
-msgstr ""
+msgstr "新密码"
 
 #: templates/shortcode-profile-editor.php:85
 msgid "Re-enter Password"
@@ -5578,7 +5568,7 @@ msgstr ""
 
 #: templates/shortcode-profile-editor.php:93
 msgid "Save Changes"
-msgstr ""
+msgstr "保存变更"
 
 #: templates/shortcode-profile-editor.php:99
 msgid "You need to login to edit your profile."
@@ -5606,11 +5596,11 @@ msgstr ""
 
 #: templates/shortcode-register.php:10
 msgid "Register New Account"
-msgstr ""
+msgstr "注册新账户"
 
 #: templates/shortcode-register.php:30
 msgid "Confirm Password"
-msgstr ""
+msgstr "确认密码"
 
 #: templates/widget-cart-checkout.php:1 templates/widget-cart-empty.php:2
 msgid "Subtotal:"
@@ -5673,17 +5663,17 @@ msgstr ""
 #: includes/checkout/template.php:650
 msgctxt "Apply discount at checkout"
 msgid "Apply"
-msgstr ""
+msgstr "应用"
 
 #: includes/class-edd-html-elements.php:237
 msgctxt "all dropdown items"
 msgid "All"
-msgstr ""
+msgstr "全部"
 
 #: includes/class-edd-html-elements.php:238
 msgctxt "no dropdown items"
 msgid "None"
-msgstr ""
+msgstr "无"
 
 #: includes/post-types.php:66
 msgctxt "post type general name"
@@ -5718,12 +5708,12 @@ msgstr ""
 #: includes/post-types.php:203
 msgctxt "taxonomy singular name"
 msgid "Category"
-msgstr ""
+msgstr "分类目录"
 
 #: includes/post-types.php:231
 msgctxt "taxonomy singular name"
 msgid "Tag"
-msgstr ""
+msgstr "标签"
 
 #: includes/post-types.php:269
 msgctxt "Refunded payment status"
@@ -5733,7 +5723,7 @@ msgstr ""
 #: includes/post-types.php:277
 msgctxt "Failed payment status"
 msgid "Failed"
-msgstr ""
+msgstr "失败"
 
 #: includes/post-types.php:285
 msgctxt "Revoked payment status"
@@ -5748,12 +5738,12 @@ msgstr ""
 #: includes/post-types.php:303
 msgctxt "Active discount code status"
 msgid "Active"
-msgstr ""
+msgstr "已启用"
 
 #: includes/post-types.php:311
 msgctxt "Inactive discount code status"
 msgid "Inactive"
-msgstr ""
+msgstr "已禁用"
 
 #: includes/shortcodes.php:530
 msgctxt "download post type name"

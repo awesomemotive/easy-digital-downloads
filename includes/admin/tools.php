@@ -143,10 +143,17 @@ add_action( 'edd_tools_tab_api_keys', 'edd_tools_api_keys_display' );
  * @return      void
  */
 function edd_tools_banned_emails_save() {
-	if( !wp_verify_nonce( $_POST['edd_banned_emails_nonce'], 'edd_banned_emails_nonce' ) )
-		return;
 
 	global $edd_options;
+
+	if( ! wp_verify_nonce( $_POST['edd_banned_emails_nonce'], 'edd_banned_emails_nonce' ) ) {
+		return;
+	}
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
 
 	// Sanitize the input
 	$emails = array_map( 'trim', explode( "\n", $_POST['banned_emails'] ) );
@@ -388,6 +395,7 @@ function edd_tools_sysinfo_get() {
 
 	$return .= 'Remote Post:              ' . $WP_REMOTE_POST . "\n";
 	$return .= 'Table Prefix:             ' . 'Length: ' . strlen( $wpdb->prefix ) . '   Status: ' . ( strlen( $wpdb->prefix ) > 16 ? 'ERROR: Too long' : 'Acceptable' ) . "\n";
+	$return .= 'Admin AJAX:               ' . ( edd_test_ajax_works() ? 'Accessible' : 'Inaccessible' ) . "\n";
 	$return .= 'WP_DEBUG:                 ' . ( defined( 'WP_DEBUG' ) ? WP_DEBUG ? 'Enabled' : 'Disabled' : 'Not set' ) . "\n";
 	$return .= 'Memory Limit:             ' . WP_MEMORY_LIMIT . "\n";
 	$return .= 'Registered Post Stati:    ' . implode( ', ', get_post_stati() ) . "\n";
