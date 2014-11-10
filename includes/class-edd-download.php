@@ -335,6 +335,12 @@ class EDD_Download {
 		return 'bundle' === $this->type;
 	}
 
+	/**
+	 * Retrieves the Download IDs that are bundled with this Download
+	 *
+	 * @since 2.2
+	 * @return array
+	 */
 	public function get_bundled_downloads() {
 
 		$products = get_post_meta( $this->ID, '_edd_bundled_products', true );
