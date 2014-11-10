@@ -1024,6 +1024,31 @@ function edd_get_payment_gateway( $payment_id ) {
 }
 
 /**
+ * Get the currency code a payment was made in
+ *
+ * @since 2.2
+ * @param int $payment_id Payment ID
+ * @return string $currency The currency code
+ */
+function edd_get_payment_currency_code( $payment_id = 0 ) {
+	$meta     = edd_get_payment_meta( $payment_id );
+	$currency = isset( $meta['currency'] ) ? $meta['currency'] : edd_get_currency();
+	return apply_filters( 'edd_payment_currency_code', $currency, $payment_id );
+}
+
+/**
+ * Get the currency name a payment was made in
+ *
+ * @since 2.2
+ * @param int $payment_id Payment ID
+ * @return string $currency The currency name
+ */
+function edd_get_payment_currency( $payment_id = 0 ) {
+	$currency = edd_get_payment_currency_code( $payment_id );
+	return apply_filters( 'edd_payment_currency', $currency, $payment_id );
+}
+
+/**
  * Get the purchase key for a purchase
  *
  * @since 1.2
