@@ -304,6 +304,8 @@ class Tests_Customers extends WP_UnitTestCase {
 		
 		$this->assertTrue( edd_has_user_purchased( $this->_user_id, array( $this->_post_id ), 1 ) );
 		$this->assertFalse( edd_has_user_purchased( $this->_user_id, array( 888 ), 1 ) );
+		$this->assertFalse( edd_has_user_purchased( 0, $this->_post_id ) );
+		$this->assertFalse( edd_has_user_purchased( 0, 888 ) );
 
 	}
 

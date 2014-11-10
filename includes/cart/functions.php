@@ -47,17 +47,22 @@ function edd_get_cart_content_details() {
 		$item['quantity'] = edd_item_quantities_enabled() ? absint( $item['quantity'] ) : 1;
 
 		$item_price = edd_get_cart_item_price( $item['id'], $item['options'] );
-		$discount   = apply_filters( 'edd_get_cart_content_details_item_discount_amount', edd_get_cart_item_discount_amount( $item ), $item );
+		$discount   = edd_get_cart_item_discount_amount( $item );
+		$discount   = apply_filters( 'edd_get_cart_content_details_item_discount_amount', $discount, $item );
 		$quantity   = edd_get_cart_item_quantity( $item['id'], $item['options'] );
-		$fees       = edd_get_cart_fees( 'fee', $item['id'] );
-		$subtotal   = ( $item_price * $quantity ) - $discount;
-		$tax        = edd_get_cart_item_tax( $item['id'], $item['options'], $subtotal );
+		$subtotal   = $item_price * $quantity;
+		$tax        = edd_get_cart_item_tax( $item['id'], $item['options'], $subtotal - $discount );
 
 		if( edd_prices_include_tax() ) {
 			$subtotal -= $tax;
 		}
 
-		$total      = round( ( $subtotal + $tax ), edd_currency_decimal_filter() );
+		$total      = $subtotal - $discount + $tax;
+
+		// Do not allow totals to go negatve
+		if( $total < 0 ) {
+			$total = 0;
+		}
 
 		$details[ $key ]  = array(
 			'name'        => get_the_title( $item['id'] ),
@@ -68,8 +73,8 @@ function edd_get_cart_content_details() {
 			'discount'    => round( $discount, edd_currency_decimal_filter() ),
 			'subtotal'    => round( $subtotal, edd_currency_decimal_filter() ),
 			'tax'         => round( $tax, edd_currency_decimal_filter() ),
-			'fees'        => $fees,
-			'price'       => $total
+			'fees'        => array(),
+			'price'       => round( $total, edd_currency_decimal_filter() )
 		);
 
 	}
@@ -348,29 +353,38 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
 	$price = edd_get_cart_item_price( $item_id, $options );
 	$label = '';
 
-	if( edd_prices_show_tax_on_checkout() && ! edd_prices_include_tax() ) {
-		
-		$price += edd_get_cart_item_tax( $item_id, $options, $price );		
+	$price_id = isset( $options['price_id'] ) ? $options['price_id'] : false;
 
-	} if( ! edd_prices_show_tax_on_checkout() && edd_prices_include_tax() ) {
+	if ( ! edd_is_free_download( $item_id, $price_id ) && ! edd_download_is_tax_exclusive( $item_id ) ) {
 
-		$price -= edd_get_cart_item_tax( $item_id, $options, $price );		
-		
+		if( edd_prices_show_tax_on_checkout() && ! edd_prices_include_tax() ) {
+
+			$price += edd_get_cart_item_tax( $item_id, $options, $price );
+
+		} if( ! edd_prices_show_tax_on_checkout() && edd_prices_include_tax() ) {
+
+			$price -= edd_get_cart_item_tax( $item_id, $options, $price );
+
+		}
+
+		if( edd_display_tax_rate() ) {
+
+			$label = '&nbsp;&ndash;&nbsp;';
+
+			if( edd_prices_show_tax_on_checkout() ) {
+				$label .= sprintf( __( 'includes %s tax', 'edd' ), edd_get_formatted_tax_rate() );
+			} else {
+				$label .= sprintf( __( 'excludes %s tax', 'edd' ), edd_get_formatted_tax_rate() );
+			}
+
+			$label = apply_filters( 'edd_cart_item_tax_description', $label, $item_id, $options );
+
+		}
 	}
 
 	$price = edd_currency_filter( edd_format_amount( $price ) );
 
-	if( edd_display_tax_rate() ) {
-		$label = '&nbsp;&ndash;&nbsp;';
-		if( edd_prices_show_tax_on_checkout() ) {
-			$label .= sprintf( __( 'includes %s tax', 'edd' ), edd_get_formatted_tax_rate() );
-		} else {
-			$label .= sprintf( __( 'excludes %s tax', 'edd' ), edd_get_formatted_tax_rate() );
-		}
-
-	}
-
-	return esc_html( $price . $label );
+	return $price . $label;
 }
 
 /**
@@ -387,18 +401,31 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
  * @return float|bool Price for this item
  */
 function edd_get_cart_item_price( $download_id = 0, $options = array() ) {
-	global $edd_options;
 
 	$price = 0;
+	$variable_prices = edd_has_variable_prices( $download_id );
 
-	if ( edd_has_variable_prices( $download_id ) && ! empty( $options ) ) {
+	if ( $variable_prices ) {
+
 		$prices = edd_get_variable_prices( $download_id );
+
 		if ( $prices ) {
-			$price = isset( $prices[ $options['price_id'] ] ) ? $prices[ $options['price_id'] ]['amount'] : 0;
+
+			if( ! empty( $options ) ) {
+
+				$price = isset( $prices[ $options['price_id'] ] ) ? $prices[ $options['price_id'] ]['amount'] : false;
+
+			} else {
+
+				$price = false;
+
+			}
+
 		}
+
 	}
 
-	if( ! $price ) {
+	if( ! $variable_prices || false === $price ) {
 		// Get the standard Download price if not using variable prices
 		$price = edd_get_download_price( $download_id );
 	}
@@ -498,7 +525,7 @@ function edd_get_cart_item_price_id( $item = array() ) {
 function edd_get_cart_item_price_name( $item = array() ) {
 	$price_id = (int) edd_get_cart_item_price_id( $item );
 	$prices   = edd_get_variable_prices( $item['id'] );
-	$name     = ! empty( $prices ) ? $prices[ $price_id ]['name'] : '';
+	$name     = ! empty( $prices[ $price_id ] ) ? $prices[ $price_id ]['name'] : '';
 	return apply_filters( 'edd_get_cart_item_price_name', $name, $item['id'], $price_id, $item );
 }
 
@@ -569,10 +596,11 @@ function edd_get_cart_subtotal() {
 function edd_get_cart_total( $discounts = false ) {
 	global $edd_options;
 
-	$subtotal = edd_get_cart_subtotal();
-	$cart_tax = edd_get_cart_tax();
-	$fees     = edd_get_cart_fee_total();
-	$total    = $subtotal + $cart_tax + $fees;
+	$subtotal  = edd_get_cart_subtotal();
+	$discounts = edd_get_cart_discounted_amount();
+	$cart_tax  = edd_get_cart_tax();
+	$fees      = edd_get_cart_fee_total();
+	$total     = $subtotal - $discounts + $cart_tax + $fees;
 
 	if( $total < 0 )
 		$total = 0.00;
@@ -1030,12 +1058,14 @@ function edd_restore_cart() {
 
 			$messages['edd_cart_restoration_failed'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Error', 'edd' ), __( 'Cart restoration failed. Invalid token.', 'edd' ) );
 			EDD()->session->set( 'edd_cart_messages', $messages );
-
-			return new WP_Error( 'invalid_cart_token', __( 'The cart cannot be restored. Invalid token.', 'edd' ) );
 		}
 
 		delete_user_meta( $user_id, 'edd_saved_cart' );
 		delete_user_meta( $user_id, 'edd_cart_token' );
+
+		if ( isset( $_GET['edd_cart_token'] ) && $_GET['edd_cart_token'] != $token ) {
+			return new WP_Error( 'invalid_cart_token', __( 'The cart cannot be restored. Invalid token.', 'edd' ) );
+		}
 
 	} elseif ( ! is_user_logged_in() && isset( $_COOKIE['edd_saved_cart'] ) && $token ) {
 

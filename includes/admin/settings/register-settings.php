@@ -165,6 +165,19 @@ function edd_get_registered_settings() {
 					'type' => 'select',
 					'options' => edd_get_pages()
 				),
+				'base_country' => array(
+					'id' => 'base_country',
+					'name' => __( 'Base Country', 'edd' ),
+					'desc' => __( 'Where does your store operate from?', 'edd' ),
+					'type' => 'select',
+					'options' => edd_get_country_list()
+				),
+				'base_state' => array(
+					'id' => 'base_state',
+					'name' => __( 'Base State / Province', 'edd' ),
+					'desc' => __( 'What state / province does your store operate from?', 'edd' ),
+					'type' => 'shop_states'
+				),
 				'currency_settings' => array(
 					'id' => 'currency_settings',
 					'name' => '<strong>' . __( 'Currency Settings', 'edd' ) . '</strong>',
@@ -420,25 +433,18 @@ function edd_get_registered_settings() {
 					'desc' => __( 'Check this to enable taxes on purchases.', 'edd' ),
 					'type' => 'checkbox',
 				),
+				'tax_rates' => array(
+					'id' => 'tax_rates',
+					'name' => '<strong>' . __( 'Tax Rates', 'edd' ) . '</strong>',
+					'desc' => __( 'Enter tax rates for specific regions.', 'edd' ),
+					'type' => 'tax_rates'
+				),
 				'tax_rate' => array(
 					'id' => 'tax_rate',
-					'name' => __( 'Default Tax Rate', 'edd' ),
-					'desc' => __( 'Enter a percentage, such as 6.5. Customers not in a specific rate below will be charged this rate.', 'edd' ),
+					'name' => __( 'Fallback Tax Rate', 'edd' ),
+					'desc' => __( 'Enter a percentage, such as 6.5. Customers not in a specific rate will be charged this rate.', 'edd' ),
 					'type' => 'text',
 					'size' => 'small'
-				),
-				'base_country' => array(
-					'id' => 'base_country',
-					'name' => __( 'Base Country', 'edd' ),
-					'desc' => __( 'Where does your store operate from?', 'edd' ),
-					'type' => 'select',
-					'options' => edd_get_country_list()
-				),
-				'base_state' => array(
-					'id' => 'base_state',
-					'name' => __( 'Base State / Province', 'edd' ),
-					'desc' => __( 'What state / province does your store operate from?', 'edd' ),
-					'type' => 'shop_states'
 				),
 				'prices_include_tax' => array(
 					'id' => 'prices_include_tax',
@@ -467,12 +473,6 @@ function edd_get_registered_settings() {
 						'yes' => __( 'Including tax', 'edd' ),
 						'no'  => __( 'Excluding tax', 'edd' )
 					)
-				),
-				'tax_rates' => array(
-					'id' => 'tax_rates',
-					'name' => '<strong>' . __( 'Additional Tax Rates', 'edd' ) . '</strong>',
-					'desc' => __( 'Specify additional tax rates for other regions.', 'edd' ),
-					'type' => 'tax_rates'
 				)
 			)
 		),
@@ -710,7 +710,7 @@ function edd_settings_sanitize( $input = array() ) {
 		}
 
 		// General filter
-		$input[$key] = apply_filters( 'edd_settings_sanitize', $value, $key );
+		$input[$key] = apply_filters( 'edd_settings_sanitize', $input[$key], $key );
 	}
 
 	// Loop through the whitelist and unset any that are empty for the tab being saved
@@ -1441,6 +1441,18 @@ function edd_tax_rates_callback($args) {
 	echo ob_get_clean();
 }
 
+/**
+ * Descriptive text callback.
+ *
+ * Renders descriptive text onto the settings field.
+ *
+ * @since 2.1.3
+ * @param array $args Arguments passed by the setting
+ * @return void
+ */
+function edd_descriptive_text_callback( $args ) {
+	echo esc_html( $args['desc'] );
+}
 
 /**
  * Registers the license field callback for Software Licensing

@@ -158,29 +158,28 @@ function edd_get_download_price( $download_id = 0 ) {
  * @since 1.0
  * @param int $download_id ID of the download price to show
  * @param bool $echo Whether to echo or return the results
+ * @param int $price_id Optional price id for variable pricing
  * @return void
  */
-function edd_price( $download_id, $echo = true ) {
+function edd_price( $download_id = 0, $echo = true, $price_id = false ) {
+
+	if( empty( $download_id ) ) {
+		$download_id = get_the_ID();
+	}
 
 	if ( edd_has_variable_prices( $download_id ) ) {
 
 		$prices = edd_get_variable_prices( $download_id );
 
-		// Return the lowest price
-		$price_float = 0;
-		foreach ( $prices as $key => $value ) {
-
-			if ( ( ( (float)$prices[ $key ]['amount'] ) < $price_float ) or ( $price_float == 0 ) ) {
-
-				$price_float = (float)$prices[ $key ]['amount'];
-
-			}
-
-			$price = edd_sanitize_amount( $price_float );
-
-			}
-
+		if ( false !== $price_id && isset( $prices[$price_id] ) ) {
+			$price = (float) $prices[$price_id]['amount'];
 		} else {
+			$price = edd_get_lowest_price_option( $download_id );
+		}
+
+		$price = edd_sanitize_amount( $price );
+
+	} else {
 
 		$price = edd_get_download_price( $download_id );
 
@@ -257,6 +256,31 @@ function edd_has_variable_prices( $download_id ) {
 }
 
 /**
+ * Returns the default price ID for variable pricing, or the first
+ * price if none is set
+ *
+ * @since  2.2
+ * @param  int $download_id ID number of the download to check
+ * @return int              The Price ID to select by default
+ */
+function edd_get_default_variable_price( $download_id ) {
+
+	if ( ! edd_has_variable_prices( $download_id ) ) {
+		return false;
+	}
+
+	$prices = edd_get_variable_prices( $download_id );
+	$default_price_id = get_post_meta( $download_id, '_edd_default_price_id', true );
+
+	if ( $default_price_id === '' ||  ! isset( $prices[$default_price_id] ) ) {
+		$default_price_id = current( array_keys( $prices ) );
+	}
+
+	return apply_filters( 'edd_variable_default_price_id', absint( $default_price_id ), $download_id );
+
+}
+
+/**
  * Retrieves the name of a variable price option
  *
  * @since 1.0.9
@@ -274,7 +298,7 @@ function edd_get_price_option_name( $download_id = 0, $price_id = 0, $payment_id
 			$price_name = $prices[ $price_id ]['name'];
 	}
 
-	return apply_filters( 'edd_get_price_option_name', $price_name, $download_id, $payment_id );
+	return apply_filters( 'edd_get_price_option_name', $price_name, $download_id, $payment_id, $price_id );
 }
 
 /**

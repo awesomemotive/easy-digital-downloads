@@ -19,8 +19,25 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return bool True if on the Checkout page, false otherwise
  */
 function edd_is_checkout() {
-	global $edd_options;
-	$is_checkout = isset( $edd_options['purchase_page'] ) ? is_page( $edd_options['purchase_page'] ) : false;
+
+	$checkout   = edd_get_option( 'purchase_page' );
+	$home_shows = get_option( 'show_on_front' );
+	$home_id    = get_option( 'page_on_front' );
+
+	if( 'page' === $home_shows && (int) $checkout === (int) $home_id && is_front_page() ) {
+
+		$is_checkout = true;
+
+	} elseif( 'page' === $home_shows && is_front_page() ) {
+
+		$is_checkout = false;
+
+	} else {
+
+		$is_checkout = $checkout && is_page( $checkout );
+
+	}
+
 	return apply_filters( 'edd_is_checkout', $is_checkout );
 }
 
@@ -84,7 +101,9 @@ function edd_send_to_success_page( $query_string = null ) {
 	if ( $query_string )
 		$redirect .= $query_string;
 
-	wp_redirect( apply_filters('edd_success_page_redirect', $redirect, $_POST['edd-gateway'], $query_string) );
+	$gateway = isset( $_REQUEST['edd-gateway'] ) ? $_REQUEST['edd-gateway'] : '';
+
+	wp_redirect( apply_filters('edd_success_page_redirect', $redirect, $gateway, $query_string) );
 	edd_die();
 }
 

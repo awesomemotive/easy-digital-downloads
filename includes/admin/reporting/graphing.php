@@ -176,6 +176,8 @@ function edd_reports_graph() {
 		__( 'Sales', 'edd' )    => $sales_data
 	);
 
+	// start our own output buffer
+	ob_start();
 	?>
 	<div id="edd-dashboard-widgets-wrap">
 		<div class="metabox-holder" style="padding-top: 0;">
@@ -206,7 +208,11 @@ function edd_reports_graph() {
 		</div>
 	</div>
 	<?php
-	echo ob_get_clean();
+	// get output buffer contents and end our own buffer
+	$output = ob_get_contents();
+	ob_end_clean();
+	
+	echo $output;
 }
 
 /**
