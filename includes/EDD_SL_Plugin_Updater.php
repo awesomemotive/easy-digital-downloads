@@ -117,7 +117,7 @@ class EDD_SL_Plugin_Updater {
         }
 
         // Remove our filter on the site transient
-        remove_filter( 'pre_site_transient_update_plugins', array( $this, 'check_update' ), 10 );
+        remove_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_update' ), 10 );
 
         $update_cache = get_site_transient( 'update_plugins' );
 
@@ -143,7 +143,7 @@ class EDD_SL_Plugin_Updater {
         }
 
         // Restore our filter
-        add_filter( 'pre_site_transient_update_plugins', array( $this, 'check_update' ) );
+        add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_update' ) );
 
         if ( ! empty( $update_cache->response[ $this->name ] ) && version_compare( $this->version, $version_info->new_version, '<' ) ) {
 
