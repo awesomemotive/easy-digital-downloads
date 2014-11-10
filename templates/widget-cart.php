@@ -1,4 +1,8 @@
 <?php
+/**
+ * 
+ * This template is used to display the Downloads cart widget.
+ */ 
 $cart_items    = edd_get_cart_contents();
 $cart_quantity = edd_get_cart_quantity();
 $display       = $cart_quantity > 0 ? '' : 'style="display:none;"';
