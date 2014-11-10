@@ -41,6 +41,7 @@ $unlimited      = edd_payment_has_unlimited_downloads( $payment_id );
 $user_info      = edd_get_payment_meta_user_info( $payment_id );
 $address        = ! empty( $user_info['address'] ) ? $user_info['address'] : array( 'line1' => '', 'line2' => '', 'city' => '', 'country' => '', 'state' => '', 'zip' => '' );
 $gateway        = edd_get_payment_gateway( $payment_id );
+$currency_code  = edd_get_payment_currency_code( $payment_id );
 ?>
 <div class="wrap edd-wrap">
 	<h2><?php printf( __( 'Payment %s', 'edd' ), $number ); ?></h2>
@@ -82,7 +83,7 @@ $gateway        = edd_get_payment_gateway( $payment_id );
 											<p class="strong"><?php _e( 'Fees', 'edd' ); ?>:</p>
 											<ul class="edd-payment-fees">
 												<?php foreach( $fees as $fee ) : ?>
-												<li><span class="fee-label"><?php echo $fee['label'] . ':</span> ' . '<span class="right fee-amount" data-fee="' . esc_attr( $fee['amount'] ) . '">' . edd_currency_filter( $fee['amount'] ); ?></span></li>
+												<li><span class="fee-label"><?php echo $fee['label'] . ':</span> ' . '<span class="right fee-amount" data-fee="' . esc_attr( $fee['amount'] ) . '">' . edd_currency_filter( $fee['amount'], $currency_code ); ?></span></li>
 												<?php endforeach; ?>
 											</ul>
 										</div>
@@ -406,7 +407,7 @@ $gateway        = edd_get_payment_gateway( $payment_id );
 											<?php endif; ?>
 	
 											<li class="price">
-												<?php echo edd_currency_filter( edd_format_amount( $price ) ); ?>
+												<?php echo edd_currency_filter( edd_format_amount( $price ), $currency_code ); ?>
 											</li>
 	
 											<li class="actions">

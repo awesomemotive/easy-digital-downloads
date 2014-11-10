@@ -1155,7 +1155,7 @@ function edd_get_next_payment_number() {
  */
 function edd_payment_amount( $payment_id = 0 ) {
 	$amount = edd_get_payment_amount( $payment_id );
-	return edd_currency_filter( edd_format_amount( $amount ) );
+	return edd_currency_filter( edd_format_amount( $amount ), edd_get_payment_currency_code( $payment_id ) );
 }
 /**
  * Get the amount associated with a payment
@@ -1196,7 +1196,7 @@ function edd_get_payment_amount( $payment_id ) {
 function edd_payment_subtotal( $payment_id = 0 ) {
 	$subtotal = edd_get_payment_subtotal( $payment_id );
 
-	return edd_currency_filter( edd_format_amount( $subtotal ) );
+	return edd_currency_filter( edd_format_amount( $subtotal ), edd_get_payment_currency_code( $payment_id ) );
 }
 
 /**
@@ -1250,7 +1250,7 @@ function edd_get_payment_subtotal( $payment_id = 0) {
 function edd_payment_tax( $payment_id = 0, $payment_meta = false ) {
 	$tax = edd_get_payment_tax( $payment_id, $payment_meta );
 
-	return edd_currency_filter( edd_format_amount( $tax ) );
+	return edd_currency_filter( edd_format_amount( $tax ), edd_get_payment_currency_code( $payment_id ) );
 }
 
 /**
