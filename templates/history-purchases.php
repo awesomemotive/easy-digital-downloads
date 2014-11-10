@@ -1,5 +1,7 @@
 <?php
-// Retrieve all purchases for the current user
+/**
+ * Template of Purchase history for the current user.
+ */
 $purchases = edd_get_users_purchases( get_current_user_id(), 20, true, 'any' );
 if ( $purchases ) : ?>
 	<table id="edd_user_history">
