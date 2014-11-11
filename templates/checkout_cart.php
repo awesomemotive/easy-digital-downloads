@@ -1,4 +1,9 @@
-<?php global $post; ?>
+<?php
+/**
+ *  This template is used to display the Checkout cart page 
+ */ 
+
+global $post; ?>
 <table id="edd_checkout_cart" <?php if ( ! edd_is_ajax_disabled() ) { echo 'class="ajaxed"'; } ?>>
 	<thead>
 		<tr class="edd_cart_header_row">
