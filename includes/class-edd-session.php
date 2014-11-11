@@ -228,35 +228,28 @@ class EDD_Session {
 		$ret = false;
 
 		// If the database variable is already set, no need to run autodetection
-		$edd_use_php_sessions = (bool) get_option( 'edd_use_php_sessions' );
+		$edd_use_php_sessions = get_option( 'edd_use_php_sessions', null );
 
-		if ( ! $edd_use_php_sessions ) {
+		// only run auto-detection if database option was not set
+		if( is_null( $edd_use_php_sessions ) ) {
 
 			// Attempt to detect if the server supports PHP sessions
 			if( function_exists( 'session_start' ) && ! ini_get( 'safe_mode' ) ) {
 
-				$this->set( 'edd_use_php_sessions', 1 );
+				$ret = true;
 
-				if( $this->get( 'edd_use_php_sessions' ) ) {
-
-					$ret = true;
-
-					// Set the database option
-					update_option( 'edd_use_php_sessions', true );
-
-				}
-
+				// Set the database option
+				update_option( 'edd_use_php_sessions', true );
 			}
 
 		} else {
-			$ret = $edd_use_php_sessions;
+			// use db option
+			$ret = (bool) $edd_use_php_sessions;
 		}
 
 		// Enable or disable PHP Sessions based on the EDD_USE_PHP_SESSIONS constant
-		if ( defined( 'EDD_USE_PHP_SESSIONS' ) && EDD_USE_PHP_SESSIONS ) {
-			$ret = true;
-		} else if ( defined( 'EDD_USE_PHP_SESSIONS' ) && ! EDD_USE_PHP_SESSIONS ) {
-			$ret = false;
+		if( defined( 'EDD_USE_PHP_SESSION' ) ) {
+			$ret = EDD_USE_PHP_SESSIONS;
 		}
 
 		return (bool) apply_filters( 'edd_use_php_sessions', $ret );
