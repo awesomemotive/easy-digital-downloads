@@ -1,6 +1,6 @@
 <?php
 /**
- *  This template is used to display the Checkout cart page 
+ *  This template is used to display the Checkout page when items are in the cart
  */ 
 
 global $post; ?>
