@@ -54,56 +54,6 @@ $gateway        = edd_get_payment_gateway( $payment_id );
 						<div id="side-sortables" class="meta-box-sortables ui-sortable">
 
 							<?php do_action( 'edd_view_order_details_sidebar_before', $payment_id ); ?>
-							
-							<div id="edd-order-totals" class="postbox">
-								<h3 class="hndle">
-									<span><?php _e( 'Payment Totals', 'edd' ); ?></span>
-								</h3>
-								<div class="inside">
-									<div class="edd-order-totals-box edd-admin-box">
-										<?php do_action( 'edd_view_order_details_totals_before', $payment_id ); ?>
-										<div class="edd-order-discount edd-admin-box-inside">
-											<p>
-												<span class="label"><?php _e( 'Discount Code', 'edd' ); ?>:</span>&nbsp;
-												<span class="right"><?php if ( isset( $user_info['discount'] ) && $user_info['discount'] !== 'none' ) { echo '<code>' . $user_info['discount'] . '</code>'; } else { _e( 'None', 'edd' ); } ?></span>
-											</p>
-										</div>
-										<?php if ( edd_use_taxes() ) : ?>
-										<div class="edd-order-taxes edd-admin-box-inside">
-											<p>
-												<span class="label"><?php _e( 'Tax', 'edd' ); ?>:</span>&nbsp;
-												<input name="edd-payment-tax" type="number" step="0.01" class="small-text right " value="<?php echo esc_attr( edd_get_payment_tax( $payment_id ) ); ?>"/>
-											</p>
-										</div>
-										<?php endif; ?>
-										<?php
-										$fees = edd_get_payment_fees( $payment_id );
-										if ( ! empty( $fees ) ) : ?>
-										<div class="edd-order-fees edd-admin-box-inside">
-											<p class="strong"><?php _e( 'Fees', 'edd' ); ?>:</p>
-											<ul class="edd-payment-fees">
-												<?php foreach( $fees as $fee ) : ?>
-												<li><span class="fee-label"><?php echo $fee['label'] . ':</span> ' . '<span class="right fee-amount" data-fee="' . esc_attr( $fee['amount'] ) . '">' . edd_currency_filter( $fee['amount'] ); ?></span></li>
-												<?php endforeach; ?>
-											</ul>
-										</div>
-										<?php endif; ?>
-										<div class="edd-order-payment edd-admin-box-inside">
-											<p>
-												<span class="label"><?php _e( 'Total Price', 'edd' ); ?>:</span>&nbsp;
-												<input name="edd-payment-total" type="number" step="0.01" class="small-text right" value="<?php echo esc_attr( edd_get_payment_amount( $payment_id ) ); ?>"/>
-											</p>
-										</div>
-										<div class="edd-order-payment-recalc-totals edd-admin-box-inside" style="display:none">
-											<p>
-												<span class="label"><?php _e( 'Recalculate Totals', 'edd' ); ?>:</span>&nbsp;
-												<a href="" id="edd-order-recalc-total" class="button button-secondary right"><?php _e( 'Recalculate', 'edd' ); ?></a>
-											</p>
-										</div>
-										<?php do_action( 'edd_view_order_details_totals_after', $payment_id ); ?>
-									</div><!-- /.edd-order-totals-box -->
-								</div><!-- /.inside -->
-							</div><!-- /#edd-order-totals -->
 
 							<div id="edd-order-update" class="postbox edd-order-data">
 
@@ -169,6 +119,56 @@ $gateway        = edd_get_payment_gateway( $payment_id );
 
 							</div><!-- /#edd-order-data -->
 
+							<div id="edd-order-totals" class="postbox">
+								<h3 class="hndle">
+									<span><?php _e( 'Payment Totals', 'edd' ); ?></span>
+								</h3>
+								<div class="inside">
+									<div class="edd-order-totals-box edd-admin-box">
+										<?php do_action( 'edd_view_order_details_totals_before', $payment_id ); ?>
+										<div class="edd-order-discount edd-admin-box-inside">
+											<p>
+												<span class="label"><?php _e( 'Discount Code', 'edd' ); ?>:</span>&nbsp;
+												<span><?php if ( isset( $user_info['discount'] ) && $user_info['discount'] !== 'none' ) { echo '<code>' . $user_info['discount'] . '</code>'; } else { _e( 'None', 'edd' ); } ?></span>
+											</p>
+										</div>
+										<?php if ( edd_use_taxes() ) : ?>
+										<div class="edd-order-taxes edd-admin-box-inside">
+											<p>
+												<span class="label"><?php _e( 'Tax', 'edd' ); ?>:</span>&nbsp;
+												<input name="edd-payment-tax" type="number" step="0.01" value="<?php echo esc_attr( edd_get_payment_tax( $payment_id ) ); ?>"/>
+											</p>
+										</div>
+										<?php endif; ?>
+										<?php
+										$fees = edd_get_payment_fees( $payment_id );
+										if ( ! empty( $fees ) ) : ?>
+										<div class="edd-order-fees edd-admin-box-inside">
+											<p class="strong"><?php _e( 'Fees', 'edd' ); ?>:</p>
+											<ul class="edd-payment-fees">
+												<?php foreach( $fees as $fee ) : ?>
+												<li><span class="fee-label"><?php echo $fee['label'] . ':</span> ' . '<span class="fee-amount" data-fee="' . esc_attr( $fee['amount'] ) . '">' . edd_currency_filter( $fee['amount'] ); ?></span></li>
+												<?php endforeach; ?>
+											</ul>
+										</div>
+										<?php endif; ?>
+										<div class="edd-order-payment edd-admin-box-inside">
+											<p>
+												<span class="label"><?php _e( 'Total Price', 'edd' ); ?>:</span>&nbsp;
+												<?php echo edd_currency_symbol( $payment_meta['currency'] ); ?>&nbsp;<input name="edd-payment-total" type="number" step="0.01" class="small-text" value="<?php echo esc_attr( edd_get_payment_amount( $payment_id ) ); ?>"/>
+											</p>
+										</div>
+										<div class="edd-order-payment-recalc-totals edd-admin-box-inside" style="display:none">
+											<p>
+												<span class="label"><?php _e( 'Recalculate Totals', 'edd' ); ?>:</span>&nbsp;
+												<a href="" id="edd-order-recalc-total" class="button button-secondary right"><?php _e( 'Recalculate', 'edd' ); ?></a>
+											</p>
+										</div>
+										<?php do_action( 'edd_view_order_details_totals_after', $payment_id ); ?>
+									</div><!-- /.edd-order-totals-box -->
+								</div><!-- /.inside -->
+							</div><!-- /#edd-order-totals -->
+
 							<div id="edd-customer-details" class="postbox">
 								<h3 class="hndle">
 									<span><?php _e( 'Customer Details', 'edd' ); ?></span>
@@ -177,24 +177,9 @@ $gateway        = edd_get_payment_gateway( $payment_id );
 
 									<div class="edd-order-totals-box edd-admin-box">
 										<div class="edd-order-customer edd-admin-box-inside">
-											
 											<p>
 												<?php echo EDD()->html->customer_dropdown(); ?>
 											</p>
-											<!--
-											<p>
-												<strong><?php _e( 'Name:', 'edd' ); ?></strong>&nbsp;
-												<input type="text" name="edd-payment-user-name" value="<?php esc_attr_e( $user_info['first_name'] . ' ' . $user_info['last_name'] ); ?>" class="medium-text"/>
-											</p>
-											<p>
-												<strong><?php _e( 'Email:', 'edd' ); ?></strong>&nbsp;
-												<input type="email" name="edd-payment-user-email" value="<?php esc_attr_e( edd_get_payment_user_email( $payment_id ) ); ?>" class="medium-text"/>
-											</p>
-											<p>
-												<strong><?php _e( 'User ID:', 'edd' ); ?></strong>&nbsp;
-												<input type="number" step="1" min="-1" name="edd-payment-user-id" value="<?php esc_attr_e( $user_id ); ?>" class="small-text"/>
-											</p>
-											-->
 										</div>
 										<div class="edd-order-customer-links edd-admin-box-inside">
 											<p>
@@ -211,7 +196,7 @@ $gateway        = edd_get_payment_gateway( $payment_id );
 									<?php
 									// The edd_payment_personal_details_list hook is left here for backwards compatibility
 									do_action( 'edd_payment_personal_details_list', $payment_meta, $user_info );
-									
+
 									?>
 
 								</div><!-- /.inside -->
@@ -265,25 +250,25 @@ $gateway        = edd_get_payment_gateway( $payment_id );
 											$gateway = edd_get_payment_gateway( $payment_id );
 											if ( $gateway ) { ?>
 											<p>
-												<strong><?php _e( 'Gateway:', 'edd' ); ?></strong>&nbsp;
-												<span><?php echo edd_get_gateway_admin_label( $gateway ); ?></span>
+												<span class="label"><?php _e( 'Gateway:', 'edd' ); ?></span>&nbsp;
+												<?php echo edd_get_gateway_admin_label( $gateway ); ?>
 											</p>
 											<?php } ?>
 
 											<p>
-												<strong><?php _e( 'Key:', 'edd' ); ?></strong>&nbsp;
+												<span class="label"><?php _e( 'Key:', 'edd' ); ?></span>&nbsp;
 												<span><?php echo edd_get_payment_key( $payment_id ); ?></span>
 											</p>
 										</div>
 										<div class="column">
 											<p>
-												<strong><?php _e( 'IP:', 'edd' ); ?></strong>&nbsp;
+												<span class="label"><?php _e( 'IP:', 'edd' ); ?></span>&nbsp;
 												<span><?php esc_attr_e( edd_get_payment_user_ip( $payment_id )); ?></span>
 											</p>
 
 											<?php if ( $transaction_id ) { ?>
 											<p>
-												<strong><?php _e( 'Transaction ID:', 'edd' ); ?></strong>&nbsp;
+												<span class="label"><?php _e( 'Transaction ID:', 'edd' ); ?></span>&nbsp;
 												<span><?php echo apply_filters( 'edd_payment_details_transaction_id-' . $gateway, $transaction_id, $payment_id ); ?></span>
 											</p>
 											<?php } ?>
@@ -303,7 +288,7 @@ $gateway        = edd_get_payment_gateway( $payment_id );
 								<h3 class="hndle">
 									<span><?php printf( __( 'Purchased %s', 'edd' ), edd_get_label_plural() ); ?></span>
 								</h3>
-								
+
 								<?php if ( is_array( $cart_items ) ) :
 
 									$i = 0;
@@ -316,7 +301,7 @@ $gateway        = edd_get_payment_gateway( $payment_id );
 											$price    = isset( $cart_item['price'] ) ? $cart_item['price'] : false;
 											$price_id = isset( $cart_item['item_number']['options']['price_id'] ) ? $cart_item['item_number']['options']['price_id'] : null;
 											$quantity = isset( $cart_item['quantity'] ) && $cart_item['quantity'] > 0 ? $cart_item['quantity'] : 1;
-	
+
 											if( false === $price ) {
 
 												// This function is only used on payments with near 1.0 cart data structure

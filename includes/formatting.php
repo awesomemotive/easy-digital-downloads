@@ -60,10 +60,10 @@ function edd_sanitize_amount( $amount ) {
  * Returns a nicely formatted amount.
  *
  * @since 1.0
- * 
+ *
  * @param string $amount   Price amount to format
  * @param string $decimals Whether or not to use decimals.  Useful when set to false for non-currency numbers.
- * 
+ *
  * @return string $amount Newly formatted amount or Price Not Available
  */
 function edd_format_amount( $amount, $decimals = true ) {
@@ -92,7 +92,7 @@ function edd_format_amount( $amount, $decimals = true ) {
 	if ( empty( $amount ) ) {
 		$amount = 0;
 	}
-	
+
 	$decimals  = apply_filters( 'edd_format_amount_decimals', $decimals ? 2 : 0, $amount );
 	$formatted = number_format( $amount, $decimals, $decimal_sep, $thousands_sep );
 
@@ -119,17 +119,13 @@ function edd_currency_filter( $price ) {
 		$price = substr( $price, 1 ); // Remove proceeding "-" -
 	}
 
+	$symbol = edd_currency_symbol( $currency );
+
 	if ( $position == 'before' ):
 		switch ( $currency ):
 			case "GBP" :
-				$formatted = '&pound;' . $price;
-				break;
 			case "BRL" :
-				$formatted = 'R&#36;' . $price;
-				break;
 			case "EUR" :
-				$formatted = '&euro;' . $price;
-				break;
 			case "USD" :
 			case "AUD" :
 			case "CAD" :
@@ -137,40 +133,30 @@ function edd_currency_filter( $price ) {
 			case "MXN" :
 			case "NZD" :
 			case "SGD" :
-				$formatted = '&#36;' . $price;
-				break;
 			case "JPY" :
-				$formatted = '&yen;' . $price;
+				$formatted = $symbol . $price;
 				break;
 			default :
-			    $formatted = $currency . ' ' . $price;
+				$formatted = $currency . ' ' . $price;
 				break;
 		endswitch;
 		$formatted = apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_before', $formatted, $currency, $price );
 	else :
 		switch ( $currency ) :
 			case "GBP" :
-				$formatted = $price . '&pound;';
-				break;
 			case "BRL" :
-				$formatted = $price . 'R&#36;';
-				break;
 			case "EUR" :
-				$formatted = $price . '&euro;';
-				break;
 			case "USD" :
 			case "AUD" :
 			case "CAD" :
 			case "HKD" :
 			case "MXN" :
 			case "SGD" :
-				$formatted = $price . '&#36;';
-				break;
 			case "JPY" :
-				$formatted = $price . '&yen;';
+				$formatted = $price . $symbol;
 				break;
 			default :
-			    $formatted = $price . ' ' . $currency;
+				$formatted = $price . ' ' . $currency;
 				break;
 		endswitch;
 		$formatted = apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_after', $formatted, $currency, $price );
@@ -182,6 +168,50 @@ function edd_currency_filter( $price ) {
 	}
 
 	return $formatted;
+}
+
+/**
+ * Given a currency determine the symbol to use. If no currency given, site default is used.
+ * If no symbol is determine, the currency string is returned.
+ *
+ * @since  2.2
+ * @param  string $currency The currency string
+ * @return string           The symbol to use for the currency
+ */
+function edd_currency_symbol( $currency = '' ) {
+	global $edd_options;
+
+	if ( empty( $currency ) ) {
+		$currency = edd_get_currency();
+	}
+
+	switch ( $currency ) :
+		case "GBP" :
+			$symbol = '&pound;';
+			break;
+		case "BRL" :
+			$symbol = 'R&#36;';
+			break;
+		case "EUR" :
+			$symbol = '&euro;';
+			break;
+		case "USD" :
+		case "AUD" :
+		case "CAD" :
+		case "HKD" :
+		case "MXN" :
+		case "SGD" :
+			$symbol = '&#36;';
+			break;
+		case "JPY" :
+			$symbol = '&yen;';
+			break;
+		default :
+			$symbol = $currency;
+			break;
+	endswitch;
+
+	return apply_filters( 'edd_currency_symbol', $symbol, $currency );
 }
 
 /**
