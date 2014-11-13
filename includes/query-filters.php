@@ -45,7 +45,7 @@ function edd_block_attachments() {
 		return;
 	}
 
-	wp_die( __( 'You do not have permission to view this file.', 'edd' ), __( 'Error', 'edd' ) );
+	wp_die( __( 'You do not have permission to view this file.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 }
 add_action( 'template_redirect', 'edd_block_attachments' );
 
@@ -62,7 +62,7 @@ function edd_redirect_canonical( $redirect_url, $requested_url ) {
 	}
 
 	if( 'page' === get_option( 'show_on_front' ) ) {
-	
+
 		/*
 		 * If we are on the homepage and the homepage contains the [downloads] shortcode, we have
 		 * to prevent the canonical redirect from taking place, otherwise /page/# gets sent back to just /

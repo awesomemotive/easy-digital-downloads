@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return void
 */
 if ( ! isset( $_GET['id'] ) || ! is_numeric( $_GET['id'] ) ) {
-	wp_die( __( 'Payment ID not supplied. Please try again', 'edd' ), __( 'Error', 'edd' ) );
+	wp_die( __( 'Payment ID not supplied. Please try again', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 400 ) );
 }
 
 // Setup the variables
@@ -29,7 +29,7 @@ $item         = get_post( $payment_id );
 
 // Sanity check... fail if purchase ID is invalid
 if ( !is_object( $item ) || $item->post_type != 'edd_payment' ) {
-    wp_die( __( 'The specified ID does not belong to a payment. Please try again', 'edd' ), __( 'Error', 'edd' ) );
+    wp_die( __( 'The specified ID does not belong to a payment. Please try again', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 400 ) );
 }
 
 $payment_meta   = edd_get_payment_meta( $payment_id );

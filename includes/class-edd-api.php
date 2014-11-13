@@ -1415,7 +1415,7 @@ class EDD_API {
 
 		if( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'edd-api-nonce' ) ) {
 
-			wp_die( __( 'Nonce verification failed', 'edd' ) );
+			wp_die( __( 'Nonce verification failed', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 
 		}
 
@@ -1428,9 +1428,9 @@ class EDD_API {
 		$process    = isset( $args['edd_api_process'] ) ? strtolower( $args['edd_api_process'] ) : false;
 
 		if( $user_id == get_current_user_id() && ! edd_get_option( 'allow_user_api_keys' ) && ! current_user_can( 'manage_shop_settings' ) ) {
-			wp_die( sprintf( __( 'You do not have permission to %s API keys for this user', 'edd' ), $process ) );
+			wp_die( sprintf( __( 'You do not have permission to %s API keys for this user', 'edd' ), $process ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 		} elseif( ! current_user_can( 'manage_shop_settings' ) ) {
-			wp_die( sprintf( __( 'You do not have permission to %s API keys for this user', 'edd' ), $process ) );
+			wp_die( sprintf( __( 'You do not have permission to %s API keys for this user', 'edd' ), $process ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 		}
 
 		switch( $process ) {
