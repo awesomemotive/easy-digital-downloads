@@ -103,15 +103,6 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 											</p>
 										</div>
 
-										<?php if ( edd_use_taxes() ) : ?>
-										<div class="edd-order-taxes edd-admin-box-inside">
-											<p>
-												<span class="label"><?php _e( 'Tax', 'edd' ); ?>:</span>&nbsp;
-												<input name="edd-payment-tax" class="small-text" value="<?php echo esc_attr( edd_format_amount( edd_get_payment_tax( $payment_id ) ) ); ?>"/>
-											</p>
-										</div>
-										<?php endif; ?>
-
 										<?php
 										$fees = edd_get_payment_fees( $payment_id );
 										if ( ! empty( $fees ) ) : ?>
@@ -125,10 +116,19 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 										</div>
 										<?php endif; ?>
 
+										<?php if ( edd_use_taxes() ) : ?>
+										<div class="edd-order-taxes edd-admin-box-inside">
+											<p>
+												<span class="label"><?php _e( 'Tax', 'edd' ); ?>:</span>&nbsp;
+												<input name="edd-payment-tax" class="small-text" type="text" value="<?php echo esc_attr( edd_format_amount( edd_get_payment_tax( $payment_id ) ) ); ?>"/>
+											</p>
+										</div>
+										<?php endif; ?>
+
 										<div class="edd-order-payment edd-admin-box-inside">
 											<p>
 												<span class="label"><?php _e( 'Total Price', 'edd' ); ?>:</span>&nbsp;
-												<?php echo edd_currency_symbol( $payment_meta['currency'] ); ?>&nbsp;<input name="edd-payment-total" class="small-text" value="<?php echo esc_attr( edd_format_amount( edd_get_payment_amount( $payment_id ) ) ); ?>"/>
+												<?php echo edd_currency_symbol( $payment_meta['currency'] ); ?>&nbsp;<input name="edd-payment-total" type="text" class="small-text" value="<?php echo esc_attr( edd_format_amount( edd_get_payment_amount( $payment_id ) ) ); ?>"/>
 											</p>
 										</div>
 
@@ -384,7 +384,7 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 									<span><?php _e( 'Customer Details', 'edd' ); ?></span>
 								</h3>
 								<div class="inside edd-clearfix">
-	
+
 									<div class="column-container">
 										<div class="column">
 											<strong><?php _e( 'Name:', 'edd' ); ?></strong>&nbsp;
@@ -399,13 +399,13 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 											<input type="number" step="1" min="-1" name="edd-payment-user-id" value="<?php esc_attr_e( $user_id ); ?>" class="small-text"/>
 										</div>
 									</div>
-	
-									<?php 
+
+									<?php
 									// The edd_payment_personal_details_list hook is left here for backwards compatibility
 									do_action( 'edd_payment_personal_details_list', $payment_meta, $user_info );
 									do_action( 'edd_payment_view_details', $payment_id );
 									?>
-	
+
 								</div><!-- /.inside -->
 							</div><!-- /#edd-customer-details -->
 
