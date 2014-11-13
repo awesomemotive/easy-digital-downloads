@@ -1067,7 +1067,7 @@ function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $ex
 
 					// Check to see if the file download limit has been reached
 					if ( edd_is_file_at_download_limit( $cart_item['id'], $payment->ID, $file_key, $price_id ) )
-						wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'edd' ) ), __( 'Error', 'edd' ) );
+						wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 
 					// If this download has variable prices, we have to confirm that this file was included in their purchase
 					if ( ! empty( $price_options ) && $file_condition != 'all' && edd_has_variable_prices( $cart_item['id'] ) ) {
@@ -1077,7 +1077,7 @@ function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $ex
 
 					// Make sure the link hasn't expired
 					if ( current_time( 'timestamp' ) > $expire ) {
-						wp_die( apply_filters( 'edd_download_link_expired_text', __( 'Sorry but your download link has expired.', 'edd' ) ), __( 'Error', 'edd' ) );
+						wp_die( apply_filters( 'edd_download_link_expired_text', __( 'Sorry but your download link has expired.', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 					}
 					return $payment->ID; // Payment has been verified and link is still valid
 				}
@@ -1087,7 +1087,7 @@ function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $ex
 		}
 
 	} else {
-		wp_die( __( 'No payments matching your request were found.', 'edd' ), __( 'Error', 'edd' ) );
+		wp_die( __( 'No payments matching your request were found.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
 	// Payment not verified
 	return false;
