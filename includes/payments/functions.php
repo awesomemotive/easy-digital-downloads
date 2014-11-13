@@ -1045,7 +1045,7 @@ function edd_get_payment_currency_code( $payment_id = 0 ) {
  */
 function edd_get_payment_currency( $payment_id = 0 ) {
 	$currency = edd_get_payment_currency_code( $payment_id );
-	return apply_filters( 'edd_payment_currency', $currency, $payment_id );
+	return apply_filters( 'edd_payment_currency', edd_get_currency_name( $currency ), $payment_id );
 }
 
 /**

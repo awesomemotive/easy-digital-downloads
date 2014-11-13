@@ -176,50 +176,6 @@ function edd_currency_filter( $price = '', $currency = '' ) {
 }
 
 /**
- * Given a currency determine the symbol to use. If no currency given, site default is used.
- * If no symbol is determine, the currency string is returned.
- *
- * @since  2.2
- * @param  string $currency The currency string
- * @return string           The symbol to use for the currency
- */
-function edd_currency_symbol( $currency = '' ) {
-	global $edd_options;
-
-	if ( empty( $currency ) ) {
-		$currency = edd_get_currency();
-	}
-
-	switch ( $currency ) :
-		case "GBP" :
-			$symbol = '&pound;';
-			break;
-		case "BRL" :
-			$symbol = 'R&#36;';
-			break;
-		case "EUR" :
-			$symbol = '&euro;';
-			break;
-		case "USD" :
-		case "AUD" :
-		case "CAD" :
-		case "HKD" :
-		case "MXN" :
-		case "SGD" :
-			$symbol = '&#36;';
-			break;
-		case "JPY" :
-			$symbol = '&yen;';
-			break;
-		default :
-			$symbol = $currency;
-			break;
-	endswitch;
-
-	return apply_filters( 'edd_currency_symbol', $symbol, $currency );
-}
-
-/**
  * Set the number of decimal places per currency
  *
  * @since 1.4.2
