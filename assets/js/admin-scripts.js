@@ -993,6 +993,12 @@ jQuery(document).ready(function ($) {
 		var menu_id = container.attr('id').replace( '_chosen', '' );
 		var lastKey = e.which;
 
+		if( container.hasClass( 'edd-customer-select') ) {
+			var type = 'customer';
+		} else {
+			var type = 'download';
+		}
+
 		// Don't fire if short or is a modifier key (shift, ctrl, apple command key, or arrow keys)
 		if(
 			val.length <= 3 ||
@@ -1017,7 +1023,7 @@ jQuery(document).ready(function ($) {
 					type: 'GET',
 					url: ajaxurl,
 					data: {
-						action: 'edd_download_search',
+						action: 'edd_' + type + '_search',
 						s: val,
 					},
 					dataType: "json",
