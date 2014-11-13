@@ -90,6 +90,70 @@ class EDD_HTML_Elements {
 	}
 
 	/**
+	 * Renders an HTML Dropdown of all customers
+	 *
+	 * @access public
+	 * @since 2.2
+	 * @param array $args
+	 * @return string $output Customer dropdown
+	 */
+	public function customer_dropdown( $args = array() ) {
+
+		$defaults = array(
+			'name'        => 'customers',
+			'id'          => 'customers',
+			'class'       => '',
+			'multiple'    => false,
+			'selected'    => 0,
+			'chosen'      => true,
+			'number'      => 30
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$customers = EDD()->customers->get_customers( array(
+			'number' => $args['number']
+		) );
+
+		$options = array();
+
+		if ( $customers ) {
+			foreach ( $customers as $customer ) {
+				$options[ absint( $customer->id ) ] = esc_html( $customer->name . ' (' . $customer->email . ')' );
+			}
+		} else {
+			$options[0] = __( 'No customers found', 'edd' );
+		}
+
+		// This ensures that any selected products are included in the drop down
+		if( is_array( $args['selected'] ) ) {
+			foreach( $args['selected'] as $item ) {
+				if( ! in_array( $item, $options ) ) {
+					$options[$item] = get_the_title( $item );
+				}
+			}
+		} elseif ( is_numeric( $args['selected'] ) && $args['selected'] !== 0 ) {
+			if ( ! in_array( $args['selected'], $options ) ) {
+				$options[$args['selected']] = get_the_title( $args['selected'] );
+			}
+		}
+
+		$output = $this->select( array(
+			'name'             => $args['name'],
+			'selected'         => $args['selected'],
+			'id'               => $args['id'],
+			'class'            => $args['class'] . ' edd-customer-select',
+			'options'          => $options,
+			'multiple'         => $args['multiple'],
+			'chosen'           => $args['chosen'],
+			'show_option_all'  => false,
+			'show_option_none' => false
+		) );
+
+		return $output;
+	}
+
+	/**
 	 * Renders an HTML Dropdown of all the Discounts
 	 *
 	 * @access public
