@@ -102,15 +102,6 @@ $gateway        = edd_get_payment_gateway( $payment_id );
 											</p>
 										</div>
 
-										<?php if ( edd_use_taxes() ) : ?>
-										<div class="edd-order-taxes edd-admin-box-inside">
-											<p>
-												<span class="label"><?php _e( 'Tax', 'edd' ); ?>:</span>&nbsp;
-												<input name="edd-payment-tax" class="small-text" type="text" value="<?php echo esc_attr( edd_format_amount( edd_get_payment_tax( $payment_id ) ) ); ?>"/>
-											</p>
-										</div>
-										<?php endif; ?>
-
 										<?php
 										$fees = edd_get_payment_fees( $payment_id );
 										if ( ! empty( $fees ) ) : ?>
@@ -121,6 +112,15 @@ $gateway        = edd_get_payment_gateway( $payment_id );
 												<li><span class="fee-label"><?php echo $fee['label'] . ':</span> ' . '<span class="fee-amount" data-fee="' . esc_attr( $fee['amount'] ) . '">' . edd_currency_filter( $fee['amount'] ); ?></span></li>
 												<?php endforeach; ?>
 											</ul>
+										</div>
+										<?php endif; ?>
+
+										<?php if ( edd_use_taxes() ) : ?>
+										<div class="edd-order-taxes edd-admin-box-inside">
+											<p>
+												<span class="label"><?php _e( 'Tax', 'edd' ); ?>:</span>&nbsp;
+												<input name="edd-payment-tax" class="small-text" type="text" value="<?php echo esc_attr( edd_format_amount( edd_get_payment_tax( $payment_id ) ) ); ?>"/>
+											</p>
 										</div>
 										<?php endif; ?>
 
