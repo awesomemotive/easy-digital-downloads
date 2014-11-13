@@ -275,7 +275,7 @@ $gateway        = edd_get_payment_gateway( $payment_id );
 
 										</div>
 
-										<?php do_action( 'edd_view_order_details_update_inner', $payment_id ); ?>
+										<?php do_action( 'edd_view_order_details_inner', $payment_id ); ?>
 
 									</div><!-- /.column-container -->
 
