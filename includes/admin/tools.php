@@ -265,13 +265,13 @@ function edd_tools_import_export_process_import() {
 		return;
 
     if( edd_get_file_extension( $_FILES['import_file']['name'] ) != 'json' ) {
-        wp_die( __( 'Please upload a valid .json file', 'edd' ) );
+        wp_die( __( 'Please upload a valid .json file', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 400 ) );
     }
 
 	$import_file = $_FILES['import_file']['tmp_name'];
 
 	if( empty( $import_file ) ) {
-		wp_die( __( 'Please upload a file to import', 'edd' ) );
+		wp_die( __( 'Please upload a file to import', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 400 ) );
 	}
 
 	// Retrieve the settings from the file and convert the json object to an array
