@@ -235,11 +235,11 @@ $gateway        = edd_get_payment_gateway( $payment_id );
 											</p>
 											<p>
 												<?php $download_log_url = admin_url( 'edit.php?post_type=download&page=edd-reports&tab=logs&user=' . $user_id ); ?>
-												<a href="<?php echo $download_log_url; ?>"><?php _e( 'View customer download log', 'edd' ); ?></a>
+												<a href="<?php echo $download_log_url; ?>"><?php _e( 'View file download log for customer', 'edd' ); ?></a>
 											</p>
 											<p>
 												<?php $purchase_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' . esc_attr( edd_get_payment_user_email( $payment_id ) ) ); ?>
-												<a href="<?php echo $purchase_url; ?>"><?php _e( 'View all purchases of customer', 'edd' ); ?></a>
+												<a href="<?php echo $purchase_url; ?>"><?php _e( 'View purchase log for customer', 'edd' ); ?></a>
 											</p>
 										</div>
 
