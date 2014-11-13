@@ -95,8 +95,7 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 .edd-admin-box .right { float: right; }
 .rtl .edd-admin-box .right { float: left; margin-left: 10px; }
 #edd-order-update .inside,
-#edd-order-details .inside,
-#edd-customer-details .inside { margin: 0; padding: 0; }
+#edd-order-details .inside { margin: 0; padding: 0; }
 #edd-order-update input.edd_datepicker { width: 180px; }
 #edd-order-update input[type="number"].edd-payment-time-hour,
 #edd-order-update input[type="number"].edd-payment-time-min { width: 50px; }

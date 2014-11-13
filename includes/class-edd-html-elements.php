@@ -118,24 +118,12 @@ class EDD_HTML_Elements {
 		$options = array();
 
 		if ( $customers ) {
+			$options[-1] = __( 'Guest', 'edd' );
 			foreach ( $customers as $customer ) {
 				$options[ absint( $customer->id ) ] = esc_html( $customer->name . ' (' . $customer->email . ')' );
 			}
 		} else {
 			$options[0] = __( 'No customers found', 'edd' );
-		}
-
-		// This ensures that any selected products are included in the drop down
-		if( is_array( $args['selected'] ) ) {
-			foreach( $args['selected'] as $item ) {
-				if( ! in_array( $item, $options ) ) {
-					$options[$item] = get_the_title( $item );
-				}
-			}
-		} elseif ( is_numeric( $args['selected'] ) && $args['selected'] !== 0 ) {
-			if ( ! in_array( $args['selected'], $options ) ) {
-				$options[$args['selected']] = get_the_title( $args['selected'] );
-			}
 		}
 
 		$output = $this->select( array(
