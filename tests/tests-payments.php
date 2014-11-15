@@ -281,4 +281,17 @@ class Tests_Payments extends WP_UnitTestCase {
 
 	}
 
+	public function test_get_payment_currency_code() {
+
+		$this->assertEquals( 'USD', edd_get_payment_currency_code( $this->_payment_id ) );
+		$this->assertEquals( 'US Dollars (&#36;)', edd_get_payment_currency( $this->_payment_id ) );
+
+		$total1 = edd_currency_filter( edd_format_amount( edd_get_payment_amount( $this->_payment_id ) ), edd_get_payment_currency_code( $this->_payment_id ) );
+		$total2 = edd_currency_filter( edd_format_amount( edd_get_payment_amount( $this->_payment_id ) ) );
+
+		$this->assertEquals( '&#36;100.00', $total1 );
+		$this->assertEquals( '&#36;100.00', $total2 );
+
+	}
+
 }
