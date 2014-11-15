@@ -193,20 +193,6 @@ class EDD_Fees {
 	}
 
 	/**
-	 * Retrieve all active fees of a specific Download
-	 *
-	 * @access public
-	 * @since 2.1
-	 * @param int $download_id The download ID whose fees to retrieve
-	 * @uses EDD_Session::get()
-	 * @return mixed array|bool
-	 */
-	public function get_fees_of_download( $download_id = 0 ) {
-
-		return $this->get_fees( 'fee', $download_id );
-	}
-
-	/**
 	 * Retrieve a specific fee
 	 *
 	 * @since 1.5
