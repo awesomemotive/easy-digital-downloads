@@ -319,7 +319,7 @@ function edd_get_price_option_amount( $download_id, $price_id = 0 ) {
 			$amount = $prices[ $price_id ]['amount'];
 	}
 
-	return apply_filters( 'edd_get_price_option_amount', edd_sanitize_amount( $amount ), $download_id );
+	return apply_filters( 'edd_get_price_option_amount', edd_sanitize_amount( $amount ), $download_id, $price_id );
 }
 
 /**
