@@ -44,7 +44,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 	if ( is_array( $cart_details ) ) {
 
 		// Increase purchase count and earnings
-		foreach ( $cart_details as $download ) {
+		foreach ( $cart_details as $cart_index => $download ) {
 
 			// "bundle" or "default"
 			$download_type = edd_get_download_type( $download['id'] );
@@ -64,7 +64,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 					}
 
-					do_action( 'edd_complete_download_purchase', $download['id'], $payment_id, $download_type, $download );
+					do_action( 'edd_complete_download_purchase', $download['id'], $payment_id, $download_type, $download, $cart_index );
 				}
 
 			}
