@@ -112,8 +112,9 @@ class Tests_EDD extends WP_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/shortcodes.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/theme-compatibility.php' );
 
-		/** Check Assets Exist */
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/chosen.css' );
+        /** Check Assets Exist */
+        $this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/select2.css' );
+        $this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/select2.min.css' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/colorbox.css' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/edd-admin.css' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/jquery-ui-classic.css' );
@@ -140,8 +141,10 @@ class Tests_EDD extends WP_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/icons/iphone.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/icons/mastercard.gif' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/icons/paypal.gif' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/icons/visa.gif' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/chosen-sprite.png' );
+        $this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/icons/visa.gif' );
+        $this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/select2.png' );
+        $this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/select2x2.png' );
+        $this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/select-spinner.gif' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-badge.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-cpt-2x.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-cpt.png' );
@@ -159,8 +162,9 @@ class Tests_EDD extends WP_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/ui-icons_cc0000_256x240.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/xit.gif' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/xit.gif' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/admin-scripts.js' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/chosen.jquery.min.js' );
+        $this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/admin-scripts.js' );
+        $this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/select2.js' );
+        $this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/select2.min.js' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/edd-ajax.js' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/edd-checkout-global.js' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/jquery.colorbox-min.js' );
