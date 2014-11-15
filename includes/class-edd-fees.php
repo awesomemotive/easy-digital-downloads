@@ -163,6 +163,8 @@ class EDD_Fees {
 
 		$fees = EDD()->session->get( 'edd_cart_fees' );
 
+		$fees = EDD()->session->get( 'edd_cart_fees' );
+
 		if( ! empty( $fees ) && ! empty( $type ) && 'all' !== $type ) {
 
 			// Remove fees not of the specified type
@@ -184,6 +186,25 @@ class EDD_Fees {
 			foreach( $fees as $key => $fee ) {
 
 				if( (int) $download_id !== (int) $fee['download_id'] ) {
+
+					unset( $fees[ $key ] );
+
+				}
+
+			}
+
+		}
+
+		if( ! empty( $fees ) ) {
+
+			// Remove fees that belong to a specific download but are not in the cart
+			foreach( $fees as $key => $fee ) {
+
+				if( empty( $fee['download_id'] ) ) {
+					continue;
+				}
+
+				if( ! edd_item_in_cart( $fee['download_id'] ) ) {
 
 					unset( $fees[ $key ] );
 
