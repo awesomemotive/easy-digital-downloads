@@ -48,6 +48,10 @@ jQuery(document).ready(function ($) {
 				$( this ).text( parseInt( key ) );
 			});
 
+			clone.find( '.edd_repeatable_default_input' ).each( function() {
+				$( this ).val( parseInt( count ) ).removeAttr('checked');
+			})
+
 			return clone;
 		},
 
@@ -198,9 +202,9 @@ jQuery(document).ready(function ($) {
 					file_frame = wp.media.frames.file_frame = wp.media( {
 						frame: 'post',
 						state: 'insert',
-						title: button.data( 'uploader_title' ),
+						title: button.data( 'uploader-title' ),
 						button: {
-							text: button.data( 'uploader_button_text' )
+							text: button.data( 'uploader-button-text' )
 						},
 						multiple: $( this ).data( 'multiple' ) == '0' ? false : true  // Set to true to allow multiple files to be selected
 					} );
@@ -973,6 +977,11 @@ jQuery(document).ready(function ($) {
     	placeholder_text_multiple: edd_vars.one_or_more_option,
     });
 
+    // Add placeholders for Chosen input fields
+    $( '.chosen-choices' ).on( 'click', function () {
+        $(this).children('li').children('input').attr( 'placeholder', edd_vars.type_to_search );
+    });
+
 	// Variables for setting up the typing timer
 	var typingTimer;               // Timer identifier
 	var doneTypingInterval = 342;  // Time in ms, Slow - 521ms, Moderate - 342ms, Fast - 300ms
@@ -983,6 +992,12 @@ jQuery(document).ready(function ($) {
 		var val = $(this).val(), container = $(this).closest( '.edd-select-chosen' );
 		var menu_id = container.attr('id').replace( '_chosen', '' );
 		var lastKey = e.which;
+
+		if( container.hasClass( 'edd-customer-select') ) {
+			var type = 'customer';
+		} else {
+			var type = 'download';
+		}
 
 		// Don't fire if short or is a modifier key (shift, ctrl, apple command key, or arrow keys)
 		if(
@@ -1008,7 +1023,7 @@ jQuery(document).ready(function ($) {
 					type: 'GET',
 					url: ajaxurl,
 					data: {
-						action: 'edd_download_search',
+						action: 'edd_' + type + '_search',
 						s: val,
 					},
 					dataType: "json",

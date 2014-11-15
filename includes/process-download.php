@@ -89,11 +89,10 @@ function edd_process_download() {
 		$file_extension = edd_get_file_extension( $requested_file );
 		$ctype          = edd_get_file_ctype( $file_extension );
 
-
 		if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
 			@set_time_limit(0);
 		}
-		if ( function_exists( 'get_magic_quotes_runtime' ) && get_magic_quotes_runtime() ) {
+		if ( function_exists( 'get_magic_quotes_runtime' ) && get_magic_quotes_runtime() && version_compare( phpversion(), '5.4', '<' ) ) {
 			set_magic_quotes_runtime(0);
 		}
 
@@ -200,7 +199,7 @@ function edd_process_download() {
 		edd_die();
 	} else {
 		$error_message = __( 'You do not have permission to download this file', 'edd' );
-		wp_die( apply_filters( 'edd_deny_download_message', $error_message, __( 'Purchase Verification Failed', 'edd' ) ) );
+		wp_die( apply_filters( 'edd_deny_download_message', $error_message, __( 'Purchase Verification Failed', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
 
 	exit;
