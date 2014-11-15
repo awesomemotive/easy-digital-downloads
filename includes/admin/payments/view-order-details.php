@@ -339,7 +339,7 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 												<?php echo EDD()->html->product_dropdown( array(
 													'name'   => 'edd-order-download-select',
 													'id'     => 'edd-order-download-select',
-													'chosen' => true
+													'select2'=> true
 												) ); ?>
 											</li>
 
@@ -451,7 +451,9 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 															'name'             => 'edd-payment-address[0][country]',
 															'selected'         => $address['country'],
 															'show_option_all'  => false,
-															'show_option_none' => false
+                                                            'show_option_none' => false,
+                                                            'select2'          => true,
+                                                            'placeholder' => __( 'Select a country', 'edd' )
 														) );
 														?>
 													</p>
@@ -465,7 +467,9 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 																'name'             => 'edd-payment-address[0][state]',
 																'selected'         => $address['state'],
 																'show_option_all'  => false,
-																'show_option_none' => false
+                                                                'show_option_none' => false,
+                                                                'select2'          => true,
+                                                                'placeholder' => __( 'Select a state', 'edd' )
 															) );
 														} else { ?>
 															<input type="text" name="edd-payment-address[0][state]" value="<?php esc_attr_e( $address['state'] ); ?>" class="medium-text"/>

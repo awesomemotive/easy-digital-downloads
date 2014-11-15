@@ -38,7 +38,8 @@ class EDD_HTML_Elements {
 			'class'       => '',
 			'multiple'    => false,
 			'selected'    => 0,
-			'chosen'      => false,
+            'select2'     => false,
+            'placeholder' => sprintf( __( 'Select a %s', 'edd' ), edd_get_label_singular() ),
 			'number'      => 30
 		);
 
@@ -81,7 +82,8 @@ class EDD_HTML_Elements {
 			'class'            => $args['class'],
 			'options'          => $options,
 			'multiple'         => $args['multiple'],
-			'chosen'           => $args['chosen'],
+            'select2'          => $args['select2'],
+            'placeholder'      => $args['placeholder'],
 			'show_option_all'  => false,
 			'show_option_none' => false
 		) );
@@ -105,7 +107,8 @@ class EDD_HTML_Elements {
 			'class'       => '',
 			'multiple'    => false,
 			'selected'    => 0,
-			'chosen'      => true,
+            'select2'     => $args['select2'],
+            'placeholder' => $args['placeholder'],
 			'number'      => 30
 		);
 
@@ -133,7 +136,7 @@ class EDD_HTML_Elements {
 			'class'            => $args['class'] . ' edd-customer-select',
 			'options'          => $options,
 			'multiple'         => $args['multiple'],
-			'chosen'           => $args['chosen'],
+			'select2'          => $args['select2'],
 			'show_option_all'  => false,
 			'show_option_none' => false
 		) );
@@ -284,7 +287,8 @@ class EDD_HTML_Elements {
 			'class'            => '',
 			'id'               => '',
 			'selected'         => 0,
-			'chosen'           => false,
+            'select2'          => false,
+            'placeholder'      => null,
 			'multiple'         => false,
 			'show_option_all'  => _x( 'All', 'all dropdown items', 'edd' ),
 			'show_option_none' => _x( 'None', 'no dropdown items', 'edd' )
@@ -299,11 +303,17 @@ class EDD_HTML_Elements {
 			$multiple = '';
 		}
 
-		if( $args['chosen'] ) {
-			$args['class'] .= ' edd-select-chosen';
+		if( $args['select2'] ) {
+			$args['class'] .= ' edd-select2';
 		}
 
-		$output = '<select name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( sanitize_key( str_replace( '-', '_', $args[ 'id' ] ) ) ) . '" class="edd-select ' . esc_attr( $args[ 'class'] ) . '"' . $multiple . '>';
+        if( $args['placeholder'] ) {
+            $placeholder = $args['placeholder'];
+        } else {
+            $placeholder = '';
+        }
+
+        $output = '<select name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( sanitize_key( str_replace( '-', '_', $args[ 'id' ] ) ) ) . '" class="edd-select ' . esc_attr( $args[ 'class'] ) . '"' . $multiple . ' data-placeholder="' . $placeholder . '">';
 
 		if ( ! empty( $args[ 'options' ] ) ) {
 			if ( $args[ 'show_option_all' ] ) {

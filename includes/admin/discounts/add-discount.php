@@ -73,7 +73,8 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 							'name'        => 'products[]',
 							'id'          => 'products',
 							'multiple'    => true,
-							'chosen'      => true 
+                            'select2'     => true,
+                            'placeholder' => sprintf( __( 'Select one or more %s', 'edd' ), edd_get_label_plural() )
 						) ); ?><br/>
 					</p>
 					<div id="edd-discount-product-conditions" style="display:none;">
@@ -108,7 +109,8 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 						'id'       => 'excluded-products',
 						'selected' => array(),
 						'multiple' => true,
-						'chosen'   => true 
+                        'select2'  => true,
+                        'placeholder' => sprintf( __( 'Select one or more %s', 'edd' ), edd_get_label_plural() )
 					) ); ?><br/>
 					<p class="description"><?php printf( __( '%s that this discount code cannot be applied to.', 'edd' ), edd_get_label_plural() ); ?></p>
 				</td>
