@@ -80,6 +80,10 @@ class EDD_Fees {
 
 		}
 
+		if( 'item' === $args['type'] && ! empty( $args['download_id'] ) ) {
+			unset( $args['download_id'] );
+		}
+
 		$fees = $this->get_fees( 'all' );
 
 		// Determine the key
