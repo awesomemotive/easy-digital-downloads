@@ -138,7 +138,7 @@ class EDD_Fees {
 	public function has_fees( $type = 'fee' ) {
 
 		if( 'all' == $type || 'fee' == $type ) {
-		
+
 			if( ! edd_get_cart_contents() ) {
 				$type = 'item';
 			}
@@ -160,7 +160,7 @@ class EDD_Fees {
 	 * @return mixed array|bool
 	 */
 	public function get_fees( $type = 'fee', $download_id = 0 ) {
-		
+
 		$fees = EDD()->session->get( 'edd_cart_fees' );
 
 		if( ! edd_get_cart_contents() ) {
@@ -171,11 +171,11 @@ class EDD_Fees {
 		if( ! empty( $fees ) && ! empty( $type ) && 'all' !== $type ) {
 
 			foreach( $fees as $key => $fee ) {
-				
+
 				if( ! empty( $fee['type'] ) && $type != $fee['type'] ) {
-				
+
 					unset( $fees[ $key ] );
-				
+
 				}
 
 			}
@@ -183,8 +183,8 @@ class EDD_Fees {
 		}
 
 		if( ! empty( $fees ) && ! empty( $download_id ) ) {
-	
-			// Remove fees that don't belong to the specified Download	
+
+			// Remove fees that don't belong to the specified Download
 			foreach( $fees as $key => $fee ) {
 
 				if( (int) $download_id !== (int) $fee['download_id'] ) {
@@ -192,7 +192,26 @@ class EDD_Fees {
 					unset( $fees[ $key ] );
 
 				}
-			
+
+			}
+
+		}
+
+		if( ! empty( $fees ) ) {
+
+			// Remove fees that belong to a specific download but are not in the cart
+			foreach( $fees as $key => $fee ) {
+
+				if( empty( $fee['download_id'] ) ) {
+					continue;
+				}
+
+				if( ! edd_item_in_cart( $fee['download_id'] ) ) {
+
+					unset( $fees[ $key ] );
+
+				}
+
 			}
 
 		}
