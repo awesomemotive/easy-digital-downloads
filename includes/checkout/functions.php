@@ -20,22 +20,22 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_is_checkout() {
 
-	$checkout   = edd_get_option( 'purchase_page' );
-	$home_shows = get_option( 'show_on_front' );
-	$home_id    = get_option( 'page_on_front' );
+	global $edd_options, $wp_query;
 
-	if( 'page' === $home_shows && (int) $checkout === (int) $home_id && is_front_page() ) {
+	$is_object_set    = isset( $wp_query->queried_object );
+	$is_object_id_set = isset( $wp_query->queried_object_id );
+	$is_checkout      = is_page( edd_get_option( 'purchase_page' ) );
 
-		$is_checkout = true;
+	if( ! $is_object_set ) {
 
-	} elseif( 'page' === $home_shows && is_front_page() ) {
+		unset( $wp_query->queried_object );
+	
+	}
 
-		$is_checkout = false;
-
-	} else {
-
-		$is_checkout = $checkout && is_page( $checkout );
-
+	if( ! $is_object_id_set ) {
+	
+		unset( $wp_query->queried_object_id );
+	
 	}
 
 	return apply_filters( 'edd_is_checkout', $is_checkout );

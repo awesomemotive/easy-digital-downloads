@@ -86,4 +86,4 @@ function edd_redirect_canonical( $redirect_url, $requested_url ) {
 	return $redirect_url;
 
 }
-add_filter( 'redirect_canonical', 'edd_redirect_canonical', 0, 2 );
+//add_filter( 'redirect_canonical', 'edd_redirect_canonical', 0, 2 );
