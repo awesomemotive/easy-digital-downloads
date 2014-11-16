@@ -324,7 +324,7 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 												<?php if ( edd_item_quantities_enabled() ) : ?>
 												<?php echo __( 'Total:', 'edd' ) . '&nbsp;'; ?>
 												<?php endif; ?>
-												<?php echo edd_currency_filter( edd_format_amount( $price ), $currency_code ); ?>
+]												<?php echo edd_currency_filter( edd_format_amount( $price ), $currency_code ); ?>
 											</li>
 
 											<li class="actions">
