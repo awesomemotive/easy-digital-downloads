@@ -138,11 +138,21 @@ function edd_ajax_add_to_cart() {
 
 		foreach ( $to_add as $options ) {
 
-			if( $_POST['download_id'] == $options['price_id'] )
+			if( $_POST['download_id'] == $options['price_id'] ) {
 				$options = array();
+			}
 
 			parse_str( $_POST['post_data'], $post_data );
-			$options['quantity'] = $post_data['edd_download_quantity'];
+
+			if( isset( $options[ 'price_id' ] ) && isset( $post_data[ 'edd_download_quantity_' . $options[ 'price_id' ] ] ) ) {
+
+				$options['quantity'] = absint( $post_data[ 'edd_download_quantity_' . $options[ 'price_id' ] ] );
+
+			} else {
+
+				$options['quantity'] = $post_data['edd_download_quantity'];
+
+			}
 
 			$key = edd_add_to_cart( $_POST['download_id'], $options );
 
