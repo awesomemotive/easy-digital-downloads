@@ -115,7 +115,7 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 #edd-edit-order-form .column,
 #edd-purchased-files .row > ul > li,
 #edd-purchased-files .inside > ul > li { display: inline-block; position: relative; vertical-align: top; margin-right: 5%; }
-#edd-purchased-files li.actions { text-align: right; }
+#edd-purchased-files li.actions { text-align: right; min-width: 200px; }
 #edd-purchased-files ul li.remove { text-align: right; }
 #edd-purchased-files .row { padding: 12px; border-bottom: 1px solid #eee; }
 #edd-purchased-files ul { font-size: 0; }
@@ -157,7 +157,7 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 	}
 	#edd-edit-order-form .columns-4 .column, #edd-purchased-files.columns-4 .row > ul > li,
 	#edd-purchased-files.columns-4 .inside > ul > li {
-		width: 23%; margin-right: 2%;
+		width: 22%; margin-right: 2%;
 	}
 	#edd-edit-order-form .columns-3 .column:nth-child(2n+1),
 	#edd-edit-order-form .columns-4 .column:nth-child(3n+1),
