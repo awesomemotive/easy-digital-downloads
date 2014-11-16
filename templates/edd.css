@@ -243,6 +243,9 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 .edd_download_purchase_form .edd_price_options ul { margin: 0; padding: 0; list-style: none; }
 .edd_download_purchase_form .edd_price_options li { display: block; padding: 0; margin: 0; }
 .edd_download_purchase_form .edd_price_options span { display: inline; padding: 0; margin: 0; }
+.edd_download_purchase_form .edd_price_options .edd_download_quantity_wrapper { padding-left:18px; }
+.edd_download_purchase_form .edd_price_options .edd_download_quantity_wrapper * { font-size:80%; }
+.edd_download_purchase_form .edd_price_options .edd-item-quantity { display: inline; width: 50px; }
 
 .edd-submit, #edd-purchase-button, input[type="submit"].edd-submit {
   display: inline-block;
