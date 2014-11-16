@@ -109,7 +109,7 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 						'id'       => 'excluded-products',
 						'selected' => array(),
 						'multiple' => true,
-                        'select2'  => true,
+                        'chosen'   => true,
                         'placeholder' => sprintf( __( 'Select one or more %s', 'edd' ), edd_get_label_plural() )
 					) ); ?><br/>
 					<p class="description"><?php printf( __( '%s that this discount code cannot be applied to.', 'edd' ), edd_get_label_plural() ); ?></p>
