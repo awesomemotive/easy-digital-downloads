@@ -91,7 +91,7 @@ function edd_admin_footer_for_thickbox() {
 			<div class="wrap" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
 				<p><?php echo sprintf( __( 'Use the form below to insert the short code for purchasing a %s', 'edd' ), edd_get_label_singular() ); ?></p>
 				<div>
-					<?php echo EDD()->html->product_dropdown( array( 'select2' => true )); ?>
+					<?php echo EDD()->html->product_dropdown( array( 'chosen' => true )); ?>
 				</div>
 				<?php if( edd_shop_supports_buy_now() ) : ?>
 					<div>
