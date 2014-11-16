@@ -38,14 +38,8 @@ class EDD_HTML_Elements {
 			'class'       => '',
 			'multiple'    => false,
 			'selected'    => 0,
-<<<<<<< HEAD
-            'select2'     => false,
-            'placeholder' => sprintf( __( 'Select a %s', 'edd' ), edd_get_label_singular() ),
-=======
 			'chosen'      => false,
-			'select2'     => false,
 			'placeholder' => sprintf( __( 'Select a %s', 'edd' ), edd_get_label_singular() ),
->>>>>>> parent of 0e3c3a6... Remove chosen
 			'number'      => 30
 		);
 
@@ -87,9 +81,8 @@ class EDD_HTML_Elements {
 			'id'               => $args['id'],
 			'class'            => $args['class'],
 			'options'          => $options,
+			'chosen'           => $args['chosen'],
 			'multiple'         => $args['multiple'],
-<<<<<<< HEAD
-            'select2'          => $args['select2'],
             'placeholder'      => $args['placeholder'],
 			'show_option_all'  => false,
 			'show_option_none' => false
@@ -143,10 +136,7 @@ class EDD_HTML_Elements {
 			'class'            => $args['class'] . ' edd-customer-select',
 			'options'          => $options,
 			'multiple'         => $args['multiple'],
-=======
 			'chosen'           => $args['chosen'],
->>>>>>> parent of 0e3c3a6... Remove chosen
-			'select2'          => $args['select2'],
 			'show_option_all'  => false,
 			'show_option_none' => false
 		) );
@@ -297,14 +287,8 @@ class EDD_HTML_Elements {
 			'class'            => '',
 			'id'               => '',
 			'selected'         => 0,
-<<<<<<< HEAD
-            'select2'          => false,
-            'placeholder'      => null,
-=======
 			'chosen'           => false,
-			'select2'          => false,
 			'placeholder'      => null,
->>>>>>> parent of 0e3c3a6... Remove chosen
 			'multiple'         => false,
 			'show_option_all'  => _x( 'All', 'all dropdown items', 'edd' ),
 			'show_option_none' => _x( 'None', 'no dropdown items', 'edd' )
@@ -321,10 +305,6 @@ class EDD_HTML_Elements {
 
 		if( $args['chosen'] ) {
 			$args['class'] .= ' edd-select-chosen';
-		}
-
-		if( $args['select2'] ) {
-			$args['class'] .= ' edd-select2';
 		}
 
         if( $args['placeholder'] ) {

@@ -87,7 +87,7 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 							'id'          => 'products',
 							'selected'    => $product_reqs,
 							'multiple'    => true,
-                            'select2'     => true,
+                            'chosen'      => true,
                             'placeholder' => sprintf( __( 'Select one or more %s', 'edd' ), edd_get_label_plural() )
 						) ); ?><br/>
 					</p>

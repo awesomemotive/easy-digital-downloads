@@ -361,13 +361,8 @@ jQuery(document).ready(function ($) {
 				e.preventDefault();
 
 				var download_id    = $('#edd_order_download_select').val();
-<<<<<<< HEAD
-				var download_title = $('.select2-chosen').text();
-                var amount         = $('#edd-order-download-amount').val();
-=======
 				var download_title = $('.chosen-single span').text();
 				var amount         = $('#edd-order-download-amount').val();
->>>>>>> parent of 0e3c3a6... Remove chosen
 				var price_id       = $('.edd_price_options_select option:selected').val();
 				var price_name     = $('.edd_price_options_select option:selected').text();
 				var quantity       = $('#edd-order-download-quantity').val();
@@ -975,18 +970,6 @@ jQuery(document).ready(function ($) {
 
 	});
 
-<<<<<<< HEAD
-    // Setup Select2
-    if ($('.edd-select2').attr('multiple')) {
-        $('.edd-select2').select2({
-            dropdownAutoWidth: true,
-        });
-    } else {
-        $('.edd-select2').select2({
-            dropdownAutoWidth: true,
-        });
-    }
-=======
     // Setup Chosen menus
     $('.edd-select-chosen').chosen({
     	inherit_select_classes: true,
@@ -999,24 +982,10 @@ jQuery(document).ready(function ($) {
         $(this).children('li').children('input').attr( 'placeholder', edd_vars.type_to_search );
     });
 
-	// Setup Select2
-	if ($('.edd-select2').attr('multiple')) {
-		$('.edd-select2').select2({
-			dropdownAutoWidth: true,
-		});
-	} else {
-		$('.edd-select2').select2({
-			dropdownAutoWidth: true,
-		});
-	}
->>>>>>> parent of 0e3c3a6... Remove chosen
-
 	// Variables for setting up the typing timer
 	var typingTimer;               // Timer identifier
 	var doneTypingInterval = 342;  // Time in ms, Slow - 521ms, Moderate - 342ms, Fast - 300ms
 
-<<<<<<< HEAD
-=======
     // Replace options with search results
 	$('.edd-select.chosen-container .chosen-search input, .edd-select.chosen-container .search-field input').keyup(function(e) {
 
@@ -1085,7 +1054,6 @@ jQuery(document).ready(function ($) {
 	$( '#post' ).on( 'click', '.edd-thickbox', function() {
 		$( '.edd-select-chosen', '#choose-download' ).css( 'width', '100%' );
 	});
->>>>>>> parent of 0e3c3a6... Remove chosen
 
 	/**
 	 * Tools screen JS

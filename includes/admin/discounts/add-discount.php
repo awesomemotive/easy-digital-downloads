@@ -73,7 +73,7 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 							'name'        => 'products[]',
 							'id'          => 'products',
 							'multiple'    => true,
-                            'select2'     => true,
+                            'chosen'      => true,
                             'placeholder' => sprintf( __( 'Select one or more %s', 'edd' ), edd_get_label_plural() )
 						) ); ?><br/>
 					</p>
