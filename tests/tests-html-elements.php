@@ -46,7 +46,7 @@ class Test_HTML_Elements extends WP_UnitTestCase {
 
 	public function test_month_dropdown() {
 		$out = EDD()->html->month_dropdown();
-		$this->assertContains( '<select name="month" id="" class="edd-select ">', $out );
+		$this->assertContains( '<select name="month" id="" class="edd-select "', $out );
 		$this->assertContains( '<option value="1"', $out );
 		$this->assertContains( '<option value="2"', $out );
 		$this->assertContains( '<option value="3"', $out );
