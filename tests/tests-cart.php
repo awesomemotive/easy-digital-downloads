@@ -7,6 +7,7 @@ class Test_Cart extends WP_UnitTestCase {
 	protected $_rewrite = null;
 
 	protected $_post = null;
+	protected $_discount = null;
 
 	public function setUp() {
 		parent::setUp();
@@ -64,6 +65,22 @@ class Test_Cart extends WP_UnitTestCase {
 		}
 
 		$this->_post = get_post( $post_id );
+
+		$discount = array(
+			'code' => '20OFF',
+			'uses' => 54,
+			'max' => 10,
+			'name' => '20 Percent Off',
+			'type' => 'percent',
+			'amount' => '20',
+			'start' => '12/12/2010 00:00:00',
+			'expiration' => '12/31/2050 00:00:00',
+			'min_price' => 128,
+			'status' => 'active',
+			'product_condition' => 'all'
+		);
+
+		$this->_discount = edd_store_discount( $discount );
 	}
 
 	public function test_endpoints() {
@@ -79,9 +96,17 @@ class Test_Cart extends WP_UnitTestCase {
 	}
 
 	public function test_get_cart_contents() {
+
+		edd_empty_cart();
+
+		$options = array(
+			'price_id' => 0
+		);
+		edd_add_to_cart( $this->_post->ID, $options );
+
 		$expected = array(
 			'0' => array(
-				'id' => $this->_post->ID - 1,
+				'id' => $this->_post->ID,
 				'options' => array(
 					'price_id' => 0
 				),
@@ -90,6 +115,121 @@ class Test_Cart extends WP_UnitTestCase {
 		);
 
 		$this->assertEquals($expected, edd_get_cart_contents());
+	}
+
+	public function test_get_cart_content_details() {
+
+		edd_empty_cart();
+
+		$options = array(
+			'price_id' => 0
+		);
+		edd_add_to_cart( $this->_post->ID, $options );
+
+		$expected = array(
+			'0' => array(
+				'name' => 'Test Download',
+				'id' => $this->_post->ID,
+				'item_number' => array(
+					'options' => array(
+						'price_id' => '0'
+					),
+					'id' => $this->_post->ID,
+					'quantity' => 1,
+				),
+				'item_price' => '20.0',
+				'quantity' => 1,
+				'discount' => '0.0',
+				'subtotal' => '20.0',
+				'tax' => 0,
+				'fees' => array(),
+				'price' => '20.0'
+			)
+		);
+
+		$this->assertEquals( $expected, edd_get_cart_content_details() );
+
+		// Now set a discount and test again
+		edd_set_cart_discount( '20OFF' );
+
+		$expected = array(
+			'0' => array(
+				'name' => 'Test Download',
+				'id' => $this->_post->ID,
+				'item_number' => array(
+					'options' => array(
+						'price_id' => '0'
+					),
+					'id' => $this->_post->ID,
+					'quantity' => 1,
+				),
+				'item_price' => '20.0',
+				'quantity' => 1,
+				'discount' => '4.0',
+				'subtotal' => '20.0',
+				'tax' => 0,
+				'fees' => array(),
+				'price' => '16.0'
+			)
+		);
+
+		$this->assertEquals( $expected, edd_get_cart_content_details() );
+	
+		// Now turn on taxes and do it again
+		add_filter( 'edd_use_taxes', '__return_true' );
+		add_filter( 'edd_tax_rate', function() {
+			return 0.20;
+		} );
+
+		$expected = array(
+			'0' => array(
+				'name' => 'Test Download',
+				'id' => $this->_post->ID,
+				'item_number' => array(
+					'options' => array(
+						'price_id' => '0'
+					),
+					'id' => $this->_post->ID,
+					'quantity' => 1,
+				),
+				'item_price' => '20.0',
+				'quantity' => 1,
+				'discount' => '4.0',
+				'subtotal' => '20.0',
+				'tax' => '3.2',
+				'fees' => array(),
+				'price' => '19.2'
+			)
+		);
+
+		$this->assertEquals( $expected, edd_get_cart_content_details() );
+
+		// Now remove the discount code and test with taxes again
+		edd_unset_cart_discount( '20OFF' );
+
+		$expected = array(
+			'0' => array(
+				'name' => 'Test Download',
+				'id' => $this->_post->ID,
+				'item_number' => array(
+					'options' => array(
+						'price_id' => '0'
+					),
+					'id' => $this->_post->ID,
+					'quantity' => 1,
+				),
+				'item_price' => '20.0',
+				'quantity' => 1,
+				'discount' => '0.0',
+				'subtotal' => '20.0',
+				'tax' => '4.0',
+				'fees' => array(),
+				'price' => '24.0'
+			)
+		);
+
+		$this->assertEquals( $expected, edd_get_cart_content_details() );
+
 	}
 
 	public function test_cart_quantity() {
@@ -144,6 +284,10 @@ class Test_Cart extends WP_UnitTestCase {
 
 	public function test_cart_item_price() {
 		$this->assertEquals( '&#036;0.00' , edd_cart_item_price( 0 ) );
+	}
+
+	public function test_get_cart_item_price() {
+		$this->assertEquals( '0.00' , edd_get_cart_item_price( 0 ) );
 	}
 
 	public function test_remove_from_cart() {

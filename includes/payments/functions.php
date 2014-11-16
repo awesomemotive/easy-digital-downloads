@@ -79,6 +79,19 @@ function edd_get_payment_by( $field = '', $value = '' ) {
 			}
 
 			break;
+			
+		case 'payment_number':
+			$payment = edd_get_payments( array(
+				'meta_key'       => '_edd_payment_number',
+				'meta_value'     => $value,
+				'posts_per_page' => 1
+			) );
+
+			if( $payment ) {
+				$payment = $payment[0];
+			}
+
+			break;
 
 		default:
 			return false;
@@ -868,7 +881,7 @@ function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files =
 	$payment_meta = edd_get_payment_meta( $payment_id );
 	$cart_details = ! empty( $payment_meta['cart_details'] ) ? maybe_unserialize( $payment_meta['cart_details'] ) : array();
 
-	if( ! empty( $cart_details ) ) {
+	if( ! empty( $cart_details ) && is_array( $cart_details ) ) {
 
 		foreach( $cart_details as $key => $cart_item ) {
 
@@ -910,7 +923,7 @@ function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files =
 
 	}
 
-	return apply_filters( 'edd_payment_meta_cart_details', $cart_details );
+	return apply_filters( 'edd_payment_meta_cart_details', $cart_details, $payment_id );
 }
 
 /**
@@ -1008,6 +1021,31 @@ function edd_get_payment_gateway( $payment_id ) {
 	$gateway = edd_get_payment_meta( $payment_id, '_edd_payment_gateway', true );
 
 	return apply_filters( 'edd_payment_gateway', $gateway );
+}
+
+/**
+ * Get the currency code a payment was made in
+ *
+ * @since 2.2
+ * @param int $payment_id Payment ID
+ * @return string $currency The currency code
+ */
+function edd_get_payment_currency_code( $payment_id = 0 ) {
+	$meta     = edd_get_payment_meta( $payment_id );
+	$currency = isset( $meta['currency'] ) ? $meta['currency'] : edd_get_currency();
+	return apply_filters( 'edd_payment_currency_code', $currency, $payment_id );
+}
+
+/**
+ * Get the currency name a payment was made in
+ *
+ * @since 2.2
+ * @param int $payment_id Payment ID
+ * @return string $currency The currency name
+ */
+function edd_get_payment_currency( $payment_id = 0 ) {
+	$currency = edd_get_payment_currency_code( $payment_id );
+	return apply_filters( 'edd_payment_currency', edd_get_currency_name( $currency ), $payment_id );
 }
 
 /**
@@ -1117,7 +1155,7 @@ function edd_get_next_payment_number() {
  */
 function edd_payment_amount( $payment_id = 0 ) {
 	$amount = edd_get_payment_amount( $payment_id );
-	return edd_currency_filter( edd_format_amount( $amount ) );
+	return edd_currency_filter( edd_format_amount( $amount ), edd_get_payment_currency_code( $payment_id ) );
 }
 /**
  * Get the amount associated with a payment
@@ -1158,7 +1196,7 @@ function edd_get_payment_amount( $payment_id ) {
 function edd_payment_subtotal( $payment_id = 0 ) {
 	$subtotal = edd_get_payment_subtotal( $payment_id );
 
-	return edd_currency_filter( edd_format_amount( $subtotal ) );
+	return edd_currency_filter( edd_format_amount( $subtotal ), edd_get_payment_currency_code( $payment_id ) );
 }
 
 /**
@@ -1212,7 +1250,7 @@ function edd_get_payment_subtotal( $payment_id = 0) {
 function edd_payment_tax( $payment_id = 0, $payment_meta = false ) {
 	$tax = edd_get_payment_tax( $payment_id, $payment_meta );
 
-	return edd_currency_filter( edd_format_amount( $tax ) );
+	return edd_currency_filter( edd_format_amount( $tax ), edd_get_payment_currency_code( $payment_id ) );
 }
 
 /**
@@ -1247,7 +1285,7 @@ function edd_get_payment_fees( $payment_id = 0, $type = 'all' ) {
 	$fees = array();
 	$payment_fees = isset( $payment_meta['fees'] ) ? $payment_meta['fees'] : false;
 
-	if ( ! empty( $payment_fees ) ) {
+	if ( ! empty( $payment_fees ) && is_array( $payment_fees ) ) {
 
 		foreach ( $payment_fees as $fee_id => $fee ) {
 
@@ -1344,11 +1382,13 @@ function edd_get_payment_notes( $payment_id = 0, $search = '' ) {
 		return false;
 	}
 
-	remove_filter( 'comments_clauses', 'edd_hide_payment_notes', 10, 2 );
+	remove_action( 'pre_get_comments', 'edd_hide_payment_notes', 10 );
+	remove_filter( 'comments_clauses', 'edd_hide_payment_notes_pre_41', 10, 2 );
 
 	$notes = get_comments( array( 'post_id' => $payment_id, 'order' => 'ASC', 'search' => $search ) );
 
-	add_filter( 'comments_clauses', 'edd_hide_payment_notes', 10, 2 );
+	add_action( 'pre_get_comments', 'edd_hide_payment_notes', 10 );
+	add_filter( 'comments_clauses', 'edd_hide_payment_notes_pre_41', 10, 2 );
 
 	return $notes;
 }
@@ -1454,17 +1494,41 @@ function edd_get_payment_note_html( $note, $payment_id = 0 ) {
  * Comments widgets
  *
  * @since 1.4.1
+ * @param obj $query WordPress Comment Query Object
+ * @return void
+ */
+function edd_hide_payment_notes( $query ) {
+    global $wp_version;
+
+	if( version_compare( floatval( $wp_version ), '4.1', '>=' ) ) {
+		$types = isset( $query->query_vars['type__not_in'] ) ? $query->query_vars['type__not_in'] : array();
+		if( ! is_array( $types ) ) {
+			$types = array( $types );
+		}
+		$types[] = 'edd_payment_note';
+		$query->query_vars['type__not_in'] = $types;
+	}
+}
+add_action( 'pre_get_comments', 'edd_hide_payment_notes', 10 );
+
+/**
+ * Exclude notes (comments) on edd_payment post type from showing in Recent
+ * Comments widgets
+ *
+ * @since 2.2
  * @param array $clauses Comment clauses for comment query
  * @param obj $wp_comment_query WordPress Comment Query Object
  * @return array $clauses Updated comment clauses
  */
-function edd_hide_payment_notes( $clauses, $wp_comment_query ) {
-    global $wpdb;
+function edd_hide_payment_notes_pre_41( $clauses, $wp_comment_query ) {
+    global $wpdb, $wp_version;
 
-	$clauses['where'] .= ' AND comment_type != "edd_payment_note"';
+	if( version_compare( floatval( $wp_version ), '4.1', '<' ) ) {
+		$clauses['where'] .= ' AND comment_type != "edd_payment_note"';
+	}
     return $clauses;
 }
-add_filter( 'comments_clauses', 'edd_hide_payment_notes', 10, 2 );
+add_filter( 'comments_clauses', 'edd_hide_payment_notes_pre_41', 10, 2 );
 
 
 /**

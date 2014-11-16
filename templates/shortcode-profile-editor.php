@@ -27,54 +27,54 @@ if ( is_user_logged_in() ):
 			<span id="edd_profile_name_label"><legend><?php _e( 'Change your Name', 'edd' ); ?></legend></span>
 			<p id="edd_profile_name_wrap">
 				<label for="edd_first_name"><?php _e( 'First Name', 'edd' ); ?></label>
-				<input name="edd_first_name" id="edd_first_name" class="text edd-input" type="text" value="<?php echo $first_name; ?>" />
+				<input name="edd_first_name" id="edd_first_name" class="text edd-input" type="text" value="<?php echo esc_attr( $first_name ); ?>" />
 				<br />
 				<label for="edd_last_name"><?php _e( 'Last Name', 'edd' ); ?></label>
-				<input name="edd_last_name" id="edd_last_name" class="text edd-input" type="text" value="<?php echo $last_name; ?>" />
+				<input name="edd_last_name" id="edd_last_name" class="text edd-input" type="text" value="<?php echo esc_attr( $last_name ); ?>" />
 			</p>
 			<p id="edd_profile_display_name_wrap">
 				<label for="edd_display_name"><?php _e( 'Display Name', 'edd' ); ?></label>
 				<select name="edd_display_name" id="edd_display_name" class="select edd-select">
 					<?php if ( ! empty( $current_user->first_name ) ): ?>
-					<option <?php selected( $display_name, $current_user->first_name ); ?> value="<?php echo $current_user->first_name; ?>"><?php echo $current_user->first_name; ?></option>
+					<option <?php selected( $display_name, $current_user->first_name ); ?> value="<?php echo esc_attr( $current_user->first_name ); ?>"><?php echo esc_html( $current_user->first_name ); ?></option>
 					<?php endif; ?>
-					<option <?php selected( $display_name, $current_user->user_nicename ); ?> value="<?php echo $current_user->user_nicename; ?>"><?php echo $current_user->user_nicename; ?></option>
+					<option <?php selected( $display_name, $current_user->user_nicename ); ?> value="<?php echo esc_attr( $current_user->user_nicename ); ?>"><?php echo esc_html( $current_user->user_nicename ); ?></option>
 					<?php if ( ! empty( $current_user->last_name ) ): ?>
-					<option <?php selected( $display_name, $current_user->last_name ); ?> value="<?php echo $current_user->last_name; ?>"><?php echo $current_user->last_name; ?></option>
+					<option <?php selected( $display_name, $current_user->last_name ); ?> value="<?php echo esc_attr( $current_user->last_name ); ?>"><?php echo esc_html( $current_user->last_name ); ?></option>
 					<?php endif; ?>
 					<?php if ( ! empty( $current_user->first_name ) && ! empty( $current_user->last_name ) ): ?>
-					<option <?php selected( $display_name, $current_user->first_name . ' ' . $current_user->last_name ); ?> value="<?php echo $current_user->first_name . ' ' . $current_user->last_name; ?>"><?php echo $current_user->first_name . ' ' . $current_user->last_name; ?></option>
-					<option <?php selected( $display_name, $current_user->last_name . ' ' . $current_user->first_name ); ?> value="<?php echo $current_user->last_name . ' ' . $current_user->first_name; ?>"><?php echo $current_user->last_name . ' ' . $current_user->first_name; ?></option>
+					<option <?php selected( $display_name, $current_user->first_name . ' ' . $current_user->last_name ); ?> value="<?php echo esc_attr( $current_user->first_name . ' ' . $current_user->last_name ); ?>"><?php echo esc_html( $current_user->first_name . ' ' . $current_user->last_name ); ?></option>
+					<option <?php selected( $display_name, $current_user->last_name . ' ' . $current_user->first_name ); ?> value="<?php echo esc_attr( $current_user->last_name . ' ' . $current_user->first_name ); ?>"><?php echo esc_html( $current_user->last_name . ' ' . $current_user->first_name ); ?></option>
 					<?php endif; ?>
 				</select>
 			</p>
 			<p>
 				<label for="edd_email"><?php _e( 'Email Address', 'edd' ); ?></label>
-				<input name="edd_email" id="edd_email" class="text edd-input required" type="email" value="<?php echo $current_user->user_email; ?>" />
+				<input name="edd_email" id="edd_email" class="text edd-input required" type="email" value="<?php echo esc_attr( $current_user->user_email ); ?>" />
 			</p>
 			<span id="edd_profile_billing_address_label"><legend><?php _e( 'Change your Billing Address', 'edd' ); ?></legend></span>
 			<p id="edd_profile_billing_address_wrap">
 				<label for="edd_address_line1"><?php _e( 'Line 1', 'edd' ); ?></label>
-				<input name="edd_address_line1" id="edd_address_line1" class="text edd-input" type="text" value="<?php echo $address['line1']; ?>" />
+				<input name="edd_address_line1" id="edd_address_line1" class="text edd-input" type="text" value="<?php echo esc_attr( $address['line1'] ); ?>" />
 				<br/>
 				<label for="edd_address_line2"><?php _e( 'Line 2', 'edd' ); ?></label>
-				<input name="edd_address_line2" id="edd_address_line2" class="text edd-input" type="text" value="<?php echo $address['line2']; ?>" />
+				<input name="edd_address_line2" id="edd_address_line2" class="text edd-input" type="text" value="<?php echo esc_attr( $address['line2'] ); ?>" />
 				<br/>
 				<label for="edd_address_city"><?php _e( 'City', 'edd' ); ?></label>
-				<input name="edd_address_city" id="edd_address_city" class="text edd-input" type="text" value="<?php echo $address['city']; ?>" />
+				<input name="edd_address_city" id="edd_address_city" class="text edd-input" type="text" value="<?php echo esc_attr( $address['city'] ); ?>" />
 				<br/>
 				<label for="edd_address_zip"><?php _e( 'Zip / Postal Code', 'edd' ); ?></label>
-				<input name="edd_address_zip" id="edd_address_zip" class="text edd-input" type="text" value="<?php echo $address['zip']; ?>" />
+				<input name="edd_address_zip" id="edd_address_zip" class="text edd-input" type="text" value="<?php echo esc_attr( $address['zip'] ); ?>" />
 				<br/>
 				<label for="edd_address_country"><?php _e( 'Country', 'edd' ); ?></label>
 				<select name="edd_address_country" id="edd_address_country" class="select edd-select">
 					<?php foreach( edd_get_country_list() as $key => $country ) : ?>
-					<option value="<?php echo $key; ?>"<?php selected( $address['country'], $key ); ?>><?php echo $country; ?></option>
+					<option value="<?php echo $key; ?>"<?php selected( $address['country'], $key ); ?>><?php echo esc_html( $country ); ?></option>
 					<?php endforeach; ?>
 				</select>
 				<br/>
 				<label for="edd_address_state"><?php _e( 'State / Province', 'edd' ); ?></label>
-				<input name="edd_address_state" id="edd_address_state" class="text edd-input" type="text" value="<?php echo $address['state']; ?>" />
+				<input name="edd_address_state" id="edd_address_state" class="text edd-input" type="text" value="<?php echo esc_attr( $address['state'] ); ?>" />
 				<br/>
 			</p>
 			<span id="edd_profile_password_label"><legend><?php _e( 'Change your Password', 'edd' ); ?></legend></span>

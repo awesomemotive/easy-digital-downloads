@@ -17,7 +17,7 @@ __Please Note:__ GitHub is for bug reports and contributions only - if you have 
 
 * Fork the repository on GitHub
 * Make the changes to your forked repository
-  * Ensure you stick to the [WordPress Coding Standards](http://codex.wordpress.org/WordPress_Coding_Standards)
+  * Ensure you stick to the [WordPress Coding Standards](https://codex.wordpress.org/WordPress_Coding_Standards)
 * When committing, reference your issue (if present) and include a note about the fix
 * If possible, and if applicable, please also add/update unit tests for your changes
 * Push the changes to your fork and submit a pull request to the 'master' branch of the EDD repository

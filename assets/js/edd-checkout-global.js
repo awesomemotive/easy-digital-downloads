@@ -282,8 +282,8 @@ jQuery(document).ready(function($) {
     $body.find('#edd_show_discount').show();
 
     // Update the checkout when item quantities are updated
-    $('#edd_checkout_cart').on('change', '.edd-item-quantity', function (event) {
-
+    $(document).on('change', '.edd-item-quantity', function (event) {
+		
         var $this = $(this),
             quantity = $this.val(),
             key = $this.data('key'),
