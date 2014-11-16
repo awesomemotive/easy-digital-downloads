@@ -25,8 +25,8 @@ function edd_setup_edd_post_types() {
 	$rewrite  = defined( 'EDD_DISABLE_REWRITE' ) && EDD_DISABLE_REWRITE ? false : array('slug' => $slug, 'with_front' => false);
 
 	$download_labels =  apply_filters( 'edd_download_labels', array(
-		'name' 				=> '%2$s',
-		'singular_name' 	=> '%1$s',
+		'name' 				=> _x( '%2$s', 'download post type name', 'edd' ),
+		'singular_name' 	=> _x( '%1$s', 'singular download post type name', 'edd' ),
 		'add_new' 			=> __( 'Add New', 'edd' ),
 		'add_new_item' 		=> __( 'Add New %1$s', 'edd' ),
 		'edit_item' 		=> __( 'Edit %1$s', 'edd' ),
@@ -37,7 +37,7 @@ function edd_setup_edd_post_types() {
 		'not_found' 		=> __( 'No %2$s found', 'edd' ),
 		'not_found_in_trash'=> __( 'No %2$s found in Trash', 'edd' ),
 		'parent_item_colon' => '',
-		'menu_name' 		=> __( '%2$s', 'edd' )
+		'menu_name' 		=> _x( '%2$s', 'download post type menu name', 'edd' )
 	) );
 
 	foreach ( $download_labels as $key => $value ) {
@@ -172,7 +172,7 @@ function edd_change_default_title( $title ) {
      // If a frontend plugin uses this filter (check extensions before changing this function)
      if ( !is_admin() ) {
      	$label = edd_get_label_singular();
-        $title = sprintf( __( 'Enter %s title here', 'edd' ), $label );
+        $title = sprintf( __( 'Enter %s name here', 'edd' ), $label );
      	return $title;
      }
      
@@ -180,7 +180,7 @@ function edd_change_default_title( $title ) {
 
      if  ( 'download' == $screen->post_type ) {
      	$label = edd_get_label_singular();
-        $title = sprintf( __( 'Enter %s title here', 'edd' ), $label );
+        $title = sprintf( __( 'Enter %s name here', 'edd' ), $label );
      }
 
      return $title;

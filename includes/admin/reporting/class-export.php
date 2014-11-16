@@ -169,7 +169,7 @@ class EDD_Export {
 	 */
 	public function export() {
 		if ( ! $this->can_export() )
-			wp_die( __( 'You do not have permission to export data.', 'edd' ), __( 'Error', 'edd' ) );
+			wp_die( __( 'You do not have permission to export data.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 
 		// Set headers
 		$this->headers();
