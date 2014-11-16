@@ -109,6 +109,12 @@ class Tests_Filters extends WP_UnitTestCase {
 	public function test_edd_purchase_link_top() {
 		global $wp_filter;
 		$this->assertarrayHasKey( 'edd_purchase_variable_pricing', $wp_filter['edd_purchase_link_top'][10] );
+		$this->assertarrayHasKey( 'edd_download_purchase_form_quantity_field', $wp_filter['edd_purchase_link_top'][10] );
+	}
+
+	public function test_edd_after_price_option() {
+		global $wp_filter;
+		$this->assertarrayHasKey( 'edd_variable_price_quantity_field', $wp_filter['edd_after_price_option'][10] );
 	}
 
 	public function test_edd_downloads_excerpt() {
