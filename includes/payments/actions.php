@@ -82,7 +82,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 	EDD()->customers->increment_stats( $customer_id, $amount );
 
 	// Check for discount codes and increment their use counts
-	if ( isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ) {
+	if ( ! empty( $user_info['discount'] ) && $user_info['discount'] !== 'none' ) {
 
 		$discounts = array_map( 'trim', explode( ',', $user_info['discount'] ) );
 

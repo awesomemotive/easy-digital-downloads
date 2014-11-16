@@ -800,7 +800,7 @@ function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
  * @param string $user User info
  * @return bool
  */
-function edd_is_discount_valid( $code = '', $user = '' ) {
+function edd_is_discount_valid( $code = '', $user = '', $set_error = true ) {
 
 
 	$return      = false;
@@ -820,7 +820,7 @@ function edd_is_discount_valid( $code = '', $user = '' ) {
 			) {
 				$return = true;
 			}
-		} else {
+		} elseif( $set_error ) {
 			edd_set_error( 'edd-discount-error', __( 'This discount is invalid.', 'edd' ) );
 		}
 
@@ -1097,6 +1097,7 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 						$discounted_amount = edd_get_discount_amount( $code_id );
 						$discounted_amount = ( $discounted_amount / edd_get_cart_quantity() );
 						$discounted_price -= $discounted_amount;
+
 					} else {
 
 						$discounted_price -= $price - edd_get_discounted_amount( $discount, $price );
@@ -1273,15 +1274,15 @@ function edd_listen_for_cart_discount() {
 
 	EDD()->session->set( 'preset_discount', $code );
 }
-add_action( 'init', 'edd_listen_for_cart_discount', 500 );
+add_action( 'init', 'edd_listen_for_cart_discount', 0 );
 
 /**
- * When adding to cart, checks if a session is set for a preset discount
- * @param  int $download_id The Download ID
- * @param  array $options   options
+ * Applies the preset discount, if any. This is separated from edd_listen_for_cart_discount() in order to allow items to be
+ * added to the cart and for it to persist across page loads if necessary
+ *
  * @return void
  */
-function edd_apply_preset_discount( $download_id = 0, $options = array() ) {
+function edd_apply_preset_discount() {
 
 	$code = sanitize_text_field( EDD()->session->get( 'preset_discount' ) );
 
@@ -1289,12 +1290,14 @@ function edd_apply_preset_discount( $download_id = 0, $options = array() ) {
 		return;
 	}
 
-	if ( ! edd_is_discount_valid( $code ) ) {
+	if ( ! edd_is_discount_valid( $code, '', false ) ) {
 		return;
 	}
 
-	$code = apply_filters( 'edd_apply_preset_discount', $code, $download_id, $options );
+	$code = apply_filters( 'edd_apply_preset_discount', $code );
 
 	edd_set_cart_discount( $code );
+
+	EDD()->session->set( 'preset_discount', null );
 }
-add_action( 'edd_post_add_to_cart', 'edd_apply_preset_discount', 10, 2 );
+add_action( 'init', 'edd_apply_preset_discount', 999 );

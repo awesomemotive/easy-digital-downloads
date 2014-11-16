@@ -24,14 +24,15 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_download_shortcode( $atts, $content = null ) {
 	global $post, $edd_options;
-	
+
 	$post_id = is_object( $post ) ? $post->ID : 0;
 
 	$atts = shortcode_atts( array(
 		'id' 	        => $post_id,
+		'price_id'      => isset( $atts['price_id'] ) ? $atts['price_id'] : false,
 		'sku'			=> '',
 		'price'         => '1',
-		'paypal_direct' => '0',
+		'direct'        => '0',
 		'text'	        => isset( $edd_options[ 'add_to_cart_text' ] )  && $edd_options[ 'add_to_cart_text' ]    != '' ? $edd_options[ 'add_to_cart_text' ] : __( 'Purchase', 'edd' ),
 		'style'         => isset( $edd_options[ 'button_style' ] ) 	 	? $edd_options[ 'button_style' ] 		: 'button',
 		'color'         => isset( $edd_options[ 'checkout_color' ] ) 	? $edd_options[ 'checkout_color' ] 		: 'blue',
@@ -41,18 +42,22 @@ function edd_download_shortcode( $atts, $content = null ) {
 	$atts, 'purchase_link' );
 
 	// Override color if color == inherit
-	if( isset( $atts['color'] )	)
+	if( isset( $atts['color'] )	) {
 		$atts['color'] = ( $atts['color'] == 'inherit' ) ? '' : $atts['color'];
+	}
 
-	if( isset( $atts['id'] ) ) {
+	if( ! empty( $atts['sku'] ) ) {
+
+		$download = edd_get_download_by( 'sku', $atts['sku'] );
+		$atts['download_id'] = $download->ID;
+
+	} elseif( isset( $atts['id'] ) ) {
+
 		// Edd_get_purchase_link() expects the ID to be download_id since v1.3
 		$atts['download_id'] = $atts['id'];
 
 		$download = edd_get_download( $atts['download_id'] );
-	} elseif( isset( $atts['sku'] ) ) {
-		$download = edd_get_download_by( 'sku', $atts['sku'] );
 
-		$atts['download_id'] = $download->ID;
 	}
 
 	if ( $download ) {
@@ -544,13 +549,15 @@ add_shortcode( 'downloads', 'edd_downloads_query' );
 function edd_download_price_shortcode( $atts, $content = null ) {
 	extract( shortcode_atts( array(
 			'id' => NULL,
+			'price_id' => false,
 		), $atts, 'edd_price' )
 	);
 
-	if ( is_null( $id ) )
+	if ( is_null( $id ) ) {
 		$id = get_the_ID();
+	}
 
-	return edd_price( $id, false );
+	return edd_price( $id, false, $price_id );
 }
 add_shortcode( 'edd_price', 'edd_download_price_shortcode' );
 

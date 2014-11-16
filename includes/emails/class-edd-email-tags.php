@@ -387,17 +387,25 @@ function edd_email_tag_download_list( $payment_id ) {
 				$sku = edd_get_download_sku( $item['id'] );
 			}
 
+			if ( edd_item_quantities_enabled() ) {
+				$quantity = $item['quantity'];
+			}
+
 			$price_id = edd_get_cart_item_price_id( $item );
 			if ( $show_names ) {
 
 				$title = '<strong>' . get_the_title( $item['id'] ) . '</strong>';
+
+				if ( ! empty( $quantity ) && $quantity > 1 ) {
+					$title .= "&nbsp;&ndash;&nbsp;" . __( 'Quantity', 'edd' ) . ': ' . $quantity;
+				}
 
 				if ( ! empty( $sku ) ) {
 					$title .= "&nbsp;&ndash;&nbsp;" . __( 'SKU', 'edd' ) . ': ' . $sku;
 				}
 
 				if ( $price_id !== null ) {
-					$title .= "&nbsp;&ndash;&nbsp;" . edd_get_price_option_name( $item['id'], $price_id );
+					$title .= "&nbsp;&ndash;&nbsp;" . edd_get_price_option_name( $item['id'], $price_id, $payment_id );
 				}
 
 				$download_list .= '<li>' . apply_filters( 'edd_email_receipt_download_title', $title, $item, $price_id, $payment_id ) . '<br/>';
@@ -418,7 +426,7 @@ function edd_email_tag_download_list( $payment_id ) {
 
 			} elseif ( edd_is_bundled_product( $item['id'] ) ) {
 
-				$bundled_products = edd_get_bundled_products( $item['id'] );
+				$bundled_products = apply_filters( 'edd_email_tag_bundled_products', edd_get_bundled_products( $item['id'] ), $item, $payment_id, 'download_list' );
 
 				foreach ( $bundled_products as $bundle_item ) {
 
@@ -475,17 +483,25 @@ function edd_email_tag_download_list_plain( $payment_id ) {
 				$sku = edd_get_download_sku( $item['id'] );
 			}
 
+			if ( edd_item_quantities_enabled() ) {
+				$quantity = $item['quantity'];
+			}
+
 			$price_id = edd_get_cart_item_price_id( $item );
 			if ( $show_names ) {
 
 				$title = get_the_title( $item['id'] );
+
+				if ( ! empty( $quantity ) && $quantity > 1 ) {
+					$title .= __( 'Quantity', 'edd' ) . ': ' . $quantity;
+				}
 
 				if ( ! empty( $sku ) ) {
 					$title .= __( 'SKU', 'edd' ) . ': ' . $sku;
 				}
 
 				if ( $price_id !== null ) {
-					$title .= edd_get_price_option_name( $item['id'], $price_id );
+					$title .= edd_get_price_option_name( $item['id'], $price_id, $payment_id );
 				}
 
 				$download_list .= "\n";
@@ -507,7 +523,7 @@ function edd_email_tag_download_list_plain( $payment_id ) {
 
 			} elseif ( edd_is_bundled_product( $item['id'] ) ) {
 
-				$bundled_products = edd_get_bundled_products( $item['id'] );
+				$bundled_products = apply_filters( 'edd_email_tag_bundled_products', edd_get_bundled_products( $item['id'] ), $item, $payment_id, 'download_list' );
 
 				foreach ( $bundled_products as $bundle_item ) {
 
@@ -562,7 +578,7 @@ function edd_email_tag_file_urls( $payment_id ) {
 		}
 		elseif ( edd_is_bundled_product( $item['id'] ) ) {
 
-			$bundled_products = edd_get_bundled_products( $item['id'] );
+			$bundled_products = apply_filters( 'edd_email_tag_bundled_products', edd_get_bundled_products( $item['id'] ), $item, $payment_id, 'file_urls' );
 
 			foreach ( $bundled_products as $bundle_item ) {
 
@@ -688,7 +704,7 @@ function edd_email_tag_date( $payment_id ) {
  * @return string subtotal
  */
 function edd_email_tag_subtotal( $payment_id ) {
-	$subtotal = edd_currency_filter( edd_format_amount( edd_get_payment_subtotal( $payment_id ) ) );
+	$subtotal = edd_currency_filter( edd_format_amount( edd_get_payment_subtotal( $payment_id ) ), edd_get_payment_currency_code( $payment_id ) );
 	return html_entity_decode( $subtotal, ENT_COMPAT, 'UTF-8' );
 }
 
@@ -701,7 +717,7 @@ function edd_email_tag_subtotal( $payment_id ) {
  * @return string tax
  */
 function edd_email_tag_tax( $payment_id ) {
-	$tax = edd_currency_filter( edd_format_amount( edd_get_payment_tax( $payment_id ) ) );
+	$tax = edd_currency_filter( edd_format_amount( edd_get_payment_tax( $payment_id ) ), edd_get_payment_currency_code( $payment_id ) );
 	return html_entity_decode( $tax, ENT_COMPAT, 'UTF-8' );
 }
 
@@ -714,7 +730,7 @@ function edd_email_tag_tax( $payment_id ) {
  * @return string price
  */
 function edd_email_tag_price( $payment_id ) {
-	$price = edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ) );
+	$price = edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ), edd_get_payment_currency_code( $payment_id ) );
 	return html_entity_decode( $price, ENT_COMPAT, 'UTF-8' );
 }
 
@@ -763,7 +779,7 @@ function edd_email_tag_payment_method( $payment_id ) {
  * @return string sitename
  */
 function edd_email_tag_sitename( $payment_id ) {
-	return get_bloginfo( 'name' );
+	return wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
 }
 
 /**

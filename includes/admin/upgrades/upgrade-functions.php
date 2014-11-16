@@ -100,6 +100,11 @@ add_action( 'admin_notices', 'edd_show_upgrade_notices' );
  * @return void
 */
 function edd_trigger_upgrades() {
+
+	if( ! current_user_can( 'manage_shop_options' ) ) {
+		wp_die( __( 'You do not have permission to do shop upgrades', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+	}
+
 	$edd_version = get_option( 'edd_version' );
 
 	if ( ! $edd_version ) {
@@ -376,6 +381,10 @@ function edd_v20_upgrades() {
  */
 function edd_v20_upgrade_sequential_payment_numbers() {
 
+	if( ! current_user_can( 'manage_shop_options' ) ) {
+		wp_die( __( 'You do not have permission to do shop upgrades', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+	}
+
 	ignore_user_abort( true );
 
 	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
@@ -409,7 +418,7 @@ function edd_v20_upgrade_sequential_payment_numbers() {
 		$number  = ! empty( $_GET['custom'] ) ? absint( $_GET['custom'] ) : intval( edd_get_option( 'sequential_start', 1 ) );
 
 		foreach( $payments as $payment ) {
-			
+
 			// Re-add the prefix and postfix
 			$payment_number = $prefix . $number . $postfix;
 
@@ -417,7 +426,7 @@ function edd_v20_upgrade_sequential_payment_numbers() {
 
 			// Increment the payment number
 			$number++;
-				
+
 		}
 
 		// Payments found so upgrade them
@@ -452,6 +461,10 @@ function edd_v21_upgrade_customers_db() {
 
 	global $wpdb;
 
+	if( ! current_user_can( 'manage_shop_options' ) ) {
+		wp_die( __( 'You do not have permission to do shop upgrades', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+	}
+
 	ignore_user_abort( true );
 
 	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
@@ -465,7 +478,7 @@ function edd_v21_upgrade_customers_db() {
 
 	$step   = isset( $_GET['step'] ) ? absint( $_GET['step'] ) : 1;
 	$number = 20;
-	$offset = $step == 1 ? 0 : ( $step - 1 ) * $number; 
+	$offset = $step == 1 ? 0 : ( $step - 1 ) * $number;
 
 	$emails = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email' LIMIT %d,%d;", $offset, $number ) );
 

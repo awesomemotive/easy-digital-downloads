@@ -1,0 +1,4 @@
+source:
+	- ./
+	
+destination: codex

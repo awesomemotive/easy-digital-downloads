@@ -212,7 +212,7 @@ class EDD_Stats {
 				case 'this_week' :
 
 					$days_to_week_start = ( date( 'w', current_time( 'timestamp' ) ) - 1 ) *60*60*24;
-				 	$today = date( 'd', current_time( 'timestamp' ) );
+				 	$today = date( 'd', current_time( 'timestamp' ) ) *60*60*24;
 
 				 	if( $today < $days_to_week_start ) {
 
@@ -245,7 +245,7 @@ class EDD_Stats {
 				case 'last_week' :
 
 					$days_to_week_start = ( date( 'w', current_time( 'timestamp' ) ) - 1 ) *60*60*24;
-				 	$today = date( 'd', current_time( 'timestamp' ) );
+				 	$today = date( 'd', current_time( 'timestamp' ) ) *60*60*24;
 
 				 	if( $today < $days_to_week_start ) {
 

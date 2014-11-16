@@ -188,7 +188,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 	if( empty( $options ) || ! edd_has_variable_prices( $download_id ) ) {
 		$price = edd_get_download_price( $download_id );
 	} else {
-			
+
 		if( is_array( $options['price_id'] ) ) {
 			$price_id = $options['price_id'][0];
 		} else {
@@ -199,7 +199,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 
 		// Make sure a valid price ID was supplied
 		if( ! isset( $prices[ $price_id ] ) ) {
-			wp_die( __( 'The requested price ID does not exist.', 'edd' ), __( 'Error', 'edd' ) );
+			wp_die( __( 'The requested price ID does not exist.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 404 ) );
 		}
 
 		$price_options = array(
@@ -247,7 +247,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 		'email'      => is_user_logged_in() ? $current_user->user_email     : '',
 		'first_name' => is_user_logged_in() ? $current_user->user_firstname : '',
 		'last_name'  => is_user_logged_in() ? $current_user->user_lastname  : '',
-		'discount'   => '',
+		'discount'   => 'none',
 		'address'    => array()
 	);
 
@@ -301,7 +301,7 @@ function edd_show_gateways() {
 
 	if ( count( $gateways ) > 1 && ! isset( $_GET['payment-mode'] ) ) {
 		$show_gateways = true;
-		if ( edd_get_cart_subtotal() <= 0 ) {
+		if ( edd_get_cart_total() <= 0 ) {
 			$show_gateways = false;
 		}
 	}
