@@ -34,7 +34,7 @@ class EDD_SL_Plugin_Updater {
         $this->version  = $_api_data['version'];
 
         // Set up hooks.
-        add_action( 'admin_init', array( $this, 'init' ) );
+        $this->init();
         add_action( 'admin_init', array( $this, 'show_changelog' ) );
     }
 
@@ -130,9 +130,9 @@ class EDD_SL_Plugin_Updater {
             }
 
             if( version_compare( $this->version, $version_info->new_version, '<' ) ) {
-            
+
                 $update_cache->response[ $this->name ] = $version_info;
-            
+
             }
 
             $update_cache->last_checked = time();
@@ -302,7 +302,7 @@ class EDD_SL_Plugin_Updater {
         }
 
         if( ! current_user_can( 'update_plugins' ) ) {
-            wp_die( __( 'You do not have permission to install plugin updates' ) );
+            wp_die( __( 'You do not have permission to install plugin updates' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
         }
 
         $response = $this->api_request( 'plugin_latest_version', array( 'slug' => $_REQUEST['slug'] ) );

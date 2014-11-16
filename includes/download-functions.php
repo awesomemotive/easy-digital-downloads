@@ -158,9 +158,10 @@ function edd_get_download_price( $download_id = 0 ) {
  * @since 1.0
  * @param int $download_id ID of the download price to show
  * @param bool $echo Whether to echo or return the results
+ * @param int $price_id Optional price id for variable pricing
  * @return void
  */
-function edd_price( $download_id = 0, $echo = true ) {
+function edd_price( $download_id = 0, $echo = true, $price_id = false ) {
 
 	if( empty( $download_id ) ) {
 		$download_id = get_the_ID();
@@ -170,20 +171,10 @@ function edd_price( $download_id = 0, $echo = true ) {
 
 		$prices = edd_get_variable_prices( $download_id );
 
-		// Return the lowest price
-		$i = 0;
-		foreach ( $prices as $key => $value ) {
-
-			if( $i < 1 ) {
-				$price = $value['amount'];
-			}
-
-			if ( (float) $value['amount'] < (float) $price ) {
-
-				$price = (float) $value['amount'];
-
-			}
-			$i++;
+		if ( false !== $price_id && isset( $prices[$price_id] ) ) {
+			$price = (float) $prices[$price_id]['amount'];
+		} else {
+			$price = edd_get_lowest_price_option( $download_id );
 		}
 
 		$price = edd_sanitize_amount( $price );
@@ -262,6 +253,31 @@ function edd_has_variable_prices( $download_id ) {
 	}
 
 	return false;
+}
+
+/**
+ * Returns the default price ID for variable pricing, or the first
+ * price if none is set
+ *
+ * @since  2.2
+ * @param  int $download_id ID number of the download to check
+ * @return int              The Price ID to select by default
+ */
+function edd_get_default_variable_price( $download_id ) {
+
+	if ( ! edd_has_variable_prices( $download_id ) ) {
+		return false;
+	}
+
+	$prices = edd_get_variable_prices( $download_id );
+	$default_price_id = get_post_meta( $download_id, '_edd_default_price_id', true );
+
+	if ( $default_price_id === '' ||  ! isset( $prices[$default_price_id] ) ) {
+		$default_price_id = current( array_keys( $prices ) );
+	}
+
+	return apply_filters( 'edd_variable_default_price_id', absint( $default_price_id ), $download_id );
+
 }
 
 /**
@@ -1051,7 +1067,7 @@ function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $ex
 
 					// Check to see if the file download limit has been reached
 					if ( edd_is_file_at_download_limit( $cart_item['id'], $payment->ID, $file_key, $price_id ) )
-						wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'edd' ) ), __( 'Error', 'edd' ) );
+						wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 
 					// If this download has variable prices, we have to confirm that this file was included in their purchase
 					if ( ! empty( $price_options ) && $file_condition != 'all' && edd_has_variable_prices( $cart_item['id'] ) ) {
@@ -1061,7 +1077,7 @@ function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $ex
 
 					// Make sure the link hasn't expired
 					if ( current_time( 'timestamp' ) > $expire ) {
-						wp_die( apply_filters( 'edd_download_link_expired_text', __( 'Sorry but your download link has expired.', 'edd' ) ), __( 'Error', 'edd' ) );
+						wp_die( apply_filters( 'edd_download_link_expired_text', __( 'Sorry but your download link has expired.', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 					}
 					return $payment->ID; // Payment has been verified and link is still valid
 				}
@@ -1071,7 +1087,7 @@ function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $ex
 		}
 
 	} else {
-		wp_die( __( 'No payments matching your request were found.', 'edd' ), __( 'Error', 'edd' ) );
+		wp_die( __( 'No payments matching your request were found.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
 	// Payment not verified
 	return false;
