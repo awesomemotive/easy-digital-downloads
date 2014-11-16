@@ -246,8 +246,12 @@ td.edd_order_price { text-align: right; }
 .edd-select-chosen { width: 300px; }
 .edd-select2 .select2-choices { width: 300px; -webkit-border-radius: 3px; border-radius: 3px; border-color: #dfdfdf; background-image: none; }
 .edd-select2 .select2-choices input { margin: 2px; height: 27px !important; border-color: #dfdfdf; }
+<<<<<<< HEAD
 .select2-drop { border-color: #aaa; -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); z-index: 999999; }
 .download .edd-select2 { width: 300px; }
+=======
+.select2-drop { border-color: #aaa; -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); }
+>>>>>>> parent of 0e3c3a6... Remove chosen
 
 .download_page_edd-tools .tablenav .actions { overflow: visible; }
 .edd_user_search_wrap { position: relative; overflow: visible; }
