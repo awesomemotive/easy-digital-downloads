@@ -1064,7 +1064,13 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 
 		foreach ( $discounts as $discount ) {
 
-			$code_id           = edd_get_discount_id_by_code( $discount );
+			$code_id = edd_get_discount_id_by_code( $discount );
+
+			// Check discount exists
+		        if( ! $code_id ) {
+		            continue;
+		        }
+		        
 			$reqs              = edd_get_discount_product_reqs( $code_id );
 			$excluded_products = edd_get_discount_excluded_products( $code_id );
 
