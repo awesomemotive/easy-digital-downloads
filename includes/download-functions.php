@@ -1096,10 +1096,9 @@ function edd_can_access_download( $bool = true, $purchase_data = array(), $args 
  * @return nool If a user can access the file
  */
 function edd_get_html5_download_attribute( $bool = true, $purchase_data = array(), $args = array(), $file = array ) {
+	$string = '';
 	if ( edd_can_access_download( $bool, $purchase_data, $arg ){
-		return 'download="'.edd_get_file_name( $file ).'"';	
+		$string = 'download="'  .edd_get_file_name( $file ) . '"';	
 	}
-	else{
-		return '';
-	}
+	return apply_filters( 'edd_get_html5_download_attribute', $string, $bool, $purchase_data, $args, $file );
 }
