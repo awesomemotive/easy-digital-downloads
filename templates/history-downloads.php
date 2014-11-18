@@ -1,5 +1,7 @@
 <?php
-// Retrieve all purchases for the current user
+/**
+ * This template is used to display the download history of the current user.
+ */
 $purchases = edd_get_users_purchases( get_current_user_id(), 20, true, 'any' );
 if ( $purchases ) :
 	do_action( 'edd_before_download_history' ); ?>
@@ -56,7 +58,7 @@ if ( $purchases ) :
 
 											<div class="edd_download_file">
 												<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link">
-													<?php echo esc_html( $file['name'] ); ?>
+													<?php echo isset( $file['name'] ) ? esc_html( $file['name'] ) : esc_html( $name ); ?>
 												</a>
 											</div>
 

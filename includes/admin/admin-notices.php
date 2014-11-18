@@ -30,6 +30,10 @@ function edd_admin_messages() {
 		add_settings_error( 'edd-notices', 'edd-discount-add-fail', __( 'There was a problem adding your discount code, please try again.', 'edd' ), 'error' );
 	}
 
+	if ( isset( $_GET['edd-message'] ) && 'discount_exists' == $_GET['edd-message'] && current_user_can( 'manage_shop_discounts' ) ) {
+		add_settings_error( 'edd-notices', 'edd-discount-exists', __( 'A discount with that code already exists, please use a different code.', 'edd' ), 'error' );
+	}
+
 	if ( isset( $_GET['edd-message'] ) && 'discount_updated' == $_GET['edd-message'] && current_user_can( 'manage_shop_discounts' ) ) {
 		 add_settings_error( 'edd-notices', 'edd-discount-updated', __( 'Discount code updated.', 'edd' ), 'updated' );
 	}
@@ -89,7 +93,7 @@ function edd_admin_messages() {
 		add_settings_error( 'edd-notices', 'edd-api-key-revoked', __( 'API keys successfully revoked.', 'edd' ), 'updated' );
 	}
 
-    if( ! edd_htaccess_exists() && ! get_user_meta( get_current_user_id(), '_edd_htaccess_missing_dismissed', true ) ) {
+    if( ! edd_htaccess_exists() && ! get_user_meta( get_current_user_id(), '_edd_htaccess_missing_dismissed', true ) && current_user_can( 'manage_shop_settings' ) ) {
         if( ! stristr( $_SERVER['SERVER_SOFTWARE'], 'apache' ) )
             return; // Bail if we aren't using Apache... nginx doesn't use htaccess!
 
@@ -98,6 +102,14 @@ function edd_admin_messages() {
 			echo '<p>' . sprintf( __( 'First, please resave the Misc settings tab a few times. If this warning continues to appear, create a file called ".htaccess" in the <strong>%s</strong> directory, and copy the following into it:', 'edd' ), edd_get_upload_dir() ) . '</p>';
 			echo '<p><pre>' . edd_get_htaccess_rules() . '</pre>';
 			echo '<p><a href="' . add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'htaccess_missing' ) ) . '">' . __( 'Dismiss Notice', 'edd' ) . '</a></p>';
+		echo '</div>';
+	}
+
+	if( ! edd_test_ajax_works() && ! get_user_meta( get_current_user_id(), '_edd_admin_ajax_inaccessible_dismissed', true ) && current_user_can( 'manage_shop_settings' ) ) {
+		echo '<div class="error">';
+			echo '<p>' . __( 'Your site appears to be blocking the WordPress ajax interface. This may causes issues with your store.', 'edd' ) . '</p>';
+			echo '<p>' . sprintf( __( 'Please see <a href="%s" target="_blank">this reference</a> for possible solutions.', 'edd' ), 'https://easydigitaldownloads.com/docs/admin-ajax-blocked' ) . '</p>';
+			echo '<p><a href="' . add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'admin_ajax_inaccessible' ) ) . '">' . __( 'Dismiss Notice', 'edd' ) . '</a></p>';
 		echo '</div>';
 	}
 

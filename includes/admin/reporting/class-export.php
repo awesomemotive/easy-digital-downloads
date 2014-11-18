@@ -35,7 +35,7 @@ class EDD_Export {
 	 * @return bool Whether we can export or not
 	 */
 	public function can_export() {
-		return (bool) apply_filters( 'edd_export_capability', current_user_can( 'manage_options' ) );
+		return (bool) apply_filters( 'edd_export_capability', current_user_can( 'export_shop_reports' ) );
 	}
 
 	/**
@@ -97,7 +97,7 @@ class EDD_Export {
 		$i = 1;
 		foreach( $cols as $col_id => $column ) {
 			echo '"' . $column . '"';
-			echo $i == count( $cols ) ? '' : ',';
+			echo $i == count( $cols ) ? '' : ';';
 			$i++;
 		}
 		echo "\r\n";
@@ -148,10 +148,9 @@ class EDD_Export {
 				// Make sure the column is valid
 				if ( array_key_exists( $col_id, $cols ) ) {
 					echo '"' . $column . '"';
-					echo $i == count( $cols ) + 1 ? '' : ',';
+					echo $i == count( $cols ) ? '' : ';';
+					$i++;
 				}
-
-				$i++;
 			}
 			echo "\r\n";
 		}
@@ -170,7 +169,7 @@ class EDD_Export {
 	 */
 	public function export() {
 		if ( ! $this->can_export() )
-			wp_die( __( 'You do not have permission to export data.', 'edd' ), __( 'Error', 'edd' ) );
+			wp_die( __( 'You do not have permission to export data.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 
 		// Set headers
 		$this->headers();

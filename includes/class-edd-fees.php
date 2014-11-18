@@ -80,6 +80,10 @@ class EDD_Fees {
 
 		}
 
+		if( 'item' === $args['type'] && ! empty( $args['download_id'] ) ) {
+			unset( $args['download_id'] );
+		}
+
 		$fees = $this->get_fees( 'all' );
 
 		// Determine the key
@@ -132,6 +136,15 @@ class EDD_Fees {
 	 * @return bool
 	 */
 	public function has_fees( $type = 'fee' ) {
+
+		if( 'all' == $type || 'fee' == $type ) {
+
+			if( ! edd_get_cart_contents() ) {
+				$type = 'item';
+			}
+
+		}
+
 		$fees = $this->get_fees( $type );
 		return ! empty( $fees ) && is_array( $fees );
 	}
@@ -147,18 +160,22 @@ class EDD_Fees {
 	 * @return mixed array|bool
 	 */
 	public function get_fees( $type = 'fee', $download_id = 0 ) {
-		
+
 		$fees = EDD()->session->get( 'edd_cart_fees' );
-		
+
+		if( ! edd_get_cart_contents() ) {
+			// We can only get item type fees when the cart is empty
+			$type = 'item';
+		}
+
 		if( ! empty( $fees ) && ! empty( $type ) && 'all' !== $type ) {
-			
-			// Remove fees not of the specified type
+
 			foreach( $fees as $key => $fee ) {
-				
+
 				if( ! empty( $fee['type'] ) && $type != $fee['type'] ) {
-				
+
 					unset( $fees[ $key ] );
-				
+
 				}
 
 			}
@@ -166,8 +183,8 @@ class EDD_Fees {
 		}
 
 		if( ! empty( $fees ) && ! empty( $download_id ) ) {
-	
-			// Remove fees that don't belong to the specified Download	
+
+			// Remove fees that don't belong to the specified Download
 			foreach( $fees as $key => $fee ) {
 
 				if( (int) $download_id !== (int) $fee['download_id'] ) {
@@ -175,26 +192,31 @@ class EDD_Fees {
 					unset( $fees[ $key ] );
 
 				}
-			
+
+			}
+
+		}
+
+		if( ! empty( $fees ) ) {
+
+			// Remove fees that belong to a specific download but are not in the cart
+			foreach( $fees as $key => $fee ) {
+
+				if( empty( $fee['download_id'] ) ) {
+					continue;
+				}
+
+				if( ! edd_item_in_cart( $fee['download_id'] ) ) {
+
+					unset( $fees[ $key ] );
+
+				}
+
 			}
 
 		}
 
 		return ! empty( $fees ) ? $fees : array();
-	}
-
-	/**
-	 * Retrieve all active fees of a specific Download
-	 *
-	 * @access public
-	 * @since 2.1
-	 * @param int $download_id The download ID whose fees to retrieve
-	 * @uses EDD_Session::get()
-	 * @return mixed array|bool
-	 */
-	public function get_fees_of_download( $download_id = 0 ) {
-		
-		return $this->get_fees( 'fee', $download_id );
 	}
 
 	/**

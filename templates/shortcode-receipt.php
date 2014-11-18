@@ -122,6 +122,11 @@ $status    = edd_get_payment_status( $payment, true );
 		<tbody>
 		<?php if( $cart ) : ?>
 			<?php foreach ( $cart as $key => $item ) : ?>
+
+				<?php if( ! apply_filters( 'edd_user_can_view_receipt_item', true, $item ) ) : ?>
+					<?php continue; // Skip this item if can't view it ?>
+				<?php endif; ?>
+
 				<?php if( empty( $item['in_bundle'] ) ) : ?>
 				<tr>
 					<td>
@@ -134,19 +139,19 @@ $status    = edd_get_payment_status( $payment, true );
 						<div class="edd_purchase_receipt_product_name">
 							<?php echo esc_html( $item['name'] ); ?>
 							<?php if( ! is_null( $price_id ) ) : ?>
-							<span class="edd_purchase_receipt_price_name">&nbsp;&ndash;&nbsp;<?php echo edd_get_price_option_name( $item['id'], $price_id ); ?></span>
+							<span class="edd_purchase_receipt_price_name">&nbsp;&ndash;&nbsp;<?php echo edd_get_price_option_name( $item['id'], $price_id, $payment->ID ); ?></span>
 							<?php endif; ?>
 						</div>
 
 						<?php if ( $edd_receipt_args['notes'] ) : ?>
-							<div class="edd_purchase_receipt_product_notes"><?php echo edd_get_product_notes( $item['id'] ); ?></div>
+							<div class="edd_purchase_receipt_product_notes"><?php echo wpautop( edd_get_product_notes( $item['id'] ) ); ?></div>
 						<?php endif; ?>
 
 						<?php
 						if( edd_is_payment_complete( $payment->ID ) && edd_receipt_show_download_files( $item['id'], $edd_receipt_args ) ) : ?>
 						<ul class="edd_purchase_receipt_files">
 							<?php
-							if ( $download_files && is_array( $download_files ) ) :
+							if ( ! empty( $download_files ) && is_array( $download_files ) ) :
 
 								foreach ( $download_files as $filekey => $file ) :
 
@@ -174,7 +179,7 @@ $status    = edd_get_payment_status( $payment, true );
 
 												foreach ( $download_files as $filekey => $file ) :
 
-													$download_url = edd_get_download_file_url( $meta['key'], $email, $filekey, $bundle_item ); ?>
+													$download_url = edd_get_download_file_url( $meta['key'], $email, $filekey, $bundle_item, $price_id ); ?>
 													<li class="edd_download_file">
 														<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link"><?php echo esc_html( $file['name'] ); ?></a>
 													</li>

@@ -203,7 +203,11 @@ class EDD_Roles {
 		switch( $cap ) {
 
 			case 'view_product_stats' :
-
+				
+				if( empty( $args[0] ) ) {
+					break;
+				}
+				
 				$download = get_post( $args[0] );
 				if ( empty( $download ) ) {
 					break;

@@ -80,6 +80,14 @@ function edd_show_upgrade_notices() {
 		);
 	}
 
+	if ( version_compare( $edd_version, '2.1', '<' ) ) {
+		printf(
+			'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the customer database, click %shere%s to start the upgrade.', 'edd' ) . '</p></div>',
+			'<a href="' . esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_customers_db' ) ) . '">',
+			'</a>'
+		);
+	}
+
 }
 add_action( 'admin_notices', 'edd_show_upgrade_notices' );
 
@@ -92,6 +100,11 @@ add_action( 'admin_notices', 'edd_show_upgrade_notices' );
  * @return void
 */
 function edd_trigger_upgrades() {
+
+	if( ! current_user_can( 'manage_shop_options' ) ) {
+		wp_die( __( 'You do not have permission to do shop upgrades', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+	}
+
 	$edd_version = get_option( 'edd_version' );
 
 	if ( ! $edd_version ) {
@@ -368,6 +381,10 @@ function edd_v20_upgrades() {
  */
 function edd_v20_upgrade_sequential_payment_numbers() {
 
+	if( ! current_user_can( 'manage_shop_options' ) ) {
+		wp_die( __( 'You do not have permission to do shop upgrades', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+	}
+
 	ignore_user_abort( true );
 
 	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
@@ -401,15 +418,15 @@ function edd_v20_upgrade_sequential_payment_numbers() {
 		$number  = ! empty( $_GET['custom'] ) ? absint( $_GET['custom'] ) : intval( edd_get_option( 'sequential_start', 1 ) );
 
 		foreach( $payments as $payment ) {
-			
+
 			// Re-add the prefix and postfix
 			$payment_number = $prefix . $number . $postfix;
 
-			update_post_meta( $payment->ID, '_edd_payment_number', $payment_number );
+			edd_update_payment_meta( $payment->ID, '_edd_payment_number', $payment_number );
 
 			// Increment the payment number
 			$number++;
-				
+
 		}
 
 		// Payments found so upgrade them
@@ -433,3 +450,115 @@ function edd_v20_upgrade_sequential_payment_numbers() {
 
 }
 add_action( 'edd_upgrade_sequential_payment_numbers', 'edd_v20_upgrade_sequential_payment_numbers' );
+
+/**
+ * Upgrades for EDD v2.1 and the new customers database
+ *
+ * @since 2.1
+ * @return void
+ */
+function edd_v21_upgrade_customers_db() {
+
+	global $wpdb;
+
+	if( ! current_user_can( 'manage_shop_options' ) ) {
+		wp_die( __( 'You do not have permission to do shop upgrades', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+	}
+
+	ignore_user_abort( true );
+
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+		@set_time_limit(0);
+	}
+
+	if( ! get_option( 'edd_upgrade_customers_db_version' ) ) {
+		// Create the customers database on the first run
+		@EDD()->customers->create_table();
+	}
+
+	$step   = isset( $_GET['step'] ) ? absint( $_GET['step'] ) : 1;
+	$number = 20;
+	$offset = $step == 1 ? 0 : ( $step - 1 ) * $number;
+
+	$emails = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email' LIMIT %d,%d;", $offset, $number ) );
+
+	if( $emails ) {
+
+		foreach( $emails as $email ) {
+
+			if( EDD()->customers->exists( $email ) ) {
+				continue; // Allow the upgrade routine to be safely re-run in the case of failure
+			}
+
+			$args = array(
+				'user'    => $email,
+				'order'   => 'ASC',
+				'orderby' => 'ID',
+				'number'  => -1,
+				'page'    => $step
+			);
+
+			$payments = new EDD_Payments_Query( $args );
+			$payments = $payments->get_payments();
+
+			if( $payments ) {
+
+				$total_value = 0.00;
+				$total_count = 0;
+
+				foreach( $payments as $payment ) {
+
+					$status = get_post_status( $payment->ID );
+					if( 'revoked' == $status || 'publish' == $status ) {
+
+						$total_value += $payment->total;
+						$total_count += 1;
+
+					}
+
+				}
+
+				$ids  = wp_list_pluck( $payments, 'ID' );
+
+				$user = get_user_by( 'email', $email );
+
+				$args = array(
+					'email'          => $email,
+					'user_id'        => $user ? $user->ID : 0,
+					'name'           => $user ? $user->display_name : '',
+					'purchase_count' => $total_count,
+					'purchase_value' => round( $total_value, 2 ),
+					'payment_ids'    => implode( ',', array_map( 'absint', $ids ) ),
+					'date_created'   => $payments[0]->date
+				);
+
+				$customer_id = EDD()->customers->add( $args );
+
+				foreach( $ids as $id ) {
+					update_post_meta( $id, '_edd_payment_customer_id', $customer_id );
+				}
+
+			}
+
+		}
+
+		// Customers found so upgrade them
+		$step++;
+		$redirect = add_query_arg( array(
+			'page'        => 'edd-upgrades',
+			'edd-upgrade' => 'upgrade_customers_db',
+			'step'        => $step
+		), admin_url( 'index.php' ) );
+		wp_redirect( $redirect ); exit;
+
+	} else {
+
+		// No more customers found, finish up
+
+		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+
+		wp_redirect( admin_url() ); exit;
+	}
+
+}
+add_action( 'edd_upgrade_customers_db', 'edd_v21_upgrade_customers_db' );
