@@ -185,6 +185,9 @@ jQuery(document).ready(function ($) {
 					if( $( '.edd_download_purchase_form' ).length ) {
 						var parent_form = $('.edd_download_purchase_form *[data-download-id="' + download + '"]').parents('form');
 						$( 'a.edd-add-to-cart', parent_form ).hide();
+                        if( price_mode != 'multi' ) {
+                            parent_form.find('.edd_download_quantity_wrapper').slideUp();
+                        }
 	                	$( '.edd_go_to_checkout', parent_form ).show().removeAttr( 'data-edd-loading' );
 	               	}
 
