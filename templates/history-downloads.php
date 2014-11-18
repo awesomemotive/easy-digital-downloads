@@ -53,11 +53,17 @@ if ( $purchases ) :
 
 										foreach ( $download_files as $filekey => $file ) :
 
-											$download_url = edd_get_download_file_url( $purchase_data['key'], $email, $filekey, $download['id'], $price_id );
+											$download_url = edd_get_download_file_url( $purchase_data['key'], $email, $filekey, $download['id'], $price_id );																		$has_access = apply_filters( 'edd_file_download_has_access', true, $payment, $edd_receipt_args );
+											$attribute = '';
+											$has_access = apply_filters( 'edd_file_download_has_access', true, $purchase_data, array() );
+										
+											if ( $has_access ){
+												$attribute = 'download="'.edd_get_file_name( $file ).'"';
+											}
 											?>
 
 											<div class="edd_download_file">
-												<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link">
+												<a href="<?php echo esc_url( $download_url ); ?>" <?php echo $attribute; ?> class="edd_download_file_link">
 													<?php echo isset( $file['name'] ) ? esc_html( $file['name'] ) : esc_html( $name ); ?>
 												</a>
 											</div>
