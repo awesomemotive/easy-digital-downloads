@@ -484,6 +484,18 @@ function edd_tools_sysinfo_get() {
 		$return  = apply_filters( 'edd_sysinfo_after_edd_templates', $return );
 	}
 
+    // Must-use plugins
+    $muplugins = get_mu_plugins();
+    if( count( $muplugins > 0 ) ) {
+        $return .= "\n" . '-- Must-Use Plugins' . "\n\n";
+
+        foreach( $muplugins as $plugin => $plugin_data ) {
+            $return .= $plugin_data['Name'] . ': ' . $plugin_data['Version'] . "\n";
+        }
+
+        $return = apply_filters( 'edd_sysinfo_after_wordpress_mu_plugins', $return );
+    }
+
 	// WordPress active plugins
 	$return .= "\n" . '-- WordPress Active Plugins' . "\n\n";
 
