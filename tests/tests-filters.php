@@ -255,7 +255,8 @@ class Tests_Filters extends WP_UnitTestCase {
 
 	public function test_comments_clauses() {
 		global $wp_filter;
-		$this->assertarrayHasKey( 'edd_hide_payment_notes', $wp_filter['comments_clauses'][10] );
+		$this->assertarrayHasKey( 'edd_hide_payment_notes', $wp_filter['pre_get_comments'][10] );
+		$this->assertarrayHasKey( 'edd_hide_payment_notes_pre_41', $wp_filter['comments_clauses'][10] );
 	}
 
 	public function test_edd_update_payment_status() {

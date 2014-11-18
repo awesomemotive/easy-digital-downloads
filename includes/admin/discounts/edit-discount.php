@@ -87,7 +87,7 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 							'id'          => 'products',
 							'selected'    => $product_reqs,
 							'multiple'    => true,
-                            'select2'     => true,
+                            'chosen'      => true,
                             'placeholder' => sprintf( __( 'Select one or more %s', 'edd' ), edd_get_label_plural() )
 						) ); ?><br/>
 					</p>
@@ -123,7 +123,7 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 						'id'       => 'excluded-products',
 						'selected' => $excluded_products,
 						'multiple' => true,
-                        'select2'  => true,
+                        'chosen'   => true,
                         'placeholder' => sprintf( __( 'Select one or more %s', 'edd' ), edd_get_label_plural() )
 					) ); ?><br/>
 					<p class="description"><?php printf( __( '%s that this discount code cannot be applied to.', 'edd' ), edd_get_label_plural() ); ?></p>
