@@ -50,6 +50,7 @@ function edd_get_cart_content_details() {
 		$discount   = edd_get_cart_item_discount_amount( $item );
 		$discount   = apply_filters( 'edd_get_cart_content_details_item_discount_amount', $discount, $item );
 		$quantity   = edd_get_cart_item_quantity( $item['id'], $item['options'] );
+		$fees       = edd_get_cart_fees( 'fee', $item['id'] );
 		$subtotal   = $item_price * $quantity;
 		$tax        = edd_get_cart_item_tax( $item['id'], $item['options'], $subtotal - $discount );
 
@@ -73,7 +74,7 @@ function edd_get_cart_content_details() {
 			'discount'    => round( $discount, edd_currency_decimal_filter() ),
 			'subtotal'    => round( $subtotal, edd_currency_decimal_filter() ),
 			'tax'         => round( $tax, edd_currency_decimal_filter() ),
-			'fees'        => array(),
+			'fees'        => $fees,
 			'price'       => round( $total, edd_currency_decimal_filter() )
 		);
 
@@ -656,11 +657,12 @@ function edd_cart_has_fees( $type = 'all' ) {
  *
  * @since 1.5
  * @param string $type
+ * @param int $download_id
  * @uses EDD()->fees->get_fees()
  * @return array All the cart fees that have been applied
  */
-function edd_get_cart_fees( $type = 'all' ) {
-	return EDD()->fees->get_fees( $type );
+function edd_get_cart_fees( $type = 'all', $download_id = 0 ) {
+	return EDD()->fees->get_fees( $type, $download_id );
 }
 
 /**
