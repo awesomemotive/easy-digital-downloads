@@ -222,9 +222,10 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 	}
 
 	$type = edd_single_price_option_mode( $download_id ) ? 'checkbox' : 'radio';
+	$mode = edd_single_price_option_mode( $download_id ) ? 'multi' : 'single';
 
 	do_action( 'edd_before_price_options', $download_id ); ?>
-	<div class="edd_price_options">
+	<div class="edd_price_options edd_<?php echo esc_attr( $mode ); ?>_mode">
 		<ul>
 			<?php
 			if ( $prices ) :
@@ -247,6 +248,53 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 	do_action( 'edd_after_price_options', $download_id );
 }
 add_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing', 10, 2 );
+
+/**
+ * Display the quantity field for a variable price when multi-purchase mode is enabled
+ *
+ * @since 2.2
+ * @param int $download_id Download ID
+ * @param array $args Argument array
+ * @return void
+ */
+function edd_download_purchase_form_quantity_field( $download_id = 0, $args = array() ) {
+
+	if( ! edd_item_quantities_enabled() ) {
+		return;
+	}
+
+	if ( ( edd_item_in_cart( $download_id ) && ! edd_has_variable_prices( $download_id ) ) || ( edd_single_price_option_mode( $download_id ) && edd_has_variable_prices( $download_id ) && ! edd_item_in_cart( $download_id ) ) ) {
+		return;
+	}
+
+	echo '<div class="edd_download_quantity_wrapper">';
+		echo '<input type="number" min="1" step="1" name="edd_download_quantity" class="edd-input edd-item-quantity" value="1" />';
+	echo '</div>';
+
+}
+add_action( 'edd_purchase_link_top', 'edd_download_purchase_form_quantity_field', 10, 2 );
+
+/**
+ * Display the quantity field for a variable price when multi-purchase mode is enabled
+ *
+ * @since 2.2
+ * @param int $key Price ID
+ * @param array $price price option array
+ * @param int $download_id Download ID
+ * @return void
+ */
+function edd_variable_price_quantity_field( $key, $price, $download_id ) {
+
+	if( ! edd_single_price_option_mode() ) {
+		return;
+	}
+
+	echo '<div class="edd_download_quantity_wrapper edd_download_quantity_price_option_' . sanitize_key( $price['name'] ) . '">';
+		echo '<span class="edd_price_option_sep">&nbsp;x&nbsp;</span>';
+		echo '<input type="number" min="1" step="1" name="edd_download_quantity_' . esc_attr( $key ) . '" class="edd-input edd-item-quantity" value="1" />';
+	echo '</div>';
+}
+add_action( 'edd_after_price_option', 'edd_variable_price_quantity_field', 10, 3 );
 
 /**
  * Before Download Content
