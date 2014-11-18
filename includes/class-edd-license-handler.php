@@ -22,7 +22,7 @@ class EDD_License {
 	private $item_shortname;
 	private $version;
 	private $author;
-	private $api_url = 'https://easydigitaldownloads.com';
+	private $api_url = 'https://easydigitaldownloads.com/edd-sl-api/';
 
 	/**
 	 * Class constructor
@@ -89,7 +89,7 @@ class EDD_License {
 		add_action( 'admin_init', array( $this, 'deactivate_license' ) );
 
 		// Updater
-		add_action( 'plugins_loaded', array( $this, 'auto_updater' ) );
+		add_action( 'admin_init', array( $this, 'auto_updater' ), 0 );
 	}
 
 	/**
@@ -183,13 +183,15 @@ class EDD_License {
 		);
 
 		// Call the API
-		$response = wp_remote_get(
-			add_query_arg( $api_params, $this->api_url ),
+		$response = wp_remote_post(
+			$this->api_url,
 			array(
 				'timeout'   => 15,
-				'sslverify' => false
+				'sslverify' => false,
+				'body'      => $api_params
 			)
 		);
+		//echo '<pre>'; print_R( $response ); echo '</pre>'; exit;
 
 		// Make sure there are no errors
 		if ( is_wp_error( $response ) )
@@ -235,11 +237,12 @@ class EDD_License {
 			);
 
 			// Call the API
-			$response = wp_remote_get(
-				add_query_arg( $api_params, $this->api_url ),
+			$response = wp_remote_post(
+				$this->api_url,
 				array(
 					'timeout'   => 15,
-					'sslverify' => false
+					'sslverify' => false,
+					'body'      => $api_params
 				)
 			);
 

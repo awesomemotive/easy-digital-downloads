@@ -181,13 +181,16 @@ function edd_string_is_image_url( $str ) {
  * @return string $ip User's IP address
  */
 function edd_get_ip() {
+
+	$ip = '127.0.0.1';
+
 	if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
 		//check ip from share internet
 		$ip = $_SERVER['HTTP_CLIENT_IP'];
 	} elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
 		//to check ip is pass from proxy
 		$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-	} else {
+	} elseif( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
 		$ip = $_SERVER['REMOTE_ADDR'];
 	}
 	return apply_filters( 'edd_get_ip', $ip );
@@ -225,6 +228,11 @@ function edd_get_host() {
 		$host = 'Rackspace Cloud';
 	} elseif( strpos( DB_HOST, '.sysfix.eu' ) !== false ) {
 		$host = 'SysFix.eu Power Hosting';
+	} elseif( strpos( $_SERVER['SERVER_NAME'], 'Flywheel' ) !== false ) {
+		$host = 'Flywheel';
+	} else {
+		// Adding a general fallback for data gathering
+		$host = 'DBH: ' . DB_HOST . ', SRV: ' . $_SERVER['SERVER_NAME'];
 	}
 
 	return $host;
@@ -287,6 +295,10 @@ function edd_is_host( $host = false ) {
 				if( strpos( DB_HOST, '.sysfix.eu' ) !== false )
 					$return = true;
 				break;
+			case 'flywheel':
+				if( strpos( $_SERVER['SERVER_NAME'], 'Flywheel' ) !== false )
+					$return = true;
+				break;
 			default:
 				$return = false;
 		}
@@ -294,7 +306,6 @@ function edd_is_host( $host = false ) {
 
 	return $return;
 }
-
 
 
 /**
@@ -337,7 +348,6 @@ function edd_get_currencies() {
 	return apply_filters( 'edd_currencies', $currencies );
 }
 
-
 /**
  * Get the store's set currency
  *
@@ -348,6 +358,63 @@ function edd_get_currency() {
 	global $edd_options;
 	$currency = isset( $edd_options['currency'] ) ? $edd_options['currency'] : 'USD';
 	return apply_filters( 'edd_currency', $currency );
+}
+
+/**
+ * Given a currency determine the symbol to use. If no currency given, site default is used.
+ * If no symbol is determine, the currency string is returned.
+ *
+ * @since  2.2
+ * @param  string $currency The currency string
+ * @return string           The symbol to use for the currency
+ */
+function edd_currency_symbol( $currency = '' ) {
+	global $edd_options;
+
+	if ( empty( $currency ) ) {
+		$currency = edd_get_currency();
+	}
+
+	switch ( $currency ) :
+		case "GBP" :
+			$symbol = '&pound;';
+			break;
+		case "BRL" :
+			$symbol = 'R&#36;';
+			break;
+		case "EUR" :
+			$symbol = '&euro;';
+			break;
+		case "USD" :
+		case "AUD" :
+		case "CAD" :
+		case "HKD" :
+		case "MXN" :
+		case "SGD" :
+			$symbol = '&#36;';
+			break;
+		case "JPY" :
+			$symbol = '&yen;';
+			break;
+		default :
+			$symbol = $currency;
+			break;
+	endswitch;
+
+	return apply_filters( 'edd_currency_symbol', $symbol, $currency );
+}
+
+/**
+ * Get the name of a currency
+ *
+ * @since 2.2
+ * @param  string $currency The currency code
+ * @return string The currency's name
+ */
+function edd_get_currency_name( $code = 'USD' ) {
+	$currencies = edd_get_currencies();
+	$name       = isset( $currencies[ $code ] ) ? $currencies[ $code ] : $code;
+	return apply_filters( 'edd_currency_name', $name );
 }
 
 /**
@@ -396,7 +463,7 @@ function edd_get_current_page_url() {
 
 	$page_url .= "://";
 
-	if ( $_SERVER["SERVER_PORT"] != "80" )
+	if ( isset( $_SERVER["SERVER_PORT"] ) && $_SERVER["SERVER_PORT"] != "80" )
 		$page_url .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
 	else
 		$page_url .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];

@@ -15,6 +15,16 @@ jQuery(document).ready(function ($) {
 		},
 		clone_repeatable : function(row) {
 
+			// Retrieve the highest current key
+			var key = highest = 1;
+			row.parent().find( 'tr.edd_repeatable_row' ).each(function() {
+				var current = $(this).data( 'key' );
+				if( parseInt( current ) > highest ) {
+					highest = current;
+				}
+			});
+			key = highest += 1;
+
 			clone = row.clone();
 
 			/** manually update any select box values */
@@ -22,18 +32,25 @@ jQuery(document).ready(function ($) {
 				$( this ).val( row.find( 'select[name="' + $( this ).attr( 'name' ) + '"]' ).val() );
 			});
 
-			var count  = row.parent().find( 'tr' ).length - 1;
-
 			clone.removeClass( 'edd_add_blank' );
 
+			clone.data( 'key', key );
 			clone.find( 'td input, td select' ).val( '' );
 			clone.find( 'input, select' ).each(function() {
-				var name 	= $( this ).attr( 'name' );
+				var name = $( this ).attr( 'name' );
 
-				name = name.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
+				name = name.replace( /\[(\d+)\]/, '[' + parseInt( key ) + ']');
 
 				$( this ).attr( 'name', name ).attr( 'id', name );
 			});
+
+			clone.find( 'span.edd_price_id' ).each(function() {
+				$( this ).text( parseInt( key ) );
+			});
+
+			clone.find( '.edd_repeatable_default_input' ).each( function() {
+				$( this ).val( parseInt( count ) ).removeAttr('checked');
+			})
 
 			return clone;
 		},
@@ -49,25 +66,19 @@ jQuery(document).ready(function ($) {
 		},
 
 		move : function() {
-			/*
-			* Disabled until we can work out a way to solve the issues raised here: https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/1066
-			if( ! $('.edd_repeatable_table').length )
-				return;
 
 			$(".edd_repeatable_table tbody").sortable({
 				handle: '.edd_draghandle', items: '.edd_repeatable_row', opacity: 0.6, cursor: 'move', axis: 'y', update: function() {
 					var count  = 0;
 					$(this).find( 'tr' ).each(function() {
-						$(this).find( 'input, select' ).each(function() {
-							var name   = $( this ).attr( 'name' );
-							name       = name.replace( /\[(\d+)\]/, '[' + count + ']');
-							$( this ).attr( 'name', name ).attr( 'id', name );
+						$(this).find( 'input.edd_repeatable_index' ).each(function() {
+							$( this ).val( count );
 						});
 						count++;
 					});
 				}
 			});
-			*/
+			
 		},
 
 		remove : function() {
@@ -191,9 +202,9 @@ jQuery(document).ready(function ($) {
 					file_frame = wp.media.frames.file_frame = wp.media( {
 						frame: 'post',
 						state: 'insert',
-						title: button.data( 'uploader_title' ),
+						title: button.data( 'uploader-title' ),
 						button: {
-							text: button.data( 'uploader_button_text' )
+							text: button.data( 'uploader-button-text' )
 						},
 						multiple: $( this ).data( 'multiple' ) == '0' ? false : true  // Set to true to allow multiple files to be selected
 					} );
@@ -350,8 +361,8 @@ jQuery(document).ready(function ($) {
 				e.preventDefault();
 
 				var download_id    = $('#edd_order_download_select').val();
-				var download_title = $('.chosen-single span').text();
-				var amount         = $('#edd-order-download-amount').val();
+				var download_title = $('.select2-chosen').text();
+                var amount         = $('#edd-order-download-amount').val();
 				var price_id       = $('.edd_price_options_select option:selected').val();
 				var price_name     = $('.edd_price_options_select option:selected').text();
 				var quantity       = $('#edd-order-download-quantity').val();
@@ -959,85 +970,21 @@ jQuery(document).ready(function ($) {
 
 	});
 
-    // Setup Chosen menus
-    $('.edd-select-chosen').chosen({
-    	inherit_select_classes: true,
-    	placeholder_text_single: edd_vars.one_option,
-    	placeholder_text_multiple: edd_vars.one_or_more_option,
-    });
+    // Setup Select2
+    if ($('.edd-select2').attr('multiple')) {
+        $('.edd-select2').select2({
+            dropdownAutoWidth: true,
+        });
+    } else {
+        $('.edd-select2').select2({
+            dropdownAutoWidth: true,
+        });
+    }
 
 	// Variables for setting up the typing timer
 	var typingTimer;               // Timer identifier
 	var doneTypingInterval = 342;  // Time in ms, Slow - 521ms, Moderate - 342ms, Fast - 300ms
 
-    // Replace options with search results
-	$('.edd-select.chosen-container .chosen-search input, .edd-select.chosen-container .search-field input').keyup(function(e) {
-
-		var val = $(this).val(), container = $(this).closest( '.edd-select-chosen' );
-		var menu_id = container.attr('id').replace( '_chosen', '' );
-		var lastKey = e.which;
-
-		// Don't fire if short or is a modifier key (shift, ctrl, apple command key, or arrow keys)
-		if(
-			val.length <= 3 ||
-			(
-				e.which == 16 ||
-				e.which == 13 ||
-				e.which == 91 ||
-				e.which == 17 ||
-				e.which == 37 ||
-				e.which == 38 ||
-				e.which == 39 ||
-				e.which == 40
-			)
-		) {
-			return;
-		}
-		
-		clearTimeout(typingTimer);
-		typingTimer = setTimeout(
-			function(){
-				$.ajax({
-					type: 'GET',
-					url: ajaxurl,
-					data: {
-						action: 'edd_download_search',
-						s: val,
-					},
-					dataType: "json",
-					beforeSend: function(){
-						$('ul.chosen-results').empty();
-					},
-					success: function( data ) {
-
-						// Remove all options but those that are selected
-					 	$('#' + menu_id + ' option:not(:selected)').remove();
-						$.each( data, function( key, item ) {
-						 	// Add any option that doesn't already exist
-							if( ! $('#' + menu_id + ' option[value="' + item.id + '"]').length ) {
-								$('#' + menu_id).prepend( '<option value="' + item.id + '">' + item.name + '</option>' );
-							}
-						});
-						 // Update the options
-						$('.edd-select-chosen').trigger('chosen:updated');
-						$('#' + menu_id).next().find('input').val(val);
-					}
-				}).fail(function (response) {
-					if ( window.console && window.console.log ) {
-						console.log( data );
-					}
-				}).done(function (response) {
-
-		        });
-			},
-			doneTypingInterval
-		);
-	});
-
-	// This fixes the Chosen box being 0px wide when the thickbox is opened
-	$( '#post' ).on( 'click', '.edd-thickbox', function() {
-		$( '.edd-select-chosen', '#choose-download' ).css( 'width', '100%' );
-	});
 
 	/**
 	 * Tools screen JS

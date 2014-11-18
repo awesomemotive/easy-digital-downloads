@@ -168,7 +168,7 @@ function edd_dashboard_sales_widget() {
 							</td>
 							<td class="edd_order_price">
 								<a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>" title="<?php printf( __( 'Purchase Details for Payment #%s', 'edd' ), $payment->ID ); ?> ">
-									<span class="edd_price_label"><?php echo edd_currency_filter( edd_format_amount( $payment->total ) ); ?></span>
+									<span class="edd_price_label"><?php echo edd_currency_filter( edd_format_amount( $payment->total ), edd_get_payment_currency_code( $payment->ID ) ); ?></span>
 								</a>
 							</td>
 						</tr>
@@ -181,3 +181,31 @@ function edd_dashboard_sales_widget() {
 	</div>
 	<?php
 }
+
+/**
+ * Add download count to At a glance widget
+ *
+ * @author Daniel J Griffiths
+ * @since 2.1
+ * @return void
+ */
+function edd_dashboard_at_a_glance_widget( $items ) {
+	$num_posts = wp_count_posts( 'download' );
+
+	if ( $num_posts && $num_posts->publish ) {
+		$text = _n( '%s ' . edd_get_label_singular(), '%s ' . edd_get_label_plural(), $num_posts->publish );
+
+		$text = sprintf( $text, number_format_i18n( $num_posts->publish ) );
+
+		if ( current_user_can( 'edit_products' ) ) {
+			$text = sprintf( '<a class="download-count" href="edit.php?post_type=download">%1$s</a>', $text );
+		} else {
+			$text = sprintf( '<span class="download-count">%1$s</span>', $text );
+		}
+
+		$items[] = $text;
+	}
+
+	return $items;
+}
+add_filter( 'dashboard_glance_items', 'edd_dashboard_at_a_glance_widget', 1 );
