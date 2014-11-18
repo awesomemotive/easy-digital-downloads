@@ -335,7 +335,7 @@ $gateway        = edd_get_payment_gateway( $payment_id );
 											<li class="quantity">
 												<?php $item_price = isset( $price_id ) ? edd_get_price_option_amount( $item_id, $price_id ) : $price; ?>
 												<span><?php echo edd_currency_filter( $item_price ); ?></span>
-												<span> x <?php echo $quantity; ?></span>
+												<span> &times; <?php echo $quantity; ?></span>
 											</li>
 											<?php endif; ?>
 
