@@ -156,12 +156,7 @@ $status    = edd_get_payment_status( $payment, true );
 								foreach ( $download_files as $filekey => $file ) :
 
 									$download_url = edd_get_download_file_url( $meta['key'], $email, $filekey, $item['id'], $price_id );
-									$attribute = '';
-									$has_access = apply_filters( 'edd_file_download_has_access', true, $payment, $edd_receipt_args );
-									if ( $has_access ){
-										$attribute = 'download="'.edd_get_file_name( $file ).'"';
-									}
-									}
+									$attribute = edd_get_html5_download_attribute( true, $payment, $edd_receipt_args, $file );
 									?>
 									<li class="edd_download_file">
 										<a href="<?php echo esc_url( $download_url ); ?>" <?php echo $attribute; ?> class="edd_download_file_link"><?php echo edd_get_file_name( $file ); ?></a>
@@ -182,13 +177,8 @@ $status    = edd_get_payment_status( $payment, true );
 											$download_files = edd_get_download_files( $bundle_item );
 
 											if( $download_files && is_array( $download_files ) ) :
-												$attribute = '';
-												$has_access = apply_filters( 'edd_file_download_has_access', true, $payment, $edd_receipt_args );
-												if ( $has_access ){
-													$attribute = 'download="'.edd_get_file_name( $file ).'"';
-												}
 												foreach ( $download_files as $filekey => $file ) :
-
+													$attribute = edd_get_html5_download_attribute( true, $payment, $edd_receipt_args, $file );
 													$download_url = edd_get_download_file_url( $meta['key'], $email, $filekey, $bundle_item, $price_id ); ?>
 													<li class="edd_download_file">
 														<a href="<?php echo esc_url( $download_url ); ?>" <?php echo $attribute; ?> class="edd_download_file_link"><?php echo esc_html( $file['name'] ); ?></a>
