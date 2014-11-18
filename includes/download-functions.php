@@ -118,21 +118,8 @@ function edd_get_download( $download ) {
  * @return bool $is_free True if the product is free, false if the product is not free or the check fails
  */
 function edd_is_free_download( $download_id = 0, $price_id = false ) {
-
-	$is_free = false;
-	$variable_pricing = edd_has_variable_prices( $download_id );
-
-	if ( $variable_pricing && ! is_null( $price_id ) && $price_id !== false ) {
-		$price = edd_get_price_option_amount( $download_id, $price_id );
-	} elseif( ! $variable_pricing ) {
-		$price = get_post_meta( $download_id, 'edd_price', true );
-	}
-
-	if( isset( $price ) && (float) $price == 0 ) {
-		$is_free = true;
-	}
-
-	return (bool) apply_filters( 'edd_is_free_download', $is_free, $download_id, $price_id );
+	$download = new EDD_Download( $download_id );
+	return $download->is_free( $price_id );
 }
 
 /**
@@ -143,13 +130,8 @@ function edd_is_free_download( $download_id = 0, $price_id = false ) {
  * @return mixed string|int Price of the download
  */
 function edd_get_download_price( $download_id = 0 ) {
-	$price = get_post_meta( $download_id, 'edd_price', true );
-	if ( $price )
-		$price = edd_sanitize_amount( $price );
-	else
-		$price = 0;
-
-	return apply_filters( 'edd_get_download_price', $price, $download_id );
+	$download = new EDD_Download( $download_id );
+	return $download->price;
 }
 
 /**
@@ -234,10 +216,8 @@ function edd_get_download_final_price( $download_id, $user_purchase_info, $amoun
  * @return array Variable prices
  */
 function edd_get_variable_prices( $download_id = 0 ) {
-
-	$prices = get_post_meta( $download_id, 'edd_variable_prices', true );
-	return apply_filters( 'edd_get_variable_prices', $prices, $download_id );
-
+	$download = new EDD_Download( $download_id );
+	return $download->prices;
 }
 
 /**
@@ -248,11 +228,8 @@ function edd_get_variable_prices( $download_id = 0 ) {
  * @return bool true if has variable prices, false otherwise
  */
 function edd_has_variable_prices( $download_id ) {
-	if ( get_post_meta( $download_id, '_variable_pricing', true ) ) {
-		return true;
-	}
-
-	return false;
+	$download = new EDD_Download( $download_id );
+	return $download->has_variable_prices();
 }
 
 /**
@@ -319,7 +296,7 @@ function edd_get_price_option_amount( $download_id, $price_id = 0 ) {
 			$amount = $prices[ $price_id ]['amount'];
 	}
 
-	return apply_filters( 'edd_get_price_option_amount', edd_sanitize_amount( $amount ), $download_id );
+	return apply_filters( 'edd_get_price_option_amount', edd_sanitize_amount( $amount ), $download_id, $price_id );
 }
 
 /**
@@ -436,12 +413,14 @@ function edd_price_range( $download_id = 0 ) {
  * @return bool
  */
 function edd_single_price_option_mode( $download_id = 0 ) {
-	if ( empty( $download_id ) )
+
+	if ( empty( $download_id ) ) {
 		$download_id = get_the_ID();
+	}
 
-	$ret = get_post_meta( $download_id, '_edd_price_options_mode', true );
+	$download = new EDD_Download( $download_id );
+	return $download->is_single_price_mode();
 
-	return (bool) apply_filters( 'edd_single_price_option_mode', $ret, $download_id );
 }
 
 /**
@@ -468,10 +447,8 @@ function edd_get_download_types() {
  * @return string $type Download type
  */
 function edd_get_download_type( $download_id ) {
-	$type = get_post_meta( $download_id, '_edd_product_type', true );
-	if( empty( $type ) )
-		$type = 'default';
-	return apply_filters( 'edd_get_download_type', $type, $download_id );
+	$download = new EDD_Download( $download_id );
+	return $download->type;
 }
 
 /**
@@ -482,7 +459,8 @@ function edd_get_download_type( $download_id ) {
  * @return bool
  */
 function edd_is_bundled_product( $download_id = 0 ) {
-	return 'bundle' === edd_get_download_type( $download_id );
+	$download = new EDD_Download( $download_id );
+	return $download->is_bundled_download();
 }
 
 
@@ -494,8 +472,8 @@ function edd_is_bundled_product( $download_id = 0 ) {
  * @return array $products Products in the bundle
  */
 function edd_get_bundled_products( $download_id = 0 ) {
-	$products = get_post_meta( $download_id, '_edd_bundled_products', true );
-	return apply_filters( 'edd_get_bundled_products', $products, $download_id );
+	$download = new EDD_Download( $download_id );
+	return $download->bundled_downloads;
 }
 
 /**
@@ -506,19 +484,8 @@ function edd_get_bundled_products( $download_id = 0 ) {
  * @return int $earnings Earnings for a certain download
  */
 function edd_get_download_earnings_stats( $download_id ) {
-
-	if ( '' == get_post_meta( $download_id, '_edd_download_earnings', true ) ) {
-		add_post_meta( $download_id, '_edd_download_earnings', 0 );
-	}
-
-	$earnings = get_post_meta( $download_id, '_edd_download_earnings', true );
-
-	if( $earnings < 0 ) {
-		// Never let earnings be less than zero
-		$earnings = 0;
-	}
-
-	return $earnings;
+	$download = new EDD_Download( $download_id );
+	return $download->earnings;
 }
 
 /**
@@ -529,19 +496,8 @@ function edd_get_download_earnings_stats( $download_id ) {
  * @return int $sales Amount of sales for a certain download
  */
 function edd_get_download_sales_stats( $download_id ) {
-
-	if ( '' == get_post_meta( $download_id, '_edd_download_sales', true ) ) {
-		add_post_meta( $download_id, '_edd_download_sales', 0 );
-	} // End if
-
-	$sales = get_post_meta( $download_id, '_edd_download_sales', true );
-
-	if ( $sales < 0 ) {
-		// Never let sales be less than zero
-		$sales = 0;
-	}
-
-	return $sales;
+	$download = new EDD_Download( $download_id );
+	return $download->sales;
 }
 
 /**
@@ -642,12 +598,8 @@ add_action( 'delete_post', 'edd_remove_download_logs_on_delete' );
  * @return bool|int
  */
 function edd_increase_purchase_count( $download_id ) {
-	$sales = edd_get_download_sales_stats( $download_id );
-	$sales = $sales + 1;
-	if ( update_post_meta( $download_id, '_edd_download_sales', $sales ) )
-		return $sales;
-
-	return false;
+	$download = new EDD_Download( $download_id );
+	return $download->increase_sales();
 }
 
 /**
@@ -659,14 +611,8 @@ function edd_increase_purchase_count( $download_id ) {
  * @return bool|int
  */
 function edd_decrease_purchase_count( $download_id ) {
-	$sales = edd_get_download_sales_stats( $download_id );
-	if ( $sales > 0 ) // Only decrease if not already zero
-		$sales = $sales - 1;
-
-	if ( update_post_meta( $download_id, '_edd_download_sales', $sales ) )
-		return $sales;
-
-	return false;
+	$download = new EDD_Download( $download_id );
+	return $download->decrease_sales();	
 }
 
 /**
@@ -678,13 +624,8 @@ function edd_decrease_purchase_count( $download_id ) {
  * @return bool|int
  */
 function edd_increase_earnings( $download_id, $amount ) {
-	$earnings = edd_get_download_earnings_stats( $download_id );
-	$earnings = $earnings + $amount;
-
-	if ( update_post_meta( $download_id, '_edd_download_earnings', $earnings ) )
-		return $earnings;
-
-	return false;
+	$download = new EDD_Download( $download_id );
+	return $download->increase_earnings( $amount );	
 }
 
 /**
@@ -696,15 +637,8 @@ function edd_increase_earnings( $download_id, $amount ) {
  * @return bool|int
  */
 function edd_decrease_earnings( $download_id, $amount ) {
-	$earnings = edd_get_download_earnings_stats( $download_id );
-
-	if ( $earnings > 0 ) // Only decrease if greater than zero
-		$earnings = $earnings - $amount;
-
-	if ( update_post_meta( $download_id, '_edd_download_earnings', $earnings ) )
-		return $earnings;
-
-	return false;
+	$download = new EDD_Download( $download_id );
+	return $download->decrease_earnings( $amount );	
 }
 
 /**
@@ -761,29 +695,8 @@ function edd_get_average_monthly_download_sales( $download_id ) {
  * @return array $files Download files
  */
 function edd_get_download_files( $download_id = 0, $variable_price_id = null ) {
-	$files = array();
-
-	// Bundled products are not allowed to have files
-	if( edd_is_bundled_product( $download_id ) )
-		return $files;
-
-	$download_files = get_post_meta( $download_id, 'edd_download_files', true );
-
-	if ( $download_files ) {
-		if ( ! is_null( $variable_price_id ) && edd_has_variable_prices( $download_id ) ) {
-			foreach ( $download_files as $key => $file_info ) {
-				if ( isset( $file_info['condition'] ) ) {
-					if ( $file_info['condition'] == $variable_price_id || 'all' === $file_info['condition'] ) {
-						$files[ $key ] = $file_info;
-					}
-				}
-			}
-		} else {
-			$files = $download_files;
-		}
-	}
-
-	return apply_filters( 'edd_download_files', $files, $download_id, $variable_price_id );
+	$download = new EDD_Download( $download_id );
+	return $download->get_files( $variable_price_id );
 }
 
 /**
@@ -842,20 +755,8 @@ function edd_get_file_downloaded_count( $download_id = 0, $file_key = 0, $paymen
  * @return int $limit File download limit
  */
 function edd_get_file_download_limit( $download_id = 0 ) {
-	global $edd_options;
-
-	$ret    = 0;
-	$limit  = get_post_meta( $download_id, '_edd_download_limit', true );
-	$global = edd_get_option( 'file_download_limit', 0 );
-
-	if ( ! empty( $limit ) || ( is_numeric( $limit ) && (int)$limit == 0 ) ) {
-		// Download specific limit
-		$ret = absint( $limit );
-	} else {
-		// Global limit
-		$ret = strlen( $limit ) == 0  || $global ? $global : 0;
-	}
-	return apply_filters( 'edd_file_download_limit', $ret, $download_id );
+	$download = new EDD_Download( $download_id );
+	return $download->get_file_download_limit();
 }
 
 /**
@@ -968,14 +869,8 @@ function edd_is_file_at_download_limit( $download_id = 0, $payment_id = 0, $file
  * @return string - the price ID if restricted, "all" otherwise
  */
 function edd_get_file_price_condition( $download_id, $file_key ) {
-	$files = edd_get_download_files( $download_id );
-
-	if ( ! $files )
-		return false;
-
-	$condition = isset( $files[ $file_key ]['condition']) ? $files[ $file_key ]['condition'] : 'all';
-
-	return $condition;
+	$download = new EDD_Download( $download_id );
+	return $download->get_file_price_condition( $file_key );
 }
 
 /**
@@ -1101,12 +996,8 @@ function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $ex
  * @return string $notes Product notes
  */
 function edd_get_product_notes( $download_id ) {
-	$notes = get_post_meta( $download_id, 'edd_product_notes', true );
-
-	if ( $notes )
-		return (string) apply_filters( 'edd_product_notes', $notes, $download_id );
-
-	return '';
+	$download = new EDD_Download( $download_id );
+	return $download->notes;
 }
 
 /**
@@ -1120,11 +1011,8 @@ function edd_get_product_notes( $download_id ) {
  * @return mixed|void Download SKU
  */
 function edd_get_download_sku( $download_id = 0 ) {
-	$sku = get_post_meta( $download_id, 'edd_sku', true );
-	if ( empty( $sku ) )
-		$sku = '-';
-
-	return apply_filters( 'edd_get_download_sku', $sku, $download_id );
+	$download = new EDD_Download( $download_id );
+	return $download->sku;
 }
 
 /**
@@ -1136,11 +1024,8 @@ function edd_get_download_sku( $download_id = 0 ) {
  * @return mixed|void Add to Cart or Direct
  */
 function edd_get_download_button_behavior( $download_id = 0 ) {
-	$behavior = get_post_meta( $download_id, '_edd_button_behavior', true );
-	if( empty( $behavior ) ) {
-		$behavior = 'add_to_cart';
-	}
-	return apply_filters( 'edd_get_download_button_behavior', $behavior, $download_id );
+	$download = new EDD_Download( $download_id );
+	return $download->button_behavior;
 }
 
 /**

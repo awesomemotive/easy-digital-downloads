@@ -39,6 +39,7 @@ class EDD_HTML_Elements {
 			'multiple'    => false,
 			'selected'    => 0,
 			'chosen'      => false,
+			'placeholder' => sprintf( __( 'Select a %s', 'edd' ), edd_get_label_singular() ),
 			'number'      => 30
 		);
 
@@ -80,8 +81,9 @@ class EDD_HTML_Elements {
 			'id'               => $args['id'],
 			'class'            => $args['class'],
 			'options'          => $options,
-			'multiple'         => $args['multiple'],
 			'chosen'           => $args['chosen'],
+			'multiple'         => $args['multiple'],
+            'placeholder'      => $args['placeholder'],
 			'show_option_all'  => false,
 			'show_option_none' => false
 		) );
@@ -105,7 +107,8 @@ class EDD_HTML_Elements {
 			'class'       => '',
 			'multiple'    => false,
 			'selected'    => 0,
-			'chosen'      => true,
+            'select2'     => $args['select2'],
+            'placeholder' => $args['placeholder'],
 			'number'      => 30
 		);
 
@@ -118,24 +121,12 @@ class EDD_HTML_Elements {
 		$options = array();
 
 		if ( $customers ) {
+			$options[-1] = __( 'Guest', 'edd' );
 			foreach ( $customers as $customer ) {
 				$options[ absint( $customer->id ) ] = esc_html( $customer->name . ' (' . $customer->email . ')' );
 			}
 		} else {
 			$options[0] = __( 'No customers found', 'edd' );
-		}
-
-		// This ensures that any selected products are included in the drop down
-		if( is_array( $args['selected'] ) ) {
-			foreach( $args['selected'] as $item ) {
-				if( ! in_array( $item, $options ) ) {
-					$options[$item] = get_the_title( $item );
-				}
-			}
-		} elseif ( is_numeric( $args['selected'] ) && $args['selected'] !== 0 ) {
-			if ( ! in_array( $args['selected'], $options ) ) {
-				$options[$args['selected']] = get_the_title( $args['selected'] );
-			}
 		}
 
 		$output = $this->select( array(
@@ -297,6 +288,7 @@ class EDD_HTML_Elements {
 			'id'               => '',
 			'selected'         => 0,
 			'chosen'           => false,
+			'placeholder'      => null,
 			'multiple'         => false,
 			'show_option_all'  => _x( 'All', 'all dropdown items', 'edd' ),
 			'show_option_none' => _x( 'None', 'no dropdown items', 'edd' )
@@ -315,7 +307,13 @@ class EDD_HTML_Elements {
 			$args['class'] .= ' edd-select-chosen';
 		}
 
-		$output = '<select name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( sanitize_key( str_replace( '-', '_', $args[ 'id' ] ) ) ) . '" class="edd-select ' . esc_attr( $args[ 'class'] ) . '"' . $multiple . '>';
+        if( $args['placeholder'] ) {
+            $placeholder = $args['placeholder'];
+        } else {
+            $placeholder = '';
+        }
+
+        $output = '<select name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( sanitize_key( str_replace( '-', '_', $args[ 'id' ] ) ) ) . '" class="edd-select ' . esc_attr( $args[ 'class'] ) . '"' . $multiple . ' data-placeholder="' . $placeholder . '">';
 
 		if ( ! empty( $args[ 'options' ] ) ) {
 			if ( $args[ 'show_option_all' ] ) {
