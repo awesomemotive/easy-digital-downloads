@@ -49,7 +49,7 @@ jQuery(document).ready(function ($) {
 			});
 
 			clone.find( '.edd_repeatable_default_input' ).each( function() {
-				$( this ).val( parseInt( count ) ).removeAttr('checked');
+				$( this ).val( parseInt( key ) ).removeAttr('checked');
 			})
 
 			return clone;
@@ -361,8 +361,8 @@ jQuery(document).ready(function ($) {
 				e.preventDefault();
 
 				var download_id    = $('#edd_order_download_select').val();
-				var download_title = $('.select2-chosen').text();
-                var amount         = $('#edd-order-download-amount').val();
+				var download_title = $('.chosen-single span').text();
+				var amount         = $('#edd-order-download-amount').val();
 				var price_id       = $('.edd_price_options_select option:selected').val();
 				var price_name     = $('.edd_price_options_select option:selected').text();
 				var quantity       = $('#edd-order-download-quantity').val();
@@ -970,21 +970,90 @@ jQuery(document).ready(function ($) {
 
 	});
 
-    // Setup Select2
-    if ($('.edd-select2').attr('multiple')) {
-        $('.edd-select2').select2({
-            dropdownAutoWidth: true,
-        });
-    } else {
-        $('.edd-select2').select2({
-            dropdownAutoWidth: true,
-        });
-    }
+    // Setup Chosen menus
+    $('.edd-select-chosen').chosen({
+    	inherit_select_classes: true,
+    	placeholder_text_single: edd_vars.one_option,
+    	placeholder_text_multiple: edd_vars.one_or_more_option,
+    });
+
+    // Add placeholders for Chosen input fields
+    $( '.chosen-choices' ).on( 'click', function () {
+        $(this).children('li').children('input').attr( 'placeholder', edd_vars.type_to_search );
+    });
 
 	// Variables for setting up the typing timer
 	var typingTimer;               // Timer identifier
 	var doneTypingInterval = 342;  // Time in ms, Slow - 521ms, Moderate - 342ms, Fast - 300ms
 
+    // Replace options with search results
+	$('.edd-select.chosen-container .chosen-search input, .edd-select.chosen-container .search-field input').keyup(function(e) {
+
+		var val = $(this).val(), container = $(this).closest( '.edd-select-chosen' );
+		var menu_id = container.attr('id').replace( '_chosen', '' );
+		var lastKey = e.which;
+
+		// Don't fire if short or is a modifier key (shift, ctrl, apple command key, or arrow keys)
+		if(
+			val.length <= 3 ||
+			(
+				e.which == 16 ||
+				e.which == 13 ||
+				e.which == 91 ||
+				e.which == 17 ||
+				e.which == 37 ||
+				e.which == 38 ||
+				e.which == 39 ||
+				e.which == 40
+			)
+		) {
+			return;
+		}
+		
+		clearTimeout(typingTimer);
+		typingTimer = setTimeout(
+			function(){
+				$.ajax({
+					type: 'GET',
+					url: ajaxurl,
+					data: {
+						action: 'edd_download_search',
+						s: val,
+					},
+					dataType: "json",
+					beforeSend: function(){
+						$('ul.chosen-results').empty();
+					},
+					success: function( data ) {
+
+						// Remove all options but those that are selected
+					 	$('#' + menu_id + ' option:not(:selected)').remove();
+						$.each( data, function( key, item ) {
+						 	// Add any option that doesn't already exist
+							if( ! $('#' + menu_id + ' option[value="' + item.id + '"]').length ) {
+								$('#' + menu_id).prepend( '<option value="' + item.id + '">' + item.name + '</option>' );
+							}
+						});
+						 // Update the options
+						$('.edd-select-chosen').trigger('chosen:updated');
+						$('#' + menu_id).next().find('input').val(val);
+					}
+				}).fail(function (response) {
+					if ( window.console && window.console.log ) {
+						console.log( data );
+					}
+				}).done(function (response) {
+
+		        });
+			},
+			doneTypingInterval
+		);
+	});
+
+	// This fixes the Chosen box being 0px wide when the thickbox is opened
+	$( '#post' ).on( 'click', '.edd-thickbox', function() {
+		$( '.edd-select-chosen', '#choose-download' ).css( 'width', '100%' );
+	});
 
 	/**
 	 * Tools screen JS

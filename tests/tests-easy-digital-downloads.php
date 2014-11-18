@@ -113,8 +113,8 @@ class Tests_EDD extends WP_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/theme-compatibility.php' );
 
         /** Check Assets Exist */
-        $this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/select2.css' );
-        $this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/select2.min.css' );
+        $this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/chosen.css' );
+        $this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/chosen.min.css' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/colorbox.css' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/edd-admin.css' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/jquery-ui-classic.css' );
