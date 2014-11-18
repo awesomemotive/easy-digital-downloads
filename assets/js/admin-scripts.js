@@ -78,7 +78,7 @@ jQuery(document).ready(function ($) {
 					});
 				}
 			});
-			
+
 		},
 
 		remove : function() {
@@ -422,12 +422,7 @@ jQuery(document).ready(function ($) {
 				var total = 0;
 				if( $('#edd-purchased-files .row .edd-payment-details-download-amount').length ) {
 					$('#edd-purchased-files .row .edd-payment-details-download-amount').each(function() {
-						var quantity = $(this).next().val();
-						if( quantity ) {
-							total += ( parseFloat( $(this).val() ) * parseInt( quantity ) );
-						} else {
-							total += parseFloat( $(this).val() );
-						}
+						total += parseFloat( $(this).val() );
 					});
 				}
 				if( $('.edd-payment-fees').length ) {
@@ -620,7 +615,7 @@ jQuery(document).ready(function ($) {
 				} else {
 
 					$('#edd-discount-product-conditions').hide();
-					
+
 				}
 
 			});
@@ -1009,7 +1004,7 @@ jQuery(document).ready(function ($) {
 		) {
 			return;
 		}
-		
+
 		clearTimeout(typingTimer);
 		typingTimer = setTimeout(
 			function(){
@@ -1086,7 +1081,7 @@ jQuery(document).ready(function ($) {
 			action: 'edd_search_users',
 			user_name: user_search
 		};
-		
+
 		document.body.style.cursor = 'wait';
 
 		$.ajax({

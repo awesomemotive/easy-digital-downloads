@@ -314,11 +314,16 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 
 											<?php if( edd_item_quantities_enabled() ) : ?>
 											<li class="quantity">
-												<?php echo __( 'Quantity:', 'edd' ) . '&nbsp;<span>' . $quantity . '</span>'; ?>
+												<?php $item_price = isset( $price_id ) ? edd_get_price_option_amount( $item_id, $price_id ) : $price; ?>
+												<span><?php echo edd_currency_filter( $item_price ); ?></span>
+												<span> &times; <?php echo $quantity; ?></span>
 											</li>
 											<?php endif; ?>
 
 											<li class="price">
+												<?php if ( edd_item_quantities_enabled() ) : ?>
+												<?php echo __( 'Total:', 'edd' ) . '&nbsp;'; ?>
+												<?php endif; ?>
 												<?php echo edd_currency_filter( edd_format_amount( $price ), $currency_code ); ?>
 											</li>
 
