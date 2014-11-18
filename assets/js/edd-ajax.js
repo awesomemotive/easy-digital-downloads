@@ -74,7 +74,8 @@ jQuery(document).ready(function ($) {
     $('body').on('click.eddAddToCart', '.edd-add-to-cart', function (e) {
 
         e.preventDefault();
-
+        document.cookie = 'edd_items_in_cart=1;path=/';
+        
         var $this = $(this), form = $this.closest('form');
 
         if( 'straight_to_gateway' == form.find('.edd_action_input').val() ) {
