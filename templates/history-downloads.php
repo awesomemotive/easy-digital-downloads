@@ -55,11 +55,7 @@ if ( $purchases ) :
 
 											$download_url = edd_get_download_file_url( $purchase_data['key'], $email, $filekey, $download['id'], $price_id );																		$has_access = apply_filters( 'edd_file_download_has_access', true, $payment, $edd_receipt_args );
 											$attribute = '';
-											$has_access = apply_filters( 'edd_file_download_has_access', true, $purchase_data, array() );
-										
-											if ( $has_access ){
-												$attribute = 'download="'.edd_get_file_name( $file ).'"';
-											}
+											$attribute = edd_get_html5_download_attribute( true, $purchase_data, array(), $file );
 											?>
 
 											<div class="edd_download_file">
