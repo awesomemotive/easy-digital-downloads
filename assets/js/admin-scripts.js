@@ -373,9 +373,23 @@ jQuery(document).ready(function ($) {
 
 				if( ! amount ) {
 					amount = 0;
-				} else {
-					amount = parseInt( amount ) * parseInt( quantity );
 				}
+
+				amount = parseInt( amount );
+				if ( isNaN( amount ) ) {
+					alert( edd_vars.numeric_item_price );
+					return false;
+				}
+
+				if ( edd_vars.quantities_enabled === '1' ) {
+					if ( !isNaN( parseInt( quantity ) ) ) {
+						amount = amount * quantity;
+					} else {
+						alert( edd_vars.numeric_quantity );
+						return false;
+					}
+				}
+
 
 				amount = amount.toFixed( edd_vars.currency_decimals );
 
@@ -414,7 +428,7 @@ jQuery(document).ready(function ($) {
 				$('#edd-payment-downloads-changed').val(1);
 
 				$(clone).insertAfter( '#edd-purchased-files div.row:last' );
-				$('.edd-order-payment-recalc-totals').show();
+				$( '.edd-order-payment-recalc-totals' ).show();
 
 			});
 		},

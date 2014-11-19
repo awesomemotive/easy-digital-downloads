@@ -280,6 +280,7 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 											// Item ID is checked if isset due to the near-1.0 cart data
 											$item_id  = isset( $cart_item['id']    ) ? $cart_item['id']    : $cart_item;
 											$price    = isset( $cart_item['price'] ) ? $cart_item['price'] : false;
+											$item_price = isset( $cart_item['item_price'] ) ? $cart_item['item_price'] : $price;
 											$price_id = isset( $cart_item['item_number']['options']['price_id'] ) ? $cart_item['item_number']['options']['price_id'] : null;
 											$quantity = isset( $cart_item['quantity'] ) && $cart_item['quantity'] > 0 ? $cart_item['quantity'] : 1;
 
@@ -314,8 +315,7 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 
 											<?php if( edd_item_quantities_enabled() ) : ?>
 											<li class="quantity">
-												<?php $item_price = isset( $price_id ) ? edd_get_price_option_amount( $item_id, $price_id ) : $price; ?>
-												<span class="item-price"><?php echo edd_currency_filter( $item_price ); ?></span>
+												<span class="item-price"><?php echo edd_currency_filter( edd_format_amount( $item_price ) ); ?></span>
 												&nbsp;&times;&nbsp;<span class="item-quantity"><?php echo $quantity; ?></span>
 											</li>
 											<?php endif; ?>
@@ -358,7 +358,7 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 											<li class="price">
 												<?php
 												echo EDD()->html->text( array( 'name' => 'edd-order-download-amount',
-													'label' => __( 'Item Amount: ', 'edd' ),
+													'label' => __( 'Item Price: ', 'edd' ),
 													'class' => 'small-text edd-order-download-price'
 												) );
 												?>
