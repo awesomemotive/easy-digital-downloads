@@ -344,7 +344,7 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 												<?php echo EDD()->html->product_dropdown( array(
 													'name'   => 'edd-order-download-select',
 													'id'     => 'edd-order-download-select',
-													'select2'=> true
+													'chosen' => true
 												) ); ?>
 											</li>
 
