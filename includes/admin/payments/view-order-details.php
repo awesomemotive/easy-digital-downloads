@@ -315,8 +315,8 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 											<?php if( edd_item_quantities_enabled() ) : ?>
 											<li class="quantity">
 												<?php $item_price = isset( $price_id ) ? edd_get_price_option_amount( $item_id, $price_id ) : $price; ?>
-												<span><?php echo edd_currency_filter( $item_price ); ?></span>
-												<span> &times; <?php echo $quantity; ?></span>
+												<span class="item-price"><?php echo edd_currency_filter( $item_price ); ?></span>
+												&nbsp;&times;&nbsp;<span class="item-quantity"><?php echo $quantity; ?></span>
 											</li>
 											<?php endif; ?>
 
@@ -324,7 +324,7 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 												<?php if ( edd_item_quantities_enabled() ) : ?>
 												<?php echo __( 'Total:', 'edd' ) . '&nbsp;'; ?>
 												<?php endif; ?>
-]												<?php echo edd_currency_filter( edd_format_amount( $price ), $currency_code ); ?>
+												<span class="price-text"><?php echo edd_currency_filter( edd_format_amount( $price ), $currency_code ); ?></span>
 											</li>
 
 											<li class="actions">
@@ -358,7 +358,7 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 											<li class="price">
 												<?php
 												echo EDD()->html->text( array( 'name' => 'edd-order-download-amount',
-													'label' => __( 'Amount: ', 'edd' ),
+													'label' => __( 'Item Amount: ', 'edd' ),
 													'class' => 'small-text edd-order-download-price'
 												) );
 												?>

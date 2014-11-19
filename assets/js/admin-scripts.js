@@ -361,19 +361,23 @@ jQuery(document).ready(function ($) {
 				e.preventDefault();
 
 				var download_id    = $('#edd_order_download_select').val();
-				var download_title = $('.chosen-single span').text();
+				var download_title = $('#edd_order_download_select').find(':selected').text();
+				var quantity       = $('#edd-order-download-quantity').val();
 				var amount         = $('#edd-order-download-amount').val();
 				var price_id       = $('.edd_price_options_select option:selected').val();
 				var price_name     = $('.edd_price_options_select option:selected').text();
-				var quantity       = $('#edd-order-download-quantity').val();
 
 				if( download_id < 1 ) {
 					return false;
 				}
 
 				if( ! amount ) {
-					amount = '0.00';
+					amount = 0;
+				} else {
+					amount = parseInt( amount ) * parseInt( quantity );
 				}
+
+				amount = amount.toFixed( edd_vars.currency_decimals );
 
 				var formatted_amount = amount + edd_vars.currency_sign;
 				if ( 'before' === edd_vars.currency_pos ) {
@@ -389,8 +393,9 @@ jQuery(document).ready(function ($) {
 
 				clone.find( '.download span' ).html( '<a href="post.php?post=' + download_id + '&action=edit"></a>' );
 				clone.find( '.download span a' ).text( download_title );
-				clone.find( '.price' ).text( formatted_amount );
-				clone.find( '.quantity span' ).text( quantity );
+				clone.find( '.price-text' ).text( formatted_amount );
+				clone.find( '.item-quantity' ).text( quantity );
+				clone.find( '.item-price' ).text( edd_vars.currency_sign + ( amount / quantity ).toFixed( edd_vars.currency_decimals ) );
 				clone.find( 'input.edd-payment-details-download-id' ).val( download_id );
 				clone.find( 'input.edd-payment-details-download-price-id' ).val( price_id );
 				clone.find( 'input.edd-payment-details-download-amount' ).val( amount );
