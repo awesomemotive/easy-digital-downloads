@@ -176,7 +176,7 @@ function edd_filter_downloads( $vars ) {
 			$author_id = $_REQUEST['author'];
 			if ( (int) $author_id !== get_current_user_id() ) {
 				// Tried to view the products of another person, sorry
-				wp_die( __( 'You do not have permission to view this data.', 'edd' ), __( 'Error', 'edd' ) );
+				wp_die( __( 'You do not have permission to view this data.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 			}
 			$vars = array_merge(
 				$vars,
