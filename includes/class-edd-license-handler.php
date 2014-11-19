@@ -176,6 +176,10 @@ class EDD_License {
 
 		$license = sanitize_text_field( $_POST['edd_settings'][ $this->item_shortname . '_license_key' ] );
 
+		if( empty( $license ) ) {
+			return;
+		}
+
 		// Data to send to the API
 		$api_params = array(
 			'edd_action' => 'activate_license',
@@ -195,8 +199,9 @@ class EDD_License {
 		);
 
 		// Make sure there are no errors
-		if ( is_wp_error( $response ) )
+		if ( is_wp_error( $response ) ) {
 			return;
+		}
 
 		// Tell WordPress to look for updates
 		set_site_transient( 'update_plugins', null );
@@ -207,7 +212,7 @@ class EDD_License {
 		update_option( $this->item_shortname . '_license_active', $license_data->license );
 
 		if( ! (bool) $license_data->success ) {
-			set_transient( 'edd_license_error', $license_data, 100 );
+			set_transient( 'edd_license_error', $license_data, 1000 );
 		} else {
 			delete_transient( 'edd_license_error' );
 		}
@@ -254,8 +259,9 @@ class EDD_License {
 			);
 
 			// Make sure there are no errors
-			if ( is_wp_error( $response ) )
+			if ( is_wp_error( $response ) ) {
 				return;
+			}
 
 			// Decode the license data
 			$license_data = json_decode( wp_remote_retrieve_body( $response ) );
@@ -263,7 +269,7 @@ class EDD_License {
 			delete_option( $this->item_shortname . '_license_active' );
 
 			if( ! (bool) $license_data->success ) {
-				set_transient( 'edd_license_error', $license_data, 100 );
+				set_transient( 'edd_license_error', $license_data, 1000 );
 			} else {
 				delete_transient( 'edd_license_error' );
 			}
@@ -293,33 +299,43 @@ class EDD_License {
 			return;
 		}
 
-		switch( $license_error->error ) {
+		if( ! empty( $license_error->error ) ) {
 
-			case 'item_name_mismatch' :
+			switch( $license_error->error ) {
 
-				$message = __( 'This license does not belong to rhe product you have entered it for.', 'edd' );
-				break;
+				case 'item_name_mismatch' :
 
-			case 'no_activations_left' :
+					$message = __( 'This license does not belong to the product you have entered it for.', 'edd' );
+					break;
 
-				$message = __( 'This license does not have any activations left', 'edd' );
-				break;
+				case 'no_activations_left' :
 
-			case 'expired' :
+					$message = __( 'This license does not have any activations left', 'edd' );
+					break;
 
-				$message = __( 'This license key is expired. Please renew it.', 'edd' );
-				break;
+				case 'expired' :
 
-			default :
+					$message = __( 'This license key is expired. Please renew it.', 'edd' );
+					break;
 
-				$message = sprintf( __( 'There was a problem activating your license key, please try again or contact support. Error code: %s', 'edd' ), $license_error->error );
-				break;
+				default :
+
+					$message = sprintf( __( 'There was a problem activating your license key, please try again or contact support. Error code: %s', 'edd' ), $license_error->error );
+					break;
+
+			}
 
 		}
 
-		echo '<div class="error">';
-			echo '<p>' . $message . '</p>';
-		echo '</div>';
+		if( ! empty( $message ) ) {
+
+			echo '<div class="error">';
+				echo '<p>' . $message . '</p>';
+			echo '</div>';
+
+		}
+
+		delete_transient( 'edd_license_error' );
 
 	}
 }
