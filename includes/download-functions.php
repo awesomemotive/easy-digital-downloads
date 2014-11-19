@@ -118,6 +118,11 @@ function edd_get_download( $download = 0 ) {
  * @return bool $is_free True if the product is free, false if the product is not free or the check fails
  */
 function edd_is_free_download( $download_id = 0, $price_id = false ) {
+
+	if( empty( $download_id ) ) {
+		return false;
+	}
+	
 	$download = new EDD_Download( $download_id );
 	return $download->is_free( $price_id );
 }
@@ -130,6 +135,11 @@ function edd_is_free_download( $download_id = 0, $price_id = false ) {
  * @return mixed string|int Price of the download
  */
 function edd_get_download_price( $download_id = 0 ) {
+
+	if( empty( $download_id ) ) {
+		return false;
+	}
+
 	$download = new EDD_Download( $download_id );
 	return $download->price;
 }
@@ -216,6 +226,11 @@ function edd_get_download_final_price( $download_id = 0, $user_purchase_info, $a
  * @return array Variable prices
  */
 function edd_get_variable_prices( $download_id = 0 ) {
+
+	if( empty( $download_id ) ) {
+		return false;
+	}
+
 	$download = new EDD_Download( $download_id );
 	return $download->prices;
 }
@@ -228,6 +243,11 @@ function edd_get_variable_prices( $download_id = 0 ) {
  * @return bool true if has variable prices, false otherwise
  */
 function edd_has_variable_prices( $download_id = 0 ) {
+
+	if( empty( $download_id ) ) {
+		return false;
+	}
+
 	$download = new EDD_Download( $download_id );
 	return $download->has_variable_prices();
 }
