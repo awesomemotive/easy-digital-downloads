@@ -185,6 +185,7 @@ function edd_load_admin_scripts( $hook ) {
 		'one_or_more_option'      => sprintf( __( 'Choose one or more %s', 'edd' ), edd_get_label_plural() ),
 		'currency_sign'           => edd_currency_filter(''),
 		'currency_pos'            => isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
+		'currency_decimals'       => edd_currency_decimal_filter(),
 		'new_media_ui'            => apply_filters( 'edd_use_35_media_ui', 1 ),
 		'remove_text'             => __( 'Remove', 'edd' ),
 		'type_to_search'          => sprintf( __( 'Type to search %s', 'edd' ), edd_get_label_plural() )
