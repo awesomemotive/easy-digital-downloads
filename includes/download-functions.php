@@ -85,7 +85,7 @@ function edd_get_download_by( $field = '', $value = '' ) {
  * @param int $download Download ID
  * @return WP_Post $download Entire download data
  */
-function edd_get_download( $download ) {
+function edd_get_download( $download = 0 ) {
 	if ( is_numeric( $download ) ) {
 		$download = get_post( $download );
 		if ( ! $download || 'download' !== $download->post_type )
@@ -190,7 +190,7 @@ add_filter( 'edd_download_price', 'edd_currency_filter', 20 );
  * @param string $amount_override a custom amount that over rides the 'edd_price' meta, used for variable prices
  * @return string - the price of the download
  */
-function edd_get_download_final_price( $download_id, $user_purchase_info, $amount_override = null ) {
+function edd_get_download_final_price( $download_id = 0, $user_purchase_info, $amount_override = null ) {
 	if ( is_null( $amount_override ) ) {
 		$original_price = get_post_meta( $download_id, 'edd_price', true );
 	} else {
@@ -227,7 +227,7 @@ function edd_get_variable_prices( $download_id = 0 ) {
  * @param int $download_id ID number of the download to check
  * @return bool true if has variable prices, false otherwise
  */
-function edd_has_variable_prices( $download_id ) {
+function edd_has_variable_prices( $download_id = 0 ) {
 	$download = new EDD_Download( $download_id );
 	return $download->has_variable_prices();
 }
@@ -240,7 +240,7 @@ function edd_has_variable_prices( $download_id ) {
  * @param  int $download_id ID number of the download to check
  * @return int              The Price ID to select by default
  */
-function edd_get_default_variable_price( $download_id ) {
+function edd_get_default_variable_price( $download_id = 0 ) {
 
 	if ( ! edd_has_variable_prices( $download_id ) ) {
 		return false;
@@ -287,7 +287,7 @@ function edd_get_price_option_name( $download_id = 0, $price_id = 0, $payment_id
  * @param int @payment_id ID of the payment
  * @return float $amount Amount of the price option
  */
-function edd_get_price_option_amount( $download_id, $price_id = 0 ) {
+function edd_get_price_option_amount( $download_id = 0, $price_id = 0 ) {
 	$prices = edd_get_variable_prices( $download_id );
 	$amount = 0.00;
 
@@ -446,7 +446,7 @@ function edd_get_download_types() {
  * @param int $download_id Download ID
  * @return string $type Download type
  */
-function edd_get_download_type( $download_id ) {
+function edd_get_download_type( $download_id = 0 ) {
 	$download = new EDD_Download( $download_id );
 	return $download->type;
 }
@@ -483,7 +483,7 @@ function edd_get_bundled_products( $download_id = 0 ) {
  * @param int $download_id Download ID
  * @return int $earnings Earnings for a certain download
  */
-function edd_get_download_earnings_stats( $download_id ) {
+function edd_get_download_earnings_stats( $download_id = 0 ) {
 	$download = new EDD_Download( $download_id );
 	return $download->earnings;
 }
@@ -495,7 +495,7 @@ function edd_get_download_earnings_stats( $download_id ) {
  * @param int $download_id Download ID
  * @return int $sales Amount of sales for a certain download
  */
-function edd_get_download_sales_stats( $download_id ) {
+function edd_get_download_sales_stats( $download_id = 0 ) {
 	$download = new EDD_Download( $download_id );
 	return $download->sales;
 }
@@ -513,7 +513,7 @@ function edd_get_download_sales_stats( $download_id ) {
  * @param string|null $sale_date The date of the sale
  * @return void
 */
-function edd_record_sale_in_log( $download_id, $payment_id, $price_id = false, $sale_date = null ) {
+function edd_record_sale_in_log( $download_id = 0, $payment_id, $price_id = false, $sale_date = null ) {
 	global $edd_logs;
 
 	$log_data = array(
@@ -546,7 +546,7 @@ function edd_record_sale_in_log( $download_id, $payment_id, $price_id = false, $
  * @param int $price_id Price ID, if any
  * @return void
  */
-function edd_record_download_in_log( $download_id, $file_id, $user_info, $ip, $payment_id, $price_id = false ) {
+function edd_record_download_in_log( $download_id = 0, $file_id, $user_info, $ip, $payment_id, $price_id = false ) {
 	global $edd_logs;
 
 	$log_data = array(
@@ -597,7 +597,7 @@ add_action( 'delete_post', 'edd_remove_download_logs_on_delete' );
  * @param int $download_id Download ID
  * @return bool|int
  */
-function edd_increase_purchase_count( $download_id ) {
+function edd_increase_purchase_count( $download_id = 0 ) {
 	$download = new EDD_Download( $download_id );
 	return $download->increase_sales();
 }
@@ -610,7 +610,7 @@ function edd_increase_purchase_count( $download_id ) {
  * @param int $download_id Download ID
  * @return bool|int
  */
-function edd_decrease_purchase_count( $download_id ) {
+function edd_decrease_purchase_count( $download_id = 0 ) {
 	$download = new EDD_Download( $download_id );
 	return $download->decrease_sales();	
 }
@@ -623,7 +623,7 @@ function edd_decrease_purchase_count( $download_id ) {
  * @param int $amount Earnings
  * @return bool|int
  */
-function edd_increase_earnings( $download_id, $amount ) {
+function edd_increase_earnings( $download_id = 0, $amount ) {
 	$download = new EDD_Download( $download_id );
 	return $download->increase_earnings( $amount );	
 }
@@ -636,7 +636,7 @@ function edd_increase_earnings( $download_id, $amount ) {
  * @param int $amount Earnings
  * @return bool|int
  */
-function edd_decrease_earnings( $download_id, $amount ) {
+function edd_decrease_earnings( $download_id = 0, $amount ) {
 	$download = new EDD_Download( $download_id );
 	return $download->decrease_earnings( $amount );	
 }
@@ -648,7 +648,7 @@ function edd_decrease_earnings( $download_id, $amount ) {
  * @param int $download_id Download ID
  * @return float $earnings Average monthly earnings
  */
-function edd_get_average_monthly_download_earnings( $download_id ) {
+function edd_get_average_monthly_download_earnings( $download_id = 0 ) {
 	$earnings 	  = edd_get_download_earnings_stats( $download_id );
 	$release_date = get_post_field( 'post_date', $download_id );
 
@@ -670,7 +670,7 @@ function edd_get_average_monthly_download_earnings( $download_id ) {
  * @param int $download_id Download ID
  * @return float $sales Average monthly sales
  */
-function edd_get_average_monthly_download_sales( $download_id ) {
+function edd_get_average_monthly_download_sales( $download_id = 0 ) {
     $sales          = edd_get_download_sales_stats( $download_id );
     $release_date   = get_post_field( 'post_date', $download_id );
 
@@ -868,7 +868,7 @@ function edd_is_file_at_download_limit( $download_id = 0, $payment_id = 0, $file
  * @param string $file_key File Key
  * @return string - the price ID if restricted, "all" otherwise
  */
-function edd_get_file_price_condition( $download_id, $file_key ) {
+function edd_get_file_price_condition( $download_id = 0, $file_key ) {
 	$download = new EDD_Download( $download_id );
 	return $download->get_file_price_condition( $file_key );
 }
@@ -887,7 +887,7 @@ function edd_get_file_price_condition( $download_id, $file_key ) {
  *
  * @return string Constructed download URL
  */
-function edd_get_download_file_url( $key, $email, $filekey, $download_id, $price_id = false ) {
+function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $price_id = false ) {
 	global $edd_options;
 
 	$hours = isset( $edd_options['download_link_expiration'] )
@@ -995,7 +995,7 @@ function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $ex
  * @param int $download_id Download ID
  * @return string $notes Product notes
  */
-function edd_get_product_notes( $download_id ) {
+function edd_get_product_notes( $download_id = 0 ) {
 	$download = new EDD_Download( $download_id );
 	return $download->notes;
 }
