@@ -448,7 +448,7 @@ class EDD_CLI extends WP_CLI_Command {
 			if( array_key_exists( 'status', $assoc_args ) ) {
 				$stati = array(
 					'publish',
-					'completed',
+					'complete',
 					'pending',
 					'refunded',
 					'revoked',
@@ -459,10 +459,10 @@ class EDD_CLI extends WP_CLI_Command {
 				);
 
 				if( in_array( $assoc_args['status'], $stati ) ) {
-					$status = ( $assoc_args['status'] == 'completed' ) ? 'publish' : $assoc_args['status'];
+					$status = ( $assoc_args['status'] == 'complete' ) ? 'publish' : $assoc_args['status'];
 				} else {
 					WP_CLI::warning( sprintf(
-						__( "Invalid status '%s', defaulting to 'completed'", 'edd' ),
+						__( "Invalid status '%s', defaulting to 'complete'", 'edd' ),
 						$assoc_args['status']
 					) );
 				}
