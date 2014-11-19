@@ -107,7 +107,7 @@ class EDD_Download {
 	 */
 	public function __construct( $_id = false, $_args = array() ) {
 
-		if( empty( $_id ) ) {
+		if( false === $_id ) {
 
 			$defaults = array(
 				'post_type'   => 'download',
