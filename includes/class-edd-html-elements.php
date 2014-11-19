@@ -55,6 +55,7 @@ class EDD_HTML_Elements {
 		$options = array();
 
 		if ( $products ) {
+			$options[0] = sprintf( __( 'Select a %s', 'edd' ), edd_get_label_singular() );
 			foreach ( $products as $product ) {
 				$options[ absint( $product->ID ) ] = esc_html( $product->post_title );
 			}
