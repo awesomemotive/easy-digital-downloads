@@ -391,5 +391,167 @@ class EDD_CLI extends WP_CLI_Command {
 
 			WP_CLI::line( '' );
 		}
+    }
+
+
+	/**
+	 * Create sample purchase data for your EDD site
+	 *
+	 * ## OPTIONS
+	 *
+	 * --number: The number of purchases to create
+	 * --status=<status>: The status to create purchases as 
+	 * --id=<product_id>: A specific product to create purchase data for
+	 * --price_id=<price_id>: A price ID of the specified product
+	 *
+	 * ## EXAMPLES
+	 *
+	 * wp edd payments create --number=10 --status=completed
+	 * wp edd payments create --number=10 --id=103
+	 */
+	public function payments( $args, $assoc_args ) {
+
+		$error = false;
+        
+		// At some point we'll likely add another action for payments
+		if( ! isset( $args ) ||  count( $args ) == 0 ) {
+			$error = __( 'No action specified, did you mean', 'edd' );
+		} elseif( isset( $args ) && ! in_array( 'create', $args ) ) {
+			$error = __( 'Invalid action specified, did you mean', 'edd' );
+		}
+
+		if( $error ) {
+			foreach( $assoc_args as $key => $value ) {
+				$query .= ' --' . $key . '=' . $value;
+			}
+
+			WP_CLI::error(
+				sprintf( $error . ' %s?', 'wp edd payments create' . $query )
+			);
+
+			return;
+		}
+
+
+		// Setup some defaults
+		$number     = 1;
+		$status     = 'complete';
+		$id         = false;
+		$price_id   = false;
+
+		if( count( $assoc_args ) > 0 ) {
+			$number     = ( array_key_exists( 'number', $assoc_args ) ) ? absint( $assoc_args['number'] ) : $number;
+			$id         = ( array_key_exists( 'id', $assoc_args ) ) ? absint( $assoc_args['id'] ) : $id;
+			$price_id   = ( array_key_exists( 'price_id', $assoc_args ) ) ? absint( $assoc_args['id'] ) : $id;
+			
+			// Status requires a bit more validation
+			if( array_key_exists( 'status', $assoc_args ) ) {
+				$stati = array(
+					'publish',
+					'completed',
+					'pending',
+					'refunded',
+					'revoked',
+					'failed',
+					'abandoned',
+					'preapproval',
+					'cancelled'
+				);
+
+				if( in_array( $assoc_args['status'], $stati ) ) {
+					$status = ( $assoc_args['status'] == 'completed' ) ? 'publish' : $assoc_args['status'];
+				} else {
+					WP_CLI::warning( sprintf(
+						__( "Invalid status '%s', defaulting to 'completed'", 'edd' ),
+						$assoc_args['status']
+					) );
+				}
+			}
+		}
+
+		// Build the user info array
+		$user_info = array(
+			'id'            => 0,
+			'email'         => 'guest@local.dev',
+			'first_name'    => 'Pippin',
+			'last_name'     => 'Williamson',
+			'discount'      => 'none'
+		);
+
+		// No specified product
+		if( ! $id ) {
+
+			// Build an array of $number products
+			for( $i = 0; $i < $number; $i++ ) {
+				$products[] = get_posts( array(
+					'post_type'     => 'download',
+					'orderby'       => 'rand',
+					'order'         => 'ASC',
+					'posts_per_page'=> 1
+				) );
+			}
+
+			$products = array_shift( $products );
+		} else {
+			$product = get_post( $id );
+			
+			if( $product->post_type != 'download' ) {
+				WP_CLI::error( __( 'Specified ID is not a product', 'edd' ) );
+				return;
+			}
+
+			for( $i = 0;  $i < $number; $i++ ) {
+				$products[] = $product;
+			}
+		}
+
+		// Create the purchases
+		foreach( $products as $key => $download ) {
+			// Deal with variable pricing
+			if( edd_has_variable_prices( $download->ID ) ) {
+				$prices = get_post_meta( $download->ID, 'edd_variable_prices', true );
+				
+				if( $id && $price_id && array_key_exists( $price_id, (array) $prices ) ) {
+					$item_price = $prices[$price_id]['amount'];
+				} else {
+					$item_price = $prices[0]['amount'];
+				}
+			} else {
+				$item_price = edd_get_download_price( $download->ID );
+			}
+
+			$cart_details[0] = array(
+				'name'			=> $download->post_title,
+				'id'			=> $download->ID,
+				'item_number'	=> (array) $download,
+				'price'			=> edd_sanitize_amount( $item_price ),
+				'quantity'		=> 1,
+				'tax'			=> 0
+			);
+
+			$purchase_data = array(
+				'price'			=> edd_sanitize_amount( $item_price ),
+				'tax'			=> 0,
+				'post_date'		=> date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
+				'purchase_key'	=> strtolower( md5( uniqid() ) ),
+				'user_email'	=> 'guest@local.dev',
+				'user_info'		=> $user_info,
+				'currency'		=> edd_get_currency(),
+				'downloads'		=> (array) $download,
+				'cart_details'	=> $cart_details,
+				'status'		=> 'pending'
+			);
+
+			$payment_id = edd_insert_payment( $purchase_data );
+				
+			remove_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999 );
+
+			if( $status != 'pending' ) {
+				edd_update_payment_status( $payment_id, $status );
+			}
+		}
+
+		WP_CLI::success( sprintf( __( 'Created %s payments', 'edd' ), $number ) );
+		return;
 	}
 }
