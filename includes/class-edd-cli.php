@@ -509,7 +509,7 @@ class EDD_CLI extends WP_CLI_Command {
 			// Create the purchases
 			foreach( $products as $key => $download ) {
 
-				if( ! $download instanceof WP_Post ) {
+				if( ! is_a( $download, 'WP_Post' ) ) {
 					continue;
 				}
 
