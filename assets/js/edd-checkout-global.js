@@ -86,7 +86,7 @@ jQuery(document).ready(function($) {
 
     /* Credit card verification */
 
-    $body.on('keyup', '.edd-do-validate .card-number', function() {
+    $body.on('keyup change', '.edd-do-validate .card-number', function() {
         edd_validate_card( $(this) );
     });
 
@@ -283,7 +283,7 @@ jQuery(document).ready(function($) {
 
     // Update the checkout when item quantities are updated
     $(document).on('change', '.edd-item-quantity', function (event) {
-		
+
         var $this = $(this),
             quantity = $this.val(),
             key = $this.data('key'),
