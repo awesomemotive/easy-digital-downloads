@@ -129,13 +129,15 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 	} else {
 		$quantity = 1;
 	}
-
+	
+	$items = array();
+	
 	if ( isset( $options['price_id'] ) && is_array( $options['price_id'] ) ) {
 
 		// Process multiple price options at once
 		foreach ( $options['price_id'] as $price ) {
 
-			$item = array(
+			$items[] = array(
 				'id'           => $download_id,
 				'options'      => array(
 					'price_id' => preg_replace( '/[^0-9\.]/', '', $price )
@@ -157,31 +159,34 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		}
 
 		// Add a single item
-		$item = array(
+		$items[] = array(
 			'id'       => $download_id,
 			'options'  => $options,
 			'quantity' => $quantity
 		);
 	}
+	
+	foreach ( $items as $item ) {
+		
+		$to_add = apply_filters( 'edd_add_to_cart_item', $item );
+		
+		if ( ! is_array( $to_add ) )
+			return;
 
-	$to_add = apply_filters( 'edd_add_to_cart_item', $item );
-	if ( ! is_array( $to_add ) )
-		return;
+		if ( ! isset( $to_add['id'] ) || empty( $to_add['id'] ) )
+			return;
 
-	if ( ! isset( $to_add['id'] ) || empty( $to_add['id'] ) )
-		return;
+		if( edd_item_in_cart( $to_add['id'], $to_add['options'] ) && edd_item_quantities_enabled() ) {
 
-	if( edd_item_in_cart( $to_add['id'], $to_add['options'] ) && edd_item_quantities_enabled() ) {
+			$key = edd_get_item_position_in_cart( $to_add['id'], $to_add['options'] );
+			$cart[ $key ]['quantity']++;
 
-		$key = edd_get_item_position_in_cart( $to_add['id'], $to_add['options'] );
-		$cart[ $key ]['quantity']++;
-
-	} else {
-
-		$cart[] = $to_add;
-
+		} else {
+	
+			$cart[] = $to_add;
+	
+		}
 	}
-
 
 	EDD()->session->set( 'edd_cart', $cart );
 
