@@ -289,15 +289,15 @@ class EDD_SL_Plugin_Updater {
     public function show_changelog() {
 
 
-        if( empty( $_REQUEST['edd_sl_action'] ) || 'view_plugin_changelog' != $_REQUEST['edd_sl_action'] ) {
+        if( empty( $_GET['edd_sl_action'] ) || 'view_plugin_changelog' != $_GET['edd_sl_action'] ) {
             return;
         }
 
-        if( empty( $_REQUEST['plugin'] ) ) {
+        if( empty( $_GET['plugin'] ) ) {
             return;
         }
 
-        if( empty( $_REQUEST['slug'] ) ) {
+        if( empty( $_GET['slug'] ) ) {
             return;
         }
 
@@ -305,7 +305,7 @@ class EDD_SL_Plugin_Updater {
             wp_die( __( 'You do not have permission to install plugin updates' ) );
         }
 
-        $response = $this->api_request( 'plugin_latest_version', array( 'slug' => $_REQUEST['slug'] ) );
+        $response = $this->api_request( 'plugin_latest_version', array( 'slug' => $_GET['slug'] ) );
 
         if( $response && isset( $response->sections['changelog'] ) ) {
             echo '<div style="background:#fff;padding:10px;">' . $response->sections['changelog'] . '</div>';
