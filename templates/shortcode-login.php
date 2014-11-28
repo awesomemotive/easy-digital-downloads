@@ -1,4 +1,7 @@
 <?php
+/**
+ * This template is used to display the login form with [edd_login]
+ */
 global $edd_login_redirect;
 if ( ! is_user_logged_in() ) :
 
