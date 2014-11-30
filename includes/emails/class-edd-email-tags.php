@@ -473,6 +473,7 @@ function edd_email_tag_download_list_plain( $payment_id ) {
 	$payment_data  = edd_get_payment_meta( $payment_id );
 	$cart_items    = edd_get_payment_meta_cart_details( $payment_id );
 	$email         = edd_get_payment_user_email( $payment_id );
+	$download_list = '';
 
 	if ( $cart_items ) {
 		$show_names = apply_filters( 'edd_email_show_names', true );

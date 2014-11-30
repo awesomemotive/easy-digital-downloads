@@ -63,8 +63,8 @@ function edd_setup_edd_post_types() {
 
 	/** Payment Post Type */
 	$payment_labels = array(
-		'name' 				=> _x('Payments', 'post type general name', 'edd' ),
-		'singular_name' 	=> _x('Payment', 'post type singular name', 'edd' ),
+		'name' 				=> _x( 'Payments', 'post type general name', 'edd' ),
+		'singular_name' 	=> _x( 'Payment', 'post type singular name', 'edd' ),
 		'add_new' 			=> __( 'Add New', 'edd' ),
 		'add_new_item' 		=> __( 'Add New Payment', 'edd' ),
 		'edit_item' 		=> __( 'Edit Payment', 'edd' ),
@@ -72,7 +72,7 @@ function edd_setup_edd_post_types() {
 		'all_items' 		=> __( 'All Payments', 'edd' ),
 		'view_item' 		=> __( 'View Payment', 'edd' ),
 		'search_items' 		=> __( 'Search Payments', 'edd' ),
-		'not_found' 		=>  __( 'No Payments found', 'edd' ),
+		'not_found' 		=> __( 'No Payments found', 'edd' ),
 		'not_found_in_trash'=> __( 'No Payments found in Trash', 'edd' ),
 		'parent_item_colon' => '',
 		'menu_name' 		=> __( 'Payment History', 'edd' )
@@ -132,7 +132,7 @@ add_action( 'init', 'edd_setup_edd_post_types', 1 );
 function edd_get_default_labels() {
 	$defaults = array(
 	   'singular' => __( 'Download', 'edd' ),
-	   'plural' => __( 'Downloads', 'edd')
+	   'plural'   => __( 'Downloads', 'edd')
 	);
 	return apply_filters( 'edd_default_downloads_name', $defaults );
 }
@@ -178,7 +178,7 @@ function edd_change_default_title( $title ) {
      
      $screen = get_current_screen();
 
-     if  ( 'download' == $screen->post_type ) {
+     if ( 'download' == $screen->post_type ) {
      	$label = edd_get_label_singular();
         $title = sprintf( __( 'Enter %s name here', 'edd' ), $label );
      }
@@ -210,7 +210,6 @@ function edd_setup_download_taxonomies() {
 		'add_new_item' 		=> sprintf( __( 'Add New %s Category', 'edd'  ), edd_get_label_singular() ),
 		'new_item_name' 	=> __( 'New Category Name', 'edd'  ),
 		'menu_name' 		=> __( 'Categories', 'edd'  ),
-		'choose_from_most_used' => sprintf( __( 'Choose from most used %s categories', 'edd'  ), edd_get_label_singular() ),
 	);
 
 	$category_args = apply_filters( 'edd_download_category_args', array(
