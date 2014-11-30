@@ -47,7 +47,7 @@ add_action( 'edd_after_download_content', 'edd_append_purchase_link' );
  * @return string $purchase_form
  */
 function edd_get_purchase_link( $args = array() ) {
-	global $edd_options, $post;
+	global $edd_options, $post, $edd_displayed_form_ids;
 
 	if ( ! isset( $edd_options['purchase_page'] ) || $edd_options['purchase_page'] == 0 ) {
 		edd_set_error( 'set_checkout', sprintf( __( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-settings' ) ) );
@@ -70,30 +70,52 @@ function edd_get_purchase_link( $args = array() ) {
 
 	$args = wp_parse_args( $args, $defaults );
 
-	if( 'publish' != get_post_field( 'post_status', $args['download_id'] ) && ! current_user_can( 'edit_product', $args['download_id'] ) ) {
+	$download = new EDD_Download( $args['download_id'] );
+
+	if( empty( $download->ID ) ) {
+		return false;
+	}
+
+	if( 'publish' !== $download->post_status && ! current_user_can( 'edit_product', $download->ID ) ) {
 		return false; // Product not published or user doesn't have permission to view drafts
 	}
 
 	// Override color if color == inherit
 	$args['color'] = ( $args['color'] == 'inherit' ) ? '' : $args['color'];
 
-	$variable_pricing = edd_has_variable_prices( $args['download_id'] );
+	$variable_pricing = $download->has_variable_prices();
 	$data_variable    = $variable_pricing ? ' data-variable-price="yes"' : 'data-variable-price="no"';
-	$type             = edd_single_price_option_mode( $args['download_id'] ) ? 'data-price-mode=multi' : 'data-price-mode=single';
+	$type             = $download->is_single_price_mode() ? 'data-price-mode=multi' : 'data-price-mode=single';
 
-	if ( $args['price'] && $args['price'] !== 'no' && ! $variable_pricing ) {
-		$price = edd_get_download_price( $args['download_id'] );
+	if ( $args['price'] && $args['price'] !== 'no' ) {
 
-		$button_text = ! empty( $args['text'] ) ? '&nbsp;&ndash;&nbsp;' . $args['text'] : '';
+		if ( $variable_pricing && false !== $args['price_id'] ) {
+
+			$price_id = $args['price_id'];
+			$prices   = $download->prices();
+
+			$price = isset( $prices[$price_id] ) ? $prices[$price_id]['amount'] : false;
+
+		} elseif ( ! $variable_pricing ) {
+
+			$price = $download->price;
+
+		}
+	}
+
+	$button_text = ! empty( $args['text'] ) ? '&nbsp;&ndash;&nbsp;' . $args['text'] : '';
+
+	if ( isset( $price ) && false !== $price ) {
 
 		if ( 0 == $price ) {
 			$args['text'] = __( 'Free', 'edd' ) . $button_text;
 		} else {
 			$args['text'] = edd_currency_filter( edd_format_amount( $price ) ) . $button_text;
 		}
+
 	}
 
-	if ( edd_item_in_cart( $args['download_id'] ) && ! $variable_pricing ) {
+	if ( edd_item_in_cart( $download->ID ) && ! $variable_pricing ) {
 		$button_display   = 'style="display:none;"';
 		$checkout_display = '';
 	} else {
@@ -101,20 +123,27 @@ function edd_get_purchase_link( $args = array() ) {
 		$checkout_display = 'style="display:none;"';
 	}
 
-	global $edd_displayed_form_ids;
+	// Collect any form IDs we've displayed already so we can avoid duplicate IDs
+	if ( isset( $edd_displayed_form_ids[ $download->ID ] ) ) {
+		$edd_displayed_form_ids[ $download->ID ]++;
+	} else {
+		$edd_displayed_form_ids[ $download->ID ] = 1;
+	}
 
+	$form_id = ! empty( $args['form_id'] ) ? $args['form_id'] : 'edd_purchase_' . $download->ID;
 
-
-	$form_id = ! empty( $args['form_id'] ) ? $args['form_id'] : 'edd_purchase_' . $args['download_id'];
-
+	// If we've already generated a form ID for this download ID, apped -#
+	if ( $edd_displayed_form_ids[ $download->ID ] > 1 ) {
+		$form_id .= '-' . $edd_displayed_form_ids[ $download->ID ];
+	}
 
 	$args = apply_filters( 'edd_purchase_link_args', $args );
 
 	ob_start();
 ?>
-	<form id="<?php echo $form_id; ?>" class="edd_download_purchase_form" method="post">
+	<form id="<?php echo $form_id; ?>" class="edd_download_purchase_form edd_purchase_<?php echo absint( $download->ID ); ?>" method="post">
 
-		<?php do_action( 'edd_purchase_link_top', $args['download_id'], $args ); ?>
+		<?php do_action( 'edd_purchase_link_top', $download->ID, $args ); ?>
 
 		<div class="edd_purchase_submit_wrapper">
 			<?php
@@ -122,11 +151,11 @@ function edd_get_purchase_link( $args = array() ) {
 
 			if ( ! edd_is_ajax_disabled() ) {
 
-				echo '<a href="#" class="edd-add-to-cart ' . esc_attr( $class ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $args['download_id'] ) . '" ' . $data_variable . ' ' . $type . ' ' . $button_display . '><span class="edd-add-to-cart-label">' . $args['text'] . '</span> <span class="edd-loading"><i class="edd-icon-spinner edd-icon-spin"></i></span></a>';
+				echo '<a href="#" class="edd-add-to-cart ' . esc_attr( $class ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $download->ID ) . '" ' . $data_variable . ' ' . $type . ' ' . $button_display . '><span class="edd-add-to-cart-label">' . $args['text'] . '</span> <span class="edd-loading"><i class="edd-icon-spinner edd-icon-spin"></i></span></a>';
 
 			}
 
-			echo '<input type="submit" class="edd-add-to-cart edd-no-js ' . esc_attr( $class ) . '" name="edd_purchase_download" value="' . esc_attr( $args['text'] ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $args['download_id'] ) . '" ' . $data_variable . ' ' . $type . ' ' . $button_display . '/>';
+			echo '<input type="submit" class="edd-add-to-cart edd-no-js ' . esc_attr( $class ) . '" name="edd_purchase_download" value="' . esc_attr( $args['text'] ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $download->ID ) . '" ' . $data_variable . ' ' . $type . ' ' . $button_display . '/>';
 			echo '<a href="' . esc_url( edd_get_checkout_uri() ) . '" class="edd_go_to_checkout ' . esc_attr( $class ) . '" ' . $checkout_display . '>' . __( 'Checkout', 'edd' ) . '</a>';
 			?>
 
@@ -134,7 +163,7 @@ function edd_get_purchase_link( $args = array() ) {
 				<span class="edd-cart-ajax-alert">
 					<span class="edd-cart-added-alert" style="display: none;">
 						<?php printf(
-								__( '<i class="edd-icon-ok"></i> Added to cart', 'edd' ),
+								'<i class="edd-icon-ok"></i> ' . __( 'Added to cart', 'edd' ),
 								'<a href="' . esc_url( edd_get_checkout_uri() ) . '" title="' . __( 'Go to Checkout', 'edd' ) . '">',
 								'</a>'
 							);
@@ -142,7 +171,7 @@ function edd_get_purchase_link( $args = array() ) {
 					</span>
 				</span>
 			<?php endif; ?>
-			<?php if( ! edd_is_free_download( $args['download_id'], $args['price_id'] ) ): ?>
+			<?php if( ! $download->is_free( $args['price_id'] ) ): ?>
 				<?php if ( edd_display_tax_rate() && edd_prices_include_tax() ) {
 					echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Includes %1$s&#37; tax', 'edd' ), edd_get_tax_rate() * 100 ) . '</span>';
 				} elseif ( edd_display_tax_rate() && ! edd_prices_include_tax() ) {
@@ -151,14 +180,17 @@ function edd_get_purchase_link( $args = array() ) {
 			<?php endif; ?>
 		</div><!--end .edd_purchase_submit_wrapper-->
 
-		<input type="hidden" name="download_id" value="<?php echo esc_attr( $args['download_id'] ); ?>">
+		<input type="hidden" name="download_id" value="<?php echo esc_attr( $download->ID ); ?>">
+		<?php if ( $variable_pricing && isset( $price_id ) && isset( $prices[$price_id] ) ): ?>
+			<input type="hidden" name="edd_options[price_id][]" id="edd_price_option_<?php echo $download->ID; ?>_1" class="edd_price_option_<?php echo $download->ID; ?>" value="<?php echo $price_id; ?>">
+		<?php endif; ?>
 		<?php if( ! empty( $args['direct'] ) ) { ?>
 			<input type="hidden" name="edd_action" class="edd_action_input" value="straight_to_gateway">
 		<?php } else { ?>
 			<input type="hidden" name="edd_action" class="edd_action_input" value="add_to_cart">
 		<?php } ?>
 
-		<?php do_action( 'edd_purchase_link_end', $args['download_id'], $args ); ?>
+		<?php do_action( 'edd_purchase_link_end', $download->ID, $args ); ?>
 
 	</form><!--end #<?php echo esc_attr( $form_id ); ?>-->
 <?php
@@ -179,23 +211,25 @@ function edd_get_purchase_link( $args = array() ) {
  * @param int $download_id Download ID
  * @return void
  */
-function edd_purchase_variable_pricing( $download_id = 0 ) {
+function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 	global $edd_options;
 
 	$variable_pricing = edd_has_variable_prices( $download_id );
-
-	if ( ! $variable_pricing )
-		return;
-
 	$prices = apply_filters( 'edd_purchase_variable_prices', edd_get_variable_prices( $download_id ), $download_id );
-	$type   = edd_single_price_option_mode( $download_id ) ? 'checkbox' : 'radio';
+
+	if ( ! $variable_pricing || ( false !== $args['price_id'] && isset( $prices[$args['price_id']] ) ) ) {
+		return;
+	}
+
+	$type = edd_single_price_option_mode( $download_id ) ? 'checkbox' : 'radio';
+	$mode = edd_single_price_option_mode( $download_id ) ? 'multi' : 'single';
 
 	do_action( 'edd_before_price_options', $download_id ); ?>
-	<div class="edd_price_options">
+	<div class="edd_price_options edd_<?php echo esc_attr( $mode ); ?>_mode">
 		<ul>
 			<?php
 			if ( $prices ) :
-				$checked_key = isset( $_GET['price_option'] ) ? absint( $_GET['price_option'] ) : 1;
+				$checked_key = isset( $_GET['price_option'] ) ? absint( $_GET['price_option'] ) : edd_get_default_variable_price( $download_id );
 				foreach ( $prices as $key => $price ) :
 					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . '" itemprop="offers" itemscope itemtype="http://schema.org/Offer">';
 						echo '<label for="'	. esc_attr( 'edd_price_option_' . $download_id . '_' . $key ) . '">';
@@ -213,7 +247,54 @@ function edd_purchase_variable_pricing( $download_id = 0 ) {
 <?php
 	do_action( 'edd_after_price_options', $download_id );
 }
-add_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing', 10 );
+add_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing', 10, 2 );
+
+/**
+ * Display the quantity field for a variable price when multi-purchase mode is enabled
+ *
+ * @since 2.2
+ * @param int $download_id Download ID
+ * @param array $args Argument array
+ * @return void
+ */
+function edd_download_purchase_form_quantity_field( $download_id = 0, $args = array() ) {
+
+	if( ! edd_item_quantities_enabled() ) {
+		return;
+	}
+
+	if ( ( edd_item_in_cart( $download_id ) && ! edd_has_variable_prices( $download_id ) ) || ( edd_single_price_option_mode( $download_id ) && edd_has_variable_prices( $download_id ) && ! edd_item_in_cart( $download_id ) ) ) {
+		return;
+	}
+
+	echo '<div class="edd_download_quantity_wrapper">';
+		echo '<input type="number" min="1" step="1" name="edd_download_quantity" class="edd-input edd-item-quantity" value="1" />';
+	echo '</div>';
+
+}
+add_action( 'edd_purchase_link_top', 'edd_download_purchase_form_quantity_field', 10, 2 );
+
+/**
+ * Display the quantity field for a variable price when multi-purchase mode is enabled
+ *
+ * @since 2.2
+ * @param int $key Price ID
+ * @param array $price price option array
+ * @param int $download_id Download ID
+ * @return void
+ */
+function edd_variable_price_quantity_field( $key, $price, $download_id ) {
+
+	if( ! edd_single_price_option_mode() ) {
+		return;
+	}
+
+	echo '<div class="edd_download_quantity_wrapper edd_download_quantity_price_option_' . sanitize_key( $price['name'] ) . '">';
+		echo '<span class="edd_price_option_sep">&nbsp;x&nbsp;</span>';
+		echo '<input type="number" min="1" step="1" name="edd_download_quantity_' . esc_attr( $key ) . '" class="edd-input edd-item-quantity" value="1" />';
+	echo '</div>';
+}
+add_action( 'edd_after_price_option', 'edd_variable_price_quantity_field', 10, 3 );
 
 /**
  * Before Download Content

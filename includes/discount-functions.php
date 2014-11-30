@@ -216,19 +216,28 @@ function edd_store_discount( $details, $discount_id = null ) {
 		'is_single_use'     => isset( $details['use_once'] )         ? $details['use_once']          : false,
 	);
 
+	$start_timestamp        = strtotime( $meta['start'] );
+
 	if( ! empty( $meta['start'] ) ) {
-		$meta['start']      = date( 'm/d/Y H:i:s', strtotime( $meta['start'] ) );
+		$meta['start']      = date( 'm/d/Y H:i:s', $start_timestamp );
 	}
 
 	if( ! empty( $meta['expiration'] ) ) {
-		$meta['expiration'] = date( 'm/d/Y H:i:s', strtotime(  date( 'm/d/Y', strtotime( $meta['expiration'] ) ) . ' 23:59:59' ) );
-		if( ! empty( $meta['start'] ) && $meta['start'] > $meta['expiration'] ) {
+
+		$meta['expiration'] = date( 'm/d/Y H:i:s', strtotime( date( 'm/d/Y', strtotime( $meta['expiration'] ) ) . ' 23:59:59' ) );
+		$end_timestamp      = strtotime( $meta['expiration'] );
+
+		if( ! empty( $meta['start'] ) && $start_timestamp > $end_timestamp ) {
+
 			// Set the expiration date to the start date if start is later than expiration
 			$meta['expiration'] = $meta['start'];
+
 		}
+
 	}
 
 	if ( edd_discount_exists( $discount_id ) && ! empty( $discount_id ) ) {
+
 		// Update an existing discount
 
 		$meta = apply_filters( 'edd_update_discount', $meta, $discount_id );
@@ -249,7 +258,9 @@ function edd_store_discount( $details, $discount_id = null ) {
 
 		// Discount code updated
 		return $discount_id;
+
 	} else {
+
 		// Add the discount
 
 		$meta = apply_filters( 'edd_insert_discount', $meta );
@@ -271,6 +282,7 @@ function edd_store_discount( $details, $discount_id = null ) {
 		// Discount code created
 		return $discount_id;
 	}
+
 }
 
 

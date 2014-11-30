@@ -28,6 +28,41 @@ function edd_is_ajax_enabled() {
 }
 
 /**
+ * Check if AJAX works as expected
+ *
+ * @since 2.2
+ * @return bool True if AJAX works, false otherwise
+ */
+function edd_test_ajax_works() {
+
+	$params = array(
+		'sslverify'     => false,
+		'timeout'       => 60,
+	);
+
+	$ajax  = wp_remote_get( add_query_arg( 'action', 'edd_test_ajax', edd_get_ajax_url() ), $params );
+	$works = true;
+
+	if( empty( $ajax['response'] ) ) {
+		$works = false;
+	}
+
+	if( empty( $ajax['response']['code'] ) || 200 !== (int) $ajax['response']['code'] ) {
+		$works = false;
+	}
+
+	if( empty( $ajax['response']['message'] ) || 'OK' !== $ajax['response']['message'] ) {
+		$works = false;
+	}
+
+	if( ! isset( $ajax['body'] ) || 0 !== (int) $ajax['body'] ) {
+		$works = false;
+	}
+
+	return $works;
+}
+
+/**
  * Checks whether AJAX is disabled.
  *
  * @since 2.0
@@ -103,8 +138,21 @@ function edd_ajax_add_to_cart() {
 
 		foreach ( $to_add as $options ) {
 
-			if( $_POST['download_id'] == $options['price_id'] )
+			if( $_POST['download_id'] == $options['price_id'] ) {
 				$options = array();
+			}
+
+			parse_str( $_POST['post_data'], $post_data );
+
+			if( isset( $options[ 'price_id' ] ) && isset( $post_data[ 'edd_download_quantity_' . $options[ 'price_id' ] ] ) ) {
+
+				$options['quantity'] = absint( $post_data[ 'edd_download_quantity_' . $options[ 'price_id' ] ] );
+
+			} else {
+
+				$options['quantity'] = $post_data['edd_download_quantity'];
+
+			}
 
 			$key = edd_add_to_cart( $_POST['download_id'], $options );
 
@@ -403,6 +451,48 @@ function edd_ajax_download_search() {
 }
 add_action( 'wp_ajax_edd_download_search', 'edd_ajax_download_search' );
 add_action( 'wp_ajax_nopriv_edd_download_search', 'edd_ajax_download_search' );
+
+/**
+ * Search the customers database via Ajax
+ *
+ * @since 2.2
+ * @return void
+ */
+function edd_ajax_customer_search() {
+	global $wpdb;
+
+	$search  = esc_sql( sanitize_text_field( $_GET['s'] ) );
+	$results = array();
+	if ( ! current_user_can( 'view_shop_reports' ) ) {
+		$customers = array();
+	} else {
+		$customers = $wpdb->get_results( "SELECT id,name,email FROM {$wpdb->prefix}edd_customers WHERE `name` LIKE '%$search%' OR `email` LIKE '%$search%' LIMIT 50" );
+	}
+
+	if( $customers ) {
+
+		foreach( $customers as $customer ) {
+
+			$results[] = array(
+				'id'   => $customer->id,
+				'name' => $customer->name . '(' .  $customer->email . ')'
+			);
+		}
+
+	} else {
+
+		$customers[] = array(
+			'id'   => 0,
+			'name' => __( 'No results found', 'edd' )
+		);
+
+	}
+
+	echo json_encode( $results );
+
+	edd_die();
+}
+add_action( 'wp_ajax_edd_customer_search', 'edd_ajax_customer_search' );
 
 /**
  * Check for Download Price Variations via AJAX (this function can only be used
