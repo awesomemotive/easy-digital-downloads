@@ -104,7 +104,8 @@ function edd_register_settings() {
 					'max'         => isset( $option['max'] )         ? $option['max']     : null,
                     'step'        => isset( $option['step'] )        ? $option['step']    : null,
                     'select2'     => isset( $option['select2'] )     ? $option['select2'] : null,
-                    'placeholder' => isset( $option['placeholder'] ) ? $option['placeholder'] : null
+                    'placeholder' => isset( $option['placeholder'] ) ? $option['placeholder'] : null,
+                    'allow_blank' => isset( $option['allow_blank'] ) ? $option['allow_blank'] : true
 				)
 			);
 		}
@@ -1259,8 +1260,12 @@ function edd_color_select_callback( $args ) {
 function edd_rich_editor_callback( $args ) {
 	global $edd_options, $wp_version;
 
-	if ( isset( $edd_options[ $args['id'] ] ) ) {
+    if ( isset( $edd_options[ $args['id'] ] ) ) {
 		$value = $edd_options[ $args['id'] ];
+        
+        if( ! isset( $args['allow_blank'] ) && empty( $value ) ) {
+            $value = isset( $args['std'] ) ? $args['std'] : '';
+        }
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
