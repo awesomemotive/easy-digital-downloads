@@ -123,6 +123,14 @@ class EDD_Download {
 
 		$download = WP_Post::get_instance( $_id );
 
+		if( ! is_object( $download ) ) {
+			return false;
+		}
+
+		if( ! is_a( $download, 'WP_Post' ) ) {
+			return false;
+		}
+
 		if( 'download' !== $download->post_type ) {
 			return false;
 		}
