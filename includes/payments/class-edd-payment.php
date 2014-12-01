@@ -55,8 +55,8 @@ class EDD_Payment {
 		// Store the payment ID for later use
 		if( $payment_id ) {
 			$this->payment_id = $payment_id;
-		} else {
-			return false;
+        } else {
+            $this->payment_id = 0;
 		}
 	}
 
@@ -69,16 +69,11 @@ class EDD_Payment {
 	 * @param int $args Other arguments to pass to the function
 	 * @return void
 	 */
-	public function add_download( $download_id, $args = array() ) {
-		// Bail if no download ID specified
-		if( ! $download_id ) {
-			return false;
-		}
-
+	public function add_download( $download_id = 0, $args = array() ) {
 		$download = get_post( $download_id );
 
 		// Bail if this post isn't a download
-		if( $download->post_type !== 'download' ) {
+		if( ! $download || $download->post_type !== 'download' ) {
 			return false;
 		}
 
@@ -113,7 +108,7 @@ class EDD_Payment {
 		}
 
 		// Sanitizing the price here so we don't have a dozen calls later
-		$item_price = edd_sanitize_amoun( $item_price );
+		$item_price = edd_sanitize_amount( $item_price );
 
 		// Silly item_number array
 		$item_number = array(
@@ -135,14 +130,14 @@ class EDD_Payment {
 			'subtotal'      => ( $item_price * $args['quantity'] )
 		);
 
-		$purchase_data = array(
-			'downloads'     => (array) $download,
-			'cart_details'  => $cart_details,
-		);
-
 		// Retrieve the current meta
 		$downloads   = edd_get_payment_meta_downloads( $download_id );
-		$downloads[] = $download;
+        $downloads[] = $download;
+
+		$purchase_data = array(
+			'downloads'     => (array) $downloads,
+			'cart_details'  => $cart_details,
+		);
 
 		$meta = edd_get_payment_meta( $download_id );
 
