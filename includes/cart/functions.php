@@ -34,15 +34,22 @@ function edd_get_cart_contents() {
  */
 function edd_get_cart_content_details() {
 
+	global $edd_is_last_cart_item, $edd_flat_discount_total;
+
 	$cart_items = edd_get_cart_contents();
 
 	if ( empty( $cart_items ) ) {
 		return false;
 	}
 
-	$details  = array();
+	$details = array();
+	$length  = count( $cart_items ) - 1;
 
 	foreach( $cart_items as $key => $item ) {
+
+		if( $key >= $length ) {
+			$edd_is_last_cart_item = true;
+		}
 
 		$item['quantity'] = edd_item_quantities_enabled() ? absint( $item['quantity'] ) : 1;
 
@@ -76,6 +83,12 @@ function edd_get_cart_content_details() {
 			'fees'        => array(),
 			'price'       => round( $total, edd_currency_decimal_filter() )
 		);
+
+		if( $edd_is_last_cart_item ) {
+
+			$edd_is_last_cart_item   = false;
+			$edd_flat_discount_total = 0.00;
+		}
 
 	}
 
