@@ -375,7 +375,7 @@ jQuery(document).ready(function ($) {
 					amount = 0;
 				}
 
-				amount = parseInt( amount );
+				amount = parseFloat( amount );
 				if ( isNaN( amount ) ) {
 					alert( edd_vars.numeric_item_price );
 					return false;
