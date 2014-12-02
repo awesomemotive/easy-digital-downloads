@@ -1029,7 +1029,7 @@ function edd_cart_has_discounts() {
  */
 function edd_get_cart_discounted_amount( $discounts = false ) {
 
-	$amount = 0;
+	$amount = 0.00;
 	$items  = edd_get_cart_content_details();
 	if( $items ) {
 
@@ -1052,6 +1052,8 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
  * @return float The discounted amount
  */
 function edd_get_cart_item_discount_amount( $item = array() ) {
+
+	global $edd_is_last_cart_item, $edd_flat_discount_total;
 
 	$amount           = 0;
 	$price            = edd_get_cart_item_price( $item['id'], $item['options'], edd_prices_include_tax() );
@@ -1103,9 +1105,16 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 						}
 
 						$subtotal_percent  = ( ( $price * $item['quantity'] ) / $items_subtotal );
-						$discounted_amount = edd_get_discount_amount( $code_id );
-						$discounted_amount = ( $discounted_amount * $subtotal_percent );
+						$code_amount       = edd_get_discount_amount( $code_id );
+						$discounted_amount = $code_amount * $subtotal_percent;
 						$discounted_price -= $discounted_amount;
+
+						$edd_flat_discount_total += round( $discounted_amount, edd_currency_decimal_filter() );
+
+						if( $edd_is_last_cart_item && $edd_flat_discount_total < $code_amount ) {
+							$adjustment = $code_amount - $edd_flat_discount_total;
+							$discounted_price -= $adjustment;
+						}
 
 					} else {
 
