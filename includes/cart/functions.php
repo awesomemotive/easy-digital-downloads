@@ -584,34 +584,6 @@ function edd_get_cart_subtotal() {
 }
 
 /**
- * Get Cart Items Subtotal
- *
- * This is the subtotal of all item prices added together before any discounts, taxes, etc,
- * just straight item prices
- *
- * @since 2.2
- * @return float Items subtotal
- */
-function edd_get_cart_items_subtotal() {
-
-	$subtotal   = 0.00;
-	$cart_items = edd_get_cart_contents();
-
-	if ( ! empty( $cart_items ) ) {
-
-		foreach( $cart_items as $key => $item ) {
-
-			$price     = edd_get_cart_item_price( $item['id'], $item['options'] );
-			$subtotal += $price * $item['quantity'];
-
-		}
-
-	}
-
-	return apply_filters( 'edd_get_cart_items_subtotal', $subtotal, $cart_items );
-}
-
-/**
  * Get Total Cart Amount
  *
  * Returns amount after taxes and discounts

@@ -20,6 +20,8 @@ if ( !defined( 'ABSPATH' ) ) exit;
  */
 function edd_checkout_cart() {
 
+	echo '<pre>'; print_r( edd_get_cart_content_details() ); echo '</pre>';
+
 	// Check if the Update cart button should be shown
 	if( edd_item_quantities_enabled() ) {
 		add_action( 'edd_cart_footer_buttons', 'edd_update_cart_button' );
