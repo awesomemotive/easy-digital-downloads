@@ -1093,7 +1093,15 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 						 * are distributed across all cart items. The discount amount is divided by the number
 						 * of items in the cart and then a portion is evenly applied to each cart item
 						 */
-						$items_subtotal    = edd_get_cart_items_subtotal();
+						$items_subtotal    = 0.00;
+						$cart_items        = edd_get_cart_contents();
+						foreach( $cart_items as $cart_item ) {
+							if( ! in_array( $cart_item['id'], $excluded_products ) ) {
+								$item_price      = edd_get_cart_item_price( $item['id'], $item['options'], edd_prices_include_tax() );
+								$items_subtotal += $item_price * $item['quantity'];
+							}
+						}
+
 						$subtotal_percent  = ( ( $price * $item['quantity'] ) / $items_subtotal );
 						$discounted_amount = edd_get_discount_amount( $code_id );
 						$discounted_amount = ( $discounted_amount * $subtotal_percent );
