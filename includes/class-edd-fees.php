@@ -58,7 +58,8 @@ class EDD_Fees {
 				'label'  => $label,
 				'id'     => $id,
 				'type'   => $type,
-				'no_tax' => false
+				'no_tax' => false,
+				'download_id' => 0
 			);
 
 		} else {
