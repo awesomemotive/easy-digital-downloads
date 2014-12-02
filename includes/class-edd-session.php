@@ -212,9 +212,6 @@ class EDD_Session {
 	}
 
 	/**
-	 * Starts a new session if one hasn't started yet.
-	 *
-	 * @return null
 	 * Checks to see if the server supports PHP sessions
 	 * or if the EDD_USE_PHP_SESSIONS constant is defined
 	 *
@@ -225,27 +222,7 @@ class EDD_Session {
 	 */
 	public function use_php_sessions() {
 
-		$ret = false;
-
-		// If the database variable is already set, no need to run autodetection
-		$edd_use_php_sessions = get_option( 'edd_use_php_sessions', null );
-
-		// only run auto-detection if database option was not set
-		if( is_null( $edd_use_php_sessions ) ) {
-
-			// Attempt to detect if the server supports PHP sessions
-			if( function_exists( 'session_start' ) && ! ini_get( 'safe_mode' ) ) {
-
-				$ret = true;
-
-				// Set the database option
-				update_option( 'edd_use_php_sessions', true );
-			}
-
-		} else {
-			// use db option
-			$ret = (bool) $edd_use_php_sessions;
-		}
+		$ret = function_exists( 'session_start' ) && ! ini_get( 'safe_mode' );
 
 		// Enable or disable PHP Sessions based on the EDD_USE_PHP_SESSIONS constant
 		if( defined( 'EDD_USE_PHP_SESSION' ) ) {
