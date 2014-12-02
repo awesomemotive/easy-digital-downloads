@@ -1093,9 +1093,10 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 						 * are distributed across all cart items. The discount amount is divided by the number
 						 * of items in the cart and then a portion is evenly applied to each cart item
 						 */
-
+						$items_subtotal    = edd_get_cart_items_subtotal();
+						$subtotal_percent  = ( ( $price * $item['quantity'] ) / $items_subtotal );
 						$discounted_amount = edd_get_discount_amount( $code_id );
-						$discounted_amount = ( $discounted_amount / edd_get_cart_quantity() );
+						$discounted_amount = ( $discounted_amount * $subtotal_percent );
 						$discounted_price -= $discounted_amount;
 
 					} else {
