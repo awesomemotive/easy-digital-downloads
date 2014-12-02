@@ -29,12 +29,13 @@ class Tests_Fee extends WP_UnitTestCase {
 				'amount' => 20,
 				'label' => 'Arbitrary Item',
 				'type' => 'item',
+				'download_id' => $this->_post->ID,
 				'no_tax' => false
 			)
 		);
 
 		EDD()->fees->add_fee( 10, 'Shipping Fee', 'shipping_fee' );
-		EDD()->fees->add_fee( array( 'amount' => 20, 'label' => 'Arbitrary Item', 'id' => 'item_fee', 'type' => 'item' ) );
+		EDD()->fees->add_fee( array( 'amount' => 20, 'label' => 'Arbitrary Item', 'download_id' => $this->_post->ID, 'id' => 'item_fee', 'type' => 'item' ) );
 
 		$this->assertEquals( $expected, EDD()->fees->get_fees( 'all' ) );
 	}
@@ -104,6 +105,34 @@ class Tests_Fee extends WP_UnitTestCase {
 		);
 
 		$this->assertEquals( $expected, EDD()->fees->get_fees( 'item' ) );
+
+		EDD()->session->set( 'edd_cart_fees', null );
+
+		EDD()->fees->add_fee( array(
+			'amount' => 20, 
+			'label' => 'Arbitrary Fee', 
+			'download_id' => $this->_post->ID, 
+			'id' => 'arb_fee' 
+		) );
+
+		EDD()->fees->add_fee( array(
+			'amount' => 20, 
+			'label' => 'Arbitrary Fee 2', 
+			'id' => 'arb_fee_2' 
+		) );
+
+		$expected = array(
+			'item_fee' => array(
+				'amount' => 20,
+				'label' => 'Arbitrary Fee',
+				'download_id' => $this->_post->ID,
+				'id' => 'arb_fee',
+				'no_tax' => false
+			)
+		);
+
+		$this->assertEquals( $expected, EDD()->fees->get_fees( 'fees', $download_id ) );
+
 	}
 
 	public function test_total_fees() {
