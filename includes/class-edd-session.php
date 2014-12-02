@@ -225,7 +225,7 @@ class EDD_Session {
 		$ret = function_exists( 'session_start' ) && ! ini_get( 'safe_mode' );
 
 		// Enable or disable PHP Sessions based on the EDD_USE_PHP_SESSIONS constant
-		if( defined( 'EDD_USE_PHP_SESSION' ) ) {
+		if( defined( 'EDD_USE_PHP_SESSIONS' ) ) {
 			$ret = EDD_USE_PHP_SESSIONS;
 		}
 
