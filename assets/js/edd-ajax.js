@@ -280,7 +280,13 @@ jQuery(document).ready(function ($) {
 
     $(document).on('click', '#edd_purchase_form #edd_purchase_submit input[type=submit]', function(e) {
 
-        e.preventDefault();
+		var eddPurchaseform = document.getElementById('edd_purchase_form');
+
+		if( typeof eddPurchaseform.checkValidity === "function" && false === eddPurchaseform.checkValidity() ) {
+			return;
+		}
+
+		e.preventDefault();
 
         var complete_purchase_val = $(this).val();
 
@@ -291,9 +297,9 @@ jQuery(document).ready(function ($) {
         $.post(edd_global_vars.ajaxurl, $('#edd_purchase_form').serialize() + '&action=edd_process_checkout&edd_ajax=true', function(data) {
             if ( $.trim(data) == 'success' ) {
                 $('.edd_errors').remove();
-                $('#edd_purchase_form').submit();
+                $(eddPurchaseform).submit();
             } else {
-                $('#edd_purchase_form #edd-purchase-button').val(complete_purchase_val);
+                $('#edd-purchase-button').val(complete_purchase_val);
                 $('.edd-cart-ajax').remove();
                 $('.edd_errors').remove();
                 $('#edd_purchase_submit').before(data);
