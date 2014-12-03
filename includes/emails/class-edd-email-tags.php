@@ -473,6 +473,7 @@ function edd_email_tag_download_list_plain( $payment_id ) {
 	$payment_data  = edd_get_payment_meta( $payment_id );
 	$cart_items    = edd_get_payment_meta_cart_details( $payment_id );
 	$email         = edd_get_payment_user_email( $payment_id );
+	$download_list = '';
 
 	if ( $cart_items ) {
 		$show_names = apply_filters( 'edd_email_show_names', true );
@@ -704,7 +705,7 @@ function edd_email_tag_date( $payment_id ) {
  * @return string subtotal
  */
 function edd_email_tag_subtotal( $payment_id ) {
-	$subtotal = edd_currency_filter( edd_format_amount( edd_get_payment_subtotal( $payment_id ) ) );
+	$subtotal = edd_currency_filter( edd_format_amount( edd_get_payment_subtotal( $payment_id ) ), edd_get_payment_currency_code( $payment_id ) );
 	return html_entity_decode( $subtotal, ENT_COMPAT, 'UTF-8' );
 }
 
@@ -717,7 +718,7 @@ function edd_email_tag_subtotal( $payment_id ) {
  * @return string tax
  */
 function edd_email_tag_tax( $payment_id ) {
-	$tax = edd_currency_filter( edd_format_amount( edd_get_payment_tax( $payment_id ) ) );
+	$tax = edd_currency_filter( edd_format_amount( edd_get_payment_tax( $payment_id ) ), edd_get_payment_currency_code( $payment_id ) );
 	return html_entity_decode( $tax, ENT_COMPAT, 'UTF-8' );
 }
 
@@ -730,7 +731,7 @@ function edd_email_tag_tax( $payment_id ) {
  * @return string price
  */
 function edd_email_tag_price( $payment_id ) {
-	$price = edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ) );
+	$price = edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ), edd_get_payment_currency_code( $payment_id ) );
 	return html_entity_decode( $price, ENT_COMPAT, 'UTF-8' );
 }
 

@@ -88,7 +88,7 @@ class EDD_Payments_Export extends EDD_Export {
 			unset( $cols['skus'] );
 		}
 		if ( ! edd_get_option( 'enable_sequential' ) ) {
-			unset( $cols['seq_id'] );			
+			unset( $cols['seq_id'] );
 		}
 
 		return $cols;
@@ -172,10 +172,10 @@ class EDD_Payments_Export extends EDD_Export {
 
 			$data[] = array(
 				'id'       => $payment->ID,
-				'seq_id'   => edd_get_payment_number( $payment->ID ),		
+				'seq_id'   => edd_get_payment_number( $payment->ID ),
 				'email'    => $payment_meta['email'],
 				'first'    => $user_info['first_name'],
-                'last'     => $user_info['last_name'],
+				'last'     => $user_info['last_name'],
 				'address1' => isset( $user_info['address']['line1'] )   ? $user_info['address']['line1']   : '',
 				'address2' => isset( $user_info['address']['line2'] )   ? $user_info['address']['line2']   : '',
 				'city'     => isset( $user_info['address']['city'] )    ? $user_info['address']['city']    : '',
@@ -185,7 +185,7 @@ class EDD_Payments_Export extends EDD_Export {
 				'products' => $products,
 				'skus'     => $skus,
 				'amount'   => html_entity_decode( edd_format_amount( $total ) ),
-				'tax'      => html_entity_decode( edd_get_payment_tax( $payment->ID, $payment_meta ) ),
+				'tax'      => html_entity_decode( edd_format_amount( edd_get_payment_tax( $payment->ID, $payment_meta ) ) ),
 				'discount' => isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ? $user_info['discount'] : __( 'none', 'edd' ),
 				'gateway'  => edd_get_gateway_admin_label( get_post_meta( $payment->ID, '_edd_payment_gateway', true ) ),
 				'trans_id' => edd_get_payment_transaction_id( $payment->ID ),

@@ -185,6 +185,9 @@ jQuery(document).ready(function ($) {
 					if( $( '.edd_download_purchase_form' ).length ) {
 						var parent_form = $('.edd_download_purchase_form *[data-download-id="' + download + '"]').parents('form');
 						$( 'a.edd-add-to-cart', parent_form ).hide();
+                        if( price_mode != 'multi' ) {
+                            parent_form.find('.edd_download_quantity_wrapper').slideUp();
+                        }
 	                	$( '.edd_go_to_checkout', parent_form ).show().removeAttr( 'data-edd-loading' );
 	               	}
 
@@ -282,29 +285,35 @@ jQuery(document).ready(function ($) {
         }, 200);
     }
 
-    $(document).on('click', '#edd_purchase_form #edd_purchase_submit input[type=submit]', function(e) {
+	$(document).on('click', '#edd_purchase_form #edd_purchase_submit input[type=submit]', function(e) {
 
-        e.preventDefault();
+		var eddPurchaseform = document.getElementById('edd_purchase_form');
 
-        var complete_purchase_val = $(this).val();
+		if( typeof eddPurchaseform.checkValidity === "function" && false === eddPurchaseform.checkValidity() ) {
+			return;
+		}
 
-        $(this).val(edd_global_vars.purchase_loading);
+		e.preventDefault();
 
-        $(this).after('<span class="edd-cart-ajax"><i class="edd-icon-spinner edd-icon-spin"></i></span>');
+		var complete_purchase_val = $(this).val();
 
-        $.post(edd_global_vars.ajaxurl, $('#edd_purchase_form').serialize() + '&action=edd_process_checkout&edd_ajax=true', function(data) {
-            if ( $.trim(data) == 'success' ) {
-                $('.edd_errors').remove();
-                $('#edd_purchase_form').submit();
-            } else {
-                $('#edd_purchase_form #edd-purchase-button').val(complete_purchase_val);
-                $('.edd-cart-ajax').remove();
-                $('.edd_errors').remove();
-                $('#edd_purchase_submit').before(data);
-            }
-        });
+		$(this).val(edd_global_vars.purchase_loading);
 
-    });
+		$(this).after('<span class="edd-cart-ajax"><i class="edd-icon-spinner edd-icon-spin"></i></span>');
+
+		$.post(edd_global_vars.ajaxurl, $('#edd_purchase_form').serialize() + '&action=edd_process_checkout&edd_ajax=true', function(data) {
+			if ( $.trim(data) == 'success' ) {
+				$('.edd_errors').remove();
+				$(eddPurchaseform).submit();
+			} else {
+				$('#edd-purchase-button').val(complete_purchase_val);
+				$('.edd-cart-ajax').remove();
+				$('.edd_errors').remove();
+				$('#edd_purchase_submit').before(data);
+			}
+		});
+
+	});
 
 });
 
