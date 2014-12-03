@@ -35,8 +35,8 @@ jQuery(document).ready(function ($) {
 			clone.removeClass( 'edd_add_blank' );
 
 			clone.data( 'key', key );
-			clone.find( 'td input, td select' ).val( '' );
-			clone.find( 'input, select' ).each(function() {
+			clone.find( 'td input, td select, textarea' ).val( '' );
+			clone.find( 'input, select, textarea' ).each(function() {
 				var name = $( this ).attr( 'name' );
 
 				name = name.replace( /\[(\d+)\]/, '[' + parseInt( key ) + ']');
