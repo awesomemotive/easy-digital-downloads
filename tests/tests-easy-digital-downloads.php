@@ -142,7 +142,6 @@ class Tests_EDD extends WP_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/icons/mastercard.gif' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/icons/paypal.gif' );
         $this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/icons/visa.gif' );
-        $this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/select-spinner.gif' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-badge.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-cpt-2x.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-cpt.png' );

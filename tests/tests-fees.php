@@ -178,7 +178,7 @@ class Tests_Fee extends WP_UnitTestCase {
 					'label' => 'Arbitrary Fee',
 					'type'  => 'fee',
 					'no_tax' => false,
-					'download_id' => 11
+					'download_id' => $this->_post->ID - 1
 				),
 				'arb_fee_2' => array(
 					'amount' => '20.00',
