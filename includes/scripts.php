@@ -183,11 +183,15 @@ function edd_load_admin_scripts( $hook ) {
 		'one_field_min'           => __( 'You must have at least one field', 'edd' ),
 		'one_option'              => sprintf( __( 'Choose a %s', 'edd' ), edd_get_label_singular() ),
 		'one_or_more_option'      => sprintf( __( 'Choose one or more %s', 'edd' ), edd_get_label_plural() ),
+		'numeric_item_price'      => __( 'Item price must be numeric', 'edd' ),
+		'numeric_quantity'        => __( 'Quantity must be numeric', 'edd' ),
 		'currency_sign'           => edd_currency_filter(''),
 		'currency_pos'            => isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
+		'currency_decimals'       => edd_currency_decimal_filter(),
 		'new_media_ui'            => apply_filters( 'edd_use_35_media_ui', 1 ),
 		'remove_text'             => __( 'Remove', 'edd' ),
-		'type_to_search'          => sprintf( __( 'Type to search %s', 'edd' ), edd_get_label_plural() )
+		'type_to_search'          => sprintf( __( 'Type to search %s', 'edd' ), edd_get_label_plural() ),
+		'quantities_enabled'      => edd_item_quantities_enabled()
 	));
 
 	wp_enqueue_style( 'wp-color-picker' );

@@ -200,6 +200,8 @@ function edd_store_discount( $details, $discount_id = null ) {
 
 	$meta = array(
 		'code'              => isset( $details['code'] )             ? $details['code']              : '',
+		'name'              => isset( $details['name'] )             ? $details['name']              : '',
+		'status'            => isset( $details['status'] )           ? $details['status']            : 'active',
 		'uses'              => isset( $details['uses'] )             ? $details['uses']              : '',
 		'max_uses'          => isset( $details['max'] )              ? $details['max']               : '',
 		'amount'            => isset( $details['amount'] )           ? $details['amount']            : '',
@@ -214,49 +216,60 @@ function edd_store_discount( $details, $discount_id = null ) {
 		'is_single_use'     => isset( $details['use_once'] )         ? $details['use_once']          : false,
 	);
 
+	$start_timestamp        = strtotime( $meta['start'] );
+
 	if( ! empty( $meta['start'] ) ) {
-		$meta['start']      = date( 'm/d/Y H:i:s', strtotime( $meta['start'] ) );
+		$meta['start']      = date( 'm/d/Y H:i:s', $start_timestamp );
 	}
 
 	if( ! empty( $meta['expiration'] ) ) {
-		$meta['expiration'] = date( 'm/d/Y H:i:s', strtotime(  date( 'm/d/Y', strtotime( $meta['expiration'] ) ) . ' 23:59:59' ) );
-		if( ! empty( $meta['start'] ) && $meta['start'] > $meta['expiration'] ) {
+
+		$meta['expiration'] = date( 'm/d/Y H:i:s', strtotime( date( 'm/d/Y', strtotime( $meta['expiration'] ) ) . ' 23:59:59' ) );
+		$end_timestamp      = strtotime( $meta['expiration'] );
+
+		if( ! empty( $meta['start'] ) && $start_timestamp > $end_timestamp ) {
+
 			// Set the expiration date to the start date if start is later than expiration
 			$meta['expiration'] = $meta['start'];
+
 		}
+
 	}
 
 	if ( edd_discount_exists( $discount_id ) && ! empty( $discount_id ) ) {
+
 		// Update an existing discount
 
-		$details = apply_filters( 'edd_update_discount', $details, $discount_id );
+		$meta = apply_filters( 'edd_update_discount', $meta, $discount_id );
 
-		do_action( 'edd_pre_update_discount', $details, $discount_id );
+		do_action( 'edd_pre_update_discount', $meta, $discount_id );
 
 		wp_update_post( array(
 			'ID'          => $discount_id,
-			'post_title'  => $details['name'],
-			'post_status' => $details['status']
+			'post_title'  => $meta['name'],
+			'post_status' => $meta['status']
 		) );
 
 		foreach( $meta as $key => $value ) {
 			update_post_meta( $discount_id, '_edd_discount_' . $key, $value );
 		}
 
-		do_action( 'edd_post_update_discount', $details, $discount_id );
+		do_action( 'edd_post_update_discount', $meta, $discount_id );
 
 		// Discount code updated
 		return $discount_id;
+
 	} else {
+
 		// Add the discount
 
-		$details = apply_filters( 'edd_insert_discount', $details );
+		$meta = apply_filters( 'edd_insert_discount', $meta );
 
-		do_action( 'edd_pre_insert_discount', $details );
+		do_action( 'edd_pre_insert_discount', $meta );
 
 		$discount_id = wp_insert_post( array(
 			'post_type'   => 'edd_discount',
-			'post_title'  => isset( $details['name'] ) ? $details['name'] : '',
+			'post_title'  => $meta['name'],
 			'post_status' => 'active'
 		) );
 
@@ -264,11 +277,12 @@ function edd_store_discount( $details, $discount_id = null ) {
 			update_post_meta( $discount_id, '_edd_discount_' . $key, $value );
 		}
 
-		do_action( 'edd_post_insert_discount', $details, $discount_id );
+		do_action( 'edd_post_insert_discount', $meta, $discount_id );
 
 		// Discount code created
 		return $discount_id;
 	}
+
 }
 
 
@@ -1066,7 +1080,13 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 
 		foreach ( $discounts as $discount ) {
 
-			$code_id           = edd_get_discount_id_by_code( $discount );
+			$code_id = edd_get_discount_id_by_code( $discount );
+
+			// Check discount exists
+		        if( ! $code_id ) {
+		            continue;
+		        }
+
 			$reqs              = edd_get_discount_product_reqs( $code_id );
 			$excluded_products = edd_get_discount_excluded_products( $code_id );
 

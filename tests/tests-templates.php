@@ -65,16 +65,21 @@ class Tests_Templates extends WP_UnitTestCase {
 	}
 
 	public function test_get_purchase_link() {
-		
+
 		$link = edd_get_purchase_link( array( 'download_id' => $this->_post->ID ) );
 		$this->assertInternalType( 'string', $link );
 		$this->assertContains( '<form id="edd_purchase_', $link );
-		$this->assertContains( 'class="edd_download_purchase_form" method="post">', $link );
+		$this->assertContains( 'class="edd_download_purchase_form', $link );
+		$this->assertContains( 'method="post">', $link );
 		$this->assertContains( '<input type="hidden" name="download_id" value="' . $this->_post->ID . '">', $link );
 		
 		// The product we created has variable pricing, so ensure the price options render
-		$this->assertContains( '<div class="edd_price_options">', $link );
+		$this->assertContains( '<div class="edd_price_options', $link );
 		$this->assertContains( '<span class="edd_price_option_name" itemprop="description">', $link );
+
+		add_filter( 'edd_item_quantities_enabled', '__return_true' );
+		$link = edd_get_purchase_link( array( 'download_id' => $this->_post->ID ) );
+		$this->assertInternalType( 'string', $link );
 
 	}
 

@@ -199,7 +199,7 @@ function edd_process_download() {
 		edd_die();
 	} else {
 		$error_message = __( 'You do not have permission to download this file', 'edd' );
-		wp_die( apply_filters( 'edd_deny_download_message', $error_message, __( 'Purchase Verification Failed', 'edd' ) ) );
+		wp_die( apply_filters( 'edd_deny_download_message', $error_message, __( 'Purchase Verification Failed', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
 
 	exit;

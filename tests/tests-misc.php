@@ -88,7 +88,7 @@ class Test_Misc extends WP_UnitTestCase {
 
 	public function test_get_countries() {
 		$expected = array(
-			'0'  => 'Choose',
+			''   => '',
 			'US' => 'United States',
 			'CA' => 'Canada',
 			'GB' => 'United Kingdom',
@@ -332,8 +332,7 @@ class Test_Misc extends WP_UnitTestCase {
 			'YU' => 'Yugoslavia',
 			'ZA' => 'South Africa',
 			'ZM' => 'Zambia',
-			'ZW' => 'Zimbabwe',
-			'0'  => 'Choose'
+			'ZW' => 'Zimbabwe'
 		);
 
 		$this->assertEquals( $expected, edd_get_country_list() );
@@ -341,7 +340,7 @@ class Test_Misc extends WP_UnitTestCase {
 
 	public function test_states_list() {
 		$expected = array(
-			'0'  => 'Choose',
+			''   => '',
 			'AL' => 'Alabama',
 			'AK' => 'Alaska',
 			'AZ' => 'Arizona',
@@ -407,7 +406,7 @@ class Test_Misc extends WP_UnitTestCase {
 			'VI' => 'Virgin Islands',
 			'AA' => 'Armed Forces - Americas',
 			'AE' => 'Armed Forces - Europe, Canada, Middle East, Africa',
-			'AP' => 'Armed Forces - Pacific'
+			'AP' => 'Armed Forces - Pacific',
 		);
 
 		$this->assertEquals( $expected, edd_get_states_list() );
@@ -415,7 +414,7 @@ class Test_Misc extends WP_UnitTestCase {
 
 	public function test_provinces_list() {
 		$expected = array(
-			'0'  => 'Choose',
+			''   => '',
 			'AB' => 'Alberta',
 			'BC' => 'British Columbia',
 			'MB' => 'Manitoba',
@@ -428,7 +427,7 @@ class Test_Misc extends WP_UnitTestCase {
 			'PE' => 'Prince Edward Island',
 			'QC' => 'Quebec',
 			'SK' => 'Saskatchewan',
-			'YT' => 'Yukon'
+			'YT' => 'Yukon',
 		);
 
 		$this->assertEquals( $expected, edd_get_provinces_list() );

@@ -35,8 +35,8 @@ jQuery(document).ready(function ($) {
 			clone.removeClass( 'edd_add_blank' );
 
 			clone.data( 'key', key );
-			clone.find( 'td input, td select' ).val( '' );
-			clone.find( 'input, select' ).each(function() {
+			clone.find( 'td input, td select, textarea' ).val( '' );
+			clone.find( 'input, select, textarea' ).each(function() {
 				var name = $( this ).attr( 'name' );
 
 				name = name.replace( /\[(\d+)\]/, '[' + parseInt( key ) + ']');
@@ -49,7 +49,7 @@ jQuery(document).ready(function ($) {
 			});
 
 			clone.find( '.edd_repeatable_default_input' ).each( function() {
-				$( this ).val( parseInt( count ) ).removeAttr('checked');
+				$( this ).val( parseInt( key ) ).removeAttr('checked');
 			})
 
 			return clone;
@@ -78,7 +78,7 @@ jQuery(document).ready(function ($) {
 					});
 				}
 			});
-			
+
 		},
 
 		remove : function() {
@@ -361,19 +361,37 @@ jQuery(document).ready(function ($) {
 				e.preventDefault();
 
 				var download_id    = $('#edd_order_download_select').val();
-				var download_title = $('.chosen-single span').text();
+				var download_title = $('#edd_order_download_select').find(':selected').text();
+				var quantity       = $('#edd-order-download-quantity').val();
 				var amount         = $('#edd-order-download-amount').val();
 				var price_id       = $('.edd_price_options_select option:selected').val();
 				var price_name     = $('.edd_price_options_select option:selected').text();
-				var quantity       = $('#edd-order-download-quantity').val();
 
 				if( download_id < 1 ) {
 					return false;
 				}
 
 				if( ! amount ) {
-					amount = '0.00';
+					amount = 0;
 				}
+
+				amount = parseFloat( amount );
+				if ( isNaN( amount ) ) {
+					alert( edd_vars.numeric_item_price );
+					return false;
+				}
+
+				if ( edd_vars.quantities_enabled === '1' ) {
+					if ( !isNaN( parseInt( quantity ) ) ) {
+						amount = amount * quantity;
+					} else {
+						alert( edd_vars.numeric_quantity );
+						return false;
+					}
+				}
+
+
+				amount = amount.toFixed( edd_vars.currency_decimals );
 
 				var formatted_amount = amount + edd_vars.currency_sign;
 				if ( 'before' === edd_vars.currency_pos ) {
@@ -389,8 +407,9 @@ jQuery(document).ready(function ($) {
 
 				clone.find( '.download span' ).html( '<a href="post.php?post=' + download_id + '&action=edit"></a>' );
 				clone.find( '.download span a' ).text( download_title );
-				clone.find( '.price' ).text( formatted_amount );
-				clone.find( '.quantity span' ).text( quantity );
+				clone.find( '.price-text' ).text( formatted_amount );
+				clone.find( '.item-quantity' ).text( quantity );
+				clone.find( '.item-price' ).text( edd_vars.currency_sign + ( amount / quantity ).toFixed( edd_vars.currency_decimals ) );
 				clone.find( 'input.edd-payment-details-download-id' ).val( download_id );
 				clone.find( 'input.edd-payment-details-download-price-id' ).val( price_id );
 				clone.find( 'input.edd-payment-details-download-amount' ).val( amount );
@@ -409,7 +428,7 @@ jQuery(document).ready(function ($) {
 				$('#edd-payment-downloads-changed').val(1);
 
 				$(clone).insertAfter( '#edd-purchased-files div.row:last' );
-				$('.edd-order-payment-recalc-totals').show();
+				$( '.edd-order-payment-recalc-totals' ).show();
 
 			});
 		},
@@ -422,12 +441,7 @@ jQuery(document).ready(function ($) {
 				var total = 0;
 				if( $('#edd-purchased-files .row .edd-payment-details-download-amount').length ) {
 					$('#edd-purchased-files .row .edd-payment-details-download-amount').each(function() {
-						var quantity = $(this).next().val();
-						if( quantity ) {
-							total += ( parseFloat( $(this).val() ) * parseInt( quantity ) );
-						} else {
-							total += parseFloat( $(this).val() );
-						}
+						total += parseFloat( $(this).val() );
 					});
 				}
 				if( $('.edd-payment-fees').length ) {
@@ -620,7 +634,7 @@ jQuery(document).ready(function ($) {
 				} else {
 
 					$('#edd-discount-product-conditions').hide();
-					
+
 				}
 
 			});
@@ -1009,7 +1023,7 @@ jQuery(document).ready(function ($) {
 		) {
 			return;
 		}
-		
+
 		clearTimeout(typingTimer);
 		typingTimer = setTimeout(
 			function(){
@@ -1086,7 +1100,7 @@ jQuery(document).ready(function ($) {
 			action: 'edd_search_users',
 			user_name: user_search
 		};
-		
+
 		document.body.style.cursor = 'wait';
 
 		$.ajax({

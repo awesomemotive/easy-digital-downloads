@@ -265,13 +265,13 @@ function edd_tools_import_export_process_import() {
 		return;
 
     if( edd_get_file_extension( $_FILES['import_file']['name'] ) != 'json' ) {
-        wp_die( __( 'Please upload a valid .json file', 'edd' ) );
+        wp_die( __( 'Please upload a valid .json file', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 400 ) );
     }
 
 	$import_file = $_FILES['import_file']['tmp_name'];
 
 	if( empty( $import_file ) ) {
-		wp_die( __( 'Please upload a file to import', 'edd' ) );
+		wp_die( __( 'Please upload a file to import', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 400 ) );
 	}
 
 	// Retrieve the settings from the file and convert the json object to an array
@@ -483,6 +483,18 @@ function edd_tools_sysinfo_get() {
 
 		$return  = apply_filters( 'edd_sysinfo_after_edd_templates', $return );
 	}
+
+    // Must-use plugins
+    $muplugins = get_mu_plugins();
+    if( count( $muplugins > 0 ) ) {
+        $return .= "\n" . '-- Must-Use Plugins' . "\n\n";
+
+        foreach( $muplugins as $plugin => $plugin_data ) {
+            $return .= $plugin_data['Name'] . ': ' . $plugin_data['Version'] . "\n";
+        }
+
+        $return = apply_filters( 'edd_sysinfo_after_wordpress_mu_plugins', $return );
+    }
 
 	// WordPress active plugins
 	$return .= "\n" . '-- WordPress Active Plugins' . "\n\n";

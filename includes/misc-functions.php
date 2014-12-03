@@ -348,7 +348,6 @@ function edd_get_currencies() {
 	return apply_filters( 'edd_currencies', $currencies );
 }
 
-
 /**
  * Get the store's set currency
  *
@@ -359,6 +358,63 @@ function edd_get_currency() {
 	global $edd_options;
 	$currency = isset( $edd_options['currency'] ) ? $edd_options['currency'] : 'USD';
 	return apply_filters( 'edd_currency', $currency );
+}
+
+/**
+ * Given a currency determine the symbol to use. If no currency given, site default is used.
+ * If no symbol is determine, the currency string is returned.
+ *
+ * @since  2.2
+ * @param  string $currency The currency string
+ * @return string           The symbol to use for the currency
+ */
+function edd_currency_symbol( $currency = '' ) {
+	global $edd_options;
+
+	if ( empty( $currency ) ) {
+		$currency = edd_get_currency();
+	}
+
+	switch ( $currency ) :
+		case "GBP" :
+			$symbol = '&pound;';
+			break;
+		case "BRL" :
+			$symbol = 'R&#36;';
+			break;
+		case "EUR" :
+			$symbol = '&euro;';
+			break;
+		case "USD" :
+		case "AUD" :
+		case "CAD" :
+		case "HKD" :
+		case "MXN" :
+		case "SGD" :
+			$symbol = '&#36;';
+			break;
+		case "JPY" :
+			$symbol = '&yen;';
+			break;
+		default :
+			$symbol = $currency;
+			break;
+	endswitch;
+
+	return apply_filters( 'edd_currency_symbol', $symbol, $currency );
+}
+
+/**
+ * Get the name of a currency
+ *
+ * @since 2.2
+ * @param  string $currency The currency code
+ * @return string The currency's name
+ */
+function edd_get_currency_name( $code = 'USD' ) {
+	$currencies = edd_get_currencies();
+	$name       = isset( $currencies[ $code ] ) ? $currencies[ $code ] : $code;
+	return apply_filters( 'edd_currency_name', $name );
 }
 
 /**
