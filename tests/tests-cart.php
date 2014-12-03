@@ -20,6 +20,11 @@ class Test_Cart extends WP_UnitTestCase {
 
 		$this->_rewrite = $wp_rewrite;
 
+		global $current_user;
+
+		$current_user = new WP_User(1);
+		$current_user->set_role('administrator');
+
 		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
 
 		$_variable_pricing = array(
@@ -283,11 +288,11 @@ class Test_Cart extends WP_UnitTestCase {
 	}
 
 	public function test_cart_item_price() {
-		$this->assertEquals( '&#036;0.00' , edd_cart_item_price( 0 ) );
+		$this->assertEquals( '&#36;0.00' , edd_cart_item_price( 0 ) );
 	}
 
 	public function test_get_cart_item_price() {
-		$this->assertEquals( '0.00' , edd_get_cart_item_price( 0 ) );
+		$this->assertEquals( false , edd_get_cart_item_price( 0 ) );
 	}
 
 	public function test_remove_from_cart() {
