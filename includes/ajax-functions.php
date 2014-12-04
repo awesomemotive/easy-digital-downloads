@@ -156,7 +156,7 @@ add_action( 'wp_ajax_nopriv_edd_get_subtotal', 'edd_ajax_get_subtotal' );
 function edd_ajax_apply_discount() {
 	if ( isset( $_POST['code'] ) ) {
 
-		$discount_code = $_POST['code'];
+		$discount_code = sanitize_text_field( $_POST['code'] );
 
 		$return = array(
 			'msg'  => '',
