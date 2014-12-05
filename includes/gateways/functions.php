@@ -282,6 +282,9 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
  * @return void
 */
 function edd_send_to_gateway( $gateway, $payment_data ) {
+
+	$payment_data['gateway_nonce'] = wp_create_nonce( 'edd-gateway' );
+
 	// $gateway must match the ID used when registering the gateway
 	do_action( 'edd_gateway_' . $gateway, $payment_data );
 }
