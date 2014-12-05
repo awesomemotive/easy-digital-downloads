@@ -222,7 +222,7 @@ function edd_ajax_apply_discount() {
 				'amount'      => $amount,
 				'total_plain' => $total,
 				'total'       => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' ),
-				'code'        => $_POST['code'],
+				'code'        => $discount_code,
 				'html'        => edd_get_cart_discounts_html( $discounts )
 			);
 		} else {
