@@ -81,6 +81,11 @@ function edd_get_tools_tabs() {
  * @return      void
  */
 function edd_tools_banned_emails_display() {
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
 	do_action( 'edd_tools_banned_emails_before' );
 ?>
 	<div class="postbox">
@@ -114,6 +119,11 @@ add_action( 'edd_tools_tab_general', 'edd_tools_banned_emails_display' );
  * @return      void
  */
 function edd_tools_api_keys_display() {
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
 	do_action( 'edd_tools_api_keys_before' );
 
 	require_once EDD_PLUGIN_DIR . 'includes/admin/class-api-keys-table.php';
@@ -172,6 +182,11 @@ add_action( 'edd_save_banned_emails', 'edd_tools_banned_emails_save' );
  * @return      void
  */
 function edd_tools_import_export_display() {
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
 	do_action( 'edd_tools_import_export_before' );
 ?>
 	<div class="postbox">
@@ -292,6 +307,11 @@ add_action( 'edd_import_settings', 'edd_tools_import_export_process_import' );
  * @return      void
  */
 function edd_tools_sysinfo_display() {
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
 ?>
 	<form action="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-tools&tab=system_info' ) ); ?>" method="post" dir="ltr">
 		<textarea readonly="readonly" onclick="this.focus(); this.select()" id="system-info-textarea" name="edd-sysinfo" title="To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac)."><?php echo edd_tools_sysinfo_get(); ?></textarea>
@@ -602,6 +622,11 @@ function edd_tools_sysinfo_get() {
  * @return      void
  */
 function edd_tools_sysinfo_download() {
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+	
 	nocache_headers();
 
 	header( 'Content-Type: text/plain' );
