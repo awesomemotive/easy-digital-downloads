@@ -791,6 +791,10 @@ add_filter( 'edd_settings_misc_sanitize', 'edd_settings_sanitize_misc' );
  */
 function edd_settings_sanitize_taxes( $input ) {
 
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return $input;
+	}
+
 	$new_rates = ! empty( $_POST['tax_rates'] ) ? array_values( $_POST['tax_rates'] ) : array();
 
 	update_option( 'edd_tax_rates', $new_rates );
