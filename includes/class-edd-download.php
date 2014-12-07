@@ -28,77 +28,77 @@ class EDD_Download {
 	 *
 	 * @since 2.2
 	 */
-	public $price;
+	private $price;
 
 	/**
 	 * The download prices, if Variable Prices are enabled
 	 *
 	 * @since 2.2
 	 */
-	public $prices;
+	private $prices;
 
 	/**
 	 * The download files
 	 *
 	 * @since 2.2
 	 */
-	public $files;
+	private $files;
 
 	/**
 	 * The download's file download limit
 	 *
 	 * @since 2.2
 	 */
-	public $file_download_limit;
+	private $file_download_limit;
 
 	/**
 	 * The download type, default or bundle
 	 *
 	 * @since 2.2
 	 */
-	public $type;
+	private $type;
 
 	/**
 	 * The bundled downloads, if this is a bundle type
 	 *
 	 * @since 2.2
 	 */
-	public $bundled_downloads;
+	private $bundled_downloads;
 
 	/**
 	 * The download's sale count
 	 *
 	 * @since 2.2
 	 */
-	public $sales = 0;
+	private $sales = 0;
 
 	/**
 	 * The download's total earnings
 	 *
 	 * @since 2.2
 	 */
-	public $earnings = 0.00;
+	private $earnings = 0.00;
 
 	/**
 	 * The download's notes
 	 *
 	 * @since 2.2
 	 */
-	public $notes;
+	private $notes;
 
 	/**
 	 * The download sku
 	 *
 	 * @since 2.2
 	 */
-	public $sku;
+	private $sku;
 
 	/**
 	 * The download's purchase button behavior
 	 *
 	 * @since 2.2
 	 */
-	public $button_behavior;
+	private $button_behavior;
 
 	/**
 	 * Get things going
