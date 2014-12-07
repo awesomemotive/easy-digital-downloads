@@ -260,8 +260,6 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 					<div id="postbox-container-2" class="postbox-container">
 						<div id="normal-sortables" class="meta-box-sortables ui-sortable">
 
-							<?php do_action( 'edd_payment_view_details', $payment_id ); // This is an old hook left here for backwards compatibility ?>
-
 							<?php do_action( 'edd_view_order_details_main_before', $payment_id ); ?>
 
 							<?php $column_count = edd_item_quantities_enabled() ? 'columns-4' : 'columns-3'; ?>
