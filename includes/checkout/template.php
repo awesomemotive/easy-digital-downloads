@@ -630,6 +630,10 @@ function edd_discount_field() {
 		return; // Only show before a payment method has been selected if ajax is disabled
 	}
 
+	if( ! edd_is_checkout() ) {
+		return;
+	}
+
 	if ( edd_has_active_discounts() && edd_get_cart_total() ) :
 
 		$color = edd_get_option( 'checkout_color', 'blue' );
