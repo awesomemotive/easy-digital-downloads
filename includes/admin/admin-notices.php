@@ -136,6 +136,10 @@ function edd_admin_addons_notices() {
 */
 function edd_dismiss_notices() {
 
+	if( ! is_user_logged_in() ) {
+		return;
+	}
+
 	$notice = isset( $_GET['edd_notice'] ) ? $_GET['edd_notice'] : false;
 
 	if( ! $notice )
