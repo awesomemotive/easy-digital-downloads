@@ -135,25 +135,28 @@ class EDD_Download {
 			return false;
 		}
 
-		if( $download ) {
+		foreach ( $download as $key => $value ) {
 
-			foreach ( $download as $key => $value ) {
+			$this->$key = $value;
 
-				$this->$key = $value;
+		}
 
-			}
+	}
 
-			foreach ( get_object_vars( $this ) as $key => $value ) {
+	/**
+	 * Magic __get function to dispatch a call to retrieve a private property
+	 *
+	 * @since 2.2
+	 */
+	public function __get( $key ) {
 
-				if( method_exists( $this, 'get_' . $key ) ) {
+		if( method_exists( $this, 'get_' . $key ) ) {
 
-					$value = call_user_func( array( $this, 'get_' . $key ) );
+			return call_user_func( array( $this, 'get_' . $key ) );
 
-				}
+		} else {
 
-				$this->$key = $value;
-
-			}
+			throw new Exception( 'Can\'t get property ' . $key );
 
 		}
 
