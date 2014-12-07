@@ -163,6 +163,18 @@ class EDD_Download {
 	}
 
 	/**
+	 * Retrieve the ID
+	 *
+	 * @since 2.2
+	 * @return int
+	 */
+	public function get_ID() {
+
+		return $this->ID;
+
+	}
+
+	/**
 	 * Retrieve the price
 	 *
 	 * @since 2.2
