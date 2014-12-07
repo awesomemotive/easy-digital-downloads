@@ -30,6 +30,10 @@ add_action( 'edd_paypal_cc_form', '__return_false' );
 function edd_process_paypal_purchase( $purchase_data ) {
 	global $edd_options;
 
+	if( ! wp_verify_nonce( $purchase_data['gateway_nonce'], 'edd-gateway' ) ) {
+		wp_die( __( 'Nonce verification has failed', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+	}
+
 	// Collect payment data
 	$payment_data = array(
 		'price'         => $purchase_data['price'],
