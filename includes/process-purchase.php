@@ -1053,6 +1053,11 @@ add_action( 'edd_checkout_error_checks', 'edd_check_purchase_email', 10, 2 );
 function edd_process_straight_to_gateway( $data ) {
 	$download_id   = $data['download_id'];
 	$options       = isset( $data['edd_options'] ) ? $data['edd_options'] : array();
+
+	if( empty( $download_id ) || ! edd_get_download( $download_id ) ) {
+		return;
+	}
+
 	$purchase_data = edd_build_straight_to_gateway_data( $download_id, $options );
 	edd_set_purchase_session( $purchase_data );
 	edd_send_to_gateway( $purchase_data['gateway'], $purchase_data );
