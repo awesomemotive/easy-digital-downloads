@@ -102,7 +102,9 @@ function edd_email_test_purchase_receipt() {
  */
 function edd_admin_email_notice( $payment_id = 0, $payment_data = array() ) {
 
-	if( empty( absint( $payment_id ) ) ) {
+	$payment_id = absint( $payment_id );
+
+	if( empty( $payment_id ) ) {
 		return;
 	}
 
