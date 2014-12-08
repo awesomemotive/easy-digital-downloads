@@ -300,12 +300,14 @@ function edd_process_paypal_ipn() {
 
 	$encoded_data_array = wp_parse_args( $encoded_data_array, $defaults );
 
+	$payment_id = isset( $encoded_data_array['custom'] ) ? absint( $encoded_data_array['custom'] ) : 0;
+
 	if ( has_action( 'edd_paypal_' . $encoded_data_array['txn_type'] ) ) {
 		// Allow PayPal IPN types to be processed separately
-		do_action( 'edd_paypal_' . $encoded_data_array['txn_type'], $encoded_data_array );
+		do_action( 'edd_paypal_' . $encoded_data_array['txn_type'], $encoded_data_array, $payment_id );
 	} else {
 		// Fallback to web accept just in case the txn_type isn't present
-		do_action( 'edd_paypal_web_accept', $encoded_data_array );
+		do_action( 'edd_paypal_web_accept', $encoded_data_array, $payment_id );
 	}
 	exit;
 }
@@ -319,15 +321,18 @@ add_action( 'edd_verify_paypal_ipn', 'edd_process_paypal_ipn' );
  * @param array   $data IPN Data
  * @return void
  */
-function edd_process_paypal_web_accept_and_cart( $data ) {
+function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 	global $edd_options;
 
 	if ( $data['txn_type'] != 'web_accept' && $data['txn_type'] != 'cart' && $data['payment_status'] != 'Refunded' ) {
 		return;
 	}
 
+	if( empty( $payment_id ) ) {
+		return;
+	}
+
 	// Collect payment details
-	$payment_id     = $data['custom'];
 	$purchase_key   = isset( $data['invoice'] ) ? $data['invoice'] : $data['item_number'];
 	$paypal_amount  = $data['mc_gross'];
 	$payment_status = strtolower( $data['payment_status'] );
@@ -389,7 +394,7 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 	if ( $payment_status == 'refunded' || $payment_status == 'reversed' ) {
 
 		// Process a refund
-		edd_process_paypal_refund( $data );
+		edd_process_paypal_refund( $data, $payment_id );
 
 	} else {
 
@@ -422,7 +427,7 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 		}
 	}
 }
-add_action( 'edd_paypal_web_accept', 'edd_process_paypal_web_accept_and_cart' );
+add_action( 'edd_paypal_web_accept', 'edd_process_paypal_web_accept_and_cart', 10, 2 );
 
 /**
  * Process PayPal IPN Refunds
@@ -431,10 +436,13 @@ add_action( 'edd_paypal_web_accept', 'edd_process_paypal_web_accept_and_cart' );
  * @param array   $data IPN Data
  * @return void
  */
-function edd_process_paypal_refund( $data ) {
+function edd_process_paypal_refund( $data, $payment_id = 0 ) {
 
 	// Collect payment details
-	$payment_id = intval( $data['custom'] );
+
+	if( empty( $payment_id ) ) {
+		return;
+	}
 
 	if ( get_post_status( $payment_id ) == 'refunded' ) {
 		return; // Only refund payments once
