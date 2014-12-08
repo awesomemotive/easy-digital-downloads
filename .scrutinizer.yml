@@ -11,7 +11,7 @@ tools:
     php_pdepend: true
     php_loc:
         enabled: true
-        excluded_dirs: [vendor, tests, .tx, languages]
+        excluded_dirs: [vendor, tests, .tx, languages, includes/libraries]
     php_cpd:
         enabled: true
-        excluded_dirs: [vendor, tests, .tx, languages]
+        excluded_dirs: [vendor, tests, .tx, languages, includes/libraries]
