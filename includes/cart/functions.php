@@ -152,7 +152,7 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 			$item = array(
 				'id'           => $download_id,
 				'options'      => array(
-					'price_id' => preg_replace( '/[^0-9\.]/', '', $price )
+					'price_id' => preg_replace( '/[^0-9\.-]/', '', $price )
 				),
 				'quantity'     => $quantity
 			);
