@@ -70,14 +70,14 @@ class EDD_Download {
 	 *
 	 * @since 2.2
 	 */
-	private $sales = 0;
+	private $sales;
 
 	/**
 	 * The download's total earnings
 	 *
 	 * @since 2.2
 	 */
-	private $earnings = 0.00;
+	private $earnings;
 
 	/**
 	 * The download's notes
