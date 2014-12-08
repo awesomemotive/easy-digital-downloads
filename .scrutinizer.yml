@@ -1,5 +1,5 @@
 filter:
-    excluded_paths: [vendor/*, tests/*, .tx/*, languages/* ]
+    excluded_paths: [vendor/*, tests/*, .tx/*, languages/*, includes/libraries/* ]
 before_commands:
     - 'composer install --dev --prefer-source'
 tools:
