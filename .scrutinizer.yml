@@ -1,5 +1,5 @@
 filter:
-    excluded_paths: [vendor/*, tests/*, .tx/*, languages/*, includes/libraries/* ]
+    excluded_paths: [vendor/*, tests/*, .tx/*, languages/*, includes/libraries/*, bin/*, assets/*, templates/* ]
 before_commands:
     - 'composer install --dev --prefer-source'
 tools:
@@ -11,7 +11,7 @@ tools:
     php_pdepend: true
     php_loc:
         enabled: true
-        excluded_dirs: [vendor, tests, .tx, languages, includes/libraries]
+        excluded_dirs: [vendor, tests, .tx, languages, includes/libraries, bin, assets, templates]
     php_cpd:
         enabled: true
-        excluded_dirs: [vendor, tests, .tx, languages, includes/libraries]
+        excluded_dirs: [vendor, tests, .tx, languages, includes/libraries, bin, assets, templates]
