@@ -49,7 +49,7 @@ class Tests_Downloads extends WP_UnitTestCase {
 			'edd_price' => '0.00',
 			'_variable_pricing' => 1,
 			'_edd_price_options_mode' => 'on',
-			'edd_variable_prices' => array_values( $_variable_pricing ), 
+			'edd_variable_prices' => array_values( $_variable_pricing ),
 			'edd_download_files' => array_values( $_download_files ),
 			'_edd_download_limit' => 20,
 			'_edd_hide_purchase_link' => 1,
@@ -78,13 +78,13 @@ class Tests_Downloads extends WP_UnitTestCase {
 	}
 
 	public function test_edd_get_download_by() {
-		
+
 		$download = edd_get_download_by( 'id', $this->_post->ID );
 		$this->assertSame( $this->_post->ID, $download->ID );
-		
+
 		$download = edd_get_download_by( 'sku', 'sku_0012' );
 		$this->assertSame( $this->_post->ID, $download->ID );
-		
+
 		$download = edd_get_download_by( 'slug', 'test-download-product' );
 		$this->assertSame( $this->_post->ID, $download->ID );
 
@@ -245,10 +245,10 @@ class Tests_Downloads extends WP_UnitTestCase {
 	}
 
 	public function test_increase_purchase_count() {
-	
+
 		// Test our helper function
 		$this->assertEquals( 60, edd_increase_purchase_count( $this->_post->ID ) );
-	
+
 		// Now test our EDD_Download class method
 		$download = new EDD_Download( $this->_post->ID );
 		$this->assertEquals( 61, $download->increase_sales() );
@@ -256,7 +256,7 @@ class Tests_Downloads extends WP_UnitTestCase {
 	}
 
 	public function test_decrease_purchase_count() {
-		
+
 		// Test our helper function
 		$this->assertEquals( 58, edd_decrease_purchase_count( $this->_post->ID ) );
 
@@ -266,7 +266,7 @@ class Tests_Downloads extends WP_UnitTestCase {
 	}
 
 	public function test_earnings_increase() {
-		
+
 		// Test our helper function
 		$this->assertEquals( 149.43, edd_increase_earnings( $this->_post->ID, 20 ) );
 
