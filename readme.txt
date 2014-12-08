@@ -17,7 +17,6 @@ Sell digital downloads through WordPress with this complete digital downloads ma
 
 Easy Digital Downloads is a complete e-commerce solution for selling digital products in a light, performant, and easy to use plugin. Rather that attempting to provide every feature under the sun, Easy Digital Downloads makes selling digital simple and complete by providing just the features you need.
 
-
 Features of the plugin include:
 
 * Cart system for purchasing multiple downloads at once
