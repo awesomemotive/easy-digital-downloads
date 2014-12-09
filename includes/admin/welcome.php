@@ -188,7 +188,7 @@ class EDD_Welcome {
 					<p><?php _e( 'The purchase forms now support quantity fields that allow your customers to enter their desired quantity before proceeding to checkout.', 'edd' );?></p>
 
 					<h4><?php _e( 'Default Selected Price Option', 'edd' );?></h4>
-					<p><?php _e( 'Shop administrators can now select thge default price option that is selected for customers.', 'edd' );?></p>
+					<p><?php _e( 'Shop administrators can now select the default price option that is selected for customers.', 'edd' );?></p>
 
 					<h4><?php _e( 'Price-Specific Purchase Buttons', 'edd' );?></h4>
 					<p><?php _e( 'Purchase buttons now support displaying a purchase form for a specific price option. Simply add the <em>price_id</em> parameter:', 'edd' );?></p>
