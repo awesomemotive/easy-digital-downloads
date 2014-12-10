@@ -4,7 +4,7 @@ Plugin URI: http://easydigitaldownloads.com
 Contributors: mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, sksmatt, SpencerFinnell
 Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
-Requires at least: 3.7
+Requires at least: 3.9.2
 Tested up to: 4.1
 
 Stable Tag: 2.2
