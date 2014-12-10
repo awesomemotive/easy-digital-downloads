@@ -158,7 +158,7 @@ function edd_ajax_add_to_cart() {
 
 			} else {
 
-				$options['quantity'] = $post_data['edd_download_quantity'];
+				$options['quantity'] = isset( $post_data['edd_download_quantity'] ) ? $post_data['edd_download_quantity'] : '';
 
 			}
 
