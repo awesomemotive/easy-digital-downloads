@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.9.2
 Tested up to: 4.1
 
-Stable Tag: 2.2
+Stable Tag: 2.2.1
 
 License: GNU Version 2 or Any Later Version
 
@@ -182,6 +182,15 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.2.1, December 10, 2014 =
+
+* Fix: Fatal error with some sites in the admin area due to an "ajax works" test
+* Fix: Improper user capability check for shop upgrades
+* Fix: Non-object errors on the in-browser receipt when an invalid payment key is provided
+* Fix: Security flaw related to API key verification
+* Fix: Undefined index for download quantity during add to cart
+* Tweak: Better option description in settings for item quantities
 
 = 2.2, December 9, 2014 =
 
