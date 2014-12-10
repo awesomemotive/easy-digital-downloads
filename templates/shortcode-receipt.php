@@ -5,6 +5,17 @@
 global $edd_receipt_args, $edd_options;
 
 $payment   = get_post( $edd_receipt_args['id'] );
+
+if( empty( $payment ) ) : ?>
+
+	<div class="edd_errors">
+		<p class="edd_error"><?php _e( 'The specified receipt ID appears to be invalid', 'edd' ); ?></p> 
+	</div>
+
+<?php
+return;
+endif;;
+
 $meta      = edd_get_payment_meta( $payment->ID );
 $cart      = edd_get_payment_meta_cart_details( $payment->ID, true );
 $user      = edd_get_payment_meta_user_info( $payment->ID );
