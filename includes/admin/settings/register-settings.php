@@ -542,7 +542,7 @@ function edd_get_registered_settings() {
 				'item_quantities' => array(
 					'id' => 'item_quantities',
 					'name' => __('Item Quantities', 'edd'),
-					'desc' => __('Allow item quantities to be changed at checkout.', 'edd'),
+					'desc' => __('Allow item quantities to be changed.', 'edd'),
 					'type' => 'checkbox'
 				),
 				'allow_multiple_discounts' => array(
@@ -554,7 +554,7 @@ function edd_get_registered_settings() {
 				'enable_cart_saving' => array(
 					'id' => 'enable_cart_saving',
 					'name' => __( 'Enable Cart Saving', 'edd' ),
-					'desc' => __( 'Check this to enable cart saving on the checkout', 'edd' ),
+					'desc' => __( 'Check this to enable cart saving on the checkout.', 'edd' ),
 					'type' => 'checkbox'
 				),
 				'field_downloads' => array(
@@ -674,7 +674,7 @@ function edd_get_registered_settings() {
 				'add_to_cart_text' => array(
 					'id' => 'add_to_cart_text',
 					'name' => __( 'Add to Cart Text', 'edd' ),
-					'desc' => __( 'Text shown on the Add to Cart Buttons', 'edd' ),
+					'desc' => __( 'Text shown on the Add to Cart Buttons.', 'edd' ),
 					'type' => 'text',
 					'std'  => __( 'Add to Cart', 'edd' )
 				)
