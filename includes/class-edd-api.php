@@ -193,7 +193,7 @@ class EDD_API {
 				$secret = get_user_meta( $user, 'edd_user_secret_key', true );
 				$public = urldecode( $wp_query->query_vars['key'] );
 
-				if ( hash( 'md5', $secret . $public ) === $token )
+				if ( hash_equals( md5( $secret . $public ), $token ) )
 					$this->is_valid_request = true;
 				else
 					$this->invalid_auth();
