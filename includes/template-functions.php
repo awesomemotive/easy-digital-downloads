@@ -263,7 +263,7 @@ function edd_download_purchase_form_quantity_field( $download_id = 0, $args = ar
 		return;
 	}
 
-	if ( ( edd_item_in_cart( $download_id ) && ! edd_has_variable_prices( $download_id ) ) || ( edd_single_price_option_mode( $download_id ) && edd_has_variable_prices( $download_id ) && ! edd_item_in_cart( $download_id ) ) ) {
+	if ( ( edd_item_in_cart( $download_id ) && ! edd_has_variable_prices( $download_id ) ) || ( edd_single_price_option_mode( $download_id ) && edd_has_variable_prices( $download_id ) && ! edd_item_in_cart( $download_id ) ) || ( edd_single_price_option_mode( $download_id ) && edd_has_variable_prices( $download_id ) && edd_item_in_cart( $download_id ) ) ) {
 		return;
 	}
 
