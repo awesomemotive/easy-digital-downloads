@@ -16,14 +16,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Get Checkout Form
  *
  * @since 1.0
- * @global $edd_options Array of all the EDD options
- * @global $user_ID ID of current logged in user
- * @global $post Current Post Object
  * @return string
  */
 function edd_checkout_form() {
-	global $edd_options, $user_ID, $post;
-
 	$payment_mode = edd_get_chosen_gateway();
 	$form_action  = esc_url( edd_get_checkout_uri( 'payment-mode=' . $payment_mode ) );
 
@@ -383,12 +378,6 @@ add_action( 'edd_purchase_form_after_cc_form', 'edd_checkout_tax_fields', 999 );
  * @return string
  */
 function edd_get_register_fields() {
-	global $edd_options;
-	global $user_ID;
-
-	if ( is_user_logged_in() )
-		$user_data = get_userdata( $user_ID );
-
 	$show_register_form = edd_get_option( 'show_register_form', 'none' );
 
 	ob_start(); ?>
