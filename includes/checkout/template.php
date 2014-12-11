@@ -165,7 +165,7 @@ function edd_user_info_fields() {
 			<input class="edd-input<?php if( edd_field_is_required( 'edd_last' ) ) { echo ' required'; } ?>" type="text" name="edd_last" id="edd-last" placeholder="<?php _e( 'Last name', 'edd' ); ?>" value="<?php echo is_user_logged_in() ? $user_data->last_name : ''; ?>"/>
 		</p>
 		<?php do_action( 'edd_purchase_form_user_info' ); ?>
-		<?php do_action( 'edd_purchase_form_personal_info_user_info' ); ?>
+		<?php do_action( 'edd_purchase_form_user_info_fields' ); ?>
 	</fieldset>
 	<?php
 }
@@ -442,7 +442,7 @@ function edd_get_register_fields() {
 		<input type="hidden" name="edd-purchase-var" value="needs-to-register"/>
 
 		<?php do_action( 'edd_purchase_form_user_info' ); ?>
-		<?php do_action( 'edd_purchase_form_register_user_info' ); ?>
+		<?php do_action( 'edd_purchase_form_user_register_fields' ); ?>
 
 	</fieldset>
 	<?php
