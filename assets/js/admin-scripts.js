@@ -883,8 +883,18 @@ jQuery(document).ready(function ($) {
 
 			// Remove tax row
 			$('body').on('click', '#edd_tax_rates .edd_remove_tax_rate', function() {
-				if( confirm( edd_vars.delete_tax_rate ) )
-					$(this).closest('tr').remove();
+				if( confirm( edd_vars.delete_tax_rate ) ) {
+					var count = $('#edd_tax_rates tr:visible').length;
+
+					if( count === 2 ) {
+						$('#edd_tax_rates select').val('');
+						$('#edd_tax_rates input[type="text"]').val('');
+						$('#edd_tax_rates input[type="number"]').val('');
+						$('#edd_tax_rates input[type="checkbox"]').attr('checked', false);
+					} else {
+						$(this).closest('tr').remove();
+					}
+				}
 				return false;
 			});
 
