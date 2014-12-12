@@ -1260,12 +1260,12 @@ function edd_color_select_callback( $args ) {
 function edd_rich_editor_callback( $args ) {
 	global $edd_options, $wp_version;
 
-    if ( isset( $edd_options[ $args['id'] ] ) ) {
+	if ( isset( $edd_options[ $args['id'] ] ) ) {
 		$value = $edd_options[ $args['id'] ];
-        
-        if( ! isset( $args['allow_blank'] ) && empty( $value ) ) {
-            $value = isset( $args['std'] ) ? $args['std'] : '';
-        }
+
+		if( ! isset( $args['allow_blank'] ) && empty( $value ) ) {
+			$value = isset( $args['std'] ) ? $args['std'] : '';
+		}
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
