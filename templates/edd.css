@@ -62,7 +62,7 @@
 .edd_clearfix:after { display: block; visibility: hidden; float: none; clear: both; text-indent: -9999px; content: "."; }
 /* Cart Contents */
 #edd_checkout_cart_wrap {  }
-#edd_checkout_cart { text-align: left; width: 100%; border: none; margin: 0 0 21px; }
+#edd_checkout_cart { text-align: left; width: 100%; border: none; margin: 0 0 21px; table-layout: auto; }
 #edd_checkout_cart th,
 #edd_checkout_cart td { text-align: left; border: 1px solid #eee; color: #666; padding: 0.5em 1.387em; }
 #edd_checkout_cart .edd_cart_header_row th { background: #fafafa; padding: 1.387em; }
