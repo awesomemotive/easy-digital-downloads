@@ -92,7 +92,7 @@ function edd_get_purchase_link( $args = array() ) {
 		if ( $variable_pricing && false !== $args['price_id'] ) {
 
 			$price_id = $args['price_id'];
-			$prices   = $download->prices();
+			$prices   = $download->prices;
 
 			$price = isset( $prices[$price_id] ) ? $prices[$price_id]['amount'] : false;
 
