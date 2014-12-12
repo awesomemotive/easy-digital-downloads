@@ -4,7 +4,7 @@
  */ 
 $cart_items    = edd_get_cart_contents();
 $cart_quantity = edd_get_cart_quantity();
-$display       = $cart_quantity > 0 ? '' : 'style="display:none;"';
+$display       = $cart_quantity > 0 ? '' : ' style="display:none;"';
 ?>
 <p class="edd-cart-number-of-items"<?php echo $display; ?>><?php _e( 'Number of items in cart', 'edd' ); ?>: <span class="edd-cart-quantity"><?php echo $cart_quantity; ?></span></p>
 <ul class="edd-cart">
