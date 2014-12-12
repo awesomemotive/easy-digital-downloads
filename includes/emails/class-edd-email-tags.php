@@ -441,17 +441,17 @@ function edd_email_tag_download_list( $payment_id ) {
 
 					$files = edd_get_download_files( $bundle_item );
 
-                    foreach ( $files as $filekey => $file ) {
-                        if ( $show_links ) {
-    						$download_list .= '<div>';
-	    					$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $bundle_item, $price_id );
-		    				$download_list .= '<a href="' . esc_url( $file_url ) . '">' . $file['name'] . '</a>';
-                            $download_list .= '</div>';
-                        } else {
-                            $download_list .= '<div>';
-                            $download_list .= $file['name'];
-                            $download_list .= '</div>';
-                        }
+					foreach ( $files as $filekey => $file ) {
+						if ( $show_links ) {
+							$download_list .= '<div>';
+							$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $bundle_item, $price_id );
+							$download_list .= '<a href="' . esc_url( $file_url ) . '">' . $file['name'] . '</a>';
+							$download_list .= '</div>';
+						} else {
+							$download_list .= '<div>';
+							$download_list .= $file['name'];
+							$download_list .= '</div>';
+						}
 					}
 				}
 			}
