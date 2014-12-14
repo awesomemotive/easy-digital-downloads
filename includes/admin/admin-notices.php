@@ -81,8 +81,8 @@ function edd_admin_messages() {
 		add_settings_error( 'edd-notices', 'edd-api-key-generated', __( 'API keys successfully generated.', 'edd' ), 'updated' );
 	}
 
-	if ( isset( $_GET['edd-message'] ) && 'api-key-exists' == $_GET['edd-message'] && current_user_can( 'manage_shop_settings' ) ) {
-		add_settings_error( 'edd-notices', 'edd-api-key-exists', __( 'The specified user already has API keys.', 'edd' ), 'error' );
+	if ( isset( $_GET['edd-message'] ) && 'api-key-failed' == $_GET['edd-message'] && current_user_can( 'manage_shop_settings' ) ) {
+		add_settings_error( 'edd-notices', 'edd-api-key-failed', __( 'The specified user already has API keys or the specified user does not exist..', 'edd' ), 'error' );
 	}
 
 	if ( isset( $_GET['edd-message'] ) && 'api-key-regenerated' == $_GET['edd-message'] && current_user_can( 'manage_shop_settings' ) ) {
