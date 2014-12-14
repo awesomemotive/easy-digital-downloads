@@ -37,7 +37,7 @@ function edd_test_ajax_works() {
 
 	$params = array(
 		'sslverify'     => false,
-		'timeout'       => 60,
+		'timeout'       => 30,
 	);
 
 	$ajax  = wp_remote_get( add_query_arg( 'action', 'edd_test_ajax', edd_get_ajax_url() ), $params );
