@@ -36,11 +36,14 @@ function edd_is_ajax_enabled() {
 function edd_test_ajax_works() {
 
 	$params = array(
-		'sslverify'     => false,
-		'timeout'       => 30,
+		'sslverify'  => false,
+		'timeout'    => 30,
+		'body'       => array(
+			'action' => 'edd_test_ajax'
+		) 
 	);
 
-	$ajax  = wp_remote_get( add_query_arg( 'action', 'edd_test_ajax', edd_get_ajax_url() ), $params );
+	$ajax  = wp_remote_post( edd_get_ajax_url(), $params );
 	$works = true;
 
 	if( is_wp_error( $ajax ) ) {
