@@ -1465,8 +1465,17 @@ class EDD_API {
 	 * @param array $args
 	 * @return string
 	 */
-	public function generate_api_key( $user_id, $regenerate = false ) {
+	public function generate_api_key( $user_id = 0, $regenerate = false ) {
+
+		if( empty( $user_id ) ) {
+			return false;
+		}
+
 		$user = get_userdata( $user_id );
+
+		if( ! $user ) {
+			return false;
+		}
 
 		if ( empty( $user->edd_user_public_key ) ) {
 			update_user_meta( $user_id, 'edd_user_public_key', $this->generate_public_key( $user->user_email ) );
@@ -1490,8 +1499,17 @@ class EDD_API {
 	 * @param int $args
 	 * @return string
 	 */
-	public function revoke_api_key( $user_id ) {
+	public function revoke_api_key( $user_id = 0 ) {
+
+		if( empty( $user_id ) ) {
+			return false;
+		}
+
 		$user = get_userdata( $user_id );
+
+		if( ! $user ) {
+			return false;
+		}
 
 		if ( ! empty( $user->edd_user_public_key ) ) {
 			delete_transient( md5( 'edd_api_user_' . $user->edd_user_public_key ) );
