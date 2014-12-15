@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.9.2
 Tested up to: 4.1
 
-Stable Tag: 2.2.1
+Stable Tag: 2.2.2
 
 License: GNU Version 2 or Any Later Version
 
@@ -182,6 +182,18 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.2.2, December 14, 2014 =
+
+* Fix: Extension updates running on every page load of plugins.php when using multisite
+* Fix: edd_test_ajax_works() request firing on every page load
+* Fix: Incorrect price ID added to the cart when two purchase buttons are on the same page
+* Fix: Fatal error when using price_id in the purchase_link short code
+* Fix: Shopping cart squished in the Twenty Fifteen theme
+* Fix: Removed unused variables in edd_get_register_fields()
+* Fix: Incorrect quantity field displayed when a variable priced item with multi-purchase mode enabled is in the vart
+* Fix: Invalid HTML markup due to a missing space before a style tag
+* Fix: Improper behavior when deleting the last tax rate
 
 = 2.2.1, December 10, 2014 =
 
