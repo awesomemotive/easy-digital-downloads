@@ -35,6 +35,8 @@ function edd_is_ajax_enabled() {
  */
 function edd_test_ajax_works() {
 
+	add_filter( 'block_local_requests', '__return_false' );
+
 	$params = array(
 		'sslverify'  => false,
 		'timeout'    => 30,
