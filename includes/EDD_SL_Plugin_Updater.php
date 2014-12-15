@@ -68,8 +68,14 @@ class EDD_SL_Plugin_Updater {
      */
     function check_update( $_transient_data ) {
 
+        global $pagenow;
+
         if( ! is_object( $_transient_data ) ) {
             $_transient_data = new stdClass;
+        }
+
+        if( 'plugins.php' == $pagenow && is_multisite() ) {
+            return $_transient_data;
         }
 
         if ( empty( $_transient_data->response ) || empty( $_transient_data->response[ $this->name ] ) ) {
