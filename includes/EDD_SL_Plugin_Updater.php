@@ -97,6 +97,10 @@ class EDD_SL_Plugin_Updater {
 
             }
 
+        } else {
+
+            $version_info = $update_cache->response[ $this->name ];
+
         }
 
         return $_transient_data;
