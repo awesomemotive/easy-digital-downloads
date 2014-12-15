@@ -105,7 +105,7 @@ function edd_admin_messages() {
 		echo '</div>';
 	}
 
-	if( ! get_user_meta( get_current_user_id(), '_edd_admin_ajax_inaccessible_dismissed', true ) && current_user_can( 'manage_shop_settings' ) ) {
+	if( ! get_user_meta( get_current_user_id(), '_edd_admin_ajax_inaccessible_dismissed', true ) && current_user_can( 'manage_shop_settings' ) && false !== get_transient( '_edd_ajax_works' ) ) {
 		
 		if( ! edd_test_ajax_works() ) {
 

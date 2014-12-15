@@ -72,6 +72,10 @@ function edd_test_ajax_works() {
 
 	}
 
+	if( $works ) {
+		set_transient( '_edd_ajax_works', '1', DAY_IN_SECONDS );
+	}
+
 	return $works;
 }
 
