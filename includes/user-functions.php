@@ -255,8 +255,17 @@ function edd_get_purchase_stats_by_user( $user = '' ) {
 
 	$customer = EDD()->customers->get_by( $field, $user );
 
-	$stats['purchases']   = absint( $customer->purchase_count );
-	$stats['total_spent'] = edd_sanitize_amount( $customer->purchase_value );
+	if ( is_null( $customer ) ) {
+
+		$stats['purchases']   = 0;
+		$stats['total_spent'] = edd_sanitize_amount( 0 );
+	
+	} else {
+
+		$stats['purchases']   = absint( $customer->purchase_count );
+		$stats['total_spent'] = edd_sanitize_amount( $customer->purchase_value );
+
+	}	
 
 	return (array) apply_filters( 'edd_purchase_stats_by_user', $stats, $user );
 }
