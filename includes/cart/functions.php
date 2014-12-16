@@ -120,8 +120,6 @@ function edd_get_cart_quantity() {
  */
 function edd_add_to_cart( $download_id, $options = array() ) {
 
-	$cart = apply_filters( 'edd_pre_add_to_cart_contents', edd_get_cart_contents() );
-
 	$download = get_post( $download_id );
 
 	if( 'download' != $download->post_type )
@@ -131,6 +129,8 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		return; // Do not allow draft/pending to be purchased if can't edit. Fixes #1056
 
 	do_action( 'edd_pre_add_to_cart', $download_id, $options );
+
+	$cart = apply_filters( 'edd_pre_add_to_cart_contents', edd_get_cart_contents() );
 
 	if ( edd_has_variable_prices( $download_id )  && ! isset( $options['price_id'] ) ) {
 		// Forces to the first price ID if none is specified and download has variable prices
