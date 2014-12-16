@@ -962,7 +962,7 @@ function edd_get_spain_states_list() {
 	    'VA' => __( 'Valladolid', 'edd' ),
 	    'BI' => __( 'Bizkaia', 'edd' ),
 	    'ZA' => __( 'Zamora', 'edd' ),
-	    'Z'  => __('Zaragoza', 'edd' )
+	    'Z'  => __( 'Zaragoza', 'edd' )
 	); 	
 
 	return apply_filters( 'edd_spain_states', $states );
