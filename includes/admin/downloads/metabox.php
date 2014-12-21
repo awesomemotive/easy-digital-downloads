@@ -577,7 +577,8 @@ function edd_render_products_field( $post_id ) {
 								'id'       => 'edd_bundled_products',
 								'selected' => $products,
 								'multiple' => true,
-								'chosen'   => true
+								'chosen'   => true,
+								'bundles'  => false
 							) );
 							?>
 						</td>
