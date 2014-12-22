@@ -943,25 +943,14 @@ function edd_payment_icons_callback( $args ) {
 					if( has_filter( 'edd_accepted_payment_' . $card . '_image' ) ) {
 
 						$image = apply_filters( 'edd_accepted_payment_' . $card . '_image', '' );
+						echo '<img class="payment-icon" src="' . esc_url( $image ) . '" style="width:32px;height:24px;position:relative;top:6px;margin-right:5px;"/>';
 
 					} else {
 
-						$image       = edd_locate_template( 'images' . DIRECTORY_SEPARATOR . 'icons' . DIRECTORY_SEPARATOR . $card . '.gif', false );
-						$content_dir = WP_CONTENT_DIR;
-
-						if( function_exists( 'wp_normalize_path' ) ) {
-
-							// Replaces backslashes with forward slashes for Windows systems
-							$image = wp_normalize_path( $image );
-							$content_dir = wp_normalize_path( $content_dir );
-
-						}
-
-						$image = str_replace( $content_dir, WP_CONTENT_URL, $image );
+						echo '<i class="edd-font edd-pm-icon edd-pm-' . $key . '"></i>';
 
 					}
 
-					echo '<img class="payment-icon" src="' . esc_url( $image ) . '" style="width:32px;height:24px;position:relative;top:6px;margin-right:5px;"/>';
 				}
 
 

@@ -98,6 +98,7 @@ function edd_register_styles() {
 
 	// Use minified libraries if SCRIPT_DEBUG is turned off
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+	$css_dir = EDD_PLUGIN_URL . 'assets/css/';
 
 	$file          = 'edd' . $suffix . '.css';
 	$templates_dir = edd_get_theme_template_dir_name();
@@ -128,6 +129,7 @@ function edd_register_styles() {
 	}
 
 	wp_enqueue_style( 'edd-styles', $url, array(), EDD_VERSION );
+	wp_enqueue_style( 'edd-font', $css_dir . 'edd-font' . $suffix . '.css', EDD_VERSION );
 
 	if( edd_is_checkout() && is_ssl() ) {
 		// Dashicons are used to show the padlock icon on the credit card form
@@ -206,6 +208,7 @@ function edd_load_admin_scripts( $hook ) {
 	wp_enqueue_script( 'thickbox' );
 	wp_enqueue_style( 'thickbox' );
 	wp_enqueue_style( 'edd-admin', $css_dir . 'edd-admin' . $suffix . '.css', EDD_VERSION );
+	wp_enqueue_style( 'edd-font', $css_dir . 'edd-font' . $suffix . '.css', EDD_VERSION );
 }
 add_action( 'admin_enqueue_scripts', 'edd_load_admin_scripts', 100 );
 

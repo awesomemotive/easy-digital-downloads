@@ -263,3 +263,11 @@ td.edd_order_price { text-align: right; }
 /* API Table Styles
 -------------------------------------------------------------- */
 .download_page_edd-tools .apikeys .column-user { width: 192px; }
+
+/* Payment Method Icons
+-------------------------------------------------------------- */
+.edd-pm-icon {
+	font-size: 20px;
+	vertical-align: text-bottom;
+	margin-left: -5px;
+}
