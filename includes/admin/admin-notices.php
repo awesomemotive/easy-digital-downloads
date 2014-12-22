@@ -16,12 +16,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Admin Messages
  *
  * @since 1.0
- * @global $edd_options Array of all the EDD Options
  * @return void
  */
 function edd_admin_messages() {
-	global $edd_options;
-
 	if ( isset( $_GET['edd-message'] ) && 'discount_added' == $_GET['edd-message'] && current_user_can( 'manage_shop_discounts' ) ) {
 		 add_settings_error( 'edd-notices', 'edd-discount-added', __( 'Discount code added.', 'edd' ), 'updated' );
 	}
@@ -58,7 +55,8 @@ function edd_admin_messages() {
 		add_settings_error( 'edd-notices', 'edd-payment-sent', sprintf( __( 'Note: Test Mode is enabled, only test payments are shown below. <a href="%s">Settings</a>.', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-settings' ) ), 'updated' );
 	}
 
-	if ( ( empty( $edd_options['purchase_page'] ) || 'trash' == get_post_status( $edd_options['purchase_page'] ) ) && current_user_can( 'edit_pages' ) && ! get_user_meta( get_current_user_id(), '_edd_set_checkout_dismissed' ) ) {
+	$purchase_page = edd_get_option( 'purchase_page', '' );
+	if ( ( empty( $purchase_page ) || 'trash' == get_post_status( $purchase_page ) ) && current_user_can( 'edit_pages' ) && ! get_user_meta( get_current_user_id(), '_edd_set_checkout_dismissed' ) ) {
 		echo '<div class="error">';
 			echo '<p>' . sprintf( __( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-settings' ) ) . '</p>';
 			echo '<p><a href="' . add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'set_checkout' ) ) . '">' . __( 'Dismiss Notice', 'edd' ) . '</a></p>';
