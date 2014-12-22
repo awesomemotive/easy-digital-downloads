@@ -32,21 +32,21 @@ class EDD_Cache_Helper {
 
 		if ( false === ( $page_uris = get_transient( 'edd_cache_excluded_uris' ) ) ) {
 
-			global $edd_options;
-
-			if( empty( $edd_options['purchase_page'] ) || empty( $edd_options['success_page'] ) ) {
+			$purchase_page = edd_get_option( 'purchase_page', '' );
+			$success_page  = edd_get_option( 'success_page', '' );
+			if ( empty( $purchase_page ) || empty( $success_page ) ) {
 				return;
 			}
 
 			$page_uris   = array();
 
 			// Exclude querystring when using page ID
-			$page_uris[] = 'p=' . $edd_options['purchase_page'];
-			$page_uris[] = 'p=' . $edd_options['success_page'];
+			$page_uris[] = 'p=' . $purchase_page;
+			$page_uris[] = 'p=' . $success_page;
 
 	    	// Exclude permalinks
-			$checkout_page  = get_post( $edd_options['purchase_page'] );
-			$success_page   = get_post( $edd_options['success_page'] );
+			$checkout_page  = get_post( $purchase_page );
+			$success_page   = get_post( $success_page );
 
 	    	if ( ! is_null( $checkout_page ) )
 	    		$page_uris[] = '/' . $checkout_page->post_name;
