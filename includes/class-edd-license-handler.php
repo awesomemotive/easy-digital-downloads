@@ -54,6 +54,7 @@ class EDD_License {
 
 			if( isset( $opt ) && empty( $this->license ) ) {
 				$this->license = trim( $opt );
+			}
 		}
 
 		// Setup hooks
