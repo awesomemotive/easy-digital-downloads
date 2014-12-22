@@ -61,7 +61,6 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
  * Email the download link(s) and payment confirmation to the admin accounts for testing.
  *
  * @since 1.5
- * @global $edd_options Array of all the EDD Options
  * @return void
  */
 function edd_email_test_purchase_receipt() {
@@ -148,13 +147,11 @@ add_action( 'edd_admin_sale_notice', 'edd_admin_email_notice', 10, 2 );
  * changed in the EDD Settings)
  *
  * @since 1.0
- * @global $edd_options Array of all the EDD Options
  * @return mixed
  */
 function edd_get_admin_notice_emails() {
-	global $edd_options;
-
-	$emails = isset( $edd_options['admin_notice_emails'] ) && strlen( trim( $edd_options['admin_notice_emails'] ) ) > 0 ? $edd_options['admin_notice_emails'] : get_bloginfo( 'admin_email' );
+	$emails = edd_get_option( 'admin_notice_emails', false );
+	$emails = strlen( trim( $emails ) ) > 0 ? $emails : get_bloginfo( 'admin_email' );
 	$emails = array_map( 'trim', explode( "\n", $emails ) );
 
 	return apply_filters( 'edd_admin_notice_emails', $emails );
@@ -169,9 +166,9 @@ function edd_get_admin_notice_emails() {
  * @return mixed
  */
 function edd_admin_notices_disabled( $payment_id = 0 ) {
-	global $edd_options;
-	$retval = isset( $edd_options['disable_admin_notices'] );
-	return apply_filters( 'edd_admin_notices_disabled', $retval, $payment_id );
+	$ret = isset( edd_get_option( 'disable_admin_notices', false ) );
+	
+	return apply_filters( 'edd_admin_notices_disabled', $ret, $payment_id );
 }
 
 /**
@@ -184,8 +181,6 @@ function edd_admin_notices_disabled( $payment_id = 0 ) {
  * @return string $message
  */
 function edd_get_default_sale_notification_email() {
-	global $edd_options;
-
 	$default_email_body = __( 'Hello', 'edd' ) . "\n\n" . sprintf( __( 'A %s purchase has been made', 'edd' ), edd_get_label_plural() ) . ".\n\n";
 	$default_email_body .= sprintf( __( '%s sold:', 'edd' ), edd_get_label_plural() ) . "\n\n";
 	$default_email_body .= '{download_list}' . "\n\n";
@@ -194,7 +189,8 @@ function edd_get_default_sale_notification_email() {
 	$default_email_body .= __( 'Payment Method: ', 'edd' ) . ' {payment_method}' . "\n\n";
 	$default_email_body .= __( 'Thank you', 'edd' );
 
-	$message = ( isset( $edd_options['sale_notification'] ) && !empty( $edd_options['sale_notification'] ) ) ? $edd_options['sale_notification'] : $default_email_body;
+	$message = edd_get_option( 'sale_notification', false );
+	$message = ! empty( $message ) ? $message : $default_email_body;
 
 	return $message;
 }
