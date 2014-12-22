@@ -1369,13 +1369,10 @@ class EDD_API {
 	 * @access public
 	 * @author Daniel J Griffiths
 	 * @since 1.5
-	 * @global $edd_options Array of all the EDD Options
 	 * @param object $user Current user info
 	 * @return void
 	 */
 	function user_key_field( $user ) {
-		global $edd_options;
-
 		if ( ( edd_get_option( 'api_allow_user_keys', false ) || current_user_can( 'manage_shop_settings' ) ) && current_user_can( 'edit_user', $user->ID ) ) {
 			$user = get_userdata( $user->ID );
 			?>
