@@ -19,7 +19,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return bool $ret True if return mode is enabled, false otherwise
  */
 function edd_is_test_mode() {
-	$ret = ! empty( edd_get_option( 'test_mode', false ) );
+	$ret = edd_get_option( 'test_mode', false );
+	$ret = ! empty( $ret );
 
 	return (bool) apply_filters( 'edd_is_test_mode', $ret );
 }
@@ -31,7 +32,8 @@ function edd_is_test_mode() {
  * @return bool $ret True if guest checkout is enabled, false otherwise
  */
 function edd_no_guest_checkout() {
-	$ret = ! empty( edd_get_option( 'logged_in_only', false ) );
+	$ret = edd_get_option( 'logged_in_only', false );
+	$ret = ! empty( $ret );
 
 	return (bool) apply_filters( 'edd_no_guest_checkout', $ret );
 }
@@ -43,7 +45,8 @@ function edd_no_guest_checkout() {
  * @return bool $ret Whether or not the logged_in_only setting is set
  */
 function edd_logged_in_only() {
-	$ret = ! empty( edd_get_option( 'logged_in_only', false ) );
+	$ret = edd_get_option( 'logged_in_only', false );
+	$ret = ! empty( $ret );
 
 	return (bool) apply_filters( 'edd_logged_in_only', $ret );
 }
@@ -55,7 +58,8 @@ function edd_logged_in_only() {
  * @return bool $ret True is redirect is enabled, false otherwise
  */
 function edd_straight_to_checkout() {
-	$ret = isset( edd_get_option( 'redirect_on_add', false ) );
+	$ret = edd_get_option( 'redirect_on_add', false );
+	$ret = isset( $ret );
 	
 	return (bool) apply_filters( 'edd_straight_to_checkout', $ret );
 }
@@ -68,7 +72,8 @@ function edd_straight_to_checkout() {
  * @return bool True if redownloading of files is disabled, false otherwise
  */
 function edd_no_redownload() {
-	$ret = isset( edd_get_option( 'disable_redownload', false ) );
+	$ret = edd_get_option( 'disable_redownload', false );
+	$ret = isset( $ret );
 
 	return (bool) apply_filters( 'edd_no_redownload', $ret );
 }
@@ -615,7 +620,8 @@ add_action( 'edd_cleanup_file_symlinks', 'edd_cleanup_file_symlinks' );
  * @return bool $ret True if SKUs are enabled, false otherwise
  */
 function edd_use_skus() {
-	$ret = isset( edd_get_option( 'enable_skus', false ) );
+	$ret = edd_get_option( 'enable_skus', false );
+	$ret = isset( $ret );
 
 	return (bool) apply_filters( 'edd_use_skus', $ret );
 }
