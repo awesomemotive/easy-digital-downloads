@@ -273,7 +273,7 @@ function edd_process_paypal_ipn() {
 			return; // Something went wrong
 		}
 
-		if ( $api_response['body'] !== 'VERIFIED' && !isset( edd_get_option( 'disable_paypal_verification', false ) ) ) {
+		if ( $api_response['body'] !== 'VERIFIED' && edd_get_option( 'disable_paypal_verification', false ) ) {
 			edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid IPN verification response. IPN data: %s', 'edd' ), json_encode( $api_response ) ) );
 			return; // Response not okay
 		}
