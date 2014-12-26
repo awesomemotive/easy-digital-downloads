@@ -59,7 +59,7 @@ function edd_download_shortcode( $atts, $content = null ) {
 	}
 
 	if ( $download ) {
-		return apply_filters( 'edd_get_purchase_link', edd_get_purchase_link( $atts ) );
+		return edd_get_purchase_link( $atts );
 	}
 }
 add_shortcode( 'purchase_link', 'edd_download_shortcode' );
