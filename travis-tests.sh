@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ev
+set -v
 if [ "${TRAVIS_PULL_REQUEST}" = "false" ]
 then
   phpunit
