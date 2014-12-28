@@ -25,10 +25,11 @@ function edd_reports_page() {
 	global $edd_options;
 
 	$current_page = admin_url( 'edit.php?post_type=download&page=edd-reports' );
-	$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'reports';
+	$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'stats';
 	?>
 	<div class="wrap">
 		<h2 class="nav-tab-wrapper">
+			<a href="<?php echo add_query_arg( array( 'tab' => 'stats', 'settings-updated' => false ), $current_page ); ?>" class="nav-tab <?php echo $active_tab == 'stats' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Stats', 'edd' ); ?></a>
 			<a href="<?php echo add_query_arg( array( 'tab' => 'reports', 'settings-updated' => false ), $current_page ); ?>" class="nav-tab <?php echo $active_tab == 'reports' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Reports', 'edd' ); ?></a>
 			<?php if ( current_user_can( 'export_shop_reports' ) ) { ?>
 				<a href="<?php echo add_query_arg( array( 'tab' => 'export', 'settings-updated' => false ), $current_page ); ?>" class="nav-tab <?php echo $active_tab == 'export' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Export', 'edd' ); ?></a>
@@ -47,6 +48,23 @@ function edd_reports_page() {
 }
 
 /**
+ * Default Stats Views
+ *
+ * @since 2.3
+ * @return array $views Stats Views
+ */
+function edd_reports_default_stats_views() {
+	$views = array(
+		'earnings'  => __( 'Earnings', 'edd' ),
+		'downloads' => edd_get_label_plural()
+	);
+
+	$views = apply_filters( 'edd_report_stats_views', $views );
+
+	return $views;
+}
+
+/**
  * Default Report Views
  *
  * @since 1.4
@@ -54,7 +72,6 @@ function edd_reports_page() {
  */
 function edd_reports_default_views() {
 	$views = array(
-		'earnings'	=> __( 'Earnings', 'edd' ),
 		'downloads' => edd_get_label_plural(),
 		'customers'	=> __( 'Customers', 'edd' ),
 		'gateways'  => __( 'Payment Methods', 'edd' ),
@@ -89,13 +106,30 @@ function edd_get_reporting_view( $default = 'earnings' ) {
 }
 
 /**
+ * Renders the Stats page
+ *
+ * @since 2.3
+ * @return void
+ */
+function edd_reports_tab_stats() {
+	$current_view = 'earnings';
+	$views        = edd_reports_default_stats_views();
+
+	if ( isset( $_GET[ 'view' ] ) && array_key_exists( $_GET[ 'view' ], $views ) )
+		$current_view = $_GET[ 'view' ];
+
+	do_action( 'edd_reports_view_stats_' . $current_view );
+}
+add_action( 'edd_reports_tab_stats', 'edd_reports_tab_stats' );
+
+/**
  * Renders the Reports page
  *
  * @since 1.3
  * @return void
  */
 function edd_reports_tab_reports() {
-	$current_view = 'earnings';
+	$current_view = 'downloads';
 	$views        = edd_reports_default_views();
 
 	if ( isset( $_GET[ 'view' ] ) && array_key_exists( $_GET[ 'view' ], $views ) )
@@ -112,7 +146,13 @@ add_action( 'edd_reports_tab_reports', 'edd_reports_tab_reports' );
  * @return void
  */
 function edd_report_views() {
-	$views        = edd_reports_default_views();
+	if( isset( $_GET['tab'] ) && $_GET['tab'] == 'reports' ) {
+		$views = edd_reports_default_views();
+		$tab   = 'reports';
+	} else {
+		$views = edd_reports_default_stats_views();
+		$tab   = 'stats';
+	}
 	$current_view = isset( $_GET[ 'view' ] ) ? $_GET[ 'view' ] : 'earnings';
 	?>
 	<form id="edd-reports-filter" method="get">
@@ -127,6 +167,7 @@ function edd_report_views() {
 
 		<input type="hidden" name="post_type" value="download"/>
 		<input type="hidden" name="page" value="edd-reports"/>
+		<input type="hidden" name="tab" value="<?php echo $tab; ?>" />
 		<?php submit_button( __( 'Show', 'edd' ), 'secondary', 'submit', false ); ?>
 	</form>
 	<?php
@@ -233,15 +274,32 @@ add_action( 'edd_reports_view_gateways', 'edd_reports_gateways_table' );
  * @since 1.3
  * @return void
  */
-function edd_reports_earnings() {
+function edd_reports_stats_earnings() {
 	?>
 	<div class="tablenav top">
 		<div class="alignleft actions"><?php edd_report_views(); ?></div>
 	</div>
 	<?php
-	edd_reports_graph();
+	edd_reports_earnings_graph();
 }
-add_action( 'edd_reports_view_earnings', 'edd_reports_earnings' );
+add_action( 'edd_reports_view_stats_earnings', 'edd_reports_stats_earnings' );
+
+
+/**
+ * Renders the Reports Downloads Graphs
+ *
+ * @since 2.3
+ * @return void
+ */
+function edd_reports_stats_downloads() {
+	?>
+	<div class="tablenav top">
+		<div class="alignleft actions"><?php edd_report_views(); ?></div>
+	</div>
+	<?php
+	edd_reports_downloads_graph();
+}
+add_action( 'edd_reports_view_stats_downloads', 'edd_reports_stats_downloads' );
 
 /**
  * Renders the Tax Reports

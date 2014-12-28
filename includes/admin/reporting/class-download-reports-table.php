@@ -80,7 +80,7 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 			case 'average_earnings' :
 				return edd_currency_filter( edd_format_amount( $item[ $column_name ] ) );
 			case 'details' :
-				return '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-reports&view=downloads&download-id=' . $item[ 'ID' ] ) . '">' . __( 'View Detailed Report', 'edd' ) . '</a>';
+				return '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-reports&tab=reports&view=downloads&download-id=' . $item[ 'ID' ] ) . '">' . __( 'View Detailed Report', 'edd' ) . '</a>';
 			default:
 				return $item[ $column_name ];
 		}
