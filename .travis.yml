@@ -15,12 +15,14 @@ env:
     - WP_VERSION=4.1 WP_MULTISITE=1
     - WP_VERSION=4.0 WP_MULTISITE=0
     - WP_VERSION=4.0 WP_MULTISITE=1
-    - WP_VERSION=3.9.2 WP_MULTISITE=0
-    - WP_VERSION=3.9.2 WP_MULTISITE=1
+    - WP_VERSION=3.9 WP_MULTISITE=0
+    - WP_VERSION=3.9 WP_MULTISITE=1
 
 before_script:
     - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
 
-script: ./travis-tests.sh
+script:
+    - ./travis-tests.sh
 
-after_script: ./travis-after.sh
+after_script:
+    - ./travis-after.sh
