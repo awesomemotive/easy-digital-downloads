@@ -65,8 +65,6 @@ class Tests_Templates extends WP_UnitTestCase {
 	}
 
 	public function test_get_purchase_link() {
-		$this->markTestIncomplete( 'This will always fail on 3.9.2 due to the way a unit tests loads the results headless. get_the_ID is expecting a post to be loaded' );
-
 		$link = edd_get_purchase_link( array( 'download_id' => $this->_post->ID ) );
 		$this->assertInternalType( 'string', $link );
 		$this->assertContains( '<form id="edd_purchase_', $link );
