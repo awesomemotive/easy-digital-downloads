@@ -435,7 +435,13 @@ function edd_price_range( $download_id = 0 ) {
 function edd_single_price_option_mode( $download_id = 0 ) {
 
 	if ( empty( $download_id ) ) {
-		$download_id = get_the_ID();
+		$download = get_post();
+
+		$download_id = isset( $download->ID ) ? $download->ID : 0;
+	}
+
+	if ( empty( $download_id ) ) {
+		return false;
 	}
 
 	$download = new EDD_Download( $download_id );
