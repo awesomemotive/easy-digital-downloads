@@ -28,30 +28,33 @@ function edd_process_download() {
 	}
 
 	$args = apply_filters( 'edd_process_download_args', array(
-		'download' => ( isset( $_GET['download_id'] ) )  ? (int) $_GET['download_id']                    : '',
+		'download' => ( isset( $_GET['download_id'] ) )  ? (int) $_GET['download_id']                       : '',
 		'email'    => ( isset( $_GET['email'] ) )        ? rawurldecode( $_GET['email'] )                   : '',
 		'expire'   => ( isset( $_GET['expire'] ) )       ? base64_decode( rawurldecode( $_GET['expire'] ) ) : '',
 		'file_key' => ( isset( $_GET['file'] ) )         ? (int) $_GET['file']                              : '',
 		'price_id' => ( isset( $_GET['price_id'] ) )     ? (int) $_GET['price_id']                          : false,
-		'key'      => ( isset( $_GET['download_key'] ) ) ? $_GET['download_key']                            : ''
+		'key'      => ( isset( $_GET['download_key'] ) ) ? $_GET['download_key']                            : '',
+		'eddfile'  => ( isset( $_GET['eddfile'] ) )      ? $_GET['eddfile']                                 : '',
+		'ttl'      => ( isset( $_GET['ttl'] ) )          ? $_GET['ttl']                                     : '',
+		'token'    => ( isset( $_GET['token'] ) )        ? $_GET['token']                                   : ''
 	) );
 
-	if( $args['download'] === '' || $args['email'] === '' || $args['file_key'] === '' ) {
-		return false;
+	if ( !empty( $args['eddfile'] ) && !empty( $args['ttl'] ) && !empty( $args['token'] ) ) {
+		// Call a signed URL validation
+		$args = edd_process_signed_download_url( $args );
+	} elseif ( !empty( $args['download'] ) && !empty( $args['key'] ) && !empty( $args['email'] ) && !empty( $args['expire'] ) && isset( $args['file_key'] ) ) {
+		// Call legacy URL validation
+		$args = edd_process_legacy_download_url( $args );
+	} else {
+		return;
 	}
-
-    // Verify the payment
-	$payment = edd_verify_download_link( $args['download'], $args['key'], $args['email'], $args['expire'], $args['file_key'] );
 
 	// Determine the download method set in settings
 	$method  = edd_get_file_download_method();
 
-	// Defaulting this to true for now because the method below doesn't work well
-	$has_access = apply_filters( 'edd_file_download_has_access', true, $payment, $args );
-
-	//$has_access = ( edd_logged_in_only() && is_user_logged_in() ) || !edd_logged_in_only() ? true : false;
-	if ( $payment && $has_access ) {
-		do_action( 'edd_process_verified_download', $args['download'], $args['email'], $payment );
+	//$args['has_access'] = ( edd_logged_in_only() && is_user_logged_in() ) || !edd_logged_in_only() ? true : false;
+	if ( $args['payment'] && $args['has_access'] ) {
+		do_action( 'edd_process_verified_download', $args['download'], $args['email'], $args['payment'] );
 
 		// Payment has been verified, setup the download
 		$download_files = edd_get_download_files( $args['download'] );
@@ -84,7 +87,7 @@ function edd_process_download() {
 			$user_info['id']   = get_current_user_id();
 			$user_info['name'] = $user_data->display_name;
 		}
-		edd_record_download_in_log( $args['download'], $args['file_key'], $user_info, edd_get_ip(), $payment, $args['price_id'] );
+		edd_record_download_in_log( $args['download'], $args['file_key'], $user_info, edd_get_ip(), $args['payment'], $args['price_id'] );
 
 		$file_extension = edd_get_file_extension( $requested_file );
 		$ctype          = edd_get_file_ctype( $file_extension );
@@ -102,7 +105,7 @@ function edd_process_download() {
 		}
 		@ini_set( 'zlib.output_compression', 'Off' );
 
-		do_action( 'edd_process_download_headers', $requested_file, $args['download'], $args['email'], $payment );
+		do_action( 'edd_process_download_headers', $requested_file, $args['download'], $args['email'], $args['payment'] );
 
 		nocache_headers();
 		header("Robots: none");
@@ -606,8 +609,8 @@ function edd_readfile_chunked( $file, $retbytes = true ) {
 		echo $buffer;
 
 		if ( $retbytes ) {
-	   		$cnt += strlen( $buffer );
-   		}
+			$cnt += strlen( $buffer );
+		}
 	}
 
 	$status = @fclose( $handle );
@@ -617,4 +620,63 @@ function edd_readfile_chunked( $file, $retbytes = true ) {
 	}
 
 	return $status;
+}
+
+/**
+ * Used to process an old URL format for downloads
+ *
+ * @since  2.3
+ * @param  array $args Arguements provided to download a file
+ * @return array       Same arguements, with the status of verification added
+ */
+function edd_process_legacy_download_url( $args ) {
+
+	// Verify the payment
+	$args['payment'] = edd_verify_download_link( $args['download'], $args['key'], $args['email'], $args['expire'], $args['file_key'] );
+
+	// Defaulting this to true for now because the method below doesn't work well
+	$args['has_access'] = apply_filters( 'edd_file_download_has_access', true, $args['payment'], $args );
+
+	$args['payment']    = $args['payment'];
+	$args['has_access'] = $args['has_access'];
+
+	return $args;
+}
+
+/**
+ * Used to process a signed URL for processing downloads
+ *
+ * @since  2.3
+ * @param  array $args Arguements provided to download a file
+ * @return array       Same arguements, with the status of verification added
+ */
+function edd_process_signed_download_url( $args ) {
+
+	$parts = parse_url( add_query_arg( array() ) );
+	wp_parse_str( $parts['query'], $query_args );
+	$url = add_query_arg( $query_args, home_url() );
+
+	$valid_token = edd_validate_url_token( $url );
+
+	// Bail if the token isn't valid.
+	// The request should pass through EDD, or custom handling can be enabled with the action.
+	if ( ! $valid_token ) {
+		// Do a wp_die() or redirect to an error page.
+		$args['payment'] = true;
+		$args['has_access'] = false;
+
+		return $args;
+	}
+
+	$order_parts = explode( ':', rawurldecode( $_GET['eddfile'] ) );
+
+	$args['download']    = $order_parts[1];
+	$args['email']       = get_post_meta( $order_parts[0], '_edd_payment_user_email', true );
+	$args['expire']      = $_GET['ttl'];
+	$args['file_key']    = $order_parts[2];
+	$args['key']         = get_post_meta( $order_parts[0], '_edd_payment_purchase_key', true );
+	$args['payment']     = $valid_token;
+	$args['has_access']  = apply_filters( 'edd_file_download_has_access', true, $args['payment'], $args );
+
+	return $args;
 }

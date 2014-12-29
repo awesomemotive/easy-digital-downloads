@@ -680,7 +680,7 @@ function edd_get_average_monthly_download_earnings( $download_id = 0 ) {
 
 	$diff 	= abs( current_time( 'timestamp' ) - strtotime( $release_date ) );
 
-    $months = floor( $diff / ( 30 * 60 * 60 * 24 ) ); // Number of months since publication
+	$months = floor( $diff / ( 30 * 60 * 60 * 24 ) ); // Number of months since publication
 
 	if ( $months > 0 ) {
 		$earnings = ( $earnings / $months );
@@ -697,17 +697,17 @@ function edd_get_average_monthly_download_earnings( $download_id = 0 ) {
  * @return float $sales Average monthly sales
  */
 function edd_get_average_monthly_download_sales( $download_id = 0 ) {
-    $sales          = edd_get_download_sales_stats( $download_id );
-    $release_date   = get_post_field( 'post_date', $download_id );
+	$sales          = edd_get_download_sales_stats( $download_id );
+	$release_date   = get_post_field( 'post_date', $download_id );
 
-    $diff   = abs( current_time( 'timestamp' ) - strtotime( $release_date ) );
+	$diff   = abs( current_time( 'timestamp' ) - strtotime( $release_date ) );
 
-    $months = floor( $diff / ( 30 * 60 * 60 * 24 ) ); // Number of months since publication
+	$months = floor( $diff / ( 30 * 60 * 60 * 24 ) ); // Number of months since publication
 
-    if ( $months > 0 )
-        $sales = ( $sales / $months );
+	if ( $months > 0 )
+		$sales = ( $sales / $months );
 
-    return $sales;
+	return $sales;
 }
 
 /**
@@ -914,7 +914,7 @@ function edd_get_file_price_condition( $download_id = 0, $file_key ) {
  * @return string Constructed download URL
  */
 function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $price_id = false ) {
-	global $edd_options;
+	global $edd_options, $wpdb;
 
 	$hours = isset( $edd_options['download_link_expiration'] )
 			&& is_numeric( $edd_options['download_link_expiration'] )
@@ -923,18 +923,43 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $p
 	if ( ! ( $date = strtotime( '+' . $hours . 'hours', current_time( 'timestamp') ) ) )
 		$date = 2147472000; // Highest possible date, January 19, 2038
 
+	// Leaving in this array and the filter for backwards compatibility now
 	$params = array(
 		'download_key' 	=> rawurlencode( $key ),
-		'email' 		=> rawurlencode( $email ),
-		'file' 			=> rawurlencode( $filekey ),
+		'email'         => rawurlencode( $email ),
+		'file'          => rawurlencode( $filekey ),
 		'price_id'      => (int) $price_id,
-		'download_id' 	=> $download_id,
-		'expire' 		=> rawurlencode( base64_encode( $date ) )
+		'download_id'   => $download_id,
+		'expire'        => rawurlencode( $date )
 	);
 
 	$params = apply_filters( 'edd_download_file_url_args', $params );
 
-	$download_url = add_query_arg( $params, home_url( 'index.php' ) );
+	$payment    = edd_get_payment_by( 'key', $params['download_key'] );
+	if ( !$payment ) {
+		return false;
+	}
+
+	$payment_id = $payment->ID;
+
+	if ( $payment_id ) {
+
+		// Simply the URL by concatenating required data using a colon as a delimiter.
+		$args = array(
+			'eddfile' => rawurlencode( sprintf( '%d:%d:%d', $payment_id, $params['download_id'], $params['file'] ) )
+		);
+
+		// Decode the expiration date.
+		if ( isset( $params['expire'] ) ) {
+			$args['ttl'] = rawurldecode( $params['expire'] );
+		}
+
+		$args = apply_filters( 'eddsurl_download_file_url_args', $args, $payment_id, $params );
+
+		$args['token'] = edd_get_download_token( add_query_arg( $args, home_url() ) );
+	}
+
+	$download_url = add_query_arg( $args, home_url( 'index.php' ) );
 
 	return $download_url;
 }
@@ -1095,3 +1120,93 @@ function edd_get_random_downloads( $num = 3, $post_ids = true ) {
 	$args  = apply_filters( 'edd_get_random_downloads', $args );
 	return get_posts( $args );
 }
+
+/**
+ * Generates a token for a given URL.
+ *
+ * An 'o' query parameter on a URL can include optional variables to test
+ * against when verifying a token without passing those variables around in
+ * the URL. For example, downloads can be limited to the IP that the URL was
+ * generated for by adding 'o=ip' to the query string.
+ *
+ * Or suppose when WordPress requested a URL for automatic updates, the user
+ * agent could be tested to ensure the URL is only valid for requests from
+ * that user agent.
+ *
+ * @since 2.3
+ *
+ * @param string $url The URL to generate a token for.
+ * @return string The token for the URL.
+ */
+function edd_get_download_token( $url ) {
+	$args = array();
+	$hash = apply_filters( 'edd_get_url_token_algorithem', 'sha256' );
+	$secret = apply_filters( 'edd_get_url_token_secret', hash( $hash, wp_salt() ) );
+
+	// Add additional args to the URL for generating the token.
+	// Allows for restricting access to IP and/or user agent.
+	$parts = parse_url( $url );
+	$options = array();
+
+	if ( isset( $parts['query'] ) ) {
+		wp_parse_str( $parts['query'], $query_args );
+
+		// o = option checks (ip, user agent).
+		if ( ! empty( $query_args['o'] ) ) {
+			// Multiple options can be checked by separating them with a colon in the query parameter.
+			$options = explode( ':', rawurldecode( $query_args['o'] ) );
+
+			if ( in_array( 'ip', $options ) ) {
+				$args['ip'] = edd_get_ip();
+			}
+
+			if ( in_array( 'ua', $options ) ) {
+				$args['user_agent'] = rawurlencode( $_SERVER['HTTP_USER_AGENT'] );
+			}
+		}
+	}
+
+	// Filter to modify arguments and allow custom options to be tested.
+	// Be sure to rawurlencode any custom options for consistent results.
+	$args = apply_filters( 'edd_get_url_token_args', $args, $url, $options );
+
+	$args['secret'] = $secret;
+	$args['token'] = false; // Removes a token if present.
+
+	$url = add_query_arg( $args, $url );
+	$parts = parse_url( $url );
+
+	// In the event there isn't a path, set an empty one so we can MD5 the token
+	if ( !isset( $parts['path'] ) ) {
+		$parts['path'] = '';
+	}
+
+	$token = md5( $parts['path'] . '?' . $parts['query'] );
+
+	return $token;
+
+}
+
+/**
+ * Generate a token for a URL and match it against the existing token to make
+ * sure the URL hasn't been tampered with.
+ *
+ * @since 2.3
+ *
+ * @param string $url URL to test.
+ * @return bool
+ */
+function edd_validate_url_token( $url ) {
+	$parts = parse_url( $url );
+
+	if ( isset( $parts['query'] ) ) {
+		wp_parse_str( $parts['query'], $query_args );
+
+		if ( isset( $query_args['token'] ) && $query_args['token'] == edd_get_download_token( $url ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
