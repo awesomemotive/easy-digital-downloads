@@ -122,7 +122,7 @@ function edd_is_free_download( $download_id = 0, $price_id = false ) {
 	if( empty( $download_id ) ) {
 		return false;
 	}
-	
+
 	$download = new EDD_Download( $download_id );
 	return $download->is_free( $price_id );
 }
@@ -435,7 +435,13 @@ function edd_price_range( $download_id = 0 ) {
 function edd_single_price_option_mode( $download_id = 0 ) {
 
 	if ( empty( $download_id ) ) {
-		$download_id = get_the_ID();
+		$download = get_post();
+
+		$download_id = isset( $download->ID ) ? $download->ID : 0;
+	}
+
+	if ( empty( $download_id ) ) {
+		return false;
 	}
 
 	$download = new EDD_Download( $download_id );
@@ -632,7 +638,7 @@ function edd_increase_purchase_count( $download_id = 0 ) {
  */
 function edd_decrease_purchase_count( $download_id = 0 ) {
 	$download = new EDD_Download( $download_id );
-	return $download->decrease_sales();	
+	return $download->decrease_sales();
 }
 
 /**
@@ -645,7 +651,7 @@ function edd_decrease_purchase_count( $download_id = 0 ) {
  */
 function edd_increase_earnings( $download_id = 0, $amount ) {
 	$download = new EDD_Download( $download_id );
-	return $download->increase_earnings( $amount );	
+	return $download->increase_earnings( $amount );
 }
 
 /**
@@ -658,7 +664,7 @@ function edd_increase_earnings( $download_id = 0, $amount ) {
  */
 function edd_decrease_earnings( $download_id = 0, $amount ) {
 	$download = new EDD_Download( $download_id );
-	return $download->decrease_earnings( $amount );	
+	return $download->decrease_earnings( $amount );
 }
 
 /**
