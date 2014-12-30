@@ -68,7 +68,7 @@ function edd_load_scripts() {
 				'empty_cart_message'      => __('Your cart is empty', 'edd'), // Item already in the cart message
 				'loading'                 => __('Loading', 'edd') , // General loading message
 				'select_option'           => __('Please select an option', 'edd') , // Variable pricing error with multi-purchase option enabled
-				'ajax_loader'             => EDD_PLUGIN_URL . 'assets/images/loading.gif', // Ajax loading image
+				'ajax_loader'             => set_url_scheme( EDD_PLUGIN_URL . 'assets/images/loading.gif', 'relative' ), // Ajax loading image
 				'is_checkout'             => edd_is_checkout() ? '1' : '0',
 				'default_gateway'         => edd_get_default_gateway(),
 				'redirect_to_checkout'    => ( edd_straight_to_checkout() || edd_is_checkout() ) ? '1' : '0',
