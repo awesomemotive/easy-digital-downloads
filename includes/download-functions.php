@@ -1194,16 +1194,18 @@ function edd_get_download_token( $url ) {
  * @return bool
  */
 function edd_validate_url_token( $url ) {
+	
+	$ret   = false;
 	$parts = parse_url( $url );
 
 	if ( isset( $parts['query'] ) ) {
 		wp_parse_str( $parts['query'], $query_args );
 
 		if ( isset( $query_args['token'] ) && $query_args['token'] == edd_get_download_token( $url ) ) {
-			return true;
+			$ret = true;
 		}
 	}
 
-	return false;
+	return apply_filters( 'edd_validate_url_token', $ret, $url, $query_args );
 }
 
