@@ -914,14 +914,12 @@ function edd_get_file_price_condition( $download_id = 0, $file_key ) {
  * @return string Constructed download URL
  */
 function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $price_id = false ) {
-	global $edd_options, $wpdb;
 
-	$hours = isset( $edd_options['download_link_expiration'] )
-			&& is_numeric( $edd_options['download_link_expiration'] )
-			? absint( $edd_options['download_link_expiration'] ) : 24;
+	$hours = absint( edd_get_option( 'download_link_expiration', 24 ) );
 
-	if ( ! ( $date = strtotime( '+' . $hours . 'hours', current_time( 'timestamp') ) ) )
+	if ( ! ( $date = strtotime( '+' . $hours . 'hours', current_time( 'timestamp') ) ) ) {
 		$date = 2147472000; // Highest possible date, January 19, 2038
+	}
 
 	// Leaving in this array and the filter for backwards compatibility now
 	$params = array(
@@ -933,20 +931,19 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $p
 		'expire'        => rawurlencode( $date )
 	);
 
-	$params = apply_filters( 'edd_download_file_url_args', $params );
+	$params  = apply_filters( 'edd_download_file_url_args', $params );
 
-	$payment    = edd_get_payment_by( 'key', $params['download_key'] );
-	if ( !$payment ) {
+	$payment = edd_get_payment_by( 'key', $params['download_key'] );
+
+	if ( ! $payment ) {
 		return false;
 	}
 
-	$payment_id = $payment->ID;
-
-	if ( $payment_id ) {
+	if ( ! empty( $payment->ID ) ) {
 
 		// Simply the URL by concatenating required data using a colon as a delimiter.
 		$args = array(
-			'eddfile' => rawurlencode( sprintf( '%d:%d:%d', $payment_id, $params['download_id'], $params['file'] ) )
+			'eddfile' => rawurlencode( sprintf( '%d:%d:%d', $payment->ID, $params['download_id'], $params['file'] ) )
 		);
 
 		// Decode the expiration date.
@@ -954,7 +951,7 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $p
 			$args['ttl'] = rawurldecode( $params['expire'] );
 		}
 
-		$args = apply_filters( 'eddsurl_download_file_url_args', $args, $payment_id, $params );
+		$args = apply_filters( 'eddsurl_download_file_url_args', $args, $payment->ID, $params );
 
 		$args['token'] = edd_get_download_token( add_query_arg( $args, home_url() ) );
 	}
