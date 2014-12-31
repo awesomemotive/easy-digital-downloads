@@ -35,15 +35,6 @@ function edd_process_purchase_form() {
 		do_action( 'edd_checkout_error_checks', $valid_data, $_POST );
 	}
 
-	// If the discount code field has a value, try and apply it.
-	$discount_field = isset( $_POST['edd-discount'] ) ? sanitize_text_field( $_POST['edd-discount'] ) : '';
-	if ( !empty( $discount_field ) ) {
-		$current_discounts = edd_get_cart_discounts();
-		if ( !in_array( $discount_field, $current_discounts ) ) {
-			edd_set_cart_discount( $discount_field );
-		}
-	}
-
 	$is_ajax = isset( $_POST['edd_ajax'] );
 
 	// Process the login form
@@ -280,14 +271,15 @@ function edd_purchase_form_validate_discounts() {
 	$error = false;
 
 	// Check for valid discount(s) is present
-	if ( ! empty( $_POST['edd-discount'] ) && empty( $discounts ) && __( 'Enter discount', 'edd' ) != $_POST['edd-discount'] ) {
+	if ( ! empty( $_POST['edd-discount'] ) && __( 'Enter discount', 'edd' ) != $_POST['edd-discount'] ) {
 		// Check for a posted discount
 		$posted_discount = isset( $_POST['edd-discount'] ) ? trim( $_POST['edd-discount'] ) : false;
 
+		// Add the posted discount to the discounts
 		if ( $posted_discount ) {
-			$discounts   = array();
-			$discounts[] = $posted_discount;
+			edd_set_cart_discount( $posted_discount );
 		}
+
 	}
 
 	// If we have discounts, loop through them
