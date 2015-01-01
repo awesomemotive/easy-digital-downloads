@@ -1119,12 +1119,16 @@ function edd_get_download_token( $url ) {
  * @return bool
  */
 function edd_validate_url_token( $url ) {
-	
+
 	$ret   = false;
 	$parts = parse_url( $url );
 
 	if ( isset( $parts['query'] ) ) {
 		wp_parse_str( $parts['query'], $query_args );
+
+		if ( isset( $query_args['ttl'] ) && current_time( 'timestamp' ) > $query_args['ttl'] ) {
+			wp_die( apply_filters( 'edd_download_link_expired_text', __( 'Sorry but your download link has expired.', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+		}
 
 		if ( isset( $query_args['token'] ) && $query_args['token'] == edd_get_download_token( $url ) ) {
 			$ret = true;
