@@ -527,7 +527,7 @@ class EDD_API {
 					$dates['day']		= $yesterday;
 					$dates['m_start'] 	= $month;
 					$dates['m_end'] 	= $month;
-					$dates['year']		= $month == 1 && date( 'd', $current_time ) == 1 ? date( 'Y', $current_time ) - 1 : date( 'Y', $current_time );
+					$dates['year']		= date( 'd', $current_time ) == 1 ? date( 'Y', $current_time ) - 1 : date( 'Y', $current_time );
 				break;
 
 				case 'this_quarter' :
