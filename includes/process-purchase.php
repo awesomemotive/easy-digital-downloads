@@ -255,7 +255,6 @@ function edd_purchase_form_validate_gateway() {
  * @return      string
  */
 function edd_purchase_form_validate_discounts() {
-
 	// Retrieve the discount stored in cookies
 	$discounts = edd_get_cart_discounts();
 
@@ -276,7 +275,7 @@ function edd_purchase_form_validate_discounts() {
 		$posted_discount = isset( $_POST['edd-discount'] ) ? trim( $_POST['edd-discount'] ) : false;
 
 		// Add the posted discount to the discounts
-		if ( $posted_discount ) {
+		if ( $posted_discount && ( empty( $discounts ) || edd_multiple_discounts_allowed() ) ) {
 			edd_set_cart_discount( $posted_discount );
 		}
 
