@@ -189,6 +189,7 @@ function edd_purchase_variable_pricing( $download_id = 0 ) {
 
 	$prices = apply_filters( 'edd_purchase_variable_prices', edd_get_variable_prices( $download_id ), $download_id );
 	$type   = edd_single_price_option_mode( $download_id ) ? 'checkbox' : 'radio';
+	$schema = edd_add_schema_microdata() ? ' itemprop="offers" itemscope itemtype="http://schema.org/Offer"' : '';
 
 	do_action( 'edd_before_price_options', $download_id ); ?>
 	<div class="edd_price_options">
@@ -197,7 +198,7 @@ function edd_purchase_variable_pricing( $download_id = 0 ) {
 			if ( $prices ) :
 				$checked_key = isset( $_GET['price_option'] ) ? absint( $_GET['price_option'] ) : 1;
 				foreach ( $prices as $key => $price ) :
-					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . '" itemprop="offers" itemscope itemtype="http://schema.org/Offer">';
+					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . '"' . $schema . '>';
 						echo '<label for="'	. esc_attr( 'edd_price_option_' . $download_id . '_' . $key ) . '">';
 							echo '<input type="' . $type . '" ' . checked( apply_filters( 'edd_price_option_checked', $checked_key, $download_id, $key ), $key, false ) . ' name="edd_options[price_id][]" id="' . esc_attr( 'edd_price_option_' . $download_id . '_' . $key ) . '" class="' . esc_attr( 'edd_price_option_' . $download_id ) . '" value="' . esc_attr( $key ) . '"/>&nbsp;';
 							echo '<span class="edd_price_option_name" itemprop="description">' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price" itemprop="price">' . edd_currency_filter( edd_format_amount( $price[ 'amount' ] ) ) . '</span>';
