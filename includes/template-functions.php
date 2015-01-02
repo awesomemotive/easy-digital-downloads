@@ -551,7 +551,7 @@ function edd_get_theme_template_dir_name() {
  */
 function edd_add_schema_microdata() {
 	// Don't modify anything until after wp_head() is called
-	$ret = did_action( 'wp_head' );
+	$ret = (bool)did_action( 'wp_head' );
 	return apply_filters( 'edd_add_schema_microdata', $ret );
 }
 
