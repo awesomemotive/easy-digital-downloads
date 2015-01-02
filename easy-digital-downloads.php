@@ -97,7 +97,7 @@ final class Easy_Digital_Downloads {
 	 * @since 2.1
 	 */
 	public $emails;
-	
+
 	/**
 	 * EDD Email Template Tags Object
 	 *
