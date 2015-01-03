@@ -208,11 +208,26 @@ class Tests_Shortcode extends WP_UnitTestCase {
 		$this->assertEquals( '<a href="?edd_action=purchase_collection&taxonomy&terms" class="button blue edd-submit">Purchase All Items</a>', edd_purchase_collection_shortcode( array() ) );
 	}
 
-	public function test_downloads_query() {
+	public function test_downloads_query_with_schema() {
 		$post_id = $this->factory->post->create( array( 'post_type' => 'download', 'post_status' => 'publish' ) );
-		$this->assertInternalType( 'string', edd_downloads_query( array() ) );
-		$this->assertContains( '<div class="edd_downloads_list', edd_downloads_query( array() ) );
-		$this->assertContains( '<div class="edd_download_inner">', edd_downloads_query( array() ) ); // edd_download_inner will only be found if products were returned successfully
+		add_filter( 'edd_add_schema_microdata', '__return_true' );
+		$with_schema = edd_downloads_query( array() );
+		$this->assertInternalType( 'string', $with_schema );
+		$this->assertContains( '<div class="edd_downloads_list', $with_schema );
+		$this->assertContains( '<div class="edd_download_inner">', $with_schema ); // edd_download_inner will only be found if products were returned successfully
+		$this->assertContains( 'itemscope', $with_schema );
+		remove_filter( 'edd_add_schema_microdata', '__return_true' );
+	}
+
+	public function test_downloads_query_without_schema() {
+		$post_id = $this->factory->post->create( array( 'post_type' => 'download', 'post_status' => 'publish' ) );
+		add_filter( 'edd_add_schema_microdata', '__return_false' );
+		$without_schema = edd_downloads_query( array() );
+		$this->assertInternalType( 'string', $without_schema );
+		$this->assertContains( '<div class="edd_downloads_list', $without_schema );
+		$this->assertContains( '<div class="edd_download_inner">', $without_schema ); // edd_download_inner will only be found if products were returned successfully
+		$this->assertNotContains( 'itemscope', $without_schema );
+		remove_filter( 'edd_add_schema_microdata', '__return_false' );
 	}
 
 	public function test_download_price_shortcode() {
