@@ -216,19 +216,28 @@ function edd_store_discount( $details, $discount_id = null ) {
 		'is_single_use'     => isset( $details['use_once'] )         ? $details['use_once']          : false,
 	);
 
+	$start_timestamp        = strtotime( $meta['start'] );
+
 	if( ! empty( $meta['start'] ) ) {
-		$meta['start']      = date( 'm/d/Y H:i:s', strtotime( $meta['start'] ) );
+		$meta['start']      = date( 'm/d/Y H:i:s', $start_timestamp );
 	}
 
 	if( ! empty( $meta['expiration'] ) ) {
-		$meta['expiration'] = date( 'm/d/Y H:i:s', strtotime(  date( 'm/d/Y', strtotime( $meta['expiration'] ) ) . ' 23:59:59' ) );
-		if( ! empty( $meta['start'] ) && $meta['start'] > $meta['expiration'] ) {
+
+		$meta['expiration'] = date( 'm/d/Y H:i:s', strtotime( date( 'm/d/Y', strtotime( $meta['expiration'] ) ) . ' 23:59:59' ) );
+		$end_timestamp      = strtotime( $meta['expiration'] );
+
+		if( ! empty( $meta['start'] ) && $start_timestamp > $end_timestamp ) {
+
 			// Set the expiration date to the start date if start is later than expiration
 			$meta['expiration'] = $meta['start'];
+
 		}
+
 	}
 
 	if ( edd_discount_exists( $discount_id ) && ! empty( $discount_id ) ) {
+
 		// Update an existing discount
 
 		$meta = apply_filters( 'edd_update_discount', $meta, $discount_id );
@@ -249,7 +258,9 @@ function edd_store_discount( $details, $discount_id = null ) {
 
 		// Discount code updated
 		return $discount_id;
+
 	} else {
+
 		// Add the discount
 
 		$meta = apply_filters( 'edd_insert_discount', $meta );
@@ -271,6 +282,7 @@ function edd_store_discount( $details, $discount_id = null ) {
 		// Discount code created
 		return $discount_id;
 	}
+
 }
 
 
@@ -1031,7 +1043,7 @@ function edd_cart_has_discounts() {
  */
 function edd_get_cart_discounted_amount( $discounts = false ) {
 
-	$amount = 0;
+	$amount = 0.00;
 	$items  = edd_get_cart_content_details();
 	if( $items ) {
 
@@ -1054,6 +1066,8 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
  * @return float The discounted amount
  */
 function edd_get_cart_item_discount_amount( $item = array() ) {
+
+	global $edd_is_last_cart_item, $edd_flat_discount_total;
 
 	$amount           = 0;
 	$price            = edd_get_cart_item_price( $item['id'], $item['options'], edd_prices_include_tax() );
@@ -1101,10 +1115,26 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 						 * are distributed across all cart items. The discount amount is divided by the number
 						 * of items in the cart and then a portion is evenly applied to each cart item
 						 */
+						$items_subtotal    = 0.00;
+						$cart_items        = edd_get_cart_contents();
+						foreach( $cart_items as $cart_item ) {
+							if( ! in_array( $cart_item['id'], $excluded_products ) ) {
+								$item_price      = edd_get_cart_item_price( $cart_item['id'], $cart_item['options'], edd_prices_include_tax() );
+								$items_subtotal += $item_price * $cart_item['quantity'];
+							}
+						}
 
-						$discounted_amount = edd_get_discount_amount( $code_id );
-						$discounted_amount = ( $discounted_amount / edd_get_cart_quantity() );
+						$subtotal_percent  = ( ( $price * $item['quantity'] ) / $items_subtotal );
+						$code_amount       = edd_get_discount_amount( $code_id );
+						$discounted_amount = $code_amount * $subtotal_percent;
 						$discounted_price -= $discounted_amount;
+
+						$edd_flat_discount_total += round( $discounted_amount, edd_currency_decimal_filter() );
+
+						if( $edd_is_last_cart_item && $edd_flat_discount_total < $code_amount ) {
+							$adjustment = $code_amount - $edd_flat_discount_total;
+							$discounted_price -= $adjustment;
+						}
 
 					} else {
 

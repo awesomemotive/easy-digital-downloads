@@ -15,6 +15,11 @@ class Tests_Shortcode extends WP_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
+		global $current_user;
+
+		$current_user = new WP_User(1);
+		$current_user->set_role('administrator');
+
 		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
 
 		$_variable_pricing = array(
@@ -152,12 +157,12 @@ class Tests_Shortcode extends WP_UnitTestCase {
 
 	public function test_download_history() {
 		$this->assertInternalType( 'string', edd_download_history( array() ) );
-		$this->assertContains( '<p class="edd-no-downloads">', edd_download_history( array() ) );
+		$this->assertContains( '<table id="edd_user_history">', edd_download_history( array() ) );
 	}
 
 	public function test_purchase_history() {
 		$this->assertInternalType( 'string', edd_purchase_history( array() ) );
-		$this->assertContains( '<p class="edd-no-purchases">', edd_purchase_history( array() ) );
+		$this->assertContains( '<table id="edd_user_history">', edd_purchase_history( array() ) );
 	}
 
 	public function test_checkout_form_shortcode() {

@@ -13,7 +13,7 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! isset( $_GET['discount'] ) || ! is_numeric( $_GET['discount'] ) ) {
-	wp_die( __( 'Something went wrong.', 'edd' ), __( 'Error', 'edd' ) );
+	wp_die( __( 'Something went wrong.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 400 ) );
 }
 
 $discount_id       = absint( $_GET['discount'] );
@@ -87,7 +87,8 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 							'id'          => 'products',
 							'selected'    => $product_reqs,
 							'multiple'    => true,
-							'chosen'      => true 
+                            'chosen'      => true,
+                            'placeholder' => sprintf( __( 'Select one or more %s', 'edd' ), edd_get_label_plural() )
 						) ); ?><br/>
 					</p>
 					<div id="edd-discount-product-conditions"<?php echo $condition_display; ?>>
@@ -122,7 +123,8 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 						'id'       => 'excluded-products',
 						'selected' => $excluded_products,
 						'multiple' => true,
-						'chosen'   => true 
+                        'chosen'   => true,
+                        'placeholder' => sprintf( __( 'Select one or more %s', 'edd' ), edd_get_label_plural() )
 					) ); ?><br/>
 					<p class="description"><?php printf( __( '%s that this discount code cannot be applied to.', 'edd' ), edd_get_label_plural() ); ?></p>
 				</td>
