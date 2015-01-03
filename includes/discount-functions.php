@@ -163,9 +163,9 @@ function edd_get_discount_by( $field = '', $value = '' ) {
 			break;
 
 		case 'name':
-			$discount = query_posts( array(
+			$discount = get_posts( array(
 				'post_type'      => 'edd_discount',
-				'name'           => sanitize_title( $value ),
+				'name'           => $value,
 				'posts_per_page' => 1,
 				'post_status'    => 'any'
 			) );
