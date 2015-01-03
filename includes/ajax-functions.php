@@ -28,6 +28,45 @@ function edd_is_ajax_enabled() {
 }
 
 /**
+ * Check if AJAX works as expected
+ *
+ * @since 2.2
+ * @return bool True if AJAX works, false otherwise
+ */
+function edd_test_ajax_works() {
+	add_filter( 'block_local_requests', '__return_false' );
+	$params = array(
+		'sslverify'  => false,
+		'timeout'    => 30,
+		'body'       => array(
+		'action' => 'edd_test_ajax'
+		)
+	);
+	$ajax  = wp_remote_post( edd_get_ajax_url(), $params );
+	$works = true;
+	if( is_wp_error( $ajax ) ) {
+		$works = false;
+	} else {
+		if( empty( $ajax['response'] ) ) {
+			$works = false;
+		}
+		if( empty( $ajax['response']['code'] ) || 200 !== (int) $ajax['response']['code'] ) {
+			$works = false;
+		}
+		if( empty( $ajax['response']['message'] ) || 'OK' !== $ajax['response']['message'] ) {
+			$works = false;
+		}
+		if( ! isset( $ajax['body'] ) || 0 !== (int) $ajax['body'] ) {
+			$works = false;
+		}
+	}
+	if( $works ) {
+		set_transient( '_edd_ajax_works', '1', DAY_IN_SECONDS );
+	}
+	return $works;
+}
+
+/**
  * Checks whether AJAX is disabled.
  *
  * @since 2.0
