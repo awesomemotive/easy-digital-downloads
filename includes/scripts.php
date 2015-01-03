@@ -68,7 +68,7 @@ function edd_load_scripts() {
 				'empty_cart_message'      => __('Your cart is empty', 'edd'), // Item already in the cart message
 				'loading'                 => __('Loading', 'edd') , // General loading message
 				'select_option'           => __('Please select an option', 'edd') , // Variable pricing error with multi-purchase option enabled
-				'ajax_loader'             => EDD_PLUGIN_URL . 'assets/images/loading.gif', // Ajax loading image
+				'ajax_loader'             => set_url_scheme( EDD_PLUGIN_URL . 'assets/images/loading.gif', 'relative' ), // Ajax loading image
 				'is_checkout'             => edd_is_checkout() ? '1' : '0',
 				'default_gateway'         => edd_get_default_gateway(),
 				'redirect_to_checkout'    => ( edd_straight_to_checkout() || edd_is_checkout() ) ? '1' : '0',
@@ -183,10 +183,15 @@ function edd_load_admin_scripts( $hook ) {
 		'one_field_min'           => __( 'You must have at least one field', 'edd' ),
 		'one_option'              => sprintf( __( 'Choose a %s', 'edd' ), edd_get_label_singular() ),
 		'one_or_more_option'      => sprintf( __( 'Choose one or more %s', 'edd' ), edd_get_label_plural() ),
+		'numeric_item_price'      => __( 'Item price must be numeric', 'edd' ),
+		'numeric_quantity'        => __( 'Quantity must be numeric', 'edd' ),
 		'currency_sign'           => edd_currency_filter(''),
 		'currency_pos'            => isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
+		'currency_decimals'       => edd_currency_decimal_filter(),
 		'new_media_ui'            => apply_filters( 'edd_use_35_media_ui', 1 ),
 		'remove_text'             => __( 'Remove', 'edd' ),
+		'type_to_search'          => sprintf( __( 'Type to search %s', 'edd' ), edd_get_label_plural() ),
+		'quantities_enabled'      => edd_item_quantities_enabled()
 	));
 
 	wp_enqueue_style( 'wp-color-picker' );

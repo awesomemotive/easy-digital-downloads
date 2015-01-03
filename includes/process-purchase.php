@@ -224,20 +224,26 @@ function edd_purchase_form_validate_fields() {
  */
 function edd_purchase_form_validate_gateway() {
 
+	$gateway = edd_get_default_gateway();
+
 	// Check if a gateway value is present
-	if ( ! empty( $_POST['edd-gateway'] ) ) {
+	if ( ! empty( $_REQUEST['edd-gateway'] ) ) {
 
-		$gateway = sanitize_text_field( $_POST['edd-gateway'] );
+		$gateway = sanitize_text_field( $_REQUEST['edd-gateway'] );
 
-		if ( edd_is_gateway_active( $gateway ) ) {
-			return $gateway;
-		} elseif ( '0.00' == edd_get_cart_total() ) {
-			return 'manual';
+		if ( '0.00' == edd_get_cart_total() ) {
+
+			$gateway = 'manual';
+
+		} elseif ( ! edd_is_gateway_active( $gateway ) ) {
+
+			edd_set_error( 'invalid_gateway', __( 'The selected payment gateway is not enabled', 'edd' ) );
+
 		}
 
 	}
 
-	return edd_get_default_gateway();
+	return $gateway;
 
 }
 
@@ -1047,6 +1053,11 @@ add_action( 'edd_checkout_error_checks', 'edd_check_purchase_email', 10, 2 );
 function edd_process_straight_to_gateway( $data ) {
 	$download_id   = $data['download_id'];
 	$options       = isset( $data['edd_options'] ) ? $data['edd_options'] : array();
+
+	if( empty( $download_id ) || ! edd_get_download( $download_id ) ) {
+		return;
+	}
+
 	$purchase_data = edd_build_straight_to_gateway_data( $download_id, $options );
 	edd_set_purchase_session( $purchase_data );
 	edd_send_to_gateway( $purchase_data['gateway'], $purchase_data );
