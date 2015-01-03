@@ -2,16 +2,16 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.1.7\n"
+"Project-Id-Version: Easy Digital Downloads 2.1.9\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2014-10-28 14:31:55+00:00\n"
+"POT-Creation-Date: 2014-11-13 09:03:57+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "PO-Revision-Date: 2014-MO-DA HO:MI+ZONE\n"
 "Last-Translator: WP-Translations (http://wp-translations.org/)\n"
 "Language-Team: WP-Translations <wpt@wp-translations.org>\n"
-"X-Generator: grunt-wp-i18n 0.4.8\n"
+"X-Generator: grunt-wp-i18n 0.4.9\n"
 "X-Poedit-KeywordsList: "
 "__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
 "attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
@@ -28,20 +28,20 @@ msgstr ""
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
-#: includes/EDD_SL_Plugin_Updater.php:167
+#: includes/EDD_SL_Plugin_Updater.php:158
 msgid ""
 "There is a new version of %1$s available. <a target=\"_blank\" "
 "class=\"thickbox\" href=\"%2$s\">View version %3$s details</a>."
 msgstr ""
 
-#: includes/EDD_SL_Plugin_Updater.php:174
+#: includes/EDD_SL_Plugin_Updater.php:165
 msgid ""
 "There is a new version of %1$s available. <a target=\"_blank\" "
 "class=\"thickbox\" href=\"%2$s\">View version %3$s details</a> or <a "
 "href=\"%4$s\">update now</a>."
 msgstr ""
 
-#: includes/EDD_SL_Plugin_Updater.php:306
+#: includes/EDD_SL_Plugin_Updater.php:305
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
@@ -230,9 +230,9 @@ msgstr ""
 
 #: includes/admin/class-api-keys-table.php:119
 #: includes/checkout/template.php:408 includes/checkout/template.php:414
-#: includes/checkout/template.php:480 templates/shortcode-login.php:12
-#: templates/shortcode-login.php:13 templates/shortcode-register.php:15
-#: templates/shortcode-register.php:16
+#: includes/checkout/template.php:480 templates/shortcode-login.php:15
+#: templates/shortcode-login.php:16 templates/shortcode-register.php:18
+#: templates/shortcode-register.php:19
 msgid "Username"
 msgstr ""
 
@@ -388,7 +388,7 @@ msgstr ""
 #: includes/admin/discounts/edit-discount.php:70
 #: includes/admin/payments/class-payments-table.php:224
 #: includes/admin/reporting/class-export-payments.php:76
-#: templates/history-purchases.php:11
+#: templates/history-purchases.php:13
 msgid "Amount"
 msgstr ""
 
@@ -725,30 +725,44 @@ msgid ""
 "will be allowed to use it."
 msgstr ""
 
-#: includes/admin/discounts/discount-actions.php:136
-#: includes/admin/discounts/discount-actions.php:157
-#: includes/admin/discounts/discount-actions.php:178
+#: includes/admin/discounts/discount-actions.php:30
+#: includes/admin/discounts/discount-actions.php:198
+msgid "You do not have permission to create discount codes"
+msgstr ""
+
+#: includes/admin/discounts/discount-actions.php:92
+#: includes/admin/discounts/discount-actions.php:173
+msgid "You do not have permission to edit discount codes"
+msgstr ""
+
+#: includes/admin/discounts/discount-actions.php:144
+#: includes/admin/discounts/discount-actions.php:169
+#: includes/admin/discounts/discount-actions.php:194
 msgid "Trying to cheat or something?"
 msgstr ""
 
-#: includes/admin/discounts/discount-actions.php:136
-#: includes/admin/discounts/discount-actions.php:157
-#: includes/admin/discounts/discount-actions.php:178
+#: includes/admin/discounts/discount-actions.php:144
+#: includes/admin/discounts/discount-actions.php:169
+#: includes/admin/discounts/discount-actions.php:194
 #: includes/admin/discounts/edit-discount.php:16
 #: includes/admin/payments/actions.php:25
-#: includes/admin/payments/actions.php:246
-#: includes/admin/payments/actions.php:267
+#: includes/admin/payments/actions.php:256
+#: includes/admin/payments/actions.php:277
 #: includes/admin/payments/view-order-details.php:22
 #: includes/admin/payments/view-order-details.php:32
 #: includes/admin/reporting/class-api-requests-logs-list-table.php:135
 #: includes/admin/reporting/class-export.php:172
 #: includes/admin/reporting/class-gateway-error-logs-list-table.php:119
-#: includes/cart/functions.php:1042 includes/cart/functions.php:1059
+#: includes/cart/functions.php:1055 includes/cart/functions.php:1072
 #: includes/download-functions.php:1054 includes/download-functions.php:1064
-#: includes/download-functions.php:1074 includes/emails/template.php:249
-#: includes/error-tracking.php:36 includes/gateways/functions.php:202
-#: includes/query-filters.php:48
+#: includes/download-functions.php:1074 includes/emails/actions.php:48
+#: includes/emails/template.php:249 includes/error-tracking.php:36
+#: includes/gateways/functions.php:202 includes/query-filters.php:48
 msgid "Error"
+msgstr ""
+
+#: includes/admin/discounts/discount-actions.php:148
+msgid "You do not have permission to delete discount codes"
 msgstr ""
 
 #: includes/admin/discounts/discount-codes.php:35 includes/post-types.php:30
@@ -924,7 +938,7 @@ msgstr ""
 #: includes/admin/reporting/class-file-downloads-logs-list-table.php:138
 #: includes/admin/reporting/class-gateway-error-logs-list-table.php:122
 #: includes/admin/reporting/class-sales-logs-list-table.php:100
-#: templates/history-purchases.php:10 templates/shortcode-receipt.php:48
+#: templates/history-purchases.php:12 templates/shortcode-receipt.php:48
 msgid "Date"
 msgstr ""
 
@@ -992,7 +1006,7 @@ msgstr ""
 #: includes/admin/reporting/class-customer-reports-table.php:143
 #: includes/admin/reporting/class-export-payments.php:63
 #: includes/admin/reporting/class-export.php:69
-#: templates/history-purchases.php:9
+#: templates/history-purchases.php:11
 msgid "ID"
 msgstr ""
 
@@ -1118,8 +1132,10 @@ msgid "View Detailed Earnings Report"
 msgstr ""
 
 #: includes/admin/payments/actions.php:25
-#: includes/admin/payments/actions.php:246
-#: includes/admin/payments/actions.php:267
+#: includes/admin/payments/actions.php:213
+#: includes/admin/payments/actions.php:229
+#: includes/admin/payments/actions.php:256
+#: includes/admin/payments/actions.php:277 includes/emails/actions.php:48
 msgid "You do not have permission to edit this payment record"
 msgstr ""
 
@@ -1178,12 +1194,12 @@ msgstr ""
 #: includes/admin/reporting/class-export-customers.php:68
 #: includes/admin/reporting/class-export-customers.php:79
 #: includes/admin/reporting/class-export-payments.php:65
-#: templates/shortcode-register.php:20
+#: templates/shortcode-register.php:23
 msgid "Email"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:223
-#: templates/history-purchases.php:12
+#: templates/history-purchases.php:14
 msgid "Details"
 msgstr ""
 
@@ -1380,7 +1396,7 @@ msgstr ""
 
 #: includes/admin/payments/view-order-details.php:73
 #: includes/admin/reporting/class-export-payments.php:77
-#: templates/checkout_cart.php:96 templates/shortcode-receipt.php:79
+#: templates/checkout_cart.php:101 templates/shortcode-receipt.php:79
 msgid "Tax"
 msgstr ""
 
@@ -1505,7 +1521,7 @@ msgstr ""
 
 #: includes/admin/payments/view-order-details.php:416
 #: includes/admin/settings/register-settings.php:1367 includes/scripts.php:189
-#: templates/checkout_cart.php:40 templates/checkout_cart.php:55
+#: templates/checkout_cart.php:45 templates/checkout_cart.php:60
 msgid "Remove"
 msgstr ""
 
@@ -3189,11 +3205,17 @@ msgid ""
 "%shere%s to start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:232 includes/install.php:85
+#: includes/admin/upgrades/upgrade-functions.php:105
+#: includes/admin/upgrades/upgrade-functions.php:385
+#: includes/admin/upgrades/upgrade-functions.php:465
+msgid "You do not have permission to do shop upgrades"
+msgstr ""
+
+#: includes/admin/upgrades/upgrade-functions.php:237 includes/install.php:85
 msgid "Transaction Failed"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:233 includes/install.php:86
+#: includes/admin/upgrades/upgrade-functions.php:238 includes/install.php:86
 msgid "Your transaction failed, please try again or contact site support."
 msgstr ""
 
@@ -3616,24 +3638,24 @@ msgstr ""
 msgid "excludes %s tax"
 msgstr ""
 
-#: includes/cart/functions.php:1004 includes/cart/functions.php:1072
+#: includes/cart/functions.php:1017 includes/cart/functions.php:1085
 #: templates/shortcode-profile-editor.php:20
 msgid "Success"
 msgstr ""
 
-#: includes/cart/functions.php:1005
+#: includes/cart/functions.php:1018
 msgid "Cart saved successfully. You can restore your cart using this URL:"
 msgstr ""
 
-#: includes/cart/functions.php:1042 includes/cart/functions.php:1059
+#: includes/cart/functions.php:1055 includes/cart/functions.php:1072
 msgid "Cart restoration failed. Invalid token."
 msgstr ""
 
-#: includes/cart/functions.php:1050 includes/cart/functions.php:1062
+#: includes/cart/functions.php:1063 includes/cart/functions.php:1075
 msgid "The cart cannot be restored. Invalid token."
 msgstr ""
 
-#: includes/cart/functions.php:1072
+#: includes/cart/functions.php:1085
 msgid "Cart restored successfully."
 msgstr ""
 
@@ -3670,7 +3692,7 @@ msgid "Personal Info"
 msgstr ""
 
 #: includes/checkout/template.php:138 templates/shortcode-profile-editor.php:52
-#: templates/shortcode-register.php:21
+#: templates/shortcode-register.php:24
 msgid "Email Address"
 msgstr ""
 
@@ -3831,8 +3853,8 @@ msgid "The username you will use to log into your account."
 msgstr ""
 
 #: includes/checkout/template.php:418 includes/checkout/template.php:424
-#: includes/checkout/template.php:484 templates/shortcode-login.php:16
-#: templates/shortcode-register.php:25
+#: includes/checkout/template.php:484 templates/shortcode-login.php:19
+#: templates/shortcode-register.php:28
 msgid "Password"
 msgstr ""
 
@@ -3856,7 +3878,7 @@ msgstr ""
 msgid "Need to create an account?"
 msgstr ""
 
-#: includes/checkout/template.php:474 templates/shortcode-register.php:41
+#: includes/checkout/template.php:474 templates/shortcode-register.php:44
 msgid "Register"
 msgstr ""
 
@@ -4319,14 +4341,223 @@ msgstr ""
 msgid "Improper date provided."
 msgstr ""
 
-#: includes/country-functions.php:113 includes/country-functions.php:372
-#: includes/country-functions.php:453 includes/country-functions.php:480
-#: includes/country-functions.php:502 includes/country-functions.php:543
-#: includes/country-functions.php:560 includes/country-functions.php:594
-#: includes/country-functions.php:640 includes/country-functions.php:669
-#: includes/country-functions.php:717 includes/country-functions.php:766
-#: includes/country-functions.php:796 includes/country-functions.php:819
+#: includes/country-functions.php:116 includes/country-functions.php:375
+#: includes/country-functions.php:456 includes/country-functions.php:483
+#: includes/country-functions.php:505 includes/country-functions.php:546
+#: includes/country-functions.php:563 includes/country-functions.php:597
+#: includes/country-functions.php:643 includes/country-functions.php:672
+#: includes/country-functions.php:720 includes/country-functions.php:769
+#: includes/country-functions.php:799 includes/country-functions.php:822
+#: includes/country-functions.php:913
 msgid "Choose"
+msgstr ""
+
+#: includes/country-functions.php:914
+msgid "A Coru&ntilde;a"
+msgstr ""
+
+#: includes/country-functions.php:915
+msgid "Araba"
+msgstr ""
+
+#: includes/country-functions.php:916
+msgid "Albacete"
+msgstr ""
+
+#: includes/country-functions.php:917
+msgid "Alicante"
+msgstr ""
+
+#: includes/country-functions.php:918
+msgid "Almer&iacute;a"
+msgstr ""
+
+#: includes/country-functions.php:919
+msgid "Asturias"
+msgstr ""
+
+#: includes/country-functions.php:920
+msgid "&Aacute;vila"
+msgstr ""
+
+#: includes/country-functions.php:921
+msgid "Badajoz"
+msgstr ""
+
+#: includes/country-functions.php:922
+msgid "Baleares"
+msgstr ""
+
+#: includes/country-functions.php:923
+msgid "Barcelona"
+msgstr ""
+
+#: includes/country-functions.php:924
+msgid "Burgos"
+msgstr ""
+
+#: includes/country-functions.php:925
+msgid "C&aacute;ceres"
+msgstr ""
+
+#: includes/country-functions.php:926
+msgid "C&aacute;diz"
+msgstr ""
+
+#: includes/country-functions.php:927
+msgid "Cantabria"
+msgstr ""
+
+#: includes/country-functions.php:928
+msgid "Castell&oacute;n"
+msgstr ""
+
+#: includes/country-functions.php:929
+msgid "Ceuta"
+msgstr ""
+
+#: includes/country-functions.php:930
+msgid "Ciudad Real"
+msgstr ""
+
+#: includes/country-functions.php:931
+msgid "C&oacute;rdoba"
+msgstr ""
+
+#: includes/country-functions.php:932
+msgid "Cuenca"
+msgstr ""
+
+#: includes/country-functions.php:933
+msgid "Girona"
+msgstr ""
+
+#: includes/country-functions.php:934
+msgid "Granada"
+msgstr ""
+
+#: includes/country-functions.php:935
+msgid "Guadalajara"
+msgstr ""
+
+#: includes/country-functions.php:936
+msgid "Gipuzkoa"
+msgstr ""
+
+#: includes/country-functions.php:937
+msgid "Huelva"
+msgstr ""
+
+#: includes/country-functions.php:938
+msgid "Huesca"
+msgstr ""
+
+#: includes/country-functions.php:939
+msgid "Ja&eacute;n"
+msgstr ""
+
+#: includes/country-functions.php:940
+msgid "La Rioja"
+msgstr ""
+
+#: includes/country-functions.php:941
+msgid "Las Palmas"
+msgstr ""
+
+#: includes/country-functions.php:942
+msgid "Le&oacute;n"
+msgstr ""
+
+#: includes/country-functions.php:943
+msgid "Lleida"
+msgstr ""
+
+#: includes/country-functions.php:944
+msgid "Lugo"
+msgstr ""
+
+#: includes/country-functions.php:945
+msgid "Madrid"
+msgstr ""
+
+#: includes/country-functions.php:946
+msgid "M&aacute;laga"
+msgstr ""
+
+#: includes/country-functions.php:947
+msgid "Melilla"
+msgstr ""
+
+#: includes/country-functions.php:948
+msgid "Murcia"
+msgstr ""
+
+#: includes/country-functions.php:949
+msgid "Navarra"
+msgstr ""
+
+#: includes/country-functions.php:950
+msgid "Ourense"
+msgstr ""
+
+#: includes/country-functions.php:951
+msgid "Palencia"
+msgstr ""
+
+#: includes/country-functions.php:952
+msgid "Pontevedra"
+msgstr ""
+
+#: includes/country-functions.php:953
+msgid "Salamanca"
+msgstr ""
+
+#: includes/country-functions.php:954
+msgid "Santa Cruz de Tenerife"
+msgstr ""
+
+#: includes/country-functions.php:955
+msgid "Segovia"
+msgstr ""
+
+#: includes/country-functions.php:956
+msgid "Sevilla"
+msgstr ""
+
+#: includes/country-functions.php:957
+msgid "Soria"
+msgstr ""
+
+#: includes/country-functions.php:958
+msgid "Tarragona"
+msgstr ""
+
+#: includes/country-functions.php:959
+msgid "Teruel"
+msgstr ""
+
+#: includes/country-functions.php:960
+msgid "Toledo"
+msgstr ""
+
+#: includes/country-functions.php:961
+msgid "Valencia"
+msgstr ""
+
+#: includes/country-functions.php:962
+msgid "Valladolid"
+msgstr ""
+
+#: includes/country-functions.php:963
+msgid "Bizkaia"
+msgstr ""
+
+#: includes/country-functions.php:964
+msgid "Zamora"
+msgstr ""
+
+#: includes/country-functions.php:965
+msgid "Zaragoza"
 msgstr ""
 
 #: includes/deprecated-functions.php:221
@@ -4967,7 +5198,7 @@ msgid "Downloads"
 msgstr ""
 
 #: includes/post-types.php:175 includes/post-types.php:183
-msgid "Enter %s title here"
+msgid "Enter %s name here"
 msgstr ""
 
 #: includes/post-types.php:204
@@ -5174,7 +5405,7 @@ msgstr ""
 msgid "The password you entered is incorrect. %sReset Password%s"
 msgstr ""
 
-#: includes/process-purchase.php:548 templates/shortcode-login.php:26
+#: includes/process-purchase.php:548 templates/shortcode-login.php:29
 msgid "Lost Password"
 msgstr ""
 
@@ -5454,51 +5685,51 @@ msgstr ""
 msgid "Show Tags"
 msgstr ""
 
-#: templates/checkout_cart.php:6
+#: templates/checkout_cart.php:11
 msgid "Item Name"
 msgstr ""
 
-#: templates/checkout_cart.php:7
+#: templates/checkout_cart.php:12
 msgid "Item Price"
 msgstr ""
 
-#: templates/checkout_cart.php:8
+#: templates/checkout_cart.php:13
 msgid "Actions"
 msgstr ""
 
-#: templates/checkout_cart.php:78 templates/shortcode-receipt.php:87
+#: templates/checkout_cart.php:83 templates/shortcode-receipt.php:87
 msgid "Subtotal"
 msgstr ""
 
-#: templates/checkout_cart.php:105
+#: templates/checkout_cart.php:110
 msgid "Total"
 msgstr ""
 
-#: templates/history-downloads.php:10
+#: templates/history-downloads.php:12
 msgid "Download Name"
 msgstr ""
 
-#: templates/history-downloads.php:12
+#: templates/history-downloads.php:14
 msgid "Files"
 msgstr ""
 
-#: templates/history-downloads.php:67 templates/shortcode-receipt.php:200
+#: templates/history-downloads.php:69 templates/shortcode-receipt.php:200
 msgid "No downloadable files found."
 msgstr ""
 
-#: templates/history-downloads.php:72
+#: templates/history-downloads.php:74
 msgid "Payment status is %s"
 msgstr ""
 
-#: templates/history-downloads.php:103
+#: templates/history-downloads.php:105
 msgid "You have not purchased any downloads"
 msgstr ""
 
-#: templates/history-purchases.php:30
+#: templates/history-purchases.php:32
 msgid "View Details and Downloads"
 msgstr ""
 
-#: templates/history-purchases.php:50
+#: templates/history-purchases.php:52
 msgid "You have not made any purchases"
 msgstr ""
 
@@ -5508,19 +5739,19 @@ msgid ""
 "seconds. If it does not, click <a href=\"%s\">here</a>."
 msgstr ""
 
-#: templates/shortcode-login.php:9
+#: templates/shortcode-login.php:12
 msgid "Log into Your Account"
 msgstr ""
 
-#: templates/shortcode-login.php:23
+#: templates/shortcode-login.php:26
 msgid "Log In"
 msgstr ""
 
-#: templates/shortcode-login.php:27
+#: templates/shortcode-login.php:30
 msgid "Lost Password?"
 msgstr ""
 
-#: templates/shortcode-login.php:34
+#: templates/shortcode-login.php:37
 msgid "You are already logged in"
 msgstr ""
 
@@ -5604,11 +5835,11 @@ msgstr ""
 msgid "No downloadable files found for this bundled item."
 msgstr ""
 
-#: templates/shortcode-register.php:10
+#: templates/shortcode-register.php:13
 msgid "Register New Account"
 msgstr ""
 
-#: templates/shortcode-register.php:30
+#: templates/shortcode-register.php:33
 msgid "Confirm Password"
 msgstr ""
 
@@ -5620,7 +5851,7 @@ msgstr ""
 msgid "remove"
 msgstr ""
 
-#: templates/widget-cart.php:6
+#: templates/widget-cart.php:9
 msgid "Number of items in cart"
 msgstr ""
 
