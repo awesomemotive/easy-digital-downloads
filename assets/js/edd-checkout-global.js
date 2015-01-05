@@ -70,7 +70,7 @@ jQuery(document).ready(function($) {
                 withCredentials: true
             },
             success: function (tax_response) {
-                $('#edd_checkout_cart').replaceWith(tax_response.html);
+                $('#edd_checkout_cart').html(tax_response.html);
                 $('.edd_cart_amount').html(tax_response.total);
                 var tax_data = new Object();
                 tax_data.postdata = postData;
