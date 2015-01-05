@@ -102,6 +102,16 @@ function edd_email_test_purchase_receipt() {
  */
 function edd_admin_email_notice( $payment_id = 0, $payment_data = array() ) {
 
+	$payment_id = absint( $payment_id );
+
+	if( empty( $payment_id ) ) {
+		return;
+	}
+
+	if( ! edd_get_payment_by( 'id', $payment_id ) ) {
+		return;
+	}
+
 	$from_name   = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
 	$from_name   = apply_filters( 'edd_purchase_from_name', $from_name, $payment_id, $payment_data );
 

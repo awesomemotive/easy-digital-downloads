@@ -58,17 +58,19 @@ class EDD_Fees {
 				'label'  => $label,
 				'id'     => $id,
 				'type'   => $type,
-				'no_tax' => false
+				'no_tax' => false,
+				'download_id' => 0
 			);
 
 		} else {
 
 			$defaults = array(
-				'amount' => 0,
-				'label'  => '',
-				'id'     => '',
-				'no_tax' => false,
-				'type'   => 'fee'
+				'amount'      => 0,
+				'label'       => '',
+				'id'          => '',
+				'no_tax'      => false,
+				'type'        => 'fee',
+				'download_id' => 0
 			);
 
 			$args = wp_parse_args( $args, $defaults );
@@ -77,6 +79,10 @@ class EDD_Fees {
 				$args['type'] = 'fee';
 			}
 
+		}
+
+		if( 'item' === $args['type'] && ! empty( $args['download_id'] ) ) {
+			unset( $args['download_id'] );
 		}
 
 		$fees = $this->get_fees( 'all' );
@@ -133,7 +139,7 @@ class EDD_Fees {
 	public function has_fees( $type = 'fee' ) {
 
 		if( 'all' == $type || 'fee' == $type ) {
-		
+
 			if( ! edd_get_cart_contents() ) {
 				$type = 'item';
 			}
@@ -150,10 +156,12 @@ class EDD_Fees {
 	 * @access public
 	 * @since 1.5
 	 * @param string $type Fee type, "fee" or "item"
+	 * @param int $download_id The download ID whose fees to retrieve
 	 * @uses EDD_Session::get()
 	 * @return mixed array|bool
 	 */
-	public function get_fees( $type = 'fee' ) {
+	public function get_fees( $type = 'fee', $download_id = 0 ) {
+
 		$fees = EDD()->session->get( 'edd_cart_fees' );
 
 		if( ! edd_get_cart_contents() ) {
@@ -164,11 +172,51 @@ class EDD_Fees {
 		if( ! empty( $fees ) && ! empty( $type ) && 'all' !== $type ) {
 
 			foreach( $fees as $key => $fee ) {
+
 				if( ! empty( $fee['type'] ) && $type != $fee['type'] ) {
+
 					unset( $fees[ $key ] );
+
 				}
+
 			}
+
 		}
+
+		if( ! empty( $fees ) && ! empty( $download_id ) ) {
+
+			// Remove fees that don't belong to the specified Download
+			foreach( $fees as $key => $fee ) {
+
+				if( (int) $download_id !== (int) $fee['download_id'] ) {
+
+					unset( $fees[ $key ] );
+
+				}
+
+			}
+
+		}
+
+		if( ! empty( $fees ) ) {
+
+			// Remove fees that belong to a specific download but are not in the cart
+			foreach( $fees as $key => $fee ) {
+
+				if( empty( $fee['download_id'] ) ) {
+					continue;
+				}
+
+				if( ! edd_item_in_cart( $fee['download_id'] ) ) {
+
+					unset( $fees[ $key ] );
+
+				}
+
+			}
+
+		}
+
 		return ! empty( $fees ) ? $fees : array();
 	}
 
@@ -223,10 +271,11 @@ class EDD_Fees {
 	 * @since 1.5
 	 * @uses EDD_Fees::get_fees()
 	 * @uses EDD_Fees::has_fees()
+	 * @param int $download_id The download ID whose fees to retrieve
 	 * @return float $total Total fee amount
 	 */
-	public function total() {
-		$fees  = $this->get_fees( 'all' );
+	public function total( $download_id = 0 ) {
+		$fees  = $this->get_fees( 'all', $download_id );
 		$total = (float) 0.00;
 
 		if ( $this->has_fees( 'all' ) ) {

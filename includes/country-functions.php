@@ -113,7 +113,7 @@ function edd_get_shop_states( $country = null ) {
  */
 function edd_get_country_list() {
 	$countries = array(
-		'0'  => __( 'Choose', 'edd' ),
+		''   => '',
 		'US' => 'United States',
 		'CA' => 'Canada',
 		'GB' => 'United Kingdom',
@@ -372,7 +372,7 @@ function edd_get_country_list() {
  */
 function edd_get_states_list() {
 	$states = array(
-		'0'  => __( 'Choose', 'edd' ),
+		''   => '',
 		'AL' => 'Alabama',
 		'AK' => 'Alaska',
 		'AZ' => 'Arizona',
@@ -453,7 +453,7 @@ function edd_get_states_list() {
  */
 function edd_get_provinces_list() {
 	$provinces = array(
-		'0'  => __( 'Choose', 'edd' ),
+		''   => '',
 		'AB' => 'Alberta',
 		'BC' => 'British Columbia',
 		'MB' => 'Manitoba',
@@ -480,7 +480,7 @@ function edd_get_provinces_list() {
  */
 function edd_get_australian_states_list() {
 	$states = array(
-		'0'   => __( 'Choose', 'edd' ),
+		''    => '',
 		'ACT' => 'Australian Capital Territory',
 		'NSW' => 'New South Wales',
 		'NT'  => 'Northern Territory',
@@ -502,7 +502,7 @@ function edd_get_australian_states_list() {
  */
 function edd_get_brazil_states_list() {
 	$states = array(
-		'0'  => __( 'Choose', 'edd' ),
+		''   => '',
 		'AC' => 'Acre',
 		'AL' => 'Alagoas',
 		'AP' => 'Amap&aacute;',
@@ -543,7 +543,7 @@ function edd_get_brazil_states_list() {
  */
 function edd_get_hong_kong_states_list() {
 	$states = array(
-		'0'               => __( 'Choose', 'edd' ),
+		''                => '',
 		'HONG KONG'       => 'Hong Kong Island',
 		'KOWLOON'         => 'Kowloon',
 		'NEW TERRITORIES' => 'New Territories'
@@ -560,7 +560,7 @@ function edd_get_hong_kong_states_list() {
  */
 function edd_get_hungary_states_list() {
 	$states = array(
-		'0'  => __( 'Choose', 'edd' ),
+		''   => '',
 		'BK' => 'Bács-Kiskun',
 		'BE' => 'Békés',
 		'BA' => 'Baranya',
@@ -594,7 +594,7 @@ function edd_get_hungary_states_list() {
  */
 function edd_get_chinese_states_list() {
 	$states = array(
-		'0'    => __( 'Choose', 'edd' ),
+		''     => '',
 	    'CN1'  => 'Yunnan / &#20113;&#21335;',
 	    'CN2'  => 'Beijing / &#21271;&#20140;',
 	    'CN3'  => 'Tianjin / &#22825;&#27941;',
@@ -640,7 +640,7 @@ function edd_get_chinese_states_list() {
  */
 function edd_get_new_zealand_states_list() {
 	$states = array(
-		'0'  => __( 'Choose', 'edd' ),
+		''   => '',
 		'AK' => 'Auckland',
 		'BP' => 'Bay of Plenty',
 		'CT' => 'Canterbury',
@@ -669,7 +669,7 @@ function edd_get_new_zealand_states_list() {
  */
 function edd_get_indonesian_states_list() {
 	$states  = array(
-		'0'  => __( 'Choose', 'edd' ),
+		''   => '',
 		'AC' => 'Daerah Istimewa Aceh',
 	    'SU' => 'Sumatera Utara',
 	    'SB' => 'Sumatera Barat',
@@ -717,7 +717,7 @@ function edd_get_indonesian_states_list() {
  */
 function edd_get_indian_states_list() {
 	$states = array(
-		'0'  => __( 'Choose', 'edd' ),
+		''   => '',
 		'AP' => 'Andra Pradesh',
 		'AR' => 'Arunachal Pradesh',
 		'AS' => 'Assam',
@@ -766,7 +766,7 @@ function edd_get_indian_states_list() {
  */
 function edd_get_malaysian_states_list() {
 	$states = array(
-		'0'   => __( 'Choose', 'edd' ),
+		''    => '',
 		'JHR' => 'Johor',
 		'KDH' => 'Kedah',
 		'KTN' => 'Kelantan',
@@ -796,7 +796,7 @@ function edd_get_malaysian_states_list() {
  */
 function edd_get_south_african_states_list() {
 	$states = array(
-		'0'   => __( 'Choose', 'edd' ),
+		''    => '',
 		'EC'  => 'Eastern Cape',
 		'FS'  => 'Free State',
 		'GP'  => 'Gauteng',
@@ -819,7 +819,7 @@ function edd_get_south_african_states_list() {
  */
 function edd_get_thailand_states_list() {
 	$states = array(
-		'0'     => __( 'Choose', 'edd' ),
+		''      => '',
 		'TH-37' => 'Amnat Charoen (&#3629;&#3635;&#3609;&#3634;&#3592;&#3648;&#3592;&#3619;&#3636;&#3597;)',
 		'TH-15' => 'Ang Thong (&#3629;&#3656;&#3634;&#3591;&#3607;&#3629;&#3591;)',
 		'TH-14' => 'Ayutthaya (&#3614;&#3619;&#3632;&#3609;&#3588;&#3619;&#3624;&#3619;&#3637;&#3629;&#3618;&#3640;&#3608;&#3618;&#3634;)',
@@ -910,7 +910,7 @@ function edd_get_thailand_states_list() {
  */
 function edd_get_spain_states_list() {
 	$states = array(
-		'0'  => __( 'Choose', 'edd' ),
+		''   => '',
 	    'C'  => __( 'A Coru&ntilde;a', 'edd' ),
 	    'VI' => __( 'Araba', 'edd' ),
 	    'AB' => __( 'Albacete', 'edd' ),
@@ -962,7 +962,7 @@ function edd_get_spain_states_list() {
 	    'VA' => __( 'Valladolid', 'edd' ),
 	    'BI' => __( 'Bizkaia', 'edd' ),
 	    'ZA' => __( 'Zamora', 'edd' ),
-	    'Z'  => __('Zaragoza', 'edd' )
+	    'Z'  => __( 'Zaragoza', 'edd' )
 	); 	
 
 	return apply_filters( 'edd_spain_states', $states );

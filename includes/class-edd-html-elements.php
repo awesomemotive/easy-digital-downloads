@@ -41,6 +41,7 @@ class EDD_HTML_Elements {
 			'chosen'      => false,
 			'number'      => 30,
 			'bundles'     => true
+			'placeholder' => sprintf( __( 'Select a %s', 'edd' ), edd_get_label_singular() )
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -69,6 +70,7 @@ class EDD_HTML_Elements {
 		$options = array();
 
 		if ( $products ) {
+			$options[0] = sprintf( __( 'Select a %s', 'edd' ), edd_get_label_singular() );
 			foreach ( $products as $product ) {
 				$options[ absint( $product->ID ) ] = esc_html( $product->post_title );
 			}
@@ -94,6 +96,60 @@ class EDD_HTML_Elements {
 			'selected'         => $args['selected'],
 			'id'               => $args['id'],
 			'class'            => $args['class'],
+			'options'          => $options,
+			'chosen'           => $args['chosen'],
+			'multiple'         => $args['multiple'],
+            'placeholder'      => $args['placeholder'],
+			'show_option_all'  => false,
+			'show_option_none' => false
+		) );
+
+		return $output;
+	}
+
+	/**
+	 * Renders an HTML Dropdown of all customers
+	 *
+	 * @access public
+	 * @since 2.2
+	 * @param array $args
+	 * @return string $output Customer dropdown
+	 */
+	public function customer_dropdown( $args = array() ) {
+
+		$defaults = array(
+			'name'        => 'customers',
+			'id'          => 'customers',
+			'class'       => '',
+			'multiple'    => false,
+			'selected'    => 0,
+            'select2'     => $args['select2'],
+            'placeholder' => $args['placeholder'],
+			'number'      => 30
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$customers = EDD()->customers->get_customers( array(
+			'number' => $args['number']
+		) );
+
+		$options = array();
+
+		if ( $customers ) {
+			$options[-1] = __( 'Guest', 'edd' );
+			foreach ( $customers as $customer ) {
+				$options[ absint( $customer->id ) ] = esc_html( $customer->name . ' (' . $customer->email . ')' );
+			}
+		} else {
+			$options[0] = __( 'No customers found', 'edd' );
+		}
+
+		$output = $this->select( array(
+			'name'             => $args['name'],
+			'selected'         => $args['selected'],
+			'id'               => $args['id'],
+			'class'            => $args['class'] . ' edd-customer-select',
 			'options'          => $options,
 			'multiple'         => $args['multiple'],
 			'chosen'           => $args['chosen'],
@@ -248,6 +304,7 @@ class EDD_HTML_Elements {
 			'id'               => '',
 			'selected'         => 0,
 			'chosen'           => false,
+			'placeholder'      => null,
 			'multiple'         => false,
 			'show_option_all'  => _x( 'All', 'all dropdown items', 'edd' ),
 			'show_option_none' => _x( 'None', 'no dropdown items', 'edd' )
@@ -266,7 +323,13 @@ class EDD_HTML_Elements {
 			$args['class'] .= ' edd-select-chosen';
 		}
 
-		$output = '<select name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( sanitize_key( str_replace( '-', '_', $args[ 'id' ] ) ) ) . '" class="edd-select ' . esc_attr( $args[ 'class'] ) . '"' . $multiple . '>';
+        if( $args['placeholder'] ) {
+            $placeholder = $args['placeholder'];
+        } else {
+            $placeholder = '';
+        }
+
+        $output = '<select name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( sanitize_key( str_replace( '-', '_', $args[ 'id' ] ) ) ) . '" class="edd-select ' . esc_attr( $args[ 'class'] ) . '"' . $multiple . ' data-placeholder="' . $placeholder . '">';
 
 		if ( ! empty( $args[ 'options' ] ) ) {
 			if ( $args[ 'show_option_all' ] ) {

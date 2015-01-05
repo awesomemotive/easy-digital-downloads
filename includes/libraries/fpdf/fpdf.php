@@ -860,7 +860,7 @@ class FPDF {
 			$this->Error( 'This version of PHP is not supported' );
 		if ( ini_get( 'mbstring.func_overload' ) & 2 )
 			$this->Error( 'mbstring overloading must be disabled' );
-		if ( get_magic_quotes_runtime() )
+		if ( get_magic_quotes_runtime() && version_compare( phpversion(), '5.4', '<' ) )
 			@set_magic_quotes_runtime( 0 );
 	}
 

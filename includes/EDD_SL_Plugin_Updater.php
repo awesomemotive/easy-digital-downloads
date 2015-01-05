@@ -7,7 +7,7 @@
  * Allows plugins to use their own update API.
  *
  * @author Pippin Williamson
- * @version 1.5
+ * @version 1.6
  */
 class EDD_SL_Plugin_Updater {
     private $api_url   = '';
@@ -34,7 +34,7 @@ class EDD_SL_Plugin_Updater {
         $this->version  = $_api_data['version'];
 
         // Set up hooks.
-        add_action( 'admin_init', array( $this, 'init' ) );
+        $this->init();
         add_action( 'admin_init', array( $this, 'show_changelog' ) );
     }
 
@@ -68,8 +68,14 @@ class EDD_SL_Plugin_Updater {
      */
     function check_update( $_transient_data ) {
 
+        global $pagenow;
+
         if( ! is_object( $_transient_data ) ) {
             $_transient_data = new stdClass;
+        }
+
+        if( 'plugins.php' == $pagenow && is_multisite() ) {
+            return $_transient_data;
         }
 
         if ( empty( $_transient_data->response ) || empty( $_transient_data->response[ $this->name ] ) ) {
@@ -123,22 +129,35 @@ class EDD_SL_Plugin_Updater {
 
         if ( ! is_object( $update_cache ) || empty( $update_cache->response ) || empty( $update_cache->response[ $this->name ] ) ) {
 
-            $version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
+            $cache_key    = md5( 'edd_plugin_' .sanitize_key( $this->name ) . '_version_info' );
+            $version_info = get_transient( $cache_key );
+
+            if( false === $version_info ) {
+
+                $version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
+
+                set_transient( $cache_key, $version_info, 3600 );
+            }
+
 
             if( ! is_object( $version_info ) ) {
                 return;
             }
 
             if( version_compare( $this->version, $version_info->new_version, '<' ) ) {
-            
+
                 $update_cache->response[ $this->name ] = $version_info;
-            
+
             }
 
             $update_cache->last_checked = time();
             $update_cache->checked[ $this->name ] = $this->version;
 
             set_site_transient( 'update_plugins', $update_cache );
+
+        } else {
+
+            $version_info = $update_cache->response[ $this->name ];
 
         }
 
@@ -155,14 +174,14 @@ class EDD_SL_Plugin_Updater {
 
             if ( empty( $version_info->download_link ) ) {
                 printf(
-                    __( 'There is a new version of %1$s available. <a target="_blank" class="thickbox" href="%2$s">View version %3$s details</a>.' ),
+                    __( 'There is a new version of %1$s available. <a target="_blank" class="thickbox" href="%2$s">View version %3$s details</a>.', 'edd' ),
                     esc_html( $version_info->name ),
                     esc_url( $changelog_link ),
                     esc_html( $version_info->new_version )
                 );
             } else {
                 printf(
-                    __( 'There is a new version of %1$s available. <a target="_blank" class="thickbox" href="%2$s">View version %3$s details</a> or <a href="%4$s">update now</a>.' ),
+                    __( 'There is a new version of %1$s available. <a target="_blank" class="thickbox" href="%2$s">View version %3$s details</a> or <a href="%4$s">update now</a>.', 'edd' ),
                     esc_html( $version_info->name ),
                     esc_url( $changelog_link ),
                     esc_html( $version_info->new_version ),
@@ -266,7 +285,7 @@ class EDD_SL_Plugin_Updater {
             'license'    => $data['license'],
             'item_name'  => isset( $data['item_name'] ) ? $data['item_name'] : false,
             'item_id'    => isset( $data['item_id'] ) ? $data['item_id'] : false,
-            'slug'       => $this->slug,
+            'slug'       => $data['slug'],
             'author'     => $data['author'],
             'url'        => home_url()
         );
@@ -302,7 +321,7 @@ class EDD_SL_Plugin_Updater {
         }
 
         if( ! current_user_can( 'update_plugins' ) ) {
-            wp_die( __( 'You do not have permission to install plugin updates' ) );
+            wp_die( __( 'You do not have permission to install plugin updates', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
         }
 
         $response = $this->api_request( 'plugin_latest_version', array( 'slug' => $_REQUEST['slug'] ) );

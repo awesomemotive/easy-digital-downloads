@@ -81,6 +81,11 @@ function edd_get_tools_tabs() {
  * @return      void
  */
 function edd_tools_banned_emails_display() {
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
 	do_action( 'edd_tools_banned_emails_before' );
 ?>
 	<div class="postbox">
@@ -114,6 +119,11 @@ add_action( 'edd_tools_tab_general', 'edd_tools_banned_emails_display' );
  * @return      void
  */
 function edd_tools_api_keys_display() {
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
 	do_action( 'edd_tools_api_keys_before' );
 
 	require_once EDD_PLUGIN_DIR . 'includes/admin/class-api-keys-table.php';
@@ -172,6 +182,11 @@ add_action( 'edd_save_banned_emails', 'edd_tools_banned_emails_save' );
  * @return      void
  */
 function edd_tools_import_export_display() {
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
 	do_action( 'edd_tools_import_export_before' );
 ?>
 	<div class="postbox">
@@ -265,13 +280,13 @@ function edd_tools_import_export_process_import() {
 		return;
 
     if( edd_get_file_extension( $_FILES['import_file']['name'] ) != 'json' ) {
-        wp_die( __( 'Please upload a valid .json file', 'edd' ) );
+        wp_die( __( 'Please upload a valid .json file', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 400 ) );
     }
 
 	$import_file = $_FILES['import_file']['tmp_name'];
 
 	if( empty( $import_file ) ) {
-		wp_die( __( 'Please upload a file to import', 'edd' ) );
+		wp_die( __( 'Please upload a file to import', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 400 ) );
 	}
 
 	// Retrieve the settings from the file and convert the json object to an array
@@ -292,6 +307,11 @@ add_action( 'edd_import_settings', 'edd_tools_import_export_process_import' );
  * @return      void
  */
 function edd_tools_sysinfo_display() {
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
 ?>
 	<form action="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-tools&tab=system_info' ) ); ?>" method="post" dir="ltr">
 		<textarea readonly="readonly" onclick="this.focus(); this.select()" id="system-info-textarea" name="edd-sysinfo" title="To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac)."><?php echo edd_tools_sysinfo_get(); ?></textarea>
@@ -395,6 +415,7 @@ function edd_tools_sysinfo_get() {
 
 	$return .= 'Remote Post:              ' . $WP_REMOTE_POST . "\n";
 	$return .= 'Table Prefix:             ' . 'Length: ' . strlen( $wpdb->prefix ) . '   Status: ' . ( strlen( $wpdb->prefix ) > 16 ? 'ERROR: Too long' : 'Acceptable' ) . "\n";
+	$return .= 'Admin AJAX:               ' . ( edd_test_ajax_works() ? 'Accessible' : 'Inaccessible' ) . "\n";
 	$return .= 'WP_DEBUG:                 ' . ( defined( 'WP_DEBUG' ) ? WP_DEBUG ? 'Enabled' : 'Disabled' : 'Not set' ) . "\n";
 	$return .= 'Memory Limit:             ' . WP_MEMORY_LIMIT . "\n";
 	$return .= 'Registered Post Stati:    ' . implode( ', ', get_post_stati() ) . "\n";
@@ -482,6 +503,18 @@ function edd_tools_sysinfo_get() {
 
 		$return  = apply_filters( 'edd_sysinfo_after_edd_templates', $return );
 	}
+
+    // Must-use plugins
+    $muplugins = get_mu_plugins();
+    if( count( $muplugins > 0 ) ) {
+        $return .= "\n" . '-- Must-Use Plugins' . "\n\n";
+
+        foreach( $muplugins as $plugin => $plugin_data ) {
+            $return .= $plugin_data['Name'] . ': ' . $plugin_data['Version'] . "\n";
+        }
+
+        $return = apply_filters( 'edd_sysinfo_after_wordpress_mu_plugins', $return );
+    }
 
 	// WordPress active plugins
 	$return .= "\n" . '-- WordPress Active Plugins' . "\n\n";
@@ -589,6 +622,11 @@ function edd_tools_sysinfo_get() {
  * @return      void
  */
 function edd_tools_sysinfo_download() {
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+	
 	nocache_headers();
 
 	header( 'Content-Type: text/plain' );
