@@ -1089,3 +1089,36 @@ function edd_get_random_downloads( $num = 3, $post_ids = true ) {
 	$args  = apply_filters( 'edd_get_random_downloads', $args );
 	return get_posts( $args );
 }
+
+/**
+ * Returns if a user can access a download of a purchase
+ *
+ * @since 2.2
+ * @author Chris Christoff
+ * @param bool $bool Default for has_access
+ * @param mixed $purchase_data Array of purchase data 
+ * @param mixed $args Array of arguments
+ * @return nool If a user can access the file
+ */
+function edd_can_access_download( $bool = true, $purchase_data = array(), $args = array() ) {
+	return apply_filters( 'edd_file_download_has_access', $bool, $purchase_data, $args );
+}
+
+/**
+ * Returns `download` attribute for download link if user can access download 
+ *
+ * @since 2.2
+ * @author Chris Christoff
+ * @param bool $bool Default for has_access for edd_can_access_download()
+ * @param mixed $purchase_data Array of purchase data  for edd_can_access_download()
+ * @param mixed $args Array of arguments for edd_can_access_download()
+ * @param mixed $args The file array
+ * @return nool If a user can access the file
+ */
+function edd_get_html5_download_attribute( $bool = true, $purchase_data = array(), $args = array(), $file = array ) {
+	$string = '';
+	if ( edd_can_access_download( $bool, $purchase_data, $arg ){
+		$string = 'download="'  .edd_get_file_name( $file ) . '"';	
+	}
+	return apply_filters( 'edd_get_html5_download_attribute', $string, $bool, $purchase_data, $args, $file );
+}
