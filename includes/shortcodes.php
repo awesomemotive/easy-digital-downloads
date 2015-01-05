@@ -29,6 +29,7 @@ function edd_download_shortcode( $atts, $content = null ) {
 
 	$atts = shortcode_atts( array(
 		'id' 	        => $post_id,
+		'price_id'      => isset( $atts['price_id'] ) ? $atts['price_id'] : false,
 		'sku'			=> '',
 		'price'         => '1',
 		'direct'        => '0',
@@ -41,8 +42,9 @@ function edd_download_shortcode( $atts, $content = null ) {
 	$atts, 'purchase_link' );
 
 	// Override color if color == inherit
-	if( isset( $atts['color'] )	)
+	if( isset( $atts['color'] )	) {
 		$atts['color'] = ( $atts['color'] == 'inherit' ) ? '' : $atts['color'];
+	}
 
 	if( ! empty( $atts['sku'] ) ) {
 
@@ -555,13 +557,15 @@ add_shortcode( 'downloads', 'edd_downloads_query' );
 function edd_download_price_shortcode( $atts, $content = null ) {
 	extract( shortcode_atts( array(
 			'id' => NULL,
+			'price_id' => false,
 		), $atts, 'edd_price' )
 	);
 
-	if ( is_null( $id ) )
+	if ( is_null( $id ) ) {
 		$id = get_the_ID();
+	}
 
-	return edd_price( $id, false );
+	return edd_price( $id, false, $price_id );
 }
 add_shortcode( 'edd_price', 'edd_download_price_shortcode' );
 
@@ -727,6 +731,12 @@ function edd_process_profile_editor_updates( $data ) {
 
 	// Make sure the new email doesn't belong to another user
 	if( $email != $old_user_data->user_email ) {
+		// Make sure the new email is valid
+		if( ! is_email( $email ) ) {
+			edd_set_error( 'email_invalid', __( 'The email you entered is invalid. Please enter a valid email.', 'edd' ) );
+		}
+
+		// Make sure the new email doesn't belong to another user
 		if( email_exists( $email ) ) {
 			edd_set_error( 'email_exists', __( 'The email you entered belongs to another user. Please use another.', 'edd' ) );
 		}

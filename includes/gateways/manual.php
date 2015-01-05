@@ -27,7 +27,12 @@ add_action( 'edd_manual_cc_form', '__return_false' );
  * @return void
 */
 function edd_manual_payment( $purchase_data ) {
+
 	global $edd_options;
+
+	if( ! wp_verify_nonce( $purchase_data['gateway_nonce'], 'edd-gateway' ) ) {
+		wp_die( __( 'Nonce verification has failed', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+	}
 
 	/*
 	* Purchase data comes in like this

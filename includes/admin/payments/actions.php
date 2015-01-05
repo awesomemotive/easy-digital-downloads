@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_update_payment_details( $data ) {
 
 	if( ! current_user_can( 'edit_shop_payment', $data['edd_payment_id' ] ) ) {
-		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ) );
+		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
 
 	check_admin_referer( 'edd_update_payment_details_nonce' );
@@ -115,7 +115,7 @@ function edd_update_payment_details( $data ) {
 	) );
 
 	if ( 0 === $updated ) {
-		wp_die( __( 'Error Updating Payment', 'edd' ) );
+		wp_die( __( 'Error Updating Payment', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 400 ) );
 	}
 
 	if ( $user_id !== $user_info['id'] || $email !== $user_info['email'] ) {
@@ -123,7 +123,7 @@ function edd_update_payment_details( $data ) {
 		$user = get_user_by( 'id', $user_id );
 		if ( ! empty( $user ) && strtolower( $user->data->user_email ) !== strtolower( $email ) ) {
 			// protect a purcahse from being assigned to a customer with a user ID and Email that belong to different users
-			wp_die( 'User ID and User Email do not match.' );
+			wp_die( __( 'User ID and User Email do not match.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 400 ) );
 			exit;
 		}
 
@@ -181,7 +181,7 @@ function edd_update_payment_details( $data ) {
 
 	// Adjust total store earnings if the payment total has been changed
 	if ( $new_total !== $curr_total && ( 'publish' == $status || 'revoked' == $status ) ) {
-	
+
 		$total_earnings = get_option( 'edd_earnings_total' ) - $curr_total + $new_total;
 		update_option( 'edd_earnings_total', $total_earnings );
 
@@ -210,7 +210,7 @@ function edd_trigger_purchase_delete( $data ) {
 		$payment_id = absint( $data['purchase_id'] );
 
 		if( ! current_user_can( 'edit_shop_payment', $payment_id ) ) {
-			wp_die( __( 'You do not have permission to edit this payment record', 'edd' ) );
+			wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 		}
 
 		edd_delete_purchase( $payment_id );
@@ -224,9 +224,9 @@ function edd_ajax_store_payment_note() {
 
 	$payment_id = absint( $_POST['payment_id'] );
 	$note       = wp_kses( $_POST['note'], array() );
-	
+
 	if( ! current_user_can( 'edit_shop_payment', $payment_id ) ) {
-		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ) );
+		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
 
 	if( empty( $payment_id ) )
@@ -253,7 +253,7 @@ function edd_trigger_payment_note_deletion( $data ) {
 		return;
 
 	if( ! current_user_can( 'edit_shop_payment', $data['payment_id' ] ) ) {
-		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ) );
+		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
 
 	$edit_order_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&edd-message=payment-note-deleted&id=' . absint( $data['payment_id'] ) );
@@ -274,7 +274,7 @@ add_action( 'edd_delete_payment_note', 'edd_trigger_payment_note_deletion' );
 function edd_ajax_delete_payment_note() {
 
 	if( ! current_user_can( 'edit_shop_payment', $_POST['payment_id' ] ) ) {
-		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ) );
+		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
 
 	if( edd_delete_payment_note( $_POST['note_id'], $_POST['payment_id'] ) ) {
