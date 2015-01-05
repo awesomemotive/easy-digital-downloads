@@ -42,7 +42,7 @@ function edd_test_ajax_works() {
 		'timeout'    => 30,
 		'body'       => array(
 			'action' => 'edd_test_ajax'
-		) 
+		)
 	);
 
 	$ajax  = wp_remote_post( edd_get_ajax_url(), $params );
@@ -122,9 +122,9 @@ function edd_ajax_remove_from_cart() {
 		edd_remove_from_cart( $_POST['cart_item'] );
 
 		$return = array(
-			'removed'  => 1,
-			'subtotal' => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
-			'total'    => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ), ENT_COMPAT, 'UTF-8' ),
+			'removed'       => 1,
+			'subtotal'      => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
+			'total'         => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ), ENT_COMPAT, 'UTF-8' ),
 			'cart_quantity' => html_entity_decode( edd_get_cart_quantity() ),
 		);
 

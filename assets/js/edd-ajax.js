@@ -33,14 +33,14 @@ jQuery(document).ready(function ($) {
 
 	                // Remove the selected cart item
 	                $('.edd-cart').find("[data-cart-item='" + item + "']").parent().remove();
-					
-					//Reset the data-cart-item attributes to match their new values in the EDD session cart array
-					var cart_item_counter = 0;
-					$('.edd-cart').find("[data-cart-item]").each(function(){
-						$(this).attr('data-cart-item', cart_item_counter);
-						cart_item_counter = cart_item_counter + 1;
-					});
-					
+
+	                //Reset the data-cart-item attributes to match their new values in the EDD session cart array
+	                var cart_item_counter = 0;
+	                $('.edd-cart').find("[data-cart-item]").each(function(){
+	                    $(this).attr('data-cart-item', cart_item_counter);
+	                    cart_item_counter = cart_item_counter + 1;
+	                });
+
 	                // Check to see if the purchase form for this download is present on this page
 	                if( $( '#edd_purchase_' + id ).length ) {
 	                    $( '#edd_purchase_' + id + ' .edd_go_to_checkout' ).hide();
