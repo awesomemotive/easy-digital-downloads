@@ -33,25 +33,26 @@ jQuery(document).ready(function ($) {
 
 	                // Remove the selected cart item
 	                $('.edd-cart').find("[data-cart-item='" + item + "']").parent().remove();
-
+					
+					//Reset the data-cart-item attributes to match their new values in the EDD session cart array
+					var cart_item_counter = 0;
+					$('.edd-cart').find("[data-cart-item]").each(function(){
+						$(this).attr('data-cart-item', cart_item_counter);
+						cart_item_counter = cart_item_counter + 1;
+					});
+					
 	                // Check to see if the purchase form for this download is present on this page
 	                if( $( '#edd_purchase_' + id ).length ) {
 	                    $( '#edd_purchase_' + id + ' .edd_go_to_checkout' ).hide();
 	                    $( '#edd_purchase_' + id + ' a.edd-add-to-cart' ).show().removeAttr('data-edd-loading');
 	                }
 
-	                $('span.edd-cart-quantity').each(function() {
-	                    var quantity = parseInt( $(this).text(), 10 ) - 1;
-	                    if( quantity < 1 ) {
-	                    	quantity = 0;
-	                    }
-	                    $(this).text( quantity );
-	                    $('body').trigger('edd_quantity_updated', [ quantity ]);
-	                });
+	                $('span.edd-cart-quantity').text( response.cart_quantity );
+	                $('body').trigger('edd_quantity_updated', [ response.cart_quantity ]);
 
 	                $('.cart_item.edd_subtotal span').html( response.subtotal );
 
-	                if(!$('.edd-cart-item').length) {
+	                if( response.cart_quantity == 0 ) {
 	                    $('.cart_item.edd_subtotal,.edd-cart-number-of-items,.cart_item.edd_checkout').hide();
 	                    $('.edd-cart').append('<li class="cart_item empty">' + edd_scripts.empty_cart_message + '</li>');
 	                }
