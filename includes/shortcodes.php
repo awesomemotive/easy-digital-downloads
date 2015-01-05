@@ -476,17 +476,24 @@ function edd_downloads_query( $atts, $content = null ) {
 
 						if ( 'false' != $atts['thumbnails'] ) :
 							edd_get_template_part( 'shortcode', 'content-image' );
+							do_action( 'edd_download_after_thumbnail' );
 						endif;
 
 						edd_get_template_part( 'shortcode', 'content-title' );
+						do_action( 'edd_download_after_title' );
 
-						if ( $atts['excerpt'] == 'yes' && $atts['full_content'] != 'yes' )
+						if ( $atts['excerpt'] == 'yes' && $atts['full_content'] != 'yes' ) {
 							edd_get_template_part( 'shortcode', 'content-excerpt' );
-						else if ( $atts['full_content'] == 'yes' )
+							do_action( 'edd_download_after_content' );
+						} else if ( $atts['full_content'] == 'yes' ) {
 							edd_get_template_part( 'shortcode', 'content-full' );
+							do_action( 'edd_download_after_content' );
+						}
 
-						if ( $atts['price'] == 'yes' )
+						if ( $atts['price'] == 'yes' ) {
 							edd_get_template_part( 'shortcode', 'content-price' );
+							do_action( 'edd_download_after_price' );
+						}
 
 						if ( $atts['buy_button'] == 'yes' )
 							edd_get_template_part( 'shortcode', 'content-cart-button' );
