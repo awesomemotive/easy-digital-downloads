@@ -160,8 +160,10 @@ jQuery(document).ready(function ($) {
 	                 $('.cart_item.edd_subtotal span').html( response.subtotal );
 
 	                // Update the cart quantity
+	                var items_added = $( '.edd-cart-item-title', response.cart_item ).length;
+
 	                $('span.edd-cart-quantity').each(function() {
-	                    var quantity = parseInt($(this).text(), 10) + 1;
+	                    var quantity = parseInt($(this).text(), 10) + items_added;
 	                    $(this).text(quantity);
 	                    $('body').trigger('edd_quantity_updated', [ quantity ]);
 	                });
