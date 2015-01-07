@@ -40,7 +40,7 @@ class EDD_HTML_Elements {
 			'selected'    => 0,
 			'chosen'      => false,
 			'number'      => 30,
-			'bundles'     => true
+			'bundles'     => true,
 			'placeholder' => sprintf( __( 'Select a %s', 'edd' ), edd_get_label_singular() )
 		);
 
