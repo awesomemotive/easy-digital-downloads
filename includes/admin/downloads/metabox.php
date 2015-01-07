@@ -355,13 +355,13 @@ function edd_render_settings_meta_box() {
  * @param $post_id
  */
 function edd_render_price_field( $post_id ) {
-	$price 				= edd_get_download_price( $post_id );
-	$variable_pricing 	= edd_has_variable_prices( $post_id );
-	$prices 			= edd_get_variable_prices( $post_id );
+	$price              = edd_get_download_price( $post_id );
+	$variable_pricing   = edd_has_variable_prices( $post_id );
+	$prices             = edd_get_variable_prices( $post_id );
 	$single_option_mode = edd_single_price_option_mode( $post_id );
 
-	$price_display    	= $variable_pricing ? ' style="display:none;"' : '';
-	$variable_display 	= $variable_pricing ? '' : ' style="display:none;"';
+	$price_display      = $variable_pricing ? ' style="display:none;"' : '';
+	$variable_display   = $variable_pricing ? '' : ' style="display:none;"';
 	$currency_position  = edd_get_option( 'currency_position', 'before' );
 ?>
 	<p>
