@@ -39,9 +39,9 @@ function edd_get_download_by( $field = '', $value = '' ) {
 
 		case 'slug':
 		case 'name':
-			$download = query_posts( array(
+			$download = get_posts( array(
 				'post_type'      => 'download',
-				'name'           => sanitize_title_for_query( $value ),
+				'name'           => $value,
 				'posts_per_page' => 1,
 				'post_status'    => 'any'
 			) );
@@ -53,7 +53,7 @@ function edd_get_download_by( $field = '', $value = '' ) {
 			break;
 
 		case 'sku':
-			$download = query_posts( array(
+			$download = get_posts( array(
 				'post_type'      => 'download',
 				'meta_key'       => 'edd_sku',
 				'meta_value'     => $value,
