@@ -1292,8 +1292,7 @@ add_action( 'edd_post_remove_from_cart', 'edd_maybe_remove_cart_discount' );
  */
 function edd_multiple_discounts_allowed() {
 	$ret = edd_get_option( 'allow_multiple_discounts', false );
-
-	return apply_filters( 'edd_multiple_discounts_allowed', $ret );
+	return (bool) apply_filters( 'edd_multiple_discounts_allowed', $ret );
 }
 
 /**
