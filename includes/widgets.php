@@ -48,8 +48,6 @@ class edd_cart_widget extends WP_Widget {
 
 		$title = apply_filters( 'widget_title', $instance[ 'title' ], $instance, $args['id'] );
 
-		global $post, $edd_options;
-
 		echo $args['before_widget'];
 
 		if ( $title ) {
@@ -124,8 +122,6 @@ class edd_categories_tags_widget extends WP_Widget {
 		$tax        = $instance['taxonomy'];
 		$count      = isset( $instance['count'] ) && $instance['count'] == 'on' ? 1 : 0;
 		$hide_empty = isset( $instance['hide_empty'] ) && $instance['hide_empty'] == 'on' ? 1 : 0;
-
-		global $post, $edd_options;
 
 		echo $args['before_widget'];
 		
