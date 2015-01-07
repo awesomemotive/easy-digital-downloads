@@ -20,8 +20,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_is_test_mode() {
 	$ret = edd_get_option( 'test_mode', false );
-	$ret = ! empty( $ret );
-
 	return (bool) apply_filters( 'edd_is_test_mode', $ret );
 }
 
@@ -33,8 +31,6 @@ function edd_is_test_mode() {
  */
 function edd_no_guest_checkout() {
 	$ret = edd_get_option( 'logged_in_only', false );
-	$ret = ! empty( $ret );
-
 	return (bool) apply_filters( 'edd_no_guest_checkout', $ret );
 }
 
@@ -46,8 +42,6 @@ function edd_no_guest_checkout() {
  */
 function edd_logged_in_only() {
 	$ret = edd_get_option( 'logged_in_only', false );
-	$ret = ! empty( $ret );
-
 	return (bool) apply_filters( 'edd_logged_in_only', $ret );
 }
 
@@ -58,9 +52,7 @@ function edd_logged_in_only() {
  * @return bool $ret True is redirect is enabled, false otherwise
  */
 function edd_straight_to_checkout() {
-	$ret = edd_get_option( 'redirect_on_add', false );
-	$ret = isset( $ret );
-	
+	$ret = edd_get_option( 'redirect_on_add', false );	
 	return (bool) apply_filters( 'edd_straight_to_checkout', $ret );
 }
 
@@ -73,8 +65,6 @@ function edd_straight_to_checkout() {
  */
 function edd_no_redownload() {
 	$ret = edd_get_option( 'disable_redownload', false );
-	$ret = isset( $ret );
-
 	return (bool) apply_filters( 'edd_no_redownload', $ret );
 }
 
