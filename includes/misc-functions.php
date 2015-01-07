@@ -611,8 +611,6 @@ add_action( 'edd_cleanup_file_symlinks', 'edd_cleanup_file_symlinks' );
  */
 function edd_use_skus() {
 	$ret = edd_get_option( 'enable_skus', false );
-	$ret = isset( $ret );
-
 	return (bool) apply_filters( 'edd_use_skus', $ret );
 }
 
