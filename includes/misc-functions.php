@@ -614,8 +614,6 @@ function edd_use_skus() {
 	return (bool) apply_filters( 'edd_use_skus', $ret );
 }
 
-
-
 /**
  * Retrieve timezone
  *
