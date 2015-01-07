@@ -217,7 +217,7 @@ add_action( 'init', 'edd_process_download', 100 );
  */
 function edd_deliver_download( $file = '' ) {
 	$symlink = edd_get_option( 'symlink_file_downloads', false );
-	$symlink = apply_filters( 'edd_symlink_file_downloads', isset( $symlink ) );
+	$symlink = (bool) apply_filters( 'edd_symlink_file_downloads', $symlink );
 
 	/*
 	 * If symlinks are enabled, a link to the file will be created
