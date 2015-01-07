@@ -350,6 +350,11 @@ function edd_setup_email_tags() {
 			'description' => __( 'Adds a list of any discount codes applied to this purchase', 'edd' ),
 			'function'    => 'edd_email_tag_discount_codes'
 		),
+		array(
+			'tag'         => 'ip_address',
+			'description' => __( 'The buyer\'s IP Address', 'edd' ),
+			'function'    => 'edd_email_tag_ip_address'
+		)
 	);
 
 	// Apply edd_email_tags filter
@@ -834,4 +839,16 @@ function edd_email_tag_discount_codes( $payment_id ) {
 	}
 
 	return $discount_codes;
+}
+
+/**
+ * Email template tag: IP address
+ * IP address of the customer
+ *
+ * @param int $payment_id
+ *
+ * @return string IP address
+ */
+function edd_email_tag_ip_address( $payment_id ) {
+	return edd_get_payment_user_ip( $payment_id );
 }
