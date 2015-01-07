@@ -71,7 +71,7 @@ function edd_show_purchase_form() {
 
 		do_action( 'edd_purchase_form_before_register_login' );
 
-		$show_register_form = edd_get_option( 'show_register_form', false ) ;
+		$show_register_form = edd_get_option( 'show_register_form', 'none' ) ;
 		if( ( $show_register_form === 'registration' || ( $show_register_form === 'both' && ! isset( $_GET['login'] ) ) ) && ! is_user_logged_in() ) : ?>
 			<div id="edd_checkout_login_register">
 				<?php do_action( 'edd_purchase_form_register_fields' ); ?>
