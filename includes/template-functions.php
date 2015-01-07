@@ -223,6 +223,7 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 
 	$prices = apply_filters( 'edd_purchase_variable_prices', edd_get_variable_prices( $download_id ), $download_id );
 	$type   = edd_single_price_option_mode( $download_id ) ? 'checkbox' : 'radio';
+	$mode = edd_single_price_option_mode( $download_id ) ? 'multi' : 'single';
 	$schema = edd_add_schema_microdata() ? ' itemprop="offers" itemscope itemtype="http://schema.org/Offer"' : '';
 
 	do_action( 'edd_before_price_options', $download_id ); ?>
