@@ -846,7 +846,7 @@ function edd_email_tag_discount_codes( $payment_id ) {
  * IP address of the customer
  *
  * @param int $payment_id
- *
+ * @since 2.3
  * @return string IP address
  */
 function edd_email_tag_ip_address( $payment_id ) {
