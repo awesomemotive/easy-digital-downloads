@@ -115,7 +115,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 	}
 
-	if ( edd_item_in_cart( $download->ID ) && ! $variable_pricing ) {
+	if ( edd_item_in_cart( $download->ID ) && ( ! $variable_pricing || ! $download->is_single_price_mode() ) ) {
 		$button_display   = 'style="display:none;"';
 		$checkout_display = '';
 	} else {
@@ -221,6 +221,10 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 		return;
 	}
 
+	if ( edd_item_in_cart( $download_id ) && ! edd_single_price_option_mode( $download_id ) ) {
+		return;
+	}
+
 	$type = edd_single_price_option_mode( $download_id ) ? 'checkbox' : 'radio';
 	$mode = edd_single_price_option_mode( $download_id ) ? 'multi' : 'single';
 
@@ -259,19 +263,23 @@ add_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing', 10, 2 );
  */
 function edd_download_purchase_form_quantity_field( $download_id = 0, $args = array() ) {
 
-	if( ! edd_item_quantities_enabled() ) {
+	if ( ! edd_item_quantities_enabled() ) {
 		return;
 	}
 
-	if( edd_item_in_cart( $download_id ) && ! edd_has_variable_prices( $download_id ) ) { 
+	if ( edd_item_in_cart( $download_id ) && ! edd_has_variable_prices( $download_id ) ) {
 		return;
 	}
 
-	if( edd_single_price_option_mode( $download_id ) && edd_has_variable_prices( $download_id ) && ! edd_item_in_cart( $download_id ) ) {
+	if ( edd_single_price_option_mode( $download_id ) && edd_has_variable_prices( $download_id ) && ! edd_item_in_cart( $download_id ) ) {
 		return;
 	}
 
-	if( edd_single_price_option_mode( $download_id ) && edd_has_variable_prices( $download_id ) && edd_item_in_cart( $download_id ) ) {
+	if ( edd_single_price_option_mode( $download_id ) && edd_has_variable_prices( $download_id ) && edd_item_in_cart( $download_id ) ) {
+		return;
+	}
+
+	if ( ! edd_single_price_option_mode( $download_id ) && edd_has_variable_prices( $download_id ) && edd_item_in_cart( $download_id ) ) {
 		return;
 	}
 
