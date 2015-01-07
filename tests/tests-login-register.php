@@ -7,9 +7,6 @@
 class Tests_Login_Register extends WP_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
-
-		$this->_user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
-		wp_set_current_user( $this->_user_id );
 	}
 
 	/**
