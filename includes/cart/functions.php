@@ -933,8 +933,7 @@ function edd_get_purchase_session() {
  */
 function edd_is_cart_saving_disabled() {
 	$ret = edd_get_option( 'enable_cart_saving', false );
-
-	return apply_filters( 'edd_cart_saving_disabled', ! isset( $ret ) );
+	return apply_filters( 'edd_cart_saving_disabled', ! $ret );
 }
 
 /**
