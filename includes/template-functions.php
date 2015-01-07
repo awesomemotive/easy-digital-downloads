@@ -221,6 +221,10 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 		return;
 	}
 
+	if ( edd_item_in_cart( $download_id ) && ! edd_single_price_option_mode( $download_id ) ) {
+		return;
+	}
+
 	$type = edd_single_price_option_mode( $download_id ) ? 'checkbox' : 'radio';
 	$mode = edd_single_price_option_mode( $download_id ) ? 'multi' : 'single';
 
