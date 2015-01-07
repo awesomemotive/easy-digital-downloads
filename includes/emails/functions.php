@@ -166,10 +166,8 @@ function edd_get_admin_notice_emails() {
  * @return mixed
  */
 function edd_admin_notices_disabled( $payment_id = 0 ) {
-	$ret = edd_get_option( 'disable_admin_notices', false );
-	$ret = isset( $ret );
-	
-	return apply_filters( 'edd_admin_notices_disabled', $ret, $payment_id );
+	$ret = edd_get_option( 'disable_admin_notices', false );	
+	return (bool) apply_filters( 'edd_admin_notices_disabled', $ret, $payment_id );
 }
 
 /**
