@@ -816,9 +816,8 @@ function edd_checkout_hidden_fields() {
  * @return string $content Filtered content
  */
 function edd_filter_success_page_content( $content ) {
-	$success_page = edd_get_option( 'success_page', false );
 
-	if ( isset( $_GET['payment-confirmation'] ) && is_page( $success_page ) ) {
+	if ( isset( $_GET['payment-confirmation'] ) && edd_is_success_page() ) {
 		if ( has_filter( 'edd_payment_confirm_' . $_GET['payment-confirmation'] ) ) {
 			$content = apply_filters( 'edd_payment_confirm_' . $_GET['payment-confirmation'], $content );
 		}
