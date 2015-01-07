@@ -343,7 +343,8 @@ function edd_downloads_query( $atts, $content = null ) {
 			$query['tax_query'][] = array(
 				'taxonomy' => 'download_tag',
 				'field'    => 'term_id',
-				'terms'    => $_tax_tags
+				'terms'    => $_tax_tags,
+				'operator' => 'AND' === $atts['relation'] ? 'AND' : 'IN'
 			);
 		}
 
@@ -370,7 +371,8 @@ function edd_downloads_query( $atts, $content = null ) {
 			$query['tax_query'][] = array(
 				'taxonomy' => 'download_category',
 				'field'    => 'term_id',
-				'terms'    => $_tax_cats
+				'terms'    => $_tax_cats,
+				'operator' => 'AND' === $atts['relation'] ? 'AND' : 'IN'
 			);
 		}
 
@@ -723,6 +725,12 @@ function edd_process_profile_editor_updates( $data ) {
 
 	// Make sure the new email doesn't belong to another user
 	if( $email != $old_user_data->user_email ) {
+		// Make sure the new email is valid
+		if( ! is_email( $email ) ) {
+			edd_set_error( 'email_invalid', __( 'The email you entered is invalid. Please enter a valid email.', 'edd' ) );
+		}
+
+		// Make sure the new email doesn't belong to another user
 		if( email_exists( $email ) ) {
 			edd_set_error( 'email_exists', __( 'The email you entered belongs to another user. Please use another.', 'edd' ) );
 		}
