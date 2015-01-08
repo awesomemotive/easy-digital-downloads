@@ -299,10 +299,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 					$amount     = 0;
 					if ( is_array( $cart_items ) && is_array( $user_info ) ) {
 						foreach ( $cart_items as $item ) {
-							$price_override = isset( $item['price'] ) ? $item['price'] : null;
-							if ( isset( $item['id'] ) && $item['id'] == $log->post_parent ) {
-								$amount = edd_get_download_final_price( $item['id'], $user_info, $price_override );
-							}
+							$amount = $item['item_price'];
 						}
 
 						$logs_data[] = array(
