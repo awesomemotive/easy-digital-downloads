@@ -422,7 +422,7 @@ function edd_email_tag_download_list( $payment_id ) {
 			if ( ! empty( $files ) ) {
 
 				foreach ( $files as $filekey => $file ) {
-                    
+
 					if ( $show_links ) {
 						$download_list .= '<div>';
 							$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $item['id'], $price_id );
@@ -825,8 +825,8 @@ function edd_email_tag_receipt_link( $payment_id ) {
  * Email template tag: discount_codes
  * Adds a list of any discount codes applied to this purchase
  *
+ * @since  2.0
  * @param $int payment_id
- * @since 2.0
  * @return string $discount_codes
  */
 function edd_email_tag_discount_codes( $payment_id ) {
@@ -845,8 +845,8 @@ function edd_email_tag_discount_codes( $payment_id ) {
  * Email template tag: IP address
  * IP address of the customer
  *
+ * @since  2.3
  * @param int $payment_id
- * @since 2.3
  * @return string IP address
  */
 function edd_email_tag_ip_address( $payment_id ) {
