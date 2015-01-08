@@ -218,6 +218,8 @@ class EDD_HTML_Elements {
 	 * @since 1.5.2
 	 * @param string $name Name attribute of the dropdown
 	 * @param int    $selected Year to select automatically
+	 * @param int    $years_before Number of years before the current year the dropdown should start with
+	 * @param int    $years_after Number of years after the current year the dropdown should finish at
 	 * @return string $output Year dropdown
 	 */
 	public function year_dropdown( $name = 'year', $selected = 0, $years_before = 5, $years_after = 0 ) {
