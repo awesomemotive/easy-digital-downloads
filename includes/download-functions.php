@@ -638,9 +638,9 @@ function edd_increase_purchase_count( $download_id = 0, $quantity = 1 ) {
  * @param int $download_id Download ID
  * @return bool|int
  */
-function edd_decrease_purchase_count( $download_id = 0 ) {
+function edd_decrease_purchase_count( $download_id = 0, $quantity = 1 ) {
 	$download = new EDD_Download( $download_id );
-	return $download->decrease_sales();
+	return $download->decrease_sales( $quantity );
 }
 
 /**
