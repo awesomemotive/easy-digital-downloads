@@ -226,8 +226,8 @@ class EDD_HTML_Elements {
 		$current     = date( 'Y' );
 		$start_year  = $current - absint( $years_before );
 		$end_year    = $current + absint( $years_after );
-		$selected = empty( $selected ) ? date( 'Y' ) : $selected;
-		$options  = array();
+		$selected    = empty( $selected ) ? date( 'Y' ) : $selected;
+		$options     = array();
 
 		while ( $start_year <= $end_year ) {
 			$options[ absint( $start_year ) ] = $start_year;
