@@ -79,7 +79,7 @@ function edd_get_payment_by( $field = '', $value = '' ) {
 			}
 
 			break;
-			
+
 		case 'payment_number':
 			$payment = edd_get_payments( array(
 				'meta_key'       => '_edd_payment_number',
@@ -263,12 +263,12 @@ function edd_update_payment_status( $payment_id, $new_status = 'publish' ) {
  */
 function edd_delete_purchase( $payment_id = 0 ) {
 	global $edd_logs;
-	
+
 	$post = get_post( $payment_id );
 
 	if( !$post )
 		return;
-		
+
 	$downloads = edd_get_payment_meta_downloads( $payment_id );
 
 	if ( is_array( $downloads ) ) {
@@ -293,7 +293,7 @@ function edd_delete_purchase( $payment_id = 0 ) {
 
 			// Decrement the stats for the customer
 			EDD()->customers->decrement_stats( $customer_id, $amount );
-	
+
 		}
 	}
 
@@ -344,11 +344,11 @@ function edd_undo_purchase( $download_id, $payment_id ) {
 
 		foreach ( $cart_details as $item ) {
 
+			// get the item's price
+			$amount = isset( $item['price'] ) ? $item['price'] : false;
+
 			// Decrease earnings/sales and fire action once per quantity number
 			for( $i = 0; $i < $item['quantity']; $i++ ) {
-
-				// get the item's price
- 				$amount = isset( $item['price'] ) ? $item['price'] : false;
 
  				// variable priced downloads
 				if ( edd_has_variable_prices( $download_id ) ) {
@@ -361,12 +361,13 @@ function edd_undo_purchase( $download_id, $payment_id ) {
  					$amount = edd_get_download_final_price( $download_id, $user_info, $amount );
  				}
 
-				// decrease earnings
-				edd_decrease_earnings( $download_id, $amount );
-
-				// decrease purchase count
-				edd_decrease_purchase_count( $download_id );
 			}
+
+			// decrease earnings
+			edd_decrease_earnings( $download_id, $amount );
+
+			// decrease purchase count
+			edd_decrease_purchase_count( $download_id, $item['quantity'] );
 
 		}
 

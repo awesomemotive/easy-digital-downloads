@@ -499,7 +499,7 @@ class EDD_Download {
 	public function increase_sales( $quantity = 1 ) {
 
 		$sales = edd_get_download_sales_stats( $this->ID );
-		$sales = $sales + $quantity;
+		$sales = $sales + absint( $quantity );
 
 		if ( update_post_meta( $this->ID, '_edd_download_sales', $sales ) ) {
 			$this->sales = $sales;
@@ -513,13 +513,19 @@ class EDD_Download {
 	 * Decrement the sale count by one
 	 *
 	 * @since 2.2
+	 * @param int $quantity The quantity to decrease by
 	 * @return int|false
 	 */
-	public function decrease_sales() {
+	public function decrease_sales( $quantity = 1 ) {
 
 		$sales = edd_get_download_sales_stats( $this->ID );
-		if ( $sales > 0 ) // Only decrease if not already zero
-			$sales = $sales - 1;
+
+		// Only decrease if not already zero
+		if ( $sales > 0 ) {
+			$sales = $sales - absint( $quantity );
+		}
+
+		$sales = absint( $sales ); // Sales should never drop below 0
 
 		if ( update_post_meta( $this->ID, '_edd_download_sales', $sales ) ) {
 			$this->sales = $sales;
