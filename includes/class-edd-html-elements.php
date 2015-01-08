@@ -220,15 +220,16 @@ class EDD_HTML_Elements {
 	 * @param int    $selected Year to select automatically
 	 * @return string $output Year dropdown
 	 */
-	public function year_dropdown( $name = 'year', $selected = 0 ) {
-		$current  = date( 'Y' );
-		$year     = $current - 5;
+	public function year_dropdown( $name = 'year', $selected = 0, $years_before = 5, $years_after = 0 ) {
+		$current     = date( 'Y' );
+		$start_year  = $current - absint( $years_before );
+		$end_year    = $current + absint( $years_after );
 		$selected = empty( $selected ) ? date( 'Y' ) : $selected;
 		$options  = array();
 
-		while ( $year <= $current ) {
-			$options[ absint( $year ) ] = $year;
-			$year++;
+		while ( $start_year <= $end_year ) {
+			$options[ absint( $start_year ) ] = $start_year;
+			$start_year++;
 		}
 
 		$output = $this->select( array(
