@@ -493,6 +493,7 @@ class EDD_Download {
 	 * Increment the sale count by one
 	 *
 	 * @since 2.2
+	 * @param int $quantity The quantity to increase the sales by
 	 * @return int|false
 	 */
 	public function increase_sales( $quantity = 1 ) {
