@@ -133,6 +133,11 @@ function edd_download_meta_box_save( $post_id, $post ) {
 				}
 			}
 
+		} elseif ( '_edd_default_price_id' == $field ) {
+
+			$new_default_price_id = is_numeric( $_POST[$field] ) ? (int)$_POST[$field] : 1;
+			update_post_meta( $post_id, $field, $new_default_price_id );
+
 		} else {
 
 			if ( ! empty( $_POST[ $field ] ) ) {
@@ -475,7 +480,6 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 	$args = wp_parse_args( $args, $defaults );
 
 	$default_price_id = edd_get_default_variable_price( $post_id );
-	$default_price_id = $default_price_id ? edd_get_default_variable_price( $post_id ) : 1;
 ?>
 	<td>
 		<span class="edd_draghandle"></span>
