@@ -495,10 +495,10 @@ class EDD_Download {
 	 * @since 2.2
 	 * @return int|false
 	 */
-	public function increase_sales() {
+	public function increase_sales( $quantity = 1 ) {
 
 		$sales = edd_get_download_sales_stats( $this->ID );
-		$sales = $sales + 1;
+		$sales = $sales + $quantity;
 
 		if ( update_post_meta( $this->ID, '_edd_download_sales', $sales ) ) {
 			$this->sales = $sales;
