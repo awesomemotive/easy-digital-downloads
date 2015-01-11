@@ -10,8 +10,8 @@ class Tests_Login_Register extends WP_UnitTestCase {
 	}
 
 	/**
-     * Test that the login form returns the expected string.
-     */
+	 * Test that the login form returns the expected string.
+	 */
 	public function test_login_form() {
 		$this->assertContains( '<span><legend>Log into Your Account</legend></span>', edd_login_form() );
 	}
@@ -80,10 +80,10 @@ class Tests_Login_Register extends WP_UnitTestCase {
 	}
 
 	/**
-     * Test that the edd_log_user_in() function successfully logs the user in.
+	 * Test that the edd_log_user_in() function successfully logs the user in.
 	 *
 	 * @since 2.2.3
-     */
+	 */
 	public function test_log_user_in_return() {
 
 		$this->assertNull( edd_log_user_in( 0, '', '' ) );
@@ -91,10 +91,10 @@ class Tests_Login_Register extends WP_UnitTestCase {
 	}
 
 	/**
-     * Test that the edd_log_user_in() function successfully logs the user in.
+	 * Test that the edd_log_user_in() function successfully logs the user in.
 	 *
 	 * @since 2.2.3
-     */
+	 */
 	public function test_log_user_in() {
 		$this->markTestIncomplete( 'Causes headers already sent errors');
 		/*
