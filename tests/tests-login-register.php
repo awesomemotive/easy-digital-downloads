@@ -29,6 +29,7 @@ class Tests_Login_Register extends WP_UnitTestCase {
 	 * @since 2.2.3
 	 */
 	public function test_process_login_form_incorrect_username() {
+
 		edd_process_login_form( array(
 			'edd_login_nonce' 	=> wp_create_nonce( 'edd-login-nonce' ),
 			'edd_user_login' 	=> 'wrong_username',
@@ -38,6 +39,7 @@ class Tests_Login_Register extends WP_UnitTestCase {
 
 		// Clear errors for other test
 		edd_clear_errors();
+
 	}
 
 	/**
@@ -46,6 +48,7 @@ class Tests_Login_Register extends WP_UnitTestCase {
 	 * @since 2.2.3
 	 */
 	public function test_process_login_form_correct_username_invalid_pass() {
+
 		edd_process_login_form( array(
 			'edd_login_nonce' 	=> wp_create_nonce( 'edd-login-nonce' ),
 			'edd_user_login' 	=> 'admin@example.org',
@@ -56,6 +59,7 @@ class Tests_Login_Register extends WP_UnitTestCase {
 
 		// Clear errors for other test
 		edd_clear_errors();
+
 	}
 
 	/**
@@ -85,9 +89,7 @@ class Tests_Login_Register extends WP_UnitTestCase {
 	 * @since 2.2.3
 	 */
 	public function test_log_user_in_return() {
-
 		$this->assertNull( edd_log_user_in( 0, '', '' ) );
-
 	}
 
 	/**
@@ -120,6 +122,7 @@ class Tests_Login_Register extends WP_UnitTestCase {
 
 		// Reset to origin
 		$current_user = $origin_user;
+
 	}
 
 	/**
@@ -128,10 +131,12 @@ class Tests_Login_Register extends WP_UnitTestCase {
 	 * @since 2.2.3
 	 */
 	public function test_process_register_form_return_submit() {
+
 		$_POST['edd_register_submit'] = '';
 		$this->assertNull( edd_process_register_form( array(
 			'edd_register_submit' 	=> '',
 		) ) );
+
 	}
 
 	/**
@@ -155,6 +160,7 @@ class Tests_Login_Register extends WP_UnitTestCase {
 
 		// Clear errors for other test
 		edd_clear_errors();
+
 	}
 
 	/**
