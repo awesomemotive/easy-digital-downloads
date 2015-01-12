@@ -490,74 +490,74 @@ class EDD_API {
 			$startdate          = strtotime( $args['startdate'] );
 			$enddate            = strtotime( $args['enddate'] );
 			$dates['day_start'] = date( 'd', $startdate );
-			$dates['day_end'] 	= date( 'd', $enddate );
-			$dates['m_start'] 	= date( 'n', $startdate );
-			$dates['m_end'] 	= date( 'n', $enddate );
-			$dates['year'] 		= date( 'Y', $startdate );
+			$dates['day_end']   = date( 'd', $enddate );
+			$dates['m_start']   = date( 'n', $startdate );
+			$dates['m_end']     = date( 'n', $enddate );
+			$dates['year']      = date( 'Y', $startdate );
 			$dates['year_end'] 	= date( 'Y', $enddate );
 		} else {
 			// Modify dates based on predefined ranges
 			switch ( $args['date'] ) :
 
 				case 'this_month' :
-					$dates['day'] 	    = null;
-					$dates['m_start'] 	= date( 'n', $current_time );
-					$dates['m_end']		= date( 'n', $current_time );
-					$dates['year']		= date( 'Y', $current_time );
+					$dates['day']       = null;
+					$dates['m_start']   = date( 'n', $current_time );
+					$dates['m_end']     = date( 'n', $current_time );
+					$dates['year']      = date( 'Y', $current_time );
 				break;
 
 				case 'last_month' :
-					$dates['day'] 	  = null;
+					$dates['day']     = null;
 					$dates['m_start'] = date( 'n', $current_time ) == 1 ? 12 : date( 'n', $current_time ) - 1;
-					$dates['m_end']	  = $dates['m_start'];
+					$dates['m_end']   = $dates['m_start'];
 					$dates['year']    = date( 'n', $current_time ) == 1 ? date( 'Y', $current_time ) - 1 : date( 'Y', $current_time );
 				break;
 
 				case 'today' :
-					$dates['day']		= date( 'd', $current_time );
-					$dates['m_start'] 	= date( 'n', $current_time );
-					$dates['m_end']		= date( 'n', $current_time );
-					$dates['year']		= date( 'Y', $current_time );
+					$dates['day']       = date( 'd', $current_time );
+					$dates['m_start']   = date( 'n', $current_time );
+					$dates['m_end']     = date( 'n', $current_time );
+					$dates['year']      = date( 'Y', $current_time );
 				break;
 
 				case 'yesterday' :
 					$month              = date( 'n', $current_time ) == 1 && date( 'd', $current_time ) == 1 ? 12 : date( 'n', $current_time );
 					$days_in_month      = cal_days_in_month( CAL_GREGORIAN, $month, date( 'Y', $current_time ) );
 					$yesterday          = date( 'd', $current_time ) == 1 ? $days_in_month : date( 'd', $current_time ) - 1;
-					$dates['day']		= $yesterday;
-					$dates['m_start'] 	= $month;
-					$dates['m_end'] 	= $month;
-					$dates['year']		= $month == 1 && date( 'd', $current_time ) == 1 ? date( 'Y', $current_time ) - 1 : date( 'Y', $current_time );
+					$dates['day']       = $yesterday;
+					$dates['m_start']   = $month;
+					$dates['m_end']     = $month;
+					$dates['year']      = date( 'n', $current_time ) == 1 && date( 'd', $current_time ) == 1 ? date( 'Y', $current_time ) - 1 : date( 'Y', $current_time );
 				break;
 
 				case 'this_quarter' :
 					$month_now = date( 'n', $current_time );
 
-					$dates['day'] 	        = null;
+					$dates['day']           = null;
 
 					if ( $month_now <= 3 ) {
 
-						$dates['m_start'] 	= 1;
-						$dates['m_end']		= 3;
-						$dates['year']		= date( 'Y', $current_time );
+						$dates['m_start']   = 1;
+						$dates['m_end']     = 3;
+						$dates['year']      = date( 'Y', $current_time );
 
 					} else if ( $month_now <= 6 ) {
 
-						$dates['m_start'] 	= 4;
-						$dates['m_end']		= 6;
-						$dates['year']		= date( 'Y', $current_time );
+						$dates['m_start']   = 4;
+						$dates['m_end']     = 6;
+						$dates['year']      = date( 'Y', $current_time );
 
 					} else if ( $month_now <= 9 ) {
 
-						$dates['m_start'] 	= 7;
-						$dates['m_end']		= 9;
-						$dates['year']		= date( 'Y', $current_time );
+						$dates['m_start']   = 7;
+						$dates['m_end']     = 9;
+						$dates['year']      = date( 'Y', $current_time );
 
 					} else {
 
-						$dates['m_start'] 	= 10;
-						$dates['m_end']		= 12;
-						$dates['year']		= date( 'Y', $current_time );
+						$dates['m_start']   = 10;
+						$dates['m_end']     = 12;
+						$dates['year']      = date( 'Y', $current_time );
 
 					}
 				break;
@@ -565,47 +565,47 @@ class EDD_API {
 				case 'last_quarter' :
 					$month_now = date( 'n', $current_time );
 
-					$dates['day'] 	        = null;
+					$dates['day']           = null;
 
 					if ( $month_now <= 3 ) {
 
-						$dates['m_start'] 	= 10;
-						$dates['m_end']		= 12;
-						$dates['year']		= date( 'Y', $current_time ) - 1; // Previous year
+						$dates['m_start']   = 10;
+						$dates['m_end']     = 12;
+						$dates['year']      = date( 'Y', $current_time ) - 1; // Previous year
 
 					} else if ( $month_now <= 6 ) {
 
-						$dates['m_start'] 	= 1;
-						$dates['m_end']		= 3;
-						$dates['year']		= date( 'Y', $current_time );
+						$dates['m_start']   = 1;
+						$dates['m_end']     = 3;
+						$dates['year']      = date( 'Y', $current_time );
 
 					} else if ( $month_now <= 9 ) {
 
-						$dates['m_start'] 	= 4;
-						$dates['m_end']		= 6;
-						$dates['year']		= date( 'Y', $current_time );
+						$dates['m_start']   = 4;
+						$dates['m_end']     = 6;
+						$dates['year']      = date( 'Y', $current_time );
 
 					} else {
 
-						$dates['m_start'] 	= 7;
-						$dates['m_end']		= 9;
-						$dates['year']		= date( 'Y', $current_time );
+						$dates['m_start']   = 7;
+						$dates['m_end']     = 9;
+						$dates['year']      = date( 'Y', $current_time );
 
 					}
 				break;
 
 				case 'this_year' :
-					$dates['day'] 	    = null;
-					$dates['m_start'] 	= null;
-					$dates['m_end']		= null;
-					$dates['year']		= date( 'Y', $current_time );
+					$dates['day']       = null;
+					$dates['m_start']   = null;
+					$dates['m_end']     = null;
+					$dates['year']      = date( 'Y', $current_time );
 				break;
 
 				case 'last_year' :
-					$dates['day'] 	    = null;
-					$dates['m_start'] 	= null;
-					$dates['m_end']		= null;
-					$dates['year']		= date( 'Y', $current_time ) - 1;
+					$dates['day']       = null;
+					$dates['m_start']   = null;
+					$dates['m_end']     = null;
+					$dates['year']      = date( 'Y', $current_time ) - 1;
 				break;
 
 			endswitch;

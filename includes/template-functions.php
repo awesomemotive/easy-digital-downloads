@@ -221,8 +221,10 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 		return;
 	}
 
-	$type = edd_single_price_option_mode( $download_id ) ? 'checkbox' : 'radio';
+	$prices = apply_filters( 'edd_purchase_variable_prices', edd_get_variable_prices( $download_id ), $download_id );
+	$type   = edd_single_price_option_mode( $download_id ) ? 'checkbox' : 'radio';
 	$mode = edd_single_price_option_mode( $download_id ) ? 'multi' : 'single';
+	$schema = edd_add_schema_microdata() ? ' itemprop="offers" itemscope itemtype="http://schema.org/Offer"' : '';
 
 	do_action( 'edd_before_price_options', $download_id ); ?>
 	<div class="edd_price_options edd_<?php echo esc_attr( $mode ); ?>_mode">
@@ -231,7 +233,7 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 			if ( $prices ) :
 				$checked_key = isset( $_GET['price_option'] ) ? absint( $_GET['price_option'] ) : edd_get_default_variable_price( $download_id );
 				foreach ( $prices as $key => $price ) :
-					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . '" itemprop="offers" itemscope itemtype="http://schema.org/Offer">';
+					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . '"' . $schema . '>';
 						echo '<label for="'	. esc_attr( 'edd_price_option_' . $download_id . '_' . $key ) . '">';
 							echo '<input type="' . $type . '" ' . checked( apply_filters( 'edd_price_option_checked', $checked_key, $download_id, $key ), $key, false ) . ' name="edd_options[price_id][]" id="' . esc_attr( 'edd_price_option_' . $download_id . '_' . $key ) . '" class="' . esc_attr( 'edd_price_option_' . $download_id ) . '" value="' . esc_attr( $key ) . '"/>&nbsp;';
 							echo '<span class="edd_price_option_name" itemprop="description">' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price" itemprop="price">' . edd_currency_filter( edd_format_amount( $price[ 'amount' ] ) ) . '</span>';
@@ -263,7 +265,7 @@ function edd_download_purchase_form_quantity_field( $download_id = 0, $args = ar
 		return;
 	}
 
-	if( edd_item_in_cart( $download_id ) && ! edd_has_variable_prices( $download_id ) ) { 
+	if( edd_item_in_cart( $download_id ) && ! edd_has_variable_prices( $download_id ) ) {
 		return;
 	}
 
@@ -643,7 +645,7 @@ function edd_get_theme_template_dir_name() {
  */
 function edd_add_schema_microdata() {
 	// Don't modify anything until after wp_head() is called
-	$ret = did_action( 'wp_head' );
+	$ret = (bool)did_action( 'wp_head' );
 	return apply_filters( 'edd_add_schema_microdata', $ret );
 }
 
