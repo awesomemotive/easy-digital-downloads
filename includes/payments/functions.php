@@ -397,8 +397,9 @@ function edd_count_payments( $args = array() ) {
 
 	$args = wp_parse_args( $args, $defaults );
 
-	$join = '';
-	$where = "WHERE p.post_type = 'edd_payment'";
+	$select = "SELECT p.post_status,count( * ) AS num_posts";
+	$join   = '';
+	$where  = "WHERE p.post_type = 'edd_payment'";
 
 	// Count payments for a specific user
 	if( ! empty( $args['user'] ) ) {
@@ -441,6 +442,16 @@ function edd_count_payments( $args = array() ) {
 				AND m.meta_key = '_edd_payment_user_id'
 				AND m.meta_value = '{$args['s']}'";
 
+		} elseif ( '#' == substr( $args['s'], 0, 1 ) ) {
+
+			$search = str_replace( '#', '', $args['s'] );
+
+			$select = "SELECT p2.post_status,count( * ) AS num_posts ";
+			$join   = "LEFT JOIN wp_2_postmeta m ON m.meta_key = '_edd_log_payment_id' AND m.post_id = p.ID ";
+			$join  .= "INNER JOIN wp_2_posts p2 ON m.meta_value = p2.ID ";
+			$where  = "WHERE p.post_type = 'edd_log' ";
+			$where .= "AND p.post_parent = {$search} ";
+
 		} else {
 			$where .= "AND ((p.post_title LIKE '%{$args['s']}%') OR (p.post_content LIKE '%{$args['s']}%'))";
 		}
@@ -464,7 +475,7 @@ function edd_count_payments( $args = array() ) {
 
 	$cache_key = md5( implode( '|', $args ) . $where );
 
-	$query = "SELECT p.post_status,count( * ) AS num_posts
+	$query = "$select
 		FROM $wpdb->posts p
 		$join
 		$where
