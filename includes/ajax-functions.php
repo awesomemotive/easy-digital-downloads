@@ -185,9 +185,10 @@ function edd_ajax_add_to_cart() {
 		}
 
 		$return = array(
-			'subtotal'  => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
-			'total'     => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ), ENT_COMPAT, 'UTF-8' ),
-			'cart_item' => $items
+			'subtotal'      => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
+			'total'         => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ), ENT_COMPAT, 'UTF-8' ),
+			'cart_item'     => $items,
+			'cart_quantity' => html_entity_decode( edd_get_cart_quantity() )
 		);
 
 		echo json_encode( $return );
