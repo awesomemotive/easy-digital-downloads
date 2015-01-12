@@ -275,7 +275,7 @@ class EDD_Logging {
 	 * @return int Log count
 	 */
 	public function get_log_count( $object_id = 0, $type = null, $meta_query = null, $date_query = null ) {
-		
+
 		global $pagenow, $typenow;
 
 		$query_args = array(

@@ -479,13 +479,13 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			$args['end-date'] = urldecode( $_GET['end-date'] );
 		}
 
-		$payment_count        = edd_count_payments( $args );
-		$this->complete_count = $payment_count->publish;
-		$this->pending_count  = $payment_count->pending;
-		$this->refunded_count = $payment_count->refunded;
-		$this->failed_count   = $payment_count->failed;
-		$this->revoked_count  = $payment_count->revoked;
-		$this->abandoned_count= $payment_count->abandoned;
+		$payment_count         = edd_count_payments( $args );
+		$this->complete_count  = $payment_count->publish;
+		$this->pending_count   = $payment_count->pending;
+		$this->refunded_count  = $payment_count->refunded;
+		$this->failed_count    = $payment_count->failed;
+		$this->revoked_count   = $payment_count->revoked;
+		$this->abandoned_count = $payment_count->abandoned;
 
 		foreach( $payment_count as $count ) {
 			$this->total_count += $count;
@@ -502,14 +502,14 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	public function payments_data() {
 
 		$per_page       = $this->per_page;
-		$orderby 		= isset( $_GET['orderby'] )     ? urldecode( $_GET['orderby'] )              : 'ID';
-		$order 			= isset( $_GET['order'] )       ? $_GET['order']                             : 'DESC';
-		$user 			= isset( $_GET['user'] )        ? $_GET['user']                              : null;
-		$status 		= isset( $_GET['status'] )      ? $_GET['status']                            : 'any';
-		$meta_key		= isset( $_GET['meta_key'] )    ? $_GET['meta_key']                          : null;
-		$year 			= isset( $_GET['year'] )        ? $_GET['year']                              : null;
-		$month 			= isset( $_GET['m'] )           ? $_GET['m']                                 : null;
-		$day 			= isset( $_GET['day'] )         ? $_GET['day']                               : null;
+		$orderby        = isset( $_GET['orderby'] )     ? urldecode( $_GET['orderby'] )              : 'ID';
+		$order          = isset( $_GET['order'] )       ? $_GET['order']                             : 'DESC';
+		$user           = isset( $_GET['user'] )        ? $_GET['user']                              : null;
+		$status         = isset( $_GET['status'] )      ? $_GET['status']                            : 'any';
+		$meta_key       = isset( $_GET['meta_key'] )    ? $_GET['meta_key']                          : null;
+		$year           = isset( $_GET['year'] )        ? $_GET['year']                              : null;
+		$month          = isset( $_GET['m'] )           ? $_GET['m']                                 : null;
+		$day            = isset( $_GET['day'] )         ? $_GET['day']                               : null;
 		$search         = isset( $_GET['s'] )           ? sanitize_text_field( $_GET['s'] )          : null;
 		$start_date     = isset( $_GET['start-date'] )  ? sanitize_text_field( $_GET['start-date'] ) : null;
 		$end_date       = isset( $_GET['end-date'] )    ? sanitize_text_field( $_GET['end-date'] )   : $start_date;
@@ -523,9 +523,9 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			'user'       => $user,
 			'status'     => $status,
 			'meta_key'   => $meta_key,
-			'year'	     => $year,
+			'year'       => $year,
 			'month'      => $month,
-			'day' 	     => $day,
+			'day'        => $day,
 			's'          => $search,
 			'start_date' => $start_date,
 			'end_date'   => $end_date,
@@ -599,9 +599,9 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$this->items = $data;
 
 		$this->set_pagination_args( array(
-				'total_items' => $total_items,                  	// WE have to calculate the total number of items
-				'per_page'    => $this->per_page,                     	// WE have to determine how many items to show on a page
-				'total_pages' => ceil( $total_items / $this->per_page )   // WE have to calculate the total number of pages
+				'total_items' => $total_items,                          // WE have to calculate the total number of items
+				'per_page'    => $this->per_page,                       // WE have to determine how many items to show on a page
+				'total_pages' => ceil( $total_items / $this->per_page ) // WE have to calculate the total number of pages
 			)
 		);
 	}

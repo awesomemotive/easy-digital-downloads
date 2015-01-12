@@ -339,14 +339,14 @@ class EDD_Payments_Query extends EDD_Stats {
 		if( ! isset( $this->args[ 's' ] ) ) {
 			return;
 		}
-		
+
 		$search = trim( $this->args[ 's' ] );
 
 		if( empty( $search ) ) {
 			return;
 		}
 
-        $is_email = is_email( $search ) || strpos( $search, '@' ) !== false;
+		$is_email = is_email( $search ) || strpos( $search, '@' ) !== false;
 		$is_user  = strpos( $search, strtolower( 'user:' ) ) !== false;
 
 		if ( ! empty( $this->args[ 'search_in_notes' ] ) ) {
@@ -399,11 +399,11 @@ class EDD_Payments_Query extends EDD_Stats {
 
 			$this->__unset( 's' );
 
-		} elseif ( 
-			edd_get_option( 'enable_sequential' ) && 
+		} elseif (
+			edd_get_option( 'enable_sequential' ) &&
 			(
 				false !== strpos( $search, edd_get_option( 'sequential_prefix' ) ) ||
-				false !== strpos( $search, edd_get_option( 'sequential_postfix' ) ) 
+				false !== strpos( $search, edd_get_option( 'sequential_postfix' ) )
 			)
 		) {
 
@@ -421,7 +421,7 @@ class EDD_Payments_Query extends EDD_Stats {
 			$post = get_post( $search );
 
 			if( is_object( $post ) && $post->post_type == 'edd_payment' ) {
-				
+
 				$arr   = array();
 				$arr[] = $search;
 				$this->__set( 'post__in', $arr );

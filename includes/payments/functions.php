@@ -79,7 +79,7 @@ function edd_get_payment_by( $field = '', $value = '' ) {
 			}
 
 			break;
-			
+
 		case 'payment_number':
 			$payment = edd_get_payments( array(
 				'meta_key'       => '_edd_payment_number',
@@ -263,12 +263,12 @@ function edd_update_payment_status( $payment_id, $new_status = 'publish' ) {
  */
 function edd_delete_purchase( $payment_id = 0 ) {
 	global $edd_logs;
-	
+
 	$post = get_post( $payment_id );
 
 	if( !$post )
 		return;
-		
+
 	$downloads = edd_get_payment_meta_downloads( $payment_id );
 
 	if ( is_array( $downloads ) ) {
@@ -293,7 +293,7 @@ function edd_delete_purchase( $payment_id = 0 ) {
 
 			// Decrement the stats for the customer
 			EDD()->customers->decrement_stats( $customer_id, $amount );
-	
+
 		}
 	}
 
