@@ -351,7 +351,7 @@ function edd_undo_purchase( $download_id, $payment_id ) {
 			for( $i = 0; $i < $item['quantity']; $i++ ) {
 
  				// variable priced downloads
-				if ( edd_has_variable_prices( $download_id ) ) {
+				if ( false === $amount && edd_has_variable_prices( $download_id ) ) {
 					$price_id = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
 					$amount   = ! isset( $item['price'] ) && 0 !== $item['price'] ? edd_get_price_option_amount( $download_id, $price_id ) : $item['price'];
 				}
