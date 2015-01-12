@@ -100,10 +100,20 @@ function edd_get_cart_content_details() {
  * Get Cart Quantity
  *
  * @since 1.0
- * @return int Quantity of items in the cart
+ * @return int Sum quantity of items in the cart
  */
 function edd_get_cart_quantity() {
-	return ( $cart = edd_get_cart_contents() ) ? count( $cart ) : 0;
+
+	$total_quantity = 0;
+	$cart           = edd_get_cart_contents();
+
+	if ( ! empty( $cart ) ) {
+		$quantities     = wp_list_pluck( $cart, 'quantity' );
+		$total_quantity = absint( array_sum( $quantities ) );
+	}
+
+
+	return apply_filters( 'edd_get_cart_quantity', $total_quantity, $cart );
 }
 
 /**
