@@ -141,7 +141,7 @@ function edd_insert_payment( $payment_data = array() ) {
 		'post_type'     => 'edd_payment',
 		'post_parent'   => isset( $payment_data['parent'] ) ? $payment_data['parent'] : null,
 		'post_date'     => isset( $payment_data['post_date'] ) ? $payment_data['post_date'] : null,
-		'post_date_gmt' => isset( $payment_data['post_date'] ) ? $payment_data['post_date'] : null
+		'post_date_gmt' => isset( $payment_data['post_date'] ) ? get_gmt_from_date( $payment_data['post_date'] ) : null
 	), $payment_data );
 
 	// Create a blank payment

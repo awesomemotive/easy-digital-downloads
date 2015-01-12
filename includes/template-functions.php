@@ -115,7 +115,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 	}
 
-	if ( edd_item_in_cart( $download->ID ) && ! $variable_pricing ) {
+	if ( edd_item_in_cart( $download->ID ) && ( ! $variable_pricing || ! $download->is_single_price_mode() ) ) {
 		$button_display   = 'style="display:none;"';
 		$checkout_display = '';
 	} else {
@@ -223,8 +223,12 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 
 	$prices = apply_filters( 'edd_purchase_variable_prices', edd_get_variable_prices( $download_id ), $download_id );
 	$type   = edd_single_price_option_mode( $download_id ) ? 'checkbox' : 'radio';
-	$mode = edd_single_price_option_mode( $download_id ) ? 'multi' : 'single';
+	$mode   = edd_single_price_option_mode( $download_id ) ? 'multi' : 'single';
 	$schema = edd_add_schema_microdata() ? ' itemprop="offers" itemscope itemtype="http://schema.org/Offer"' : '';
+
+	if ( edd_item_in_cart( $download_id ) && ! edd_single_price_option_mode( $download_id ) ) {
+		return;
+	}
 
 	do_action( 'edd_before_price_options', $download_id ); ?>
 	<div class="edd_price_options edd_<?php echo esc_attr( $mode ); ?>_mode">
@@ -261,19 +265,23 @@ add_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing', 10, 2 );
  */
 function edd_download_purchase_form_quantity_field( $download_id = 0, $args = array() ) {
 
-	if( ! edd_item_quantities_enabled() ) {
+	if ( ! edd_item_quantities_enabled() ) {
 		return;
 	}
 
-	if( edd_item_in_cart( $download_id ) && ! edd_has_variable_prices( $download_id ) ) {
+	if ( edd_item_in_cart( $download_id ) && ! edd_has_variable_prices( $download_id ) ) {
 		return;
 	}
 
-	if( edd_single_price_option_mode( $download_id ) && edd_has_variable_prices( $download_id ) && ! edd_item_in_cart( $download_id ) ) {
+	if ( edd_single_price_option_mode( $download_id ) && edd_has_variable_prices( $download_id ) && ! edd_item_in_cart( $download_id ) ) {
 		return;
 	}
 
-	if( edd_single_price_option_mode( $download_id ) && edd_has_variable_prices( $download_id ) && edd_item_in_cart( $download_id ) ) {
+	if ( edd_single_price_option_mode( $download_id ) && edd_has_variable_prices( $download_id ) && edd_item_in_cart( $download_id ) ) {
+		return;
+	}
+
+	if ( ! edd_single_price_option_mode( $download_id ) && edd_has_variable_prices( $download_id ) && edd_item_in_cart( $download_id ) ) {
 		return;
 	}
 

@@ -88,6 +88,9 @@ class Tests_Downloads extends WP_UnitTestCase {
 		$download = edd_get_download_by( 'slug', 'test-download-product' );
 		$this->assertSame( $this->_post->ID, $download->ID );
 
+		$downoad = edd_get_download_by( 'name', 'Test Download Product' );
+		$this->assertSame( $this->_post->ID, $download->ID );
+
 	}
 
 	public function test_edd_download() {
