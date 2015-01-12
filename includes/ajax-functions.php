@@ -41,8 +41,8 @@ function edd_test_ajax_works() {
 		'sslverify'  => false,
 		'timeout'    => 30,
 		'body'       => array(
-			'action' => 'edd_test_ajax'
-		) 
+		'action' => 'edd_test_ajax'
+		)
 	);
 
 	$ajax  = wp_remote_post( edd_get_ajax_url(), $params );
