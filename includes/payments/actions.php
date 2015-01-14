@@ -59,15 +59,18 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 					if ( ! edd_is_test_mode() || apply_filters( 'edd_log_test_payment_stats', false ) ) {
 
 						edd_record_sale_in_log( $download['id'], $payment_id, $price_id, $creation_date );
-						edd_increase_purchase_count( $download['id'] );
-						edd_increase_earnings( $download['id'], $download['price'] );
 
 					}
 
 					do_action( 'edd_complete_download_purchase', $download['id'], $payment_id, $download_type, $download, $cart_index );
+
 				}
 
 			}
+
+			// Increase the earnings for this download ID
+			edd_increase_earnings( $download['id'], $download['price'] );
+			edd_increase_purchase_count( $download['id'], $download['quantity'] );
 
 		}
 
