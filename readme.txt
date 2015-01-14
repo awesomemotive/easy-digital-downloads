@@ -193,6 +193,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Added NZD currency symbol
 * Tweak: Improved support for Polylang plugin via edd_get_option() standardization
 * Tweak: Improved unit testing suite
+* Tweak: Updated numerous translation files
 * Bug: GMT date / time not properly set in date is specified when creating a payment record
 * Bug: Items purchased with quantities show incorrectly in sales log table
 * Bug: [downloads] pagination not working with default permalinks
