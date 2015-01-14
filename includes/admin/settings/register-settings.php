@@ -1520,6 +1520,8 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 		}
 		$html .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
 
+		wp_nonce_field( $args['id'] . '-nonce', $args['id'] . '-nonce' );
+
 		echo $html;
 	}
 }
