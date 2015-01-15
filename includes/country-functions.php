@@ -976,6 +976,7 @@ function edd_get_indian_states_list() {
 	$states = array(
 		''   => '',
 		'AP' => 'Andra Pradesh',
+		'AP' => 'Andhra Pradesh',
 		'AR' => 'Arunachal Pradesh',
 		'AS' => 'Assam',
 		'BR' => 'Bihar',
@@ -999,8 +1000,9 @@ function edd_get_indian_states_list() {
 		'RJ' => 'Rajasthan',
 		'SK' => 'Sikkim',
 		'TN' => 'Tamil Nadu',
+		'TG' => 'Telangana',
 		'TR' => 'Tripura',
-		'UT' => 'Uttaranchal',
+		'UT' => 'Uttarakhand',
 		'UP' => 'Uttar Pradesh',
 		'WB' => 'West Bengal',
 		'AN' => 'Andaman and Nicobar Islands',
@@ -1008,7 +1010,7 @@ function edd_get_indian_states_list() {
 		'DN' => 'Dadar and Nagar Haveli',
 		'DD' => 'Daman and Diu',
 		'DL' => 'Delhi',
-		'LD' => 'Lakshadeep',
+		'LD' => 'Lakshadweep',
 		'PY' => 'Pondicherry (Puducherry)'
 	);
 
