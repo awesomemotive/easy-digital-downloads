@@ -1062,7 +1062,7 @@ function edd_get_random_downloads( $num = 3, $post_ids = true ) {
  */
 function edd_get_download_token( $url ) {
 	$args = array();
-	$hash = apply_filters( 'edd_get_url_token_algorithem', 'sha256' );
+	$hash = apply_filters( 'edd_get_url_token_algorithm', 'sha256' );
 	$secret = apply_filters( 'edd_get_url_token_secret', hash( $hash, wp_salt() ) );
 
 	// Add additional args to the URL for generating the token.
