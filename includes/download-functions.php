@@ -1083,7 +1083,8 @@ function edd_get_download_token( $url ) {
 			}
 
 			if ( in_array( 'ua', $options ) ) {
-				$args['user_agent'] = rawurlencode( $_SERVER['HTTP_USER_AGENT'] );
+				$ua = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : '';
+				$args['user_agent'] = rawurlencode( $ua );
 			}
 		}
 	}
