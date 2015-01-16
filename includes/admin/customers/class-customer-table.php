@@ -63,7 +63,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		parent::__construct( array(
 			'singular'  => __( 'Customer', 'edd' ),     // Singular name of the listed records
 			'plural'    => __( 'Customers', 'edd' ),    // Plural name of the listed records
-			'ajax'      => false             			// Does this table support ajax?
+			'ajax'      => false                       // Does this table support ajax?
 		) );
 
 	}
@@ -108,7 +108,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 */
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
-	
+
 			case 'num_purchases' :
 				$value = '<a href="' .
 					admin_url( '/edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $item['email'] )
@@ -130,6 +130,14 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		return apply_filters( 'edd_report_column_' . $column_name, $value, $item['id'] );
 	}
 
+	public function column_name( $item ) {
+		$actions = array( 'view'          => sprintf( __( '<a href="%s">View</a>', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-customers&view=view&id=' . $item['id'] ) ),
+		                  'delete'        => sprintf( __( '<a href="%s">Delete</a>', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $item['id'] ) )
+		                );
+
+		return sprintf( '%1$s %2$s', $item['name'], $this->row_actions( $actions ) );
+	}
+
 	/**
 	 * Retrieve the table columns
 	 *
@@ -139,12 +147,12 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'name'     		=> __( 'Name', 'edd' ),
-			'id'     		=> __( 'ID', 'edd' ),
-			'email'     	=> __( 'Email', 'edd' ),
-			'num_purchases' => __( 'Purchases', 'edd' ),
-			'amount_spent'  => __( 'Total Spent', 'edd' ),
-			'file_downloads'=> __( 'Files Downloaded', 'edd' )
+			'name'           => __( 'Name', 'edd' ),
+			'id'             => __( 'Customer ID', 'edd' ),
+			'email'          => __( 'Email', 'edd' ),
+			'num_purchases'  => __( 'Purchases', 'edd' ),
+			'amount_spent'   => __( 'Total Spent', 'edd' ),
+			'file_downloads' => __( 'Files Downloaded', 'edd' )
 		);
 
 		return apply_filters( 'edd_report_customer_columns', $columns );
@@ -160,10 +168,10 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 */
 	public function get_sortable_columns() {
 		return array(
-			'id' 	        => array( 'id', true ),
-			'name' 	        => array( 'name', true ),
+			'id'            => array( 'id', true ),
+			'name'          => array( 'name', true ),
 			'num_purchases' => array( 'purchase_count', false ),
-			'amount_spent' 	=> array( 'purchase_value', false ),
+			'amount_spent'  => array( 'purchase_value', false ),
 		);
 	}
 
@@ -176,7 +184,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 */
 	public function bulk_actions( $which = '' ) {
 		// These aren't really bulk actions but this outputs the markup in the right place
-		edd_report_views();
 	}
 
 	/**
@@ -248,8 +255,8 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 					'user_id'       => $user_id,
 					'name'          => $customer->name,
 					'email'         => $customer->email,
-					'num_purchases'	=> $customer->purchase_count,
-					'amount_spent'	=> $customer->purchase_value
+					'num_purchases' => $customer->purchase_count,
+					'amount_spent'  => $customer->purchase_value
 				);
 			}
 		}
@@ -278,7 +285,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 		$this->items = $this->reports_data();
 
-		$this->total = edd_count_total_customers();
+		$this->total = $this->count;
 
 		$this->set_pagination_args( array(
 			'total_items' => $this->total,
