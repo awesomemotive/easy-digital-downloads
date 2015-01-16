@@ -109,7 +109,7 @@ class EDD_DB_Customers extends EDD_DB  {
 				if( empty( $customer->payment_ids ) ) {
 
 					$customer->payment_ids = $args['payment_ids'];
-				
+
 				} else {
 
 					$existing_ids = array_map( 'absint', explode( ',', $customer->payment_ids ) );
@@ -164,7 +164,7 @@ class EDD_DB_Customers extends EDD_DB  {
 		if( empty( $customer->payment_ids ) ) {
 
 			$customer->payment_ids = $payment_id;
-		
+
 		} else {
 
 			$payment_ids   = array_map( 'absint', explode( ',', $customer->payment_ids ) );
@@ -258,6 +258,30 @@ class EDD_DB_Customers extends EDD_DB  {
 	}
 
 	/**
+	 * Retrieves a single customer from the database
+	 *
+	 * @access public
+	 * @since  2.3
+	 * @param  integer $customer_id The Customer ID to retrieve
+	 * @return mixed                Upon success, an object of the customer. Upon failure, NULL
+	 */
+	public function get_customer( $customer_id = 0 ) {
+
+		global $wpdb;
+
+		if ( empty( $customer_id ) || ! is_numeric( $customer_id ) ) {
+			return NULL;
+		}
+
+		$customer_id = absint( $customer_id );
+		$where = "WHERE `id` = $customer_id";
+
+		$customer = $wpdb->get_row( "SELECT * FROM  $this->table_name $where" );
+
+		return $customer;
+	}
+
+	/**
 	 * Retrieve customers from the database
 	 *
 	 * @access  public
@@ -290,7 +314,7 @@ class EDD_DB_Customers extends EDD_DB  {
 				$ids = implode( ',', $args['id'] );
 			} else {
 				$ids = intval( $args['id'] );
-			}	
+			}
 
 			$where .= "WHERE `id` IN( {$ids} ) ";
 
@@ -303,7 +327,7 @@ class EDD_DB_Customers extends EDD_DB  {
 				$user_ids = implode( ',', $args['user_id'] );
 			} else {
 				$user_ids = intval( $args['user_id'] );
-			}	
+			}
 
 			$where .= "WHERE `user_id` IN( {$user_ids} ) ";
 
@@ -316,7 +340,7 @@ class EDD_DB_Customers extends EDD_DB  {
 				$emails = "'" . implode( "', '", $args['email'] ) . "'";
 			} else {
 				$emails = "'" . $args['email'] . "'";
-			}	
+			}
 
 			$where .= "WHERE `email` IN( {$emails} ) ";
 
@@ -334,11 +358,11 @@ class EDD_DB_Customers extends EDD_DB  {
 					if( ! empty( $where ) ) {
 
 						$where .= " AND `date_created` >= '{$start}'";
-					
+
 					} else {
-						
+
 						$where .= " WHERE `date_created` >= '{$start}'";
-		
+
 					}
 
 				}
@@ -350,11 +374,11 @@ class EDD_DB_Customers extends EDD_DB  {
 					if( ! empty( $where ) ) {
 
 						$where .= " AND `date_created` <= '{$end}'";
-					
+
 					} else {
-						
+
 						$where .= " WHERE `date_created` <= '{$end}'";
-		
+
 					}
 
 				}
@@ -383,7 +407,7 @@ class EDD_DB_Customers extends EDD_DB  {
 		$cache_key = md5( 'edd_customers_' . serialize( $args ) );
 
 		$customers = wp_cache_get( $cache_key, 'customers' );
-		
+
 		if( $customers === false ) {
 			$customers = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM  $this->table_name $where ORDER BY {$args['orderby']} {$args['order']} LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) ) );
 			wp_cache_set( $cache_key, $customers, 'customers', 3600 );
@@ -416,11 +440,11 @@ class EDD_DB_Customers extends EDD_DB  {
 				if( empty( $where ) ) {
 
 					$where .= " WHERE `date_created` >= '{$start}' AND `date_created` <= '{$end}'";
-				
+
 				} else {
-					
+
 					$where .= " AND `date_created` >= '{$start}' AND `date_created` <= '{$end}'";
-	
+
 				}
 
 			} else {
@@ -444,7 +468,7 @@ class EDD_DB_Customers extends EDD_DB  {
 		$cache_key = md5( 'edd_customers_count' . serialize( $args ) );
 
 		$count = wp_cache_get( $cache_key, 'customers' );
-		
+
 		if( $count === false ) {
 			$count = $wpdb->get_var( "SELECT COUNT($this->primary_key) FROM " . $this->table_name . "{$where};" );
 			wp_cache_set( $cache_key, $count, 'customers', 3600 );
