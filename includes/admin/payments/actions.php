@@ -182,8 +182,17 @@ function edd_update_payment_details( $data ) {
 	// Adjust total store earnings if the payment total has been changed
 	if ( $new_total !== $curr_total && ( 'publish' == $status || 'revoked' == $status ) ) {
 
-		$total_earnings = get_option( 'edd_earnings_total' ) - $curr_total + $new_total;
-		update_option( 'edd_earnings_total', $total_earnings );
+		if ( $new_total > $curr_total ) {
+			// Increase if our new total is higher
+			$difference = $new_total - $curr_total;
+			edd_increase_total_earnings( $difference );
+
+		} elseif ( $curr_total > $new_total ) {
+			// Decrease if our new total is lower
+			$difference = $curr_total - $new_total;
+			edd_decrease_total_earnings( $difference );
+
+		}
 
 	}
 
