@@ -124,7 +124,7 @@ class EDD_Tracking {
 			'method'      => 'POST',
 			'timeout'     => 20,
 			'redirection' => 5,
-			'httpversion' => '1.0',
+			'httpversion' => '1.1',
 			'blocking'    => true,
 			'body'        => $this->data,
 			'user-agent'  => 'EDD/' . EDD_VERSION . '; ' . get_bloginfo( 'url' )
@@ -235,7 +235,7 @@ class EDD_Tracking {
 		if( ! current_user_can( 'manage_options' ) )
 			return;
 
-		if( 
+		if(
 			stristr( network_site_url( '/' ), 'dev'       ) !== false ||
 			stristr( network_site_url( '/' ), 'localhost' ) !== false ||
 			stristr( network_site_url( '/' ), ':8888'     ) !== false // This is common with MAMP on OS X
