@@ -88,6 +88,14 @@ function edd_show_upgrade_notices() {
 		);
 	}
 
+	if ( version_compare( $edd_version, '2.3', '<' ) ) {
+		printf(
+			'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the payments database, click %shere%s to start the upgrade.', 'edd' ) . '</p></div>',
+			'<a href="' . esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_payment_taxes' ) ) . '">',
+			'</a>'
+		);
+	}
+
 }
 add_action( 'admin_notices', 'edd_show_upgrade_notices' );
 
@@ -562,3 +570,66 @@ function edd_v21_upgrade_customers_db() {
 
 }
 add_action( 'edd_upgrade_customers_db', 'edd_v21_upgrade_customers_db' );
+
+function edd_v23_upgrade_payment_taxes() {
+
+	global $wpdb;
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		wp_die( __( 'You do not have permission to do shop upgrades', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+	}
+
+	ignore_user_abort( true );
+
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+		@set_time_limit(0);
+	}
+
+	$step   = isset( $_GET['step'] ) ? absint( $_GET['step'] ) : 1;
+	$number = 20;
+	$offset = $step == 1 ? 0 : ( $step - 1 ) * $number;
+
+	$args = array(
+		'order'   => 'ASC',
+		'orderby' => 'ID',
+		'number'  => $number,
+		'page'    => $step,
+		'offset'  => $offset
+	);
+
+	$payments = new EDD_Payments_Query( $args );
+	$payments = $payments->get_payments();
+
+	if( $payments ) {
+
+		foreach( $payments as $payment ) {
+			// Add the new _edd_payment_meta item
+			$payment_tax = edd_get_payment_tax( $payment->ID );
+			edd_update_payment_meta( $payment->ID, '_edd_payment_tax', $payment_tax );
+
+			// Remove the 'tax' item from the _edd_payment_meta array
+			$payment_meta = edd_get_payment_meta( $payment->ID, '_edd_payment_meta', true );
+			unset( $payment_meta['tax'] );
+			edd_update_payment_meta( $payment->ID, '_edd_payment_meta', $payment_meta );
+		}
+
+		// Payments found so upgrade them
+		$step++;
+		$redirect = add_query_arg( array(
+			'page'        => 'edd-upgrades',
+			'edd-upgrade' => 'upgrade_payment_taxes',
+			'step'        => $step
+		), admin_url( 'index.php' ) );
+		wp_redirect( $redirect ); exit;
+
+	} else {
+
+		// No more payments found, finish up
+
+		//update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+
+		wp_redirect( admin_url() ); exit;
+	}
+
+}
+add_action( 'edd_upgrade_payment_taxes', 'edd_v23_upgrade_payment_taxes' );

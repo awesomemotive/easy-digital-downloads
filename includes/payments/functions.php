@@ -156,8 +156,7 @@ function edd_insert_payment( $payment_data = array() ) {
 			'currency'     => $payment_data['currency'],
 			'downloads'    => $payment_data['downloads'],
 			'user_info'    => $payment_data['user_info'],
-			'cart_details' => $payment_data['cart_details'],
-			'tax'          => $cart_tax,
+			'cart_details' => $payment_data['cart_details']
 		);
 
 		$mode    = edd_is_test_mode() ? 'test' : 'live';
@@ -178,15 +177,16 @@ function edd_insert_payment( $payment_data = array() ) {
 		) );
 
 		// Record the payment details
-		update_post_meta( $payment, '_edd_payment_meta',         apply_filters( 'edd_payment_meta', $payment_meta, $payment_data ) );
-		update_post_meta( $payment, '_edd_payment_user_id',      $payment_data['user_info']['id'] );
-		update_post_meta( $payment, '_edd_payment_customer_id',  $customer_id );
-		update_post_meta( $payment, '_edd_payment_user_email',   $payment_data['user_email'] );
-		update_post_meta( $payment, '_edd_payment_user_ip',      edd_get_ip() );
-		update_post_meta( $payment, '_edd_payment_purchase_key', $payment_data['purchase_key'] );
-		update_post_meta( $payment, '_edd_payment_total',        $payment_data['price'] );
-		update_post_meta( $payment, '_edd_payment_mode',         $mode );
-		update_post_meta( $payment, '_edd_payment_gateway',      $gateway );
+		edd_update_payment_meta( $payment, '_edd_payment_meta',         apply_filters( 'edd_payment_meta', $payment_meta, $payment_data ) );
+		edd_update_payment_meta( $payment, '_edd_payment_user_id',      $payment_data['user_info']['id'] );
+		edd_update_payment_meta( $payment, '_edd_payment_customer_id',  $customer_id );
+		edd_update_payment_meta( $payment, '_edd_payment_user_email',   $payment_data['user_email'] );
+		edd_update_payment_meta( $payment, '_edd_payment_user_ip',      edd_get_ip() );
+		edd_update_payment_meta( $payment, '_edd_payment_purchase_key', $payment_data['purchase_key'] );
+		edd_update_payment_meta( $payment, '_edd_payment_total',        $payment_data['price'] );
+		edd_update_payment_meta( $payment, '_edd_payment_mode',         $mode );
+		edd_update_payment_meta( $payment, '_edd_payment_gateway',      $gateway );
+		edd_update_payment_meta( $payment, '_edd_payment_tax',          $cart_tax );
 
 		if ( ! empty( $discount ) ) {
 			edd_update_payment_meta( $payment, '_edd_payment_discount_id',  $discount->ID );
@@ -1263,10 +1263,19 @@ function edd_payment_tax( $payment_id = 0, $payment_meta = false ) {
  * @return float $subtotal Subtotal for payment (non formatted)
  */
 function edd_get_payment_tax( $payment_id = 0, $payment_meta = false ) {
-	if ( ! $payment_meta )
-		$payment_meta = edd_get_payment_meta( $payment_id );
 
-	$tax = isset( $payment_meta['tax'] ) ? $payment_meta['tax'] : 0;
+	$tax = edd_get_payment_meta( $payment_id, '_edd_payment_tax', true );
+
+	// We don't have tax as it's own meta and no meta was passed
+	if ( false === $tax ) {
+
+		if ( ! $payment_meta ) {
+			$payment_meta = edd_get_payment_meta( $payment_id );
+		}
+
+		$tax = isset( $payment_meta['tax'] ) ? $payment_meta['tax'] : 0;
+
+	}
 
 	return apply_filters( 'edd_get_payment_tax', $tax, $payment_id );
 }
