@@ -344,7 +344,7 @@ function edd_downloads_query( $atts, $content = null ) {
 				'taxonomy' => 'download_tag',
 				'field'    => 'term_id',
 				'terms'    => $_tax_tags,
-				'operator' => 'AND' === $atts['relation'] ? 'AND' : 'IN'
+				'operator' => 'AND' === $atts['relation'] ? 'AND' : ''
 			);
 		}
 
@@ -372,7 +372,7 @@ function edd_downloads_query( $atts, $content = null ) {
 				'taxonomy' => 'download_category',
 				'field'    => 'term_id',
 				'terms'    => $_tax_cats,
-				'operator' => 'AND' === $atts['relation'] ? 'AND' : 'IN'
+				'operator' => 'AND' === $atts['relation'] ? 'AND' : ''
 			);
 		}
 
