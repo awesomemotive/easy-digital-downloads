@@ -24,10 +24,10 @@ function edd_upgrades_screen() {
 	$total  = isset( $_GET['total'] )       ? absint( $_GET['total'] )                    : false;
 	$custom = isset( $_GET['custom'] )      ? absint( $_GET['custom'] )                   : 0;
 	$steps  = round( ( $total / 100 ), 0 );
-	?> 
+	?>
 	<div class="wrap">
 		<h2><?php _e( 'Easy Digital Downloads - Upgrades', 'edd' ); ?></h2>
-	
+
 		<?php if( ! empty( $action ) ) : ?>
 
 			<div id="edd-upgrade-status">
