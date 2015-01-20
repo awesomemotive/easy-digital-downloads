@@ -202,7 +202,6 @@ class Test_Misc extends WP_UnitTestCase {
 		'IM' => 'Isle of Man',
 		'IL' => 'Israel',
 		'IT' => 'Italy',
-		'CI' => 'Icory Coast',
 		'JM' => 'Jamaica',
 		'JP' => 'Japan',
 		'JE' => 'Jersey',

@@ -254,7 +254,6 @@ function edd_get_country_list() {
 		'IM' => 'Isle of Man',
 		'IL' => 'Israel',
 		'IT' => 'Italy',
-		'CI' => 'Icory Coast',
 		'JM' => 'Jamaica',
 		'JP' => 'Japan',
 		'JE' => 'Jersey',
@@ -975,7 +974,6 @@ function edd_get_indonesian_states_list() {
 function edd_get_indian_states_list() {
 	$states = array(
 		''   => '',
-		'AP' => 'Andra Pradesh',
 		'AP' => 'Andhra Pradesh',
 		'AR' => 'Arunachal Pradesh',
 		'AS' => 'Assam',
@@ -1621,7 +1619,7 @@ function edd_get_spain_states_list() {
 	    'BI' => __( 'Bizkaia', 'edd' ),
 	    'ZA' => __( 'Zamora', 'edd' ),
 	    'Z'  => __( 'Zaragoza', 'edd' )
-	); 	
+	);
 
 	return apply_filters( 'edd_spain_states', $states );
 }
