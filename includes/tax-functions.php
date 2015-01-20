@@ -198,8 +198,11 @@ function edd_get_sales_tax_for_year( $year = null ) {
 		$payments    = get_posts( $args );
 		$payment_ids = implode( ',', $payments );
 
-		$sql = "SELECT SUM( meta_value ) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_tax' AND post_id IN( $payment_ids )";
-		$tax = $wpdb->get_var( $sql );
+		if ( count( $payments ) > 0 ) {
+			$sql = "SELECT SUM( meta_value ) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_tax' AND post_id IN( $payment_ids )";
+			$tax = $wpdb->get_var( $sql );
+		}
+
 	}
 
 	return apply_filters( 'edd_get_sales_tax_for_year', $tax, $year );
