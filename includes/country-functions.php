@@ -974,7 +974,6 @@ function edd_get_indonesian_states_list() {
 function edd_get_indian_states_list() {
 	$states = array(
 		''   => '',
-		'AP' => 'Andra Pradesh',
 		'AP' => 'Andhra Pradesh',
 		'AR' => 'Arunachal Pradesh',
 		'AS' => 'Assam',
