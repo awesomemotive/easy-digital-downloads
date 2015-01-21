@@ -90,7 +90,7 @@ function edd_customer_save_note( $args ) {
 			exit;
 		}
 
-		return $output;
+		return $note_id;
 
 	}
 
