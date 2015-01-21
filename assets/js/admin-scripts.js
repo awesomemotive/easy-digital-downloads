@@ -1102,6 +1102,87 @@ jQuery(document).ready(function ($) {
 	};
 	EDD_Tools.init();
 
+	/**
+	 * Customer management screen JS
+	 */
+	var EDD_Customer = {
+
+		init : function() {
+			this.add_note();
+			this.delete_note();
+		},
+		add_note : function() {
+			$( 'body' ).on( 'click', '#add-customer-note', function( e ) {
+				e.preventDefault();
+				var postData = {
+					edd_action : 'add-customer-note',
+					customer_id : $( '#customer-id' ).val(),
+					customer_note : $( '#customer-note' ).val(),
+					add_customer_note_nonce: $( '#add_customer_note_nonce' ).val()
+				};
+
+				if( postData.customer_note ) {
+
+					$.ajax({
+						type: "POST",
+						data: postData,
+						url: ajaxurl,
+						success: function ( response ) {
+							$( '#edd-customer-notes' ).prepend( response );
+							$( '.edd-no-customer-notes' ).hide();
+							$( '#customer-note' ).val( '' );
+						}
+					}).fail( function ( data ) {
+						if ( window.console && window.console.log ) {
+							console.log( data );
+						}
+					});
+
+				} else {
+					var border_color = $( '#customer-note' ).css( 'border-color' );
+					$( '#customer-note' ).css( 'border-color', 'red' );
+					setTimeout( function() {
+						$( '#customer-note' ).css( 'border-color', border_color );
+					}, 500 );
+				}
+			});
+		},
+		delete_note : function() {
+			$( 'body' ).on( 'click', '#edd-customer-card-wrapper a.delete', function( e ) {
+				e.preventDefault();
+
+				var postData = {
+					edd_action : 'delete-customer-note',
+					note_id : $( this ).data( 'note-id' ),
+					_wpnonce: $( this ).data( 'nonce' )
+				};
+
+				if( postData.note_id ) {
+
+					$.ajax({
+						type: "POST",
+						data: postData,
+						url: ajaxurl,
+						success: function (response) {
+							$( '#customer-note-' + postData.note_id ).slideUp( 200, function() {});
+						}
+					}).fail(function (data) {
+						if ( window.console && window.console.log ) {
+							console.log( data );
+						}
+					});
+
+				} else {
+					if ( window.console && window.console.log ) {
+						console.log( 'Error deleting customer note' );
+					}
+				}
+			});
+		}
+
+	};
+	EDD_Customer.init();
+
 	// Ajax user search
 	$('.edd-ajax-user-search').keyup(function() {
 		var user_search = $(this).val();

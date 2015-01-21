@@ -2,6 +2,8 @@
 
 /**
  * Get the customer notes for a customer ID
+ *
+ * @since  2.3
  * @param  int $customer_id The Customer ID to request notes for
  * @return object               An object of comment objects, empty object if none found
  */
