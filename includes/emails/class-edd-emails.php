@@ -217,18 +217,39 @@ class EDD_Emails {
 
 		edd_get_template_part( 'emails/header', $this->get_template(), true );
 
+		/**
+		 * Hooks into the email header
+		 *
+		 * @since 2.1
+		 */
 		do_action( 'edd_email_header', $this );
 
 		if ( has_action( 'edd_email_template_' . $this->get_template() ) ) {
+			/**
+			 * Hooks into the template of the email
+			 *
+			 * @param string $this->template Gets the enabled email template
+			 * @since 2.1
+			 */
 			do_action( 'edd_email_template_' . $this->get_template() );
 		} else {
 			edd_get_template_part( 'emails/body', $this->get_template(), true );
 		}
 
+		/**
+		 * Hooks into the body of the email
+		 *
+		 * @since 2.1
+		 */
 		do_action( 'edd_email_body', $this );
 
 		edd_get_template_part( 'emails/footer', $this->get_template(), true );
 
+		/**
+		 * Hooks into the footer of the email
+		 *
+		 * @since 2.1
+		 */
 		do_action( 'edd_email_footer', $this );
 
 		$body    = ob_get_clean();
@@ -252,6 +273,11 @@ class EDD_Emails {
 			return false;
 		}
 
+		/**
+		 * Hooks before the email is sent
+		 *
+		 * @since 2.1
+		 */
 		do_action( 'edd_email_send_before', $this );
 
 		$subject = $this->parse_tags( $subject );
@@ -263,6 +289,11 @@ class EDD_Emails {
 
 		$sent = wp_mail( $to, $subject, $message, $this->get_headers(), $attachments );
 
+		/**
+		 * Hooks after the email is sent
+		 *
+		 * @since 2.1
+		 */
 		do_action( 'edd_email_send_after', $this );
 
 		return $sent;
