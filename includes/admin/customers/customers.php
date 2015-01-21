@@ -20,6 +20,8 @@ function edd_customers_page() {
 
 /**
  * Register the views for customer management
+ *
+ * @since  2.3
  * @return array Array of views and their callbacks
  */
 function edd_customer_views() {
@@ -29,6 +31,12 @@ function edd_customer_views() {
 
 }
 
+/**
+ * Register the tabs for customer management
+ *
+ * @since  2.3
+ * @return array Array of tabs for the customer
+ */
 function edd_customer_tabs() {
 
 	$tabs = array();
@@ -38,6 +46,8 @@ function edd_customer_tabs() {
 
 /**
  * List table of customers
+ *
+ * @since  2.3
  * @return void
  */
 function edd_customers_list() {
@@ -63,6 +73,14 @@ function edd_customers_list() {
 	<?php
 }
 
+/**
+ * Renders the customer view wrapper
+ *
+ * @since  2.3
+ * @param  string $view      The View being requested
+ * @param  array $callbacks  The Registered views and their callback functions
+ * @return void
+ */
 function edd_render_customer_view( $view, $callbacks ) {
 	$customer_edit_role = apply_filters( 'edd_view_customers_role', 'view_shop_reports' );
 	if ( ! current_user_can( $customer_edit_role ) ) {
@@ -80,40 +98,44 @@ function edd_render_customer_view( $view, $callbacks ) {
 		edd_set_error( 'edd-invalid_customer', __( 'Invalid Customer ID Provided.', 'edd' ) );
 	}
 
-	if ( ! empty( edd_get_errors() ) ) {
-		edd_print_errors();
-		edd_clear_errors();
-		return;
-	}
-
 	$customer_tabs = edd_customer_tabs();
 	?>
 
 	<div class='wrap'>
 		<h2><?php _e( 'Customer Details', 'edd' );?></h2>
-		<div id="customer-tab-wrapper">
-			<ul id="customer-tab-wrapper-list">
-			<?php foreach ( $customer_tabs as $key => $tab ) : ?>
-				<?php $active = $key === $view ? true : false; ?>
-				<?php $class  = $active ? 'active' : 'inactive'; ?>
+		<?php if ( ! empty( edd_get_errors() ) ) :?>
+			<div class="error settings-error">
+				<?php edd_print_errors(); ?>
+			</div>
+		<?php endif; ?>
 
-				<?php if ( ! $active ) : ?>
-				<a title="<?php echo $tab['title']; ?>" href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=' . $key . '&id=' . $customer->id ); ?>">
-				<?php endif; ?>
+		<?php if ( $customer ) : ?>
 
-				<li class="<?php echo $class; ?>"><span class="dashicons <?php echo $tab['dashicon']; ?>"></span></li>
+			<div id="customer-tab-wrapper">
+				<ul id="customer-tab-wrapper-list">
+				<?php foreach ( $customer_tabs as $key => $tab ) : ?>
+					<?php $active = $key === $view ? true : false; ?>
+					<?php $class  = $active ? 'active' : 'inactive'; ?>
 
-				<?php if ( ! $active ) : ?>
-				</a>
-				<?php endif; ?>
+					<?php if ( ! $active ) : ?>
+					<a title="<?php echo $tab['title']; ?>" href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=' . $key . '&id=' . $customer->id ); ?>">
+					<?php endif; ?>
 
-			<?php endforeach; ?>
-			</ul>
-		</div>
+					<li class="<?php echo $class; ?>"><span class="dashicons <?php echo $tab['dashicon']; ?>"></span></li>
 
-		<div id="edd-customer-card-wrapper" style="float: left">
-			<?php $callbacks[$view]( $customer ) ?>
-		</div>
+					<?php if ( ! $active ) : ?>
+					</a>
+					<?php endif; ?>
+
+				<?php endforeach; ?>
+				</ul>
+			</div>
+
+			<div id="edd-customer-card-wrapper" style="float: left">
+				<?php $callbacks[$view]( $customer ) ?>
+			</div>
+
+		<?php endif; ?>
 
 	</div>
 	<?php
@@ -123,6 +145,9 @@ function edd_render_customer_view( $view, $callbacks ) {
 
 /**
  * View a customer
+ *
+ * @since  2.3
+ * @param  $customer The Customer object being displayed
  * @return void
  */
 function edd_customers_view( $customer ) {
@@ -140,7 +165,7 @@ function edd_customers_view( $customer ) {
 			<div class="customer-id right">
 				#<?php echo $customer->id; ?>
 			</div>
-			<span class="customer-name info-item"><?php echo $customer->name; ?>&nbsp;<a id="edit-customer"><span class="dashicons dashicons-edit"></span></a></span>
+			<span class="customer-name info-item"><?php echo $customer->name; ?>&nbsp;<a title="<?php _e( 'Edit Customer', 'edd' ); ?>" id="edit-customer"><span class="dashicons dashicons-edit"></span></a></span>
 			<span class="customer-email info-item"><?php echo $customer->email; ?></span>
 			<span class="customer-since info-item">
 				<?php _e( 'Customer since', 'edd' ); ?>
@@ -151,7 +176,9 @@ function edd_customers_view( $customer ) {
 					<?php _e( 'User ID', 'edd' ); ?>:&nbsp;
 					<?php echo $customer->user_id; ?>
 					&nbsp; - &nbsp;
-					<?php printf( '<a href="%s">' . __( 'Edit User', 'edd' ) . '</a>', admin_url( 'user-edit.php?user_id=' . $customer->user_id ) ); ?>
+					<a title="<?php _e( 'Edit User', 'edd' ); ?>" href="<?php echo admin_url( 'user-edit.php?user_id=' . $customer->user_id ); ?>">
+						<?php  _e( 'Edit User', 'edd' ); ?>
+					</a>
 				</span>
 			<?php endif; ?>
 		</div>
@@ -163,12 +190,12 @@ function edd_customers_view( $customer ) {
 		<ul>
 			<li>
 				<a title="<?php _e( 'View All Purchases', 'edd' ); ?>" href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $customer->email ) ); ?>">
-					<span class="dashicons dashicons-products"></span>
+					<span class="dashicons dashicons-cart"></span>
 					<?php echo $customer->purchase_count; ?> <?php _e( 'Purchases' ,'edd' ); ?>
 				</a>
 			</li>
 			<li>
-				<span class="dashicons dashicons-cart"></span>
+				<span class="dashicons dashicons-money"></span>
 				<?php echo edd_currency_filter( edd_format_amount( $customer->purchase_value ) ); ?> <?php _e( 'Lifetime Value', 'edd' ); ?>
 			</li>
 			<?php do_action( 'edd_customer_stats_list', $customer ); ?>
@@ -202,7 +229,7 @@ function edd_customers_view( $customer ) {
 						<td><?php echo date_i18n( get_option( 'date_format' ), strtotime( $payment->post_date ) ); ?></td>
 						<td><?php echo edd_get_payment_status( $payment, true ); ?></td>
 						<td>
-							<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $payment->ID ); ?>">
+							<a title="<?php _e( 'View Details for Payment', 'edd' ); echo ' ' . $payment->ID; ?>" href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $payment->ID ); ?>">
 								<?php _e( 'View Details', 'edd' ); ?>
 							</a>
 							<?php do_action( 'edd_customer_recent_purcahses_actions', $customer, $payment ); ?>
@@ -220,6 +247,9 @@ function edd_customers_view( $customer ) {
 
 /**
  * View the notes of a customer
+ *
+ * @since  2.3
+ * @param  $customer The Customer being displayed
  * @return void
  */
 function edd_customer_notes_view( $customer ) {
@@ -237,20 +267,22 @@ function edd_customer_notes_view( $customer ) {
 				<?php echo get_avatar( $current_user->user_email, 32 ); ?>
 			</div>
 			<form id="edd-add-customer-note" method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=notes&id=' . $customer->id ); ?>">
-				<textarea name="customer-note" style="width: 93%; margin-bottom: 5px;"></textarea>
+				<textarea id="customer-note" name="customer_note" style="width: 93%; margin-bottom: 5px;"></textarea>
 				<br />
-				<input type="hidden" name="customer-id" value="<?php echo $customer->id; ?>" />
-				<input type="hidden" name="edd-action" value="add-customer-note" />
-				<?php wp_nonce_field( 'add-customer-note', 'add-customer-note-nonce', true, true ); ?>
-				<input class="right button-primary" type="submit" value="Add Note" />
+				<input type="hidden" id="customer-id" name="customer_id" value="<?php echo $customer->id; ?>" />
+				<input type="hidden" name="edd_action" value="add-customer-note" />
+				<?php wp_nonce_field( 'add-customer-note', 'add_customer_note_nonce', true, true ); ?>
+				<input id="add-customer-note" class="right button-primary" type="submit" value="Add Note" />
 			</form>
 		</div>
 
+		<div id="edd-customer-notes">
 		<?php if ( count( $customer_notes ) > 0 ) : ?>
 			<?php foreach( $customer_notes as $note ) : ?>
-				<div class="customer-note-wrapper dashboard-comment-wrap comment-item">
+				<div id="customer-note-<?php echo $note->comment_ID; ?>" class="customer-note-wrapper dashboard-comment-wrap comment-item">
 					<span class="row-actions right">
-						<a href="<?php echo wp_nonce_url( admin_url( 'edit.php?post_type=download&page=edd-customers&view=notes&edd-action=delete-customer-note&note_id=' . $note->comment_ID . '&id=' . $customer->id ), 'delete-customer-note' ); ?>" class="delete"><?php _e( 'Delete', 'edd' ); ?></a>
+						<?php $delete_url = wp_nonce_url( admin_url( 'edit.php?post_type=download&page=edd-customers&view=notes&edd-action=delete-customer-note&note_id=' . $note->comment_ID . '&id=' . $customer->id ), 'delete-customer-note' ); ?>
+						<a href="<?php echo $delete_url; ?>" data-nonce="<?php echo wp_create_nonce( 'delete-customer-note' ); ?>" data-note-id="<?php echo $note->comment_ID; ?>" class="delete"><?php _e( 'Delete', 'edd' ); ?></a>
 					</span>
 					<span class="avatar-wrap left">
 						<?php $user_data = get_userdata( $note->user_id ); ?>
@@ -267,8 +299,12 @@ function edd_customer_notes_view( $customer ) {
 				</div>
 			<?php endforeach; ?>
 		<?php else: ?>
-			<?php _e( 'No Customer Notes', 'edd' ); ?>
+			<div class="edd-no-customer-notes">
+				<?php _e( 'No Customer Notes', 'edd' ); ?>
+			</div>
 		<?php endif; ?>
+		</div>
+
 	</div>
 
 	<?php

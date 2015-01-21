@@ -265,17 +265,8 @@ td.edd_order_price { text-align: right; }
 -------------------------------------------------------------- */
 .download_page_edd-tools .apikeys .column-user { width: 192px; }
 
-/* Customer Styles */
-/*
-#edd-customer-card-wrapper .avatar-wrap img,
-#edd-customer-notes-wapper .avatar-wrap img {
- -webkit-border-radius: 50%;
- -moz-border-radius: 50%;
- -ms-border-radius: 50%;
- -o-border-radius: 50%;
- border-radius: 50%;
- }
- */
+/* Customer Styles
+-------------------------------------------------------------- */
 #customer-tab-wrapper { margin-left: -1px; z-index: 1; text-align: center; display: inline-block; }
 #customer-tab-wrapper-list li { background-color: #fff; width: 32px; height: 32px; }
 #customer-tab-wrapper-list .inactive { background-color: #fff; color: #eee; border-left: 1px solid #e5e5e5; }
@@ -314,7 +305,7 @@ td.edd_order_price { text-align: right; }
 #customer-purchases-wrapper table { width: 100%; text-align: center; }
 #customer-purchases-wrapper th { text-align: center; }
 #customer-notes-wrapper { min-height: 50px; }
-#customer-notes-wrapper div:nth-of-type(even) { background-color: #fcfcfc; }
+#edd-customer-notes div:nth-of-type(even) { background-color: #fcfcfc; }
 .customer-note-wrapper { border-bottom: 1px solid #f9f9f9; min-height: 38px; padding: 7px 0 7px 7px; }
 .customer-note-wrapper span { display: block; }
 .note-content-wrap { padding-top: 7px; }
