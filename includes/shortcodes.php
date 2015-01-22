@@ -266,7 +266,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		'exclude_category' => '',
 		'tags'             => '',
 		'exclude_tags'     => '',
-		'relation'         => 'AND',
+		'relation'         => 'OR',
 		'number'           => 9,
 		'price'            => 'no',
 		'excerpt'          => 'yes',
@@ -355,11 +355,11 @@ function edd_downloads_query( $atts, $content = null ) {
 			$categories = explode( ',', $atts['category'] );
 
 			foreach( $categories as $category ) {
-				
+
 				if( is_numeric( $category ) ) {
-				
+
 					$term_id = $category;
-			
+
 				} else {
 
 					$term = get_term_by( 'slug', $category, 'download_category' );
@@ -408,7 +408,7 @@ function edd_downloads_query( $atts, $content = null ) {
 
 					$term_id = $term->term_id;
 				}
-				
+
 				$query['tax_query'][ $tax_query_key ][] = array(
 					'taxonomy' => 'download_category',
 					'field'    => 'term_id',
