@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.9.2
 Tested up to: 4.1
 
-Stable Tag: 2.2.3
+Stable Tag: 2.2.4
 
 License: GNU Version 2 or Any Later Version
 
@@ -182,6 +182,15 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.2.4, January 24, 2015 =
+
+* New: Introduced edd_global_checkout_script_vars and edd_ajax_script_vars filters for localized javascript variables
+* Bug: Strict PHP Standards notice in EDD_Gateway_Error_Log class
+* Bug: Category parameter behaves incorrectly for the [downloads] short code
+* Bug: Select a Download placeholder on add discount screen saves improperly
+* Bug: EDD_Session leaks across sites in multisite installs
+* Bug: Incorrect spelling of Indian state names
 
 = 2.2.3, January 14, 2015 =
 
