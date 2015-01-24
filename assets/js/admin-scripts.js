@@ -1108,8 +1108,16 @@ jQuery(document).ready(function ($) {
 	var EDD_Customer = {
 
 		init : function() {
+			this.edit_customer();
 			this.add_note();
 			this.delete_note();
+		},
+		edit_customer: function() {
+			$( 'body' ).on( 'click', '#edit-customer', function( e ) {
+				e.preventDefault();
+				$( '.customer-info .editable' ).hide();
+				$( '.customer-info .edit-item' ).fadeIn().css( 'display', 'block' );
+			});
 		},
 		add_note : function() {
 			$( 'body' ).on( 'click', '#add-customer-note', function( e ) {
