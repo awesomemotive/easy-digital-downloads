@@ -165,14 +165,68 @@ function edd_customers_view( $customer ) {
 			<div class="customer-id right">
 				#<?php echo $customer->id; ?>
 			</div>
-			<span class="customer-name info-item"><?php echo $customer->name; ?>&nbsp;<a title="<?php _e( 'Edit Customer', 'edd' ); ?>" id="edit-customer"><span class="dashicons dashicons-edit"></span></a></span>
-			<span class="customer-email info-item"><?php echo $customer->email; ?></span>
+
+			<div class="customer-address-wrapper right">
+			<?php if ( isset( $customer->user_id ) ) : ?>
+				<?php $address = get_user_meta( $customer->user_id, '_edd_user_address', true ); ?>
+				<?php if ( ! empty( $address ) ) : ?>
+				<strong><?php _e( 'Customer Address', 'edd' ); ?></strong>
+				<span class="customer-address info-item editable">
+					<span class="info-item"><?php echo $address['line1']; ?></span>
+					<span class="info-item"><?php echo $address['line2']; ?></span>
+					<span class="info-item"><?php echo $address['city'] . ', ' . $address['state']; ?></span>
+					<span class="info-item"><?php echo $address['zip']; ?></span>
+					<span class="info-item"><?php echo $address['country']; ?></span>
+				</span>
+				<?php endif; ?>
+				<span class="customer-address info-item edit-item">
+					<input class="info-item" type="text" name="customerinfo[address][line1]" placeholder="<?php _e( 'Address 1', 'edd' ); ?>" value="<?php echo $address['line1']; ?>" />
+					<input class="info-item" type="text" name="customerinfo[address][line2]" placeholder="<?php _e( 'Address 2', 'edd' ); ?>" value="<?php echo $address['line2']; ?>" />
+					<input class="info-item" type="text" name="customerinfo[address][city]" placeholder="<?php _e( 'City', 'edd' ); ?>" value="<?php echo $address['city']; ?>" />
+					<select name="customerinfo[address][country]" id="billing_country" class="billing_country edd-select edit-item">
+						<?php
+
+						$selected_country = edd_get_shop_country();
+						$selected_country = $address['country'];
+
+						$countries = edd_get_country_list();
+						foreach( $countries as $country_code => $country ) {
+						  echo '<option value="' . esc_attr( $country_code ) . '"' . selected( $country_code, $selected_country, false ) . '>' . $country . '</option>';
+						}
+						?>
+					</select>
+					<?php
+					$selected_state = edd_get_shop_state();
+					$states         = edd_get_shop_states( $selected_country );
+
+					$selected_state = isset( $address['state'] ) ? $address['state'] : $selected_state;
+
+					if( ! empty( $states ) ) : ?>
+					<select name="customerinfo[address][state]" id="card_state" class="card_state edd-select info-item">
+						<?php
+							foreach( $states as $state_code => $state ) {
+								echo '<option value="' . $state_code . '"' . selected( $state_code, $selected_state, false ) . '>' . $state . '</option>';
+							}
+						?>
+					</select>
+					<?php else : ?>
+					<input type="text" size="6" name="customerinfo[address][state]" id="card_state" class="card_state edd-input info-item" placeholder="<?php _e( 'State / Province', 'edd' ); ?>"/>
+					<?php endif; ?>
+				</span>
+			<?php endif; ?>
+			</div>
+
+			<span class="customer-name info-item edit-item"><input size="15" name="customerinfo[name]" type="text" value="<?php echo $customer->name; ?>" placeholder="<?php _e( 'Customer Name', 'edd' ); ?>" /></span>
+			<span class="customer-name info-item editable"><?php echo $customer->name; ?>&nbsp;<a title="<?php _e( 'Edit Customer', 'edd' ); ?>" id="edit-customer"><span class="dashicons dashicons-edit"></span></a></span>
+			<span class="customer-name info-item edit-item"><input size="20" name="customerinfo[email]" type="text" value="<?php echo $customer->email; ?>" placeholder="<?php _e( 'Customer Email', 'edd' ); ?>" /></span>
+			<span class="customer-email info-item editable"><?php echo $customer->email; ?></span>
 			<span class="customer-since info-item">
 				<?php _e( 'Customer since', 'edd' ); ?>
 				<?php echo date_i18n( get_option( 'date_format' ), strtotime( $customer->date_created ) ) ?>
 			</span>
+			<span class="customer-user-id info-item edit-item"><input size="5" name="customerinfo[user_id]" type="text" value="<?php echo $customer->user_id; ?>" placeholder="<?php _e( 'User ID', 'edd' ); ?>" /></span>
 			<?php if ( isset( $customer->user_id ) && $customer->user_id > 0 ) : ?>
-				<span class="customer-user-id info-item">
+				<span class="customer-user-id info-item editable">
 					<?php _e( 'User ID', 'edd' ); ?>:&nbsp;
 					<?php echo $customer->user_id; ?>
 					&nbsp; - &nbsp;
@@ -195,7 +249,7 @@ function edd_customers_view( $customer ) {
 				</a>
 			</li>
 			<li>
-				<span class="dashicons dashicons-money"></span>
+				<span class="dashicons dashicons-chart-area"></span>
 				<?php echo edd_currency_filter( edd_format_amount( $customer->purchase_value ) ); ?> <?php _e( 'Lifetime Value', 'edd' ); ?>
 			</li>
 			<?php do_action( 'edd_customer_stats_list', $customer ); ?>

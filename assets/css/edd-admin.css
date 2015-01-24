@@ -292,14 +292,17 @@ td.edd_order_price { text-align: right; }
 #edd-customer-card-wrapper > div:last-child { padding-bottom: 20px; border: none; }
 #edd-customer-card-wrapper .avatar-wrap { padding-right: 10px; }
 #edd-customer-card-wrapper .customer-id { font-size: 24px; font-weight: 600; }
-#edd-customer-card-wrapper .customer-info { margin-top: 5px; }
+#edd-customer-card-wrapper .customer-address-wrapper { max-width: 33%; margin-right: 25px; }
+#edd-customer-card-wrapper .customer-address-wrapper select { width: 200px;}
+#edd-customer-card-wrapper .customer-info { margin-top: 5px; min-height: 185px; }
 #edd-customer-card-wrapper .info-wrapper { min-height: 125px; }
 #edd-customer-card-wrapper a.delete { text-decoration: none; color: #ff0000; margin-right: 5px; }
 .customer-info .customer-name { font-size: 24px; font-weight: 600; }
 #edit-customer, #edit-customer:hover{ color: #ccc; cursor: pointer; }
 .customer-info .info-item { line-height: 16px; display: block; padding-bottom: 5px; }
+.customer-info .edit-item { display: none; }
 #customer-stats-wrapper { margin: 0 auto; text-align: center; min-height: 30px; }
-#customer-stats-wrapper li { width: 50%; float: left; line-height: 22px; }
+#customer-stats-wrapper li { width: 50%; float: left; line-height: 22px; font-size: 14px; }
 #customer-stats-wrapper a { text-decoration: none; }
 #customer-stats-wrapper .dashicons { color: #888; }
 #customer-purchases-wrapper table { width: 100%; text-align: center; }
