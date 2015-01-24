@@ -191,6 +191,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Bug: Select a Download placeholder on add discount screen saves improperly
 * Bug: EDD_Session leaks across sites in multisite installs
 * Bug: Incorrect spelling of Indian state names
+* Bug: Duplicate array key in country list
 
 = 2.2.3, January 14, 2015 =
 
