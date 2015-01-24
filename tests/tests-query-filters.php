@@ -58,7 +58,9 @@ class Tests_Query_Filters extends WP_UnitTestCase {
 
 		$this->assertNull( edd_block_attachments() );
 
+		// Reset to origin
 		wp_delete_attachment( $attach_id, true );
+		$this->go_to( '' );
 
 	}
 
@@ -98,8 +100,10 @@ class Tests_Query_Filters extends WP_UnitTestCase {
 
 		$this->assertNull( edd_block_attachments() );
 
+		// Reset to origin
 		wp_delete_post( $parent_post_id, true );
 		wp_delete_attachment( $attach_id, true );
+		$this->go_to( '' );
 
 	}
 
@@ -157,6 +161,7 @@ class Tests_Query_Filters extends WP_UnitTestCase {
 		// Reset to origin
 		wp_delete_post( $parent_post_id, true );
 		wp_delete_attachment( $attach_id, true );
+		$this->go_to( '' );
 
 	}
 
@@ -224,13 +229,17 @@ class Tests_Query_Filters extends WP_UnitTestCase {
 		$this->go_to( get_permalink( $attach_id ) );
 
 		add_filter( 'wp_die_handler', function() { return 'Tests_Query_Filters::some_useless_function'; } );
-		$this->assertNull( edd_block_attachments() );
+		ob_start();
+			edd_block_attachments();
+		$return = ob_get_clean();
+		$this->assertEquals( 'wp_die', $return );
 
 		// Reset to origin
 		remove_all_filters( 'wp_die_handler' );
 		add_filter( 'wp_die_handler', '_default_wp_die_handler' );
 		wp_delete_post( $parent_post_id, true );
 		wp_delete_attachment( $attach_id, true );
+		$this->go_to( '' );
 
 	}
 
@@ -242,7 +251,7 @@ class Tests_Query_Filters extends WP_UnitTestCase {
 	 * @since 2.2.4
 	 */
 	public static function some_useless_function( $message = '', $title = '', $args = array() ) {
-		return 'wp_die';
+		echo 'wp_die';
 	}
 
 
