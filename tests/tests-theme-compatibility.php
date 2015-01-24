@@ -37,6 +37,7 @@ class Tests_Theme_Compatibility extends WP_UnitTestCase {
 		$this->assertContains( 'type-post', get_post_class() );
 
 		// Reset to origin
+		$this->go_to( '' );
 		wp_delete_post( $post_id, true );
 
 	}
@@ -62,6 +63,7 @@ class Tests_Theme_Compatibility extends WP_UnitTestCase {
 		$this->assertContains( 'type-download', get_post_class() );
 
 		// Reset to origin
+		$this->go_to( '' );
 		wp_delete_post( $post_id, true );
 
 	}
