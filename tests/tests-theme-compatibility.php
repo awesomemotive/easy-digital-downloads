@@ -33,7 +33,7 @@ class Tests_Theme_Compatibility extends WP_UnitTestCase {
 		$this->go_to( get_permalink( $post_id ) );
 
 		// Test some regular values in a post (should be unaffected)
-		$this->assertContains( 'post', get_post_class() );
+		$this->assertContains( 'post-' . $post_id, get_post_class() );
 		$this->assertContains( 'type-post', get_post_class() );
 
 		// Reset to origin
