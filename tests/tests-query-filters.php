@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * @group query_filters
  */
@@ -107,7 +106,11 @@ class Tests_Query_Filters extends WP_UnitTestCase {
 
 	}
 
-
+	/**
+	 * Test that the edd_block_attachments() function will retrun when the content is not restricted.
+	 *
+	 * @since 2.2.4
+	 */
 	public function test_edd_block_attachments_not_restricted_bail() {
 
 		// Prepare test
@@ -165,11 +168,10 @@ class Tests_Query_Filters extends WP_UnitTestCase {
 
 	}
 
-
 	/**
+	 * Test that the edd_block_attachments() function dies when the file is restricted.
 	 *
-	 *
-	 *
+	 * @since 2.2.4
 	 */
 	public function test_edd_block_attachments_die() {
 
