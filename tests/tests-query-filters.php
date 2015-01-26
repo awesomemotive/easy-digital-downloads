@@ -72,16 +72,16 @@ class Tests_Query_Filters extends WP_UnitTestCase {
 
 		// Prepare test
 		$parent_post_id = $this->factory->post->create( array(
-			'post_title' 	=> 'Hello World',
-			'post_name' 	=> 'hello-world',
-			'post_type' 	=> 'post',
-			'post_status' 	=> 'publish'
+			'post_title'  => 'Hello World',
+			'post_name'   => 'hello-world',
+			'post_type'   => 'post',
+			'post_status' => 'publish'
 		) );
 
-		$filename 			= '../assets/images/loading.gif';
-		$parent_post_id 	= $parent_post_id;
-		$filetype 			= wp_check_filetype( basename( $filename ), null );
-		$wp_upload_dir 		= wp_upload_dir();
+		$filename       = '../assets/images/loading.gif';
+		$parent_post_id = $parent_post_id;
+		$filetype       = wp_check_filetype( basename( $filename ), null );
+		$wp_upload_dir  = wp_upload_dir();
 
 		$attachment = array(
 			'guid'           => $wp_upload_dir['url'] . '/' . basename( $filename ),
@@ -122,19 +122,19 @@ class Tests_Query_Filters extends WP_UnitTestCase {
 		) );
 
 		$meta = array(
-			'edd_price'							=> '0.00',
-			'_variable_pricing'					=> 1,
-			'_edd_price_options_mode'			=> 'on',
-			'edd_variable_prices'				=> array(),
-			'edd_download_files'				=> array(),
-			'_edd_download_limit'				=> 20,
-			'_edd_hide_purchase_link'			=> 1,
-			'edd_product_notes'					=> 'Purchase Notes',
-			'_edd_product_type'					=> 'default',
-			'_edd_download_earnings'			=> 129.43,
-			'_edd_download_sales'				=> 59,
-			'_edd_download_limit_override_1'	=> 1,
-			'edd_sku'							=> 'sku_0012'
+			'edd_price'                         => '0.00',
+			'_variable_pricing'                 => 1,
+			'_edd_price_options_mode'           => 'on',
+			'edd_variable_prices'               => array(),
+			'edd_download_files'                => array(),
+			'_edd_download_limit'               => 20,
+			'_edd_hide_purchase_link'           => 1,
+			'edd_product_notes'                 => 'Purchase Notes',
+			'_edd_product_type'                 => 'default',
+			'_edd_download_earnings'            => 129.43,
+			'_edd_download_sales'               => 59,
+			'_edd_download_limit_override_1'    => 1,
+			'edd_sku'                           => 'sku_0012'
 		);
 		foreach( $meta as $key => $value ) {
 			update_post_meta( $parent_post_id, $key, $value );
@@ -177,26 +177,26 @@ class Tests_Query_Filters extends WP_UnitTestCase {
 
 		// Prepare test
 		$parent_post_id = $this->factory->post->create( array(
-			'post_title'	=> 'Test Download Product',
-			'post_name'		=> 'test-download-product',
-			'post_type'		=> 'download',
-			'post_status'	=> 'publish'
+			'post_title'  => 'Test Download Product',
+			'post_name'   => 'test-download-product',
+			'post_type'   => 'download',
+			'post_status' => 'publish'
 		) );
 
 		$meta = array(
-			'edd_price'							=> '0.00',
-			'_variable_pricing'					=> 1,
-			'_edd_price_options_mode'			=> 'on',
-			'edd_variable_prices'				=> array(),
-			'edd_download_files'				=> array(),
-			'_edd_download_limit'				=> 20,
-			'_edd_hide_purchase_link'			=> 1,
-			'edd_product_notes'					=> 'Purchase Notes',
-			'_edd_product_type'					=> 'default',
-			'_edd_download_earnings'			=> 129.43,
-			'_edd_download_sales'				=> 59,
-			'_edd_download_limit_override_1'	=> 1,
-			'edd_sku'							=> 'sku_0012'
+			'edd_price'                         => '0.00',
+			'_variable_pricing'                 => 1,
+			'_edd_price_options_mode'           => 'on',
+			'edd_variable_prices'               => array(),
+			'edd_download_files'                => array(),
+			'_edd_download_limit'               => 20,
+			'_edd_hide_purchase_link'           => 1,
+			'edd_product_notes'                 => 'Purchase Notes',
+			'_edd_product_type'                 => 'default',
+			'_edd_download_earnings'            => 129.43,
+			'_edd_download_sales'               => 59,
+			'_edd_download_limit_override_1'    => 1,
+			'edd_sku'                           => 'sku_0012'
 		);
 		foreach( $meta as $key => $value ) {
 			update_post_meta( $parent_post_id, $key, $value );
@@ -222,9 +222,9 @@ class Tests_Query_Filters extends WP_UnitTestCase {
 		// Add attachment to the download product files
 		update_post_meta( $parent_post_id, 'edd_download_files', array(
 			array(
-				'name'		=> 'Restricted file',
-				'file'		=> wp_get_attachment_url( $attach_id ),
-				'condition'	=> 0,
+				'name'      => 'Restricted file',
+				'file'      => wp_get_attachment_url( $attach_id ),
+				'condition' => 0,
 			) )
 		);
 
