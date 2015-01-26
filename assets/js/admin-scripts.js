@@ -1043,6 +1043,7 @@ jQuery(document).ready(function ($) {
 					data: {
 						action: 'edd_download_search',
 						s: val,
+						current_id: edd_vars.post_id,
 					},
 					dataType: "json",
 					beforeSend: function(){
