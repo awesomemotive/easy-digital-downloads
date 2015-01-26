@@ -32,6 +32,11 @@ function edd_checkout_form() {
 				<?php do_action( 'edd_before_purchase_form' ); ?>
 				<form id="edd_purchase_form" class="edd_form" action="<?php echo $form_action; ?>" method="POST">
 					<?php
+					/**
+					 * Hooks in at the top of the checkout form
+					 *
+					 * @since 1.0
+					 */
 					do_action( 'edd_checkout_form_top' );
 
 					if ( edd_show_gateways() ) {
@@ -40,6 +45,11 @@ function edd_checkout_form() {
 						do_action( 'edd_purchase_form' );
 					}
 
+					/**
+					 * Hooks in at the bottom of the checkout form
+					 *
+					 * @since 1.0
+					 */
 					do_action( 'edd_checkout_form_bottom' )
 					?>
 				</form>
@@ -47,6 +57,11 @@ function edd_checkout_form() {
 			</div><!--end #edd_checkout_form_wrap-->
 		<?php
 		else:
+			/**
+			 * Fires off when there is nothing in the cart
+			 *
+			 * @since 1.0
+			 */
 			do_action( 'edd_cart_empty' );
 		endif;
 		echo '</div><!--end #edd_checkout_wrap-->';
@@ -68,6 +83,11 @@ function edd_show_purchase_form() {
 
 	$payment_mode = edd_get_chosen_gateway();
 
+	/**
+	 * Hooks in at the top of the purchase form
+	 *
+	 * @since 1.4
+	 */
 	do_action( 'edd_purchase_form_top' );
 
 	if ( edd_can_checkout() ) {
@@ -89,6 +109,11 @@ function edd_show_purchase_form() {
 			do_action( 'edd_purchase_form_after_user_info' );
 		}
 
+		/**
+		 * Hooks in before Credit Card Form
+		 *
+		 * @since 1.4
+		 */
 		do_action( 'edd_purchase_form_before_cc_form' );
 
 		if( edd_get_cart_total() > 0 ) {
@@ -102,6 +127,11 @@ function edd_show_purchase_form() {
 
 		}
 
+		/**
+		 * Hooks in after Credit Card Form
+		 *
+		 * @since 1.4
+		 */
 		do_action( 'edd_purchase_form_after_cc_form' );
 
 	} else {
@@ -109,6 +139,11 @@ function edd_show_purchase_form() {
 		do_action( 'edd_purchase_form_no_access' );
 	}
 
+	/**
+	 * Hooks in at the bottom of the purchase form
+	 *
+	 * @since 1.4
+	 */
 	do_action( 'edd_purchase_form_bottom' );
 }
 add_action( 'edd_purchase_form', 'edd_show_purchase_form' );
