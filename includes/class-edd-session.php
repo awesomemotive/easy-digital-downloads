@@ -40,6 +40,15 @@ class EDD_Session {
 	 */
 	private $use_php_sessions = false;
 
+	/**
+	 * Session index prefix
+	 *
+	 * @var string
+	 * @access private
+	 * @since 2.3
+	 */
+	private $prefix = '';
+
 
 	/**
 	 * Get things started
@@ -54,6 +63,12 @@ class EDD_Session {
 		$this->use_php_sessions = $this->use_php_sessions();
 
 		if( $this->use_php_sessions ) {
+
+			if( is_multisite() ) {
+
+				$this->prefix = '_' . get_current_blog_id();
+	
+			}
 
 			// Use PHP SESSION (must be enabled via the EDD_USE_PHP_SESSIONS constant)
 			add_action( 'init', array( $this, 'maybe_start_session' ), -2 );
@@ -98,7 +113,7 @@ class EDD_Session {
 	public function init() {
 
 		if( $this->use_php_sessions ) {
-			$this->session = isset( $_SESSION['edd'] ) && is_array( $_SESSION['edd'] ) ? $_SESSION['edd'] : array();
+			$this->session = isset( $_SESSION[ 'edd' . $this->prefix ] ) && is_array( $_SESSION[ 'edd' . $this->prefix ] ) ? $_SESSION[ 'edd' . $this->prefix ] : array();
 		} else {
 			$this->session = WP_Session::get_instance();
 		}
@@ -161,7 +176,8 @@ class EDD_Session {
 		}
 
 		if( $this->use_php_sessions ) {
-			$_SESSION['edd'] = $this->session;
+
+			$_SESSION[ 'edd' . $this->prefix ] = $this->session;
 		}
 
 		return $this->session[ $key ];
