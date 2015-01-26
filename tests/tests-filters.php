@@ -303,6 +303,11 @@ class Tests_Filters extends WP_UnitTestCase {
 		$this->assertarrayHasKey( 'edd_updated_messages', $wp_filter['post_updated_messages'][10] );
 	}
 
+	public function test_bulk_post_updated_messages() {
+		global $wp_filter;
+		$this->assertarrayHasKek( 'edd_bulk_updated_messages', $wp_filter['bulk_post_updated_messages'][10] );
+	}
+
 	public function test_load_edit_php() {
 		global $wp_filter;
 		$this->assertarrayHasKey( 'edd_remove_post_types_order', $wp_filter['load-edit.php'][10] );
