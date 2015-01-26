@@ -305,7 +305,7 @@ class Tests_Filters extends WP_UnitTestCase {
 
 	public function test_bulk_post_updated_messages() {
 		global $wp_filter;
-		$this->assertarrayHasKek( 'edd_bulk_updated_messages', $wp_filter['bulk_post_updated_messages'][10] );
+		$this->assertarrayHasKey( 'edd_bulk_updated_messages', $wp_filter['bulk_post_updated_messages'][10] );
 	}
 
 	public function test_load_edit_php() {
