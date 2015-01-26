@@ -19,8 +19,25 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return bool True if on the Checkout page, false otherwise
  */
 function edd_is_checkout() {
-	global $edd_options;
-	$is_checkout = isset( $edd_options['purchase_page'] ) ? is_page( $edd_options['purchase_page'] ) : false;
+
+	global $edd_options, $wp_query;
+
+	$is_object_set    = isset( $wp_query->queried_object );
+	$is_object_id_set = isset( $wp_query->queried_object_id );
+	$is_checkout      = is_page( edd_get_option( 'purchase_page' ) );
+
+	if( ! $is_object_set ) {
+
+		unset( $wp_query->queried_object );
+
+	}
+
+	if( ! $is_object_id_set ) {
+
+		unset( $wp_query->queried_object_id );
+
+	}
+
 	return apply_filters( 'edd_is_checkout', $is_checkout );
 }
 
@@ -117,7 +134,7 @@ function edd_get_checkout_uri( $args = array() ) {
 
 	$ajax_url = admin_url( 'admin-ajax.php', $scheme );
 
-	if ( ( ! preg_match( '/^https/', $uri ) && preg_match( '/^https/', $ajax_url ) ) || edd_is_ssl_enforced() ) {
+	if ( ( ! preg_match( '/^https/', $uri ) && preg_match( '/^https/', $ajax_url ) && edd_is_ajax_enabled() ) || edd_is_ssl_enforced() ) {
 		$uri = preg_replace( '/^http:/', 'https:', $uri );
 	}
 
@@ -214,7 +231,7 @@ function edd_is_failed_transaction_page() {
  * @return      void
 */
 function edd_listen_for_failed_payments() {
-	
+
 	$failed_page = edd_get_option( 'failure_page', 0 );
 
 	if( ! empty( $failed_page ) && is_page( $failed_page ) && ! empty( $_GET['payment-id'] ) ) {
@@ -269,7 +286,7 @@ function edd_is_email_banned( $email = '' ) {
 	return apply_filters( 'edd_is_email_banned', $ret, $email );
 }
 
-/** 
+/**
  * Determines if secure checkout pages are enforced
  *
  * @since       2.0
@@ -291,7 +308,7 @@ function edd_enforced_ssl_redirect_handler() {
 	if ( ! edd_is_ssl_enforced() || ! edd_is_checkout() || is_admin() || is_ssl() ) {
 		return;
 	}
- 
+
 	if ( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" ) {
 		return;
 	}
@@ -327,7 +344,7 @@ function edd_enforced_ssl_asset_handler() {
 		'stylesheet_directory_uri',
 		'site_url'
 	);
-	
+
 	$filters = apply_filters( 'edd_enforced_ssl_asset_filters', $filters );
 
 	foreach ( $filters as $filter ) {

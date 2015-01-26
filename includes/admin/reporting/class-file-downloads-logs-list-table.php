@@ -25,7 +25,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  * @since 1.4
  */
 class EDD_File_Downloads_Log_Table extends WP_List_Table {
-	
+
 	/**
 	 * Number of items per page
 	 *
@@ -112,9 +112,9 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 			case 'download' :
 				return '<a href="' . add_query_arg( 'download', $item[ $column_name ] ) . '" >' . get_the_title( $item[ $column_name ] ) . '</a>';
 			case 'user_id' :
-				return '<a href="' . add_query_arg( 'user', $item[ $column_name ] ) . '">' . $item[ 'user_name' ] . '</a>';
+				return $item[ $column_name ] ? '<a href="' . add_query_arg( 'user', $item[ $column_name ] ) . '">' . $item[ 'user_name' ] . '</a>' : $item[ 'user_name' ];
 			case 'payment_id' :
-				return '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item[ 'payment_id' ] ) . '">' . edd_get_payment_number( $item[ 'payment_id' ] ) . '</a>';
+				return $item[ 'payment_id' ] !== false ? '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item[ 'payment_id' ] ) . '">' . edd_get_payment_number( $item[ 'payment_id' ] ) . '</a>' : '';
 			default:
 				return $item[ $column_name ];
 		}
@@ -373,10 +373,9 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 		if ( $logs ) {
 			foreach ( $logs as $log ) {
 
-
 				$meta        = get_post_custom( $log->ID );
-				$user_info 	 = maybe_unserialize( $meta[ '_edd_log_user_info' ][0] );
-				$payment_id  = $meta[ '_edd_log_payment_id' ][0];
+				$user_info 	 = isset( $meta['_edd_log_user_info'] ) ? maybe_unserialize( $meta[ '_edd_log_user_info' ][0] ) : array();
+				$payment_id  = isset( $meta['_edd_log_payment_id'] ) ? $meta[ '_edd_log_payment_id' ][0] : false;
 				$ip 		 = $meta[ '_edd_log_ip' ][0];
 				$user_id 	 = isset( $user_info['id'] ) ? $user_info['id'] : false;
 
@@ -396,8 +395,8 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 						'ID' 		=> $log->ID,
 						'download'	=> $log->post_parent,
 						'payment_id'=> $payment_id,
-						'user_id'	=> $user_id ? $user_id : $user_info['email'],
-						'user_name'	=> $user_info['email'],
+						'user_id'	=> $user_id ? $user_id : ( isset( $user_info['email'] ) ? $user_info['email'] : null ),
+						'user_name'	=> isset( $user_info['email'] ) ? $user_info['email'] : ( isset( $user_info['name'] ) ? $user_info['name'] : '' ),
 						'file'		=> $file_name,
 						'ip'		=> $ip,
 						'date'		=> $log->post_date

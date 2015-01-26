@@ -34,24 +34,28 @@ jQuery(document).ready(function ($) {
 	                // Remove the selected cart item
 	                $('.edd-cart').find("[data-cart-item='" + item + "']").parent().remove();
 
+	                //Reset the data-cart-item attributes to match their new values in the EDD session cart array
+	                var cart_item_counter = 0;
+	                $('.edd-cart').find("[data-cart-item]").each(function(){
+	                    $(this).attr('data-cart-item', cart_item_counter);
+	                    cart_item_counter = cart_item_counter + 1;
+	                });
+
 	                // Check to see if the purchase form for this download is present on this page
 	                if( $( '#edd_purchase_' + id ).length ) {
 	                    $( '#edd_purchase_' + id + ' .edd_go_to_checkout' ).hide();
 	                    $( '#edd_purchase_' + id + ' a.edd-add-to-cart' ).show().removeAttr('data-edd-loading');
+	                    if ( edd_scripts.quantities_enabled == '1' ) {
+	                        $( '#edd_purchase_' + id + ' .edd_download_quantity_wrapper' ).show();
+	                    }
 	                }
 
-	                $('span.edd-cart-quantity').each(function() {
-	                    var quantity = parseInt( $(this).text(), 10 ) - 1;
-	                    if( quantity < 1 ) {
-	                    	quantity = 0;
-	                    }
-	                    $(this).text( quantity );
-	                    $('body').trigger('edd_quantity_updated', [ quantity ]);
-	                });
+	                $('span.edd-cart-quantity').text( response.cart_quantity );
+	                $('body').trigger('edd_quantity_updated', [ response.cart_quantity ]);
 
 	                $('.cart_item.edd_subtotal span').html( response.subtotal );
 
-	                if(!$('.edd-cart-item').length) {
+	                if( response.cart_quantity == 0 ) {
 	                    $('.cart_item.edd_subtotal,.edd-cart-number-of-items,.cart_item.edd_checkout').hide();
 	                    $('.edd-cart').append('<li class="cart_item empty">' + edd_scripts.empty_cart_message + '</li>');
 	                }
@@ -104,16 +108,20 @@ jQuery(document).ready(function ($) {
 
         if( variable_price == 'yes' ) {
 
-            if( ! $('.edd_price_option_' + download + ':checked', form).length ) {
-                 // hide the spinner
-                $this.removeAttr( 'data-edd-loading' );
-                alert( edd_scripts.select_option );
-                return;
-            }
+            if ( form.find('.edd_price_option_' + download).is('input:hidden') ) {
+            	item_price_ids[0] = $('.edd_price_option_' + download).val();
+            } else {
+	            if( ! form.find('.edd_price_option_' + download + ':checked', form).length ) {
+	                 // hide the spinner
+	                $this.removeAttr( 'data-edd-loading' );
+	                alert( edd_scripts.select_option );
+	                return;
+	            }
 
-            $('.edd_price_option_' + download + ':checked', form).each(function( index ) {
-                item_price_ids[ index ] = $(this).val();
-            });
+	            form.find('.edd_price_option_' + download + ':checked', form).each(function( index ) {
+	                item_price_ids[ index ] = $(this).val();
+	            });
+        	}
 
         } else {
             item_price_ids[0] = download;
@@ -155,8 +163,10 @@ jQuery(document).ready(function ($) {
 	                 $('.cart_item.edd_subtotal span').html( response.subtotal );
 
 	                // Update the cart quantity
+	                var items_added = $( '.edd-cart-item-title', response.cart_item ).length;
+
 	                $('span.edd-cart-quantity').each(function() {
-	                    var quantity = parseInt($(this).text(), 10) + 1;
+	                    var quantity = parseInt($(this).text(), 10) + items_added;
 	                    $(this).text(quantity);
 	                    $('body').trigger('edd_quantity_updated', [ quantity ]);
 	                });
@@ -176,11 +186,14 @@ jQuery(document).ready(function ($) {
 	                    // remove spinner for multi
 	                    $this.removeAttr( 'data-edd-loading' );
 	                }
-	                
+
 	                // Update all buttons for same download
 					if( $( '.edd_download_purchase_form' ).length ) {
 						var parent_form = $('.edd_download_purchase_form *[data-download-id="' + download + '"]').parents('form');
 						$( 'a.edd-add-to-cart', parent_form ).hide();
+                        if( price_mode != 'multi' ) {
+                            parent_form.find('.edd_download_quantity_wrapper').slideUp();
+                        }
 	                	$( '.edd_go_to_checkout', parent_form ).show().removeAttr( 'data-edd-loading' );
 	               	}
 
@@ -278,29 +291,35 @@ jQuery(document).ready(function ($) {
         }, 200);
     }
 
-    $(document).on('click', '#edd_purchase_form #edd_purchase_submit input[type=submit]', function(e) {
+	$(document).on('click', '#edd_purchase_form #edd_purchase_submit input[type=submit]', function(e) {
 
-        e.preventDefault();
+		var eddPurchaseform = document.getElementById('edd_purchase_form');
 
-        var complete_purchase_val = $(this).val();
+		if( typeof eddPurchaseform.checkValidity === "function" && false === eddPurchaseform.checkValidity() ) {
+			return;
+		}
 
-        $(this).val(edd_global_vars.purchase_loading);
+		e.preventDefault();
 
-        $(this).after('<span class="edd-cart-ajax"><i class="edd-icon-spinner edd-icon-spin"></i></span>');
+		var complete_purchase_val = $(this).val();
 
-        $.post(edd_global_vars.ajaxurl, $('#edd_purchase_form').serialize() + '&action=edd_process_checkout&edd_ajax=true', function(data) {
-            if ( $.trim(data) == 'success' ) {
-                $('.edd_errors').remove();
-                $('#edd_purchase_form').submit();
-            } else {
-                $('#edd_purchase_form #edd-purchase-button').val(complete_purchase_val);
-                $('.edd-cart-ajax').remove();
-                $('.edd_errors').remove();
-                $('#edd_purchase_submit').before(data);
-            }
-        });
+		$(this).val(edd_global_vars.purchase_loading);
 
-    });
+		$(this).after('<span class="edd-cart-ajax"><i class="edd-icon-spinner edd-icon-spin"></i></span>');
+
+		$.post(edd_global_vars.ajaxurl, $('#edd_purchase_form').serialize() + '&action=edd_process_checkout&edd_ajax=true', function(data) {
+			if ( $.trim(data) == 'success' ) {
+				$('.edd_errors').remove();
+				$(eddPurchaseform).submit();
+			} else {
+				$('#edd-purchase-button').val(complete_purchase_val);
+				$('.edd-cart-ajax').remove();
+				$('.edd_errors').remove();
+				$('#edd_purchase_submit').before(data);
+			}
+		});
+
+	});
 
 });
 

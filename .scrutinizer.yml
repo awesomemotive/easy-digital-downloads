@@ -1,17 +1,37 @@
 filter:
-    excluded_paths: [vendor/*, tests/*, .tx/*, languages/* ]
+    excluded_paths: [vendor/*, tests/*, .tx/*, languages/*, includes/libraries/*, bin/*, assets/*, templates/* ]
 before_commands:
     - 'composer install --dev --prefer-source'
 tools:
     external_code_coverage: true
-    php_mess_detector: true
+    php_mess_detector: 
+        config:
+            code_size_rules:
+                cyclomatic_complexity:  false
+                npath_complexity:     false
+                excessive_method_length:  false
+                excessive_class_length:  false
+                excessive_parameter_list:  false
+                excessive_public_count:  false
+                too_many_fields:      false
+                too_many_methods:     false
+                excessive_class_complexity:  false
+
     php_code_sniffer: true
     sensiolabs_security_checker: true
     php_code_coverage: true
     php_pdepend: true
     php_loc:
         enabled: true
-        excluded_dirs: [vendor, tests, .tx, languages]
+        excluded_dirs: [vendor, tests, .tx, languages, includes/libraries, bin, assets, templates]
     php_cpd:
         enabled: true
-        excluded_dirs: [vendor, tests, .tx, languages]
+        excluded_dirs: [vendor, tests, .tx, languages, includes/libraries, bin, assets, templates]
+checks:
+    php:
+        psr2_switch_declaration: false
+        psr2_control_structure_declaration: false
+        psr2_class_declaration: false
+        one_class_per_file: false
+        avoid_superglobals: false
+        require_php_tag_first: false

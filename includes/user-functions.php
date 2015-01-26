@@ -75,7 +75,7 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 
 	/*
 	$payment_ids = EDD()->customers->get_column_by( 'payment_ids', $field, $user );
-	
+
 	if( ! empty( $payment_ids ) ) {
 		unset( $args['user'] );
 		$args['post__in'] = array_map( 'absint', explode( ',', $payment_ids ) );
@@ -255,8 +255,17 @@ function edd_get_purchase_stats_by_user( $user = '' ) {
 
 	$customer = EDD()->customers->get_by( $field, $user );
 
-	$stats['purchases']   = absint( $customer->purchase_count );
-	$stats['total_spent'] = edd_sanitize_amount( $customer->purchase_value );
+	if ( empty( $customer ) ) {
+
+		$stats['purchases']   = 0;
+		$stats['total_spent'] = edd_sanitize_amount( 0 );
+
+	} else {
+
+		$stats['purchases']   = absint( $customer->purchase_count );
+		$stats['total_spent'] = edd_sanitize_amount( $customer->purchase_value );
+
+	}
 
 	return (array) apply_filters( 'edd_purchase_stats_by_user', $stats, $user );
 }
@@ -434,6 +443,11 @@ function edd_get_customer_address( $user_id = 0 ) {
  * @return 		void
  */
 function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
+
+	if( empty( $user_id ) || empty( $user_data ) ) {
+		return;
+	}
+
 	wp_new_user_notification( $user_id, __( '[Password entered at checkout]', 'edd' ) );
 }
 add_action( 'edd_insert_user', 'edd_new_user_notification', 10, 2 );
