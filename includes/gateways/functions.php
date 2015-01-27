@@ -78,7 +78,7 @@ function edd_is_gateway_active( $gateway ) {
  */
 function edd_get_default_gateway() {
 	$default = edd_get_option( 'default_gateway', false );
-	$default = edd_is_gateway_active( $default ) ? $default : 'paypal';
+	$default = $default && edd_is_gateway_active( $default ) ? $default : 'paypal';
 	return apply_filters( 'edd_default_gateway', $default );
 }
 
