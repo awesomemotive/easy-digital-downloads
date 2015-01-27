@@ -47,9 +47,9 @@ add_action( 'edd_after_download_content', 'edd_append_purchase_link' );
  * @return string $purchase_form
  */
 function edd_get_purchase_link( $args = array() ) {
-	global $edd_options, $post, $edd_displayed_form_ids;
+	global $post, $edd_displayed_form_ids;
 
-	if ( ! isset( $edd_options['purchase_page'] ) || $edd_options['purchase_page'] == 0 ) {
+	if ( ! edd_get_option( 'purchase_page', false ) || edd_get_option( 'purchase_page', false ) == 0 ) {
 		edd_set_error( 'set_checkout', sprintf( __( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-settings' ) ) );
 		edd_print_errors();
 		return false;
@@ -62,9 +62,9 @@ function edd_get_purchase_link( $args = array() ) {
 		'price'       => (bool) true,
 		'price_id'    => isset( $args['price_id'] ) ? $args['price_id'] : false,
 		'direct'      => edd_get_download_button_behavior( $post_id ) == 'direct' ? true : false,
-		'text'        => ! empty( $edd_options[ 'add_to_cart_text' ] ) ? $edd_options[ 'add_to_cart_text' ] : __( 'Purchase', 'edd' ),
-		'style'       => isset( $edd_options[ 'button_style' ] ) 	   ? $edd_options[ 'button_style' ]     : 'button',
-		'color'       => isset( $edd_options[ 'checkout_color' ] ) 	   ? $edd_options[ 'checkout_color' ] 	: 'blue',
+		'text' => edd_get_option( 'add_to_cart_text', __( 'Purchase', 'edd' ) ),
+		'style' => edd_get_option( 'button_style', 'button' ),
+		'color' => edd_get_option( 'checkout_color', 'blue' ),
 		'class'       => 'edd-submit'
 	) );
 
@@ -212,8 +212,6 @@ function edd_get_purchase_link( $args = array() ) {
  * @return void
  */
 function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
-	global $edd_options;
-
 	$variable_pricing = edd_has_variable_prices( $download_id );
 	$prices = apply_filters( 'edd_purchase_variable_prices', edd_get_variable_prices( $download_id ), $download_id );
 
@@ -743,8 +741,7 @@ add_action( 'wp_head', 'edd_version_in_header' );
  * @return bool True if on the Purchase History page, false otherwise.
  */
 function edd_is_purchase_history_page() {
-	global $edd_options;
-	$ret = isset( $edd_options['purchase_history_page'] ) ? is_page( $edd_options['purchase_history_page'] ) : false;
+	$ret = is_page( edd_get_option( 'purchase_history_page', false ) );
 	return apply_filters( 'edd_is_purchase_history_page', $ret );
 }
 
