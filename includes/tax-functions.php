@@ -24,7 +24,8 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @return bool Whether or not taxes are enabled
  */
 function edd_use_taxes() {
-	return apply_filters( 'edd_use_taxes', edd_get_option( 'enable_taxes', false ) );
+	$ret = edd_get_option( 'enable_taxes', false );
+	return apply_filters( 'edd_use_taxes', isset( $ret ) );
 }
 
 /**
