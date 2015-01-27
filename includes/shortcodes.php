@@ -382,15 +382,15 @@ function edd_downloads_query( $atts, $content = null ) {
 
 		}
 
-		$tax_query_key = count( $query['tax_query'] );
-		$query['tax_query'][ $tax_query_key ] = array(
-			'relation' => 'AND'
-		);
-
+		$tax_query_key = count( $query['tax_query'] ) - 1;
 
 		if ( $atts['exclude_category'] ) {
 
 			$categories = explode( ',', $atts['exclude_category'] );
+
+			$query['tax_query'][ $tax_query_key ] = array(
+				'relation' => 'AND'
+			);
 
 			foreach( $categories as $category ) {
 
@@ -415,7 +415,6 @@ function edd_downloads_query( $atts, $content = null ) {
 					'terms'    => $term_id,
 					'operator' => 'NOT IN'
 				);
-
 			}
 
 		}
@@ -423,6 +422,12 @@ function edd_downloads_query( $atts, $content = null ) {
 		if ( $atts['exclude_tags'] ) {
 
 			$tag_list = explode( ',', $atts['exclude_tags'] );
+
+			if( empty( $query['tax_query'][ $tax_query_key ] ) ) {
+				$query['tax_query'][ $tax_query_key ] = array(
+					'relation' => 'AND'
+				);
+			}
 
 			foreach( $tag_list as $tag ) {
 
