@@ -53,8 +53,7 @@ class EDD_Tracking {
 	 * @return bool
 	 */
 	private function tracking_allowed() {
-		global $edd_options;
-		return isset( $edd_options['allow_tracking'] );
+		return edd_get_option( 'allow_tracking', false );
 	}
 
 	/**
