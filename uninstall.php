@@ -15,7 +15,7 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit;
 // Load EDD file
 include_once( 'easy-digital-downloads.php' );
 
-global $wpdb, $edd_options, $wp_roles;
+global $wpdb, $wp_roles;
 
 if( edd_get_option( 'uninstall_on_delete' ) ) {
 
@@ -54,7 +54,7 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 	/** Delete the Plugin Pages */
 	$edd_created_pages = array( 'purchase_page', 'success_page', 'failure_page', 'purchase_history_page' );
 	foreach ( $edd_created_pages as $p ) {
-		if ( isset( $edd_options[ $p ] ) ) {
+		if ( isset( edd_get_option( $p, false ) ) ) {
 			wp_delete_post( $edd_options[ $p ], true );
 		}
 	}
