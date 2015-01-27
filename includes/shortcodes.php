@@ -488,7 +488,7 @@ function edd_downloads_query( $atts, $content = null ) {
 
 	// Allow the query to be manipulated by other plugins
 	$query = apply_filters( 'edd_downloads_query', $query, $atts );
-	echo '<pre>'; print_r( $query ); echo '</pre>';
+
 	$downloads = new WP_Query( $query );
 	if ( $downloads->have_posts() ) :
 		$i = 1;
