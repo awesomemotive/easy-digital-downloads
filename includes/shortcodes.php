@@ -382,7 +382,7 @@ function edd_downloads_query( $atts, $content = null ) {
 
 		}
 
-		$tax_query_key = count( $query['tax_query'] );
+		$tax_query_key = count( $query['tax_query'] ) - 1;
 
 		if ( $atts['exclude_category'] ) {
 
