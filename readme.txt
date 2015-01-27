@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.9.2
 Tested up to: 4.1
 
-Stable Tag: 2.2.4
+Stable Tag: 2.2.5
 
 License: GNU Version 2 or Any Later Version
 
@@ -182,6 +182,13 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.2.5, January 27, 2015 =
+
+* Bug: FORCE_SSL_LOGIN incorrectly makes checkout link HTTPS
+* Bug: Reports for 'This Month' forced to current year
+* Bug: Reverted CSV Seperator to , and escaped values
+* Bug: No downloads showing when using category parameter
 
 = 2.2.4, January 24, 2015 =
 
@@ -359,7 +366,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: No file name displayed in download history when one isn't set
 * Fix: Corrected some strict SQL standards with the customer table creation SQL
 * Fix: Restored the .hentry class
-* Tweak: Modified the CSV Payments export to allow easier data manipulation 
+* Tweak: Modified the CSV Payments export to allow easier data manipulation
 
 = 2.1.2, September 4, 2014 =
 
@@ -374,7 +381,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Incorrect subtotal displayed on purchase receipt when taxes are enabled
 * Fix: Customer records not getting created due to SQL syntax error
 * Fix: Apostrophes in site name not being decoded in emails
-* Fix: card_state class not kept on select when when switching countries on checkout 
+* Fix: card_state class not kept on select when when switching countries on checkout
 
 = 2.1, September 3, 2014 =
 
@@ -763,7 +770,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 _REQUIRES WordPress 3.7 or later_
 
 * New: Added a new Getting Started page for first time installs
-* New: Rebuilt the View / Edit Details screen for payments, adding the ability to edit almost all data associated with a payment and dramatically improving the edit payment interface 
+* New: Rebuilt the View / Edit Details screen for payments, adding the ability to edit almost all data associated with a payment and dramatically improving the edit payment interface
 * New: Added per-products earnings and sales graphs
 * New: Allow purchase buttons to show only the price, no text
 * New: Added an option to enable/disable data deletion during plugin uninstall
@@ -840,7 +847,7 @@ _REQUIRES WordPress 3.7 or later_
 * Tweak: MP6 UI compatibility
 * Tweak: add edd_get_option() helper function
 * Tweak: enable mobile app link to be removed
-* Tweak: pass $item along with edd_email_receipt_download_title filter 
+* Tweak: pass $item along with edd_email_receipt_download_title filter
 * Tweak: map lowest price option amount to edd_price
 * Tweak: add new user notification on checkout user registration
 * Tweak: check the address is not equal to * when selecting country
