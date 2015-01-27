@@ -18,12 +18,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Enqueues the required scripts.
  *
  * @since 1.0
- * @global $edd_options
  * @global $post
  * @return void
  */
 function edd_load_scripts() {
-	global $edd_options, $post;
+	global $post;
 
 	$js_dir = EDD_PLUGIN_URL . 'assets/js/';
 
@@ -44,7 +43,7 @@ function edd_load_scripts() {
 			'ajaxurl'            => edd_get_ajax_url(),
 			'checkout_nonce'     => wp_create_nonce( 'edd_checkout_nonce' ),
 			'currency_sign'      => edd_currency_filter(''),
-			'currency_pos'       => isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
+			'currency_pos'       => edd_get_option( 'currency_position', 'before' ),
 			'no_gateway'         => __( 'Please select a payment method', 'edd' ),
 			'no_discount'        => __( 'Please enter a discount code', 'edd' ), // Blank discount code message
 			'enter_discount'     => __( 'Enter discount', 'edd' ),
@@ -87,13 +86,10 @@ add_action( 'wp_enqueue_scripts', 'edd_load_scripts' );
  * Checks the styles option and hooks the required filter.
  *
  * @since 1.0
- * @global $edd_options
  * @return void
  */
 function edd_register_styles() {
-	global $edd_options;
-
-	if ( isset( $edd_options['disable_styles'] ) ) {
+	if ( edd_get_option( 'disable_styles', false ) ) {
 		return;
 	}
 
@@ -187,7 +183,7 @@ function edd_load_admin_scripts( $hook ) {
 		'numeric_item_price'      => __( 'Item price must be numeric', 'edd' ),
 		'numeric_quantity'        => __( 'Quantity must be numeric', 'edd' ),
 		'currency_sign'           => edd_currency_filter(''),
-		'currency_pos'            => isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
+		'currency_pos'            => edd_get_option( 'currency_position', 'before' ),
 		'currency_decimals'       => edd_currency_decimal_filter(),
 		'new_media_ui'            => apply_filters( 'edd_use_35_media_ui', 1 ),
 		'remove_text'             => __( 'Remove', 'edd' ),
