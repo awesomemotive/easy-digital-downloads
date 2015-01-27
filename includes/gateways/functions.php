@@ -42,10 +42,8 @@ function edd_get_payment_gateways() {
  * @return array $gateway_list All the available gateways
 */
 function edd_get_enabled_payment_gateways() {
-	global $edd_options;
-
 	$gateways = edd_get_payment_gateways();
-	$enabled  = isset( $edd_options['gateways'] ) ? $edd_options['gateways'] : false;
+	$enabled  = edd_get_option( 'gateways', false );
 
 	$gateway_list = array();
 
@@ -76,12 +74,11 @@ function edd_is_gateway_active( $gateway ) {
  * Gets the default payment gateway selected from the EDD Settings
  *
  * @since 1.5
- * @global $edd_options Array of all the EDD Options
  * @return string Gateway ID
  */
 function edd_get_default_gateway() {
-	global $edd_options;
-	$default = isset( $edd_options['default_gateway'] ) && edd_is_gateway_active( $edd_options['default_gateway'] ) ? $edd_options['default_gateway'] : 'paypal';
+	$default = edd_get_option( 'default_gateway', false );
+	$default = edd_is_gateway_active( $default ) ? $default : 'paypal';
 	return apply_filters( 'edd_default_gateway', $default );
 }
 
