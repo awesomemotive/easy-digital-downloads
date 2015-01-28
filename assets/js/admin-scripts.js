@@ -1109,14 +1109,72 @@ jQuery(document).ready(function ($) {
 
 		init : function() {
 			this.edit_customer();
+			this.cancel_edit();
+			this.save_edit();
+			this.change_country();
 			this.add_note();
 			this.delete_note();
 		},
 		edit_customer: function() {
 			$( 'body' ).on( 'click', '#edit-customer', function( e ) {
 				e.preventDefault();
-				$( '.customer-info .editable' ).hide();
-				$( '.customer-info .edit-item' ).fadeIn().css( 'display', 'block' );
+				$( '#edd-customer-card-wrapper .editable' ).hide();
+				$( '#edd-customer-card-wrapper .edit-item' ).fadeIn().css( 'display', 'block' );
+			});
+		},
+		cancel_edit: function() {
+			$( 'body' ).on( 'click', '#edd-edit-customer-cancel', function( e ) {
+				e.preventDefault();
+				$( '#edd-customer-card-wrapper .edit-item' ).hide()
+				$( '#edd-customer-card-wrapper .editable' ).show();
+			});
+		},
+		save_edit: function() {
+			$( 'body' ).on( 'submit', '#edit-customer-info', function( e ) {
+
+				e.preventDefault();
+				var formData = {};
+
+				$( ':input[name^="customerinfo"]' ).each( function() {
+					var name  = $( this ).data( 'key' );
+					var value = $( this ).val();
+
+					formData[name] = value;
+				});
+
+				var postData = {
+					edd_action:   'edit-customer',
+					customerinfo: formData,
+					_wpnonce:     $( '#edit-customer-info #_wpnonce' ).val()
+				};
+
+				$.post(ajaxurl, postData, function( response ) {
+					if ( 'true' == response ) {
+						alert( 'success' );
+					} else {
+						// Errors
+					}
+				});
+
+			});
+		},
+		change_country: function() {
+			$('select[name="customerinfo[country]"]').change(function() {
+				var $this = $(this);
+				data = {
+					action: 'edd_get_shop_states',
+					country: $this.val(),
+					field_name: 'customerinfo[state]'
+				};
+				$.post(ajaxurl, data, function (response) {
+					if( 'nostates' == response ) {
+						$(':input[name="customerinfo[state]"]').replaceWith( '<input type="text" name="' + data.field_name + '" value="" class="edd-edit-toggles medium-text"/>' );
+					} else {
+						$(':input[name="customerinfo[state]"]').replaceWith( response );
+					}
+				});
+
+				return false;
 			});
 		},
 		add_note : function() {
