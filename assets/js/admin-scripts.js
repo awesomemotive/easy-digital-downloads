@@ -93,16 +93,13 @@ jQuery(document).ready(function ($) {
 				/** remove from price condition */
 			    $( '.edd_repeatable_condition_field option[value=' + row.index() + ']' ).remove();
 
-				if( count > 1 ) {
+				if( count > 1 || type === 'file' ) {
 					$( 'input, select', row ).val( '' );
 					row.fadeOut( 'fast' ).remove();
 				} else {
 					switch( type ) {
 						case 'price' :
 							alert( edd_vars.one_price_min );
-							break;
-						case 'file' :
-							alert( edd_vars.one_file_min );
 							break;
 						default:
 							alert( edd_vars.one_field_min );
