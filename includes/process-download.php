@@ -166,6 +166,13 @@ function edd_process_download() {
 					$file_path  = realpath( $file_path );
 					$direct     = true;
 
+				} else if( strpos( $requested_file, set_url_scheme( WP_CONTENT_URL, 'https' ) ) !== false ) {
+
+					/** This is a local file given by an HTTPS URL so we need to figure out the path */
+					$file_path  = str_replace( set_url_scheme( WP_CONTENT_URL, 'https' ), WP_CONTENT_DIR, $requested_file );
+					$file_path  = realpath( $file_path );
+					$direct     = true;
+
 				}
 
 				// Now deliver the file based on the kind of software the server is running / has enabled
