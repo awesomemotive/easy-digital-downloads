@@ -444,9 +444,9 @@ function edd_ajax_download_search() {
 
 	$results = array();
 	if ( current_user_can( 'edit_products' ) ) {
-		$items = $wpdb->get_results( $wpdb->prepare( "SELECT ID,post_title FROM $wpdb->posts WHERE `post_type` = 'download' AND `post_title` LIKE '%$search%' AND `ID` NOT IN($exclude) LIMIT 50" ) );
+		$items = $wpdb->get_results( $wpdb->prepare( "SELECT ID,post_title FROM $wpdb->posts WHERE `post_type` = 'download' AND `post_title` LIKE '%%s%' AND `ID` NOT IN(%s) LIMIT 50", $search, $exclude ) );
 	} else {
-		$items = $wpdb->get_results( $wpdb->prepare( "SELECT ID,post_title FROM $wpdb->posts WHERE `post_type` = 'download' AND `post_status` = 'publish' AND `post_title` LIKE '%$search%' AND `ID` NOT IN($exclude) LIMIT 50" ) );
+		$items = $wpdb->get_results( $wpdb->prepare( "SELECT ID,post_title FROM $wpdb->posts WHERE `post_type` = 'download' AND `post_status` = 'publish' AND `post_title` LIKE '%%s%' AND `ID` NOT IN(%s) LIMIT 50", $search, $exclude ) );
 	}
 
 	if( $items ) {
