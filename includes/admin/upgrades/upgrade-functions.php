@@ -79,7 +79,7 @@ function edd_show_upgrade_notices() {
 
 		$resume_url = add_query_arg( $resume_upgrade, admin_url( 'index.php' ) );
 		printf(
-			'<div class="error"><p>' . esc_html__( 'Easy Digital Downloads needs to complete a database upgrade that was previously started, click <a href="%s">here</a> to resume the upgrade.', 'edd' ) . '</p></div>',
+			'<div class="error"><p>' . __( 'Easy Digital Downloads needs to complete a database upgrade that was previously started, click <a href="%s">here</a> to resume the upgrade.', 'edd' ) . '</p></div>',
 			esc_url( $resume_url )
 		);
 
