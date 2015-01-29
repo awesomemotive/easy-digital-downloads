@@ -168,6 +168,7 @@ add_action( 'wp_ajax_edd_trigger_upgrades', 'edd_trigger_upgrades' );
 
 /**
  * For use when doing 'stepped' upgrade routines, to see if we need to start somewhere in the middle
+ * @since 2.2.6
  * @return mixed   When nothing to resume returns false, otherwise starts the upgrade where it left off
  */
 function edd_maybe_resume_upgrade() {
