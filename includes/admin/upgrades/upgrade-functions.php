@@ -106,7 +106,7 @@ function edd_show_upgrade_notices() {
 		if ( version_compare( $edd_version, '2.2.6', '<' ) ) {
 			printf(
 				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the payment database, click <a href="%s">here</a> to start the upgrade.', 'edd' ) . '</p></div>',
-				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_payments_db' ) )
+				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_payments_price_logs_db' ) )
 			);
 		}
 
@@ -613,7 +613,7 @@ add_action( 'edd_upgrade_customers_db', 'edd_v21_upgrade_customers_db' );
  * @since 2.2.6
  * @return void
  */
-function edd_v226_upgrade_payments_db() {
+function edd_v226_upgrade_payments_price_logs_db() {
 
 	global $wpdb;
 
@@ -714,7 +714,7 @@ function edd_v226_upgrade_payments_db() {
 		$step++;
 		$redirect = add_query_arg( array(
 			'page'        => 'edd-upgrades',
-			'edd-upgrade' => 'upgrade_payments_db',
+			'edd-upgrade' => 'upgrade_payments_price_logs_db',
 			'step'        => $step
 		), admin_url( 'index.php' ) );
 		wp_redirect( $redirect ); exit;
@@ -730,4 +730,4 @@ function edd_v226_upgrade_payments_db() {
 	}
 
 }
-add_action( 'edd_upgrade_payments_db', 'edd_v226_upgrade_payments_db' );
+add_action( 'edd_upgrade_payments_price_logs_db', 'edd_v226_upgrade_payments_price_logs_db' );
