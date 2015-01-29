@@ -672,15 +672,15 @@ function edd_v226_upgrade_payments_db() {
 
 			$mapped_logs = array();
 
-			// Go through each cart download
-			foreach( $variable_downloads as $download ) {
+			// Go through each cart item
+			foreach( $variable_downloads as $cart_item ) {
 
 				// Itterate through the logs we found attached to this payment
 				foreach ( $logs as $key => $log ) {
 
 					// If this Log ID is associated with this download ID give it the price_id
-					if ( $log['download_id'] === $download['id'] ) {
-						$mapped_logs[$log['log_id']] = $download['price_id'];
+					if ( (int) $log['download_id'] === (int) $cart_item['id'] ) {
+						$mapped_logs[$log['log_id']] = $cart_item['price_id'];
 
 						// Remove this Download/Log ID from the list, for multipurchase compatibility
 						unset( $logs[$key] );
