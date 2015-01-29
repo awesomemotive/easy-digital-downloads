@@ -52,21 +52,27 @@ add_action( 'admin_menu', 'edd_add_options_link', 10 );
  */
 function edd_is_admin_page() {
 
-	if ( ! is_admin() || ! did_action( 'wp_loaded' ) ) {
-		return false;
-	}
-	
-	global $pagenow, $typenow, $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_settings_export, $edd_upgrades_screen;
+	global $pagenow, $typenow, $edd_discounts_page, $edd_payments_page, $edd_settings_page,
+			$edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_settings_export, $edd_upgrades_screen;
+
+	$ret         = false;
+	$admin_pages = apply_filters( 'edd_admin_pages', array( $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_settings_export ) );
 
 	if ( 'download' == $typenow || 'index.php' == $pagenow || 'post-new.php' == $pagenow || 'post.php' == $pagenow ) {
-		return true;
+			
+		$ret = true;
+
+		if( isset( $_GET['page'] ) && 'edd-upgrades' == $_GET['page'] ) {
+
+			$ret = false;
+
+		}
+
+	} elseif ( in_array( $pagenow, $admin_pages ) ) {
+
+		$ret = true;
+
 	}
-	
-	$edd_admin_pages = apply_filters( 'edd_admin_pages', array( $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_settings_export, $edd_upgrades_screen, ) );
-	
-	if ( in_array( $pagenow, $edd_admin_pages ) ) {
-		return true;
-	} else {
-		return false;
-	}
+
+	return (bool) apply_filters( 'edd_is_admin_page', $ret );
 }
