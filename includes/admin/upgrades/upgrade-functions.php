@@ -632,15 +632,9 @@ function edd_v226_upgrade_payments_db() {
 	$offset = $step == 1 ? 0 : ( $step - 1 ) * $number;
 
 	if ( 1 === $step ) {
-		// Check if we have any variable price products on the first step
-		$args = array(
-			'post_type'  => 'download',
-			'meta_key'   => '_variable_pricing',
-			'meta_value' => '1',
-			'posts_per_page' => -1
-		);
 
-		$sql = "SELECT ID FROM $wpdb->posts p LEFT JOIN $wpdb->postmeta m ON p.ID = m.post_id WHERE m.meta_key = '_variable_pricing' AND m.meta_value = 1";
+		// Check if we have any variable price products on the first step
+		$sql = "SELECT ID FROM $wpdb->posts p LEFT JOIN $wpdb->postmeta m ON p.ID = m.post_id WHERE m.meta_key = '_variable_pricing' AND m.meta_value = 1 LIMIT 1";
 		$has_variable = $wpdb->get_col( $sql );
 
 		if( empty( $has_variable ) ) {
