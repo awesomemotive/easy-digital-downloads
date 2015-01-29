@@ -179,7 +179,6 @@ function edd_load_admin_scripts( $hook ) {
 		'copy_download_link_text' => __( 'Copy these links to your clipboard and give them to your customer', 'edd' ),
 		'delete_payment_download' => sprintf( __( 'Are you sure you wish to delete this %s?', 'edd' ), edd_get_label_singular() ),
 		'one_price_min'           => __( 'You must have at least one price', 'edd' ),
-		'one_file_min'            => __( 'You must have at least one file', 'edd' ),
 		'one_field_min'           => __( 'You must have at least one field', 'edd' ),
 		'one_option'              => sprintf( __( 'Choose a %s', 'edd' ), edd_get_label_singular() ),
 		'one_or_more_option'      => sprintf( __( 'Choose one or more %s', 'edd' ), edd_get_label_plural() ),
