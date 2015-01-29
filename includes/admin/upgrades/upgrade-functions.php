@@ -105,7 +105,7 @@ function edd_show_upgrade_notices() {
 
 		if ( version_compare( $edd_version, '2.2.6', '<' ) ) {
 			printf(
-				'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the payment database, click <a href="%s">here</a> to start the upgrade.', 'edd' ) . '</p></div>',
+				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the payment database, click <a href="%s">here</a> to start the upgrade.', 'edd' ) . '</p></div>',
 				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_payments_db' ) )
 			);
 		}
