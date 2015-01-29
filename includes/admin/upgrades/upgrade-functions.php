@@ -721,7 +721,7 @@ function edd_v226_upgrade_payments_db() {
 
 	} else {
 
-		// No more customers found, finish up
+		// No more payments found, finish up
 
 		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
 		delete_option( 'edd_doing_upgrade' );
