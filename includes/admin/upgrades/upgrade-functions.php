@@ -79,9 +79,8 @@ function edd_show_upgrade_notices() {
 
 		$resume_url = add_query_arg( $resume_upgrade, admin_url( 'index.php' ) );
 		printf(
-			'<div class="error"><p>' . esc_html__( 'Easy Digital Downloads needs to complete a database upgrade that was previously started, click %shere%s to resume the upgrade.', 'edd' ) . '</p></div>',
-			'<a href="' . esc_url( $resume_url ) . '">',
-			'</a>'
+			'<div class="error"><p>' . esc_html__( 'Easy Digital Downloads needs to complete a database upgrade that was previously started, click <a href="%s">here</a> to resume the upgrade.', 'edd' ) . '</p></div>',
+			esc_url( $resume_url )
 		);
 
 	} else {
@@ -106,9 +105,8 @@ function edd_show_upgrade_notices() {
 
 		if ( version_compare( $edd_version, '2.2.6', '<' ) ) {
 			printf(
-				'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the payment database, click %shere%s to start the upgrade.', 'edd' ) . '</p></div>',
-				'<a href="' . esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_payments_db' ) ) . '">',
-				'</a>'
+				'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the payment database, click <a href="%s">here</a> to start the upgrade.', 'edd' ) . '</p></div>',
+				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_payments_db' ) )
 			);
 		}
 
@@ -170,6 +168,7 @@ add_action( 'wp_ajax_edd_trigger_upgrades', 'edd_trigger_upgrades' );
 
 /**
  * For use when doing 'stepped' upgrade routines, to see if we need to start somewhere in the middle
+ * @since 2.2.6
  * @return mixed   When nothing to resume returns false, otherwise starts the upgrade where it left off
  */
 function edd_maybe_resume_upgrade() {
