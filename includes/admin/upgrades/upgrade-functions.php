@@ -647,6 +647,7 @@ function edd_v226_upgrade_payments_db() {
 		if( empty( $has_variable ) ) {
 			// We had no variable priced products, so go ahead and just complete
 			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+			delete_option( 'edd_doing_upgrade' );
 
 			wp_redirect( admin_url() ); exit;
 		}
