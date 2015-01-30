@@ -45,12 +45,19 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 			$paged = 1;
 	}
 
-	$args = apply_filters( 'edd_get_users_purchases_args', array(
+	if( is_numeric( $user ) ) {
+
+		$user_data = get_userdata( $user );
+		$user      = $user_data->user_email;
+
+	}
+
+	$args = array(
 		'user'    => $user,
 		'number'  => $number,
 		'status'  => $status,
 		'orderby' => 'date'
-	) );
+	);
 
 	if ( $pagination ) {
 
@@ -62,27 +69,16 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 
 	}
 
-
-	if( is_email( $user ) ) {
-
-		$field = 'email';
-
-	} else {
-
-		$field = 'user_id';
-
-	}
-
-	/*
-	$payment_ids = EDD()->customers->get_column_by( 'payment_ids', $field, $user );
+	$payment_ids = EDD()->customers->get_column_by( 'payment_ids', 'email', $user );
 
 	if( ! empty( $payment_ids ) ) {
+
 		unset( $args['user'] );
 		$args['post__in'] = array_map( 'absint', explode( ',', $payment_ids ) );
+	
 	}
-	*/
 
-	$purchases = edd_get_payments( $args );
+	$purchases = edd_get_payments( apply_filters( 'edd_get_users_purchases_args', $args ) );
 
 	// No purchases
 	if ( ! $purchases )
