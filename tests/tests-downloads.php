@@ -88,6 +88,9 @@ class Tests_Downloads extends WP_UnitTestCase {
 		$download = edd_get_download_by( 'slug', 'test-download-product' );
 		$this->assertSame( $this->_post->ID, $download->ID );
 
+		$downoad = edd_get_download_by( 'name', 'Test Download Product' );
+		$this->assertSame( $this->_post->ID, $download->ID );
+
 	}
 
 	public function test_edd_download() {
@@ -249,9 +252,15 @@ class Tests_Downloads extends WP_UnitTestCase {
 		// Test our helper function
 		$this->assertEquals( 60, edd_increase_purchase_count( $this->_post->ID ) );
 
-		// Now test our EDD_Download class method
+		// Now test our helper with a quantity
+		$this->assertEquals( 62, edd_increase_purchase_count( $this->_post->ID, 2 ) );
+
 		$download = new EDD_Download( $this->_post->ID );
-		$this->assertEquals( 61, $download->increase_sales() );
+		// Now test our EDD_Download class method
+		$this->assertEquals( 63, $download->increase_sales() );
+
+		// Now test our EDD_Downlaod class method with a quantity
+		$this->assertEquals( 65, $download->increase_sales( 2 ) );
 
 	}
 
@@ -260,9 +269,16 @@ class Tests_Downloads extends WP_UnitTestCase {
 		// Test our helper function
 		$this->assertEquals( 58, edd_decrease_purchase_count( $this->_post->ID ) );
 
-		// Now test our EDD_Download class method
+		// Test our helper function with a quantity
+		$this->assertEquals( 56, edd_decrease_purchase_count( $this->_post->ID, 2 ) );
+
 		$download = new EDD_Download( $this->_post->ID );
-		$this->assertEquals( 57, $download->decrease_sales() );
+		// Now test our EDD_Download class method
+		$this->assertEquals( 55, $download->decrease_sales() );
+
+		// Now test our EDD_Download class method with a quantity
+		$this->assertEquals( 53, $download->decrease_sales( 2 ) );
+
 	}
 
 	public function test_earnings_increase() {

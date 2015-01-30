@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.9.2
 Tested up to: 4.1
 
-Stable Tag: 2.2.2
+Stable Tag: 2.2.4
 
 License: GNU Version 2 or Any Later Version
 
@@ -182,6 +182,46 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.2.4, January 24, 2015 =
+
+* New: Introduced edd_global_checkout_script_vars and edd_ajax_script_vars filters for localized javascript variables
+* Bug: Strict PHP Standards notice in EDD_Gateway_Error_Log class
+* Bug: Category parameter behaves incorrectly for the [downloads] short code
+* Bug: Select a Download placeholder on add discount screen saves improperly
+* Bug: EDD_Session leaks across sites in multisite installs
+* Bug: Incorrect spelling of Indian state names
+* Bug: Duplicate array key in country list
+
+= 2.2.3, January 14, 2015 =
+
+* New: Added more hooks to the profile editor template files
+* New: Added more country state/provinces to the country dropdown field
+* New: Added a JSHint file for WP Coding Standards
+* Tweak: Use get_posts() instead of query_posts() in edd_get_*_by() functions
+* Tweak: Improved flexibility for EDD()->html->year_dropdown() to support larger year spans
+* Tweak: Added NZD currency symbol
+* Tweak: Improved support for Polylang plugin via edd_get_option() standardization
+* Tweak: Improved unit testing suite
+* Tweak: Updated numerous translation files
+* Bug: GMT date / time not properly set in date is specified when creating a payment record
+* Bug: Items purchased with quantities show incorrectly in sales log table
+* Bug: [downloads] pagination not working with default permalinks
+* Bug: AND relation acting as an OR relation in [downloads] short code
+* Bug: Cart widget items incorrect with variable prices
+* Bug: Custom date range reports do not work when crossing year boundaries
+* Bug: Yesterday report fails on January 1
+* Bug: Missing license declaration from Credit Card validation library
+* Bug: loading.gif file does not respect HTTPS
+* Bug: Copy Download Link(s) link displayed on non-complete purchases
+* Bug: Nested FORM tags on checkout after taxes are recalculated
+* Bug: get_the_ID() causing non-object error
+* Bug: Discount codes not applied if Apply button is not clicked
+* Bug: Default price ID cannot be selected on products created before version 2.2
+* Bug: edd_get_current_page_url() returns localhost in HHVM
+* Bug: Conflict with 404 Redirected plugin resulting in receipts not being displayed
+* Bug: Add to Cart button reappears on refresh with variable prices
+* Bug: Profile editor not properly validation user email address on save
 
 = 2.2.2, December 14, 2014 =
 

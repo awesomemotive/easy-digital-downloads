@@ -80,6 +80,7 @@ class EDD_License {
 	 * @return  void
 	 */
 	private function hooks() {
+
 		// Register settings
 		add_filter( 'edd_settings_licenses', array( $this, 'settings' ), 1 );
 
@@ -166,6 +167,12 @@ class EDD_License {
 			}
 		}
 
+		if( ! wp_verify_nonce( $_REQUEST[ $this->item_shortname . '_license_key-nonce' ], $this->item_shortname . '_license_key-nonce' ) ) {
+
+			wp_die( __( 'Nonce verification failed', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+
+		}
+
 		if( ! current_user_can( 'manage_shop_settings' ) ) {
 			return;
 		}
@@ -232,6 +239,12 @@ class EDD_License {
 
 		if ( ! isset( $_POST['edd_settings'][ $this->item_shortname . '_license_key' ] ) )
 			return;
+
+		if( ! wp_verify_nonce( $_REQUEST[ $this->item_shortname . '_license_key-nonce' ], $this->item_shortname . '_license_key-nonce' ) ) {
+
+			wp_die( __( 'Nonce verification failed', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+
+		}
 
 		if( ! current_user_can( 'manage_shop_settings' ) ) {
 			return;

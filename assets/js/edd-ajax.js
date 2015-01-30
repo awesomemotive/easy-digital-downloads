@@ -45,6 +45,9 @@ jQuery(document).ready(function ($) {
 	                if( $( '#edd_purchase_' + id ).length ) {
 	                    $( '#edd_purchase_' + id + ' .edd_go_to_checkout' ).hide();
 	                    $( '#edd_purchase_' + id + ' a.edd-add-to-cart' ).show().removeAttr('data-edd-loading');
+	                    if ( edd_scripts.quantities_enabled == '1' ) {
+	                        $( '#edd_purchase_' + id + ' .edd_download_quantity_wrapper' ).show();
+	                    }
 	                }
 
 	                $('span.edd-cart-quantity').text( response.cart_quantity );
@@ -160,10 +163,11 @@ jQuery(document).ready(function ($) {
 	                 $('.cart_item.edd_subtotal span').html( response.subtotal );
 
 	                // Update the cart quantity
+	                //
 	                $('span.edd-cart-quantity').each(function() {
-	                    var quantity = parseInt($(this).text(), 10) + 1;
-	                    $(this).text(quantity);
-	                    $('body').trigger('edd_quantity_updated', [ quantity ]);
+	                    $(this).text(response.cart_quantity);
+
+	                    $('body').trigger('edd_quantity_updated', [ response.cart_quantity ]);
 	                });
 
 	                // Show the "number of items in cart" message
