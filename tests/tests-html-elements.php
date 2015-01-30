@@ -53,6 +53,25 @@ class Test_HTML_Elements extends WP_UnitTestCase {
 		$this->assertEquals( $expected, EDD()->html->year_dropdown() );
 	}
 
+	public function test_year_dropdown_variable() {
+		$years_before = 5;
+		$years_after  = 5;
+		$current_year = date( 'Y' );
+
+		$start_year    = $current_year - $years_before;
+		$end_year      = $current_year + $years_after;
+
+		$expected = '<select name="year" id="" class="edd-select " data-placeholder="">';
+		while ( $start_year <= $end_year ) {
+			$selected  = $start_year == $current_year ? ' selected=\'selected\'' : '';
+			$expected .= '<option value="' . $start_year . '"' . $selected . '>' . $start_year . '</option>';
+			$start_year++;
+		}
+		$expected .= '</select>';
+		$this->assertEquals( $expected, EDD()->html->year_dropdown( 'year', 0, $years_before, $years_after ) );
+
+	}
+
 	public function test_month_dropdown() {
 		$out = EDD()->html->month_dropdown();
 		$this->assertContains( '<select name="month" id="" class="edd-select "', $out );

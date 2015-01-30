@@ -133,6 +133,11 @@ function edd_download_meta_box_save( $post_id, $post ) {
 				}
 			}
 
+		} elseif ( '_edd_default_price_id' == $field && edd_has_variable_prices( $post_id ) ) {
+
+			$new_default_price_id = ! empty( $_POST[$field] ) && is_numeric( $_POST[$field] ) ? (int)$_POST[$field] : 1;
+			update_post_meta( $post_id, $field, $new_default_price_id );
+
 		} else {
 
 			if ( ! empty( $_POST[ $field ] ) ) {
@@ -472,8 +477,8 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 	$args = wp_parse_args( $args, $defaults );
 
 	$default_price_id = edd_get_default_variable_price( $post_id );
-	$default_price_id = $default_price_id ? edd_get_default_variable_price( $post_id ) : 1;
 	$currency_position = edd_get_option( 'currency_position', 'before' );
+
 ?>
 	<td>
 		<span class="edd_draghandle"></span>
@@ -580,7 +585,8 @@ function edd_render_products_field( $post_id ) {
 								'id'       => 'edd_bundled_products',
 								'selected' => $products,
 								'multiple' => true,
-								'chosen'   => true
+								'chosen'   => true,
+								'bundles'  => false
 							) );
 							?>
 						</td>

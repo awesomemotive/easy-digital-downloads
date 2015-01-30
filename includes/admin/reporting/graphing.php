@@ -540,10 +540,12 @@ function edd_get_report_dates() {
 	switch ( $dates['range'] ) :
 
 		case 'this_month' :
-			$dates['m_start'] = date( 'n', $current_time );
-			$dates['m_end']   = date( 'n', $current_time );
-			$dates['day']     = 1;
-			$dates['day_end'] = cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] );
+			$dates['m_start']  = date( 'n', $current_time );
+			$dates['m_end']    = date( 'n', $current_time );
+			$dates['day']      = 1;
+			$dates['day_end']  = cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] );
+			$dates['year']     = date( 'Y' );
+			$dates['year_end'] = date( 'Y' );
 		break;
 
 		case 'last_month' :

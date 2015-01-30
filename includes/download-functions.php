@@ -621,11 +621,13 @@ add_action( 'delete_post', 'edd_remove_download_logs_on_delete' );
  *
  * @since 1.0
  * @param int $download_id Download ID
+ * @param int $quantity Quantity to increase purchase count by
  * @return bool|int
  */
-function edd_increase_purchase_count( $download_id = 0 ) {
+function edd_increase_purchase_count( $download_id = 0, $quantity = 1 ) {
+	$quantity = (int) $quantity;
 	$download = new EDD_Download( $download_id );
-	return $download->increase_sales();
+	return $download->increase_sales( $quantity );
 }
 
 /**
@@ -636,9 +638,9 @@ function edd_increase_purchase_count( $download_id = 0 ) {
  * @param int $download_id Download ID
  * @return bool|int
  */
-function edd_decrease_purchase_count( $download_id = 0 ) {
+function edd_decrease_purchase_count( $download_id = 0, $quantity = 1 ) {
 	$download = new EDD_Download( $download_id );
-	return $download->decrease_sales();
+	return $download->decrease_sales( $quantity );
 }
 
 /**

@@ -5,7 +5,7 @@
  * Description: Serve Digital Downloads Through WordPress
  * Author: Pippin Williamson
  * Author URI: http://pippinsplugins.com
- * Version: 2.2.2
+ * Version: 2.2.4
  * Text Domain: edd
  * Domain Path: languages
  *
@@ -25,7 +25,7 @@
  * @package EDD
  * @category Core
  * @author Pippin Williamson
- * @version 2.2.2
+ * @version 2.2.4
  */
 
 // Exit if accessed directly
@@ -97,7 +97,7 @@ final class Easy_Digital_Downloads {
 	 * @since 2.1
 	 */
 	public $emails;
-	
+
 	/**
 	 * EDD Email Template Tags Object
 	 *
@@ -187,7 +187,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '2.2.2' );
+			define( 'EDD_VERSION', '2.2.4' );
 		}
 
 		// Plugin Folder Path
@@ -284,7 +284,7 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/add-ons.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-footer.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-notices.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-notices.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/dashboard-widgets.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/export-functions.php';
