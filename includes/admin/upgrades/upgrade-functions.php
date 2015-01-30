@@ -655,6 +655,11 @@ function edd_v226_upgrade_payments_price_logs_db() {
 
 			$payment_downloads  = edd_get_payment_meta_downloads( $payment_id );
 			$variable_downloads = array();
+
+			if ( ! is_array( $payment_downloads ) ) {
+				continue; // May not be an array due to some very old payments, move along
+			}
+
 			foreach ( $payment_downloads as $download ) {
 
 				// Don't care if the download is a single price id
@@ -667,6 +672,11 @@ function edd_v226_upgrade_payments_price_logs_db() {
 
 			$variable_download_ids = array_unique( wp_list_pluck( $variable_downloads, 'id' ) );
 			$unique_download_ids   = implode( ',', $variable_download_ids );
+
+			if ( empty( $unique_download_ids ) ) {
+				continue; // If there were no downloads, just fees, move along
+			}
+
 			// Get all Log Ids where the post parent is in the set of download IDs we found in the cart meta
 			$logs = $wpdb->get_results( "SELECT m.post_id AS log_id, p.post_parent AS download_id FROM $wpdb->postmeta m LEFT JOIN $wpdb->posts p ON m.post_id = p.ID WHERE meta_key = '_edd_log_payment_id' AND meta_value = $payment_id AND p.post_parent IN ($unique_download_ids)", ARRAY_A );
 
