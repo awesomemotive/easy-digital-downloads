@@ -44,7 +44,7 @@ class Tests_Customers extends WP_UnitTestCase {
 			'edd_price' => '0.00',
 			'_variable_pricing' => 1,
 			'_edd_price_options_mode' => 'on',
-			'edd_variable_prices' => array_values( $_variable_pricing ), 
+			'edd_variable_prices' => array_values( $_variable_pricing ),
 			'edd_download_files' => array_values( $_download_files ),
 			'_edd_download_limit' => 20,
 			'_edd_hide_purchase_link' => 1,
@@ -160,7 +160,7 @@ class Tests_Customers extends WP_UnitTestCase {
 
 	public function test_get_by() {
 
-		$customer = EDD()->customers->get_by( 'email', 'testadmin@domain.com' );
+		$customer = new EDD_Customer( 'testadmin@domain.com' );
 
 		$this->assertInternalType( 'object', $customer );
 		$this->assertObjectHasAttribute( 'email', $customer );
@@ -183,11 +183,10 @@ class Tests_Customers extends WP_UnitTestCase {
 
 	public function test_attach_payment() {
 
-		$customer = EDD()->customers->get_by( 'email', 'testadmin@domain.com' );
-		EDD()->customers->attach_payment( $customer->id, 5222222 );
-		
-		$payment_ids = EDD()->customers->get_column_by( 'payment_ids', 'email', 'testadmin@domain.com' );
-		$payment_ids = array_map( 'absint', explode( ',', $payment_ids ) );
+		$customer = new EDD_Customer( 'testadmin@domain.com' );
+		$customer->attach_payment( 5222222 );
+
+		$payment_ids = array_map( 'absint', explode( ',', $customer->payment_ids ) );
 
 		$this->assertTrue( in_array( 5222222, $payment_ids ) );
 
@@ -195,38 +194,30 @@ class Tests_Customers extends WP_UnitTestCase {
 
 	public function test_remove_payment() {
 
-		$customer = EDD()->customers->get_by( 'email', 'testadmin@domain.com' );
-		EDD()->customers->attach_payment( $customer->id, 5222222 );
+		$customer = new EDD_Customer( 'testadmin@domain.com' );
+		$customer->attach_payment( 5222223, false );
 
-		$payment_ids = EDD()->customers->get_column_by( 'payment_ids', 'email', 'testadmin@domain.com' );
-		$payment_ids = array_map( 'absint', explode( ',', $payment_ids ) );
+		$payment_ids = array_map( 'absint', explode( ',', $customer->payment_ids ) );
+		$this->assertTrue( in_array( 5222223, $payment_ids ) );
 
-		$this->assertTrue( in_array( 5222222, $payment_ids ) );
+		$customer->remove_payment( 5222223, false );
 
-		EDD()->customers->remove_payment( $customer->id, 5222222 );
-
-		$payment_ids = EDD()->customers->get_column_by( 'payment_ids', 'email', 'testadmin@domain.com' );
-		$payment_ids = array_map( 'absint', explode( ',', $payment_ids ) );
-
-		$this->assertFalse( in_array( 5222222, $payment_ids ) );
+		$payment_ids = array_map( 'absint', explode( ',', $customer->payment_ids ) );
+		$this->assertFalse( in_array( 5222223, $payment_ids ) );
 	}
 
 	public function test_increment_stats() {
 
-		$customer = EDD()->customers->get_by( 'email', 'testadmin@domain.com' );
-		
-		EDD()->customers->increment_stats( $customer->id, '10' );
+		$customer = new EDD_Customer( 'testadmin@domain.com' );
 
-		$updated_customer = EDD()->customers->get( $customer->id );
+		$this->assertEquals( '100', $customer->purchase_value );
+		$this->assertEquals( '1'  , $customer->purchase_count );
 
-		$this->assertEquals( $customer->purchase_value, '100' );
-		$this->assertEquals( $customer->purchase_count, '1' );
+		$customer->increase_purchase_count();
+		$customer->increase_value( 10 );
 
-		$this->assertEquals( $updated_customer->purchase_value, '110' );
-		$this->assertEquals( $updated_customer->purchase_count, '2' );
-
-		$this->assertGreaterThan( $customer->purchase_value, $updated_customer->purchase_value );
-		$this->assertGreaterThan( $customer->purchase_count, $updated_customer->purchase_count );
+		$this->assertEquals( '110', $customer->purchase_value );
+		$this->assertEquals( '2'  , $customer->purchase_count );
 
 		$this->assertEquals( edd_count_purchases_of_customer( $this->_user_id ), '2' );
 		$this->assertEquals( edd_purchase_total_of_user( $this->_user_id ), '110' );
@@ -235,20 +226,13 @@ class Tests_Customers extends WP_UnitTestCase {
 
 	public function test_decrement_stats() {
 
-		$customer = EDD()->customers->get_by( 'email', 'testadmin@domain.com' );
-		
-		EDD()->customers->decrement_stats( $customer->id, '10' );
+		$customer = new EDD_Customer( 'testadmin@domain.com' );
 
-		$updated_customer = EDD()->customers->get( $customer->id );
+		$customer->decrease_purchase_count();
+		$customer->decrease_value( 10 );
 
-		$this->assertEquals( $customer->purchase_value, '100' );
-		$this->assertEquals( $customer->purchase_count, '1' );
-
-		$this->assertEquals( $updated_customer->purchase_value, '90' );
-		$this->assertEquals( $updated_customer->purchase_count, '0' );
-
-		$this->assertLessThan( $customer->purchase_value, $updated_customer->purchase_value );
-		$this->assertLessThan( $customer->purchase_count, $updated_customer->purchase_count );
+		$this->assertEquals( $customer->purchase_value, '90' );
+		$this->assertEquals( $customer->purchase_count, '0' );
 
 		$this->assertEquals( edd_count_purchases_of_customer( $this->_user_id ), '0' );
 		$this->assertEquals( edd_purchase_total_of_user( $this->_user_id ), '90' );
@@ -290,18 +274,18 @@ class Tests_Customers extends WP_UnitTestCase {
 	}
 
 	public function test_users_purchased_product() {
-		
+
 		$out2 = edd_get_users_purchased_products( $this->_user_id );
-		
+
 		$this->assertInternalType( 'array', $out2 );
 		$this->assertEquals( 1, count( $out2 ) );
 		$this->assertInternalType( 'object', $out2[0] );
 		$this->assertEquals( $out2[0]->post_type, 'download' );
 
 	}
-		
+
 	public function test_has_user_purchased() {
-		
+
 		$this->assertTrue( edd_has_user_purchased( $this->_user_id, array( $this->_post_id ), 1 ) );
 		$this->assertFalse( edd_has_user_purchased( $this->_user_id, array( 888 ), 1 ) );
 		$this->assertFalse( edd_has_user_purchased( 0, $this->_post_id ) );
@@ -312,7 +296,7 @@ class Tests_Customers extends WP_UnitTestCase {
 	public function test_get_purchase_stats_by_user() {
 
 		$purchase_stats = edd_get_purchase_stats_by_user( $this->_user_id );
-		
+
 		$this->assertInternalType( 'array', $purchase_stats );
 		$this->assertEquals( 2, count( $purchase_stats ) );
 		$this->assertTrue( isset( $purchase_stats['purchases'] ) );
@@ -321,9 +305,9 @@ class Tests_Customers extends WP_UnitTestCase {
 	}
 
 	public function test_get_purchase_total_of_user() {
-		
+
 		$purchase_total = edd_purchase_total_of_user( $this->_user_id );
-		
+
 		$this->assertEquals( 100, $purchase_total );
 	}
 
