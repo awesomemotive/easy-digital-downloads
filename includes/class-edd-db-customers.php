@@ -157,7 +157,7 @@ class EDD_DB_Customers extends EDD_DB  {
 
 		$customer = new EDD_Customer( $customer_id );
 
-		if( ! $customer ) {
+		if( empty( $customer->id ) ) {
 			return false;
 		}
 
@@ -202,7 +202,7 @@ class EDD_DB_Customers extends EDD_DB  {
 		$increased_count = $customer->increase_purchase_count();
 		$increased_value = $customer->increase_value( $amount );
 
-		return ( $increased_count && $increase_value ) ? true : false;
+		return ( $increased_count && $increased_value ) ? true : false;
 
 	}
 
