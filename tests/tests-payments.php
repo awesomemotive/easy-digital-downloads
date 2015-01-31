@@ -17,14 +17,17 @@ class Tests_Payments extends WP_UnitTestCase {
 
 		parent::setUp();
 
-		$payment_id = EDD_Helper_Payment::create_simple_payment();
+		$payment_id        	= EDD_Helper_Payment::create_simple_payment();
+		$purchase_data     	= edd_get_payment_meta( $payment_id );
+		$this->_payment_key = edd_get_payment_key( $payment_id );
 
 		$this->_payment_id = $payment_id;
-		$this->_key = $purchase_data['purchase_key'];
+		$this->_key = $this->_payment_key;
 
 		$this->_transaction_id = 'FIR3SID3';
 		edd_set_payment_transaction_id( $payment_id, $this->_transaction_id );
 		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'edd' ) , $this->_transaction_id ) );
+
 	}
 
 	public function tearDown() {
@@ -84,11 +87,11 @@ class Tests_Payments extends WP_UnitTestCase {
 		$out = edd_get_payment_statuses();
 
 		$expected = array(
-			'pending' => 'Pending',
-			'publish' => 'Complete',
-			'refunded' => 'Refunded',
-			'failed' => 'Failed',
-			'revoked' => 'Revoked',
+			'pending'   => 'Pending',
+			'publish'   => 'Complete',
+			'refunded'  => 'Refunded',
+			'failed'    => 'Failed',
+			'revoked'   => 'Revoked',
 			'abandoned' => 'Abandoned'
 		);
 
@@ -96,8 +99,10 @@ class Tests_Payments extends WP_UnitTestCase {
 	}
 
 	public function test_undo_purchase() {
-		edd_undo_purchase( $this->_post->ID, $this->_payment_id );
+		$purchase_download_ids = wp_list_pluck( edd_get_payment_meta_downloads( $this->_payment_id ), 'id' );
+		edd_undo_purchase( reset( $purchase_download_ids ), $this->_payment_id );
 		$this->assertEquals( 0, edd_get_total_earnings() );
+		$this->markTestIncomplete( "When testing edd_get_total_earnings, it is always 0, no matter the undo." );
 	}
 
 	public function test_delete_purchase() {
@@ -183,8 +188,8 @@ class Tests_Payments extends WP_UnitTestCase {
 		$total1 = edd_currency_filter( edd_format_amount( edd_get_payment_amount( $this->_payment_id ) ), edd_get_payment_currency_code( $this->_payment_id ) );
 		$total2 = edd_currency_filter( edd_format_amount( edd_get_payment_amount( $this->_payment_id ) ) );
 
-		$this->assertEquals( '&#36;100.00', $total1 );
-		$this->assertEquals( '&#36;100.00', $total2 );
+		$this->assertEquals( '&#36;120.00', $total1 );
+		$this->assertEquals( '&#36;120.00', $total2 );
 
 	}
 
