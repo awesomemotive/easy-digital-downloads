@@ -17,7 +17,7 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 	public static function delete_payment( $payment_id ) {
 
 		// Delete the payment
-		wp_delete_post( $payment_id, true );
+		edd_delete_purchase( $payment_id );
 
 	}
 
