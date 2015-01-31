@@ -192,6 +192,18 @@ class Tests_Customers extends WP_UnitTestCase {
 
 	}
 
+	public function test_legacy_attach_payment() {
+
+		$customer = new EDD_Customer( 'testadmin@domain.com' );
+		EDD()->customers->attach_payment( $customer->id, 999999 );
+
+		$updated_customer = new EDD_Customer( 'testadmin@domain.com' );
+		$payment_ids = array_map( 'absint', explode( ',', $updated_customer->payment_ids ) );
+
+		$this->assertTrue( in_array( 999999, $payment_ids ) );
+
+	}
+
 	public function test_remove_payment() {
 
 		$customer = new EDD_Customer( 'testadmin@domain.com' );
@@ -204,6 +216,23 @@ class Tests_Customers extends WP_UnitTestCase {
 
 		$payment_ids = array_map( 'absint', explode( ',', $customer->payment_ids ) );
 		$this->assertFalse( in_array( 5222223, $payment_ids ) );
+	}
+
+	public function test_legacy_remove_payment() {
+
+		$customer = new EDD_Customer( 'testadmin@domain.com' );
+		EDD()->customers->attach_payment( $customer->id, 91919191 );
+
+		$updated_customer = new EDD_Customer( 'testadmin@domain.com' );
+		$payment_ids = array_map( 'absint', explode( ',', $updated_customer->payment_ids ) );
+		$this->assertTrue( in_array( 91919191, $payment_ids ) );
+
+		EDD()->customers->remove_payment( $updated_customer->id, 91919191 );
+		$updated_customer = new EDD_Customer( 'testadmin@domain.com' );
+		$payment_ids = array_map( 'absint', explode( ',', $updated_customer->payment_ids ) );
+
+		$this->assertFalse( in_array( 91919191, $payment_ids ) );
+
 	}
 
 	public function test_increment_stats() {
@@ -224,6 +253,21 @@ class Tests_Customers extends WP_UnitTestCase {
 
 	}
 
+	public function test_legacy_increment_stats() {
+
+		$customer = new EDD_Customer( 'testadmin@domain.com' );
+
+		$this->assertEquals( '100', $customer->purchase_value );
+		$this->assertEquals( '1', $customer->purchase_count );
+
+		EDD()->customers->increment_stats( $customer->id, 10 );
+
+		$updated_customer = new EDD_Customer( 'testadmin@domain.com' );
+
+		$this->assertEquals( '110', $updated_customer->purchase_value );
+		$this->assertEquals( '2', $updated_customer->purchase_count );
+	}
+
 	public function test_decrement_stats() {
 
 		$customer = new EDD_Customer( 'testadmin@domain.com' );
@@ -237,6 +281,21 @@ class Tests_Customers extends WP_UnitTestCase {
 		$this->assertEquals( edd_count_purchases_of_customer( $this->_user_id ), '0' );
 		$this->assertEquals( edd_purchase_total_of_user( $this->_user_id ), '90' );
 
+	}
+
+	public function test_legacy_decrement_stats() {
+
+		$customer = new EDD_Customer( 'testadmin@domain.com' );
+
+		$this->assertEquals( '100', $customer->purchase_value );
+		$this->assertEquals( '1', $customer->purchase_count );
+
+		EDD()->customers->decrement_stats( $customer->id, 10 );
+
+		$updated_customer = new EDD_Customer( 'testadmin@domain.com' );
+
+		$this->assertEquals( '90', $updated_customer->purchase_value );
+		$this->assertEquals( '0', $updated_customer->purchase_count );
 	}
 
 	public function test_get_customers() {
