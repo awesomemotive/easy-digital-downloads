@@ -101,7 +101,19 @@ class EDD_Customer {
 		}
 
 		foreach ( $customer as $key => $value ) {
-			$this->$key = $value;
+
+			switch ( $key ) {
+
+				case 'notes':
+					$this->$key = $this->get_notes();
+					break;
+
+				default:
+					$this->$key = $value;
+					break;
+
+			}
+
 		}
 
 	}
@@ -322,6 +334,68 @@ class EDD_Customer {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Get the parsed notes for a customer as an array
+	 * @param  integer $length The number of notes to get
+	 * @param  integer $offset What note to start at
+	 * @return array           The notes requsted
+	 */
+	public function get_notes( $length = 20, $paged = 1 ) {
+
+		$length = is_numeric( $length ) ? $length : 20;
+		$offset = is_numeric( $paged ) && $paged != 1 ? ( absint( $paged ) * $length ) - 1 : 0;
+
+		$all_notes   = $this->get_raw_notes();
+		$notes_array = array_reverse( array_filter( explode( "\n\n", $all_notes ) ) );
+
+		$desired_notes = array_slice( $notes_array, $offset, $length );
+
+		return $desired_notes;
+
+	}
+
+	/**
+	 * Add a note for the customer
+	 * @param string $note The note to add
+	 */
+	public function add_note( $note = '' ) {
+
+		global $edd_customers_db;
+		$notes = $this->get_raw_notes();
+
+		if( empty( $notes ) ) {
+			$notes = '';
+		}
+
+		$new_note = date_i18n( 'F j, Y H:i:s', current_time( 'timestamp' ) ) . ' - ' . $note;
+		$notes   .= "\n\n" . $new_note;
+
+		$updated = $edd_customers_db->update( $this->id, array( 'notes' => $notes ) );
+
+		if ( $updated ) {
+			$this->notes = $this->get_notes();
+		}
+
+		// Return the formatted note, so we can test, as well as update any displays
+		return $new_note;
+
+	}
+
+	/**
+	 * Get the notes column for the customer
+	 *
+	 * @since  2.3
+	 * @return string The Notes for the customer, non-parsed
+	 */
+	private function get_raw_notes() {
+
+		global $edd_customers_db;
+		$all_notes = $edd_customers_db->get_column( 'notes', $this->id );
+
+		return $all_notes;
+
 	}
 
 }
