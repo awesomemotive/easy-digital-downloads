@@ -61,9 +61,7 @@ class EDD_Helper_Download extends WP_UnitTestCase {
 			update_post_meta( $post_id, $key, $value );
 		}
 
-		$post = get_post( $post_id );
-
-		return $post;
+		return get_post( $post_id );
 
 	}
 
@@ -101,7 +99,7 @@ class EDD_Helper_Download extends WP_UnitTestCase {
 			array(
 				'name'      => 'File 2',
 				'file'      => 'http://localhost/file2.jpg',
-				'condition' => 0,
+				'condition' => 'all',
 			),
 		);
 
@@ -117,7 +115,8 @@ class EDD_Helper_Download extends WP_UnitTestCase {
 			'_edd_product_type'                 => 'default',
 			'_edd_download_earnings'            => 120,
 			'_edd_download_sales'               => 6,
-			'_edd_download_limit_override_1'    => 1
+			'_edd_download_limit_override_1'    => 1,
+			'edd_sku'                          => 'sku_0012',
 		);
 		foreach ( $meta as $key => $value ) {
 			update_post_meta( $post_id, $key, $value );
