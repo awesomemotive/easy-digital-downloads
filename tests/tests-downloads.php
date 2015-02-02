@@ -98,6 +98,7 @@ class Tests_Downloads extends WP_UnitTestCase {
 			)
 		);
 		$download3 = new EDD_Download( $this->_post->ID );
+		$download3->increase_earnings( '0.50' );
 		$this->assertNotEmpty( $download3->ID );
 		$this->assertEquals( $this->_post->ID, $download3->ID );
 		$this->assertEquals( 'download', $download3->post_type );
@@ -109,7 +110,7 @@ class Tests_Downloads extends WP_UnitTestCase {
 		$this->assertEquals( $prices, $download3->prices );
 		$this->assertEquals( $prices, $download3->get_prices() );
 		$this->assertEquals( 6, $download3->sales );
-		$this->assertEquals( 120, $download3->earnings );
+		$this->assertEquals( 120.50, $download3->earnings );
 		$this->assertNotEmpty( $download3->files );
 		$this->assertEquals( $files, $download3->files );
 		$this->assertEquals( $files, $download3->get_files() );
