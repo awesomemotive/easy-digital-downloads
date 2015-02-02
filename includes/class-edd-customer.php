@@ -80,21 +80,27 @@ class EDD_Customer {
 	public $notes;
 
 	/**
+	 * The Database Abstraction
+	 *
+	 * @since  2.3
+	 */
+	protected $db;
+
+	/**
 	 * Get things going
 	 *
 	 * @since 2.3
 	 */
 	public function __construct( $_id_or_email ) {
 
-		global $edd_customers_db;
-		$edd_customers_db = new EDD_DB_Customers;
+		$this->db = new EDD_DB_Customers;
 
 		if ( false === $_id_or_email || ( is_numeric( $_id_or_email ) && (int) $_id_or_email !== absint( $_id_or_email ) ) ) {
 			return false;
 		}
 
 		$field       = is_numeric( $_id_or_email ) ? 'id' : 'email';
-		$customer    = $edd_customers_db->get_customer_by( $field, $_id_or_email );
+		$customer    = $this->db->get_customer_by( $field, $_id_or_email );
 
 		if ( empty( $customer ) || ! is_object( $customer ) ) {
 			return false;
@@ -188,12 +194,11 @@ class EDD_Customer {
 			$args['payment_ids'] = implode( ',', array_unique( array_values( $args['payment_ids'] ) ) );
 		}
 
-		global $edd_customers_db;
 		// The DB class 'add' implies an update if the customer being asked to be created already exists
-		if ( $edd_customers_db->add( $data ) ) {
+		if ( $this->db->add( $data ) ) {
 
 			// We've successfully added/updated the customer, reset the class vars with the new data
-			$customer = $edd_customers_db->get_customer_by( 'email', $args['email'] );
+			$customer = $this->db->get_customer_by( 'email', $args['email'] );
 
 			// Setup the customer data with the values from DB
 			$this->setup_customer( $customer );
@@ -219,11 +224,9 @@ class EDD_Customer {
 			return false;
 		}
 
-		global $edd_customers_db;
+		if ( $this->db->update( $this->id, $data ) ) {
 
-		if ( $edd_customers_db->update( $this->id, $data ) ) {
-
-			$customer = $edd_customers_db->get_customer_by( 'id', $this->id );
+			$customer = $this->db->get_customer_by( 'id', $this->id );
 			$this->setup_customer( $customer) ;
 
 			return true;
@@ -247,8 +250,6 @@ class EDD_Customer {
 			return false;
 		}
 
-		global $edd_customers_db;
-
 		if( empty( $this->payment_ids ) ) {
 
 			$new_payment_ids = $payment_id;
@@ -261,7 +262,7 @@ class EDD_Customer {
 
 		}
 
-		$payment_added = $edd_customers_db->update( $this->id, array( 'payment_ids' => $new_payment_ids ) );
+		$payment_added = $this->db->update( $this->id, array( 'payment_ids' => $new_payment_ids ) );
 
 		if ( $payment_added ) {
 
@@ -298,8 +299,6 @@ class EDD_Customer {
 			return false;
 		}
 
-		global $edd_customers_db;
-
 		$new_payment_ids = '';
 
 		if( ! empty( $this->payment_ids ) ) {
@@ -318,7 +317,7 @@ class EDD_Customer {
 
 		}
 
-		$payment_removed = $edd_customers_db->update( $this->id, array( 'payment_ids' => $new_payment_ids ) );
+		$payment_removed = $this->db->update( $this->id, array( 'payment_ids' => $new_payment_ids ) );
 
 		if ( $payment_removed ) {
 
@@ -355,10 +354,9 @@ class EDD_Customer {
 			return false;
 		}
 
-		global $edd_customers_db;
 		$new_total = (int) $this->purchase_count + (int) $count;
 
-		if ( $edd_customers_db->update( $this->id, array( 'purchase_count' => $new_total ) ) ) {
+		if ( $this->db->update( $this->id, array( 'purchase_count' => $new_total ) ) ) {
 			$this->purchase_count = $new_total;
 			return $new_total;
 		}
@@ -380,10 +378,9 @@ class EDD_Customer {
 			return false;
 		}
 
-		global $edd_customers_db;
 		$new_total = (int) $this->purchase_count - (int) $count;
 
-		if ( $edd_customers_db->update( $this->id, array( 'purchase_count' => $new_total ) ) ) {
+		if ( $this->db->update( $this->id, array( 'purchase_count' => $new_total ) ) ) {
 			$this->purchase_count = $new_total;
 			return (string) $new_total;
 		}
@@ -400,10 +397,9 @@ class EDD_Customer {
 	 */
 	public function increase_value( $value = 0.00 ) {
 
-		global $edd_customers_db;
 		$new_value = floatval( $this->purchase_value ) + $value;
 
-		if ( $edd_customers_db->update( $this->id, array( 'purchase_value' => $new_value ) ) ) {
+		if ( $this->db->update( $this->id, array( 'purchase_value' => $new_value ) ) ) {
 			$this->purchase_value = $new_value;
 			return (string) $new_value;
 		}
@@ -420,10 +416,9 @@ class EDD_Customer {
 	 */
 	public function decrease_value( $value = 0.00 ) {
 
-		global $edd_customers_db;
 		$new_value = floatval( $this->purchase_value ) - $value;
 
-		if ( $edd_customers_db->update( $this->id, array( 'purchase_value' => $new_value ) ) ) {
+		if ( $this->db->update( $this->id, array( 'purchase_value' => $new_value ) ) ) {
 			$this->purchase_value = $new_value;
 			return (string) $new_value;
 		}
@@ -461,7 +456,6 @@ class EDD_Customer {
 	 */
 	public function add_note( $note = '' ) {
 
-		global $edd_customers_db;
 		$notes = $this->get_raw_notes();
 
 		if( empty( $notes ) ) {
@@ -471,7 +465,7 @@ class EDD_Customer {
 		$new_note = date_i18n( 'F j, Y H:i:s', current_time( 'timestamp' ) ) . ' - ' . $note;
 		$notes   .= "\n\n" . $new_note;
 
-		$updated = $edd_customers_db->update( $this->id, array( 'notes' => $notes ) );
+		$updated = $this->db->update( $this->id, array( 'notes' => $notes ) );
 
 		if ( $updated ) {
 			$this->notes = $this->get_notes();
@@ -490,8 +484,7 @@ class EDD_Customer {
 	 */
 	private function get_raw_notes() {
 
-		global $edd_customers_db;
-		$all_notes = $edd_customers_db->get_column( 'notes', $this->id );
+		$all_notes = $this->db->get_column( 'notes', $this->id );
 
 		return $all_notes;
 
