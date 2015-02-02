@@ -149,7 +149,7 @@ function edd_insert_payment( $payment_data = array() ) {
 
 	if ( $payment ) {
 
-		$taxes    = wp_list_pluck( $payment_data['cart_details'], 'tax' );
+		$taxes    = $payment_data['cart_details'] ? wp_list_pluck( $payment_data['cart_details'], 'tax' ) : array();
 		$cart_tax = array_sum( $taxes );
 
 		$payment_meta = array(
