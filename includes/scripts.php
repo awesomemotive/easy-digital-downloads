@@ -250,12 +250,15 @@ function edd_admin_downloads_icon() {
 				background-position: 7px 6px;
 			}
 		<?php } ?>
-		#icon-edit.icon32-posts-download {
-			background: url(<?php echo $icon_cpt_url; ?>) -7px -5px no-repeat;
-		}
 		#edd-media-button {
 			background: url(<?php echo $icon_url; ?>) 0 -16px no-repeat;
 			background-size: 12px 30px;
+		}
+		#icon-edit.icon32-posts-download {
+			background: url(<?php echo $icon_cpt_url; ?>) -7px -5px no-repeat;
+		}
+		.wp-media-buttons a.edd-thickbox {
+			padding-left: 5px;
 		}
 		@media
 		only screen and (-webkit-min-device-pixel-ratio: 1.5),
