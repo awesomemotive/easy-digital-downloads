@@ -170,17 +170,25 @@ function edd_insert_payment( $payment_data = array() ) {
 		}
 
 		// Create or update a customer
-		$customer_id = EDD()->customers->add( array(
+		$customer      = new EDD_Customer( $payment_data['user_email'] );
+		$customer_data = array(
 			'name'        => $payment_data['user_info']['first_name'] . ' ' . $payment_data['user_info']['last_name'],
 			'email'       => $payment_data['user_email'],
 			'user_id'     => $payment_data['user_info']['id'],
 			'payment_ids' => $payment
-		) );
+		);
+
+		if ( empty( $customer->id ) ) {
+			$customer_id = $customer->create( $customer_data );
+		} else {
+			$customer->update( $customer_data );
+		}
+
 
 		// Record the payment details
 		update_post_meta( $payment, '_edd_payment_meta',         apply_filters( 'edd_payment_meta', $payment_meta, $payment_data ) );
 		update_post_meta( $payment, '_edd_payment_user_id',      $payment_data['user_info']['id'] );
-		update_post_meta( $payment, '_edd_payment_customer_id',  $customer_id );
+		update_post_meta( $payment, '_edd_payment_customer_id',  $customer->id );
 		update_post_meta( $payment, '_edd_payment_user_email',   $payment_data['user_email'] );
 		update_post_meta( $payment, '_edd_payment_user_ip',      edd_get_ip() );
 		update_post_meta( $payment, '_edd_payment_purchase_key', $payment_data['purchase_key'] );

@@ -137,8 +137,7 @@ function edd_update_payment_details( $data ) {
 		if( empty( $new_customer->id ) ) {
 
 			// No customer exists for the given email so create one
-			$new_customer_id = EDD()->customers->add( array( 'email' => $email, 'name' => $first_name . ' ' . $last_name ) );
-			$new_customer    = EDD_Customer( $new_customer_id );
+			$new_customer_id = $new_customer->create( array( 'email' => $email, 'name' => $first_name . ' ' . $last_name ) );
 		}
 
 		$new_customer->attach_payment( $payment_id, false );
