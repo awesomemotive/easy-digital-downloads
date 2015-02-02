@@ -100,6 +100,12 @@ class EDD_Customer {
 			return false;
 		}
 
+		$this->setup_customer( $customer );
+
+	}
+
+	private function setup_customer( $customer ) {
+
 		foreach ( $customer as $key => $value ) {
 
 			switch ( $key ) {
@@ -115,7 +121,6 @@ class EDD_Customer {
 			}
 
 		}
-
 	}
 
 	/**
@@ -135,6 +140,77 @@ class EDD_Customer {
 
 		}
 
+	}
+
+	/**
+	 * Creates a customer
+	 *
+	 * @since  2.3
+	 * @param  array  $data Array of attributes for a customer
+	 * @return mixed        False if not a valid creation, Customer ID if user is found or valid creation
+	 */
+	public function create( $data = array() ) {
+
+		if ( $this->id != 0 || empty( $data ) ) {
+			return;
+		}
+
+		$defaults = array(
+			'payment_ids' => ''
+		);
+
+		$args = wp_parse_args( $data, $defaults );
+
+		if ( empty( $args['email'] ) || ! is_email( $args['email'] ) || '' == trim( $args['email'] ) ) {
+			return false;
+		}
+
+		if ( ! empty( $args['payment_ids'] ) && is_array( $args['payment_ids'] ) ) {
+			$args['payment_ids'] = implode( ',', array_unique( array_values( $args['payment_ids'] ) ) );
+		}
+
+		global $edd_customers_db;
+		// The DB class 'add' implies an update if the customer being asked to be created already exists
+		if ( $edd_customers_db->add( $data ) ) {
+
+			// We've successfully added/updated the customer, reset the class vars with the new data
+			$customer = $edd_customers_db->get_customer_by( 'email', $args['email'] );
+
+			// Setup the customer data with the values from DB
+			$this->setup_customer( $customer );
+
+			return $this->id;
+		}
+
+
+		return false;
+
+	}
+
+	/**
+	 * Update a customer record
+	 *
+	 * @since  2.3
+	 * @param  array  $data Array of data attributes for a customer (checked via whitelist)
+	 * @return bool         If the update was successful or not
+	 */
+	public function update( $data = array() ) {
+
+		if ( empty( $data ) ) {
+			return false;
+		}
+
+		global $edd_customers_db;
+
+		if ( $edd_customers_db->update( $this->id, $data ) ) {
+
+			$customer = $edd_customers_db->get_customer_by( 'id', $this->id );
+			$this->setup_customer( $customer) ;
+
+			return true;
+		}
+
+		return false;
 	}
 
 
