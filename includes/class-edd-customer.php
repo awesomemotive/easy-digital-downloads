@@ -104,7 +104,18 @@ class EDD_Customer {
 
 	}
 
+	/**
+	 * Given the customer data, let's set the variables
+	 *
+	 * @since  2.3
+	 * @param  object $customer The Customer Object
+	 * @return bool             If the setup was successful or not
+	 */
 	private function setup_customer( $customer ) {
+
+		if ( ! is_object( $customer ) ) {
+			return false;
+		}
 
 		foreach ( $customer as $key => $value ) {
 
@@ -121,6 +132,14 @@ class EDD_Customer {
 			}
 
 		}
+
+		// Customer ID and email are the only things that are necessary, make sure they exist
+		if ( ! empty( $this->id ) && ! empty( $this->email ) ) {
+			return true;
+		}
+
+		return false;
+
 	}
 
 	/**
@@ -414,6 +433,8 @@ class EDD_Customer {
 
 	/**
 	 * Get the parsed notes for a customer as an array
+	 *
+	 * @since  2.3
 	 * @param  integer $length The number of notes to get
 	 * @param  integer $offset What note to start at
 	 * @return array           The notes requsted
@@ -434,6 +455,8 @@ class EDD_Customer {
 
 	/**
 	 * Add a note for the customer
+	 *
+	 * @since  2.3
 	 * @param string $note The note to add
 	 */
 	public function add_note( $note = '' ) {

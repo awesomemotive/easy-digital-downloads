@@ -175,6 +175,9 @@ class Tests_Customers extends WP_UnitTestCase {
 		$this->assertEquals( 'testaccountupdated@domain.com', $customer->email );
 		$this->assertEquals( 'Test Account', $customer->name );
 
+		// Verify if we have an empty array we get false
+		$this->assertFalse( $customer->update() );
+
 	}
 
 	public function test_attach_payment() {
@@ -185,6 +188,9 @@ class Tests_Customers extends WP_UnitTestCase {
 		$payment_ids = array_map( 'absint', explode( ',', $customer->payment_ids ) );
 
 		$this->assertTrue( in_array( 5222222, $payment_ids ) );
+
+		// Verify if we don't send a payment, we get false
+		$this->assertFalse( $customer->attach_payment() );
 
 	}
 
@@ -218,6 +224,10 @@ class Tests_Customers extends WP_UnitTestCase {
 		$this->assertEquals( edd_count_purchases_of_customer( $this->_user_id ), '2' );
 		$this->assertEquals( edd_purchase_total_of_user( $this->_user_id ), '110' );
 
+		// Make sure we hit the false conditions
+		$this->assertFalse( $customer->increase_purchase_count( -1 ) );
+		$this->assertFalse( $customer->increase_purchase_count( 'abc' ) );
+
 	}
 
 	public function test_decrement_stats() {
@@ -232,6 +242,10 @@ class Tests_Customers extends WP_UnitTestCase {
 
 		$this->assertEquals( edd_count_purchases_of_customer( $this->_user_id ), '0' );
 		$this->assertEquals( edd_purchase_total_of_user( $this->_user_id ), '90' );
+
+		// Make sure we hit the false conditions
+		$this->assertFalse( $customer->decrease_purchase_count( -1 ) );
+		$this->assertFalse( $customer->decrease_purchase_count( 'abc' ) );
 
 	}
 
