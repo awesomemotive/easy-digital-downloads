@@ -198,7 +198,9 @@ class Tests_Downloads extends WP_UnitTestCase {
 	}
 
 	public function test_download_earnings() {
-		$this->assertEquals( 120, edd_get_download_earnings_stats( $this->_post->ID ) );
+		$download = new EDD_Download( $this->_post->ID );
+		$download->increase_earnings( '0.50' );
+		$this->assertEquals( 120.50, edd_get_download_earnings_stats( $this->_post->ID ) );
 	}
 
 	public function test_download_sales() {
