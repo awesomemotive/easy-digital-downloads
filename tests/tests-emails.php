@@ -215,7 +215,7 @@ class Tests_Emails extends WP_UnitTestCase {
 
 		$this->assertContains( '<div><a href="', edd_email_tag_download_list( $this->_payment_id ) );
 		add_filter( 'edd_email_show_links', '__return_false' );
-		$this->assertContains( '<div>File 1</div>', edd_email_tag_download_list( $this->_payment_id ) );
+		$this->assertContains( '<div>File 2</div>', edd_email_tag_download_list( $this->_payment_id ) );
 		remove_filter( 'edd_email_show_links', '__return_false' );
 
 	}
