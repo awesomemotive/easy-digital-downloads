@@ -77,20 +77,37 @@ function edd_edit_customer( $args ) {
 			edd_set_error( 'edd-invalid-user_id', sprintf( __( 'The User ID %d does not exist. Please assign an existing user.', 'edd' ), $customer_info['user_id'] ) );
 		}
 
+		// Record this for later
+		$previous_user_id  = $customer->user_id;
+
 	}
-
-
 
 	if ( edd_get_errors() ) {
 		return;
 	}
 
-	$output = array();
+	$output         = array();
+	$previous_email = $customer->email;
 
 	if ( $customer->update( $customer_info ) ) {
 
 		if ( ! empty( $customer->user_id ) ) {
 			update_user_meta( $customer->user_id, '_edd_user_address', $address );
+		}
+
+		// Update some payment meta if we need to
+		$payments_array = explode( ',', $customer->payment_ids );
+
+		if ( $customer->email != $previous_email ) {
+			foreach ( $payments_array as $payment_id ) {
+				edd_update_payment_meta( $payment_id, '_edd_payment_user_email', $customer->email );
+			}
+		}
+
+		if ( $customer->user_id != $previous_user_id ) {
+			foreach ( $payments_array as $payment_id ) {
+				edd_update_payment_meta( $payment_id, '_edd_payment_user_id', $customer->user_id );
+			}
 		}
 
 		$output['success']       = true;
