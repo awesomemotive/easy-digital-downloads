@@ -105,6 +105,7 @@ function edd_render_customer_view( $view, $callbacks ) {
 	}
 
 	$customer_tabs = edd_customer_tabs();
+	$errors        = edd_get_errors();
 	?>
 
 	<div class='wrap'>
@@ -260,7 +261,7 @@ function edd_customers_view( $customer ) {
 			<li>
 				<a title="<?php _e( 'View All Purchases', 'edd' ); ?>" href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $customer->email ) ); ?>">
 					<span class="dashicons dashicons-cart"></span>
-					<?php echo $customer->purchase_count; ?> <?php _e( 'Purchases' ,'edd' ); ?>
+					<?php echo $customer->purchase_count; ?> <?php _e( 'Completed Sales' ,'edd' ); ?>
 				</a>
 			</li>
 			<li>
