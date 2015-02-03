@@ -206,6 +206,20 @@ class Tests_Emails extends WP_UnitTestCase {
 		$this->assertFalse( edd_email_tag_exists( 'sample_tag' ) );
 	}
 
+	public function test_email_tags_download_list() {
+
+		$this->assertContains( '<strong>' . get_the_title( $this->_post->ID ) . '</strong>', edd_email_tag_download_list( $this->_payment_id ) );
+		add_filter( 'edd_email_show_names', '__return_false' );
+		$this->assertNotContains( '<strong>' . get_the_title( $this->_post->ID ) . '</strong>', edd_email_tag_download_list( $this->_payment_id ) );
+		remove_filter( 'edd_email_show_names', '__return_false' );
+
+		$this->assertContains( '<div><a href="', edd_email_tag_download_list( $this->_payment_id ) );
+		add_filter( 'edd_email_show_links', '__return_false' );
+		$this->assertContains( '<div>File 1</div>', edd_email_tag_download_list( $this->_payment_id ) );
+		remove_filter( 'edd_email_show_links', '__return_false' );
+
+	}
+
 	public function test_email_tags_first_name() {
 		$this->assertEquals( 'Network', edd_email_tag_first_name( $this->_payment_id ) );
 	}
