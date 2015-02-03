@@ -9,6 +9,9 @@
  * @since       2.3
 */
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  * EDD_Customer Class
  *
@@ -437,7 +440,7 @@ class EDD_Customer {
 	public function get_notes( $length = 20, $paged = 1 ) {
 
 		$length = is_numeric( $length ) ? $length : 20;
-		$offset = is_numeric( $paged ) && $paged != 1 ? ( absint( $paged ) * $length ) - 1 : 0;
+		$offset = is_numeric( $paged ) && $paged != 1 ? ( ( absint( $paged ) - 1 ) * $length ) : 0;
 
 		$all_notes   = $this->get_raw_notes();
 		$notes_array = array_reverse( array_filter( explode( "\n\n", $all_notes ) ) );
@@ -449,12 +452,32 @@ class EDD_Customer {
 	}
 
 	/**
+	 * Get the total number of notes we have after parsing
+	 *
+	 * @since  2.3
+	 * @return int The number of notes for the customer
+	 */
+	public function get_notes_count() {
+
+		$all_notes = $this->get_raw_notes();
+		$notes_array = array_reverse( array_filter( explode( "\n\n", $all_notes ) ) );
+
+		return count( $notes_array );
+
+	}
+
+	/**
 	 * Add a note for the customer
 	 *
 	 * @since  2.3
 	 * @param string $note The note to add
 	 */
 	public function add_note( $note = '' ) {
+
+		$note = trim( $note );
+		if ( empty( $note ) ) {
+			return false;
+		}
 
 		$notes = $this->get_raw_notes();
 

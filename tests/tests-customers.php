@@ -254,17 +254,16 @@ class Tests_Customers extends WP_UnitTestCase {
 		$customer = new EDD_Customer( 'testadmin@domain.com' );
 
 		$this->assertInternalType( 'array', $customer->notes );
-		$this->assertEquals( 0, count( $customer->notes ) );
+		$this->assertEquals( 0, $customer->get_notes_count() );
 
-		//
 		$note_1 = $customer->add_note( 'Testing' );
 		$this->assertEquals( 0, array_search( $note_1, $customer->notes ) );
-		$this->assertEquals( 1, count( $customer->notes ) );
+		$this->assertEquals( 1, $customer->get_notes_count() );
 
 		$note_2 = $customer->add_note( 'Test 2nd Note' );
 		$this->assertEquals( 1, array_search( $note_1, $customer->notes ) );
 		$this->assertEquals( 0, array_search( $note_2, $customer->notes ) );
-		$this->assertEquals( 2, count( $customer->notes ) );
+		$this->assertEquals( 2, $customer->get_notes_count() );
 
 		// Verify we took out all empty rows
 		$this->assertEquals( count( $customer->notes ), count( array_values( $customer->notes ) ) );
