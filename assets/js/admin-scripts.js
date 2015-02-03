@@ -1113,7 +1113,6 @@ jQuery(document).ready(function ($) {
 			this.save_edit();
 			this.change_country();
 			this.add_note();
-			this.delete_note();
 		},
 		edit_customer: function() {
 			$( 'body' ).on( 'click', '#edit-customer', function( e ) {
@@ -1210,38 +1209,6 @@ jQuery(document).ready(function ($) {
 					setTimeout( function() {
 						$( '#customer-note' ).css( 'border-color', border_color );
 					}, 500 );
-				}
-			});
-		},
-		delete_note : function() {
-			$( 'body' ).on( 'click', '#edd-customer-card-wrapper a.delete', function( e ) {
-				e.preventDefault();
-
-				var postData = {
-					edd_action : 'delete-customer-note',
-					note_id : $( this ).data( 'note-id' ),
-					_wpnonce: $( this ).data( 'nonce' )
-				};
-
-				if( postData.note_id ) {
-
-					$.ajax({
-						type: "POST",
-						data: postData,
-						url: ajaxurl,
-						success: function (response) {
-							$( '#customer-note-' + postData.note_id ).slideUp( 200, function() {});
-						}
-					}).fail(function (data) {
-						if ( window.console && window.console.log ) {
-							console.log( data );
-						}
-					});
-
-				} else {
-					if ( window.console && window.console.log ) {
-						console.log( 'Error deleting customer note' );
-					}
 				}
 			});
 		}
