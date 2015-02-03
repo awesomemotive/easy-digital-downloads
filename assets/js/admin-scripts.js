@@ -1127,6 +1127,7 @@ jQuery(document).ready(function ($) {
 			}
 		});
 	});
+
 	$('body').on('click.eddSelectUser', '.edd_user_search_results a', function(e) {
 		e.preventDefault();
 		var login = $(this).data('login');
@@ -1134,4 +1135,14 @@ jQuery(document).ready(function ($) {
 		$('.edd_user_search_results').html('');
 	});
 
+	$.ajax({
+		type: "GET",
+		data: {
+			action: 'edd_load_dashboard_widget'
+		},
+		url: ajaxurl,
+		success: function (response) {
+			$('#edd_dashboard_sales .inside').html( response );
+		}
+	});
 });
