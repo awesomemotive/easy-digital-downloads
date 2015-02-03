@@ -102,7 +102,7 @@ jQuery(document).ready(function ($) {
 							alert( edd_vars.one_price_min );
 							break;
 						case 'file' :
-							alert( edd_vars.one_file_min );
+							$( 'input, select', row ).val( '' );
 							break;
 						default:
 							alert( edd_vars.one_field_min );

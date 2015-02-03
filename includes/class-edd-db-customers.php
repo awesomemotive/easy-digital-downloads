@@ -98,7 +98,7 @@ class EDD_DB_Customers extends EDD_DB  {
 			$args['payment_ids'] = implode( ',', array_unique( array_values( $args['payment_ids'] ) ) );
 		}
 
-		$customer = $this->get_by( 'email', $args['email'] );
+		$customer = $this->get_customer_by( 'email', $args['email'] );
 
 		if( $customer ) {
 			// update an existing customer
@@ -155,25 +155,14 @@ class EDD_DB_Customers extends EDD_DB  {
 	*/
 	public function attach_payment( $customer_id = 0, $payment_id = 0 ) {
 
-		$customer = $this->get( $customer_id );
+		$customer = new EDD_Customer( $customer_id );
 
-		if( ! $customer ) {
+		if( empty( $customer->id ) ) {
 			return false;
 		}
 
-		if( empty( $customer->payment_ids ) ) {
-
-			$customer->payment_ids = $payment_id;
-
-		} else {
-
-			$payment_ids   = array_map( 'absint', explode( ',', $customer->payment_ids ) );
-			$payment_ids[] = $payment_id;
-			$customer->payment_ids = implode( ',', array_unique( array_values( $payment_ids ) ) );
-
-		}
-
-		return $this->update( $customer_id, (array) $customer );
+		// Attach the payment, but don't increment stats, as this function previously did not
+		return $customer->attach_payment( $payment_id, false );
 
 	}
 
@@ -185,33 +174,14 @@ class EDD_DB_Customers extends EDD_DB  {
 	*/
 	public function remove_payment( $customer_id = 0, $payment_id = 0 ) {
 
-		$customer = $this->get( $customer_id );
+		$customer = new EDD_Customer( $customer_id );
 
 		if( ! $customer ) {
 			return false;
 		}
 
-		if( ! $payment_id ) {
-			return false;
-		}
-
-		if( ! empty( $customer->payment_ids ) ) {
-
-			$payment_ids = array_map( 'absint', explode( ',', $customer->payment_ids ) );
-
-			$pos = array_search( $payment_id, $payment_ids );
-			if ( false === $pos ) {
-				return false;
-			}
-
-			unset( $payment_ids[$pos] );
-			$payment_ids = array_filter( $payment_ids );
-
-			$customer->payment_ids = implode( ',', array_unique( array_values( $payment_ids ) ) );
-
-		}
-
-		return $this->update( $customer_id, (array) $customer );
+		// Remove the payment, but don't decrease stats, as this function previously did not
+		return $customer->remove_payment( $payment_id, false );
 
 	}
 
@@ -223,16 +193,16 @@ class EDD_DB_Customers extends EDD_DB  {
 	*/
 	public function increment_stats( $customer_id = 0, $amount = 0.00 ) {
 
-		$customer = $this->get( $customer_id );
+		$customer = new EDD_Customer( $customer_id );
 
-		if( ! $customer ) {
+		if( empty( $customer->id ) ) {
 			return false;
 		}
 
-		$customer->purchase_count = intval( $customer->purchase_count ) + 1;
-		$customer->purchase_value = floatval( $customer->purchase_value ) + $amount;
+		$increased_count = $customer->increase_purchase_count();
+		$increased_value = $customer->increase_value( $amount );
 
-		return $this->update( $customer_id, (array) $customer );
+		return ( $increased_count && $increased_value ) ? true : false;
 
 	}
 
@@ -244,16 +214,16 @@ class EDD_DB_Customers extends EDD_DB  {
 	*/
 	public function decrement_stats( $customer_id = 0, $amount = 0.00 ) {
 
-		$customer = $this->get( $customer_id );
+		$customer = new EDD_Customer( $customer_id );
 
 		if( ! $customer ) {
 			return false;
 		}
 
-		$customer->purchase_count = intval( $customer->purchase_count ) - 1;
-		$customer->purchase_value = floatval( $customer->purchase_value ) - $amount;
+		$decreased_count = $customer->decrease_purchase_count();
+		$decreased_value = $customer->decrease_value( $amount );
 
-		return $this->update( $customer_id, (array) $customer );
+		return ( $decreased_count && $decreased_value ) ? true : false;
 
 	}
 
@@ -262,21 +232,61 @@ class EDD_DB_Customers extends EDD_DB  {
 	 *
 	 * @access public
 	 * @since  2.3
-	 * @param  integer $customer_id The Customer ID to retrieve
-	 * @return mixed                Upon success, an object of the customer. Upon failure, NULL
+	 * @param  string $column id or email
+	 * @param  mixed  $value  The Customer ID or email to search
+	 * @return mixed          Upon success, an object of the customer. Upon failure, NULL
 	 */
-	public function get_customer( $customer_id = 0 ) {
-
+	public function get_customer_by( $field = 'id', $value = 0 ) {
 		global $wpdb;
 
-		if ( empty( $customer_id ) || ! is_numeric( $customer_id ) ) {
+		if ( empty( $field ) || empty( $value ) ) {
 			return NULL;
 		}
 
-		$customer_id = absint( $customer_id );
-		$where = "WHERE `id` = $customer_id";
+		if ( 'id' == $field || 'user_id' == $field ) {
+			// Make sure the value is numeric to avoid casting objects, for example,
+			// to int 1.
+			if ( ! is_numeric( $value ) ) {
+				return false;
+			}
 
-		$customer = $wpdb->get_row( "SELECT * FROM  $this->table_name $where" );
+			$value = intval( $value );
+
+			if ( $value < 1 ) {
+				return false;
+			}
+
+		} elseif ( 'email' === $field ) {
+
+			if ( ! is_email( $value ) ) {
+				return false;
+			}
+
+			$value = trim( $value );
+		}
+
+		if ( ! $value ) {
+			return false;
+		}
+
+		switch ( $field ) {
+			case 'id':
+				$db_field = 'id';
+				break;
+			case 'email':
+				$value    = sanitize_text_field( $value );
+				$db_field = 'email';
+				break;
+			case 'user_id':
+				$db_field = 'user_id';
+				break;
+			default:
+				return false;
+		}
+
+		if ( ! $customer = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $this->table_name WHERE $db_field = %s LIMIT 1", $value ) ) ) {
+			return false;
+		}
 
 		return $customer;
 	}

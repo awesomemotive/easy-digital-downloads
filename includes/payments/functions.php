@@ -170,17 +170,25 @@ function edd_insert_payment( $payment_data = array() ) {
 		}
 
 		// Create or update a customer
-		$customer_id = EDD()->customers->add( array(
+		$customer      = new EDD_Customer( $payment_data['user_email'] );
+		$customer_data = array(
 			'name'        => $payment_data['user_info']['first_name'] . ' ' . $payment_data['user_info']['last_name'],
 			'email'       => $payment_data['user_email'],
 			'user_id'     => $payment_data['user_info']['id'],
 			'payment_ids' => $payment
-		) );
+		);
+
+		if ( empty( $customer->id ) ) {
+			$customer_id = $customer->create( $customer_data );
+		} else {
+			$customer->update( $customer_data );
+		}
+
 
 		// Record the payment details
 		update_post_meta( $payment, '_edd_payment_meta',         apply_filters( 'edd_payment_meta', $payment_meta, $payment_data ) );
 		update_post_meta( $payment, '_edd_payment_user_id',      $payment_data['user_info']['id'] );
-		update_post_meta( $payment, '_edd_payment_customer_id',  $customer_id );
+		update_post_meta( $payment, '_edd_payment_customer_id',  $customer->id );
 		update_post_meta( $payment, '_edd_payment_user_email',   $payment_data['user_email'] );
 		update_post_meta( $payment, '_edd_payment_user_ip',      edd_get_ip() );
 		update_post_meta( $payment, '_edd_payment_purchase_key', $payment_data['purchase_key'] );
@@ -282,6 +290,9 @@ function edd_delete_purchase( $payment_id = 0 ) {
 	$amount      = edd_get_payment_amount( $payment_id );
 	$status      = $post->post_status;
 	$customer_id = edd_get_payment_customer_id( $payment_id );
+	if ( $customer_id ) {
+		$customer = new EDD_Customer( $customer_id );
+	}
 
 	if( $status == 'revoked' || $status == 'publish' ) {
 		// Only decrease earnings if they haven't already been decreased (or were never increased for this payment)
@@ -289,20 +300,21 @@ function edd_delete_purchase( $payment_id = 0 ) {
 		// Clear the This Month earnings (this_monththis_month is NOT a typo)
 		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
 
-		if( $customer_id ) {
+		if( $customer->id ) {
 
 			// Decrement the stats for the customer
-			EDD()->customers->decrement_stats( $customer_id, $amount );
+			$customer->decrease_purchase_count();
+			$customer->decrease_value( $amount );
 
 		}
 	}
 
 	do_action( 'edd_payment_delete', $payment_id );
 
-	if( $customer_id ){
+	if( $customer->id ){
 
 		// Remove the payment ID from the customer
-		EDD()->customers->remove_payment( $customer_id, $payment_id );
+		$customer->remove_payment( $payment_id );
 
 	}
 
