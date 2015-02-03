@@ -105,11 +105,12 @@ function edd_render_customer_view( $view, $callbacks ) {
 	}
 
 	$customer_tabs = edd_customer_tabs();
+	$errors        = edd_get_errors();
 	?>
 
 	<div class='wrap'>
 		<h2><?php _e( 'Customer Details', 'edd' );?></h2>
-		<?php if ( ! empty( edd_get_errors() ) ) :?>
+		<?php if ( ! empty( $errors ) ) :?>
 			<div class="error settings-error">
 				<?php edd_print_errors(); ?>
 			</div>
