@@ -54,7 +54,7 @@ function edd_load_scripts() {
 			'purchase_loading'  => __( 'Please Wait...', 'edd' ),
 			'complete_purchase' => __( 'Purchase', 'edd' ),
 			'taxes_enabled'     => edd_use_taxes() ? '1' : '0',
-			'edd_version'       => EDD_VERSION
+			'edd_version'       => EDD_VERSION,
 		) ) );
 	}
 
@@ -74,7 +74,7 @@ function edd_load_scripts() {
 			'redirect_to_checkout'    => ( edd_straight_to_checkout() || edd_is_checkout() ) ? '1' : '0',
 			'checkout_page'           => edd_get_checkout_uri(),
 			'permalinks'              => get_option( 'permalink_structure' ) ? '1' : '0',
-			'quantities_enabled'      => edd_item_quantities_enabled()
+			'quantities_enabled'      => edd_item_quantities_enabled(),
 		) ) );
 	}
 }
