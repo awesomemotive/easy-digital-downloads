@@ -261,7 +261,7 @@ function edd_process_paypal_ipn() {
 			'method'           => 'POST',
 			'timeout'          => 45,
 			'redirection'      => 5,
-			'httpversion'      => '1.0',
+			'httpversion'      => '1.1',
 			'blocking'         => true,
 			'headers'          => array(
 				'host'         => 'www.paypal.com',
