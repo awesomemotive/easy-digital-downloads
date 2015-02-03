@@ -167,7 +167,7 @@ function edd_customers_view( $customer ) {
 
 			<div class="customer-info">
 
-				<div class="avatar-wrap left">
+				<div class="avatar-wrap left" id="customer-avatar">
 					<?php echo get_avatar( $customer->email ); ?>
 				</div>
 
@@ -181,11 +181,12 @@ function edd_customers_view( $customer ) {
 					<?php if ( ! empty( $address ) ) : ?>
 					<strong><?php _e( 'Customer Address', 'edd' ); ?></strong>
 					<span class="customer-address info-item editable">
-						<span class="info-item"><?php echo $address['line1']; ?></span>
-						<span class="info-item"><?php echo $address['line2']; ?></span>
-						<span class="info-item"><?php echo $address['city'] . ', ' . $address['state']; ?></span>
-						<span class="info-item"><?php echo $address['country']; ?></span>
-						<span class="info-item"><?php echo $address['zip']; ?></span>
+						<span class="info-item" data-key="line1"><?php echo $address['line1']; ?></span>
+						<span class="info-item" data-key="line2"><?php echo $address['line2']; ?></span>
+						<span class="info-item" data-key="city"><?php echo $address['city']; ?></span>
+						<span class="info-item" data-key="state"><?php echo $address['state']; ?></span>
+						<span class="info-item" data-key="country"><?php echo $address['country']; ?></span>
+						<span class="info-item" data-key="zip"><?php echo $address['zip']; ?></span>
 					</span>
 					<?php endif; ?>
 					<span class="customer-address info-item edit-item">
@@ -227,24 +228,18 @@ function edd_customers_view( $customer ) {
 				</div>
 
 				<span class="customer-name info-item edit-item"><input size="15" data-key="name" name="customerinfo[name]" type="text" value="<?php echo $customer->name; ?>" placeholder="<?php _e( 'Customer Name', 'edd' ); ?>" /></span>
-				<span class="customer-name info-item editable"><?php echo $customer->name; ?>&nbsp;<a title="<?php _e( 'Edit Customer', 'edd' ); ?>" id="edit-customer"><span class="dashicons dashicons-edit"></span></a></span>
+				<span class="customer-name info-item editable"><span data-key="name"><?php echo $customer->name; ?></span>&nbsp;<a title="<?php _e( 'Edit Customer', 'edd' ); ?>" id="edit-customer"><span class="dashicons dashicons-edit"></span></a></span>
 				<span class="customer-name info-item edit-item"><input size="20" data-key="email" name="customerinfo[email]" type="text" value="<?php echo $customer->email; ?>" placeholder="<?php _e( 'Customer Email', 'edd' ); ?>" /></span>
-				<span class="customer-email info-item editable"><?php echo $customer->email; ?></span>
+				<span class="customer-email info-item editable" data-key="email"><?php echo $customer->email; ?></span>
 				<span class="customer-since info-item">
 					<?php _e( 'Customer since', 'edd' ); ?>
 					<?php echo date_i18n( get_option( 'date_format' ), strtotime( $customer->date_created ) ) ?>
 				</span>
 				<span class="customer-user-id info-item edit-item"><input size="5" data-key="user_id" name="customerinfo[user_id]" type="text" value="<?php echo $customer->user_id; ?>" placeholder="<?php _e( 'User ID', 'edd' ); ?>" /></span>
-				<?php if ( isset( $customer->user_id ) && $customer->user_id > 0 ) : ?>
-					<span class="customer-user-id info-item editable">
-						<?php _e( 'User ID', 'edd' ); ?>:&nbsp;
-						<?php echo $customer->user_id; ?>
-						&nbsp; - &nbsp;
-						<a title="<?php _e( 'Edit User', 'edd' ); ?>" href="<?php echo admin_url( 'user-edit.php?user_id=' . $customer->user_id ); ?>">
-							<?php  _e( 'Edit User', 'edd' ); ?>
-						</a>
-					</span>
-				<?php endif; ?>
+				<span class="customer-user-id info-item editable">
+					<?php _e( 'User ID', 'edd' ); ?>:&nbsp;
+					<span data-key="user_id"><?php echo $customer->user_id; ?></span>
+				</span>
 
 			</div>
 

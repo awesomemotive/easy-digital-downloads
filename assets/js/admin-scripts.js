@@ -1124,7 +1124,7 @@ jQuery(document).ready(function ($) {
 		cancel_edit: function() {
 			$( 'body' ).on( 'click', '#edd-edit-customer-cancel', function( e ) {
 				e.preventDefault();
-				$( '#edd-customer-card-wrapper .edit-item' ).hide()
+				$( '#edd-customer-card-wrapper .edit-item' ).hide();
 				$( '#edd-customer-card-wrapper .editable' ).show();
 			});
 		},
@@ -1148,10 +1148,22 @@ jQuery(document).ready(function ($) {
 				};
 
 				$.post(ajaxurl, postData, function( response ) {
-					if ( 'true' == response ) {
-						alert( 'success' );
+					var data = $.parseJSON( response );
+
+					if ( true == data.success ) {
+						$.each( data.customer_info, function( key, value ) {
+							$('span[data-key="' + key + '"]').text( value );
+							$(':input[data-key="' + key + '"]').val( value );
+						});
+
+						$( '#edd-customer-card-wrapper .edit-item' ).hide();
+						$( '#edd-customer-card-wrapper .editable' ).show();
+
 					} else {
-						// Errors
+
+						// We had errors, refresh to show them
+						window.location.reload();
+
 					}
 				});
 

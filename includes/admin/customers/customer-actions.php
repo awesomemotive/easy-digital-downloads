@@ -22,6 +22,11 @@ function edd_edit_customer( $args ) {
 		wp_die( __( 'Cheatin\' eh?!', 'edd' ) );
 	}
 
+	$customer = new EDD_Customer( $customer_id );
+	if ( empty( $customer->id ) ) {
+		return false;
+	}
+
 	$defaults = array(
 		'line1'   => '',
 		'line2'   => '',
@@ -31,24 +36,47 @@ function edd_edit_customer( $args ) {
 		'state'   => '',
 		'name'    => '',
 		'email'   => '',
-		'user_id' => ''
+		'user_id' => 0
 	);
 
 	$customer_info = wp_parse_args( $customer_info, $defaults );
 
 	// Sanitize the inputs
-	$customer_info['line1'] = sanitize_text_field( $customer_info['line1'] );
-	$customer_info['line2'] = sanitize_text_field( $customer_info['line2'] );
-	$customer_info['city']  = sanitize_text_field( $customer_info['city'] );
-	$customer_info['zip']   = sanitize_text_field( $customer_info['zip'] );
-	$customer_info['state'] = sanitize_text_field( $customer_info['state'] );
-	$customer_info['name']  = sanitize_text_field( $customer_info['name'] );
-	$customer_info['email'] = sanitize_text_field( $customer_info['email'] );
+	$address['line1']         = $customer_info['line1'];
+	$address['line2']         = $customer_info['line2'];
+	$address['city']          = $customer_info['city'];
+	$address['zip']           = $customer_info['zip'];
+	$address['state']         = $customer_info['state'];
+	$address['country']       = $customer_info['country'];
+	$customer_info['name']    = $customer_info['name'];
+	$customer_info['email']   = $customer_info['email'];
+	$customer_info['user_id'] = $customer_info['user_id'];
 
-	do_action( 'edd_pre_edit_customer', $customer_id, $customer_info );
+	$customer_info = apply_filters( 'edd_edit_customer_info', $customer_info, $customer_id );
+	$address       = apply_filters( 'edd_edit_customer_address', $customer_info, $customer_id );
+
+	$customer_info = array_map( 'sanitize_text_field', $customer_info );
+	$address       = array_map( 'sanitize_text_field', $address );
+
+	do_action( 'edd_pre_edit_customer', $customer_id, $customer_info, $address );
 
 	if ( ! is_email( $customer_info['email'] ) ) {
-		edd_set_error( 'edd-invalid-customer-email', __( 'Please enter a valid email address', 'edd' ) );
+		edd_set_error( 'edd-invalid-email', __( 'Please enter a valid email address.', 'edd' ) );
+	}
+
+	if ( $customer_info['user_id'] != $customer->user_id ) {
+
+		// Make sure we don't already have this user attached to a customer
+		if ( false !== EDD()->customers->get_customer_by( 'user_id', $customer_info['user_id'] ) ) {
+			edd_set_error( 'edd-invlid-customer-user_id', sprintf( __( 'The User ID %d is already associated with a different customer.', 'edd' ), $customer_info['user_id'] ) );
+		}
+
+		// Make sure it's actually a user
+		$user = get_user_by( 'id', $customer_info['user_id'] );
+		if ( false === $user ) {
+			edd_set_error( 'edd-invalid-user_id', sprintf( __( 'The User ID %d does not exist. Please assign an existing user.', 'edd' ), $customer_info['user_id'] ) );
+		}
+
 	}
 
 
@@ -57,7 +85,32 @@ function edd_edit_customer( $args ) {
 		return;
 	}
 
+	$output = array();
+
+	if ( $customer->update( $customer_info ) ) {
+
+		if ( ! empty( $customer->user_id ) ) {
+			update_user_meta( $customer->user_id, '_edd_user_address', $address );
+		}
+
+		$output['success']       = true;
+		$customer_info           = array_merge( $customer_info, $address );
+		$output['customer_info'] = $customer_info;
+
+	} else {
+
+		$output['success'] = false;
+
+	}
+
 	do_action( 'edd_post_edit_customer', $customer_id, $customer_info );
+
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		echo json_encode( $output );
+		exit;
+	}
+
+	return $output;
 
 }
 add_action( 'edd_edit-customer', 'edd_edit_customer', 10, 1 );
