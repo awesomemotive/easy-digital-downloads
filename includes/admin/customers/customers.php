@@ -1,4 +1,8 @@
 <?php
+
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  * Customers Page
  *
@@ -82,7 +86,9 @@ function edd_customers_list() {
  * @return void
  */
 function edd_render_customer_view( $view, $callbacks ) {
+
 	$customer_edit_role = apply_filters( 'edd_view_customers_role', 'view_shop_reports' );
+
 	if ( ! current_user_can( $customer_edit_role ) ) {
 		edd_set_error( 'edd-no-access', __( 'You are not permitted to view this data.', 'edd' ) );
 	}
@@ -92,10 +98,9 @@ function edd_render_customer_view( $view, $callbacks ) {
 	}
 
 	$customer_id = (int)$_GET['id'];
+	$customer    = new EDD_Customer( $customer_id );
 
-	$customer    = EDD()->customers->get_customer( $customer_id );
-
-	if ( empty( $customer ) ) {
+	if ( empty( $customer->id ) ) {
 		edd_set_error( 'edd-invalid_customer', __( 'Invalid Customer ID Provided.', 'edd' ) );
 	}
 
@@ -322,19 +327,24 @@ function edd_customers_view( $customer ) {
  * @return void
  */
 function edd_customer_notes_view( $customer ) {
-	global $current_user;
-	get_currentuserinfo();
 
-	$customer_notes = edd_get_customer_notes( $customer->id );
+	$paged       = isset( $_GET['paged'] ) && is_numeric( $_GET['paged'] ) ? $_GET['paged'] : 1;
+	$paged       = absint( $paged );
+	$note_count  = $customer->get_notes_count();
+	$per_page    = apply_filters( 'edd_customer_notes_per_page', 20 );
+	$total_pages = ceil( $note_count / $per_page );
+
+	$customer_notes = $customer->get_notes( $per_page, $paged );
 	?>
 
 	<div id="customer-notes-wrapper">
+		<div class="customer-notes-header">
+			<?php echo get_avatar( $customer->email, 30 ); ?> <span><?php echo $customer->name; ?></span>
+		</div>
 		<h3><?php _e( 'Notes', 'edd' ); ?></h3>
 
+		<?php if ( 1 == $paged ) : ?>
 		<div style="display: block; margin-bottom: 35px;">
-			<div class="avatar-wrap left">
-				<?php echo get_avatar( $current_user->user_email, 32 ); ?>
-			</div>
 			<form id="edd-add-customer-note" method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=notes&id=' . $customer->id ); ?>">
 				<textarea id="customer-note" name="customer_note" style="width: 93%; margin-bottom: 5px;"></textarea>
 				<br />
@@ -344,26 +354,26 @@ function edd_customer_notes_view( $customer ) {
 				<input id="add-customer-note" class="right button-primary" type="submit" value="Add Note" />
 			</form>
 		</div>
+		<?php endif; ?>
+
+		<?php
+		$pagination_args = array(
+			'base'     => '%_%',
+			'format'   => '?paged=%#%',
+			'total'    => $total_pages,
+			'current'  => $paged,
+			'show_all' => true
+		);
+
+		echo paginate_links( $pagination_args );
+		?>
 
 		<div id="edd-customer-notes">
 		<?php if ( count( $customer_notes ) > 0 ) : ?>
-			<?php foreach( $customer_notes as $note ) : ?>
-				<div id="customer-note-<?php echo $note->comment_ID; ?>" class="customer-note-wrapper dashboard-comment-wrap comment-item">
-					<span class="row-actions right">
-						<?php $delete_url = wp_nonce_url( admin_url( 'edit.php?post_type=download&page=edd-customers&view=notes&edd-action=delete-customer-note&note_id=' . $note->comment_ID . '&id=' . $customer->id ), 'delete-customer-note' ); ?>
-						<a href="<?php echo $delete_url; ?>" data-nonce="<?php echo wp_create_nonce( 'delete-customer-note' ); ?>" data-note-id="<?php echo $note->comment_ID; ?>" class="delete"><?php _e( 'Delete', 'edd' ); ?></a>
-					</span>
-					<span class="avatar-wrap left">
-						<?php $user_data = get_userdata( $note->user_id ); ?>
-						<?php echo get_avatar( $user_data->user_email, 32 ); ?>
-					</span>
-					<span class="note-meta-wrap">
-						<?php echo $user_data->user_nicename; ?>
-						 @ <?php echo date_i18n( get_option( 'time_format' ), strtotime( $note->comment_date ), true ); ?>
-						 <?php _e( 'on', 'edd' ); ?> <?php echo date_i18n( get_option( 'date_format' ), strtotime( $note->comment_date ), true ); ?>
-					</span>
+			<?php foreach( $customer_notes as $key => $note ) : ?>
+				<div class="customer-note-wrapper dashboard-comment-wrap comment-item">
 					<span class="note-content-wrap">
-						<?php echo $note->comment_content; ?>
+						<?php echo stripslashes( $note ); ?>
 					</span>
 				</div>
 			<?php endforeach; ?>
@@ -373,6 +383,8 @@ function edd_customer_notes_view( $customer ) {
 			</div>
 		<?php endif; ?>
 		</div>
+
+		<?php echo paginate_links( $pagination_args ); ?>
 
 	</div>
 

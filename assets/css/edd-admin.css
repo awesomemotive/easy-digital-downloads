@@ -309,6 +309,7 @@ td.edd_order_price { text-align: right; }
 #customer-purchases-wrapper table { width: 100%; text-align: center; }
 #customer-purchases-wrapper th { text-align: center; }
 #customer-notes-wrapper { min-height: 50px; }
+.customer-notes-header span, .customer-notes-header img { font-weight: 600; line-height: 30px; vertical-align: middle; }
 #edd-customer-notes div:nth-of-type(even) { background-color: #fcfcfc; }
 .customer-note-wrapper { border-bottom: 1px solid #f9f9f9; min-height: 38px; padding: 7px 0 7px 7px; }
 .customer-note-wrapper span { display: block; }
