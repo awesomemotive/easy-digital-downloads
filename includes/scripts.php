@@ -234,57 +234,65 @@ function edd_admin_downloads_icon() {
 	$icon_2x_url     = $images_url . 'edd-icon-2x.png';
 	$icon_cpt_2x_url = $images_url . 'edd-cpt-2x.png';
 	?>
-	<style type="text/css" media="screen">
+	<style type="text/css">
 		<?php if ( version_compare( $wp_version, '3.8-RC', '>=' ) || version_compare( $wp_version, '3.8', '>=' ) ) { ?>
 			#adminmenu #menu-posts-download .wp-menu-image:before,
 			#dashboard_right_now .download-count:before {
 				content: '<?php echo $menu_icon; ?>';
+			}
+			#edd-media-button:before {
+				font: normal 18px/1 dashicons;
+				content: '<?php echo $menu_icon; ?>';
+				-moz-osx-font-smoothing: grayscale;
+				-webkit-font-smoothing: antialiased;
+				speak: none;
+			}
+			@media screen and (max-width: 782px) {
+				#edd-media-button:before {
+					font-size: 20px !important;
+				}
 			}
 		<?php } else { ?>
 			/** Fallback for outdated WP installations */
 			#adminmenu #menu-posts-download div.wp-menu-image {
 				background: url(<?php echo $icon_url; ?>) no-repeat 7px -17px;
 			}
-			#adminmenu #menu-posts-download:hover div.wp-menu-image,
-			#adminmenu #menu-posts-download.wp-has-current-submenu div.wp-menu-image {
+			#adminmenu #menu-posts-download.wp-has-current-submenu div.wp-menu-image,
+			#adminmenu #menu-posts-download:hover div.wp-menu-image {
 				background-position: 7px 6px;
 			}
-		<?php } ?>
-		#edd-media-button {
-			background: url(<?php echo $icon_url; ?>) 0 -16px no-repeat;
-			background-size: 12px 30px;
-		}
-		#icon-edit.icon32-posts-download {
-			background: url(<?php echo $icon_cpt_url; ?>) -7px -5px no-repeat;
-		}
-		.wp-media-buttons a.edd-thickbox {
-			padding-left: 5px;
-		}
-		@media
-		only screen and (-webkit-min-device-pixel-ratio: 1.5),
-		only screen and (   min--moz-device-pixel-ratio: 1.5),
-		only screen and (     -o-min-device-pixel-ratio: 3/2),
-		only screen and (        min-device-pixel-ratio: 1.5),
-		only screen and (                min-resolution: 1.5dppx) {
-			<?php if ( version_compare( $wp_version, '3.7', '<=' ) ) { ?>
+			#edd-media-button {
+				background: url(<?php echo $icon_url; ?>) 0 -16px no-repeat;
+				background-size: 12px 30px;
+			}
+			#icon-edit.icon32-posts-download {
+				background: url(<?php echo $icon_cpt_url; ?>) -7px -5px no-repeat;
+			}
+			@media print,
+				(-o-min-device-pixel-ratio: 5/4),
+				(-webkit-min-device-pixel-ratio: 1.25),
+				(min-resolution: 120dpi) {
 				#adminmenu #menu-posts-download div.wp-menu-image {
 					background-image: url(<?php echo $icon_2x_url; ?>);
 					background-position: 7px -18px;
 					background-size: 16px 40px;
 				}
-				#adminmenu #menu-posts-download:hover div.wp-menu-image,
-				#adminmenu #menu-posts-download.wp-has-current-submenu div.wp-menu-image {
+				#adminmenu #menu-posts-download.wp-has-current-submenu div.wp-menu-image,
+				#adminmenu #menu-posts-download:hover div.wp-menu-image {
 					background-position: 7px 6px;
 				}
-			<?php } ?>
-			#icon-edit.icon32-posts-download {
-				background: url(<?php echo $icon_cpt_2x_url; ?>) no-repeat -7px -5px !important;
-				background-size: 55px 45px !important;
+				#edd-media-button {
+					background-image: url(<?php echo $icon_2x_url; ?>);
+					background-position: 0 -17px;
+				}
+				#icon-edit.icon32-posts-download {
+					background: url(<?php echo $icon_cpt_2x_url; ?>) no-repeat -7px -5px !important;
+					background-size: 55px 45px !important;
+				}
 			}
-			#edd-media-button {
-				background-image: url(<?php echo $icon_2x_url; ?>);
-				background-position: 0 -17px;
-			}
+		<?php } ?>
+		.wp-media-buttons a.edd-thickbox {
+			padding-left: 5px;
 		}
 	</style>
 	<?php
