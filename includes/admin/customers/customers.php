@@ -109,7 +109,7 @@ function edd_render_customer_view( $view, $callbacks ) {
 
 	<div class='wrap'>
 		<h2><?php _e( 'Customer Details', 'edd' );?></h2>
-		<?php if ( ! empty( edd_get_errors() ) ) :?>
+		<?php if ( edd_get_errors() ) :?>
 			<div class="error settings-error">
 				<?php edd_print_errors(); ?>
 			</div>
