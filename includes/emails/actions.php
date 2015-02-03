@@ -44,7 +44,7 @@ function edd_resend_purchase_receipt( $data ) {
 		return;
 	}
 
-	if( ! current_user_can( 'edit_shop_payment', $purchase_id ) ) {
+	if( ! current_user_can( 'edit_shop_payments' ) ) {
 		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
 
