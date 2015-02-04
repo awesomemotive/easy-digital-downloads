@@ -94,7 +94,7 @@ class EDD_Customer {
 	 *
 	 * @since 2.3
 	 */
-	public function __construct( $_id_or_email ) {
+	public function __construct( $_id_or_email = false ) {
 
 		$this->db = new EDD_DB_Customers;
 
@@ -102,8 +102,8 @@ class EDD_Customer {
 			return false;
 		}
 
-		$field       = is_numeric( $_id_or_email ) ? 'id' : 'email';
-		$customer    = $this->db->get_customer_by( $field, $_id_or_email );
+		$field    = is_numeric( $_id_or_email ) ? 'id' : 'email';
+		$customer = $this->db->get_customer_by( $field, $_id_or_email );
 
 		if ( empty( $customer ) || ! is_object( $customer ) ) {
 			return false;
@@ -188,8 +188,9 @@ class EDD_Customer {
 		);
 
 		$args = wp_parse_args( $data, $defaults );
+		$args = $this->sanitize_columns( $args );
 
-		if ( empty( $args['email'] ) || ! is_email( $args['email'] ) || '' == trim( $args['email'] ) ) {
+		if ( empty( $args['email'] ) || ! is_email( $args['email'] ) ) {
 			return false;
 		}
 
@@ -226,6 +227,8 @@ class EDD_Customer {
 		if ( empty( $data ) ) {
 			return false;
 		}
+
+		$data = $this->sanitize_columns( $data );
 
 		if ( $this->db->update( $this->id, $data ) ) {
 
@@ -265,7 +268,7 @@ class EDD_Customer {
 
 		}
 
-		$payment_added = $this->db->update( $this->id, array( 'payment_ids' => $new_payment_ids ) );
+		$payment_added = $this->update( array( 'payment_ids' => $new_payment_ids ) );
 
 		if ( $payment_added ) {
 
@@ -320,7 +323,7 @@ class EDD_Customer {
 
 		}
 
-		$payment_removed = $this->db->update( $this->id, array( 'payment_ids' => $new_payment_ids ) );
+		$payment_removed = $this->update( array( 'payment_ids' => $new_payment_ids ) );
 
 		if ( $payment_removed ) {
 
@@ -359,7 +362,7 @@ class EDD_Customer {
 
 		$new_total = (int) $this->purchase_count + (int) $count;
 
-		if ( $this->db->update( $this->id, array( 'purchase_count' => $new_total ) ) ) {
+		if ( $this->update( array( 'purchase_count' => $new_total ) ) ) {
 			$this->purchase_count = $new_total;
 			return $new_total;
 		}
@@ -383,7 +386,7 @@ class EDD_Customer {
 
 		$new_total = (int) $this->purchase_count - (int) $count;
 
-		if ( $this->db->update( $this->id, array( 'purchase_count' => $new_total ) ) ) {
+		if ( $this->update( array( 'purchase_count' => $new_total ) ) ) {
 			$this->purchase_count = $new_total;
 			return (string) $new_total;
 		}
@@ -402,7 +405,7 @@ class EDD_Customer {
 
 		$new_value = floatval( $this->purchase_value ) + $value;
 
-		if ( $this->db->update( $this->id, array( 'purchase_value' => $new_value ) ) ) {
+		if ( $this->update( array( 'purchase_value' => $new_value ) ) ) {
 			$this->purchase_value = $new_value;
 			return (string) $new_value;
 		}
@@ -421,7 +424,7 @@ class EDD_Customer {
 
 		$new_value = floatval( $this->purchase_value ) - $value;
 
-		if ( $this->db->update( $this->id, array( 'purchase_value' => $new_value ) ) ) {
+		if ( $this->update( array( 'purchase_value' => $new_value ) ) ) {
 			$this->purchase_value = $new_value;
 			return (string) $new_value;
 		}
@@ -488,7 +491,7 @@ class EDD_Customer {
 		$new_note = date_i18n( 'F j, Y H:i:s', current_time( 'timestamp' ) ) . ' - ' . $note;
 		$notes   .= "\n\n" . $new_note;
 
-		$updated = $this->db->update( $this->id, array( 'notes' => $notes ) );
+		$updated = $this->update( array( 'notes' => $notes ) );
 
 		if ( $updated ) {
 			$this->notes = $this->get_notes();
@@ -511,6 +514,54 @@ class EDD_Customer {
 
 		return $all_notes;
 
+	}
+
+	/**
+	 * Sanitize the data for update/create
+	 *
+	 * @since  2.3
+	 * @param  array $data The data to sanitize
+	 * @return array       The sanitized data, based off column defaults
+	 */
+	private function sanitize_columns( $data ) {
+
+		$columns        = $this->db->get_columns();
+		$default_values = $this->db->get_column_defaults();
+
+		foreach ( $columns as $key => $type ) {
+
+			// Only sanitize data that we were provided
+			if ( ! array_key_exists( $key, $data ) ) {
+				continue;
+			}
+
+			switch( $type ) {
+
+				case '%s':
+					if ( 'email' == $key ) {
+						$data[$key] = sanitize_email( $data[$key] );
+					} elseif ( 'notes' == $key ) {
+						$data[$key] = strip_tags( $data[$key] );
+					} else {
+						$data[$key] = sanitize_text_field( $data[$key] );
+					}
+					break;
+
+				case '%d':
+					if ( ! is_numeric( $data[$key] ) ) {
+						$data[$key] = $default_values[$key];
+					}
+					break;
+
+				default:
+					$data[$key] = sanitize_text_field( $data[$key] );
+					break;
+
+			}
+
+		}
+
+		return $data;
 	}
 
 }
