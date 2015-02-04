@@ -180,6 +180,14 @@ class Tests_Customers extends WP_UnitTestCase {
 
 	}
 
+	public function test_magic_get_method() {
+
+		$customer = new EDD_Customer( 'testadmin@domain.com' );
+		$this->assertEquals( 'testadmin@domain.com', $customer->email );
+		$this->assertTrue( is_wp_error( $customer->__get( 'asdf' ) ) );
+
+	}
+
 	public function test_attach_payment() {
 
 		$customer = new EDD_Customer( 'testadmin@domain.com' );
