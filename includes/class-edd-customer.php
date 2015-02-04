@@ -164,7 +164,7 @@ class EDD_Customer {
 
 		} else {
 
-			throw new Exception( 'Can\'t get property ' . $key );
+			return new WP_Error( 'edd-customer-invalid-property', sprintf( __( 'Can\'t get property %s', 'edd' ), $key ) );
 
 		}
 
