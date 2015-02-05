@@ -584,8 +584,21 @@ class EDD_Customer {
 					break;
 
 				case '%d':
-					if ( ! is_numeric( $data[$key] ) ) {
+					if ( ! is_numeric( $data[$key] ) || (int) $data[$key] !== absint( $data[$key] ) ) {
 						$data[$key] = $default_values[$key];
+					} else {
+						$data[$key] = absint( $data[$key] );
+					}
+					break;
+
+				case '%f':
+					// Convert what was given to a float
+					$value = floatval( $data[$key] );
+
+					if ( ! is_float( $value ) ) {
+						$data[$key] = $default_values[$key];
+					} else {
+						$data[$key] = $value;
 					}
 					break;
 
