@@ -180,7 +180,7 @@ class EDD_Customer {
 	public function create( $data = array() ) {
 
 		if ( $this->id != 0 || empty( $data ) ) {
-			return;
+			return false;
 		}
 
 		$defaults = array(
@@ -198,6 +198,10 @@ class EDD_Customer {
 			$args['payment_ids'] = implode( ',', array_unique( array_values( $args['payment_ids'] ) ) );
 		}
 
+		do_action( 'edd_customer_pre_create', $args );
+
+		$created = false;
+
 		// The DB class 'add' implies an update if the customer being asked to be created already exists
 		if ( $this->db->add( $data ) ) {
 
@@ -207,11 +211,12 @@ class EDD_Customer {
 			// Setup the customer data with the values from DB
 			$this->setup_customer( $customer );
 
-			return $this->id;
+			$created = $this->id;
 		}
 
+		do_action( 'edd_customer_post_create', $created, $args );
 
-		return false;
+		return $created;
 
 	}
 
@@ -230,15 +235,21 @@ class EDD_Customer {
 
 		$data = $this->sanitize_columns( $data );
 
+		do_action( 'edd_customer_pre_update', $this->id, $data );
+
+		$updated = false;
+
 		if ( $this->db->update( $this->id, $data ) ) {
 
 			$customer = $this->db->get_customer_by( 'id', $this->id );
-			$this->setup_customer( $customer) ;
+			$this->setup_customer( $customer);
 
-			return true;
+			$udpated = true;
 		}
 
-		return false;
+		do_action( 'edd_customer_post_update', $updated, $this->id, $data );
+
+		return $updated;
 	}
 
 
@@ -268,6 +279,8 @@ class EDD_Customer {
 
 		}
 
+		do_action( 'edd_customer_pre_attach_payment', $payment_id, $this->id );
+
 		$payment_added = $this->update( array( 'payment_ids' => $new_payment_ids ) );
 
 		if ( $payment_added ) {
@@ -286,6 +299,8 @@ class EDD_Customer {
 			}
 
 		}
+
+		do_action( 'edd_customer_post_attach_payment', $payment_added, $payment_id, $this->id );
 
 		return $payment_added;
 	}
@@ -323,6 +338,8 @@ class EDD_Customer {
 
 		}
 
+		do_action( 'edd_customer_pre_remove_payment', $payment_id, $this->id );
+
 		$payment_removed = $this->update( array( 'payment_ids' => $new_payment_ids ) );
 
 		if ( $payment_removed ) {
@@ -342,6 +359,8 @@ class EDD_Customer {
 
 		}
 
+		do_action( 'edd_customer_post_remove_payment', $payment_removed, $payment_id, $this->id );
+
 		return $payment_removed;
 
 	}
@@ -351,7 +370,7 @@ class EDD_Customer {
 	 *
 	 * @since  2.3
 	 * @param  integer $count The number to imcrement by
-	 * @return mixed          If successful, the new count, otherwise false
+	 * @return int            The purchase count
 	 */
 	public function increase_purchase_count( $count = 1 ) {
 
@@ -362,12 +381,15 @@ class EDD_Customer {
 
 		$new_total = (int) $this->purchase_count + (int) $count;
 
+		do_action( 'edd_customer_pre_increase_purchase_count', $count, $this->id );
+
 		if ( $this->update( array( 'purchase_count' => $new_total ) ) ) {
 			$this->purchase_count = $new_total;
-			return $new_total;
 		}
 
-		return false;
+		do_action( 'edd_customer_post_increase_purchase_count', $this->purcahse_count, $count, $this->id );
+
+		return $this->purchase_count;
 	}
 
 	/**
@@ -386,12 +408,15 @@ class EDD_Customer {
 
 		$new_total = (int) $this->purchase_count - (int) $count;
 
+		do_action( 'edd_customer_pre_decrease_purchase_count', $count, $this->id );
+
 		if ( $this->update( array( 'purchase_count' => $new_total ) ) ) {
 			$this->purchase_count = $new_total;
-			return (string) $new_total;
 		}
 
-		return false;
+		do_action( 'edd_customer_post_decrease_purchase_count', $this->purcahse_count, $count, $this->id );
+
+		return $this->purchase_count;
 	}
 
 	/**
@@ -405,12 +430,15 @@ class EDD_Customer {
 
 		$new_value = floatval( $this->purchase_value ) + $value;
 
+		do_action( 'edd_customer_pre_increase_value', $value, $this->id );
+
 		if ( $this->update( array( 'purchase_value' => $new_value ) ) ) {
 			$this->purchase_value = $new_value;
-			return (string) $new_value;
 		}
 
-		return false;
+		do_action( 'edd_customer_post_increase_value', $this->purchase_value, $value, $this->id );
+
+		return $this->purchase_value;
 	}
 
 	/**
@@ -424,12 +452,15 @@ class EDD_Customer {
 
 		$new_value = floatval( $this->purchase_value ) - $value;
 
+		do_action( 'edd_customer_pre_decrease_value', $value, $this->id );
+
 		if ( $this->update( array( 'purchase_value' => $new_value ) ) ) {
 			$this->purchase_value = $new_value;
-			return (string) $new_value;
 		}
 
-		return false;
+		do_action( 'edd_customer_post_decrease_value', $this->purchase_value, $value, $this->id );
+
+		return $this->purchase_value;
 	}
 
 	/**
@@ -488,14 +519,19 @@ class EDD_Customer {
 			$notes = '';
 		}
 
-		$new_note = date_i18n( 'F j, Y H:i:s', current_time( 'timestamp' ) ) . ' - ' . $note;
-		$notes   .= "\n\n" . $new_note;
+		$note_string = date_i18n( 'F j, Y H:i:s', current_time( 'timestamp' ) ) . ' - ' . $note;
+		$new_note    = apply_filters( 'edd_customer_add_note_string', $note_string );
+		$notes      .= "\n\n" . $new_note;
+
+		do_action( 'edd_customer_pre_add_note', $new_note, $this->id );
 
 		$updated = $this->update( array( 'notes' => $notes ) );
 
 		if ( $updated ) {
 			$this->notes = $this->get_notes();
 		}
+
+		do_action( 'edd_customer_post_add_note', $this->notes, $new_note, $this->id );
 
 		// Return the formatted note, so we can test, as well as update any displays
 		return $new_note;
