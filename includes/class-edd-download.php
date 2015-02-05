@@ -156,7 +156,7 @@ class EDD_Download {
 
 		} else {
 
-			throw new Exception( 'Can\'t get property ' . $key );
+			return new WP_Error( 'edd-download-invalid-property', sprintf( __( 'Can\'t get property %s', 'edd' ), $key ) );
 
 		}
 
