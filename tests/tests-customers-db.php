@@ -137,7 +137,7 @@ class Tests_Customers_DB extends WP_UnitTestCase {
 			'name'           => '%s',
 			'email'          => '%s',
 			'payment_ids'    => '%s',
-			'purchase_value' => '%s',
+			'purchase_value' => '%f',
 			'purchase_count' => '%d',
 			'notes'          => '%s',
 			'date_created'   => '%s',
