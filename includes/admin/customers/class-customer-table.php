@@ -119,10 +119,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 				$value = edd_currency_filter( edd_format_amount( $item[ $column_name ] ) );
 				break;
 
-			case 'file_downloads' :
-				$user = ! empty( $item['user_id'] ) ? $item['user_id'] : $item['email'];
-				$value = '<a href="' . esc_url( admin_url( '/edit.php?post_type=download&page=edd-reports&tab=logs&user=' . urlencode( $user ) ) ) . '">' . __( 'View download log', 'edd' ) . '</a>';
-				break;
 			default:
 				$value = isset( $item[ $column_name ] ) ? $item[ $column_name ] : null;
 				break;
@@ -131,7 +127,9 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	}
 
 	public function column_name( $item ) {
+		$user = ! empty( $item['user_id'] ) ? $item['user_id'] : $item['email'];
 		$actions = array( 'view'          => sprintf( __( '<a href="%s">View</a>', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $item['id'] ) ),
+		                  'logs'          => sprintf( __( '<a href="%s">Download log</a>', 'edd' ), admin_url( '/edit.php?post_type=download&page=edd-reports&tab=logs&user=' . urlencode( $user ) ) ),
 		                  'delete'        => sprintf( __( '<a href="%s">Delete</a>', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $item['id'] ) )
 		                );
 
@@ -151,8 +149,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			'id'             => __( 'Customer ID', 'edd' ),
 			'email'          => __( 'Email', 'edd' ),
 			'num_purchases'  => __( 'Purchases', 'edd' ),
-			'amount_spent'   => __( 'Total Spent', 'edd' ),
-			'file_downloads' => __( 'Files Downloaded', 'edd' )
+			'amount_spent'   => __( 'Total Spent', 'edd' )
 		);
 
 		return apply_filters( 'edd_report_customer_columns', $columns );

@@ -67,13 +67,13 @@ function edd_edit_customer( $args ) {
 	if ( $customer_info['user_id'] != $customer->user_id ) {
 
 		// Make sure we don't already have this user attached to a customer
-		if ( false !== EDD()->customers->get_customer_by( 'user_id', $customer_info['user_id'] ) ) {
+		if ( ! empty( $customer_info['user_id'] ) && false !== EDD()->customers->get_customer_by( 'user_id', $customer_info['user_id'] ) ) {
 			edd_set_error( 'edd-invlid-customer-user_id', sprintf( __( 'The User ID %d is already associated with a different customer.', 'edd' ), $customer_info['user_id'] ) );
 		}
 
 		// Make sure it's actually a user
 		$user = get_user_by( 'id', $customer_info['user_id'] );
-		if ( false === $user ) {
+		if ( ! empty( $customer_info['user_id'] ) && false === $user ) {
 			edd_set_error( 'edd-invalid-user_id', sprintf( __( 'The User ID %d does not exist. Please assign an existing user.', 'edd' ), $customer_info['user_id'] ) );
 		}
 
