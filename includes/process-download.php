@@ -168,6 +168,9 @@ function edd_process_download() {
 
 				}
 
+				// Set the file size header
+				header( "Content-Length: " . filesize( $file_path ) );
+
 				// Now deliver the file based on the kind of software the server is running / has enabled
 				if ( function_exists( 'apache_get_modules' ) && in_array( 'mod_xsendfile', apache_get_modules() ) ) {
 
