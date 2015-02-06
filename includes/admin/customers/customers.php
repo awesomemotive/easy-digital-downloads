@@ -169,7 +169,8 @@ function edd_customers_view( $customer ) {
 			<div class="customer-info">
 
 				<div class="avatar-wrap left" id="customer-avatar">
-					<?php echo get_avatar( $customer->email ); ?>
+					<?php echo get_avatar( $customer->email ); ?><br />
+					<span class="info-item editable customer-edit-link"><a title="<?php _e( 'Edit Customer', 'edd' ); ?>" href="#" id="edit-customer"><?php _e( 'Edit Customer', 'edd' ); ?></a></span>
 				</div>
 
 				<div class="customer-id right">
@@ -229,7 +230,7 @@ function edd_customers_view( $customer ) {
 				</div>
 
 				<span class="customer-name info-item edit-item"><input size="15" data-key="name" name="customerinfo[name]" type="text" value="<?php echo $customer->name; ?>" placeholder="<?php _e( 'Customer Name', 'edd' ); ?>" /></span>
-				<span class="customer-name info-item editable"><span data-key="name"><?php echo $customer->name; ?></span>&nbsp;<a title="<?php _e( 'Edit Customer', 'edd' ); ?>" id="edit-customer"><span class="dashicons dashicons-edit"></span></a></span>
+				<span class="customer-name info-item editable"><span data-key="name"><?php echo $customer->name; ?></span></span>
 				<span class="customer-name info-item edit-item"><input size="20" data-key="email" name="customerinfo[email]" type="text" value="<?php echo $customer->email; ?>" placeholder="<?php _e( 'Customer Email', 'edd' ); ?>" /></span>
 				<span class="customer-email info-item editable" data-key="email"><?php echo $customer->email; ?></span>
 				<span class="customer-since info-item">
