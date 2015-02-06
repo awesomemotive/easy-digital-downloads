@@ -305,6 +305,7 @@ jQuery(document).ready(function ($) {
 			this.edit_address();
 			this.remove_download();
 			this.add_download();
+			this.new_customer();
 			this.recalculate_total();
 			this.variable_prices_check();
 			this.add_note();
@@ -352,6 +353,22 @@ jQuery(document).ready(function ($) {
 
 		},
 
+		new_customer : function() {
+
+			$('#edd-customer-details').on('click', '.edd-payment-new-customer, .edd-payment-new-customer-cancel', function(e) {
+				e.preventDefault();
+				$('.customer-info').toggle();
+				$('.new-customer').toggle();
+
+				if ($('.new-customer').is(":visible")) {
+					$('#edd-new-customer').val(1);
+				} else {
+					$('#edd-new-customer').val(0);
+				}
+
+			});
+
+		},
 
 		add_download : function() {
 

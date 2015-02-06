@@ -236,7 +236,35 @@ function edd_customers_view( $customer ) {
 					<?php _e( 'Customer since', 'edd' ); ?>
 					<?php echo date_i18n( get_option( 'date_format' ), strtotime( $customer->date_created ) ) ?>
 				</span>
-				<span class="customer-user-id info-item edit-item"><input size="5" data-key="user_id" name="customerinfo[user_id]" type="text" value="<?php echo $customer->user_id; ?>" placeholder="<?php _e( 'User ID', 'edd' ); ?>" /></span>
+				<span class="customer-user-id info-item edit-item">
+					<?php
+					$customers = EDD()->customers->get_customers( array( 'number' => -1 ) );
+					foreach ( $customers as $key => $customer_search ) {
+						if ( $customer_search->id == $customer->id ) {
+							unset( $customers[$key] );
+							break;
+						}
+					}
+					$user_ids  = wp_list_pluck( $customers, 'user_id' );
+					$user_dropdown_args = array(
+						'name'                    => 'customerinfo[user_id]',
+						'selected'                =>  $customer->user_id,
+						'include_selected'        => true,
+						'echo'                    => '0',
+						'show_option_none'        => __( 'None', 'edd' ),
+						'class'                   => 'edd-user-dropdown',
+						'exclude'                 => $user_ids,
+						'hide_if_only_one_author' => false
+					);
+					$users_dropdown = wp_dropdown_users( $user_dropdown_args );
+					$find           = array( 'class=\'edd-user-dropdown\'', 'value=\'-1\'' );
+					$replace        = array( 'data-key=\'user_id\' class=\'edd-user-dropdown\'', 'value=\'0\'' );
+					$users_dropdown = str_replace( $find, $replace, $users_dropdown );
+
+					echo $users_dropdown;
+					?>
+				</span>
+
 				<span class="customer-user-id info-item editable">
 					<?php _e( 'User ID', 'edd' ); ?>:&nbsp;
 					<span data-key="user_id"><?php echo $customer->user_id; ?></span>
@@ -247,7 +275,7 @@ function edd_customers_view( $customer ) {
 			<span id="customer-edit-actions" class="edit-item">
 				<input type="hidden" data-key="id" name="customerinfo[id]" value="<?php echo $customer->id; ?>" />
 				<?php wp_nonce_field( 'edit-customer', '_wpnonce', false, true ); ?>
-				<input type="submit" id="edd-edit-customer-save" class="button-primary" value="<?php _e( 'Save', 'edd' ); ?>" />
+				<input type="submit" id="edd-edit-customer-save" class="button-secondary" value="<?php _e( 'Update Customer', 'edd' ); ?>" />
 				<a id="edd-edit-customer-cancel" href="" class="delete"><?php _e( 'Cancel', 'edd' ); ?></a>
 			</span>
 
@@ -292,20 +320,24 @@ function edd_customers_view( $customer ) {
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach ( $payments as $payment ) : ?>
-					<tr>
-						<td><?php echo $payment->ID; ?></td>
-						<td><?php echo edd_payment_amount( $payment->ID ); ?></td>
-						<td><?php echo date_i18n( get_option( 'date_format' ), strtotime( $payment->post_date ) ); ?></td>
-						<td><?php echo edd_get_payment_status( $payment, true ); ?></td>
-						<td>
-							<a title="<?php _e( 'View Details for Payment', 'edd' ); echo ' ' . $payment->ID; ?>" href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $payment->ID ); ?>">
-								<?php _e( 'View Details', 'edd' ); ?>
-							</a>
-							<?php do_action( 'edd_customer_recent_purcahses_actions', $customer, $payment ); ?>
-						</td>
-					</tr>
-				<?php endforeach; ?>
+				<?php if ( ! empty( $payments ) ) : ?>
+					<?php foreach ( $payments as $payment ) : ?>
+						<tr>
+							<td><?php echo $payment->ID; ?></td>
+							<td><?php echo edd_payment_amount( $payment->ID ); ?></td>
+							<td><?php echo date_i18n( get_option( 'date_format' ), strtotime( $payment->post_date ) ); ?></td>
+							<td><?php echo edd_get_payment_status( $payment, true ); ?></td>
+							<td>
+								<a title="<?php _e( 'View Details for Payment', 'edd' ); echo ' ' . $payment->ID; ?>" href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $payment->ID ); ?>">
+									<?php _e( 'View Details', 'edd' ); ?>
+								</a>
+								<?php do_action( 'edd_customer_recent_purcahses_actions', $customer, $payment ); ?>
+							</td>
+						</tr>
+					<?php endforeach; ?>
+				<?php else: ?>
+					<tr><td colspan="5"><?php _e( 'No Payments Found', 'edd' ); ?></td></tr>
+				<?php endif; ?>
 			</tbody>
 		</table>
 	</div>

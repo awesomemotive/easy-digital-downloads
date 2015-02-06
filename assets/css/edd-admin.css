@@ -108,13 +108,14 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 #edd-customer-details .order-data-address input,
 #edd-edit-order-form .column input,
 #edd-customer-details .order-data-column p.data input { clear: both; display: block; }
+#edd-customer-details .actions { float: right; }
 .edd-order-data input.small-text { margin: 0; }
 #edd-order-update span.label { display: inline; width: 50px; }
 .edd-order-update-box .button-primary { margin-right: 0; }
 #edd-edit-order-form .column .description { padding-right: 10px; }
 #edd-edit-order-form .column,
 #edd-purchased-files .row > ul > li,
-#edd-purchased-files .inside > ul > li { display: inline-block; position: relative; vertical-align: top; margin-right: 5%; }
+#edd-purchased-files .inside > ul > li { display: inline-block; position: relative; vertical-align: bottom; margin-right: 5%; line-height:30px; }
 #edd-purchased-files li.actions { text-align: right; min-width: 200px; }
 #edd-purchased-files ul li.remove { text-align: right; }
 #edd-purchased-files .row { padding: 12px; border-bottom: 1px solid #eee; }
@@ -127,6 +128,7 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 .edd_repeatable_upload_wrapper .pricing select, .edd_repeatable_product_wrapper .edd-select,
 #edd_products .edd-select { min-width: 100%; max-width: 200px; }
 .edd_repeatable_product_wrapper td { overflow: visible; }
+
 @media screen and ( max-width: 782px ) {
 	.order-data-column input[type="email"] {
 		padding: 6px 10px;
@@ -299,7 +301,8 @@ td.edd_order_price { text-align: right; }
 #edd-customer-card-wrapper a.delete { text-decoration: none; color: #ff0000; margin-right: 5px; }
 .customer-info .customer-name { font-size: 24px; font-weight: 600; }
 #edit-customer, #edit-customer:hover{ color: #ccc; cursor: pointer; }
-#customer-edit-actions { text-align: center; margin-bottom: 20px }
+#customer-edit-actions { text-align: center; margin-bottom: 20px; line-height: 28px; }
+#customer-edit-actions .button-secondary { margin-right: 10px; }
 #edd-customer-card-wrapper .info-item { line-height: 16px; display: block; padding-bottom: 5px; }
 #edd-customer-card-wrapper .edit-item { display: none; }
 #customer-stats-wrapper { margin: 0 auto; text-align: center; min-height: 30px; }
