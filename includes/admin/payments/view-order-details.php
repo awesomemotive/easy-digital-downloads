@@ -418,6 +418,9 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 											<input type="hidden" id="edd-new-customer" name="edd-new-customer" value="0" />
 											<a href="#cancel" class="edd-payment-new-customer-cancel edd-delete"><?php _e( 'Cancel', 'edd' ); ?></a>
 										</div>
+										<div class="column">
+											<small><em>*<?php _e( 'Click "Save Payment" to create new customer', 'edd' ); ?></em></small>
+										</div>
 									</div>
 
 									<?php
