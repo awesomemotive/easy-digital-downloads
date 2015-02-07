@@ -253,6 +253,8 @@ class EDD_CLI extends WP_CLI_Command {
 
 		if( $create ) {
 
+			$number = 1;
+
 			// Create one or more customers
 			if( ! $email ) {
 
@@ -288,7 +290,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 			// Search for customers
 
-			$search    = $customer_id ? $customer_id : $customer_email;
+			$search    = $customer_id ? $customer_id : $email;
 			$customers = $this->api->get_customers( $search );
 
 			if( isset( $customers['error'] ) ) {
