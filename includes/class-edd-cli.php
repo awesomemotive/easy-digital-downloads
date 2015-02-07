@@ -265,7 +265,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 				if( ! $email ) {
 					// Generate fake email
-					$email = 'test-edd-customer-' . md5( uniqid() ) ) . '@test.com';
+					$email = 'test-edd-customer-' . md5( uniqid() ) . '@test.com';
 				}
 
 				$args = array(
@@ -273,7 +273,7 @@ class EDD_CLI extends WP_CLI_Command {
 					'name'    => $name,
 					'user_id' => $user_id
 				);
-	
+
 				$customer_id = EDD()->customers->add( $args );
 
 				if( $customer_id ) {
