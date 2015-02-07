@@ -226,20 +226,24 @@ class EDD_CLI extends WP_CLI_Command {
 
 
 	/**
-	 * Get the customers currently on your EDD site
+	 * Get the customers currently on your EDD site. Can also be used to create customers records
 	 *
 	 * ## OPTIONS
 	 *
 	 * --id=<customer_id>: A specific customer ID to retrieve
+	 * --email=<customer_email>: The email address of the customer to retrieve
 	 *
 	 * ## EXAMPLES
 	 *
 	 * wp edd customers --id=103
+	 * wp edd customers --email=john@test.com
 	 */
 	public function customers( $args, $assoc_args ) {
 
-		$customer_id = isset( $assoc_args ) && array_key_exists( 'id', $assoc_args ) ? absint( $assoc_args['id'] ) : false;
-		$customers   = $this->api->get_customers( $customer_id );
+		$customer_id    = isset( $assoc_args ) && array_key_exists( 'id', $assoc_args ) ? absint( $assoc_args['id'] ) : false;
+		$customer_email = isset( $assoc_args ) && array_key_exists( 'email', $assoc_args ) ? $assoc_args['email'] : false;
+		$search         = $customer_id ? $customer_id : $customer_email;
+		$customers      = $this->api->get_customers( $search );
 
 		if( isset( $customers['error'] ) ) {
 			WP_CLI::error( $customers['error'] );
