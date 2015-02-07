@@ -91,7 +91,7 @@ jQuery(document).ready(function ($) {
 					repeatable = 'tr.edd_repeatable_' + type + 's';
 
 				/** remove from price condition */
-			    $( '.edd_repeatable_condition_field option[value=' + row.index() + ']' ).remove();
+				$( '.edd_repeatable_condition_field option[value=' + row.index() + ']' ).remove();
 
 				if( count > 1 ) {
 					$( 'input, select', row ).val( '' );
@@ -111,13 +111,13 @@ jQuery(document).ready(function ($) {
 				}
 
 				/* re-index after deleting */
-			    $(repeatable).each( function( rowIndex ) {
-			        $(this).find( 'input, select' ).each(function() {
-			        	var name = $( this ).attr( 'name' );
-			        	name = name.replace( /\[(\d+)\]/, '[' + rowIndex+ ']');
-			        	$( this ).attr( 'name', name ).attr( 'id', name );
-			    	});
-			    });
+				$(repeatable).each( function( rowIndex ) {
+					$(this).find( 'input, select' ).each(function() {
+						var name = $( this ).attr( 'name' );
+						name = name.replace( /\[(\d+)\]/, '[' + rowIndex+ ']');
+						$( this ).attr( 'name', name ).attr( 'id', name );
+					});
+				});
 			});
 		},
 
@@ -984,8 +984,8 @@ jQuery(document).ready(function ($) {
 	});
 
 
-    // Bulk edit save
-    $( 'body' ).on( 'click', '#bulk_edit', function() {
+	// Bulk edit save
+	$( 'body' ).on( 'click', '#bulk_edit', function() {
 
 		// define the bulk edit row
 		var $bulk_row = $( '#bulk-edit' );
@@ -1011,23 +1011,23 @@ jQuery(document).ready(function ($) {
 
 	});
 
-    // Setup Chosen menus
-    $('.edd-select-chosen').chosen({
-    	inherit_select_classes: true,
-    	placeholder_text_single: edd_vars.one_option,
-    	placeholder_text_multiple: edd_vars.one_or_more_option,
-    });
+	// Setup Chosen menus
+	$('.edd-select-chosen').chosen({
+		inherit_select_classes: true,
+		placeholder_text_single: edd_vars.one_option,
+		placeholder_text_multiple: edd_vars.one_or_more_option,
+	});
 
-    // Add placeholders for Chosen input fields
-    $( '.chosen-choices' ).on( 'click', function () {
-        $(this).children('li').children('input').attr( 'placeholder', edd_vars.type_to_search );
-    });
+	// Add placeholders for Chosen input fields
+	$( '.chosen-choices' ).on( 'click', function () {
+		$(this).children('li').children('input').attr( 'placeholder', edd_vars.type_to_search );
+	});
 
 	// Variables for setting up the typing timer
 	var typingTimer;               // Timer identifier
 	var doneTypingInterval = 342;  // Time in ms, Slow - 521ms, Moderate - 342ms, Fast - 300ms
 
-    // Replace options with search results
+	// Replace options with search results
 	$('.edd-select.chosen-container .chosen-search input, .edd-select.chosen-container .search-field input').keyup(function(e) {
 
 		var val = $(this).val(), container = $(this).closest( '.edd-select-chosen' );
@@ -1068,9 +1068,9 @@ jQuery(document).ready(function ($) {
 					success: function( data ) {
 
 						// Remove all options but those that are selected
-					 	$('#' + menu_id + ' option:not(:selected)').remove();
+						$('#' + menu_id + ' option:not(:selected)').remove();
 						$.each( data, function( key, item ) {
-						 	// Add any option that doesn't already exist
+							// Add any option that doesn't already exist
 							if( ! $('#' + menu_id + ' option[value="' + item.id + '"]').length ) {
 								$('#' + menu_id).prepend( '<option value="' + item.id + '">' + item.name + '</option>' );
 							}
@@ -1085,7 +1085,7 @@ jQuery(document).ready(function ($) {
 					}
 				}).done(function (response) {
 
-		        });
+				});
 			},
 			doneTypingInterval
 		);
@@ -1287,4 +1287,11 @@ jQuery(document).ready(function ($) {
 			$('#edd_dashboard_sales .inside').html( response );
 		}
 	});
+
+	$(document).on('keydown', '.customer-note-input', function(e) {
+		if(e.keyCode == 13 && (e.metaKey || e.ctrlKey)) {
+			$('#add-customer-note').click();
+		}
+	});
+
 });
