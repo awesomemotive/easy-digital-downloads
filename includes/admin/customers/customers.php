@@ -375,7 +375,7 @@ function edd_customer_notes_view( $customer ) {
 		<?php if ( 1 == $paged ) : ?>
 		<div style="display: block; margin-bottom: 35px;">
 			<form id="edd-add-customer-note" method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=notes&id=' . $customer->id ); ?>">
-				<textarea id="customer-note" name="customer_note" style="width: 93%; margin-bottom: 5px;"></textarea>
+				<textarea id="customer-note" name="customer_note" class="customer-note-input"></textarea>
 				<br />
 				<input type="hidden" id="customer-id" name="customer_id" value="<?php echo $customer->id; ?>" />
 				<input type="hidden" name="edd_action" value="add-customer-note" />
