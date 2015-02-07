@@ -48,39 +48,39 @@ function edd_edit_customer( $args ) {
 	$address['zip']           = $customer_info['zip'];
 	$address['state']         = $customer_info['state'];
 	$address['country']       = $customer_info['country'];
-	$customer_info['name']    = $customer_info['name'];
-	$customer_info['email']   = $customer_info['email'];
-	$customer_info['user_id'] = $customer_info['user_id'];
+	$customer_data['name']    = $customer_info['name'];
+	$customer_data['email']   = $customer_info['email'];
+	$customer_data['user_id'] = $customer_info['user_id'];
 
-	$customer_info = apply_filters( 'edd_edit_customer_info', $customer_info, $customer_id );
-	$address       = apply_filters( 'edd_edit_customer_address', $customer_info, $customer_id );
+	$customer_data = apply_filters( 'edd_edit_customer_info', $customer_data, $customer_id );
+	$address       = apply_filters( 'edd_edit_customer_address', $address, $customer_id );
 
-	$customer_info = array_map( 'sanitize_text_field', $customer_info );
+	$customer_data = array_map( 'sanitize_text_field', $customer_data );
 	$address       = array_map( 'sanitize_text_field', $address );
 
-	do_action( 'edd_pre_edit_customer', $customer_id, $customer_info, $address );
+	do_action( 'edd_pre_edit_customer', $customer_id, $customer_data, $address );
 
-	if ( ! is_email( $customer_info['email'] ) ) {
+	if ( ! is_email( $customer_data['email'] ) ) {
 		edd_set_error( 'edd-invalid-email', __( 'Please enter a valid email address.', 'edd' ) );
 	}
 
-	if ( $customer_info['user_id'] != $customer->user_id ) {
+	if ( $customer_data['user_id'] != $customer->user_id ) {
 
 		// Make sure we don't already have this user attached to a customer
-		if ( ! empty( $customer_info['user_id'] ) && false !== EDD()->customers->get_customer_by( 'user_id', $customer_info['user_id'] ) ) {
-			edd_set_error( 'edd-invlid-customer-user_id', sprintf( __( 'The User ID %d is already associated with a different customer.', 'edd' ), $customer_info['user_id'] ) );
+		if ( ! empty( $customer_data['user_id'] ) && false !== EDD()->customers->get_customer_by( 'user_id', $customer_data['user_id'] ) ) {
+			edd_set_error( 'edd-invlid-customer-user_id', sprintf( __( 'The User ID %d is already associated with a different customer.', 'edd' ), $customer_data['user_id'] ) );
 		}
 
 		// Make sure it's actually a user
-		$user = get_user_by( 'id', $customer_info['user_id'] );
-		if ( ! empty( $customer_info['user_id'] ) && false === $user ) {
-			edd_set_error( 'edd-invalid-user_id', sprintf( __( 'The User ID %d does not exist. Please assign an existing user.', 'edd' ), $customer_info['user_id'] ) );
+		$user = get_user_by( 'id', $customer_data['user_id'] );
+		if ( ! empty( $customer_data['user_id'] ) && false === $user ) {
+			edd_set_error( 'edd-invalid-user_id', sprintf( __( 'The User ID %d does not exist. Please assign an existing user.', 'edd' ), $customer_data['user_id'] ) );
 		}
 
-		// Record this for later
-		$previous_user_id  = $customer->user_id;
-
 	}
+
+	// Record this for later
+	$previous_user_id  = $customer->user_id;
 
 	if ( edd_get_errors() ) {
 		return;
@@ -89,7 +89,7 @@ function edd_edit_customer( $args ) {
 	$output         = array();
 	$previous_email = $customer->email;
 
-	if ( $customer->update( $customer_info ) ) {
+	if ( $customer->update( $customer_data ) ) {
 
 		if ( ! empty( $customer->user_id ) ) {
 			update_user_meta( $customer->user_id, '_edd_user_address', $address );
@@ -111,8 +111,8 @@ function edd_edit_customer( $args ) {
 		}
 
 		$output['success']       = true;
-		$customer_info           = array_merge( $customer_info, $address );
-		$output['customer_info'] = $customer_info;
+		$customer_data           = array_merge( $customer_data, $address );
+		$output['customer_info'] = $customer_data;
 
 	} else {
 
@@ -120,11 +120,12 @@ function edd_edit_customer( $args ) {
 
 	}
 
-	do_action( 'edd_post_edit_customer', $customer_id, $customer_info );
+	do_action( 'edd_post_edit_customer', $customer_id, $customer_data );
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		header( 'Content-Type: application/json' );
 		echo json_encode( $output );
-		exit;
+		wp_die();
 	}
 
 	return $output;

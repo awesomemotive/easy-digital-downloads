@@ -1165,10 +1165,9 @@ jQuery(document).ready(function ($) {
 				};
 
 				$.post(ajaxurl, postData, function( response ) {
-					var data = $.parseJSON( response );
 
-					if ( true == data.success ) {
-						$.each( data.customer_info, function( key, value ) {
+					if ( true == response.success ) {
+						$.each( response.customer_info, function( key, value ) {
 							$('span[data-key="' + key + '"]').text( value );
 							$(':input[data-key="' + key + '"]').val( value );
 						});
@@ -1182,7 +1181,7 @@ jQuery(document).ready(function ($) {
 						window.location.reload();
 
 					}
-				});
+				}, 'json');
 
 			});
 		},

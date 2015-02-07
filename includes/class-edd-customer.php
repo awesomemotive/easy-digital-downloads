@@ -244,7 +244,7 @@ class EDD_Customer {
 			$customer = $this->db->get_customer_by( 'id', $this->id );
 			$this->setup_customer( $customer);
 
-			$udpated = true;
+			$updated = true;
 		}
 
 		do_action( 'edd_customer_post_update', $updated, $this->id, $data );
