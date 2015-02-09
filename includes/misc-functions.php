@@ -734,6 +734,15 @@ if ( ! function_exists( 'cal_days_in_month' ) ) {
 	}
 }
 
+function edd_combine_array( $a, $b ) { 
+    $acount = count( $a ); 
+    $bcount = count( $b ); 
+    $size = ( $acount > $bcount ) ? $bcount : $acount; 
+    $a = array_slice( $a, 0, $size ); 
+    $b = array_slice( $b, 0, $size ); 
+    return array_combine( $a, $b ); 
+} 
+
 
 if ( ! function_exists( 'hash_equals' ) ) :
 /**

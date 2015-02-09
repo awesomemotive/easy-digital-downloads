@@ -156,11 +156,7 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 			}
 			// if there's more quantities than price_ids, match up the first pairs of each, ignoring extra quantities
 			else if( count( $options['quantity'] ) > count( $options['price_id'] )  ){
-				$remove = count( $options['quantity'] ) - count( $options['price_id'] );
-				for( $i = 0; $i <= $remove; $i++ ){
-					$extra = array_pop( $options['quantity']  );
-				}
-				foreach ( array_combine( $options['price_id'], $options['quantity'] ) as $price => $quantity ) {
+				foreach ( edd_combine_array( $options['price_id'], $options['quantity'] ) as $price => $quantity ) {
 					$local_options = $options;
 					$local_options['price_id'] = preg_replace( '/[^0-9\.-]/', '', $price );
 					$local_options['quantity'] = $quantity;
