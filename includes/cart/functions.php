@@ -166,7 +166,7 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 					$count++;
 					$item = array(
 						'id'           => $download_id,
-						'options'	   => $options;
+						'options'	   => $options,
 						'quantity'     => $quantity
 					);
 
@@ -181,7 +181,7 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 			foreach ( $options['price_id'] as $price ) {
 				$item = array(
 					'id'           => $download_id,
-					'options'	   => $options;
+					'options'	   => $options,
 					'quantity'     => $quantity
 				);
 
