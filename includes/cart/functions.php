@@ -131,15 +131,38 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 	// Support multiple price id's being added on a single edd_add_to_cart call
 	if ( isset( $options['price_id'] ) && is_array( $options['price_id'] ) ){
 		$last_cart_count = 0;
-		$quantity = 1;
-		if( isset( $options['quantity'] ) ) {
+		$quantity = array();
+		if( isset( $options['quantity'] ) && is_array( $options['quantity'] ) ) {
 			$quantity = $options['quantity'];
+		}
+		else if( isset( $options['quantity'] ) ) {
+			$quantity = array( $options['quantity'] );
+		}
+		else{
+			$quantity = array( 1 );
 		}
 
 		if ( is_array( $options['quantity'] ) ){
 			// if the number of quantities is the same as the number of price options, match them up
+			if ( count( $options['quantity'] ) == count( $options['price_id'] ) ){
+				foreach ( array_combine( $options['price_id'], $options['quantity'] ) as $price => $quantity ) {
+					$item = array(
+						'id'           => $download_id,
+						'options'	   => $options,
+						'quantity'     => $quantity
+					);
+
+					$item['options']['price_id'] = preg_replace( '/[^0-9\.-]/', '', $price );
+
+					$last_cart_count = edd_add_to_cart( $download_id, $item );
+				}
+			}
 			// if there's more quantities than price_ids, match up the first pairs of each, ignoring extra quantities
-			if ( count( $options['quantity'] ) >= count( $options['price_id'] ) ){
+			else if( count( $options['quantity'] ) > count( $options['price_id'] )  ){
+				$remove = count( $options['quantity'] ) - count( $options['price_id'];
+				for( $i = 0; $i < $remove; i++ ){
+					$remove = array_pop( $options['quantity']  );
+				}
 				foreach ( array_combine( $options['price_id'], $options['quantity'] ) as $price => $quantity ) {
 					$item = array(
 						'id'           => $download_id,
