@@ -146,15 +146,11 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 			// if the number of quantities is the same as the number of price options, match them up
 			if ( count( $options['quantity'] ) == count( $options['price_id'] ) ){
 				foreach ( array_combine( $options['price_id'], $options['quantity'] ) as $price => $quantity ) {
-					$item = array(
-						'id'           => $download_id,
-						'options'	   => $options,
-						'quantity'     => $quantity
-					);
+					$local_options = $options;
+					$local_options['price_id'] = preg_replace( '/[^0-9\.-]/', '', $price );
+					$local_options['quantity'] = $quantity;
 
-					$item['options']['price_id'] = preg_replace( '/[^0-9\.-]/', '', $price );
-
-					$last_cart_count = edd_add_to_cart( $download_id, $item );
+					$last_cart_count = edd_add_to_cart( $download_id, $local_options );
 				}
 			}
 			// if there's more quantities than price_ids, match up the first pairs of each, ignoring extra quantities
@@ -164,15 +160,11 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 					$remove = array_pop( $options['quantity']  );
 				}
 				foreach ( array_combine( $options['price_id'], $options['quantity'] ) as $price => $quantity ) {
-					$item = array(
-						'id'           => $download_id,
-						'options'	   => $options,
-						'quantity'     => $quantity
-					);
+					$local_options = $options;
+					$local_options['price_id'] = preg_replace( '/[^0-9\.-]/', '', $price );
+					$local_options['quantity'] = $quantity;
 
-					$item['options']['price_id'] = preg_replace( '/[^0-9\.-]/', '', $price );
-
-					$last_cart_count = edd_add_to_cart( $download_id, $item );
+					$last_cart_count = edd_add_to_cart( $download_id, $local_options );
 				}
 			}
 			// else match them up until we run out, then assume all remaining ones use the last quantity
@@ -187,30 +179,22 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 						$quantity = $options['quantity'][ $count ];
 					}
 					$count++;
-					$item = array(
-						'id'           => $download_id,
-						'options'	   => $options,
-						'quantity'     => $quantity
-					);
+					$local_options = $options;
+					$local_options['price_id'] = preg_replace( '/[^0-9\.-]/', '', $price );
+					$local_options['quantity'] = $quantity;
 
-					$item['options']['price_id'] = preg_replace( '/[^0-9\.-]/', '', $price );
-
-					$last_cart_count = edd_add_to_cart( $download_id, $item );
+					$last_cart_count = edd_add_to_cart( $download_id, $local_options );
 				}
 			}
 		}
 		// there is 1 quantity for all price_ids
 		else{
 			foreach ( $options['price_id'] as $price ) {
-				$item = array(
-					'id'           => $download_id,
-					'options'	   => $options,
-					'quantity'     => $quantity
-				);
+				$local_options = $options;
+				$local_options['price_id'] = preg_replace( '/[^0-9\.-]/', '', $price );
+				$local_options['quantity'] = $quantity;
 
-				$item['options']['price_id'] = preg_replace( '/[^0-9\.-]/', '', $price );
-
-				$last_cart_count = edd_add_to_cart( $download_id, $item );
+				$last_cart_count = edd_add_to_cart( $download_id, $local_options );
 			}
 		}
 		// done adding each price_id. Return
