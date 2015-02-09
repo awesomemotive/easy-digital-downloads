@@ -128,6 +128,72 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 	if ( ! current_user_can( 'edit_post', $download->ID ) && ( $download->post_status == 'draft' || $download->post_status == 'pending' ) )
 		return; // Do not allow draft/pending to be purchased if can't edit. Fixes #1056
 
+	// Support multiple price id's being added on a single edd_add_to_cart call
+	if ( isset( $options['price_id'] ) && is_array( $options['price_id'] ) ){
+		$last_cart_count = 0;
+		$quantity = 1;
+		if( isset( $options['quantity'] ) ) {
+			$quantity = $options['quantity'];
+		}
+
+		if ( is_array( $options['quantity'] ) ){
+			// if the number of quantities is the same as the number of price options, match them up
+			// if there's more quantities than price_ids, match up the first pairs of each, ignoring extra quantities
+			if ( count( $options['quantity'] ) >= count( $options['price_id'] ) ){
+				foreach ( array_combine( $options['price_id'], $options['quantity'] ) as $price => $quantity ) {
+					$item = array(
+						'id'           => $download_id,
+						'options'	   => $options;
+						'quantity'     => $quantity
+					);
+
+					$item['options']['price_id'] = preg_replace( '/[^0-9\.-]/', '', $price );
+
+					$last_cart_count = edd_add_to_cart( $download_id, $item );
+				}
+			}
+			// else match them up until we run out, then assume all remaining ones use the last quantity
+			else{
+				$count = 0;
+				$max = count( $options['quantity'] ) - 1;
+				foreach ( $options['price_id'] as $price ) {
+					if ( $count > $max ){
+						$quantity = $options['quantity'][ $max ];
+					}
+					else{
+						$quantity = $options['quantity'][ $count ];
+					}
+					$count++;
+					$item = array(
+						'id'           => $download_id,
+						'options'	   => $options;
+						'quantity'     => $quantity
+					);
+
+					$item['options']['price_id'] = preg_replace( '/[^0-9\.-]/', '', $price );
+
+					$last_cart_count = edd_add_to_cart( $download_id, $item );
+				}
+			}
+		}
+		// there is 1 quantity for all price_ids
+		else{
+			foreach ( $options['price_id'] as $price ) {
+				$item = array(
+					'id'           => $download_id,
+					'options'	   => $options;
+					'quantity'     => $quantity
+				);
+
+				$item['options']['price_id'] = preg_replace( '/[^0-9\.-]/', '', $price );
+
+				$last_cart_count = edd_add_to_cart( $download_id, $item );
+			}
+		}
+		// done adding each price_id. Return
+		return $last_cart_count;
+	}
+
 	do_action( 'edd_pre_add_to_cart', $download_id, $options );
 
 	$cart = apply_filters( 'edd_pre_add_to_cart_contents', edd_get_cart_contents() );
@@ -144,39 +210,22 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		$quantity = 1;
 	}
 
-	if ( isset( $options['price_id'] ) && is_array( $options['price_id'] ) ) {
+	// Sanitize price IDs
+	foreach( $options as $key => $option ) {
 
-		// Process multiple price options at once
-		foreach ( $options['price_id'] as $price ) {
-
-			$item = array(
-				'id'           => $download_id,
-				'options'      => array(
-					'price_id' => preg_replace( '/[^0-9\.-]/', '', $price )
-				),
-				'quantity'     => $quantity
-			);
-
+		if( 'price_id' == $key ) {
+			$options[ $key ] = preg_replace( '/[^0-9\.-]/', '', $option );
 		}
 
-	} else {
-
-		// Sanitize price IDs
-		foreach( $options as $key => $option ) {
-
-			if( 'price_id' == $key ) {
-				$options[ $key ] = preg_replace( '/[^0-9\.-]/', '', $option );
-			}
-
-		}
-
-		// Add a single item
-		$item = array(
-			'id'       => $download_id,
-			'options'  => $options,
-			'quantity' => $quantity
-		);
 	}
+
+	// Add a single item
+	$item = array(
+		'id'       => $download_id,
+		'options'  => $options,
+		'quantity' => $quantity
+	);
+	
 
 	$to_add = apply_filters( 'edd_add_to_cart_item', $item );
 	if ( ! is_array( $to_add ) )

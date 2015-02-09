@@ -93,6 +93,125 @@ class Test_Cart extends WP_UnitTestCase {
 		$this->assertEquals('edd-remove', $this->_rewrite->endpoints[1][1]);
 	}
 
+	public function test_add_to_cart_multiple_ids() {
+		$options = array(
+			'price_id' => array( 0, 1 ),
+			'quantity' => array( 1, 2 )
+		);
+		$this->assertEquals( 1, edd_add_to_cart( $this->_post->ID, $options ) );
+
+		$expected = array(
+			'0' => array(
+				'id' => $this->_post->ID,
+				'options' => array(
+					'price_id' => 0
+				),
+				'quantity' => 1
+			),
+			'1' => array(
+				'id' => $this->_post->ID,
+				'options' => array(
+					'price_id' => 1
+				),
+				'quantity' => 2
+			),		
+		);
+
+		$this->assertEquals($expected, edd_get_cart_contents());
+
+		// empty cart so the next sets of tests work as expected
+		edd_empty_cart();
+	}
+
+	public function test_add_to_cart_multiple_ids_under_quantity() {
+		$options = array(
+			'price_id' => array( 0, 1 ),
+			'quantity' => array( 2 )
+		);
+		$this->assertEquals( 1, edd_add_to_cart( $this->_post->ID, $options ) );
+
+		$expected = array(
+			'0' => array(
+				'id' => $this->_post->ID,
+				'options' => array(
+					'price_id' => 0
+				),
+				'quantity' => 2
+			),
+			'1' => array(
+				'id' => $this->_post->ID,
+				'options' => array(
+					'price_id' => 1
+				),
+				'quantity' => 2
+			),		
+		);
+
+		$this->assertEquals($expected, edd_get_cart_contents());
+
+		// empty cart so the next sets of tests work as expected
+		edd_empty_cart();
+	}
+
+	public function test_add_to_cart_over_quantity() {
+		$options = array(
+			'price_id' => array( 0, 1 ),
+			'quantity' => array( 1, 2, 3 )
+		);
+		$this->assertEquals( 1, edd_add_to_cart( $this->_post->ID, $options ) );
+
+		$expected = array(
+			'0' => array(
+				'id' => $this->_post->ID,
+				'options' => array(
+					'price_id' => 0
+				),
+				'quantity' => 1
+			),
+			'1' => array(
+				'id' => $this->_post->ID,
+				'options' => array(
+					'price_id' => 1
+				),
+				'quantity' => 2
+			),		
+		);
+
+		$this->assertEquals($expected, edd_get_cart_contents());
+
+		// empty cart so the next sets of tests work as expected
+		edd_empty_cart();
+	}
+
+	public function test_add_to_cart_no_quantity() {
+		$options = array(
+			'price_id' => array( 0, 1 )
+		);
+		$this->assertEquals( 1, edd_add_to_cart( $this->_post->ID, $options ) );
+
+		$expected = array(
+			'0' => array(
+				'id' => $this->_post->ID,
+				'options' => array(
+					'price_id' => 0
+				),
+				'quantity' => 1
+			),
+			'1' => array(
+				'id' => $this->_post->ID,
+				'options' => array(
+					'price_id' => 1
+				),
+				'quantity' => 1
+			),		
+		);
+
+		$this->assertEquals($expected, edd_get_cart_contents());
+
+		// empty cart so the next sets of tests work as expected
+		edd_empty_cart();
+	}
+
 	public function test_add_to_cart() {
 		$options = array(
 			'price_id' => 0
