@@ -477,4 +477,13 @@ class Test_Misc extends WP_UnitTestCase {
 		$this->assertTrue( edd_is_host( 'WP Engine' ) );
 		$this->assertTrue( edd_is_host( 'WPEngine' ) );
 	}
+
+	public function test_edd_combine_array() {
+		$one   = array( 1 );
+		$two   = array( 1, 2 );
+
+		$this->assertEquals( edd_combine_array( $two, $two ), array( 1 => 1, 2 => 2 ) );
+		$this->assertEquals( edd_combine_array( $two, $one ), array( 1 => 1 ) );
+		$this->assertEquals( edd_combine_array( $one, $two ), array( 1 => 1 ) );
+	}
 }
