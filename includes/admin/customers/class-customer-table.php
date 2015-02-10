@@ -146,10 +146,10 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	public function get_columns() {
 		$columns = array(
 			'name'           => __( 'Name', 'edd' ),
-			'id'             => __( 'Customer ID', 'edd' ),
 			'email'          => __( 'Email', 'edd' ),
 			'num_purchases'  => __( 'Purchases', 'edd' ),
-			'amount_spent'   => __( 'Total Spent', 'edd' )
+			'amount_spent'   => __( 'Total Spent', 'edd' ),
+			'date_created'   => __( 'Date Created', 'edd' )
 		);
 
 		return apply_filters( 'edd_report_customer_columns', $columns );
@@ -165,7 +165,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 */
 	public function get_sortable_columns() {
 		return array(
-			'id'            => array( 'id', true ),
+			'date_created'  => array( 'date_created', true ),
 			'name'          => array( 'name', true ),
 			'num_purchases' => array( 'purchase_count', false ),
 			'amount_spent'  => array( 'purchase_value', false ),
@@ -251,7 +251,8 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 					'name'          => $customer->name,
 					'email'         => $customer->email,
 					'num_purchases' => $customer->purchase_count,
-					'amount_spent'  => $customer->purchase_value
+					'amount_spent'  => $customer->purchase_value,
+					'date_created'  => $customer->date_created,
 				);
 			}
 		}
