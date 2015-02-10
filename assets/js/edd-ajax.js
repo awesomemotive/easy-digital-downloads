@@ -81,11 +81,6 @@ jQuery(document).ready(function ($) {
 
 		var $this = $(this), form = $this.closest('form');
 
-		if( 'straight_to_gateway' == form.find('.edd_action_input').val() ) {
-			form.submit();
-			return true; // Submit the form
-		}
-
 		var $spinner = $this.find('.edd-loading');
 		var container = $this.closest('div');
 
@@ -105,6 +100,7 @@ jQuery(document).ready(function ($) {
 		var variable_price = $this.data('variable-price');
 		var price_mode     = $this.data('price-mode');
 		var item_price_ids = [];
+		var free_items     = true;
 
 		if( variable_price == 'yes' ) {
 
@@ -120,11 +116,31 @@ jQuery(document).ready(function ($) {
 
 				form.find('.edd_price_option_' + download + ':checked', form).each(function( index ) {
 					item_price_ids[ index ] = $(this).val();
+
+					// If we're still only at free items, check if this one is free also
+					if ( true === free_items ) {
+						var item_price = parseInt( $(this).data('price') );
+						if ( item_price > 0 ) {
+							// We now have a paid item, we can't use add_to_cart
+							free_items = false;
+						}
+					}
+
 				});
 			}
 
 		} else {
 			item_price_ids[0] = download;
+		}
+
+		// If we've got nothing but free items being added, change to add_to_cart
+		if ( free_items ) {
+			form.find('.edd_action_input').val('add_to_cart');
+		}
+
+		if( 'straight_to_gateway' == form.find('.edd_action_input').val() ) {
+			form.submit();
+			return true; // Submit the form
 		}
 
 		var action = $this.data('action');

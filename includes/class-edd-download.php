@@ -617,9 +617,22 @@ class EDD_Download {
 		$variable_pricing = edd_has_variable_prices( $this->ID );
 
 		if ( $variable_pricing && ! is_null( $price_id ) && $price_id !== false ) {
+
 			$price = edd_get_price_option_amount( $this->ID, $price_id );
+
+		} elseif ( $variable_pricing && $price_id === false ) {
+
+			$lowest_price  = (float) edd_get_lowest_price_option( $this->ID );
+			$highest_price = (float) edd_get_highest_price_option( $this->ID );
+
+			if ( $lowest_price === 0.00 && $highest_price === 0.00 ) {
+				$price = 0;
+			}
+
 		} elseif( ! $variable_pricing ) {
+
 			$price = get_post_meta( $this->ID, 'edd_price', true );
+
 		}
 
 		if( isset( $price ) && (float) $price == 0 ) {
