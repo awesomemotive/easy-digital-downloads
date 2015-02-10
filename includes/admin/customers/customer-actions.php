@@ -3,7 +3,15 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+/**
+ * Processes a custom edit
+ *
+ * @since  2.3
+ * @param  array $args The $_POST array being passeed
+ * @return array $output Response messages
+ */
 function edd_edit_customer( $args ) {
+
 	$customer_edit_role = apply_filters( 'edd_view_customers_role', 'view_shop_reports' );
 
 	if ( ! is_admin() || ! current_user_can( $customer_edit_role ) ) {
