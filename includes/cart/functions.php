@@ -103,7 +103,17 @@ function edd_get_cart_content_details() {
  * @return int Quantity of items in the cart
  */
 function edd_get_cart_quantity() {
-	return ( $cart = edd_get_cart_contents() ) ? count( $cart ) : 0;
+	
+	$cart     = edd_get_cart_contents();
+	$quantity = 0;
+	
+	if( $cart ){
+		foreach( $cart as $item ){
+			$quantity += isset( $item['quantity'] ) ? intval( $item['quantity'] ) : 1;
+		}
+	}
+	
+	return $quantity;
 }
 
 /**
