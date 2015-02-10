@@ -266,8 +266,10 @@ class EDD_CLI extends WP_CLI_Command {
 			for( $i = 0; $i < $number; $i++ ) {
 
 				if( ! $email ) {
+
 					// Generate fake email
-					$email = 'test-edd-customer-' . md5( uniqid() ) . '@test.com';
+					$email = 'customer-' . uniqid() . '@test.com';
+
 				}
 
 				$args = array(
