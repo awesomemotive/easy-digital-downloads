@@ -119,8 +119,9 @@ jQuery(document).ready(function ($) {
 
 					// If we're still only at free items, check if this one is free also
 					if ( true === free_items ) {
-						var item_price = parseInt( $(this).data('price') );
-						if ( item_price > 0 ) {
+						var item_price = $(this).data('price');
+
+						if ( item_price && item_price > 0 ) {
 							// We now have a paid item, we can't use add_to_cart
 							free_items = false;
 						}
