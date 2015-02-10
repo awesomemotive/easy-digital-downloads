@@ -250,6 +250,7 @@ class EDD_CLI extends WP_CLI_Command {
 		$name        = isset( $assoc_args ) && array_key_exists( 'name', $assoc_args )    ? $assoc_args['name']         : null;
 		$user_id     = isset( $assoc_args ) && array_key_exists( 'user_id', $assoc_args ) ? $assoc_args['user_id']      : null;
 		$create      = isset( $assoc_args ) && array_key_exists( 'create', $assoc_args )  ? $assoc_args['create']       : false;
+		$start       = time();
 
 		if( $create ) {
 
@@ -290,6 +291,8 @@ class EDD_CLI extends WP_CLI_Command {
 				$email = false;
 
 			}
+			
+			WP_CLI::line( WP_CLI::colorize( '%G' . sprintf( __( '%d customers created in %d seconds', 'edd' ), $create, time() - $start ) . '%N' ) );
 
 		} else {
 
