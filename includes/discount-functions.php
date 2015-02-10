@@ -1291,9 +1291,8 @@ add_action( 'edd_post_remove_from_cart', 'edd_maybe_remove_cart_discount' );
  * @return bool
  */
 function edd_multiple_discounts_allowed() {
-	global $edd_options;
-	$ret = isset( $edd_options['allow_multiple_discounts'] );
-	return apply_filters( 'edd_multiple_discounts_allowed', $ret );
+	$ret = edd_get_option( 'allow_multiple_discounts', false );
+	return (bool) apply_filters( 'edd_multiple_discounts_allowed', $ret );
 }
 
 /**

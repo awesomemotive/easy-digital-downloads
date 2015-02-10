@@ -163,12 +163,11 @@ jQuery(document).ready(function ($) {
 	                 $('.cart_item.edd_subtotal span').html( response.subtotal );
 
 	                // Update the cart quantity
-	                var items_added = $( '.edd-cart-item-title', response.cart_item ).length;
-
+	                //
 	                $('span.edd-cart-quantity').each(function() {
-	                    var quantity = parseInt($(this).text(), 10) + items_added;
-	                    $(this).text(quantity);
-	                    $('body').trigger('edd_quantity_updated', [ quantity ]);
+	                    $(this).text(response.cart_quantity);
+
+	                    $('body').trigger('edd_quantity_updated', [ response.cart_quantity ]);
 	                });
 
 	                // Show the "number of items in cart" message

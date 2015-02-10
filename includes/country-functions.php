@@ -20,8 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return string $country The two letter country code for the shop's base country
  */
 function edd_get_shop_country() {
-	global $edd_options;
-	$country = isset( $edd_options['base_country'] ) ? $edd_options['base_country'] : 'US';
+	$country = edd_get_option( 'base_country', 'US' );
+
 	return apply_filters( 'edd_shop_country', $country );
 }
 
@@ -32,8 +32,8 @@ function edd_get_shop_country() {
  * @return string $state The shop's base state name
  */
 function edd_get_shop_state() {
-	global $edd_options;
-	$state = isset( $edd_options['base_state'] ) ? $edd_options['base_state'] : false;
+	$state = edd_get_option( 'base_state', false );
+
 	return apply_filters( 'edd_shop_state', $state );
 }
 
@@ -46,8 +46,6 @@ function edd_get_shop_state() {
  * @return mixed|void  A list of states for the shop's base country
  */
 function edd_get_shop_states( $country = null ) {
-	global $edd_options;
-
 	if( empty( $country ) )
 		$country = edd_get_shop_country();
 

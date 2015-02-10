@@ -100,10 +100,20 @@ function edd_get_cart_content_details() {
  * Get Cart Quantity
  *
  * @since 1.0
- * @return int Quantity of items in the cart
+ * @return int Sum quantity of items in the cart
  */
 function edd_get_cart_quantity() {
-	return ( $cart = edd_get_cart_contents() ) ? count( $cart ) : 0;
+
+	$total_quantity = 0;
+	$cart           = edd_get_cart_contents();
+
+	if ( ! empty( $cart ) ) {
+		$quantities     = wp_list_pluck( $cart, 'quantity' );
+		$total_quantity = absint( array_sum( $quantities ) );
+	}
+
+
+	return apply_filters( 'edd_get_cart_quantity', $total_quantity, $cart );
 }
 
 /**
@@ -306,9 +316,8 @@ function edd_get_item_position_in_cart( $download_id = 0, $options = array() ) {
  * @return bool
  */
 function edd_item_quantities_enabled() {
-	global $edd_options;
-	$ret = isset( $edd_options['item_quantities'] );
-	return apply_filters( 'edd_item_quantities_enabled', $ret );
+	$ret = edd_get_option( 'item_quantities', false );	
+	return (bool) apply_filters( 'edd_item_quantities_enabled', $ret );
 }
 
 /**
@@ -362,8 +371,6 @@ function edd_get_cart_item_quantity( $download_id = 0, $options = array() ) {
  * @return string Fully formatted price
  */
 function edd_cart_item_price( $item_id = 0, $options = array() ) {
-	global $edd_options;
-
 	$price = edd_get_cart_item_price( $item_id, $options );
 	$label = '';
 
@@ -549,12 +556,9 @@ function edd_get_cart_item_price_name( $item = array() ) {
  * Shows the subtotal for the shopping cart (no taxes)
  *
  * @since 1.4
- * @global $edd_options Array of all the EDD Options
  * @return float Total amount before taxes fully formatted
  */
 function edd_cart_subtotal() {
-	global $edd_options;
-
 	$price = esc_html( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ) );
 
 	// Todo - Show tax labels here (if needed)
@@ -569,12 +573,9 @@ function edd_cart_subtotal() {
  * uses edd_get_cart_contents().
  *
  * @since 1.3.3
- * @global $edd_options Array of all the EDD Options
  * @return float Total amount before taxes
  */
 function edd_get_cart_subtotal() {
-	global $edd_options;
-
 	$subtotal = 0.00;
 	$items    = edd_get_cart_content_details();
 
@@ -603,13 +604,10 @@ function edd_get_cart_subtotal() {
  * Returns amount after taxes and discounts
  *
  * @since 1.4.1
- * @global $edd_options Array of all the EDD Options
  * @param bool $discounts Array of discounts to apply (needed during AJAX calls)
  * @return float Cart amount
  */
 function edd_get_cart_total( $discounts = false ) {
-	global $edd_options;
-
 	$subtotal  = edd_get_cart_subtotal();
 	$discounts = edd_get_cart_discounted_amount();
 	$cart_tax  = edd_get_cart_tax();
@@ -629,15 +627,12 @@ function edd_get_cart_total( $discounts = false ) {
  * Gets the fully formatted total price amount in the cart.
  * uses edd_get_cart_amount().
  *
- * @global $edd_options Array of all the EDD Options
  * @since 1.3.3
  *
  * @param bool $echo
  * @return mixed|string|void
  */
 function edd_cart_total( $echo = true ) {
-	global $edd_options;
-
 	$total = apply_filters( 'edd_cart_total', edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ) );
 
 	// Todo - Show tax labels here (if needed)
@@ -944,13 +939,11 @@ function edd_get_purchase_session() {
  * Checks if cart saving has been disabled
  *
  * @since 1.8
- * @global $edd_options
  * @return bool Whether or not cart saving has been disabled
  */
 function edd_is_cart_saving_disabled() {
-	global $edd_options;
-
-	return apply_filters( 'edd_cart_saving_disabled', ! isset( $edd_options['enable_cart_saving'] ) );
+	$ret = edd_get_option( 'enable_cart_saving', false );
+	return apply_filters( 'edd_cart_saving_disabled', ! $ret );
 }
 
 /**
@@ -1002,8 +995,6 @@ function edd_is_cart_saved() {
  * @return bool
  */
 function edd_save_cart() {
-	global $edd_options;
-
 	if ( edd_is_cart_saving_disabled() )
 		return false;
 

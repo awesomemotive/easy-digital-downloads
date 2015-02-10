@@ -39,18 +39,33 @@ class EDD_HTML_Elements {
 			'multiple'    => false,
 			'selected'    => 0,
 			'chosen'      => false,
-			'placeholder' => sprintf( __( 'Select a %s', 'edd' ), edd_get_label_singular() ),
-			'number'      => 30
+			'number'      => 30,
+			'bundles'     => true,
+			'placeholder' => sprintf( __( 'Select a %s', 'edd' ), edd_get_label_singular() )
 		);
 
 		$args = wp_parse_args( $args, $defaults );
 
-		$products = get_posts( array(
+		$product_args = array(
 			'post_type'      => 'download',
 			'orderby'        => 'title',
 			'order'          => 'ASC',
 			'posts_per_page' => $args['number']
-		) );
+		);
+
+		// Maybe disable bundles
+		if( ! $args['bundles'] ) {
+			$product_args['meta_query'] = array(
+				'relation'       => 'AND',
+				array(
+					'key'        => '_edd_product_type',
+					'value'      => 'bundle',
+					'compare'    => 'NOT EXISTS'
+				)
+			);
+		}
+
+		$products = get_posts( $product_args );
 
 		$options = array();
 

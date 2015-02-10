@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return string Fully formatted purchase link
  */
 function edd_download_shortcode( $atts, $content = null ) {
-	global $post, $edd_options;
+	global $post;
 
 	$post_id = is_object( $post ) ? $post->ID : 0;
 
@@ -33,9 +33,9 @@ function edd_download_shortcode( $atts, $content = null ) {
 		'sku'			=> '',
 		'price'         => '1',
 		'direct'        => '0',
-		'text'	        => isset( $edd_options[ 'add_to_cart_text' ] )  && $edd_options[ 'add_to_cart_text' ]    != '' ? $edd_options[ 'add_to_cart_text' ] : __( 'Purchase', 'edd' ),
-		'style'         => isset( $edd_options[ 'button_style' ] ) 	 	? $edd_options[ 'button_style' ] 		: 'button',
-		'color'         => isset( $edd_options[ 'checkout_color' ] ) 	? $edd_options[ 'checkout_color' ] 		: 'blue',
+		'text'          => edd_get_option( 'add_to_cart_text', __( 'Purchase', 'edd' ) ),
+		'style'         => edd_get_option( 'button_style', 'button' ),
+		'color'         => edd_get_option( 'checkout_color', 'blue' ),
 		'class'         => 'edd-submit',
 		'form_id'       => ''
 	),
@@ -228,14 +228,12 @@ add_shortcode( 'download_discounts', 'edd_discounts_shortcode' );
  * @return string
  */
 function edd_purchase_collection_shortcode( $atts, $content = null ) {
-	global $edd_options;
-
 	extract( shortcode_atts( array(
 			'taxonomy'	=> '',
 			'terms'		=> '',
 			'text'		=> __('Purchase All Items', 'edd'),
-			'style'		=> isset( $edd_options['button_style'] ) ? $edd_options['button_style'] : 'button',
-			'color'		=> isset( $edd_options['checkout_color'] ) ? $edd_options['checkout_color'] : 'blue',
+			'style'     => edd_get_option( 'button_style', 'button' ),
+			'color'     => edd_get_option( 'checkout_color', 'blue' ),
 			'class'		=> 'edd-submit'
 		), $atts, 'purchase_collection' )
 	);
@@ -496,7 +494,8 @@ function edd_downloads_query( $atts, $content = null ) {
 		ob_start(); ?>
 		<div class="edd_downloads_list <?php echo apply_filters( 'edd_downloads_list_wrapper_class', $wrapper_class, $atts ); ?>">
 			<?php while ( $downloads->have_posts() ) : $downloads->the_post(); ?>
-				<div itemscope itemtype="http://schema.org/Product" class="<?php echo apply_filters( 'edd_download_class', 'edd_download', get_the_ID(), $atts, $i ); ?>" id="edd_download_<?php echo get_the_ID(); ?>" style="width: <?php echo $column_width; ?>; float: left;">
+				<?php $schema = edd_add_schema_microdata() ? 'itemscope itemtype="http://schema.org/Product" ' : ''; ?>
+				<div <?php echo $schema; ?>class="<?php echo apply_filters( 'edd_download_class', 'edd_download', get_the_ID(), $atts, $i ); ?>" id="edd_download_<?php echo get_the_ID(); ?>" style="width: <?php echo $column_width; ?>; float: left;">
 					<div class="edd_download_inner">
 						<?php
 
@@ -504,17 +503,24 @@ function edd_downloads_query( $atts, $content = null ) {
 
 						if ( 'false' != $atts['thumbnails'] ) :
 							edd_get_template_part( 'shortcode', 'content-image' );
+							do_action( 'edd_download_after_thumbnail' );
 						endif;
 
 						edd_get_template_part( 'shortcode', 'content-title' );
+						do_action( 'edd_download_after_title' );
 
-						if ( $atts['excerpt'] == 'yes' && $atts['full_content'] != 'yes' )
+						if ( $atts['excerpt'] == 'yes' && $atts['full_content'] != 'yes' ) {
 							edd_get_template_part( 'shortcode', 'content-excerpt' );
-						else if ( $atts['full_content'] == 'yes' )
+							do_action( 'edd_download_after_content' );
+						} else if ( $atts['full_content'] == 'yes' ) {
 							edd_get_template_part( 'shortcode', 'content-full' );
+							do_action( 'edd_download_after_content' );
+						}
 
-						if ( $atts['price'] == 'yes' )
+						if ( $atts['price'] == 'yes' ) {
 							edd_get_template_part( 'shortcode', 'content-price' );
+							do_action( 'edd_download_after_price' );
+						}
 
 						if ( $atts['buy_button'] == 'yes' )
 							edd_get_template_part( 'shortcode', 'content-cart-button' );

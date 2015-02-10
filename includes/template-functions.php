@@ -47,9 +47,10 @@ add_action( 'edd_after_download_content', 'edd_append_purchase_link' );
  * @return string $purchase_form
  */
 function edd_get_purchase_link( $args = array() ) {
-	global $edd_options, $post, $edd_displayed_form_ids;
+	global $post, $edd_displayed_form_ids;
 
-	if ( ! isset( $edd_options['purchase_page'] ) || $edd_options['purchase_page'] == 0 ) {
+	$purchase_page = edd_get_option( 'purchase_page', false );
+	if ( ! $purchase_page || $purchase_page == 0 ) {
 		edd_set_error( 'set_checkout', sprintf( __( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-settings' ) ) );
 		edd_print_errors();
 		return false;
@@ -62,9 +63,9 @@ function edd_get_purchase_link( $args = array() ) {
 		'price'       => (bool) true,
 		'price_id'    => isset( $args['price_id'] ) ? $args['price_id'] : false,
 		'direct'      => edd_get_download_button_behavior( $post_id ) == 'direct' ? true : false,
-		'text'        => ! empty( $edd_options[ 'add_to_cart_text' ] ) ? $edd_options[ 'add_to_cart_text' ] : __( 'Purchase', 'edd' ),
-		'style'       => isset( $edd_options[ 'button_style' ] ) 	   ? $edd_options[ 'button_style' ]     : 'button',
-		'color'       => isset( $edd_options[ 'checkout_color' ] ) 	   ? $edd_options[ 'checkout_color' ] 	: 'blue',
+		'text'        => edd_get_option( 'add_to_cart_text', __( 'Purchase', 'edd' ) ),
+		'style'       => edd_get_option( 'button_style', 'button' ),
+		'color'       => edd_get_option( 'checkout_color', 'blue' ),
 		'class'       => 'edd-submit'
 	) );
 
@@ -212,8 +213,6 @@ function edd_get_purchase_link( $args = array() ) {
  * @return void
  */
 function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
-	global $edd_options;
-
 	$variable_pricing = edd_has_variable_prices( $download_id );
 	$prices = apply_filters( 'edd_purchase_variable_prices', edd_get_variable_prices( $download_id ), $download_id );
 
@@ -221,12 +220,14 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 		return;
 	}
 
+	$prices = apply_filters( 'edd_purchase_variable_prices', edd_get_variable_prices( $download_id ), $download_id );
+	$type   = edd_single_price_option_mode( $download_id ) ? 'checkbox' : 'radio';
+	$mode   = edd_single_price_option_mode( $download_id ) ? 'multi' : 'single';
+	$schema = edd_add_schema_microdata() ? ' itemprop="offers" itemscope itemtype="http://schema.org/Offer"' : '';
+
 	if ( edd_item_in_cart( $download_id ) && ! edd_single_price_option_mode( $download_id ) ) {
 		return;
 	}
-
-	$type = edd_single_price_option_mode( $download_id ) ? 'checkbox' : 'radio';
-	$mode = edd_single_price_option_mode( $download_id ) ? 'multi' : 'single';
 
 	do_action( 'edd_before_price_options', $download_id ); ?>
 	<div class="edd_price_options edd_<?php echo esc_attr( $mode ); ?>_mode">
@@ -235,7 +236,7 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 			if ( $prices ) :
 				$checked_key = isset( $_GET['price_option'] ) ? absint( $_GET['price_option'] ) : edd_get_default_variable_price( $download_id );
 				foreach ( $prices as $key => $price ) :
-					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . '" itemprop="offers" itemscope itemtype="http://schema.org/Offer">';
+					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . '"' . $schema . '>';
 						echo '<label for="'	. esc_attr( 'edd_price_option_' . $download_id . '_' . $key ) . '">';
 							echo '<input type="' . $type . '" ' . checked( apply_filters( 'edd_price_option_checked', $checked_key, $download_id, $key ), $key, false ) . ' name="edd_options[price_id][]" id="' . esc_attr( 'edd_price_option_' . $download_id . '_' . $key ) . '" class="' . esc_attr( 'edd_price_option_' . $download_id ) . '" value="' . esc_attr( $key ) . '"/>&nbsp;';
 							echo '<span class="edd_price_option_name" itemprop="description">' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price" itemprop="price">' . edd_currency_filter( edd_format_amount( $price[ 'amount' ] ) ) . '</span>';
@@ -651,7 +652,7 @@ function edd_get_theme_template_dir_name() {
  */
 function edd_add_schema_microdata() {
 	// Don't modify anything until after wp_head() is called
-	$ret = did_action( 'wp_head' );
+	$ret = (bool)did_action( 'wp_head' );
 	return apply_filters( 'edd_add_schema_microdata', $ret );
 }
 
@@ -741,8 +742,8 @@ add_action( 'wp_head', 'edd_version_in_header' );
  * @return bool True if on the Purchase History page, false otherwise.
  */
 function edd_is_purchase_history_page() {
-	global $edd_options;
-	$ret = isset( $edd_options['purchase_history_page'] ) ? is_page( $edd_options['purchase_history_page'] ) : false;
+	$ret = edd_get_option( 'purchase_history_page', false );
+	$ret = $ret ? is_page( $ret ) : false;
 	return apply_filters( 'edd_is_purchase_history_page', $ret );
 }
 

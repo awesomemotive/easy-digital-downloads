@@ -223,10 +223,8 @@ add_action( 'init', 'edd_process_download', 100 );
  * @return   void
  */
 function edd_deliver_download( $file = '' ) {
-
-	global $edd_options;
-
-	$symlink = apply_filters( 'edd_symlink_file_downloads', isset( $edd_options['symlink_file_downloads'] ) );
+	$symlink = edd_get_option( 'symlink_file_downloads', false );
+	$symlink = (bool) apply_filters( 'edd_symlink_file_downloads', $symlink );
 
 	/*
 	 * If symlinks are enabled, a link to the file will be created
