@@ -241,8 +241,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 		if ( $customers ) {
 
-			$this->count = count( $customers );
-
 			foreach ( $customers as $customer ) {
 
 				$user_id = ! empty( $customer->user_id ) ? absint( $customer->user_id ) : 0;
@@ -282,7 +280,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 		$this->items = $this->reports_data();
 
-		$this->total = $this->count;
+		$this->total = edd_count_total_customers();
 
 		$this->set_pagination_args( array(
 			'total_items' => $this->total,
