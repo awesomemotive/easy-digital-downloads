@@ -315,7 +315,7 @@ class EDD_DB_Customers extends EDD_DB  {
 			$args['number'] = 999999999999;
 		}
 
-		$where    = '';
+		$where = '';
 
 		// specific customers
 		if( ! empty( $args['id'] ) ) {
@@ -339,7 +339,12 @@ class EDD_DB_Customers extends EDD_DB  {
 				$user_ids = intval( $args['user_id'] );
 			}
 
-			$where .= "WHERE `user_id` IN( {$user_ids} ) ";
+			if( ! empty( $where ) ) {
+				$where .= " AND `user_id` IN( {$user_ids} ) ";
+			} else {
+				$where .= "WHERE `user_id` IN( {$user_ids} ) ";
+			}
+
 
 		}
 
@@ -352,8 +357,22 @@ class EDD_DB_Customers extends EDD_DB  {
 				$emails = "'" . $args['email'] . "'";
 			}
 
-			$where .= "WHERE `email` IN( {$emails} ) ";
+			if( ! empty( $where ) ) {
+				$where .= " AND `email` IN( {$emails} ) ";
+			} else {
+				$where .= "WHERE `email` IN( {$emails} ) ";
+			}
 
+		}
+
+		// specific customers by name
+		if( ! empty( $args['name'] ) ) {
+
+			if( ! empty( $where ) ) {
+				$where .= " AND `name` LIKE '" . $args['name'] . "' ";
+			} else {
+				$where .= "WHERE `name` LIKE '%%" . $args['name'] . "%%' ";
+			}
 		}
 
 		// Customers created for a specific date or in a date range
