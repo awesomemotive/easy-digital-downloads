@@ -127,13 +127,15 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	}
 
 	public function column_name( $item ) {
-		$user = ! empty( $item['user_id'] ) ? $item['user_id'] : $item['email'];
-		$actions = array( 'view'          => sprintf( __( '<a href="%s">View</a>', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $item['id'] ) ),
-		                  'logs'          => sprintf( __( '<a href="%s">Download log</a>', 'edd' ), admin_url( '/edit.php?post_type=download&page=edd-reports&tab=logs&user=' . urlencode( $user ) ) ),
-		                  'delete'        => sprintf( __( '<a href="%s">Delete</a>', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $item['id'] ) )
-		                );
+		$name        = '#' . $item['id'] . ' ' . $item[ 'name'];
+		$user        = ! empty( $item['user_id'] ) ? $item['user_id'] : $item['email'];
+		$actions     = array(
+			'view'   => sprintf( __( '<a href="%s">View</a>', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $item['id'] ) ),
+			'logs'   => sprintf( __( '<a href="%s">Download log</a>', 'edd' ), admin_url( '/edit.php?post_type=download&page=edd-reports&tab=logs&user=' . urlencode( $user ) ) ),
+			'delete' => sprintf( __( '<a href="%s">Delete</a>', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $item['id'] ) )
+		);
 
-		return sprintf( '%1$s %2$s', $item['name'], $this->row_actions( $actions ) );
+		return sprintf( '%1$s %2$s', $name, $this->row_actions( $actions ) );
 	}
 
 	/**
