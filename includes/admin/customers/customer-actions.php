@@ -72,7 +72,7 @@ function edd_edit_customer( $args ) {
 		edd_set_error( 'edd-invalid-email', __( 'Please enter a valid email address.', 'edd' ) );
 	}
 
-	if ( $customer_data['user_id'] != $customer->user_id ) {
+	if ( (int) $customer_data['user_id'] != (int) $customer->user_id ) {
 
 		// Make sure we don't already have this user attached to a customer
 		if ( ! empty( $customer_data['user_id'] ) && false !== EDD()->customers->get_customer_by( 'user_id', $customer_data['user_id'] ) ) {
