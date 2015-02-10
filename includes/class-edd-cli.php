@@ -286,6 +286,9 @@ class EDD_CLI extends WP_CLI_Command {
 					WP_CLI::error( __( 'Failed to create customer', 'edd' ) );
 				}
 
+				// Reset email to false so it is generated on the next loop (if creating customers)
+				$email = false;
+
 			}
 
 		} else {
