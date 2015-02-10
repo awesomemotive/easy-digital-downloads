@@ -105,19 +105,15 @@ class EDD_Stats {
 	public function setup_dates( $_start_date = 'this_month', $_end_date = false ) {
 
 		if( empty( $_start_date ) ) {
-			$this->start_date = 'this_month';
+			$_start_date = 'this_month';
 		}
 
-		$this->start_date = $_start_date;
-
-		if( ! empty( $_end_date ) ) {
-			$this->end_date = $_end_date;
-		} else {
-			$this->end_date = $this->start_date;
+		if( empty( $_end_date ) ) {
+			$_end_date = $_start_date;
 		}
 
-		$this->start_date = $this->convert_date( $this->start_date );
-		$this->end_date   = $this->convert_date( $this->end_date, true );
+		$this->start_date = $this->convert_date( $_start_date );
+		$this->end_date   = $this->convert_date( $_end_date, true );
 
 	}
 
