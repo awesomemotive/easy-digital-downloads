@@ -145,7 +145,7 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		if ( is_array( $options[ 'quantity' ] ) ) {
 			// if the number of quantities is the same as the number of price options, match them up
 			if ( count( $options[ 'quantity' ] ) == count( $options[ 'price_id' ] ) ) {
-				foreach ( array_combine( $options[ 'price_id' ], $options[ 'quantity' ] ) as $price => $quantity ) {
+				foreach ( edd_combine_array( $options[ 'price_id' ], $options[ 'quantity' ] ) as $price => $quantity ) {
 					$local_options = $options;
 					$local_options[ 'price_id' ] = preg_replace( '/[^0-9\.-]/', '', $price );
 					$local_options[ 'quantity' ] = $quantity;
