@@ -107,10 +107,10 @@ function edd_is_cc_verify_enabled() {
 	if ( count( $gateways ) == 1 && ! isset( $gateways['paypal'] ) && ! isset( $gateways['manual'] ) ) {
 		$ret = true;
 	} else if ( count( $gateways ) == 1 ) {
-			$ret = false;
-		} else if ( count( $gateways ) == 2 && isset( $gateways['paypal'] ) && isset( $gateways['manual'] ) ) {
-			$ret = false;
-		}
+		$ret = false;
+	} else if ( count( $gateways ) == 2 && isset( $gateways['paypal'] ) && isset( $gateways['manual'] ) ) {
+		$ret = false;
+	}
 
 	return (bool) apply_filters( 'edd_verify_credit_cards', $ret );
 }
@@ -376,30 +376,30 @@ function edd_currency_symbol( $currency = '' ) {
 	}
 
 	switch ( $currency ) :
-	case "GBP" :
-		$symbol = '&pound;';
-	break;
-case "BRL" :
-	$symbol = 'R&#36;';
-	break;
-case "EUR" :
-	$symbol = '&euro;';
-	break;
-case "USD" :
-case "AUD" :
-case "NZD" :
-case "CAD" :
-case "HKD" :
-case "MXN" :
-case "SGD" :
-	$symbol = '&#36;';
-	break;
-case "JPY" :
-	$symbol = '&yen;';
-	break;
-default :
-	$symbol = $currency;
-	break;
+		case "GBP" :
+			$symbol = '&pound;';
+		break;
+		case "BRL" :
+			$symbol = 'R&#36;';
+		break;
+		case "EUR" :
+			$symbol = '&euro;';
+			break;
+		case "USD" :
+		case "AUD" :
+		case "NZD" :
+		case "CAD" :
+		case "HKD" :
+		case "MXN" :
+		case "SGD" :
+			$symbol = '&#36;';
+			break;
+		case "JPY" :
+			$symbol = '&yen;';
+			break;
+		default :
+			$symbol = $currency;
+			break;
 	endswitch;
 
 	return apply_filters( 'edd_currency_symbol', $symbol, $currency );
@@ -546,15 +546,15 @@ function edd_let_to_num( $v ) {
 	$ret = substr( $v, 0, -1 );
 
 	switch ( strtoupper( $l ) ) {
-	case 'P': // fall-through
-	case 'T': // fall-through
-	case 'G': // fall-through
-	case 'M': // fall-through
-	case 'K': // fall-through
-		$ret *= 1024;
-		break;
-	default:
-		break;
+		case 'P': // fall-through
+		case 'T': // fall-through
+		case 'G': // fall-through
+		case 'M': // fall-through
+		case 'K': // fall-through
+			$ret *= 1024;
+			break;
+		default:
+			break;
 	}
 
 	return $ret;
