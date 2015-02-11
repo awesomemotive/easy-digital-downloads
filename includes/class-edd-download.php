@@ -506,8 +506,12 @@ class EDD_Download {
 		$sql = "UPDATE $wpdb->postmeta SET meta_value = meta_value + {$quantity} WHERE meta_key = '_edd_download_sales' AND post_id = {$this->ID};";
 
 		if( $wpdb->query( $sql ) ) {
+			$total_sales = $sales + $quantity;
+			$this->sales = $total_sales;
 
-			return $sales + $quantity;
+			clean_post_cache( $this->ID );
+
+			return $this->sales;
 
 		}
 
@@ -535,8 +539,12 @@ class EDD_Download {
 			$sql = "UPDATE $wpdb->postmeta SET meta_value = meta_value - {$quantity} WHERE meta_key = '_edd_download_sales' AND post_id = {$this->ID};";
 
 			if( $wpdb->query( $sql ) ) {
+				$total_sales = $sales - $quantity;
+				$this->sales = $total_sales;
 
-				return $sales - $quantity;
+				clean_post_cache( $this->ID );
+
+				return $this->sales;
 
 			}
 
@@ -590,7 +598,9 @@ class EDD_Download {
 		if( $wpdb->query( $sql ) ) {
 
 			$this->earnings = $earnings + (float) $amount;
-			return $earnings;
+			clean_post_cache( $this->ID );
+
+			return $this->earnings;
 
 		}
 
@@ -619,7 +629,9 @@ class EDD_Download {
 			if( $wpdb->query( $sql ) ) {
 
 				$this->earnings = $earnings - (float) $amount;
-				return $earnings;
+				clean_post_cache( $this->ID );
+
+				return $this->earnings;
 
 			}
 
