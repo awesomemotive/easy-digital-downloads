@@ -1065,7 +1065,7 @@ jQuery(document).ready(function ($) {
 					}
 				}).fail(function (response) {
 					if ( window.console && window.console.log ) {
-						console.log( data );
+						console.log( response );
 					}
 				}).done(function (response) {
 
