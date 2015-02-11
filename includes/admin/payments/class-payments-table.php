@@ -514,6 +514,10 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$start_date     = isset( $_GET['start-date'] )  ? sanitize_text_field( $_GET['start-date'] ) : null;
 		$end_date       = isset( $_GET['end-date'] )    ? sanitize_text_field( $_GET['end-date'] )   : $start_date;
 
+		if( ! empty( $search ) ) {
+			$status = 'any'; // Force all payment statuses when searching
+		}
+
 		$args = array(
 			'output'     => 'payments',
 			'number'     => $per_page,
