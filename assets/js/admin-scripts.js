@@ -1041,7 +1041,7 @@ jQuery(document).ready(function ($) {
 
 		// Don't fire if short or is a modifier key (shift, ctrl, apple command key, or arrow keys)
 		if(
-			val.length <= 3 ||
+			( val.length <= 3 && 'edd_download_search' == search_type ) ||
 			(
 				e.which == 16 ||
 				e.which == 13 ||
@@ -1055,7 +1055,6 @@ jQuery(document).ready(function ($) {
 		) {
 			return;
 		}
-
 		clearTimeout(typingTimer);
 		typingTimer = setTimeout(
 			function(){
