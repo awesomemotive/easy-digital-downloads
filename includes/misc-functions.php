@@ -734,6 +734,25 @@ if ( ! function_exists( 'cal_days_in_month' ) ) {
 	}
 }
 
+/**
+ * Compare two arrays into a single array.
+ *
+ * This function is safer than PHP's array_combine
+ * because it ensures that the two arrays being
+ * merged will be the same size before using
+ * array_combine, which throws an error on 
+ * attempting to combine two arrays of different
+ * sizes. Works by removing extra items from the 
+ * larger array to make them both arrays the 
+ * same size as the smaller array. Returns
+ * the combined array.
+ *
+ * @since 2.3.0
+ *
+ * @param array  $a First array
+ * @param array  $b Second array
+ * @return array Combined array
+ */
 function edd_combine_array( $a, $b ) {
 	$acount = count( $a );
 	$bcount = count( $b );
