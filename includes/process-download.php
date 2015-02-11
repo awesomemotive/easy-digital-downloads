@@ -189,6 +189,7 @@ function edd_process_download() {
 					// We need a path relative to the domain
 					$file_path = str_ireplace( $_SERVER[ 'DOCUMENT_ROOT' ], '', $file_path );
 					header( "X-Accel-Redirect: /$file_path" );
+					header( "Access-Control-Allow-Origin: *" );
 
 				}
 
