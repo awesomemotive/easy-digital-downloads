@@ -503,7 +503,7 @@ class EDD_Download {
 		$sales    = edd_get_download_sales_stats( $this->ID );
 		$quantity = absint( $quantity );
 
-		$sql = "UPDATE $wpdb->postmeta SET meta_value = meta_value + $quantity WHERE meta_key = '_edd_download_sales' AND post_id = {$this->ID};";
+		$sql = "UPDATE $wpdb->postmeta SET meta_value = meta_value + {$quantity} WHERE meta_key = '_edd_download_sales' AND post_id = {$this->ID};";
 
 		if( $wpdb->query( $sql ) ) {
 
@@ -532,7 +532,7 @@ class EDD_Download {
 
 			$quantity = absint( $quantity );
 
-			$sql = "UPDATE $wpdb->postmeta SET meta_value = meta_value - $quantity WHERE meta_key = '_edd_download_sales' AND post_id = {$this->ID};";
+			$sql = "UPDATE $wpdb->postmeta SET meta_value = meta_value - {$quantity} WHERE meta_key = '_edd_download_sales' AND post_id = {$this->ID};";
 
 			if( $wpdb->query( $sql ) ) {
 
@@ -585,7 +585,7 @@ class EDD_Download {
 
 		$earnings = edd_get_download_earnings_stats( $this->ID );
 
-		$sql = "UPDATE $wpdb->postmeta SET meta_value = meta_value + $amount WHERE meta_key = '_edd_download_earnings' AND post_id = {$this->ID};";
+		$sql = "UPDATE $wpdb->postmeta SET meta_value = meta_value + {$amount} WHERE meta_key = '_edd_download_earnings' AND post_id = {$this->ID};";
 
 		if( $wpdb->query( $sql ) ) {
 
@@ -614,7 +614,7 @@ class EDD_Download {
 
 			// Only decrease if greater than zero
 
-			$sql = "UPDATE $wpdb->postmeta SET meta_value = meta_value - $amount WHERE meta_key = '_edd_download_earnings' AND post_id = {$this->ID};";
+			$sql = "UPDATE $wpdb->postmeta SET meta_value = meta_value - {$amount} WHERE meta_key = '_edd_download_earnings' AND post_id = {$this->ID};";
 
 			if( $wpdb->query( $sql ) ) {
 
