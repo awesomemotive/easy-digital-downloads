@@ -1033,6 +1033,11 @@ jQuery(document).ready(function ($) {
 		var val = $(this).val(), container = $(this).closest( '.edd-select-chosen' );
 		var menu_id = container.attr('id').replace( '_chosen', '' );
 		var lastKey = e.which;
+		var search_type = 'edd_download_search';
+
+		if( container.attr( 'id' ).indexOf( "customer" ) >= 0 ) {
+			search_type = 'edd_customer_search';
+		}
 
 		// Don't fire if short or is a modifier key (shift, ctrl, apple command key, or arrow keys)
 		if(
@@ -1058,7 +1063,7 @@ jQuery(document).ready(function ($) {
 					type: 'GET',
 					url: ajaxurl,
 					data: {
-						action: 'edd_download_search',
+						action: search_type,
 						s: val,
 					},
 					dataType: "json",
