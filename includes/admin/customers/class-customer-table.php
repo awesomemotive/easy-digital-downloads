@@ -127,7 +127,8 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	}
 
 	public function column_name( $item ) {
-		$name        = '#' . $item['id'] . ' ' . $item[ 'name'];
+		$name        = '#' . $item['id'] . ' ';
+		$name       .= ! empty( $item['name'] ) ? $item['name'] : '<em>' . __( 'Unnamed Customer', 'edd') . '</em>';
 		$user        = ! empty( $item['user_id'] ) ? $item['user_id'] : $item['email'];
 		$view_url    = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $item['id'] );
 		$actions     = array(
