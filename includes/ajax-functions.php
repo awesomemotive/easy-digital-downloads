@@ -485,7 +485,15 @@ function edd_ajax_customer_search() {
 	if ( ! current_user_can( 'view_shop_reports' ) ) {
 		$customers = array();
 	} else {
-		$customers = $wpdb->get_results( "SELECT id,name,email FROM {$wpdb->prefix}edd_customers WHERE `name` LIKE '%$search%' OR `email` LIKE '%$search%' LIMIT 50" );
+		$select = "SELECT id, name, email FROM {$wpdb->prefix}edd_customers ";
+		if ( is_numeric( $search ) ) {
+			$where = "WHERE `id` LIKE '%$search%' ";
+		} else {
+			$where = "WHERE `name` LIKE '%$search%' OR `email` LIKE '%$search%' ";
+		}
+		$limit = "LIMIT 50";
+
+		$customers = $wpdb->get_results( $select . $where . $limit );
 	}
 
 	if( $customers ) {
