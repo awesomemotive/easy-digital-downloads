@@ -1,6 +1,7 @@
 <?php
-
 /**
+ *
+ *
  * @group edd_cart
  */
 class Test_Cart extends WP_UnitTestCase {
@@ -16,14 +17,14 @@ class Test_Cart extends WP_UnitTestCase {
 		$GLOBALS['wp_rewrite']->init();
 		flush_rewrite_rules();
 
-		edd_add_rewrite_endpoints($wp_rewrite);
+		edd_add_rewrite_endpoints( $wp_rewrite );
 
 		$this->_rewrite = $wp_rewrite;
 
 		global $current_user;
 
-		$current_user = new WP_User(1);
-		$current_user->set_role('administrator');
+		$current_user = new WP_User( 1 );
+		$current_user->set_role( 'administrator' );
 
 		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
 
@@ -55,7 +56,7 @@ class Test_Cart extends WP_UnitTestCase {
 			'edd_price' => '0.00',
 			'_variable_pricing' => 1,
 			'_edd_price_options_mode' => 'on',
-			'edd_variable_prices' => array_values( $_variable_pricing ), 
+			'edd_variable_prices' => array_values( $_variable_pricing ),
 			'edd_download_files' => array_values( $_download_files ),
 			'_edd_download_limit' => 20,
 			'_edd_hide_purchase_link' => 1,
@@ -65,7 +66,7 @@ class Test_Cart extends WP_UnitTestCase {
 			'_edd_download_sales' => 59,
 			'_edd_download_limit_override_1' => 1
 		);
-		foreach( $meta as $key => $value ) {
+		foreach ( $meta as $key => $value ) {
 			update_post_meta( $post_id, $key, $value );
 		}
 
@@ -89,8 +90,8 @@ class Test_Cart extends WP_UnitTestCase {
 	}
 
 	public function test_endpoints() {
-		$this->assertEquals('edd-add', $this->_rewrite->endpoints[0][1]);
-		$this->assertEquals('edd-remove', $this->_rewrite->endpoints[1][1]);
+		$this->assertEquals( 'edd-add', $this->_rewrite->endpoints[0][1] );
+		$this->assertEquals( 'edd-remove', $this->_rewrite->endpoints[1][1] );
 	}
 
 	public function test_add_to_cart_multiple_ids() {
@@ -114,10 +115,10 @@ class Test_Cart extends WP_UnitTestCase {
 					'price_id' => 1
 				),
 				'quantity' => 2
-			),		
+			),
 		);
 
-		$this->assertEquals($expected, edd_get_cart_contents());
+		$this->assertEquals( $expected, edd_get_cart_contents() );
 
 		// empty cart so the next sets of tests work as expected
 		edd_empty_cart();
@@ -144,10 +145,10 @@ class Test_Cart extends WP_UnitTestCase {
 					'price_id' => 1
 				),
 				'quantity' => 2
-			),		
+			),
 		);
 
-		$this->assertEquals($expected, edd_get_cart_contents());
+		$this->assertEquals( $expected, edd_get_cart_contents() );
 
 		// empty cart so the next sets of tests work as expected
 		edd_empty_cart();
@@ -174,10 +175,10 @@ class Test_Cart extends WP_UnitTestCase {
 					'price_id' => 1
 				),
 				'quantity' => 2
-			),		
+			),
 		);
 
-		$this->assertEquals($expected, edd_get_cart_contents());
+		$this->assertEquals( $expected, edd_get_cart_contents() );
 
 		// empty cart so the next sets of tests work as expected
 		edd_empty_cart();
@@ -203,10 +204,10 @@ class Test_Cart extends WP_UnitTestCase {
 					'price_id' => 1
 				),
 				'quantity' => 1
-			),		
+			),
 		);
 
-		$this->assertEquals($expected, edd_get_cart_contents());
+		$this->assertEquals( $expected, edd_get_cart_contents() );
 
 		// empty cart so the next sets of tests work as expected
 		edd_empty_cart();
@@ -238,7 +239,7 @@ class Test_Cart extends WP_UnitTestCase {
 			)
 		);
 
-		$this->assertEquals($expected, edd_get_cart_contents());
+		$this->assertEquals( $expected, edd_get_cart_contents() );
 	}
 
 	public function test_get_cart_content_details() {
@@ -298,12 +299,12 @@ class Test_Cart extends WP_UnitTestCase {
 		);
 
 		$this->assertEquals( $expected, edd_get_cart_content_details() );
-	
+
 		// Now turn on taxes and do it again
 		add_filter( 'edd_use_taxes', '__return_true' );
 		add_filter( 'edd_tax_rate', function() {
-			return 0.20;
-		} );
+				return 0.20;
+			} );
 
 		$expected = array(
 			'0' => array(
@@ -357,7 +358,7 @@ class Test_Cart extends WP_UnitTestCase {
 	}
 
 	public function test_cart_quantity() {
-		$this->assertEquals(1, edd_get_cart_quantity());
+		$this->assertEquals( 1, edd_get_cart_quantity() );
 	}
 
 	public function test_get_cart_item_quantity() {
@@ -403,7 +404,7 @@ class Test_Cart extends WP_UnitTestCase {
 	}
 
 	public function test_item_in_cart() {
-		$this->assertFalse(edd_item_in_cart($this->_post->ID));
+		$this->assertFalse( edd_item_in_cart( $this->_post->ID ) );
 	}
 
 	public function test_cart_item_price() {

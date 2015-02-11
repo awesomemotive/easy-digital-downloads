@@ -107,10 +107,10 @@ function edd_is_cc_verify_enabled() {
 	if ( count( $gateways ) == 1 && ! isset( $gateways['paypal'] ) && ! isset( $gateways['manual'] ) ) {
 		$ret = true;
 	} else if ( count( $gateways ) == 1 ) {
-		$ret = false;
-	} else if ( count( $gateways ) == 2 && isset( $gateways['paypal'] ) && isset( $gateways['manual'] ) ) {
-		$ret = false;
-	}
+			$ret = false;
+		} else if ( count( $gateways ) == 2 && isset( $gateways['paypal'] ) && isset( $gateways['manual'] ) ) {
+			$ret = false;
+		}
 
 	return (bool) apply_filters( 'edd_verify_credit_cards', $ret );
 }
@@ -155,18 +155,18 @@ function edd_string_is_image_url( $str ) {
 	$ext = edd_get_file_extension( $str );
 
 	switch ( strtolower( $ext ) ) {
-		case 'jpg';
-			$return = true;
-			break;
-		case 'png';
-			$return = true;
-			break;
-		case 'gif';
-			$return = true;
-			break;
-		default:
-			$return = false;
-			break;
+	case 'jpg';
+		$return = true;
+		break;
+	case 'png';
+		$return = true;
+		break;
+	case 'gif';
+		$return = true;
+		break;
+	default:
+		$return = false;
+		break;
 	}
 
 	return (bool) apply_filters( 'edd_string_is_image', $return, $str );
@@ -190,7 +190,7 @@ function edd_get_ip() {
 	} elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
 		//to check ip is pass from proxy
 		$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-	} elseif( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
+	} elseif ( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
 		$ip = $_SERVER['REMOTE_ADDR'];
 	}
 	return apply_filters( 'edd_get_ip', $ip );
@@ -208,27 +208,27 @@ function edd_get_ip() {
 function edd_get_host() {
 	$host = false;
 
-	if( defined( 'WPE_APIKEY' ) ) {
+	if ( defined( 'WPE_APIKEY' ) ) {
 		$host = 'WP Engine';
-	} elseif( defined( 'PAGELYBIN' ) ) {
+	} elseif ( defined( 'PAGELYBIN' ) ) {
 		$host = 'Pagely';
-	} elseif( DB_HOST == 'localhost:/tmp/mysql5.sock' ) {
+	} elseif ( DB_HOST == 'localhost:/tmp/mysql5.sock' ) {
 		$host = 'ICDSoft';
-	} elseif( DB_HOST == 'mysqlv5' ) {
+	} elseif ( DB_HOST == 'mysqlv5' ) {
 		$host = 'NetworkSolutions';
-	} elseif( strpos( DB_HOST, 'ipagemysql.com' ) !== false ) {
+	} elseif ( strpos( DB_HOST, 'ipagemysql.com' ) !== false ) {
 		$host = 'iPage';
-	} elseif( strpos( DB_HOST, 'ipowermysql.com' ) !== false ) {
+	} elseif ( strpos( DB_HOST, 'ipowermysql.com' ) !== false ) {
 		$host = 'IPower';
-	} elseif( strpos( DB_HOST, '.gridserver.com' ) !== false ) {
+	} elseif ( strpos( DB_HOST, '.gridserver.com' ) !== false ) {
 		$host = 'MediaTemple Grid';
-	} elseif( strpos( DB_HOST, '.pair.com' ) !== false ) {
+	} elseif ( strpos( DB_HOST, '.pair.com' ) !== false ) {
 		$host = 'pair Networks';
-	} elseif( strpos( DB_HOST, '.stabletransit.com' ) !== false ) {
+	} elseif ( strpos( DB_HOST, '.stabletransit.com' ) !== false ) {
 		$host = 'Rackspace Cloud';
-	} elseif( strpos( DB_HOST, '.sysfix.eu' ) !== false ) {
+	} elseif ( strpos( DB_HOST, '.sysfix.eu' ) !== false ) {
 		$host = 'SysFix.eu Power Hosting';
-	} elseif( strpos( $_SERVER['SERVER_NAME'], 'Flywheel' ) !== false ) {
+	} elseif ( strpos( $_SERVER['SERVER_NAME'], 'Flywheel' ) !== false ) {
 		$host = 'Flywheel';
 	} else {
 		// Adding a general fallback for data gathering
@@ -243,64 +243,64 @@ function edd_get_host() {
  * Check site host
  *
  * @since 2.0
- * @param $host The host to check
+ * @param unknown $host The host to check
  * @return bool true if host matches, false if not
  */
 function edd_is_host( $host = false ) {
 
 	$return = false;
 
-	if( $host ) {
+	if ( $host ) {
 		$host = str_replace( ' ', '', strtolower( $host ) );
 
-		switch( $host ) {
-			case 'wpengine':
-				if( defined( 'WPE_APIKEY' ) )
-					$return = true;
-				break;
-			case 'pagely':
-				if( defined( 'PAGELYBIN' ) )
-					$return = true;
-				break;
-			case 'icdsoft':
-				if( DB_HOST == 'localhost:/tmp/mysql5.sock' )
-					$return = true;
-				break;
-			case 'networksolutions':
-				if( DB_HOST == 'mysqlv5' )
-					$return = true;
-				break;
-			case 'ipage':
-				if( strpos( DB_HOST, 'ipagemysql.com' ) !== false )
-					$return = true;
-				break;
-			case 'ipower':
-				if( strpos( DB_HOST, 'ipowermysql.com' ) !== false )
-					$return = true;
-				break;
-			case 'mediatemplegrid':
-				if( strpos( DB_HOST, '.gridserver.com' ) !== false )
-					$return = true;
-				break;
-			case 'pairnetworks':
-				if( strpos( DB_HOST, '.pair.com' ) !== false )
-					$return = true;
-				break;
-			case 'rackspacecloud':
-				if( strpos( DB_HOST, '.stabletransit.com' ) !== false )
-					$return = true;
-				break;
-			case 'sysfix.eu':
-			case 'sysfix.eupowerhosting':
-				if( strpos( DB_HOST, '.sysfix.eu' ) !== false )
-					$return = true;
-				break;
-			case 'flywheel':
-				if( strpos( $_SERVER['SERVER_NAME'], 'Flywheel' ) !== false )
-					$return = true;
-				break;
-			default:
-				$return = false;
+		switch ( $host ) {
+		case 'wpengine':
+			if ( defined( 'WPE_APIKEY' ) )
+				$return = true;
+			break;
+		case 'pagely':
+			if ( defined( 'PAGELYBIN' ) )
+				$return = true;
+			break;
+		case 'icdsoft':
+			if ( DB_HOST == 'localhost:/tmp/mysql5.sock' )
+				$return = true;
+			break;
+		case 'networksolutions':
+			if ( DB_HOST == 'mysqlv5' )
+				$return = true;
+			break;
+		case 'ipage':
+			if ( strpos( DB_HOST, 'ipagemysql.com' ) !== false )
+				$return = true;
+			break;
+		case 'ipower':
+			if ( strpos( DB_HOST, 'ipowermysql.com' ) !== false )
+				$return = true;
+			break;
+		case 'mediatemplegrid':
+			if ( strpos( DB_HOST, '.gridserver.com' ) !== false )
+				$return = true;
+			break;
+		case 'pairnetworks':
+			if ( strpos( DB_HOST, '.pair.com' ) !== false )
+				$return = true;
+			break;
+		case 'rackspacecloud':
+			if ( strpos( DB_HOST, '.stabletransit.com' ) !== false )
+				$return = true;
+			break;
+		case 'sysfix.eu':
+		case 'sysfix.eupowerhosting':
+			if ( strpos( DB_HOST, '.sysfix.eu' ) !== false )
+				$return = true;
+			break;
+		case 'flywheel':
+			if ( strpos( $_SERVER['SERVER_NAME'], 'Flywheel' ) !== false )
+				$return = true;
+			break;
+		default:
+			$return = false;
 		}
 	}
 
@@ -365,7 +365,7 @@ function edd_get_currency() {
  * If no symbol is determine, the currency string is returned.
  *
  * @since  2.2
- * @param  string $currency The currency string
+ * @param string  $currency The currency string
  * @return string           The symbol to use for the currency
  */
 function edd_currency_symbol( $currency = '' ) {
@@ -376,30 +376,30 @@ function edd_currency_symbol( $currency = '' ) {
 	}
 
 	switch ( $currency ) :
-		case "GBP" :
-			$symbol = '&pound;';
-			break;
-		case "BRL" :
-			$symbol = 'R&#36;';
-			break;
-		case "EUR" :
-			$symbol = '&euro;';
-			break;
-		case "USD" :
-		case "AUD" :
-		case "NZD" :
-		case "CAD" :
-		case "HKD" :
-		case "MXN" :
-		case "SGD" :
-			$symbol = '&#36;';
-			break;
-		case "JPY" :
-			$symbol = '&yen;';
-			break;
-		default :
-			$symbol = $currency;
-			break;
+	case "GBP" :
+		$symbol = '&pound;';
+	break;
+case "BRL" :
+	$symbol = 'R&#36;';
+	break;
+case "EUR" :
+	$symbol = '&euro;';
+	break;
+case "USD" :
+case "AUD" :
+case "NZD" :
+case "CAD" :
+case "HKD" :
+case "MXN" :
+case "SGD" :
+	$symbol = '&#36;';
+	break;
+case "JPY" :
+	$symbol = '&yen;';
+	break;
+default :
+	$symbol = $currency;
+	break;
 	endswitch;
 
 	return apply_filters( 'edd_currency_symbol', $symbol, $currency );
@@ -409,7 +409,7 @@ function edd_currency_symbol( $currency = '' ) {
  * Get the name of a currency
  *
  * @since 2.2
- * @param  string $currency The currency code
+ * @param string  $currency The currency code
  * @return string The currency's name
  */
 function edd_get_currency_name( $code = 'USD' ) {
@@ -546,15 +546,15 @@ function edd_let_to_num( $v ) {
 	$ret = substr( $v, 0, -1 );
 
 	switch ( strtoupper( $l ) ) {
-		case 'P': // fall-through
-		case 'T': // fall-through
-		case 'G': // fall-through
-		case 'M': // fall-through
-		case 'K': // fall-through
-			$ret *= 1024;
-			break;
-		default:
-			break;
+	case 'P': // fall-through
+	case 'T': // fall-through
+	case 'G': // fall-through
+	case 'M': // fall-through
+	case 'K': // fall-through
+		$ret *= 1024;
+		break;
+	default:
+		break;
 	}
 
 	return $ret;
@@ -734,41 +734,41 @@ if ( ! function_exists( 'cal_days_in_month' ) ) {
 	}
 }
 
-function edd_combine_array( $a, $b ) { 
-    $acount = count( $a ); 
-    $bcount = count( $b ); 
-    $size = ( $acount > $bcount ) ? $bcount : $acount; 
-    $a = array_slice( $a, 0, $size ); 
-    $b = array_slice( $b, 0, $size ); 
-    return array_combine( $a, $b ); 
-} 
+function edd_combine_array( $a, $b ) {
+	$acount = count( $a );
+	$bcount = count( $b );
+	$size = ( $acount > $bcount ) ? $bcount : $acount;
+	$a = array_slice( $a, 0, $size );
+	$b = array_slice( $b, 0, $size );
+	return array_combine( $a, $b );
+}
 
 
 if ( ! function_exists( 'hash_equals' ) ) :
-/**
- * Compare two strings in constant time.
- *
- * This function was added in PHP 5.6.
- * It can leak the length of a string.
- *
- * @since 2.2.1
- *
- * @param string $a Expected string.
- * @param string $b Actual string.
- * @return bool Whether strings are equal.
- */
-function hash_equals( $a, $b ) {
-	$a_length = strlen( $a );
-	if ( $a_length !== strlen( $b ) ) {
-		return false;
-	}
-	$result = 0;
+	/**
+	 * Compare two strings in constant time.
+	 *
+	 * This function was added in PHP 5.6.
+	 * It can leak the length of a string.
+	 *
+	 * @since 2.2.1
+	 *
+	 * @param string  $a Expected string.
+	 * @param string  $b Actual string.
+	 * @return bool Whether strings are equal.
+	 */
+	function hash_equals( $a, $b ) {
+		$a_length = strlen( $a );
+		if ( $a_length !== strlen( $b ) ) {
+			return false;
+		}
+		$result = 0;
 
-	// Do not attempt to "optimize" this.
-	for ( $i = 0; $i < $a_length; $i++ ) {
-		$result |= ord( $a[ $i ] ) ^ ord( $b[ $i ] );
-	}
+		// Do not attempt to "optimize" this.
+		for ( $i = 0; $i < $a_length; $i++ ) {
+			$result |= ord( $a[ $i ] ) ^ ord( $b[ $i ] );
+		}
 
-	return $result === 0;
-}
+		return $result === 0;
+	}
 endif;
