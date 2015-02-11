@@ -104,8 +104,8 @@ function edd_register_settings() {
 					'max'         => isset( $option['max'] )         ? $option['max']     : null,
                     'step'        => isset( $option['step'] )        ? $option['step']    : null,
                     'select2'     => isset( $option['select2'] )     ? $option['select2'] : null,
-					'placeholder' => isset( $option['placeholder'] ) ? $option['placeholder'] : null,
-					'allow_blank' => isset( $option['allow_blank'] ) ? $option['allow_blank'] : true
+                    'placeholder' => isset( $option['placeholder'] ) ? $option['placeholder'] : null,
+                    'allow_blank' => isset( $option['allow_blank'] ) ? $option['allow_blank'] : true
 				)
 			);
 		}
