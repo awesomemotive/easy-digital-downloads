@@ -120,7 +120,6 @@ jQuery(document).ready(function ($) {
 					// If we're still only at free items, check if this one is free also
 					if ( true === free_items ) {
 						var item_price = $(this).data('price');
-
 						if ( item_price && item_price > 0 ) {
 							// We now have a paid item, we can't use add_to_cart
 							free_items = false;
@@ -132,6 +131,9 @@ jQuery(document).ready(function ($) {
 
 		} else {
 			item_price_ids[0] = download;
+			if ( $this.data('price') && $this.data('price') > 0 ) {
+				free_items = false;
+			}
 		}
 
 		// If we've got nothing but free items being added, change to add_to_cart
