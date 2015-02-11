@@ -9,6 +9,9 @@
  * @since       1.0
  */
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  * PayPal Remove CC Form
  *

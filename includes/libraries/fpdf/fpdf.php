@@ -7,6 +7,9 @@
  * @since       1.1.3.2
 */
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 define( 'FPDF_VERSION', '1.7' );
 
 class FPDF {
