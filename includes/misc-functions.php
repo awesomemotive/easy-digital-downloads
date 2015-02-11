@@ -748,6 +748,8 @@ if ( ! function_exists( 'cal_days_in_month' ) ) {
  * the combined array.
  *
  * @since 2.3.0
+ * @usedby edd_add_to_cart()
+ * @author Chris Christoff
  *
  * @param array  $a First array
  * @param array  $b Second array
