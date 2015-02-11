@@ -266,6 +266,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 		'post_data'    => array(),
 		'cart_details' => $cart_details,
 		'gateway'      => 'paypal',
+		'buy_now'      => true,
 		'card_info'    => array()
 	);
 
