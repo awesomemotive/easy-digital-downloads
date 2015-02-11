@@ -487,7 +487,7 @@ function edd_ajax_customer_search() {
 	} else {
 		$select = "SELECT id, name, email FROM {$wpdb->prefix}edd_customers ";
 		if ( is_numeric( $search ) ) {
-			$where = "WHERE `id` LIKE '%$search%' ";
+			$where = "WHERE `id` LIKE '%$search%' OR `user_id` LIKE '%$search%' ";
 		} else {
 			$where = "WHERE `name` LIKE '%$search%' OR `email` LIKE '%$search%' ";
 		}
