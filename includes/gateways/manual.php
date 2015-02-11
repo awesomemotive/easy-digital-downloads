@@ -9,6 +9,9 @@
  * @since       1.0
  */
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  * Manual Gateway does not need a CC form, so remove it.
  *

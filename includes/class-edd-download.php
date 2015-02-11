@@ -9,6 +9,9 @@
  * @since       2.2
 */
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  * EDD_Download Class
  *
