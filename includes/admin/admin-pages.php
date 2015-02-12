@@ -42,55 +42,19 @@ function edd_add_options_link() {
 add_action( 'admin_menu', 'edd_add_options_link', 10 );
 
 /**
- *  Determines whether the current admin page is an EDD admin page.
- *  
- *  Only works after the `wp_loaded` hook, & most effective 
- *  starting on `admin_menu` hook.
- *  
- *  @since 1.9.6
- *  @return bool True if EDD admin page.
- */
-function edd_is_admin_page() {
-
-	global $pagenow, $typenow, $edd_discounts_page, $edd_payments_page, $edd_settings_page,
-			$edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_settings_export, $edd_upgrades_screen;
-
-	$ret         = false;
-	$admin_pages = apply_filters( 'edd_admin_pages', array( $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_settings_export ) );
-
-	if ( 'download' == $typenow || 'index.php' == $pagenow || 'post-new.php' == $pagenow || 'post.php' == $pagenow ) {
-
-		$ret = true;
-
-		if( isset( $_GET['page'] ) && 'edd-upgrades' == $_GET['page'] ) {
-
-			$ret = false;
-
-		}
-
-	} elseif ( in_array( $pagenow, $admin_pages ) ) {
-
-		$ret = true;
-
-	}
-
-	return (bool) apply_filters( 'edd_is_admin_page', $ret );
-}
-
-/**
  *  Determines whether the current admin page is a specific EDD admin page.
  *  
  *  Only works after the `wp_loaded` hook, & most effective 
  *  starting on `admin_menu` hook. Failure to pass in $view will match all views of $main_page.
- *  Failure to pass in $main_page will return edd_is_admin_page().
+ *  Failure to pass in $main_page will return true if on any EDD page
  *  
- *  @since 2.3.0
+ *  @since 1.9.6
  *  
  *  @param string $page Optional. Main page's slug
  *  @param string $view Optional. Page view ( ex: `edit` or `delete` ) 
- *  @return bool True if EDD admin page we're looking for.
+ *  @return bool True if EDD admin page we're looking for or an EDD page or if $page is empty, any EDD page
  */
-function edd_is_admin( $page = '', $view = '' ) {
+function edd_is_admin_page( $page = '', $view = '' ) {
 	
 	global $pagenow, $typenow;
 	
@@ -333,9 +297,28 @@ function edd_is_admin( $page = '', $view = '' ) {
 			}
 			break;
 		default:
-			$found = edd_is_admin_page();
+			global $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_settings_export, $edd_upgrades_screen;
+
+			$admin_pages = apply_filters( 'edd_admin_pages', array( $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_settings_export ) );
+
+			if ( 'download' == $typenow || 'index.php' == $pagenow || 'post-new.php' == $pagenow || 'post.php' == $pagenow ) {
+
+				$found = true;
+
+				if( isset( $_GET[ 'page' ] ) && 'edd-upgrades' == $_GET[ 'page' ] ) {
+
+					$found = false;
+
+				}
+
+			} elseif ( in_array( $pagenow, $admin_pages ) ) {
+
+				$found = true;
+
+			}
+
 			break;
 	}
 
-	return (bool) apply_filters( 'edd_is_admin', $found, $page, $view );
+	return (bool) apply_filters( 'edd_is_admin_page', $found, $page, $view );
 }
