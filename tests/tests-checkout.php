@@ -83,6 +83,14 @@ class Tests_Checkout extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Test for retrieving banned email domains
+	 */
+	public function test_edd_get_banned_email_domains() {
+		$this->assertInternalType( 'array', edd_get_banned_email_domains() );
+		$this->assertEmpty( edd_get_banned_email_domains() );
+	}
+
+	/**
 	 * Test that a specific email is banned
 	 */
 	public function test_edd_is_email_banned() {
@@ -92,9 +100,14 @@ class Tests_Checkout extends WP_UnitTestCase {
 		$emails = array();
 		$emails[] = 'john@test.com';
 		$edd_options['banned_emails'] = $emails;
+
+		$email_domains = array();
+		$email_domains[] = 'test2.com';
+		$edd_options['banned_email_domains'] = $email_domains;
 		update_option( 'edd_settings', $edd_options );
 
 		$this->assertTrue( edd_is_email_banned( 'john@test.com' ) );
+		$this->assertTrue( edd_is_email_banned( 'john@test2.com' ) );
 		$this->assertFalse( edd_is_email_banned( 'john2@test.com' ) );
 	}
 
