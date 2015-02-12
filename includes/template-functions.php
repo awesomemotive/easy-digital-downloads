@@ -478,6 +478,7 @@ function edd_get_purchase_download_links( $payment_id = 0 ) {
 	$payment_key = edd_get_payment_key( $payment_id );
 	$email       = edd_get_payment_user_email( $payment_id );
 	$links       = '<ul class="edd_download_links">';
+	$purchase    = edd_get_payment_meta( $payment_id );
 
 	foreach ( $downloads as $download ) {
 		$links .= '<li>';
@@ -487,7 +488,8 @@ function edd_get_purchase_download_links( $payment_id = 0 ) {
 			if ( is_array( $files ) ) {
 				foreach ( $files as $filekey => $file ) {
 					$links .= '<div class="edd_download_link_file">';
-						$links .= '<a href="' . esc_url( edd_get_download_file_url( $payment_key, $email, $filekey, $download['id'], $price_id ) ) . '">';
+						$attribute = edd_get_html5_download_attribute( true, $purchase, array(), $file );
+						$links .= '<a href="' . esc_url( edd_get_download_file_url( $payment_key, $email, $filekey, $download['id'], $price_id ) ) . '" ' . $attribute . '> ';
 							if ( isset( $file['name'] ) )
 								$links .= esc_html( $file['name'] );
 							else
