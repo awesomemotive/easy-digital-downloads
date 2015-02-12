@@ -282,11 +282,12 @@ function edd_is_email_banned( $email = '' ) {
 	}
 
 	$banned_emails = edd_get_banned_emails();
-	$ret = false;
 
 	foreach( $banned_emails as $banned_email ) {
-		if( $banned_email == trim( $email ) || stristr( trim( $email ), $banned_email ) ) {
-			$ret = true;
+		if( is_email( $banned_email ) ) {
+			$ret = ( $banned_email == trim( $email ) ? true : false );
+		} else {
+			$ret = ( stristr( trim( $email ), $banned_email ) ? true : false );
 		}
 	}
 	
