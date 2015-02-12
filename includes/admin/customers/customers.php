@@ -178,8 +178,22 @@ function edd_customers_view( $customer ) {
 				</div>
 
 				<div class="customer-address-wrapper right">
-				<?php if ( isset( $customer->user_id ) ) : ?>
-					<?php $address = get_user_meta( $customer->user_id, '_edd_user_address', true ); ?>
+				<?php if ( isset( $customer->user_id ) && ! empty( $customer->user_id ) ) : ?>
+
+					<?php
+						$address = get_user_meta( $customer->user_id, '_edd_user_address', true );
+						$defaults = array(
+							'line1'   => '',
+							'line2'   => '',
+							'city'    => '',
+							'state'   => '',
+							'country' => '',
+							'zip'     => ''
+						);
+
+						$address = wp_parse_args( $address, $defaults );
+					?>
+
 					<?php if ( ! empty( $address ) ) : ?>
 					<strong><?php _e( 'Customer Address', 'edd' ); ?></strong>
 					<span class="customer-address info-item editable">
