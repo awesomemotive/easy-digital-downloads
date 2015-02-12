@@ -17,128 +17,25 @@ class Tests_Payments extends WP_UnitTestCase {
 
 		parent::setUp();
 
-		// Enable a few options
-		$edd_options['enable_sequential'] = '1';
-		$edd_options['sequential_prefix'] = 'EDD-';
-		update_option( 'edd_settings', $edd_options );
-
-		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
-
-		$_variable_pricing = array(
-			array(
-				'name' => 'Simple',
-				'amount' => 20
-			),
-			array(
-				'name' => 'Advanced',
-				'amount' => 100
-			)
-		);
-
-		$_download_files = array(
-			array(
-				'name' => 'File 1',
-				'file' => 'http://localhost/file1.jpg',
-				'condition' => 0
-			),
-			array(
-				'name' => 'File 2',
-				'file' => 'http://localhost/file2.jpg',
-				'condition' => 'all'
-			)
-		);
-
-		$meta = array(
-			'edd_price' => '0.00',
-			'_variable_pricing' => 1,
-			'_edd_price_options_mode' => 'on',
-			'edd_variable_prices' => array_values( $_variable_pricing ),
-			'edd_download_files' => array_values( $_download_files ),
-			'_edd_download_limit' => 20,
-			'_edd_hide_purchase_link' => 1,
-			'edd_product_notes' => 'Purchase Notes',
-			'_edd_product_type' => 'default',
-			'_edd_download_earnings' => 129.43,
-			'_edd_download_sales' => 59,
-			'_edd_download_limit_override_1' => 1
-		);
-		foreach( $meta as $key => $value ) {
-			update_post_meta( $post_id, $key, $value );
-		}
-
-		$this->_post = get_post( $post_id );
-
-		/** Generate some sales */
-		$user = get_userdata(1);
-
-		$user_info = array(
-			'id' => $user->ID,
-			'email' => $user->user_email,
-			'first_name' => $user->first_name,
-			'last_name' => $user->last_name,
-			'discount' => 'none'
-		);
-
-		$download_details = array(
-			array(
-				'id' => $this->_post->ID,
-				'options' => array(
-					'price_id' => 1
-				)
-			)
-		);
-
-		$price = '100.00';
-
-		$total = 0;
-
-		$prices = get_post_meta($download_details[0]['id'], 'edd_variable_prices', true);
-		$item_price = $prices[1]['amount'];
-
-		$total += $item_price;
-
-		$cart_details = array(
-			array(
-				'name' => 'Test Download',
-				'id' => $this->_post->ID,
-				'item_number' => array(
-					'id' => $this->_post->ID,
-					'options' => array(
-						'price_id' => 1
-					)
-				),
-				'price' =>  100,
-				'item_price' => 100,
-				'tax' => 0,
-				'quantity' => 1
-			)
-		);
-
-		$this->_payment_key = strtolower( md5( uniqid() ) );
-
-		$purchase_data = array(
-			'price' => number_format( (float) $total, 2 ),
-			'date' => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
-			'purchase_key' => $this->_payment_key,
-			'user_email' => $user_info['email'],
-			'user_info' => $user_info,
-			'currency' => 'USD',
-			'downloads' => $download_details,
-			'cart_details' => $cart_details,
-			'status' => 'pending'
-		);
-
-		$_SERVER['REMOTE_ADDR'] = '10.0.0.0';
-		$_SERVER['SERVER_NAME'] = 'edd_virtual';
-
-		$payment_id = edd_insert_payment( $purchase_data );
+		$payment_id        	= EDD_Helper_Payment::create_simple_payment();
+		$purchase_data     	= edd_get_payment_meta( $payment_id );
+		$this->_payment_key = edd_get_payment_key( $payment_id );
 
 		$this->_payment_id = $payment_id;
-		$this->_key = $purchase_data['purchase_key'];
+		$this->_key = $this->_payment_key;
 
 		$this->_transaction_id = 'FIR3SID3';
 		edd_set_payment_transaction_id( $payment_id, $this->_transaction_id );
 		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'edd' ) , $this->_transaction_id ) );
+
+	}
+
+	public function tearDown() {
+
+		parent::tearDown();
+
+		EDD_Helper_Payment::delete_payment( $this->_payment_id );
+
 	}
 
 	public function test_get_payments() {
@@ -190,11 +87,11 @@ class Tests_Payments extends WP_UnitTestCase {
 		$out = edd_get_payment_statuses();
 
 		$expected = array(
-			'pending' => 'Pending',
-			'publish' => 'Complete',
-			'refunded' => 'Refunded',
-			'failed' => 'Failed',
-			'revoked' => 'Revoked',
+			'pending'   => 'Pending',
+			'publish'   => 'Complete',
+			'refunded'  => 'Refunded',
+			'failed'    => 'Failed',
+			'revoked'   => 'Revoked',
 			'abandoned' => 'Abandoned'
 		);
 
@@ -202,8 +99,10 @@ class Tests_Payments extends WP_UnitTestCase {
 	}
 
 	public function test_undo_purchase() {
-		edd_undo_purchase( $this->_post->ID, $this->_payment_id );
+		$purchase_download_ids = wp_list_pluck( edd_get_payment_meta_downloads( $this->_payment_id ), 'id' );
+		edd_undo_purchase( reset( $purchase_download_ids ), $this->_payment_id );
 		$this->assertEquals( 0, edd_get_total_earnings() );
+		$this->markTestIncomplete( "When testing edd_get_total_earnings, it is always 0, no matter the undo." );
 	}
 
 	public function test_delete_purchase() {
@@ -289,8 +188,8 @@ class Tests_Payments extends WP_UnitTestCase {
 		$total1 = edd_currency_filter( edd_format_amount( edd_get_payment_amount( $this->_payment_id ) ), edd_get_payment_currency_code( $this->_payment_id ) );
 		$total2 = edd_currency_filter( edd_format_amount( edd_get_payment_amount( $this->_payment_id ) ) );
 
-		$this->assertEquals( '&#36;100.00', $total1 );
-		$this->assertEquals( '&#36;100.00', $total2 );
+		$this->assertEquals( '&#36;120.00', $total1 );
+		$this->assertEquals( '&#36;120.00', $total2 );
 
 	}
 
