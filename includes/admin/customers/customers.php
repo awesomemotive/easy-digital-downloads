@@ -178,7 +178,7 @@ function edd_customers_view( $customer ) {
 				</div>
 
 				<div class="customer-address-wrapper right">
-				<?php if ( isset( $customer->user_id ) ) : ?>
+				<?php if ( isset( $customer->user_id ) && ! empty( $customer->user_id ) ) : ?>
 
 					<?php
 						$address = get_user_meta( $customer->user_id, '_edd_user_address', true );
