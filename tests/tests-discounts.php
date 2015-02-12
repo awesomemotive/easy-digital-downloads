@@ -13,55 +13,25 @@ class Tests_Discounts extends WP_UnitTestCase {
 	public function setUp() {
 
 		parent::setUp();
-		$post = array(
-			'code' => '20OFF',
-			'uses' => 54,
-			'max' => 10,
-			'name' => '20 Percent Off',
-			'type' => 'percent',
-			'amount' => '20',
-			'start' => '12/12/2010 00:00:00',
-			'expiration' => '12/31/2050 00:00:00',
-			'min_price' => 128,
-			'status' => 'active',
-			'product_condition' => 'all'
-		);
 
-		$this->_post_id = edd_store_discount( $post );
+		$this->_post_id = EDD_Helper_Discount::create_simple_percent_discount();
 
-		$post = array(
-			'name' => 'Double Double',
-			'type' => 'percent',
-			'amount' => '-100',
-			'start' => '12/12/2010 00:00:00',
-			'expiration' => '12/31/2050 00:00:00',
-			'code' => 'DOUBLE',
-			'product_condition' => 'all',
-			'max' => 10,
-			'uses' => 54,
-			'min_price' => 0
-		);
+		$this->_negative_post_id = EDD_Helper_Discount::create_simple_percent_discount();
+		update_post_meta( $this->_negative_post_id, '_edd_discount_name', 'Double Double' );
+		update_post_meta( $this->_negative_post_id, '_edd_discount_amount', '-100' );
+		update_post_meta( $this->_negative_post_id, '_edd_discount_code', 'DOUBLE' );
 
-		$this->_negative_post_id = edd_store_discount( $post );
-
-		$post = array(
-			'name' => 'Flat Rate',
-			'type' => 'flat',
-			'amount' => '1',
-			'start' => '12/12/2010 00:00:00',
-			'expiration' => '12/31/2050 00:00:00',
-			'code' => 'FLAT',
-			'product_condition' => 'all',
-			'max' => 100,
-			'uses' => 0,
-			'min_price' => 0
-		);
-
-		$this->_flat_post_id = edd_store_discount( $post );
+		$this->_flat_post_id = EDD_Helper_Discount::create_simple_flat_discount();
 	}
 
 	public function tearDown() {
+
 		parent::tearDown();
+
+		EDD_Helper_Discount::delete_discount( $this->_post_id );
+		EDD_Helper_Discount::delete_discount( $this->_negative_post_id );
+		EDD_Helper_Discount::delete_discount( $this->_flat_post_id );
+
 	}
 
 	public function test_discount_created() {
@@ -236,7 +206,7 @@ class Tests_Discounts extends WP_UnitTestCase {
 
 	public function test_formatted_discount_amount_flat() {
 		$amount = edd_get_discount_amount( $this->_flat_post_id );
-		$this->assertSame( '&#36;1.00', edd_format_discount_rate( 'flat', $amount ) );
+		$this->assertSame( '&#36;10.00', edd_format_discount_rate( 'flat', $amount ) );
 	}
 
 	public function test_discount_excluded_products() {
