@@ -564,7 +564,10 @@ function edd_get_payment_statuses() {
  * @return array $payment_status All the available payment statuses
  */
 function edd_get_payment_status_keys() {
-	return array_keys( edd_get_payment_statuses() );
+	$statuses = array_keys( edd_get_payment_statuses() );
+	asort( $statuses );
+
+	return array_values( $statuses );
 }
 
 /**

@@ -201,6 +201,22 @@ class Tests_Payments extends WP_UnitTestCase {
 		$this->assertEquals( $expected, $out );
 	}
 
+	public function test_get_payment_status_keys() {
+		$out = edd_get_payment_status_keys();
+
+		$expected = array(
+			'abandoned',
+			'failed',
+			'pending',
+			'publish',
+			'refunded',
+			'revoked'
+		);
+
+		$this->assertInternalType( 'array', $out );
+		$this->assertEquals( $expected, $out );
+	}
+
 	public function test_undo_purchase() {
 		edd_undo_purchase( $this->_post->ID, $this->_payment_id );
 		$this->assertEquals( 0, edd_get_total_earnings() );
