@@ -1271,7 +1271,7 @@ function edd_rich_editor_callback( $args ) {
 	if ( isset( $edd_options[ $args['id'] ] ) ) {
 		$value = $edd_options[ $args['id'] ];
 
-		if( ! isset( $args['allow_blank'] ) && empty( $value ) ) {
+		if( empty( $args['allow_blank'] ) && empty( $value ) ) {
 			$value = isset( $args['std'] ) ? $args['std'] : '';
 		}
 	} else {
