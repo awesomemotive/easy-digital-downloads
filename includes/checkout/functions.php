@@ -270,6 +270,18 @@ function edd_get_banned_emails() {
 }
 
 /**
+ * Retrieve an array of banned_email_domains
+ *
+ * @since       3.2
+ * @return      array
+ */
+function edd_get_banned_email_domains() {
+	$emails = array_map( 'trim', edd_get_option( 'banned_email_domains', array() ) );
+
+	return apply_filters( 'edd_get_banned_email_domains', $emails );
+}
+
+/**
  * Determines if an email is banned
  *
  * @since       2.0
@@ -281,7 +293,14 @@ function edd_is_email_banned( $email = '' ) {
 		return false;
 	}
 
-	$ret = in_array( trim( $email ), edd_get_banned_emails() );
+	$domain = explode( '@', $email );
+	$domain = array_pop( $domain );
+
+	$ret = in_array( trim( $domain ), edd_get_banned_email_domains() );
+
+	if( ! $ret ) {
+		$ret = in_array( trim( $email ), edd_get_banned_emails() );
+	}
 
 	return apply_filters( 'edd_is_email_banned', $ret, $email );
 }
