@@ -45,7 +45,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		'user_info'     => $purchase_data['user_info'],
 		'cart_details'  => $purchase_data['cart_details'],
 		'gateway'       => 'paypal',
-		'status'        => 'pending'
+		'status'        => ! empty( $purchase_data['buy_now'] ) ? 'private' : 'pending'
 	);
 
 	// Record the pending payment
