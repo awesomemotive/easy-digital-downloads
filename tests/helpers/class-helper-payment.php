@@ -117,7 +117,7 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		$_SERVER['SERVER_NAME'] = 'edd_virtual';
 
 		$payment_id = edd_insert_payment( $purchase_data );
-		$key 		= $purchase_data['purchase_key'];
+		$key        = $purchase_data['purchase_key'];
 
 		$transaction_id = 'FIR3SID3';
 		edd_set_payment_transaction_id( $payment_id, $transaction_id );

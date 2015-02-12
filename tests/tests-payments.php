@@ -28,6 +28,10 @@ class Tests_Payments extends WP_UnitTestCase {
 		edd_set_payment_transaction_id( $payment_id, $this->_transaction_id );
 		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'edd' ) , $this->_transaction_id ) );
 
+		// Make sure we're working off a clean object caching in WP Core.
+		// Prevents some payment_meta from not being present.
+		clean_post_cache( $payment_id );
+		update_postmeta_cache( array( $payment_id ) );
 	}
 
 	public function tearDown() {
@@ -64,7 +68,7 @@ class Tests_Payments extends WP_UnitTestCase {
 		$this->assertFalse( edd_insert_payment() );
 	}
 
-	public function test_payment_completd_flag_not_exists() {
+	public function test_payment_completed_flag_not_exists() {
 
 		$completed_date = edd_get_payment_completed_date( $this->_payment_id );
 		$this->assertEmpty( $completed_date );
