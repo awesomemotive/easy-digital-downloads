@@ -39,19 +39,19 @@
     speak: none;
 }
 .edd-icon-spinner:before {
-    content: "71";
+    content: "\71";
 }
 .edd-icon-ok:before {
-    content: "77";
+    content: "\77";
 }
 .edd-icon-remove:before {
-    content: "65";
+    content: "\65";
 }
 .edd-icon-remove-circle:before {
-    content: "72";
+    content: "\72";
 }
 .edd-icon-ok-circle:before {
-    content: "74";
+    content: "\74";
 }
 .edd-icon-spin {
     display: inline-block;
@@ -378,7 +378,7 @@
     font-weight: bold;
 }
 #edd_secure_site_wrapper span.padlock:before {
-    content: 'f160';
+    content: '\f160';
     display: inline-block;
     -webkit-font-smoothing: antialiased;
     font: normal 20px/1'dashicons';
