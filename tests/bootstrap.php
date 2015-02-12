@@ -31,3 +31,8 @@ $edd_options = get_option( 'edd_settings' );
 
 $current_user = new WP_User(1);
 $current_user->set_role('administrator');
+
+// Include helpers
+require_once 'helpers/class-helper-download.php';
+require_once 'helpers/class-helper-payment.php';
+require_once 'helpers/class-helper-discount.php';

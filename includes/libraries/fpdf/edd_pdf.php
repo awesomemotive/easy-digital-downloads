@@ -7,6 +7,9 @@
  * @since       1.1.4.0
 */
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 class edd_pdf extends FPDF {
 
 	var $widths;
