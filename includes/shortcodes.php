@@ -229,12 +229,12 @@ add_shortcode( 'download_discounts', 'edd_discounts_shortcode' );
  */
 function edd_purchase_collection_shortcode( $atts, $content = null ) {
 	extract( shortcode_atts( array(
-			'taxonomy'	=> '',
-			'terms'		=> '',
-			'text'		=> __('Purchase All Items', 'edd'),
+			'taxonomy'  => '',
+			'terms'     => '',
+			'text'      => __('Purchase All Items', 'edd'),
 			'style'     => edd_get_option( 'button_style', 'button' ),
 			'color'     => edd_get_option( 'checkout_color', 'blue' ),
-			'class'		=> 'edd-submit'
+			'class'     => 'edd-submit'
 		), $atts, 'purchase_collection' )
 	);
 
