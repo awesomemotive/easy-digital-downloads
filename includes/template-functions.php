@@ -49,7 +49,8 @@ add_action( 'edd_after_download_content', 'edd_append_purchase_link' );
 function edd_get_purchase_link( $args = array() ) {
 	global $post, $edd_displayed_form_ids;
 
-	if ( ! edd_get_option( 'purchase_page', false ) || edd_get_option( 'purchase_page', false ) == 0 ) {
+	$purchase_page = edd_get_option( 'purchase_page', false );
+	if ( ! $purchase_page || $purchase_page == 0 ) {
 		edd_set_error( 'set_checkout', sprintf( __( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-settings' ) ) );
 		edd_print_errors();
 		return false;
@@ -741,7 +742,8 @@ add_action( 'wp_head', 'edd_version_in_header' );
  * @return bool True if on the Purchase History page, false otherwise.
  */
 function edd_is_purchase_history_page() {
-	$ret = is_page( edd_get_option( 'purchase_history_page', false ) );
+	$ret = edd_get_option( 'purchase_history_page', false );
+	$ret = $ret ? is_page( $ret ) : false;
 	return apply_filters( 'edd_is_purchase_history_page', $ret );
 }
 

@@ -42,7 +42,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		'user_info'     => $purchase_data['user_info'],
 		'cart_details'  => $purchase_data['cart_details'],
 		'gateway'       => 'paypal',
-		'status'        => 'pending'
+		'status'        => ! empty( $purchase_data['buy_now'] ) ? 'private' : 'pending'
 	);
 
 	// Record the pending payment
@@ -62,15 +62,14 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		$return_url = add_query_arg( array(
 				'payment-confirmation' => 'paypal',
 				'payment-id' => $payment
-
-			), get_permalink( edd_get_option( 'success_page' ) ) );
+			), get_permalink( edd_get_option( 'success_page', false ) ) );
 
 		// Get the PayPal redirect uri
 		$paypal_redirect = trailingslashit( edd_get_paypal_redirect() ) . '?';
 
 		// Setup PayPal arguments
 		$paypal_args = array(
-			'business'      => edd_get_option( 'paypal_email' ),
+			'business'      => edd_get_option( 'paypal_email', false ),
 			'email'         => $purchase_data['user_email'],
 			'invoice'       => $purchase_data['purchase_key'],
 			'no_shipping'   => '1',
@@ -273,7 +272,7 @@ function edd_process_paypal_ipn() {
 			return; // Something went wrong
 		}
 
-		if ( $api_response['body'] !== 'VERIFIED' && ! edd_get_option( 'disable_paypal_verification' ) ) {
+		if ( $api_response['body'] !== 'VERIFIED' && edd_get_option( 'disable_paypal_verification', false ) ) {
 			edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid IPN verification response. IPN data: %s', 'edd' ), json_encode( $api_response ) ) );
 			return; // Response not okay
 		}
@@ -334,8 +333,7 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 	}
 
 	// Verify payment recipient
-	if ( strcasecmp( $business_email, trim( edd_get_option( 'paypal_email' ) ) ) != 0 ) {
-
+	if ( strcasecmp( $business_email, trim( edd_get_option( 'paypal_email', false ) ) ) != 0 ) {
 		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid business email in IPN response. IPN data: %s', 'edd' ), json_encode( $data ) ), $payment_id );
 		edd_update_payment_status( $payment_id, 'failed' );
 		edd_insert_payment_note( $payment_id, __( 'Payment failed due to invalid PayPal business email.', 'edd' ) );

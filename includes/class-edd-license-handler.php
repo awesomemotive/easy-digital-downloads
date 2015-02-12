@@ -49,8 +49,12 @@ class EDD_License {
 		 * handler will automatically pick these up and use those in lieu of the
 		 * user having to reactive their license.
 		 */
-		if ( ! empty( $_optname ) && edd_get_option( $_optname, false ) && empty( $this->license ) ) {
-			$this->license = trim( edd_get_option( $_optname, false ) );
+		if ( ! empty( $_optname ) ) {
+			$opt = edd_get_option( $_optname, false );
+
+			if( isset( $opt ) && empty( $this->license ) ) {
+				$this->license = trim( $opt );
+			}
 		}
 
 		// Setup hooks

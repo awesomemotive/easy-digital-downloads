@@ -102,7 +102,7 @@ jQuery(document).ready(function ($) {
 							alert( edd_vars.one_price_min );
 							break;
 						case 'file' :
-							alert( edd_vars.one_file_min );
+							$( 'input, select', row ).val( '' );
 							break;
 						default:
 							alert( edd_vars.one_field_min );
@@ -1127,6 +1127,7 @@ jQuery(document).ready(function ($) {
 			}
 		});
 	});
+
 	$('body').on('click.eddSelectUser', '.edd_user_search_results a', function(e) {
 		e.preventDefault();
 		var login = $(this).data('login');
@@ -1134,4 +1135,14 @@ jQuery(document).ready(function ($) {
 		$('.edd_user_search_results').html('');
 	});
 
+	$.ajax({
+		type: "GET",
+		data: {
+			action: 'edd_load_dashboard_widget'
+		},
+		url: ajaxurl,
+		success: function (response) {
+			$('#edd_dashboard_sales .inside').html( response );
+		}
+	});
 });

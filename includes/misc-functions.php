@@ -52,7 +52,7 @@ function edd_logged_in_only() {
  * @return bool $ret True is redirect is enabled, false otherwise
  */
 function edd_straight_to_checkout() {
-	$ret = edd_get_option( 'redirect_on_add', false );
+	$ret = edd_get_option( 'redirect_on_add', false );	
 	return (bool) apply_filters( 'edd_straight_to_checkout', $ret );
 }
 
@@ -612,8 +612,6 @@ function edd_use_skus() {
 	$ret = edd_get_option( 'enable_skus', false );
 	return (bool) apply_filters( 'edd_use_skus', $ret );
 }
-
-
 
 /**
  * Retrieve timezone

@@ -77,8 +77,9 @@ function edd_is_gateway_active( $gateway ) {
  * @return string Gateway ID
  */
 function edd_get_default_gateway() {
-	$default = edd_get_option( 'default_gateway', false );
-	$default = $default && edd_is_gateway_active( $default ) ? $default : 'paypal';
+	$gateway = edd_get_option( 'default_gateway', 'paypal' );
+	$default = edd_is_gateway_active( $gateway ) ? $gateway : 'paypal';
+
 	return apply_filters( 'edd_default_gateway', $default );
 }
 
@@ -263,6 +264,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 		'post_data'    => array(),
 		'cart_details' => $cart_details,
 		'gateway'      => 'paypal',
+		'buy_now'      => true,
 		'card_info'    => array()
 	);
 
