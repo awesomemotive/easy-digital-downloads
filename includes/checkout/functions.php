@@ -285,7 +285,7 @@ function edd_is_email_banned( $email = '' ) {
 
 	foreach( $banned_emails as $banned_email ) {
 		if( is_email( $banned_email ) ) {
-			$ret = $banned_email == trim( $email );
+			$ret = ( $banned_email == trim( $email ) ? true : false );
 		} else {
 			$ret = ( stristr( trim( $email ), $banned_email ) ? true : false );
 		}
