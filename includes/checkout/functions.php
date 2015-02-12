@@ -289,6 +289,10 @@ function edd_is_email_banned( $email = '' ) {
 		} else {
 			$ret = ( stristr( trim( $email ), $banned_email ) ? true : false );
 		}
+
+		if( true === $ret ) {
+			break;
+		}
 	}
 	
 	return apply_filters( 'edd_is_email_banned', $ret, $email );
