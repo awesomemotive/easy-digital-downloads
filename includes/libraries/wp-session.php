@@ -10,6 +10,9 @@
  * @since   3.7.0
  */
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  * Return the current cache expire setting.
  *

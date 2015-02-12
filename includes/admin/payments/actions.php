@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Payments
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.9
 */
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 */
 function edd_update_payment_details( $data ) {
 
-	if( ! current_user_can( 'edit_shop_payment', $data['edd_payment_id' ] ) ) {
+	if( ! current_user_can( 'edit_shop_payments', $data['edd_payment_id' ] ) ) {
 		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
 
@@ -252,7 +252,7 @@ function edd_trigger_purchase_delete( $data ) {
 
 		$payment_id = absint( $data['purchase_id'] );
 
-		if( ! current_user_can( 'edit_shop_payment', $payment_id ) ) {
+		if( ! current_user_can( 'edit_shop_payments', $payment_id ) ) {
 			wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 		}
 
@@ -268,7 +268,7 @@ function edd_ajax_store_payment_note() {
 	$payment_id = absint( $_POST['payment_id'] );
 	$note       = wp_kses( $_POST['note'], array() );
 
-	if( ! current_user_can( 'edit_shop_payment', $payment_id ) ) {
+	if( ! current_user_can( 'edit_shop_payments', $payment_id ) ) {
 		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
 
@@ -295,7 +295,7 @@ function edd_trigger_payment_note_deletion( $data ) {
 	if( ! wp_verify_nonce( $data['_wpnonce'], 'edd_delete_payment_note_' . $data['note_id'] ) )
 		return;
 
-	if( ! current_user_can( 'edit_shop_payment', $data['payment_id' ] ) ) {
+	if( ! current_user_can( 'edit_shop_payments', $data['payment_id' ] ) ) {
 		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
 
@@ -316,7 +316,7 @@ add_action( 'edd_delete_payment_note', 'edd_trigger_payment_note_deletion' );
 */
 function edd_ajax_delete_payment_note() {
 
-	if( ! current_user_can( 'edit_shop_payment', $_POST['payment_id' ] ) ) {
+	if( ! current_user_can( 'edit_shop_payments', $_POST['payment_id' ] ) ) {
 		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
 

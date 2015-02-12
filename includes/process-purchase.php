@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Functions
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -273,7 +273,7 @@ function edd_purchase_form_validate_discounts() {
 		$posted_discount = isset( $_POST['edd-discount'] ) ? trim( $_POST['edd-discount'] ) : false;
 
 		// Add the posted discount to the discounts
-		if ( $posted_discount && ( empty( $discounts ) || edd_multiple_discounts_allowed() ) ) {
+		if ( $posted_discount && ( empty( $discounts ) || edd_multiple_discounts_allowed() ) && edd_is_discount_valid( $posted_discount, $user ) ) {
 			edd_set_cart_discount( $posted_discount );
 		}
 

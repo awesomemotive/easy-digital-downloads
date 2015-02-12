@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Functions/Templates
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -104,6 +104,8 @@ function edd_get_purchase_link( $args = array() ) {
 		}
 	}
 
+	$data_price       = isset( $price ) && false !== $price ? 'data-price="' . $price . '"' : 'data-price="' . 0 . '"';
+
 	$button_text = ! empty( $args['text'] ) ? '&nbsp;&ndash;&nbsp;' . $args['text'] : '';
 
 	if ( isset( $price ) && false !== $price ) {
@@ -152,7 +154,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 			if ( ! edd_is_ajax_disabled() ) {
 
-				echo '<a href="#" class="edd-add-to-cart ' . esc_attr( $class ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $download->ID ) . '" ' . $data_variable . ' ' . $type . ' ' . $button_display . '><span class="edd-add-to-cart-label">' . $args['text'] . '</span> <span class="edd-loading"><i class="edd-icon-spinner edd-icon-spin"></i></span></a>';
+				echo '<a href="#" class="edd-add-to-cart ' . esc_attr( $class ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $download->ID ) . '" ' . $data_variable . ' ' . $type . ' ' . $data_price . ' ' . $button_display . '><span class="edd-add-to-cart-label">' . $args['text'] . '</span> <span class="edd-loading"><i class="edd-icon-spinner edd-icon-spin"></i></span></a>';
 
 			}
 
@@ -185,7 +187,7 @@ function edd_get_purchase_link( $args = array() ) {
 		<?php if ( $variable_pricing && isset( $price_id ) && isset( $prices[$price_id] ) ): ?>
 			<input type="hidden" name="edd_options[price_id][]" id="edd_price_option_<?php echo $download->ID; ?>_1" class="edd_price_option_<?php echo $download->ID; ?>" value="<?php echo $price_id; ?>">
 		<?php endif; ?>
-		<?php if( ! empty( $args['direct'] ) ) { ?>
+		<?php if( ! empty( $args['direct'] ) && ! $download->is_free( $args['price_id'] ) ) { ?>
 			<input type="hidden" name="edd_action" class="edd_action_input" value="straight_to_gateway">
 		<?php } else { ?>
 			<input type="hidden" name="edd_action" class="edd_action_input" value="add_to_cart">
@@ -238,7 +240,7 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 				foreach ( $prices as $key => $price ) :
 					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . '"' . $schema . '>';
 						echo '<label for="'	. esc_attr( 'edd_price_option_' . $download_id . '_' . $key ) . '">';
-							echo '<input type="' . $type . '" ' . checked( apply_filters( 'edd_price_option_checked', $checked_key, $download_id, $key ), $key, false ) . ' name="edd_options[price_id][]" id="' . esc_attr( 'edd_price_option_' . $download_id . '_' . $key ) . '" class="' . esc_attr( 'edd_price_option_' . $download_id ) . '" value="' . esc_attr( $key ) . '"/>&nbsp;';
+							echo '<input type="' . $type . '" ' . checked( apply_filters( 'edd_price_option_checked', $checked_key, $download_id, $key ), $key, false ) . ' name="edd_options[price_id][]" id="' . esc_attr( 'edd_price_option_' . $download_id . '_' . $key ) . '" class="' . esc_attr( 'edd_price_option_' . $download_id ) . '" value="' . esc_attr( $key ) . '" data-price="' . edd_get_price_option_amount( $download_id, $key ) .'"/>&nbsp;';
 							echo '<span class="edd_price_option_name" itemprop="description">' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price" itemprop="price">' . edd_currency_filter( edd_format_amount( $price[ 'amount' ] ) ) . '</span>';
 						echo '</label>';
 						do_action( 'edd_after_price_option', $key, $price, $download_id );

@@ -14,7 +14,7 @@ if( empty( $payment ) ) : ?>
 
 <?php
 return;
-endif;;
+endif;
 
 $meta      = edd_get_payment_meta( $payment->ID );
 $cart      = edd_get_payment_meta_cart_details( $payment->ID, true );

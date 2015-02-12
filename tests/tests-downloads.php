@@ -2,7 +2,7 @@
 
 
 /**
- * @group edd_cpt
+ * @group edd_downloads
  */
 class Tests_Downloads extends WP_UnitTestCase {
 	protected $_post = null;
@@ -14,57 +14,15 @@ class Tests_Downloads extends WP_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$post_id = $this->factory->post->create( array(
-			'post_title' => 'Test Download Product',
-			'post_name' => 'test-download-product',
-			'post_type' => 'download',
-			'post_status' => 'publish'
-		) );
+		$this->_post = EDD_Helper_Download::create_variable_download();
+	}
 
-		$_variable_pricing = array(
-			array(
-				'name' => 'Simple',
-				'amount' => 20
-			),
-			array(
-				'name' => 'Advanced',
-				'amount' => 100
-			)
-		);
+	public function tearDown() {
 
-		$_download_files = array(
-			array(
-				'name' => 'File 1',
-				'file' => 'http://localhost/file1.jpg',
-				'condition' => 0
-			),
-			array(
-				'name' => 'File 2',
-				'file' => 'http://localhost/file2.jpg',
-				'condition' => 'all'
-			)
-		);
+		parent::tearDown();
 
-		$meta = array(
-			'edd_price' => '0.00',
-			'_variable_pricing' => 1,
-			'_edd_price_options_mode' => 'on',
-			'edd_variable_prices' => array_values( $_variable_pricing ),
-			'edd_download_files' => array_values( $_download_files ),
-			'_edd_download_limit' => 20,
-			'_edd_hide_purchase_link' => 1,
-			'edd_product_notes' => 'Purchase Notes',
-			'_edd_product_type' => 'default',
-			'_edd_download_earnings' => 129.43,
-			'_edd_download_sales' => 59,
-			'_edd_download_limit_override_1' => 1,
-			'edd_sku' => 'sku_0012'
-		);
-		foreach( $meta as $key => $value ) {
-			update_post_meta( $post_id, $key, $value );
-		}
+		EDD_Helper_Download::delete_download( $this->_post->ID );
 
-		$this->_post = get_post( $post_id );
 	}
 
 	public function test_get_download() {
@@ -85,10 +43,10 @@ class Tests_Downloads extends WP_UnitTestCase {
 		$download = edd_get_download_by( 'sku', 'sku_0012' );
 		$this->assertSame( $this->_post->ID, $download->ID );
 
-		$download = edd_get_download_by( 'slug', 'test-download-product' );
+		$download = edd_get_download_by( 'slug', 'variable-test-download-product' );
 		$this->assertSame( $this->_post->ID, $download->ID );
 
-		$downoad = edd_get_download_by( 'name', 'Test Download Product' );
+		$downoad = edd_get_download_by( 'name', 'Variable Test Download Product' );
 		$this->assertSame( $this->_post->ID, $download->ID );
 
 	}
@@ -140,6 +98,7 @@ class Tests_Downloads extends WP_UnitTestCase {
 			)
 		);
 		$download3 = new EDD_Download( $this->_post->ID );
+		$download3->increase_earnings( '0.50' );
 		$this->assertNotEmpty( $download3->ID );
 		$this->assertEquals( $this->_post->ID, $download3->ID );
 		$this->assertEquals( 'download', $download3->post_type );
@@ -150,8 +109,8 @@ class Tests_Downloads extends WP_UnitTestCase {
 		$this->assertNotEmpty( $download3->prices );
 		$this->assertEquals( $prices, $download3->prices );
 		$this->assertEquals( $prices, $download3->get_prices() );
-		$this->assertEquals( 59, $download3->sales );
-		$this->assertEquals( 129.43, $download3->earnings );
+		$this->assertEquals( 6, $download3->sales );
+		$this->assertEquals( 120.50, $download3->earnings );
 		$this->assertNotEmpty( $download3->files );
 		$this->assertEquals( $files, $download3->files );
 		$this->assertEquals( $files, $download3->get_files() );
@@ -244,66 +203,68 @@ class Tests_Downloads extends WP_UnitTestCase {
 	}
 
 	public function test_download_earnings() {
-		$this->assertEquals( 129.43, edd_get_download_earnings_stats( $this->_post->ID ) );
+		$download = new EDD_Download( $this->_post->ID );
+		$download->increase_earnings( '0.50' );
+		$this->assertEquals( 120.50, edd_get_download_earnings_stats( $this->_post->ID ) );
 	}
 
 	public function test_download_sales() {
-		$this->assertEquals( 59, edd_get_download_sales_stats( $this->_post->ID ) );
+		$this->assertEquals( 6, edd_get_download_sales_stats( $this->_post->ID ) );
 	}
 
 	public function test_increase_purchase_count() {
 
 		// Test our helper function
-		$this->assertEquals( 60, edd_increase_purchase_count( $this->_post->ID ) );
+		$this->assertEquals( 7, edd_increase_purchase_count( $this->_post->ID ) );
 
 		// Now test our helper with a quantity
-		$this->assertEquals( 62, edd_increase_purchase_count( $this->_post->ID, 2 ) );
+		$this->assertEquals( 9, edd_increase_purchase_count( $this->_post->ID, 2 ) );
 
 		$download = new EDD_Download( $this->_post->ID );
 		// Now test our EDD_Download class method
-		$this->assertEquals( 63, $download->increase_sales() );
+		$this->assertEquals( 10, $download->increase_sales() );
 
 		// Now test our EDD_Downlaod class method with a quantity
-		$this->assertEquals( 65, $download->increase_sales( 2 ) );
+		$this->assertEquals( 12, $download->increase_sales( 2 ) );
 
 	}
 
 	public function test_decrease_purchase_count() {
 
 		// Test our helper function
-		$this->assertEquals( 58, edd_decrease_purchase_count( $this->_post->ID ) );
+		$this->assertEquals( 5, edd_decrease_purchase_count( $this->_post->ID ) );
 
 		// Test our helper function with a quantity
-		$this->assertEquals( 56, edd_decrease_purchase_count( $this->_post->ID, 2 ) );
+		$this->assertEquals( 3, edd_decrease_purchase_count( $this->_post->ID, 2 ) );
 
 		$download = new EDD_Download( $this->_post->ID );
 		// Now test our EDD_Download class method
-		$this->assertEquals( 55, $download->decrease_sales() );
+		$this->assertEquals( 2, $download->decrease_sales() );
 
 		// Now test our EDD_Download class method with a quantity
-		$this->assertEquals( 53, $download->decrease_sales( 2 ) );
+		$this->assertEquals( 0, $download->decrease_sales( 2 ) );
 
 	}
 
 	public function test_earnings_increase() {
 
 		// Test our helper function
-		$this->assertEquals( 149.43, edd_increase_earnings( $this->_post->ID, 20 ) );
+		$this->assertEquals( 140, edd_increase_earnings( $this->_post->ID, 20 ) );
 
 		// Now test our EDD_Download class method
 		$download = new EDD_Download( $this->_post->ID );
-		$this->assertEquals( 169.43, $download->increase_earnings( 20 ) );
+		$this->assertEquals( 160, $download->increase_earnings( 20 ) );
 
 	}
 
 	public function test_decrease_earnings() {
 
 		// Test our helper function
-		$this->assertEquals( 109.43, edd_decrease_earnings( $this->_post->ID, 20 ) );
+		$this->assertEquals( 100, edd_decrease_earnings( $this->_post->ID, 20 ) );
 
 		// Now test our EDD_Download class method
 		$download = new EDD_Download( $this->_post->ID );
-		$this->assertEquals( 104.43, $download->decrease_earnings( 5 ) );
+		$this->assertEquals( 95, $download->decrease_earnings( 5 ) );
 	}
 
 	public function test_get_download_files() {

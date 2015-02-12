@@ -9,6 +9,8 @@
  * @since       1.8
 */
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * EDD_Stats Class

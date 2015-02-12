@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Upgrades
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.3.1
  */
@@ -73,19 +73,45 @@ function edd_show_upgrade_notices() {
 		);
 	}
 
-	if ( EDD()->session->get( 'upgrade_sequential' ) && edd_get_payments() ) {
-		printf(
-			'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade past order numbers to make them sequential, click <a href="%s">here</a> to start the upgrade.', 'edd' ) . '</p></div>',
-			admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_sequential_payment_numbers' )
-		);
-	}
+	// Sequential Orders was the first stepped upgrade, so check if we have a stalled upgrade
+	$resume_upgrade = edd_maybe_resume_upgrade();
+	if ( ! empty( $resume_upgrade ) ) {
 
-	if ( version_compare( $edd_version, '2.1', '<' ) ) {
+		$resume_url = add_query_arg( $resume_upgrade, admin_url( 'index.php' ) );
 		printf(
-			'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the customer database, click %shere%s to start the upgrade.', 'edd' ) . '</p></div>',
-			'<a href="' . esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_customers_db' ) ) . '">',
-			'</a>'
+			'<div class="error"><p>' . __( 'Easy Digital Downloads needs to complete a database upgrade that was previously started, click <a href="%s">here</a> to resume the upgrade.', 'edd' ) . '</p></div>',
+			esc_url( $resume_url )
 		);
+
+	} else {
+
+		// Include all 'Stepped' upgrade process notices in this else statement,
+		// to avoid having a pending, and new upgrade suggested at the same time
+
+		if ( EDD()->session->get( 'upgrade_sequential' ) && edd_get_payments() ) {
+			printf(
+				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade past order numbers to make them sequential, click <a href="%s">here</a> to start the upgrade.', 'edd' ) . '</p></div>',
+				admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_sequential_payment_numbers' )
+			);
+		}
+
+		if ( version_compare( $edd_version, '2.1', '<' ) ) {
+			printf(
+				'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the customer database, click %shere%s to start the upgrade.', 'edd' ) . '</p></div>',
+				'<a href="' . esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_customers_db' ) ) . '">',
+				'</a>'
+			);
+		}
+
+		if ( version_compare( $edd_version, '2.2.6', '<' ) ) {
+			printf(
+				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the payment database, click <a href="%s">here</a> to start the upgrade.', 'edd' ) . '</p></div>',
+				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_payments_price_logs_db' ) )
+			);
+		}
+
+		// End 'Stepped' upgrade process notices
+
 	}
 
 }
@@ -139,6 +165,21 @@ function edd_trigger_upgrades() {
 		die( 'complete' ); // Let AJAX know that the upgrade is complete
 }
 add_action( 'wp_ajax_edd_trigger_upgrades', 'edd_trigger_upgrades' );
+
+/**
+ * For use when doing 'stepped' upgrade routines, to see if we need to start somewhere in the middle
+ * @since 2.2.6
+ * @return mixed   When nothing to resume returns false, otherwise starts the upgrade where it left off
+ */
+function edd_maybe_resume_upgrade() {
+	$doing_upgrade = get_option( 'edd_doing_upgrade', false );
+
+	if ( empty( $doing_upgrade ) ) {
+		return false;
+	}
+
+	return $doing_upgrade;
+}
 
 /**
  * Converts old sale and file download logs to new logging system
@@ -445,6 +486,8 @@ function edd_v20_upgrade_sequential_payment_numbers() {
 
 		// No more payments found, finish up
 		EDD()->session->set( 'upgrade_sequential', null );
+		delete_option( 'edd_doing_upgrade' );
+
 		wp_redirect( admin_url() ); exit;
 	}
 
@@ -556,9 +599,145 @@ function edd_v21_upgrade_customers_db() {
 		// No more customers found, finish up
 
 		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+		delete_option( 'edd_doing_upgrade' );
 
 		wp_redirect( admin_url() ); exit;
 	}
 
 }
 add_action( 'edd_upgrade_customers_db', 'edd_v21_upgrade_customers_db' );
+
+/**
+ * Fixes the edd_log meta for 2.2.6
+ *
+ * @since 2.2.6
+ * @return void
+ */
+function edd_v226_upgrade_payments_price_logs_db() {
+
+	global $wpdb;
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		wp_die( __( 'You do not have permission to do shop upgrades', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+	}
+
+	ignore_user_abort( true );
+
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+		@set_time_limit(0);
+	}
+
+	$step   = isset( $_GET['step'] ) ? absint( $_GET['step'] ) : 1;
+	$number = 25;
+	$offset = $step == 1 ? 0 : ( $step - 1 ) * $number;
+
+	if ( 1 === $step ) {
+
+		// Check if we have any variable price products on the first step
+		$sql = "SELECT ID FROM $wpdb->posts p LEFT JOIN $wpdb->postmeta m ON p.ID = m.post_id WHERE m.meta_key = '_variable_pricing' AND m.meta_value = 1 LIMIT 1";
+		$has_variable = $wpdb->get_col( $sql );
+
+		if( empty( $has_variable ) ) {
+			// We had no variable priced products, so go ahead and just complete
+			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+			delete_option( 'edd_doing_upgrade' );
+
+			wp_redirect( admin_url() ); exit;
+		}
+
+	}
+
+	$payment_ids = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_type = 'edd_payment' ORDER BY post_date DESC LIMIT %d,%d;", $offset, $number ) );
+
+	if( ! empty( $payment_ids ) ) {
+
+		foreach( $payment_ids as $payment_id ) {
+
+			$payment_downloads  = edd_get_payment_meta_downloads( $payment_id );
+			$variable_downloads = array();
+
+			if ( ! is_array( $payment_downloads ) ) {
+				continue; // May not be an array due to some very old payments, move along
+			}
+
+			foreach ( $payment_downloads as $download ) {
+
+				// Don't care if the download is a single price id
+				if ( ! isset( $download['options']['price_id'] ) ) {
+					continue;
+				}
+
+				$variable_downloads[] = array( 'id' => $download['id'], 'price_id' => $download['options']['price_id'] );
+			}
+
+			$variable_download_ids = array_unique( wp_list_pluck( $variable_downloads, 'id' ) );
+			$unique_download_ids   = implode( ',', $variable_download_ids );
+
+			if ( empty( $unique_download_ids ) ) {
+				continue; // If there were no downloads, just fees, move along
+			}
+
+			// Get all Log Ids where the post parent is in the set of download IDs we found in the cart meta
+			$logs = $wpdb->get_results( "SELECT m.post_id AS log_id, p.post_parent AS download_id FROM $wpdb->postmeta m LEFT JOIN $wpdb->posts p ON m.post_id = p.ID WHERE meta_key = '_edd_log_payment_id' AND meta_value = $payment_id AND p.post_parent IN ($unique_download_ids)", ARRAY_A );
+
+			$mapped_logs = array();
+
+			// Go through each cart item
+			foreach( $variable_downloads as $cart_item ) {
+
+				// Itterate through the logs we found attached to this payment
+				foreach ( $logs as $key => $log ) {
+
+					// If this Log ID is associated with this download ID give it the price_id
+					if ( (int) $log['download_id'] === (int) $cart_item['id'] ) {
+						$mapped_logs[$log['log_id']] = $cart_item['price_id'];
+
+						// Remove this Download/Log ID from the list, for multipurchase compatibility
+						unset( $logs[$key] );
+
+						// These aren't the logs we're looking for. Move Along, Move Along.
+						break;
+					}
+				}
+			}
+
+			if ( ! empty( $mapped_logs ) ) {
+				$update  = "UPDATE $wpdb->postmeta SET meta_value = ";
+
+				$case    = "CASE post_id ";
+				foreach ( $mapped_logs as $post_id => $value ) {
+					$case .= "WHEN $post_id THEN $value ";
+				}
+				$case   .= "END ";
+
+				$log_ids = implode( ',', array_keys( $mapped_logs ) );
+				$where   = "WHERE post_id IN ($log_ids) AND meta_key = '_edd_log_price_id'";
+				$sql     = $update . $case . $where;
+
+				// Execute our query to update this payment
+				$wpdb->query( $sql );
+			}
+
+		}
+
+		// More Payments found so upgrade them
+		$step++;
+		$redirect = add_query_arg( array(
+			'page'        => 'edd-upgrades',
+			'edd-upgrade' => 'upgrade_payments_price_logs_db',
+			'step'        => $step
+		), admin_url( 'index.php' ) );
+		wp_redirect( $redirect ); exit;
+
+	} else {
+
+		// No more payments found, finish up
+
+		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+		delete_option( 'edd_doing_upgrade' );
+
+		wp_redirect( admin_url() ); exit;
+	}
+
+}
+add_action( 'edd_upgrade_payments_price_logs_db', 'edd_v226_upgrade_payments_price_logs_db' );
