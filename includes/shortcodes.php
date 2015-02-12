@@ -33,9 +33,9 @@ function edd_download_shortcode( $atts, $content = null ) {
 		'sku'			=> '',
 		'price'         => '1',
 		'direct'        => '0',
-		'text'	=> edd_get_option( 'add_to_cart_text', __( 'Purchase', 'edd' ) ),
-		'style' => edd_get_option( 'button_style', 'button' ),
-		'color' => edd_get_option( 'checkout_color', 'blue' ),
+		'text'          => edd_get_option( 'add_to_cart_text', __( 'Purchase', 'edd' ) ),
+		'style'         => edd_get_option( 'button_style', 'button' ),
+		'color'         => edd_get_option( 'checkout_color', 'blue' ),
 		'class'         => 'edd-submit',
 		'form_id'       => ''
 	),
