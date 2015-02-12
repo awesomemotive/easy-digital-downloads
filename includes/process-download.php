@@ -47,7 +47,7 @@ function edd_process_download() {
 	$method  = edd_get_file_download_method();
 
 	// Defaulting this to true for now because the method below doesn't work well
-	$has_access = apply_filters( 'edd_file_download_has_access', true, $payment, $args );
+	$has_access = edd_can_access_download( true, $payment, $args );
 
 	//$has_access = ( edd_logged_in_only() && is_user_logged_in() ) || !edd_logged_in_only() ? true : false;
 	if ( $payment && $has_access ) {
