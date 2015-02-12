@@ -32,7 +32,7 @@ class EDD_Cache_Helper {
 
 		if ( false === ( $page_uris = get_transient( 'edd_cache_excluded_uris' ) ) ) {
 
-			if( ! edd_get_option( 'purchase_page', false ) || ! edd_get_option( 'success_page' ) ) {
+			if( ! edd_get_option( 'purchase_page', false ) || ! edd_get_option( 'success_page', false ) ) {
 				return;
 			}
 
