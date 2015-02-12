@@ -1125,7 +1125,7 @@ function edd_can_access_download( $bool = true, $purchase_data = array(), $args 
  */
 function edd_get_html5_download_attribute( $bool = true, $purchase_data = array(), $args = array(), $file = array() ) {
 	$string = '';
-	if ( edd_can_access_download( $bool, $purchase_data, $arg ) ){
+	if ( edd_can_access_download( $bool, $purchase_data, $args ) ){
 		$string = 'download="'  .edd_get_file_name( $file ) . '"';	
 	}
 	return apply_filters( 'edd_get_html5_download_attribute', $string, $bool, $purchase_data, $args, $file );
