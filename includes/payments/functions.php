@@ -290,9 +290,8 @@ function edd_delete_purchase( $payment_id = 0 ) {
 	$amount      = edd_get_payment_amount( $payment_id );
 	$status      = $post->post_status;
 	$customer_id = edd_get_payment_customer_id( $payment_id );
-	if ( $customer_id ) {
-		$customer = new EDD_Customer( $customer_id );
-	}
+
+	$customer = new EDD_Customer( $customer_id );
 
 	if( $status == 'revoked' || $status == 'publish' ) {
 		// Only decrease earnings if they haven't already been decreased (or were never increased for this payment)
