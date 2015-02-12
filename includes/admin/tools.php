@@ -91,33 +91,15 @@ function edd_tools_banned_emails_display() {
 	<div class="postbox">
 		<h3><span><?php _e( 'Banned Emails', 'edd' ); ?></span></h3>
 		<div class="inside">
-			<p><?php _e( 'Emails placed in the box below will not be allowed to make purchases.', 'edd' ); ?></p>
+			<p><?php _e( 'Emails placed in the box below will not be allowed to make purchases. To ban an entire domain, enter the domain starting with "@".', 'edd' ); ?></p>
 			<form method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ); ?>">
 				<p>
 					<textarea name="banned_emails" rows="10" class="large-text"><?php echo implode( "\n", edd_get_banned_emails() ); ?></textarea>
-					<span class="description"><?php _e( 'Enter emails to disallow, one per line', 'edd' ); ?></span>
+					<span class="description"><?php _e( 'Enter emails and/or to disallow, one per line', 'edd' ); ?></span>
 				</p>
 				<p>
 					<input type="hidden" name="edd_action" value="save_banned_emails" />
 					<?php wp_nonce_field( 'edd_banned_emails_nonce', 'edd_banned_emails_nonce' ); ?>
-					<?php submit_button( __( 'Save', 'edd' ), 'secondary', 'submit', false ); ?>
-				</p>
-			</form>
-		</div><!-- .inside -->
-	</div><!-- .postbox -->
-	
-	<div class="postbox">
-		<h3><span><?php _e( 'Banned Email Domains', 'edd' ); ?></span></h3>
-		<div class="inside">
-			<p><?php _e( 'Email domains placed in the box below will not be allowed to make purchases.', 'edd' ); ?></p>
-			<form method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ); ?>">
-				<p>
-					<textarea name="banned_email_domains" rows="10" class="large-text"><?php echo implode( "\n", edd_get_banned_email_domains() ); ?></textarea>
-					<span class="description"><?php _e( 'Enter email domains to disallow, one per line. Do not include the "@"', 'edd' ); ?></span>
-				</p>
-				<p>
-					<input type="hidden" name="edd_action" value="save_banned_email_domains" />
-					<?php wp_nonce_field( 'edd_banned_email_domains_nonce', 'edd_banned_email_domains_nonce' ); ?>
 					<?php submit_button( __( 'Save', 'edd' ), 'secondary', 'submit', false ); ?>
 				</p>
 			</form>
@@ -185,41 +167,24 @@ function edd_tools_banned_emails_save() {
 
 	// Sanitize the input
 	$emails = array_map( 'trim', explode( "\n", $_POST['banned_emails'] ) );
-	$emails = array_filter( array_map( 'is_email', $emails ) );
 	$emails = array_unique( $emails );
+
+	foreach( $emails as $id => $email ) {
+		if( ! is_email( $email ) ) {
+			if( $email[0] != '@' ) {
+				unset( $emails[$id] );
+			} else {
+				$emails[$id] = sanitize_text_field( $emails[$id] );
+			}
+		} else {
+			$emails[$id] = sanitize_text_field( $emails[$id] );
+		}
+	}
 
 	$edd_options['banned_emails'] = $emails;
 	update_option( 'edd_settings', $edd_options );
 }
 add_action( 'edd_save_banned_emails', 'edd_tools_banned_emails_save' );
-
-
-/*
- * Save banned email domains
- *
- * @since       3.2
- * @return      void
- */
-function edd_tools_banned_email_domains_save() {
-	global $edd_options;
-	
-	if( ! wp_verify_nonce( $_POST['edd_banned_email_domains_nonce'], 'edd_banned_email_domains_nonce' ) ) {
-		return;
-	}
-
-	if( ! current_user_can( 'manage_shop_settings' ) ) {
-		return;
-	}
-
-	// Sanitize the input
-	$emails = str_replace( '@', '', $_POST['banned_email_domains'] );
-	$emails = array_map( 'trim', explode( "\n", $emails ) );
-	$emails = array_unique( $emails );
-
-	$edd_options['banned_email_domains'] = $emails;
-	update_option( 'edd_settings', $edd_options );
-}
-add_action( 'edd_save_banned_email_domains', 'edd_tools_banned_email_domains_save' );
 
 
 /**
