@@ -98,7 +98,7 @@ class EDD_HTML_Elements {
 			'options'          => $options,
 			'chosen'           => $args['chosen'],
 			'multiple'         => $args['multiple'],
-            'placeholder'      => $args['placeholder'],
+			'placeholder'      => $args['placeholder'],
 			'show_option_all'  => false,
 			'show_option_none' => false
 		) );
@@ -122,8 +122,8 @@ class EDD_HTML_Elements {
 			'class'       => '',
 			'multiple'    => false,
 			'selected'    => 0,
-            'select2'     => $args['select2'],
-            'placeholder' => $args['placeholder'],
+			'chosen'      => true,
+			'placeholder' => __( 'Select a Customer', 'edd' ),
 			'number'      => 30
 		);
 
@@ -136,7 +136,6 @@ class EDD_HTML_Elements {
 		$options = array();
 
 		if ( $customers ) {
-			$options[-1] = __( 'Guest', 'edd' );
 			foreach ( $customers as $customer ) {
 				$options[ absint( $customer->id ) ] = esc_html( $customer->name . ' (' . $customer->email . ')' );
 			}

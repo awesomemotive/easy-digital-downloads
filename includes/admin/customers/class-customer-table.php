@@ -63,7 +63,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		parent::__construct( array(
 			'singular'  => __( 'Customer', 'edd' ),     // Singular name of the listed records
 			'plural'    => __( 'Customers', 'edd' ),    // Plural name of the listed records
-			'ajax'      => false             			// Does this table support ajax?
+			'ajax'      => false                       // Does this table support ajax?
 		) );
 
 	}
@@ -108,7 +108,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 */
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
-	
+
 			case 'num_purchases' :
 				$value = '<a href="' .
 					admin_url( '/edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $item['email'] )
@@ -119,15 +119,25 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 				$value = edd_currency_filter( edd_format_amount( $item[ $column_name ] ) );
 				break;
 
-			case 'file_downloads' :
-				$user = ! empty( $item['user_id'] ) ? $item['user_id'] : $item['email'];
-				$value = '<a href="' . esc_url( admin_url( '/edit.php?post_type=download&page=edd-reports&tab=logs&user=' . urlencode( $user ) ) ) . '">' . __( 'View download log', 'edd' ) . '</a>';
-				break;
 			default:
 				$value = isset( $item[ $column_name ] ) ? $item[ $column_name ] : null;
 				break;
 		}
 		return apply_filters( 'edd_report_column_' . $column_name, $value, $item['id'] );
+	}
+
+	public function column_name( $item ) {
+		$name        = '#' . $item['id'] . ' ';
+		$name       .= ! empty( $item['name'] ) ? $item['name'] : '<em>' . __( 'Unnamed Customer', 'edd') . '</em>';
+		$user        = ! empty( $item['user_id'] ) ? $item['user_id'] : $item['email'];
+		$view_url    = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $item['id'] );
+		$actions     = array(
+			'view'   => sprintf( __( '<a href="%s">View</a>', 'edd' ), $view_url ),
+			'logs'   => sprintf( __( '<a href="%s">Download log</a>', 'edd' ), admin_url( '/edit.php?post_type=download&page=edd-reports&tab=logs&user=' . urlencode( $user ) ) ),
+			'delete' => sprintf( __( '<a href="%s">Delete</a>', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $item['id'] ) )
+		);
+
+		return '<a href="' . esc_url( $view_url ) . '">' . $name . '</a>' . $this->row_actions( $actions );
 	}
 
 	/**
@@ -139,12 +149,11 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'name'     		=> __( 'Name', 'edd' ),
-			'id'     		=> __( 'ID', 'edd' ),
-			'email'     	=> __( 'Email', 'edd' ),
-			'num_purchases' => __( 'Purchases', 'edd' ),
-			'amount_spent'  => __( 'Total Spent', 'edd' ),
-			'file_downloads'=> __( 'Files Downloaded', 'edd' )
+			'name'           => __( 'Name', 'edd' ),
+			'email'          => __( 'Email', 'edd' ),
+			'num_purchases'  => __( 'Purchases', 'edd' ),
+			'amount_spent'   => __( 'Total Spent', 'edd' ),
+			'date_created'   => __( 'Date Created', 'edd' )
 		);
 
 		return apply_filters( 'edd_report_customer_columns', $columns );
@@ -160,10 +169,10 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 */
 	public function get_sortable_columns() {
 		return array(
-			'id' 	        => array( 'id', true ),
-			'name' 	        => array( 'name', true ),
+			'date_created'  => array( 'date_created', true ),
+			'name'          => array( 'name', true ),
 			'num_purchases' => array( 'purchase_count', false ),
-			'amount_spent' 	=> array( 'purchase_value', false ),
+			'amount_spent'  => array( 'purchase_value', false ),
 		);
 	}
 
@@ -176,7 +185,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 */
 	public function bulk_actions( $which = '' ) {
 		// These aren't really bulk actions but this outputs the markup in the right place
-		edd_report_views();
 	}
 
 	/**
@@ -231,13 +239,13 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			$args['email'] = $search;
 		} elseif( is_numeric( $search ) ) {
 			$args['id']    = $search;
+		} else {
+			$args['name']  = $search;
 		}
 
 		$customers = EDD()->customers->get_customers( $args );
 
 		if ( $customers ) {
-
-			$this->count = count( $customers );
 
 			foreach ( $customers as $customer ) {
 
@@ -248,8 +256,9 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 					'user_id'       => $user_id,
 					'name'          => $customer->name,
 					'email'         => $customer->email,
-					'num_purchases'	=> $customer->purchase_count,
-					'amount_spent'	=> $customer->purchase_value
+					'num_purchases' => $customer->purchase_count,
+					'amount_spent'  => $customer->purchase_value,
+					'date_created'  => $customer->date_created,
 				);
 			}
 		}
