@@ -1123,7 +1123,7 @@ function edd_can_access_download( $bool = true, $purchase_data = array(), $args 
  * @param mixed $args The file array
  * @return nool If a user can access the file
  */
-function edd_get_html5_download_attribute( $bool = true, $purchase_data = array(), $args = array(), $file = array ) {
+function edd_get_html5_download_attribute( $bool = true, $purchase_data = array(), $args = array(), $file = array() ) {
 	$string = '';
 	if ( edd_can_access_download( $bool, $purchase_data, $arg ){
 		$string = 'download="'  .edd_get_file_name( $file ) . '"';	
