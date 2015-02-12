@@ -112,8 +112,7 @@
     content: ".";
 }
 /* Cart Contents */
-
-#edd_checkout_cart_wrap, #edd_checkout_cart {
+#edd_checkout_cart {
         text-align: left;
         width: 100%;
         border: none;
