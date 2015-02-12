@@ -52,7 +52,7 @@ function edd_render_download_columns( $column_name, $post_id ) {
 		$style			= edd_get_option( 'button_style', 'button' );
 		$color			= edd_get_option( 'checkout_color', 'blue' );
 		$color			= ( $color == 'inherit' ) ? '' : $color;		
-		$purchase_text  = edd_get_option( 'add_to_cart_text', __( 'Purchase', 'edd' ) );
+		$purchase_text	= edd_get_option( 'add_to_cart_text', __( 'Purchase', 'edd' ) );
 
 		switch ( $column_name ) {
 			case 'download_category':
