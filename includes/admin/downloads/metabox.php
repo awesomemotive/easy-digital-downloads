@@ -293,7 +293,7 @@ add_filter( 'edd_metabox_save_edd_download_files', 'edd_metabox_save_check_blank
  * @return void
  */
 function edd_render_download_meta_box() {
-	global $post, $edd_options;
+	global $post;
 
 	/*
 	 * Output the price fields
@@ -319,7 +319,7 @@ function edd_render_download_meta_box() {
  * @return void
  */
 function edd_render_files_meta_box() {
-	global $post, $edd_options;
+	global $post;
 
 	/*
 	 * Output the files fields
@@ -335,7 +335,7 @@ function edd_render_files_meta_box() {
  * @return void
  */
 function edd_render_settings_meta_box() {
-	global $post, $edd_options;
+	global $post;
 
 	/*
 	 * Output the files fields
@@ -360,15 +360,14 @@ function edd_render_settings_meta_box() {
  * @param $post_id
  */
 function edd_render_price_field( $post_id ) {
-	global $edd_options;
-
-	$price 				= edd_get_download_price( $post_id );
-	$variable_pricing 	= edd_has_variable_prices( $post_id );
-	$prices 			= edd_get_variable_prices( $post_id );
+	$price              = edd_get_download_price( $post_id );
+	$variable_pricing   = edd_has_variable_prices( $post_id );
+	$prices             = edd_get_variable_prices( $post_id );
 	$single_option_mode = edd_single_price_option_mode( $post_id );
 
-	$price_display    	= $variable_pricing ? ' style="display:none;"' : '';
-	$variable_display 	= $variable_pricing ? '' : ' style="display:none;"';
+	$price_display      = $variable_pricing ? ' style="display:none;"' : '';
+	$variable_display   = $variable_pricing ? '' : ' style="display:none;"';
+	$currency_position  = edd_get_option( 'currency_position', 'before' );
 ?>
 	<p>
 		<strong><?php echo apply_filters( 'edd_price_options_heading', __( 'Pricing Options:', 'edd' ) ); ?></strong>
@@ -390,7 +389,7 @@ function edd_render_price_field( $post_id ) {
 			);
 		?>
 
-		<?php if ( ! isset( $edd_options['currency_position'] ) || $edd_options['currency_position'] == 'before' ) : ?>
+		<?php if ( $currency_position == 'before' ) : ?>
 			<?php echo edd_currency_filter( '' ); ?>
 			<?php echo EDD()->html->text( $price_args ); ?>
 		<?php else : ?>
@@ -470,8 +469,6 @@ add_action( 'edd_meta_box_price_fields', 'edd_render_price_field', 10 );
  * @param       $post_id
  */
 function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
-	global $edd_options;
-
 	$defaults = array(
 		'name'   => null,
 		'amount' => null
@@ -480,6 +477,8 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 	$args = wp_parse_args( $args, $defaults );
 
 	$default_price_id = edd_get_default_variable_price( $post_id );
+	$currency_position = edd_get_option( 'currency_position', 'before' );
+
 ?>
 	<td>
 		<span class="edd_draghandle"></span>
@@ -504,7 +503,7 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 			);
 		?>
 
-		<?php if( ! isset( $edd_options['currency_position'] ) || $edd_options['currency_position'] == 'before' ) : ?>
+		<?php if( $currency_position == 'before' ) : ?>
 			<span><?php echo edd_currency_filter( '' ); ?></span>
 			<?php echo EDD()->html->text( $price_args ); ?>
 		<?php else : ?>
@@ -800,8 +799,6 @@ add_filter( 'media_view_strings', 'edd_download_media_strings', 10, 1 );
  * @return void
  */
 function edd_render_download_limit_row( $post_id ) {
-    global $edd_options;
-
     if( ! current_user_can( 'manage_shop_settings' ) )
         return;
 
@@ -833,8 +830,6 @@ add_action( 'edd_meta_box_settings_fields', 'edd_render_download_limit_row', 20 
  * @return void
  */
 function edd_render_dowwn_tax_options( $post_id = 0 ) {
-    global $edd_options;
-
     if( ! current_user_can( 'manage_shop_settings' ) || ! edd_use_taxes() )
         return;
 
@@ -860,8 +855,6 @@ add_action( 'edd_meta_box_settings_fields', 'edd_render_dowwn_tax_options', 30 )
  * @return void
  */
 function edd_render_accounting_options( $post_id ) {
-	global $edd_options;
-
 	if( ! edd_use_skus() ) {
 		return;
 	}
@@ -936,11 +929,10 @@ add_action( 'edd_meta_box_settings_fields', 'edd_render_disable_button', 30 );
  *
  * @since 1.2.1
  * @global array $post Contains all the download data
- * @global array $edd_options Contains all the options set for EDD
  * @return void
  */
 function edd_render_product_notes_meta_box() {
-	global $post, $edd_options;
+	global $post;
 
 	do_action( 'edd_product_notes_meta_box_fields', $post->ID );
 }
@@ -953,8 +945,6 @@ function edd_render_product_notes_meta_box() {
  * @return void
  */
 function edd_render_product_notes_field( $post_id ) {
-	global $edd_options;
-
 	$product_notes = edd_get_product_notes( $post_id );
 ?>
 	<textarea rows="1" cols="40" class="large-texarea" name="edd_product_notes" id="edd_product_notes_field"><?php echo esc_textarea( $product_notes ); ?></textarea>
