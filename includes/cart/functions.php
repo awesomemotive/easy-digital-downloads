@@ -316,8 +316,8 @@ function edd_get_item_position_in_cart( $download_id = 0, $options = array() ) {
  * @return bool
  */
 function edd_item_quantities_enabled() {
-	$ret = edd_get_option( 'item_quantities', false );
-	return apply_filters( 'edd_item_quantities_enabled', $ret );
+	$ret = edd_get_option( 'item_quantities', false );	
+	return (bool) apply_filters( 'edd_item_quantities_enabled', $ret );
 }
 
 /**
@@ -942,7 +942,12 @@ function edd_get_purchase_session() {
  * @return bool Whether or not cart saving has been disabled
  */
 function edd_is_cart_saving_disabled() {
+<<<<<<< HEAD
 	return apply_filters( 'edd_cart_saving_disabled', ! edd_get_option( 'enable_cart_saving', false ) );
+=======
+	$ret = edd_get_option( 'enable_cart_saving', false );
+	return apply_filters( 'edd_cart_saving_disabled', ! $ret );
+>>>>>>> release/2.3
 }
 
 /**

@@ -166,8 +166,8 @@ function edd_get_admin_notice_emails() {
  * @return mixed
  */
 function edd_admin_notices_disabled( $payment_id = 0 ) {
-	$retval = edd_get_option( 'disable_admin_notices', false );
-	return apply_filters( 'edd_admin_notices_disabled', $retval, $payment_id );
+	$ret = edd_get_option( 'disable_admin_notices', false );	
+	return (bool) apply_filters( 'edd_admin_notices_disabled', $ret, $payment_id );
 }
 
 /**
@@ -188,7 +188,8 @@ function edd_get_default_sale_notification_email() {
 	$default_email_body .= __( 'Payment Method: ', 'edd' ) . ' {payment_method}' . "\n\n";
 	$default_email_body .= __( 'Thank you', 'edd' );
 
-	$message = edd_get_option( 'sale_notification', $default_email_body );
+	$message = edd_get_option( 'sale_notification', false );
+	$message = ! empty( $message ) ? $message : $default_email_body;
 
 	return $message;
 }

@@ -25,7 +25,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  */
 function edd_use_taxes() {
 	$ret = edd_get_option( 'enable_taxes', false );
-	return apply_filters( 'edd_use_taxes', isset( $ret ) );
+	return (bool) apply_filters( 'edd_use_taxes', $ret );
 }
 
 /**
@@ -218,7 +218,7 @@ function edd_is_cart_taxed() {
  * @return bool $include_tax
 */
 function edd_prices_include_tax() {
-	$ret = edd_get_option( 'prices_include_tax', 'no' ) == 'yes' && edd_use_taxes();
+	$ret = ( edd_get_option( 'prices_include_tax', false ) == 'yes' && edd_use_taxes() );
 
 	return apply_filters( 'edd_prices_include_tax', $ret );
 }
@@ -230,7 +230,8 @@ function edd_prices_include_tax() {
  * @return bool $include_tax
  */
 function edd_prices_show_tax_on_checkout() {
-	$ret = edd_get_option( 'checkout_include_tax', 'no' ) == 'yes' && edd_use_taxes();
+	$ret = ( edd_get_option( 'checkout_include_tax', false ) == 'yes' && edd_use_taxes() );
+	
 	return apply_filters( 'edd_taxes_on_prices_on_checkout', $ret );
 }
 

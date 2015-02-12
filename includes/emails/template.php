@@ -159,7 +159,8 @@ function edd_get_email_body_content( $payment_id = 0, $payment_data = array() ) 
 	$default_email_body .= "{download_list}\n\n";
 	$default_email_body .= "{sitename}";
 
-	$email = stripslashes( edd_get_option( 'purchase_receipt', $default_email_body ) );
+	$email = edd_get_option( 'purchase_receipt', false );
+	$email = $email ? stripslashes( $email ) : $default_email_body;
 
 	$email_body = wpautop( $email );
 
@@ -216,7 +217,8 @@ function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data 
 	$default_email_body .= __( 'Payment Method: ', 'edd' ) . " " . $gateway . "\n\n";
 	$default_email_body .= __( 'Thank you', 'edd' );
 
-	$email = stripslashes( edd_get_option( 'sale_notification', $default_email_body ) );
+	$email = edd_get_option( 'sale_notification', false );
+	$email = $email ? stripslashes( $email ) : $default_email_body;
 
 	//$email_body = edd_email_template_tags( $email, $payment_data, $payment_id, true );
 	$email_body = edd_do_email_tags( $email, $payment_id );

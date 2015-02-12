@@ -32,19 +32,21 @@ class EDD_Cache_Helper {
 
 		if ( false === ( $page_uris = get_transient( 'edd_cache_excluded_uris' ) ) ) {
 
-			if( ! edd_get_option( 'purchase_page', false ) || ! edd_get_option( 'success_page', false ) ) {
+			$purchase_page = edd_get_option( 'purchase_page', '' );
+			$success_page  = edd_get_option( 'success_page', '' );
+			if ( empty( $purchase_page ) || empty( $success_page ) ) {
 				return;
 			}
 
 			$page_uris   = array();
 
 			// Exclude querystring when using page ID
-			$page_uris[] = 'p=' . edd_get_option( 'purchase_page', 0 );
-			$page_uris[] = 'p=' . edd_get_option( 'purchase_page', 0 );
+			$page_uris[] = 'p=' . $purchase_page;
+			$page_uris[] = 'p=' . $success_page;
 
 	    	// Exclude permalinks
-			$checkout_page  = get_post( edd_get_option( 'purchase_page', false ) );
-			$success_page   = get_post( edd_get_option( 'success_page', false ) );
+			$checkout_page  = get_post( $purchase_page );
+			$success_page   = get_post( $success_page );
 
 	    	if ( ! is_null( $checkout_page ) )
 	    		$page_uris[] = '/' . $checkout_page->post_name;

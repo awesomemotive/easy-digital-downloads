@@ -60,7 +60,7 @@ class EDD_Payments_Query extends EDD_Stats {
 			'orderby'         => 'ID',
 			'order'           => 'DESC',
 			'user'            => null,
-			'status'          => 'any',
+			'status'          => edd_get_payment_status_keys(),
 			'meta_key'        => null,
 			'year'            => null,
 			'month'           => null,

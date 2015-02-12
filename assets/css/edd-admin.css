@@ -69,6 +69,7 @@ tr.status-refunded td { background: #cecece; border-top-color: #ccc; }
 #postbox-container-1 .edd_files_name_label { width: 80px; }
 #postbox-container-1 .edd_files_url_label { width: 80px; }
 .edd_add_repeatable { display: inline-block; }
+.edd_repeatable_row td { vertical-align: middle }
 #downloadinformation .edd_meta_table_wrap table input,
 #downloadinformation .edd_meta_table_wrap table select,
 #downloadinformation .edd_meta_table_wrap table textarea { margin: 4px 0; width: 100%; }

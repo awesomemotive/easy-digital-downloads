@@ -29,13 +29,13 @@ function edd_is_checkout() {
 	if( ! $is_object_set ) {
 
 		unset( $wp_query->queried_object );
-	
+
 	}
 
 	if( ! $is_object_id_set ) {
-	
+
 		unset( $wp_query->queried_object_id );
-	
+
 	}
 
 	return apply_filters( 'edd_is_checkout', $is_checkout );
@@ -61,7 +61,8 @@ function edd_can_checkout() {
  * @return      string
 */
 function edd_get_success_page_uri() {
-	$page_id = absint( edd_get_option( 'success_page', 0 ) );
+	$page_id = edd_get_option( 'success_page', 0 );
+	$page_id = absint( $page_id );
 
 	return apply_filters( 'edd_get_success_page_uri', get_permalink( $page_id ) );
 }
@@ -73,7 +74,9 @@ function edd_get_success_page_uri() {
  * @return bool True if on the Success page, false otherwise.
  */
 function edd_is_success_page() {
-	$is_success_page = is_page( edd_get_option( 'success_page', false ) );
+	$is_success_page = edd_get_option( 'success_page', false );
+	$is_success_page = isset( $is_success_page ) ? is_page( $is_success_page ) : false;
+
 	return apply_filters( 'edd_is_success_page', $is_success_page );
 }
 
@@ -108,7 +111,7 @@ function edd_send_to_success_page( $query_string = null ) {
  */
 function edd_get_checkout_uri( $args = array() ) {
 	$uri = edd_get_option( 'purchase_page', false );
-	$uri = $uri ? get_permalink( $uri ) : NULL;
+	$uri = isset( $uri ) ? get_permalink( $uri ) : NULL;
 
 	if ( ! empty( $args ) ) {
 		// Check for backward compatibility
@@ -124,7 +127,7 @@ function edd_get_checkout_uri( $args = array() ) {
 
 	$ajax_url = admin_url( 'admin-ajax.php', $scheme );
 
-	if ( ( ! preg_match( '/^https/', $uri ) && preg_match( '/^https/', $ajax_url ) ) || edd_is_ssl_enforced() ) {
+	if ( ( ! preg_match( '/^https/', $uri ) && preg_match( '/^https/', $ajax_url ) && edd_is_ajax_enabled() ) || edd_is_ssl_enforced() ) {
 		$uri = preg_replace( '/^http:/', 'https:', $uri );
 	}
 
@@ -173,7 +176,9 @@ function edd_send_back_to_checkout( $args = array() ) {
  * @return      string
 */
 function edd_get_success_page_url( $query_string = null ) {
-	$success_page = get_permalink( edd_get_option( 'success_page', false ) );
+	$success_page = edd_get_option( 'success_page', 0 );
+	$success_page = get_permalink( $success_page );
+
 	if ( $query_string )
 		$success_page .= $query_string;
 
@@ -184,12 +189,17 @@ function edd_get_success_page_url( $query_string = null ) {
  * Get the URL of the Transaction Failed page
  *
  * @since 1.3.4
+<<<<<<< HEAD
+=======
+ *
+>>>>>>> release/2.3
  * @param bool $extras Extras to append to the URL
  * @return mixed|void Full URL to the Transaction Failed page, if present, home page if it doesn't exist
  */
 function edd_get_failed_transaction_uri( $extras = false ) {
-	$uri = edd_get_option( 'failure_page', false );
-	$uri = $uri ? trailingslashit( get_permalink( $uri ) ) : home_url();
+	$uri = edd_get_option( 'failure_page', '' );
+	$uri = ! empty( $uri ) ? trailingslashit( get_permalink( $uri ) ) : home_url();
+	
 	if ( $extras )
 		$uri .= $extras;
 
@@ -203,8 +213,9 @@ function edd_get_failed_transaction_uri( $extras = false ) {
  * @return bool True if on the Failed Transaction page, false otherwise.
  */
 function edd_is_failed_transaction_page() {
-	$ret = is_page( edd_get_option( 'failure_page', false ) );
-	
+	$ret = edd_get_option( 'failure_page', false );
+	$ret = isset( $ret ) ? is_page( $ret ) : false;
+
 	return apply_filters( 'edd_is_failure_page', $ret );
 }
 
@@ -216,7 +227,7 @@ function edd_is_failed_transaction_page() {
  * @return      void
 */
 function edd_listen_for_failed_payments() {
-	
+
 	$failed_page = edd_get_option( 'failure_page', 0 );
 
 	if( ! empty( $failed_page ) && is_page( $failed_page ) && ! empty( $_GET['payment-id'] ) ) {
@@ -271,7 +282,7 @@ function edd_is_email_banned( $email = '' ) {
 	return apply_filters( 'edd_is_email_banned', $ret, $email );
 }
 
-/** 
+/**
  * Determines if secure checkout pages are enforced
  *
  * @since       2.0
@@ -292,7 +303,7 @@ function edd_enforced_ssl_redirect_handler() {
 	if ( ! edd_is_ssl_enforced() || ! edd_is_checkout() || is_admin() || is_ssl() ) {
 		return;
 	}
- 
+
 	if ( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" ) {
 		return;
 	}
@@ -328,7 +339,7 @@ function edd_enforced_ssl_asset_handler() {
 		'stylesheet_directory_uri',
 		'site_url'
 	);
-	
+
 	$filters = apply_filters( 'edd_enforced_ssl_asset_filters', $filters );
 
 	foreach ( $filters as $filter ) {

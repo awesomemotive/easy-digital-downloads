@@ -168,6 +168,9 @@ function edd_process_download() {
 
 				}
 
+				// Set the file size header
+				header( "Content-Length: " . filesize( $file_path ) );
+
 				// Now deliver the file based on the kind of software the server is running / has enabled
 				if ( function_exists( 'apache_get_modules' ) && in_array( 'mod_xsendfile', apache_get_modules() ) ) {
 
@@ -216,7 +219,8 @@ add_action( 'init', 'edd_process_download', 100 );
  * @return   void
  */
 function edd_deliver_download( $file = '' ) {
-	$symlink = apply_filters( 'edd_symlink_file_downloads', edd_get_option( 'symlink_file_downloads', false ) );
+	$symlink = edd_get_option( 'symlink_file_downloads', false );
+	$symlink = (bool) apply_filters( 'edd_symlink_file_downloads', $symlink );
 
 	/*
 	 * If symlinks are enabled, a link to the file will be created

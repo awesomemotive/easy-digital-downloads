@@ -360,13 +360,14 @@ function edd_render_settings_meta_box() {
  * @param $post_id
  */
 function edd_render_price_field( $post_id ) {
-	$price 				= edd_get_download_price( $post_id );
-	$variable_pricing 	= edd_has_variable_prices( $post_id );
-	$prices 			= edd_get_variable_prices( $post_id );
+	$price              = edd_get_download_price( $post_id );
+	$variable_pricing   = edd_has_variable_prices( $post_id );
+	$prices             = edd_get_variable_prices( $post_id );
 	$single_option_mode = edd_single_price_option_mode( $post_id );
 
-	$price_display    	= $variable_pricing ? ' style="display:none;"' : '';
-	$variable_display 	= $variable_pricing ? '' : ' style="display:none;"';
+	$price_display      = $variable_pricing ? ' style="display:none;"' : '';
+	$variable_display   = $variable_pricing ? '' : ' style="display:none;"';
+	$currency_position  = edd_get_option( 'currency_position', 'before' );
 ?>
 	<p>
 		<strong><?php echo apply_filters( 'edd_price_options_heading', __( 'Pricing Options:', 'edd' ) ); ?></strong>
@@ -388,7 +389,7 @@ function edd_render_price_field( $post_id ) {
 			);
 		?>
 
-		<?php if ( edd_get_option( 'currency_position', 'before' ) ) : ?>
+		<?php if ( $currency_position == 'before' ) : ?>
 			<?php echo edd_currency_filter( '' ); ?>
 			<?php echo EDD()->html->text( $price_args ); ?>
 		<?php else : ?>
@@ -476,6 +477,8 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 	$args = wp_parse_args( $args, $defaults );
 
 	$default_price_id = edd_get_default_variable_price( $post_id );
+	$currency_position = edd_get_option( 'currency_position', 'before' );
+
 ?>
 	<td>
 		<span class="edd_draghandle"></span>
@@ -500,7 +503,7 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 			);
 		?>
 
-		<?php if( edd_get_option( 'currency_position', 'before' ) ) : ?>
+		<?php if( $currency_position == 'before' ) : ?>
 			<span><?php echo edd_currency_filter( '' ); ?></span>
 			<?php echo EDD()->html->text( $price_args ); ?>
 		<?php else : ?>
