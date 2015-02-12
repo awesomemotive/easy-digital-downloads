@@ -168,16 +168,13 @@ function edd_tools_banned_emails_save() {
 	// Sanitize the input
 	$emails = array_map( 'trim', explode( "\n", $_POST['banned_emails'] ) );
 	$emails = array_unique( $emails );
+	$emails = array_map( 'sanitize_text_field', $emails );
 
 	foreach( $emails as $id => $email ) {
 		if( ! is_email( $email ) ) {
 			if( $email[0] != '@' ) {
 				unset( $emails[$id] );
-			} else {
-				$emails[$id] = sanitize_text_field( $emails[$id] );
 			}
-		} else {
-			$emails[$id] = sanitize_text_field( $emails[$id] );
 		}
 	}
 
