@@ -102,11 +102,7 @@ function edd_show_purchase_form() {
 			</div>
 		<?php endif; ?>
 
-<<<<<<< HEAD
-		<?php if( ( !isset( $_GET['login'] ) && is_user_logged_in() ) || ! edd_get_option( 'show_register_form', false ) || 'none' == $show_register_form ) {
-=======
 		<?php if( ( !isset( $_GET['login'] ) && is_user_logged_in() ) || ! isset( $show_register_form ) || 'none' === $show_register_form ) {
->>>>>>> release/2.3
 			do_action( 'edd_purchase_form_after_user_info' );
 		}
 

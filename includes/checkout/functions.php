@@ -189,10 +189,6 @@ function edd_get_success_page_url( $query_string = null ) {
  * Get the URL of the Transaction Failed page
  *
  * @since 1.3.4
-<<<<<<< HEAD
-=======
- *
->>>>>>> release/2.3
  * @param bool $extras Extras to append to the URL
  * @return mixed|void Full URL to the Transaction Failed page, if present, home page if it doesn't exist
  */
