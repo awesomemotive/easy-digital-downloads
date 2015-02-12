@@ -62,9 +62,9 @@ function edd_get_purchase_link( $args = array() ) {
 		'price'       => (bool) true,
 		'price_id'    => isset( $args['price_id'] ) ? $args['price_id'] : false,
 		'direct'      => edd_get_download_button_behavior( $post_id ) == 'direct' ? true : false,
-		'text' => edd_get_option( 'add_to_cart_text', __( 'Purchase', 'edd' ) ),
-		'style' => edd_get_option( 'button_style', 'button' ),
-		'color' => edd_get_option( 'checkout_color', 'blue' ),
+		'text'        => edd_get_option( 'add_to_cart_text', __( 'Purchase', 'edd' ) ),
+		'style'       => edd_get_option( 'button_style', 'button' ),
+		'color'       => edd_get_option( 'checkout_color', 'blue' ),
 		'class'       => 'edd-submit'
 	) );
 
