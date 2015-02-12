@@ -50,21 +50,23 @@ class EDD_CLI extends WP_CLI_Command {
 	 * @access		public
 	 * @param		array $args
 	 * @param		array $assoc_args
-	 * @global		array $edd_options
 	 * @return		void
 	 */
 	public function details( $args, $assoc_args ) {
-		global $edd_options;
+		$symlink_file_downloads = edd_get_option( 'symlink_file_downloads', false );
+		$purchase_page          = edd_get_option( 'purchase_page', '' );
+		$success_page           = edd_get_option( 'success_page', '' );
+		$failure_page           = edd_get_option( 'failure_page', '' );
 
 		WP_CLI::line( sprintf( __( 'You are running EDD version: %s', 'edd' ), EDD_VERSION ) );
 		WP_CLI::line( "\n" . sprintf( __( 'Test mode is: %s', 'edd' ), ( edd_is_test_mode() ? __( 'Enabled', 'edd' ) : __( 'Disabled', 'edd' ) ) ) );
 		WP_CLI::line( sprintf( __( 'Ajax is: %s', 'edd' ), ( edd_is_ajax_enabled() ? __( 'Enabled', 'edd' ) : __( 'Disabled', 'edd' ) ) ) );
 		WP_CLI::line( sprintf( __( 'Guest checkouts are: %s', 'edd' ), ( edd_no_guest_checkout() ? __( 'Disabled', 'edd' ) : __( 'Enabled', 'edd' ) ) ) );
-		WP_CLI::line( sprintf( __( 'Symlinks are: %s', 'edd' ), ( apply_filters( 'edd_symlink_file_downloads', isset( $edd_options['symlink_file_downloads'] ) ) && function_exists( 'symlink' ) ? __( 'Enabled', 'edd' ) : __( 'Disabled', 'edd' ) ) ) );
-		WP_CLI::line( "\n" . sprintf( __( 'Checkout page is: %s', 'edd' ), ( ! empty( $edd_options['purchase_page'] ) ? __( 'Valid', 'edd' ) : __( 'Invalid', 'edd' ) ) ) );
-		WP_CLI::line( sprintf( __( 'Checkout URL is: %s', 'edd' ), ( ! empty( $edd_options['purchase_page'] ) ? get_permalink( $edd_options['purchase_page'] ) : __( 'Undefined', 'edd' ) ) ) );
-		WP_CLI::line( sprintf( __( 'Success URL is: %s', 'edd' ), ( ! empty( $edd_options['success_page'] ) ? get_permalink( $edd_options['success_page'] ) : __( 'Undefined', 'edd' ) ) ) );
-		WP_CLI::line( sprintf( __( 'Failure URL is: %s', 'edd' ), ( ! empty( $edd_options['failure_page'] ) ? get_permalink( $edd_options['failure_page'] ) : __( 'Undefined', 'edd' ) ) ) );
+		WP_CLI::line( sprintf( __( 'Symlinks are: %s', 'edd' ), ( apply_filters( 'edd_symlink_file_downloads', isset( $symlink_file_downloads ) ) && function_exists( 'symlink' ) ? __( 'Enabled', 'edd' ) : __( 'Disabled', 'edd' ) ) ) );
+		WP_CLI::line( "\n" . sprintf( __( 'Checkout page is: %s', 'edd' ), ( ! edd_get_option( 'purchase_page', false ) ) ? __( 'Valid', 'edd' ) : __( 'Invalid', 'edd' ) ) ) );
+		WP_CLI::line( sprintf( __( 'Checkout URL is: %s', 'edd' ), ( ! empty( $purchase_page ) ? get_permalink( $purchase_page ) : __( 'Undefined', 'edd' ) ) ) );
+		WP_CLI::line( sprintf( __( 'Success URL is: %s', 'edd' ), ( ! empty( $success_page ) ? get_permalink( $success_page ) : __( 'Undefined', 'edd' ) ) ) );
+		WP_CLI::line( sprintf( __( 'Failure URL is: %s', 'edd' ), ( ! empty( $failure_page ) ? get_permalink( $failure_page ) : __( 'Undefined', 'edd' ) ) ) );
 		WP_CLI::line( sprintf( __( 'Downloads slug is: %s', 'edd' ), ( defined( 'EDD_SLUG' ) ? '/' . EDD_SLUG : '/downloads' ) ) );
 		WP_CLI::line( "\n" . sprintf( __( 'Taxes are: %s', 'edd' ), ( edd_use_taxes() ? __( 'Enabled', 'edd' ) : __( 'Disabled', 'edd' ) ) ) );
 		WP_CLI::line( sprintf( __( 'Tax rate is: %s', 'edd' ), edd_get_tax_rate() * 100 . '%' ) );

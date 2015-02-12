@@ -16,14 +16,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Is Test Mode
  *
  * @since 1.0
- * @global $edd_options
  * @return bool $ret True if return mode is enabled, false otherwise
  */
 function edd_is_test_mode() {
-	global $edd_options;
-
-	$ret = ! empty( $edd_options['test_mode'] );
-
+	$ret = edd_get_option( 'test_mode', false );
 	return (bool) apply_filters( 'edd_is_test_mode', $ret );
 }
 
@@ -31,14 +27,10 @@ function edd_is_test_mode() {
  * Checks if Guest checkout is enabled
  *
  * @since 1.0
- * @global $edd_options
  * @return bool $ret True if guest checkout is enabled, false otherwise
  */
 function edd_no_guest_checkout() {
-	global $edd_options;
-
-	$ret = ! empty ( $edd_options['logged_in_only'] );
-
+	$ret = edd_get_option( 'logged_in_only', false );
 	return (bool) apply_filters( 'edd_no_guest_checkout', $ret );
 }
 
@@ -46,14 +38,10 @@ function edd_no_guest_checkout() {
  * Checks if users can only purchase downloads when logged in
  *
  * @since 1.0
- * @global $edd_options
  * @return bool $ret Whether or not the logged_in_only setting is set
  */
 function edd_logged_in_only() {
-	global $edd_options;
-
-	$ret = ! empty( $edd_options['logged_in_only'] );
-
+	$ret = edd_get_option( 'logged_in_only', false );
 	return (bool) apply_filters( 'edd_logged_in_only', $ret );
 }
 
@@ -64,8 +52,7 @@ function edd_logged_in_only() {
  * @return bool $ret True is redirect is enabled, false otherwise
  */
 function edd_straight_to_checkout() {
-	global $edd_options;
-	$ret = isset( $edd_options['redirect_on_add'] );
+	$ret = edd_get_option( 'redirect_on_add', false );	
 	return (bool) apply_filters( 'edd_straight_to_checkout', $ret );
 }
 
@@ -74,14 +61,10 @@ function edd_straight_to_checkout() {
  *
  * @access public
  * @since 1.0.8.2
- * @global $edd_options
  * @return bool True if redownloading of files is disabled, false otherwise
  */
 function edd_no_redownload() {
-	global $edd_options;
-
-	$ret = isset( $edd_options['disable_redownload'] );
-
+	$ret = edd_get_option( 'disable_redownload', false );
 	return (bool) apply_filters( 'edd_no_redownload', $ret );
 }
 
@@ -89,12 +72,9 @@ function edd_no_redownload() {
  * Verify credit card numbers live?
  *
  * @since 1.4
- * @global $edd_options
  * @return bool $ret True is verify credit cards is live
  */
 function edd_is_cc_verify_enabled() {
-	global $edd_options;
-
 	$ret = true;
 
 	/*
@@ -355,8 +335,8 @@ function edd_get_currencies() {
  * @return string The currency code
  */
 function edd_get_currency() {
-	global $edd_options;
-	$currency = isset( $edd_options['currency'] ) ? $edd_options['currency'] : 'USD';
+	$currency = edd_get_option( 'currency', 'USD' );
+	
 	return apply_filters( 'edd_currency', $currency );
 }
 
@@ -369,8 +349,6 @@ function edd_get_currency() {
  * @return string           The symbol to use for the currency
  */
 function edd_currency_symbol( $currency = '' ) {
-	global $edd_options;
-
 	if ( empty( $currency ) ) {
 		$currency = edd_get_currency();
 	}
@@ -628,19 +606,13 @@ add_action( 'edd_cleanup_file_symlinks', 'edd_cleanup_file_symlinks' );
  * Checks if SKUs are enabled
  *
  * @since 1.6
- * @global $edd_options
  * @author Daniel J Griffiths
  * @return bool $ret True if SKUs are enabled, false otherwise
  */
 function edd_use_skus() {
-	global $edd_options;
-
-	$ret = isset( $edd_options['enable_skus'] );
-
+	$ret = edd_get_option( 'enable_skus', false );
 	return (bool) apply_filters( 'edd_use_skus', $ret );
 }
-
-
 
 /**
  * Retrieve timezone

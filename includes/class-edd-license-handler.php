@@ -27,7 +27,6 @@ class EDD_License {
 	/**
 	 * Class constructor
 	 *
-	 * @global  array $edd_options
 	 * @param string  $_file
 	 * @param string  $_item_name
 	 * @param string  $_version
@@ -36,13 +35,11 @@ class EDD_License {
 	 * @param string  $_api_url
 	 */
 	function __construct( $_file, $_item_name, $_version, $_author, $_optname = null, $_api_url = null ) {
-		global $edd_options;
-
 		$this->file           = $_file;
 		$this->item_name      = $_item_name;
 		$this->item_shortname = 'edd_' . preg_replace( '/[^a-zA-Z0-9_\s]/', '', str_replace( ' ', '_', strtolower( $this->item_name ) ) );
 		$this->version        = $_version;
-		$this->license        = isset( $edd_options[ $this->item_shortname . '_license_key' ] ) ? trim( $edd_options[ $this->item_shortname . '_license_key' ] ) : '';
+		$this->license        = trim( edd_get_option( $this->item_shortname . '_license_key', '' ) );
 		$this->author         = $_author;
 		$this->api_url        = is_null( $_api_url ) ? $this->api_url : $_api_url;
 
@@ -52,8 +49,12 @@ class EDD_License {
 		 * handler will automatically pick these up and use those in lieu of the
 		 * user having to reactive their license.
 		 */
-		if ( ! empty( $_optname ) && isset( $edd_options[ $_optname ] ) && empty( $this->license ) ) {
-			$this->license = trim( $edd_options[ $_optname ] );
+		if ( ! empty( $_optname ) ) {
+			$opt = edd_get_option( $_optname, false );
+
+			if( isset( $opt ) && empty( $this->license ) ) {
+				$this->license = trim( $opt );
+			}
 		}
 
 		// Setup hooks
@@ -99,7 +100,6 @@ class EDD_License {
 	 * Auto updater
 	 *
 	 * @access  private
-	 * @global  array $edd_options
 	 * @return  void
 	 */
 	public function auto_updater() {

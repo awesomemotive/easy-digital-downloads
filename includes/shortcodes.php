@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return string Fully formatted purchase link
  */
 function edd_download_shortcode( $atts, $content = null ) {
-	global $post, $edd_options;
+	global $post;
 
 	$post_id = is_object( $post ) ? $post->ID : 0;
 
@@ -33,9 +33,9 @@ function edd_download_shortcode( $atts, $content = null ) {
 		'sku'			=> '',
 		'price'         => '1',
 		'direct'        => '0',
-		'text'	        => isset( $edd_options[ 'add_to_cart_text' ] )  && $edd_options[ 'add_to_cart_text' ]    != '' ? $edd_options[ 'add_to_cart_text' ] : __( 'Purchase', 'edd' ),
-		'style'         => isset( $edd_options[ 'button_style' ] ) 	 	? $edd_options[ 'button_style' ] 		: 'button',
-		'color'         => isset( $edd_options[ 'checkout_color' ] ) 	? $edd_options[ 'checkout_color' ] 		: 'blue',
+		'text'          => edd_get_option( 'add_to_cart_text', __( 'Purchase', 'edd' ) ),
+		'style'         => edd_get_option( 'button_style', 'button' ),
+		'color'         => edd_get_option( 'checkout_color', 'blue' ),
 		'class'         => 'edd-submit',
 		'form_id'       => ''
 	),
@@ -228,14 +228,12 @@ add_shortcode( 'download_discounts', 'edd_discounts_shortcode' );
  * @return string
  */
 function edd_purchase_collection_shortcode( $atts, $content = null ) {
-	global $edd_options;
-
 	extract( shortcode_atts( array(
 			'taxonomy'	=> '',
 			'terms'		=> '',
 			'text'		=> __('Purchase All Items', 'edd'),
-			'style'		=> isset( $edd_options['button_style'] ) ? $edd_options['button_style'] : 'button',
-			'color'		=> isset( $edd_options['checkout_color'] ) ? $edd_options['checkout_color'] : 'blue',
+			'style'     => edd_get_option( 'button_style', 'button' ),
+			'color'     => edd_get_option( 'checkout_color', 'blue' ),
 			'class'		=> 'edd-submit'
 		), $atts, 'purchase_collection' )
 	);
