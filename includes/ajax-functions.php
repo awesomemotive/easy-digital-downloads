@@ -438,7 +438,7 @@ function edd_ajax_download_search() {
 	global $wpdb;
 
 	$search   = esc_sql( sanitize_text_field( $_GET['s'] ) );
-	$excludes = (array) $_GET['post_id'];
+	$excludes = ( isset( $_GET['post'] ) ? (array) $_GET['post'] : array() );
 	$excludes = array_map( 'absint', $excludes );
 	$exclude  = explode( ',', $excludes );
 
