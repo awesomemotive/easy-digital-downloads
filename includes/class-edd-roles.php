@@ -9,6 +9,9 @@
  * @since       1.4.4
 */
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  * EDD_Roles Class
  *
@@ -203,11 +206,11 @@ class EDD_Roles {
 		switch( $cap ) {
 
 			case 'view_product_stats' :
-				
+
 				if( empty( $args[0] ) ) {
 					break;
 				}
-				
+
 				$download = get_post( $args[0] );
 				if ( empty( $download ) ) {
 					break;
@@ -232,7 +235,7 @@ class EDD_Roles {
 	 * @return void
 	 */
 	public function remove_caps() {
-		
+
 		global $wp_roles;
 
 		if ( class_exists( 'WP_Roles' ) ) {

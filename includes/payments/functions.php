@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Payments
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -149,7 +149,7 @@ function edd_insert_payment( $payment_data = array() ) {
 
 	if ( $payment ) {
 
-		$taxes    = wp_list_pluck( $payment_data['cart_details'], 'tax' );
+		$taxes    = $payment_data['cart_details'] ? wp_list_pluck( $payment_data['cart_details'], 'tax' ) : array();
 		$cart_tax = array_sum( $taxes );
 
 		$payment_meta = array(

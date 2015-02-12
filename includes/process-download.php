@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Functions
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
   */
@@ -163,6 +163,13 @@ function edd_process_download() {
 
 					/** This is a local file given by URL so we need to figure out the path */
 					$file_path  = str_replace( WP_CONTENT_URL, WP_CONTENT_DIR, $requested_file );
+					$file_path  = realpath( $file_path );
+					$direct     = true;
+
+				} else if( strpos( $requested_file, set_url_scheme( WP_CONTENT_URL, 'https' ) ) !== false ) {
+
+					/** This is a local file given by an HTTPS URL so we need to figure out the path */
+					$file_path  = str_replace( set_url_scheme( WP_CONTENT_URL, 'https' ), WP_CONTENT_DIR, $requested_file );
 					$file_path  = realpath( $file_path );
 					$direct     = true;
 

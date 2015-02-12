@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Functions
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -177,9 +177,9 @@ function edd_price( $download_id = 0, $echo = true, $price_id = false ) {
 
 	}
 
-	$price           = apply_filters( 'edd_download_price', edd_sanitize_amount( $price ), $download_id );
+	$price           = apply_filters( 'edd_download_price', edd_sanitize_amount( $price ), $download_id, $price_id );
 	$formatted_price = '<span class="edd_price" id="edd_price_' . $download_id . '">' . $price . '</span>';
-	$formatted_price = apply_filters( 'edd_download_price_after_html', $formatted_price, $download_id, $price );
+	$formatted_price = apply_filters( 'edd_download_price_after_html', $formatted_price, $download_id, $price, $price_id );
 
 	if ( $echo ) {
 		echo $formatted_price;
