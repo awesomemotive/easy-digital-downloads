@@ -558,6 +558,19 @@ function edd_get_payment_statuses() {
 }
 
 /**
+ * Retrieves keys for all available statuses for payments
+ *
+ * @since 2.3
+ * @return array $payment_status All the available payment statuses
+ */
+function edd_get_payment_status_keys() {
+	$statuses = array_keys( edd_get_payment_statuses() );
+	asort( $statuses );
+
+	return array_values( $statuses );
+}
+
+/**
  * Get Earnings By Date
  *
  * @since 1.0
