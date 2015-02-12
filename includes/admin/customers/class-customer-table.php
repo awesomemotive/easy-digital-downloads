@@ -119,6 +119,10 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 				$value = edd_currency_filter( edd_format_amount( $item[ $column_name ] ) );
 				break;
 
+			case 'date_created' :
+				$value = date_i18n( get_option( 'date_format' ), strtotime( $item['date_created'] ) );
+				break;
+
 			default:
 				$value = isset( $item[ $column_name ] ) ? $item[ $column_name ] : null;
 				break;
