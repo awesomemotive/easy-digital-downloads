@@ -507,6 +507,7 @@ class EDD_CLI extends WP_CLI_Command {
 			$number     = ( array_key_exists( 'number', $assoc_args ) )   ? absint( $assoc_args['number'] ) : $number;
 			$id         = ( array_key_exists( 'id', $assoc_args ) )       ? absint( $assoc_args['id'] )     : $id;
 			$price_id   = ( array_key_exists( 'price_id', $assoc_args ) ) ? absint( $assoc_args['id'] )     : false;
+			$tax        = ( array_key_exists( 'tax', $assoc_args ) )      ? floatval( $assoc_args['tax'] )  : 0;
 
 			// Status requires a bit more validation
 			if( array_key_exists( 'status', $assoc_args ) ) {
@@ -612,7 +613,7 @@ class EDD_CLI extends WP_CLI_Command {
 					'price'	      => edd_sanitize_amount( $item_price ),
 					'quantity'    => 1,
 					'discount'    => 0,
-					'tax'         => 0
+					'tax'         => $tax
 				);
 
 				$total += $item_price;
