@@ -5,9 +5,9 @@ Contributors: mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, 
 Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.9.2
-Tested up to: 4.1
+Tested up to: 4.2
 
-Stable Tag: 2.2.7
+Stable Tag: 2.2.8
 
 License: GNU Version 2 or Any Later Version
 
@@ -182,6 +182,14 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.2.8, February 13, 2015 =
+
+* Fix: Permissions error when accessing upgrades screen with DISALLOW_FILE_EDITS defined
+* Fix: Shop Accountants are unable to resend purchase receipts
+* Fix: PHP warnings on checkout when purchasing an "item" fee
+* Fix: Improper application of discount codes that do not have their product requirements meant
+* Fix: Buy Now buttons for free products result in error at PayPal.com
 
 = 2.2.7, January 30, 2015 =
 
