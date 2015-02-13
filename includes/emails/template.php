@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Emails
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -46,13 +46,10 @@ function edd_email_template_tags( $message, $payment_data, $payment_id, $admin_n
  * Email Preview Template Tags
  *
  * @since 1.0
- * @global $edd_options Array of all the EDD Options
  * @param string $message Email message with template tags
  * @return string $message Fully formatted message
  */
 function edd_email_preview_template_tags( $message ) {
-	global $edd_options;
-
 	$download_list = '<ul>';
 	$download_list .= '<li>' . __( 'Sample Product Title', 'edd' ) . '<br />';
 	$download_list .= '<div>';
@@ -102,12 +99,9 @@ function edd_email_preview_template_tags( $message ) {
  * Email Template Preview
  *
  * @access private
- * @global $edd_options Array of all the EDD Options
  * @since 1.0.8.2
  */
 function edd_email_template_preview() {
-	global $edd_options;
-
 	if( ! current_user_can( 'manage_shop_settings' ) ) {
 		return;
 	}
@@ -160,14 +154,13 @@ add_action( 'template_redirect', 'edd_display_email_template_preview' );
  * @return string $email_body Body of the email
  */
 function edd_get_email_body_content( $payment_id = 0, $payment_data = array() ) {
-	global $edd_options;
-
 	$default_email_body = __( "Dear", "edd" ) . " {name},\n\n";
 	$default_email_body .= __( "Thank you for your purchase. Please click on the link(s) below to download your files.", "edd" ) . "\n\n";
 	$default_email_body .= "{download_list}\n\n";
 	$default_email_body .= "{sitename}";
 
-	$email = isset( $edd_options['purchase_receipt'] ) ? stripslashes( $edd_options['purchase_receipt'] ) : $default_email_body;
+	$email = edd_get_option( 'purchase_receipt', false );
+	$email = $email ? stripslashes( $email ) : $default_email_body;
 
 	$email_body = wpautop( $email );
 
@@ -186,8 +179,6 @@ function edd_get_email_body_content( $payment_id = 0, $payment_data = array() ) 
  * @return string $email_body Body of the email
  */
 function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data = array() ) {
-	global $edd_options;
-
 	$user_info = maybe_unserialize( $payment_data['user_info'] );
 	$email = edd_get_payment_user_email( $payment_id );
 
@@ -226,7 +217,8 @@ function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data 
 	$default_email_body .= __( 'Payment Method: ', 'edd' ) . " " . $gateway . "\n\n";
 	$default_email_body .= __( 'Thank you', 'edd' );
 
-	$email = isset( $edd_options['sale_notification'] ) ? stripslashes( $edd_options['sale_notification'] ) : $default_email_body;
+	$email = edd_get_option( 'sale_notification', false );
+	$email = $email ? stripslashes( $email ) : $default_email_body;
 
 	//$email_body = edd_email_template_tags( $email, $payment_data, $payment_id, true );
 	$email_body = edd_do_email_tags( $email, $payment_id );

@@ -6,7 +6,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4.4
  */
@@ -96,8 +96,8 @@ class EDD_Export {
 		$cols = $this->get_csv_cols();
 		$i = 1;
 		foreach( $cols as $col_id => $column ) {
-			echo '"' . $column . '"';
-			echo $i == count( $cols ) ? '' : ';';
+			echo '"' . addslashes( $column ) . '"';
+			echo $i == count( $cols ) ? '' : ',';
 			$i++;
 		}
 		echo "\r\n";
@@ -147,8 +147,8 @@ class EDD_Export {
 			foreach ( $row as $col_id => $column ) {
 				// Make sure the column is valid
 				if ( array_key_exists( $col_id, $cols ) ) {
-					echo '"' . $column . '"';
-					echo $i == count( $cols ) ? '' : ';';
+					echo '"' . addslashes( $column ) . '"';
+					echo $i == count( $cols ) ? '' : ',';
 					$i++;
 				}
 			}

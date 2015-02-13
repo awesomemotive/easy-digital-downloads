@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Cart
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -48,8 +48,6 @@ function edd_checkout_cart() {
  * @return string Fully formatted cart
  */
 function edd_shopping_cart( $echo = false ) {
-	global $edd_options;
-
 	ob_start();
 
 	do_action( 'edd_before_cart' );
@@ -146,16 +144,13 @@ function edd_checkout_cart_columns() {
  * Display the "Save Cart" button on the checkout
  *
  * @since 1.8
- * @global $edd_options Array of all the EDD Options
  * @return void
  */
 function edd_save_cart_button() {
-	global $edd_options;
-
 	if ( edd_is_cart_saving_disabled() )
 		return;
 
-	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'blue';
+	$color = edd_get_option( 'checkout_color', 'blue' );
 	$color = ( $color == 'inherit' ) ? '' : $color;
 
 	if ( edd_is_cart_saved() ) : ?>
@@ -186,16 +181,13 @@ add_action( 'edd_cart_empty', 'edd_empty_cart_restore_cart_link' );
  * Display the "Save Cart" button on the checkout
  *
  * @since 1.8
- * @global $edd_options Array of all the EDD Options
  * @return void
  */
 function edd_update_cart_button() {
-	global $edd_options;
-
 	if ( ! edd_item_quantities_enabled() )
 		return;
 
-	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'blue';
+	$color = edd_get_option( 'checkout_color', 'blue' );
 	$color = ( $color == 'inherit' ) ? '' : $color;
 ?>
 	<input type="submit" name="edd_update_cart_submit" class="edd-submit edd-no-js button<?php echo ' ' . $color; ?>" value="<?php _e( 'Update Cart', 'edd' ); ?>"/>

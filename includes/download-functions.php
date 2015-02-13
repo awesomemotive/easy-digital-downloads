@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Functions
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -177,9 +177,9 @@ function edd_price( $download_id = 0, $echo = true, $price_id = false ) {
 
 	}
 
-	$price           = apply_filters( 'edd_download_price', edd_sanitize_amount( $price ), $download_id );
+	$price           = apply_filters( 'edd_download_price', edd_sanitize_amount( $price ), $download_id, $price_id );
 	$formatted_price = '<span class="edd_price" id="edd_price_' . $download_id . '">' . $price . '</span>';
-	$formatted_price = apply_filters( 'edd_download_price_after_html', $formatted_price, $download_id, $price );
+	$formatted_price = apply_filters( 'edd_download_price_after_html', $formatted_price, $download_id, $price, $price_id );
 
 	if ( $echo ) {
 		echo $formatted_price;
@@ -916,11 +916,8 @@ function edd_get_file_price_condition( $download_id = 0, $file_key ) {
  * @return string Constructed download URL
  */
 function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $price_id = false ) {
-	global $edd_options;
-
-	$hours = isset( $edd_options['download_link_expiration'] )
-			&& is_numeric( $edd_options['download_link_expiration'] )
-			? absint( $edd_options['download_link_expiration'] ) : 24;
+	$hours = edd_get_option( 'download_link_expiration', false );
+	$hours = is_numeric( $hours ) ? absint( $hours ) : 24;
 
 	if ( ! ( $date = strtotime( '+' . $hours . 'hours', current_time( 'timestamp') ) ) )
 		$date = 2147472000; // Highest possible date, January 19, 2038
@@ -1063,8 +1060,8 @@ function edd_get_download_button_behavior( $download_id = 0 ) {
  * @return string The method to use for file downloads
  */
 function edd_get_file_download_method() {
-	global $edd_options;
-	$method = isset( $edd_options['download_method'] ) ? $edd_options['download_method'] : 'direct';
+	$method = edd_get_option( 'download_method', 'direct' );
+
 	return apply_filters( 'edd_file_download_method', $method );
 }
 

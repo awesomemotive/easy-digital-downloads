@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Payments
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -48,8 +48,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 			// "bundle" or "default"
 			$download_type = edd_get_download_type( $download['id'] );
-			$price_id      = isset( $download['options']['price_id'] ) ? (int) $download['options']['price_id'] : false;
-
+			$price_id      = isset( $download['item_number']['options']['price_id'] ) ? (int) $download['item_number']['options']['price_id'] : false;
 			// Increase earnings and fire actions once per quantity number
 			for( $i = 0; $i < $download['quantity']; $i++ ) {
 
@@ -82,7 +81,9 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 	}
 
 	// Increase the customer's purchase stats
-	EDD()->customers->increment_stats( $customer_id, $amount );
+	$customer = new EDD_Customer( $customer_id );
+	$customer->increase_purchase_count();
+	$customer->increase_value( $amount );
 
 	// Check for discount codes and increment their use counts
 	if ( ! empty( $user_info['discount'] ) && $user_info['discount'] !== 'none' ) {
@@ -170,7 +171,8 @@ function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
 
 	if( $customer_id ) {
 
-		EDD()->customers->decrement_stats( $customer_id, $amount );
+		$customer = new EDD_Customer( $customer_id );
+		$customer->decrement_stats( $customer_id, $amount );
 
 	}
 

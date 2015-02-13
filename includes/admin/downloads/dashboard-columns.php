@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Downloads
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -49,12 +49,10 @@ add_filter( 'manage_edit-download_columns', 'edd_download_columns' );
  */
 function edd_render_download_columns( $column_name, $post_id ) {
 	if ( get_post_type( $post_id ) == 'download' ) {
-		global $edd_options;
-
-		$style 			= isset( $edd_options['button_style'] ) ? $edd_options['button_style'] : 'button';
-		$color 			= isset( $edd_options['checkout_color'] ) ? $edd_options['checkout_color'] : 'blue';
-		$color			= ( $color == 'inherit' ) ? '' : $color;
-		$purchase_text 	= ! empty( $edd_options['add_to_cart_text'] ) ? $edd_options['add_to_cart_text'] : __( 'Purchase', 'edd' );
+		$style          = edd_get_option( 'button_style', 'button' );
+		$color          = edd_get_option( 'checkout_color', 'blue' );
+		$color          = ( $color == 'inherit' ) ? '' : $color;
+		$purchase_text  = edd_get_option( 'add_to_cart_text', __( 'Purchase', 'edd' ) );
 
 		switch ( $column_name ) {
 			case 'download_category':

@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Functions
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.6
  */
@@ -20,8 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return string $country The two letter country code for the shop's base country
  */
 function edd_get_shop_country() {
-	global $edd_options;
-	$country = isset( $edd_options['base_country'] ) ? $edd_options['base_country'] : 'US';
+	$country = edd_get_option( 'base_country', 'US' );
+
 	return apply_filters( 'edd_shop_country', $country );
 }
 
@@ -32,8 +32,8 @@ function edd_get_shop_country() {
  * @return string $state The shop's base state name
  */
 function edd_get_shop_state() {
-	global $edd_options;
-	$state = isset( $edd_options['base_state'] ) ? $edd_options['base_state'] : false;
+	$state = edd_get_option( 'base_state', false );
+
 	return apply_filters( 'edd_shop_state', $state );
 }
 
@@ -46,8 +46,6 @@ function edd_get_shop_state() {
  * @return mixed|void  A list of states for the shop's base country
  */
 function edd_get_shop_states( $country = null ) {
-	global $edd_options;
-
 	if( empty( $country ) )
 		$country = edd_get_shop_country();
 
@@ -254,7 +252,6 @@ function edd_get_country_list() {
 		'IM' => 'Isle of Man',
 		'IL' => 'Israel',
 		'IT' => 'Italy',
-		'CI' => 'Icory Coast',
 		'JM' => 'Jamaica',
 		'JP' => 'Japan',
 		'JE' => 'Jersey',
@@ -975,7 +972,7 @@ function edd_get_indonesian_states_list() {
 function edd_get_indian_states_list() {
 	$states = array(
 		''   => '',
-		'AP' => 'Andra Pradesh',
+		'AP' => 'Andhra Pradesh',
 		'AR' => 'Arunachal Pradesh',
 		'AS' => 'Assam',
 		'BR' => 'Bihar',
@@ -999,8 +996,9 @@ function edd_get_indian_states_list() {
 		'RJ' => 'Rajasthan',
 		'SK' => 'Sikkim',
 		'TN' => 'Tamil Nadu',
+		'TG' => 'Telangana',
 		'TR' => 'Tripura',
-		'UT' => 'Uttaranchal',
+		'UT' => 'Uttarakhand',
 		'UP' => 'Uttar Pradesh',
 		'WB' => 'West Bengal',
 		'AN' => 'Andaman and Nicobar Islands',
@@ -1008,7 +1006,7 @@ function edd_get_indian_states_list() {
 		'DN' => 'Dadar and Nagar Haveli',
 		'DD' => 'Daman and Diu',
 		'DL' => 'Delhi',
-		'LD' => 'Lakshadeep',
+		'LD' => 'Lakshadweep',
 		'PY' => 'Pondicherry (Puducherry)'
 	);
 
@@ -1619,7 +1617,7 @@ function edd_get_spain_states_list() {
 	    'BI' => __( 'Bizkaia', 'edd' ),
 	    'ZA' => __( 'Zamora', 'edd' ),
 	    'Z'  => __( 'Zaragoza', 'edd' )
-	); 	
+	);
 
 	return apply_filters( 'edd_spain_states', $states );
 }
