@@ -448,7 +448,7 @@ function edd_ajax_download_search() {
 	$select = "SELECT ID,post_title FROM $wpdb->posts ";
 
 	// Setup the WHERE clause
-	$where = "WHERE `post_type` = 'download' and `post_title` LIKE '%%s' ";
+	$where = "WHERE `post_type` = 'download' and `post_title` LIKE '%s' ";
 
 	// If we have items to exclude, exclude them
 	if( ! empty( $exclude ) ) {
@@ -463,10 +463,12 @@ function edd_ajax_download_search() {
 	// Limit the result sets
 	$limit = "LIMIT 50";
 
+	$sql = $select . $where . $limit;
+
 	if( ! empty( $exclude ) ) {
-		$prepared_statement = $wpdb->prepare( $select . $where . $limit, $search, $exclude );
+		$prepared_statement = $wpdb->prepare( $sql, '%' . $search . '%' . $exclude );
 	} else {
-		$prepared_statement = $wpdb->prepare( $select . $where . $limit, $search );
+		$prepared_statement = $wpdb->prepare( $sql, '%' . $search . '%' );
 	}
 
 	$items = $wpdb->get_results( $prepared_statement );
