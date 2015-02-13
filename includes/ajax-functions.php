@@ -443,11 +443,33 @@ function edd_ajax_download_search() {
 	$exclude  = explode( ',', $excludes );
 
 	$results = array();
-	if ( current_user_can( 'edit_products' ) ) {
-		$items = $wpdb->get_results( $wpdb->prepare( "SELECT ID,post_title FROM $wpdb->posts WHERE `post_type` = 'download' AND `post_title` LIKE '%%s%' AND `ID` NOT IN(%s) LIMIT 50", $search, $exclude ) );
-	} else {
-		$items = $wpdb->get_results( $wpdb->prepare( "SELECT ID,post_title FROM $wpdb->posts WHERE `post_type` = 'download' AND `post_status` = 'publish' AND `post_title` LIKE '%%s%' AND `ID` NOT IN(%s) LIMIT 50", $search, $exclude ) );
+
+	// Setup the SELECT statement
+	$select = "SELECT ID,post_title FROM $wpdb->posts ";
+
+	// Setup the WHERE clause
+	$where = "WHERE `post_type` = 'download' and `post_title` LIKE '%%s' ";
+
+	// If we have items to exclude, exclude them
+	if( ! empty( $exclude ) ) {
+		$where .= "AND `ID` NOT IN (%s) ";
 	}
+
+	// If the user can't edit products, limit to just published items
+	if( ! current_user_can( 'edit_products' ) ) {
+		$where .= "AND `post_status` = 'publish' ";
+	}
+
+	// Limit the result sets
+	$limit = "LIMIT 50";
+
+	if( ! empty( $exclude ) ) {
+		$prepared_statement = $wpdb->prepare( $select . $where . $limit, $search, $exclude );
+	} else {
+		$prepared_statement = $wpdb->prepare( $select . $where . $limit, $search );
+	}
+
+	$items = $wpdb->get_results( $prepared_statement );
 
 	if( $items ) {
 
