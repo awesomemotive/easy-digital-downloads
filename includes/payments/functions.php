@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Payments
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -149,7 +149,7 @@ function edd_insert_payment( $payment_data = array() ) {
 
 	if ( $payment ) {
 
-		$taxes    = wp_list_pluck( $payment_data['cart_details'], 'tax' );
+		$taxes    = $payment_data['cart_details'] ? wp_list_pluck( $payment_data['cart_details'], 'tax' ) : array();
 		$cart_tax = array_sum( $taxes );
 
 		$payment_meta = array(
@@ -169,17 +169,24 @@ function edd_insert_payment( $payment_data = array() ) {
 		}
 
 		// Create or update a customer
-		$customer_id = EDD()->customers->add( array(
+		$customer      = new EDD_Customer( $payment_data['user_email'] );
+		$customer_data = array(
 			'name'        => $payment_data['user_info']['first_name'] . ' ' . $payment_data['user_info']['last_name'],
 			'email'       => $payment_data['user_email'],
 			'user_id'     => $payment_data['user_info']['id'],
 			'payment_ids' => $payment
-		) );
+		);
+
+		if ( empty( $customer->id ) ) {
+			$customer_id = $customer->create( $customer_data );
+		} else {
+			$customer->update( $customer_data );
+		}
 
 		// Record the payment details
 		edd_update_payment_meta( $payment, '_edd_payment_meta',         apply_filters( 'edd_payment_meta', $payment_meta, $payment_data ) );
 		edd_update_payment_meta( $payment, '_edd_payment_user_id',      $payment_data['user_info']['id'] );
-		edd_update_payment_meta( $payment, '_edd_payment_customer_id',  $customer_id );
+		edd_update_payment_meta( $payment, '_edd_payment_customer_id',  $customer->id );
 		edd_update_payment_meta( $payment, '_edd_payment_user_email',   $payment_data['user_email'] );
 		edd_update_payment_meta( $payment, '_edd_payment_user_ip',      edd_get_ip() );
 		edd_update_payment_meta( $payment, '_edd_payment_purchase_key', $payment_data['purchase_key'] );
@@ -187,6 +194,7 @@ function edd_insert_payment( $payment_data = array() ) {
 		edd_update_payment_meta( $payment, '_edd_payment_mode',         $mode );
 		edd_update_payment_meta( $payment, '_edd_payment_gateway',      $gateway );
 		edd_update_payment_meta( $payment, '_edd_payment_tax',          $cart_tax );
+
 
 		if ( ! empty( $discount ) ) {
 			edd_update_payment_meta( $payment, '_edd_payment_discount_id',  $discount->ID );
@@ -283,26 +291,29 @@ function edd_delete_purchase( $payment_id = 0 ) {
 	$status      = $post->post_status;
 	$customer_id = edd_get_payment_customer_id( $payment_id );
 
+	$customer = new EDD_Customer( $customer_id );
+
 	if( $status == 'revoked' || $status == 'publish' ) {
 		// Only decrease earnings if they haven't already been decreased (or were never increased for this payment)
 		edd_decrease_total_earnings( $amount );
 		// Clear the This Month earnings (this_monththis_month is NOT a typo)
 		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
 
-		if( $customer_id ) {
+		if( $customer->id ) {
 
 			// Decrement the stats for the customer
-			EDD()->customers->decrement_stats( $customer_id, $amount );
+			$customer->decrease_purchase_count();
+			$customer->decrease_value( $amount );
 
 		}
 	}
 
 	do_action( 'edd_payment_delete', $payment_id );
 
-	if( $customer_id ){
+	if( $customer->id ){
 
 		// Remove the payment ID from the customer
-		EDD()->customers->remove_payment( $customer_id, $payment_id );
+		$customer->remove_payment( $payment_id );
 
 	}
 
@@ -555,6 +566,19 @@ function edd_get_payment_statuses() {
 	);
 
 	return apply_filters( 'edd_payment_statuses', $payment_statuses );
+}
+
+/**
+ * Retrieves keys for all available statuses for payments
+ *
+ * @since 2.3
+ * @return array $payment_status All the available payment statuses
+ */
+function edd_get_payment_status_keys() {
+	$statuses = array_keys( edd_get_payment_statuses() );
+	asort( $statuses );
+
+	return array_values( $statuses );
 }
 
 /**
@@ -1205,7 +1229,6 @@ function edd_payment_subtotal( $payment_id = 0 ) {
  * returns a non formatted amount.
  *
  * @since 1.3.3
- * @global $edd_options Array of all the EDD Options
  * @param int $payment_id Payment ID
  * @return float $subtotal Subtotal for payment (non formatted)
  */

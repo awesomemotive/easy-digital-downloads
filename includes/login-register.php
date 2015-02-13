@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Functions/Login
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -16,13 +16,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Login Form
  *
  * @since 1.0
- * @global $edd_options
  * @global $post
  * @param string $redirect Redirect page URL
  * @return string Login form
 */
 function edd_login_form( $redirect = '' ) {
-	global $edd_options, $edd_login_redirect;
+	global $edd_login_redirect;
 
 	if ( empty( $redirect ) ) {
 		$redirect = edd_get_current_page_url();
@@ -41,13 +40,12 @@ function edd_login_form( $redirect = '' ) {
  * Registration Form
  *
  * @since 2.0
- * @global $edd_options
  * @global $post
  * @param string $redirect Redirect page URL
  * @return string Register form
 */
 function edd_register_form( $redirect = '' ) {
-	global $edd_options, $edd_register_redirect;
+	global $edd_register_redirect;
 
 	if ( empty( $redirect ) ) {
 		$redirect = edd_get_current_page_url();

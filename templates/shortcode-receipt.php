@@ -2,7 +2,7 @@
 /**
  * This template is used to display the purchase summary with [edd_receipt]
  */
-global $edd_receipt_args, $edd_options;
+global $edd_receipt_args;
 
 $payment   = get_post( $edd_receipt_args['id'] );
 
@@ -14,7 +14,7 @@ if( empty( $payment ) ) : ?>
 
 <?php
 return;
-endif;;
+endif;
 
 $meta      = edd_get_payment_meta( $payment->ID );
 $cart      = edd_get_payment_meta_cart_details( $payment->ID, true );
@@ -208,7 +208,7 @@ $status    = edd_get_payment_status( $payment, true );
 								endforeach;
 
 							else :
-								echo '<li>' . __( 'No downloadable files found.', 'edd' ) . '</li>';
+								echo '<li>' . apply_filters( 'edd_receipt_no_files_found_text', __( 'No downloadable files found.', 'edd' ), $item['id'] ) . '</li>';
 							endif; ?>
 						</ul>
 						<?php endif; ?>

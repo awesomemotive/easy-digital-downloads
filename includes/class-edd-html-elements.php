@@ -6,7 +6,7 @@
  *
  * @package     EDD
  * @subpackage  Classes/HTML
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
  */
@@ -70,7 +70,6 @@ class EDD_HTML_Elements {
 		$options = array();
 
 		if ( $products ) {
-			$options[0] = sprintf( __( 'Select a %s', 'edd' ), edd_get_label_singular() );
 			foreach ( $products as $product ) {
 				$options[ absint( $product->ID ) ] = esc_html( $product->post_title );
 			}
@@ -99,7 +98,7 @@ class EDD_HTML_Elements {
 			'options'          => $options,
 			'chosen'           => $args['chosen'],
 			'multiple'         => $args['multiple'],
-            'placeholder'      => $args['placeholder'],
+			'placeholder'      => $args['placeholder'],
 			'show_option_all'  => false,
 			'show_option_none' => false
 		) );
@@ -123,8 +122,8 @@ class EDD_HTML_Elements {
 			'class'       => '',
 			'multiple'    => false,
 			'selected'    => 0,
-            'select2'     => $args['select2'],
-            'placeholder' => $args['placeholder'],
+			'chosen'      => true,
+			'placeholder' => __( 'Select a Customer', 'edd' ),
 			'number'      => 30
 		);
 
@@ -137,7 +136,6 @@ class EDD_HTML_Elements {
 		$options = array();
 
 		if ( $customers ) {
-			$options[-1] = __( 'Guest', 'edd' );
 			foreach ( $customers as $customer ) {
 				$options[ absint( $customer->id ) ] = esc_html( $customer->name . ' (' . $customer->email . ')' );
 			}

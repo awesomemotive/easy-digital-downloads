@@ -4,11 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Classes/Stats
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.8
 */
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * EDD_Stats Class
@@ -159,7 +161,7 @@ class EDD_Stats {
 
 						$month = 12;
 						$year--;
-				
+
 					} else {
 
 						$month--;
@@ -173,7 +175,7 @@ class EDD_Stats {
 					break;
 
 				case 'today' :
-				
+
 					$day = date( 'd', current_time( 'timestamp' ) );
 
 					if( $end_date ) {

@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Downloads
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.2.3
  */
@@ -92,7 +92,13 @@ function edd_downloads_contextual_help() {
 			</ul>' .
 			'<p>' . sprintf( __( 'For more information, see <a href="%s">using Shortcodes</a> on the WordPress.org Codex or <a href="%s">Easy Digital Downloads Documentation</a>', 'edd' ), 'https://codex.wordpress.org/Shortcode', 'https://easydigitaldownloads.com/docs/display-purchase-buttons-purchase_link/' ) . '</p>'
 	) );
-
+	
+	/**
+	 * Fires off in the EDD Downloads Contextual Help Screen
+	 * 
+	 * @since 1.2.3
+	 * @param object $screen The current admin screen
+	 */
 	do_action( 'edd_downloads_contextual_help', $screen );
 }
 add_action( 'load-post.php', 'edd_downloads_contextual_help' );
