@@ -190,6 +190,8 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: PHP warnings on checkout when purchasing an "item" fee
 * Fix: Improper application of discount codes that do not have their product requirements meant
 * Fix: Buy Now buttons for free products result in error at PayPal.com
+* New: Translation file for Argentina Spanish
+* Tweak: Updated translation files for most languages
 
 = 2.2.7, January 30, 2015 =
 
