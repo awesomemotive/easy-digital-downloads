@@ -759,7 +759,8 @@ function edd_v23_upgrade_payment_taxes() {
 		wp_redirect( $redirect ); exit;
 	} else {
 		// No more payments found, finish up
-		//update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+		delete_option( 'edd_doing_upgrade' );
 		wp_redirect( admin_url() ); exit;
 	}
 }
