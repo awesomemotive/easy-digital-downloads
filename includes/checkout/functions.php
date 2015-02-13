@@ -274,8 +274,20 @@ function edd_is_email_banned( $email = '' ) {
 		return false;
 	}
 
-	$ret = in_array( trim( $email ), edd_get_banned_emails() );
+	$banned_emails = edd_get_banned_emails();
 
+	foreach( $banned_emails as $banned_email ) {
+		if( is_email( $banned_email ) ) {
+			$ret = ( $banned_email == trim( $email ) ? true : false );
+		} else {
+			$ret = ( stristr( trim( $email ), $banned_email ) ? true : false );
+		}
+
+		if( true === $ret ) {
+			break;
+		}
+	}
+	
 	return apply_filters( 'edd_is_email_banned', $ret, $email );
 }
 
