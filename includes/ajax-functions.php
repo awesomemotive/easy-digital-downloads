@@ -440,7 +440,7 @@ function edd_ajax_download_search() {
 	$search   = esc_sql( sanitize_text_field( $_GET['s'] ) );
 	$excludes = ( isset( $_GET['post'] ) ? (array) $_GET['post'] : array() );
 	$excludes = array_map( 'absint', $excludes );
-	$exclude  = explode( ',', $excludes );
+	$exclude  = implode( ',', $excludes );
 
 	$results = array();
 
