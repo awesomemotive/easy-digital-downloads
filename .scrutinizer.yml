@@ -64,3 +64,4 @@ checks:
         argument_type_checks: false
         unused_parameters: false
         no_error_suppression: false
+        return_doc_comments: false
