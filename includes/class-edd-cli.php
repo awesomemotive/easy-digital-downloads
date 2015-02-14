@@ -108,7 +108,7 @@ class EDD_CLI extends WP_CLI_Command {
 		if( ! empty( $date ) ) {
 			$start_date = $date;
 			$end_date   = false;
-		} elseif( empty( $date ) && empty( $startdate ) ) {
+		} elseif( empty( $date ) && empty( $start_date ) ) {
 			$start_date = 'this_month';
 			$end_date   = false;
 		}
