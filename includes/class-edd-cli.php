@@ -578,6 +578,7 @@ class EDD_CLI extends WP_CLI_Command {
 				}
 
 				$options = array();
+				$final_downloads = array();
 
 				// Deal with variable pricing
 				if( edd_has_variable_prices( $download->ID ) ) {
@@ -615,6 +616,8 @@ class EDD_CLI extends WP_CLI_Command {
 					'tax'         => 0
 				);
 
+				$final_downloads[$key] = $item_number;
+
 				$total += $item_price;
 
 			}
@@ -626,7 +629,7 @@ class EDD_CLI extends WP_CLI_Command {
 				'user_email'    => 'guest@local.dev',
 				'user_info'     => $user_info,
 				'currency'      => edd_get_currency(),
-				'downloads'     => (array) $download,
+				'downloads'     => $final_downloads,
 				'cart_details'  => $cart_details,
 				'status'        => 'pending'
 			);
