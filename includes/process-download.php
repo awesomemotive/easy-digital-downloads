@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Functions
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
   */
@@ -89,11 +89,10 @@ function edd_process_download() {
 		$file_extension = edd_get_file_extension( $requested_file );
 		$ctype          = edd_get_file_ctype( $file_extension );
 
-
 		if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
 			@set_time_limit(0);
 		}
-		if ( function_exists( 'get_magic_quotes_runtime' ) && get_magic_quotes_runtime() ) {
+		if ( function_exists( 'get_magic_quotes_runtime' ) && get_magic_quotes_runtime() && version_compare( phpversion(), '5.4', '<' ) ) {
 			set_magic_quotes_runtime(0);
 		}
 
@@ -167,7 +166,17 @@ function edd_process_download() {
 					$file_path  = realpath( $file_path );
 					$direct     = true;
 
+				} else if( strpos( $requested_file, set_url_scheme( WP_CONTENT_URL, 'https' ) ) !== false ) {
+
+					/** This is a local file given by an HTTPS URL so we need to figure out the path */
+					$file_path  = str_replace( set_url_scheme( WP_CONTENT_URL, 'https' ), WP_CONTENT_DIR, $requested_file );
+					$file_path  = realpath( $file_path );
+					$direct     = true;
+
 				}
+
+				// Set the file size header
+				header( "Content-Length: " . filesize( $file_path ) );
 
 				// Now deliver the file based on the kind of software the server is running / has enabled
 				if ( function_exists( 'apache_get_modules' ) && in_array( 'mod_xsendfile', apache_get_modules() ) ) {
@@ -200,7 +209,7 @@ function edd_process_download() {
 		edd_die();
 	} else {
 		$error_message = __( 'You do not have permission to download this file', 'edd' );
-		wp_die( apply_filters( 'edd_deny_download_message', $error_message, __( 'Purchase Verification Failed', 'edd' ) ) );
+		wp_die( apply_filters( 'edd_deny_download_message', $error_message, __( 'Purchase Verification Failed', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
 
 	exit;
@@ -217,10 +226,8 @@ add_action( 'init', 'edd_process_download', 100 );
  * @return   void
  */
 function edd_deliver_download( $file = '' ) {
-
-	global $edd_options;
-
-	$symlink = apply_filters( 'edd_symlink_file_downloads', isset( $edd_options['symlink_file_downloads'] ) );
+	$symlink = edd_get_option( 'symlink_file_downloads', false );
+	$symlink = (bool) apply_filters( 'edd_symlink_file_downloads', $symlink );
 
 	/*
 	 * If symlinks are enabled, a link to the file will be created

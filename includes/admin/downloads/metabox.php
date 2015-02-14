@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Downloads
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -68,7 +68,8 @@ function edd_download_metabox_fields() {
 			'_edd_hide_purchase_link',
 			'_edd_download_tax_exclusive',
 			'_edd_button_behavior',
-			'edd_product_notes'
+			'edd_product_notes',
+			'_edd_default_price_id'
 		);
 
 	if ( current_user_can( 'manage_shop_settings' ) ) {
@@ -131,6 +132,11 @@ function edd_download_meta_box_save( $post_id, $post ) {
 
 				}
 			}
+
+		} elseif ( '_edd_default_price_id' == $field && edd_has_variable_prices( $post_id ) ) {
+
+			$new_default_price_id = ! empty( $_POST[$field] ) && is_numeric( $_POST[$field] ) ? (int)$_POST[$field] : 1;
+			update_post_meta( $post_id, $field, $new_default_price_id );
 
 		} else {
 
@@ -287,7 +293,7 @@ add_filter( 'edd_metabox_save_edd_download_files', 'edd_metabox_save_check_blank
  * @return void
  */
 function edd_render_download_meta_box() {
-	global $post, $edd_options;
+	global $post;
 
 	/*
 	 * Output the price fields
@@ -313,7 +319,7 @@ function edd_render_download_meta_box() {
  * @return void
  */
 function edd_render_files_meta_box() {
-	global $post, $edd_options;
+	global $post;
 
 	/*
 	 * Output the files fields
@@ -329,7 +335,7 @@ function edd_render_files_meta_box() {
  * @return void
  */
 function edd_render_settings_meta_box() {
-	global $post, $edd_options;
+	global $post;
 
 	/*
 	 * Output the files fields
@@ -354,15 +360,14 @@ function edd_render_settings_meta_box() {
  * @param $post_id
  */
 function edd_render_price_field( $post_id ) {
-	global $edd_options;
-
-	$price 				= edd_get_download_price( $post_id );
-	$variable_pricing 	= edd_has_variable_prices( $post_id );
-	$prices 			= edd_get_variable_prices( $post_id );
+	$price              = edd_get_download_price( $post_id );
+	$variable_pricing   = edd_has_variable_prices( $post_id );
+	$prices             = edd_get_variable_prices( $post_id );
 	$single_option_mode = edd_single_price_option_mode( $post_id );
 
-	$price_display    	= $variable_pricing ? ' style="display:none;"' : '';
-	$variable_display 	= $variable_pricing ? '' : ' style="display:none;"';
+	$price_display      = $variable_pricing ? ' style="display:none;"' : '';
+	$variable_display   = $variable_pricing ? '' : ' style="display:none;"';
+	$currency_position  = edd_get_option( 'currency_position', 'before' );
 ?>
 	<p>
 		<strong><?php echo apply_filters( 'edd_price_options_heading', __( 'Pricing Options:', 'edd' ) ); ?></strong>
@@ -384,7 +389,7 @@ function edd_render_price_field( $post_id ) {
 			);
 		?>
 
-		<?php if ( ! isset( $edd_options['currency_position'] ) || $edd_options['currency_position'] == 'before' ) : ?>
+		<?php if ( $currency_position == 'before' ) : ?>
 			<?php echo edd_currency_filter( '' ); ?>
 			<?php echo EDD()->html->text( $price_args ); ?>
 		<?php else : ?>
@@ -410,6 +415,7 @@ function edd_render_price_field( $post_id ) {
 						<th style="width: 20px"></th>
 						<th><?php _e( 'Option Name', 'edd' ); ?></th>
 						<th style="width: 100px"><?php _e( 'Price', 'edd' ); ?></th>
+						<th class="edd_repeatable_default"><?php _e( 'Default', 'edd' ); ?></th>
 						<th style="width: 15px"><?php _e( 'ID', 'edd' ); ?></th>
 						<?php do_action( 'edd_download_price_table_head', $post_id ); ?>
 						<th style="width: 2%"></th>
@@ -463,14 +469,15 @@ add_action( 'edd_meta_box_price_fields', 'edd_render_price_field', 10 );
  * @param       $post_id
  */
 function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
-	global $edd_options;
-
 	$defaults = array(
 		'name'   => null,
 		'amount' => null
 	);
 
 	$args = wp_parse_args( $args, $defaults );
+
+	$default_price_id = edd_get_default_variable_price( $post_id );
+	$currency_position = edd_get_option( 'currency_position', 'before' );
 
 ?>
 	<td>
@@ -496,7 +503,7 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 			);
 		?>
 
-		<?php if( ! isset( $edd_options['currency_position'] ) || $edd_options['currency_position'] == 'before' ) : ?>
+		<?php if( $currency_position == 'before' ) : ?>
 			<span><?php echo edd_currency_filter( '' ); ?></span>
 			<?php echo EDD()->html->text( $price_args ); ?>
 		<?php else : ?>
@@ -504,7 +511,8 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 			<?php echo edd_currency_filter( '' ); ?>
 		<?php endif; ?>
 	</td>
-
+	<td class="edd_repeatable_default_wrapper">
+		<input type="radio" <?php checked( $default_price_id, $key, true ); ?> class="edd_repeatable_default_input" name="_edd_default_price_id" value="<?php echo $key; ?>" />
 	<td>
 		<span class="edd_price_id"><?php echo $key; ?></span>
 	</td>
@@ -577,7 +585,8 @@ function edd_render_products_field( $post_id ) {
 								'id'       => 'edd_bundled_products',
 								'selected' => $products,
 								'multiple' => true,
-								'chosen'   => true
+								'chosen'   => true,
+								'bundles'  => false
 							) );
 							?>
 						</td>
@@ -721,7 +730,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 			) ); ?>
 
 			<span class="edd_upload_file">
-				<a href="#" data-uploader_title="" data-uploader_button_text="<?php _e( 'Insert', 'edd' ); ?>" class="edd_upload_file_button" onclick="return false;"><?php _e( 'Upload a File', 'edd' ); ?></a>
+				<a href="#" data-uploader-title="<?php _e( 'Insert File', 'edd' ); ?>" data-uploader-button-text="<?php _e( 'Insert', 'edd' ); ?>" class="edd_upload_file_button" onclick="return false;"><?php _e( 'Upload a File', 'edd' ); ?></a>
 			</span>
 		</div>
 	</td>
@@ -755,6 +764,29 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 }
 add_action( 'edd_render_file_row', 'edd_render_file_row', 10, 3 );
 
+/**
+ * Alter the Add to post button in the media manager for downloads
+ *
+ * @since  2.2
+ * @param  array $strings Array of default strings for media manager
+ * @return array          The altered array of strings for media manager
+ */
+function edd_download_media_strings( $strings ) {
+	global $post;
+
+	if ( ! $post || $post->post_type !== 'download' ) {
+		return $strings;
+	}
+
+	$downloads_object = get_post_type_object( 'download' );
+	$labels = $downloads_object->labels;
+
+	$strings['insertIntoPost'] = sprintf( __( 'Insert into %s', 'edd' ), strtolower( $labels->singular_name ) );
+
+	return $strings;
+}
+add_filter( 'media_view_strings', 'edd_download_media_strings', 10, 1 );
+
 
 /**
  * File Download Limit Row
@@ -767,8 +799,6 @@ add_action( 'edd_render_file_row', 'edd_render_file_row', 10, 3 );
  * @return void
  */
 function edd_render_download_limit_row( $post_id ) {
-    global $edd_options;
-
     if( ! current_user_can( 'manage_shop_settings' ) )
         return;
 
@@ -800,8 +830,6 @@ add_action( 'edd_meta_box_settings_fields', 'edd_render_download_limit_row', 20 
  * @return void
  */
 function edd_render_dowwn_tax_options( $post_id = 0 ) {
-    global $edd_options;
-
     if( ! current_user_can( 'manage_shop_settings' ) || ! edd_use_taxes() )
         return;
 
@@ -827,8 +855,6 @@ add_action( 'edd_meta_box_settings_fields', 'edd_render_dowwn_tax_options', 30 )
  * @return void
  */
 function edd_render_accounting_options( $post_id ) {
-	global $edd_options;
-
 	if( ! edd_use_skus() ) {
 		return;
 	}
@@ -903,11 +929,10 @@ add_action( 'edd_meta_box_settings_fields', 'edd_render_disable_button', 30 );
  *
  * @since 1.2.1
  * @global array $post Contains all the download data
- * @global array $edd_options Contains all the options set for EDD
  * @return void
  */
 function edd_render_product_notes_meta_box() {
-	global $post, $edd_options;
+	global $post;
 
 	do_action( 'edd_product_notes_meta_box_fields', $post->ID );
 }
@@ -920,8 +945,6 @@ function edd_render_product_notes_meta_box() {
  * @return void
  */
 function edd_render_product_notes_field( $post_id ) {
-	global $edd_options;
-
 	$product_notes = edd_get_product_notes( $post_id );
 ?>
 	<textarea rows="1" cols="40" class="large-texarea" name="edd_product_notes" id="edd_product_notes_field"><?php echo esc_textarea( $product_notes ); ?></textarea>

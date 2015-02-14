@@ -84,12 +84,16 @@ class Tests_EDD extends WP_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/login-register.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/add-ons.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/admin-notices.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/class-edd-notices.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/dashboard-widgets.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/export-functions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/thickbox.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/upload-functions.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/customers/class-customer-table.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/customers/customer-actions.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/customers/customer-functions.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/customers/customers.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/downloads/dashboard-columns.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/downloads/metabox.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/downloads/contextual-help.php' );
@@ -112,8 +116,9 @@ class Tests_EDD extends WP_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/shortcodes.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/theme-compatibility.php' );
 
-		/** Check Assets Exist */
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/chosen.css' );
+        /** Check Assets Exist */
+        $this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/chosen.css' );
+        $this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/chosen.min.css' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/colorbox.css' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/edd-admin.css' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/jquery-ui-classic.css' );
@@ -140,8 +145,7 @@ class Tests_EDD extends WP_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/icons/iphone.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/icons/mastercard.gif' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/icons/paypal.gif' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/icons/visa.gif' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/chosen-sprite.png' );
+        $this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/icons/visa.gif' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-badge.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-cpt-2x.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-cpt.png' );
@@ -159,8 +163,9 @@ class Tests_EDD extends WP_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/ui-icons_cc0000_256x240.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/xit.gif' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/xit.gif' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/admin-scripts.js' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/chosen.jquery.min.js' );
+        $this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/admin-scripts.js' );
+        $this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/chosen.jquery.js' );
+        $this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/chosen.jquery.min.js' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/edd-ajax.js' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/edd-checkout-global.js' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/jquery.colorbox-min.js' );

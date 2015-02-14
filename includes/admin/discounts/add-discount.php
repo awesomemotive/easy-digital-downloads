@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Discounts
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -73,7 +73,8 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 							'name'        => 'products[]',
 							'id'          => 'products',
 							'multiple'    => true,
-							'chosen'      => true 
+                            'chosen'      => true,
+                            'placeholder' => sprintf( __( 'Select one or more %s', 'edd' ), edd_get_label_plural() )
 						) ); ?><br/>
 					</p>
 					<div id="edd-discount-product-conditions" style="display:none;">
@@ -108,7 +109,8 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 						'id'       => 'excluded-products',
 						'selected' => array(),
 						'multiple' => true,
-						'chosen'   => true 
+                        'chosen'   => true,
+                        'placeholder' => sprintf( __( 'Select one or more %s', 'edd' ), edd_get_label_plural() )
 					) ); ?><br/>
 					<p class="description"><?php printf( __( '%s that this discount code cannot be applied to.', 'edd' ), edd_get_label_plural() ); ?></p>
 				</td>

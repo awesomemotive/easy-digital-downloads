@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Functions
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -16,14 +16,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Is Test Mode
  *
  * @since 1.0
- * @global $edd_options
  * @return bool $ret True if return mode is enabled, false otherwise
  */
 function edd_is_test_mode() {
-	global $edd_options;
-
-	$ret = ! empty( $edd_options['test_mode'] );
-
+	$ret = edd_get_option( 'test_mode', false );
 	return (bool) apply_filters( 'edd_is_test_mode', $ret );
 }
 
@@ -31,14 +27,10 @@ function edd_is_test_mode() {
  * Checks if Guest checkout is enabled
  *
  * @since 1.0
- * @global $edd_options
  * @return bool $ret True if guest checkout is enabled, false otherwise
  */
 function edd_no_guest_checkout() {
-	global $edd_options;
-
-	$ret = ! empty ( $edd_options['logged_in_only'] );
-
+	$ret = edd_get_option( 'logged_in_only', false );
 	return (bool) apply_filters( 'edd_no_guest_checkout', $ret );
 }
 
@@ -46,14 +38,10 @@ function edd_no_guest_checkout() {
  * Checks if users can only purchase downloads when logged in
  *
  * @since 1.0
- * @global $edd_options
  * @return bool $ret Whether or not the logged_in_only setting is set
  */
 function edd_logged_in_only() {
-	global $edd_options;
-
-	$ret = ! empty( $edd_options['logged_in_only'] );
-
+	$ret = edd_get_option( 'logged_in_only', false );
 	return (bool) apply_filters( 'edd_logged_in_only', $ret );
 }
 
@@ -64,8 +52,7 @@ function edd_logged_in_only() {
  * @return bool $ret True is redirect is enabled, false otherwise
  */
 function edd_straight_to_checkout() {
-	global $edd_options;
-	$ret = isset( $edd_options['redirect_on_add'] );
+	$ret = edd_get_option( 'redirect_on_add', false );	
 	return (bool) apply_filters( 'edd_straight_to_checkout', $ret );
 }
 
@@ -74,14 +61,10 @@ function edd_straight_to_checkout() {
  *
  * @access public
  * @since 1.0.8.2
- * @global $edd_options
  * @return bool True if redownloading of files is disabled, false otherwise
  */
 function edd_no_redownload() {
-	global $edd_options;
-
-	$ret = isset( $edd_options['disable_redownload'] );
-
+	$ret = edd_get_option( 'disable_redownload', false );
 	return (bool) apply_filters( 'edd_no_redownload', $ret );
 }
 
@@ -89,12 +72,9 @@ function edd_no_redownload() {
  * Verify credit card numbers live?
  *
  * @since 1.4
- * @global $edd_options
  * @return bool $ret True is verify credit cards is live
  */
 function edd_is_cc_verify_enabled() {
-	global $edd_options;
-
 	$ret = true;
 
 	/*
@@ -228,6 +208,11 @@ function edd_get_host() {
 		$host = 'Rackspace Cloud';
 	} elseif( strpos( DB_HOST, '.sysfix.eu' ) !== false ) {
 		$host = 'SysFix.eu Power Hosting';
+	} elseif( strpos( $_SERVER['SERVER_NAME'], 'Flywheel' ) !== false ) {
+		$host = 'Flywheel';
+	} else {
+		// Adding a general fallback for data gathering
+		$host = 'DBH: ' . DB_HOST . ', SRV: ' . $_SERVER['SERVER_NAME'];
 	}
 
 	return $host;
@@ -290,6 +275,10 @@ function edd_is_host( $host = false ) {
 				if( strpos( DB_HOST, '.sysfix.eu' ) !== false )
 					$return = true;
 				break;
+			case 'flywheel':
+				if( strpos( $_SERVER['SERVER_NAME'], 'Flywheel' ) !== false )
+					$return = true;
+				break;
 			default:
 				$return = false;
 		}
@@ -297,7 +286,6 @@ function edd_is_host( $host = false ) {
 
 	return $return;
 }
-
 
 
 /**
@@ -340,7 +328,6 @@ function edd_get_currencies() {
 	return apply_filters( 'edd_currencies', $currencies );
 }
 
-
 /**
  * Get the store's set currency
  *
@@ -348,9 +335,65 @@ function edd_get_currencies() {
  * @return string The currency code
  */
 function edd_get_currency() {
-	global $edd_options;
-	$currency = isset( $edd_options['currency'] ) ? $edd_options['currency'] : 'USD';
+	$currency = edd_get_option( 'currency', 'USD' );
+	
 	return apply_filters( 'edd_currency', $currency );
+}
+
+/**
+ * Given a currency determine the symbol to use. If no currency given, site default is used.
+ * If no symbol is determine, the currency string is returned.
+ *
+ * @since  2.2
+ * @param  string $currency The currency string
+ * @return string           The symbol to use for the currency
+ */
+function edd_currency_symbol( $currency = '' ) {
+	if ( empty( $currency ) ) {
+		$currency = edd_get_currency();
+	}
+
+	switch ( $currency ) :
+		case "GBP" :
+			$symbol = '&pound;';
+			break;
+		case "BRL" :
+			$symbol = 'R&#36;';
+			break;
+		case "EUR" :
+			$symbol = '&euro;';
+			break;
+		case "USD" :
+		case "AUD" :
+		case "NZD" :
+		case "CAD" :
+		case "HKD" :
+		case "MXN" :
+		case "SGD" :
+			$symbol = '&#36;';
+			break;
+		case "JPY" :
+			$symbol = '&yen;';
+			break;
+		default :
+			$symbol = $currency;
+			break;
+	endswitch;
+
+	return apply_filters( 'edd_currency_symbol', $symbol, $currency );
+}
+
+/**
+ * Get the name of a currency
+ *
+ * @since 2.2
+ * @param  string $currency The currency code
+ * @return string The currency's name
+ */
+function edd_get_currency_name( $code = 'USD' ) {
+	$currencies = edd_get_currencies();
+	$name       = isset( $currencies[ $code ] ) ? $currencies[ $code ] : $code;
+	return apply_filters( 'edd_currency_name', $name );
 }
 
 /**
@@ -563,19 +606,13 @@ add_action( 'edd_cleanup_file_symlinks', 'edd_cleanup_file_symlinks' );
  * Checks if SKUs are enabled
  *
  * @since 1.6
- * @global $edd_options
  * @author Daniel J Griffiths
  * @return bool $ret True if SKUs are enabled, false otherwise
  */
 function edd_use_skus() {
-	global $edd_options;
-
-	$ret = isset( $edd_options['enable_skus'] );
-
+	$ret = edd_get_option( 'enable_skus', false );
 	return (bool) apply_filters( 'edd_use_skus', $ret );
 }
-
-
 
 /**
  * Retrieve timezone
@@ -668,3 +705,33 @@ if ( ! function_exists( 'cal_days_in_month' ) ) {
 		return date( 't', mktime( 0, 0, 0, $month, 1, $year ) );
 	}
 }
+
+
+if ( ! function_exists( 'hash_equals' ) ) :
+/**
+ * Compare two strings in constant time.
+ *
+ * This function was added in PHP 5.6.
+ * It can leak the length of a string.
+ *
+ * @since 2.2.1
+ *
+ * @param string $a Expected string.
+ * @param string $b Actual string.
+ * @return bool Whether strings are equal.
+ */
+function hash_equals( $a, $b ) {
+	$a_length = strlen( $a );
+	if ( $a_length !== strlen( $b ) ) {
+		return false;
+	}
+	$result = 0;
+
+	// Do not attempt to "optimize" this.
+	for ( $i = 0; $i < $a_length; $i++ ) {
+		$result |= ord( $a[ $i ] ) ^ ord( $b[ $i ] );
+	}
+
+	return $result === 0;
+}
+endif;

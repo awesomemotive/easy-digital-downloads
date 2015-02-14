@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Emails
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0.8.2
  */
@@ -42,6 +42,10 @@ function edd_resend_purchase_receipt( $data ) {
 
 	if( empty( $purchase_id ) ) {
 		return;
+	}
+
+	if( ! current_user_can( 'edit_shop_payments' ) ) {
+		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
 
 	edd_email_purchase_receipt( $purchase_id, false );

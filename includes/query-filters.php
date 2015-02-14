@@ -6,7 +6,7 @@
  *
  * @package     EDD
  * @subpackage  Functions
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -45,6 +45,6 @@ function edd_block_attachments() {
 		return;
 	}
 
-	wp_die( __( 'You do not have permission to view this file.', 'edd' ), __( 'Error', 'edd' ) );
+	wp_die( __( 'You do not have permission to view this file.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 }
 add_action( 'template_redirect', 'edd_block_attachments' );

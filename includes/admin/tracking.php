@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.8.2
 */
@@ -53,8 +53,9 @@ class EDD_Tracking {
 	 * @return bool
 	 */
 	private function tracking_allowed() {
-		global $edd_options;
-		return isset( $edd_options['allow_tracking'] );
+		$allow_tracking = edd_get_option( 'allow_tracking', false );
+
+		return isset( $allow_tracking );
 	}
 
 	/**
@@ -124,7 +125,7 @@ class EDD_Tracking {
 			'method'      => 'POST',
 			'timeout'     => 20,
 			'redirection' => 5,
-			'httpversion' => '1.0',
+			'httpversion' => '1.1',
 			'blocking'    => true,
 			'body'        => $this->data,
 			'user-agent'  => 'EDD/' . EDD_VERSION . '; ' . get_bloginfo( 'url' )
@@ -221,21 +222,18 @@ class EDD_Tracking {
 	 * @return void
 	 */
 	public function admin_notice() {
-
-		global $edd_options;
-
 		$hide_notice = get_option( 'edd_tracking_notice' );
 
 		if( $hide_notice )
 			return;
 
-		if( isset( $edd_options['allow_tracking'] ) )
+		if( edd_get_option( 'allow_tracking', false ) )
 			return;
 
 		if( ! current_user_can( 'manage_options' ) )
 			return;
 
-		if( 
+		if(
 			stristr( network_site_url( '/' ), 'dev'       ) !== false ||
 			stristr( network_site_url( '/' ), 'localhost' ) !== false ||
 			stristr( network_site_url( '/' ), ':8888'     ) !== false // This is common with MAMP on OS X

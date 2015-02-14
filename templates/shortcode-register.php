@@ -1,4 +1,7 @@
 <?php
+/**
+ * This template is used to display the registration form with [edd_register]
+ */
 global $edd_register_redirect;
 
 edd_print_errors(); ?>

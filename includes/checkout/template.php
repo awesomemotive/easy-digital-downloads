@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Checkout
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
@@ -16,14 +16,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Get Checkout Form
  *
  * @since 1.0
- * @global $edd_options Array of all the EDD options
- * @global $user_ID ID of current logged in user
- * @global $post Current Post Object
  * @return string
  */
 function edd_checkout_form() {
-	global $edd_options, $user_ID, $post;
-
 	$payment_mode = edd_get_chosen_gateway();
 	$form_action  = esc_url( edd_get_checkout_uri( 'payment-mode=' . $payment_mode ) );
 
@@ -37,6 +32,11 @@ function edd_checkout_form() {
 				<?php do_action( 'edd_before_purchase_form' ); ?>
 				<form id="edd_purchase_form" class="edd_form" action="<?php echo $form_action; ?>" method="POST">
 					<?php
+					/**
+					 * Hooks in at the top of the checkout form
+					 *
+					 * @since 1.0
+					 */
 					do_action( 'edd_checkout_form_top' );
 
 					if ( edd_show_gateways() ) {
@@ -45,6 +45,11 @@ function edd_checkout_form() {
 						do_action( 'edd_purchase_form' );
 					}
 
+					/**
+					 * Hooks in at the bottom of the checkout form
+					 *
+					 * @since 1.0
+					 */
 					do_action( 'edd_checkout_form_bottom' )
 					?>
 				</form>
@@ -52,6 +57,11 @@ function edd_checkout_form() {
 			</div><!--end #edd_checkout_form_wrap-->
 		<?php
 		else:
+			/**
+			 * Fires off when there is nothing in the cart
+			 *
+			 * @since 1.0
+			 */
 			do_action( 'edd_cart_empty' );
 		endif;
 		echo '</div><!--end #edd_checkout_wrap-->';
@@ -65,14 +75,16 @@ function edd_checkout_form() {
  * if credit cards are enabled
  *
  * @since 1.4
- * @global $edd_options Array of all the EDD options
  * @return string
  */
 function edd_show_purchase_form() {
-	global $edd_options;
-
 	$payment_mode = edd_get_chosen_gateway();
 
+	/**
+	 * Hooks in at the top of the purchase form
+	 *
+	 * @since 1.4
+	 */
 	do_action( 'edd_purchase_form_top' );
 
 	if ( edd_can_checkout() ) {
@@ -90,10 +102,15 @@ function edd_show_purchase_form() {
 			</div>
 		<?php endif; ?>
 
-		<?php if( ( !isset( $_GET['login'] ) && is_user_logged_in() ) || ! isset( $edd_options['show_register_form'] ) || 'none' === $show_register_form ) {
+		<?php if( ( !isset( $_GET['login'] ) && is_user_logged_in() ) || ! isset( $show_register_form ) || 'none' === $show_register_form ) {
 			do_action( 'edd_purchase_form_after_user_info' );
 		}
 
+		/**
+		 * Hooks in before Credit Card Form
+		 *
+		 * @since 1.4
+		 */
 		do_action( 'edd_purchase_form_before_cc_form' );
 
 		if( edd_get_cart_total() > 0 ) {
@@ -107,6 +124,11 @@ function edd_show_purchase_form() {
 
 		}
 
+		/**
+		 * Hooks in after Credit Card Form
+		 *
+		 * @since 1.4
+		 */
 		do_action( 'edd_purchase_form_after_cc_form' );
 
 	} else {
@@ -114,6 +136,11 @@ function edd_show_purchase_form() {
 		do_action( 'edd_purchase_form_no_access' );
 	}
 
+	/**
+	 * Hooks in at the bottom of the purchase form
+	 *
+	 * @since 1.4
+	 */
 	do_action( 'edd_purchase_form_bottom' );
 }
 add_action( 'edd_purchase_form', 'edd_show_purchase_form' );
@@ -165,6 +192,7 @@ function edd_user_info_fields() {
 			<input class="edd-input<?php if( edd_field_is_required( 'edd_last' ) ) { echo ' required'; } ?>" type="text" name="edd_last" id="edd-last" placeholder="<?php _e( 'Last name', 'edd' ); ?>" value="<?php echo is_user_logged_in() ? $user_data->last_name : ''; ?>"/>
 		</p>
 		<?php do_action( 'edd_purchase_form_user_info' ); ?>
+		<?php do_action( 'edd_purchase_form_user_info_fields' ); ?>
 	</fieldset>
 	<?php
 }
@@ -205,7 +233,7 @@ function edd_get_cc_form() {
 				<span class="edd-required-indicator">*</span>
 			</label>
 			<span class="edd-description"><?php _e( 'The 3 digit (back) or 4 digit (front) value on your card.', 'edd' ); ?></span>
-			<input type="text" size="4" autocomplete="off" name="card_cvc" id="card_cvc" class="card-cvc edd-input required" placeholder="<?php _e( 'Security code', 'edd' ); ?>" />
+			<input type="text" size="4" maxlength="4" autocomplete="off" name="card_cvc" id="card_cvc" class="card-cvc edd-input required" placeholder="<?php _e( 'Security code', 'edd' ); ?>" />
 		</p>
 		<p id="edd-card-name-wrap">
 			<label for="card_name" class="edd-label">
@@ -383,12 +411,6 @@ add_action( 'edd_purchase_form_after_cc_form', 'edd_checkout_tax_fields', 999 );
  * @return string
  */
 function edd_get_register_fields() {
-	global $edd_options;
-	global $user_ID;
-
-	if ( is_user_logged_in() )
-		$user_data = get_userdata( $user_ID );
-
 	$show_register_form = edd_get_option( 'show_register_form', 'none' );
 
 	ob_start(); ?>
@@ -441,6 +463,7 @@ function edd_get_register_fields() {
 		<input type="hidden" name="edd-purchase-var" value="needs-to-register"/>
 
 		<?php do_action( 'edd_purchase_form_user_info' ); ?>
+		<?php do_action( 'edd_purchase_form_user_register_fields' ); ?>
 
 	</fieldset>
 	<?php
@@ -457,11 +480,9 @@ add_action( 'edd_purchase_form_register_fields', 'edd_get_register_fields' );
  * @return string
  */
 function edd_get_login_fields() {
-	global $edd_options;
-
-	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'gray';
+	$color = edd_get_option( 'checkout_color', 'gray' );
 	$color = ( $color == 'inherit' ) ? '' : $color;
-	$style = isset( $edd_options[ 'button_style' ] ) ? $edd_options[ 'button_style' ] : 'button';
+	$style = edd_get_option( 'button_style', 'button' );
 
 	$show_register_form = edd_get_option( 'show_register_form', 'none' );
 
@@ -630,6 +651,10 @@ function edd_discount_field() {
 		return; // Only show before a payment method has been selected if ajax is disabled
 	}
 
+	if( ! edd_is_checkout() ) {
+		return;
+	}
+
 	if ( edd_has_active_discounts() && edd_get_cart_total() ) :
 
 		$color = edd_get_option( 'checkout_color', 'blue' );
@@ -662,18 +687,18 @@ add_action( 'edd_checkout_form_top', 'edd_discount_field', -1 );
  * set in the EDD Settings.
  *
  * @since 1.3.2
- * @global $edd_options Array of all the EDD Options
  * @return void
  */
 function edd_terms_agreement() {
-	global $edd_options;
-	if ( isset( $edd_options['show_agree_to_terms'] ) ) {
+	if ( edd_get_option( 'show_agree_to_terms', false ) ) {
+		$agree_text  = edd_get_option( 'agree_text', '' );
+		$agree_label = edd_get_option( 'agree_label', __( 'Agree to Terms?', 'edd' ) );
 ?>
 		<fieldset id="edd_terms_agreement">
 			<div id="edd_terms" style="display:none;">
 				<?php
 					do_action( 'edd_before_terms' );
-					echo wpautop( stripslashes( $edd_options['agree_text'] ) );
+					echo wpautop( stripslashes( $agree_text ) );
 					do_action( 'edd_after_terms' );
 				?>
 			</div>
@@ -681,7 +706,7 @@ function edd_terms_agreement() {
 				<a href="#" class="edd_terms_links"><?php _e( 'Show Terms', 'edd' ); ?></a>
 				<a href="#" class="edd_terms_links" style="display:none;"><?php _e( 'Hide Terms', 'edd' ); ?></a>
 			</div>
-			<label for="edd_agree_to_terms"><?php echo isset( $edd_options['agree_label'] ) ? stripslashes( $edd_options['agree_label'] ) : __( 'Agree to Terms?', 'edd' ); ?></label>
+			<label for="edd_agree_to_terms"><?php echo stripslashes( $agree_label ); ?></label>
 			<input name="edd_agree_to_terms" class="required" type="checkbox" id="edd_agree_to_terms" value="1"/>
 		</fieldset>
 <?php
@@ -735,20 +760,18 @@ add_action( 'edd_purchase_form_after_cc_form', 'edd_checkout_submit', 9999 );
  * Renders the Next button on the Checkout
  *
  * @since 1.2
- * @global $edd_options Array of all the EDD Options
  * @return string
  */
 function edd_checkout_button_next() {
-	global $edd_options;
-
-	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'blue';
+	$color = edd_get_option( 'checkout_color', 'blue' );
 	$color = ( $color == 'inherit' ) ? '' : $color;
-	$style = isset( $edd_options[ 'button_style' ] ) ? $edd_options[ 'button_style' ] : 'button';
+	$style = edd_get_option( 'button_style', 'button' );
+	$purchase_page = edd_get_option( 'purchase_page', '0' );
 
 	ob_start();
 ?>
 	<input type="hidden" name="edd_action" value="gateway_select" />
-	<input type="hidden" name="page_id" value="<?php echo absint( $edd_options['purchase_page'] ); ?>"/>
+	<input type="hidden" name="page_id" value="<?php echo absint( $purchase_page ); ?>"/>
 	<input type="submit" name="gateway_submit" id="edd_next_button" class="edd-submit <?php echo $color; ?> <?php echo $style; ?>" value="<?php _e( 'Next', 'edd' ); ?>"/>
 <?php
 	return apply_filters( 'edd_checkout_button_next', ob_get_clean() );
@@ -758,20 +781,18 @@ function edd_checkout_button_next() {
  * Renders the Purchase button on the Checkout
  *
  * @since 1.2
- * @global $edd_options Array of all the EDD Options
  * @return string
  */
 function edd_checkout_button_purchase() {
-	global $edd_options;
-
-	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'blue';
+	$color = edd_get_option( 'checkout_color', 'blue' );
 	$color = ( $color == 'inherit' ) ? '' : $color;
-	$style = isset( $edd_options[ 'button_style' ] ) ? $edd_options[ 'button_style' ] : 'button';
+	$style = edd_get_option( 'button_style', 'button' );
+	$label = edd_get_option( 'checkout_label', '' );
 
 	if ( edd_get_cart_total() ) {
-		$complete_purchase = ! empty( $edd_options['checkout_label'] ) ? $edd_options['checkout_label'] : __( 'Purchase', 'edd' );
+		$complete_purchase = ! empty( $label ) ? $label : __( 'Purchase', 'edd' );
 	} else {
-		$complete_purchase = ! empty( $edd_options['checkout_label'] ) ? $edd_options['checkout_label'] : __( 'Free Download', 'edd' );
+		$complete_purchase = ! empty( $label ) ? $label : __( 'Free Download', 'edd' );
 	}
 
 	ob_start();
@@ -786,13 +807,10 @@ function edd_checkout_button_purchase() {
  * the T&Cs text
  *
  * @since 1.0
- * @global $edd_options Array of all the EDD Options
  * @return void
  */
 function edd_agree_to_terms_js() {
-	global $edd_options;
-
-	if ( isset( $edd_options['show_agree_to_terms'] ) ) {
+	if ( edd_get_option( 'show_agree_to_terms', false ) ) {
 ?>
 	<script type="text/javascript">
 		jQuery(document).ready(function($){
@@ -835,9 +853,8 @@ function edd_checkout_hidden_fields() {
  * @return string $content Filtered content
  */
 function edd_filter_success_page_content( $content ) {
-	global $edd_options;
 
-	if ( isset( $edd_options['success_page'] ) && isset( $_GET['payment-confirmation'] ) && is_page( $edd_options['success_page'] ) ) {
+	if ( isset( $_GET['payment-confirmation'] ) && edd_is_success_page() ) {
 		if ( has_filter( 'edd_payment_confirm_' . $_GET['payment-confirmation'] ) ) {
 			$content = apply_filters( 'edd_payment_confirm_' . $_GET['payment-confirmation'], $content );
 		}

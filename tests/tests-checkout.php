@@ -91,10 +91,12 @@ class Tests_Checkout extends WP_UnitTestCase {
 
 		$emails = array();
 		$emails[] = 'john@test.com';
+		$emails[] = 'test2.com';
 		$edd_options['banned_emails'] = $emails;
 		update_option( 'edd_settings', $edd_options );
 
 		$this->assertTrue( edd_is_email_banned( 'john@test.com' ) );
+		$this->assertTrue( edd_is_email_banned( 'john@test2.com' ) );
 		$this->assertFalse( edd_is_email_banned( 'john2@test.com' ) );
 	}
 

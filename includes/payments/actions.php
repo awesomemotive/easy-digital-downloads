@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Payments
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -44,12 +44,11 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 	if ( is_array( $cart_details ) ) {
 
 		// Increase purchase count and earnings
-		foreach ( $cart_details as $download ) {
+		foreach ( $cart_details as $cart_index => $download ) {
 
 			// "bundle" or "default"
 			$download_type = edd_get_download_type( $download['id'] );
-			$price_id      = isset( $download['options']['price_id'] ) ? (int) $download['options']['price_id'] : false;
-
+			$price_id      = isset( $download['item_number']['options']['price_id'] ) ? (int) $download['item_number']['options']['price_id'] : false;
 			// Increase earnings and fire actions once per quantity number
 			for( $i = 0; $i < $download['quantity']; $i++ ) {
 
@@ -59,15 +58,18 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 					if ( ! edd_is_test_mode() || apply_filters( 'edd_log_test_payment_stats', false ) ) {
 
 						edd_record_sale_in_log( $download['id'], $payment_id, $price_id, $creation_date );
-						edd_increase_purchase_count( $download['id'] );
-						edd_increase_earnings( $download['id'], $download['price'] );
 
 					}
 
-					do_action( 'edd_complete_download_purchase', $download['id'], $payment_id, $download_type, $download );
+					do_action( 'edd_complete_download_purchase', $download['id'], $payment_id, $download_type, $download, $cart_index );
+
 				}
 
 			}
+
+			// Increase the earnings for this download ID
+			edd_increase_earnings( $download['id'], $download['price'] );
+			edd_increase_purchase_count( $download['id'], $download['quantity'] );
 
 		}
 
@@ -79,7 +81,9 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 	}
 
 	// Increase the customer's purchase stats
-	EDD()->customers->increment_stats( $customer_id, $amount );
+	$customer = new EDD_Customer( $customer_id );
+	$customer->increase_purchase_count();
+	$customer->increase_value( $amount );
 
 	// Check for discount codes and increment their use counts
 	if ( ! empty( $user_info['discount'] ) && $user_info['discount'] !== 'none' ) {
@@ -167,7 +171,8 @@ function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
 
 	if( $customer_id ) {
 
-		EDD()->customers->decrement_stats( $customer_id, $amount );
+		$customer = new EDD_Customer( $customer_id );
+		$customer->decrement_stats( $customer_id, $amount );
 
 	}
 
