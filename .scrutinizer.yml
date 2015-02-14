@@ -41,7 +41,7 @@ checks:
         variable_existence: true
         useless_calls: true
         use_statement_alias_conflict: true
-        unused_variables: true
+        unused_variables: false
         unused_properties: true
         unreachable_code: true
         sql_injection_vulnerabilities: true
