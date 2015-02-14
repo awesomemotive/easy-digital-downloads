@@ -169,6 +169,8 @@ class EDD_Emails {
 	 * Get the enabled email template
 	 *
 	 * @since 2.1
+	 *
+	 * @return string|null
 	 */
 	public function get_template() {
 		if ( ! $this->template ) {
@@ -205,6 +207,9 @@ class EDD_Emails {
 	 * Build the final email
 	 *
 	 * @since 2.1
+	 * @param string $message
+	 *
+	 * @return string
 	 */
 	public function build_email( $message ) {
 
