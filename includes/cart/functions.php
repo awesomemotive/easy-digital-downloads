@@ -982,8 +982,6 @@ function edd_is_cart_saved() {
 		return true;
 
 	}
-
-	return false;
 }
 
 /**
