@@ -17,7 +17,7 @@ class EDD_SL_Plugin_Updater {
     private $api_data  = array();
     private $name      = '';
     private $slug      = '';
-	private $version      = '';
+    private $version      = '';
 
     /**
      * Class constructor.
