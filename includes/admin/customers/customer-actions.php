@@ -50,12 +50,14 @@ function edd_edit_customer( $args ) {
 	$customer_info = wp_parse_args( $customer_info, $defaults );
 
 	// Sanitize the inputs
+	$address = array();
 	$address['line1']         = $customer_info['line1'];
 	$address['line2']         = $customer_info['line2'];
 	$address['city']          = $customer_info['city'];
 	$address['zip']           = $customer_info['zip'];
 	$address['state']         = $customer_info['state'];
 	$address['country']       = $customer_info['country'];
+	$customer_data = array();
 	$customer_data['name']    = $customer_info['name'];
 	$customer_data['email']   = $customer_info['email'];
 	$customer_data['user_id'] = $customer_info['user_id'];
