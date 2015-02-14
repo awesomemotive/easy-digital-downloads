@@ -256,6 +256,7 @@ function edd_get_purchase_stats_by_user( $user = '' ) {
 	$customer = EDD()->customers->get_customer_by( $field, $user );
 	$customer = new EDD_Customer( $customer->id );
 
+	$stats = array();
 	$stats['purchases']   = absint( $customer->purchase_count );
 	$stats['total_spent'] = edd_sanitize_amount( $customer->purchase_value );
 
