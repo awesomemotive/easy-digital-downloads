@@ -67,7 +67,6 @@ class EDD_Stats {
 	 *
 	 * @access public
 	 * @since 1.8
-	 * @return void
 	 */
 	public function __construct() { /* nothing here. Call get_sales() and get_earnings() directly */ }
 
