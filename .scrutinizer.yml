@@ -61,3 +61,4 @@ checks:
         too_many_arguments: true
         no_debug_code: true
         missing_arguments: true
+        argument_type_checks: false
