@@ -209,8 +209,6 @@ function edd_customers_view( $customer ) {
 						<input class="info-item" type="text" data-key="city" name="customerinfo[city]" placeholder="<?php _e( 'City', 'edd' ); ?>" value="<?php echo $address['city']; ?>" />
 						<select data-key="country" name="customerinfo[country]" id="billing_country" class="billing_country edd-select edit-item">
 							<?php
-
-							$selected_country = edd_get_shop_country();
 							$selected_country = $address['country'];
 
 							$countries = edd_get_country_list();
