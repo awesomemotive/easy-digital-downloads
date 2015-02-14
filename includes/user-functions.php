@@ -34,6 +34,10 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 		$user = get_current_user_id();
 	}
 
+	if ( 0 === $user ) {
+		return false;
+	}
+
 	$status = $status === 'complete' ? 'publish' : $status;
 
 	if ( $pagination ) {
@@ -43,13 +47,6 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 			$paged = get_query_var( 'page' );
 		else
 			$paged = 1;
-	}
-
-	if( is_numeric( $user ) ) {
-
-		$user_data = get_userdata( $user );
-		$user      = $user_data->user_email;
-
 	}
 
 	$args = array(
@@ -69,13 +66,13 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 
 	}
 
-	$payment_ids = EDD()->customers->get_column_by( 'payment_ids', 'email', $user );
+	$customer = new EDD_Customer( $user );
 
-	if( ! empty( $payment_ids ) ) {
+	if( ! empty( $customer->payment_ids ) ) {
 
 		unset( $args['user'] );
 		$args['post__in'] = array_map( 'absint', explode( ',', $payment_ids ) );
-	
+
 	}
 
 	$purchases = edd_get_payments( apply_filters( 'edd_get_users_purchases_args', $args ) );
