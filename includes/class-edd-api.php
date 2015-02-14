@@ -738,6 +738,8 @@ class EDD_API {
 				'suppress_filters' => true,
 				'paged'            => $this->get_paged()
 			) );
+			
+			$error = array();
 
 			if ( $product_list ) {
 				$i = 0;
@@ -1181,6 +1183,7 @@ class EDD_API {
 		if( ! user_can( $this->user_id, 'manage_shop_discounts' ) && ! $this->override ) {
 			return $discount_list;
 		}
+		$error = array();
 
 		if ( empty( $discount ) ) {
 
@@ -1600,7 +1603,7 @@ class EDD_API {
 	private function get_default_sales_stats() {
 
 		// Default sales return
-
+		$sales = array();
 		$sales['sales']['today']         = $this->stats->get_sales( 0, 'today' );
 		$sales['sales']['current_month'] = $this->stats->get_sales( 0, 'this_month' );
 		$sales['sales']['last_month']    = $this->stats->get_sales( 0, 'last_month' );
@@ -1619,7 +1622,7 @@ class EDD_API {
 	private function get_default_earnings_stats() {
 
 		// Default earnings return
-
+		$earnings = array();
 		$earnings['earnings']['today']         = $this->stats->get_earnings( 0, 'today' );
 		$earnings['earnings']['current_month'] = $this->stats->get_earnings( 0, 'this_month' );
 		$earnings['earnings']['last_month']    = $this->stats->get_earnings( 0, 'last_month' );
