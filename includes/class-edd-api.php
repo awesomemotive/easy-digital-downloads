@@ -251,6 +251,7 @@ class EDD_API {
 	 * @since 1.5
 	 */
 	private function missing_auth() {
+		$error = array();
 		$error['error'] = __( 'You must specify both a token and API key!', 'edd' );
 
 		$this->data = $error;
@@ -267,6 +268,7 @@ class EDD_API {
 	 * @return void
 	 */
 	private function invalid_auth() {
+		$error = array();
 		$error['error'] = __( 'Your request could not be authenticated!', 'edd' );
 
 		$this->data = $error;
@@ -284,6 +286,7 @@ class EDD_API {
 	 * @return void
 	 */
 	private function invalid_key() {
+		$error = array();
 		$error['error'] = __( 'Invalid API key!', 'edd' );
 
 		$this->data = $error;
@@ -400,7 +403,7 @@ class EDD_API {
 		) );
 
 		$query = isset( $wp_query->query_vars['edd-api'] ) ? $wp_query->query_vars['edd-api'] : null;
-
+		$error = array();
 		// Make sure our query is valid
 		if ( ! in_array( $query, $accepted ) ) {
 			$error['error'] = __( 'Invalid query!', 'edd' );
@@ -635,7 +638,7 @@ class EDD_API {
 	public function get_customers( $customer = null ) {
 
 		$customers = array();
-
+		$error = array();
 		if( ! user_can( $this->user_id, 'view_shop_sensitive_data' ) && ! $this->override ) {
 			return $customers;
 		}
