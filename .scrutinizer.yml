@@ -62,3 +62,5 @@ checks:
         no_debug_code: true
         missing_arguments: true
         argument_type_checks: false
+        unused_parameters: false
+        no_error_suppression: false
