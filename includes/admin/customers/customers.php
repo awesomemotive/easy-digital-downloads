@@ -12,7 +12,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return void
 */
 function edd_customers_page() {
-	$current_page  = admin_url( 'edit.php?post_type=download&page=edd-customers' );
 	$default_views = edd_customer_views();
 	$requested_view = isset( $_GET['view'] ) ? sanitize_text_field( $_GET['view'] ) : 'customers';
 	if ( array_key_exists( $requested_view, $default_views ) && function_exists( $default_views[$requested_view] ) ) {
