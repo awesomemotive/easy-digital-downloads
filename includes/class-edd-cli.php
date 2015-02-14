@@ -602,7 +602,8 @@ class EDD_CLI extends WP_CLI_Command {
 					'quantity' => 1,
 					'options'  => $options
 				);
-
+				
+				$cart_details = array();
 				$cart_details[$key] = array(
 					'name'        => $download->post_title,
 					'id'          => $download->ID,
