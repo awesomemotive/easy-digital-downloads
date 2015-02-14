@@ -104,7 +104,6 @@ function edd_render_customer_view( $view, $callbacks ) {
 	}
 
 	$customer_tabs = edd_customer_tabs();
-	$errors        = edd_get_errors();
 	?>
 
 	<div class='wrap'>
