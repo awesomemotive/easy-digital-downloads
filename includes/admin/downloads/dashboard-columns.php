@@ -18,11 +18,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Defines the custom columns and their order
  *
  * @since 1.0
- * @param array $download_columns Array of download columns
  * @return array $download_columns Updated array of download columns for Downloads
  *  Post Type List Table
  */
-function edd_download_columns( $download_columns ) {
+function edd_download_columns( ) {
 	$download_columns = array(
 		'cb'                => '<input type="checkbox"/>',
 		'title'             => __( 'Name', 'edd' ),
