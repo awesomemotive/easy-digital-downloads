@@ -57,3 +57,7 @@ checks:
         avoid_useless_overridden_methods: true
         avoid_conflicting_incrementers: true
         assignment_of_null_return: true
+        unused_methods: true
+        too_many_arguments: true
+        no_debug_code: true
+        missing_arguments: true
