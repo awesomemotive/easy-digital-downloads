@@ -263,7 +263,7 @@ class EDD_SL_Plugin_Updater {
      *
      * @param string  $_action The requested action.
      * @param array   $_data   Parameters for the API action.
-     * @return false||object
+     * @return false|object
      */
     private function api_request( $_action, $_data ) {
 
