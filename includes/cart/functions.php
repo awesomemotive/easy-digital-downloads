@@ -417,7 +417,7 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
  * Use edd_get_cart_item_final_price()
  *
  * @since 1.0
- * @param int   $item_id Download ID number
+ * @param int   $download_id Download ID number
  * @param array $options Optional parameters, used for defining variable prices
  * @return float|bool Price for this item
  */
