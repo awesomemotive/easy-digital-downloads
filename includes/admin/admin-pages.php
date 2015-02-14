@@ -28,7 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return void
  */
 function edd_add_options_link() {
-	global $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_add_ons_page, $edd_settings_export, $edd_upgrades_screen, $edd_tools_page;
+	global $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_add_ons_page, $edd_settings_export, $edd_upgrades_screen, $edd_tools_page, $edd_customers_page;
 
 	$edd_payment            = get_post_type_object( 'edd_payment' );
 
