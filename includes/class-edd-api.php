@@ -728,7 +728,8 @@ class EDD_API {
 	public function get_products( $product = null ) {
 
 		$products = array();
-
+		$error = array();
+		
 		if ( $product == null ) {
 			$products['products'] = array();
 
@@ -738,8 +739,6 @@ class EDD_API {
 				'suppress_filters' => true,
 				'paged'            => $this->get_paged()
 			) );
-			
-			$error = array();
 
 			if ( $product_list ) {
 				$i = 0;
