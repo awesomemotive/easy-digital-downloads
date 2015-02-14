@@ -839,11 +839,9 @@ function edd_add_collection_to_cart( $taxonomy, $terms ) {
  * @since 1.0
  * @global $post
  * @param int $cart_key Cart item key
- * @param object $post Download (post) object
- * @param bool $ajax AJAX?
  * @return string $remove_url URL to remove the cart item
  */
-function edd_remove_item_url( $cart_key, $post, $ajax = false ) {
+function edd_remove_item_url( $cart_key ) {
 
 	global $wp_query;
 
