@@ -530,7 +530,7 @@ function edd_get_discount_product_condition( $code_id = 0 ) {
  * @since 1.5
  * @param int $code_id Discount ID
  * @return array $product_reqs IDs of the required products
- * @return bool Whether or not discount code is global
+ * @return boolean Whether or not discount code is global
  */
 function edd_is_discount_not_global( $code_id = 0 ) {
 	return (bool) get_post_meta( $code_id, '_edd_discount_is_not_global', true );

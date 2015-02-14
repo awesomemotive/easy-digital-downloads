@@ -387,7 +387,7 @@ function edd_currency_symbol( $currency = '' ) {
  * Get the name of a currency
  *
  * @since 2.2
- * @param  string $currency The currency code
+ * @param  string $code The currency code
  * @return string The currency's name
  */
 function edd_get_currency_name( $code = 'USD' ) {

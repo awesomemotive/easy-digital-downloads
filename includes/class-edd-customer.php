@@ -468,7 +468,7 @@ class EDD_Customer {
 	 *
 	 * @since  2.3
 	 * @param  integer $length The number of notes to get
-	 * @param  integer $offset What note to start at
+	 * @param  integer $paged What note to start at
 	 * @return array           The notes requsted
 	 */
 	public function get_notes( $length = 20, $paged = 1 ) {
@@ -505,6 +505,7 @@ class EDD_Customer {
 	 *
 	 * @since  2.3
 	 * @param string $note The note to add
+	 * @return string/false The new note if added succesfully, false otherwise
 	 */
 	public function add_note( $note = '' ) {
 
