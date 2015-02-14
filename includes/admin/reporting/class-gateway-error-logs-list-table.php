@@ -56,7 +56,7 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	 * @access public
 	 * @since 1.4
 	 *
-	 * @param array $item Contains all the data of the discount code
+	 * @param array $item Contains all the data of the log item
 	 * @param string $column_name The name of the column
 	 *
 	 * @return string Column Name

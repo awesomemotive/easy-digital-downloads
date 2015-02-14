@@ -1459,8 +1459,9 @@ class EDD_API {
 	 *
 	 * @access public
 	 * @since 2.0.0
-	 * @param array $args
-	 * @return string
+	 * @param int $user_id User ID the key is being generated for
+	 * @param boolean $regenerate Regenerate the key for the user
+	 * @return boolean True if (re)generated succesfully, false otherwise.
 	 */
 	public function generate_api_key( $user_id = 0, $regenerate = false ) {
 
@@ -1493,7 +1494,7 @@ class EDD_API {
 	 *
 	 * @access public
 	 * @since 2.0.0
-	 * @param int $args
+	 * @param int $user_id User ID of user to revoke key for
 	 * @return string
 	 */
 	public function revoke_api_key( $user_id = 0 ) {
