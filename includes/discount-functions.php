@@ -1119,7 +1119,7 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 						$cart_items        = edd_get_cart_contents();
 						foreach( $cart_items as $cart_item ) {
 							if( ! in_array( $cart_item['id'], $excluded_products ) ) {
-								$item_price      = edd_get_cart_item_price( $cart_item['id'], $cart_item['options'], edd_prices_include_tax() );
+								$item_price      = edd_get_cart_item_price( $cart_item['id'], $cart_item['options'] );
 								$items_subtotal += $item_price * $cart_item['quantity'];
 							}
 						}
