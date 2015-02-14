@@ -280,6 +280,9 @@ class Tests_Customers extends WP_UnitTestCase {
 		$this->assertTrue( edd_has_purchases( $this->_user_id ) );
 		$this->assertEquals( 1, edd_count_purchases_of_customer( $this->_user_id ) );
 
+		$no_user = edd_get_users_purchases( 0 );
+		$this->assertFalse( $no_user );
+
 	}
 
 	public function test_users_purchased_product() {
