@@ -43,6 +43,7 @@ checks:
         use_statement_alias_conflict: true
         unused_variables: false
         unused_properties: true
+        unused_parameters: false
         unreachable_code: true
         sql_injection_vulnerabilities: true
         security_vulnerabilities: true
@@ -62,6 +63,6 @@ checks:
         no_debug_code: true
         missing_arguments: true
         argument_type_checks: false
-        unused_parameters: false
         no_error_suppression: false
         return_doc_comments: false
+        property_assignments: false
