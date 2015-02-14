@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Settings
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
@@ -104,7 +104,8 @@ function edd_register_settings() {
 					'max'         => isset( $option['max'] )         ? $option['max']     : null,
                     'step'        => isset( $option['step'] )        ? $option['step']    : null,
                     'select2'     => isset( $option['select2'] )     ? $option['select2'] : null,
-                    'placeholder' => isset( $option['placeholder'] ) ? $option['placeholder'] : null
+                    'placeholder' => isset( $option['placeholder'] ) ? $option['placeholder'] : null,
+                    'allow_blank' => isset( $option['allow_blank'] ) ? $option['allow_blank'] : true
 				)
 			);
 		}
@@ -1269,6 +1270,10 @@ function edd_rich_editor_callback( $args ) {
 
 	if ( isset( $edd_options[ $args['id'] ] ) ) {
 		$value = $edd_options[ $args['id'] ];
+
+		if( empty( $args['allow_blank'] ) && empty( $value ) ) {
+			$value = isset( $args['std'] ) ? $args['std'] : '';
+		}
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}

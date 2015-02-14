@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Functions
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
   */
@@ -166,7 +166,17 @@ function edd_process_download() {
 					$file_path  = realpath( $file_path );
 					$direct     = true;
 
+				} else if( strpos( $requested_file, set_url_scheme( WP_CONTENT_URL, 'https' ) ) !== false ) {
+
+					/** This is a local file given by an HTTPS URL so we need to figure out the path */
+					$file_path  = str_replace( set_url_scheme( WP_CONTENT_URL, 'https' ), WP_CONTENT_DIR, $requested_file );
+					$file_path  = realpath( $file_path );
+					$direct     = true;
+
 				}
+
+				// Set the file size header
+				header( "Content-Length: " . filesize( $file_path ) );
 
 				// Now deliver the file based on the kind of software the server is running / has enabled
 				if ( function_exists( 'apache_get_modules' ) && in_array( 'mod_xsendfile', apache_get_modules() ) ) {
@@ -216,10 +226,8 @@ add_action( 'init', 'edd_process_download', 100 );
  * @return   void
  */
 function edd_deliver_download( $file = '' ) {
-
-	global $edd_options;
-
-	$symlink = apply_filters( 'edd_symlink_file_downloads', isset( $edd_options['symlink_file_downloads'] ) );
+	$symlink = edd_get_option( 'symlink_file_downloads', false );
+	$symlink = (bool) apply_filters( 'edd_symlink_file_downloads', $symlink );
 
 	/*
 	 * If symlinks are enabled, a link to the file will be created

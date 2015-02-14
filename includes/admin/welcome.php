@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Welcome
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4
  */
@@ -530,12 +530,9 @@ class EDD_Welcome {
 	 *
 	 * @access public
 	 * @since 1.4
-	 * @global $edd_options Array of all the EDD Options
 	 * @return void
 	 */
 	public function welcome() {
-		global $edd_options;
-
 		// Bail if no activation redirect
 		if ( ! get_transient( '_edd_activation_redirect' ) )
 			return;

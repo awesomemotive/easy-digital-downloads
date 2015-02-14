@@ -6,7 +6,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4.4
  */
@@ -57,8 +57,6 @@ class EDD_Payments_Export extends EDD_Export {
 	 * @return array $cols All the columns
 	 */
 	public function csv_cols() {
-		global $edd_options;
-
 		$cols = array(
 			'id'       => __( 'ID',   'edd' ), // unaltered payment ID (use for querying)
 			'seq_id'   => __( 'Payment Number',   'edd' ), // sequential payment ID
@@ -104,7 +102,7 @@ class EDD_Payments_Export extends EDD_Export {
 	 * @return array $data The data for the CSV file
 	 */
 	public function get_data() {
-		global $wpdb, $edd_options;
+		global $wpdb;
 
 		$data = array();
 
