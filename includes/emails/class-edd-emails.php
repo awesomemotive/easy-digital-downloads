@@ -191,6 +191,7 @@ class EDD_Emails {
 	 * Parse email template tags
 	 *
 	 * @since 2.1
+	 * @param string $content
 	 */
 	public function parse_tags( $content ) {
 

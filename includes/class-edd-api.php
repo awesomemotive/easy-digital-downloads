@@ -140,7 +140,7 @@ class EDD_API {
 	 * @since 1.5
 	 * @author Daniel J Griffiths
 	 * @param array $vars Query vars
-	 * @return array $vars New query vars
+	 * @return string[] $vars New query vars
 	 */
 	public function query_vars( $vars ) {
 		$vars[] = 'token';

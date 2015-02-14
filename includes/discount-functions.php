@@ -85,7 +85,7 @@ function edd_has_active_discounts() {
  * Retrieves a complete discount code by discount ID.
  *
  * @since 1.0
- * @param string $discount_id Discount ID
+ * @param integer $discount_id Discount ID
  * @return array
  */
 function edd_get_discount( $discount_id = 0 ) {
@@ -946,7 +946,7 @@ function edd_format_discount_rate( $type, $amount ) {
  *
  * @since 1.4.1
  * @param string $code Discount code
- * @return array All currently active discounts
+ * @return string[] All currently active discounts
  */
 function edd_set_cart_discount( $code = '' ) {
 
