@@ -4,10 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Gateways
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
+
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * Manual Gateway does not need a CC form, so remove it.
@@ -22,14 +25,10 @@ add_action( 'edd_manual_cc_form', '__return_false' );
  * the transaction in the Purchase History
  *
  * @since 1.0
- * @global $edd_options Array of all the EDD Options
  * @param array $purchase_data Purchase Data
  * @return void
 */
 function edd_manual_payment( $purchase_data ) {
-
-	global $edd_options;
-
 	if( ! wp_verify_nonce( $purchase_data['gateway_nonce'], 'edd-gateway' ) ) {
 		wp_die( __( 'Nonce verification has failed', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}

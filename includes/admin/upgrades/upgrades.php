@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Upgrades
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.3.1
  */
@@ -24,14 +24,25 @@ function edd_upgrades_screen() {
 	$total  = isset( $_GET['total'] )       ? absint( $_GET['total'] )                    : false;
 	$custom = isset( $_GET['custom'] )      ? absint( $_GET['custom'] )                   : 0;
 	$steps  = round( ( $total / 100 ), 0 );
-	?> 
+
+	$doing_upgrade_args = array(
+		'page'        => 'edd-upgrades',
+		'edd-upgrade' => $action,
+		'step'        => $step,
+		'total'       => $total,
+		'custom'      => $custom,
+		'steps'       => $steps
+	);
+	update_option( 'edd_doing_upgrade', $doing_upgrade_args );
+	?>
 	<div class="wrap">
 		<h2><?php _e( 'Easy Digital Downloads - Upgrades', 'edd' ); ?></h2>
-	
+
 		<?php if( ! empty( $action ) ) : ?>
 
 			<div id="edd-upgrade-status">
 				<p><?php _e( 'The upgrade process has started, please be patient. This could take several minutes. You will be automatically redirected when the upgrade is finished.', 'edd' ); ?></p>
+
 				<?php if( ! empty( $total ) ) : ?>
 					<p><strong><?php printf( __( 'Step %d of approximately %d running', 'edd' ), $step, $steps ); ?></strong></p>
 				<?php endif; ?>

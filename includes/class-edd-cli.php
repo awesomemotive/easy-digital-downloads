@@ -7,7 +7,7 @@
  *
  * @package		EDD
  * @subpackage	Classes/CLI
- * @copyright	Copyright (c) 2014, Pippin Williamson
+ * @copyright	Copyright (c) 2015, Pippin Williamson
  * @license		http://opensource.org/license/gpl-2.0.php GNU Public License
  * @since		2.0
  */
@@ -50,21 +50,23 @@ class EDD_CLI extends WP_CLI_Command {
 	 * @access		public
 	 * @param		array $args
 	 * @param		array $assoc_args
-	 * @global		array $edd_options
 	 * @return		void
 	 */
 	public function details( $args, $assoc_args ) {
-		global $edd_options;
+		$symlink_file_downloads = edd_get_option( 'symlink_file_downloads', false );
+		$purchase_page          = edd_get_option( 'purchase_page', '' );
+		$success_page           = edd_get_option( 'success_page', '' );
+		$failure_page           = edd_get_option( 'failure_page', '' );
 
 		WP_CLI::line( sprintf( __( 'You are running EDD version: %s', 'edd' ), EDD_VERSION ) );
 		WP_CLI::line( "\n" . sprintf( __( 'Test mode is: %s', 'edd' ), ( edd_is_test_mode() ? __( 'Enabled', 'edd' ) : __( 'Disabled', 'edd' ) ) ) );
 		WP_CLI::line( sprintf( __( 'Ajax is: %s', 'edd' ), ( edd_is_ajax_enabled() ? __( 'Enabled', 'edd' ) : __( 'Disabled', 'edd' ) ) ) );
 		WP_CLI::line( sprintf( __( 'Guest checkouts are: %s', 'edd' ), ( edd_no_guest_checkout() ? __( 'Disabled', 'edd' ) : __( 'Enabled', 'edd' ) ) ) );
-		WP_CLI::line( sprintf( __( 'Symlinks are: %s', 'edd' ), ( apply_filters( 'edd_symlink_file_downloads', isset( $edd_options['symlink_file_downloads'] ) ) && function_exists( 'symlink' ) ? __( 'Enabled', 'edd' ) : __( 'Disabled', 'edd' ) ) ) );
-		WP_CLI::line( "\n" . sprintf( __( 'Checkout page is: %s', 'edd' ), ( ! empty( $edd_options['purchase_page'] ) ? __( 'Valid', 'edd' ) : __( 'Invalid', 'edd' ) ) ) );
-		WP_CLI::line( sprintf( __( 'Checkout URL is: %s', 'edd' ), ( ! empty( $edd_options['purchase_page'] ) ? get_permalink( $edd_options['purchase_page'] ) : __( 'Undefined', 'edd' ) ) ) );
-		WP_CLI::line( sprintf( __( 'Success URL is: %s', 'edd' ), ( ! empty( $edd_options['success_page'] ) ? get_permalink( $edd_options['success_page'] ) : __( 'Undefined', 'edd' ) ) ) );
-		WP_CLI::line( sprintf( __( 'Failure URL is: %s', 'edd' ), ( ! empty( $edd_options['failure_page'] ) ? get_permalink( $edd_options['failure_page'] ) : __( 'Undefined', 'edd' ) ) ) );
+		WP_CLI::line( sprintf( __( 'Symlinks are: %s', 'edd' ), ( apply_filters( 'edd_symlink_file_downloads', isset( $symlink_file_downloads ) ) && function_exists( 'symlink' ) ? __( 'Enabled', 'edd' ) : __( 'Disabled', 'edd' ) ) ) );
+		WP_CLI::line( "\n" . sprintf( __( 'Checkout page is: %s', 'edd' ), ( ! edd_get_option( 'purchase_page', false ) ) ? __( 'Valid', 'edd' ) : __( 'Invalid', 'edd' ) ) ) );
+		WP_CLI::line( sprintf( __( 'Checkout URL is: %s', 'edd' ), ( ! empty( $purchase_page ) ? get_permalink( $purchase_page ) : __( 'Undefined', 'edd' ) ) ) );
+		WP_CLI::line( sprintf( __( 'Success URL is: %s', 'edd' ), ( ! empty( $success_page ) ? get_permalink( $success_page ) : __( 'Undefined', 'edd' ) ) ) );
+		WP_CLI::line( sprintf( __( 'Failure URL is: %s', 'edd' ), ( ! empty( $failure_page ) ? get_permalink( $failure_page ) : __( 'Undefined', 'edd' ) ) ) );
 		WP_CLI::line( sprintf( __( 'Downloads slug is: %s', 'edd' ), ( defined( 'EDD_SLUG' ) ? '/' . EDD_SLUG : '/downloads' ) ) );
 		WP_CLI::line( "\n" . sprintf( __( 'Taxes are: %s', 'edd' ), ( edd_use_taxes() ? __( 'Enabled', 'edd' ) : __( 'Disabled', 'edd' ) ) ) );
 		WP_CLI::line( sprintf( __( 'Tax rate is: %s', 'edd' ), edd_get_tax_rate() * 100 . '%' ) );
@@ -226,52 +228,114 @@ class EDD_CLI extends WP_CLI_Command {
 
 
 	/**
-	 * Get the customers currently on your EDD site
+	 * Get the customers currently on your EDD site. Can also be used to create customers records
 	 *
 	 * ## OPTIONS
 	 *
 	 * --id=<customer_id>: A specific customer ID to retrieve
+	 * --email=<customer_email>: The email address of the customer to retrieve
+	 * --create=<number>: The number of arbitrary customers to create. Leave as 1 or blank to create a customer with a speciific email
 	 *
 	 * ## EXAMPLES
 	 *
 	 * wp edd customers --id=103
+	 * wp edd customers --email=john@test.com
+	 * wp edd customers --create=1 --email=john@test.com
+	 * wp edd customers --create=1 --email=john@test.com --name="John Doe"
+	 * wp edd customers --create=1 --email=john@test.com --name="John Doe" user_id=1
+	 * wp edd customers --create=1000
 	 */
 	public function customers( $args, $assoc_args ) {
 
-		$customer_id = isset( $assoc_args ) && array_key_exists( 'id', $assoc_args ) ? absint( $assoc_args['id'] ) : false;
-		$customers   = $this->api->get_customers( $customer_id );
+		$customer_id = isset( $assoc_args ) && array_key_exists( 'id', $assoc_args )      ? absint( $assoc_args['id'] ) : false;
+		$email       = isset( $assoc_args ) && array_key_exists( 'email', $assoc_args )   ? $assoc_args['email']        : false;
+		$name        = isset( $assoc_args ) && array_key_exists( 'name', $assoc_args )    ? $assoc_args['name']         : null;
+		$user_id     = isset( $assoc_args ) && array_key_exists( 'user_id', $assoc_args ) ? $assoc_args['user_id']      : null;
+		$create      = isset( $assoc_args ) && array_key_exists( 'create', $assoc_args )  ? $assoc_args['create']       : false;
+		$start       = time();
 
-		if( isset( $customers['error'] ) ) {
-			WP_CLI::error( $customers['error'] );
-		}
+		if( $create ) {
 
-		if( empty( $customers ) ) {
-			WP_CLI::error( __( 'No customers found', 'edd' ) );
-			return;
-		}
+			$number = 1;
 
-		foreach( $customers['customers'] as $customer ) {
-			WP_CLI::line( WP_CLI::colorize( '%G' . $customer['info']['email'] . '%N' ) );
-			WP_CLI::line( sprintf( __( 'Customer User ID: %s', 'edd' ), $customer['info']['id'] ) );
-			WP_CLI::line( sprintf( __( 'Username: %s', 'edd' ), $customer['info']['username'] ) );
-			WP_CLI::line( sprintf( __( 'Display Name: %s', 'edd' ), $customer['info']['display_name'] ) );
+			// Create one or more customers
+			if( ! $email ) {
 
-			if( array_key_exists( 'first_name', $customer ) ) {
-				WP_CLI::line( sprintf( __( 'First Name: %s', 'edd' ), $customer['info']['first_name'] ) );
+				// If no email is specified, look to see if we are generating arbitrary customer accounts
+				$number = is_numeric( $create ) ? absint( $create ) : 1;
+
 			}
 
-			if( array_key_exists( 'last_name', $customer ) ) {
-				WP_CLI::line( sprintf( __( 'Last Name: %s', 'edd' ), $customer['info']['last_name'] ) );
+			for( $i = 0; $i < $number; $i++ ) {
+
+				if( ! $email ) {
+
+					// Generate fake email
+					$email = 'customer-' . uniqid() . '@test.com';
+
+				}
+
+				$args = array(
+					'email'   => $email,
+					'name'    => $name,
+					'user_id' => $user_id
+				);
+
+				$customer_id = EDD()->customers->add( $args );
+
+				if( $customer_id ) {
+					WP_CLI::line( sprintf( __( 'Customer %d created successfully', 'edd' ), $customer_id ) );
+				} else {
+					WP_CLI::error( __( 'Failed to create customer', 'edd' ) );
+				}
+
+				// Reset email to false so it is generated on the next loop (if creating customers)
+				$email = false;
+
+			}
+			
+			WP_CLI::line( WP_CLI::colorize( '%G' . sprintf( __( '%d customers created in %d seconds', 'edd' ), $create, time() - $start ) . '%N' ) );
+
+		} else {
+
+			// Search for customers
+
+			$search    = $customer_id ? $customer_id : $email;
+			$customers = $this->api->get_customers( $search );
+
+			if( isset( $customers['error'] ) ) {
+				WP_CLI::error( $customers['error'] );
 			}
 
-			WP_CLI::line( sprintf( __( 'Email: %s', 'edd' ), $customer['info']['email'] ) );
+			if( empty( $customers ) ) {
+				WP_CLI::error( __( 'No customers found', 'edd' ) );
+				return;
+			}
 
-			WP_CLI::line( '' );
-			WP_CLI::line( sprintf( __( 'Purchases: %s', 'edd' ), $customer['stats']['total_purchases'] ) );
-			WP_CLI::line( sprintf( __( 'Total Spent: %s', 'edd' ), edd_format_amount( $customer['stats']['total_spent'] ) . ' ' . edd_get_currency() ) );
-			WP_CLI::line( sprintf( __( 'Total Downloads: %s', 'edd' ), $customer['stats']['total_downloads'] ) );
+			foreach( $customers['customers'] as $customer ) {
+				WP_CLI::line( WP_CLI::colorize( '%G' . $customer['info']['email'] . '%N' ) );
+				WP_CLI::line( sprintf( __( 'Customer User ID: %s', 'edd' ), $customer['info']['id'] ) );
+				WP_CLI::line( sprintf( __( 'Username: %s', 'edd' ), $customer['info']['username'] ) );
+				WP_CLI::line( sprintf( __( 'Display Name: %s', 'edd' ), $customer['info']['display_name'] ) );
 
-			WP_CLI::line( '' );
+				if( array_key_exists( 'first_name', $customer ) ) {
+					WP_CLI::line( sprintf( __( 'First Name: %s', 'edd' ), $customer['info']['first_name'] ) );
+				}
+
+				if( array_key_exists( 'last_name', $customer ) ) {
+					WP_CLI::line( sprintf( __( 'Last Name: %s', 'edd' ), $customer['info']['last_name'] ) );
+				}
+
+				WP_CLI::line( sprintf( __( 'Email: %s', 'edd' ), $customer['info']['email'] ) );
+
+				WP_CLI::line( '' );
+				WP_CLI::line( sprintf( __( 'Purchases: %s', 'edd' ), $customer['stats']['total_purchases'] ) );
+				WP_CLI::line( sprintf( __( 'Total Spent: %s', 'edd' ), edd_format_amount( $customer['stats']['total_spent'] ) . ' ' . edd_get_currency() ) );
+				WP_CLI::line( sprintf( __( 'Total Downloads: %s', 'edd' ), $customer['stats']['total_downloads'] ) );
+
+				WP_CLI::line( '' );
+			}
+
 		}
 
 	}
