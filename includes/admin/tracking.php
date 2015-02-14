@@ -33,7 +33,6 @@ class EDD_Tracking {
 	 * Get things going
 	 *
 	 * @access public
-	 * @return void
 	 */
 	public function __construct() {
 
