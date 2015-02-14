@@ -161,9 +161,9 @@ class EDD_Session {
 	 *
 	 * @since 1.5
 	 *
-	 * @param $key Session key
-	 * @param $value Session variable
-	 * @return mixed Session variable
+	 * @param string $key Session key
+	 * @param integer $value Session variable
+	 * @return string Session variable
 	 */
 	public function set( $key, $value ) {
 
@@ -230,14 +230,14 @@ class EDD_Session {
 	/**
 	 * Starts a new session if one hasn't started yet.
 	 *
-	 * @return null
+	 * @return boolean
 	 * Checks to see if the server supports PHP sessions
 	 * or if the EDD_USE_PHP_SESSIONS constant is defined
 	 *
 	 * @access public
 	 * @since 2.1
 	 * @author Daniel J Griffiths
-	 * @return bool $ret True if we are using PHP sessions, false otherwise
+	 * @return boolean $ret True if we are using PHP sessions, false otherwise
 	 */
 	public function use_php_sessions() {
 

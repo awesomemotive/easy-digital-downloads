@@ -311,7 +311,6 @@ add_action( 'edd_delete_payment_note', 'edd_trigger_payment_note_deletion' );
  * Delete a payment note deletion with ajax
  *
  * @since 1.6
- * @param array $data Arguments passed
  * @return void
 */
 function edd_ajax_delete_payment_note() {
