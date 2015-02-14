@@ -18,12 +18,12 @@ env:
 matrix:
   include:
     - php: 5.3
-    env: WP_VERSION=latest WP_MULTISITE=1
+      env: WP_VERSION=latest WP_MULTISITE=1
   exclude:
     - php: hhvm
-    env: WP_VERSION=3.9.2 WP_MULTISITE=1
+      env: WP_VERSION=3.9.2 WP_MULTISITE=1
     - php: hhvm
-    env: WP_VERSION=4.0 WP_MULTISITE=1
+      env: WP_VERSION=4.0 WP_MULTISITE=1
   fast_finish: true
 
 before_script:
