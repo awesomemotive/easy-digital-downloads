@@ -74,10 +74,9 @@ add_action( 'edd_payments_page_bottom', 'edd_payment_history_mobile_link' );
  * @since 1.6
  *
  * @param $admin_title
- * @param $title
  * @return string
  */
-function edd_view_order_details_title( $admin_title, $title ) {
+function edd_view_order_details_title( $admin_title ) {
 	if ( 'download_page_edd-payment-history' != get_current_screen()->base )
 		return $admin_title;
 
