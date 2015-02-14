@@ -473,7 +473,7 @@ function edd_get_cart_item_final_price( $item_key = 0 ) {
  * Get cart item tax
  *
  * @since 1.9
- * @param array $item Download ID
+ * @param array $download_id Download ID
  * @param array $options Cart item options
  * @param float $subtotal Cart item subtotal
  * @return float Tax amount
