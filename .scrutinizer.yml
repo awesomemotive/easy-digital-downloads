@@ -3,7 +3,8 @@ filter:
 before_commands:
     - 'composer install --dev --prefer-source'
 tools:
-    external_code_coverage: true
+    external_code_coverage:
+            timeout: 900    # wait for 15 minutes instead of 5
     php_mess_detector: 
         config:
             code_size_rules:
