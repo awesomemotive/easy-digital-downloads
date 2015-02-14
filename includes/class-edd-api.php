@@ -923,7 +923,7 @@ class EDD_API {
 								$d++;
 							endwhile;
 							if ( !$total ){
-   								unset( $earnings[ 'earnings' ] );
+   								unset( $sales[ 'sales' ] );
 							}
 							$i++;
 						endwhile;
