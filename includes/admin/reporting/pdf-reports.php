@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @author      Sunny Ratilal
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.1.4.0
@@ -26,13 +26,13 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_generate_pdf( $data ) {
 
 	if( ! current_user_can( 'view_shop_reports' ) ) {
-		wp_die( __( 'You do not have permission to generate PDF sales reports', 'edd' ) );
+		wp_die( __( 'You do not have permission to generate PDF sales reports', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
 
 	if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'edd_generate_pdf' ) ) {
-		wp_die( __( 'Nonce verification failed', 'edd' ) );
+		wp_die( __( 'Nonce verification failed', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
-	
+
 	require_once EDD_PLUGIN_DIR . '/includes/libraries/fpdf/fpdf.php';
 	require_once EDD_PLUGIN_DIR . '/includes/libraries/fpdf/edd_pdf.php';
 

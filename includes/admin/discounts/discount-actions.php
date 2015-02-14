@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Discounts
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0.8.1
  */
@@ -24,6 +24,10 @@ function edd_add_discount( $data ) {
 
 	if ( ! isset( $data['edd-discount-nonce'] ) || ! wp_verify_nonce( $data['edd-discount-nonce'], 'edd_discount_nonce' ) ) {
 		return;
+	}
+
+	if( ! current_user_can( 'manage_shop_discounts' ) ) {
+		wp_die( __( 'You do not have permission to create discount codes', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
 
 	// Setup the discount code details
@@ -84,6 +88,10 @@ function edd_edit_discount( $data ) {
 		return;
 	}
 
+	if( ! current_user_can( 'manage_shop_discounts' ) ) {
+		wp_die( __( 'You do not have permission to edit discount codes', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+	}
+
 	// Setup the discount code details
 	$discount = array();
 
@@ -133,7 +141,11 @@ add_action( 'edd_edit_discount', 'edd_edit_discount' );
 function edd_delete_discount( $data ) {
 
 	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'edd_discount_nonce' ) ) {
-		wp_die( __( 'Trying to cheat or something?', 'edd' ), __( 'Error', 'edd' ) );
+		wp_die( __( 'Trying to cheat or something?', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+	}
+
+	if( ! current_user_can( 'manage_shop_discounts' ) ) {
+		wp_die( __( 'You do not have permission to delete discount codes', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
 
 	$discount_id = $data['discount'];
@@ -154,7 +166,11 @@ add_action( 'edd_delete_discount', 'edd_delete_discount' );
 function edd_activate_discount( $data ) {
 
 	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'edd_discount_nonce' ) ) {
-		wp_die( __( 'Trying to cheat or something?', 'edd' ), __( 'Error', 'edd' ) );
+		wp_die( __( 'Trying to cheat or something?', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+	}
+
+	if( ! current_user_can( 'manage_shop_discounts' ) ) {
+		wp_die( __( 'You do not have permission to edit discount codes', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
 
 	$id = absint( $data['discount'] );
@@ -175,9 +191,13 @@ add_action( 'edd_activate_discount', 'edd_activate_discount' );
 function edd_deactivate_discount( $data ) {
 
 	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'edd_discount_nonce' ) ) {
-		wp_die( __( 'Trying to cheat or something?', 'edd' ), __( 'Error', 'edd' ) );
+		wp_die( __( 'Trying to cheat or something?', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
-	
+
+	if( ! current_user_can( 'manage_shop_discounts' ) ) {
+		wp_die( __( 'You do not have permission to create discount codes', 'edd' ), array( 'response' => 403 ) );
+	}
+
 	$id = absint( $data['discount'] );
 	edd_update_discount_status( $id, 'inactive' );
 }

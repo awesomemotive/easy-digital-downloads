@@ -3,7 +3,7 @@
  *
  * @package     EDD
  * @subpackage  Admin CSS
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
 */
 
@@ -69,6 +69,7 @@ tr.status-refunded td { background: #cecece; border-top-color: #ccc; }
 #postbox-container-1 .edd_files_name_label { width: 80px; }
 #postbox-container-1 .edd_files_url_label { width: 80px; }
 .edd_add_repeatable { display: inline-block; }
+.edd_repeatable_row td { vertical-align: middle }
 #downloadinformation .edd_meta_table_wrap table input,
 #downloadinformation .edd_meta_table_wrap table select,
 #downloadinformation .edd_meta_table_wrap table textarea { margin: 4px 0; width: 100%; }
@@ -83,6 +84,7 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 .edd-price-field { width: 80px; }
 .edd_repeatable_upload_wrapper .pricing select, .edd_repeatable_product_wrapper .edd-select { min-width: 100%; }
 #edd_product_notes_field { width: 98%; margin: 0; height: 4em; }
+.edd_repeatable_default_wrapper { text-align: center; width: 25px; }
 
 /* Payment Details
 -------------------------------------------------------------- */
@@ -93,8 +95,8 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 .edd-payment-fees .fee-label { font-weight: normal; color: #666; }
 .edd-admin-box .right { float: right; }
 .rtl .edd-admin-box .right { float: left; margin-left: 10px; }
-#edd-order-totals .inside,
-#edd-order-update .inside { margin: 0; padding: 0; }
+#edd-order-update .inside,
+#edd-order-details .inside { margin: 0; padding: 0; }
 #edd-order-update input.edd_datepicker { width: 180px; }
 #edd-order-update input[type="number"].edd-payment-time-hour,
 #edd-order-update input[type="number"].edd-payment-time-min { width: 50px; }
@@ -107,14 +109,15 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 #edd-customer-details .order-data-address input,
 #edd-edit-order-form .column input,
 #edd-customer-details .order-data-column p.data input { clear: both; display: block; }
+#edd-customer-details .actions { float: right; }
 .edd-order-data input.small-text { margin: 0; }
-#edd-order-update span.label { display: inline-block; width: 50px; }
+#edd-order-update span.label { display: inline; width: 50px; }
 .edd-order-update-box .button-primary { margin-right: 0; }
 #edd-edit-order-form .column .description { padding-right: 10px; }
 #edd-edit-order-form .column,
 #edd-purchased-files .row > ul > li,
-#edd-purchased-files .inside > ul > li { display: inline-block; position: relative; vertical-align: top; margin-right: 5%; }
-#edd-purchased-files li.actions { text-align: right; }
+#edd-purchased-files .inside > ul > li { display: inline-block; position: relative; vertical-align: bottom; margin-right: 5%; line-height:30px; }
+#edd-purchased-files li.actions { text-align: right; min-width: 200px; }
 #edd-purchased-files ul li.remove { text-align: right; }
 #edd-purchased-files .row { padding: 12px; border-bottom: 1px solid #eee; }
 #edd-purchased-files ul { font-size: 0; }
@@ -126,6 +129,7 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 .edd_repeatable_upload_wrapper .pricing select, .edd_repeatable_product_wrapper .edd-select,
 #edd_products .edd-select { min-width: 100%; max-width: 200px; }
 .edd_repeatable_product_wrapper td { overflow: visible; }
+
 @media screen and ( max-width: 782px ) {
 	.order-data-column input[type="email"] {
 		padding: 6px 10px;
@@ -156,7 +160,7 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 	}
 	#edd-edit-order-form .columns-4 .column, #edd-purchased-files.columns-4 .row > ul > li,
 	#edd-purchased-files.columns-4 .inside > ul > li {
-		width: 23%; margin-right: 2%;
+		width: 22%; margin-right: 2%;
 	}
 	#edd-edit-order-form .columns-3 .column:nth-child(2n+1),
 	#edd-edit-order-form .columns-4 .column:nth-child(3n+1),
@@ -243,13 +247,13 @@ td.edd_order_price { text-align: right; }
 /* General styles
 -------------------------------------------------------------- */
 .edd-select-chosen { width: 300px; }
-
 .chosen-container-multi .chosen-choices{ -webkit-border-radius: 3px; border-radius: 3px; border-color: #dfdfdf; background-image:none; }
 .chosen-container-multi .chosen-choices input{ margin:2px; height:27px!important; border-color: #dfdfdf; }
 .chosen-container .chosen-drop { border-color: #aaa; -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); }
-.chosen-container .search-field { width: 50%; }
+.chosen-container .search-field { float: none!important; }
 .chosen-container .search-field input { width: 90%!important; }
 .chosen-container-active .chosen-choices { -webkit-border-top-left-radius: 3px; border-top-left-radius: 3px; -webkit-border-top-right-radius: 3px; border-top-right-radius: 3px; -webkit-border-bottom-left-radius: 0; border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-color: #aaa; -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); }
+
 .download_page_edd-tools .tablenav .actions { overflow: visible; }
 .edd_user_search_wrap { position: relative; overflow: visible; }
 .edd_user_search_results { position: absolute; left: 0; top: 27px; }
@@ -263,3 +267,57 @@ td.edd_order_price { text-align: right; }
 /* API Table Styles
 -------------------------------------------------------------- */
 .download_page_edd-tools .apikeys .column-user { width: 192px; }
+
+/* Customer Styles
+-------------------------------------------------------------- */
+#customer-tab-wrapper { margin-left: -1px; z-index: 1; text-align: center; display: inline-block; }
+#customer-tab-wrapper-list li { background-color: #fff; width: 32px; height: 32px; }
+#customer-tab-wrapper-list .inactive { background-color: #fff; color: #eee; border-left: 1px solid #e5e5e5; }
+#customer-tab-wrapper-list .active { border-width: 1px 1px 1px 0; border-style: solid; border-color: #e5e5e5; }
+#customer-tab-wrapper-list :not(:last-child) { margin-bottom: 3px; }
+#customer-tab-wrapper-list .dashicons { font-size: 24px; line-height: 32px; }
+#edd-customer-card-wrapper .left { float: left; }
+#edd-customer-card-wrapper .right { float: right; }
+#edd-customer-card-wrapper input { font-weight: normal; }
+#edd-customer-card-wrapper {
+	display: inline-block;
+	margin-left: -1px;
+	z-index: 2;
+	width: 700px;
+	background-color: #FFF;
+	min-height: 200px;
+	border: 1px solid #e5e5e5;
+	webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+	box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+}
+#edd-customer-card-wrapper .customer-section { border-bottom: 1px solid #eee; margin-bottom: 10px; }
+#edd-customer-card-wrapper > div { padding: 0px 20px; }
+#edd-customer-card-wrapper > div:first-child { padding-top: 20px; }
+#edd-customer-card-wrapper > div:last-child { padding-bottom: 20px; border: none; }
+#edd-customer-card-wrapper .avatar-wrap { padding-right: 10px; text-align: center; }
+#edd-customer-card-wrapper .customer-id { font-size: 24px; font-weight: 600; }
+#edd-customer-card-wrapper .customer-address-wrapper { max-width: 33%; margin-right: 25px; width: 202px; }
+#edd-customer-card-wrapper .customer-address-wrapper select { width: 200px;}
+#edd-customer-card-wrapper .customer-info { margin-top: 5px; min-height: 185px; }
+#edd-customer-card-wrapper .info-wrapper { min-height: 125px; }
+#edd-customer-card-wrapper a.delete { text-decoration: none; color: #ff0000; margin-right: 5px; }
+.customer-info .customer-name { font-size: 24px; font-weight: 600; }
+.customer-edit-link a { font-size: 12px; font-weight: normal; text-decoration: none; }
+#customer-edit-actions { text-align: center; margin-bottom: 20px; line-height: 28px; }
+#customer-edit-actions .button-secondary { margin-right: 10px; }
+#edd-customer-card-wrapper .info-item { line-height: 16px; display: block; padding-bottom: 5px; }
+#edd-customer-card-wrapper .edit-item { display: none; }
+#customer-stats-wrapper { margin: 0 auto; text-align: center; min-height: 30px; }
+#customer-stats-wrapper li { width: 50%; float: left; line-height: 22px; font-size: 14px; }
+#customer-stats-wrapper a { text-decoration: none; }
+#customer-stats-wrapper .dashicons { color: #888; }
+#customer-purchases-wrapper table { width: 100%; text-align: center; }
+#customer-purchases-wrapper th { text-align: center; }
+#customer-notes-wrapper { min-height: 50px; }
+.customer-notes-header span, .customer-notes-header img { font-weight: 600; line-height: 30px; vertical-align: middle; }
+.customer-note-input { width: 100%; margin-bottom: 5px; }
+#edd-customer-notes div:nth-of-type(even) { background-color: #fcfcfc; }
+.customer-note-wrapper { border-bottom: 1px solid #f9f9f9; min-height: 38px; padding: 7px 0 7px 7px; }
+.customer-note-wrapper span { display: block; }
+.note-content-wrap { padding-top: 7px; }
+

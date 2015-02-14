@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Functions/Formatting
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.2
 */
@@ -22,8 +22,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return string $amount Newly sanitized amount
  */
 function edd_sanitize_amount( $amount ) {
-	global $edd_options;
-
 	$is_negative   = false;
 	$thousands_sep = edd_get_option( 'thousands_separator', ',' );
 	$decimal_sep   = edd_get_option( 'decimal_separator', '.' );
@@ -60,15 +58,13 @@ function edd_sanitize_amount( $amount ) {
  * Returns a nicely formatted amount.
  *
  * @since 1.0
- * 
+ *
  * @param string $amount   Price amount to format
  * @param string $decimals Whether or not to use decimals.  Useful when set to false for non-currency numbers.
- * 
+ *
  * @return string $amount Newly formatted amount or Price Not Available
  */
 function edd_format_amount( $amount, $decimals = true ) {
-	global $edd_options;
-
 	$thousands_sep = edd_get_option( 'thousands_separator', ',' );
 	$decimal_sep   = edd_get_option( 'decimal_separator', '.' );
 
@@ -92,7 +88,7 @@ function edd_format_amount( $amount, $decimals = true ) {
 	if ( empty( $amount ) ) {
 		$amount = 0;
 	}
-	
+
 	$decimals  = apply_filters( 'edd_format_amount_decimals', $decimals ? 2 : 0, $amount );
 	$formatted = number_format( $amount, $decimals, $decimal_sep, $thousands_sep );
 
@@ -107,11 +103,14 @@ function edd_format_amount( $amount, $decimals = true ) {
  * @param string $price Price
  * @return array $currency Currencies displayed correctly
  */
-function edd_currency_filter( $price ) {
-	global $edd_options;
+function edd_currency_filter( $price = '', $currency = '' ) {
+	if( empty( $currency ) ) {
 
-	$currency = edd_get_currency();
-	$position = isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before';
+		$currency = edd_get_currency();
+	
+	}
+
+	$position = edd_get_option( 'currency_position', 'before' );
 
 	$negative = $price < 0;
 
@@ -119,17 +118,13 @@ function edd_currency_filter( $price ) {
 		$price = substr( $price, 1 ); // Remove proceeding "-" -
 	}
 
+	$symbol = edd_currency_symbol( $currency );
+
 	if ( $position == 'before' ):
 		switch ( $currency ):
 			case "GBP" :
-				$formatted = '&pound;' . $price;
-				break;
 			case "BRL" :
-				$formatted = 'R&#36;' . $price;
-				break;
 			case "EUR" :
-				$formatted = '&euro;' . $price;
-				break;
 			case "USD" :
 			case "AUD" :
 			case "CAD" :
@@ -137,40 +132,30 @@ function edd_currency_filter( $price ) {
 			case "MXN" :
 			case "NZD" :
 			case "SGD" :
-				$formatted = '&#36;' . $price;
-				break;
 			case "JPY" :
-				$formatted = '&yen;' . $price;
+				$formatted = $symbol . $price;
 				break;
 			default :
-			    $formatted = $currency . ' ' . $price;
+				$formatted = $currency . ' ' . $price;
 				break;
 		endswitch;
 		$formatted = apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_before', $formatted, $currency, $price );
 	else :
 		switch ( $currency ) :
 			case "GBP" :
-				$formatted = $price . '&pound;';
-				break;
 			case "BRL" :
-				$formatted = $price . 'R&#36;';
-				break;
 			case "EUR" :
-				$formatted = $price . '&euro;';
-				break;
 			case "USD" :
 			case "AUD" :
 			case "CAD" :
 			case "HKD" :
 			case "MXN" :
 			case "SGD" :
-				$formatted = $price . '&#36;';
-				break;
 			case "JPY" :
-				$formatted = $price . '&yen;';
+				$formatted = $price . $symbol;
 				break;
 			default :
-			    $formatted = $price . ' ' . $currency;
+				$formatted = $price . ' ' . $currency;
 				break;
 		endswitch;
 		$formatted = apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_after', $formatted, $currency, $price );
@@ -204,7 +189,7 @@ function edd_currency_decimal_filter( $decimals = 2 ) {
 			break;
 	}
 
-	return apply_filters( 'edd_currecny_decimal_count', $decimals, $currency );
+	return apply_filters( 'edd_currency_decimal_count', $decimals, $currency );
 }
 add_filter( 'edd_sanitize_amount_decimals', 'edd_currency_decimal_filter' );
 add_filter( 'edd_format_amount_decimals', 'edd_currency_decimal_filter' );

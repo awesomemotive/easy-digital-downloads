@@ -2,9 +2,20 @@
 /**
  * This template is used to display the purchase summary with [edd_receipt]
  */
-global $edd_receipt_args, $edd_options;
+global $edd_receipt_args;
 
 $payment   = get_post( $edd_receipt_args['id'] );
+
+if( empty( $payment ) ) : ?>
+
+	<div class="edd_errors">
+		<p class="edd_error"><?php _e( 'The specified receipt ID appears to be invalid', 'edd' ); ?></p> 
+	</div>
+
+<?php
+return;
+endif;
+
 $meta      = edd_get_payment_meta( $payment->ID );
 $cart      = edd_get_payment_meta_cart_details( $payment->ID, true );
 $user      = edd_get_payment_meta_user_info( $payment->ID );
@@ -158,7 +169,7 @@ $status    = edd_get_payment_status( $payment, true );
 									$download_url = edd_get_download_file_url( $meta['key'], $email, $filekey, $item['id'], $price_id );
 									?>
 									<li class="edd_download_file">
-										<a href="<?php echo esc_url( $download_url ); ?>" download="<?php echo edd_get_file_name( $file ); ?>" class="edd_download_file_link"><?php echo edd_get_file_name( $file ); ?></a>
+										<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link"><?php echo edd_get_file_name( $file ); ?></a>
 									</li>
 									<?php
 									do_action( 'edd_receipt_files', $filekey, $file, $item['id'], $payment->ID, $meta );
@@ -197,7 +208,7 @@ $status    = edd_get_payment_status( $payment, true );
 								endforeach;
 
 							else :
-								echo '<li>' . __( 'No downloadable files found.', 'edd' ) . '</li>';
+								echo '<li>' . apply_filters( 'edd_receipt_no_files_found_text', __( 'No downloadable files found.', 'edd' ), $item['id'] ) . '</li>';
 							endif; ?>
 						</ul>
 						<?php endif; ?>
