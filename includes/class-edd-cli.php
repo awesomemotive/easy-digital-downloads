@@ -293,7 +293,7 @@ class EDD_CLI extends WP_CLI_Command {
 				$email = false;
 
 			}
-			
+
 			WP_CLI::line( WP_CLI::colorize( '%G' . sprintf( __( '%d customers created in %d seconds', 'edd' ), $create, time() - $start ) . '%N' ) );
 
 		} else {
@@ -604,7 +604,7 @@ class EDD_CLI extends WP_CLI_Command {
 					'quantity' => 1,
 					'options'  => $options
 				);
-				
+
 				$cart_details[$key] = array(
 					'name'        => $download->post_title,
 					'id'          => $download->ID,
