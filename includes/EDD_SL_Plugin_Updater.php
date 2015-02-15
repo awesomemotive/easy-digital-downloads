@@ -17,6 +17,7 @@ class EDD_SL_Plugin_Updater {
     private $api_data  = array();
     private $name      = '';
     private $slug      = '';
+    private $version   = '';
 
     /**
      * Class constructor.
@@ -27,7 +28,6 @@ class EDD_SL_Plugin_Updater {
      * @param string  $_api_url     The URL pointing to the custom API endpoint.
      * @param string  $_plugin_file Path to the plugin file.
      * @param array   $_api_data    Optional data to send with API calls.
-     * @return void
      */
     function __construct( $_api_url, $_plugin_file, $_api_data = null ) {
         $this->api_url  = trailingslashit( $_api_url );
@@ -86,8 +86,6 @@ class EDD_SL_Plugin_Updater {
             $version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
 
             if ( false !== $version_info && is_object( $version_info ) && isset( $version_info->new_version ) ) {
-
-                $this->did_check = true;
 
                 if( version_compare( $this->version, $version_info->new_version, '<' ) ) {
 
@@ -265,7 +263,7 @@ class EDD_SL_Plugin_Updater {
      *
      * @param string  $_action The requested action.
      * @param array   $_data   Parameters for the API action.
-     * @return false||object
+     * @return false|object
      */
     private function api_request( $_action, $_data ) {
 

@@ -232,7 +232,7 @@ class EDD_DB_Customers extends EDD_DB  {
 	 *
 	 * @access public
 	 * @since  2.3
-	 * @param  string $column id or email
+	 * @param  string $field id or email
 	 * @param  mixed  $value  The Customer ID or email to search
 	 * @return mixed          Upon success, an object of the customer. Upon failure, NULL
 	 */
