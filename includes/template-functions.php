@@ -71,7 +71,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 	$args = wp_parse_args( $args, $defaults );
 
-	$download = new EDD_Download( $args['download_id'] );
+	$download      = new EDD_Download( $args['download_id'] );
 	$download_post = get_post( $args['download_id'] );
 
 	if( empty( $download->ID ) ) {
