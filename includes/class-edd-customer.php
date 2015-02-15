@@ -366,7 +366,7 @@ class EDD_Customer {
 	}
 
 	/**
-	 * Increase the purcahse count of a customer
+	 * Increase the purchase count of a customer
 	 *
 	 * @since  2.3
 	 * @param  integer $count The number to imcrement by
@@ -387,7 +387,7 @@ class EDD_Customer {
 			$this->purchase_count = $new_total;
 		}
 
-		do_action( 'edd_customer_post_increase_purchase_count', $this->purcahse_count, $count, $this->id );
+		do_action( 'edd_customer_post_increase_purchase_count', $this->purchase_count, $count, $this->id );
 
 		return $this->purchase_count;
 	}
@@ -414,7 +414,7 @@ class EDD_Customer {
 			$this->purchase_count = $new_total;
 		}
 
-		do_action( 'edd_customer_post_decrease_purchase_count', $this->purcahse_count, $count, $this->id );
+		do_action( 'edd_customer_post_decrease_purchase_count', $this->purchase_count, $count, $this->id );
 
 		return $this->purchase_count;
 	}
