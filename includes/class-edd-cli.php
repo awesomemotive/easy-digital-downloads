@@ -542,7 +542,6 @@ class EDD_CLI extends WP_CLI_Command {
 			'discount'      => 'none'
 		);
 
-		$cart_details = array();
 		for( $i = 0; $i < $number; $i++ ) {
 
 			$products = array();
@@ -570,6 +569,8 @@ class EDD_CLI extends WP_CLI_Command {
 				$products[] = $product;
 
 			}
+
+			$cart_details = array();
 
 			// Create the purchases
 			foreach( $products as $key => $download ) {
