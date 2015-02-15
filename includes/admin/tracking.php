@@ -33,7 +33,6 @@ class EDD_Tracking {
 	 * Get things going
 	 *
 	 * @access public
-	 * @return void
 	 */
 	public function __construct() {
 
@@ -198,7 +197,7 @@ class EDD_Tracking {
 	 * Get the last time a checkin was sent
 	 *
 	 * @access private
-	 * @return false/string
+	 * @return false|string
 	 */
 	private function get_last_send() {
 		return get_option( 'edd_tracking_last_send' );

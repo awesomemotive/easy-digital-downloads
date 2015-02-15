@@ -254,6 +254,7 @@ class EDD_Download {
 	 * Retrieve the file downloads
 	 *
 	 * @since 2.2
+	 * @param integer $variable_price_id
 	 * @return array
 	 */
 	public function get_files( $variable_price_id = null ) {
@@ -590,6 +591,7 @@ class EDD_Download {
 	 * Decrease the earnings by the given amount
 	 *
 	 * @since 2.2
+	 * @param integer $amount
 	 * @return float|false
 	 */
 	public function decrease_earnings( $amount ) {
