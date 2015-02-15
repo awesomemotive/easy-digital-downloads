@@ -208,12 +208,10 @@ function edd_v131_upgrades() {
 	);
 
 	$query = new WP_Query( $args );
-	$count = $query->post_count;
 	$downloads = $query->get_posts();
 
 	if ( $downloads ) {
 		$edd_log = new EDD_Logging();
-		$i = 0;
 		foreach ( $downloads as $download ) {
 			// Convert sale logs
 			$sale_logs = edd_get_download_sales_log( $download->ID, false );
@@ -314,7 +312,6 @@ function edd_v14_upgrades() {
 
 	if ( $discounts ) {
 		foreach ( $discounts as $discount_key => $discount ) {
-			$status = isset( $discount['status'] ) ? $discount['status'] : 'inactive';
 
 			$discount_id = wp_insert_post( array(
 				'post_type'   => 'edd_discount',
