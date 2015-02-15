@@ -173,7 +173,8 @@ function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
 	if( $customer_id ) {
 
 		$customer = new EDD_Customer( $customer_id );
-		$customer->decrement_stats( $customer_id, $amount );
+		$customer->decrease_value( $amount );
+		$customer->decrease_purchase_count();
 
 	}
 
