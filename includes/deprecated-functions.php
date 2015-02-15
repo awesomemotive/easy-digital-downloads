@@ -257,7 +257,7 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 
 	_edd_deprecated_function( __FUNCTION__, '1.9', 'edd_get_cart_subtotal() or edd_get_cart_total()', $backtrace );
 
-	$amount = edd_get_cart_subtotal( false );
+	$amount = edd_get_cart_subtotal( );
 	if ( ! empty( $_POST['edd-discount'] ) || edd_get_cart_discounts() !== false ) {
 		// Retrieve the discount stored in cookies
 		$discounts = edd_get_cart_discounts();
