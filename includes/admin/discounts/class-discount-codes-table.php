@@ -180,10 +180,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return string Column Name
 	 */
 	function column_default( $item, $column_name ) {
-		switch( $column_name ){
-			default:
-				return $item[ $column_name ];
-		}
+		return $item[ $column_name ];
 	}
 
 	/**
