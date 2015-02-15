@@ -1477,7 +1477,7 @@ function edd_delete_payment_note( $comment_id = 0, $payment_id = 0 ) {
  * Gets the payment note HTML
  *
  * @since 1.9
- * @param object/int $note The comment object or ID
+ * @param object|int $note The comment object or ID
  * @param int $payment_id The payment ID the note is connected to
  * @return string
  */
