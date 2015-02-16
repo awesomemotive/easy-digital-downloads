@@ -12,7 +12,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return void
 */
 function edd_customers_page() {
-	$current_page  = admin_url( 'edit.php?post_type=download&page=edd-customers' );
 	$default_views = edd_customer_views();
 	$requested_view = isset( $_GET['view'] ) ? sanitize_text_field( $_GET['view'] ) : 'customers';
 	if ( array_key_exists( $requested_view, $default_views ) && function_exists( $default_views[$requested_view] ) ) {
@@ -105,7 +104,6 @@ function edd_render_customer_view( $view, $callbacks ) {
 	}
 
 	$customer_tabs = edd_customer_tabs();
-	$errors        = edd_get_errors();
 	?>
 
 	<div class='wrap'>
@@ -212,7 +210,6 @@ function edd_customers_view( $customer ) {
 						<select data-key="country" name="customerinfo[country]" id="billing_country" class="billing_country edd-select edit-item">
 							<?php
 
-							$selected_country = edd_get_shop_country();
 							$selected_country = $address['country'];
 
 							$countries = edd_get_country_list();
