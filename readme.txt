@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.9.2
 Tested up to: 4.1
 
-Stable Tag: 2.2.2
+Stable Tag: 2.2.7
 
 License: GNU Version 2 or Any Later Version
 
@@ -71,6 +71,15 @@ Easy Digital Downloads has been translated into the following languages:
 15. Farsi
 16. Finnish
 17. Hebrew
+18. Persian
+19. Finnish
+20. Slovak
+21. Swedish
+22. Romanian
+23. Hungarian
+24. Norwegian
+25. Khmer
+26. Lithuanian
 
 Would you like to help translate the plugin into more languages? [Join our WP-Translations Community](https://www.transifex.com/projects/p/easy-digital-downloads/).
 
@@ -182,6 +191,63 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.2.7, January 30, 2015 =
+
+* Fix: Prevent payment records with missing meta data from haulting the upgrade routine introduced in v2.2.6
+
+= 2.2.6, January 29, 2015 =
+
+* Note: This release will ask you to perform an upgrade process on the payments database. It should take approximately 1.5 minutes for every 1000 payment records
+* Bug: Price ID improperly logged in the database, making customer export by price option impossible
+* Bug: WP_CONTENT_URL does necessarily respect HTTPS URLs causing some file downloads to fail
+
+= 2.2.5, January 27, 2015 =
+
+* Bug: FORCE_SSL_LOGIN incorrectly makes checkout link HTTPS
+* Bug: Reports for 'This Month' forced to current year
+* Bug: Reverted CSV Seperator to , and escaped values
+* Bug: No downloads showing when using category parameter
+
+= 2.2.4, January 24, 2015 =
+
+* New: Introduced edd_global_checkout_script_vars and edd_ajax_script_vars filters for localized javascript variables
+* Bug: Strict PHP Standards notice in EDD_Gateway_Error_Log class
+* Bug: Category parameter behaves incorrectly for the [downloads] short code
+* Bug: Select a Download placeholder on add discount screen saves improperly
+* Bug: EDD_Session leaks across sites in multisite installs
+* Bug: Incorrect spelling of Indian state names
+* Bug: Duplicate array key in country list
+
+= 2.2.3, January 14, 2015 =
+
+* New: Added more hooks to the profile editor template files
+* New: Added more country state/provinces to the country dropdown field
+* New: Added a JSHint file for WP Coding Standards
+* Tweak: Use get_posts() instead of query_posts() in edd_get_*_by() functions
+* Tweak: Improved flexibility for EDD()->html->year_dropdown() to support larger year spans
+* Tweak: Added NZD currency symbol
+* Tweak: Improved support for Polylang plugin via edd_get_option() standardization
+* Tweak: Improved unit testing suite
+* Tweak: Updated numerous translation files
+* Bug: GMT date / time not properly set in date is specified when creating a payment record
+* Bug: Items purchased with quantities show incorrectly in sales log table
+* Bug: [downloads] pagination not working with default permalinks
+* Bug: AND relation acting as an OR relation in [downloads] short code
+* Bug: Cart widget items incorrect with variable prices
+* Bug: Custom date range reports do not work when crossing year boundaries
+* Bug: Yesterday report fails on January 1
+* Bug: Missing license declaration from Credit Card validation library
+* Bug: loading.gif file does not respect HTTPS
+* Bug: Copy Download Link(s) link displayed on non-complete purchases
+* Bug: Nested FORM tags on checkout after taxes are recalculated
+* Bug: get_the_ID() causing non-object error
+* Bug: Discount codes not applied if Apply button is not clicked
+* Bug: Default price ID cannot be selected on products created before version 2.2
+* Bug: edd_get_current_page_url() returns localhost in HHVM
+* Bug: Conflict with 404 Redirected plugin resulting in receipts not being displayed
+* Bug: Add to Cart button reappears on refresh with variable prices
+* Bug: Profile editor not properly validation user email address on save
 
 = 2.2.2, December 14, 2014 =
 
@@ -319,7 +385,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: No file name displayed in download history when one isn't set
 * Fix: Corrected some strict SQL standards with the customer table creation SQL
 * Fix: Restored the .hentry class
-* Tweak: Modified the CSV Payments export to allow easier data manipulation 
+* Tweak: Modified the CSV Payments export to allow easier data manipulation
 
 = 2.1.2, September 4, 2014 =
 
@@ -334,7 +400,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Incorrect subtotal displayed on purchase receipt when taxes are enabled
 * Fix: Customer records not getting created due to SQL syntax error
 * Fix: Apostrophes in site name not being decoded in emails
-* Fix: card_state class not kept on select when when switching countries on checkout 
+* Fix: card_state class not kept on select when when switching countries on checkout
 
 = 2.1, September 3, 2014 =
 
@@ -723,7 +789,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 _REQUIRES WordPress 3.7 or later_
 
 * New: Added a new Getting Started page for first time installs
-* New: Rebuilt the View / Edit Details screen for payments, adding the ability to edit almost all data associated with a payment and dramatically improving the edit payment interface 
+* New: Rebuilt the View / Edit Details screen for payments, adding the ability to edit almost all data associated with a payment and dramatically improving the edit payment interface
 * New: Added per-products earnings and sales graphs
 * New: Allow purchase buttons to show only the price, no text
 * New: Added an option to enable/disable data deletion during plugin uninstall
@@ -800,7 +866,7 @@ _REQUIRES WordPress 3.7 or later_
 * Tweak: MP6 UI compatibility
 * Tweak: add edd_get_option() helper function
 * Tweak: enable mobile app link to be removed
-* Tweak: pass $item along with edd_email_receipt_download_title filter 
+* Tweak: pass $item along with edd_email_receipt_download_title filter
 * Tweak: map lowest price option amount to edd_price
 * Tweak: add new user notification on checkout user registration
 * Tweak: check the address is not equal to * when selecting country

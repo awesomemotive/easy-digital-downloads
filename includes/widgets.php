@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Widgets
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
@@ -47,8 +47,6 @@ class edd_cart_widget extends WP_Widget {
 		$instance['title'] = ( isset( $instance['title'] ) ) ? $instance['title'] : '';
 
 		$title = apply_filters( 'widget_title', $instance[ 'title' ], $instance, $args['id'] );
-
-		global $post, $edd_options;
 
 		echo $args['before_widget'];
 
@@ -124,8 +122,6 @@ class edd_categories_tags_widget extends WP_Widget {
 		$tax        = $instance['taxonomy'];
 		$count      = isset( $instance['count'] ) && $instance['count'] == 'on' ? 1 : 0;
 		$hide_empty = isset( $instance['hide_empty'] ) && $instance['hide_empty'] == 'on' ? 1 : 0;
-
-		global $post, $edd_options;
 
 		echo $args['before_widget'];
 		

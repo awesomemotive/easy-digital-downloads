@@ -10,7 +10,7 @@
  *
  * @package     EDD
  * @subpackage  Classes/API
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
  */
@@ -140,7 +140,7 @@ class EDD_API {
 	 * @since 1.5
 	 * @author Daniel J Griffiths
 	 * @param array $vars Query vars
-	 * @return array $vars New query vars
+	 * @return string[] $vars New query vars
 	 */
 	public function query_vars( $vars ) {
 		$vars[] = 'token';
@@ -251,6 +251,7 @@ class EDD_API {
 	 * @since 1.5
 	 */
 	private function missing_auth() {
+		$error = array();
 		$error['error'] = __( 'You must specify both a token and API key!', 'edd' );
 
 		$this->data = $error;
@@ -267,6 +268,7 @@ class EDD_API {
 	 * @return void
 	 */
 	private function invalid_auth() {
+		$error = array();
 		$error['error'] = __( 'Your request could not be authenticated!', 'edd' );
 
 		$this->data = $error;
@@ -284,6 +286,7 @@ class EDD_API {
 	 * @return void
 	 */
 	private function invalid_key() {
+		$error = array();
 		$error['error'] = __( 'Invalid API key!', 'edd' );
 
 		$this->data = $error;
@@ -400,7 +403,7 @@ class EDD_API {
 		) );
 
 		$query = isset( $wp_query->query_vars['edd-api'] ) ? $wp_query->query_vars['edd-api'] : null;
-
+		$error = array();
 		// Make sure our query is valid
 		if ( ! in_array( $query, $accepted ) ) {
 			$error['error'] = __( 'Invalid query!', 'edd' );
@@ -635,7 +638,7 @@ class EDD_API {
 	public function get_customers( $customer = null ) {
 
 		$customers = array();
-
+		$error = array();
 		if( ! user_can( $this->user_id, 'view_shop_sensitive_data' ) && ! $this->override ) {
 			return $customers;
 		}
@@ -725,7 +728,8 @@ class EDD_API {
 	public function get_products( $product = null ) {
 
 		$products = array();
-
+		$error = array();
+		
 		if ( $product == null ) {
 			$products['products'] = array();
 
@@ -1178,6 +1182,7 @@ class EDD_API {
 		if( ! user_can( $this->user_id, 'manage_shop_discounts' ) && ! $this->override ) {
 			return $discount_list;
 		}
+		$error = array();
 
 		if ( empty( $discount ) ) {
 
@@ -1369,13 +1374,10 @@ class EDD_API {
 	 * @access public
 	 * @author Daniel J Griffiths
 	 * @since 1.5
-	 * @global $edd_options Array of all the EDD Options
 	 * @param object $user Current user info
 	 * @return void
 	 */
 	function user_key_field( $user ) {
-		global $edd_options;
-
 		if ( ( edd_get_option( 'api_allow_user_keys', false ) || current_user_can( 'manage_shop_settings' ) ) && current_user_can( 'edit_user', $user->ID ) ) {
 			$user = get_userdata( $user->ID );
 			?>
@@ -1462,8 +1464,9 @@ class EDD_API {
 	 *
 	 * @access public
 	 * @since 2.0.0
-	 * @param array $args
-	 * @return string
+	 * @param int $user_id User ID the key is being generated for
+	 * @param boolean $regenerate Regenerate the key for the user
+	 * @return boolean True if (re)generated succesfully, false otherwise.
 	 */
 	public function generate_api_key( $user_id = 0, $regenerate = false ) {
 
@@ -1496,7 +1499,7 @@ class EDD_API {
 	 *
 	 * @access public
 	 * @since 2.0.0
-	 * @param int $args
+	 * @param int $user_id User ID of user to revoke key for
 	 * @return string
 	 */
 	public function revoke_api_key( $user_id = 0 ) {
@@ -1599,7 +1602,7 @@ class EDD_API {
 	private function get_default_sales_stats() {
 
 		// Default sales return
-
+		$sales = array();
 		$sales['sales']['today']         = $this->stats->get_sales( 0, 'today' );
 		$sales['sales']['current_month'] = $this->stats->get_sales( 0, 'this_month' );
 		$sales['sales']['last_month']    = $this->stats->get_sales( 0, 'last_month' );
@@ -1618,7 +1621,7 @@ class EDD_API {
 	private function get_default_earnings_stats() {
 
 		// Default earnings return
-
+		$earnings = array();
 		$earnings['earnings']['today']         = $this->stats->get_earnings( 0, 'today' );
 		$earnings['earnings']['current_month'] = $this->stats->get_earnings( 0, 'this_month' );
 		$earnings['earnings']['last_month']    = $this->stats->get_earnings( 0, 'last_month' );
