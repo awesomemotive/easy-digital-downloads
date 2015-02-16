@@ -79,6 +79,7 @@ function edd_get_cart_item_template( $cart_key, $item, $ajax = false ) {
 	$remove_url = edd_remove_item_url( $cart_key );
 	$title      = get_the_title( $id );
 	$options    = !empty( $item['options'] ) ? $item['options'] : array();
+	$quantity   = edd_get_cart_item_quantity( $id, $options );
 	$price      = edd_get_cart_item_price( $id, $options );
 
 	if ( ! empty( $options ) ) {
@@ -95,6 +96,7 @@ function edd_get_cart_item_template( $cart_key, $item, $ajax = false ) {
 	$item = str_replace( '{item_amount}', edd_currency_filter( edd_format_amount( $price ) ), $item );
 	$item = str_replace( '{cart_item_id}', absint( $cart_key ), $item );
 	$item = str_replace( '{item_id}', absint( $id ), $item );
+	$item = str_replace( '{item_quantity}', absint( $quantity ), $item );
 	$item = str_replace( '{remove_url}', $remove_url, $item );
   	$subtotal = '';
   	if ( $ajax ){
