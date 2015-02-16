@@ -94,7 +94,7 @@ class EDD_Customer {
 	 *
 	 * @since 2.3
 	 */
-	public function __construct( $_id_or_email = false ) {
+	public function __construct( $_id_or_email = false, $by_user_id = false ) {
 
 		$this->db = new EDD_DB_Customers;
 
@@ -102,7 +102,14 @@ class EDD_Customer {
 			return false;
 		}
 
-		$field    = is_numeric( $_id_or_email ) ? 'id' : 'email';
+		$by_user_id = is_bool( $by_user_id ) ? $by_user_id : false;
+
+		if ( is_numeric( $_id_or_email ) ) {
+			$field = $by_user_id ? 'user_id' : 'id';
+		} else {
+			$field = 'email';
+		}
+
 		$customer = $this->db->get_customer_by( $field, $_id_or_email );
 
 		if ( empty( $customer ) || ! is_object( $customer ) ) {
