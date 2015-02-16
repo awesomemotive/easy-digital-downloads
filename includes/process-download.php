@@ -44,6 +44,9 @@ function edd_process_download() {
 		// Validate a signed URL that contains a token
 		$args = edd_process_signed_download_url( $args );
 
+		// Backfill some legacy super globals for backwards compatibility
+		$_GET['download_id'] = $args['download'];
+
 	} elseif ( ! empty( $args['download'] ) && ! empty( $args['key'] ) && ! empty( $args['email'] ) && ! empty( $args['expire'] ) && isset( $args['file_key'] ) ) {
 
 		// Validate a legacy URL without a token
