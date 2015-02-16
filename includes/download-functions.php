@@ -924,7 +924,7 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $p
 	}
 
 	// Leaving in this array and the filter for backwards compatibility now
-	$params = array(
+	$old_args = array(
 		'download_key' 	=> rawurlencode( $key ),
 		'email'         => rawurlencode( $email ),
 		'file'          => rawurlencode( $filekey ),
@@ -933,7 +933,7 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $p
 		'expire'        => rawurlencode( $date )
 	);
 
-	$params  = apply_filters( 'edd_download_file_url_args', $params );
+	$params  = apply_filters( 'edd_download_file_url_args', $old_args );
 
 	$payment = edd_get_payment_by( 'key', $params['download_key'] );
 
@@ -952,8 +952,12 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $p
 			$args['ttl'] = $params['expire'];
 		}
 
+		// Ensure all custom args registered with extensions through edd_download_file_url_args get added to the URL, but without adding all the old args
+		$args = array_merge( $args, array_diff_key( $params, $old_args ) );
+
 		$args = apply_filters( 'edd_get_download_file_url_args', $args, $payment->ID, $params );
 
+		$args['file'] = $params['file'];
 		$args['token'] = edd_get_download_token( add_query_arg( $args, home_url() ) );
 	}
 
