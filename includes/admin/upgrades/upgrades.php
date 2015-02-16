@@ -35,6 +35,11 @@ function edd_upgrades_screen() {
 		'steps'       => $steps
 	);
 	update_option( 'edd_doing_upgrade', $doing_upgrade_args );
+
+	if ( $step > $steps ) {
+		// Prevent a weird case where the estimate was off. Usually only a couple.
+		$steps = $step;
+	}
 	?>
 	<div class="wrap">
 		<h2><?php _e( 'Easy Digital Downloads - Upgrades', 'edd' ); ?></h2>
@@ -49,7 +54,7 @@ function edd_upgrades_screen() {
 				<?php endif; ?>
 			</div>
 			<script type="text/javascript">
-				document.location.href = "index.php?edd_action=<?php echo $action; ?>&step=<?php echo $step; ?>&total=<?php echo $total; ?>&custom=<?php echo $custom; ?>";
+				setTimeout(function() { document.location.href = "index.php?edd_action=<?php echo $action; ?>&step=<?php echo $step; ?>&total=<?php echo $total; ?>&custom=<?php echo $custom; ?>"; }, 250);
 			</script>
 
 		<?php else : ?>
