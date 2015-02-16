@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Classes/Customer
- * @copyright   Copyright (c) 2012, Chris Klosowski
+ * @copyright   Copyright (c) 2015, Chris Klosowski
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.3
 */
@@ -366,7 +366,7 @@ class EDD_Customer {
 	}
 
 	/**
-	 * Increase the purcahse count of a customer
+	 * Increase the purchase count of a customer
 	 *
 	 * @since  2.3
 	 * @param  integer $count The number to imcrement by
@@ -387,7 +387,7 @@ class EDD_Customer {
 			$this->purchase_count = $new_total;
 		}
 
-		do_action( 'edd_customer_post_increase_purchase_count', $this->purcahse_count, $count, $this->id );
+		do_action( 'edd_customer_post_increase_purchase_count', $this->purchase_count, $count, $this->id );
 
 		return $this->purchase_count;
 	}
@@ -414,7 +414,7 @@ class EDD_Customer {
 			$this->purchase_count = $new_total;
 		}
 
-		do_action( 'edd_customer_post_decrease_purchase_count', $this->purcahse_count, $count, $this->id );
+		do_action( 'edd_customer_post_decrease_purchase_count', $this->purchase_count, $count, $this->id );
 
 		return $this->purchase_count;
 	}
@@ -468,7 +468,7 @@ class EDD_Customer {
 	 *
 	 * @since  2.3
 	 * @param  integer $length The number of notes to get
-	 * @param  integer $offset What note to start at
+	 * @param  integer $paged What note to start at
 	 * @return array           The notes requsted
 	 */
 	public function get_notes( $length = 20, $paged = 1 ) {
@@ -505,6 +505,7 @@ class EDD_Customer {
 	 *
 	 * @since  2.3
 	 * @param string $note The note to add
+	 * @return string|boolean The new note if added succesfully, false otherwise
 	 */
 	public function add_note( $note = '' ) {
 

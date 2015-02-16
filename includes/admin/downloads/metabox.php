@@ -167,7 +167,7 @@ add_action( 'save_post', 'edd_download_meta_box_save', 10, 2 );
  *
  * @since 1.3.2
  * @param string $price Price before sanitization
- * @return float $price Sanitized price
+ * @return string $price Sanitized price
  */
 function edd_sanitize_price_save( $price ) {
 	return edd_sanitize_amount( $price );

@@ -43,7 +43,6 @@ function edd_get_tax_rates() {
  * Get taxation rate
  *
  * @since 1.3.3
- *
  * @param bool $country
  * @param bool $state
  * @return mixed|void

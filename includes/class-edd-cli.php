@@ -63,7 +63,7 @@ class EDD_CLI extends WP_CLI_Command {
 		WP_CLI::line( sprintf( __( 'Ajax is: %s', 'edd' ), ( edd_is_ajax_enabled() ? __( 'Enabled', 'edd' ) : __( 'Disabled', 'edd' ) ) ) );
 		WP_CLI::line( sprintf( __( 'Guest checkouts are: %s', 'edd' ), ( edd_no_guest_checkout() ? __( 'Disabled', 'edd' ) : __( 'Enabled', 'edd' ) ) ) );
 		WP_CLI::line( sprintf( __( 'Symlinks are: %s', 'edd' ), ( apply_filters( 'edd_symlink_file_downloads', isset( $symlink_file_downloads ) ) && function_exists( 'symlink' ) ? __( 'Enabled', 'edd' ) : __( 'Disabled', 'edd' ) ) ) );
-		WP_CLI::line( "\n" . sprintf( __( 'Checkout page is: %s', 'edd' ), ( ! edd_get_option( 'purchase_page', false ) ) ? __( 'Valid', 'edd' ) : __( 'Invalid', 'edd' ) ) ) );
+		WP_CLI::line( "\n" . sprintf( __( 'Checkout page is: %s', 'edd' ), ( ! edd_get_option( 'purchase_page', false ) ) ? __( 'Valid', 'edd' ) : __( 'Invalid', 'edd' ) ) );
 		WP_CLI::line( sprintf( __( 'Checkout URL is: %s', 'edd' ), ( ! empty( $purchase_page ) ? get_permalink( $purchase_page ) : __( 'Undefined', 'edd' ) ) ) );
 		WP_CLI::line( sprintf( __( 'Success URL is: %s', 'edd' ), ( ! empty( $success_page ) ? get_permalink( $success_page ) : __( 'Undefined', 'edd' ) ) ) );
 		WP_CLI::line( sprintf( __( 'Failure URL is: %s', 'edd' ), ( ! empty( $failure_page ) ? get_permalink( $failure_page ) : __( 'Undefined', 'edd' ) ) ) );
@@ -108,7 +108,7 @@ class EDD_CLI extends WP_CLI_Command {
 		if( ! empty( $date ) ) {
 			$start_date = $date;
 			$end_date   = false;
-		} elseif( empty( $date ) && empty( $startdate ) ) {
+		} elseif( empty( $date ) && empty( $start_date ) ) {
 			$start_date = 'this_month';
 			$end_date   = false;
 		}
@@ -293,7 +293,7 @@ class EDD_CLI extends WP_CLI_Command {
 				$email = false;
 
 			}
-			
+
 			WP_CLI::line( WP_CLI::colorize( '%G' . sprintf( __( '%d customers created in %d seconds', 'edd' ), $create, time() - $start ) . '%N' ) );
 
 		} else {
@@ -570,6 +570,8 @@ class EDD_CLI extends WP_CLI_Command {
 
 			}
 
+			$cart_details = array();
+
 			// Create the purchases
 			foreach( $products as $key => $download ) {
 
@@ -578,6 +580,7 @@ class EDD_CLI extends WP_CLI_Command {
 				}
 
 				$options = array();
+				$final_downloads = array();
 
 				// Deal with variable pricing
 				if( edd_has_variable_prices( $download->ID ) ) {
@@ -615,6 +618,8 @@ class EDD_CLI extends WP_CLI_Command {
 					'tax'         => 0
 				);
 
+				$final_downloads[$key] = $item_number;
+
 				$total += $item_price;
 
 			}
@@ -626,7 +631,7 @@ class EDD_CLI extends WP_CLI_Command {
 				'user_email'    => 'guest@local.dev',
 				'user_info'     => $user_info,
 				'currency'      => edd_get_currency(),
-				'downloads'     => (array) $download,
+				'downloads'     => $final_downloads,
 				'cart_details'  => $cart_details,
 				'status'        => 'pending'
 			);
