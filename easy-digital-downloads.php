@@ -225,7 +225,9 @@ final class Easy_Digital_Downloads {
 		$edd_options = edd_get_settings();
 
 		require_once EDD_PLUGIN_DIR . 'includes/actions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/deprecated-functions.php';
+		if( file_exists( EDD_PLUGIN_DIR . 'includes/deprecated-functions.php' ) ) {
+			require_once EDD_PLUGIN_DIR . 'includes/deprecated-functions.php';
+		}
 		require_once EDD_PLUGIN_DIR . 'includes/ajax-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/template-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/checkout/template.php';
