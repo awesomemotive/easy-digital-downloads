@@ -41,12 +41,12 @@ function edd_process_download() {
 
 	if ( ! empty( $args['eddfile'] ) && ! empty( $args['ttl'] ) && ! empty( $args['token'] ) ) {
 
-		// Call a signed URL validation
+		// Validate a signed URL that contains a token
 		$args = edd_process_signed_download_url( $args );
 
 	} elseif ( ! empty( $args['download'] ) && ! empty( $args['key'] ) && ! empty( $args['email'] ) && ! empty( $args['expire'] ) && isset( $args['file_key'] ) ) {
 
-		// Call legacy URL validation
+		// Validate a legacy URL without a token
 		$args = edd_process_legacy_download_url( $args );
 
 	} else {
