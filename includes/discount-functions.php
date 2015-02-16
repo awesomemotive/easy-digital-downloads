@@ -85,7 +85,7 @@ function edd_has_active_discounts() {
  * Retrieves a complete discount code by discount ID.
  *
  * @since 1.0
- * @param string $discount_id Discount ID
+ * @param integer $discount_id Discount ID
  * @return array
  */
 function edd_get_discount( $discount_id = 0 ) {
@@ -530,7 +530,7 @@ function edd_get_discount_product_condition( $code_id = 0 ) {
  * @since 1.5
  * @param int $code_id Discount ID
  * @return array $product_reqs IDs of the required products
- * @return bool Whether or not discount code is global
+ * @return boolean Whether or not discount code is global
  */
 function edd_is_discount_not_global( $code_id = 0 ) {
 	return (bool) get_post_meta( $code_id, '_edd_discount_is_not_global', true );
@@ -946,7 +946,7 @@ function edd_format_discount_rate( $type, $amount ) {
  *
  * @since 1.4.1
  * @param string $code Discount code
- * @return array All currently active discounts
+ * @return string[] All currently active discounts
  */
 function edd_set_cart_discount( $code = '' ) {
 
@@ -1070,7 +1070,7 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 	global $edd_is_last_cart_item, $edd_flat_discount_total;
 
 	$amount           = 0;
-	$price            = edd_get_cart_item_price( $item['id'], $item['options'], edd_prices_include_tax() );
+	$price            = edd_get_cart_item_price( $item['id'], $item['options'] );
 	$discounted_price = $price;
 
 	// Retrieve all discounts applied to the cart
@@ -1119,7 +1119,7 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 						$cart_items        = edd_get_cart_contents();
 						foreach( $cart_items as $cart_item ) {
 							if( ! in_array( $cart_item['id'], $excluded_products ) ) {
-								$item_price      = edd_get_cart_item_price( $cart_item['id'], $cart_item['options'], edd_prices_include_tax() );
+								$item_price      = edd_get_cart_item_price( $cart_item['id'], $cart_item['options'] );
 								$items_subtotal += $item_price * $cart_item['quantity'];
 							}
 						}

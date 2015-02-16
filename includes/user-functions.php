@@ -256,6 +256,7 @@ function edd_get_purchase_stats_by_user( $user = '' ) {
 	$customer = EDD()->customers->get_customer_by( $field, $user );
 	$customer = new EDD_Customer( $customer->id );
 
+	$stats = array();
 	$stats['purchases']   = absint( $customer->purchase_count );
 	$stats['total_spent'] = edd_sanitize_amount( $customer->purchase_value );
 
@@ -334,7 +335,7 @@ function edd_count_file_downloads_of_user( $user ) {
  *
  * @access      public
  * @since       1.3.4
- * @param       $username string - the username to validate
+ * @param       string $username The username to validate
  * @return      bool
  */
 function edd_validate_username( $username ) {

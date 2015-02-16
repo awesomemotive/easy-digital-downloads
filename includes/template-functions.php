@@ -753,7 +753,7 @@ function edd_is_purchase_history_page() {
  * Adds body classes for EDD pages
  *
  * @since 2.1
- * @param array $classes current classes
+ * @param array $class current classes
  * @return array Modified array of classes
  */
 function edd_add_body_classes( $class ) {

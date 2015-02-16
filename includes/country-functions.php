@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_get_shop_country() {
 	$country = edd_get_option( 'base_country', 'US' );
-
+	
 	return apply_filters( 'edd_shop_country', $country );
 }
 
