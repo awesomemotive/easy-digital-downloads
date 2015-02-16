@@ -523,7 +523,10 @@ function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $ex
 					}
 
 					// Make sure the link hasn't expired
-					if ( current_time( 'timestamp' ) > base64_decode( $expire ) ) {
+
+					$expire = base64_decode( $expire, true ) ? base64_decode( $expire ) : $expire; // Detect whether the expiration was given in base64
+
+					if ( current_time( 'timestamp' ) > $expire ) {
 						wp_die( apply_filters( 'edd_download_link_expired_text', __( 'Sorry but your download link has expired.', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 					}
 					return $payment->ID; // Payment has been verified and link is still valid
