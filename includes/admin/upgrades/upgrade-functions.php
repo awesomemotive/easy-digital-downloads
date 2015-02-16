@@ -782,6 +782,12 @@ function edd_v23_upgrade_customer_purcahses() {
 
 	}
 
+	$total = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : false;
+
+	if ( empty( $total ) || $total <= 1 ) {
+		$total = EDD()->customers->count();
+	}
+
 	$customers = EDD()->customers->get_customers( array( 'number' => $number, 'offset' => $offset ) );
 
 	if( ! empty( $customers ) ) {
@@ -834,7 +840,8 @@ function edd_v23_upgrade_customer_purcahses() {
 		$redirect = add_query_arg( array(
 			'page'        => 'edd-upgrades',
 			'edd-upgrade' => 'upgrade_customer_payments_association',
-			'step'        => $step
+			'step'        => $step,
+			'total'       => $total
 		), admin_url( 'index.php' ) );
 		wp_redirect( $redirect ); exit;
 
