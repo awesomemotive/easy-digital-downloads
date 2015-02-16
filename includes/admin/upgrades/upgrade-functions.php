@@ -728,33 +728,53 @@ function edd_v23_upgrade_payment_taxes() {
 		@set_time_limit(0);
 	}
 	$step   = isset( $_GET['step'] ) ? absint( $_GET['step'] ) : 1;
-	$number = 20;
+	$number = 50;
 	$offset = $step == 1 ? 0 : ( $step - 1 ) * $number;
-	$args = array(
-		'order'   => 'ASC',
-		'orderby' => 'ID',
-		'number'  => $number,
-		'page'    => $step,
-		'offset'  => $offset
-	);
-	$payments = new EDD_Payments_Query( $args );
-	$payments = $payments->get_payments();
-	if( $payments ) {
-		foreach( $payments as $payment ) {
-			// Add the new _edd_payment_meta item
-			$payment_tax = edd_get_payment_tax( $payment->ID );
-			edd_update_payment_meta( $payment->ID, '_edd_payment_tax', $payment_tax );
-			// Remove the 'tax' item from the _edd_payment_meta array
-			$payment_meta = edd_get_payment_meta( $payment->ID, '_edd_payment_meta', true );
-			unset( $payment_meta['tax'] );
-			edd_update_payment_meta( $payment->ID, '_edd_payment_meta', $payment_meta );
+
+	if ( $step < 2 ) {
+		// Check if we have any payments before moving on
+		$sql = "SELECT ID FROM $wpdb->posts WHERE post_type = 'edd_payment' LIMIT 1";
+		$has_payments = $wpdb->get_col( $sql );
+
+		if( empty( $has_payments ) ) {
+			// We had no payments, just complete
+			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+			delete_option( 'edd_doing_upgrade' );
+			wp_redirect( admin_url() ); exit;
 		}
+	}
+
+	$total = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : false;
+	if ( empty( $total ) || $total <= 1 ) {
+		$total_sql = "SELECT COUNT(ID) as total_payments FROM $wpdb->posts WHERE post_type = 'edd_payment'";
+		$results   = $wpdb->get_row( $total_sql, 0 );
+
+		$total     = $results->total_payments;
+	}
+
+	$payment_ids = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_type = 'edd_payment' ORDER BY post_date DESC LIMIT %d,%d;", $offset, $number ) );
+
+	if( $payment_ids ) {
+		foreach( $payment_ids as $payment_id ) {
+
+			// Add the new _edd_payment_meta item
+			$payment_tax = edd_get_payment_tax( $payment_id );
+			edd_update_payment_meta( $payment_id, '_edd_payment_tax', $payment_tax );
+
+			// Remove the 'tax' item from the _edd_payment_meta array
+			$payment_meta = edd_get_payment_meta( $payment_id, '_edd_payment_meta', true );
+			unset( $payment_meta['tax'] );
+			edd_update_payment_meta( $payment_id, '_edd_payment_meta', $payment_meta );
+		}
+
 		// Payments found so upgrade them
 		$step++;
 		$redirect = add_query_arg( array(
 			'page'        => 'edd-upgrades',
 			'edd-upgrade' => 'upgrade_payment_taxes',
-			'step'        => $step
+			'step'        => $step,
+			'number'      => $number,
+			'total'       => $total
 		), admin_url( 'index.php' ) );
 		wp_redirect( $redirect ); exit;
 	} else {
