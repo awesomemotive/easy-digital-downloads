@@ -41,7 +41,7 @@ function edd_process_download() {
 
 	if ( ! empty( $args['eddfile'] ) && ! empty( $args['ttl'] ) && ! empty( $args['token'] ) ) {
 
-		// Validate a signed URL that contains a token
+		// Validate a signed URL that edd_process_signed_download_urlcontains a token
 		$args = edd_process_signed_download_url( $args );
 
 		// Backfill some legacy super globals for backwards compatibility
@@ -49,6 +49,7 @@ function edd_process_download() {
 		$_GET['email']        = $args['email'];
 		$_GET['expire']       = $args['expire'];
 		$_GET['download_key'] = $args['key'];
+		$_GET['price_id']     = $args['key'];
 
 	} elseif ( ! empty( $args['download'] ) && ! empty( $args['key'] ) && ! empty( $args['email'] ) && ! empty( $args['expire'] ) && isset( $args['file_key'] ) ) {
 
@@ -691,12 +692,13 @@ function edd_process_signed_download_url( $args ) {
 
 	$order_parts = explode( ':', rawurldecode( $_GET['eddfile'] ) );
 
-	$args['download']    = $order_parts[1];
-	$args['email']       = get_post_meta( $order_parts[0], '_edd_payment_user_email', true );
 	$args['expire']      = $_GET['ttl'];
-	$args['file_key']    = $order_parts[2];
-	$args['key']         = get_post_meta( $order_parts[0], '_edd_payment_purchase_key', true );
+	$args['download']    = $order_parts[1];
 	$args['payment']     = $order_parts[0];
+	$args['file_key']    = $order_parts[2];
+	$args['price_id']    = $order_parts[3];
+	$args['email']       = get_post_meta( $order_parts[0], '_edd_payment_user_email', true );
+	$args['key']         = get_post_meta( $order_parts[0], '_edd_payment_purchase_key', true );
 	$args['has_access']  = true;
 
 	return $args;
