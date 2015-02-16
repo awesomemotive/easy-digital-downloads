@@ -950,7 +950,7 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $p
 			$args['ttl'] = $params['expire'];
 		}
 
-		$args = apply_filters( 'eddsurl_download_file_url_args', $args, $payment->ID, $params );
+		$args = apply_filters( 'edd_get_download_file_url_args', $args, $payment->ID, $params );
 
 		$args['token'] = edd_get_download_token( add_query_arg( $args, home_url() ) );
 	}
