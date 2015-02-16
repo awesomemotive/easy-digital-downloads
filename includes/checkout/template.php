@@ -853,13 +853,12 @@ function edd_checkout_hidden_fields() {
  * @return string $content Filtered content
  */
 function edd_filter_success_page_content( $content ) {
-
 	if ( isset( $_GET['payment-confirmation'] ) && edd_is_success_page() ) {
 		if ( has_filter( 'edd_payment_confirm_' . $_GET['payment-confirmation'] ) ) {
 			$content = apply_filters( 'edd_payment_confirm_' . $_GET['payment-confirmation'], $content );
 		}
 	}
-
+	
 	return $content;
 }
 add_filter( 'the_content', 'edd_filter_success_page_content' );

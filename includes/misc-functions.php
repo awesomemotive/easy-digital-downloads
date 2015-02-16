@@ -336,7 +336,6 @@ function edd_get_currencies() {
  */
 function edd_get_currency() {
 	$currency = edd_get_option( 'currency', 'USD' );
-	
 	return apply_filters( 'edd_currency', $currency );
 }
 

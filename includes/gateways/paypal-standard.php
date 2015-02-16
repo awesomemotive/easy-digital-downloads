@@ -65,7 +65,6 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		$return_url = add_query_arg( array(
 				'payment-confirmation' => 'paypal',
 				'payment-id' => $payment
-
 			), get_permalink( edd_get_option( 'success_page', false ) ) );
 
 		// Get the PayPal redirect uri
@@ -338,7 +337,6 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 
 	// Verify payment recipient
 	if ( strcasecmp( $business_email, trim( edd_get_option( 'paypal_email', false ) ) ) != 0 ) {
-
 		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid business email in IPN response. IPN data: %s', 'edd' ), json_encode( $data ) ), $payment_id );
 		edd_update_payment_status( $payment_id, 'failed' );
 		edd_insert_payment_note( $payment_id, __( 'Payment failed due to invalid PayPal business email.', 'edd' ) );
@@ -488,7 +486,6 @@ function edd_get_paypal_redirect( $ssl_check = false ) {
  */
 function edd_get_paypal_page_style() {
 	$page_style = trim( edd_get_option( 'paypal_page_style', 'PayPal' ) );
-
 	return apply_filters( 'edd_paypal_page_style', $page_style );
 }
 

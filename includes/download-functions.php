@@ -1061,7 +1061,6 @@ function edd_get_download_button_behavior( $download_id = 0 ) {
  */
 function edd_get_file_download_method() {
 	$method = edd_get_option( 'download_method', 'direct' );
-
 	return apply_filters( 'edd_file_download_method', $method );
 }
 
