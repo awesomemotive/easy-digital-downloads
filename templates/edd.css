@@ -518,7 +518,7 @@ body.edd_receipt_page th {
     display: table-cell;
     text-align: left;
     border-top: 1px solid #ededed;
-    padding: 6px 10px 6px 0;
+    padding: 6px 10px;
     font-weight: normal;
 }
 body.edd_receipt_page th {
