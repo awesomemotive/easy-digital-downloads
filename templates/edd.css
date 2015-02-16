@@ -532,6 +532,9 @@ body.edd_receipt_page h3 {
     display: block;
     font-weight: bold;
 }
+body.edd_receipt_page li {
+    list-style: none;
+}
 /* =Purchase Summary Tables
 -------------------------------------------------------------- */
 
