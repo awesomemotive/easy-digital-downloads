@@ -85,10 +85,16 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 		delete_transient( md5( 'edd_earnings_todaytoday' ) );
 	}
 
-	// Increase the customer's purchase stats
-	$customer = new EDD_Customer( $customer_id );
-	$customer->increase_purchase_count();
-	$customer->increase_value( $amount );
+	if( $increase_stats ) {
+
+		// Increase the customer's purchase stats
+		$customer = new EDD_Customer( $customer_id );
+		$customer->increase_purchase_count();
+		$customer->increase_value( $amount );
+
+		edd_increase_total_earnings( $amount );
+
+	}
 
 	// Check for discount codes and increment their use counts
 	if ( ! empty( $user_info['discount'] ) && $user_info['discount'] !== 'none' ) {
@@ -106,7 +112,6 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 		}
 	}
 
-	edd_increase_total_earnings( $amount );
 
 	// Ensure this action only runs once ever
 	if( empty( $completed_date ) ) {
