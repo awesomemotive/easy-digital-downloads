@@ -1060,7 +1060,7 @@ function edd_get_random_downloads( $num = 3, $post_ids = true ) {
  * @param string $url The URL to generate a token for.
  * @return string The token for the URL.
  */
-function edd_get_download_token( $url ) {
+function edd_get_download_token( $url = '' ) {
 	$args = array();
 	$hash = apply_filters( 'edd_get_url_token_algorithm', 'sha256' );
 	$secret = apply_filters( 'edd_get_url_token_secret', hash( $hash, wp_salt() ) );
@@ -1119,7 +1119,7 @@ function edd_get_download_token( $url ) {
  * @param string $url URL to test.
  * @return bool
  */
-function edd_validate_url_token( $url ) {
+function edd_validate_url_token( $url = '' ) {
 
 	$ret   = false;
 	$parts = parse_url( $url );
