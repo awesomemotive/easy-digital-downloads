@@ -811,10 +811,10 @@ function edd_v23_upgrade_customer_purcahses() {
 
 				$customer_data = array( 'payment_ids' => $unique_ids_string );
 
-				$purchase_value_sql = "SELECT SUM( m.meta_value ) FROM $wpdb->postmeta m LEFT JOIN $wpdb->posts p ON m.post_id = p.ID WHERE m.post_id IN ( $unique_ids_string ) AND p.post_status = 'publish' AND m.meta_key = '_edd_payment_total'";
+				$purchase_value_sql = "SELECT SUM( m.meta_value ) FROM $wpdb->postmeta m LEFT JOIN $wpdb->posts p ON m.post_id = p.ID WHERE m.post_id IN ( $unique_ids_string ) AND p.post_status IN ( 'publish', 'revoked' ) AND m.meta_key = '_edd_payment_total'";
 				$purchase_value     = $wpdb->get_col( $purchase_value_sql );
 
-				$purchase_count_sql = "SELECT COUNT( m.post_id ) FROM $wpdb->postmeta m LEFT JOIN $wpdb->posts p ON m.post_id = p.ID WHERE m.post_id IN ( $unique_ids_string ) AND p.post_status = 'publish' AND m.meta_key = '_edd_payment_total'";
+				$purchase_count_sql = "SELECT COUNT( m.post_id ) FROM $wpdb->postmeta m LEFT JOIN $wpdb->posts p ON m.post_id = p.ID WHERE m.post_id IN ( $unique_ids_string ) AND p.post_status IN ( 'publish', 'revoked' ) AND m.meta_key = '_edd_payment_total'";
 				$purchase_count     = $wpdb->get_col( $purchase_count_sql );
 
 				if ( ! empty( $purchase_value ) && ! empty( $purchase_count ) ) {
