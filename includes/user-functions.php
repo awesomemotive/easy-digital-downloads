@@ -66,12 +66,13 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 
 	}
 
-	$customer = new EDD_Customer( $user );
+	$by_user_id = is_numeric( $user ) ? true : false;
+	$customer   = new EDD_Customer( $user, $by_user_id );
 
 	if( ! empty( $customer->payment_ids ) ) {
 
 		unset( $args['user'] );
-		$args['post__in'] = array_map( 'absint', explode( ',', $payment_ids ) );
+		$args['post__in'] = array_map( 'absint', explode( ',', $customer->payment_ids ) );
 
 	}
 
