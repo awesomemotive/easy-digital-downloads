@@ -189,7 +189,6 @@ function edd_get_success_page_url( $query_string = null ) {
  * Get the URL of the Transaction Failed page
  *
  * @since 1.3.4
- *
  * @param bool $extras Extras to append to the URL
  * @return mixed|void Full URL to the Transaction Failed page, if present, home page if it doesn't exist
  */
@@ -274,8 +273,20 @@ function edd_is_email_banned( $email = '' ) {
 		return false;
 	}
 
-	$ret = in_array( trim( $email ), edd_get_banned_emails() );
+	$banned_emails = edd_get_banned_emails();
 
+	foreach( $banned_emails as $banned_email ) {
+		if( is_email( $banned_email ) ) {
+			$ret = ( $banned_email == trim( $email ) ? true : false );
+		} else {
+			$ret = ( stristr( trim( $email ), $banned_email ) ? true : false );
+		}
+
+		if( true === $ret ) {
+			break;
+		}
+	}
+	
 	return apply_filters( 'edd_is_email_banned', $ret, $email );
 }
 

@@ -34,6 +34,10 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 		$user = get_current_user_id();
 	}
 
+	if ( 0 === $user ) {
+		return false;
+	}
+
 	$status = $status === 'complete' ? 'publish' : $status;
 
 	if ( $pagination ) {
@@ -45,12 +49,12 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 			$paged = 1;
 	}
 
-	$args = apply_filters( 'edd_get_users_purchases_args', array(
+	$args = array(
 		'user'    => $user,
 		'number'  => $number,
 		'status'  => $status,
 		'orderby' => 'date'
-	) );
+	);
 
 	if ( $pagination ) {
 
@@ -62,27 +66,17 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 
 	}
 
+	$by_user_id = is_numeric( $user ) ? true : false;
+	$customer   = new EDD_Customer( $user, $by_user_id );
 
-	if( is_email( $user ) ) {
+	if( ! empty( $customer->payment_ids ) ) {
 
-		$field = 'email';
-
-	} else {
-
-		$field = 'user_id';
-
-	}
-
-	/*
-	$payment_ids = EDD()->customers->get_column_by( 'payment_ids', $field, $user );
-
-	if( ! empty( $payment_ids ) ) {
 		unset( $args['user'] );
-		$args['post__in'] = array_map( 'absint', explode( ',', $payment_ids ) );
-	}
-	*/
+		$args['post__in'] = array_map( 'absint', explode( ',', $customer->payment_ids ) );
 
-	$purchases = edd_get_payments( $args );
+	}
+
+	$purchases = edd_get_payments( apply_filters( 'edd_get_users_purchases_args', $args ) );
 
 	// No purchases
 	if ( ! $purchases )
@@ -256,6 +250,7 @@ function edd_get_purchase_stats_by_user( $user = '' ) {
 	$customer = EDD()->customers->get_customer_by( $field, $user );
 	$customer = new EDD_Customer( $customer->id );
 
+	$stats = array();
 	$stats['purchases']   = absint( $customer->purchase_count );
 	$stats['total_spent'] = edd_sanitize_amount( $customer->purchase_value );
 
@@ -334,7 +329,7 @@ function edd_count_file_downloads_of_user( $user ) {
  *
  * @access      public
  * @since       1.3.4
- * @param       $username string - the username to validate
+ * @param       string $username The username to validate
  * @return      bool
  */
 function edd_validate_username( $username ) {

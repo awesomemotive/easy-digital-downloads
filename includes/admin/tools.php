@@ -91,11 +91,11 @@ function edd_tools_banned_emails_display() {
 	<div class="postbox">
 		<h3><span><?php _e( 'Banned Emails', 'edd' ); ?></span></h3>
 		<div class="inside">
-			<p><?php _e( 'Emails placed in the box below will not be allowed to make purchases.', 'edd' ); ?></p>
+			<p><?php _e( 'Emails placed in the box below will not be allowed to make purchases. To ban an entire domain, enter the domain starting with "@".', 'edd' ); ?></p>
 			<form method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ); ?>">
 				<p>
 					<textarea name="banned_emails" rows="10" class="large-text"><?php echo implode( "\n", edd_get_banned_emails() ); ?></textarea>
-					<span class="description"><?php _e( 'Enter emails to disallow, one per line', 'edd' ); ?></span>
+					<span class="description"><?php _e( 'Enter emails and/or to disallow, one per line', 'edd' ); ?></span>
 				</p>
 				<p>
 					<input type="hidden" name="edd_action" value="save_banned_emails" />
@@ -167,7 +167,16 @@ function edd_tools_banned_emails_save() {
 
 	// Sanitize the input
 	$emails = array_map( 'trim', explode( "\n", $_POST['banned_emails'] ) );
-	$emails = array_filter( array_map( 'is_email', $emails ) );
+	$emails = array_unique( $emails );
+	$emails = array_map( 'sanitize_text_field', $emails );
+
+	foreach( $emails as $id => $email ) {
+		if( ! is_email( $email ) ) {
+			if( $email[0] != '@' ) {
+				unset( $emails[$id] );
+			}
+		}
+	}
 
 	$edd_options['banned_emails'] = $emails;
 	update_option( 'edd_settings', $edd_options );

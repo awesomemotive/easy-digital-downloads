@@ -405,7 +405,7 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
 
 	$price = edd_currency_filter( edd_format_amount( $price ) );
 
-	return $price . $label;
+	return apply_filters( 'edd_cart_item_price_label', $price . $label, $item_id, $options );
 }
 
 /**
@@ -417,7 +417,7 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
  * Use edd_get_cart_item_final_price()
  *
  * @since 1.0
- * @param int   $item_id Download ID number
+ * @param int   $download_id Download ID number
  * @param array $options Optional parameters, used for defining variable prices
  * @return float|bool Price for this item
  */
@@ -473,7 +473,7 @@ function edd_get_cart_item_final_price( $item_key = 0 ) {
  * Get cart item tax
  *
  * @since 1.9
- * @param array $item Download ID
+ * @param array $download_id Download ID
  * @param array $options Cart item options
  * @param float $subtotal Cart item subtotal
  * @return float Tax amount
@@ -839,11 +839,9 @@ function edd_add_collection_to_cart( $taxonomy, $terms ) {
  * @since 1.0
  * @global $post
  * @param int $cart_key Cart item key
- * @param object $post Download (post) object
- * @param bool $ajax AJAX?
  * @return string $remove_url URL to remove the cart item
  */
-function edd_remove_item_url( $cart_key, $post, $ajax = false ) {
+function edd_remove_item_url( $cart_key ) {
 
 	global $wp_query;
 
@@ -953,7 +951,6 @@ function edd_is_cart_saving_disabled() {
  * @return bool
  */
 function edd_is_cart_saved() {
-
 	if( edd_is_cart_saving_disabled() )
 		return false;
 
@@ -984,8 +981,6 @@ function edd_is_cart_saved() {
 		return true;
 
 	}
-
-	return false;
 }
 
 /**

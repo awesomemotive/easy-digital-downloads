@@ -108,7 +108,7 @@ class EDD_CLI extends WP_CLI_Command {
 		if( ! empty( $date ) ) {
 			$start_date = $date;
 			$end_date   = false;
-		} elseif( empty( $date ) && empty( $startdate ) ) {
+		} elseif( empty( $date ) && empty( $start_date ) ) {
 			$start_date = 'this_month';
 			$end_date   = false;
 		}
@@ -293,7 +293,7 @@ class EDD_CLI extends WP_CLI_Command {
 				$email = false;
 
 			}
-			
+
 			WP_CLI::line( WP_CLI::colorize( '%G' . sprintf( __( '%d customers created in %d seconds', 'edd' ), $create, time() - $start ) . '%N' ) );
 
 		} else {
@@ -571,6 +571,8 @@ class EDD_CLI extends WP_CLI_Command {
 
 			}
 
+			$cart_details = array();
+
 			// Create the purchases
 			foreach( $products as $key => $download ) {
 
@@ -579,6 +581,7 @@ class EDD_CLI extends WP_CLI_Command {
 				}
 
 				$options = array();
+				$final_downloads = array();
 
 				// Deal with variable pricing
 				if( edd_has_variable_prices( $download->ID ) ) {
@@ -616,6 +619,8 @@ class EDD_CLI extends WP_CLI_Command {
 					'tax'         => $tax
 				);
 
+				$final_downloads[$key] = $item_number;
+
 				$total += $item_price;
 
 			}
@@ -627,7 +632,7 @@ class EDD_CLI extends WP_CLI_Command {
 				'user_email'    => 'guest@local.dev',
 				'user_info'     => $user_info,
 				'currency'      => edd_get_currency(),
-				'downloads'     => (array) $download,
+				'downloads'     => $final_downloads,
 				'cart_details'  => $cart_details,
 				'status'        => 'pending'
 			);

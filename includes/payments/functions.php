@@ -149,8 +149,9 @@ function edd_insert_payment( $payment_data = array() ) {
 
 	if ( $payment ) {
 
-		$taxes    = $payment_data['cart_details'] ? wp_list_pluck( $payment_data['cart_details'], 'tax' ) : array();
-		$cart_tax = array_sum( $taxes );
+		$taxes     = $payment_data['cart_details'] ? wp_list_pluck( $payment_data['cart_details'], 'tax' ) : array();
+		$cart_tax  = array_sum( $taxes );
+		$cart_tax += edd_get_cart_fee_tax();
 
 		$payment_meta = array(
 			'currency'     => $payment_data['currency'],
@@ -489,12 +490,24 @@ function edd_count_payments( $args = array() ) {
 
 	$count = $wpdb->get_results( $query, ARRAY_A );
 
-	$stats = array();
-	foreach ( get_post_stati() as $state )
-		$stats[$state] = 0;
+	$stats    = array();
+	$statuses = get_post_stati();
+	if( isset( $statuses['private'] ) && empty( $args['s'] ) ) {
+		unset( $statuses['private'] );
+	}
 
-	foreach ( (array) $count as $row )
+	foreach ( $statuses as $state ) {
+		$stats[$state] = 0;
+	}
+
+	foreach ( (array) $count as $row ) {
+
+		if( 'private' == $row['post_status'] && empty( $args['s'] ) ) {
+			continue;
+		}
+
 		$stats[$row['post_status']] = $row['num_posts'];
+	}
 
 	$stats = (object) $stats;
 	wp_cache_set( $cache_key, $stats, 'counts' );
@@ -1485,7 +1498,7 @@ function edd_delete_payment_note( $comment_id = 0, $payment_id = 0 ) {
  * Gets the payment note HTML
  *
  * @since 1.9
- * @param object/int $note The comment object or ID
+ * @param object|int $note The comment object or ID
  * @param int $payment_id The payment ID the note is connected to
  * @return string
  */
