@@ -45,7 +45,10 @@ function edd_process_download() {
 		$args = edd_process_signed_download_url( $args );
 
 		// Backfill some legacy super globals for backwards compatibility
-		$_GET['download_id'] = $args['download'];
+		$_GET['download_id']  = $args['download'];
+		$_GET['email']        = $args['email'];
+		$_GET['expire']       = $args['expire'];
+		$_GET['download_key'] = $args['key'];
 
 	} elseif ( ! empty( $args['download'] ) && ! empty( $args['key'] ) && ! empty( $args['email'] ) && ! empty( $args['expire'] ) && isset( $args['file_key'] ) ) {
 

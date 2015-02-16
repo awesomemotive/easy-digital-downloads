@@ -948,7 +948,7 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $p
 
 		// Decode the expiration date.
 		if ( isset( $params['expire'] ) ) {
-			$args['ttl'] = rawurldecode( $params['expire'] );
+			$args['ttl'] = rawurlencode( $params['expire'] );
 		}
 
 		$args = apply_filters( 'eddsurl_download_file_url_args', $args, $payment->ID, $params );
