@@ -763,7 +763,7 @@ function edd_v23_upgrade_customer_purcahses() {
 	}
 
 	$step   = isset( $_GET['step'] ) ? absint( $_GET['step'] ) : 1;
-	$number = 25;
+	$number = 50;
 	$offset = $step == 1 ? 0 : ( $step - 1 ) * $number;
 
 	if ( $step < 2 ) {
@@ -841,6 +841,7 @@ function edd_v23_upgrade_customer_purcahses() {
 			'page'        => 'edd-upgrades',
 			'edd-upgrade' => 'upgrade_customer_payments_association',
 			'step'        => $step,
+			'number'      => $number,
 			'total'       => $total
 		), admin_url( 'index.php' ) );
 		wp_redirect( $redirect ); exit;

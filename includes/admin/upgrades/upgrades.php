@@ -23,7 +23,8 @@ function edd_upgrades_screen() {
 	$step   = isset( $_GET['step'] )        ? absint( $_GET['step'] )                     : 1;
 	$total  = isset( $_GET['total'] )       ? absint( $_GET['total'] )                    : false;
 	$custom = isset( $_GET['custom'] )      ? absint( $_GET['custom'] )                   : 0;
-	$steps  = round( ( $total / 100 ), 0 );
+	$number = isset( $_GET['number'] )      ? absint( $_GET['number'] )                   : 100;
+	$steps  = round( ( $total / $number ), 0 );
 
 	$doing_upgrade_args = array(
 		'page'        => 'edd-upgrades',
