@@ -495,6 +495,9 @@ body.edd_receipt_page {
     font-family: Helvetica, sans-serif;
     font-size: 12px;
 }
+body.edd_receipt_page:before {
+    position: relative;
+}
 body.edd_receipt_page #edd_receipt_wrapper {
     width: 660px;
     margin: 0 auto;
