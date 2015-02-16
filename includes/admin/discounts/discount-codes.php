@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Discounts
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -20,8 +20,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return void
 */
 function edd_discounts_page() {
-	global $edd_options;
-
 	if ( isset( $_GET['edd-action'] ) && $_GET['edd-action'] == 'edit_discount' ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/edit-discount.php';
 	} elseif ( isset( $_GET['edd-action'] ) && $_GET['edd-action'] == 'add_discount' ) {

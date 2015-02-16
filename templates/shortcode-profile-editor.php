@@ -22,6 +22,8 @@ if ( is_user_logged_in() ):
 
 	<?php edd_print_errors(); ?>
 
+	<?php do_action( 'edd_profile_editor_before' ); ?>
+
 	<form id="edd_profile_editor_form" class="edd_form" action="<?php echo edd_get_current_page_url(); ?>" method="post">
 		<fieldset>
 			<span id="edd_profile_name_label"><legend><?php _e( 'Change your Name', 'edd' ); ?></legend></span>
@@ -47,11 +49,15 @@ if ( is_user_logged_in() ):
 					<option <?php selected( $display_name, $current_user->last_name . ' ' . $current_user->first_name ); ?> value="<?php echo esc_attr( $current_user->last_name . ' ' . $current_user->first_name ); ?>"><?php echo esc_html( $current_user->last_name . ' ' . $current_user->first_name ); ?></option>
 					<?php endif; ?>
 				</select>
+				<?php do_action( 'edd_profile_editor_name' ); ?>
 			</p>
+			<?php do_action( 'edd_profile_editor_after_name' ); ?>
 			<p>
 				<label for="edd_email"><?php _e( 'Email Address', 'edd' ); ?></label>
 				<input name="edd_email" id="edd_email" class="text edd-input required" type="email" value="<?php echo esc_attr( $current_user->user_email ); ?>" />
+				<?php do_action( 'edd_profile_editor_email' ); ?>
 			</p>
+			<?php do_action( 'edd_profile_editor_after_email' ); ?>
 			<span id="edd_profile_billing_address_label"><legend><?php _e( 'Change your Billing Address', 'edd' ); ?></legend></span>
 			<p id="edd_profile_billing_address_wrap">
 				<label for="edd_address_line1"><?php _e( 'Line 1', 'edd' ); ?></label>
@@ -76,7 +82,9 @@ if ( is_user_logged_in() ):
 				<label for="edd_address_state"><?php _e( 'State / Province', 'edd' ); ?></label>
 				<input name="edd_address_state" id="edd_address_state" class="text edd-input" type="text" value="<?php echo esc_attr( $address['state'] ); ?>" />
 				<br/>
+				<?php do_action( 'edd_profile_editor_address' ); ?>
 			</p>
+			<?php do_action( 'edd_profile_editor_after_address' ); ?>
 			<span id="edd_profile_password_label"><legend><?php _e( 'Change your Password', 'edd' ); ?></legend></span>
 			<p id="edd_profile_password_wrap">
 				<label for="edd_user_pass"><?php _e( 'New Password', 'edd' ); ?></label>
@@ -84,8 +92,10 @@ if ( is_user_logged_in() ):
 				<br />
 				<label for="edd_user_pass"><?php _e( 'Re-enter Password', 'edd' ); ?></label>
 				<input name="edd_new_user_pass2" id="edd_new_user_pass2" class="password edd-input" type="password"/>
+				<?php do_action( 'edd_profile_editor_password' ); ?>
 			</p>
 			<p class="edd_password_change_notice"><?php _e( 'Please note after changing your password, you must log back in.', 'edd' ); ?></p>
+			<?php do_action( 'edd_profile_editor_after_password' ); ?>
 			<p id="edd_profile_submit_wrap">
 				<input type="hidden" name="edd_profile_editor_nonce" value="<?php echo wp_create_nonce( 'edd-profile-editor-nonce' ); ?>"/>
 				<input type="hidden" name="edd_action" value="edit_user_profile" />
@@ -94,6 +104,9 @@ if ( is_user_logged_in() ):
 			</p>
 		</fieldset>
 	</form><!-- #edd_profile_editor_form -->
+
+	<?php do_action( 'edd_profile_editor_after' ); ?>
+
 	<?php
 else:
 	echo __( 'You need to login to edit your profile.', 'edd' );

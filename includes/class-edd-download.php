@@ -4,10 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Classes/Download
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.2
 */
+
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * EDD_Download Class
@@ -156,7 +159,7 @@ class EDD_Download {
 
 		} else {
 
-			throw new Exception( 'Can\'t get property ' . $key );
+			return new WP_Error( 'edd-download-invalid-property', sprintf( __( 'Can\'t get property %s', 'edd' ), $key ) );
 
 		}
 
@@ -251,6 +254,7 @@ class EDD_Download {
 	 * Retrieve the file downloads
 	 *
 	 * @since 2.2
+	 * @param integer $variable_price_id
 	 * @return array
 	 */
 	public function get_files( $variable_price_id = null ) {
@@ -493,12 +497,13 @@ class EDD_Download {
 	 * Increment the sale count by one
 	 *
 	 * @since 2.2
+	 * @param int $quantity The quantity to increase the sales by
 	 * @return int|false
 	 */
-	public function increase_sales() {
+	public function increase_sales( $quantity = 1 ) {
 
 		$sales = edd_get_download_sales_stats( $this->ID );
-		$sales = $sales + 1;
+		$sales = $sales + absint( $quantity );
 
 		if ( update_post_meta( $this->ID, '_edd_download_sales', $sales ) ) {
 			$this->sales = $sales;
@@ -512,13 +517,19 @@ class EDD_Download {
 	 * Decrement the sale count by one
 	 *
 	 * @since 2.2
+	 * @param int $quantity The quantity to decrease by
 	 * @return int|false
 	 */
-	public function decrease_sales() {
+	public function decrease_sales( $quantity = 1 ) {
 
 		$sales = edd_get_download_sales_stats( $this->ID );
-		if ( $sales > 0 ) // Only decrease if not already zero
-			$sales = $sales - 1;
+
+		// Only decrease if not already zero
+		if ( $sales > 0 ) {
+			$sales = $sales - absint( $quantity );
+		}
+
+		$sales = absint( $sales ); // Sales should never drop below 0
 
 		if ( update_post_meta( $this->ID, '_edd_download_sales', $sales ) ) {
 			$this->sales = $sales;
@@ -580,6 +591,7 @@ class EDD_Download {
 	 * Decrease the earnings by the given amount
 	 *
 	 * @since 2.2
+	 * @param integer $amount
 	 * @return float|false
 	 */
 	public function decrease_earnings( $amount ) {
@@ -610,9 +622,22 @@ class EDD_Download {
 		$variable_pricing = edd_has_variable_prices( $this->ID );
 
 		if ( $variable_pricing && ! is_null( $price_id ) && $price_id !== false ) {
+
 			$price = edd_get_price_option_amount( $this->ID, $price_id );
+
+		} elseif ( $variable_pricing && $price_id === false ) {
+
+			$lowest_price  = (float) edd_get_lowest_price_option( $this->ID );
+			$highest_price = (float) edd_get_highest_price_option( $this->ID );
+
+			if ( $lowest_price === 0.00 && $highest_price === 0.00 ) {
+				$price = 0;
+			}
+
 		} elseif( ! $variable_pricing ) {
+
 			$price = get_post_meta( $this->ID, 'edd_price', true );
+
 		}
 
 		if( isset( $price ) && (float) $price == 0 ) {

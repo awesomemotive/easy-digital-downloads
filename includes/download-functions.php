@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Functions
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -177,9 +177,9 @@ function edd_price( $download_id = 0, $echo = true, $price_id = false ) {
 
 	}
 
-	$price           = apply_filters( 'edd_download_price', edd_sanitize_amount( $price ), $download_id );
+	$price           = apply_filters( 'edd_download_price', edd_sanitize_amount( $price ), $download_id, $price_id );
 	$formatted_price = '<span class="edd_price" id="edd_price_' . $download_id . '">' . $price . '</span>';
-	$formatted_price = apply_filters( 'edd_download_price_after_html', $formatted_price, $download_id, $price );
+	$formatted_price = apply_filters( 'edd_download_price_after_html', $formatted_price, $download_id, $price, $price_id );
 
 	if ( $echo ) {
 		echo $formatted_price;
@@ -621,11 +621,13 @@ add_action( 'delete_post', 'edd_remove_download_logs_on_delete' );
  *
  * @since 1.0
  * @param int $download_id Download ID
+ * @param int $quantity Quantity to increase purchase count by
  * @return bool|int
  */
-function edd_increase_purchase_count( $download_id = 0 ) {
+function edd_increase_purchase_count( $download_id = 0, $quantity = 1 ) {
+	$quantity = (int) $quantity;
 	$download = new EDD_Download( $download_id );
-	return $download->increase_sales();
+	return $download->increase_sales( $quantity );
 }
 
 /**
@@ -636,9 +638,9 @@ function edd_increase_purchase_count( $download_id = 0 ) {
  * @param int $download_id Download ID
  * @return bool|int
  */
-function edd_decrease_purchase_count( $download_id = 0 ) {
+function edd_decrease_purchase_count( $download_id = 0, $quantity = 1 ) {
 	$download = new EDD_Download( $download_id );
-	return $download->decrease_sales();
+	return $download->decrease_sales( $quantity );
 }
 
 /**
@@ -1007,8 +1009,7 @@ function edd_get_download_button_behavior( $download_id = 0 ) {
  * @return string The method to use for file downloads
  */
 function edd_get_file_download_method() {
-	global $edd_options;
-	$method = isset( $edd_options['download_method'] ) ? $edd_options['download_method'] : 'direct';
+	$method = edd_get_option( 'download_method', 'direct' );
 	return apply_filters( 'edd_file_download_method', $method );
 }
 

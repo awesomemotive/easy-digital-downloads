@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Payments
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -79,7 +79,7 @@ function edd_get_payment_by( $field = '', $value = '' ) {
 			}
 
 			break;
-			
+
 		case 'payment_number':
 			$payment = edd_get_payments( array(
 				'meta_key'       => '_edd_payment_number',
@@ -141,7 +141,7 @@ function edd_insert_payment( $payment_data = array() ) {
 		'post_type'     => 'edd_payment',
 		'post_parent'   => isset( $payment_data['parent'] ) ? $payment_data['parent'] : null,
 		'post_date'     => isset( $payment_data['post_date'] ) ? $payment_data['post_date'] : null,
-		'post_date_gmt' => isset( $payment_data['post_date'] ) ? $payment_data['post_date'] : null
+		'post_date_gmt' => isset( $payment_data['post_date'] ) ? get_gmt_from_date( $payment_data['post_date'] ) : null
 	), $payment_data );
 
 	// Create a blank payment
@@ -149,8 +149,9 @@ function edd_insert_payment( $payment_data = array() ) {
 
 	if ( $payment ) {
 
-		$taxes    = wp_list_pluck( $payment_data['cart_details'], 'tax' );
-		$cart_tax = array_sum( $taxes );
+		$taxes     = $payment_data['cart_details'] ? wp_list_pluck( $payment_data['cart_details'], 'tax' ) : array();
+		$cart_tax  = array_sum( $taxes );
+		$cart_tax += edd_get_cart_fee_tax();
 
 		$payment_meta = array(
 			'currency'     => $payment_data['currency'],
@@ -170,17 +171,25 @@ function edd_insert_payment( $payment_data = array() ) {
 		}
 
 		// Create or update a customer
-		$customer_id = EDD()->customers->add( array(
+		$customer      = new EDD_Customer( $payment_data['user_email'] );
+		$customer_data = array(
 			'name'        => $payment_data['user_info']['first_name'] . ' ' . $payment_data['user_info']['last_name'],
 			'email'       => $payment_data['user_email'],
 			'user_id'     => $payment_data['user_info']['id'],
 			'payment_ids' => $payment
-		) );
+		);
+
+		if ( empty( $customer->id ) ) {
+			$customer_id = $customer->create( $customer_data );
+		} else {
+			$customer->update( $customer_data );
+		}
+
 
 		// Record the payment details
 		update_post_meta( $payment, '_edd_payment_meta',         apply_filters( 'edd_payment_meta', $payment_meta, $payment_data ) );
 		update_post_meta( $payment, '_edd_payment_user_id',      $payment_data['user_info']['id'] );
-		update_post_meta( $payment, '_edd_payment_customer_id',  $customer_id );
+		update_post_meta( $payment, '_edd_payment_customer_id',  $customer->id );
 		update_post_meta( $payment, '_edd_payment_user_email',   $payment_data['user_email'] );
 		update_post_meta( $payment, '_edd_payment_user_ip',      edd_get_ip() );
 		update_post_meta( $payment, '_edd_payment_purchase_key', $payment_data['purchase_key'] );
@@ -263,12 +272,12 @@ function edd_update_payment_status( $payment_id, $new_status = 'publish' ) {
  */
 function edd_delete_purchase( $payment_id = 0 ) {
 	global $edd_logs;
-	
+
 	$post = get_post( $payment_id );
 
 	if( !$post )
 		return;
-		
+
 	$downloads = edd_get_payment_meta_downloads( $payment_id );
 
 	if ( is_array( $downloads ) ) {
@@ -283,26 +292,29 @@ function edd_delete_purchase( $payment_id = 0 ) {
 	$status      = $post->post_status;
 	$customer_id = edd_get_payment_customer_id( $payment_id );
 
+	$customer = new EDD_Customer( $customer_id );
+
 	if( $status == 'revoked' || $status == 'publish' ) {
 		// Only decrease earnings if they haven't already been decreased (or were never increased for this payment)
 		edd_decrease_total_earnings( $amount );
 		// Clear the This Month earnings (this_monththis_month is NOT a typo)
 		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
 
-		if( $customer_id ) {
+		if( $customer->id ) {
 
 			// Decrement the stats for the customer
-			EDD()->customers->decrement_stats( $customer_id, $amount );
-	
+			$customer->decrease_purchase_count();
+			$customer->decrease_value( $amount );
+
 		}
 	}
 
 	do_action( 'edd_payment_delete', $payment_id );
 
-	if( $customer_id ){
+	if( $customer->id ){
 
 		// Remove the payment ID from the customer
-		EDD()->customers->remove_payment( $customer_id, $payment_id );
+		$customer->remove_payment( $payment_id );
 
 	}
 
@@ -344,14 +356,14 @@ function edd_undo_purchase( $download_id, $payment_id ) {
 
 		foreach ( $cart_details as $item ) {
 
+			// get the item's price
+			$amount = isset( $item['price'] ) ? $item['price'] : false;
+
 			// Decrease earnings/sales and fire action once per quantity number
 			for( $i = 0; $i < $item['quantity']; $i++ ) {
 
-				// get the item's price
- 				$amount = isset( $item['price'] ) ? $item['price'] : false;
-
  				// variable priced downloads
-				if ( edd_has_variable_prices( $download_id ) ) {
+				if ( false === $amount && edd_has_variable_prices( $download_id ) ) {
 					$price_id = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
 					$amount   = ! isset( $item['price'] ) && 0 !== $item['price'] ? edd_get_price_option_amount( $download_id, $price_id ) : $item['price'];
 				}
@@ -361,12 +373,13 @@ function edd_undo_purchase( $download_id, $payment_id ) {
  					$amount = edd_get_download_final_price( $download_id, $user_info, $amount );
  				}
 
-				// decrease earnings
-				edd_decrease_earnings( $download_id, $amount );
-
-				// decrease purchase count
-				edd_decrease_purchase_count( $download_id );
 			}
+
+			// decrease earnings
+			edd_decrease_earnings( $download_id, $amount );
+
+			// decrease purchase count
+			edd_decrease_purchase_count( $download_id, $item['quantity'] );
 
 		}
 
@@ -477,12 +490,24 @@ function edd_count_payments( $args = array() ) {
 
 	$count = $wpdb->get_results( $query, ARRAY_A );
 
-	$stats = array();
-	foreach ( get_post_stati() as $state )
-		$stats[$state] = 0;
+	$stats    = array();
+	$statuses = get_post_stati();
+	if( isset( $statuses['private'] ) && empty( $args['s'] ) ) {
+		unset( $statuses['private'] );
+	}
 
-	foreach ( (array) $count as $row )
+	foreach ( $statuses as $state ) {
+		$stats[$state] = 0;
+	}
+
+	foreach ( (array) $count as $row ) {
+
+		if( 'private' == $row['post_status'] && empty( $args['s'] ) ) {
+			continue;
+		}
+
 		$stats[$row['post_status']] = $row['num_posts'];
+	}
 
 	$stats = (object) $stats;
 	wp_cache_set( $cache_key, $stats, 'counts' );
@@ -554,6 +579,19 @@ function edd_get_payment_statuses() {
 	);
 
 	return apply_filters( 'edd_payment_statuses', $payment_statuses );
+}
+
+/**
+ * Retrieves keys for all available statuses for payments
+ *
+ * @since 2.3
+ * @return array $payment_status All the available payment statuses
+ */
+function edd_get_payment_status_keys() {
+	$statuses = array_keys( edd_get_payment_statuses() );
+	asort( $statuses );
+
+	return array_values( $statuses );
 }
 
 /**
@@ -1204,7 +1242,6 @@ function edd_payment_subtotal( $payment_id = 0 ) {
  * returns a non formatted amount.
  *
  * @since 1.3.3
- * @global $edd_options Array of all the EDD Options
  * @param int $payment_id Payment ID
  * @return float $subtotal Subtotal for payment (non formatted)
  */
@@ -1452,7 +1489,7 @@ function edd_delete_payment_note( $comment_id = 0, $payment_id = 0 ) {
  * Gets the payment note HTML
  *
  * @since 1.9
- * @param object/int $note The comment object or ID
+ * @param object|int $note The comment object or ID
  * @param int $payment_id The payment ID the note is connected to
  * @return string
  */

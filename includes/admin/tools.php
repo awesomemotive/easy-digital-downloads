@@ -6,7 +6,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Tools
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
@@ -91,11 +91,11 @@ function edd_tools_banned_emails_display() {
 	<div class="postbox">
 		<h3><span><?php _e( 'Banned Emails', 'edd' ); ?></span></h3>
 		<div class="inside">
-			<p><?php _e( 'Emails placed in the box below will not be allowed to make purchases.', 'edd' ); ?></p>
+			<p><?php _e( 'Emails placed in the box below will not be allowed to make purchases. To ban an entire domain, enter the domain starting with "@".', 'edd' ); ?></p>
 			<form method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ); ?>">
 				<p>
 					<textarea name="banned_emails" rows="10" class="large-text"><?php echo implode( "\n", edd_get_banned_emails() ); ?></textarea>
-					<span class="description"><?php _e( 'Enter emails to disallow, one per line', 'edd' ); ?></span>
+					<span class="description"><?php _e( 'Enter emails and/or to disallow, one per line', 'edd' ); ?></span>
 				</p>
 				<p>
 					<input type="hidden" name="edd_action" value="save_banned_emails" />
@@ -167,7 +167,16 @@ function edd_tools_banned_emails_save() {
 
 	// Sanitize the input
 	$emails = array_map( 'trim', explode( "\n", $_POST['banned_emails'] ) );
-	$emails = array_filter( array_map( 'is_email', $emails ) );
+	$emails = array_unique( $emails );
+	$emails = array_map( 'sanitize_text_field', $emails );
+
+	foreach( $emails as $id => $email ) {
+		if( ! is_email( $email ) ) {
+			if( $email[0] != '@' ) {
+				unset( $emails[$id] );
+			}
+		}
+	}
 
 	$edd_options['banned_emails'] = $emails;
 	update_option( 'edd_settings', $edd_options );
@@ -331,11 +340,10 @@ add_action( 'edd_tools_tab_system_info', 'edd_tools_sysinfo_display' );
  * @since       2.0
  * @access      public
  * @global      object $wpdb Used to query the database using the WordPress Database API
- * @global      array $edd_options Array of all EDD options
  * @return      string $return A string containing the info to output
  */
 function edd_tools_sysinfo_get() {
-	global $wpdb, $edd_options;
+	global $wpdb;
 
 	if( !class_exists( 'Browser' ) )
 		require_once EDD_PLUGIN_DIR . 'includes/libraries/browser.php';
@@ -429,7 +437,7 @@ function edd_tools_sysinfo_get() {
 	$return .= 'Test Mode:                ' . ( edd_is_test_mode() ? "Enabled\n" : "Disabled\n" );
 	$return .= 'Ajax:                     ' . ( ! edd_is_ajax_disabled() ? "Enabled\n" : "Disabled\n" );
 	$return .= 'Guest Checkout:           ' . ( edd_no_guest_checkout() ? "Disabled\n" : "Enabled\n" );
-	$return .= 'Symlinks:                 ' . ( apply_filters( 'edd_symlink_file_downloads', isset( $edd_options['symlink_file_downloads'] ) ) && function_exists( 'symlink' ) ? "Enabled\n" : "Disabled\n" );
+	$return .= 'Symlinks:                 ' . ( apply_filters( 'edd_symlink_file_downloads', edd_get_option( 'symlink_file_downloads', false ) ) && function_exists( 'symlink' ) ? "Enabled\n" : "Disabled\n" );
 	$return .= 'Download Method:          ' . ucfirst( edd_get_file_download_method() ) . "\n";
 	$return .= 'Currency Code:            ' . edd_get_currency() . "\n";
 	$return .= 'Currency Position:        ' . edd_get_option( 'currency_position', 'before' ) . "\n";
@@ -439,11 +447,15 @@ function edd_tools_sysinfo_get() {
 	$return  = apply_filters( 'edd_sysinfo_after_edd_config', $return );
 
 	// EDD pages
+	$purchase_page = edd_get_option( 'purchase_page', '' );
+	$success_page  = edd_get_option( 'success_page', '' );
+	$failure_page  = edd_get_option( 'failure_page', '' );
+
 	$return .= "\n" . '-- EDD Page Configuration' . "\n\n";
-	$return .= 'Checkout:                 ' . ( !empty( $edd_options['purchase_page'] ) ? "Valid\n" : "Invalid\n" );
-	$return .= 'Checkout Page:            ' . ( !empty( $edd_options['purchase_page'] ) ? get_permalink( $edd_options['purchase_page'] ) . "\n" : "Unset\n" );
-	$return .= 'Success Page:             ' . ( !empty( $edd_options['success_page'] ) ? get_permalink( $edd_options['success_page'] ) . "\n" : "Unset\n" );
-	$return .= 'Failure Page:             ' . ( !empty( $edd_options['failure_page'] ) ? get_permalink( $edd_options['failure_page'] ) . "\n" : "Unset\n" );
+	$return .= 'Checkout:                 ' . ( !empty( $purchase_page ) ? "Valid\n" : "Invalid\n" );
+	$return .= 'Checkout Page:            ' . ( !empty( $purchase_page ) ? get_permalink( $purchase_page ) . "\n" : "Unset\n" );
+	$return .= 'Success Page:             ' . ( !empty( $success_page ) ? get_permalink( $success_page ) . "\n" : "Unset\n" );
+	$return .= 'Failure Page:             ' . ( !empty( $failure_page ) ? get_permalink( $failure_page ) . "\n" : "Unset\n" );
 	$return .= 'Downloads Slug:           ' . ( defined( 'EDD_SLUG' ) ? '/' . EDD_SLUG . "\n" : "/downloads\n" );
 
 	$return  = apply_filters( 'edd_sysinfo_after_edd_pages', $return );
@@ -479,7 +491,7 @@ function edd_tools_sysinfo_get() {
 	$return .= "\n" . '-- EDD Tax Configuration' . "\n\n";
 	$return .= 'Taxes:                    ' . ( edd_use_taxes() ? "Enabled\n" : "Disabled\n" );
 	$return .= 'Tax Rate:                 ' . edd_get_tax_rate() * 100 . "\n";
-	$return .= 'Display On Checkout:      ' . ( !empty( $edd_options['checkout_include_tax'] ) ? "Displayed\n" : "Not Displayed\n" );
+	$return .= 'Display On Checkout:      ' . ( edd_get_option( 'checkout_include_tax', false ) ? "Displayed\n" : "Not Displayed\n" );
 	$return .= 'Prices Include Tax:       ' . ( edd_prices_include_tax() ? "Yes\n" : "No\n" );
 
 	$rates = edd_get_tax_rates();

@@ -6,7 +6,7 @@
  *
  * @package     EDD
  * @subpackage  Functions
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0.8.6
  */
@@ -253,19 +253,13 @@ function edd_get_purchase_stats_by_user( $user = '' ) {
 
 	}
 
-	$customer = EDD()->customers->get_by( $field, $user );
+	$customer = EDD()->customers->get_customer_by( $field, $user );
+	$customer = new EDD_Customer( $customer->id );
 
-	if ( empty( $customer ) ) {
+	$stats = array();
+	$stats['purchases']   = absint( $customer->purchase_count );
+	$stats['total_spent'] = edd_sanitize_amount( $customer->purchase_value );
 
-		$stats['purchases']   = 0;
-		$stats['total_spent'] = edd_sanitize_amount( 0 );
-
-	} else {
-
-		$stats['purchases']   = absint( $customer->purchase_count );
-		$stats['total_spent'] = edd_sanitize_amount( $customer->purchase_value );
-
-	}
 
 	return (array) apply_filters( 'edd_purchase_stats_by_user', $stats, $user );
 }
@@ -341,7 +335,7 @@ function edd_count_file_downloads_of_user( $user ) {
  *
  * @access      public
  * @since       1.3.4
- * @param       $username string - the username to validate
+ * @param       string $username The username to validate
  * @return      bool
  */
 function edd_validate_username( $username ) {
