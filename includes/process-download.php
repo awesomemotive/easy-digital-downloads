@@ -49,7 +49,7 @@ function edd_process_download() {
 		$_GET['email']        = $args['email'];
 		$_GET['expire']       = $args['expire'];
 		$_GET['download_key'] = $args['key'];
-		$_GET['price_id']     = $args['key'];
+		$_GET['price_id']     = $args['price_id'];
 
 	} elseif ( ! empty( $args['download'] ) && ! empty( $args['key'] ) && ! empty( $args['email'] ) && ! empty( $args['expire'] ) && isset( $args['file_key'] ) ) {
 
