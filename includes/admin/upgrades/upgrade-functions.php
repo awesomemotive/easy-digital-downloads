@@ -110,6 +110,13 @@ function edd_show_upgrade_notices() {
 			);
 		}
 
+		if ( version_compare( $edd_version, '2.3', '<' ) ) {
+			printf(
+				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the customer database, click <a href="%s">here</a> to start the upgrade.', 'edd' ) . '</p></div>',
+				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_customer_payments_association' ) )
+			);
+		}
+
 		// End 'Stepped' upgrade process notices
 
 	}
@@ -738,3 +745,112 @@ function edd_v226_upgrade_payments_price_logs_db() {
 
 }
 add_action( 'edd_upgrade_payments_price_logs_db', 'edd_v226_upgrade_payments_price_logs_db' );
+
+function edd_v23_upgrade_customer_purcahses() {
+	global $wpdb;
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		wp_die( __( 'You do not have permission to do shop upgrades', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+	}
+
+	ignore_user_abort( true );
+
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+		@set_time_limit(0);
+	}
+
+	$step   = isset( $_GET['step'] ) ? absint( $_GET['step'] ) : 1;
+	$number = 50;
+	$offset = $step == 1 ? 0 : ( $step - 1 ) * $number;
+
+	if ( $step < 2 ) {
+
+		// Check if we have any payments to begin with
+		$sql           = "SELECT ID FROM $wpdb->posts WHERE post_type = 'edd_payment' LIMIT 1";
+		$has_purchases = $wpdb->get_col( $sql );
+
+		if( empty( $has_purchases ) ) {
+			// We had no purchases, so go ahead and copmlete
+			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+			delete_option( 'edd_doing_upgrade' );
+
+			wp_redirect( admin_url() ); exit;
+		}
+
+	}
+
+	$total = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : false;
+
+	if ( empty( $total ) || $total <= 1 ) {
+		$total = EDD()->customers->count();
+	}
+
+	$customers = EDD()->customers->get_customers( array( 'number' => $number, 'offset' => $offset ) );
+
+	if( ! empty( $customers ) ) {
+
+		foreach( $customers as $customer ) {
+
+			$current_payment_ids = explode( ',', $customer->payment_ids );
+
+			// Get payments by email and user ID
+			$select = "SELECT ID FROM $wpdb->posts p ";
+			$join   = "LEFT JOIN $wpdb->postmeta m ON p.ID = m.post_id ";
+			$where  = "WHERE p.post_type = 'edd_payment' ";
+
+			if ( ! empty( $customer->user_id ) ) {
+				$where .= "AND ( ( m.meta_key = '_edd_payment_user_email' AND m.meta_value = '$customer->email' ) OR ( m.meta_key = '_edd_payment_user_id' AND m.meta_value = '$customer->user_id' ) )";
+			} else {
+				$where .= "AND m.meta_key = '_edd_payment_user_email' AND m.meta_value = '$customer->email' ) ";
+			}
+
+			$sql            = $select . $join . $where;
+			$found_payments = $wpdb->get_col( $sql );
+
+			$unique_payment_ids = array_unique( array_filter( array_merge( $current_payment_ids, $found_payments ) ) );
+			if ( ! empty( $unique_payment_ids ) ) {
+				$unique_ids_string = implode( ',', $unique_payment_ids );
+				$customer = new EDD_Customer( $customer->id );
+
+				$customer_data = array( 'payment_ids' => $unique_ids_string );
+
+				$purchase_value_sql = "SELECT SUM( m.meta_value ) FROM $wpdb->postmeta m LEFT JOIN $wpdb->posts p ON m.post_id = p.ID WHERE m.post_id IN ( $unique_ids_string ) AND p.post_status IN ( 'publish', 'revoked' ) AND m.meta_key = '_edd_payment_total'";
+				$purchase_value     = $wpdb->get_col( $purchase_value_sql );
+
+				$purchase_count_sql = "SELECT COUNT( m.post_id ) FROM $wpdb->postmeta m LEFT JOIN $wpdb->posts p ON m.post_id = p.ID WHERE m.post_id IN ( $unique_ids_string ) AND p.post_status IN ( 'publish', 'revoked' ) AND m.meta_key = '_edd_payment_total'";
+				$purchase_count     = $wpdb->get_col( $purchase_count_sql );
+
+				if ( ! empty( $purchase_value ) && ! empty( $purchase_count ) ) {
+					$purchase_value = $purchase_value[0];
+					$purchase_count = $purchase_count[0];
+
+					$customer_data['purchase_count'] = $purchase_count;
+					$customer_data['purchase_value'] = $purchase_value;
+				}
+
+				$customer->update( $customer_data );
+			}
+		}
+
+		// More Payments found so upgrade them
+		$step++;
+		$redirect = add_query_arg( array(
+			'page'        => 'edd-upgrades',
+			'edd-upgrade' => 'upgrade_customer_payments_association',
+			'step'        => $step,
+			'number'      => $number,
+			'total'       => $total
+		), admin_url( 'index.php' ) );
+		wp_redirect( $redirect ); exit;
+
+	} else {
+
+		// No more customers found, finish up
+
+		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+		delete_option( 'edd_doing_upgrade' );
+
+		wp_redirect( admin_url() ); exit;
+	}
+}
+add_action( 'edd_upgrade_customer_payments_association', 'edd_v23_upgrade_customer_purcahses' );
