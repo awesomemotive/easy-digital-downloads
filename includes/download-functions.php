@@ -945,7 +945,7 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $p
 
 		// Simply the URL by concatenating required data using a colon as a delimiter.
 		$args = array(
-			'eddfile' => rawurlencode( sprintf( '%d:%d:%d', $payment->ID, $params['download_id'], $params['file'] ) )
+			'eddfile' => rawurlencode( sprintf( '%d:%d:%d:%d', $payment->ID, $params['download_id'], $params['file'], $price_id ) )
 		);
 
 		if ( isset( $params['expire'] ) ) {
