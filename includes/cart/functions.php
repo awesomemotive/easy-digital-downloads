@@ -951,7 +951,6 @@ function edd_is_cart_saving_disabled() {
  * @return bool
  */
 function edd_is_cart_saved() {
-
 	if( edd_is_cart_saving_disabled() )
 		return false;
 
