@@ -500,17 +500,13 @@ class EDD_Download {
 
 		global $wpdb;
 
-		$sales    = edd_get_download_sales_stats( $this->ID );
-		$quantity = absint( $quantity );
+		$sales       = edd_get_download_sales_stats( $this->ID );
+		$quantity    = absint( $quantity );
+		$total_sales = $sales + $quantity;
 
-		$sql = "UPDATE $wpdb->postmeta SET meta_value = meta_value + {$quantity} WHERE meta_key = '_edd_download_sales' AND post_id = {$this->ID};";
+		if ( $this->update_download_meta( '_edd_download_sales', $total_sales ) ) {
 
-		if( $wpdb->query( $sql ) ) {
-			$total_sales = $sales + $quantity;
 			$this->sales = $total_sales;
-
-			clean_post_cache( $this->ID );
-
 			return $this->sales;
 
 		}
@@ -534,16 +530,12 @@ class EDD_Download {
 		// Only decrease if not already zero
 		if ( $sales > 0 ) {
 
-			$quantity = absint( $quantity );
+			$quantity    = absint( $quantity );
+			$total_sales = $sales - $quantity;
 
-			$sql = "UPDATE $wpdb->postmeta SET meta_value = meta_value - {$quantity} WHERE meta_key = '_edd_download_sales' AND post_id = {$this->ID};";
+			if ( $this->update_download_meta( '_edd_download_sales', $total_sales ) ) {
 
-			if( $wpdb->query( $sql ) ) {
-				$total_sales = $sales - $quantity;
 				$this->sales = $total_sales;
-
-				clean_post_cache( $this->ID );
-
 				return $this->sales;
 
 			}
@@ -570,7 +562,7 @@ class EDD_Download {
 
 			$this->earnings = get_post_meta( $this->ID, '_edd_download_earnings', true );
 
-			if( $this->earnings < 0 ) {
+			if ( $this->earnings < 0 ) {
 				// Never let earnings be less than zero
 				$this->earnings = 0;
 			}
@@ -591,15 +583,12 @@ class EDD_Download {
 
 		global $wpdb;
 
-		$earnings = edd_get_download_earnings_stats( $this->ID );
+		$earnings   = edd_get_download_earnings_stats( $this->ID );
+		$new_amount = $earnings + (float) $amount;
 
-		$sql = "UPDATE $wpdb->postmeta SET meta_value = meta_value + {$amount} WHERE meta_key = '_edd_download_earnings' AND post_id = {$this->ID};";
+		if ( $this->update_download_meta( '_edd_download_earnings', $new_amount ) ) {
 
-		if( $wpdb->query( $sql ) ) {
-
-			$this->earnings = $earnings + (float) $amount;
-			clean_post_cache( $this->ID );
-
+			$this->earnings = $new_amount;
 			return $this->earnings;
 
 		}
@@ -623,14 +612,11 @@ class EDD_Download {
 		if ( $earnings > 0 ) {
 
 			// Only decrease if greater than zero
+			$new_amount = $earnings - (float) $amount;
 
-			$sql = "UPDATE $wpdb->postmeta SET meta_value = meta_value - {$amount} WHERE meta_key = '_edd_download_earnings' AND post_id = {$this->ID};";
+			if ( $this->update_download_meta( '_edd_download_earnings', $new_amount ) ) {
 
-			if( $wpdb->query( $sql ) ) {
-
-				$this->earnings = $earnings - (float) $amount;
-				clean_post_cache( $this->ID );
-
+				$this->earnings = $new_amount;
 				return $this->earnings;
 
 			}
@@ -664,6 +650,43 @@ class EDD_Download {
 
 		return (bool) apply_filters( 'edd_is_free_download', $is_free, $this->ID, $price_id );
 
+	}
+
+	/**
+	 * Updates a single meta entry for the download
+	 *
+	 * @since  2.3
+	 * @access private
+	 * @param  string $meta_key   The meta_key to update
+	 * @param  string|array|object $meta_value The value to put into the meta
+	 * @return bool             The result of the update query
+	 */
+	private function update_meta( $meta_key = '', $meta_value = '' ) {
+		global $wpdb;
+
+		if ( empty( $meta_key ) || empty( $meta_value ) ) {
+			return false;
+		}
+
+		// Make sure if it needs to be serialized, we do
+		$meta_value = maybe_serialize( $meta_value );
+
+		if ( is_numeric( $meta_value ) ) {
+			$value_type = is_float( $meta_value ) ? '%f' : '%d';
+		} else {
+			$value_type = "'%s'";
+		}
+
+		$sql = $wpdb->prepare( "UPDATE $wpdb->postmeta SET meta_value = $value_type WHERE post_id = $this->ID AND meta_key = '%s'", $meta_value, $meta_key );
+
+		if ( $wpdb->query( $sql ) ) {
+
+			clean_post_cache( $this->ID );
+			return true;
+
+		}
+
+		return false;
 	}
 
 }
