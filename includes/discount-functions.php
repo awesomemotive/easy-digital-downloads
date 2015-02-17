@@ -682,9 +682,23 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 	$cart_ids     = $cart_items ? wp_list_pluck( $cart_items, 'id' ) : null;
 	$ret          = false;
 
-	if ( empty( $product_reqs ) ) {
+	if ( empty( $product_reqs ) && empty( $excluded_ps ) ) {
 		$ret = true;
 	}
+
+	// Normalize our data for product requiremetns, exlusions and cart data
+	// First absint the items, then sort, and reset the array keys
+	$product_reqs = array_map( 'absint', $product_reqs );
+	asort( $product_reqs );
+	$product_reqs = array_values( $product_reqs );
+
+	$excluded_ps  = array_map( 'absint', $excluded_ps );
+	asort( $excluded_ps );
+	$excluded_ps  = array_values( $excluded_ps );
+
+	$cart_ids     = array_map( 'absint', $cart_ids );
+	asort( $cart_ids );
+	$cart_ids     = array_values( $cart_ids );
 
 	// Ensure we have requirements before proceeding
 	if ( ! $ret ) {
