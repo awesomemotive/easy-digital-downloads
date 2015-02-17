@@ -6,7 +6,7 @@
  *
  * @package     EDD
  * @subpackage  Functions/AJAX
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -41,7 +41,7 @@ function edd_test_ajax_works() {
 		'sslverify'  => false,
 		'timeout'    => 30,
 		'body'       => array(
-		'action' => 'edd_test_ajax'
+			'action' => 'edd_test_ajax'
 		)
 	);
 
@@ -122,9 +122,10 @@ function edd_ajax_remove_from_cart() {
 		edd_remove_from_cart( $_POST['cart_item'] );
 
 		$return = array(
-			'removed'  => 1,
-			'subtotal' => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
-			'total'    => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ), ENT_COMPAT, 'UTF-8' )
+			'removed'       => 1,
+			'subtotal'      => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
+			'total'         => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ), ENT_COMPAT, 'UTF-8' ),
+			'cart_quantity' => html_entity_decode( edd_get_cart_quantity() ),
 		);
 
 		echo json_encode( $return );
@@ -184,9 +185,10 @@ function edd_ajax_add_to_cart() {
 		}
 
 		$return = array(
-			'subtotal'  => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
-			'total'     => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ), ENT_COMPAT, 'UTF-8' ),
-			'cart_item' => $items
+			'subtotal'      => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
+			'total'         => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ), ENT_COMPAT, 'UTF-8' ),
+			'cart_item'     => $items,
+			'cart_quantity' => html_entity_decode( edd_get_cart_quantity() )
 		);
 
 		echo json_encode( $return );
@@ -435,13 +437,41 @@ add_action( 'wp_ajax_nopriv_edd_get_shop_states', 'edd_ajax_get_states_field' );
 function edd_ajax_download_search() {
 	global $wpdb;
 
-	$search  = esc_sql( sanitize_text_field( $_GET['s'] ) );
+	$search   = esc_sql( sanitize_text_field( $_GET['s'] ) );
+	$excludes = ( isset( $_GET['post'] ) ? (array) $_GET['post'] : array() );
+	$excludes = array_map( 'absint', $excludes );
+	$exclude  = implode( ',', $excludes );
+
 	$results = array();
-	if ( current_user_can( 'edit_products' ) ) {
-		$items = $wpdb->get_results( "SELECT ID,post_title FROM $wpdb->posts WHERE `post_type` = 'download' AND `post_title` LIKE '%$search%' LIMIT 50" );
-	} else {
-		$items = $wpdb->get_results( "SELECT ID,post_title FROM $wpdb->posts WHERE `post_type` = 'download' AND `post_status` = 'publish' AND `post_title` LIKE '%$search%' LIMIT 50" );
+
+	// Setup the SELECT statement
+	$select = "SELECT ID,post_title FROM $wpdb->posts ";
+
+	// Setup the WHERE clause
+	$where = "WHERE `post_type` = 'download' and `post_title` LIKE '%s' ";
+
+	// If we have items to exclude, exclude them
+	if( ! empty( $exclude ) ) {
+		$where .= "AND `ID` NOT IN (%s) ";
 	}
+
+	// If the user can't edit products, limit to just published items
+	if( ! current_user_can( 'edit_products' ) ) {
+		$where .= "AND `post_status` = 'publish' ";
+	}
+
+	// Limit the result sets
+	$limit = "LIMIT 50";
+
+	$sql = $select . $where . $limit;
+
+	if( ! empty( $exclude ) ) {
+		$prepared_statement = $wpdb->prepare( $sql, '%' . $search . '%' . $exclude );
+	} else {
+		$prepared_statement = $wpdb->prepare( $sql, '%' . $search . '%' );
+	}
+
+	$items = $wpdb->get_results( $prepared_statement );
 
 	if( $items ) {
 
@@ -483,7 +513,15 @@ function edd_ajax_customer_search() {
 	if ( ! current_user_can( 'view_shop_reports' ) ) {
 		$customers = array();
 	} else {
-		$customers = $wpdb->get_results( "SELECT id,name,email FROM {$wpdb->prefix}edd_customers WHERE `name` LIKE '%$search%' OR `email` LIKE '%$search%' LIMIT 50" );
+		$select = "SELECT id, name, email FROM {$wpdb->prefix}edd_customers ";
+		if ( is_numeric( $search ) ) {
+			$where = "WHERE `id` LIKE '%$search%' OR `user_id` LIKE '%$search%' ";
+		} else {
+			$where = "WHERE `name` LIKE '%$search%' OR `email` LIKE '%$search%' ";
+		}
+		$limit = "LIMIT 50";
+
+		$customers = $wpdb->get_results( $select . $where . $limit );
 	}
 
 	if( $customers ) {

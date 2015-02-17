@@ -6,7 +6,7 @@
  *
  * @package     EDD
  * @subpackage  Classes/HTML
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
  */
@@ -26,8 +26,7 @@ class EDD_HTML_Elements {
 	 *
 	 * @access public
 	 * @since 1.5
-	 * @param string $name Name attribute of the dropdown
-	 * @param int $selected Download to select automatically
+	 * @param array $args Arguments for the dropdown
 	 * @return string $output Product dropdown
 	 */
 	public function product_dropdown( $args = array() ) {
@@ -70,7 +69,6 @@ class EDD_HTML_Elements {
 		$options = array();
 
 		if ( $products ) {
-			$options[0] = sprintf( __( 'Select a %s', 'edd' ), edd_get_label_singular() );
 			foreach ( $products as $product ) {
 				$options[ absint( $product->ID ) ] = esc_html( $product->post_title );
 			}
@@ -99,7 +97,7 @@ class EDD_HTML_Elements {
 			'options'          => $options,
 			'chosen'           => $args['chosen'],
 			'multiple'         => $args['multiple'],
-            'placeholder'      => $args['placeholder'],
+			'placeholder'      => $args['placeholder'],
 			'show_option_all'  => false,
 			'show_option_none' => false
 		) );
@@ -123,8 +121,8 @@ class EDD_HTML_Elements {
 			'class'       => '',
 			'multiple'    => false,
 			'selected'    => 0,
-            'select2'     => $args['select2'],
-            'placeholder' => $args['placeholder'],
+			'chosen'      => true,
+			'placeholder' => __( 'Select a Customer', 'edd' ),
 			'number'      => 30
 		);
 
@@ -137,12 +135,29 @@ class EDD_HTML_Elements {
 		$options = array();
 
 		if ( $customers ) {
-			$options[-1] = __( 'Guest', 'edd' );
 			foreach ( $customers as $customer ) {
 				$options[ absint( $customer->id ) ] = esc_html( $customer->name . ' (' . $customer->email . ')' );
 			}
 		} else {
 			$options[0] = __( 'No customers found', 'edd' );
+		}
+
+		if( ! empty( $args['selected'] ) ) {
+
+			// If a selected customer has been specified, we need to ensure it's in the initial list of customers displayed
+
+			if( ! array_key_exists( $args['selected'], $options ) ) {
+
+				$customer = new EDD_Customer( $args['selected'] );
+
+				if( $customer ) {
+
+					$options[ absint( $args['selected'] ) ] = esc_html( $customer->name . ' (' . $customer->email . ')' );
+
+				}
+
+			}
+
 		}
 
 		$output = $this->select( array(
@@ -233,17 +248,20 @@ class EDD_HTML_Elements {
 	 * @since 1.5.2
 	 * @param string $name Name attribute of the dropdown
 	 * @param int    $selected Year to select automatically
+	 * @param int    $years_before Number of years before the current year the dropdown should start with
+	 * @param int    $years_after Number of years after the current year the dropdown should finish at
 	 * @return string $output Year dropdown
 	 */
-	public function year_dropdown( $name = 'year', $selected = 0 ) {
-		$current  = date( 'Y' );
-		$year     = $current - 5;
-		$selected = empty( $selected ) ? date( 'Y' ) : $selected;
-		$options  = array();
+	public function year_dropdown( $name = 'year', $selected = 0, $years_before = 5, $years_after = 0 ) {
+		$current     = date( 'Y' );
+		$start_year  = $current - absint( $years_before );
+		$end_year    = $current + absint( $years_after );
+		$selected    = empty( $selected ) ? date( 'Y' ) : $selected;
+		$options     = array();
 
-		while ( $year <= $current ) {
-			$options[ absint( $year ) ] = $year;
-			$year++;
+		while ( $start_year <= $end_year ) {
+			$options[ absint( $start_year ) ] = $start_year;
+			$start_year++;
 		}
 
 		$output = $this->select( array(
@@ -395,10 +413,7 @@ class EDD_HTML_Elements {
 	 *
 	 * @since 1.5.2
 	 *
-	 * @param string $name Name attribute of the text field
-	 * @param string $value The value to prepopulate the field with
-	 * @param string $label
-	 * @param string $desc
+	 * @param array $args Arguments for the text field
 	 * @return string Text field
 	 */
 	public function text( $args = array() ) {
@@ -450,10 +465,7 @@ class EDD_HTML_Elements {
 	 *
 	 * @since 1.9
 	 *
-	 * @param string $name Name attribute of the textarea
-	 * @param string $value The value to prepopulate the field with
-	 * @param string $label
-	 * @param string $desc
+	 * @param array $args Arguments for the textarea
 	 * @return string textarea
 	 */
 	public function textarea( $args = array() ) {
