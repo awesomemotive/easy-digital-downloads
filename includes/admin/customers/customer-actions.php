@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_edit_customer( $args ) {
 
-	$customer_edit_role = apply_filters( 'edd_view_customers_role', 'view_shop_reports' );
+	$customer_edit_role = apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
 
 	if ( ! is_admin() || ! current_user_can( $customer_edit_role ) ) {
 		wp_die( __( 'You do not have permission to edit this customer.', 'edd' ) );
@@ -153,9 +153,9 @@ add_action( 'edd_edit-customer', 'edd_edit_customer', 10, 1 );
  */
 function edd_customer_save_note( $args ) {
 
-	$customer_edit_role = apply_filters( 'edd_view_customers_role', 'view_shop_reports' );
+	$customer_view_role = apply_filters( 'edd_view_customers_role', 'view_shop_reports' );
 
-	if ( ! is_admin() || ! current_user_can( $customer_edit_role ) ) {
+	if ( ! is_admin() || ! current_user_can( $customer_view_role ) ) {
 		wp_die( __( 'You do not have permission to edit this customer.', 'edd' ) );
 	}
 

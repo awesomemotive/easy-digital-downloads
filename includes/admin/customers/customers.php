@@ -86,9 +86,9 @@ function edd_customers_list() {
  */
 function edd_render_customer_view( $view, $callbacks ) {
 
-	$customer_edit_role = apply_filters( 'edd_view_customers_role', 'view_shop_reports' );
+	$customer_view_role = apply_filters( 'edd_view_customers_role', 'view_shop_reports' );
 
-	if ( ! current_user_can( $customer_edit_role ) ) {
+	if ( ! current_user_can( $customer_view_role ) ) {
 		edd_set_error( 'edd-no-access', __( 'You are not permitted to view this data.', 'edd' ) );
 	}
 
@@ -156,6 +156,9 @@ function edd_render_customer_view( $view, $callbacks ) {
  * @return void
  */
 function edd_customers_view( $customer ) {
+
+	$customer_edit_role = apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
+
 	?>
 
 	<?php do_action( 'edd_customer_card_top', $customer ); ?>
@@ -168,7 +171,9 @@ function edd_customers_view( $customer ) {
 
 				<div class="avatar-wrap left" id="customer-avatar">
 					<?php echo get_avatar( $customer->email ); ?><br />
-					<span class="info-item editable customer-edit-link"><a title="<?php _e( 'Edit Customer', 'edd' ); ?>" href="#" id="edit-customer"><?php _e( 'Edit Customer', 'edd' ); ?></a></span>
+					<?php if ( current_user_can( $customer_edit_role ) ): ?>
+						<span class="info-item editable customer-edit-link"><a title="<?php _e( 'Edit Customer', 'edd' ); ?>" href="#" id="edit-customer"><?php _e( 'Edit Customer', 'edd' ); ?></a></span>
+					<?php endif; ?>
 				</div>
 
 				<div class="customer-id right">
