@@ -842,19 +842,17 @@ function edd_v23_upgrade_customer_purchases() {
 			$where  = "WHERE p.post_type = 'edd_payment' ";
 
 			if ( ! empty( $customer->user_id ) ) {
-				$where .= "AND ( ( m.meta_key = '_edd_payment_user_email' AND m.meta_value = '$customer->email' ) OR ( m.meta_key = '_edd_payment_user_id' AND m.meta_value = '$customer->user_id' ) )";
+				$where .= "AND ( ( m.meta_key = '_edd_payment_user_email' AND m.meta_value = '$customer->email' ) OR ( m.meta_key = '_edd_payment_customer_id' AND m.meta_value = '$customer->id' ) OR ( m.meta_key = '_edd_payment_user_id' AND m.meta_value = '$customer->user_id' ) )";
 			} else {
-				$where .= "AND m.meta_key = '_edd_payment_user_email' AND m.meta_value = '$customer->email' ) ";
+				$where .= "AND ( ( m.meta_key = '_edd_payment_user_email' AND m.meta_value = '$customer->email' ) OR ( m.meta_key = '_edd_payment_customer_id' AND m.meta_value = '$customer->id' ) ) ";
 			}
 
 			$sql            = $select . $join . $where;
 			$found_payments = $wpdb->get_col( $sql );
 
 			$unique_payment_ids  = array_unique( array_filter( $found_payments ) );
-			$current_payment_ids = array_unique( array_filter( explode( ',', $customer->payment_ids ) ) );
-			$needs_update        = array_diff( $unique_payment_ids, $current_payment_ids );
 
-			if ( ! empty( $unique_payment_ids ) && ! empty( $needs_update ) ) {
+			if ( ! empty( $unique_payment_ids ) ) {
 
 				$unique_ids_string = implode( ',', $unique_payment_ids );
 
@@ -876,19 +874,20 @@ function edd_v23_upgrade_customer_purchases() {
 
 				}
 
-			} else if ( ! empty( $needs_update ) ) {
+			} else {
 
 				$customer_data['purchase_count'] = 0;
 				$customer_data['purchase_value'] = 0;
+				$customer_data['payment_ids']    = '';
 
 			}
-			
 
-			if ( ! empty( $needs_update ) ) {
+
+			if ( ! empty( $customer_data ) ) {
 
 				$customer = new EDD_Customer( $customer->id );
 				$customer->update( $customer_data );
-		
+
 			}
 
 		}
