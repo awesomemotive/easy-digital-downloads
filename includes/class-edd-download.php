@@ -498,8 +498,6 @@ class EDD_Download {
 	 */
 	public function increase_sales( $quantity = 1 ) {
 
-		global $wpdb;
-
 		$sales       = edd_get_download_sales_stats( $this->ID );
 		$quantity    = absint( $quantity );
 		$total_sales = $sales + $quantity;
@@ -581,8 +579,6 @@ class EDD_Download {
 	 */
 	public function increase_earnings( $amount = 0 ) {
 
-		global $wpdb;
-
 		$earnings   = edd_get_download_earnings_stats( $this->ID );
 		$new_amount = $earnings + (float) $amount;
 
@@ -662,6 +658,7 @@ class EDD_Download {
 	 * @return bool             The result of the update query
 	 */
 	private function update_meta( $meta_key = '', $meta_value = '' ) {
+
 		global $wpdb;
 
 		if ( empty( $meta_key ) || empty( $meta_value ) ) {
