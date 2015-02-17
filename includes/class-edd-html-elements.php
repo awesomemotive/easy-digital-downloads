@@ -142,6 +142,24 @@ class EDD_HTML_Elements {
 			$options[0] = __( 'No customers found', 'edd' );
 		}
 
+		if( ! empty( $args['selected'] ) ) {
+
+			// If a selected customer has been specified, we need to ensure it's in the initial list of customers displayed
+
+			if( ! array_key_exists( $args['selected'], $options ) ) {
+
+				$customer = new EDD_Customer( $args['selected'] );
+
+				if( $customer ) {
+
+					$options[ absint( $args['selected'] ) ] = esc_html( $customer->name . ' (' . $customer->email . ')' );
+
+				}
+
+			}
+
+		}
+
 		$output = $this->select( array(
 			'name'             => $args['name'],
 			'selected'         => $args['selected'],
