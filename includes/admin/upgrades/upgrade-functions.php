@@ -836,8 +836,6 @@ function edd_v23_upgrade_customer_purchases() {
 
 		foreach( $customers as $customer ) {
 
-			$current_payment_ids = explode( ',', $customer->payment_ids );
-
 			// Get payments by email and user ID
 			$select = "SELECT ID FROM $wpdb->posts p ";
 			$join   = "LEFT JOIN $wpdb->postmeta m ON p.ID = m.post_id ";
@@ -852,10 +850,13 @@ function edd_v23_upgrade_customer_purchases() {
 			$sql            = $select . $join . $where;
 			$found_payments = $wpdb->get_col( $sql );
 
-			$unique_payment_ids = array_unique( array_filter( array_merge( $current_payment_ids, $found_payments ) ) );
-			if ( ! empty( $unique_payment_ids ) ) {
+			$unique_payment_ids  = array_unique( array_filter( $found_payments ) );
+			$current_payment_ids = array_unique( array_filter( explode( ',', $customer->payment_ids ) ) );
+			$needs_update        = array_diff( $unique_payment_ids, $current_payment_ids );
+
+			if ( ! empty( $unique_payment_ids ) && ! empty( $needs_update ) ) {
+
 				$unique_ids_string = implode( ',', $unique_payment_ids );
-				$customer = new EDD_Customer( $customer->id );
 
 				$customer_data = array( 'payment_ids' => $unique_ids_string );
 
@@ -866,15 +867,30 @@ function edd_v23_upgrade_customer_purchases() {
 				$purchase_count     = $wpdb->get_col( $purchase_count_sql );
 
 				if ( ! empty( $purchase_value ) && ! empty( $purchase_count ) ) {
+
 					$purchase_value = $purchase_value[0];
 					$purchase_count = $purchase_count[0];
 
 					$customer_data['purchase_count'] = $purchase_count;
 					$customer_data['purchase_value'] = $purchase_value;
+
 				}
 
-				$customer->update( $customer_data );
+			} else if ( ! empty( $needs_update ) ) {
+
+				$customer_data['purchase_count'] = 0;
+				$customer_data['purchase_value'] = 0;
+
 			}
+			
+
+			if ( ! empty( $needs_update ) ) {
+
+				$customer = new EDD_Customer( $customer->id );
+				$customer->update( $customer_data );
+		
+			}
+
 		}
 
 		// More Payments found so upgrade them
