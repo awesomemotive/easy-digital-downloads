@@ -841,7 +841,7 @@ function edd_v23_upgrade_customer_purchases() {
 			$join   = "LEFT JOIN $wpdb->postmeta m ON p.ID = m.post_id ";
 			$where  = "WHERE p.post_type = 'edd_payment' ";
 
-			if ( ! empty( $customer->user_id ) ) {
+			if ( ! empty( $customer->user_id ) && intval( $customer->user_id ) > 0 ) {
 				$where .= "AND ( ( m.meta_key = '_edd_payment_user_email' AND m.meta_value = '$customer->email' ) OR ( m.meta_key = '_edd_payment_customer_id' AND m.meta_value = '$customer->id' ) OR ( m.meta_key = '_edd_payment_user_id' AND m.meta_value = '$customer->user_id' ) )";
 			} else {
 				$where .= "AND ( ( m.meta_key = '_edd_payment_user_email' AND m.meta_value = '$customer->email' ) OR ( m.meta_key = '_edd_payment_customer_id' AND m.meta_value = '$customer->id' ) ) ";
