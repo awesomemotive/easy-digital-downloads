@@ -320,7 +320,7 @@ function edd_downloads_query( $atts, $content = null ) {
 
 		if ( $atts['tags'] ) {
 
-			$tag_list	= explode( ',', $atts['tags'] );
+			$tag_list = explode( ',', $atts['tags'] );
 
 			foreach( $tag_list as $tag ) {
 
@@ -390,6 +390,9 @@ function edd_downloads_query( $atts, $content = null ) {
 				'relation' => 'AND'
 			);
 
+			// To properly exclude, we need to also include the first query to this meta query
+			$query['tax_query'][ $tax_query_key ][] = $query['tax_query'][0];
+
 			foreach( $categories as $category ) {
 
 				if( is_numeric( $category ) ) {
@@ -415,6 +418,11 @@ function edd_downloads_query( $atts, $content = null ) {
 				);
 			}
 
+			// Since we're excluding, we need the overall relation to be AND
+			if ( ! empty( $query['tax_query'][ $tax_query_key ] ) ) {
+				$query['tax_query']['relation'] = 'AND';
+			}
+
 		}
 
 		if ( $atts['exclude_tags'] ) {
@@ -426,6 +434,9 @@ function edd_downloads_query( $atts, $content = null ) {
 					'relation' => 'AND'
 				);
 			}
+
+			// To properly exclude, we need to also include the first query to this meta query
+			$query['tax_query'][ $tax_query_key ][] = $query['tax_query'][0];
 
 			foreach( $tag_list as $tag ) {
 
@@ -453,6 +464,11 @@ function edd_downloads_query( $atts, $content = null ) {
 
 			}
 
+			// Since we're excluding, we need the overall relation to be AND
+			if ( ! empty( $query['tax_query'][ $tax_query_key ] ) ) {
+				$query['tax_query']['relation'] = 'AND';
+			}
+
 		}
 	}
 
@@ -467,8 +483,8 @@ function edd_downloads_query( $atts, $content = null ) {
 		$query['paged'] = 1;
 
 	switch( intval( $atts['columns'] ) ) :
-	    case 0:
-	        $column_width = 'inherit'; break;
+		case 0:
+			$column_width = 'inherit'; break;
 		case 1:
 			$column_width = '100%'; break;
 		case 2:
