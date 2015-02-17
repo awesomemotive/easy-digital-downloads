@@ -521,8 +521,6 @@ class EDD_Download {
 	 */
 	public function decrease_sales( $quantity = 1 ) {
 
-		global $wpdb;
-
 		$sales = edd_get_download_sales_stats( $this->ID );
 
 		// Only decrease if not already zero
@@ -600,8 +598,6 @@ class EDD_Download {
 	 * @return float|false
 	 */
 	public function decrease_earnings( $amount ) {
-
-		global $wpdb;
 
 		$earnings = edd_get_download_earnings_stats( $this->ID );
 
