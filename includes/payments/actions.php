@@ -38,6 +38,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 	$customer_id    = edd_get_payment_customer_id( $payment_id );
 	$amount         = edd_get_payment_amount( $payment_id );
 	$cart_details   = edd_get_payment_meta_cart_details( $payment_id );
+	$increase_stats = ! edd_is_test_mode() || apply_filters( 'edd_log_test_payment_stats', false );
 
 	do_action( 'edd_pre_complete_purchase', $payment_id );
 
@@ -55,7 +56,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 				// Ensure these actions only run once, ever
 				if( empty( $completed_date ) ) {
 
-					if ( ! edd_is_test_mode() || apply_filters( 'edd_log_test_payment_stats', false ) ) {
+					if ( $increase_stats ) {
 
 						edd_record_sale_in_log( $download['id'], $payment_id, $price_id, $creation_date );
 
@@ -67,9 +68,13 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 			}
 
-			// Increase the earnings for this download ID
-			edd_increase_earnings( $download['id'], $download['price'] );
-			edd_increase_purchase_count( $download['id'], $download['quantity'] );
+			if( $increase_stats ) {
+
+				// Increase the earnings for this download ID
+				edd_increase_earnings( $download['id'], $download['price'] );
+				edd_increase_purchase_count( $download['id'], $download['quantity'] );
+
+			}
 
 		}
 
@@ -80,8 +85,16 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 		delete_transient( md5( 'edd_earnings_todaytoday' ) );
 	}
 
-	// Increase the customer's purchase stats
-	EDD()->customers->increment_stats( $customer_id, $amount );
+	if( $increase_stats ) {
+
+		// Increase the customer's purchase stats
+		$customer = new EDD_Customer( $customer_id );
+		$customer->increase_purchase_count();
+		$customer->increase_value( $amount );
+
+		edd_increase_total_earnings( $amount );
+
+	}
 
 	// Check for discount codes and increment their use counts
 	if ( ! empty( $user_info['discount'] ) && $user_info['discount'] !== 'none' ) {
@@ -99,7 +112,6 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 		}
 	}
 
-	edd_increase_total_earnings( $amount );
 
 	// Ensure this action only runs once ever
 	if( empty( $completed_date ) ) {
@@ -169,7 +181,9 @@ function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
 
 	if( $customer_id ) {
 
-		EDD()->customers->decrement_stats( $customer_id, $amount );
+		$customer = new EDD_Customer( $customer_id );
+		$customer->decrease_value( $amount );
+		$customer->decrease_purchase_count();
 
 	}
 

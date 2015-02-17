@@ -101,16 +101,13 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	 * @access public
 	 * @since 1.5
 	 *
-	 * @param array $item Contains all the data of the discount code
+	 * @param array $item Contains all the data of the api request
 	 * @param string $column_name The name of the column
 	 *
 	 * @return string Column Name
 	 */
 	public function column_default( $item, $column_name ) {
-		switch( $column_name ){
-			default:
-				return $item[ $column_name ];
-		}
+		return $item[ $column_name ];
 	}
 
 	/**
@@ -151,7 +148,7 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	 *
 	 * @access public
 	 * @since 1.5
-	 * @return mixed String if search is present, false otherwise
+	 * @return string|false String if search is present, false otherwise
 	 */
 	public function get_search() {
 		return ! empty( $_GET['s'] ) ? urldecode( trim( $_GET['s'] ) ) : false;
