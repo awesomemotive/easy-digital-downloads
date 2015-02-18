@@ -343,7 +343,27 @@ jQuery(document).ready(function ($) {
 			// Remove a download from a purchase
 			$('#edd-purchased-files').on('click', '.edd-order-remove-download', function() {
 				if( confirm( edd_vars.delete_payment_download ) ) {
+					var key = $(this).data('key');
+
+					var purchase_id = $('.edd-payment-id').val();
+					var download_id = $('input[name="edd-payment-details-downloads['+key+'][id]"]').val();
+					var price_id    = $('input[name="edd-payment-details-downloads['+key+'][price_id]"]').val();
+					var quantity    = $('input[name="edd-payment-details-downloads['+key+'][quantity]"]').val();
+					var amount      = $('input[name="edd-payment-details-downloads['+key+'][amount]"]').val();
+
+					var currently_removed  = $('input[name="edd-payment-removed"]').val();
+					currently_removed      = $.parseJSON(currently_removed);
+					if ( currently_removed.length < 1 ) {
+						currently_removed  = {};
+					}
+
+					var removed_item       = [ { 'id': download_id, 'price_id': price_id, 'quantity': quantity, 'amount': amount } ];
+					currently_removed[key] = removed_item
+
+					$('input[name="edd-payment-removed"]').val(JSON.stringify(currently_removed));
+
 					$(this).parent().parent().parent().remove();
+
 					// Flag the Downloads section as changed
 					$('#edd-payment-downloads-changed').val(1);
 					$('.edd-order-payment-recalc-totals').show();
@@ -431,6 +451,7 @@ jQuery(document).ready(function ($) {
 				clone.find( 'input.edd-payment-details-download-price-id' ).val( price_id );
 				clone.find( 'input.edd-payment-details-download-amount' ).val( amount );
 				clone.find( 'input.edd-payment-details-download-quantity' ).val( quantity );
+				clone.find( 'input.edd-payment-details-download-has-log').val(0);
 
 				// Replace the name / id attributes
 				clone.find( 'input' ).each(function() {
