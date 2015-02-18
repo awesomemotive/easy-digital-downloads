@@ -298,17 +298,20 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 					$amount     = 0;
 					if ( is_array( $cart_items ) && is_array( $user_info ) ) {
 						foreach ( $cart_items as $item ) {
-							$amount = isset( $item['item_price'] ) ? $item['item_price'] : $item['price'];
+							if ( $item['id'] == $log->post_parent ) {
+								$amount = isset( $item['item_price'] ) ? $item['item_price'] : $item['price'];
+								break;
+							}
 						}
 
 						$logs_data[] = array(
-							'ID' 		=> $log->ID,
-							'payment_id'=> $payment_id,
-							'download'  => $log->post_parent,
-							'amount'    => $amount,
-							'user_id'	=> $user_info['id'],
-							'user_name'	=> $user_info['first_name'] . ' ' . $user_info['last_name'],
-							'date'		=> get_post_field( 'post_date', $payment_id )
+							'ID'         => $log->ID,
+							'payment_id' => $payment_id,
+							'download'   => $log->post_parent,
+							'amount'     => $amount,
+							'user_id'    => $user_info['id'],
+							'user_name'  => $user_info['first_name'] . ' ' . $user_info['last_name'],
+							'date'       => get_post_field( 'post_date', $payment_id )
 						);
 					}
 				endif;

@@ -27,6 +27,8 @@ function edd_update_payment_details( $data ) {
 
 	check_admin_referer( 'edd_update_payment_details_nonce' );
 
+	global $edd_logs, $wpdb;
+
 	// Retrieve the payment ID
 	$payment_id = absint( $data['edd_payment_id'] );
 
@@ -52,6 +54,7 @@ function edd_update_payment_details( $data ) {
 	// Setup purchased Downloads and price options
 	$updated_downloads = isset( $_POST['edd-payment-details-downloads'] ) ? $_POST['edd-payment-details-downloads'] : false;
 	if( $updated_downloads && ! empty( $_POST['edd-payment-downloads-changed'] ) ) {
+
 		$downloads    = array();
 		$cart_details = array();
 		$i = 0;
@@ -65,6 +68,7 @@ function edd_update_payment_details( $data ) {
 			$item['id']       = absint( $download['id'] );
 			$item['quantity'] = absint( $download['quantity'] ) > 0 ? absint( $download['quantity'] ) : 1;
 			$price_id         = (int) $download['price_id'];
+			$has_log          = absint( $download['has_log'] );
 
 			if( $price_id !== false && edd_has_variable_prices( $item['id'] ) ) {
 				$item['options'] = array(
@@ -88,11 +92,53 @@ function edd_update_payment_details( $data ) {
 				'discount'    => 0,
 				'tax'         => 0,
 			);
+
+			if ( empty( $has_log ) ) {
+
+				$date     =  date( 'Y-m-d G:i:s', time() );
+				$price_id = $price_id !== false ? $price_id : 0;
+				edd_record_sale_in_log( $download['id'], $payment_id, $price_id, $date );
+
+			}
+
 			$i++;
 		}
 
 		$meta['downloads']    = $downloads;
 		$meta['cart_details'] = $cart_details;
+
+		$deleted_downloads = json_decode( stripcslashes( $data['edd-payment-removed'] ), true );
+
+		foreach ( $deleted_downloads as $deleted_download ) {
+			$deleted_download = $deleted_download[0];
+
+			if ( empty ( $deleted_download['id'] ) ) {
+				continue;
+			}
+
+			$log_query = $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta m LEFT JOIN $wpdb->posts p ON p.ID = m.post_id WHERE p.post_parent = %d AND m.meta_value = %d", $deleted_download['id'], $payment_id );
+			$log_ids   = $wpdb->get_col( $log_query );
+			foreach ( $log_ids as $log_id ) {
+
+				$log_price_id      = get_post_meta( $log_id, '_edd_log_price_id', true );
+				$download_price_id = ( $deleted_download['price_id'] == '' ) ? 0 : $deleted_download['price_id'];
+
+				if ( $log_price_id != $download_price_id ) {
+					continue;
+				}
+
+				if ( wp_delete_post( $log_id, true ) ) {
+					edd_decrease_purchase_count( $deleted_download['id'] );
+					break;
+				}
+
+			}
+
+			edd_decrease_earnings( $deleted_download['id'], $deleted_download['amount'] );
+
+		}
+
+
 	}
 
 	do_action( 'edd_update_edited_purchase', $payment_id );
