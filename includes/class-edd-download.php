@@ -104,6 +104,33 @@ class EDD_Download {
 	private $button_behavior;
 
 	/**
+	 * Declare the default properities in WP_Post as we can't extend it
+	 * Anything we've delcared above has been removed.
+	 */
+	public $post_author = 0;
+	public $post_date = '0000-00-00 00:00:00';
+	public $post_date_gmt = '0000-00-00 00:00:00';
+	public $post_content = '';
+	public $post_title = '';
+	public $post_excerpt = '';
+	public $post_status = 'publish';
+	public $comment_status = 'open';
+	public $ping_status = 'open';
+	public $post_password = '';
+	public $post_name = '';
+	public $to_ping = '';
+	public $pinged = '';
+	public $post_modified = '0000-00-00 00:00:00';
+	public $post_modified_gmt = '0000-00-00 00:00:00';
+	public $post_content_filtered = '';
+	public $post_parent = 0;
+	public $guid = '';
+	public $menu_order = 0;
+	public $post_mime_type = '';
+	public $comment_count = 0;
+	public $filter;
+
+	/**
 	 * Get things going
 	 *
 	 * @since 2.2
