@@ -409,10 +409,83 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 			return;
 		}
 
-		if ( $payment_status == 'completed' || edd_is_test_mode() ) {
+		if ( 'completed' == $payment_status || edd_is_test_mode() ) {
+
 			edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'edd' ) , $data['txn_id'] ) );
 			edd_set_payment_transaction_id( $payment_id, $data['txn_id'] );
 			edd_update_payment_status( $payment_id, 'publish' );
+
+		} else if ( 'pending' == $payment_status && isset( $data['pending_reason'] ) ) {
+
+			// Look for possible pending reasons, such as an echeck
+
+			$note = '';
+
+			switch( strtolower( $data['pending_reason'] ) ) {
+
+				case 'echeck' :
+
+					$note = __( 'Payment made via eCheck and will clear automatically in 5-8 days', 'edd' );
+
+					break;
+
+				case 'address' :
+
+					$note = __( 'Payment requires a confirmed customer address and must be accepted manually through PayPal', 'edd' );
+
+					break;
+
+				case 'intl' :
+
+					$note = __( 'Payment must be accepted manually through PayPal due to international account regulations', 'edd' );
+
+					break;
+
+				case 'multi-currency' :
+
+					$note = __( 'Payment received in non-shop currency and must be accepted manually through PayPal', 'edd' );
+
+					break;
+
+				case 'paymentreview' :
+				case 'regulatory_review' :
+
+					$note = __( 'Payment is being reviewed by PayPal staff as high-risk or in possible violation of government regulations', 'edd' );
+
+					break;
+
+				case 'unilateral' :
+
+					$note = __( 'Payment was sent to non-confirmed or non-registered email address.', 'edd' );
+
+					break;
+
+				case 'upgrade' :
+
+					$note = __( 'PayPal account must be upgraded before this payment can be accepted', 'edd' );
+
+					break;
+
+				case 'verify' :
+
+					$note = __( 'PayPal account is not verified. Verify account in order to accept this payment', 'edd' );
+
+					break;
+
+				case 'other' :
+
+					$note = __( 'Payment is pending for unknown reasons. Contact PayPal support for assistance', 'edd' );
+
+					break;
+
+			}
+
+			if( ! empty( $note ) ) {
+
+				edd_insert_payment_note( $payment_id, $note );
+
+			}
+
 		}
 	}
 }
