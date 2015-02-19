@@ -27,8 +27,6 @@ function edd_update_payment_details( $data ) {
 
 	check_admin_referer( 'edd_update_payment_details_nonce' );
 
-	global $edd_logs;
-
 	// Retrieve the payment ID
 	$payment_id = absint( $data['edd_payment_id'] );
 
