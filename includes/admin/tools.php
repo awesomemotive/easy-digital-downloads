@@ -443,6 +443,7 @@ function edd_tools_sysinfo_get() {
 	$return .= 'Currency Position:        ' . edd_get_option( 'currency_position', 'before' ) . "\n";
 	$return .= 'Decimal Separator:        ' . edd_get_option( 'decimal_separator', '.' ) . "\n";
 	$return .= 'Thousands Separator:      ' . edd_get_option( 'thousands_separator', ',' ) . "\n";
+	$return .= 'Upgrades Completed:       ' . implode( ',', edd_get_completed_upgrades() ) . "\n";
 
 	$return  = apply_filters( 'edd_sysinfo_after_edd_config', $return );
 
@@ -638,7 +639,7 @@ function edd_tools_sysinfo_download() {
 	if( ! current_user_can( 'manage_shop_settings' ) ) {
 		return;
 	}
-	
+
 	nocache_headers();
 
 	header( 'Content-Type: text/plain' );
