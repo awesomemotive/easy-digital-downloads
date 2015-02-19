@@ -223,7 +223,7 @@ function edd_has_upgrade_completed( $upgrade_action = '' ) {
  * @param  string $upgrade_action The action to add to the copmleted upgrades array
  * @return bool                   If the function was successfully added
  */
-function edd_upgrade_has_completed( $upgrade_action = '' ) {
+function edd_set_upgrade_complete( $upgrade_action = '' ) {
 
 	if ( empty( $upgrade_action ) ) {
 		return false;
@@ -804,7 +804,7 @@ function edd_v23_upgrade_payment_taxes() {
 		if( empty( $has_payments ) ) {
 			// We had no payments, just complete
 			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
-			edd_upgrade_has_completed( 'upgrade_payment_taxes' );
+			edd_set_upgrade_complete( 'upgrade_payment_taxes' );
 			delete_option( 'edd_doing_upgrade' );
 			wp_redirect( admin_url() ); exit;
 		}
@@ -846,7 +846,7 @@ function edd_v23_upgrade_payment_taxes() {
 	} else {
 		// No more payments found, finish up
 		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
-		edd_upgrade_has_completed( 'upgrade_payment_taxes' );
+		edd_set_upgrade_complete( 'upgrade_payment_taxes' );
 		delete_option( 'edd_doing_upgrade' );
 		wp_redirect( admin_url() ); exit;
 	}
@@ -884,7 +884,7 @@ function edd_v23_upgrade_customer_purchases() {
 		if( empty( $has_payments ) ) {
 			// We had no payments, just complete
 			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
-			edd_upgrade_has_completed( 'upgrade_customer_payments_association' );
+			edd_set_upgrade_complete( 'upgrade_customer_payments_association' );
 			delete_option( 'edd_doing_upgrade' );
 			wp_redirect( admin_url() ); exit;
 		}
@@ -973,7 +973,7 @@ function edd_v23_upgrade_customer_purchases() {
 		// No more customers found, finish up
 
 		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
-		edd_upgrade_has_completed( 'upgrade_customer_payments_association' );
+		edd_set_upgrade_complete( 'upgrade_customer_payments_association' );
 		delete_option( 'edd_doing_upgrade' );
 
 		wp_redirect( admin_url() ); exit;

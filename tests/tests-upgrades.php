@@ -21,7 +21,7 @@ class Tests_Upgrades extends WP_UnitTestCase {
 		$this->assertTrue( empty( $current_upgrades ) );
 		$this->assertInternalType( 'array', $current_upgrades );
 
-		$this->assertTrue( edd_upgrade_has_completed( 'test-upgrade-action' ) );
+		$this->assertTrue( edd_set_upgrade_complete( 'test-upgrade-action' ) );
 		$this->assertTrue( edd_has_upgrade_completed( 'test-upgrade-action' ) );
 		$this->assertFalse( edd_has_upgrade_completed( 'test-upgrade-action-false' ) );
 
