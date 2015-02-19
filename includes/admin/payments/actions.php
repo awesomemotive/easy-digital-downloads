@@ -93,11 +93,24 @@ function edd_update_payment_details( $data ) {
 				'tax'         => 0,
 			);
 
+			// If this item doesn't have a log yet, add one for each quantity count
 			if ( empty( $has_log ) ) {
 
-				$date     =  date( 'Y-m-d G:i:s', time() );
+				$log_date =  date( 'Y-m-d G:i:s', current_time( 'timestamp', true ) );
 				$price_id = $price_id !== false ? $price_id : 0;
-				edd_record_sale_in_log( $download['id'], $payment_id, $price_id, $date );
+
+				$y = 0;
+
+				while ( $y < $download['quantity'] ) {
+
+					edd_record_sale_in_log( $download['id'], $payment_id, $price_id, $log_date );
+					$y++;
+
+				}
+
+				edd_increase_purchase_count( $download['id'], $download['quantity'] );
+				edd_increase_earnings( $download['id'], $download['amount'] );
+
 
 			}
 
@@ -116,24 +129,32 @@ function edd_update_payment_details( $data ) {
 				continue;
 			}
 
-			$log_query = $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta m LEFT JOIN $wpdb->posts p ON p.ID = m.post_id WHERE p.post_parent = %d AND m.meta_value = %d", $deleted_download['id'], $payment_id );
-			$log_ids   = $wpdb->get_col( $log_query );
-			foreach ( $log_ids as $log_id ) {
+			$price_id = empty( $deleted_download['price_id'] ) ? 0 : (int) $deleted_download['price_id'];
 
-				$log_price_id      = get_post_meta( $log_id, '_edd_log_price_id', true );
-				$download_price_id = ( $deleted_download['price_id'] == '' ) ? 0 : $deleted_download['price_id'];
+			$log_args = array(
+				'post_type'   => 'edd_log',
+				'post_parent' => $deleted_download['id'],
+				'numberposts' => $deleted_download['quantity'],
+				'meta_query'  => array(
+					array(
+						'key'     => '_edd_log_payment_id',
+						'value'   => $payment_id,
+						'compare' => '=',
+					),
+					array(
+						'key'     => '_edd_log_price_id',
+						'value'   => $price_id,
+						'compare' => '='
+					)
+				)
+			);
 
-				if ( $log_price_id != $download_price_id ) {
-					continue;
-				}
-
-				if ( wp_delete_post( $log_id, true ) ) {
-					edd_decrease_purchase_count( $deleted_download['id'] );
-					break;
-				}
-
+			$found_logs = get_posts( $log_args );
+			foreach ( $found_logs as $log ) {
+				wp_delete_post( $log->ID, true );
 			}
 
+			edd_decrease_purchase_count( $deleted_download['id'], $deleted_download['quantity'] );
 			edd_decrease_earnings( $deleted_download['id'], $deleted_download['amount'] );
 
 		}
