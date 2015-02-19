@@ -110,12 +110,14 @@ function edd_show_upgrade_notices() {
 			);
 		}
 
-		if ( version_compare( $edd_version, '2.3', '<' ) ) {
+		if ( ! edd_has_upgrade_completed( 'upgrade_customer_payments_association' ) ) {
 			printf(
 				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the customer database, click <a href="%s">here</a> to start the upgrade.', 'edd' ) . '</p></div>',
 				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_customer_payments_association' ) )
 			);
+		}
 
+		if ( ! edd_has_upgrade_completed( 'upgrade_payment_taxes' ) ) {
 			printf(
 				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the payments database, click <a href="%s">here</a> to start the upgrade.', 'edd' ) . '</p></div>',
 				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_payment_taxes' ) )
@@ -184,6 +186,7 @@ add_action( 'wp_ajax_edd_trigger_upgrades', 'edd_trigger_upgrades' );
  * @return mixed   When nothing to resume returns false, otherwise starts the upgrade where it left off
  */
 function edd_maybe_resume_upgrade() {
+
 	$doing_upgrade = get_option( 'edd_doing_upgrade', false );
 
 	if ( empty( $doing_upgrade ) ) {
@@ -191,6 +194,64 @@ function edd_maybe_resume_upgrade() {
 	}
 
 	return $doing_upgrade;
+
+}
+
+/**
+ * Check if the upgrade routine has been run for a specific action
+ *
+ * @since  2.3
+ * @param  string $upgrade_action The upgrade action to check completion for
+ * @return bool                   If the action has been added to the copmleted actions array
+ */
+function edd_has_upgrade_completed( $upgrade_action = '' ) {
+
+	if ( empty( $upgrade_action ) ) {
+		return false;
+	}
+
+	$completed_upgrades = edd_get_completed_upgrades();
+
+	return in_array( $upgrade_action, $completed_upgrades );
+
+}
+
+/**
+ * Adds an upgrade action to the completed upgrades array
+ *
+ * @since  2.3
+ * @param  string $upgrade_action The action to add to the copmleted upgrades array
+ * @return bool                   If the function was successfully added
+ */
+function edd_upgrade_has_completed( $upgrade_action = '' ) {
+
+	if ( empty( $upgrade_action ) ) {
+		return false;
+	}
+
+	$completed_upgrades   = edd_get_completed_upgrades();
+	$completed_upgrades[] = $upgrade_action;
+
+	// Remove any blanks, and only show uniques
+	$completed_upgrades = array_unique( array_values( $completed_upgrades ) );
+
+	return update_option( 'edd_completed_upgrades', $completed_upgrades );
+}
+
+/**
+ * Get's the array of completed upgrade actions
+ * @return array The array of completed upgrades
+ */
+function edd_get_completed_upgrades() {
+
+	$completed_upgrades = get_option( 'edd_completed_upgrades' );
+
+	if ( false === $completed_upgrades ) {
+		$completed_upgrades = array();
+	}
+
+	return $completed_upgrades;
+
 }
 
 /**
@@ -741,6 +802,7 @@ function edd_v23_upgrade_payment_taxes() {
 		if( empty( $has_payments ) ) {
 			// We had no payments, just complete
 			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+			edd_upgrade_has_completed( 'upgrade_payment_taxes' );
 			delete_option( 'edd_doing_upgrade' );
 			wp_redirect( admin_url() ); exit;
 		}
@@ -782,6 +844,7 @@ function edd_v23_upgrade_payment_taxes() {
 	} else {
 		// No more payments found, finish up
 		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+		edd_upgrade_has_completed( 'upgrade_payment_taxes' );
 		delete_option( 'edd_doing_upgrade' );
 		wp_redirect( admin_url() ); exit;
 	}
@@ -819,6 +882,7 @@ function edd_v23_upgrade_customer_purchases() {
 		if( empty( $has_payments ) ) {
 			// We had no payments, just complete
 			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+			edd_upgrade_has_completed( 'upgrade_customer_payments_association' );
 			delete_option( 'edd_doing_upgrade' );
 			wp_redirect( admin_url() ); exit;
 		}
@@ -907,6 +971,7 @@ function edd_v23_upgrade_customer_purchases() {
 		// No more customers found, finish up
 
 		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+		edd_upgrade_has_completed( 'upgrade_customer_payments_association' );
 		delete_option( 'edd_doing_upgrade' );
 
 		wp_redirect( admin_url() ); exit;
