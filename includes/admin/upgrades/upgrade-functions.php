@@ -240,6 +240,8 @@ function edd_upgrade_has_completed( $upgrade_action = '' ) {
 
 /**
  * Get's the array of completed upgrade actions
+ *
+ * @since  2.3
  * @return array The array of completed upgrades
  */
 function edd_get_completed_upgrades() {
