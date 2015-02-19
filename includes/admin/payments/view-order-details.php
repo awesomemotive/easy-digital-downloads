@@ -369,7 +369,6 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 
 										</ul>
 
-										<input type="hidden" name="edd-payment-id" id="edd-payment-id" value="<?php echo $payment_id; ?>" />
 										<input type="hidden" name="edd-payment-downloads-changed" id="edd-payment-downloads-changed" value="" />
 										<input type="hidden" name="edd-payment-removed" id="edd-payment-removed" value="{}" />
 
