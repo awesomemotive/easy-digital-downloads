@@ -316,7 +316,7 @@ function edd_get_item_position_in_cart( $download_id = 0, $options = array() ) {
  * @return bool
  */
 function edd_item_quantities_enabled() {
-	$ret = edd_get_option( 'item_quantities', false );	
+	$ret = edd_get_option( 'item_quantities', false );
 	return (bool) apply_filters( 'edd_item_quantities_enabled', $ret );
 }
 
