@@ -59,9 +59,13 @@ jQuery(document).ready(function ($) {
 			$( 'body' ).on( 'click', '.submit .edd_add_repeatable', function(e) {
 				e.preventDefault();
 				var button = $( this ),
-				row = button.parent().parent().prev( 'tr' ),
-				clone = EDD_Download_Configuration.clone_repeatable(row);
+					row = button.parent().parent().prev( 'tr' ),
+					clone = EDD_Download_Configuration.clone_repeatable(row);
 				clone.insertAfter( row );
+				$(document).trigger('edd_after_add_repeatable', clone);
+			});
+			$(document).on('edd_after_add_repeatable', function (event, clone) {
+				$(clone).find('input, textarea, select').filter(':visible').eq(0).focus();
 			});
 		},
 
@@ -1043,14 +1047,14 @@ jQuery(document).ready(function ($) {
 		if(
 			( val.length <= 3 && 'edd_download_search' == search_type ) ||
 			(
-				e.which == 16 ||
-				e.which == 13 ||
-				e.which == 91 ||
-				e.which == 17 ||
-				e.which == 37 ||
-				e.which == 38 ||
-				e.which == 39 ||
-				e.which == 40
+			e.which == 16 ||
+			e.which == 13 ||
+			e.which == 91 ||
+			e.which == 17 ||
+			e.which == 37 ||
+			e.which == 38 ||
+			e.which == 39 ||
+			e.which == 40
 			)
 		) {
 			return;
@@ -1080,7 +1084,7 @@ jQuery(document).ready(function ($) {
 								$('#' + menu_id).prepend( '<option value="' + item.id + '">' + item.name + '</option>' );
 							}
 						});
-						 // Update the options
+						// Update the options
 						$('.edd-select-chosen').trigger('chosen:updated');
 						$('#' + menu_id).next().find('input').val(val);
 					}
