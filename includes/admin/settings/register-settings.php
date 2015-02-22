@@ -93,7 +93,7 @@ function edd_remove_option( $key = '' ) {
 	// If it updated, let's update the global variable
 	if ( $did_update ){
 		global $edd_options;
-		unset( $options[ $key ] )
+		unset( $options[ $key ] );
 
 	}
 
