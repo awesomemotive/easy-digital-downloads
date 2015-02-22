@@ -831,3 +831,23 @@ function edd_add_download_post_classes( $classes, $class = '', $post_id = false 
 	return $classes;
 }
 add_filter( 'post_class', 'edd_add_download_post_classes', 20, 3 );
+
+/**
+ * Checks if download supports specific feature in the loop
+ *
+ * @since 2.4
+ * @author Daniel Iser
+ * @param string $feature The feature being checked.
+ * @return bool $supports True if the product supports the feature, false if the product does not or no ID is passed
+ */
+function edd_item_supports( $feature ) {
+	global $post;
+
+	$post_id = is_object( $post ) ? $post->ID : 0;
+
+	if( empty( $post_id ) ) {
+		return false;
+	}
+
+	return edd_download_supports( $post_id, $feature );
+}

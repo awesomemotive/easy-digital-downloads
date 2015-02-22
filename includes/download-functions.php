@@ -1097,3 +1097,22 @@ function edd_get_random_downloads( $num = 3, $post_ids = true ) {
 	$args  = apply_filters( 'edd_get_random_downloads', $args );
 	return get_posts( $args );
 }
+
+/**
+ * Checks whether or not a download supports a specific feature
+ *
+ * @since 2.4
+ * @author Daniel Iser
+ * @param int $download_id ID number of the download to check
+ * @param string $feature The feature being checked.
+ * @return bool $supports True if the product supports the feature, false if the product does not or no ID is passed
+ */
+function edd_download_supports( $download_id = 0, $feature ) {
+
+	if( empty( $download_id ) ) {
+		return false;
+	}
+
+	$download = new EDD_Download( $download_id );
+	return $download->supports( $feature );
+}
