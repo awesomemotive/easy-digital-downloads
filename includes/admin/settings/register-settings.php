@@ -29,6 +29,35 @@ function edd_get_option( $key = '', $default = false ) {
 }
 
 /**
+ * Update an option
+ *
+ * Updates an edd setting value in both the db and the global variable.
+ *
+ * @since 2.3
+ * @return boolean True if updated, false if not.
+ */
+function edd_update_option( $key = '', $value = false ) {
+	// First let's grab the current settings
+	$options = get_option( 'edd_settings' );
+
+	// Let's let devs alter that value coming in
+	$value = apply_filters( 'edd_update_option', $value, $key );
+
+	// Next let's try to update the value
+	$options[ $key ] = $value;
+	$did_update = update_option( 'edd_settings', $options );
+
+	// If it updated, let's update the global variable
+	if ( $did_update ){
+		global $edd_options;
+		$edd_options[ $key ] = $value;
+
+	}
+
+	return $did_update;
+}
+
+/**
  * Get Settings
  *
  * Retrieves all plugin settings
