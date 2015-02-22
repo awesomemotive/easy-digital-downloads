@@ -179,7 +179,7 @@ function edd_sales_tax_for_year( $year = null ) {
  * @return float $tax Sales tax
  */
 function edd_get_sales_tax_for_year( $year = null ) {
-	
+
 	// Start at zero
 	$tax = 0;
 
@@ -274,8 +274,9 @@ function edd_display_tax_rate() {
  */
 function edd_cart_needs_tax_address_fields() {
 
-	if( ! edd_is_cart_taxed() )
+	if( ! edd_is_cart_taxed() ) {
 		return false;
+	}
 
 	return ! did_action( 'edd_after_cc_fields', 'edd_default_cc_address_fields' );
 
