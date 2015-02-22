@@ -479,36 +479,20 @@ class Test_Misc extends WP_UnitTestCase {
 	}
 
 	public function test_edd_update_option(){
-		// Test a regular update works
-			$key   = 'some-setting';
-			$value = 'some-value';
-			$isset = edd_get_option( $key, false );
+		$key   = 'some-setting';
+		$value = 'some-value';
+		$isset = edd_get_option( $key, false );
 
-			// The option shouldn't exist
-			$this->assertFalse( $isset );
+		// The option shouldn't exist
+		$this->assertFalse( $isset );
 
-			$updated = edd_update_option( $key, $value );
+		$updated = edd_update_option( $key, $value );
 
-			// The option should have succesfully updated
-			$this->assertTrue( $updated );
+		// The option should have succesfully updated
+		$this->assertTrue( $updated );
 
-			// The option retrieve should be equal to the one we set
-			$this->assertEquals( $value, edd_get_option( $key, false ) );
+		// The option retrieve should be equal to the one we set
+		$this->assertEquals( $value, edd_get_option( $key, false ) );
 
-		// Test an invalid update doesn't
-			$key   = '';
-			$value = 'some-value';
-			$isset = edd_get_option( $key, false );
-
-			// The option shouldn't exist
-			$this->assertFalse( $isset );
-
-			$updated = edd_update_option( $key, $value );
-
-			// The option should have not have succesfully updated
-			$this->assertFalse( $updated );
-
-			// The option retrieve should fail
-			$this->assertEquals( $value, edd_get_option( $key, false ) );
 	}
 }
