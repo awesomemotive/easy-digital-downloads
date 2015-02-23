@@ -435,7 +435,8 @@ class EDD_HTML_Elements {
 			'placeholder'  => '',
 			'class'        => 'regular-text',
 			'disabled'     => false,
-			'autocomplete' => ''
+			'autocomplete' => '',
+			'data'         => false
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -443,6 +444,13 @@ class EDD_HTML_Elements {
 		$disabled = '';
 		if( $args['disabled'] ) {
 			$disabled = ' disabled="disabled"';
+		}
+
+		$data = '';
+		if ( ! empty( $args['data'] ) ) {
+			foreach ( $args['data'] as $key => $value ) {
+				$data .= 'data-' . $key . '="' . $value . '" ';
+			}
 		}
 
 		$output = '<span id="edd-' . sanitize_key( $args[ 'name' ] ) . '-wrap">';
@@ -453,7 +461,7 @@ class EDD_HTML_Elements {
 				$output .= '<span class="edd-description">' . esc_html( $args[ 'desc' ] ) . '</span>';
 			}
 
-			$output .= '<input type="text" name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] )  . '" autocomplete="' . esc_attr( $args[ 'autocomplete' ] )  . '" value="' . esc_attr( $args[ 'value' ] ) . '" placeholder="' . esc_attr( $args[ 'placeholder' ] ) . '" class="' . $args[ 'class' ] . '"' . $disabled . '/>';
+			$output .= '<input type="text" name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] )  . '" autocomplete="' . esc_attr( $args[ 'autocomplete' ] )  . '" value="' . esc_attr( $args[ 'value' ] ) . '" placeholder="' . esc_attr( $args[ 'placeholder' ] ) . '" class="' . $args[ 'class' ] . '" ' . $data . '' . $disabled . '/>';
 
 		$output .= '</span>';
 
@@ -474,7 +482,7 @@ class EDD_HTML_Elements {
 			'value'       => null,
 			'label'       => null,
 			'desc'        => null,
-            'class'       => 'large-text',
+			'class'       => 'large-text',
 			'disabled'    => false
 		);
 
@@ -516,9 +524,10 @@ class EDD_HTML_Elements {
 			'placeholder' => __( 'Enter username', 'edd' ),
 			'label'       => null,
 			'desc'        => null,
-            'class'       => '',
+			'class'       => '',
 			'disabled'    => false,
-			'autocomplete'=> 'off'
+			'autocomplete'=> 'off',
+			'data'        => false
 		);
 
 		$args = wp_parse_args( $args, $defaults );

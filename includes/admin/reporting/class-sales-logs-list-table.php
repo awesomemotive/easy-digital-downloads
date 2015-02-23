@@ -298,10 +298,12 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 					$amount     = 0;
 					if ( is_array( $cart_items ) && is_array( $user_info ) ) {
 						foreach ( $cart_items as $item ) {
+
 							if ( $item['id'] == $log->post_parent ) {
 								$amount = isset( $item['item_price'] ) ? $item['item_price'] : $item['price'];
 								break;
 							}
+
 						}
 
 						$logs_data[] = array(
