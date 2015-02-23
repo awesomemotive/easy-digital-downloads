@@ -149,9 +149,13 @@ function edd_insert_payment( $payment_data = array() ) {
 
 	if ( $payment ) {
 
-		$taxes     = $payment_data['cart_details'] ? wp_list_pluck( $payment_data['cart_details'], 'tax' ) : array();
-		$cart_tax  = array_sum( $taxes );
-		$cart_tax += edd_get_cart_fee_tax();
+		if ( isset( $payment_data['tax'] ) ){
+			$cart_tax = $payment_data['tax'];
+		} else {
+			$taxes     = $payment_data['cart_details'] ? wp_list_pluck( $payment_data['cart_details'], 'tax' ) : array();
+			$cart_tax  = array_sum( $taxes );
+			$cart_tax += edd_get_cart_fee_tax();
+		}
 
 		$payment_meta = array(
 			'currency'     => $payment_data['currency'],
@@ -1300,18 +1304,8 @@ function edd_payment_tax( $payment_id = 0, $payment_meta = false ) {
  */
 function edd_get_payment_tax( $payment_id = 0, $payment_meta = false ) {
 
-	$tax = edd_get_payment_meta( $payment_id, '_edd_payment_tax', true );
-
-	// We don't have tax as it's own meta and no meta was passed
-	if ( false === $tax ) {
-
-		if ( ! $payment_meta ) {
-			$payment_meta = edd_get_payment_meta( $payment_id );
-		}
-
-		$tax = isset( $payment_meta['tax'] ) ? $payment_meta['tax'] : 0;
-
-	}
+	$tax_meta = edd_get_payment_meta( $payment_id, '_edd_payment_tax', true );
+	$tax      = false !== $tax_meta ? $tax_meta : 0;
 
 	return apply_filters( 'edd_get_payment_tax', $tax, $payment_id );
 }
