@@ -307,6 +307,8 @@ td.edd_order_price { text-align: right; }
 #customer-edit-actions .button-secondary { margin-right: 10px; }
 #edd-customer-card-wrapper .info-item { line-height: 16px; display: block; padding-bottom: 5px; }
 #edd-customer-card-wrapper .edit-item { display: none; }
+#edd-customer-card-wrapper .edd_user_search_results { left: 1px; top: 16px;}
+#edd-customer-card-wrapper .edd_user_search_results ul { width: 200px }
 #customer-stats-wrapper { margin: 0 auto; text-align: center; min-height: 30px; }
 #customer-stats-wrapper li { width: 50%; float: left; line-height: 22px; font-size: 14px; }
 #customer-stats-wrapper a { text-decoration: none; }

@@ -102,7 +102,7 @@ function edd_edit_customer( $args ) {
 
 	if ( $customer->update( $customer_data ) ) {
 
-		if ( ! empty( $customer->user_id ) ) {
+		if ( ! empty( $customer->user_id ) && $customer->user_id > 0 ) {
 			update_user_meta( $customer->user_id, '_edd_user_address', $address );
 		}
 
