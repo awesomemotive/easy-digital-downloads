@@ -262,24 +262,20 @@ function edd_customers_view( $customer ) {
 							break;
 						}
 					}
-					$user_ids  = wp_list_pluck( $customers, 'user_id' );
-					$user_dropdown_args = array(
-						'name'                    => 'customerinfo[user_id]',
-						'selected'                =>  $customer->user_id,
-						'include_selected'        => true,
-						'echo'                    => '0',
-						'show_option_none'        => __( 'None', 'edd' ),
-						'class'                   => 'edd-user-dropdown',
-						'exclude'                 => $user_ids,
-						'hide_if_only_one_author' => false
-					);
-					$users_dropdown = wp_dropdown_users( $user_dropdown_args );
-					$find           = array( 'class=\'edd-user-dropdown\'', 'value=\'-1\'' );
-					$replace        = array( 'data-key=\'user_id\' class=\'edd-user-dropdown\'', 'value=\'0\'' );
-					$users_dropdown = str_replace( $find, $replace, $users_dropdown );
 
-					echo $users_dropdown;
+					$user_ids = array();
+					$user_ids  = array_unique( wp_list_pluck( $customers, 'user_id' ) );
+
+					$data_atts = array( 'key' => 'user_login', 'exclude' => implode( ',', $user_ids ) );
+
+					$user_search_args = array(
+						'name'             => 'customerinfo[user_login]',
+						'class'            => 'edd-user-dropdown',
+						'data'             => $data_atts
+					);
+					echo EDD()->html->ajax_user_search( $user_search_args );
 					?>
+					<input type="hidden" name="customerinfo[user_id]" data-key="user_id" value="<?php echo $customer->user_id; ?>" />
 				</span>
 
 				<span class="customer-user-id info-item editable">
