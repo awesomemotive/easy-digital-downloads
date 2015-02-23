@@ -103,7 +103,7 @@ function edd_register_settings() {
 					'min'         => isset( $option['min'] )         ? $option['min']     : null,
 					'max'         => isset( $option['max'] )         ? $option['max']     : null,
                     'step'        => isset( $option['step'] )        ? $option['step']    : null,
-                    'select2'     => isset( $option['select2'] )     ? $option['select2'] : null,
+                    'chosen'      => isset( $option['chosen'] )      ? $option['chosen']  : null,
                     'placeholder' => isset( $option['placeholder'] ) ? $option['placeholder'] : null,
                     'allow_blank' => isset( $option['allow_blank'] ) ? $option['allow_blank'] : true
 				)
@@ -146,7 +146,7 @@ function edd_get_registered_settings() {
 					'desc' => __( 'This is the checkout page where buyers will complete their purchases. The [download_checkout] short code must be on this page.', 'edd' ),
 					'type' => 'select',
                     'options' => edd_get_pages(),
-                    'select2' => true,
+                    'chosen' => true,
                     'placeholder' => __( 'Select a page', 'edd' )
 				),
 				'success_page' => array(
@@ -155,7 +155,7 @@ function edd_get_registered_settings() {
 					'desc' => __( 'This is the page buyers are sent to after completing their purchases. The [edd_receipt] short code should be on this page.', 'edd' ),
 					'type' => 'select',
 					'options' => edd_get_pages(),
-                    'select2' => true,
+                    'chosen' => true,
                     'placeholder' => __( 'Select a page', 'edd' )
 				),
 				'failure_page' => array(
@@ -164,7 +164,7 @@ function edd_get_registered_settings() {
 					'desc' => __( 'This is the page buyers are sent to if their transaction is cancelled or fails', 'edd' ),
 					'type' => 'select',
 					'options' => edd_get_pages(),
-                    'select2' => true,
+                    'chosen' => true,
                     'placeholder' => __( 'Select a page', 'edd' )
 				),
 				'purchase_history_page' => array(
@@ -173,7 +173,7 @@ function edd_get_registered_settings() {
 					'desc' => __( 'This page shows a complete purchase history for the current user, including download links', 'edd' ),
 					'type' => 'select',
 					'options' => edd_get_pages(),
-                    'select2' => true,
+                    'chosen' => true,
                     'placeholder' => __( 'Select a page', 'edd' )
 				),
 				'base_country' => array(
@@ -182,7 +182,7 @@ function edd_get_registered_settings() {
 					'desc' => __( 'Where does your store operate from?', 'edd' ),
 					'type' => 'select',
                     'options' => edd_get_country_list(),
-                    'select2' => true,
+                    'chosen' => true,
                     'placeholder' => __( 'Select a country', 'edd' )
 				),
 				'base_state' => array(
@@ -190,7 +190,7 @@ function edd_get_registered_settings() {
 					'name' => __( 'Base State / Province', 'edd' ),
 					'desc' => __( 'What state / province does your store operate from?', 'edd' ),
 					'type' => 'shop_states',
-                    'select2' => true,
+                    'chosen' => true,
                     'placeholder' => __( 'Select a state', 'edd' )
 				),
 				'currency_settings' => array(
@@ -205,7 +205,7 @@ function edd_get_registered_settings() {
 					'desc' => __( 'Choose your currency. Note that some payment gateways have currency restrictions.', 'edd' ),
 					'type' => 'select',
                     'options' => edd_get_currencies(),
-                    'select2' => true
+                    'chosen' => true
 				),
 				'currency_position' => array(
 					'id' => 'currency_position',
@@ -1209,9 +1209,14 @@ function edd_select_callback($args) {
     if ( isset( $args['placeholder'] ) )
         $placeholder = $args['placeholder'];
     else
-        $placeholder = '';
+		$placeholder = '';
 
-    $html = '<select id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']" ' . ( $args['select2'] ? 'class="edd-select2"' : '' ) . 'data-placeholder="' . $placeholder . '" />';
+	if ( isset( $args['chosen'] ) )
+		$chosen = 'class="edd-chosen"';
+	else
+		$chosen = '';
+
+    $html = '<select id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']" ' . $chosen . 'data-placeholder="' . $placeholder . '" />';
 
 	foreach ( $args['options'] as $option => $name ) :
 		$selected = selected( $option, $value, false );
@@ -1367,8 +1372,8 @@ function edd_shop_states_callback($args) {
 
 	$states = edd_get_shop_states();
 
-    $select2= ( $args['select2'] ? ' edd-select2' : '' );
-    $class = empty( $states ) ? ' class="edd-no-states' . $select2 . '"' : 'class="' . $select2 . '"';
+    $chosen = ( $args['chosen'] ? ' edd-chosen' : '' );
+    $class = empty( $states ) ? ' class="edd-no-states' . $chosen . '"' : 'class="' . $chosen . '"';
     $html = '<select id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']"' . $class . 'data-placeholder="' . $placeholder . '"/>';
 
 	foreach ( $states as $option => $name ) :
@@ -1419,7 +1424,7 @@ function edd_tax_rates_callback($args) {
 						'show_option_all'  => false,
 						'show_option_none' => false,
                         'class'            => 'edd-select edd-tax-country',
-                        'select2' => true,
+                        'chosen'           => true,
                         'placeholder' => __( 'Choose a country', 'edd' )
 					) );
 					?>
@@ -1434,7 +1439,7 @@ function edd_tax_rates_callback($args) {
 							'selected'         => $rate['state'],
 							'show_option_all'  => false,
                             'show_option_none' => false,
-                            'select2' => true,
+                            'chosen'           => true,
                             'placeholder' => __( 'Choose a state', 'edd' )
 						) );
 					} else {
@@ -1462,7 +1467,7 @@ function edd_tax_rates_callback($args) {
 						'show_option_all'  => false,
 						'show_option_none' => false,
                         'class'            => 'edd-select edd-tax-country',
-                        'select2' => true,
+                        'chosen'           => true,
                         'placeholder' => __( 'Choose a country', 'edd' )
 					) ); ?>
 				</td>
