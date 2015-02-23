@@ -1304,8 +1304,18 @@ function edd_payment_tax( $payment_id = 0, $payment_meta = false ) {
  */
 function edd_get_payment_tax( $payment_id = 0, $payment_meta = false ) {
 
-	$tax_meta = edd_get_payment_meta( $payment_id, '_edd_payment_tax', true );
-	$tax      = false !== $tax_meta ? $tax_meta : 0;
+	$tax = edd_get_payment_meta( $payment_id, '_edd_payment_tax', true );
+
+	// We don't have tax as it's own meta and no meta was passed
+	if ( false === $tax ) {
+
+		if ( ! $payment_meta ) {
+			$payment_meta = edd_get_payment_meta( $payment_id );
+		}
+
+		$tax = isset( $payment_meta['tax'] ) ? $payment_meta['tax'] : 0;
+
+	}
 
 	return apply_filters( 'edd_get_payment_tax', $tax, $payment_id );
 }
