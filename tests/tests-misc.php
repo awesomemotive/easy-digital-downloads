@@ -506,8 +506,8 @@ class Test_Misc extends WP_UnitTestCase {
 		// The option should have succesfully updated
 		$this->assertTrue( $updated );
 
-		// The option retrieve should be equal to the one we set
-		$this->assertEquals( $value, edd_get_option( $key, false ) );
+		// The option retrieve should be false since it doesn't exist
+		$this->assertFalse( edd_get_option( $key, false ) );
 
 	}
 }
