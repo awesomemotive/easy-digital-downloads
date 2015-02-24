@@ -245,43 +245,47 @@ function edd_customers_view( $customer ) {
 				<?php endif; ?>
 				</div>
 
-				<span class="customer-name info-item edit-item"><input size="15" data-key="name" name="customerinfo[name]" type="text" value="<?php echo $customer->name; ?>" placeholder="<?php _e( 'Customer Name', 'edd' ); ?>" /></span>
-				<span class="customer-name info-item editable"><span data-key="name"><?php echo $customer->name; ?></span></span>
-				<span class="customer-name info-item edit-item"><input size="20" data-key="email" name="customerinfo[email]" type="text" value="<?php echo $customer->email; ?>" placeholder="<?php _e( 'Customer Email', 'edd' ); ?>" /></span>
-				<span class="customer-email info-item editable" data-key="email"><?php echo $customer->email; ?></span>
-				<span class="customer-since info-item">
-					<?php _e( 'Customer since', 'edd' ); ?>
-					<?php echo date_i18n( get_option( 'date_format' ), strtotime( $customer->date_created ) ) ?>
-				</span>
-				<span class="customer-user-id info-item edit-item">
-					<?php
-					$customers = EDD()->customers->get_customers( array( 'number' => -1 ) );
-					foreach ( $customers as $key => $customer_search ) {
-						if ( $customer_search->id == $customer->id ) {
-							unset( $customers[$key] );
-							break;
+				<div class="customer-main-wrapper left">
+
+					<span class="customer-name info-item edit-item"><input size="15" data-key="name" name="customerinfo[name]" type="text" value="<?php echo $customer->name; ?>" placeholder="<?php _e( 'Customer Name', 'edd' ); ?>" /></span>
+					<span class="customer-name info-item editable"><span data-key="name"><?php echo $customer->name; ?></span></span>
+					<span class="customer-name info-item edit-item"><input size="20" data-key="email" name="customerinfo[email]" type="text" value="<?php echo $customer->email; ?>" placeholder="<?php _e( 'Customer Email', 'edd' ); ?>" /></span>
+					<span class="customer-email info-item editable" data-key="email"><?php echo $customer->email; ?></span>
+					<span class="customer-since info-item">
+						<?php _e( 'Customer since', 'edd' ); ?>
+						<?php echo date_i18n( get_option( 'date_format' ), strtotime( $customer->date_created ) ) ?>
+					</span>
+					<span class="customer-user-id info-item edit-item">
+						<?php
+						$customers = EDD()->customers->get_customers( array( 'number' => -1 ) );
+						foreach ( $customers as $key => $customer_search ) {
+							if ( $customer_search->id == $customer->id ) {
+								unset( $customers[$key] );
+								break;
+							}
 						}
-					}
 
-					$user_ids = array();
-					$user_ids  = array_unique( wp_list_pluck( $customers, 'user_id' ) );
+						$user_ids = array();
+						$user_ids  = array_unique( wp_list_pluck( $customers, 'user_id' ) );
 
-					$data_atts = array( 'key' => 'user_login', 'exclude' => implode( ',', $user_ids ) );
+						$data_atts = array( 'key' => 'user_login', 'exclude' => implode( ',', $user_ids ) );
 
-					$user_search_args = array(
-						'name'             => 'customerinfo[user_login]',
-						'class'            => 'edd-user-dropdown',
-						'data'             => $data_atts
-					);
-					echo EDD()->html->ajax_user_search( $user_search_args );
-					?>
-					<input type="hidden" name="customerinfo[user_id]" data-key="user_id" value="<?php echo $customer->user_id; ?>" />
-				</span>
+						$user_search_args = array(
+							'name'             => 'customerinfo[user_login]',
+							'class'            => 'edd-user-dropdown',
+							'data'             => $data_atts
+						);
+						echo EDD()->html->ajax_user_search( $user_search_args );
+						?>
+						<input type="hidden" name="customerinfo[user_id]" data-key="user_id" value="<?php echo $customer->user_id; ?>" />
+					</span>
 
-				<span class="customer-user-id info-item editable">
-					<?php _e( 'User ID', 'edd' ); ?>:&nbsp;
-					<span data-key="user_id"><?php echo $customer->user_id; ?></span>
-				</span>
+					<span class="customer-user-id info-item editable">
+						<?php _e( 'User ID', 'edd' ); ?>:&nbsp;
+						<span data-key="user_id"><?php echo $customer->user_id; ?></span>
+					</span>
+
+				</div>
 
 			</div>
 
