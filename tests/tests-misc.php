@@ -503,8 +503,8 @@ class Test_Misc extends WP_UnitTestCase {
 
 		$updated = edd_update_option( $key, $value );
 
-		// The option should have succesfully updated
-		$this->assertTrue( $updated );
+		// The option should return false due to the null value
+		$this->assertFalse( $updated );
 
 		// The option retrieve should be false since it doesn't exist
 		$this->assertFalse( edd_get_option( $key, false ) );
