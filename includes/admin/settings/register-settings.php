@@ -79,6 +79,7 @@ function edd_update_option( $key = '', $value = false ) {
  * @return boolean True if updated, false if not.
  */
 function edd_delete_option( $key = '' ) {
+
 	// If no key, exit
 	if ( empty( $key ) ){
 		return false;
@@ -88,14 +89,18 @@ function edd_delete_option( $key = '' ) {
 	$options = get_option( 'edd_settings' );
 
 	// Next let's try to update the value
-	unset( $options[ $key ] );
+	if( isset( $options[ $key ] ) ) {
+
+		unset( $options[ $key ] );
+	
+	}
+
 	$did_update = update_option( 'edd_settings', $options );
 
 	// If it updated, let's update the global variable
 	if ( $did_update ){
 		global $edd_options;
-		unset( $options[ $key ] );
-
+		$edd_options = $options;
 	}
 
 	return $did_update;
