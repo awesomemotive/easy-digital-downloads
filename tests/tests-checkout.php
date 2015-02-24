@@ -87,13 +87,11 @@ class Tests_Checkout extends WP_UnitTestCase {
 	 */
 	public function test_edd_is_email_banned() {
 
-		global $edd_options;
-
 		$emails = array();
 		$emails[] = 'john@test.com';
 		$emails[] = 'test2.com';
-		$edd_options['banned_emails'] = $emails;
-		update_option( 'edd_settings', $edd_options );
+
+		edd_update_option( 'banned_emails', $emails );
 
 		$this->assertTrue( edd_is_email_banned( 'john@test.com' ) );
 		$this->assertTrue( edd_is_email_banned( 'john@test2.com' ) );
@@ -104,12 +102,10 @@ class Tests_Checkout extends WP_UnitTestCase {
 	 * Test SSL enforced checkout
 	 */
 	public function test_edd_is_ssl_enforced() {
-		global $edd_options;
 
 		$this->assertFalse( edd_is_ssl_enforced() );
 
-		$edd_options['enforce_ssl'] = true;
-		update_option( 'edd_settings', $edd_options );
+		edd_update_option( 'enforce_ssl', true );
 
 		$this->assertTrue( edd_is_ssl_enforced() );
 	}
