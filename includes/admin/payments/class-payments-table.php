@@ -118,7 +118,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 		$this->get_payment_counts();
 		$this->process_bulk_action();
-		$this->base_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history' );
+		$this->base_url = admin_url( 'admin.php?page=edd-store' );
 	}
 
 	public function advanced_filters() {
@@ -138,7 +138,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				<input type="hidden" name="status" value="<?php echo esc_attr( $status ); ?>"/>
 			<?php endif; ?>
 			<?php if( ! empty( $start_date ) || ! empty( $end_date ) ) : ?>
-				<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>" class="button-secondary"><?php _e( 'Clear Filter', 'edd' ); ?></a>
+				<a href="<?php echo admin_url( 'admin.php?page=edd-store' ); ?>" class="button-secondary"><?php _e( 'Clear Filter', 'edd' ); ?></a>
 			<?php endif; ?>
 			<?php $this->search_box( __( 'Search', 'edd' ), 'edd-payments' ); ?>
 		</div>
@@ -272,7 +272,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				$value   = edd_get_payment_status( $payment, true );
 				break;
 			case 'details' :
-				$value = '<a href="' . add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ) . '">' . __( 'View Order Details', 'edd' ) . '</a>';
+				$value = '<a href="' . add_query_arg( 'id', $payment->ID, admin_url( 'admin.php?page=edd-store&view=view-order-details' ) ) . '">' . __( 'View Order Details', 'edd' ) . '</a>';
 				break;
 			default:
 				$value = isset( $payment->$column_name ) ? $payment->$column_name : '';
