@@ -86,6 +86,7 @@ function edd_update_payment_details( $data ) {
 				'item_number' => $item,
 				'price'       => $download['amount'],
 				'item_price'  => $item_price,
+				'subtotal'    => $download['amount'],
 				'quantity'    => $download['quantity'],
 				'discount'    => 0,
 				'tax'         => 0,
