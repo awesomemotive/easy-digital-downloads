@@ -146,7 +146,7 @@ function edd_dashboard_sales_widget() {
 					<tr>
 						<td colspan="2">
 							<?php _e( 'Recent Purchases', 'edd' ); ?>
-							<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>">&nbsp;&ndash;&nbsp;<?php _e( 'View All', 'edd' ); ?></a>
+							<a href="<?php echo admin_url( 'admin.php?page=edd-store' ); ?>">&nbsp;&ndash;&nbsp;<?php _e( 'View All', 'edd' ); ?></a>
 						</td>
 					</tr>
 				</thead>
@@ -155,7 +155,7 @@ function edd_dashboard_sales_widget() {
 					foreach ( $payments as $payment ) { ?>
 						<tr>
 							<td class="edd_order_label">
-								<a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>" title="<?php printf( __( 'Purchase Details for Payment #%s', 'edd' ), $payment->ID ); ?> ">
+								<a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'admin.php?page=edd-store&view=view-order-details' ) ); ?>" title="<?php printf( __( 'Purchase Details for Payment #%s', 'edd' ), $payment->ID ); ?> ">
 									<?php echo get_the_title( $payment->ID ) ?>
 									&mdash; <?php echo $payment->user_info['email'] ?>
 								</a>
@@ -167,7 +167,7 @@ function edd_dashboard_sales_widget() {
 								} ?>
 							</td>
 							<td class="edd_order_price">
-								<a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>" title="<?php printf( __( 'Purchase Details for Payment #%s', 'edd' ), $payment->ID ); ?> ">
+								<a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'admin.php?page=edd-store&view=view-order-details' ) ); ?>" title="<?php printf( __( 'Purchase Details for Payment #%s', 'edd' ), $payment->ID ); ?> ">
 									<span class="edd_price_label"><?php echo edd_currency_filter( edd_format_amount( $payment->total ) ); ?></span>
 								</a>
 							</td>
