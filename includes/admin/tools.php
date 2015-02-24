@@ -293,7 +293,7 @@ add_action( 'edd_import_settings', 'edd_tools_import_export_process_import' );
  */
 function edd_tools_sysinfo_display() {
 ?>
-	<form action="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-tools&tab=system_info' ) ); ?>" method="post" dir="ltr">
+	<form action="<?php echo esc_url( admin_url( 'admin.php?page=edd-tools&tab=system_info' ) ); ?>" method="post" dir="ltr">
 		<textarea readonly="readonly" onclick="this.focus(); this.select()" id="system-info-textarea" name="edd-sysinfo" title="To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac)."><?php echo edd_tools_sysinfo_get(); ?></textarea>
 		<p class="submit">
 			<input type="hidden" name="edd-action" value="download_sysinfo" />
