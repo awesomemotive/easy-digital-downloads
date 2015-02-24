@@ -78,9 +78,5 @@ class Tests_Formatting extends WP_UnitTestCase {
 		$this->assertEquals( ',', $thousands_sep );
 		$this->assertEquals( '.', $decimal_sep );
 
-		// Restore defaults
-		edd_update_option( 'thousands_separator', '.' );
-		edd_update_option( 'decimal_separator', ',' );
-
 	}
 }
