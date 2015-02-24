@@ -52,6 +52,7 @@ function edd_update_payment_details( $data ) {
 	// Setup purchased Downloads and price options
 	$updated_downloads = isset( $_POST['edd-payment-details-downloads'] ) ? $_POST['edd-payment-details-downloads'] : false;
 	if( $updated_downloads && ! empty( $_POST['edd-payment-downloads-changed'] ) ) {
+
 		$downloads    = array();
 		$cart_details = array();
 		$i = 0;
@@ -65,6 +66,7 @@ function edd_update_payment_details( $data ) {
 			$item['id']       = absint( $download['id'] );
 			$item['quantity'] = absint( $download['quantity'] ) > 0 ? absint( $download['quantity'] ) : 1;
 			$price_id         = (int) $download['price_id'];
+			$has_log          = absint( $download['has_log'] );
 
 			if( $price_id !== false && edd_has_variable_prices( $item['id'] ) ) {
 				$item['options'] = array(
@@ -84,15 +86,79 @@ function edd_update_payment_details( $data ) {
 				'item_number' => $item,
 				'price'       => $download['amount'],
 				'item_price'  => $item_price,
+				'subtotal'    => $download['amount'],
 				'quantity'    => $download['quantity'],
 				'discount'    => 0,
 				'tax'         => 0,
 			);
+
+			// If this item doesn't have a log yet, add one for each quantity count
+			if ( empty( $has_log ) ) {
+
+				$log_date =  date( 'Y-m-d G:i:s', current_time( 'timestamp', true ) );
+				$price_id = $price_id !== false ? $price_id : 0;
+
+				$y = 0;
+
+				while ( $y < $download['quantity'] ) {
+
+					edd_record_sale_in_log( $download['id'], $payment_id, $price_id, $log_date );
+					$y++;
+
+				}
+
+				edd_increase_purchase_count( $download['id'], $download['quantity'] );
+				edd_increase_earnings( $download['id'], $download['amount'] );
+
+
+			}
+
 			$i++;
 		}
 
 		$meta['downloads']    = $downloads;
 		$meta['cart_details'] = $cart_details;
+
+		$deleted_downloads = json_decode( stripcslashes( $data['edd-payment-removed'] ), true );
+
+		foreach ( $deleted_downloads as $deleted_download ) {
+			$deleted_download = $deleted_download[0];
+
+			if ( empty ( $deleted_download['id'] ) ) {
+				continue;
+			}
+
+			$price_id = empty( $deleted_download['price_id'] ) ? 0 : (int) $deleted_download['price_id'];
+
+			$log_args = array(
+				'post_type'   => 'edd_log',
+				'post_parent' => $deleted_download['id'],
+				'numberposts' => $deleted_download['quantity'],
+				'meta_query'  => array(
+					array(
+						'key'     => '_edd_log_payment_id',
+						'value'   => $payment_id,
+						'compare' => '=',
+					),
+					array(
+						'key'     => '_edd_log_price_id',
+						'value'   => $price_id,
+						'compare' => '='
+					)
+				)
+			);
+
+			$found_logs = get_posts( $log_args );
+			foreach ( $found_logs as $log ) {
+				wp_delete_post( $log->ID, true );
+			}
+
+			edd_decrease_purchase_count( $deleted_download['id'], $deleted_download['quantity'] );
+			edd_decrease_earnings( $deleted_download['id'], $deleted_download['amount'] );
+
+		}
+
+
 	}
 
 	do_action( 'edd_update_edited_purchase', $payment_id );
