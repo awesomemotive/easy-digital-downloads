@@ -26,7 +26,7 @@ $flat_display      = edd_get_discount_type( $discount_id ) == 'flat' ? '' : ' st
 $percent_display   = edd_get_discount_type( $discount_id ) == 'percent' ? '' : ' style="display:none;"';
 $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 ?>
-<h2><?php _e( 'Edit Discount', 'edd' ); ?> - <a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-discounts' ); ?>" class="button-secondary"><?php _e( 'Go Back', 'edd' ); ?></a></h2>
+<h2><?php _e( 'Edit Discount', 'edd' ); ?> - <a href="<?php echo admin_url( 'admin.php?page=edd-discounts' ); ?>" class="button-secondary"><?php _e( 'Go Back', 'edd' ); ?></a></h2>
 <form id="edd-edit-discount" action="" method="post">
 	<?php do_action( 'edd_edit_discount_form_top', $discount_id, $discount ); ?>
 	<table class="form-table">
@@ -196,7 +196,7 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 	<p class="submit">
 		<input type="hidden" name="edd-action" value="edit_discount"/>
 		<input type="hidden" name="discount-id" value="<?php echo absint( $_GET['discount'] ); ?>"/>
-		<input type="hidden" name="edd-redirect" value="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-discounts' ) ); ?>"/>
+		<input type="hidden" name="edd-redirect" value="<?php echo esc_url( admin_url( 'admin.php?page=edd-discounts' ) ); ?>"/>
 		<input type="hidden" name="edd-discount-nonce" value="<?php echo wp_create_nonce( 'edd_discount_nonce' ); ?>"/>
 		<input type="submit" value="<?php _e( 'Update Discount Code', 'edd' ); ?>" class="button-primary"/>
 	</p>
