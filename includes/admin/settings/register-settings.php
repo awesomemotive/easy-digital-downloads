@@ -39,12 +39,13 @@ function edd_get_option( $key = '', $default = false ) {
  * @return boolean True if updated, false if not.
  */
 function edd_update_option( $key = '', $value = false ) {
+
 	// If no key, exit
 	if ( empty( $key ) ){
 		return false;
 	}
 
-	if ( ! $value ){
+	if ( empty( $value ) ) {
 		$remove_option = edd_remove_option( $key );
 		return $remove_option;
 	}
