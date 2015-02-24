@@ -257,25 +257,21 @@ function edd_customers_view( $customer ) {
 					</span>
 					<span class="customer-user-id info-item edit-item">
 						<?php
-						$customers = EDD()->customers->get_customers( array( 'number' => -1 ) );
-						foreach ( $customers as $key => $customer_search ) {
-							if ( $customer_search->id == $customer->id ) {
-								unset( $customers[$key] );
-								break;
-							}
+
+						$user_id    = $customer->user_id > 0 ? $customer->user_id : '';
+						$data_atts  = array( 'key' => 'user_login', 'exclude' => $user_id );
+						$user_args  = array(
+							'name'  => 'customerinfo[user_login]',
+							'class' => 'edd-user-dropdown',
+							'data'  => $data_atts,
+						);
+
+						if( ! empty( $user_id ) ) {
+							$userdata = get_userdata( $user_id );
+							$user_args['value'] = $userdata->user_login;
 						}
 
-						$user_ids = array();
-						$user_ids  = array_unique( wp_list_pluck( $customers, 'user_id' ) );
-
-						$data_atts = array( 'key' => 'user_login', 'exclude' => implode( ',', $user_ids ) );
-
-						$user_search_args = array(
-							'name'             => 'customerinfo[user_login]',
-							'class'            => 'edd-user-dropdown',
-							'data'             => $data_atts
-						);
-						echo EDD()->html->ajax_user_search( $user_search_args );
+						echo EDD()->html->ajax_user_search( $user_args );
 						?>
 						<input type="hidden" name="customerinfo[user_id]" data-key="user_id" value="<?php echo $customer->user_id; ?>" />
 					</span>
