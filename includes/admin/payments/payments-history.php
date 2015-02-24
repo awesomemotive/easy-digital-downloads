@@ -36,7 +36,7 @@ function edd_payment_history_page() {
 	<div class="wrap">
 		<h2><?php echo $edd_payment->labels->menu_name ?></h2>
 		<?php do_action( 'edd_payments_page_top' ); ?>
-		<form id="edd-payments-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>">
+		<form id="edd-payments-filter" method="get" action="<?php echo admin_url( 'admin.php?page=edd-store' ); ?>">
 			<input type="hidden" name="post_type" value="download" />
 			<input type="hidden" name="page" value="edd-payment-history" />
 
@@ -122,7 +122,7 @@ function edd_override_edit_post_for_payment_link( $url, $post_id = 0, $context )
 	if( 'edd_payment' != $post->post_type )
 		return $url;
 
-	$url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $post_id );
+	$url = admin_url( 'admin.php?page=edd-store&view=view-order-details&id=' . $post_id );
 
 	return $url;
 }
