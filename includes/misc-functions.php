@@ -19,8 +19,26 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return bool $ret True if return mode is enabled, false otherwise
  */
 function edd_is_test_mode() {
-	$ret = edd_get_option( 'test_mode', false );
+	$ret = ( ! empty( $edd_options['test_mode'] ) || edd_is_test_purchase() ) ? true : false;
 	return (bool) apply_filters( 'edd_is_test_mode', $ret );
+}
+
+/**
+ * Is Test Purchase
+ *
+ * @since 2.4
+ * @author Daniel J Griffiths
+ * @return bool $ret True if this is a test purchase, false otherwise
+ */
+function edd_is_test_purchase() {
+	$key = edd_get_option( 'test_payment_key', false );
+	$ret = false;
+
+	if( isset( $_GET['test-purchase-key'] ) && ! empty( $_GET['test-purchase-key'] ) && $_GET['test-purchase-key'] == $key && current_user_can( 'manage_shop_settings' ) ) {
+		$ret = true;
+	}
+
+	return (bool) apply_filters( 'edd_is_test_purchase', $ret );
 }
 
 /**
@@ -695,6 +713,39 @@ function edd_set_upload_dir( $upload ) {
 	$upload['url']    = $upload['baseurl'] . $upload['subdir'];
 	return $upload;
 }
+
+
+/**
+ * Generates a random test purchase key
+ *
+ * @since 2.3
+ * @author Daniel J Griffiths
+ * @return void
+ */
+function edd_generate_test_payment_key() {
+	global $edd_options;
+	
+	if( ! wp_verify_nonce( $_GET['edd_test_payment_key_nonce'], 'edd_test_payment_key_nonce' ) )
+		return;
+
+	// As the PHP uniqid() function isn't truly random (in fact, it's quite predictable)
+	// and this is used for security, we're rolling our own uniqid function.
+
+	// Define character pool
+	$chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	$key   = '';
+
+	for( $i = 0; $i < 24; ++$i ) {
+		$key .= substr( $chars, mt_rand() % 62, 1 );
+	}
+
+	$edd_options['test_payment_key'] = $key;
+	update_option( 'edd_settings', $edd_options );
+
+	wp_redirect( remove_query_arg( array( 'edd-action', 'edd_test_payment_key_nonce' ) ) );
+	exit;
+}
+add_action( 'edd_generate_test_payment_key', 'edd_generate_test_payment_key' );
 
 
 if ( ! function_exists( 'cal_days_in_month' ) ) {
