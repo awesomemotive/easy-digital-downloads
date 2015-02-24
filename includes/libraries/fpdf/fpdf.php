@@ -7,6 +7,9 @@
  * @since       1.1.3.2
 */
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 define( 'FPDF_VERSION', '1.7' );
 
 class FPDF {
@@ -860,7 +863,7 @@ class FPDF {
 			$this->Error( 'This version of PHP is not supported' );
 		if ( ini_get( 'mbstring.func_overload' ) & 2 )
 			$this->Error( 'mbstring overloading must be disabled' );
-		if ( get_magic_quotes_runtime() )
+		if ( get_magic_quotes_runtime() && version_compare( phpversion(), '5.4', '<' ) )
 			@set_magic_quotes_runtime( 0 );
 	}
 

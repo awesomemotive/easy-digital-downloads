@@ -109,6 +109,12 @@ class Tests_Filters extends WP_UnitTestCase {
 	public function test_edd_purchase_link_top() {
 		global $wp_filter;
 		$this->assertarrayHasKey( 'edd_purchase_variable_pricing', $wp_filter['edd_purchase_link_top'][10] );
+		$this->assertarrayHasKey( 'edd_download_purchase_form_quantity_field', $wp_filter['edd_purchase_link_top'][10] );
+	}
+
+	public function test_edd_after_price_option() {
+		global $wp_filter;
+		$this->assertarrayHasKey( 'edd_variable_price_quantity_field', $wp_filter['edd_after_price_option'][10] );
 	}
 
 	public function test_edd_downloads_excerpt() {
@@ -249,7 +255,8 @@ class Tests_Filters extends WP_UnitTestCase {
 
 	public function test_comments_clauses() {
 		global $wp_filter;
-		$this->assertarrayHasKey( 'edd_hide_payment_notes', $wp_filter['comments_clauses'][10] );
+		$this->assertarrayHasKey( 'edd_hide_payment_notes', $wp_filter['pre_get_comments'][10] );
+		$this->assertarrayHasKey( 'edd_hide_payment_notes_pre_41', $wp_filter['comments_clauses'][10] );
 	}
 
 	public function test_edd_update_payment_status() {
@@ -294,6 +301,11 @@ class Tests_Filters extends WP_UnitTestCase {
 	public function test_post_updated_messages() {
 		global $wp_filter;
 		$this->assertarrayHasKey( 'edd_updated_messages', $wp_filter['post_updated_messages'][10] );
+	}
+
+	public function test_bulk_post_updated_messages() {
+		global $wp_filter;
+		$this->assertarrayHasKey( 'edd_bulk_updated_messages', $wp_filter['bulk_post_updated_messages'][10] );
 	}
 
 	public function test_load_edit_php() {

@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Gateways
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -42,10 +42,8 @@ function edd_get_payment_gateways() {
  * @return array $gateway_list All the available gateways
 */
 function edd_get_enabled_payment_gateways() {
-	global $edd_options;
-
 	$gateways = edd_get_payment_gateways();
-	$enabled  = isset( $edd_options['gateways'] ) ? $edd_options['gateways'] : false;
+	$enabled  = edd_get_option( 'gateways', false );
 
 	$gateway_list = array();
 
@@ -76,12 +74,12 @@ function edd_is_gateway_active( $gateway ) {
  * Gets the default payment gateway selected from the EDD Settings
  *
  * @since 1.5
- * @global $edd_options Array of all the EDD Options
  * @return string Gateway ID
  */
 function edd_get_default_gateway() {
-	global $edd_options;
-	$default = isset( $edd_options['default_gateway'] ) && edd_is_gateway_active( $edd_options['default_gateway'] ) ? $edd_options['default_gateway'] : 'paypal';
+	$gateway = edd_get_option( 'default_gateway', 'paypal' );
+	$default = edd_is_gateway_active( $gateway ) ? $gateway : 'paypal';
+
 	return apply_filters( 'edd_default_gateway', $default );
 }
 
@@ -188,7 +186,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 	if( empty( $options ) || ! edd_has_variable_prices( $download_id ) ) {
 		$price = edd_get_download_price( $download_id );
 	} else {
-			
+
 		if( is_array( $options['price_id'] ) ) {
 			$price_id = $options['price_id'][0];
 		} else {
@@ -199,7 +197,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 
 		// Make sure a valid price ID was supplied
 		if( ! isset( $prices[ $price_id ] ) ) {
-			wp_die( __( 'The requested price ID does not exist.', 'edd' ), __( 'Error', 'edd' ) );
+			wp_die( __( 'The requested price ID does not exist.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 404 ) );
 		}
 
 		$price_options = array(
@@ -247,7 +245,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 		'email'      => is_user_logged_in() ? $current_user->user_email     : '',
 		'first_name' => is_user_logged_in() ? $current_user->user_firstname : '',
 		'last_name'  => is_user_logged_in() ? $current_user->user_lastname  : '',
-		'discount'   => '',
+		'discount'   => 'none',
 		'address'    => array()
 	);
 
@@ -266,6 +264,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 		'post_data'    => array(),
 		'cart_details' => $cart_details,
 		'gateway'      => 'paypal',
+		'buy_now'      => true,
 		'card_info'    => array()
 	);
 
@@ -282,6 +281,9 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
  * @return void
 */
 function edd_send_to_gateway( $gateway, $payment_data ) {
+
+	$payment_data['gateway_nonce'] = wp_create_nonce( 'edd-gateway' );
+
 	// $gateway must match the ID used when registering the gateway
 	do_action( 'edd_gateway_' . $gateway, $payment_data );
 }

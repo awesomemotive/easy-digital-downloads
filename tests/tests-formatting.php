@@ -52,6 +52,12 @@ class Tests_Formatting extends WP_UnitTestCase {
 		$this->assertEquals( '&#36;20,000.20', edd_currency_filter( '20,000.20' ) );
 	}
 
+	public function test_currency_symbol() {
+		$this->assertEquals( '&#36;', edd_currency_symbol( 'USD' ) );
+		$this->assertEquals( '&yen;', edd_currency_symbol( 'JPY' ) );
+		$this->assertEquals( 'DKK', edd_currency_symbol( 'DKK' ) );
+	}
+
 	public function test_separators() {
 
 		global $edd_options;
@@ -90,5 +96,5 @@ class Tests_Formatting extends WP_UnitTestCase {
 
 		update_option( 'edd_settings', $edd_options );
 
-	} 
+	}
 }

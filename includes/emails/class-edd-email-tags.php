@@ -18,7 +18,7 @@
  *
  * @package     EDD
  * @subpackage  Emails
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.9
  * @author      Barry Kooij
@@ -350,6 +350,11 @@ function edd_setup_email_tags() {
 			'description' => __( 'Adds a list of any discount codes applied to this purchase', 'edd' ),
 			'function'    => 'edd_email_tag_discount_codes'
 		),
+		array(
+			'tag'         => 'ip_address',
+			'description' => __( 'The buyer\'s IP Address', 'edd' ),
+			'function'    => 'edd_email_tag_ip_address'
+		)
 	);
 
 	// Apply edd_email_tags filter
@@ -417,7 +422,7 @@ function edd_email_tag_download_list( $payment_id ) {
 			if ( ! empty( $files ) ) {
 
 				foreach ( $files as $filekey => $file ) {
-                    
+
 					if ( $show_links ) {
 						$download_list .= '<div>';
 							$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $item['id'], $price_id );
@@ -726,7 +731,7 @@ function edd_email_tag_date( $payment_id ) {
  * @return string subtotal
  */
 function edd_email_tag_subtotal( $payment_id ) {
-	$subtotal = edd_currency_filter( edd_format_amount( edd_get_payment_subtotal( $payment_id ) ) );
+	$subtotal = edd_currency_filter( edd_format_amount( edd_get_payment_subtotal( $payment_id ) ), edd_get_payment_currency_code( $payment_id ) );
 	return html_entity_decode( $subtotal, ENT_COMPAT, 'UTF-8' );
 }
 
@@ -739,7 +744,7 @@ function edd_email_tag_subtotal( $payment_id ) {
  * @return string tax
  */
 function edd_email_tag_tax( $payment_id ) {
-	$tax = edd_currency_filter( edd_format_amount( edd_get_payment_tax( $payment_id ) ) );
+	$tax = edd_currency_filter( edd_format_amount( edd_get_payment_tax( $payment_id ) ), edd_get_payment_currency_code( $payment_id ) );
 	return html_entity_decode( $tax, ENT_COMPAT, 'UTF-8' );
 }
 
@@ -752,7 +757,7 @@ function edd_email_tag_tax( $payment_id ) {
  * @return string price
  */
 function edd_email_tag_price( $payment_id ) {
-	$price = edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ) );
+	$price = edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ), edd_get_payment_currency_code( $payment_id ) );
 	return html_entity_decode( $price, ENT_COMPAT, 'UTF-8' );
 }
 
@@ -820,8 +825,8 @@ function edd_email_tag_receipt_link( $payment_id ) {
  * Email template tag: discount_codes
  * Adds a list of any discount codes applied to this purchase
  *
+ * @since  2.0
  * @param $int payment_id
- * @since 2.0
  * @return string $discount_codes
  */
 function edd_email_tag_discount_codes( $payment_id ) {
@@ -834,4 +839,16 @@ function edd_email_tag_discount_codes( $payment_id ) {
 	}
 
 	return $discount_codes;
+}
+
+/**
+ * Email template tag: IP address
+ * IP address of the customer
+ *
+ * @since  2.3
+ * @param int $payment_id
+ * @return string IP address
+ */
+function edd_email_tag_ip_address( $payment_id ) {
+	return edd_get_payment_user_ip( $payment_id );
 }

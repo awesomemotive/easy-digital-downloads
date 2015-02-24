@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Notices
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
@@ -81,8 +81,8 @@ function edd_admin_messages() {
 		add_settings_error( 'edd-notices', 'edd-api-key-generated', __( 'API keys successfully generated.', 'edd' ), 'updated' );
 	}
 
-	if ( isset( $_GET['edd-message'] ) && 'api-key-exists' == $_GET['edd-message'] && current_user_can( 'manage_shop_settings' ) ) {
-		add_settings_error( 'edd-notices', 'edd-api-key-exists', __( 'The specified user already has API keys.', 'edd' ), 'error' );
+	if ( isset( $_GET['edd-message'] ) && 'api-key-failed' == $_GET['edd-message'] && current_user_can( 'manage_shop_settings' ) ) {
+		add_settings_error( 'edd-notices', 'edd-api-key-failed', __( 'The specified user already has API keys or the specified user does not exist..', 'edd' ), 'error' );
 	}
 
 	if ( isset( $_GET['edd-message'] ) && 'api-key-regenerated' == $_GET['edd-message'] && current_user_can( 'manage_shop_settings' ) ) {
@@ -93,7 +93,7 @@ function edd_admin_messages() {
 		add_settings_error( 'edd-notices', 'edd-api-key-revoked', __( 'API keys successfully revoked.', 'edd' ), 'updated' );
 	}
 
-    if( ! edd_htaccess_exists() && ! get_user_meta( get_current_user_id(), '_edd_htaccess_missing_dismissed', true ) ) {
+    if( ! edd_htaccess_exists() && ! get_user_meta( get_current_user_id(), '_edd_htaccess_missing_dismissed', true ) && current_user_can( 'manage_shop_settings' ) ) {
         if( ! stristr( $_SERVER['SERVER_SOFTWARE'], 'apache' ) )
             return; // Bail if we aren't using Apache... nginx doesn't use htaccess!
 
@@ -103,6 +103,19 @@ function edd_admin_messages() {
 			echo '<p><pre>' . edd_get_htaccess_rules() . '</pre>';
 			echo '<p><a href="' . add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'htaccess_missing' ) ) . '">' . __( 'Dismiss Notice', 'edd' ) . '</a></p>';
 		echo '</div>';
+	}
+
+	if( ! get_user_meta( get_current_user_id(), '_edd_admin_ajax_inaccessible_dismissed', true ) && current_user_can( 'manage_shop_settings' ) && false !== get_transient( '_edd_ajax_works' ) ) {
+		
+		if( ! edd_test_ajax_works() ) {
+
+			echo '<div class="error">';
+				echo '<p>' . __( 'Your site appears to be blocking the WordPress ajax interface. This may causes issues with your store.', 'edd' ) . '</p>';
+				echo '<p>' . sprintf( __( 'Please see <a href="%s" target="_blank">this reference</a> for possible solutions.', 'edd' ), 'https://easydigitaldownloads.com/docs/admin-ajax-blocked' ) . '</p>';
+				echo '<p><a href="' . add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'admin_ajax_inaccessible' ) ) . '">' . __( 'Dismiss Notice', 'edd' ) . '</a></p>';
+			echo '</div>';
+
+		}
 	}
 
 	settings_errors( 'edd-notices' );
@@ -127,6 +140,10 @@ function edd_admin_addons_notices() {
  * @return void
 */
 function edd_dismiss_notices() {
+
+	if( ! is_user_logged_in() ) {
+		return;
+	}
 
 	$notice = isset( $_GET['edd_notice'] ) ? $_GET['edd_notice'] : false;
 

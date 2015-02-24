@@ -6,7 +6,7 @@
  *
  * @package     EDD
  * @subpackage  Classes/HTML
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
  */
@@ -26,8 +26,7 @@ class EDD_HTML_Elements {
 	 *
 	 * @access public
 	 * @since 1.5
-	 * @param string $name Name attribute of the dropdown
-	 * @param int $selected Download to select automatically
+	 * @param array $args Arguments for the dropdown
 	 * @return string $output Product dropdown
 	 */
 	public function product_dropdown( $args = array() ) {
@@ -40,7 +39,8 @@ class EDD_HTML_Elements {
 			'selected'    => 0,
 			'chosen'      => false,
 			'number'      => 30,
-			'bundles'     => true
+			'bundles'     => true,
+			'placeholder' => sprintf( __( 'Select a %s', 'edd' ), edd_get_label_singular() )
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -94,6 +94,77 @@ class EDD_HTML_Elements {
 			'selected'         => $args['selected'],
 			'id'               => $args['id'],
 			'class'            => $args['class'],
+			'options'          => $options,
+			'chosen'           => $args['chosen'],
+			'multiple'         => $args['multiple'],
+			'placeholder'      => $args['placeholder'],
+			'show_option_all'  => false,
+			'show_option_none' => false
+		) );
+
+		return $output;
+	}
+
+	/**
+	 * Renders an HTML Dropdown of all customers
+	 *
+	 * @access public
+	 * @since 2.2
+	 * @param array $args
+	 * @return string $output Customer dropdown
+	 */
+	public function customer_dropdown( $args = array() ) {
+
+		$defaults = array(
+			'name'        => 'customers',
+			'id'          => 'customers',
+			'class'       => '',
+			'multiple'    => false,
+			'selected'    => 0,
+			'chosen'      => true,
+			'placeholder' => __( 'Select a Customer', 'edd' ),
+			'number'      => 30
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$customers = EDD()->customers->get_customers( array(
+			'number' => $args['number']
+		) );
+
+		$options = array();
+
+		if ( $customers ) {
+			foreach ( $customers as $customer ) {
+				$options[ absint( $customer->id ) ] = esc_html( $customer->name . ' (' . $customer->email . ')' );
+			}
+		} else {
+			$options[0] = __( 'No customers found', 'edd' );
+		}
+
+		if( ! empty( $args['selected'] ) ) {
+
+			// If a selected customer has been specified, we need to ensure it's in the initial list of customers displayed
+
+			if( ! array_key_exists( $args['selected'], $options ) ) {
+
+				$customer = new EDD_Customer( $args['selected'] );
+
+				if( $customer ) {
+
+					$options[ absint( $args['selected'] ) ] = esc_html( $customer->name . ' (' . $customer->email . ')' );
+
+				}
+
+			}
+
+		}
+
+		$output = $this->select( array(
+			'name'             => $args['name'],
+			'selected'         => $args['selected'],
+			'id'               => $args['id'],
+			'class'            => $args['class'] . ' edd-customer-select',
 			'options'          => $options,
 			'multiple'         => $args['multiple'],
 			'chosen'           => $args['chosen'],
@@ -177,17 +248,20 @@ class EDD_HTML_Elements {
 	 * @since 1.5.2
 	 * @param string $name Name attribute of the dropdown
 	 * @param int    $selected Year to select automatically
+	 * @param int    $years_before Number of years before the current year the dropdown should start with
+	 * @param int    $years_after Number of years after the current year the dropdown should finish at
 	 * @return string $output Year dropdown
 	 */
-	public function year_dropdown( $name = 'year', $selected = 0 ) {
-		$current  = date( 'Y' );
-		$year     = $current - 5;
-		$selected = empty( $selected ) ? date( 'Y' ) : $selected;
-		$options  = array();
+	public function year_dropdown( $name = 'year', $selected = 0, $years_before = 5, $years_after = 0 ) {
+		$current     = date( 'Y' );
+		$start_year  = $current - absint( $years_before );
+		$end_year    = $current + absint( $years_after );
+		$selected    = empty( $selected ) ? date( 'Y' ) : $selected;
+		$options     = array();
 
-		while ( $year <= $current ) {
-			$options[ absint( $year ) ] = $year;
-			$year++;
+		while ( $start_year <= $end_year ) {
+			$options[ absint( $start_year ) ] = $start_year;
+			$start_year++;
 		}
 
 		$output = $this->select( array(
@@ -248,6 +322,7 @@ class EDD_HTML_Elements {
 			'id'               => '',
 			'selected'         => 0,
 			'chosen'           => false,
+			'placeholder'      => null,
 			'multiple'         => false,
 			'show_option_all'  => _x( 'All', 'all dropdown items', 'edd' ),
 			'show_option_none' => _x( 'None', 'no dropdown items', 'edd' )
@@ -266,7 +341,13 @@ class EDD_HTML_Elements {
 			$args['class'] .= ' edd-select-chosen';
 		}
 
-		$output = '<select name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( sanitize_key( str_replace( '-', '_', $args[ 'id' ] ) ) ) . '" class="edd-select ' . esc_attr( $args[ 'class'] ) . '"' . $multiple . '>';
+        if( $args['placeholder'] ) {
+            $placeholder = $args['placeholder'];
+        } else {
+            $placeholder = '';
+        }
+
+        $output = '<select name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( sanitize_key( str_replace( '-', '_', $args[ 'id' ] ) ) ) . '" class="edd-select ' . esc_attr( $args[ 'class'] ) . '"' . $multiple . ' data-placeholder="' . $placeholder . '">';
 
 		if ( ! empty( $args[ 'options' ] ) ) {
 			if ( $args[ 'show_option_all' ] ) {
@@ -332,10 +413,7 @@ class EDD_HTML_Elements {
 	 *
 	 * @since 1.5.2
 	 *
-	 * @param string $name Name attribute of the text field
-	 * @param string $value The value to prepopulate the field with
-	 * @param string $label
-	 * @param string $desc
+	 * @param array $args Arguments for the text field
 	 * @return string Text field
 	 */
 	public function text( $args = array() ) {
@@ -357,7 +435,8 @@ class EDD_HTML_Elements {
 			'placeholder'  => '',
 			'class'        => 'regular-text',
 			'disabled'     => false,
-			'autocomplete' => ''
+			'autocomplete' => '',
+			'data'         => false
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -365,6 +444,13 @@ class EDD_HTML_Elements {
 		$disabled = '';
 		if( $args['disabled'] ) {
 			$disabled = ' disabled="disabled"';
+		}
+
+		$data = '';
+		if ( ! empty( $args['data'] ) ) {
+			foreach ( $args['data'] as $key => $value ) {
+				$data .= 'data-' . $key . '="' . $value . '" ';
+			}
 		}
 
 		$output = '<span id="edd-' . sanitize_key( $args[ 'name' ] ) . '-wrap">';
@@ -375,7 +461,7 @@ class EDD_HTML_Elements {
 				$output .= '<span class="edd-description">' . esc_html( $args[ 'desc' ] ) . '</span>';
 			}
 
-			$output .= '<input type="text" name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] )  . '" autocomplete="' . esc_attr( $args[ 'autocomplete' ] )  . '" value="' . esc_attr( $args[ 'value' ] ) . '" placeholder="' . esc_attr( $args[ 'placeholder' ] ) . '" class="' . $args[ 'class' ] . '"' . $disabled . '/>';
+			$output .= '<input type="text" name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] )  . '" autocomplete="' . esc_attr( $args[ 'autocomplete' ] )  . '" value="' . esc_attr( $args[ 'value' ] ) . '" placeholder="' . esc_attr( $args[ 'placeholder' ] ) . '" class="' . $args[ 'class' ] . '" ' . $data . '' . $disabled . '/>';
 
 		$output .= '</span>';
 
@@ -387,10 +473,7 @@ class EDD_HTML_Elements {
 	 *
 	 * @since 1.9
 	 *
-	 * @param string $name Name attribute of the textarea
-	 * @param string $value The value to prepopulate the field with
-	 * @param string $label
-	 * @param string $desc
+	 * @param array $args Arguments for the textarea
 	 * @return string textarea
 	 */
 	public function textarea( $args = array() ) {
@@ -399,7 +482,7 @@ class EDD_HTML_Elements {
 			'value'       => null,
 			'label'       => null,
 			'desc'        => null,
-            'class'       => 'large-text',
+			'class'       => 'large-text',
 			'disabled'    => false
 		);
 
@@ -441,9 +524,10 @@ class EDD_HTML_Elements {
 			'placeholder' => __( 'Enter username', 'edd' ),
 			'label'       => null,
 			'desc'        => null,
-            'class'       => '',
+			'class'       => '',
 			'disabled'    => false,
-			'autocomplete'=> 'off'
+			'autocomplete'=> 'off',
+			'data'        => false
 		);
 
 		$args = wp_parse_args( $args, $defaults );

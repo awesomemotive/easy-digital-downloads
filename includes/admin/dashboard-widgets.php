@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Dashboard
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -37,7 +37,22 @@ add_action('wp_dashboard_setup', 'edd_register_dashboard_widgets', 10 );
  * @since 1.2.2
  * @return void
  */
-function edd_dashboard_sales_widget() {
+function edd_dashboard_sales_widget( ) {
+	echo '<p><img src=" ' . esc_attr( set_url_scheme( EDD_PLUGIN_URL . 'assets/images/loading.gif', 'relative' ) ) . '"/></p>';
+}
+
+/**
+ * Loads the dashboard sales widget via ajax
+ *
+ * @since 2.1
+ * @return void
+ */
+function edd_load_dashboard_sales_widget( ) {
+
+	if ( ! current_user_can( apply_filters( 'edd_dashboard_stats_cap', 'view_shop_reports' ) ) ) {
+		die();
+	}
+
 	$stats = new EDD_Payment_Stats; ?>
 	<div class="edd_dashboard_widget">
 		<div class="table table_left table_current_month">
@@ -168,7 +183,7 @@ function edd_dashboard_sales_widget() {
 							</td>
 							<td class="edd_order_price">
 								<a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>" title="<?php printf( __( 'Purchase Details for Payment #%s', 'edd' ), $payment->ID ); ?> ">
-									<span class="edd_price_label"><?php echo edd_currency_filter( edd_format_amount( $payment->total ) ); ?></span>
+									<span class="edd_price_label"><?php echo edd_currency_filter( edd_format_amount( $payment->total ), edd_get_payment_currency_code( $payment->ID ) ); ?></span>
 								</a>
 							</td>
 						</tr>
@@ -180,7 +195,9 @@ function edd_dashboard_sales_widget() {
 		<?php } // End if ?>
 	</div>
 	<?php
+	die();
 }
+add_action( 'wp_ajax_edd_load_dashboard_widget', 'edd_load_dashboard_sales_widget' );
 
 /**
  * Add download count to At a glance widget

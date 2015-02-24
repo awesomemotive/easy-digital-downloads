@@ -6,7 +6,7 @@
  *
  * @package     EDD
  * @subpackage  Classes/Session
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
  */
@@ -40,6 +40,15 @@ class EDD_Session {
 	 */
 	private $use_php_sessions = false;
 
+	/**
+	 * Session index prefix
+	 *
+	 * @var string
+	 * @access private
+	 * @since 2.3
+	 */
+	private $prefix = '';
+
 
 	/**
 	 * Get things started
@@ -54,6 +63,12 @@ class EDD_Session {
 		$this->use_php_sessions = $this->use_php_sessions();
 
 		if( $this->use_php_sessions ) {
+
+			if( is_multisite() ) {
+
+				$this->prefix = '_' . get_current_blog_id();
+	
+			}
 
 			// Use PHP SESSION (must be enabled via the EDD_USE_PHP_SESSIONS constant)
 			add_action( 'init', array( $this, 'maybe_start_session' ), -2 );
@@ -98,7 +113,7 @@ class EDD_Session {
 	public function init() {
 
 		if( $this->use_php_sessions ) {
-			$this->session = isset( $_SESSION['edd'] ) && is_array( $_SESSION['edd'] ) ? $_SESSION['edd'] : array();
+			$this->session = isset( $_SESSION[ 'edd' . $this->prefix ] ) && is_array( $_SESSION[ 'edd' . $this->prefix ] ) ? $_SESSION[ 'edd' . $this->prefix ] : array();
 		} else {
 			$this->session = WP_Session::get_instance();
 		}
@@ -146,9 +161,9 @@ class EDD_Session {
 	 *
 	 * @since 1.5
 	 *
-	 * @param $key Session key
-	 * @param $value Session variable
-	 * @return mixed Session variable
+	 * @param string $key Session key
+	 * @param integer $value Session variable
+	 * @return string Session variable
 	 */
 	public function set( $key, $value ) {
 
@@ -161,7 +176,8 @@ class EDD_Session {
 		}
 
 		if( $this->use_php_sessions ) {
-			$_SESSION['edd'] = $this->session;
+
+			$_SESSION[ 'edd' . $this->prefix ] = $this->session;
 		}
 
 		return $this->session[ $key ];
@@ -214,14 +230,14 @@ class EDD_Session {
 	/**
 	 * Starts a new session if one hasn't started yet.
 	 *
-	 * @return null
+	 * @return boolean
 	 * Checks to see if the server supports PHP sessions
 	 * or if the EDD_USE_PHP_SESSIONS constant is defined
 	 *
 	 * @access public
 	 * @since 2.1
 	 * @author Daniel J Griffiths
-	 * @return bool $ret True if we are using PHP sessions, false otherwise
+	 * @return boolean $ret True if we are using PHP sessions, false otherwise
 	 */
 	public function use_php_sessions() {
 
