@@ -296,6 +296,7 @@ td.edd_order_price { text-align: right; }
 #edd-customer-card-wrapper > div:last-child { padding-bottom: 20px; border: none; }
 #edd-customer-card-wrapper .avatar-wrap { padding-right: 10px; text-align: center; }
 #edd-customer-card-wrapper .customer-id { font-size: 24px; font-weight: 600; }
+#edd-customer-card-wrapper .customer-main-wrapper input { width: 200px; }
 #edd-customer-card-wrapper .customer-address-wrapper { max-width: 33%; margin-right: 25px; width: 202px; }
 #edd-customer-card-wrapper .customer-address-wrapper select { width: 200px;}
 #edd-customer-card-wrapper .customer-info { margin-top: 5px; min-height: 185px; }
