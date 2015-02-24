@@ -46,7 +46,7 @@ function edd_update_option( $key = '', $value = false ) {
 	}
 
 	if ( empty( $value ) ) {
-		$remove_option = edd_remove_option( $key );
+		$remove_option = edd_delete_option( $key );
 		return $remove_option;
 	}
 
@@ -78,7 +78,7 @@ function edd_update_option( $key = '', $value = false ) {
  * @since 2.3
  * @return boolean True if updated, false if not.
  */
-function edd_remove_option( $key = '' ) {
+function edd_delete_option( $key = '' ) {
 	// If no key, exit
 	if ( empty( $key ) ){
 		return false;
