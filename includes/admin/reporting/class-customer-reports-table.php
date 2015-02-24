@@ -111,7 +111,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	
 			case 'num_purchases' :
 				$value = '<a href="' .
-					admin_url( '/edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $item['email'] )
+					admin_url( '/admin.php?page=edd-store&user=' . urlencode( $item['email'] )
 				) . '">' . esc_html( $item['num_purchases'] ) . '</a>';
 				break;
 
