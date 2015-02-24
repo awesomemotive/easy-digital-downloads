@@ -26,8 +26,7 @@ class EDD_HTML_Elements {
 	 *
 	 * @access public
 	 * @since 1.5
-	 * @param string $name Name attribute of the dropdown
-	 * @param int $selected Download to select automatically
+	 * @param array $args Arguments for the dropdown
 	 * @return string $output Product dropdown
 	 */
 	public function product_dropdown( $args = array() ) {
@@ -141,6 +140,24 @@ class EDD_HTML_Elements {
 			}
 		} else {
 			$options[0] = __( 'No customers found', 'edd' );
+		}
+
+		if( ! empty( $args['selected'] ) ) {
+
+			// If a selected customer has been specified, we need to ensure it's in the initial list of customers displayed
+
+			if( ! array_key_exists( $args['selected'], $options ) ) {
+
+				$customer = new EDD_Customer( $args['selected'] );
+
+				if( $customer ) {
+
+					$options[ absint( $args['selected'] ) ] = esc_html( $customer->name . ' (' . $customer->email . ')' );
+
+				}
+
+			}
+
 		}
 
 		$output = $this->select( array(
@@ -396,10 +413,7 @@ class EDD_HTML_Elements {
 	 *
 	 * @since 1.5.2
 	 *
-	 * @param string $name Name attribute of the text field
-	 * @param string $value The value to prepopulate the field with
-	 * @param string $label
-	 * @param string $desc
+	 * @param array $args Arguments for the text field
 	 * @return string Text field
 	 */
 	public function text( $args = array() ) {
@@ -421,7 +435,8 @@ class EDD_HTML_Elements {
 			'placeholder'  => '',
 			'class'        => 'regular-text',
 			'disabled'     => false,
-			'autocomplete' => ''
+			'autocomplete' => '',
+			'data'         => false
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -429,6 +444,13 @@ class EDD_HTML_Elements {
 		$disabled = '';
 		if( $args['disabled'] ) {
 			$disabled = ' disabled="disabled"';
+		}
+
+		$data = '';
+		if ( ! empty( $args['data'] ) ) {
+			foreach ( $args['data'] as $key => $value ) {
+				$data .= 'data-' . $key . '="' . $value . '" ';
+			}
 		}
 
 		$output = '<span id="edd-' . sanitize_key( $args[ 'name' ] ) . '-wrap">';
@@ -439,7 +461,7 @@ class EDD_HTML_Elements {
 				$output .= '<span class="edd-description">' . esc_html( $args[ 'desc' ] ) . '</span>';
 			}
 
-			$output .= '<input type="text" name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] )  . '" autocomplete="' . esc_attr( $args[ 'autocomplete' ] )  . '" value="' . esc_attr( $args[ 'value' ] ) . '" placeholder="' . esc_attr( $args[ 'placeholder' ] ) . '" class="' . $args[ 'class' ] . '"' . $disabled . '/>';
+			$output .= '<input type="text" name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] )  . '" autocomplete="' . esc_attr( $args[ 'autocomplete' ] )  . '" value="' . esc_attr( $args[ 'value' ] ) . '" placeholder="' . esc_attr( $args[ 'placeholder' ] ) . '" class="' . $args[ 'class' ] . '" ' . $data . '' . $disabled . '/>';
 
 		$output .= '</span>';
 
@@ -451,10 +473,7 @@ class EDD_HTML_Elements {
 	 *
 	 * @since 1.9
 	 *
-	 * @param string $name Name attribute of the textarea
-	 * @param string $value The value to prepopulate the field with
-	 * @param string $label
-	 * @param string $desc
+	 * @param array $args Arguments for the textarea
 	 * @return string textarea
 	 */
 	public function textarea( $args = array() ) {
@@ -463,7 +482,7 @@ class EDD_HTML_Elements {
 			'value'       => null,
 			'label'       => null,
 			'desc'        => null,
-            'class'       => 'large-text',
+			'class'       => 'large-text',
 			'disabled'    => false
 		);
 
@@ -505,9 +524,10 @@ class EDD_HTML_Elements {
 			'placeholder' => __( 'Enter username', 'edd' ),
 			'label'       => null,
 			'desc'        => null,
-            'class'       => '',
+			'class'       => '',
 			'disabled'    => false,
-			'autocomplete'=> 'off'
+			'autocomplete'=> 'off',
+			'data'        => false
 		);
 
 		$args = wp_parse_args( $args, $defaults );

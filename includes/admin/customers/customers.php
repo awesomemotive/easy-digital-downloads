@@ -12,7 +12,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return void
 */
 function edd_customers_page() {
-	$current_page  = admin_url( 'edit.php?post_type=download&page=edd-customers' );
 	$default_views = edd_customer_views();
 	$requested_view = isset( $_GET['view'] ) ? sanitize_text_field( $_GET['view'] ) : 'customers';
 	if ( array_key_exists( $requested_view, $default_views ) && function_exists( $default_views[$requested_view] ) ) {
@@ -87,9 +86,9 @@ function edd_customers_list() {
  */
 function edd_render_customer_view( $view, $callbacks ) {
 
-	$customer_edit_role = apply_filters( 'edd_view_customers_role', 'view_shop_reports' );
+	$customer_view_role = apply_filters( 'edd_view_customers_role', 'view_shop_reports' );
 
-	if ( ! current_user_can( $customer_edit_role ) ) {
+	if ( ! current_user_can( $customer_view_role ) ) {
 		edd_set_error( 'edd-no-access', __( 'You are not permitted to view this data.', 'edd' ) );
 	}
 
@@ -105,7 +104,6 @@ function edd_render_customer_view( $view, $callbacks ) {
 	}
 
 	$customer_tabs = edd_customer_tabs();
-	$errors        = edd_get_errors();
 	?>
 
 	<div class='wrap'>
@@ -158,6 +156,9 @@ function edd_render_customer_view( $view, $callbacks ) {
  * @return void
  */
 function edd_customers_view( $customer ) {
+
+	$customer_edit_role = apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
+
 	?>
 
 	<?php do_action( 'edd_customer_card_top', $customer ); ?>
@@ -170,7 +171,9 @@ function edd_customers_view( $customer ) {
 
 				<div class="avatar-wrap left" id="customer-avatar">
 					<?php echo get_avatar( $customer->email ); ?><br />
-					<span class="info-item editable customer-edit-link"><a title="<?php _e( 'Edit Customer', 'edd' ); ?>" href="#" id="edit-customer"><?php _e( 'Edit Customer', 'edd' ); ?></a></span>
+					<?php if ( current_user_can( $customer_edit_role ) ): ?>
+						<span class="info-item editable customer-edit-link"><a title="<?php _e( 'Edit Customer', 'edd' ); ?>" href="#" id="edit-customer"><?php _e( 'Edit Customer', 'edd' ); ?></a></span>
+					<?php endif; ?>
 				</div>
 
 				<div class="customer-id right">
@@ -178,7 +181,7 @@ function edd_customers_view( $customer ) {
 				</div>
 
 				<div class="customer-address-wrapper right">
-				<?php if ( isset( $customer->user_id ) && ! empty( $customer->user_id ) ) : ?>
+				<?php if ( isset( $customer->user_id ) && $customer->user_id > 0 ) : ?>
 
 					<?php
 						$address = get_user_meta( $customer->user_id, '_edd_user_address', true );
@@ -212,7 +215,6 @@ function edd_customers_view( $customer ) {
 						<select data-key="country" name="customerinfo[country]" id="billing_country" class="billing_country edd-select edit-item">
 							<?php
 
-							$selected_country = edd_get_shop_country();
 							$selected_country = $address['country'];
 
 							$countries = edd_get_country_list();
@@ -260,24 +262,20 @@ function edd_customers_view( $customer ) {
 							break;
 						}
 					}
-					$user_ids  = wp_list_pluck( $customers, 'user_id' );
-					$user_dropdown_args = array(
-						'name'                    => 'customerinfo[user_id]',
-						'selected'                =>  $customer->user_id,
-						'include_selected'        => true,
-						'echo'                    => '0',
-						'show_option_none'        => __( 'None', 'edd' ),
-						'class'                   => 'edd-user-dropdown',
-						'exclude'                 => $user_ids,
-						'hide_if_only_one_author' => false
-					);
-					$users_dropdown = wp_dropdown_users( $user_dropdown_args );
-					$find           = array( 'class=\'edd-user-dropdown\'', 'value=\'-1\'' );
-					$replace        = array( 'data-key=\'user_id\' class=\'edd-user-dropdown\'', 'value=\'0\'' );
-					$users_dropdown = str_replace( $find, $replace, $users_dropdown );
 
-					echo $users_dropdown;
+					$user_ids = array();
+					$user_ids  = array_unique( wp_list_pluck( $customers, 'user_id' ) );
+
+					$data_atts = array( 'key' => 'user_login', 'exclude' => implode( ',', $user_ids ) );
+
+					$user_search_args = array(
+						'name'             => 'customerinfo[user_login]',
+						'class'            => 'edd-user-dropdown',
+						'data'             => $data_atts
+					);
+					echo EDD()->html->ajax_user_search( $user_search_args );
 					?>
+					<input type="hidden" name="customerinfo[user_id]" data-key="user_id" value="<?php echo $customer->user_id; ?>" />
 				</span>
 
 				<span class="customer-user-id info-item editable">

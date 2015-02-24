@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_edit_customer( $args ) {
 
-	$customer_edit_role = apply_filters( 'edd_view_customers_role', 'view_shop_reports' );
+	$customer_edit_role = apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
 
 	if ( ! is_admin() || ! current_user_can( $customer_edit_role ) ) {
 		wp_die( __( 'You do not have permission to edit this customer.', 'edd' ) );
@@ -50,12 +50,15 @@ function edd_edit_customer( $args ) {
 	$customer_info = wp_parse_args( $customer_info, $defaults );
 
 	// Sanitize the inputs
+	$address                  = array();
 	$address['line1']         = $customer_info['line1'];
 	$address['line2']         = $customer_info['line2'];
 	$address['city']          = $customer_info['city'];
 	$address['zip']           = $customer_info['zip'];
 	$address['state']         = $customer_info['state'];
 	$address['country']       = $customer_info['country'];
+
+	$customer_data            = array();
 	$customer_data['name']    = $customer_info['name'];
 	$customer_data['email']   = $customer_info['email'];
 	$customer_data['user_id'] = $customer_info['user_id'];
@@ -99,7 +102,7 @@ function edd_edit_customer( $args ) {
 
 	if ( $customer->update( $customer_data ) ) {
 
-		if ( ! empty( $customer->user_id ) ) {
+		if ( ! empty( $customer->user_id ) && $customer->user_id > 0 ) {
 			update_user_meta( $customer->user_id, '_edd_user_address', $address );
 		}
 
@@ -150,9 +153,9 @@ add_action( 'edd_edit-customer', 'edd_edit_customer', 10, 1 );
  */
 function edd_customer_save_note( $args ) {
 
-	$customer_edit_role = apply_filters( 'edd_view_customers_role', 'view_shop_reports' );
+	$customer_view_role = apply_filters( 'edd_view_customers_role', 'view_shop_reports' );
 
-	if ( ! is_admin() || ! current_user_can( $customer_edit_role ) ) {
+	if ( ! is_admin() || ! current_user_can( $customer_view_role ) ) {
 		wp_die( __( 'You do not have permission to edit this customer.', 'edd' ) );
 	}
 

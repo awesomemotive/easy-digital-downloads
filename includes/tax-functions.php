@@ -43,7 +43,6 @@ function edd_get_tax_rates() {
  * Get taxation rate
  *
  * @since 1.3.3
- *
  * @param bool $country
  * @param bool $state
  * @return mixed|void
@@ -150,7 +149,7 @@ function edd_calculate_tax( $amount = 0, $country = false, $state = false ) {
 }
 
 /**
- * Stores the tax info in the payment meta
+ * Returns the formatted tax amount for the given year
  *
  * @since 1.3.3
  * @param $year int The year to retrieve taxes for, i.e. 2012
@@ -162,7 +161,7 @@ function edd_sales_tax_for_year( $year = null ) {
 }
 
 /**
- * Gets the sales tax for the current year
+ * Gets the sales tax for the given year
  *
  * @since 1.3.3
  * @param $year int The year to retrieve taxes for, i.e. 2012
@@ -170,7 +169,8 @@ function edd_sales_tax_for_year( $year = null ) {
  * @return float $tax Sales tax
  */
 function edd_get_sales_tax_for_year( $year = null ) {
-	
+	global $wpdb;
+
 	// Start at zero
 	$tax = 0;
 
@@ -185,14 +185,12 @@ function edd_get_sales_tax_for_year( $year = null ) {
 			'fields'			=> 'ids'
 		);
 
-		$payments = get_posts( $args );
+		$payments    = get_posts( $args );
+		$payment_ids = implode( ',', $payments );
 
-		if( $payments ) {
-
-			foreach( $payments as $payment ) {
-				$tax += edd_get_payment_tax( $payment );
-			}
-
+		if ( count( $payments ) > 0 ) {
+			$sql = "SELECT SUM( meta_value ) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_tax' AND post_id IN( $payment_ids )";
+			$tax = $wpdb->get_var( $sql );
 		}
 
 	}

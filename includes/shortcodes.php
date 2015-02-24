@@ -474,7 +474,6 @@ function edd_downloads_query( $atts, $content = null ) {
 		case 2:
 			$column_width = '50%'; break;
 		case 3:
-		default:
 			$column_width = '33%'; break;
 		case 4:
 			$column_width = '25%'; break;
@@ -482,6 +481,8 @@ function edd_downloads_query( $atts, $content = null ) {
 			$column_width = '20%'; break;
 		case 6:
 			$column_width = '16.6%'; break;
+		default:
+			$column_width = '33%'; break;
 	endswitch;
 
 	// Allow the query to be manipulated by other plugins

@@ -1064,6 +1064,7 @@ jQuery(document).ready(function ($) {
 					data: {
 						action: search_type,
 						s: val,
+						current_id: edd_vars.post_id,
 					},
 					dataType: "json",
 					beforeSend: function(){
@@ -1085,7 +1086,7 @@ jQuery(document).ready(function ($) {
 					}
 				}).fail(function (response) {
 					if ( window.console && window.console.log ) {
-						console.log( data );
+						console.log( response );
 					}
 				}).done(function (response) {
 
@@ -1130,6 +1131,7 @@ jQuery(document).ready(function ($) {
 
 		init : function() {
 			this.edit_customer();
+			this.user_search();
 			this.cancel_edit();
 			this.save_edit();
 			this.change_country();
@@ -1142,11 +1144,21 @@ jQuery(document).ready(function ($) {
 				$( '#edd-customer-card-wrapper .edit-item' ).fadeIn().css( 'display', 'block' );
 			});
 		},
+		user_search: function() {
+			// Upon selecting a user from the dropdown, we need to update the User ID
+			$('body').on('click.eddSelectUser', '.edd_user_search_results a', function(e) {
+				e.preventDefault();
+				var user_id = $(this).data('userid');
+				$('input[name="customerinfo[user_id]"]').val(user_id);
+			});
+		},
 		cancel_edit: function() {
 			$( 'body' ).on( 'click', '#edd-edit-customer-cancel', function( e ) {
 				e.preventDefault();
 				$( '#edd-customer-card-wrapper .edit-item' ).hide();
 				$( '#edd-customer-card-wrapper .editable' ).show();
+				$( '.edd_user_search_results' ).html('');
+				$( '.edd-ajax-user-search' ).val('');
 			});
 		},
 		save_edit: function() {
@@ -1251,10 +1263,17 @@ jQuery(document).ready(function ($) {
 	// Ajax user search
 	$('.edd-ajax-user-search').keyup(function() {
 		var user_search = $(this).val();
+		var exclude     = '';
+
+		if ( $(this).data('exclude') ) {
+			exclude = $(this).data('exclude');
+		}
+
 		$('.edd-ajax').show();
 		data = {
 			action: 'edd_search_users',
-			user_name: user_search
+			user_name: user_search,
+			exclude: exclude
 		};
 
 		document.body.style.cursor = 'wait';
