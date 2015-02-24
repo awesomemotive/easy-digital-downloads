@@ -179,7 +179,7 @@ function edd_tools_import_export_display() {
 		<div class="inside">
 			<p><?php _e( 'Export the Easy Digital Downloads settings for this site as a .json file. This allows you to easily import the configuration into another site.', 'edd' ); ?></p>
 			<p><?php printf( __( 'To export shop data (purchases, customers, etc), visit the <a href="%s">Reports</a> page.', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-reports&tab=export' ) ); ?></p>
-			<form method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=import_export' ); ?>">
+			<form method="post" action="<?php echo admin_url( 'admin.php?page=edd-tools&tab=import_export' ); ?>">
 				<p><input type="hidden" name="edd_action" value="export_settings" /></p>
 				<p>
 					<?php wp_nonce_field( 'edd_export_nonce', 'edd_export_nonce' ); ?>
@@ -193,7 +193,7 @@ function edd_tools_import_export_display() {
 		<h3><span><?php _e( 'Import Settings', 'edd' ); ?></span></h3>
 		<div class="inside">
 			<p><?php _e( 'Import the Easy Digital Downloads settings from a .json file. This file can be obtained by exporting the settings on another site using the form above.', 'edd' ); ?></p>
-			<form method="post" enctype="multipart/form-data" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=import_export' ); ?>">
+			<form method="post" enctype="multipart/form-data" action="<?php echo admin_url( 'admin.php?page=edd-tools&tab=import_export' ); ?>">
 				<p>
 					<input type="file" name="import_file"/>
 				</p>
@@ -279,7 +279,7 @@ function edd_tools_import_export_process_import() {
 
 	update_option( 'edd_settings', $settings );
 
-	wp_safe_redirect( admin_url( 'edit.php?post_type=download&page=edd-tools&edd-message=settings-imported' ) ); exit;
+	wp_safe_redirect( admin_url( 'admin.php?page=edd-tools&edd-message=settings-imported' ) ); exit;
 
 }
 add_action( 'edd_import_settings', 'edd_tools_import_export_process_import' );
