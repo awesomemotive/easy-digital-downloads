@@ -192,7 +192,7 @@ function edd_update_payment_details( $data ) {
 
 	do_action( 'edd_updated_edited_purchase', $payment_id );
 
-	wp_safe_redirect( admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&edd-message=payment-updated&id=' . $payment_id ) );
+	wp_safe_redirect( admin_url( 'admin.php?page=edd-store&view=view-order-details&edd-message=payment-updated&id=' . $payment_id ) );
 	exit;
 }
 add_action( 'edd_update_payment_details', 'edd_update_payment_details' );
@@ -214,7 +214,7 @@ function edd_trigger_purchase_delete( $data ) {
 		}
 
 		edd_delete_purchase( $payment_id );
-		wp_redirect( admin_url( '/edit.php?post_type=download&page=edd-payment-history&edd-message=payment_deleted' ) );
+		wp_redirect( admin_url( '/admin.php?page=edd-store&edd-message=payment_deleted' ) );
 		edd_die();
 	}
 }
@@ -256,7 +256,7 @@ function edd_trigger_payment_note_deletion( $data ) {
 		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ) );
 	}
 
-	$edit_order_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&edd-message=payment-note-deleted&id=' . absint( $data['payment_id'] ) );
+	$edit_order_url = admin_url( 'admin.php?page=edd-store&view=view-order-details&edd-message=payment-note-deleted&id=' . absint( $data['payment_id'] ) );
 
 	edd_delete_payment_note( $data['note_id'], $data['payment_id'] );
 
