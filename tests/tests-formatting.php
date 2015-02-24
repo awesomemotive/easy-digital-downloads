@@ -36,7 +36,7 @@ class Tests_Formatting extends WP_UnitTestCase {
 
 		$this->assertEquals( '20.000,20', edd_format_amount( '20000.20' ) );
 
-		edd_update_option( 'thousands_separator', ',' );
+		edd_update_option( 'thousands_separator', ' ' );
 		edd_update_option( 'decimal_separator', '.' );
 
 		$this->assertEquals( '20 000.20', edd_format_amount( '20000.20' ) );
