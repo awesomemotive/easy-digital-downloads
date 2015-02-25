@@ -142,14 +142,12 @@ class Tests_Payments extends WP_UnitTestCase {
 	}
 
 	public function test_get_payment_number() {
-		global $edd_options;
 
 		$this->assertEquals( 'EDD-1', edd_get_payment_number( $this->_payment_id ) );
 		$this->assertEquals( 'EDD-2', edd_get_next_payment_number() );
 
 		// Now disable sequential and ensure values come back as expected
-		unset( $edd_options['enable_sequential'] );
-		update_option( 'edd_settings', $edd_options );
+		edd_delete_option( 'enable_sequential' );
 
 		$this->assertEquals( $this->_payment_id, edd_get_payment_number( $this->_payment_id ) );
 	}

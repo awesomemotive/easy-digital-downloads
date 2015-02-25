@@ -477,4 +477,37 @@ class Test_Misc extends WP_UnitTestCase {
 		$this->assertTrue( edd_is_host( 'WP Engine' ) );
 		$this->assertTrue( edd_is_host( 'WPEngine' ) );
 	}
+
+	public function test_edd_update_option(){
+		$key   = 'some-setting';
+		$value = 'some-value';
+		$isset = edd_get_option( $key, false );
+
+		// The option shouldn't exist
+		$this->assertFalse( $isset );
+
+		$updated = edd_update_option( $key, $value );
+
+		// The option should have succesfully updated
+		$this->assertTrue( $updated );
+
+		// The option retrieve should be equal to the one we set
+		$this->assertEquals( $value, edd_get_option( $key, false ) );
+
+		$key   = 'some-setting2';
+		$value = null;
+		$isset = edd_get_option( $key, false );
+
+		// The option shouldn't exist
+		$this->assertFalse( $isset );
+
+		$updated = edd_update_option( $key, $value );
+
+		// The option should return false due to the null value
+		$this->assertFalse( $updated );
+
+		// The option retrieve should be false since it doesn't exist
+		$this->assertFalse( edd_get_option( $key, false ) );
+
+	}
 }
