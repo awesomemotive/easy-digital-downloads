@@ -91,6 +91,11 @@ function edd_get_reporting_view( $default = 'earnings' ) {
  * @return void
  */
 function edd_reports_tab_reports() {
+
+	if( ! current_user_can( 'view_shop_reports' ) ) {
+		wp_die( __( 'You do not have permission to access this report', 'edd'  ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+	}
+
 	$current_view = 'earnings';
 	$views        = edd_reports_default_views();
 
@@ -98,6 +103,7 @@ function edd_reports_tab_reports() {
 		$current_view = $_GET[ 'view' ];
 
 	do_action( 'edd_reports_view_' . $current_view );
+
 }
 add_action( 'edd_reports_tab_reports', 'edd_reports_tab_reports' );
 
@@ -108,6 +114,11 @@ add_action( 'edd_reports_tab_reports', 'edd_reports_tab_reports' );
  * @return void
  */
 function edd_report_views() {
+
+	if( ! current_user_can( 'view_shop_reports' ) ) {
+		return;
+	}
+
 	$views        = edd_reports_default_views();
 	$current_view = isset( $_GET[ 'view' ] ) ? $_GET[ 'view' ] : 'earnings';
 	?>
@@ -139,6 +150,10 @@ function edd_report_views() {
  */
 function edd_reports_downloads_table() {
 
+	if( ! current_user_can( 'view_shop_reports' ) ) {
+		return;
+	}
+
 	if( isset( $_GET['download-id'] ) )
 		return;
 
@@ -157,6 +172,11 @@ add_action( 'edd_reports_view_downloads', 'edd_reports_downloads_table' );
  * @return void
  */
 function edd_reports_download_details() {
+
+	if( ! current_user_can( 'view_shop_reports' ) ) {
+		return;
+	}
+
 	if( ! isset( $_GET['download-id'] ) )
 		return;
 ?>
@@ -183,6 +203,11 @@ add_action( 'edd_reports_view_downloads', 'edd_reports_download_details' );
  * @return void
  */
 function edd_reports_gateways_table() {
+
+	if( ! current_user_can( 'view_shop_reports' ) ) {
+		return;
+	}
+
 	include( dirname( __FILE__ ) . '/class-gateways-reports-table.php' );
 
 	$downloads_table = new EDD_Gateawy_Reports_Table();
@@ -199,6 +224,10 @@ add_action( 'edd_reports_view_gateways', 'edd_reports_gateways_table' );
  * @return void
  */
 function edd_reports_earnings() {
+
+	if( ! current_user_can( 'view_shop_reports' ) ) {
+		return;
+	}
 	?>
 	<div class="tablenav top">
 		<div class="alignleft actions"><?php edd_report_views(); ?></div>
@@ -215,6 +244,11 @@ add_action( 'edd_reports_view_earnings', 'edd_reports_earnings' );
  * @return void
  */
 function edd_reports_taxes() {
+
+	if( ! current_user_can( 'view_shop_reports' ) ) {
+		return;
+	}
+
 	$year = isset( $_GET['year'] ) ? absint( $_GET['year'] ) : date( 'Y' );
 	?>
 	<div class="tablenav top">
@@ -252,6 +286,10 @@ add_action( 'edd_reports_view_taxes', 'edd_reports_taxes' );
  * @return void
  */
 function edd_reports_tab_export() {
+
+	if( ! current_user_can( 'view_shop_reports' ) ) {
+		return;
+	}
 	?>
 	<div id="edd-dashboard-widgets-wrap">
 		<div class="metabox-holder">
@@ -371,6 +409,11 @@ add_action( 'edd_reports_tab_export', 'edd_reports_tab_export' );
  * @return void
  */
 function edd_reports_tab_logs() {
+
+	if( ! current_user_can( 'view_shop_reports' ) ) {
+		return;
+	}
+
 	require( EDD_PLUGIN_DIR . 'includes/admin/reporting/logs.php' );
 
 	$current_view = 'file_downloads';
