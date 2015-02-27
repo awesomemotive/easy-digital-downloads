@@ -313,9 +313,9 @@ function edd_customers_view( $customer ) {
 		</ul>
 	</div>
 
-	<?php do_action( 'edd_customer_before_downloads', $customer ); ?>
+	<?php do_action( 'edd_customer_before_purchases', $customer ); ?>
 
-	<div id="customer-downloads-wrapper" class="customer-section">
+	<div id="customer-purchases-wrapper" class="customer-section">
 		<h3><?php _e( 'Recent Payments', 'edd' ); ?></h3>
 		<?php
 			$payment_ids = explode( ',', $customer->payment_ids );
