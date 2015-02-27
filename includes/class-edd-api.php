@@ -879,7 +879,7 @@ class EDD_API {
 
 					// Loop through the years
 					$y = $dates['year'];
-					if ( !isset( $sales[ 'sales' ] ) ){
+					if ( !isset( $sales[ 'sales' ] ) ) {
 						$sales['sales'] = array();
 					}
 					while( $y <= $dates['year_end'] ) :
@@ -901,13 +901,13 @@ class EDD_API {
 						$i = $month_start;
 						while ( $i <= $month_end ) :
 
-							if( $i == $dates['m_start'] ){
+							if( $i == $dates['m_start'] ) {
 								$d = $dates['day_start'];
 							} else {
 								$d = 1;
 							}
 
-							if( $i == $dates['m_end'] ){
+							if( $i == $dates['m_end'] ) {
 								$num_of_days = $dates['day_end'];
 							} else {
 								$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $y );
@@ -915,7 +915,7 @@ class EDD_API {
 
 							while ( $d <= $num_of_days ) :
 								$sale_count = edd_get_sales_by_date( $d, $i, $y );
-								if ( !isset( $sales[ 'sales' ][ date( 'Ymd', strtotime( $y . '/' . $i . '/' . $d ) ) ] ) ){
+								if ( !isset( $sales[ 'sales' ][ date( 'Ymd', strtotime( $y . '/' . $i . '/' . $d ) ) ] ) ) {
         								$sales[ 'sales' ][ date( 'Ymd', strtotime( $y . '/' . $i . '/' . $d ) ) ] = 0;
 								}
 								$sales['sales'][ date( 'Ymd', strtotime( $y . '/' . $i . '/' . $d ) ) ] += $sale_count;
@@ -987,7 +987,7 @@ class EDD_API {
 
 					// Loop through the years
 					$y = $dates['year'];
-					if ( !isset( $earnings[ 'earnings' ] ) ){
+					if ( !isset( $earnings[ 'earnings' ] ) ) {
 						$earnings[ 'earnings' ] = array();
 					}
 					while( $y <= $dates['year_end'] ) :
@@ -1014,7 +1014,7 @@ class EDD_API {
 							else
 								$d = 1;
 
-							if( $i == $dates['m_end'] ){
+							if( $i == $dates['m_end'] ) {
 								$num_of_days = $dates['day_end'];
 							} else {
 								$num_of_days = cal_days_in_month( CAL_GREGORIAN, $i, $y );
@@ -1022,7 +1022,7 @@ class EDD_API {
 
 							while ( $d <= $num_of_days ) :
 								$earnings_stat = edd_get_earnings_by_date( $d, $i, $y );
-								if ( !isset( $earnings[ 'earnings' ][ date( 'Ymd', strtotime( $y . '/' . $i . '/' . $d ) ) ] ) ){
+								if ( !isset( $earnings[ 'earnings' ][ date( 'Ymd', strtotime( $y . '/' . $i . '/' . $d ) ) ] ) ) {
         								$earnings[ 'earnings' ][ date( 'Ymd', strtotime( $y . '/' . $i . '/' . $d ) ) ] = 0;
 								}
 								$earnings['earnings'][ date( 'Ymd', strtotime( $y . '/' . $i . '/' . $d ) ) ] += $earnings_stat;
