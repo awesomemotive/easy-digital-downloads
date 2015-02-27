@@ -360,7 +360,7 @@ function edd_customers_view( $customer ) {
 	<div id="customer-downloads-wrapper" class="customer-section">
 		<h3><?php printf( __( 'Purchased %s', 'edd' ), edd_get_label_plural() ); ?></h3>
 		<?php
-			$downloads = edd_get_users_purchased_products( $customer->id );
+			$downloads = edd_get_users_purchased_products( $customer->email );
 		?>
 		<table class="wp-list-table widefat striped">
 			<thead>
