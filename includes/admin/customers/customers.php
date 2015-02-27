@@ -279,6 +279,9 @@ function edd_customers_view( $customer ) {
 					<span class="customer-user-id info-item editable">
 						<?php _e( 'User ID', 'edd' ); ?>:&nbsp;
 						<span data-key="user_id"><?php echo $customer->user_id; ?></span>
+						<?php if ( current_user_can( $customer_edit_role ) && intval( $customer->user_id ) > 0 ): ?>
+							<span class="disconnect-user"> - <a id="disconnect-customer" href="#disconnect" title="<?php _e( 'Disconnects the current user ID from this customer record', 'edd' ); ?>"><?php _e( 'Disconnect User', 'edd' ); ?></a></span>
+						<?php endif; ?>
 					</span>
 
 				</div>
@@ -288,6 +291,7 @@ function edd_customers_view( $customer ) {
 			<span id="customer-edit-actions" class="edit-item">
 				<input type="hidden" data-key="id" name="customerinfo[id]" value="<?php echo $customer->id; ?>" />
 				<?php wp_nonce_field( 'edit-customer', '_wpnonce', false, true ); ?>
+				<input type="hidden" name="edd_action" value="edit-customer" />
 				<input type="submit" id="edd-edit-customer-save" class="button-secondary" value="<?php _e( 'Update Customer', 'edd' ); ?>" />
 				<a id="edd-edit-customer-cancel" href="" class="delete"><?php _e( 'Cancel', 'edd' ); ?></a>
 			</span>
