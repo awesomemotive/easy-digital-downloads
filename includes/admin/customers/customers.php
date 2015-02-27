@@ -355,6 +355,24 @@ function edd_customers_view( $customer ) {
 		</table>
 	</div>
 
+	<?php do_action( 'edd_customer_before_downloads', $customer ); ?>
+	
+	<div id="customer-products-wrapper" class="customer-section">
+		<h3><?php printf( __( 'Purchased %s', 'edd' ), edd_get_label_plural() ); ?></h3>
+		<?php
+		?>
+		<table class="wp-list-table widefat striped">
+			<thead>
+				<tr>
+					<th><?php echo edd_get_label_singular(); ?></th>
+					<th><?php _e( 'Actions', 'edd' ); ?></th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+
 	<?php do_action( 'edd_customer_card_bottom', $customer ); ?>
 
 	<?php
