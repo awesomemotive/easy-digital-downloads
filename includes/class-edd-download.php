@@ -481,7 +481,7 @@ class EDD_Download {
 
 			$this->button_behavior = get_post_meta( $this->ID, '_edd_button_behavior', true );
 
-			if( empty( $this->button_behavior ) ) {
+			if( empty( $this->button_behavior ) || ! edd_shop_supports_buy_now() ) {
 
 				$this->button_behavior = 'add_to_cart';
 
