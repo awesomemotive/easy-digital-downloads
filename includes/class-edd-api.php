@@ -850,8 +850,12 @@ class EDD_API {
 		$dates = $this->get_dates( $args );
 
 		$stats    = array();
-		$earnings = array();
-		$sales    = array();
+		$earnings = array(
+			'earnings' => array()
+		);
+		$sales    = array(
+			'sales' => array()
+		);
 		$error    = array();
 
 		if( ! user_can( $this->user_id, 'view_shop_reports' ) && ! $this->override ) {
@@ -879,9 +883,6 @@ class EDD_API {
 
 					// Loop through the years
 					$y = $dates['year'];
-					if ( ! isset( $sales[ 'sales' ] ) ) {
-						$sales['sales'] = array();
-					}
 					while( $y <= $dates['year_end'] ) :
 
 						if( $dates['year'] == $dates['year_end'] ) {
@@ -915,10 +916,11 @@ class EDD_API {
 
 							while ( $d <= $num_of_days ) :
 								$sale_count = edd_get_sales_by_date( $d, $i, $y );
-								if ( ! isset( $sales[ 'sales' ][ date( 'Ymd', strtotime( $y . '/' . $i . '/' . $d ) ) ] ) ) {
-        								$sales[ 'sales' ][ date( 'Ymd', strtotime( $y . '/' . $i . '/' . $d ) ) ] = 0;
+								$date_key   = date( 'Ymd', strtotime( $y . '/' . $i . '/' . $d ) );
+								if ( ! isset( $sales[ 'sales' ][ $date_key ] ) ) {
+        							$sales[ 'sales' ][ $date_key ] = 0;
 								}
-								$sales['sales'][ date( 'Ymd', strtotime( $y . '/' . $i . '/' . $d ) ) ] += $sale_count;
+								$sales['sales'][ $date_key ] += $sale_count;
 								$total += $sale_count;
 								$d++;
 							endwhile;
@@ -1022,10 +1024,11 @@ class EDD_API {
 
 							while ( $d <= $num_of_days ) :
 								$earnings_stat = edd_get_earnings_by_date( $d, $i, $y );
-								if ( ! isset( $earnings[ 'earnings' ][ date( 'Ymd', strtotime( $y . '/' . $i . '/' . $d ) ) ] ) ) {
-        								$earnings[ 'earnings' ][ date( 'Ymd', strtotime( $y . '/' . $i . '/' . $d ) ) ] = 0;
+								$date_key = date( 'Ymd', strtotime( $y . '/' . $i . '/' . $d ) );
+								if ( ! isset( $earnings[ 'earnings' ][ $date_key ] ) ) {
+        							$earnings[ 'earnings' ][ $date_key ] = 0;
 								}
-								$earnings['earnings'][ date( 'Ymd', strtotime( $y . '/' . $i . '/' . $d ) ) ] += $earnings_stat;
+								$earnings['earnings'][ $date_key ] += $earnings_stat;
 								$total += $earnings_stat;
 								$d++;
 							endwhile;
