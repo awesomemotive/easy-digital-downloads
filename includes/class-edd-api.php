@@ -918,7 +918,7 @@ class EDD_API {
 								$sale_count = edd_get_sales_by_date( $d, $i, $y );
 								$date_key   = date( 'Ymd', strtotime( $y . '/' . $i . '/' . $d ) );
 								if ( ! isset( $sales[ 'sales' ][ $date_key ] ) ) {
-        							$sales[ 'sales' ][ $date_key ] = 0;
+									$sales[ 'sales' ][ $date_key ] = 0;
 								}
 								$sales['sales'][ $date_key ] += $sale_count;
 								$total += $sale_count;
@@ -1026,7 +1026,7 @@ class EDD_API {
 								$earnings_stat = edd_get_earnings_by_date( $d, $i, $y );
 								$date_key = date( 'Ymd', strtotime( $y . '/' . $i . '/' . $d ) );
 								if ( ! isset( $earnings[ 'earnings' ][ $date_key ] ) ) {
-        							$earnings[ 'earnings' ][ $date_key ] = 0;
+									$earnings[ 'earnings' ][ $date_key ] = 0;
 								}
 								$earnings['earnings'][ $date_key ] += $earnings_stat;
 								$total += $earnings_stat;
