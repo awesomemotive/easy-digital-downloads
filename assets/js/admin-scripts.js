@@ -1153,8 +1153,8 @@ jQuery(document).ready(function ($) {
 		init : function() {
 			this.edit_customer();
 			this.user_search();
+			this.remove_user();
 			this.cancel_edit();
-			this.save_edit();
 			this.change_country();
 			this.add_note();
 		},
@@ -1167,10 +1167,29 @@ jQuery(document).ready(function ($) {
 		},
 		user_search: function() {
 			// Upon selecting a user from the dropdown, we need to update the User ID
-			$('body').on('click.eddSelectUser', '.edd_user_search_results a', function(e) {
+			$('body').on('click.eddSelectUser', '.edd_user_search_results a', function( e ) {
 				e.preventDefault();
 				var user_id = $(this).data('userid');
 				$('input[name="customerinfo[user_id]"]').val(user_id);
+			});
+		},
+		remove_user: function() {
+			$( 'body' ).on( 'click', '#disconnect-customer', function( e ) {
+				e.preventDefault();
+				var customer_id = $('input[name="customerinfo[id]"]').val();
+
+				var postData = {
+					edd_action:   'disconnect-userid',
+					customer_id: customer_id,
+					_wpnonce:     $( '#edit-customer-info #_wpnonce' ).val()
+				};
+
+				$.post(ajaxurl, postData, function( response ) {
+
+					window.location.href=window.location.href;
+
+				}, 'json');
+
 			});
 		},
 		cancel_edit: function() {
@@ -1180,46 +1199,6 @@ jQuery(document).ready(function ($) {
 				$( '#edd-customer-card-wrapper .editable' ).show();
 				$( '.edd_user_search_results' ).html('');
 				$( '.edd-ajax-user-search' ).val('');
-			});
-		},
-		save_edit: function() {
-			$( 'body' ).on( 'submit', '#edit-customer-info', function( e ) {
-
-				e.preventDefault();
-				var formData = {};
-
-				$( ':input[name^="customerinfo"]' ).each( function() {
-					var name  = $( this ).data( 'key' );
-					var value = $( this ).val();
-
-					formData[name] = value;
-				});
-
-				var postData = {
-					edd_action:   'edit-customer',
-					customerinfo: formData,
-					_wpnonce:     $( '#edit-customer-info #_wpnonce' ).val()
-				};
-
-				$.post(ajaxurl, postData, function( response ) {
-
-					if ( true == response.success ) {
-						$.each( response.customer_info, function( key, value ) {
-							$('span[data-key="' + key + '"]').text( value );
-							$(':input[data-key="' + key + '"]').val( value );
-						});
-
-						$( '#edd-customer-card-wrapper .edit-item' ).hide();
-						$( '#edd-customer-card-wrapper .editable' ).show();
-
-					} else {
-
-						// We had errors, refresh to show them
-						window.location.reload();
-
-					}
-				}, 'json');
-
 			});
 		},
 		change_country: function() {
