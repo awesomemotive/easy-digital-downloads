@@ -359,6 +359,39 @@ function edd_customers_view( $customer ) {
 		</table>
 	</div>
 
+	<?php do_action( 'edd_customer_before_downloads', $customer ); ?>
+	
+	<div id="customer-downloads-wrapper" class="customer-section">
+		<h3><?php printf( __( 'Purchased %s', 'edd' ), edd_get_label_plural() ); ?></h3>
+		<?php
+			$downloads = edd_get_users_purchased_products( $customer->email );
+		?>
+		<table class="wp-list-table widefat striped">
+			<thead>
+				<tr>
+					<th><?php echo edd_get_label_singular(); ?></th>
+					<th width="120px"><?php _e( 'Actions', 'edd' ); ?></th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php if ( ! empty( $downloads ) ) : ?>
+					<?php foreach ( $downloads as $download ) : ?>
+						<tr>
+							<td><?php echo $download->post_title; ?></td>
+							<td>
+								<a title="<?php printf( __( 'View %s', 'edd' ), edd_get_label_singular() ); echo ' ' . $download->post_title; ?>" href="<?php echo admin_url( 'post.php?action=edit&post=' . $download->ID ); ?>">
+									<?php printf( __( 'View %s', 'edd' ), edd_get_label_singular() ); ?>
+								</a>
+							</td>
+						</tr>
+					<?php endforeach; ?>
+				<?php else: ?>
+					<tr><td colspan="2"><?php printf( __( 'No %s Found', 'edd' ), edd_get_label_plural() ); ?></td></tr>
+				<?php endif; ?>
+			</tbody>
+		</table>
+	</div>
+
 	<?php do_action( 'edd_customer_card_bottom', $customer ); ?>
 
 	<?php
