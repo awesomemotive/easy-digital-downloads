@@ -318,6 +318,7 @@ td.edd_order_price { text-align: right; }
 #customer-tables-wrapper table { width: 100%; text-align: center; }
 #customer-tables-wrapper th { text-align: center; }
 #customer-tables-wrapper .downloads tr > th:first-child, #customer-tables-wrapper .downloads tr > td:first-child { text-align: left; }
+#customer-tables-wrapper .downloads tr > td:only-child { text-align: center; }
 #customer-notes-wrapper { min-height: 50px; }
 .customer-notes-header span, .customer-notes-header img { font-weight: 600; line-height: 30px; vertical-align: middle; }
 .customer-note-input { width: 100%; margin-bottom: 5px; }
