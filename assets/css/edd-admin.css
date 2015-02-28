@@ -291,6 +291,7 @@ td.edd_order_price { text-align: right; }
 	box-shadow: 0 1px 1px rgba(0,0,0,0.04);
 }
 #edd-customer-card-wrapper .customer-section { border-bottom: 1px solid #eee; margin-bottom: 10px; }
+#edd-customer-card-wrapper .customer-section table { margin-bottom: 20px; }
 #edd-customer-card-wrapper > div { padding: 0px 20px; }
 #edd-customer-card-wrapper > div:first-child { padding-top: 20px; }
 #edd-customer-card-wrapper > div:last-child { padding-bottom: 20px; border: none; }
@@ -316,6 +317,8 @@ td.edd_order_price { text-align: right; }
 #customer-stats-wrapper .dashicons { color: #888; }
 #customer-purchases-wrapper table { width: 100%; text-align: center; }
 #customer-purchases-wrapper th { text-align: center; }
+#customer-downloads-wrapper table { width: 100%; }
+#customer-downloads-wrapper tr > th:last-child, #customer-downloads-wrapper tr > td:last-child { text-align: center; }
 #customer-notes-wrapper { min-height: 50px; }
 .customer-notes-header span, .customer-notes-header img { font-weight: 600; line-height: 30px; vertical-align: middle; }
 .customer-note-input { width: 100%; margin-bottom: 5px; }
