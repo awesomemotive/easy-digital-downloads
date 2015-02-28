@@ -380,18 +380,9 @@ function edd_downloads_query( $atts, $content = null ) {
 
 		}
 
-		$tax_query_key = count( $query['tax_query'] ) - 1;
-
 		if ( $atts['exclude_category'] ) {
 
 			$categories = explode( ',', $atts['exclude_category'] );
-
-			$query['tax_query'][ $tax_query_key ] = array(
-				'relation' => 'AND'
-			);
-
-			// To properly exclude, we need to also include the first query to this meta query
-			$query['tax_query'][ $tax_query_key ][] = $query['tax_query'][0];
 
 			foreach( $categories as $category ) {
 
@@ -410,7 +401,7 @@ function edd_downloads_query( $atts, $content = null ) {
 					$term_id = $term->term_id;
 				}
 
-				$query['tax_query'][ $tax_query_key ][] = array(
+				$query['tax_query'][] = array(
 					'taxonomy' => 'download_category',
 					'field'    => 'term_id',
 					'terms'    => $term_id,
@@ -418,25 +409,11 @@ function edd_downloads_query( $atts, $content = null ) {
 				);
 			}
 
-			// Since we're excluding, we need the overall relation to be AND
-			if ( ! empty( $query['tax_query'][ $tax_query_key ] ) ) {
-				$query['tax_query']['relation'] = 'AND';
-			}
-
 		}
 
 		if ( $atts['exclude_tags'] ) {
 
 			$tag_list = explode( ',', $atts['exclude_tags'] );
-
-			if( empty( $query['tax_query'][ $tax_query_key ] ) ) {
-				$query['tax_query'][ $tax_query_key ] = array(
-					'relation' => 'AND'
-				);
-			}
-
-			// To properly exclude, we need to also include the first query to this meta query
-			$query['tax_query'][ $tax_query_key ][] = $query['tax_query'][0];
 
 			foreach( $tag_list as $tag ) {
 
@@ -455,7 +432,7 @@ function edd_downloads_query( $atts, $content = null ) {
 					$term_id = $term->term_id;
 				}
 
-				$query['tax_query'][ $tax_query_key ][] = array(
+				$query['tax_query'][] = array(
 					'taxonomy' => 'download_tag',
 					'field'    => 'term_id',
 					'terms'    => $term_id,
@@ -464,12 +441,11 @@ function edd_downloads_query( $atts, $content = null ) {
 
 			}
 
-			// Since we're excluding, we need the overall relation to be AND
-			if ( ! empty( $query['tax_query'][ $tax_query_key ] ) ) {
-				$query['tax_query']['relation'] = 'AND';
-			}
-
 		}
+	}
+
+	if ( $atts['exclude_tags'] || $atts['exclude_category'] ) {
+		$query['tax_query']['relation'] = 'AND';
 	}
 
 	if( ! empty( $atts['ids'] ) )
