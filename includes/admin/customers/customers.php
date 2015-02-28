@@ -378,7 +378,7 @@ function edd_customers_view( $customer ) {
 						<tr>
 							<td><?php echo $download->post_title; ?></td>
 							<td>
-								<a title="<?php printf( __( 'View %s', 'edd' ), edd_get_label_singular() ); echo ' ' . $download->post_title; ?>" href="<?php echo admin_url( 'post.php?action=edit&post=' . $download->ID ); ?>">
+								<a title="<?php echo esc_attr( sprintf( __( 'View %s', 'edd' ), $download->post_title ) ); ?>" href="<?php echo esc_url( admin_url( 'post.php?action=edit&post=' . $download->ID ) ); ?>">
 									<?php printf( __( 'View %s', 'edd' ), edd_get_label_singular() ); ?>
 								</a>
 							</td>
