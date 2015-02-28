@@ -317,9 +317,12 @@ function edd_customers_view( $customer ) {
 		</ul>
 	</div>
 
-	<?php do_action( 'edd_customer_before_purchases', $customer ); ?>
+	<?php do_action( 'edd_customer_before_tables_wrapper', $customer ); ?>
 
-	<div id="customer-purchases-wrapper" class="customer-section">
+	<div id="customer-tables-wrapper" class="customer-section">
+
+		<?php do_action( 'edd_customer_before_tables', $customer ); ?>
+
 		<h3><?php _e( 'Recent Payments', 'edd' ); ?></h3>
 		<?php
 			$payment_ids = explode( ',', $customer->payment_ids );
@@ -357,16 +360,12 @@ function edd_customers_view( $customer ) {
 				<?php endif; ?>
 			</tbody>
 		</table>
-	</div>
 
-	<?php do_action( 'edd_customer_before_downloads', $customer ); ?>
-	
-	<div id="customer-downloads-wrapper" class="customer-section">
 		<h3><?php printf( __( 'Purchased %s', 'edd' ), edd_get_label_plural() ); ?></h3>
 		<?php
 			$downloads = edd_get_users_purchased_products( $customer->email );
 		?>
-		<table class="wp-list-table widefat striped">
+		<table class="wp-list-table widefat striped downloads">
 			<thead>
 				<tr>
 					<th><?php echo edd_get_label_singular(); ?></th>
@@ -390,6 +389,9 @@ function edd_customers_view( $customer ) {
 				<?php endif; ?>
 			</tbody>
 		</table>
+
+		<?php do_action( 'edd_customer_after_tables', $customer ); ?>
+
 	</div>
 
 	<?php do_action( 'edd_customer_card_bottom', $customer ); ?>

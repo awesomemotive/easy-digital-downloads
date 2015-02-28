@@ -315,10 +315,9 @@ td.edd_order_price { text-align: right; }
 #customer-stats-wrapper li { width: 50%; float: left; line-height: 22px; font-size: 14px; }
 #customer-stats-wrapper a { text-decoration: none; }
 #customer-stats-wrapper .dashicons { color: #888; }
-#customer-purchases-wrapper table { width: 100%; text-align: center; }
-#customer-purchases-wrapper th { text-align: center; }
-#customer-downloads-wrapper table { width: 100%; }
-#customer-downloads-wrapper tr > th:last-child, #customer-downloads-wrapper tr > td:last-child { text-align: center; }
+#customer-tables-wrapper table { width: 100%; text-align: center; }
+#customer-tables-wrapper th { text-align: center; }
+#customer-tables-wrapper .downloads tr > th:first-child, #customer-tables-wrapper .downloads tr > td:first-child { text-align: left; }
 #customer-notes-wrapper { min-height: 50px; }
 .customer-notes-header span, .customer-notes-header img { font-weight: 600; line-height: 30px; vertical-align: middle; }
 .customer-note-input { width: 100%; margin-bottom: 5px; }
