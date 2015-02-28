@@ -466,10 +466,11 @@ function edd_ajax_download_search() {
 	$sql = $select . $where . $limit;
 
 	if( ! empty( $exclude ) ) {
-		$prepared_statement = $wpdb->prepare( $sql, '%' . $search . '%' . $exclude );
+		$prepared_statement = $wpdb->prepare( $sql, '%' . $search . '%', $exclude );
 	} else {
 		$prepared_statement = $wpdb->prepare( $sql, '%' . $search . '%' );
 	}
+
 
 	$items = $wpdb->get_results( $prepared_statement );
 
