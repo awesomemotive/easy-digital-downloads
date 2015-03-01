@@ -55,7 +55,7 @@ function edd_reports_graph() {
 	if( $dates['range'] == 'today' || $dates['range'] == 'yesterday' ) {
 		// Hour by hour
 		$hour  = 1;
-		$month = date( 'n', current_time( 'timestamp' ) );
+		$month = $dates['m_start'];
 		while ( $hour <= 23 ) :
 
 			$sales    = edd_get_sales_by_date( $dates['day'], $month, $dates['year'], $hour );
@@ -270,8 +270,9 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 	$stats         = new EDD_Payment_Stats;
 
 	if( $dates['range'] == 'today' || $dates['range'] == 'yesterday' ) {
+
 		// Hour by hour
-		$month  = date( 'n', current_time( 'timestamp' ) );
+		$month  = $dates['m_start'];
 		$hour   = 1;
 		$minute = 0;
 		$second = 0;
@@ -593,10 +594,11 @@ function edd_get_report_dates() {
 			}
 
 			$dates['day']       = $day;
-			$dates['day_end']   = $day;
 			$dates['m_start']   = $month;
 			$dates['m_end']     = $month;
 			$dates['year']      = $year;
+			$dates['year_end']      = $year;
+			//print_r( $dates ); exit;
 		break;
 
 		case 'this_week' :
