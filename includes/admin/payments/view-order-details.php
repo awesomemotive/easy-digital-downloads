@@ -326,6 +326,7 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 											</li>
 
 											<li class="actions">
+												<input type="hidden" class="edd-payment-details-download-has-log" name="edd-payment-details-downloads[<?php echo $key; ?>][has_log]" value="1" />
 												<?php if( edd_get_download_files( $item_id, $price_id ) && edd_is_payment_complete( $payment_id ) ) : ?>
 													<a href="" class="edd-copy-download-link" data-download-id="<?php echo esc_attr( $item_id ); ?>" data-price-id="<?php echo esc_attr( $price_id ); ?>"><?php _e( 'Copy Download Link(s)', 'edd' ); ?></a> |
 												<?php endif; ?>
@@ -368,7 +369,8 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 
 										</ul>
 
-										<input type="hidden" name="edd-payment-downloads-changed" id="edd-payment-downloads-changed" value=""/>
+										<input type="hidden" name="edd-payment-downloads-changed" id="edd-payment-downloads-changed" value="" />
+										<input type="hidden" name="edd-payment-removed" id="edd-payment-removed" value="{}" />
 
 									</div><!-- /.inside -->
 								<?php else : $key = 0; ?>

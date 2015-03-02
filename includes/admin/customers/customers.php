@@ -181,7 +181,7 @@ function edd_customers_view( $customer ) {
 				</div>
 
 				<div class="customer-address-wrapper right">
-				<?php if ( isset( $customer->user_id ) && ! empty( $customer->user_id ) ) : ?>
+				<?php if ( isset( $customer->user_id ) && $customer->user_id > 0 ) : ?>
 
 					<?php
 						$address = get_user_meta( $customer->user_id, '_edd_user_address', true );
@@ -245,53 +245,53 @@ function edd_customers_view( $customer ) {
 				<?php endif; ?>
 				</div>
 
-				<span class="customer-name info-item edit-item"><input size="15" data-key="name" name="customerinfo[name]" type="text" value="<?php echo $customer->name; ?>" placeholder="<?php _e( 'Customer Name', 'edd' ); ?>" /></span>
-				<span class="customer-name info-item editable"><span data-key="name"><?php echo $customer->name; ?></span></span>
-				<span class="customer-name info-item edit-item"><input size="20" data-key="email" name="customerinfo[email]" type="text" value="<?php echo $customer->email; ?>" placeholder="<?php _e( 'Customer Email', 'edd' ); ?>" /></span>
-				<span class="customer-email info-item editable" data-key="email"><?php echo $customer->email; ?></span>
-				<span class="customer-since info-item">
-					<?php _e( 'Customer since', 'edd' ); ?>
-					<?php echo date_i18n( get_option( 'date_format' ), strtotime( $customer->date_created ) ) ?>
-				</span>
-				<span class="customer-user-id info-item edit-item">
-					<?php
-					$customers = EDD()->customers->get_customers( array( 'number' => -1 ) );
-					foreach ( $customers as $key => $customer_search ) {
-						if ( $customer_search->id == $customer->id ) {
-							unset( $customers[$key] );
-							break;
+				<div class="customer-main-wrapper left">
+
+					<span class="customer-name info-item edit-item"><input size="15" data-key="name" name="customerinfo[name]" type="text" value="<?php echo $customer->name; ?>" placeholder="<?php _e( 'Customer Name', 'edd' ); ?>" /></span>
+					<span class="customer-name info-item editable"><span data-key="name"><?php echo $customer->name; ?></span></span>
+					<span class="customer-name info-item edit-item"><input size="20" data-key="email" name="customerinfo[email]" type="text" value="<?php echo $customer->email; ?>" placeholder="<?php _e( 'Customer Email', 'edd' ); ?>" /></span>
+					<span class="customer-email info-item editable" data-key="email"><?php echo $customer->email; ?></span>
+					<span class="customer-since info-item">
+						<?php _e( 'Customer since', 'edd' ); ?>
+						<?php echo date_i18n( get_option( 'date_format' ), strtotime( $customer->date_created ) ) ?>
+					</span>
+					<span class="customer-user-id info-item edit-item">
+						<?php
+
+						$user_id    = $customer->user_id > 0 ? $customer->user_id : '';
+						$data_atts  = array( 'key' => 'user_login', 'exclude' => $user_id );
+						$user_args  = array(
+							'name'  => 'customerinfo[user_login]',
+							'class' => 'edd-user-dropdown',
+							'data'  => $data_atts,
+						);
+
+						if( ! empty( $user_id ) ) {
+							$userdata = get_userdata( $user_id );
+							$user_args['value'] = $userdata->user_login;
 						}
-					}
-					$user_ids  = wp_list_pluck( $customers, 'user_id' );
-					$user_dropdown_args = array(
-						'name'                    => 'customerinfo[user_id]',
-						'selected'                =>  $customer->user_id,
-						'include_selected'        => true,
-						'echo'                    => '0',
-						'show_option_none'        => __( 'None', 'edd' ),
-						'class'                   => 'edd-user-dropdown',
-						'exclude'                 => $user_ids,
-						'hide_if_only_one_author' => false
-					);
-					$users_dropdown = wp_dropdown_users( $user_dropdown_args );
-					$find           = array( 'class=\'edd-user-dropdown\'', 'value=\'-1\'' );
-					$replace        = array( 'data-key=\'user_id\' class=\'edd-user-dropdown\'', 'value=\'0\'' );
-					$users_dropdown = str_replace( $find, $replace, $users_dropdown );
 
-					echo $users_dropdown;
-					?>
-				</span>
+						echo EDD()->html->ajax_user_search( $user_args );
+						?>
+						<input type="hidden" name="customerinfo[user_id]" data-key="user_id" value="<?php echo $customer->user_id; ?>" />
+					</span>
 
-				<span class="customer-user-id info-item editable">
-					<?php _e( 'User ID', 'edd' ); ?>:&nbsp;
-					<span data-key="user_id"><?php echo $customer->user_id; ?></span>
-				</span>
+					<span class="customer-user-id info-item editable">
+						<?php _e( 'User ID', 'edd' ); ?>:&nbsp;
+						<span data-key="user_id"><?php echo $customer->user_id; ?></span>
+						<?php if ( current_user_can( $customer_edit_role ) && intval( $customer->user_id ) > 0 ): ?>
+							<span class="disconnect-user"> - <a id="disconnect-customer" href="#disconnect" title="<?php _e( 'Disconnects the current user ID from this customer record', 'edd' ); ?>"><?php _e( 'Disconnect User', 'edd' ); ?></a></span>
+						<?php endif; ?>
+					</span>
+
+				</div>
 
 			</div>
 
 			<span id="customer-edit-actions" class="edit-item">
 				<input type="hidden" data-key="id" name="customerinfo[id]" value="<?php echo $customer->id; ?>" />
 				<?php wp_nonce_field( 'edit-customer', '_wpnonce', false, true ); ?>
+				<input type="hidden" name="edd_action" value="edit-customer" />
 				<input type="submit" id="edd-edit-customer-save" class="button-secondary" value="<?php _e( 'Update Customer', 'edd' ); ?>" />
 				<a id="edd-edit-customer-cancel" href="" class="delete"><?php _e( 'Cancel', 'edd' ); ?></a>
 			</span>
@@ -317,9 +317,12 @@ function edd_customers_view( $customer ) {
 		</ul>
 	</div>
 
-	<?php do_action( 'edd_customer_before_purchases', $customer ); ?>
+	<?php do_action( 'edd_customer_before_tables_wrapper', $customer ); ?>
 
-	<div id="customer-purchases-wrapper" class="customer-section">
+	<div id="customer-tables-wrapper" class="customer-section">
+
+		<?php do_action( 'edd_customer_before_tables', $customer ); ?>
+
 		<h3><?php _e( 'Recent Payments', 'edd' ); ?></h3>
 		<?php
 			$payment_ids = explode( ',', $customer->payment_ids );
@@ -357,6 +360,38 @@ function edd_customers_view( $customer ) {
 				<?php endif; ?>
 			</tbody>
 		</table>
+
+		<h3><?php printf( __( 'Purchased %s', 'edd' ), edd_get_label_plural() ); ?></h3>
+		<?php
+			$downloads = edd_get_users_purchased_products( $customer->email );
+		?>
+		<table class="wp-list-table widefat striped downloads">
+			<thead>
+				<tr>
+					<th><?php echo edd_get_label_singular(); ?></th>
+					<th width="120px"><?php _e( 'Actions', 'edd' ); ?></th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php if ( ! empty( $downloads ) ) : ?>
+					<?php foreach ( $downloads as $download ) : ?>
+						<tr>
+							<td><?php echo $download->post_title; ?></td>
+							<td>
+								<a title="<?php echo esc_attr( sprintf( __( 'View %s', 'edd' ), $download->post_title ) ); ?>" href="<?php echo esc_url( admin_url( 'post.php?action=edit&post=' . $download->ID ) ); ?>">
+									<?php printf( __( 'View %s', 'edd' ), edd_get_label_singular() ); ?>
+								</a>
+							</td>
+						</tr>
+					<?php endforeach; ?>
+				<?php else: ?>
+					<tr><td colspan="2"><?php printf( __( 'No %s Found', 'edd' ), edd_get_label_plural() ); ?></td></tr>
+				<?php endif; ?>
+			</tbody>
+		</table>
+
+		<?php do_action( 'edd_customer_after_tables', $customer ); ?>
+
 	</div>
 
 	<?php do_action( 'edd_customer_card_bottom', $customer ); ?>

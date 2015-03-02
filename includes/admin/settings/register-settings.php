@@ -29,6 +29,87 @@ function edd_get_option( $key = '', $default = false ) {
 }
 
 /**
+ * Update an option
+ *
+ * Updates an edd setting value in both the db and the global variable.
+ * Warning: Passing in an empty, false or null string value will remove
+ *          the key from the edd_options array.
+ *
+ * @since 2.3
+ * @param string $key The Key to update
+ * @param string|bool|int $value The value to set the key to
+ * @return boolean True if updated, false if not.
+ */
+function edd_update_option( $key = '', $value = false ) {
+
+	// If no key, exit
+	if ( empty( $key ) ){
+		return false;
+	}
+
+	if ( empty( $value ) ) {
+		$remove_option = edd_delete_option( $key );
+		return $remove_option;
+	}
+
+	// First let's grab the current settings
+	$options = get_option( 'edd_settings' );
+
+	// Let's let devs alter that value coming in
+	$value = apply_filters( 'edd_update_option', $value, $key );
+
+	// Next let's try to update the value
+	$options[ $key ] = $value;
+	$did_update = update_option( 'edd_settings', $options );
+
+	// If it updated, let's update the global variable
+	if ( $did_update ){
+		global $edd_options;
+		$edd_options[ $key ] = $value;
+
+	}
+
+	return $did_update;
+}
+
+/**
+ * Remove an option
+ *
+ * Removes an edd setting value in both the db and the global variable.
+ *
+ * @since 2.3
+ * @param string $key The Key to delete
+ * @return boolean True if updated, false if not.
+ */
+function edd_delete_option( $key = '' ) {
+
+	// If no key, exit
+	if ( empty( $key ) ){
+		return false;
+	}
+
+	// First let's grab the current settings
+	$options = get_option( 'edd_settings' );
+
+	// Next let's try to update the value
+	if( isset( $options[ $key ] ) ) {
+
+		unset( $options[ $key ] );
+
+	}
+
+	$did_update = update_option( 'edd_settings', $options );
+
+	// If it updated, let's update the global variable
+	if ( $did_update ){
+		global $edd_options;
+		$edd_options = $options;
+	}
+
+	return $did_update;
+}
+
+/**
  * Get Settings
  *
  * Retrieves all plugin settings
@@ -945,17 +1026,17 @@ function edd_payment_icons_callback( $args ) {
 
 	if ( ! empty( $args['options'] ) ) {
 		foreach( $args['options'] as $key => $option ) {
-			
-			if( isset( $edd_options[$args['id']][$key] ) ) { 
+
+			if( isset( $edd_options[$args['id']][$key] ) ) {
 				$enabled = $option;
 			} else {
-				$enabled = NULL; 
+				$enabled = NULL;
 			}
-			
-			echo '<label for="edd_settings[' . $args['id'] . '][' . $key . ']" style="margin-right:10px;line-height:16px;height:16px;display:inline-block;">'; 
-			
+
+			echo '<label for="edd_settings[' . $args['id'] . '][' . $key . ']" style="margin-right:10px;line-height:16px;height:16px;display:inline-block;">';
+
 				echo '<input name="edd_settings[' . $args['id'] . '][' . $key . ']" id="edd_settings[' . $args['id'] . '][' . $key . ']" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked( $option, $enabled, false ) . '/>&nbsp;';
-				
+
 				if( edd_string_is_image_url( $key ) ) {
 
 					echo '<img class="payment-icon" src="' . esc_url( $key ) . '" style="width:32px;height:24px;position:relative;top:6px;margin-right:5px;"/>';
@@ -990,7 +1071,7 @@ function edd_payment_icons_callback( $args ) {
 
 
 			echo $option . '</label>';
-		
+
 		}
 		echo '<p class="description" style="margin-top:16px;">' . $args['desc'] . '</p>';
 	}
@@ -1109,7 +1190,7 @@ function edd_text_callback( $args ) {
  */
 function edd_number_callback( $args ) {
 	global $edd_options;
-    
+
     if ( isset( $edd_options[ $args['id'] ] ) )
 		$value = $edd_options[ $args['id'] ];
 	else

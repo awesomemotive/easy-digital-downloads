@@ -322,7 +322,6 @@ class Test_Cart extends WP_UnitTestCase {
 
 	public function test_is_cart_saved() {
 
-		global $edd_options;
 
 		// Test for no saved cart
 		$this->assertFalse( edd_is_cart_saved() );
@@ -338,8 +337,8 @@ class Test_Cart extends WP_UnitTestCase {
 			)
 		);
 		update_user_meta( get_current_user_id(), 'edd_saved_cart', $cart );
-		$edd_options['enable_cart_saving'] = '1';
-		update_option( 'edd_settings', $edd_options );
+		
+		edd_update_option( 'enable_cart_saving', '1' );
 
 		$this->assertTrue( edd_is_cart_saved() );
 	}

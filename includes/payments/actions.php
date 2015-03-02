@@ -270,3 +270,63 @@ function edd_mark_abandoned_orders() {
 	}
 }
 add_action( 'edd_weekly_scheduled_events', 'edd_mark_abandoned_orders' );
+
+/**
+ * Listens to the updated_postmeta hook for our backwards compatible payment_meta updates, and runs through them
+ *
+ * @since  2.3
+ * @param  int $meta_id    The Meta ID that was updated
+ * @param  int $object_id  The Object ID that was updated (post ID)
+ * @param  string $meta_key   The Meta key that was updated
+ * @param  string|int|float $meta_value The Value being updated
+ * @return bool|int             If successful the number of rows updated, if it fails, false
+ */
+function edd_update_payment_backwards_compat( $meta_id, $object_id, $meta_key, $meta_value ) {
+
+	$meta_keys = array( '_edd_payment_meta', '_edd_payment_tax' );
+
+	if ( ! in_array( $meta_key, $meta_keys ) ) {
+		return;
+	}
+
+	global $wpdb;
+	switch( $meta_key ) {
+
+		case '_edd_payment_meta':
+			$meta_value   = maybe_unserialize( $meta_value );
+			$tax_value    = ! empty( $meta_value['tax'] ) ? $meta_value['tax'] : 0;
+
+			$data         = array( 'meta_value' => $tax_value );
+			$where        = array( 'post_id'  => $object_id, 'meta_key' => '_edd_payment_tax' );
+			$data_format  = array( '%f' );
+			$where_format = array( '%d', '%s' );
+			break;
+
+		case '_edd_payment_tax':
+			$tax_value    = ! empty( $meta_value ) ? $meta_value : 0;
+			$current_meta = edd_get_payment_meta( $object_id, '_edd_payment_meta', true );
+
+			$current_meta['tax'] = $tax_value;
+			$new_meta            = maybe_serialize( $current_meta );
+
+			$data         = array( 'meta_value' => $new_meta );
+			$where        = array( 'post_id' => $object_id, 'meta_key' => '_edd_payment_meta' );
+			$data_format  = array( '%s' );
+			$where_format = array( '%d', '%s' );
+
+			break;
+
+	}
+
+	$updated = $wpdb->update( $wpdb->postmeta, $data, $where, $data_format, $where_format );
+
+	if ( ! empty( $updated ) ) {
+		// Since we did a direct DB query, clear the postmeta cache.
+		wp_cache_delete( $object_id, 'post_meta' );
+	}
+
+	return $updated;
+
+
+}
+add_action( 'updated_postmeta', 'edd_update_payment_backwards_compat', 10, 4 );

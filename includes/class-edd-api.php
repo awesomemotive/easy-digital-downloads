@@ -524,13 +524,33 @@ class EDD_API {
 				break;
 
 				case 'yesterday' :
-					$month              = date( 'n', $current_time ) == 1 && date( 'd', $current_time ) == 1 ? 12 : date( 'n', $current_time );
-					$days_in_month      = cal_days_in_month( CAL_GREGORIAN, $month, date( 'Y', $current_time ) );
-					$yesterday          = date( 'd', $current_time ) == 1 ? $days_in_month : date( 'd', $current_time ) - 1;
-					$dates['day']       = $yesterday;
+
+					$year               = date( 'Y', $current_time );
+					$month              = date( 'n', $current_time );
+					$day                = date( 'd', $current_time );
+					
+					if ( $month == 1 && $day == 1 ) {
+
+						$year -= 1;
+						$month = 12;
+						$day   = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+
+					} elseif ( $month > 1 && $day == 1 ) {
+
+						$month -= 1;
+						$day   = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+
+					} else {
+
+						$day -= 1;
+
+					}
+
+					$dates['day']       = $day;
 					$dates['m_start']   = $month;
 					$dates['m_end']     = $month;
-					$dates['year']      = date( 'n', $current_time ) == 1 && date( 'd', $current_time ) == 1 ? date( 'Y', $current_time ) - 1 : date( 'Y', $current_time );
+					$dates['year']      = $year;
+
 				break;
 
 				case 'this_quarter' :
@@ -854,8 +874,12 @@ class EDD_API {
 		$dates = $this->get_dates( $args );
 
 		$stats    = array();
-		$earnings = array();
-		$sales    = array();
+		$earnings = array(
+			'earnings' => array()
+		);
+		$sales    = array(
+			'sales' => array()
+		);
 		$error    = array();
 
 		if( ! user_can( $this->user_id, 'view_shop_reports' ) && ! $this->override ) {
@@ -902,19 +926,25 @@ class EDD_API {
 						$i = $month_start;
 						while ( $i <= $month_end ) :
 
-							if( $i == $dates['m_start'] )
+							if( $i == $dates['m_start'] ) {
 								$d = $dates['day_start'];
-							else
+							} else {
 								$d = 1;
+							}
 
-							if( $i == $dates['m_end'] )
+							if( $i == $dates['m_end'] ) {
 								$num_of_days = $dates['day_end'];
-							else
+							} else {
 								$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $y );
+							}
 
 							while ( $d <= $num_of_days ) :
 								$sale_count = edd_get_sales_by_date( $d, $i, $y );
-								$sales['sales'][ date( 'Ymd', strtotime( $y . '/' . $i . '/' . $d ) ) ] += $sale_count;
+								$date_key   = date( 'Ymd', strtotime( $y . '/' . $i . '/' . $d ) );
+								if ( ! isset( $sales[ 'sales' ][ $date_key ] ) ) {
+									$sales[ 'sales' ][ $date_key ] = 0;
+								}
+								$sales['sales'][ $date_key ] += $sale_count;
 								$total += $sale_count;
 								$d++;
 							endwhile;
@@ -983,6 +1013,9 @@ class EDD_API {
 
 					// Loop through the years
 					$y = $dates['year'];
+					if ( ! isset( $earnings[ 'earnings' ] ) ) {
+						$earnings[ 'earnings' ] = array();
+					}
 					while( $y <= $dates['year_end'] ) :
 
 						if( $dates['year'] == $dates['year_end'] ) {
@@ -1007,14 +1040,19 @@ class EDD_API {
 							else
 								$d = 1;
 
-							if( $i == $dates['m_end'] )
+							if( $i == $dates['m_end'] ) {
 								$num_of_days = $dates['day_end'];
-							else
+							} else {
 								$num_of_days = cal_days_in_month( CAL_GREGORIAN, $i, $y );
+							}
 
 							while ( $d <= $num_of_days ) :
 								$earnings_stat = edd_get_earnings_by_date( $d, $i, $y );
-								$earnings['earnings'][ date( 'Ymd', strtotime( $y . '/' . $i . '/' . $d ) ) ] += $earnings_stat;
+								$date_key = date( 'Ymd', strtotime( $y . '/' . $i . '/' . $d ) );
+								if ( ! isset( $earnings[ 'earnings' ][ $date_key ] ) ) {
+									$earnings[ 'earnings' ][ $date_key ] = 0;
+								}
+								$earnings['earnings'][ $date_key ] += $earnings_stat;
 								$total += $earnings_stat;
 								$d++;
 							endwhile;
