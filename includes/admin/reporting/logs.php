@@ -21,6 +21,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return void
  */
 function edd_logs_view_sales() {
+
+	if( ! current_user_can( 'view_shop_reports' ) ) {
+		return;
+	}
+
 	include( dirname( __FILE__ ) . '/class-sales-logs-list-table.php' );
 
 	$logs_table = new EDD_Sales_Log_Table();
@@ -40,6 +45,11 @@ add_action( 'edd_logs_view_sales', 'edd_logs_view_sales' );
  * @return void
  */
 function edd_logs_view_file_downloads() {
+
+	if( ! current_user_can( 'view_shop_reports' ) ) {
+		return;
+	}
+
 	include( dirname( __FILE__ ) . '/class-file-downloads-logs-list-table.php' );
 
 	$logs_table = new EDD_File_Downloads_Log_Table();
@@ -71,6 +81,11 @@ add_action( 'edd_logs_view_file_downloads', 'edd_logs_view_file_downloads' );
  * @return void
  */
 function edd_logs_view_gateway_errors() {
+
+	if( ! current_user_can( 'view_shop_reports' ) ) {
+		return;
+	}
+
 	include( dirname( __FILE__ ) . '/class-gateway-error-logs-list-table.php' );
 
 	$logs_table = new EDD_Gateway_Error_Log_Table();
@@ -90,6 +105,11 @@ add_action( 'edd_logs_view_gateway_errors', 'edd_logs_view_gateway_errors' );
  */
 
 function edd_logs_view_api_requests() {
+
+	if( ! current_user_can( 'view_shop_reports' ) ) {
+		return;
+	}
+	
 	include( dirname( __FILE__ ) . '/class-api-requests-logs-list-table.php' );
 
 	$logs_table = new EDD_API_Request_Log_Table();

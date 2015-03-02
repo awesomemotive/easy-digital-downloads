@@ -253,7 +253,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 			foreach ( $customers as $customer ) {
 
-				$user_id = ! empty( $customer->user_id ) ? absint( $customer->user_id ) : 0;
+				$user_id = ! empty( $customer->user_id ) ? intval( $customer->user_id ) : 0;
 
 				$data[] = array(
 					'id'            => $customer->id,

@@ -11,7 +11,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return array $output Response messages
  */
 function edd_edit_customer( $args ) {
-
 	$customer_edit_role = apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
 
 	if ( ! is_admin() || ! current_user_can( $customer_edit_role ) ) {
@@ -36,18 +35,34 @@ function edd_edit_customer( $args ) {
 	}
 
 	$defaults = array(
-		'line1'   => '',
-		'line2'   => '',
-		'city'    => '',
-		'country' => '',
-		'zip'     => '',
-		'state'   => '',
 		'name'    => '',
 		'email'   => '',
 		'user_id' => 0
 	);
 
 	$customer_info = wp_parse_args( $customer_info, $defaults );
+
+	if ( intval( $customer_info['user_id'] ) > 0 ) {
+
+		$current_address = get_user_meta( $customer_info['user_id'], '_edd_user_address', true );
+
+		if ( false === $current_address ) {
+			$customer_info['line1']   = isset( $customer_info['line1'] )   ? $customer_info['line1']   : '';
+			$customer_info['line2']   = isset( $customer_info['line2'] )   ? $customer_info['line2']   : '';
+			$customer_info['city']    = isset( $customer_info['city'] )    ? $customer_info['city']    : '';
+			$customer_info['country'] = isset( $customer_info['country'] ) ? $customer_info['country'] : '';
+			$customer_info['zip']     = isset( $customer_info['zip'] )     ? $customer_info['zip']     : '';
+			$customer_info['state']   = isset( $customer_info['state'] )   ? $customer_info['state']   : '';
+		} else {
+			$customer_info['line1']   = ! empty( $customer_info['line1'] )   ? $customer_info['line1']   : $current_address['line1']  ;
+			$customer_info['line2']   = ! empty( $customer_info['line2'] )   ? $customer_info['line2']   : $current_address['line2']  ;
+			$customer_info['city']    = ! empty( $customer_info['city'] )    ? $customer_info['city']    : $current_address['city']   ;
+			$customer_info['country'] = ! empty( $customer_info['country'] ) ? $customer_info['country'] : $current_address['country'];
+			$customer_info['zip']     = ! empty( $customer_info['zip'] )     ? $customer_info['zip']     : $current_address['zip']    ;
+			$customer_info['state']   = ! empty( $customer_info['state'] )   ? $customer_info['state']   : $current_address['state']  ;
+		}
+
+	}
 
 	// Sanitize the inputs
 	$address                  = array();
@@ -102,7 +117,7 @@ function edd_edit_customer( $args ) {
 
 	if ( $customer->update( $customer_data ) ) {
 
-		if ( ! empty( $customer->user_id ) ) {
+		if ( ! empty( $customer->user_id ) && $customer->user_id > 0 ) {
 			update_user_meta( $customer->user_id, '_edd_user_address', $address );
 		}
 
@@ -210,3 +225,66 @@ function edd_customer_save_note( $args ) {
 
 }
 add_action( 'edd_add-customer-note', 'edd_customer_save_note', 10, 1 );
+
+/**
+ * Disconnect a user ID from a customer
+ *
+ * @since  2.3
+ * @param  array $args Array of arguements
+ * @return bool        If the disconnect was sucessful
+ */
+function edd_disconnect_customer_user_id( $args ) {
+
+	$customer_edit_role = apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
+
+	if ( ! is_admin() || ! current_user_can( $customer_edit_role ) ) {
+		wp_die( __( 'You do not have permission to edit this customer.', 'edd' ) );
+	}
+
+	if ( empty( $args ) ) {
+		return;
+	}
+
+	$customer_id   = (int)$args['customer_id'];
+	$nonce         = $args['_wpnonce'];
+
+	if ( ! wp_verify_nonce( $nonce, 'edit-customer' ) ) {
+		wp_die( __( 'Cheatin\' eh?!', 'edd' ) );
+	}
+
+	$customer = new EDD_Customer( $customer_id );
+	if ( empty( $customer->id ) ) {
+		return false;
+	}
+
+	do_action( 'edd_pre_customer_disconnect_user_id', $customer_id, $customer->user_id );
+
+	$customer_args = array( 'user_id' => 0 );
+
+	if ( $customer->update( $customer_args ) ) {
+		global $wpdb;
+
+		if ( ! empty( $customer->payment_ids ) ) {
+			$wpdb->query( "UPDATE $wpdb->postmeta SET meta_value = 0 WHERE meta_key = '_edd_payment_user_id' AND post_id IN ( $customer->payment_ids )" );
+		}
+
+		$output['success'] = true;
+
+	} else {
+
+		$output['success'] = false;
+		edd_set_error( 'edd-disconnect-user-fail', __( 'Failed to disconnect user from customer', 'edd' ) );
+	}
+
+	do_action( 'edd_post_customer_disconnect_user_id', $customer_id );
+
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		header( 'Content-Type: application/json' );
+		echo json_encode( $output );
+		wp_die();
+	}
+
+	return $output;
+
+}
+add_action( 'edd_disconnect-userid', 'edd_disconnect_customer_user_id', 10, 1 );

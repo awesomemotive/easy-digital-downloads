@@ -13,8 +13,6 @@ class Tests_Taxes extends WP_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		global $edd_options;
-
 		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
 
 		$meta = array(
@@ -82,14 +80,14 @@ class Tests_Taxes extends WP_UnitTestCase {
 		$this->_payment_id = $payment_id;
 
 		// Setup global tax rate
-		$edd_options['enable_taxes'] = '1';
-		$edd_options['tax_rate']     = '3.6';
+
+		edd_update_option( 'enable_taxes', true );
+		edd_update_option( 'tax_rate', '3.6' );
 
 		// Setup country / state tax rates
 		$tax_rates   = array();
 		$tax_rates[] = array( 'country' => 'US', 'state' => 'AL', 'rate' => 15 );
 
-		update_option( 'edd_options', $edd_options );
 		update_option( 'edd_tax_rates', $tax_rates );
 	}
 

@@ -827,10 +827,6 @@ function edd_v23_upgrade_payment_taxes() {
 			$payment_tax = edd_get_payment_tax( $payment_id );
 			edd_update_payment_meta( $payment_id, '_edd_payment_tax', $payment_tax );
 
-			// Remove the 'tax' item from the _edd_payment_meta array
-			$payment_meta = edd_get_payment_meta( $payment_id, '_edd_payment_meta', true );
-			unset( $payment_meta['tax'] );
-			edd_update_payment_meta( $payment_id, '_edd_payment_meta', $payment_meta );
 		}
 
 		// Payments found so upgrade them

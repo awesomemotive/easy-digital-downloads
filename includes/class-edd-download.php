@@ -421,11 +421,11 @@ class EDD_Download {
 
 		if( ! isset( $this->bundled_downloads ) ) {
 
-			$this->bundled_downloads = get_post_meta( $this->ID, '_edd_bundled_products', true );
+			$this->bundled_downloads = (array) get_post_meta( $this->ID, '_edd_bundled_products', true );
 
 		}
 
-		return (array) apply_filters( 'edd_get_bundled_products', $this->bundled_downloads, $this->ID );
+		return (array) apply_filters( 'edd_get_bundled_products', array_filter( $this->bundled_downloads ), $this->ID );
 
 	}
 
@@ -481,7 +481,7 @@ class EDD_Download {
 
 			$this->button_behavior = get_post_meta( $this->ID, '_edd_button_behavior', true );
 
-			if( empty( $this->button_behavior ) ) {
+			if( empty( $this->button_behavior ) || ! edd_shop_supports_buy_now() ) {
 
 				$this->button_behavior = 'add_to_cart';
 
