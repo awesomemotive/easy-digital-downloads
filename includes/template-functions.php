@@ -668,18 +668,68 @@ function edd_add_schema_microdata() {
  * @return string $title New title
  */
 function edd_microdata_title( $title, $id = 0 ) {
+	global $post;
 
 	if( ! edd_add_schema_microdata() ) {
 		return $title;
 	}
 
-	if ( is_singular( 'download' ) && 'download' == get_post_type( intval( $id ) ) ) {
+	if ( $post->ID == $id && is_singular( 'download' ) && 'download' == get_post_type( intval( $id ) ) ) {
 		$title = '<span itemprop="name">' . $title . '</span>';
 	}
 
 	return $title;
 }
 add_filter( 'the_title', 'edd_microdata_title', 10, 2 );
+
+/**
+ * Start Microdata to wrapper download
+ *
+ * @since 2.3
+ * @author Chris Klosowski
+ *
+ * @return void
+ */
+function edd_microdata_wrapper_open() {
+	global $post;
+
+	static $microdata_open = NULL;
+
+	if( ! edd_add_schema_microdata() || true === $microdata_open ) {
+		return;
+	}
+
+	if ( $post && $post->post_type == 'download' && is_singular() && is_main_query() ) {
+		$microdata_open = true;
+		echo '<span itemscope itemtype="http://schema.org/Product">';
+	}
+
+}
+add_action( 'loop_start', 'edd_microdata_wrapper_open', 10 );
+
+/**
+ * End Microdata to wrapper download
+ *
+ * @since 2.3
+ * @author Chris Klosowski
+ *
+ * @return void
+ */
+function edd_microdata_wrapper_close() {
+	global $post;
+
+	static $microdata_close = NULL;
+
+	if( ! edd_add_schema_microdata() || true === $microdata_close ) {
+		return;
+	}
+
+	if ( $post && $post->post_type == 'download' && is_singular() && is_main_query() ) {
+		$microdata_close = true;
+		echo '</span>';
+	}
+}
+add_action( 'loop_end', 'edd_microdata_wrapper_close', 10 );
 
 /**
  * Add Microdata to download description
@@ -690,19 +740,22 @@ add_filter( 'the_title', 'edd_microdata_title', 10, 2 );
  * @param $content
  * @return mixed|void New title
  */
-function edd_microdata_wrapper( $content ) {
+function edd_microdata_description( $content ) {
 	global $post;
 
-	if( ! edd_add_schema_microdata() ) {
+	static $microdata_description = NULL;
+
+	if( ! edd_add_schema_microdata() || true === $microdata_description ) {
 		return $content;
 	}
 
 	if ( $post && $post->post_type == 'download' && is_singular() && is_main_query() ) {
-		$content = apply_filters( 'edd_microdata_wrapper', '<div itemscope itemtype="http://schema.org/Product" itemprop="description">' . $content . '</div>' );
+		$microdata_description = true;
+		$content = apply_filters( 'edd_microdata_wrapper', '<div itemprop="description">' . $content . '</div>' );
 	}
 	return $content;
 }
-add_filter( 'the_content', 'edd_microdata_wrapper', 10 );
+add_filter( 'the_content', 'edd_microdata_description', 10 );
 
 /**
  * Add no-index and no-follow to EDD checkout and purchase confirmation pages
