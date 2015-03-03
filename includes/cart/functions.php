@@ -154,12 +154,17 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		$quantity = 1;
 	}
 
+	// If the price IDs are a string and is a coma separted list, make it an array (allows custom add to cart URLs)
+	if ( isset( $options['price_id'] ) && ! is_array( $options['price_id'] ) && false !== strpos( $options['price_id'], ',' ) ) {
+		$options['price_id'] = explode( ',', $options['price_id'] );
+	}
+
 	if ( isset( $options['price_id'] ) && is_array( $options['price_id'] ) ) {
 
 		// Process multiple price options at once
 		foreach ( $options['price_id'] as $price ) {
 
-			$item = array(
+			$items[] = array(
 				'id'           => $download_id,
 				'options'      => array(
 					'price_id' => preg_replace( '/[^0-9\.-]/', '', $price )
@@ -181,31 +186,32 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		}
 
 		// Add a single item
-		$item = array(
+		$items[] = array(
 			'id'       => $download_id,
 			'options'  => $options,
 			'quantity' => $quantity
 		);
 	}
 
-	$to_add = apply_filters( 'edd_add_to_cart_item', $item );
-	if ( ! is_array( $to_add ) )
-		return;
+	foreach ( $items as $item ) {
+		$to_add = apply_filters( 'edd_add_to_cart_item', $item );
+		if ( ! is_array( $to_add ) )
+			return;
 
-	if ( ! isset( $to_add['id'] ) || empty( $to_add['id'] ) )
-		return;
+		if ( ! isset( $to_add['id'] ) || empty( $to_add['id'] ) )
+			return;
 
-	if( edd_item_in_cart( $to_add['id'], $to_add['options'] ) && edd_item_quantities_enabled() ) {
+		if( edd_item_in_cart( $to_add['id'], $to_add['options'] ) && edd_item_quantities_enabled() ) {
 
-		$key = edd_get_item_position_in_cart( $to_add['id'], $to_add['options'] );
-		$cart[ $key ]['quantity'] += $quantity;
+			$key = edd_get_item_position_in_cart( $to_add['id'], $to_add['options'] );
+			$cart[ $key ]['quantity'] += $quantity;
 
-	} else {
+		} else {
 
-		$cart[] = $to_add;
+			$cart[] = $to_add;
 
+		}
 	}
-
 
 	EDD()->session->set( 'edd_cart', $cart );
 
@@ -316,7 +322,7 @@ function edd_get_item_position_in_cart( $download_id = 0, $options = array() ) {
  * @return bool
  */
 function edd_item_quantities_enabled() {
-	$ret = edd_get_option( 'item_quantities', false );	
+	$ret = edd_get_option( 'item_quantities', false );
 	return (bool) apply_filters( 'edd_item_quantities_enabled', $ret );
 }
 
