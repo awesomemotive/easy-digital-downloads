@@ -477,7 +477,7 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 															'selected'         => $address['country'],
 															'show_option_all'  => false,
                                                             'show_option_none' => false,
-                                                            'select2'          => true,
+                                                            'chosen'           => true,
                                                             'placeholder' => __( 'Select a country', 'edd' )
 														) );
 														?>
@@ -493,7 +493,7 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 																'selected'         => $address['state'],
 																'show_option_all'  => false,
                                                                 'show_option_none' => false,
-                                                                'select2'          => true,
+                                                                'chosen'           => true,
                                                                 'placeholder' => __( 'Select a state', 'edd' )
 															) );
 														} else { ?>
