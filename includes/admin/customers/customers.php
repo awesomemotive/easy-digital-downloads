@@ -123,10 +123,10 @@ function edd_render_customer_view( $view, $callbacks ) {
 					<?php $class  = $active ? 'active' : 'inactive'; ?>
 
 					<?php if ( ! $active ) : ?>
-					<a title="<?php echo $tab['title']; ?>" aria-label="<?php echo esc_attr( $tab['title'] ); ?>" href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=' . $key . '&id=' . $customer->id ); ?>">
+					<a title="<?php echo esc_attr( $tab['title'] ); ?>" aria-label="<?php echo esc_attr( $tab['title'] ); ?>" href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-customers&view=' . $key . '&id=' . $customer->id ) ); ?>">
 					<?php endif; ?>
 
-					<li class="<?php echo $class; ?>"><span class="dashicons <?php echo $tab['dashicon']; ?>"></span></li>
+					<li class="<?php echo esc_attr( $class ); ?>"><span class="dashicons <?php echo esc_attr( $tab['dashicon'] ); ?>"></span></li>
 
 					<?php if ( ! $active ) : ?>
 					</a>
