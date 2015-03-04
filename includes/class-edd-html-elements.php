@@ -536,7 +536,7 @@ class EDD_HTML_Elements {
 
 		$output  = '<span class="edd_user_search_wrap">';
 			$output .= $this->text( $args );
-			$output .= '<span class="edd_user_search_results"></span>';
+			$output .= '<span class="edd_user_search_results hidden"><a class="edd-ajax-user-cancel" title="' . __( 'Cancel', 'edd' ) . '" aria-label="' . __( 'Cancel', 'edd' ) . '" href="#">x</a><span></span></span>';
 		$output .= '</span>';
 
 		return $output;
