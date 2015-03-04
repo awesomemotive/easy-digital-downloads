@@ -41,6 +41,11 @@ function edd_download_shortcode( $atts, $content = null ) {
 	),
 	$atts, 'purchase_link' );
 
+	// Override text if direct == 1
+	if( $atts['direct'] == '1' ) {
+		$atts['text'] = edd_get_option( 'buy_now_text', __( 'Buy Now', 'edd' ) );
+	}
+
 	// Override color if color == inherit
 	if( isset( $atts['color'] )	) {
 		$atts['color'] = ( $atts['color'] == 'inherit' ) ? '' : $atts['color'];
