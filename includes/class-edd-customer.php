@@ -415,6 +415,10 @@ class EDD_Customer {
 
 		$new_total = (int) $this->purchase_count - (int) $count;
 
+		if( $new_total < 0 ) {
+			$new_total = 0;
+		}
+
 		do_action( 'edd_customer_pre_decrease_purchase_count', $count, $this->id );
 
 		if ( $this->update( array( 'purchase_count' => $new_total ) ) ) {
@@ -458,6 +462,10 @@ class EDD_Customer {
 	public function decrease_value( $value = 0.00 ) {
 
 		$new_value = floatval( $this->purchase_value ) - $value;
+
+		if( $new_value < 0 ) {
+			$new_value = 0.00;
+		}
 
 		do_action( 'edd_customer_pre_decrease_value', $value, $this->id );
 
