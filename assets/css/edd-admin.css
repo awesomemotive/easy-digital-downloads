@@ -257,6 +257,7 @@ td.edd_order_price { text-align: right; }
 .download_page_edd-tools .tablenav .actions { overflow: visible; }
 .edd_user_search_wrap { position: relative; overflow: visible; }
 .edd_user_search_results { position: absolute; left: 0; top: 27px; }
+.edd_user_search_results a.edd-ajax-user-cancel { position: absolute; right: 6px; top: 2px; }
 .edd_user_search_results ul { padding: 10px 10px 4px; margin: 0; background: #f0f0f0; border: 1px solid #DFDFDF; width: 300px; max-height: 200px; overflow-y: scroll; }
 
 /* Global Graph Styles

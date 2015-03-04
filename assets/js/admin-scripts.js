@@ -1286,18 +1286,27 @@ jQuery(document).ready(function ($) {
 			success: function (search_response) {
 
 				$('.edd-ajax').hide();
-				$('.edd_user_search_results').html('');
-				$(search_response.results).appendTo('.edd_user_search_results');
+				$('.edd_user_search_results').removeClass('hidden');
+				$('.edd_user_search_results span').html('');
+				$(search_response.results).appendTo('.edd_user_search_results span');
 				document.body.style.cursor = 'default';
 			}
 		});
 	});
 
-	$('body').on('click.eddSelectUser', '.edd_user_search_results a', function(e) {
+	$('body').on('click.eddSelectUser', '.edd_user_search_results span a', function(e) {
 		e.preventDefault();
 		var login = $(this).data('login');
 		$('.edd-ajax-user-search').val(login);
-		$('.edd_user_search_results').html('');
+		$('.edd_user_search_results').addClass('hidden');
+		$('.edd_user_search_results span').html('');
+	});
+
+	$('body').on('click.eddCancelUserSearch', '.edd_user_search_results a.edd-ajax-user-cancel', function(e) {
+		e.preventDefault();
+		$('.edd-ajax-user-search').val('');
+		$('.edd_user_search_results').addClass('hidden');
+		$('.edd_user_search_results span').html('');
 	});
 
 	$.ajax({
