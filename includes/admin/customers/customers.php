@@ -306,7 +306,7 @@ function edd_customers_view( $customer ) {
 			<li>
 				<a title="<?php _e( 'View All Purchases', 'edd' ); ?>" href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $customer->email ) ); ?>">
 					<span class="dashicons dashicons-cart"></span>
-					<?php echo $customer->purchase_count; ?> <?php _e( 'Completed Sales' ,'edd' ); ?>
+					<?php printf( _n( '%d Completed Sale', '%d Completed Sales', $customer->purchase_count, 'edd' ), $customer->purchase_count ); ?>
 				</a>
 			</li>
 			<li>
