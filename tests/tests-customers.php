@@ -239,6 +239,12 @@ class Tests_Customers extends WP_UnitTestCase {
 		$this->assertFalse( $customer->decrease_purchase_count( -1 ) );
 		$this->assertFalse( $customer->decrease_purchase_count( 'abc' ) );
 
+		$customer->decrease_purchase_count( 100 );
+		$customer->decrease_value( 100000 );
+
+		$this->assertEquals( $customer->purchase_value, '0' );
+		$this->assertEquals( $customer->purchase_count, '0' );
+
 	}
 
 	public function test_customer_notes() {
