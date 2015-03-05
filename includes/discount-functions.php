@@ -702,6 +702,7 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 
 	// Ensure we have requirements before proceeding
 	if ( ! $ret && ! empty( $product_reqs ) ) {
+
 		switch( $condition ) {
 			case 'all' :
 				// Default back to true
@@ -735,9 +736,14 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 
 				break;
 		}
+
+	} else {
+
+		$ret = true;
+
 	}
 
-	if( $excluded_ps ) {
+	if( ! empty( $excluded_ps ) ) {
 		// Check that there are products other than excluded ones in the cart
 		if( $cart_ids == $excluded_ps ) {
 			edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'edd' ) );
