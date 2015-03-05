@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Functions/Install
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
@@ -53,7 +53,7 @@ function edd_install() {
 	$options = array();
 
 	// Checks if the purchase page option exists
-	if ( ! isset( $edd_options['purchase_page'] ) ) {
+	if ( ! edd_get_option( 'purchase_page', false ) ) {
 	  // Checkout Page
 		$checkout = wp_insert_post(
 			array(
