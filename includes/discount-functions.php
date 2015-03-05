@@ -701,7 +701,7 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 	$cart_ids     = array_values( $cart_ids );
 
 	// Ensure we have requirements before proceeding
-	if ( ! $ret ) {
+	if ( ! $ret && ! empty( $product_reqs ) ) {
 		switch( $condition ) {
 			case 'all' :
 				// Default back to true
