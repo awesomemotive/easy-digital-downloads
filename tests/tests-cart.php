@@ -103,6 +103,27 @@ class Test_Cart extends WP_UnitTestCase {
 		$this->assertEquals( 0, edd_add_to_cart( $this->_post->ID, $options ) );
 	}
 
+	public function test_add_to_cart_multiple_price_ids() {
+
+		edd_empty_cart();
+
+		$options = array(
+			'price_id' => array( 0, 1 )
+		);
+
+		edd_add_to_cart( $this->_post->ID, $options );
+		$this->assertEquals( 2, count( edd_get_cart_contents() ) );
+
+		edd_empty_cart();
+
+		$options = array(
+			'price_id' => '0,1'
+		);
+		edd_add_to_cart( $this->_post->ID, $options );
+		$this->assertEquals( 2, count( edd_get_cart_contents() ) );
+
+	}
+
 	public function test_get_cart_contents() {
 
 		edd_empty_cart();
@@ -322,7 +343,6 @@ class Test_Cart extends WP_UnitTestCase {
 
 	public function test_is_cart_saved() {
 
-		global $edd_options;
 
 		// Test for no saved cart
 		$this->assertFalse( edd_is_cart_saved() );
@@ -338,8 +358,8 @@ class Test_Cart extends WP_UnitTestCase {
 			)
 		);
 		update_user_meta( get_current_user_id(), 'edd_saved_cart', $cart );
-		$edd_options['enable_cart_saving'] = '1';
-		update_option( 'edd_settings', $edd_options );
+
+		edd_update_option( 'enable_cart_saving', '1' );
 
 		$this->assertTrue( edd_is_cart_saved() );
 	}

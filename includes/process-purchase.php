@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Functions
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -168,8 +168,6 @@ add_action( 'wp_ajax_nopriv_edd_process_checkout_login', 'edd_process_purchase_l
  * @return      bool|array
  */
 function edd_purchase_form_validate_fields() {
-	global $edd_options;
-
 	// Check if there is $_POST
 	if ( empty( $_POST ) ) return false;
 
@@ -187,7 +185,7 @@ function edd_purchase_form_validate_fields() {
 	);
 
 	// Validate agree to terms
-	if ( isset( $edd_options['show_agree_to_terms'] ) )
+	if ( edd_get_option( 'show_agree_to_terms', false ) )
 		edd_purchase_form_validate_agree_to_terms();
 
 	if ( is_user_logged_in() ) {
@@ -275,7 +273,7 @@ function edd_purchase_form_validate_discounts() {
 		$posted_discount = isset( $_POST['edd-discount'] ) ? trim( $_POST['edd-discount'] ) : false;
 
 		// Add the posted discount to the discounts
-		if ( $posted_discount && ( empty( $discounts ) || edd_multiple_discounts_allowed() ) ) {
+		if ( $posted_discount && ( empty( $discounts ) || edd_multiple_discounts_allowed() ) && edd_is_discount_valid( $posted_discount, $user ) ) {
 			edd_set_cart_discount( $posted_discount );
 		}
 

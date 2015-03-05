@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Cart
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -154,12 +154,17 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		$quantity = 1;
 	}
 
+	// If the price IDs are a string and is a coma separted list, make it an array (allows custom add to cart URLs)
+	if ( isset( $options['price_id'] ) && ! is_array( $options['price_id'] ) && false !== strpos( $options['price_id'], ',' ) ) {
+		$options['price_id'] = explode( ',', $options['price_id'] );
+	}
+
 	if ( isset( $options['price_id'] ) && is_array( $options['price_id'] ) ) {
 
 		// Process multiple price options at once
 		foreach ( $options['price_id'] as $price ) {
 
-			$item = array(
+			$items[] = array(
 				'id'           => $download_id,
 				'options'      => array(
 					'price_id' => preg_replace( '/[^0-9\.-]/', '', $price )
@@ -181,31 +186,32 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		}
 
 		// Add a single item
-		$item = array(
+		$items[] = array(
 			'id'       => $download_id,
 			'options'  => $options,
 			'quantity' => $quantity
 		);
 	}
 
-	$to_add = apply_filters( 'edd_add_to_cart_item', $item );
-	if ( ! is_array( $to_add ) )
-		return;
+	foreach ( $items as $item ) {
+		$to_add = apply_filters( 'edd_add_to_cart_item', $item );
+		if ( ! is_array( $to_add ) )
+			return;
 
-	if ( ! isset( $to_add['id'] ) || empty( $to_add['id'] ) )
-		return;
+		if ( ! isset( $to_add['id'] ) || empty( $to_add['id'] ) )
+			return;
 
-	if( edd_item_in_cart( $to_add['id'], $to_add['options'] ) && edd_item_quantities_enabled() ) {
+		if( edd_item_in_cart( $to_add['id'], $to_add['options'] ) && edd_item_quantities_enabled() ) {
 
-		$key = edd_get_item_position_in_cart( $to_add['id'], $to_add['options'] );
-		$cart[ $key ]['quantity'] += $quantity;
+			$key = edd_get_item_position_in_cart( $to_add['id'], $to_add['options'] );
+			$cart[ $key ]['quantity'] += $quantity;
 
-	} else {
+		} else {
 
-		$cart[] = $to_add;
+			$cart[] = $to_add;
 
+		}
 	}
-
 
 	EDD()->session->set( 'edd_cart', $cart );
 
@@ -316,9 +322,8 @@ function edd_get_item_position_in_cart( $download_id = 0, $options = array() ) {
  * @return bool
  */
 function edd_item_quantities_enabled() {
-	global $edd_options;
-	$ret = isset( $edd_options['item_quantities'] );
-	return apply_filters( 'edd_item_quantities_enabled', $ret );
+	$ret = edd_get_option( 'item_quantities', false );
+	return (bool) apply_filters( 'edd_item_quantities_enabled', $ret );
 }
 
 /**
@@ -372,8 +377,6 @@ function edd_get_cart_item_quantity( $download_id = 0, $options = array() ) {
  * @return string Fully formatted price
  */
 function edd_cart_item_price( $item_id = 0, $options = array() ) {
-	global $edd_options;
-
 	$price = edd_get_cart_item_price( $item_id, $options );
 	$label = '';
 
@@ -408,7 +411,7 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
 
 	$price = edd_currency_filter( edd_format_amount( $price ) );
 
-	return $price . $label;
+	return apply_filters( 'edd_cart_item_price_label', $price . $label, $item_id, $options );
 }
 
 /**
@@ -420,7 +423,7 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
  * Use edd_get_cart_item_final_price()
  *
  * @since 1.0
- * @param int   $item_id Download ID number
+ * @param int   $download_id Download ID number
  * @param array $options Optional parameters, used for defining variable prices
  * @return float|bool Price for this item
  */
@@ -476,7 +479,7 @@ function edd_get_cart_item_final_price( $item_key = 0 ) {
  * Get cart item tax
  *
  * @since 1.9
- * @param array $item Download ID
+ * @param array $download_id Download ID
  * @param array $options Cart item options
  * @param float $subtotal Cart item subtotal
  * @return float Tax amount
@@ -559,12 +562,9 @@ function edd_get_cart_item_price_name( $item = array() ) {
  * Shows the subtotal for the shopping cart (no taxes)
  *
  * @since 1.4
- * @global $edd_options Array of all the EDD Options
  * @return float Total amount before taxes fully formatted
  */
 function edd_cart_subtotal() {
-	global $edd_options;
-
 	$price = esc_html( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ) );
 
 	// Todo - Show tax labels here (if needed)
@@ -579,12 +579,9 @@ function edd_cart_subtotal() {
  * uses edd_get_cart_contents().
  *
  * @since 1.3.3
- * @global $edd_options Array of all the EDD Options
  * @return float Total amount before taxes
  */
 function edd_get_cart_subtotal() {
-	global $edd_options;
-
 	$subtotal = 0.00;
 	$items    = edd_get_cart_content_details();
 
@@ -613,13 +610,10 @@ function edd_get_cart_subtotal() {
  * Returns amount after taxes and discounts
  *
  * @since 1.4.1
- * @global $edd_options Array of all the EDD Options
  * @param bool $discounts Array of discounts to apply (needed during AJAX calls)
  * @return float Cart amount
  */
 function edd_get_cart_total( $discounts = false ) {
-	global $edd_options;
-
 	$subtotal  = edd_get_cart_subtotal();
 	$discounts = edd_get_cart_discounted_amount();
 	$cart_tax  = edd_get_cart_tax();
@@ -639,15 +633,12 @@ function edd_get_cart_total( $discounts = false ) {
  * Gets the fully formatted total price amount in the cart.
  * uses edd_get_cart_amount().
  *
- * @global $edd_options Array of all the EDD Options
  * @since 1.3.3
  *
  * @param bool $echo
  * @return mixed|string|void
  */
 function edd_cart_total( $echo = true ) {
-	global $edd_options;
-
 	$total = apply_filters( 'edd_cart_total', edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ) );
 
 	// Todo - Show tax labels here (if needed)
@@ -854,11 +845,9 @@ function edd_add_collection_to_cart( $taxonomy, $terms ) {
  * @since 1.0
  * @global $post
  * @param int $cart_key Cart item key
- * @param object $post Download (post) object
- * @param bool $ajax AJAX?
  * @return string $remove_url URL to remove the cart item
  */
-function edd_remove_item_url( $cart_key, $post, $ajax = false ) {
+function edd_remove_item_url( $cart_key ) {
 
 	global $wp_query;
 
@@ -954,13 +943,11 @@ function edd_get_purchase_session() {
  * Checks if cart saving has been disabled
  *
  * @since 1.8
- * @global $edd_options
  * @return bool Whether or not cart saving has been disabled
  */
 function edd_is_cart_saving_disabled() {
-	global $edd_options;
-
-	return apply_filters( 'edd_cart_saving_disabled', ! isset( $edd_options['enable_cart_saving'] ) );
+	$ret = edd_get_option( 'enable_cart_saving', false );
+	return apply_filters( 'edd_cart_saving_disabled', ! $ret );
 }
 
 /**
@@ -970,7 +957,6 @@ function edd_is_cart_saving_disabled() {
  * @return bool
  */
 function edd_is_cart_saved() {
-
 	if( edd_is_cart_saving_disabled() )
 		return false;
 
@@ -1001,8 +987,6 @@ function edd_is_cart_saved() {
 		return true;
 
 	}
-
-	return false;
 }
 
 /**
@@ -1012,8 +996,6 @@ function edd_is_cart_saved() {
  * @return bool
  */
 function edd_save_cart() {
-	global $edd_options;
-
 	if ( edd_is_cart_saving_disabled() )
 		return false;
 

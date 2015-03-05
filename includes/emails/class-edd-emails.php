@@ -6,7 +6,7 @@
  *
  * @package     EDD
  * @subpackage  Classes/Emails
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.1.php GNU Public License
  * @since       2.1
  */
@@ -169,6 +169,8 @@ class EDD_Emails {
 	 * Get the enabled email template
 	 *
 	 * @since 2.1
+	 *
+	 * @return string|null
 	 */
 	public function get_template() {
 		if ( ! $this->template ) {
@@ -191,6 +193,7 @@ class EDD_Emails {
 	 * Parse email template tags
 	 *
 	 * @since 2.1
+	 * @param string $content
 	 */
 	public function parse_tags( $content ) {
 
@@ -204,6 +207,9 @@ class EDD_Emails {
 	 * Build the final email
 	 *
 	 * @since 2.1
+	 * @param string $message
+	 *
+	 * @return string
 	 */
 	public function build_email( $message ) {
 
