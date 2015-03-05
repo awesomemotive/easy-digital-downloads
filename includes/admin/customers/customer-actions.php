@@ -127,6 +127,7 @@ function edd_edit_customer( $args ) {
 		if ( $customer->email != $previous_email ) {
 			foreach ( $payments_array as $payment_id ) {
 				edd_update_payment_meta( $payment_id, '_edd_payment_user_email', $customer->email );
+				edd_update_payment_meta( $payment_id, 'email', $customer->email ); // Updates the old email record too
 			}
 		}
 
