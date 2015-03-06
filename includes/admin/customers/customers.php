@@ -278,8 +278,12 @@ function edd_customers_view( $customer ) {
 
 					<span class="customer-user-id info-item editable">
 						<?php _e( 'User ID', 'edd' ); ?>:&nbsp;
-						<span data-key="user_id"><?php echo $customer->user_id; ?></span>
-						<?php if ( current_user_can( $customer_edit_role ) && intval( $customer->user_id ) > 0 ): ?>
+						<?php if( intval( $customer->user_id ) > 0 ) : ?>
+							<span data-key="user_id"><?php echo $customer->user_id; ?></span>
+						<?php else : ?>
+							<span data-key="user_id"><?php _e( 'none', 'edd' ); ?></span>
+						<?php endif; ?>
+						<?php if ( current_user_can( $customer_edit_role ) && intval( $customer->user_id ) > 0 ) : ?>
 							<span class="disconnect-user"> - <a id="disconnect-customer" href="#disconnect" title="<?php _e( 'Disconnects the current user ID from this customer record', 'edd' ); ?>"><?php _e( 'Disconnect User', 'edd' ); ?></a></span>
 						<?php endif; ?>
 					</span>
