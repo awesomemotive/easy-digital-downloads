@@ -62,7 +62,7 @@ function edd_get_cart_content_details() {
 		$tax        = edd_get_cart_item_tax( $item['id'], $item['options'], $subtotal - $discount );
 
 		if( edd_prices_include_tax() ) {
-			$subtotal -= $tax;
+			$subtotal -= round( $tax, edd_currency_decimal_filter() );
 		}
 
 		$total      = $subtotal - $discount + $tax;
