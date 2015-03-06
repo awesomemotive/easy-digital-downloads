@@ -874,10 +874,21 @@ function edd_update_payment_meta( $payment_id = 0, $meta_key = '', $meta_value =
 		return;
 	}
 
-	if ( $meta_key == 'key' || $meta_key == 'email' || $meta_key == 'date' ) {
+	if ( $meta_key == 'key' || $meta_key == 'date' ) {
 
 		$current_meta = edd_get_payment_meta( $payment_id );
 		$current_meta[$meta_key] = $meta_value;
+
+		$meta_key     = '_edd_payment_meta';
+		$meta_value   = $current_meta;
+
+	} else if ( $meta_key == 'email' || $meta_key == '_edd_payment_user_email' ) {
+
+		$meta_value = apply_filters( 'edd_edd_update_payment_meta_' . $meta_key, $meta_value, $payment_id );
+		update_post_meta( $payment_id, '_edd_payment_user_email', $meta_value );
+
+		$current_meta = edd_get_payment_meta( $payment_id );
+		$current_meta[ 'user_info']['email']  = $meta_value;
 
 		$meta_key     = '_edd_payment_meta';
 		$meta_value   = $current_meta;
