@@ -42,6 +42,32 @@ function edd_edit_customer( $args ) {
 
 	$customer_info = wp_parse_args( $customer_info, $defaults );
 
+	if ( ! is_email( $customer_info['email'] ) ) {
+		edd_set_error( 'edd-invalid-email', __( 'Please enter a valid email address.', 'edd' ) );
+	}
+
+	if ( (int) $customer_info['user_id'] != (int) $customer->user_id ) {
+
+		// Make sure we don't already have this user attached to a customer
+		if ( ! empty( $customer_info['user_id'] ) && false !== EDD()->customers->get_customer_by( 'user_id', $customer_info['user_id'] ) ) {
+			edd_set_error( 'edd-invlid-customer-user_id', sprintf( __( 'The User ID %d is already associated with a different customer.', 'edd' ), $customer_info['user_id'] ) );
+		}
+
+		// Make sure it's actually a user
+		$user = get_user_by( 'id', $customer_info['user_id'] );
+		if ( ! empty( $customer_info['user_id'] ) && false === $user ) {
+			edd_set_error( 'edd-invalid-user_id', sprintf( __( 'The User ID %d does not exist. Please assign an existing user.', 'edd' ), $customer_info['user_id'] ) );
+		}
+
+	}
+
+	// Record this for later
+	$previous_user_id  = $customer->user_id;
+
+	if ( edd_get_errors() ) {
+		return;
+	}
+
 	if ( intval( $customer_info['user_id'] ) > 0 ) {
 
 		$current_address = get_user_meta( $customer_info['user_id'], '_edd_user_address', true );
@@ -54,6 +80,7 @@ function edd_edit_customer( $args ) {
 			$customer_info['zip']     = isset( $customer_info['zip'] )     ? $customer_info['zip']     : '';
 			$customer_info['state']   = isset( $customer_info['state'] )   ? $customer_info['state']   : '';
 		} else {
+			$current_address          = wp_parse_args( $current_address, array( 'line1', 'line2', 'city', 'zip', 'state', 'country' ) );
 			$customer_info['line1']   = ! empty( $customer_info['line1'] )   ? $customer_info['line1']   : $current_address['line1']  ;
 			$customer_info['line2']   = ! empty( $customer_info['line2'] )   ? $customer_info['line2']   : $current_address['line2']  ;
 			$customer_info['city']    = ! empty( $customer_info['city'] )    ? $customer_info['city']    : $current_address['city']   ;
@@ -85,32 +112,6 @@ function edd_edit_customer( $args ) {
 	$address       = array_map( 'sanitize_text_field', $address );
 
 	do_action( 'edd_pre_edit_customer', $customer_id, $customer_data, $address );
-
-	if ( ! is_email( $customer_data['email'] ) ) {
-		edd_set_error( 'edd-invalid-email', __( 'Please enter a valid email address.', 'edd' ) );
-	}
-
-	if ( (int) $customer_data['user_id'] != (int) $customer->user_id ) {
-
-		// Make sure we don't already have this user attached to a customer
-		if ( ! empty( $customer_data['user_id'] ) && false !== EDD()->customers->get_customer_by( 'user_id', $customer_data['user_id'] ) ) {
-			edd_set_error( 'edd-invlid-customer-user_id', sprintf( __( 'The User ID %d is already associated with a different customer.', 'edd' ), $customer_data['user_id'] ) );
-		}
-
-		// Make sure it's actually a user
-		$user = get_user_by( 'id', $customer_data['user_id'] );
-		if ( ! empty( $customer_data['user_id'] ) && false === $user ) {
-			edd_set_error( 'edd-invalid-user_id', sprintf( __( 'The User ID %d does not exist. Please assign an existing user.', 'edd' ), $customer_data['user_id'] ) );
-		}
-
-	}
-
-	// Record this for later
-	$previous_user_id  = $customer->user_id;
-
-	if ( edd_get_errors() ) {
-		return;
-	}
 
 	$output         = array();
 	$previous_email = $customer->email;
