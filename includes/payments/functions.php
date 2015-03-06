@@ -842,15 +842,15 @@ function edd_get_payment_meta( $payment_id = 0, $meta_key = '_edd_payment_meta',
 	if ( $meta_key === '_edd_payment_meta' ) {
 
 		// Payment meta was simplified in EDD v1.5, so these are here for backwards compatibility
-		if ( ! isset( $meta['key'] ) ) {
+		if ( empty( $meta['key'] ) ) {
 			$meta['key'] = edd_get_payment_key( $payment_id );
 		}
 
-		if ( ! isset( $meta['email'] ) ) {
+		if ( empty( $meta['email'] ) ) {
 			$meta['email'] = edd_get_payment_user_email( $payment_id );
 		}
 
-		if ( ! isset( $meta['date'] ) ) {
+		if ( empty( $meta['date'] ) ) {
 			$meta['date'] = get_post_field( 'post_date', $payment_id );
 		}
 	}
