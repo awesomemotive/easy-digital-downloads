@@ -68,38 +68,32 @@ function edd_edit_customer( $args ) {
 		return;
 	}
 
+	// Setup the customer address, if present
+	$address = array();
 	if ( intval( $customer_info['user_id'] ) > 0 ) {
 
 		$current_address = get_user_meta( $customer_info['user_id'], '_edd_user_address', true );
 
 		if ( false === $current_address ) {
-			$customer_info['line1']   = isset( $customer_info['line1'] )   ? $customer_info['line1']   : '';
-			$customer_info['line2']   = isset( $customer_info['line2'] )   ? $customer_info['line2']   : '';
-			$customer_info['city']    = isset( $customer_info['city'] )    ? $customer_info['city']    : '';
-			$customer_info['country'] = isset( $customer_info['country'] ) ? $customer_info['country'] : '';
-			$customer_info['zip']     = isset( $customer_info['zip'] )     ? $customer_info['zip']     : '';
-			$customer_info['state']   = isset( $customer_info['state'] )   ? $customer_info['state']   : '';
+			$address['line1']   = isset( $customer_info['line1'] )   ? $customer_info['line1']   : '';
+			$address['line2']   = isset( $customer_info['line2'] )   ? $customer_info['line2']   : '';
+			$address['city']    = isset( $customer_info['city'] )    ? $customer_info['city']    : '';
+			$address['country'] = isset( $customer_info['country'] ) ? $customer_info['country'] : '';
+			$address['zip']     = isset( $customer_info['zip'] )     ? $customer_info['zip']     : '';
+			$address['state']   = isset( $customer_info['state'] )   ? $customer_info['state']   : '';
 		} else {
 			$current_address          = wp_parse_args( $current_address, array( 'line1', 'line2', 'city', 'zip', 'state', 'country' ) );
-			$customer_info['line1']   = ! empty( $customer_info['line1'] )   ? $customer_info['line1']   : $current_address['line1']  ;
-			$customer_info['line2']   = ! empty( $customer_info['line2'] )   ? $customer_info['line2']   : $current_address['line2']  ;
-			$customer_info['city']    = ! empty( $customer_info['city'] )    ? $customer_info['city']    : $current_address['city']   ;
-			$customer_info['country'] = ! empty( $customer_info['country'] ) ? $customer_info['country'] : $current_address['country'];
-			$customer_info['zip']     = ! empty( $customer_info['zip'] )     ? $customer_info['zip']     : $current_address['zip']    ;
-			$customer_info['state']   = ! empty( $customer_info['state'] )   ? $customer_info['state']   : $current_address['state']  ;
+			$address['line1']   = ! empty( $customer_info['line1'] )   ? $customer_info['line1']   : $current_address['line1']  ;
+			$address['line2']   = ! empty( $customer_info['line2'] )   ? $customer_info['line2']   : $current_address['line2']  ;
+			$address['city']    = ! empty( $customer_info['city'] )    ? $customer_info['city']    : $current_address['city']   ;
+			$address['country'] = ! empty( $customer_info['country'] ) ? $customer_info['country'] : $current_address['country'];
+			$address['zip']     = ! empty( $customer_info['zip'] )     ? $customer_info['zip']     : $current_address['zip']    ;
+			$address['state']   = ! empty( $customer_info['state'] )   ? $customer_info['state']   : $current_address['state']  ;
 		}
 
 	}
 
 	// Sanitize the inputs
-	$address                  = array();
-	$address['line1']         = $customer_info['line1'];
-	$address['line2']         = $customer_info['line2'];
-	$address['city']          = $customer_info['city'];
-	$address['zip']           = $customer_info['zip'];
-	$address['state']         = $customer_info['state'];
-	$address['country']       = $customer_info['country'];
-
 	$customer_data            = array();
 	$customer_data['name']    = $customer_info['name'];
 	$customer_data['email']   = $customer_info['email'];
