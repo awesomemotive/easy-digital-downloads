@@ -85,7 +85,7 @@ class Tests_Taxes extends WP_UnitTestCase {
 		edd_update_option( 'tax_rate', '3.6' );
 
 		// Setup country / state tax rates
-		$tax_rates = array();
+		$tax_rates   = array();
 		$tax_rates[] = array( 'country' => 'US', 'state' => 'AL', 'rate' => 15 );
 
 		update_option( 'edd_tax_rates', $tax_rates );
@@ -128,6 +128,53 @@ class Tests_Taxes extends WP_UnitTestCase {
 		$this->assertEquals( '0.036', edd_get_tax_rate() );
 	}
 
+	public function test_get_tax_rate_post() {
+		$_POST['billing_country'] = 'US';
+		$_POST['state']           = 'AL';
+		$this->assertEquals( '0.15', edd_get_tax_rate() );
+
+		// Reset to origin
+		unset( $_POST['billing_country'] );
+		unset( $_POST['state'] );
+	}
+
+	public function test_get_tax_rate_user_address() {
+
+		// Prep test (fake is_user_logged_in())
+		global $current_user;
+		$current_user      = new WP_User(1);
+		$user_id           = get_current_user_id();
+		$existing_addresss = get_user_meta( $user_id, '_edd_user_address', true );
+		update_user_meta( $user_id, '_edd_user_address', array(
+			'line1'   => 'First address',
+			'line2'   => 'Line two',
+			'city'    => 'MyCity',
+			'zip'     => '12345',
+			'country' => 'US',
+			'state'   => 'AL',
+		) );
+
+		// Assert
+		$this->assertEquals( '0.15', edd_get_tax_rate() );
+
+		// Reset to origin
+		update_post_meta( $user_id, '_edd_user_address', $existing_addresss );
+	}
+
+	public function test_get_tax_rate_global() {
+
+		// Prepare test
+		$existing_tax_rates = get_option( 'edd_tax_rates' );
+		$tax_rates[]        = array( 'country' => 'NL', 'global' => '1', 'rate' => 21 );
+		update_option( 'edd_tax_rates', $tax_rates );
+
+		// Assert
+		$this->assertEquals( '0.21', edd_get_tax_rate( 'NL' ) );
+
+		// Reset to origin
+		update_option( 'edd_tax_rates', $existing_tax_rates );
+	}
+
 	public function test_get_formatted_tax_rate() {
 		$this->assertEquals( '3.6%', edd_get_formatted_tax_rate() );
 	}
@@ -141,6 +188,24 @@ class Tests_Taxes extends WP_UnitTestCase {
 		$this->assertEquals( '361.58724', edd_calculate_tax( 10044.09 ) );
 	}
 
+	public function test_calculate_tax_price_includes_tax() {
+
+		// Prepare test
+		$origin_price_include_tax = edd_get_option( 'prices_include_tax' );
+		edd_update_option( 'prices_include_tax', 'yes' );
+
+		// Asserts
+		$this->assertEquals( '1.87644787645', edd_calculate_tax( 54 ) );
+		$this->assertEquals( '1.90077220077', edd_calculate_tax( 54.7 ) );
+		$this->assertEquals( '5.34613899614', edd_calculate_tax( 153.85 ) );
+		$this->assertEquals( '8.97602316602', edd_calculate_tax( 258.31 ) );
+		$this->assertEquals( '36.1153667954', edd_calculate_tax( 1039.32 ) );
+		$this->assertEquals( '349.02243243243356118910014629364013671875', edd_calculate_tax( 10044.09 ) );
+
+		// Reset to origin
+		edd_update_option( 'prices_include_tax', $origin_price_include_tax );
+	}
+
 	public function test_get_sales_tax_for_year() {
 		$this->assertEquals( '0.36', edd_get_sales_tax_for_year( date( 'Y' ) ) );
 		$this->assertEquals( '0', edd_get_sales_tax_for_year( date( 'Y' ) - 1 ) );
@@ -150,7 +215,7 @@ class Tests_Taxes extends WP_UnitTestCase {
 		ob_start();
 		edd_sales_tax_for_year( date( 'Y' ) );
 		$this_year = ob_get_clean();
-		
+
 		ob_start();
 		edd_sales_tax_for_year( date( 'Y' ) - 1 );
 		$last_year = ob_get_clean();
@@ -169,11 +234,28 @@ class Tests_Taxes extends WP_UnitTestCase {
 
 	public function test_is_cart_taxed() {
 		$this->assertTrue( edd_is_cart_taxed() );
-
 	}
 
 	public function test_display_tax_rates() {
 		$this->assertFalse( edd_display_tax_rate() );
+	}
+
+	public function test_cart_needs_tax_address_fields() {
+		$this->assertInternalType( 'bool', edd_cart_needs_tax_address_fields() );
+		$this->assertTrue( edd_cart_needs_tax_address_fields() );
+	}
+
+	public function test_cart_needs_tax_address_fields_false() {
+
+		// Prepare test
+		$existing_enable_taxes = edd_get_option( 'enable_taxes' );
+		edd_update_option( 'enable_taxes', false );
+
+		// Assert
+		$this->assertFalse( edd_cart_needs_tax_address_fields() );
+
+		// Reset to origin
+		edd_update_option( 'enable_taxes', $existing_enable_taxes );
 	}
 
 	public function test_download_is_exclusive_of_tax() {
