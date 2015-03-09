@@ -61,7 +61,7 @@ jQuery(document).ready(function ($) {
 				var button = $( this ),
 				row = button.parent().parent().prev( 'tr' ),
 				clone = EDD_Download_Configuration.clone_repeatable(row);
-				clone.insertAfter( row );
+				clone.insertAfter( row ).find('input, textarea, select').filter(':visible').eq(0).focus();
 			});
 		},
 
