@@ -229,7 +229,13 @@ function edd_listen_for_failed_payments() {
 	if( ! empty( $failed_page ) && is_page( $failed_page ) && ! empty( $_GET['payment-id'] ) ) {
 
 		$payment_id = absint( $_GET['payment-id'] );
-		edd_update_payment_status( $payment_id, 'failed' );
+		$status     = edd_get_payment_status( $payment_id );
+
+		if( $status && 'pending' === strtolower( $status ) ) {
+
+			edd_update_payment_status( $payment_id, 'failed' );
+
+		}
 
 	}
 
