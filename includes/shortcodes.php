@@ -92,11 +92,9 @@ add_shortcode( 'download_history', 'edd_download_history' );
  * @return string
  */
 function edd_purchase_history() {
-	if ( is_user_logged_in() ) {
-		ob_start();
-		edd_get_template_part( 'history', 'purchases' );
-		return ob_get_clean();
-	}
+	ob_start();
+	edd_get_template_part( 'history', 'purchases' );
+	return ob_get_clean();
 }
 add_shortcode( 'purchase_history', 'edd_purchase_history' );
 
