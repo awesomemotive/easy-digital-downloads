@@ -28,6 +28,10 @@ class Tests_Payments extends WP_UnitTestCase {
 		edd_set_payment_transaction_id( $payment_id, $this->_transaction_id );
 		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'edd' ) , $this->_transaction_id ) );
 
+		// Make sure we're working off a clean object caching in WP Core.
+		// Prevents some payment_meta from not being present.
+		clean_post_cache( $payment_id );
+		update_postmeta_cache( array( $payment_id ) );
 	}
 
 	public function tearDown() {
@@ -64,7 +68,7 @@ class Tests_Payments extends WP_UnitTestCase {
 		$this->assertFalse( edd_insert_payment() );
 	}
 
-	public function test_payment_completd_flag_not_exists() {
+	public function test_payment_completed_flag_not_exists() {
 
 		$completed_date = edd_get_payment_completed_date( $this->_payment_id );
 		$this->assertEmpty( $completed_date );
@@ -98,6 +102,22 @@ class Tests_Payments extends WP_UnitTestCase {
 		$this->assertEquals( $expected, $out );
 	}
 
+	public function test_get_payment_status_keys() {
+		$out = edd_get_payment_status_keys();
+
+		$expected = array(
+			'abandoned',
+			'failed',
+			'pending',
+			'publish',
+			'refunded',
+			'revoked'
+		);
+
+		$this->assertInternalType( 'array', $out );
+		$this->assertEquals( $expected, $out );
+	}
+
 	public function test_undo_purchase() {
 		$purchase_download_ids = wp_list_pluck( edd_get_payment_meta_downloads( $this->_payment_id ), 'id' );
 		edd_undo_purchase( reset( $purchase_download_ids ), $this->_payment_id );
@@ -122,14 +142,12 @@ class Tests_Payments extends WP_UnitTestCase {
 	}
 
 	public function test_get_payment_number() {
-		global $edd_options;
 
 		$this->assertEquals( 'EDD-1', edd_get_payment_number( $this->_payment_id ) );
 		$this->assertEquals( 'EDD-2', edd_get_next_payment_number() );
 
 		// Now disable sequential and ensure values come back as expected
-		unset( $edd_options['enable_sequential'] );
-		update_option( 'edd_settings', $edd_options );
+		edd_delete_option( 'enable_sequential' );
 
 		$this->assertEquals( $this->_payment_id, edd_get_payment_number( $this->_payment_id ) );
 	}
@@ -190,6 +208,22 @@ class Tests_Payments extends WP_UnitTestCase {
 
 		$this->assertEquals( '&#36;120.00', $total1 );
 		$this->assertEquals( '&#36;120.00', $total2 );
+
+	}
+
+	public function test_payment_tax_updates() {
+
+		// Test that when we update _edd_payment_tax, we update the _edd_payment_meta
+		edd_update_payment_meta( $this->_payment_id, '_edd_payment_tax', 10 );
+		$meta_array = edd_get_payment_meta( $this->_payment_id, '_edd_payment_meta', true );
+		$this->assertEquals( 10, $meta_array['tax'] );
+		$this->assertEquals( 10, edd_get_payment_tax( $this->_payment_id ) );
+
+		// Test that when we update the _edd_payment_meta, we update the _edd_payment_tax
+		$current_meta = edd_get_payment_meta( $this->_payment_id, true );
+		$current_meta['tax'] = 20;
+		edd_update_payment_meta( $this->_payment_id, '_edd_payment_meta', $current_meta );
+		$this->assertEquals( 20, edd_get_payment_tax( $this->_payment_id ) );
 
 	}
 

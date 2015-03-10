@@ -85,7 +85,7 @@ function edd_has_active_discounts() {
  * Retrieves a complete discount code by discount ID.
  *
  * @since 1.0
- * @param string $discount_id Discount ID
+ * @param integer $discount_id Discount ID
  * @return array
  */
 function edd_get_discount( $discount_id = 0 ) {
@@ -530,7 +530,7 @@ function edd_get_discount_product_condition( $code_id = 0 ) {
  * @since 1.5
  * @param int $code_id Discount ID
  * @return array $product_reqs IDs of the required products
- * @return bool Whether or not discount code is global
+ * @return boolean Whether or not discount code is global
  */
 function edd_is_discount_not_global( $code_id = 0 ) {
 	return (bool) get_post_meta( $code_id, '_edd_discount_is_not_global', true );
@@ -682,12 +682,27 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 	$cart_ids     = $cart_items ? wp_list_pluck( $cart_items, 'id' ) : null;
 	$ret          = false;
 
-	if ( empty( $product_reqs ) ) {
+	if ( empty( $product_reqs ) && empty( $excluded_ps ) ) {
 		$ret = true;
 	}
 
+	// Normalize our data for product requiremetns, exlusions and cart data
+	// First absint the items, then sort, and reset the array keys
+	$product_reqs = array_map( 'absint', $product_reqs );
+	asort( $product_reqs );
+	$product_reqs = array_values( $product_reqs );
+
+	$excluded_ps  = array_map( 'absint', $excluded_ps );
+	asort( $excluded_ps );
+	$excluded_ps  = array_values( $excluded_ps );
+
+	$cart_ids     = array_map( 'absint', $cart_ids );
+	asort( $cart_ids );
+	$cart_ids     = array_values( $cart_ids );
+
 	// Ensure we have requirements before proceeding
-	if ( ! $ret ) {
+	if ( ! $ret && ! empty( $product_reqs ) ) {
+
 		switch( $condition ) {
 			case 'all' :
 				// Default back to true
@@ -721,9 +736,14 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 
 				break;
 		}
+
+	} else {
+
+		$ret = true;
+
 	}
 
-	if( $excluded_ps ) {
+	if( ! empty( $excluded_ps ) ) {
 		// Check that there are products other than excluded ones in the cart
 		if( $cart_ids == $excluded_ps ) {
 			edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'edd' ) );
@@ -946,7 +966,7 @@ function edd_format_discount_rate( $type, $amount ) {
  *
  * @since 1.4.1
  * @param string $code Discount code
- * @return array All currently active discounts
+ * @return string[] All currently active discounts
  */
 function edd_set_cart_discount( $code = '' ) {
 
@@ -1070,7 +1090,7 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 	global $edd_is_last_cart_item, $edd_flat_discount_total;
 
 	$amount           = 0;
-	$price            = edd_get_cart_item_price( $item['id'], $item['options'], edd_prices_include_tax() );
+	$price            = edd_get_cart_item_price( $item['id'], $item['options'] );
 	$discounted_price = $price;
 
 	// Retrieve all discounts applied to the cart
@@ -1119,7 +1139,7 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 						$cart_items        = edd_get_cart_contents();
 						foreach( $cart_items as $cart_item ) {
 							if( ! in_array( $cart_item['id'], $excluded_products ) ) {
-								$item_price      = edd_get_cart_item_price( $cart_item['id'], $cart_item['options'], edd_prices_include_tax() );
+								$item_price      = edd_get_cart_item_price( $cart_item['id'], $cart_item['options'] );
 								$items_subtotal += $item_price * $cart_item['quantity'];
 							}
 						}
@@ -1291,9 +1311,8 @@ add_action( 'edd_post_remove_from_cart', 'edd_maybe_remove_cart_discount' );
  * @return bool
  */
 function edd_multiple_discounts_allowed() {
-	global $edd_options;
-	$ret = isset( $edd_options['allow_multiple_discounts'] );
-	return apply_filters( 'edd_multiple_discounts_allowed', $ret );
+	$ret = edd_get_option( 'allow_multiple_discounts', false );
+	return (bool) apply_filters( 'edd_multiple_discounts_allowed', $ret );
 }
 
 /**

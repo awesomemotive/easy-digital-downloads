@@ -55,7 +55,7 @@ function edd_reports_graph() {
 	if( $dates['range'] == 'today' || $dates['range'] == 'yesterday' ) {
 		// Hour by hour
 		$hour  = 1;
-		$month = date( 'n', current_time( 'timestamp' ) );
+		$month = $dates['m_start'];
 		while ( $hour <= 23 ) :
 
 			$sales    = edd_get_sales_by_date( $dates['day'], $month, $dates['year'], $hour );
@@ -270,8 +270,9 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 	$stats         = new EDD_Payment_Stats;
 
 	if( $dates['range'] == 'today' || $dates['range'] == 'yesterday' ) {
+
 		// Hour by hour
-		$month  = date( 'n', current_time( 'timestamp' ) );
+		$month  = $dates['m_start'];
 		$hour   = 1;
 		$minute = 0;
 		$second = 0;
@@ -570,13 +571,34 @@ function edd_get_report_dates() {
 		break;
 
 		case 'yesterday' :
-			$month              = date( 'n', $current_time ) == 1 ? 12 : date( 'n', $current_time );
-			$days_in_month      = cal_days_in_month( CAL_GREGORIAN, $month, date( 'Y' ) );
-			$yesterday          = date( 'd', $current_time ) == 1 ? $days_in_month : date( 'd', $current_time ) - 1;
-			$dates['day']		= $yesterday;
-			$dates['m_start'] 	= $month;
-			$dates['m_end'] 	= $month;
-			$dates['year']		= $month == 1 && date( 'd', $current_time ) == 1 ? date( 'Y', $current_time ) - 1 : date( 'Y', $current_time );
+
+			$year               = date( 'Y', $current_time );
+			$month              = date( 'n', $current_time );
+			$day                = date( 'd', $current_time );
+
+			if ( $month == 1 && $day == 1 ) {
+
+				$year -= 1;
+				$month = 12;
+				$day   = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+
+			} elseif ( $month > 1 && $day == 1 ) {
+
+				$month -= 1;
+				$day   = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+
+			} else {
+
+				$day -= 1;
+
+			}
+
+			$dates['day']       = $day;
+			$dates['m_start']   = $month;
+			$dates['m_end']     = $month;
+			$dates['year']      = $year;
+			$dates['year_end']      = $year;
+			//print_r( $dates ); exit;
 		break;
 
 		case 'this_week' :

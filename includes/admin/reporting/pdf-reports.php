@@ -111,7 +111,6 @@ function edd_generate_pdf( $data ) {
 			$tags = $tags ? strip_tags( $tags ) : '';
 
 			$sales = edd_get_download_sales_stats( $download->ID );
-			$link = get_permalink( $download->ID );
 			$earnings = html_entity_decode ( edd_currency_filter( edd_get_download_earnings_stats( $download->ID ) ) );
 
 			if( function_exists( 'iconv' ) ) {
@@ -186,9 +185,7 @@ function edd_draw_chart_image() {
 		$i++;
 	}
 
-	$min_earnings = 0;
 	$max_earnings = max( $earnings_array );
-	$earnings_scale = round( $max_earnings, -1 );
 
 	$data = new GoogleChartData( array(
 		$earnings_array[0],

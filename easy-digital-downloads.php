@@ -225,7 +225,9 @@ final class Easy_Digital_Downloads {
 		$edd_options = edd_get_settings();
 
 		require_once EDD_PLUGIN_DIR . 'includes/actions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/deprecated-functions.php';
+		if( file_exists( EDD_PLUGIN_DIR . 'includes/deprecated-functions.php' ) ) {
+			require_once EDD_PLUGIN_DIR . 'includes/deprecated-functions.php';
+		}
 		require_once EDD_PLUGIN_DIR . 'includes/ajax-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/template-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/checkout/template.php';
@@ -236,6 +238,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-api.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-customers.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-download.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cache-helper.php';
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
@@ -284,13 +287,16 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/add-ons.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-footer.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-notices.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-notices.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/dashboard-widgets.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/export-functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/thickbox.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/upload-functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/downloads/dashboard-columns.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/customers/customers.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/customers/customer-functions.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/customers/customer-actions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/downloads/metabox.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/downloads/contextual-help.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/contextual-help.php';

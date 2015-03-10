@@ -126,7 +126,7 @@ add_action( 'edd_email_send_before', 'edd_disable_mandrill_nl2br');
  * @return void
  */
 function edd_disable_404_redirected_redirect() {
-	
+
 	if( ! defined( 'WBZ404_VERSION' ) ) {
 		return;
 	}

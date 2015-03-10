@@ -2,7 +2,7 @@
 /**
  * This template is used to display the purchase summary with [edd_receipt]
  */
-global $edd_receipt_args, $edd_options;
+global $edd_receipt_args;
 
 $payment   = get_post( $edd_receipt_args['id'] );
 

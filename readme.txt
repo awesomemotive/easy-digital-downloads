@@ -42,13 +42,13 @@ More information at [Easy Digital Downloads.com](https://easydigitaldownloads.co
 
 **Sell and Track Software License Keys**
 
-[Software Licensing](https://easydigitaldownloads.com/extension/software-licensing/) for Easy Digital Downloads provides a complete license key generation, activation, and checking system. It allows you to provide license keys along with your digital products that can then be used to properly license and activate the buyer’s copy of the software.
+[Software Licensing](https://easydigitaldownloads.com/extensions/software-licensing/) for Easy Digital Downloads provides a complete license key generation, activation, and checking system. It allows you to provide license keys along with your digital products that can then be used to properly license and activate the buyer’s copy of the software.
 
 Includes a complete integration pack for delivering automatic upgrades for premium WordPress plugins and themes.
 
 **Build Up Your Email Subscribers**
 
-With add-ons for [Mail Chimp](http://easydigitaldownloads.com/extension/mail-chimp/), [Campaign Monitor](http://easydigitaldownloads.com/extension/campaign-monitor/), and [AWeber](http://easydigitaldownloads.com/extension/aweber/), [Wysija](https://easydigitaldownloads.com/extension/wysija/), [ActiveCampaign](https://easydigitaldownloads.com/extension/active-campaign/), [iContact](https://easydigitaldownloads.com/extension/icontact/), [Campaign Monitor](https://easydigitaldownloads.com/extension/campaign-monitor/), [Constant Contact](https://easydigitaldownloads.com/extension/constant-contact/), and more, Easy Digital Downloads can easily grow your email subscription lists while making you money at the same time.
+With add-ons for [Mail Chimp](http://easydigitaldownloads.com/extensions/mail-chimp/), [Campaign Monitor](http://easydigitaldownloads.com/extensions/campaign-monitor/), and [AWeber](http://easydigitaldownloads.com/extensions/aweber/), [Wysija](https://easydigitaldownloads.com/extensions/wysija/), [ActiveCampaign](https://easydigitaldownloads.com/extensions/active-campaign/), [iContact](https://easydigitaldownloads.com/extensions/icontact/), [Campaign Monitor](https://easydigitaldownloads.com/extensions/campaign-monitor/), [Constant Contact](https://easydigitaldownloads.com/extensions/constant-contact/), and more, Easy Digital Downloads can easily grow your email subscription lists while making you money at the same time.
 
 **Languages**
 
@@ -71,6 +71,15 @@ Easy Digital Downloads has been translated into the following languages:
 15. Farsi
 16. Finnish
 17. Hebrew
+18. Persian
+19. Finnish
+20. Slovak
+21. Swedish
+22. Romanian
+23. Hungarian
+24. Norwegian
+25. Khmer
+26. Lithuanian
 
 Would you like to help translate the plugin into more languages? [Join our WP-Translations Community](https://www.transifex.com/projects/p/easy-digital-downloads/).
 
@@ -123,51 +132,51 @@ Yes! EDD integrates directly with several affiliate platforms that provide compl
 = Can I give my customers downloadable PDF Invoices? =
 Yes, EDD has an add-on that allows for downloadable invoices to be generated for each payment.
 
-[PDF Invoices](https://easydigitaldownloads.com/extension/pdf-invoices)
+[PDF Invoices](https://easydigitaldownloads.com/extensions/pdf-invoices)
 
 = Can Users Purchase Products without Using PayPal? =
 
 Yes, through the addition of one or more of the add-on payment gateways, you can accept payments in many different ways. The add-on gateways currently available:
 
-* [Stripe](http://easydigitaldownloads.com/extension/stripe-payment-gateway/)
-* [Recurly](http://easydigitaldownloads.com/extension/recurly-com-checkout/)
-* [Authorize.net](http://easydigitaldownloads.com/extension/authorize-net-gateway/)
-* [Google Wallet](https://easydigitaldownloads.com/extension/google-checkout/)
-* [Moneybookers / Skrill](http://easydigitaldownloads.com/extension/moneybookers-skrill-payment-gateway/)
-* [2Checkout](http://easydigitaldownloads.com/extension/2checkout-gateway/)
-* [PayPal Pro/Express](http://easydigitaldownloads.com/extension/paypal-pro-express/)
-* [PayPal Adaptive Payments](https://easydigitaldownloads.com/extension/paypal-adaptive-payments/)
-* [GoCardless](https://easydigitaldownloads.com/extension/gocardless-payment-gateway/)
-* [Amazon FPS](https://easydigitaldownloads.com/extension/amazon-fps-payment-gateway/)
-* [Payza](https://easydigitaldownloads.com/extension/payza-payment-gateway/)
-* [Paymill](https://easydigitaldownloads.com/extension/paymill-payment-gateway/)
-* [MOLPay](https://easydigitaldownloads.com/extension/molpay-payment-gateway/)
-* [MercadoPago](https://easydigitaldownloads.com/extension/mercadopago/)
-* [NoChex](https://easydigitaldownloads.com/extension/nochex-gateway/)
-* [Recurly.com](https://easydigitaldownloads.com/extension/recurly-com-checkout/)
-* [Network Merchants](https://easydigitaldownloads.com/extension/network-merchants-gateway/)
-* [Direct One](https://easydigitaldownloads.com/extension/direct-one/)
-* [Moneybookers/Skrill](https://easydigitaldownloads.com/extension/moneybookers-skrill-payment-gateway/)
-* [Moneris Solutions](https://easydigitaldownloads.com/extension/moneris-solutions-gateway/)
-* [My Virtual Merchant](https://easydigitaldownloads.com/extension/my-virtual-merchant/)
-* [NAB](https://easydigitaldownloads.com/extension/6038/)
-* [Mijireh](https://easydigitaldownloads.com/extension/mijireh-checkout/)
-* [eWay](https://easydigitaldownloads.com/extension/eway-gateway/)
-* [Check](https://easydigitaldownloads.com/extension/check-payment-gateway/)
-* [PagSeguro](https://easydigitaldownloads.com/extension/pagseguro-payment-gateway/)
-* [Beanstream](https://easydigitaldownloads.com/extension/beanstream-payment-gateway/)
-* [Quickbooks](https://easydigitaldownloads.com/extension/quickbooks/)
-* [PayFast](https://easydigitaldownloads.com/extension/payfast-payment-gateway/())
-* [WorldPay](https://easydigitaldownloads.com/extension/worldpay-gateway/)
-* [Payment Express](https://easydigitaldownloads.com/extension/payment-express-gateway/)
-* [BitPay](https://easydigitaldownloads.com/extension/bitpay-payment-gateway/)
-* [ClickBank](https://easydigitaldownloads.com/extension/clickbank-gateway/)
-* [Braintree](https://easydigitaldownloads.com/extension/braintree-gateway/)
-* [Dwolla](https://easydigitaldownloads.com/extension/dwolla/)
-* [Realex](https://easydigitaldownloads.com/extension/realex-gateway/)
-* [PayTrace](https://easydigitaldownloads.com/extension/paytrace/)
-* [iPay88](https://easydigitaldownloads.com/extension/ipay88-gateway/)
-* [First Data](https://easydigitaldownloads.com/extension/first-data-payment-gateway/)
+* [Stripe](http://easydigitaldownloads.com/extensions/stripe-payment-gateway/)
+* [Recurly](http://easydigitaldownloads.com/extensions/recurly-com-checkout/)
+* [Authorize.net](http://easydigitaldownloads.com/extensions/authorize-net-gateway/)
+* [Google Wallet](https://easydigitaldownloads.com/extensions/google-checkout/)
+* [Moneybookers / Skrill](http://easydigitaldownloads.com/extensions/moneybookers-skrill-payment-gateway/)
+* [2Checkout](http://easydigitaldownloads.com/extensions/2checkout-gateway/)
+* [PayPal Pro/Express](http://easydigitaldownloads.com/extensions/paypal-pro-express/)
+* [PayPal Adaptive Payments](https://easydigitaldownloads.com/extensions/paypal-adaptive-payments/)
+* [GoCardless](https://easydigitaldownloads.com/extensions/gocardless-payment-gateway/)
+* [Amazon FPS](https://easydigitaldownloads.com/extensions/amazon-fps-payment-gateway/)
+* [Payza](https://easydigitaldownloads.com/extensions/payza-payment-gateway/)
+* [Paymill](https://easydigitaldownloads.com/extensions/paymill-payment-gateway/)
+* [MOLPay](https://easydigitaldownloads.com/extensions/molpay-payment-gateway/)
+* [MercadoPago](https://easydigitaldownloads.com/extensions/mercadopago/)
+* [NoChex](https://easydigitaldownloads.com/extensions/nochex-gateway/)
+* [Recurly.com](https://easydigitaldownloads.com/extensions/recurly-com-checkout/)
+* [Network Merchants](https://easydigitaldownloads.com/extensions/network-merchants-gateway/)
+* [Direct One](https://easydigitaldownloads.com/extensions/direct-one/)
+* [Moneybookers/Skrill](https://easydigitaldownloads.com/extensions/moneybookers-skrill-payment-gateway/)
+* [Moneris Solutions](https://easydigitaldownloads.com/extensions/moneris-solutions-gateway/)
+* [My Virtual Merchant](https://easydigitaldownloads.com/extensions/my-virtual-merchant/)
+* [NAB](https://easydigitaldownloads.com/extensions/6038/)
+* [Mijireh](https://easydigitaldownloads.com/extensions/mijireh-checkout/)
+* [eWay](https://easydigitaldownloads.com/extensions/eway-gateway/)
+* [Check](https://easydigitaldownloads.com/extensions/check-payment-gateway/)
+* [PagSeguro](https://easydigitaldownloads.com/extensions/pagseguro-payment-gateway/)
+* [Beanstream](https://easydigitaldownloads.com/extensions/beanstream-payment-gateway/)
+* [Quickbooks](https://easydigitaldownloads.com/extensions/quickbooks/)
+* [PayFast](https://easydigitaldownloads.com/extensions/payfast-payment-gateway/())
+* [WorldPay](https://easydigitaldownloads.com/extensions/worldpay-gateway/)
+* [Payment Express](https://easydigitaldownloads.com/extensions/payment-express-gateway/)
+* [BitPay](https://easydigitaldownloads.com/extensions/bitpay-payment-gateway/)
+* [ClickBank](https://easydigitaldownloads.com/extensions/clickbank-gateway/)
+* [Braintree](https://easydigitaldownloads.com/extensions/braintree-gateway/)
+* [Dwolla](https://easydigitaldownloads.com/extensions/dwolla/)
+* [Realex](https://easydigitaldownloads.com/extensions/realex-gateway/)
+* [PayTrace](https://easydigitaldownloads.com/extensions/paytrace/)
+* [iPay88](https://easydigitaldownloads.com/extensions/ipay88-gateway/)
+* [First Data](https://easydigitaldownloads.com/extensions/first-data-payment-gateway/)
 
 == Screenshots ==
 
