@@ -1198,7 +1198,6 @@ jQuery(document).ready(function ($) {
 				$( '#edd-customer-card-wrapper .edit-item' ).hide();
 				$( '#edd-customer-card-wrapper .editable' ).show();
 				$( '.edd_user_search_results' ).html('');
-				$( '.edd-ajax-user-search' ).val('');
 			});
 		},
 		change_country: function() {
