@@ -110,14 +110,14 @@ function edd_show_upgrade_notices() {
 			);
 		}
 
-		if ( version_compare( $edd_version, '2.3', '<' ) && ! edd_has_upgrade_completed( 'upgrade_customer_payments_association' ) ) {
+		if ( version_compare( $edd_version, '2.3', '<' ) || ! edd_has_upgrade_completed( 'upgrade_customer_payments_association' ) ) {
 			printf(
 				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the customer database, click <a href="%s">here</a> to start the upgrade.', 'edd' ) . '</p></div>',
 				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_customer_payments_association' ) )
 			);
 		}
 
-		if ( version_compare( $edd_version, '2.3', '<' ) && ! edd_has_upgrade_completed( 'upgrade_payment_taxes' ) ) {
+		if ( version_compare( $edd_version, '2.3', '<' ) || ! edd_has_upgrade_completed( 'upgrade_payment_taxes' ) ) {
 			printf(
 				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the payments database, click <a href="%s">here</a> to start the upgrade.', 'edd' ) . '</p></div>',
 				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_payment_taxes' ) )
