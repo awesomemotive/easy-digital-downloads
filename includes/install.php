@@ -152,6 +152,8 @@ function edd_install() {
 	}
 
 	if ( ! $current_version ) {
+		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
+
 		// When new upgrade routines are added, mark them as complete on fresh install
 		$upgrade_routines = array(
 			'upgrade_payment_taxes',
