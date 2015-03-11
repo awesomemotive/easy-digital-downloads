@@ -180,7 +180,7 @@ class EDD_Welcome {
 
 				<div class="feature-section">
 
-					<p><?php _e( 'Version 2.3 introduces a comprehensive customer management interface. Get detailed statistics on your customres, quickly make edits, and leave detailed notes.', 'edd' );?></p>
+					<p><?php _e( 'Version 2.3 introduces a comprehensive customer management interface. Get detailed statistics on your customers, quickly make edits, and leave detailed notes.', 'edd' );?></p>
 
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/customer-ui.png'; ?>" class="edd-welcome-screenshots"/>
 
@@ -218,7 +218,7 @@ class EDD_Welcome {
 					<p><?php _e( 'The Download products your customer has purchased is one of the most important parts of this screen, so we have put it up front and in the spotlight.', 'edd' );?></p>
 
 					<h4><?php _e( 'More Accurate Statistics', 'edd' );?></h4>
-					<p><?php _e( 'Adding or removing Downloads to and from a payment receord now properly triggers an update routine to ensure the sales and earnings for the affected products are properly updated.', 'edd' );?></p>
+					<p><?php _e( 'Adding or removing Downloads to and from a payment record now properly triggers an update routine to ensure the sales and earnings for the affected products are properly updated.', 'edd' );?></p>
 
 				</div>
 			</div>
@@ -240,10 +240,10 @@ class EDD_Welcome {
 					<div>
 
 						<h4><?php _e( 'Schema Validation', 'edd' );?></h4>
-						<p><?php _e( 'The Schema Markup has been improved and now properly includes prices for both single and mult-price option products.' ,'edd' );?></p>
+						<p><?php _e( 'The Schema Markup has been improved and now properly includes prices for both single and multi-price option products.' ,'edd' );?></p>
 
 						<h4><?php _e( 'Buy Now Button Improvements', 'edd' );?></h4>
-						<p><?php _e( 'Buy Now buttons no longer create pending payment records when they are clicked. Buy Now also get automatically deactivated if no supported payment gateway is activated.' ,'edd' );?></p>
+						<p><?php _e( 'Buy Now buttons no longer create pending payment records when they are clicked. Buy Now buttons are now automatically deactivated if no supported payment gateway is activated.' ,'edd' );?></p>
 
 					</div>
 
