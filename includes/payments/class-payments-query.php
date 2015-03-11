@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Classes/Stats
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.8
 */
@@ -62,7 +62,7 @@ class EDD_Payments_Query extends EDD_Stats {
 			'orderby'         => 'ID',
 			'order'           => 'DESC',
 			'user'            => null,
-			'status'          => 'any',
+			'status'          => edd_get_payment_status_keys(),
 			'meta_key'        => null,
 			'year'            => null,
 			'month'           => null,

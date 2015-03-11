@@ -682,7 +682,7 @@ function edd_get_average_monthly_download_earnings( $download_id = 0 ) {
 
 	$diff 	= abs( current_time( 'timestamp' ) - strtotime( $release_date ) );
 
-    $months = floor( $diff / ( 30 * 60 * 60 * 24 ) ); // Number of months since publication
+	$months = floor( $diff / ( 30 * 60 * 60 * 24 ) ); // Number of months since publication
 
 	if ( $months > 0 ) {
 		$earnings = ( $earnings / $months );
@@ -699,17 +699,17 @@ function edd_get_average_monthly_download_earnings( $download_id = 0 ) {
  * @return float $sales Average monthly sales
  */
 function edd_get_average_monthly_download_sales( $download_id = 0 ) {
-    $sales          = edd_get_download_sales_stats( $download_id );
-    $release_date   = get_post_field( 'post_date', $download_id );
+	$sales          = edd_get_download_sales_stats( $download_id );
+	$release_date   = get_post_field( 'post_date', $download_id );
 
-    $diff   = abs( current_time( 'timestamp' ) - strtotime( $release_date ) );
+	$diff   = abs( current_time( 'timestamp' ) - strtotime( $release_date ) );
 
-    $months = floor( $diff / ( 30 * 60 * 60 * 24 ) ); // Number of months since publication
+	$months = floor( $diff / ( 30 * 60 * 60 * 24 ) ); // Number of months since publication
 
-    if ( $months > 0 )
-        $sales = ( $sales / $months );
+	if ( $months > 0 )
+		$sales = ( $sales / $months );
 
-    return $sales;
+	return $sales;
 }
 
 /**
@@ -916,104 +916,54 @@ function edd_get_file_price_condition( $download_id = 0, $file_key ) {
  * @return string Constructed download URL
  */
 function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $price_id = false ) {
-	global $edd_options;
 
-	$hours = isset( $edd_options['download_link_expiration'] )
-			&& is_numeric( $edd_options['download_link_expiration'] )
-			? absint( $edd_options['download_link_expiration'] ) : 24;
+	$hours = absint( edd_get_option( 'download_link_expiration', 24 ) );
 
-	if ( ! ( $date = strtotime( '+' . $hours . 'hours', current_time( 'timestamp') ) ) )
+	if ( ! ( $date = strtotime( '+' . $hours . 'hours', current_time( 'timestamp') ) ) ) {
 		$date = 2147472000; // Highest possible date, January 19, 2038
+	}
 
-	$params = array(
+	// Leaving in this array and the filter for backwards compatibility now
+	$old_args = array(
 		'download_key' 	=> rawurlencode( $key ),
-		'email' 		=> rawurlencode( $email ),
-		'file' 			=> rawurlencode( $filekey ),
+		'email'         => rawurlencode( $email ),
+		'file'          => rawurlencode( $filekey ),
 		'price_id'      => (int) $price_id,
-		'download_id' 	=> $download_id,
-		'expire' 		=> rawurlencode( base64_encode( $date ) )
+		'download_id'   => $download_id,
+		'expire'        => rawurlencode( $date )
 	);
 
-	$params = apply_filters( 'edd_download_file_url_args', $params );
+	$params  = apply_filters( 'edd_download_file_url_args', $old_args );
 
-	$download_url = add_query_arg( $params, home_url( 'index.php' ) );
+	$payment = edd_get_payment_by( 'key', $params['download_key'] );
 
-	return $download_url;
-}
+	if ( ! $payment ) {
+		return false;
+	}
 
-/**
- * Verifies a download purchase using a purchase key and email.
- *
- * @since 1.0
- *
- * @param int    $download_id
- * @param string $key
- * @param string $email
- * @param string $expire
- * @param int    $file_key
- *
- * @return bool True if payment and link was verified, false otherwise
- */
-function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $expire = '', $file_key = 0 ) {
+	if ( ! empty( $payment->ID ) ) {
 
-	$meta_query = array(
-		'relation'  => 'AND',
-		array(
-			'key'   => '_edd_payment_purchase_key',
-			'value' => $key
-		),
-		array(
-			'key'   => '_edd_payment_user_email',
-			'value' => $email
-		)
-	);
+		// Simply the URL by concatenating required data using a colon as a delimiter.
+		$args = array(
+			'eddfile' => rawurlencode( sprintf( '%d:%d:%d:%d', $payment->ID, $params['download_id'], $params['file'], $price_id ) )
+		);
 
-	$accepted_stati = apply_filters( 'edd_allowed_download_stati', array( 'publish', 'complete' ) );
-
-	$payments = get_posts( array( 'meta_query' => $meta_query, 'post_type' => 'edd_payment', 'post_status' => $accepted_stati ) );
-
-	if ( $payments ) {
-		foreach ( $payments as $payment ) {
-
-			$cart_details = edd_get_payment_meta_cart_details( $payment->ID, true );
-
-			if ( ! empty( $cart_details ) ) {
-				foreach ( $cart_details as $cart_key => $cart_item ) {
-
-					if ( $cart_item['id'] != $download_id )
-						continue;
-
-					$price_options 	= isset( $cart_item['item_number']['options'] ) ? $cart_item['item_number']['options'] : false;
-					$price_id 		= isset( $price_options['price_id'] ) ? $price_options['price_id'] : false;
-
-					$file_condition = edd_get_file_price_condition( $cart_item['id'], $file_key );
-
-					// Check to see if the file download limit has been reached
-					if ( edd_is_file_at_download_limit( $cart_item['id'], $payment->ID, $file_key, $price_id ) )
-						wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
-
-					// If this download has variable prices, we have to confirm that this file was included in their purchase
-					if ( ! empty( $price_options ) && $file_condition != 'all' && edd_has_variable_prices( $cart_item['id'] ) ) {
-						if ( $file_condition == $price_options['price_id'] )
-							return $payment->ID;
-					}
-
-					// Make sure the link hasn't expired
-					if ( current_time( 'timestamp' ) > $expire ) {
-						wp_die( apply_filters( 'edd_download_link_expired_text', __( 'Sorry but your download link has expired.', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
-					}
-					return $payment->ID; // Payment has been verified and link is still valid
-				}
-
-			}
-
+		if ( isset( $params['expire'] ) ) {
+			$args['ttl'] = $params['expire'];
 		}
 
-	} else {
-		wp_die( __( 'No payments matching your request were found.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+		// Ensure all custom args registered with extensions through edd_download_file_url_args get added to the URL, but without adding all the old args
+		$args = array_merge( $args, array_diff_key( $params, $old_args ) );
+
+		$args = apply_filters( 'edd_get_download_file_url_args', $args, $payment->ID, $params );
+
+		$args['file']  = $params['file'];
+		$args['token'] = edd_get_download_token( add_query_arg( $args, home_url() ) );
 	}
-	// Payment not verified
-	return false;
+
+	$download_url = add_query_arg( $args, home_url( 'index.php' ) );
+
+	return $download_url;
 }
 
 /**
@@ -1063,8 +1013,7 @@ function edd_get_download_button_behavior( $download_id = 0 ) {
  * @return string The method to use for file downloads
  */
 function edd_get_file_download_method() {
-	global $edd_options;
-	$method = isset( $edd_options['download_method'] ) ? $edd_options['download_method'] : 'direct';
+	$method = edd_get_option( 'download_method', 'direct' );
 	return apply_filters( 'edd_file_download_method', $method );
 }
 
@@ -1096,4 +1045,121 @@ function edd_get_random_downloads( $num = 3, $post_ids = true ) {
 	}
 	$args  = apply_filters( 'edd_get_random_downloads', $args );
 	return get_posts( $args );
+}
+
+/**
+ * Generates a token for a given URL.
+ *
+ * An 'o' query parameter on a URL can include optional variables to test
+ * against when verifying a token without passing those variables around in
+ * the URL. For example, downloads can be limited to the IP that the URL was
+ * generated for by adding 'o=ip' to the query string.
+ *
+ * Or suppose when WordPress requested a URL for automatic updates, the user
+ * agent could be tested to ensure the URL is only valid for requests from
+ * that user agent.
+ *
+ * @since 2.3
+ *
+ * @param string $url The URL to generate a token for.
+ * @return string The token for the URL.
+ */
+function edd_get_download_token( $url = '' ) {
+
+	$args    = array();
+	$hash    = apply_filters( 'edd_get_url_token_algorithm', 'sha256' );
+	$secret  = apply_filters( 'edd_get_url_token_secret', hash( $hash, wp_salt() ) );
+
+	/*
+	 * Add additional args to the URL for generating the token.
+	 * Allows for restricting access to IP and/or user agent.
+	 */
+	$parts   = parse_url( $url );
+	$options = array();
+
+	if ( isset( $parts['query'] ) ) {
+
+		wp_parse_str( $parts['query'], $query_args );
+
+		// o = option checks (ip, user agent).
+		if ( ! empty( $query_args['o'] ) ) {
+	
+			// Multiple options can be checked by separating them with a colon in the query parameter.
+			$options = explode( ':', rawurldecode( $query_args['o'] ) );
+
+			if ( in_array( 'ip', $options ) ) {
+
+				$args['ip'] = edd_get_ip();
+
+			}
+
+			if ( in_array( 'ua', $options ) ) {
+
+				$ua = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : '';
+				$args['user_agent'] = rawurlencode( $ua );
+
+			}
+
+		}
+
+	}
+
+	/*
+	 * Filter to modify arguments and allow custom options to be tested.
+	 * Be sure to rawurlencode any custom options for consistent results.
+	 */
+	$args = apply_filters( 'edd_get_url_token_args', $args, $url, $options );
+
+	$args['secret'] = $secret;
+	$args['token']  = false; // Removes a token if present.
+
+	$url   = add_query_arg( $args, $url );
+	$parts = parse_url( $url );
+
+	// In the event there isn't a path, set an empty one so we can MD5 the token
+	if ( ! isset( $parts['path'] ) ) {
+
+		$parts['path'] = '';
+
+	}
+
+	$token = md5( $parts['path'] . '?' . $parts['query'] );
+
+	return $token;
+
+}
+
+/**
+ * Generate a token for a URL and match it against the existing token to make
+ * sure the URL hasn't been tampered with.
+ *
+ * @since 2.3
+ *
+ * @param string $url URL to test.
+ * @return bool
+ */
+function edd_validate_url_token( $url = '' ) {
+
+	$ret   = false;
+	$parts = parse_url( $url );
+
+	if ( isset( $parts['query'] ) ) {
+
+		wp_parse_str( $parts['query'], $query_args );
+
+		if ( isset( $query_args['ttl'] ) && current_time( 'timestamp' ) > $query_args['ttl'] ) {
+
+			wp_die( apply_filters( 'edd_download_link_expired_text', __( 'Sorry but your download link has expired.', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+
+		}
+
+		if ( isset( $query_args['token'] ) && $query_args['token'] == edd_get_download_token( $url ) ) {
+
+			$ret = true;
+
+		}
+
+	}
+
+	return apply_filters( 'edd_validate_url_token', $ret, $url, $query_args );
 }
