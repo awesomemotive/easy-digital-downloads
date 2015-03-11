@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.2.8\n"
+"Project-Id-Version: Easy Digital Downloads 2.3\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2015-03-11 15:01:09+00:00\n"
+"POT-Creation-Date: 2015-03-11 18:59:04+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -593,7 +593,7 @@ msgid "Purchased %s"
 msgstr ""
 
 #: includes/admin/customers/customers.php:385
-#: includes/admin/customers/customers.php:386 includes/admin/welcome.php:485
+#: includes/admin/customers/customers.php:386 includes/admin/welcome.php:491
 msgid "View %s"
 msgstr ""
 
@@ -3568,7 +3568,7 @@ msgid "Welcome to Easy Digital Downloads"
 msgstr ""
 
 #: includes/admin/welcome.php:60 includes/admin/welcome.php:61
-#: includes/admin/welcome.php:273
+#: includes/admin/welcome.php:279
 msgid "Easy Digital Downloads Changelog"
 msgstr ""
 
@@ -3588,213 +3588,211 @@ msgstr ""
 msgid "Credits"
 msgstr ""
 
-#: includes/admin/welcome.php:172 includes/admin/welcome.php:305
-#: includes/admin/welcome.php:424
+#: includes/admin/welcome.php:172 includes/admin/welcome.php:311
+#: includes/admin/welcome.php:430
 msgid "Welcome to Easy Digital Downloads %s"
 msgstr ""
 
-#: includes/admin/welcome.php:173 includes/admin/welcome.php:274
+#: includes/admin/welcome.php:173 includes/admin/welcome.php:280
 msgid ""
 "Thank you for updating to the latest version! Easy Digital Downloads %s is "
 "ready to make your online store faster, safer, and better!"
 msgstr ""
 
-#: includes/admin/welcome.php:174 includes/admin/welcome.php:275
-#: includes/admin/welcome.php:307 includes/admin/welcome.php:426
+#: includes/admin/welcome.php:174 includes/admin/welcome.php:281
+#: includes/admin/welcome.php:313 includes/admin/welcome.php:432
 msgid "Version %s"
 msgstr ""
 
 #: includes/admin/welcome.php:179
-msgid "Better Purchase Form Options"
+msgid "New Customer Management UI"
 msgstr ""
 
 #: includes/admin/welcome.php:183
 msgid ""
-"In version 2.2, we have dramatically improved the purchase form features, "
-"making them more flexible and powerful."
+"Version 2.3 introduces a comprehensive customer management interface. Get "
+"detailed statistics on your customers, quickly make edits, and leave "
+"detailed notes."
 msgstr ""
 
 #: includes/admin/welcome.php:187
-msgid "Quantity Field"
+msgid "Better Customer Details on Payment"
 msgstr ""
 
 #: includes/admin/welcome.php:188
 msgid ""
-"The purchase forms now support quantity fields that allow your customers to "
-"enter their desired quantity before proceeding to checkout."
+"The Customer Details section of the View Order Details screen has been "
+"updated to make it easier to move payment records between customers. A "
+"quick link to the customer's overview page has also been added, letting you "
+"easily see all purchases made by the customer."
 msgstr ""
 
 #: includes/admin/welcome.php:190
-msgid "Default Selected Price Option"
+msgid "Create New Customers Quickly"
 msgstr ""
 
 #: includes/admin/welcome.php:191
 msgid ""
-"Shop administrators can now select the default price option that is "
-"selected for customers."
+"New customer records can now be created directly from the View Order "
+"Details screen, making it easier for you to manage change requests from "
+"your customers."
 msgstr ""
 
 #: includes/admin/welcome.php:193
-msgid "Price-Specific Purchase Buttons"
+msgid "More Accessible"
 msgstr ""
 
 #: includes/admin/welcome.php:194
 msgid ""
-"Purchase buttons now support displaying a purchase form for a specific "
-"price option. Simply add the <em>price_id</em> parameter:"
+"Your store's customer history has been moved to a dedicated submenu of the "
+"Downloads menu, making it significantly easier to locate. No longer is it "
+"hidden in an obscure section of the Reports page."
 msgstr ""
 
-#: includes/admin/welcome.php:202
-msgid "Improved View Order Details"
+#: includes/admin/welcome.php:200
+msgid "Signed URLs"
 msgstr ""
 
-#: includes/admin/welcome.php:206
+#: includes/admin/welcome.php:204
 msgid ""
-"The View Order Details screen is likely one of the places you spend the "
-"most time in, so shouldn't it be great? We think so."
+"We take security seriously and with Easy Digital Downloads 2.3, we have "
+"introduced a better, more secure file download mechanism that keeps your "
+"files safe and secure."
 msgstr ""
 
-#: includes/admin/welcome.php:210
-msgid "Focus on Purchased Downloads"
+#: includes/admin/welcome.php:205
+msgid ""
+"Download URLs provided to customers have been improved to be shorter and "
+"more secure, and now use tokens to verify the URL prior to allowing the "
+"download to start."
 msgstr ""
 
 #: includes/admin/welcome.php:211
+msgid "Improved Order Details"
+msgstr ""
+
+#: includes/admin/welcome.php:217
+msgid "Focus on Purchased Downloads"
+msgstr ""
+
+#: includes/admin/welcome.php:218
 msgid ""
 "The Download products your customer has purchased is one of the most "
 "important parts of this screen, so we have put it up front and in the "
 "spotlight."
 msgstr ""
 
-#: includes/admin/welcome.php:213
-msgid "Easy Access to Important Data"
+#: includes/admin/welcome.php:220
+msgid "More Accurate Statistics"
 msgstr ""
 
-#: includes/admin/welcome.php:215
+#: includes/admin/welcome.php:221
 msgid ""
-"EDD keeps extensive logs of everything that happens with a purchase, "
-"including file downloads for the purchase and the customer. We have made "
-"this information much more accessible in 2.2."
+"Adding or removing Downloads to and from a payment record now properly "
+"triggers an update routine to ensure the sales and earnings for the "
+"affected products are properly updated."
 msgstr ""
 
-#: includes/admin/welcome.php:217
-msgid "Linked Transaction IDs"
-msgstr ""
-
-#: includes/admin/welcome.php:218
-msgid ""
-"The Transaction ID is now linked directly to the transaction details page "
-"of the payment processor, making refunds and cross references easier and "
-"more efficient."
-msgstr ""
-
-#: includes/admin/welcome.php:224
+#: includes/admin/welcome.php:227
 msgid "Additional Updates"
 msgstr ""
 
-#: includes/admin/welcome.php:229
-msgid "New EDD_Download Class"
-msgstr ""
-
-#: includes/admin/welcome.php:230
-msgid ""
-"The EDD_Download class implemented in 2.2 will make it easier for theme and "
-"extension developers to integrate with Easy Digital Downloads by providing "
-"a simple method to create and access Download product information."
-msgstr ""
-
 #: includes/admin/welcome.php:232
-msgid "Per-Product Fees with EDD_Fees"
+msgid "PolyLang Support"
 msgstr ""
 
 #: includes/admin/welcome.php:233
 msgid ""
-"The EDD_Fees class now supports per-product fees that can be setup to only "
-"be applied when specific products are in the cart."
+"We've improved support for the popular PolyLang Plugin in 2.3 making EDD "
+"more accessible in more languages."
 msgstr ""
 
-#: includes/admin/welcome.php:237
-msgid "WP CLI Command for Test Payments"
+#: includes/admin/welcome.php:235
+msgid "Customer API"
 msgstr ""
 
-#: includes/admin/welcome.php:238
+#: includes/admin/welcome.php:236
 msgid ""
-"The <em>edd</em> command in WP CLI now supports creating sample purchase "
-"data for easier testing."
+"A new EDD_Customer class has been introduced that makes it easy for "
+"developers to interact with customer data."
 msgstr ""
 
-#: includes/admin/welcome.php:240
-msgid "Improved Tax Settings"
+#: includes/admin/welcome.php:242
+msgid "Schema Validation"
 msgstr ""
 
-#: includes/admin/welcome.php:241
+#: includes/admin/welcome.php:243
 msgid ""
-"The Taxes settings tab has been re-organized to make configuring taxes in "
-"your store simpler and more intuitive."
+"The Schema Markup has been improved and now properly includes prices for "
+"both single and multi-price option products."
 msgstr ""
 
 #: includes/admin/welcome.php:245
-msgid "Better Multi-Currency Support"
+msgid "Buy Now Button Improvements"
 msgstr ""
 
 #: includes/admin/welcome.php:246
 msgid ""
-"Payment records now properly support historical currencies, meaning that "
-"payment currencies will display their original currency even if the shop "
-"currency changes."
+"Buy Now buttons no longer create pending payment records when they are "
+"clicked. Buy Now buttons are now automatically deactivated if no supported "
+"payment gateway is activated."
 msgstr ""
 
-#: includes/admin/welcome.php:248
-msgid "Improved Product Drop Downs"
+#: includes/admin/welcome.php:252
+msgid "Improved Upgrade Routine API"
 msgstr ""
 
-#: includes/admin/welcome.php:249
-msgid "The product drop downs have been made more intuitive and reliable."
+#: includes/admin/welcome.php:253
+msgid ""
+"The upgrade routine has been improved to be more robust and user friendly. "
+"It now supports multiple upgrades in a single release, logs which have been "
+"completed ,as well as allows incomplete upgrades to be resumed."
 msgstr ""
 
-#: includes/admin/welcome.php:255 includes/admin/welcome.php:288
+#: includes/admin/welcome.php:261 includes/admin/welcome.php:294
 msgid "Go to Easy Digital Downloads Settings"
 msgstr ""
 
-#: includes/admin/welcome.php:256
+#: includes/admin/welcome.php:262
 msgid "View the Full Changelog"
 msgstr ""
 
-#: includes/admin/welcome.php:280
+#: includes/admin/welcome.php:286
 msgid "Full Changelog"
 msgstr ""
 
-#: includes/admin/welcome.php:306 includes/admin/welcome.php:425
+#: includes/admin/welcome.php:312 includes/admin/welcome.php:431
 msgid ""
 "Thank you for updating to the latest version! Easy Digital Downloads %s is "
 "ready to make your online store faster, safer and better!"
 msgstr ""
 
-#: includes/admin/welcome.php:311
+#: includes/admin/welcome.php:317
 msgid ""
 "Use the tips below to get started using Easy Digital Downloads. You will be "
 "up and running in no time!"
 msgstr ""
 
-#: includes/admin/welcome.php:314
+#: includes/admin/welcome.php:320
 msgid "Creating Your First Download Product"
 msgstr ""
 
-#: includes/admin/welcome.php:320
+#: includes/admin/welcome.php:326
 msgid "<a href=\"%s\">%s &rarr; Add New</a>"
 msgstr ""
 
-#: includes/admin/welcome.php:321
+#: includes/admin/welcome.php:327
 msgid ""
 "The %s menu is your access point for all aspects of your Easy Digital "
 "Downloads product creation and setup. To create your first product, simply "
 "click Add New and then fill out the product details."
 msgstr ""
 
-#: includes/admin/welcome.php:323
+#: includes/admin/welcome.php:329
 msgid "Product Price"
 msgstr ""
 
-#: includes/admin/welcome.php:324
+#: includes/admin/welcome.php:330
 msgid ""
 "Products can have simple prices or variable prices if you wish to have more "
 "than one price point for a product. For a single price, simply enter the "
@@ -3802,112 +3800,112 @@ msgid ""
 "and enter the options."
 msgstr ""
 
-#: includes/admin/welcome.php:326
+#: includes/admin/welcome.php:332
 msgid "Download Files"
 msgstr ""
 
-#: includes/admin/welcome.php:327
+#: includes/admin/welcome.php:333
 msgid ""
 "Uploading the downloadable files is simple. Click <em>Upload File</em> in "
 "the Download Files section and choose your download file. To add more than "
 "one file, simply click the <em>Add New</em> button."
 msgstr ""
 
-#: includes/admin/welcome.php:333
+#: includes/admin/welcome.php:339
 msgid "Display a Product Grid"
 msgstr ""
 
-#: includes/admin/welcome.php:339
+#: includes/admin/welcome.php:345
 msgid "Flexible Product Grids"
 msgstr ""
 
-#: includes/admin/welcome.php:340
+#: includes/admin/welcome.php:346
 msgid ""
 "The [downloads] shortcode will display a product grid that works with any "
 "theme, no matter the size. It is even responsive!"
 msgstr ""
 
-#: includes/admin/welcome.php:342
+#: includes/admin/welcome.php:348
 msgid "Change the Number of Columns"
 msgstr ""
 
-#: includes/admin/welcome.php:343
+#: includes/admin/welcome.php:349
 msgid ""
 "You can easily change the number of columns by adding the columns=\"x\" "
 "parameter:"
 msgstr ""
 
-#: includes/admin/welcome.php:346
+#: includes/admin/welcome.php:352
 msgid "Additional Display Options"
 msgstr ""
 
-#: includes/admin/welcome.php:347
+#: includes/admin/welcome.php:353
 msgid ""
 "The product grids can be customized in any way you wish and there is <a "
 "href=\"%s\">extensive documentation</a> to assist you."
 msgstr ""
 
-#: includes/admin/welcome.php:352
+#: includes/admin/welcome.php:358
 msgid "Purchase Buttons Anywhere"
 msgstr ""
 
-#: includes/admin/welcome.php:358
+#: includes/admin/welcome.php:364
 msgid "The <em>[purchase_link]</em> Shortcode"
 msgstr ""
 
-#: includes/admin/welcome.php:359
+#: includes/admin/welcome.php:365
 msgid ""
 "With easily accessible shortcodes to display purchase buttons, you can add "
 "a Buy Now or Add to Cart button for any product anywhere on your site in "
 "seconds."
 msgstr ""
 
-#: includes/admin/welcome.php:361
+#: includes/admin/welcome.php:367
 msgid "Buy Now Buttons"
 msgstr ""
 
-#: includes/admin/welcome.php:362
+#: includes/admin/welcome.php:368
 msgid ""
 "Purchase buttons can behave as either Add to Cart or Buy Now buttons. With "
 "Buy Now buttons customers are taken straight to PayPal, giving them the "
 "most frictionless purchasing experience possible."
 msgstr ""
 
-#: includes/admin/welcome.php:368
+#: includes/admin/welcome.php:374
 msgid "Need Help?"
 msgstr ""
 
-#: includes/admin/welcome.php:372
+#: includes/admin/welcome.php:378
 msgid "Phenomenal Support"
 msgstr ""
 
-#: includes/admin/welcome.php:373
+#: includes/admin/welcome.php:379
 msgid ""
 "We do our best to provide the best support we can. If you encounter a "
 "problem or have a question, post a question in the <a "
 "href=\"https://easydigitaldownloads.com/support\">support forums</a>."
 msgstr ""
 
-#: includes/admin/welcome.php:375
+#: includes/admin/welcome.php:381
 msgid "Need Even Faster Support?"
 msgstr ""
 
-#: includes/admin/welcome.php:376
+#: includes/admin/welcome.php:382
 msgid ""
 "Our <a href=\"https://easydigitaldownloads.com/support/pricing/\">Priority "
 "Support forums</a> are there for customers that need faster and/or more "
 "in-depth assistance."
 msgstr ""
 
-#: includes/admin/welcome.php:382
+#: includes/admin/welcome.php:388
 msgid "Stay Up to Date"
 msgstr ""
 
-#: includes/admin/welcome.php:386
+#: includes/admin/welcome.php:392
 msgid "Get Notified of Extension Releases"
 msgstr ""
 
-#: includes/admin/welcome.php:387
+#: includes/admin/welcome.php:393
 msgid ""
 "New extensions that make Easy Digital Downloads even more powerful are "
 "released nearly every single week. Subscribe to the newsletter to stay up "
@@ -3915,26 +3913,26 @@ msgid ""
 "target=\"_blank\">Signup now</a> to ensure you do not miss a release!"
 msgstr ""
 
-#: includes/admin/welcome.php:389
+#: includes/admin/welcome.php:395
 msgid "Get Alerted About New Tutorials"
 msgstr ""
 
-#: includes/admin/welcome.php:390
+#: includes/admin/welcome.php:396
 msgid ""
 "<a href=\"http://eepurl.com/kaerz\" target=\"_blank\">Signup now</a> to "
 "hear about the latest tutorial releases that explain how to take Easy "
 "Digital Downloads further."
 msgstr ""
 
-#: includes/admin/welcome.php:396
+#: includes/admin/welcome.php:402
 msgid "Extensions for Everything"
 msgstr ""
 
-#: includes/admin/welcome.php:400
+#: includes/admin/welcome.php:406
 msgid "Over 250 Extensions"
 msgstr ""
 
-#: includes/admin/welcome.php:401
+#: includes/admin/welcome.php:407
 msgid ""
 "Add-on plugins are available that greatly extend the default functionality "
 "of Easy Digital Downloads. There are extensions for payment processors, "
@@ -3942,11 +3940,11 @@ msgid ""
 "many, many more."
 msgstr ""
 
-#: includes/admin/welcome.php:403
+#: includes/admin/welcome.php:409
 msgid "Visit the Extension Store"
 msgstr ""
 
-#: includes/admin/welcome.php:404
+#: includes/admin/welcome.php:410
 msgid ""
 "<a href=\"https://easydigitaldownloads.com/extensions\" "
 "target=\"_blank\">The Extensions store</a> has a list of all available "
@@ -3954,14 +3952,14 @@ msgid ""
 "what you are looking for."
 msgstr ""
 
-#: includes/admin/welcome.php:430
+#: includes/admin/welcome.php:436
 msgid ""
 "Easy Digital Downloads is created by a worldwide team of developers who aim "
 "to provide the #1 eCommerce platform for selling digital goods through "
 "WordPress."
 msgstr ""
 
-#: includes/admin/welcome.php:448
+#: includes/admin/welcome.php:454
 msgid "No valid changlog was found."
 msgstr ""
 
