@@ -180,40 +180,45 @@ class EDD_Welcome {
 
 				<div class="feature-section">
 
-					<p><?php _e( 'Version 2.3 added a comprehensive customer management interface. Get detailed statistics on your customres, quickly make edits, and leave detailed notes.', 'edd' );?></p>
+					<p><?php _e( 'Version 2.3 introduces a comprehensive customer management interface. Get detailed statistics on your customres, quickly make edits, and leave detailed notes.', 'edd' );?></p>
 
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/customer-ui.png'; ?>" class="edd-welcome-screenshots"/>
 
-					<h4><?php _e( 'Signed URLs', 'edd' );?></h4>
-					<p><?php _e( 'Download URLs provided to customers have been improved to be shorter and more secure, using tokens to verify the URL prior to allowing the download to start.', 'edd' );?></p>
+					<h4><?php _e( 'Better Customer Details on Payment', 'edd' );?></h4>
+					<p><?php _e( 'The Customer Details section of the View Order Details screen has been updated to make it easier to move payment records between customers. A quick link to the customer\'s overview page has also been added, letting you easily see all purchases made by the customer.', 'edd' );?></p>
 
-					<h4><?php _e( 'Sales Log Improvements', 'edd' );?></h4>
-					<p><?php _e( 'When adding or removing a downlaod from a payment, the appropriate action is taken on the sales logs, which will provide more accurate sales and earnings statistics.', 'edd' );?></p>
+					<h4><?php _e( 'Create New Customers Quickly', 'edd' );?></h4>
+					<p><?php _e( 'New customer records can now be created directly from the View Order Details screen, making it easier for you to manage change requests from your customers.', 'edd' );?></p>
 
-					<h4><?php _e( 'Better Tax Calculation', 'edd' );?></h4>
-					<p><?php _e( 'Calculating year end taxes has been improved to be EXTREMELY more efficient. We\'ve improved the performance by ~8x, which means faster report generation.', 'edd' );?></p>
+					<h4><?php _e( 'More Accessible', 'edd' );?></h4>
+					<p><?php _e( 'Your store\'s customer history has been moved to a dedicated submenu of the Downloads menu, making it significantly easier to locate. No longer is it hidden in an obscure section of the Reports page.', 'edd' );?></p>
 
 				</div>
 			</div>
 
 			<div class="changelog">
-				<h3><?php _e( '2nd Section', 'edd' );?></h3>
+				<h3><?php _e( 'Signed URLs', 'edd' );?></h3>
 
 				<div class="feature-section">
 
-					<p><?php _e( 'Another great feature', 'edd' );?></p>
+					<p><?php _e( 'We take security seriously and with Easy Digital Downloads 2.3, we have introduced a better, more secure file download mechanism that keeps your files safe and secure.', 'edd' );?></p>
+					<p><?php _e( 'Download URLs provided to customers have been improved to be shorter and more secure, and now use tokens to verify the URL prior to allowing the download to start.', 'edd' );?></p>
+
+				</div>
+			</div>
+
+			<div class="changelog">
+				<h3><?php _e( 'Improved Order Details', 'edd' );?></h3>
+
+				<div class="feature-section">
 
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/22-purchased-downloads2.png'; ?>" class="edd-welcome-screenshots"/>
 
 					<h4><?php _e( 'Focus on Purchased Downloads', 'edd' );?></h4>
 					<p><?php _e( 'The Download products your customer has purchased is one of the most important parts of this screen, so we have put it up front and in the spotlight.', 'edd' );?></p>
 
-					<h4><?php _e( 'Easy Access to Important Data', 'edd' );?></h4>
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/22-logs.png'; ?>" class="edd-welcome-screenshots"/>
-					<p><?php _e( 'EDD keeps extensive logs of everything that happens with a purchase, including file downloads for the purchase and the customer. We have made this information much more accessible in 2.2.', 'edd' );?></p>
-
-					<h4><?php _e( 'Linked Transaction IDs', 'edd' );?></h4>
-					<p><?php _e( 'The Transaction ID is now linked directly to the transaction details page of the payment processor, making refunds and cross references easier and more efficient.', 'edd' );?></p>
+					<h4><?php _e( 'More Accurate Statistics', 'edd' );?></h4>
+					<p><?php _e( 'Adding or removing Downloads to and from a payment receord now properly triggers an update routine to ensure the sales and earnings for the affected products are properly updated.', 'edd' );?></p>
 
 				</div>
 			</div>
@@ -225,17 +230,20 @@ class EDD_Welcome {
 					<div>
 
 						<h4><?php _e( 'PolyLang Support', 'edd' );?></h4>
-						<p><?php _e( 'We\'ve added support for the popular PolyLang Plugin in 2.3.', 'edd' );?></p>
+						<p><?php _e( 'We\'ve improved support for the popular PolyLang Plugin in 2.3 making EDD more accessible in more languages.', 'edd' );?></p>
 
-						<h4><?php _e( 'Customer Data Performance', 'edd' );?></h4>
-						<p><?php _e( 'With the new EDD_Customer class, getting stats and purchases for a specific user or customer is more efficient and faster then previous versions.', 'edd' );?></p>
+						<h4><?php _e( 'Customer API', 'edd' );?></h4>
+						<p><?php _e( 'A new EDD_Customer class has been introduced that makes it easy for developers to interact with customer data.', 'edd' );?></p>
 
 					</div>
 
 					<div>
 
 						<h4><?php _e( 'Schema Validation', 'edd' );?></h4>
-						<p><?php _e( 'The Schema Markup has been corrected, allowing both single and mult-price option products to validate.' ,'edd' );?></p>
+						<p><?php _e( 'The Schema Markup has been improved and now properly includes prices for both single and mult-price option products.' ,'edd' );?></p>
+
+						<h4><?php _e( 'Buy Now Button Improvements', 'edd' );?></h4>
+						<p><?php _e( 'Buy Now buttons no longer create pending payment records when they are clicked. Buy Now also get automatically deactivated if no supported payment gateway is activated.' ,'edd' );?></p>
 
 					</div>
 
