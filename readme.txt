@@ -212,6 +212,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * New: Introduced edd_before_purchase_history hook
 * New: Introduced edd_after_purchase_history hook
 * New: Introduced edd_email_show_links filter
+* New: Updated translation files for numerous languages
 * New: Introduced EDD_Notices class for handling admin notices
 * Tweak: Buy Now buttons should revert to Add to Cart if no compatible gateway is activated
 * Tweak: Improved PHPDoc for many existing functions and classes
