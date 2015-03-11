@@ -83,12 +83,12 @@ function edd_edit_customer( $args ) {
 			$address['state']   = isset( $customer_info['state'] )   ? $customer_info['state']   : '';
 		} else {
 			$current_address    = wp_parse_args( $current_address, array( 'line1', 'line2', 'city', 'zip', 'state', 'country' ) );
-			$address['line1']   = ! empty( $customer_info['line1'] )   ? $customer_info['line1']   : $current_address['line1']  ;
-			$address['line2']   = ! empty( $customer_info['line2'] )   ? $customer_info['line2']   : $current_address['line2']  ;
-			$address['city']    = ! empty( $customer_info['city'] )    ? $customer_info['city']    : $current_address['city']   ;
-			$address['country'] = ! empty( $customer_info['country'] ) ? $customer_info['country'] : $current_address['country'];
-			$address['zip']     = ! empty( $customer_info['zip'] )     ? $customer_info['zip']     : $current_address['zip']    ;
-			$address['state']   = ! empty( $customer_info['state'] )   ? $customer_info['state']   : $current_address['state']  ;
+			$address['line1']   = isset( $customer_info['line1'] )   ? $customer_info['line1']   : $current_address['line1']  ;
+			$address['line2']   = isset( $customer_info['line2'] )   ? $customer_info['line2']   : $current_address['line2']  ;
+			$address['city']    = isset( $customer_info['city'] )    ? $customer_info['city']    : $current_address['city']   ;
+			$address['country'] = isset( $customer_info['country'] ) ? $customer_info['country'] : $current_address['country'];
+			$address['zip']     = isset( $customer_info['zip'] )     ? $customer_info['zip']     : $current_address['zip']    ;
+			$address['state']   = isset( $customer_info['state'] )   ? $customer_info['state']   : $current_address['state']  ;
 		}
 
 	}
