@@ -549,7 +549,7 @@ function edd_purchase_form_validate_user_login() {
 					'password_incorrect',
 					sprintf(
 						__( 'The password you entered is incorrect. %sReset Password%s', 'edd' ),
-						'<a href="' . wp_lostpassword_url( edd_get_checkout_uri() ) . '" title="' . __( 'Lost Password' ) . '">',
+						'<a href="' . wp_lostpassword_url( edd_get_checkout_uri() ) . '" title="' . __( 'Lost Password', 'edd' ) . '">',
 						'</a>'
 					)
 				);
