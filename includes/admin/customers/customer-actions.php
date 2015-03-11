@@ -82,7 +82,7 @@ function edd_edit_customer( $args ) {
 			$address['zip']     = isset( $customer_info['zip'] )     ? $customer_info['zip']     : '';
 			$address['state']   = isset( $customer_info['state'] )   ? $customer_info['state']   : '';
 		} else {
-			$current_address          = wp_parse_args( $current_address, array( 'line1', 'line2', 'city', 'zip', 'state', 'country' ) );
+			$current_address    = wp_parse_args( $current_address, array( 'line1', 'line2', 'city', 'zip', 'state', 'country' ) );
 			$address['line1']   = ! empty( $customer_info['line1'] )   ? $customer_info['line1']   : $current_address['line1']  ;
 			$address['line2']   = ! empty( $customer_info['line2'] )   ? $customer_info['line2']   : $current_address['line2']  ;
 			$address['city']    = ! empty( $customer_info['city'] )    ? $customer_info['city']    : $current_address['city']   ;
