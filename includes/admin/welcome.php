@@ -176,40 +176,38 @@ class EDD_Welcome {
 			<?php $this->tabs(); ?>
 
 			<div class="changelog">
-				<h3><?php _e( 'Better Purchase Form Options', 'edd' );?></h3>
+				<h3><?php _e( 'New Customer Management UI', 'edd' );?></h3>
 
 				<div class="feature-section">
 
-					<p><?php _e( 'In version 2.2, we have dramatically improved the purchase form features, making them more flexible and powerful.', 'edd' );?></p>
+					<p><?php _e( 'Version 2.3 added a comprehensive customer management interface. Get detailed statistics on your customres, quickly make edits, and leave detailed notes.', 'edd' );?></p>
 
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/22-quantity.png'; ?>" class="edd-welcome-screenshots"/>
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/customer-ui.png'; ?>" class="edd-welcome-screenshots"/>
 
-					<h4><?php _e( 'Quantity Field', 'edd' );?></h4>
-					<p><?php _e( 'The purchase forms now support quantity fields that allow your customers to enter their desired quantity before proceeding to checkout.', 'edd' );?></p>
+					<h4><?php _e( 'Signed URLs', 'edd' );?></h4>
+					<p><?php _e( 'Download URLs provided to customers have been improved to be shorter and more secure, using tokens to verify the URL prior to allowing the download to start.', 'edd' );?></p>
 
-					<h4><?php _e( 'Default Selected Price Option', 'edd' );?></h4>
-					<p><?php _e( 'Shop administrators can now select the default price option that is selected for customers.', 'edd' );?></p>
+					<h4><?php _e( 'Sales Log Improvements', 'edd' );?></h4>
+					<p><?php _e( 'When adding or removing a downlaod from a payment, the appropriate action is taken on the sales logs, which will provide more accurate sales and earnings statistics.', 'edd' );?></p>
 
-					<h4><?php _e( 'Price-Specific Purchase Buttons', 'edd' );?></h4>
-					<p><?php _e( 'Purchase buttons now support displaying a purchase form for a specific price option. Simply add the <em>price_id</em> parameter:', 'edd' );?></p>
-					<p><pre>[purchase_link id="22" price_id="2"]</pre></p>
-
+					<h4><?php _e( 'Better Tax Calculation', 'edd' );?></h4>
+					<p><?php _e( 'Calculating year end taxes has been improved to be EXTREMELY more efficient. We\'ve improved the performance by ~8x, which means faster report generation.', 'edd' );?></p>
 
 				</div>
 			</div>
 
 			<div class="changelog">
-				<h3><?php _e( 'Improved View Order Details', 'edd' );?></h3>
+				<h3><?php _e( '2nd Section', 'edd' );?></h3>
 
 				<div class="feature-section">
 
-					<p><?php _e( 'The View Order Details screen is likely one of the places you spend the most time in, so shouldn\'t it be great? We think so.', 'edd' );?></p>
+					<p><?php _e( 'Another great feature', 'edd' );?></p>
 
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/22-purchased-downloads2.png'; ?>" class="edd-welcome-screenshots"/>
 
 					<h4><?php _e( 'Focus on Purchased Downloads', 'edd' );?></h4>
 					<p><?php _e( 'The Download products your customer has purchased is one of the most important parts of this screen, so we have put it up front and in the spotlight.', 'edd' );?></p>
-					
+
 					<h4><?php _e( 'Easy Access to Important Data', 'edd' );?></h4>
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/22-logs.png'; ?>" class="edd-welcome-screenshots"/>
 					<p><?php _e( 'EDD keeps extensive logs of everything that happens with a purchase, including file downloads for the purchase and the customer. We have made this information much more accessible in 2.2.', 'edd' );?></p>
@@ -225,29 +223,29 @@ class EDD_Welcome {
 
 				<div class="feature-section col three-col">
 					<div>
-		
-						<h4><?php _e( 'New EDD_Download Class', 'edd' );?></h4>
-						<p><?php _e( 'The EDD_Download class implemented in 2.2 will make it easier for theme and extension developers to integrate with Easy Digital Downloads by providing a simple method to create and access Download product information.', 'edd' );?></p>
 
-						<h4><?php _e( 'Per-Product Fees with EDD_Fees', 'edd' );?></h4>
-						<p><?php _e( 'The EDD_Fees class now supports per-product fees that can be setup to only be applied when specific products are in the cart.', 'edd' );?></p>
+						<h4><?php _e( 'PolyLang Support', 'edd' );?></h4>
+						<p><?php _e( 'We\'ve added support for the popular PolyLang Plugin in 2.3.', 'edd' );?></p>
+
+						<h4><?php _e( 'Customer Data Performance', 'edd' );?></h4>
+						<p><?php _e( 'With the new EDD_Customer class, getting stats and purchases for a specific user or customer is more efficient and faster then previous versions.', 'edd' );?></p>
+
 					</div>
 
 					<div>
-						<h4><?php _e( 'WP CLI Command for Test Payments', 'edd' );?></h4>
-						<p><?php _e( 'The <em>edd</em> command in WP CLI now supports creating sample purchase data for easier testing.' ,'edd' );?></p>
 
-						<h4><?php _e( 'Improved Tax Settings', 'edd' );?></h4>
-						<p><?php _e( 'The Taxes settings tab has been re-organized to make configuring taxes in your store simpler and more intuitive.', 'edd' );?></p>
+						<h4><?php _e( 'Schema Validation', 'edd' );?></h4>
+						<p><?php _e( 'The Schema Markup has been corrected, allowing both single and mult-price option products to validate.' ,'edd' );?></p>
+
 					</div>
 
 					<div class="last-feature">
-						<h4><?php _e( 'Better Multi-Currency Support', 'edd' );?></h4>
-						<p><?php _e( 'Payment records now properly support historical currencies, meaning that payment currencies will display their original currency even if the shop currency changes.', 'edd' );?></p>
 
-						<h4><?php _e( 'Improved Product Drop Downs', 'edd' ); ?></h4>
-						<p><?php _e( 'The product drop downs have been made more intuitive and reliable.', 'edd' );?></p>
+						<h4><?php _e( 'Improved Upgrade Routine API', 'edd' );?></h4>
+						<p><?php _e( 'The upgrade routine has been improved to be more robust and user friendly. It now supports multiple upgrades in a single release, logs which have been completed ,as well as allows incomplete upgrades to be resumed.', 'edd' );?></p>
+
 					</div>
+
 				</div>
 			</div>
 
