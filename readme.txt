@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.9.2
 Tested up to: 4.2
 
-Stable Tag: 2.2.8
+Stable Tag: 2.3
 
 License: GNU Version 2 or Any Later Version
 
@@ -191,6 +191,73 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.3, March 11, 2015 =
+
+* New: Improved customer management interface
+* New: Added support for adding multiple prices IDs to the cart with a single add to cart command
+* New: Introduced edd_update_option() and edd_delete_option() functions
+* New: Payments that remain pending in PayPal will now record a reason in the Payment Notes section
+* New: Adding / removing Download products from payment records now properly updates sale and earnings stats
+* New: Introduced signed URLs for more secure file download links
+* New: Introduced {ip_address} email template tag
+* New: Introduced EDD_Customer class for interacting with customer records
+* New: Introduced WP CLI command to create sample customers
+* New: Introduced edd_purchase_form_user_info_fields hook
+* New: Introduced edd_purchase_form_user_register_fields hook
+* New: Introduced edd_download_after_thumbnail hook
+* New: Introduced edd_download_after_title hook
+* New: Introduced edd_download_after_content hook
+* New: Introduced edd_download_after_price hook
+* New: Introduced edd_before_purchase_history hook
+* New: Introduced edd_after_purchase_history hook
+* New: Introduced edd_email_show_links filter
+* New: Introduced EDD_Notices class for handling admin notices
+* Tweak: Buy Now buttons should revert to Add to Cart if no compatible gateway is activated
+* Tweak: Improved PHPDoc for many existing functions and classes
+* Tweak: First input field in repeatable files / prices fields receive input focus when adding a new row
+* Tweak: Added line breaks to edd.css file in favor of single-line rules
+* Tweak: Improved performance of edd_get_users_purchases() by querying the customer table directly
+* Tweak: Dashboard sales / earnings widget is now loaded via Ajax to improve performance
+* Tweak: PayPal payments made through Buy Now buttons do not show up 
+* Tweak: Removed the "You must have at least one file" alert when deleting file rows
+* Tweak: Improved text alignment in repeatable file / price rows
+* Tweak: Updated HTTP Protocal version in PayPal Standard gateway
+* Tweak: Improved support for Polylang plugin
+* Tweak: Improved standards throughout EDD for usage of edd_get_option()
+* Tweak: Added option to prevent empty settings in the rich_editor callback function
+* Tweak: Removed dependency on base64_encode/decode functions
+* Tweak: Notice now displayed NGINX users to alert them of missing protection for file downloads
+* Tweak: Improved quantity / price display for items in the cart widget
+* Tweak: Bundles should not be included in the product search when adding items to a bundle
+* Tweak: Improved earnings / sales stats tracking for products to avoid race conditions
+* Tweak: Improved performance for edd_get_sales_tax_for_year()
+* Fix: Yesterday view for reports and REST API fails when on the first day of the month
+* Fix: EDD_Download class missing default properties from WP_Post
+* Fix: Removed unused function calls in PDF reports and upgrade functions
+* Fix: Deprecated edd_get_cart_subtotal() function called with too many arguments
+* Fix: edd_get_cart_item_price() function called with too many arguments
+* Fix: edd_remove_item_url() function called with too many arguments
+* Fix: Improper start_date declaration in CLI class
+* Fix: Missing variable declaration in EDD_SL_Plugin_Updater class
+* Fix: Undefined variable $download in CLI clas
+* Fix: Rounding error when prices are inclusive of tax
+* Fix: Sale / Earnings stats improperly adjusted when Test Mode is enabled
+* Fix: Discount codes are validated improperly when the product requirements are not meant
+* Fix: CVC field allows more than 4 digits
+* Fix: In-browser receipt page is a mess on Twenty Fifteeen theme
+* Fix: exclude_categories and exclude_tags parameters not working properly in [downloads] short code
+* Fix: Cross-domain download files get corrupted on NGINX servers
+* Fix: Instantiating EDD_Payment_Stats without a date triggers an error
+* Fix: File size not displayed when download files
+* Fix: Undefined index notice in REST API
+* Fix: Missing Download ID check in the Sales Log table
+* Fix: Update successful messages are wrong when using bulk edit
+* Fix: Cart widget items do not show the proper quantity
+* Fix: Upgrade routine notices overwrite each other improperly
+* Fix: Not all schema metadata removed when schema is disabled
+* Fix: Incorrect schema markup
+* Fix: Taxes on checkout do not display the taxed amount of fees
 
 = 2.2.8, February 13, 2015 =
 
