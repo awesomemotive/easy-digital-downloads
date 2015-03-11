@@ -185,9 +185,10 @@ function edd_ajax_add_to_cart() {
 		}
 
 		$return = array(
-			'subtotal'  => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
-			'total'     => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ), ENT_COMPAT, 'UTF-8' ),
-			'cart_item' => $items
+			'subtotal'      => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
+			'total'         => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ), ENT_COMPAT, 'UTF-8' ),
+			'cart_item'     => $items,
+			'cart_quantity' => html_entity_decode( edd_get_cart_quantity() )
 		);
 
 		echo json_encode( $return );
@@ -436,13 +437,42 @@ add_action( 'wp_ajax_nopriv_edd_get_shop_states', 'edd_ajax_get_states_field' );
 function edd_ajax_download_search() {
 	global $wpdb;
 
-	$search  = esc_sql( sanitize_text_field( $_GET['s'] ) );
+	$search   = esc_sql( sanitize_text_field( $_GET['s'] ) );
+	$excludes = ( isset( $_GET['current_id'] ) ? (array) $_GET['current_id'] : array() );
+	$excludes = array_map( 'absint', $excludes );
+	$exclude  = implode( ',', $excludes );
+
 	$results = array();
-	if ( current_user_can( 'edit_products' ) ) {
-		$items = $wpdb->get_results( "SELECT ID,post_title FROM $wpdb->posts WHERE `post_type` = 'download' AND `post_title` LIKE '%$search%' LIMIT 50" );
-	} else {
-		$items = $wpdb->get_results( "SELECT ID,post_title FROM $wpdb->posts WHERE `post_type` = 'download' AND `post_status` = 'publish' AND `post_title` LIKE '%$search%' LIMIT 50" );
+
+	// Setup the SELECT statement
+	$select = "SELECT ID,post_title FROM $wpdb->posts ";
+
+	// Setup the WHERE clause
+	$where = "WHERE `post_type` = 'download' and `post_title` LIKE '%s' ";
+
+	// If we have items to exclude, exclude them
+	if( ! empty( $exclude ) ) {
+		$where .= "AND `ID` NOT IN (%s) ";
 	}
+
+	// If the user can't edit products, limit to just published items
+	if( ! current_user_can( 'edit_products' ) ) {
+		$where .= "AND `post_status` = 'publish' ";
+	}
+
+	// Limit the result sets
+	$limit = "LIMIT 50";
+
+	$sql = $select . $where . $limit;
+
+	if( ! empty( $exclude ) ) {
+		$prepared_statement = $wpdb->prepare( $sql, '%' . $search . '%', $exclude );
+	} else {
+		$prepared_statement = $wpdb->prepare( $sql, '%' . $search . '%' );
+	}
+
+
+	$items = $wpdb->get_results( $prepared_statement );
 
 	if( $items ) {
 
@@ -484,7 +514,15 @@ function edd_ajax_customer_search() {
 	if ( ! current_user_can( 'view_shop_reports' ) ) {
 		$customers = array();
 	} else {
-		$customers = $wpdb->get_results( "SELECT id,name,email FROM {$wpdb->prefix}edd_customers WHERE `name` LIKE '%$search%' OR `email` LIKE '%$search%' LIMIT 50" );
+		$select = "SELECT id, name, email FROM {$wpdb->prefix}edd_customers ";
+		if ( is_numeric( $search ) ) {
+			$where = "WHERE `id` LIKE '%$search%' OR `user_id` LIKE '%$search%' ";
+		} else {
+			$where = "WHERE `name` LIKE '%$search%' OR `email` LIKE '%$search%' ";
+		}
+		$limit = "LIMIT 50";
+
+		$customers = $wpdb->get_results( $select . $where . $limit );
 	}
 
 	if( $customers ) {
@@ -566,17 +604,26 @@ function edd_ajax_search_users() {
 	if( current_user_can( 'manage_shop_settings' ) ) {
 
 		$search_query = trim( $_POST['user_name'] );
+		$exclude      = trim( $_POST['exclude'] );
 
-		$found_users = get_users( array(
-				'number' => 9999,
-				'search' => $search_query . '*'
-			)
+		$get_users_args = array(
+			'number' => 9999,
+			'search' => $search_query . '*'
 		);
+
+		if ( ! empty( $exclude ) ) {
+			$exclude_array = explode( ',', $exclude );
+			$get_users_args['exclude'] = $exclude_array;
+		}
+
+		$get_users_args = apply_filters( 'edd_search_users_args', $get_users_args );
+
+		$found_users = get_users( $get_users_args );
 
 		$user_list = '<ul>';
 		if( $found_users ) {
 			foreach( $found_users as $user ) {
-				$user_list .= '<li><a href="#" data-login="' . esc_attr( $user->user_login ) . '">' . esc_html( $user->user_login ) . '</a></li>';
+				$user_list .= '<li><a href="#" data-userid="' . esc_attr( $user->ID ) . '" data-login="' . esc_attr( $user->user_login ) . '">' . esc_html( $user->user_login ) . '</a></li>';
 			}
 		} else {
 			$user_list .= '<li>' . __( 'No users found', 'edd' ) . '</li>';

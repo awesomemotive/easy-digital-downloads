@@ -257,7 +257,7 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 
 	_edd_deprecated_function( __FUNCTION__, '1.9', 'edd_get_cart_subtotal() or edd_get_cart_total()', $backtrace );
 
-	$amount = edd_get_cart_subtotal( false );
+	$amount = edd_get_cart_subtotal( );
 	if ( ! empty( $_POST['edd-discount'] ) || edd_get_cart_discounts() !== false ) {
 		// Retrieve the discount stored in cookies
 		$discounts = edd_get_cart_discounts();
@@ -460,4 +460,87 @@ function edd_taxes_after_discounts() {
 	global $edd_options;
 	$ret = isset( $edd_options['taxes_after_discounts'] ) && edd_use_taxes();
 	return apply_filters( 'edd_taxes_after_discounts', $ret );
+}
+
+/**
+ * Verifies a download purchase using a purchase key and email.
+ *
+ * @deprecated Please avoid usage of this function in favor of the tokenized urls with edd_validate_url_token()
+ * introduced in EDD 2.3
+ *
+ * @since 1.0
+ *
+ * @param int    $download_id
+ * @param string $key
+ * @param string $email
+ * @param string $expire
+ * @param int    $file_key
+ *
+ * @return bool True if payment and link was verified, false otherwise
+ */
+function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $expire = '', $file_key = 0 ) {
+
+	$meta_query = array(
+		'relation'  => 'AND',
+		array(
+			'key'   => '_edd_payment_purchase_key',
+			'value' => $key
+		),
+		array(
+			'key'   => '_edd_payment_user_email',
+			'value' => $email
+		)
+	);
+
+	$accepted_stati = apply_filters( 'edd_allowed_download_stati', array( 'publish', 'complete' ) );
+
+	$payments = get_posts( array( 'meta_query' => $meta_query, 'post_type' => 'edd_payment', 'post_status' => $accepted_stati ) );
+
+	if ( $payments ) {
+		foreach ( $payments as $payment ) {
+
+			$cart_details = edd_get_payment_meta_cart_details( $payment->ID, true );
+
+			if ( ! empty( $cart_details ) ) {
+				foreach ( $cart_details as $cart_key => $cart_item ) {
+
+					if ( $cart_item['id'] != $download_id )
+						continue;
+
+					$price_options 	= isset( $cart_item['item_number']['options'] ) ? $cart_item['item_number']['options'] : false;
+					$price_id 		= isset( $price_options['price_id'] ) ? $price_options['price_id'] : false;
+
+					$file_condition = edd_get_file_price_condition( $cart_item['id'], $file_key );
+
+					// Check to see if the file download limit has been reached
+					if ( edd_is_file_at_download_limit( $cart_item['id'], $payment->ID, $file_key, $price_id ) )
+						wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+
+					// If this download has variable prices, we have to confirm that this file was included in their purchase
+					if ( ! empty( $price_options ) && $file_condition != 'all' && edd_has_variable_prices( $cart_item['id'] ) ) {
+						if ( $file_condition == $price_options['price_id'] )
+							return $payment->ID;
+					}
+
+					// Make sure the link hasn't expired
+
+					if ( base64_encode( base64_decode( $expire, true ) ) === $expire ) {
+						$expire = base64_decode( $expire ); // If it is a base64 string, decode it. Old expiration dates were in base64
+					}
+
+					if ( current_time( 'timestamp' ) > $expire ) {
+						wp_die( apply_filters( 'edd_download_link_expired_text', __( 'Sorry but your download link has expired.', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+					}
+					return $payment->ID; // Payment has been verified and link is still valid
+				}
+
+			}
+
+		}
+
+	} else {
+		wp_die( __( 'No payments matching your request were found.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+	}
+	// Payment not verified
+	return false;
 }

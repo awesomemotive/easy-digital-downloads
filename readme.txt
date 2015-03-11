@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.9.2
 Tested up to: 4.2
 
-Stable Tag: 2.2.8
+Stable Tag: 2.3
 
 License: GNU Version 2 or Any Later Version
 
@@ -42,13 +42,13 @@ More information at [Easy Digital Downloads.com](https://easydigitaldownloads.co
 
 **Sell and Track Software License Keys**
 
-[Software Licensing](https://easydigitaldownloads.com/extension/software-licensing/) for Easy Digital Downloads provides a complete license key generation, activation, and checking system. It allows you to provide license keys along with your digital products that can then be used to properly license and activate the buyer’s copy of the software.
+[Software Licensing](https://easydigitaldownloads.com/extensions/software-licensing/) for Easy Digital Downloads provides a complete license key generation, activation, and checking system. It allows you to provide license keys along with your digital products that can then be used to properly license and activate the buyer’s copy of the software.
 
 Includes a complete integration pack for delivering automatic upgrades for premium WordPress plugins and themes.
 
 **Build Up Your Email Subscribers**
 
-With add-ons for [Mail Chimp](http://easydigitaldownloads.com/extension/mail-chimp/), [Campaign Monitor](http://easydigitaldownloads.com/extension/campaign-monitor/), and [AWeber](http://easydigitaldownloads.com/extension/aweber/), [Wysija](https://easydigitaldownloads.com/extension/wysija/), [ActiveCampaign](https://easydigitaldownloads.com/extension/active-campaign/), [iContact](https://easydigitaldownloads.com/extension/icontact/), [Campaign Monitor](https://easydigitaldownloads.com/extension/campaign-monitor/), [Constant Contact](https://easydigitaldownloads.com/extension/constant-contact/), and more, Easy Digital Downloads can easily grow your email subscription lists while making you money at the same time.
+With add-ons for [Mail Chimp](http://easydigitaldownloads.com/extensions/mail-chimp/), [Campaign Monitor](http://easydigitaldownloads.com/extensions/campaign-monitor/), and [AWeber](http://easydigitaldownloads.com/extensions/aweber/), [Wysija](https://easydigitaldownloads.com/extensions/wysija/), [ActiveCampaign](https://easydigitaldownloads.com/extensions/active-campaign/), [iContact](https://easydigitaldownloads.com/extensions/icontact/), [Campaign Monitor](https://easydigitaldownloads.com/extensions/campaign-monitor/), [Constant Contact](https://easydigitaldownloads.com/extensions/constant-contact/), and more, Easy Digital Downloads can easily grow your email subscription lists while making you money at the same time.
 
 **Languages**
 
@@ -71,6 +71,15 @@ Easy Digital Downloads has been translated into the following languages:
 15. Farsi
 16. Finnish
 17. Hebrew
+18. Persian
+19. Finnish
+20. Slovak
+21. Swedish
+22. Romanian
+23. Hungarian
+24. Norwegian
+25. Khmer
+26. Lithuanian
 
 Would you like to help translate the plugin into more languages? [Join our WP-Translations Community](https://www.transifex.com/projects/p/easy-digital-downloads/).
 
@@ -123,51 +132,51 @@ Yes! EDD integrates directly with several affiliate platforms that provide compl
 = Can I give my customers downloadable PDF Invoices? =
 Yes, EDD has an add-on that allows for downloadable invoices to be generated for each payment.
 
-[PDF Invoices](https://easydigitaldownloads.com/extension/pdf-invoices)
+[PDF Invoices](https://easydigitaldownloads.com/extensions/pdf-invoices)
 
 = Can Users Purchase Products without Using PayPal? =
 
 Yes, through the addition of one or more of the add-on payment gateways, you can accept payments in many different ways. The add-on gateways currently available:
 
-* [Stripe](http://easydigitaldownloads.com/extension/stripe-payment-gateway/)
-* [Recurly](http://easydigitaldownloads.com/extension/recurly-com-checkout/)
-* [Authorize.net](http://easydigitaldownloads.com/extension/authorize-net-gateway/)
-* [Google Wallet](https://easydigitaldownloads.com/extension/google-checkout/)
-* [Moneybookers / Skrill](http://easydigitaldownloads.com/extension/moneybookers-skrill-payment-gateway/)
-* [2Checkout](http://easydigitaldownloads.com/extension/2checkout-gateway/)
-* [PayPal Pro/Express](http://easydigitaldownloads.com/extension/paypal-pro-express/)
-* [PayPal Adaptive Payments](https://easydigitaldownloads.com/extension/paypal-adaptive-payments/)
-* [GoCardless](https://easydigitaldownloads.com/extension/gocardless-payment-gateway/)
-* [Amazon FPS](https://easydigitaldownloads.com/extension/amazon-fps-payment-gateway/)
-* [Payza](https://easydigitaldownloads.com/extension/payza-payment-gateway/)
-* [Paymill](https://easydigitaldownloads.com/extension/paymill-payment-gateway/)
-* [MOLPay](https://easydigitaldownloads.com/extension/molpay-payment-gateway/)
-* [MercadoPago](https://easydigitaldownloads.com/extension/mercadopago/)
-* [NoChex](https://easydigitaldownloads.com/extension/nochex-gateway/)
-* [Recurly.com](https://easydigitaldownloads.com/extension/recurly-com-checkout/)
-* [Network Merchants](https://easydigitaldownloads.com/extension/network-merchants-gateway/)
-* [Direct One](https://easydigitaldownloads.com/extension/direct-one/)
-* [Moneybookers/Skrill](https://easydigitaldownloads.com/extension/moneybookers-skrill-payment-gateway/)
-* [Moneris Solutions](https://easydigitaldownloads.com/extension/moneris-solutions-gateway/)
-* [My Virtual Merchant](https://easydigitaldownloads.com/extension/my-virtual-merchant/)
-* [NAB](https://easydigitaldownloads.com/extension/6038/)
-* [Mijireh](https://easydigitaldownloads.com/extension/mijireh-checkout/)
-* [eWay](https://easydigitaldownloads.com/extension/eway-gateway/)
-* [Check](https://easydigitaldownloads.com/extension/check-payment-gateway/)
-* [PagSeguro](https://easydigitaldownloads.com/extension/pagseguro-payment-gateway/)
-* [Beanstream](https://easydigitaldownloads.com/extension/beanstream-payment-gateway/)
-* [Quickbooks](https://easydigitaldownloads.com/extension/quickbooks/)
-* [PayFast](https://easydigitaldownloads.com/extension/payfast-payment-gateway/())
-* [WorldPay](https://easydigitaldownloads.com/extension/worldpay-gateway/)
-* [Payment Express](https://easydigitaldownloads.com/extension/payment-express-gateway/)
-* [BitPay](https://easydigitaldownloads.com/extension/bitpay-payment-gateway/)
-* [ClickBank](https://easydigitaldownloads.com/extension/clickbank-gateway/)
-* [Braintree](https://easydigitaldownloads.com/extension/braintree-gateway/)
-* [Dwolla](https://easydigitaldownloads.com/extension/dwolla/)
-* [Realex](https://easydigitaldownloads.com/extension/realex-gateway/)
-* [PayTrace](https://easydigitaldownloads.com/extension/paytrace/)
-* [iPay88](https://easydigitaldownloads.com/extension/ipay88-gateway/)
-* [First Data](https://easydigitaldownloads.com/extension/first-data-payment-gateway/)
+* [Stripe](http://easydigitaldownloads.com/extensions/stripe-payment-gateway/)
+* [Recurly](http://easydigitaldownloads.com/extensions/recurly-com-checkout/)
+* [Authorize.net](http://easydigitaldownloads.com/extensions/authorize-net-gateway/)
+* [Google Wallet](https://easydigitaldownloads.com/extensions/google-checkout/)
+* [Moneybookers / Skrill](http://easydigitaldownloads.com/extensions/moneybookers-skrill-payment-gateway/)
+* [2Checkout](http://easydigitaldownloads.com/extensions/2checkout-gateway/)
+* [PayPal Pro/Express](http://easydigitaldownloads.com/extensions/paypal-pro-express/)
+* [PayPal Adaptive Payments](https://easydigitaldownloads.com/extensions/paypal-adaptive-payments/)
+* [GoCardless](https://easydigitaldownloads.com/extensions/gocardless-payment-gateway/)
+* [Amazon FPS](https://easydigitaldownloads.com/extensions/amazon-fps-payment-gateway/)
+* [Payza](https://easydigitaldownloads.com/extensions/payza-payment-gateway/)
+* [Paymill](https://easydigitaldownloads.com/extensions/paymill-payment-gateway/)
+* [MOLPay](https://easydigitaldownloads.com/extensions/molpay-payment-gateway/)
+* [MercadoPago](https://easydigitaldownloads.com/extensions/mercadopago/)
+* [NoChex](https://easydigitaldownloads.com/extensions/nochex-gateway/)
+* [Recurly.com](https://easydigitaldownloads.com/extensions/recurly-com-checkout/)
+* [Network Merchants](https://easydigitaldownloads.com/extensions/network-merchants-gateway/)
+* [Direct One](https://easydigitaldownloads.com/extensions/direct-one/)
+* [Moneybookers/Skrill](https://easydigitaldownloads.com/extensions/moneybookers-skrill-payment-gateway/)
+* [Moneris Solutions](https://easydigitaldownloads.com/extensions/moneris-solutions-gateway/)
+* [My Virtual Merchant](https://easydigitaldownloads.com/extensions/my-virtual-merchant/)
+* [NAB](https://easydigitaldownloads.com/extensions/6038/)
+* [Mijireh](https://easydigitaldownloads.com/extensions/mijireh-checkout/)
+* [eWay](https://easydigitaldownloads.com/extensions/eway-gateway/)
+* [Check](https://easydigitaldownloads.com/extensions/check-payment-gateway/)
+* [PagSeguro](https://easydigitaldownloads.com/extensions/pagseguro-payment-gateway/)
+* [Beanstream](https://easydigitaldownloads.com/extensions/beanstream-payment-gateway/)
+* [Quickbooks](https://easydigitaldownloads.com/extensions/quickbooks/)
+* [PayFast](https://easydigitaldownloads.com/extensions/payfast-payment-gateway/())
+* [WorldPay](https://easydigitaldownloads.com/extensions/worldpay-gateway/)
+* [Payment Express](https://easydigitaldownloads.com/extensions/payment-express-gateway/)
+* [BitPay](https://easydigitaldownloads.com/extensions/bitpay-payment-gateway/)
+* [ClickBank](https://easydigitaldownloads.com/extensions/clickbank-gateway/)
+* [Braintree](https://easydigitaldownloads.com/extensions/braintree-gateway/)
+* [Dwolla](https://easydigitaldownloads.com/extensions/dwolla/)
+* [Realex](https://easydigitaldownloads.com/extensions/realex-gateway/)
+* [PayTrace](https://easydigitaldownloads.com/extensions/paytrace/)
+* [iPay88](https://easydigitaldownloads.com/extensions/ipay88-gateway/)
+* [First Data](https://easydigitaldownloads.com/extensions/first-data-payment-gateway/)
 
 == Screenshots ==
 
@@ -182,6 +191,74 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.3, March 11, 2015 =
+
+* New: Improved customer management interface
+* New: Added support for adding multiple prices IDs to the cart with a single add to cart command
+* New: Introduced edd_update_option() and edd_delete_option() functions
+* New: Payments that remain pending in PayPal will now record a reason in the Payment Notes section
+* New: Adding / removing Download products from payment records now properly updates sale and earnings stats
+* New: Introduced signed URLs for more secure file download links
+* New: Introduced {ip_address} email template tag
+* New: Introduced EDD_Customer class for interacting with customer records
+* New: Introduced WP CLI command to create sample customers
+* New: Introduced edd_purchase_form_user_info_fields hook
+* New: Introduced edd_purchase_form_user_register_fields hook
+* New: Introduced edd_download_after_thumbnail hook
+* New: Introduced edd_download_after_title hook
+* New: Introduced edd_download_after_content hook
+* New: Introduced edd_download_after_price hook
+* New: Introduced edd_before_purchase_history hook
+* New: Introduced edd_after_purchase_history hook
+* New: Introduced edd_email_show_links filter
+* New: Updated translation files for numerous languages
+* New: Introduced EDD_Notices class for handling admin notices
+* Tweak: Buy Now buttons should revert to Add to Cart if no compatible gateway is activated
+* Tweak: Improved PHPDoc for many existing functions and classes
+* Tweak: First input field in repeatable files / prices fields receive input focus when adding a new row
+* Tweak: Added line breaks to edd.css file in favor of single-line rules
+* Tweak: Improved performance of edd_get_users_purchases() by querying the customer table directly
+* Tweak: Dashboard sales / earnings widget is now loaded via Ajax to improve performance
+* Tweak: PayPal payments made through Buy Now buttons do not show up 
+* Tweak: Removed the "You must have at least one file" alert when deleting file rows
+* Tweak: Improved text alignment in repeatable file / price rows
+* Tweak: Updated HTTP Protocal version in PayPal Standard gateway
+* Tweak: Improved support for Polylang plugin
+* Tweak: Improved standards throughout EDD for usage of edd_get_option()
+* Tweak: Added option to prevent empty settings in the rich_editor callback function
+* Tweak: Removed dependency on base64_encode/decode functions
+* Tweak: Notice now displayed NGINX users to alert them of missing protection for file downloads
+* Tweak: Improved quantity / price display for items in the cart widget
+* Tweak: Bundles should not be included in the product search when adding items to a bundle
+* Tweak: Improved earnings / sales stats tracking for products to avoid race conditions
+* Tweak: Improved performance for edd_get_sales_tax_for_year()
+* Fix: Yesterday view for reports and REST API fails when on the first day of the month
+* Fix: EDD_Download class missing default properties from WP_Post
+* Fix: Removed unused function calls in PDF reports and upgrade functions
+* Fix: Deprecated edd_get_cart_subtotal() function called with too many arguments
+* Fix: edd_get_cart_item_price() function called with too many arguments
+* Fix: edd_remove_item_url() function called with too many arguments
+* Fix: Improper start_date declaration in CLI class
+* Fix: Missing variable declaration in EDD_SL_Plugin_Updater class
+* Fix: Undefined variable $download in CLI clas
+* Fix: Rounding error when prices are inclusive of tax
+* Fix: Sale / Earnings stats improperly adjusted when Test Mode is enabled
+* Fix: Discount codes are validated improperly when the product requirements are not meant
+* Fix: CVC field allows more than 4 digits
+* Fix: In-browser receipt page is a mess on Twenty Fifteeen theme
+* Fix: exclude_categories and exclude_tags parameters not working properly in [downloads] short code
+* Fix: Cross-domain download files get corrupted on NGINX servers
+* Fix: Instantiating EDD_Payment_Stats without a date triggers an error
+* Fix: File size not displayed when download files
+* Fix: Undefined index notice in REST API
+* Fix: Missing Download ID check in the Sales Log table
+* Fix: Update successful messages are wrong when using bulk edit
+* Fix: Cart widget items do not show the proper quantity
+* Fix: Upgrade routine notices overwrite each other improperly
+* Fix: Not all schema metadata removed when schema is disabled
+* Fix: Incorrect schema markup
+* Fix: Taxes on checkout do not display the taxed amount of fees
 
 = 2.2.8, February 13, 2015 =
 
