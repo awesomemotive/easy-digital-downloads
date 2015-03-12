@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Classes/Stats
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.8
 */
@@ -107,19 +107,15 @@ class EDD_Stats {
 	public function setup_dates( $_start_date = 'this_month', $_end_date = false ) {
 
 		if( empty( $_start_date ) ) {
-			$this->start_date = 'this_month';
+			$_start_date = 'this_month';
 		}
 
-		$this->start_date = $_start_date;
-
-		if( ! empty( $_end_date ) ) {
-			$this->end_date = $_end_date;
-		} else {
-			$this->end_date = $this->start_date;
+		if( empty( $_end_date ) ) {
+			$_end_date = $_start_date;
 		}
 
-		$this->start_date = $this->convert_date( $this->start_date );
-		$this->end_date   = $this->convert_date( $this->end_date, true );
+		$this->start_date = $this->convert_date( $_start_date );
+		$this->end_date   = $this->convert_date( $_end_date, true );
 
 	}
 

@@ -22,8 +22,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return      void
 */
 function edd_payment_history_page() {
-	global $edd_options;
-
 	$edd_payment = get_post_type_object( 'edd_payment' );
 
 	if ( isset( $_GET['view'] ) && 'view-order-details' == $_GET['view'] ) {
