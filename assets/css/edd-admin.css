@@ -327,4 +327,5 @@ td.edd_order_price { text-align: right; }
 .customer-note-wrapper { border-bottom: 1px solid #f9f9f9; min-height: 38px; padding: 7px 0 7px 7px; }
 .customer-note-wrapper span { display: block; }
 .note-content-wrap { padding-top: 7px; }
+.delete-customer { text-align: center; }
 
