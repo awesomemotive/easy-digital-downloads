@@ -57,7 +57,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	 * @access public
 	 * @since 1.4
 	 *
-	 * @param array $item Contains all the data of the discount code
+	 * @param array $item Contains all the data of the log item
 	 * @param string $column_name The name of the column
 	 *
 	 * @return string Column Name
@@ -141,7 +141,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	 *
 	 * @access public
 	 * @since 1.4
-	 * @return mixed string If search is present, false otherwise
+	 * @return string|false string If search is present, false otherwise
 	 */
 	public function get_search() {
 		return ! empty( $_GET['s'] ) ? urldecode( trim( $_GET['s'] ) ) : false;
@@ -277,7 +277,6 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 		$logs_data = array();
 		$paged     = $this->get_paged();
 		$download  = empty( $_GET['s'] ) ? $this->get_filtered_download() : null;
-		$user      = $this-> get_filtered_user();
 
 		$log_query = array(
 			'post_parent' => $download,
@@ -299,17 +298,22 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 					$amount     = 0;
 					if ( is_array( $cart_items ) && is_array( $user_info ) ) {
 						foreach ( $cart_items as $item ) {
-							$amount = isset( $item['item_price'] ) ? $item['item_price'] : $item['price'];
+
+							if ( $item['id'] == $log->post_parent ) {
+								$amount = isset( $item['item_price'] ) ? $item['item_price'] : $item['price'];
+								break;
+							}
+
 						}
 
 						$logs_data[] = array(
-							'ID' 		=> $log->ID,
-							'payment_id'=> $payment_id,
-							'download'  => $log->post_parent,
-							'amount'    => $amount,
-							'user_id'	=> $user_info['id'],
-							'user_name'	=> $user_info['first_name'] . ' ' . $user_info['last_name'],
-							'date'		=> get_post_field( 'post_date', $payment_id )
+							'ID'         => $log->ID,
+							'payment_id' => $payment_id,
+							'download'   => $log->post_parent,
+							'amount'     => $amount,
+							'user_id'    => $user_info['id'],
+							'user_name'  => $user_info['first_name'] . ' ' . $user_info['last_name'],
+							'date'       => get_post_field( 'post_date', $payment_id )
 						);
 					}
 				endif;
@@ -339,7 +343,6 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 		$hidden                = array();
 		$sortable              = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-		$current_page          = $this->get_pagenum();
 		$this->items           = $this->get_logs();
 		$total_items           = $edd_logs->get_log_count( $this->get_filtered_download(), 'sale', $this->get_meta_query() );
 

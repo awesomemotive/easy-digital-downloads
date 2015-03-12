@@ -275,7 +275,7 @@ class EDD_Logging {
 	 * @return int Log count
 	 */
 	public function get_log_count( $object_id = 0, $type = null, $meta_query = null, $date_query = null ) {
-		
+
 		global $pagenow, $typenow;
 
 		$query_args = array(
@@ -322,19 +322,19 @@ class EDD_Logging {
 	 */
 	public function delete_logs( $object_id = 0, $type = null, $meta_query = null  ) {
 		$query_args = array(
-			'post_parent' 	=> $object_id,
-			'post_type'		=> 'edd_log',
-			'posts_per_page'=> -1,
-			'post_status'	=> 'publish',
-			'fields'        => 'ids'
+			'post_parent'    => $object_id,
+			'post_type'      => 'edd_log',
+			'posts_per_page' => -1,
+			'post_status'    => 'publish',
+			'fields'         => 'ids'
 		);
 
 		if ( ! empty( $type ) && $this->valid_type( $type ) ) {
 			$query_args['tax_query'] = array(
 				array(
-					'taxonomy' 	=> 'edd_log_type',
-					'field'		=> 'slug',
-					'terms'		=> $type,
+					'taxonomy'  => 'edd_log_type',
+					'field'     => 'slug',
+					'terms'     => $type,
 				)
 			);
 		}
