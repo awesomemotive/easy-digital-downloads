@@ -276,17 +276,23 @@ function edd_update_payment_status( $payment_id, $new_status = 'publish' ) {
  *
  * @since 1.0
  * @global $edd_logs
+ *
  * @uses EDD_Logging::delete_logs()
+ *
  * @param int $payment_id Payment ID (default: 0)
+ * @param bool $update_customer If we should update the customer stats (default:true)
+ * @param bool $delete_download_logs If we should remove all file download logs associated with the payment (default:false)
+ *
  * @return void
  */
-function edd_delete_purchase( $payment_id = 0 ) {
+function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_download_logs = false ) {
 	global $edd_logs;
 
 	$post = get_post( $payment_id );
 
-	if( !$post )
+	if( !$post ) {
 		return;
+	}
 
 	$downloads = edd_get_payment_meta_downloads( $payment_id );
 
@@ -310,7 +316,7 @@ function edd_delete_purchase( $payment_id = 0 ) {
 		// Clear the This Month earnings (this_monththis_month is NOT a typo)
 		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
 
-		if( $customer->id ) {
+		if( $customer->id && $update_customer ) {
 
 			// Decrement the stats for the customer
 			$customer->decrease_purchase_count();
@@ -321,7 +327,7 @@ function edd_delete_purchase( $payment_id = 0 ) {
 
 	do_action( 'edd_payment_delete', $payment_id );
 
-	if( $customer->id ){
+	if( $customer->id && $update_customer ) {
 
 		// Remove the payment ID from the customer
 		$customer->remove_payment( $payment_id );
@@ -343,6 +349,19 @@ function edd_delete_purchase( $payment_id = 0 ) {
 		)
 	);
 
+	if ( $delete_download_logs ) {
+		$edd_logs->delete_logs(
+			null,
+			'file_download',
+			array(
+				array(
+					'key'   => '_edd_log_payment_id',
+					'value' => $payment_id
+				)
+			)
+		);
+	}
+
 	do_action( 'edd_payment_deleted', $payment_id );
 }
 
@@ -356,8 +375,9 @@ function edd_delete_purchase( $payment_id = 0 ) {
  * @return void
  */
 function edd_undo_purchase( $download_id, $payment_id ) {
-	if ( edd_is_test_mode() )
-        return;
+	if ( edd_is_test_mode() ) {
+		return;
+	}
 
 	$cart_details = edd_get_payment_meta_cart_details( $payment_id );
 	$user_info    = edd_get_payment_meta_user_info( $payment_id );
