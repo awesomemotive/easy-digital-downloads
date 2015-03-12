@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Classes/Download
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.2
 */
@@ -104,6 +104,33 @@ class EDD_Download {
 	private $button_behavior;
 
 	/**
+	 * Declare the default properities in WP_Post as we can't extend it
+	 * Anything we've delcared above has been removed.
+	 */
+	public $post_author = 0;
+	public $post_date = '0000-00-00 00:00:00';
+	public $post_date_gmt = '0000-00-00 00:00:00';
+	public $post_content = '';
+	public $post_title = '';
+	public $post_excerpt = '';
+	public $post_status = 'publish';
+	public $comment_status = 'open';
+	public $ping_status = 'open';
+	public $post_password = '';
+	public $post_name = '';
+	public $to_ping = '';
+	public $pinged = '';
+	public $post_modified = '0000-00-00 00:00:00';
+	public $post_modified_gmt = '0000-00-00 00:00:00';
+	public $post_content_filtered = '';
+	public $post_parent = 0;
+	public $guid = '';
+	public $menu_order = 0;
+	public $post_mime_type = '';
+	public $comment_count = 0;
+	public $filter;
+
+	/**
 	 * Get things going
 	 *
 	 * @since 2.2
@@ -159,7 +186,7 @@ class EDD_Download {
 
 		} else {
 
-			throw new Exception( 'Can\'t get property ' . $key );
+			return new WP_Error( 'edd-download-invalid-property', sprintf( __( 'Can\'t get property %s', 'edd' ), $key ) );
 
 		}
 
@@ -254,6 +281,7 @@ class EDD_Download {
 	 * Retrieve the file downloads
 	 *
 	 * @since 2.2
+	 * @param integer $variable_price_id
 	 * @return array
 	 */
 	public function get_files( $variable_price_id = null ) {
@@ -393,11 +421,11 @@ class EDD_Download {
 
 		if( ! isset( $this->bundled_downloads ) ) {
 
-			$this->bundled_downloads = get_post_meta( $this->ID, '_edd_bundled_products', true );
+			$this->bundled_downloads = (array) get_post_meta( $this->ID, '_edd_bundled_products', true );
 
 		}
 
-		return (array) apply_filters( 'edd_get_bundled_products', $this->bundled_downloads, $this->ID );
+		return (array) apply_filters( 'edd_get_bundled_products', array_filter( $this->bundled_downloads ), $this->ID );
 
 	}
 
@@ -453,7 +481,7 @@ class EDD_Download {
 
 			$this->button_behavior = get_post_meta( $this->ID, '_edd_button_behavior', true );
 
-			if( empty( $this->button_behavior ) ) {
+			if( empty( $this->button_behavior ) || ! edd_shop_supports_buy_now() ) {
 
 				$this->button_behavior = 'add_to_cart';
 
@@ -501,12 +529,15 @@ class EDD_Download {
 	 */
 	public function increase_sales( $quantity = 1 ) {
 
-		$sales = edd_get_download_sales_stats( $this->ID );
-		$sales = $sales + absint( $quantity );
+		$sales       = edd_get_download_sales_stats( $this->ID );
+		$quantity    = absint( $quantity );
+		$total_sales = $sales + $quantity;
 
-		if ( update_post_meta( $this->ID, '_edd_download_sales', $sales ) ) {
-			$this->sales = $sales;
-			return $sales;
+		if ( $this->update_meta( '_edd_download_sales', $total_sales ) ) {
+
+			$this->sales = $total_sales;
+			return $this->sales;
+
 		}
 
 		return false;
@@ -525,14 +556,17 @@ class EDD_Download {
 
 		// Only decrease if not already zero
 		if ( $sales > 0 ) {
-			$sales = $sales - absint( $quantity );
-		}
 
-		$sales = absint( $sales ); // Sales should never drop below 0
+			$quantity    = absint( $quantity );
+			$total_sales = $sales - $quantity;
 
-		if ( update_post_meta( $this->ID, '_edd_download_sales', $sales ) ) {
-			$this->sales = $sales;
-			return $sales;
+			if ( $this->update_meta( '_edd_download_sales', $total_sales ) ) {
+
+				$this->sales = $total_sales;
+				return $this->sales;
+
+			}
+
 		}
 
 		return false;
@@ -555,7 +589,7 @@ class EDD_Download {
 
 			$this->earnings = get_post_meta( $this->ID, '_edd_download_earnings', true );
 
-			if( $this->earnings < 0 ) {
+			if ( $this->earnings < 0 ) {
 				// Never let earnings be less than zero
 				$this->earnings = 0;
 			}
@@ -574,12 +608,14 @@ class EDD_Download {
 	 */
 	public function increase_earnings( $amount = 0 ) {
 
-		$earnings = edd_get_download_earnings_stats( $this->ID );
-		$earnings = $earnings + (float) $amount;
+		$earnings   = edd_get_download_earnings_stats( $this->ID );
+		$new_amount = $earnings + (float) $amount;
 
-		if ( update_post_meta( $this->ID, '_edd_download_earnings', $earnings ) ) {
-			$this->earnings = $earnings;
-			return $earnings;
+		if ( $this->update_meta( '_edd_download_earnings', $new_amount ) ) {
+
+			$this->earnings = $new_amount;
+			return $this->earnings;
+
 		}
 
 		return false;
@@ -590,18 +626,25 @@ class EDD_Download {
 	 * Decrease the earnings by the given amount
 	 *
 	 * @since 2.2
+	 * @param integer $amount
 	 * @return float|false
 	 */
 	public function decrease_earnings( $amount ) {
 
 		$earnings = edd_get_download_earnings_stats( $this->ID );
 
-		if ( $earnings > 0 ) // Only decrease if greater than zero
-			$earnings = $earnings - (float) $amount;
+		if ( $earnings > 0 ) {
 
-		if ( update_post_meta( $this->ID, '_edd_download_earnings', $earnings ) ) {
-			$this->earnings = $earnings;
-			return $earnings;
+			// Only decrease if greater than zero
+			$new_amount = $earnings - (float) $amount;
+
+			if ( $this->update_meta( '_edd_download_earnings', $new_amount ) ) {
+
+				$this->earnings = $new_amount;
+				return $this->earnings;
+
+			}
+
 		}
 
 		return false;
@@ -644,6 +687,44 @@ class EDD_Download {
 
 		return (bool) apply_filters( 'edd_is_free_download', $is_free, $this->ID, $price_id );
 
+	}
+
+	/**
+	 * Updates a single meta entry for the download
+	 *
+	 * @since  2.3
+	 * @access private
+	 * @param  string $meta_key   The meta_key to update
+	 * @param  string|array|object $meta_value The value to put into the meta
+	 * @return bool             The result of the update query
+	 */
+	private function update_meta( $meta_key = '', $meta_value = '' ) {
+
+		global $wpdb;
+
+		if ( empty( $meta_key ) || empty( $meta_value ) ) {
+			return false;
+		}
+
+		// Make sure if it needs to be serialized, we do
+		$meta_value = maybe_serialize( $meta_value );
+
+		if ( is_numeric( $meta_value ) ) {
+			$value_type = is_float( $meta_value ) ? '%f' : '%d';
+		} else {
+			$value_type = "'%s'";
+		}
+
+		$sql = $wpdb->prepare( "UPDATE $wpdb->postmeta SET meta_value = $value_type WHERE post_id = $this->ID AND meta_key = '%s'", $meta_value, $meta_key );
+
+		if ( $wpdb->query( $sql ) ) {
+
+			clean_post_cache( $this->ID );
+			return true;
+
+		}
+
+		return false;
 	}
 
 }

@@ -84,12 +84,16 @@ class Tests_EDD extends WP_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/login-register.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/add-ons.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/admin-notices.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/class-edd-notices.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/dashboard-widgets.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/export-functions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/thickbox.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/upload-functions.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/customers/class-customer-table.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/customers/customer-actions.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/customers/customer-functions.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/customers/customers.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/downloads/dashboard-columns.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/downloads/metabox.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/downloads/contextual-help.php' );
