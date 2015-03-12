@@ -1099,6 +1099,89 @@ function edd_get_random_downloads( $num = 3, $post_ids = true ) {
 }
 
 /**
+ * Generates a token for a given URL.
+ *
+ * An 'o' query parameter on a URL can include optional variables to test
+ * against when verifying a token without passing those variables around in
+ * the URL. For example, downloads can be limited to the IP that the URL was
+ * generated for by adding 'o=ip' to the query string.
+ *
+ * Or suppose when WordPress requested a URL for automatic updates, the user
+ * agent could be tested to ensure the URL is only valid for requests from
+ * that user agent.
+ *
+ * @since 2.3
+ *
+ * @param string $url The URL to generate a token for.
+ * @return string The token for the URL.
+ */
+function edd_get_download_token( $url = '' ) {
+	$args    = array();
+	$hash    = apply_filters( 'edd_get_url_token_algorithm', 'sha256' );
+	$secret  = apply_filters( 'edd_get_url_token_secret', hash( $hash, wp_salt() ) );
+	/*
+	 * Add additional args to the URL for generating the token.
+	 * Allows for restricting access to IP and/or user agent.
+	 */
+	$parts   = parse_url( $url );
+	$options = array();
+	if ( isset( $parts['query'] ) ) {
+		wp_parse_str( $parts['query'], $query_args );
+		// o = option checks (ip, user agent).
+		if ( ! empty( $query_args['o'] ) ) {
+	
+			// Multiple options can be checked by separating them with a colon in the query parameter.
+			$options = explode( ':', rawurldecode( $query_args['o'] ) );
+			if ( in_array( 'ip', $options ) ) {
+				$args['ip'] = edd_get_ip();
+			}
+			if ( in_array( 'ua', $options ) ) {
+				$ua = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : '';
+				$args['user_agent'] = rawurlencode( $ua );
+			}
+		}
+	}
+	/*
+	 * Filter to modify arguments and allow custom options to be tested.
+	 * Be sure to rawurlencode any custom options for consistent results.
+	 */
+	$args = apply_filters( 'edd_get_url_token_args', $args, $url, $options );
+	$args['secret'] = $secret;
+	$args['token']  = false; // Removes a token if present.
+	$url   = add_query_arg( $args, $url );
+	$parts = parse_url( $url );
+	// In the event there isn't a path, set an empty one so we can MD5 the token
+	if ( ! isset( $parts['path'] ) ) {
+		$parts['path'] = '';
+	}
+	$token = md5( $parts['path'] . '?' . $parts['query'] );
+	return $token;
+}
+/**
+ * Generate a token for a URL and match it against the existing token to make
+ * sure the URL hasn't been tampered with.
+ *
+ * @since 2.3
+ *
+ * @param string $url URL to test.
+ * @return bool
+ */
+function edd_validate_url_token( $url = '' ) {
+	$ret   = false;
+	$parts = parse_url( $url );
+	if ( isset( $parts['query'] ) ) {
+		wp_parse_str( $parts['query'], $query_args );
+		if ( isset( $query_args['ttl'] ) && current_time( 'timestamp' ) > $query_args['ttl'] ) {
+			wp_die( apply_filters( 'edd_download_link_expired_text', __( 'Sorry but your download link has expired.', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+		}
+		if ( isset( $query_args['token'] ) && $query_args['token'] == edd_get_download_token( $url ) ) {
+			$ret = true;
+		}
+	}
+	return apply_filters( 'edd_validate_url_token', $ret, $url, $query_args );
+}
+
+/**
  * Returns if a user can access a download of a purchase
  *
  * @since 2.2
