@@ -21,24 +21,20 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * The value returned can be filtered.
  *
  * @since 1.3.3
- * @global $edd_options
  * @return bool Whether or not taxes are enabled
  */
 function edd_use_taxes() {
-	global $edd_options;
-
-	return apply_filters( 'edd_use_taxes', isset( $edd_options['enable_taxes'] ) );
+	$ret = edd_get_option( 'enable_taxes', false );
+	return (bool) apply_filters( 'edd_use_taxes', $ret );
 }
 
 /**
  * Retrieve tax rates
  *
  * @since 1.6
- * @global $edd_options
  * @return array Defined tax rates
  */
 function edd_get_tax_rates() {
-
 	$rates = get_option( 'edd_tax_rates', array() );
 	return apply_filters( 'edd_get_tax_rates', $rates );
 }
@@ -47,16 +43,12 @@ function edd_get_tax_rates() {
  * Get taxation rate
  *
  * @since 1.3.3
- * @global $edd_options
- *
  * @param bool $country
  * @param bool $state
  * @return mixed|void
  */
 function edd_get_tax_rate( $country = false, $state = false ) {
-	global $edd_options;
-
-	$rate = isset( $edd_options['tax_rate'] ) ? (float) $edd_options['tax_rate'] : 0;
+	$rate = (float) edd_get_option( 'tax_rate', 0 );
 
 	$user_address = edd_get_customer_address();
 
@@ -139,8 +131,6 @@ function edd_get_formatted_tax_rate( $country = false, $state = false ) {
  * @return float $tax Taxed amount
  */
 function edd_calculate_tax( $amount = 0, $country = false, $state = false ) {
-	global $edd_options;
-
 	$rate = edd_get_tax_rate( $country, $state );
 	$tax  = 0.00;
 
@@ -159,7 +149,7 @@ function edd_calculate_tax( $amount = 0, $country = false, $state = false ) {
 }
 
 /**
- * Stores the tax info in the payment meta
+ * Returns the formatted tax amount for the given year
  *
  * @since 1.3.3
  * @param $year int The year to retrieve taxes for, i.e. 2012
@@ -171,7 +161,7 @@ function edd_sales_tax_for_year( $year = null ) {
 }
 
 /**
- * Gets the sales tax for the current year
+ * Gets the sales tax for the given year
  *
  * @since 1.3.3
  * @param $year int The year to retrieve taxes for, i.e. 2012
@@ -179,7 +169,8 @@ function edd_sales_tax_for_year( $year = null ) {
  * @return float $tax Sales tax
  */
 function edd_get_sales_tax_for_year( $year = null ) {
-	
+	global $wpdb;
+
 	// Start at zero
 	$tax = 0;
 
@@ -194,14 +185,12 @@ function edd_get_sales_tax_for_year( $year = null ) {
 			'fields'			=> 'ids'
 		);
 
-		$payments = get_posts( $args );
+		$payments    = get_posts( $args );
+		$payment_ids = implode( ',', $payments );
 
-		if( $payments ) {
-
-			foreach( $payments as $payment ) {
-				$tax += edd_get_payment_tax( $payment );
-			}
-
+		if ( count( $payments ) > 0 ) {
+			$sql = "SELECT SUM( meta_value ) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_tax' AND post_id IN( $payment_ids )";
+			$tax = $wpdb->get_var( $sql );
 		}
 
 	}
@@ -225,13 +214,10 @@ function edd_is_cart_taxed() {
  * Check if the individual product prices include tax
  *
  * @since 1.5
- * @global $edd_options
  * @return bool $include_tax
 */
 function edd_prices_include_tax() {
-	global $edd_options;
-
-	$ret = isset( $edd_options['prices_include_tax'] ) && $edd_options['prices_include_tax'] == 'yes' && edd_use_taxes();
+	$ret = ( edd_get_option( 'prices_include_tax', false ) == 'yes' && edd_use_taxes() );
 
 	return apply_filters( 'edd_prices_include_tax', $ret );
 }
@@ -240,12 +226,11 @@ function edd_prices_include_tax() {
  * Checks whether the user has enabled display of taxes on the checkout
  *
  * @since 1.5
- * @global $edd_options
  * @return bool $include_tax
  */
 function edd_prices_show_tax_on_checkout() {
-	global $edd_options;
-	$ret = isset( $edd_options['checkout_include_tax'] ) && $edd_options['checkout_include_tax'] == 'yes' && edd_use_taxes();
+	$ret = ( edd_get_option( 'checkout_include_tax', false ) == 'yes' && edd_use_taxes() );
+	
 	return apply_filters( 'edd_taxes_on_prices_on_checkout', $ret );
 }
 
@@ -259,9 +244,7 @@ function edd_prices_show_tax_on_checkout() {
  * @return bool
  */
 function edd_display_tax_rate() {
-	global $edd_options;
-
-	$ret = edd_use_taxes() && isset( $edd_options['display_tax_rate'] );
+	$ret = edd_use_taxes() && edd_get_option( 'display_tax_rate', false );
 
 	return apply_filters( 'edd_display_tax_rate', $ret );
 }

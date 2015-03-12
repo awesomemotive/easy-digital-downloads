@@ -26,13 +26,10 @@ add_action( 'edd_paypal_cc_form', '__return_false' );
  * Process PayPal Purchase
  *
  * @since 1.0
- * @global $edd_options Array of all the EDD Options
  * @param array   $purchase_data Purchase Data
  * @return void
  */
 function edd_process_paypal_purchase( $purchase_data ) {
-	global $edd_options;
-
 	if( ! wp_verify_nonce( $purchase_data['gateway_nonce'], 'edd-gateway' ) ) {
 		wp_die( __( 'Nonce verification has failed', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
@@ -48,7 +45,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		'user_info'     => $purchase_data['user_info'],
 		'cart_details'  => $purchase_data['cart_details'],
 		'gateway'       => 'paypal',
-		'status'        => 'pending'
+		'status'        => ! empty( $purchase_data['buy_now'] ) ? 'private' : 'pending'
 	);
 
 	// Record the pending payment
@@ -68,17 +65,16 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		$return_url = add_query_arg( array(
 				'payment-confirmation' => 'paypal',
 				'payment-id' => $payment
-
-			), get_permalink( $edd_options['success_page'] ) );
+			), get_permalink( edd_get_option( 'success_page', false ) ) );
 
 		// Get the PayPal redirect uri
 		$paypal_redirect = trailingslashit( edd_get_paypal_redirect() ) . '?';
 
 		// Setup PayPal arguments
 		$paypal_args = array(
-			'business'      => $edd_options['paypal_email'],
+			'business'      => edd_get_option( 'paypal_email', false ),
 			'email'         => $purchase_data['user_email'],
-			'invoice'  => $purchase_data['purchase_key'],
+			'invoice'       => $purchase_data['purchase_key'],
 			'no_shipping'   => '1',
 			'shipping'      => '0',
 			'no_note'       => '1',
@@ -188,12 +184,9 @@ add_action( 'edd_gateway_paypal', 'edd_process_paypal_purchase' );
  * Listens for a PayPal IPN requests and then sends to the processing function
  *
  * @since 1.0
- * @global $edd_options Array of all the EDD Options
  * @return void
  */
 function edd_listen_for_paypal_ipn() {
-	global $edd_options;
-
 	// Regular PayPal IPN
 	if ( isset( $_GET['edd-listener'] ) && $_GET['edd-listener'] == 'IPN' ) {
 		do_action( 'edd_verify_paypal_ipn' );
@@ -205,12 +198,9 @@ add_action( 'init', 'edd_listen_for_paypal_ipn' );
  * Process PayPal IPN
  *
  * @since 1.0
- * @global $edd_options Array of all the EDD Options
  * @return void
  */
 function edd_process_paypal_ipn() {
-	global $edd_options;
-
 	// Check the request method is POST
 	if ( isset( $_SERVER['REQUEST_METHOD'] ) && $_SERVER['REQUEST_METHOD'] != 'POST' ) {
 		return;
@@ -264,7 +254,7 @@ function edd_process_paypal_ipn() {
 			'method'           => 'POST',
 			'timeout'          => 45,
 			'redirection'      => 5,
-			'httpversion'      => '1.0',
+			'httpversion'      => '1.1',
 			'blocking'         => true,
 			'headers'          => array(
 				'host'         => 'www.paypal.com',
@@ -285,7 +275,7 @@ function edd_process_paypal_ipn() {
 			return; // Something went wrong
 		}
 
-		if ( $api_response['body'] !== 'VERIFIED' && !isset( $edd_options['disable_paypal_verification'] ) ) {
+		if ( $api_response['body'] !== 'VERIFIED' && edd_get_option( 'disable_paypal_verification', false ) ) {
 			edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid IPN verification response. IPN data: %s', 'edd' ), json_encode( $api_response ) ) );
 			return; // Response not okay
 		}
@@ -320,13 +310,10 @@ add_action( 'edd_verify_paypal_ipn', 'edd_process_paypal_ipn' );
  * Process web accept (one time) payment IPNs
  *
  * @since 1.3.4
- * @global $edd_options Array of all the EDD Options
  * @param array   $data IPN Data
  * @return void
  */
 function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
-	global $edd_options;
-
 	if ( $data['txn_type'] != 'web_accept' && $data['txn_type'] != 'cart' && $data['payment_status'] != 'Refunded' ) {
 		return;
 	}
@@ -349,8 +336,7 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 	}
 
 	// Verify payment recipient
-	if ( strcasecmp( $business_email, trim( $edd_options['paypal_email'] ) ) != 0 ) {
-
+	if ( strcasecmp( $business_email, trim( edd_get_option( 'paypal_email', false ) ) ) != 0 ) {
 		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid business email in IPN response. IPN data: %s', 'edd' ), json_encode( $data ) ), $payment_id );
 		edd_update_payment_status( $payment_id, 'failed' );
 		edd_insert_payment_note( $payment_id, __( 'Payment failed due to invalid PayPal business email.', 'edd' ) );
@@ -423,10 +409,83 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 			return;
 		}
 
-		if ( $payment_status == 'completed' || edd_is_test_mode() ) {
+		if ( 'completed' == $payment_status || edd_is_test_mode() ) {
+
 			edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'edd' ) , $data['txn_id'] ) );
 			edd_set_payment_transaction_id( $payment_id, $data['txn_id'] );
 			edd_update_payment_status( $payment_id, 'publish' );
+
+		} else if ( 'pending' == $payment_status && isset( $data['pending_reason'] ) ) {
+
+			// Look for possible pending reasons, such as an echeck
+
+			$note = '';
+
+			switch( strtolower( $data['pending_reason'] ) ) {
+
+				case 'echeck' :
+
+					$note = __( 'Payment made via eCheck and will clear automatically in 5-8 days', 'edd' );
+
+					break;
+
+				case 'address' :
+
+					$note = __( 'Payment requires a confirmed customer address and must be accepted manually through PayPal', 'edd' );
+
+					break;
+
+				case 'intl' :
+
+					$note = __( 'Payment must be accepted manually through PayPal due to international account regulations', 'edd' );
+
+					break;
+
+				case 'multi-currency' :
+
+					$note = __( 'Payment received in non-shop currency and must be accepted manually through PayPal', 'edd' );
+
+					break;
+
+				case 'paymentreview' :
+				case 'regulatory_review' :
+
+					$note = __( 'Payment is being reviewed by PayPal staff as high-risk or in possible violation of government regulations', 'edd' );
+
+					break;
+
+				case 'unilateral' :
+
+					$note = __( 'Payment was sent to non-confirmed or non-registered email address.', 'edd' );
+
+					break;
+
+				case 'upgrade' :
+
+					$note = __( 'PayPal account must be upgraded before this payment can be accepted', 'edd' );
+
+					break;
+
+				case 'verify' :
+
+					$note = __( 'PayPal account is not verified. Verify account in order to accept this payment', 'edd' );
+
+					break;
+
+				case 'other' :
+
+					$note = __( 'Payment is pending for unknown reasons. Contact PayPal support for assistance', 'edd' );
+
+					break;
+
+			}
+
+			if( ! empty( $note ) ) {
+
+				edd_insert_payment_note( $payment_id, $note );
+
+			}
+
 		}
 	}
 }
@@ -470,13 +529,10 @@ function edd_process_paypal_refund( $data, $payment_id = 0 ) {
  * Get PayPal Redirect
  *
  * @since 1.0.8.2
- * @global $edd_options Array of all the EDD Options
  * @param bool    $ssl_check Is SSL?
  * @return string
  */
 function edd_get_paypal_redirect( $ssl_check = false ) {
-	global $edd_options;
-
 	if ( is_ssl() || ! $ssl_check ) {
 		$protocal = 'https://';
 	} else {
@@ -499,17 +555,10 @@ function edd_get_paypal_redirect( $ssl_check = false ) {
  * Set the Page Style for PayPal Purchase page
  *
  * @since 1.4.1
- * @global $edd_options Array of all the EDD Options
  * @return string
  */
 function edd_get_paypal_page_style() {
-	global $edd_options;
-
-	$page_style = 'PayPal';
-
-	if ( isset( $edd_options['paypal_page_style'] ) )
-		$page_style = trim( $edd_options['paypal_page_style'] );
-
+	$page_style = trim( edd_get_option( 'paypal_page_style', 'PayPal' ) );
 	return apply_filters( 'edd_paypal_page_style', $page_style );
 }
 

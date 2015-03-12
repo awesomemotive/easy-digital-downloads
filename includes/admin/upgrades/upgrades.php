@@ -23,7 +23,8 @@ function edd_upgrades_screen() {
 	$step   = isset( $_GET['step'] )        ? absint( $_GET['step'] )                     : 1;
 	$total  = isset( $_GET['total'] )       ? absint( $_GET['total'] )                    : false;
 	$custom = isset( $_GET['custom'] )      ? absint( $_GET['custom'] )                   : 0;
-	$steps  = round( ( $total / 100 ), 0 );
+	$number = isset( $_GET['number'] )      ? absint( $_GET['number'] )                   : 100;
+	$steps  = round( ( $total / $number ), 0 );
 
 	$doing_upgrade_args = array(
 		'page'        => 'edd-upgrades',
@@ -34,6 +35,10 @@ function edd_upgrades_screen() {
 		'steps'       => $steps
 	);
 	update_option( 'edd_doing_upgrade', $doing_upgrade_args );
+	if ( $step > $steps ) {
+		// Prevent a weird case where the estimate was off. Usually only a couple.
+		$steps = $step;
+	}
 	?>
 	<div class="wrap">
 		<h2><?php _e( 'Easy Digital Downloads - Upgrades', 'edd' ); ?></h2>
@@ -48,7 +53,7 @@ function edd_upgrades_screen() {
 				<?php endif; ?>
 			</div>
 			<script type="text/javascript">
-				document.location.href = "index.php?edd_action=<?php echo $action; ?>&step=<?php echo $step; ?>&total=<?php echo $total; ?>&custom=<?php echo $custom; ?>";
+				setTimeout(function() { document.location.href = "index.php?edd_action=<?php echo $action; ?>&step=<?php echo $step; ?>&total=<?php echo $total; ?>&custom=<?php echo $custom; ?>"; }, 250);
 			</script>
 
 		<?php else : ?>

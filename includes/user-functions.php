@@ -34,6 +34,10 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 		$user = get_current_user_id();
 	}
 
+	if ( 0 === $user ) {
+		return false;
+	}
+
 	$status = $status === 'complete' ? 'publish' : $status;
 
 	if ( $pagination ) {
@@ -45,12 +49,12 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 			$paged = 1;
 	}
 
-	$args = apply_filters( 'edd_get_users_purchases_args', array(
+	$args = array(
 		'user'    => $user,
 		'number'  => $number,
 		'status'  => $status,
 		'orderby' => 'date'
-	) );
+	);
 
 	if ( $pagination ) {
 
@@ -62,27 +66,17 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 
 	}
 
+	$by_user_id = is_numeric( $user ) ? true : false;
+	$customer   = new EDD_Customer( $user, $by_user_id );
 
-	if( is_email( $user ) ) {
+	if( ! empty( $customer->payment_ids ) ) {
 
-		$field = 'email';
-
-	} else {
-
-		$field = 'user_id';
-
-	}
-
-	/*
-	$payment_ids = EDD()->customers->get_column_by( 'payment_ids', $field, $user );
-
-	if( ! empty( $payment_ids ) ) {
 		unset( $args['user'] );
-		$args['post__in'] = array_map( 'absint', explode( ',', $payment_ids ) );
-	}
-	*/
+		$args['post__in'] = array_map( 'absint', explode( ',', $customer->payment_ids ) );
 
-	$purchases = edd_get_payments( $args );
+	}
+
+	$purchases = edd_get_payments( apply_filters( 'edd_get_users_purchases_args', $args ) );
 
 	// No purchases
 	if ( ! $purchases )
@@ -104,32 +98,47 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
  * @return bool|object List of unique products purchased by user
  */
 function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
-	if ( empty( $user ) )
+	if ( empty( $user ) ) {
 		$user = get_current_user_id();
-
-	// Get the purchase history
-	$purchase_history = edd_get_users_purchases( $user, -1, false, $status );
-
-	if ( empty( $purchase_history ) )
-		return false;
-
-	// Get all the items purchased
-	$purchase_data = array();
-	foreach ( $purchase_history as $purchase ) {
-		$purchase_data[] = edd_get_payment_meta_downloads( $purchase->ID );
 	}
 
-	if ( empty( $purchase_data ) )
+	if ( empty( $user ) ) {
 		return false;
+	}
+
+	$by_user_id = is_numeric( $user ) ? true : false;
+
+	$customer = new EDD_Customer( $user, $by_user_id );
+
+	if ( empty( $customer->payment_ids ) ) {
+		return false;
+	}
+
+	// Get all the items purchased
+	$payment_ids    = array_reverse( explode( ',', $customer->payment_ids ) );
+	$limit_payments = apply_filters( 'edd_users_purchased_products_payments', 50 );
+	if ( ! empty( $limit_payments ) ) {
+		$payment_ids = array_slice( $payment_ids, 0, $limit_payments );
+	}
+	$purchase_data  = array();
+
+	foreach ( $payment_ids as $payment_id ) {
+		$purchase_data[] = edd_get_payment_meta_downloads( $payment_id );
+	}
+
+	if ( empty( $purchase_data ) ) {
+		return false;
+	}
 
 	// Grab only the post ids of the products purchased on this order
 	$purchase_product_ids = array();
 	foreach ( $purchase_data as $purchase_meta ) {
-		$purchase_product_ids[] = wp_list_pluck( $purchase_meta, 'id' );
+		$purchase_product_ids[] = @wp_list_pluck( $purchase_meta, 'id' );
 	}
 
-	if ( empty( $purchase_product_ids ) )
+	if ( empty( $purchase_product_ids ) ) {
 		return false;
+	}
 
 	// Merge all orders into a single array of all items purchased
 	$purchased_products = array();
@@ -253,19 +262,13 @@ function edd_get_purchase_stats_by_user( $user = '' ) {
 
 	}
 
-	$customer = EDD()->customers->get_by( $field, $user );
+	$customer = EDD()->customers->get_customer_by( $field, $user );
+	$customer = new EDD_Customer( $customer->id );
 
-	if ( empty( $customer ) ) {
+	$stats = array();
+	$stats['purchases']   = absint( $customer->purchase_count );
+	$stats['total_spent'] = edd_sanitize_amount( $customer->purchase_value );
 
-		$stats['purchases']   = 0;
-		$stats['total_spent'] = edd_sanitize_amount( 0 );
-
-	} else {
-
-		$stats['purchases']   = absint( $customer->purchase_count );
-		$stats['total_spent'] = edd_sanitize_amount( $customer->purchase_value );
-
-	}
 
 	return (array) apply_filters( 'edd_purchase_stats_by_user', $stats, $user );
 }
@@ -341,7 +344,7 @@ function edd_count_file_downloads_of_user( $user ) {
  *
  * @access      public
  * @since       1.3.4
- * @param       $username string - the username to validate
+ * @param       string $username The username to validate
  * @return      bool
  */
 function edd_validate_username( $username ) {

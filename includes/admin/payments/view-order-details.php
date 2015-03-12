@@ -73,7 +73,7 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 												<span class="label"><?php _e( 'Status:', 'edd' ); ?></span>&nbsp;
 												<select name="edd-payment-status" class="medium-text">
 													<?php foreach( edd_get_payment_statuses() as $key => $status ) : ?>
-														<option value="<?php esc_attr_e( $key ); ?>"<?php selected( edd_get_payment_status( $item, true ), $status ); ?>><?php esc_html_e( $status ); ?></option>
+														<option value="<?php echo esc_attr( $key ); ?>"<?php selected( edd_get_payment_status( $item, true ), $status ); ?>><?php echo esc_html( $status ); ?></option>
 													<?php endforeach; ?>
 												</select>
 											</p>
@@ -82,15 +82,15 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 										<div class="edd-admin-box-inside">
 											<p>
 												<span class="label"><?php _e( 'Date:', 'edd' ); ?></span>&nbsp;
-												<input type="text" name="edd-payment-date" value="<?php esc_attr_e( date( 'm/d/Y', $payment_date ) ); ?>" class="medium-text edd_datepicker"/>
+												<input type="text" name="edd-payment-date" value="<?php echo esc_attr( date( 'm/d/Y', $payment_date ) ); ?>" class="medium-text edd_datepicker"/>
 											</p>
 										</div>
 
 										<div class="edd-admin-box-inside">
 											<p>
 												<span class="label"><?php _e( 'Time:', 'edd' ); ?></span>&nbsp;
-												<input type="number" step="1" max="24" name="edd-payment-time-hour" value="<?php esc_attr_e( date_i18n( 'H', $payment_date ) ); ?>" class="small-text edd-payment-time-hour"/>&nbsp;:&nbsp;
-												<input type="number" step="1" max="59" name="edd-payment-time-min" value="<?php esc_attr_e( date( 'i', $payment_date ) ); ?>" class="small-text edd-payment-time-min"/>
+												<input type="number" step="1" max="24" name="edd-payment-time-hour" value="<?php echo esc_attr( date_i18n( 'H', $payment_date ) ); ?>" class="small-text edd-payment-time-hour"/>&nbsp;:&nbsp;
+												<input type="number" step="1" max="59" name="edd-payment-time-min" value="<?php echo esc_attr( date( 'i', $payment_date ) ); ?>" class="small-text edd-payment-time-min"/>
 											</p>
 										</div>
 
@@ -192,7 +192,7 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 										<div class="edd-order-ip edd-admin-box-inside">
 											<p>
 												<span class="label"><?php _e( 'IP:', 'edd' ); ?></span>&nbsp;
-												<span><?php esc_attr_e( edd_get_payment_user_ip( $payment_id )); ?></span>
+												<span><?php echo esc_attr( edd_get_payment_user_ip( $payment_id )); ?></span>
 											</p>
 										</div>
 
@@ -326,6 +326,7 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 											</li>
 
 											<li class="actions">
+												<input type="hidden" class="edd-payment-details-download-has-log" name="edd-payment-details-downloads[<?php echo $key; ?>][has_log]" value="1" />
 												<?php if( edd_get_download_files( $item_id, $price_id ) && edd_is_payment_complete( $payment_id ) ) : ?>
 													<a href="" class="edd-copy-download-link" data-download-id="<?php echo esc_attr( $item_id ); ?>" data-price-id="<?php echo esc_attr( $price_id ); ?>"><?php _e( 'Copy Download Link(s)', 'edd' ); ?></a> |
 												<?php endif; ?>
@@ -368,7 +369,8 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 
 										</ul>
 
-										<input type="hidden" name="edd-payment-downloads-changed" id="edd-payment-downloads-changed" value=""/>
+										<input type="hidden" name="edd-payment-downloads-changed" id="edd-payment-downloads-changed" value="" />
+										<input type="hidden" name="edd-payment-removed" id="edd-payment-removed" value="{}" />
 
 									</div><!-- /.inside -->
 								<?php else : $key = 0; ?>
@@ -388,18 +390,38 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 								</h3>
 								<div class="inside edd-clearfix">
 
-									<div class="column-container">
+									<?php $customer = new EDD_Customer( edd_get_payment_customer_id( $payment_id ) ); ?>
+
+									<div class="column-container customer-info">
+										<div class="column">
+											<?php echo EDD()->html->customer_dropdown( array( 'selected' => $customer->id, 'name' => 'customer-id' ) ); ?>
+										</div>
+										<div class="column">
+											<input type="hidden" name="edd-current-customer" value="<?php echo $customer->id; ?>" />
+										</div>
+										<div class="column">
+											<?php $customer_url = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ); ?>
+											<a href="<?php echo $customer_url; ?>" title="<?php _e( 'View Customer Details', 'edd' ); ?>"><?php _e( 'View Customer Details', 'edd' ); ?></a>
+											&nbsp;|&nbsp;
+											<a href="#new" class="edd-payment-new-customer" title="<?php _e( 'New Customer', 'edd' ); ?>"><?php _e( 'New Customer', 'edd' ); ?></a>
+										</div>
+									</div>
+
+									<div class="column-container new-customer" style="display: none">
 										<div class="column">
 											<strong><?php _e( 'Name:', 'edd' ); ?></strong>&nbsp;
-											<input type="text" name="edd-payment-user-name" value="<?php esc_attr_e( $user_info['first_name'] . ' ' . $user_info['last_name'] ); ?>" class="medium-text"/>
+											<input type="text" name="edd-new-customer-name" value="" class="medium-text"/>
 										</div>
 										<div class="column">
 											<strong><?php _e( 'Email:', 'edd' ); ?></strong>&nbsp;
-											<input type="email" name="edd-payment-user-email" value="<?php esc_attr_e( edd_get_payment_user_email( $payment_id ) ); ?>" class="medium-text"/>
+											<input type="email" name="edd-new-customer-email" value="" class="medium-text"/>
 										</div>
 										<div class="column">
-											<strong><?php _e( 'User ID:', 'edd' ); ?></strong>&nbsp;
-											<input type="number" step="1" min="-1" name="edd-payment-user-id" value="<?php esc_attr_e( $user_id ); ?>" class="small-text"/>
+											<input type="hidden" id="edd-new-customer" name="edd-new-customer" value="0" />
+											<a href="#cancel" class="edd-payment-new-customer-cancel edd-delete"><?php _e( 'Cancel', 'edd' ); ?></a>
+										</div>
+										<div class="column">
+											<small><em>*<?php _e( 'Click "Save Payment" to create new customer', 'edd' ); ?></em></small>
 										</div>
 									</div>
 
@@ -425,23 +447,23 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 												<div class="column">
 													<p>
 														<strong class="order-data-address-line"><?php _e( 'Street Address Line 1:', 'edd' ); ?></strong><br/>
-														<input type="text" name="edd-payment-address[0][line1]" value="<?php esc_attr_e( $address['line1'] ); ?>" class="medium-text" />
+														<input type="text" name="edd-payment-address[0][line1]" value="<?php echo esc_attr( $address['line1'] ); ?>" class="medium-text" />
 													</p>
 													<p>
 														<strong class="order-data-address-line"><?php _e( 'Street Address Line 2:', 'edd' ); ?></strong><br/>
-														<input type="text" name="edd-payment-address[0][line2]" value="<?php esc_attr_e( $address['line2'] ); ?>" class="medium-text" />
+														<input type="text" name="edd-payment-address[0][line2]" value="<?php echo esc_attr( $address['line2'] ); ?>" class="medium-text" />
 													</p>
 
 												</div>
 												<div class="column">
 													<p>
 														<strong class="order-data-address-line"><?php echo _x( 'City:', 'Address City', 'edd' ); ?></strong><br/>
-														<input type="text" name="edd-payment-address[0][city]" value="<?php esc_attr_e( $address['city'] ); ?>" class="medium-text"/>
+														<input type="text" name="edd-payment-address[0][city]" value="<?php echo esc_attr( $address['city'] ); ?>" class="medium-text"/>
 
 													</p>
 													<p>
 														<strong class="order-data-address-line"><?php echo _x( 'Zip / Postal Code:', 'Zip / Postal code of address', 'edd' ); ?></strong><br/>
-														<input type="text" name="edd-payment-address[0][zip]" value="<?php esc_attr_e( $address['zip'] ); ?>" class="medium-text"/>
+														<input type="text" name="edd-payment-address[0][zip]" value="<?php echo esc_attr( $address['zip'] ); ?>" class="medium-text"/>
 
 													</p>
 												</div>
@@ -455,7 +477,7 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 															'selected'         => $address['country'],
 															'show_option_all'  => false,
                                                             'show_option_none' => false,
-                                                            'select2'          => true,
+                                                            'chosen'           => true,
                                                             'placeholder' => __( 'Select a country', 'edd' )
 														) );
 														?>
@@ -471,11 +493,11 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 																'selected'         => $address['state'],
 																'show_option_all'  => false,
                                                                 'show_option_none' => false,
-                                                                'select2'          => true,
+                                                                'chosen'           => true,
                                                                 'placeholder' => __( 'Select a state', 'edd' )
 															) );
 														} else { ?>
-															<input type="text" name="edd-payment-address[0][state]" value="<?php esc_attr_e( $address['state'] ); ?>" class="medium-text"/>
+															<input type="text" name="edd-payment-address[0][state]" value="<?php echo esc_attr( $address['state'] ); ?>" class="medium-text"/>
 															<?php
 														} ?>
 													</p>

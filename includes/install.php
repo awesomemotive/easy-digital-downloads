@@ -53,7 +53,7 @@ function edd_install() {
 	$options = array();
 
 	// Checks if the purchase page option exists
-	if ( ! isset( $edd_options['purchase_page'] ) ) {
+	if ( ! edd_get_option( 'purchase_page', false ) ) {
 	  // Checkout Page
 		$checkout = wp_insert_post(
 			array(
@@ -149,6 +149,20 @@ function edd_install() {
 	// Bail if activating from network, or bulk
 	if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
 		return;
+	}
+
+	if ( ! $current_version ) {
+		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
+
+		// When new upgrade routines are added, mark them as complete on fresh install
+		$upgrade_routines = array(
+			'upgrade_payment_taxes',
+			'upgrade_customer_payments_association'
+		);
+
+		foreach ( $upgrade_routines as $upgrade ) {
+			edd_set_upgrade_complete( $upgrade );
+		}
 	}
 
 	// Add the transient to redirect

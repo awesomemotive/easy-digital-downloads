@@ -176,46 +176,49 @@ class EDD_Welcome {
 			<?php $this->tabs(); ?>
 
 			<div class="changelog">
-				<h3><?php _e( 'Better Purchase Form Options', 'edd' );?></h3>
+				<h3><?php _e( 'New Customer Management UI', 'edd' );?></h3>
 
 				<div class="feature-section">
 
-					<p><?php _e( 'In version 2.2, we have dramatically improved the purchase form features, making them more flexible and powerful.', 'edd' );?></p>
+					<p><?php _e( 'Version 2.3 introduces a comprehensive customer management interface. Get detailed statistics on your customers, quickly make edits, and leave detailed notes.', 'edd' );?></p>
 
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/22-quantity.png'; ?>" class="edd-welcome-screenshots"/>
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/customer-ui.png'; ?>" class="edd-welcome-screenshots"/>
 
-					<h4><?php _e( 'Quantity Field', 'edd' );?></h4>
-					<p><?php _e( 'The purchase forms now support quantity fields that allow your customers to enter their desired quantity before proceeding to checkout.', 'edd' );?></p>
+					<h4><?php _e( 'Better Customer Details on Payment', 'edd' );?></h4>
+					<p><?php _e( 'The Customer Details section of the View Order Details screen has been updated to make it easier to move payment records between customers. A quick link to the customer\'s overview page has also been added, letting you easily see all purchases made by the customer.', 'edd' );?></p>
 
-					<h4><?php _e( 'Default Selected Price Option', 'edd' );?></h4>
-					<p><?php _e( 'Shop administrators can now select the default price option that is selected for customers.', 'edd' );?></p>
+					<h4><?php _e( 'Create New Customers Quickly', 'edd' );?></h4>
+					<p><?php _e( 'New customer records can now be created directly from the View Order Details screen, making it easier for you to manage change requests from your customers.', 'edd' );?></p>
 
-					<h4><?php _e( 'Price-Specific Purchase Buttons', 'edd' );?></h4>
-					<p><?php _e( 'Purchase buttons now support displaying a purchase form for a specific price option. Simply add the <em>price_id</em> parameter:', 'edd' );?></p>
-					<p><pre>[purchase_link id="22" price_id="2"]</pre></p>
-
+					<h4><?php _e( 'More Accessible', 'edd' );?></h4>
+					<p><?php _e( 'Your store\'s customer history has been moved to a dedicated submenu of the Downloads menu, making it significantly easier to locate. No longer is it hidden in an obscure section of the Reports page.', 'edd' );?></p>
 
 				</div>
 			</div>
 
 			<div class="changelog">
-				<h3><?php _e( 'Improved View Order Details', 'edd' );?></h3>
+				<h3><?php _e( 'Signed URLs', 'edd' );?></h3>
 
 				<div class="feature-section">
 
-					<p><?php _e( 'The View Order Details screen is likely one of the places you spend the most time in, so shouldn\'t it be great? We think so.', 'edd' );?></p>
+					<p><?php _e( 'We take security seriously and with Easy Digital Downloads 2.3, we have introduced a better, more secure file download mechanism that keeps your files safe and secure.', 'edd' );?></p>
+					<p><?php _e( 'Download URLs provided to customers have been improved to be shorter and more secure, and now use tokens to verify the URL prior to allowing the download to start.', 'edd' );?></p>
+
+				</div>
+			</div>
+
+			<div class="changelog">
+				<h3><?php _e( 'Improved Order Details', 'edd' );?></h3>
+
+				<div class="feature-section">
 
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/22-purchased-downloads2.png'; ?>" class="edd-welcome-screenshots"/>
 
 					<h4><?php _e( 'Focus on Purchased Downloads', 'edd' );?></h4>
 					<p><?php _e( 'The Download products your customer has purchased is one of the most important parts of this screen, so we have put it up front and in the spotlight.', 'edd' );?></p>
-					
-					<h4><?php _e( 'Easy Access to Important Data', 'edd' );?></h4>
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/22-logs.png'; ?>" class="edd-welcome-screenshots"/>
-					<p><?php _e( 'EDD keeps extensive logs of everything that happens with a purchase, including file downloads for the purchase and the customer. We have made this information much more accessible in 2.2.', 'edd' );?></p>
 
-					<h4><?php _e( 'Linked Transaction IDs', 'edd' );?></h4>
-					<p><?php _e( 'The Transaction ID is now linked directly to the transaction details page of the payment processor, making refunds and cross references easier and more efficient.', 'edd' );?></p>
+					<h4><?php _e( 'More Accurate Statistics', 'edd' );?></h4>
+					<p><?php _e( 'Adding or removing Downloads to and from a payment record now properly triggers an update routine to ensure the sales and earnings for the affected products are properly updated.', 'edd' );?></p>
 
 				</div>
 			</div>
@@ -225,29 +228,32 @@ class EDD_Welcome {
 
 				<div class="feature-section col three-col">
 					<div>
-		
-						<h4><?php _e( 'New EDD_Download Class', 'edd' );?></h4>
-						<p><?php _e( 'The EDD_Download class implemented in 2.2 will make it easier for theme and extension developers to integrate with Easy Digital Downloads by providing a simple method to create and access Download product information.', 'edd' );?></p>
 
-						<h4><?php _e( 'Per-Product Fees with EDD_Fees', 'edd' );?></h4>
-						<p><?php _e( 'The EDD_Fees class now supports per-product fees that can be setup to only be applied when specific products are in the cart.', 'edd' );?></p>
+						<h4><?php _e( 'PolyLang Support', 'edd' );?></h4>
+						<p><?php _e( 'We\'ve improved support for the popular PolyLang Plugin in 2.3 making EDD more accessible in more languages.', 'edd' );?></p>
+
+						<h4><?php _e( 'Customer API', 'edd' );?></h4>
+						<p><?php _e( 'A new EDD_Customer class has been introduced that makes it easy for developers to interact with customer data.', 'edd' );?></p>
+
 					</div>
 
 					<div>
-						<h4><?php _e( 'WP CLI Command for Test Payments', 'edd' );?></h4>
-						<p><?php _e( 'The <em>edd</em> command in WP CLI now supports creating sample purchase data for easier testing.' ,'edd' );?></p>
 
-						<h4><?php _e( 'Improved Tax Settings', 'edd' );?></h4>
-						<p><?php _e( 'The Taxes settings tab has been re-organized to make configuring taxes in your store simpler and more intuitive.', 'edd' );?></p>
+						<h4><?php _e( 'Schema Validation', 'edd' );?></h4>
+						<p><?php _e( 'The Schema Markup has been improved and now properly includes prices for both single and multi-price option products.' ,'edd' );?></p>
+
+						<h4><?php _e( 'Buy Now Button Improvements', 'edd' );?></h4>
+						<p><?php _e( 'Buy Now buttons no longer create pending payment records when they are clicked. Buy Now buttons are now automatically deactivated if no supported payment gateway is activated.' ,'edd' );?></p>
+
 					</div>
 
 					<div class="last-feature">
-						<h4><?php _e( 'Better Multi-Currency Support', 'edd' );?></h4>
-						<p><?php _e( 'Payment records now properly support historical currencies, meaning that payment currencies will display their original currency even if the shop currency changes.', 'edd' );?></p>
 
-						<h4><?php _e( 'Improved Product Drop Downs', 'edd' ); ?></h4>
-						<p><?php _e( 'The product drop downs have been made more intuitive and reliable.', 'edd' );?></p>
+						<h4><?php _e( 'Improved Upgrade Routine API', 'edd' );?></h4>
+						<p><?php _e( 'The upgrade routine has been improved to be more robust and user friendly. It now supports multiple upgrades in a single release, logs which have been completed ,as well as allows incomplete upgrades to be resumed.', 'edd' );?></p>
+
 					</div>
+
 				</div>
 			</div>
 
@@ -530,12 +536,9 @@ class EDD_Welcome {
 	 *
 	 * @access public
 	 * @since 1.4
-	 * @global $edd_options Array of all the EDD Options
 	 * @return void
 	 */
 	public function welcome() {
-		global $edd_options;
-
 		// Bail if no activation redirect
 		if ( ! get_transient( '_edd_activation_redirect' ) )
 			return;

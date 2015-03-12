@@ -1,5 +1,5 @@
 # [Easy Digital Downloads](http://easydigitaldownloads.com) #
-[![Build Status](https://secure.travis-ci.org/easydigitaldownloads/Easy-Digital-Downloads.png?branch=master)](http://travis-ci.org/easydigitaldownloads/Easy-Digital-Downloads) [![Code Coverage](https://scrutinizer-ci.com/g/easydigitaldownloads/Easy-Digital-Downloads/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/easydigitaldownloads/Easy-Digital-Downloads/?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/easydigitaldownloads/Easy-Digital-Downloads/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/easydigitaldownloads/Easy-Digital-Downloads/?branch=master) [![License](https://img.shields.io/badge/license-GPL--2.0%2B-red.svg)](https://github.com/easydigitaldownloads/Easy-Digital-Downloads/blob/master/license.txt) 
+[![Build Status](https://secure.travis-ci.org/easydigitaldownloads/Easy-Digital-Downloads.png?branch=master)](http://travis-ci.org/easydigitaldownloads/Easy-Digital-Downloads) [![Code Coverage](https://scrutinizer-ci.com/g/easydigitaldownloads/Easy-Digital-Downloads/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/easydigitaldownloads/Easy-Digital-Downloads/?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/easydigitaldownloads/Easy-Digital-Downloads/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/easydigitaldownloads/Easy-Digital-Downloads/?branch=master) [![License](https://img.shields.io/badge/license-GPL--2.0%2B-red.svg)](https://github.com/easydigitaldownloads/Easy-Digital-Downloads/blob/master/license.txt)
 
 ### Welcome to our GitHub Repository
 
@@ -29,5 +29,5 @@ There are various ways you can contribute:
 
 1. Raise an [Issue](https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues) on GitHub
 2. Send us a Pull Request with your bug fixes and/or new features
-3. Translate Easy Digital Downloads into different languages
+3. Translate Easy Digital Downloads into [different languages](https://www.transifex.com/projects/p/easy-digital-downloads/)
 4. Provide feedback and suggestions on [enhancements](https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues?direction=desc&labels=Enhancement&page=1&sort=created&state=open)
