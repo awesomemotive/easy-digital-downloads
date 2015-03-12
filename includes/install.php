@@ -151,6 +151,20 @@ function edd_install() {
 		return;
 	}
 
+	if ( ! $current_version ) {
+		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
+
+		// When new upgrade routines are added, mark them as complete on fresh install
+		$upgrade_routines = array(
+			'upgrade_payment_taxes',
+			'upgrade_customer_payments_association'
+		);
+
+		foreach ( $upgrade_routines as $upgrade ) {
+			edd_set_upgrade_complete( $upgrade );
+		}
+	}
+
 	// Add the transient to redirect
 	set_transient( '_edd_activation_redirect', true, 30 );
 }
