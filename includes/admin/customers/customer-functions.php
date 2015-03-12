@@ -41,6 +41,13 @@ function edd_register_default_customer_tabs( $tabs ) {
 }
 add_filter( 'edd_customer_tabs', 'edd_register_default_customer_tabs', 1, 1 );
 
+/**
+ * Register the Delete icon as late as possible so it's at the bottom
+ *
+ * @since  2.3.1
+ * @param  array $tabs An array of existing tabs
+ * @return array       The altered list of tabs, with 'delete' at the bottom
+ */
 function edd_register_delete_customer_tab( $tabs ) {
 
 	$tabs['delete'] = array( 'dashicon' => 'dashicons-trash', 'title' => __( 'Delete Customer', 'edd' ) );
