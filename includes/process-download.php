@@ -697,15 +697,6 @@ function edd_process_signed_download_url( $args ) {
 		wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );	
 	}
 	
-	// Make sure the link hasn't expired
-	$expire = $_GET['ttl'];
-	if ( base64_encode( base64_decode( $expire, true ) ) === $expire ) {
-		$expire = base64_decode( $expire ); // If it is a base64 string, decode it. Old expiration dates were in base64
-	}
-	if ( current_time( 'timestamp' ) > $expire ) {
-		wp_die( apply_filters( 'edd_download_link_expired_text', __( 'Sorry but your download link has expired.', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
-	}
-	
 	$args['expire']      = $_GET['ttl'];
 	$args['download']    = $order_parts[1];
 	$args['payment']     = $order_parts[0];
