@@ -136,6 +136,35 @@ class EDD_DB_Customers extends EDD_DB  {
 	}
 
 	/**
+	 * Delete a customer
+	 *
+	 * NOTE: This should not be called directly as it does not make necessary changes to
+	 * the payment meta and logs. Use edd_customer_delete() instead
+	 *
+	 * @access  public
+	 * @since   2.3.1
+	*/
+	public function delete( $_id_or_email = false ) {
+
+		if ( empty( $_id_or_email ) ) {
+			return false;
+		}
+
+		$column   = is_email( $_id_or_email ) ? 'email' : 'id';
+		$customer = $this->get_customer_by( $column, $_id_or_email );
+
+		if ( $customer->id > 0 ) {
+
+			global $wpdb;
+			return $wpdb->delete( $this->table_name, array( 'id' => $customer->id ), array( '%d' ) );
+
+		} else {
+			return false;
+		}
+
+	}
+
+	/**
 	 * Checks if a customer exists by email
 	 *
 	 * @access  public
