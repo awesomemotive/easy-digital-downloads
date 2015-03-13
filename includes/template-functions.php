@@ -670,7 +670,7 @@ function edd_add_schema_microdata() {
 function edd_microdata_title( $title, $id = 0 ) {
 	global $post;
 
-	if( ! edd_add_schema_microdata() ) {
+	if( ! edd_add_schema_microdata() || ! is_object( $post ) ) {
 		return $title;
 	}
 
@@ -695,11 +695,11 @@ function edd_microdata_wrapper_open() {
 
 	static $microdata_open = NULL;
 
-	if( ! edd_add_schema_microdata() || true === $microdata_open ) {
+	if( ! edd_add_schema_microdata() || true === $microdata_open || ! is_object( $post ) ) {
 		return;
 	}
 
-	if ( $post && $post->post_type == 'download' && is_singular() && is_main_query() ) {
+	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() ) {
 		$microdata_open = true;
 		echo '<span itemscope itemtype="http://schema.org/Product">';
 	}
@@ -720,11 +720,11 @@ function edd_microdata_wrapper_close() {
 
 	static $microdata_close = NULL;
 
-	if( ! edd_add_schema_microdata() || true === $microdata_close ) {
+	if( ! edd_add_schema_microdata() || true === $microdata_close || ! is_object( $post ) ) {
 		return;
 	}
 
-	if ( $post && $post->post_type == 'download' && is_singular() && is_main_query() ) {
+	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() ) {
 		$microdata_close = true;
 		echo '</span>';
 	}
@@ -745,11 +745,11 @@ function edd_microdata_description( $content ) {
 
 	static $microdata_description = NULL;
 
-	if( ! edd_add_schema_microdata() || true === $microdata_description ) {
+	if( ! edd_add_schema_microdata() || true === $microdata_description || ! is_object( $post ) ) {
 		return $content;
 	}
 
-	if ( $post && $post->post_type == 'download' && is_singular() && is_main_query() ) {
+	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() ) {
 		$microdata_description = true;
 		$content = apply_filters( 'edd_microdata_wrapper', '<div itemprop="description">' . $content . '</div>' );
 	}
