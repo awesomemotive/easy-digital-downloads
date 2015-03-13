@@ -398,12 +398,23 @@ class EDD_HTML_Elements {
 		$defaults = array(
 			'name'     => null,
 			'current'  => null,
-			'class'    => 'edd-checkbox'
+			'class'    => 'edd-checkbox',
+			'options'  => array(
+				'disabled' => false,
+				'readonly' => false
+			)
 		);
 
 		$args = wp_parse_args( $args, $defaults );
 
-		$output = '<input type="checkbox" name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] ) . '" class="' . $args[ 'class' ] . ' ' . esc_attr( $args[ 'name'] ) . '" ' . checked( 1, $args[ 'current' ], false ) . ' />';
+		$options = '';
+		if ( ! empty( $args['options']['disabled'] ) ) {
+			$options .= ' disabled="disabled"';
+		} elseif ( ! empty( $args['options']['readonly'] ) ) {
+			$options .= ' readonly';
+		}
+
+		$output = '<input type="checkbox"' . $options . ' name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] ) . '" class="' . $args[ 'class' ] . ' ' . esc_attr( $args[ 'name'] ) . '" ' . checked( 1, $args[ 'current' ], false ) . ' />';
 
 		return $output;
 	}
