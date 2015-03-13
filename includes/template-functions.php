@@ -699,7 +699,7 @@ function edd_microdata_wrapper_open() {
 		return;
 	}
 
-	if ( $post && $post->post_type == 'download' && is_singular() && is_main_query() ) {
+	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() ) {
 		$microdata_open = true;
 		echo '<span itemscope itemtype="http://schema.org/Product">';
 	}
