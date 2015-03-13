@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.9.2
 Tested up to: 4.2
 
-Stable Tag: 2.3
+Stable Tag: 2.3.1
 
 License: GNU Version 2 or Any Later Version
 
@@ -191,6 +191,13 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.3.1, March 13, 2015 =
+
+* Fix: File download limits not limiting the number of downloads allowed per payment
+* Fix: Microdata improperly added to page titles and content
+* Fix: Customer records cannot be deleted
+* Fix: Upgrade notices shown unnecessarily on new installs
 
 = 2.3, March 11, 2015 =
 
