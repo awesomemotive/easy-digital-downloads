@@ -724,7 +724,7 @@ function edd_microdata_wrapper_close() {
 		return;
 	}
 
-	if ( $post && $post->post_type == 'download' && is_singular() && is_main_query() ) {
+	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() ) {
 		$microdata_close = true;
 		echo '</span>';
 	}
@@ -749,7 +749,7 @@ function edd_microdata_description( $content ) {
 		return $content;
 	}
 
-	if ( $post && $post->post_type == 'download' && is_singular() && is_main_query() ) {
+	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() ) {
 		$microdata_description = true;
 		$content = apply_filters( 'edd_microdata_wrapper', '<div itemprop="description">' . $content . '</div>' );
 	}
