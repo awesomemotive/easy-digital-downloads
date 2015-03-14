@@ -1627,7 +1627,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
  * @return void
  */
 function edd_hook_callback( $args ) {
-	do_action( 'edd_' . $args['id'] );
+	do_action( 'edd_' . $args['id'], $args );
 }
 
 /**
