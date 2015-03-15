@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.3\n"
+"Project-Id-Version: Easy Digital Downloads 2.3.1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2015-03-11 18:59:04+00:00\n"
+"POT-Creation-Date: 2015-03-13 15:58:54+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -70,12 +70,12 @@ msgstr ""
 #: includes/admin/reporting/pdf-reports.php:33
 #: includes/admin/reporting/reports.php:96 includes/admin/tools.php:292
 #: includes/admin/tools.php:298
-#: includes/admin/upgrades/upgrade-functions.php:145
-#: includes/admin/upgrades/upgrade-functions.php:498
-#: includes/admin/upgrades/upgrade-functions.php:580
-#: includes/admin/upgrades/upgrade-functions.php:691
-#: includes/admin/upgrades/upgrade-functions.php:788
-#: includes/admin/upgrades/upgrade-functions.php:862
+#: includes/admin/upgrades/upgrade-functions.php:153
+#: includes/admin/upgrades/upgrade-functions.php:506
+#: includes/admin/upgrades/upgrade-functions.php:588
+#: includes/admin/upgrades/upgrade-functions.php:699
+#: includes/admin/upgrades/upgrade-functions.php:796
+#: includes/admin/upgrades/upgrade-functions.php:870
 #: includes/cart/functions.php:1066 includes/cart/functions.php:1083
 #: includes/class-edd-api.php:1458 includes/class-edd-api.php:1471
 #: includes/class-edd-api.php:1473 includes/class-edd-license-handler.php:173
@@ -85,7 +85,8 @@ msgstr ""
 #: includes/emails/actions.php:48 includes/emails/template.php:241
 #: includes/error-tracking.php:36 includes/gateways/functions.php:200
 #: includes/gateways/manual.php:33 includes/gateways/paypal-standard.php:34
-#: includes/process-download.php:230 includes/query-filters.php:48
+#: includes/process-download.php:230 includes/process-download.php:697
+#: includes/query-filters.php:48
 msgid "Error"
 msgstr ""
 
@@ -330,6 +331,10 @@ msgstr ""
 msgid "The payment has been successfully updated."
 msgstr ""
 
+#: includes/admin/class-edd-notices.php:160
+msgid "Customer successfully deleted"
+msgstr ""
+
 #: includes/admin/customers/class-customer-table.php:64
 msgid "Customer"
 msgstr ""
@@ -383,13 +388,14 @@ msgstr ""
 
 #: includes/admin/customers/customer-actions.php:17
 #: includes/admin/customers/customer-actions.php:169
-#: includes/admin/customers/customer-actions.php:236
+#: includes/admin/customers/customer-actions.php:324
 msgid "You do not have permission to edit this customer."
 msgstr ""
 
 #: includes/admin/customers/customer-actions.php:29
 #: includes/admin/customers/customer-actions.php:181
-#: includes/admin/customers/customer-actions.php:247
+#: includes/admin/customers/customer-actions.php:249
+#: includes/admin/customers/customer-actions.php:335
 msgid "Cheatin' eh?!"
 msgstr ""
 
@@ -409,7 +415,23 @@ msgstr ""
 msgid "A note is required"
 msgstr ""
 
-#: includes/admin/customers/customer-actions.php:271
+#: includes/admin/customers/customer-actions.php:236
+msgid "You do not have permission to delete this customer."
+msgstr ""
+
+#: includes/admin/customers/customer-actions.php:253
+msgid "Please confirm you want to delete this customer"
+msgstr ""
+
+#: includes/admin/customers/customer-actions.php:294
+msgid "Error deleting customer"
+msgstr ""
+
+#: includes/admin/customers/customer-actions.php:301
+msgid "Invalid Customer ID"
+msgstr ""
+
+#: includes/admin/customers/customer-actions.php:359
 msgid "Failed to disconnect user from customer"
 msgstr ""
 
@@ -421,114 +443,120 @@ msgstr ""
 msgid "Customer Notes"
 msgstr ""
 
+#: includes/admin/customers/customer-functions.php:53
+#: includes/admin/customers/customers.php:519
+msgid "Delete Customer"
+msgstr ""
+
 #: includes/admin/customers/customers.php:67
 msgid "Search Customers"
 msgstr ""
 
-#: includes/admin/customers/customers.php:92
+#: includes/admin/customers/customers.php:94
 msgid "You are not permitted to view this data."
 msgstr ""
 
-#: includes/admin/customers/customers.php:96
-#: includes/admin/customers/customers.php:103
+#: includes/admin/customers/customers.php:99
+#: includes/admin/customers/customers.php:107
 msgid "Invalid Customer ID Provided."
 msgstr ""
 
-#: includes/admin/customers/customers.php:110
+#: includes/admin/customers/customers.php:115
 #: includes/admin/payments/view-order-details.php:389
 msgid "Customer Details"
 msgstr ""
 
-#: includes/admin/customers/customers.php:175
+#: includes/admin/customers/customers.php:180
 msgid "Edit Customer"
 msgstr ""
 
-#: includes/admin/customers/customers.php:201
+#: includes/admin/customers/customers.php:206
 msgid "Customer Address"
 msgstr ""
 
-#: includes/admin/customers/customers.php:212
+#: includes/admin/customers/customers.php:217
 msgid "Address 1"
 msgstr ""
 
-#: includes/admin/customers/customers.php:213
+#: includes/admin/customers/customers.php:218
 msgid "Address 2"
 msgstr ""
 
-#: includes/admin/customers/customers.php:214
+#: includes/admin/customers/customers.php:219
 #: includes/admin/reporting/class-export-payments.php:68
 #: includes/checkout/template.php:320 templates/shortcode-profile-editor.php:69
 msgid "City"
 msgstr ""
 
-#: includes/admin/customers/customers.php:241
+#: includes/admin/customers/customers.php:246
 #: includes/admin/settings/register-settings.php:1490
 #: includes/checkout/template.php:381 templates/shortcode-profile-editor.php:82
 msgid "State / Province"
 msgstr ""
 
-#: includes/admin/customers/customers.php:243
+#: includes/admin/customers/customers.php:248
 msgid "Postal"
 msgstr ""
 
-#: includes/admin/customers/customers.php:250
+#: includes/admin/customers/customers.php:255
 msgid "Customer Name"
 msgstr ""
 
-#: includes/admin/customers/customers.php:252
+#: includes/admin/customers/customers.php:257
 msgid "Customer Email"
 msgstr ""
 
-#: includes/admin/customers/customers.php:255
+#: includes/admin/customers/customers.php:260
 msgid "Customer since"
 msgstr ""
 
-#: includes/admin/customers/customers.php:280
+#: includes/admin/customers/customers.php:285
 msgid "User ID"
 msgstr ""
 
-#: includes/admin/customers/customers.php:284
+#: includes/admin/customers/customers.php:289
 #: includes/admin/reporting/class-export-payments.php:187
 msgid "none"
 msgstr ""
 
-#: includes/admin/customers/customers.php:287
+#: includes/admin/customers/customers.php:292
 msgid "Disconnects the current user ID from this customer record"
 msgstr ""
 
-#: includes/admin/customers/customers.php:287
+#: includes/admin/customers/customers.php:292
 msgid "Disconnect User"
 msgstr ""
 
-#: includes/admin/customers/customers.php:299
+#: includes/admin/customers/customers.php:304
 msgid "Update Customer"
 msgstr ""
 
-#: includes/admin/customers/customers.php:300
+#: includes/admin/customers/customers.php:305
+#: includes/admin/customers/customers.php:520
 #: includes/admin/payments/view-order-details.php:421
-#: includes/admin/thickbox.php:135 includes/class-edd-html-elements.php:539
+#: includes/admin/thickbox.php:135 includes/class-edd-html-elements.php:550
 msgid "Cancel"
 msgstr ""
 
-#: includes/admin/customers/customers.php:311
+#: includes/admin/customers/customers.php:316
 msgid "View All Purchases"
 msgstr ""
 
-#: includes/admin/customers/customers.php:313
+#: includes/admin/customers/customers.php:318
 msgid "%d Completed Sale"
 msgid_plural "%d Completed Sales"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/admin/customers/customers.php:318
+#: includes/admin/customers/customers.php:323
 msgid "Lifetime Value"
 msgstr ""
 
-#: includes/admin/customers/customers.php:330
+#: includes/admin/customers/customers.php:335
 msgid "Recent Payments"
 msgstr ""
 
-#: includes/admin/customers/customers.php:339
+#: includes/admin/customers/customers.php:344
 #: includes/admin/downloads/metabox.php:419
 #: includes/admin/payments/class-payments-table.php:221
 #: includes/admin/reporting/class-export-payments.php:61
@@ -537,7 +565,7 @@ msgstr ""
 msgid "ID"
 msgstr ""
 
-#: includes/admin/customers/customers.php:340
+#: includes/admin/customers/customers.php:345
 #: includes/admin/discounts/add-discount.php:57
 #: includes/admin/discounts/class-discount-codes-table.php:147
 #: includes/admin/discounts/edit-discount.php:70
@@ -547,7 +575,7 @@ msgstr ""
 msgid "Amount"
 msgstr ""
 
-#: includes/admin/customers/customers.php:341
+#: includes/admin/customers/customers.php:346
 #: includes/admin/downloads/dashboard-columns.php:35
 #: includes/admin/payments/class-payments-table.php:225
 #: includes/admin/reporting/class-api-requests-logs-list-table.php:92
@@ -562,7 +590,7 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: includes/admin/customers/customers.php:342
+#: includes/admin/customers/customers.php:347
 #: includes/admin/discounts/class-discount-codes-table.php:152
 #: includes/admin/discounts/edit-discount.php:175
 #: includes/admin/payments/class-payments-table.php:227
@@ -570,43 +598,51 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: includes/admin/customers/customers.php:343
-#: includes/admin/customers/customers.php:376 templates/checkout_cart.php:13
+#: includes/admin/customers/customers.php:348
+#: includes/admin/customers/customers.php:381 templates/checkout_cart.php:13
 msgid "Actions"
 msgstr ""
 
-#: includes/admin/customers/customers.php:355
+#: includes/admin/customers/customers.php:360
 msgid "View Details for Payment"
 msgstr ""
 
-#: includes/admin/customers/customers.php:356
+#: includes/admin/customers/customers.php:361
 msgid "View Details"
 msgstr ""
 
-#: includes/admin/customers/customers.php:363
+#: includes/admin/customers/customers.php:368
 msgid "No Payments Found"
 msgstr ""
 
-#: includes/admin/customers/customers.php:368
+#: includes/admin/customers/customers.php:373
 #: includes/admin/payments/view-order-details.php:268
 msgid "Purchased %s"
 msgstr ""
 
-#: includes/admin/customers/customers.php:385
-#: includes/admin/customers/customers.php:386 includes/admin/welcome.php:491
+#: includes/admin/customers/customers.php:390
+#: includes/admin/customers/customers.php:391 includes/admin/welcome.php:491
 msgid "View %s"
 msgstr ""
 
-#: includes/admin/customers/customers.php:392
+#: includes/admin/customers/customers.php:397
 msgid "No %s Found"
 msgstr ""
 
-#: includes/admin/customers/customers.php:428
+#: includes/admin/customers/customers.php:433
 msgid "Notes"
 msgstr ""
 
-#: includes/admin/customers/customers.php:466
+#: includes/admin/customers/customers.php:471
 msgid "No Customer Notes"
+msgstr ""
+
+#: includes/admin/customers/customers.php:504
+msgid "Are you sure you want to delete this customer?"
+msgstr ""
+
+#: includes/admin/customers/customers.php:509
+msgid "Delete all associated payments and records?"
 msgstr ""
 
 #: includes/admin/dashboard-widgets.php:24
@@ -900,7 +936,7 @@ msgstr ""
 #: includes/admin/discounts/class-discount-codes-table.php:274
 #: includes/admin/payments/class-payments-table.php:302
 #: includes/admin/payments/class-payments-table.php:375
-#: includes/payments/functions.php:1551
+#: includes/payments/functions.php:1571
 msgid "Delete"
 msgstr ""
 
@@ -1483,27 +1519,27 @@ msgid "Completed"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:201
-#: includes/payments/functions.php:583
+#: includes/payments/functions.php:603
 msgid "Pending"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:202
-#: includes/payments/functions.php:585
+#: includes/payments/functions.php:605
 msgid "Refunded"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:203
-#: includes/payments/functions.php:588
+#: includes/payments/functions.php:608
 msgid "Revoked"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:204
-#: includes/payments/functions.php:586
+#: includes/payments/functions.php:606
 msgid "Failed"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:205
-#: includes/payments/functions.php:587
+#: includes/payments/functions.php:607
 msgid "Abandoned"
 msgstr ""
 
@@ -3531,20 +3567,20 @@ msgid ""
 "href=\"%s\">here</a> to start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:145
-#: includes/admin/upgrades/upgrade-functions.php:498
-#: includes/admin/upgrades/upgrade-functions.php:580
-#: includes/admin/upgrades/upgrade-functions.php:691
-#: includes/admin/upgrades/upgrade-functions.php:788
-#: includes/admin/upgrades/upgrade-functions.php:862
+#: includes/admin/upgrades/upgrade-functions.php:153
+#: includes/admin/upgrades/upgrade-functions.php:506
+#: includes/admin/upgrades/upgrade-functions.php:588
+#: includes/admin/upgrades/upgrade-functions.php:699
+#: includes/admin/upgrades/upgrade-functions.php:796
+#: includes/admin/upgrades/upgrade-functions.php:870
 msgid "You do not have permission to do shop upgrades"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:351 includes/install.php:85
+#: includes/admin/upgrades/upgrade-functions.php:359 includes/install.php:85
 msgid "Transaction Failed"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:352 includes/install.php:86
+#: includes/admin/upgrades/upgrade-functions.php:360 includes/install.php:86
 msgid "Your transaction failed, please try again or contact site support."
 msgstr ""
 
@@ -4698,7 +4734,7 @@ msgstr ""
 msgid "All Categories"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:524
+#: includes/class-edd-html-elements.php:535
 msgid "Enter username"
 msgstr ""
 
@@ -5042,7 +5078,7 @@ msgid ""
 "they are unable to view it in the browser correctly."
 msgstr ""
 
-#: includes/deprecated-functions.php:517
+#: includes/deprecated-functions.php:517 includes/process-download.php:697
 msgid "Sorry but you have hit your download limit for this file."
 msgstr ""
 
@@ -5528,15 +5564,15 @@ msgstr ""
 msgid "Status changed from %s to %s"
 msgstr ""
 
-#: includes/payments/functions.php:584
+#: includes/payments/functions.php:604
 msgid "Complete"
 msgstr ""
 
-#: includes/payments/functions.php:1536
+#: includes/payments/functions.php:1556
 msgid "EDD Bot"
 msgstr ""
 
-#: includes/payments/functions.php:1551
+#: includes/payments/functions.php:1571
 msgid "Delete this payment note"
 msgstr ""
 
