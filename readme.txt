@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.9.2
 Tested up to: 4.2
 
-Stable Tag: 2.3.1
+Stable Tag: 2.3.2
 
 License: GNU Version 2 or Any Later Version
 
@@ -191,6 +191,10 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.3.2, March 14, 2015 =
+
+* Fix: Slow performance in admin area dur to edd_test_ajax_works() function
 
 = 2.3.1, March 13, 2015 =
 
