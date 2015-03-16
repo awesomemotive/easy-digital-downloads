@@ -458,6 +458,8 @@ class EDD_DB_Customers extends EDD_DB  {
 
 		}
 
+		$args['orderby'] = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'id' : $args['orderby'];
+
 		if( 'purchase_value' == $args['orderby'] ) {
 			$args['orderby'] = 'purchase_value+0';
 		}
