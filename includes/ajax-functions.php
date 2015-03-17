@@ -166,9 +166,9 @@ function edd_ajax_add_to_cart() {
 
 			parse_str( $_POST['post_data'], $post_data );
 
-			if( isset( $options[ 'price_id' ] ) && isset( $post_data[ 'edd_download_quantity_' . $options[ 'price_id' ] ] ) ) {
+			if( isset( $options['price_id'] ) && isset( $post_data['edd_download_quantity_' . $options['price_id'] ] ) ) {
 
-				$options['quantity'] = absint( $post_data[ 'edd_download_quantity_' . $options[ 'price_id' ] ] );
+				$options['quantity'] = absint( $post_data['edd_download_quantity_' . $options['price_id'] ] );
 
 			} else {
 

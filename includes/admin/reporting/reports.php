@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 */
 function edd_reports_page() {
 	$current_page = admin_url( 'edit.php?post_type=download&page=edd-reports' );
-	$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'reports';
+	$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'reports';
 	?>
 	<div class="wrap">
 		<h2 class="nav-tab-wrapper">
@@ -99,8 +99,8 @@ function edd_reports_tab_reports() {
 	$current_view = 'earnings';
 	$views        = edd_reports_default_views();
 
-	if ( isset( $_GET[ 'view' ] ) && array_key_exists( $_GET[ 'view' ], $views ) )
-		$current_view = $_GET[ 'view' ];
+	if ( isset( $_GET['view'] ) && array_key_exists( $_GET['view'], $views ) )
+		$current_view = $_GET['view'];
 
 	do_action( 'edd_reports_view_' . $current_view );
 
@@ -120,7 +120,7 @@ function edd_report_views() {
 	}
 
 	$views        = edd_reports_default_views();
-	$current_view = isset( $_GET[ 'view' ] ) ? $_GET[ 'view' ] : 'earnings';
+	$current_view = isset( $_GET['view'] ) ? $_GET['view'] : 'earnings';
 	?>
 	<form id="edd-reports-filter" method="get">
 		<select id="edd-reports-view" name="view">
@@ -419,8 +419,8 @@ function edd_reports_tab_logs() {
 	$current_view = 'file_downloads';
 	$log_views    = edd_log_default_views();
 
-	if ( isset( $_GET[ 'view' ] ) && array_key_exists( $_GET[ 'view' ], $log_views ) )
-		$current_view = $_GET[ 'view' ];
+	if ( isset( $_GET['view'] ) && array_key_exists( $_GET['view'], $log_views ) )
+		$current_view = $_GET['view'];
 
 	do_action( 'edd_logs_view_' . $current_view );
 }
