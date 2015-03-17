@@ -326,7 +326,7 @@ add_action( 'save_post', 'edd_price_save_quick_edit' );
  */
 function edd_save_bulk_edit() {
 
-	$post_ids = ( isset( $_POST[ 'post_ids' ] ) && ! empty( $_POST[ 'post_ids' ] ) ) ? $_POST[ 'post_ids' ] : array();
+	$post_ids = ( isset( $_POST['post_ids'] ) && ! empty( $_POST['post_ids'] ) ) ? $_POST['post_ids'] : array();
 
 	if ( ! empty( $post_ids ) && is_array( $post_ids ) ) {
 		$price = isset( $_POST['price'] ) ? strip_tags( stripslashes( $_POST['price'] ) ) : 0;
