@@ -244,12 +244,12 @@ function edd_sanitize_files_save( $files ) {
 	// Clean up filenames to ensure whitespaces are stripped
 	foreach( $files as $id => $file ) {
 
-		if( ! empty( $files[ $id ][ 'file' ] ) ) {
-			$files[ $id ][ 'file' ] = trim( $file[ 'file' ] );
+		if( ! empty( $files[ $id ]['file'] ) ) {
+			$files[ $id ]['file'] = trim( $file['file'] );
 		}
 
-		if( ! empty( $files[ $id ][ 'name' ] ) ) {
-			$files[ $id ][ 'name' ] = trim( $file[ 'name' ] );
+		if( ! empty( $files[ $id ]['name'] ) ) {
+			$files[ $id ]['name'] = trim( $file['name'] );
 		}
 	}
 
@@ -741,7 +741,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 
 			if ( $prices ) {
 				foreach ( $prices as $price_key => $price ) {
-					$options[ $price_key ] = $prices[ $price_key ][ 'name' ];
+					$options[ $price_key ] = $prices[ $price_key ]['name'];
 				}
 			}
 

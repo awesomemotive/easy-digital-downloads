@@ -241,7 +241,7 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . '"' . $schema . '>';
 						echo '<label for="'	. esc_attr( 'edd_price_option_' . $download_id . '_' . $key ) . '">';
 							echo '<input type="' . $type . '" ' . checked( apply_filters( 'edd_price_option_checked', $checked_key, $download_id, $key ), $key, false ) . ' name="edd_options[price_id][]" id="' . esc_attr( 'edd_price_option_' . $download_id . '_' . $key ) . '" class="' . esc_attr( 'edd_price_option_' . $download_id ) . '" value="' . esc_attr( $key ) . '" data-price="' . edd_get_price_option_amount( $download_id, $key ) .'"/>&nbsp;';
-							echo '<span class="edd_price_option_name" itemprop="description">' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price" itemprop="price">' . edd_currency_filter( edd_format_amount( $price[ 'amount' ] ) ) . '</span>';
+							echo '<span class="edd_price_option_name" itemprop="description">' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price" itemprop="price">' . edd_currency_filter( edd_format_amount( $price['amount'] ) ) . '</span>';
 						echo '</label>';
 						do_action( 'edd_after_price_option', $key, $price, $download_id );
 					echo '</li>';
@@ -670,7 +670,7 @@ function edd_add_schema_microdata() {
 function edd_microdata_title( $title, $id = 0 ) {
 	global $post;
 
-	if( ! edd_add_schema_microdata() ) {
+	if( ! edd_add_schema_microdata() || ! is_object( $post ) ) {
 		return $title;
 	}
 
@@ -695,11 +695,11 @@ function edd_microdata_wrapper_open() {
 
 	static $microdata_open = NULL;
 
-	if( ! edd_add_schema_microdata() || true === $microdata_open ) {
+	if( ! edd_add_schema_microdata() || true === $microdata_open || ! is_object( $post ) ) {
 		return;
 	}
 
-	if ( $post && $post->post_type == 'download' && is_singular() && is_main_query() ) {
+	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() ) {
 		$microdata_open = true;
 		echo '<span itemscope itemtype="http://schema.org/Product">';
 	}
@@ -720,11 +720,11 @@ function edd_microdata_wrapper_close() {
 
 	static $microdata_close = NULL;
 
-	if( ! edd_add_schema_microdata() || true === $microdata_close ) {
+	if( ! edd_add_schema_microdata() || true === $microdata_close || ! is_object( $post ) ) {
 		return;
 	}
 
-	if ( $post && $post->post_type == 'download' && is_singular() && is_main_query() ) {
+	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() ) {
 		$microdata_close = true;
 		echo '</span>';
 	}
@@ -745,11 +745,11 @@ function edd_microdata_description( $content ) {
 
 	static $microdata_description = NULL;
 
-	if( ! edd_add_schema_microdata() || true === $microdata_description ) {
+	if( ! edd_add_schema_microdata() || true === $microdata_description || ! is_object( $post ) ) {
 		return $content;
 	}
 
-	if ( $post && $post->post_type == 'download' && is_singular() && is_main_query() ) {
+	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() ) {
 		$microdata_description = true;
 		$content = apply_filters( 'edd_microdata_wrapper', '<div itemprop="description">' . $content . '</div>' );
 	}

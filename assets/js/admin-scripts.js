@@ -1157,6 +1157,7 @@ jQuery(document).ready(function ($) {
 			this.cancel_edit();
 			this.change_country();
 			this.add_note();
+			this.delete_checked();
 		},
 		edit_customer: function() {
 			$( 'body' ).on( 'click', '#edit-customer', function( e ) {
@@ -1252,6 +1253,21 @@ jQuery(document).ready(function ($) {
 					setTimeout( function() {
 						$( '#customer-note' ).css( 'border-color', border_color );
 					}, 500 );
+				}
+			});
+		},
+		delete_checked: function() {
+			$( '#edd-customer-delete-confirm' ).change( function() {
+				var records_input = $('#edd-customer-delete-records');
+				var submit_button = $('#edd-delete-customer');
+
+				if ( $(this).prop('checked') ) {
+					records_input.attr('disabled', false);
+					submit_button.attr('disabled', false);
+				} else {
+					records_input.attr('disabled', true);
+					records_input.prop('checked', false);
+					submit_button.attr('disabled', true);
 				}
 			});
 		}
