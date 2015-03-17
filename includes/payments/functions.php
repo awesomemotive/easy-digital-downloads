@@ -908,7 +908,7 @@ function edd_update_payment_meta( $payment_id = 0, $meta_key = '', $meta_value =
 		update_post_meta( $payment_id, '_edd_payment_user_email', $meta_value );
 
 		$current_meta = edd_get_payment_meta( $payment_id );
-		$current_meta[ 'user_info']['email']  = $meta_value;
+		$current_meta['user_info']['email']  = $meta_value;
 
 		$meta_key     = '_edd_payment_meta';
 		$meta_value   = $current_meta;
