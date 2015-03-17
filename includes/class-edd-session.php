@@ -113,7 +113,7 @@ class EDD_Session {
 	public function init() {
 
 		if( $this->use_php_sessions ) {
-			$this->session = isset( $_SESSION[ 'edd' . $this->prefix ] ) && is_array( $_SESSION[ 'edd' . $this->prefix ] ) ? $_SESSION[ 'edd' . $this->prefix ] : array();
+			$this->session = isset( $_SESSION['edd' . $this->prefix ] ) && is_array( $_SESSION['edd' . $this->prefix ] ) ? $_SESSION['edd' . $this->prefix ] : array();
 		} else {
 			$this->session = WP_Session::get_instance();
 		}
@@ -177,7 +177,7 @@ class EDD_Session {
 
 		if( $this->use_php_sessions ) {
 
-			$_SESSION[ 'edd' . $this->prefix ] = $this->session;
+			$_SESSION['edd' . $this->prefix ] = $this->session;
 		}
 
 		return $this->session[ $key ];
