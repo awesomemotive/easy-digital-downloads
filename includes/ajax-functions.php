@@ -78,6 +78,14 @@ function edd_test_ajax_works() {
 
 	if( $works ) {
 		set_transient( '_edd_ajax_works', '1', DAY_IN_SECONDS );
+	} else {
+		if ( class_exists( 'Airplane_Mode_Core' ) ) { // the Airplane Mode plugin is installed
+			global $Airplane_Mode_Core;
+			if ( $Airplane_Mode_Core->enabled() ) { // and it's enabled
+				$works = true; // the checks will fail if its active, so set works to true to avoid outputting error message
+				set_transient( '_edd_ajax_works', '1', DAY_IN_SECONDS ); // ignore for a day
+			}
+		}		
 	}
 
 	return $works;
