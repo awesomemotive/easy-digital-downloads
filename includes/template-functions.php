@@ -313,7 +313,7 @@ function edd_variable_price_quantity_field( $key, $price, $download_id ) {
 		return;
 	}
 
-	if( ! edd_single_price_option_mode() ) {
+	if( ! edd_single_price_option_mode( $download_id ) ) {
 		return;
 	}
 
