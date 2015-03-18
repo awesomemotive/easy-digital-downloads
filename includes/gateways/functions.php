@@ -158,7 +158,7 @@ function edd_shop_supports_buy_now() {
 	$gateways = edd_get_enabled_payment_gateways();
 	$ret      = false;
 
-	if( $gateways ) {
+	if( ! edd_use_taxes()  && $gateways ) {
 		foreach( $gateways as $gateway_id => $gateway ) {
 			if( edd_gateway_supports_buy_now( $gateway_id ) ) {
 				$ret = true;
