@@ -89,6 +89,7 @@ function edd_get_purchase_link( $args = array() ) {
 	// Override color if color == inherit
 	$args['color'] = ( $args['color'] == 'inherit' ) ? '' : $args['color'];
 
+	$options          = array();
 	$variable_pricing = $download->has_variable_prices();
 	$data_variable    = $variable_pricing ? ' data-variable-price="yes"' : 'data-variable-price="no"';
 	$type             = $download->is_single_price_mode() ? 'data-price-mode=multi' : 'data-price-mode=single';
@@ -97,10 +98,10 @@ function edd_get_purchase_link( $args = array() ) {
 
 		if ( $variable_pricing && false !== $args['price_id'] ) {
 
-			$price_id = $args['price_id'];
-			$prices   = $download->prices;
-
-			$price = isset( $prices[$price_id] ) ? $prices[$price_id]['amount'] : false;
+			$price_id            = $args['price_id'];
+			$prices              = $download->prices;
+			$options['price_id'] = $args['price_id'];
+			$price               = isset( $prices[$price_id] ) ? $prices[$price_id]['amount'] : false;
 
 		} elseif ( ! $variable_pricing ) {
 
@@ -109,7 +110,7 @@ function edd_get_purchase_link( $args = array() ) {
 		}
 	}
 
-	$data_price       = isset( $price ) && false !== $price ? 'data-price="' . $price . '"' : 'data-price="' . 0 . '"';
+	$data_price  = isset( $price ) && false !== $price ? 'data-price="' . $price . '"' : 'data-price="' . 0 . '"';
 
 	$button_text = ! empty( $args['text'] ) ? '&nbsp;&ndash;&nbsp;' . $args['text'] : '';
 
@@ -123,7 +124,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 	}
 
-	if ( edd_item_in_cart( $download->ID ) && ( ! $variable_pricing || ! $download->is_single_price_mode() ) ) {
+	if ( edd_item_in_cart( $download->ID, $options ) && ( ! $variable_pricing || ! $download->is_single_price_mode() ) ) {
 		$button_display   = 'style="display:none;"';
 		$checkout_display = '';
 	} else {
