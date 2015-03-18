@@ -348,7 +348,7 @@ class EDD_Payments_Query extends EDD_Stats {
 			return;
 		}
 
-        $is_email = is_email( $search ) || strpos( $search, '@' ) !== false;
+		$is_email = is_email( $search ) || strpos( $search, '@' ) !== false;
 		$is_user  = strpos( $search, strtolower( 'user:' ) ) !== false;
 
 		if ( ! empty( $this->args[ 'search_in_notes' ] ) ) {
