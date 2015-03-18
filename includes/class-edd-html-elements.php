@@ -135,6 +135,7 @@ class EDD_HTML_Elements {
 		$options = array();
 
 		if ( $customers ) {
+			$options[0] = __( 'No customer attached', 'edd' );
 			foreach ( $customers as $customer ) {
 				$options[ absint( $customer->id ) ] = esc_html( $customer->name . ' (' . $customer->email . ')' );
 			}
