@@ -157,7 +157,7 @@ class EDD_License {
 			return;
 		}
 
-		if ( ! isset( $_POST['edd_settings'][ $this->item_shortname . '_license_key' ] ) ) {
+		if ( ! isset( $_POST['edd_settings'][ $this->item_shortname . '_license_key'] ) ) {
 			return;
 		}
 
@@ -168,7 +168,7 @@ class EDD_License {
 			}
 		}
 
-		if( ! wp_verify_nonce( $_REQUEST[ $this->item_shortname . '_license_key-nonce' ], $this->item_shortname . '_license_key-nonce' ) ) {
+		if( ! wp_verify_nonce( $_REQUEST[ $this->item_shortname . '_license_key-nonce'], $this->item_shortname . '_license_key-nonce' ) ) {
 
 			wp_die( __( 'Nonce verification failed', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 
@@ -182,7 +182,7 @@ class EDD_License {
 			return;
 		}
 
-		$license = sanitize_text_field( $_POST['edd_settings'][ $this->item_shortname . '_license_key' ] );
+		$license = sanitize_text_field( $_POST['edd_settings'][ $this->item_shortname . '_license_key'] );
 
 		if( empty( $license ) ) {
 			return;
@@ -238,10 +238,10 @@ class EDD_License {
 		if ( ! isset( $_POST['edd_settings'] ) )
 			return;
 
-		if ( ! isset( $_POST['edd_settings'][ $this->item_shortname . '_license_key' ] ) )
+		if ( ! isset( $_POST['edd_settings'][ $this->item_shortname . '_license_key'] ) )
 			return;
 
-		if( ! wp_verify_nonce( $_REQUEST[ $this->item_shortname . '_license_key-nonce' ], $this->item_shortname . '_license_key-nonce' ) ) {
+		if( ! wp_verify_nonce( $_REQUEST[ $this->item_shortname . '_license_key-nonce'], $this->item_shortname . '_license_key-nonce' ) ) {
 
 			wp_die( __( 'Nonce verification failed', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 
@@ -252,7 +252,7 @@ class EDD_License {
 		}
 
 		// Run on deactivate button press
-		if ( isset( $_POST[ $this->item_shortname . '_license_key_deactivate' ] ) ) {
+		if ( isset( $_POST[ $this->item_shortname . '_license_key_deactivate'] ) ) {
 
 			// Data to send to the API
 			$api_params = array(

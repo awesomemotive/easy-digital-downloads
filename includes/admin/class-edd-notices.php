@@ -152,6 +152,15 @@ class EDD_Notices {
 						break;
 				}
 			}
+
+			// Customer Notices
+			if ( current_user_can( 'edit_shop_payments' ) ) {
+				switch( $_GET['edd-message'] ) {
+					case 'customer-deleted' :
+						$notices['updated']['edd-customer-deleted'] = __( 'Customer successfully deleted', 'edd' );
+						break;
+				}
+			}
 		}
 
 		if ( count( $notices['updated'] ) > 0 ) {
