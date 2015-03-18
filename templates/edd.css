@@ -381,7 +381,7 @@
     content: '\f160';
     display: inline-block;
     -webkit-font-smoothing: antialiased;
-    font: normal 20px/1'dashicons';
+    font: normal 20px/1 'dashicons';
     vertical-align: top;
 }
 #edd_checkout_form_wrap input.edd-input.card-number.valid {
