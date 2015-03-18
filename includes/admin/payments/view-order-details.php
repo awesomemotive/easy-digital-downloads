@@ -400,9 +400,11 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 											<input type="hidden" name="edd-current-customer" value="<?php echo $customer->id; ?>" />
 										</div>
 										<div class="column">
-											<?php $customer_url = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ); ?>
-											<a href="<?php echo $customer_url; ?>" title="<?php _e( 'View Customer Details', 'edd' ); ?>"><?php _e( 'View Customer Details', 'edd' ); ?></a>
-											&nbsp;|&nbsp;
+											<?php if( ! empty( $customer->id ) ) : ?>
+												<?php $customer_url = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ); ?>
+												<a href="<?php echo $customer_url; ?>" title="<?php _e( 'View Customer Details', 'edd' ); ?>"><?php _e( 'View Customer Details', 'edd' ); ?></a>
+												&nbsp;|&nbsp;
+											<?php endif; ?>
 											<a href="#new" class="edd-payment-new-customer" title="<?php _e( 'New Customer', 'edd' ); ?>"><?php _e( 'New Customer', 'edd' ); ?></a>
 										</div>
 									</div>
