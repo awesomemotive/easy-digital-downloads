@@ -203,6 +203,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Quantity field not shown on purchase buttons with the [purchase_link] short code
 * Tweak: Automatically disable buy now buttons when taxes are enabled since they do not support taxes
 * Tweak: Automatically disable the edd_test_ajax_works() test if the Airplane Mode plugin is enabled
+* Tweak: Updated translation files for many languages
 
 = 2.3.2, March 14, 2015 =
 
