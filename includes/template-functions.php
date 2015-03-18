@@ -71,6 +71,11 @@ function edd_get_purchase_link( $args = array() ) {
 
 	$args = wp_parse_args( $args, $defaults );
 
+	// Override the stright_to_gateway if the shop doesn't support it
+	if ( ! edd_shop_supports_buy_now() ) {
+		$args['direct'] = false;
+	}
+
 	$download = new EDD_Download( $args['download_id'] );
 
 	if( empty( $download->ID ) ) {
