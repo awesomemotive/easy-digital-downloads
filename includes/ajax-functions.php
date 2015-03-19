@@ -40,13 +40,22 @@ function edd_test_ajax_works() {
 
 		global $Airplane_Mode_Core;
 
-		if ( $Airplane_Mode_Core->enabled() ) {
-			return true;
+		if ( version_compare( AIRMDE_VER, '0.0.1', '==' ) ) {
+
+			if ( $Airplane_Mode_Core->check_status() == 'on' ) {
+				return true;
+			}
+
+		} else {
+
+			if ( $Airplane_Mode_Core->enabled() ) {
+				return true;
+			}
 		}
 	}
 
 	add_filter( 'block_local_requests', '__return_false' );
-	
+
 	if ( get_transient( '_edd_ajax_works' ) ) {
 		return true;
 	}
@@ -62,7 +71,7 @@ function edd_test_ajax_works() {
 	$ajax  = wp_remote_post( edd_get_ajax_url(), $params );
 	$works = true;
 
-	if( is_wp_error( $ajax ) ) {
+	if ( is_wp_error( $ajax ) ) {
 
 		$works = false;
 
@@ -86,7 +95,7 @@ function edd_test_ajax_works() {
 
 	}
 
-	if( $works ) {
+	if ( $works ) {
 		set_transient( '_edd_ajax_works', '1', DAY_IN_SECONDS );
 	}
 
