@@ -29,21 +29,15 @@ class Tests_Formatting extends WP_UnitTestCase {
 
 	public function test_format_amount() {
 
-		global $edd_options;
-
 		$this->assertEquals( '20,000.20', edd_format_amount( '20000.20' ) );
 
-		$edd_options['thousands_separator'] = '.';
-		$edd_options['decimal_separator'] = ',';
-
-		update_option( 'edd_settings', $edd_options );
+		edd_update_option( 'thousands_separator', '.' );
+		edd_update_option( 'decimal_separator', ',' );
 
 		$this->assertEquals( '20.000,20', edd_format_amount( '20000.20' ) );
 
-		$edd_options['thousands_separator'] = ' ';
-		$edd_options['decimal_separator'] = '.';
-
-		update_option( 'edd_settings', $edd_options );
+		edd_update_option( 'thousands_separator', ' ' );
+		edd_update_option( 'decimal_separator', '.' );
 
 		$this->assertEquals( '20 000.20', edd_format_amount( '20000.20' ) );
 	}
@@ -52,9 +46,13 @@ class Tests_Formatting extends WP_UnitTestCase {
 		$this->assertEquals( '&#36;20,000.20', edd_currency_filter( '20,000.20' ) );
 	}
 
-	public function test_separators() {
+	public function test_currency_symbol() {
+		$this->assertEquals( '&#36;', edd_currency_symbol( 'USD' ) );
+		$this->assertEquals( '&yen;', edd_currency_symbol( 'JPY' ) );
+		$this->assertEquals( 'DKK', edd_currency_symbol( 'DKK' ) );
+	}
 
-		global $edd_options;
+	public function test_separators() {
 
 		$thousands_sep = edd_get_option( 'thousands_separator', ',' );
 		$decimal_sep   = edd_get_option( 'decimal_separator', '.' );
@@ -62,10 +60,8 @@ class Tests_Formatting extends WP_UnitTestCase {
 		$this->assertEquals( ' ', $thousands_sep );
 		$this->assertEquals( '.', $decimal_sep );
 
-		$edd_options['thousands_separator'] = '.';
-		$edd_options['decimal_separator'] = ',';
-
-		update_option( 'edd_settings', $edd_options );
+		edd_update_option( 'thousands_separator', '.' );
+		edd_update_option( 'decimal_separator', ',' );
 
 		$thousands_sep = edd_get_option( 'thousands_separator', ',' );
 		$decimal_sep   = edd_get_option( 'decimal_separator', '.' );
@@ -73,10 +69,8 @@ class Tests_Formatting extends WP_UnitTestCase {
 		$this->assertEquals( '.', $thousands_sep );
 		$this->assertEquals( ',', $decimal_sep );
 
-		$edd_options['thousands_separator'] = ',';
-		$edd_options['decimal_separator'] = '.';
-
-		update_option( 'edd_settings', $edd_options );
+		edd_update_option( 'thousands_separator', ',' );
+		edd_update_option( 'decimal_separator', '.' );
 
 		$thousands_sep = edd_get_option( 'thousands_separator', ',' );
 		$decimal_sep   = edd_get_option( 'decimal_separator', '.' );
@@ -84,11 +78,5 @@ class Tests_Formatting extends WP_UnitTestCase {
 		$this->assertEquals( ',', $thousands_sep );
 		$this->assertEquals( '.', $decimal_sep );
 
-		// Restore defaults
-		$edd_options['thousands_separator'] = ',';
-		$edd_options['decimal_separator'] = '.';
-
-		update_option( 'edd_settings', $edd_options );
-
-	} 
+	}
 }
