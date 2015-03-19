@@ -4,11 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Admin
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.8
 */
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * EDD_Heartbeart Class
@@ -110,34 +112,45 @@ class EDD_Heartbeat {
 		?>
 		<script>
 			(function($){
+				// Hook into the heartbeat-send
+				$(document).on('heartbeat-send', function(e, data) {
+					data['edd_heartbeat'] = 'dashboard_summary';
+				});
 
-			// Hook into the heartbeat-send
-			$(document).on('heartbeat-send', function(e, data) {
-				data['edd_heartbeat'] = 'dashboard_summary';
-			});
+				// Listen for the custom event "heartbeat-tick" on $(document).
+				$(document).on( 'heartbeat-tick', function(e, data) {
 
-			// Listen for the custom event "heartbeat-tick" on $(document).
-			$(document).on( 'heartbeat-tick', function(e, data) {
+					// Only proceed if our EDD data is present
+					if ( ! data['edd-total-payments'] )
+						return;
 
-				// Only proceed if our EDD data is present
-				if ( ! data['edd-total-payments'] )
-					return;
+					<?php if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) : ?>
+					console.log('tick');
+					<?php endif; ?>
 
-				// Update sale count and bold it to provide a highlight
-				$('.edd_dashboard_widget .table_totals .b.b-earnings').text( data['edd-total-earnings'] ).css( 'font-weight', 'bold' );
-				$('.edd_dashboard_widget .table_totals .b.b-sales').text( data['edd-total-payments'] ).css( 'font-weight', 'bold' );
-				$('.edd_dashboard_widget .table_today .b.b-earnings').text( data['edd-earnings-today'] ).css( 'font-weight', 'bold' );
-				$('.edd_dashboard_widget .table_today .b.b-sales').text( data['edd-payments-today'] ).css( 'font-weight', 'bold' );
-				$('.edd_dashboard_widget .table_current_month .b-earnings').text( data['edd-earnings-month'] ).css( 'font-weight', 'bold' );
-				$('.edd_dashboard_widget .table_current_month .b-sales').text( data['edd-payments-month'] ).css( 'font-weight', 'bold' );
+					// Update sale count and bold it to provide a highlight
+					edd_dashboard_heartbeat_update( '.edd_dashboard_widget .table_totals .b.b-earnings', data['edd-total-earnings'] );
+					edd_dashboard_heartbeat_update( '.edd_dashboard_widget .table_totals .b.b-sales', data['edd-total-payments'] );
+					edd_dashboard_heartbeat_update( '.edd_dashboard_widget .table_today .b.b-earnings', data['edd-earnings-today'] );
+					edd_dashboard_heartbeat_update( '.edd_dashboard_widget .table_today .b.b-sales', data['edd-payments-today'] );
+					edd_dashboard_heartbeat_update( '.edd_dashboard_widget .table_current_month .b-earnings', data['edd-earnings-month'] );
+					edd_dashboard_heartbeat_update( '.edd_dashboard_widget .table_current_month .b-sales', data['edd-payments-month'] );
 
-				// Return font-weight to normal after 2 seconds
-				setTimeout(function(){
-					$('.edd_dashboard_widget .b.b-sales,.edd_dashboard_widget .b.b-earnings').css( 'font-weight', 'normal' );
-					$('.edd_dashboard_widget .table_current_month .b.b-earnings,.edd_dashboard_widget .table_current_month .b.b-sales').css( 'font-weight', 'normal' );
-				}, 2000);
+					// Return font-weight to normal after 2 seconds
+					setTimeout(function(){
+						$('.edd_dashboard_widget .b.b-sales,.edd_dashboard_widget .b.b-earnings').css( 'font-weight', 'normal' );
+						$('.edd_dashboard_widget .table_current_month .b.b-earnings,.edd_dashboard_widget .table_current_month .b.b-sales').css( 'font-weight', 'normal' );
+					}, 2000);
 
-			});
+				});
+
+				function edd_dashboard_heartbeat_update( selector, new_value ) {
+					var current_value = $(selector).text();
+					$(selector).text( new_value );
+					if ( current_value !== new_value ) {
+						$(selector).css( 'font-weight', 'bold' );
+					}
+				}
 			}(jQuery));
 		</script>
 		<?php

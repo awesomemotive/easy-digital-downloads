@@ -111,7 +111,7 @@ class Tests_AJAX extends WP_UnitTestCase {
 			'edd_price' => '0.00',
 			'_variable_pricing' => 1,
 			'_edd_price_options_mode' => 'on',
-			'edd_variable_prices' => array_values( $_variable_pricing ), 
+			'edd_variable_prices' => array_values( $_variable_pricing ),
 			'edd_download_files' => array_values( $_download_files ),
 			'_edd_download_limit' => 20,
 			'_edd_hide_purchase_link' => 1,
@@ -195,7 +195,7 @@ class Tests_AJAX extends WP_UnitTestCase {
 			'edd_price' => '0.00',
 			'_variable_pricing' => 1,
 			'_edd_price_options_mode' => 'on',
-			'edd_variable_prices' => array_values( $_variable_pricing ), 
+			'edd_variable_prices' => array_values( $_variable_pricing ),
 			'edd_download_files' => array_values( $_download_files ),
 			'_edd_download_limit' => 20,
 			'_edd_hide_purchase_link' => 1,
@@ -216,5 +216,29 @@ class Tests_AJAX extends WP_UnitTestCase {
 
 		$expected = '<select class="edd_price_options_select edd-select edd-select"><option value="0">Simple</option><option value="1">Advanced</option></select>';
 		//$this->assertEquals( $expected, $this->_last_response );
+	}
+
+	public function test_edd_test_ajax_works() {
+		
+		$this->assertTrue( edd_test_ajax_works() );
+
+		$this->assertNotEmpty( get_transient( '_edd_ajax_works' ) );
+
+		// Now test for Airplane Mode plugin
+
+		delete_transient( '_edd_ajax_works' );
+
+		class Airplane_Mode_Core {
+			function __construct() {}
+			public function enabled() { return true }
+		}
+
+		global $Airplane_Mode_Core;
+		$Airplane_Mode_Core = new Airplane_Mode_Core;
+
+		// Should return true but should not set a transient
+		$this->assertTrue( edd_test_ajax_works() );
+		$this->assertEmpty( get_transient( '_edd_ajax_works' ) );
+
 	}
 }

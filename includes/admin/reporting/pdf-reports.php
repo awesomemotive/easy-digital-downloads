@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @author      Sunny Ratilal
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.1.4.0
@@ -26,13 +26,13 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_generate_pdf( $data ) {
 
 	if( ! current_user_can( 'view_shop_reports' ) ) {
-		wp_die( __( 'You do not have permission to generate PDF sales reports', 'edd' ) );
+		wp_die( __( 'You do not have permission to generate PDF sales reports', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
 
 	if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'edd_generate_pdf' ) ) {
-		wp_die( __( 'Nonce verification failed', 'edd' ) );
+		wp_die( __( 'Nonce verification failed', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
-	
+
 	require_once EDD_PLUGIN_DIR . '/includes/libraries/fpdf/fpdf.php';
 	require_once EDD_PLUGIN_DIR . '/includes/libraries/fpdf/edd_pdf.php';
 
@@ -111,7 +111,6 @@ function edd_generate_pdf( $data ) {
 			$tags = $tags ? strip_tags( $tags ) : '';
 
 			$sales = edd_get_download_sales_stats( $download->ID );
-			$link = get_permalink( $download->ID );
 			$earnings = html_entity_decode ( edd_currency_filter( edd_get_download_earnings_stats( $download->ID ) ) );
 
 			if( function_exists( 'iconv' ) ) {
@@ -186,9 +185,7 @@ function edd_draw_chart_image() {
 		$i++;
 	}
 
-	$min_earnings = 0;
 	$max_earnings = max( $earnings_array );
-	$earnings_scale = round( $max_earnings, -1 );
 
 	$data = new GoogleChartData( array(
 		$earnings_array[0],
