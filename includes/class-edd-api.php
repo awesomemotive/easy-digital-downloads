@@ -1103,17 +1103,17 @@ class EDD_API {
 
 			return $earnings;
 		} elseif ( $args['type'] == 'customers' ) {
-	        if ( version_compare( $edd_version, '2.3', '<' ) || ! edd_has_upgrade_completed( 'upgrade_customer_payments_association' ) ) {
-	            global $wpdb;
-	            $stats = array();
-	            $count = $wpdb->get_col( "SELECT COUNT(DISTINCT meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email'" );
-	            $stats['customers']['total_customers'] = $count[0];
-	            return $stats;
-	        } else {
-	            $customers = new EDD_DB_Customers();
-	            $stats['customers']['total_customers'] = $customers->count();
-	            return $stats;
-	        }
+			if ( version_compare( $edd_version, '2.3', '<' ) || ! edd_has_upgrade_completed( 'upgrade_customer_payments_association' ) ) {
+				global $wpdb;
+				$stats = array();
+				$count = $wpdb->get_col( "SELECT COUNT(DISTINCT meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email'" );
+				$stats['customers']['total_customers'] = $count[0];
+				return $stats;
+			} else {
+				$customers = new EDD_DB_Customers();
+				$stats['customers']['total_customers'] = $customers->count();
+				return $stats;
+			}
 		} elseif ( empty( $args['type'] ) ) {
 			$stats = array_merge( $stats, $this->get_default_sales_stats() );
 			$stats = array_merge ( $stats, $this->get_default_earnings_stats() );
