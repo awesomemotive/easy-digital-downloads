@@ -618,6 +618,12 @@ function edd_render_files_field( $post_id = 0 ) {
 	$variable_pricing = edd_has_variable_prices( $post_id );
 	$display          = $type == 'bundle' ? ' style="display:none;"' : '';
 	$variable_display = $variable_pricing ? '' : 'display:none;';
+	if ( $variable_pricing ) {
+		$prices     = edd_get_variable_prices( $post_id );
+		$key = min( array_keys( $prices ) );
+	} else {
+		$key = 0;
+	}
 ?>
 	<div id="edd_download_files"<?php echo $display; ?>>
 		<p>
@@ -643,7 +649,7 @@ function edd_render_files_field( $post_id = 0 ) {
 				<tbody>
 				<?php
 					if ( ! empty( $files ) && is_array( $files ) ) :
-						foreach ( $files as $key => $value ) :
+						foreach ( $files as $value ) :
 							$name          = isset( $value['name'] )          ? $value['name']          : '';
 							$file          = isset( $value['file'] )          ? $value['file']          : '';
 							$condition     = isset( $value['condition'] )     ? $value['condition']     : false;
@@ -655,6 +661,7 @@ function edd_render_files_field( $post_id = 0 ) {
 							<?php do_action( 'edd_render_file_row', $key, $args, $post_id ); ?>
 						</tr>
 				<?php
+							$key++;
 						endforeach;
 					else :
 				?>
