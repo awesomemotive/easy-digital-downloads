@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.9.2
 Tested up to: 4.2
 
-Stable Tag: 2.3.3
+Stable Tag: 2.3.4
 
 License: GNU Version 2 or Any Later Version
 
@@ -191,6 +191,14 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.3.4, March 20, 2015 =
+
+* Fix: Cannot add new tax rates
+* Fix: Airplane mode plugin v0.1.1 causes fatal error
+* Fix: Completed payments can sometimes be marked as abandoned improperly
+* Fix: Cart widget items not fully removed when clicking Remove
+* Fix: Incorrect price assignment for files when creating new Download products
 
 = 2.3.3, March 18, 2015 =
 
