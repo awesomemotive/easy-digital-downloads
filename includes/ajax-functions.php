@@ -40,15 +40,15 @@ function edd_test_ajax_works() {
 
 		global $Airplane_Mode_Core;
 
-		if ( version_compare( AIRMDE_VER, '0.0.1', '==' ) ) {
+		if ( method_exists( $Airplane_Mode_Core, 'enabled' ) ) {
 
-			if ( $Airplane_Mode_Core->check_status() == 'on' ) {
+			if ( $Airplane_Mode_Core->enabled() ) {
 				return true;
 			}
 
 		} else {
 
-			if ( $Airplane_Mode_Core->enabled() ) {
+			if ( $Airplane_Mode_Core->check_status() == 'on' ) {
 				return true;
 			}
 		}
