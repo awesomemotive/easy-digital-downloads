@@ -57,7 +57,7 @@ class Tests_Logging extends WP_UnitTestCase {
 		$this->assertEquals( 'file_download', $types[1] );
 		$this->assertEquals( 'gateway_error', $types[2] );
 		$this->assertEquals( 'api_request', $types[3] );
-		$this->assertEquals( 'extension_request', $types[4] );
+		$this->assertEquals( 'extension_error', $types[4] );
 	}
 
 	public function test_valid_log() {
