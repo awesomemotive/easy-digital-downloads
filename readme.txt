@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.9.2
 Tested up to: 4.2
 
-Stable Tag: 2.3.2
+Stable Tag: 2.3.3
 
 License: GNU Version 2 or Any Later Version
 
@@ -191,6 +191,19 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.3.3, March 18, 2015 =
+
+* Fix: Minor SQL injection issue in the Customers DB class
+* Fix: All purchase buttons for a product displayed on a page change to Checkout incorrectly when one is clicked
+* Fix: Customer dropdown on View Order Details improperly shows first customer in the list when no customer is attached
+* Fix: Mixed-content notice on the checkout page for sites with SSL
+* Fix: Incorrect price ID gets added to the cart when multiple purchase buttons are placed on the same page with the price_id parameter
+* Fix: Removed Yugoslavia from the country list since it is not a country anymore
+* Fix: Quantity field not shown on purchase buttons with the [purchase_link] short code
+* Tweak: Automatically disable buy now buttons when taxes are enabled since they do not support taxes
+* Tweak: Automatically disable the edd_test_ajax_works() test if the Airplane Mode plugin is enabled
+* Tweak: Updated translation files for many languages
 
 = 2.3.2, March 14, 2015 =
 

@@ -35,8 +35,27 @@ function edd_is_ajax_enabled() {
  */
 function edd_test_ajax_works() {
 
+	// Check if the Airplane Mode plugin is installed
+	if ( class_exists( 'Airplane_Mode_Core' ) ) {
+
+		global $Airplane_Mode_Core;
+
+		if ( method_exists( $Airplane_Mode_Core, 'enabled' ) ) {
+
+			if ( $Airplane_Mode_Core->enabled() ) {
+				return true;
+			}
+
+		} else {
+
+			if ( $Airplane_Mode_Core->check_status() == 'on' ) {
+				return true;
+			}
+		}
+	}
+
 	add_filter( 'block_local_requests', '__return_false' );
-	
+
 	if ( get_transient( '_edd_ajax_works' ) ) {
 		return true;
 	}
@@ -52,7 +71,7 @@ function edd_test_ajax_works() {
 	$ajax  = wp_remote_post( edd_get_ajax_url(), $params );
 	$works = true;
 
-	if( is_wp_error( $ajax ) ) {
+	if ( is_wp_error( $ajax ) ) {
 
 		$works = false;
 
@@ -76,7 +95,7 @@ function edd_test_ajax_works() {
 
 	}
 
-	if( $works ) {
+	if ( $works ) {
 		set_transient( '_edd_ajax_works', '1', DAY_IN_SECONDS );
 	}
 
