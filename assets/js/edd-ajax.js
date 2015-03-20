@@ -32,7 +32,7 @@ jQuery(document).ready(function ($) {
 					}
 
 					// Remove the selected cart item
-					$('.edd-cart').find("[data-cart-item='" + item + "']").parent().remove();
+					$('.edd-cart').find("[data-cart-item='" + item + "']").parent().parent().remove();
 
 					//Reset the data-cart-item attributes to match their new values in the EDD session cart array
 					var cart_item_counter = 0;
