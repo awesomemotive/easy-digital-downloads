@@ -697,6 +697,22 @@ function edd_set_upload_dir( $upload ) {
 }
 
 
+/**
+ * Record an extension error
+ *
+ * A simple wrapper function for edd_record_log()
+ *
+ * @since 2.4
+ * @param string $title Title of the log entry (default: empty)
+ * @param string $message Message to store in the log entry (default: empty)
+ * @param int $parent Parent log entry (default: 0)
+ * @return int ID of the new log entry
+ */
+function edd_record_extension_error( $title = '', $message = '', $parent = 0 ) {
+	return edd_record_log( $title, $message, $parent, 'extension_error' );
+}
+
+
 if ( ! function_exists( 'cal_days_in_month' ) ) {
 	// Fallback in case the calendar extension is not loaded in PHP
 	// Only supports Gregorian calendar

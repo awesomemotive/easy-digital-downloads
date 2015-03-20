@@ -134,6 +134,29 @@ add_action( 'edd_logs_view_api_requests', 'edd_logs_view_api_requests' );
 
 
 /**
+ * Extension Error Logs
+ *
+ * @since 2.4
+ * @uses EDD_File_Downloads_Log_Table::prepare_items()
+ * @uses EDD_File_Downloads_Log_Table::display()
+ * @return void
+ */
+function edd_logs_view_extension_errors() {
+
+	if( ! current_user_can( 'view_shop_reports' ) ) {
+		return;
+	}
+
+	include( dirname( __FILE__ ) . '/class-extension-error-logs-list-table.php' );
+
+	$logs_table = new EDD_Extension_Error_Log_Table();
+	$logs_table->prepare_items();
+	$logs_table->display();
+}
+add_action( 'edd_logs_view_extension_errors', 'edd_logs_view_extension_errors' );
+
+
+/**
  * Default Log Views
  *
  * @since 1.4
@@ -144,7 +167,8 @@ function edd_log_default_views() {
 		'file_downloads'  => __( 'File Downloads', 'edd' ),
 		'sales' 		  => __( 'Sales', 'edd' ),
 		'gateway_errors'  => __( 'Payment Errors', 'edd' ),
-		'api_requests'    => __( 'API Requests', 'edd' )
+		'api_requests'    => __( 'API Requests', 'edd' ),
+		'extension_errors'=> __( 'Extension Errors', 'edd' )
 	);
 
 	$views = apply_filters( 'edd_log_views', $views );
