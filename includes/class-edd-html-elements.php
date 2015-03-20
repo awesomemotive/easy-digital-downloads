@@ -342,23 +342,24 @@ class EDD_HTML_Elements {
 			$args['class'] .= ' edd-select-chosen';
 		}
 
-        if( $args['placeholder'] ) {
-            $placeholder = $args['placeholder'];
-        } else {
-            $placeholder = '';
-        }
+		if( $args['placeholder'] ) {
+			$placeholder = $args['placeholder'];
+		} else {
+			$placeholder = '';
+		}
 
-        $output = '<select name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( sanitize_key( str_replace( '-', '_', $args['id'] ) ) ) . '" class="edd-select ' . esc_attr( $args['class'] ) . '"' . $multiple . ' data-placeholder="' . $placeholder . '">';
+		$output = '<select name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( sanitize_key( str_replace( '-', '_', $args['id'] ) ) ) . '" class="edd-select ' . esc_attr( $args['class'] ) . '"' . $multiple . ' data-placeholder="' . $placeholder . '">';
+
+		if ( $args['show_option_all'] ) {
+			if( $args['multiple'] ) {
+				$selected = selected( true, in_array( 0, $args['selected'] ), false );
+			} else {
+				$selected = selected( $args['selected'], 0, false );
+			}
+			$output .= '<option value="all"' . $selected . '>' . esc_html( $args['show_option_all'] ) . '</option>';
+		}
 
 		if ( ! empty( $args['options'] ) ) {
-			if ( $args['show_option_all'] ) {
-				if( $args['multiple'] ) {
-					$selected = selected( true, in_array( 0, $args['selected'] ), false );
-				} else {
-					$selected = selected( $args['selected'], 0, false );
-				}
-				$output .= '<option value="all"' . $selected . '>' . esc_html( $args['show_option_all'] ) . '</option>';
-			}
 
 			if ( $args['show_option_none'] ) {
 				if( $args['multiple'] ) {
