@@ -107,7 +107,7 @@ function edd_currency_filter( $price = '', $currency = '' ) {
 	if( empty( $currency ) ) {
 
 		$currency = edd_get_currency();
-	
+
 	}
 
 	$position = edd_get_option( 'currency_position', 'before' );
@@ -132,8 +132,11 @@ function edd_currency_filter( $price = '', $currency = '' ) {
 			case "MXN" :
 			case "NZD" :
 			case "SGD" :
-			case "JPY" :
-				$formatted = $symbol . $price;
+      case "JPY" :
+        $formatted = $symbol . $price;
+        break;
+			case "NPR" :
+				$formatted = $symbol . ' ' . $price;
 				break;
 			default :
 				$formatted = $currency . ' ' . $price;

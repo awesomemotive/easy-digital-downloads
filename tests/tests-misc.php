@@ -77,6 +77,7 @@ class Test_Misc extends WP_UnitTestCase {
 			'TWD'  => __( 'Taiwan New Dollars', 'edd' ),
 			'THB'  => __( 'Thai Baht (&#3647;)', 'edd' ),
 			'INR'  => __( 'Indian Rupee (&#8377;)', 'edd' ),
+      'NPR'  => __( 'Nepali Rupee (&#8360;)', 'edd' ),
 			'TRY'  => __( 'Turkish Lira (&#8378;)', 'edd' ),
 			'RIAL' => __( 'Iranian Rial (&#65020;)', 'edd' ),
 			'RUB'  => __( 'Russian Rubles', 'edd' )

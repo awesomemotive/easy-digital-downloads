@@ -52,7 +52,7 @@ function edd_logged_in_only() {
  * @return bool $ret True is redirect is enabled, false otherwise
  */
 function edd_straight_to_checkout() {
-	$ret = edd_get_option( 'redirect_on_add', false );	
+	$ret = edd_get_option( 'redirect_on_add', false );
 	return (bool) apply_filters( 'edd_straight_to_checkout', $ret );
 }
 
@@ -319,7 +319,8 @@ function edd_get_currencies() {
 		'CHF'  => __( 'Swiss Franc', 'edd' ),
 		'TWD'  => __( 'Taiwan New Dollars', 'edd' ),
 		'THB'  => __( 'Thai Baht (&#3647;)', 'edd' ),
-		'INR'  => __( 'Indian Rupee (&#8377;)', 'edd' ),
+    'INR'  => __( 'Indian Rupee (&#8377;)', 'edd' ),
+		'NPR'  => __( 'Nepali Rupee (&#8360;)', 'edd' ),
 		'TRY'  => __( 'Turkish Lira (&#8378;)', 'edd' ),
 		'RIAL' => __( 'Iranian Rial (&#65020;)', 'edd' ),
 		'RUB'  => __( 'Russian Rubles', 'edd' )
@@ -371,8 +372,11 @@ function edd_currency_symbol( $currency = '' ) {
 		case "SGD" :
 			$symbol = '&#36;';
 			break;
-		case "JPY" :
-			$symbol = '&yen;';
+    case "JPY" :
+      $symbol = '&yen;';
+      break;
+		case "NPR" :
+			$symbol = '&#8360;';
 			break;
 		default :
 			$symbol = $currency;
