@@ -215,7 +215,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 = 2.3.2, March 14, 2015 =
 
-* Fix: Slow performance in admin area dur to edd_test_ajax_works() function
+* Fix: Slow performance in admin area due to edd_test_ajax_works() function
 
 = 2.3.1, March 13, 2015 =
 
