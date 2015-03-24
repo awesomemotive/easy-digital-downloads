@@ -114,7 +114,7 @@ add_action( 'edd_tools_tab_general', 'edd_tools_banned_emails_display' );
 /**
  * Display the clear upgrades tab
  *
- * @since       2.3
+ * @since       2.3.5
  * @return      void
  */
 function edd_tools_clear_doing_upgrade_display() {
@@ -219,7 +219,7 @@ add_action( 'edd_save_banned_emails', 'edd_tools_banned_emails_save' );
 /**
  * Execute upgrade notice clear
  *
- * @since       2.3
+ * @since       2.3.5
  * @return      void
  */
 function edd_tools_clear_upgrade_notice() {
