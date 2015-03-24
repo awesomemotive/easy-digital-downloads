@@ -128,7 +128,8 @@ function edd_tools_clear_doing_upgrade_display() {
 	<div class="postbox">
 		<h3><span><?php _e( 'Clear Incomplete Upgrade Notice', 'edd' ); ?></span></h3>
 		<div class="inside">
-			<p><?php _e( 'This will clear the notice to "Finish an incomplete upgrade" and allow further action to be taken, in the event of an error. Please use this option with caution.', 'edd' ); ?></p>
+			<p><?php _e( 'Sometimes a database upgrade notice may not be cleared after an upgrade is completed due to conflicts with other extensions or other minor issues.', 'edd' ); ?></p>
+			<p><?php _e( 'If you\'re certain these upgrades have been completed, you can clear these upgrade notices by clicking the button below. If you have any questions about this, please contact the Easy Digital Downloads support team and we\'ll be happy to help.', 'edd' ); ?></p>
 			<form method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ); ?>">
 				<p>
 					<input type="hidden" name="edd_action" value="clear_doing_upgrade" />
