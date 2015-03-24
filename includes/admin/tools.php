@@ -123,7 +123,7 @@ function edd_tools_clear_doing_upgrade_display() {
 		return;
 	}
 
-	do_action( 'edd_tools_banned_emails_before' );
+	do_action( 'edd_tools_clear_doing_upgrade_before' );
 ?>
 	<div class="postbox">
 		<h3><span><?php _e( 'Clear Incomplete Upgrade Notice', 'edd' ); ?></span></h3>
@@ -140,8 +140,7 @@ function edd_tools_clear_doing_upgrade_display() {
 		</div><!-- .inside -->
 	</div><!-- .postbox -->
 <?php
-	do_action( 'edd_tools_banned_emails_after' );
-	do_action( 'edd_tools_after' );
+	do_action( 'edd_tools_clear_doing_upgrade_after' );
 }
 add_action( 'edd_tools_tab_general', 'edd_tools_clear_doing_upgrade_display' );
 
