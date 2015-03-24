@@ -128,7 +128,7 @@ function edd_tools_clear_doing_upgrade_display() {
 	<div class="postbox">
 		<h3><span><?php _e( 'Clear Incomplete Upgrades', 'edd' ); ?></span></h3>
 		<div class="inside">
-			<p><?php _e( 'This will clear the notice to "Finish an incomplete upgrade" and allow futher action to be taken, in the event of an error. Please use this option with caution.', 'edd' ); ?></p>
+			<p><?php _e( 'This will clear the notice to "Finish an incomplete upgrade" and allow further action to be taken, in the event of an error. Please use this option with caution.', 'edd' ); ?></p>
 			<form method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ); ?>">
 				<p>
 					<input type="hidden" name="edd_action" value="clear_doing_upgrade" />
