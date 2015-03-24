@@ -32,7 +32,7 @@ jQuery(document).ready(function ($) {
 					}
 
 					// Remove the selected cart item
-					$('.edd-cart').find("[data-cart-item='" + item + "']").parent().remove();
+					$('.edd-cart').find("[data-cart-item='" + item + "']").parent().parent().remove();
 
 					//Reset the data-cart-item attributes to match their new values in the EDD session cart array
 					var cart_item_counter = 0;
@@ -105,7 +105,7 @@ jQuery(document).ready(function ($) {
 		if( variable_price == 'yes' ) {
 
 			if ( form.find('.edd_price_option_' + download).is('input:hidden') ) {
-				item_price_ids[0] = $('.edd_price_option_' + download).val();
+				item_price_ids[0] = $('.edd_price_option_' + download, form).val();
 			} else {
 				if( ! form.find('.edd_price_option_' + download + ':checked', form).length ) {
 					 // hide the spinner
@@ -206,7 +206,7 @@ jQuery(document).ready(function ($) {
 					}
 
 					// Update all buttons for same download
-					if( $( '.edd_download_purchase_form' ).length ) {
+					if( $( '.edd_download_purchase_form' ).length && ( variable_price == 'no' || ! form.find('.edd_price_option_' + download).is('input:hidden') ) ) {
 						var parent_form = $('.edd_download_purchase_form *[data-download-id="' + download + '"]').parents('form');
 						$( 'a.edd-add-to-cart', parent_form ).hide();
 						if( price_mode != 'multi' ) {

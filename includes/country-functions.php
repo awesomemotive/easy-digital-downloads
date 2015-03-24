@@ -322,6 +322,7 @@ function edd_get_country_list() {
 		'PT' => 'Portugal',
 		'PR' => 'Puerto Rico',
 		'QA' => 'Qatar',
+		'XK' => 'Republic of Kosovo',
 		'RE' => 'Reunion Island',
 		'RO' => 'Romania',
 		'RU' => 'Russian Federation',
@@ -388,7 +389,6 @@ function edd_get_country_list() {
 		'EH' => 'Western Sahara',
 		'WS' => 'Western Samoa',
 		'YE' => 'Yemen',
-		'YU' => 'Yugoslavia',
 		'ZM' => 'Zambia',
 		'ZW' => 'Zimbabwe'
 	);

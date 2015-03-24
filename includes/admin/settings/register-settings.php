@@ -1505,7 +1505,7 @@ function edd_tax_rates_callback($args) {
 						'show_option_all'  => false,
 						'show_option_none' => false,
                         'class'            => 'edd-select edd-tax-country',
-                        'chosen'           => true,
+                        'chosen'           => false,
                         'placeholder' => __( 'Choose a country', 'edd' )
 					) );
 					?>
@@ -1520,7 +1520,7 @@ function edd_tax_rates_callback($args) {
 							'selected'         => $rate['state'],
 							'show_option_all'  => false,
                             'show_option_none' => false,
-                            'chosen'           => true,
+                            'chosen'           => false,
                             'placeholder' => __( 'Choose a state', 'edd' )
 						) );
 					} else {
@@ -1548,7 +1548,7 @@ function edd_tax_rates_callback($args) {
 						'show_option_all'  => false,
 						'show_option_none' => false,
                         'class'            => 'edd-select edd-tax-country',
-                        'chosen'           => true,
+                        'chosen'           => false,
                         'placeholder' => __( 'Choose a country', 'edd' )
 					) ); ?>
 				</td>
