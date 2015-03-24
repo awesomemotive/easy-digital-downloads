@@ -111,6 +111,38 @@ function edd_tools_banned_emails_display() {
 }
 add_action( 'edd_tools_tab_general', 'edd_tools_banned_emails_display' );
 
+/**
+ * Display the clear upgrades tab
+ *
+ * @since       2.3
+ * @return      void
+ */
+function edd_tools_clear_doing_upgrade_display() {
+
+	if( ! current_user_can( 'manage_shop_settings' ) || false === get_option( 'edd_doing_upgrade' ) ) {
+		return;
+	}
+
+	do_action( 'edd_tools_banned_emails_before' );
+?>
+	<div class="postbox">
+		<h3><span><?php _e( 'Clear Incomplete Upgrades', 'edd' ); ?></span></h3>
+		<div class="inside">
+			<p><?php _e( 'This will clear the notice to "Finish an incomplete upgrade" and allow futher action to be taken, in the event of an error. Please use this option with caution.', 'edd' ); ?></p>
+			<form method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ); ?>">
+				<p>
+					<input type="hidden" name="edd_action" value="clear_doing_upgrade" />
+					<?php wp_nonce_field( 'edd_clear_upgrades_nonce', 'edd_clear_upgrades_nonce' ); ?>
+					<?php submit_button( __( 'Clear Incomplete Upgrade Notice', 'edd' ), 'secondary', 'submit', false ); ?>
+				</p>
+			</form>
+		</div><!-- .inside -->
+	</div><!-- .postbox -->
+<?php
+	do_action( 'edd_tools_banned_emails_after' );
+	do_action( 'edd_tools_after' );
+}
+add_action( 'edd_tools_tab_general', 'edd_tools_clear_doing_upgrade_display' );
 
 /**
  * Display the API Keys
@@ -182,6 +214,25 @@ function edd_tools_banned_emails_save() {
 	update_option( 'edd_settings', $edd_options );
 }
 add_action( 'edd_save_banned_emails', 'edd_tools_banned_emails_save' );
+
+/**
+ * Execute upgrade notice clear
+ *
+ * @since       2.3
+ * @return      void
+ */
+function edd_tools_clear_upgrade_notice() {
+	if( ! wp_verify_nonce( $_POST['edd_clear_upgrades_nonce'], 'edd_clear_upgrades_nonce' ) ) {
+		return;
+	}
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
+	delete_option( 'edd_doing_upgrade' );
+}
+add_action( 'edd_clear_doing_upgrade', 'edd_tools_clear_upgrade_notice' );
 
 
 /**
