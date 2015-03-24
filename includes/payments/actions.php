@@ -253,8 +253,7 @@ add_action( 'edd_upgrade_payments', 'edd_update_old_payments_with_totals' );
 function edd_mark_abandoned_orders() {
 	$args = array(
 		'status' => 'pending',
-		'number' => -1,
-		'fields' => 'ids'
+		'number' => -1
 	);
 
 	add_filter( 'posts_where', 'edd_filter_where_older_than_week' );
@@ -265,7 +264,9 @@ function edd_mark_abandoned_orders() {
 
 	if( $payments ) {
 		foreach( $payments as $payment ) {
-			edd_update_payment_status( $payment, 'abandoned' );
+			if( 'pending' === $payment->post_status ) {
+				edd_update_payment_status( $payment->ID, 'abandoned' );
+			}
 		}
 	}
 }

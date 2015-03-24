@@ -266,7 +266,7 @@ jQuery(document).ready(function ($) {
 		updatePrices: function() {
 			$( '#edd_price_fields' ).on( 'keyup', '.edd_variable_prices_name', function() {
 
-				var key = $( this ).parents( 'tr' ).index(),
+				var key = $( this ).parents( 'tr' ).data( 'key' ),
 					name = $( this ).val(),
 					field_option = $( '.edd_repeatable_condition_field option[value=' + key + ']' );
 
