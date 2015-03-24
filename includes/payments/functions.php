@@ -1344,7 +1344,7 @@ function edd_get_payment_tax( $payment_id = 0, $payment_meta = false ) {
 	$tax = edd_get_payment_meta( $payment_id, '_edd_payment_tax', true );
 
 	// We don't have tax as it's own meta and no meta was passed
-	if ( empty( $tax ) ) {
+	if ( '' === $tax ) {
 
 		if ( ! $payment_meta ) {
 			$payment_meta = edd_get_payment_meta( $payment_id );
