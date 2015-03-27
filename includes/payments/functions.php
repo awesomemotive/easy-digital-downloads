@@ -1337,14 +1337,14 @@ function edd_payment_tax( $payment_id = 0, $payment_meta = false ) {
  * @since 1.3.3
  * @param int $payment_id Payment ID
  * @param bool $payment_meta Get payment meta?
- * @return float $subtotal Subtotal for payment (non formatted)
+ * @return float $tax Tax for payment (non formatted)
  */
 function edd_get_payment_tax( $payment_id = 0, $payment_meta = false ) {
 
 	$tax = edd_get_payment_meta( $payment_id, '_edd_payment_tax', true );
 
 	// We don't have tax as it's own meta and no meta was passed
-	if ( false === $tax ) {
+	if ( '' === $tax ) {
 
 		if ( ! $payment_meta ) {
 			$payment_meta = edd_get_payment_meta( $payment_id );
