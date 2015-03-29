@@ -231,7 +231,7 @@ class EDD_Download {
 		/**
 		 * Override the download price.
 		 *
-		 * @since unknown
+		 * @since 2.2
 		 *
 		 * @param string $price The download price(s).
 		 * @param string|int $id The downloads ID.
@@ -257,7 +257,7 @@ class EDD_Download {
 		/**
 		 * Override variable prices
 		 *
-		 * @since unknown
+		 * @since 2.2
 		 *
 		 * @param array $prices The array of variables prices.
 		 * @param int|string The ID of the download.
@@ -279,7 +279,7 @@ class EDD_Download {
 		/**
 		 * Override the price mode for a download when checking if is in single price mode.
 		 *
-		 * @since unknown
+		 * @since 2.3
 		 *
 		 * @param bool $ret Is download in single price mode?
 		 * @param int|string The ID of the download.
@@ -301,7 +301,7 @@ class EDD_Download {
 		/**
 		 * Override whether the download has variables prices.
 		 *
-		 * @since unknown
+		 * @since 2.3
 		 *
 		 * @param bool $ret Does download have variable prices?
 		 * @param int|string The ID of the download.
