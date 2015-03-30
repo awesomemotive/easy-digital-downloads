@@ -485,6 +485,9 @@ function edd_get_download_type( $download_id = 0 ) {
  * @return bool
  */
 function edd_is_bundled_product( $download_id = 0 ) {
+	if ( 'download' !== get_post_type( $download_id ) )
+		return;
+
 	$download = new EDD_Download( $download_id );
 	return $download->is_bundled_download();
 }
@@ -498,6 +501,9 @@ function edd_is_bundled_product( $download_id = 0 ) {
  * @return array $products Products in the bundle
  */
 function edd_get_bundled_products( $download_id = 0 ) {
+	if ( 'download' !== get_post_type( $download_id ) )
+		return;
+
 	$download = new EDD_Download( $download_id );
 	return $download->bundled_downloads;
 }
@@ -522,6 +528,9 @@ function edd_get_download_earnings_stats( $download_id = 0 ) {
  * @return int $sales Amount of sales for a certain download
  */
 function edd_get_download_sales_stats( $download_id = 0 ) {
+	if ( 'download' !== get_post_type( $download_id ) )
+		return;
+
 	$download = new EDD_Download( $download_id );
 	return $download->sales;
 }
