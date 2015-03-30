@@ -228,7 +228,16 @@ class EDD_Download {
 
 		}
 
+		/**
+		 * Override the download price.
+		 *
+		 * @since 2.2
+		 *
+		 * @param string $price The download price(s).
+		 * @param string|int $id The downloads ID.
+		 */
 		return apply_filters( 'edd_get_download_price', $this->price, $this->ID );
+
 	}
 
 	/**
@@ -245,6 +254,14 @@ class EDD_Download {
 
 		}
 
+		/**
+		 * Override variable prices
+		 *
+		 * @since 2.2
+		 *
+		 * @param array $prices The array of variables prices.
+		 * @param int|string The ID of the download.
+		 */
 		return apply_filters( 'edd_get_variable_prices', $this->prices, $this->ID );
 
 	}
@@ -259,6 +276,14 @@ class EDD_Download {
 
 		$ret = get_post_meta( $this->ID, '_edd_price_options_mode', true );
 
+		/**
+		 * Override the price mode for a download when checking if is in single price mode.
+		 *
+		 * @since 2.3
+		 *
+		 * @param bool $ret Is download in single price mode?
+		 * @param int|string The ID of the download.
+		 */
 		return (bool) apply_filters( 'edd_single_price_option_mode', $ret, $this->ID );
 
 	}
@@ -273,6 +298,14 @@ class EDD_Download {
 
 		$ret = get_post_meta( $this->ID, '_variable_pricing', true );
 
+		/**
+		 * Override whether the download has variables prices.
+		 *
+		 * @since 2.3
+		 *
+		 * @param bool $ret Does download have variable prices?
+		 * @param int|string The ID of the download.
+		 */
 		return (bool) apply_filters( 'edd_has_variable_prices', $ret, $this->ID );
 
 	}
