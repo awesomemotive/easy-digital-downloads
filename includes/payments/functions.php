@@ -915,7 +915,7 @@ function edd_update_payment_meta( $payment_id = 0, $meta_key = '', $meta_value =
 
 	}
 
-	$meta_value = apply_filters( 'edd_edd_update_payment_meta_' . $meta_key, $meta_value, $payment_id );
+	$meta_value = apply_filters( 'edd_update_payment_meta_' . $meta_key, $meta_value, $payment_id );
 
 	return update_post_meta( $payment_id, $meta_key, $meta_value, $prev_value );
 }
