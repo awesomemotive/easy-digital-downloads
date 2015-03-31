@@ -10,11 +10,11 @@ if ( is_user_logged_in() ):
 			<thead>
 				<tr class="edd_purchase_row">
 					<?php do_action('edd_purchase_history_header_before'); ?>
-					<th class="edd_purchase_id"><?php _e('ID', 'edd'); ?></th>
-					<th class="edd_purchase_date"><?php _e('Date', 'edd'); ?></th>
-					<th class="edd_purchase_amount"><?php _e('Amount', 'edd'); ?></th>
-					<th class="edd_purchase_details"><?php _e('Details', 'edd'); ?></th>
-					<?php do_action('edd_purchase_history_header_after'); ?>
+					<th class="edd_purchase_id"><?php echo apply_filters( 'edd_purchase_history_table_purchase_id_label', __('ID', 'edd') ); ?></th>
+					<th class="edd_purchase_date"><?php echo apply_filters( 'edd_purchase_history_table_purchase_date_label', __('Date', 'edd') ); ?></th>
+					<th class="edd_purchase_amount"><?php echo apply_filters( 'edd_purchase_history_table_purchase_amount_label', __('Amount', 'edd') ); ?></th>
+					<th class="edd_purchase_details"><?php echo apply_filters( 'edd_purchase_history_table_purchase_details_label', __('Details', 'edd') ); ?></th>
+					<?php do_action('edd_purchase_history_header_after') ?>
 				</tr>
 			</thead>
 			<?php foreach ( $purchases as $post ) : setup_postdata( $post ); ?>
