@@ -31,6 +31,7 @@
 								$item_title .= $variable_pricing ? ' - ' . edd_get_price_name( $item['id'], $item['options'] ) : edd_get_price_name( $item['id'], $item['options'] );
 							}
 							echo '<span class="edd_checkout_cart_item_title">' . esc_html( $item_title ) . '</span>';
+							do_action( 'edd_checkout_cart_item_title_after', $item );
 						?>
 					</td>
 					<td class="edd_cart_item_price"><?php echo edd_cart_item_price( $item['id'], $item['options'] ); ?></td>
