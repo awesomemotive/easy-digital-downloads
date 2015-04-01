@@ -221,14 +221,19 @@ function edd_get_purchase_link( $args = array() ) {
  * @return void
  */
 function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
-	$variable_pricing = edd_has_variable_prices( $download_id );
-	$prices = apply_filters( 'edd_purchase_variable_prices', edd_get_variable_prices( $download_id ), $download_id );
+	$variable_pricing = edd_has_variable_prices( $download_id );	
 
-	if ( ! $variable_pricing || ( false !== $args['price_id'] && isset( $prices[$args['price_id']] ) ) ) {
+	if ( ! $variable_pricing ) {
 		return;
 	}
 
 	$prices = apply_filters( 'edd_purchase_variable_prices', edd_get_variable_prices( $download_id ), $download_id );
+
+	// If the price_id passed is found in the variable prices, do not display all variable prices.
+	if ( false !== $args['price_id'] && isset( $prices[ $args['price_id'] ] ) ) {
+		return;
+	}
+
 	$type   = edd_single_price_option_mode( $download_id ) ? 'checkbox' : 'radio';
 	$mode   = edd_single_price_option_mode( $download_id ) ? 'multi' : 'single';
 	$schema = edd_add_schema_microdata() ? ' itemprop="offers" itemscope itemtype="http://schema.org/Offer"' : '';
