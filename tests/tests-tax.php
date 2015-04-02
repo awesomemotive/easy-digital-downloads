@@ -265,5 +265,18 @@ class Tests_Taxes extends WP_UnitTestCase {
 	public function test_get_payment_tax() {
 		$this->assertEquals( '0.36', edd_get_payment_tax( $this->_payment_id ) );
 	}
+	
+	/**
+	 * @see https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/3324
+	 */
+	public function test_backwards_compat_bug(){
+		
+		$this->assertEquals( '0.36', edd_get_payment_tax( $this->_payment_id ) );
+		
+		$current_meta = edd_get_payment_meta( $this->_payment_id );
+		edd_update_payment_meta( $this->_payment_id, '_edd_payment_meta', $current_meta );
+		
+		$this->assertEquals( '0.36', edd_get_payment_tax( $this->_payment_id ) );
+	}
 
 }
