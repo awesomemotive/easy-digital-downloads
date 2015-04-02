@@ -28,3 +28,9 @@ tests/clover.xml
 
 # Grunt
 node_modules
+
+# Vendor
+vendor
+
+# Temporary files
+*~
