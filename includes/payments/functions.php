@@ -162,7 +162,6 @@ function edd_insert_payment( $payment_data = array() ) {
 			'downloads'    => $payment_data['downloads'],
 			'user_info'    => $payment_data['user_info'],
 			'cart_details' => $payment_data['cart_details'],
-			'tax'          => $cart_tax,
 		);
 
 		$mode    = edd_is_test_mode() ? 'test' : 'live';
