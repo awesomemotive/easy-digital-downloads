@@ -94,23 +94,27 @@ function edd_get_purchase_link( $args = array() ) {
 	$data_variable    = $variable_pricing ? ' data-variable-price="yes"' : 'data-variable-price="no"';
 	$type             = $download->is_single_price_mode() ? 'data-price-mode=multi' : 'data-price-mode=single';
 
-	if ( $args['price'] && $args['price'] !== 'no' ) {
+	$data_price_value = 0;
 
-		if ( $variable_pricing && false !== $args['price_id'] ) {
+	if ( $variable_pricing && false !== $args['price_id'] ) {
 
-			$price_id            = $args['price_id'];
-			$prices              = $download->prices;
-			$options['price_id'] = $args['price_id'];
-			$price               = isset( $prices[$price_id] ) ? $prices[$price_id]['amount'] : false;
+		$price_id            = $args['price_id'];
+		$prices              = $download->prices;
+		$options['price_id'] = $args['price_id'];
+		$data_price_value    = isset( $prices[$price_id] ) ? $prices[$price_id]['amount'] : false;
 
-		} elseif ( ! $variable_pricing ) {
+	} elseif ( ! $variable_pricing ) {
 
-			$price = $download->price;
+		$data_price_value = $download->price;
 
-		}
 	}
 
-	$data_price  = isset( $price ) && false !== $price ? 'data-price="' . $price . '"' : 'data-price="' . 0 . '"';
+	if ( $args['price'] && $args['price'] !== 'no' ) {
+
+		$price = $data_price_value;
+	}
+
+	$data_price  = 'data-price="' . $data_price_value . '"';
 
 	$button_text = ! empty( $args['text'] ) ? '&nbsp;&ndash;&nbsp;' . $args['text'] : '';
 
@@ -221,7 +225,7 @@ function edd_get_purchase_link( $args = array() ) {
  * @return void
  */
 function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
-	$variable_pricing = edd_has_variable_prices( $download_id );	
+	$variable_pricing = edd_has_variable_prices( $download_id );
 
 	if ( ! $variable_pricing ) {
 		return;
