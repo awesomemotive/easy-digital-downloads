@@ -111,6 +111,7 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 #edd-customer-details .order-data-column p.data input { clear: both; display: block; }
 #edd-customer-details .actions { float: right; }
 .edd-order-data input.small-text { margin: 0; }
+.edd-order-data input.med-text { margin: 0; width: 100px; }
 #edd-order-update span.label { display: inline; width: 50px; }
 .edd-order-update-box .button-primary { margin-right: 0; }
 #edd-edit-order-form .column .description { padding-right: 10px; }
