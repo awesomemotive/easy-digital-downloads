@@ -120,7 +120,7 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 										<div class="edd-order-taxes edd-admin-box-inside">
 											<p>
 												<span class="label"><?php _e( 'Tax', 'edd' ); ?>:</span>&nbsp;
-												<input name="edd-payment-tax" class="small-text" type="text" value="<?php echo esc_attr( edd_format_amount( edd_get_payment_tax( $payment_id ) ) ); ?>"/>
+												<input name="edd-payment-tax" class="med-text" type="text" value="<?php echo esc_attr( edd_format_amount( edd_get_payment_tax( $payment_id ) ) ); ?>"/>
 											</p>
 										</div>
 										<?php endif; ?>
@@ -128,7 +128,7 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 										<div class="edd-order-payment edd-admin-box-inside">
 											<p>
 												<span class="label"><?php _e( 'Total Price', 'edd' ); ?>:</span>&nbsp;
-												<?php echo edd_currency_symbol( $payment_meta['currency'] ); ?>&nbsp;<input name="edd-payment-total" type="text" class="small-text" value="<?php echo esc_attr( edd_format_amount( edd_get_payment_amount( $payment_id ) ) ); ?>"/>
+												<?php echo edd_currency_symbol( $payment_meta['currency'] ); ?>&nbsp;<input name="edd-payment-total" type="text" class="med-text" value="<?php echo esc_attr( edd_format_amount( edd_get_payment_amount( $payment_id ) ) ); ?>"/>
 											</p>
 										</div>
 
