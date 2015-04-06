@@ -137,20 +137,6 @@ class EDD_Download {
 	 */
 	public function __construct( $_id = false, $_args = array() ) {
 
-		if( false === $_id ) {
-
-			$defaults = array(
-				'post_type'   => 'download',
-				'post_status' => 'draft',
-				'post_title'  => __( 'New Download Product', 'edd' )
-			);
-
-			$args = wp_parse_args( $_args, $defaults );
-
-			$_id  = wp_insert_post( $args, true );
-
-		}
-
 		$download = WP_Post::get_instance( $_id );
 
 		if( ! is_object( $download ) ) {
@@ -189,6 +175,37 @@ class EDD_Download {
 			return new WP_Error( 'edd-download-invalid-property', sprintf( __( 'Can\'t get property %s', 'edd' ), $key ) );
 
 		}
+
+	}
+
+	/**
+	 * Creates a download
+	 *
+	 * @since  future
+	 * @param  array  $data Array of attributes for a download
+	 * @return mixed  false if data isn't passed and class not instantiated for creation, or New Download ID
+	 */
+	public function create( $data = array() ) {
+
+		if ( $this->id != 0 || empty( $data ) ) {
+			return false;
+		}
+
+		$defaults = array(
+			'post_type'   => 'download',
+			'post_status' => 'draft',
+			'post_title'  => __( 'New Download Product', 'edd' )
+		);
+
+		$args = wp_parse_args( $data, $defaults );
+
+		do_action( 'edd_download_pre_create', $args );
+
+		$id = wp_insert_post( $args, true );
+
+		do_action( 'edd_download_post_create', $id, $args );
+
+		return $id;
 
 	}
 
