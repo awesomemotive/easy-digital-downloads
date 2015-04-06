@@ -146,7 +146,7 @@ class EDD_Download {
 	/**
 	 * Given the download data, let's set the variables
 	 *
-	 * @since  2.3
+	 * @since  2.3.6
 	 * @param  object $download The Download Object
 	 * @return bool             If the setup was successful or not
 	 */
@@ -202,13 +202,13 @@ class EDD_Download {
 	/**
 	 * Creates a download
 	 *
-	 * @since  future
+	 * @since  2.3.6
 	 * @param  array  $data Array of attributes for a download
 	 * @return mixed  false if data isn't passed and class not instantiated for creation, or New Download ID
 	 */
 	public function create( $data = array() ) {
 
-		if ( $this->id != 0 || empty( $data ) ) {
+		if ( $this->id != 0 ) {
 			return false;
 		}
 
