@@ -29,7 +29,7 @@ $item         = get_post( $payment_id );
 
 // Sanity check... fail if purchase ID is invalid
 if ( !is_object( $item ) || $item->post_type != 'edd_payment' ) {
-    wp_die( __( 'The specified ID does not belong to a payment. Please try again', 'edd' ), __( 'Error', 'edd' ) );
+	wp_die( __( 'The specified ID does not belong to a payment. Please try again', 'edd' ), __( 'Error', 'edd' ) );
 }
 
 $payment_meta   = edd_get_payment_meta( $payment_id );
@@ -478,9 +478,9 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 															'name'             => 'edd-payment-address[0][country]',
 															'selected'         => $address['country'],
 															'show_option_all'  => false,
-                                                            'show_option_none' => false,
-                                                            'chosen'           => true,
-                                                            'placeholder' => __( 'Select a country', 'edd' )
+															'show_option_none' => false,
+															'chosen'           => true,
+															'placeholder' => __( 'Select a country', 'edd' )
 														) );
 														?>
 													</p>
@@ -494,9 +494,9 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 																'name'             => 'edd-payment-address[0][state]',
 																'selected'         => $address['state'],
 																'show_option_all'  => false,
-                                                                'show_option_none' => false,
-                                                                'chosen'           => true,
-                                                                'placeholder' => __( 'Select a state', 'edd' )
+																'show_option_none' => false,
+																'chosen'           => true,
+																'placeholder' => __( 'Select a state', 'edd' )
 															) );
 														} else { ?>
 															<input type="text" name="edd-payment-address[0][state]" value="<?php echo esc_attr( $address['state'] ); ?>" class="medium-text"/>
