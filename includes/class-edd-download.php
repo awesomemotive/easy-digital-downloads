@@ -139,6 +139,19 @@ class EDD_Download {
 
 		$download = WP_Post::get_instance( $_id );
 
+		return $this->setup_download( $download );
+
+	}
+
+	/**
+	 * Given the download data, let's set the variables
+	 *
+	 * @since  2.3
+	 * @param  object $download The Download Object
+	 * @return bool             If the setup was successful or not
+	 */
+	private function setup_download( $download ) {
+
 		if( ! is_object( $download ) ) {
 			return false;
 		}
@@ -153,9 +166,17 @@ class EDD_Download {
 
 		foreach ( $download as $key => $value ) {
 
-			$this->$key = $value;
+			switch ( $key ) {
+
+				default:
+					$this->$key = $value;
+					break;
+
+			}
 
 		}
+
+		return true;
 
 	}
 
@@ -203,9 +224,11 @@ class EDD_Download {
 
 		$id = wp_insert_post( $args, true );
 
+		$download = WP_Post::get_instance( $id );
+
 		do_action( 'edd_download_post_create', $id, $args );
 
-		return $id;
+		return $this->setup_download( $download );
 
 	}
 
