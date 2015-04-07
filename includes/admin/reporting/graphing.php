@@ -47,7 +47,7 @@ function edd_reports_graph() {
 	endswitch;
 
 	$earnings_totals = 0.00; // Total earnings for time period shown
-	$sales_totals    = 0;            // Total sales for time period shown
+	$sales_totals    = 0;    // Total sales for time period shown
 
 	$earnings_data = array();
 	$sales_data    = array();
@@ -373,7 +373,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 					$num_of_days = cal_days_in_month( CAL_GREGORIAN, $i, $y );
 
 					$date        = mktime( 0, 0, 0, $i, 1, $y );
-					$end_date    = mktime( 0, 0, 0, $i + 1, $num_of_days, $y );
+					$end_date    = mktime( 23, 59, 59, $i, $num_of_days, $y );
 
 					$sales = $stats->get_sales( $download_id, $date, $end_date );
 					$sales_totals += $sales;
@@ -399,7 +399,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 		__( 'Sales', 'edd' )    => $sales_data
 	);
 
-   	?>
+	?>
 	<div class="metabox-holder" style="padding-top: 0;">
 		<div class="postbox">
 			<h3><span><?php printf( __('Earnings Over Time for %s', 'edd' ), get_the_title( $download_id ) ); ?></span></h3>
@@ -451,8 +451,6 @@ function edd_reports_graph_controls() {
 	if( empty( $dates['day_end'] ) ) {
 		$dates['day_end'] = cal_days_in_month( CAL_GREGORIAN, date( 'n' ), date( 'Y' ) );
 	}
-
-	//echo '<pre>'; print_r( $dates ); echo '</pre>';
 
 	?>
 	<form id="edd-graphs-filter" method="get">
@@ -598,7 +596,6 @@ function edd_get_report_dates() {
 			$dates['m_end']     = $month;
 			$dates['year']      = $year;
 			$dates['year_end']      = $year;
-			//print_r( $dates ); exit;
 		break;
 
 		case 'this_week' :
