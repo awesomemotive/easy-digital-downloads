@@ -89,8 +89,8 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 										<div class="edd-admin-box-inside">
 											<p>
 												<span class="label"><?php _e( 'Time:', 'edd' ); ?></span>&nbsp;
-												<input type="tel" pattern="[0-9]*" max="24" name="edd-payment-time-hour" value="<?php echo esc_attr( date_i18n( 'H', $payment_date ) ); ?>" class="small-text edd-payment-time-hour"/>&nbsp;:&nbsp;
-												<input type="tel" pattern="[0-9]*" max="59" name="edd-payment-time-min" value="<?php echo esc_attr( date( 'i', $payment_date ) ); ?>" class="small-text edd-payment-time-min"/>
+												<input type="text" maxlength="2" name="edd-payment-time-hour" value="<?php echo esc_attr( date_i18n( 'H', $payment_date ) ); ?>" class="small-text edd-payment-time-hour"/>&nbsp;:&nbsp;
+												<input type="text" maxlength="2" name="edd-payment-time-min" value="<?php echo esc_attr( date( 'i', $payment_date ) ); ?>" class="small-text edd-payment-time-min"/>
 											</p>
 										</div>
 
