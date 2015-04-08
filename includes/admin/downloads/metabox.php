@@ -244,12 +244,12 @@ function edd_sanitize_files_save( $files ) {
 	// Clean up filenames to ensure whitespaces are stripped
 	foreach( $files as $id => $file ) {
 
-		if( ! empty( $files[ $id ][ 'file' ] ) ) {
-			$files[ $id ][ 'file' ] = trim( $file[ 'file' ] );
+		if( ! empty( $files[ $id ]['file'] ) ) {
+			$files[ $id ]['file'] = trim( $file['file'] );
 		}
 
-		if( ! empty( $files[ $id ][ 'name' ] ) ) {
-			$files[ $id ][ 'name' ] = trim( $file[ 'name' ] );
+		if( ! empty( $files[ $id ]['name'] ) ) {
+			$files[ $id ]['name'] = trim( $file['name'] );
 		}
 	}
 
@@ -438,7 +438,7 @@ function edd_render_price_field( $post_id ) {
 							endforeach;
 						else :
 					?>
-						<tr class="edd_variable_prices_wrapper edd_repeatable_row">
+						<tr class="edd_variable_prices_wrapper edd_repeatable_row" data-key="1">
 							<?php do_action( 'edd_render_price_row', 1, array(), $post_id, 1 ); ?>
 						</tr>
 					<?php endif; ?>
@@ -618,6 +618,7 @@ function edd_render_files_field( $post_id = 0 ) {
 	$variable_pricing = edd_has_variable_prices( $post_id );
 	$display          = $type == 'bundle' ? ' style="display:none;"' : '';
 	$variable_display = $variable_pricing ? '' : 'display:none;';
+
 ?>
 	<div id="edd_download_files"<?php echo $display; ?>>
 		<p>
@@ -741,7 +742,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 
 			if ( $prices ) {
 				foreach ( $prices as $price_key => $price ) {
-					$options[ $price_key ] = $prices[ $price_key ][ 'name' ];
+					$options[ $price_key ] = $prices[ $price_key ]['name'];
 				}
 			}
 

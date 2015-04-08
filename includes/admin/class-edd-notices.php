@@ -52,6 +52,17 @@ class EDD_Notices {
 			$notices['updated']['edd-payment-history-test-mode'] = sprintf( __( 'Note: Test Mode is enabled, only test payments are shown below. <a href="%s">Settings</a>.', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-settings' ) );
 		}
 
+		if( stristr( $_SERVER['SERVER_SOFTWARE'], 'nginx' ) && ! get_user_meta( get_current_user_id(), '_edd_nginx_redirect_dismissed', true ) && current_user_can( 'manage_shop_settings' ) ) {
+
+			echo '<div class="error">';
+				echo '<p>' . sprintf( __( 'The download files in <strong>%s</strong> are not currently protected due to your site running on NGINX.', 'edd' ), edd_get_upload_dir() ) . '</p>';
+				echo '<p>' . __( 'To protect them, you must add a redirect rule as explained in <a href="http://docs.easydigitaldownloads.com/article/682-protected-download-files-on-nginx">this guide</a>.', 'edd' ) . '</p>';
+				echo '<p>' . __( 'If you have already added the redirect rule, you may safely dismiss this notice', 'edd' ) . '</p>';
+				echo '<p><a href="' . add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'nginx_redirect' ) ) . '">' . __( 'Dismiss Notice', 'edd' ) . '</a></p>';
+			echo '</div>';
+
+		}
+
 		if( ! edd_htaccess_exists() && ! get_user_meta( get_current_user_id(), '_edd_htaccess_missing_dismissed', true ) && current_user_can( 'manage_shop_settings' ) ) {
 			if( ! stristr( $_SERVER['SERVER_SOFTWARE'], 'apache' ) )
 				return; // Bail if we aren't using Apache... nginx doesn't use htaccess!
@@ -138,6 +149,15 @@ class EDD_Notices {
 						break;
 					case 'payment-updated' :
 						$notices['updated']['edd-payment-updated'] = __( 'The payment has been successfully updated.', 'edd' );
+						break;
+				}
+			}
+
+			// Customer Notices
+			if ( current_user_can( 'edit_shop_payments' ) ) {
+				switch( $_GET['edd-message'] ) {
+					case 'customer-deleted' :
+						$notices['updated']['edd-customer-deleted'] = __( 'Customer successfully deleted', 'edd' );
 						break;
 				}
 			}

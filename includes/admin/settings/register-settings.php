@@ -983,7 +983,7 @@ function edd_header_callback( $args ) {
 function edd_checkbox_callback( $args ) {
 	global $edd_options;
 
-	$checked = isset( $edd_options[ $args[ 'id' ] ] ) ? checked( 1, $edd_options[ $args[ 'id' ] ], false ) : '';
+	$checked = isset( $edd_options[ $args['id'] ] ) ? checked( 1, $edd_options[ $args['id'] ], false ) : '';
 	$html = '<input type="checkbox" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']" value="1" ' . $checked . '/>';
 	$html .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
 
@@ -1505,7 +1505,7 @@ function edd_tax_rates_callback($args) {
 						'show_option_all'  => false,
 						'show_option_none' => false,
                         'class'            => 'edd-select edd-tax-country',
-                        'chosen'           => true,
+                        'chosen'           => false,
                         'placeholder' => __( 'Choose a country', 'edd' )
 					) );
 					?>
@@ -1520,7 +1520,7 @@ function edd_tax_rates_callback($args) {
 							'selected'         => $rate['state'],
 							'show_option_all'  => false,
                             'show_option_none' => false,
-                            'chosen'           => true,
+                            'chosen'           => false,
                             'placeholder' => __( 'Choose a state', 'edd' )
 						) );
 					} else {
@@ -1548,7 +1548,7 @@ function edd_tax_rates_callback($args) {
 						'show_option_all'  => false,
 						'show_option_none' => false,
                         'class'            => 'edd-select edd-tax-country',
-                        'chosen'           => true,
+                        'chosen'           => false,
                         'placeholder' => __( 'Choose a country', 'edd' )
 					) ); ?>
 				</td>
@@ -1627,7 +1627,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
  * @return void
  */
 function edd_hook_callback( $args ) {
-	do_action( 'edd_' . $args['id'] );
+	do_action( 'edd_' . $args['id'], $args );
 }
 
 /**

@@ -253,8 +253,7 @@ add_action( 'edd_upgrade_payments', 'edd_update_old_payments_with_totals' );
 function edd_mark_abandoned_orders() {
 	$args = array(
 		'status' => 'pending',
-		'number' => -1,
-		'fields' => 'ids'
+		'number' => -1
 	);
 
 	add_filter( 'posts_where', 'edd_filter_where_older_than_week' );
@@ -265,7 +264,9 @@ function edd_mark_abandoned_orders() {
 
 	if( $payments ) {
 		foreach( $payments as $payment ) {
-			edd_update_payment_status( $payment, 'abandoned' );
+			if( 'pending' === $payment->post_status ) {
+				edd_update_payment_status( $payment->ID, 'abandoned' );
+			}
 		}
 	}
 }
@@ -294,7 +295,12 @@ function edd_update_payment_backwards_compat( $meta_id, $object_id, $meta_key, $
 
 		case '_edd_payment_meta':
 			$meta_value   = maybe_unserialize( $meta_value );
-			$tax_value    = ! empty( $meta_value['tax'] ) ? $meta_value['tax'] : 0;
+			
+			if( !isset( $meta_value['tax'] ) ){
+				return;
+			}
+			
+			$tax_value    = $meta_value['tax'];
 
 			$data         = array( 'meta_value' => $tax_value );
 			$where        = array( 'post_id'  => $object_id, 'meta_key' => '_edd_payment_tax' );

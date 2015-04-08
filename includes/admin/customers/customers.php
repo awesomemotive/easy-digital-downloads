@@ -86,14 +86,18 @@ function edd_customers_list() {
  */
 function edd_render_customer_view( $view, $callbacks ) {
 
+	$render = true;
+
 	$customer_view_role = apply_filters( 'edd_view_customers_role', 'view_shop_reports' );
 
 	if ( ! current_user_can( $customer_view_role ) ) {
 		edd_set_error( 'edd-no-access', __( 'You are not permitted to view this data.', 'edd' ) );
+		$render = false;
 	}
 
 	if ( ! isset( $_GET['id'] ) || ! is_numeric( $_GET['id'] ) ) {
 		edd_set_error( 'edd-invalid_customer', __( 'Invalid Customer ID Provided.', 'edd' ) );
+		$render = false;
 	}
 
 	$customer_id = (int)$_GET['id'];
@@ -101,6 +105,7 @@ function edd_render_customer_view( $view, $callbacks ) {
 
 	if ( empty( $customer->id ) ) {
 		edd_set_error( 'edd-invalid_customer', __( 'Invalid Customer ID Provided.', 'edd' ) );
+		$render = false;
 	}
 
 	$customer_tabs = edd_customer_tabs();
@@ -114,7 +119,7 @@ function edd_render_customer_view( $view, $callbacks ) {
 			</div>
 		<?php endif; ?>
 
-		<?php if ( $customer ) : ?>
+		<?php if ( $customer && $render ) : ?>
 
 			<div id="customer-tab-wrapper">
 				<ul id="customer-tab-wrapper-list">
@@ -278,8 +283,12 @@ function edd_customers_view( $customer ) {
 
 					<span class="customer-user-id info-item editable">
 						<?php _e( 'User ID', 'edd' ); ?>:&nbsp;
-						<span data-key="user_id"><?php echo $customer->user_id; ?></span>
-						<?php if ( current_user_can( $customer_edit_role ) && intval( $customer->user_id ) > 0 ): ?>
+						<?php if( intval( $customer->user_id ) > 0 ) : ?>
+							<span data-key="user_id"><?php echo $customer->user_id; ?></span>
+						<?php else : ?>
+							<span data-key="user_id"><?php _e( 'none', 'edd' ); ?></span>
+						<?php endif; ?>
+						<?php if ( current_user_can( $customer_edit_role ) && intval( $customer->user_id ) > 0 ) : ?>
 							<span class="disconnect-user"> - <a id="disconnect-customer" href="#disconnect" title="<?php _e( 'Disconnects the current user ID from this customer record', 'edd' ); ?>"><?php _e( 'Disconnect User', 'edd' ); ?></a></span>
 						<?php endif; ?>
 					</span>
@@ -426,7 +435,7 @@ function edd_customer_notes_view( $customer ) {
 		<?php if ( 1 == $paged ) : ?>
 		<div style="display: block; margin-bottom: 35px;">
 			<form id="edd-add-customer-note" method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=notes&id=' . $customer->id ); ?>">
-				<textarea id="customer-note" name="customer_note" class="customer-note-input"></textarea>
+				<textarea id="customer-note" name="customer_note" class="customer-note-input" rows="10"></textarea>
 				<br />
 				<input type="hidden" id="customer-id" name="customer_id" value="<?php echo $customer->id; ?>" />
 				<input type="hidden" name="edd_action" value="add-customer-note" />
@@ -469,4 +478,54 @@ function edd_customer_notes_view( $customer ) {
 	</div>
 
 	<?php
+}
+
+function edd_customers_delete_view( $customer ) {
+	$customer_edit_role = apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
+
+	?>
+
+	<?php do_action( 'edd_customer_delete_top', $customer ); ?>
+
+	<div class="info-wrapper customer-section">
+
+		<form id="delete-customer" method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $customer->id ); ?>">
+
+			<div class="customer-notes-header">
+				<?php echo get_avatar( $customer->email, 30 ); ?> <span><?php echo $customer->name; ?></span>
+			</div>
+
+
+			<div class="customer-info delete-customer">
+
+				<span class="delete-customer-options">
+					<p>
+						<?php echo EDD()->html->checkbox( array( 'name' => 'edd-customer-delete-confirm' ) ); ?>
+						<label for="edd-customer-delete-confirm"><?php _e( 'Are you sure you want to delete this customer?', 'edd' ); ?></label>
+					</p>
+
+					<p>
+						<?php echo EDD()->html->checkbox( array( 'name' => 'edd-customer-delete-records', 'options' => array( 'disabled' => true ) ) ); ?>
+						<label for="edd-customer-delete-records"><?php _e( 'Delete all associated payments and records?', 'edd' ); ?></label>
+					</p>
+
+					<?php do_action( 'edd_customer_delete_inputs', $customer ); ?>
+				</span>
+
+				<span id="customer-edit-actions">
+					<input type="hidden" name="customer_id" value="<?php echo $customer->id; ?>" />
+					<?php wp_nonce_field( 'delete-customer', '_wpnonce', false, true ); ?>
+					<input type="hidden" name="edd_action" value="delete-customer" />
+					<input type="submit" disabled="disabled" id="edd-delete-customer" class="button-primary" value="<?php _e( 'Delete Customer', 'edd' ); ?>" />
+					<a id="edd-delete-customer-cancel" href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ); ?>" class="delete"><?php _e( 'Cancel', 'edd' ); ?></a>
+				</span>
+
+			</div>
+
+		</form>
+	</div>
+
+	<?php
+
+	do_action( 'edd_customer_delete_bottom', $customer );
 }

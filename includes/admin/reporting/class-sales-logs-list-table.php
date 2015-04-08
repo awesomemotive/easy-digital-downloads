@@ -70,13 +70,13 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 			case 'user_id' :
 				return '<a href="' .
 					admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $item['user_id'] ) ) .
-					 '">' . $item[ 'user_name' ] . '</a>';
+					 '">' . $item['user_name'] . '</a>';
 
 			case 'amount' :
 				return edd_currency_filter( edd_format_amount( $item['amount'] ) );
 
 			case 'payment_id' :
-				return '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item[ 'payment_id' ] ) . '">' . edd_get_payment_number( $item[ 'payment_id' ] ) . '</a>';
+				return '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item['payment_id'] ) . '">' . edd_get_payment_number( $item['payment_id'] ) . '</a>';
 
 			default:
 				return $item[ $column_name ];

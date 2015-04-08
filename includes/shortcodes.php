@@ -92,11 +92,9 @@ add_shortcode( 'download_history', 'edd_download_history' );
  * @return string
  */
 function edd_purchase_history() {
-	if ( is_user_logged_in() ) {
-		ob_start();
-		edd_get_template_part( 'history', 'purchases' );
-		return ob_get_clean();
-	}
+	ob_start();
+	edd_get_template_part( 'history', 'purchases' );
+	return ob_get_clean();
 }
 add_shortcode( 'purchase_history', 'edd_purchase_history' );
 
@@ -320,7 +318,7 @@ function edd_downloads_query( $atts, $content = null ) {
 
 		if ( $atts['tags'] ) {
 
-			$tag_list	= explode( ',', $atts['tags'] );
+			$tag_list = explode( ',', $atts['tags'] );
 
 			foreach( $tag_list as $tag ) {
 
@@ -380,15 +378,9 @@ function edd_downloads_query( $atts, $content = null ) {
 
 		}
 
-		$tax_query_key = count( $query['tax_query'] ) - 1;
-
 		if ( $atts['exclude_category'] ) {
 
 			$categories = explode( ',', $atts['exclude_category'] );
-
-			$query['tax_query'][ $tax_query_key ] = array(
-				'relation' => 'AND'
-			);
 
 			foreach( $categories as $category ) {
 
@@ -407,7 +399,7 @@ function edd_downloads_query( $atts, $content = null ) {
 					$term_id = $term->term_id;
 				}
 
-				$query['tax_query'][ $tax_query_key ][] = array(
+				$query['tax_query'][] = array(
 					'taxonomy' => 'download_category',
 					'field'    => 'term_id',
 					'terms'    => $term_id,
@@ -420,12 +412,6 @@ function edd_downloads_query( $atts, $content = null ) {
 		if ( $atts['exclude_tags'] ) {
 
 			$tag_list = explode( ',', $atts['exclude_tags'] );
-
-			if( empty( $query['tax_query'][ $tax_query_key ] ) ) {
-				$query['tax_query'][ $tax_query_key ] = array(
-					'relation' => 'AND'
-				);
-			}
 
 			foreach( $tag_list as $tag ) {
 
@@ -444,7 +430,7 @@ function edd_downloads_query( $atts, $content = null ) {
 					$term_id = $term->term_id;
 				}
 
-				$query['tax_query'][ $tax_query_key ][] = array(
+				$query['tax_query'][] = array(
 					'taxonomy' => 'download_tag',
 					'field'    => 'term_id',
 					'terms'    => $term_id,
@@ -454,6 +440,10 @@ function edd_downloads_query( $atts, $content = null ) {
 			}
 
 		}
+	}
+
+	if ( $atts['exclude_tags'] || $atts['exclude_category'] ) {
+		$query['tax_query']['relation'] = 'AND';
 	}
 
 	if( ! empty( $atts['ids'] ) )
@@ -467,8 +457,8 @@ function edd_downloads_query( $atts, $content = null ) {
 		$query['paged'] = 1;
 
 	switch( intval( $atts['columns'] ) ) :
-	    case 0:
-	        $column_width = 'inherit'; break;
+		case 0:
+			$column_width = 'inherit'; break;
 		case 1:
 			$column_width = '100%'; break;
 		case 2:
@@ -623,20 +613,20 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	), $atts, 'edd_receipt' );
 
 	$session = edd_get_purchase_session();
-	if ( isset( $_GET[ 'payment_key' ] ) ) {
-		$payment_key = urldecode( $_GET[ 'payment_key' ] );
+	if ( isset( $_GET['payment_key'] ) ) {
+		$payment_key = urldecode( $_GET['payment_key'] );
 	} elseif ( $edd_receipt_args['payment_key'] ) {
 		$payment_key = $edd_receipt_args['payment_key'];
 	} else if ( $session ) {
-		$payment_key = $session[ 'purchase_key' ];
+		$payment_key = $session['purchase_key'];
 	}
 
 	// No key found
 	if ( ! isset( $payment_key ) )
-		return $edd_receipt_args[ 'error' ];
+		return $edd_receipt_args['error'];
 
-	$edd_receipt_args[ 'id' ] = edd_get_purchase_id_by_key( $payment_key );
-	$customer_id              = edd_get_payment_user_id( $edd_receipt_args[ 'id' ] );
+	$edd_receipt_args['id'] = edd_get_purchase_id_by_key( $payment_key );
+	$customer_id              = edd_get_payment_user_id( $edd_receipt_args['id'] );
 
 	/*
 	 * Check if the user has permission to view the receipt
@@ -652,7 +642,7 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	$user_can_view = ( is_user_logged_in() && $customer_id == get_current_user_id() ) || ( ( $customer_id == 0 || $customer_id == '-1' ) && ! is_user_logged_in() && edd_get_purchase_session() ) || current_user_can( 'view_shop_sensitive_data' );
 
 	if ( ! apply_filters( 'edd_user_can_view_receipt', $user_can_view, $edd_receipt_args ) ) {
-		return $edd_receipt_args[ 'error' ];
+		return $edd_receipt_args['error'];
 	}
 
 	ob_start();

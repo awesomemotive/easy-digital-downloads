@@ -210,7 +210,7 @@ function edd_dashboard_at_a_glance_widget( $items ) {
 	$num_posts = wp_count_posts( 'download' );
 
 	if ( $num_posts && $num_posts->publish ) {
-		$text = _n( '%s ' . edd_get_label_singular(), '%s ' . edd_get_label_plural(), $num_posts->publish );
+		$text = _n( '%s ' . edd_get_label_singular(), '%s ' . edd_get_label_plural(), $num_posts->publish, 'edd' );
 
 		$text = sprintf( $text, number_format_i18n( $num_posts->publish ) );
 
