@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 */
 function edd_update_payment_details( $data ) {
 
-	if( ! current_user_can( 'edit_shop_payments', $data['edd_payment_id' ] ) ) {
+	if( ! current_user_can( 'edit_shop_payments', $data['edd_payment_id'] ) ) {
 		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
 
@@ -38,7 +38,23 @@ function edd_update_payment_details( $data ) {
 	$unlimited   = isset( $data['edd-unlimited-downloads'] ) ? '1' : '';
 	$date        = sanitize_text_field( $data['edd-payment-date'] );
 	$hour        = sanitize_text_field( $data['edd-payment-time-hour'] );
+
+	// Restrict to our high and low
+	if ( $hour > 23 ) {
+		$hour = 23;
+	} elseif ( $hour < 0 ) {
+		$hour = 00;
+	}
+
 	$minute      = sanitize_text_field( $data['edd-payment-time-min'] );
+
+	// Restrict to our high and low
+	if ( $minute > 59 ) {
+		$minute = 59;
+	} elseif ( $minute < 0 ) {
+		$minute = 00;
+	}
+
 	$address     = array_map( 'trim', $data['edd-payment-address'][0] );
 
 	$curr_total  = edd_sanitize_amount( edd_get_payment_amount( $payment_id ) );
@@ -361,7 +377,7 @@ function edd_trigger_payment_note_deletion( $data ) {
 	if( ! wp_verify_nonce( $data['_wpnonce'], 'edd_delete_payment_note_' . $data['note_id'] ) )
 		return;
 
-	if( ! current_user_can( 'edit_shop_payments', $data['payment_id' ] ) ) {
+	if( ! current_user_can( 'edit_shop_payments', $data['payment_id'] ) ) {
 		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
 
@@ -381,7 +397,7 @@ add_action( 'edd_delete_payment_note', 'edd_trigger_payment_note_deletion' );
 */
 function edd_ajax_delete_payment_note() {
 
-	if( ! current_user_can( 'edit_shop_payments', $_POST['payment_id' ] ) ) {
+	if( ! current_user_can( 'edit_shop_payments', $_POST['payment_id'] ) ) {
 		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
 

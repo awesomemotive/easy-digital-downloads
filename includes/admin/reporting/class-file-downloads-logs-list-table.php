@@ -112,9 +112,9 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 			case 'download' :
 				return '<a href="' . add_query_arg( 'download', $item[ $column_name ] ) . '" >' . get_the_title( $item[ $column_name ] ) . '</a>';
 			case 'user_id' :
-				return $item[ $column_name ] ? '<a href="' . add_query_arg( 'user', $item[ $column_name ] ) . '">' . $item[ 'user_name' ] . '</a>' : $item[ 'user_name' ];
+				return $item[ $column_name ] ? '<a href="' . add_query_arg( 'user', $item[ $column_name ] ) . '">' . $item['user_name'] . '</a>' : $item['user_name'];
 			case 'payment_id' :
-				return $item[ 'payment_id' ] !== false ? '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item[ 'payment_id' ] ) . '">' . edd_get_payment_number( $item[ 'payment_id' ] ) . '</a>' : '';
+				return $item['payment_id'] !== false ? '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item['payment_id'] ) . '">' . edd_get_payment_number( $item['payment_id'] ) . '</a>' : '';
 			default:
 				return $item[ $column_name ];
 		}
@@ -374,9 +374,9 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 			foreach ( $logs as $log ) {
 
 				$meta        = get_post_custom( $log->ID );
-				$user_info 	 = isset( $meta['_edd_log_user_info'] ) ? maybe_unserialize( $meta[ '_edd_log_user_info' ][0] ) : array();
-				$payment_id  = isset( $meta['_edd_log_payment_id'] ) ? $meta[ '_edd_log_payment_id' ][0] : false;
-				$ip 		 = $meta[ '_edd_log_ip' ][0];
+				$user_info 	 = isset( $meta['_edd_log_user_info'] ) ? maybe_unserialize( $meta['_edd_log_user_info'][0] ) : array();
+				$payment_id  = isset( $meta['_edd_log_payment_id'] ) ? $meta['_edd_log_payment_id'][0] : false;
+				$ip 		 = $meta['_edd_log_ip'][0];
 				$user_id 	 = isset( $user_info['id'] ) ? $user_info['id'] : false;
 
 				if( ! array_key_exists( $log->post_parent, $this->queried_files ) ) {
@@ -386,7 +386,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 					$files   = $this->queried_files[ $log->post_parent ];
 				}
 
-				$file_id 	 = (int) $meta[ '_edd_log_file_id' ][0];
+				$file_id 	 = (int) $meta['_edd_log_file_id'][0];
 				$file_id 	 = $file_id !== false ? $file_id : 0;
 				$file_name 	 = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
 

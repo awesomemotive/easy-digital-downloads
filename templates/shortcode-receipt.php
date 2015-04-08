@@ -78,7 +78,7 @@ $status    = edd_get_payment_status( $payment, true );
 		</tr>
 		<?php endif; ?>
 
-		<?php if ( $edd_receipt_args['discount'] && $user['discount'] != 'none' ) : ?>
+		<?php if ( $edd_receipt_args['discount'] && isset( $user['discount'] ) && $user['discount'] != 'none' ) : ?>
 			<tr>
 				<td><strong><?php _e( 'Discount(s)', 'edd' ); ?>:</strong></td>
 				<td><?php echo $user['discount']; ?></td>

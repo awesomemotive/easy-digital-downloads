@@ -111,6 +111,7 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 #edd-customer-details .order-data-column p.data input { clear: both; display: block; }
 #edd-customer-details .actions { float: right; }
 .edd-order-data input.small-text { margin: 0; }
+.edd-order-data input.med-text { margin: 0; width: 100px; }
 #edd-order-update span.label { display: inline; width: 50px; }
 .edd-order-update-box .button-primary { margin-right: 0; }
 #edd-edit-order-form .column .description { padding-right: 10px; }
@@ -327,4 +328,5 @@ td.edd_order_price { text-align: right; }
 .customer-note-wrapper { border-bottom: 1px solid #f9f9f9; min-height: 38px; padding: 7px 0 7px 7px; }
 .customer-note-wrapper span { display: block; }
 .note-content-wrap { padding-top: 7px; }
+.delete-customer { text-align: center; }
 

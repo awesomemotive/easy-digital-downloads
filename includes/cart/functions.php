@@ -62,7 +62,7 @@ function edd_get_cart_content_details() {
 		$tax        = edd_get_cart_item_tax( $item['id'], $item['options'], $subtotal - $discount );
 
 		if( edd_prices_include_tax() ) {
-			$subtotal -= $tax;
+			$subtotal -= round( $tax, edd_currency_decimal_filter() );
 		}
 
 		$total      = $subtotal - $discount + $tax;
@@ -238,7 +238,7 @@ function edd_remove_from_cart( $cart_key ) {
 	if ( ! is_array( $cart ) ) {
 		return true; // Empty cart
 	} else {
-		$item_id = isset( $cart[ $cart_key ][ 'id' ] ) ? $cart[ $cart_key ][ 'id' ] : null;
+		$item_id = isset( $cart[ $cart_key ]['id'] ) ? $cart[ $cart_key ]['id'] : null;
 		unset( $cart[ $cart_key ] );
 	}
 
@@ -708,7 +708,7 @@ function edd_get_cart_fee_tax() {
 
 		foreach ( $fees as $fee_id => $fee ) {
 
-			if( ! empty( $fee['no_tax' ] ) ) {
+			if( ! empty( $fee['no_tax'] ) ) {
 				continue;
 			}
 

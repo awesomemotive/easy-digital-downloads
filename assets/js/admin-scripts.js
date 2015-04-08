@@ -61,7 +61,7 @@ jQuery(document).ready(function ($) {
 				var button = $( this ),
 				row = button.parent().parent().prev( 'tr' ),
 				clone = EDD_Download_Configuration.clone_repeatable(row);
-				clone.insertAfter( row );
+				clone.insertAfter( row ).find('input, textarea, select').filter(':visible').eq(0).focus();
 			});
 		},
 
@@ -266,7 +266,7 @@ jQuery(document).ready(function ($) {
 		updatePrices: function() {
 			$( '#edd_price_fields' ).on( 'keyup', '.edd_variable_prices_name', function() {
 
-				var key = $( this ).parents( 'tr' ).index(),
+				var key = $( this ).parents( 'tr' ).data( 'key' ),
 					name = $( this ).val(),
 					field_option = $( '.edd_repeatable_condition_field option[value=' + key + ']' );
 
@@ -1157,6 +1157,7 @@ jQuery(document).ready(function ($) {
 			this.cancel_edit();
 			this.change_country();
 			this.add_note();
+			this.delete_checked();
 		},
 		edit_customer: function() {
 			$( 'body' ).on( 'click', '#edit-customer', function( e ) {
@@ -1198,7 +1199,6 @@ jQuery(document).ready(function ($) {
 				$( '#edd-customer-card-wrapper .edit-item' ).hide();
 				$( '#edd-customer-card-wrapper .editable' ).show();
 				$( '.edd_user_search_results' ).html('');
-				$( '.edd-ajax-user-search' ).val('');
 			});
 		},
 		change_country: function() {
@@ -1253,6 +1253,21 @@ jQuery(document).ready(function ($) {
 					setTimeout( function() {
 						$( '#customer-note' ).css( 'border-color', border_color );
 					}, 500 );
+				}
+			});
+		},
+		delete_checked: function() {
+			$( '#edd-customer-delete-confirm' ).change( function() {
+				var records_input = $('#edd-customer-delete-records');
+				var submit_button = $('#edd-delete-customer');
+
+				if ( $(this).prop('checked') ) {
+					records_input.attr('disabled', false);
+					submit_button.attr('disabled', false);
+				} else {
+					records_input.attr('disabled', true);
+					records_input.prop('checked', false);
+					submit_button.attr('disabled', true);
 				}
 			});
 		}

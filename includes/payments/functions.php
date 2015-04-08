@@ -161,7 +161,7 @@ function edd_insert_payment( $payment_data = array() ) {
 			'currency'     => $payment_data['currency'],
 			'downloads'    => $payment_data['downloads'],
 			'user_info'    => $payment_data['user_info'],
-			'cart_details' => $payment_data['cart_details']
+			'cart_details' => $payment_data['cart_details'],
 		);
 
 		$mode    = edd_is_test_mode() ? 'test' : 'live';
@@ -276,17 +276,23 @@ function edd_update_payment_status( $payment_id, $new_status = 'publish' ) {
  *
  * @since 1.0
  * @global $edd_logs
+ *
  * @uses EDD_Logging::delete_logs()
+ *
  * @param int $payment_id Payment ID (default: 0)
+ * @param bool $update_customer If we should update the customer stats (default:true)
+ * @param bool $delete_download_logs If we should remove all file download logs associated with the payment (default:false)
+ *
  * @return void
  */
-function edd_delete_purchase( $payment_id = 0 ) {
+function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_download_logs = false ) {
 	global $edd_logs;
 
 	$post = get_post( $payment_id );
 
-	if( !$post )
+	if( !$post ) {
 		return;
+	}
 
 	$downloads = edd_get_payment_meta_downloads( $payment_id );
 
@@ -310,7 +316,7 @@ function edd_delete_purchase( $payment_id = 0 ) {
 		// Clear the This Month earnings (this_monththis_month is NOT a typo)
 		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
 
-		if( $customer->id ) {
+		if( $customer->id && $update_customer ) {
 
 			// Decrement the stats for the customer
 			$customer->decrease_purchase_count();
@@ -321,7 +327,7 @@ function edd_delete_purchase( $payment_id = 0 ) {
 
 	do_action( 'edd_payment_delete', $payment_id );
 
-	if( $customer->id ){
+	if( $customer->id && $update_customer ) {
 
 		// Remove the payment ID from the customer
 		$customer->remove_payment( $payment_id );
@@ -343,6 +349,19 @@ function edd_delete_purchase( $payment_id = 0 ) {
 		)
 	);
 
+	if ( $delete_download_logs ) {
+		$edd_logs->delete_logs(
+			null,
+			'file_download',
+			array(
+				array(
+					'key'   => '_edd_log_payment_id',
+					'value' => $payment_id
+				)
+			)
+		);
+	}
+
 	do_action( 'edd_payment_deleted', $payment_id );
 }
 
@@ -356,8 +375,9 @@ function edd_delete_purchase( $payment_id = 0 ) {
  * @return void
  */
 function edd_undo_purchase( $download_id, $payment_id ) {
-	if ( edd_is_test_mode() )
-        return;
+	if ( edd_is_test_mode() ) {
+		return;
+	}
 
 	$cart_details = edd_get_payment_meta_cart_details( $payment_id );
 	$user_info    = edd_get_payment_meta_user_info( $payment_id );
@@ -842,15 +862,15 @@ function edd_get_payment_meta( $payment_id = 0, $meta_key = '_edd_payment_meta',
 	if ( $meta_key === '_edd_payment_meta' ) {
 
 		// Payment meta was simplified in EDD v1.5, so these are here for backwards compatibility
-		if ( ! isset( $meta['key'] ) ) {
+		if ( empty( $meta['key'] ) ) {
 			$meta['key'] = edd_get_payment_key( $payment_id );
 		}
 
-		if ( ! isset( $meta['email'] ) ) {
+		if ( empty( $meta['email'] ) ) {
 			$meta['email'] = edd_get_payment_user_email( $payment_id );
 		}
 
-		if ( ! isset( $meta['date'] ) ) {
+		if ( empty( $meta['date'] ) ) {
 			$meta['date'] = get_post_field( 'post_date', $payment_id );
 		}
 	}
@@ -874,7 +894,7 @@ function edd_update_payment_meta( $payment_id = 0, $meta_key = '', $meta_value =
 		return;
 	}
 
-	if ( $meta_key == 'key' || $meta_key == 'email' || $meta_key == 'date' ) {
+	if ( $meta_key == 'key' || $meta_key == 'date' ) {
 
 		$current_meta = edd_get_payment_meta( $payment_id );
 		$current_meta[$meta_key] = $meta_value;
@@ -882,9 +902,20 @@ function edd_update_payment_meta( $payment_id = 0, $meta_key = '', $meta_value =
 		$meta_key     = '_edd_payment_meta';
 		$meta_value   = $current_meta;
 
+	} else if ( $meta_key == 'email' || $meta_key == '_edd_payment_user_email' ) {
+
+		$meta_value = apply_filters( 'edd_edd_update_payment_meta_' . $meta_key, $meta_value, $payment_id );
+		update_post_meta( $payment_id, '_edd_payment_user_email', $meta_value );
+
+		$current_meta = edd_get_payment_meta( $payment_id );
+		$current_meta['user_info']['email']  = $meta_value;
+
+		$meta_key     = '_edd_payment_meta';
+		$meta_value   = $current_meta;
+
 	}
 
-	$meta_value = apply_filters( 'edd_edd_update_payment_meta_' . $meta_key, $meta_value, $payment_id );
+	$meta_value = apply_filters( 'edd_update_payment_meta_' . $meta_key, $meta_value, $payment_id );
 
 	return update_post_meta( $payment_id, $meta_key, $meta_value, $prev_value );
 }
@@ -1306,14 +1337,14 @@ function edd_payment_tax( $payment_id = 0, $payment_meta = false ) {
  * @since 1.3.3
  * @param int $payment_id Payment ID
  * @param bool $payment_meta Get payment meta?
- * @return float $subtotal Subtotal for payment (non formatted)
+ * @return float $tax Tax for payment (non formatted)
  */
 function edd_get_payment_tax( $payment_id = 0, $payment_meta = false ) {
 
 	$tax = edd_get_payment_meta( $payment_id, '_edd_payment_tax', true );
 
 	// We don't have tax as it's own meta and no meta was passed
-	if ( false === $tax ) {
+	if ( '' === $tax ) {
 
 		if ( ! $payment_meta ) {
 			$payment_meta = edd_get_payment_meta( $payment_id );

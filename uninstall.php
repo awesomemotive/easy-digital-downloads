@@ -54,8 +54,9 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 	/** Delete the Plugin Pages */
 	$edd_created_pages = array( 'purchase_page', 'success_page', 'failure_page', 'purchase_history_page' );
 	foreach ( $edd_created_pages as $p ) {
-		if ( isset( edd_get_option( $p, false ) ) ) {
-			wp_delete_post( $edd_options[ $p ], true );
+		$page = edd_get_option( $p, false );
+		if ( $page ) {
+			wp_delete_post( $page, true );
 		}
 	}
 
