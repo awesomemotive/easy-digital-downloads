@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.9.2
 Tested up to: 4.2
 
-Stable Tag: 2.3.5
+Stable Tag: 2.3.6
 
 License: GNU Version 2 or Any Later Version
 
@@ -191,6 +191,15 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.3.6, April 8, 2015 =
+
+* Fix: Correct issue with non-day-by-day reporting calculating earnings & sales incorrectly
+* Fix: Payment Tax backwards compatibility not working correctly
+* Fix: Always set the data-price attribute, even when price is excluded from purchase button
+* Fix: Prevent New Download Draft by using explicit create method in EDD_Download
+* Fix: Hours/Minutes on Order Details truncating leading zeros
+* Tweak: Increase the Total Price and Tax input widths on order details
 
 = 2.3.5, March 24, 2015 =
 
