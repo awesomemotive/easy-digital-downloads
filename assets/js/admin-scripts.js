@@ -34,7 +34,7 @@ jQuery(document).ready(function ($) {
 
 			clone.removeClass( 'edd_add_blank' );
 
-			clone.data( 'key', key );
+			clone.attr( 'data-key', key );
 			clone.find( 'td input, td select, textarea' ).val( '' );
 			clone.find( 'input, select, textarea' ).each(function() {
 				var name = $( this ).attr( 'name' );
@@ -90,8 +90,11 @@ jQuery(document).ready(function ($) {
 					type  = $(this).data('type'),
 					repeatable = 'tr.edd_repeatable_' + type + 's';
 
-				/** remove from price condition */
-				$( '.edd_repeatable_condition_field option[value=' + row.index() + ']' ).remove();
+				if ( type === 'price' ) {
+					var price_row_id = row.data('key');
+					/** remove from price condition */
+					$( '.edd_repeatable_condition_field option[value="' + price_row_id + '"]' ).remove();
+				}
 
 				if( count > 1 ) {
 					$( 'input, select', row ).val( '' );
