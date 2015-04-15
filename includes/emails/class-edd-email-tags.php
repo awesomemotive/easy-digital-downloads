@@ -818,7 +818,7 @@ function edd_email_tag_sitename( $payment_id ) {
  * @return string receipt_link
  */
 function edd_email_tag_receipt_link( $payment_id ) {
-	return sprintf( __( '%1$sView it in your browser.%2$s', 'edd' ), '<a href="' . add_query_arg( array( 'payment_key' => edd_get_payment_key( $payment_id ), 'edd_action' => 'view_receipt' ), home_url() ) . '">', '</a>' );
+	return sprintf( __( '%1$sView it in your browser.%2$s', 'edd' ), '<a href="' . esc_url( add_query_arg( array( 'payment_key' => edd_get_payment_key( $payment_id ), 'edd_action' => 'view_receipt' ), home_url() ) ) . '">', '</a>' );
 }
 
 /**
