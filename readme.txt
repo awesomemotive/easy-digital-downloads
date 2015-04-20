@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.9.2
 Tested up to: 4.2
 
-Stable Tag: 2.3.6
+Stable Tag: 2.3.7
 
 License: GNU Version 2 or Any Later Version
 
@@ -191,6 +191,10 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.3.7, April 20, 2015 =
+
+* Fix: XSS security flaw
 
 = 2.3.6, April 8, 2015 =
 
