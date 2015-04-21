@@ -280,8 +280,14 @@ class EDD_Customer {
 
 		} else {
 
-			$payment_ids   = array_map( 'absint', explode( ',', $this->payment_ids ) );
+			$payment_ids = array_map( 'absint', explode( ',', $this->payment_ids ) );
+
+			if ( in_array( $payment_id, $payment_ids ) ) {
+				$update_stats = false;
+			}
+
 			$payment_ids[] = $payment_id;
+
 			$new_payment_ids = implode( ',', array_unique( array_values( $payment_ids ) ) );
 
 		}
