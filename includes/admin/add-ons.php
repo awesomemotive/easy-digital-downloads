@@ -43,7 +43,9 @@ function edd_add_ons_page() {
 	<div class="wrap" id="edd-add-ons">
 		<h2>
 			<?php _e( 'Extensions for Easy Digital Downloads', 'edd' ); ?>
-			&nbsp;&mdash;&nbsp;<a href="http://easydigitaldownloads.com/extensions/?utm_source=plugin-addons-page&utm_medium=plugin&ytm_campaign=EDD%20Addons%20Page&utm_content=All%20Extensions" class="button-primary" title="<?php _e( 'Browse All Extensions', 'edd' ); ?>" target="_blank"><?php _e( 'Browse All Extensions', 'edd' ); ?></a>
+			<span>
+				&nbsp;&nbsp;<a href="http://easydigitaldownloads.com/extensions/?utm_source=plugin-addons-page&utm_medium=plugin&ytm_campaign=EDD%20Addons%20Page&utm_content=All%20Extensions" class="button-primary" title="<?php _e( 'Browse All Extensions', 'edd' ); ?>" target="_blank"><?php _e( 'Browse All Extensions', 'edd' ); ?></a>
+			</span>
 		</h2>
 		<p><?php _e( 'These extensions <em><strong>add functionality</strong></em> to your Easy Digital Downloads powered store.', 'edd' ); ?></p>
 		<h2 class="nav-tab-wrapper">

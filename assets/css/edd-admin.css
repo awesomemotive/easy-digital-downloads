@@ -18,6 +18,7 @@ a.edd-delete:hover { color: #f00; }
 .edd-tab-span { float: right; bottom: 15px; position: relative; }
 .edd-add-ons-footer { padding-top: 10px; }
 #edd-add-ons h2 { margin: 0 0 15px; }
+#edd-add-ons h2 .button-primary { position: absolute; }
 #edd-add-ons .edd-extension { float: left; margin: 0 15px 15px 0; background: #fff; border: 1px solid #ccc; width: 320px; padding: 14px; height: 315px; position: relative; }
 #edd-add-ons .edd-extension h3 { margin: 0 0 8px; font-size: 13px;  }
 #edd-add-ons .edd-extension .button-secondary { position: absolute; bottom: 14px; left: 14px; }
