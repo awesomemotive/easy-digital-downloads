@@ -88,7 +88,7 @@ function edd_add_ons_page() {
  */
 function edd_add_ons_get_feed( $tab = 'popular' ) {
 	if ( false === ( $cache = get_transient( 'easydigitaldownloads_add_ons_feed_' . $tab ) ) ) {
-		$url = 'https://staging.easydigitaldownloads.com/?feed=addons';
+		$url = 'https://easydigitaldownloads.com/?feed=addons';
 		if ( 'popular' !== $tab ) {
 			$url = add_query_arg( array( 'display' => $tab ), $url );
 		}
