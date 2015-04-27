@@ -67,7 +67,7 @@ function edd_process_download() {
 	//$args['has_access'] = ( edd_logged_in_only() && is_user_logged_in() ) || !edd_logged_in_only() ? true : false;
 	if ( $args['payment'] && $args['has_access'] ) {
 
-		do_action( 'edd_process_verified_download', $args['download'], $args['email'], $args['payment'] );
+		do_action( 'edd_process_verified_download', $args['download'], $args['email'], $args['payment'], $args );
 
 		// Determine the download method set in settings
 		$method  = edd_get_file_download_method();
