@@ -4375,7 +4375,7 @@ msgid "Invalid or no date range specified!"
 msgstr ""
 
 #: includes/class-edd-api.php:1235
-msgid "No disocunts found!"
+msgid "No discounts found!"
 msgstr ""
 
 #: includes/class-edd-api.php:1282
