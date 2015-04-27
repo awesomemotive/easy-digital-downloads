@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.9.2
 Tested up to: 4.2
 
-Stable Tag: 2.3.7
+Stable Tag: 2.3.8
 
 License: GNU Version 2 or Any Later Version
 
@@ -190,6 +190,14 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.3.8, April 27, 2015 =
+
+* Fix: Customer stats incrementing with attaching payment to customer, if payment is already attached
+* Fix: edd_get_file_download_method called too late during download process
+* Update: Translations Updated
+* Tweak: Improvements to the EDD Extensions page
+* TWeak: Corrections and updates to readme.txt
 
 = 2.3.7, April 20, 2015 =
 
