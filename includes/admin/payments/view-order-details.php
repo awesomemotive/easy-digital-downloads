@@ -29,7 +29,7 @@ $item         = get_post( $payment_id );
 
 // Sanity check... fail if purchase ID is invalid
 if ( !is_object( $item ) || $item->post_type != 'edd_payment' ) {
-    wp_die( __( 'The specified ID does not belong to a payment. Please try again', 'edd' ), __( 'Error', 'edd' ) );
+	wp_die( __( 'The specified ID does not belong to a payment. Please try again', 'edd' ), __( 'Error', 'edd' ) );
 }
 
 $payment_meta   = edd_get_payment_meta( $payment_id );
@@ -89,8 +89,8 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 										<div class="edd-admin-box-inside">
 											<p>
 												<span class="label"><?php _e( 'Time:', 'edd' ); ?></span>&nbsp;
-												<input type="number" step="1" max="24" name="edd-payment-time-hour" value="<?php echo esc_attr( date_i18n( 'H', $payment_date ) ); ?>" class="small-text edd-payment-time-hour"/>&nbsp;:&nbsp;
-												<input type="number" step="1" max="59" name="edd-payment-time-min" value="<?php echo esc_attr( date( 'i', $payment_date ) ); ?>" class="small-text edd-payment-time-min"/>
+												<input type="text" maxlength="2" name="edd-payment-time-hour" value="<?php echo esc_attr( date_i18n( 'H', $payment_date ) ); ?>" class="small-text edd-payment-time-hour"/>&nbsp;:&nbsp;
+												<input type="text" maxlength="2" name="edd-payment-time-min" value="<?php echo esc_attr( date( 'i', $payment_date ) ); ?>" class="small-text edd-payment-time-min"/>
 											</p>
 										</div>
 
@@ -120,7 +120,7 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 										<div class="edd-order-taxes edd-admin-box-inside">
 											<p>
 												<span class="label"><?php _e( 'Tax', 'edd' ); ?>:</span>&nbsp;
-												<input name="edd-payment-tax" class="small-text" type="text" value="<?php echo esc_attr( edd_format_amount( edd_get_payment_tax( $payment_id ) ) ); ?>"/>
+												<input name="edd-payment-tax" class="med-text" type="text" value="<?php echo esc_attr( edd_format_amount( edd_get_payment_tax( $payment_id ) ) ); ?>"/>
 											</p>
 										</div>
 										<?php endif; ?>
@@ -128,7 +128,7 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 										<div class="edd-order-payment edd-admin-box-inside">
 											<p>
 												<span class="label"><?php _e( 'Total Price', 'edd' ); ?>:</span>&nbsp;
-												<?php echo edd_currency_symbol( $payment_meta['currency'] ); ?>&nbsp;<input name="edd-payment-total" type="text" class="small-text" value="<?php echo esc_attr( edd_format_amount( edd_get_payment_amount( $payment_id ) ) ); ?>"/>
+												<?php echo edd_currency_symbol( $payment_meta['currency'] ); ?>&nbsp;<input name="edd-payment-total" type="text" class="med-text" value="<?php echo esc_attr( edd_format_amount( edd_get_payment_amount( $payment_id ) ) ); ?>"/>
 											</p>
 										</div>
 
@@ -478,9 +478,9 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 															'name'             => 'edd-payment-address[0][country]',
 															'selected'         => $address['country'],
 															'show_option_all'  => false,
-                                                            'show_option_none' => false,
-                                                            'chosen'           => true,
-                                                            'placeholder' => __( 'Select a country', 'edd' )
+															'show_option_none' => false,
+															'chosen'           => true,
+															'placeholder' => __( 'Select a country', 'edd' )
 														) );
 														?>
 													</p>
@@ -494,9 +494,9 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 																'name'             => 'edd-payment-address[0][state]',
 																'selected'         => $address['state'],
 																'show_option_all'  => false,
-                                                                'show_option_none' => false,
-                                                                'chosen'           => true,
-                                                                'placeholder' => __( 'Select a state', 'edd' )
+																'show_option_none' => false,
+																'chosen'           => true,
+																'placeholder' => __( 'Select a state', 'edd' )
 															) );
 														} else { ?>
 															<input type="text" name="edd-payment-address[0][state]" value="<?php echo esc_attr( $address['state'] ); ?>" class="medium-text"/>

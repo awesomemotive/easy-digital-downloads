@@ -2,16 +2,16 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.3.5\n"
+"Project-Id-Version: Easy Digital Downloads 2.3.7\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2015-03-25 08:10:04+00:00\n"
+"POT-Creation-Date: 2015-04-27 21:32:37+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "PO-Revision-Date: 2015-MO-DA HO:MI+ZONE\n"
 "Last-Translator: WP-Translations (http://wp-translations.org/)\n"
 "Language-Team: WP-Translations <wpt@wp-translations.org>\n"
-"X-Generator: grunt-wp-i18n 0.5.0\n"
+"X-Generator: grunt-wp-i18n 0.5.2\n"
 "X-Poedit-KeywordsList: "
 "__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
 "attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
@@ -56,11 +56,11 @@ msgstr ""
 #: includes/admin/discounts/edit-discount.php:16
 #: includes/admin/downloads/dashboard-columns.php:177
 #: includes/admin/payments/actions.php:25
-#: includes/admin/payments/actions.php:173
-#: includes/admin/payments/actions.php:322
+#: includes/admin/payments/actions.php:189
 #: includes/admin/payments/actions.php:338
-#: includes/admin/payments/actions.php:365
-#: includes/admin/payments/actions.php:385
+#: includes/admin/payments/actions.php:354
+#: includes/admin/payments/actions.php:381
+#: includes/admin/payments/actions.php:401
 #: includes/admin/payments/view-order-details.php:22
 #: includes/admin/payments/view-order-details.php:32
 #: includes/admin/reporting/class-api-requests-logs-list-table.php:132
@@ -85,24 +85,26 @@ msgstr ""
 #: includes/emails/actions.php:48 includes/emails/template.php:241
 #: includes/error-tracking.php:36 includes/gateways/functions.php:200
 #: includes/gateways/manual.php:33 includes/gateways/paypal-standard.php:34
-#: includes/process-download.php:230 includes/process-download.php:697
+#: includes/process-download.php:231 includes/process-download.php:698
 #: includes/query-filters.php:48
 msgid "Error"
 msgstr ""
 
-#: includes/admin/add-ons.php:42
-msgid "Add Ons for Easy Digital Downloads"
+#: includes/admin/add-ons.php:45
+msgid "Extensions for Easy Digital Downloads"
 msgstr ""
 
-#: includes/admin/add-ons.php:43
+#: includes/admin/add-ons.php:47 includes/admin/add-ons.php:73
 msgid "Browse All Extensions"
 msgstr ""
 
-#: includes/admin/add-ons.php:45
-msgid "These add-ons extend the functionality of Easy Digital Downloads."
+#: includes/admin/add-ons.php:50
+msgid ""
+"These extensions <em><strong>add functionality</strong></em> to your Easy "
+"Digital Downloads powered store."
 msgstr ""
 
-#: includes/admin/add-ons.php:69
+#: includes/admin/add-ons.php:104
 msgid ""
 "There was an error retrieving the extensions list from the server. Please "
 "try again later."
@@ -153,11 +155,13 @@ msgid "Tools"
 msgstr ""
 
 #: includes/admin/admin-pages.php:41
-msgid "Easy Digital Download Add Ons"
+msgid "Easy Digital Download Extensions"
 msgstr ""
 
-#: includes/admin/admin-pages.php:41 includes/admin/plugins.php:51
-msgid "Add Ons"
+#: includes/admin/admin-pages.php:41 includes/admin/plugins.php:59
+#: includes/admin/settings/contextual-help.php:87
+#: includes/admin/settings/register-settings.php:922
+msgid "Extensions"
 msgstr ""
 
 #: includes/admin/admin-pages.php:42
@@ -1478,22 +1482,22 @@ msgid "View Detailed Earnings Report"
 msgstr ""
 
 #: includes/admin/payments/actions.php:25
-#: includes/admin/payments/actions.php:322
 #: includes/admin/payments/actions.php:338
-#: includes/admin/payments/actions.php:365
-#: includes/admin/payments/actions.php:385 includes/emails/actions.php:48
+#: includes/admin/payments/actions.php:354
+#: includes/admin/payments/actions.php:381
+#: includes/admin/payments/actions.php:401 includes/emails/actions.php:48
 msgid "You do not have permission to edit this payment record"
 msgstr ""
 
-#: includes/admin/payments/actions.php:173
+#: includes/admin/payments/actions.php:189
 msgid "Error Updating Payment"
 msgstr ""
 
-#: includes/admin/payments/actions.php:184
+#: includes/admin/payments/actions.php:200
 msgid "New Customers require a name and email address"
 msgstr ""
 
-#: includes/admin/payments/actions.php:199
+#: includes/admin/payments/actions.php:215
 msgid "Error creating new customer"
 msgstr ""
 
@@ -1922,7 +1926,7 @@ msgstr ""
 msgid "General Settings"
 msgstr ""
 
-#: includes/admin/plugins.php:50 includes/admin/welcome.php:152
+#: includes/admin/plugins.php:58 includes/admin/welcome.php:152
 msgid "Getting Started"
 msgstr ""
 
@@ -2248,15 +2252,15 @@ msgstr ""
 msgid "Custom"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:476
+#: includes/admin/reporting/graphing.php:474
 msgid "From"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:492
+#: includes/admin/reporting/graphing.php:490
 msgid "To"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:511
+#: includes/admin/reporting/graphing.php:509
 msgid "Filter"
 msgstr ""
 
@@ -2621,11 +2625,6 @@ msgstr ""
 msgid ""
 "<strong>Additional Tax Rates</strong>: This section lets you add tax rates "
 "for specific countries and/or states/provinces in those countries."
-msgstr ""
-
-#: includes/admin/settings/contextual-help.php:87
-#: includes/admin/settings/register-settings.php:922
-msgid "Extensions"
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:88
@@ -4376,7 +4375,7 @@ msgid "Invalid or no date range specified!"
 msgstr ""
 
 #: includes/class-edd-api.php:1235
-msgid "No disocunts found!"
+msgid "No discounts found!"
 msgstr ""
 
 #: includes/class-edd-api.php:1282
@@ -4728,11 +4727,11 @@ msgstr ""
 msgid "Once Weekly"
 msgstr ""
 
-#: includes/class-edd-customer.php:174 includes/class-edd-download.php:189
+#: includes/class-edd-customer.php:174 includes/class-edd-download.php:196
 msgid "Can't get property %s"
 msgstr ""
 
-#: includes/class-edd-download.php:145
+#: includes/class-edd-download.php:218
 msgid "New Download Product"
 msgstr ""
 
@@ -5100,7 +5099,7 @@ msgid ""
 "they are unable to view it in the browser correctly."
 msgstr ""
 
-#: includes/deprecated-functions.php:517 includes/process-download.php:697
+#: includes/deprecated-functions.php:517 includes/process-download.php:698
 msgid "Sorry but you have hit your download limit for this file."
 msgstr ""
 
@@ -5407,7 +5406,7 @@ msgstr ""
 msgid "PayPal Refund Transaction ID: %s"
 msgstr ""
 
-#: includes/install.php:60 includes/template-functions.php:168
+#: includes/install.php:60 includes/template-functions.php:178
 #: templates/widget-cart-checkout.php:2 templates/widget-cart-empty.php:3
 msgid "Checkout"
 msgstr ""
@@ -5854,11 +5853,11 @@ msgid_plural "%1$s %3$s restored from the Trash."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/process-download.php:229
+#: includes/process-download.php:230
 msgid "You do not have permission to download this file"
 msgstr ""
 
-#: includes/process-download.php:230
+#: includes/process-download.php:231
 msgid "Purchase Verification Failed"
 msgstr ""
 
@@ -6090,67 +6089,67 @@ msgstr ""
 msgid "The email you entered belongs to another user. Please use another."
 msgstr ""
 
-#: includes/template-functions.php:120
+#: includes/template-functions.php:130
 msgid "Free"
 msgstr ""
 
-#: includes/template-functions.php:175
+#: includes/template-functions.php:185
 msgid "Added to cart"
 msgstr ""
 
-#: includes/template-functions.php:176
+#: includes/template-functions.php:186
 msgid "Go to Checkout"
 msgstr ""
 
-#: includes/template-functions.php:185
+#: includes/template-functions.php:195
 msgid "Includes %1$s&#37; tax"
 msgstr ""
 
-#: includes/template-functions.php:187
+#: includes/template-functions.php:197
 msgid "Excluding %1$s&#37; tax"
 msgstr ""
 
-#: includes/template-functions.php:394
+#: includes/template-functions.php:409
 msgid "White"
 msgstr ""
 
-#: includes/template-functions.php:398
+#: includes/template-functions.php:413
 msgid "Gray"
 msgstr ""
 
-#: includes/template-functions.php:402
+#: includes/template-functions.php:417
 msgid "Blue"
 msgstr ""
 
-#: includes/template-functions.php:406
+#: includes/template-functions.php:421
 msgid "Red"
 msgstr ""
 
-#: includes/template-functions.php:410
+#: includes/template-functions.php:425
 msgid "Green"
 msgstr ""
 
-#: includes/template-functions.php:414
+#: includes/template-functions.php:429
 msgid "Yellow"
 msgstr ""
 
-#: includes/template-functions.php:418
+#: includes/template-functions.php:433
 msgid "Orange"
 msgstr ""
 
-#: includes/template-functions.php:422
+#: includes/template-functions.php:437
 msgid "Dark Gray"
 msgstr ""
 
-#: includes/template-functions.php:426
+#: includes/template-functions.php:441
 msgid "Inherit"
 msgstr ""
 
-#: includes/template-functions.php:444
+#: includes/template-functions.php:459
 msgid "Button"
 msgstr ""
 
-#: includes/template-functions.php:445
+#: includes/template-functions.php:460
 msgid "Plain Text"
 msgstr ""
 

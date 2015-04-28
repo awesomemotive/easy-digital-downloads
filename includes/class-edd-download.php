@@ -137,21 +137,20 @@ class EDD_Download {
 	 */
 	public function __construct( $_id = false, $_args = array() ) {
 
-		if( false === $_id ) {
-
-			$defaults = array(
-				'post_type'   => 'download',
-				'post_status' => 'draft',
-				'post_title'  => __( 'New Download Product', 'edd' )
-			);
-
-			$args = wp_parse_args( $_args, $defaults );
-
-			$_id  = wp_insert_post( $args, true );
-
-		}
-
 		$download = WP_Post::get_instance( $_id );
+
+		return $this->setup_download( $download );
+
+	}
+
+	/**
+	 * Given the download data, let's set the variables
+	 *
+	 * @since  2.3.6
+	 * @param  object $download The Download Object
+	 * @return bool             If the setup was successful or not
+	 */
+	private function setup_download( $download ) {
 
 		if( ! is_object( $download ) ) {
 			return false;
@@ -167,9 +166,17 @@ class EDD_Download {
 
 		foreach ( $download as $key => $value ) {
 
-			$this->$key = $value;
+			switch ( $key ) {
+
+				default:
+					$this->$key = $value;
+					break;
+
+			}
 
 		}
+
+		return true;
 
 	}
 
@@ -189,6 +196,39 @@ class EDD_Download {
 			return new WP_Error( 'edd-download-invalid-property', sprintf( __( 'Can\'t get property %s', 'edd' ), $key ) );
 
 		}
+
+	}
+
+	/**
+	 * Creates a download
+	 *
+	 * @since  2.3.6
+	 * @param  array  $data Array of attributes for a download
+	 * @return mixed  false if data isn't passed and class not instantiated for creation, or New Download ID
+	 */
+	public function create( $data = array() ) {
+
+		if ( $this->id != 0 ) {
+			return false;
+		}
+
+		$defaults = array(
+			'post_type'   => 'download',
+			'post_status' => 'draft',
+			'post_title'  => __( 'New Download Product', 'edd' )
+		);
+
+		$args = wp_parse_args( $data, $defaults );
+
+		do_action( 'edd_download_pre_create', $args );
+
+		$id = wp_insert_post( $args, true );
+
+		$download = WP_Post::get_instance( $id );
+
+		do_action( 'edd_download_post_create', $id, $args );
+
+		return $this->setup_download( $download );
 
 	}
 
@@ -228,7 +268,16 @@ class EDD_Download {
 
 		}
 
+		/**
+		 * Override the download price.
+		 *
+		 * @since 2.2
+		 *
+		 * @param string $price The download price(s).
+		 * @param string|int $id The downloads ID.
+		 */
 		return apply_filters( 'edd_get_download_price', $this->price, $this->ID );
+
 	}
 
 	/**
@@ -245,6 +294,14 @@ class EDD_Download {
 
 		}
 
+		/**
+		 * Override variable prices
+		 *
+		 * @since 2.2
+		 *
+		 * @param array $prices The array of variables prices.
+		 * @param int|string The ID of the download.
+		 */
 		return apply_filters( 'edd_get_variable_prices', $this->prices, $this->ID );
 
 	}
@@ -259,6 +316,14 @@ class EDD_Download {
 
 		$ret = get_post_meta( $this->ID, '_edd_price_options_mode', true );
 
+		/**
+		 * Override the price mode for a download when checking if is in single price mode.
+		 *
+		 * @since 2.3
+		 *
+		 * @param bool $ret Is download in single price mode?
+		 * @param int|string The ID of the download.
+		 */
 		return (bool) apply_filters( 'edd_single_price_option_mode', $ret, $this->ID );
 
 	}
@@ -273,6 +338,14 @@ class EDD_Download {
 
 		$ret = get_post_meta( $this->ID, '_variable_pricing', true );
 
+		/**
+		 * Override whether the download has variables prices.
+		 *
+		 * @since 2.3
+		 *
+		 * @param bool $ret Does download have variable prices?
+		 * @param int|string The ID of the download.
+		 */
 		return (bool) apply_filters( 'edd_has_variable_prices', $ret, $this->ID );
 
 	}

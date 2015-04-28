@@ -161,7 +161,7 @@ function edd_insert_payment( $payment_data = array() ) {
 			'currency'     => $payment_data['currency'],
 			'downloads'    => $payment_data['downloads'],
 			'user_info'    => $payment_data['user_info'],
-			'cart_details' => $payment_data['cart_details']
+			'cart_details' => $payment_data['cart_details'],
 		);
 
 		$mode    = edd_is_test_mode() ? 'test' : 'live';
@@ -504,6 +504,7 @@ function edd_count_payments( $args = array() ) {
 	}
 
 	$where = apply_filters( 'edd_count_payments_where', $where );
+	$join  = apply_filters( 'edd_count_payments_join', $join );
 
 	$cache_key = md5( implode( '|', $args ) . $where );
 
@@ -915,7 +916,7 @@ function edd_update_payment_meta( $payment_id = 0, $meta_key = '', $meta_value =
 
 	}
 
-	$meta_value = apply_filters( 'edd_edd_update_payment_meta_' . $meta_key, $meta_value, $payment_id );
+	$meta_value = apply_filters( 'edd_update_payment_meta_' . $meta_key, $meta_value, $payment_id );
 
 	return update_post_meta( $payment_id, $meta_key, $meta_value, $prev_value );
 }

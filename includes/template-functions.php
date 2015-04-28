@@ -94,23 +94,33 @@ function edd_get_purchase_link( $args = array() ) {
 	$data_variable    = $variable_pricing ? ' data-variable-price="yes"' : 'data-variable-price="no"';
 	$type             = $download->is_single_price_mode() ? 'data-price-mode=multi' : 'data-price-mode=single';
 
-	if ( $args['price'] && $args['price'] !== 'no' ) {
+	$show_price       = $args['price'] && $args['price'] !== 'no';
+	$data_price_value = 0;
 
-		if ( $variable_pricing && false !== $args['price_id'] ) {
+	if ( $variable_pricing && false !== $args['price_id'] ) {
 
-			$price_id            = $args['price_id'];
-			$prices              = $download->prices;
-			$options['price_id'] = $args['price_id'];
-			$price               = isset( $prices[$price_id] ) ? $prices[$price_id]['amount'] : false;
+		$price_id            = $args['price_id'];
+		$prices              = $download->prices;
+		$options['price_id'] = $args['price_id'];
+		$found_price         = isset( $prices[$price_id] ) ? $prices[$price_id]['amount'] : false;
 
-		} elseif ( ! $variable_pricing ) {
+		$data_price_value    = $found_price;
 
-			$price = $download->price;
-
+		if ( $show_price ) {
+			$price = $found_price;
 		}
+
+	} elseif ( ! $variable_pricing ) {
+
+		$data_price_value = $download->price;
+
+		if ( $show_price ) {
+			$price = $download->price;
+		}
+
 	}
 
-	$data_price  = isset( $price ) && false !== $price ? 'data-price="' . $price . '"' : 'data-price="' . 0 . '"';
+	$data_price  = 'data-price="' . $data_price_value . '"';
 
 	$button_text = ! empty( $args['text'] ) ? '&nbsp;&ndash;&nbsp;' . $args['text'] : '';
 
@@ -222,13 +232,18 @@ function edd_get_purchase_link( $args = array() ) {
  */
 function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 	$variable_pricing = edd_has_variable_prices( $download_id );
-	$prices = apply_filters( 'edd_purchase_variable_prices', edd_get_variable_prices( $download_id ), $download_id );
 
-	if ( ! $variable_pricing || ( false !== $args['price_id'] && isset( $prices[$args['price_id']] ) ) ) {
+	if ( ! $variable_pricing ) {
 		return;
 	}
 
 	$prices = apply_filters( 'edd_purchase_variable_prices', edd_get_variable_prices( $download_id ), $download_id );
+
+	// If the price_id passed is found in the variable prices, do not display all variable prices.
+	if ( false !== $args['price_id'] && isset( $prices[ $args['price_id'] ] ) ) {
+		return;
+	}
+
 	$type   = edd_single_price_option_mode( $download_id ) ? 'checkbox' : 'radio';
 	$mode   = edd_single_price_option_mode( $download_id ) ? 'multi' : 'single';
 	$schema = edd_add_schema_microdata() ? ' itemprop="offers" itemscope itemtype="http://schema.org/Offer"' : '';
