@@ -528,7 +528,7 @@ class EDD_API {
 					$year               = date( 'Y', $current_time );
 					$month              = date( 'n', $current_time );
 					$day                = date( 'd', $current_time );
-					
+
 					if ( $month == 1 && $day == 1 ) {
 
 						$year -= 1;
@@ -749,7 +749,7 @@ class EDD_API {
 
 		$products = array();
 		$error = array();
-		
+
 		if ( $product == null ) {
 			$products['products'] = array();
 
@@ -1231,8 +1231,8 @@ class EDD_API {
 			$discounts = edd_get_discounts( array( 'posts_per_page' => $per_page, 'paged' => $paged ) );
 			$count     = 0;
 
-			if( empty( $discounts ) ) {
-				$error['error'] = __( 'No disocunts found!', 'edd' );
+			if ( empty( $discounts ) ) {
+				$error['error'] = __( 'No discounts found!', 'edd' );
 				return $error;
 			}
 

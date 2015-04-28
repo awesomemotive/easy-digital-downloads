@@ -15,12 +15,19 @@ a.edd-delete:hover { color: #f00; }
 
 /* =Add Ons Styles
 -------------------------------------------------------------- */
+.edd-tab-span { float: right; bottom: 15px; position: relative; }
+.edd-add-ons-footer { padding-top: 10px; }
 #edd-add-ons h2 { margin: 0 0 15px; }
-#edd-add-ons .edd-extension { float: left; margin: 0 15px 15px 0; background: #f0f0f0; border: 1px solid #ccc; width: 320px; padding: 8px; height: 315px; position: relative; }
+#edd-add-ons h2 .button-primary { position: absolute; }
+#edd-add-ons .edd-extension { float: left; margin: 0 15px 15px 0; background: #fff; border: 1px solid #ccc; width: 320px; padding: 14px; height: 315px; position: relative; }
 #edd-add-ons .edd-extension h3 { margin: 0 0 8px; font-size: 13px;  }
-#edd-add-ons .edd-extension .button-secondary { position: absolute; bottom: 8px; left: 8px; }
+#edd-add-ons .edd-extension .button-secondary { position: absolute; bottom: 14px; left: 14px; }
 #edd-add-ons .edd-browse-all { clear:both; width:100%; }
 #edd-add-ons .edd-extension .third-party { display: none; }
+#edd-add-ons .edd-starter-package { border-color: #62a9d7; background-color: #85c0e5; color: #fff; }
+#edd-add-ons .edd-starter-package h3 { color: #fff; }
+#edd-add-ons .edd-extension .wp-post-image { width: 100%; height: auto; }
+
 
 /* Discount Code Styles
 -------------------------------------------------------------- */
