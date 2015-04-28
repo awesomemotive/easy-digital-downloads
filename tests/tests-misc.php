@@ -149,7 +149,7 @@ class Test_Misc extends WP_UnitTestCase {
 			'HR' => 'Croatia/Hrvatska',
 			'CU' => 'Cuba',
 			'CW' => 'Cura&Ccedil;ao',
-			'CY' => 'Cyprus Island',
+			'CY' => 'Cyprus',
 			'CZ' => 'Czech Republic',
 			'DK' => 'Denmark',
 			'DJ' => 'Djibouti',

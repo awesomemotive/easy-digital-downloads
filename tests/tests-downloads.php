@@ -53,20 +53,20 @@ class Tests_Downloads extends WP_UnitTestCase {
 
 	public function test_edd_download() {
 
-		// Create a new download
+		// Verify passing nothing gives us an empty download
 		$download = new EDD_Download;
-		$this->assertNotEmpty( $download->ID );
-		$this->assertEquals( 'download', $download->post_type );
-		$this->assertEquals( 'draft', $download->post_status );
-		$this->assertEquals( 0, $download->sales );
-		$this->assertEquals( 0.00, $download->earnings );
-		$this->assertFalse( $download->has_variable_prices() );
-		$this->assertEmpty( $download->prices );
+		$this->assertEquals( 0, $download->ID );
 
-		// Retrieve the one we just created
-		$download2 = new EDD_Download( $download->ID );
+		// Create a Download
+		$args = array(
+			'post_title'  => 'Test Create Download'
+		);
+		$download2 = new EDD_Download;
+		$this->assertEquals( 0, $download2->ID );
+
+		$download2->create( $args );
+
 		$this->assertNotEmpty( $download2->ID );
-		$this->assertEquals( $download->ID, $download2->ID );
 		$this->assertEquals( 'download', $download2->post_type );
 		$this->assertEquals( 'draft', $download2->post_status );
 		$this->assertEquals( 0, $download2->sales );
