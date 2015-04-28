@@ -504,6 +504,7 @@ function edd_count_payments( $args = array() ) {
 	}
 
 	$where = apply_filters( 'edd_count_payments_where', $where );
+	$join  = apply_filters( 'edd_count_payments_join', $join );
 
 	$cache_key = md5( implode( '|', $args ) . $where );
 
