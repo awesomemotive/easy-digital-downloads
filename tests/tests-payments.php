@@ -152,6 +152,14 @@ class Tests_Payments extends WP_UnitTestCase {
 		$this->assertEquals( $this->_payment_id, edd_get_payment_number( $this->_payment_id ) );
 	}
 
+	public function test_increment_payment_number() {
+		$prefix  = 'EDD';
+		$postfix = 'TESTING';
+		$starting_number = $prefix . '1' . $postfix;
+
+		$this->assertEquals( $prefix . '2' . $postfix, edd_increment_payment_number( $prefix, $starting_number, $postfix ) );
+	}
+
 	public function test_get_payment_transaction_id() {
 		$this->assertEquals( $this->_transaction_id, edd_get_payment_transaction_id( $this->_payment_id ) );
 	}

@@ -213,6 +213,7 @@ function edd_insert_payment( $payment_data = array() ) {
 
 		if( edd_get_option( 'enable_sequential' ) ) {
 			edd_update_payment_meta( $payment, '_edd_payment_number', $number );
+			update_option( 'edd_last_payment_number', $number );
 		}
 
 		// Clear the user's purchased cache
@@ -1182,46 +1183,72 @@ function edd_get_next_payment_number() {
 		return false;
 	}
 
+	$last_payment_number = get_option( 'edd_last_payment_number' );
+
 	$prefix  = edd_get_option( 'sequential_prefix' );
 	$postfix = edd_get_option( 'sequential_postfix' );
 	$start   = edd_get_option( 'sequential_start', 1 );
 
-	$payments     = new EDD_Payments_Query( array( 'number' => 1, 'order' => 'DESC', 'orderby' => 'ID', 'output' => 'posts', 'fields' => 'ids' ) );
+	if ( false !== $last_payment_number ) {
 
-	$last_payment = $payments->get_payments();
-
-	if( $last_payment ) {
-
-		$number = edd_get_payment_number( $last_payment[0] );
-
-		if( empty( $number ) ) {
+		if ( empty( $last_payment_number ) ) {
 
 			$number = $prefix . $start . $postfix;
 
 		} else {
 
-			// Remove prefix and postfix
-			$number = str_replace( $prefix, '', $number );
-			$number = str_replace( $postfix, '', $number );
-
-			// Ensure it's a whole number
-			$number = intval( $number );
-
-			// Increment the payment number
-			$number++;
-
-			// Re-add the prefix and postfix
-			$number = $prefix . $number . $postfix;
+			$number = edd_increment_payment_number( $prefix, $last_payment_number, $postfix );
 
 		}
 
 	} else {
 
-		$number = $prefix . $start . $postfix;
+		// This case handles the first addition of the new option, as well as if it get's deleted for any reason
+		$payments     = new EDD_Payments_Query( array( 'number' => 1, 'order' => 'DESC', 'orderby' => 'ID', 'output' => 'posts', 'fields' => 'ids' ) );
+		$last_payment = $payments->get_payments();
+
+		if ( $last_payment ) {
+			$number = edd_get_payment_number( $last_payment[0] );
+		}
+
+
+		if( ! empty( $number ) ) {
+			$number = edd_increment_payment_number( $prefix, $number, $postfix );
+		} else {
+			$number = $prefix . $start . $postfix;
+		}
 
 	}
 
 	return apply_filters( 'edd_get_next_payment_number', $number );
+}
+
+/**
+ * Given a prefix, number and postfix, return the payment number,  incremented
+ *
+ * @since  2.4
+ * @param  string $prefix  The Payment Number Prefix
+ * @param  string $number  The formatted Current Number to increment
+ * @param  string $postfix The Payment Number Postfix
+ * @return string          The new formatted Payment number
+ */
+function edd_increment_payment_number( $prefix, $number, $postfix ) {
+
+	// Remove prefix and postfix
+	$number = str_replace( $prefix, '', $number );
+	$number = str_replace( $postfix, '', $number );
+
+	// Ensure it's a whole number
+	$number = intval( $number );
+
+	// Increment the payment number
+	$number++;
+
+	// Re-add the prefix and postfix
+	$number = $prefix . $number . $postfix;
+
+	return $number;
+
 }
 
 /**
