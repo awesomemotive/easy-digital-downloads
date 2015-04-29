@@ -2,16 +2,16 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.3.6\n"
+"Project-Id-Version: Easy Digital Downloads 2.3.8\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2015-04-16 06:31:52+00:00\n"
+"POT-Creation-Date: 2015-04-29 07:28:25+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "PO-Revision-Date: 2015-MO-DA HO:MI+ZONE\n"
 "Last-Translator: WP-Translations (http://wp-translations.org/)\n"
 "Language-Team: WP-Translations <wpt@wp-translations.org>\n"
-"X-Generator: grunt-wp-i18n 0.5.0\n"
+"X-Generator: grunt-wp-i18n 0.5.2\n"
 "X-Poedit-KeywordsList: "
 "__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
 "attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
@@ -85,24 +85,26 @@ msgstr ""
 #: includes/emails/actions.php:48 includes/emails/template.php:241
 #: includes/error-tracking.php:36 includes/gateways/functions.php:200
 #: includes/gateways/manual.php:33 includes/gateways/paypal-standard.php:34
-#: includes/process-download.php:230 includes/process-download.php:697
+#: includes/process-download.php:231 includes/process-download.php:698
 #: includes/query-filters.php:48
 msgid "Error"
 msgstr ""
 
-#: includes/admin/add-ons.php:42
-msgid "Add Ons for Easy Digital Downloads"
+#: includes/admin/add-ons.php:45
+msgid "Extensions for Easy Digital Downloads"
 msgstr ""
 
-#: includes/admin/add-ons.php:43
+#: includes/admin/add-ons.php:47 includes/admin/add-ons.php:73
 msgid "Browse All Extensions"
 msgstr ""
 
-#: includes/admin/add-ons.php:45
-msgid "These add-ons extend the functionality of Easy Digital Downloads."
+#: includes/admin/add-ons.php:50
+msgid ""
+"These extensions <em><strong>add functionality</strong></em> to your Easy "
+"Digital Downloads powered store."
 msgstr ""
 
-#: includes/admin/add-ons.php:69
+#: includes/admin/add-ons.php:104
 msgid ""
 "There was an error retrieving the extensions list from the server. Please "
 "try again later."
@@ -153,11 +155,13 @@ msgid "Tools"
 msgstr ""
 
 #: includes/admin/admin-pages.php:41
-msgid "Easy Digital Download Add Ons"
+msgid "Easy Digital Download Extensions"
 msgstr ""
 
-#: includes/admin/admin-pages.php:41 includes/admin/plugins.php:51
-msgid "Add Ons"
+#: includes/admin/admin-pages.php:41 includes/admin/plugins.php:59
+#: includes/admin/settings/contextual-help.php:87
+#: includes/admin/settings/register-settings.php:922
+msgid "Extensions"
 msgstr ""
 
 #: includes/admin/admin-pages.php:42
@@ -936,7 +940,7 @@ msgstr ""
 #: includes/admin/discounts/class-discount-codes-table.php:274
 #: includes/admin/payments/class-payments-table.php:302
 #: includes/admin/payments/class-payments-table.php:375
-#: includes/payments/functions.php:1571
+#: includes/payments/functions.php:1572
 msgid "Delete"
 msgstr ""
 
@@ -1519,27 +1523,27 @@ msgid "Completed"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:201
-#: includes/payments/functions.php:603
+#: includes/payments/functions.php:604
 msgid "Pending"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:202
-#: includes/payments/functions.php:605
+#: includes/payments/functions.php:606
 msgid "Refunded"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:203
-#: includes/payments/functions.php:608
+#: includes/payments/functions.php:609
 msgid "Revoked"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:204
-#: includes/payments/functions.php:606
+#: includes/payments/functions.php:607
 msgid "Failed"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:205
-#: includes/payments/functions.php:607
+#: includes/payments/functions.php:608
 msgid "Abandoned"
 msgstr ""
 
@@ -1922,7 +1926,7 @@ msgstr ""
 msgid "General Settings"
 msgstr ""
 
-#: includes/admin/plugins.php:50 includes/admin/welcome.php:152
+#: includes/admin/plugins.php:58 includes/admin/welcome.php:152
 msgid "Getting Started"
 msgstr ""
 
@@ -2621,11 +2625,6 @@ msgstr ""
 msgid ""
 "<strong>Additional Tax Rates</strong>: This section lets you add tax rates "
 "for specific countries and/or states/provinces in those countries."
-msgstr ""
-
-#: includes/admin/settings/contextual-help.php:87
-#: includes/admin/settings/register-settings.php:922
-msgid "Extensions"
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:88
@@ -3568,6 +3567,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/upgrades/upgrade-functions.php:108
+#: includes/admin/upgrades/upgrade-functions.php:122
 msgid ""
 "Easy Digital Downloads needs to upgrade the payment database, click <a "
 "href=\"%s\">here</a> to start the upgrade."
@@ -3576,12 +3576,6 @@ msgstr ""
 #: includes/admin/upgrades/upgrade-functions.php:115
 msgid ""
 "Easy Digital Downloads needs to upgrade the customer database, click <a "
-"href=\"%s\">here</a> to start the upgrade."
-msgstr ""
-
-#: includes/admin/upgrades/upgrade-functions.php:122
-msgid ""
-"Easy Digital Downloads needs to upgrade the payments database, click <a "
 "href=\"%s\">here</a> to start the upgrade."
 msgstr ""
 
@@ -5100,7 +5094,7 @@ msgid ""
 "they are unable to view it in the browser correctly."
 msgstr ""
 
-#: includes/deprecated-functions.php:517 includes/process-download.php:697
+#: includes/deprecated-functions.php:517 includes/process-download.php:698
 msgid "Sorry but you have hit your download limit for this file."
 msgstr ""
 
@@ -5586,15 +5580,15 @@ msgstr ""
 msgid "Status changed from %s to %s"
 msgstr ""
 
-#: includes/payments/functions.php:604
+#: includes/payments/functions.php:605
 msgid "Complete"
 msgstr ""
 
-#: includes/payments/functions.php:1556
+#: includes/payments/functions.php:1557
 msgid "EDD Bot"
 msgstr ""
 
-#: includes/payments/functions.php:1571
+#: includes/payments/functions.php:1572
 msgid "Delete this payment note"
 msgstr ""
 
@@ -5854,11 +5848,11 @@ msgid_plural "%1$s %3$s restored from the Trash."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/process-download.php:229
+#: includes/process-download.php:230
 msgid "You do not have permission to download this file"
 msgstr ""
 
-#: includes/process-download.php:230
+#: includes/process-download.php:231
 msgid "Purchase Verification Failed"
 msgstr ""
 
