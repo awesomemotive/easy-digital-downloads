@@ -526,15 +526,7 @@ add_action( 'edd_purchase_form_login_fields', 'edd_get_login_fields' );
  * @return void
  */
 function edd_payment_mode_select() {
-	$all_gateways       = edd_get_enabled_payment_gateways();
-
-	// Reorder our gateways so the default is first
-	$default_gateway_id = edd_get_default_gateway();
-	$default_gateway    = array( $default_gateway_id => $all_gateways[ $default_gateway_id ] );
-	unset( $all_gateways[ $default_gateway_id ] );
-
-	$gateways = array_merge( $default_gateway, $all_gateways );
-
+	$gateways = edd_get_enabled_payment_gateways( true );
 	$page_URL = edd_get_current_page_url();
 	do_action('edd_payment_mode_top'); ?>
 	<?php if( edd_is_ajax_disabled() ) { ?>
