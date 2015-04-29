@@ -375,9 +375,6 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
  * @return void
  */
 function edd_undo_purchase( $download_id, $payment_id ) {
-	if ( edd_is_test_mode() ) {
-		return;
-	}
 
 	$cart_details = edd_get_payment_meta_cart_details( $payment_id );
 	$user_info    = edd_get_payment_meta_user_info( $payment_id );
