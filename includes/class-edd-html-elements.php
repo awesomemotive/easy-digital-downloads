@@ -231,11 +231,12 @@ class EDD_HTML_Elements {
 			$options[ absint( $category->term_id ) ] = esc_html( $category->name );
 		}
 
+		$category_labels = edd_get_taxonomy_labels( 'download_category' );
 		$output = $this->select( array(
 			'name'             => $name,
 			'selected'         => $selected,
 			'options'          => $options,
-			'show_option_all'  => __( 'All Categories', 'edd' ),
+			'show_option_all'  => sprintf( __( 'All %s', 'edd' ), $category_labels['name'] ),
 			'show_option_none' => false
 		) );
 
