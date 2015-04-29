@@ -175,7 +175,7 @@ function edd_change_default_title( $title ) {
         $title = sprintf( __( 'Enter %s name here', 'edd' ), $label );
      	return $title;
      }
-     
+
      $screen = get_current_screen();
 
      if ( 'download' == $screen->post_type ) {
@@ -199,7 +199,7 @@ function edd_setup_download_taxonomies() {
 
 	/** Categories */
 	$category_labels = array(
-		'name' 				=> sprintf( _x( '%s Categories', 'taxonomy general name', 'edd' ), edd_get_label_singular() ),
+		'name' 				=> _x( 'Categories', 'taxonomy general name', 'edd' ),
 		'singular_name' 	=> _x( 'Category', 'taxonomy singular name', 'edd' ),
 		'search_items' 		=> __( 'Search Categories', 'edd'  ),
 		'all_items' 		=> __( 'All Categories', 'edd'  ),
@@ -226,7 +226,7 @@ function edd_setup_download_taxonomies() {
 
 	/** Tags */
 	$tag_labels = array(
-		'name' 				=> sprintf( _x( '%s Tags', 'taxonomy general name', 'edd' ), edd_get_label_singular() ),
+		'name' 				=> _x( 'Tags', 'taxonomy general name', 'edd' ),
 		'singular_name' 	=> _x( 'Tag', 'taxonomy singular name', 'edd' ),
 		'search_items' 		=> __( 'Search Tags', 'edd'  ),
 		'all_items' 		=> __( 'All Tags', 'edd'  ),
@@ -254,6 +254,38 @@ function edd_setup_download_taxonomies() {
 	register_taxonomy_for_object_type( 'download_tag', 'download' );
 }
 add_action( 'init', 'edd_setup_download_taxonomies', 0 );
+
+/**
+ * Get the singular and plural labels for a download taxonomy
+ *
+ * @since  2.4
+ * @param  string $taxonomy The Taxonomy to get labels for
+ * @return array            Associative array of labels (name = plural)
+ */
+function edd_get_taxonomy_labels( $taxonomy = 'download_category' ) {
+
+	$allowed_taxonomies = apply_filters( 'edd_allowed_downlaod_taxonomies', array( 'download_category', 'download_tag' ) );
+
+	if ( ! in_array( $taxonomy, $allowed_taxonomies ) ) {
+		return false;
+	}
+
+	$labels   = array();
+	$taxonomy = get_taxonomy( $taxonomy );
+
+	if ( false !== $taxonomy ) {
+		$singular = $taxonomy->labels->singular_name;
+		$name     = $taxonomy->labels->name;
+
+		$labels = array(
+			'name'          => $name,
+			'singular_name' => $singular,
+		);
+	}
+
+	return apply_filters( 'edd_get_taxonomy_labels', $labels, $taxonomy );
+
+}
 
 /**
  * Registers Custom Post Statuses which are used by the Payments and Discount
