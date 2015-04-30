@@ -80,7 +80,7 @@ global $post; ?>
 			<tr class="edd_cart_footer_row edd_cart_subtotal_row"<?php if ( ! edd_is_cart_taxed() ) echo ' style="display:none;"'; ?>>
 				<?php do_action( 'edd_checkout_table_subtotal_first' ); ?>
 				<th colspan="<?php echo edd_checkout_cart_columns(); ?>" class="edd_cart_subtotal">
-					<?php echo apply_filters( 'edd_cart_table_subtotal_label', __( 'Subtotal:', 'edd' ) ); ?>&nbsp;<span class="edd_cart_subtotal_amount"><?php echo edd_cart_subtotal(); ?></span>
+					<?php echo apply_filters( 'edd_cart_table_subtotal_label', __( 'Subtotal', 'edd' ) ); ?>:&nbsp;<span class="edd_cart_subtotal_amount"><?php echo edd_cart_subtotal(); ?></span>
 				</th>
 				<?php do_action( 'edd_checkout_table_subtotal_last' ); ?>
 			</tr>
@@ -98,7 +98,7 @@ global $post; ?>
 			<tr class="edd_cart_footer_row edd_cart_tax_row"<?php if( ! edd_is_cart_taxed() ) echo ' style="display:none;"'; ?>>
 				<?php do_action( 'edd_checkout_table_tax_first' ); ?>
 				<th colspan="<?php echo edd_checkout_cart_columns(); ?>" class="edd_cart_tax">
-					<?php echo apply_filters( 'edd_cart_table_tax_amount_label', __( 'Tax:', 'edd' ) ); ?>&nbsp;<span class="edd_cart_tax_amount" data-tax="<?php echo edd_get_cart_tax( false ); ?>"><?php echo esc_html( edd_cart_tax() ); ?></span>
+					<?php echo apply_filters( 'edd_cart_table_tax_amount_label', __( 'Tax', 'edd' ) ); ?>:&nbsp;<span class="edd_cart_tax_amount" data-tax="<?php echo edd_get_cart_tax( false ); ?>"><?php echo esc_html( edd_cart_tax() ); ?></span>
 				</th>
 				<?php do_action( 'edd_checkout_table_tax_last' ); ?>
 			</tr>
