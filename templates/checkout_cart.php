@@ -107,7 +107,7 @@ global $post; ?>
 
 		<tr class="edd_cart_footer_row">
 			<?php do_action( 'edd_checkout_table_footer_first' ); ?>
-			<th colspan="<?php echo edd_checkout_cart_columns(); ?>" class="edd_cart_total"><?php echo apply_filters( 'edd_cart_table_total_label', __( 'Total:', 'edd' ) ); ?> <span class="edd_cart_amount" data-subtotal="<?php echo edd_get_cart_total(); ?>" data-total="<?php echo edd_get_cart_total(); ?>"><?php edd_cart_total(); ?></span></th>
+			<th colspan="<?php echo edd_checkout_cart_columns(); ?>" class="edd_cart_total"><?php echo apply_filters( 'edd_cart_table_total_label', __( 'Total', 'edd' ) ); ?>:&nbsp;<span class="edd_cart_amount" data-subtotal="<?php echo edd_get_cart_total(); ?>" data-total="<?php echo edd_get_cart_total(); ?>"><?php edd_cart_total(); ?></span></th>
 			<?php do_action( 'edd_checkout_table_footer_last' ); ?>
 		</tr>
 	</tfoot>
