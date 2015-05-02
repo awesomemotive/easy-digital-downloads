@@ -25,7 +25,7 @@ class Tests_Scripts extends WP_UnitTestCase {
 	 * @since 2.3.6
 	 */
 	public function test_load_scripts_checkout() {
-$this->markTestIncomplete( 'Getting weird errors' );
+
 		// Prepare test
 		$this->go_to( get_permalink( edd_get_option( 'purchase_page' ) ) );
 		edd_load_scripts();
@@ -79,7 +79,7 @@ $this->markTestIncomplete( 'Getting weird errors' );
 	 * @since 2.3.6
 	 */
 	public function test_register_styles_checkout_ssl() {
-$this->markTestIncomplete( 'Getting weird' );
+
 		// Prepare test
 		$_SERVER['HTTPS'] = 'ON'; // Fake SSL
 		$this->go_to( get_permalink( edd_get_option( 'purchase_page' ) ) );
