@@ -88,21 +88,6 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Displays the secret key rows
-	 *
-	 * @access public
-	 * @since 2.4
-	 *
-	 * @param array $item Contains all the data of the keys
-	 * @param string $column_name The name of the column
-	 *
-	 * @return string Column Name
-	 */
-	public function column_secret( $item ) {
-		return '<input type="text" class="large-text" value="' . esc_attr( $item[ 'secret' ] ) . '"/>';
-	}
-
-	/**
 	 * Displays the token rows
 	 *
 	 * @access public
@@ -115,6 +100,21 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	 */
 	public function column_token( $item ) {
 		return '<input type="text" class="large-text" value="' . esc_attr( $item[ 'token' ] ) . '"/>';
+	}
+
+	/**
+	 * Displays the secret key rows
+	 *
+	 * @access public
+	 * @since 2.4
+	 *
+	 * @param array $item Contains all the data of the keys
+	 * @param string $column_name The name of the column
+	 *
+	 * @return string Column Name
+	 */
+	public function column_secret( $item ) {
+		return '<input type="text" class="large-text" value="' . esc_attr( $item[ 'secret' ] ) . '"/>';
 	}
 
 	/**
@@ -163,8 +163,8 @@ class EDD_API_Keys_Table extends WP_List_Table {
 		$columns = array(
 			'user'         => __( 'Username', 'edd' ),
 			'key'          => __( 'Public Key', 'edd' ),
-			'secret'       => __( 'Secret Key', 'edd' ),
-			'token'        => __( 'Token', 'edd' )
+			'token'        => __( 'Token', 'edd' ),
+			'secret'       => __( 'Secret Key', 'edd' )
 		);
 
 		return $columns;
