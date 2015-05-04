@@ -73,6 +73,51 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Displays the public key rows
+	 *
+	 * @access public
+	 * @since 2.4
+	 *
+	 * @param array $item Contains all the data of the keys
+	 * @param string $column_name The name of the column
+	 *
+	 * @return string Column Name
+	 */
+	public function column_key( $item ) {
+		return '<input type="text" class="large-text" value="' . esc_attr( $item[ 'key' ] ) . '"/>';
+	}
+
+	/**
+	 * Displays the secret key rows
+	 *
+	 * @access public
+	 * @since 2.4
+	 *
+	 * @param array $item Contains all the data of the keys
+	 * @param string $column_name The name of the column
+	 *
+	 * @return string Column Name
+	 */
+	public function column_secret( $item ) {
+		return '<input type="text" class="large-text" value="' . esc_attr( $item[ 'secret' ] ) . '"/>';
+	}
+
+	/**
+	 * Displays the token rows
+	 *
+	 * @access public
+	 * @since 2.4
+	 *
+	 * @param array $item Contains all the data of the keys
+	 * @param string $column_name The name of the column
+	 *
+	 * @return string Column Name
+	 */
+	public function column_token( $item ) {
+		return '<input type="text" class="large-text" value="' . esc_attr( $item[ 'token' ] ) . '"/>';
+	}
+
+	/**
 	 * Renders the column for the user field
 	 *
 	 * @access public 
