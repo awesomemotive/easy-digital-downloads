@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.3.7\n"
+"Project-Id-Version: Easy Digital Downloads 2.3.8\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2015-04-27 21:32:37+00:00\n"
+"POT-Creation-Date: 2015-04-29 07:28:25+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -940,7 +940,7 @@ msgstr ""
 #: includes/admin/discounts/class-discount-codes-table.php:274
 #: includes/admin/payments/class-payments-table.php:302
 #: includes/admin/payments/class-payments-table.php:375
-#: includes/payments/functions.php:1571
+#: includes/payments/functions.php:1572
 msgid "Delete"
 msgstr ""
 
@@ -1523,27 +1523,27 @@ msgid "Completed"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:201
-#: includes/payments/functions.php:603
+#: includes/payments/functions.php:604
 msgid "Pending"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:202
-#: includes/payments/functions.php:605
+#: includes/payments/functions.php:606
 msgid "Refunded"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:203
-#: includes/payments/functions.php:608
+#: includes/payments/functions.php:609
 msgid "Revoked"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:204
-#: includes/payments/functions.php:606
+#: includes/payments/functions.php:607
 msgid "Failed"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:205
-#: includes/payments/functions.php:607
+#: includes/payments/functions.php:608
 msgid "Abandoned"
 msgstr ""
 
@@ -3567,6 +3567,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/upgrades/upgrade-functions.php:108
+#: includes/admin/upgrades/upgrade-functions.php:122
 msgid ""
 "Easy Digital Downloads needs to upgrade the payment database, click <a "
 "href=\"%s\">here</a> to start the upgrade."
@@ -3575,12 +3576,6 @@ msgstr ""
 #: includes/admin/upgrades/upgrade-functions.php:115
 msgid ""
 "Easy Digital Downloads needs to upgrade the customer database, click <a "
-"href=\"%s\">here</a> to start the upgrade."
-msgstr ""
-
-#: includes/admin/upgrades/upgrade-functions.php:122
-msgid ""
-"Easy Digital Downloads needs to upgrade the payments database, click <a "
 "href=\"%s\">here</a> to start the upgrade."
 msgstr ""
 
@@ -5585,15 +5580,15 @@ msgstr ""
 msgid "Status changed from %s to %s"
 msgstr ""
 
-#: includes/payments/functions.php:604
+#: includes/payments/functions.php:605
 msgid "Complete"
 msgstr ""
 
-#: includes/payments/functions.php:1556
+#: includes/payments/functions.php:1557
 msgid "EDD Bot"
 msgstr ""
 
-#: includes/payments/functions.php:1571
+#: includes/payments/functions.php:1572
 msgid "Delete this payment note"
 msgstr ""
 
