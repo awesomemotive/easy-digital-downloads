@@ -329,11 +329,11 @@ function edd_reports_tab_export() {
 						<div class="inside">
 							<p><?php _e( 'Download a CSV of all payments recorded.', 'edd' ); ?></p>
 							<p>
-								<form method="post">
+								<form method="get" action="<?php echo esc_url( admin_url( 'index.php' ) ); ?>">
 									<?php echo EDD()->html->year_dropdown(); ?>
 									<?php echo EDD()->html->month_dropdown(); ?>
-									<select name="edd_export_payment_status">
-										<option value="0"><?php _e( 'All Statuses', 'edd' ); ?></option>
+									<select name="status">
+										<option value="any"><?php _e( 'All Statuses', 'edd' ); ?></option>
 										<?php
 										$statuses = edd_get_payment_statuses();
 										foreach( $statuses as $status => $label ) {
@@ -341,7 +341,8 @@ function edd_reports_tab_export() {
 										}
 										?>
 									</select>
-									<input type="hidden" name="edd-action" value="payment_export"/>
+									<input type="hidden" name="page" value="edd-export"/>
+									<input type="hidden" name="edd-export" value="payment_export"/>
 									<input type="submit" value="<?php _e( 'Generate CSV', 'edd' ); ?>" class="button-secondary"/>
 								</form>
 							</p>

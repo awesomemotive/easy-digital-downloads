@@ -39,11 +39,22 @@ add_action( 'edd_earnings_export', 'edd_export_earnings' );
  * @return void
  */
 function edd_export_payment_history() {
-	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export-payments.php';
 
-	$payments_export = new EDD_Payments_Export();
+	require_once EDD_PLUGIN_DIR . 'includes/admin/export/class-export-payments.php';
 
-	$payments_export->export();
+	$step   = isset( $_REQUEST['step'] ) ? absint( $_REQUEST['step'] ) : 1;
+	$export = new EDD_Payments_Export( $step );
+
+	$export->month  = isset( $_REQUEST['month'] )   ? absint( $_REQUEST['month'] )                : date( 'n' );
+	$export->year   = isset( $_REQUEST['year']  )   ? absint( $_REQUEST['year']  )                : date( 'Y' );
+	$export->status = isset( $_REQUEST['status']  ) ? sanitize_text_field( $_REQUEST['status']  ) : 'complete';
+
+	if( $export->ready() ) {
+		$export->export();
+	} else {	
+		$export->process_step( $step );
+	}
+
 }
 add_action( 'edd_payment_export', 'edd_export_payment_history' );
 
