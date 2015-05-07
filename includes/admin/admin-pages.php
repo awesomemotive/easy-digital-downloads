@@ -40,7 +40,6 @@ function edd_add_options_link() {
 	$edd_tools_page         = add_submenu_page( 'edit.php?post_type=download', __( 'Easy Digital Download Info and Tools', 'edd' ), __( 'Tools', 'edd' ), 'install_plugins', 'edd-tools', 'edd_tools_page' );
 	$edd_add_ons_page       = add_submenu_page( 'edit.php?post_type=download', __( 'Easy Digital Download Extensions', 'edd' ), __( 'Extensions', 'edd' ), 'install_plugins', 'edd-addons', 'edd_add_ons_page' );
 	$edd_upgrades_screen    = add_submenu_page( null, __( 'EDD Upgrades', 'edd' ), __( 'EDD Upgrades', 'edd' ), 'manage_shop_settings', 'edd-upgrades', 'edd_upgrades_screen' );
-	$edd_export_screen      = add_submenu_page( null, __( 'EDD Export', 'edd' ), __( 'EDD Export', 'edd' ), 'export_shop_reports', 'edd-export', 'edd_export_screen' );
 
 }
 add_action( 'admin_menu', 'edd_add_options_link', 10 );
