@@ -15,6 +15,39 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export.php';
 
+function edd_do_ajax_export() {
+
+	if( ! current_user_can( 'export_shop_reports' ) ) {
+		die( '-1' );
+	}
+
+	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-batch-export.php';
+	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-batch-export-payments.php';
+
+	parse_str( $_POST['form'], $form );
+
+	$_REQUEST = $form = (array) $form;
+	$step     = absint( $_POST['step'] );
+	$type     = $form['edd-action'];
+	$class    = $form['edd-export-class'];
+	$export   = new $class( $step );
+
+	$export->month  = isset( $_REQUEST['month'] )   ? absint( $_REQUEST['month'] )                : date( 'n' );
+	$export->year   = isset( $_REQUEST['year']  )   ? absint( $_REQUEST['year']  )                : date( 'Y' );
+	$export->status = isset( $_REQUEST['status']  ) ? sanitize_text_field( $_REQUEST['status']  ) : 'complete';
+
+	$ret = $export->process_step( $step );
+
+	if( $ret ) {
+		$step += 1;
+		echo json_encode( array( 'step' => $step ) ); exit;
+	} else {
+		$download_url = add_query_arg( array( 'step' => $step, 'edd_action' => $type ), admin_url() );
+		echo json_encode( array( 'step' => 'done', 'url' => $download_url ) ); exit;
+	}
+}
+add_action( 'wp_ajax_edd_do_ajax_export', 'edd_do_ajax_export' );
+
 /**
  * Exports earnings for a specified time period
  * EDD_Earnings_Export class.

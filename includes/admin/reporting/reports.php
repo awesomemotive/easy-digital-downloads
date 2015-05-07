@@ -329,7 +329,7 @@ function edd_reports_tab_export() {
 						<div class="inside">
 							<p><?php _e( 'Download a CSV of all payments recorded.', 'edd' ); ?></p>
 							<p>
-								<form method="get" action="<?php echo esc_url( admin_url( 'index.php' ) ); ?>">
+								<form id="edd-export-payments" class="edd-export-form" method="post">
 									<?php echo EDD()->html->year_dropdown(); ?>
 									<?php echo EDD()->html->month_dropdown(); ?>
 									<select name="status">
@@ -341,9 +341,12 @@ function edd_reports_tab_export() {
 										}
 										?>
 									</select>
-									<input type="hidden" name="page" value="edd-export"/>
-									<input type="hidden" name="edd-export" value="payment_export"/>
-									<input type="submit" value="<?php _e( 'Generate CSV', 'edd' ); ?>" class="button-secondary"/>
+									<input type="hidden" name="edd-export-class" value="EDD_Payments_Export"/>
+									<input type="hidden" name="edd-action" value="payment_export"/>
+									<span>
+										<input type="submit" value="<?php _e( 'Generate CSV', 'edd' ); ?>" class="button-secondary"/>
+										<span class="spinner"></span>
+									</span>
 								</form>
 							</p>
 						</div><!-- .inside -->
