@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Gateways
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -39,13 +39,12 @@ function edd_get_payment_gateways() {
  * Returns a list of all enabled gateways.
  *
  * @since 1.0
+ * @param  bool $sort If true, the default gateway will be first
  * @return array $gateway_list All the available gateways
 */
-function edd_get_enabled_payment_gateways() {
-	global $edd_options;
-
+function edd_get_enabled_payment_gateways( $sort = false ) {
 	$gateways = edd_get_payment_gateways();
-	$enabled  = isset( $edd_options['gateways'] ) ? $edd_options['gateways'] : false;
+	$enabled  = edd_get_option( 'gateways', false );
 
 	$gateway_list = array();
 
@@ -53,6 +52,15 @@ function edd_get_enabled_payment_gateways() {
 		if ( isset( $enabled[ $key ] ) && $enabled[ $key ] == 1 ) {
 			$gateway_list[ $key ] = $gateway;
 		}
+	}
+
+	if ( true === $sort ) {
+		// Reorder our gateways so the default is first
+		$default_gateway_id = edd_get_default_gateway();
+		$default_gateway    = array( $default_gateway_id => $gateway_list[ $default_gateway_id ] );
+		unset( $gateway_list[ $default_gateway_id ] );
+
+		$gateway_list = array_merge( $default_gateway, $gateway_list );
 	}
 
 	return apply_filters( 'edd_enabled_payment_gateways', $gateway_list );
@@ -76,12 +84,12 @@ function edd_is_gateway_active( $gateway ) {
  * Gets the default payment gateway selected from the EDD Settings
  *
  * @since 1.5
- * @global $edd_options Array of all the EDD Options
  * @return string Gateway ID
  */
 function edd_get_default_gateway() {
-	global $edd_options;
-	$default = isset( $edd_options['default_gateway'] ) && edd_is_gateway_active( $edd_options['default_gateway'] ) ? $edd_options['default_gateway'] : 'paypal';
+	$gateway = edd_get_option( 'default_gateway', 'paypal' );
+	$default = edd_is_gateway_active( $gateway ) ? $gateway : 'paypal';
+
 	return apply_filters( 'edd_default_gateway', $default );
 }
 
@@ -160,7 +168,7 @@ function edd_shop_supports_buy_now() {
 	$gateways = edd_get_enabled_payment_gateways();
 	$ret      = false;
 
-	if( $gateways ) {
+	if( ! edd_use_taxes()  && $gateways ) {
 		foreach( $gateways as $gateway_id => $gateway ) {
 			if( edd_gateway_supports_buy_now( $gateway_id ) ) {
 				$ret = true;
@@ -266,6 +274,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 		'post_data'    => array(),
 		'cart_details' => $cart_details,
 		'gateway'      => 'paypal',
+		'buy_now'      => true,
 		'card_info'    => array()
 	);
 
@@ -282,6 +291,9 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
  * @return void
 */
 function edd_send_to_gateway( $gateway, $payment_data ) {
+
+	$payment_data['gateway_nonce'] = wp_create_nonce( 'edd-gateway' );
+
 	// $gateway must match the ID used when registering the gateway
 	do_action( 'edd_gateway_' . $gateway, $payment_data );
 }

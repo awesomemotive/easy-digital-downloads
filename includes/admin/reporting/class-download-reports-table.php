@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
  */
@@ -80,7 +80,7 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 			case 'average_earnings' :
 				return edd_currency_filter( edd_format_amount( $item[ $column_name ] ) );
 			case 'details' :
-				return '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-reports&view=downloads&download-id=' . $item[ 'ID' ] ) . '">' . __( 'View Detailed Report', 'edd' ) . '</a>';
+				return '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-reports&view=downloads&download-id=' . $item['ID'] ) . '">' . __( 'View Detailed Report', 'edd' ) . '</a>';
 			default:
 				return $item[ $column_name ];
 		}

@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Payments
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -48,26 +48,23 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 			// "bundle" or "default"
 			$download_type = edd_get_download_type( $download['id'] );
-			$price_id      = isset( $download['options']['price_id'] ) ? (int) $download['options']['price_id'] : false;
-
+			$price_id      = isset( $download['item_number']['options']['price_id'] ) ? (int) $download['item_number']['options']['price_id'] : false;
 			// Increase earnings and fire actions once per quantity number
 			for( $i = 0; $i < $download['quantity']; $i++ ) {
 
 				// Ensure these actions only run once, ever
 				if( empty( $completed_date ) ) {
 
-					if ( ! edd_is_test_mode() || apply_filters( 'edd_log_test_payment_stats', false ) ) {
-
-						edd_record_sale_in_log( $download['id'], $payment_id, $price_id, $creation_date );
-						edd_increase_purchase_count( $download['id'] );
-						edd_increase_earnings( $download['id'], $download['price'] );
-
-					}
-
+					edd_record_sale_in_log( $download['id'], $payment_id, $price_id, $creation_date );
 					do_action( 'edd_complete_download_purchase', $download['id'], $payment_id, $download_type, $download, $cart_index );
+
 				}
 
 			}
+
+			// Increase the earnings for this download ID
+			edd_increase_earnings( $download['id'], $download['price'] );
+			edd_increase_purchase_count( $download['id'], $download['quantity'] );
 
 		}
 
@@ -78,8 +75,14 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 		delete_transient( md5( 'edd_earnings_todaytoday' ) );
 	}
 
+
 	// Increase the customer's purchase stats
-	EDD()->customers->increment_stats( $customer_id, $amount );
+	$customer = new EDD_Customer( $customer_id );
+	$customer->increase_purchase_count();
+	$customer->increase_value( $amount );
+
+	edd_increase_total_earnings( $amount );
+
 
 	// Check for discount codes and increment their use counts
 	if ( ! empty( $user_info['discount'] ) && $user_info['discount'] !== 'none' ) {
@@ -97,7 +100,6 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 		}
 	}
 
-	edd_increase_total_earnings( $amount );
 
 	// Ensure this action only runs once ever
 	if( empty( $completed_date ) ) {
@@ -167,7 +169,9 @@ function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
 
 	if( $customer_id ) {
 
-		EDD()->customers->decrement_stats( $customer_id, $amount );
+		$customer = new EDD_Customer( $customer_id );
+		$customer->decrease_value( $amount );
+		$customer->decrease_purchase_count();
 
 	}
 
@@ -237,8 +241,7 @@ add_action( 'edd_upgrade_payments', 'edd_update_old_payments_with_totals' );
 function edd_mark_abandoned_orders() {
 	$args = array(
 		'status' => 'pending',
-		'number' => -1,
-		'fields' => 'ids'
+		'number' => -1
 	);
 
 	add_filter( 'posts_where', 'edd_filter_where_older_than_week' );
@@ -249,8 +252,75 @@ function edd_mark_abandoned_orders() {
 
 	if( $payments ) {
 		foreach( $payments as $payment ) {
-			edd_update_payment_status( $payment, 'abandoned' );
+			if( 'pending' === $payment->post_status ) {
+				edd_update_payment_status( $payment->ID, 'abandoned' );
+			}
 		}
 	}
 }
 add_action( 'edd_weekly_scheduled_events', 'edd_mark_abandoned_orders' );
+
+/**
+ * Listens to the updated_postmeta hook for our backwards compatible payment_meta updates, and runs through them
+ *
+ * @since  2.3
+ * @param  int $meta_id    The Meta ID that was updated
+ * @param  int $object_id  The Object ID that was updated (post ID)
+ * @param  string $meta_key   The Meta key that was updated
+ * @param  string|int|float $meta_value The Value being updated
+ * @return bool|int             If successful the number of rows updated, if it fails, false
+ */
+function edd_update_payment_backwards_compat( $meta_id, $object_id, $meta_key, $meta_value ) {
+
+	$meta_keys = array( '_edd_payment_meta', '_edd_payment_tax' );
+
+	if ( ! in_array( $meta_key, $meta_keys ) ) {
+		return;
+	}
+
+	global $wpdb;
+	switch( $meta_key ) {
+
+		case '_edd_payment_meta':
+			$meta_value   = maybe_unserialize( $meta_value );
+
+			if( !isset( $meta_value['tax'] ) ){
+				return;
+			}
+
+			$tax_value    = $meta_value['tax'];
+
+			$data         = array( 'meta_value' => $tax_value );
+			$where        = array( 'post_id'  => $object_id, 'meta_key' => '_edd_payment_tax' );
+			$data_format  = array( '%f' );
+			$where_format = array( '%d', '%s' );
+			break;
+
+		case '_edd_payment_tax':
+			$tax_value    = ! empty( $meta_value ) ? $meta_value : 0;
+			$current_meta = edd_get_payment_meta( $object_id, '_edd_payment_meta', true );
+
+			$current_meta['tax'] = $tax_value;
+			$new_meta            = maybe_serialize( $current_meta );
+
+			$data         = array( 'meta_value' => $new_meta );
+			$where        = array( 'post_id' => $object_id, 'meta_key' => '_edd_payment_meta' );
+			$data_format  = array( '%s' );
+			$where_format = array( '%d', '%s' );
+
+			break;
+
+	}
+
+	$updated = $wpdb->update( $wpdb->postmeta, $data, $where, $data_format, $where_format );
+
+	if ( ! empty( $updated ) ) {
+		// Since we did a direct DB query, clear the postmeta cache.
+		wp_cache_delete( $object_id, 'post_meta' );
+	}
+
+	return $updated;
+
+
+}
+add_action( 'updated_postmeta', 'edd_update_payment_backwards_compat', 10, 4 );

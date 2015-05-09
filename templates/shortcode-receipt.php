@@ -2,9 +2,20 @@
 /**
  * This template is used to display the purchase summary with [edd_receipt]
  */
-global $edd_receipt_args, $edd_options;
+global $edd_receipt_args;
 
 $payment   = get_post( $edd_receipt_args['id'] );
+
+if( empty( $payment ) ) : ?>
+
+	<div class="edd_errors">
+		<p class="edd_error"><?php _e( 'The specified receipt ID appears to be invalid', 'edd' ); ?></p> 
+	</div>
+
+<?php
+return;
+endif;
+
 $meta      = edd_get_payment_meta( $payment->ID );
 $cart      = edd_get_payment_meta_cart_details( $payment->ID, true );
 $user      = edd_get_payment_meta_user_info( $payment->ID );
@@ -67,7 +78,7 @@ $status    = edd_get_payment_status( $payment, true );
 		</tr>
 		<?php endif; ?>
 
-		<?php if ( $edd_receipt_args['discount'] && $user['discount'] != 'none' ) : ?>
+		<?php if ( $edd_receipt_args['discount'] && isset( $user['discount'] ) && $user['discount'] != 'none' ) : ?>
 			<tr>
 				<td><strong><?php _e( 'Discount(s)', 'edd' ); ?>:</strong></td>
 				<td><?php echo $user['discount']; ?></td>
@@ -197,7 +208,7 @@ $status    = edd_get_payment_status( $payment, true );
 								endforeach;
 
 							else :
-								echo '<li>' . __( 'No downloadable files found.', 'edd' ) . '</li>';
+								echo '<li>' . apply_filters( 'edd_receipt_no_files_found_text', __( 'No downloadable files found.', 'edd' ), $item['id'] ) . '</li>';
 							endif; ?>
 						</ul>
 						<?php endif; ?>

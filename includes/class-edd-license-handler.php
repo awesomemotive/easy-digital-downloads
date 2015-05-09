@@ -8,7 +8,8 @@
  * @version 1.1
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! class_exists( 'EDD_License' ) ) :
 
@@ -27,7 +28,6 @@ class EDD_License {
 	/**
 	 * Class constructor
 	 *
-	 * @global  array $edd_options
 	 * @param string  $_file
 	 * @param string  $_item_name
 	 * @param string  $_version
@@ -36,13 +36,11 @@ class EDD_License {
 	 * @param string  $_api_url
 	 */
 	function __construct( $_file, $_item_name, $_version, $_author, $_optname = null, $_api_url = null ) {
-		global $edd_options;
-
 		$this->file           = $_file;
 		$this->item_name      = $_item_name;
 		$this->item_shortname = 'edd_' . preg_replace( '/[^a-zA-Z0-9_\s]/', '', str_replace( ' ', '_', strtolower( $this->item_name ) ) );
 		$this->version        = $_version;
-		$this->license        = isset( $edd_options[ $this->item_shortname . '_license_key' ] ) ? trim( $edd_options[ $this->item_shortname . '_license_key' ] ) : '';
+		$this->license        = trim( edd_get_option( $this->item_shortname . '_license_key', '' ) );
 		$this->author         = $_author;
 		$this->api_url        = is_null( $_api_url ) ? $this->api_url : $_api_url;
 
@@ -52,8 +50,12 @@ class EDD_License {
 		 * handler will automatically pick these up and use those in lieu of the
 		 * user having to reactive their license.
 		 */
-		if ( ! empty( $_optname ) && isset( $edd_options[ $_optname ] ) && empty( $this->license ) ) {
-			$this->license = trim( $edd_options[ $_optname ] );
+		if ( ! empty( $_optname ) ) {
+			$opt = edd_get_option( $_optname, false );
+
+			if( isset( $opt ) && empty( $this->license ) ) {
+				$this->license = trim( $opt );
+			}
 		}
 
 		// Setup hooks
@@ -79,6 +81,7 @@ class EDD_License {
 	 * @return  void
 	 */
 	private function hooks() {
+
 		// Register settings
 		add_filter( 'edd_settings_licenses', array( $this, 'settings' ), 1 );
 
@@ -98,7 +101,6 @@ class EDD_License {
 	 * Auto updater
 	 *
 	 * @access  private
-	 * @global  array $edd_options
 	 * @return  void
 	 */
 	public function auto_updater() {
@@ -155,7 +157,7 @@ class EDD_License {
 			return;
 		}
 
-		if ( ! isset( $_POST['edd_settings'][ $this->item_shortname . '_license_key' ] ) ) {
+		if ( ! isset( $_POST['edd_settings'][ $this->item_shortname . '_license_key'] ) ) {
 			return;
 		}
 
@@ -166,6 +168,12 @@ class EDD_License {
 			}
 		}
 
+		if( ! wp_verify_nonce( $_REQUEST[ $this->item_shortname . '_license_key-nonce'], $this->item_shortname . '_license_key-nonce' ) ) {
+
+			wp_die( __( 'Nonce verification failed', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+
+		}
+
 		if( ! current_user_can( 'manage_shop_settings' ) ) {
 			return;
 		}
@@ -174,7 +182,7 @@ class EDD_License {
 			return;
 		}
 
-		$license = sanitize_text_field( $_POST['edd_settings'][ $this->item_shortname . '_license_key' ] );
+		$license = sanitize_text_field( $_POST['edd_settings'][ $this->item_shortname . '_license_key'] );
 
 		if( empty( $license ) ) {
 			return;
@@ -230,15 +238,21 @@ class EDD_License {
 		if ( ! isset( $_POST['edd_settings'] ) )
 			return;
 
-		if ( ! isset( $_POST['edd_settings'][ $this->item_shortname . '_license_key' ] ) )
+		if ( ! isset( $_POST['edd_settings'][ $this->item_shortname . '_license_key'] ) )
 			return;
+
+		if( ! wp_verify_nonce( $_REQUEST[ $this->item_shortname . '_license_key-nonce'], $this->item_shortname . '_license_key-nonce' ) ) {
+
+			wp_die( __( 'Nonce verification failed', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+
+		}
 
 		if( ! current_user_can( 'manage_shop_settings' ) ) {
 			return;
 		}
 
 		// Run on deactivate button press
-		if ( isset( $_POST[ $this->item_shortname . '_license_key_deactivate' ] ) ) {
+		if ( isset( $_POST[ $this->item_shortname . '_license_key_deactivate'] ) ) {
 
 			// Data to send to the API
 			$api_params = array(

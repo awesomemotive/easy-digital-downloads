@@ -6,7 +6,7 @@
  *
  * @package     EDD
  * @subpackage  Functions/AJAX
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -35,28 +35,68 @@ function edd_is_ajax_enabled() {
  */
 function edd_test_ajax_works() {
 
+	// Check if the Airplane Mode plugin is installed
+	if ( class_exists( 'Airplane_Mode_Core' ) ) {
+
+		global $Airplane_Mode_Core;
+
+		if ( method_exists( $Airplane_Mode_Core, 'enabled' ) ) {
+
+			if ( $Airplane_Mode_Core->enabled() ) {
+				return true;
+			}
+
+		} else {
+
+			if ( $Airplane_Mode_Core->check_status() == 'on' ) {
+				return true;
+			}
+		}
+	}
+
+	add_filter( 'block_local_requests', '__return_false' );
+
+	if ( get_transient( '_edd_ajax_works' ) ) {
+		return true;
+	}
+
 	$params = array(
-		'sslverify'     => false,
-		'timeout'       => 60,
+		'sslverify'  => false,
+		'timeout'    => 30,
+		'body'       => array(
+			'action' => 'edd_test_ajax'
+		)
 	);
 
-	$ajax  = wp_remote_get( add_query_arg( 'action', 'edd_test_ajax', edd_get_ajax_url() ), $params );
+	$ajax  = wp_remote_post( edd_get_ajax_url(), $params );
 	$works = true;
 
-	if( empty( $ajax['response'] ) ) {
+	if ( is_wp_error( $ajax ) ) {
+
 		$works = false;
+
+	} else {
+
+		if( empty( $ajax['response'] ) ) {
+			$works = false;
+		}
+
+		if( empty( $ajax['response']['code'] ) || 200 !== (int) $ajax['response']['code'] ) {
+			$works = false;
+		}
+
+		if( empty( $ajax['response']['message'] ) || 'OK' !== $ajax['response']['message'] ) {
+			$works = false;
+		}
+
+		if( ! isset( $ajax['body'] ) || 0 !== (int) $ajax['body'] ) {
+			$works = false;
+		}
+
 	}
 
-	if( empty( $ajax['response']['code'] ) || 200 !== (int) $ajax['response']['code'] ) {
-		$works = false;
-	}
-
-	if( empty( $ajax['response']['message'] ) || 'OK' !== $ajax['response']['message'] ) {
-		$works = false;
-	}
-
-	if( ! isset( $ajax['body'] ) || 0 !== (int) $ajax['body'] ) {
-		$works = false;
+	if ( $works ) {
+		set_transient( '_edd_ajax_works', '1', DAY_IN_SECONDS );
 	}
 
 	return $works;
@@ -105,9 +145,10 @@ function edd_ajax_remove_from_cart() {
 		edd_remove_from_cart( $_POST['cart_item'] );
 
 		$return = array(
-			'removed'  => 1,
-			'subtotal' => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
-			'total'    => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ), ENT_COMPAT, 'UTF-8' )
+			'removed'       => 1,
+			'subtotal'      => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
+			'total'         => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ), ENT_COMPAT, 'UTF-8' ),
+			'cart_quantity' => html_entity_decode( edd_get_cart_quantity() ),
 		);
 
 		echo json_encode( $return );
@@ -144,13 +185,13 @@ function edd_ajax_add_to_cart() {
 
 			parse_str( $_POST['post_data'], $post_data );
 
-			if( isset( $options[ 'price_id' ] ) && isset( $post_data[ 'edd_download_quantity_' . $options[ 'price_id' ] ] ) ) {
+			if( isset( $options['price_id'] ) && isset( $post_data['edd_download_quantity_' . $options['price_id'] ] ) ) {
 
-				$options['quantity'] = absint( $post_data[ 'edd_download_quantity_' . $options[ 'price_id' ] ] );
+				$options['quantity'] = absint( $post_data['edd_download_quantity_' . $options['price_id'] ] );
 
 			} else {
 
-				$options['quantity'] = $post_data['edd_download_quantity'];
+				$options['quantity'] = isset( $post_data['edd_download_quantity'] ) ? absint( $post_data['edd_download_quantity'] ) : 1;
 
 			}
 
@@ -167,9 +208,10 @@ function edd_ajax_add_to_cart() {
 		}
 
 		$return = array(
-			'subtotal'  => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
-			'total'     => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ), ENT_COMPAT, 'UTF-8' ),
-			'cart_item' => $items
+			'subtotal'      => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
+			'total'         => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ), ENT_COMPAT, 'UTF-8' ),
+			'cart_item'     => $items,
+			'cart_quantity' => html_entity_decode( edd_get_cart_quantity() )
 		);
 
 		echo json_encode( $return );
@@ -204,7 +246,7 @@ add_action( 'wp_ajax_nopriv_edd_get_subtotal', 'edd_ajax_get_subtotal' );
 function edd_ajax_apply_discount() {
 	if ( isset( $_POST['code'] ) ) {
 
-		$discount_code = $_POST['code'];
+		$discount_code = sanitize_text_field( $_POST['code'] );
 
 		$return = array(
 			'msg'  => '',
@@ -222,7 +264,7 @@ function edd_ajax_apply_discount() {
 				'amount'      => $amount,
 				'total_plain' => $total,
 				'total'       => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' ),
-				'code'        => $_POST['code'],
+				'code'        => $discount_code,
 				'html'        => edd_get_cart_discounts_html( $discounts )
 			);
 		} else {
@@ -418,13 +460,42 @@ add_action( 'wp_ajax_nopriv_edd_get_shop_states', 'edd_ajax_get_states_field' );
 function edd_ajax_download_search() {
 	global $wpdb;
 
-	$search  = esc_sql( sanitize_text_field( $_GET['s'] ) );
+	$search   = esc_sql( sanitize_text_field( $_GET['s'] ) );
+	$excludes = ( isset( $_GET['current_id'] ) ? (array) $_GET['current_id'] : array() );
+	$excludes = array_map( 'absint', $excludes );
+	$exclude  = implode( ',', $excludes );
+
 	$results = array();
-	if ( current_user_can( 'edit_products' ) ) {
-		$items = $wpdb->get_results( "SELECT ID,post_title FROM $wpdb->posts WHERE `post_type` = 'download' AND `post_title` LIKE '%$search%' LIMIT 50" );
-	} else {
-		$items = $wpdb->get_results( "SELECT ID,post_title FROM $wpdb->posts WHERE `post_type` = 'download' AND `post_status` = 'publish' AND `post_title` LIKE '%$search%' LIMIT 50" );
+
+	// Setup the SELECT statement
+	$select = "SELECT ID,post_title FROM $wpdb->posts ";
+
+	// Setup the WHERE clause
+	$where = "WHERE `post_type` = 'download' and `post_title` LIKE '%s' ";
+
+	// If we have items to exclude, exclude them
+	if( ! empty( $exclude ) ) {
+		$where .= "AND `ID` NOT IN (%s) ";
 	}
+
+	// If the user can't edit products, limit to just published items
+	if( ! current_user_can( 'edit_products' ) ) {
+		$where .= "AND `post_status` = 'publish' ";
+	}
+
+	// Limit the result sets
+	$limit = "LIMIT 50";
+
+	$sql = $select . $where . $limit;
+
+	if( ! empty( $exclude ) ) {
+		$prepared_statement = $wpdb->prepare( $sql, '%' . $search . '%', $exclude );
+	} else {
+		$prepared_statement = $wpdb->prepare( $sql, '%' . $search . '%' );
+	}
+
+
+	$items = $wpdb->get_results( $prepared_statement );
 
 	if( $items ) {
 
@@ -466,7 +537,15 @@ function edd_ajax_customer_search() {
 	if ( ! current_user_can( 'view_shop_reports' ) ) {
 		$customers = array();
 	} else {
-		$customers = $wpdb->get_results( "SELECT id,name,email FROM {$wpdb->prefix}edd_customers WHERE `name` LIKE '%$search%' OR `email` LIKE '%$search%' LIMIT 50" );
+		$select = "SELECT id, name, email FROM {$wpdb->prefix}edd_customers ";
+		if ( is_numeric( $search ) ) {
+			$where = "WHERE `id` LIKE '%$search%' OR `user_id` LIKE '%$search%' ";
+		} else {
+			$where = "WHERE `name` LIKE '%$search%' OR `email` LIKE '%$search%' ";
+		}
+		$limit = "LIMIT 50";
+
+		$customers = $wpdb->get_results( $select . $where . $limit );
 	}
 
 	if( $customers ) {
@@ -548,17 +627,26 @@ function edd_ajax_search_users() {
 	if( current_user_can( 'manage_shop_settings' ) ) {
 
 		$search_query = trim( $_POST['user_name'] );
+		$exclude      = trim( $_POST['exclude'] );
 
-		$found_users = get_users( array(
-				'number' => 9999,
-				'search' => $search_query . '*'
-			)
+		$get_users_args = array(
+			'number' => 9999,
+			'search' => $search_query . '*'
 		);
+
+		if ( ! empty( $exclude ) ) {
+			$exclude_array = explode( ',', $exclude );
+			$get_users_args['exclude'] = $exclude_array;
+		}
+
+		$get_users_args = apply_filters( 'edd_search_users_args', $get_users_args );
+
+		$found_users = get_users( $get_users_args );
 
 		$user_list = '<ul>';
 		if( $found_users ) {
 			foreach( $found_users as $user ) {
-				$user_list .= '<li><a href="#" data-login="' . esc_attr( $user->user_login ) . '">' . esc_html( $user->user_login ) . '</a></li>';
+				$user_list .= '<li><a href="#" data-userid="' . esc_attr( $user->ID ) . '" data-login="' . esc_attr( $user->user_login ) . '">' . esc_html( $user->user_login ) . '</a></li>';
 			}
 		} else {
 			$user_list .= '<li>' . __( 'No users found', 'edd' ) . '</li>';

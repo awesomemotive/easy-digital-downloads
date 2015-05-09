@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Functions
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -344,3 +344,27 @@ function edd_updated_messages( $messages ) {
 	return $messages;
 }
 add_filter( 'post_updated_messages', 'edd_updated_messages' );
+
+/**
+ * Updated bulk messages
+ *
+ * @since 2.3
+ * @param array $bulk_messages Post updated messages
+ * @param array $bulk_counts Post counts
+ * @return array $bulk_messages New post updated messages
+ */
+function edd_bulk_updated_messages( $bulk_messages, $bulk_counts ) {
+	$singular = edd_get_label_singular();
+	$plural   = edd_get_label_plural();
+
+	$bulk_messages['download'] = array(
+		'updated'   => sprintf( _n( '%1$s %2$s updated.', '%1$s %3$s updated.', $bulk_counts['updated'], 'edd' ), $bulk_counts['updated'], $singular, $plural ),
+		'locked'    => sprintf( _n( '%1$s %2$s not updated, somebody is editing it.', '%1$s %3$s not updated, somebody is editing them.', $bulk_counts['locked'], 'edd' ), $bulk_counts['locked'], $singular, $plural ),
+		'deleted'   => sprintf( _n( '%1$s %2$s permanently deleted.', '%1$s %3$s permanently deleted.', $bulk_counts['deleted'], 'edd' ), $bulk_counts['deleted'], $singular, $plural ),
+		'trashed'   => sprintf( _n( '%1$s %2$s moved to the Trash.', '%1$s %3$s moved to the Trash.', $bulk_counts['trashed'], 'edd' ), $bulk_counts['trashed'], $singular, $plural ),
+		'untrashed' => sprintf( _n( '%1$s %2$s restored from the Trash.', '%1$s %3$s restored from the Trash.', $bulk_counts['untrashed'], 'edd' ), $bulk_counts['untrashed'], $singular, $plural )
+	);
+
+	return $bulk_messages;
+}
+add_filter( 'bulk_post_updated_messages', 'edd_bulk_updated_messages', 10, 2 );
