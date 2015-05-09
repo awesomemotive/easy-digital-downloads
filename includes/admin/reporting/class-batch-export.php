@@ -125,6 +125,10 @@ class EDD_Batch_Export extends EDD_Export {
 		return false;
 	}
 
+	public function get_percentage_complete() {
+		return 100;
+	}
+
 	public function ready() {
 		return ! empty( $_REQUEST['ready'] );
 	}

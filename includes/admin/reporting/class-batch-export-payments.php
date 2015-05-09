@@ -204,4 +204,25 @@ class EDD_Payments_Export extends EDD_Batch_Export {
 		return false;
 
 	}
+
+	public function get_percentage_complete() {
+		
+		$status = $this->status;
+		if( 'any' == $status ) {
+
+			$total = array_sum( (array) edd_count_payments() );
+
+		} else {
+
+			$total = edd_count_payments()->$status;
+			
+		}
+
+
+		$percentage = 100;
+		if( $total > 0 ) {
+			$percentage = absint( ( 30 * $this->step ) / $total ) * 10;
+		}
+		return $percentage;
+	}
 }
