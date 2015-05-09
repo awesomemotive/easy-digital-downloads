@@ -38,12 +38,24 @@ function edd_do_ajax_export() {
 
 	$ret = $export->process_step( $step );
 
+	$percentage = $export->get_percentage_complete();
+
 	if( $ret ) {
+
 		$step += 1;
-		echo json_encode( array( 'step' => $step ) ); exit;
+		echo json_encode( array( 'step' => $step, 'percentage' => $percentage ) ); exit;
+
 	} else {
-		$download_url = add_query_arg( array( 'step' => $step, 'edd_action' => $type ), admin_url() );
+
+		$args = array_merge( $_REQUEST, array(
+			'step'       => $step,
+			'edd_action' => $type
+		) );
+
+		$download_url = add_query_arg( $args, admin_url() );
+
 		echo json_encode( array( 'step' => 'done', 'url' => $download_url ) ); exit;
+
 	}
 }
 add_action( 'wp_ajax_edd_do_ajax_export', 'edd_do_ajax_export' );
