@@ -6,7 +6,7 @@
  *
  * @package     EDD
  * @subpackage  Functions/Compatibility
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -118,3 +118,21 @@ function edd_disable_mandrill_nl2br() {
 	add_filter( 'mandrill_nl2br', '__return_false' );
 }
 add_action( 'edd_email_send_before', 'edd_disable_mandrill_nl2br');
+
+/**
+ * Prevents the Purchase Confirmation screen from being detected as a 404 error in the 404 Redirected plugin
+ *
+ * @since 2.2.3
+ * @return void
+ */
+function edd_disable_404_redirected_redirect() {
+	
+	if( ! defined( 'WBZ404_VERSION' ) ) {
+		return;
+	}
+
+	if( edd_is_success_page() ) {
+		remove_action( 'template_redirect', 'wbz404_process404', 10 );
+	}
+}
+add_action( 'parse_query', 'edd_disable_404_redirected_redirect' );

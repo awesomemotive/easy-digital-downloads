@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Plugins
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.8
  */
@@ -46,9 +46,17 @@ function edd_plugin_row_meta( $input, $file ) {
 	if ( $file != 'easy-digital-downloads/easy-digital-downloads.php' )
 		return $input;
 
+	$edd_link = esc_url( add_query_arg( array(
+			'utm_source'   => 'admin-plugins-page',
+			'utm_medium'   => 'plugin',
+			'utm_campaign' => 'EDDPluginsPage',
+			'utm_content'  => 'plugin-page-link'
+		), 'https://easydigitaldownloads.com/extensions/' )
+	);
+
 	$links = array(
 		'<a href="' . admin_url( 'index.php?page=edd-getting-started' ) . '">' . esc_html__( 'Getting Started', 'edd' ) . '</a>',
-		'<a href="https://easydigitaldownloads.com/extensions/">' . esc_html__( 'Add Ons', 'edd' ) . '</a>',
+		'<a href="' . $edd_link . '">' . esc_html__( 'Extensions', 'edd' ) . '</a>',
 	);
 
 	$input = array_merge( $input, $links );

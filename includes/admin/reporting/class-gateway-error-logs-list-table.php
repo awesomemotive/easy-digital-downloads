@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
@@ -56,7 +56,7 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	 * @access public
 	 * @since 1.4
 	 *
-	 * @param array $item Contains all the data of the discount code
+	 * @param array $item Contains all the data of the log item
 	 * @param string $column_name The name of the column
 	 *
 	 * @return string Column Name
@@ -143,7 +143,7 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	 * @since 1.4
 	 * @return void
 	 */
-	public function bulk_actions() {
+	public function bulk_actions( $which = '' ) {
 		// These aren't really bulk actions but this outputs the markup in the right place
 		edd_log_views();
 	}
@@ -207,7 +207,6 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 		$hidden                = array(); // No hidden columns
 		$sortable              = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-		$current_page          = $this->get_pagenum();
 		$this->items           = $this->get_logs();
 		$total_items           = $edd_logs->get_log_count( 0, 'gateway_error' );
 

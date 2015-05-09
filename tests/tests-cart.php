@@ -12,6 +12,9 @@ class Test_Cart extends WP_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
+		$this->_user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $this->_user_id );
+
 		global $wp_rewrite;
 		$GLOBALS['wp_rewrite']->init();
 		flush_rewrite_rules();
@@ -19,6 +22,11 @@ class Test_Cart extends WP_UnitTestCase {
 		edd_add_rewrite_endpoints($wp_rewrite);
 
 		$this->_rewrite = $wp_rewrite;
+
+		global $current_user;
+
+		$current_user = new WP_User(1);
+		$current_user->set_role('administrator');
 
 		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
 
@@ -50,7 +58,7 @@ class Test_Cart extends WP_UnitTestCase {
 			'edd_price' => '0.00',
 			'_variable_pricing' => 1,
 			'_edd_price_options_mode' => 'on',
-			'edd_variable_prices' => array_values( $_variable_pricing ), 
+			'edd_variable_prices' => array_values( $_variable_pricing ),
 			'edd_download_files' => array_values( $_download_files ),
 			'_edd_download_limit' => 20,
 			'_edd_hide_purchase_link' => 1,
@@ -93,6 +101,27 @@ class Test_Cart extends WP_UnitTestCase {
 			'price_id' => 0
 		);
 		$this->assertEquals( 0, edd_add_to_cart( $this->_post->ID, $options ) );
+	}
+
+	public function test_add_to_cart_multiple_price_ids() {
+
+		edd_empty_cart();
+
+		$options = array(
+			'price_id' => array( 0, 1 )
+		);
+
+		edd_add_to_cart( $this->_post->ID, $options );
+		$this->assertEquals( 2, count( edd_get_cart_contents() ) );
+
+		edd_empty_cart();
+
+		$options = array(
+			'price_id' => '0,1'
+		);
+		edd_add_to_cart( $this->_post->ID, $options );
+		$this->assertEquals( 2, count( edd_get_cart_contents() ) );
+
 	}
 
 	public function test_get_cart_contents() {
@@ -174,7 +203,7 @@ class Test_Cart extends WP_UnitTestCase {
 		);
 
 		$this->assertEquals( $expected, edd_get_cart_content_details() );
-	
+
 		// Now turn on taxes and do it again
 		add_filter( 'edd_use_taxes', '__return_true' );
 		add_filter( 'edd_tax_rate', function() {
@@ -232,6 +261,42 @@ class Test_Cart extends WP_UnitTestCase {
 
 	}
 
+	public function test_get_cart_item_discounted_amount() {
+
+		// Call without any arguements
+		$expected = edd_get_cart_item_discount_amount();
+		$this->assertEquals( 0.00, $expected );
+
+		// Call with an array but missing 'id'
+		$expected = edd_get_cart_item_discount_amount( array( 'foo' => 'bar' ) );
+		$this->assertEquals( 0.00, $expected );
+
+		// Now setup a cart and make sure it works
+		edd_empty_cart();
+
+		$options = array(
+			'price_id' => 0
+		);
+
+		edd_add_to_cart( $this->_post->ID, $options );
+
+		// Now set a discount and test again
+		edd_set_cart_discount( '20OFF' );
+
+		// Test it without a quantity
+		$cart_item_args = array( 'id' => $this->_post->ID );
+		$this->assertEquals( 0.00, edd_get_cart_item_discount_amount( $cart_item_args ) );
+
+		// Test it without an options array on an item with variable pricing to make sure we get 0
+		$cart_item_args = array( 'id' => $this->_post->ID, 'quantity' => 1 );
+		$this->assertEquals( 0.00, edd_get_cart_item_discount_amount( $cart_item_args ) );
+
+		// Now test it with an options array properly set
+		$cart_item_args['options'] = $options;
+		$this->assertEquals( 4, edd_get_cart_item_discount_amount( $cart_item_args ) );
+
+	}
+
 	public function test_cart_quantity() {
 		$this->assertEquals(1, edd_get_cart_quantity());
 	}
@@ -283,11 +348,11 @@ class Test_Cart extends WP_UnitTestCase {
 	}
 
 	public function test_cart_item_price() {
-		$this->assertEquals( '&#036;0.00' , edd_cart_item_price( 0 ) );
+		$this->assertEquals( '&#36;0.00' , edd_cart_item_price( 0 ) );
 	}
 
 	public function test_get_cart_item_price() {
-		$this->assertEquals( '0.00' , edd_get_cart_item_price( 0 ) );
+		$this->assertEquals( false , edd_get_cart_item_price( 0 ) );
 	}
 
 	public function test_remove_from_cart() {
@@ -314,7 +379,6 @@ class Test_Cart extends WP_UnitTestCase {
 
 	public function test_is_cart_saved() {
 
-		global $edd_options;
 
 		// Test for no saved cart
 		$this->assertFalse( edd_is_cart_saved() );
@@ -330,8 +394,8 @@ class Test_Cart extends WP_UnitTestCase {
 			)
 		);
 		update_user_meta( get_current_user_id(), 'edd_saved_cart', $cart );
-		$edd_options['enable_cart_saving'] = '1';
-		update_option( 'edd_settings', $edd_options );
+
+		edd_update_option( 'enable_cart_saving', '1' );
 
 		$this->assertTrue( edd_is_cart_saved() );
 	}

@@ -6,7 +6,7 @@
  *
  * @package     EDD
  * @subpackage  Classes/Fees
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
  */
@@ -58,7 +58,8 @@ class EDD_Fees {
 				'label'  => $label,
 				'id'     => $id,
 				'type'   => $type,
-				'no_tax' => false
+				'no_tax' => false,
+				'download_id' => 0
 			);
 
 		} else {

@@ -15,8 +15,8 @@ class Test_HTML_Elements extends WP_UnitTestCase {
 	}
 
 	public function test_product_dropdown() {
-		$expected = '<select name="products" id="products" class="edd-select " data-placeholder="Select a Download"><option value="'. $this->_post_id .'">Test Download</option></select>';
-		$this->assertEquals( $expected, EDD()->html->product_dropdown() );
+		$expected = '<select name="products" id="products" class="edd-select " data-placeholder="Select a Download">';
+		$this->assertContains( $expected, EDD()->html->product_dropdown() );
 	}
 
 	public function test_discount_dropdown() {
@@ -35,13 +35,41 @@ class Test_HTML_Elements extends WP_UnitTestCase {
 	}
 
 	public function test_category_dropdown() {
-		$expected = '<select name="edd_categories" id="" class="edd-select " data-placeholder=""></select>';
+		$expected = '<select name="edd_categories" id="" class="edd-select " data-placeholder=""><option value="all" selected=\'selected\'>All Categories</option></select>';
 		$this->assertEquals( $expected, EDD()->html->category_dropdown() );
 	}
 
 	public function test_year_dropdown() {
-		$expected = '<select name="year" id="" class="edd-select " data-placeholder=""><option value="2009">2009</option><option value="2010">2010</option><option value="2011">2011</option><option value="2012">2012</option><option value="2013">2013</option><option value="2014" selected=\'selected\'>2014</option></select>';
+		$current_year = date( 'Y' );
+		$expected = '<select name="year" id="" class="edd-select " data-placeholder="">';
+		$i = 5;
+		while ( $i >= 0 ) {
+			$selected  = 0 === $i ? ' selected=\'selected\'' : '';
+			$option_year = $current_year - $i;
+			$expected .= '<option value="' . $option_year . '"' . $selected . '>' . $option_year . '</option>';
+			$i--;
+		}
+		$expected .= '</select>';
 		$this->assertEquals( $expected, EDD()->html->year_dropdown() );
+	}
+
+	public function test_year_dropdown_variable() {
+		$years_before = 5;
+		$years_after  = 5;
+		$current_year = date( 'Y' );
+
+		$start_year    = $current_year - $years_before;
+		$end_year      = $current_year + $years_after;
+
+		$expected = '<select name="year" id="" class="edd-select " data-placeholder="">';
+		while ( $start_year <= $end_year ) {
+			$selected  = $start_year == $current_year ? ' selected=\'selected\'' : '';
+			$expected .= '<option value="' . $start_year . '"' . $selected . '>' . $start_year . '</option>';
+			$start_year++;
+		}
+		$expected .= '</select>';
+		$this->assertEquals( $expected, EDD()->html->year_dropdown( 'year', 0, $years_before, $years_after ) );
+
 	}
 
 	public function test_month_dropdown() {

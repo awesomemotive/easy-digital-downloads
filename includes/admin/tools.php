@@ -6,7 +6,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Tools
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
@@ -81,16 +81,21 @@ function edd_get_tools_tabs() {
  * @return      void
  */
 function edd_tools_banned_emails_display() {
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
 	do_action( 'edd_tools_banned_emails_before' );
 ?>
 	<div class="postbox">
 		<h3><span><?php _e( 'Banned Emails', 'edd' ); ?></span></h3>
 		<div class="inside">
-			<p><?php _e( 'Emails placed in the box below will not be allowed to make purchases.', 'edd' ); ?></p>
+			<p><?php _e( 'Emails placed in the box below will not be allowed to make purchases. To ban an entire domain, enter the domain starting with "@".', 'edd' ); ?></p>
 			<form method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ); ?>">
 				<p>
 					<textarea name="banned_emails" rows="10" class="large-text"><?php echo implode( "\n", edd_get_banned_emails() ); ?></textarea>
-					<span class="description"><?php _e( 'Enter emails to disallow, one per line', 'edd' ); ?></span>
+					<span class="description"><?php _e( 'Enter emails and/or to disallow, one per line', 'edd' ); ?></span>
 				</p>
 				<p>
 					<input type="hidden" name="edd_action" value="save_banned_emails" />
@@ -106,6 +111,38 @@ function edd_tools_banned_emails_display() {
 }
 add_action( 'edd_tools_tab_general', 'edd_tools_banned_emails_display' );
 
+/**
+ * Display the clear upgrades tab
+ *
+ * @since       2.3.5
+ * @return      void
+ */
+function edd_tools_clear_doing_upgrade_display() {
+
+	if( ! current_user_can( 'manage_shop_settings' ) || false === get_option( 'edd_doing_upgrade' ) ) {
+		return;
+	}
+
+	do_action( 'edd_tools_clear_doing_upgrade_before' );
+?>
+	<div class="postbox">
+		<h3><span><?php _e( 'Clear Incomplete Upgrade Notice', 'edd' ); ?></span></h3>
+		<div class="inside">
+			<p><?php _e( 'Sometimes a database upgrade notice may not be cleared after an upgrade is completed due to conflicts with other extensions or other minor issues.', 'edd' ); ?></p>
+			<p><?php _e( 'If you\'re certain these upgrades have been completed, you can clear these upgrade notices by clicking the button below. If you have any questions about this, please contact the Easy Digital Downloads support team and we\'ll be happy to help.', 'edd' ); ?></p>
+			<form method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ); ?>">
+				<p>
+					<input type="hidden" name="edd_action" value="clear_doing_upgrade" />
+					<?php wp_nonce_field( 'edd_clear_upgrades_nonce', 'edd_clear_upgrades_nonce' ); ?>
+					<?php submit_button( __( 'Clear Incomplete Upgrade Notice', 'edd' ), 'secondary', 'submit', false ); ?>
+				</p>
+			</form>
+		</div><!-- .inside -->
+	</div><!-- .postbox -->
+<?php
+	do_action( 'edd_tools_clear_doing_upgrade_after' );
+}
+add_action( 'edd_tools_tab_general', 'edd_tools_clear_doing_upgrade_display' );
 
 /**
  * Display the API Keys
@@ -114,6 +151,11 @@ add_action( 'edd_tools_tab_general', 'edd_tools_banned_emails_display' );
  * @return      void
  */
 function edd_tools_api_keys_display() {
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
 	do_action( 'edd_tools_api_keys_before' );
 
 	require_once EDD_PLUGIN_DIR . 'includes/admin/class-api-keys-table.php';
@@ -157,12 +199,40 @@ function edd_tools_banned_emails_save() {
 
 	// Sanitize the input
 	$emails = array_map( 'trim', explode( "\n", $_POST['banned_emails'] ) );
-	$emails = array_filter( array_map( 'is_email', $emails ) );
+	$emails = array_unique( $emails );
+	$emails = array_map( 'sanitize_text_field', $emails );
+
+	foreach( $emails as $id => $email ) {
+		if( ! is_email( $email ) ) {
+			if( $email[0] != '@' ) {
+				unset( $emails[$id] );
+			}
+		}
+	}
 
 	$edd_options['banned_emails'] = $emails;
 	update_option( 'edd_settings', $edd_options );
 }
 add_action( 'edd_save_banned_emails', 'edd_tools_banned_emails_save' );
+
+/**
+ * Execute upgrade notice clear
+ *
+ * @since       2.3.5
+ * @return      void
+ */
+function edd_tools_clear_upgrade_notice() {
+	if( ! wp_verify_nonce( $_POST['edd_clear_upgrades_nonce'], 'edd_clear_upgrades_nonce' ) ) {
+		return;
+	}
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
+	delete_option( 'edd_doing_upgrade' );
+}
+add_action( 'edd_clear_doing_upgrade', 'edd_tools_clear_upgrade_notice' );
 
 
 /**
@@ -172,6 +242,11 @@ add_action( 'edd_save_banned_emails', 'edd_tools_banned_emails_save' );
  * @return      void
  */
 function edd_tools_import_export_display() {
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
 	do_action( 'edd_tools_import_export_before' );
 ?>
 	<div class="postbox">
@@ -292,6 +367,11 @@ add_action( 'edd_import_settings', 'edd_tools_import_export_process_import' );
  * @return      void
  */
 function edd_tools_sysinfo_display() {
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
 ?>
 	<form action="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-tools&tab=system_info' ) ); ?>" method="post" dir="ltr">
 		<textarea readonly="readonly" onclick="this.focus(); this.select()" id="system-info-textarea" name="edd-sysinfo" title="To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac)."><?php echo edd_tools_sysinfo_get(); ?></textarea>
@@ -311,11 +391,10 @@ add_action( 'edd_tools_tab_system_info', 'edd_tools_sysinfo_display' );
  * @since       2.0
  * @access      public
  * @global      object $wpdb Used to query the database using the WordPress Database API
- * @global      array $edd_options Array of all EDD options
  * @return      string $return A string containing the info to output
  */
 function edd_tools_sysinfo_get() {
-	global $wpdb, $edd_options;
+	global $wpdb;
 
 	if( !class_exists( 'Browser' ) )
 		require_once EDD_PLUGIN_DIR . 'includes/libraries/browser.php';
@@ -409,21 +488,26 @@ function edd_tools_sysinfo_get() {
 	$return .= 'Test Mode:                ' . ( edd_is_test_mode() ? "Enabled\n" : "Disabled\n" );
 	$return .= 'Ajax:                     ' . ( ! edd_is_ajax_disabled() ? "Enabled\n" : "Disabled\n" );
 	$return .= 'Guest Checkout:           ' . ( edd_no_guest_checkout() ? "Disabled\n" : "Enabled\n" );
-	$return .= 'Symlinks:                 ' . ( apply_filters( 'edd_symlink_file_downloads', isset( $edd_options['symlink_file_downloads'] ) ) && function_exists( 'symlink' ) ? "Enabled\n" : "Disabled\n" );
+	$return .= 'Symlinks:                 ' . ( apply_filters( 'edd_symlink_file_downloads', edd_get_option( 'symlink_file_downloads', false ) ) && function_exists( 'symlink' ) ? "Enabled\n" : "Disabled\n" );
 	$return .= 'Download Method:          ' . ucfirst( edd_get_file_download_method() ) . "\n";
 	$return .= 'Currency Code:            ' . edd_get_currency() . "\n";
 	$return .= 'Currency Position:        ' . edd_get_option( 'currency_position', 'before' ) . "\n";
 	$return .= 'Decimal Separator:        ' . edd_get_option( 'decimal_separator', '.' ) . "\n";
 	$return .= 'Thousands Separator:      ' . edd_get_option( 'thousands_separator', ',' ) . "\n";
+	$return .= 'Upgrades Completed:       ' . implode( ',', edd_get_completed_upgrades() ) . "\n";
 
 	$return  = apply_filters( 'edd_sysinfo_after_edd_config', $return );
 
 	// EDD pages
+	$purchase_page = edd_get_option( 'purchase_page', '' );
+	$success_page  = edd_get_option( 'success_page', '' );
+	$failure_page  = edd_get_option( 'failure_page', '' );
+
 	$return .= "\n" . '-- EDD Page Configuration' . "\n\n";
-	$return .= 'Checkout:                 ' . ( !empty( $edd_options['purchase_page'] ) ? "Valid\n" : "Invalid\n" );
-	$return .= 'Checkout Page:            ' . ( !empty( $edd_options['purchase_page'] ) ? get_permalink( $edd_options['purchase_page'] ) . "\n" : "Unset\n" );
-	$return .= 'Success Page:             ' . ( !empty( $edd_options['success_page'] ) ? get_permalink( $edd_options['success_page'] ) . "\n" : "Unset\n" );
-	$return .= 'Failure Page:             ' . ( !empty( $edd_options['failure_page'] ) ? get_permalink( $edd_options['failure_page'] ) . "\n" : "Unset\n" );
+	$return .= 'Checkout:                 ' . ( !empty( $purchase_page ) ? "Valid\n" : "Invalid\n" );
+	$return .= 'Checkout Page:            ' . ( !empty( $purchase_page ) ? get_permalink( $purchase_page ) . "\n" : "Unset\n" );
+	$return .= 'Success Page:             ' . ( !empty( $success_page ) ? get_permalink( $success_page ) . "\n" : "Unset\n" );
+	$return .= 'Failure Page:             ' . ( !empty( $failure_page ) ? get_permalink( $failure_page ) . "\n" : "Unset\n" );
 	$return .= 'Downloads Slug:           ' . ( defined( 'EDD_SLUG' ) ? '/' . EDD_SLUG . "\n" : "/downloads\n" );
 
 	$return  = apply_filters( 'edd_sysinfo_after_edd_pages', $return );
@@ -459,7 +543,7 @@ function edd_tools_sysinfo_get() {
 	$return .= "\n" . '-- EDD Tax Configuration' . "\n\n";
 	$return .= 'Taxes:                    ' . ( edd_use_taxes() ? "Enabled\n" : "Disabled\n" );
 	$return .= 'Tax Rate:                 ' . edd_get_tax_rate() * 100 . "\n";
-	$return .= 'Display On Checkout:      ' . ( !empty( $edd_options['checkout_include_tax'] ) ? "Displayed\n" : "Not Displayed\n" );
+	$return .= 'Display On Checkout:      ' . ( edd_get_option( 'checkout_include_tax', false ) ? "Displayed\n" : "Not Displayed\n" );
 	$return .= 'Prices Include Tax:       ' . ( edd_prices_include_tax() ? "Yes\n" : "No\n" );
 
 	$rates = edd_get_tax_rates();
@@ -602,6 +686,11 @@ function edd_tools_sysinfo_get() {
  * @return      void
  */
 function edd_tools_sysinfo_download() {
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
 	nocache_headers();
 
 	header( 'Content-Type: text/plain' );

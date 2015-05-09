@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Welcome
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4
  */
@@ -176,33 +176,49 @@ class EDD_Welcome {
 			<?php $this->tabs(); ?>
 
 			<div class="changelog">
-				<h3><?php _e( 'New Email Templates', 'edd' );?></h3>
+				<h3><?php _e( 'New Customer Management UI', 'edd' );?></h3>
 
 				<div class="feature-section">
 
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/email-template-21.png'; ?>" class="edd-welcome-screenshots"/>
+					<p><?php _e( 'Version 2.3 introduces a comprehensive customer management interface. Get detailed statistics on your customers, quickly make edits, and leave detailed notes.', 'edd' );?></p>
 
-					<h4><?php _e( 'Simple, Clean, Elegant', 'edd' );?></h4>	
-					<p><?php printf( __( 'The new default email template in version 2.1 is clean, simple, elegant, and so much better than before.', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-settings&tab=misc' ) ); ?></p>
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/customer-ui.png'; ?>" class="edd-welcome-screenshots"/>
 
-					<h4><?php _e( 'Email Template Files', 'edd' );?></h4>
-					<p><?php _e( 'With this new template, we have also introduced an entire new API for interacting with the emails sent through Easy Digital Downloads. Within the <em>edd_templates</em> folder is a new folder called <em>emails</em>. This folder contains all of the template files that control the HTML markup of the emails, meaning you can easily adjust the email templates to look exactly how you want them to look.', 'edd' );?></p>
+					<h4><?php _e( 'Better Customer Details on Payment', 'edd' );?></h4>
+					<p><?php _e( 'The Customer Details section of the View Order Details screen has been updated to make it easier to move payment records between customers. A quick link to the customer\'s overview page has also been added, letting you easily see all purchases made by the customer.', 'edd' );?></p>
+
+					<h4><?php _e( 'Create New Customers Quickly', 'edd' );?></h4>
+					<p><?php _e( 'New customer records can now be created directly from the View Order Details screen, making it easier for you to manage change requests from your customers.', 'edd' );?></p>
+
+					<h4><?php _e( 'More Accessible', 'edd' );?></h4>
+					<p><?php _e( 'Your store\'s customer history has been moved to a dedicated submenu of the Downloads menu, making it significantly easier to locate. No longer is it hidden in an obscure section of the Reports page.', 'edd' );?></p>
 
 				</div>
 			</div>
 
 			<div class="changelog">
-				<h3><?php _e( 'New Customer API', 'edd' );?></h3>
+				<h3><?php _e( 'Signed URLs', 'edd' );?></h3>
 
 				<div class="feature-section">
 
-					<p><?php _e( 'In version 2.1, the underlying API that tracks customer data has been dramatically improved. It is now more efficient, more accurate, and far more powerful.', 'edd' );?></p>
+					<p><?php _e( 'We take security seriously and with Easy Digital Downloads 2.3, we have introduced a better, more secure file download mechanism that keeps your files safe and secure.', 'edd' );?></p>
+					<p><?php _e( 'Download URLs provided to customers have been improved to be shorter and more secure, and now use tokens to verify the URL prior to allowing the download to start.', 'edd' );?></p>
 
-					<h4><?php _e( 'Better Reporting', 'edd' );?></h4>
-					<p><?php _e( 'The new customers API has also allowed us to improve the reporting features around customers. In Downloads > Reports > Customers, you can now easily filter the customers’ table to show you the customers that have made the most purchases or the customers that have spent the most with your store.', 'edd' );?></p>
+				</div>
+			</div>
 
-					<h4><?php _e( 'For Developers', 'edd' );?></h4>
-					<p><?php _e( 'The new API opens up a whole realm of possibilities for extension developers, especially for extensions that integrate with CRMs and other customer / contact tracking systems.', 'edd' );?></p>
+			<div class="changelog">
+				<h3><?php _e( 'Improved Order Details', 'edd' );?></h3>
+
+				<div class="feature-section">
+
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/22-purchased-downloads2.png'; ?>" class="edd-welcome-screenshots"/>
+
+					<h4><?php _e( 'Focus on Purchased Downloads', 'edd' );?></h4>
+					<p><?php _e( 'The Download products your customer has purchased is one of the most important parts of this screen, so we have put it up front and in the spotlight.', 'edd' );?></p>
+
+					<h4><?php _e( 'More Accurate Statistics', 'edd' );?></h4>
+					<p><?php _e( 'Adding or removing Downloads to and from a payment record now properly triggers an update routine to ensure the sales and earnings for the affected products are properly updated.', 'edd' );?></p>
 
 				</div>
 			</div>
@@ -212,29 +228,32 @@ class EDD_Welcome {
 
 				<div class="feature-section col three-col">
 					<div>
-		
-						<h4><?php _e( 'Drag-and-Drop Variable Prices', 'edd' );?></h4>
-						<p><?php _e( 'In version 2.1, we have introduced the ability to reorder variable prices into the exact order you want them displayed on the frontend with a simple drag-and-drop interface.', 'edd' );?></p>
 
-						<h4><?php _e( 'Transaction ID Tracking', 'edd' );?></h4>
-						<p><?php _e( 'A new set of functions have been introduced to allow payment gateways to better track transaction IDs. The transaction IDs, if present, are now prominently displayed on the Viwe Order Details screen.', 'edd' );?></p>
+						<h4><?php _e( 'PolyLang Support', 'edd' );?></h4>
+						<p><?php _e( 'We\'ve improved support for the popular PolyLang Plugin in 2.3 making EDD more accessible in more languages.', 'edd' );?></p>
+
+						<h4><?php _e( 'Customer API', 'edd' );?></h4>
+						<p><?php _e( 'A new EDD_Customer class has been introduced that makes it easy for developers to interact with customer data.', 'edd' );?></p>
+
 					</div>
 
 					<div>
-						<h4><?php _e( 'Better Reporting', 'edd' );?></h4>
-						<p><?php _e( 'We have added a new option to the “Custom” date selection that lets you specify a start day and an end day, along with the month and year, allowing you to get exact numbers for precise date ranges.' ,'edd' );?></p>
 
-						<h4><?php _e( 'More Accurate Estimates', 'edd' );?></h4>
-						<p><?php _e( 'We have improved the calculations for the Estimated monthly earnings and Estimated monthly sales statistics. The estimated values shown are now much, much more accurate and should represent a realistic estimate of how your store is expected to perform for the current month.', 'edd' );?></p>
+						<h4><?php _e( 'Schema Validation', 'edd' );?></h4>
+						<p><?php _e( 'The Schema Markup has been improved and now properly includes prices for both single and multi-price option products.' ,'edd' );?></p>
+
+						<h4><?php _e( 'Buy Now Button Improvements', 'edd' );?></h4>
+						<p><?php _e( 'Buy Now buttons no longer create pending payment records when they are clicked. Buy Now buttons are now automatically deactivated if no supported payment gateway is activated.' ,'edd' );?></p>
+
 					</div>
 
 					<div class="last-feature">
-						<h4><?php _e( 'Integration with WP CLI', 'edd' );?></h4>
-						<p><?php _e( 'Easy Digital Downloads now integrates with the WP Command Line Interface, allowing you to quick view stats, discounts, products, and customer info from the command line.', 'edd' );?></p>
 
-						<h4><?php _e( 'Improved Session Management', 'edd' ); ?></h4>
-						<p><?php _e( 'The session management, for tracking cart details, customer actions, and more, has been dramatically improved in version 2.1. It is now more efficient and far more reliable.', 'edd' );?></p>
+						<h4><?php _e( 'Improved Upgrade Routine API', 'edd' );?></h4>
+						<p><?php _e( 'The upgrade routine has been improved to be more robust and user friendly. It now supports multiple upgrades in a single release, logs which have been completed ,as well as allows incomplete upgrades to be resumed.', 'edd' );?></p>
+
 					</div>
+
 				</div>
 			</div>
 
@@ -517,12 +536,9 @@ class EDD_Welcome {
 	 *
 	 * @access public
 	 * @since 1.4
-	 * @global $edd_options Array of all the EDD Options
 	 * @return void
 	 */
 	public function welcome() {
-		global $edd_options;
-
 		// Bail if no activation redirect
 		if ( ! get_transient( '_edd_activation_redirect' ) )
 			return;
