@@ -30,7 +30,28 @@ class EDD_Payment {
 	 * @access private
 	 * @since 2.4
 	 */
-	private $payment_id;
+	public $ID;
+	public $number;
+	public $key;
+	public $total;
+	public $subtotal;
+	public $tax;
+	public $fees;
+	public $discount;
+	public $discounts = array();
+	public $date;
+	public $completed_date;
+	public $status;
+	public $post_status; // Same as $status but here for backwards compat
+	public $customer_id;
+	public $user_info;
+	public $transaction_id;
+	public $downloads = array();
+	public $ip;
+	public $gateway;
+	public $currency;
+	public $cart_details;
+	public $downloads;
 
 
 	/**
@@ -41,25 +62,59 @@ class EDD_Payment {
 	 * @return mixed void|false
 	 */
 	public function __construct( $payment_id = false ) {
-		// If no payment ID is specified, create a new payment
-		if( ! $payment_id ) {
-			$args = array(
-				'post_title'    => '',
-				'post_status'   => 'pending',
-				'post_type'     => 'edd_payment'
-			);
 
-			$payment_id = wp_insert_post( $args );
+		if( empty( $payment_id ) ) {
+			return false;
 		}
 
-		// Store the payment ID for later use
-		if( $payment_id ) {
-			$this->payment_id = $payment_id;
-        } else {
-            $this->payment_id = 0;
-		}
+		$this->setup_payment( $payment_id );
+
 	}
 
+	/**
+	 * Setup payment properties
+	 *
+	 * @since  2.4
+	 * @param  int $payment_id The payment ID
+	 * @return bool            If the setup was successful or not
+	 */
+	private function setup_payment( $payment_id ) {
+
+		if ( empty( $payment_id ) ) {
+			return false;
+		}
+
+		$payment = get_post( $payment_id );
+
+		if( ! $payment || is_wp_error( $payment ) ) {
+			return false;
+		}
+
+		if( 'edd_payment' !== $payment->post_type ) {
+			return false;
+		}
+
+		$this->ID             = absint( $payment_id );
+		$this->total          = edd_get_payment_amount( $payment_id );
+		$this->subtotal       = edd_get_payment_subtotal( $payment_id );
+		$this->tax            = edd_get_payment_tax( $payment_id );
+		$this->fees           = edd_get_payment_fees( $payment_id );
+		$this->customer_id    = edd_get_payment_customer_id( $payment_id );
+		$this->transaction_id = edd_get_payment_transaction_id( $payment_id );
+		$this->ip             = edd_get_payment_user_ip( $payment_id );
+		$this->date           = $payment->post_date;
+		$this->completed_date = edd_get_payment_completed_date( $payment_id );
+		$this->gateway        = edd_get_payment_gateway( $payment_id );
+		$this->currency       = edd_get_payment_currency_code( $payment_id );
+		$this->key            = edd_get_payment_key( $payment_id );
+		$this->number         = edd_get_payment_number( $payment_id );
+		$this->cart_details   = edd_get_payment_meta( $payment_id );
+		$this->user_info      = edd_get_payment_meta_user_info( $payment_id );
+		$this->downloads      = edd_get_payment_meta_downloads( $payment_id );
+
+		return false;
+
+	}
 
 	/**
 	 * Add a download to a given payment
