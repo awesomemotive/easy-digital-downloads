@@ -236,6 +236,22 @@ function edd_store_discount( $details, $discount_id = null ) {
 
 	}
 
+	if( ! empty( $meta['product_reqs'] ) ) {
+		foreach( $meta['product_reqs'] as $key => $product ) {
+			if( 0 === intval( $key ) ) {
+				unset( $meta['product_reqs'][ $key ] );
+			}
+		}
+	}
+
+	if( ! empty( $meta['excluded_products'] ) ) {
+		foreach( $meta['excluded_products'] as $key => $product ) {
+			if( 0 === intval( $key ) ) {
+				unset( $meta['excluded_products'][ $key ] );
+			}
+		}
+	}
+
 	if ( edd_discount_exists( $discount_id ) && ! empty( $discount_id ) ) {
 
 		// Update an existing discount
