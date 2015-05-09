@@ -8,7 +8,7 @@
  * @subpackage  Classes/Payment
  * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       2.2
+ * @since       2.4
  */
 
 
@@ -19,7 +19,7 @@ if( ! defined( 'ABSPATH' ) ) exit;
 /**
  * EDD_Payment Class
  *
- * @since 2.2
+ * @since 2.4
  */
 class EDD_Payment {
 
@@ -28,7 +28,7 @@ class EDD_Payment {
 	 *
 	 * @var int
 	 * @access private
-	 * @since 2.2
+	 * @since 2.4
 	 */
 	private $payment_id;
 
@@ -36,7 +36,7 @@ class EDD_Payment {
 	/**
 	 * Setup the EDD Payments class
 	 *
-	 * @since 2.2
+	 * @since 2.4
 	 * @param int $payment_id A given payment
 	 * @return mixed void|false
 	 */
@@ -64,7 +64,7 @@ class EDD_Payment {
 	/**
 	 * Add a download to a given payment
 	 *
-	 * @since 2.2
+	 * @since 2.4
 	 * @param int $download_id The download to add
 	 * @param int $args Other arguments to pass to the function
 	 * @return void
@@ -154,7 +154,7 @@ class EDD_Payment {
 	/**
 	 * Add a fee to a given payment
 	 *
-	 * @since 2.2
+	 * @since 2.4
 	 * @param string $label The description of the fee
 	 * @param int $amount The amount of the fee
 	 * @return void
@@ -167,7 +167,7 @@ class EDD_Payment {
 	/**
 	 * Add a discount to a given payment
 	 *
-	 * @since 2.2
+	 * @since 2.4
 	 * @param string $code The discount code to apply
 	 * @return void
 	 */
@@ -179,7 +179,7 @@ class EDD_Payment {
 	/**
 	 * Set or update the total for a payment
 	 *
-	 * @since 2.2
+	 * @since 2.4
 	 * @param int $amount The amount of the payment
 	 * @return void
 	 */
@@ -191,7 +191,7 @@ class EDD_Payment {
 	/**
 	 * Set the tax for a payment
 	 *
-	 * @since 2.2
+	 * @since 2.4
 	 * @param int $amount The amount of the tax
 	 * @return void
 	 */
@@ -203,7 +203,7 @@ class EDD_Payment {
 	/**
 	 * Add a note to a payment
 	 *
-	 * @since 2.2
+	 * @since 2.4
 	 * @param string $note The note to add
 	 * @return void
 	 */
@@ -220,7 +220,7 @@ class EDD_Payment {
 	/**
 	 * Complete processing of the payment
 	 *
-	 * @since 2.2
+	 * @since 2.4
 	 * @return void
 	 */
 	public function complete() {
