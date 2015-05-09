@@ -1166,8 +1166,9 @@ jQuery(document).ready(function ($) {
 				
 				var data = $(this).serialize();
 
-				$(this).find('.spinner').addClass( 'is-active' );
-				
+				//$(this).find('.spinner').addClass( 'is-active' );
+				$(this).append( '<span class="spinner is-active"></span><div class="edd-progress"><div></div></div>' );
+
 				// start the process
 				self.process_step( 1, data, self );
 
@@ -1189,17 +1190,21 @@ jQuery(document).ready(function ($) {
 					
 				},
 				success: function( response ) {
-
+					console.log( response );
 					if( 'done' == response.step ) {
 
 						$('.edd-export-form').find('.spinner').removeClass( 'is-active' );
-
+						
 						window.location = response.url;
 
 					} else {
 
+						$('.edd-progress div').animate({
+							witdth: response.percentage + '%',
+						}, 5000, function() {
+							// Animation complete.
+						});
 						self.process_step( parseInt( response.step ), data, self );
-
 					}
 
 				}
