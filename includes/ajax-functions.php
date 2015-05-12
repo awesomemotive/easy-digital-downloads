@@ -38,17 +38,17 @@ function edd_test_ajax_works() {
 	// Check if the Airplane Mode plugin is installed
 	if ( class_exists( 'Airplane_Mode_Core' ) ) {
 
-		global $Airplane_Mode_Core;
+		$airplane = Airplane_Mode_Core::getInstance();
 
-		if ( method_exists( $Airplane_Mode_Core, 'enabled' ) ) {
+		if ( method_exists( $airplane, 'enabled' ) ) {
 
-			if ( $Airplane_Mode_Core->enabled() ) {
+			if ( $airplane->enabled() ) {
 				return true;
 			}
 
 		} else {
 
-			if ( $Airplane_Mode_Core->check_status() == 'on' ) {
+			if ( $airplane->check_status() == 'on' ) {
 				return true;
 			}
 		}
