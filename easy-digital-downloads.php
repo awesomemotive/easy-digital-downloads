@@ -1,10 +1,10 @@
 <?php
 /**
  * Plugin Name: Easy Digital Downloads
- * Plugin URI: http://easydigitaldownloads.com
+ * Plugin URI: https://easydigitaldownloads.com
  * Description: Serve Digital Downloads Through WordPress
  * Author: Pippin Williamson
- * Author URI: http://pippinsplugins.com
+ * Author URI: https://pippinsplugins.com
  * Version: 2.3.8
  * Text Domain: edd
  * Domain Path: languages
