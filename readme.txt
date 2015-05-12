@@ -9,7 +9,7 @@ Tested up to: 4.2
 
 Stable Tag: 2.3.8
 
-License: GNU Version 2 or Any Later VersionTW
+License: GNU Version 2 or Any Later Version
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
 
