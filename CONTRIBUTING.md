@@ -34,6 +34,6 @@ At this point you're waiting on us to merge your pull request. We'll review all 
 
 # Additional Resources
 * [EDD Developer's API](https://easydigitaldownloads.com/docs/developers-intro-to-easy-digital-downloads/)
-* [General GitHub Documentation](http://help.github.com/)
-* [GitHub Pull Request documentation](http://help.github.com/send-pull-requests/)
-* [PHPUnit Tests Guide](http://phpunit.de/manual/current/en/writing-tests-for-phpunit.html)
+* [General GitHub Documentation](https://help.github.com/)
+* [GitHub Pull Request documentation](https://help.github.com/send-pull-requests/)
+* [PHPUnit Tests Guide](https://phpunit.de/manual/current/en/writing-tests-for-phpunit.html)
