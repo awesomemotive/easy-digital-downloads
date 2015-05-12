@@ -9,7 +9,7 @@ Tested up to: 4.2
 
 Stable Tag: 2.3.8
 
-License: GNU Version 2 or Any Later Version
+License: GNU Version 2 or Any Later VersionTW
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
 
@@ -197,7 +197,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: edd_get_file_download_method called too late during download process
 * Update: Translations Updated
 * Tweak: Improvements to the EDD Extensions page
-* TWeak: Corrections and updates to readme.txt
+* Tweak: Corrections and updates to readme.txt
 
 = 2.3.7, April 20, 2015 =
 
