@@ -39,6 +39,7 @@ function edd_test_ajax_works() {
 	if ( class_exists( 'Airplane_Mode_Core' ) ) {
 
 		global $Airplane_Mode_Core;
+		$Airplane_Mode_Core = new Airplane_Mode_Core::getInstance();
 
 		if ( method_exists( $Airplane_Mode_Core, 'enabled' ) ) {
 
