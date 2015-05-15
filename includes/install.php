@@ -137,6 +137,9 @@ function edd_install() {
 	$roles->add_roles();
 	$roles->add_caps();
 
+	$api = new EDD_API;
+	update_option( 'edd_default_api_version', $api->VERSION );
+
 	// Create the customers database
 	@EDD()->customers->create_table();
 
