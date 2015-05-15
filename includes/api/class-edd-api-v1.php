@@ -19,6 +19,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @since  2.4
  */
-class EDD_API_V1 extends EDD_API_Base {
+class EDD_API_V1 extends EDD_API {
 
 }
