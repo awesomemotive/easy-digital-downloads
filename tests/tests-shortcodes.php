@@ -256,4 +256,15 @@ class Tests_Shortcode extends WP_UnitTestCase {
 		$this->assertInternalType( 'string', edd_profile_editor_shortcode( array() ) );
 		$this->assertContains( '<form id="edd_profile_editor_form" class="edd_form" action="', edd_profile_editor_shortcode( array() ) );
 	}
+
+	public function test_downloads_shortcode_pagination() {
+		$output = edd_downloads_query( array() );
+		$this->assertNotContains( 'id="edd_download_pagination"', $output );
+
+		// Create a second post so we can see pagination
+		$this->factory->post->create( array( 'post_title' => 'Test Download #2', 'post_type' => 'download', 'post_status' => 'publish' ) );
+
+		$output2 = edd_downloads_query( array( 'number' => 1 ) );
+		$this->assertContains( 'id="edd_download_pagination"', $output2 );
+	}
 }
