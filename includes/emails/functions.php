@@ -37,7 +37,7 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	$subject      = apply_filters( 'edd_purchase_subject', wp_strip_all_tags( $subject ), $payment_id );
 	$subject      = edd_do_email_tags( $subject, $payment_id );
 
-	$heading     = edd_get_option( 'purchase_heading', __( 'Purchase Reciept', 'edd' ) );
+	$heading     = edd_get_option( 'purchase_heading', __( 'Purchase Receipt', 'edd' ) );
 	$heading     = apply_filters( 'edd_purchase_heading', $heading, $payment_id, $payment_data );
 
 	$attachments  = apply_filters( 'edd_receipt_attachments', array(), $payment_id, $payment_data );
@@ -78,7 +78,7 @@ function edd_email_test_purchase_receipt() {
 	$subject     = apply_filters( 'edd_purchase_subject', wp_strip_all_tags( $subject ), 0 );
 	$subject     = edd_do_email_tags( $subject, 0 );
 
-	$heading     = edd_get_option( 'purchase_heading', __( 'Purchase Reciept', 'edd' ) );
+	$heading     = edd_get_option( 'purchase_heading', __( 'Purchase Receipt', 'edd' ) );
 	$heading     = apply_filters( 'edd_purchase_heading', $heading, $payment_id, $payment_data );
 
 	$attachments = apply_filters( 'edd_receipt_attachments', array(), 0, array() );
