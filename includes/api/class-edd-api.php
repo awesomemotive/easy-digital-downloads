@@ -1683,6 +1683,10 @@ class EDD_API {
 		return true;
 	}
 
+	public function get_version() {
+		return self::VERSION;
+	}
+
 
 	/**
 	 * Generate and Save API key

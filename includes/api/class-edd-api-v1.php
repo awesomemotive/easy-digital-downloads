@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * EDD_API_V13 Class
  *
- * The base version API class 
+ * The base version API class
  *
  * @since  2.4
  */
