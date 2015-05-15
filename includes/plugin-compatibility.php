@@ -126,7 +126,7 @@ add_action( 'edd_email_send_before', 'edd_disable_mandrill_nl2br');
  * @return void
  */
 function edd_disable_404_redirected_redirect() {
-	
+
 	if( ! defined( 'WBZ404_VERSION' ) ) {
 		return;
 	}
@@ -135,4 +135,4 @@ function edd_disable_404_redirected_redirect() {
 		remove_action( 'template_redirect', 'wbz404_process404', 10 );
 	}
 }
-add_action( 'parse_query', 'edd_disable_404_redirected_redirect' );
+add_action( 'template_redirect', 'edd_disable_404_redirected_redirect', 9 );

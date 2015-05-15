@@ -204,8 +204,9 @@ class Tests_Shortcode extends WP_UnitTestCase {
 	}
 
 	public function test_purchase_collection_shortcode() {
+		$this->go_to( '/' );
 		$this->assertInternalType( 'string', edd_purchase_collection_shortcode( array() ) );
-		$this->assertEquals( '<a href="?edd_action=purchase_collection&taxonomy&terms" class="button blue edd-submit">Purchase All Items</a>', edd_purchase_collection_shortcode( array() ) );
+		$this->assertEquals( '<a href="/?edd_action=purchase_collection&taxonomy&terms" class="button blue edd-submit">Purchase All Items</a>', edd_purchase_collection_shortcode( array() ) );
 	}
 
 	public function test_downloads_query_with_schema() {
