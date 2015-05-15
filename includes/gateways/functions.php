@@ -21,11 +21,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_get_payment_gateways() {
 	// Default, built-in gateways
 	$gateways = array(
-		'amazon' => array(
-			'admin_label'    => __( 'Amazon Payments', 'edd' ),
-			'checkout_label' => __( 'Amazon', 'edd' ),
-			'supports'       => array( 'buy_now' )
-		),
 		'paypal' => array(
 			'admin_label'    => __( 'PayPal Standard', 'edd' ),
 			'checkout_label' => __( 'PayPal', 'edd' ),
