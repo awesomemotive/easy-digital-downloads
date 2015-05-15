@@ -782,6 +782,13 @@ class EDD_API {
 		return $products;
 	}
 
+	/**
+	 * Given a download post object, generate the data for the API output
+	 *
+	 * @since  2.3.9
+	 * @param  object $product_info The Download Post Object
+	 * @return array                Array of post data to return back in the API
+	 */
 	private function get_product_data( $product_info ) {
 
 		$product = array();
