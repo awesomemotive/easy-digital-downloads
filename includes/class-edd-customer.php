@@ -162,6 +162,9 @@ class EDD_Customer {
 	 * Magic __get function to dispatch a call to retrieve a private property
 	 *
 	 * @since 2.3
+	 *
+	 * @param 	string $key Name of the method return to get. Method name without 'get_'.
+	 * @return 	mixed       $this->get_{$key} return when method exists. WP_Error if method doesn't exist.
 	 */
 	public function __get( $key ) {
 
