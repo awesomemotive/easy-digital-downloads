@@ -24,7 +24,7 @@ class Tests_API extends WP_UnitTestCase {
 
 		global $wp_rewrite, $wp_query;
 		$GLOBALS['wp_rewrite']->init();
-		flush_rewrite_rules();
+		flush_rewrite_rules( false );
 
 		$roles = new EDD_Roles;
 		$roles->add_roles();
