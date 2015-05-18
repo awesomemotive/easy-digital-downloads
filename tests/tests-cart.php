@@ -17,7 +17,7 @@ class Test_Cart extends WP_UnitTestCase {
 
 		global $wp_rewrite;
 		$GLOBALS['wp_rewrite']->init();
-		flush_rewrite_rules();
+		flush_rewrite_rules( false );
 
 		edd_add_rewrite_endpoints($wp_rewrite);
 
