@@ -306,6 +306,10 @@ function edd_ajax_update_cart_item_quantity() {
 			'subtotal'    => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
 			'total'       => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' )
 		);
+
+		// Allow for custom cart item quantity handling
+		$return = apply_filters( 'edd_ajax_cart_item_quantity_response', $return );
+
 		echo json_encode($return);
 	}
 	edd_die();
