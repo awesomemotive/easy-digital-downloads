@@ -447,7 +447,7 @@ function edd_v15_upgrades() {
 	update_option( 'edd_settings_taxes', $tax_options );
 
 	// Flush the rewrite rules for the new /edd-api/ end point
-	flush_rewrite_rules();
+	flush_rewrite_rules( false );
 }
 
 /**

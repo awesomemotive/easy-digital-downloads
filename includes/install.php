@@ -41,7 +41,7 @@ function edd_install() {
 	edd_setup_download_taxonomies();
 
 	// Clear the permalinks
-	flush_rewrite_rules();
+	flush_rewrite_rules( false );
 
 	// Add Upgraded From Option
 	$current_version = get_option( 'edd_version' );
