@@ -95,7 +95,7 @@ function edd_edit_customer( $args ) {
 
 	// Sanitize the inputs
 	$customer_data            = array();
-	$customer_data['name']    = $customer_info['name'];
+	$customer_data['name']    = strip_tags( stripslashes( $customer_info['name'] ) );
 	$customer_data['email']   = $customer_info['email'];
 	$customer_data['user_id'] = $customer_info['user_id'];
 
