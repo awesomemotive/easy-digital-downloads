@@ -13,6 +13,13 @@
 a.edd-delete { color: #a00; }
 a.edd-delete:hover { color: #f00; }
 
+
+/* General Settings Styles
+-------------------------------------------------------------- */
+.download_page_edd-settings .form-table label { font-size: 13px; color: #aaa; font-style:italic; cursor:default; margin:5px 0; }
+.download_page_edd-settings .form-table select +  label, .download_page_edd-settings .form-table input.regular-text + label, .download_page_edd-settings .form-table input.small-text + label { display:block; }
+.download_page_edd-settings .field-section-title { font-style: italic; color: #aaa;}
+
 /* =Add Ons Styles
 -------------------------------------------------------------- */
 .edd-tab-span { float: right; bottom: 15px; position: relative; }
