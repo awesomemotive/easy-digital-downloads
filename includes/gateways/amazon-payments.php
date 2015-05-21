@@ -79,7 +79,7 @@ final class EDD_Amazon_Payments {
 	private function actions() {
 		add_action( 'wp_enqueue_scripts', array( $this, 'print_client' ), 10 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ), 11 );
-		add_action( 'edd_before_cc_fields', array( $this, 'capture_oauth' ) );
+		add_action( 'wp_head', array( $this, 'capture_oauth' ) );
 		add_action( 'edd_amazon_cc_form', array( $this, 'credit_card_form' ) );
 	}
 
@@ -263,23 +263,20 @@ final class EDD_Amazon_Payments {
 			return;
 		}
 
-		$redirect = esc_url_raw( remove_query_arg( array( 'access_token', 'state' ), $this->get_amazon_checkout_redirect() ) );
 		?>
-		<div id="amazon-root"></div>
 
 		<script type='text/javascript'>
-		function getURLParameter(name, source) {
-			return decodeURIComponent((new RegExp('[?|&|#]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(source)||[,''])[1].replace(/\+/g, '%20'))||null;
-		}
 
-		var accessToken = getURLParameter('access_token', location.search);
+			function getURLParameter(name, source) {
+			return decodeURIComponent((new RegExp('[?|&|#]' + name + '=' +
+			'([^&;]+?)(&|#|;|$)').exec(source)||[,""])[1].replace(/\+/g,'%20'))||null; }
+			var accessToken = getURLParameter("access_token", location.hash);
+			if (typeof accessToken === 'string' && accessToken.match(/^Atza/)) {
+			document.cookie = "amazon_Login_accessToken=" + accessToken + ";secure";}
+			window.onAmazonLoginReady = function() {
+			amazon.Login.setClientId(edd_amazon.clientId));
+			amazon.Login.setUseCookie(true);  };
 
-		if (typeof accessToken === 'string' && accessToken.match(/^Atza/)) {
-			var d = new Date();
-			d.setTime(d.getTime() + 3600);
-			var expires = "expires="+d.toUTCString();
-			document.cookie = 'amazon_Login_accessToken=' + accessToken + '; path=/;';
-		}
 		</script>
 
 		<?php
