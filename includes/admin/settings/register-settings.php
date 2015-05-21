@@ -276,7 +276,7 @@ function edd_get_registered_settings() {
 				),
 				'currency_settings' => array(
 					'id' => 'currency_settings',
-					'name' => '<strong>' . __( 'Currency Settings', 'edd' ) . '</strong>',
+					'name' => '<span class="field-section-title">' . __( 'Currency Settings', 'edd' ) . '</span>',
 					'desc' => __( 'Configure the currency options', 'edd' ),
 					'type' => 'header'
 				),
@@ -316,7 +316,7 @@ function edd_get_registered_settings() {
 				),
 				'api_settings' => array(
 					'id' => 'api_settings',
-					'name' => '<strong>' . __( 'API Settings', 'edd' ) . '</strong>',
+					'name' => '<span class="field-section-title">' . __( 'API Settings', 'edd' ) . '</span>',
 					'desc' => '',
 					'type' => 'header'
 				),
@@ -328,7 +328,7 @@ function edd_get_registered_settings() {
 				),
 				'tracking_settings' => array(
 					'id' => 'tracking_settings',
-					'name' => '<strong>' . __( 'Tracking Settings', 'edd' ) . '</strong>',
+					'name' => '<span class="field-section-title">' . __( 'Tracking Settings', 'edd' ) . '</span>',
 					'desc' => '',
 					'type' => 'header'
 				),
@@ -379,7 +379,7 @@ function edd_get_registered_settings() {
 				),
 				'paypal' => array(
 					'id' => 'paypal',
-					'name' => '<strong>' . __( 'PayPal Settings', 'edd' ) . '</strong>',
+					'name' => '<span class="field-section-title">' . __( 'PayPal Settings', 'edd' ) . '</span>',
 					'desc' => __( 'Configure the PayPal settings', 'edd' ),
 					'type' => 'header'
 				),
@@ -457,7 +457,7 @@ function edd_get_registered_settings() {
 				),
 				'sale_notification_header' => array(
 					'id' => 'sale_notification_header',
-					'name' => '<strong>' . __('New Sale Notifications', 'edd') . '</strong>',
+					'name' => '<span class="field-section-title">' . __('New Sale Notifications', 'edd') . '</span>',
 					'desc' => __('Configure new sale notification emails', 'edd'),
 					'type' => 'header'
 				),
@@ -501,7 +501,7 @@ function edd_get_registered_settings() {
 				),
 				'button_header' => array(
 					'id' => 'button_header',
-					'name' => '<strong>' . __( 'Buttons', 'edd' ) . '</strong>',
+					'name' => '<span class="field-section-title">' . __( 'Buttons', 'edd' ) . '</span>',
 					'desc' => __( 'Options for add to cart and purchase buttons', 'edd' ),
 					'type' => 'header'
 				),
@@ -532,7 +532,7 @@ function edd_get_registered_settings() {
 				),
 				'tax_rates' => array(
 					'id' => 'tax_rates',
-					'name' => '<strong>' . __( 'Tax Rates', 'edd' ) . '</strong>',
+					'name' => '<span class="field-section-title">' . __( 'Tax Rates', 'edd' ) . '</span>',
 					'desc' => __( 'Enter tax rates for specific regions.', 'edd' ),
 					'type' => 'tax_rates'
 				),
@@ -641,7 +641,7 @@ function edd_get_registered_settings() {
 				),
 				'field_downloads' => array(
 					'id' => 'field_downloads',
-					'name' => '<strong>' . __( 'File Downloads', 'edd' ) . '</strong>',
+					'name' => '<span class="field-section-title">' . __( 'File Downloads', 'edd' ) . '</span>',
 					'desc' => '',
 					'type' => 'header'
 				),
@@ -685,7 +685,7 @@ function edd_get_registered_settings() {
 				),
 				'accounting_settings' => array(
 					'id' => 'accounting_settings',
-					'name' => '<strong>' . __( 'Accounting Settings', 'edd' ) . '</strong>',
+					'name' => '<span class="field-section-title">' . __( 'Accounting Settings', 'edd' ) . '</span>',
 					'desc' => '',
 					'type' => 'header'
 				),
@@ -723,7 +723,7 @@ function edd_get_registered_settings() {
 				),
 				'terms' => array(
 					'id' => 'terms',
-					'name' => '<strong>' . __( 'Terms of Agreement', 'edd' ) . '</strong>',
+					'name' => '<span class="field-section-title">' . __( 'Terms of Agreement', 'edd' ) . '</span>',
 					'desc' => '',
 					'type' => 'header'
 				),
