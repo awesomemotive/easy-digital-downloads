@@ -164,7 +164,7 @@ function edd_get_purchase_link( $args = array() ) {
 ?>
 	<form id="<?php echo $form_id; ?>" class="edd_download_purchase_form edd_purchase_<?php echo absint( $download->ID ); ?>" method="post">
 
-		<?php do_action( 'edd_purchase_link_top', $download->ID, $args ); ?>
+		<?php do_action( 'edd_purchase_link_top', $download->ID, $args, $price ); ?>
 
 		<div class="edd_purchase_submit_wrapper">
 			<?php
