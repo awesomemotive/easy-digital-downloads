@@ -163,7 +163,7 @@ function edd_get_purchase_link( $args = array() ) {
 ?>
 	<form id="<?php echo $form_id; ?>" class="edd_download_purchase_form edd_purchase_<?php echo absint( $download->ID ); ?>" method="post">
 
-		<?php do_action( 'edd_purchase_link_top', $download->ID, $args ); ?>
+		<?php do_action( 'edd_purchase_link_top', $download->ID, $args, $price ); ?>
 
 		<div class="edd_purchase_submit_wrapper">
 			<?php
@@ -210,7 +210,7 @@ function edd_get_purchase_link( $args = array() ) {
 			<input type="hidden" name="edd_action" class="edd_action_input" value="add_to_cart">
 		<?php } ?>
 
-		<?php do_action( 'edd_purchase_link_end', $download->ID, $args ); ?>
+		<?php do_action( 'edd_purchase_link_end', $download->ID, $args, $price ); ?>
 
 	</form><!--end #<?php echo esc_attr( $form_id ); ?>-->
 <?php
