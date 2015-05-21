@@ -345,6 +345,14 @@ jQuery(document).ready(function ($) {
 
 			// Remove a download from a purchase
 			$('#edd-purchased-files').on('click', '.edd-order-remove-download', function() {
+
+				var count = $('body').find( '#edd-purchased-files > .row' ).length;
+
+				if ( count === 1 ) {
+					alert( edd_vars.one_download_min );
+					return false;
+				}
+
 				if( confirm( edd_vars.delete_payment_download ) ) {
 					var key = $(this).data('key');
 
