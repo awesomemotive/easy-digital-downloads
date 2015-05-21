@@ -227,7 +227,7 @@ final class EDD_Amazon_Payments {
 		if ( ! empty( $base_url ) ) {
 			$url = $base_url . ( $test_mode ? 'sandbox/' : '' ) . 'js/Widgets.js?sellerId=' . $seller_id;
 
-			wp_enqueue_script( 'edd-amazon-widgets', $url, array( 'jquery' ), EDD_VERSION, false );
+			wp_enqueue_script( 'edd-amazon-widgets', $url, array( 'jquery' ), null, false );
 			wp_localize_script( 'edd-amazon-widgets', 'edd_amazon', apply_filters( 'edd_amazon_checkout_vars', array(
 				'sellerId'    => $seller_id,
 				'clientId'    => $client_id,
