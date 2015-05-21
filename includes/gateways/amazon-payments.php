@@ -77,8 +77,9 @@ final class EDD_Amazon_Payments {
 	}
 
 	private function actions() {
+		add_action( 'wp_enqueue_scripts', array( $this, 'print_client' ), 10 );
+		add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ), 11 );
 		add_action( 'edd_before_cc_fields', array( $this, 'capture_oauth' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'scripts' ) );
 		add_action( 'edd_amazon_cc_form', array( $this, 'credit_card_form' ) );
 	}
 
@@ -180,21 +181,7 @@ final class EDD_Amazon_Payments {
 
 	}
 
-	public function scripts() {
-		if ( ! edd_is_checkout() ) {
-			return;
-		}
-
-		?>
-		<script type='text/javascript'>
-			window.onAmazonLoginReady = function() {
-				amazon.Login.setClientId('<?php echo edd_get_option( 'amazon_client_id', '' ); ?>');
-			};
-		</script>
-		<?php
-	}
-
-	public function widget_script() {
+	public function load_scripts() {
 
 		if ( ! edd_is_checkout() ) {
 			return;
@@ -202,7 +189,27 @@ final class EDD_Amazon_Payments {
 
 		$test_mode = edd_is_test_mode();
 		$seller_id = edd_get_option( 'amazon_seller_id', '' );
+		$client_id = edd_get_option( 'amazon_client_id', '' );
 
+		$default_amazon_scope = array(
+			'profile',
+			'postal_code',
+			'payments:widget',
+		);
+
+		if ( edd_use_taxes() ) {
+			$default_amazon_scope[] = 'payments:shipping_address';
+		}
+
+		$default_amazon_button_settings = array(
+			'type'  => 'PwA',
+			'color' => 'Gold',
+			'size'  => 'medium',
+			'scope' => implode( ' ', $default_amazon_scope ),
+			'popup' => true,
+		);
+
+		$amazon_button_settings = apply_filters( 'edd_amazon_button_settings', $default_amazon_button_settings );
 		$base_url = '';
 
 		switch ( edd_get_shop_country() ) {
@@ -220,10 +227,30 @@ final class EDD_Amazon_Payments {
 		if ( ! empty( $base_url ) ) {
 			$url = $base_url . ( $test_mode ? 'sandbox/' : '' ) . 'js/Widgets.js?sellerId=' . $seller_id;
 
-			wp_register_script( 'edd-amazon-widgets', $url, array( 'jquery' ), EDD_VERSION, false );
-			wp_enqueue_script( 'edd-amazon-widgets' );
+			wp_enqueue_script( 'edd-amazon-widgets', $url, array( 'jquery' ), EDD_VERSION, false );
+			wp_localize_script( 'edd-amazon-widgets', 'edd_amazon', apply_filters( 'edd_amazon_checkout_vars', array(
+				'sellerId'    => $seller_id,
+				'clientId'    => $client_id,
+				'buttonType'  => $amazon_button_settings['type'],
+				'buttonColor' => $amazon_button_settings['color'],
+				'buttonSize'  => $amazon_button_settings['size'],
+				'scope'       => $amazon_button_settings['scope'],
+				'popup'       => $amazon_button_settings['popup'],
+				'redirectUri' => $this->get_amazon_checkout_redirect(),
+			) ) );
+
 		}
 
+	}
+
+	public function print_client() {
+		?>
+		<script>
+			window.onAmazonLoginReady = function() {
+				amazon.Login.setClientId(edd_amazon.clientId);
+			};
+		</script>
+		<?php
 	}
 
 	public function capture_oauth() {
@@ -236,75 +263,52 @@ final class EDD_Amazon_Payments {
 			return;
 		}
 
-		$redirect = esc_url_raw( remove_query_arg( 'state', $this->get_amazon_checkout_redirect() ) );
+		$redirect = esc_url_raw( remove_query_arg( array( 'access_token', 'state' ), $this->get_amazon_checkout_redirect() ) );
 		?>
 		<div id="amazon-root"></div>
 
 		<script type='text/javascript'>
 		function getURLParameter(name, source) {
-			return decodeURIComponent((new RegExp('[?|&|#]' + name + '=' +
-							'([^&;]+?)(&|#|;|$)').exec(source)||[,''])[1].replace(/\+/g,
-						'%20'))||null;}
-		var accessToken = getURLParameter('access_token', location.hash);
+			return decodeURIComponent((new RegExp('[?|&|#]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(source)||[,''])[1].replace(/\+/g, '%20'))||null;
+		}
+
+		var accessToken = getURLParameter('access_token', location.search);
+
 		if (typeof accessToken === 'string' && accessToken.match(/^Atza/)) {
 			var d = new Date();
 			d.setTime(d.getTime() + 3600);
 			var expires = "expires="+d.toUTCString();
-			document.cookie = 'edd_amazon_access_key=' + accessToken + '; path=/; ' + expires;
-			window.location.replace('<?php echo $redirect; ?>');
+			document.cookie = 'amazon_Login_accessToken=' + accessToken + '; path=/;';
 		}
 		</script>
 
 		<?php
-		wp_die();
-
 	}
 
 
 	public function credit_card_form() {
-
-		$default_amazon_scope = array(
-			'profile',
-			'postal_code',
-			'payments:widget',
-		);
-
-		if ( edd_use_taxes() ) {
-			$default_amazon_scope[] = 'payments:shipping_address';
-		}
-
-		$default_amazon_button_settings = array(
-			'type'  => 'PwA',
-			'color' => 'Gold',
-			'size'  => 'medium',
-			'scope' => implode( ' ', $default_amazon_scope ),
-			'popup' => false,
-		);
-
-		$amazon_button_settings = apply_filters( 'edd_amazon_button_settings', $default_amazon_button_settings );
-
 		ob_start(); ?>
 
 		<?php do_action( 'edd_before_cc_fields' ); ?>
 
 		<fieldset id="edd_cc_fields" class="edd-amazon-fields">
 
-		<?php if ( ! isset( $_COOKIE['edd_amazon_access_key'] ) ) : ?>
+		<?php if ( ! isset( $_COOKIE['amazon_Login_accessToken'] ) ) : ?>
 			<div id="edd-amazon-pay-button"></div>
 			<script type="text/javascript">
 				var authRequest;
-				OffAmazonPayments.Button('edd-amazon-pay-button', '<?php echo edd_get_option( 'amazon_seller_id', '' ); ?>', {
-					type:  '<?php echo $amazon_button_settings['type']; ?>',
-					color: '<?php echo $amazon_button_settings['color']; ?>',
-					size:  '<?php echo $amazon_button_settings['size']; ?>',
+				OffAmazonPayments.Button('edd-amazon-pay-button', edd_amazon.sellerId, {
+					type:  edd_amazon.buttonType,
+					color: edd_amazon.buttonColor,
+					size:  edd_amazon.buttonSize,
 
 					authorization: function() {
 						loginOptions = {
-							scope: '<?php echo $amazon_button_settings['scope']; ?>',
-							popup:  <?php echo $amazon_button_settings['popup'] ? 'true' : 'false'; ?>,
+							scope: edd_amazon.scope,
+							popup: edd_amazon.popup
 						};
 
-						authRequest = amazon.Login.authorize (loginOptions, '<?php echo $this->get_amazon_checkout_redirect(); ?>' );
+						authRequest = amazon.Login.authorize (loginOptions,  edd_amazon.redirectUri);
 					}, onError: function(error) {
 						// your error handling code
 					}
@@ -318,7 +322,7 @@ final class EDD_Amazon_Payments {
 			<div id="walletWidgetDiv"></div>
 			<script>
 			  new OffAmazonPayments.Widgets.Wallet({
-				sellerId: '<?php echo edd_get_option( 'amazon_seller_id', '' ); ?>',
+				sellerId: edd_amazon.sellerId,
 				design: {
 				  size: {width:'400px', height:'260px'}
 				},
