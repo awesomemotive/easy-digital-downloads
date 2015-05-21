@@ -274,7 +274,7 @@ final class EDD_Amazon_Payments {
 			if (typeof accessToken === 'string' && accessToken.match(/^Atza/)) {
 			document.cookie = "amazon_Login_accessToken=" + accessToken + ";secure";}
 			window.onAmazonLoginReady = function() {
-			amazon.Login.setClientId(edd_amazon.clientId));
+			amazon.Login.setClientId(edd_amazon.clientId);
 			amazon.Login.setUseCookie(true);  };
 
 		</script>
