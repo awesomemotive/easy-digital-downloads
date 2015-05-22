@@ -403,9 +403,9 @@ function edd_ajax_recalculate_taxes() {
 	edd_checkout_cart();
 	$cart     = ob_get_clean();
 	$response = array(
-		'html'        => $cart,
-		'total'       => html_entity_decode( edd_cart_total( false ), ENT_COMPAT, 'UTF-8' ),
-		'total_plain' => edd_get_cart_total(),
+		'html'      => $cart,
+		'total'     => html_entity_decode( edd_cart_total( false ), ENT_COMPAT, 'UTF-8' ),
+		'total_raw' => edd_get_cart_total(),
 	);
 
 	echo json_encode( $response );
