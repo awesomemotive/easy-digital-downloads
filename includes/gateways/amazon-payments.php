@@ -97,6 +97,7 @@ final class EDD_Amazon_Payments {
 	private function setup_client() {
 		$config = array(
 			'merchant_id' => edd_get_option( 'amazon_seller_id', '' ),
+			'client_id'   => edd_get_option( 'amazon_client_id', '' ),
 			'access_key'  => edd_get_option( 'amazon_mws_access_key', '' ),
 			'secret_key'  => edd_get_option( 'amazon_mws_secret_key', '' ),
 			'region'      => edd_get_shop_country(),
@@ -267,10 +268,39 @@ final class EDD_Amazon_Payments {
 			return;
 		}
 
-		$token = $_GET['access_token'];
+		$profile = $this->get_client()->getUserInfo( $_GET['access_token'] );
+		
+		if( is_user_logged_in() ) {
 
-		var_dump( $this->get_client()->getUserInfo( $token ) );
-		exit;
+			// Do something, probably with address
+
+		} else {
+
+			$user = get_user_by( 'email', $profile['email'] );
+
+			if( $user ) {
+
+				edd_log_user_in( $user->ID, $user->user_login, '' );
+
+			} else {
+
+				$args = array(
+					'user_email'   => $profile['email'],
+					'user_login'   => $profile['email'],
+					'display_name' => $profile['name'],
+					'user_pass'    => wp_generate_password( 20 )
+				);
+
+				$user_id = wp_insert_user( $args );
+
+				edd_log_user_in( $user_id, $args['user_login'], $args['user_pass'] );
+			}
+
+		}
+
+		EDD()->session->set( 'amazon_access_token', $_GET['access_token'] );
+
+		wp_redirect( edd_get_checkout_uri( array( 'payment-method' => 'amazon', 'state' => 'authorized' ) ) ); exit;
 
 	}
 
@@ -282,7 +312,7 @@ final class EDD_Amazon_Payments {
 
 		<fieldset id="edd_cc_fields" class="edd-amazon-fields">
 
-			<?php if ( isset( $_GET['state'] ) && 'return_auth' === $_GET['state'] ) : ?>
+			<?php if ( EDD()->session->get( 'amazon_access_token' ) ) : ?>
 
 				<style type="text/css">
 					#walletWidgetDiv{width: 400px; height: 228px;}
