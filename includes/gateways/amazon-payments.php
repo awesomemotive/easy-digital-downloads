@@ -324,8 +324,38 @@ final class EDD_Amazon_Payments {
 
 				<style type="text/css">
 					#walletWidgetDiv{width: 400px; height: 228px;}
+					#addressBookWidgetDiv{width: 400px; height: 228px;}
 				</style>
 
+				<div id="addressBookWidgetDiv">
+				</div> 
+
+				<script>
+				new OffAmazonPayments.Widgets.AddressBook({
+				  sellerId: 'YOUR_SELLER_ID_HERE',
+				  onOrderReferenceCreate: function(orderReference) {
+				    orderReference.getAmazonOrderReferenceId();
+				  },
+				  onAddressSelect: function(orderReference) {
+				    // Replace the following code with the action that you want to perform 
+				    // after the address is selected.
+				    // The amazonOrderReferenceId can be used to retrieve 
+				    // the address details by calling the GetOrderReferenceDetails
+				    // operation. If rendering the AddressBook and Wallet widgets on the
+				    // same page, you should wait for this event before you render the
+				    // Wallet widget for the first time.
+				    // The Wallet widget will re-render itself on all subsequent 
+				    // onAddressSelect events, without any action from you. It is not 
+				    // recommended that you explicitly refresh it.
+				  },
+				  design: {
+				    designMode: 'responsive'
+				  },
+				  onError: function(error) {
+				    // your error handling code
+				  }
+				}).bind("addressBookWidgetDiv");
+				</script>
 				<div id="walletWidgetDiv"></div>
 				<script>
 				  new OffAmazonPayments.Widgets.Wallet({
@@ -334,7 +364,9 @@ final class EDD_Amazon_Payments {
 					  size: {width:'400px', height:'260px'}
 					},
 					onPaymentSelect: function(orderReference) {
-					  // Display your custom complete purchase button
+					  	amazonOrderReferenceId = orderReference.getAmazonOrderReferenceId();
+						console.log( orderReference.getAmazonOrderReferenceId() );
+					  	// Display your custom complete purchase button
 					},
 					onError: function(error) {
 					  // Write your custom error handling
