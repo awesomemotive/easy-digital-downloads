@@ -268,39 +268,47 @@ final class EDD_Amazon_Payments {
 			return;
 		}
 
-		$profile = $this->get_client()->getUserInfo( $_GET['access_token'] );
-		
-		if( is_user_logged_in() ) {
+		try {
 
-			// Do something, probably with address
+			$profile = $this->get_client()->getUserInfo( $_GET['access_token'] );
+			
+			if( is_user_logged_in() ) {
 
-		} else {
-
-			$user = get_user_by( 'email', $profile['email'] );
-
-			if( $user ) {
-
-				edd_log_user_in( $user->ID, $user->user_login, '' );
+				// Do something, probably with address
 
 			} else {
 
-				$args = array(
-					'user_email'   => $profile['email'],
-					'user_login'   => $profile['email'],
-					'display_name' => $profile['name'],
-					'user_pass'    => wp_generate_password( 20 )
-				);
+				$user = get_user_by( 'email', $profile['email'] );
 
-				$user_id = wp_insert_user( $args );
+				if( $user ) {
 
-				edd_log_user_in( $user_id, $args['user_login'], $args['user_pass'] );
+					edd_log_user_in( $user->ID, $user->user_login, '' );
+
+				} else {
+
+					$args = array(
+						'user_email'   => $profile['email'],
+						'user_login'   => $profile['email'],
+						'display_name' => $profile['name'],
+						'user_pass'    => wp_generate_password( 20 )
+					);
+
+					$user_id = wp_insert_user( $args );
+
+					edd_log_user_in( $user_id, $args['user_login'], $args['user_pass'] );
+				}
+
 			}
 
+			EDD()->session->set( 'amazon_access_token', $_GET['access_token'] );
+
+			wp_redirect( edd_get_checkout_uri( array( 'payment-method' => 'amazon', 'state' => 'authorized' ) ) ); exit;
+
+		} catch( Exception $e ) {
+
+			wp_die( print_r( $e, true ) );
+
 		}
-
-		EDD()->session->set( 'amazon_access_token', $_GET['access_token'] );
-
-		wp_redirect( edd_get_checkout_uri( array( 'payment-method' => 'amazon', 'state' => 'authorized' ) ) ); exit;
 
 	}
 
