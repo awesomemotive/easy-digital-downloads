@@ -79,7 +79,7 @@ final class EDD_Amazon_Payments {
 	private function actions() {
 		add_action( 'wp_enqueue_scripts', array( $this, 'print_client' ), 10 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ), 11 );
-		add_action( 'wp_head', array( $this, 'capture_oauth' ) );
+		add_action( 'init',               array( $this, 'capture_oauth' ) );
 		add_action( 'edd_amazon_cc_form', array( $this, 'credit_card_form' ) );
 	}
 
@@ -255,7 +255,7 @@ final class EDD_Amazon_Payments {
 
 	public function capture_oauth() {
 
-		if ( ! edd_is_checkout() || ! isset( $_GET['payment-mode'] ) || $_GET['payment-mode'] !== 'amazon' ) {
+		if ( ! isset( $_GET['edd-listener'] ) || $_GET['edd-listener'] !== 'amazon' ) {
 			return;
 		}
 
@@ -263,23 +263,15 @@ final class EDD_Amazon_Payments {
 			return;
 		}
 
-		?>
+		if( empty( $_GET['access_token'] ) || false === strpos( $_GET['access_token'], 'Atza' ) ) {
+			return;
+		}
 
-		<script type='text/javascript'>
+		$token = $_GET['access_token'];
 
-			function getURLParameter(name, source) {
-			return decodeURIComponent((new RegExp('[?|&|#]' + name + '=' +
-			'([^&;]+?)(&|#|;|$)').exec(source)||[,""])[1].replace(/\+/g,'%20'))||null; }
-			var accessToken = getURLParameter("access_token", location.hash);
-			if (typeof accessToken === 'string' && accessToken.match(/^Atza/)) {
-			document.cookie = "amazon_Login_accessToken=" + accessToken + ";secure";}
-			window.onAmazonLoginReady = function() {
-			amazon.Login.setClientId(edd_amazon.clientId);
-			amazon.Login.setUseCookie(true);  };
+		var_dump( $this->get_client()->getUserInfo( $token ) );
+		exit;
 
-		</script>
-
-		<?php
 	}
 
 
@@ -348,7 +340,7 @@ final class EDD_Amazon_Payments {
 	private function get_amazon_checkout_redirect() {
 
 		if ( is_null( $this->redirect_uri ) ) {
-			$this->redirect_uri = esc_url_raw( add_query_arg( array( 'payment-mode' => 'amazon', 'state' => 'return_auth' ), edd_get_checkout_uri() ) );
+			$this->redirect_uri = esc_url_raw( add_query_arg( array( 'edd-listener' => 'amazon', 'state' => 'return_auth' ), home_url() ) );
 		}
 
 		return $this->redirect_uri;
