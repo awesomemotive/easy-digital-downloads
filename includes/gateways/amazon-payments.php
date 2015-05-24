@@ -80,6 +80,7 @@ final class EDD_Amazon_Payments {
 		add_action( 'wp_enqueue_scripts', array( $this, 'print_client' ), 10 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ), 11 );
 		add_action( 'init',               array( $this, 'capture_oauth' ) );
+		add_action( 'edd_purchase_form_before_register_login', array( $this, 'login_form' ) );
 		add_action( 'edd_amazon_cc_form', array( $this, 'credit_card_form' ) );
 	}
 
@@ -313,6 +314,42 @@ final class EDD_Amazon_Payments {
 	}
 
 
+	public function login_form() {
+		ob_start(); ?>
+
+		<?php if ( ! EDD()->session->get( 'amazon_access_token' ) && 'amazon' == edd_get_chosen_gateway() ) : ?>
+		
+			<fieldset id="edd-amazon-login-fields" class="edd-amazon-fields">
+
+				<div id="edd-amazon-pay-button"></div>
+				<script type="text/javascript">
+					OffAmazonPayments.Button('edd-amazon-pay-button', edd_amazon.sellerId, {
+						type:  edd_amazon.buttonType,
+						color: edd_amazon.buttonColor,
+						size:  edd_amazon.buttonSize,
+
+						authorization: function() {
+							loginOptions = {
+								scope: edd_amazon.scope,
+								popup: edd_amazon.popup
+							};
+
+							authRequest = amazon.Login.authorize (loginOptions,  edd_amazon.redirectUri);
+						}, onError: function(error) {
+							// your error handling code
+						}
+					});
+				</script>
+
+			</fieldset>
+
+		<?php endif;
+
+		$form = ob_get_clean();
+		echo $form;
+
+	}
+
 	public function credit_card_form() {
 		ob_start(); ?>
 
@@ -332,7 +369,7 @@ final class EDD_Amazon_Payments {
 
 				<script>
 				new OffAmazonPayments.Widgets.AddressBook({
-				  sellerId: 'YOUR_SELLER_ID_HERE',
+				  sellerId: edd_amazon.sellerId,
 				  onOrderReferenceCreate: function(orderReference) {
 				    orderReference.getAmazonOrderReferenceId();
 				  },
@@ -364,36 +401,12 @@ final class EDD_Amazon_Payments {
 					  size: {width:'400px', height:'260px'}
 					},
 					onPaymentSelect: function(orderReference) {
-					  	amazonOrderReferenceId = orderReference.getAmazonOrderReferenceId();
-						console.log( orderReference.getAmazonOrderReferenceId() );
 					  	// Display your custom complete purchase button
 					},
 					onError: function(error) {
 					  // Write your custom error handling
 					}
 				  }).bind("walletWidgetDiv");
-				</script>
-
-			<?php else: ?>
-
-				<div id="edd-amazon-pay-button"></div>
-				<script type="text/javascript">
-					OffAmazonPayments.Button('edd-amazon-pay-button', edd_amazon.sellerId, {
-						type:  edd_amazon.buttonType,
-						color: edd_amazon.buttonColor,
-						size:  edd_amazon.buttonSize,
-
-						authorization: function() {
-							loginOptions = {
-								scope: edd_amazon.scope,
-								popup: edd_amazon.popup
-							};
-
-							authRequest = amazon.Login.authorize (loginOptions,  edd_amazon.redirectUri);
-						}, onError: function(error) {
-							// your error handling code
-						}
-					});
 				</script>
 
 			<?php endif; ?>
