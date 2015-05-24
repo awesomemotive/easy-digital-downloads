@@ -353,8 +353,6 @@ final class EDD_Amazon_Payments {
 	public function credit_card_form() {
 		ob_start(); ?>
 
-		<?php do_action( 'edd_before_cc_fields' ); ?>
-
 		<fieldset id="edd_cc_fields" class="edd-amazon-fields">
 
 			<?php if ( EDD()->session->get( 'amazon_access_token' ) ) : ?>
@@ -414,7 +412,6 @@ final class EDD_Amazon_Payments {
 		</fieldset>
 
 		<?php
-		do_action( 'edd_after_cc_fields' );
 		$form = ob_get_clean();
 		echo $form;
 
