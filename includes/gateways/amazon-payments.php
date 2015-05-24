@@ -81,7 +81,7 @@ final class EDD_Amazon_Payments {
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ), 11 );
 		add_action( 'init',               array( $this, 'capture_oauth' ) );
 		add_action( 'edd_purchase_form_before_register_login', array( $this, 'login_form' ) );
-		add_action( 'edd_amazon_cc_form', array( $this, 'credit_card_form' ) );
+		add_action( 'edd_amazon_cc_form', array( $this, 'wallet_form' ) );
 	}
 
 	private function get_client() {
@@ -350,7 +350,7 @@ final class EDD_Amazon_Payments {
 
 	}
 
-	public function credit_card_form() {
+	public function wallet_form() {
 		ob_start(); ?>
 
 		<fieldset id="edd_cc_fields" class="edd-amazon-fields">
