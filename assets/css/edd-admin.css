@@ -275,6 +275,13 @@ td.edd_order_price { text-align: right; }
 .edd_user_search_results a.edd-ajax-user-cancel { position: absolute; right: 6px; top: 2px; }
 .edd_user_search_results ul { padding: 10px 10px 4px; margin: 0; background: #f0f0f0; border: 1px solid #DFDFDF; width: 300px; max-height: 200px; overflow-y: scroll; }
 
+@media screen and ( max-width: 782px ) {
+	.post-type-download .nav-tab-wrapper a {
+		padding: 2px 4px;
+		font-size: 50%;
+	}
+}
+
 /* Global Graph Styles
 -------------------------------------------------------------- */
 .edd-graph .y1Axis { color: rgb( 237, 194, 64 )!important; }
@@ -283,6 +290,7 @@ td.edd_order_price { text-align: right; }
 /* API Table Styles
 -------------------------------------------------------------- */
 .download_page_edd-tools .apikeys .column-user { width: 192px; }
+
 
 /* Customer Styles
 -------------------------------------------------------------- */
