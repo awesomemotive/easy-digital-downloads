@@ -1,6 +1,6 @@
 <?php
 /**
- * Easy Digital Downloads API V13
+ * Easy Digital Downloads API V1
  *
  * @package     EDD
  * @subpackage  Classes/API
@@ -13,7 +13,7 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * EDD_API_V13 Class
+ * EDD_API_V1 Class
  *
  * The base version API class
  *
