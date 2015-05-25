@@ -135,7 +135,7 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 	if( 'download' != $download->post_type )
 		return; // Not a download product
 
-	if ( ! current_user_can( 'edit_post', $download->ID ) && ( $download->post_status == 'draft' || $download->post_status == 'pending' || $download->post_status == 'trash' ) ) {
+	if ( ! current_user_can( 'edit_post', $download->ID ) && $download->post_status != 'publish' ) {
 		return; // Do not allow draft/pending to be purchased if can't edit. Fixes #1056
 	}
 
