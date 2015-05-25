@@ -476,7 +476,8 @@ final class EDD_Amazon_Payments {
 		//echo json_encode( $request->response ); exit;
 
 		$address = array();
-		$data    = $this->xml2Array( $request->response['ResponseBody'] );
+		$data    = new ResponseParser( $request ):
+		$data    = $data->toArray();
 
 		if( isset( $data['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['Destination']['PhysicalDestination'] ) ) {
 
@@ -522,11 +523,9 @@ final class EDD_Amazon_Payments {
 
 		if( 200 == $charge->response['Status'] ) {
 
-			$data = $this->xml2Array( $charge->response['ResponseBody'] );
-
+			$charge = new ResponseParser( $charge ):
+			$charge = $charge->toArray();
 			
-			
-			echo '<pre>'; print_r( $data ); echo '</pre>'; exit;
 
 		} else {
 
@@ -557,35 +556,6 @@ final class EDD_Amazon_Payments {
 		return $this->redirect_uri;
 
 	}
-
-	/**
-     * Renvoie le flux xml sous forme de tableau associatif multi dimensionnel
-     * php.net Julio Cesar Oliveira
-     *
-     * @param string $xml
-     * @param boolean $recursive
-     *
-     * @return array
-     */
-    public function xml2Array($xml, $recursive = false) {
-        if( ! $recursive ) {
-            $array = (array) simplexml_load_string($xml);
-        } else {
-            $array = (array) $xml;
-        }
-
-        $newArray = array();
-
-        foreach ($array as $key => $value) {
-            $value = (array)$value;
-            if (isset($value[0])) {
-                $newArray[$key] = trim ($value[0]);
-            } else {
-                $newArray[$key] = self::xml2Array($value, true);
-            }
-        }
-        return $newArray ;
-    }
 
 }
 
