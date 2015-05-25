@@ -520,7 +520,21 @@ final class EDD_Amazon_Payments {
 			'store_name'                 => remove_accents( wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) ),
 		) );
 
-		echo '<pre>'; print_r( $charge ); echo '</pre>'; exit;
+		if( 200 == $charge->response['Status'] ) {
+
+			$data = $this->xml2Array( $charge->response['ResponseBody'] );
+
+			
+			
+			echo '<pre>'; print_r( $data ); echo '</pre>'; exit;
+
+		} else {
+
+			// Set an error
+			echo '<pre>'; print_r( $charge ); echo '</pre>'; exit;
+			
+		}
+
 
 	}
 
