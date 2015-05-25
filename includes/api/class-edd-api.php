@@ -442,7 +442,7 @@ class EDD_API {
 		global $wp_query;
 
 		// Check for edd-api var. Get out if not present
-		if ( ! isset( $wp_query->query_vars['edd-api'] ) ) {
+		if ( empty( $wp_query->query_vars['edd-api'] ) ) {
 			return;
 		}
 
