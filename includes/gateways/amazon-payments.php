@@ -384,37 +384,49 @@ final class EDD_Amazon_Payments {
 			</div> 
 
 			<script>
+			var edd_scripts;
 			new OffAmazonPayments.Widgets.AddressBook({
-			  sellerId: edd_amazon.sellerId,
-			  amazonOrderReferenceId: edd_amazon.reference_id,
-			  onOrderReferenceCreate: function(orderReference) {
-			    orderReference.getAmazonOrderReferenceId();
-			  },
-			  onAddressSelect: function(orderReference) {
-			    // Replace the following code with the action that you want to perform 
-			    // after the address is selected.
-			    // The amazonOrderReferenceId can be used to retrieve 
-			    // the address details by calling the GetOrderReferenceDetails
-			    // operation. If rendering the AddressBook and Wallet widgets on the
-			    // same page, you should wait for this event before you render the
-			    // Wallet widget for the first time.
-			    // The Wallet widget will re-render itself on all subsequent 
-			    // onAddressSelect events, without any action from you. It is not 
-			    // recommended that you explicitly refresh it.
-			  },
-			  design: {
-			    designMode: 'responsive'
-			  },
-			  onError: function(error) {
-			    // your error handling code
-			  }
+				sellerId: edd_amazon.sellerId,
+				amazonOrderReferenceId: edd_amazon.referenceID,
+					onOrderReferenceCreate: function(orderReference) {
+				orderReference.getAmazonOrderReferenceId();
+				},
+				onAddressSelect: function(orderReference) {
+					jQuery.ajax({
+						type: "POST",
+						data: {
+							action       : 'edd_amazon_get_address',
+							reference_id : edd_amazon.referenceID
+						},
+						dataType: "json",
+						url: edd_scripts.ajaxurl,
+						xhrFields: {
+							withCredentials: true
+						},
+						success: function (response) {
+							console.log( response );
+						}
+					}).fail(function (response) {
+						if ( window.console && window.console.log ) {
+							console.log( response );
+						}
+					}).done(function (response) {
+
+					});
+				},
+				design: {
+					designMode: 'responsive'
+				},
+				onError: function(error) {
+					// your error handling code
+				}
 			}).bind("addressBookWidgetDiv");
 			</script>
 			<div id="walletWidgetDiv"></div>
 			<script>
 			  new OffAmazonPayments.Widgets.Wallet({
 				sellerId: edd_amazon.sellerId,
-				amazonOrderReferenceId: edd_amazon.reference_id,
+				amazonOrderReferenceId: edd_amazon.referenceID,
 				design: {
 				  size: {width:'400px', height:'260px'}
 				},
