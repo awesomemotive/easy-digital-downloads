@@ -20,6 +20,8 @@ final class EDD_Amazon_Payments {
 	private $gateway_id   = 'amazon';
 	private $client       = null;
 	private $redirect_uri = null;
+	private $checkout_uri = null;
+	private $reference_id = null;
 
 	private function __construct() {
 
@@ -27,6 +29,8 @@ final class EDD_Amazon_Payments {
 			// The Amazon Login & Pay libraries require PHP 5.3
 			return;
 		}
+
+		$this->reference_id = ! empty( $_REQUEST['amazon_reference_id'] ) ? $_REQUEST['amazon_reference_id'] : '';
 
 		// Run this separate so we can ditch as early as possible
 		$this->register();
@@ -39,6 +43,7 @@ final class EDD_Amazon_Payments {
 		$this->includes();
 		$this->filters();
 		$this->actions();
+
 	}
 
 	public static function getInstance() {
@@ -81,6 +86,13 @@ final class EDD_Amazon_Payments {
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ), 11 );
 		add_action( 'init',               array( $this, 'capture_oauth' ) );
 		add_action( 'edd_purchase_form_before_register_login', array( $this, 'login_form' ) );
+		add_action( 'edd_checkout_error_check', array( $this, 'checkout_errors' ), 10, 2 );
+		add_action( 'edd_gateway_amazon', array( $this, 'process_purchase' ) );
+
+		if ( empty( $this->reference_id ) ) {
+			return;
+		}
+
 		add_action( 'edd_amazon_cc_form', array( $this, 'wallet_form' ) );
 	}
 
@@ -233,11 +245,13 @@ final class EDD_Amazon_Payments {
 			wp_localize_script( 'edd-amazon-widgets', 'edd_amazon', apply_filters( 'edd_amazon_checkout_vars', array(
 				'sellerId'    => $seller_id,
 				'clientId'    => $client_id,
+				'referenceID' => $this->reference_id,
 				'buttonType'  => $amazon_button_settings['type'],
 				'buttonColor' => $amazon_button_settings['color'],
 				'buttonSize'  => $amazon_button_settings['size'],
 				'scope'       => $amazon_button_settings['scope'],
 				'popup'       => $amazon_button_settings['popup'],
+				'checkoutUri' => $this->get_amazon_checkout_uri(),
 				'redirectUri' => $this->get_amazon_checkout_redirect(),
 			) ) );
 
@@ -317,7 +331,7 @@ final class EDD_Amazon_Payments {
 	public function login_form() {
 		ob_start(); ?>
 
-		<?php if ( ! EDD()->session->get( 'amazon_access_token' ) && 'amazon' == edd_get_chosen_gateway() ) : ?>
+		<?php if ( empty( $this->reference_id ) && 'amazon' == edd_get_chosen_gateway() ) : ?>
 		
 			<fieldset id="edd-amazon-login-fields" class="edd-amazon-fields">
 
@@ -329,12 +343,18 @@ final class EDD_Amazon_Payments {
 						size:  edd_amazon.buttonSize,
 
 						authorization: function() {
+
 							loginOptions = {
 								scope: edd_amazon.scope,
 								popup: edd_amazon.popup
 							};
 
-							authRequest = amazon.Login.authorize (loginOptions,  edd_amazon.redirectUri);
+							authRequest = amazon.Login.authorize( loginOptions, edd_amazon.redirectUri );
+
+						},
+						onSignIn: function( orderReference ) {
+							amazonOrderReferenceId = orderReference.getAmazonOrderReferenceId();
+							window.location = edd_amazon.checkoutUri + '&amazon_reference_id=' + amazonOrderReferenceId;
 						}, onError: function(error) {
 							// your error handling code
 						}
@@ -355,65 +375,107 @@ final class EDD_Amazon_Payments {
 
 		<fieldset id="edd_cc_fields" class="edd-amazon-fields">
 
-			<?php if ( EDD()->session->get( 'amazon_access_token' ) ) : ?>
+			<style type="text/css">
+				#walletWidgetDiv{width: 400px; height: 228px;}
+				#addressBookWidgetDiv{width: 400px; height: 228px;}
+			</style>
 
-				<style type="text/css">
-					#walletWidgetDiv{width: 400px; height: 228px;}
-					#addressBookWidgetDiv{width: 400px; height: 228px;}
-				</style>
+			<div id="addressBookWidgetDiv">
+			</div> 
 
-				<div id="addressBookWidgetDiv">
-				</div> 
+			<script>
+			new OffAmazonPayments.Widgets.AddressBook({
+			  sellerId: edd_amazon.sellerId,
+			  amazonOrderReferenceId: edd_amazon.reference_id,
+			  onOrderReferenceCreate: function(orderReference) {
+			    orderReference.getAmazonOrderReferenceId();
+			  },
+			  onAddressSelect: function(orderReference) {
+			    // Replace the following code with the action that you want to perform 
+			    // after the address is selected.
+			    // The amazonOrderReferenceId can be used to retrieve 
+			    // the address details by calling the GetOrderReferenceDetails
+			    // operation. If rendering the AddressBook and Wallet widgets on the
+			    // same page, you should wait for this event before you render the
+			    // Wallet widget for the first time.
+			    // The Wallet widget will re-render itself on all subsequent 
+			    // onAddressSelect events, without any action from you. It is not 
+			    // recommended that you explicitly refresh it.
+			  },
+			  design: {
+			    designMode: 'responsive'
+			  },
+			  onError: function(error) {
+			    // your error handling code
+			  }
+			}).bind("addressBookWidgetDiv");
+			</script>
+			<div id="walletWidgetDiv"></div>
+			<script>
+			  new OffAmazonPayments.Widgets.Wallet({
+				sellerId: edd_amazon.sellerId,
+				amazonOrderReferenceId: edd_amazon.reference_id,
+				design: {
+				  size: {width:'400px', height:'260px'}
+				},
+				onPaymentSelect: function(orderReference) {
+				  	// Display your custom complete purchase button
+				},
+				onError: function(error) {
+				  // Write your custom error handling
+				}
+			  }).bind("walletWidgetDiv");
+			</script>
 
-				<script>
-				new OffAmazonPayments.Widgets.AddressBook({
-				  sellerId: edd_amazon.sellerId,
-				  onOrderReferenceCreate: function(orderReference) {
-				    orderReference.getAmazonOrderReferenceId();
-				  },
-				  onAddressSelect: function(orderReference) {
-				    // Replace the following code with the action that you want to perform 
-				    // after the address is selected.
-				    // The amazonOrderReferenceId can be used to retrieve 
-				    // the address details by calling the GetOrderReferenceDetails
-				    // operation. If rendering the AddressBook and Wallet widgets on the
-				    // same page, you should wait for this event before you render the
-				    // Wallet widget for the first time.
-				    // The Wallet widget will re-render itself on all subsequent 
-				    // onAddressSelect events, without any action from you. It is not 
-				    // recommended that you explicitly refresh it.
-				  },
-				  design: {
-				    designMode: 'responsive'
-				  },
-				  onError: function(error) {
-				    // your error handling code
-				  }
-				}).bind("addressBookWidgetDiv");
-				</script>
-				<div id="walletWidgetDiv"></div>
-				<script>
-				  new OffAmazonPayments.Widgets.Wallet({
-					sellerId: edd_amazon.sellerId,
-					design: {
-					  size: {width:'400px', height:'260px'}
-					},
-					onPaymentSelect: function(orderReference) {
-					  	// Display your custom complete purchase button
-					},
-					onError: function(error) {
-					  // Write your custom error handling
-					}
-				  }).bind("walletWidgetDiv");
-				</script>
-
-			<?php endif; ?>
-
+			<input type="hidden" name="edd_amazon_reference_id" value="<?php echo esc_attr( $this->reference_id ); ?>"/>
 		</fieldset>
 
 		<?php
 		$form = ob_get_clean();
 		echo $form;
+
+	}
+
+	public function checkout_errors( $valid_data, $post_data ) {
+
+		// should validate that we have a reference ID here, perhaps even fire the API call here
+
+	}
+
+	public function process_purchase( $purchase_data ) {
+
+		if( empty( $purchase_data['post_data']['edd_amazon_reference_id'] ) ) {
+			edd_set_error( 'missing_reference_id', __( 'Missing Reference ID, please try again', 'edd' ) );
+		}
+
+		$errors = edd_get_errors();
+		if ( $errors ) {
+
+			edd_send_back_to_checkout( '?payment-mode=amazon' );
+
+		}
+
+		$charge = $this->get_client()->charge( array(
+			'merchant_id' 		        => edd_get_option( 'amazon_seller_id', '' ),
+			'amazon_order_reference_id' => $purchase_data['post_data']['edd_amazon_reference_id'],
+			'charge_amount' 			=> $purchase_data['price'],
+			'currency_code' 		    => edd_get_currency(),
+			//'platform_id' 		    => 'OrderReferenceAttributes.PlatformId',
+			'charge_order_id' 		    => $purchase_data['purchase_key'],
+			'store_name' 		        => remove_accents( wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) ),
+		) );
+
+		echo '<pre>'; print_r( $charge ); echo '</pre>'; exit;
+
+	}
+
+	private function get_amazon_checkout_uri() {
+
+		if ( is_null( $this->checkout_uri ) ) {
+			$this->checkout_uri = esc_url_raw( add_query_arg( array( 'payment-mode' => 'amazon' ), edd_get_checkout_uri() ) );
+		}
+
+		return $this->checkout_uri;
 
 	}
 
