@@ -220,6 +220,17 @@ class EDD_API {
 	}
 
 	/**
+	 * Retrieve the API version that was queried
+	 *
+	 * @access private
+	 * @since 2.4
+	 * @return string
+	 */
+	private function get_queried_version() {
+		return $this->queried_version;
+	}
+
+	/**
 	 * Sets the version of the API that was queried.
 	 *
 	 * Falls back to the default version if no version is specified
@@ -455,7 +466,7 @@ class EDD_API {
 		}
 
 		$data = array();
-		$this->routes = new $this->versions[ $this->queried_version ];
+		$this->routes = new $this->versions[ $this->get_queried_version() ];
 
 		switch( $this->endpoint ) :
 
