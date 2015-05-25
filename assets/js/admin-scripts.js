@@ -912,11 +912,17 @@ jQuery(document).ready(function ($) {
 				var row = $('#edd_tax_rates tr:last');
 				var clone = row.clone();
 				var count = row.parent().find( 'tr' ).length;
-				clone.find( 'td input' ).val( '' );
+				clone.find( 'td input' ).not(':input[type=checkbox]').val( '' );
+				clone.find( 'td [type="checkbox"]' ).attr('checked', false);
 				clone.find( 'input, select' ).each(function() {
 					var name = $( this ).attr( 'name' );
 					name = name.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
 					$( this ).attr( 'name', name ).attr( 'id', name );
+				});
+				clone.find( 'label' ).each(function() {
+					var name = $( this ).attr( 'for' );
+					name = name.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
+					$( this ).attr( 'for', name );
 				});
 				clone.insertAfter( row );
 				return false;

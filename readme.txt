@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.9.2
 Tested up to: 4.2
 
-Stable Tag: 2.3.8
+Stable Tag: 2.3.9
 
 License: GNU Version 2 or Any Later Version
 
@@ -48,7 +48,7 @@ Includes a complete integration pack for delivering automatic upgrades for premi
 
 **Build Up Your Email Subscribers**
 
-With extensions for [Mail Chimp](https://easydigitaldownloads.com/extensions/mail-chimp/?utm_source=extension&utm_medium=description_tab&utm_content=mail-chimp&utm_campaign=readme), [Campaign Monitor](https://easydigitaldownloads.com/extensions/campaign-monitor/?utm_source=extension&utm_medium=description_tab&utm_content=campaign-monitor&utm_campaign=readme), and [AWeber](https://easydigitaldownloads.com/extensions/aweber/?utm_source=extension&utm_medium=description_tab&utm_content=aweber&utm_campaign=readme), [Wysija](https://easydigitaldownloads.com/extensions/wysija/?utm_source=extension&utm_medium=description_tab&utm_content=wysija&utm_campaign=readme), [ActiveCampaign](https://easydigitaldownloads.com/extensions/active-campaign/?utm_source=extension&utm_medium=description_tab&utm_content=active-campaign&utm_campaign=readme), [iContact](https://easydigitaldownloads.com/extensions/icontact/?utm_source=extension&utm_medium=description_tab&utm_content=icontact&utm_campaign=readme), [Constant Contact](https://easydigitaldownloads.com/extensions/constant-contact/?utm_source=extension&utm_medium=description_tab&utm_content=constant-contact&utm_campaign=readme), and more, Easy Digital Downloads can easily grow your email subscription lists while making you money at the same time.
+With extensions for [MailChimp](https://easydigitaldownloads.com/extensions/mail-chimp/?utm_source=extension&utm_medium=description_tab&utm_content=mail-chimp&utm_campaign=readme), [Campaign Monitor](https://easydigitaldownloads.com/extensions/campaign-monitor/?utm_source=extension&utm_medium=description_tab&utm_content=campaign-monitor&utm_campaign=readme), and [AWeber](https://easydigitaldownloads.com/extensions/aweber/?utm_source=extension&utm_medium=description_tab&utm_content=aweber&utm_campaign=readme), [Wysija](https://easydigitaldownloads.com/extensions/wysija/?utm_source=extension&utm_medium=description_tab&utm_content=wysija&utm_campaign=readme), [ActiveCampaign](https://easydigitaldownloads.com/extensions/active-campaign/?utm_source=extension&utm_medium=description_tab&utm_content=active-campaign&utm_campaign=readme), [iContact](https://easydigitaldownloads.com/extensions/icontact/?utm_source=extension&utm_medium=description_tab&utm_content=icontact&utm_campaign=readme), [Constant Contact](https://easydigitaldownloads.com/extensions/constant-contact/?utm_source=extension&utm_medium=description_tab&utm_content=constant-contact&utm_campaign=readme), and more, Easy Digital Downloads can easily grow your email subscription lists while making you money at the same time.
 
 **Languages**
 
@@ -190,6 +190,20 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.3.9, May 25, 2015 =
+
+* Fix: Variable price assignment options get removed from download when deleting file row
+* Fix: Pagination container still shown when no pagination is needed
+* Fix: Airplane Mode load order can cause problems
+* Fix: Rewrites hard flushed during activation instead of soft flushed
+* Fix: Log records not recording post_date_gmt
+* Fix: Slashes not stripped from customer name in Customer Details view
+* Fix: "Apply to whole country" tax setting not saved on first save
+* Fix: Trashed downloads can be purchased with custom add to cart URLs
+* Tweak: Added filters to join and where clauses in edd_count_payments()
+* Tweak: Improved logic and flexibility for Products endpoint of the REST API
+
 
 = 2.3.8, April 27, 2015 =
 
