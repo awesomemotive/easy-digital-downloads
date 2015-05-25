@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.9.2
 Tested up to: 4.2
 
-Stable Tag: 2.3.8
+Stable Tag: 2.3.9
 
 License: GNU Version 2 or Any Later Version
 
@@ -190,6 +190,20 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.3.9, May 25, 2015 =
+
+* Fix: Variable price assignment options get removed from download when deleting file row
+* Fix: Pagination container still shown when no pagination is needed
+* Fix: Airplane Mode load order can cause problems
+* Fix: Rewrites hard flushed during activation instead of soft flushed
+* Fix: Log records not recording post_date_gmt
+* Fix: Slashes not stripped from customer name in Customer Details view
+* Fix: "Apply to whole country" tax setting not saved on first save
+* Fix: Trashed downloads can be purchased with custom add to cart URLs
+* Tweak: Added filters to join and where clauses in edd_count_payments()
+* Tweak: Improved logic and flexibility for Products endpoint of the REST API
+
 
 = 2.3.8, April 27, 2015 =
 
