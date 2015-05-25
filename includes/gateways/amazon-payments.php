@@ -509,13 +509,15 @@ final class EDD_Amazon_Payments {
 		}
 
 		$charge = $this->get_client()->charge( array(
-			'merchant_id' 		        => edd_get_option( 'amazon_seller_id', '' ),
-			'amazon_order_reference_id' => $purchase_data['post_data']['edd_amazon_reference_id'],
-			'charge_amount' 			=> $purchase_data['price'],
-			'currency_code' 		    => edd_get_currency(),
-			//'platform_id' 		    => 'OrderReferenceAttributes.PlatformId',
-			'charge_order_id' 		    => $purchase_data['purchase_key'],
-			'store_name' 		        => remove_accents( wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) ),
+			'merchant_id'                => edd_get_option( 'amazon_seller_id', '' ),
+			'amazon_reference_id'        => $purchase_data['post_data']['edd_amazon_reference_id'],
+			'authorization_reference_id' => $purchase_data['purchase_key'],
+			'charge_amount'              => $purchase_data['price'],
+			'currency_code'              => edd_get_currency(),
+			//'platform_id'              => 'OrderReferenceAttributes.PlatformId',
+			'charge_note'                => edd_get_purchase_summary( $purchase_data ),
+			'charge_order_id'            => $purchase_data['purchase_key'],
+			'store_name'                 => remove_accents( wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) ),
 		) );
 
 		echo '<pre>'; print_r( $charge ); echo '</pre>'; exit;
