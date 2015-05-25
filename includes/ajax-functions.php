@@ -38,17 +38,17 @@ function edd_test_ajax_works() {
 	// Check if the Airplane Mode plugin is installed
 	if ( class_exists( 'Airplane_Mode_Core' ) ) {
 
-		global $Airplane_Mode_Core;
+		$airplane = Airplane_Mode_Core::getInstance();
 
-		if ( method_exists( $Airplane_Mode_Core, 'enabled' ) ) {
+		if ( method_exists( $airplane, 'enabled' ) ) {
 
-			if ( $Airplane_Mode_Core->enabled() ) {
+			if ( $airplane->enabled() ) {
 				return true;
 			}
 
 		} else {
 
-			if ( $Airplane_Mode_Core->check_status() == 'on' ) {
+			if ( $airplane->check_status() == 'on' ) {
 				return true;
 			}
 		}
@@ -306,6 +306,10 @@ function edd_ajax_update_cart_item_quantity() {
 			'subtotal'    => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
 			'total'       => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' )
 		);
+
+		// Allow for custom cart item quantity handling
+		$return = apply_filters( 'edd_ajax_cart_item_quantity_response', $return );
+
 		echo json_encode($return);
 	}
 	edd_die();
