@@ -448,7 +448,6 @@ class EDD_API {
 
 		// Determine which version was queried
 		$this->set_queried_version();
-//		echo $this->get_query_mode(); exit;
 
 		// Determine the kind of query
 		$this->set_query_mode();
