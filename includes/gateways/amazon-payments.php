@@ -88,6 +88,8 @@ final class EDD_Amazon_Payments {
 		add_action( 'edd_purchase_form_before_register_login', array( $this, 'login_form' ) );
 		add_action( 'edd_checkout_error_check', array( $this, 'checkout_errors' ), 10, 2 );
 		add_action( 'edd_gateway_amazon', array( $this, 'process_purchase' ) );
+		add_action( 'wp_ajax_edd_amazon_get_address', array( $this, 'ajax_get_address' ) );
+		add_action( 'wp_ajax_nopriv_edd_amazon_get_address', array( $this, 'ajax_get_address' ) );
 
 		if ( empty( $this->reference_id ) ) {
 			return;
@@ -317,7 +319,7 @@ final class EDD_Amazon_Payments {
 
 			EDD()->session->set( 'amazon_access_token', $_GET['access_token'] );
 
-			wp_redirect( edd_get_checkout_uri( array( 'payment-method' => 'amazon', 'state' => 'authorized' ) ) ); exit;
+			wp_redirect( edd_get_checkout_uri( array( 'payment-mode' => 'amazon', 'state' => 'authorized' ) ) ); exit;
 
 		} catch( Exception $e ) {
 
@@ -371,6 +373,9 @@ final class EDD_Amazon_Payments {
 	}
 
 	public function wallet_form() {
+
+		remove_action( 'edd_purchase_form_after_cc_form', 'edd_checkout_tax_fields', 999 );
+
 		ob_start(); ?>
 
 		<fieldset id="edd_cc_fields" class="edd-amazon-fields">
@@ -404,7 +409,10 @@ final class EDD_Amazon_Payments {
 							withCredentials: true
 						},
 						success: function (response) {
-							console.log( response );
+							jQuery('#card_city').val( response.City );
+							jQuery('#card_zip').val( response.PostalCode );
+							jQuery('#billing_country').val( response.CountryCode );
+							jQuery('#card_state').val( response.StateOrRegion ).trigger( 'change' );
 						}
 					}).fail(function (response) {
 						if ( window.console && window.console.log ) {
@@ -439,12 +447,45 @@ final class EDD_Amazon_Payments {
 			  }).bind("walletWidgetDiv");
 			</script>
 
-			<input type="hidden" name="edd_amazon_reference_id" value="<?php echo esc_attr( $this->reference_id ); ?>"/>
+			<div id="edd_cc_address">
+				<input type="hidden" name="edd_amazon_reference_id" value="<?php echo esc_attr( $this->reference_id ); ?>"/>
+				<input type="hidden" name="card_city" class="card_city" id="card_city" value=""/>
+				<input type="hidden" name="card_zip" class="card_zip" id="card_zip" value=""/>
+				<input type="hidden" name="card_state" class="card_state" id="card_state" value=""/>
+				<input type="hidden" name="billing_country" class="billing_country" id="billing_country" value=""/>
+			</div>
 		</fieldset>
 
 		<?php
 		$form = ob_get_clean();
 		echo $form;
+
+	}
+
+	public function ajax_get_address() {
+
+		if( empty( $_POST['reference_id'] ) ) {
+			die( '-2' );
+		}
+
+		$request = $this->get_client()->getOrderReferenceDetails( array(
+			'merchant_id' 		        => edd_get_option( 'amazon_seller_id', '' ),
+			'amazon_order_reference_id' => $_POST['reference_id'],
+		) );
+
+		//echo json_encode( $request->response ); exit;
+
+		$address = array();
+		$data    = $this->xml2Array( $request->response['ResponseBody'] );
+
+		if( isset( $data['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['Destination']['PhysicalDestination'] ) ) {
+
+			$address = $data['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['Destination']['PhysicalDestination'];
+			$address = wp_parse_args( $address, array( 'City', 'CountryCode', 'StateOrRegion', 'PostalCode' ) );
+
+		}
+
+		echo json_encode( $address ); exit;
 
 	}
 
@@ -500,6 +541,35 @@ final class EDD_Amazon_Payments {
 		return $this->redirect_uri;
 
 	}
+
+	/**
+     * Renvoie le flux xml sous forme de tableau associatif multi dimensionnel
+     * php.net Julio Cesar Oliveira
+     *
+     * @param string $xml
+     * @param boolean $recursive
+     *
+     * @return array
+     */
+    public function xml2Array($xml, $recursive = false) {
+        if( ! $recursive ) {
+            $array = (array) simplexml_load_string($xml);
+        } else {
+            $array = (array) $xml;
+        }
+
+        $newArray = array();
+
+        foreach ($array as $key => $value) {
+            $value = (array)$value;
+            if (isset($value[0])) {
+                $newArray[$key] = trim ($value[0]);
+            } else {
+                $newArray[$key] = self::xml2Array($value, true);
+            }
+        }
+        return $newArray ;
+    }
 
 }
 
