@@ -142,7 +142,7 @@ class EDD_API {
 			'v1' => 'EDD_API_V1',
 		);
 
-		foreach( $this->versions as $version => $class ) {
+		foreach( $this->get_versions() as $version => $class ) {
 			require_once EDD_PLUGIN_DIR . 'includes/api/class-edd-api-' . $version . '.php';
 		}
 
@@ -206,6 +206,17 @@ class EDD_API {
 		$vars[] = 'email';
 
 		return $vars;
+	}
+
+	/**
+	 * Retrieve the API versions
+	 *
+	 * @access private
+	 * @since 2.4
+	 * @return array
+	 */
+	private function get_versions() {
+		return $this->versions;
 	}
 
 	/**
