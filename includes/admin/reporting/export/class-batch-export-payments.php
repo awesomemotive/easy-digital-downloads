@@ -24,34 +24,15 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 	/**
 	 * Our export type. Used for export-type specific filters/actions
 	 * @var string
-	 * @since 1.4.4
+	 * @since 2.4
 	 */
 	public $export_type = 'payment_export';
-
-	/**
-	 * Set the export headers
-	 *
-	 * @access public
-	 * @since 1.6
-	 * @return void
-	 */
-	public function headers() {
-		ignore_user_abort( true );
-
-		if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) )
-			set_time_limit( 0 );
-
-		nocache_headers();
-		header( 'Content-Type: text/csv; charset=utf-8' );
-		header( 'Content-Disposition: attachment; filename=' . apply_filters( 'edd_payments_export_filename', $this->filename ) );
-		header( "Expires: 0" );
-	}
 
 	/**
 	 * Set the CSV columns
 	 *
 	 * @access public
-	 * @since 1.4.4
+	 * @since 2.4
 	 * @return array $cols All the columns
 	 */
 	public function csv_cols() {
@@ -94,7 +75,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 	 * Get the Export Data
 	 *
 	 * @access public
-	 * @since 1.4.4
+	 * @since 2.4
 	 * @global object $wpdb Used to query the database using the WordPress
 	 *   Database API
 	 * @return array $data The data for the CSV file
@@ -207,9 +188,16 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 
 	}
 
+	/**
+	 * Return the calculated completion percentage
+	 *
+	 * @since 2.4
+	 * @return int
+	 */
 	public function get_percentage_complete() {
 		
 		$status = $this->status;
+
 		if( 'any' == $status ) {
 
 			$total = array_sum( (array) edd_count_payments() );
@@ -220,8 +208,8 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			
 		}
 
-
 		$percentage = 100;
+
 		if( $total > 0 ) {
 			$percentage = absint( ( 30 * $this->step ) / $total ) * 10;
 		}
