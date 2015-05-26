@@ -34,7 +34,7 @@ class EDD_Batch_Export extends EDD_Export {
 
 		$upload_dir       = wp_upload_dir();
 		$this->filetype   = '.csv';
-		$this->filename   = 'edd-export-' . $this->export_type . '-data' . $this->filetype;
+		$this->filename   = 'edd-' . $this->export_type . $this->filetype;
 		$this->file       = trailingslashit( $upload_dir['basedir'] ) . $this->filename;
 		$this->step       = $_step;
 		$this->done       = false;
