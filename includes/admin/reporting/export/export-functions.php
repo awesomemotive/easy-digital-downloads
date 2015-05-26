@@ -25,6 +25,7 @@ function edd_do_ajax_export() {
 
 	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export.php';
 	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-payments.php';
+	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-customers.php';
 
 	parse_str( $_POST['form'], $form );
 
@@ -37,9 +38,11 @@ function edd_do_ajax_export() {
 		die( '-1' );
 	}
 
-	$export->month  = isset( $_REQUEST['month'] )   ? absint( $_REQUEST['month'] )                : date( 'n' );
-	$export->year   = isset( $_REQUEST['year']  )   ? absint( $_REQUEST['year']  )                : date( 'Y' );
-	$export->status = isset( $_REQUEST['status']  ) ? sanitize_text_field( $_REQUEST['status']  ) : 'complete';
+	$export->month    = isset( $_REQUEST['month'] )             ? absint( $_REQUEST['month'] )                : date( 'n' );
+	$export->year     = isset( $_REQUEST['year']  )             ? absint( $_REQUEST['year']  )                : date( 'Y' );
+	$export->status   = isset( $_REQUEST['status']  )           ? sanitize_text_field( $_REQUEST['status']  ) : 'complete';
+	$export->download = isset( $_REQUEST['download']  )         ? absint( $_REQUEST['download']  )            : null;
+	$export->price_id = isset( $_REQUEST['edd_price_option']  ) ? absint( $_REQUEST['edd_price_option']  )    : null;
 
 	$ret = $export->process_step( $step );
 
@@ -81,6 +84,7 @@ function edd_process_batch_export_download() {
 
 	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export.php';
 	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-payments.php';
+	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-customers.php';
 
 	$export = new $_REQUEST['class'];
 	$export->export();

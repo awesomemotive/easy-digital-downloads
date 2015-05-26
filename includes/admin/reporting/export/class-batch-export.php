@@ -71,6 +71,20 @@ class EDD_Batch_Export extends EDD_Export {
 	public $status;
 
 	/**
+	 * Download to export data for
+	 *
+	 * @since 2.4
+	 */
+	public $download = null;
+
+	/**
+	 * Download Price ID to export data for
+	 *
+	 * @since 2.4
+	 */
+	public $price_id = null;
+
+	/**
 	 * Get things started
 	 *
 	 * @param $_step int The step to process
