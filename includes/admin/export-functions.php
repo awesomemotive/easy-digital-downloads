@@ -23,8 +23,8 @@ require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export.php';
  */
 function edd_do_ajax_export() {
 
-	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-batch-export.php';
-	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-batch-export-payments.php';
+	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export.php';
+	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-payments.php';
 
 	parse_str( $_POST['form'], $form );
 
@@ -55,7 +55,7 @@ function edd_do_ajax_export() {
 		$args = array_merge( $_REQUEST, array(
 			'step'       => $step,
 			'class'      => $class,
-			'nonce'      => wp_create_nonce( 'edd-batch-export' )
+			'nonce'      => wp_create_nonce( 'edd-batch-export' ),
 			'edd_action' => 'download_batch_export',
 		) );
 
@@ -79,8 +79,8 @@ function edd_process_batch_export_download() {
 		wp_die( __( 'Nonce verification failed', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
 
-	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-batch-export.php';
-	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-batch-export-payments.php';
+	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export.php';
+	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-payments.php';
 
 	$export = new $_REQUEST['class'];
 	$export->export();
