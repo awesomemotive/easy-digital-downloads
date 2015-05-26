@@ -2,24 +2,24 @@
 /**
  * Payments Export Class
  *
- * This class handles payment export
+ * This class handles payment export in batches
  *
  * @package     EDD
  * @subpackage  Admin/Reports
  * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.4.4
+ * @since       2.4
  */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * EDD_Payments_Export Class
+ * EDD_Batch_Payments_Export Class
  *
- * @since 1.4.4
+ * @since 2.4
  */
-class EDD_Payments_Export extends EDD_Batch_Export {
+class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 
 	/**
 	 * Our export type. Used for export-type specific filters/actions
@@ -104,13 +104,15 @@ class EDD_Payments_Export extends EDD_Batch_Export {
 
 		$data = array();
 
-		$payments = edd_get_payments( array(
-			'number' => 30,
-			'page'   => $this->step,
-			'status' => $this->status,
-			'month'  => $this->month,
-			'year'   => $this->year
-		) );
+		$args = array(
+			'number'   => 30,
+			'page'     => $this->step,
+			'status'   => $this->status,
+			'monthnum' => $this->month,
+			'year'     => $this->year
+		);
+
+		$payments = edd_get_payments( $args );
 
 		if( $payments ) {
 
