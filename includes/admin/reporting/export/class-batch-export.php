@@ -21,15 +21,61 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class EDD_Batch_Export extends EDD_Export {
 
+	/**
+	 * The file the data is stored in
+	 *
+	 * @since 2.4
+	 */
 	private $file;
 
+	/**
+	 * The name of the file the data is stored in
+	 *
+	 * @since 2.4
+	 */
 	public $filename;
+
+	/**
+	 * The file type, typically .csv
+	 *
+	 * @since 2.4
+	 */
 	public $filetype;
+
+	/**
+	 * The current step being processed
+	 *
+	 * @since 2.4
+	 */
 	public $step;
+
+	/**
+	 * Month of the year to export
+	 *
+	 * @since 2.4
+	 */
 	public $month;
+
+	/**
+	 * Year to export
+	 *
+	 * @since 2.4
+	 */
 	public $year;
+
+	/**
+	 * Status to export
+	 *
+	 * @since 2.4
+	 */
 	public $status;
 
+	/**
+	 * Get things started
+	 *
+	 * @param $_step int The step to process
+	 * @since 2.4
+	 */
 	public function __construct( $_step = 1 ) {
 
 		$upload_dir       = wp_upload_dir();
@@ -40,6 +86,12 @@ class EDD_Batch_Export extends EDD_Export {
 		$this->done       = false;
 	}
 
+	/**
+	 * Process a step
+	 *
+	 * @since 2.4
+	 * @return bool
+	 */
 	public function process_step() {
 
 		if ( ! $this->can_export() ) {
@@ -66,9 +118,9 @@ class EDD_Batch_Export extends EDD_Export {
 	 * Output the CSV columns
 	 *
 	 * @access public
-	 * @since 1.4.4
+	 * @since 2.4
 	 * @uses EDD_Export::get_csv_cols()
-	 * @return void
+	 * @return string
 	 */
 	public function print_csv_cols() {
 		
@@ -89,11 +141,11 @@ class EDD_Batch_Export extends EDD_Export {
 	}
 
 	/**
-	 * Retrieve the CSV rows for the current step
+	 * Print the CSV rows for the current step
 	 *
 	 * @access public
 	 * @since 2.4
-	 * @return void
+	 * @return string|false
 	 */
 	public function print_csv_rows() {
 		
@@ -125,14 +177,22 @@ class EDD_Batch_Export extends EDD_Export {
 		return false;
 	}
 
+	/**
+	 * Return the calculated completion percentage
+	 *
+	 * @since 2.4
+	 * @return int
+	 */
 	public function get_percentage_complete() {
 		return 100;
 	}
 
-	public function ready() {
-		return ! empty( $_REQUEST['ready'] );
-	}
-
+	/**
+	 * Retrieve the file data is written to
+	 *
+	 * @since 2.4
+	 * @return string
+	 */
 	private function get_file() {
 		$file = @file_get_contents( $this->file );
 		if( ! $file ) {
@@ -141,6 +201,13 @@ class EDD_Batch_Export extends EDD_Export {
 		return $file;
 	}
 
+	/**
+	 * Append data to export file
+	 *
+	 * @since 2.4
+	 * @param $data string The data to add to the file 
+	 * @return void
+	 */
 	private function stash_step_data( $data = '' ) {
 
 		$file = $this->get_file();
@@ -154,10 +221,6 @@ class EDD_Batch_Export extends EDD_Export {
 	 *
 	 * @access public
 	 * @since 2.4
-	 * @uses EDD_Export::can_export()
-	 * @uses EDD_Export::headers()
-	 * @uses EDD_Export::csv_cols_out()
-	 * @uses EDD_Export::csv_rows_out()
 	 * @return void
 	 */
 	public function export() {
