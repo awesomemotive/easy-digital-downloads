@@ -341,8 +341,7 @@ function edd_reports_tab_export() {
 										}
 										?>
 									</select>
-									<input type="hidden" name="edd-export-class" value="EDD_Payments_Export"/>
-									<input type="hidden" name="edd-action" value="payment_export"/>
+									<input type="hidden" name="edd-export-class" value="EDD_Batch_Payments_Export"/>
 									<span>
 										<input type="submit" value="<?php _e( 'Generate CSV', 'edd' ); ?>" class="button-secondary"/>
 										<span class="spinner"></span>
