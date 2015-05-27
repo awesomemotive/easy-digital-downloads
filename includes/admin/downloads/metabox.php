@@ -1019,9 +1019,10 @@ function edd_publish_meta_box_shortcode() {
 
 	$shortcode     = '[purchase_link id="' . absint( $post->ID ) . '" text="' . esc_html( $purchase_text ) . '" style="' . $style . '" color="' . esc_attr( $color ) . '"]';
 ?>
-	<div class="misc-pub-section misc-pub-download-shortcode">
-		<span id="download-shortcode" class="dashicons dashicons-editor-code"></span>&nbsp;<?php _e( 'Purchase Shortcode:', 'edd' ); ?>
-		<input type="text" id="edd-download-shortcode" class="widefat" readonly="readonly" value="<?php echo htmlentities( $shortcode ); ?>">
+	<div class="misc-pub-section misc-pub-purchase-shortcode">
+		<span id="purchase-shortcode" class="dashicons dashicons-editor-code"></span>&nbsp;<?php _e( 'Purchase Shortcode:', 'edd' ); ?>
+		<a href="#view-purchase-shortcode" class="view-purchase-shortcode hide-if-no-js"><? _e( 'View', 'edd' ); ?></a>
+		<input type="text" id="edd-purchase-shortcode" class="widefat hide-if-js" readonly="readonly" value="<?php echo htmlentities( $shortcode ); ?>">
 	</div>
 <?php
 }

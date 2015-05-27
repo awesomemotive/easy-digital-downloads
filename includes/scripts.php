@@ -186,7 +186,9 @@ function edd_load_admin_scripts( $hook ) {
 		'new_media_ui'            => apply_filters( 'edd_use_35_media_ui', 1 ),
 		'remove_text'             => __( 'Remove', 'edd' ),
 		'type_to_search'          => sprintf( __( 'Type to search %s', 'edd' ), edd_get_label_plural() ),
-		'quantities_enabled'      => edd_item_quantities_enabled()
+		'quantities_enabled'      => edd_item_quantities_enabled(),
+		'hide_purchase_shortcode' => __( 'Hide', 'edd' ),
+		'show_purchase_shortcode' => __( 'Show', 'edd' )
 	));
 
 	wp_enqueue_style( 'wp-color-picker' );
