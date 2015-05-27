@@ -485,7 +485,7 @@ final class EDD_Amazon_Payments {
 		//echo json_encode( $request->response ); exit;
 
 		$address = array();
-		$data    = new ResponseParser( $request );
+		$data    = new ResponseParser( $request->response );
 		$data    = $data->toArray();
 
 		if( isset( $data['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['Destination']['PhysicalDestination'] ) ) {
@@ -532,7 +532,7 @@ final class EDD_Amazon_Payments {
 
 		if( 200 == $charge->response['Status'] ) {
 
-			$charge = new ResponseParser( $charge );
+			$charge = new ResponseParser( $charge->response );
 			$charge = $charge->toArray();
 			
 
