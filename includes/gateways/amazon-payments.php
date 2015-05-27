@@ -78,6 +78,7 @@ final class EDD_Amazon_Payments {
 	private function filters() {
 		if ( is_admin() ) {
 			add_filter( 'edd_settings_gateways', array( $this, 'register_gateway_settings' ), 1, 1 );
+			add_filter( 'edd_payment_details_transaction_id-' . $this->gateway_id, array( $this, 'link_transaction_id' ), 10, 2 );
 		}
 	}
 
@@ -608,6 +609,24 @@ final class EDD_Amazon_Payments {
 		}
 
 	}
+
+	/**
+	 * Given a transaction ID, generate a link to the Amazon transaction ID details
+	 *
+	 * @since  2.4
+	 * @param  string $transaction_id The Transaction ID
+	 * @param  int    $payment_id     The payment ID for this transaction
+	 * @return string                 A link to the PayPal transaction details
+	 */
+	public function link_transaction_id( $transaction_id, $payment_id ) {
+
+		$base_url = 'https://sellercentral.amazon.com/hz/me/pmd/payment-details?orderReferenceId=';
+		$transaction_url = '<a href="' . esc_url( $base_url . $transaction_id ) . '" target="_blank">' . $transaction_id . '</a>';
+
+		return apply_filters( 'edd_' . $this->gateway_id . '_link_payment_details_transaction_id', $transaction_url );
+
+	}
+
 
 }
 
