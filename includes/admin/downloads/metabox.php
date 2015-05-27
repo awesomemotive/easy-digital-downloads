@@ -849,6 +849,34 @@ function edd_render_dowwn_tax_options( $post_id = 0 ) {
 add_action( 'edd_meta_box_settings_fields', 'edd_render_dowwn_tax_options', 30 );
 
 /**
+ * Add shortcode to settings meta box
+ *
+ * @since 2.5
+ * @global array $post Contains all the download data
+ * @return void
+ */
+function edd_render_meta_box_shortcode() {
+	global $post;
+
+	if( $post->post_type != 'download' ) {
+		return;
+	}
+
+	$purchase_text = edd_get_option( 'add_to_cart_text', __( 'Purchase', 'edd' ) );
+	$style         = edd_get_option( 'button_style', 'button' );
+	$color         = edd_get_option( 'checkout_color', 'blue' );
+	$color         = ( $color == 'inherit' ) ? '' : $color;
+
+	$shortcode     = '[purchase_link id="' . absint( $post->ID ) . '" text="' . esc_html( $purchase_text ) . '" style="' . $style . '" color="' . esc_attr( $color ) . '"]';
+?>
+	<p><strong><?php _e( 'Purchase Shortcode:', 'edd' ); ?></strong></p>
+	<input type="text" id="edd-purchase-shortcode" class="widefat" readonly="readonly" value="<?php echo htmlentities( $shortcode ); ?>">
+<?php
+}
+add_action( 'edd_meta_box_settings_fields', 'edd_render_meta_box_shortcode', 35 );
+
+
+/**
  * Render Accounting Options
  *
  * @since 1.6
@@ -996,34 +1024,3 @@ function edd_render_stats_meta_box() {
 <?php
 	do_action('edd_stats_meta_box');
 }
-
-
-/**
- * Add shortcode to publish meta box
- *
- * @since 2.5
- * @global array $post Contains all the download data
- * @return void
- */
-function edd_publish_meta_box_shortcode() {
-	global $post;
-
-	if( $post->post_type != 'download' ) {
-		return;
-	}
-
-	$purchase_text = edd_get_option( 'add_to_cart_text', __( 'Purchase', 'edd' ) );
-	$style         = edd_get_option( 'button_style', 'button' );
-	$color         = edd_get_option( 'checkout_color', 'blue' );
-	$color         = ( $color == 'inherit' ) ? '' : $color;
-
-	$shortcode     = '[purchase_link id="' . absint( $post->ID ) . '" text="' . esc_html( $purchase_text ) . '" style="' . $style . '" color="' . esc_attr( $color ) . '"]';
-?>
-	<div class="misc-pub-section misc-pub-purchase-shortcode">
-		<span id="purchase-shortcode" class="dashicons dashicons-editor-code"></span>&nbsp;<?php _e( 'Purchase Shortcode:', 'edd' ); ?>
-		<a href="#view-purchase-shortcode" class="view-purchase-shortcode hide-if-no-js"><? _e( 'View', 'edd' ); ?></a>
-		<input type="text" id="edd-purchase-shortcode" class="widefat hide-if-js" readonly="readonly" value="<?php echo htmlentities( $shortcode ); ?>">
-	</div>
-<?php
-}
-add_action( 'post_submitbox_misc_actions', 'edd_publish_meta_box_shortcode' );

@@ -12,7 +12,6 @@ jQuery(document).ready(function ($) {
 			this.prices();
 			this.files();
 			this.updatePrices();
-			this.metabox();
 		},
 		clone_repeatable : function(row) {
 
@@ -284,21 +283,6 @@ jQuery(document).ready(function ($) {
 					);
 				}
 			} );
-		},
-
-		metabox: function() {
-			$( '.view-purchase-shortcode' ).click( function () {
-				if ( $( '#edd-purchase-shortcode' ).is( ':hidden' ) ) {
-					$( '#edd-purchase-shortcode' ).show();
-					$( '#edd-purchase-shortcode' ).slideDown( 'fast' );
-					$( '.view-purchase-shortcode' ).html( edd_vars.hide_purchase_shortcode );
-				} else {
-					$( '#edd-purchase-shortcode' ).slideUp( 'fast' );
-					$( '#edd-purchase-shortcode' ).hide();
-					$( '.view-purchase-shortcode' ).html( edd_vars.show_purchase_shortcode );
-				}
-				return false;
-			});
 		}
 
 	};
