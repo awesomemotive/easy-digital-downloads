@@ -698,7 +698,7 @@ function edd_get_registered_settings() {
 				'enable_sequential' => array(
 					'id' => 'enable_sequential',
 					'name' => __( 'Sequential Order Numbers', 'edd' ),
-					'desc' => __( 'Check this box to sequential order numbers.', 'edd' ),
+					'desc' => __( 'Check this box to enable sequential order numbers.', 'edd' ),
 					'type' => 'checkbox'
 				),
 				'sequential_start' => array(
