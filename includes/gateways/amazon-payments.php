@@ -331,10 +331,18 @@ final class EDD_Amazon_Payments {
 
 
 	public function login_form() {
-		ob_start(); ?>
 
-		<?php if ( empty( $this->reference_id ) && 'amazon' == edd_get_chosen_gateway() ) : ?>
-		
+		if ( empty( $this->reference_id ) && 'amazon' == edd_get_chosen_gateway() ) : 
+
+			remove_all_actions( 'edd_purchase_form_after_cc_form' );
+			remove_all_actions( 'edd_purchase_form_after_user_info' );
+			remove_all_actions( 'edd_purchase_form_register_fields' );
+			remove_all_actions( 'edd_purchase_form_login_fields' );
+			remove_all_actions( 'edd_register_fields_before' );
+			remove_all_actions( 'edd_cc_form' );
+			remove_all_actions( 'edd_checkout_form_top' );
+
+			ob_start(); ?>
 			<fieldset id="edd-amazon-login-fields" class="edd-amazon-fields">
 
 				<div id="edd-amazon-pay-button"></div>
@@ -365,11 +373,11 @@ final class EDD_Amazon_Payments {
 
 			</fieldset>
 
-		<?php endif;
+		<?php
 
-		$form = ob_get_clean();
-		echo $form;
+		echo ob_get_clean();
 
+		endif;
 	}
 
 	public function wallet_form() {
