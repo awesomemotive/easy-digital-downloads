@@ -716,7 +716,7 @@ function edd_get_registered_settings() {
 				'sequential_start' => array(
 					'id'   => 'sequential_start',
 					'name' => __( 'Sequential Starting Number', 'edd' ),
-					'desc' => __( 'The number that sequential order numbers should start at.', 'edd' ),
+					'desc' => __( 'The number at which the sequence should begin.', 'edd' ),
 					'type' => 'number',
 					'size' => 'small',
 					'std'  => '1'
