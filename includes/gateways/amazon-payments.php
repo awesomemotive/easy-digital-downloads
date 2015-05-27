@@ -90,6 +90,7 @@ final class EDD_Amazon_Payments {
 		add_action( 'edd_gateway_amazon', array( $this, 'process_purchase' ) );
 		add_action( 'wp_ajax_edd_amazon_get_address', array( $this, 'ajax_get_address' ) );
 		add_action( 'wp_ajax_nopriv_edd_amazon_get_address', array( $this, 'ajax_get_address' ) );
+		add_action( 'edd_pre_process_purchase', array( $this, 'disable_address_requirement' ), 99999 );
 
 		if ( empty( $this->reference_id ) ) {
 			return;
@@ -562,6 +563,14 @@ final class EDD_Amazon_Payments {
 		}
 
 		return $this->redirect_uri;
+
+	}
+
+	public function disable_address_requirement() {
+
+		if( ! empty( $_POST['edd-gateway'] ) && $this->gateway_id == $_REQUEST['edd-gateway'] ) {
+			add_filter( 'edd_require_billing_address', '__return_false', 9999 );
+		}
 
 	}
 
