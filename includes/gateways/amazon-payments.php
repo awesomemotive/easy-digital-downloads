@@ -92,6 +92,7 @@ final class EDD_Amazon_Payments {
 		add_action( 'wp_ajax_edd_amazon_get_address', array( $this, 'ajax_get_address' ) );
 		add_action( 'wp_ajax_nopriv_edd_amazon_get_address', array( $this, 'ajax_get_address' ) );
 		add_action( 'edd_pre_process_purchase', array( $this, 'disable_address_requirement' ), 99999 );
+		add_action( 'init', array( $this, 'process_ipn' ) );
 
 		if ( empty( $this->reference_id ) ) {
 			return;
@@ -627,6 +628,15 @@ final class EDD_Amazon_Payments {
 
 	}
 
+	public function process_ipn() {
+
+		if ( ! isset( $_GET['edd-listener'] ) || $_GET['edd-listener'] !== 'AmazonIPN' ) {
+			return;
+		}
+
+
+		$ipn = new IpnHandler;
+	}
 
 }
 
