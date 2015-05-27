@@ -996,3 +996,33 @@ function edd_render_stats_meta_box() {
 <?php
 	do_action('edd_stats_meta_box');
 }
+
+
+/**
+ * Add shortcode to publish meta box
+ *
+ * @since 2.5
+ * @global array $post Contains all the download data
+ * @return void
+ */
+function edd_publish_meta_box_shortcode() {
+	global $post;
+
+	if( $post->post_type != 'download' ) {
+		return;
+	}
+
+	$purchase_text = edd_get_option( 'add_to_cart_text', __( 'Purchase', 'edd' ) );
+	$style         = edd_get_option( 'button_style', 'button' );
+	$color         = edd_get_option( 'checkout_color', 'blue' );
+	$color         = ( $color == 'inherit' ) ? '' : $color;
+
+	$shortcode     = '[purchase_link id="' . absint( $post->ID ) . '" text="' . esc_html( $purchase_text ) . '" style="' . $style . '" color="' . esc_attr( $color ) . '"]';
+?>
+	<div class="misc-pub-section misc-pub-download-shortcode">
+		<span id="download-shortcode" class="dashicons dashicons-editor-code"></span>&nbsp;<?php _e( 'Purchase Shortcode:', 'edd' ); ?>
+		<input type="text" id="edd-download-shortcode" class="widefat" readonly="readonly" value="<?php echo htmlentities( $shortcode ); ?>">
+	</div>
+<?php
+}
+add_action( 'post_submitbox_misc_actions', 'edd_publish_meta_box_shortcode' );
