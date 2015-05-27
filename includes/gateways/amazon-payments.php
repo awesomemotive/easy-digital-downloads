@@ -535,6 +535,41 @@ final class EDD_Amazon_Payments {
 			$charge = new ResponseParser( $charge->response );
 			$charge = $charge->toArray();
 			
+			//echo '<pre>'; print_r( $charge ); echo '</pre>'; exit;
+			
+			$status = $charge['AuthorizeResult']['AuthorizationDetails']['AuthorizationStatus']['State'];
+			if( 'Declined' === $status ) {
+				edd_set_error( 'payment_declined', __( 'Your payment could not be authorized, please try a different payment method', 'edd' ) );
+				edd_send_back_to_checkout( '?payment-mode=amazon' );
+			}
+
+			// Setup payment data to be recorded
+			$payment_data = array(
+				'price'         => $purchase_data['price'],
+				'date'          => $purchase_data['date'],
+				'user_email'    => $purchase_data['user_email'],
+				'purchase_key'  => $purchase_data['purchase_key'],
+				'currency'      => edd_get_currency(),
+				'downloads'     => $purchase_data['downloads'],
+				'user_info'     => $purchase_data['user_info'],
+				'cart_details'  => $purchase_data['cart_details'],
+				'gateway'       => $this->gateway_id,
+				'status'        => 'pending'
+			);
+
+			$payment_id = edd_insert_payment( $payment_data );
+
+			$authorization_id = $charge['AuthorizeResult']['AuthorizationDetails']['AmazonAuthorizationId'];
+			$reference_id     = sanitize_text_field( $_POST['edd_amazon_reference_id'] );
+
+
+			add_post_meta( $payment_id, '_edd_amazon_authorization_id', $authorization_id );
+
+			edd_set_payment_transaction_id( $payment_id, $reference_id );
+
+			// Empty the shopping cart
+			edd_empty_cart();
+			edd_send_to_success_page();
 
 		} else {
 
