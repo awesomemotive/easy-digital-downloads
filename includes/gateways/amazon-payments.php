@@ -30,7 +30,7 @@ final class EDD_Amazon_Payments {
 			return;
 		}
 
-		$this->reference_id = ! empty( $_REQUEST['amazon_reference_id'] ) ? $_REQUEST['amazon_reference_id'] : '';
+		$this->reference_id = ! empty( $_REQUEST['amazon_reference_id'] ) ? sanitize_text_field( $_REQUEST['amazon_reference_id'] ) : '';
 
 		// Run this separate so we can ditch as early as possible
 		$this->register();
@@ -47,15 +47,19 @@ final class EDD_Amazon_Payments {
 	}
 
 	public static function getInstance() {
+
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof EDD_Amazon_Payments ) ) {
 			self::$instance = new EDD_Amazon_Payments;
 		}
 
 		return self::$instance;
+
 	}
 
 	private function register() {
+
 		add_filter( 'edd_payment_gateways', array( $this, 'register_gateway' ), 1, 1 );
+
 	}
 
 	private function config() {
@@ -76,29 +80,33 @@ final class EDD_Amazon_Payments {
 	}
 
 	private function filters() {
+
 		if ( is_admin() ) {
 			add_filter( 'edd_settings_gateways', array( $this, 'register_gateway_settings' ), 1, 1 );
 			add_filter( 'edd_payment_details_transaction_id-' . $this->gateway_id, array( $this, 'link_transaction_id' ), 10, 2 );
 		}
+
 	}
 
 	private function actions() {
-		add_action( 'wp_enqueue_scripts', array( $this, 'print_client' ), 10 );
-		add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ), 11 );
-		add_action( 'init',               array( $this, 'capture_oauth' ) );
+
+		add_action( 'wp_enqueue_scripts',                      array( $this, 'print_client' ), 10 );
+		add_action( 'wp_enqueue_scripts',                      array( $this, 'load_scripts' ), 11 );
+		add_action( 'init',                                    array( $this, 'capture_oauth' ) );
 		add_action( 'edd_purchase_form_before_register_login', array( $this, 'login_form' ) );
-		add_action( 'edd_checkout_error_check', array( $this, 'checkout_errors' ), 10, 2 );
-		add_action( 'edd_gateway_amazon', array( $this, 'process_purchase' ) );
-		add_action( 'wp_ajax_edd_amazon_get_address', array( $this, 'ajax_get_address' ) );
-		add_action( 'wp_ajax_nopriv_edd_amazon_get_address', array( $this, 'ajax_get_address' ) );
-		add_action( 'edd_pre_process_purchase', array( $this, 'disable_address_requirement' ), 99999 );
-		add_action( 'init', array( $this, 'process_ipn' ) );
+		add_action( 'edd_checkout_error_check',                array( $this, 'checkout_errors' ), 10, 2 );
+		add_action( 'edd_gateway_amazon',                      array( $this, 'process_purchase' ) );
+		add_action( 'wp_ajax_edd_amazon_get_address',          array( $this, 'ajax_get_address' ) );
+		add_action( 'wp_ajax_nopriv_edd_amazon_get_address',   array( $this, 'ajax_get_address' ) );
+		add_action( 'edd_pre_process_purchase',                array( $this, 'disable_address_requirement' ), 99999 );
+		add_action( 'init',                                    array( $this, 'process_ipn' ) );
 
 		if ( empty( $this->reference_id ) ) {
 			return;
 		}
 
 		add_action( 'edd_amazon_cc_form', array( $this, 'wallet_form' ) );
+
 	}
 
 	private function get_client() {
@@ -113,6 +121,7 @@ final class EDD_Amazon_Payments {
 	}
 
 	private function setup_client() {
+
 		$config = array(
 			'merchant_id' => edd_get_option( 'amazon_seller_id', '' ),
 			'client_id'   => edd_get_option( 'amazon_client_id', '' ),
@@ -126,6 +135,7 @@ final class EDD_Amazon_Payments {
 		$client = new Client( $config );
 
 		return $client;
+
 	}
 
 	public function register_gateway( $gateways ) {
@@ -134,7 +144,7 @@ final class EDD_Amazon_Payments {
 			$this->gateway_id => array(
 				'admin_label'    => __( 'Amazon', 'edd' ),
 				'checkout_label' => __( 'Amazon', 'edd' ),
-				'supports'       => array( 'buy_now' )
+				'supports'       => array( 'buy_now' ),
 			),
 		);
 
@@ -166,21 +176,21 @@ final class EDD_Amazon_Payments {
 				'name' => __( 'Seller ID', 'edd' ),
 				'desc' => __( 'Found in the Integration settings. Also called a Merchent ID', 'edd' ),
 				'type' => 'text',
-				'size' => 'regular'
+				'size' => 'regular',
 			),
 			'amazon_mws_access_key' => array(
 				'id'   => 'amazon_mws_access_key',
 				'name' => __( 'MWS Access Key', 'edd' ),
 				'desc' => __( 'Found on Seller Central in the MWS Keys section', 'edd' ),
 				'type' => 'text',
-				'size' => 'regular'
+				'size' => 'regular',
 			),
 			'amazon_mws_secret_key' => array(
 				'id'   => 'amazon_mws_secret_key',
 				'name' => __( 'MWS Secret Key', 'edd' ),
 				'desc' => __( 'Found on Seller Central in the MWS Keys section', 'edd' ),
 				'type' => 'text',
-				'size' => 'regular'
+				'size' => 'regular',
 			),
 			'amazon_mws_callback_url' => array(
 				'id'       => 'amazon_callback_url',
@@ -265,6 +275,7 @@ final class EDD_Amazon_Payments {
 	}
 
 	public function print_client() {
+
 		?>
 		<script>
 			window.onAmazonLoginReady = function() {
@@ -272,6 +283,7 @@ final class EDD_Amazon_Payments {
 			};
 		</script>
 		<?php
+
 	}
 
 	public function capture_oauth() {
@@ -291,7 +303,7 @@ final class EDD_Amazon_Payments {
 		try {
 
 			$profile = $this->get_client()->getUserInfo( $_GET['access_token'] );
-			
+
 			if( is_user_logged_in() ) {
 
 				// Do something, probably with address
@@ -310,7 +322,7 @@ final class EDD_Amazon_Payments {
 						'user_email'   => $profile['email'],
 						'user_login'   => $profile['email'],
 						'display_name' => $profile['name'],
-						'user_pass'    => wp_generate_password( 20 )
+						'user_pass'    => wp_generate_password( 20 ),
 					);
 
 					$user_id = wp_insert_user( $args );
@@ -335,7 +347,7 @@ final class EDD_Amazon_Payments {
 
 	public function login_form() {
 
-		if ( empty( $this->reference_id ) && 'amazon' == edd_get_chosen_gateway() ) : 
+		if ( empty( $this->reference_id ) && 'amazon' == edd_get_chosen_gateway() ) :
 
 			remove_all_actions( 'edd_purchase_form_after_cc_form' );
 			remove_all_actions( 'edd_purchase_form_after_user_info' );
@@ -397,7 +409,7 @@ final class EDD_Amazon_Payments {
 			</style>
 
 			<div id="addressBookWidgetDiv">
-			</div> 
+			</div>
 
 			<script>
 			var edd_scripts;
@@ -447,10 +459,10 @@ final class EDD_Amazon_Payments {
 				sellerId: edd_amazon.sellerId,
 				amazonOrderReferenceId: edd_amazon.referenceID,
 				design: {
-				  size: {width:'400px', height:'260px'}
+					size: {width:'400px', height:'260px'}
 				},
 				onPaymentSelect: function(orderReference) {
-				  	// Display your custom complete purchase button
+					// Display your custom complete purchase button
 				},
 				onError: function(error) {
 				  // Write your custom error handling
@@ -465,6 +477,7 @@ final class EDD_Amazon_Payments {
 				<input type="hidden" name="card_state" class="card_state" id="card_state" value=""/>
 				<input type="hidden" name="billing_country" class="billing_country" id="billing_country" value=""/>
 			</div>
+
 		</fieldset>
 
 		<?php
@@ -480,7 +493,7 @@ final class EDD_Amazon_Payments {
 		}
 
 		$request = $this->get_client()->getOrderReferenceDetails( array(
-			'merchant_id' 		        => edd_get_option( 'amazon_seller_id', '' ),
+			'merchant_id'               => edd_get_option( 'amazon_seller_id', '' ),
 			'amazon_order_reference_id' => $_POST['reference_id'],
 		) );
 
@@ -536,9 +549,9 @@ final class EDD_Amazon_Payments {
 
 			$charge = new ResponseParser( $charge->response );
 			$charge = $charge->toArray();
-			
+
 			//echo '<pre>'; print_r( $charge ); echo '</pre>'; exit;
-			
+
 			$status = $charge['AuthorizeResult']['AuthorizationDetails']['AuthorizationStatus']['State'];
 			if( 'Declined' === $status ) {
 				edd_set_error( 'payment_declined', __( 'Your payment could not be authorized, please try a different payment method', 'edd' ) );
@@ -556,7 +569,7 @@ final class EDD_Amazon_Payments {
 				'user_info'     => $purchase_data['user_info'],
 				'cart_details'  => $purchase_data['cart_details'],
 				'gateway'       => $this->gateway_id,
-				'status'        => 'pending'
+				'status'        => 'pending',
 			);
 
 			$payment_id = edd_insert_payment( $payment_data );
@@ -577,7 +590,7 @@ final class EDD_Amazon_Payments {
 
 			// Set an error
 			echo '<pre>'; print_r( $charge ); echo '</pre>'; exit;
-			
+
 		}
 
 
@@ -634,8 +647,8 @@ final class EDD_Amazon_Payments {
 			return;
 		}
 
-
 		$ipn = new IpnHandler;
+
 	}
 
 }
