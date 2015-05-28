@@ -408,10 +408,10 @@ function edd_ajax_recalculate_taxes() {
 	$cart = ob_get_clean();
 	$response = array(
 		'html'  => $cart,
-		'tax' => edd_get_cart_tax(),
-		'tax_formatted' => html_entity_decode( edd_cart_tax( false ), ENT_COMPAT, 'UTF-8' ),
-		'tax_rate' => edd_get_tax_rate(),
-		'tax_rate_formatted' => html_entity_decode( edd_get_formatted_tax_rate(), ENT_COMPAT, 'UTF-8' ),
+		'tax_raw' => edd_get_cart_tax(),
+		'tax' => html_entity_decode( edd_cart_tax( false ), ENT_COMPAT, 'UTF-8' ),
+		'tax_rate_raw' => edd_get_tax_rate(),
+		'tax_rate' => html_entity_decode( edd_get_formatted_tax_rate(), ENT_COMPAT, 'UTF-8' ),
 		'total' => html_entity_decode( edd_cart_total( false ), ENT_COMPAT, 'UTF-8' ),
 	);
 
