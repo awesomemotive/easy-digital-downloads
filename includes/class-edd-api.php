@@ -1316,7 +1316,7 @@ class EDD_API {
 		$log_meta = array(
 			'request_ip' => edd_get_ip(),
 			'user'       => $this->user_id,
-			'key'        => isset( $wp_query->query_vars['key'] ) ? $wp_query->query_vars['key'] : null
+			'key'        => isset( $wp_query->query_vars['key'] ) ? $wp_query->query_vars['key'] : null,
 			'token'      => isset( $wp_query->query_vars['token'] ) ? $wp_query->query_vars['token'] : null
 		);
 
