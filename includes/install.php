@@ -157,7 +157,8 @@ function edd_install() {
 		// When new upgrade routines are added, mark them as complete on fresh install
 		$upgrade_routines = array(
 			'upgrade_payment_taxes',
-			'upgrade_customer_payments_association'
+			'upgrade_customer_payments_association',
+			'upgrade_user_api_keys',
 		);
 
 		foreach ( $upgrade_routines as $upgrade ) {
