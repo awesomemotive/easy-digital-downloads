@@ -370,9 +370,11 @@ class EDD_API {
 
 				break;
 
-			case 'purchases' :
+			case 'downloads' :
 
-				$data = $this->get_purchases();
+				$customer = isset( $wp_query->query_vars['customer'] ) ? $wp_query->query_vars['customer']  : null;
+				
+				$data = $this->get_downloads( $customer );
 
 				break;
 
@@ -406,7 +408,7 @@ class EDD_API {
 			'customers',
 			'sales',
 			'discounts',
-			'purchases'
+			'downloads'
 		) );
 
 		$query = isset( $wp_query->query_vars['edd-api'] ) ? $wp_query->query_vars['edd-api'] : null;
@@ -1281,90 +1283,83 @@ class EDD_API {
 
 
 	/**
-	 * Process Get Purchases API Request
+	 * Process Get Downloads API Request
 	 *
 	 * @access public
 	 * @since 2.5
 	 * @author Daniel J Griffiths
 	 * @global object $wpdb Used to query the database using the WordPress
 	 *   Database API
-	 * @return array $purchases Multidimensional array of the customers
+	 * @return array $downloads Multidimensional array of the downloads
 	 */
-	public function get_purchases() {
-		
-		$purchases = array();
-		$errors = array();
+	public function get_downloads( $customer ) {
+		$downloads  = array();
+		$errors     = array();
+		$meta_query = array();
 
-		global $wpdb;
+		global $wpdb, $edd_logs;
 
 		$paged    = $this->get_paged();
 		$per_page = $this->per_page();
 		$offset   = $per_page * ( $paged - 1 );
 		$count    = 0;
 
-		$all_purchases = edd_get_users_purchases( $this->user_id, $per_page, $paged, 'any' );
+		if( $customer ) {
+			if( is_numeric( $customer ) ) {
+				$meta_query[] = array(
+					'key'   => '_edd_log_user_id',
+					'value' => $customer
+				);
+			} else {
+				$meta_query[] = array(
+					'key'     => '_edd_log_user_info',
+					'value'   => $customer,
+					'compare' => 'LIKE'
+				);
+			}
+		}
 
-		if ( empty( $all_purchases ) ) {
-			$error['error'] = __( 'No purchases found!', 'edd' );
+		$query = array(
+			'log_type'       => 'file_download',
+			'paged'          => $paged,
+			'meta_query'     => $meta_query,
+			'posts_per_page' => $per_page,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false
+		);
+
+		$logs = $edd_logs->get_connected_logs( $query );
+
+		if ( empty( $logs ) ) {
+			$error['error'] = __( 'No downloads found!', 'edd' );
 			return $error;
 		}
 
-		foreach( $all_purchases as $purchase ) {
-			setup_postdata( $purchase );
-			$purchase_data = edd_get_payment_meta( $purchase->ID );
+		foreach( $logs as $log ) {
+			$meta        = get_post_custom( $log->ID );
+			$user_info   = isset( $meta['_edd_log_user_info'] ) ? maybe_unserialize( $meta['_edd_log_user_info'][0] ) : array();
+			$payment_id  = isset( $meta['_edd_log_payment_id'] ) ? $meta['_edd_log_payment_id'][0] : false;
+			$customer_id = edd_get_payment_customer_id( $payment_id );
+			$ip          = $meta['_edd_log_ip'][0];
+			$user_id     = isset( $user_info['id'] ) ? $user_info['id'] : false;
+			$files       = edd_get_payment_meta_downloads( $payment_id );
+			$files       = edd_get_download_files( $files[0]['id'] );
+			$file_id     = (int) $meta['_edd_log_file_id'][0];
+			$file_id     = $file_id !== false ? $file_id : 0;
+			$file_name   = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
 
-			$purchases['purchases'][$count]['ID']          = edd_get_payment_number( $purchase->ID );
-			$purchases['purchases'][$count]['date']        = get_post_field( 'post_date', $purchase->ID );
-			$purchases['purchases'][$count]['amount']      = edd_format_amount( edd_get_payment_amount( $purchase->ID ) );
-			$purchases['purchases'][$count]['status']      = edd_get_payment_status( $purchase, true );
-			$purchases['purchases'][$count]['payment_key'] = edd_get_payment_key( $purchase->ID );
-			$purchases['purchases'][$count]['details_url'] = esc_url( add_query_arg( 'payment_key', edd_get_payment_key( $purchase->ID ), edd_get_success_page_uri() ) );
-
-			$downloads     = edd_get_payment_meta_cart_details( $purchase->ID, true );
-			$purchase_data = edd_get_payment_meta( $purchase->ID );
-			$email         = edd_get_payment_user_email( $purchase->ID );
-
-			if( $downloads ) {
-				foreach( $downloads as $download ) {
-					if( edd_is_bundled_product( $download['id'] ) ) {
-						continue;
-					}
-
-					$price_id       = edd_get_cart_item_price_id( $download );
-					$download_files = edd_get_download_files( $download['id'], $price_id );
-					$name           = get_the_title( $download['id'] );
-
-					if( ! empty( $price_id ) ) {
-						$name .= ' - ' . edd_get_price_option_name( $download['id'], $price_id, $purchase->ID );
-					}
-
-					if( edd_is_payment_complete( $purchase->ID ) ) {
-						if( $download_files ) {
-							$dcount = 0;
-
-							foreach( $download_files as $filekey => $file ) {
-								if( ! edd_no_redownload() ) {
-									$download_url = edd_get_download_file_url( $purchase_data['key'], $email, $filekey, $download['id'], $price_id );
-								} else {
-									$download_url = __( 'This file can not be redownloaded.', 'edd' );
-								}
-
-								$purchases['purchases'][$count]['downloads'][$dcount]['name']         = isset( $file['name'] ) ? esc_html( $file['name'] ) : esc_html( $name );
-								$purchases['purchases'][$count]['downloads'][$dcount]['download_url'] = $download_url;
-
-								$dcount++;
-							}
-						} else {
-							$purchases['purchases'][$count]['downloads']['error'] = __( 'No downloadable files found.', 'edd' );
-						}
-					}
-				}
-			}
+			$downloads['downloads'][$count]['ID']          = $log->ID;
+			$downloads['downloads'][$count]['user_id']     = $user_id;
+			$downloads['downloads'][$count]['customer_id'] = $customer_id;
+			$downloads['downloads'][$count]['payment_id']  = $payment_id;
+			$downloads['downloads'][$count]['file']        = $file_name;
+			$downloads['downloads'][$count]['ip']          = $ip;
+			$downloads['downloads'][$count]['date']        = $log->post_date;
 
 			$count++;
 		}
 
-		return $purchases;
+		return $downloads;
 	}
 
 
