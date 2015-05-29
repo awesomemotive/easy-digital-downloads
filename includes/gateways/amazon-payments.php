@@ -93,6 +93,7 @@ final class EDD_Amazon_Payments {
 		add_action( 'wp_ajax_nopriv_edd_amazon_get_address', array( $this, 'ajax_get_address' ) );
 		add_action( 'edd_pre_process_purchase', array( $this, 'disable_address_requirement' ), 99999 );
 		add_action( 'init', array( $this, 'process_ipn' ) );
+		add_action( 'edd_update_payment_status', array( $this, 'process_refund' ), 200, 3 );
 
 		if ( empty( $this->reference_id ) ) {
 			return;
@@ -562,10 +563,11 @@ final class EDD_Amazon_Payments {
 			$payment_id = edd_insert_payment( $payment_data );
 
 			$authorization_id = $charge['AuthorizeResult']['AuthorizationDetails']['AmazonAuthorizationId'];
+			$capture_id       = str_replace( '-A', '-C', $authorization_id );
 			$reference_id     = sanitize_text_field( $_POST['edd_amazon_reference_id'] );
 
-
-			add_post_meta( $payment_id, '_edd_amazon_authorization_id', $authorization_id );
+			edd_update_payment_meta( $payment_id, '_edd_amazon_authorization_id', $authorization_id );
+			edd_update_payment_meta( $payment_id, '_edd_amazon_capture_id', $capture_id );
 
 			edd_set_payment_transaction_id( $payment_id, $reference_id );
 
@@ -636,6 +638,62 @@ final class EDD_Amazon_Payments {
 
 
 		$ipn = new IpnHandler;
+
+
+		/* once verified charge was complete, call $this->complete( $payment_id ); */
+	}
+
+	public function process_refund( $payment_id, $new_status, $old_status ) {
+
+		if( 'publish' != $old_status && 'revoked' != $old_status ) {
+			return;
+		}
+
+		if( 'refunded' != $new_status ) {
+			return;
+		}
+
+		$this->refund( $payment_id );
+
+	}
+
+	private function complete( $payment_id = 0 ) {
+
+		edd_update_payment_status( $payment_id, 'publish' );
+
+		$this->get_client()->closeAuthorization( array(
+			'merchant_id'             => edd_get_option( 'amazon_seller_id', '' ),
+			'amazon_authorization_id' => $authorization_id,
+		) );
+
+	}
+
+	private function refund( $payment_id = 0 ) {
+
+		$refund = $this->get_client()->refund( array(
+			'merchant_id'         => edd_get_option( 'amazon_seller_id', '' ),
+			'amazon_capture_id'   => edd_get_payment_meta( $payment_id, '_edd_amazon_capture_id', true ),
+			'refund_reference_id' => md5( edd_get_payment_key( $payment_id ) . '-refund' ),
+			'refund_amount'       => edd_get_payment_amount( $payment_id ),
+			'currency_code'       => edd_get_payment_currency_code( $payment_id ),
+		) );
+
+		if( 200 == $refund->response['Status'] ) {
+
+			$refund = new ResponseParser( $refund->response );
+			$refund = $refund->toArray();
+
+			$reference_id = $refund['RefundResult']['RefundDetails']['RefundReferenceId'];
+
+			edd_insert_payment_note( $payment_id, sprintf( __( 'Charge refunded in Amazon. Reference ID: %s', 'edd' ), $reference_id ) );
+
+		} else {
+
+			echo '<pre>'; print_r( $refund ); echo '</pre>'; exit;
+			edd_insert_payment_note( $payment_id, __( 'Refund failed in Amazon.', 'edd' ) );
+		
+		}
+
 	}
 
 }
