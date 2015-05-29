@@ -383,6 +383,7 @@ final class EDD_Amazon_Payments {
 							window.location = edd_amazon.checkoutUri + '&amazon_reference_id=' + amazonOrderReferenceId;
 						}, onError: function(error) {
 							// your error handling code
+							jQuery('#edd_purchase_submit').prepend( '<div class="edd_errors"><p class="edd_error" id="edd_error_"' + error.getErrorCode() + '>' + error.getErrorMessage() + '</p></div>' );
 							console.log( error.getErrorCode() );
 							console.log( error.getErrorMessage() );
 						}
@@ -452,6 +453,7 @@ final class EDD_Amazon_Payments {
 					designMode: 'responsive'
 				},
 				onError: function(error) {
+					jQuery('#edd_purchase_submit').prepend( '<div class="edd_errors"><p class="edd_error" id="edd_error_"' + error.getErrorCode() + '>' + error.getErrorMessage() + '</p></div>' );
 					console.log( error.getErrorCode() );
 					console.log( error.getErrorMessage() ); 
 				}
@@ -469,6 +471,9 @@ final class EDD_Amazon_Payments {
 					// Display your custom complete purchase button
 				},
 				onError: function(error) {
+					jQuery('#edd_purchase_submit').prepend( '<div class="edd_errors"><p class="edd_error" id="edd_error_"' + error.getErrorCode() + '>' + error.getErrorMessage() + '</p></div>' );
+					console.log( error.getErrorCode() );
+					console.log( error.getErrorMessage() ); 
 				  // Write your custom error handling
 				}
 			  }).bind("walletWidgetDiv");
