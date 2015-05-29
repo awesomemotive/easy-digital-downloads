@@ -690,13 +690,35 @@ final class EDD_Amazon_Payments {
 			$refund = $refund->toArray();
 
 			$reference_id = $refund['RefundResult']['RefundDetails']['RefundReferenceId'];
+			$status       = $refund['RefundResult']['RefundDetails']['RefundStatus']['State'];
 
-			edd_insert_payment_note( $payment_id, sprintf( __( 'Charge refunded in Amazon. Reference ID: %s', 'edd' ), $reference_id ) );
+			switch( $status ) {
+
+				case 'Declined' :
+
+					$note   = __( 'Refund declined in Amazon. Refeund ID: %s', 'edd' );
+
+					break;
+
+				case 'Completed' :
+
+					$refund_id = $refund['RefundResult']['RefundDetails']['AmazonRefundId'];
+					$note      = sprintf( __( 'Refund completed in Amazon. Refeund ID: %s', 'edd' ), $refund_id );
+
+					break;
+
+				case 'Pending' :
+
+					$note = sprintf( __( 'Refund initiated in Amazon. Reference ID: %s', 'edd' ), $reference_id );
+
+					break;
+			}
+
+			edd_insert_payment_note( $payment_id, $note );
 
 		} else {
 
-			echo '<pre>'; print_r( $refund ); echo '</pre>'; exit;
-			edd_insert_payment_note( $payment_id, __( 'Refund failed in Amazon.', 'edd' ) );
+			edd_insert_payment_note( $payment_id, __( 'Refund request failed in Amazon.', 'edd' ) );
 		
 		}
 
