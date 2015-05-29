@@ -534,7 +534,7 @@ final class EDD_Amazon_Payments {
 
 		}
 
-		$charge = $this->get_client()->charge( array(
+		$args = apply_filters( 'edd_amazon_charge_args', array(
 			'merchant_id'                => edd_get_option( 'amazon_seller_id', '' ),
 			'amazon_reference_id'        => $purchase_data['post_data']['edd_amazon_reference_id'],
 			'authorization_reference_id' => $purchase_data['purchase_key'],
@@ -545,7 +545,9 @@ final class EDD_Amazon_Payments {
 			'charge_order_id'            => $purchase_data['purchase_key'],
 			'store_name'                 => remove_accents( wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) ),
 			'transaction_timeout'        => 0
-		) );
+		), $purchase_data );
+
+		$charge = $this->get_client()->charge( $args );
 
 		if( 200 == $charge->response['Status'] ) {
 
@@ -553,6 +555,7 @@ final class EDD_Amazon_Payments {
 			$charge = $charge->toArray();
 
 			$status = $charge['AuthorizeResult']['AuthorizationDetails']['AuthorizationStatus']['State'];
+
 			if( 'Declined' === $status ) {
 
 				// show reason for decline
