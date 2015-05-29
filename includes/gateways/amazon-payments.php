@@ -100,7 +100,7 @@ final class EDD_Amazon_Payments {
 		add_action( 'wp_ajax_nopriv_edd_amazon_get_address',   array( $this, 'ajax_get_address' ) );
 		add_action( 'edd_pre_process_purchase',                array( $this, 'disable_address_requirement' ), 99999 );
 		add_action( 'init',                                    array( $this, 'process_ipn' ) );
-		add_action( 'edd_update_payment_status', array( $this, 'process_refund' ), 200, 3 );
+		add_action( 'edd_update_payment_status',               array( $this, 'process_refund' ), 200, 3 );
 
 		if ( empty( $this->reference_id ) ) {
 			return;
