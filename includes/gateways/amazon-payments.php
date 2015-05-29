@@ -383,6 +383,8 @@ final class EDD_Amazon_Payments {
 							window.location = edd_amazon.checkoutUri + '&amazon_reference_id=' + amazonOrderReferenceId;
 						}, onError: function(error) {
 							// your error handling code
+							console.log( error.getErrorCode() );
+							console.log( error.getErrorMessage() );
 						}
 					});
 				</script>
@@ -450,7 +452,8 @@ final class EDD_Amazon_Payments {
 					designMode: 'responsive'
 				},
 				onError: function(error) {
-					// your error handling code
+					console.log( error.getErrorCode() );
+					console.log( error.getErrorMessage() ); 
 				}
 			}).bind("addressBookWidgetDiv");
 			</script>
