@@ -544,6 +544,7 @@ final class EDD_Amazon_Payments {
 			'charge_note'                => edd_get_purchase_summary( $purchase_data ),
 			'charge_order_id'            => $purchase_data['purchase_key'],
 			'store_name'                 => remove_accents( wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) ),
+			'transaction_timeout'        => 0
 		) );
 
 		if( 200 == $charge->response['Status'] ) {
@@ -551,10 +552,12 @@ final class EDD_Amazon_Payments {
 			$charge = new ResponseParser( $charge->response );
 			$charge = $charge->toArray();
 
-			//echo '<pre>'; print_r( $charge ); echo '</pre>'; exit;
-
 			$status = $charge['AuthorizeResult']['AuthorizationDetails']['AuthorizationStatus']['State'];
 			if( 'Declined' === $status ) {
+
+				// show reason for decline
+
+
 				edd_set_error( 'payment_declined', __( 'Your payment could not be authorized, please try a different payment method', 'edd' ) );
 				edd_send_back_to_checkout( '?payment-mode=amazon' );
 			}
@@ -583,6 +586,8 @@ final class EDD_Amazon_Payments {
 			edd_update_payment_meta( $payment_id, '_edd_amazon_capture_id', $capture_id );
 
 			edd_set_payment_transaction_id( $payment_id, $reference_id );
+
+			edd_update_payment_status( $payment_id, 'publish' );
 
 			// Empty the shopping cart
 			edd_empty_cart();
@@ -666,17 +671,6 @@ final class EDD_Amazon_Payments {
 		}
 
 		$this->refund( $payment_id );
-
-	}
-
-	private function complete( $payment_id = 0 ) {
-
-		edd_update_payment_status( $payment_id, 'publish' );
-
-		$this->get_client()->closeAuthorization( array(
-			'merchant_id'             => edd_get_option( 'amazon_seller_id', '' ),
-			'amazon_authorization_id' => $authorization_id,
-		) );
 
 	}
 
