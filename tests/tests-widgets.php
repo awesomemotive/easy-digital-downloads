@@ -113,17 +113,7 @@ class Tests_Widgets extends WP_UnitTestCase {
 
 	}
 
-
-
-
-
-
-
-
-
-
-
-
+	/** Categories tags widget */
 
 	/**
 	 * Test that the categories_widget widget exists with the right properties.
