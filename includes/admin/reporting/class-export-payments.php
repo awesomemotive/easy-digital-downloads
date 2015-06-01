@@ -130,15 +130,7 @@ class EDD_Payments_Export extends EDD_Export {
 					$id = isset( $payment_meta['cart_details'] ) ? $download['id'] : $download;
 
 					// If the download has variable prices, override the default price
-					$price_override = null;
-
-					if( isset( $payment_meta['cart_details'] ) ) {
-						if( isset( $download['subtotal'] ) ) {
-							$price_override = $download['subtotal'];
-						} else {
-							$price_override = $download['total'];
-						}
-					}
+					$price_override = isset( $payment_meta['cart_details'] ) && ! isset( $payment_meta['subtotal'] ) ? $download['total'] : null;
 					
 					$price = edd_get_download_final_price( $id, $user_info, $price_override );
 
