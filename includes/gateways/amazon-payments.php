@@ -548,7 +548,7 @@ final class EDD_Amazon_Payments {
 			'authorization_reference_id' => $purchase_data['purchase_key'],
 			'charge_amount'              => $purchase_data['price'],
 			'currency_code'              => edd_get_currency(),
-			//'platform_id'              => 'OrderReferenceAttributes.PlatformId',
+			'platform_id'                => 'A3JST9YM1SX7LB',
 			'charge_note'                => edd_get_purchase_summary( $purchase_data ),
 			'charge_order_id'            => $purchase_data['purchase_key'],
 			'store_name'                 => remove_accents( wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) ),
@@ -592,6 +592,17 @@ final class EDD_Amazon_Payments {
 			$authorization_id = $charge['AuthorizeResult']['AuthorizationDetails']['AmazonAuthorizationId'];
 			$capture_id       = str_replace( '-A', '-C', $authorization_id );
 			$reference_id     = sanitize_text_field( $_POST['edd_amazon_reference_id'] );
+
+			// Confirm the capture was completed 
+			$capture = $this->get_client()->getCaptureDetails( array(
+				'merchant_id'       => edd_get_option( 'amazon_seller_id', '' ),
+				'amazon_capture_id' => $capture_id
+			) );
+
+			$capture = new ResponseParser( $capture->response );
+			$capture = $capture->toArray();
+
+			// Check capture status
 
 			edd_update_payment_meta( $payment_id, '_edd_amazon_authorization_id', $authorization_id );
 			edd_update_payment_meta( $payment_id, '_edd_amazon_capture_id', $capture_id );
@@ -665,8 +676,14 @@ final class EDD_Amazon_Payments {
 			return;
 		}
 
-		$ipn = new IpnHandler;
+		// Get the IPN headers and Message body
+		$headers = getallheaders();
+		$body    = file_get_contents( 'php://input' );
 
+		// Create an object($ipnHandler) of the IpnHandler class 
+		$ipn = new IpnHandler( $headers, $body );
+		$ipn->returnMessage();
+		$ipn->toArray();
 
 		/* once verified charge was complete, call $this->complete( $payment_id ); */
 	}
@@ -707,6 +724,7 @@ final class EDD_Amazon_Payments {
 
 				case 'Declined' :
 
+					$code   = $refund['RefundResult']['RefundDetails']['RefundStatus']['ReasonCode'];
 					$note   = __( 'Refund declined in Amazon. Refeund ID: %s', 'edd' );
 
 					break;
