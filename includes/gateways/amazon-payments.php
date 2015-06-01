@@ -549,7 +549,7 @@ final class EDD_Amazon_Payments {
 			'charge_amount'              => $purchase_data['price'],
 			'currency_code'              => edd_get_currency(),
 			'platform_id'                => 'A3JST9YM1SX7LB',
-			'charge_note'                => edd_get_purchase_summary( $purchase_data ),
+			'charge_note'                => edd_get_purchase_summary( $purchase_data, false ),
 			'charge_order_id'            => $purchase_data['purchase_key'],
 			'store_name'                 => remove_accents( wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) ),
 			'transaction_timeout'        => 0
