@@ -680,12 +680,69 @@ final class EDD_Amazon_Payments {
 		$headers = getallheaders();
 		$body    = file_get_contents( 'php://input' );
 
-		// Create an object($ipnHandler) of the IpnHandler class 
-		$ipn = new IpnHandler( $headers, $body );
-		$ipn->returnMessage();
-		$ipn->toArray();
+		try {
 
-		/* once verified charge was complete, call $this->complete( $payment_id ); */
+			$ipn       = new IpnHandler( $headers, $body );
+			$data      = $ipn->toArray();
+			$seller_id = $data['Message']['SellerId'];
+
+			if( $seller_id != edd_get_option( 'amazon_seller_id', '' ) ) {
+				wp_die( __( 'Invalid Amazon seller ID', 'edd' ), __( 'IPN Error', 'edd' ), array( 'response' => 401 ) );
+			}
+
+			switch( $data['Message']['NotificationType'] ) {
+
+				case 'OrderReferenceNotification' :
+
+					break;
+
+				case 'PaymentAuthorize' :
+
+					break;
+
+				case 'PaymentCapture' :
+
+					$key     = $data['Message']['NotificationData']['CaptureNotification']['CaptureDetails']['CaptureReferenceId'];
+					$status  = $data['Message']['NotificationData']['CaptureNotification']['CaptureDetails']['CaptureStatus']['State'];
+					
+					if( 'Declined' === $status ) {
+
+						$payment_id = edd_get_purchase_id_by_key( $key );
+
+						edd_update_payment_status( $payment_id, 'failed' );
+						
+						edd_insert_payment_note( $payment_id, __( 'Capture declined in Amazon', 'edd' ) );
+
+					}
+
+					break;
+
+
+				case 'PaymentRefund' :
+
+					$key     = $data['Message']['NotificationData']['RefundNotification']['RefundDetails']['RefundReferenceId'];
+					$status  = $data['Message']['NotificationData']['RefundNotification']['RefundDetails']['RefundStatus']['State'];
+					
+					if( 'Completed' === $status ) {
+
+						edd_update_payment_status( $payment_id, 'refunded' );
+						
+						edd_insert_payment_note( $payment_id, __( 'Refund completed in Amazon', 'edd' ) );
+
+					}
+
+					break;
+
+			}
+
+
+
+		} catch( Exception $e ) {
+
+			wp_die( $e->getErrorMessage(), __( 'IPN Error', 'edd' ), array( 'response' => 401 ) );
+
+		}
+
 	}
 
 	public function process_refund( $payment_id, $new_status, $old_status ) {
