@@ -41,8 +41,10 @@ final class EDD_Amazon_Payments {
 
 		$this->config();
 		$this->includes();
+		$this->setup_client();
 		$this->filters();
 		$this->actions();
+
 
 	}
 
@@ -116,7 +118,7 @@ final class EDD_Amazon_Payments {
 			return $this->client;
 		}
 
-		$this->client = $this->setup_client();
+		$this->setup_client();
 
 		return $this->client;
 	}
@@ -133,9 +135,8 @@ final class EDD_Amazon_Payments {
 		);
 
 		$config = apply_filters( 'edd_amazon_client_config', $config );
-		$client = new Client( $config );
 
-		return $client;
+		$this->client = new Client( $config );
 
 	}
 
@@ -303,7 +304,7 @@ final class EDD_Amazon_Payments {
 
 		try {
 
-			$profile = $this->get_client()->getUserInfo( $_GET['access_token'] );
+			$profile = $this->client->getUserInfo( $_GET['access_token'] );
 
 			if( is_user_logged_in() ) {
 
@@ -501,7 +502,7 @@ final class EDD_Amazon_Payments {
 			die( '-2' );
 		}
 
-		$request = $this->get_client()->getOrderReferenceDetails( array(
+		$request = $this->client->getOrderReferenceDetails( array(
 			'merchant_id'               => edd_get_option( 'amazon_seller_id', '' ),
 			'amazon_order_reference_id' => $_POST['reference_id'],
 		) );
@@ -555,7 +556,7 @@ final class EDD_Amazon_Payments {
 			'transaction_timeout'        => 0
 		), $purchase_data );
 
-		$charge = $this->get_client()->charge( $args );
+		$charge = $this->client->charge( $args );
 
 		if( 200 == $charge->response['Status'] ) {
 
@@ -594,7 +595,7 @@ final class EDD_Amazon_Payments {
 			$reference_id     = sanitize_text_field( $_POST['edd_amazon_reference_id'] );
 
 			// Confirm the capture was completed 
-			$capture = $this->get_client()->getCaptureDetails( array(
+			$capture = $this->client->getCaptureDetails( array(
 				'merchant_id'       => edd_get_option( 'amazon_seller_id', '' ),
 				'amazon_capture_id' => $capture_id
 			) );
@@ -761,7 +762,7 @@ final class EDD_Amazon_Payments {
 
 	private function refund( $payment_id = 0 ) {
 
-		$refund = $this->get_client()->refund( array(
+		$refund = $this->client->refund( array(
 			'merchant_id'         => edd_get_option( 'amazon_seller_id', '' ),
 			'amazon_capture_id'   => edd_get_payment_meta( $payment_id, '_edd_amazon_capture_id', true ),
 			'refund_reference_id' => md5( edd_get_payment_key( $payment_id ) . '-refund' ),
