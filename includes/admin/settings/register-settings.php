@@ -153,50 +153,61 @@ function edd_register_settings() {
 	if ( false == get_option( 'edd_settings' ) ) {
 		add_option( 'edd_settings' );
 	}
+	
+	foreach( edd_get_registered_settings() as $tab => $sections ) {	
+		foreach( $sections as $section => $settings) {
 
-	foreach( edd_get_registered_settings() as $tab => $settings ) {
+			// Check for backwards compatibility
+			$section_tabs = edd_get_settings_sections( $tab );
+			if( !is_array( $section_tabs ) || !array_key_exists( $section, $section_tabs ) ) {
+				$section = 'main';
+				$settings = $sections;
+			}
 
-		add_settings_section(
-			'edd_settings_' . $tab,
-			__return_null(),
-			'__return_false',
-			'edd_settings_' . $tab
-		);
-
-		foreach ( $settings as $option ) {
-
-			$name = isset( $option['name'] ) ? $option['name'] : '';
-
-			add_settings_field(
-				'edd_settings[' . $option['id'] . ']',
-				$name,
-				function_exists( 'edd_' . $option['type'] . '_callback' ) ? 'edd_' . $option['type'] . '_callback' : 'edd_missing_callback',
-				'edd_settings_' . $tab,
-				'edd_settings_' . $tab,
-				array(
-					'section'     => $tab,
-					'id'          => isset( $option['id'] )          ? $option['id']          : null,
-					'desc'        => ! empty( $option['desc'] )      ? $option['desc']        : '',
-					'name'        => isset( $option['name'] )        ? $option['name']        : null,
-					'size'        => isset( $option['size'] )        ? $option['size']        : null,
-					'options'     => isset( $option['options'] )     ? $option['options']     : '',
-					'std'         => isset( $option['std'] )         ? $option['std']         : '',
-					'min'         => isset( $option['min'] )         ? $option['min']         : null,
-					'max'         => isset( $option['max'] )         ? $option['max']         : null,
-					'step'        => isset( $option['step'] )        ? $option['step']        : null,
-					'chosen'      => isset( $option['chosen'] )      ? $option['chosen']      : null,
-					'placeholder' => isset( $option['placeholder'] ) ? $option['placeholder'] : null,
-					'allow_blank' => isset( $option['allow_blank'] ) ? $option['allow_blank'] : true,
-					'readonly'    => isset( $option['readonly'] )    ? $option['readonly']    : false,
-					'faux'        => isset( $option['faux'] )        ? $option['faux']        : false,
-				)
+			add_settings_section(
+				'edd_settings_' . $tab . '_' . $section,
+				__return_null(),
+				'__return_false',
+				'edd_settings_' . $tab . '_' . $section
 			);
+
+			foreach ( $settings as $option ) {
+
+				$name = isset( $option['name'] ) ? $option['name'] : '';
+
+				add_settings_field(
+					'edd_settings[' . $option['id'] . ']',
+					$name,
+					function_exists( 'edd_' . $option['type'] . '_callback' ) ? 'edd_' . $option['type'] . '_callback' : 'edd_missing_callback',
+					'edd_settings_' . $tab . '_' . $section,
+					'edd_settings_' . $tab . '_' . $section,
+					array(
+						'section'     => $section,
+						'id'          => isset( $option['id'] )          ? $option['id']      : null,
+						'desc'        => ! empty( $option['desc'] )      ? $option['desc']    : '',
+						'name'        => isset( $option['name'] )        ? $option['name']    : null,
+						'size'        => isset( $option['size'] )        ? $option['size']    : null,
+						'options'     => isset( $option['options'] )     ? $option['options'] : '',
+						'std'         => isset( $option['std'] )         ? $option['std']     : '',
+						'min'         => isset( $option['min'] )         ? $option['min']     : null,
+						'max'         => isset( $option['max'] )         ? $option['max']     : null,
+            'step'        => isset( $option['step'] )        ? $option['step']    : null,
+            'chosen'      => isset( $option['chosen'] )      ? $option['chosen']  : null,
+            'placeholder' => isset( $option['placeholder'] ) ? $option['placeholder'] : null,
+            'allow_blank' => isset( $option['allow_blank'] ) ? $option['allow_blank'] : true,
+						'readonly'    => isset( $option['readonly'] )    ? $option['readonly']    : false,
+						'faux'        => isset( $option['faux'] )        ? $option['faux']        : false,
+					)
+				);
+			}
 		}
 
 	}
 
 	// Creates our settings in the options table
 	register_setting( 'edd_settings', 'edd_settings', 'edd_settings_sanitize' );
+		//echo 'TRYING:<pre>' . nl2br(print_r(edd_get_registered_settings(), true)) . '</pre>';
+
 
 }
 add_action('admin_init', 'edd_register_settings');
@@ -217,370 +228,380 @@ function edd_get_registered_settings() {
 		/** General Settings */
 		'general' => apply_filters( 'edd_settings_general',
 			array(
-				'purchase_page' => array(
-					'id' => 'purchase_page',
-					'name' => __( 'Checkout Page', 'edd' ),
-					'desc' => __( 'This is the checkout page where buyers will complete their purchases. The [download_checkout] short code must be on this page.', 'edd' ),
-					'type' => 'select',
-					'options' => edd_get_pages(),
-					'chosen' => true,
-					'placeholder' => __( 'Select a page', 'edd' )
-				),
-				'success_page' => array(
-					'id' => 'success_page',
-					'name' => __( 'Success Page', 'edd' ),
-					'desc' => __( 'This is the page buyers are sent to after completing their purchases. The [edd_receipt] short code should be on this page.', 'edd' ),
-					'type' => 'select',
-					'options' => edd_get_pages(),
-					'chosen' => true,
-					'placeholder' => __( 'Select a page', 'edd' )
-				),
-				'failure_page' => array(
-					'id' => 'failure_page',
-					'name' => __( 'Failed Transaction Page', 'edd' ),
-					'desc' => __( 'This is the page buyers are sent to if their transaction is cancelled or fails', 'edd' ),
-					'type' => 'select',
-					'options' => edd_get_pages(),
-					'chosen' => true,
-					'placeholder' => __( 'Select a page', 'edd' )
-				),
-				'purchase_history_page' => array(
-					'id' => 'purchase_history_page',
-					'name' => __( 'Purchase History Page', 'edd' ),
-					'desc' => __( 'This page shows a complete purchase history for the current user, including download links', 'edd' ),
-					'type' => 'select',
-					'options' => edd_get_pages(),
-					'chosen' => true,
-					'placeholder' => __( 'Select a page', 'edd' )
-				),
-				'base_country' => array(
-					'id' => 'base_country',
-					'name' => __( 'Base Country', 'edd' ),
-					'desc' => __( 'Where does your store operate from?', 'edd' ),
-					'type' => 'select',
-					'options' => edd_get_country_list(),
-					'chosen' => true,
-					'placeholder' => __( 'Select a country', 'edd' )
-				),
-				'base_state' => array(
-					'id' => 'base_state',
-					'name' => __( 'Base State / Province', 'edd' ),
-					'desc' => __( 'What state / province does your store operate from?', 'edd' ),
-					'type' => 'shop_states',
-					'chosen' => true,
-					'placeholder' => __( 'Select a state', 'edd' )
-				),
-				'currency_settings' => array(
-					'id' => 'currency_settings',
-					'name' => '<strong>' . __( 'Currency Settings', 'edd' ) . '</strong>',
-					'desc' => __( 'Configure the currency options', 'edd' ),
-					'type' => 'header'
-				),
-				'currency' => array(
-					'id' => 'currency',
-					'name' => __( 'Currency', 'edd' ),
-					'desc' => __( 'Choose your currency. Note that some payment gateways have currency restrictions.', 'edd' ),
-					'type' => 'select',
-					'options' => edd_get_currencies(),
-					'chosen' => true
-				),
-				'currency_position' => array(
-					'id'      => 'currency_position',
-					'name'    => __( 'Currency Position', 'edd' ),
-					'desc'    => __( 'Choose the location of the currency sign.', 'edd' ),
-					'type'    => 'select',
-					'options' => array(
-						'before' => __( 'Before - $10', 'edd' ),
-						'after'  => __( 'After - 10$', 'edd' )
-					)
-				),
-				'thousands_separator' => array(
-					'id'   => 'thousands_separator',
-					'name' => __( 'Thousands Separator', 'edd' ),
-					'desc' => __( 'The symbol (usually , or .) to separate thousands', 'edd' ),
-					'type' => 'text',
-					'size' => 'small',
-					'std'  => ','
-				),
-				'decimal_separator' => array(
-					'id'   => 'decimal_separator',
-					'name' => __( 'Decimal Separator', 'edd' ),
-					'desc' => __( 'The symbol (usually , or .) to separate decimal points', 'edd' ),
-					'type' => 'text',
-					'size' => 'small',
-					'std'  => '.'
-				),
-				'api_settings' => array(
-					'id' => 'api_settings',
-					'name' => '<strong>' . __( 'API Settings', 'edd' ) . '</strong>',
-					'desc' => '',
-					'type' => 'header'
-				),
-				'api_allow_user_keys' => array(
-					'id'   => 'api_allow_user_keys',
-					'name' => __( 'Allow User Keys', 'edd' ),
-					'desc' => __( 'Check this box to allow all users to generate API keys. Users with the \'manage_shop_settings\' capability are always allowed to generate keys.', 'edd' ),
-					'type' => 'checkbox'
-				),
-				'tracking_settings' => array(
-					'id' => 'tracking_settings',
-					'name' => '<strong>' . __( 'Tracking Settings', 'edd' ) . '</strong>',
-					'desc' => '',
-					'type' => 'header'
-				),
-				'allow_tracking' => array(
-					'id'   => 'allow_tracking',
-					'name' => __( 'Allow Usage Tracking?', 'edd' ),
-					'desc' => sprintf(
-						__( 'Allow Easy Digital Downloads to anonymously track how this plugin is used and help us make the plugin better. Opt-in to tracking and our newsletter and immediately be emailed a 20%% discount to the EDD shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'edd' ),
-						'https://easydigitaldownloads.com/extensions?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking'
+				'main' => array(
+					'purchase_page' => array(
+						'id' => 'purchase_page',
+						'name' => __( 'Checkout Page', 'edd' ),
+						'desc' => __( 'This is the checkout page where buyers will complete their purchases. The [download_checkout] short code must be on this page.', 'edd' ),
+						'type' => 'select',
+						'options' => edd_get_pages(),
+						'chosen' => true,
+						'placeholder' => __( 'Select a page', 'edd' )
 					),
-					'type' => 'checkbox'
-				),
-				'uninstall_on_delete' => array(
-					'id'   => 'uninstall_on_delete',
-					'name' => __( 'Remove Data on Uninstall?', 'edd' ),
-					'desc' => __( 'Check this box if you would like EDD to completely remove all of its data when the plugin is deleted.', 'edd' ),
-					'type' => 'checkbox'
+					'success_page' => array(
+						'id' => 'success_page',
+						'name' => __( 'Success Page', 'edd' ),
+						'desc' => __( 'This is the page buyers are sent to after completing their purchases. The [edd_receipt] short code should be on this page.', 'edd' ),
+						'type' => 'select',
+						'options' => edd_get_pages(),
+						'chosen' => true,
+						'placeholder' => __( 'Select a page', 'edd' )
+					),
+					'failure_page' => array(
+						'id' => 'failure_page',
+						'name' => __( 'Failed Transaction Page', 'edd' ),
+						'desc' => __( 'This is the page buyers are sent to if their transaction is cancelled or fails', 'edd' ),
+						'type' => 'select',
+						'options' => edd_get_pages(),
+						'chosen' => true,
+						'placeholder' => __( 'Select a page', 'edd' )
+					),
+					'purchase_history_page' => array(
+						'id' => 'purchase_history_page',
+						'name' => __( 'Purchase History Page', 'edd' ),
+						'desc' => __( 'This page shows a complete purchase history for the current user, including download links', 'edd' ),
+						'type' => 'select',
+						'options' => edd_get_pages(),
+						'chosen' => true,
+						'placeholder' => __( 'Select a page', 'edd' )
+					),
+					'base_country' => array(
+						'id' => 'base_country',
+						'name' => __( 'Base Country', 'edd' ),
+						'desc' => __( 'Where does your store operate from?', 'edd' ),
+						'type' => 'select',
+						'options' => edd_get_country_list(),
+						'chosen' => true,
+						'placeholder' => __( 'Select a country', 'edd' )
+					),
+					'base_state' => array(
+						'id' => 'base_state',
+						'name' => __( 'Base State / Province', 'edd' ),
+						'desc' => __( 'What state / province does your store operate from?', 'edd' ),
+						'type' => 'shop_states',
+						'chosen' => true,
+						'placeholder' => __( 'Select a state', 'edd' )
+					),
+					'currency_settings' => array(
+						'id' => 'currency_settings',
+						'name' => '<strong>' . __( 'Currency Settings', 'edd' ) . '</strong>',
+						'desc' => __( 'Configure the currency options', 'edd' ),
+						'type' => 'header'
+					),
+					'currency' => array(
+						'id' => 'currency',
+						'name' => __( 'Currency', 'edd' ),
+						'desc' => __( 'Choose your currency. Note that some payment gateways have currency restrictions.', 'edd' ),
+						'type' => 'select',
+						'options' => edd_get_currencies(),
+						'chosen' => true
+					),
+					'currency_position' => array(
+						'id'      => 'currency_position',
+						'name'    => __( 'Currency Position', 'edd' ),
+						'desc'    => __( 'Choose the location of the currency sign.', 'edd' ),
+						'type'    => 'select',
+						'options' => array(
+							'before' => __( 'Before - $10', 'edd' ),
+							'after'  => __( 'After - 10$', 'edd' )
+						)
+					),
+					'thousands_separator' => array(
+						'id'   => 'thousands_separator',
+						'name' => __( 'Thousands Separator', 'edd' ),
+						'desc' => __( 'The symbol (usually , or .) to separate thousands', 'edd' ),
+						'type' => 'text',
+						'size' => 'small',
+						'std'  => ','
+					),
+					'decimal_separator' => array(
+						'id'   => 'decimal_separator',
+						'name' => __( 'Decimal Separator', 'edd' ),
+						'desc' => __( 'The symbol (usually , or .) to separate decimal points', 'edd' ),
+						'type' => 'text',
+						'size' => 'small',
+						'std'  => '.'
+					),
+					'api_settings' => array(
+						'id' => 'api_settings',
+						'name' => '<strong>' . __( 'API Settings', 'edd' ) . '</strong>',
+						'desc' => '',
+						'type' => 'header'
+					),
+					'api_allow_user_keys' => array(
+						'id'   => 'api_allow_user_keys',
+						'name' => __( 'Allow User Keys', 'edd' ),
+						'desc' => __( 'Check this box to allow all users to generate API keys. Users with the \'manage_shop_settings\' capability are always allowed to generate keys.', 'edd' ),
+						'type' => 'checkbox'
+					),
+					'tracking_settings' => array(
+						'id' => 'tracking_settings',
+						'name' => '<strong>' . __( 'Tracking Settings', 'edd' ) . '</strong>',
+						'desc' => '',
+						'type' => 'header'
+					),
+					'allow_tracking' => array(
+						'id'   => 'allow_tracking',
+						'name' => __( 'Allow Usage Tracking?', 'edd' ),
+						'desc' => sprintf(
+							__( 'Allow Easy Digital Downloads to anonymously track how this plugin is used and help us make the plugin better. Opt-in to tracking and our newsletter and immediately be emailed a 20%% discount to the EDD shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'edd' ),
+							'https://easydigitaldownloads.com/extensions?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking'
+						),
+						'type' => 'checkbox'
+					),
+					'uninstall_on_delete' => array(
+						'id'   => 'uninstall_on_delete',
+						'name' => __( 'Remove Data on Uninstall?', 'edd' ),
+						'desc' => __( 'Check this box if you would like EDD to completely remove all of its data when the plugin is deleted.', 'edd' ),
+						'type' => 'checkbox'
+					)
 				)
 			)
 		),
 		/** Payment Gateways Settings */
 		'gateways' => apply_filters('edd_settings_gateways',
 			array(
-				'test_mode' => array(
-					'id' => 'test_mode',
-					'name' => __( 'Test Mode', 'edd' ),
-					'desc' => __( 'While in test mode no live transactions are processed. To fully use test mode, you must have a sandbox (test) account for the payment gateway you are testing.', 'edd' ),
-					'type' => 'checkbox'
-				),
-				'gateways' => array(
-					'id'      => 'gateways',
-					'name'    => __( 'Payment Gateways', 'edd' ),
-					'desc'    => __( 'Choose the payment gateways you want to enable.', 'edd' ),
-					'type'    => 'gateways',
-					'options' => edd_get_payment_gateways()
-				),
-				'default_gateway' => array(
-					'id'      => 'default_gateway',
-					'name'    => __( 'Default Gateway', 'edd' ),
-					'desc'    => __( 'This gateway will be loaded automatically with the checkout page.', 'edd' ),
-					'type'    => 'gateway_select',
-					'options' => edd_get_payment_gateways()
-				),
-				'accepted_cards' => array(
-					'id'      => 'accepted_cards',
-					'name'    => __( 'Accepted Payment Method Icons', 'edd' ),
-					'desc'    => __( 'Display icons for the selected payment methods', 'edd' ) . '<br/>' . __( 'You will also need to configure your gateway settings if you are accepting credit cards', 'edd' ),
-					'type'    => 'payment_icons',
-					'options' => apply_filters('edd_accepted_payment_icons', array(
-							'mastercard'      => 'Mastercard',
-							'visa'            => 'Visa',
-							'americanexpress' => 'American Express',
-							'discover'        => 'Discover',
-							'paypal'          => 'PayPal',
-						)
+				'main' => array(
+					'test_mode' => array(
+						'id' => 'test_mode',
+						'name' => __( 'Test Mode', 'edd' ),
+						'desc' => __( 'While in test mode no live transactions are processed. To fully use test mode, you must have a sandbox (test) account for the payment gateway you are testing.', 'edd' ),
+						'type' => 'checkbox'
+					),
+					'gateways' => array(
+						'id'      => 'gateways',
+						'name'    => __( 'Payment Gateways', 'edd' ),
+						'desc'    => __( 'Choose the payment gateways you want to enable.', 'edd' ),
+						'type'    => 'gateways',
+						'options' => edd_get_payment_gateways()
+					),
+					'default_gateway' => array(
+						'id'      => 'default_gateway',
+						'name'    => __( 'Default Gateway', 'edd' ),
+						'desc'    => __( 'This gateway will be loaded automatically with the checkout page.', 'edd' ),
+						'type'    => 'gateway_select',
+						'options' => edd_get_payment_gateways()
+					),
+					'accepted_cards' => array(
+						'id'      => 'accepted_cards',
+						'name'    => __( 'Accepted Payment Method Icons', 'edd' ),
+						'desc'    => __( 'Display icons for the selected payment methods', 'edd' ) . '<br/>' . __( 'You will also need to configure your gateway settings if you are accepting credit cards', 'edd' ),
+						'type'    => 'payment_icons',
+						'options' => apply_filters('edd_accepted_payment_icons', array(
+								'mastercard'      => 'Mastercard',
+								'visa'            => 'Visa',
+								'americanexpress' => 'American Express',
+								'discover'        => 'Discover',
+								'paypal'          => 'PayPal',
+
+						))
+					),
+					'paypal' => array(
+						'id' => 'paypal',
+						'name' => '<span class="field-section-title">' . __( 'PayPal Settings', 'edd' ) . '</span>',
+						'desc' => __( 'Configure the PayPal settings', 'edd' ),
+						'type' => 'header'
+					),
+					'paypal_email' => array(
+						'id' => 'paypal_email',
+						'name' => __( 'PayPal Email', 'edd' ),
+						'desc' => __( 'Enter your PayPal account\'s email', 'edd' ),
+						'type' => 'text',
+						'size' => 'regular'
+					),
+					'paypal_page_style' => array(
+						'id' => 'paypal_page_style',
+						'name' => __( 'PayPal Page Style', 'edd' ),
+						'desc' => __( 'Enter the name of the page style to use, or leave blank for default', 'edd' ),
+						'type' => 'text',
+						'size' => 'regular'
+					),
+					'disable_paypal_verification' => array(
+						'id' => 'disable_paypal_verification',
+						'name' => __( 'Disable PayPal IPN Verification', 'edd' ),
+						'desc' => __( 'If payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases.', 'edd' ),
+						'type' => 'checkbox'
 					)
-				),
-				'paypal' => array(
-					'id' => 'paypal',
-					'name' => '<strong>' . __( 'PayPal Settings', 'edd' ) . '</strong>',
-					'desc' => __( 'Configure the PayPal settings', 'edd' ),
-					'type' => 'header'
-				),
-				'paypal_email' => array(
-					'id'   => 'paypal_email',
-					'name' => __( 'PayPal Email', 'edd' ),
-					'desc' => __( 'Enter your PayPal account\'s email', 'edd' ),
-					'type' => 'text',
-					'size' => 'regular'
-				),
-				'paypal_page_style' => array(
-					'id'   => 'paypal_page_style',
-					'name' => __( 'PayPal Page Style', 'edd' ),
-					'desc' => __( 'Enter the name of the page style to use, or leave blank for default', 'edd' ),
-					'type' => 'text',
-					'size' => 'regular'
-				),
-				'disable_paypal_verification' => array(
-					'id'   => 'disable_paypal_verification',
-					'name' => __( 'Disable PayPal IPN Verification', 'edd' ),
-					'desc' => __( 'If payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases.', 'edd' ),
-					'type' => 'checkbox'
-				),
+				)
 			)
 		),
 		/** Emails Settings */
 		'emails' => apply_filters('edd_settings_emails',
 			array(
-				'email_template' => array(
-					'id'      => 'email_template',
-					'name'    => __( 'Email Template', 'edd' ),
-					'desc'    => __( 'Choose a template. Click "Save Changes" then "Preview Purchase Receipt" to see the new template.', 'edd' ),
-					'type'    => 'select',
-					'options' => edd_get_email_templates()
-				),
-				'email_logo' => array(
-					'id'   => 'email_logo',
-					'name' => __( 'Logo', 'edd' ),
-					'desc' => __( 'Upload or choose a logo to be displayed at the top of the purchase receipt emails. Displayed on HTML emails only.', 'edd' ),
-					'type' => 'upload'
-				),
-				'email_settings' => array(
-					'id'   => 'email_settings',
-					'name' => '',
-					'desc' => '',
-					'type' => 'hook'
-				),
-				'from_name' => array(
-					'id'   => 'from_name',
-					'name' => __( 'From Name', 'edd' ),
-					'desc' => __( 'The name purchase receipts are said to come from. This should probably be your site or shop name.', 'edd' ),
-					'type' => 'text',
-					'std'  => get_bloginfo( 'name' )
-				),
-				'from_email' => array(
-					'id'   => 'from_email',
-					'name' => __( 'From Email', 'edd' ),
-					'desc' => __( 'Email to send purchase receipts from. This will act as the "from" and "reply-to" address.', 'edd' ),
-					'type' => 'text',
-					'std'  => get_bloginfo( 'admin_email' )
-				),
-				'purchase_subject' => array(
-					'id'   => 'purchase_subject',
-					'name' => __( 'Purchase Email Subject', 'edd' ),
-					'desc' => __( 'Enter the subject line for the purchase receipt email', 'edd' ),
-					'type' => 'text',
-					'std'  => __( 'Purchase Receipt', 'edd' )
-				),
-				'purchase_heading' => array(
-					'id'   => 'purchase_heading',
-					'name' => __( 'Purchase Email Heading', 'edd' ),
-					'desc' => __( 'Enter the heading for the purchase receipt email', 'edd' ),
-					'type' => 'text',
-					'std'  => __( 'Purchase Receipt', 'edd' )
-				),
-				'purchase_receipt' => array(
-					'id'   => 'purchase_receipt',
-					'name' => __( 'Purchase Receipt', 'edd' ),
-					'desc' => __('Enter the email that is sent to users after completing a successful purchase. HTML is accepted. Available template tags:', 'edd') . '<br/>' . edd_get_emails_tags_list(),
-					'type' => 'rich_editor',
-					'std'  => __( "Dear", "edd" ) . " {name},\n\n" . __( "Thank you for your purchase. Please click on the link(s) below to download your files.", "edd" ) . "\n\n{download_list}\n\n{sitename}"
-				),
-				'sale_notification_header' => array(
-					'id' => 'sale_notification_header',
-					'name' => '<strong>' . __('New Sale Notifications', 'edd') . '</strong>',
-					'desc' => __('Configure new sale notification emails', 'edd'),
-					'type' => 'header'
-				),
-				'sale_notification_subject' => array(
-					'id'   => 'sale_notification_subject',
-					'name' => __( 'Sale Notification Subject', 'edd' ),
-					'desc' => __( 'Enter the subject line for the sale notification email', 'edd' ),
-					'type' => 'text',
-					'std'  => 'New download purchase - Order #{payment_id}'
-				),
-				'sale_notification' => array(
-					'id'   => 'sale_notification',
-					'name' => __( 'Sale Notification', 'edd' ),
-					'desc' => __( 'Enter the email that is sent to sale notification emails after completion of a purchase. HTML is accepted. Available template tags:', 'edd' ) . '<br/>' . edd_get_emails_tags_list(),
-					'type' => 'rich_editor',
-					'std'  => edd_get_default_sale_notification_email()
-				),
-				'admin_notice_emails' => array(
-					'id'   => 'admin_notice_emails',
-					'name' => __( 'Sale Notification Emails', 'edd' ),
-					'desc' => __( 'Enter the email address(es) that should receive a notification anytime a sale is made, one per line', 'edd' ),
-					'type' => 'textarea',
-					'std'  => get_bloginfo( 'admin_email' )
-				),
-				'disable_admin_notices' => array(
-					'id'   => 'disable_admin_notices',
-					'name' => __( 'Disable Admin Notifications', 'edd' ),
-					'desc' => __( 'Check this box if you do not want to receive sales notification emails.', 'edd' ),
-					'type' => 'checkbox'
+				'main' => array(
+					'email_template' => array(
+						'id'      => 'email_template',
+						'name'    => __( 'Email Template', 'edd' ),
+						'desc'    => __( 'Choose a template. Click "Save Changes" then "Preview Purchase Receipt" to see the new template.', 'edd' ),
+						'type'    => 'select',
+						'options' => edd_get_email_templates()
+					),
+					'email_logo' => array(
+						'id'   => 'email_logo',
+						'name' => __( 'Logo', 'edd' ),
+						'desc' => __( 'Upload or choose a logo to be displayed at the top of the purchase receipt emails. Displayed on HTML emails only.', 'edd' ),
+						'type' => 'upload'
+					),
+					'email_settings' => array(
+						'id'   => 'email_settings',
+						'name' => '',
+						'desc' => '',
+						'type' => 'hook'
+					),
+					'from_name' => array(
+						'id'   => 'from_name',
+						'name' => __( 'From Name', 'edd' ),
+						'desc' => __( 'The name purchase receipts are said to come from. This should probably be your site or shop name.', 'edd' ),
+						'type' => 'text',
+						'std'  => get_bloginfo( 'name' )
+					),
+					'from_email' => array(
+						'id'   => 'from_email',
+						'name' => __( 'From Email', 'edd' ),
+						'desc' => __( 'Email to send purchase receipts from. This will act as the "from" and "reply-to" address.', 'edd' ),
+						'type' => 'text',
+						'std'  => get_bloginfo( 'admin_email' )
+					),
+					'purchase_subject' => array(
+						'id'   => 'purchase_subject',
+						'name' => __( 'Purchase Email Subject', 'edd' ),
+						'desc' => __( 'Enter the subject line for the purchase receipt email', 'edd' ),
+						'type' => 'text',
+						'std'  => __( 'Purchase Receipt', 'edd' )
+					),
+					'purchase_heading' => array(
+						'id'   => 'purchase_heading',
+						'name' => __( 'Purchase Email Heading', 'edd' ),
+						'desc' => __( 'Enter the heading for the purchase receipt email', 'edd' ),
+						'type' => 'text',
+						'std'  => __( 'Purchase Receipt', 'edd' )
+					),
+					'purchase_receipt' => array(
+						'id'   => 'purchase_receipt',
+						'name' => __( 'Purchase Receipt', 'edd' ),
+						'desc' => __('Enter the email that is sent to users after completing a successful purchase. HTML is accepted. Available template tags:', 'edd') . '<br/>' . edd_get_emails_tags_list(),
+						'type' => 'rich_editor',
+						'std'  => __( "Dear", "edd" ) . " {name},\n\n" . __( "Thank you for your purchase. Please click on the link(s) below to download your files.", "edd" ) . "\n\n{download_list}\n\n{sitename}"
+					),
+					'sale_notification_header' => array(
+						'id' => 'sale_notification_header',
+						'name' => '<strong>' . __('New Sale Notifications', 'edd') . '</strong>',
+						'desc' => __('Configure new sale notification emails', 'edd'),
+						'type' => 'header'
+					),
+					'sale_notification_subject' => array(
+						'id'   => 'sale_notification_subject',
+						'name' => __( 'Sale Notification Subject', 'edd' ),
+						'desc' => __( 'Enter the subject line for the sale notification email', 'edd' ),
+						'type' => 'text',
+						'std'  => 'New download purchase - Order #{payment_id}'
+					),
+					'sale_notification' => array(
+						'id'   => 'sale_notification',
+						'name' => __( 'Sale Notification', 'edd' ),
+						'desc' => __( 'Enter the email that is sent to sale notification emails after completion of a purchase. HTML is accepted. Available template tags:', 'edd' ) . '<br/>' . edd_get_emails_tags_list(),
+						'type' => 'rich_editor',
+						'std'  => edd_get_default_sale_notification_email()
+					),
+					'admin_notice_emails' => array(
+						'id'   => 'admin_notice_emails',
+						'name' => __( 'Sale Notification Emails', 'edd' ),
+						'desc' => __( 'Enter the email address(es) that should receive a notification anytime a sale is made, one per line', 'edd' ),
+						'type' => 'textarea',
+						'std'  => get_bloginfo( 'admin_email' )
+					),
+					'disable_admin_notices' => array(
+						'id'   => 'disable_admin_notices',
+						'name' => __( 'Disable Admin Notifications', 'edd' ),
+						'desc' => __( 'Check this box if you do not want to receive sales notification emails.', 'edd' ),
+						'type' => 'checkbox'
+					)
 				)
 			)
 		),
 		/** Styles Settings */
 		'styles' => apply_filters('edd_settings_styles',
 			array(
-				'disable_styles' => array(
-					'id'   => 'disable_styles',
-					'name' => __( 'Disable Styles', 'edd' ),
-					'desc' => __( 'Check this to disable all included styling of buttons, checkout fields, and all other elements.', 'edd' ),
-					'type' => 'checkbox'
-				),
-				'button_header' => array(
-					'id' => 'button_header',
-					'name' => '<strong>' . __( 'Buttons', 'edd' ) . '</strong>',
-					'desc' => __( 'Options for add to cart and purchase buttons', 'edd' ),
-					'type' => 'header'
-				),
-				'button_style' => array(
-					'id'      => 'button_style',
-					'name'    => __( 'Default Button Style', 'edd' ),
-					'desc'    => __( 'Choose the style you want to use for the buttons.', 'edd' ),
-					'type'    => 'select',
-					'options' => edd_get_button_styles()
-				),
-				'checkout_color' => array(
-					'id'      => 'checkout_color',
-					'name'    => __( 'Default Button Color', 'edd' ),
-					'desc'    => __( 'Choose the color you want to use for the buttons.', 'edd' ),
-					'type'    => 'color_select',
-					'options' => edd_get_button_colors()
+				'main' => array(
+					'disable_styles' => array(
+						'id'   => 'disable_styles',
+						'name' => __( 'Disable Styles', 'edd' ),
+						'desc' => __( 'Check this to disable all included styling of buttons, checkout fields, and all other elements.', 'edd' ),
+						'type' => 'checkbox'
+					),
+					'button_header' => array(
+						'id' => 'button_header',
+						'name' => '<strong>' . __( 'Buttons', 'edd' ) . '</strong>',
+						'desc' => __( 'Options for add to cart and purchase buttons', 'edd' ),
+						'type' => 'header'
+					),
+					'button_style' => array(
+						'id'      => 'button_style',
+						'name'    => __( 'Default Button Style', 'edd' ),
+						'desc'    => __( 'Choose the style you want to use for the buttons.', 'edd' ),
+						'type'    => 'select',
+						'options' => edd_get_button_styles()
+					),
+					'checkout_color' => array(
+						'id'      => 'checkout_color',
+						'name'    => __( 'Default Button Color', 'edd' ),
+						'desc'    => __( 'Choose the color you want to use for the buttons.', 'edd' ),
+						'type'    => 'color_select',
+						'options' => edd_get_button_colors()
+					)
 				)
 			)
 		),
 		/** Taxes Settings */
 		'taxes' => apply_filters('edd_settings_taxes',
 			array(
-				'enable_taxes' => array(
-					'id'   => 'enable_taxes',
-					'name' => __( 'Enable Taxes', 'edd' ),
-					'desc' => __( 'Check this to enable taxes on purchases.', 'edd' ),
-					'type' => 'checkbox',
-				),
-				'tax_rates' => array(
-					'id' => 'tax_rates',
-					'name' => '<strong>' . __( 'Tax Rates', 'edd' ) . '</strong>',
-					'desc' => __( 'Enter tax rates for specific regions.', 'edd' ),
-					'type' => 'tax_rates'
-				),
-				'tax_rate' => array(
-					'id'   => 'tax_rate',
-					'name' => __( 'Fallback Tax Rate', 'edd' ),
-					'desc' => __( 'Enter a percentage, such as 6.5. Customers not in a specific rate will be charged this rate.', 'edd' ),
-					'type' => 'text',
-					'size' => 'small'
-				),
-				'prices_include_tax' => array(
-					'id'   => 'prices_include_tax',
-					'name' => __( 'Prices entered with tax', 'edd' ),
-					'desc' => __( 'This option affects how you enter prices.', 'edd' ),
-					'type' => 'radio',
-					'std'  => 'no',
-					'options' => array(
-						'yes' => __( 'Yes, I will enter prices inclusive of tax', 'edd' ),
-						'no'  => __( 'No, I will enter prices exclusive of tax', 'edd' )
-					)
-				),
-				'display_tax_rate' => array(
-					'id'   => 'display_tax_rate',
-					'name' => __( 'Display Tax Rate on Prices', 'edd' ),
-					'desc' => __( 'Some countries require a notice when product prices include tax.', 'edd' ),
-					'type' => 'checkbox',
-				),
-				'checkout_include_tax' => array(
-					'id'   => 'checkout_include_tax',
-					'name' => __( 'Display during checkout', 'edd' ),
-					'desc' => __( 'Should prices on the checkout page be shown with or without tax?', 'edd' ),
-					'type' => 'select',
-					'std'  => 'no',
-					'options' => array(
-						'yes' => __( 'Including tax', 'edd' ),
-						'no'  => __( 'Excluding tax', 'edd' )
+				'main' => array(
+					'enable_taxes' => array(
+						'id'   => 'enable_taxes',
+						'name' => __( 'Enable Taxes', 'edd' ),
+						'desc' => __( 'Check this to enable taxes on purchases.', 'edd' ),
+						'type' => 'checkbox',
+					),
+					'tax_rates' => array(
+						'id' => 'tax_rates',
+						'name' => '<strong>' . __( 'Tax Rates', 'edd' ) . '</strong>',
+						'desc' => __( 'Enter tax rates for specific regions.', 'edd' ),
+						'type' => 'tax_rates'
+					),
+					'tax_rate' => array(
+						'id'   => 'tax_rate',
+						'name' => __( 'Fallback Tax Rate', 'edd' ),
+						'desc' => __( 'Enter a percentage, such as 6.5. Customers not in a specific rate will be charged this rate.', 'edd' ),
+						'type' => 'text',
+						'size' => 'small'
+					),
+					'prices_include_tax' => array(
+						'id'   => 'prices_include_tax',
+						'name' => __( 'Prices entered with tax', 'edd' ),
+						'desc' => __( 'This option affects how you enter prices.', 'edd' ),
+						'type' => 'radio',
+						'std'  => 'no',
+						'options' => array(
+							'yes' => __( 'Yes, I will enter prices inclusive of tax', 'edd' ),
+							'no'  => __( 'No, I will enter prices exclusive of tax', 'edd' )
+						)
+					),
+					'display_tax_rate' => array(
+						'id'   => 'display_tax_rate',
+						'name' => __( 'Display Tax Rate on Prices', 'edd' ),
+						'desc' => __( 'Some countries require a notice when product prices include tax.', 'edd' ),
+						'type' => 'checkbox',
+					),
+					'checkout_include_tax' => array(
+						'id'   => 'checkout_include_tax',
+						'name' => __( 'Display during checkout', 'edd' ),
+						'desc' => __( 'Should prices on the checkout page be shown with or without tax?', 'edd' ),
+						'type' => 'select',
+						'std'  => 'no',
+						'options' => array(
+							'yes' => __( 'Including tax', 'edd' ),
+							'no'  => __( 'Excluding tax', 'edd' )
+						)
 					)
 				)
 			)
@@ -595,189 +616,191 @@ function edd_get_registered_settings() {
 		/** Misc Settings */
 		'misc' => apply_filters('edd_settings_misc',
 			array(
-				'enable_ajax_cart' => array(
-					'id'   => 'enable_ajax_cart',
-					'name' => __( 'Enable Ajax', 'edd' ),
-					'desc' => __( 'Check this to enable AJAX for the shopping cart.', 'edd' ),
-					'type' => 'checkbox',
-					'std'  => '1'
-				),
-				'redirect_on_add' => array(
-					'id'   => 'redirect_on_add',
-					'name' => __( 'Redirect to Checkout', 'edd' ),
-					'desc' => __( 'Immediately redirect to checkout after adding an item to the cart?', 'edd' ),
-					'type' => 'checkbox'
-				),
-				'enforce_ssl' => array(
-					'id'   => 'enforce_ssl',
-					'name' => __( 'Enforce SSL on Checkout', 'edd' ),
-					'desc' => __( 'Check this to force users to be redirected to the secure checkout page. You must have an SSL certificate installed to use this option.', 'edd' ),
-					'type' => 'checkbox'
-				),
-				'logged_in_only' => array(
-					'id'   => 'logged_in_only',
-					'name' => __( 'Disable Guest Checkout', 'edd' ),
-					'desc' => __( 'Require that users be logged-in to purchase files.', 'edd' ),
-					'type' => 'checkbox'
-				),
-				'show_register_form' => array(
-					'id'      => 'show_register_form',
-					'name'    => __( 'Show Register / Login Form?', 'edd' ),
-					'desc'    => __( 'Display the registration and login forms on the checkout page for non-logged-in users.', 'edd' ),
-					'type'    => 'select',
-					'std'     => 'none',
-					'options' => array(
-						'both'         => __( 'Registration and Login Forms', 'edd' ),
-						'registration' => __( 'Registration Form Only', 'edd' ),
-						'login'        => __( 'Login Form Only', 'edd' ),
-						'none'         => __( 'None', 'edd' )
+				'main' => array(
+					'enable_ajax_cart' => array(
+						'id'   => 'enable_ajax_cart',
+						'name' => __( 'Enable Ajax', 'edd' ),
+						'desc' => __( 'Check this to enable AJAX for the shopping cart.', 'edd' ),
+						'type' => 'checkbox',
+						'std'  => '1'
 					),
-				),
-				'item_quantities' => array(
-					'id'   => 'item_quantities',
-					'name' => __('Item Quantities', 'edd'),
-					'desc' => __('Allow item quantities to be changed.', 'edd'),
-					'type' => 'checkbox'
-				),
-				'allow_multiple_discounts' => array(
-					'id'   => 'allow_multiple_discounts',
-					'name' => __('Multiple Discounts', 'edd'),
-					'desc' => __('Allow customers to use multiple discounts on the same purchase?', 'edd'),
-					'type' => 'checkbox'
-				),
-				'enable_cart_saving' => array(
-					'id'   => 'enable_cart_saving',
-					'name' => __( 'Enable Cart Saving', 'edd' ),
-					'desc' => __( 'Check this to enable cart saving on the checkout.', 'edd' ),
-					'type' => 'checkbox'
-				),
-				'field_downloads' => array(
-					'id' => 'field_downloads',
-					'name' => '<strong>' . __( 'File Downloads', 'edd' ) . '</strong>',
-					'desc' => '',
-					'type' => 'header'
-				),
-				'download_method' => array(
-					'id'      => 'download_method',
-					'name'    => __( 'Download Method', 'edd' ),
-					'desc'    => sprintf( __( 'Select the file download method. Note, not all methods work on all servers.', 'edd' ), edd_get_label_singular() ),
-					'type'    => 'select',
-					'options' => array(
-						'direct'   => __( 'Forced', 'edd' ),
-						'redirect' => __( 'Redirect', 'edd' )
+					'redirect_on_add' => array(
+						'id'   => 'redirect_on_add',
+						'name' => __( 'Redirect to Checkout', 'edd' ),
+						'desc' => __( 'Immediately redirect to checkout after adding an item to the cart?', 'edd' ),
+						'type' => 'checkbox'
+					),
+					'enforce_ssl' => array(
+						'id'   => 'enforce_ssl',
+						'name' => __( 'Enforce SSL on Checkout', 'edd' ),
+						'desc' => __( 'Check this to force users to be redirected to the secure checkout page. You must have an SSL certificate installed to use this option.', 'edd' ),
+						'type' => 'checkbox'
+					),
+					'logged_in_only' => array(
+						'id'   => 'logged_in_only',
+						'name' => __( 'Disable Guest Checkout', 'edd' ),
+						'desc' => __( 'Require that users be logged-in to purchase files.', 'edd' ),
+						'type' => 'checkbox'
+					),
+					'show_register_form' => array(
+						'id'      => 'show_register_form',
+						'name'    => __( 'Show Register / Login Form?', 'edd' ),
+						'desc'    => __( 'Display the registration and login forms on the checkout page for non-logged-in users.', 'edd' ),
+						'type'    => 'select',
+						'std'     => 'none',
+						'options' => array(
+							'both'         => __( 'Registration and Login Forms', 'edd' ),
+							'registration' => __( 'Registration Form Only', 'edd' ),
+							'login'        => __( 'Login Form Only', 'edd' ),
+							'none'         => __( 'None', 'edd' )
+						),
+					),
+					'item_quantities' => array(
+						'id'   => 'item_quantities',
+						'name' => __('Item Quantities', 'edd'),
+						'desc' => __('Allow item quantities to be changed.', 'edd'),
+						'type' => 'checkbox'
+					),
+					'allow_multiple_discounts' => array(
+						'id'   => 'allow_multiple_discounts',
+						'name' => __('Multiple Discounts', 'edd'),
+						'desc' => __('Allow customers to use multiple discounts on the same purchase?', 'edd'),
+						'type' => 'checkbox'
+					),
+					'enable_cart_saving' => array(
+						'id'   => 'enable_cart_saving',
+						'name' => __( 'Enable Cart Saving', 'edd' ),
+						'desc' => __( 'Check this to enable cart saving on the checkout.', 'edd' ),
+						'type' => 'checkbox'
+					),
+					'field_downloads' => array(
+						'id' => 'field_downloads',
+						'name' => '<strong>' . __( 'File Downloads', 'edd' ) . '</strong>',
+						'desc' => '',
+						'type' => 'header'
+					),
+					'download_method' => array(
+						'id'      => 'download_method',
+						'name'    => __( 'Download Method', 'edd' ),
+						'desc'    => sprintf( __( 'Select the file download method. Note, not all methods work on all servers.', 'edd' ), edd_get_label_singular() ),
+						'type'    => 'select',
+						'options' => array(
+							'direct'   => __( 'Forced', 'edd' ),
+							'redirect' => __( 'Redirect', 'edd' )
+						)
+					),
+					'symlink_file_downloads' => array(
+						'id'   => 'symlink_file_downloads',
+						'name' => __( 'Symlink File Downloads?', 'edd' ),
+						'desc' => __( 'Check this if you are delivering really large files or having problems with file downloads completing.', 'edd' ),
+						'type' => 'checkbox'
+					),
+					'file_download_limit' => array(
+						'id'   => 'file_download_limit',
+						'name' => __( 'File Download Limit', 'edd' ),
+						'desc' => sprintf( __( 'The maximum number of times files can be downloaded for purchases. Can be overwritten for each %s.', 'edd' ), edd_get_label_singular() ),
+						'type' => 'number',
+						'size' => 'small'
+					),
+					'download_link_expiration' => array(
+						'id'   => 'download_link_expiration',
+						'name' => __( 'Download Link Expiration', 'edd' ),
+						'desc' => __( 'How long should download links be valid for? Default is 24 hours from the time they are generated. Enter a time in hours.', 'edd' ),
+						'type' => 'number',
+						'size' => 'small',
+						'std'  => '24',
+						'min'  => '0'
+					),
+					'disable_redownload' => array(
+						'id'   => 'disable_redownload',
+						'name' => __( 'Disable Redownload?', 'edd' ),
+						'desc' => __( 'Check this if you do not want to allow users to redownload items from their purchase history.', 'edd' ),
+						'type' => 'checkbox'
+					),
+					'accounting_settings' => array(
+						'id' => 'accounting_settings',
+						'name' => '<strong>' . __( 'Accounting Settings', 'edd' ) . '</strong>',
+						'desc' => '',
+						'type' => 'header'
+					),
+					'enable_skus' => array(
+						'id'   => 'enable_skus',
+						'name' => __( 'Enable SKU Entry', 'edd' ),
+						'desc' => __( 'Check this box to allow entry of product SKUs. SKUs will be shown on purchase receipt and exported purchase histories.', 'edd' ),
+						'type' => 'checkbox'
+					),
+					'enable_sequential' => array(
+						'id'   => 'enable_sequential',
+						'name' => __( 'Sequential Order Numbers', 'edd' ),
+						'desc' => __( 'Check this box to enable sequential order numbers.', 'edd' ),
+						'type' => 'checkbox'
+					),
+					'sequential_start' => array(
+						'id'   => 'sequential_start',
+						'name' => __( 'Sequential Starting Number', 'edd' ),
+						'desc' => __( 'The number at which the sequence should begin.', 'edd' ),
+						'type' => 'number',
+						'size' => 'small',
+						'std'  => '1'
+					),
+					'sequential_prefix' => array(
+						'id'   => 'sequential_prefix',
+						'name' => __( 'Sequential Number Prefix', 'edd' ),
+						'desc' => __( 'A prefix to prepend to all sequential order numbers.', 'edd' ),
+						'type' => 'text'
+					),
+					'sequential_postfix' => array(
+						'id'   => 'sequential_postfix',
+						'name' => __( 'Sequential Number Postfix', 'edd' ),
+						'desc' => __( 'A postfix to append to all sequential order numbers.', 'edd' ),
+						'type' => 'text',
+					),
+					'terms' => array(
+						'id' => 'terms',
+						'name' => '<strong>' . __( 'Terms of Agreement', 'edd' ) . '</strong>',
+						'desc' => '',
+						'type' => 'header'
+					),
+					'show_agree_to_terms' => array(
+						'id'   => 'show_agree_to_terms',
+						'name' => __( 'Agree to Terms', 'edd' ),
+						'desc' => __( 'Check this to show an agree to terms on the checkout that users must agree to before purchasing.', 'edd' ),
+						'type' => 'checkbox'
+					),
+					'agree_label' => array(
+						'id'   => 'agree_label',
+						'name' => __( 'Agree to Terms Label', 'edd' ),
+						'desc' => __( 'Label shown next to the agree to terms check box.', 'edd' ),
+						'type' => 'text',
+						'size' => 'regular'
+					),
+					'agree_text' => array(
+						'id'   => 'agree_text',
+						'name' => __( 'Agreement Text', 'edd' ),
+						'desc' => __( 'If Agree to Terms is checked, enter the agreement terms here.', 'edd' ),
+						'type' => 'rich_editor'
+					),
+					'checkout_label' => array(
+						'id'   => 'checkout_label',
+						'name' => __( 'Complete Purchase Text', 'edd' ),
+						'desc' => __( 'The button label for completing a purchase.', 'edd' ),
+						'type' => 'text',
+						'std'  => __( 'Purchase', 'edd' )
+					),
+					'add_to_cart_text' => array(
+						'id'   => 'add_to_cart_text',
+						'name' => __( 'Add to Cart Text', 'edd' ),
+						'desc' => __( 'Text shown on the Add to Cart Buttons.', 'edd' ),
+						'type' => 'text',
+						'std'  => __( 'Add to Cart', 'edd' )
+					),
+					'buy_now_text' => array(
+						'id' => 'buy_now_text',
+						'name' => __( 'Buy Now Text', 'edd' ),
+						'desc' => __( 'Text shown on the Buy Now Buttons.', 'edd' ),
+						'type' => 'text',
+						'std' => __( 'Buy Now', 'edd' )
 					)
-				),
-				'symlink_file_downloads' => array(
-					'id'   => 'symlink_file_downloads',
-					'name' => __( 'Symlink File Downloads?', 'edd' ),
-					'desc' => __( 'Check this if you are delivering really large files or having problems with file downloads completing.', 'edd' ),
-					'type' => 'checkbox'
-				),
-				'file_download_limit' => array(
-					'id'   => 'file_download_limit',
-					'name' => __( 'File Download Limit', 'edd' ),
-					'desc' => sprintf( __( 'The maximum number of times files can be downloaded for purchases. Can be overwritten for each %s.', 'edd' ), edd_get_label_singular() ),
-					'type' => 'number',
-					'size' => 'small'
-				),
-				'download_link_expiration' => array(
-					'id'   => 'download_link_expiration',
-					'name' => __( 'Download Link Expiration', 'edd' ),
-					'desc' => __( 'How long should download links be valid for? Default is 24 hours from the time they are generated. Enter a time in hours.', 'edd' ),
-					'type' => 'number',
-					'size' => 'small',
-					'std'  => '24',
-					'min'  => '0'
-				),
-				'disable_redownload' => array(
-					'id'   => 'disable_redownload',
-					'name' => __( 'Disable Redownload?', 'edd' ),
-					'desc' => __( 'Check this if you do not want to allow users to redownload items from their purchase history.', 'edd' ),
-					'type' => 'checkbox'
-				),
-				'accounting_settings' => array(
-					'id' => 'accounting_settings',
-					'name' => '<strong>' . __( 'Accounting Settings', 'edd' ) . '</strong>',
-					'desc' => '',
-					'type' => 'header'
-				),
-				'enable_skus' => array(
-					'id'   => 'enable_skus',
-					'name' => __( 'Enable SKU Entry', 'edd' ),
-					'desc' => __( 'Check this box to allow entry of product SKUs. SKUs will be shown on purchase receipt and exported purchase histories.', 'edd' ),
-					'type' => 'checkbox'
-				),
-				'enable_sequential' => array(
-					'id'   => 'enable_sequential',
-					'name' => __( 'Sequential Order Numbers', 'edd' ),
-					'desc' => __( 'Check this box to enable sequential order numbers.', 'edd' ),
-					'type' => 'checkbox'
-				),
-				'sequential_start' => array(
-					'id'   => 'sequential_start',
-					'name' => __( 'Sequential Starting Number', 'edd' ),
-					'desc' => __( 'The number at which the sequence should begin.', 'edd' ),
-					'type' => 'number',
-					'size' => 'small',
-					'std'  => '1'
-				),
-				'sequential_prefix' => array(
-					'id'   => 'sequential_prefix',
-					'name' => __( 'Sequential Number Prefix', 'edd' ),
-					'desc' => __( 'A prefix to prepend to all sequential order numbers.', 'edd' ),
-					'type' => 'text'
-				),
-				'sequential_postfix' => array(
-					'id'   => 'sequential_postfix',
-					'name' => __( 'Sequential Number Postfix', 'edd' ),
-					'desc' => __( 'A postfix to append to all sequential order numbers.', 'edd' ),
-					'type' => 'text',
-				),
-				'terms' => array(
-					'id' => 'terms',
-					'name' => '<strong>' . __( 'Terms of Agreement', 'edd' ) . '</strong>',
-					'desc' => '',
-					'type' => 'header'
-				),
-				'show_agree_to_terms' => array(
-					'id'   => 'show_agree_to_terms',
-					'name' => __( 'Agree to Terms', 'edd' ),
-					'desc' => __( 'Check this to show an agree to terms on the checkout that users must agree to before purchasing.', 'edd' ),
-					'type' => 'checkbox'
-				),
-				'agree_label' => array(
-					'id'   => 'agree_label',
-					'name' => __( 'Agree to Terms Label', 'edd' ),
-					'desc' => __( 'Label shown next to the agree to terms check box.', 'edd' ),
-					'type' => 'text',
-					'size' => 'regular'
-				),
-				'agree_text' => array(
-					'id'   => 'agree_text',
-					'name' => __( 'Agreement Text', 'edd' ),
-					'desc' => __( 'If Agree to Terms is checked, enter the agreement terms here.', 'edd' ),
-					'type' => 'rich_editor'
-				),
-				'checkout_label' => array(
-					'id'   => 'checkout_label',
-					'name' => __( 'Complete Purchase Text', 'edd' ),
-					'desc' => __( 'The button label for completing a purchase.', 'edd' ),
-					'type' => 'text',
-					'std'  => __( 'Purchase', 'edd' )
-				),
-				'add_to_cart_text' => array(
-					'id'   => 'add_to_cart_text',
-					'name' => __( 'Add to Cart Text', 'edd' ),
-					'desc' => __( 'Text shown on the Add to Cart Buttons.', 'edd' ),
-					'type' => 'text',
-					'std'  => __( 'Add to Cart', 'edd' )
-				),
-				'buy_now_text' => array(
-					'id' => 'buy_now_text',
-					'name' => __( 'Buy Now Text', 'edd' ),
-					'desc' => __( 'Text shown on the Buy Now Buttons.', 'edd' ),
-					'type' => 'text',
-					'std' => __( 'Buy Now', 'edd' )
 				)
 			)
 		)
@@ -947,6 +970,44 @@ function edd_get_settings_tabs() {
 	$tabs['misc']      = __( 'Misc', 'edd' );
 
 	return apply_filters( 'edd_settings_tabs', $tabs );
+}
+
+/**
+ * Retrieve settings tabs
+ *
+ * @since 2.3.9
+ * @return array $section
+ */
+function edd_get_settings_sections( $tab = false ) {
+
+	$settings = edd_get_registered_settings();
+	$tabs 		= edd_get_settings_tabs();
+
+	$sections         = array(
+		'general' => apply_filters( 'edd_settings_sections_general', array(
+			'main' => __( 'Main', 'edd' )
+		) ),
+		'gateways' => apply_filters( 'edd_settings_sections_gateways', array(
+			'main' => __( 'Main', 'edd' )
+		) ),
+		'emails' => apply_filters( 'edd_settings_sections_emails', array(
+			'main' => __( 'Main', 'edd' )
+		) ),
+		'styles' => apply_filters( 'edd_settings_sections_styles', array(
+			'main' => __( 'Main', 'edd' )
+		) ),
+		'taxes' => apply_filters( 'edd_settings_sections_taxes', array(
+			'main' => __( 'Main', 'edd' )
+		) ),
+		'extensions' => apply_filters( 'edd_settings_sections_extensions', array() ),
+		'licenses' => apply_filters( 'edd_settings_sections_licenses', array() ),
+		'misc' => apply_filters( 'edd_settings_sections_misc', array(
+			'main' => __( 'Main', 'edd' )
+		) )
+	);
+
+	$sections = apply_filters( 'edd_settings_sections', $sections );
+	return $tab && !empty( $sections[ $tab ] ) ? $sections[ $tab ] : ( $tab ? false : $sections );
 }
 
 /**
