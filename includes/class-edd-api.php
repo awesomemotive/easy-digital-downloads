@@ -183,7 +183,7 @@ class EDD_API {
 
 		$this->override = false;
 
-        // Make sure we have both user and api key
+		// Make sure we have both user and api key
 		if ( ! empty( $wp_query->query_vars['edd-api'] ) && ( $wp_query->query_vars['edd-api'] != 'products' || ! empty( $wp_query->query_vars['token'] ) ) ) {
 			if ( empty( $wp_query->query_vars['token'] ) || empty( $wp_query->query_vars['key'] ) )
 				$this->missing_auth();
@@ -979,7 +979,7 @@ class EDD_API {
 					$sales['totals'] = $total;
 				} else {
 					if( $args['date'] == 'this_quarter' || $args['date'] == 'last_quarter'  ) {
-   						$sales_count = 0;
+						$sales_count = 0;
 
 						// Loop through the months
 						$month = $dates['m_start'];
@@ -990,9 +990,9 @@ class EDD_API {
 						endwhile;
 
 						$sales['sales'][ $args['date'] ] = $sales_count;
-   					} else {
+					} else {
 						$sales['sales'][ $args['date'] ] = edd_get_sales_by_date( $dates['day'], $dates['m_start'], $dates['year'] );
-   					}
+					}
 				}
 			} elseif ( $args['product'] == 'all' ) {
 				$products = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) );
@@ -1088,7 +1088,7 @@ class EDD_API {
 					$earnings['totals'] = $total;
 				} else {
 					if ( $args['date'] == 'this_quarter' || $args['date'] == 'last_quarter'  ) {
-   						$earnings_count = (float) 0.00;
+						$earnings_count = (float) 0.00;
 
 						// Loop through the months
 						$month = $dates['m_start'];
@@ -1099,9 +1099,9 @@ class EDD_API {
 						endwhile;
 
 						$earnings['earnings'][ $args['date'] ] = $earnings_count;
-   					} else {
+					} else {
 						$earnings['earnings'][ $args['date'] ] = edd_get_earnings_by_date( $dates['day'], $dates['m_start'], $dates['year'] );
-   					}
+					}
 				}
 			} elseif ( $args['product'] == 'all' ) {
 				$products = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) );
