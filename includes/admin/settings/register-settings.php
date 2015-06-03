@@ -1582,7 +1582,7 @@ function edd_tax_rates_callback($args) {
  * @return void
  */
 function edd_descriptive_text_callback( $args ) {
-	echo esc_html( $args['desc'] );
+	echo wp_kses_post( $args['desc'] );
 }
 
 /**
