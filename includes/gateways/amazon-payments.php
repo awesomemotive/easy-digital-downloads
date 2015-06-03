@@ -244,6 +244,12 @@ final class EDD_Amazon_Payments {
 				'desc' => __( 'Configure the Amazon settings', 'edd' ),
 				'type' => 'header',
 			),
+			'amazon_register' => array(
+				'id'   => 'amazon_register',
+				'name' => __( 'Register with Amazon', 'edd' ),
+				'desc' => sprintf( __( '<a href="%s" target="_blank">Connect Easy Digital Downloads to your Amazon account, or register a new one.</a>', 'edd' ), $this->get_registration_url() ),
+				'type' => 'descriptive_text',
+			),
 			'amazon_client_id' => array(
 				'id'   => 'amazon_client_id',
 				'name' => __( 'Client ID', 'edd' ),
@@ -994,6 +1000,17 @@ final class EDD_Amazon_Payments {
 		
 		}
 
+	}
+
+	/**
+	 * Retrieve the URL for connecting Amazon account to EDD
+	 *
+	 * @access public
+	 * @since  2.4
+	 * @return string
+	 */
+	private function get_registration_url() {
+		return 'https://sellercentral.amazon.com/hz/me/sp/signup?solutionProviderId=A3JST9YM1SX7LB&marketplaceId=AGWSWK15IEJJ7&solutionProviderToken=AAAAAQAAAAEAAAAQnngerc8vYweGDt8byl2smgAAAHBgMm923quugHaGmPi%2B3sqo93TSL1aKwU85v71Zh7EXVK8De%2FuahjCFHft3cxN3rwAF4Iwg03sDW0jnkLULmFk7M1Fr69IV2XF477m0kU1EM0Z%2FbQssHdLai%2Fzoce1jZVmw8So3F2jhiDyfTHUK2AYP&solutionProviderOptions=lwa%3Bmws-acc%3B';
 	}
 
 }
