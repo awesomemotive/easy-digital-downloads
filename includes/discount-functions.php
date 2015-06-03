@@ -236,6 +236,22 @@ function edd_store_discount( $details, $discount_id = null ) {
 
 	}
 
+	if( ! empty( $meta['product_reqs'] ) ) {
+		foreach( $meta['product_reqs'] as $key => $product ) {
+			if( 0 === intval( $product ) ) {
+				unset( $meta['product_reqs'][ $key ] );
+			}
+		}
+	}
+
+	if( ! empty( $meta['excluded_products'] ) ) {
+		foreach( $meta['excluded_products'] as $key => $product ) {
+			if( 0 === intval( $product ) ) {
+				unset( $meta['excluded_products'][ $key ] );
+			}
+		}
+	}
+
 	if ( edd_discount_exists( $discount_id ) && ! empty( $discount_id ) ) {
 
 		// Update an existing discount
@@ -1089,6 +1105,20 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 
 	global $edd_is_last_cart_item, $edd_flat_discount_total;
 
+	// If we're not meeting the requirements of the $item array, return or set them
+	if ( empty( $item ) || empty( $item['id'] ) ) {
+		return 0;
+	}
+
+	// Quantity is a requirement of the cart options array to determine the discounted price
+	if ( empty( $item['quantity'] ) ) {
+		return 0;
+	}
+
+	if ( ! isset( $item['options'] ) ) {
+		$item['options'] = array();
+	}
+
 	$amount           = 0;
 	$price            = edd_get_cart_item_price( $item['id'], $item['options'] );
 	$discounted_price = $price;
@@ -1103,9 +1133,9 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 			$code_id = edd_get_discount_id_by_code( $discount );
 
 			// Check discount exists
-		        if( ! $code_id ) {
-		            continue;
-		        }
+			if( ! $code_id ) {
+				continue;
+			}
 
 			$reqs              = edd_get_discount_product_reqs( $code_id );
 			$excluded_products = edd_get_discount_excluded_products( $code_id );

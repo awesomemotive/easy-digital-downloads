@@ -13,6 +13,13 @@
 a.edd-delete { color: #a00; }
 a.edd-delete:hover { color: #f00; }
 
+
+/* General Settings Styles
+-------------------------------------------------------------- */
+.download_page_edd-settings .form-table label { font-size: 13px; color: #aaa; font-style:italic; cursor:default; margin:5px 0; }
+.download_page_edd-settings .form-table select +  label, .download_page_edd-settings .form-table input.regular-text + label, .download_page_edd-settings .form-table input.small-text + label { display:block; }
+.download_page_edd-settings .field-section-title { font-style: italic; color: #aaa;}
+
 /* =Add Ons Styles
 -------------------------------------------------------------- */
 .edd-tab-span { float: right; bottom: 15px; position: relative; }
@@ -124,7 +131,7 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 #edd-edit-order-form .column .description { padding-right: 10px; }
 #edd-edit-order-form .column,
 #edd-purchased-files .row > ul > li,
-#edd-purchased-files .inside > ul > li { display: inline-block; position: relative; vertical-align: bottom; margin-right: 5%; line-height:30px; }
+#edd-purchased-files .inside > ul > li { display: inline-block; position: relative; vertical-align: middle; margin-right: 5%; line-height:30px; }
 #edd-purchased-files li.actions { text-align: right; min-width: 200px; }
 #edd-purchased-files ul li.remove { text-align: right; }
 #edd-purchased-files .row { padding: 12px; border-bottom: 1px solid #eee; }

@@ -1,13 +1,13 @@
 === Easy Digital Downloads ===
-Author URI: http://pippinsplugins.com
-Plugin URI: http://easydigitaldownloads.com
+Author URI: https://pippinsplugins.com
+Plugin URI: https://easydigitaldownloads.com
 Contributors: mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, sksmatt, SpencerFinnell
-Donate link: http://pippinsplugins.com/support-the-site
+Donate link: https://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.9.2
 Tested up to: 4.2
 
-Stable Tag: 2.3.8
+Stable Tag: 2.3.9
 
 License: GNU Version 2 or Any Later Version
 
@@ -36,7 +36,7 @@ Features of the plugin include:
 
 More information at [Easy Digital Downloads.com](https://easydigitaldownloads.com/?utm_source=home&utm_medium=description_tab&utm_content=home&utm_campaign=readme).
 
-[youtube http://www.youtube.com/watch?v=japHPcIFs4I]
+[youtube https://www.youtube.com/watch?v=japHPcIFs4I]
 
 **Follow this plugin on [GitHub](https://github.com/easydigitaldownloads/Easy-Digital-Downloads)**
 
@@ -48,7 +48,7 @@ Includes a complete integration pack for delivering automatic upgrades for premi
 
 **Build Up Your Email Subscribers**
 
-With extensions for [Mail Chimp](http://easydigitaldownloads.com/extensions/mail-chimp/?utm_source=extension&utm_medium=description_tab&utm_content=mail-chimp&utm_campaign=readme), [Campaign Monitor](http://easydigitaldownloads.com/extensions/campaign-monitor/?utm_source=extension&utm_medium=description_tab&utm_content=campaign-monitor&utm_campaign=readme), and [AWeber](http://easydigitaldownloads.com/extensions/aweber/?utm_source=extension&utm_medium=description_tab&utm_content=aweber&utm_campaign=readme), [Wysija](https://easydigitaldownloads.com/extensions/wysija/?utm_source=extension&utm_medium=description_tab&utm_content=wysija&utm_campaign=readme), [ActiveCampaign](https://easydigitaldownloads.com/extensions/active-campaign/?utm_source=extension&utm_medium=description_tab&utm_content=active-campaign&utm_campaign=readme), [iContact](https://easydigitaldownloads.com/extensions/icontact/?utm_source=extension&utm_medium=description_tab&utm_content=icontact&utm_campaign=readme), [Constant Contact](https://easydigitaldownloads.com/extensions/constant-contact/?utm_source=extension&utm_medium=description_tab&utm_content=constant-contact&utm_campaign=readme), and more, Easy Digital Downloads can easily grow your email subscription lists while making you money at the same time.
+With extensions for [MailChimp](https://easydigitaldownloads.com/extensions/mail-chimp/?utm_source=extension&utm_medium=description_tab&utm_content=mail-chimp&utm_campaign=readme), [Campaign Monitor](https://easydigitaldownloads.com/extensions/campaign-monitor/?utm_source=extension&utm_medium=description_tab&utm_content=campaign-monitor&utm_campaign=readme), and [AWeber](https://easydigitaldownloads.com/extensions/aweber/?utm_source=extension&utm_medium=description_tab&utm_content=aweber&utm_campaign=readme), [Wysija](https://easydigitaldownloads.com/extensions/wysija/?utm_source=extension&utm_medium=description_tab&utm_content=wysija&utm_campaign=readme), [ActiveCampaign](https://easydigitaldownloads.com/extensions/active-campaign/?utm_source=extension&utm_medium=description_tab&utm_content=active-campaign&utm_campaign=readme), [iContact](https://easydigitaldownloads.com/extensions/icontact/?utm_source=extension&utm_medium=description_tab&utm_content=icontact&utm_campaign=readme), [Constant Contact](https://easydigitaldownloads.com/extensions/constant-contact/?utm_source=extension&utm_medium=description_tab&utm_content=constant-contact&utm_campaign=readme), and more, Easy Digital Downloads can easily grow your email subscription lists while making you money at the same time.
 
 **Languages**
 
@@ -89,7 +89,7 @@ Would you like to help translate the plugin into more languages? [Join our WP-Tr
 2. Go to Downloads > Settings and configure the options
 3. Create Downloadable products from the Downloads page
 4. Insert purchase buttons for any download via the "Insert Download" button next the Upload Media buttons
-5. For detailed setup instructions, vist the official [Documentation](http://easydigitaldownloads.com/documentation/?utm_source=docs&utm_medium=installation_tab&utm_content=documentation&utm_campaign=readme) page.
+5. For detailed setup instructions, vist the official [Documentation](https://easydigitaldownloads.com/documentation/?utm_source=docs&utm_medium=installation_tab&utm_content=documentation&utm_campaign=readme) page.
 
 == Frequently Asked Questions ==
 
@@ -138,13 +138,13 @@ Yes, EDD has an extension that allows for downloadable invoices to be generated 
 
 Yes, through the addition of one or more of the add-on payment gateways, you can accept payments in many different ways. The add-on gateways currently available:
 
-* [Stripe](http://easydigitaldownloads.com/extensions/stripe-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=stripe-payment-gateway&utm_campaign=readme)
-* [Recurly](http://easydigitaldownloads.com/extensions/recurly-com-checkout/?utm_source=gateway&utm_medium=faq_tab&utm_content=recurly-com-checkout&utm_campaign=readme)
-* [Authorize.net](http://easydigitaldownloads.com/extensions/authorize-net-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=authorize-net-gateway&utm_campaign=readme)
+* [Stripe](https://easydigitaldownloads.com/extensions/stripe-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=stripe-payment-gateway&utm_campaign=readme)
+* [Recurly](https://easydigitaldownloads.com/extensions/recurly-com-checkout/?utm_source=gateway&utm_medium=faq_tab&utm_content=recurly-com-checkout&utm_campaign=readme)
+* [Authorize.net](https://easydigitaldownloads.com/extensions/authorize-net-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=authorize-net-gateway&utm_campaign=readme)
 * [Google Wallet](https://easydigitaldownloads.com/extensions/google-checkout/?utm_source=gateway&utm_medium=faq_tab&utm_content=google-checkout&utm_campaign=readme)
-* [Moneybookers / Skrill](http://easydigitaldownloads.com/extensions/moneybookers-skrill-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=moneybookers-skrill-payment-gateway&utm_campaign=readme)
-* [2Checkout](http://easydigitaldownloads.com/extensions/2checkout-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=2checkout-gateway&utm_campaign=readme)
-* [PayPal Pro/Express](http://easydigitaldownloads.com/extensions/paypal-pro-express/?utm_source=gateway&utm_medium=faq_tab&utm_content=paypal-pro-express&utm_campaign=readme)
+* [Moneybookers / Skrill](https://easydigitaldownloads.com/extensions/moneybookers-skrill-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=moneybookers-skrill-payment-gateway&utm_campaign=readme)
+* [2Checkout](https://easydigitaldownloads.com/extensions/2checkout-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=2checkout-gateway&utm_campaign=readme)
+* [PayPal Pro/Express](https://easydigitaldownloads.com/extensions/paypal-pro-express/?utm_source=gateway&utm_medium=faq_tab&utm_content=paypal-pro-express&utm_campaign=readme)
 * [PayPal Adaptive Payments](https://easydigitaldownloads.com/extensions/paypal-adaptive-payments/?utm_source=gateway&utm_medium=faq_tab&utm_content=paypal-adaptive-payments&utm_campaign=readme)
 * [GoCardless](https://easydigitaldownloads.com/extensions/gocardless-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=gocardless-payment-gateway&utm_campaign=readme)
 * [Amazon FPS](https://easydigitaldownloads.com/extensions/amazon-fps-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=amazon-fps-payment-gateway&utm_campaign=readme)
@@ -191,13 +191,27 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
+= 2.3.9, May 25, 2015 =
+
+* Fix: Variable price assignment options get removed from download when deleting file row
+* Fix: Pagination container still shown when no pagination is needed
+* Fix: Airplane Mode load order can cause problems
+* Fix: Rewrites hard flushed during activation instead of soft flushed
+* Fix: Log records not recording post_date_gmt
+* Fix: Slashes not stripped from customer name in Customer Details view
+* Fix: "Apply to whole country" tax setting not saved on first save
+* Fix: Trashed downloads can be purchased with custom add to cart URLs
+* Tweak: Added filters to join and where clauses in edd_count_payments()
+* Tweak: Improved logic and flexibility for Products endpoint of the REST API
+
+
 = 2.3.8, April 27, 2015 =
 
 * Fix: Customer stats incrementing with attaching payment to customer, if payment is already attached
 * Fix: edd_get_file_download_method called too late during download process
 * Update: Translations Updated
 * Tweak: Improvements to the EDD Extensions page
-* TWeak: Corrections and updates to readme.txt
+* Tweak: Corrections and updates to readme.txt
 
 = 2.3.7, April 20, 2015 =
 

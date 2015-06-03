@@ -19,7 +19,7 @@ class Tests_Plugin_Compatibility extends WP_UnitTestCase {
 		$this->assertNotFalse( has_filter( 'edd_downloads_excerpt', 'edd_qtranslate_content' ) );
 		$this->assertNotFalse( has_action( 'template_redirect', 'edd_disable_woo_ssl_on_checkout' ) );
 		$this->assertNotFalse( has_action( 'edd_email_send_before', 'edd_disable_mandrill_nl2br' ) );
-		$this->assertNotFalse( has_action( 'parse_query', 'edd_disable_404_redirected_redirect' ) );
+		$this->assertNotFalse( has_action( 'template_redirect', 'edd_disable_404_redirected_redirect' ) );
 
 	}
 

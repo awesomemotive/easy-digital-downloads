@@ -763,41 +763,7 @@ class EDD_API {
 			if ( $product_list ) {
 				$i = 0;
 				foreach ( $product_list as $product_info ) {
-					$products['products'][$i]['info']['id']                           = $product_info->ID;
-					$products['products'][$i]['info']['slug']                         = $product_info->post_name;
-					$products['products'][$i]['info']['title']                        = $product_info->post_title;
-					$products['products'][$i]['info']['create_date']                  = $product_info->post_date;
-					$products['products'][$i]['info']['modified_date']                = $product_info->post_modified;
-					$products['products'][$i]['info']['status']                       = $product_info->post_status;
-					$products['products'][$i]['info']['link']                         = html_entity_decode( $product_info->guid );
-					$products['products'][$i]['info']['content']                      = $product_info->post_content;
-					$products['products'][$i]['info']['excerpt']                      = $product_info->post_excerpt;
-					$products['products'][$i]['info']['thumbnail']                    = wp_get_attachment_url( get_post_thumbnail_id( $product_info->ID ) );
-					$products['products'][$i]['info']['category']                     = get_the_terms( $product_info, 'download_category' );
-					$products['products'][$i]['info']['tags']                         = get_the_terms( $product_info, 'download_tag' );
-
-					if( user_can( $this->user_id, 'view_shop_reports' ) || $this->override) {
-						$products['products'][$i]['stats']['total']['sales']              = edd_get_download_sales_stats( $product_info->ID );
-						$products['products'][$i]['stats']['total']['earnings']           = edd_get_download_earnings_stats( $product_info->ID );
-						$products['products'][$i]['stats']['monthly_average']['sales']    = edd_get_average_monthly_download_sales( $product_info->ID );
-						$products['products'][$i]['stats']['monthly_average']['earnings'] = edd_get_average_monthly_download_earnings( $product_info->ID );
-					}
-
-					if ( edd_has_variable_prices( $product_info->ID ) ) {
-						foreach ( edd_get_variable_prices( $product_info->ID ) as $price ) {
-							$products['products'][$i]['pricing'][ sanitize_key( $price['name'] ) ] = $price['amount'];
-						}
-					} else {
-						$products['products'][$i]['pricing']['amount'] = edd_get_download_price( $product_info->ID );
-					}
-
-					if( user_can( $this->user_id, 'view_shop_sensitive_data' ) || $this->override ) {
-						foreach ( edd_get_download_files( $product_info->ID ) as $file ) {
-							$products['products'][$i]['files'][] = $file;
-						}
-						$products['products'][$i]['notes'] = edd_get_product_notes( $product_info->ID );
-					}
-
+					$products['products'][$i] = $this->get_product_data( $product_info );
 					$i++;
 				}
 			}
@@ -805,39 +771,7 @@ class EDD_API {
 			if ( get_post_type( $product ) == 'download' ) {
 				$product_info = get_post( $product );
 
-				$products['products'][0]['info']['id']                           = $product_info->ID;
-				$products['products'][0]['info']['slug']                         = $product_info->post_name;
-				$products['products'][0]['info']['title']                        = $product_info->post_title;
-				$products['products'][0]['info']['create_date']                  = $product_info->post_date;
-				$products['products'][0]['info']['modified_date']                = $product_info->post_modified;
-				$products['products'][0]['info']['status']                       = $product_info->post_status;
-				$products['products'][0]['info']['link']                         = html_entity_decode( $product_info->guid );
-				$products['products'][0]['info']['content']                      = $product_info->post_content;
-				$products['products'][0]['info']['thumbnail']                    = wp_get_attachment_url( get_post_thumbnail_id( $product_info->ID ) );
-				$products['products'][0]['info']['category']                     = get_the_terms( $product_info, 'download_category' );
-				$products['products'][0]['info']['tags']                         = get_the_terms( $product_info, 'download_tag' );
-
-				if( user_can( $this->user_id, 'view_shop_reports' ) || $this->override ) {
-					$products['products'][0]['stats']['total']['sales']              = edd_get_download_sales_stats( $product_info->ID );
-					$products['products'][0]['stats']['total']['earnings']           = edd_get_download_earnings_stats( $product_info->ID );
-					$products['products'][0]['stats']['monthly_average']['sales']    = edd_get_average_monthly_download_sales( $product_info->ID );
-					$products['products'][0]['stats']['monthly_average']['earnings'] = edd_get_average_monthly_download_earnings( $product_info->ID );
-				}
-
-				if ( edd_has_variable_prices( $product_info->ID ) ) {
-					foreach ( edd_get_variable_prices( $product_info->ID ) as $price ) {
-						$products['products'][0]['pricing'][ sanitize_key( $price['name'] ) ] = $price['amount'];
-					}
-				} else {
-					$products['products'][0]['pricing']['amount'] = edd_get_download_price( $product_info->ID );
-				}
-
-				if( user_can( $this->user_id, 'view_shop_sensitive_data' ) || $this->override ) {
-					foreach ( edd_get_download_files( $product_info->ID ) as $file ) {
-						$products['products'][0]['files'][] = $file;
-					}
-					$products['products'][0]['notes'] = edd_get_product_notes( $product_info->ID );
-				}
+				$products['products'][0] = $this->get_product_data( $product_info );
 
 			} else {
 				$error['error'] = sprintf( __( 'Product %s not found!', 'edd' ), $product );
@@ -846,6 +780,55 @@ class EDD_API {
 		}
 
 		return $products;
+	}
+
+	/**
+	 * Given a download post object, generate the data for the API output
+	 *
+	 * @since  2.3.9
+	 * @param  object $product_info The Download Post Object
+	 * @return array                Array of post data to return back in the API
+	 */
+	private function get_product_data( $product_info ) {
+
+		$product = array();
+
+		$product['info']['id']                           = $product_info->ID;
+		$product['info']['slug']                         = $product_info->post_name;
+		$product['info']['title']                        = $product_info->post_title;
+		$product['info']['create_date']                  = $product_info->post_date;
+		$product['info']['modified_date']                = $product_info->post_modified;
+		$product['info']['status']                       = $product_info->post_status;
+		$product['info']['link']                         = html_entity_decode( $product_info->guid );
+		$product['info']['content']                      = $product_info->post_content;
+		$product['info']['thumbnail']                    = wp_get_attachment_url( get_post_thumbnail_id( $product_info->ID ) );
+		$product['info']['category']                     = get_the_terms( $product_info, 'download_category' );
+		$product['info']['tags']                         = get_the_terms( $product_info, 'download_tag' );
+
+		if( user_can( $this->user_id, 'view_shop_reports' ) || $this->override ) {
+			$product['stats']['total']['sales']              = edd_get_download_sales_stats( $product_info->ID );
+			$product['stats']['total']['earnings']           = edd_get_download_earnings_stats( $product_info->ID );
+			$product['stats']['monthly_average']['sales']    = edd_get_average_monthly_download_sales( $product_info->ID );
+			$product['stats']['monthly_average']['earnings'] = edd_get_average_monthly_download_earnings( $product_info->ID );
+		}
+
+		if ( edd_has_variable_prices( $product_info->ID ) ) {
+			foreach ( edd_get_variable_prices( $product_info->ID ) as $price ) {
+				$product['pricing'][ sanitize_key( $price['name'] ) ] = $price['amount'];
+			}
+		} else {
+			$product['pricing']['amount'] = edd_get_download_price( $product_info->ID );
+		}
+
+		if( user_can( $this->user_id, 'view_shop_sensitive_data' ) || $this->override ) {
+			foreach ( edd_get_download_files( $product_info->ID ) as $file ) {
+				$product['files'][] = $file;
+			}
+			$product['notes'] = edd_get_product_notes( $product_info->ID );
+		}
+
+		return apply_filters( 'edd_api_products_product', $product );
+
 	}
 
 	/**
@@ -1103,15 +1086,17 @@ class EDD_API {
 
 			return $earnings;
 		} elseif ( $args['type'] == 'customers' ) {
-			global $wpdb;
-
-			$stats = array();
-
-			$count = $wpdb->get_col( "SELECT COUNT(DISTINCT meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email'" );
-
-			$stats['customers']['total_customers'] = $count[0];
-
-			return $stats;
+			if ( version_compare( $edd_version, '2.3', '<' ) || ! edd_has_upgrade_completed( 'upgrade_customer_payments_association' ) ) {
+				global $wpdb;
+				$stats = array();
+				$count = $wpdb->get_col( "SELECT COUNT(DISTINCT meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email'" );
+				$stats['customers']['total_customers'] = $count[0];
+				return $stats;
+			} else {
+				$customers = new EDD_DB_Customers();
+				$stats['customers']['total_customers'] = $customers->count();
+				return $stats;
+			}
 		} elseif ( empty( $args['type'] ) ) {
 			$stats = array_merge( $stats, $this->get_default_sales_stats() );
 			$stats = array_merge ( $stats, $this->get_default_earnings_stats() );
@@ -1308,8 +1293,8 @@ class EDD_API {
 
 		$query = array(
 			'edd-api'     => $wp_query->query_vars['edd-api'],
-			'key'         => $wp_query->query_vars['key'],
-			'token'       => $wp_query->query_vars['token'],
+			'key'         => isset( $wp_query->query_vars['key'] )         ? $wp_query->query_vars['key']         : null,
+			'token'       => isset( $wp_query->query_vars['token'] )       ? $wp_query->query_vars['token']       : null,
 			'query'       => isset( $wp_query->query_vars['query'] )       ? $wp_query->query_vars['query']       : null,
 			'type'        => isset( $wp_query->query_vars['type'] )        ? $wp_query->query_vars['type']        : null,
 			'product'     => isset( $wp_query->query_vars['product'] )     ? $wp_query->query_vars['product']     : null,
@@ -1331,8 +1316,8 @@ class EDD_API {
 		$log_meta = array(
 			'request_ip' => edd_get_ip(),
 			'user'       => $this->user_id,
-			'key'        => $wp_query->query_vars['key'],
-			'token'      => $wp_query->query_vars['token']
+			'key'        => isset( $wp_query->query_vars['key'] ) ? $wp_query->query_vars['key'] : null,
+			'token'      => isset( $wp_query->query_vars['token'] ) ? $wp_query->query_vars['token'] : null
 		);
 
 		$edd_logs->insert_log( $log_data, $log_meta );
@@ -1430,9 +1415,9 @@ class EDD_API {
 								<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
 								<span class="description"><?php _e( 'Generate API Key', 'edd' ); ?></span>
 							<?php } else { ?>
-								<strong><?php _e( 'Public key:', 'edd' ); ?>&nbsp;</strong><span id="publickey"><?php echo $user->edd_user_public_key; ?></span><br/>
-								<strong><?php _e( 'Secret key:', 'edd' ); ?>&nbsp;</strong><span id="privatekey"><?php echo $user->edd_user_secret_key; ?></span><br/>
-								<strong><?php _e( 'Token:', 'edd' ); ?>&nbsp;</strong><span id="token"><?php echo $this->get_token( $user->ID ); ?></span><br/>
+								<strong style="display:inline-block; width: 125px;"><?php _e( 'Public key:', 'edd' ); ?>&nbsp;</strong><input type="text" disabled="disabled" class="regular-text" id="publickey" value="<?php echo esc_attr($user->edd_user_public_key ); ?>"/><br/>
+								<strong style="display:inline-block; width: 125px;"><?php _e( 'Secret key:', 'edd' ); ?>&nbsp;</strong><input type="text" disabled="disabled" class="regular-text" id="privatekey" value="<?php echo esc_attr( $user->edd_user_secret_key ); ?>"/><br/>
+								<strong style="display:inline-block; width: 125px;"><?php _e( 'Token:', 'edd' ); ?>&nbsp;</strong><input type="text" disabled="disabled" class="regular-text" id="token" value="<?php echo esc_attr( $this->get_token( $user->ID ) ); ?>"/><br/>
 								<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
 								<span class="description"><?php _e( 'Revoke API Keys', 'edd' ); ?></span>
 							<?php } ?>
