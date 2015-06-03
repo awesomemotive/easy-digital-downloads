@@ -119,7 +119,7 @@ function edd_show_upgrade_notices() {
 
 		if ( version_compare( $edd_version, '2.3', '<' ) || ! edd_has_upgrade_completed( 'upgrade_payment_taxes' ) ) {
 			printf(
-				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the payments database, click <a href="%s">here</a> to start the upgrade.', 'edd' ) . '</p></div>',
+				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the payment database, click <a href="%s">here</a> to start the upgrade.', 'edd' ) . '</p></div>',
 				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_payment_taxes' ) )
 			);
 		}
@@ -447,7 +447,7 @@ function edd_v15_upgrades() {
 	update_option( 'edd_settings_taxes', $tax_options );
 
 	// Flush the rewrite rules for the new /edd-api/ end point
-	flush_rewrite_rules();
+	flush_rewrite_rules( false );
 }
 
 /**

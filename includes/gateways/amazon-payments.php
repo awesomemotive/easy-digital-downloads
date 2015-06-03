@@ -240,7 +240,7 @@ final class EDD_Amazon_Payments {
 		$default_amazon_settings = array(
 			'amazon' => array(
 				'id'   => 'amazon',
-				'name' => '<strong>' . __( 'Login & Pay with Amazon Settings', 'edd' ) . '</strong>',
+				'name' => '<span class="field-section-title">' . __( 'Login & Pay with Amazon Settings', 'edd' ) . '</span>',
 				'desc' => __( 'Configure the Amazon settings', 'edd' ),
 				'type' => 'header',
 			),

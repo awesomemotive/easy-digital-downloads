@@ -216,72 +216,62 @@ function edd_get_registered_settings() {
 		/** General Settings */
 		'general' => apply_filters( 'edd_settings_general',
 			array(
-				'test_mode' => array(
-					'id'   => 'test_mode',
-					'name' => __( 'Test Mode', 'edd' ),
-					'desc' => __( 'While in test mode no live transactions are processed. To fully use test mode, you must have a sandbox (test) account for the payment gateway you are testing.', 'edd' ),
-					'type' => 'checkbox'
-				),
 				'purchase_page' => array(
-					'id'          => 'purchase_page',
-					'name'        => __( 'Checkout Page', 'edd' ),
-					'desc'        => __( 'This is the checkout page where buyers will complete their purchases. The [download_checkout] short code must be on this page.', 'edd' ),
-					'type'        => 'select',
-					'options'     => edd_get_pages(),
-					'chosen'      => true,
+					'id' => 'purchase_page',
+					'name' => __( 'Checkout Page', 'edd' ),
+					'desc' => __( 'This is the checkout page where buyers will complete their purchases. The [download_checkout] short code must be on this page.', 'edd' ),
+					'type' => 'select',
+					'options' => edd_get_pages(),
+					'chosen' => true,
 					'placeholder' => __( 'Select a page', 'edd' )
 				),
 				'success_page' => array(
-					'id'          => 'success_page',
-					'name'        => __( 'Success Page', 'edd' ),
-					'desc'        => __( 'This is the page buyers are sent to after completing their purchases. The [edd_receipt] short code should be on this page.', 'edd' ),
-					'type'        => 'select',
-					'options'     => edd_get_pages(),
-					'chosen'      => true,
+					'id' => 'success_page',
+					'name' => __( 'Success Page', 'edd' ),
+					'desc' => __( 'This is the page buyers are sent to after completing their purchases. The [edd_receipt] short code should be on this page.', 'edd' ),
+					'type' => 'select',
+					'options' => edd_get_pages(),
+					'chosen' => true,
 					'placeholder' => __( 'Select a page', 'edd' )
 				),
 				'failure_page' => array(
-					'id'          => 'failure_page',
-					'name'        => __( 'Failed Transaction Page', 'edd' ),
-					'desc'        => __( 'This is the page buyers are sent to if their transaction is cancelled or fails', 'edd' ),
-					'type'        => 'select',
-					'options'     => edd_get_pages(),
-					'chosen'      => true,
+					'id' => 'failure_page',
+					'name' => __( 'Failed Transaction Page', 'edd' ),
+					'desc' => __( 'This is the page buyers are sent to if their transaction is cancelled or fails', 'edd' ),
+					'type' => 'select',
+					'options' => edd_get_pages(),
+					'chosen' => true,
 					'placeholder' => __( 'Select a page', 'edd' )
 				),
 				'purchase_history_page' => array(
-					'id'          => 'purchase_history_page',
-					'name'        => __( 'Purchase History Page', 'edd' ),
-					'desc'        => __( 'This page shows a complete purchase history for the current user, including download links', 'edd' ),
-					'type'        => 'select',
-					'options'     => edd_get_pages(),
-					'chosen'      => true,
+					'id' => 'purchase_history_page',
+					'name' => __( 'Purchase History Page', 'edd' ),
+					'desc' => __( 'This page shows a complete purchase history for the current user, including download links', 'edd' ),
+					'type' => 'select',
+					'options' => edd_get_pages(),
+					'chosen' => true,
 					'placeholder' => __( 'Select a page', 'edd' )
 				),
 				'base_country' => array(
-					'id'          => 'base_country',
-					'name'        => __( 'Base Country', 'edd' ),
-					'desc'        => __( 'Where does your store operate from?', 'edd' ),
-					'type'        => 'select',
-					'options'     => edd_get_country_list(),
-					'chosen'      => true,
+					'id' => 'base_country',
+					'name' => __( 'Base Country', 'edd' ),
+					'desc' => __( 'Where does your store operate from?', 'edd' ),
+					'type' => 'select',
+					'options' => edd_get_country_list(),
+					'chosen' => true,
 					'placeholder' => __( 'Select a country', 'edd' )
 				),
 				'base_state' => array(
-					'id'          => 'base_state',
-					'name'        => __( 'Base State / Province', 'edd' ),
-					'desc'        => __( 'What state / province does your store operate from?', 'edd' ),
-					'type'        => 'shop_states',
-					'chosen'      => true,
+					'id' => 'base_state',
+					'name' => __( 'Base State / Province', 'edd' ),
+					'desc' => __( 'What state / province does your store operate from?', 'edd' ),
+					'type' => 'shop_states',
+					'chosen' => true,
 					'placeholder' => __( 'Select a state', 'edd' )
 				),
 				'currency_settings' => array(
-					'id'   => 'currency_settings',
-					'name' => '<strong>' . __( 'Currency Settings', 'edd' ) . '</strong>',
-					'desc' => __( 'Configure the currency options', 'edd' ),
-					'type' => 'header'
-				),
-				'currency' => array(
+					'id'      => 'currency_settings',
+					'name'    => '<span class="field-section-title">' . __( 'Currency Settings', 'edd' ) . '</span>',
 					'id'      => 'currency',
 					'name'    => __( 'Currency', 'edd' ),
 					'desc'    => __( 'Choose your currency. Note that some payment gateways have currency restrictions.', 'edd' ),
@@ -316,8 +306,8 @@ function edd_get_registered_settings() {
 					'std'  => '.'
 				),
 				'api_settings' => array(
-					'id'   => 'api_settings',
-					'name' => '<strong>' . __( 'API Settings', 'edd' ) . '</strong>',
+					'id' => 'api_settings',
+					'name' => '<span class="field-section-title">' . __( 'API Settings', 'edd' ) . '</span>',
 					'desc' => '',
 					'type' => 'header'
 				),
@@ -328,8 +318,8 @@ function edd_get_registered_settings() {
 					'type' => 'checkbox'
 				),
 				'tracking_settings' => array(
-					'id'   => 'tracking_settings',
-					'name' => '<strong>' . __( 'Tracking Settings', 'edd' ) . '</strong>',
+					'id' => 'tracking_settings',
+					'name' => '<span class="field-section-title">' . __( 'Tracking Settings', 'edd' ) . '</span>',
 					'desc' => '',
 					'type' => 'header'
 				),
@@ -350,6 +340,12 @@ function edd_get_registered_settings() {
 		/** Payment Gateways Settings */
 		'gateways' => apply_filters('edd_settings_gateways',
 			array(
+				'test_mode' => array(
+					'id' => 'test_mode',
+					'name' => __( 'Test Mode', 'edd' ),
+					'desc' => __( 'While in test mode no live transactions are processed. To fully use test mode, you must have a sandbox (test) account for the payment gateway you are testing.', 'edd' ),
+					'type' => 'checkbox'
+				),
 				'gateways' => array(
 					'id'      => 'gateways',
 					'name'    => __( 'Payment Gateways', 'edd' ),
@@ -380,8 +376,8 @@ function edd_get_registered_settings() {
 					)
 				),
 				'paypal' => array(
-					'id'   => 'paypal',
-					'name' => '<strong>' . __( 'PayPal Settings', 'edd' ) . '</strong>',
+					'id' => 'paypal',
+					'name' => '<span class="field-section-title">' . __( 'PayPal Settings', 'edd' ) . '</span>',
 					'desc' => __( 'Configure the PayPal settings', 'edd' ),
 					'type' => 'header'
 				),
@@ -458,8 +454,8 @@ function edd_get_registered_settings() {
 					'std'  => __( "Dear", "edd" ) . " {name},\n\n" . __( "Thank you for your purchase. Please click on the link(s) below to download your files.", "edd" ) . "\n\n{download_list}\n\n{sitename}"
 				),
 				'sale_notification_header' => array(
-					'id'   => 'sale_notification_header',
-					'name' => '<strong>' . __('New Sale Notifications', 'edd') . '</strong>',
+					'id' => 'sale_notification_header',
+					'name' => '<span class="field-section-title">' . __('New Sale Notifications', 'edd') . '</span>',
 					'desc' => __('Configure new sale notification emails', 'edd'),
 					'type' => 'header'
 				),
@@ -502,8 +498,8 @@ function edd_get_registered_settings() {
 					'type' => 'checkbox'
 				),
 				'button_header' => array(
-					'id'   => 'button_header',
-					'name' => '<strong>' . __( 'Buttons', 'edd' ) . '</strong>',
+					'id' => 'button_header',
+					'name' => '<span class="field-section-title">' . __( 'Buttons', 'edd' ) . '</span>',
 					'desc' => __( 'Options for add to cart and purchase buttons', 'edd' ),
 					'type' => 'header'
 				),
@@ -533,8 +529,8 @@ function edd_get_registered_settings() {
 					'type' => 'checkbox',
 				),
 				'tax_rates' => array(
-					'id'   => 'tax_rates',
-					'name' => '<strong>' . __( 'Tax Rates', 'edd' ) . '</strong>',
+					'id' => 'tax_rates',
+					'name' => '<span class="field-section-title">' . __( 'Tax Rates', 'edd' ) . '</span>',
 					'desc' => __( 'Enter tax rates for specific regions.', 'edd' ),
 					'type' => 'tax_rates'
 				),
@@ -642,8 +638,8 @@ function edd_get_registered_settings() {
 					'type' => 'checkbox'
 				),
 				'field_downloads' => array(
-					'id'   => 'field_downloads',
-					'name' => '<strong>' . __( 'File Downloads', 'edd' ) . '</strong>',
+					'id' => 'field_downloads',
+					'name' => '<span class="field-section-title">' . __( 'File Downloads', 'edd' ) . '</span>',
 					'desc' => '',
 					'type' => 'header'
 				),
@@ -686,8 +682,8 @@ function edd_get_registered_settings() {
 					'type' => 'checkbox'
 				),
 				'accounting_settings' => array(
-					'id'   => 'accounting_settings',
-					'name' => '<strong>' . __( 'Accounting Settings', 'edd' ) . '</strong>',
+					'id' => 'accounting_settings',
+					'name' => '<span class="field-section-title">' . __( 'Accounting Settings', 'edd' ) . '</span>',
 					'desc' => '',
 					'type' => 'header'
 				),
@@ -700,7 +696,7 @@ function edd_get_registered_settings() {
 				'enable_sequential' => array(
 					'id'   => 'enable_sequential',
 					'name' => __( 'Sequential Order Numbers', 'edd' ),
-					'desc' => __( 'Check this box to sequential order numbers.', 'edd' ),
+					'desc' => __( 'Check this box to enable sequential order numbers.', 'edd' ),
 					'type' => 'checkbox'
 				),
 				'sequential_start' => array(
@@ -724,8 +720,8 @@ function edd_get_registered_settings() {
 					'type' => 'text',
 				),
 				'terms' => array(
-					'id'   => 'terms',
-					'name' => '<strong>' . __( 'Terms of Agreement', 'edd' ) . '</strong>',
+					'id' => 'terms',
+					'name' => '<span class="field-section-title">' . __( 'Terms of Agreement', 'edd' ) . '</span>',
 					'desc' => '',
 					'type' => 'header'
 				),

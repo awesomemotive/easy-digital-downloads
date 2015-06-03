@@ -34,7 +34,7 @@ jQuery(document).ready(function ($) {
 
 			clone.removeClass( 'edd_add_blank' );
 
-			clone.data( 'key', key );
+			clone.attr( 'data-key', key );
 			clone.find( 'td input, td select, textarea' ).val( '' );
 			clone.find( 'input, select, textarea' ).each(function() {
 				var name = $( this ).attr( 'name' );
@@ -90,8 +90,11 @@ jQuery(document).ready(function ($) {
 					type  = $(this).data('type'),
 					repeatable = 'tr.edd_repeatable_' + type + 's';
 
-				/** remove from price condition */
-				$( '.edd_repeatable_condition_field option[value=' + row.index() + ']' ).remove();
+				if ( type === 'price' ) {
+					var price_row_id = row.data('key');
+					/** remove from price condition */
+					$( '.edd_repeatable_condition_field option[value="' + price_row_id + '"]' ).remove();
+				}
 
 				if( count > 1 ) {
 					$( 'input, select', row ).val( '' );
@@ -342,6 +345,14 @@ jQuery(document).ready(function ($) {
 
 			// Remove a download from a purchase
 			$('#edd-purchased-files').on('click', '.edd-order-remove-download', function() {
+
+				var count = $('body').find( '#edd-purchased-files > .row' ).length;
+
+				if ( count === 1 ) {
+					alert( edd_vars.one_download_min );
+					return false;
+				}
+
 				if( confirm( edd_vars.delete_payment_download ) ) {
 					var key = $(this).data('key');
 
@@ -909,11 +920,17 @@ jQuery(document).ready(function ($) {
 				var row = $('#edd_tax_rates tr:last');
 				var clone = row.clone();
 				var count = row.parent().find( 'tr' ).length;
-				clone.find( 'td input' ).val( '' );
+				clone.find( 'td input' ).not(':input[type=checkbox]').val( '' );
+				clone.find( 'td [type="checkbox"]' ).attr('checked', false);
 				clone.find( 'input, select' ).each(function() {
 					var name = $( this ).attr( 'name' );
 					name = name.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
 					$( this ).attr( 'name', name ).attr( 'id', name );
+				});
+				clone.find( 'label' ).each(function() {
+					var name = $( this ).attr( 'for' );
+					name = name.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
+					$( this ).attr( 'for', name );
 				});
 				clone.insertAfter( row );
 				return false;

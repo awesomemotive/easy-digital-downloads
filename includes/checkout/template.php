@@ -436,7 +436,7 @@ function edd_get_register_fields() {
 				<input name="edd_user_login" id="edd_user_login" class="<?php if(edd_no_guest_checkout()) { echo 'required '; } ?>edd-input" type="text" placeholder="<?php _e( 'Username', 'edd' ); ?>" title="<?php _e( 'Username', 'edd' ); ?>"/>
 			</p>
 			<p id="edd-user-pass-wrap">
-				<label for="password">
+				<label for="edd_user_pass">
 					<?php _e( 'Password', 'edd' ); ?>
 					<?php if( edd_no_guest_checkout() ) { ?>
 					<span class="edd-required-indicator">*</span>
@@ -446,7 +446,7 @@ function edd_get_register_fields() {
 				<input name="edd_user_pass" id="edd_user_pass" class="<?php if(edd_no_guest_checkout()) { echo 'required '; } ?>edd-input" placeholder="<?php _e( 'Password', 'edd' ); ?>" type="password"/>
 			</p>
 			<p id="edd-user-pass-confirm-wrap" class="edd_register_password">
-				<label for="password_again">
+				<label for="edd_user_pass_confirm">
 					<?php _e( 'Password Again', 'edd' ); ?>
 					<?php if( edd_no_guest_checkout() ) { ?>
 					<span class="edd-required-indicator">*</span>
@@ -526,7 +526,7 @@ add_action( 'edd_purchase_form_login_fields', 'edd_get_login_fields' );
  * @return void
  */
 function edd_payment_mode_select() {
-	$gateways = edd_get_enabled_payment_gateways();
+	$gateways = edd_get_enabled_payment_gateways( true );
 	$page_URL = edd_get_current_page_url();
 	do_action('edd_payment_mode_top'); ?>
 	<?php if( edd_is_ajax_disabled() ) { ?>
@@ -858,7 +858,7 @@ function edd_filter_success_page_content( $content ) {
 			$content = apply_filters( 'edd_payment_confirm_' . $_GET['payment-confirmation'], $content );
 		}
 	}
-	
+
 	return $content;
 }
 add_filter( 'the_content', 'edd_filter_success_page_content' );

@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Easy Digital Downloads
- * Plugin URI: http://easydigitaldownloads.com
+ * Plugin URI: https://easydigitaldownloads.com
  * Description: Serve Digital Downloads Through WordPress
  * Author: Pippin Williamson
- * Author URI: http://pippinsplugins.com
- * Version: 2.3.8
+ * Author URI: https://pippinsplugins.com
+ * Version: 2.3.9
  * Text Domain: edd
  * Domain Path: languages
  *
@@ -25,7 +25,7 @@
  * @package EDD
  * @category Core
  * @author Pippin Williamson
- * @version 2.3.8
+ * @version 2.3.9
  */
 
 // Exit if accessed directly
@@ -187,7 +187,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '2.3.8' );
+			define( 'EDD_VERSION', '2.3.9' );
 		}
 
 		// Plugin Folder Path
