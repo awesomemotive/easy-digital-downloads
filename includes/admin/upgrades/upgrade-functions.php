@@ -1050,7 +1050,7 @@ function upgrade_user_api_keys() {
 			update_user_meta( $user_id, $meta_value, $meta_key );
 
 			// Delete the old one
-			//delete_user_meta( $user_id, $meta_key );
+			delete_user_meta( $user_id, $meta_key );
 
 		}
 

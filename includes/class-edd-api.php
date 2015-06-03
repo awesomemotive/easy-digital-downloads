@@ -110,6 +110,9 @@ class EDD_API {
 		add_action( 'edit_user_profile_update', array( $this, 'update_key'       ) );
 		add_action( 'edd_process_api_key',      array( $this, 'process_api_key'  ) );
 
+		// Setup a backwards compatibilty check for user API Keys
+		add_filter( 'get_user_metadata',        array( $this, 'api_key_backwards_copmat' ), 10, 4 );
+
 		// Determine if JSON_PRETTY_PRINT is available
 		$this->pretty_print = defined( 'JSON_PRETTY_PRINT' ) ? JSON_PRETTY_PRINT : null;
 
@@ -190,7 +193,7 @@ class EDD_API {
 				$this->invalid_key();
 			else :
 				$token  = urldecode( $wp_query->query_vars['token'] );
-				$secret = get_user_meta( $user, 'edd_user_secret_key', true );
+				$secret = $this->get_user_secret_key( $user );
 				$public = urldecode( $wp_query->query_vars['key'] );
 
 				if ( hash_equals( md5( $secret . $public ), $token ) )
@@ -229,7 +232,7 @@ class EDD_API {
 		$user = get_transient( md5( 'edd_api_user_' . $key ) );
 
 		if ( false === $user ) {
-			$user = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'edd_user_public_key' AND meta_value = %s LIMIT 1", $key ) );
+			$user = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = %s LIMIT 1", $key ) );
 			set_transient( md5( 'edd_api_user_' . $key ) , $user, DAY_IN_SECONDS );
 		}
 
@@ -239,6 +242,42 @@ class EDD_API {
 		}
 
 		return false;
+	}
+
+	public function get_user_public_key( $user_id = 0 ) {
+		global $wpdb;
+
+		if ( empty( $user_id ) ) {
+			return '';
+		}
+
+		$cache_key       = md5( 'edd_api_user_public_key' . $user_id );
+		$user_public_key = get_transient( $cache_key );
+
+		if ( empty( $user_public_key ) ) {
+			$user_public_key = $wpdb->get_var( $wpdb->prepare( "SELECT meta_key FROM $wpdb->usermeta WHERE meta_value = 'edd_user_public_key' AND user_id = %d", $user_id ) );
+			set_transient( $cache_key, $user_public_key, HOUR_IN_SECONDS );
+		}
+
+		return $user_public_key;
+	}
+
+	public function get_user_secret_key( $user_id = 0 ) {
+		global $wpdb;
+
+		if ( empty( $user_id ) ) {
+			return '';
+		}
+
+		$cache_key       = md5( 'edd_api_user_secret_key' . $user_id );
+		$user_secret_key = get_transient( $cache_key );
+
+		if ( empty( $user_secret_key ) ) {
+			$user_secret_key = $wpdb->get_var( $wpdb->prepare( "SELECT meta_key FROM $wpdb->usermeta WHERE meta_value = 'edd_user_secret_key' AND user_id = %d", $user_id ) );
+			set_transient( $cache_key, $user_secret_key, HOUR_IN_SECONDS );
+		}
+
+		return $user_secret_key;
 	}
 
 	/**
@@ -1408,18 +1447,22 @@ class EDD_API {
 				<tbody>
 					<tr>
 						<th>
-							<label for="edd_set_api_key"><?php _e( 'Easy Digital Downloads API Keys', 'edd' ); ?></label>
+							<?php _e( 'Easy Digital Downloads API Keys', 'edd' ); ?>
 						</th>
 						<td>
+							<?php
+								$public_key = $this->get_user_public_key( $user->ID );
+								$secret_key = $this->get_user_secret_key( $user->ID );
+							?>
 							<?php if ( empty( $user->edd_user_public_key ) ) { ?>
 								<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
 								<span class="description"><?php _e( 'Generate API Key', 'edd' ); ?></span>
 							<?php } else { ?>
-								<strong style="display:inline-block; width: 125px;"><?php _e( 'Public key:', 'edd' ); ?>&nbsp;</strong><input type="text" disabled="disabled" class="regular-text" id="publickey" value="<?php echo esc_attr($user->edd_user_public_key ); ?>"/><br/>
-								<strong style="display:inline-block; width: 125px;"><?php _e( 'Secret key:', 'edd' ); ?>&nbsp;</strong><input type="text" disabled="disabled" class="regular-text" id="privatekey" value="<?php echo esc_attr( $user->edd_user_secret_key ); ?>"/><br/>
+								<strong style="display:inline-block; width: 125px;"><?php _e( 'Public key:', 'edd' ); ?>&nbsp;</strong><input type="text" disabled="disabled" class="regular-text" id="publickey" value="<?php echo esc_attr( $public_key ); ?>"/><br/>
+								<strong style="display:inline-block; width: 125px;"><?php _e( 'Secret key:', 'edd' ); ?>&nbsp;</strong><input type="text" disabled="disabled" class="regular-text" id="privatekey" value="<?php echo esc_attr( $secret_key ); ?>"/><br/>
 								<strong style="display:inline-block; width: 125px;"><?php _e( 'Token:', 'edd' ); ?>&nbsp;</strong><input type="text" disabled="disabled" class="regular-text" id="token" value="<?php echo esc_attr( $this->get_token( $user->ID ) ); ?>"/><br/>
 								<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
-								<span class="description"><?php _e( 'Revoke API Keys', 'edd' ); ?></span>
+								<span class="description"><label for="edd_set_api_key"><?php _e( 'Revoke API Keys', 'edd' ); ?></label></span>
 							<?php } ?>
 						</td>
 					</tr>
@@ -1503,16 +1546,22 @@ class EDD_API {
 			return false;
 		}
 
-		if ( empty( $user->edd_user_public_key ) ) {
-			update_user_meta( $user_id, 'edd_user_public_key', $this->generate_public_key( $user->user_email ) );
-			update_user_meta( $user_id, 'edd_user_secret_key', $this->generate_private_key( $user->ID ) );
-		} elseif( $regenerate == true ) {
-			$this->revoke_api_key( $user->ID );
-			update_user_meta( $user_id, 'edd_user_public_key', $this->generate_public_key( $user->user_email ) );
-			update_user_meta( $user_id, 'edd_user_secret_key', $this->generate_private_key( $user->ID ) );
+		$public_key = $this->get_user_public_key( $user_id );
+		$secret_key = $this->get_user_secret_key( $user_id );
+
+		if ( empty( $public_key ) || $regenerate == true ) {
+			$new_public_key = $this->generate_public_key( $user->user_email );
+			$new_secret_key = $this->generate_private_key( $user->ID );
 		} else {
 			return false;
 		}
+
+		if ( $regenerate == true ) {
+			$this->revoke_api_key( $user->ID );
+		}
+
+		update_user_meta( $user_id, $new_public_key, 'edd_user_public_key' );
+		update_user_meta( $user_id, $new_secret_key, 'edd_user_secret_key' );
 
 		return true;
 	}
@@ -1537,10 +1586,14 @@ class EDD_API {
 			return false;
 		}
 
-		if ( ! empty( $user->edd_user_public_key ) ) {
-			delete_transient( md5( 'edd_api_user_' . $user->edd_user_public_key ) );
-			delete_user_meta( $user_id, 'edd_user_public_key' );
-			delete_user_meta( $user_id, 'edd_user_secret_key' );
+		$public_key = $this->get_user_public_key( $user_id );
+		$secret_key = $this->get_user_secret_key( $user_id );
+		if ( ! empty( $public_key ) ) {
+			delete_transient( md5( 'edd_api_user_' . $public_key ) );
+			delete_transient( md5('edd_api_user_public_key' . $user_id ) );
+			delete_transient( md5('edd_api_user_secret_key' . $user_id ) );
+			delete_user_meta( $user_id, $public_key );
+			delete_user_meta( $user_id, $secret_key );
 		} else {
 			return false;
 		}
@@ -1565,9 +1618,15 @@ class EDD_API {
 
 			$user = get_userdata( $user_id );
 
-			if ( empty( $user->edd_user_public_key ) ) {
-				update_user_meta( $user_id, 'edd_user_public_key', $this->generate_public_key( $user->user_email ) );
-				update_user_meta( $user_id, 'edd_user_secret_key', $this->generate_private_key( $user->ID ) );
+			$public_key = $this->get_user_public_key( $user_id );
+			$secret_key = $this->get_user_secret_key( $user_id );
+
+			if ( empty( $public_key ) ) {
+				$new_public_key = $this->generate_public_key( $user->user_email );
+				$new_secret_key = $this->generate_private_key( $user->ID );
+
+				update_user_meta( $user_id, $new_public_key, 'edd_user_public_key' );
+				update_user_meta( $user_id, $new_secret_key, 'edd_user_secret_key' );
 			} else {
 				$this->revoke_api_key( $user_id );
 			}
@@ -1610,9 +1669,8 @@ class EDD_API {
 	 * @param int $user_id
 	 * @return string
 	 */
-	private function get_token( $user_id = 0 ) {
-		$user = get_userdata( $user_id );
-		return hash( 'md5', $user->edd_user_secret_key . $user->edd_user_public_key );
+	public function get_token( $user_id = 0 ) {
+		return hash( 'md5', $this->get_user_secret_key( $user_id ) . $this->get_user_public_key( $user_id ) );
 	}
 
 	/**
@@ -1652,4 +1710,40 @@ class EDD_API {
 
 		return $earnings;
 	}
+
+	/**
+	 * A Backwards Compatibility call for the change of meta_key/value for users API Keys
+	 *
+	 * @since  2.4
+	 * @param  string $check     Wether to check the cache or not
+	 * @param  int $object_id    The User ID being passed
+	 * @param  string $meta_key  The user meta key
+	 * @param  bool $single      If it should return a single value or array
+	 * @return string            The API key/secret for the user supplied
+	 */
+	public function api_key_backwards_copmat( $check, $object_id, $meta_key, $single ) {
+
+		if ( $meta_key !== 'edd_user_public_key' && $meta_key !== 'edd_user_secret_key' ) {
+			return $check;
+		}
+
+		$return = $check;
+
+		switch( $meta_key ) {
+			case 'edd_user_public_key':
+				$return = EDD()->api->get_user_public_key( $object_id );
+				break;
+			case 'edd_user_secret_key':
+				$return = EDD()->api->get_user_secret_key( $object_id );
+				break;
+		}
+
+		if ( ! $single ) {
+			$return = array( $return );
+		}
+
+		return $return;
+
+	}
+
 }
