@@ -124,7 +124,7 @@ function edd_show_upgrade_notices() {
 			);
 		}
 
-		if ( version_compare( $edd_version, '2.4', '<' ) || ! edd_has_upgrade_completd( 'upgrade_user_api_keys' ) ) {
+		if ( version_compare( $edd_version, '2.4', '<' ) || ! edd_has_upgrade_completed( 'upgrade_user_api_keys' ) ) {
 			printf(
 				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the API Key database, click <a href="%s">here</a> to start the upgrade.', 'edd' ) . '</p></div>',
 				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_user_api_keys' ) )
@@ -998,7 +998,7 @@ add_action( 'edd_upgrade_customer_payments_association', 'edd_v23_upgrade_custom
  * @since  2.4
  * @return void
  */
-function upgrade_user_api_keys() {
+function edd_upgrade_user_api_keys() {
 	global $wpdb;
 
 	if( ! current_user_can( 'manage_shop_settings' ) ) {
@@ -1075,4 +1075,4 @@ function upgrade_user_api_keys() {
 		wp_redirect( admin_url() ); exit;
 	}
 }
-add_action( 'edd_upgrade_user_api_keys', 'upgrade_user_api_keys' );
+add_action( 'edd_upgrade_user_api_keys', 'edd_upgrade_user_api_keys' );
