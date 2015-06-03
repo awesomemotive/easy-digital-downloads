@@ -281,6 +281,10 @@ function edd_is_email_banned( $email = '' ) {
 
 	$banned_emails = edd_get_banned_emails();
 
+	if( ! is_array( $banned_emails ) || empty( $banned_emails ) ) {
+		return false;
+	}
+
 	foreach( $banned_emails as $banned_email ) {
 		if( is_email( $banned_email ) ) {
 			$ret = ( $banned_email == trim( $email ) ? true : false );
