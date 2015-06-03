@@ -345,6 +345,9 @@ class EDD_API {
 	public function process_query() {
 		global $wp_query;
 
+		// Start logging how long the request takes for logging
+		$before = microtime( true );
+
 		// Check for edd-api var. Get out if not present
 		if ( ! isset( $wp_query->query_vars['edd-api'] ) )
 			return;
@@ -413,6 +416,10 @@ class EDD_API {
 
 		// Allow extensions to setup their own return data
 		$this->data = apply_filters( 'edd_api_output_data', $data, $query_mode, $this );
+
+		$after        = microtime( true );
+		$request_time = ( $after - $before );
+		$this->data['request_speed'] = $request_time;
 
 		// Log this API request, if enabled. We log it here because we have access to errors.
 		$this->log_request( $this->data );
@@ -1356,7 +1363,8 @@ class EDD_API {
 			'request_ip' => edd_get_ip(),
 			'user'       => $this->user_id,
 			'key'        => $wp_query->query_vars['key'],
-			'token'      => $wp_query->query_vars['token']
+			'token'      => $wp_query->query_vars['token'],
+			'time'       => $data['request_speed'],
 		);
 
 		$edd_logs->insert_log( $log_data, $log_meta );
