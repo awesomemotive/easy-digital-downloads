@@ -956,7 +956,7 @@ function edd_get_settings_tabs() {
 /**
  * Retrieve settings tabs
  *
- * @since 2.3.9
+ * @since 2.5
  * @return array $section
  */
 function edd_get_settings_sections( $tab = false ) {
