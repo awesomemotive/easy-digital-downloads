@@ -1190,7 +1190,8 @@ jQuery(document).ready(function ($) {
 					console.log( response );
 					if( 'done' == response.step ) {
 
-						$('.edd-export-form').find('.spinner').removeClass( 'is-active' );
+						$('.edd-export-form').find('.spinner').remove();
+						$('.edd-export-form').find('.edd-progress').remove();
 						
 						window.location = response.url;
 
