@@ -1186,9 +1186,6 @@ jQuery(document).ready(function ($) {
 					step: step,
 				},
 				dataType: "json",
-				beforeSend: function(){
-					
-				},
 				success: function( response ) {
 					console.log( response );
 					if( 'done' == response.step ) {
@@ -1200,8 +1197,8 @@ jQuery(document).ready(function ($) {
 					} else {
 
 						$('.edd-progress div').animate({
-							witdth: response.percentage + '%',
-						}, 5000, function() {
+							width: response.percentage + '%',
+						}, 50, function() {
 							// Animation complete.
 						});
 						self.process_step( parseInt( response.step ), data, self );
