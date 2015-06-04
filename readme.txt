@@ -7,15 +7,18 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.9.2
 Tested up to: 4.2
 
+
 Stable Tag: 2.3.9
 
 License: GNU Version 2 or Any Later Version
+
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
 
 == Description ==
 
 Easy Digital Downloads is a complete e-commerce solution for selling digital products in a light, performant, and easy to use plugin. Rather that attempting to provide every feature under the sun, Easy Digital Downloads makes selling digital simple and complete by providing just the features you need.
+
 
 Features of the plugin include:
 
@@ -33,6 +36,7 @@ Features of the plugin include:
 * Data export options for CSV and PDF
 * Add functionality with many [extensions](https://easydigitaldownloads.com/extensions/?utm_source=extensions&utm_medium=description_tab&utm_content=extensions&utm_campaign=readme)
 * Developer friendly with dozens of actions and filters. [View Codex](https://easydigitaldownloads.com/codex/index.html)
+
 
 More information at [Easy Digital Downloads.com](https://easydigitaldownloads.com/?utm_source=home&utm_medium=description_tab&utm_content=home&utm_campaign=readme).
 
