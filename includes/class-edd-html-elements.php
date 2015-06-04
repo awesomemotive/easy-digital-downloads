@@ -480,6 +480,24 @@ class EDD_HTML_Elements {
 
 		return $output;
 	}
+	/**
+	 * Renders a date picker
+	 *
+	 * @since 2.4
+	 *
+	 * @param array $args Arguments for the text field
+	 * @return string Datepicker field
+	 */
+	public function date_field( $args = array() ) {
+
+		if( empty( $args['class'] ) ) {
+			$args['class'] = 'edd_datepicker';
+		} elseif( ! strpos( $args['class'], 'edd_datepicker' ) ) {
+			$args['class'] .= ' edd_datepicker';
+		}
+
+		return $this->text( $args );
+	}
 
 	/**
 	 * Renders an HTML textarea
