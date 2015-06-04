@@ -354,7 +354,7 @@ function edd_reports_tab_export() {
 					<div class="postbox edd-export-customers">
 						<h3><span><?php _e('Export Customers in CSV', 'edd'); ?></span></h3>
 						<div class="inside">
-							<p><?php _e( 'Download a CSV of all customer emails. Optionally export only customers that have purchased a particular product. Note, if you have a large number of customers, exporting the purchase stats may fail.', 'edd' ); ?></p>
+							<p><?php _e( 'Download a CSV of customers.', 'edd' ); ?></p>
 							<p>
 								<form id="edd-export-customers" class="edd-export-form" method="post">
 									<select name="download" id="edd_customer_export_download">
