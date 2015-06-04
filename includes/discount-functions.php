@@ -770,7 +770,6 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
 
 	$return     = false;
-	$user_found = false;
 
 	if ( empty( $code_id ) ) {
 		$code_id = edd_get_discount_id_by_code( $code );
@@ -780,44 +779,65 @@ function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
 	}
 
 	if ( edd_discount_is_single_use( $code_id ) ) {
-		if ( is_email( $user ) ) {
-			$user_found = true; // All we need is the email
-			$key        = '_edd_payment_user_email';
-			$value      = $user;
-		} else {
-			$user_data = get_user_by( 'login', $user );
 
-			if ( $user_data ) {
-				$user_found	= true;
-				$key   		= '_edd_payment_user_id';
-				$value 		= $user_data->ID;
+		$payments = array();
+
+		if ( EDD()->customers->installed() ) {
+
+			$by_user_id = is_email( $user ) ? false : true;
+			$customer = new EDD_Customer( $user, $by_user_id );
+
+			$payments = explode( ',', $customer->payment_ids );
+
+		} else {
+
+			$user_found = false;
+
+			if ( is_email( $user ) ) {
+
+				$user_found = true; // All we need is the email
+				$key        = '_edd_payment_user_email';
+				$value      = $user;
+
+			} else {
+
+				$user_data = get_user_by( 'login', $user );
+
+				if ( $user_data ) {
+
+					$user_found = true;
+					$key        = '_edd_payment_user_id';
+					$value      = $user_data->ID;
+
+				}
+			}
+
+			if ( $user_found ) {
+				$query_args = array(
+				'post_type'  => 'edd_payment',
+					'meta_query' => array(
+						array(
+							'key'     => $key,
+							'value'   => $value,
+							'compare' => '='
+						)
+					),
+					'fields'     => 'ids'
+				);
+
+				$payments = get_posts( $query_args ); // Get all payments with matching email
+
 			}
 		}
 
-		if ( $user_found ) {
-			$query_args = array(
-				'post_type'  => 'edd_payment',
-				'meta_query' => array(
-					array(
-						'key'     => $key,
-						'value'   => $value,
-						'compare' => '='
-					)
-				),
-				'fields'     => 'ids'
-			);
-
-			$payments = get_posts( $query_args ); // Get all payments with matching email
-
-			if ( $payments ) {
-				foreach ( $payments as $payment ) {
-					// Check all matching payments for discount code.
-					$payment_meta = edd_get_payment_meta( $payment );
-					$user_info    = maybe_unserialize( $payment_meta['user_info'] );
-					if ( $user_info['discount'] == $code ) {
-						edd_set_error( 'edd-discount-error', __( 'This discount has already been redeemed.', 'edd' ) );
-						$return = true;
-					}
+		if ( $payments ) {
+			foreach ( $payments as $payment ) {
+				// Check all matching payments for discount code.
+				$payment_meta = edd_get_payment_meta( $payment );
+				$user_info    = maybe_unserialize( $payment_meta['user_info'] );
+				if ( $user_info['discount'] == $code ) {
+					edd_set_error( 'edd-discount-error', __( 'This discount has already been redeemed.', 'edd' ) );
+					$return = true;
 				}
 			}
 		}
