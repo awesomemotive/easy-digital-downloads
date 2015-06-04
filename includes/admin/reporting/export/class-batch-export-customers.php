@@ -127,4 +127,34 @@ class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 
 		return $data;
 	}
+
+	/**
+	 * Return the calculated completion percentage
+	 *
+	 * @since 2.4
+	 * @return int
+	 */
+	public function get_percentage_complete() {
+
+		$percentage = 0;
+
+		// We can't count the number when getting them for a specific download
+		if( empty( $this->download ) ) {
+
+			$total = EDD()->customers->count();
+
+			if( $total > 0 ) {
+
+				$percentage = ( ( 30 * $this->step ) / $total ) * 100;
+
+			}
+
+		}
+
+		if( $percentage > 100 ) {
+			$percentage = 100;
+		}
+
+		return $percentage;
+	}
 }
