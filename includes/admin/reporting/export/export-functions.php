@@ -26,6 +26,7 @@ function edd_do_ajax_export() {
 	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export.php';
 	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-payments.php';
 	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-customers.php';
+	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-file-downloads.php';
 
 	parse_str( $_POST['form'], $form );
 
@@ -85,6 +86,7 @@ function edd_process_batch_export_download() {
 	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export.php';
 	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-payments.php';
 	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-customers.php';
+	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-file-downloads.php';
 
 	$export = new $_REQUEST['class'];
 	$export->export();
