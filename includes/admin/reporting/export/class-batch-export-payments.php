@@ -209,22 +209,31 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 	public function get_percentage_complete() {
 		
 		$status = $this->status;
+		$args   = array(
+			'start-date' => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
+			'end-date'   => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
+		);
 
 		if( 'any' == $status ) {
 
-			$total = array_sum( (array) edd_count_payments() );
+			$total = array_sum( (array) edd_count_payments( $args ) );
 
 		} else {
 
-			$total = edd_count_payments()->$status;
+			$total = edd_count_payments( $args )->$status;
 			
 		}
 
 		$percentage = 100;
 
 		if( $total > 0 ) {
-			$percentage = absint( ( 30 * $this->step ) / $total ) * 10;
+			$percentage = ( ( 30 * $this->step ) / $total ) * 100;
 		}
+
+		if( $percentage > 100 ) {
+			$percentage = 100;
+		}
+
 		return $percentage;
 	}
 }
