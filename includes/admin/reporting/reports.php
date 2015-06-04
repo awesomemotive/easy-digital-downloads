@@ -330,8 +330,8 @@ function edd_reports_tab_export() {
 							<p><?php _e( 'Download a CSV of all payments recorded.', 'edd' ); ?></p>
 							<p>
 								<form id="edd-export-payments" class="edd-export-form" method="post">
-									<?php echo EDD()->html->year_dropdown(); ?>
-									<?php echo EDD()->html->month_dropdown(); ?>
+									<?php echo EDD()->html->date_field( array( 'name' => 'start', 'placeholder' => __( 'Choose start date', 'edd' ) )); ?>
+									<?php echo EDD()->html->date_field( array( 'name' => 'end', 'placeholder' => __( 'Choose end date', 'edd' ) )); ?>
 									<select name="status">
 										<option value="any"><?php _e( 'All Statuses', 'edd' ); ?></option>
 										<?php
