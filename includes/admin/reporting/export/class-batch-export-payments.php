@@ -88,10 +88,22 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 		$args = array(
 			'number'   => 30,
 			'page'     => $this->step,
-			'status'   => $this->status,
-			'monthnum' => $this->month,
-			'year'     => $this->year
+			'status'   => $this->status
 		);
+
+		if( ! empty( $this->start ) || ! empty( $this->end ) ) {
+
+			$args['date_query'] = array(
+				array(
+					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
+					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
+					'inclusive' => true
+				)
+			);
+
+		}
+
+		//echo json_encode($args ); exit;
 
 		$payments = edd_get_payments( $args );
 

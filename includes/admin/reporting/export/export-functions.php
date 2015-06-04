@@ -38,8 +38,8 @@ function edd_do_ajax_export() {
 		die( '-1' );
 	}
 
-	$export->month    = isset( $_REQUEST['month'] )             ? absint( $_REQUEST['month'] )                : date( 'n' );
-	$export->year     = isset( $_REQUEST['year']  )             ? absint( $_REQUEST['year']  )                : date( 'Y' );
+	$export->start    = isset( $_REQUEST['start'] )             ?  sanitize_text_field( $_REQUEST['start'] )  : '';
+	$export->end      = isset( $_REQUEST['end']  )              ?  sanitize_text_field( $_REQUEST['end']  )   : '';
 	$export->status   = isset( $_REQUEST['status']  )           ? sanitize_text_field( $_REQUEST['status']  ) : 'complete';
 	$export->download = isset( $_REQUEST['download']  )         ? absint( $_REQUEST['download']  )            : null;
 	$export->price_id = isset( $_REQUEST['edd_price_option']  ) ? absint( $_REQUEST['edd_price_option']  )    : null;

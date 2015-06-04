@@ -50,18 +50,18 @@ class EDD_Batch_Export extends EDD_Export {
 	public $step;
 
 	/**
-	 * Month of the year to export
+	 * Start date, Y-m-d H:i:s
 	 *
 	 * @since 2.4
 	 */
-	public $month;
+	public $start;
 
 	/**
-	 * Year to export
+	 * End date, Y-m-d H:i:s
 	 *
 	 * @since 2.4
 	 */
-	public $year;
+	public $end;
 
 	/**
 	 * Status to export
