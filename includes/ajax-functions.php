@@ -407,9 +407,13 @@ function edd_ajax_recalculate_taxes() {
 	edd_checkout_cart();
 	$cart     = ob_get_clean();
 	$response = array(
-		'html'      => $cart,
-		'total'     => html_entity_decode( edd_cart_total( false ), ENT_COMPAT, 'UTF-8' ),
-		'total_raw' => edd_get_cart_total(),
+		'html'         => $cart,
+		'tax_raw'      => edd_get_cart_tax(),
+		'tax'          => html_entity_decode( edd_cart_tax( false ), ENT_COMPAT, 'UTF-8' ),
+		'tax_rate_raw' => edd_get_tax_rate(),
+		'tax_rate'     => html_entity_decode( edd_get_formatted_tax_rate(), ENT_COMPAT, 'UTF-8' ),
+		'total'        => html_entity_decode( edd_cart_total( false ), ENT_COMPAT, 'UTF-8' ),
+		'total_raw'    => edd_get_cart_total(),
 	);
 
 	echo json_encode( $response );
