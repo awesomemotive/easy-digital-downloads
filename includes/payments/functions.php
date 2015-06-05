@@ -1514,6 +1514,26 @@ function edd_get_purchase_id_by_key( $key ) {
 }
 
 /**
+ * Retrieve the purchase ID based on the transaction ID
+ *
+ * @since 2.4
+ * @global object $wpdb Used to query the database using the WordPress
+ *   Database API
+ * @param string $key the transaction ID to search for
+ * @return int $purchase Purchase ID
+ */
+function edd_get_purchase_id_by_transaction_id( $key ) {
+	global $wpdb;
+
+	$purchase = $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_transaction_id' AND meta_value = %s LIMIT 1", $key ) );
+
+	if ( $purchase != NULL )
+		return $purchase;
+
+	return 0;
+}
+
+/**
  * Retrieve all notes attached to a purchase
  *
  * @since 1.4
