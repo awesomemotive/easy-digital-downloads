@@ -253,7 +253,18 @@ function edd_ajax_apply_discount() {
 			'code' => $discount_code
 		);
 
-		if ( edd_is_discount_valid( $discount_code ) ) {
+		$user = '';
+
+		if ( is_user_logged_in() ) {
+			$user = get_current_user_id();
+		} else {
+			$form = maybe_unserialize( $_POST['form'] );
+			if ( ! empty( $form['edd_email'] ) ) {
+				$user = urldecode( $form['edd_email'] );
+			}
+		}
+
+		if ( edd_is_discount_valid( $discount_code, $user ) ) {
 			$discount  = edd_get_discount_by_code( $discount_code );
 			$amount    = edd_format_discount_rate( edd_get_discount_type( $discount->ID ), edd_get_discount_amount( $discount->ID ) );
 			$discounts = edd_set_cart_discount( $discount_code );
