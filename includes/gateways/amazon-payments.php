@@ -736,7 +736,7 @@ final class EDD_Amazon_Payments {
 			$capture_id       = str_replace( '-A', '-C', $authorization_id );
 			$reference_id     = sanitize_text_field( $_POST['edd_amazon_reference_id'] );
 
-			// Confirm the capture was completed 
+			// Confirm the capture was completed
 			$capture = $this->client->getCaptureDetails( array(
 				'merchant_id'       => edd_get_option( 'amazon_seller_id', '' ),
 				'amazon_capture_id' => $capture_id
@@ -814,7 +814,7 @@ final class EDD_Amazon_Payments {
 	private function get_amazon_ipn_url() {
 
 		return esc_url_raw( add_query_arg( array( 'edd-listener' => 'amazon' ), home_url( 'index.php' ) ) );
-		
+
 	}
 
 	/**
@@ -892,13 +892,13 @@ final class EDD_Amazon_Payments {
 
 					$key     = $data['Message']['NotificationData']['CaptureNotification']['CaptureDetails']['CaptureReferenceId'];
 					$status  = $data['Message']['NotificationData']['CaptureNotification']['CaptureDetails']['CaptureStatus']['State'];
-					
+
 					if( 'Declined' === $status ) {
 
 						$payment_id = edd_get_purchase_id_by_key( $key );
 
 						edd_update_payment_status( $payment_id, 'failed' );
-						
+
 						edd_insert_payment_note( $payment_id, __( 'Capture declined in Amazon', 'edd' ) );
 
 					}
@@ -910,11 +910,11 @@ final class EDD_Amazon_Payments {
 
 					$key     = $data['Message']['NotificationData']['RefundNotification']['RefundDetails']['RefundReferenceId'];
 					$status  = $data['Message']['NotificationData']['RefundNotification']['RefundDetails']['RefundStatus']['State'];
-					
+
 					if( 'Completed' === $status ) {
 
 						edd_update_payment_status( $payment_id, 'refunded' );
-						
+
 						edd_insert_payment_note( $payment_id, __( 'Refund completed in Amazon', 'edd' ) );
 
 					}
@@ -1011,7 +1011,7 @@ final class EDD_Amazon_Payments {
 		} else {
 
 			edd_insert_payment_note( $payment_id, __( 'Refund request failed in Amazon.', 'edd' ) );
-		
+
 		}
 
 	}
