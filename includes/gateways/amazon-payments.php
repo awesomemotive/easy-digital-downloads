@@ -287,6 +287,15 @@ final class EDD_Amazon_Payments {
 				'std'      => $this->get_amazon_checkout_redirect(),
 				'readonly' => true,
 			),
+			'amazon_mws_ipn_url' => array(
+				'id'       => 'amazon_ipn_url',
+				'name'     => __( 'Amazon Merchant IPN URL', 'edd' ),
+				'desc'     => sprintf( __( 'The IPN URL to provide in your MWS account. Enter this under your <a href="%s">Integration Settings</a>', 'edd' ), 'https://sellercentral.amazon.com/gp/pyop/seller/account/settings/user-settings-edit.html' ),
+				'type'     => 'text',
+				'size'     => 'large',
+				'std'      => $this->get_amazon_ipn_url(),
+				'readonly' => true,
+			),
 		);
 
 		$default_amazon_settings = apply_filters( 'edd_default_amazon_settings', $default_amazon_settings );
@@ -793,6 +802,19 @@ final class EDD_Amazon_Payments {
 
 		return $this->redirect_uri;
 
+	}
+
+	/**
+	 * Retrieve the IPN URL for Amazon
+	 *
+	 * @access public
+	 * @since  2.4
+	 * @return string
+	 */
+	private function get_amazon_ipn_url() {
+
+		return esc_url_raw( add_query_arg( array( 'edd-listener' => 'amazon' ), home_url( 'index.php' ) ) );
+		
 	}
 
 	/**
