@@ -908,7 +908,7 @@ final class EDD_Amazon_Payments {
 
 				case 'PaymentRefund' :
 
-					$trans_id = substr( 0, 19, $data['RefundDetails']['RefundReferenceId'] );
+					$trans_id = substr( 0, 19, $data['RefundDetails']['AmazonRefundId'] );
 					$status   = $data['RefundDetails']['RefundStatus']['State'];
 
 					if( 'Completed' === $status ) {
