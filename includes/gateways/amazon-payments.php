@@ -872,13 +872,13 @@ final class EDD_Amazon_Payments {
 
 			$ipn       = new IpnHandler( $headers, $body );
 			$data      = $ipn->toArray();
-			$seller_id = $data['Message']['SellerId'];
+			$seller_id = $data['SellerId'];
 
 			if( $seller_id != edd_get_option( 'amazon_seller_id', '' ) ) {
 				wp_die( __( 'Invalid Amazon seller ID', 'edd' ), __( 'IPN Error', 'edd' ), array( 'response' => 401 ) );
 			}
 
-			switch( $data['Message']['NotificationType'] ) {
+			switch( $data['NotificationType'] ) {
 
 				case 'OrderReferenceNotification' :
 
@@ -890,8 +890,8 @@ final class EDD_Amazon_Payments {
 
 				case 'PaymentCapture' :
 
-					$key     = $data['Message']['NotificationData']['CaptureNotification']['CaptureDetails']['CaptureReferenceId'];
-					$status  = $data['Message']['NotificationData']['CaptureNotification']['CaptureDetails']['CaptureStatus']['State'];
+					$key     = $data['CaptureDetails']['CaptureReferenceId'];
+					$status  = $data['CaptureDetails']['CaptureStatus']['State'];
 
 					if( 'Declined' === $status ) {
 
@@ -908,8 +908,8 @@ final class EDD_Amazon_Payments {
 
 				case 'PaymentRefund' :
 
-					$key     = $data['Message']['NotificationData']['RefundNotification']['RefundDetails']['RefundReferenceId'];
-					$status  = $data['Message']['NotificationData']['RefundNotification']['RefundDetails']['RefundStatus']['State'];
+					$key     = $data['RefundDetails']['RefundReferenceId'];
+					$status  = $data['RefundDetails']['RefundStatus']['State'];
 
 					if( 'Completed' === $status ) {
 
