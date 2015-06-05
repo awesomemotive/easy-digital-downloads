@@ -860,7 +860,7 @@ final class EDD_Amazon_Payments {
 	 */
 	public function process_ipn() {
 
-		if ( ! isset( $_GET['edd-listener'] ) || $_GET['edd-listener'] !== 'AmazonIPN' ) {
+		if ( ! isset( $_GET['edd-listener'] ) || $_GET['edd-listener'] !== 'amazon' ) {
 			return;
 		}
 
