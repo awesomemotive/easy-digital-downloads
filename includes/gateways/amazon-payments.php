@@ -22,6 +22,7 @@ final class EDD_Amazon_Payments {
 	private $redirect_uri = null;
 	private $checkout_uri = null;
 	private $reference_id = null;
+	private $doing_ipn    = false;
 
 	/**
 	 * Get things going
@@ -868,6 +869,8 @@ final class EDD_Amazon_Payments {
 		$headers = getallheaders();
 		$body    = file_get_contents( 'php://input' );
 
+		$this->doing_ipn = true;
+
 		try {
 
 			$ipn       = new IpnHandler( $headers, $body );
@@ -952,6 +955,10 @@ final class EDD_Amazon_Payments {
 		}
 
 		if( 'refunded' != $new_status ) {
+			return;
+		}
+
+		if( $this->doing_ipn ) {
 			return;
 		}
 
