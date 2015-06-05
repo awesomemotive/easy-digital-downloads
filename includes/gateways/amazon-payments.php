@@ -908,10 +908,12 @@ final class EDD_Amazon_Payments {
 
 				case 'PaymentRefund' :
 
-					$key     = $data['RefundDetails']['RefundReferenceId'];
-					$status  = $data['RefundDetails']['RefundStatus']['State'];
+					$trans_id = substr( 0, 19, $data['RefundDetails']['RefundReferenceId'] );
+					$status   = $data['RefundDetails']['RefundStatus']['State'];
 
 					if( 'Completed' === $status ) {
+
+						$payment_id = edd_get_purchase_id_by_transaction_id( $trans_id );
 
 						edd_update_payment_status( $payment_id, 'refunded' );
 
