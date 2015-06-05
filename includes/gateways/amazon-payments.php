@@ -920,7 +920,7 @@ final class EDD_Amazon_Payments {
 
 						edd_update_payment_status( $payment_id, 'refunded' );
 
-						edd_insert_payment_note( $payment_id, __( 'Refund completed in Amazon', 'edd' ) );
+						edd_insert_payment_note( $payment_id, sprintf( __( 'Refund completed in Amazon. Refund ID: %s', 'edd' ), $data['RefundDetails']['AmazonRefundId'] ) );
 
 					}
 
