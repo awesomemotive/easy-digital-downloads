@@ -281,7 +281,7 @@ final class EDD_Amazon_Payments {
 			'amazon_mws_callback_url' => array(
 				'id'       => 'amazon_callback_url',
 				'name'     => __( 'Amazon MWS Callback URL', 'edd' ),
-				'desc'     => __( 'The Callback URL to provide in your MWS Application', 'edd' ),
+				'desc'     => __( 'The Return URL to provide in your MWS Application. Enter this under your Login and Pay &rarr; Web Settings', 'edd' ),
 				'type'     => 'text',
 				'size'     => 'large',
 				'std'      => $this->get_amazon_checkout_redirect(),
