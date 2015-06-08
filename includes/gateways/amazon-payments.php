@@ -433,8 +433,8 @@ final class EDD_Amazon_Payments {
 					edd_log_user_in( $user->ID, $user->user_login, '' );
 
 					$customer = array(
-						'first_name' => $user->user_first,
-						'last_name'  => $user->user_last,
+						'first_name' => $user->first_name,
+						'last_name'  => $user->last_name,
 						'email'      => $user->user_email
 					);
 
