@@ -646,7 +646,6 @@ final class EDD_Amazon_Payments {
 			'amazon_order_reference_id' => $_POST['reference_id'],
 		) );
 
-		//echo json_encode( $request->response ); exit;
 
 		$address = array();
 		$data    = new ResponseParser( $request->response );
