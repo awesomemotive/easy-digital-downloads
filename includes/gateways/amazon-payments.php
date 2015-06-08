@@ -470,22 +470,29 @@ final class EDD_Amazon_Payments {
 
 			} else {
 
-				$args = array(
-					'user_email'   => $profile['email'],
-					'user_login'   => $profile['email'],
-					'display_name' => $profile['name'],
-					'user_pass'    => wp_generate_password( 20 ),
-				);
-
-				$user_id  = wp_insert_user( $args );
-				$names    = explode( ' ', $profile['name'] );
 				$customer = array(
 					'first_name' => $names[0],
 					'last_name'  => isset( $names[1] ) ? $names[1] : '',
 					'email'      => $profile['email']
 				);
 
-				edd_log_user_in( $user_id, $args['user_login'], $args['user_pass'] );
+				if( 'none' !== edd_get_option( 'show_register_form' ) ) {
+
+					// Create a customer account if registration is not disabled
+
+					$args = array(
+						'user_email'   => $profile['email'],
+						'user_login'   => $profile['email'],
+						'display_name' => $profile['name'],
+						'user_pass'    => wp_generate_password( 20 ),
+					);
+
+					$user_id  = wp_insert_user( $args );
+					$names    = explode( ' ', $profile['name'] );
+
+					edd_log_user_in( $user_id, $args['user_login'], $args['user_pass'] );
+
+				}
 
 			}
 
