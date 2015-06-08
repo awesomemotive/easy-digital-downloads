@@ -541,71 +541,63 @@ final class EDD_Amazon_Payments {
 
 		<fieldset id="edd_cc_fields" class="edd-amazon-fields">
 
-			<style type="text/css">
-				#walletWidgetDiv{width: 400px; height: 228px;}
-				#addressBookWidgetDiv{width: 400px; height: 228px;}
-			</style>
-
-			<div id="addressBookWidgetDiv">
-			</div>
-
+			<div id="edd-amazon-address-box"></div>
+			<div id="edd-amazon-wallet-box"></div>
 			<script>
-			var edd_scripts;
-			new OffAmazonPayments.Widgets.AddressBook({
-				sellerId: edd_amazon.sellerId,
-				amazonOrderReferenceId: edd_amazon.referenceID,
-					onOrderReferenceCreate: function(orderReference) {
-					orderReference.getAmazonOrderReferenceId();
-				},
-				onAddressSelect: function(orderReference) {
-					jQuery.ajax({
-						type: "POST",
-						data: {
-							action       : 'edd_amazon_get_address',
-							reference_id : edd_amazon.referenceID
-						},
-						dataType: "json",
-						url: edd_scripts.ajaxurl,
-						xhrFields: {
-							withCredentials: true
-						},
-						success: function (response) {
-							jQuery('#card_city').val( response.City );
-							jQuery('#card_zip').val( response.PostalCode );
-							jQuery('#billing_country').val( response.CountryCode );
-							jQuery('#card_state').val( response.StateOrRegion ).trigger( 'change' );
-						}
-					}).fail(function (response) {
-						if ( window.console && window.console.log ) {
-							console.log( response );
-						}
-					}).done(function (response) {
+				var edd_scripts;
+				new OffAmazonPayments.Widgets.AddressBook({
+					sellerId: edd_amazon.sellerId,
+					amazonOrderReferenceId: edd_amazon.referenceID,
+						onOrderReferenceCreate: function(orderReference) {
+						orderReference.getAmazonOrderReferenceId();
+					},
+					onAddressSelect: function(orderReference) {
+						jQuery.ajax({
+							type: "POST",
+							data: {
+								action       : 'edd_amazon_get_address',
+								reference_id : edd_amazon.referenceID
+							},
+							dataType: "json",
+							url: edd_scripts.ajaxurl,
+							xhrFields: {
+								withCredentials: true
+							},
+							success: function (response) {
+								jQuery('#card_city').val( response.City );
+								jQuery('#card_zip').val( response.PostalCode );
+								jQuery('#billing_country').val( response.CountryCode );
+								jQuery('#card_state').val( response.StateOrRegion ).trigger( 'change' );
+							}
+						}).fail(function (response) {
+							if ( window.console && window.console.log ) {
+								console.log( response );
+							}
+						}).done(function (response) {
 
-					});
-				},
-				design: {
-					designMode: 'responsive'
-				},
-				onError: function(error) {
-					jQuery('#edd_purchase_submit').prepend( '<div class="edd_errors"><p class="edd_error" id="edd_error_"' + error.getErrorCode() + '>' + error.getErrorMessage() + '</p></div>' );
-				}
-			}).bind("addressBookWidgetDiv");
-			</script>
-			<div id="walletWidgetDiv"></div>
-			<script>
-			  new OffAmazonPayments.Widgets.Wallet({
-				sellerId: edd_amazon.sellerId,
-				amazonOrderReferenceId: edd_amazon.referenceID,
-				design: {
-					size: {width:'400px', height:'260px'}
-				},
-				onPaymentSelect: function(orderReference) {
-					// Display your custom complete purchase button
-				},
-				onError: function(error) {
-					jQuery('#edd_purchase_submit').prepend( '<div class="edd_errors"><p class="edd_error" id="edd_error_"' + error.getErrorCode() + '>' + error.getErrorMessage() + '</p></div>' );
-				}
-			  }).bind("walletWidgetDiv");
+						});
+					},
+					design: {
+						designMode: 'responsive'
+					},
+					onError: function(error) {
+						jQuery('#edd_purchase_submit').prepend( '<div class="edd_errors"><p class="edd_error" id="edd_error_"' + error.getErrorCode() + '>' + error.getErrorMessage() + '</p></div>' );
+					}
+				}).bind("edd-amazon-address-box");
+
+				new OffAmazonPayments.Widgets.Wallet({
+					sellerId: edd_amazon.sellerId,
+					amazonOrderReferenceId: edd_amazon.referenceID,
+					design: {
+						size: {width:'400px', height:'260px'}
+					},
+					onPaymentSelect: function(orderReference) {
+						// Display your custom complete purchase button
+					},
+					onError: function(error) {
+						jQuery('#edd_purchase_submit').prepend( '<div class="edd_errors"><p class="edd_error" id="edd_error_"' + error.getErrorCode() + '>' + error.getErrorMessage() + '</p></div>' );
+					}
+				}).bind("edd-amazon-wallet-box");
 			</script>
 
 			<div id="edd_cc_address">

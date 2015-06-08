@@ -421,6 +421,46 @@
     -moz-box-shadow: none;
     box-shadow: none;
 }
+
+#edd-amazon-address-box {
+    min-width: 300px; 
+    max-width: 600px; 
+    min-height: 228px; 
+    max-height: 400px;
+    margin-bottom: 15px;
+}
+
+#edd-amazon-wallet-box {
+    min-width: 300px; 
+    max-width:600px; 
+    min-height: 260px;
+    max-height: 400px;
+}
+
+/* Smartphone and small window */
+#edd-amazon-address-box {
+    width: 100%; 
+    height: 228px;
+}
+
+#edd-amazon-wallet-box {
+    width: 100%; 
+    height: 228px;
+}
+
+/* Desktop and tablet */
+@media only screen and (min-width: 768px) {
+    #edd-amazon-address-box {
+        width: 400px; 
+        height: 228px;
+    }
+
+    #edd-amazon-wallet-box {
+        width: 400px; 
+        height: 228px;
+    }
+}
+
 /* =Ajax Add To Cart Button
 -------------------------------------------------------------- */
 
