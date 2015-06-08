@@ -972,22 +972,23 @@ jQuery(document).ready(function ($) {
 
 		misc : function() {
 
+			var downloadMethod = $('select[name="edd_settings[download_method]"]');
+			var symlink = downloadMethod.parent().parent().next();
+
 			// Hide Symlink option if Download Method is set to Direct
-			if( $('select[name="edd_settings[download_method]"]:selected').val() != 'direct' ) {
-				$('select[name="edd_settings[download_method]"]').parent().parent().next().hide();
-				$('select[name="edd_settings[download_method]"]').parent().parent().next().find('input').attr('checked', false);
+			if( downloadMethod.val() == 'direct' ) {
+				symlink.hide();
+				symlink.find('input').prop('checked', false);
 			}
 			// Toggle download method option
-			$('select[name="edd_settings[download_method]"]').on('change', function() {
-				var symlink = $(this).parent().parent().next();
+			downloadMethod.on('change', function() {
 				if( $(this).val() == 'direct' ) {
 					symlink.hide();
+					symlink.find('input').prop('checked', false);
 				} else {
 					symlink.show();
-					symlink.find('input').attr('checked', false);
 				}
 			});
-
 		}
 
 	}

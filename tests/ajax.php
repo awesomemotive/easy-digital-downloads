@@ -219,7 +219,7 @@ class Tests_AJAX extends WP_UnitTestCase {
 	}
 
 	public function test_edd_test_ajax_works() {
-		
+		$this->markTestIncomplete( 'Needs to be reworked per #3475' );
 		$this->assertTrue( edd_test_ajax_works() );
 
 		$this->assertNotEmpty( get_transient( '_edd_ajax_works' ) );
