@@ -574,11 +574,14 @@ final class EDD_Amazon_Payments {
 	 * @return void
 	 */
 	public function wallet_form() {
-
+		$profile   = EDD()->session->get( 'amazon_profile' );
 		remove_action( 'edd_purchase_form_after_cc_form', 'edd_checkout_tax_fields', 999 );
 		ob_start(); ?>
-
 		<fieldset id="edd_cc_fields" class="edd-amazon-fields">
+			<p class="edd-amazon-profile-wrapper">
+				<?php _e( 'Currently logged into Amazon as', 'edd' ); ?>: <span class="edd-amazon-profile-name"><?php echo $profile['name']; ?></span>
+				<span class="edd-amazon-logout">(<a id="Logout"><?php _e( 'Logout', 'edd' ); ?></a>)</span>
+			</p>
 
 			<div id="edd-amazon-address-box"></div>
 			<div id="edd-amazon-wallet-box"></div>
