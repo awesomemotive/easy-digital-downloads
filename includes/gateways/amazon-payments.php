@@ -726,7 +726,7 @@ final class EDD_Amazon_Payments {
 
 
 				edd_set_error( 'payment_declined', __( 'Your payment could not be authorized, please try a different payment method', 'edd' ) );
-				edd_send_back_to_checkout( '?payment-mode=amazon' );
+				edd_send_back_to_checkout( '?payment-mode=amazon&amazon_reference_id=' . $purchase_data['post_data']['edd_amazon_reference_id'] );
 			}
 
 			// Setup payment data to be recorded
@@ -774,7 +774,8 @@ final class EDD_Amazon_Payments {
 		} else {
 
 			// Set an error
-			echo '<pre>'; print_r( $charge ); echo '</pre>'; exit;
+			edd_set_error( 'amazon_error',sprintf( __( 'There was an issue processing your payment. Amazon error: %s', 'edd' ), print_r( $charge, true ) ) );
+			edd_send_back_to_checkout( '?payment-mode=amazon&amazon_reference_id=' . $purchase_data['post_data']['edd_amazon_reference_id'] );
 
 		}
 
