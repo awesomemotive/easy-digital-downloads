@@ -165,6 +165,8 @@ function edd_user_info_fields() {
 			'email'      => $user_data->user_email
 		);
 	}
+
+	$customer = array_map( 'sanitize_text_field', $customer );
 	?>
 	<fieldset id="edd_checkout_user_info">
 		<span><legend><?php echo apply_filters( 'edd_checkout_personal_info_text', __( 'Personal Info', 'edd' ) ); ?></legend></span>
@@ -295,6 +297,8 @@ function edd_default_cc_address_fields() {
 		'state'   => '',
 		'country' => ''
 	) ) );
+
+	$customer['address'] = array_map( 'sanitize_text_field', $customer['address'] );
 
 	if( empty( $customer['address'] ) && $logged_in ) {
 
