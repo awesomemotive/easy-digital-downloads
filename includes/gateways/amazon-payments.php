@@ -17,12 +17,13 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 final class EDD_Amazon_Payments {
 
 	private static $instance;
-	private $gateway_id   = 'amazon';
-	private $client       = null;
-	private $redirect_uri = null;
-	private $checkout_uri = null;
-	private $reference_id = null;
-	private $doing_ipn    = false;
+	private $gateway_id      = 'amazon';
+	private $client          = null;
+	private $redirect_uri    = null;
+	private $checkout_uri    = null;
+	private $signin_redirect = null;
+	private $reference_id    = null;
+	private $doing_ipn       = false;
 
 	/**
 	 * Get things going
@@ -143,7 +144,8 @@ final class EDD_Amazon_Payments {
 
 		add_action( 'wp_enqueue_scripts',                      array( $this, 'print_client' ), 10 );
 		add_action( 'wp_enqueue_scripts',                      array( $this, 'load_scripts' ), 11 );
-		add_action( 'init',                                    array( $this, 'capture_oauth' ) );
+		add_action( 'init',                                    array( $this, 'capture_oauth' ), 9 );
+		add_action( 'init',                                    array( $this, 'signin_redirect' ) );
 		add_action( 'edd_purchase_form_before_register_login', array( $this, 'login_form' ) );
 		add_action( 'edd_checkout_error_check',                array( $this, 'checkout_errors' ), 10, 2 );
 		add_action( 'edd_gateway_amazon',                      array( $this, 'process_purchase' ) );
@@ -285,7 +287,7 @@ final class EDD_Amazon_Payments {
 				'desc'     => __( 'The Return URL to provide in your MWS Application. Enter this under your Login and Pay &rarr; Web Settings', 'edd' ),
 				'type'     => 'text',
 				'size'     => 'large',
-				'std'      => $this->get_amazon_checkout_redirect(),
+				'std'      => $this->get_amazon_authenticate_redirect(),
 				'readonly' => true,
 			),
 			'amazon_mws_ipn_url' => array(
@@ -361,16 +363,17 @@ final class EDD_Amazon_Payments {
 
 			wp_enqueue_script( 'edd-amazon-widgets', $url, array( 'jquery' ), null, false );
 			wp_localize_script( 'edd-amazon-widgets', 'edd_amazon', apply_filters( 'edd_amazon_checkout_vars', array(
-				'sellerId'    => $seller_id,
-				'clientId'    => $client_id,
-				'referenceID' => $this->reference_id,
-				'buttonType'  => $amazon_button_settings['type'],
-				'buttonColor' => $amazon_button_settings['color'],
-				'buttonSize'  => $amazon_button_settings['size'],
-				'scope'       => $amazon_button_settings['scope'],
-				'popup'       => $amazon_button_settings['popup'],
-				'checkoutUri' => $this->get_amazon_checkout_uri(),
-				'redirectUri' => $this->get_amazon_checkout_redirect(),
+				'sellerId'      => $seller_id,
+				'clientId'      => $client_id,
+				'referenceID'   => $this->reference_id,
+				'buttonType'    => $amazon_button_settings['type'],
+				'buttonColor'   => $amazon_button_settings['color'],
+				'buttonSize'    => $amazon_button_settings['size'],
+				'scope'         => $amazon_button_settings['scope'],
+				'popup'         => $amazon_button_settings['popup'],
+				'checkoutUri'   => $this->get_amazon_checkout_uri(),
+				'redirectUri'   => $this->get_amazon_authenticate_redirect(),
+				'signinUri'     => $this->get_amazon_signin_redirect(),
 			) ) );
 
 		}
@@ -420,47 +423,8 @@ final class EDD_Amazon_Payments {
 
 			$profile = $this->client->getUserInfo( $_GET['access_token'] );
 
-			if( ! is_user_logged_in() ) {
-
-				$user = get_user_by( 'email', $profile['email'] );
-
-				if( $user ) {
-
-					edd_log_user_in( $user->ID, $user->user_login, '' );
-
-					$customer = array(
-						'first_name' => $user->first_name,
-						'last_name'  => $user->last_name,
-						'email'      => $user->user_email
-					);
-
-				} else {
-
-					$args = array(
-						'user_email'   => $profile['email'],
-						'user_login'   => $profile['email'],
-						'display_name' => $profile['name'],
-						'user_pass'    => wp_generate_password( 20 ),
-					);
-
-					$user_id  = wp_insert_user( $args );
-					$names    = explode( ' ', $profile['name'] );
-					$customer = array(
-						'first_name' => $names[0],
-						'last_name'  => isset( $names[1] ) ? $names[1] : '',
-						'email'      => $profile['email']
-					);
-
-					edd_log_user_in( $user_id, $args['user_login'], $args['user_pass'] );
-
-				}
-
-			}
-
 			EDD()->session->set( 'amazon_access_token', $_GET['access_token'] );
-			EDD()->session->set( 'customer', $customer );
-
-			wp_redirect( edd_get_checkout_uri( array( 'payment-mode' => 'amazon', 'state' => 'authorized' ) ) ); exit;
+			EDD()->session->set( 'amazon_profile', $profile );
 
 		} catch( Exception $e ) {
 
@@ -469,6 +433,70 @@ final class EDD_Amazon_Payments {
 		}
 
 	}
+
+	/**
+	 * Set customer details after authentication
+	 *
+	 * @access public
+	 * @since  2.4
+	 * @return void
+	 */
+	public function signin_redirect() {
+
+		if ( ! isset( $_GET['edd-listener'] ) || $_GET['edd-listener'] !== 'amazon' ) {
+			return;
+		}
+
+		if ( ! isset( $_GET['state'] ) || $_GET['state'] !== 'signed-in' ) {
+			return;
+		}
+
+		$profile   = EDD()->session->get( 'amazon_profile' );
+		$reference = $_GET['amazon_reference_id'];
+
+		if( ! is_user_logged_in() ) {
+
+			$user = get_user_by( 'email', $profile['email'] );
+
+			if( $user ) {
+
+				edd_log_user_in( $user->ID, $user->user_login, '' );
+
+				$customer = array(
+					'first_name' => $user->first_name,
+					'last_name'  => $user->last_name,
+					'email'      => $user->user_email
+				);
+
+			} else {
+
+				$args = array(
+					'user_email'   => $profile['email'],
+					'user_login'   => $profile['email'],
+					'display_name' => $profile['name'],
+					'user_pass'    => wp_generate_password( 20 ),
+				);
+
+				$user_id  = wp_insert_user( $args );
+				$names    = explode( ' ', $profile['name'] );
+				$customer = array(
+					'first_name' => $names[0],
+					'last_name'  => isset( $names[1] ) ? $names[1] : '',
+					'email'      => $profile['email']
+				);
+
+				edd_log_user_in( $user_id, $args['user_login'], $args['user_pass'] );
+
+			}
+
+		}
+
+		EDD()->session->set( 'customer', $customer );
+
+		wp_redirect( edd_get_checkout_uri( array( 'payment-mode' => 'amazon', 'state' => 'authorized', 'amazon_reference_id' => $reference ) ) ); exit;
+
+	}
+
 
 	/**
 	 * Display the log in button
@@ -511,7 +539,7 @@ final class EDD_Amazon_Payments {
 						},
 						onSignIn: function( orderReference ) {
 							amazonOrderReferenceId = orderReference.getAmazonOrderReferenceId();
-							window.location = edd_amazon.checkoutUri + '&amazon_reference_id=' + amazonOrderReferenceId;
+							window.location = edd_amazon.signinUri + '&amazon_reference_id=' + amazonOrderReferenceId;
 						}, onError: function(error) {
 							jQuery('#edd_purchase_submit').prepend( '<div class="edd_errors"><p class="edd_error" id="edd_error_"' + error.getErrorCode() + '>' + error.getErrorMessage() + '</p></div>' );
 						}
@@ -788,19 +816,34 @@ final class EDD_Amazon_Payments {
 	/**
 	 * Retrieve the return URL for Amazon after authentication on Amazon is complete
 	 *
-	 * Captured by capture_auth() method
+	 * @access public
+	 * @since  2.4
+	 * @return string
+	 */
+	private function get_amazon_authenticate_redirect() {
+
+		if ( is_null( $this->redirect_uri ) ) {
+			$this->redirect_uri = esc_url_raw( add_query_arg( array( 'edd-listener' => 'amazon', 'state' => 'return_auth' ), edd_get_checkout_uri() ) );
+		}
+
+		return $this->redirect_uri;
+
+	}
+
+	/**
+	 * Retrieve the URL to send customers too once sign-in is complete
 	 *
 	 * @access public
 	 * @since  2.4
 	 * @return string
 	 */
-	private function get_amazon_checkout_redirect() {
+	private function get_amazon_signin_redirect() {
 
-		if ( is_null( $this->redirect_uri ) ) {
-			$this->redirect_uri = esc_url_raw( add_query_arg( array( 'edd-listener' => 'amazon', 'state' => 'return_auth' ), home_url() ) );
+		if ( is_null( $this->signin_redirect ) ) {
+			$this->signin_redirect = esc_url_raw( add_query_arg( array( 'edd-listener' => 'amazon', 'state' => 'signed-in' ), home_url() ) );
 		}
 
-		return $this->redirect_uri;
+		return $this->signin_redirect;
 
 	}
 
@@ -861,6 +904,10 @@ final class EDD_Amazon_Payments {
 	public function process_ipn() {
 
 		if ( ! isset( $_GET['edd-listener'] ) || $_GET['edd-listener'] !== 'amazon' ) {
+			return;
+		}
+
+		if ( isset( $_GET['state'] ) ) {
 			return;
 		}
 
