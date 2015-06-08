@@ -420,11 +420,7 @@ final class EDD_Amazon_Payments {
 
 			$profile = $this->client->getUserInfo( $_GET['access_token'] );
 
-			if( is_user_logged_in() ) {
-
-				// Do something, probably with address
-
-			} else {
+			if( ! is_user_logged_in() ) {
 
 				$user = get_user_by( 'email', $profile['email'] );
 
