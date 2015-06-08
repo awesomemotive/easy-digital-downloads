@@ -628,7 +628,7 @@ final class EDD_Amazon_Payments {
 					sellerId: edd_amazon.sellerId,
 					amazonOrderReferenceId: edd_amazon.referenceID,
 					design: {
-						size: {width:'400px', height:'260px'}
+						designMode: 'responsive'
 					},
 					onPaymentSelect: function(orderReference) {
 						// Display your custom complete purchase button
