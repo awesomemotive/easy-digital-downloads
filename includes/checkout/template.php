@@ -153,9 +153,18 @@ add_action( 'edd_purchase_form', 'edd_show_purchase_form' );
  * @return void
  */
 function edd_user_info_fields() {
-	if ( is_user_logged_in() ) :
+
+	$customer = EDD()->session->get( 'customer' );
+	$customer = wp_parse_args( $customer, array( 'first_name' => '', 'last_name' => '', 'email' => '' ) );
+
+	if( empty( $customer ) && is_user_logged_in() ) {
 		$user_data = get_userdata( get_current_user_id() );
-	endif;
+		$customer  = array(
+			'first_name' => $user_data->user_first,
+			'last_name'  => $user_data->user_last,
+			'email'      => $user_data->user_email
+		);
+	}
 	?>
 	<fieldset id="edd_checkout_user_info">
 		<span><legend><?php echo apply_filters( 'edd_checkout_personal_info_text', __( 'Personal Info', 'edd' ) ); ?></legend></span>
@@ -168,7 +177,7 @@ function edd_user_info_fields() {
 				<?php } ?>
 			</label>
 			<span class="edd-description"><?php _e( 'We will send the purchase receipt to this address.', 'edd' ); ?></span>
-			<input class="edd-input required" type="email" name="edd_email" placeholder="<?php _e( 'Email address', 'edd' ); ?>" id="edd-email" value="<?php echo is_user_logged_in() ? $user_data->user_email : ''; ?>"/>
+			<input class="edd-input required" type="email" name="edd_email" placeholder="<?php _e( 'Email address', 'edd' ); ?>" id="edd-email" value="<?php echo esc_attr( $customer['email'] ); ?>"/>
 		</p>
 		<?php do_action( 'edd_purchase_form_after_email' ); ?>
 		<p id="edd-first-name-wrap">
@@ -179,7 +188,7 @@ function edd_user_info_fields() {
 				<?php } ?>
 			</label>
 			<span class="edd-description"><?php _e( 'We will use this to personalize your account experience.', 'edd' ); ?></span>
-			<input class="edd-input required" type="text" name="edd_first" placeholder="<?php _e( 'First name', 'edd' ); ?>" id="edd-first" value="<?php echo is_user_logged_in() ? $user_data->first_name : ''; ?>"/>
+			<input class="edd-input required" type="text" name="edd_first" placeholder="<?php _e( 'First name', 'edd' ); ?>" id="edd-first" value="<?php echo esc_attr( $customer['first_name'] ); ?>"/>
 		</p>
 		<p id="edd-last-name-wrap">
 			<label class="edd-label" for="edd-last">
@@ -189,7 +198,7 @@ function edd_user_info_fields() {
 				<?php } ?>
 			</label>
 			<span class="edd-description"><?php _e( 'We will use this as well to personalize your account experience.', 'edd' ); ?></span>
-			<input class="edd-input<?php if( edd_field_is_required( 'edd_last' ) ) { echo ' required'; } ?>" type="text" name="edd_last" id="edd-last" placeholder="<?php _e( 'Last name', 'edd' ); ?>" value="<?php echo is_user_logged_in() ? $user_data->last_name : ''; ?>"/>
+			<input class="edd-input<?php if( edd_field_is_required( 'edd_last' ) ) { echo ' required'; } ?>" type="text" name="edd_last" id="edd-last" placeholder="<?php _e( 'Last name', 'edd' ); ?>" value="<?php echo esc_attr( $customer['last_name'] ); ?>"/>
 		</p>
 		<?php do_action( 'edd_purchase_form_user_info' ); ?>
 		<?php do_action( 'edd_purchase_form_user_info_fields' ); ?>
@@ -277,14 +286,38 @@ add_action( 'edd_cc_form', 'edd_get_cc_form' );
 function edd_default_cc_address_fields() {
 
 	$logged_in = is_user_logged_in();
+	$customer  = EDD()->session->get( 'customer' );
+	$customer  = wp_parse_args( $customer, array( 'address' => array(
+		'line1'   => '',
+		'line2'   => '',
+		'city'    => '',
+		'zip'     => '',
+		'state'   => '',
+		'country' => ''
+	) ) );
 
-	if( $logged_in ) {
+	if( empty( $customer['address'] ) && $logged_in ) {
+
 		$user_address = get_user_meta( get_current_user_id(), '_edd_user_address', true );
+
+		$line1   = $logged_in && ! empty( $user_address['line1'] )   ? $user_address['line1']   : '';
+		$line2   = $logged_in && ! empty( $user_address['line2'] )   ? $user_address['line2']   : '';
+		$city    = $logged_in && ! empty( $user_address['city']  )   ? $user_address['city']    : '';
+		$zip     = $logged_in && ! empty( $user_address['zip']   )   ? $user_address['zip']     : '';
+		$state   = $logged_in && ! empty( $user_address['state'] )   ? $user_address['state']   : '';
+		$country = $logged_in && ! empty( $user_address['country'] ) ? $user_address['country'] : '';
+
+		$customer['address'] = array(
+			'line1'   => $line1,
+			'line2'   => $line2,
+			'city'    => $city,
+			'zip'     => $zip,
+			'state'   => $state,
+			'country' => $country
+		);
 	}
-	$line1 = $logged_in && ! empty( $user_address['line1'] ) ? $user_address['line1'] : '';
-	$line2 = $logged_in && ! empty( $user_address['line2'] ) ? $user_address['line2'] : '';
-	$city  = $logged_in && ! empty( $user_address['city']  ) ? $user_address['city']  : '';
-	$zip   = $logged_in && ! empty( $user_address['zip']   ) ? $user_address['zip']   : '';
+
+
 	ob_start(); ?>
 	<fieldset id="edd_cc_address" class="cc-address">
 		<span><legend><?php _e( 'Billing Details', 'edd' ); ?></legend></span>
@@ -342,8 +375,8 @@ function edd_default_cc_address_fields() {
 
 				$selected_country = edd_get_shop_country();
 
-				if( $logged_in && ! empty( $user_address['country'] ) && '*' !== $user_address['country'] ) {
-					$selected_country = $user_address['country'];
+				if( ! empty( $customer['country'] ) && '*' !== $customer['country'] ) {
+					$selected_country = $customer['country'];
 				}
 
 				$countries = edd_get_country_list();
@@ -365,8 +398,8 @@ function edd_default_cc_address_fields() {
             $selected_state = edd_get_shop_state();
             $states         = edd_get_shop_states( $selected_country );
 
-            if( $logged_in && ! empty( $user_address['state'] ) ) {
-				$selected_state = $user_address['state'];
+            if( ! empty( $customer['state'] ) ) {
+				$selected_state = $customer['state'];
 			}
 
             if( ! empty( $states ) ) : ?>
