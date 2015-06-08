@@ -422,22 +422,39 @@
     box-shadow: none;
 }
 
+.edd-amazon-profile-wrapper {
+	font-size: 12px;
+}
+
+.edd-amazon-profile-name {
+	font-weight: 600;
+}
+
+.edd-amazon-logout {
+	font-size: 10px;
+	line-height: 12px;
+}
+
+.edd-amazon-logout a {
+	cursor: pointer;
+}
+
 #edd-amazon-address-box {
     height: 228px;
-    width: 350px; 
+    width: 350px;
     margin-bottom: 15px;
 }
 
 #edd-amazon-wallet-box {
     height: 228px;
-    width: 350px; 
+    width: 350px;
 }
 
 /* Desktop and tablet */
 @media only screen and (min-width: 768px) {
     #edd-amazon-address-box,
     #edd-amazon-wallet-box {
-        width: 100%; 
+        width: 100%;
         height: 228px;
     }
 }

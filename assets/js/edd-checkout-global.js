@@ -333,4 +333,10 @@ jQuery(document).ready(function($) {
 		return false;
 	});
 
+	$body.on('click', '.edd-amazon-logout #Logout', function(e) {
+		e.preventDefault();
+		amazon.Login.logout();
+		window.location = edd_amazon.checkoutUri;
+	});
+
 });
