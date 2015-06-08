@@ -126,6 +126,8 @@ final class EDD_Amazon_Payments {
 	 */
 	private function filters() {
 
+		add_filter( 'edd_accepted_payment_icons', array( $this, 'register_payment_icon' ), 10, 1 );
+
 		if ( is_admin() ) {
 			add_filter( 'edd_settings_gateways', array( $this, 'register_gateway_settings' ), 1, 1 );
 			add_filter( 'edd_payment_details_transaction_id-' . $this->gateway_id, array( $this, 'link_transaction_id' ), 10, 2 );
@@ -228,6 +230,20 @@ final class EDD_Amazon_Payments {
 
 		return $gateways;
 
+	}
+
+	/**
+	 * Register the payment icon
+	 *
+	 * @access public
+	 * @since  2.4
+	 * @param  array $payment_icons Array of payment icons
+	 * @return array                The array of icons with Amazon Added
+	 */
+	public function register_payment_icon( $payment_icons ) {
+		$payment_icons['amazon'] = 'Amazon';
+
+		return $payment_icons;
 	}
 
 	/**

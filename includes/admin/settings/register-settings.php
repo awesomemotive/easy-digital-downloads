@@ -371,7 +371,6 @@ function edd_get_registered_settings() {
 							'americanexpress' => 'American Express',
 							'discover'        => 'Discover',
 							'paypal'          => 'PayPal',
-							'amazon'          => 'Amazon',
 						)
 					)
 				),
