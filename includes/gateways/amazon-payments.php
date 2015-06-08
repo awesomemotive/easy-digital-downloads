@@ -722,10 +722,8 @@ final class EDD_Amazon_Payments {
 
 			if( 'Declined' === $status ) {
 
-				// show reason for decline
-
-
-				edd_set_error( 'payment_declined', __( 'Your payment could not be authorized, please try a different payment method', 'edd' ) );
+				$reason = $charge['AuthorizeResult']['AuthorizationDetails']['AuthorizationStatus']['ReasonCode'];
+				edd_set_error( 'payment_declined', sprintf( __( 'Your payment could not be authorized, please try a different payment method. Reason: %s', 'edd' ), $reason ) );
 				edd_send_back_to_checkout( '?payment-mode=amazon&amazon_reference_id=' . $purchase_data['post_data']['edd_amazon_reference_id'] );
 			}
 
