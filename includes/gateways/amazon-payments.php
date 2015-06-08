@@ -470,6 +470,8 @@ final class EDD_Amazon_Payments {
 
 			} else {
 
+				$names = explode( ' ', $profile['name'] );
+
 				$customer = array(
 					'first_name' => $names[0],
 					'last_name'  => isset( $names[1] ) ? $names[1] : '',
@@ -480,15 +482,16 @@ final class EDD_Amazon_Payments {
 
 					// Create a customer account if registration is not disabled
 
-					$args = array(
+					$args  = array(
 						'user_email'   => $profile['email'],
 						'user_login'   => $profile['email'],
 						'display_name' => $profile['name'],
+						'first_name'   => $customer['first_name'],
+						'last_name'    => $customer['last_name'],
 						'user_pass'    => wp_generate_password( 20 ),
 					);
 
-					$user_id  = wp_insert_user( $args );
-					$names    = explode( ' ', $profile['name'] );
+					$user_id = wp_insert_user( $args );
 
 					edd_log_user_in( $user_id, $args['user_login'], $args['user_pass'] );
 
