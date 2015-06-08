@@ -432,6 +432,12 @@ final class EDD_Amazon_Payments {
 
 					edd_log_user_in( $user->ID, $user->user_login, '' );
 
+					$customer = array(
+						'first_name' => $user->user_first,
+						'last_name'  => $user->user_last,
+						'email'      => $user->user_email
+					);
+
 				} else {
 
 					$args = array(
@@ -441,14 +447,22 @@ final class EDD_Amazon_Payments {
 						'user_pass'    => wp_generate_password( 20 ),
 					);
 
-					$user_id = wp_insert_user( $args );
+					$user_id  = wp_insert_user( $args );
+					$names    = explode( ' ', $profile['name'] );
+					$customer = array(
+						'first_name' => $names[0],
+						'last_name'  => isset( $names[1] ) ? $names[1] : '',
+						'email'      => $profile['email']
+					);
 
 					edd_log_user_in( $user_id, $args['user_login'], $args['user_pass'] );
+
 				}
 
 			}
 
 			EDD()->session->set( 'amazon_access_token', $_GET['access_token'] );
+			EDD()->session->set( 'customer', $customer );
 
 			wp_redirect( edd_get_checkout_uri( array( 'payment-mode' => 'amazon', 'state' => 'authorized' ) ) ); exit;
 
@@ -527,7 +541,6 @@ final class EDD_Amazon_Payments {
 	public function wallet_form() {
 
 		remove_action( 'edd_purchase_form_after_cc_form', 'edd_checkout_tax_fields', 999 );
-
 		ob_start(); ?>
 
 		<fieldset id="edd_cc_fields" class="edd-amazon-fields">
@@ -546,7 +559,7 @@ final class EDD_Amazon_Payments {
 				sellerId: edd_amazon.sellerId,
 				amazonOrderReferenceId: edd_amazon.referenceID,
 					onOrderReferenceCreate: function(orderReference) {
-				orderReference.getAmazonOrderReferenceId();
+					orderReference.getAmazonOrderReferenceId();
 				},
 				onAddressSelect: function(orderReference) {
 					jQuery.ajax({
