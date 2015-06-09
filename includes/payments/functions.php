@@ -676,7 +676,7 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 
 		}
 		// Cache the results for one hour
-		//set_transient( $key, $earnings, 60*60 );
+		set_transient( $key, $earnings, 60*60 );
 	}
 
 	return round( $earnings, 2 );
