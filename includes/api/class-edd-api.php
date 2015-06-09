@@ -231,6 +231,26 @@ class EDD_API {
 	}
 
 	/**
+	 * Retrieves the default version of the API to use
+	 *
+	 * @access private
+	 * @since 2.4
+	 * @return string
+	 */
+	public function get_default_version() {
+
+		$version = get_option( 'edd_default_api_version' );
+
+		if( defined( 'EDD_API_VERSION' ) ) {
+			$version = EDD_API_VERSION;
+		} elseif( ! $version ) {
+			$version = 'v1';
+		}
+
+		return $version;
+	}
+
+	/**
 	 * Sets the version of the API that was queried.
 	 *
 	 * Falls back to the default version if no version is specified
@@ -267,26 +287,6 @@ class EDD_API {
 
 		}
 
-	}
-
-	/**
-	 * Retrieves the default version of the API to use
-	 *
-	 * @access private
-	 * @since 2.4
-	 * @return string
-	 */
-	private function get_default_version() {
-
-		$version = get_option( 'edd_default_api_version' );
-
-		if( defined( 'EDD_API_VERSION' ) ) {
-			$version = EDD_API_VERSION;
-		} elseif( ! $version ) {
-			$version = 'v1';
-		}
-
-		return $version;
 	}
 
 	/**
