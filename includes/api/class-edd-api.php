@@ -257,8 +257,8 @@ class EDD_API {
 
 			} else {
 
-				$this->queried_version = $this->get_default_version();
-
+				$this->is_valid_request = false;
+				$this->invalid_version();
 			}
 
 		} else {
@@ -427,6 +427,21 @@ class EDD_API {
 		$this->output( 401 );
 	}
 
+	/**
+	 * Displays an invalid version error if the version number passed isn't valid
+	 *
+	 * @access private
+	 * @since 2.4
+	 * @uses EDD_API::output()
+	 * @return void
+	 */
+	private function invalid_version() {
+		$error = array();
+		$error['error'] = __( 'Invalid API version!', 'edd' );
+
+		$this->data = $error;
+		$this->output( 404 );
+	}
 
 	/**
 	 * Listens for the API and then processes the API requests
