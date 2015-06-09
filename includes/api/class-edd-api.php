@@ -211,22 +211,22 @@ class EDD_API {
 	/**
 	 * Retrieve the API versions
 	 *
-	 * @access private
+	 * @access public
 	 * @since 2.4
 	 * @return array
 	 */
-	private function get_versions() {
+	public function get_versions() {
 		return $this->versions;
 	}
 
 	/**
 	 * Retrieve the API version that was queried
 	 *
-	 * @access private
+	 * @access public
 	 * @since 2.4
 	 * @return string
 	 */
-	private function get_queried_version() {
+	public function get_queried_version() {
 		return $this->queried_version;
 	}
 
