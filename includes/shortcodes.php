@@ -41,6 +41,11 @@ function edd_download_shortcode( $atts, $content = null ) {
 	),
 	$atts, 'purchase_link' );
 
+	// Override text if direct == 1
+	if( $atts['direct'] == '1' ) {
+		$atts['text'] = edd_get_option( 'buy_now_text', __( 'Buy Now', 'edd' ) );
+	}
+
 	// Override color if color == inherit
 	if( isset( $atts['color'] )	) {
 		$atts['color'] = ( $atts['color'] == 'inherit' ) ? '' : $atts['color'];
@@ -528,10 +533,11 @@ function edd_downloads_query( $atts, $content = null ) {
 
 			<?php wp_reset_postdata(); ?>
 
-			<div id="edd_download_pagination" class="navigation">
-				<?php
+			<?php
+				$pagination = false;
+
 				if ( is_single() ) {
-					echo paginate_links( apply_filters( 'edd_download_pagination_args', array(
+					$pagination = paginate_links( apply_filters( 'edd_download_pagination_args', array(
 						'base'    => get_permalink() . '%#%',
 						'format'  => '?paged=%#%',
 						'current' => max( 1, $query['paged'] ),
@@ -541,15 +547,20 @@ function edd_downloads_query( $atts, $content = null ) {
 					$big = 999999;
 					$search_for   = array( $big, '#038;' );
 					$replace_with = array( '%#%', '&' );
-					echo paginate_links( apply_filters( 'edd_download_pagination_args', array(
+					$pagination = paginate_links( apply_filters( 'edd_download_pagination_args', array(
 						'base'    => str_replace( $search_for, $replace_with, get_pagenum_link( $big ) ),
 						'format'  => '?paged=%#%',
 						'current' => max( 1, $query['paged'] ),
 						'total'   => $downloads->max_num_pages
 					), $atts, $downloads, $query ) );
 				}
-				?>
+			?>
+
+			<?php if ( ! empty( $pagination ) ) : ?>
+			<div id="edd_download_pagination" class="navigation">
+				<?php echo $pagination; ?>
 			</div>
+			<?php endif; ?>
 
 		</div>
 		<?php

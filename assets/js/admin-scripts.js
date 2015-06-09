@@ -345,6 +345,14 @@ jQuery(document).ready(function ($) {
 
 			// Remove a download from a purchase
 			$('#edd-purchased-files').on('click', '.edd-order-remove-download', function() {
+
+				var count = $('body').find( '#edd-purchased-files > .row' ).length;
+
+				if ( count === 1 ) {
+					alert( edd_vars.one_download_min );
+					return false;
+				}
+
 				if( confirm( edd_vars.delete_payment_download ) ) {
 					var key = $(this).data('key');
 
@@ -912,11 +920,17 @@ jQuery(document).ready(function ($) {
 				var row = $('#edd_tax_rates tr:last');
 				var clone = row.clone();
 				var count = row.parent().find( 'tr' ).length;
-				clone.find( 'td input' ).val( '' );
+				clone.find( 'td input' ).not(':input[type=checkbox]').val( '' );
+				clone.find( 'td [type="checkbox"]' ).attr('checked', false);
 				clone.find( 'input, select' ).each(function() {
 					var name = $( this ).attr( 'name' );
 					name = name.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
 					$( this ).attr( 'name', name ).attr( 'id', name );
+				});
+				clone.find( 'label' ).each(function() {
+					var name = $( this ).attr( 'for' );
+					name = name.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
+					$( this ).attr( 'for', name );
 				});
 				clone.insertAfter( row );
 				return false;
@@ -958,22 +972,23 @@ jQuery(document).ready(function ($) {
 
 		misc : function() {
 
+			var downloadMethod = $('select[name="edd_settings[download_method]"]');
+			var symlink = downloadMethod.parent().parent().next();
+
 			// Hide Symlink option if Download Method is set to Direct
-			if( $('select[name="edd_settings[download_method]"]:selected').val() != 'direct' ) {
-				$('select[name="edd_settings[download_method]"]').parent().parent().next().hide();
-				$('select[name="edd_settings[download_method]"]').parent().parent().next().find('input').attr('checked', false);
+			if( downloadMethod.val() == 'direct' ) {
+				symlink.hide();
+				symlink.find('input').prop('checked', false);
 			}
 			// Toggle download method option
-			$('select[name="edd_settings[download_method]"]').on('change', function() {
-				var symlink = $(this).parent().parent().next();
+			downloadMethod.on('change', function() {
 				if( $(this).val() == 'direct' ) {
 					symlink.hide();
+					symlink.find('input').prop('checked', false);
 				} else {
 					symlink.show();
-					symlink.find('input').attr('checked', false);
 				}
 			});
-
 		}
 
 	}
