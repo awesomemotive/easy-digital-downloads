@@ -176,7 +176,6 @@ function edd_load_admin_scripts( $hook ) {
 		'delete_payment_download' => sprintf( __( 'Are you sure you wish to delete this %s?', 'edd' ), edd_get_label_singular() ),
 		'one_price_min'           => __( 'You must have at least one price', 'edd' ),
 		'one_field_min'           => __( 'You must have at least one field', 'edd' ),
-		'one_download_min'        => __( 'Payments must contain at least one item', 'edd' ),
 		'one_option'              => sprintf( __( 'Choose a %s', 'edd' ), edd_get_label_singular() ),
 		'one_or_more_option'      => sprintf( __( 'Choose one or more %s', 'edd' ), edd_get_label_plural() ),
 		'numeric_item_price'      => __( 'Item price must be numeric', 'edd' ),

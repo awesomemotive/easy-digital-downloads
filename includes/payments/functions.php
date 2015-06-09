@@ -212,8 +212,7 @@ function edd_insert_payment( $payment_data = array() ) {
 		}
 
 		if( edd_get_option( 'enable_sequential' ) ) {
-			edd_update_payment_meta( $payment, '_edd_payment_number', edd_format_payment_number( $number ) );
-			update_option( 'edd_last_payment_number', $number );
+			edd_update_payment_meta( $payment, '_edd_payment_number', $number );
 		}
 
 		// Clear the user's purchased cache
@@ -376,6 +375,9 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
  * @return void
  */
 function edd_undo_purchase( $download_id, $payment_id ) {
+	if ( edd_is_test_mode() ) {
+		return;
+	}
 
 	$cart_details = edd_get_payment_meta_cart_details( $payment_id );
 	$user_info    = edd_get_payment_meta_user_info( $payment_id );
@@ -1167,32 +1169,6 @@ function edd_get_payment_number( $payment_id = 0 ) {
 }
 
 /**
- * Formats the payment number with the prefix and postfix
- *
- * @since  2.4
- * @param  int $number The payment number to format
- * @return string      The formatted payment number
- */
-function edd_format_payment_number( $number ) {
-
-	if( ! edd_get_option( 'enable_sequential' ) ) {
-		return $number;
-	}
-
-	if ( ! is_numeric( $number ) ) {
-		return $number;
-	}
-
-	$prefix  = edd_get_option( 'sequential_prefix' );
-	$number  = absint( $number );
-	$postfix = edd_get_option( 'sequential_postfix' );
-
-	$formatted_number = $prefix . $number . $postfix;
-
-	return apply_filters( 'edd_format_payment_number', $formatted_number, $prefix, $number, $postfix );
-}
-
-/**
  * Gets the next available order number
  *
  * This is used when inserting a new payment
@@ -1206,79 +1182,46 @@ function edd_get_next_payment_number() {
 		return false;
 	}
 
-	$number           = get_option( 'edd_last_payment_number' );
-	$start            = edd_get_option( 'sequential_start', 1 );
-	$increment_number = true;
+	$prefix  = edd_get_option( 'sequential_prefix' );
+	$postfix = edd_get_option( 'sequential_postfix' );
+	$start   = edd_get_option( 'sequential_start', 1 );
 
-	if ( false !== $number ) {
+	$payments     = new EDD_Payments_Query( array( 'number' => 1, 'order' => 'DESC', 'orderby' => 'ID', 'output' => 'posts', 'fields' => 'ids' ) );
 
-		if ( empty( $number ) ) {
+	$last_payment = $payments->get_payments();
 
-			$number = $start;
-			$increment_number = false;
+	if( $last_payment ) {
+
+		$number = edd_get_payment_number( $last_payment[0] );
+
+		if( empty( $number ) ) {
+
+			$number = $prefix . $start . $postfix;
+
+		} else {
+
+			// Remove prefix and postfix
+			$number = str_replace( $prefix, '', $number );
+			$number = str_replace( $postfix, '', $number );
+
+			// Ensure it's a whole number
+			$number = intval( $number );
+
+			// Increment the payment number
+			$number++;
+
+			// Re-add the prefix and postfix
+			$number = $prefix . $number . $postfix;
 
 		}
 
 	} else {
 
-		// This case handles the first addition of the new option, as well as if it get's deleted for any reason
-		$payments     = new EDD_Payments_Query( array( 'number' => 1, 'order' => 'DESC', 'orderby' => 'ID', 'output' => 'posts', 'fields' => 'ids' ) );
-		$last_payment = $payments->get_payments();
+		$number = $prefix . $start . $postfix;
 
-		if ( $last_payment ) {
-
-			$number = edd_get_payment_number( $last_payment[0] );
-
-		}
-
-		if( ! empty( $number ) && $number !== $last_payment[0] ) {
-
-			$number = edd_remove_payment_prefix_postfix( $number );
-
-		} else {
-
-			$number = $start;
-			$increment_number = false;
-		}
-
-	}
-
-	$increment_number = apply_filters( 'edd_increment_payment_number', $increment_number, $number );
-
-	if ( $increment_number ) {
-		$number++;
 	}
 
 	return apply_filters( 'edd_get_next_payment_number', $number );
-}
-
-/**
- * Given a given a number, remove the pre/postfix
- *
- * @since  2.4
- * @param  string $number  The formatted Current Number to increment
- * @return string          The new Payment number without prefix and postfix
- */
-function edd_remove_payment_prefix_postfix( $number ) {
-
-	$prefix  = edd_get_option( 'sequential_prefix' );
-	$postfix = edd_get_option( 'sequential_postfix' );
-
-	// Remove prefix
-	$number = preg_replace( '/' . $prefix . '/', '', $number, 1 );
-
-	// Remove the postfix
-	$length      = strlen( $number );
-	$postfix_pos = strrpos( $number, $postfix );
-	if ( false !== $postfix_pos ) {
-		$number      = substr_replace( $number, '', $postfix_pos, $length );
-	}
-
-	// Ensure it's a whole number
-	$number = intval( $number );
-
-	return apply_filters( 'edd_remove_payment_prefix_postfix', $number, $prefix, $postfix );
-
 }
 
 /**
@@ -1643,7 +1586,7 @@ function edd_get_payment_note_html( $note, $payment_id = 0 ) {
  * @return void
  */
 function edd_hide_payment_notes( $query ) {
-	global $wp_version;
+    global $wp_version;
 
 	if( version_compare( floatval( $wp_version ), '4.1', '>=' ) ) {
 		$types = isset( $query->query_vars['type__not_in'] ) ? $query->query_vars['type__not_in'] : array();
@@ -1666,12 +1609,12 @@ add_action( 'pre_get_comments', 'edd_hide_payment_notes', 10 );
  * @return array $clauses Updated comment clauses
  */
 function edd_hide_payment_notes_pre_41( $clauses, $wp_comment_query ) {
-	global $wpdb, $wp_version;
+    global $wpdb, $wp_version;
 
 	if( version_compare( floatval( $wp_version ), '4.1', '<' ) ) {
 		$clauses['where'] .= ' AND comment_type != "edd_payment_note"';
 	}
-	return $clauses;
+    return $clauses;
 }
 add_filter( 'comments_clauses', 'edd_hide_payment_notes_pre_41', 10, 2 );
 

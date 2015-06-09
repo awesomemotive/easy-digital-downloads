@@ -130,10 +130,6 @@ class Tests_Customers_DB extends WP_UnitTestCase {
 		parent::tearDown();
 	}
 
-	public function test_intalled() {
-		$this->assertTrue( EDD()->customers->installed() );
-	}
-
 	public function test_get_customer_columns() {
 		$columns = array(
 			'id'             => '%d',

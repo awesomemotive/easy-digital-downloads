@@ -39,10 +39,9 @@ function edd_get_payment_gateways() {
  * Returns a list of all enabled gateways.
  *
  * @since 1.0
- * @param  bool $sort If true, the default gateway will be first
  * @return array $gateway_list All the available gateways
 */
-function edd_get_enabled_payment_gateways( $sort = false ) {
+function edd_get_enabled_payment_gateways() {
 	$gateways = edd_get_payment_gateways();
 	$enabled  = edd_get_option( 'gateways', false );
 
@@ -52,15 +51,6 @@ function edd_get_enabled_payment_gateways( $sort = false ) {
 		if ( isset( $enabled[ $key ] ) && $enabled[ $key ] == 1 ) {
 			$gateway_list[ $key ] = $gateway;
 		}
-	}
-
-	if ( true === $sort ) {
-		// Reorder our gateways so the default is first
-		$default_gateway_id = edd_get_default_gateway();
-		$default_gateway    = array( $default_gateway_id => $gateway_list[ $default_gateway_id ] );
-		unset( $gateway_list[ $default_gateway_id ] );
-
-		$gateway_list = array_merge( $default_gateway, $gateway_list );
 	}
 
 	return apply_filters( 'edd_enabled_payment_gateways', $gateway_list );
