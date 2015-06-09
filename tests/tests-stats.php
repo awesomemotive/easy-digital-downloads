@@ -77,7 +77,7 @@ class Tests_Stats extends WP_UnitTestCase {
 				'name'        => 'Test Download',
 				'id'          => $this->_post->ID,
 				'item_price'  => 100,
-				'tax'         => 0,
+				'tax'         => 10,
 				'price'       => 100,
 				'quantity'    => 1,
 				'item_number' => array(
@@ -161,7 +161,7 @@ class Tests_Stats extends WP_UnitTestCase {
 		$this->assertInternalType( 'numeric', $this->_stats->end_date );
 		$this->assertGreaterThan( $this->_stats->start_date, $this->_stats->end_date );
 
-		
+
 		// Set some valid timestamps
 		$this->_stats->setup_dates( '1379635200', '1379645200' );
 		$this->assertInternalType( 'numeric', $this->_stats->start_date );
@@ -172,7 +172,7 @@ class Tests_Stats extends WP_UnitTestCase {
 		$this->_stats->setup_dates( 'nonvaliddatestring', 'nonvaliddatestring' );
 		$this->assertInstanceOf( 'WP_Error', $this->_stats->start_date );
 		$this->assertInstanceOf( 'WP_Error', $this->_stats->end_date );
-		
+
 	}
 
 
@@ -186,8 +186,10 @@ class Tests_Stats extends WP_UnitTestCase {
 
 		$stats = new EDD_Payment_Stats;
 		$earnings = $stats->get_earnings( 0, 'this_month' );
-
 		$this->assertEquals( 100, $earnings );
+
+		$earnings_minus_taxes = $stats->get_earnings( 0, 'this_month', false, false );
+		$this->assertEquals( 90, $earnings_minus_taxes );
 	}
 
 	public function test_get_sales_by_date() {
@@ -202,8 +204,10 @@ class Tests_Stats extends WP_UnitTestCase {
 
 		$stats = new EDD_Payment_Stats;
 		$earnings = $stats->get_earnings( $this->_post->ID, 'this_month' );
-
 		$this->assertEquals( 100, $earnings );
+
+		$earnings_minus_taxes = $stats->get_earnings( $this->_post->ID, 'this_month', false, false );
+		$this->assertEquals( 90, $earnings_minus_taxes );
 	}
 
 	public function test_get_sales_by_date_of_download() {
