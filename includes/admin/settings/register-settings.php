@@ -698,7 +698,7 @@ function edd_get_registered_settings() {
 				'enable_sequential' => array(
 					'id' => 'enable_sequential',
 					'name' => __( 'Sequential Order Numbers', 'edd' ),
-					'desc' => __( 'Check this box to sequential order numbers.', 'edd' ),
+					'desc' => __( 'Check this box to enable sequential order numbers.', 'edd' ),
 					'type' => 'checkbox'
 				),
 				'sequential_start' => array(
@@ -759,6 +759,13 @@ function edd_get_registered_settings() {
 					'desc' => __( 'Text shown on the Add to Cart Buttons.', 'edd' ),
 					'type' => 'text',
 					'std'  => __( 'Add to Cart', 'edd' )
+				),
+				'buy_now_text' => array(
+					'id' => 'buy_now_text',
+					'name' => __( 'Buy Now Text', 'edd' ),
+					'desc' => __( 'Text shown on the Buy Now Buttons.', 'edd' ),
+					'type' => 'text',
+					'std' => __( 'Buy Now', 'edd' )
 				)
 			)
 		)

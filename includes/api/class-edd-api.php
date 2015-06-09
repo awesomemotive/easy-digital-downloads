@@ -1449,8 +1449,8 @@ class EDD_API {
 
 		$query = array(
 			'edd-api'     => $wp_query->query_vars['edd-api'],
-			'key'         => $wp_query->query_vars['key'],
-			'token'       => $wp_query->query_vars['token'],
+			'key'         => isset( $wp_query->query_vars['key'] )         ? $wp_query->query_vars['key']         : null,
+			'token'       => isset( $wp_query->query_vars['token'] )       ? $wp_query->query_vars['token']       : null,
 			'query'       => isset( $wp_query->query_vars['query'] )       ? $wp_query->query_vars['query']       : null,
 			'type'        => isset( $wp_query->query_vars['type'] )        ? $wp_query->query_vars['type']        : null,
 			'product'     => isset( $wp_query->query_vars['product'] )     ? $wp_query->query_vars['product']     : null,
@@ -1472,8 +1472,8 @@ class EDD_API {
 		$log_meta = array(
 			'request_ip' => edd_get_ip(),
 			'user'       => $this->user_id,
-			'key'        => $wp_query->query_vars['key'],
-			'token'      => $wp_query->query_vars['token']
+			'key'        => isset( $wp_query->query_vars['key'] ) ? $wp_query->query_vars['key'] : null,
+			'token'      => isset( $wp_query->query_vars['token'] ) ? $wp_query->query_vars['token'] : null
 		);
 
 		$edd_logs->insert_log( $log_data, $log_meta );
