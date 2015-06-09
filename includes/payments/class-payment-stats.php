@@ -89,9 +89,10 @@ class EDD_Payment_Stats extends EDD_Stats {
 	 * @param $download_id INT The download product to retrieve stats for. If false, gets stats for all products
 	 * @param $start_date string|bool The starting date for which we'd like to filter our sale stats. If false, we'll use the default start date of `this_month`
 	 * @param $end_date string|bool The end date for which we'd like to filter our sale stats. If false, we'll use the default end date of `this_month`
+	 * @param $include_taxes bool If taxes should be included in the earnings graphs
 	 * @return float|int
 	 */
-	public function get_earnings( $download_id = 0, $start_date = false, $end_date = false ) {
+	public function get_earnings( $download_id = 0, $start_date = false, $end_date = false, $include_taxes = true ) {
 
 		global $wpdb;
 
@@ -105,7 +106,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 		if( is_wp_error( $this->end_date ) )
 			return $this->end_date;
 
-		$earnings = 0;
+		$earnings = false;
 
 		add_filter( 'posts_where', array( $this, 'payments_where' ) );
 
@@ -123,6 +124,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 				'start_date'             => $this->start_date, // These dates are not valid query args, but they are used for cache keys
 				'end_date'               => $this->end_date,
 				'edd_transient_type'     => 'edd_earnings', // This is not a valid query arg, but is used for cache keying
+				'include_taxes'          => $include_taxes,
 			);
 
 			$args     = apply_filters( 'edd_stats_earnings_args', $args );
@@ -133,8 +135,16 @@ class EDD_Payment_Stats extends EDD_Stats {
 				$sales = get_posts( $args );
 				$earnings = 0;
 				if ( $sales ) {
-					$sales = implode( ',', $sales );
-					$earnings += $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN({$sales})" );
+					$sales = implode( ',', array_map('intval', $sales ) );
+
+					if ( $include_taxes ) {
+						$earnings += $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN ({$sales})" );
+					} else {
+						$earnings_with_tax = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN ({$sales})" );
+						$total_tax         = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_tax' AND post_id IN ({$sales})" );
+
+						$earnings += ( $earnings_with_tax - $total_tax );
+					}
 				}
 				// Cache the results for one hour
 				set_transient( $key, $earnings, 60*60 );
@@ -155,6 +165,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 				'start_date'         => $this->start_date, // These dates are not valid query args, but they are used for cache keys
 				'end_date'           => $this->end_date,
 				'edd_transient_type' => 'edd_earnings', // This is not a valid query arg, but is used for cache keying
+				'include_taxes'      => $include_taxes,
 			);
 
 			$args     = apply_filters( 'edd_stats_earnings_args', $args );
@@ -167,8 +178,8 @@ class EDD_Payment_Stats extends EDD_Stats {
 				$earnings = 0;
 
 				if( $log_ids ) {
-					$log_ids     = implode( ',', $log_ids );
-					$payment_ids = $wpdb->get_col( "SELECT meta_value FROM $wpdb->postmeta WHERE meta_key='_edd_log_payment_id' AND post_id IN ($log_ids);" );
+					$log_ids     = implode( ',', array_map('intval', $log_ids ) );
+					$payment_ids = $wpdb->get_col( "SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_log_payment_id' AND post_id IN ($log_ids);" );
 
 					foreach( $payment_ids as $payment_id ) {
 						$items = edd_get_payment_meta_cart_details( $payment_id );
@@ -177,6 +188,10 @@ class EDD_Payment_Stats extends EDD_Stats {
 								continue;
 
 							$earnings += $item['price'];
+						}
+
+						if ( ! $include_taxes ) {
+							$earnings -= edd_get_payment_tax( $payment_id );
 						}
 					}
 				}

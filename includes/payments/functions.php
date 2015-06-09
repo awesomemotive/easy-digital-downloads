@@ -633,7 +633,7 @@ function edd_get_payment_status_keys() {
  * @param int $hour Hour
  * @return int $earnings Earnings
  */
-function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour = null ) {
+function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour = null, $include_taxes = true ) {
 
 	// This is getting deprecated soon. Use EDD_Payment_Stats with the get_earnings() method instead
 
@@ -646,7 +646,8 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 		'monthnum'       => $month_num,
 		'post_status'    => array( 'publish', 'revoked' ),
 		'fields'         => 'ids',
-		'update_post_term_cache' => false
+		'update_post_term_cache' => false,
+		'include_taxes'  => $include_taxes,
 	);
 	if ( ! empty( $day ) )
 		$args['day'] = $day;
@@ -663,7 +664,15 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 		$earnings = 0;
 		if ( $sales ) {
 			$sales = implode( ',', $sales );
-			$earnings += $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN({$sales})" );
+
+			if ( $include_taxes ) {
+				$earnings += $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN ({$sales})" );
+			} else {
+				$earnings_with_tax = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN ({$sales})" );
+				$total_tax         = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_tax' AND post_id IN ({$sales})" );
+
+				$earnings += ( $earnings_with_tax - $total_tax );
+			}
 
 		}
 		// Cache the results for one hour
