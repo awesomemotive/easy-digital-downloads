@@ -56,7 +56,7 @@ class EDD_Notices {
 
 			echo '<div class="error">';
 				echo '<p>' . sprintf( __( 'The download files in <strong>%s</strong> are not currently protected due to your site running on NGINX.', 'edd' ), edd_get_upload_dir() ) . '</p>';
-				echo '<p>' . __( 'To protect them, you must add a redirect rule as explained in <a href="http://docs.easydigitaldownloads.com/article/682-protected-download-files-on-nginx">this guide</a>.', 'edd' ) . '</p>';
+				echo '<p>' . __( 'To protect them, you must add a redirect rule as explained in <a href="https://docs.easydigitaldownloads.com/article/682-protected-download-files-on-nginx">this guide</a>.', 'edd' ) . '</p>';
 				echo '<p>' . __( 'If you have already added the redirect rule, you may safely dismiss this notice', 'edd' ) . '</p>';
 				echo '<p><a href="' . add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'nginx_redirect' ) ) . '">' . __( 'Dismiss Notice', 'edd' ) . '</a></p>';
 			echo '</div>';
@@ -75,6 +75,7 @@ class EDD_Notices {
 			echo '</div>';
 		}
 
+		/* Commented out per https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/3475
 		if( ! edd_test_ajax_works() && ! get_user_meta( get_current_user_id(), '_edd_admin_ajax_inaccessible_dismissed', true ) && current_user_can( 'manage_shop_settings' ) ) {
 			echo '<div class="error">';
 				echo '<p>' . __( 'Your site appears to be blocking the WordPress ajax interface. This may causes issues with your store.', 'edd' ) . '</p>';
@@ -82,6 +83,7 @@ class EDD_Notices {
 				echo '<p><a href="' . add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'admin_ajax_inaccessible' ) ) . '">' . __( 'Dismiss Notice', 'edd' ) . '</a></p>';
 			echo '</div>';
 		}
+		*/
 
 		if ( isset( $_GET['edd-message'] ) ) {
 			// Shop discounts errors
