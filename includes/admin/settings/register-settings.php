@@ -125,14 +125,14 @@ function edd_get_settings() {
 
 		// Update old settings with new single option
 
-		$general_settings = is_array( get_option( 'edd_settings_general' ) )    ? get_option( 'edd_settings_general' )    : array();
-		$gateway_settings = is_array( get_option( 'edd_settings_gateways' ) )   ? get_option( 'edd_settings_gateways' )   : array();
-		$email_settings   = is_array( get_option( 'edd_settings_emails' ) )     ? get_option( 'edd_settings_emails' )     : array();
-		$style_settings   = is_array( get_option( 'edd_settings_styles' ) )     ? get_option( 'edd_settings_styles' )     : array();
-		$tax_settings     = is_array( get_option( 'edd_settings_taxes' ) )      ? get_option( 'edd_settings_taxes' )      : array();
-		$ext_settings     = is_array( get_option( 'edd_settings_extensions' ) ) ? get_option( 'edd_settings_extensions' ) : array();
-		$license_settings = is_array( get_option( 'edd_settings_licenses' ) )   ? get_option( 'edd_settings_licenses' )   : array();
-		$misc_settings    = is_array( get_option( 'edd_settings_misc' ) )       ? get_option( 'edd_settings_misc' )       : array();
+		$general_settings = is_array( get_option( 'edd_settings_general' ) )    ? get_option( 'edd_settings_general' )  	: array();
+		$gateway_settings = is_array( get_option( 'edd_settings_gateways' ) )   ? get_option( 'edd_settings_gateways' ) 	: array();
+		$email_settings   = is_array( get_option( 'edd_settings_emails' ) )     ? get_option( 'edd_settings_emails' )   	: array();
+		$style_settings   = is_array( get_option( 'edd_settings_styles' ) )     ? get_option( 'edd_settings_styles' )   	: array();
+		$tax_settings     = is_array( get_option( 'edd_settings_taxes' ) )      ? get_option( 'edd_settings_taxes' )    	: array();
+		$ext_settings     = is_array( get_option( 'edd_settings_extensions' ) ) ? get_option( 'edd_settings_extensions' )	: array();
+		$license_settings = is_array( get_option( 'edd_settings_licenses' ) )   ? get_option( 'edd_settings_licenses' )		: array();
+		$misc_settings    = is_array( get_option( 'edd_settings_misc' ) )       ? get_option( 'edd_settings_misc' )			: array();
 
 		$settings = array_merge( $general_settings, $gateway_settings, $email_settings, $style_settings, $tax_settings, $ext_settings, $license_settings, $misc_settings );
 
@@ -191,12 +191,10 @@ function edd_register_settings() {
 						'std'         => isset( $option['std'] )         ? $option['std']     : '',
 						'min'         => isset( $option['min'] )         ? $option['min']     : null,
 						'max'         => isset( $option['max'] )         ? $option['max']     : null,
-            'step'        => isset( $option['step'] )        ? $option['step']    : null,
-            'chosen'      => isset( $option['chosen'] )      ? $option['chosen']  : null,
-            'placeholder' => isset( $option['placeholder'] ) ? $option['placeholder'] : null,
-            'allow_blank' => isset( $option['allow_blank'] ) ? $option['allow_blank'] : true,
-						'readonly'    => isset( $option['readonly'] )    ? $option['readonly']    : false,
-						'faux'        => isset( $option['faux'] )        ? $option['faux']        : false,
+	                    'step'        => isset( $option['step'] )        ? $option['step']    : null,
+	                    'chosen'      => isset( $option['chosen'] )      ? $option['chosen']  : null,
+	                    'placeholder' => isset( $option['placeholder'] ) ? $option['placeholder'] : null,
+	                    'allow_blank' => isset( $option['allow_blank'] ) ? $option['allow_blank'] : true
 					)
 				);
 			}
@@ -229,14 +227,20 @@ function edd_get_registered_settings() {
 		'general' => apply_filters( 'edd_settings_general',
 			array(
 				'main' => array(
+					'test_mode' => array(
+						'id' => 'test_mode',
+						'name' => __( 'Test Mode', 'edd' ),
+						'desc' => __( 'While in test mode no live transactions are processed. To fully use test mode, you must have a sandbox (test) account for the payment gateway you are testing.', 'edd' ),
+						'type' => 'checkbox'
+					),
 					'purchase_page' => array(
 						'id' => 'purchase_page',
 						'name' => __( 'Checkout Page', 'edd' ),
 						'desc' => __( 'This is the checkout page where buyers will complete their purchases. The [download_checkout] short code must be on this page.', 'edd' ),
 						'type' => 'select',
-						'options' => edd_get_pages(),
-						'chosen' => true,
-						'placeholder' => __( 'Select a page', 'edd' )
+	                    'options' => edd_get_pages(),
+	                    'chosen' => true,
+	                    'placeholder' => __( 'Select a page', 'edd' )
 					),
 					'success_page' => array(
 						'id' => 'success_page',
@@ -244,8 +248,8 @@ function edd_get_registered_settings() {
 						'desc' => __( 'This is the page buyers are sent to after completing their purchases. The [edd_receipt] short code should be on this page.', 'edd' ),
 						'type' => 'select',
 						'options' => edd_get_pages(),
-						'chosen' => true,
-						'placeholder' => __( 'Select a page', 'edd' )
+	                    'chosen' => true,
+	                    'placeholder' => __( 'Select a page', 'edd' )
 					),
 					'failure_page' => array(
 						'id' => 'failure_page',
@@ -253,8 +257,8 @@ function edd_get_registered_settings() {
 						'desc' => __( 'This is the page buyers are sent to if their transaction is cancelled or fails', 'edd' ),
 						'type' => 'select',
 						'options' => edd_get_pages(),
-						'chosen' => true,
-						'placeholder' => __( 'Select a page', 'edd' )
+	                    'chosen' => true,
+	                    'placeholder' => __( 'Select a page', 'edd' )
 					),
 					'purchase_history_page' => array(
 						'id' => 'purchase_history_page',
@@ -262,29 +266,29 @@ function edd_get_registered_settings() {
 						'desc' => __( 'This page shows a complete purchase history for the current user, including download links', 'edd' ),
 						'type' => 'select',
 						'options' => edd_get_pages(),
-						'chosen' => true,
-						'placeholder' => __( 'Select a page', 'edd' )
+	                    'chosen' => true,
+	                    'placeholder' => __( 'Select a page', 'edd' )
 					),
 					'base_country' => array(
 						'id' => 'base_country',
 						'name' => __( 'Base Country', 'edd' ),
 						'desc' => __( 'Where does your store operate from?', 'edd' ),
 						'type' => 'select',
-						'options' => edd_get_country_list(),
-						'chosen' => true,
-						'placeholder' => __( 'Select a country', 'edd' )
+	                    'options' => edd_get_country_list(),
+	                    'chosen' => true,
+	                    'placeholder' => __( 'Select a country', 'edd' )
 					),
 					'base_state' => array(
 						'id' => 'base_state',
 						'name' => __( 'Base State / Province', 'edd' ),
 						'desc' => __( 'What state / province does your store operate from?', 'edd' ),
 						'type' => 'shop_states',
-						'chosen' => true,
-						'placeholder' => __( 'Select a state', 'edd' )
+	                    'chosen' => true,
+	                    'placeholder' => __( 'Select a state', 'edd' )
 					),
 					'currency_settings' => array(
 						'id' => 'currency_settings',
-						'name' => '<strong>' . __( 'Currency Settings', 'edd' ) . '</strong>',
+						'name' => '<span class="field-section-title">' . __( 'Currency Settings', 'edd' ) . '</span>',
 						'desc' => __( 'Configure the currency options', 'edd' ),
 						'type' => 'header'
 					),
@@ -293,64 +297,61 @@ function edd_get_registered_settings() {
 						'name' => __( 'Currency', 'edd' ),
 						'desc' => __( 'Choose your currency. Note that some payment gateways have currency restrictions.', 'edd' ),
 						'type' => 'select',
-						'options' => edd_get_currencies(),
-						'chosen' => true
+	                    'options' => edd_get_currencies(),
+	                    'chosen' => true
 					),
 					'currency_position' => array(
-						'id'      => 'currency_position',
-						'name'    => __( 'Currency Position', 'edd' ),
-						'desc'    => __( 'Choose the location of the currency sign.', 'edd' ),
-						'type'    => 'select',
+						'id' => 'currency_position',
+						'name' => __( 'Currency Position', 'edd' ),
+						'desc' => __( 'Choose the location of the currency sign.', 'edd' ),
+						'type' => 'select',
 						'options' => array(
 							'before' => __( 'Before - $10', 'edd' ),
-							'after'  => __( 'After - 10$', 'edd' )
+							'after' => __( 'After - 10$', 'edd' )
 						)
 					),
 					'thousands_separator' => array(
-						'id'   => 'thousands_separator',
+						'id' => 'thousands_separator',
 						'name' => __( 'Thousands Separator', 'edd' ),
 						'desc' => __( 'The symbol (usually , or .) to separate thousands', 'edd' ),
 						'type' => 'text',
 						'size' => 'small',
-						'std'  => ','
+						'std' => ','
 					),
 					'decimal_separator' => array(
-						'id'   => 'decimal_separator',
+						'id' => 'decimal_separator',
 						'name' => __( 'Decimal Separator', 'edd' ),
 						'desc' => __( 'The symbol (usually , or .) to separate decimal points', 'edd' ),
 						'type' => 'text',
 						'size' => 'small',
-						'std'  => '.'
+						'std' => '.'
 					),
 					'api_settings' => array(
 						'id' => 'api_settings',
-						'name' => '<strong>' . __( 'API Settings', 'edd' ) . '</strong>',
+						'name' => '<span class="field-section-title">' . __( 'API Settings', 'edd' ) . '</span>',
 						'desc' => '',
 						'type' => 'header'
 					),
 					'api_allow_user_keys' => array(
-						'id'   => 'api_allow_user_keys',
+						'id' => 'api_allow_user_keys',
 						'name' => __( 'Allow User Keys', 'edd' ),
 						'desc' => __( 'Check this box to allow all users to generate API keys. Users with the \'manage_shop_settings\' capability are always allowed to generate keys.', 'edd' ),
 						'type' => 'checkbox'
 					),
 					'tracking_settings' => array(
 						'id' => 'tracking_settings',
-						'name' => '<strong>' . __( 'Tracking Settings', 'edd' ) . '</strong>',
+						'name' => '<span class="field-section-title">' . __( 'Tracking Settings', 'edd' ) . '</span>',
 						'desc' => '',
 						'type' => 'header'
 					),
 					'allow_tracking' => array(
-						'id'   => 'allow_tracking',
+						'id' => 'allow_tracking',
 						'name' => __( 'Allow Usage Tracking?', 'edd' ),
-						'desc' => sprintf(
-							__( 'Allow Easy Digital Downloads to anonymously track how this plugin is used and help us make the plugin better. Opt-in to tracking and our newsletter and immediately be emailed a 20%% discount to the EDD shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'edd' ),
-							'https://easydigitaldownloads.com/extensions?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking'
-						),
+						'desc' => __( 'Allow Easy Digital Downloads to anonymously track how this plugin is used and help us make the plugin better. Opt-in and receive a 20% discount code for any purchase from the <a href="https://easydigitaldownloads.com/extensions" target="_blank">Easy Digital Downloads store</a>. Your discount code will be emailed to you.', 'edd' ),
 						'type' => 'checkbox'
 					),
 					'uninstall_on_delete' => array(
-						'id'   => 'uninstall_on_delete',
+						'id' => 'uninstall_on_delete',
 						'name' => __( 'Remove Data on Uninstall?', 'edd' ),
 						'desc' => __( 'Check this box if you would like EDD to completely remove all of its data when the plugin is deleted.', 'edd' ),
 						'type' => 'checkbox'
@@ -362,39 +363,33 @@ function edd_get_registered_settings() {
 		'gateways' => apply_filters('edd_settings_gateways',
 			array(
 				'main' => array(
-					'test_mode' => array(
-						'id' => 'test_mode',
-						'name' => __( 'Test Mode', 'edd' ),
-						'desc' => __( 'While in test mode no live transactions are processed. To fully use test mode, you must have a sandbox (test) account for the payment gateway you are testing.', 'edd' ),
-						'type' => 'checkbox'
-					),
 					'gateways' => array(
-						'id'      => 'gateways',
-						'name'    => __( 'Payment Gateways', 'edd' ),
-						'desc'    => __( 'Choose the payment gateways you want to enable.', 'edd' ),
-						'type'    => 'gateways',
+						'id' => 'gateways',
+						'name' => __( 'Payment Gateways', 'edd' ),
+						'desc' => __( 'Choose the payment gateways you want to enable.', 'edd' ),
+						'type' => 'gateways',
 						'options' => edd_get_payment_gateways()
 					),
 					'default_gateway' => array(
-						'id'      => 'default_gateway',
-						'name'    => __( 'Default Gateway', 'edd' ),
-						'desc'    => __( 'This gateway will be loaded automatically with the checkout page.', 'edd' ),
-						'type'    => 'gateway_select',
+						'id' => 'default_gateway',
+						'name' => __( 'Default Gateway', 'edd' ),
+						'desc' => __( 'This gateway will be loaded automatically with the checkout page.', 'edd' ),
+						'type' => 'gateway_select',
 						'options' => edd_get_payment_gateways()
 					),
 					'accepted_cards' => array(
-						'id'      => 'accepted_cards',
-						'name'    => __( 'Accepted Payment Method Icons', 'edd' ),
-						'desc'    => __( 'Display icons for the selected payment methods', 'edd' ) . '<br/>' . __( 'You will also need to configure your gateway settings if you are accepting credit cards', 'edd' ),
-						'type'    => 'payment_icons',
+						'id' => 'accepted_cards',
+						'name' => __( 'Accepted Payment Method Icons', 'edd' ),
+						'desc' => __( 'Display icons for the selected payment methods', 'edd' ) . '<br/>' . __( 'You will also need to configure your gateway settings if you are accepting credit cards', 'edd' ),
+						'type' => 'payment_icons',
 						'options' => apply_filters('edd_accepted_payment_icons', array(
-								'mastercard'      => 'Mastercard',
-								'visa'            => 'Visa',
+								'mastercard' => 'Mastercard',
+								'visa' => 'Visa',
 								'americanexpress' => 'American Express',
-								'discover'        => 'Discover',
-								'paypal'          => 'PayPal',
-
-						))
+								'discover' => 'Discover',
+								'paypal' => 'PayPal'
+							)
+						)
 					),
 					'paypal' => array(
 						'id' => 'paypal',
@@ -430,54 +425,47 @@ function edd_get_registered_settings() {
 			array(
 				'main' => array(
 					'email_template' => array(
-						'id'      => 'email_template',
-						'name'    => __( 'Email Template', 'edd' ),
-						'desc'    => __( 'Choose a template. Click "Save Changes" then "Preview Purchase Receipt" to see the new template.', 'edd' ),
-						'type'    => 'select',
+						'id' => 'email_template',
+						'name' => __( 'Email Template', 'edd' ),
+						'desc' => __( 'Choose a template. Click "Save Changes" then "Preview Purchase Receipt" to see the new template.', 'edd' ),
+						'type' => 'select',
 						'options' => edd_get_email_templates()
 					),
 					'email_logo' => array(
-						'id'   => 'email_logo',
+						'id' => 'email_logo',
 						'name' => __( 'Logo', 'edd' ),
 						'desc' => __( 'Upload or choose a logo to be displayed at the top of the purchase receipt emails. Displayed on HTML emails only.', 'edd' ),
 						'type' => 'upload'
 					),
 					'email_settings' => array(
-						'id'   => 'email_settings',
+						'id' => 'email_settings',
 						'name' => '',
 						'desc' => '',
 						'type' => 'hook'
 					),
 					'from_name' => array(
-						'id'   => 'from_name',
+						'id' => 'from_name',
 						'name' => __( 'From Name', 'edd' ),
 						'desc' => __( 'The name purchase receipts are said to come from. This should probably be your site or shop name.', 'edd' ),
 						'type' => 'text',
 						'std'  => get_bloginfo( 'name' )
 					),
 					'from_email' => array(
-						'id'   => 'from_email',
+						'id' => 'from_email',
 						'name' => __( 'From Email', 'edd' ),
 						'desc' => __( 'Email to send purchase receipts from. This will act as the "from" and "reply-to" address.', 'edd' ),
 						'type' => 'text',
 						'std'  => get_bloginfo( 'admin_email' )
 					),
 					'purchase_subject' => array(
-						'id'   => 'purchase_subject',
+						'id' => 'purchase_subject',
 						'name' => __( 'Purchase Email Subject', 'edd' ),
 						'desc' => __( 'Enter the subject line for the purchase receipt email', 'edd' ),
 						'type' => 'text',
 						'std'  => __( 'Purchase Receipt', 'edd' )
 					),
-					'purchase_heading' => array(
-						'id'   => 'purchase_heading',
-						'name' => __( 'Purchase Email Heading', 'edd' ),
-						'desc' => __( 'Enter the heading for the purchase receipt email', 'edd' ),
-						'type' => 'text',
-						'std'  => __( 'Purchase Receipt', 'edd' )
-					),
 					'purchase_receipt' => array(
-						'id'   => 'purchase_receipt',
+						'id' => 'purchase_receipt',
 						'name' => __( 'Purchase Receipt', 'edd' ),
 						'desc' => __('Enter the email that is sent to users after completing a successful purchase. HTML is accepted. Available template tags:', 'edd') . '<br/>' . edd_get_emails_tags_list(),
 						'type' => 'rich_editor',
@@ -485,35 +473,35 @@ function edd_get_registered_settings() {
 					),
 					'sale_notification_header' => array(
 						'id' => 'sale_notification_header',
-						'name' => '<strong>' . __('New Sale Notifications', 'edd') . '</strong>',
+						'name' => '<span class="field-section-title">' . __('New Sale Notifications', 'edd') . '</span>',
 						'desc' => __('Configure new sale notification emails', 'edd'),
 						'type' => 'header'
 					),
 					'sale_notification_subject' => array(
-						'id'   => 'sale_notification_subject',
+						'id' => 'sale_notification_subject',
 						'name' => __( 'Sale Notification Subject', 'edd' ),
 						'desc' => __( 'Enter the subject line for the sale notification email', 'edd' ),
 						'type' => 'text',
-						'std'  => 'New download purchase - Order #{payment_id}'
+						'std' => 'New download purchase - Order #{payment_id}'
 					),
 					'sale_notification' => array(
-						'id'   => 'sale_notification',
+						'id' => 'sale_notification',
 						'name' => __( 'Sale Notification', 'edd' ),
 						'desc' => __( 'Enter the email that is sent to sale notification emails after completion of a purchase. HTML is accepted. Available template tags:', 'edd' ) . '<br/>' . edd_get_emails_tags_list(),
 						'type' => 'rich_editor',
-						'std'  => edd_get_default_sale_notification_email()
+						'std' => edd_get_default_sale_notification_email()
 					),
 					'admin_notice_emails' => array(
-						'id'   => 'admin_notice_emails',
+						'id' => 'admin_notice_emails',
 						'name' => __( 'Sale Notification Emails', 'edd' ),
 						'desc' => __( 'Enter the email address(es) that should receive a notification anytime a sale is made, one per line', 'edd' ),
 						'type' => 'textarea',
 						'std'  => get_bloginfo( 'admin_email' )
 					),
 					'disable_admin_notices' => array(
-						'id'   => 'disable_admin_notices',
+						'id' => 'disable_admin_notices',
 						'name' => __( 'Disable Admin Notifications', 'edd' ),
-						'desc' => __( 'Check this box if you do not want to receive sales notification emails.', 'edd' ),
+						'desc' => __( 'Check this box if you do not want to receive emails when new sales are made.', 'edd' ),
 						'type' => 'checkbox'
 					)
 				)
@@ -524,29 +512,29 @@ function edd_get_registered_settings() {
 			array(
 				'main' => array(
 					'disable_styles' => array(
-						'id'   => 'disable_styles',
+						'id' => 'disable_styles',
 						'name' => __( 'Disable Styles', 'edd' ),
 						'desc' => __( 'Check this to disable all included styling of buttons, checkout fields, and all other elements.', 'edd' ),
 						'type' => 'checkbox'
 					),
 					'button_header' => array(
 						'id' => 'button_header',
-						'name' => '<strong>' . __( 'Buttons', 'edd' ) . '</strong>',
+						'name' => '<span class="field-section-title">' . __( 'Buttons', 'edd' ) . '</span>',
 						'desc' => __( 'Options for add to cart and purchase buttons', 'edd' ),
 						'type' => 'header'
 					),
 					'button_style' => array(
-						'id'      => 'button_style',
-						'name'    => __( 'Default Button Style', 'edd' ),
-						'desc'    => __( 'Choose the style you want to use for the buttons.', 'edd' ),
-						'type'    => 'select',
+						'id' => 'button_style',
+						'name' => __( 'Default Button Style', 'edd' ),
+						'desc' => __( 'Choose the style you want to use for the buttons.', 'edd' ),
+						'type' => 'select',
 						'options' => edd_get_button_styles()
 					),
 					'checkout_color' => array(
-						'id'      => 'checkout_color',
-						'name'    => __( 'Default Button Color', 'edd' ),
-						'desc'    => __( 'Choose the color you want to use for the buttons.', 'edd' ),
-						'type'    => 'color_select',
+						'id' => 'checkout_color',
+						'name' => __( 'Default Button Color', 'edd' ),
+						'desc' => __( 'Choose the color you want to use for the buttons.', 'edd' ),
+						'type' => 'color_select',
 						'options' => edd_get_button_colors()
 					)
 				)
@@ -557,47 +545,47 @@ function edd_get_registered_settings() {
 			array(
 				'main' => array(
 					'enable_taxes' => array(
-						'id'   => 'enable_taxes',
+						'id' => 'enable_taxes',
 						'name' => __( 'Enable Taxes', 'edd' ),
 						'desc' => __( 'Check this to enable taxes on purchases.', 'edd' ),
 						'type' => 'checkbox',
 					),
 					'tax_rates' => array(
 						'id' => 'tax_rates',
-						'name' => '<strong>' . __( 'Tax Rates', 'edd' ) . '</strong>',
+						'name' => '<span class="field-section-title">' . __( 'Tax Rates', 'edd' ) . '</span>',
 						'desc' => __( 'Enter tax rates for specific regions.', 'edd' ),
 						'type' => 'tax_rates'
 					),
 					'tax_rate' => array(
-						'id'   => 'tax_rate',
+						'id' => 'tax_rate',
 						'name' => __( 'Fallback Tax Rate', 'edd' ),
 						'desc' => __( 'Enter a percentage, such as 6.5. Customers not in a specific rate will be charged this rate.', 'edd' ),
 						'type' => 'text',
 						'size' => 'small'
 					),
 					'prices_include_tax' => array(
-						'id'   => 'prices_include_tax',
+						'id' => 'prices_include_tax',
 						'name' => __( 'Prices entered with tax', 'edd' ),
 						'desc' => __( 'This option affects how you enter prices.', 'edd' ),
 						'type' => 'radio',
-						'std'  => 'no',
+						'std' => 'no',
 						'options' => array(
 							'yes' => __( 'Yes, I will enter prices inclusive of tax', 'edd' ),
 							'no'  => __( 'No, I will enter prices exclusive of tax', 'edd' )
 						)
 					),
 					'display_tax_rate' => array(
-						'id'   => 'display_tax_rate',
+						'id' => 'display_tax_rate',
 						'name' => __( 'Display Tax Rate on Prices', 'edd' ),
 						'desc' => __( 'Some countries require a notice when product prices include tax.', 'edd' ),
 						'type' => 'checkbox',
 					),
 					'checkout_include_tax' => array(
-						'id'   => 'checkout_include_tax',
+						'id' => 'checkout_include_tax',
 						'name' => __( 'Display during checkout', 'edd' ),
 						'desc' => __( 'Should prices on the checkout page be shown with or without tax?', 'edd' ),
 						'type' => 'select',
-						'std'  => 'no',
+						'std' => 'no',
 						'options' => array(
 							'yes' => __( 'Including tax', 'edd' ),
 							'no'  => __( 'Excluding tax', 'edd' )
@@ -618,92 +606,92 @@ function edd_get_registered_settings() {
 			array(
 				'main' => array(
 					'enable_ajax_cart' => array(
-						'id'   => 'enable_ajax_cart',
+						'id' => 'enable_ajax_cart',
 						'name' => __( 'Enable Ajax', 'edd' ),
 						'desc' => __( 'Check this to enable AJAX for the shopping cart.', 'edd' ),
 						'type' => 'checkbox',
 						'std'  => '1'
 					),
 					'redirect_on_add' => array(
-						'id'   => 'redirect_on_add',
+						'id' => 'redirect_on_add',
 						'name' => __( 'Redirect to Checkout', 'edd' ),
 						'desc' => __( 'Immediately redirect to checkout after adding an item to the cart?', 'edd' ),
 						'type' => 'checkbox'
 					),
 					'enforce_ssl' => array(
-						'id'   => 'enforce_ssl',
+						'id' => 'enforce_ssl',
 						'name' => __( 'Enforce SSL on Checkout', 'edd' ),
 						'desc' => __( 'Check this to force users to be redirected to the secure checkout page. You must have an SSL certificate installed to use this option.', 'edd' ),
 						'type' => 'checkbox'
 					),
 					'logged_in_only' => array(
-						'id'   => 'logged_in_only',
+						'id' => 'logged_in_only',
 						'name' => __( 'Disable Guest Checkout', 'edd' ),
 						'desc' => __( 'Require that users be logged-in to purchase files.', 'edd' ),
 						'type' => 'checkbox'
 					),
 					'show_register_form' => array(
-						'id'      => 'show_register_form',
-						'name'    => __( 'Show Register / Login Form?', 'edd' ),
-						'desc'    => __( 'Display the registration and login forms on the checkout page for non-logged-in users.', 'edd' ),
-						'type'    => 'select',
-						'std'     => 'none',
+						'id' => 'show_register_form',
+						'name' => __( 'Show Register / Login Form?', 'edd' ),
+						'desc' => __( 'Display the registration and login forms on the checkout page for non-logged-in users.', 'edd' ),
+						'type' => 'select',
 						'options' => array(
-							'both'         => __( 'Registration and Login Forms', 'edd' ),
+							'both' => __( 'Registration and Login Forms', 'edd' ),
 							'registration' => __( 'Registration Form Only', 'edd' ),
-							'login'        => __( 'Login Form Only', 'edd' ),
-							'none'         => __( 'None', 'edd' )
+							'login' => __( 'Login Form Only', 'edd' ),
+							'none' => __( 'None', 'edd' )
 						),
+						'std' => 'none'
 					),
 					'item_quantities' => array(
-						'id'   => 'item_quantities',
+						'id' => 'item_quantities',
 						'name' => __('Item Quantities', 'edd'),
 						'desc' => __('Allow item quantities to be changed.', 'edd'),
 						'type' => 'checkbox'
 					),
 					'allow_multiple_discounts' => array(
-						'id'   => 'allow_multiple_discounts',
+						'id' => 'allow_multiple_discounts',
 						'name' => __('Multiple Discounts', 'edd'),
 						'desc' => __('Allow customers to use multiple discounts on the same purchase?', 'edd'),
 						'type' => 'checkbox'
 					),
 					'enable_cart_saving' => array(
-						'id'   => 'enable_cart_saving',
+						'id' => 'enable_cart_saving',
 						'name' => __( 'Enable Cart Saving', 'edd' ),
 						'desc' => __( 'Check this to enable cart saving on the checkout.', 'edd' ),
 						'type' => 'checkbox'
 					),
 					'field_downloads' => array(
 						'id' => 'field_downloads',
-						'name' => '<strong>' . __( 'File Downloads', 'edd' ) . '</strong>',
+						'name' => '<span class="field-section-title">' . __( 'File Downloads', 'edd' ) . '</span>',
 						'desc' => '',
 						'type' => 'header'
 					),
 					'download_method' => array(
-						'id'      => 'download_method',
-						'name'    => __( 'Download Method', 'edd' ),
-						'desc'    => sprintf( __( 'Select the file download method. Note, not all methods work on all servers.', 'edd' ), edd_get_label_singular() ),
-						'type'    => 'select',
+						'id' => 'download_method',
+						'name' => __( 'Download Method', 'edd' ),
+						'desc' => sprintf( __( 'Select the file download method. Note, not all methods work on all servers.', 'edd' ), edd_get_label_singular() ),
+						'type' => 'select',
 						'options' => array(
-							'direct'   => __( 'Forced', 'edd' ),
+							'direct' => __( 'Forced', 'edd' ),
 							'redirect' => __( 'Redirect', 'edd' )
 						)
 					),
 					'symlink_file_downloads' => array(
-						'id'   => 'symlink_file_downloads',
+						'id' => 'symlink_file_downloads',
 						'name' => __( 'Symlink File Downloads?', 'edd' ),
 						'desc' => __( 'Check this if you are delivering really large files or having problems with file downloads completing.', 'edd' ),
 						'type' => 'checkbox'
 					),
 					'file_download_limit' => array(
-						'id'   => 'file_download_limit',
+						'id' => 'file_download_limit',
 						'name' => __( 'File Download Limit', 'edd' ),
 						'desc' => sprintf( __( 'The maximum number of times files can be downloaded for purchases. Can be overwritten for each %s.', 'edd' ), edd_get_label_singular() ),
 						'type' => 'number',
 						'size' => 'small'
 					),
 					'download_link_expiration' => array(
-						'id'   => 'download_link_expiration',
+						'id' => 'download_link_expiration',
 						'name' => __( 'Download Link Expiration', 'edd' ),
 						'desc' => __( 'How long should download links be valid for? Default is 24 hours from the time they are generated. Enter a time in hours.', 'edd' ),
 						'type' => 'number',
@@ -712,94 +700,87 @@ function edd_get_registered_settings() {
 						'min'  => '0'
 					),
 					'disable_redownload' => array(
-						'id'   => 'disable_redownload',
+						'id' => 'disable_redownload',
 						'name' => __( 'Disable Redownload?', 'edd' ),
 						'desc' => __( 'Check this if you do not want to allow users to redownload items from their purchase history.', 'edd' ),
 						'type' => 'checkbox'
 					),
 					'accounting_settings' => array(
 						'id' => 'accounting_settings',
-						'name' => '<strong>' . __( 'Accounting Settings', 'edd' ) . '</strong>',
+						'name' => '<span class="field-section-title">' . __( 'Accounting Settings', 'edd' ) . '</span>',
 						'desc' => '',
 						'type' => 'header'
 					),
 					'enable_skus' => array(
-						'id'   => 'enable_skus',
+						'id' => 'enable_skus',
 						'name' => __( 'Enable SKU Entry', 'edd' ),
 						'desc' => __( 'Check this box to allow entry of product SKUs. SKUs will be shown on purchase receipt and exported purchase histories.', 'edd' ),
 						'type' => 'checkbox'
 					),
 					'enable_sequential' => array(
-						'id'   => 'enable_sequential',
+						'id' => 'enable_sequential',
 						'name' => __( 'Sequential Order Numbers', 'edd' ),
-						'desc' => __( 'Check this box to enable sequential order numbers.', 'edd' ),
+						'desc' => __( 'Check this box to sequential order numbers.', 'edd' ),
 						'type' => 'checkbox'
 					),
 					'sequential_start' => array(
-						'id'   => 'sequential_start',
+						'id' => 'sequential_start',
 						'name' => __( 'Sequential Starting Number', 'edd' ),
-						'desc' => __( 'The number at which the sequence should begin.', 'edd' ),
+						'desc' => __( 'The number that sequential order numbers should start at.', 'edd' ),
 						'type' => 'number',
 						'size' => 'small',
 						'std'  => '1'
 					),
 					'sequential_prefix' => array(
-						'id'   => 'sequential_prefix',
+						'id' => 'sequential_prefix',
 						'name' => __( 'Sequential Number Prefix', 'edd' ),
 						'desc' => __( 'A prefix to prepend to all sequential order numbers.', 'edd' ),
 						'type' => 'text'
 					),
 					'sequential_postfix' => array(
-						'id'   => 'sequential_postfix',
+						'id' => 'sequential_postfix',
 						'name' => __( 'Sequential Number Postfix', 'edd' ),
 						'desc' => __( 'A postfix to append to all sequential order numbers.', 'edd' ),
 						'type' => 'text',
 					),
 					'terms' => array(
 						'id' => 'terms',
-						'name' => '<strong>' . __( 'Terms of Agreement', 'edd' ) . '</strong>',
+						'name' => '<span class="field-section-title">' . __( 'Terms of Agreement', 'edd' ) . '</span>',
 						'desc' => '',
 						'type' => 'header'
 					),
 					'show_agree_to_terms' => array(
-						'id'   => 'show_agree_to_terms',
+						'id' => 'show_agree_to_terms',
 						'name' => __( 'Agree to Terms', 'edd' ),
 						'desc' => __( 'Check this to show an agree to terms on the checkout that users must agree to before purchasing.', 'edd' ),
 						'type' => 'checkbox'
 					),
 					'agree_label' => array(
-						'id'   => 'agree_label',
+						'id' => 'agree_label',
 						'name' => __( 'Agree to Terms Label', 'edd' ),
 						'desc' => __( 'Label shown next to the agree to terms check box.', 'edd' ),
 						'type' => 'text',
 						'size' => 'regular'
 					),
 					'agree_text' => array(
-						'id'   => 'agree_text',
+						'id' => 'agree_text',
 						'name' => __( 'Agreement Text', 'edd' ),
 						'desc' => __( 'If Agree to Terms is checked, enter the agreement terms here.', 'edd' ),
 						'type' => 'rich_editor'
 					),
 					'checkout_label' => array(
-						'id'   => 'checkout_label',
+						'id' => 'checkout_label',
 						'name' => __( 'Complete Purchase Text', 'edd' ),
 						'desc' => __( 'The button label for completing a purchase.', 'edd' ),
 						'type' => 'text',
-						'std'  => __( 'Purchase', 'edd' )
+						'std' => __( 'Purchase', 'edd' )
 					),
 					'add_to_cart_text' => array(
-						'id'   => 'add_to_cart_text',
+						'id' => 'add_to_cart_text',
 						'name' => __( 'Add to Cart Text', 'edd' ),
 						'desc' => __( 'Text shown on the Add to Cart Buttons.', 'edd' ),
 						'type' => 'text',
 						'std'  => __( 'Add to Cart', 'edd' )
-					),
-					'buy_now_text' => array(
-						'id' => 'buy_now_text',
-						'name' => __( 'Buy Now Text', 'edd' ),
-						'desc' => __( 'Text shown on the Buy Now Buttons.', 'edd' ),
-						'type' => 'text',
-						'std' => __( 'Buy Now', 'edd' )
 					)
 				)
 			)
@@ -1063,14 +1044,8 @@ function edd_header_callback( $args ) {
 function edd_checkbox_callback( $args ) {
 	global $edd_options;
 
-	if ( isset( $args['faux'] ) && true === $args['faux'] ) {
-		$name = '';
-	} else {
-		$name = 'name="edd_settings[' . $args['id'] . ']"';
-	}
-
 	$checked = isset( $edd_options[ $args['id'] ] ) ? checked( 1, $edd_options[ $args['id'] ], false ) : '';
-	$html = '<input type="checkbox" id="edd_settings[' . $args['id'] . ']"' . $name . ' value="1" ' . $checked . '/>';
+	$html = '<input type="checkbox" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']" value="1" ' . $checked . '/>';
 	$html .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
 
 	echo $html;
@@ -1252,24 +1227,14 @@ function edd_gateway_select_callback($args) {
 function edd_text_callback( $args ) {
 	global $edd_options;
 
-	if ( isset( $edd_options[ $args['id'] ] ) ) {
+	if ( isset( $edd_options[ $args['id'] ] ) )
 		$value = $edd_options[ $args['id'] ];
-	} else {
+	else
 		$value = isset( $args['std'] ) ? $args['std'] : '';
-	}
 
-	if ( isset( $args['faux'] ) && true === $args['faux'] ) {
-		$args['readonly'] = true;
-		$value = isset( $args['std'] ) ? $args['std'] : '';
-		$name  = '';
-	} else {
-		$name = 'name="edd_settings[' . $args['id'] . ']"';
-	}
-
-	$readonly = $args['readonly'] === true ? ' readonly="readonly"' : '';
-	$size     = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$html     = '<input type="text" class="' . $size . '-text" id="edd_settings[' . $args['id'] . ']"' . $name . ' value="' . esc_attr( stripslashes( $value ) ) . '"' . $readonly . '/>';
-	$html    .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
+	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
+	$html = '<input type="text" class="' . $size . '-text" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
+	$html .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
 
 	echo $html;
 }
@@ -1287,26 +1252,17 @@ function edd_text_callback( $args ) {
 function edd_number_callback( $args ) {
 	global $edd_options;
 
-	if ( isset( $edd_options[ $args['id'] ] ) ) {
+    if ( isset( $edd_options[ $args['id'] ] ) )
 		$value = $edd_options[ $args['id'] ];
-	} else {
+	else
 		$value = isset( $args['std'] ) ? $args['std'] : '';
-	}
-
-	if ( isset( $args['faux'] ) && true === $args['faux'] ) {
-		$args['readonly'] = true;
-		$value = isset( $args['std'] ) ? $args['std'] : '';
-		$name  = '';
-	} else {
-		$name = 'name="edd_settings[' . $args['id'] . ']"';
-	}
 
 	$max  = isset( $args['max'] ) ? $args['max'] : 999999;
 	$min  = isset( $args['min'] ) ? $args['min'] : 0;
 	$step = isset( $args['step'] ) ? $args['step'] : 1;
 
 	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$html = '<input type="number" step="' . esc_attr( $step ) . '" max="' . esc_attr( $max ) . '" min="' . esc_attr( $min ) . '" class="' . $size . '-text" id="edd_settings[' . $args['id'] . ']" ' . $name . ' value="' . esc_attr( stripslashes( $value ) ) . '"/>';
+	$html = '<input type="number" step="' . esc_attr( $step ) . '" max="' . esc_attr( $max ) . '" min="' . esc_attr( $min ) . '" class="' . $size . '-text" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
 	$html .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
 
 	echo $html;
@@ -1325,11 +1281,10 @@ function edd_number_callback( $args ) {
 function edd_textarea_callback( $args ) {
 	global $edd_options;
 
-	if ( isset( $edd_options[ $args['id'] ] ) ) {
+	if ( isset( $edd_options[ $args['id'] ] ) )
 		$value = $edd_options[ $args['id'] ];
-	} else {
+	else
 		$value = isset( $args['std'] ) ? $args['std'] : '';
-	}
 
 	$html = '<textarea class="large-text" cols="50" rows="5" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
 	$html .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
@@ -1350,11 +1305,10 @@ function edd_textarea_callback( $args ) {
 function edd_password_callback( $args ) {
 	global $edd_options;
 
-	if ( isset( $edd_options[ $args['id'] ] ) ) {
+	if ( isset( $edd_options[ $args['id'] ] ) )
 		$value = $edd_options[ $args['id'] ];
-	} else {
+	else
 		$value = isset( $args['std'] ) ? $args['std'] : '';
-	}
 
 	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
 	$html = '<input type="password" class="' . $size . '-text" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']" value="' . esc_attr( $value ) . '"/>';
@@ -1389,30 +1343,27 @@ function edd_missing_callback($args) {
 function edd_select_callback($args) {
 	global $edd_options;
 
-	if ( isset( $edd_options[ $args['id'] ] ) ) {
+	if ( isset( $edd_options[ $args['id'] ] ) )
 		$value = $edd_options[ $args['id'] ];
-	} else {
+	else
 		$value = isset( $args['std'] ) ? $args['std'] : '';
-	}
 
-	if ( isset( $args['placeholder'] ) ) {
-		$placeholder = $args['placeholder'];
-	} else {
+    if ( isset( $args['placeholder'] ) )
+        $placeholder = $args['placeholder'];
+    else
 		$placeholder = '';
-	}
 
-	if ( isset( $args['chosen'] ) ) {
+	if ( isset( $args['chosen'] ) )
 		$chosen = 'class="edd-chosen"';
-	} else {
+	else
 		$chosen = '';
-	}
 
-	$html = '<select id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']" ' . $chosen . 'data-placeholder="' . $placeholder . '" />';
+    $html = '<select id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']" ' . $chosen . 'data-placeholder="' . $placeholder . '" />';
 
-	foreach ( $args['options'] as $option => $name ) {
+	foreach ( $args['options'] as $option => $name ) :
 		$selected = selected( $option, $value, false );
 		$html .= '<option value="' . $option . '" ' . $selected . '>' . $name . '</option>';
-	}
+	endforeach;
 
 	$html .= '</select>';
 	$html .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
@@ -1433,18 +1384,17 @@ function edd_select_callback($args) {
 function edd_color_select_callback( $args ) {
 	global $edd_options;
 
-	if ( isset( $edd_options[ $args['id'] ] ) ) {
+	if ( isset( $edd_options[ $args['id'] ] ) )
 		$value = $edd_options[ $args['id'] ];
-	} else {
+	else
 		$value = isset( $args['std'] ) ? $args['std'] : '';
-	}
 
 	$html = '<select id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']"/>';
 
-	foreach ( $args['options'] as $option => $color ) {
+	foreach ( $args['options'] as $option => $color ) :
 		$selected = selected( $option, $value, false );
 		$html .= '<option value="' . $option . '" ' . $selected . '>' . $color['label'] . '</option>';
-	}
+	endforeach;
 
 	$html .= '</select>';
 	$html .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
@@ -1503,11 +1453,10 @@ function edd_rich_editor_callback( $args ) {
 function edd_upload_callback( $args ) {
 	global $edd_options;
 
-	if ( isset( $edd_options[ $args['id'] ] ) ) {
+	if ( isset( $edd_options[ $args['id'] ] ) )
 		$value = $edd_options[$args['id']];
-	} else {
+	else
 		$value = isset($args['std']) ? $args['std'] : '';
-	}
 
 	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
 	$html = '<input type="text" class="' . $size . '-text" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
@@ -1531,11 +1480,10 @@ function edd_upload_callback( $args ) {
 function edd_color_callback( $args ) {
 	global $edd_options;
 
-	if ( isset( $edd_options[ $args['id'] ] ) ) {
+	if ( isset( $edd_options[ $args['id'] ] ) )
 		$value = $edd_options[ $args['id'] ];
-	} else {
+	else
 		$value = isset( $args['std'] ) ? $args['std'] : '';
-	}
 
 	$default = isset( $args['std'] ) ? $args['std'] : '';
 
@@ -1559,22 +1507,21 @@ function edd_color_callback( $args ) {
 function edd_shop_states_callback($args) {
 	global $edd_options;
 
-	if ( isset( $args['placeholder'] ) ) {
-		$placeholder = $args['placeholder'];
-	} else {
-		$placeholder = '';
-	}
+    if ( isset( $args['placeholder'] ) )
+        $placeholder = $args['placeholder'];
+    else
+        $placeholder = '';
 
 	$states = edd_get_shop_states();
 
-	$chosen = ( $args['chosen'] ? ' edd-chosen' : '' );
-	$class = empty( $states ) ? ' class="edd-no-states' . $chosen . '"' : 'class="' . $chosen . '"';
-	$html = '<select id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']"' . $class . 'data-placeholder="' . $placeholder . '"/>';
+    $chosen = ( $args['chosen'] ? ' edd-chosen' : '' );
+    $class = empty( $states ) ? ' class="edd-no-states' . $chosen . '"' : 'class="' . $chosen . '"';
+    $html = '<select id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']"' . $class . 'data-placeholder="' . $placeholder . '"/>';
 
-	foreach ( $states as $option => $name ) {
+	foreach ( $states as $option => $name ) :
 		$selected = isset( $edd_options[ $args['id'] ] ) ? selected( $option, $edd_options[$args['id']], false ) : '';
 		$html .= '<option value="' . $option . '" ' . $selected . '>' . $name . '</option>';
-	}
+	endforeach;
 
 	$html .= '</select>';
 	$html .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
@@ -1618,9 +1565,9 @@ function edd_tax_rates_callback($args) {
 						'selected'         => $rate['country'],
 						'show_option_all'  => false,
 						'show_option_none' => false,
-						'class'            => 'edd-select edd-tax-country',
-						'chosen'           => false,
-						'placeholder'      => __( 'Choose a country', 'edd' )
+                        'class'            => 'edd-select edd-tax-country',
+                        'chosen'           => false,
+                        'placeholder' => __( 'Choose a country', 'edd' )
 					) );
 					?>
 				</td>
@@ -1633,14 +1580,13 @@ function edd_tax_rates_callback($args) {
 							'name'             => 'tax_rates[' . $key . '][state]',
 							'selected'         => $rate['state'],
 							'show_option_all'  => false,
-							'show_option_none' => false,
-							'chosen'           => false,
-							'placeholder'      => __( 'Choose a state', 'edd' )
+                            'show_option_none' => false,
+                            'chosen'           => false,
+                            'placeholder' => __( 'Choose a state', 'edd' )
 						) );
 					} else {
 						echo EDD()->html->text( array(
-							'name'  => 'tax_rates[' . $key . '][state]', $rate['state'],
-							'value' => ! empty( $rate['state'] ) ? $rate['state'] : '',
+							'name'             => 'tax_rates[' . $key . '][state]', $rate['state']
 						) );
 					}
 					?>
@@ -1662,14 +1608,14 @@ function edd_tax_rates_callback($args) {
 						'name'             => 'tax_rates[0][country]',
 						'show_option_all'  => false,
 						'show_option_none' => false,
-						'class'            => 'edd-select edd-tax-country',
-						'chosen'           => false,
-						'placeholder'      => __( 'Choose a country', 'edd' )
+                        'class'            => 'edd-select edd-tax-country',
+                        'chosen'           => false,
+                        'placeholder' => __( 'Choose a country', 'edd' )
 					) ); ?>
 				</td>
 				<td class="edd_tax_state">
 					<?php echo EDD()->html->text( array(
-						'name' => 'tax_rates[0][state]'
+						'name'             => 'tax_rates[0][state]'
 					) ); ?>
 				</td>
 				<td class="edd_tax_global">
@@ -1698,7 +1644,7 @@ function edd_tax_rates_callback($args) {
  * @return void
  */
 function edd_descriptive_text_callback( $args ) {
-	echo wp_kses_post( $args['desc'] );
+	echo esc_html( $args['desc'] );
 }
 
 /**
@@ -1713,11 +1659,10 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 	function edd_license_key_callback( $args ) {
 		global $edd_options;
 
-		if ( isset( $edd_options[ $args['id'] ] ) ) {
+		if ( isset( $edd_options[ $args['id'] ] ) )
 			$value = $edd_options[ $args['id'] ];
-		} else {
+		else
 			$value = isset( $args['std'] ) ? $args['std'] : '';
-		}
 
 		$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
 		$html = '<input type="text" class="' . $size . '-text" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']" value="' . esc_attr( $value ) . '"/>';
