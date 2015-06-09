@@ -230,9 +230,20 @@ td.edd_order_price { text-align: right; }
 #edd-graphs-date-options,
 #edd-date-range-options { float: left; }
 #edd-date-range-options span { float: left; margin-right: 6px; height: 24px; line-height: 24px; }
+.edd-export-form { position: relative; }
+.edd-export-form .edd-progress {background: #ddd; position: absolute; bottom: -20px; height: 15px; width: 100%; }
+.edd-export-form .edd-progress div { height: 100%; background: #ccc; width: 0; }
+.admin-color-fresh .edd-export-form .edd-progress div { background: #0073aa; }
+.admin-color-light .edd-export-form .edd-progress div { background: #888; }
+.admin-color-blue .edd-export-form .edd-progress div { background: #096484; }
+.admin-color-coffee .edd-export-form .edd-progress div { background: #c7a589; }
+.admin-color-ectoplasm .edd-export-form .edd-progress div { background: #a3b745; }
+.admin-color-midnight .edd-export-form .edd-progress div { background: #e14d43; }
+.admin-color-sunrise .edd-export-form .edd-progress div { background: #dd823b; }
 #edd-graphs-filter label { vertical-align: inherit; }
 #edd-graphs-filter .graph-option-section { float: left; line-height: 2.5em; padding-right: 5px; }
 .edd_graph_notes { color: #9c9c9c; }
+
 
 /* Upgrades page styles
 -------------------------------------------------------------- */

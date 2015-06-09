@@ -1164,6 +1164,77 @@ jQuery(document).ready(function ($) {
 	EDD_Tools.init();
 
 	/**
+	 * Export screen JS
+	 */
+	var EDD_Export = {
+
+		init : function() {
+			this.submit();
+		},
+
+		submit : function() {
+
+			var self = this;
+
+			$('body').on( 'submit', '.edd-export-form', function(e) {
+				e.preventDefault();
+				
+				var data = $(this).serialize();
+
+				//$(this).find('.spinner').addClass( 'is-active' );
+				$(this).append( '<span class="spinner is-active"></span><div class="edd-progress"><div></div></div>' );
+
+				// start the process
+				self.process_step( 1, data, self );
+
+			});
+		},
+
+		process_step : function( step, data, self ) {
+			
+			$.ajax({
+				type: 'POST',
+				url: ajaxurl,
+				data: {
+					form: data,
+					action: 'edd_do_ajax_export',
+					step: step,
+				},
+				dataType: "json",
+				success: function( response ) {
+					console.log( response );
+					if( 'done' == response.step ) {
+
+						$('.edd-export-form').find('.spinner').remove();
+						$('.edd-export-form').find('.edd-progress').remove();
+						
+						window.location = response.url;
+
+					} else {
+
+						$('.edd-progress div').animate({
+							width: response.percentage + '%',
+						}, 50, function() {
+							// Animation complete.
+						});
+						self.process_step( parseInt( response.step ), data, self );
+					}
+
+				}
+			}).fail(function (response) {
+				if ( window.console && window.console.log ) {
+					console.log( response );
+				}
+			}).done(function (response) {
+
+			});
+
+		}
+
+	};
+	EDD_Export.init();
+
+	/**
 	 * Customer management screen JS
 	 */
 	var EDD_Customer = {
