@@ -222,4 +222,18 @@ abstract class EDD_DB {
 		return true;
 	}
 
+	/**
+	 * Check if the given table exists
+	 *
+	 * @since  2.4
+	 * @param  string $table The table name
+	 * @return bool          If the table name exists
+	 */
+	public function table_exists( $table ) {
+		global $wpdb;
+		$table = sanitize_text_field( $table );
+
+		return $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE '%s'", $table ) ) === $table;
+	}
+
 }
