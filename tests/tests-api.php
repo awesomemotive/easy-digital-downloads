@@ -192,6 +192,15 @@ class Tests_API extends WP_UnitTestCase {
 		$this->assertEquals( 'format', $out[11] );
 	}
 
+	public function test_get_default_version() {
+
+		$this->assertEquals( 'v1', EDD()->api->get_default_version() );
+
+		define( 'EDD_API_VERSION', 'v2' );
+		$this->assertEquals( 'v2', EDD()->api->get_default_version() );
+
+	}
+
 	public function test_get_products() {
 		$out = $this->_api_output;
 		$this->assertArrayHasKey( 'id', $out['products'][0]['info'] );
