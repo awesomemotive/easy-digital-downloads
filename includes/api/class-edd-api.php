@@ -1488,7 +1488,8 @@ class EDD_API {
 			'request_ip' => edd_get_ip(),
 			'user'       => $this->user_id,
 			'key'        => isset( $wp_query->query_vars['key'] ) ? $wp_query->query_vars['key'] : null,
-			'token'      => isset( $wp_query->query_vars['token'] ) ? $wp_query->query_vars['token'] : null
+			'token'      => isset( $wp_query->query_vars['token'] ) ? $wp_query->query_vars['token'] : null,
+			'version'    => $this->get_queried_version()
 		);
 
 		$edd_logs->insert_log( $log_data, $log_meta );
