@@ -230,6 +230,9 @@ td.edd_order_price { text-align: right; }
 #edd-graphs-date-options,
 #edd-date-range-options { float: left; }
 #edd-date-range-options span { float: left; margin-right: 6px; height: 24px; line-height: 24px; }
+#edd-graphs-filter label { vertical-align: inherit; }
+#edd-graphs-filter .graph-option-section { float: left; line-height: 2.5em; padding-right: 5px; }
+.edd_graph_notes { color: #9c9c9c; }
 
 /* Upgrades page styles
 -------------------------------------------------------------- */

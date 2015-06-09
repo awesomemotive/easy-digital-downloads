@@ -430,11 +430,13 @@ add_action( 'edd_reports_tab_logs', 'edd_reports_tab_logs' );
  * Retrieves estimated monthly earnings and sales
  *
  * @since 1.5
+ *
+ * @param bool  $include_taxes If the estimated earnings should include taxes
  * @return array
  */
-function edd_estimated_monthly_stats() {
+function edd_estimated_monthly_stats( $include_taxes = true ) {
 
-	$estimated = get_transient( 'edd_estimated_monthly_stats' );
+	$estimated = get_transient( 'edd_estimated_monthly_stats' . $include_taxes );
 
 	if ( false === $estimated ) {
 
@@ -445,7 +447,7 @@ function edd_estimated_monthly_stats() {
 
 		$stats = new EDD_Payment_Stats;
 
-		$to_date_earnings = $stats->get_earnings( 0, 'this_month' );
+		$to_date_earnings = $stats->get_earnings( 0, 'this_month', null, $include_taxes );
 		$to_date_sales    = $stats->get_sales( 0, 'this_month' );
 
 		$current_day      = date( 'd', current_time( 'timestamp' ) );
@@ -457,7 +459,7 @@ function edd_estimated_monthly_stats() {
 		$estimated['sales']    = ( $to_date_sales / $current_day ) * $days_in_month;
 
 		// Cache for one day
-		set_transient( 'edd_estimated_monthly_stats', $estimated, 86400 );
+		set_transient( 'edd_estimated_monthly_stats' . $include_taxes, $estimated, 86400 );
 	}
 
 	return maybe_unserialize( $estimated );
