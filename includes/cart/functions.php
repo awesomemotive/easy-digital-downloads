@@ -773,7 +773,7 @@ function edd_get_purchase_summary( $purchase_data, $email = true ) {
 
 	$summary = substr( $summary, 0, -2 );
 
-	return apply_filters( 'edd_get_purchase_summary', $summary, $purchase_data );
+	return apply_filters( 'edd_get_purchase_summary', $summary, $purchase_data, $email );
 }
 
 /**
