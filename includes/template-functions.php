@@ -58,7 +58,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 	$post_id = is_object( $post ) ? $post->ID : 0;
 	$button_behavior = edd_get_download_button_behavior( $post_id );
-	
+
 	$defaults = apply_filters( 'edd_purchase_link_defaults', array(
 		'download_id' => $post_id,
 		'price'       => (bool) true,
@@ -250,6 +250,11 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 	$schema = edd_add_schema_microdata() ? ' itemprop="offers" itemscope itemtype="http://schema.org/Offer"' : '';
 
 	if ( edd_item_in_cart( $download_id ) && ! edd_single_price_option_mode( $download_id ) ) {
+		?>
+		<div class="edd_prices_options item_in_cart">
+			<em><?php _e( 'Item in cart.', 'edd' ); ?></em>
+		</div>
+		<?php
 		return;
 	}
 

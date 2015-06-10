@@ -681,6 +681,9 @@ input.edd_submit_plain {
     padding: 0;
     margin: 0;
 }
+.edd_download_purchase_form .item_in_cart {
+    color: #9c9c9c;
+}
 .edd_download_purchase_form .edd_price_options .edd_download_quantity_wrapper {
     padding-left: 18px
 }
