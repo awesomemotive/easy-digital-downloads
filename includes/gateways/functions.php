@@ -187,9 +187,10 @@ function edd_shop_supports_buy_now() {
  *
  * @param int   $download_id
  * @param array $options
+ * @param int   $quantity
  * @return mixed|void
  */
-function edd_build_straight_to_gateway_data( $download_id = 0, $options = array() ) {
+function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(), $quantity = 1 ) {
 
 	$price_options = array();
 
@@ -239,7 +240,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 			'item_price'  => $price,
 			'subtotal'    => $price,
 			'price'       => $price,
-			'quantity'    => 1,
+			'quantity'    => $quantity,
 		)
 	);
 
