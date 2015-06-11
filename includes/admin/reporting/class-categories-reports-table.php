@@ -181,7 +181,7 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 				'label'              => $category->name,
 				'total_sales'        => edd_format_amount( $sales, false ),
 				'total_sales_raw'    => $sales,
-				'total_earnings'     => edd_currency_filter( edd_format_amount( $earnings, false ) ),
+				'total_earnings'     => edd_currency_filter( edd_format_amount( $earnings ) ),
 				'total_earnings_raw' => $earnings,
 				'avg_sales'          => edd_format_amount( $avg_sales, false ),
 				'avg_earnings'       => edd_currency_filter( edd_format_amount( $avg_earnings ) ),
@@ -226,7 +226,7 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 						'label'              => '&#8212; ' . $child_term->name,
 						'total_sales'        => edd_format_amount( $child_sales, false ),
 						'total_sales_raw'    => $child_sales,
-						'total_earnings'     => edd_currency_filter( edd_format_amount( $child_earnings, false ) ),
+						'total_earnings'     => edd_currency_filter( edd_format_amount( $child_earnings ) ),
 						'total_earnings_raw' => $child_earnings,
 						'avg_sales'          => edd_format_amount( $child_avg_sales, false ),
 						'avg_earnings'       => edd_currency_filter( edd_format_amount( $child_avg_earnings ) ),
@@ -241,110 +241,74 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 		return $reports_data;
 	}
 
+	/**
+	 * Load the Necessary scripts for this graph page
+	 *
+	 * @since  2.4
+	 */
 	public function load_scripts() {
-		// Use minified libraries if SCRIPT_DEBUG is turned off
-		$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-		wp_enqueue_script( 'jquery-flot', EDD_PLUGIN_URL . 'assets/js/jquery.flot' . $suffix . '.js' );
-		wp_enqueue_script( 'jquery-flot-pie', EDD_PLUGIN_URL . 'assets/js/jquery.flot.pie' . $suffix . '.js' );
-		?>
-		<script>
-		function labelFormatter (label, series) {
-			return "<div style='font-size:8pt; text-align:center; padding:2px; color:white; padding: 0 5px'>" + label + ': ' + Math.round(series.percent) + "%</div>";
-		}
-		</script>
-		<?php
+		$required_graphing_libraries = array(
+			'jquery.flot.pie',
+		);
+		edd_load_graph_scripts( $required_graphing_libraries );
 	}
 
+	/**
+	 * Output the Category Sales Mix Pie Chart
+	 *
+	 * @since  2.4
+	 * @return string The HTML for the outputted graph
+	 */
 	public function output_sales_graph() {
 		if ( empty( $this->items ) ) {
 			return;
 		}
 
-		ob_start();
-		?>
-		<script type="text/javascript">
-			var sales_data = [
-			<?php foreach ( $this->items as $item ) : ?>
-				<?php if ( false === $item['is_child'] ) : ?>
-					<?php echo '{ label: "' . esc_attr( $item['label'] ) . '", data: "' . $item['total_sales_raw'] . '" },' . "\n"; ?>
-				<?php endif; ?>
-			<?php endforeach; ?>
-			];
+		$data = array();
+		foreach ( $this->items as $item ) {
+			if ( ! empty( $item['is_child'] ) || empty( $item['total_sales_raw'] ) ) {
+				continue;
+			}
 
-			var sales_options = {
-				series: {
-					pie: {
-						show: true,
-						radius: 1,
-						label: {
-							threshold: 0.01,
-							show: true,
-							radius: 3/4,
-							formatter: labelFormatter,
-							background: {
-								opacity: 0.75,
-								color: '#000',
-							}
-						}
-					}
-				},
-				legend: { show: false },
-			};
+			$data[ $item['label'] ] = $item['total_sales_raw'];
+		}
 
-			jQuery( document ).ready( function($) {
-				$.plot( $("#edd-pie-graph-sales"), sales_data, sales_options );
-			});
+		$data = apply_filters( 'edd_category_sales_graph_data', $data );
 
-		</script>
-		<div id="edd-pie-graph-sales" class="edd-pie-graph" style="height: 300px;"></div>
-		<?php
-		return ob_get_clean();
+		$options = apply_filters( 'edd_category_sales_graph_options', array(
+			'legend_formatter' => 'legendFormatterSales',
+		), $data );
+
+		return edd_output_pie_graph( 'category_sales', $data, $options );
 	}
 
+	/**
+	 * Output the Category Earnings Mix Pie Chart
+	 *
+	 * @since  2.4
+	 * @return string The HTML for the outputted graph
+	 */
 	public function output_earnings_graph() {
 		if ( empty( $this->items ) ) {
 			return;
 		}
 
-		ob_start();
-		?>
-		<script type="text/javascript">
-			var earnings_data = [
-			<?php foreach ( $this->items as $item ) :  ?>
-				<?php if ( false === $item['is_child'] ) : ?>
-					<?php echo '{ label: "' . esc_attr( $item['label'] ) . '", data: "' . $item['total_earnings_raw'] . '" },' . "\n"; ?>
-				<?php endif; ?>
-			<?php endforeach; ?>
-			];
+		$data = array();
+		foreach ( $this->items as $item ) {
+			if ( ! empty( $item['is_child'] ) || empty( $item['total_earnings_raw'] ) ) {
+				continue;
+			}
 
-			var earnings_options = {
-				series: {
-					pie: {
-						show: true,
-						radius: 1,
-						label: {
-							threshold: 0.01,
-							show: true,
-							radius: 3/4,
-							formatter: labelFormatter,
-							background: {
-								opacity: 0.75,
-								color: '#000',
-							}
-						}
-					}
-				},
-				legend: { show: false },
-			};
+			$data[ $item['label'] ] = $item['total_earnings_raw'];
+		}
 
-			jQuery( document ).ready( function($) {
-				$.plot( $("#edd-pie-graph-earnings"), earnings_data, earnings_options );
-			});
+		$data = apply_filters( 'edd_category_earnings_graph_data', $data );
 
-		</script>
-		<div id="edd-pie-graph-earnings" class="edd-pie-graph" style="height: 300px;"></div>
-		<?php
-		return ob_get_clean();
+		$options = apply_filters( 'edd_category_earnings_graph_options', array(
+			'legend_formatter' => 'legendFormatterEarnings',
+		), $data );
+
+		return edd_output_pie_graph( 'category_earnings', $data, $options );
 	}
 
 	/**
