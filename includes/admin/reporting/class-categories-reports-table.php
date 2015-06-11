@@ -224,7 +224,7 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 					$reports_data[] = array(
 						'ID'                 => $child_term->term_id,
 						'label'              => '&#8212; ' . $child_term->name,
-						'total_sales'        => edd_format_amount( $child_sales, true ),
+						'total_sales'        => edd_format_amount( $child_sales, false ),
 						'total_sales_raw'    => $child_sales,
 						'total_earnings'     => edd_currency_filter( edd_format_amount( $child_earnings, false ) ),
 						'total_earnings_raw' => $child_earnings,
