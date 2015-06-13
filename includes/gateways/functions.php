@@ -239,7 +239,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 			'discount'    => 0,
 			'item_price'  => $price,
 			'subtotal'    => ( $price * $quantity ),
-			'price'       => $price,
+			'price'       => ( $price * $quantity ),
 			'quantity'    => $quantity,
 		)
 	);
