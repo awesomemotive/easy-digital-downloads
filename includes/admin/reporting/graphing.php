@@ -770,7 +770,7 @@ add_action( 'edd_filter_reports', 'edd_parse_report_dates' );
  * @param  array  $args List of options for the pie graph
  * @return string       Returns the outputted JS and HTML for the graph display
  */
-function edd_output_pie_graph( $id = '', $data = array(), $args = array() ) {
+function edd_pie_graph( $id = '', $data = array(), $args = array() ) {
 	global $id_count;
 	if ( empty( $id_count ) ) {
 		$id_count = 1;
