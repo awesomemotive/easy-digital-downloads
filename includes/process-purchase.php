@@ -25,7 +25,7 @@ function edd_process_purchase_form() {
 
 	// Make sure the cart isn't empty
 	if ( ! edd_get_cart_contents() && ! edd_cart_has_fees() ) {
-		$valid_data = array();
+		$valid_data = false;
 		edd_set_error( 'empty_cart', __( 'Your cart is empty', 'edd' ) );
 	} else {
 		// Validate the form $_POST data
@@ -45,7 +45,7 @@ function edd_process_purchase_form() {
 	// Validate the user
 	$user = edd_get_purchase_form_user( $valid_data );
 
-	if ( edd_get_errors() || ! $user ) {
+	if ( false === $valid_data || edd_get_errors() || ! $user ) {
 		if ( $is_ajax ) {
 			do_action( 'edd_ajax_checkout_errors' );
 			edd_die();
@@ -689,34 +689,33 @@ function edd_get_purchase_form_user( $valid_data = array() ) {
 		// Do not create or login the user during the ajax submission (check for errors only)
 		return true;
 	} else if ( is_user_logged_in() ) {
-			// Set the valid user as the logged in collected data
-			$user = $valid_data['logged_in_user'];
-		} else if ( $valid_data['need_new_user'] === true || $valid_data['need_user_login'] === true  ) {
-			// New user registration
-			if ( $valid_data['need_new_user'] === true ) {
-				// Set user
-				$user = $valid_data['new_user_data'];
-				// Register and login new user
-				$user['user_id'] = edd_register_and_login_new_user( $user );
-				// User login
-			} else if ( $valid_data['need_user_login'] === true  && ! $is_ajax ) {
+		// Set the valid user as the logged in collected data
+		$user = $valid_data['logged_in_user'];
+	} else if ( $valid_data['need_new_user'] === true || $valid_data['need_user_login'] === true  ) {
+		// New user registration
+		if ( $valid_data['need_new_user'] === true ) {
+			// Set user
+			$user = $valid_data['new_user_data'];
+			// Register and login new user
+			$user['user_id'] = edd_register_and_login_new_user( $user );
+			// User login
+		} else if ( $valid_data['need_user_login'] === true  && ! $is_ajax ) {
+			/*
+			 * The login form is now processed in the edd_process_purchase_login() function.
+			 * This is still here for backwards compatibility.
+			 * This also allows the old login process to still work if a user removes the
+			 * checkout login submit button.
+			 *
+			 * This also ensures that the customer is logged in correctly if they click "Purchase"
+			 * instead of submitting the login form, meaning the customer is logged in during the purchase process.
+			 */
 
-				/*
-				 * The login form is now processed in the edd_process_purchase_login() function.
-				 * This is still here for backwards compatibility.
-				 * This also allows the old login process to still work if a user removes the
-				 * checkout login submit button.
-				 *
-				 * This also ensures that the customer is logged in correctly if they click "Purchase"
-				 * instead of submitting the login form, meaning the customer is logged in during the purchase process.
-				 */
-
-				// Set user
-				$user = $valid_data['login_user_data'];
-				// Login user
-				edd_log_user_in( $user['user_id'], $user['user_login'], $user['user_pass'] );
-			}
+			// Set user
+			$user = $valid_data['login_user_data'];
+			// Login user
+			edd_log_user_in( $user['user_id'], $user['user_login'], $user['user_pass'] );
 		}
+	}
 
 	// Check guest checkout
 	if ( false === $user && false === edd_no_guest_checkout() ) {
