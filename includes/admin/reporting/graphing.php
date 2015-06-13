@@ -94,11 +94,15 @@ function edd_reports_graph() {
 	} else {
 
 		$y = $dates['year'];
+
 		while( $y <= $dates['year_end'] ) :
+			
+			$last_year = false;
 
 			if( $dates['year'] == $dates['year_end'] ) {
 				$month_start = $dates['m_start'];
 				$month_end   = $dates['m_end'];
+				$last_year   = true;
 			} elseif( $y == $dates['year'] ) {
 				$month_start = $dates['m_start'];
 				$month_end   = 12;
@@ -150,7 +154,7 @@ function edd_reports_graph() {
 					$earnings = edd_get_earnings_by_date( null, $i, $y, null, $include_taxes );
 					$earnings_totals += $earnings;
 
-					if( $i == $month_end ) {
+					if( $i == $month_end && $last_year ) {
 
 						$num_of_days = cal_days_in_month( CAL_GREGORIAN, $i, $y );
 
@@ -350,11 +354,15 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 	} else {
 
 		$y = $dates['year'];
+
 		while( $y <= $dates['year_end'] ) :
+
+			$last_year = false;
 
 			if( $dates['year'] == $dates['year_end'] ) {
 				$month_start = $dates['m_start'];
 				$month_end   = $dates['m_end'];
+				$last_year   = true;
 			} elseif( $y == $dates['year'] ) {
 				$month_start = $dates['m_start'];
 				$month_end   = 12;
@@ -368,7 +376,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 
 				if ( $day_by_day ) :
 
-					if( $i == $month_end ) {
+					if( $i == $month_end && $last_year ) {
 
 						$num_of_days = $dates['day_end'];
 
