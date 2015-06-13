@@ -778,21 +778,6 @@ function edd_purchase_form_validate_cc() {
 		}
 	}
 
-	// Validate the card number
-	$card_type = edd_purchase_form_cc_card_type( $card_data['card_number'] );
-	$valid = empty( $card_data['card_number'] ) ? false : true;
-	$valid &= edd_purchase_form_validate_cc_luhn( $card_data['card_number'] );
-	$valid &= edd_purchase_form_validate_cc_length( $card_type, $card_data['card_number'] );
-
-	if ( ! apply_filters( 'edd_purchase_form_valid_cc', $valid, $card_type ) ) {
-		edd_set_error( 'invalid_cc_number', __( 'The credit card number you entered is invalid', 'edd' ) );
-	}
-
-	// Validate the card expiration date
-	if ( ! edd_purchase_form_validate_cc_exp_date( $card_data['card_exp_month'], $card_data['card_exp_year'] ) ) {
-		edd_set_error( 'ivalid_cc_exp_date', __( 'Please enter a valid expiration date', 'edd' ) );
-	}
-
 	return $card_data;
 }
 
