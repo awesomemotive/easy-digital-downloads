@@ -157,13 +157,17 @@ function edd_user_info_fields() {
 	$customer = EDD()->session->get( 'customer' );
 	$customer = wp_parse_args( $customer, array( 'first_name' => '', 'last_name' => '', 'email' => '' ) );
 
-	if( empty( $customer ) && is_user_logged_in() ) {
+	if( is_user_logged_in() ) {
 		$user_data = get_userdata( get_current_user_id() );
-		$customer  = array(
-			'first_name' => $user_data->user_first,
-			'last_name'  => $user_data->user_last,
-			'email'      => $user_data->user_email
-		);
+		foreach( $customer as $key => $field ) { 
+
+			if ( 'email' == $key && empty( $field ) ) {
+				$customer[ $key ] = $user_data->user_email;
+			} elseif ( empty( $field ) ) {
+				$customer[ $key ] = $user_data->$key;
+			}
+
+		}
 	}
 
 	$customer = array_map( 'sanitize_text_field', $customer );
