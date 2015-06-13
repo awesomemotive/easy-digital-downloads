@@ -46,284 +46,292 @@ add_action( 'admin_menu', 'edd_add_options_link', 10 );
 
 /**
  *  Determines whether the current admin page is a specific EDD admin page.
- *  
- *  Only works after the `wp_loaded` hook, & most effective 
+ *
+ *  Only works after the `wp_loaded` hook, & most effective
  *  starting on `admin_menu` hook. Failure to pass in $view will match all views of $main_page.
  *  Failure to pass in $main_page will return true if on any EDD page
- *  
+ *
  *  @since 1.9.6
- *  
+ *
  *  @param string $page Optional. Main page's slug
- *  @param string $view Optional. Page view ( ex: `edit` or `delete` ) 
+ *  @param string $view Optional. Page view ( ex: `edit` or `delete` )
  *  @return bool True if EDD admin page we're looking for or an EDD page or if $page is empty, any EDD page
  */
-function edd_is_admin_page( $page = '', $view = '' ) {
-	
+function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
+
 	global $pagenow, $typenow;
-	
-	$found = false;
-	switch ( $page ){
+
+	$found      = false;
+	$post_type  = isset( $_GET['post_type'] )  ? strtolower( $_GET['post_type'] )  : false;
+	$action     = isset( $_GET['action'] )     ? strtolower( $_GET['action'] )     : false;
+	$taxonomy   = isset( $_GET['taxonomy'] )   ? strtolower( $_GET['taxonomy'] )   : false;
+	$page       = isset( $_GET['page'] )       ? strtolower( $_GET['page'] )       : false;
+	$view       = isset( $_GET['view'] )       ? strtolower( $_GET['view'] )       : false;
+	$edd_action = isset( $_GET['edd-action'] ) ? strtolower( $_GET['edd-action'] ) : false;
+	$tab        = isset( $_GET['tab'] )        ? strtolower( $_GET['tab'] )        : false;
+
+	switch ( $passed_page ) {
 		case 'download':
-			switch ( $view ){
+			switch ( $passed_view ) {
 				case 'list-table':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' ) {
 						$found = true;
-					}					
+					}
 					break;
 				case 'edit':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'post.php' ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'post.php' ) {
 						$found = true;
-					}				
+					}
 					break;
 				case 'new':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'post-new.php' ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'post-new.php' ) {
 						$found = true;
-					}				
+					}
 					break;
 				default:
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) || ( 'post-new.php' == $pagenow && isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) || 'download' === $post_type || ( 'post-new.php' == $pagenow && 'download' === $post_type ) ) {
 						$found = true;
 					}
 					break;
 			}
 			break;
 		case 'categories':
-			switch ( $view ){
+			switch ( $passed_view ) {
 				case 'list-table':
 				case 'new':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit-tags.php' && !( isset( $_GET[ 'action' ] ) && $_GET[ 'action' ] == 'edit' ) && ( isset( $_GET[ 'taxonomy' ] ) && $_GET[ 'taxonomy' ] == 'download_category' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit-tags.php' && 'edit' !== $action && 'download_category' === $taxonomy ) {
 						$found = true;
-					}					
+					}
 					break;
 				case 'edit':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit-tags.php' && ( isset( $_GET[ 'action' ] ) && $_GET[ 'action' ] == 'edit' ) && ( isset( $_GET[ 'taxonomy' ] ) && $_GET[ 'taxonomy' ] == 'download_category' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit-tags.php' && 'edit' === $action && 'download_category' === $taxonomy ) {
 						$found = true;
-					}		
+					}
 					break;
 				default:
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit-tags.php' && ( isset( $_GET[ 'taxonomy' ] ) && $_GET[ 'taxonomy' ] == 'download_category' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit-tags.php' && 'download_category' === $taxonomy ) {
 						$found = true;
-					}					
+					}
 					break;
 			}
 			break;
 		case 'tags':
-			switch ( $view ){
+			switch ( $passed_view ) {
 				case 'list-table':
 				case 'new':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit-tags.php' && !( isset( $_GET[ 'action' ] ) && $_GET[ 'action' ] == 'edit' ) && ( isset( $_GET[ 'taxonomy' ] ) && $_GET[ 'taxonomy' ] == 'download_tag' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit-tags.php' && 'edit' !== $action && 'download_tax' === $taxonomy ) {
 						$found = true;
-					}					
+					}
 					break;
 				case 'edit':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit-tags.php' && ( isset( $_GET[ 'action' ] ) && $_GET[ 'action' ] == 'edit' ) && ( isset( $_GET[ 'taxonomy' ] ) && $_GET[ 'taxonomy' ] == 'download_tag' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit-tags.php' && 'edit' === $action && 'download_tax' === $taxonomy ) {
 						$found = true;
-					}		
+					}
 					break;
 				default:
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit-tags.php' && ( isset( $_GET[ 'taxonomy' ] ) && $_GET[ 'taxonomy' ] == 'download_tag' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit-tags.php' && 'download_tax' === $taxonomy ) {
 						$found = true;
-					}					
+					}
 					break;
 			}
 			break;
 		case 'payments':
-			switch ( $view ){
+			switch ( $passed_view ) {
 				case 'list-table':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-payment-history' ) && !isset( $_GET[ 'view' ] )  ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-payment-history' === $page && false === $view  ) {
 						$found = true;
-					}					
+					}
 					break;
 				case 'edit':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-payment-history' ) && ( isset( $_GET[ 'view' ] ) && $_GET[ 'view' ] == 'view-order-details' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-payment-history' === $page && 'view-order-details' === $view ) {
 						$found = true;
-					}					
+					}
 					break;
 				default:
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-payment-history' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-payment-history' === $page ) {
 						$found = true;
-					}				
+					}
 					break;
 			}
 			break;
 		case 'discounts':
-			switch ( $view ){
+			switch ( $passed_view ) {
 				case 'list-table':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-discounts' ) && !isset( $_GET[ 'edd-action' ] )  ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-discounts' === $page && false === $edd_action ) {
 						$found = true;
-					}					
+					}
 					break;
 				case 'edit':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-discounts' ) && ( isset( $_GET[ 'edd-action' ] ) && $_GET[ 'edd-action' ] == 'edit_discount' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-discounts' === $page && 'edit_discount' === $edd_action ) {
 						$found = true;
-					}					
+					}
 					break;
 				case 'new':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-discounts' ) && ( isset( $_GET[ 'edd-action' ] ) && $_GET[ 'edd-action' ] == 'add_discount' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-discounts' === $page && 'add_discount' === $edd_action ) {
 						$found = true;
-					}					
-					break;					
+					}
+					break;
 				default:
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-discounts' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-discounts' === $page ) {
 						$found = true;
-					}				
+					}
 					break;
 			}
 			break;
 		case 'reports':
-			switch ( $view ){
+			switch ( $passed_view ) {
 				// If you want to do something like enqueue a script on a particular report's duration, look at $_GET[ 'range' ]
 				case 'earnings':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-reports' ) && ( ( isset( $_GET[ 'view' ] ) && $_GET[ 'view' ] == 'earnings' ) || ( isset( $_GET[ 'view' ] ) && $_GET[ 'view' ] == '-1' ) || !isset( $_GET[ 'view' ] ) ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-reports' === $page && ( 'earnings' === $view || '-1' === $view || false === $view ) ) {
 						$found = true;
-					}					
+					}
 					break;
 				case 'downloads':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-reports' ) && ( isset( $_GET[ 'view' ] ) && $_GET[ 'view' ] == 'downloads' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-reports' === $page && 'downloads' === $view ) {
 						$found = true;
-					}					
+					}
 					break;
 				case 'customers':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-reports' ) && ( isset( $_GET[ 'view' ] ) && $_GET[ 'view' ] == 'customers' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-reports' === $page && 'customers' === $view ) {
 						$found = true;
-					}					
+					}
 					break;
 				case 'gateways':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-reports' ) && ( isset( $_GET[ 'view' ] ) && $_GET[ 'view' ] == 'gateways' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-reports' === $page && 'gateways' === $view ) {
 						$found = true;
-					}					
+					}
 					break;
 				case 'taxes':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-reports' ) && ( isset( $_GET[ 'view' ] ) && $_GET[ 'view' ] == 'taxes' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-reports' === $page && 'taxes' === $view ) {
 						$found = true;
-					}					
+					}
 					break;
 				case 'export':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-reports' ) && ( isset( $_GET[ 'tab' ] ) && $_GET[ 'tab' ] == 'export' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-reports' === $page && 'export' === $view ) {
 						$found = true;
-					}					
+					}
 					break;
 				case 'logs':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-reports' ) && ( isset( $_GET[ 'tab' ] ) && $_GET[ 'tab' ] == 'logs' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-reports' === $page && 'logs' === $ivew ) {
 						$found = true;
-					}					
-					break;		
+					}
+					break;
 				default:
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-reports' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-reports' === $page ) {
 						$found = true;
-					}				
+					}
 					break;
 			}
 			break;
 		case 'settings':
-			switch ( $view ){
+			switch ( $passed_view ) {
 				case 'general':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-settings' ) && ( ( isset( $_GET[ 'tab' ] ) && $_GET[ 'tab' ] == 'general' ) || !isset( $_GET[ 'tab' ] ) ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-settings' === $page && ( 'genera' === $tab || false === $tab ) ) {
 						$found = true;
 					}
 					break;
 				case 'gateways':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-settings' ) && ( isset( $_GET[ 'tab' ] ) && $_GET[ 'tab' ] == 'gateways' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-settings' === $page && 'gateways' === $tab ) {
 						$found = true;
 					}
-					break;				
+					break;
 				case 'emails':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-settings' ) && ( isset( $_GET[ 'tab' ] ) && $_GET[ 'tab' ] == 'emails' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-settings' === $page && 'emails' === $tab ) {
 						$found = true;
-					}				
+					}
 					break;
 				case 'styles':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-settings' ) && ( isset( $_GET[ 'tab' ] ) && $_GET[ 'tab' ] == 'styles' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-settings' === $page && 'styles' === $tab ) {
 						$found = true;
-					}				
+					}
 					break;
 				case 'taxes':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-settings' ) && ( isset( $_GET[ 'tab' ] ) && $_GET[ 'tab' ] == 'taxes' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-settings' === $page && 'taxes' === $tab ) {
 						$found = true;
-					}				
+					}
 					break;
 				case 'extensions':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-settings' ) && ( isset( $_GET[ 'tab' ] ) && $_GET[ 'tab' ] == 'extensions' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-settings' === $page && 'extensions' === $tab ) {
 						$found = true;
-					}				
+					}
 					break;
 				case 'licenses':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-settings' ) && ( isset( $_GET[ 'tab' ] ) && $_GET[ 'tab' ] == 'licenses' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-settings' === $page && 'licenses' === $tab ) {
 						$found = true;
-					}				
+					}
 					break;
 				case 'misc':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-settings' ) && ( isset( $_GET[ 'tab' ] ) && $_GET[ 'tab' ] == 'misc' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-settings' === $page && 'misc' === $tab ) {
 						$found = true;
-					}				
+					}
 					break;
 				default:
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-settings' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-settings' === $page ) {
 						$found = true;
-					}				
+					}
 					break;
 			}
 			break;
 		case 'tools':
-			switch ( $view ){
+			switch ( $passed_view ) {
 				case 'general':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-tools' ) && ( ( isset( $_GET[ 'tab' ] ) && $_GET[ 'tab' ] == 'general' ) || !isset( $_GET[ 'tab' ] ) ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-tools' === $page && ( 'general' === $tab || false === $tab ) ) {
 						$found = true;
 					}
 					break;
 				case 'api_keys':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-tools' ) && ( isset( $_GET[ 'tab' ] ) && $_GET[ 'tab' ] == 'api_keys' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-tools' === $page && 'api_keys' === $tab ) {
 						$found = true;
 					}
 					break;
 				case 'system_info':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-tools' ) && ( isset( $_GET[ 'tab' ] ) && $_GET[ 'tab' ] == 'system_info' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-tools' === $page && 'system_info' === $tab ) {
 						$found = true;
 					}
 					break;
 				case 'import_export':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-tools' ) && ( isset( $_GET[ 'tab' ] ) && $_GET[ 'tab' ] == 'import_export' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-tools' === $page && 'import_export' === $tab ) {
 						$found = true;
 					}
 					break;
 				default:
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-tools' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-tools' === $page ) {
 						$found = true;
-					}				
+					}
 					break;
 			}
 			break;
 		case 'addons':
-			if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-addons' ) ){
+			if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-addons' === $page ) {
 				$found = true;
 			}
 			break;
 		case 'customers':
-			switch ( $view ){
+			switch ( $passed_view ) {
 				case 'list-table':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-customers' ) && !isset( $_GET[ 'view' ] ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-customers' === $page && false === $view ) {
 						$found = true;
 					}
 					break;
 				case 'overview':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-customers' ) && ( isset( $_GET[ 'view' ] ) && $_GET[ 'view' ] == 'overview' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-customers' === $page && 'overview' === $view ) {
 						$found = true;
 					}
 					break;
 				case 'notes':
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-customers' ) && ( isset( $_GET[ 'view' ] ) && $_GET[ 'view' ] == 'notes' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-customers' === $page && 'notes' === $view ) {
 						$found = true;
 					}
 					break;
 				default:
-					if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-customers' ) ){
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-customers' === $page ) {
 						$found = true;
-					}				
+					}
 					break;
 			}
 			break;
 		case 'reports':
-			if ( ( 'download' == $typenow || ( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'download' ) ) && $pagenow == 'edit.php' && ( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'edd-reports' ) ){
+			if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-reports' === $page ) {
 				$found = true;
 			}
 			break;
@@ -340,5 +348,6 @@ function edd_is_admin_page( $page = '', $view = '' ) {
 			}
 			break;
 	}
+
 	return (bool) apply_filters( 'edd_is_admin_page', $found, $page, $view );
 }
