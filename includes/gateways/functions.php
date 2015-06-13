@@ -238,7 +238,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 			'tax'         => 0,
 			'discount'    => 0,
 			'item_price'  => $price,
-			'subtotal'    => $price,
+			'subtotal'    => ( $price * $quantity ),
 			'price'       => $price,
 			'quantity'    => $quantity,
 		)
