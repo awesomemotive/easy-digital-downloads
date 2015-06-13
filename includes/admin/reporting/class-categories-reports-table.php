@@ -279,7 +279,7 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 			'legend_formatter' => 'legendFormatterSales',
 		), $data );
 
-		return edd_output_pie_graph( 'category_sales', $data, $options );
+		return edd_pie_graph( 'category_sales', $data, $options );
 	}
 
 	/**
@@ -308,7 +308,7 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 			'legend_formatter' => 'legendFormatterEarnings',
 		), $data );
 
-		return edd_output_pie_graph( 'category_earnings', $data, $options );
+		return edd_pie_graph( 'category_earnings', $data, $options );
 	}
 
 	/**
