@@ -692,12 +692,12 @@ function edd_process_signed_download_url( $args ) {
 	}
 
 	$order_parts = explode( ':', rawurldecode( $_GET['eddfile'] ) );
-	
+
 	// Check to make sure not at download limit
 	if ( edd_is_file_at_download_limit( $order_parts[1], $order_parts[0], $order_parts[2], $order_parts[3] ) ) {
-		wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );	
+		wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
-	
+
 	$args['expire']      = $_GET['ttl'];
 	$args['download']    = $order_parts[1];
 	$args['payment']     = $order_parts[0];
@@ -709,3 +709,168 @@ function edd_process_signed_download_url( $args ) {
 
 	return $args;
 }
+
+/**
+ * Process the download for an admin user in the backend
+ *
+ * @since  2.4
+ * @return void Downloads a file
+ */
+function edd_process_admin_download() {
+	$error_message = __( 'You do not have permission to download this file', 'edd' );
+
+	if ( ! is_user_logged_in() || ! current_user_can( 'edit_others_posts' ) ) {
+		wp_die( apply_filters( 'edd_deny_admin_message', $error_message, __( 'Invalid User Permissions', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+	}
+
+	$nonce = ! empty( $_GET['_wpnonce'] ) ? sanitize_text_field( $_GET['_wpnonce'] ) : false;
+	if ( ! wp_verify_nonce( $nonce, 'edd_admin_file_download' ) ) {
+		wp_die( apply_filters( 'edd_deny_admin_message', $error_message, __( 'Nonce Verification Failed', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+	}
+
+	$download_id   = isset( $_GET['admin_download_id'] ) ? intval( $_GET['admin_download_id'] ) : false;
+	$attachment_id = isset( $_GET['admin_attachment_id'] ) ? intval( $_GET['admin_attachment_id'] ) : false;
+
+	if ( empty( $download_id ) || empty( $attachment_id ) ) {
+		wp_die( apply_filters( 'edd_deny_admin_message', $error_message, __( 'Download or Attachment Not Provided', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+	}
+
+	// Verify the attachment belongs to the download
+	$files               = edd_get_download_files( $download_id );
+	$attachment_verified = false;
+	foreach ( $files as $file ) {
+		if ( $file['attachment_id'] == $attachment_id ) {
+			$attachment_verified = true;
+			$requested_file      = $file['file'];
+			break;
+		}
+	}
+
+	if ( false === $attachment_verified ) {
+		wp_die( apply_filters( 'edd_deny_admin_message', $error_message, __( 'Download Attachment Mismatch', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+	}
+
+	$file_extension = edd_get_file_extension( $requested_file );
+	$ctype          = edd_get_file_ctype( $file_extension );
+
+	$method = edd_get_file_download_method();
+
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+		@set_time_limit(0);
+	}
+	if ( function_exists( 'get_magic_quotes_runtime' ) && get_magic_quotes_runtime() && version_compare( phpversion(), '5.4', '<' ) ) {
+		set_magic_quotes_runtime(0);
+	}
+
+	@session_write_close();
+	if( function_exists( 'apache_setenv' ) ) {
+		@apache_setenv('no-gzip', 1);
+	}
+	@ini_set( 'zlib.output_compression', 'Off' );
+
+	nocache_headers();
+	header("Robots: none");
+	header("Content-Type: " . $ctype . "");
+	header("Content-Description: File Transfer");
+	header("Content-Disposition: attachment; filename=\"" . apply_filters( 'edd_requested_file_name', basename( $requested_file ) ) . "\"");
+	header("Content-Transfer-Encoding: binary");
+
+	if( 'x_sendfile' == $method && ( ! function_exists( 'apache_get_modules' ) || ! in_array( 'mod_xsendfile', apache_get_modules() ) ) ) {
+		// If X-Sendfile is selected but is not supported, fallback to Direct
+		$method = 'direct';
+	}
+
+	$file_details = parse_url( $requested_file );
+	$schemes      = array( 'http', 'https' ); // Direct URL schemes
+
+	if ( ( ! isset( $file_details['scheme'] ) || ! in_array( $file_details['scheme'], $schemes ) ) && isset( $file_details['path'] ) && file_exists( $requested_file ) ) {
+
+		/**
+		 * Download method is seto to Redirect in settings but an absolute path was provided
+		 * We need to switch to a direct download in order for the file to download properly
+		 */
+		$method = 'direct';
+
+	}
+
+	switch( $method ) :
+
+		case 'redirect' :
+
+			// Redirect straight to the file
+			header( "Location: " . $requested_file );
+			break;
+
+		case 'direct' :
+		default:
+
+			$direct = false;
+
+			if ( ( ! isset( $file_details['scheme'] ) || ! in_array( $file_details['scheme'], $schemes ) ) && isset( $file_details['path'] ) && file_exists( $requested_file ) ) {
+
+				/** This is an absolute path */
+				$direct    = true;
+				$file_path = $requested_file;
+
+			} else if( defined( 'UPLOADS' ) && strpos( $requested_file, UPLOADS ) !== false ) {
+
+				/**
+				 * This is a local file given by URL so we need to figure out the path
+				 * UPLOADS is always relative to ABSPATH
+				 * site_url() is the URL to where WordPress is installed
+				 */
+				$file_path  = str_replace( site_url(), '', $requested_file );
+				$file_path  = realpath( ABSPATH . $file_path );
+				$direct     = true;
+
+			} else if( strpos( $requested_file, WP_CONTENT_URL ) !== false ) {
+
+				/** This is a local file given by URL so we need to figure out the path */
+				$file_path  = str_replace( WP_CONTENT_URL, WP_CONTENT_DIR, $requested_file );
+				$file_path  = realpath( $file_path );
+				$direct     = true;
+
+			} else if( strpos( $requested_file, set_url_scheme( WP_CONTENT_URL, 'https' ) ) !== false ) {
+
+				/** This is a local file given by an HTTPS URL so we need to figure out the path */
+				$file_path  = str_replace( set_url_scheme( WP_CONTENT_URL, 'https' ), WP_CONTENT_DIR, $requested_file );
+				$file_path  = realpath( $file_path );
+				$direct     = true;
+
+			}
+
+			// Set the file size header
+			header( "Content-Length: " . filesize( $file_path ) );
+
+			// Now deliver the file based on the kind of software the server is running / has enabled
+			if ( function_exists( 'apache_get_modules' ) && in_array( 'mod_xsendfile', apache_get_modules() ) ) {
+
+				header("X-Sendfile: $file_path");
+
+			} elseif ( stristr( getenv( 'SERVER_SOFTWARE' ), 'lighttpd' ) ) {
+
+				header( "X-LIGHTTPD-send-file: $file_path" );
+
+			} elseif ( $direct && ( stristr( getenv( 'SERVER_SOFTWARE' ), 'nginx' ) || stristr( getenv( 'SERVER_SOFTWARE' ), 'cherokee' ) ) ) {
+
+				// We need a path relative to the domain
+				$file_path = str_ireplace( $_SERVER['DOCUMENT_ROOT'], '', $file_path );
+				header( "X-Accel-Redirect: /$file_path" );
+
+			}
+
+			if( $direct ) {
+				edd_deliver_download( $file_path );
+			} else {
+				// The file supplied does not have a discoverable absolute path
+				header( "Location: " . $requested_file );
+			}
+
+			break;
+
+	endswitch;
+
+	edd_die();
+
+}
+add_action( 'edd_process_admin_download', 'edd_process_admin_download' );

@@ -42,6 +42,11 @@ function edd_add_download_meta_box() {
 			/** Product Stats */
 			add_meta_box( 'edd_product_stats', sprintf( __( '%1$s Stats', 'edd' ), edd_get_label_singular(), edd_get_label_plural() ), 'edd_render_stats_meta_box', $post_type, 'side', 'high' );
 		}
+
+		if ( current_user_can( 'edit_others_posts' ) ) {
+			/** File download metabox */
+			add_meta_box( 'edd_attached_files', sprintf( __( 'Attached Files', 'edd' ), edd_get_label_singular(), edd_get_label_plural() ), 'edd_render_attached_files_meta_box', $post_type, 'normal', 'high' );
+		}
 	}
 }
 add_action( 'add_meta_boxes', 'edd_add_download_meta_box' );
@@ -342,6 +347,23 @@ function edd_render_settings_meta_box() {
 	 * @since 1.9
 	 */
 	do_action( 'edd_meta_box_settings_fields', $post->ID );
+}
+
+/**
+ * Download Attachments metabox
+ *
+ * @since  2.4
+ * @return void
+ */
+function edd_render_attached_files_meta_box() {
+	global $post;
+
+	/**
+	 * Ouput the Admin-Downloadable files
+	 * @since  2.4
+	 */
+
+	do_action( 'edd_render_attached_files_meta_box', $post->ID );
 }
 
 /**
@@ -766,6 +788,79 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 add_action( 'edd_render_file_row', 'edd_render_file_row', 10, 3 );
 
 /**
+ * Render a list of files for this download that an admin can click
+ * to download the files
+ *
+ * @since  2.4
+ */
+function edd_render_attached_files() {
+	global $post;
+
+	$type = edd_get_download_type( $post->ID );
+
+	if ( 'bundle' === $type ) {
+		// Bundles don't have files, return
+		return;
+	}
+
+	$files = edd_get_download_files( $post->ID );
+	?>
+	<table class="wp-list-table widefat striped downloads">
+		<thead>
+			<tr>
+				<th><?php _e( 'File', 'edd' ); ?></th>
+				<th><?php _e( 'Type', 'edd' ); ?></th>
+				<th><?php _e( 'Size', 'edd' ); ?></th>
+				<th width="120px"><?php _e( 'Actions', 'edd' ); ?></th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php if ( ! empty( $files ) ) : ?>
+				<?php foreach ( $files as $file ) : ?>
+					<?php $bytes     = filesize( get_attached_file( $file['attachment_id'] ) ); ?>
+					<?php $mime_type = get_post_mime_type( $file['attachment_id'] ); ?>
+					<?php $mime_img  = wp_mime_type_icon( $mime_type ); ?>
+					<?php
+
+					?>
+					<tr>
+						<td>
+							<img height="20px" src="<?php echo $mime_img; ?>" />
+							<?php echo $file['name']; ?>
+						</td>
+						<td><?php echo $mime_type; ?></td>
+						<td><?php echo size_format( $bytes, 2 ); ?></td>
+						<td>
+							<?php
+								if ( empty( $file['attachment_id'] ) ) {
+									$url = $file['file'];
+								} else {
+									$query_args = array(
+										'edd_action'          => 'process_admin_download',
+										'admin_download_id'   => $post->ID,
+										'admin_attachment_id' => $file['attachment_id'],
+										'_wpnonce'           => wp_create_nonce( 'edd_admin_file_download' ),
+									);
+
+									$url = esc_url( add_query_arg( $query_args, home_url() ) );
+								}
+							?>
+							<a title="<?php echo esc_attr( sprintf( __( 'Download %s', 'edd' ), $file['name'] ) ); ?>" href="<?php echo $url; ?>">
+								<?php _e( 'Download', 'edd' ); ?>
+							</a>
+						</td>
+					</tr>
+				<?php endforeach; ?>
+			<?php else: ?>
+				<tr><td colspan="2"><?php printf( __( 'No %s Found', 'edd' ), edd_get_label_plural() ); ?></td></tr>
+			<?php endif; ?>
+		</tbody>
+	</table>
+	<?php
+}
+add_action( 'edd_render_attached_files_meta_box', 'edd_render_attached_files' );
+
+/**
  * Alter the Add to post button in the media manager for downloads
  *
  * @since  2.2
@@ -857,7 +952,7 @@ add_action( 'edd_meta_box_settings_fields', 'edd_render_dowwn_tax_options', 30 )
  */
 function edd_render_meta_box_shortcode() {
 	global $post;
-	
+
 	if( $post->post_type != 'download' ) {
 		return;
 	}
