@@ -45,7 +45,7 @@ function edd_add_download_meta_box() {
 
 		if ( current_user_can( 'edit_others_posts' ) ) {
 			/** File download metabox */
-			add_meta_box( 'edd_attached_files', sprintf( __( 'Attached Files', 'edd' ), edd_get_label_singular(), edd_get_label_plural() ), 'edd_render_attached_files_meta_box', $post_type, 'normal', 'high' );
+			add_meta_box( 'edd_attached_files', __( 'Attached Files', 'edd' ), 'edd_render_attached_files_meta_box', $post_type, 'normal', 'high' );
 		}
 	}
 }
