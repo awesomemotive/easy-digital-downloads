@@ -570,26 +570,31 @@ function edd_record_sale_in_log( $download_id = 0, $payment_id, $price_id = fals
  * @param string $ip IP Address
  * @param int $payment_id Payment ID
  * @param int $price_id Price ID, if any
+ * @param bool $is_admin If the download is an admin procssed download from issue #3002
  * @return void
  */
-function edd_record_download_in_log( $download_id = 0, $file_id, $user_info, $ip, $payment_id, $price_id = false ) {
+function edd_record_download_in_log( $download_id = 0, $file_id, $user_info, $ip, $payment_id, $price_id = false, $is_admin = false ) {
 	global $edd_logs;
 
 	$log_data = array(
-		'post_parent'	=> $download_id,
-		'log_type'		=> 'file_download'
+		'post_parent' => $download_id,
+		'log_type'    => 'file_download'
 	);
 
 	$user_id = isset( $user_info['id'] ) ? $user_info['id'] : (int) -1;
 
 	$log_meta = array(
-		'user_info'	=> $user_info,
-		'user_id'	=> $user_id,
-		'file_id'	=> (int) $file_id,
-		'ip'		=> $ip,
-		'payment_id'=> $payment_id,
-		'price_id'  => (int) $price_id
+		'user_info'  => $user_info,
+		'user_id'    => $user_id,
+		'file_id'    => (int) $file_id,
+		'ip'         => $ip,
+		'payment_id' => $payment_id,
+		'price_id'   => (int) $price_id
 	);
+
+	if ( $is_admin ) {
+		$log_meta['admin_download'] = 1;
+	}
 
 	$edd_logs->insert_log( $log_data, $log_meta );
 }

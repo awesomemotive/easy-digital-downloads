@@ -738,10 +738,11 @@ function edd_process_admin_download() {
 	// Verify the attachment belongs to the download
 	$files               = edd_get_download_files( $download_id );
 	$attachment_verified = false;
-	foreach ( $files as $file ) {
+	foreach ( $files as $file_id => $file ) {
 		if ( $file['attachment_id'] == $attachment_id ) {
 			$attachment_verified = true;
 			$requested_file      = $file['file'];
+			$file_id             = $file_id;
 			break;
 		}
 	}
@@ -749,6 +750,15 @@ function edd_process_admin_download() {
 	if ( false === $attachment_verified ) {
 		wp_die( apply_filters( 'edd_deny_admin_message', $error_message, __( 'Download Attachment Mismatch', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
+
+	// Record this file download in the log
+	$user_info = array();
+	$user_data          = get_userdata( get_current_user_id() );
+	$user_info['id']    = get_current_user_id();
+	$user_info['name']  = $user_data->display_name;
+	$user_info['email'] = $user_data->user_email;
+
+	edd_record_download_in_log( $download_id, $file_id, $user_info, edd_get_ip(), __( 'Admin' ), true );
 
 	$file_extension = edd_get_file_extension( $requested_file );
 	$ctype          = edd_get_file_ctype( $file_extension );
