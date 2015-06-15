@@ -278,8 +278,24 @@ class EDD_DB_Customers extends EDD_DB  {
 
 			if( ! $this->get_customer_by( 'email', $user->user_email ) ) {
 
-				$this->update( $customer->id, array( 'email' => $user->user_email ) );
-	
+				$success = $this->update( $customer->id, array( 'email' => $user->user_email ) );
+				
+				if( $success ) {
+					// Update some payment meta if we need to
+					$payments_array = explode( ',', $customer->payment_ids );
+
+					if( ! empty( $payments_array ) ) {
+
+						foreach ( $payments_array as $payment_id ) {
+
+							edd_update_payment_meta( $payment_id, 'email', $user->user_email );
+
+						}
+						
+					}
+
+				}
+
 			}
 
 		}
