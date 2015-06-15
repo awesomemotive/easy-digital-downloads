@@ -35,6 +35,8 @@ class EDD_DB_Customers extends EDD_DB  {
 		$this->primary_key = 'id';
 		$this->version     = '1.0';
 
+		add_action( 'profile_update', array( $this, 'update_customer_email_on_user_update' ), 10, 2 );
+
 	}
 
 	/**
@@ -253,6 +255,34 @@ class EDD_DB_Customers extends EDD_DB  {
 		$decreased_value = $customer->decrease_value( $amount );
 
 		return ( $decreased_count && $decreased_value ) ? true : false;
+
+	}
+
+	/**
+	 * Updates the email address of a customer record when the email on a user is updated
+	 *
+	 * @access  public
+	 * @since   2.4
+	*/
+	public function update_customer_email_on_user_update( $user_id = 0, $old_user_data ) {
+
+		$customer = new EDD_Customer( $user_id, true );
+
+		if( ! $customer ) {
+			return false;
+		}
+
+		$user = get_userdata( $user_id );
+
+		if( $user->user_email !== $customer->email ) {
+
+			if( ! $this->get_customer_by( 'email', $user->user_email ) ) {
+
+				$this->update( $customer->id, array( 'email' => $user->user_email ) );
+	
+			}
+
+		}
 
 	}
 
