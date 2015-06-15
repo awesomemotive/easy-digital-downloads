@@ -52,6 +52,34 @@ class Tests_Widgets extends WP_UnitTestCase {
 	 *
 	 * @since 2.3.10
 	 */
+	public function test_cart_widget_function_bail_checkout() {
+
+		$widgets = $GLOBALS['wp_widget_factory']->widgets;
+		$cart_widget = $widgets['edd_cart_widget'];
+
+		$this->go_to( get_permalink( edd_get_option( 'purchase_page' ) ) );
+
+		ob_start();
+			$cart_widget->widget( array(
+				'before_title'  => '',
+				'after_title'   => '',
+				'before_widget' => '',
+				'after_widget'  => '',
+			), array(
+				'title'            => 'Cart',
+				'hide_on_checkout' => true,
+			) );
+		$output = ob_get_clean();
+
+		$this->assertEmpty( $output );
+
+	}
+
+	/**
+	 * Test that the widget() method outputs HTML.
+	 *
+	 * @since 2.3.10
+	 */
 	public function test_cart_widget_function() {
 
 		$widgets = $GLOBALS['wp_widget_factory']->widgets;
@@ -208,6 +236,162 @@ class Tests_Widgets extends WP_UnitTestCase {
 		$this->assertRegExp( '/<option value="download_tag" (.*)>(.*)<\/option>/', $output );
 		$this->assertRegExp( '/<label for="(.*)">Show Count:<\/label>/', $output );
 		$this->assertRegExp( '/<label for="(.*)">Hide Empty Categories:<\/label>/', $output );
+
+	}
+
+	/** Product details widget */
+
+	/**
+	 * Test that the edd_product_details widget exists with the right properties.
+	 *
+	 * @since 2.3.10
+	 */
+	public function test_edd_product_details_widget() {
+
+		$widgets = $GLOBALS['wp_widget_factory']->widgets;
+		$categories_widget = $widgets['edd_product_details_widget'];
+
+		$this->assertInstanceOf( 'EDD_Product_Details_Widget', $categories_widget );
+		$this->assertEquals( 'edd_product_details', $categories_widget->id_base );
+		$this->assertEquals( 'Download Details', $categories_widget->name );
+
+	}
+
+	/**
+	 * Test that the widget() method returns when the visiting page is invalid.
+	 *
+	 * @since 2.3.10
+	 */
+	public function test_edd_product_details_widget_function_bail_no_download() {
+
+		$this->go_to( '/' );
+		$widgets = $GLOBALS['wp_widget_factory']->widgets;
+		$details_widget = $widgets['edd_product_details_widget'];
+
+		$this->assertNull( $details_widget->widget( array(), array( 'download_id' => 'current' ) ) );
+
+	}
+
+	/**
+	 * Test that the widget() method uses the current post when 'download_id' is set to 'current'.
+	 *
+	 * @since 2.3.10
+	 */
+	public function test_edd_product_details_widget_function_bail_download() {
+
+		$download = EDD_Helper_Download::create_simple_download();
+		$this->go_to( get_permalink( $download->ID ) );
+		$widgets = $GLOBALS['wp_widget_factory']->widgets;
+		$details_widget = $widgets['edd_product_details_widget'];
+
+		ob_start();
+			$details_widget->widget( array(
+				'before_title'  => '',
+				'after_title'   => '',
+				'before_widget' => '',
+				'after_widget'  => '',
+			), array(
+				'title'           => 'Cart',
+				'download_id'     => 'current',
+				'download_title'  => 'download_category',
+				'purchase_button' => true,
+				'categories'      => true,
+				'tags'            => true,
+			) );
+		$output = ob_get_clean();
+
+		$this->assertNotEmpty( $output );
+
+		EDD_Helper_Download::delete_download( $download->ID );
+
+	}
+
+	/**
+	 * Test that the widget() method outputs HTML.
+	 *
+	 * @since 2.3.10
+	 */
+	public function test_edd_product_details_widget_function() {
+
+		$widgets = $GLOBALS['wp_widget_factory']->widgets;
+		$details_widget = $widgets['edd_product_details_widget'];
+		$download = EDD_Helper_Download::create_simple_download();
+		$terms = wp_set_object_terms( $download->ID, array( 'test1' ), 'download_category', false );
+
+		$this->go_to( $download->ID );
+
+		ob_start();
+			$details_widget->widget( array(
+				'before_title'  => '',
+				'after_title'   => '',
+				'before_widget' => '',
+				'after_widget'  => '',
+			), array(
+				'title'           => 'Cart',
+				'download_id'     => $download->ID,
+				'download_title'  => 'download_category',
+				'purchase_button' => true,
+				'categories'      => true,
+				'tags'            => true,
+			) );
+		$output = ob_get_clean();
+
+		$this->assertContains( '<h3>' . $download->post_title . '</h3>', $output );
+		$this->assertRegExp( '/<form id="edd_purchase_[0-9]+" class="edd_download_purchase_form edd_purchase_[0-9]+" method="post">/', $output );
+		$this->assertContains( '<input type="hidden" name="edd_action" class="edd_action_input" value="add_to_cart">', $output );
+		$this->assertContains( '<input type="hidden" name="download_id" value="' . $download->ID . '">', $output );
+		$this->assertContains( '<p class="edd-meta">', $output );
+		$this->assertContains( '<span class="categories">Categories:', $output );
+
+		EDD_Helper_Download::delete_download( $download->ID );
+
+	}
+
+	/**
+	 * Test that the cart widget form method outputs HTML.
+	 *
+	 * @since 2.3.10
+	 */
+	public function test_edd_product_details_widget_form() {
+
+		$widgets = $GLOBALS['wp_widget_factory']->widgets;
+		$categories_widget = $widgets['edd_product_details_widget'];
+
+		ob_start();
+			$categories_widget->form( array() );
+		$output = ob_get_clean();
+
+		$this->assertRegExp( '/<label for="widget-edd_product_details--title">Title:<\/label>/', $output );
+		$this->assertRegExp( '/<input class="widefat" id="widget-edd_product_details--title" name="widget-edd_product_details\[\]\[title\]" type="text" value="(.*)" \/>/', $output );
+		$this->assertRegExp( '/<label for="widget-edd_product_details--download_id">Download<\/label>/', $output );
+		$this->assertRegExp( '/<select class="widefat" name="widget-edd_product_details\[\]\[download_id\]" id="widget-edd_product_details--download_id">/', $output );
+		$this->assertRegExp( '/<input  checked=\'checked\' id="widget-edd_product_details--download_title" name="widget-edd_product_details\[\]\[download_title\]" type="checkbox" \/>/', $output );
+		$this->assertRegExp( '/<label for="widget-edd_product_details--download_title">Show Title<\/label>/', $output );
+		$this->assertRegExp( '/<input  checked=\'checked\' id="widget-edd_product_details--purchase_button" name="widget-edd_product_details\[\]\[purchase_button\]" type="checkbox" \/>/', $output );
+		$this->assertRegExp( '/<label for="widget-edd_product_details--purchase_button">Show Purchase Button<\/label>/', $output );
+		$this->assertRegExp( '/<input  checked=\'checked\' id="widget-edd_product_details--categories" name="widget-edd_product_details\[\]\[categories\]" type="checkbox" \/>/', $output );
+		$this->assertRegExp( '/<label for="widget-edd_product_details--categories">Show Categories<\/label>/', $output );
+		$this->assertRegExp( '/<input  checked=\'checked\' id="widget-edd_product_details--tags" name="widget-edd_product_details\[\]\[tags\]" type="checkbox" \/>/', $output );
+		$this->assertRegExp( '/<label for="widget-edd_product_details--tags">Show Tags<\/label>/', $output );
+
+	}
+
+	/**
+	 * Test that the categories widget update method returns the correct values.
+	 *
+	 * @since 2.3.10
+	 */
+	public function test_edd_product_details_widget_update() {
+
+		$widgets = $GLOBALS['wp_widget_factory']->widgets;
+		$details_widget = $widgets['edd_product_details_widget'];
+
+		$updated = $details_widget->update(
+			array( 'title' => 'Details', 'download_id' => 123, 'download_title' => true, 'purchase_button' => true, 'categories' => true, 'tags' => true ),
+			array( 'title' => 'OLD Details', 'download_id' => 123, 'download_title' => false, 'purchase_button' => false, 'categories' => false, 'tags' => false )
+		);
+
+		$this->assertEquals( $updated, array( 'title' => 'Details', 'download_id' => 123, 'download_title' => true, 'purchase_button' => true, 'categories' => true, 'tags' => true ) );
 
 	}
 
