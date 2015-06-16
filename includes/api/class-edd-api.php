@@ -28,9 +28,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class EDD_API {
 
 	/**
-	 * API Version
+	 * Latest API Version
 	 */
-	const VERSION = '1.3';
+	const VERSION = 1;
 
 	/**
 	 * Pretty Print?
@@ -66,7 +66,7 @@ class EDD_API {
 	 * @access private
 	 * @since 1.5.1
 	 */
-	private $user_id = 0;
+	public $user_id = 0;
 
 	/**
 	 * Instance of EDD Stats class
@@ -92,7 +92,43 @@ class EDD_API {
 	 * @access private
 	 * @since 1.7
 	 */
-	private $override = true;
+	public $override = true;
+
+	/**
+	 * Version of the API queried
+	 *
+	 * @var string
+	 * @access public
+	 * @since 2.4
+	 */
+	private $queried_version;
+
+	/**
+	 * All versions of the API
+	 *
+	 * @var string
+	 * @access public
+	 * @since 2.4
+	 */
+	protected $versions = array();
+
+	/**
+	 * Queried endpoint
+	 *
+	 * @var string
+	 * @access public
+	 * @since 2.4
+	 */
+	private $endpoint;
+
+	/**
+	 * Endpoints routes
+	 *
+	 * @var object
+	 * @access public
+	 * @since 2.4
+	 */
+	private $routes;
 
 	/**
 	 * Setup the EDD API
@@ -101,6 +137,15 @@ class EDD_API {
 	 * @since 1.5
 	 */
 	public function __construct() {
+
+		$this->versions = array(
+			'v1' => 'EDD_API_V1',
+		);
+
+		foreach( $this->get_versions() as $version => $class ) {
+			require_once EDD_PLUGIN_DIR . 'includes/api/class-edd-api-' . $version . '.php';
+		}
+
 		add_action( 'init',                     array( $this, 'add_endpoint'     ) );
 		add_action( 'template_redirect',        array( $this, 'process_query'    ), -1 );
 		add_filter( 'query_vars',               array( $this, 'query_vars'       ) );
@@ -143,6 +188,7 @@ class EDD_API {
 	 * @return string[] $vars New query vars
 	 */
 	public function query_vars( $vars ) {
+
 		$vars[] = 'token';
 		$vars[] = 'key';
 		$vars[] = 'query';
@@ -163,6 +209,87 @@ class EDD_API {
 	}
 
 	/**
+	 * Retrieve the API versions
+	 *
+	 * @access public
+	 * @since 2.4
+	 * @return array
+	 */
+	public function get_versions() {
+		return $this->versions;
+	}
+
+	/**
+	 * Retrieve the API version that was queried
+	 *
+	 * @access public
+	 * @since 2.4
+	 * @return string
+	 */
+	public function get_queried_version() {
+		return $this->queried_version;
+	}
+
+	/**
+	 * Retrieves the default version of the API to use
+	 *
+	 * @access private
+	 * @since 2.4
+	 * @return string
+	 */
+	public function get_default_version() {
+
+		$version = get_option( 'edd_default_api_version' );
+
+		if( defined( 'EDD_API_VERSION' ) ) {
+			$version = EDD_API_VERSION;
+		} elseif( ! $version ) {
+			$version = 'v1';
+		}
+
+		return $version;
+	}
+
+	/**
+	 * Sets the version of the API that was queried.
+	 *
+	 * Falls back to the default version if no version is specified
+	 *
+	 * @access private
+	 * @since 2.4
+	 */
+	private function set_queried_version() {
+
+		global $wp_query;
+
+		$version = $wp_query->query_vars['edd-api'];
+
+		if( strpos( $version, '/' ) ) {
+
+			$version = explode( '/', $version );
+			$version = strtolower( $version[0] );
+
+			$wp_query->query_vars['edd-api'] = str_replace( $version . '/', '', $wp_query->query_vars['edd-api'] );
+
+			if( array_key_exists( $version, $this->versions ) ) {
+
+				$this->queried_version = $version;
+
+			} else {
+
+				$this->is_valid_request = false;
+				$this->invalid_version();
+			}
+
+		} else {
+
+			$this->queried_version = $this->get_default_version();
+
+		}
+
+	}
+
+	/**
 	 * Validate the API request
 	 *
 	 * Checks for the user's public key and token against the secret key
@@ -180,25 +307,31 @@ class EDD_API {
 
 		$this->override = false;
 
-        // Make sure we have both user and api key
+		// Make sure we have both user and api key
 		if ( ! empty( $wp_query->query_vars['edd-api'] ) && ( $wp_query->query_vars['edd-api'] != 'products' || ! empty( $wp_query->query_vars['token'] ) ) ) {
-			if ( empty( $wp_query->query_vars['token'] ) || empty( $wp_query->query_vars['key'] ) )
+
+			if ( empty( $wp_query->query_vars['token'] ) || empty( $wp_query->query_vars['key'] ) ) {
 				$this->missing_auth();
+			}
 
 			// Retrieve the user by public API key and ensure they exist
-			if ( ! ( $user = $this->get_user( $wp_query->query_vars['key'] ) ) ) :
+			if ( ! ( $user = $this->get_user( $wp_query->query_vars['key'] ) ) ) {
+
 				$this->invalid_key();
-			else :
+
+			} else {
+
 				$token  = urldecode( $wp_query->query_vars['token'] );
 				$secret = get_user_meta( $user, 'edd_user_secret_key', true );
 				$public = urldecode( $wp_query->query_vars['key'] );
 
-				if ( hash_equals( md5( $secret . $public ), $token ) )
+				if ( hash_equals( md5( $secret . $public ), $token ) ) {
 					$this->is_valid_request = true;
-				else
+				} else {
 					$this->invalid_auth();
-			endif;
-		} elseif ( !empty( $wp_query->query_vars['edd-api'] ) && $wp_query->query_vars['edd-api'] == 'products' ) {
+				}
+			}
+		} elseif ( ! empty( $wp_query->query_vars['edd-api'] ) && $wp_query->query_vars['edd-api'] == 'products' ) {
 			$this->is_valid_request = true;
 			$wp_query->set( 'key', 'public' );
 		}
@@ -219,8 +352,9 @@ class EDD_API {
 	public function get_user( $key = '' ) {
 		global $wpdb, $wp_query;
 
-		if( empty( $key ) )
+		if( empty( $key ) ) {
 			$key = urldecode( $wp_query->query_vars['key'] );
+		}
 
 		if ( empty( $key ) ) {
 			return false;
@@ -293,6 +427,21 @@ class EDD_API {
 		$this->output( 401 );
 	}
 
+	/**
+	 * Displays an invalid version error if the version number passed isn't valid
+	 *
+	 * @access private
+	 * @since 2.4
+	 * @uses EDD_API::output()
+	 * @return void
+	 */
+	private function invalid_version() {
+		$error = array();
+		$error['error'] = __( 'Invalid API version!', 'edd' );
+
+		$this->data = $error;
+		$this->output( 404 );
+	}
 
 	/**
 	 * Listens for the API and then processes the API requests
@@ -304,33 +453,40 @@ class EDD_API {
 	 * @return void
 	 */
 	public function process_query() {
+
 		global $wp_query;
 
 		// Check for edd-api var. Get out if not present
-		if ( ! isset( $wp_query->query_vars['edd-api'] ) )
+		if ( empty( $wp_query->query_vars['edd-api'] ) ) {
 			return;
+		}
+
+		// Determine which version was queried
+		$this->set_queried_version();
+
+		// Determine the kind of query
+		$this->set_query_mode();
 
 		// Check for a valid user and set errors if necessary
 		$this->validate_request();
 
 		// Only proceed if no errors have been noted
-		if( ! $this->is_valid_request )
+		if( ! $this->is_valid_request ) {
 			return;
+		}
 
 		if( ! defined( 'EDD_DOING_API' ) ) {
 			define( 'EDD_DOING_API', true );
 		}
 
-		// Determine the kind of query
-		$query_mode = $this->get_query_mode();
-
 		$data = array();
+		$this->routes = new $this->versions[ $this->get_queried_version() ];
 
-		switch( $query_mode ) :
+		switch( $this->endpoint ) :
 
 			case 'stats' :
 
-				$data = $this->get_stats( array(
+				$data = $this->routes->get_stats( array(
 					'type'      => isset( $wp_query->query_vars['type'] )      ? $wp_query->query_vars['type']      : null,
 					'product'   => isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null,
 					'date'      => isset( $wp_query->query_vars['date'] )      ? $wp_query->query_vars['date']      : null,
@@ -344,7 +500,7 @@ class EDD_API {
 
 				$product = isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null;
 
-				$data = $this->get_products( $product );
+				$data = $this->routes->get_products( $product );
 
 				break;
 
@@ -352,13 +508,13 @@ class EDD_API {
 
 				$customer = isset( $wp_query->query_vars['customer'] ) ? $wp_query->query_vars['customer']  : null;
 
-				$data = $this->get_customers( $customer );
+				$data = $this->routes->get_customers( $customer );
 
 				break;
 
 			case 'sales' :
 
-				$data = $this->get_recent_sales();
+				$data = $this->routes->get_recent_sales();
 
 				break;
 
@@ -366,14 +522,14 @@ class EDD_API {
 
 				$discount = isset( $wp_query->query_vars['discount'] ) ? $wp_query->query_vars['discount']  : null;
 
-				$data = $this->get_discounts( $discount );
+				$data = $this->routes->get_discounts( $discount );
 
 				break;
 
 		endswitch;
 
 		// Allow extensions to setup their own return data
-		$this->data = apply_filters( 'edd_api_output_data', $data, $query_mode, $this );
+		$this->data = apply_filters( 'edd_api_output_data', $data, $this->endpoint, $this );
 
 		// Log this API request, if enabled. We log it here because we have access to errors.
 		$this->log_request( $this->data );
@@ -383,14 +539,26 @@ class EDD_API {
 	}
 
 	/**
-	 * Determines the kind of query requested and also ensure it is a valid query
+	 * Returns the API endpoint requested
 	 *
 	 * @access private
 	 * @since 1.5
-	 * @global $wp_query
 	 * @return string $query Query mode
 	 */
 	public function get_query_mode() {
+
+		return $this->endpoint;
+	}
+
+	/**
+	 * Determines the kind of query requested and also ensure it is a valid query
+	 *
+	 * @access private
+	 * @since 2.4
+	 * @global $wp_query
+	 */
+	public function set_query_mode() {
+
 		global $wp_query;
 
 		// Whitelist our query options
@@ -403,7 +571,10 @@ class EDD_API {
 		) );
 
 		$query = isset( $wp_query->query_vars['edd-api'] ) ? $wp_query->query_vars['edd-api'] : null;
+		$query = str_replace( $this->queried_version . '/', '', $query );
+
 		$error = array();
+
 		// Make sure our query is valid
 		if ( ! in_array( $query, $accepted ) ) {
 			$error['error'] = __( 'Invalid query!', 'edd' );
@@ -412,7 +583,7 @@ class EDD_API {
 			$this->output();
 		}
 
-		return $query;
+		$this->endpoint = $query;
 	}
 
 	/**
@@ -447,23 +618,6 @@ class EDD_API {
 			$per_page = 99999999; // Customers query doesn't support -1
 
 		return apply_filters( 'edd_api_results_per_page', $per_page );
-	}
-
-	/**
-	 * Retrieve the output format
-	 *
-	 * Determines whether results should be displayed in XML or JSON
-	 *
-	 * @since 1.5
-	 *
-	 * @return mixed|void
-	 */
-	public function get_output_format() {
-		global $wp_query;
-
-		$format = isset( $wp_query->query_vars['format'] ) ? $wp_query->query_vars['format'] : 'json';
-
-		return apply_filters( 'edd_api_output_format', $format );
 	}
 
 	/**
@@ -940,7 +1094,7 @@ class EDD_API {
 					$sales['totals'] = $total;
 				} else {
 					if( $args['date'] == 'this_quarter' || $args['date'] == 'last_quarter'  ) {
-   						$sales_count = 0;
+						$sales_count = 0;
 
 						// Loop through the months
 						$month = $dates['m_start'];
@@ -951,9 +1105,9 @@ class EDD_API {
 						endwhile;
 
 						$sales['sales'][ $args['date'] ] = $sales_count;
-   					} else {
+					} else {
 						$sales['sales'][ $args['date'] ] = edd_get_sales_by_date( $dates['day'], $dates['m_start'], $dates['year'] );
-   					}
+					}
 				}
 			} elseif ( $args['product'] == 'all' ) {
 				$products = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) );
@@ -1049,7 +1203,7 @@ class EDD_API {
 					$earnings['totals'] = $total;
 				} else {
 					if ( $args['date'] == 'this_quarter' || $args['date'] == 'last_quarter'  ) {
-   						$earnings_count = (float) 0.00;
+						$earnings_count = (float) 0.00;
 
 						// Loop through the months
 						$month = $dates['m_start'];
@@ -1060,9 +1214,9 @@ class EDD_API {
 						endwhile;
 
 						$earnings['earnings'][ $args['date'] ] = $earnings_count;
-   					} else {
+					} else {
 						$earnings['earnings'][ $args['date'] ] = edd_get_earnings_by_date( $dates['day'], $dates['m_start'], $dates['year'] );
-   					}
+					}
 				}
 			} elseif ( $args['product'] == 'all' ) {
 				$products = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) );
@@ -1274,6 +1428,23 @@ class EDD_API {
 		return $discount_list;
 	}
 
+	/**
+	 * Retrieve the output format
+	 *
+	 * Determines whether results should be displayed in XML or JSON
+	 *
+	 * @since 1.5
+	 *
+	 * @return mixed|void
+	 */
+	public function get_output_format() {
+		global $wp_query;
+
+		$format = isset( $wp_query->query_vars['format'] ) ? $wp_query->query_vars['format'] : 'json';
+
+		return apply_filters( 'edd_api_output_format', $format );
+	}
+
 
 	/**
 	 * Log each API request, if enabled
@@ -1317,7 +1488,8 @@ class EDD_API {
 			'request_ip' => edd_get_ip(),
 			'user'       => $this->user_id,
 			'key'        => isset( $wp_query->query_vars['key'] ) ? $wp_query->query_vars['key'] : null,
-			'token'      => isset( $wp_query->query_vars['token'] ) ? $wp_query->query_vars['token'] : null
+			'token'      => isset( $wp_query->query_vars['token'] ) ? $wp_query->query_vars['token'] : null,
+			'version'    => $this->get_queried_version()
 		);
 
 		$edd_logs->insert_log( $log_data, $log_meta );
@@ -1546,6 +1718,10 @@ class EDD_API {
 		}
 
 		return true;
+	}
+
+	public function get_version() {
+		return self::VERSION;
 	}
 
 
