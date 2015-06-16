@@ -229,13 +229,13 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/deprecated-functions.php';
 		}
 		require_once EDD_PLUGIN_DIR . 'includes/ajax-functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/api/class-edd-api.php';
 		require_once EDD_PLUGIN_DIR . 'includes/template-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/checkout/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/checkout/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-api.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-customers.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer.php';
