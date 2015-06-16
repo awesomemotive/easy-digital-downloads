@@ -370,6 +370,14 @@ class EDD_API {
 
 				break;
 
+			case 'downloads' :
+
+				$customer = isset( $wp_query->query_vars['customer'] ) ? $wp_query->query_vars['customer']  : null;
+				
+				$data = $this->get_downloads( $customer );
+
+				break;
+
 		endswitch;
 
 		// Allow extensions to setup their own return data
@@ -399,7 +407,8 @@ class EDD_API {
 			'products',
 			'customers',
 			'sales',
-			'discounts'
+			'discounts',
+			'downloads'
 		) );
 
 		$query = isset( $wp_query->query_vars['edd-api'] ) ? $wp_query->query_vars['edd-api'] : null;
@@ -1272,6 +1281,87 @@ class EDD_API {
 		}
 
 		return $discount_list;
+	}
+
+
+	/**
+	 * Process Get Downloads API Request
+	 *
+	 * @access public
+	 * @since 2.5
+	 * @author Daniel J Griffiths
+	 * @global object $wpdb Used to query the database using the WordPress
+	 *   Database API
+	 * @return array $downloads Multidimensional array of the downloads
+	 */
+	public function get_downloads( $customer ) {
+		$downloads  = array();
+		$errors     = array();
+		$meta_query = array();
+
+		global $wpdb, $edd_logs;
+
+		$paged    = $this->get_paged();
+		$per_page = $this->per_page();
+		$offset   = $per_page * ( $paged - 1 );
+		$count    = 0;
+
+		if( $customer ) {
+			if( is_numeric( $customer ) ) {
+				$meta_query[] = array(
+					'key'   => '_edd_log_user_id',
+					'value' => $customer
+				);
+			} else {
+				$meta_query[] = array(
+					'key'     => '_edd_log_user_info',
+					'value'   => $customer,
+					'compare' => 'LIKE'
+				);
+			}
+		}
+
+		$query = array(
+			'log_type'       => 'file_download',
+			'paged'          => $paged,
+			'meta_query'     => $meta_query,
+			'posts_per_page' => $per_page,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false
+		);
+
+		$logs = $edd_logs->get_connected_logs( $query );
+
+		if ( empty( $logs ) ) {
+			$error['error'] = __( 'No downloads found!', 'edd' );
+			return $error;
+		}
+
+		foreach( $logs as $log ) {
+			$meta        = get_post_custom( $log->ID );
+			$user_info   = isset( $meta['_edd_log_user_info'] ) ? maybe_unserialize( $meta['_edd_log_user_info'][0] ) : array();
+			$payment_id  = isset( $meta['_edd_log_payment_id'] ) ? $meta['_edd_log_payment_id'][0] : false;
+			$customer_id = edd_get_payment_customer_id( $payment_id );
+			$ip          = $meta['_edd_log_ip'][0];
+			$user_id     = isset( $user_info['id'] ) ? $user_info['id'] : false;
+			$files       = edd_get_payment_meta_downloads( $payment_id );
+			$files       = edd_get_download_files( $files[0]['id'] );
+			$file_id     = (int) $meta['_edd_log_file_id'][0];
+			$file_id     = $file_id !== false ? $file_id : 0;
+			$file_name   = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
+
+			$downloads['downloads'][$count]['ID']          = $log->ID;
+			$downloads['downloads'][$count]['user_id']     = $user_id;
+			$downloads['downloads'][$count]['customer_id'] = $customer_id;
+			$downloads['downloads'][$count]['payment_id']  = $payment_id;
+			$downloads['downloads'][$count]['file']        = $file_name;
+			$downloads['downloads'][$count]['ip']          = $ip;
+			$downloads['downloads'][$count]['date']        = $log->post_date;
+
+			$count++;
+		}
+
+		return $downloads;
 	}
 
 
