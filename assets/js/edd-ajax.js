@@ -164,7 +164,7 @@ jQuery(document).ready(function ($) {
 			},
 			success: function (response) {
 
-				if( edd_scripts.redirect_to_checkout == '1' ) {
+				if( edd_scripts.redirect_to_checkout == '1' && form.find( '#edd_redirect_to_checkout' ).val() == '1' ) {
 
 					window.location = edd_scripts.checkout_page;
 
