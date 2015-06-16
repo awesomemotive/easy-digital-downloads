@@ -87,7 +87,6 @@ class Tests_EDD extends WP_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/class-edd-notices.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/dashboard-widgets.php' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/export-functions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/thickbox.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/upload-functions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/customers/class-customer-table.php' );
@@ -103,6 +102,7 @@ class Tests_EDD extends WP_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/payments/payments-history.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/payments/contextual-help.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/reporting/contextual-help.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/reporting/export/export-functions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/reporting/reports.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/reporting/pdf-reports.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/reporting/graphing.php' );

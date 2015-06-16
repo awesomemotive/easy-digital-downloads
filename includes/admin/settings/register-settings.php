@@ -183,10 +183,10 @@ function edd_register_settings() {
 					'std'         => isset( $option['std'] )         ? $option['std']     : '',
 					'min'         => isset( $option['min'] )         ? $option['min']     : null,
 					'max'         => isset( $option['max'] )         ? $option['max']     : null,
-                    'step'        => isset( $option['step'] )        ? $option['step']    : null,
-                    'chosen'      => isset( $option['chosen'] )      ? $option['chosen']  : null,
-                    'placeholder' => isset( $option['placeholder'] ) ? $option['placeholder'] : null,
-                    'allow_blank' => isset( $option['allow_blank'] ) ? $option['allow_blank'] : true
+					'step'        => isset( $option['step'] )        ? $option['step']    : null,
+					'chosen'      => isset( $option['chosen'] )      ? $option['chosen']  : null,
+					'placeholder' => isset( $option['placeholder'] ) ? $option['placeholder'] : null,
+					'allow_blank' => isset( $option['allow_blank'] ) ? $option['allow_blank'] : true
 				)
 			);
 		}
@@ -215,20 +215,14 @@ function edd_get_registered_settings() {
 		/** General Settings */
 		'general' => apply_filters( 'edd_settings_general',
 			array(
-				'test_mode' => array(
-					'id' => 'test_mode',
-					'name' => __( 'Test Mode', 'edd' ),
-					'desc' => __( 'While in test mode no live transactions are processed. To fully use test mode, you must have a sandbox (test) account for the payment gateway you are testing.', 'edd' ),
-					'type' => 'checkbox'
-				),
 				'purchase_page' => array(
 					'id' => 'purchase_page',
 					'name' => __( 'Checkout Page', 'edd' ),
 					'desc' => __( 'This is the checkout page where buyers will complete their purchases. The [download_checkout] short code must be on this page.', 'edd' ),
 					'type' => 'select',
-                    'options' => edd_get_pages(),
-                    'chosen' => true,
-                    'placeholder' => __( 'Select a page', 'edd' )
+					'options' => edd_get_pages(),
+					'chosen' => true,
+					'placeholder' => __( 'Select a page', 'edd' )
 				),
 				'success_page' => array(
 					'id' => 'success_page',
@@ -236,8 +230,8 @@ function edd_get_registered_settings() {
 					'desc' => __( 'This is the page buyers are sent to after completing their purchases. The [edd_receipt] short code should be on this page.', 'edd' ),
 					'type' => 'select',
 					'options' => edd_get_pages(),
-                    'chosen' => true,
-                    'placeholder' => __( 'Select a page', 'edd' )
+					'chosen' => true,
+					'placeholder' => __( 'Select a page', 'edd' )
 				),
 				'failure_page' => array(
 					'id' => 'failure_page',
@@ -245,8 +239,8 @@ function edd_get_registered_settings() {
 					'desc' => __( 'This is the page buyers are sent to if their transaction is cancelled or fails', 'edd' ),
 					'type' => 'select',
 					'options' => edd_get_pages(),
-                    'chosen' => true,
-                    'placeholder' => __( 'Select a page', 'edd' )
+					'chosen' => true,
+					'placeholder' => __( 'Select a page', 'edd' )
 				),
 				'purchase_history_page' => array(
 					'id' => 'purchase_history_page',
@@ -254,25 +248,25 @@ function edd_get_registered_settings() {
 					'desc' => __( 'This page shows a complete purchase history for the current user, including download links', 'edd' ),
 					'type' => 'select',
 					'options' => edd_get_pages(),
-                    'chosen' => true,
-                    'placeholder' => __( 'Select a page', 'edd' )
+					'chosen' => true,
+					'placeholder' => __( 'Select a page', 'edd' )
 				),
 				'base_country' => array(
 					'id' => 'base_country',
 					'name' => __( 'Base Country', 'edd' ),
 					'desc' => __( 'Where does your store operate from?', 'edd' ),
 					'type' => 'select',
-                    'options' => edd_get_country_list(),
-                    'chosen' => true,
-                    'placeholder' => __( 'Select a country', 'edd' )
+					'options' => edd_get_country_list(),
+					'chosen' => true,
+					'placeholder' => __( 'Select a country', 'edd' )
 				),
 				'base_state' => array(
 					'id' => 'base_state',
 					'name' => __( 'Base State / Province', 'edd' ),
 					'desc' => __( 'What state / province does your store operate from?', 'edd' ),
 					'type' => 'shop_states',
-                    'chosen' => true,
-                    'placeholder' => __( 'Select a state', 'edd' )
+					'chosen' => true,
+					'placeholder' => __( 'Select a state', 'edd' )
 				),
 				'currency_settings' => array(
 					'id' => 'currency_settings',
@@ -285,8 +279,8 @@ function edd_get_registered_settings() {
 					'name' => __( 'Currency', 'edd' ),
 					'desc' => __( 'Choose your currency. Note that some payment gateways have currency restrictions.', 'edd' ),
 					'type' => 'select',
-                    'options' => edd_get_currencies(),
-                    'chosen' => true
+					'options' => edd_get_currencies(),
+					'chosen' => true
 				),
 				'currency_position' => array(
 					'id' => 'currency_position',
@@ -349,6 +343,12 @@ function edd_get_registered_settings() {
 		/** Payment Gateways Settings */
 		'gateways' => apply_filters('edd_settings_gateways',
 			array(
+				'test_mode' => array(
+					'id' => 'test_mode',
+					'name' => __( 'Test Mode', 'edd' ),
+					'desc' => __( 'While in test mode no live transactions are processed. To fully use test mode, you must have a sandbox (test) account for the payment gateway you are testing.', 'edd' ),
+					'type' => 'checkbox'
+				),
 				'gateways' => array(
 					'id' => 'gateways',
 					'name' => __( 'Payment Gateways', 'edd' ),
@@ -698,7 +698,7 @@ function edd_get_registered_settings() {
 				'enable_sequential' => array(
 					'id' => 'enable_sequential',
 					'name' => __( 'Sequential Order Numbers', 'edd' ),
-					'desc' => __( 'Check this box to sequential order numbers.', 'edd' ),
+					'desc' => __( 'Check this box to enable sequential order numbers.', 'edd' ),
 					'type' => 'checkbox'
 				),
 				'sequential_start' => array(
@@ -759,6 +759,13 @@ function edd_get_registered_settings() {
 					'desc' => __( 'Text shown on the Add to Cart Buttons.', 'edd' ),
 					'type' => 'text',
 					'std'  => __( 'Add to Cart', 'edd' )
+				),
+				'buy_now_text' => array(
+					'id' => 'buy_now_text',
+					'name' => __( 'Buy Now Text', 'edd' ),
+					'desc' => __( 'Text shown on the Buy Now Buttons.', 'edd' ),
+					'type' => 'text',
+					'std' => __( 'Buy Now', 'edd' )
 				)
 			)
 		)

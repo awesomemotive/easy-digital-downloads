@@ -57,13 +57,14 @@ function edd_get_purchase_link( $args = array() ) {
 	}
 
 	$post_id = is_object( $post ) ? $post->ID : 0;
-
+	$button_behavior = edd_get_download_button_behavior( $post_id );
+	
 	$defaults = apply_filters( 'edd_purchase_link_defaults', array(
 		'download_id' => $post_id,
 		'price'       => (bool) true,
 		'price_id'    => isset( $args['price_id'] ) ? $args['price_id'] : false,
-		'direct'      => edd_get_download_button_behavior( $post_id ) == 'direct' ? true : false,
-		'text'        => edd_get_option( 'add_to_cart_text', __( 'Purchase', 'edd' ) ),
+		'direct'      => $button_behavior == 'direct' ? true : false,
+		'text'        => $button_behavior == 'direct' ? edd_get_option( 'buy_now_text', __( 'Buy Now', 'edd' ) ) : edd_get_option( 'add_to_cart_text', __( 'Purchase', 'edd' ) ),
 		'style'       => edd_get_option( 'button_style', 'button' ),
 		'color'       => edd_get_option( 'checkout_color', 'blue' ),
 		'class'       => 'edd-submit'
@@ -208,6 +209,10 @@ function edd_get_purchase_link( $args = array() ) {
 		<?php } else { ?>
 			<input type="hidden" name="edd_action" class="edd_action_input" value="add_to_cart">
 		<?php } ?>
+
+		<?php if( apply_filters( 'edd_download_redirect_to_checkout', edd_straight_to_checkout(), $download->ID, $args ) ) : ?>
+			<input type="hidden" name="edd_redirect_to_checkout" id="edd_redirect_to_checkout" value="1">
+		<?php endif; ?>
 
 		<?php do_action( 'edd_purchase_link_end', $download->ID, $args ); ?>
 
