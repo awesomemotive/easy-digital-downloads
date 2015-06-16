@@ -238,7 +238,7 @@
     display: inline-block;
     width: auto;
 }
-#edd_checkout_form_wrap p {
+#edd_checkout_form_wrap > p {
     margin: 0 0 21px
 }
 #edd_checkout_form_wrap span.edd-required-indicator {
@@ -918,6 +918,60 @@ input[type="submit"].edd-submit:focus,
     font-size: 75%;
     font-style: italic;
 }
+
+/** Usage Is as Follows */
+/* <div class="edd-alert edd-error">This is your error message</div> */
+/* Replace edd-error with the class of your choice */
+
+/* Alert Styles */
+div.edd-alert,
+span.edd-alert {
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid transparent;
+    vertical-align: middle;
+}
+
+.edd-alert p:not(:last-child) {
+    margin-bottom: 5px;
+}
+
+.edd-alert p:last-child {
+    margin-bottom: 0;
+}
+
+div.edd-error,
+span.edd-error {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+
+div.edd-success,
+span.edd-success {
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+    color:#3c763d;
+}
+
+div.edd-info,
+span.edd-info {
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+}
+
+div.edd-warn,
+span.edd-warn {
+    color: #8a6d3b;
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+}
+
+/** These styles are being depricated, please move the new Alerts class above */
 /* =Error styles
 -------------------------------------------------------------- */
 
@@ -950,3 +1004,4 @@ p.edd_error {
     padding: 6px 8px;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
+/** End Depricated styles */
