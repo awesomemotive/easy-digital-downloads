@@ -210,6 +210,10 @@ function edd_get_purchase_link( $args = array() ) {
 			<input type="hidden" name="edd_action" class="edd_action_input" value="add_to_cart">
 		<?php } ?>
 
+		<?php if( apply_filters( 'edd_download_redirect_to_checkout', edd_straight_to_checkout(), $download->ID, $args ) ) : ?>
+			<input type="hidden" name="edd_redirect_to_checkout" id="edd_redirect_to_checkout" value="1">
+		<?php endif; ?>
+
 		<?php do_action( 'edd_purchase_link_end', $download->ID, $args ); ?>
 
 	</form><!--end #<?php echo esc_attr( $form_id ); ?>-->
