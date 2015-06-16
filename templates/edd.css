@@ -973,7 +973,7 @@ span.edd-warn {
 
 /** These styles are being depricated, please move the new Alerts class above */
 /* =Error styles
--------------------------------------------------------------- */
+--------------------------------------------------------------
 
 .edd_errors {
     -webkit-border-radius: 2px;
@@ -991,7 +991,7 @@ p.edd_error {
     margin: 0 !important
 }
 /* =Success Message styles
--------------------------------------------------------------- */
+--------------------------------------------------------------
 
 .edd_success {
     -webkit-border-radius: 2px;
