@@ -232,11 +232,12 @@ class EDD_HTML_Elements {
 			$options[ absint( $category->term_id ) ] = esc_html( $category->name );
 		}
 
+		$category_labels = edd_get_taxonomy_labels( 'download_category' );
 		$output = $this->select( array(
 			'name'             => $name,
 			'selected'         => $selected,
 			'options'          => $options,
-			'show_option_all'  => __( 'All Categories', 'edd' ),
+			'show_option_all'  => sprintf( _x( 'All %s', 'plural: Example: "All Categories"', 'edd' ), $category_labels['name'] ),
 			'show_option_none' => false
 		) );
 
@@ -480,6 +481,24 @@ class EDD_HTML_Elements {
 		$output .= '</span>';
 
 		return $output;
+	}
+	/**
+	 * Renders a date picker
+	 *
+	 * @since 2.4
+	 *
+	 * @param array $args Arguments for the text field
+	 * @return string Datepicker field
+	 */
+	public function date_field( $args = array() ) {
+
+		if( empty( $args['class'] ) ) {
+			$args['class'] = 'edd_datepicker';
+		} elseif( ! strpos( $args['class'], 'edd_datepicker' ) ) {
+			$args['class'] .= ' edd_datepicker';
+		}
+
+		return $this->text( $args );
 	}
 
 	/**
