@@ -159,7 +159,7 @@ function edd_user_info_fields() {
 
 	if( is_user_logged_in() ) {
 		$user_data = get_userdata( get_current_user_id() );
-		foreach( $customer as $key => $field ) { 
+		foreach( $customer as $key => $field ) {
 
 			if ( 'email' == $key && empty( $field ) ) {
 				$customer[ $key ] = $user_data->user_email;
@@ -308,7 +308,7 @@ function edd_default_cc_address_fields() {
 
 		$user_address = get_user_meta( get_current_user_id(), '_edd_user_address', true );
 
-		foreach( $customer['address'] as $key => $field ) { 
+		foreach( $customer['address'] as $key => $field ) {
 
 			if ( empty( $field ) && ! empty( $user_address[ $key ] ) ) {
 				$customer['address'][ $key ] = $user_address[ $key ];
@@ -708,7 +708,7 @@ function edd_discount_field() {
 				<span class="edd-description"><?php _e( 'Enter a coupon code if you have one.', 'edd' ); ?></span>
 				<input class="edd-input" type="text" id="edd-discount" name="edd-discount" placeholder="<?php _e( 'Enter discount', 'edd' ); ?>"/>
 				<input type="submit" class="edd-apply-discount edd-submit button <?php echo $color . ' ' . $style; ?>" value="<?php echo _x( 'Apply', 'Apply discount at checkout', 'edd' ); ?>"/>
-				<span id="edd-discount-error-wrap" class="edd_errors" style="display:none;"></span>
+				<span id="edd-discount-error-wrap" class="edd-alert edd-error" style="display:none;"></span>
 			</p>
 		</fieldset>
 <?php

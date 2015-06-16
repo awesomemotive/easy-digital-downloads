@@ -209,12 +209,12 @@ function edd_display_cart_messages() {
 
 	if ( $messages ) {
 		$classes = apply_filters( 'edd_error_class', array(
-			'edd_errors'
+			'edd-alert', 'edd-error'
 		) );
 		echo '<div class="' . implode( ' ', $classes ) . '">';
 		    // Loop message codes and display messages
 		   foreach ( $messages as $message_id => $message ){
-		        echo '<p class="edd_error" id="edd_msg_' . $message_id . '">' . $message . '</p>';
+		        echo '<p id="edd_msg_' . $message_id . '">' . $message . '</p>';
 		   }
 		echo '</div>';
 
