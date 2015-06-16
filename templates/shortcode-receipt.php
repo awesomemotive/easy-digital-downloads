@@ -8,7 +8,7 @@ $payment   = get_post( $edd_receipt_args['id'] );
 
 if( empty( $payment ) ) : ?>
 
-	<div class="edd-alert edd-error">
+	<div class="edd_errors edd-alert edd-error">
 		<?php _e( 'The specified receipt ID appears to be invalid', 'edd' ); ?>
 	</div>
 
