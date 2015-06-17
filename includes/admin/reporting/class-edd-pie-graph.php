@@ -66,7 +66,7 @@ class EDD_Pie_Graph extends EDD_Graph {
 	 *
 	 * @since 2.4
 	 */
-	public function __construct( $_data, $options ) {
+	public function __construct( $_data, $options = array() ) {
 
 		$this->data = $_data;
 		// Set this so filters recieving $this can quickly know if it's a graph they want to modify
@@ -82,6 +82,8 @@ class EDD_Pie_Graph extends EDD_Graph {
 			'legend_formatter' => false,
 			'label_formatter'  => false,
 			'height'           => '300',
+			'hoverable'        => true,
+			'clickable'        => false,
 		);
 
 		$this->options = wp_parse_args( $options, $defaults );
@@ -126,20 +128,43 @@ class EDD_Pie_Graph extends EDD_Graph {
 					pie: {
 						show: true,
 						radius: <?php echo $this->options['radius']; ?>,
+					},
+					edd_vars: {
+						id: '<?php echo $this->id; ?>',
 					}
 				},
 				legend: {
 					show: <?php echo $this->options['legend']; ?>,
 				},
+				grid: {},
 			};
 
 			<?php if ( true === $this->options['legend'] && ! empty( $this->options['legend_formatter'] ) ) : ?>
 				<?php echo $this->id; ?>_options.legend.labelFormatter = <?php echo $this->options['legend_formatter']; ?>;
 			<?php endif; ?>
 
+			<?php if ( true === $this->options['hoverable'] ) : ?>
+				<?php echo $this->id; ?>_options.grid.hoverable = true;
+			<?php endif; ?>
+
+			<?php if ( true === $this->options['clickable'] ) : ?>
+				<?php echo $this->id; ?>_options.grid.clickable = true;
+			<?php endif; ?>
+
 			jQuery( document ).ready( function($) {
 				var <?php echo $this->id; ?>Chart = $('#edd-pie-graph-<?php echo $this->id; ?>');
 				$.plot( <?php echo $this->id; ?>Chart, <?php echo $this->id; ?>_data, <?php echo $this->id; ?>_options );
+				$(<?php echo $this->id; ?>Chart).bind("plothover", function (event, pos, item) {
+					$('.edd-pie-legend-item').css('background-color', 'inherit');
+					if ( item ) {
+						var label = item.series.label;
+						var id    = item.series.edd_vars.id;
+
+						var slug = label.toLowerCase().replace(/\s/g, '-');
+						var legendTarget = '#' + id + slug;
+						$(legendTarget).css('background-color', '#f0f0f0');
+					}
+				});
 			});
 
 		</script>
