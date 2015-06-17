@@ -124,6 +124,13 @@ function edd_show_upgrade_notices() {
 			);
 		}
 
+		if ( version_compare( $edd_version, '2.4', '<' ) || ! edd_has_upgrade_completed( 'upgrade_user_api_keys' ) ) {
+			printf(
+				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the API Key database, click <a href="%s">here</a> to start the upgrade.', 'edd' ) . '</p></div>',
+				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_user_api_keys' ) )
+			);
+		}
+
 		/*
 		 *  NOTICE:
 		 *
@@ -984,3 +991,88 @@ function edd_v23_upgrade_customer_purchases() {
 	}
 }
 add_action( 'edd_upgrade_customer_payments_association', 'edd_v23_upgrade_customer_purchases' );
+
+/**
+ * Upgrade the Usermeta API Key storage to swap keys/values for performance
+ *
+ * @since  2.4
+ * @return void
+ */
+function edd_upgrade_user_api_keys() {
+	global $wpdb;
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		wp_die( __( 'You do not have permission to do shop upgrades', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+	}
+
+	ignore_user_abort( true );
+
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+		@set_time_limit(0);
+	}
+
+	$step   = isset( $_GET['step'] ) ? absint( $_GET['step'] ) : 1;
+	$number = 10;
+	$offset = $step == 1 ? 0 : ( $step - 1 ) * $number;
+
+	if ( $step < 2 ) {
+		// Check if we have any users with API Keys before moving on
+		$sql     = "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'edd_user_public_key' LIMIT 1";
+		$has_key = $wpdb->get_col( $sql );
+
+		if( empty( $has_key ) ) {
+			// We had no key, just complete
+			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+			edd_set_upgrade_complete( 'upgrade_user_api_keys' );
+			delete_option( 'edd_doing_upgrade' );
+			wp_redirect( admin_url() ); exit;
+		}
+	}
+
+	$total = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : false;
+
+	if ( empty( $total ) || $total <= 1 ) {
+		$total = $wpdb->get_var( "SELECT count(user_id) FROM $wpdb->usermeta WHERE meta_key = 'edd_user_public_key'" );
+	}
+
+	$keys_sql   = $wpdb->prepare( "SELECT user_id, meta_key, meta_value FROM $wpdb->usermeta WHERE meta_key = 'edd_user_public_key' OR meta_key = 'edd_user_secret_key' ORDER BY user_id ASC LIMIT %d,%d;", $offset, $number );
+	$found_keys = $wpdb->get_results( $keys_sql );
+
+	if( ! empty( $found_keys ) ) {
+
+
+		foreach( $found_keys as $key ) {
+			$user_id    = $key->user_id;
+			$meta_key   = $key->meta_key;
+			$meta_value = $key->meta_value;
+
+			// Generate a new entry
+			update_user_meta( $user_id, $meta_value, $meta_key );
+
+			// Delete the old one
+			delete_user_meta( $user_id, $meta_key );
+
+		}
+
+		// More Payments found so upgrade them
+		$step++;
+		$redirect = add_query_arg( array(
+			'page'        => 'edd-upgrades',
+			'edd-upgrade' => 'upgrade_user_api_keys',
+			'step'        => $step,
+			'number'      => $number,
+			'total'       => $total
+		), admin_url( 'index.php' ) );
+		wp_redirect( $redirect ); exit;
+	} else {
+
+		// No more customers found, finish up
+
+		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+		edd_set_upgrade_complete( 'upgrade_user_api_keys' );
+		delete_option( 'edd_doing_upgrade' );
+
+		wp_redirect( admin_url() ); exit;
+	}
+}
+add_action( 'edd_upgrade_user_api_keys', 'edd_upgrade_user_api_keys' );
