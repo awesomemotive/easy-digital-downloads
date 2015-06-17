@@ -308,6 +308,12 @@ td.edd_order_price { text-align: right; }
 	.download_page_edd-tools .apikeys .column-user {
 		width: 80px;
 	}
+
+	.edd-mix-chart {
+		display: block;
+		width: 100%;
+	}
+
 }
 
 /* Customer Styles
