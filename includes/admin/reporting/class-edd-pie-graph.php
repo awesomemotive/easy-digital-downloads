@@ -154,6 +154,7 @@ class EDD_Pie_Graph extends EDD_Graph {
 			jQuery( document ).ready( function($) {
 				var <?php echo $this->id; ?>Chart = $('#edd-pie-graph-<?php echo $this->id; ?>');
 				$.plot( <?php echo $this->id; ?>Chart, <?php echo $this->id; ?>_data, <?php echo $this->id; ?>_options );
+				<?php if ( ! wp_is_mobile() ) : ?>
 				$(<?php echo $this->id; ?>Chart).bind("plothover", function (event, pos, item) {
 					$('.edd-pie-legend-item').css('background-color', 'inherit');
 					if ( item ) {
@@ -165,6 +166,7 @@ class EDD_Pie_Graph extends EDD_Graph {
 						$(legendTarget).css('background-color', '#f0f0f0');
 					}
 				});
+				<?php endif; ?>
 			});
 
 		</script>
