@@ -245,6 +245,8 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 			$data[ $item['label'] ] = $item['total_sales_raw'];
 		}
 
+		// Sort High to Low, prior to filter so people can reorder if they please
+		arsort( $data );
 		$data = apply_filters( 'edd_category_sales_graph_data', $data );
 
 		$options = apply_filters( 'edd_category_sales_graph_options', array(
@@ -275,6 +277,8 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 			$data[ $item['label'] ] = $item['total_earnings_raw'];
 		}
 
+		// Sort High to Low, prior to filter so people can reorder if they please
+		arsort( $data );
 		$data = apply_filters( 'edd_category_earnings_graph_data', $data );
 
 		$options = apply_filters( 'edd_category_earnings_graph_options', array(

@@ -1487,13 +1487,15 @@ var eddFormatNumber = function(value) {
 }
 
 var eddLabelFormatter = function (label, series) {
-	return "<div style='font-size:8pt; text-align:center; padding:2px; color:white; padding: 0 5px'>" + label + ': ' + Math.round(series.percent) + "%</div>";
+	return '<div style="font-size:8pt; text-align:center; padding:2px; color:white; padding: 0 5px">' + label + ': ' + Math.round(series.percent) + '%</div>';
 }
 
 var eddLegendFormatterSales = function (label, series) {
-	return "<div style='font-size:8pt; padding:2px; color:#333; padding: 0 5px'>" + label + ': ' + Math.round(series.percent) + "% ( " + eddFormatNumber(series.data[0][1]) + " )</div>";
+	var slug = label.toLowerCase().replace(/\s/g, '-');
+	return '<div id="' + series.edd_vars.id + slug + '" class="edd-pie-legend-item">' + label + ': ' + Math.round(series.percent) + '% ( ' + eddFormatNumber(series.data[0][1]) + ' )</div>';
 }
 
 var eddLegendFormatterEarnings = function (label, series) {
-	return "<div style='font-size:8pt; padding:2px; color:#333; padding: 0 5px'>" + label + ': ' + Math.round(series.percent) + "% ( " + eddFormatCurrency(series.data[0][1]) + " )</div>";
+	var slug = label.toLowerCase().replace(/\s/g, '-');
+	return '<div id="' + series.edd_vars.id + slug + '" class="edd-pie-legend-item">' + label + ': ' + Math.round(series.percent) + '% ( ' + eddFormatCurrency(series.data[0][1]) + ' )</div>';
 }
