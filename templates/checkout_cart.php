@@ -33,9 +33,15 @@ global $post; ?>
 								$item_title .= ' - ' . edd_get_cart_item_price_name( $item );
 							}
 							echo '<span class="edd_checkout_cart_item_title">' . esc_html( $item_title ) . '</span>';
+							do_action( 'edd_checkout_cart_item_title_after', $item );
 						?>
 					</td>
-					<td class="edd_cart_item_price"><?php echo edd_cart_item_price( $item['id'], $item['options'] ); ?></td>
+					<td class="edd_cart_item_price">
+						<?php 
+						echo edd_cart_item_price( $item['id'], $item['options'] );
+						do_action( 'edd_checkout_cart_item_price_after', $item );
+						?>
+					</td>
 					<td class="edd_cart_actions">
 						<?php if( edd_item_quantities_enabled() ) : ?>
 							<input type="number" min="1" step="1" name="edd-cart-download-<?php echo $key; ?>-quantity" data-key="<?php echo $key; ?>" class="edd-input edd-item-quantity" value="<?php echo edd_get_cart_item_quantity( $item['id'], $item['options'] ); ?>"/>
