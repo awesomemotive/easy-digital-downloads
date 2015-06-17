@@ -219,9 +219,13 @@ class Tests_API extends WP_UnitTestCase {
 
 	public function test_get_queried_version() {
 
+		$this->go_to( home_url( '/edd-api/products' ) );
+
 		$this->assertEquals( 'v1', $this->_api->get_queried_version() );
 
 		define( 'EDD_API_VERSION', 'v2' );
+
+		$this->go_to( home_url( '/edd-api/products' ) );
 		$this->assertEquals( 'v2', $this->_api->get_default_version() );
 
 	}
