@@ -277,6 +277,9 @@ function edd_reports_categories() {
 			<span>
 				<em><sup>&dagger;</sup> <?php _e( 'All Parent categories include sales and earnings stats from child categories.', 'edd' ); ?></em>
 			</span>
+			<span>
+				<em><?php _e( 'Stats include all sales and earnings for the lifetime of the store.', 'edd' ); ?></em>
+			</span>
 		</p>
 
 	</div>
