@@ -220,7 +220,7 @@ function edd_display_cart_messages() {
 			}
 
 			$classes = apply_filters( 'edd_' . $type . '_class', array(
-				'edd_errors', 'edd-alert', 'edd-' . $type
+				'edd_errors', 'edd-alert', 'edd-alert-' . $type
 			) );
 
 			echo '<div class="' . implode( ' ', $classes ) . '">';
