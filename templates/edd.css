@@ -962,8 +962,7 @@ input[type="submit"].edd-submit:focus,
 /* Replace edd-error with the class of your choice */
 
 /* Alert Styles */
-div.edd-alert,
-span.edd-alert {
+.edd-alert {
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
@@ -981,29 +980,25 @@ span.edd-alert {
     margin-bottom: 0;
 }
 
-div.edd-error,
-span.edd-error {
+.edd-alert-error {
     color: #a94442;
     background-color: #f2dede;
     border-color: #ebccd1;
 }
 
-div.edd-success,
-span.edd-success {
+.edd-alert-success {
     background-color: #dff0d8;
     border-color: #d6e9c6;
     color:#3c763d;
 }
 
-div.edd-info,
-span.edd-info {
+.edd-alert-info {
     color: #31708f;
     background-color: #d9edf7;
     border-color: #bce8f1;
 }
 
-div.edd-warn,
-span.edd-warn {
+.edd-alert-warn {
     color: #8a6d3b;
     background-color: #fcf8e3;
     border-color: #faebcc;
