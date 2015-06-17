@@ -221,7 +221,7 @@ final class EDD_Amazon_Payments {
 			$this->gateway_id => array(
 				'admin_label'    => __( 'Amazon', 'edd' ),
 				'checkout_label' => __( 'Amazon', 'edd' ),
-				'supports'       => array( 'buy_now' ),
+				'supports'       => array(),
 			),
 		);
 
