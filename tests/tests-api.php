@@ -219,6 +219,10 @@ class Tests_API extends WP_UnitTestCase {
 
 	public function test_get_queried_version() {
 
+		global $wp_query;
+
+		$wp_query->query_vars['edd-api'] = 'sales';
+
 		$this->_api->process_query();
 
 		$this->assertEquals( 'v1', $this->_api->get_queried_version() );
