@@ -911,12 +911,20 @@ input[type="submit"].edd-submit:focus,
 }
 .edd_subtotal {
     font-weight: bold;
-    margin: 8px 0 8px 0;
     font-style: italic;
 }
 .edd_purchase_tax_rate {
     font-size: 75%;
     font-style: italic;
+}
+.edd_total {
+    font-weight: bold;
+}
+.edd-cart-meta {
+    padding: 2px 5px;
+}
+.edd-cart-meta:nth-child(even) {
+    background-color: #f9f9f9;
 }
 /* =Error styles
 -------------------------------------------------------------- */
