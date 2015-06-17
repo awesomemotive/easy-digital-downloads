@@ -27,35 +27,20 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 class EDD_Categories_Reports_Table extends WP_List_Table {
 
 	/**
-	 * @var int Number of items per page
-	 * @since 1.5
-	 */
-	public $per_page = 30;
-
-
-	/**
 	 * Get things started
 	 *
-	 * @since 1.5
+	 * @since 2.4
 	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct() {
 		global $status, $page;
-
-		// Set parent defaults
-		parent::__construct( array(
-			'singular'  => edd_get_label_singular(),    // Singular name of the listed records
-			'plural'    => edd_get_label_plural(),    	// Plural name of the listed records
-			'ajax'      => false             			// Does this table support ajax?
-		) );
-
 	}
 
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
 	 * @access public
-	 * @since 1.5
+	 * @since 2.4
 	 *
 	 * @param array $item Contains all the data of the downloads
 	 * @param string $column_name The name of the column
@@ -70,7 +55,7 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 	 * Retrieve the table columns
 	 *
 	 * @access public
-	 * @since 1.5
+	 * @since  2.4
 	 * @return array $columns Array of all the list table columns
 	 */
 	public function get_columns() {
@@ -85,12 +70,11 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 		return $columns;
 	}
 
-
 	/**
 	 * Retrieve the current page number
 	 *
 	 * @access public
-	 * @since 1.5
+	 * @since  2.4
 	 * @return int Current page number
 	 */
 	public function get_paged() {
@@ -102,7 +86,7 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 	 * Outputs the reporting views
 	 *
 	 * @access public
-	 * @since 1.5
+	 * @since  2.4
 	 * @return void
 	 */
 	public function bulk_actions( $which = '' ) {
@@ -115,7 +99,7 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 	 * Build all the reports data
 	 *
 	 * @access public
-	 * @since 1.5
+	 * @since  2.4
 	 * @return array $reports_data All the data for customer reports
 	 */
 	public function reports_data() {
@@ -242,18 +226,6 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Load the Necessary scripts for this graph page
-	 *
-	 * @since  2.4
-	 */
-	public function load_scripts() {
-		$required_graphing_libraries = array(
-			'jquery.flot.pie',
-		);
-		edd_load_graph_scripts( $required_graphing_libraries );
-	}
-
-	/**
 	 * Output the Category Sales Mix Pie Chart
 	 *
 	 * @since  2.4
@@ -279,7 +251,8 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 			'legend_formatter' => 'legendFormatterSales',
 		), $data );
 
-		return edd_pie_graph( 'category_sales', $data, $options );
+		$pie_graph = new EDD_Pie_Graph( $data, $options );
+		$pie_graph->display();
 	}
 
 	/**
@@ -308,14 +281,15 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 			'legend_formatter' => 'legendFormatterEarnings',
 		), $data );
 
-		return edd_pie_graph( 'category_earnings', $data, $options );
+		$pie_graph = new EDD_Pie_Graph( $data, $options );
+		$pie_graph->display();
 	}
 
 	/**
 	 * Setup the final data for the table
 	 *
 	 * @access public
-	 * @since 1.5
+	 * @since 2.4
 	 * @uses EDD_Gateawy_Reports_Table::get_columns()
 	 * @uses EDD_Gateawy_Reports_Table::get_sortable_columns()
 	 * @uses EDD_Gateawy_Reports_Table::reports_data()

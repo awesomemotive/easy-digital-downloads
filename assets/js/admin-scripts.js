@@ -1178,7 +1178,7 @@ jQuery(document).ready(function ($) {
 
 			$('body').on( 'submit', '.edd-export-form', function(e) {
 				e.preventDefault();
-				
+
 				var data = $(this).serialize();
 
 				//$(this).find('.spinner').addClass( 'is-active' );
@@ -1191,7 +1191,7 @@ jQuery(document).ready(function ($) {
 		},
 
 		process_step : function( step, data, self ) {
-			
+
 			$.ajax({
 				type: 'POST',
 				url: ajaxurl,
@@ -1207,7 +1207,7 @@ jQuery(document).ready(function ($) {
 
 						$('.edd-export-form').find('.spinner').remove();
 						$('.edd-export-form').find('.edd-progress').remove();
-						
+
 						window.location = response.url;
 
 					} else {
@@ -1431,3 +1431,35 @@ jQuery(document).ready(function ($) {
 	});
 
 });
+
+// Graphing Helper Functions
+
+var formatCurrency = function (value) {
+	// Convert the value to a floating point number in case it arrives as a string.
+	var numeric = parseFloat(value);
+	// Specify the local currency.
+	var storeCurrency = edd_vars.currency;
+	var decimalPlaces = edd_vars.currency_decimals;
+	return numeric.toLocaleString(storeCurrency, { style: 'currency', currency: storeCurrency, minimumFractionDigits: decimalPlaces, maximumFractionDigits: decimalPlaces });
+}
+
+var formatNumber = function(value) {
+	// Convert the value to a floating point number in case it arrives as a string.
+	var numeric = parseFloat(value);
+	// Specify the local currency.
+	var storeCurrency = edd_vars.currency;
+	var decimalPlaces = edd_vars.currency_decimals;
+	return numeric.toLocaleString(storeCurrency, { style: 'decimal', minimumFractionDigits: 0, maximumFractionDigits: 0 });
+}
+
+var labelFormatter = function (label, series) {
+	return "<div style='font-size:8pt; text-align:center; padding:2px; color:white; padding: 0 5px'>" + label + ': ' + Math.round(series.percent) + "%</div>";
+}
+
+var legendFormatterSales = function (label, series) {
+	return "<div style='font-size:8pt; padding:2px; color:#333; padding: 0 5px'>" + label + ': ' + Math.round(series.percent) + "% ( " + formatNumber(series.data[0][1]) + " )</div>";
+}
+
+var legendFormatterEarnings = function (label, series) {
+	return "<div style='font-size:8pt; padding:2px; color:#333; padding: 0 5px'>" + label + ': ' + Math.round(series.percent) + "% ( " + formatCurrency(series.data[0][1]) + " )</div>";
+}

@@ -239,6 +239,11 @@ function edd_reports_earnings() {
 add_action( 'edd_reports_view_earnings', 'edd_reports_earnings' );
 
 
+/**
+ * Renders the Reports Earnings By Category Table & Graphs
+ *
+ * @since  2.4
+ */
 function edd_reports_categories() {
 	if( ! current_user_can( 'view_shop_reports' ) ) {
 		return;
@@ -258,11 +263,11 @@ function edd_reports_categories() {
 		<div class="edd-mix-totals">
 			<div class="edd-mix-chart">
 				<strong><?php _e( 'Category Sales Mix: ', 'edd' ); ?></strong>
-				<?php echo $categories_table->output_sales_graph(); ?>
+				<?php $categories_table->output_sales_graph(); ?>
 			</div>
 			<div class="edd-mix-chart">
 				<strong><?php _e( 'Category Earnings Mix: ', 'edd' ); ?></strong>
-				<?php echo $categories_table->output_earnings_graph(); ?>
+				<?php $categories_table->output_earnings_graph(); ?>
 			</div>
 		</div>
 
@@ -271,9 +276,6 @@ function edd_reports_categories() {
 		<p class="edd-graph-notes">
 			<span>
 				<em><sup>&dagger;</sup> <?php _e( 'All Parent categories include sales and earnings stats from child categories.', 'edd' ); ?></em>
-			</span>
-			<span>
-				<em><?php _e( 'Items that total less than 1% on graphs do not show labels.', 'edd' ); ?></em>
 			</span>
 		</p>
 
