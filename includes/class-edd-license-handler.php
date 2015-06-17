@@ -20,6 +20,7 @@ class EDD_License {
 	private $file;
 	private $license;
 	private $item_name;
+	private $item_id;
 	private $item_shortname;
 	private $version;
 	private $author;
@@ -35,9 +36,16 @@ class EDD_License {
 	 * @param string  $_optname
 	 * @param string  $_api_url
 	 */
-	function __construct( $_file, $_item_name, $_version, $_author, $_optname = null, $_api_url = null ) {
+	function __construct( $_file, $_item, $_version, $_author, $_optname = null, $_api_url = null ) {
+
 		$this->file           = $_file;
-		$this->item_name      = $_item_name;
+
+		if( is_numeric( $_item ) ) {
+			$this->item_id    = absint( $_item );
+		} else {
+			$this->item_name  = $_item;
+		}
+
 		$this->item_shortname = 'edd_' . preg_replace( '/[^a-zA-Z0-9_\s]/', '', str_replace( ' ', '_', strtolower( $this->item_name ) ) );
 		$this->version        = $_version;
 		$this->license        = trim( edd_get_option( $this->item_shortname . '_license_key', '' ) );
@@ -108,16 +116,23 @@ class EDD_License {
 		if ( 'valid' !== get_option( $this->item_shortname . '_license_active' ) )
 			return;
 
+		$args = array(
+			'version'   => $this->version,
+			'license'   => $this->license,
+			'author'    => $this->author
+		);
+
+		if( ! empty( $this->item_id ) ) {
+			$args['item_id']   = $this->item_id;
+		} else {
+			$args['item_name'] = $this->item_name;
+		}
+
 		// Setup the updater
 		$edd_updater = new EDD_SL_Plugin_Updater(
 			$this->api_url,
 			$this->file,
-			array(
-				'version'   => $this->version,
-				'license'   => $this->license,
-				'item_name' => $this->item_name,
-				'author'    => $this->author
-			)
+			$args
 		);
 	}
 

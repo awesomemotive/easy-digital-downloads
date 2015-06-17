@@ -88,6 +88,7 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 		$columns = array(
 			'ID'         => __( 'Log ID', 'edd' ),
 			'details'    => __( 'Request Details', 'edd' ),
+			'version'    => __( 'API Version', 'edd' ),
 			'ip'         => __( 'Request IP', 'edd' ),
 			'date'       => __( 'Date', 'edd' )
 		);
@@ -258,9 +259,10 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 			foreach ( $logs as $log ) {
 
 				$logs_data[] = array(
-					'ID'   => $log->ID,
-					'ip'   => get_post_meta( $log->ID, '_edd_log_request_ip', true ),
-					'date' => $log->post_date
+					'ID'      => $log->ID,
+					'version' => get_post_meta( $log->ID, '_edd_log_version', true ),
+					'ip'      => get_post_meta( $log->ID, '_edd_log_request_ip', true ),
+					'date'    => $log->post_date
 				);
 			}
 		}
