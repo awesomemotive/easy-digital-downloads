@@ -67,7 +67,8 @@ function edd_generate_pdf( $data ) {
 	$pdf->SetFillColor( 238, 238, 238 );
 	$pdf->Cell( 70, 6, utf8_decode( __( 'Product Name', 'edd' ) ), 1, 0, 'L', true );
 	$pdf->Cell( 30, 6, utf8_decode( __( 'Price', 'edd' ) ), 1, 0, 'L', true );
-	$pdf->Cell( 50, 6, utf8_decode( __( 'Categories', 'edd' ) ), 1, 0, 'L', true );
+	$category_labels = edd_get_taxonomy_labels( 'download_category' );
+	$pdf->Cell( 50, 6, utf8_decode( $category_labels['name'] ), 1, 0, 'L', true );
 	$pdf->Cell( 50, 6, utf8_decode( __( 'Tags', 'edd' ) ), 1, 0, 'L', true );
 	$pdf->Cell( 45, 6, utf8_decode( __( 'Number of Sales', 'edd' ) ), 1, 0, 'L', true );
 	$pdf->Cell( 35, 6, utf8_decode( __( 'Earnings to Date', 'edd' ) ), 1, 1, 'L', true );
