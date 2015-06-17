@@ -720,7 +720,9 @@ final class EDD_Amazon_Payments {
 	public function checkout_errors( $valid_data, $post_data ) {
 
 		// should validate that we have a reference ID here, perhaps even fire the API call here
-
+		if( empty( $post_data['edd_amazon_reference_id'] ) ) {
+			edd_set_error( 'missing_reference_id', __( 'Missing Reference ID, please try again', 'edd' ) );
+		}
 	}
 
 	/**
