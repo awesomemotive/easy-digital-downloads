@@ -49,7 +49,8 @@ class Tests_EDD extends WP_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/cart/template.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/cart/functions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/cart/actions.php' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-api.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/api/class-edd-api.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/api/class-edd-api-v1.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-cache-helper.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-fees.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-html-elements.php' );
