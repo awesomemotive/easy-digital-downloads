@@ -317,6 +317,9 @@ class EDD_API {
 				$this->missing_auth();
 			}
 
+			// Auth was provided, include the upgrade routine so we can use the fallback api checks
+			require EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
+
 			// Retrieve the user by public API key and ensure they exist
 			if ( ! ( $user = $this->get_user( $wp_query->query_vars['key'] ) ) ) {
 
@@ -366,7 +369,11 @@ class EDD_API {
 		$user = get_transient( md5( 'edd_api_user_' . $key ) );
 
 		if ( false === $user ) {
-			$user = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = %s LIMIT 1", $key ) );
+			if ( edd_has_upgrade_completed( 'upgrade_user_api_keys' ) ) {
+				$user = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = %s LIMIT 1", $key ) );
+			} else {
+				$user = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'edd_user_public_key' AND meta_value = %s LIMIT 1", $key ) );
+			}
 			set_transient( md5( 'edd_api_user_' . $key ) , $user, DAY_IN_SECONDS );
 		}
 
@@ -389,7 +396,11 @@ class EDD_API {
 		$user_public_key = get_transient( $cache_key );
 
 		if ( empty( $user_public_key ) ) {
-			$user_public_key = $wpdb->get_var( $wpdb->prepare( "SELECT meta_key FROM $wpdb->usermeta WHERE meta_value = 'edd_user_public_key' AND user_id = %d", $user_id ) );
+			if ( edd_has_upgrade_completed( 'upgrade_user_api_keys' ) ) {
+				$user_public_key = $wpdb->get_var( $wpdb->prepare( "SELECT meta_key FROM $wpdb->usermeta WHERE meta_value = 'edd_user_public_key' AND user_id = %d", $user_id ) );
+			} else {
+				$user_public_key = $wpdb->get_var( $wpdb->prepare( "SELECT meta_value FROM $wpdb->usermeta WHERE meta_key = 'edd_user_public_key' AND user_id = %d", $user_id ) );
+			}
 			set_transient( $cache_key, $user_public_key, HOUR_IN_SECONDS );
 		}
 
@@ -407,7 +418,11 @@ class EDD_API {
 		$user_secret_key = get_transient( $cache_key );
 
 		if ( empty( $user_secret_key ) ) {
-			$user_secret_key = $wpdb->get_var( $wpdb->prepare( "SELECT meta_key FROM $wpdb->usermeta WHERE meta_value = 'edd_user_secret_key' AND user_id = %d", $user_id ) );
+			if ( edd_has_upgrade_completed( 'upgrade_user_api_keys' ) ) {
+				$user_secret_key = $wpdb->get_var( $wpdb->prepare( "SELECT meta_key FROM $wpdb->usermeta WHERE meta_value = 'edd_user_secret_key' AND user_id = %d", $user_id ) );
+			} else {
+				$user_secret_key = $wpdb->get_var( $wpdb->prepare( "SELECT meta_value FROM $wpdb->usermeta WHERE meta_key = 'edd_user_secret_key' AND user_id = %d", $user_id ) );
+			}
 			set_transient( $cache_key, $user_secret_key, HOUR_IN_SECONDS );
 		}
 
