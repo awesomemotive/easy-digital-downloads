@@ -340,7 +340,7 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 			$admin_pages = apply_filters( 'edd_admin_pages', array( $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_settings_export, $edd_customers_page, $edd_reports_page ) );
 			if ( 'download' == $typenow || 'index.php' == $pagenow || 'post-new.php' == $pagenow || 'post.php' == $pagenow ) {
 				$found = true;
-				if( isset( $_GET[ 'page' ] ) && 'edd-upgrades' == $_GET[ 'page' ] ) {
+				if( 'edd-upgrades' === $page ) {
 					$found = false;
 				}
 			} elseif ( in_array( $pagenow, $admin_pages ) ) {
@@ -349,5 +349,5 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 			break;
 	}
 
-	return (bool) apply_filters( 'edd_is_admin_page', $found, $page, $view );
+	return (bool) apply_filters( 'edd_is_admin_page', $found, $page, $view, $passed_page, $passed_view );
 }
