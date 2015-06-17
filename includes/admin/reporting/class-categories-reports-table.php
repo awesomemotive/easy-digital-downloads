@@ -248,7 +248,7 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 		$data = apply_filters( 'edd_category_sales_graph_data', $data );
 
 		$options = apply_filters( 'edd_category_sales_graph_options', array(
-			'legend_formatter' => 'legendFormatterSales',
+			'legend_formatter' => 'eddLegendFormatterSales',
 		), $data );
 
 		$pie_graph = new EDD_Pie_Graph( $data, $options );
@@ -278,7 +278,7 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 		$data = apply_filters( 'edd_category_earnings_graph_data', $data );
 
 		$options = apply_filters( 'edd_category_earnings_graph_options', array(
-			'legend_formatter' => 'legendFormatterEarnings',
+			'legend_formatter' => 'eddLegendFormatterEarnings',
 		), $data );
 
 		$pie_graph = new EDD_Pie_Graph( $data, $options );

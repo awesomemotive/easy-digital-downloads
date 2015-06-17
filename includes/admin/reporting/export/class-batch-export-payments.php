@@ -26,7 +26,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 	 * @var string
 	 * @since 2.4
 	 */
-	public $export_type = 'payment_export';
+	public $export_type = 'payments';
 
 	/**
 	 * Set the CSV columns

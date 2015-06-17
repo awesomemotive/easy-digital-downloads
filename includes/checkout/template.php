@@ -157,13 +157,17 @@ function edd_user_info_fields() {
 	$customer = EDD()->session->get( 'customer' );
 	$customer = wp_parse_args( $customer, array( 'first_name' => '', 'last_name' => '', 'email' => '' ) );
 
-	if( empty( $customer ) && is_user_logged_in() ) {
+	if( is_user_logged_in() ) {
 		$user_data = get_userdata( get_current_user_id() );
-		$customer  = array(
-			'first_name' => $user_data->user_first,
-			'last_name'  => $user_data->user_last,
-			'email'      => $user_data->user_email
-		);
+		foreach( $customer as $key => $field ) { 
+
+			if ( 'email' == $key && empty( $field ) ) {
+				$customer[ $key ] = $user_data->user_email;
+			} elseif ( empty( $field ) ) {
+				$customer[ $key ] = $user_data->$key;
+			}
+
+		}
 	}
 
 	$customer = array_map( 'sanitize_text_field', $customer );
@@ -300,27 +304,21 @@ function edd_default_cc_address_fields() {
 
 	$customer['address'] = array_map( 'sanitize_text_field', $customer['address'] );
 
-	if( empty( $customer['address'] ) && $logged_in ) {
+	if( $logged_in ) {
 
 		$user_address = get_user_meta( get_current_user_id(), '_edd_user_address', true );
 
-		$line1   = $logged_in && ! empty( $user_address['line1'] )   ? $user_address['line1']   : '';
-		$line2   = $logged_in && ! empty( $user_address['line2'] )   ? $user_address['line2']   : '';
-		$city    = $logged_in && ! empty( $user_address['city']  )   ? $user_address['city']    : '';
-		$zip     = $logged_in && ! empty( $user_address['zip']   )   ? $user_address['zip']     : '';
-		$state   = $logged_in && ! empty( $user_address['state'] )   ? $user_address['state']   : '';
-		$country = $logged_in && ! empty( $user_address['country'] ) ? $user_address['country'] : '';
+		foreach( $customer['address'] as $key => $field ) { 
 
-		$customer['address'] = array(
-			'line1'   => $line1,
-			'line2'   => $line2,
-			'city'    => $city,
-			'zip'     => $zip,
-			'state'   => $state,
-			'country' => $country
-		);
+			if ( empty( $field ) && ! empty( $user_address[ $key ] ) ) {
+				$customer['address'][ $key ] = $user_address[ $key ];
+			} else {
+				$customer['address'][ $key ] = '';
+			}
+
+		}
+
 	}
-
 
 	ob_start(); ?>
 	<fieldset id="edd_cc_address" class="cc-address">
@@ -334,7 +332,7 @@ function edd_default_cc_address_fields() {
 				<?php } ?>
 			</label>
 			<span class="edd-description"><?php _e( 'The primary billing address for your credit card.', 'edd' ); ?></span>
-			<input type="text" id="card_address" name="card_address" class="card-address edd-input<?php if( edd_field_is_required( 'card_address' ) ) { echo ' required'; } ?>" placeholder="<?php _e( 'Address line 1', 'edd' ); ?>" value="<?php echo $line1; ?>"/>
+			<input type="text" id="card_address" name="card_address" class="card-address edd-input<?php if( edd_field_is_required( 'card_address' ) ) { echo ' required'; } ?>" placeholder="<?php _e( 'Address line 1', 'edd' ); ?>" value="<?php echo $customer['address']['line1']; ?>"/>
 		</p>
 		<p id="edd-card-address-2-wrap">
 			<label for="card_address_2" class="edd-label">
@@ -344,7 +342,7 @@ function edd_default_cc_address_fields() {
 				<?php } ?>
 			</label>
 			<span class="edd-description"><?php _e( 'The suite, apt no, PO box, etc, associated with your billing address.', 'edd' ); ?></span>
-			<input type="text" id="card_address_2" name="card_address_2" class="card-address-2 edd-input<?php if( edd_field_is_required( 'card_address_2' ) ) { echo ' required'; } ?>" placeholder="<?php _e( 'Address line 2', 'edd' ); ?>" value="<?php echo $line2; ?>"/>
+			<input type="text" id="card_address_2" name="card_address_2" class="card-address-2 edd-input<?php if( edd_field_is_required( 'card_address_2' ) ) { echo ' required'; } ?>" placeholder="<?php _e( 'Address line 2', 'edd' ); ?>" value="<?php echo $customer['address']['line2']; ?>"/>
 		</p>
 		<p id="edd-card-city-wrap">
 			<label for="card_city" class="edd-label">
@@ -354,7 +352,7 @@ function edd_default_cc_address_fields() {
 				<?php } ?>
 			</label>
 			<span class="edd-description"><?php _e( 'The city for your billing address.', 'edd' ); ?></span>
-			<input type="text" id="card_city" name="card_city" class="card-city edd-input<?php if( edd_field_is_required( 'card_city' ) ) { echo ' required'; } ?>" placeholder="<?php _e( 'City', 'edd' ); ?>" value="<?php echo $city; ?>"/>
+			<input type="text" id="card_city" name="card_city" class="card-city edd-input<?php if( edd_field_is_required( 'card_city' ) ) { echo ' required'; } ?>" placeholder="<?php _e( 'City', 'edd' ); ?>" value="<?php echo $customer['address']['city']; ?>"/>
 		</p>
 		<p id="edd-card-zip-wrap">
 			<label for="card_zip" class="edd-label">
@@ -364,7 +362,7 @@ function edd_default_cc_address_fields() {
 				<?php } ?>
 			</label>
 			<span class="edd-description"><?php _e( 'The zip or postal code for your billing address.', 'edd' ); ?></span>
-			<input type="text" size="4" name="card_zip" class="card-zip edd-input<?php if( edd_field_is_required( 'card_zip' ) ) { echo ' required'; } ?>" placeholder="<?php _e( 'Zip / Postal code', 'edd' ); ?>" value="<?php echo $zip; ?>"/>
+			<input type="text" size="4" name="card_zip" class="card-zip edd-input<?php if( edd_field_is_required( 'card_zip' ) ) { echo ' required'; } ?>" placeholder="<?php _e( 'Zip / Postal code', 'edd' ); ?>" value="<?php echo $customer['address']['zip']; ?>"/>
 		</p>
 		<p id="edd-card-country-wrap">
 			<label for="billing_country" class="edd-label">
@@ -379,8 +377,8 @@ function edd_default_cc_address_fields() {
 
 				$selected_country = edd_get_shop_country();
 
-				if( ! empty( $customer['country'] ) && '*' !== $customer['country'] ) {
-					$selected_country = $customer['country'];
+				if( ! empty( $customer['address']['country'] ) && '*' !== $customer['address']['country'] ) {
+					$selected_country = $customer['address']['country'];
 				}
 
 				$countries = edd_get_country_list();
@@ -402,8 +400,8 @@ function edd_default_cc_address_fields() {
             $selected_state = edd_get_shop_state();
             $states         = edd_get_shop_states( $selected_country );
 
-            if( ! empty( $customer['state'] ) ) {
-				$selected_state = $customer['state'];
+            if( ! empty( $customer['address']['state'] ) ) {
+				$selected_state = $customer['address']['state'];
 			}
 
             if( ! empty( $states ) ) : ?>
