@@ -771,9 +771,9 @@ add_action( 'edd_filter_reports', 'edd_parse_report_dates' );
  * @return string       Returns the outputted JS and HTML for the graph display
  */
 function edd_pie_graph( $id = '', $data = array(), $args = array() ) {
-	global $id_count;
-	if ( empty( $id_count ) ) {
-		$id_count = 1;
+	global $edd_pie_graph_id_count;
+	if ( empty( $edd_pie_graph_id_count ) ) {
+		$edd_pie_graph_id_count = 1;
 	}
 
 	if ( empty( $data ) ) {
@@ -782,8 +782,8 @@ function edd_pie_graph( $id = '', $data = array(), $args = array() ) {
 
 	// If no ID is passed in, let's use a global identifier
 	if ( empty( $id ) ) {
-		$id = 'pie_' . (string) $id_count;
-		$id_count ++;
+		$id = 'pie_' . (string) $edd_pie_graph_id_count;
+		$edd_pie_graph_id_count ++;
 	}
 
 	$defaults = array(
@@ -794,6 +794,7 @@ function edd_pie_graph( $id = '', $data = array(), $args = array() ) {
 		'height'           => '300',
 	);
 
+	$id   = esc_attr( $id );
 	$args = wp_parse_args( $args, $defaults );
 
 	ob_start();
