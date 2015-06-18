@@ -328,11 +328,13 @@ jQuery(document).ready(function ($) {
 		$.post(edd_global_vars.ajaxurl, $('#edd_purchase_form').serialize() + '&action=edd_process_checkout&edd_ajax=true', function(data) {
 			if ( $.trim(data) == 'success' ) {
 				$('.edd_errors').remove();
+				$('.edd-error').hide();
 				$(eddPurchaseform).submit();
 			} else {
 				$('#edd-purchase-button').val(complete_purchase_val);
 				$('.edd-cart-ajax').remove();
 				$('.edd_errors').remove();
+				$('.edd-error').hide();
 				$('#edd_purchase_submit').before(data);
 			}
 		});
