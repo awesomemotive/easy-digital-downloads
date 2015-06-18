@@ -923,7 +923,8 @@ input[type="submit"].edd-submit:focus,
 .edd-cart-meta {
     padding: 2px 5px;
 }
-.edd-cart-meta:nth-child(odd) {
+.edd-cart-meta:nth-child(even),
+.edd-cart-meta:last-child {
     background-color: #f9f9f9;
 }
 
