@@ -955,7 +955,7 @@ input[type="submit"].edd-submit:focus,
     font-size: 75%;
     font-style: italic;
 }
-<<<<<<< HEAD
+
 .edd_total {
     font-weight: bold;
 }
@@ -967,7 +967,40 @@ input[type="submit"].edd-submit:focus,
     background-color: #f9f9f9;
 }
 
-=======
+/** Old Error Styles */
+/* =Error styles
+-------------------------------------------------------------- */
+
+.edd_errors:not(.edd-alert) {
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    border: 1px solid #E6DB55;
+    margin: 0 0 21px 0;
+    background: #FFFFE0;
+    color: #333;
+}
+.edd_error {
+    padding: 10px
+}
+p.edd_error {
+    margin: 0 !important
+}
+/* =Success Message styles
+-------------------------------------------------------------- */
+
+.edd_success:not(.edd-alert) {
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    border: 1px solid #b3ce89;
+    margin: 20px 0;
+    background: #d5eab3;
+    color: #567622;
+    padding: 6px 8px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+/** End old Error */
 
 /** Usage Is as Follows */
 /* <div class="edd-alert edd-alert-error">This is your error message</div> */
@@ -982,6 +1015,10 @@ input[type="submit"].edd-submit:focus,
     padding: 10px;
     border: 1px solid transparent;
     vertical-align: middle;
+}
+
+.edd-alert p {
+    padding: 0;
 }
 
 .edd-alert p:not(:last-child) {
