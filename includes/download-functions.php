@@ -1022,13 +1022,13 @@ function edd_get_file_download_method() {
  *
  * @since 2.4
  * @author Chris Christoff
- * @param bool $bool Default for has_access
+ * @param bool $has_access Default for has_access
  * @param mixed $purchase_data Array of purchase data 
  * @param mixed $args Array of arguments
  * @return nool If a user can access the file
  */
-function edd_can_access_download( $bool = true, $purchase_data = array(), $args = array() ) {
-	return apply_filters( 'edd_file_download_has_access', $bool, $purchase_data, $args );
+function edd_has_file_download_access( $has_access = true, $purchase_data = array(), $args = array() ) {
+	return apply_filters( 'edd_file_download_has_access', $has_access, $purchase_data, $args );
 }
 
 /**
@@ -1036,18 +1036,18 @@ function edd_can_access_download( $bool = true, $purchase_data = array(), $args 
  *
  * @since 2.4
  * @author Chris Christoff
- * @param bool $bool Default for has_access for edd_can_access_download()
- * @param mixed $purchase_data Array of purchase data  for edd_can_access_download()
- * @param mixed $args Array of arguments for edd_can_access_download()
+ * @param bool $has_access Default for has_access for edd_has_file_download_access()
+ * @param mixed $purchase_data Array of purchase data  for edd_has_file_download_access()
+ * @param mixed $args Array of arguments for edd_has_file_download_access()
  * @param mixed $args The file array
  * @return nool If a user can access the file
  */
-function edd_get_html5_download_attribute( $bool = true, $purchase_data = array(), $args = array(), $file = array() ) {
+function edd_get_html5_download_attribute( $has_access = true, $purchase_data = array(), $args = array(), $file = array() ) {
 	$string = '';
-	if ( edd_can_access_download( $bool, $purchase_data, $args ) ){
+	if ( edd_has_file_download_access( $has_access, $purchase_data, $args ) ){
 		$string = 'download="'  .edd_get_file_name( $file ) . '"';	
 	}
-	return apply_filters( 'edd_get_html5_download_attribute', $string, $bool, $purchase_data, $args, $file );
+	return apply_filters( 'edd_get_html5_download_attribute', $string, $has_access, $purchase_data, $args, $file );
 }
 
 
