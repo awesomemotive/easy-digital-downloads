@@ -194,6 +194,7 @@ function edd_load_admin_scripts( $hook ) {
 		'one_or_more_option'      => sprintf( __( 'Choose one or more %s', 'edd' ), edd_get_label_plural() ),
 		'numeric_item_price'      => __( 'Item price must be numeric', 'edd' ),
 		'numeric_quantity'        => __( 'Quantity must be numeric', 'edd' ),
+		'currency'                => edd_get_currency(),
 		'currency_sign'           => edd_currency_filter(''),
 		'currency_pos'            => edd_get_option( 'currency_position', 'before' ),
 		'currency_decimals'       => edd_currency_decimal_filter(),
