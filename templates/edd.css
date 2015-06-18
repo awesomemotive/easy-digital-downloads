@@ -949,16 +949,28 @@ input[type="submit"].edd-submit:focus,
 }
 .edd_subtotal {
     font-weight: bold;
-    margin: 8px 0 8px 0;
     font-style: italic;
 }
 .edd_purchase_tax_rate {
     font-size: 75%;
     font-style: italic;
 }
+<<<<<<< HEAD
+.edd_total {
+    font-weight: bold;
+}
+.edd-cart-meta {
+    padding: 2px 5px;
+}
+.edd-cart-meta:nth-child(even),
+.edd-cart-meta:last-child {
+    background-color: #f9f9f9;
+}
+
+=======
 
 /** Usage Is as Follows */
-/* <div class="edd-alert edd-error">This is your error message</div> */
+/* <div class="edd-alert edd-alert-error">This is your error message</div> */
 /* Replace edd-error with the class of your choice */
 
 /* Alert Styles */
@@ -1003,39 +1015,3 @@ input[type="submit"].edd-submit:focus,
     background-color: #fcf8e3;
     border-color: #faebcc;
 }
-
-/** These styles are being depricated, please move the new Alerts class above */
-/* =Error styles
---------------------------------------------------------------
-
-.edd_errors {
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-    border-radius: 2px;
-    border: 1px solid #E6DB55;
-    margin: 0 0 21px 0;
-    background: #FFFFE0;
-    color: #333;
-}
-.edd_error {
-    padding: 10px
-}
-p.edd_error {
-    margin: 0 !important
-}
-/* =Success Message styles
---------------------------------------------------------------
-
-.edd_success {
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-    border-radius: 2px;
-    border: 1px solid #b3ce89;
-    margin: 20px 0;
-    background: #d5eab3;
-    color: #567622;
-    padding: 6px 8px;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
-}
-<<<<<<< HEAD
-/** End Depricated styles */
