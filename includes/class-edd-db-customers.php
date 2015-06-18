@@ -274,7 +274,7 @@ class EDD_DB_Customers extends EDD_DB  {
 
 		$user = get_userdata( $user_id );
 
-		if( $user->user_email !== $customer->email ) {
+		if( ! empty( $user ) && $user->user_email !== $customer->email ) {
 
 			if( ! $this->get_customer_by( 'email', $user->user_email ) ) {
 
