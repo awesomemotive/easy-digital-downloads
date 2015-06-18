@@ -951,9 +951,14 @@ input[type="submit"].edd-submit:focus,
     font-weight: bold;
     font-style: italic;
 }
-.edd_purchase_tax_rate {
-    font-size: 75%;
+.edd_cart_tax {
+    font-size: 1em;
     font-style: italic;
+}
+
+/** Since this is a LI, make sure to not italicize any list item images */
+.edd_cart_tax::before {
+    font-style: normal;
 }
 
 .edd_total {
@@ -962,8 +967,8 @@ input[type="submit"].edd-submit:focus,
 .edd-cart-meta {
     padding: 2px 5px;
 }
-.edd-cart-meta:nth-child(even),
-.edd-cart-meta:last-child {
+.edd-cart-meta.edd_subtotal,
+.edd-cart-meta.edd_total {
     background-color: #f9f9f9;
 }
 
