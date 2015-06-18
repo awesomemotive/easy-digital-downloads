@@ -449,6 +449,13 @@ function edd_get_registered_settings() {
 					'type' => 'text',
 					'std'  => __( 'Purchase Receipt', 'edd' )
 				),
+				'purchase_heading' => array(
+					'id' => 'purchase_heading',
+					'name' => __( 'Purchase Email Heading', 'edd' ),
+					'desc' => __( 'Enter the heading for the purchase receipt email', 'edd' ),
+					'type' => 'text',
+					'std'  => __( 'Purchase Receipt', 'edd' )
+				),
 				'purchase_receipt' => array(
 					'id'   => 'purchase_receipt',
 					'name' => __( 'Purchase Receipt', 'edd' ),
