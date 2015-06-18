@@ -229,13 +229,13 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/deprecated-functions.php';
 		}
 		require_once EDD_PLUGIN_DIR . 'includes/ajax-functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/api/class-edd-api.php';
 		require_once EDD_PLUGIN_DIR . 'includes/template-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/checkout/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/checkout/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-api.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-customers.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer.php';
@@ -255,9 +255,13 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/country-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/formatting.php';
 		require_once EDD_PLUGIN_DIR . 'includes/widgets.php';
+		require_once EDD_PLUGIN_DIR . 'includes/misc-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/mime-types.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/functions.php';
+		if ( version_compare( phpversion(), 5.3, '>' ) ) {
+			require_once EDD_PLUGIN_DIR . 'includes/gateways/amazon-payments.php';
+		}
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal-standard.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/manual.php';
 		require_once EDD_PLUGIN_DIR . 'includes/discount-functions.php';
@@ -265,7 +269,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/payments/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/payments/class-payment-stats.php';
 		require_once EDD_PLUGIN_DIR . 'includes/payments/class-payments-query.php';
-		require_once EDD_PLUGIN_DIR . 'includes/misc-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/download-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/scripts.php';
 		require_once EDD_PLUGIN_DIR . 'includes/post-types.php';
@@ -309,6 +312,7 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/reports.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/pdf-reports.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-graph.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-pie-graph.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/graphing.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/display-settings.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/contextual-help.php';

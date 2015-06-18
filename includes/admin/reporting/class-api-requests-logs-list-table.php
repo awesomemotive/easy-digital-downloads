@@ -88,7 +88,9 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 		$columns = array(
 			'ID'         => __( 'Log ID', 'edd' ),
 			'details'    => __( 'Request Details', 'edd' ),
+			'version'    => __( 'API Version', 'edd' ),
 			'ip'         => __( 'Request IP', 'edd' ),
+			'speed'      => __( 'Request Speed', 'edd' ),
 			'date'       => __( 'Date', 'edd' )
 		);
 
@@ -175,8 +177,8 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 			} else if ( is_email( $search ) ) {
 				// This is an email search
 				$userdata = get_user_by( 'email', $search );
-				
-				if( $userdata ) { 
+
+				if( $userdata ) {
 					$search = $userdata->ID;
 				}
 
@@ -258,9 +260,11 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 			foreach ( $logs as $log ) {
 
 				$logs_data[] = array(
-					'ID'   => $log->ID,
-					'ip'   => get_post_meta( $log->ID, '_edd_log_request_ip', true ),
-					'date' => $log->post_date
+					'ID'      => $log->ID,
+					'version' => get_post_meta( $log->ID, '_edd_log_version', true ),
+					'speed'   => get_post_meta( $log->ID, '_edd_log_time', true ),
+					'ip'      => get_post_meta( $log->ID, '_edd_log_request_ip', true ),
+					'date'    => $log->post_date
 				);
 			}
 		}
@@ -287,7 +291,7 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 		$columns               = $this->get_columns();
 		$hidden                = array(); // No hidden columns
 		$sortable              = $this->get_sortable_columns();
-		$this->_column_headers = array( $columns, $hidden, $sortable );
+		$this->_column_headers = array( $columns, $hidden, $sortable, 'ID' );
 		$this->items           = $this->get_logs();
 		$total_items           = $edd_logs->get_log_count( 0, 'api_requests' );
 

@@ -264,10 +264,10 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 	$purchase_data = array(
 		'downloads'    => $downloads,
 		'fees'         => edd_get_cart_fees(),
-		'subtotal'     => $price,
+		'subtotal'     => $price * $quantity,
 		'discount'     => 0,
 		'tax'          => 0,
-		'price'        => $price,
+		'price'        => $price * $quantity,
 		'purchase_key' => strtolower( md5( uniqid() ) ),
 		'user_email'   => $user_info['email'],
 		'date'         => date( 'Y-m-d H:i:s' ),
