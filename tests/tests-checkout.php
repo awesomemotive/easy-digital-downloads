@@ -139,27 +139,67 @@ class Tests_Checkout extends WP_UnitTestCase {
 
 	public function test_credit_card_format_methods() {
 
-		// Test Cards, Thanks Stripe!
+		// Test Cards, Thanks http://www.freeformatter.com/credit-card-number-generator-validator.html
 		$test_cards = array(
-			'visa1'              => '4242424242424242',
-			'visa2'              => '4012888888881881',
-			'visa_debit'         => '4000056655665556',
-			'mastercard'         => '5555555555554444',
-			'mastercard_debit'   => '5200828282828210',
-			'mastercard_prepaid' => '5105105105105100',
-			'american_express1'  => '378282246310005',
-			'american_express2'  => '371449635398431',
-			'discover1'          => '6011111111111117',
-			'discover2'          => '6011000990139424',
-			'diners_club1'       => '30569309025904',
-			'diners_club2'       => '38520000023237',
-			'jcb1'               => '3530111333300000',
-			'jcb2'               => '3566002020360505',
+			'amex' => array(
+				'373727872168601',
+				'349197153955145',
+				'347051495193935',
+			),
+			'diners_club_carte_blanche' => array(
+				'30142801263033',
+				'30358703415790',
+				'30495144869936',
+			),
+			'diners_club_international' => array(
+				'36326253251158',
+				'36880678146963',
+				'36446904405472',
+			),
+			'jcb' => array(
+				'3530111333300000',
+				'3566002020360505',
+			),
+			'laser' => array(
+				'6304894437928605',
+				'6771753193657440',
+				'6771575180660297',
+			),
+			'visa_electron' => array(
+				'4175000419164927',
+				'4917758689682679',
+				'4913525617006584',
+			),
+			'visa' => array(
+				'4485319939801387',
+				'4556288114854566',
+				'4929098273851984',
+			),
+			'mastercard' => array(
+				'5529267381716121',
+				'5577967452254156',
+				'5255867454472922',
+			),
+			'maestro' => array(
+				'5038721445859297',
+				'5018250387370752',
+				'5020265126898844',
+			),
+			'discover' => array(
+				'6011911144758069',
+				'6011783671967201',
+				'6011427578160466',
+			),
 		);
 
-		foreach ( $test_cards as $type => $card ) {
-			$is_valid = edd_validate_card_number_format( $card );
-			$this->assertTrue( $is_valid, $type . ' failed' );
+		foreach ( $test_cards as $type => $cards ) {
+			foreach ( $cards as $card ) {
+				$card_type = edd_detect_cc_type( $card );
+				$this->assertEquals( $type, $card_type );
+
+				$is_valid = edd_validate_card_number_format( $card );
+				$this->assertTrue( $is_valid, $type . ' failed' );
+			}
 		}
 	}
 }
