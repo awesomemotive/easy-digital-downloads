@@ -114,7 +114,7 @@ class Tests_Checkout extends WP_UnitTestCase {
 	 * Test SSL asset filter
 	 */
 	public function test_edd_enforced_ssl_asset_filter() {
-		
+
 		// Test page URLs. These should not get modified
 
 		$content = 'http://local.dev/';
@@ -135,5 +135,30 @@ class Tests_Checkout extends WP_UnitTestCase {
 
 		$this->assertSame( $expected, edd_enforced_ssl_asset_filter( $content ) );
 
+	}
+
+	public function test_credit_card_format_methods() {
+
+		// Test Cards, Thanks Stripe!
+		$test_cards = array(
+			'visa1'              => '4242424242424242',
+			'visa2'              => '4012888888881881',
+			'visa_debit'         => '4000056655665556',
+			'mastercard'         => '5555555555554444',
+			'mastercard_debit'   => '5200828282828210',
+			'mastercard_prepaid' => '5105105105105100',
+			'american_express1'  => '378282246310005',
+			'american_express2'  => '371449635398431',
+			'discover1'          => '6011111111111117',
+			'discover2'          => '6011000990139424',
+			'diners_club1'       => '30569309025904',
+			'diners_club2'       => '38520000023237',
+			'jcb1'               => '3530111333300000',
+			'jcb2'               => '3566002020360505',
+		);
+
+		foreach ( $test_cards as $type => $card ) {
+			$this->assertTrue( edd_validate_card_number_format( $card ), $type . ' failed' );
+		}
 	}
 }
