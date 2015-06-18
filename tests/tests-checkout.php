@@ -158,7 +158,8 @@ class Tests_Checkout extends WP_UnitTestCase {
 		);
 
 		foreach ( $test_cards as $type => $card ) {
-			$this->assertTrue( edd_validate_card_number_format( $card ), $type . ' failed' );
+			$is_valid = edd_validate_card_number_format( $card );
+			$this->assertTrue( $is_valid, $type . ' failed' );
 		}
 	}
 }
