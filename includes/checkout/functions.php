@@ -109,7 +109,7 @@ function edd_send_to_success_page( $query_string = null ) {
  * @param array $args Extra query args to add to the URI
  * @return mixed Full URL to the checkout page, if present | null if it doesn't exist
  */
-function edd_get_checkout_uri( $args = array() ) {
+function edd_get_checkout_uri( $args = array( ) ) {
 	$uri = edd_get_option( 'purchase_page', false );
 	$uri = isset( $uri ) ? get_permalink( $uri ) : NULL;
 
@@ -148,7 +148,7 @@ function edd_get_checkout_uri( $args = array() ) {
  * @since  1.0
  * @return Void
  */
-function edd_send_back_to_checkout( $args = array() ) {
+function edd_send_back_to_checkout( $args = array( ) ) {
 	$redirect = edd_get_checkout_uri();
 
 	if ( ! empty( $args ) ) {
@@ -262,7 +262,7 @@ function edd_field_is_required( $field = '' ) {
  * @return      array
  */
 function edd_get_banned_emails() {
-	$emails = array_map( 'trim', edd_get_option( 'banned_emails', array() ) );
+	$emails = array_map( 'trim', edd_get_option( 'banned_emails', array( ) ) );
 
 	return apply_filters( 'edd_get_banned_emails', $emails );
 }
@@ -281,7 +281,7 @@ function edd_is_email_banned( $email = '' ) {
 
 	$banned_emails = edd_get_banned_emails();
 
-	if( ! is_array( $banned_emails ) || empty( $banned_emails ) ) {
+	if( ! is_array(  $banned_emails ) || empty( $banned_emails ) ) {
 		return false;
 	}
 
@@ -375,7 +375,7 @@ add_action( 'template_redirect', 'edd_enforced_ssl_asset_handler' );
  */
 function edd_enforced_ssl_asset_filter( $content ) {
 
-	if ( is_array( $content ) ) {
+	if ( is_array(  $content ) ) {
 
 		$content = array_map( 'edd_enforced_ssl_asset_filter', $content );
 
@@ -404,7 +404,7 @@ function edd_enforced_ssl_asset_filter( $content ) {
 			'ru',
 		);
 
-		if( ! in_array( $extension, $suffixes ) ) {
+		if( ! in_array(  $extension, $suffixes ) ) {
 
 			$content = str_replace( 'http:', 'https:', $content );
 
@@ -506,59 +506,59 @@ function edd_detect_cc_type( $number ) {
 	$card_types = array(
 		array(
 			'name'         => 'amex',
-			'pattern'      => '/^3[47]/',
-			'valid_length' => array(15, 16)
+			'pattern'      => '/^3[4|7]/',
+			'valid_length' => array( 15 ),
 		),
 		array(
-			'name'          => 'diners_club_carte_blanche',
-			'pattern'       => '/^30[0-5]/',
-			'valid_length'  => array(14)
+			'name'         => 'diners_club_carte_blanche',
+			'pattern'      => '/^30[0-5]/',
+			'valid_length' => array( 14 ),
 		),
 		array(
-			'name'          => 'diners_club_international',
-			'pattern'       => '/^3(6|8)/',
-			'valid_length'  => array(14)
+			'name'         => 'diners_club_international',
+			'pattern'      => '/^36/',
+			'valid_length' => array( 14 ),
 		),
 		array(
-			'name'          => 'jcb',
-			'pattern'       => '/^35(2[89]|[3-8][0-9])/',
-			'valid_length'  => array(16)
+			'name'         => 'jcb',
+			'pattern'      => '/^35(2[89]|[3-8][0-9])/',
+			'valid_length' => array( 16 ),
 		),
 		array(
-			'name'          => 'laser',
-			'pattern'       => '/^(6304|670[69]|6771)/',
-			'valid_length'  => array(16, 17, 18, 19)
+			'name'         => 'laser',
+			'pattern'      => '/^(6304|670[69]|6771)/',
+			'valid_length' => array( 16, 17, 18, 19 ),
 		),
 		array(
-			'name'          => 'visa_electron',
-			'pattern'       => '/^(4026|417500|4508|4844|491(3|7))/',
-			'valid_length'  => array(16)
+			'name'         => 'visa_electron',
+			'pattern'      => '/^(4026|417500|4508|4844|491(3|7))/',
+			'valid_length' => array( 16 ),
 		),
 		array(
-			'name'          => 'visa',
-			'pattern'       => '/^4/',
-			'valid_length'  => array(16)
+			'name'         => 'visa',
+			'pattern'      => '/^4/',
+			'valid_length' => array( 16 ),
 		),
 		array(
-			'name'          => 'mastercard',
-			'pattern'       => '/^5[1-5]/',
-			'valid_length'  => array(16)
+			'name'         => 'mastercard',
+			'pattern'      => '/^5[1-5]/',
+			'valid_length' => array( 16 ),
 		),
 		array(
-			'name'          => 'maestro',
-			'pattern'       => '/^(5018|5020|5038|6304|6759|676[1-3])/',
-			'valid_length'  => array(12, 13, 14, 15, 16, 17, 18, 19)
+			'name'         => 'maestro',
+			'pattern'      => '/^(5018|5020|5038|6304|6759|676[1-3])/',
+			'valid_length' => array( 12, 13, 14, 15, 16, 17, 18, 19 ),
 		),
 		array(
-			'name'          => 'discover',
-			'pattern'       => '/^(6011|622(12[6-9]|1[3-9][0-9]|[2-8][0-9]{2}|9[0-1][0-9]|92[0-5]|64[4-9])|65)/',
-			'valid_length'  => array(16)
+			'name'         => 'discover',
+			'pattern'      => '/^(6011|622(12[6-9]|1[3-9][0-9]|[2-8][0-9]{2}|9[0-1][0-9]|92[0-5]|64[4-9])|65)/',
+			'valid_length' => array( 16 ),
 		),
 	);
 
 	$card_types = apply_filters( 'edd_cc_card_types', $card_types );
 
-	if ( ! is_array( $card_types ) ) {
+	if ( ! is_array(  $card_types ) ) {
 		return false;
 	}
 
@@ -567,8 +567,9 @@ function edd_detect_cc_type( $number ) {
 		if ( preg_match( $card_type['pattern'], $number ) ) {
 
 			$number_length = strlen( $number );
-			if ( in_array( $number_length, $card_type['valid_length'] ) ) {
+			if ( in_array(  $number_length, $card_type['valid_length'] ) ) {
 				$return = $card_type['name'];
+				break;
 			}
 
 		}
