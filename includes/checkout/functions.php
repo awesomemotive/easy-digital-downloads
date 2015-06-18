@@ -444,7 +444,8 @@ function edd_validate_card_number_format( $number = 0, $method = 'luhn' ) {
 
 	if ( true === $is_valid_format ) {
 		// We've passed our methdd check, onto card specific checks
-		$is_valid_format = ! empty( edd_detect_cc_type( $number ) ) ? true : false;
+		$card_type       = edd_detect_cc_type( $number );
+		$is_valid_format = ! empty( $card_type ) ? true : false;
 	}
 
 	return apply_filters( 'edd_cc_is_valid_format', $is_valid_format, $number, $method );
