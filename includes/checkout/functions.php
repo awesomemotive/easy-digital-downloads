@@ -109,7 +109,7 @@ function edd_send_to_success_page( $query_string = null ) {
  * @param array $args Extra query args to add to the URI
  * @return mixed Full URL to the checkout page, if present | null if it doesn't exist
  */
-function edd_get_checkout_uri( $args = array( ) ) {
+function edd_get_checkout_uri( $args = array() ) {
 	$uri = edd_get_option( 'purchase_page', false );
 	$uri = isset( $uri ) ? get_permalink( $uri ) : NULL;
 
@@ -148,7 +148,7 @@ function edd_get_checkout_uri( $args = array( ) ) {
  * @since  1.0
  * @return Void
  */
-function edd_send_back_to_checkout( $args = array( ) ) {
+function edd_send_back_to_checkout( $args = array() ) {
 	$redirect = edd_get_checkout_uri();
 
 	if ( ! empty( $args ) ) {
@@ -262,7 +262,7 @@ function edd_field_is_required( $field = '' ) {
  * @return      array
  */
 function edd_get_banned_emails() {
-	$emails = array_map( 'trim', edd_get_option( 'banned_emails', array( ) ) );
+	$emails = array_map( 'trim', edd_get_option( 'banned_emails', array() ) );
 
 	return apply_filters( 'edd_get_banned_emails', $emails );
 }
@@ -281,7 +281,7 @@ function edd_is_email_banned( $email = '' ) {
 
 	$banned_emails = edd_get_banned_emails();
 
-	if( ! is_array(  $banned_emails ) || empty( $banned_emails ) ) {
+	if( ! is_array( $banned_emails ) || empty( $banned_emails ) ) {
 		return false;
 	}
 
@@ -375,7 +375,7 @@ add_action( 'template_redirect', 'edd_enforced_ssl_asset_handler' );
  */
 function edd_enforced_ssl_asset_filter( $content ) {
 
-	if ( is_array(  $content ) ) {
+	if ( is_array( $content ) ) {
 
 		$content = array_map( 'edd_enforced_ssl_asset_filter', $content );
 
@@ -404,7 +404,7 @@ function edd_enforced_ssl_asset_filter( $content ) {
 			'ru',
 		);
 
-		if( ! in_array(  $extension, $suffixes ) ) {
+		if( ! in_array( $extension, $suffixes ) ) {
 
 			$content = str_replace( 'http:', 'https:', $content );
 
@@ -558,7 +558,7 @@ function edd_detect_cc_type( $number ) {
 
 	$card_types = apply_filters( 'edd_cc_card_types', $card_types );
 
-	if ( ! is_array(  $card_types ) ) {
+	if ( ! is_array( $card_types ) ) {
 		return false;
 	}
 
@@ -567,7 +567,7 @@ function edd_detect_cc_type( $number ) {
 		if ( preg_match( $card_type['pattern'], $number ) ) {
 
 			$number_length = strlen( $number );
-			if ( in_array(  $number_length, $card_type['valid_length'] ) ) {
+			if ( in_array( $number_length, $card_type['valid_length'] ) ) {
 				$return = $card_type['name'];
 				break;
 			}
