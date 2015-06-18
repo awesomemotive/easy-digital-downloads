@@ -13,12 +13,11 @@
 a.edd-delete { color: #a00; }
 a.edd-delete:hover { color: #f00; }
 
-
 /* General Settings Styles
 -------------------------------------------------------------- */
-.download_page_edd-settings .form-table label { font-size: 13px; color: #aaa; font-style:italic; cursor:default; margin:5px 0; }
-.download_page_edd-settings .form-table select +  label, .download_page_edd-settings .form-table input.regular-text + label, .download_page_edd-settings .form-table input.small-text + label { display:block; }
-.download_page_edd-settings .field-section-title { font-style: italic; color: #aaa;}
+.download_page_edd-settings .form-table select +  label,
+.download_page_edd-settings .form-table input.regular-text + label,
+.download_page_edd-settings .form-table input.small-text + label { display:block; }
 
 /* =Add Ons Styles
 -------------------------------------------------------------- */
@@ -242,8 +241,11 @@ td.edd_order_price { text-align: right; }
 .admin-color-sunrise .edd-export-form .edd-progress div { background: #dd823b; }
 #edd-graphs-filter label { vertical-align: inherit; }
 #edd-graphs-filter .graph-option-section { float: left; line-height: 2.5em; padding-right: 5px; }
-.edd_graph_notes { color: #9c9c9c; }
-
+.edd-mix-totals { padding: 10px; background-color: #fff; box-shadow: 0 1px 1px rgba(0,0,0,0.04); border: 1px solid #e5e5e5; }
+.edd-mix-chart { display: inline-block; width: 49%; }
+.edd-graph-notes { color: #9c9c9c; }
+.edd-graph-notes span { display: block; }
+.edd-pie-legend-item { font-size:8pt; padding:2px; color:#333; padding: 0 5px }
 
 /* Upgrades page styles
 -------------------------------------------------------------- */
@@ -306,6 +308,12 @@ td.edd_order_price { text-align: right; }
 	.download_page_edd-tools .apikeys .column-user {
 		width: 80px;
 	}
+
+	.edd-mix-chart {
+		display: block;
+		width: 100%;
+	}
+
 }
 
 /* Customer Styles

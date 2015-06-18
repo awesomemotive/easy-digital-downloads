@@ -270,14 +270,18 @@ function edd_get_registered_settings() {
 					'placeholder' => __( 'Select a state', 'edd' )
 				),
 				'currency_settings' => array(
-					'id'      => 'currency_settings',
-					'name'    => '<span class="field-section-title">' . __( 'Currency Settings', 'edd' ) . '</span>',
-					'id'      => 'currency',
-					'name'    => __( 'Currency', 'edd' ),
-					'desc'    => __( 'Choose your currency. Note that some payment gateways have currency restrictions.', 'edd' ),
-					'type'    => 'select',
+					'id' => 'currency_settings',
+					'name' => '<strong>' . __( 'Currency Settings', 'edd' ) . '</strong>',
+					'desc' => __( 'Configure the currency options', 'edd' ),
+					'type' => 'header'
+				),
+				'currency' => array(
+					'id' => 'currency',
+					'name' => __( 'Currency', 'edd' ),
+					'desc' => __( 'Choose your currency. Note that some payment gateways have currency restrictions.', 'edd' ),
+					'type' => 'select',
 					'options' => edd_get_currencies(),
-					'chosen'  => true
+					'chosen' => true
 				),
 				'currency_position' => array(
 					'id'      => 'currency_position',
@@ -307,7 +311,7 @@ function edd_get_registered_settings() {
 				),
 				'api_settings' => array(
 					'id' => 'api_settings',
-					'name' => '<span class="field-section-title">' . __( 'API Settings', 'edd' ) . '</span>',
+					'name' => '<strong>' . __( 'API Settings', 'edd' ) . '</strong>',
 					'desc' => '',
 					'type' => 'header'
 				),
@@ -319,7 +323,7 @@ function edd_get_registered_settings() {
 				),
 				'tracking_settings' => array(
 					'id' => 'tracking_settings',
-					'name' => '<span class="field-section-title">' . __( 'Tracking Settings', 'edd' ) . '</span>',
+					'name' => '<strong>' . __( 'Tracking Settings', 'edd' ) . '</strong>',
 					'desc' => '',
 					'type' => 'header'
 				),
@@ -376,7 +380,7 @@ function edd_get_registered_settings() {
 				),
 				'paypal' => array(
 					'id' => 'paypal',
-					'name' => '<span class="field-section-title">' . __( 'PayPal Settings', 'edd' ) . '</span>',
+					'name' => '<strong>' . __( 'PayPal Settings', 'edd' ) . '</strong>',
 					'desc' => __( 'Configure the PayPal settings', 'edd' ),
 					'type' => 'header'
 				),
@@ -454,7 +458,7 @@ function edd_get_registered_settings() {
 				),
 				'sale_notification_header' => array(
 					'id' => 'sale_notification_header',
-					'name' => '<span class="field-section-title">' . __('New Sale Notifications', 'edd') . '</span>',
+					'name' => '<strong>' . __('New Sale Notifications', 'edd') . '</strong>',
 					'desc' => __('Configure new sale notification emails', 'edd'),
 					'type' => 'header'
 				),
@@ -498,7 +502,7 @@ function edd_get_registered_settings() {
 				),
 				'button_header' => array(
 					'id' => 'button_header',
-					'name' => '<span class="field-section-title">' . __( 'Buttons', 'edd' ) . '</span>',
+					'name' => '<strong>' . __( 'Buttons', 'edd' ) . '</strong>',
 					'desc' => __( 'Options for add to cart and purchase buttons', 'edd' ),
 					'type' => 'header'
 				),
@@ -529,7 +533,7 @@ function edd_get_registered_settings() {
 				),
 				'tax_rates' => array(
 					'id' => 'tax_rates',
-					'name' => '<span class="field-section-title">' . __( 'Tax Rates', 'edd' ) . '</span>',
+					'name' => '<strong>' . __( 'Tax Rates', 'edd' ) . '</strong>',
 					'desc' => __( 'Enter tax rates for specific regions.', 'edd' ),
 					'type' => 'tax_rates'
 				),
@@ -638,7 +642,7 @@ function edd_get_registered_settings() {
 				),
 				'field_downloads' => array(
 					'id' => 'field_downloads',
-					'name' => '<span class="field-section-title">' . __( 'File Downloads', 'edd' ) . '</span>',
+					'name' => '<strong>' . __( 'File Downloads', 'edd' ) . '</strong>',
 					'desc' => '',
 					'type' => 'header'
 				),
@@ -682,7 +686,7 @@ function edd_get_registered_settings() {
 				),
 				'accounting_settings' => array(
 					'id' => 'accounting_settings',
-					'name' => '<span class="field-section-title">' . __( 'Accounting Settings', 'edd' ) . '</span>',
+					'name' => '<strong>' . __( 'Accounting Settings', 'edd' ) . '</strong>',
 					'desc' => '',
 					'type' => 'header'
 				),
@@ -720,7 +724,7 @@ function edd_get_registered_settings() {
 				),
 				'terms' => array(
 					'id' => 'terms',
-					'name' => '<span class="field-section-title">' . __( 'Terms of Agreement', 'edd' ) . '</span>',
+					'name' => '<strong>' . __( 'Terms of Agreement', 'edd' ) . '</strong>',
 					'desc' => '',
 					'type' => 'header'
 				),
