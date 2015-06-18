@@ -294,6 +294,8 @@ class EDD_DB_Customers extends EDD_DB  {
 						
 					}
 
+					do_action( 'edd_update_customer_email_on_user_update', $user, $customer );
+
 				}
 
 			}
