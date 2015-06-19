@@ -1204,7 +1204,6 @@ jQuery(document).ready(function ($) {
 
 				var data = $(this).serialize();
 
-				//$(this).find('.spinner').addClass( 'is-active' );
 				$(this).append( '<span class="spinner is-active"></span><div class="edd-progress"><div></div></div>' );
 
 				// start the process
