@@ -352,7 +352,7 @@ function edd_variable_price_quantity_field( $key, $price, $download_id ) {
 <?php 
 	$quantity_input = ob_get_clean();
 
-	echo apply_filters( 'edd_purchase_form_variation_quantity_input', $quantity_input, $key, $price, $download_id );	
+	echo apply_filters( 'edd_purchase_form_variation_quantity_input', $quantity_input, $download_id, $key, $price );
 }
 add_action( 'edd_after_price_option', 'edd_variable_price_quantity_field', 10, 3 );
 
