@@ -1224,7 +1224,7 @@ jQuery(document).ready(function ($) {
 				},
 				dataType: "json",
 				success: function( response ) {
-					console.log( response );
+
 					if( 'done' == response.step ) {
 
 						var export_form = $('.edd-export-form');
@@ -1249,8 +1249,6 @@ jQuery(document).ready(function ($) {
 				if ( window.console && window.console.log ) {
 					console.log( response );
 				}
-			}).done(function (response) {
-
 			});
 
 		}
