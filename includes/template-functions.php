@@ -272,7 +272,7 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 									<span class="edd_price_option_price" itemprop="price"><?php echo edd_currency_filter( edd_format_amount( $price['amount'] ) ); ?></span>
 								</span>
 						</label><?php
-							do_action( 'edd_after_price_option', $key, $price, $download_id );
+						do_action( 'edd_after_price_option', $key, $price, $download_id );
 					?></li><?php
 
 				endforeach;
