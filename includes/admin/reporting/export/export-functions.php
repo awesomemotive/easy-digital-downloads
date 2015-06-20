@@ -31,6 +31,11 @@ function edd_do_ajax_export() {
 	parse_str( $_POST['form'], $form );
 
 	$_REQUEST = $form = (array) $form;
+
+	if( ! wp_verify_nonce( $_REQUEST['edd_ajax_export'], 'edd_ajax_export' ) ) {
+		die( '-2' );
+	}
+	
 	$step     = absint( $_POST['step'] );
 	$class    = $form['edd-export-class'];
 	$export   = new $class( $step );
