@@ -366,7 +366,7 @@ function edd_reports_tab_export() {
 									<?php echo EDD()->html->month_dropdown( 'start_month' ); ?>
 									<?php echo _x( 'to', 'Date one to date two', 'edd' ); ?>
 									<?php echo EDD()->html->year_dropdown( 'end_year' ); ?>
-									<?php echo EDD()->html->month_dropdown( 'end_month' ); ?>
+									<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 									<input type="hidden" name="edd-action" value="earnings_export"/>
 									<input type="submit" value="<?php _e( 'Generate CSV', 'edd' ); ?>" class="button-secondary"/>
 								</form>
@@ -391,6 +391,7 @@ function edd_reports_tab_export() {
 										}
 										?>
 									</select>
+									<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 									<input type="hidden" name="edd-export-class" value="EDD_Batch_Payments_Export"/>
 									<span>
 										<input type="submit" value="<?php _e( 'Generate CSV', 'edd' ); ?>" class="button-secondary"/>
@@ -418,6 +419,7 @@ function edd_reports_tab_export() {
 										}
 										?>
 									</select>
+									<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 									<input type="hidden" name="edd-export-class" value="EDD_Batch_Customers_Export"/>
 									<input type="submit" value="<?php _e( 'Generate CSV', 'edd' ); ?>" class="button-secondary"/>
 								</form>
@@ -433,6 +435,7 @@ function edd_reports_tab_export() {
 								<form id="edd-export-file-downloads" class="edd-export-form" method="post">
 									<?php echo EDD()->html->date_field( array( 'id' => 'edd-file-download-export-start', 'name' => 'start', 'placeholder' => __( 'Choose start date', 'edd' ) )); ?>
 									<?php echo EDD()->html->date_field( array( 'id' => 'edd-file-download-export-end', 'name' => 'end', 'placeholder' => __( 'Choose end date', 'edd' ) )); ?>
+									<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 									<input type="hidden" name="edd-export-class" value="EDD_Batch_File_Downloads_Export"/>
 									<input type="submit" value="<?php _e( 'Generate CSV', 'edd' ); ?>" class="button-secondary"/>
 								</form>
