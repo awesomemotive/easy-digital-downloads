@@ -947,24 +947,24 @@ input[type="submit"].edd-submit:focus,
     font-style: italic;
     color: grey;
 }
-.edd_subtotal {
+.edd-cart-meta.edd_subtotal {
     font-weight: bold;
     font-style: italic;
 }
-.edd_cart_tax {
+.edd-cart-meta.edd_cart_tax {
     font-size: 1em;
     font-style: italic;
 }
 
 /** Since this is a LI, make sure to not italicize any list item images */
-.edd_cart_tax::before {
+.edd-cart-meta.edd_cart_tax::before {
     font-style: normal;
 }
 
-.edd_total {
+.edd-cart-meta.edd_total {
     font-weight: bold;
 }
-.edd-cart-meta {
+.edd-cart-meta.edd-cart-meta {
     padding: 2px 5px;
 }
 .edd-cart-meta.edd_subtotal,
