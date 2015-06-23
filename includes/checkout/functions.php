@@ -420,10 +420,9 @@ function edd_enforced_ssl_asset_filter( $content ) {
  *
  * @since  2.4
  * @param  integer $number The Credit Card Number to validate
- * @param  string  $method The algorithem to use, by default our build in Luhn method
  * @return bool            If the card number provided matches a specific format of a valid card
  */
-function edd_validate_card_number_format( $number = 0, $method = 'luhn' ) {
+function edd_validate_card_number_format( $number = 0 ) {
 
 	$number = trim( $number );
 	if ( empty( $number ) ) {
@@ -443,12 +442,12 @@ function edd_validate_card_number_format( $number = 0, $method = 'luhn' ) {
 	$is_valid_format = apply_filters( 'edd_valiate_card_format_pre_type', $is_valid_format, $number );
 
 	if ( true === $is_valid_format ) {
-		// We've passed our methdd check, onto card specific checks
+		// We've passed our method check, onto card specific checks
 		$card_type       = edd_detect_cc_type( $number );
 		$is_valid_format = ! empty( $card_type ) ? true : false;
 	}
 
-	return apply_filters( 'edd_cc_is_valid_format', $is_valid_format, $number, $method );
+	return apply_filters( 'edd_cc_is_valid_format', $is_valid_format, $number );
 }
 
 /**
@@ -464,12 +463,12 @@ function edd_validate_card_number_format_luhn( $number ) {
 	$number = preg_replace( '/\D/', '', $number );
 
 	// Set the string length and parity
-	$number_length = strlen( $number );
-	$parity = $number_length % 2;
+	$length = strlen( $number );
+	$parity = $length % 2;
 
-	// Loop through each digit and do the maths
+	// Loop through each digit and do the math
 	$total = 0;
-	for ( $i=0; $i<$number_length; $i++ ) {
+	for ( $i = 0; $i < $length; $i++ ) {
 		$digit = $number[ $i ];
 
 		// Multiply alternate digits by two
