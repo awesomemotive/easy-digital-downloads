@@ -1484,7 +1484,7 @@ var eddFormatNumber = function(value) {
 }
 
 var eddLabelFormatter = function (label, series) {
-	return '<div style="font-size:8pt; text-align:center; padding:2px; color:white; padding: 0 5px">' + label + ': ' + Math.round(series.percent) + '%</div>';
+	return '<div style="font-size:12px; text-align:center; padding:2px">' + label + '</div>';
 }
 
 var eddLegendFormatterSales = function (label, series) {
