@@ -245,8 +245,11 @@ td.edd_order_price { text-align: right; }
 .edd-mix-chart { display: inline-block; width: 49%; }
 .edd-graph-notes { color: #9c9c9c; }
 .edd-graph-notes span { display: block; }
-.edd-pie-graph .legend { margin-left: 10px; }
-.edd-pie-legend-item { font-size:8pt; padding:2px; color:#333; padding: 0 5px }
+.edd-pie-graph .legend { display: none; }
+.edd-pie-legend { margin-top: 10px; overflow: auto; }
+.edd-legend-item-wrapper { width: 180px; float: left; font-size:8pt; padding:2px; color:#333; padding: 2px 5px 0px 5px; height: 20px; }
+.edd-legend-color { display: inline-block; height: 15px; width: 20px; border: 1px solid #cfcfcf; margin-right: 5px; }
+.edd-pie-legend-item { display: inline-block; vertical-align: top; }
 
 /* Upgrades page styles
 -------------------------------------------------------------- */
@@ -301,6 +304,13 @@ td.edd_order_price { text-align: right; }
 .edd_user_search_results a.edd-ajax-user-cancel { position: absolute; right: 6px; top: 2px; }
 .edd_user_search_results ul { padding: 10px 10px 4px; margin: 0; background: #f0f0f0; border: 1px solid #DFDFDF; width: 300px; max-height: 200px; overflow-y: scroll; }
 
+@media screen and ( max-width: 1100px ) {
+	.edd-mix-chart {
+		display: block;
+		width: 100%;
+	}
+}
+
 @media screen and ( max-width: 782px ) {
 	.post-type-download .nav-tab-wrapper a {
 		padding: 2px 4px;
@@ -308,11 +318,6 @@ td.edd_order_price { text-align: right; }
 	}
 	.download_page_edd-tools .apikeys .column-user {
 		width: 80px;
-	}
-
-	.edd-mix-chart {
-		display: block;
-		width: 100%;
 	}
 
 }
