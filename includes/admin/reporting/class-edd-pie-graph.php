@@ -80,10 +80,17 @@ class EDD_Pie_Graph extends EDD_Graph {
 			'radius'           => 1,
 			'legend'           => true,
 			'legend_formatter' => false,
-			'label_formatter'  => false,
-			'height'           => '300',
+			'legend_columns'   => 3,
+			'legend_position'  => 's',
+			'show_labels'      => false,
+			'label_threshold'  => 0.01,
+			'label_formatter'  => 'eddLabelFormatter',
+			'label_bg_opacity' => 0.75,
+			'label_radius'     => 1,
+			'height'           => '500',
 			'hoverable'        => true,
 			'clickable'        => false,
+			'threshold'        => false,
 		);
 
 		$this->options = wp_parse_args( $options, $defaults );
@@ -128,6 +135,7 @@ class EDD_Pie_Graph extends EDD_Graph {
 					pie: {
 						show: true,
 						radius: <?php echo $this->options['radius']; ?>,
+						label: [],
 					},
 					edd_vars: {
 						id: '<?php echo $this->id; ?>',
@@ -139,8 +147,18 @@ class EDD_Pie_Graph extends EDD_Graph {
 				grid: {},
 			};
 
+			<?php if ( true === $this->options['show_labels'] ) : ?>
+				<?php echo $this->id; ?>_options.series.pie.label.show = true;
+				<?php echo $this->id; ?>_options.series.pie.label.formatter = <?php echo $this->options['label_formatter']; ?>;
+				<?php echo $this->id; ?>_options.series.pie.label.threshold = <?php echo $this->options['label_threshold']; ?>;
+				<?php echo $this->id; ?>_options.series.pie.label.radius = <?php echo $this->options['label_radius']; ?>;
+				<?php echo $this->id; ?>_options.series.pie.label.background = { opacity: <?php echo $this->options['label_bg_opacity']; ?> };
+			<?php endif; ?>
+
 			<?php if ( true === $this->options['legend'] && ! empty( $this->options['legend_formatter'] ) ) : ?>
 				<?php echo $this->id; ?>_options.legend.labelFormatter = <?php echo $this->options['legend_formatter']; ?>;
+				<?php echo $this->id; ?>_options.legend.noColumns = <?php echo $this->options['legend_columns']; ?>;
+				<?php echo $this->id; ?>_options.legend.position = "<?php echo $this->options['legend_position']; ?>";
 			<?php endif; ?>
 
 			<?php if ( true === $this->options['hoverable'] ) : ?>
