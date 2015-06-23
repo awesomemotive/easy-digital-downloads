@@ -77,20 +77,20 @@ class EDD_Pie_Graph extends EDD_Graph {
 
 		// Setup default options;
 		$defaults = array(
-			'radius'           => 1,
-			'legend'           => true,
-			'legend_formatter' => false,
-			'legend_columns'   => 3,
-			'legend_position'  => 's',
-			'show_labels'      => false,
-			'label_threshold'  => 0.01,
-			'label_formatter'  => 'eddLabelFormatter',
-			'label_bg_opacity' => 0.75,
-			'label_radius'     => 1,
-			'height'           => '500',
-			'hoverable'        => true,
-			'clickable'        => false,
-			'threshold'        => false,
+			'radius'            => 1,
+			'legend'            => true,
+			'legend_formatter'  => false,
+			'legend_columns'    => 3,
+			'legend_position'   => 's',
+			'show_labels'       => false,
+			'label_threshold'   => 0.01,
+			'label_formatter'   => 'eddLabelFormatter',
+			'label_bg_opacity'  => 0.75,
+			'label_radius'      => 1,
+			'height'            => '300',
+			'hoverable'         => true,
+			'clickable'         => false,
+			'threshold'         => false,
 		);
 
 		$this->options = wp_parse_args( $options, $defaults );
@@ -173,22 +173,26 @@ class EDD_Pie_Graph extends EDD_Graph {
 				var <?php echo $this->id; ?>Chart = $('#edd-pie-graph-<?php echo $this->id; ?>');
 				$.plot( <?php echo $this->id; ?>Chart, <?php echo $this->id; ?>_data, <?php echo $this->id; ?>_options );
 				<?php if ( ! wp_is_mobile() ) : ?>
-				$(<?php echo $this->id; ?>Chart).bind("plothover", function (event, pos, item) {
-					$('.edd-pie-legend-item').css('background-color', 'inherit');
+				$(<?php echo $this->id; ?>Chart).on('plothover', function (event, pos, item) {
+					$('.edd-legend-item-wrapper').css('background-color', 'inherit');
 					if ( item ) {
 						var label = item.series.label;
 						var id    = item.series.edd_vars.id;
 
 						var slug = label.toLowerCase().replace(/\s/g, '-');
 						var legendTarget = '#' + id + slug;
-						$(legendTarget).css('background-color', '#f0f0f0');
+
+						$('.edd-legend-item-wrapper' + legendTarget).css('background-color', '#f0f0f0');
 					}
 				});
 				<?php endif; ?>
 			});
 
 		</script>
-		<div id="edd-pie-graph-<?php echo $this->id; ?>" class="edd-pie-graph" style="height: <?php echo $this->options['height']; ?>px;"></div>
+		<div class="edd-pie-graph-wrap">
+			<div id="edd-pie-graph-<?php echo $this->id; ?>" class="edd-pie-graph" style="height: <?php echo $this->options['height']; ?>px;"></div>
+			<div id="edd-pie-legend-<?php echo $this->id; ?>" class="edd-pie-legend"></div>
+		</div>
 		<?php
 
 		return apply_filters( 'edd_pie_graph_output', ob_get_clean(), $this->id, $this->data, $this->options );
