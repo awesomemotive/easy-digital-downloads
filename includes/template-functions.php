@@ -312,10 +312,15 @@ function edd_download_purchase_form_quantity_field( $download_id = 0, $args = ar
 		return;
 	}
 
-	echo '<div class="edd_download_quantity_wrapper">';
-		echo '<input type="number" min="1" step="1" name="edd_download_quantity" class="edd-input edd-item-quantity" value="1" />';
-	echo '</div>';
+	ob_start();
+?>
+	<div class="edd_download_quantity_wrapper">
+		<input type="number" min="1" step="1" name="edd_download_quantity" class="edd-input edd-item-quantity" value="1" />
+	</div>
+<?php 
+	$quantity_input = ob_get_clean();
 
+	echo apply_filters( 'edd_purchase_form_quantity_input', $quantity_input, $download_id, $args );
 }
 add_action( 'edd_purchase_link_top', 'edd_download_purchase_form_quantity_field', 10, 2 );
 
@@ -338,10 +343,16 @@ function edd_variable_price_quantity_field( $key, $price, $download_id ) {
 		return;
 	}
 
-	echo '<div class="edd_download_quantity_wrapper edd_download_quantity_price_option_' . sanitize_key( $price['name'] ) . '">';
-		echo '<span class="edd_price_option_sep">&nbsp;x&nbsp;</span>';
-		echo '<input type="number" min="1" step="1" name="edd_download_quantity_' . esc_attr( $key ) . '" class="edd-input edd-item-quantity" value="1" />';
-	echo '</div>';
+	ob_start();
+?>
+	<div class="edd_download_quantity_wrapper edd_download_quantity_price_option_<?php echo sanitize_key( $price['name'] ) ?>">
+		<span class="edd_price_option_sep">&nbsp;x&nbsp;</span>
+		<input type="number" min="1" step="1" name="edd_download_quantity_<?php echo esc_attr( $key ) ?>" class="edd-input edd-item-quantity" value="1" />
+	</div>
+<?php 
+	$quantity_input = ob_get_clean();
+
+	echo apply_filters( 'edd_purchase_form_variation_quantity_input', $quantity_input, $download_id, $key, $price );
 }
 add_action( 'edd_after_price_option', 'edd_variable_price_quantity_field', 10, 3 );
 
