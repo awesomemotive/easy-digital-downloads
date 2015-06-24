@@ -1490,7 +1490,7 @@ var eddLabelFormatter = function (label, series) {
 var eddLegendFormatterSales = function (label, series) {
 	var slug  = label.toLowerCase().replace(/\s/g, '-');
 	var color = '<div class="edd-legend-color" style="background-color: ' + series.color + '"></div>';
-	var value = '<div class="edd-pie-legend-item">' + label + ': ' + Math.round(series.percent) + '% ( ' + eddFormatNumber(series.data[0][1]) + ' )</div>';
+	var value = '<div class="edd-pie-legend-item">' + label + ': ' + Math.round(series.percent) + '% (' + eddFormatNumber(series.data[0][1]) + ')</div>';
 	var item = '<div id="' + series.edd_vars.id + slug + '" class="edd-legend-item-wrapper">' + color + value + '</div>';
 
 	jQuery('#edd-pie-legend-' + series.edd_vars.id).append( item );
@@ -1500,7 +1500,7 @@ var eddLegendFormatterSales = function (label, series) {
 var eddLegendFormatterEarnings = function (label, series) {
 	var slug  = label.toLowerCase().replace(/\s/g, '-');
 	var color = '<div class="edd-legend-color" style="background-color: ' + series.color + '"></div>';
-	var value = '<div class="edd-pie-legend-item">' + label + ': ' + Math.round(series.percent) + '% ( ' + eddFormatCurrency(series.data[0][1]) + ' )</div>';
+	var value = '<div class="edd-pie-legend-item">' + label + ': ' + Math.round(series.percent) + '% (' + eddFormatCurrency(series.data[0][1]) + ')</div>';
 	var item = '<div id="' + series.edd_vars.id + slug + '" class="edd-legend-item-wrapper">' + color + value + '</div>';
 
 	jQuery('#edd-pie-legend-' + series.edd_vars.id).append( item );
