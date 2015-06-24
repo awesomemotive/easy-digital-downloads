@@ -272,19 +272,28 @@ function edd_downloads_query( $atts, $content = null ) {
 		'thumbnails'       => 'true',
 		'orderby'          => 'post_date',
 		'order'            => 'DESC',
-		'ids'              => ''
+		'ids'              => '',
+		'pagination'       => 'yes'
 	), $atts, 'downloads' );
 
 	$query = array(
 		'post_type'      => 'download',
-		'posts_per_page' => (int) $atts['number'],
 		'orderby'        => $atts['orderby'],
 		'order'          => $atts['order']
 	);
 
-	if ( $query['posts_per_page'] < -1 ) {
-		$query['posts_per_page'] = abs( $query['posts_per_page'] );
+	if(  'yes' === $atts['pagination']  ) {
+
+		$query['posts_per_page'] = (int) $atts['number'];
+
+		if ( $query['posts_per_page'] < -1 ) {
+			$query['posts_per_page'] = abs( $query['posts_per_page'] );
+		}
+	} else {
+		$query['nopaging'] = true;
 	}
+
+
 
 	switch ( $atts['orderby'] ) {
 		case 'price':
