@@ -60,7 +60,7 @@ jQuery(document).ready(function ($) {
 					$('.cart_item.edd_total span').html( response.total );
 
 					if( response.cart_quantity == 0 ) {
-						$('.cart_item.edd_subtotal,.edd-cart-number-of-items,.cart_item.edd_checkout,.cart_item.edd_purchase_tax_rate,.cart_item.edd_total').hide();
+						$('.cart_item.edd_subtotal,.edd-cart-number-of-items,.cart_item.edd_checkout,.cart_item.edd_cart_tax,.cart_item.edd_total').hide();
 						$('.edd-cart').append('<li class="cart_item empty">' + edd_scripts.empty_cart_message + '</li>');
 					}
 
