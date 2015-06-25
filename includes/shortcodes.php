@@ -273,7 +273,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		'orderby'          => 'post_date',
 		'order'            => 'DESC',
 		'ids'              => '',
-		'pagination'       => 'yes'
+		'pagination'       => 'true'
 	), $atts, 'downloads' );
 
 	$query = array(
@@ -282,7 +282,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		'order'          => $atts['order']
 	);
 
-	if(  'yes' === $atts['pagination']  ) {
+	if(  'true' === $atts['pagination']  ) {
 
 		$query['posts_per_page'] = (int) $atts['number'];
 
