@@ -1590,6 +1590,30 @@ function edd_tax_rates_callback($args) {
 }
 
 /**
+ * Outputs a text field, that's readonly with the 'std' value but no name.
+ * This is useful if you want to display some infomration for easy copy/paste
+ *
+ * Renders the faux text input
+ *
+ * @since 1.5
+ * @param array $args Arguments passed by the setting
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_faux_input_callback( $args ) {
+	global $edd_options;
+
+	$value = isset( $args['std'] ) ? $args['std'] : '';
+
+	$readonly = ' readonly="readonly"';
+	$size     = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
+	$html     = '<input type="text" class="' . $size . '-text" id="edd_settings[' . $args['id'] . ']" value="' . esc_attr( stripslashes( $value ) ) . '"' . $readonly . '/>';
+	$html    .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
+
+	echo $html;
+}
+
+/**
  * Descriptive text callback.
  *
  * Renders descriptive text onto the settings field.
