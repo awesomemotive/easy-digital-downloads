@@ -151,6 +151,11 @@ function edd_ajax_remove_from_cart() {
 			'cart_quantity' => html_entity_decode( edd_get_cart_quantity() ),
 		);
 
+		if ( edd_use_taxes() ) {
+			$cart_tax = (float) edd_get_cart_tax();
+			$return['tax'] = html_entity_decode( edd_currency_filter( edd_format_amount( $cart_tax ) ), ENT_COMPAT, 'UTF-8' );
+		}
+
 		echo json_encode( $return );
 
 	}
@@ -214,6 +219,11 @@ function edd_ajax_add_to_cart() {
 			'cart_quantity' => html_entity_decode( edd_get_cart_quantity() )
 		);
 
+		if ( edd_use_taxes() ) {
+			$cart_tax = (float) edd_get_cart_tax();
+			$return['tax'] = html_entity_decode( edd_currency_filter( edd_format_amount( $cart_tax ) ), ENT_COMPAT, 'UTF-8' );
+		}
+
 		echo json_encode( $return );
 	}
 	edd_die();
@@ -253,7 +263,18 @@ function edd_ajax_apply_discount() {
 			'code' => $discount_code
 		);
 
-		if ( edd_is_discount_valid( $discount_code ) ) {
+		$user = '';
+
+		if ( is_user_logged_in() ) {
+			$user = get_current_user_id();
+		} else {
+			$form = maybe_unserialize( $_POST['form'] );
+			if ( ! empty( $form['edd_email'] ) ) {
+				$user = urldecode( $form['edd_email'] );
+			}
+		}
+
+		if ( edd_is_discount_valid( $discount_code, $user ) ) {
 			$discount  = edd_get_discount_by_code( $discount_code );
 			$amount    = edd_format_discount_rate( edd_get_discount_type( $discount->ID ), edd_get_discount_amount( $discount->ID ) );
 			$discounts = edd_set_cart_discount( $discount_code );
@@ -405,14 +426,15 @@ function edd_ajax_recalculate_taxes() {
 
 	ob_start();
 	edd_checkout_cart();
-	$cart = ob_get_clean();
+	$cart     = ob_get_clean();
 	$response = array(
-		'html'  => $cart,
-		'tax_raw' => edd_get_cart_tax(),
-		'tax' => html_entity_decode( edd_cart_tax( false ), ENT_COMPAT, 'UTF-8' ),
+		'html'         => $cart,
+		'tax_raw'      => edd_get_cart_tax(),
+		'tax'          => html_entity_decode( edd_cart_tax( false ), ENT_COMPAT, 'UTF-8' ),
 		'tax_rate_raw' => edd_get_tax_rate(),
-		'tax_rate' => html_entity_decode( edd_get_formatted_tax_rate(), ENT_COMPAT, 'UTF-8' ),
-		'total' => html_entity_decode( edd_cart_total( false ), ENT_COMPAT, 'UTF-8' ),
+		'tax_rate'     => html_entity_decode( edd_get_formatted_tax_rate(), ENT_COMPAT, 'UTF-8' ),
+		'total'        => html_entity_decode( edd_cart_total( false ), ENT_COMPAT, 'UTF-8' ),
+		'total_raw'    => edd_get_cart_total(),
 	);
 
 	echo json_encode( $response );

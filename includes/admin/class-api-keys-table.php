@@ -73,9 +73,54 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Displays the public key rows
+	 *
+	 * @access public
+	 * @since 2.4
+	 *
+	 * @param array $item Contains all the data of the keys
+	 * @param string $column_name The name of the column
+	 *
+	 * @return string Column Name
+	 */
+	public function column_key( $item ) {
+		return '<input readonly="readonly" type="text" class="large-text" value="' . esc_attr( $item[ 'key' ] ) . '"/>';
+	}
+
+	/**
+	 * Displays the token rows
+	 *
+	 * @access public
+	 * @since 2.4
+	 *
+	 * @param array $item Contains all the data of the keys
+	 * @param string $column_name The name of the column
+	 *
+	 * @return string Column Name
+	 */
+	public function column_token( $item ) {
+		return '<input readonly="readonly" type="text" class="large-text" value="' . esc_attr( $item[ 'token' ] ) . '"/>';
+	}
+
+	/**
+	 * Displays the secret key rows
+	 *
+	 * @access public
+	 * @since 2.4
+	 *
+	 * @param array $item Contains all the data of the keys
+	 * @param string $column_name The name of the column
+	 *
+	 * @return string Column Name
+	 */
+	public function column_secret( $item ) {
+		return '<input readonly="readonly" type="text" class="large-text" value="' . esc_attr( $item[ 'secret' ] ) . '"/>';
+	}
+
+	/**
 	 * Renders the column for the user field
 	 *
-	 * @access public 
+	 * @access public
 	 * @since 2.0
 	 * @return void
 	 */
@@ -118,8 +163,8 @@ class EDD_API_Keys_Table extends WP_List_Table {
 		$columns = array(
 			'user'         => __( 'Username', 'edd' ),
 			'key'          => __( 'Public Key', 'edd' ),
-			'secret'       => __( 'Secret Key', 'edd' ),
-			'token'        => __( 'Token', 'edd' )
+			'token'        => __( 'Token', 'edd' ),
+			'secret'       => __( 'Secret Key', 'edd' )
 		);
 
 		return $columns;
@@ -170,10 +215,10 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function query() {
-		$users    = get_users( array( 
-			'meta_key' => 'edd_user_secret_key',
-			'number'   => $this->per_page,
-			'offset'   => $this->per_page * ( $this->get_paged() - 1 ) 
+		$users    = get_users( array(
+			'meta_value' => 'edd_user_secret_key',
+			'number'     => $this->per_page,
+			'offset'     => $this->per_page * ( $this->get_paged() - 1 )
 		) );
 		$keys     = array();
 
@@ -182,9 +227,9 @@ class EDD_API_Keys_Table extends WP_List_Table {
 			$keys[$user->ID]['email']  = $user->user_email;
 			$keys[$user->ID]['user']   = '<a href="' . add_query_arg( 'user_id', $user->ID, 'user-edit.php' ) . '"><strong>' . $user->user_login . '</strong></a>';
 
-			$keys[$user->ID]['key']    = get_user_meta( $user->ID, 'edd_user_public_key', true );
-			$keys[$user->ID]['secret'] = get_user_meta( $user->ID, 'edd_user_secret_key', true );
-			$keys[$user->ID]['token']  = hash( 'md5', get_user_meta( $user->ID, 'edd_user_secret_key', true ) . get_user_meta( $user->ID, 'edd_user_public_key', true ) );
+			$keys[$user->ID]['key']    = EDD()->api->get_user_public_key( $user->ID );
+			$keys[$user->ID]['secret'] = EDD()->api->get_user_secret_key( $user->ID );
+			$keys[$user->ID]['token']  = EDD()->api->get_token( $user->ID );
 		}
 
 		return $keys;
@@ -203,7 +248,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 		global $wpdb;
 
 		if( ! get_transient( 'edd_total_api_keys' ) ) {
-			$total_items = $wpdb->get_var( "SELECT count(user_id) FROM $wpdb->usermeta WHERE meta_key='edd_user_secret_key'" );
+			$total_items = $wpdb->get_var( "SELECT count(user_id) FROM $wpdb->usermeta WHERE meta_value='edd_user_secret_key'" );
 
 			set_transient( 'edd_total_api_keys', $total_items, 60 * 60 );
 		}
@@ -224,7 +269,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 		$hidden = array(); // No hidden columns
 		$sortable = array(); // Not sortable... for now
 
-		$this->_column_headers = array( $columns, $hidden, $sortable );
+		$this->_column_headers = array( $columns, $hidden, $sortable, 'id' );
 
 		$data = $this->query();
 

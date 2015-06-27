@@ -70,9 +70,16 @@ window.EDD_Checkout = (function($) {
 		// Update the checkout when item quantities are updated
 		$body.on('change', '.edd-item-quantity', update_item_quantities);
 
+		$body.on('click', '.edd-amazon-logout #Logout', function(e) {
+			e.preventDefault();
+			amazon.Login.logout();
+			window.location = edd_amazon.checkoutUri;
+		});
+
 	}
 
 	function update_state_field() {
+
 		var $this = $(this);
 		if( 'card_state' != $this.attr('id') ) {
 
@@ -97,7 +104,9 @@ window.EDD_Checkout = (function($) {
 					} else {
 						$form.find('input[name="card_state"], select[name="card_state"]').replaceWith( response );
 					}
+
 					$body.trigger('edd_cart_billing_address_updated', [ response ]);
+
 				}
 			}).fail(function (data) {
 				if ( window.console && window.console.log ) {
@@ -113,7 +122,8 @@ window.EDD_Checkout = (function($) {
 		return false;
 	}
 
-	function recalculate_taxes( state ) {
+	function recalculate_taxes(state) {
+
 		if( '1' != edd_global_vars.taxes_enabled )
 			return; // Taxes not enabled
 
@@ -148,13 +158,12 @@ window.EDD_Checkout = (function($) {
 		}).fail(function (data) {
 			if ( window.console && window.console.log ) {
 				console.log( data );
+				$body.trigger('edd_taxes_recalculated', [ tax_data ]);
 			}
 		});
 	}
 
-	/* Credit card verification */
-
-	function edd_validate_card( field ) {
+	function edd_validate_card(field) {
 		var card_field = field;
 		card_field.validateCreditCard(function(result) {
 			var $card_type = $('.card-type');
@@ -251,7 +260,7 @@ window.EDD_Checkout = (function($) {
 		});
 
 		return false;
-	}
+	};
 
 	function remove_discount(event) {
 
@@ -281,15 +290,17 @@ window.EDD_Checkout = (function($) {
 				$('.edd_cart_discount').html(discount_response.html);
 
 				if( ! discount_response.discounts ) {
-					$('.edd_cart_discount_row').hide();
-				}
 
+					$('.edd_cart_discount_row').hide();
+
+				}
 
 				recalculate_taxes();
 
 				$('#edd_cc_fields,#edd_cc_address').slideDown();
 
 				$body.trigger('edd_discount_removed', [ discount_response ]);
+
 			}
 		}).fail(function (data) {
 			if ( window.console && window.console.log ) {
@@ -300,7 +311,7 @@ window.EDD_Checkout = (function($) {
 		return false;
 	}
 
-	function update_item_quantities (event) {
+	function update_item_quantities(event) {
 
 		var $this = $(this),
 			quantity = $this.val(),
@@ -354,6 +365,7 @@ window.EDD_Checkout = (function($) {
 		'init': init,
 		'recalculate_taxes': recalculate_taxes
 	}
+
 })(window.jQuery);
 
 // init on document.ready

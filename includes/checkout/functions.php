@@ -195,7 +195,7 @@ function edd_get_success_page_url( $query_string = null ) {
 function edd_get_failed_transaction_uri( $extras = false ) {
 	$uri = edd_get_option( 'failure_page', '' );
 	$uri = ! empty( $uri ) ? trailingslashit( get_permalink( $uri ) ) : home_url();
-	
+
 	if ( $extras )
 		$uri .= $extras;
 
@@ -281,6 +281,10 @@ function edd_is_email_banned( $email = '' ) {
 
 	$banned_emails = edd_get_banned_emails();
 
+	if( ! is_array( $banned_emails ) || empty( $banned_emails ) ) {
+		return false;
+	}
+
 	foreach( $banned_emails as $banned_email ) {
 		if( is_email( $banned_email ) ) {
 			$ret = ( $banned_email == trim( $email ) ? true : false );
@@ -292,7 +296,7 @@ function edd_is_email_banned( $email = '' ) {
 			break;
 		}
 	}
-	
+
 	return apply_filters( 'edd_is_email_banned', $ret, $email );
 }
 
@@ -409,4 +413,184 @@ function edd_enforced_ssl_asset_filter( $content ) {
 	}
 
 	return $content;
+}
+
+/**
+ * Given a number and algorithem, determine if we have a valid credit card format
+ *
+ * @since  2.4
+ * @param  integer $number The Credit Card Number to validate
+ * @return bool            If the card number provided matches a specific format of a valid card
+ */
+function edd_validate_card_number_format( $number = 0 ) {
+
+	$number = trim( $number );
+	if ( empty( $number ) ) {
+		return false;
+	}
+
+	if ( ! is_numeric( $number ) ) {
+		return false;
+	}
+
+	$is_valid_format = false;
+
+	// First check if it passes with the passed method, Luhn by default
+	$is_valid_format = edd_validate_card_number_format_luhn( $number );
+
+	// Run additional checks before we start the regexing and looping by type
+	$is_valid_format = apply_filters( 'edd_valiate_card_format_pre_type', $is_valid_format, $number );
+
+	if ( true === $is_valid_format ) {
+		// We've passed our method check, onto card specific checks
+		$card_type       = edd_detect_cc_type( $number );
+		$is_valid_format = ! empty( $card_type ) ? true : false;
+	}
+
+	return apply_filters( 'edd_cc_is_valid_format', $is_valid_format, $number );
+}
+
+/**
+ * Validate credit card number based on the luhn algorithm
+ *
+ * @since  2.4
+ * @param string $number
+ * @return bool
+ */
+function edd_validate_card_number_format_luhn( $number ) {
+
+	// Strip any non-digits (useful for credit card numbers with spaces and hyphens)
+	$number = preg_replace( '/\D/', '', $number );
+
+	// Set the string length and parity
+	$length = strlen( $number );
+	$parity = $length % 2;
+
+	// Loop through each digit and do the math
+	$total = 0;
+	for ( $i = 0; $i < $length; $i++ ) {
+		$digit = $number[ $i ];
+
+		// Multiply alternate digits by two
+		if ( $i % 2 == $parity ) {
+			$digit *= 2;
+
+			// If the sum is two digits, add them together (in effect)
+			if ( $digit > 9 ) {
+				$digit -= 9;
+			}
+		}
+
+		// Total up the digits
+		$total += $digit;
+	}
+
+	// If the total mod 10 equals 0, the number is valid
+	return ( $total % 10 == 0 ) ? true : false;
+
+}
+
+/**
+ * Detect credit card type based on the number and return an
+ * array of data to validate the credit card number
+ *
+ * @since  2.4
+ * @param string  $number
+ * @return string|bool
+ */
+function edd_detect_cc_type( $number ) {
+
+	$return = false;
+
+	$card_types = array(
+		array(
+			'name'         => 'amex',
+			'pattern'      => '/^3[4|7]/',
+			'valid_length' => array( 15 ),
+		),
+		array(
+			'name'         => 'diners_club_carte_blanche',
+			'pattern'      => '/^30[0-5]/',
+			'valid_length' => array( 14 ),
+		),
+		array(
+			'name'         => 'diners_club_international',
+			'pattern'      => '/^36/',
+			'valid_length' => array( 14 ),
+		),
+		array(
+			'name'         => 'jcb',
+			'pattern'      => '/^35(2[89]|[3-8][0-9])/',
+			'valid_length' => array( 16 ),
+		),
+		array(
+			'name'         => 'laser',
+			'pattern'      => '/^(6304|670[69]|6771)/',
+			'valid_length' => array( 16, 17, 18, 19 ),
+		),
+		array(
+			'name'         => 'visa_electron',
+			'pattern'      => '/^(4026|417500|4508|4844|491(3|7))/',
+			'valid_length' => array( 16 ),
+		),
+		array(
+			'name'         => 'visa',
+			'pattern'      => '/^4/',
+			'valid_length' => array( 16 ),
+		),
+		array(
+			'name'         => 'mastercard',
+			'pattern'      => '/^5[1-5]/',
+			'valid_length' => array( 16 ),
+		),
+		array(
+			'name'         => 'maestro',
+			'pattern'      => '/^(5018|5020|5038|6304|6759|676[1-3])/',
+			'valid_length' => array( 12, 13, 14, 15, 16, 17, 18, 19 ),
+		),
+		array(
+			'name'         => 'discover',
+			'pattern'      => '/^(6011|622(12[6-9]|1[3-9][0-9]|[2-8][0-9]{2}|9[0-1][0-9]|92[0-5]|64[4-9])|65)/',
+			'valid_length' => array( 16 ),
+		),
+	);
+
+	$card_types = apply_filters( 'edd_cc_card_types', $card_types );
+
+	if ( ! is_array( $card_types ) ) {
+		return false;
+	}
+
+	foreach ( $card_types as $card_type ){
+
+		if ( preg_match( $card_type['pattern'], $number ) ) {
+
+			$number_length = strlen( $number );
+			if ( in_array( $number_length, $card_type['valid_length'] ) ) {
+				$return = $card_type['name'];
+				break;
+			}
+
+		}
+
+	}
+
+	return apply_filters( 'edd_cc_found_card_type', $return, $number, $card_types );
+}
+
+/**
+ * Validate credit card expiration date
+ *
+ * @since  2.4
+ * @param string  $exp_month
+ * @param string  $exp_year
+ * @return bool
+ */
+function edd_purchase_form_validate_cc_exp_date( $exp_month, $exp_year ) {
+
+	$month_name = date( 'M', mktime( 0, 0, 0, $exp_month, 10 ) );
+	$expiration = strtotime( date( 't', strtotime( $month_name . ' ' . $exp_year ) ) . ' ' . $month_name . ' ' . $exp_year . ' 11:59:59PM' );
+
+	return $expiration >= time();
+
 }
