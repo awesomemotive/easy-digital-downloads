@@ -15,9 +15,12 @@ a.edd-delete:hover { color: #f00; }
 
 /* General Settings Styles
 -------------------------------------------------------------- */
-.download_page_edd-settings .form-table select +  label,
-.download_page_edd-settings .form-table input.regular-text + label,
-.download_page_edd-settings .form-table input.small-text + label { display:block; }
+.download_page_edd-settings .form-table label { color: #666; font-size: 14px; font-style: italic; margin: 4px 0 0; }
+.download_page_edd-settings .form-table select + label,
+.download_page_edd-settings .form-table input.regular-text ~ label { display:block; }
+.download_page_edd-settings .form-table input.small-text ~ label,
+.download_page_edd-settings .form-table input[type="checkbox"] + label { display: inline; }
+.download_page_edd-settings .form-table tr > th > strong { font-size: 18px; font-style: italic; }
 
 /* =Add Ons Styles
 -------------------------------------------------------------- */
