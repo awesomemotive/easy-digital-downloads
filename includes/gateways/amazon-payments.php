@@ -266,20 +266,13 @@ final class EDD_Amazon_Payments {
 			'amazon_register' => array(
 				'id'   => 'amazon_register',
 				'name' => __( 'Register with Amazon', 'edd' ),
-				'desc' => sprintf( __( '<p><a href="%s" class="button" target="_blank">Connect Easy Digital Downloads to your Amazon account, or register a new one</a></p><p class="description">Once registration is complete, enter your API credentials below.</p>', 'edd' ), $this->get_registration_url() ),
+				'desc' => sprintf( __( '<p><a href="%s" class="button" target="_blank">Connect Easy Digital Downloads to Amazon</a></p><p class="description">Once registration is complete, enter your API credentials below.</p>', 'edd' ), $this->get_registration_url() ),
 				'type' => 'descriptive_text',
-			),
-			'amazon_client_id' => array(
-				'id'   => 'amazon_client_id',
-				'name' => __( 'Client ID', 'edd' ),
-				'desc' => __( 'The Amazon Client ID. Should look like `amzn1.application-oa2...`', 'edd' ),
-				'type' => 'text',
-				'size' => 'regular',
 			),
 			'amazon_seller_id' => array(
 				'id'   => 'amazon_seller_id',
 				'name' => __( 'Seller ID', 'edd' ),
-				'desc' => __( 'Found in the Integration settings. Also called a Merchent ID', 'edd' ),
+				'desc' => __( 'Found in the Integration settings. Also called a Merchant ID', 'edd' ),
 				'type' => 'text',
 				'size' => 'regular',
 			),
@@ -294,6 +287,13 @@ final class EDD_Amazon_Payments {
 				'id'   => 'amazon_mws_secret_key',
 				'name' => __( 'MWS Secret Key', 'edd' ),
 				'desc' => __( 'Found on Seller Central in the MWS Keys section', 'edd' ),
+				'type' => 'text',
+				'size' => 'regular',
+			),
+			'amazon_client_id' => array(
+				'id'   => 'amazon_client_id',
+				'name' => __( 'Client ID', 'edd' ),
+				'desc' => __( 'The Amazon Client ID. Should look like `amzn1.application-oa2...`', 'edd' ),
 				'type' => 'text',
 				'size' => 'regular',
 			),
@@ -720,7 +720,9 @@ final class EDD_Amazon_Payments {
 	public function checkout_errors( $valid_data, $post_data ) {
 
 		// should validate that we have a reference ID here, perhaps even fire the API call here
-
+		if( empty( $post_data['edd_amazon_reference_id'] ) ) {
+			edd_set_error( 'missing_reference_id', __( 'Missing Reference ID, please try again', 'edd' ) );
+		}
 	}
 
 	/**

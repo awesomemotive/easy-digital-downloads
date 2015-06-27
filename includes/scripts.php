@@ -79,7 +79,8 @@ function edd_load_scripts() {
 			'redirect_to_checkout'    => ( edd_straight_to_checkout() || edd_is_checkout() ) ? '1' : '0',
 			'checkout_page'           => edd_get_checkout_uri(),
 			'permalinks'              => get_option( 'permalink_structure' ) ? '1' : '0',
-			'quantities_enabled'      => edd_item_quantities_enabled()
+			'quantities_enabled'      => edd_item_quantities_enabled(),
+			'taxes_enabled'           => edd_use_taxes() ? '1' : '0', // Adding here for widget, but leaving in checkout vars for backcompat
 		) ) );
 	}
 }
@@ -194,6 +195,7 @@ function edd_load_admin_scripts( $hook ) {
 		'one_or_more_option'      => sprintf( __( 'Choose one or more %s', 'edd' ), edd_get_label_plural() ),
 		'numeric_item_price'      => __( 'Item price must be numeric', 'edd' ),
 		'numeric_quantity'        => __( 'Quantity must be numeric', 'edd' ),
+		'currency'                => edd_get_currency(),
 		'currency_sign'           => edd_currency_filter(''),
 		'currency_pos'            => edd_get_option( 'currency_position', 'before' ),
 		'currency_decimals'       => edd_currency_decimal_filter(),

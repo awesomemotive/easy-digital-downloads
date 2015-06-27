@@ -51,10 +51,11 @@ function edd_reports_page() {
  */
 function edd_reports_default_views() {
 	$views = array(
-		'earnings'	=> __( 'Earnings', 'edd' ),
-		'downloads' => edd_get_label_plural(),
-		'gateways'  => __( 'Payment Methods', 'edd' ),
-		'taxes'		=> __( 'Taxes', 'edd' )
+		'earnings'   => __( 'Earnings', 'edd' ),
+		'categories' => __( 'Earnings by Category', 'edd' ),
+		'downloads'  => edd_get_label_plural(),
+		'gateways'   => __( 'Payment Methods', 'edd' ),
+		'taxes'      => __( 'Taxes', 'edd' ),
 	);
 
 	$views = apply_filters( 'edd_report_views', $views );
@@ -237,6 +238,55 @@ function edd_reports_earnings() {
 }
 add_action( 'edd_reports_view_earnings', 'edd_reports_earnings' );
 
+
+/**
+ * Renders the Reports Earnings By Category Table & Graphs
+ *
+ * @since  2.4
+ */
+function edd_reports_categories() {
+	if( ! current_user_can( 'view_shop_reports' ) ) {
+		return;
+	}
+
+	include( dirname( __FILE__ ) . '/class-categories-reports-table.php' );
+	?>
+	<div class="inside">
+		<?php
+		$categories_table = new EDD_Categories_Reports_Table();
+		$categories_table->prepare_items();
+		$categories_table->display();
+		?>
+
+		<?php echo $categories_table->load_scripts(); ?>
+
+		<div class="edd-mix-totals">
+			<div class="edd-mix-chart">
+				<strong><?php _e( 'Category Sales Mix: ', 'edd' ); ?></strong>
+				<?php $categories_table->output_sales_graph(); ?>
+			</div>
+			<div class="edd-mix-chart">
+				<strong><?php _e( 'Category Earnings Mix: ', 'edd' ); ?></strong>
+				<?php $categories_table->output_earnings_graph(); ?>
+			</div>
+		</div>
+
+		<?php do_action( 'edd_reports_graph_additional_stats' ); ?>
+
+		<p class="edd-graph-notes">
+			<span>
+				<em><sup>&dagger;</sup> <?php _e( 'All Parent categories include sales and earnings stats from child categories.', 'edd' ); ?></em>
+			</span>
+			<span>
+				<em><?php _e( 'Stats include all sales and earnings for the lifetime of the store.', 'edd' ); ?></em>
+			</span>
+		</p>
+
+	</div>
+	<?php
+}
+add_action( 'edd_reports_view_categories', 'edd_reports_categories' );
+
 /**
  * Renders the Tax Reports
  *
@@ -317,6 +367,7 @@ function edd_reports_tab_export() {
 									<?php echo _x( 'to', 'Date one to date two', 'edd' ); ?>
 									<?php echo EDD()->html->year_dropdown( 'end_year' ); ?>
 									<?php echo EDD()->html->month_dropdown( 'end_month' ); ?>
+									<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 									<input type="hidden" name="edd-action" value="earnings_export"/>
 									<input type="submit" value="<?php _e( 'Generate CSV', 'edd' ); ?>" class="button-secondary"/>
 								</form>
@@ -341,6 +392,7 @@ function edd_reports_tab_export() {
 										}
 										?>
 									</select>
+									<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 									<input type="hidden" name="edd-export-class" value="EDD_Batch_Payments_Export"/>
 									<span>
 										<input type="submit" value="<?php _e( 'Generate CSV', 'edd' ); ?>" class="button-secondary"/>
@@ -368,6 +420,7 @@ function edd_reports_tab_export() {
 										}
 										?>
 									</select>
+									<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 									<input type="hidden" name="edd-export-class" value="EDD_Batch_Customers_Export"/>
 									<input type="submit" value="<?php _e( 'Generate CSV', 'edd' ); ?>" class="button-secondary"/>
 								</form>
@@ -383,6 +436,7 @@ function edd_reports_tab_export() {
 								<form id="edd-export-file-downloads" class="edd-export-form" method="post">
 									<?php echo EDD()->html->date_field( array( 'id' => 'edd-file-download-export-start', 'name' => 'start', 'placeholder' => __( 'Choose start date', 'edd' ) )); ?>
 									<?php echo EDD()->html->date_field( array( 'id' => 'edd-file-download-export-end', 'name' => 'end', 'placeholder' => __( 'Choose end date', 'edd' ) )); ?>
+									<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 									<input type="hidden" name="edd-export-class" value="EDD_Batch_File_Downloads_Export"/>
 									<input type="submit" value="<?php _e( 'Generate CSV', 'edd' ); ?>" class="button-secondary"/>
 								</form>
