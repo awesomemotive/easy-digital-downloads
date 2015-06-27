@@ -151,6 +151,11 @@ function edd_ajax_remove_from_cart() {
 			'cart_quantity' => html_entity_decode( edd_get_cart_quantity() ),
 		);
 
+		if ( edd_use_taxes() ) {
+			$cart_tax = (float) edd_get_cart_tax();
+			$return['tax'] = html_entity_decode( edd_currency_filter( edd_format_amount( $cart_tax ) ), ENT_COMPAT, 'UTF-8' );
+		}
+
 		echo json_encode( $return );
 
 	}
@@ -213,6 +218,11 @@ function edd_ajax_add_to_cart() {
 			'cart_item'     => $items,
 			'cart_quantity' => html_entity_decode( edd_get_cart_quantity() )
 		);
+
+		if ( edd_use_taxes() ) {
+			$cart_tax = (float) edd_get_cart_tax();
+			$return['tax'] = html_entity_decode( edd_currency_filter( edd_format_amount( $cart_tax ) ), ENT_COMPAT, 'UTF-8' );
+		}
 
 		echo json_encode( $return );
 	}
