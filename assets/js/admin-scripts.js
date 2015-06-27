@@ -1204,7 +1204,6 @@ jQuery(document).ready(function ($) {
 
 				var data = $(this).serialize();
 
-				//$(this).find('.spinner').addClass( 'is-active' );
 				$(this).append( '<span class="spinner is-active"></span><div class="edd-progress"><div></div></div>' );
 
 				// start the process
@@ -1225,7 +1224,7 @@ jQuery(document).ready(function ($) {
 				},
 				dataType: "json",
 				success: function( response ) {
-					console.log( response );
+
 					if( 'done' == response.step ) {
 
 						var export_form = $('.edd-export-form');
@@ -1250,8 +1249,6 @@ jQuery(document).ready(function ($) {
 				if ( window.console && window.console.log ) {
 					console.log( response );
 				}
-			}).done(function (response) {
-
 			});
 
 		}
@@ -1465,3 +1462,47 @@ jQuery(document).ready(function ($) {
 	});
 
 });
+
+// Graphing Helper Functions
+
+var eddFormatCurrency = function (value) {
+	// Convert the value to a floating point number in case it arrives as a string.
+	var numeric = parseFloat(value);
+	// Specify the local currency.
+	var storeCurrency = edd_vars.currency;
+	var decimalPlaces = edd_vars.currency_decimals;
+	return numeric.toLocaleString(storeCurrency, { style: 'currency', currency: storeCurrency, minimumFractionDigits: decimalPlaces, maximumFractionDigits: decimalPlaces });
+}
+
+var eddFormatNumber = function(value) {
+	// Convert the value to a floating point number in case it arrives as a string.
+	var numeric = parseFloat(value);
+	// Specify the local currency.
+	var storeCurrency = edd_vars.currency;
+	var decimalPlaces = edd_vars.currency_decimals;
+	return numeric.toLocaleString(storeCurrency, { style: 'decimal', minimumFractionDigits: 0, maximumFractionDigits: 0 });
+}
+
+var eddLabelFormatter = function (label, series) {
+	return '<div style="font-size:12px; text-align:center; padding:2px">' + label + '</div>';
+}
+
+var eddLegendFormatterSales = function (label, series) {
+	var slug  = label.toLowerCase().replace(/\s/g, '-');
+	var color = '<div class="edd-legend-color" style="background-color: ' + series.color + '"></div>';
+	var value = '<div class="edd-pie-legend-item">' + label + ': ' + Math.round(series.percent) + '% (' + eddFormatNumber(series.data[0][1]) + ')</div>';
+	var item = '<div id="' + series.edd_vars.id + slug + '" class="edd-legend-item-wrapper">' + color + value + '</div>';
+
+	jQuery('#edd-pie-legend-' + series.edd_vars.id).append( item );
+	return item;
+}
+
+var eddLegendFormatterEarnings = function (label, series) {
+	var slug  = label.toLowerCase().replace(/\s/g, '-');
+	var color = '<div class="edd-legend-color" style="background-color: ' + series.color + '"></div>';
+	var value = '<div class="edd-pie-legend-item">' + label + ': ' + Math.round(series.percent) + '% (' + eddFormatCurrency(series.data[0][1]) + ')</div>';
+	var item = '<div id="' + series.edd_vars.id + slug + '" class="edd-legend-item-wrapper">' + color + value + '</div>';
+
+	jQuery('#edd-pie-legend-' + series.edd_vars.id).append( item );
+	return item;
+}
