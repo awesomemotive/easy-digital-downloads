@@ -606,10 +606,50 @@ function edd_cart_subtotal() {
  * @return float Total amount before taxes
  */
 function edd_get_cart_subtotal() {
-	$subtotal = 0.00;
-	$items    = edd_get_cart_content_details();
 
-	if( $items ) {
+	$items    = edd_get_cart_content_details();
+	$subtotal = edd_get_cart_items_subtotal( $items );
+
+	return apply_filters( 'edd_get_cart_subtotal', $subtotal );
+}
+
+/**
+ * Get Cart Discountable Subtotal.
+ *
+ * @return float Total discountable amount before taxes
+ */
+function edd_get_cart_discountable_subtotal( $code_id ) {
+
+	$cart_items    = edd_get_cart_content_details();
+	$items   = array();
+
+	$excluded_products = edd_get_discount_excluded_products( $code_id );
+
+	if( $cart_items ) {
+
+		foreach( $cart_items as $item ) {
+
+			if( ! in_array( $item['id'], $excluded_products ) ) {
+				$items[] =  $item;
+			}
+		}
+	}
+
+	$subtotal = edd_get_cart_items_subtotal( $items );
+
+	return apply_filters( 'edd_get_cart_discountable_subtotal', $subtotal );
+}
+
+/**
+ * Get cart items subtotal
+ * @param array $items Cart items array
+ *
+ * @return float items subtotal
+ */
+function edd_get_cart_items_subtotal( $items ) {
+	$subtotal = 0.00;
+
+	if( is_array( $items ) && ! empty( $items ) ) {
 
 		$prices = wp_list_pluck( $items, 'subtotal' );
 
@@ -625,9 +665,8 @@ function edd_get_cart_subtotal() {
 
 	}
 
-	return apply_filters( 'edd_get_cart_subtotal', $subtotal );
+	return apply_filters( 'edd_get_cart_items_subtotal', $subtotal );
 }
-
 /**
  * Get Total Cart Amount
  *
