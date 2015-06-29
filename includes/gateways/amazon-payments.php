@@ -304,7 +304,7 @@ final class EDD_Amazon_Payments {
 				'type'     => 'text',
 				'size'     => 'large',
 				'std'      => $this->get_amazon_authenticate_redirect(),
-				'readonly' => true,
+				'faux'     => true,
 			),
 			'amazon_mws_ipn_url' => array(
 				'id'       => 'amazon_ipn_url',
@@ -313,7 +313,7 @@ final class EDD_Amazon_Payments {
 				'type'     => 'text',
 				'size'     => 'large',
 				'std'      => $this->get_amazon_ipn_url(),
-				'readonly' => true,
+				'faux'     => true,
 			),
 		);
 
