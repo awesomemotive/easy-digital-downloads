@@ -301,19 +301,19 @@ final class EDD_Amazon_Payments {
 				'id'       => 'amazon_callback_url',
 				'name'     => __( 'Amazon MWS Callback URL', 'edd' ),
 				'desc'     => __( 'The Return URL to provide in your MWS Application. Enter this under your Login and Pay &rarr; Web Settings', 'edd' ),
-				'type'     => 'faux_input',
+				'type'     => 'text',
 				'size'     => 'large',
 				'std'      => $this->get_amazon_authenticate_redirect(),
-				'readonly' => true,
+				'faux'     => true,
 			),
 			'amazon_mws_ipn_url' => array(
 				'id'       => 'amazon_ipn_url',
 				'name'     => __( 'Amazon Merchant IPN URL', 'edd' ),
 				'desc'     => sprintf( __( 'The IPN URL to provide in your MWS account. Enter this under your <a href="%s">Integration Settings</a>', 'edd' ), 'https://sellercentral.amazon.com/gp/pyop/seller/account/settings/user-settings-edit.html' ),
-				'type'     => 'faux_input',
+				'type'     => 'text',
 				'size'     => 'large',
 				'std'      => $this->get_amazon_ipn_url(),
-				'readonly' => true,
+				'faux'     => true,
 			),
 		);
 
