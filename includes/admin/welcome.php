@@ -188,10 +188,10 @@ class EDD_Welcome {
 					<p><?php _e( 'When using Amazon Payments, credit / debit card details are entered on Amazon\'s secure servers and never pass through your own server, making the entire process dramatically more secure and reliable.', 'edd' );?></p>
 
 					<h4><?php _e( 'Accept Credit and Debit Card Payments', 'edd' );?></h4>
-					<p><?php _e( 'Amazon Payments allows your customers to easily pay with their debit or credit cards, at not extra cost to you. During checkout, customers will be provided an option to use a stored card or enter a new one.', 'edd' );?></p>
+					<p><?php _e( 'Amazon Payments allows your customers to easily pay with their debit or credit cards. During checkout, customers will be provided an option to use a stored card or enter a new one.', 'edd' );?></p>
 
 					<h4><?php _e( 'Simple Customer Authentication', 'edd' );?></h4>
-					<p><?php _e( 'Customers can log into their Amazon account from your checkout screen and have all of their billing details retrieved automatically from Amazon. With just a few clicks, customers can complete their purchase pain free.', 'edd' );?></p>
+					<p><?php _e( 'Customers can log into their Amazon account from your checkout screen and have all of their billing details retrieved automatically from Amazon. With just a few clicks, customers can effortlessly complete their purchase.', 'edd' );?></p>
 
 				</div>
 			</div>
@@ -246,7 +246,7 @@ class EDD_Welcome {
 
 					<div>
 
-						<h4><?php _e( 'Customer > User Syncronization', 'edd' );?></h4>
+						<h4><?php _e( 'Customer > User Synchronization', 'edd' );?></h4>
 						<p><?php _e( 'Customer email addresses are now updated when the associated user account\'s email is changed.' ,'edd' );?></p>
 
 						<h4><?php _e( 'Better Test Mode Settings', 'edd' );?></h4>
