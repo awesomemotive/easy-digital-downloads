@@ -184,7 +184,7 @@ class EDD_Welcome {
 
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/24-checkout.png'; ?>" class="edd-welcome-screenshots"/>
 
-					<h4><?php _e( 'More Secure Checkout', 'edd' );?></h4>
+					<h4><?php _e( 'Secure Checkout', 'edd' );?></h4>
 					<p><?php _e( 'When using Amazon Payments, credit / debit card details are entered on Amazon\'s secure servers and never pass through your own server, making the entire process dramatically more secure and reliable.', 'edd' );?></p>
 
 					<h4><?php _e( 'Accept Credit and Debit Card Payments', 'edd' );?></h4>
