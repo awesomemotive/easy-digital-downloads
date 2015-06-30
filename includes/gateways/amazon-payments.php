@@ -144,7 +144,7 @@ final class EDD_Amazon_Payments {
 	 */
 	private function actions() {
 
-		add_action( 'wp_enqueue_scripts',                      array( $this, 'print_client' ), 10 );
+		add_action( 'wp_head',                                 array( $this, 'print_client' ), 10 );
 		add_action( 'wp_enqueue_scripts',                      array( $this, 'load_scripts' ), 11 );
 		add_action( 'init',                                    array( $this, 'capture_oauth' ), 9 );
 		add_action( 'init',                                    array( $this, 'signin_redirect' ) );
