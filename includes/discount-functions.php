@@ -1377,7 +1377,7 @@ function edd_listen_for_cart_discount() {
 		return;
 	}
 
-	$code = preg_replace('/[^a-zA-Z0-9]+/', '', $_REQUEST['discount'] );
+	$code = preg_replace('/[^a-zA-Z0-9-_]+/', '', $_REQUEST['discount'] );
 
 	EDD()->session->set( 'preset_discount', $code );
 }
