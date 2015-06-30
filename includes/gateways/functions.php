@@ -323,7 +323,7 @@ function edd_show_gateways() {
 
 	$chosen_gateway = isset( $_GET['payment-mode'] ) ? preg_replace('/[^a-zA-Z0-9-_]+/', '', $_GET['payment-mode'] ) : false;
 
-	if ( count( $gateways ) > 1 && ! empty( $chosen_gateway ) ) {
+	if ( count( $gateways ) > 1 && empty( $chosen_gateway ) ) {
 		$show_gateways = true;
 		if ( edd_get_cart_total() <= 0 ) {
 			$show_gateways = false;
