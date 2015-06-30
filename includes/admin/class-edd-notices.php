@@ -75,6 +75,7 @@ class EDD_Notices {
 			echo '</div>';
 		}
 
+		/* Commented out per https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/3475
 		if( ! edd_test_ajax_works() && ! get_user_meta( get_current_user_id(), '_edd_admin_ajax_inaccessible_dismissed', true ) && current_user_can( 'manage_shop_settings' ) ) {
 			echo '<div class="error">';
 				echo '<p>' . __( 'Your site appears to be blocking the WordPress ajax interface. This may causes issues with your store.', 'edd' ) . '</p>';
@@ -82,6 +83,7 @@ class EDD_Notices {
 				echo '<p><a href="' . add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'admin_ajax_inaccessible' ) ) . '">' . __( 'Dismiss Notice', 'edd' ) . '</a></p>';
 			echo '</div>';
 		}
+		*/
 
 		if ( isset( $_GET['edd-message'] ) ) {
 			// Shop discounts errors

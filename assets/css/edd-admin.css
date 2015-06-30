@@ -13,12 +13,14 @@
 a.edd-delete { color: #a00; }
 a.edd-delete:hover { color: #f00; }
 
-
 /* General Settings Styles
 -------------------------------------------------------------- */
-.download_page_edd-settings .form-table label { font-size: 13px; color: #aaa; font-style:italic; cursor:default; margin:5px 0; }
-.download_page_edd-settings .form-table select +  label, .download_page_edd-settings .form-table input.regular-text + label, .download_page_edd-settings .form-table input.small-text + label { display:block; }
-.download_page_edd-settings .field-section-title { font-style: italic; color: #aaa;}
+.download_page_edd-settings .form-table label { color: #666; font-size: 14px; font-style: italic; margin: 4px 0 0; }
+.download_page_edd-settings .form-table select + label,
+.download_page_edd-settings .form-table input.regular-text ~ label { display:block; }
+.download_page_edd-settings .form-table input.small-text ~ label,
+.download_page_edd-settings .form-table input[type="checkbox"] + label { display: inline; }
+.download_page_edd-settings .form-table tr > th > strong { font-size: 18px; font-style: italic; }
 
 /* =Add Ons Styles
 -------------------------------------------------------------- */
@@ -131,7 +133,7 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 #edd-edit-order-form .column .description { padding-right: 10px; }
 #edd-edit-order-form .column,
 #edd-purchased-files .row > ul > li,
-#edd-purchased-files .inside > ul > li { display: inline-block; position: relative; vertical-align: bottom; margin-right: 5%; line-height:30px; }
+#edd-purchased-files .inside > ul > li { display: inline-block; position: relative; vertical-align: middle; margin-right: 5%; line-height:30px; }
 #edd-purchased-files li.actions { text-align: right; min-width: 200px; }
 #edd-purchased-files ul li.remove { text-align: right; }
 #edd-purchased-files .row { padding: 12px; border-bottom: 1px solid #eee; }
@@ -230,6 +232,27 @@ td.edd_order_price { text-align: right; }
 #edd-graphs-date-options,
 #edd-date-range-options { float: left; }
 #edd-date-range-options span { float: left; margin-right: 6px; height: 24px; line-height: 24px; }
+.edd-export-form { position: relative; }
+.edd-export-form .edd-progress {background: #ddd; position: absolute; bottom: -20px; height: 15px; width: 100%; }
+.edd-export-form .edd-progress div { height: 100%; background: #ccc; width: 0; }
+.admin-color-fresh .edd-export-form .edd-progress div { background: #0073aa; }
+.admin-color-light .edd-export-form .edd-progress div { background: #888; }
+.admin-color-blue .edd-export-form .edd-progress div { background: #096484; }
+.admin-color-coffee .edd-export-form .edd-progress div { background: #c7a589; }
+.admin-color-ectoplasm .edd-export-form .edd-progress div { background: #a3b745; }
+.admin-color-midnight .edd-export-form .edd-progress div { background: #e14d43; }
+.admin-color-sunrise .edd-export-form .edd-progress div { background: #dd823b; }
+#edd-graphs-filter label { vertical-align: inherit; }
+#edd-graphs-filter .graph-option-section { float: left; line-height: 2.5em; padding-right: 5px; }
+.edd-mix-totals { padding: 10px; background-color: #fff; box-shadow: 0 1px 1px rgba(0,0,0,0.04); border: 1px solid #e5e5e5; }
+.edd-mix-chart { display: inline-block; width: 49%; }
+.edd-graph-notes { color: #9c9c9c; }
+.edd-graph-notes span { display: block; }
+.edd-pie-graph .legend { display: none; }
+.edd-pie-legend { margin-top: 10px; overflow: auto; }
+.edd-legend-item-wrapper { width: 180px; float: left; font-size:8pt; padding:2px; color:#333; padding: 2px 5px 0px 5px; height: 20px; }
+.edd-legend-color { display: inline-block; height: 15px; width: 20px; border: 1px solid #cfcfcf; margin-right: 5px; }
+.edd-pie-legend-item { display: inline-block; vertical-align: top; }
 
 /* Upgrades page styles
 -------------------------------------------------------------- */
@@ -259,6 +282,15 @@ td.edd_order_price { text-align: right; }
 -------------------------------------------------------------- */
 #TB_window #edd-add-download:hover, #TB_window #edd-add-download:active, #TB_window #edd-add-download:focus { color: #fff; }
 
+/* Global Graph Styles
+-------------------------------------------------------------- */
+.edd-graph .y1Axis { color: rgb( 237, 194, 64 )!important; }
+.edd-graph .y2Axis { color: rgb( 175, 216, 248 )!important; }
+
+/* API Table Styles
+-------------------------------------------------------------- */
+.download_page_edd-tools .apikeys .column-user { width: 192px; }
+
 /* General styles
 -------------------------------------------------------------- */
 .edd-select-chosen { width: 300px; }
@@ -275,14 +307,23 @@ td.edd_order_price { text-align: right; }
 .edd_user_search_results a.edd-ajax-user-cancel { position: absolute; right: 6px; top: 2px; }
 .edd_user_search_results ul { padding: 10px 10px 4px; margin: 0; background: #f0f0f0; border: 1px solid #DFDFDF; width: 300px; max-height: 200px; overflow-y: scroll; }
 
-/* Global Graph Styles
--------------------------------------------------------------- */
-.edd-graph .y1Axis { color: rgb( 237, 194, 64 )!important; }
-.edd-graph .y2Axis { color: rgb( 175, 216, 248 )!important; }
+@media screen and ( max-width: 1100px ) {
+	.edd-mix-chart {
+		display: block;
+		width: 100%;
+	}
+}
 
-/* API Table Styles
--------------------------------------------------------------- */
-.download_page_edd-tools .apikeys .column-user { width: 192px; }
+@media screen and ( max-width: 782px ) {
+	.post-type-download .nav-tab-wrapper a {
+		padding: 2px 4px;
+		font-size: 50%;
+	}
+	.download_page_edd-tools .apikeys .column-user {
+		width: 80px;
+	}
+
+}
 
 /* Customer Styles
 -------------------------------------------------------------- */

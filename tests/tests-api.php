@@ -13,6 +13,8 @@ class Tests_API extends WP_UnitTestCase {
 
 	protected $_post = null;
 
+	protected $_api = null;
+
 	protected $_api_output = null;
 
 	protected $_api_output_sales = null;
@@ -26,11 +28,13 @@ class Tests_API extends WP_UnitTestCase {
 		$GLOBALS['wp_rewrite']->init();
 		flush_rewrite_rules( false );
 
+		$this->_api = new EDD_API;
+
 		$roles = new EDD_Roles;
 		$roles->add_roles();
 		$roles->add_caps();
 
-		EDD()->api->add_endpoint( $wp_rewrite );
+		$this->_api->add_endpoint( $wp_rewrite );
 
 		$this->_rewrite = $wp_rewrite;
 		$this->_query = $wp_query;
@@ -150,8 +154,8 @@ class Tests_API extends WP_UnitTestCase {
 
 		edd_update_payment_status( $payment_id, 'complete' );
 
-		$this->_api_output = EDD()->api->get_products();
-		$this->_api_output_sales = EDD()->api->get_recent_sales();
+		$this->_api_output = $this->_api->get_products();
+		$this->_api_output_sales = $this->_api->get_recent_sales();
 
 		global $wp_query;
 		$wp_query->query_vars['format'] = 'override';
@@ -177,7 +181,7 @@ class Tests_API extends WP_UnitTestCase {
 
 		endforeach;
 
-		$out = EDD()->api->query_vars( array() );
+		$out = $this->_api->query_vars( array() );
 		$this->assertEquals( 'token', $out[0] );
 		$this->assertEquals( 'key', $out[1] );
 		$this->assertEquals( 'query', $out[2] );
@@ -190,6 +194,38 @@ class Tests_API extends WP_UnitTestCase {
 		$this->assertEquals( 'customer', $out[9] );
 		$this->assertEquals( 'discount', $out[10] );
 		$this->assertEquals( 'format', $out[11] );
+	}
+
+	public function test_get_versions() {
+		$this->assertInternalType( 'array', $this->_api->get_versions() );
+		$this->assertArrayHasKey( 'v1', $this->_api->get_versions() );
+	}
+
+	public function test_get_default_version() {
+
+		$this->assertEquals( 'v1', $this->_api->get_default_version() );
+
+		define( 'EDD_API_VERSION', 'v2' );
+		$this->assertEquals( 'v2', $this->_api->get_default_version() );
+
+	}
+
+	public function test_get_queried_version() {
+		$this->markTestIncomplete( 'This test is causing the suite to die for some reason' );
+		global $wp_query;
+
+		$wp_query->query_vars['edd-api'] = 'sales';
+
+		$this->_api->process_query();
+
+		$this->assertEquals( 'v1', $this->_api->get_queried_version() );
+
+		define( 'EDD_API_VERSION', 'v2' );
+
+		$this->_api->process_query();
+
+		$this->assertEquals( 'v2', $this->_api->get_queried_version() );
+
 	}
 
 	public function test_get_products() {
@@ -293,20 +329,34 @@ class Tests_API extends WP_UnitTestCase {
 	}
 
 	public function test_update_key() {
+
 		$_POST['edd_set_api_key'] = 1;
+
 		EDD()->api->update_key( $this->_user_id );
-		$this->assertNotEmpty( get_user_meta( $this->_user_id, 'edd_user_public_key', true ) );
-		$this->assertNotEmpty( get_user_meta( $this->_user_id, 'edd_user_secret_key', true ) );
+
+		$user_public = $this->_api->get_user_public_key( $this->_user_id );
+		$user_secret = $this->_api->get_user_secret_key( $this->_user_id );
+
+		$this->assertNotEmpty( $user_public );
+		$this->assertNotEmpty( $user_secret );
+
+		// Backwards compatibilty check for API Keys
+		$this->assertEquals( $user_public, get_user_meta( $this->_user_id, 'edd_user_public_key', true ) );
+		$this->assertEquals( $user_secret, get_user_meta( $this->_user_id, 'edd_user_secret_key', true ) );
+
 	}
 
 	public function test_get_user() {
+
 		$_POST['edd_set_api_key'] = 1;
+
 		EDD()->api->update_key( $this->_user_id );
-		$this->assertEquals( $this->_user_id, EDD()->api->get_user( get_user_meta( $this->_user_id, 'edd_user_public_key', true ) ) );
+		$this->assertEquals( $this->_user_id, $this->_api->get_user( $this->_api->get_user_public_key( $this->_user_id ) ) );
+
 	}
 
 	public function test_get_customers() {
-		$out = EDD()->api->get_customers();
+		$out = $this->_api->get_customers();
 
 		$this->assertArrayHasKey( 'customers', $out );
 		$this->assertArrayHasKey( 'info', $out['customers'][0] );
@@ -333,8 +383,8 @@ class Tests_API extends WP_UnitTestCase {
 
 	public function test_missing_auth() {
 		$this->markTestIncomplete('Needs to be rewritten since this outputs xml that kills travis with a 255 error (fatal PHP error)');
-		//EDD()->api->missing_auth();
-		//$out = EDD()->api->get_output();
+		//$this->_api->missing_auth();
+		//$out = $this->_api->get_output();
 		//$this->assertArrayHasKey( 'error', $out );
 		//$this->assertEquals( 'You must specify both a token and API key!', $out['error'] );
 
@@ -342,16 +392,16 @@ class Tests_API extends WP_UnitTestCase {
 
 	public function test_invalid_auth() {
 		$this->markTestIncomplete('Needs to be rewritten since this outputs xml that kills travis with a 255 error (fatal PHP error)');
-		//EDD()->api->invalid_auth();
-		//$out = EDD()->api->get_output();
+		//$this->_api->invalid_auth();
+		//$out = $this->_api->get_output();
 		//$this->assertArrayHasKey( 'error', $out );
 		//$this->assertEquals( 'Your request could not be authenticated!', $out['error'] );
 	}
 
 	public function test_invalid_key() {
 		$this->markTestIncomplete('Needs to be rewritten since this outputs xml that kills travis with a 255 error (fatal PHP error)');
-		//$out = EDD()->api->invalid_key();
-		//$out = EDD()->api->get_output();
+		//$out = $this->_api->invalid_key();
+		//$out = $this->_api->get_output();
 		//$this->assertArrayHasKey( 'error', $out );
 		//$this->assertEquals( 'Invalid API key!', $out['error'] );
 	}
@@ -362,15 +412,15 @@ class Tests_API extends WP_UnitTestCase {
 		$this->markTestIncomplete('Needs to be rewritten since this outputs xml that kills travis with a 255 error (fatal PHP error)');
 		$_POST['edd_set_api_key'] = 1;
 
-		EDD()->api->update_key( $this->_user_id );
+		$this->_api->update_key( $this->_user_id );
 
 		$wp_query->query_vars['edd-api'] = 'products';
 		$wp_query->query_vars['key'] = get_user_meta( $this->_user_id, 'edd_user_public_key', true );
 		$wp_query->query_vars['token'] = hash( 'md5', get_user_meta( $this->_user_id, 'edd_user_secret_key', true ) . get_user_meta( $this->_user_id, 'edd_user_public_key', true ) );
 
-		EDD()->api->process_query();
+		$this->_api->process_query();
 
-		$out = EDD()->api->get_output();
+		$out = $this->_api->get_output();
 
 		$this->assertArrayHasKey( 'info', $out['products'][0] );
 		$this->assertArrayHasKey( 'id', $out['products'][0]['info'] );

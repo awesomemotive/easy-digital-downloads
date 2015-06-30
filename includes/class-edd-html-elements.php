@@ -69,6 +69,7 @@ class EDD_HTML_Elements {
 		$options = array();
 
 		if ( $products ) {
+			$options[0] = sprintf( __( 'Select a %s', 'edd' ), edd_get_label_singular() );
 			foreach ( $products as $product ) {
 				$options[ absint( $product->ID ) ] = esc_html( $product->post_title );
 			}
@@ -231,11 +232,12 @@ class EDD_HTML_Elements {
 			$options[ absint( $category->term_id ) ] = esc_html( $category->name );
 		}
 
+		$category_labels = edd_get_taxonomy_labels( 'download_category' );
 		$output = $this->select( array(
 			'name'             => $name,
 			'selected'         => $selected,
 			'options'          => $options,
-			'show_option_all'  => __( 'All Categories', 'edd' ),
+			'show_option_all'  => sprintf( _x( 'All %s', 'plural: Example: "All Categories"', 'edd' ), $category_labels['name'] ),
 			'show_option_none' => false
 		) );
 
@@ -441,6 +443,7 @@ class EDD_HTML_Elements {
 		}
 
 		$defaults = array(
+			'id'           => '',
 			'name'         => isset( $name )  ? $name  : 'text',
 			'value'        => isset( $value ) ? $value : null,
 			'label'        => isset( $label ) ? $label : null,
@@ -474,11 +477,29 @@ class EDD_HTML_Elements {
 				$output .= '<span class="edd-description">' . esc_html( $args['desc'] ) . '</span>';
 			}
 
-			$output .= '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['name'] )  . '" autocomplete="' . esc_attr( $args['autocomplete'] )  . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="' . $args['class'] . '" ' . $data . '' . $disabled . '/>';
+			$output .= '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] )  . '" autocomplete="' . esc_attr( $args['autocomplete'] )  . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="' . $args['class'] . '" ' . $data . '' . $disabled . '/>';
 
 		$output .= '</span>';
 
 		return $output;
+	}
+	/**
+	 * Renders a date picker
+	 *
+	 * @since 2.4
+	 *
+	 * @param array $args Arguments for the text field
+	 * @return string Datepicker field
+	 */
+	public function date_field( $args = array() ) {
+
+		if( empty( $args['class'] ) ) {
+			$args['class'] = 'edd_datepicker';
+		} elseif( ! strpos( $args['class'], 'edd_datepicker' ) ) {
+			$args['class'] .= ' edd_datepicker';
+		}
+
+		return $this->text( $args );
 	}
 
 	/**

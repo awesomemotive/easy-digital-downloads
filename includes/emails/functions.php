@@ -37,8 +37,8 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	$subject      = apply_filters( 'edd_purchase_subject', wp_strip_all_tags( $subject ), $payment_id );
 	$subject      = edd_do_email_tags( $subject, $payment_id );
 
-	$heading     = edd_get_option( 'purchase_heading', __( 'Purchase Receipt', 'edd' ) );
-	$heading     = apply_filters( 'edd_purchase_heading', $heading, $payment_id, $payment_data );
+	$heading      = edd_get_option( 'purchase_heading', __( 'Purchase Receipt', 'edd' ) );
+	$heading      = apply_filters( 'edd_purchase_heading', $heading, $payment_id, $payment_data );
 
 	$attachments  = apply_filters( 'edd_receipt_attachments', array(), $payment_id, $payment_data );
 	$message      = edd_do_email_tags( edd_get_email_body_content( $payment_id, $payment_data ), $payment_id );
@@ -72,7 +72,7 @@ function edd_email_test_purchase_receipt() {
 	$from_name   = apply_filters( 'edd_purchase_from_name', $from_name, 0, array() );
 
 	$from_email  = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
-	$from_email  = apply_filters( 'edd_purchase_from_address', $from_email, 0, array() );
+	$from_email  = apply_filters( 'edd_test_purchase_from_address', $from_email, 0, array() );
 
 	$subject     = edd_get_option( 'purchase_subject', __( 'Purchase Receipt', 'edd' ) );
 	$subject     = apply_filters( 'edd_purchase_subject', wp_strip_all_tags( $subject ), 0 );
@@ -121,7 +121,7 @@ function edd_admin_email_notice( $payment_id = 0, $payment_data = array() ) {
 	$from_name   = apply_filters( 'edd_purchase_from_name', $from_name, $payment_id, $payment_data );
 
 	$from_email  = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
-	$from_email  = apply_filters( 'edd_purchase_from_address', $from_email, $payment_id, $payment_data );
+	$from_email  = apply_filters( 'edd_admin_sale_from_address', $from_email, $payment_id, $payment_data );
 
 	$subject     = edd_get_option( 'sale_notification_subject', sprintf( __( 'New download purchase - Order #%1$s', 'edd' ), $payment_id ) );
 	$subject     = apply_filters( 'edd_admin_sale_notification_subject', wp_strip_all_tags( $subject ), $payment_id );

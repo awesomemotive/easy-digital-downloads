@@ -176,49 +176,56 @@ class EDD_Welcome {
 			<?php $this->tabs(); ?>
 
 			<div class="changelog">
-				<h3><?php _e( 'New Customer Management UI', 'edd' );?></h3>
+				<h3><?php _e( 'Amazon Payments', 'edd' );?></h3>
 
 				<div class="feature-section">
 
-					<p><?php _e( 'Version 2.3 introduces a comprehensive customer management interface. Get detailed statistics on your customers, quickly make edits, and leave detailed notes.', 'edd' );?></p>
+					<p><?php _e( 'With Easy Digital Downloads version 2.4, you can now accept payments through Amazon\'s Login and Pay with the new built-in payment gateway.', 'edd' );?></p>
 
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/customer-ui.png'; ?>" class="edd-welcome-screenshots"/>
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/24-checkout.png'; ?>" class="edd-welcome-screenshots"/>
 
-					<h4><?php _e( 'Better Customer Details on Payment', 'edd' );?></h4>
-					<p><?php _e( 'The Customer Details section of the View Order Details screen has been updated to make it easier to move payment records between customers. A quick link to the customer\'s overview page has also been added, letting you easily see all purchases made by the customer.', 'edd' );?></p>
+					<h4><?php _e( 'Secure Checkout', 'edd' );?></h4>
+					<p><?php _e( 'When using Amazon Payments, credit / debit card details are entered on Amazon\'s secure servers and never pass through your own server, making the entire process dramatically more secure and reliable.', 'edd' );?></p>
 
-					<h4><?php _e( 'Create New Customers Quickly', 'edd' );?></h4>
-					<p><?php _e( 'New customer records can now be created directly from the View Order Details screen, making it easier for you to manage change requests from your customers.', 'edd' );?></p>
+					<h4><?php _e( 'Accept Credit and Debit Card Payments', 'edd' );?></h4>
+					<p><?php _e( 'Amazon Payments allows your customers to easily pay with their debit or credit cards. During checkout, customers will be provided an option to use a stored card or enter a new one.', 'edd' );?></p>
 
-					<h4><?php _e( 'More Accessible', 'edd' );?></h4>
-					<p><?php _e( 'Your store\'s customer history has been moved to a dedicated submenu of the Downloads menu, making it significantly easier to locate. No longer is it hidden in an obscure section of the Reports page.', 'edd' );?></p>
+					<h4><?php _e( 'Simple Customer Authentication', 'edd' );?></h4>
+					<p><?php _e( 'Customers can log into their Amazon account from your checkout screen and have all of their billing details retrieved automatically from Amazon. With just a few clicks, customers can effortlessly complete their purchase.', 'edd' );?></p>
 
 				</div>
 			</div>
 
 			<div class="changelog">
-				<h3><?php _e( 'Signed URLs', 'edd' );?></h3>
+				<h3><?php _e( 'Earnings / Sales By Category', 'edd' );?></h3>
 
 				<div class="feature-section">
 
-					<p><?php _e( 'We take security seriously and with Easy Digital Downloads 2.3, we have introduced a better, more secure file download mechanism that keeps your files safe and secure.', 'edd' );?></p>
-					<p><?php _e( 'Download URLs provided to customers have been improved to be shorter and more secure, and now use tokens to verify the URL prior to allowing the download to start.', 'edd' );?></p>
+					<p><?php _e( 'Easy Digital Downloads version 2.4 introduces a new Report that displays earnings and sales for your product categories.', 'edd' );?></p>
+
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/24-category-earnings.png'; ?>" class="edd-welcome-screenshots"/>
+
+					<h4><?php _e( 'Earnings and Sales Overview', 'edd' );?></h4>
+					<p><?php _e( 'Quickly see how each of your categories has performed over the lifetime of your store. The total sales and earnings are displayed, as well as the average monthly sales and earnings for each category.', 'edd' );?></p>
+
+					<h4><?php _e( 'Category Sales / Earnings Mix', 'edd' );?></h4>
+					<p><?php _e( 'The report includes a visual break down of the sales / earnings mix for your categories. Quickly see which categories account for the highest (or lowest) percentage of your sales and earnings.', 'edd' );?></p>
 
 				</div>
 			</div>
 
 			<div class="changelog">
-				<h3><?php _e( 'Improved Order Details', 'edd' );?></h3>
+				<h3><?php _e( 'Improved Data Export', 'edd' );?></h3>
 
 				<div class="feature-section">
 
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/22-purchased-downloads2.png'; ?>" class="edd-welcome-screenshots"/>
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/24-export.png'; ?>" class="edd-welcome-screenshots"/>
 
-					<h4><?php _e( 'Focus on Purchased Downloads', 'edd' );?></h4>
-					<p><?php _e( 'The Download products your customer has purchased is one of the most important parts of this screen, so we have put it up front and in the spotlight.', 'edd' );?></p>
+					<h4><?php _e( 'Big Data Support', 'edd' );?></h4>
+					<p><?php _e( 'With the new export processing in Easy Digital Downloads 2.4, you can easily export massive amounts of data. Need to export 20,000 payment records? No problem.', 'edd' );?></p>
 
-					<h4><?php _e( 'More Accurate Statistics', 'edd' );?></h4>
-					<p><?php _e( 'Adding or removing Downloads to and from a payment record now properly triggers an update routine to ensure the sales and earnings for the affected products are properly updated.', 'edd' );?></p>
+					<h4><?php _e( 'Standardized Customer Export', 'edd' );?></h4>
+					<p><?php _e( 'The Customer export has been standarized so it now produces the same data during export for all export options. It can also easily handle 20,000 or even 50,000 customer records in a single export.', 'edd' );?></p>
 
 				</div>
 			</div>
@@ -229,28 +236,31 @@ class EDD_Welcome {
 				<div class="feature-section col three-col">
 					<div>
 
-						<h4><?php _e( 'PolyLang Support', 'edd' );?></h4>
-						<p><?php _e( 'We\'ve improved support for the popular PolyLang Plugin in 2.3 making EDD more accessible in more languages.', 'edd' );?></p>
+						<h4><?php _e( 'REST API Versioning', 'edd' );?></h4>
+						<p><?php _e( 'The REST API now supports a version parameter that allows you to specify which version of the API you wish to use.', 'edd' );?></p>
 
-						<h4><?php _e( 'Customer API', 'edd' );?></h4>
-						<p><?php _e( 'A new EDD_Customer class has been introduced that makes it easy for developers to interact with customer data.', 'edd' );?></p>
+						<h4><?php _e( 'Better Cart Tax Display', 'edd' );?></h4>
+						<p><?php _e( 'Cart widgets now display estimated taxes for customers before reaching the checkout page.', 'edd' );?></p>
 
 					</div>
 
 					<div>
 
-						<h4><?php _e( 'Schema Validation', 'edd' );?></h4>
-						<p><?php _e( 'The Schema Markup has been improved and now properly includes prices for both single and multi-price option products.' ,'edd' );?></p>
+						<h4><?php _e( 'Customer > User Synchronization', 'edd' );?></h4>
+						<p><?php _e( 'Customer email addresses are now updated when the associated user account\'s email is changed.' ,'edd' );?></p>
 
-						<h4><?php _e( 'Buy Now Button Improvements', 'edd' );?></h4>
-						<p><?php _e( 'Buy Now buttons no longer create pending payment records when they are clicked. Buy Now buttons are now automatically deactivated if no supported payment gateway is activated.' ,'edd' );?></p>
+						<h4><?php _e( 'Better Test Mode Settings', 'edd' );?></h4>
+						<p><?php _e( 'Test Mode has been improved by moving the option to the Payment Gateways screen. Sales / earnings stats are now incremented in test mode.', 'edd' );?></p>
 
 					</div>
 
 					<div class="last-feature">
 
-						<h4><?php _e( 'Improved Upgrade Routine API', 'edd' );?></h4>
-						<p><?php _e( 'The upgrade routine has been improved to be more robust and user friendly. It now supports multiple upgrades in a single release, logs which have been completed ,as well as allows incomplete upgrades to be resumed.', 'edd' );?></p>
+						<h4><?php _e( 'Exclude Taxes from Reports', 'edd' );?></h4>
+						<p><?php _e( 'Earnings and sales reports can now be shown exclusive of tax, allowing you to easily see how your store is performing after taxes.', 'edd' );?></p>
+	
+						<h4><?php _e( 'Default Gateway First', 'edd' );?></h4>
+						<p><?php _e( 'The gateway selected as the default option will always be displayed first on checkout.' ,'edd' );?></p>
 
 					</div>
 

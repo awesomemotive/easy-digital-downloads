@@ -39,9 +39,10 @@ function edd_get_payment_gateways() {
  * Returns a list of all enabled gateways.
  *
  * @since 1.0
+ * @param  bool $sort If true, the default gateway will be first
  * @return array $gateway_list All the available gateways
 */
-function edd_get_enabled_payment_gateways() {
+function edd_get_enabled_payment_gateways( $sort = false ) {
 	$gateways = edd_get_payment_gateways();
 	$enabled  = edd_get_option( 'gateways', false );
 
@@ -51,6 +52,15 @@ function edd_get_enabled_payment_gateways() {
 		if ( isset( $enabled[ $key ] ) && $enabled[ $key ] == 1 ) {
 			$gateway_list[ $key ] = $gateway;
 		}
+	}
+
+	if ( true === $sort ) {
+		// Reorder our gateways so the default is first
+		$default_gateway_id = edd_get_default_gateway();
+		$default_gateway    = array( $default_gateway_id => $gateway_list[ $default_gateway_id ] );
+		unset( $gateway_list[ $default_gateway_id ] );
+
+		$gateway_list = array_merge( $default_gateway, $gateway_list );
 	}
 
 	return apply_filters( 'edd_enabled_payment_gateways', $gateway_list );
@@ -177,9 +187,10 @@ function edd_shop_supports_buy_now() {
  *
  * @param int   $download_id
  * @param array $options
+ * @param int   $quantity
  * @return mixed|void
  */
-function edd_build_straight_to_gateway_data( $download_id = 0, $options = array() ) {
+function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(), $quantity = 1 ) {
 
 	$price_options = array();
 
@@ -227,9 +238,9 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 			'tax'         => 0,
 			'discount'    => 0,
 			'item_price'  => $price,
-			'subtotal'    => $price,
-			'price'       => $price,
-			'quantity'    => 1,
+			'subtotal'    => ( $price * $quantity ),
+			'price'       => ( $price * $quantity ),
+			'quantity'    => $quantity,
 		)
 	);
 
@@ -253,10 +264,10 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 	$purchase_data = array(
 		'downloads'    => $downloads,
 		'fees'         => edd_get_cart_fees(),
-		'subtotal'     => $price,
+		'subtotal'     => $price * $quantity,
 		'discount'     => 0,
 		'tax'          => 0,
-		'price'        => $price,
+		'price'        => $price * $quantity,
 		'purchase_key' => strtolower( md5( uniqid() ) ),
 		'user_email'   => $user_info['email'],
 		'date'         => date( 'Y-m-d H:i:s' ),
@@ -301,7 +312,18 @@ function edd_show_gateways() {
 	$gateways = edd_get_enabled_payment_gateways();
 	$show_gateways = false;
 
-	if ( count( $gateways ) > 1 && ! isset( $_GET['payment-mode'] ) ) {
+	$gateways        = edd_get_payment_gateways();
+	$active_gateways = array();
+
+	foreach ( $gateways as $gateway => $data ) {
+		if ( edd_is_gateway_active( $gateway ) ) {
+			$active_gateways[] = $gateway;
+		}
+	}
+
+	$chosen_gateway = isset( $_GET['payment-mode'] ) ? preg_replace('/[^a-zA-Z0-9-_]+/', '', $_GET['payment-mode'] ) : false;
+
+	if ( count( $gateways ) > 1 && empty( $chosen_gateway ) ) {
 		$show_gateways = true;
 		if ( edd_get_cart_total() <= 0 ) {
 			$show_gateways = false;
@@ -325,7 +347,11 @@ function edd_get_chosen_gateway() {
 	$gateways = edd_get_enabled_payment_gateways();
 	$chosen   = isset( $_REQUEST['payment-mode'] ) ? $_REQUEST['payment-mode'] : false;
 
-	if ( $chosen ) {
+	if ( false !== $chosen ) {
+		$chosen = preg_replace('/[^a-zA-Z0-9-_]+/', '', $chosen );
+	}
+
+	if ( ! empty ( $chosen ) ) {
 		$enabled_gateway = urldecode( $chosen );
 	} else if( count( $gateways ) >= 1 && ! $chosen ) {
 		foreach ( $gateways as $gateway_id => $gateway ):
