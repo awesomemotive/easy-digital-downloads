@@ -250,7 +250,7 @@ td.edd_order_price { text-align: right; }
 .edd-graph-notes span { display: block; }
 .edd-pie-graph .legend { display: none; }
 .edd-pie-legend { margin-top: 10px; overflow: auto; }
-.edd-legend-item-wrapper { width: 180px; display:inline-block; font-size:8pt; padding:2px; color:#333; padding: 2px 5px 0px 5px; height: 20px; }
+.edd-legend-item-wrapper { width: 48%; display:inline-block; font-size:8pt; padding:2px; color:#333; padding: 2px 5px 0px 5px; height: 20px; }
 .edd-legend-color { display: inline-block; height: 15px; width: 20px; border: 1px solid #cfcfcf; margin-right: 5px; }
 .edd-pie-legend-item { display: inline-block; vertical-align: top; width: 80%; }
 
