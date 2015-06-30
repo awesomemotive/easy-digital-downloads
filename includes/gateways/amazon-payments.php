@@ -404,6 +404,10 @@ final class EDD_Amazon_Payments {
 	 * @return void
 	 */
 	public function print_client() {
+
+		if ( ! edd_is_checkout() ) {
+			return;
+		}
 		?>
 		<script>
 			window.onAmazonLoginReady = function() {
