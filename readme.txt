@@ -191,7 +191,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
-= 2.4, June 29, 2015 =
+= 2.4, June 30, 2015 =
 
 * New: Added support for Amazon Login and Pay
 * New: Added Earnings by Category report
