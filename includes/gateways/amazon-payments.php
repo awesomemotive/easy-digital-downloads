@@ -361,21 +361,23 @@ final class EDD_Amazon_Payments {
 
 		$amazon_button_settings = apply_filters( 'edd_amazon_button_settings', $default_amazon_button_settings );
 		$base_url = '';
+		$sandbox  = $test_mode ? 'sandbox/' : '';
 
 		switch ( edd_get_shop_country() ) {
 			case 'GB':
-				$base_url = 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/';
+				$base_url = 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/' . $sandbox . 'lpa/';
 			break;
 			case 'DE':
-				$base_url = 'https://static-eu.payments-amazon.com/OffAmazonPayments/de/';
+				$base_url = 'https://static-eu.payments-amazon.com/OffAmazonPayments/de/' . $sandbox. 'lpa/';
 			break;
 			default:
-				$base_url = 'https://static-na.payments-amazon.com/OffAmazonPayments/us/';
+				$base_url = 'https://static-na.payments-amazon.com/OffAmazonPayments/us/' . $sandbox;
 			break;
 		}
 
 		if ( ! empty( $base_url ) ) {
-			$url = $base_url . ( $test_mode ? 'sandbox/' : '' ) . 'js/Widgets.js?sellerId=' . $seller_id;
+
+			$url = $base_url . 'js/Widgets.js?sellerId=' . $seller_id;
 
 			wp_enqueue_script( 'edd-amazon-widgets', $url, array( 'jquery' ), null, false );
 			wp_localize_script( 'edd-amazon-widgets', 'edd_amazon', apply_filters( 'edd_amazon_checkout_vars', array(
