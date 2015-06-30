@@ -1045,6 +1045,10 @@ final class EDD_Amazon_Payments {
 			return;
 		}
 
+		if( 'amazon' !== edd_get_payment_gateway( $payment_id ) ) {
+			return;
+		}
+
 		$this->refund( $payment_id );
 
 	}
