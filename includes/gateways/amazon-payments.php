@@ -553,6 +553,7 @@ final class EDD_Amazon_Payments {
 
 				<div id="edd-amazon-pay-button"></div>
 				<script type="text/javascript">
+					var authRequest;
 					OffAmazonPayments.Button('edd-amazon-pay-button', edd_amazon.sellerId, {
 						type:  edd_amazon.buttonType,
 						color: edd_amazon.buttonColor,
