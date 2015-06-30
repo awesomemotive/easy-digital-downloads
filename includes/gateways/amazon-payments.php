@@ -413,7 +413,7 @@ final class EDD_Amazon_Payments {
 		?>
 		<script>
 			window.onAmazonLoginReady = function() {
-				amazon.Login.setClientId(<?php echo wp_json_encode( edd_get_option( 'amazon_client_id', '' ) ); ?>);
+				amazon.Login.setClientId(<?php echo json_encode( edd_get_option( 'amazon_client_id', '' ) ); ?>);
 			};
 		</script>
 		<?php
