@@ -144,7 +144,7 @@ final class EDD_Amazon_Payments {
 	 */
 	private function actions() {
 
-		add_action( 'wp_enqueue_scripts',                      array( $this, 'print_client' ), 10 );
+		add_action( 'wp_head',                                 array( $this, 'print_client' ), 10 );
 		add_action( 'wp_enqueue_scripts',                      array( $this, 'load_scripts' ), 11 );
 		add_action( 'init',                                    array( $this, 'capture_oauth' ), 9 );
 		add_action( 'init',                                    array( $this, 'signin_redirect' ) );
@@ -404,6 +404,10 @@ final class EDD_Amazon_Payments {
 	 * @return void
 	 */
 	public function print_client() {
+
+		if ( ! edd_is_checkout() ) {
+			return;
+		}
 		?>
 		<script>
 			window.onAmazonLoginReady = function() {
@@ -549,6 +553,7 @@ final class EDD_Amazon_Payments {
 
 				<div id="edd-amazon-pay-button"></div>
 				<script type="text/javascript">
+					var authRequest;
 					OffAmazonPayments.Button('edd-amazon-pay-button', edd_amazon.sellerId, {
 						type:  edd_amazon.buttonType,
 						color: edd_amazon.buttonColor,
