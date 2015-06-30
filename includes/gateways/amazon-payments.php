@@ -192,12 +192,18 @@ final class EDD_Amazon_Payments {
 	 */
 	private function setup_client() {
 
+		$region = edd_get_shop_country();
+
+		if( 'GB' === $region ) {
+			$region = 'UK';
+		}
+
 		$config = array(
 			'merchant_id' => edd_get_option( 'amazon_seller_id', '' ),
 			'client_id'   => edd_get_option( 'amazon_client_id', '' ),
 			'access_key'  => edd_get_option( 'amazon_mws_access_key', '' ),
 			'secret_key'  => edd_get_option( 'amazon_mws_secret_key', '' ),
-			'region'      => edd_get_shop_country(),
+			'region'      => $region,
 			'sandbox'     => edd_is_test_mode(),
 		);
 
