@@ -137,6 +137,9 @@ function edd_install() {
 	$roles->add_roles();
 	$roles->add_caps();
 
+	$api = new EDD_API;
+	update_option( 'edd_default_api_version', 'v' . $api->get_version() );
+
 	// Create the customers database
 	@EDD()->customers->create_table();
 
@@ -157,7 +160,8 @@ function edd_install() {
 		// When new upgrade routines are added, mark them as complete on fresh install
 		$upgrade_routines = array(
 			'upgrade_payment_taxes',
-			'upgrade_customer_payments_association'
+			'upgrade_customer_payments_association',
+			'upgrade_user_api_keys',
 		);
 
 		foreach ( $upgrade_routines as $upgrade ) {

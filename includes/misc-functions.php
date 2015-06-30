@@ -734,3 +734,26 @@ function hash_equals( $a, $b ) {
 	return $result === 0;
 }
 endif;
+
+if ( ! function_exists( 'getallheaders' ) ) :
+
+	/**
+	 * Retrieve all headers
+	 *
+	 * Ensure getallheaders function exists in the case we're using nginx
+	 *
+	 * @access public
+	 * @since  2.4
+	 * @return array
+	 */
+	function getallheaders() {
+		$headers = '';
+		foreach ( $_SERVER as $name => $value ) {
+			if ( substr( $name, 0, 5 ) == 'HTTP_' ) {
+				$headers[ str_replace( ' ', '-', ucwords( strtolower( str_replace( '_', ' ', substr( $name, 5 ) ) ) ) ) ] = $value;
+			}
+		}
+		return $headers;
+	}
+
+endif;
