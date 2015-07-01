@@ -347,7 +347,7 @@ td.edd_order_price { text-align: right; }
 	webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
 	box-shadow: 0 1px 1px rgba(0,0,0,0.04);
 }
-#edd-customer-card-wrapper .customer-section { border-bottom: 1px solid #eee; margin-bottom: 10px; }
+#edd-customer-card-wrapper .customer-section { border-bottom: 1px solid #eee; margin-bottom: 10px; overflow: auto; }
 #edd-customer-card-wrapper .customer-section table { margin-bottom: 20px; }
 #edd-customer-card-wrapper > div { padding: 0px 20px; }
 #edd-customer-card-wrapper > div:first-child { padding-top: 20px; }
