@@ -1093,14 +1093,14 @@ final class EDD_Amazon_Payments {
 				case 'Declined' :
 
 					$code   = $refund['RefundResult']['RefundDetails']['RefundStatus']['ReasonCode'];
-					$note   = __( 'Refund declined in Amazon. Refeund ID: %s', 'edd' );
+					$note   = __( 'Refund declined in Amazon. Refund ID: %s', 'edd' );
 
 					break;
 
 				case 'Completed' :
 
 					$refund_id = $refund['RefundResult']['RefundDetails']['AmazonRefundId'];
-					$note      = sprintf( __( 'Refund completed in Amazon. Refeund ID: %s', 'edd' ), $refund_id );
+					$note      = sprintf( __( 'Refund completed in Amazon. Refund ID: %s', 'edd' ), $refund_id );
 
 					break;
 
