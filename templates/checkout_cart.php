@@ -1,7 +1,7 @@
 <?php
 /**
  *  This template is used to display the Checkout page when items are in the cart
- */ 
+ */
 
 global $post; ?>
 <table id="edd_checkout_cart" <?php if ( ! edd_is_ajax_disabled() ) { echo 'class="ajaxed"'; } ?>>
@@ -33,15 +33,22 @@ global $post; ?>
 								$item_title .= ' - ' . edd_get_cart_item_price_name( $item );
 							}
 							echo '<span class="edd_checkout_cart_item_title">' . esc_html( $item_title ) . '</span>';
+							do_action( 'edd_checkout_cart_item_title_after', $item );
 						?>
 					</td>
-					<td class="edd_cart_item_price"><?php echo edd_cart_item_price( $item['id'], $item['options'] ); ?></td>
+					<td class="edd_cart_item_price">
+						<?php 
+						echo edd_cart_item_price( $item['id'], $item['options'] );
+						do_action( 'edd_checkout_cart_item_price_after', $item );
+						?>
+					</td>
 					<td class="edd_cart_actions">
 						<?php if( edd_item_quantities_enabled() ) : ?>
 							<input type="number" min="1" step="1" name="edd-cart-download-<?php echo $key; ?>-quantity" data-key="<?php echo $key; ?>" class="edd-input edd-item-quantity" value="<?php echo edd_get_cart_item_quantity( $item['id'], $item['options'] ); ?>"/>
 							<input type="hidden" name="edd-cart-downloads[]" value="<?php echo $item['id']; ?>"/>
 							<input type="hidden" name="edd-cart-download-<?php echo $key; ?>-options" value="<?php echo esc_attr( serialize( $item['options'] ) ); ?>"/>
 						<?php endif; ?>
+						<?php do_action( 'edd_cart_actions', $item, $key ); ?>
 						<a class="edd_cart_remove_item_btn" href="<?php echo esc_url( edd_remove_item_url( $key ) ); ?>"><?php _e( 'Remove', 'edd' ); ?></a>
 					</td>
 					<?php do_action( 'edd_checkout_table_body_last', $item ); ?>
@@ -53,13 +60,20 @@ global $post; ?>
 		<?php if( edd_cart_has_fees() ) : ?>
 			<?php foreach( edd_get_cart_fees() as $fee_id => $fee ) : ?>
 				<tr class="edd_cart_fee" id="edd_cart_fee_<?php echo $fee_id; ?>">
+
+					<?php do_action( 'edd_cart_fee_rows_before', $fee_id, $fee ); ?>
+
 					<td class="edd_cart_fee_label"><?php echo esc_html( $fee['label'] ); ?></td>
 					<td class="edd_cart_fee_amount"><?php echo esc_html( edd_currency_filter( edd_format_amount( $fee['amount'] ) ) ); ?></td>
 					<td>
 						<?php if( ! empty( $fee['type'] ) && 'item' == $fee['type'] ) : ?>
 							<a href="<?php echo esc_url( edd_remove_cart_fee_url( $fee_id ) ); ?>"><?php _e( 'Remove', 'edd' ); ?></a>
 						<?php endif; ?>
+
 					</td>
+
+					<?php do_action( 'edd_cart_fee_rows_after', $fee_id, $fee ); ?>
+
 				</tr>
 			<?php endforeach; ?>
 		<?php endif; ?>
@@ -85,7 +99,7 @@ global $post; ?>
 				<?php do_action( 'edd_checkout_table_subtotal_last' ); ?>
 			</tr>
 		<?php endif; ?>
-		
+
 		<tr class="edd_cart_footer_row edd_cart_discount_row" <?php if( ! edd_cart_has_discounts() )  echo ' style="display:none;"'; ?>>
 			<?php do_action( 'edd_checkout_table_discount_first' ); ?>
 			<th colspan="<?php echo edd_checkout_cart_columns(); ?>" class="edd_cart_discount">

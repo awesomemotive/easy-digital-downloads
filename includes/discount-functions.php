@@ -236,6 +236,22 @@ function edd_store_discount( $details, $discount_id = null ) {
 
 	}
 
+	if( ! empty( $meta['product_reqs'] ) ) {
+		foreach( $meta['product_reqs'] as $key => $product ) {
+			if( 0 === intval( $product ) ) {
+				unset( $meta['product_reqs'][ $key ] );
+			}
+		}
+	}
+
+	if( ! empty( $meta['excluded_products'] ) ) {
+		foreach( $meta['excluded_products'] as $key => $product ) {
+			if( 0 === intval( $product ) ) {
+				unset( $meta['excluded_products'][ $key ] );
+			}
+		}
+	}
+
 	if ( edd_discount_exists( $discount_id ) && ! empty( $discount_id ) ) {
 
 		// Update an existing discount
@@ -770,7 +786,6 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
 
 	$return     = false;
-	$user_found = false;
 
 	if ( empty( $code_id ) ) {
 		$code_id = edd_get_discount_id_by_code( $code );
@@ -780,44 +795,65 @@ function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
 	}
 
 	if ( edd_discount_is_single_use( $code_id ) ) {
-		if ( is_email( $user ) ) {
-			$user_found = true; // All we need is the email
-			$key        = '_edd_payment_user_email';
-			$value      = $user;
-		} else {
-			$user_data = get_user_by( 'login', $user );
 
-			if ( $user_data ) {
-				$user_found	= true;
-				$key   		= '_edd_payment_user_id';
-				$value 		= $user_data->ID;
+		$payments = array();
+
+		if ( EDD()->customers->installed() ) {
+
+			$by_user_id = is_email( $user ) ? false : true;
+			$customer = new EDD_Customer( $user, $by_user_id );
+
+			$payments = explode( ',', $customer->payment_ids );
+
+		} else {
+
+			$user_found = false;
+
+			if ( is_email( $user ) ) {
+
+				$user_found = true; // All we need is the email
+				$key        = '_edd_payment_user_email';
+				$value      = $user;
+
+			} else {
+
+				$user_data = get_user_by( 'login', $user );
+
+				if ( $user_data ) {
+
+					$user_found = true;
+					$key        = '_edd_payment_user_id';
+					$value      = $user_data->ID;
+
+				}
+			}
+
+			if ( $user_found ) {
+				$query_args = array(
+				'post_type'  => 'edd_payment',
+					'meta_query' => array(
+						array(
+							'key'     => $key,
+							'value'   => $value,
+							'compare' => '='
+						)
+					),
+					'fields'     => 'ids'
+				);
+
+				$payments = get_posts( $query_args ); // Get all payments with matching email
+
 			}
 		}
 
-		if ( $user_found ) {
-			$query_args = array(
-				'post_type'  => 'edd_payment',
-				'meta_query' => array(
-					array(
-						'key'     => $key,
-						'value'   => $value,
-						'compare' => '='
-					)
-				),
-				'fields'     => 'ids'
-			);
-
-			$payments = get_posts( $query_args ); // Get all payments with matching email
-
-			if ( $payments ) {
-				foreach ( $payments as $payment ) {
-					// Check all matching payments for discount code.
-					$payment_meta = edd_get_payment_meta( $payment );
-					$user_info    = maybe_unserialize( $payment_meta['user_info'] );
-					if ( $user_info['discount'] == $code ) {
-						edd_set_error( 'edd-discount-error', __( 'This discount has already been redeemed.', 'edd' ) );
-						$return = true;
-					}
+		if ( $payments ) {
+			foreach ( $payments as $payment ) {
+				// Check all matching payments for discount code.
+				$payment_meta = edd_get_payment_meta( $payment );
+				$user_info    = maybe_unserialize( $payment_meta['user_info'] );
+				if ( $user_info['discount'] == $code ) {
+					edd_set_error( 'edd-discount-error', __( 'This discount has already been redeemed.', 'edd' ) );
+					$return = true;
 				}
 			}
 		}
@@ -1089,6 +1125,20 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 
 	global $edd_is_last_cart_item, $edd_flat_discount_total;
 
+	// If we're not meeting the requirements of the $item array, return or set them
+	if ( empty( $item ) || empty( $item['id'] ) ) {
+		return 0;
+	}
+
+	// Quantity is a requirement of the cart options array to determine the discounted price
+	if ( empty( $item['quantity'] ) ) {
+		return 0;
+	}
+
+	if ( ! isset( $item['options'] ) ) {
+		$item['options'] = array();
+	}
+
 	$amount           = 0;
 	$price            = edd_get_cart_item_price( $item['id'], $item['options'] );
 	$discounted_price = $price;
@@ -1103,9 +1153,9 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 			$code_id = edd_get_discount_id_by_code( $discount );
 
 			// Check discount exists
-		        if( ! $code_id ) {
-		            continue;
-		        }
+			if( ! $code_id ) {
+				continue;
+			}
 
 			$reqs              = edd_get_discount_product_reqs( $code_id );
 			$excluded_products = edd_get_discount_excluded_products( $code_id );
@@ -1327,7 +1377,7 @@ function edd_listen_for_cart_discount() {
 		return;
 	}
 
-	$code = sanitize_text_field( $_REQUEST['discount'] );
+	$code = preg_replace('/[^a-zA-Z0-9-_]+/', '', $_REQUEST['discount'] );
 
 	EDD()->session->set( 'preset_discount', $code );
 }

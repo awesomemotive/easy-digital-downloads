@@ -27,6 +27,37 @@ class Test_Gateways extends WP_UnitTestCase {
 
 	public function test_enabled_gateways() {
 		$this->assertEmpty( edd_get_enabled_payment_gateways() );
+
+		global $edd_options;
+		$edd_options['gateways']['paypal'] = '1';
+		$edd_options['gateways']['manual'] = '1';
+
+		// Verify PayPal comes back as default/first when none is set
+		$this->assertTrue( empty( $edd_options['default_gateway'] ) );
+
+		$enabled_gateway_list = edd_get_enabled_payment_gateways( true );
+		$first_gateway_id     = current( array_keys( $enabled_gateway_list ) );
+		$this->assertEquals( 'paypal', $first_gateway_id );
+
+		// Test when default is set to paypal
+		$edd_options['default_gateway'] = 'paypal';
+		$enabled_gateway_list = edd_get_enabled_payment_gateways( true );
+		$first_gateway_id     = current( array_keys( $enabled_gateway_list ) );
+		$this->assertEquals( 'paypal', $first_gateway_id );
+
+		// Test default is set to manual and we ask for it sorted
+		$edd_options['default_gateway'] = 'manual';
+		$enabled_gateway_list = edd_get_enabled_payment_gateways( true );
+		$first_gateway_id     = current( array_keys( $enabled_gateway_list ) );
+		$this->assertEquals( 'manual', $first_gateway_id );
+
+		// Test the call does not return it sorted when manual is default
+		$enabled_gateway_list = edd_get_enabled_payment_gateways();
+		$first_gateway_id     = current( array_keys( $enabled_gateway_list ) );
+		$this->assertEquals( 'paypal', $first_gateway_id );
+
+		// Reset these so the rest of the tests don't fail
+		unset( $edd_options['default_gateway'], $edd_options['gateways']['paypal'], $edd_options['gateways']['manual'] );
 	}
 
 	public function test_is_gateway_active() {

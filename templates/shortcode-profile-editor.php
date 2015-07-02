@@ -13,11 +13,11 @@ if ( is_user_logged_in() ):
 
 	if ( edd_is_cart_saved() ): ?>
 		<?php $restore_url = add_query_arg( array( 'edd_action' => 'restore_cart', 'edd_cart_token' => edd_get_cart_token() ), edd_get_checkout_uri() ); ?>
-		<p class="edd_success"><strong><?php _e( 'Saved cart', 'edd'); ?>:</strong> <?php printf( __( 'You have a saved cart, <a href="%s">click here</a> to restore it.', 'edd' ), esc_url( $restore_url ) ); ?></p>
+		<div class="edd_success edd-alert edd-alert-success"><strong><?php _e( 'Saved cart', 'edd'); ?>:</strong> <?php printf( __( 'You have a saved cart, <a href="%s">click here</a> to restore it.', 'edd' ), esc_url( $restore_url ) ); ?></div>
 	<?php endif; ?>
 
 	<?php if ( isset( $_GET['updated'] ) && $_GET['updated'] == true && ! edd_get_errors() ): ?>
-		<p class="edd_success"><strong><?php _e( 'Success', 'edd'); ?>:</strong> <?php _e( 'Your profile has been edited successfully.', 'edd' ); ?></p>
+		<div class="edd_success edd-alert edd-alert-success"><strong><?php _e( 'Success', 'edd'); ?>:</strong> <?php _e( 'Your profile has been edited successfully.', 'edd' ); ?></=div>
 	<?php endif; ?>
 
 	<?php edd_print_errors(); ?>
