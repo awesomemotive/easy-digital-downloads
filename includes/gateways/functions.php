@@ -97,7 +97,8 @@ function edd_get_default_gateway() {
 
 	if( ! edd_is_gateway_active( $default ) ) {
 		$gateways = edd_get_enabled_payment_gateways();
-		$default  = reset( array_keys( $gateways ) );
+		array_keys( $gateways );
+		$default  = reset( $gateways );
 	}
 
 	return apply_filters( 'edd_default_gateway', $default );
