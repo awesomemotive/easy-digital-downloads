@@ -5,7 +5,7 @@
  * Description: Serve Digital Downloads Through WordPress
  * Author: Pippin Williamson
  * Author URI: https://pippinsplugins.com
- * Version: 2.4
+ * Version: 2.4.1
  * Text Domain: edd
  * Domain Path: languages
  *
