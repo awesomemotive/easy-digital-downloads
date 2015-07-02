@@ -312,15 +312,6 @@ function edd_show_gateways() {
 	$gateways = edd_get_enabled_payment_gateways();
 	$show_gateways = false;
 
-	$gateways        = edd_get_payment_gateways();
-	$active_gateways = array();
-
-	foreach ( $gateways as $gateway => $data ) {
-		if ( edd_is_gateway_active( $gateway ) ) {
-			$active_gateways[] = $gateway;
-		}
-	}
-
 	$chosen_gateway = isset( $_GET['payment-mode'] ) ? preg_replace('/[^a-zA-Z0-9-_]+/', '', $_GET['payment-mode'] ) : false;
 
 	if ( count( $gateways ) > 1 && empty( $chosen_gateway ) ) {
