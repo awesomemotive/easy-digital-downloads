@@ -57,10 +57,16 @@ function edd_get_enabled_payment_gateways( $sort = false ) {
 	if ( true === $sort ) {
 		// Reorder our gateways so the default is first
 		$default_gateway_id = edd_get_default_gateway();
-		$default_gateway    = array( $default_gateway_id => $gateway_list[ $default_gateway_id ] );
-		unset( $gateway_list[ $default_gateway_id ] );
 
-		$gateway_list = array_merge( $default_gateway, $gateway_list );
+		if( edd_is_gateway_active( $default_gateway_id ) ) {
+
+			$default_gateway    = array( $default_gateway_id => $gateway_list[ $default_gateway_id ] );
+			unset( $gateway_list[ $default_gateway_id ] );
+
+			$gateway_list = array_merge( $default_gateway, $gateway_list );
+
+		}
+
 	}
 
 	return apply_filters( 'edd_enabled_payment_gateways', $gateway_list );
