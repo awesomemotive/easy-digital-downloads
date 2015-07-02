@@ -303,11 +303,13 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 		$row_actions = apply_filters( 'edd_payment_row_actions', $row_actions, $payment );
 
-		if ( ! isset( $payment->user_info['email'] ) ) {
+		$email = edd_get_payment_user_email( $payment->ID );
+
+		if ( empty( $email ) ) {
 			$payment->user_info['email'] = __( '(unknown)', 'edd' );
 		}
 
-		$value = $payment->user_info['email'] . $this->row_actions( $row_actions );
+		$value = $email . $this->row_actions( $row_actions );
 
 		return apply_filters( 'edd_payments_table_column', $value, $payment->ID, 'email' );
 	}
