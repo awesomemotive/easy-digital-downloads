@@ -111,7 +111,7 @@ function edd_get_default_gateway() {
  * @return string Gateway admin label
  */
 function edd_get_gateway_admin_label( $gateway ) {
-	$gateways = edd_get_enabled_payment_gateways();
+	$gateways = edd_get_payment_gateways();
 	$label    = isset( $gateways[ $gateway ] ) ? $gateways[ $gateway ]['admin_label'] : $gateway;
 	$payment  = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : false;
 
@@ -132,7 +132,7 @@ function edd_get_gateway_admin_label( $gateway ) {
  * @return string Checkout label for the gateway
  */
 function edd_get_gateway_checkout_label( $gateway ) {
-	$gateways = edd_get_enabled_payment_gateways();
+	$gateways = edd_get_payment_gateways();
 	$label    = isset( $gateways[ $gateway ] ) ? $gateways[ $gateway ]['checkout_label'] : $gateway;
 
 	if( $gateway == 'manual' ) {
