@@ -576,6 +576,7 @@ function edd_payment_mode_select() {
 				do_action( 'edd_payment_mode_before_gateways' );
 
 				foreach ( $gateways as $gateway_id => $gateway ) :
+
 					$checked = checked( $gateway_id, edd_get_default_gateway(), false );
 					$checked_class = $checked ? ' edd-gateway-option-selected' : '';
 					echo '<label for="edd-gateway-' . esc_attr( $gateway_id ) . '" class="edd-gateway-option' . $checked_class . '" id="edd-gateway-option-' . esc_attr( $gateway_id ) . '">';

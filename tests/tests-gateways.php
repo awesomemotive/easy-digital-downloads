@@ -65,16 +65,44 @@ class Test_Gateways extends WP_UnitTestCase {
 	}
 
 	public function test_default_gateway() {
+
+		global $edd_options;
+
+		$this->assertFalse( edd_get_default_gateway() );
+
+		$edd_options['gateways'] = array();
+		$edd_options['gateways']['paypal'] = '1';
+		$edd_options['gateways']['manual'] = '1';
+
 		$this->assertEquals( 'paypal', edd_get_default_gateway() );
+
+		$edd_options['default_gateway'] = 'paypal';
+		$edd_options['gateways'] = array();
+		$edd_options['gateways']['manual'] = '1';
+		$edd_options['gateways']['stripe'] = '1';
+
+		$this->assertEquals( 'manual', edd_get_default_gateway() );
 	}
 
 	public function test_get_gateway_admin_label() {
-		$this->assertEquals( 'paypal', edd_get_gateway_admin_label( 'paypal' ) );
-		$this->assertEquals( 'manual', edd_get_gateway_admin_label( 'manual' ) );
+		global $edd_options;
+
+		$edd_options['gateways'] = array();
+		$edd_options['gateways']['paypal'] = '1';
+		$edd_options['gateways']['manual'] = '1';
+
+		$this->assertEquals( 'PayPal Standard', edd_get_gateway_admin_label( 'paypal' ) );
+		$this->assertEquals( 'Test Payment', edd_get_gateway_admin_label( 'manual' ) );
 	}
 
 	public function test_get_gateway_checkout_label() {
-		$this->assertEquals( 'paypal', edd_get_gateway_checkout_label( 'paypal' ) );
+		global $edd_options;
+
+		$edd_options['gateways'] = array();
+		$edd_options['gateways']['paypal'] = '1';
+		$edd_options['gateways']['manual'] = '1';
+
+		$this->assertEquals( 'PayPal', edd_get_gateway_checkout_label( 'paypal' ) );
 		$this->assertEquals( 'Free Purchase', edd_get_gateway_checkout_label( 'manual' ) );
 	}
 
@@ -87,6 +115,11 @@ class Test_Gateways extends WP_UnitTestCase {
 	}
 
 	public function test_no_gateway_error() {
+
+		global $edd_options;
+
+		$edd_options['gateways'] = array();
+
 		edd_no_gateway_error();
 
 		$errors = edd_get_errors();
