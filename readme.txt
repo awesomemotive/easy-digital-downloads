@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.9.2
 Tested up to: 4.2
 
-Stable Tag: 2.4
+Stable Tag: 2.4.1
 
 License: GNU Version 2 or Any Later Version
 
@@ -191,6 +191,15 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
+= 2.4.1, July 2, 2015 =
+
+* FIX: edd_get_gateway_admin_label() should use edd_get_payment_gateways()
+* FIX: Payment email in payments list table pulled from User Info, should be pulled from payment info
+* FIX: Manually added items to an order always get a price of $0.00
+* FIX: Improve Customer View CSS
+* FIX: Select Payment Method shown incorrectly when only one gateway is enabled
+* FIX: API Security Fix
+
 = 2.4, June 30, 2015 =
 
 * New: Added support for Amazon Login and Pay
@@ -209,13 +218,13 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * New: Added filters for the From Address for admin sale notifications
 * Tweak: Improved performance of user validation in the REST API
 * Tweak: Improved edd_is_admin_page() helper function for detecting when on specific EDD admin pages
-* Tweak: Stylesheets are now registered before enqueueed 
+* Tweak: Stylesheets are now registered before enqueueed
 * Tweak: Moved Test Mode option to the Payment Gateways tab
 * Tweak: Earnings and sales states now incremented while in Test Mode
 * Tweak: Download Details widget now properly respects taxonomy labels
 * Tweak: Improved customer count functions in the REST API
 * Tweak: Default gateway now shows as first gateway on checkout
-* Tweak: Purchase link shortcode now shown in the Download Settings meta box 
+* Tweak: Purchase link shortcode now shown in the Download Settings meta box
 * Tweak: edd_recalculate_taxes() now includes a raw amount in the response
 * Tweak: Customer export is now standarized for all export options
 * Tweak: Sequential order numbers improved to protect against race conditions
@@ -231,7 +240,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Tools tab displays poorly on mobile
 * Fix: Buy Now buttons not properly setting item quantity through PayPal
 * Fix: December month data is plotted in January when viewing custom date range
-* Fix: Double error message when entering discount code that has already been used 
+* Fix: Double error message when entering discount code that has already been used
 
 = 2.3.9, May 25, 2015 =
 
