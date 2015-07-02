@@ -85,11 +85,23 @@ class Test_Gateways extends WP_UnitTestCase {
 	}
 
 	public function test_get_gateway_admin_label() {
+		global $edd_options;
+
+		$edd_options['gateways'] = array();
+		$edd_options['gateways']['paypal'] = '1';
+		$edd_options['gateways']['manual'] = '1';
+
 		$this->assertEquals( 'PayPal Standard', edd_get_gateway_admin_label( 'paypal' ) );
 		$this->assertEquals( 'Test Payment', edd_get_gateway_admin_label( 'manual' ) );
 	}
 
 	public function test_get_gateway_checkout_label() {
+		global $edd_options;
+
+		$edd_options['gateways'] = array();
+		$edd_options['gateways']['paypal'] = '1';
+		$edd_options['gateways']['manual'] = '1';
+
 		$this->assertEquals( 'PayPal', edd_get_gateway_checkout_label( 'paypal' ) );
 		$this->assertEquals( 'Free Purchase', edd_get_gateway_checkout_label( 'manual' ) );
 	}
