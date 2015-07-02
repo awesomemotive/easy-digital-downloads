@@ -193,12 +193,13 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 = 2.4.1, July 2, 2015 =
 
-* FIX: edd_get_gateway_admin_label() should use edd_get_payment_gateways()
-* FIX: Payment email in payments list table pulled from User Info, should be pulled from payment info
-* FIX: Manually added items to an order always get a price of $0.00
-* FIX: Improve Customer View CSS
-* FIX: Select Payment Method shown incorrectly when only one gateway is enabled
-* FIX: API Security Fix
+* Tweak: Updated Language Files
+* Fix: edd_get_gateway_admin_label() should use edd_get_payment_gateways()
+* Fix: Payment email in payments list table pulled from User Info, should be pulled from payment info
+* Fix: Manually added items to an order always get a price of $0.00
+* Fix: Improve Customer View CSS
+* Fix: Select Payment Method shown incorrectly when only one gateway is enabled
+* Fix: API Security Fix
 
 = 2.4, June 30, 2015 =
 
