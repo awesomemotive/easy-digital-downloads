@@ -207,7 +207,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 	 * @return int
 	 */
 	public function get_percentage_complete() {
-		
+
 		$status = $this->status;
 		$args   = array(
 			'start-date' => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
@@ -221,7 +221,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 		} else {
 
 			$total = edd_count_payments( $args )->$status;
-			
+
 		}
 
 		$percentage = 100;
@@ -235,5 +235,15 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 		}
 
 		return $percentage;
+	}
+
+	/**
+	 * Set the properties specific to the payments export
+	 *
+	 * @since 2.4.2
+	 * @param array $form The Form Data passed into the batch processing
+	 */
+	public function set_properties( $form ) {
+		$this->status  = isset( $form['status'] ) ? sanitize_text_field( $form['status'] ) : 'complete';
 	}
 }
