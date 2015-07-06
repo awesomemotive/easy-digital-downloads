@@ -207,7 +207,7 @@ class EDD_Batch_Export extends EDD_Export {
 	 * @since 2.4
 	 * @return string
 	 */
-	private function get_file() {
+	protected function get_file() {
 		$file = @file_get_contents( $this->file );
 		if( ! $file ) {
 			@file_put_contents( $this->file, '' );
@@ -222,7 +222,7 @@ class EDD_Batch_Export extends EDD_Export {
 	 * @param $data string The data to add to the file
 	 * @return void
 	 */
-	private function stash_step_data( $data = '' ) {
+	protected function stash_step_data( $data = '' ) {
 
 		$file = $this->get_file();
 		$file .= $data;
@@ -251,10 +251,4 @@ class EDD_Batch_Export extends EDD_Export {
 		edd_die();
 	}
 
-	/**
-	 * A stub function for classes extending this to set properties
-	 */
-	public function set_properties() {
-
-	}
 }

@@ -44,9 +44,6 @@ function edd_do_ajax_export() {
 		die( '-1' );
 	}
 
-	$export->start = isset( $_REQUEST['start'] ) ? sanitize_text_field( $_REQUEST['start'] ) : '';
-	$export->end   = isset( $_REQUEST['end']  )  ? sanitize_text_field( $_REQUEST['end']  )  : '';
-
 	$export->set_properties( $_REQUEST );
 
 	$ret = $export->process_step( $step );
