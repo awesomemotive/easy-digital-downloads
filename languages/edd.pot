@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.4\n"
+"Project-Id-Version: Easy Digital Downloads 2.4.1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2015-07-01 15:47:45+00:00\n"
+"POT-Creation-Date: 2015-07-06 19:53:04+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -86,7 +86,7 @@ msgstr ""
 #: includes/deprecated-functions.php:517 includes/deprecated-functions.php:532
 #: includes/deprecated-functions.php:542 includes/download-functions.php:1152
 #: includes/emails/actions.php:48 includes/emails/template.php:241
-#: includes/error-tracking.php:36 includes/gateways/functions.php:211
+#: includes/error-tracking.php:36 includes/gateways/functions.php:221
 #: includes/gateways/manual.php:33 includes/gateways/paypal-standard.php:34
 #: includes/process-download.php:231 includes/process-download.php:698
 #: includes/query-filters.php:48
@@ -459,7 +459,7 @@ msgid "Invalid Customer ID Provided."
 msgstr ""
 
 #: includes/admin/customers/customers.php:115
-#: includes/admin/payments/view-order-details.php:389
+#: includes/admin/payments/view-order-details.php:393
 msgid "Customer Details"
 msgstr ""
 
@@ -532,7 +532,7 @@ msgstr ""
 
 #: includes/admin/customers/customers.php:305
 #: includes/admin/customers/customers.php:520
-#: includes/admin/payments/view-order-details.php:423
+#: includes/admin/payments/view-order-details.php:427
 #: includes/admin/thickbox.php:135 includes/class-edd-html-elements.php:573
 msgid "Cancel"
 msgstr ""
@@ -942,7 +942,7 @@ msgstr ""
 #: includes/admin/discounts/class-discount-codes-table.php:206
 #: includes/admin/discounts/class-discount-codes-table.php:274
 #: includes/admin/payments/class-payments-table.php:302
-#: includes/admin/payments/class-payments-table.php:375
+#: includes/admin/payments/class-payments-table.php:377
 #: includes/payments/functions.php:1658
 msgid "Delete"
 msgstr ""
@@ -1403,7 +1403,7 @@ msgstr ""
 
 #: includes/admin/downloads/metabox.php:865
 #: includes/admin/settings/register-settings.php:763
-#: includes/admin/thickbox.php:62 includes/checkout/template.php:828
+#: includes/admin/thickbox.php:62 includes/checkout/template.php:829
 #: includes/scripts.php:58 includes/shortcodes.php:36
 #: includes/template-functions.php:67
 msgid "Purchase"
@@ -1559,50 +1559,50 @@ msgstr ""
 msgid "Resend Purchase Receipt"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:307
+#: includes/admin/payments/class-payments-table.php:309
 msgid "(unknown)"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:357
 #: includes/admin/payments/class-payments-table.php:359
+#: includes/admin/payments/class-payments-table.php:361
 #: includes/admin/reporting/class-export-payments.php:192
 #: includes/admin/reporting/export/class-batch-export-payments.php:186
 msgid "guest"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:376
+#: includes/admin/payments/class-payments-table.php:378
 msgid "Set To Completed"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:377
+#: includes/admin/payments/class-payments-table.php:379
 msgid "Set To Pending"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:378
+#: includes/admin/payments/class-payments-table.php:380
 msgid "Set To Refunded"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:379
+#: includes/admin/payments/class-payments-table.php:381
 msgid "Set To Revoked"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:380
+#: includes/admin/payments/class-payments-table.php:382
 msgid "Set To Failed"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:381
+#: includes/admin/payments/class-payments-table.php:383
 msgid "Set To Abandoned"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:382
+#: includes/admin/payments/class-payments-table.php:384
 msgid "Set To Preapproval"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:383
+#: includes/admin/payments/class-payments-table.php:385
 msgid "Set To Cancelled"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:384
+#: includes/admin/payments/class-payments-table.php:386
 msgid "Resend Email Receipts"
 msgstr ""
 
@@ -1833,7 +1833,7 @@ msgid "Total:"
 msgstr ""
 
 #: includes/admin/payments/view-order-details.php:331
-#: includes/admin/payments/view-order-details.php:561
+#: includes/admin/payments/view-order-details.php:565
 msgid "Copy Download Link(s)"
 msgstr ""
 
@@ -1850,70 +1850,70 @@ msgstr ""
 msgid "Quantity"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:360
+#: includes/admin/payments/view-order-details.php:363
 msgid "Item Price: "
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:367
+#: includes/admin/payments/view-order-details.php:371
 msgid "Add %s to Payment"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:378
+#: includes/admin/payments/view-order-details.php:382
 msgid "No %s included with this purchase"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:405
+#: includes/admin/payments/view-order-details.php:409
 msgid "View Customer Details"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:408
+#: includes/admin/payments/view-order-details.php:412
 msgid "New Customer"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:414
+#: includes/admin/payments/view-order-details.php:418
 msgid "Name:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:418
+#: includes/admin/payments/view-order-details.php:422
 msgid "Email:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:426
+#: includes/admin/payments/view-order-details.php:430
 msgid "Click \"Save Payment\" to create new customer"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:441
+#: includes/admin/payments/view-order-details.php:445
 #: includes/checkout/template.php:329
 msgid "Billing Address"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:451
+#: includes/admin/payments/view-order-details.php:455
 msgid "Street Address Line 1:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:455
+#: includes/admin/payments/view-order-details.php:459
 msgid "Street Address Line 2:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:483
+#: includes/admin/payments/view-order-details.php:487
 #: includes/admin/settings/register-settings.php:263
 msgid "Select a country"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:499
+#: includes/admin/payments/view-order-details.php:503
 #: includes/admin/settings/register-settings.php:271
 msgid "Select a state"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:519
+#: includes/admin/payments/view-order-details.php:523
 msgid "Payment Notes"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:534
+#: includes/admin/payments/view-order-details.php:538
 msgid "No payment notes"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:540
+#: includes/admin/payments/view-order-details.php:544
 msgid "Add Note"
 msgstr ""
 
@@ -4483,48 +4483,48 @@ msgstr ""
 msgid "Select Payment Method"
 msgstr ""
 
-#: includes/checkout/template.php:701
+#: includes/checkout/template.php:702
 msgid "Have a discount code?"
 msgstr ""
 
-#: includes/checkout/template.php:705
+#: includes/checkout/template.php:706
 msgid "Discount"
 msgstr ""
 
-#: includes/checkout/template.php:708
+#: includes/checkout/template.php:709
 msgid "Enter a coupon code if you have one."
 msgstr ""
 
-#: includes/checkout/template.php:709 includes/process-purchase.php:273
+#: includes/checkout/template.php:710 includes/process-purchase.php:273
 #: includes/scripts.php:53
 msgid "Enter discount"
 msgstr ""
 
-#: includes/checkout/template.php:730
+#: includes/checkout/template.php:731
 msgid "Agree to Terms?"
 msgstr ""
 
-#: includes/checkout/template.php:741
+#: includes/checkout/template.php:742
 msgid "Show Terms"
 msgstr ""
 
-#: includes/checkout/template.php:742
+#: includes/checkout/template.php:743
 msgid "Hide Terms"
 msgstr ""
 
-#: includes/checkout/template.php:761
+#: includes/checkout/template.php:762
 msgid "Purchase Total:"
 msgstr ""
 
-#: includes/checkout/template.php:787
+#: includes/checkout/template.php:788
 msgid "Go back"
 msgstr ""
 
-#: includes/checkout/template.php:810
+#: includes/checkout/template.php:811
 msgid "Next"
 msgstr ""
 
-#: includes/checkout/template.php:830
+#: includes/checkout/template.php:831
 msgid "Free Download"
 msgstr ""
 
@@ -5520,11 +5520,11 @@ msgstr ""
 msgid "Test Payment"
 msgstr ""
 
-#: includes/gateways/functions.php:110 includes/gateways/functions.php:129
+#: includes/gateways/functions.php:120 includes/gateways/functions.php:139
 msgid "Free Purchase"
 msgstr ""
 
-#: includes/gateways/functions.php:211
+#: includes/gateways/functions.php:221
 msgid "The requested price ID does not exist."
 msgstr ""
 
@@ -6649,22 +6649,22 @@ msgstr ""
 msgid "Serve Digital Downloads Through WordPress"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:462
+#: includes/admin/payments/view-order-details.php:466
 msgctxt "Address City"
 msgid "City:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:467
+#: includes/admin/payments/view-order-details.php:471
 msgctxt "Zip / Postal code of address"
 msgid "Zip / Postal Code:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:474
+#: includes/admin/payments/view-order-details.php:478
 msgctxt "Address country"
 msgid "Country:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:488
+#: includes/admin/payments/view-order-details.php:492
 msgctxt "State / province of address"
 msgid "State / Province:"
 msgstr ""
@@ -6674,12 +6674,12 @@ msgctxt "Date one to date two"
 msgid "to"
 msgstr ""
 
-#: includes/checkout/template.php:701
+#: includes/checkout/template.php:702
 msgctxt "Entering a discount code"
 msgid "Click to enter it"
 msgstr ""
 
-#: includes/checkout/template.php:710
+#: includes/checkout/template.php:711
 msgctxt "Apply discount at checkout"
 msgid "Apply"
 msgstr ""
