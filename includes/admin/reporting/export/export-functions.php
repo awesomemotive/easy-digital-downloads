@@ -14,6 +14,7 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export.php';
+require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/export-actions.php';
 
 /**
  * Process batch exports via ajax
@@ -24,18 +25,17 @@ require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export.php';
 function edd_do_ajax_export() {
 
 	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export.php';
-	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-payments.php';
-	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-customers.php';
-	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-file-downloads.php';
 
 	parse_str( $_POST['form'], $form );
 
 	$_REQUEST = $form = (array) $form;
 
+	do_action( 'edd_batch_export_class_include', $form['edd-export-class'] );
+
 	if( ! wp_verify_nonce( $_REQUEST['edd_ajax_export'], 'edd_ajax_export' ) ) {
 		die( '-2' );
 	}
-	
+
 	$step     = absint( $_POST['step'] );
 	$class    = $form['edd-export-class'];
 	$export   = new $class( $step );
@@ -44,11 +44,7 @@ function edd_do_ajax_export() {
 		die( '-1' );
 	}
 
-	$export->start    = isset( $_REQUEST['start'] )             ?  sanitize_text_field( $_REQUEST['start'] )  : '';
-	$export->end      = isset( $_REQUEST['end']  )              ?  sanitize_text_field( $_REQUEST['end']  )   : '';
-	$export->status   = isset( $_REQUEST['status']  )           ? sanitize_text_field( $_REQUEST['status']  ) : 'complete';
-	$export->download = isset( $_REQUEST['download']  )         ? absint( $_REQUEST['download']  )            : null;
-	$export->price_id = isset( $_REQUEST['edd_price_option']  ) ? absint( $_REQUEST['edd_price_option']  )    : null;
+	$export->set_properties( $_REQUEST );
 
 	$ret = $export->process_step( $step );
 
@@ -89,9 +85,8 @@ function edd_process_batch_export_download() {
 	}
 
 	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export.php';
-	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-payments.php';
-	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-customers.php';
-	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-file-downloads.php';
+
+	do_action( 'edd_batch_export_class_include', $_REQUEST['class'] );
 
 	$export = new $_REQUEST['class'];
 	$export->export();
@@ -148,3 +143,5 @@ function edd_export_all_downloads_history() {
 	$file_download_export->export();
 }
 add_action( 'edd_downloads_history_export', 'edd_export_all_downloads_history' );
+
+
