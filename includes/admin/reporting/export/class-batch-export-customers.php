@@ -37,7 +37,7 @@ class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 	 * @return array $cols All the columns
 	 */
 	public function csv_cols() {
-		
+
 		$cols = array(
 			'id'        => __( 'ID',   'edd' ),
 			'name'      => __( 'Name',   'edd' ),
@@ -87,7 +87,7 @@ class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 
 			if ( $logs ) {
 				foreach ( $logs as $log ) {
-					
+
 					$payment_id  = get_post_meta( $log->ID, '_edd_log_payment_id', true );
 					$customer_id = edd_get_payment_customer_id( $payment_id );
 					$customer    = new EDD_Customer( $customer_id );
@@ -156,5 +156,18 @@ class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 		}
 
 		return $percentage;
+	}
+
+	/**
+	 * Set the properties specific to the Customers export
+	 *
+	 * @since 2.4.2
+	 * @param array $request The Form Data passed into the batch processing
+	 */
+	public function set_properties( $request ) {
+		$this->start    = isset( $request['start'] )            ? sanitize_text_field( $request['start'] ) : '';
+		$this->end      = isset( $request['end']  )             ? sanitize_text_field( $request['end']  )  : '';
+		$this->download = isset( $request['download']         ) ? absint( $request['download']         )   : null;
+		$this->price_id = isset( $request['edd_price_option'] ) ? absint( $request['edd_price_option'] )   : null;
 	}
 }
