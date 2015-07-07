@@ -388,6 +388,8 @@ class EDD_API {
 	public function get_user_public_key( $user_id = 0 ) {
 		global $wpdb;
 
+		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
+		
 		if ( empty( $user_id ) ) {
 			return '';
 		}
