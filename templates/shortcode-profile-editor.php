@@ -17,7 +17,7 @@ if ( is_user_logged_in() ):
 	<?php endif; ?>
 
 	<?php if ( isset( $_GET['updated'] ) && $_GET['updated'] == true && ! edd_get_errors() ): ?>
-		<div class="edd_success edd-alert edd-alert-success"><strong><?php _e( 'Success', 'edd'); ?>:</strong> <?php _e( 'Your profile has been edited successfully.', 'edd' ); ?></=div>
+		<div class="edd_success edd-alert edd-alert-success"><strong><?php _e( 'Success', 'edd'); ?>:</strong> <?php _e( 'Your profile has been edited successfully.', 'edd' ); ?></div>
 	<?php endif; ?>
 
 	<?php edd_print_errors(); ?>
