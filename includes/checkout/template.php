@@ -897,7 +897,7 @@ function edd_filter_success_page_content( $content ) {
 
 	return $content;
 }
-add_filter( 'the_content', 'edd_filter_success_page_content' );
+add_filter( 'the_content', 'edd_filter_success_page_content', 99999 );
 
 /**
  * Show a download's files in the purchase receipt
