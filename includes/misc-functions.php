@@ -52,7 +52,7 @@ function edd_logged_in_only() {
  * @return bool $ret True is redirect is enabled, false otherwise
  */
 function edd_straight_to_checkout() {
-	$ret = edd_get_option( 'redirect_on_add', false );	
+	$ret = edd_get_option( 'redirect_on_add', false );
 	return (bool) apply_filters( 'edd_straight_to_checkout', $ret );
 }
 
@@ -694,6 +694,43 @@ function edd_set_upload_dir( $upload ) {
 	$upload['path']   = $upload['basedir'] . $upload['subdir'];
 	$upload['url']    = $upload['baseurl'] . $upload['subdir'];
 	return $upload;
+}
+
+/**
+ * Check if the upgrade routine has been run for a specific action
+ *
+ * @since  2.3
+ * @param  string $upgrade_action The upgrade action to check completion for
+ * @return bool                   If the action has been added to the copmleted actions array
+ */
+function edd_has_upgrade_completed( $upgrade_action = '' ) {
+
+	if ( empty( $upgrade_action ) ) {
+		return false;
+	}
+
+	$completed_upgrades = edd_get_completed_upgrades();
+
+	return in_array( $upgrade_action, $completed_upgrades );
+
+}
+
+/**
+ * Get's the array of completed upgrade actions
+ *
+ * @since  2.3
+ * @return array The array of completed upgrades
+ */
+function edd_get_completed_upgrades() {
+
+	$completed_upgrades = get_option( 'edd_completed_upgrades' );
+
+	if ( false === $completed_upgrades ) {
+		$completed_upgrades = array();
+	}
+
+	return $completed_upgrades;
+
 }
 
 

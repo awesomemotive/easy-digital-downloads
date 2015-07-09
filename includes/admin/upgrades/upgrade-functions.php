@@ -213,25 +213,6 @@ function edd_maybe_resume_upgrade() {
 }
 
 /**
- * Check if the upgrade routine has been run for a specific action
- *
- * @since  2.3
- * @param  string $upgrade_action The upgrade action to check completion for
- * @return bool                   If the action has been added to the copmleted actions array
- */
-function edd_has_upgrade_completed( $upgrade_action = '' ) {
-
-	if ( empty( $upgrade_action ) ) {
-		return false;
-	}
-
-	$completed_upgrades = edd_get_completed_upgrades();
-
-	return in_array( $upgrade_action, $completed_upgrades );
-
-}
-
-/**
  * Adds an upgrade action to the completed upgrades array
  *
  * @since  2.3
@@ -251,24 +232,6 @@ function edd_set_upgrade_complete( $upgrade_action = '' ) {
 	$completed_upgrades = array_unique( array_values( $completed_upgrades ) );
 
 	return update_option( 'edd_completed_upgrades', $completed_upgrades );
-}
-
-/**
- * Get's the array of completed upgrade actions
- *
- * @since  2.3
- * @return array The array of completed upgrades
- */
-function edd_get_completed_upgrades() {
-
-	$completed_upgrades = get_option( 'edd_completed_upgrades' );
-
-	if ( false === $completed_upgrades ) {
-		$completed_upgrades = array();
-	}
-
-	return $completed_upgrades;
-
 }
 
 /**
