@@ -74,6 +74,8 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		$paypal_args = array(
 			'business'      => edd_get_option( 'paypal_email', false ),
 			'email'         => $purchase_data['user_email'],
+			'first_name'    => $purchase_data['user_info']['first_name'],
+			'last_name'     => $purchase_data['user_info']['last_name'],
 			'invoice'       => $purchase_data['purchase_key'],
 			'no_shipping'   => '1',
 			'shipping'      => '0',
