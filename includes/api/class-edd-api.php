@@ -1016,6 +1016,7 @@ class EDD_API {
 		$product['info']['status']                       = $product_info->post_status;
 		$product['info']['link']                         = html_entity_decode( $product_info->guid );
 		$product['info']['content']                      = $product_info->post_content;
+		$product['info']['excerpt']                      = $product_info->post_excerpt;
 		$product['info']['thumbnail']                    = wp_get_attachment_url( get_post_thumbnail_id( $product_info->ID ) );
 		$product['info']['category']                     = get_the_terms( $product_info, 'download_category' );
 		$product['info']['tags']                         = get_the_terms( $product_info, 'download_tag' );
