@@ -571,7 +571,7 @@ function edd_get_cart_item_title( $item = array() ) {
 		$item_title = $item['id'];
 	}
 
-	if ( edd_has_variable_prices( $item['id'] ) && edd_get_cart_item_price_id( $item ) !== false ) {
+	if ( edd_has_variable_prices( $item['id'] ) && false !== edd_get_cart_item_price_id( $item ) ) {
 
 		$item['name'] .= ' - ' . edd_get_cart_item_price_name( $item );
 	}
