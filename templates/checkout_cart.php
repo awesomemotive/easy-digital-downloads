@@ -28,7 +28,7 @@ global $post; ?>
 									echo get_the_post_thumbnail( $item['id'], apply_filters( 'edd_checkout_image_size', array( 25,25 ) ) );
 								echo '</div>';
 							}
-							$item_title = edd_get_cart_item_title( $item );
+							$item_title = edd_get_cart_item_name( $item );
 							echo '<span class="edd_checkout_cart_item_title">' . esc_html( $item_title ) . '</span>';
 							do_action( 'edd_checkout_cart_item_title_after', $item );
 						?>

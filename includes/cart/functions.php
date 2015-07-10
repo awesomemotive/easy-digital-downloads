@@ -564,7 +564,7 @@ function edd_get_cart_item_price_name( $item = array() ) {
  * @param int $item Cart item array
  * @return string item title
  */
-function edd_get_cart_item_title( $item = array() ) {
+function edd_get_cart_item_name( $item = array() ) {
 	$item_title = get_the_title( $item['id'] );
 
 	if( empty( $item_title ) ) {
@@ -576,7 +576,7 @@ function edd_get_cart_item_title( $item = array() ) {
 		$item['name'] .= ' - ' . edd_get_cart_item_price_name( $item );
 	}
 
-	return apply_filters( 'edd_get_cart_item_title', $item_title, $item['id'], $item );
+	return apply_filters( 'edd_get_cart_item_name', $item_title, $item['id'], $item );
 }
 
 /**
