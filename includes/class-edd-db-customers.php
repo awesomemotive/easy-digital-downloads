@@ -425,13 +425,13 @@ class EDD_DB_Customers extends EDD_DB  {
 
 			if( is_array( $args['email'] ) ) {
 
-				$emails_count = count( $args['email'] );
+				$emails_count       = count( $args['email'] );
 				$emails_placeholder = array_fill( 0, $emails_count, '%s' );
-				$emails = implode( ', ',  $emails_placeholder ) ;
-				$where .= $wpdb->prepare( " AND `email` IN( $emails ) ",  $args['email'] );
+				$emails             = implode( ', ', $emails_placeholder );
+
+				$where .= $wpdb->prepare( " AND `email` IN( $emails ) ", $args['email'] );
 			} else {
-				$emails = $args['email'];
-				$where .= $wpdb->prepare( " AND `email` = %s ", $emails );
+				$where .= $wpdb->prepare( " AND `email` = %s ", $args['email'] );
 			}
 		}
 
