@@ -424,18 +424,20 @@ class EDD_DB_Customers extends EDD_DB  {
 		if( ! empty( $args['email'] ) ) {
 
 			if( is_array( $args['email'] ) ) {
-				$emails = "'" . implode( "', '", $args['email'] ) . "'";
+
+				$emails_count       = count( $args['email'] );
+				$emails_placeholder = array_fill( 0, $emails_count, '%s' );
+				$emails             = implode( ', ', $emails_placeholder );
+
+				$where .= $wpdb->prepare( " AND `email` IN( $emails ) ", $args['email'] );
 			} else {
-				$emails = "'" . $args['email'] . "'";
+				$where .= $wpdb->prepare( " AND `email` = %s ", $args['email'] );
 			}
-
-			$where .= $wpdb->prepare( " AND `email` IN( {%s} ) ", $emails );
-
 		}
 
 		// specific customers by name
 		if( ! empty( $args['name'] ) ) {
-			$where .= $wpdb->prepare( " AND `name` LIKE '%%" . '%s' . "%%' ", $args['name'] );
+			$where .= $wpdb->prepare( " AND `name` LIKE '%%%%" . '%s' . "%%%%' ", $args['name'] );
 		}
 
 		// Customers created for a specific date or in a date range
