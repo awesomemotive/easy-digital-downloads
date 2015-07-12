@@ -1,6 +1,9 @@
 <?php
 namespace PayWithAmazon;
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /* Class IPN_Handler
  * Takes headers and body of the IPN message as input in the constructor
  * verifies that the IPN is from the right resource and has the valid data
@@ -76,7 +79,7 @@ class IpnHandler implements IpnHandlerInterface
     /* Setter function
      * Sets the value for the key if the key exists in ipnConfig
      */
-    
+
     public function __set($name, $value)
     {
         if (array_key_exists(strtolower($name), $this->ipnConfig)) {
@@ -89,7 +92,7 @@ class IpnHandler implements IpnHandlerInterface
     /* Getter function
      * Returns the value for the key if the key exists in ipnConfig
      */
-    
+
     public function __get($name)
     {
         if (array_key_exists(strtolower($name), $this->ipnConfig)) {
@@ -100,7 +103,7 @@ class IpnHandler implements IpnHandlerInterface
     }
 
     /* Trim the input Array key values */
-    
+
     private function trimArray($array)
     {
 	foreach ($array as $key => $value)
@@ -109,7 +112,7 @@ class IpnHandler implements IpnHandlerInterface
 	}
 	return $array;
     }
-    
+
     private function validateHeaders()
     {
         // Quickly check that this is a sns message
@@ -140,7 +143,7 @@ class IpnHandler implements IpnHandlerInterface
      *
      * @return string error message
      */
-    
+
     private function getErrorMessageForJsonError($json_error)
     {
         switch ($json_error) {
@@ -217,7 +220,7 @@ class IpnHandler implements IpnHandlerInterface
      *
      * @return bool true if valid
      */
-    
+
     private function constructAndVerifySignature()
     {
 	$signature       = base64_decode($this->getMandatoryField("Signature"));
@@ -235,7 +238,7 @@ class IpnHandler implements IpnHandlerInterface
      *
      * gets the certificate from the $certificatePath using Curl
      */
-    
+
     private function getCertificate($certificatePath)
     {
         $httpCurlRequest  = new HttpCurl($this->ipnConfig);
@@ -294,7 +297,7 @@ class IpnHandler implements IpnHandlerInterface
      *
      * @return string field contents if found
      */
-    
+
     private function getMandatoryField($fieldName)
     {
         $value = $this->getField($fieldName);
@@ -310,7 +313,7 @@ class IpnHandler implements IpnHandlerInterface
      *
      * @return string field contents if found, null otherwise
      */
-    
+
     private function getField($fieldName)
     {
         if (array_key_exists($fieldName, $this->snsMessage)) {
@@ -321,7 +324,7 @@ class IpnHandler implements IpnHandlerInterface
     }
 
     /* returnMessage() - JSON decode the raw [Message] portion of the IPN */
-    
+
     public function returnMessage()
     {
         return json_decode($this->snsMessage['Message'], true);
@@ -337,7 +340,7 @@ class IpnHandler implements IpnHandlerInterface
      * Topic ARN - Topic of the IPN
      * @return response in JSON format
      */
-    
+
     public function toJson()
     {
         $response = $this->simpleXmlObject();
@@ -355,7 +358,7 @@ class IpnHandler implements IpnHandlerInterface
     /* toArray() - Converts IPN [Message] field to associative array
      * @return response in array format
      */
-    
+
     public function toArray()
     {
         $response = $this->simpleXmlObject();
@@ -400,7 +403,7 @@ class IpnHandler implements IpnHandlerInterface
     /* getRemainingIpnFields()
      * Gets the remaining fields of the IPN to be later appended to the return message
      */
-    
+
     private function getRemainingIpnFields()
     {
         $ipnMessage = $this->returnMessage();
