@@ -331,7 +331,10 @@ function edd_get_registered_settings() {
 				'allow_tracking' => array(
 					'id'   => 'allow_tracking',
 					'name' => __( 'Allow Usage Tracking?', 'edd' ),
-					'desc' => __( 'Allow Easy Digital Downloads to anonymously track how this plugin is used and help us make the plugin better. Opt-in and receive a 20% discount code for any purchase from the <a href="https://easydigitaldownloads.com/extensions" target="_blank">Easy Digital Downloads store</a>. Your discount code will be emailed to you.', 'edd' ),
+					'desc' => sprintf(
+						__( 'Allow Easy Digital Downloads to anonymously track how this plugin is used and help us make the plugin better. Opt-in to tracking and our newsletter and immediately be emailed a 20%% discount to the EDD shop, valid twoards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'edd' ),
+						'https://easydigitaldownloads.com/extensions?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking'
+					),
 					'type' => 'checkbox'
 				),
 				'uninstall_on_delete' => array(
