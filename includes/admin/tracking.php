@@ -220,16 +220,20 @@ class EDD_Tracking {
 	 * @return void
 	 */
 	public function admin_notice() {
+
 		$hide_notice = get_option( 'edd_tracking_notice' );
 
-		if( $hide_notice )
+		if( $hide_notice ) {
 			return;
+		}
 
-		if( edd_get_option( 'allow_tracking', false ) )
+		if( edd_get_option( 'allow_tracking', false ) ) {
 			return;
+		}
 
-		if( ! current_user_can( 'manage_options' ) )
+		if( ! current_user_can( 'manage_options' ) ) {
 			return;
+		}
 
 		if(
 			stristr( network_site_url( '/' ), 'dev'       ) !== false ||
@@ -241,8 +245,10 @@ class EDD_Tracking {
 			$optin_url  = add_query_arg( 'edd_action', 'opt_into_tracking' );
 			$optout_url = add_query_arg( 'edd_action', 'opt_out_of_tracking' );
 
+			$source         = substr( md5( get_bloginfo( 'name' ) ), 0, 10 );
+			$extensions_url = 'https://easydigitaldownloads.com/extensions?utm_source=' . $source . '&utm_medium=admin&utm_term=notice&utm_campaign=EDDUsageTracking';
 			echo '<div class="updated"><p>';
-				echo __( 'Allow Easy Digital Downloads to track plugin usage? Opt-in to tracking and our newsletter and immediately be emailed a 20% discount to the shop for <a href="https://easydigitaldownloads.com/extensions" target="_blank">Extensions and Themes</a>. No sensitive data is tracked.', 'edd' );
+				echo sprintf( __( 'Allow Easy Digital Downloads to track plugin usage? Opt-in to tracking and our newsletter and immediately be emailed a 20%% discount to the EDD shop, valid twoards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'edd' ), $extensions_url );
 				echo '&nbsp;<a href="' . esc_url( $optin_url ) . '" class="button-secondary">' . __( 'Allow', 'edd' ) . '</a>';
 				echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary">' . __( 'Do not allow', 'edd' ) . '</a>';
 			echo '</p></div>';
