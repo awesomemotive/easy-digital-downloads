@@ -205,9 +205,10 @@ function edd_currency_pattern() {
 	$decimal_sep   = edd_get_option( 'decimal_separator', '.' );
 	$decimals      = edd_currency_decimal_filter();
 
-	$regex_sep     = '.' === $decimal_sep ? '\.' : ',';
+	$regex_dec_sep = '.' === $decimal_sep ? '\.' : ',';
+	$regex_tho_sep = ',' === $thousands_sep ? ',' : '\.';
 
-	$pattern = '\d+(' . $regex_sep . '\d{' . $decimals . '})?';
+	$pattern = '(-?\d{1,3}(' . $regex_tho_sep . '?\d{3})*('. $regex_dec_sep . '\d{2}?))(\D|$)';
 
 	return $pattern;
 }
