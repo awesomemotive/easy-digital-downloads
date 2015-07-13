@@ -961,7 +961,8 @@ jQuery(document).ready(function ($) {
 			// Remove tax row
 			$('body').on('click', '#edd_tax_rates .edd_remove_tax_rate', function() {
 				if( confirm( edd_vars.delete_tax_rate ) ) {
-					var count = $('#edd_tax_rates tr:visible').length;
+					var tax_rates = $('#edd_tax_rates tr:visible');
+					var count     = tax_rates.length;
 
 					if( count === 2 ) {
 						$('#edd_tax_rates select').val('');
@@ -971,6 +972,15 @@ jQuery(document).ready(function ($) {
 					} else {
 						$(this).closest('tr').remove();
 					}
+
+					/* re-index after deleting */
+					$('#edd_tax_rates tr').each( function( rowIndex ) {
+						$(this).children().find( 'input, select' ).each(function() {
+							var name = $( this ).attr( 'name' );
+							name = name.replace( /\[(\d+)\]/, '[' + ( rowIndex - 1 ) + ']');
+							$( this ).attr( 'name', name ).attr( 'id', name );
+						});
+					});
 				}
 				return false;
 			});
