@@ -208,6 +208,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: API Key fields caused fatal error when viewed in front end profile editors
 * Fix: Invalid 'for' attribute in username label for login shortcode
 * Fix: Correct edd_listen_for_failed_payments() sending post id, not WP_Post object
+* Fix: Fix tax state not saving when text field
 
 = 2.4.1, July 2, 2015 =
 
