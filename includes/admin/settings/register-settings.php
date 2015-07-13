@@ -1559,7 +1559,7 @@ function edd_tax_rates_callback($args) {
 						'show_option_none' => false,
 						'class'            => 'edd-select edd-tax-country',
 						'chosen'           => false,
-						'placeholder' => __( 'Choose a country', 'edd' )
+						'placeholder'      => __( 'Choose a country', 'edd' )
 					) );
 					?>
 				</td>
@@ -1574,11 +1574,12 @@ function edd_tax_rates_callback($args) {
 							'show_option_all'  => false,
 							'show_option_none' => false,
 							'chosen'           => false,
-							'placeholder' => __( 'Choose a state', 'edd' )
+							'placeholder'      => __( 'Choose a state', 'edd' )
 						) );
 					} else {
 						echo EDD()->html->text( array(
-							'name'             => 'tax_rates[' . $key . '][state]', $rate['state']
+							'name'  => 'tax_rates[' . $key . '][state]', $rate['state'],
+							'value' => ! empty( $rate['state'] ) ? $rate['state'] : '',
 						) );
 					}
 					?>
@@ -1602,12 +1603,12 @@ function edd_tax_rates_callback($args) {
 						'show_option_none' => false,
 						'class'            => 'edd-select edd-tax-country',
 						'chosen'           => false,
-						'placeholder' => __( 'Choose a country', 'edd' )
+						'placeholder'      => __( 'Choose a country', 'edd' )
 					) ); ?>
 				</td>
 				<td class="edd_tax_state">
 					<?php echo EDD()->html->text( array(
-						'name'             => 'tax_rates[0][state]'
+						'name' => 'tax_rates[0][state]'
 					) ); ?>
 				</td>
 				<td class="edd_tax_global">
