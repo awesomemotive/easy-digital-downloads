@@ -212,6 +212,13 @@ function edd_currency_pattern() {
 	return $pattern;
 }
 
+/**
+ * Format a placeholder for text inputs for the currency
+ *
+ * @since  2.4.2
+ * @param  integer $amount The dollar amount to format
+ * @return string          A String number format
+ */
 function edd_currency_placeholder( $amount = 1000 ) {
 	$decimal_sep   = edd_get_option( 'decimal_separator', '.' );
 	$decimals      = edd_currency_decimal_filter();
