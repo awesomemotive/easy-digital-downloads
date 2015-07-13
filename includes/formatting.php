@@ -107,7 +107,7 @@ function edd_currency_filter( $price = '', $currency = '' ) {
 	if( empty( $currency ) ) {
 
 		$currency = edd_get_currency();
-	
+
 	}
 
 	$position = edd_get_option( 'currency_position', 'before' );
@@ -193,3 +193,28 @@ function edd_currency_decimal_filter( $decimals = 2 ) {
 }
 add_filter( 'edd_sanitize_amount_decimals', 'edd_currency_decimal_filter' );
 add_filter( 'edd_format_amount_decimals', 'edd_currency_decimal_filter' );
+
+/**
+ * Return a pattern for use on HTML5 elements for currency
+ *
+ * @since  2.4.2
+ * @return string The pattern regex for a currency
+ */
+function edd_currency_pattern() {
+	$thousands_sep = edd_get_option( 'thousands_separator', ',' );
+	$decimal_sep   = edd_get_option( 'decimal_separator', '.' );
+	$decimals      = edd_currency_decimal_filter();
+
+	$regex_sep     = '.' === $decimal_sep ? '\.' : ',';
+
+	$pattern = '\d+(' . $regex_sep . '\d{' . $decimals . '})?';
+
+	return $pattern;
+}
+
+function edd_currency_placeholder( $amount = 1000 ) {
+	$decimal_sep   = edd_get_option( 'decimal_separator', '.' );
+	$decimals      = edd_currency_decimal_filter();
+
+	return number_format( $amount, $decimals, $decimal_sep, '' );
+}

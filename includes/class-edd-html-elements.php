@@ -452,7 +452,9 @@ class EDD_HTML_Elements {
 			'class'        => 'regular-text',
 			'disabled'     => false,
 			'autocomplete' => '',
-			'data'         => false
+			'data'         => false,
+			'pattern'      => false,
+			'title'        => false,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -460,6 +462,16 @@ class EDD_HTML_Elements {
 		$disabled = '';
 		if( $args['disabled'] ) {
 			$disabled = ' disabled="disabled"';
+		}
+
+		$pattern = '';
+		if ( ! empty( $args['pattern'] ) ) {
+			$pattern = ' pattern="' . $args['pattern'] . '"';
+		}
+
+		$title = '';
+		if ( ! empty( $args['title'] ) ) {
+			$title = ' title="' . $args['title'] . '"';
 		}
 
 		$data = '';
@@ -477,7 +489,7 @@ class EDD_HTML_Elements {
 				$output .= '<span class="edd-description">' . esc_html( $args['desc'] ) . '</span>';
 			}
 
-			$output .= '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] )  . '" autocomplete="' . esc_attr( $args['autocomplete'] )  . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="' . $args['class'] . '" ' . $data . '' . $disabled . '/>';
+			$output .= '<input type="text"' . $pattern . $title . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] )  . '" autocomplete="' . esc_attr( $args['autocomplete'] )  . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="' . $args['class'] . '" ' . $data . '' . $disabled . '/>';
 
 		$output .= '</span>';
 

@@ -383,9 +383,12 @@ function edd_render_price_field( $post_id ) {
 	<div id="edd_regular_price_field" class="edd_pricing_fields" <?php echo $price_display; ?>>
 		<?php
 			$price_args = array(
-				'name'  => 'edd_price',
-				'value' => isset( $price ) ? esc_attr( edd_format_amount( $price ) ) : '',
-				'class' => 'edd-price-field'
+				'name'        => 'edd_price',
+				'value'       => isset( $price ) ? esc_attr( edd_format_amount( $price ) ) : '',
+				'class'       => 'edd-price-field',
+				'pattern'     => edd_currency_pattern(),
+				'placeholder' => edd_currency_placeholder(),
+				'title'       => sprintf( __( 'Please use the following format: %s', 'edd' ), edd_currency_placeholder() ),
 			);
 		?>
 
@@ -496,10 +499,12 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 	<td>
 		<?php
 			$price_args = array(
-				'name'  => 'edd_variable_prices[' . $key . '][amount]',
-				'value' => $args['amount'],
-				'placeholder' => '9.99',
-				'class' => 'edd-price-field'
+				'name'        => 'edd_variable_prices[' . $key . '][amount]',
+				'value'       => $args['amount'],
+				'placeholder' => edd_currency_pattern( 9.99 ),
+				'class'       => 'edd-price-field',
+				'pattern'     => edd_currency_pattern(),
+				'title'       => sprintf( __( 'Please use the following format: %s', 'edd' ), edd_currency_pattern() ),
 			);
 		?>
 
@@ -857,7 +862,7 @@ add_action( 'edd_meta_box_settings_fields', 'edd_render_dowwn_tax_options', 30 )
  */
 function edd_render_meta_box_shortcode() {
 	global $post;
-	
+
 	if( $post->post_type != 'download' ) {
 		return;
 	}
