@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.9.2
 Tested up to: 4.2
 
-Stable Tag: 2.4.1
+Stable Tag: 2.4.2
 
 License: GNU Version 2 or Any Later Version
 
@@ -190,6 +190,24 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.4.2, July 13, 2015 =
+
+* Tweak: Allow filtering the ajax user search
+* Tweak: Send first_name and last_name to PayPal
+* Tweak: edd_filter_success_page_content() not run early enough
+* Tweak: URLs to remove fees and items should not be caught by caching
+* Tweak: Improve batch exporter extensibility
+* Tweak: Add ABSPATH check to Amazon gateway files
+* Fix: Multiple tax rates with same id in taxes settings
+* Fix: Clarified opt-in messaging
+* Fix: Microdata wrapper showing in sidebar
+* Fix: Excerpt missing from products API Endpoint
+* Fix: Customer search not working with name or email in API
+* Fix: Invalid markup on profile editor save
+* Fix: API Key fields caused fatal error when viewed in front end profile editors
+* Fix: Invalid 'for' attribute in username label for login shortcode
+* Fix: Correct edd_listen_for_failed_payments() sending post id, not WP_Post object
 
 = 2.4.1, July 2, 2015 =
 
