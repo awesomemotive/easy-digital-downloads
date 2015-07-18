@@ -52,7 +52,7 @@ add_action( 'admin_init', 'edd_change_downloads_upload_dir', 999 );
  */
 
 function edd_create_protection_files( $force = false, $method = false ) {
-	if ( false === get_transient( 'edd_check_protection_files' ) || $force ) {
+	//if ( false === get_transient( 'edd_check_protection_files' ) || $force ) {
 
 		$upload_path = edd_get_upload_dir();
 
@@ -61,6 +61,7 @@ function edd_create_protection_files( $force = false, $method = false ) {
 
 		// Top level .htaccess file
 		$rules = edd_get_htaccess_rules( $method );
+
 		if ( edd_htaccess_exists() ) {
 			$contents = @file_get_contents( $upload_path . '/.htaccess' );
 			if ( $contents !== $rules || ! $contents ) {
@@ -86,8 +87,8 @@ function edd_create_protection_files( $force = false, $method = false ) {
 			}
 		}
 		// Check for the files once per day
-		set_transient( 'edd_check_protection_files', true, 3600 * 24 );
-	}
+		//set_transient( 'edd_check_protection_files', true, 3600 * 24 );
+	//}
 }
 add_action( 'admin_init', 'edd_create_protection_files' );
 
@@ -159,6 +160,7 @@ function edd_get_htaccess_rules( $method = false ) {
 			break;
 
 	endswitch;
+
 	$rules = apply_filters( 'edd_protected_directory_htaccess_rules', $rules, $method );
 	return $rules;
 }
