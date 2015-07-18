@@ -167,14 +167,14 @@ class EDD_DB_Customers extends EDD_DB  {
 	}
 
 	/**
-	 * Checks if a customer exists by email
+	 * Checks if a customer exists
 	 *
 	 * @access  public
 	 * @since   2.1
 	*/
-	public function exists( $email = '' ) {
+	public function exists( $value = '', $field = 'email' ) {
 
-		return (bool) $this->get_column_by( 'id', 'email', $email );
+		return (bool) $this->get_column_by( 'id', $field, $value );
 
 	}
 
