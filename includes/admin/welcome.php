@@ -95,9 +95,7 @@ class EDD_Welcome {
 		remove_submenu_page( 'index.php', 'edd-changelog' );
 		remove_submenu_page( 'index.php', 'edd-getting-started' );
 		remove_submenu_page( 'index.php', 'edd-credits' );
-
-		// Badge for welcome page
-		$badge_url = EDD_PLUGIN_URL . 'assets/images/edd-badge.png';
+		
 		?>
 		<style type="text/css" media="screen">
 		/*<![CDATA[*/
@@ -247,7 +245,7 @@ class EDD_Welcome {
 
 						<h4><?php _e( 'Exclude Taxes from Reports', 'edd' );?></h4>
 						<p><?php _e( 'Earnings and sales reports can now be shown exclusive of tax, allowing you to easily see how your store is performing after taxes.', 'edd' );?></p>
-	
+
 						<h4><?php _e( 'Default Gateway First', 'edd' );?></h4>
 						<p><?php _e( 'The gateway selected as the default option will always be displayed first on checkout.' ,'edd' );?></p>
 
