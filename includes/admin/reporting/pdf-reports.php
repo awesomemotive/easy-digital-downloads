@@ -45,7 +45,7 @@ function edd_generate_pdf( $data ) {
 	$pdf->SetAuthor( utf8_decode( __( 'Easy Digital Downloads', 'edd' ) ) );
 	$pdf->SetCreator( utf8_decode( __( 'Easy Digital Downloads', 'edd' ) ) );
 
-	$pdf->Image( EDD_PLUGIN_URL . 'assets/images/edd-logo.png', 205, 10 );
+	$pdf->Image( EDD_PLUGIN_URL . 'assets/images/edd-logo-pdf.png', 205, 10 );
 
 	$pdf->SetMargins( 8, 8, 8 );
 	$pdf->SetX( 8 );
