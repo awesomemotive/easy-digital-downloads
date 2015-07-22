@@ -214,10 +214,7 @@ function edd_load_admin_scripts( $hook ) {
 	wp_register_script( 'colorbox', $js_dir . 'jquery.colorbox-min.js', array( 'jquery' ), '1.3.20' );
 	wp_enqueue_script( 'colorbox' );
 
-	if( function_exists( 'wp_enqueue_media' ) && version_compare( $wp_version, '3.5', '>=' ) ) {
-		//call for new media manager
-		wp_enqueue_media();
-	}
+	wp_enqueue_media();
 
 	wp_register_script( 'jquery-flot', $js_dir . 'jquery.flot' . $suffix . '.js' );
 	wp_enqueue_script( 'jquery-flot' );

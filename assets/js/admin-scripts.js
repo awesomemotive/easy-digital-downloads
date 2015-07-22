@@ -1152,7 +1152,7 @@ jQuery(document).ready(function ($) {
 								$('#' + menu_id).prepend( '<option value="' + item.id + '">' + item.name + '</option>' );
 							}
 						});
-						 // Update the options
+						// Update the options
 						$('.edd-select-chosen').trigger('chosen:updated');
 						$('#' + menu_id).next().find('input').val(val);
 					}
