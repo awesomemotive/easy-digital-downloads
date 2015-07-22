@@ -95,29 +95,16 @@ class EDD_Welcome {
 		remove_submenu_page( 'index.php', 'edd-changelog' );
 		remove_submenu_page( 'index.php', 'edd-getting-started' );
 		remove_submenu_page( 'index.php', 'edd-credits' );
-
-		// Badge for welcome page
-		$badge_url = EDD_PLUGIN_URL . 'assets/images/edd-badge.png';
+		
 		?>
 		<style type="text/css" media="screen">
 		/*<![CDATA[*/
-		.edd-badge {
-			padding-top: 150px;
-			height: 52px;
-			width: 185px;
-			color: #666;
-			font-weight: bold;
-			font-size: 14px;
-			text-align: center;
-			text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
-			margin: 0 -5px;
-			background: url('<?php echo $badge_url; ?>') no-repeat;
-		}
 
 		.about-wrap .edd-badge {
 			position: absolute;
 			top: 0;
 			right: 0;
+			width: 100px;
 		}
 
 		.edd-welcome-screenshots {
@@ -171,7 +158,7 @@ class EDD_Welcome {
 		<div class="wrap about-wrap">
 			<h1><?php printf( __( 'Welcome to Easy Digital Downloads %s', 'edd' ), $display_version ); ?></h1>
 			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online store faster, safer, and better!', 'edd' ), $display_version ); ?></div>
-			<div class="edd-badge"><?php printf( __( 'Version %s', 'edd' ), $display_version ); ?></div>
+			<div class="edd-badge"><img src="<?php echo EDD_PLUGIN_URL . 'assets/images/edd-logo.svg'; ?>" alt="<?php _e( 'Easy Digital Downloads', 'edd' ); ?>" / ></div>
 
 			<?php $this->tabs(); ?>
 
@@ -258,7 +245,7 @@ class EDD_Welcome {
 
 						<h4><?php _e( 'Exclude Taxes from Reports', 'edd' );?></h4>
 						<p><?php _e( 'Earnings and sales reports can now be shown exclusive of tax, allowing you to easily see how your store is performing after taxes.', 'edd' );?></p>
-	
+
 						<h4><?php _e( 'Default Gateway First', 'edd' );?></h4>
 						<p><?php _e( 'The gateway selected as the default option will always be displayed first on checkout.' ,'edd' );?></p>
 
@@ -288,7 +275,7 @@ class EDD_Welcome {
 		<div class="wrap about-wrap">
 			<h1><?php _e( 'Easy Digital Downloads Changelog', 'edd' ); ?></h1>
 			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online store faster, safer, and better!', 'edd' ), $display_version ); ?></div>
-			<div class="edd-badge"><?php printf( __( 'Version %s', 'edd' ), $display_version ); ?></div>
+			<div class="edd-badge"><img src="<?php echo EDD_PLUGIN_URL . 'assets/images/edd-logo.svg'; ?>" alt="<?php _e( 'Easy Digital Downloads', 'edd' ); ?>" / ></div>
 
 			<?php $this->tabs(); ?>
 
@@ -320,7 +307,7 @@ class EDD_Welcome {
 		<div class="wrap about-wrap">
 			<h1><?php printf( __( 'Welcome to Easy Digital Downloads %s', 'edd' ), $display_version ); ?></h1>
 			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online store faster, safer and better!', 'edd' ), $display_version ); ?></div>
-			<div class="edd-badge"><?php printf( __( 'Version %s', 'edd' ), $display_version ); ?></div>
+			<div class="edd-badge"><img src="<?php echo EDD_PLUGIN_URL . 'assets/images/edd-logo.svg'; ?>" alt="<?php _e( 'Easy Digital Downloads', 'edd' ); ?>" / ></div>
 
 			<?php $this->tabs(); ?>
 
@@ -439,7 +426,7 @@ class EDD_Welcome {
 		<div class="wrap about-wrap">
 			<h1><?php printf( __( 'Welcome to Easy Digital Downloads %s', 'edd' ), $display_version ); ?></h1>
 			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online store faster, safer and better!', 'edd' ), $display_version ); ?></div>
-			<div class="edd-badge"><?php printf( __( 'Version %s', 'edd' ), $display_version ); ?></div>
+			<div class="edd-badge"><img src="<?php echo EDD_PLUGIN_URL . 'assets/images/edd-logo.svg'; ?>" alt="<?php _e( 'Easy Digital Downloads', 'edd' ); ?>" / ></div>
 
 			<?php $this->tabs(); ?>
 
