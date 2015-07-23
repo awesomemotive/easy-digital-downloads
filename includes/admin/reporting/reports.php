@@ -253,6 +253,9 @@ function edd_reports_categories() {
 	?>
 	<div class="inside">
 		<?php
+
+                edd_reports_graph_controls();
+
 		$categories_table = new EDD_Categories_Reports_Table();
 		$categories_table->prepare_items();
 		$categories_table->display();
