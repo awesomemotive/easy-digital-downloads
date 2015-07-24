@@ -252,7 +252,7 @@ function edd_store_discount( $details, $discount_id = null ) {
 		}
 	}
 
-	if ( edd_discount_exists( $discount_id ) && ! empty( $discount_id ) ) {
+	if ( ! empty( $discount_id ) && edd_discount_exists( $discount_id ) ) {
 
 		// Update an existing discount
 
