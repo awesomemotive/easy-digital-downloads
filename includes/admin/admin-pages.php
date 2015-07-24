@@ -212,7 +212,7 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 					}
 					break;
 				case 'logs':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-reports' === $page && 'logs' === $ivew ) {
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-reports' === $page && 'logs' === $view ) {
 						$found = true;
 					}
 					break;
