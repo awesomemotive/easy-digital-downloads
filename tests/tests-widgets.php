@@ -9,7 +9,7 @@ class Tests_Widgets extends WP_UnitTestCase {
 	/**
 	 * Test that the hooks in the file are good.
 	 *
-	 * @since 2.3.10
+	 * @since 2.4.3
 	 */
 	public function test_file_hooks() {
 		$this->assertNotFalse( has_action( 'widgets_init', 'edd_register_widgets' ) );
@@ -18,7 +18,7 @@ class Tests_Widgets extends WP_UnitTestCase {
 	/**
 	 * Test that the widgets are registered properly.
 	 *
-	 * @since 2.3.10
+	 * @since 2.4.3
 	 */
 	public function test_register_widget() {
 
@@ -34,7 +34,7 @@ class Tests_Widgets extends WP_UnitTestCase {
 	/**
 	 * Test that the cart widget exists with the right properties.
 	 *
-	 * @since 2.3.10
+	 * @since 2.4.3
 	 */
 	public function test_cart_widget() {
 
@@ -50,7 +50,7 @@ class Tests_Widgets extends WP_UnitTestCase {
 	/**
 	 * Test that the widget() method outputs HTML.
 	 *
-	 * @since 2.3.10
+	 * @since 2.4.3
 	 */
 	public function test_cart_widget_function_bail_checkout() {
 
@@ -78,7 +78,7 @@ class Tests_Widgets extends WP_UnitTestCase {
 	/**
 	 * Test that the widget() method outputs HTML.
 	 *
-	 * @since 2.3.10
+	 * @since 2.4.3
 	 */
 	public function test_cart_widget_function() {
 
@@ -107,7 +107,7 @@ class Tests_Widgets extends WP_UnitTestCase {
 	/**
 	 * Test that the cart widget update method returns the correct values.
 	 *
-	 * @since 2.3.10
+	 * @since 2.4.3
 	 */
 	public function test_cart_widget_update() {
 
@@ -123,7 +123,7 @@ class Tests_Widgets extends WP_UnitTestCase {
 	/**
 	 * Test that the cart widget form method outputs HTML.
 	 *
-	 * @since 2.3.10
+	 * @since 2.4.3
 	 */
 	public function test_cart_widget_form() {
 
@@ -146,7 +146,7 @@ class Tests_Widgets extends WP_UnitTestCase {
 	/**
 	 * Test that the categories_widget widget exists with the right properties.
 	 *
-	 * @since 2.3.10
+	 * @since 2.4.3
 	 */
 	public function test_categories_tags_widget() {
 
@@ -162,7 +162,7 @@ class Tests_Widgets extends WP_UnitTestCase {
 	/**
 	 * Test that the widget() method outputs HTML.
 	 *
-	 * @since 2.3.10
+	 * @since 2.4.3
 	 */
 	public function test_categories_tags_widget_function() {
 
@@ -199,7 +199,7 @@ class Tests_Widgets extends WP_UnitTestCase {
 	/**
 	 * Test that the categories widget update method returns the correct values.
 	 *
-	 * @since 2.3.10
+	 * @since 2.4.3
 	 */
 	public function test_categories_tags_widget_update() {
 
@@ -218,7 +218,7 @@ class Tests_Widgets extends WP_UnitTestCase {
 	/**
 	 * Test that the cart widget form method outputs HTML.
 	 *
-	 * @since 2.3.10
+	 * @since 2.4.3
 	 */
 	public function test_categories_tags_widget_form() {
 
@@ -244,7 +244,7 @@ class Tests_Widgets extends WP_UnitTestCase {
 	/**
 	 * Test that the edd_product_details widget exists with the right properties.
 	 *
-	 * @since 2.3.10
+	 * @since 2.4.3
 	 */
 	public function test_edd_product_details_widget() {
 
@@ -260,7 +260,7 @@ class Tests_Widgets extends WP_UnitTestCase {
 	/**
 	 * Test that the widget() method returns when the visiting page is invalid.
 	 *
-	 * @since 2.3.10
+	 * @since 2.4.3
 	 */
 	public function test_edd_product_details_widget_function_bail_no_download() {
 
@@ -275,7 +275,7 @@ class Tests_Widgets extends WP_UnitTestCase {
 	/**
 	 * Test that the widget() method uses the current post when 'download_id' is set to 'current'.
 	 *
-	 * @since 2.3.10
+	 * @since 2.4.3
 	 */
 	public function test_edd_product_details_widget_function_bail_download() {
 
@@ -309,7 +309,7 @@ class Tests_Widgets extends WP_UnitTestCase {
 	/**
 	 * Test that the widget() method outputs HTML.
 	 *
-	 * @since 2.3.10
+	 * @since 2.4.3
 	 */
 	public function test_edd_product_details_widget_function() {
 
@@ -350,7 +350,7 @@ class Tests_Widgets extends WP_UnitTestCase {
 	/**
 	 * Test that the cart widget form method outputs HTML.
 	 *
-	 * @since 2.3.10
+	 * @since 2.4.3
 	 */
 	public function test_edd_product_details_widget_form() {
 
@@ -379,7 +379,7 @@ class Tests_Widgets extends WP_UnitTestCase {
 	/**
 	 * Test that the categories widget update method returns the correct values.
 	 *
-	 * @since 2.3.10
+	 * @since 2.4.3
 	 */
 	public function test_edd_product_details_widget_update() {
 
