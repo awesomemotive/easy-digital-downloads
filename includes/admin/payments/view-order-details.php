@@ -356,10 +356,14 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 
 											<li class="price">
 												<?php
-												echo EDD()->html->text( array( 'name' => 'edd-order-download-amount',
-													'label' => __( 'Item Price: ', 'edd' ),
-													'class' => 'small-text edd-order-download-price'
-												) );
+												echo EDD()->html->text(
+													array(
+														'name'  => 'edd-order-download-amount',
+														'id'    => 'edd-order-download-amount',
+														'label' => __( 'Item Price: ', 'edd' ),
+														'class' => 'small-text edd-order-download-price'
+													)
+												);
 												?>
 											</li>
 

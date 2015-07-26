@@ -35,6 +35,8 @@ class EDD_DB_Customers extends EDD_DB  {
 		$this->primary_key = 'id';
 		$this->version     = '1.0';
 
+		add_action( 'profile_update', array( $this, 'update_customer_email_on_user_update' ), 10, 2 );
+
 	}
 
 	/**
@@ -257,6 +259,52 @@ class EDD_DB_Customers extends EDD_DB  {
 	}
 
 	/**
+	 * Updates the email address of a customer record when the email on a user is updated
+	 *
+	 * @access  public
+	 * @since   2.4
+	*/
+	public function update_customer_email_on_user_update( $user_id = 0, $old_user_data ) {
+
+		$customer = new EDD_Customer( $user_id, true );
+
+		if( ! $customer ) {
+			return false;
+		}
+
+		$user = get_userdata( $user_id );
+
+		if( ! empty( $user ) && $user->user_email !== $customer->email ) {
+
+			if( ! $this->get_customer_by( 'email', $user->user_email ) ) {
+
+				$success = $this->update( $customer->id, array( 'email' => $user->user_email ) );
+				
+				if( $success ) {
+					// Update some payment meta if we need to
+					$payments_array = explode( ',', $customer->payment_ids );
+
+					if( ! empty( $payments_array ) ) {
+
+						foreach ( $payments_array as $payment_id ) {
+
+							edd_update_payment_meta( $payment_id, 'email', $user->user_email );
+
+						}
+						
+					}
+
+					do_action( 'edd_update_customer_email_on_user_update', $user, $customer );
+
+				}
+
+			}
+
+		}
+
+	}
+
+	/**
 	 * Retrieves a single customer from the database
 	 *
 	 * @access public
@@ -376,18 +424,20 @@ class EDD_DB_Customers extends EDD_DB  {
 		if( ! empty( $args['email'] ) ) {
 
 			if( is_array( $args['email'] ) ) {
-				$emails = "'" . implode( "', '", $args['email'] ) . "'";
+
+				$emails_count       = count( $args['email'] );
+				$emails_placeholder = array_fill( 0, $emails_count, '%s' );
+				$emails             = implode( ', ', $emails_placeholder );
+
+				$where .= $wpdb->prepare( " AND `email` IN( $emails ) ", $args['email'] );
 			} else {
-				$emails = "'" . $args['email'] . "'";
+				$where .= $wpdb->prepare( " AND `email` = %s ", $args['email'] );
 			}
-
-			$where .= $wpdb->prepare( " AND `email` IN( {%s} ) ", $emails );
-
 		}
 
 		// specific customers by name
 		if( ! empty( $args['name'] ) ) {
-			$where .= $wpdb->prepare( " AND `name` LIKE '%%" . '%s' . "%%' ", $args['name'] );
+			$where .= $wpdb->prepare( " AND `name` LIKE '%%%%" . '%s' . "%%%%' ", $args['name'] );
 		}
 
 		// Customers created for a specific date or in a date range
@@ -521,5 +571,15 @@ class EDD_DB_Customers extends EDD_DB  {
 		dbDelta( $sql );
 
 		update_option( $this->table_name . '_db_version', $this->version );
+	}
+
+	/**
+	 * Check if the Customers table was ever installed
+	 *
+	 * @since  2.4
+	 * @return bool Returns if the customers table was installed and upgrade routine run
+	 */
+	public function installed() {
+		return $this->table_exists( $this->table_name );
 	}
 }
