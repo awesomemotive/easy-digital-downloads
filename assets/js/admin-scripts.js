@@ -39,9 +39,13 @@ jQuery(document).ready(function ($) {
 			clone.find( 'input, select, textarea' ).each(function() {
 				var name = $( this ).attr( 'name' );
 
-				name = name.replace( /\[(\d+)\]/, '[' + parseInt( key ) + ']');
+				if( name ) {
 
-				$( this ).attr( 'name', name ).attr( 'id', name );
+					name = name.replace( /\[(\d+)\]/, '[' + parseInt( key ) + ']');
+					$( this ).attr( 'name', name ).attr( 'id', name );
+	
+				}
+
 			});
 
 			clone.find( 'span.edd_price_id' ).each(function() {
