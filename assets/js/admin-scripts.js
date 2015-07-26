@@ -56,6 +56,10 @@ jQuery(document).ready(function ($) {
 				$( this ).val( parseInt( key ) ).removeAttr('checked');
 			})
 
+			// Remove Chosen elements
+			clone.find( '.search-choice' ).remove();
+			clone.find( '.chosen-container' ).remove();
+
 			return clone;
 		},
 
@@ -65,7 +69,16 @@ jQuery(document).ready(function ($) {
 				var button = $( this ),
 				row = button.parent().parent().prev( 'tr' ),
 				clone = EDD_Download_Configuration.clone_repeatable(row);
+
 				clone.insertAfter( row ).find('input, textarea, select').filter(':visible').eq(0).focus();
+
+				// Setup chosen fields again if they exist
+				clone.find('.edd-select-chosen').chosen({
+					inherit_select_classes: true,
+					placeholder_text_single: edd_vars.one_option,
+					placeholder_text_multiple: edd_vars.one_or_more_option,
+				});
+				clone.find( '.edd-select-chosen' ).css( 'width', '100%' );
 			});
 		},
 
