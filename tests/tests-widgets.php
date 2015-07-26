@@ -99,7 +99,7 @@ class Tests_Widgets extends WP_UnitTestCase {
 
 		$this->assertContains( 'Number of items in cart:', $output );
 		$this->assertContains( '<li class="cart_item empty">', $output );
-		$this->assertContains( '<li class="cart_item edd_subtotal"', $output );
+		$this->assertContains( '<li class="cart_item edd-cart-meta edd_total"', $output );
 		$this->assertContains( '<li class="cart_item edd_checkout"', $output );
 
 	}
@@ -341,7 +341,7 @@ class Tests_Widgets extends WP_UnitTestCase {
 		$this->assertContains( '<input type="hidden" name="edd_action" class="edd_action_input" value="add_to_cart">', $output );
 		$this->assertContains( '<input type="hidden" name="download_id" value="' . $download->ID . '">', $output );
 		$this->assertContains( '<p class="edd-meta">', $output );
-		$this->assertContains( '<span class="categories">Categories:', $output );
+		$this->assertContains( '<span class="categories">Category: ', $output );
 
 		EDD_Helper_Download::delete_download( $download->ID );
 
