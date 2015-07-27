@@ -217,14 +217,14 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'cb'        => '<input type="checkbox" />', //Render a checkbox instead of text
-			'ID'     	=> __( 'ID', 'edd' ),
-			'email'  	=> __( 'Email', 'edd' ),
-			'details'  	=> __( 'Details', 'edd' ),
-			'amount'  	=> __( 'Amount', 'edd' ),
-			'date'  	=> __( 'Date', 'edd' ),
-			'user'  	=> __( 'User', 'edd' ),
-			'status'  	=> __( 'Status', 'edd' )
+			'cb'       => '<input type="checkbox" />', //Render a checkbox instead of text
+			'ID'       => __( 'ID', 'edd' ),
+			'email'    => __( 'Email', 'edd' ),
+			'details'  => __( 'Details', 'edd' ),
+			'amount'   => __( 'Amount', 'edd' ),
+			'date'     => __( 'Date', 'edd' ),
+			'customer' => __( 'Customer', 'edd' ),
+			'status'   => __( 'Status', 'edd' )
 		);
 
 		return apply_filters( 'edd_payments_table_columns', $columns );
@@ -343,25 +343,19 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Render the User Column
+	 * Render the Customer Column
 	 *
 	 * @access public
-	 * @since 1.4
+	 * @since 2.4.3
 	 * @param array $payment Contains all the data of the payment
 	 * @return string Data shown in the User column
 	 */
-	public function column_user( $payment ) {
+	public function column_customer( $payment ) {
 
-		$user_id = edd_get_payment_user_id( $payment->ID );
+		$customer_id = edd_get_payment_customer_id( $payment->ID );
+		$customer    = new EDD_Customer( $customer_id );
 
-		if ( $user_id && $user_id > 0 ) {
-			$user = get_userdata( $user_id ) ;
-			$display_name = is_object( $user ) ? $user->display_name : __( 'guest', 'edd' );
-		} else {
-			$display_name = __( 'guest', 'edd' );
-		}
-
-		$value = '<a href="' . esc_url( add_query_arg( array( 'user' => urlencode( $payment->user_info['email'] ), 'paged' => false ) ) ) . '">' . $display_name . '</a>';
+		$value = '<a href="' . esc_url( add_query_arg( array( 'user' => urlencode( $customer->email ), 'paged' => false ) ) ) . '">' . $customer->name . '</a>';
 		return apply_filters( 'edd_payments_table_column', $value, $payment->ID, 'user' );
 	}
 
