@@ -13,21 +13,6 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Add-ons Page Init
- *
- * Hooks check feed to the page load action.
- *
- * @since 1.0
- * @global $edd_add_ons_page EDD Add-ons Pages
- * @return void
- */
-function edd_add_ons_init() {
-	global $edd_add_ons_page;
-	add_action( 'load-' . $edd_add_ons_page, 'edd_add_ons_check_feed' );
-}
-add_action( 'admin_menu', 'edd_add_ons_init');
-
-/**
  * Add-ons Page
  *
  * Renders the add-ons page content.
