@@ -1212,11 +1212,13 @@ jQuery(document).ready(function ($) {
 			$('body').on( 'submit', '.edd-export-form', function(e) {
 				e.preventDefault();
 
-				if ( ! $(this).find( 'input[type="submit"]' ).hasClass( 'button-disabled' ) ) {
+				var submitButton = $(this).find( 'input[type="submit"]' );
+
+				if ( ! submitButton.hasClass( 'button-disabled' ) ) {
 
 					var data = $(this).serialize();
 
-					$(this).find( 'input[type="submit"]' ).addClass( 'button-disabled' );
+					submitButton.addClass( 'button-disabled' );
 					$(this).append( '<span class="spinner is-active"></span><div class="edd-progress"><div></div></div>' );
 
 					// start the process
