@@ -167,14 +167,19 @@ class EDD_DB_Customers extends EDD_DB  {
 	}
 
 	/**
-	 * Checks if a customer exists by email
+	 * Checks if a customer exists
 	 *
 	 * @access  public
 	 * @since   2.1
 	*/
-	public function exists( $email = '' ) {
+	public function exists( $value = '', $field = 'email' ) {
 
-		return (bool) $this->get_column_by( 'id', 'email', $email );
+		$columns = $this->get_columns();
+		if ( ! array_key_exists( $field, $columns ) ) {
+			return false;
+		}
+
+		return (bool) $this->get_column_by( 'id', $field, $value );
 
 	}
 
@@ -279,7 +284,7 @@ class EDD_DB_Customers extends EDD_DB  {
 			if( ! $this->get_customer_by( 'email', $user->user_email ) ) {
 
 				$success = $this->update( $customer->id, array( 'email' => $user->user_email ) );
-				
+
 				if( $success ) {
 					// Update some payment meta if we need to
 					$payments_array = explode( ',', $customer->payment_ids );
@@ -291,7 +296,7 @@ class EDD_DB_Customers extends EDD_DB  {
 							edd_update_payment_meta( $payment_id, 'email', $user->user_email );
 
 						}
-						
+
 					}
 
 					do_action( 'edd_update_customer_email_on_user_update', $user, $customer );
