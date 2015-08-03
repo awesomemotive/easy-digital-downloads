@@ -1229,12 +1229,19 @@ jQuery(document).ready(function ($) {
 			$('body').on( 'submit', '.edd-export-form', function(e) {
 				e.preventDefault();
 
-				var data = $(this).serialize();
+				var submitButton = $(this).find( 'input[type="submit"]' );
 
-				$(this).append( '<span class="spinner is-active"></span><div class="edd-progress"><div></div></div>' );
+				if ( ! submitButton.hasClass( 'button-disabled' ) ) {
 
-				// start the process
-				self.process_step( 1, data, self );
+					var data = $(this).serialize();
+
+					submitButton.addClass( 'button-disabled' );
+					$(this).append( '<span class="spinner is-active"></span><div class="edd-progress"><div></div></div>' );
+
+					// start the process
+					self.process_step( 1, data, self );
+
+				}
 
 			});
 		},
@@ -1258,6 +1265,7 @@ jQuery(document).ready(function ($) {
 
 						export_form.find('.spinner').remove();
 						export_form.find('.edd-progress').remove();
+						export_form.find('.button-disabled').removeClass('button-disabled');
 
 						window.location = response.url;
 
