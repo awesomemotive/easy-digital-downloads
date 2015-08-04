@@ -79,4 +79,25 @@ class Tests_Formatting extends WP_UnitTestCase {
 		$this->assertEquals( '.', $decimal_sep );
 
 	}
+
+	public function test_decimal_filter() {
+		$initial_currency = edd_get_currency();
+
+		$this->assertEquals( 2, edd_currency_decimal_filter() );
+
+		edd_update_option( 'currency', 'RIAL' );
+		$this->assertEquals( 0, edd_currency_decimal_filter() );
+
+		edd_update_option( 'currency', 'JPY' );
+		$this->assertEquals( 0, edd_currency_decimal_filter() );
+
+		edd_update_option( 'currency', 'HUF' );
+		$this->assertEquals( 0, edd_currency_decimal_filter() );
+
+		edd_update_option( 'currency', 'TWD' );
+		$this->assertEquals( 0, edd_currency_decimal_filter() );
+
+		// Reset the option
+		edd_update_option( 'currency', $initial_currency );
+	}
 }
