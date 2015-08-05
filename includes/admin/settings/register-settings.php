@@ -485,7 +485,7 @@ function edd_get_registered_settings() {
 				'disable_admin_notices' => array(
 					'id' => 'disable_admin_notices',
 					'name' => __( 'Disable Admin Notifications', 'edd' ),
-					'desc' => __( 'Check this box if you do not want to receive emails when new sales are made.', 'edd' ),
+					'desc' => __( 'Check this box if you do not want to receive sales notification emails.', 'edd' ),
 					'type' => 'checkbox'
 				)
 			)
@@ -704,7 +704,7 @@ function edd_get_registered_settings() {
 				'sequential_start' => array(
 					'id' => 'sequential_start',
 					'name' => __( 'Sequential Starting Number', 'edd' ),
-					'desc' => __( 'The number that sequential order numbers should start at.', 'edd' ),
+					'desc' => __( 'The number at which the sequence should begin.', 'edd' ),
 					'type' => 'number',
 					'size' => 'small',
 					'std'  => '1'
