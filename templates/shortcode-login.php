@@ -12,7 +12,7 @@ if ( ! is_user_logged_in() ) :
 			<span><legend><?php _e( 'Log into Your Account', 'edd' ); ?></legend></span>
 			<?php do_action( 'edd_login_fields_before' ); ?>
 			<p>
-				<label for="edd_user_Login"><?php _e( 'Username', 'edd' ); ?></label>
+				<label for="edd_user_login"><?php _e( 'Username', 'edd' ); ?></label>
 				<input name="edd_user_login" id="edd_user_login" class="required edd-input" type="text" title="<?php _e( 'Username', 'edd' ); ?>"/>
 			</p>
 			<p>

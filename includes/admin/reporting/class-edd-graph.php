@@ -81,7 +81,7 @@ class EDD_Graph {
 		$this->data = $_data;
 
 		// Generate unique ID
-		$this->id   = md5( rand() );
+		$this->id   = 'a' . md5( rand() );
 
 		// Setup default options;
 		$this->options = array(
@@ -144,6 +144,8 @@ class EDD_Graph {
 		// Use minified libraries if SCRIPT_DEBUG is turned off
 		$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 		wp_enqueue_script( 'jquery-flot', EDD_PLUGIN_URL . 'assets/js/jquery.flot' . $suffix . '.js' );
+
+		do_action( 'edd_graph_load_scripts' );
 	}
 
 	/**

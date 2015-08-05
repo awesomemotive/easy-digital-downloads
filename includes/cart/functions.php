@@ -852,16 +852,13 @@ function edd_remove_item_url( $cart_key ) {
 
 	global $wp_query;
 
-	if ( defined('DOING_AJAX') ){
+	if ( defined('DOING_AJAX') ) {
 		$current_page = edd_get_checkout_uri();
-	} else if( is_page() ) {
-		$current_page = add_query_arg( 'page_id', $wp_query->queried_object_id, home_url( 'index.php' ) );
-	} else if( is_singular() ) {
-		$current_page = add_query_arg( 'p', $wp_query->queried_object_id, home_url( 'index.php' ) );
 	} else {
 		$current_page = edd_get_current_page_url();
 	}
-	$remove_url = add_query_arg( array( 'cart_item' => $cart_key, 'edd_action' => 'remove' ), $current_page );
+
+	$remove_url = add_query_arg( array( 'cart_item' => $cart_key, 'edd_action' => 'remove', 'nocache' => current_time( 'timestamp' ) ), $current_page );
 
 	return apply_filters( 'edd_remove_item_url', $remove_url );
 }
@@ -877,16 +874,13 @@ function edd_remove_item_url( $cart_key ) {
 function edd_remove_cart_fee_url( $fee_id = '') {
 	global $post;
 
-	if ( defined('DOING_AJAX') ){
+	if ( defined('DOING_AJAX') ) {
 		$current_page = edd_get_checkout_uri();
-	} else if( is_page() ) {
-		$current_page = add_query_arg( 'page_id', $post->ID, home_url( 'index.php' ) );
-	} else if( is_singular() ) {
-		$current_page = add_query_arg( 'p', $post->ID, home_url( 'index.php' ) );
 	} else {
 		$current_page = edd_get_current_page_url();
 	}
-	$remove_url = add_query_arg( array( 'fee' => $fee_id, 'edd_action' => 'remove_fee' ), $current_page );
+
+	$remove_url = add_query_arg( array( 'fee' => $fee_id, 'edd_action' => 'remove_fee', 'nocache' => current_time( 'timestamp' ) ), $current_page );
 
 	return apply_filters( 'edd_remove_fee_url', $remove_url );
 }
