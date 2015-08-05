@@ -252,7 +252,7 @@ function edd_store_discount( $details, $discount_id = null ) {
 		}
 	}
 
-	if ( edd_discount_exists( $discount_id ) && ! empty( $discount_id ) ) {
+	if ( ! empty( $discount_id ) && edd_discount_exists( $discount_id ) ) {
 
 		// Update an existing discount
 
@@ -1377,7 +1377,7 @@ function edd_listen_for_cart_discount() {
 		return;
 	}
 
-	$code = sanitize_text_field( $_REQUEST['discount'] );
+	$code = preg_replace('/[^a-zA-Z0-9-_]+/', '', $_REQUEST['discount'] );
 
 	EDD()->session->set( 'preset_discount', $code );
 }

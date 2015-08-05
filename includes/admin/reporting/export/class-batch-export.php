@@ -137,7 +137,7 @@ class EDD_Batch_Export extends EDD_Export {
 	 * @return string
 	 */
 	public function print_csv_cols() {
-		
+
 		$col_data = '';
 		$cols = $this->get_csv_cols();
 		$i = 1;
@@ -147,7 +147,7 @@ class EDD_Batch_Export extends EDD_Export {
 			$i++;
 		}
 		$col_data .= "\r\n";
-	
+
 		$this->stash_step_data( $col_data );
 
 		return $col_data;
@@ -162,7 +162,7 @@ class EDD_Batch_Export extends EDD_Export {
 	 * @return string|false
 	 */
 	public function print_csv_rows() {
-		
+
 		$row_data = '';
 		$data     = $this->get_data();
 		$cols     = $this->get_csv_cols();
@@ -207,7 +207,7 @@ class EDD_Batch_Export extends EDD_Export {
 	 * @since 2.4
 	 * @return string
 	 */
-	private function get_file() {
+	protected function get_file() {
 		$file = @file_get_contents( $this->file );
 		if( ! $file ) {
 			@file_put_contents( $this->file, '' );
@@ -219,10 +219,10 @@ class EDD_Batch_Export extends EDD_Export {
 	 * Append data to export file
 	 *
 	 * @since 2.4
-	 * @param $data string The data to add to the file 
+	 * @param $data string The data to add to the file
 	 * @return void
 	 */
-	private function stash_step_data( $data = '' ) {
+	protected function stash_step_data( $data = '' ) {
 
 		$file = $this->get_file();
 		$file .= $data;
@@ -250,4 +250,5 @@ class EDD_Batch_Export extends EDD_Export {
 
 		edd_die();
 	}
+
 }
