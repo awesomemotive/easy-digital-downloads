@@ -284,7 +284,7 @@ function edd_customers_view( $customer ) {
 					<span class="customer-user-id info-item editable">
 						<?php _e( 'User ID', 'edd' ); ?>:&nbsp;
 						<?php if( intval( $customer->user_id ) > 0 ) : ?>
-							<span data-key="user_id"><?php echo $customer->user_id; ?></span>
+							<span data-key="user_id"><a href="<?php echo admin_url( 'user-edit.php?user_id=' . $customer->user_id ); ?>"><?php echo $customer->user_id; ?></a></span>
 						<?php else : ?>
 							<span data-key="user_id"><?php _e( 'none', 'edd' ); ?></span>
 						<?php endif; ?>
