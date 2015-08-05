@@ -54,10 +54,11 @@ if ( $purchases ) :
 										foreach ( $download_files as $filekey => $file ) :
 
 											$download_url = edd_get_download_file_url( $purchase_data['key'], $email, $filekey, $download['id'], $price_id );
+											$attribute = edd_get_html5_download_attribute( true, $purchase_data, array(), $file );
 											?>
 
 											<div class="edd_download_file">
-												<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link">
+												<a href="<?php echo esc_url( $download_url ); ?>" <?php echo $attribute; ?> class="edd_download_file_link">
 													<?php echo isset( $file['name'] ) ? esc_html( $file['name'] ) : esc_html( $name ); ?>
 												</a>
 											</div>
