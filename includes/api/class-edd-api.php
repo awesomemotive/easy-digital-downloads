@@ -1387,12 +1387,13 @@ class EDD_API {
 					if ( isset( $item['item_number'] ) && isset( $item['item_number']['options'] ) ) {
 						$price_options  = $item['item_number']['options'];
 						if ( isset( $price_options['price_id'] ) ) {
-							$price_name = edd_get_price_option_name( $item['id'], $price_options['price_id'], $payment->ID );
+							$price_name = edd_get_price_option_name( $item_id, $price_options['price_id'], $payment->ID );
 						}
 					}
 
+					$sales['sales'][ $i ]['products'][ $c ]['id']         = $item_id;
 					$sales['sales'][ $i ]['products'][ $c ]['quantity']   = $quantity;
-					$sales['sales'][ $i ]['products'][ $c ]['name']       = get_the_title( $item['id'] );
+					$sales['sales'][ $i ]['products'][ $c ]['name']       = get_the_title( $item_id );
 					$sales['sales'][ $i ]['products'][ $c ]['price']      = $price;
 					$sales['sales'][ $i ]['products'][ $c ]['price_name'] = $price_name;
 					$c++;
