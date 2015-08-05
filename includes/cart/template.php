@@ -208,15 +208,27 @@ function edd_display_cart_messages() {
 	$messages = EDD()->session->get( 'edd_cart_messages' );
 
 	if ( $messages ) {
-		$classes = apply_filters( 'edd_error_class', array(
-			'edd_errors'
-		) );
-		echo '<div class="' . implode( ' ', $classes ) . '">';
-		    // Loop message codes and display messages
-		   foreach ( $messages as $message_id => $message ){
-		        echo '<p class="edd_error" id="edd_msg_' . $message_id . '">' . $message . '</p>';
-		   }
-		echo '</div>';
+		foreach ( $messages as $message_id => $message ) {
+
+			// Try and detect what type of message this is
+			if ( strpos( strtolower( $message ), 'error' ) ) {
+				$type = 'error';
+			} elseif ( strpos( strtolower( $message ), 'success' ) ) {
+				$type = 'success';
+			} else {
+				$type = 'info';
+			}
+
+			$classes = apply_filters( 'edd_' . $type . '_class', array(
+				'edd_errors', 'edd-alert', 'edd-alert-' . $type
+			) );
+
+			echo '<div class="' . implode( ' ', $classes ) . '">';
+				// Loop message codes and display messages
+					echo '<p class="edd_error" id="edd_msg_' . $message_id . '">' . $message . '</p>';
+			echo '</div>';
+
+		}
 
 		// Remove all of the cart saving messages
 		EDD()->session->set( 'edd_cart_messages', null );

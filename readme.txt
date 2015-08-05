@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.9.2
 Tested up to: 4.2
 
-Stable Tag: 2.3.9
+Stable Tag: 2.4.2
 
 License: GNU Version 2 or Any Later Version
 
@@ -21,7 +21,7 @@ Features of the plugin include:
 
 * Cart system for purchasing multiple downloads at once
 * Complete promotional code system
-* Many payment gateways. PayPal and Manual are included by default with Stripe, PayPal Pro, PayPal Express, and others available as [extensions](https://easydigitaldownloads.com/blog/extensions/categories/gateways/?utm_source=gateways&utm_medium=description_tab&utm_content=gateways&utm_campaign=readme)
+* Many payment gateways. PayPal, Amazon, Test Payments are included by default with Stripe, PayPal Pro, PayPal Express, and others available as [extensions](https://easydigitaldownloads.com/blog/extensions/categories/gateways/?utm_source=gateways&utm_medium=description_tab&utm_content=gateways&utm_campaign=readme)
 * Complete payment history
 * User purchase history and ability to redownload files
 * Multiple files per downloadable product
@@ -190,6 +190,77 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.4.2, July 13, 2015 =
+
+* Tweak: Allow filtering the ajax user search
+* Tweak: Send first_name and last_name to PayPal
+* Tweak: edd_filter_success_page_content() not run early enough
+* Tweak: URLs to remove fees and items should not be caught by caching
+* Tweak: Improve batch exporter extensibility
+* Tweak: Add ABSPATH check to Amazon gateway files
+* Fix: Multiple tax rates with same id in taxes settings
+* Fix: Clarified opt-in messaging
+* Fix: Microdata wrapper showing in sidebar
+* Fix: Excerpt missing from products API Endpoint
+* Fix: Customer search not working with name or email in API
+* Fix: Invalid markup on profile editor save
+* Fix: API Key fields caused fatal error when viewed in front end profile editors
+* Fix: Invalid 'for' attribute in username label for login shortcode
+* Fix: Correct edd_listen_for_failed_payments() sending post id, not WP_Post object
+* Fix: Fix tax state not saving when text field
+
+= 2.4.1, July 2, 2015 =
+
+* Tweak: Updated Language Files
+* Fix: edd_get_gateway_admin_label() should use edd_get_payment_gateways()
+* Fix: Payment email in payments list table pulled from User Info, should be pulled from payment info
+* Fix: Manually added items to an order always get a price of $0.00
+* Fix: Improve Customer View CSS
+* Fix: Select Payment Method shown incorrectly when only one gateway is enabled
+* Fix: API Security Fix
+
+= 2.4, June 30, 2015 =
+
+* New: Added support for Amazon Login and Pay
+* New: Added Earnings by Category report
+* New: Added batch processing to data export for handling large amounts of data
+* New: Added versioning to the REST API
+* New: Added a filter to disable redirect to checkout on per-download basis
+* New: Added method for extensions to pre-fill customer details on checkout
+* New: Added helper functions for verifying credit / debit card numbers
+* New: Added date range options to payment and file download history exports
+* New: Added options to control the text shown on Buy Now buttons
+* New: Added an action to the cart item title column
+* New: Added an action to the Actions column of the cart
+* New: Added standardized classes for error, notice, and alert messages
+* New: Added date_field() method to EDD_HTML_Elements class
+* New: Added filters for the From Address for admin sale notifications
+* Tweak: Improved performance of user validation in the REST API
+* Tweak: Improved edd_is_admin_page() helper function for detecting when on specific EDD admin pages
+* Tweak: Stylesheets are now registered before enqueueed
+* Tweak: Moved Test Mode option to the Payment Gateways tab
+* Tweak: Earnings and sales states now incremented while in Test Mode
+* Tweak: Download Details widget now properly respects taxonomy labels
+* Tweak: Improved customer count functions in the REST API
+* Tweak: Default gateway now shows as first gateway on checkout
+* Tweak: Purchase link shortcode now shown in the Download Settings meta box
+* Tweak: edd_recalculate_taxes() now includes a raw amount in the response
+* Tweak: Customer export is now standarized for all export options
+* Tweak: Sequential order numbers improved to protect against race conditions
+* Fix: Opt-in tracking accidentally enabled for all installs
+* Fix: Minor security flaw with gateway selection on checkout
+* Fix: Symlink file downloads option gets hidden after reload
+* Fix: Undefined index error with banned emails
+* Fix: Notices thrown when logging API requests
+* Fix: Customer email not updated when associated user account's email is updated
+* Fix: Incorrect for attribute on checkout's password field
+* Fix: edd_items_in_cart cookie disables cache improperly
+* Fix: API keys are difficult to select on mobile
+* Fix: Tools tab displays poorly on mobile
+* Fix: Buy Now buttons not properly setting item quantity through PayPal
+* Fix: December month data is plotted in January when viewing custom date range
+* Fix: Double error message when entering discount code that has already been used
 
 = 2.3.9, May 25, 2015 =
 
