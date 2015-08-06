@@ -490,29 +490,15 @@ function edd_count_payments( $args = array() ) {
 
 	// Limit payments count by date
 	if ( ! empty( $args['start-date'] ) ) {
-
-		// If our date pickers ever support other formats, update this 'format' with the chosen one for the store
-		$date = DateTime::createFromFormat( 'm/d/Y', $args['start-date'] );
-
-		if ( false !== $date ) {
-			$where .= " AND p.post_date >= '" . $date->format( 'Y-m-d' ) . "'";
-		} else {
-			unset( $args['start-date'] );
-		}
-
+		$date = new DateTime( $args['start-date'] );
+		$where .= "
+			AND p.post_date >= '" . $date->format( 'Y-m-d' ) . "'";
 	}
 
 	if ( ! empty ( $args['end-date'] ) ) {
-
-		// If our date pickers ever support other formats, update this 'format' with the chosen one for the store
-		$date = DateTime::createFromFormat( 'm/d/Y', $args['end-date'] );
-
-		if ( false !== $date ) {
-			$where .= " AND p.post_date <= '" . $date->format( 'Y-m-d' ) . "'";
-		} else {
-			unset( $args['end-date'] );
-		}
-
+		$date = new DateTime( $args['end-date'] );
+		$where .= "
+			AND p.post_date <= '" . $date->format( 'Y-m-d' ) . "'";
 	}
 
 	$where = apply_filters( 'edd_count_payments_where', $where );
