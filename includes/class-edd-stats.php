@@ -502,7 +502,7 @@ class EDD_Stats {
 		$start_where = '';
 		$end_where   = '';
 
-		if( $this->start_date ) {
+		if( ! is_wp_error( $this->start_date ) && strtotime( $this->start_date ) ) {
 
 			if( $this->timestamp ) {
 				$format = 'Y-m-d H:i:s';
@@ -511,10 +511,10 @@ class EDD_Stats {
 			}
 
 			$start_date  = date( $format, $this->start_date );
-			$start_where = " AND $wpdb->posts.post_date >= '{$start_date}'";
+			$start_where = $wpdb->prepare( " AND $wpdb->posts.post_date >= '%s'", $start_date );
 		}
 
-		if( $this->end_date ) {
+		if( ! is_wp_error( $this->end_date ) && strtotime( $this->end_date ) ) {
 
 			if( $this->timestamp ) {
 				$format = 'Y-m-d H:i:s';
@@ -524,7 +524,7 @@ class EDD_Stats {
 
 			$end_date  = date( $format, $this->end_date );
 
-			$end_where = " AND $wpdb->posts.post_date <= '{$end_date}'";
+			$end_where = $wpdb->prepare( " AND $wpdb->posts.post_date <= '%s'", $end_date );
 		}
 
 		$where .= "{$start_where}{$end_where}";
