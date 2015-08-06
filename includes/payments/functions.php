@@ -505,6 +505,11 @@ function edd_count_payments( $args = array() ) {
 
 		}
 
+		// Fixes an issue with the payments list table counts when no end date is specified (partiy with stats class)
+		if ( empty( $args['end-date'] ) ) {
+			$args['end-date'] = $args['start-date'];
+		}
+
 	}
 
 	if ( ! empty ( $args['end-date'] ) ) {
