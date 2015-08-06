@@ -454,9 +454,9 @@ function edd_count_payments( $args = array() ) {
 		$join = "LEFT JOIN $wpdb->postmeta m ON (p.ID = m.post_id)";
 
 		if ( ! empty( $field ) ) {
-			$where .= "
+			$where .= $wpdb->prepare( "
 				AND m.meta_key = '_edd_payment_user_{$field}'
-				AND m.meta_value = '{$args['user']}'";
+				AND m.meta_value = '%s'", $args['user'] );
 		}
 
 	// Count payments for a search
@@ -471,34 +471,57 @@ function edd_count_payments( $args = array() ) {
 
 
 			$join = "LEFT JOIN $wpdb->postmeta m ON (p.ID = m.post_id)";
-			$where .= "
+			$where .= $wpdb->prepare( "
 				AND m.meta_key = '{$field}'
-				AND m.meta_value = '{$args['s']}'";
+				AND m.meta_value = '%s'", $args['s'] );
 
 		} elseif ( is_numeric( $args['s'] ) ) {
 
 			$join = "LEFT JOIN $wpdb->postmeta m ON (p.ID = m.post_id)";
-			$where .= "
+			$where .= $wpdb->prepare( "
 				AND m.meta_key = '_edd_payment_user_id'
-				AND m.meta_value = '{$args['s']}'";
+				AND m.meta_value = '%s'", $args['s'] );
 
 		} else {
-			$where .= "AND ((p.post_title LIKE '%{$args['s']}%') OR (p.post_content LIKE '%{$args['s']}%'))";
+			$search_string = '%' . $args['s'] . '%';
+			$where .= $wpdb->prepare( " AND ((p.post_title LIKE '%s') OR (p.post_content LIKE '%s'))", $search_string, $search_string );
 		}
 
 	}
 
 	// Limit payments count by date
 	if ( ! empty( $args['start-date'] ) ) {
-		$date = new DateTime( $args['start-date'] );
-		$where .= "
-			AND p.post_date >= '" . $date->format( 'Y-m-d' ) . "'";
+
+		$date_parts = explode( '/', $args['start-date'] );
+		$month      = ! empty( $date_parts[0] ) && is_numeric( $date_parts[0] ) ? $date_parts[0] : 0;
+		$day        = ! empty( $date_parts[1] ) && is_numeric( $date_parts[1] ) ? $date_parts[1] : 0;
+		$year       = ! empty( $date_parts[2] ) && is_numeric( $date_parts[2] ) ? $date_parts[2] : 0;
+
+		$is_date    = checkdate( $month, $day, $year );
+		if ( false !== $is_date ) {
+
+			$date   = new DateTime( $args['start-date'] );
+			$where .= $wpdb->prepare( " AND p.post_date >= '%s'", $date->format( 'Y-m-d' ) );
+
+		}
+
 	}
 
 	if ( ! empty ( $args['end-date'] ) ) {
-		$date = new DateTime( $args['end-date'] );
-		$where .= "
-			AND p.post_date <= '" . $date->format( 'Y-m-d' ) . "'";
+
+		$date_parts = explode( '/', $args['end-date'] );
+		$month      = ! empty( $date_parts[0] ) ? $date_parts[0] : 0;
+		$day        = ! empty( $date_parts[1] ) ? $date_parts[1] : 0;
+		$year       = ! empty( $date_parts[2] ) ? $date_parts[2] : 0;
+
+		$is_date    = checkdate( $month, $day, $year );
+		if ( false !== $is_date ) {
+
+			$date   = new DateTime( $args['end-date'] );
+			$where .= $wpdb->prepare( " AND p.post_date <= '%s'", $date->format( 'Y-m-d' ) );
+
+		}
+
 	}
 
 	$where = apply_filters( 'edd_count_payments_where', $where );
