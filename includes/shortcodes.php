@@ -286,7 +286,7 @@ function edd_downloads_query( $atts, $content = null ) {
 
 		$query['posts_per_page'] = (int) $atts['number'];
 
-		if ( $query['posts_per_page'] < -1 ) {
+		if ( $query['posts_per_page'] < 0 ) {
 			$query['posts_per_page'] = abs( $query['posts_per_page'] );
 		}
 	} else {
