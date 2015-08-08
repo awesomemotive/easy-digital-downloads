@@ -498,7 +498,7 @@ final class EDD_Amazon_Payments {
 
 			} else {
 
-				$names = explode( ' ', $profile['name'] );
+				$names = explode( ' ', $profile['name'], 2 );
 
 				$customer = array(
 					'first_name' => $names[0],
