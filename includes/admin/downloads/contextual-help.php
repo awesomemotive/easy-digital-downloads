@@ -31,7 +31,7 @@ function edd_downloads_contextual_help() {
 					__( '<a href="%s">Post an issue</a> on <a href="%s">GitHub</a>. View <a href="%s">extensions</a> or <a href="%s">themes</a>.', 'edd' ),
 					esc_url( 'https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues' ),
 					esc_url( 'https://github.com/easydigitaldownloads/Easy-Digital-Downloads' ),
-					esc_url( 'https://easydigitaldownloads.com/extensions/' ),
+					esc_url( 'https://easydigitaldownloads.com/downloads/' ),
 					esc_url( 'https://easydigitaldownloads.com/themes/' )
 				) . '</p>'
 	);
@@ -60,7 +60,7 @@ function edd_downloads_contextual_help() {
 		'id'	    => 'edd-download-files',
 		'title'	    => sprintf( __( '%s Files', 'edd' ), edd_get_label_singular() ),
 		'content'	=>
-			'<p>' . __( '<strong>Product Type Options</strong> - Choose a default product type or a bundle. Bundled products automatically include access other download&#39;s files when purchased.', 'edd' ) . '</p>' . 
+			'<p>' . __( '<strong>Product Type Options</strong> - Choose a default product type or a bundle. Bundled products automatically include access other download&#39;s files when purchased.', 'edd' ) . '</p>' .
 
 			'<p>' . __( '<strong>File Downloads</strong> - Define download file names and their respsective file URL. Multiple files can be assigned to a single price, or variable prices.', 'edd' ) . '</p>'
 	) );
@@ -92,10 +92,10 @@ function edd_downloads_contextual_help() {
 			</ul>' .
 			'<p>' . sprintf( __( 'For more information, see <a href="%s">using Shortcodes</a> on the WordPress.org Codex or <a href="%s">Easy Digital Downloads Documentation</a>', 'edd' ), 'https://codex.wordpress.org/Shortcode', 'https://easydigitaldownloads.com/docs/display-purchase-buttons-purchase_link/' ) . '</p>'
 	) );
-	
+
 	/**
 	 * Fires off in the EDD Downloads Contextual Help Screen
-	 * 
+	 *
 	 * @since 1.2.3
 	 * @param object $screen The current admin screen
 	 */
