@@ -760,7 +760,7 @@ function edd_checkout_final_total() {
 ?>
 <p id="edd_final_total_wrap">
 	<strong><?php _e( 'Purchase Total:', 'edd' ); ?></strong>
-	<span class="edd_cart_amount" data-subtotal="<?php echo edd_get_cart_subtotal(); ?>" data-total="<?php echo edd_get_cart_subtotal(); ?>"><?php edd_cart_total(); ?></span>
+	<span class="edd_cart_amount" data-subtotal="<?php echo edd_get_cart_subtotal(); ?>" data-total="<?php echo edd_get_cart_total(); ?>"><?php edd_cart_total(); ?></span>
 </p>
 <?php
 }
@@ -850,7 +850,7 @@ function edd_agree_to_terms_js() {
 ?>
 	<script type="text/javascript">
 		jQuery(document).ready(function($){
-			$('body').on('click', '.edd_terms_links', function(e) {
+			$(document.body).on('click', '.edd_terms_links', function(e) {
 				//e.preventDefault();
 				$('#edd_terms').slideToggle();
 				$('.edd_terms_links').toggle();
