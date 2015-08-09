@@ -193,7 +193,7 @@ function edd_purchase_form_validate_fields() {
 	if ( is_user_logged_in() ) {
 		// Collect logged in user data
 		$valid_data['logged_in_user'] = edd_purchase_form_validate_logged_in_user();
-	} elseif ( isset( $_POST['edd-purchase-var'] ) && $_POST['edd-purchase-var'] == 'needs-to-register' ) {
+	} else if ( isset( $_POST['edd-purchase-var'] ) && $_POST['edd-purchase-var'] == 'needs-to-register' ) {
 		// Set new user registration as required
 		$valid_data['need_new_user'] = true;
 
