@@ -445,7 +445,7 @@ class Test_Cart extends WP_UnitTestCase {
 
 		edd_add_to_cart( $this->_post->ID, $options );
 
-		$items = edd_get_cart_contents();
+		$items = edd_get_cart_content_details();
 
 		$this->assertEquals( 'Test Download - Simple', edd_get_cart_item_name( $items[0] ) );
 
@@ -455,7 +455,7 @@ class Test_Cart extends WP_UnitTestCase {
 
 		edd_add_to_cart( $post_id );
 
-		$items = edd_get_cart_contents();
+		$items = edd_get_cart_content_details();
 
 		$this->assertEquals( $post_id, edd_get_cart_item_name( $items[0] ) );
 
