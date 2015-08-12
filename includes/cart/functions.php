@@ -560,7 +560,7 @@ function edd_get_cart_item_price_name( $item = array() ) {
 /**
  * Get cart item title
  *
- * @since 2.4.2
+ * @since 2.4.3
  * @param int $item Cart item array
  * @return string item title
  */
