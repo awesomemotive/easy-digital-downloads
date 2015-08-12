@@ -1075,6 +1075,11 @@ function edd_remove_refunded_sale_logs() {
 		// Refunded Payments found so process them
 
 		foreach( $refunds as $refund ) {
+
+			if( 'refunded' !== $refund->post_status ) {
+				continue; // Just to be safe
+			}
+
 			// Remove related sale log entries
 			$edd_logs->delete_logs(
 				null,
