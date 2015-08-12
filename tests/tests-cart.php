@@ -439,15 +439,11 @@ class Test_Cart extends WP_UnitTestCase {
 
 		edd_empty_cart();
 
-		$options = array(
-			'price_id' => 0
-		);
-
-		edd_add_to_cart( $this->_post->ID, $options );
+		edd_add_to_cart( $this->_post->ID );
 
 		$items = edd_get_cart_content_details();
 
-		$this->assertEquals( 'Test Download - Simple', edd_get_cart_item_name( $items[0] ) );
+		$this->assertEquals( 'Test Download', edd_get_cart_item_name( $items[0] ) );
 
 		$post_id = $this->factory->post->create( array( 'post_type' => 'download', 'post_status' => 'publish' ) );
 
