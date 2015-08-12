@@ -1102,7 +1102,7 @@ function edd_remove_refunded_sale_logs() {
 		// No more refunded payments found, finish up
 
 		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
-		edd_set_upgrade_complete( 'upgrade_remove_refunded_sale_logs' );
+		edd_set_upgrade_complete( 'remove_refunded_sale_logs' );
 		delete_option( 'edd_doing_upgrade' );
 
 		wp_redirect( admin_url() ); exit;
