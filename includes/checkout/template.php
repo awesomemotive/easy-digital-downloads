@@ -173,7 +173,7 @@ function edd_user_info_fields() {
 	$customer = array_map( 'sanitize_text_field', $customer );
 	?>
 	<fieldset id="edd_checkout_user_info">
-		<span><legend><?php echo apply_filters( 'edd_checkout_personal_info_text', __( 'Personal Info', 'edd' ) ); ?></legend></span>
+		<legend><?php echo apply_filters( 'edd_checkout_personal_info_text', __( 'Personal Info', 'edd' ) ); ?></legend>
 		<?php do_action( 'edd_purchase_form_before_email' ); ?>
 		<p id="edd-email-wrap">
 			<label class="edd-label" for="edd-email">
@@ -226,7 +226,7 @@ function edd_get_cc_form() {
 	<?php do_action( 'edd_before_cc_fields' ); ?>
 
 	<fieldset id="edd_cc_fields" class="edd-do-validate">
-		<span><legend><?php _e( 'Credit Card Info', 'edd' ); ?></legend></span>
+		<legend><?php _e( 'Credit Card Info', 'edd' ); ?></legend>
 		<?php if( is_ssl() ) : ?>
 			<div id="edd_secure_site_wrapper">
 				<span class="padlock"></span>
@@ -322,7 +322,7 @@ function edd_default_cc_address_fields() {
 
 	ob_start(); ?>
 	<fieldset id="edd_cc_address" class="cc-address">
-		<span><legend><?php _e( 'Billing Details', 'edd' ); ?></legend></span>
+		<legend><?php _e( 'Billing Details', 'edd' ); ?></legend>
 		<?php do_action( 'edd_cc_billing_top' ); ?>
 		<p id="edd-card-address-wrap">
 			<label for="card_address" class="edd-label">
@@ -458,7 +458,7 @@ function edd_get_register_fields() {
 		<?php do_action('edd_register_fields_before'); ?>
 
 		<fieldset id="edd_register_account_fields">
-			<span><legend><?php _e( 'Create an account', 'edd' ); if( !edd_no_guest_checkout() ) { echo ' ' . __( '(optional)', 'edd' ); } ?></legend></span>
+			<legend><?php _e( 'Create an account', 'edd' ); if( !edd_no_guest_checkout() ) { echo ' ' . __( '(optional)', 'edd' ); } ?></legend>
 			<?php do_action('edd_register_account_fields_before'); ?>
 			<p id="edd-user-login-wrap">
 				<label for="edd_user_login">
