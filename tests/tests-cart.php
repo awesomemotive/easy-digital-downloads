@@ -434,4 +434,30 @@ class Test_Cart extends WP_UnitTestCase {
 	public function test_generate_cart_token() {
 		$this->assertInternalType( 'int', edd_generate_cart_token() );
 	}
+
+	public function test_edd_get_cart_item_name() {
+
+		edd_empty_cart();
+
+		$options = array(
+			'price_id' => 0
+		);
+
+		edd_add_to_cart( $this->_post->ID, $options );
+
+		$items = edd_get_cart_contents();
+
+		$this->assertEquals( 'Test Download - Simple', edd_get_cart_item_name( $items[0] ) );
+
+		$post_id = $this->factory->post->create( array( 'post_type' => 'download', 'post_status' => 'publish' ) );
+
+		edd_empty_cart();
+
+		edd_add_to_cart( $post_id );
+
+		$items = edd_get_cart_contents();
+
+		$this->assertEquals( $post_id, edd_get_cart_item_name( $items[0] ) );
+
+	}
 }
