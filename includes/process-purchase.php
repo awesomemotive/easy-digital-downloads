@@ -505,9 +505,9 @@ function edd_purchase_form_validate_new_user() {
 			// The password is invalid
 			edd_set_error( 'password_empty', __( 'Enter a password', 'edd' ) );
 		} else if ( ! $pass_confirm && $registering_new_user ) {
-				// Confirmation password is invalid
-				edd_set_error( 'confirmation_empty', __( 'Enter the password confirmation', 'edd' ) );
-			}
+			// Confirmation password is invalid
+			edd_set_error( 'confirmation_empty', __( 'Enter the password confirmation', 'edd' ) );
+		}
 	}
 
 	return $valid_user_data;
