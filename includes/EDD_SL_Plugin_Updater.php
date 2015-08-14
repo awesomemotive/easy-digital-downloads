@@ -89,6 +89,10 @@ class EDD_SL_Plugin_Updater {
 
                 if( version_compare( $this->version, $version_info->new_version, '<' ) ) {
 
+					if ( empty( $version_info->plugin ) ) {
+						$version_info->plugin = $this->name;
+					}
+
                     $_transient_data->response[ $this->name ] = $version_info;
 
                 }
