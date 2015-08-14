@@ -194,19 +194,19 @@ function edd_purchase_form_validate_fields() {
 		// Collect logged in user data
 		$valid_data['logged_in_user'] = edd_purchase_form_validate_logged_in_user();
 	} else if ( isset( $_POST['edd-purchase-var'] ) && $_POST['edd-purchase-var'] == 'needs-to-register' ) {
-			// Set new user registration as required
-			$valid_data['need_new_user'] = true;
+		// Set new user registration as required
+		$valid_data['need_new_user'] = true;
 
-			// Validate new user data
-			$valid_data['new_user_data'] = edd_purchase_form_validate_new_user();
-			// Check if login validation is needed
-		} else if ( isset( $_POST['edd-purchase-var'] ) && $_POST['edd-purchase-var'] == 'needs-to-login' ) {
-			// Set user login as required
-			$valid_data['need_user_login'] = true;
+		// Validate new user data
+		$valid_data['new_user_data'] = edd_purchase_form_validate_new_user();
+		// Check if login validation is needed
+	} else if ( isset( $_POST['edd-purchase-var'] ) && $_POST['edd-purchase-var'] == 'needs-to-login' ) {
+		// Set user login as required
+		$valid_data['need_user_login'] = true;
 
-			// Validate users login info
-			$valid_data['login_user_data'] = edd_purchase_form_validate_user_login();
-		} else {
+		// Validate users login info
+		$valid_data['login_user_data'] = edd_purchase_form_validate_user_login();
+	} else {
 		// Not registering or logging in, so setup guest user data
 		$valid_data['guest_user_data'] = edd_purchase_form_validate_guest_user();
 	}
@@ -505,9 +505,9 @@ function edd_purchase_form_validate_new_user() {
 			// The password is invalid
 			edd_set_error( 'password_empty', __( 'Enter a password', 'edd' ) );
 		} else if ( ! $pass_confirm && $registering_new_user ) {
-				// Confirmation password is invalid
-				edd_set_error( 'confirmation_empty', __( 'Enter the password confirmation', 'edd' ) );
-			}
+			// Confirmation password is invalid
+			edd_set_error( 'confirmation_empty', __( 'Enter the password confirmation', 'edd' ) );
+		}
 	}
 
 	return $valid_user_data;
@@ -644,14 +644,14 @@ function edd_register_and_login_new_user( $user_data = array() ) {
 		return -1;
 
 	$user_args = apply_filters( 'edd_insert_user_args', array(
-			'user_login'      => isset( $user_data['user_login'] ) ? $user_data['user_login'] : '',
-			'user_pass'       => isset( $user_data['user_pass'] )  ? $user_data['user_pass']  : '',
-			'user_email'      => isset( $user_data['user_email'] ) ? $user_data['user_email'] : '',
-			'first_name'      => isset( $user_data['user_first'] ) ? $user_data['user_first'] : '',
-			'last_name'       => isset( $user_data['user_last'] )  ? $user_data['user_last']  : '',
-			'user_registered' => date( 'Y-m-d H:i:s' ),
-			'role'            => get_option( 'default_role' )
-		), $user_data );
+		'user_login'      => isset( $user_data['user_login'] ) ? $user_data['user_login'] : '',
+		'user_pass'       => isset( $user_data['user_pass'] )  ? $user_data['user_pass']  : '',
+		'user_email'      => isset( $user_data['user_email'] ) ? $user_data['user_email'] : '',
+		'first_name'      => isset( $user_data['user_first'] ) ? $user_data['user_first'] : '',
+		'last_name'       => isset( $user_data['user_last'] )  ? $user_data['user_last']  : '',
+		'user_registered' => date( 'Y-m-d H:i:s' ),
+		'role'            => get_option( 'default_role' )
+	), $user_data );
 
 	// Insert new user
 	$user_id = wp_insert_user( $user_args );
