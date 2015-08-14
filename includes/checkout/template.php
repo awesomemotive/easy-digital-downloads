@@ -850,7 +850,7 @@ function edd_agree_to_terms_js() {
 ?>
 	<script type="text/javascript">
 		jQuery(document).ready(function($){
-			$('body').on('click', '.edd_terms_links', function(e) {
+			$( document.body ).on('click', '.edd_terms_links', function(e) {
 				//e.preventDefault();
 				$('#edd_terms').slideToggle();
 				$('.edd_terms_links').toggle();
