@@ -693,7 +693,9 @@ function edd_get_purchase_form_user( $valid_data = array() ) {
 	} else if ( is_user_logged_in() ) {
 		// Set the valid user as the logged in collected data
 		$user = $valid_data['logged_in_user'];
-	} else if ( $valid_data['need_new_user'] === true || $valid_data['need_user_login'] === true  ) {
+		// Update the user meta
+		edd_update_user( $user );
+	} else if ( $valid_data['need_new_user'] === true || $valid_data['need_user_login'] === true ) {
 		// New user registration
 		if ( $valid_data['need_new_user'] === true ) {
 			// Set user
@@ -1064,3 +1066,28 @@ function edd_process_straight_to_gateway( $data ) {
 	edd_send_to_gateway( $purchase_data['gateway'], $purchase_data );
 }
 add_action( 'edd_straight_to_gateway', 'edd_process_straight_to_gateway' );
+
+/**
+ * Update the user first and last name
+ *
+ * @since
+ * @param array $user_data
+ *
+ * @return int|WP_Error
+ */
+function edd_update_user( $user_data = array() ) {
+	// Bail, if we don't have a user to update
+	if ( ! isset( $user_data['user_id'] ) ) {
+		return false;
+	}
+
+	$user_args = array(
+		'first_name' => isset( $user_data['user_first'] ) ? $user_data['user_first'] : '',
+		'last_name'  => isset( $user_data['user_last'] ) ? $user_data['user_last'] : '',
+		'ID'         => $user_data['user_id'],
+	);
+
+	$user_id = wp_update_user( $user_args );
+
+	return $user_id;
+}
