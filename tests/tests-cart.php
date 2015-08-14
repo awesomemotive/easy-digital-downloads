@@ -443,7 +443,7 @@ class Test_Cart extends WP_UnitTestCase {
 
 		$items = edd_get_cart_content_details();
 
-		$this->assertEquals( 'Test Download', edd_get_cart_item_name( $items[0] ) );
+		$this->assertEquals( 'Test Download - Simple', edd_get_cart_item_name( $items[0] ) );
 
 	}
 }
