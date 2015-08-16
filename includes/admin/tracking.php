@@ -97,6 +97,7 @@ class EDD_Tracking {
 		$data['active_plugins']   = $active_plugins;
 		$data['inactive_plugins'] = $plugins;
 		$data['products']         = wp_count_posts( 'download' )->publish;
+		$data['download_label'] = edd_get_label_singular( true );
 
 		$this->data = $data;
 	}
