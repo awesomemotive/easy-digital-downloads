@@ -406,13 +406,8 @@ function edd_tools_sysinfo_get() {
 	$browser = new Browser();
 
 	// Get theme info
-	if( get_bloginfo( 'version' ) < '3.4' ) {
-		$theme_data = get_theme_data( get_stylesheet_directory() . '/style.css' );
-		$theme      = $theme_data['Name'] . ' ' . $theme_data['Version'];
-	} else {
-		$theme_data = wp_get_theme();
-		$theme      = $theme_data->Name . ' ' . $theme_data->Version;
-	}
+	$theme_data = wp_get_theme();
+	$theme      = $theme_data->Name . ' ' . $theme_data->Version;
 
 	// Try to identify the hosting provider
 	$host = edd_get_host();
