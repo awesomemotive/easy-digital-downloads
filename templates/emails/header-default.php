@@ -60,6 +60,7 @@ $header_content_h1 = "
 	line-height: 1.2;
 ";
 $header_img = edd_get_option( 'email_logo', '' );
+$heading    = EDD()->emails->get_heading();
 ?>
 <!DOCTYPE html>
 <html>
@@ -78,19 +79,21 @@ $header_img = edd_get_option( 'email_logo', '' );
 						</div>
 					<?php endif; ?>
 					<table border="0" cellpadding="0" cellspacing="0" width="520" id="template_container" style="<?php echo $template_container; ?>">
-						<tr>
-							<td align="center" valign="top">
-								<!-- Header -->
-								<table border="0" cellpadding="0" cellspacing="0" width="520" id="template_header" style="<?php echo $template_header; ?>" bgcolor="#ffffff">
-									<tr>
-										<td>
-											<h1 style="<?php echo $header_content_h1; ?>"><?php echo EDD()->emails->get_heading(); ?></h1>
-										</td>
-									</tr>
-								</table>
-								<!-- End Header -->
-							</td>
-						</tr>
+						<?php if ( ! empty ( $heading ) ) : ?>
+							<tr>
+								<td align="center" valign="top">
+									<!-- Header -->
+									<table border="0" cellpadding="0" cellspacing="0" width="520" id="template_header" style="<?php echo $template_header; ?>" bgcolor="#ffffff">
+										<tr>
+											<td>
+												<h1 style="<?php echo $header_content_h1; ?>"><?php echo $heading; ?></h1>
+											</td>
+										</tr>
+									</table>
+									<!-- End Header -->
+								</td>
+							</tr>
+						<?php endif; ?>
 						<tr>
 							<td align="center" valign="top">
 								<!-- Body -->
