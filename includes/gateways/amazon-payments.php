@@ -638,6 +638,8 @@ final class EDD_Amazon_Payments {
 								},
 								success: function (response) {
 									jQuery('#card_city').val( response.City );
+									jQuery('#card_address').val( response.AddressLine1 );
+									jQuery('#card_address_2').val( response.AddressLine2 );
 									jQuery('#card_zip').val( response.PostalCode );
 									jQuery('#billing_country').val( response.CountryCode );
 									jQuery('#card_state').val( response.StateOrRegion ).trigger( 'change' );
@@ -696,6 +698,8 @@ final class EDD_Amazon_Payments {
 			<div id="edd_cc_address">
 				<input type="hidden" name="edd_amazon_reference_id" id="edd_amazon_reference_id" value="<?php echo esc_attr( $this->reference_id ); ?>"/>
 				<input type="hidden" name="card_city" class="card_city" id="card_city" value=""/>
+				<input type="hidden" name="card_address" class="card_address" id="card_address" value=""/>
+				<input type="hidden" name="card_address_2" class="card_address_2" id="card_address_2" value=""/>
 				<input type="hidden" name="card_zip" class="card_zip" id="card_zip" value=""/>
 				<input type="hidden" name="card_state" class="card_state" id="card_state" value=""/>
 				<input type="hidden" name="billing_country" class="billing_country" id="billing_country" value=""/>
@@ -725,6 +729,7 @@ final class EDD_Amazon_Payments {
 		$request = $this->client->getOrderReferenceDetails( array(
 			'merchant_id'               => edd_get_option( 'amazon_seller_id', '' ),
 			'amazon_order_reference_id' => $_POST['reference_id'],
+			'address_consent_token'     => EDD()->session->get( 'amazon_access_token' )
 		) );
 
 
@@ -735,7 +740,7 @@ final class EDD_Amazon_Payments {
 		if( isset( $data['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['Destination']['PhysicalDestination'] ) ) {
 
 			$address = $data['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['Destination']['PhysicalDestination'];
-			$address = wp_parse_args( $address, array( 'City', 'CountryCode', 'StateOrRegion', 'PostalCode' ) );
+			$address = wp_parse_args( $address, array( 'City', 'CountryCode', 'StateOrRegion', 'PostalCode', 'AddressLine1', 'AddressLine2' ) );
 
 		}
 
@@ -839,9 +844,7 @@ final class EDD_Amazon_Payments {
 
 			$capture = new ResponseParser( $capture->response );
 			$capture = $capture->toArray();
-
-			// Check capture status
-
+	
 			edd_update_payment_meta( $payment_id, '_edd_amazon_authorization_id', $authorization_id );
 			edd_update_payment_meta( $payment_id, '_edd_amazon_capture_id', $capture_id );
 
