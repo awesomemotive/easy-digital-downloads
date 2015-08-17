@@ -656,6 +656,7 @@ final class EDD_Amazon_Payments {
 							designMode: 'responsive'
 						},
 						onError: function(error) {
+							jQuery('#edd-amazon-address-box').hide();
 							jQuery('#edd_purchase_submit').prepend( '<div class="edd_errors"><p class="edd_error" id="edd_error_"' + error.getErrorCode() + '>' + error.getErrorMessage() + '</p></div>' );
 						}
 					}).bind("edd-amazon-address-box");
