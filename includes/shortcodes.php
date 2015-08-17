@@ -42,7 +42,7 @@ function edd_download_shortcode( $atts, $content = null ) {
 	$atts, 'purchase_link' );
 
 	// Override text if direct == 1
-	if( $atts['direct'] == '1' ) {
+	if( $atts['direct'] == '1' || $atts['direct'] == 'true' ) {
 		$atts['text'] = edd_get_option( 'buy_now_text', __( 'Buy Now', 'edd' ) );
 	}
 
