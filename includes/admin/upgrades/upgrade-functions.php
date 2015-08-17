@@ -131,6 +131,13 @@ function edd_show_upgrade_notices() {
 			);
 		}
 
+		if ( version_compare( $edd_version, '2.4.3', '<' ) || ! edd_has_upgrade_completed( 'remove_refunded_sale_logs' ) ) {
+			printf(
+				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the payments database, click <a href="%s">here</a> to start the upgrade.', 'edd' ) . '</p></div>',
+				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=remove_refunded_sale_logs' ) )
+			);
+		}
+
 		/*
 		 *  NOTICE:
 		 *
@@ -1039,3 +1046,71 @@ function edd_upgrade_user_api_keys() {
 	}
 }
 add_action( 'edd_upgrade_user_api_keys', 'edd_upgrade_user_api_keys' );
+
+/**
+ * Remove sale logs from refunded orders
+ *
+ * @since  2.4.3
+ * @return void
+ */
+function edd_remove_refunded_sale_logs() {
+	global $wpdb, $edd_logs;
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		wp_die( __( 'You do not have permission to do shop upgrades', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+	}
+
+	ignore_user_abort( true );
+
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+		@set_time_limit(0);
+	}
+
+	$step    = isset( $_GET['step'] ) ? absint( $_GET['step'] ) : 1;
+	$total   = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : edd_count_payments()->refunded;
+	$refunds = edd_get_payments( array( 'status' => 'refunded', 'number' => 20, 'page' => $step ) );
+
+	if( ! empty( $refunds ) ) {
+
+		// Refunded Payments found so process them
+
+		foreach( $refunds as $refund ) {
+
+			if( 'refunded' !== $refund->post_status ) {
+				continue; // Just to be safe
+			}
+
+			// Remove related sale log entries
+			$edd_logs->delete_logs(
+				null,
+				'sale',
+				array(
+					array(
+						'key'   => '_edd_log_payment_id',
+						'value' => $refund->ID
+					)
+				)
+			);
+		}
+
+		$step++;
+		$redirect = add_query_arg( array(
+			'page'        => 'edd-upgrades',
+			'edd-upgrade' => 'remove_refunded_sale_logs',
+			'step'        => $step,
+			'total'       => $total
+		), admin_url( 'index.php' ) );
+		wp_redirect( $redirect ); exit;
+
+	} else {
+
+		// No more refunded payments found, finish up
+
+		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+		edd_set_upgrade_complete( 'remove_refunded_sale_logs' );
+		delete_option( 'edd_doing_upgrade' );
+
+		wp_redirect( admin_url() ); exit;
+	}
+}
+add_action( 'edd_remove_refunded_sale_logs', 'edd_remove_refunded_sale_logs' );
