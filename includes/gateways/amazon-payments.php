@@ -611,8 +611,9 @@ final class EDD_Amazon_Payments {
 				<?php _e( 'Currently logged into Amazon as', 'edd' ); ?>: <span class="edd-amazon-profile-name"><?php echo $profile['name']; ?></span>
 				<span class="edd-amazon-logout">(<a id="Logout"><?php _e( 'Logout', 'edd' ); ?></a>)</span>
 			</p>
-
-			<div id="edd-amazon-address-box"></div>
+			<?php if( edd_use_taxes() ) : ?>
+				<div id="edd-amazon-address-box"></div>
+			<?php endif; ?>
 			<div id="edd-amazon-wallet-box"></div>
 			<script>
 				var edd_scripts;
