@@ -111,6 +111,62 @@ function edd_tools_banned_emails_display() {
 }
 add_action( 'edd_tools_tab_general', 'edd_tools_banned_emails_display' );
 
+
+/**
+ * Display the recount stats
+ *
+ * @since       2.5
+ * @return      void
+ */
+function edd_tools_recount_stats_display() {
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
+	do_action( 'edd_tools_recount_stats_before' );
+?>
+	<div class="postbox">
+		<h3><span><?php _e( 'Recount Stats', 'edd' ); ?></span></h3>
+		<div class="inside">
+			<p><?php _e( 'Use these tools to recount / reset store stats.', 'edd' ); ?></p>
+			<p>
+				<form method="post">
+					<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+					<input type="hidden" name="edd-export-class" value="EDD_Batch_Payments_Export"/>
+					<span>
+						<input type="submit" value="<?php _e( 'Recount Product Earnings and Sales', 'edd' ); ?>" class="button-secondary"/>
+						<span class="spinner"></span>
+					</span>
+				</form>
+			</p>
+			<p>
+				<form method="post">
+					<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+					<input type="hidden" name="edd-export-class" value="EDD_Batch_Payments_Export"/>
+					<span>
+						<input type="submit" value="<?php _e( 'Recount Store Earnings and Sales', 'edd' ); ?>" class="button-secondary"/>
+						<span class="spinner"></span>
+					</span>
+				</form>
+			</p>
+			<p>
+				<form method="post">
+					<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+					<input type="hidden" name="edd-export-class" value="EDD_Batch_Payments_Export"/>
+					<span>
+						<input type="submit" value="<?php _e( 'Reset Product Earnings and Sales', 'edd' ); ?>" class="button-secondary"/>
+						<span class="spinner"></span>
+					</span>
+				</form>
+			</p>
+		</div><!-- .inside -->
+	</div><!-- .postbox -->
+<?php
+	do_action( 'edd_tools_recount_stats_after' );
+}
+add_action( 'edd_tools_tab_general', 'edd_tools_recount_stats_display' );
+
 /**
  * Display the clear upgrades tab
  *
