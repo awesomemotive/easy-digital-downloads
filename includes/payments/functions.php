@@ -454,9 +454,9 @@ function edd_count_payments( $args = array() ) {
 		$join = "LEFT JOIN $wpdb->postmeta m ON (p.ID = m.post_id)";
 
 		if ( ! empty( $field ) ) {
-			$where .= $wpdb->prepare( "
+			$where .= "
 				AND m.meta_key = '_edd_payment_user_{$field}'
-				AND m.meta_value = '%s'", $args['user'] );
+				AND m.meta_value = '{$args['user']}'";
 		}
 
 	// Count payments for a search
@@ -471,20 +471,19 @@ function edd_count_payments( $args = array() ) {
 
 
 			$join = "LEFT JOIN $wpdb->postmeta m ON (p.ID = m.post_id)";
-			$where .= $wpdb->prepare( "
+			$where .= "
 				AND m.meta_key = '{$field}'
-				AND m.meta_value = '%s'", $args['s'] );
+				AND m.meta_value = '{$args['s']}'";
 
 		} elseif ( is_numeric( $args['s'] ) ) {
 
 			$join = "LEFT JOIN $wpdb->postmeta m ON (p.ID = m.post_id)";
-			$where .= $wpdb->prepare( "
+			$where .= "
 				AND m.meta_key = '_edd_payment_user_id'
-				AND m.meta_value = '%s'", $args['s'] );
+				AND m.meta_value = '{$args['s']}'";
 
 		} else {
-			$search_string = '%' . $args['s'] . '%';
-			$where .= $wpdb->prepare( " AND ((p.post_title LIKE '%s') OR (p.post_content LIKE '%s'))", $search_string, $search_string );
+			$where .= "AND ((p.post_title LIKE '%{$args['s']}%') OR (p.post_content LIKE '%{$args['s']}%'))";
 		}
 
 	}

@@ -511,7 +511,7 @@ class EDD_Stats {
 			}
 
 			$start_date  = date( $format, $this->start_date );
-			$start_where = $wpdb->prepare( " AND $wpdb->posts.post_date >= '%s'", $start_date );
+			$start_where = " AND $wpdb->posts.post_date >= '{$start_date}'";
 		}
 
 		if( ! is_wp_error( $this->end_date ) ) {
@@ -524,7 +524,7 @@ class EDD_Stats {
 
 			$end_date  = date( $format, $this->end_date );
 
-			$end_where = $wpdb->prepare( " AND $wpdb->posts.post_date <= '%s'", $end_date );
+			$end_where = " AND $wpdb->posts.post_date <= '{$end_date}'";
 		}
 
 		$where .= "{$start_where}{$end_where}";

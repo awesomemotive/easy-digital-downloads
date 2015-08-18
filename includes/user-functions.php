@@ -285,10 +285,11 @@ function edd_get_purchase_stats_by_user( $user = '' ) {
  * @return      int - the total number of purchases
  */
 function edd_count_purchases_of_customer( $user = null ) {
-	if ( empty( $user ) )
+	if ( empty( $user ) ) {
 		$user = get_current_user_id();
+	}
 
-	$stats = edd_get_purchase_stats_by_user( $user );
+	$stats = ! empty( $user ) ? edd_get_purchase_stats_by_user( $user ) : false;
 
 	return isset( $stats['purchases'] ) ? $stats['purchases'] : 0;
 }
