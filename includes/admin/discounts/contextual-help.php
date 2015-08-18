@@ -28,7 +28,7 @@ function edd_discounts_contextual_help() {
 					__( '<a href="%s">Post an issue</a> on <a href="%s">GitHub</a>. View <a href="%s">extensions</a> or <a href="%s">themes</a>.', 'edd' ),
 					esc_url( 'https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues' ),
 					esc_url( 'https://github.com/easydigitaldownloads/Easy-Digital-Downloads' ),
-					esc_url( 'https://easydigitaldownloads.com/extensions/' ),
+					esc_url( 'https://easydigitaldownloads.com/downloads/' ),
 					esc_url( 'https://easydigitaldownloads.com/themes/' )
 				) . '</p>'
 	);
