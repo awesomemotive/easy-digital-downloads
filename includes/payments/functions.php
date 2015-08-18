@@ -490,7 +490,7 @@ function edd_count_payments( $args = array() ) {
 	}
 
 	// Limit payments count by date
-	if ( ! empty( $args['start-date'] ) ) {
+	if ( ! empty( $args['start-date'] ) && false !== strpos( '/', $args['start-date'] ) ) {
 
 		$date_parts = explode( '/', $args['start-date'] );
 		$month      = ! empty( $date_parts[0] ) && is_numeric( $date_parts[0] ) ? $date_parts[0] : 0;
@@ -512,9 +512,10 @@ function edd_count_payments( $args = array() ) {
 
 	}
 
-	if ( ! empty ( $args['end-date'] ) ) {
+	if ( ! empty ( $args['end-date'] ) && false !== strpos( '/', $args['end-date'] ) ) {
 
 		$date_parts = explode( '/', $args['end-date'] );
+
 		$month      = ! empty( $date_parts[0] ) ? $date_parts[0] : 0;
 		$day        = ! empty( $date_parts[1] ) ? $date_parts[1] : 0;
 		$year       = ! empty( $date_parts[2] ) ? $date_parts[2] : 0;
