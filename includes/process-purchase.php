@@ -1081,13 +1081,26 @@ function edd_update_user( $user_data = array() ) {
 		return false;
 	}
 
-	$user_args = array(
-		'first_name' => isset( $user_data['user_first'] ) ? $user_data['user_first'] : '',
-		'last_name'  => isset( $user_data['user_last'] ) ? $user_data['user_last'] : '',
-		'ID'         => $user_data['user_id'],
-	);
+	// Set defaults
+	$user_id = 0;
+	$user_args = array();
 
-	$user_id = wp_update_user( $user_args );
+	// Check first name
+	if ( ! empty( $user_data['user_first'] ) ) {
+		$user_args['first_name'] = $user_data['user_first'];
+	}
+
+	// Check last name
+	if ( ! empty( $user_data['user_last'] ) ) {
+		$user_args['last_name'] = $user_data['user_last'];
+	}
+
+	// Update, if we have info
+	if ( ! empty( $update_args ) ) {
+		$user_args['ID'] = $user_data['user_id'];
+
+		$user_id = wp_update_user( $user_args );
+	}
 
 	return $user_id;
 }
