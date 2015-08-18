@@ -558,6 +558,29 @@ function edd_get_cart_item_price_name( $item = array() ) {
 }
 
 /**
+ * Get cart item title
+ *
+ * @since 2.4.3
+ * @param int $item Cart item array
+ * @return string item title
+ */
+function edd_get_cart_item_name( $item = array() ) {
+
+	$item_title = get_the_title( $item['id'] );
+
+	if( empty( $item_title ) ) {
+		$item_title = $item['id'];
+	}
+
+	if ( edd_has_variable_prices( $item['id'] ) && false !== edd_get_cart_item_price_id( $item ) ) {
+
+		$item_title .= ' - ' . edd_get_cart_item_price_name( $item );
+	}
+
+	return apply_filters( 'edd_get_cart_item_name', $item_title, $item['id'], $item );
+}
+
+/**
  * Cart Subtotal
  *
  * Shows the subtotal for the shopping cart (no taxes)
@@ -744,13 +767,15 @@ function edd_get_purchase_summary( $purchase_data, $email = true ) {
 		$summary .= $purchase_data['user_email'] . ' - ';
 	}
 
-	foreach ( $purchase_data['downloads'] as $download ) {
-		$summary .= get_the_title( $download['id'] ) . ', ';
-	}
+	if ( ! empty( $purchase_data['downloads'] ) ) {
+		foreach ( $purchase_data['downloads'] as $download ) {
+			$summary .= get_the_title( $download['id'] ) . ', ';
+		}
 
-	$summary = substr( $summary, 0, -2 );
+		$summary = substr( $summary, 0, -2 );
+	}	
 
-	return $summary;
+	return apply_filters( 'edd_get_purchase_summary', $summary, $purchase_data, $email );
 }
 
 /**

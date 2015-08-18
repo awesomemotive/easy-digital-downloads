@@ -141,7 +141,7 @@ function edd_get_download_price( $download_id = 0 ) {
 	}
 
 	$download = new EDD_Download( $download_id );
-	return $download->price;
+	return $download->get_price();
 }
 
 /**
@@ -232,7 +232,7 @@ function edd_get_variable_prices( $download_id = 0 ) {
 	}
 
 	$download = new EDD_Download( $download_id );
-	return $download->prices;
+	return $download->get_prices();
 }
 
 /**

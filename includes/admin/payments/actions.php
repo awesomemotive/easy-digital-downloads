@@ -172,6 +172,8 @@ function edd_update_payment_details( $data ) {
 			edd_decrease_purchase_count( $deleted_download['id'], $deleted_download['quantity'] );
 			edd_decrease_earnings( $deleted_download['id'], $deleted_download['amount'] );
 
+			do_action( 'edd_remove_download_from_payment', $payment_id, $deleted_download['id'] );
+
 		}
 
 
