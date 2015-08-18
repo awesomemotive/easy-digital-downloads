@@ -202,6 +202,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Only show address widget for Amazon Payments when taxes are enabled
 * Tweak: Update Amazon Payment registration URLs for EU and DE
 * Tweak: Retrieve complete billing address from Amazon
+* Tweak: Updated language files
 * Fix: Profile editor missing P tag when user is logged out
 * Fix: Email headers should only be added if header text is set
 * Fix: Undefined index "plugin"
