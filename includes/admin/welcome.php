@@ -373,7 +373,7 @@ class EDD_Welcome {
 				<div class="feature-section">
 
 					<h4><?php _e( 'Phenomenal Support','edd' );?></h4>
-					<p><?php _e( 'We do our best to provide the best support we can. If you encounter a problem or have a question, submit a ticket to our <a href="https://easydigitaldownloads.com/support">support form</a>.', 'edd' );?></p>
+					<p><?php _e( 'We do our best to provide the best support we can. If you encounter a problem or have a question, simply open a ticket using our <a href="https://easydigitaldownloads.com/support">support form</a>.', 'edd' );?></p>
 
 					<h4><?php _e( 'Need Even Faster Support?', 'edd' );?></h4>
 					<p><?php _e( 'Our <a href="https://easydigitaldownloads.com/support/pricing/">Priority Support</a> system is there for customers that need faster and/or more in-depth assistance.', 'edd' );?></p>
