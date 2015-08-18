@@ -767,13 +767,15 @@ function edd_get_purchase_summary( $purchase_data, $email = true ) {
 		$summary .= $purchase_data['user_email'] . ' - ';
 	}
 
-	foreach ( $purchase_data['downloads'] as $download ) {
-		$summary .= get_the_title( $download['id'] ) . ', ';
-	}
+	if ( ! empty( $purchase_data['downloads'] ) ) {
+		foreach ( $purchase_data['downloads'] as $download ) {
+			$summary .= get_the_title( $download['id'] ) . ', ';
+		}
 
-	$summary = substr( $summary, 0, -2 );
+		$summary = substr( $summary, 0, -2 );
+	}	
 
-	return $summary;
+	return apply_filters( 'edd_get_purchase_summary', $summary, $purchase_data, $email );
 }
 
 /**
