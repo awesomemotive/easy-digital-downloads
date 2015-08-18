@@ -198,7 +198,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Updated logo on PDF reports
 * Tweak: Updated logo on welcome screen
 * Tweak: Improved order of operations when updating discount codes
-* Tweak: Address widget is hidden on reload when a charge is declined
+* Tweak: Amazon Payments Address widget is hidden on reload when a charge is declined
 * Tweak: Only show address widget for Amazon Payments when taxes are enabled
 * Tweak: Update Amazon Payment registration URLs for EU and DE
 * Tweak: Retrieve complete billing address from Amazon
