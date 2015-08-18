@@ -107,7 +107,7 @@ function edd_currency_filter( $price = '', $currency = '' ) {
 	if( empty( $currency ) ) {
 
 		$currency = edd_get_currency();
-	
+
 	}
 
 	$position = edd_get_option( 'currency_position', 'before' );
@@ -184,6 +184,7 @@ function edd_currency_decimal_filter( $decimals = 2 ) {
 		case 'RIAL' :
 		case 'JPY' :
 		case 'TWD' :
+		case 'HUF' :
 
 			$decimals = 0;
 			break;

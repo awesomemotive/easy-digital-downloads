@@ -346,7 +346,7 @@ function edd_register_post_type_statuses() {
 		'label_count'               => _n_noop( 'Inactive <span class="count">(%s)</span>', 'Inactive <span class="count">(%s)</span>', 'edd' )
 	)  );
 }
-add_action( 'init', 'edd_register_post_type_statuses' );
+add_action( 'init', 'edd_register_post_type_statuses', 2 );
 
 /**
  * Updated Messages

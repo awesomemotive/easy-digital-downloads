@@ -56,7 +56,7 @@ class EDD_Notices {
 
 			echo '<div class="error">';
 				echo '<p>' . sprintf( __( 'The download files in <strong>%s</strong> are not currently protected due to your site running on NGINX.', 'edd' ), edd_get_upload_dir() ) . '</p>';
-				echo '<p>' . __( 'To protect them, you must add a redirect rule as explained in <a href="https://docs.easydigitaldownloads.com/article/682-protected-download-files-on-nginx">this guide</a>.', 'edd' ) . '</p>';
+				echo '<p>' . __( 'To protect them, you must add a redirect rule as explained in <a href="http://docs.easydigitaldownloads.com/article/682-protected-download-files-on-nginx">this guide</a>.', 'edd' ) . '</p>';
 				echo '<p>' . __( 'If you have already added the redirect rule, you may safely dismiss this notice', 'edd' ) . '</p>';
 				echo '<p><a href="' . add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'nginx_redirect' ) ) . '">' . __( 'Dismiss Notice', 'edd' ) . '</a></p>';
 			echo '</div>';

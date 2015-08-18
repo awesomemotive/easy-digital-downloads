@@ -47,11 +47,10 @@ function edd_plugin_row_meta( $input, $file ) {
 		return $input;
 
 	$edd_link = esc_url( add_query_arg( array(
-			'utm_source'   => 'admin-plugins-page',
-			'utm_medium'   => 'plugin',
-			'utm_campaign' => 'EDDPluginsPage',
-			'utm_content'  => 'plugin-page-link'
-		), 'https://easydigitaldownloads.com/extensions/' )
+			'utm_source'   => 'plugins-page',
+			'utm_medium'   => 'plugin-row',
+			'utm_campaign' => 'admin',
+		), 'https://easydigitaldownloads.com/downloads/' )
 	);
 
 	$links = array(
