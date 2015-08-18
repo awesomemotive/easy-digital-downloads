@@ -5,9 +5,9 @@ Contributors: mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, 
 Donate link: https://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.9.2
-Tested up to: 4.2
+Tested up to: 4.3
 
-Stable Tag: 2.4.2
+Stable Tag: 2.4.3
 
 License: GNU Version 2 or Any Later Version
 
@@ -190,6 +190,35 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.4.3, August 18, 2015 =
+
+* Tweak: Added new action hooks to the Sales Summary widget
+* Tweak: Added new action hook that fires when an item is removed from a payment record
+* Tweak: Updated logo on PDF reports
+* Tweak: Updated logo on welcome screen
+* Tweak: Improved order of operations when updating discount codes
+* Tweak: Address widget is hidden on reload when a charge is declined
+* Tweak: Only show address widget for Amazon Payments when taxes are enabled
+* Tweak: Update Amazon Payment registration URLs for EU and DE
+* Tweak: Retrieve complete billing address from Amazon
+* Fix: Profile editor missing P tag when user is logged out
+* Fix: Email headers should only be added if header text is set
+* Fix: Undefined index "plugin"
+* Fix: Sale log entries not deleted when purchase is refunded
+* Fix: Preset discount code logic tries to run when bulk deleting discount codes
+* Fix: Adding ?discount={code} to static home page URL causes blog page to be shown
+* Fix: Ensure we have a user before trying to get purchase history
+* Fix: Properly format decimals for HUF currency
+* Fix: Prevent fatal errors when entering invalid date in start/end date of payment history
+* Fix: Removed unused function edd_add_ons_init()
+* Fix: Prevent multiple batch processes from being started at the same time
+* Fix: Re-instantiate Chosen when cloning a repeatable row with a Chosen field
+* Fix: Variable typo in edd_is_admin_page()
+* Fix: Customer name not stored properly if three names are entered when purchasing through Amazon Payments
+* Fix: Sales report column fails does not work for guest customers
+* Fix: direct="true" does not work properly if price_id="1" is also set
+* Fix: Products without a title cannot be purchased through PayPal
 
 = 2.4.2, July 13, 2015 =
 
