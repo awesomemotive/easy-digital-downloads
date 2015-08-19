@@ -291,7 +291,7 @@ function edd_is_host( $host = false ) {
 /**
  * Get Currencies
  *
- * @since 1.0
+ * @since 1.1
  * @return array $currencies A list of the available currencies
  */
 function edd_get_currencies() {
@@ -322,7 +322,8 @@ function edd_get_currencies() {
 		'INR'  => __( 'Indian Rupee (&#8377;)', 'edd' ),
 		'TRY'  => __( 'Turkish Lira (&#8378;)', 'edd' ),
 		'RIAL' => __( 'Iranian Rial (&#65020;)', 'edd' ),
-		'RUB'  => __( 'Russian Rubles', 'edd' )
+		'RUB'  => __( 'Russian Rubles', 'edd' ),
+		'Akz'  => __( 'Kwanza', 'edd' )
 	);
 
 	return apply_filters( 'edd_currencies', $currencies );
