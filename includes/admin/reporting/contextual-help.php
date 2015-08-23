@@ -32,7 +32,7 @@ function edd_reporting_contextual_help() {
 					__( '<a href="%s">Post an issue</a> on <a href="%s">GitHub</a>. View <a href="%s">extensions</a> or <a href="%s">themes</a>.', 'edd' ),
 					esc_url( 'https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues' ),
 					esc_url( 'https://github.com/easydigitaldownloads/Easy-Digital-Downloads' ),
-					esc_url( 'https://easydigitaldownloads.com/extensions/' ),
+					esc_url( 'https://easydigitaldownloads.com/downloads/' ),
 					esc_url( 'https://easydigitaldownloads.com/themes/' )
 				) . '</p>'
 	);
@@ -47,7 +47,7 @@ function edd_reporting_contextual_help() {
 		'id'	    => 'edd-reports-export',
 		'title'	    => __( 'Export', 'edd' ),
 		'content'	=>
-			'<p>' . __( 'This screen allows you to export your reports into a PDF or CSV format.', 'edd' ) . '</p>' . 
+			'<p>' . __( 'This screen allows you to export your reports into a PDF or CSV format.', 'edd' ) . '</p>' .
 			'<p>' . __( '<strong>Sales and Earnings</strong> - This report exports all of the sales and earnings that you have made in the current year. This report includes your sales and earnings for each product as well a graphs of sales and earnings so you can compare them for each month.', 'edd' ) . '</p>' .
 			'<p>' . __( '<strong>Payment History</strong> - This report exports all of payments you have received on your EDD store in a CSV format.  The report includes the contact details of the customer, the products they have purchased as well as any discount codes they have used and the final price they have paid.', 'edd' ) . '</p>' .
 			'<p>' . __( "<strong>Customers</strong> - This report exports all of your customers in a CSV format. It exports the customer's name and email address and the amount of products they have purchased as well as the final price of their total purchases.", 'edd' ) . '</p>' .

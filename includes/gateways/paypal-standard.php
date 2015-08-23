@@ -74,6 +74,8 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		$paypal_args = array(
 			'business'      => edd_get_option( 'paypal_email', false ),
 			'email'         => $purchase_data['user_email'],
+			'first_name'    => $purchase_data['user_info']['first_name'],
+			'last_name'     => $purchase_data['user_info']['last_name'],
 			'invoice'       => $purchase_data['purchase_key'],
 			'no_shipping'   => '1',
 			'shipping'      => '0',
@@ -114,12 +116,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
 				$item_amount = 0;
 			}
 
-			if ( edd_has_variable_prices( $item['id'] ) && edd_get_cart_item_price_id( $item ) !== false ) {
-
-				$item['name'] .= ' - ' . edd_get_cart_item_price_name( $item );
-			}
-
-			$paypal_args['item_name_' . $i ] = stripslashes_deep( html_entity_decode( wp_strip_all_tags( $item['name'] ), ENT_COMPAT, 'UTF-8' ) );
+			$paypal_args['item_name_' . $i ] = stripslashes_deep( html_entity_decode( edd_get_cart_item_name( $item ), ENT_COMPAT, 'UTF-8' ) );
 			$paypal_args['quantity_' . $i ]  = $item['quantity'];
 			$paypal_args['amount_' . $i ]    = $item_amount;
 

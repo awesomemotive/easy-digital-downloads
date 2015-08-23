@@ -671,7 +671,7 @@ function edd_ajax_search_users() {
 
 		$get_users_args = apply_filters( 'edd_search_users_args', $get_users_args );
 
-		$found_users = get_users( $get_users_args );
+		$found_users = apply_filters( 'edd_ajax_found_users', get_users( $get_users_args ), $search_query );
 
 		$user_list = '<ul>';
 		if( $found_users ) {

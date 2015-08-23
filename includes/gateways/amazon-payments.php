@@ -265,7 +265,7 @@ final class EDD_Amazon_Payments {
 		$default_amazon_settings = array(
 			'amazon' => array(
 				'id'   => 'amazon',
-				'name' => '<span class="field-section-title">' . __( 'Login & Pay with Amazon Settings', 'edd' ) . '</span>',
+				'name' => '<span class="field-section-title">' . __( 'Amazon Payments Settings', 'edd' ) . '</span>',
 				'desc' => __( 'Configure the Amazon settings', 'edd' ),
 				'type' => 'header',
 			),
@@ -498,7 +498,7 @@ final class EDD_Amazon_Payments {
 
 			} else {
 
-				$names = explode( ' ', $profile['name'] );
+				$names = explode( ' ', $profile['name'], 2 );
 
 				$customer = array(
 					'first_name' => $names[0],
@@ -611,69 +611,96 @@ final class EDD_Amazon_Payments {
 				<?php _e( 'Currently logged into Amazon as', 'edd' ); ?>: <span class="edd-amazon-profile-name"><?php echo $profile['name']; ?></span>
 				<span class="edd-amazon-logout">(<a id="Logout"><?php _e( 'Logout', 'edd' ); ?></a>)</span>
 			</p>
-
-			<div id="edd-amazon-address-box"></div>
+			<?php if( edd_use_taxes() ) : ?>
+				<div id="edd-amazon-address-box"></div>
+			<?php endif; ?>
 			<div id="edd-amazon-wallet-box"></div>
 			<script>
 				var edd_scripts;
-				new OffAmazonPayments.Widgets.AddressBook({
-					sellerId: edd_amazon.sellerId,
-					amazonOrderReferenceId: edd_amazon.referenceID,
+				if( '1' == edd_scripts.taxes_enabled ) {
+					new OffAmazonPayments.Widgets.AddressBook({
+						sellerId: edd_amazon.sellerId,
+						amazonOrderReferenceId: edd_amazon.referenceID,
 						onOrderReferenceCreate: function(orderReference) {
-						orderReference.getAmazonOrderReferenceId();
-					},
-					onAddressSelect: function(orderReference) {
-						jQuery.ajax({
-							type: "POST",
-							data: {
-								action       : 'edd_amazon_get_address',
-								reference_id : edd_amazon.referenceID
-							},
-							dataType: "json",
-							url: edd_scripts.ajaxurl,
-							xhrFields: {
-								withCredentials: true
-							},
-							success: function (response) {
-								jQuery('#card_city').val( response.City );
-								jQuery('#card_zip').val( response.PostalCode );
-								jQuery('#billing_country').val( response.CountryCode );
-								jQuery('#card_state').val( response.StateOrRegion ).trigger( 'change' );
-							}
-						}).fail(function (response) {
-							if ( window.console && window.console.log ) {
-								console.log( response );
-							}
-						}).done(function (response) {
+							orderReference.getAmazonOrderReferenceId();
+						},
+						onAddressSelect: function(orderReference) {
+							jQuery.ajax({
+								type: "POST",
+								data: {
+									action       : 'edd_amazon_get_address',
+									reference_id : edd_amazon.referenceID
+								},
+								dataType: "json",
+								url: edd_scripts.ajaxurl,
+								xhrFields: {
+									withCredentials: true
+								},
+								success: function (response) {
+									jQuery('#card_city').val( response.City );
+									jQuery('#card_address').val( response.AddressLine1 );
+									jQuery('#card_address_2').val( response.AddressLine2 );
+									jQuery('#card_zip').val( response.PostalCode );
+									jQuery('#billing_country').val( response.CountryCode );
+									jQuery('#card_state').val( response.StateOrRegion ).trigger( 'change' );
+								}
+							}).fail(function (response) {
+								if ( window.console && window.console.log ) {
+									console.log( response );
+								}
+							}).done(function (response) {
 
-						});
-					},
-					design: {
-						designMode: 'responsive'
-					},
-					onError: function(error) {
-						jQuery('#edd_purchase_submit').prepend( '<div class="edd_errors"><p class="edd_error" id="edd_error_"' + error.getErrorCode() + '>' + error.getErrorMessage() + '</p></div>' );
-					}
-				}).bind("edd-amazon-address-box");
+							});
+						},
+						design: {
+							designMode: 'responsive'
+						},
+						onError: function(error) {
+							jQuery('#edd-amazon-address-box').hide();
+							jQuery('#edd_purchase_submit').prepend( '<div class="edd_errors"><p class="edd_error" id="edd_error_"' + error.getErrorCode() + '>' + error.getErrorMessage() + '</p></div>' );
+						}
+					}).bind("edd-amazon-address-box");
 
-				new OffAmazonPayments.Widgets.Wallet({
-					sellerId: edd_amazon.sellerId,
-					amazonOrderReferenceId: edd_amazon.referenceID,
-					design: {
-						designMode: 'responsive'
-					},
-					onPaymentSelect: function(orderReference) {
-						// Display your custom complete purchase button
-					},
-					onError: function(error) {
-						jQuery('#edd_purchase_submit').prepend( '<div class="edd_errors"><p class="edd_error" id="edd_error_"' + error.getErrorCode() + '>' + error.getErrorMessage() + '</p></div>' );
-					}
-				}).bind("edd-amazon-wallet-box");
+					new OffAmazonPayments.Widgets.Wallet({
+						sellerId: edd_amazon.sellerId,
+						amazonOrderReferenceId: edd_amazon.referenceID,
+						design: {
+							designMode: 'responsive'
+						},
+						onPaymentSelect: function(orderReference) {
+							// Display your custom complete purchase button
+						},
+						onError: function(error) {
+							jQuery('#edd_purchase_submit').prepend( '<div class="edd_errors"><p class="edd_error" id="edd_error_"' + error.getErrorCode() + '>' + error.getErrorMessage() + '</p></div>' );
+						}
+					}).bind("edd-amazon-wallet-box");
+
+				} else {
+
+					new OffAmazonPayments.Widgets.Wallet({
+						sellerId: edd_amazon.sellerId,
+						design: {
+							designMode: 'responsive'
+						},
+						onOrderReferenceCreate: function(orderReference) {
+							jQuery( '#edd_amazon_reference_id' ).val( orderReference.getAmazonOrderReferenceId() );
+						},
+						onPaymentSelect: function(orderReference) {
+							// Display your custom complete purchase button
+						},
+						onError: function(error) {
+							jQuery('#edd_purchase_submit').prepend( '<div class="edd_errors"><p class="edd_error" id="edd_error_"' + error.getErrorCode() + '>' + error.getErrorMessage() + '</p></div>' );
+						}
+					}).bind("edd-amazon-wallet-box");
+
+				}
 			</script>
 
 			<div id="edd_cc_address">
-				<input type="hidden" name="edd_amazon_reference_id" value="<?php echo esc_attr( $this->reference_id ); ?>"/>
+				<input type="hidden" name="edd_amazon_reference_id" id="edd_amazon_reference_id" value="<?php echo esc_attr( $this->reference_id ); ?>"/>
 				<input type="hidden" name="card_city" class="card_city" id="card_city" value=""/>
+				<input type="hidden" name="card_address" class="card_address" id="card_address" value=""/>
+				<input type="hidden" name="card_address_2" class="card_address_2" id="card_address_2" value=""/>
 				<input type="hidden" name="card_zip" class="card_zip" id="card_zip" value=""/>
 				<input type="hidden" name="card_state" class="card_state" id="card_state" value=""/>
 				<input type="hidden" name="billing_country" class="billing_country" id="billing_country" value=""/>
@@ -703,6 +730,7 @@ final class EDD_Amazon_Payments {
 		$request = $this->client->getOrderReferenceDetails( array(
 			'merchant_id'               => edd_get_option( 'amazon_seller_id', '' ),
 			'amazon_order_reference_id' => $_POST['reference_id'],
+			'address_consent_token'     => EDD()->session->get( 'amazon_access_token' )
 		) );
 
 
@@ -713,7 +741,7 @@ final class EDD_Amazon_Payments {
 		if( isset( $data['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['Destination']['PhysicalDestination'] ) ) {
 
 			$address = $data['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['Destination']['PhysicalDestination'];
-			$address = wp_parse_args( $address, array( 'City', 'CountryCode', 'StateOrRegion', 'PostalCode' ) );
+			$address = wp_parse_args( $address, array( 'City', 'CountryCode', 'StateOrRegion', 'PostalCode', 'AddressLine1', 'AddressLine2' ) );
 
 		}
 
@@ -817,9 +845,7 @@ final class EDD_Amazon_Payments {
 
 			$capture = new ResponseParser( $capture->response );
 			$capture = $capture->toArray();
-
-			// Check capture status
-
+	
 			edd_update_payment_meta( $payment_id, '_edd_amazon_authorization_id', $authorization_id );
 			edd_update_payment_meta( $payment_id, '_edd_amazon_capture_id', $capture_id );
 
@@ -1129,7 +1155,27 @@ final class EDD_Amazon_Payments {
 	 * @return string
 	 */
 	private function get_registration_url() {
-		return 'https://sellercentral.amazon.com/hz/me/sp/signup?solutionProviderId=A3JST9YM1SX7LB&marketplaceId=AGWSWK15IEJJ7&solutionProviderToken=AAAAAQAAAAEAAAAQnngerc8vYweGDt8byl2smgAAAHBgMm923quugHaGmPi%2B3sqo93TSL1aKwU85v71Zh7EXVK8De%2FuahjCFHft3cxN3rwAF4Iwg03sDW0jnkLULmFk7M1Fr69IV2XF477m0kU1EM0Z%2FbQssHdLai%2Fzoce1jZVmw8So3F2jhiDyfTHUK2AYP&solutionProviderOptions=lwa%3Bmws-acc%3B';
+
+		switch ( edd_get_shop_country() ) {
+			case 'GB':
+				$base_url = 'https://payments.amazon.co.uk/preregistration/lpa';
+			break;
+			case 'DE':
+				$base_url = 'https://payments.amazon.de/preregistration/lpa';
+			break;
+			default:
+				$base_url = 'https://sellercentral.amazon.com/hz/me/sp/signup';
+			break;
+		}
+
+		$query_args = array(
+			'solutionProviderId' => 'A3JST9YM1SX7LB',
+			'marketplaceId'      => 'AGWSWK15IEJJ7',
+			'solutionProviderToken' => 'AAAAAQAAAAEAAAAQnngerc8vYweGDt8byl2smgAAAHBgMm923quugHaGmPi%2B3sqo93TSL1aKwU85v71Zh7EXVK8De%2FuahjCFHft3cxN3rwAF4Iwg03sDW0jnkLULmFk7M1Fr69IV2XF477m0kU1EM0Z%2FbQssHdLai%2Fzoce1jZVmw8So3F2jhiDyfTHUK2AYP',
+			'solutionProviderOptions' => 'lwa%3Bmws-acc%3B',
+		);
+
+		return add_query_arg( $query_args, $base_url );
 	}
 
 }

@@ -110,6 +110,9 @@ jQuery(document).ready(function ($) {
 
 			if ( form.find('.edd_price_option_' + download).is('input:hidden') ) {
 				item_price_ids[0] = $('.edd_price_option_' + download, form).val();
+				if ( form.find('.edd-submit').data('price') && form.find('.edd-submit').data('price') > 0 ) {
+					free_items = false;
+				}
 			} else {
 				if( ! form.find('.edd_price_option_' + download + ':checked', form).length ) {
 					 // hide the spinner

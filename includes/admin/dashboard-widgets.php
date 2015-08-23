@@ -146,6 +146,7 @@ function edd_load_dashboard_sales_widget( ) {
 			</table>
 		</div>
 		<div style="clear: both"></div>
+		<?php do_action( 'edd_sales_summary_widget_after_stats', $stats ); ?>
 		<?php
 		$p_query = new EDD_Payments_Query( array(
 			'number'   => 5,
@@ -193,6 +194,7 @@ function edd_load_dashboard_sales_widget( ) {
 			</table>
 		</div>
 		<?php } // End if ?>
+		<?php do_action( 'edd_sales_summary_widget_after_purchases', $payments ); ?>
 	</div>
 	<?php
 	die();
