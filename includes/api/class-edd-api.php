@@ -1016,6 +1016,7 @@ class EDD_API {
 		$product['info']['status']                       = $product_info->post_status;
 		$product['info']['link']                         = html_entity_decode( $product_info->guid );
 		$product['info']['content']                      = $product_info->post_content;
+		$product['info']['excerpt']                      = $product_info->post_excerpt;
 		$product['info']['thumbnail']                    = wp_get_attachment_url( get_post_thumbnail_id( $product_info->ID ) );
 		$product['info']['category']                     = get_the_terms( $product_info, 'download_category' );
 		$product['info']['tags']                         = get_the_terms( $product_info, 'download_tag' );
@@ -1386,12 +1387,13 @@ class EDD_API {
 					if ( isset( $item['item_number'] ) && isset( $item['item_number']['options'] ) ) {
 						$price_options  = $item['item_number']['options'];
 						if ( isset( $price_options['price_id'] ) ) {
-							$price_name = edd_get_price_option_name( $item['id'], $price_options['price_id'], $payment->ID );
+							$price_name = edd_get_price_option_name( $item_id, $price_options['price_id'], $payment->ID );
 						}
 					}
 
+					$sales['sales'][ $i ]['products'][ $c ]['id']         = $item_id;
 					$sales['sales'][ $i ]['products'][ $c ]['quantity']   = $quantity;
-					$sales['sales'][ $i ]['products'][ $c ]['name']       = get_the_title( $item['id'] );
+					$sales['sales'][ $i ]['products'][ $c ]['name']       = get_the_title( $item_id );
 					$sales['sales'][ $i ]['products'][ $c ]['price']      = $price;
 					$sales['sales'][ $i ]['products'][ $c ]['price_name'] = $price_name;
 					$c++;

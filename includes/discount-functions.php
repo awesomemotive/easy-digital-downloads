@@ -252,7 +252,7 @@ function edd_store_discount( $details, $discount_id = null ) {
 		}
 	}
 
-	if ( edd_discount_exists( $discount_id ) && ! empty( $discount_id ) ) {
+	if ( ! empty( $discount_id ) && edd_discount_exists( $discount_id ) ) {
 
 		// Update an existing discount
 
@@ -1373,7 +1373,8 @@ function edd_multiple_discounts_allowed() {
  */
 function edd_listen_for_cart_discount() {
 
-	if ( empty( $_REQUEST['discount'] ) ) {
+	// Array stops the bulk delete of discount codes from storing as a preset_discount
+	if ( empty( $_REQUEST['discount'] ) || is_array( $_REQUEST['discount'] ) ) {
 		return;
 	}
 

@@ -58,7 +58,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 	$post_id = is_object( $post ) ? $post->ID : 0;
 	$button_behavior = edd_get_download_button_behavior( $post_id );
-	
+
 	$defaults = apply_filters( 'edd_purchase_link_defaults', array(
 		'download_id' => $post_id,
 		'price'       => (bool) true,
@@ -322,7 +322,7 @@ function edd_download_purchase_form_quantity_field( $download_id = 0, $args = ar
 	<div class="edd_download_quantity_wrapper">
 		<input type="number" min="1" step="1" name="edd_download_quantity" class="edd-input edd-item-quantity" value="1" />
 	</div>
-<?php 
+<?php
 	$quantity_input = ob_get_clean();
 
 	echo apply_filters( 'edd_purchase_form_quantity_input', $quantity_input, $download_id, $args );
@@ -354,7 +354,7 @@ function edd_variable_price_quantity_field( $key, $price, $download_id ) {
 		<span class="edd_price_option_sep">&nbsp;x&nbsp;</span>
 		<input type="number" min="1" step="1" name="edd_download_quantity_<?php echo esc_attr( $key ) ?>" class="edd-input edd-item-quantity" value="1" />
 	</div>
-<?php 
+<?php
 	$quantity_input = ob_get_clean();
 
 	echo apply_filters( 'edd_purchase_form_variation_quantity_input', $quantity_input, $download_id, $key, $price );
@@ -732,16 +732,16 @@ add_filter( 'the_title', 'edd_microdata_title', 10, 2 );
  *
  * @return void
  */
-function edd_microdata_wrapper_open() {
+function edd_microdata_wrapper_open( $query ) {
 	global $post;
 
 	static $microdata_open = NULL;
 
-	if( ! edd_add_schema_microdata() || true === $microdata_open || ! is_object( $post ) ) {
+	if( ! edd_add_schema_microdata() || true === $microdata_open || ! is_object( $query ) ) {
 		return;
 	}
 
-	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() ) {
+	if ( $query && ! empty( $query->query['post_type'] ) && $query->query['post_type'] == 'download' && is_singular( 'download' ) && $query->is_main_query() ) {
 		$microdata_open = true;
 		echo '<span itemscope itemtype="http://schema.org/Product">';
 	}

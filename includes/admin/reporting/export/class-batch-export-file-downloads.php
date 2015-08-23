@@ -37,7 +37,7 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 	 * @return array $cols All the columns
 	 */
 	public function csv_cols() {
-		
+
 		$cols = array(
 			'date'     => __( 'Date',   'edd' ),
 			'user'     => __( 'Downloaded by', 'edd' ),
@@ -155,5 +155,10 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 		}
 
 		return $percentage;
+	}
+
+	public function set_properties( $request ) {
+		$this->start = isset( $request['start'] ) ? sanitize_text_field( $request['start'] ) : '';
+		$this->end   = isset( $request['end']  )  ? sanitize_text_field( $request['end']  )  : '';
 	}
 }

@@ -850,7 +850,7 @@ function edd_agree_to_terms_js() {
 ?>
 	<script type="text/javascript">
 		jQuery(document).ready(function($){
-			$('body').on('click', '.edd_terms_links', function(e) {
+			$( document.body ).on('click', '.edd_terms_links', function(e) {
 				//e.preventDefault();
 				$('#edd_terms').slideToggle();
 				$('.edd_terms_links').toggle();
@@ -897,7 +897,7 @@ function edd_filter_success_page_content( $content ) {
 
 	return $content;
 }
-add_filter( 'the_content', 'edd_filter_success_page_content' );
+add_filter( 'the_content', 'edd_filter_success_page_content', 99999 );
 
 /**
  * Show a download's files in the purchase receipt
