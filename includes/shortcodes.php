@@ -33,7 +33,7 @@ function edd_download_shortcode( $atts, $content = null ) {
 		'sku'			=> '',
 		'price'         => '1',
 		'direct'        => '0',
-		'text'          => edd_get_option( 'add_to_cart_text', __( 'Purchase', 'edd' ) ),
+		'text'          => '',
 		'style'         => edd_get_option( 'button_style', 'button' ),
 		'color'         => edd_get_option( 'checkout_color', 'blue' ),
 		'class'         => 'edd-submit',
@@ -41,9 +41,13 @@ function edd_download_shortcode( $atts, $content = null ) {
 	),
 	$atts, 'purchase_link' );
 
-	// Override text if direct == 1
-	if( $atts['direct'] == '1' || $atts['direct'] == 'true' ) {
-		$atts['text'] = edd_get_option( 'buy_now_text', __( 'Buy Now', 'edd' ) );
+	// Override text only if not provided / empty
+	if ( ! $atts['text'] ) {
+		if( $atts['direct'] == '1' || $atts['direct'] == 'true' ) {
+			$atts['text'] = edd_get_option( 'buy_now_text', __( 'Buy Now', 'edd' ) );
+		} else {
+			$atts['text'] = edd_get_option( 'add_to_cart_text', __( 'Purchase', 'edd' ) );
+		}
 	}
 
 	// Override color if color == inherit
