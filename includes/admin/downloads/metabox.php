@@ -1003,21 +1003,18 @@ function edd_render_stats_meta_box() {
 
 	<p class="product-sales-stats">
 		<span class="label"><?php _e( 'Sales:', 'edd' ); ?></span>
-		<span><strong><?php echo $sales; ?> &mdash; </strong><a href="<?php echo admin_url( '/edit.php?page=edd-reports&view=sales&post_type=download&tab=logs&download=' . $post->ID ); ?>"><?php _e( 'View Sales Log', 'edd' ); ?></a></span>
+		<span><a href="<?php echo admin_url( '/edit.php?page=edd-reports&view=sales&post_type=download&tab=logs&download=' . $post->ID ); ?>"><?php echo $sales; ?></a></span>
 	</p>
 
 	<p class="product-earnings-stats">
 		<span class="label"><?php _e( 'Earnings:', 'edd' ); ?></span>
-		<span><strong><?php echo edd_currency_filter( edd_format_amount( $earnings ) ); ?></strong></span>
+		<span><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-reports&view=downloads&download-id=' . $post->ID ); ?>"><?php echo edd_currency_filter( edd_format_amount( $earnings ) ); ?></a></span>
 	</p>
 
 	<hr />
 
 	<p class="file-download-log">
 		<span><a href="<?php echo admin_url( 'edit.php?page=edd-reports&view=file_downloads&post_type=download&tab=logs&download=' . $post->ID ); ?>"><?php _e( 'View File Download Log', 'edd' ); ?></a></span><br/>
-	</p>
-	<p class="detailed-earnings-report">
-		<span><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-reports&view=downloads&download-id=' . $post->ID ); ?>"><?php _e( 'View Detailed Earnings Report', 'edd' ); ?></a></span>
 	</p>
 <?php
 	do_action('edd_stats_meta_box');
