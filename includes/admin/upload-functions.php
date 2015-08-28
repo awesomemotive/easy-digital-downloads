@@ -150,7 +150,7 @@ function edd_get_htaccess_rules( $method = false ) {
 		case 'direct' :
 		default :
 			// Prevent directory browsing and direct access to all files, except images and videos (they must be allowed for featured images / thumbnails)
-			$allowed_filetypes = apply_filters( 'edd_protected_directory_allowed_filetypes', array( 'jpg', 'png', 'gif', 'mp3', 'ogg', 'mp4', 'ogv', 'flv', 'm4v', 'webm' ) );
+			$allowed_filetypes = apply_filters( 'edd_protected_directory_allowed_filetypes', array( 'jpg', 'png', 'gif', 'mp3', 'ogg' ) );
 			$rules = "Options -Indexes\n";
 			$rules .= "deny from all\n";
 			$rules .= "<FilesMatch '\.(" . implode( '|', $allowed_filetypes ) . ")$'>\n";
