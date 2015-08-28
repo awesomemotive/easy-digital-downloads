@@ -30,7 +30,7 @@ function edd_download_shortcode( $atts, $content = null ) {
 	$atts = shortcode_atts( array(
 		'id' 	        => $post_id,
 		'price_id'      => isset( $atts['price_id'] ) ? $atts['price_id'] : false,
-		'sku'			=> '',
+		'sku'           => '',
 		'price'         => '1',
 		'direct'        => '0',
 		'text'          => edd_get_option( 'add_to_cart_text', __( 'Purchase', 'edd' ) ),
@@ -70,6 +70,28 @@ function edd_download_shortcode( $atts, $content = null ) {
 	}
 }
 add_shortcode( 'purchase_link', 'edd_download_shortcode' );
+
+/**
+ * Provide Purchase Link Shortcode
+ *
+ * Adds a button to the permalink row that provides the full purchase shortcode
+ * for the current download.
+ *
+ * @since 2.5
+ * @param string $content Permalink edit form and permalink button
+ * @param string $post The download ID
+ * @return string Button and JS alert for purchase link shortcode
+ */
+function edd_get_purchase_shortcode( $content, $post ) {
+	$purchase_text = edd_get_option( 'add_to_cart_text', __( 'Purchase', 'edd' ) );
+	$style         = edd_get_option( 'button_style', 'button' );
+	$color         = edd_get_option( 'checkout_color', 'blue' );
+	$shortcode     = '[purchase_link id="' . absint( $post ) . '" text="' . esc_html( $purchase_text ) . '" style="' . $style . '" color="' . esc_attr( $color ) . '"]';
+	$get_shortcode = '<input id="shortcode" type="hidden" value="' . esc_attr($shortcode) . '" /><a style="margin-right: 4px;" href="#" class="button button-small edd-get-shortcode" onclick="prompt(&#39;Purchase Shortcode:&#39;, jQuery(\'#shortcode\').val()); return false;">' . __( 'Get Purchase Shortcode', 'edd' ) . '</a>';
+
+	return $content . $get_shortcode;
+}
+add_filter( 'get_sample_permalink_html', 'edd_get_purchase_shortcode', 10, 2 );
 
 /**
  * Download History Shortcode
