@@ -83,6 +83,11 @@ add_shortcode( 'purchase_link', 'edd_download_shortcode' );
  * @return string Button and JS alert for purchase link shortcode
  */
 function edd_get_purchase_shortcode( $content, $post ) {
+
+	if( 'download' != get_post_type( $post ) ) {
+		return $content;
+	}
+
 	$purchase_text = edd_get_option( 'add_to_cart_text', __( 'Purchase', 'edd' ) );
 	$style         = edd_get_option( 'button_style', 'button' );
 	$color         = edd_get_option( 'checkout_color', 'blue' );
