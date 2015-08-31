@@ -82,7 +82,17 @@ add_shortcode( 'purchase_link', 'edd_download_shortcode' );
 function edd_download_history() {
 	if ( is_user_logged_in() ) {
 		ob_start();
-		edd_get_template_part( 'history', 'downloads' );
+
+		if( ! edd_user_pending_verification() ) {
+
+			edd_get_template_part( 'history', 'downloads' );
+			
+		} else {
+
+			edd_get_template_part( 'account', 'pending' );
+
+		}
+
 		return ob_get_clean();
 	}
 }
@@ -98,7 +108,17 @@ add_shortcode( 'download_history', 'edd_download_history' );
  */
 function edd_purchase_history() {
 	ob_start();
-	edd_get_template_part( 'history', 'purchases' );
+
+	if( ! edd_user_pending_verification() ) {
+
+		edd_get_template_part( 'history', 'purchases' );
+		
+	} else {
+
+		edd_get_template_part( 'account', 'pending' );
+
+	}
+
 	return ob_get_clean();
 }
 add_shortcode( 'purchase_history', 'edd_purchase_history' );
