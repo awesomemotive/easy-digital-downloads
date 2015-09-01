@@ -673,6 +673,8 @@ function edd_validate_user_verification_token( $url = '' ) {
 
 		if ( isset( $query_args['ttl'] ) && current_time( 'timestamp' ) > $query_args['ttl'] ) {
 
+			do_action( 'edd_user_verification_token_expired' );
+
 			wp_die( apply_filters( 'edd_verification_link_expired_text', __( 'Sorry but your account verification link has expired. <a href="#">Click here</a> to request a new verification URL.', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 
 		}
@@ -701,7 +703,6 @@ function edd_process_user_verification_request() {
 		wp_die( __( 'Nonce verification failed.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
 
-
 	if( ! is_user_logged_in() ) {
 		wp_die( __( 'You must be logged in to verify your account.', 'edd' ), __( 'Notice', 'edd' ), array( 'response' => 403 ) );
 	}
@@ -712,7 +713,12 @@ function edd_process_user_verification_request() {
 
 	edd_send_user_verification_email( get_current_user_id() );
 
-	wp_safe_redirect( add_query_arg( 'edd-verify-request', '1', get_permalink( edd_get_option( 'purchase_history_page', 0 ) ) ) );
+	$redirect = apply_filters(
+		'edd_user_account_verifification_request_redirect'
+		add_query_arg( 'edd-verify-request', '1', get_permalink( edd_get_option( 'purchase_history_page', 0 ) ) )
+	);
+
+	wp_safe_redirect( $redirect );
 	exit;
 
 }
@@ -744,12 +750,22 @@ function edd_process_user_account_verification() {
 	$url = add_query_arg( $query_args, untrailingslashit( get_permalink( edd_get_option( 'purchase_history_page', 0 ) ) ) );
 
 	if( ! edd_validate_user_verification_token( $url ) ) {
+
+		do_action( 'edd_invalid_user_verification_token' );
+
 		wp_die( __( 'Invalid verification token provided.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
 
 	delete_user_meta( absint( $_GET['user_id'] ), '_edd_pending_verification' );
 
-	wp_safe_redirect( add_query_arg( 'edd-verify-success', '1', get_permalink( edd_get_option( 'purchase_history_page', 0 ) ) ) );
+	do_action( 'edd_user_verification_token_validated' );
+
+	$redirect = apply_filters(
+		'edd_user_account_verified_redirect'
+		add_query_arg( 'edd-verify-success', '1', get_permalink( edd_get_option( 'purchase_history_page', 0 ) ) )
+	);
+
+	wp_safe_redirect( $redirect );
 	exit;
 
 }
