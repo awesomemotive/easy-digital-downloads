@@ -761,7 +761,7 @@ function edd_process_user_account_verification() {
 	do_action( 'edd_user_verification_token_validated' );
 
 	$redirect = apply_filters(
-		'edd_user_account_verified_redirect'
+		'edd_user_account_verified_redirect',
 		add_query_arg( 'edd-verify-success', '1', get_permalink( edd_get_option( 'purchase_history_page', 0 ) ) )
 	);
 
