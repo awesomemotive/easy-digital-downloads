@@ -714,7 +714,7 @@ function edd_process_user_verification_request() {
 	edd_send_user_verification_email( get_current_user_id() );
 
 	$redirect = apply_filters(
-		'edd_user_account_verifification_request_redirect',
+		'edd_user_account_verification_request_redirect',
 		add_query_arg( 'edd-verify-request', '1', get_permalink( edd_get_option( 'purchase_history_page', 0 ) ) )
 	);
 
