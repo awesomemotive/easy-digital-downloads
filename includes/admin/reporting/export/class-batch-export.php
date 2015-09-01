@@ -85,6 +85,13 @@ class EDD_Batch_Export extends EDD_Export {
 	public $price_id = null;
 
 	/**
+	 * Download to export data for
+	 *
+	 * @since 2.4.4
+	 */
+	public $is_writable = true;
+
+	/**
 	 * Get things started
 	 *
 	 * @param $_step int The step to process
@@ -96,6 +103,11 @@ class EDD_Batch_Export extends EDD_Export {
 		$this->filetype   = '.csv';
 		$this->filename   = 'edd-' . $this->export_type . $this->filetype;
 		$this->file       = trailingslashit( $upload_dir['basedir'] ) . $this->filename;
+
+		if ( ! is_writeable( $upload_dir['basedir'] ) ) {
+			$this->is_writable = false;
+		}
+
 		$this->step       = $_step;
 		$this->done       = false;
 	}
@@ -208,10 +220,24 @@ class EDD_Batch_Export extends EDD_Export {
 	 * @return string
 	 */
 	protected function get_file() {
-		$file = @file_get_contents( $this->file );
-		if( ! $file ) {
+
+		$file = '';
+
+		if ( @file_exists( $this->file ) ) {
+
+			if ( ! is_writeable( $this->file ) ) {
+				$this->is_writable = false;
+			}
+
+			$file = @file_get_contents( $this->file );
+
+		} else {
+
 			@file_put_contents( $this->file, '' );
+			@chmod( $this->file, 0664 );
+
 		}
+
 		return $file;
 	}
 
