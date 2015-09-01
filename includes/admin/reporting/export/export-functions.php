@@ -60,6 +60,10 @@ function edd_do_ajax_export() {
 		$step += 1;
 		echo json_encode( array( 'step' => $step, 'percentage' => $percentage ) ); exit;
 
+	} elseif ( true === $export->is_empty ) {
+
+		echo json_encode( array( 'error' => true, 'message' => __( 'No data found for export parameters', 'edd' ) ) ); exit;
+
 	} else {
 
 		$args = array_merge( $_REQUEST, array(

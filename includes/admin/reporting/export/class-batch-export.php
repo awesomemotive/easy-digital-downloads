@@ -85,11 +85,18 @@ class EDD_Batch_Export extends EDD_Export {
 	public $price_id = null;
 
 	/**
-	 * Download to export data for
+	 * Is the export file writable
 	 *
 	 * @since 2.4.4
 	 */
 	public $is_writable = true;
+
+	/**
+	 *  Is the export file empty
+	 *
+	 * @since 2.4.4
+	 */
+	public $is_empty = false;
 
 	/**
 	 * Get things started
@@ -253,6 +260,12 @@ class EDD_Batch_Export extends EDD_Export {
 		$file = $this->get_file();
 		$file .= $data;
 		@file_put_contents( $this->file, $file );
+
+		// If we have no rows after this step, mark it as an empty export
+		$file_rows    = file( $this->file, FILE_SKIP_EMPTY_LINES);
+		$default_cols = empty( $this->get_csv_cols() ) ? 0 : 1;
+
+		$this->is_empty = count( $file_rows ) == $default_cols ? true : false;
 
 	}
 
