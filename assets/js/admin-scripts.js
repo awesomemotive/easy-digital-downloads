@@ -1236,6 +1236,7 @@ jQuery(document).ready(function ($) {
 					var data = $(this).serialize();
 
 					submitButton.addClass( 'button-disabled' );
+					$(this).find('.error-message').remove();
 					$(this).append( '<span class="spinner is-active"></span><div class="edd-progress"><div></div></div>' );
 
 					// start the process
@@ -1259,15 +1260,25 @@ jQuery(document).ready(function ($) {
 				dataType: "json",
 				success: function( response ) {
 
-					if( 'done' == response.step ) {
+					if( 'done' == response.step || response.error ) {
 
-						var export_form = $('.edd-export-form');
+						// We need to get the actual in progress form, not all forms on the page
+						var export_form = $('.edd-export-form').find('.edd-progress').parent();
 
 						export_form.find('.spinner').remove();
 						export_form.find('.edd-progress').remove();
 						export_form.find('.button-disabled').removeClass('button-disabled');
 
-						window.location = response.url;
+						if ( response.error ) {
+
+							var error_message = response.message;
+							export_form.append('<div class="error-message">' + error_message + '</div>');
+
+						} else {
+
+							window.location = response.url;
+
+						}
 
 					} else {
 

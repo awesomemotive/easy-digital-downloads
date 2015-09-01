@@ -45,6 +45,10 @@ function edd_do_ajax_export() {
 		die( '-1' );
 	}
 
+	if ( ! $export->is_writable ) {
+		echo json_encode( array( 'error' => true, 'message' => __( 'Export location or file not writable', 'edd' ) ) ); exit;
+	}
+
 	$export->set_properties( $_REQUEST );
 
 	$ret = $export->process_step( $step );
