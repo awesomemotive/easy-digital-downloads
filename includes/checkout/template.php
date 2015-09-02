@@ -905,6 +905,6 @@ add_filter( 'the_content', 'edd_filter_success_page_content', 99999 );
  * @since 1.8.6
  * @return boolean
 */
-function edd_receipt_show_download_files( $item_id, $receipt_args ) {
-	return apply_filters( 'edd_receipt_show_download_files', true, $item_id, $receipt_args );
+function edd_receipt_show_download_files( $item_id, $receipt_args, $item ) {
+	return apply_filters( 'edd_receipt_show_download_files', true, $item_id, $receipt_args, $item );
 }
