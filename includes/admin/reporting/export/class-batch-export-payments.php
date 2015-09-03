@@ -210,8 +210,8 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 
 		$status = $this->status;
 		$args   = array(
-			'start-date' => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
-			'end-date'   => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
+			'start-date' => date( 'n/d/Y', strtotime( $this->start ) ),
+			'end-date'   => date( 'n/d/Y', strtotime( $this->end ) ),
 		);
 
 		if( 'any' == $status ) {
