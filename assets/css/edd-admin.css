@@ -233,8 +233,10 @@ td.edd_order_price { text-align: right; }
 #edd-date-range-options { float: left; }
 #edd-date-range-options span { float: left; margin-right: 6px; height: 24px; line-height: 24px; }
 .edd-export-form { position: relative; }
-.edd-export-form .edd-progress {background: #ddd; position: absolute; bottom: -20px; height: 15px; width: 100%; }
+.edd-export-form .edd-progress {background: #ddd; position: absolute; bottom: 15px; height: 15px; width: 95%; }
 .edd-export-form .edd-progress div { height: 100%; background: #ccc; width: 0; }
+.edd-export-form .notice-wrap { background-color: #f4f4f4; padding: 12px 12px 4px; margin: 20px -12px -23px; border-style: solid; border-width: 1px 0; border-color: #eae9e9; overflow: auto; }
+.edd-export-form .notice-wrap .spinner { margin: 4px 10px 8px; }
 .admin-color-fresh .edd-export-form .edd-progress div { background: #0073aa; }
 .admin-color-light .edd-export-form .edd-progress div { background: #888; }
 .admin-color-blue .edd-export-form .edd-progress div { background: #096484; }
