@@ -489,7 +489,7 @@ function edd_count_payments( $args = array() ) {
 	}
 
 	// Limit payments count by date
-	if ( ! empty( $args['start-date'] ) && false !== strpos( '/', $args['start-date'] ) ) {
+	if ( ! empty( $args['start-date'] ) && false !== strpos( $args['start-date'], '/' ) ) {
 
 		$date_parts = explode( '/', $args['start-date'] );
 		$month      = ! empty( $date_parts[0] ) && is_numeric( $date_parts[0] ) ? $date_parts[0] : 0;
@@ -511,7 +511,7 @@ function edd_count_payments( $args = array() ) {
 
 	}
 
-	if ( ! empty ( $args['end-date'] ) && false !== strpos( '/', $args['end-date'] ) ) {
+	if ( ! empty ( $args['end-date'] ) && false !== strpos( $args['end-date'], '/' ) ) {
 
 		$date_parts = explode( '/', $args['end-date'] );
 
@@ -532,8 +532,6 @@ function edd_count_payments( $args = array() ) {
 	$where = apply_filters( 'edd_count_payments_where', $where );
 	$join  = apply_filters( 'edd_count_payments_join', $join );
 
-	$cache_key = md5( implode( '|', $args ) . $where );
-
 	$query = "SELECT p.post_status,count( * ) AS num_posts
 		FROM $wpdb->posts p
 		$join
@@ -541,9 +539,12 @@ function edd_count_payments( $args = array() ) {
 		GROUP BY p.post_status
 	";
 
+	$cache_key = md5( $query );
+
 	$count = wp_cache_get( $cache_key, 'counts');
-	if ( false !== $count )
+	if ( false !== $count ) {
 		return $count;
+	}
 
 	$count = $wpdb->get_results( $query, ARRAY_A );
 

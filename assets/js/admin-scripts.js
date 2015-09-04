@@ -1236,7 +1236,8 @@ jQuery(document).ready(function ($) {
 					var data = $(this).serialize();
 
 					submitButton.addClass( 'button-disabled' );
-					$(this).append( '<span class="spinner is-active"></span><div class="edd-progress"><div></div></div>' );
+					$(this).find('.notice-wrap').remove();
+					$(this).append( '<div class="notice-wrap"><span class="spinner is-active"></span><div class="edd-progress"><div></div></div></div>' );
 
 					// start the process
 					self.process_step( 1, data, self );
@@ -1259,18 +1260,27 @@ jQuery(document).ready(function ($) {
 				dataType: "json",
 				success: function( response ) {
 
-					if( 'done' == response.step ) {
+					if( 'done' == response.step || response.error ) {
 
-						var export_form = $('.edd-export-form');
+						// We need to get the actual in progress form, not all forms on the page
+						var export_form    = $('.edd-export-form').find('.edd-progress').parent().parent();
+						var notice_wrap    = export_form.find('.notice-wrap');
 
-						export_form.find('.spinner').remove();
-						export_form.find('.edd-progress').remove();
 						export_form.find('.button-disabled').removeClass('button-disabled');
 
-						window.location = response.url;
+						if ( response.error ) {
+
+							var error_message = response.message;
+							notice_wrap.html('<div class="update error"><p>' + error_message + '</p></div>');
+
+						} else {
+
+							notice_wrap.remove();
+							window.location = response.url;
+
+						}
 
 					} else {
-
 						$('.edd-progress div').animate({
 							width: response.percentage + '%',
 						}, 50, function() {
