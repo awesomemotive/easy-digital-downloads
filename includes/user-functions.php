@@ -136,6 +136,9 @@ function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
 		$purchase_product_ids[] = @wp_list_pluck( $purchase_meta, 'id' );
 	}
 
+	// Ensure that grabbed products actually HAVE downloads
+	$purchase_product_ids = array_filter( $purchase_product_ids );
+
 	if ( empty( $purchase_product_ids ) ) {
 		return false;
 	}
