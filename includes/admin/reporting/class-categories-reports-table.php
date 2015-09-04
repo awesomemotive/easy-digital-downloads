@@ -135,9 +135,9 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 
 			$categories = get_terms( 'download_category', $term_args );
 
-			foreach ( $categories as $category_id => $category ) {
+		foreach ( $categories as $category_id => $category ) {
 
-				$category_slugs = array( $category->slug );
+			$category_slugs = array( $category->slug );
 
 				$child_args = array(
 					'parent'		 => $category->term_id,
@@ -163,9 +163,10 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 							'terms'		 => $category_slugs,
 						),
 					),
-				);
+				),
+			);
 
-				$downloads = get_posts( $download_args );
+			$downloads = get_posts( $download_args );
 
 				$sales			 = 0;
 				$earnings		 = 0.00;
@@ -222,9 +223,10 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 									'terms'		 => $child_term->slug,
 								),
 							),
-						);
+						),
+					);
 
-						$child_downloads = get_posts( $child_args );
+					$child_downloads = get_posts( $child_args );
 
 						$child_sales		 = 0;
 						$child_earnings		 = 0.00;
