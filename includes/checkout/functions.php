@@ -323,10 +323,6 @@ function edd_enforced_ssl_redirect_handler() {
 		return;
 	}
 
-	if ( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" ) {
-		return;
-	}
-
 	$uri = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 	wp_safe_redirect( $uri );
