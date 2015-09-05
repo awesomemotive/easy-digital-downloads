@@ -436,8 +436,9 @@ function edd_get_current_page_url() {
 	else :
 		$page_url = 'http';
 
-	if ( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" )
+	if ( is_ssl() ) {
 		$page_url .= "s";
+	}
 
 	$page_url .= "://";
 
