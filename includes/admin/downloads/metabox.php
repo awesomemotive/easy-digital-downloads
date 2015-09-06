@@ -690,6 +690,7 @@ function edd_render_files_field( $post_id = 0 ) {
 				<?php
 					if ( ! empty( $files ) && is_array( $files ) ) :
 						foreach ( $files as $key => $value ) :
+							$index         = isset( $value['index'] )         ? $value['index']         : $key;
 							$name          = isset( $value['name'] )          ? $value['name']          : '';
 							$file          = isset( $value['file'] )          ? $value['file']          : '';
 							$condition     = isset( $value['condition'] )     ? $value['condition']     : false;
@@ -698,14 +699,14 @@ function edd_render_files_field( $post_id = 0 ) {
 							$args = apply_filters( 'edd_file_row_args', compact( 'name', 'file', 'condition', 'attachment_id' ), $value );
 				?>
 						<tr class="edd_repeatable_upload_wrapper edd_repeatable_row" data-key="<?php echo esc_attr( $key ); ?>">
-							<?php do_action( 'edd_render_file_row', $key, $args, $post_id ); ?>
+							<?php do_action( 'edd_render_file_row', $key, $args, $post_id, $index ); ?>
 						</tr>
 				<?php
 						endforeach;
 					else :
 				?>
 					<tr class="edd_repeatable_upload_wrapper edd_repeatable_row">
-						<?php do_action( 'edd_render_file_row', 0, array(), $post_id ); ?>
+						<?php do_action( 'edd_render_file_row', 0, array(), $post_id, 0 ); ?>
 					</tr>
 				<?php endif; ?>
 					<tr>
@@ -734,7 +735,7 @@ add_action( 'edd_meta_box_files_fields', 'edd_render_files_field', 20 );
  * @param int $post_id Download (Post) ID
  * @return void
  */
-function edd_render_file_row( $key = '', $args = array(), $post_id ) {
+function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 	$defaults = array(
 		'name'          => null,
 		'file'          => null,
@@ -752,9 +753,10 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 
 	<td>
 		<span class="edd_draghandle"></span>
-		<input type="hidden" name="edd_download_files[<?php echo absint( $key ); ?>][attachment_id]" class="edd_repeatable_attachment_id_field edd_repeatable_index" value="<?php echo esc_attr( absint( $args['attachment_id'] ) ); ?>"/>
+		<input type="hidden" name="edd_download_files[<?php echo $key; ?>][index]" class="edd_repeatable_index" value="<?php echo $index; ?>"/>
 	</td>
 	<td>
+		<input type="hidden" name="edd_download_files[<?php echo absint( $key ); ?>][attachment_id]" class="edd_repeatable_attachment_id_field" value="<?php echo esc_attr( absint( $args['attachment_id'] ) ); ?>"/>
 		<?php echo EDD()->html->text( array(
 			'name'        => 'edd_download_files[' . $key . '][name]',
 			'value'       => $args['name'],
@@ -805,7 +807,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 	</td>
 <?php
 }
-add_action( 'edd_render_file_row', 'edd_render_file_row', 10, 3 );
+add_action( 'edd_render_file_row', 'edd_render_file_row', 10, 4 );
 
 /**
  * Alter the Add to post button in the media manager for downloads
