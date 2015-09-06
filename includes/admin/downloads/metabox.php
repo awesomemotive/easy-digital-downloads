@@ -678,9 +678,7 @@ function edd_render_files_field( $post_id = 0 ) {
 			<table class="widefat edd_repeatable_table" width="100%" cellpadding="0" cellspacing="0">
 				<thead>
 					<tr>
-						<!--drag handle column. Disabled until we can work out a way to solve the issues raised here: https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/1066
 						<th style="width: 20px"></th>
-						-->
 						<th style="width: 20%"><?php _e( 'File Name', 'easy-digital-downloads' ); ?></th>
 						<th><?php _e( 'File URL', 'easy-digital-downloads' ); ?></th>
 						<th class="pricing" style="width: 20%; <?php echo $variable_display; ?>"><?php _e( 'Price Assignment', 'easy-digital-downloads' ); ?></th>
@@ -752,14 +750,11 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 	$variable_display = $variable_pricing ? '' : ' style="display:none;"';
 ?>
 
-	<!--
-	Disabled until we can work out a way to solve the issues raised here: https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/1066
 	<td>
 		<span class="edd_draghandle"></span>
+		<input type="hidden" name="edd_download_files[<?php echo absint( $key ); ?>][attachment_id]" class="edd_repeatable_attachment_id_field edd_repeatable_index" value="<?php echo esc_attr( absint( $args['attachment_id'] ) ); ?>"/>
 	</td>
-	-->
 	<td>
-		<input type="hidden" name="edd_download_files[<?php echo absint( $key ); ?>][attachment_id]" class="edd_repeatable_attachment_id_field" value="<?php echo esc_attr( absint( $args['attachment_id'] ) ); ?>"/>
 		<?php echo EDD()->html->text( array(
 			'name'        => 'edd_download_files[' . $key . '][name]',
 			'value'       => $args['name'],
