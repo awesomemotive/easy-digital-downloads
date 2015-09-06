@@ -173,7 +173,6 @@ function edd_install() {
 	// Add the transient to redirect
 	set_transient( '_edd_activation_redirect', true, 30 );
 }
-register_activation_hook( EDD_PLUGIN_FILE, 'edd_install' );
 
 /**
  * Post-installation
