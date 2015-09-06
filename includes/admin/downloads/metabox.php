@@ -706,7 +706,7 @@ function edd_render_files_field( $post_id = 0 ) {
 					else :
 				?>
 					<tr class="edd_repeatable_upload_wrapper edd_repeatable_row">
-						<?php do_action( 'edd_render_file_row', 0, array(), $post_id, 0 ); ?>
+						<?php do_action( 'edd_render_file_row', 1, array(), $post_id, 0 ); ?>
 					</tr>
 				<?php endif; ?>
 					<tr>
