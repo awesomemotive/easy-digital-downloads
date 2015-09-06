@@ -682,6 +682,7 @@ function edd_render_files_field( $post_id = 0 ) {
 						<th style="width: 20%"><?php _e( 'File Name', 'easy-digital-downloads' ); ?></th>
 						<th><?php _e( 'File URL', 'easy-digital-downloads' ); ?></th>
 						<th class="pricing" style="width: 20%; <?php echo $variable_display; ?>"><?php _e( 'Price Assignment', 'easy-digital-downloads' ); ?></th>
+						<th style="width: 15px"><?php _e( 'ID', 'easy-digital-downloads' ); ?></th>
 						<?php do_action( 'edd_download_file_table_head', $post_id ); ?>
 						<th style="width: 2%"></th>
 					</tr>
@@ -800,6 +801,10 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 		?>
 	</td>
 
+	<td>
+		<span class="edd_file_id"><?php echo $key; ?></span>
+	</td>
+	
 	<?php do_action( 'edd_download_file_table_row', $post_id, $key, $args ); ?>
 
 	<td>
