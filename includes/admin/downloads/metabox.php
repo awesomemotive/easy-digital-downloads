@@ -238,8 +238,6 @@ add_filter( 'edd_metabox_save__edd_bundled_products', 'edd_sanitize_bundled_prod
 /**
  * Sanitize the file downloads
  *
- * Ensures files are correctly mapped to an array starting with an index of 0
- *
  * @since 1.5.1
  * @param array $files Array of all the file downloads
  * @return array $files Array of the remapped file downloads
@@ -259,7 +257,7 @@ function edd_sanitize_files_save( $files ) {
 	}
 
 	// Make sure all files are rekeyed starting at 0
-	return array_values( $files );
+	return $files;
 }
 add_filter( 'edd_metabox_save_edd_download_files', 'edd_sanitize_files_save' );
 
@@ -518,6 +516,8 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 	</td>
 	<td class="edd_repeatable_default_wrapper">
 		<input type="radio" <?php checked( $default_price_id, $key, true ); ?> class="edd_repeatable_default_input" name="_edd_default_price_id" value="<?php echo $key; ?>" />
+	</td>
+	
 	<td>
 		<span class="edd_price_id"><?php echo $key; ?></span>
 	</td>
@@ -665,7 +665,6 @@ function edd_render_files_field( $post_id = 0 ) {
 	$variable_pricing = edd_has_variable_prices( $post_id );
 	$display          = $type == 'bundle' ? ' style="display:none;"' : '';
 	$variable_display = $variable_pricing ? '' : 'display:none;';
-
 ?>
 	<div id="edd_download_files"<?php echo $display; ?>>
 		<p>
