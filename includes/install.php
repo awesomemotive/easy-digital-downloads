@@ -141,10 +141,10 @@ function edd_install() {
 	update_option( 'edd_default_api_version', 'v' . $api->get_version() );
 
 	// Create the customers database
-	@EDD()->customers->create_table();
+	@EDD_Loader()->customers->create_table();
 
 	// Check for PHP Session support, and enable if available
-	EDD()->session->use_php_sessions();
+	EDD_Loader()->session->use_php_sessions();
 
 	// Add a temporary option to note that EDD pages have been created
 	set_transient( '_edd_installed', $options, 30 );
@@ -197,7 +197,7 @@ function edd_after_install() {
 	}
 
 	// Create the customers database (this ensures it creates it on multisite instances where it is network activated)
-	@EDD()->customers->create_table();
+	@EDD_Loader()->customers->create_table();
 
 	// Delete the transient
 	delete_transient( '_edd_installed' );
