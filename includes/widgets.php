@@ -214,8 +214,9 @@ class EDD_Product_Details_Widget extends WP_Widget {
 	public function widget( $args, $instance ) {
 		$args['id'] = ( isset( $args['id'] ) ) ? $args['id'] : 'edd_download_details_widget';
 
+		// Set defaults
 		if ( ! isset( $instance['download_id'] ) || ( 'current' == $instance['download_id'] && ! is_singular( 'download' ) ) ) {
-			return;
+			$instance['download_id'] = 'current';
 		}
 
 		// set correct download ID
