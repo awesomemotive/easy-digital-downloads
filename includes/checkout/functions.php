@@ -131,8 +131,9 @@ function edd_get_checkout_uri( $args = array() ) {
 		$uri = preg_replace( '/^http:/', 'https:', $uri );
 	}
 
-	if ( edd_get_option( 'no_cache_checkout', false ) && edd_is_caching_plugin_active() )
-		$uri = add_query_arg( 'nocache', 'true', $uri );
+	if ( edd_get_option( 'no_cache_checkout', false ) ) {
+		$uri = edd_add_cache_busting( $uri );
+	}
 
 	return apply_filters( 'edd_get_checkout_uri', $uri );
 }
