@@ -156,9 +156,9 @@ function edd_save_cart_button() {
 	$color = ( $color == 'inherit' ) ? '' : $color;
 
 	if ( edd_is_cart_saved() ) : ?>
-		<a class="edd-cart-saving-button edd-submit button<?php echo ' ' . $color; ?>" id="edd-restore-cart-button" href="<?php echo add_query_arg( array( 'edd_action' => 'restore_cart', 'edd_cart_token' => edd_get_cart_token() ) ) ?>"><?php _e( 'Restore Previous Cart', 'edd' ); ?></a>
+		<a class="edd-cart-saving-button edd-submit button<?php echo ' ' . $color; ?>" id="edd-restore-cart-button" href="<?php echo esc_url( add_query_arg( array( 'edd_action' => 'restore_cart', 'edd_cart_token' => edd_get_cart_token() ) ) ); ?>"><?php _e( 'Restore Previous Cart', 'edd' ); ?></a>
 	<?php endif; ?>
-	<a class="edd-cart-saving-button edd-submit button<?php echo ' ' . $color; ?>" id="edd-save-cart-button" href="<?php echo add_query_arg( 'edd_action', 'save_cart' ) ?>"><?php _e( 'Save Cart', 'edd' ); ?></a>
+	<a class="edd-cart-saving-button edd-submit button<?php echo ' ' . $color; ?>" id="edd-save-cart-button" href="<?php echo esc_url( add_query_arg( 'edd_action', 'save_cart' ) ); ?>"><?php _e( 'Save Cart', 'edd' ); ?></a>
 	<?php
 }
 
@@ -174,7 +174,7 @@ function edd_empty_cart_restore_cart_link() {
 		return;
 
 	if( edd_is_cart_saved() ) {
-		echo ' <a class="edd-cart-saving-link" id="edd-restore-cart-link" href="' . add_query_arg( array( 'edd_action' => 'restore_cart', 'edd_cart_token' => edd_get_cart_token() ) ) . '">' . __( 'Restore Previous Cart.', 'edd' ) . '</a>';
+		echo ' <a class="edd-cart-saving-link" id="edd-restore-cart-link" href="' . esc_url( add_query_arg( array( 'edd_action' => 'restore_cart', 'edd_cart_token' => edd_get_cart_token() ) ) ) . '">' . __( 'Restore Previous Cart.', 'edd' ) . '</a>';
 	}
 }
 add_action( 'edd_cart_empty', 'edd_empty_cart_restore_cart_link' );
@@ -208,15 +208,27 @@ function edd_display_cart_messages() {
 	$messages = EDD()->session->get( 'edd_cart_messages' );
 
 	if ( $messages ) {
-		$classes = apply_filters( 'edd_error_class', array(
-			'edd_errors'
-		) );
-		echo '<div class="' . implode( ' ', $classes ) . '">';
-		    // Loop message codes and display messages
-		   foreach ( $messages as $message_id => $message ){
-		        echo '<p class="edd_error" id="edd_msg_' . $message_id . '">' . $message . '</p>';
-		   }
-		echo '</div>';
+		foreach ( $messages as $message_id => $message ) {
+
+			// Try and detect what type of message this is
+			if ( strpos( strtolower( $message ), 'error' ) ) {
+				$type = 'error';
+			} elseif ( strpos( strtolower( $message ), 'success' ) ) {
+				$type = 'success';
+			} else {
+				$type = 'info';
+			}
+
+			$classes = apply_filters( 'edd_' . $type . '_class', array(
+				'edd_errors', 'edd-alert', 'edd-alert-' . $type
+			) );
+
+			echo '<div class="' . implode( ' ', $classes ) . '">';
+				// Loop message codes and display messages
+					echo '<p class="edd_error" id="edd_msg_' . $message_id . '">' . $message . '</p>';
+			echo '</div>';
+
+		}
 
 		// Remove all of the cart saving messages
 		EDD()->session->set( 'edd_cart_messages', null );

@@ -141,7 +141,7 @@ function edd_get_download_price( $download_id = 0 ) {
 	}
 
 	$download = new EDD_Download( $download_id );
-	return $download->price;
+	return $download->get_price();
 }
 
 /**
@@ -232,7 +232,7 @@ function edd_get_variable_prices( $download_id = 0 ) {
 	}
 
 	$download = new EDD_Download( $download_id );
-	return $download->prices;
+	return $download->get_prices();
 }
 
 /**
@@ -546,7 +546,7 @@ function edd_record_sale_in_log( $download_id = 0, $payment_id, $price_id = fals
 		'post_parent'   => $download_id,
 		'log_type'      => 'sale',
 		'post_date'     => isset( $sale_date ) ? $sale_date : null,
-		'post_date_gmt' => isset( $sale_date ) ? $sale_date : null
+		'post_date_gmt' => isset( $sale_date ) ? get_gmt_from_date( $sale_date ) : null
 	);
 
 	$log_meta = array(

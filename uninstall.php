@@ -23,7 +23,7 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 	$edd_taxonomies = array( 'download_category', 'download_tag', 'edd_log_type', );
 	$edd_post_types = array( 'download', 'edd_payment', 'edd_discount', 'edd_log' );
 	foreach ( $edd_post_types as $post_type ) {
-	
+
 		$edd_taxonomies = array_merge( $edd_taxonomies, get_object_taxonomies( $post_type ) );
 		$items = get_posts( array( 'post_type' => $post_type, 'post_status' => 'any', 'numberposts' => -1, 'fields' => 'ids' ) );
 
@@ -36,9 +36,9 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 
 	/** Delete All the Terms & Taxonomies */
 	foreach ( array_unique( array_filter( $edd_taxonomies ) ) as $taxonomy ) {
-		
+
 		$terms = $wpdb->get_results( $wpdb->prepare( "SELECT t.*, tt.* FROM $wpdb->terms AS t INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id WHERE tt.taxonomy IN ('%s') ORDER BY t.name ASC", $taxonomy ) );
-		
+
 		// Delete Terms
 		if ( $terms ) {
 			foreach ( $terms as $term ) {
@@ -46,7 +46,7 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 				$wpdb->delete( $wpdb->terms, array( 'term_id' => $term->term_id ) );
 			}
 		}
-		
+
 		// Delete Taxonomies
 		$wpdb->delete( $wpdb->term_taxonomy, array( 'taxonomy' => $taxonomy ), array( '%s' ) );
 	}
@@ -62,6 +62,7 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 
 	/** Delete all the Plugin Options */
 	delete_option( 'edd_settings' );
+	delete_option( 'edd_version' );
 
 	/** Delete Capabilities */
 	EDD()->roles->remove_caps();

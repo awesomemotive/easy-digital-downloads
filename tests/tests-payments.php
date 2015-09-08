@@ -17,8 +17,8 @@ class Tests_Payments extends WP_UnitTestCase {
 
 		parent::setUp();
 
-		$payment_id        	= EDD_Helper_Payment::create_simple_payment();
-		$purchase_data     	= edd_get_payment_meta( $payment_id );
+		$payment_id         = EDD_Helper_Payment::create_simple_payment();
+		$purchase_data      = edd_get_payment_meta( $payment_id );
 		$this->_payment_key = edd_get_payment_key( $payment_id );
 
 		$this->_payment_id = $payment_id;
@@ -143,8 +143,14 @@ class Tests_Payments extends WP_UnitTestCase {
 
 	public function test_get_payment_number() {
 
+		$this->assertInternalType( 'int', edd_get_next_payment_number() );
+		$this->assertInternalType( 'string', edd_format_payment_number( edd_get_next_payment_number() ) );
+		$this->assertEquals( 'EDD-2', edd_format_payment_number( edd_get_next_payment_number() ) );
+
+		$last_payment_number = edd_remove_payment_prefix_postfix( edd_get_payment_number( $this->_payment_id ) );
+		$this->assertEquals( 1, $last_payment_number );
 		$this->assertEquals( 'EDD-1', edd_get_payment_number( $this->_payment_id ) );
-		$this->assertEquals( 'EDD-2', edd_get_next_payment_number() );
+		$this->assertEquals( 2, edd_get_next_payment_number() );
 
 		// Now disable sequential and ensure values come back as expected
 		edd_delete_option( 'enable_sequential' );
@@ -208,22 +214,6 @@ class Tests_Payments extends WP_UnitTestCase {
 
 		$this->assertEquals( '&#36;120.00', $total1 );
 		$this->assertEquals( '&#36;120.00', $total2 );
-
-	}
-
-	public function test_payment_tax_updates() {
-
-		// Test that when we update _edd_payment_tax, we update the _edd_payment_meta
-		edd_update_payment_meta( $this->_payment_id, '_edd_payment_tax', 10 );
-		$meta_array = edd_get_payment_meta( $this->_payment_id, '_edd_payment_meta', true );
-		$this->assertEquals( 10, $meta_array['tax'] );
-		$this->assertEquals( 10, edd_get_payment_tax( $this->_payment_id ) );
-
-		// Test that when we update the _edd_payment_meta, we update the _edd_payment_tax
-		$current_meta = edd_get_payment_meta( $this->_payment_id, true );
-		$current_meta['tax'] = 20;
-		edd_update_payment_meta( $this->_payment_id, '_edd_payment_meta', $current_meta );
-		$this->assertEquals( 20, edd_get_payment_tax( $this->_payment_id ) );
 
 	}
 

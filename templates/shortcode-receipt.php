@@ -8,8 +8,8 @@ $payment   = get_post( $edd_receipt_args['id'] );
 
 if( empty( $payment ) ) : ?>
 
-	<div class="edd_errors">
-		<p class="edd_error"><?php _e( 'The specified receipt ID appears to be invalid', 'edd' ); ?></p> 
+	<div class="edd_errors edd-alert edd-alert-error">
+		<?php _e( 'The specified receipt ID appears to be invalid', 'edd' ); ?>
 	</div>
 
 <?php
@@ -159,7 +159,7 @@ $status    = edd_get_payment_status( $payment, true );
 						<?php endif; ?>
 
 						<?php
-						if( edd_is_payment_complete( $payment->ID ) && edd_receipt_show_download_files( $item['id'], $edd_receipt_args ) ) : ?>
+						if( edd_is_payment_complete( $payment->ID ) && edd_receipt_show_download_files( $item['id'], $edd_receipt_args, $item ) ) : ?>
 						<ul class="edd_purchase_receipt_files">
 							<?php
 							if ( ! empty( $download_files ) && is_array( $download_files ) ) :

@@ -135,8 +135,9 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 	if( 'download' != $download->post_type )
 		return; // Not a download product
 
-	if ( ! current_user_can( 'edit_post', $download->ID ) && ( $download->post_status == 'draft' || $download->post_status == 'pending' ) )
+	if ( ! current_user_can( 'edit_post', $download->ID ) && $download->post_status != 'publish' ) {
 		return; // Do not allow draft/pending to be purchased if can't edit. Fixes #1056
+	}
 
 	do_action( 'edd_pre_add_to_cart', $download_id, $options );
 
@@ -557,6 +558,29 @@ function edd_get_cart_item_price_name( $item = array() ) {
 }
 
 /**
+ * Get cart item title
+ *
+ * @since 2.4.3
+ * @param int $item Cart item array
+ * @return string item title
+ */
+function edd_get_cart_item_name( $item = array() ) {
+
+	$item_title = get_the_title( $item['id'] );
+
+	if( empty( $item_title ) ) {
+		$item_title = $item['id'];
+	}
+
+	if ( edd_has_variable_prices( $item['id'] ) && false !== edd_get_cart_item_price_id( $item ) ) {
+
+		$item_title .= ' - ' . edd_get_cart_item_price_name( $item );
+	}
+
+	return apply_filters( 'edd_get_cart_item_name', $item_title, $item['id'], $item );
+}
+
+/**
  * Cart Subtotal
  *
  * Shows the subtotal for the shopping cart (no taxes)
@@ -743,13 +767,15 @@ function edd_get_purchase_summary( $purchase_data, $email = true ) {
 		$summary .= $purchase_data['user_email'] . ' - ';
 	}
 
-	foreach ( $purchase_data['downloads'] as $download ) {
-		$summary .= get_the_title( $download['id'] ) . ', ';
-	}
+	if ( ! empty( $purchase_data['downloads'] ) ) {
+		foreach ( $purchase_data['downloads'] as $download ) {
+			$summary .= get_the_title( $download['id'] ) . ', ';
+		}
 
-	$summary = substr( $summary, 0, -2 );
+		$summary = substr( $summary, 0, -2 );
+	}	
 
-	return $summary;
+	return apply_filters( 'edd_get_purchase_summary', $summary, $purchase_data, $email );
 }
 
 /**
@@ -851,16 +877,13 @@ function edd_remove_item_url( $cart_key ) {
 
 	global $wp_query;
 
-	if ( defined('DOING_AJAX') ){
+	if ( defined('DOING_AJAX') ) {
 		$current_page = edd_get_checkout_uri();
-	} else if( is_page() ) {
-		$current_page = add_query_arg( 'page_id', $wp_query->queried_object_id, home_url( 'index.php' ) );
-	} else if( is_singular() ) {
-		$current_page = add_query_arg( 'p', $wp_query->queried_object_id, home_url( 'index.php' ) );
 	} else {
 		$current_page = edd_get_current_page_url();
 	}
-	$remove_url = add_query_arg( array( 'cart_item' => $cart_key, 'edd_action' => 'remove' ), $current_page );
+
+	$remove_url = add_query_arg( array( 'cart_item' => $cart_key, 'edd_action' => 'remove', 'nocache' => current_time( 'timestamp' ) ), $current_page );
 
 	return apply_filters( 'edd_remove_item_url', $remove_url );
 }
@@ -876,16 +899,13 @@ function edd_remove_item_url( $cart_key ) {
 function edd_remove_cart_fee_url( $fee_id = '') {
 	global $post;
 
-	if ( defined('DOING_AJAX') ){
+	if ( defined('DOING_AJAX') ) {
 		$current_page = edd_get_checkout_uri();
-	} else if( is_page() ) {
-		$current_page = add_query_arg( 'page_id', $post->ID, home_url( 'index.php' ) );
-	} else if( is_singular() ) {
-		$current_page = add_query_arg( 'p', $post->ID, home_url( 'index.php' ) );
 	} else {
 		$current_page = edd_get_current_page_url();
 	}
-	$remove_url = add_query_arg( array( 'fee' => $fee_id, 'edd_action' => 'remove_fee' ), $current_page );
+
+	$remove_url = add_query_arg( array( 'fee' => $fee_id, 'edd_action' => 'remove_fee', 'nocache' => current_time( 'timestamp' ) ), $current_page );
 
 	return apply_filters( 'edd_remove_fee_url', $remove_url );
 }

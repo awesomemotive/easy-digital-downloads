@@ -38,7 +38,6 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 	$customer_id    = edd_get_payment_customer_id( $payment_id );
 	$amount         = edd_get_payment_amount( $payment_id );
 	$cart_details   = edd_get_payment_meta_cart_details( $payment_id );
-	$increase_stats = ! edd_is_test_mode() || apply_filters( 'edd_log_test_payment_stats', false );
 
 	do_action( 'edd_pre_complete_purchase', $payment_id );
 
@@ -56,25 +55,16 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 				// Ensure these actions only run once, ever
 				if( empty( $completed_date ) ) {
 
-					if ( $increase_stats ) {
-
-						edd_record_sale_in_log( $download['id'], $payment_id, $price_id, $creation_date );
-
-					}
-
+					edd_record_sale_in_log( $download['id'], $payment_id, $price_id, $creation_date );
 					do_action( 'edd_complete_download_purchase', $download['id'], $payment_id, $download_type, $download, $cart_index );
 
 				}
 
 			}
 
-			if( $increase_stats ) {
-
-				// Increase the earnings for this download ID
-				edd_increase_earnings( $download['id'], $download['price'] );
-				edd_increase_purchase_count( $download['id'], $download['quantity'] );
-
-			}
+			// Increase the earnings for this download ID
+			edd_increase_earnings( $download['id'], $download['price'] );
+			edd_increase_purchase_count( $download['id'], $download['quantity'] );
 
 		}
 
@@ -85,16 +75,14 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 		delete_transient( md5( 'edd_earnings_todaytoday' ) );
 	}
 
-	if( $increase_stats ) {
 
-		// Increase the customer's purchase stats
-		$customer = new EDD_Customer( $customer_id );
-		$customer->increase_purchase_count();
-		$customer->increase_value( $amount );
+	// Increase the customer's purchase stats
+	$customer = new EDD_Customer( $customer_id );
+	$customer->increase_purchase_count();
+	$customer->increase_value( $amount );
 
-		edd_increase_total_earnings( $amount );
+	edd_increase_total_earnings( $amount );
 
-	}
 
 	// Check for discount codes and increment their use counts
 	if ( ! empty( $user_info['discount'] ) && $user_info['discount'] !== 'none' ) {
@@ -159,11 +147,15 @@ add_action( 'edd_update_payment_status', 'edd_record_status_change', 100, 3 );
  */
 function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
 
-	if( 'publish' != $old_status && 'revoked' != $old_status )
-		return;
+	global $edd_logs;
 
-	if( 'refunded' != $new_status )
+	if( 'publish' != $old_status && 'revoked' != $old_status ) {
 		return;
+	}
+
+	if( 'refunded' != $new_status ) {
+		return;
+	}
 
 	$downloads = edd_get_payment_meta_cart_details( $payment_id );
 	if( $downloads ) {
@@ -186,6 +178,18 @@ function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
 		$customer->decrease_purchase_count();
 
 	}
+
+	// Remove related sale log entries
+	$edd_logs->delete_logs(
+		null,
+		'sale',
+		array(
+			array(
+				'key'   => '_edd_log_payment_id',
+				'value' => $payment_id
+			)
+		)
+	);
 
 	// Clear the This Month earnings (this_monththis_month is NOT a typo)
 	delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
@@ -295,7 +299,12 @@ function edd_update_payment_backwards_compat( $meta_id, $object_id, $meta_key, $
 
 		case '_edd_payment_meta':
 			$meta_value   = maybe_unserialize( $meta_value );
-			$tax_value    = ! empty( $meta_value['tax'] ) ? $meta_value['tax'] : 0;
+
+			if( !isset( $meta_value['tax'] ) ){
+				return;
+			}
+
+			$tax_value    = $meta_value['tax'];
 
 			$data         = array( 'meta_value' => $tax_value );
 			$where        = array( 'post_id'  => $object_id, 'meta_key' => '_edd_payment_tax' );

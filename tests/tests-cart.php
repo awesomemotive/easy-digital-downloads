@@ -17,7 +17,7 @@ class Test_Cart extends WP_UnitTestCase {
 
 		global $wp_rewrite;
 		$GLOBALS['wp_rewrite']->init();
-		flush_rewrite_rules();
+		flush_rewrite_rules( false );
 
 		edd_add_rewrite_endpoints($wp_rewrite);
 
@@ -261,6 +261,42 @@ class Test_Cart extends WP_UnitTestCase {
 
 	}
 
+	public function test_get_cart_item_discounted_amount() {
+
+		// Call without any arguements
+		$expected = edd_get_cart_item_discount_amount();
+		$this->assertEquals( 0.00, $expected );
+
+		// Call with an array but missing 'id'
+		$expected = edd_get_cart_item_discount_amount( array( 'foo' => 'bar' ) );
+		$this->assertEquals( 0.00, $expected );
+
+		// Now setup a cart and make sure it works
+		edd_empty_cart();
+
+		$options = array(
+			'price_id' => 0
+		);
+
+		edd_add_to_cart( $this->_post->ID, $options );
+
+		// Now set a discount and test again
+		edd_set_cart_discount( '20OFF' );
+
+		// Test it without a quantity
+		$cart_item_args = array( 'id' => $this->_post->ID );
+		$this->assertEquals( 0.00, edd_get_cart_item_discount_amount( $cart_item_args ) );
+
+		// Test it without an options array on an item with variable pricing to make sure we get 0
+		$cart_item_args = array( 'id' => $this->_post->ID, 'quantity' => 1 );
+		$this->assertEquals( 0.00, edd_get_cart_item_discount_amount( $cart_item_args ) );
+
+		// Now test it with an options array properly set
+		$cart_item_args['options'] = $options;
+		$this->assertEquals( 4, edd_get_cart_item_discount_amount( $cart_item_args ) );
+
+	}
+
 	public function test_cart_quantity() {
 		$this->assertEquals(1, edd_get_cart_quantity());
 	}
@@ -397,5 +433,17 @@ class Test_Cart extends WP_UnitTestCase {
 
 	public function test_generate_cart_token() {
 		$this->assertInternalType( 'int', edd_generate_cart_token() );
+	}
+
+	public function test_edd_get_cart_item_name() {
+
+		edd_empty_cart();
+
+		edd_add_to_cart( $this->_post->ID );
+
+		$items = edd_get_cart_content_details();
+
+		$this->assertEquals( 'Test Download - Simple', edd_get_cart_item_name( $items[0] ) );
+
 	}
 }

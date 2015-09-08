@@ -41,7 +41,7 @@ function edd_payment_history_page() {
 			<?php $payments_table->views() ?>
 
 			<?php $payments_table->advanced_filters(); ?>
-			
+
 			<?php $payments_table->display() ?>
 		</form>
 		<?php do_action( 'edd_payments_page_bottom' ); ?>
@@ -56,15 +56,15 @@ function edd_payment_history_page() {
  * @since 1.8.4
  * @return void
 */
-function edd_payment_history_mobile_link() { 
+function edd_payment_history_mobile_link() {
 	?>
 	<p class="edd-mobile-link">
-		<a href="https://easydigitaldownloads.com/extensions/ios-sales-earnings-tracker/" target="_blank">
+		<a href="https://easydigitaldownloads.com/downloads/ios-sales-earnings-tracker/?utm_source=payments&utm_medium=mobile-link&utm_campaign=admin" target="_blank">
 			<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/icons/iphone.png'; ?>"/>
 			<?php _e( 'Get the EDD Sales / Earnings tracker for iOS', 'edd' ); ?>
 		</a>
 	</p>
-	<?php 
+	<?php
 }
 add_action( 'edd_payments_page_bottom', 'edd_payment_history_mobile_link' );
 

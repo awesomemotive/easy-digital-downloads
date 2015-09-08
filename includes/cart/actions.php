@@ -87,7 +87,7 @@ add_action( 'edd_add_to_cart', 'edd_process_add_to_cart' );
 function edd_process_remove_from_cart( $data ) {
 	$cart_key = absint( $_GET['cart_item'] );
 	edd_remove_from_cart( $cart_key );
-	wp_redirect( remove_query_arg( array( 'edd_action', 'cart_item' ) ) ); edd_die();
+	wp_redirect( remove_query_arg( array( 'edd_action', 'cart_item', 'nocache' ) ) ); edd_die();
 }
 add_action( 'edd_remove', 'edd_process_remove_from_cart' );
 
@@ -101,7 +101,7 @@ add_action( 'edd_remove', 'edd_process_remove_from_cart' );
 function edd_process_remove_fee_from_cart( $data ) {
 	$fee = sanitize_text_field( $data['fee'] );
 	EDD()->fees->remove_fee( $fee );
-	wp_redirect( remove_query_arg( array( 'edd_action', 'fee' ) ) ); edd_die();
+	wp_redirect( remove_query_arg( array( 'edd_action', 'fee', 'nocache' ) ) ); edd_die();
 }
 add_action( 'edd_remove_fee', 'edd_process_remove_fee_from_cart' );
 

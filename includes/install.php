@@ -41,7 +41,7 @@ function edd_install() {
 	edd_setup_download_taxonomies();
 
 	// Clear the permalinks
-	flush_rewrite_rules();
+	flush_rewrite_rules( false );
 
 	// Add Upgraded From Option
 	$current_version = get_option( 'edd_version' );
@@ -137,6 +137,9 @@ function edd_install() {
 	$roles->add_roles();
 	$roles->add_caps();
 
+	$api = new EDD_API;
+	update_option( 'edd_default_api_version', 'v' . $api->get_version() );
+
 	// Create the customers database
 	@EDD()->customers->create_table();
 
@@ -157,7 +160,9 @@ function edd_install() {
 		// When new upgrade routines are added, mark them as complete on fresh install
 		$upgrade_routines = array(
 			'upgrade_payment_taxes',
-			'upgrade_customer_payments_association'
+			'upgrade_customer_payments_association',
+			'upgrade_user_api_keys',
+			'remove_refunded_sale_logs'
 		);
 
 		foreach ( $upgrade_routines as $upgrade ) {

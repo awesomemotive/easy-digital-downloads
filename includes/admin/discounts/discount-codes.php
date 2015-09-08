@@ -30,7 +30,7 @@ function edd_discounts_page() {
 		$discount_codes_table->prepare_items();
 	?>
 	<div class="wrap">
-		<h2><?php _e( 'Discount Codes', 'edd' ); ?><a href="<?php echo add_query_arg( array( 'edd-action' => 'add_discount' ) ); ?>" class="add-new-h2"><?php _e( 'Add New', 'edd' ); ?></a></h2>
+		<h2><?php _e( 'Discount Codes', 'edd' ); ?><a href="<?php echo esc_url( add_query_arg( array( 'edd-action' => 'add_discount' ) ) ); ?>" class="add-new-h2"><?php _e( 'Add New', 'edd' ); ?></a></h2>
 		<?php do_action( 'edd_discounts_page_top' ); ?>
 		<form id="edd-discounts-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-discounts' ); ?>">
 			<?php $discount_codes_table->search_box( __( 'Search', 'edd' ), 'edd-discounts' ); ?>

@@ -166,9 +166,9 @@ function edd_tools_api_keys_display() {
 ?>
 	<p>
 	<?php printf(
-		__( 'These API keys allow you to use the <a href="%s">EDD REST API</a> to retrieve store data in JSON or XML for external applications or devices, such as the <a href="%s">EDD mobile apps</a>.', 'edd' ),
-		'https://easydigitaldownloads.com/docs/edd-api-reference/',
-		'https://easydigitaldownloads.com/blog/extensions/categories/mobile/'
+		__( 'These API keys allow you to use the <a href="%s">EDD REST API</a> to retrieve store data in JSON or XML for external applications or devices, such as the <a href="%s">EDD mobile app</a>.', 'edd' ),
+		'http://docs.easydigitaldownloads.com/article/544-edd-api-reference/',
+		'https://easydigitaldownloads.com/downloads/ios-sales-earnings-tracker/'
 	); ?>
 	</p>
 <?php
@@ -196,18 +196,22 @@ function edd_tools_banned_emails_save() {
 		return;
 	}
 
+	if( ! empty( $_POST['banned_emails'] ) ) {
 
-	// Sanitize the input
-	$emails = array_map( 'trim', explode( "\n", $_POST['banned_emails'] ) );
-	$emails = array_unique( $emails );
-	$emails = array_map( 'sanitize_text_field', $emails );
+		// Sanitize the input
+		$emails = array_map( 'trim', explode( "\n", $_POST['banned_emails'] ) );
+		$emails = array_unique( $emails );
+		$emails = array_map( 'sanitize_text_field', $emails );
 
-	foreach( $emails as $id => $email ) {
-		if( ! is_email( $email ) ) {
-			if( $email[0] != '@' ) {
-				unset( $emails[$id] );
+		foreach( $emails as $id => $email ) {
+			if( ! is_email( $email ) ) {
+				if( $email[0] != '@' ) {
+					unset( $emails[$id] );
+				}
 			}
 		}
+	} else {
+		$emails = '';
 	}
 
 	$edd_options['banned_emails'] = $emails;
@@ -474,7 +478,8 @@ function edd_tools_sysinfo_get() {
 
 	$return .= 'Remote Post:              ' . $WP_REMOTE_POST . "\n";
 	$return .= 'Table Prefix:             ' . 'Length: ' . strlen( $wpdb->prefix ) . '   Status: ' . ( strlen( $wpdb->prefix ) > 16 ? 'ERROR: Too long' : 'Acceptable' ) . "\n";
-	$return .= 'Admin AJAX:               ' . ( edd_test_ajax_works() ? 'Accessible' : 'Inaccessible' ) . "\n";
+	// Commented out per https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/3475
+	//$return .= 'Admin AJAX:               ' . ( edd_test_ajax_works() ? 'Accessible' : 'Inaccessible' ) . "\n";
 	$return .= 'WP_DEBUG:                 ' . ( defined( 'WP_DEBUG' ) ? WP_DEBUG ? 'Enabled' : 'Disabled' : 'Not set' ) . "\n";
 	$return .= 'Memory Limit:             ' . WP_MEMORY_LIMIT . "\n";
 	$return .= 'Registered Post Stati:    ' . implode( ', ', get_post_stati() ) . "\n";
