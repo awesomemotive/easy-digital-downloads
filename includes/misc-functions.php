@@ -813,16 +813,18 @@ function edd_can_view_receipt( $payment_key = '' ) {
 
 	$edd_receipt_args['id'] = edd_get_purchase_id_by_key( $payment_key );
 
-	$user_id = edd_get_payment_user_id( $edd_receipt_args['id'] );
+	$user_id = (int) edd_get_payment_user_id( $edd_receipt_args['id'] );
 
 	$payment_meta = edd_get_payment_meta( $edd_receipt_args['id'] );
 
-	if ( is_user_logged_in() && $user_id == get_current_user_id() ) {
-		$return = true;
-	}
-
-	if ( current_user_can( 'view_shop_sensitive_data' ) ) {
-		$return = true;
+	if ( is_user_logged_in() ) {
+		if ( $user_id === (int) get_current_user_id() ) {
+			$return = true;
+		} elseif ( wp_get_current_user()->user_email === $payment_meta['user_info']['email'] ) {
+			$return = true;
+		} elseif ( current_user_can( 'view_shop_sensitive_data' ) ) {
+			$return = true;
+		}
 	}
 
 	$session = edd_get_purchase_session();
