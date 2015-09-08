@@ -263,11 +263,15 @@ function edd_get_purchase_stats_by_user( $user = '' ) {
 	}
 
 	$customer = EDD()->customers->get_customer_by( $field, $user );
-	$customer = new EDD_Customer( $customer->id );
 
-	$stats = array();
-	$stats['purchases']   = absint( $customer->purchase_count );
-	$stats['total_spent'] = edd_sanitize_amount( $customer->purchase_value );
+	if( $customer ) {
+
+		$customer = new EDD_Customer( $customer->id );
+
+		$stats['purchases']   = absint( $customer->purchase_count );
+		$stats['total_spent'] = edd_sanitize_amount( $customer->purchase_value );
+
+	}
 
 
 	return (array) apply_filters( 'edd_purchase_stats_by_user', $stats, $user );
@@ -375,7 +379,7 @@ function edd_add_past_purchases_to_new_user( $user_id ) {
 	if( $payments ) {
 
 		// Set a flag to force the account to be verified before purchase history can be accessed
-		update_user_meta( $user_id, '_edd_pending_verification', '1' );
+		edd_set_user_to_pending( $user_id );
 
 		edd_send_user_verification_email( $user_id );
 
@@ -463,11 +467,57 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 add_action( 'edd_insert_user', 'edd_new_user_notification', 10, 2 );
 
 /**
+ * Set a user's status to pending
+ *
+ * @since  2.4.4
+ * @param  integer $user_id The User ID to set to pending
+ * @return bool             If the update was successful
+ */
+function edd_set_user_to_pending( $user_id = 0 ) {
+	if ( empty( $user_id ) ) {
+		return false;
+	}
+
+	do_action( 'edd_pre_set_user_to_pending', $user_id );
+
+	$update_successful = (bool) update_user_meta( $user_id, '_edd_pending_verification', '1' );
+
+	do_action( 'edd_post_set_user_to_pending', $user_id, $update_successful );
+
+	return $update_successful;
+}
+
+/**
+ * Set the user from pending to active
+ *
+ * @since  2.4.4
+ * @param  integer $user_id The User ID to activate
+ * @return bool             If the user was marked as active or not
+ */
+function edd_set_user_to_active( $user_id = 0 ) {
+	if ( empty( $user_id ) ) {
+		return false;
+	}
+
+	if ( ! edd_user_pending_verification( $user_id ) ) {
+		return false;
+	}
+
+	do_action( 'edd_pre_set_user_to_active', $user_id );
+
+	$update_successful = delete_user_meta( $user_id, '_edd_pending_verification', '1' );
+
+	do_action( 'edd_post_set_user_to_active', $user_id, $update_successful );
+
+	return $update_successful;
+}
+
+/**
  * Determines if the user account is pending verification. Pending accounts cannot view purchase history
  *
- * @access 		public
- * @since 		2.4.4
- * @return 		bool
+ * @access  public
+ * @since   2.4.4
+ * @return  bool
  */
 function edd_user_pending_verification( $user_id = 0 ) {
 
@@ -484,9 +534,9 @@ function edd_user_pending_verification( $user_id = 0 ) {
 /**
  * Gets the activation URL for the specified user
  *
- * @access 		public
- * @since 		2.4.4
- * @return 		string
+ * @access  public
+ * @since   2.4.4
+ * @return  string
  */
 function edd_get_user_verification_url( $user_id = 0 ) {
 
@@ -510,9 +560,9 @@ function edd_get_user_verification_url( $user_id = 0 ) {
 /**
  * Gets the URL that triggers a new verification email to be sent
  *
- * @access 		public
- * @since 		2.4.4
- * @return 		string
+ * @access  public
+ * @since   2.4.4
+ * @return  string
  */
 function edd_get_user_verification_request_url( $user_id = 0 ) {
 
@@ -531,9 +581,9 @@ function edd_get_user_verification_request_url( $user_id = 0 ) {
 /**
  * Sends an email to the specified user with a URL to verify their account
  *
- * @access 		public
- * @since 		2.4.4
- * @return 		void
+ * @access  public
+ * @since   2.4.4
+ * @return  void
  */
 function edd_send_user_verification_email( $user_id = 0 ) {
 
@@ -583,9 +633,9 @@ function edd_send_user_verification_email( $user_id = 0 ) {
  * agent could be tested to ensure the URL is only valid for requests from
  * that user agent.
  *
- * @since 2.4.4
+ * @since  2.4.4
  *
- * @param string $url The URL to generate a token for.
+ * @param  string $url The URL to generate a token for.
  * @return string The token for the URL.
  */
 function edd_get_user_verification_token( $url = '' ) {
@@ -657,15 +707,16 @@ function edd_get_user_verification_token( $url = '' ) {
  * Generate a token for a URL and match it against the existing token to make
  * sure the URL hasn't been tampered with.
  *
- * @since 2.4.4
+ * @since  2.4.4
  *
- * @param string $url URL to test.
+ * @param  string $url URL to test.
  * @return bool
  */
 function edd_validate_user_verification_token( $url = '' ) {
 
-	$ret   = false;
-	$parts = parse_url( $url );
+	$ret        = false;
+	$parts      = parse_url( $url );
+	$query_args = array();
 
 	if ( isset( $parts['query'] ) ) {
 
@@ -693,7 +744,7 @@ function edd_validate_user_verification_token( $url = '' ) {
 /**
  * Processes an account verification email request
  *
- * @since 2.4.4
+ * @since  2.4.4
  *
  * @return void
  */
@@ -756,7 +807,7 @@ function edd_process_user_account_verification() {
 		wp_die( __( 'Invalid verification token provided.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
 
-	delete_user_meta( absint( $_GET['user_id'] ), '_edd_pending_verification' );
+	edd_set_user_to_active( absint( $_GET['user_id'] ) );
 
 	do_action( 'edd_user_verification_token_validated' );
 
