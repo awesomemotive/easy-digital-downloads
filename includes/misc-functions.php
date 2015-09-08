@@ -811,7 +811,7 @@ function edd_user_can_view_receipt( $payment_key ) {
 
 	$payment_meta = edd_get_payment_meta( $edd_receipt_args['id'] );
 
-	if ( is_user_logged_in() && $customer_id === get_current_user_id() ) {
+	if ( is_user_logged_in() && $customer_id == get_current_user_id() ) {
 		return true;
 	}
 
