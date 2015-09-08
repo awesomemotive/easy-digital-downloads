@@ -252,7 +252,7 @@ function edd_customers_view( $customer ) {
 
 				<div class="customer-main-wrapper left">
 
-					<span class="customer-name info-item edit-item"><input size="15" data-key="name" name="customerinfo[name]" type="text" value="<?php echo $customer->name; ?>" placeholder="<?php _e( 'Customer Name', 'edd' ); ?>" /></span>
+					<span class="customer-name info-item edit-item"><input size="15" data-key="name" name="customerinfo[name]" type="text" value="<?php echo esc_attr( $customer->name ); ?>" placeholder="<?php _e( 'Customer Name', 'edd' ); ?>" /></span>
 					<span class="customer-name info-item editable"><span data-key="name"><?php echo $customer->name; ?></span></span>
 					<span class="customer-name info-item edit-item"><input size="20" data-key="email" name="customerinfo[email]" type="text" value="<?php echo $customer->email; ?>" placeholder="<?php _e( 'Customer Email', 'edd' ); ?>" /></span>
 					<span class="customer-email info-item editable" data-key="email"><?php echo $customer->email; ?></span>
@@ -284,7 +284,7 @@ function edd_customers_view( $customer ) {
 					<span class="customer-user-id info-item editable">
 						<?php _e( 'User ID', 'edd' ); ?>:&nbsp;
 						<?php if( intval( $customer->user_id ) > 0 ) : ?>
-							<span data-key="user_id"><?php echo $customer->user_id; ?></span>
+							<span data-key="user_id"><a href="<?php echo admin_url( 'user-edit.php?user_id=' . $customer->user_id ); ?>"><?php echo $customer->user_id; ?></a></span>
 						<?php else : ?>
 							<span data-key="user_id"><?php _e( 'none', 'edd' ); ?></span>
 						<?php endif; ?>

@@ -52,7 +52,7 @@ function edd_logged_in_only() {
  * @return bool $ret True is redirect is enabled, false otherwise
  */
 function edd_straight_to_checkout() {
-	$ret = edd_get_option( 'redirect_on_add', false );	
+	$ret = edd_get_option( 'redirect_on_add', false );
 	return (bool) apply_filters( 'edd_straight_to_checkout', $ret );
 }
 
@@ -436,8 +436,9 @@ function edd_get_current_page_url() {
 	else :
 		$page_url = 'http';
 
-	if ( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" )
+	if ( is_ssl() ) {
 		$page_url .= "s";
+	}
 
 	$page_url .= "://";
 
@@ -696,6 +697,43 @@ function edd_set_upload_dir( $upload ) {
 	return $upload;
 }
 
+/**
+ * Check if the upgrade routine has been run for a specific action
+ *
+ * @since  2.3
+ * @param  string $upgrade_action The upgrade action to check completion for
+ * @return bool                   If the action has been added to the copmleted actions array
+ */
+function edd_has_upgrade_completed( $upgrade_action = '' ) {
+
+	if ( empty( $upgrade_action ) ) {
+		return false;
+	}
+
+	$completed_upgrades = edd_get_completed_upgrades();
+
+	return in_array( $upgrade_action, $completed_upgrades );
+
+}
+
+/**
+ * Get's the array of completed upgrade actions
+ *
+ * @since  2.3
+ * @return array The array of completed upgrades
+ */
+function edd_get_completed_upgrades() {
+
+	$completed_upgrades = get_option( 'edd_completed_upgrades' );
+
+	if ( false === $completed_upgrades ) {
+		$completed_upgrades = array();
+	}
+
+	return $completed_upgrades;
+
+}
+
 
 if ( ! function_exists( 'cal_days_in_month' ) ) {
 	// Fallback in case the calendar extension is not loaded in PHP
@@ -733,4 +771,27 @@ function hash_equals( $a, $b ) {
 
 	return $result === 0;
 }
+endif;
+
+if ( ! function_exists( 'getallheaders' ) ) :
+
+	/**
+	 * Retrieve all headers
+	 *
+	 * Ensure getallheaders function exists in the case we're using nginx
+	 *
+	 * @access public
+	 * @since  2.4
+	 * @return array
+	 */
+	function getallheaders() {
+		$headers = '';
+		foreach ( $_SERVER as $name => $value ) {
+			if ( substr( $name, 0, 5 ) == 'HTTP_' ) {
+				$headers[ str_replace( ' ', '-', ucwords( strtolower( str_replace( '_', ' ', substr( $name, 5 ) ) ) ) ) ] = $value;
+			}
+		}
+		return $headers;
+	}
+
 endif;

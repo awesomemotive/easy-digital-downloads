@@ -135,7 +135,7 @@ function edd_download_meta_box_save( $post_id, $post ) {
 
 		} elseif ( '_edd_default_price_id' == $field && edd_has_variable_prices( $post_id ) ) {
 
-			$new_default_price_id = ! empty( $_POST[$field] ) && is_numeric( $_POST[$field] ) ? (int)$_POST[$field] : 1;
+			$new_default_price_id = ( ! empty( $_POST[$field] ) && is_numeric( $_POST[$field] ) ) || ( 0 === (int)$_POST[$field] ) ? (int)$_POST[$field] : 1;
 			update_post_meta( $post_id, $field, $new_default_price_id );
 
 		} else {
@@ -847,6 +847,32 @@ function edd_render_dowwn_tax_options( $post_id = 0 ) {
 <?php
 }
 add_action( 'edd_meta_box_settings_fields', 'edd_render_dowwn_tax_options', 30 );
+
+/**
+ * Add shortcode to settings meta box
+ *
+ * @since 2.5
+ * @global array $post Contains all the download data
+ * @return void
+ */
+function edd_render_meta_box_shortcode() {
+	global $post;
+	
+	if( $post->post_type != 'download' ) {
+		return;
+	}
+
+	$purchase_text = edd_get_option( 'add_to_cart_text', __( 'Purchase', 'edd' ) );
+	$style         = edd_get_option( 'button_style', 'button' );
+	$color         = edd_get_option( 'checkout_color', 'blue' );
+	$color         = ( $color == 'inherit' ) ? '' : $color;
+	$shortcode     = '[purchase_link id="' . absint( $post->ID ) . '" text="' . esc_html( $purchase_text ) . '" style="' . $style . '" color="' . esc_attr( $color ) . '"]';
+?>
+	<p><strong><?php _e( 'Purchase Shortcode:', 'edd' ); ?></strong></p>
+	<input type="text" id="edd-purchase-shortcode" class="widefat" readonly="readonly" value="<?php echo htmlentities( $shortcode ); ?>">
+<?php
+}
+add_action( 'edd_meta_box_settings_fields', 'edd_render_meta_box_shortcode', 35 );
 
 /**
  * Render Accounting Options

@@ -68,8 +68,9 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 				return '<a href="' . add_query_arg( 'download', $item[ $column_name ] ) . '" >' . get_the_title( $item[ $column_name ] ) . '</a>';
 
 			case 'user_id' :
+				$user = ! empty( $item['user_id'] ) ? $item['user_id'] : edd_get_payment_user_email( $item['payment_id'] );
 				return '<a href="' .
-					admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $item['user_id'] ) ) .
+				       admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $user ) ) .
 					 '">' . $item['user_name'] . '</a>';
 
 			case 'amount' :

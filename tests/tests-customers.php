@@ -186,6 +186,21 @@ class Tests_Customers extends WP_UnitTestCase {
 
 	}
 
+	public function test_attach_duplicate_payment() {
+
+		// Verify that if we pass a payment that's already attached we do not change stats
+		$customer = new EDD_Customer( 'testadmin@domain.com' );
+		$payments = array_map( 'absint', explode( ',', $customer->payment_ids ) );
+
+		$expected_purcahse_count = $customer->purchase_count;
+		$expected_purcahse_value = $customer->purchase_value;
+
+		$customer->attach_payment( $payments[0] );
+		$this->assertEquals( $expected_purcahse_count, $customer->purchase_count );
+		$this->assertEquals( $expected_purcahse_value, $customer->purchase_value );
+
+	}
+
 	public function test_remove_payment() {
 
 		$customer = new EDD_Customer( 'testadmin@domain.com' );
@@ -288,6 +303,9 @@ class Tests_Customers extends WP_UnitTestCase {
 
 		$no_user = edd_get_users_purchases( 0 );
 		$this->assertFalse( $no_user );
+
+		$no_user_count = edd_count_purchases_of_customer();
+		$this->assertEquals( 0, $no_user_count );
 
 	}
 

@@ -130,6 +130,10 @@ class Tests_Customers_DB extends WP_UnitTestCase {
 		parent::tearDown();
 	}
 
+	public function test_intalled() {
+		$this->assertTrue( EDD()->customers->installed() );
+	}
+
 	public function test_get_customer_columns() {
 		$columns = array(
 			'id'             => '%d',
@@ -248,6 +252,31 @@ class Tests_Customers_DB extends WP_UnitTestCase {
 		);
 
 		$this->assertEquals( 0, EDD()->customers->count( $args ) );
+
+	}
+
+	public function test_update_customer_email_on_user_update() {
+
+		$user_id = wp_insert_user( array(
+			'user_login' => 'john12345',
+			'user_email' => 'john1234@test.com',
+			'user_pass'  => wp_generate_password()
+		) );
+
+		$customer = new EDD_Customer;
+		$customer->create( array(
+			'email' => 'john1234@test.com',
+			'user_id' => $user_id
+		) );
+
+		wp_update_user( array(
+			'ID' => $user_id,
+			'user_email' => 'john12345@test.com'
+		) );
+
+		$updated_customer = new EDD_Customer( 'john12345@test.com' );
+
+		$this->assertEquals( $customer->id, $updated_customer->id );
 
 	}
 

@@ -35,6 +35,8 @@ class EDD_DB_Customers extends EDD_DB  {
 		$this->primary_key = 'id';
 		$this->version     = '1.0';
 
+		add_action( 'profile_update', array( $this, 'update_customer_email_on_user_update' ), 10, 2 );
+
 	}
 
 	/**
@@ -165,14 +167,19 @@ class EDD_DB_Customers extends EDD_DB  {
 	}
 
 	/**
-	 * Checks if a customer exists by email
+	 * Checks if a customer exists
 	 *
 	 * @access  public
 	 * @since   2.1
 	*/
-	public function exists( $email = '' ) {
+	public function exists( $value = '', $field = 'email' ) {
 
-		return (bool) $this->get_column_by( 'id', 'email', $email );
+		$columns = $this->get_columns();
+		if ( ! array_key_exists( $field, $columns ) ) {
+			return false;
+		}
+
+		return (bool) $this->get_column_by( 'id', $field, $value );
 
 	}
 
@@ -253,6 +260,52 @@ class EDD_DB_Customers extends EDD_DB  {
 		$decreased_value = $customer->decrease_value( $amount );
 
 		return ( $decreased_count && $decreased_value ) ? true : false;
+
+	}
+
+	/**
+	 * Updates the email address of a customer record when the email on a user is updated
+	 *
+	 * @access  public
+	 * @since   2.4
+	*/
+	public function update_customer_email_on_user_update( $user_id = 0, $old_user_data ) {
+
+		$customer = new EDD_Customer( $user_id, true );
+
+		if( ! $customer ) {
+			return false;
+		}
+
+		$user = get_userdata( $user_id );
+
+		if( ! empty( $user ) && $user->user_email !== $customer->email ) {
+
+			if( ! $this->get_customer_by( 'email', $user->user_email ) ) {
+
+				$success = $this->update( $customer->id, array( 'email' => $user->user_email ) );
+
+				if( $success ) {
+					// Update some payment meta if we need to
+					$payments_array = explode( ',', $customer->payment_ids );
+
+					if( ! empty( $payments_array ) ) {
+
+						foreach ( $payments_array as $payment_id ) {
+
+							edd_update_payment_meta( $payment_id, 'email', $user->user_email );
+
+						}
+
+					}
+
+					do_action( 'edd_update_customer_email_on_user_update', $user, $customer );
+
+				}
+
+			}
+
+		}
 
 	}
 
@@ -344,18 +397,18 @@ class EDD_DB_Customers extends EDD_DB  {
 			$args['number'] = 999999999999;
 		}
 
-		$where = '';
+		$where = ' WHERE 1=1 ';
 
 		// specific customers
 		if( ! empty( $args['id'] ) ) {
 
 			if( is_array( $args['id'] ) ) {
-				$ids = implode( ',', $args['id'] );
+				$ids = implode( ',', array_map('intval', $args['id'] ) );
 			} else {
 				$ids = intval( $args['id'] );
 			}
 
-			$where .= "WHERE `id` IN( {$ids} ) ";
+			$where .= " AND `id` IN( {$ids} ) ";
 
 		}
 
@@ -363,17 +416,12 @@ class EDD_DB_Customers extends EDD_DB  {
 		if( ! empty( $args['user_id'] ) ) {
 
 			if( is_array( $args['user_id'] ) ) {
-				$user_ids = implode( ',', $args['user_id'] );
+				$user_ids = implode( ',', array_map('intval', $args['user_id'] ) );
 			} else {
 				$user_ids = intval( $args['user_id'] );
 			}
 
-			if( ! empty( $where ) ) {
-				$where .= " AND `user_id` IN( {$user_ids} ) ";
-			} else {
-				$where .= "WHERE `user_id` IN( {$user_ids} ) ";
-			}
-
+			$where .= " AND `user_id` IN( {$user_ids} ) ";
 
 		}
 
@@ -381,27 +429,20 @@ class EDD_DB_Customers extends EDD_DB  {
 		if( ! empty( $args['email'] ) ) {
 
 			if( is_array( $args['email'] ) ) {
-				$emails = "'" . implode( "', '", $args['email'] ) . "'";
-			} else {
-				$emails = "'" . $args['email'] . "'";
-			}
 
-			if( ! empty( $where ) ) {
-				$where .= " AND `email` IN( {$emails} ) ";
-			} else {
-				$where .= "WHERE `email` IN( {$emails} ) ";
-			}
+				$emails_count       = count( $args['email'] );
+				$emails_placeholder = array_fill( 0, $emails_count, '%s' );
+				$emails             = implode( ', ', $emails_placeholder );
 
+				$where .= $wpdb->prepare( " AND `email` IN( $emails ) ", $args['email'] );
+			} else {
+				$where .= $wpdb->prepare( " AND `email` = %s ", $args['email'] );
+			}
 		}
 
 		// specific customers by name
 		if( ! empty( $args['name'] ) ) {
-
-			if( ! empty( $where ) ) {
-				$where .= " AND `name` LIKE '" . $args['name'] . "' ";
-			} else {
-				$where .= "WHERE `name` LIKE '%%" . $args['name'] . "%%' ";
-			}
+			$where .= $wpdb->prepare( " AND `name` LIKE '%%%%" . '%s' . "%%%%' ", $args['name'] );
 		}
 
 		// Customers created for a specific date or in a date range
@@ -413,15 +454,7 @@ class EDD_DB_Customers extends EDD_DB  {
 
 					$start = date( 'Y-m-d H:i:s', strtotime( $args['date']['start'] ) );
 
-					if( ! empty( $where ) ) {
-
-						$where .= " AND `date_created` >= '{$start}'";
-
-					} else {
-
-						$where .= " WHERE `date_created` >= '{$start}'";
-
-					}
+					$where .= " AND `date_created` >= '{$start}'";
 
 				}
 
@@ -429,15 +462,7 @@ class EDD_DB_Customers extends EDD_DB  {
 
 					$end = date( 'Y-m-d H:i:s', strtotime( $args['date']['end'] ) );
 
-					if( ! empty( $where ) ) {
-
-						$where .= " AND `date_created` <= '{$end}'";
-
-					} else {
-
-						$where .= " WHERE `date_created` <= '{$end}'";
-
-					}
+					$where .= " AND `date_created` <= '{$end}'";
 
 				}
 
@@ -447,13 +472,7 @@ class EDD_DB_Customers extends EDD_DB  {
 				$month = date( 'm', strtotime( $args['date'] ) );
 				$day   = date( 'd', strtotime( $args['date'] ) );
 
-				if( empty( $where ) ) {
-					$where .= " WHERE";
-				} else {
-					$where .= " AND";
-				}
-
-				$where .= " $year = YEAR ( date_created ) AND $month = MONTH ( date_created ) AND $day = DAY ( date_created )";
+				$where .= " AND $year = YEAR ( date_created ) AND $month = MONTH ( date_created ) AND $day = DAY ( date_created )";
 			}
 
 		}
@@ -467,6 +486,9 @@ class EDD_DB_Customers extends EDD_DB  {
 		$cache_key = md5( 'edd_customers_' . serialize( $args ) );
 
 		$customers = wp_cache_get( $cache_key, 'customers' );
+
+		$args['orderby'] = esc_sql( $args['orderby'] );
+		$args['order']   = esc_sql( $args['order'] );
 
 		if( $customers === false ) {
 			$customers = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM  $this->table_name $where ORDER BY {$args['orderby']} {$args['order']} LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) ) );
@@ -488,7 +510,7 @@ class EDD_DB_Customers extends EDD_DB  {
 
 		global $wpdb;
 
-		$where = '';
+		$where = ' WHERE 1=1 ';
 
 		if( ! empty( $args['date'] ) ) {
 
@@ -497,15 +519,7 @@ class EDD_DB_Customers extends EDD_DB  {
 				$start = date( 'Y-m-d H:i:s', strtotime( $args['date']['start'] ) );
 				$end   = date( 'Y-m-d H:i:s', strtotime( $args['date']['end'] ) );
 
-				if( empty( $where ) ) {
-
-					$where .= " WHERE `date_created` >= '{$start}' AND `date_created` <= '{$end}'";
-
-				} else {
-
-					$where .= " AND `date_created` >= '{$start}' AND `date_created` <= '{$end}'";
-
-				}
+				$where .= " AND `date_created` >= '{$start}' AND `date_created` <= '{$end}'";
 
 			} else {
 
@@ -513,13 +527,7 @@ class EDD_DB_Customers extends EDD_DB  {
 				$month = date( 'm', strtotime( $args['date'] ) );
 				$day   = date( 'd', strtotime( $args['date'] ) );
 
-				if( empty( $where ) ) {
-					$where .= " WHERE";
-				} else {
-					$where .= " AND";
-				}
-
-				$where .= " $year = YEAR ( date_created ) AND $month = MONTH ( date_created ) AND $day = DAY ( date_created )";
+				$where .= " AND $year = YEAR ( date_created ) AND $month = MONTH ( date_created ) AND $day = DAY ( date_created )";
 			}
 
 		}
@@ -568,5 +576,15 @@ class EDD_DB_Customers extends EDD_DB  {
 		dbDelta( $sql );
 
 		update_option( $this->table_name . '_db_version', $this->version );
+	}
+
+	/**
+	 * Check if the Customers table was ever installed
+	 *
+	 * @since  2.4
+	 * @return bool Returns if the customers table was installed and upgrade routine run
+	 */
+	public function installed() {
+		return $this->table_exists( $this->table_name );
 	}
 }

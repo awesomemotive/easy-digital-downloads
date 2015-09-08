@@ -502,7 +502,7 @@ class EDD_Stats {
 		$start_where = '';
 		$end_where   = '';
 
-		if( $this->start_date ) {
+		if( ! is_wp_error( $this->start_date ) ) {
 
 			if( $this->timestamp ) {
 				$format = 'Y-m-d H:i:s';
@@ -514,7 +514,7 @@ class EDD_Stats {
 			$start_where = " AND $wpdb->posts.post_date >= '{$start_date}'";
 		}
 
-		if( $this->end_date ) {
+		if( ! is_wp_error( $this->end_date ) ) {
 
 			if( $this->timestamp ) {
 				$format = 'Y-m-d H:i:s';

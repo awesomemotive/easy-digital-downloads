@@ -79,7 +79,31 @@ class Tests_Templates extends WP_UnitTestCase {
 		add_filter( 'edd_item_quantities_enabled', '__return_true' );
 		$link = edd_get_purchase_link( array( 'download_id' => $this->_post->ID ) );
 		$this->assertInternalType( 'string', $link );
+		remove_filter( 'edd_item_quantities_enabled', '__return_true' );
 
+		// Test a single price point as well
+		$single_id = $this->factory->post->create( array( 'post_title' => 'A Test Single Price Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
+		$meta = array(
+			'edd_price' => '10.00',
+			'_edd_download_limit' => 20,
+			'_edd_product_type' => 'default',
+			'_edd_download_earnings' => 0,
+			'_edd_download_sales' => 0
+		);
+
+		foreach( $meta as $key => $value ) {
+			update_post_meta( $single_id, $key, $value );
+		}
+		$single_link_default = edd_get_purchase_link( array( 'download_id' => $single_id ) );
+		$this->assertContains( 'data-price="10.00"', $single_link_default );
+		$this->assertContains( '<span class="edd-add-to-cart-label">&#36;10.00&nbsp;&ndash;&nbsp;Purchase</span>', $single_link_default );
+
+		// Verify the purchase link works with price = 0
+		$single_link_no_price = edd_get_purchase_link( array( 'download_id' => $single_id, 'price' => 0 ) );
+		// Price should NOT show on button
+		$this->assertContains( '<span class="edd-add-to-cart-label">Purchase</span>', $single_link_no_price );
+		// data-price should still contain the price
+		$this->assertContains( 'data-price="10.00"', $single_link_no_price );
 	}
 
 	public function test_button_colors() {

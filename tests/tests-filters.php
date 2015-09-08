@@ -13,7 +13,7 @@ class Tests_Filters extends WP_UnitTestCase {
 		global $wp_filter;
 		$this->assertarrayHasKey( 'edd_before_download_content', $wp_filter['the_content'][10] );
 		$this->assertarrayHasKey( 'edd_after_download_content', $wp_filter['the_content'][10] );
-		$this->assertarrayHasKey( 'edd_filter_success_page_content', $wp_filter['the_content'][10] );
+		$this->assertarrayHasKey( 'edd_filter_success_page_content', $wp_filter['the_content'][99999] );
 		$this->assertarrayHasKey( 'edd_microdata_description', $wp_filter['the_content'][10] );
 		$this->assertarrayHasKey( 'edd_microdata_title', $wp_filter['the_title'][10] );
 		$this->assertArrayHasKey( 'edd_microdata_wrapper_open', $wp_filter['loop_start'][10] );
@@ -40,7 +40,7 @@ class Tests_Filters extends WP_UnitTestCase {
 		$this->assertarrayHasKey( 'edd_no_gateway_error', $wp_filter['init'][10] );
 		$this->assertarrayHasKey( 'edd_listen_for_paypal_ipn', $wp_filter['init'][10] );
 		$this->assertarrayHasKey( 'edd_setup_download_taxonomies', $wp_filter['init'][0] );
-		$this->assertarrayHasKey( 'edd_register_post_type_statuses', $wp_filter['init'][10] );
+		$this->assertarrayHasKey( 'edd_register_post_type_statuses', $wp_filter['init'][2] );
 		$this->assertarrayHasKey( 'edd_setup_edd_post_types', $wp_filter['init'][1] );
 		$this->assertarrayHasKey( 'edd_process_download', $wp_filter['init'][100] );
 	}

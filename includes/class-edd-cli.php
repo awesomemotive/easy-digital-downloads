@@ -372,7 +372,7 @@ class EDD_CLI extends WP_CLI_Command {
 				WP_CLI::line( __( 'Fees:', 'edd' ) );
 
 				foreach( $sale['fees'] as $fee ) {
-					WP_CLI::line( sprintf( __( '  Fee: %s - %s', 'edd' ), edd_format_amount( $fee['amount'] ) . ' ' . edd_get_currency() ) );
+					WP_CLI::line( sprintf( __( '  Fee: %s - %s', 'edd' ), edd_format_amount( $fee['amount'] ), edd_get_currency() ) );
 				}
 			}
 

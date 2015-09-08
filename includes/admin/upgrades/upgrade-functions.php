@@ -119,8 +119,22 @@ function edd_show_upgrade_notices() {
 
 		if ( version_compare( $edd_version, '2.3', '<' ) || ! edd_has_upgrade_completed( 'upgrade_payment_taxes' ) ) {
 			printf(
-				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the payments database, click <a href="%s">here</a> to start the upgrade.', 'edd' ) . '</p></div>',
+				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the payment database, click <a href="%s">here</a> to start the upgrade.', 'edd' ) . '</p></div>',
 				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_payment_taxes' ) )
+			);
+		}
+
+		if ( version_compare( $edd_version, '2.4', '<' ) || ! edd_has_upgrade_completed( 'upgrade_user_api_keys' ) ) {
+			printf(
+				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the API Key database, click <a href="%s">here</a> to start the upgrade.', 'edd' ) . '</p></div>',
+				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_user_api_keys' ) )
+			);
+		}
+
+		if ( version_compare( $edd_version, '2.4.3', '<' ) || ! edd_has_upgrade_completed( 'remove_refunded_sale_logs' ) ) {
+			printf(
+				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the payments database, click <a href="%s">here</a> to start the upgrade.', 'edd' ) . '</p></div>',
+				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=remove_refunded_sale_logs' ) )
 			);
 		}
 
@@ -206,25 +220,6 @@ function edd_maybe_resume_upgrade() {
 }
 
 /**
- * Check if the upgrade routine has been run for a specific action
- *
- * @since  2.3
- * @param  string $upgrade_action The upgrade action to check completion for
- * @return bool                   If the action has been added to the copmleted actions array
- */
-function edd_has_upgrade_completed( $upgrade_action = '' ) {
-
-	if ( empty( $upgrade_action ) ) {
-		return false;
-	}
-
-	$completed_upgrades = edd_get_completed_upgrades();
-
-	return in_array( $upgrade_action, $completed_upgrades );
-
-}
-
-/**
  * Adds an upgrade action to the completed upgrades array
  *
  * @since  2.3
@@ -244,24 +239,6 @@ function edd_set_upgrade_complete( $upgrade_action = '' ) {
 	$completed_upgrades = array_unique( array_values( $completed_upgrades ) );
 
 	return update_option( 'edd_completed_upgrades', $completed_upgrades );
-}
-
-/**
- * Get's the array of completed upgrade actions
- *
- * @since  2.3
- * @return array The array of completed upgrades
- */
-function edd_get_completed_upgrades() {
-
-	$completed_upgrades = get_option( 'edd_completed_upgrades' );
-
-	if ( false === $completed_upgrades ) {
-		$completed_upgrades = array();
-	}
-
-	return $completed_upgrades;
-
 }
 
 /**
@@ -447,7 +424,7 @@ function edd_v15_upgrades() {
 	update_option( 'edd_settings_taxes', $tax_options );
 
 	// Flush the rewrite rules for the new /edd-api/ end point
-	flush_rewrite_rules();
+	flush_rewrite_rules( false );
 }
 
 /**
@@ -984,3 +961,156 @@ function edd_v23_upgrade_customer_purchases() {
 	}
 }
 add_action( 'edd_upgrade_customer_payments_association', 'edd_v23_upgrade_customer_purchases' );
+
+/**
+ * Upgrade the Usermeta API Key storage to swap keys/values for performance
+ *
+ * @since  2.4
+ * @return void
+ */
+function edd_upgrade_user_api_keys() {
+	global $wpdb;
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		wp_die( __( 'You do not have permission to do shop upgrades', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+	}
+
+	ignore_user_abort( true );
+
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+		@set_time_limit(0);
+	}
+
+	$step   = isset( $_GET['step'] ) ? absint( $_GET['step'] ) : 1;
+	$number = 10;
+	$offset = $step == 1 ? 0 : ( $step - 1 ) * $number;
+
+	if ( $step < 2 ) {
+		// Check if we have any users with API Keys before moving on
+		$sql     = "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'edd_user_public_key' LIMIT 1";
+		$has_key = $wpdb->get_col( $sql );
+
+		if( empty( $has_key ) ) {
+			// We had no key, just complete
+			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+			edd_set_upgrade_complete( 'upgrade_user_api_keys' );
+			delete_option( 'edd_doing_upgrade' );
+			wp_redirect( admin_url() ); exit;
+		}
+	}
+
+	$total = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : false;
+
+	if ( empty( $total ) || $total <= 1 ) {
+		$total = $wpdb->get_var( "SELECT count(user_id) FROM $wpdb->usermeta WHERE meta_key = 'edd_user_public_key'" );
+	}
+
+	$keys_sql   = $wpdb->prepare( "SELECT user_id, meta_key, meta_value FROM $wpdb->usermeta WHERE meta_key = 'edd_user_public_key' OR meta_key = 'edd_user_secret_key' ORDER BY user_id ASC LIMIT %d,%d;", $offset, $number );
+	$found_keys = $wpdb->get_results( $keys_sql );
+
+	if( ! empty( $found_keys ) ) {
+
+
+		foreach( $found_keys as $key ) {
+			$user_id    = $key->user_id;
+			$meta_key   = $key->meta_key;
+			$meta_value = $key->meta_value;
+
+			// Generate a new entry
+			update_user_meta( $user_id, $meta_value, $meta_key );
+
+			// Delete the old one
+			delete_user_meta( $user_id, $meta_key );
+
+		}
+
+		// More Payments found so upgrade them
+		$step++;
+		$redirect = add_query_arg( array(
+			'page'        => 'edd-upgrades',
+			'edd-upgrade' => 'upgrade_user_api_keys',
+			'step'        => $step,
+			'number'      => $number,
+			'total'       => $total
+		), admin_url( 'index.php' ) );
+		wp_redirect( $redirect ); exit;
+	} else {
+
+		// No more customers found, finish up
+
+		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+		edd_set_upgrade_complete( 'upgrade_user_api_keys' );
+		delete_option( 'edd_doing_upgrade' );
+
+		wp_redirect( admin_url() ); exit;
+	}
+}
+add_action( 'edd_upgrade_user_api_keys', 'edd_upgrade_user_api_keys' );
+
+/**
+ * Remove sale logs from refunded orders
+ *
+ * @since  2.4.3
+ * @return void
+ */
+function edd_remove_refunded_sale_logs() {
+	global $wpdb, $edd_logs;
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		wp_die( __( 'You do not have permission to do shop upgrades', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+	}
+
+	ignore_user_abort( true );
+
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+		@set_time_limit(0);
+	}
+
+	$step    = isset( $_GET['step'] ) ? absint( $_GET['step'] ) : 1;
+	$total   = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : edd_count_payments()->refunded;
+	$refunds = edd_get_payments( array( 'status' => 'refunded', 'number' => 20, 'page' => $step ) );
+
+	if( ! empty( $refunds ) ) {
+
+		// Refunded Payments found so process them
+
+		foreach( $refunds as $refund ) {
+
+			if( 'refunded' !== $refund->post_status ) {
+				continue; // Just to be safe
+			}
+
+			// Remove related sale log entries
+			$edd_logs->delete_logs(
+				null,
+				'sale',
+				array(
+					array(
+						'key'   => '_edd_log_payment_id',
+						'value' => $refund->ID
+					)
+				)
+			);
+		}
+
+		$step++;
+		$redirect = add_query_arg( array(
+			'page'        => 'edd-upgrades',
+			'edd-upgrade' => 'remove_refunded_sale_logs',
+			'step'        => $step,
+			'total'       => $total
+		), admin_url( 'index.php' ) );
+		wp_redirect( $redirect ); exit;
+
+	} else {
+
+		// No more refunded payments found, finish up
+
+		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+		edd_set_upgrade_complete( 'remove_refunded_sale_logs' );
+		delete_option( 'edd_doing_upgrade' );
+
+		wp_redirect( admin_url() ); exit;
+	}
+}
+add_action( 'edd_remove_refunded_sale_logs', 'edd_remove_refunded_sale_logs' );

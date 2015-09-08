@@ -23,9 +23,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_process_purchase_form() {
 
+	do_action( 'edd_pre_process_purchase' );
+
 	// Make sure the cart isn't empty
 	if ( ! edd_get_cart_contents() && ! edd_cart_has_fees() ) {
-		$valid_data = array();
+		$valid_data = false;
 		edd_set_error( 'empty_cart', __( 'Your cart is empty', 'edd' ) );
 	} else {
 		// Validate the form $_POST data
@@ -45,7 +47,7 @@ function edd_process_purchase_form() {
 	// Validate the user
 	$user = edd_get_purchase_form_user( $valid_data );
 
-	if ( edd_get_errors() || ! $user ) {
+	if ( false === $valid_data || edd_get_errors() || ! $user ) {
 		if ( $is_ajax ) {
 			do_action( 'edd_ajax_checkout_errors' );
 			edd_die();
@@ -192,19 +194,19 @@ function edd_purchase_form_validate_fields() {
 		// Collect logged in user data
 		$valid_data['logged_in_user'] = edd_purchase_form_validate_logged_in_user();
 	} else if ( isset( $_POST['edd-purchase-var'] ) && $_POST['edd-purchase-var'] == 'needs-to-register' ) {
-			// Set new user registration as required
-			$valid_data['need_new_user'] = true;
+		// Set new user registration as required
+		$valid_data['need_new_user'] = true;
 
-			// Validate new user data
-			$valid_data['new_user_data'] = edd_purchase_form_validate_new_user();
-			// Check if login validation is needed
-		} else if ( isset( $_POST['edd-purchase-var'] ) && $_POST['edd-purchase-var'] == 'needs-to-login' ) {
-			// Set user login as required
-			$valid_data['need_user_login'] = true;
+		// Validate new user data
+		$valid_data['new_user_data'] = edd_purchase_form_validate_new_user();
+		// Check if login validation is needed
+	} else if ( isset( $_POST['edd-purchase-var'] ) && $_POST['edd-purchase-var'] == 'needs-to-login' ) {
+		// Set user login as required
+		$valid_data['need_user_login'] = true;
 
-			// Validate users login info
-			$valid_data['login_user_data'] = edd_purchase_form_validate_user_login();
-		} else {
+		// Validate users login info
+		$valid_data['login_user_data'] = edd_purchase_form_validate_user_login();
+	} else {
 		// Not registering or logging in, so setup guest user data
 		$valid_data['guest_user_data'] = edd_purchase_form_validate_guest_user();
 	}
@@ -503,9 +505,9 @@ function edd_purchase_form_validate_new_user() {
 			// The password is invalid
 			edd_set_error( 'password_empty', __( 'Enter a password', 'edd' ) );
 		} else if ( ! $pass_confirm && $registering_new_user ) {
-				// Confirmation password is invalid
-				edd_set_error( 'confirmation_empty', __( 'Enter the password confirmation', 'edd' ) );
-			}
+			// Confirmation password is invalid
+			edd_set_error( 'confirmation_empty', __( 'Enter the password confirmation', 'edd' ) );
+		}
 	}
 
 	return $valid_user_data;
@@ -642,14 +644,14 @@ function edd_register_and_login_new_user( $user_data = array() ) {
 		return -1;
 
 	$user_args = apply_filters( 'edd_insert_user_args', array(
-			'user_login'      => isset( $user_data['user_login'] ) ? $user_data['user_login'] : '',
-			'user_pass'       => isset( $user_data['user_pass'] )  ? $user_data['user_pass']  : '',
-			'user_email'      => isset( $user_data['user_email'] ) ? $user_data['user_email'] : '',
-			'first_name'      => isset( $user_data['user_first'] ) ? $user_data['user_first'] : '',
-			'last_name'       => isset( $user_data['user_last'] )  ? $user_data['user_last']  : '',
-			'user_registered' => date( 'Y-m-d H:i:s' ),
-			'role'            => get_option( 'default_role' )
-		), $user_data );
+		'user_login'      => isset( $user_data['user_login'] ) ? $user_data['user_login'] : '',
+		'user_pass'       => isset( $user_data['user_pass'] )  ? $user_data['user_pass']  : '',
+		'user_email'      => isset( $user_data['user_email'] ) ? $user_data['user_email'] : '',
+		'first_name'      => isset( $user_data['user_first'] ) ? $user_data['user_first'] : '',
+		'last_name'       => isset( $user_data['user_last'] )  ? $user_data['user_last']  : '',
+		'user_registered' => date( 'Y-m-d H:i:s' ),
+		'role'            => get_option( 'default_role' )
+	), $user_data );
 
 	// Insert new user
 	$user_id = wp_insert_user( $user_args );
@@ -689,34 +691,33 @@ function edd_get_purchase_form_user( $valid_data = array() ) {
 		// Do not create or login the user during the ajax submission (check for errors only)
 		return true;
 	} else if ( is_user_logged_in() ) {
-			// Set the valid user as the logged in collected data
-			$user = $valid_data['logged_in_user'];
-		} else if ( $valid_data['need_new_user'] === true || $valid_data['need_user_login'] === true  ) {
-			// New user registration
-			if ( $valid_data['need_new_user'] === true ) {
-				// Set user
-				$user = $valid_data['new_user_data'];
-				// Register and login new user
-				$user['user_id'] = edd_register_and_login_new_user( $user );
-				// User login
-			} else if ( $valid_data['need_user_login'] === true  && ! $is_ajax ) {
+		// Set the valid user as the logged in collected data
+		$user = $valid_data['logged_in_user'];
+	} else if ( $valid_data['need_new_user'] === true || $valid_data['need_user_login'] === true  ) {
+		// New user registration
+		if ( $valid_data['need_new_user'] === true ) {
+			// Set user
+			$user = $valid_data['new_user_data'];
+			// Register and login new user
+			$user['user_id'] = edd_register_and_login_new_user( $user );
+			// User login
+		} else if ( $valid_data['need_user_login'] === true  && ! $is_ajax ) {
+			/*
+			 * The login form is now processed in the edd_process_purchase_login() function.
+			 * This is still here for backwards compatibility.
+			 * This also allows the old login process to still work if a user removes the
+			 * checkout login submit button.
+			 *
+			 * This also ensures that the customer is logged in correctly if they click "Purchase"
+			 * instead of submitting the login form, meaning the customer is logged in during the purchase process.
+			 */
 
-				/*
-				 * The login form is now processed in the edd_process_purchase_login() function.
-				 * This is still here for backwards compatibility.
-				 * This also allows the old login process to still work if a user removes the
-				 * checkout login submit button.
-				 *
-				 * This also ensures that the customer is logged in correctly if they click "Purchase"
-				 * instead of submitting the login form, meaning the customer is logged in during the purchase process.
-				 */
-
-				// Set user
-				$user = $valid_data['login_user_data'];
-				// Login user
-				edd_log_user_in( $user['user_id'], $user['user_login'], $user['user_pass'] );
-			}
+			// Set user
+			$user = $valid_data['login_user_data'];
+			// Login user
+			edd_log_user_in( $user['user_id'], $user['user_login'], $user['user_pass'] );
 		}
+	}
 
 	// Check guest checkout
 	if ( false === $user && false === edd_no_guest_checkout() ) {
@@ -1049,14 +1050,16 @@ add_action( 'edd_checkout_error_checks', 'edd_check_purchase_email', 10, 2 );
  * @return void
  */
 function edd_process_straight_to_gateway( $data ) {
-	$download_id   = $data['download_id'];
-	$options       = isset( $data['edd_options'] ) ? $data['edd_options'] : array();
+
+	$download_id = $data['download_id'];
+	$options     = isset( $data['edd_options'] ) ? $data['edd_options'] : array();
+	$quantity    = isset( $data['edd_download_quantity'] ) ? $data['edd_download_quantity'] : 1;
 
 	if( empty( $download_id ) || ! edd_get_download( $download_id ) ) {
 		return;
 	}
 
-	$purchase_data = edd_build_straight_to_gateway_data( $download_id, $options );
+	$purchase_data = edd_build_straight_to_gateway_data( $download_id, $options, $quantity );
 	edd_set_purchase_session( $purchase_data );
 	edd_send_to_gateway( $purchase_data['gateway'], $purchase_data );
 }
