@@ -795,3 +795,36 @@ if ( ! function_exists( 'getallheaders' ) ) :
 	}
 
 endif;
+
+/**
+ * Determines the receipt visibility status
+ *
+ * @return bool Whether the receipt is visible or not.
+ */
+function edd_user_can_view_receipt( $payment_key ) {
+
+	global $edd_receipt_args;
+
+	$edd_receipt_args['id'] = edd_get_purchase_id_by_key( $payment_key );
+
+	$customer_id = edd_get_payment_user_id( $edd_receipt_args['id'] );
+
+	$payment_meta = edd_get_payment_meta( $edd_receipt_args['id'] );
+
+	if ( is_user_logged_in() && $customer_id === get_current_user_id() ) {
+		return true;
+	}
+
+	if ( current_user_can( 'view_shop_sensitive_data' ) ) {
+		return true;
+	}
+
+	$session = edd_get_purchase_session();
+	if ( ! empty( $session ) && ! is_user_logged_in() ) {
+		if ( $session['user_email'] === $payment_meta['user_info']['email'] ) {
+			return true;
+		}
+	}
+
+	return false;
+}

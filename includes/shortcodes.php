@@ -646,11 +646,9 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	}
 
 	// No key found
-	if ( ! isset( $payment_key ) )
+	if ( ! isset( $payment_key ) ) {
 		return $edd_receipt_args['error'];
-
-	$edd_receipt_args['id'] = edd_get_purchase_id_by_key( $payment_key );
-	$customer_id              = edd_get_payment_user_id( $edd_receipt_args['id'] );
+	}
 
 	/*
 	 * Check if the user has permission to view the receipt
@@ -663,7 +661,7 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	 *
 	 */
 
-	$user_can_view = ( is_user_logged_in() && $customer_id == get_current_user_id() ) || ( ( $customer_id == 0 || $customer_id == '-1' ) && ! is_user_logged_in() && edd_get_purchase_session() ) || current_user_can( 'view_shop_sensitive_data' );
+	$user_can_view = edd_user_can_view_receipt( $payment_key );
 
 	if ( ! apply_filters( 'edd_user_can_view_receipt', $user_can_view, $edd_receipt_args ) ) {
 		return $edd_receipt_args['error'];
