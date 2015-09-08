@@ -914,7 +914,7 @@ class EDD_API {
 				$customers['customers'][$customer_count]['info']['last_name']    = $last_name;
 				$customers['customers'][$customer_count]['info']['email']        = $customer_obj->email;
 
-				if ( $customer_obj->user_id > 0 ) {
+				if ( ! empty( $customer_obj->user_id ) && $customer_obj->user_id > 0 ) {
 
 					$user_data = get_userdata( $customer_obj->user_id );
 
