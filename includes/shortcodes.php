@@ -661,7 +661,7 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	 *
 	 */
 
-	$user_can_view = edd_user_can_view_receipt( $payment_key );
+	$user_can_view = edd_can_view_receipt( $payment_key );
 
 	if ( ! apply_filters( 'edd_user_can_view_receipt', $user_can_view, $edd_receipt_args ) ) {
 		return $edd_receipt_args['error'];
