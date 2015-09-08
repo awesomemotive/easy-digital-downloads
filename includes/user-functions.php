@@ -455,6 +455,18 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 		return;
 	}
 
-	wp_new_user_notification( $user_id, __( '[Password entered at checkout]', 'edd' ) );
+	$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
+	$message  = sprintf( __( 'New user registration on your site %s:' ), $blogname ) . "\r\n\r\n";
+	$message .= sprintf( __( 'Username: %s'), $user_data['user_login'] ) . "\r\n\r\n";
+	$message .= sprintf( __( 'E-mail: %s'), $user_data['user_email'] ) . "\r\n";	
+
+	@wp_mail( get_option( 'admin_email' ), sprintf( __('[%s] New User Registration' ), $blogname ), $message );	
+
+	$message  = sprintf( __( 'Username: %s' ), $user_data['user_login'] ) . "\r\n";
+	$message .= sprintf( __( 'Password: %s' ), __( '[Password entered at checkout]', 'edd' ) ) . "\r\n";
+	$message .= wp_login_url() . "\r\n";
+
+	wp_mail( $user_data['user_email'], sprintf( __( '[%s] Your username and password' ), $blogname ), $message );
+
 }
 add_action( 'edd_insert_user', 'edd_new_user_notification', 10, 2 );
