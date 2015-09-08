@@ -773,7 +773,7 @@ function edd_get_purchase_summary( $purchase_data, $email = true ) {
 		}
 
 		$summary = substr( $summary, 0, -2 );
-	}	
+	}
 
 	return apply_filters( 'edd_get_purchase_summary', $summary, $purchase_data, $email );
 }
@@ -883,7 +883,7 @@ function edd_remove_item_url( $cart_key ) {
 		$current_page = edd_get_current_page_url();
 	}
 
-	$remove_url = add_query_arg( array( 'cart_item' => $cart_key, 'edd_action' => 'remove', 'nocache' => current_time( 'timestamp' ) ), $current_page );
+	$remove_url = add_query_arg( array( 'cart_item' => $cart_key, 'edd_action' => 'remove', 'nocache' => 'true' ), $current_page );
 
 	return apply_filters( 'edd_remove_item_url', $remove_url );
 }
@@ -905,7 +905,7 @@ function edd_remove_cart_fee_url( $fee_id = '') {
 		$current_page = edd_get_current_page_url();
 	}
 
-	$remove_url = add_query_arg( array( 'fee' => $fee_id, 'edd_action' => 'remove_fee', 'nocache' => current_time( 'timestamp' ) ), $current_page );
+	$remove_url = add_query_arg( array( 'fee' => $fee_id, 'edd_action' => 'remove_fee', 'nocache' => 'true' ), $current_page );
 
 	return apply_filters( 'edd_remove_fee_url', $remove_url );
 }
