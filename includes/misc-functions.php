@@ -820,7 +820,7 @@ function edd_can_view_receipt( $payment_key = '' ) {
 	if ( is_user_logged_in() ) {
 		if ( $user_id === (int) get_current_user_id() ) {
 			$return = true;
-		} elseif ( wp_get_current_user()->user_email === $payment_meta['user_info']['email'] ) {
+		} elseif ( wp_get_current_user()->user_email === edd_get_payment_user_email() ) {
 			$return = true;
 		} elseif ( current_user_can( 'view_shop_sensitive_data' ) ) {
 			$return = true;
@@ -829,7 +829,7 @@ function edd_can_view_receipt( $payment_key = '' ) {
 
 	$session = edd_get_purchase_session();
 	if ( ! empty( $session ) && ! is_user_logged_in() ) {
-		if ( $session['user_email'] === $payment_meta['user_info']['email'] ) {
+		if ( $session['purchase_key'] === $payment_meta['key'] ) {
 			$return = true;
 		}
 	}
