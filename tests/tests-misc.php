@@ -551,9 +551,14 @@ class Test_Misc extends WP_UnitTestCase {
 		$this->assertTrue( edd_item_in_cart( $post->ID ) );
 
 		$item_position = edd_get_item_position_in_cart( $post->ID );
+		add_filter( 'edd_is_caching_plugin_active', '__return_true' );
 		$expected_url  = 'http://example.org/?page_id=3&cart_item=' . $item_position . '&edd_action=remove&nocache=true';
+		$remove_url    = edd_remove_item_url( $item_position );
+		$this->assertEquals( $expected_url, $remove_url );
+		remove_filter( 'edd_is_caching_plugin_active', '__return_true' );
 
 		$remove_url    = edd_remove_item_url( $item_position );
+		$expected_url  = 'http://example.org/?page_id=3&cart_item=' . $item_position . '&edd_action=remove';
 		$this->assertEquals( $expected_url, $remove_url );
 
 		EDD_Helper_Download::delete_download( $post->ID );
