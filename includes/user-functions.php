@@ -494,7 +494,8 @@ function edd_set_user_to_pending( $user_id = 0 ) {
  * @param  integer $user_id The User ID to activate
  * @return bool             If the user was marked as active or not
  */
-function edd_set_user_to_active( $user_id = 0 ) {
+function edd_set_user_to_verified( $user_id = 0 ) {
+
 	if ( empty( $user_id ) ) {
 		return false;
 	}
@@ -807,7 +808,7 @@ function edd_process_user_account_verification() {
 		wp_die( __( 'Invalid verification token provided.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 	}
 
-	edd_set_user_to_active( absint( $_GET['user_id'] ) );
+	edd_set_user_to_verified( absint( $_GET['user_id'] ) );
 
 	do_action( 'edd_user_verification_token_validated' );
 
