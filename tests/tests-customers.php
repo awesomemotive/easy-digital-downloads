@@ -354,11 +354,11 @@ class Tests_Customers extends WP_UnitTestCase {
 
 	public function test_user_activation_updates() {
 		// No user, no status updates
-		$this->assertFalse( edd_set_user_to_active() );
+		$this->assertFalse( edd_set_user_to_verified() );
 		$this->assertFalse( edd_set_user_to_pending() );
 
 		// Cant' set active if the user is not pending
-		$this->assertFalse( edd_set_user_to_active( 1 ) );
+		$this->assertFalse( edd_set_user_to_verified( 1 ) );
 
 		$this->assertFalse( edd_user_pending_verification( 1 ) );
 
@@ -367,7 +367,7 @@ class Tests_Customers extends WP_UnitTestCase {
 		$this->assertTrue( edd_user_pending_verification( 1 ) );
 
 
-		$this->assertTrue( edd_set_user_to_active( 1 ) );
+		$this->assertTrue( edd_set_user_to_verified( 1 ) );
 		$this->assertEmpty( get_user_meta( 1, '_edd_pending_verification', true ) );
 		$this->assertFalse( edd_user_pending_verification( 1 ) );
 	}
