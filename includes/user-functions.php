@@ -262,6 +262,7 @@ function edd_get_purchase_stats_by_user( $user = '' ) {
 
 	}
 
+	$stats    = array();
 	$customer = EDD()->customers->get_customer_by( $field, $user );
 
 	if( $customer ) {
@@ -524,6 +525,11 @@ function edd_user_pending_verification( $user_id = 0 ) {
 
 	if( empty( $user_id ) ) {
 		$user_id = get_current_user_id();
+	}
+
+	// No need to run a DB lookup on an empty user id
+	if ( empty( $user_id ) ) {
+		return false;
 	}
 
 	$pending = get_user_meta( $user_id, '_edd_pending_verification', true );
