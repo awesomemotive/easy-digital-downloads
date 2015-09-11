@@ -93,8 +93,13 @@ function edd_maybe_remove_menu_profile_links() {
 	if ( edd_user_pending_verification() ) {
 
 		if( defined( 'IS_PROFILE_PAGE' ) && true === IS_PROFILE_PAGE ) {
-			$url = esc_url( edd_get_user_verification_request_url() );
-			wp_die( printf( __( 'Your account is pending verification. Please click the link in your email to activate your account. No email? <a href="%s">Click here</a> to send a new activation code.', 'edd' ), $url ) );
+			$url     = esc_url( edd_get_user_verification_request_url() );
+			$message = sprintf( __( 'Your account is pending verification. Please click the link in your email to activate your account. No email? <a href="%s">Click here</a> to send a new activation code.', 'edd' ), $url );
+			$title   = __( 'Account Pending Verification', 'edd' );
+			$args    = array(
+				'response' => 403,
+			);
+			wp_die( $message, $title, $args );
 		}
 
 		remove_menu_page( 'profile.php' );
