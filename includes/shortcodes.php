@@ -86,7 +86,17 @@ add_shortcode( 'purchase_link', 'edd_download_shortcode' );
 function edd_download_history() {
 	if ( is_user_logged_in() ) {
 		ob_start();
-		edd_get_template_part( 'history', 'downloads' );
+
+		if( ! edd_user_pending_verification() ) {
+
+			edd_get_template_part( 'history', 'downloads' );
+
+		} else {
+
+			edd_get_template_part( 'account', 'pending' );
+
+		}
+
 		return ob_get_clean();
 	}
 }
@@ -102,7 +112,17 @@ add_shortcode( 'download_history', 'edd_download_history' );
  */
 function edd_purchase_history() {
 	ob_start();
-	edd_get_template_part( 'history', 'purchases' );
+
+	if( ! edd_user_pending_verification() ) {
+
+		edd_get_template_part( 'history', 'purchases' );
+
+	} else {
+
+		edd_get_template_part( 'account', 'pending' );
+
+	}
+
 	return ob_get_clean();
 }
 add_shortcode( 'purchase_history', 'edd_purchase_history' );
@@ -716,7 +736,15 @@ add_shortcode( 'edd_receipt', 'edd_receipt_shortcode' );
 function edd_profile_editor_shortcode( $atts, $content = null ) {
 	ob_start();
 
-	edd_get_template_part( 'shortcode', 'profile-editor' );
+	if( ! edd_user_pending_verification() ) {
+
+		edd_get_template_part( 'shortcode', 'profile-editor' );
+
+	} else {
+
+		edd_get_template_part( 'account', 'pending' );
+
+	}
 
 	$display = ob_get_clean();
 
@@ -736,12 +764,19 @@ add_shortcode( 'edd_profile_editor', 'edd_profile_editor_shortcode' );
  */
 function edd_process_profile_editor_updates( $data ) {
 	// Profile field change request
-	if ( empty( $_POST['edd_profile_editor_submit'] ) && !is_user_logged_in() )
+	if ( empty( $_POST['edd_profile_editor_submit'] ) && !is_user_logged_in() ) {
 		return false;
+	}
+
+	// Pending users can't edit their profile
+	if ( edd_user_pending_verification() ) {
+		return false;
+	}
 
 	// Nonce security
-	if ( ! wp_verify_nonce( $data['edd_profile_editor_nonce'], 'edd-profile-editor-nonce' ) )
+	if ( ! wp_verify_nonce( $data['edd_profile_editor_nonce'], 'edd-profile-editor-nonce' ) ) {
 		return false;
+	}
 
 	$user_id       = get_current_user_id();
 	$old_user_data = get_userdata( $user_id );
