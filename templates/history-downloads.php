@@ -1,4 +1,9 @@
+<?php if( ! empty( $_GET['edd-verify-success'] ) ) : ?>
+<p class="edd-account-verified edd_success">
+	<?php _e( 'Your account has been successfully verified!', 'edd' ); ?>
+</p>
 <?php
+endif;
 /**
  * This template is used to display the download history of the current user.
  */
@@ -99,9 +104,7 @@ if ( $purchases ) :
 		) );
 		?>
 	</div>
-	<?php
-	do_action( 'edd_after_download_history' );
-else : ?>
+	<?php do_action( 'edd_after_download_history' ); ?>
+<?php else : ?>
 	<p class="edd-no-downloads"><?php _e( 'You have not purchased any downloads', 'edd' ); ?></p>
-	<?php
-endif;
+<?php endif; ?>

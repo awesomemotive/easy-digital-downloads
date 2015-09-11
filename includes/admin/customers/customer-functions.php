@@ -55,3 +55,52 @@ function edd_register_delete_customer_tab( $tabs ) {
 	return $tabs;
 }
 add_filter( 'edd_customer_tabs', 'edd_register_delete_customer_tab', PHP_INT_MAX, 1 );
+
+/**
+ * Remove the admin bar edit profile link when the user is not verified
+ *
+ * @since  2.4.4
+ * @return void
+ */
+function edd_maybe_remove_adminbar_profile_link() {
+
+	if ( current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
+	if ( edd_user_pending_verification() ) {
+
+		global $wp_admin_bar;
+		$wp_admin_bar->remove_menu('edit-profile', 'user-actions');
+
+	}
+
+}
+add_action( 'wp_before_admin_bar_render', 'edd_maybe_remove_adminbar_profile_link' );
+
+/**
+ * Remove the admin menus and disable profile access for non-verified users
+ *
+ * @since  2.4.4
+ * @return void
+ */
+function edd_maybe_remove_menu_profile_links() {
+
+	if ( current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
+	if ( edd_user_pending_verification() ) {
+
+		if( defined( 'IS_PROFILE_PAGE' ) && true === IS_PROFILE_PAGE ) {
+			$url = esc_url( edd_get_user_verification_request_url() );
+			wp_die( printf( __( 'Your account is pending verification. Please click the link in your email to activate your account. No email? <a href="%s">Click here</a> to send a new activation code.', 'edd' ), $url ) );
+		}
+
+		remove_menu_page( 'profile.php' );
+		remove_submenu_page( 'users.php', 'profile.php' );
+
+	}
+
+}
+add_action( 'admin_init', 'edd_maybe_remove_menu_profile_links' );

@@ -351,4 +351,59 @@ class Tests_Customers extends WP_UnitTestCase {
 		$this->assertTrue( edd_validate_username( 'easydigitaldownloads' ) );
 		$this->assertFalse( edd_validate_username( 'edd12345$%&+-!@£%^&()(*&^%$£@!' ) );
 	}
+
+	public function test_user_activation_updates() {
+		// No user, no status updates
+		$this->assertFalse( edd_set_user_to_verified() );
+		$this->assertFalse( edd_set_user_to_pending() );
+
+		// Cant' set active if the user is not pending
+		$this->assertFalse( edd_set_user_to_verified( 1 ) );
+
+		$this->assertFalse( edd_user_pending_verification( 1 ) );
+
+		$this->assertTrue( edd_set_user_to_pending( 1 ) );
+		$this->assertEquals( '1', get_user_meta( 1, '_edd_pending_verification', true ) );
+		$this->assertTrue( edd_user_pending_verification( 1 ) );
+
+
+		$this->assertTrue( edd_set_user_to_verified( 1 ) );
+		$this->assertEmpty( get_user_meta( 1, '_edd_pending_verification', true ) );
+		$this->assertFalse( edd_user_pending_verification( 1 ) );
+	}
+
+	public function test_get_user_verification_url() {
+
+		// Returns false with no user ID
+		$this->assertFalse( edd_get_user_verification_url() );
+
+		$url = edd_get_user_verification_url( 1 );
+
+		$this->assertContains( 'edd_action=verify_user', $url );
+		$this->assertContains( 'user_id=1', $url );
+		$this->assertContains( 'ttl', $url );
+		$this->assertContains( 'token', $url );
+
+	}
+
+	public function test_get_user_verification_request_url() {
+
+		$url = edd_get_user_verification_request_url( 1 );
+
+		$this->assertContains( 'edd_action=send_verification_email', $url );
+
+	}
+
+	public function test_validate_user_verification_token() {
+
+		$url = edd_get_user_verification_url( 1 );
+
+		$this->assertTrue( edd_validate_user_verification_token( $url ) );
+
+		$this->assertFalse( edd_validate_user_verification_token( substr( $url, -1 ) ) );
+
+		$this->assertFalse( edd_validate_user_verification_token( remove_query_arg( 'token', $url ) ) );
+
+	}
+
 }
