@@ -1077,6 +1077,7 @@ function edd_is_guest_payment( $payment_id ) {
  * @return string $user_id User ID
  */
 function edd_get_payment_user_id( $payment_id ) {
+
 	$user_id = -1;
 
 	// check the customer record first
@@ -1088,7 +1089,7 @@ function edd_get_payment_user_id( $payment_id ) {
 	}
 
 	// check the payment meta if we're still not finding a user with the customer record
-	if ( ! empty( $user_id ) && $user_id > 0 ) {
+	if ( empty( $user_id ) || $user_id < 1 ) {
 		$payment_meta_user_id = edd_get_payment_meta( $payment_id, '_edd_payment_user_id', true );
 
 		if ( ! empty( $payment_meta_user_id ) ) {
@@ -1097,7 +1098,7 @@ function edd_get_payment_user_id( $payment_id ) {
 	}
 
 	// Last ditch effort is to connect payment email with a user in the user table
-	if ( ! empty( $user_id ) && $user_id > 0 ) {
+	if ( empty( $user_id ) || $user_id < 1 ) {
 		$payment_email = edd_get_payment_user_email( $payment_id );
 		$user          = get_user_by( 'email', $payment_email );
 
