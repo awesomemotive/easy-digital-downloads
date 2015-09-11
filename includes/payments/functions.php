@@ -1056,6 +1056,20 @@ function edd_get_payment_user_email( $payment_id ) {
 }
 
 /**
+ * Is the payment provided associated with a user account
+ *
+ * @since  2.4.4
+ * @param  int $payment_id The payment ID
+ * @return bool            If the payment is associted with a user (false) or not (true)
+ */
+function edd_is_guest_payment( $payment_id ) {
+	$payment_user_id  = edd_get_payment_user_id( $payment_id );
+	$is_guest_payment = ! empty( $payment_user_id ) && $payment_user_id > 0 ? false : true;
+
+	return (bool) apply_filters( 'edd_is_guest_payment', $is_guest_payment, $payment_id );
+}
+
+/**
  * Get the user ID associated with a payment
  *
  * @since 1.5.1
@@ -1063,9 +1077,36 @@ function edd_get_payment_user_email( $payment_id ) {
  * @return string $user_id User ID
  */
 function edd_get_payment_user_id( $payment_id ) {
-	$user_id = edd_get_payment_meta( $payment_id, '_edd_payment_user_id', true );
+	$user_id = -1;
 
-	return apply_filters( 'edd_payment_user_id', $user_id );
+	// check the customer record first
+	$customer_id = edd_get_payment_customer_id( $payment_id );
+	$customer    = new EDD_Customer( $customer_id );
+
+	if ( ! empty( $customer->user_id ) && $customer->user_id > 0 ) {
+		$user_id = $customer->user_id;
+	}
+
+	// check the payment meta if we're still not finding a user with the customer record
+	if ( ! empty( $user_id ) && $user_id > 0 ) {
+		$payment_meta_user_id = edd_get_payment_meta( $payment_id, '_edd_payment_user_id', true );
+
+		if ( ! empty( $payment_meta_user_id ) ) {
+			$user_id = $payment_meta_user_id;
+		}
+	}
+
+	// Last ditch effort is to connect payment email with a user in the user table
+	if ( ! empty( $user_id ) && $user_id > 0 ) {
+		$payment_email = edd_get_payment_user_email( $payment_id );
+		$user          = get_user_by( 'email', $payment_email );
+
+		if ( false !== $user ) {
+			$user_id = $user->ID;
+		}
+	}
+
+	return apply_filters( 'edd_payment_user_id', (int) $user_id );
 }
 
 /**
