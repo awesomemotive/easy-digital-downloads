@@ -86,7 +86,17 @@ add_shortcode( 'purchase_link', 'edd_download_shortcode' );
 function edd_download_history() {
 	if ( is_user_logged_in() ) {
 		ob_start();
-		edd_get_template_part( 'history', 'downloads' );
+
+		if( ! edd_user_pending_verification() ) {
+
+			edd_get_template_part( 'history', 'downloads' );
+
+		} else {
+
+			edd_get_template_part( 'account', 'pending' );
+
+		}
+
 		return ob_get_clean();
 	}
 }
@@ -102,7 +112,17 @@ add_shortcode( 'download_history', 'edd_download_history' );
  */
 function edd_purchase_history() {
 	ob_start();
-	edd_get_template_part( 'history', 'purchases' );
+
+	if( ! edd_user_pending_verification() ) {
+
+		edd_get_template_part( 'history', 'purchases' );
+
+	} else {
+
+		edd_get_template_part( 'account', 'pending' );
+
+	}
+
 	return ob_get_clean();
 }
 add_shortcode( 'purchase_history', 'edd_purchase_history' );
@@ -646,11 +666,27 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	}
 
 	// No key found
-	if ( ! isset( $payment_key ) )
-		return $edd_receipt_args['error'];
+	if ( ! isset( $payment_key ) ) {
+		return '<p class="edd-alert edd-alert-error">' . $edd_receipt_args['error'] . '</p>';
+	}
 
-	$edd_receipt_args['id'] = edd_get_purchase_id_by_key( $payment_key );
-	$customer_id              = edd_get_payment_user_id( $edd_receipt_args['id'] );
+	$payment_id    = edd_get_purchase_id_by_key( $payment_key );
+	$user_can_view = edd_can_view_receipt( $payment_key );
+
+	// Key was provided, but user is logged out. Offer them the ability to login and view the receipt
+	if ( ! $user_can_view && ! empty( $payment_key ) && ! is_user_logged_in() && ! edd_is_guest_payment( $payment_id ) ) {
+		global $edd_login_redirect;
+		$edd_login_redirect = edd_get_current_page_url();
+
+		ob_start();
+
+		echo '<p class="edd-alert edd-alert-warn">' . __( 'You must be logged in to view this payment receipt.', 'edd' ) . '</p>';
+		edd_get_template_part( 'shortcode', 'login' );
+
+		$login_form = ob_get_clean();
+
+		return $login_form;
+	}
 
 	/*
 	 * Check if the user has permission to view the receipt
@@ -663,10 +699,9 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	 *
 	 */
 
-	$user_can_view = ( is_user_logged_in() && $customer_id == get_current_user_id() ) || ( ( $customer_id == 0 || $customer_id == '-1' ) && ! is_user_logged_in() && edd_get_purchase_session() ) || current_user_can( 'view_shop_sensitive_data' );
 
 	if ( ! apply_filters( 'edd_user_can_view_receipt', $user_can_view, $edd_receipt_args ) ) {
-		return $edd_receipt_args['error'];
+		return '<p class="edd-alert edd-alert-error">' . $edd_receipt_args['error'] . '</p>';
 	}
 
 	ob_start();
@@ -701,7 +736,15 @@ add_shortcode( 'edd_receipt', 'edd_receipt_shortcode' );
 function edd_profile_editor_shortcode( $atts, $content = null ) {
 	ob_start();
 
-	edd_get_template_part( 'shortcode', 'profile-editor' );
+	if( ! edd_user_pending_verification() ) {
+
+		edd_get_template_part( 'shortcode', 'profile-editor' );
+
+	} else {
+
+		edd_get_template_part( 'account', 'pending' );
+
+	}
 
 	$display = ob_get_clean();
 
@@ -721,12 +764,19 @@ add_shortcode( 'edd_profile_editor', 'edd_profile_editor_shortcode' );
  */
 function edd_process_profile_editor_updates( $data ) {
 	// Profile field change request
-	if ( empty( $_POST['edd_profile_editor_submit'] ) && !is_user_logged_in() )
+	if ( empty( $_POST['edd_profile_editor_submit'] ) && !is_user_logged_in() ) {
 		return false;
+	}
+
+	// Pending users can't edit their profile
+	if ( edd_user_pending_verification() ) {
+		return false;
+	}
 
 	// Nonce security
-	if ( ! wp_verify_nonce( $data['edd_profile_editor_nonce'], 'edd-profile-editor-nonce' ) )
+	if ( ! wp_verify_nonce( $data['edd_profile_editor_nonce'], 'edd-profile-editor-nonce' ) ) {
 		return false;
+	}
 
 	$user_id       = get_current_user_id();
 	$old_user_data = get_userdata( $user_id );
