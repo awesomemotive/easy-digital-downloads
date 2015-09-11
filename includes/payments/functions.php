@@ -1064,7 +1064,7 @@ function edd_get_payment_user_email( $payment_id ) {
  */
 function edd_is_guest_payment( $payment_id ) {
 	$payment_user_id  = edd_get_payment_user_id( $payment_id );
-	$is_guest_payment = ! empty( $payment_user_id ) ? false : true;
+	$is_guest_payment = ! empty( $payment_user_id ) && $payment_user_id > 0 ? false : true;
 
 	return (bool) apply_filters( 'edd_is_guest_payment', $is_guest_payment, $payment_id );
 }
@@ -1077,7 +1077,7 @@ function edd_is_guest_payment( $payment_id ) {
  * @return string $user_id User ID
  */
 function edd_get_payment_user_id( $payment_id ) {
-	$user_id = 0;
+	$user_id = -1;
 
 	// check the customer record first
 	$customer_id = edd_get_payment_customer_id( $payment_id );
