@@ -820,7 +820,7 @@ function edd_can_view_receipt( $payment_key = '' ) {
 	if ( is_user_logged_in() ) {
 		if ( $user_id === (int) get_current_user_id() ) {
 			$return = true;
-		} elseif ( wp_get_current_user()->user_email === edd_get_payment_user_email() ) {
+		} elseif ( wp_get_current_user()->user_email === edd_get_payment_user_email( $edd_receipt_args['id'] ) ) {
 			$return = true;
 		} elseif ( current_user_can( 'view_shop_sensitive_data' ) ) {
 			$return = true;

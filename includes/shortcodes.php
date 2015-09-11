@@ -647,7 +647,25 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 
 	// No key found
 	if ( ! isset( $payment_key ) ) {
-		return $edd_receipt_args['error'];
+		return '<p class="edd-alert edd-alert-error">' . $edd_receipt_args['error'] . '</p>';
+	}
+
+	$payment_id    = edd_get_purchase_id_by_key( $payment_key );
+	$user_can_view = edd_can_view_receipt( $payment_key );
+
+	// Key was provided, but user is logged out. Offer them the ability to login and view the receipt
+	if ( ! $user_can_view && ! empty( $payment_key ) && ! is_user_logged_in() && ! edd_is_guest_payment( $payment_id ) ) {
+		global $edd_login_redirect;
+		$edd_login_redirect = edd_get_current_page_url();
+
+		ob_start();
+
+		echo '<p class="edd-alert edd-alert-warn">' . __( 'You must be logged in to view this payment receipt.', 'edd' ) . '</p>';
+		edd_get_template_part( 'shortcode', 'login' );
+
+		$login_form = ob_get_clean();
+
+		return $login_form;
 	}
 
 	/*
@@ -661,10 +679,9 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	 *
 	 */
 
-	$user_can_view = edd_can_view_receipt( $payment_key );
 
 	if ( ! apply_filters( 'edd_user_can_view_receipt', $user_can_view, $edd_receipt_args ) ) {
-		return $edd_receipt_args['error'];
+		return '<p class="edd-alert edd-alert-error">' . $edd_receipt_args['error'] . '</p>';
 	}
 
 	ob_start();
