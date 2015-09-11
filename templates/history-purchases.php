@@ -1,4 +1,9 @@
+<?php if( ! empty( $_GET['edd-verify-success'] ) ) : ?>
+<p class="edd-account-verified edd_success">
+	<?php _e( 'Your account has been successfully verified!', 'edd' ); ?>
+</p>
 <?php
+endif;
 /**
  * This template is used to display the purchase history of the current user.
  */
