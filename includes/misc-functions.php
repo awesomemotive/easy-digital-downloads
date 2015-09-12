@@ -425,30 +425,41 @@ function edd_get_php_arg_separator_output() {
  * Get the current page URL
  *
  * @since 1.3
- * @global $post
+ * @param  bool   $nocache  If we should bust cache on the returned URL
  * @return string $page_url Current page URL
  */
-function edd_get_current_page_url() {
-	global $post;
+function edd_get_current_page_url( $nocache = false ) {
 
-	if ( is_front_page() ) :
-		$page_url = home_url();
-	else :
-		$page_url = 'http';
-
-	if ( is_ssl() ) {
-		$page_url .= "s";
+	if ( is_front_page() ) {
+		$uri = home_url();
+	} else {
+		$scheme = is_ssl() || ( edd_is_ssl_enforced() && edd_is_checkout() ) ? 'https' : 'http';
+		$uri    = site_url( $_SERVER['REQUEST_URI'], $scheme );
 	}
 
-	$page_url .= "://";
+	$uri = apply_filters( 'edd_get_current_page_url', esc_url( $uri ) );
 
-	if ( isset( $_SERVER["SERVER_PORT"] ) && $_SERVER["SERVER_PORT"] != "80" )
-		$page_url .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
-	else
-		$page_url .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
-	endif;
+	if ( $nocache ) {
+		$uri = edd_add_cache_busting( $uri );
+	}
 
-	return apply_filters( 'edd_get_current_page_url', esc_url( $page_url ) );
+	return $uri;
+}
+
+/**
+ * Adds the 'nocache' parameter to the provided URL
+ *
+ * @since  2.4.4
+ * @param  string $url The URL being requested
+ * @return string      The URL with cache busting added or not
+ */
+function edd_add_cache_busting( $url = '' ) {
+
+	if ( edd_is_caching_plugin_active() ) {
+		$url = add_query_arg( 'nocache', 'true', $url );
+	}
+
+	return $url;
 }
 
 /**
