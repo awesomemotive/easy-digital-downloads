@@ -318,7 +318,7 @@ class EDD_API {
 			}
 
 			// Auth was provided, include the upgrade routine so we can use the fallback api checks
-			require EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
 
 			// Retrieve the user by public API key and ensure they exist
 			if ( ! ( $user = $this->get_user( $wp_query->query_vars['key'] ) ) ) {
@@ -341,6 +341,7 @@ class EDD_API {
 			$this->is_valid_request = true;
 			$wp_query->set( 'key', 'public' );
 		}
+
 	}
 
 	/**
@@ -538,6 +539,7 @@ class EDD_API {
 
 		$data = array();
 		$this->routes = new $this->versions[ $this->get_queried_version() ];
+		$this->routes->validate_request();
 
 		switch( $this->endpoint ) :
 
