@@ -264,11 +264,30 @@ class Tests_Widgets extends WP_UnitTestCase {
 	 */
 	public function test_edd_product_details_widget_function_bail_no_download() {
 
-		$this->go_to( '/' );
+		$download = EDD_Helper_Download::create_simple_download();
+		$this->go_to( get_permalink( $download->ID ) );
 		$widgets = $GLOBALS['wp_widget_factory']->widgets;
 		$details_widget = $widgets['edd_product_details_widget'];
 
-		$this->assertNull( $details_widget->widget( array(), array( 'download_id' => 'current' ) ) );
+		ob_start();
+			$details_widget->widget( array(
+				'before_title'  => '',
+				'after_title'   => '',
+				'before_widget' => '',
+				'after_widget'  => '',
+			), array(
+				'title'           => 'Cart',
+				'download_id'     => '',
+				'download_title'  => 'download_category',
+				'purchase_button' => true,
+				'categories'      => true,
+				'tags'            => true,
+			) );
+		$output = ob_get_clean();
+
+		$this->assertNotEmpty( $output );
+
+		EDD_Helper_Download::delete_download( $download->ID );
 
 	}
 
