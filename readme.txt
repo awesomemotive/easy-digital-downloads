@@ -193,21 +193,21 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 = 2.4.4, September 11, 2015 =
 
-Fix: Incorrectly shown "Sorry, trouble retrieving payment receipt" error
-Fix: Credit / debit cards with an expiration more than 10 years in the future cannot be used
-Fix: Non-object notice on /edd-api/customers endpoint
-Fix: Javascript error on category / tag quick edit screen
-Fix: Not array PHP error on customer details screen when customer has purchases without any items
-Fix: Cart item quantities cannnot be changed in HTML structure of cart items is changed
-Fix: Purchase link shortcode attributes for "text" not working properly
-Fix: Default price ID cannot be saved with ID of 0
-Fix: New user notifications not working properly since WordPress 4.3
-Fix: Incorrect URl returned by edd_get_current_page_url() in some instances
-Tweak: Improved account creation process
-Tweak: Introduced "pagination" parameter for downloads shortcode to disable pagination
-Tweak: Introduced edd_protected_directory_allowed_filetypes filter
-Tweak: Add $item to edd_receipt_show_download_files filter
-Tweak: Better error reporting when batch export process fails
+* Fix: Incorrectly shown "Sorry, trouble retrieving payment receipt" error
+* Fix: Credit / debit cards with an expiration more than 10 years in the future cannot be used
+* Fix: Non-object notice on /edd-api/customers endpoint
+* Fix: Javascript error on category / tag quick edit screen
+* Fix: Not array PHP error on customer details screen when customer has purchases without any items
+* Fix: Cart item quantities cannnot be changed in HTML structure of cart items is changed
+* Fix: Purchase link shortcode attributes for "text" not working properly
+* Fix: Default price ID cannot be saved with ID of 0
+* Fix: New user notifications not working properly since WordPress 4.3
+* Fix: Incorrect URl returned by edd_get_current_page_url() in some instances
+* Tweak: Improved account creation process
+* Tweak: Introduced "pagination" parameter for downloads shortcode to disable pagination
+* Tweak: Introduced edd_protected_directory_allowed_filetypes filter
+* Tweak: Add $item to edd_receipt_show_download_files filter
+* Tweak: Better error reporting when batch export process fails
 
 = 2.4.3, August 18, 2015 =
 
