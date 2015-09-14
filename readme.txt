@@ -191,7 +191,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
-= 2.4.4, September 11, 2015 =
+= 2.4.4, September 14, 2015 =
 
 * Fix: Incorrectly shown "Sorry, trouble retrieving payment receipt" error
 * Fix: Credit / debit cards with an expiration more than 10 years in the future cannot be used
