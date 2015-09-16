@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.9.2
 Tested up to: 4.3
 
-Stable Tag: 2.4.4
+Stable Tag: 2.4.5
 
 License: GNU Version 2 or Any Later Version
 
@@ -190,6 +190,10 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.4.5, September 16, 2015 =
+
+* Fix: Bug with AJAX URL on checkout and mixed-content error messages for sites that use HTTPS on checkout but not in /wp-admin/
 
 = 2.4.4, September 14, 2015 =
 
