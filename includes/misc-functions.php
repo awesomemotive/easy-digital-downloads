@@ -430,16 +430,16 @@ function edd_get_php_arg_separator_output() {
  */
 function edd_get_current_page_url( $nocache = false ) {
 
+	$scheme = is_ssl() ? 'https' : 'http';
+	$uri    = esc_url( site_url( $_SERVER['REQUEST_URI'], $scheme ) );
+
 	if ( is_front_page() ) {
 		$uri = home_url();
-	} elseif ( edd_is_checkout() ) {
+	} elseif ( edd_is_checkout( array(), false ) ) {
 		$uri = edd_get_checkout_uri();
-	} else {
-		$scheme = is_ssl() ? 'https' : 'http';
-		$uri    = site_url( $_SERVER['REQUEST_URI'], $scheme );
 	}
 
-	$uri = apply_filters( 'edd_get_current_page_url', esc_url( $uri ) );
+	$uri = apply_filters( 'edd_get_current_page_url', $uri );
 
 	if ( $nocache ) {
 		$uri = edd_add_cache_busting( $uri );
@@ -457,8 +457,13 @@ function edd_get_current_page_url( $nocache = false ) {
  */
 function edd_add_cache_busting( $url = '' ) {
 
-	if ( edd_is_caching_plugin_active() ) {
-		$url = add_query_arg( 'nocache', 'true', $url );
+	$no_cache_checkout = edd_get_option( 'no_cache_checkout', false );
+	$current_url       = urldecode( $url );
+
+	if ( edd_is_caching_plugin_active() || ( edd_is_checkout() && $no_cache_checkout ) ) {
+		if ( false === strpos( $current_url, 'nocache=true' ) ) {
+			$url = add_query_arg( 'nocache', 'true', $url );
+		}
 	}
 
 	return $url;
