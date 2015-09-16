@@ -432,8 +432,10 @@ function edd_get_current_page_url( $nocache = false ) {
 
 	if ( is_front_page() ) {
 		$uri = home_url();
+	} elseif ( edd_is_checkout() ) {
+		$uri = edd_get_checkout_uri();
 	} else {
-		$scheme = is_ssl() || ( edd_is_ssl_enforced() && edd_is_checkout() ) ? 'https' : 'http';
+		$scheme = is_ssl() ? 'https' : 'http';
 		$uri    = site_url( $_SERVER['REQUEST_URI'], $scheme );
 	}
 
