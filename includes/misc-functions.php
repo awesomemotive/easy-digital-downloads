@@ -458,12 +458,9 @@ function edd_get_current_page_url( $nocache = false ) {
 function edd_add_cache_busting( $url = '' ) {
 
 	$no_cache_checkout = edd_get_option( 'no_cache_checkout', false );
-	$current_url       = urldecode( $url );
 
 	if ( edd_is_caching_plugin_active() || ( edd_is_checkout() && $no_cache_checkout ) ) {
-		if ( false === strpos( $current_url, 'nocache=true' ) ) {
-			$url = add_query_arg( 'nocache', 'true', $url );
-		}
+		$url = add_query_arg( 'nocache', 'true', $url );
 	}
 
 	return $url;
