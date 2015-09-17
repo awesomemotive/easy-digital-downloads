@@ -270,7 +270,7 @@ function edd_get_cc_form() {
 			</select>
 			<span class="exp-divider"> / </span>
 			<select id="card_exp_year" name="card_exp_year" class="card-expiry-year edd-select edd-select-small required">
-				<?php for( $i = date('Y'); $i <= date('Y') + 10; $i++ ) { echo '<option value="' . $i . '">' . substr( $i, 2 ) . '</option>'; } ?>
+				<?php for( $i = date('Y'); $i <= date('Y') + 30; $i++ ) { echo '<option value="' . $i . '">' . substr( $i, 2 ) . '</option>'; } ?>
 			</select>
 		</p>
 		<?php do_action( 'edd_after_cc_expiration' ); ?>
@@ -902,9 +902,12 @@ add_filter( 'the_content', 'edd_filter_success_page_content', 99999 );
 /**
  * Show a download's files in the purchase receipt
  *
- * @since 1.8.6
+ * @since  1.8.6
+ * @param  int        $item_id      The download ID
+ * @param  array      $receipt_args Args specified in the [edd_receipt] shortcode
+ * @param  array      $item         Cart item array
  * @return boolean
-*/
-function edd_receipt_show_download_files( $item_id, $receipt_args ) {
-	return apply_filters( 'edd_receipt_show_download_files', true, $item_id, $receipt_args );
+ */
+function edd_receipt_show_download_files( $item_id, $receipt_args, $item ) {
+	return apply_filters( 'edd_receipt_show_download_files', true, $item_id, $receipt_args, $item );
 }

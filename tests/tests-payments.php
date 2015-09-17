@@ -217,4 +217,13 @@ class Tests_Payments extends WP_UnitTestCase {
 
 	}
 
+	public function test_is_guest_payment() {
+		// setUp defines a payment with a known user, use this
+		$this->assertFalse( edd_is_guest_payment( $this->_payment_id ) );
+
+		// Create a guest payment
+		$guest_payment_id   = EDD_Helper_Payment::create_simple_guest_payment();
+		$this->assertTrue( edd_is_guest_payment( $guest_payment_id ) );
+	}
+
 }

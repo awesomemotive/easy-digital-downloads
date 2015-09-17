@@ -448,7 +448,7 @@ class EDD_Welcome {
 		$file = file_exists( EDD_PLUGIN_DIR . 'readme.txt' ) ? EDD_PLUGIN_DIR . 'readme.txt' : null;
 
 		if ( ! $file ) {
-			$readme = '<p>' . __( 'No valid changlog was found.', 'edd' ) . '</p>';
+			$readme = '<p>' . __( 'No valid changelog was found.', 'edd' ) . '</p>';
 		} else {
 			$readme = file_get_contents( $file );
 			$readme = nl2br( esc_html( $readme ) );

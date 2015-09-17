@@ -136,6 +136,9 @@ function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
 		$purchase_product_ids[] = @wp_list_pluck( $purchase_meta, 'id' );
 	}
 
+	// Ensure that grabbed products actually HAVE downloads
+	$purchase_product_ids = array_filter( $purchase_product_ids );
+
 	if ( empty( $purchase_product_ids ) ) {
 		return false;
 	}
@@ -262,12 +265,17 @@ function edd_get_purchase_stats_by_user( $user = '' ) {
 
 	}
 
+	$stats    = array();
 	$customer = EDD()->customers->get_customer_by( $field, $user );
-	$customer = new EDD_Customer( $customer->id );
 
-	$stats = array();
-	$stats['purchases']   = absint( $customer->purchase_count );
-	$stats['total_spent'] = edd_sanitize_amount( $customer->purchase_value );
+	if( $customer ) {
+
+		$customer = new EDD_Customer( $customer->id );
+
+		$stats['purchases']   = absint( $customer->purchase_count );
+		$stats['total_spent'] = edd_sanitize_amount( $customer->purchase_value );
+
+	}
 
 
 	return (array) apply_filters( 'edd_purchase_stats_by_user', $stats, $user );
@@ -373,6 +381,12 @@ function edd_add_past_purchases_to_new_user( $user_id ) {
 	$payments = edd_get_payments( array( 's' => $email ) );
 
 	if( $payments ) {
+
+		// Set a flag to force the account to be verified before purchase history can be accessed
+		edd_set_user_to_pending( $user_id );
+
+		edd_send_user_verification_email( $user_id );
+
 		foreach( $payments as $payment ) {
 			if( intval( edd_get_payment_user_id( $payment->ID ) ) > 0 )
 				continue; // This payment already associated with an account
@@ -452,6 +466,380 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 		return;
 	}
 
-	wp_new_user_notification( $user_id, __( '[Password entered at checkout]', 'edd' ) );
+	$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
+	$message  = sprintf( __( 'New user registration on your site %s:' ), $blogname ) . "\r\n\r\n";
+	$message .= sprintf( __( 'Username: %s'), $user_data['user_login'] ) . "\r\n\r\n";
+	$message .= sprintf( __( 'E-mail: %s'), $user_data['user_email'] ) . "\r\n";	
+
+	@wp_mail( get_option( 'admin_email' ), sprintf( __('[%s] New User Registration' ), $blogname ), $message );	
+
+	$message  = sprintf( __( 'Username: %s' ), $user_data['user_login'] ) . "\r\n";
+	$message .= sprintf( __( 'Password: %s' ), __( '[Password entered at checkout]', 'edd' ) ) . "\r\n";
+	$message .= wp_login_url() . "\r\n";
+
+	wp_mail( $user_data['user_email'], sprintf( __( '[%s] Your username and password' ), $blogname ), $message );
+
 }
 add_action( 'edd_insert_user', 'edd_new_user_notification', 10, 2 );
+
+/**
+ * Set a user's status to pending
+ *
+ * @since  2.4.4
+ * @param  integer $user_id The User ID to set to pending
+ * @return bool             If the update was successful
+ */
+function edd_set_user_to_pending( $user_id = 0 ) {
+	if ( empty( $user_id ) ) {
+		return false;
+	}
+
+	do_action( 'edd_pre_set_user_to_pending', $user_id );
+
+	$update_successful = (bool) update_user_meta( $user_id, '_edd_pending_verification', '1' );
+
+	do_action( 'edd_post_set_user_to_pending', $user_id, $update_successful );
+
+	return $update_successful;
+}
+
+/**
+ * Set the user from pending to active
+ *
+ * @since  2.4.4
+ * @param  integer $user_id The User ID to activate
+ * @return bool             If the user was marked as active or not
+ */
+function edd_set_user_to_verified( $user_id = 0 ) {
+
+	if ( empty( $user_id ) ) {
+		return false;
+	}
+
+	if ( ! edd_user_pending_verification( $user_id ) ) {
+		return false;
+	}
+
+	do_action( 'edd_pre_set_user_to_active', $user_id );
+
+	$update_successful = delete_user_meta( $user_id, '_edd_pending_verification', '1' );
+
+	do_action( 'edd_post_set_user_to_active', $user_id, $update_successful );
+
+	return $update_successful;
+}
+
+/**
+ * Determines if the user account is pending verification. Pending accounts cannot view purchase history
+ *
+ * @access  public
+ * @since   2.4.4
+ * @return  bool
+ */
+function edd_user_pending_verification( $user_id = 0 ) {
+
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	// No need to run a DB lookup on an empty user id
+	if ( empty( $user_id ) ) {
+		return false;
+	}
+
+	$pending = get_user_meta( $user_id, '_edd_pending_verification', true );
+
+	return (bool) apply_filters( 'edd_user_pending_verification', ! empty( $pending ), $user_id );
+
+}
+
+/**
+ * Gets the activation URL for the specified user
+ *
+ * @access  public
+ * @since   2.4.4
+ * @return  string
+ */
+function edd_get_user_verification_url( $user_id = 0 ) {
+
+	if( empty( $user_id ) ) {
+		return false;
+	}
+
+	$base_url = add_query_arg( array(
+		'edd_action' => 'verify_user',
+		'user_id'    => $user_id,
+		'ttl'        => strtotime( '+24 hours' )
+	), untrailingslashit( get_permalink( edd_get_option( 'purchase_history_page', 0 ) ) ) );
+
+	$token = edd_get_user_verification_token( $base_url );
+	$url   = add_query_arg( 'token', $token, $base_url );
+
+	return apply_filters( 'edd_get_user_verification_url', $url, $user_id );
+
+}
+
+/**
+ * Gets the URL that triggers a new verification email to be sent
+ *
+ * @access  public
+ * @since   2.4.4
+ * @return  string
+ */
+function edd_get_user_verification_request_url( $user_id = 0 ) {
+
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	$url = wp_nonce_url( add_query_arg( array(
+		'edd_action' => 'send_verification_email'
+	) ), 'edd-request-verification' );
+
+	return apply_filters( 'edd_get_user_verification_request_url', $url, $user_id );
+
+}
+
+/**
+ * Sends an email to the specified user with a URL to verify their account
+ *
+ * @access  public
+ * @since   2.4.4
+ * @return  void
+ */
+function edd_send_user_verification_email( $user_id = 0 ) {
+
+	if( empty( $user_id ) ) {
+		return;
+	}
+
+	if( ! edd_user_pending_verification( $user_id ) ) {
+		return;
+	}
+
+	$user_data  = get_userdata( $user_id );
+
+	if( ! $user_data ) {
+		return;
+	}
+
+	$verify_url = edd_get_user_verification_url( $user_id );
+	$name       = $user_data->display_name;
+	$url        = edd_get_user_verification_url( $user_id );
+	$from_name  = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
+	$from_email = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
+	$subject    = apply_filters( 'edd_user_verification_email_subject', __( 'Verify your account', 'edd' ), $user_id );
+	$heading    = apply_filters( 'edd_user_verification_email_heading', __( 'Verify your account', 'edd' ), $user_id );
+	$message    = sprintf( __( "Hello %s,\n\nYour account with %s needs to be verified before you can access your purchase history. <a href='%s'>Click here</a> to verify your account.", 'edd' ), $name, $from_name, $url );
+	$message    = apply_filters( 'edd_user_verification_email_message', $message, $user_id );
+
+	$emails     = new EDD_Emails;
+
+	$emails->__set( 'from_name', $from_name );
+	$emails->__set( 'from_email', $from_email );
+	$emails->__set( 'heading', $heading );
+
+	$emails->send( $user_data->user_email, $subject, $message );
+
+}
+
+/**
+ * Generates a token for a user verification URL.
+ *
+ * An 'o' query parameter on a URL can include optional variables to test
+ * against when verifying a token without passing those variables around in
+ * the URL. For example, downloads can be limited to the IP that the URL was
+ * generated for by adding 'o=ip' to the query string.
+ *
+ * Or suppose when WordPress requested a URL for automatic updates, the user
+ * agent could be tested to ensure the URL is only valid for requests from
+ * that user agent.
+ *
+ * @since  2.4.4
+ *
+ * @param  string $url The URL to generate a token for.
+ * @return string The token for the URL.
+ */
+function edd_get_user_verification_token( $url = '' ) {
+
+	$args    = array();
+	$hash    = apply_filters( 'edd_get_user_verification_token_algorithm', 'sha256' );
+	$secret  = apply_filters( 'edd_get_user_verification_token_secret', hash( $hash, wp_salt() ) );
+
+	/*
+	 * Add additional args to the URL for generating the token.
+	 * Allows for restricting access to IP and/or user agent.
+	 */
+	$parts   = parse_url( $url );
+	$options = array();
+
+	if ( isset( $parts['query'] ) ) {
+
+		wp_parse_str( $parts['query'], $query_args );
+
+		// o = option checks (ip, user agent).
+		if ( ! empty( $query_args['o'] ) ) {
+
+			// Multiple options can be checked by separating them with a colon in the query parameter.
+			$options = explode( ':', rawurldecode( $query_args['o'] ) );
+
+			if ( in_array( 'ip', $options ) ) {
+
+				$args['ip'] = edd_get_ip();
+
+			}
+
+			if ( in_array( 'ua', $options ) ) {
+
+				$ua = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : '';
+				$args['user_agent'] = rawurlencode( $ua );
+
+			}
+
+		}
+
+	}
+
+	/*
+	 * Filter to modify arguments and allow custom options to be tested.
+	 * Be sure to rawurlencode any custom options for consistent results.
+	 */
+	$args = apply_filters( 'edd_get_user_verification_token_args', $args, $url, $options );
+
+	$args['secret'] = $secret;
+	$args['token']  = false; // Removes a token if present.
+
+	$url   = add_query_arg( $args, $url );
+	$parts = parse_url( $url );
+
+	// In the event there isn't a path, set an empty one so we can MD5 the token
+	if ( ! isset( $parts['path'] ) ) {
+
+		$parts['path'] = '';
+
+	}
+
+	$token = md5( $parts['path'] . '?' . $parts['query'] );
+
+	return $token;
+
+}
+
+/**
+ * Generate a token for a URL and match it against the existing token to make
+ * sure the URL hasn't been tampered with.
+ *
+ * @since  2.4.4
+ *
+ * @param  string $url URL to test.
+ * @return bool
+ */
+function edd_validate_user_verification_token( $url = '' ) {
+
+	$ret        = false;
+	$parts      = parse_url( $url );
+	$query_args = array();
+
+	if ( isset( $parts['query'] ) ) {
+
+		wp_parse_str( $parts['query'], $query_args );
+
+		if ( isset( $query_args['ttl'] ) && current_time( 'timestamp' ) > $query_args['ttl'] ) {
+
+			do_action( 'edd_user_verification_token_expired' );
+
+			wp_die( apply_filters( 'edd_verification_link_expired_text', __( 'Sorry but your account verification link has expired. <a href="#">Click here</a> to request a new verification URL.', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+
+		}
+
+		if ( isset( $query_args['token'] ) && $query_args['token'] == edd_get_user_verification_token( $url ) ) {
+
+			$ret = true;
+
+		}
+
+	}
+
+	return apply_filters( 'edd_validate_user_verification_token', $ret, $url, $query_args );
+}
+
+/**
+ * Processes an account verification email request
+ *
+ * @since  2.4.4
+ *
+ * @return void
+ */
+function edd_process_user_verification_request() {
+
+	if( ! wp_verify_nonce( $_GET['_wpnonce'], 'edd-request-verification' ) ) {
+		wp_die( __( 'Nonce verification failed.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+	}
+
+	if( ! is_user_logged_in() ) {
+		wp_die( __( 'You must be logged in to verify your account.', 'edd' ), __( 'Notice', 'edd' ), array( 'response' => 403 ) );
+	}
+
+	if( ! edd_user_pending_verification( get_current_user_id() ) ) {
+		wp_die( __( 'Your account has already been verified.', 'edd' ), __( 'Notice', 'edd' ), array( 'response' => 403 ) );
+	}
+
+	edd_send_user_verification_email( get_current_user_id() );
+
+	$redirect = apply_filters(
+		'edd_user_account_verification_request_redirect',
+		add_query_arg( 'edd-verify-request', '1', get_permalink( edd_get_option( 'purchase_history_page', 0 ) ) )
+	);
+
+	wp_safe_redirect( $redirect );
+	exit;
+
+}
+add_action( 'edd_send_verification_email', 'edd_process_user_verification_request' );
+
+/**
+ * Processes an account verification
+ *
+ * @since 2.4.4
+ *
+ * @return void
+ */
+function edd_process_user_account_verification() {
+
+	if( empty( $_GET['token'] ) ) {
+		return false;
+	}
+
+	if( empty( $_GET['user_id'] ) ) {
+		return false;
+	}
+
+	if( empty( $_GET['ttl'] ) ) {
+		return false;
+	}
+
+	$parts = parse_url( add_query_arg( array() ) );
+	wp_parse_str( $parts['query'], $query_args );
+	$url = add_query_arg( $query_args, untrailingslashit( get_permalink( edd_get_option( 'purchase_history_page', 0 ) ) ) );
+
+	if( ! edd_validate_user_verification_token( $url ) ) {
+
+		do_action( 'edd_invalid_user_verification_token' );
+
+		wp_die( __( 'Invalid verification token provided.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+	}
+
+	edd_set_user_to_verified( absint( $_GET['user_id'] ) );
+
+	do_action( 'edd_user_verification_token_validated' );
+
+	$redirect = apply_filters(
+		'edd_user_account_verified_redirect',
+		add_query_arg( 'edd-verify-success', '1', get_permalink( edd_get_option( 'purchase_history_page', 0 ) ) )
+	);
+
+	wp_safe_redirect( $redirect );
+	exit;
+
+}
+add_action( 'edd_verify_user', 'edd_process_user_account_verification' );
