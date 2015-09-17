@@ -489,7 +489,7 @@ function edd_count_payments( $args = array() ) {
 	}
 
 	// Limit payments count by date
-	if ( ! empty( $args['start-date'] ) && false !== strpos( '/', $args['start-date'] ) ) {
+	if ( ! empty( $args['start-date'] ) && false !== strpos( $args['start-date'], '/' ) ) {
 
 		$date_parts = explode( '/', $args['start-date'] );
 		$month      = ! empty( $date_parts[0] ) && is_numeric( $date_parts[0] ) ? $date_parts[0] : 0;
@@ -511,7 +511,7 @@ function edd_count_payments( $args = array() ) {
 
 	}
 
-	if ( ! empty ( $args['end-date'] ) && false !== strpos( '/', $args['end-date'] ) ) {
+	if ( ! empty ( $args['end-date'] ) && false !== strpos( $args['end-date'], '/' ) ) {
 
 		$date_parts = explode( '/', $args['end-date'] );
 
@@ -532,8 +532,6 @@ function edd_count_payments( $args = array() ) {
 	$where = apply_filters( 'edd_count_payments_where', $where );
 	$join  = apply_filters( 'edd_count_payments_join', $join );
 
-	$cache_key = md5( implode( '|', $args ) . $where );
-
 	$query = "SELECT p.post_status,count( * ) AS num_posts
 		FROM $wpdb->posts p
 		$join
@@ -541,9 +539,12 @@ function edd_count_payments( $args = array() ) {
 		GROUP BY p.post_status
 	";
 
+	$cache_key = md5( $query );
+
 	$count = wp_cache_get( $cache_key, 'counts');
-	if ( false !== $count )
+	if ( false !== $count ) {
 		return $count;
+	}
 
 	$count = $wpdb->get_results( $query, ARRAY_A );
 
@@ -747,7 +748,7 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 	$args = apply_filters( 'edd_get_sales_by_date_args', $args  );
 
 	$key   = md5( serialize( $args ) );
-	$count = get_transient( $key, 'edd' );
+	$count = get_transient( $key );
 
 	if( false === $count ) {
 		$sales = new WP_Query( $args );
@@ -1055,6 +1056,20 @@ function edd_get_payment_user_email( $payment_id ) {
 }
 
 /**
+ * Is the payment provided associated with a user account
+ *
+ * @since  2.4.4
+ * @param  int $payment_id The payment ID
+ * @return bool            If the payment is associted with a user (false) or not (true)
+ */
+function edd_is_guest_payment( $payment_id ) {
+	$payment_user_id  = edd_get_payment_user_id( $payment_id );
+	$is_guest_payment = ! empty( $payment_user_id ) && $payment_user_id > 0 ? false : true;
+
+	return (bool) apply_filters( 'edd_is_guest_payment', $is_guest_payment, $payment_id );
+}
+
+/**
  * Get the user ID associated with a payment
  *
  * @since 1.5.1
@@ -1062,9 +1077,37 @@ function edd_get_payment_user_email( $payment_id ) {
  * @return string $user_id User ID
  */
 function edd_get_payment_user_id( $payment_id ) {
-	$user_id = edd_get_payment_meta( $payment_id, '_edd_payment_user_id', true );
 
-	return apply_filters( 'edd_payment_user_id', $user_id );
+	$user_id = -1;
+
+	// check the customer record first
+	$customer_id = edd_get_payment_customer_id( $payment_id );
+	$customer    = new EDD_Customer( $customer_id );
+
+	if ( ! empty( $customer->user_id ) && $customer->user_id > 0 ) {
+		$user_id = $customer->user_id;
+	}
+
+	// check the payment meta if we're still not finding a user with the customer record
+	if ( empty( $user_id ) || $user_id < 1 ) {
+		$payment_meta_user_id = edd_get_payment_meta( $payment_id, '_edd_payment_user_id', true );
+
+		if ( ! empty( $payment_meta_user_id ) ) {
+			$user_id = $payment_meta_user_id;
+		}
+	}
+
+	// Last ditch effort is to connect payment email with a user in the user table
+	if ( empty( $user_id ) || $user_id < 1 ) {
+		$payment_email = edd_get_payment_user_email( $payment_id );
+		$user          = get_user_by( 'email', $payment_email );
+
+		if ( false !== $user ) {
+			$user_id = $user->ID;
+		}
+	}
+
+	return apply_filters( 'edd_payment_user_id', (int) $user_id );
 }
 
 /**
