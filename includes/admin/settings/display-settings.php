@@ -26,8 +26,8 @@ function edd_options_page() {
 	ob_start();
 	?>
 	<div class="wrap">
-		<h2><?php _e( 'Settings', 'edd' ); ?></h2>
 		<h2 class="nav-tab-wrapper">
+			<span class="page-title"><?php _e( 'EDD Settings', 'edd' ); ?></span>
 			<?php
 			foreach( edd_get_settings_tabs() as $tab_id => $tab_name ) {
 
