@@ -748,7 +748,7 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 	$args = apply_filters( 'edd_get_sales_by_date_args', $args  );
 
 	$key   = md5( serialize( $args ) );
-	$count = get_transient( $key, 'edd' );
+	$count = get_transient( $key );
 
 	if( false === $count ) {
 		$sales = new WP_Query( $args );
