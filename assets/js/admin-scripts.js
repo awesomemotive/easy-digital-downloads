@@ -1054,7 +1054,6 @@ jQuery(document).ready(function ($) {
 
 
 	$('#the-list').on('click', '.editinline', function() {
-		inlineEditPost.revert();
 
 		var post_id = $(this).closest('tr').attr('id');
 
