@@ -131,8 +131,9 @@ function edd_get_checkout_uri( $args = array() ) {
 		$uri = preg_replace( '/^http:/', 'https:', $uri );
 	}
 
-	if ( edd_get_option( 'no_cache_checkout', false ) && edd_is_caching_plugin_active() )
-		$uri = add_query_arg( 'nocache', 'true', $uri );
+	if ( edd_get_option( 'no_cache_checkout', false ) ) {
+		$uri = edd_add_cache_busting( $uri );
+	}
 
 	return apply_filters( 'edd_get_checkout_uri', $uri );
 }
@@ -319,11 +320,12 @@ function edd_is_ssl_enforced() {
  * @return void
  */
 function edd_enforced_ssl_redirect_handler() {
+
 	if ( ! edd_is_ssl_enforced() || ! edd_is_checkout() || is_admin() || is_ssl() ) {
 		return;
 	}
 
-	if ( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" ) {
+	if( edd_is_checkout() && false !== strpos( edd_get_current_page_url(), 'https://' ) ) {
 		return;
 	}
 

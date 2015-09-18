@@ -347,7 +347,7 @@ class EDD_Welcome {
 					<p><pre>[downloads columns="4"]</pre></p>
 
 					<h4><?php _e( 'Additional Display Options', 'edd' ); ?></h4>
-					<p><?php printf( __( 'The product grids can be customized in any way you wish and there is <a href="%s">extensive documentation</a> to assist you.', 'edd' ), 'http://easydigitaldownloads.com/documentation' ); ?></p>
+					<p><?php printf( __( 'The product grids can be customized in any way you wish and there is <a href="%s">extensive documentation</a> to assist you.', 'edd' ), 'http://docs.easydigitaldownloads.com/' ); ?></p>
 				</div>
 			</div>
 
@@ -373,10 +373,10 @@ class EDD_Welcome {
 				<div class="feature-section">
 
 					<h4><?php _e( 'Phenomenal Support','edd' );?></h4>
-					<p><?php _e( 'We do our best to provide the best support we can. If you encounter a problem or have a question, post a question in the <a href="https://easydigitaldownloads.com/support">support forums</a>.', 'edd' );?></p>
+					<p><?php _e( 'We do our best to provide the best support we can. If you encounter a problem or have a question, simply open a ticket using our <a href="https://easydigitaldownloads.com/support">support form</a>.', 'edd' );?></p>
 
 					<h4><?php _e( 'Need Even Faster Support?', 'edd' );?></h4>
-					<p><?php _e( 'Our <a href="https://easydigitaldownloads.com/support/pricing/">Priority Support forums</a> are there for customers that need faster and/or more in-depth assistance.', 'edd' );?></p>
+					<p><?php _e( 'Our <a href="https://easydigitaldownloads.com/support/pricing/">Priority Support</a> system is there for customers that need faster and/or more in-depth assistance.', 'edd' );?></p>
 
 				</div>
 			</div>
@@ -404,7 +404,7 @@ class EDD_Welcome {
 					<p><?php _e( 'Add-on plugins are available that greatly extend the default functionality of Easy Digital Downloads. There are extensions for payment processors, such as Stripe and PayPal, extensions for newsletter integrations, and many, many more.', 'edd' );?></p>
 
 					<h4><?php _e( 'Visit the Extension Store', 'edd' );?></h4>
-					<p><?php _e( '<a href="https://easydigitaldownloads.com/extensions" target="_blank">The Extensions store</a> has a list of all available extensions, including convenient category filters so you can find exactly what you are looking for.', 'edd' );?></p>
+					<p><?php _e( '<a href="https://easydigitaldownloads.com/downloads" target="_blank">The Extensions store</a> has a list of all available extensions, including convenient category filters so you can find exactly what you are looking for.', 'edd' );?></p>
 
 				</div>
 			</div>
@@ -448,7 +448,7 @@ class EDD_Welcome {
 		$file = file_exists( EDD_PLUGIN_DIR . 'readme.txt' ) ? EDD_PLUGIN_DIR . 'readme.txt' : null;
 
 		if ( ! $file ) {
-			$readme = '<p>' . __( 'No valid changlog was found.', 'edd' ) . '</p>';
+			$readme = '<p>' . __( 'No valid changelog was found.', 'edd' ) . '</p>';
 		} else {
 			$readme = file_get_contents( $file );
 			$readme = nl2br( esc_html( $readme ) );
@@ -512,7 +512,7 @@ class EDD_Welcome {
 		if ( false !== $contributors )
 			return $contributors;
 
-		$response = wp_remote_get( 'https://api.github.com/repos/easydigitaldownloads/Easy-Digital-Downloads/contributors', array( 'sslverify' => false ) );
+		$response = wp_remote_get( 'https://api.github.com/repos/easydigitaldownloads/Easy-Digital-Downloads/contributors?per_page=999', array( 'sslverify' => false ) );
 
 		if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) )
 			return array();

@@ -156,11 +156,19 @@ class Tests_Shortcode extends WP_UnitTestCase {
 	public function test_download_history() {
 		$this->assertInternalType( 'string', edd_download_history( array() ) );
 		$this->assertContains( '<p class="edd-no-downloads">', edd_download_history( array() ) );
+
+		edd_set_user_to_pending( $this->_user_id );
+
+		$this->assertContains( '<p class="edd-account-pending">', edd_download_history( array() ) );
 	}
 
 	public function test_purchase_history() {
 		$this->assertInternalType( 'string', edd_purchase_history( array() ) );
 		$this->assertContains( '<p class="edd-no-purchases">', edd_purchase_history( array() ) );
+
+		edd_set_user_to_pending( $this->_user_id );
+
+		$this->assertContains( '<p class="edd-account-pending">', edd_purchase_history( array() ) );
 	}
 
 	public function test_checkout_form_shortcode() {
@@ -255,6 +263,10 @@ class Tests_Shortcode extends WP_UnitTestCase {
 	public function test_profile_shortcode() {
 		$this->assertInternalType( 'string', edd_profile_editor_shortcode( array() ) );
 		$this->assertContains( '<form id="edd_profile_editor_form" class="edd_form" action="', edd_profile_editor_shortcode( array() ) );
+
+		edd_set_user_to_pending( $this->_user_id );
+
+		$this->assertContains( '<p class="edd-account-pending">', edd_profile_editor_shortcode( array() ) );
 	}
 
 	public function test_downloads_shortcode_pagination() {
@@ -266,5 +278,20 @@ class Tests_Shortcode extends WP_UnitTestCase {
 
 		$output2 = edd_downloads_query( array( 'number' => 1 ) );
 		$this->assertContains( 'id="edd_download_pagination"', $output2 );
+
+		edd_set_user_to_pending( $this->_user_id );
+
+		$this->assertContains( '<p class="edd-account-pending">', edd_download_history( array() ) );
+	}
+
+	public function test_downloads_shortcode_nopaging() {
+
+		// Create a posts so we can see pagination
+		$this->factory->post->create( array( 'post_title' => 'Test Download #2', 'post_type' => 'download', 'post_status' => 'publish' ) );
+		$this->factory->post->create( array( 'post_title' => 'Test Download #3', 'post_type' => 'download', 'post_status' => 'publish' ) );
+		$this->factory->post->create( array( 'post_title' => 'Test Download #4', 'post_type' => 'download', 'post_status' => 'publish' ) );
+
+		$output2 = edd_downloads_query( array( 'number' => 1, 'pagination' => 'false' ) );
+		$this->assertNotContains( 'id="edd_download_pagination"', $output2 );
 	}
 }
