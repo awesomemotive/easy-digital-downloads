@@ -510,4 +510,57 @@ class Test_Misc extends WP_UnitTestCase {
 		$this->assertFalse( edd_get_option( $key, false ) );
 
 	}
+
+	public function test_add_cache_busting() {
+		add_filter( 'edd_is_caching_plugin_active', '__return_true' );
+		$this->assertEquals( 'http://example.org?nocache=true', edd_add_cache_busting( home_url() ) );
+		remove_filter( 'edd_is_caching_plugin_active', '__return_true' );
+		$this->assertEquals( 'http://example.org', edd_add_cache_busting( home_url() ) );
+	}
+
+	public function test_get_current_page_url() {
+		$this->go_to( home_url() );
+		$this->assertEquals( 'http://example.org', edd_get_current_page_url() );
+
+		$post = EDD_Helper_Download::create_simple_download();
+		$this->go_to( get_permalink( $post->ID ) );
+		$this->assertEquals( 'http://example.org/?download=test-download-product', edd_get_current_page_url() );
+
+		add_filter( 'edd_is_caching_plugin_active', '__return_true' );
+		$this->go_to( get_permalink( $post->ID ) );
+		$this->assertEquals( 'http://example.org/?download=test-download-product&nocache=true', edd_get_current_page_url( true ) );
+		EDD_Helper_Download::delete_download( $post->ID );
+		remove_filter( 'edd_is_caching_plugin_active', '__return_true' );
+
+
+		$checkout = edd_get_option( 'purchase_page', false );
+		$this->go_to( get_permalink( $checkout ) );
+		$this->assertEquals( edd_get_checkout_uri(), edd_get_current_page_url() );
+
+		add_filter( 'edd_is_caching_plugin_active', '__return_true' );
+		edd_update_option( 'no_cache_checkout', true );
+		$this->assertEquals( edd_get_checkout_uri(), edd_get_current_page_url( true ) );
+		remove_filter( 'edd_is_caching_plugin_active', '__return_true' );
+
+	}
+
+	public function test_cart_url_formats() {
+		$post = EDD_Helper_Download::create_simple_download();
+
+		edd_add_to_cart( $post->ID );
+		$this->assertTrue( edd_item_in_cart( $post->ID ) );
+
+		$item_position = edd_get_item_position_in_cart( $post->ID );
+		add_filter( 'edd_is_caching_plugin_active', '__return_true' );
+		$expected_url  = 'http://example.org/?page_id=3&cart_item=' . $item_position . '&edd_action=remove&nocache=true';
+		$remove_url    = edd_remove_item_url( $item_position );
+		$this->assertEquals( $expected_url, $remove_url );
+		remove_filter( 'edd_is_caching_plugin_active', '__return_true' );
+
+		$remove_url    = edd_remove_item_url( $item_position );
+		$expected_url  = 'http://example.org/?page_id=3&cart_item=' . $item_position . '&edd_action=remove';
+		$this->assertEquals( $expected_url, $remove_url );
+
+		EDD_Helper_Download::delete_download( $post->ID );
+	}
 }

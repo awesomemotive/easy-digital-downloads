@@ -316,7 +316,7 @@ window.EDD_Checkout = (function($) {
 		var $this = $(this),
 			quantity = $this.val(),
 			key = $this.data('key'),
-			download_id = $this.closest('tr.edd_cart_item').data('download-id'),
+			download_id = $this.closest('.edd_cart_item').data('download-id'),
 			options = $this.parent().find('input[name="edd-cart-download-' + key + '-options"]').val();
 
 		var postData = {
