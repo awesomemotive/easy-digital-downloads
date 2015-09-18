@@ -469,9 +469,9 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 	$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
 	$message  = sprintf( __( 'New user registration on your site %s:' ), $blogname ) . "\r\n\r\n";
 	$message .= sprintf( __( 'Username: %s'), $user_data['user_login'] ) . "\r\n\r\n";
-	$message .= sprintf( __( 'E-mail: %s'), $user_data['user_email'] ) . "\r\n";	
+	$message .= sprintf( __( 'E-mail: %s'), $user_data['user_email'] ) . "\r\n";
 
-	@wp_mail( get_option( 'admin_email' ), sprintf( __('[%s] New User Registration' ), $blogname ), $message );	
+	@wp_mail( get_option( 'admin_email' ), sprintf( __('[%s] New User Registration' ), $blogname ), $message );
 
 	$message  = sprintf( __( 'Username: %s' ), $user_data['user_login'] ) . "\r\n";
 	$message .= sprintf( __( 'Password: %s' ), __( '[Password entered at checkout]', 'edd' ) ) . "\r\n";
@@ -570,7 +570,7 @@ function edd_get_user_verification_url( $user_id = 0 ) {
 		'edd_action' => 'verify_user',
 		'user_id'    => $user_id,
 		'ttl'        => strtotime( '+24 hours' )
-	), untrailingslashit( get_permalink( edd_get_option( 'purchase_history_page', 0 ) ) ) );
+	), untrailingslashit( edd_get_user_verification_page() ) );
 
 	$token = edd_get_user_verification_token( $base_url );
 	$url   = add_query_arg( 'token', $token, $base_url );
@@ -788,7 +788,7 @@ function edd_process_user_verification_request() {
 
 	$redirect = apply_filters(
 		'edd_user_account_verification_request_redirect',
-		add_query_arg( 'edd-verify-request', '1', get_permalink( edd_get_option( 'purchase_history_page', 0 ) ) )
+		add_query_arg( 'edd-verify-request', '1', edd_get_user_verification_page() )
 	);
 
 	wp_safe_redirect( $redirect );
@@ -820,7 +820,7 @@ function edd_process_user_account_verification() {
 
 	$parts = parse_url( add_query_arg( array() ) );
 	wp_parse_str( $parts['query'], $query_args );
-	$url = add_query_arg( $query_args, untrailingslashit( get_permalink( edd_get_option( 'purchase_history_page', 0 ) ) ) );
+	$url = add_query_arg( $query_args, untrailingslashit( edd_get_user_verification_page() ) );
 
 	if( ! edd_validate_user_verification_token( $url ) ) {
 
@@ -835,7 +835,7 @@ function edd_process_user_account_verification() {
 
 	$redirect = apply_filters(
 		'edd_user_account_verified_redirect',
-		add_query_arg( 'edd-verify-success', '1', get_permalink( edd_get_option( 'purchase_history_page', 0 ) ) )
+		add_query_arg( 'edd-verify-success', '1', edd_get_user_verification_page() )
 	);
 
 	wp_safe_redirect( $redirect );
@@ -843,3 +843,20 @@ function edd_process_user_account_verification() {
 
 }
 add_action( 'edd_verify_user', 'edd_process_user_account_verification' );
+
+/**
+ * Retrieves the purchase history page, or main URL for the account verification process
+ *
+ * @since  2.4.6
+ * @return string The base URL to use for account verification
+ */
+function edd_get_user_verification_page() {
+	$url              = home_url();
+	$purchase_history = edd_get_option( 'purchase_history_page', 0 );
+
+	if ( ! empty( $purchase_history ) ) {
+		$url = get_permalink( $purchase_history );
+	}
+
+	return apply_filters( 'edd_user_verification_base_url', $url );
+}
