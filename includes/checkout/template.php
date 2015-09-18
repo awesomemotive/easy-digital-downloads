@@ -908,6 +908,6 @@ add_filter( 'the_content', 'edd_filter_success_page_content', 99999 );
  * @param  array      $item         Cart item array
  * @return boolean
  */
-function edd_receipt_show_download_files( $item_id, $receipt_args, $item ) {
+function edd_receipt_show_download_files( $item_id, $receipt_args, $item = array() ) {
 	return apply_filters( 'edd_receipt_show_download_files', true, $item_id, $receipt_args, $item );
 }
