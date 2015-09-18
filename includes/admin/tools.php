@@ -128,37 +128,27 @@ function edd_tools_recount_stats_display() {
 ?>
 	<div class="postbox">
 		<h3><span><?php _e( 'Recount Stats', 'edd' ); ?></span></h3>
-		<div class="inside">
+		<div class="inside recount-stats-controls">
 			<p><?php _e( 'Use these tools to recount / reset store stats.', 'edd' ); ?></p>
 			<p>
 				<form method="post">
-					<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
-					<input type="hidden" name="edd-export-class" value="EDD_Batch_Payments_Export"/>
 					<span>
-						<input type="submit" value="<?php _e( 'Recount Product Earnings and Sales', 'edd' ); ?>" class="button-secondary"/>
+						<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+
+						<select name="edd-export-class" id="recount-stats-type">
+							<option value="-1" selected="selected" disabled="disabled"><?php _e( 'Plase select an option', 'edd' ); ?></option>
+							<option value="EDD_Batch_Recount_Stats"><?php _e( 'Recount Store Earnings and Sales', 'edd' ); ?></option>
+							<option value="EDD_Batch_Recount_Stats"><?php _e( 'Recount Product Earnings and Sales', 'edd' ); ?></option>
+							<option value="EDD_Batch_Reset_Product_Stats"><?php _e( 'Reset Product Earnings and Sales', 'edd' ); ?></option>
+						</select>
+
+						<input type="submit" value="<?php _e( 'Submit', 'edd' ); ?>" class="button-secondary"/>
+
 						<span class="spinner"></span>
+
 					</span>
 				</form>
-			</p>
-			<p>
-				<form method="post">
-					<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
-					<input type="hidden" name="edd-export-class" value="EDD_Batch_Payments_Export"/>
-					<span>
-						<input type="submit" value="<?php _e( 'Recount Store Earnings and Sales', 'edd' ); ?>" class="button-secondary"/>
-						<span class="spinner"></span>
-					</span>
-				</form>
-			</p>
-			<p>
-				<form method="post">
-					<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
-					<input type="hidden" name="edd-export-class" value="EDD_Batch_Payments_Export"/>
-					<span>
-						<input type="submit" value="<?php _e( 'Reset Product Earnings and Sales', 'edd' ); ?>" class="button-secondary"/>
-						<span class="spinner"></span>
-					</span>
-				</form>
+				<?php do_action( 'edd_tools_recount_forms' ); ?>
 			</p>
 		</div><!-- .inside -->
 	</div><!-- .postbox -->
@@ -399,9 +389,9 @@ function edd_tools_import_export_process_import() {
 	if( ! current_user_can( 'manage_shop_settings' ) )
 		return;
 
-    if( edd_get_file_extension( $_FILES['import_file']['name'] ) != 'json' ) {
-        wp_die( __( 'Please upload a valid .json file', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 400 ) );
-    }
+	if( edd_get_file_extension( $_FILES['import_file']['name'] ) != 'json' ) {
+		wp_die( __( 'Please upload a valid .json file', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 400 ) );
+	}
 
 	$import_file = $_FILES['import_file']['tmp_name'];
 
@@ -629,16 +619,16 @@ function edd_tools_sysinfo_get() {
 
 	// Must-use plugins
 	// NOTE: MU plugins can't show updates!
-    $muplugins = get_mu_plugins();
-    if( count( $muplugins > 0 ) ) {
-        $return .= "\n" . '-- Must-Use Plugins' . "\n\n";
+	$muplugins = get_mu_plugins();
+	if( count( $muplugins > 0 ) ) {
+		$return .= "\n" . '-- Must-Use Plugins' . "\n\n";
 
 		foreach( $muplugins as $plugin => $plugin_data ) {
-            $return .= $plugin_data['Name'] . ': ' . $plugin_data['Version'] . "\n";
-        }
+			$return .= $plugin_data['Name'] . ': ' . $plugin_data['Version'] . "\n";
+		}
 
-        $return = apply_filters( 'edd_sysinfo_after_wordpress_mu_plugins', $return );
-    }
+		$return = apply_filters( 'edd_sysinfo_after_wordpress_mu_plugins', $return );
+	}
 
 	// WordPress active plugins
 	$return .= "\n" . '-- WordPress Active Plugins' . "\n\n";

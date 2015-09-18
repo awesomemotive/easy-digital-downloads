@@ -390,3 +390,9 @@ td.edd_order_price { text-align: right; }
 .note-content-wrap { padding-top: 7px; }
 .delete-customer { text-align: center; }
 
+/* Tools Styles
+-------------------------------------------------------------- */
+.recount-stats-controls form {
+	display: inline;
+}
+

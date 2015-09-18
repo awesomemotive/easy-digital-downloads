@@ -64,6 +64,11 @@ function edd_do_ajax_export() {
 
 		echo json_encode( array( 'error' => true, 'message' => __( 'No data found for export parameters', 'edd' ) ) ); exit;
 
+	} elseif ( true === $export->is_void && true === $export->is_complete ) {
+
+		$message = ! empty( $export->mesasge ) ? $export->message : __( 'Batch Processing Complete', 'edd' );
+		echo json_encode( array( 'success' => true, 'message' => $message ) ); exit;
+
 	} else {
 
 		$args = array_merge( $_REQUEST, array(
