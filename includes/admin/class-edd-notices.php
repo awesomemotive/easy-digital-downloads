@@ -116,6 +116,9 @@ class EDD_Notices {
 					case 'email_sent' :
 						$notices['updated']['edd-payment-sent'] = __( 'The purchase receipt has been resent.', 'edd' );
 						break;
+					case 'refreshed-reports' :
+						$notices['updated']['edd-refreshed-reports'] = __( 'The reports cache has been cleared.', 'edd' );
+						break;
 					case 'payment-note-deleted' :
 						$notices['updated']['edd-payment-note-deleted'] = __( 'The payment note has been deleted.', 'edd' );
 						break;
