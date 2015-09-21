@@ -96,7 +96,7 @@ function edd_reports_graph() {
 		$y = $dates['year'];
 
 		while( $y <= $dates['year_end'] ) :
-			
+
 			$last_year = false;
 
 			if( $dates['year'] == $dates['year_end'] ) {
@@ -186,7 +186,7 @@ function edd_reports_graph() {
 
 	// start our own output buffer
 	ob_start();
-	?>
+	do_action( 'edd_reports_graph_before' ); ?>
 	<div id="edd-dashboard-widgets-wrap">
 		<div class="metabox-holder" style="padding-top: 0;">
 			<div class="postbox">
@@ -245,6 +245,8 @@ function edd_reports_graph() {
 			</div>
 		</div>
 	</div>
+	<?php do_action( 'edd_reports_graph_after' ); ?>
+
 	<?php
 	// get output buffer contents and end our own buffer
 	$output = ob_get_contents();
@@ -768,3 +770,48 @@ function edd_parse_report_dates( $data ) {
 	wp_redirect( add_query_arg( $dates, admin_url( 'edit.php?post_type=download&page=edd-reports&view=' . esc_attr( $view ) . '&download-id=' . absint( $id ) . '&exclude_taxes=' . absint( $exclude_taxes ) ) ) ); edd_die();
 }
 add_action( 'edd_filter_reports', 'edd_parse_report_dates' );
+
+
+
+/**
+ * EDD Reports Refresh Button
+ * @since 2.7
+ * @description: Outputs a "Refresh Reports" button for graphs
+ */
+function edd_reports_refresh_button() {
+
+	$url = wp_nonce_url( add_query_arg( array(
+		'edd_action'  => 'refresh_reports_transients',
+		'edd-message' => 'refreshed-reports'
+	) ), 'edd-refresh-reports' );
+
+	echo '<a href="' . $url . '" title="' . __( 'Clicking this will clear the reports cache', 'edd' ) . '"  class="button edd-refresh-reports-button">' . __( 'Refresh Reports', 'edd' ) . '</a>';
+
+}
+
+add_action( 'edd_reports_graph_after', 'edd_reports_refresh_button' );
+
+/**
+ * EDD trigger the refresh of reports transients
+ *
+ * @since 2.7
+ *
+ * @param array $data Parameters sent from Settings page
+ *
+ * @return void
+ */
+function edd_run_refresh_reports_transients( $data ) {
+
+	if ( ! wp_verify_nonce( $data['_wpnonce'], 'edd-refresh-reports' ) ) {
+		return;
+	}
+
+	//Delete transients
+	delete_transient( 'edd_estimated_monthly_stats' );
+	delete_transient( 'edd_earnings_total' );
+	delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
+	delete_transient( md5( 'edd_earnings_todaytoday' ) );
+
+}
+
+add_action( 'edd_refresh_reports_transients', 'edd_run_refresh_reports_transients' );
