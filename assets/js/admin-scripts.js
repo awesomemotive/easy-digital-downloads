@@ -1197,6 +1197,7 @@ jQuery(document).ready(function ($) {
 		init : function() {
 			this.revoke_api_key();
 			this.regenerate_api_key();
+			this.recount_stats();
 		},
 
 		revoke_api_key : function() {
@@ -1207,6 +1208,50 @@ jQuery(document).ready(function ($) {
 		regenerate_api_key : function() {
 			$( document.body ).on( 'click', '.edd-regenerate-api-key', function( e ) {
 				return confirm( edd_vars.regenerate_api_key );
+			} );
+		},
+		recount_stats : function() {
+			$( 'body').on( 'change', '#recount-stats-type', function() {
+				var selected_type = $('option:selected', this).data('type');
+
+				if ( 'recount-download' === selected_type || 'reset-download' === selected_type ) {
+					$('#tools-product-dropdown').show();
+				} else {
+					$('#tools-product-dropdown').hide();
+					$('#tools-product-dropdown').val(0);
+				}
+			} );
+
+			$( '#edd-tools-recount-form' ).submit( function(e) {
+				var selection   = $('#recount-stats-type').val();
+				var export_form = $(this);
+
+				export_form.append('<div class="notice-wrap"></div>');
+				var notice_wrap = export_form.find('.notice-wrap');
+				var has_errors  = false;
+
+				if ( null === selection || 0 === selection ) {
+					// Needs to pick a method edd_vars.batch_export_no_class
+					notice_wrap.html('<div class="updated error"><p>' + edd_vars.batch_export_no_class + '</p></div>');
+					has_errors = true;
+				}
+
+				var selected_type = $('option:selected', this).data('type');
+				if ( 'recount-download' === selected_type ) {
+
+					var selected_download = $('select[name="download_id"]').val();
+					if ( selected_download == 0 ) {
+						// Needs to pick download edd_vars.batch_export_no_reqs
+						notice_wrap.html('<div class="updated error"><p>' + edd_vars.batch_export_no_reqs + '</p></div>');
+						has_errors = true;
+					}
+
+				}
+
+				if ( has_errors ) {
+					export_form.find('.button-disabled').removeClass('button-disabled');
+					return false;
+				}
 			} );
 		},
 	};
@@ -1259,7 +1304,7 @@ jQuery(document).ready(function ($) {
 				dataType: "json",
 				success: function( response ) {
 
-					if( 'done' == response.step || response.error ) {
+					if( 'done' == response.step || response.error || response.success ) {
 
 						// We need to get the actual in progress form, not all forms on the page
 						var export_form    = $('.edd-export-form').find('.edd-progress').parent().parent();
@@ -1270,7 +1315,12 @@ jQuery(document).ready(function ($) {
 						if ( response.error ) {
 
 							var error_message = response.message;
-							notice_wrap.html('<div class="update error"><p>' + error_message + '</p></div>');
+							notice_wrap.html('<div class="updated error"><p>' + error_message + '</p></div>');
+
+						} else if ( response.success ) {
+
+							var success_message = response.message;
+							notice_wrap.html('<div class="updated"><p>' + success_message + '</p></div>');
 
 						} else {
 
@@ -1280,6 +1330,7 @@ jQuery(document).ready(function ($) {
 						}
 
 					} else {
+						console.log(response.downloads);
 						$('.edd-progress div').animate({
 							width: response.percentage + '%',
 						}, 50, function() {
