@@ -60,11 +60,10 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 		) );
 
 		$downloads = get_posts( $args );
-		$this->downloads = array();
+
 		if ( $downloads ) {
 
 			foreach ( $downloads as $download ) {
-				$this->downloads[] = $download->ID;
 				update_post_meta( $download->ID, '_edd_download_sales'   , 0 );
 				update_post_meta( $download->ID, '_edd_download_earnings', 0 );
 			}
