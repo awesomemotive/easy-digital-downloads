@@ -1213,12 +1213,13 @@ jQuery(document).ready(function ($) {
 		recount_stats : function() {
 			$( 'body').on( 'change', '#recount-stats-type', function() {
 				var selected_type = $('option:selected', this).data('type');
-
+				var products      = $('#tools-product-dropdown');
 				if ( 'recount-download' === selected_type || 'reset-download' === selected_type ) {
-					$('#tools-product-dropdown').show();
+					products.show();
+					products.find('.edd-select-chosen').css('width', 'auto');
 				} else {
-					$('#tools-product-dropdown').hide();
-					$('#tools-product-dropdown').val(0);
+					products.hide();
+					products.val(0);
 				}
 			} );
 
