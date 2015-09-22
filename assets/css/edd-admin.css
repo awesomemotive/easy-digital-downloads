@@ -392,7 +392,4 @@ td.edd_order_price { text-align: right; }
 
 /* Tools Styles
 -------------------------------------------------------------- */
-.recount-stats-controls form {
-	display: inline;
-}
-
+.recount-stats-controls form { display: inline; }
