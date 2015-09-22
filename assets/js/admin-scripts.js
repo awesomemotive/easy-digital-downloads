@@ -1226,6 +1226,8 @@ jQuery(document).ready(function ($) {
 				var selection   = $('#recount-stats-type').val();
 				var export_form = $(this);
 
+				export_form.find('.notice-wrap').remove();
+
 				export_form.append('<div class="notice-wrap"></div>');
 				var notice_wrap = export_form.find('.notice-wrap');
 				var has_errors  = false;
