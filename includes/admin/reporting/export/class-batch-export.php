@@ -291,4 +291,13 @@ class EDD_Batch_Export extends EDD_Export {
 		edd_die();
 	}
 
+	/**
+	 * Allow for prefetching of data for the remainder of the exporter
+	 *
+	 * @access public
+	 * @since  2.5
+	 * @return void
+	 */
+	public function pre_fetch() {}
+
 }

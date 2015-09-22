@@ -51,6 +51,9 @@ function edd_do_ajax_export() {
 
 	$export->set_properties( $_REQUEST );
 
+	// Added in 2.5 to allow a bulk processor to pre-fetch some data to speed up the remaining steps and cache data
+	$export->pre_fetch();
+
 	$ret = $export->process_step( $step );
 
 	$percentage = $export->get_percentage_complete();
@@ -58,15 +61,15 @@ function edd_do_ajax_export() {
 	if( $ret ) {
 
 		$step += 1;
-		echo json_encode( array( 'step' => $step, 'percentage' => $percentage ) ); exit;
+		echo json_encode( array( 'step' => $step, 'percentage' => $percentage, 'downloads' => $export->downloads ) ); exit;
 
 	} elseif ( true === $export->is_empty ) {
 
 		echo json_encode( array( 'error' => true, 'message' => __( 'No data found for export parameters', 'edd' ) ) ); exit;
 
-	} elseif ( true === $export->is_void && true === $export->is_complete ) {
+	} elseif ( true === $export->done && true === $export->is_void ) {
 
-		$message = ! empty( $export->mesasge ) ? $export->message : __( 'Batch Processing Complete', 'edd' );
+		$message = ! empty( $export->message ) ? $export->message : __( 'Batch Processing Complete', 'edd' );
 		echo json_encode( array( 'success' => true, 'message' => $message ) ); exit;
 
 	} else {

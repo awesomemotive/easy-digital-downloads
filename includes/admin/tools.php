@@ -131,16 +131,27 @@ function edd_tools_recount_stats_display() {
 		<div class="inside recount-stats-controls">
 			<p><?php _e( 'Use these tools to recount / reset store stats.', 'edd' ); ?></p>
 			<p>
-				<form method="post">
+				<form method="post" id="edd-tools-recount-form" class="edd-export-form">
 					<span>
 						<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 
 						<select name="edd-export-class" id="recount-stats-type">
-							<option value="-1" selected="selected" disabled="disabled"><?php _e( 'Plase select an option', 'edd' ); ?></option>
-							<option value="EDD_Batch_Recount_Stats"><?php _e( 'Recount Store Earnings and Sales', 'edd' ); ?></option>
-							<option value="EDD_Batch_Recount_Stats"><?php _e( 'Recount Product Earnings and Sales', 'edd' ); ?></option>
-							<option value="EDD_Batch_Reset_Product_Stats"><?php _e( 'Reset Product Earnings and Sales', 'edd' ); ?></option>
+							<option value="0" selected="selected" disabled="disabled"><?php _e( 'Plase select an option', 'edd' ); ?></option>
+							<option data-type="recount-store" value="EDD_Tools_Recount_Store_Earnings"><?php _e( 'Recount Store Earnings', 'edd' ); ?></option>
+							<option data-type="recount-download" value="EDD_Tools_Recount_Download_Stats"><?php _e( 'Recount Product Earnings and Sales', 'edd' ); ?></option>
+							<option data-type="recount-all" value="EDD_Tools_Recount_All_Stats"><?php _e( 'Recount All Store and Product Stats', 'edd' ); ?></option>
+							<option data-type="reset-stats" value="EDD_Tools_Reset_Stats"><?php _e( 'Reset All Sales and Earnings Stats', 'edd' ); ?></option>
 						</select>
+
+						<span id="tools-product-dropdown" style="display: none">
+							<?php
+								$args = array(
+									'name'   => 'download_id',
+									'number' => -1,
+								);
+								echo EDD()->html->product_dropdown( $args );
+							?>
+						</span>
 
 						<input type="submit" value="<?php _e( 'Submit', 'edd' ); ?>" class="button-secondary"/>
 
