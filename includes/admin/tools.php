@@ -406,13 +406,8 @@ function edd_tools_sysinfo_get() {
 	$browser = new Browser();
 
 	// Get theme info
-	if( get_bloginfo( 'version' ) < '3.4' ) {
-		$theme_data = get_theme_data( get_stylesheet_directory() . '/style.css' );
-		$theme      = $theme_data['Name'] . ' ' . $theme_data['Version'];
-	} else {
-		$theme_data = wp_get_theme();
-		$theme      = $theme_data->Name . ' ' . $theme_data->Version;
-	}
+	$theme_data = wp_get_theme();
+	$theme      = $theme_data->Name . ' ' . $theme_data->Version;
 
 	// Try to identify the hosting provider
 	$host = edd_get_host();
@@ -573,12 +568,16 @@ function edd_tools_sysinfo_get() {
 		$return  = apply_filters( 'edd_sysinfo_after_edd_templates', $return );
 	}
 
-    // Must-use plugins
+	// Get plugins that have an update
+	$updates = get_plugin_updates();
+
+	// Must-use plugins
+	// NOTE: MU plugins can't show updates!
     $muplugins = get_mu_plugins();
     if( count( $muplugins > 0 ) ) {
         $return .= "\n" . '-- Must-Use Plugins' . "\n\n";
 
-        foreach( $muplugins as $plugin => $plugin_data ) {
+		foreach( $muplugins as $plugin => $plugin_data ) {
             $return .= $plugin_data['Name'] . ': ' . $plugin_data['Version'] . "\n";
         }
 
@@ -595,7 +594,8 @@ function edd_tools_sysinfo_get() {
 		if( !in_array( $plugin_path, $active_plugins ) )
 			continue;
 
-		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . "\n";
+		$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[$plugin_path]->update->new_version . ')' : '';
+		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
 	}
 
 	$return  = apply_filters( 'edd_sysinfo_after_wordpress_plugins', $return );
@@ -607,7 +607,8 @@ function edd_tools_sysinfo_get() {
 		if( in_array( $plugin_path, $active_plugins ) )
 			continue;
 
-		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . "\n";
+		$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[$plugin_path]->update->new_version . ')' : '';
+		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
 	}
 
 	$return  = apply_filters( 'edd_sysinfo_after_wordpress_plugins_inactive', $return );
@@ -625,8 +626,9 @@ function edd_tools_sysinfo_get() {
 			if( !array_key_exists( $plugin_base, $active_plugins ) )
 				continue;
 
+			$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[$plugin_path]->update->new_version . ')' : '';
 			$plugin  = get_plugin_data( $plugin_path );
-			$return .= $plugin['Name'] . ': ' . $plugin['Version'] . "\n";
+			$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
 		}
 
 		$return  = apply_filters( 'edd_sysinfo_after_wordpress_ms_plugins', $return );

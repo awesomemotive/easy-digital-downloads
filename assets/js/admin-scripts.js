@@ -1306,8 +1306,8 @@ jQuery(document).ready(function ($) {
 	var EDD_Customer = {
 
 		vars: {
-			customer_card_wrap_editable:  $( '#edd-customer-card-wrapper .editable' ),
-			customer_card_wrap_edit_item: $( '#edd-customer-card-wrapper .edit-item' ),
+			customer_card_wrap_editable:  $( '.edd-customer-card-wrapper .editable' ),
+			customer_card_wrap_edit_item: $( '.edd-customer-card-wrapper .edit-item' ),
 			user_id: $('input[name="customerinfo[user_id]"]'),
 			state_input: $(':input[name="customerinfo[state]"]'),
 			note: $( '#customer-note' ),
