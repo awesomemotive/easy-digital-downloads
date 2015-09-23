@@ -253,6 +253,27 @@ function edd_tools_import_export_display() {
 
 	do_action( 'edd_tools_import_export_before' );
 ?>
+
+	<div class="postbox edd-import-payment-history">
+		<h3><span><?php _e( 'Import Payment History', 'edd' ); ?></span></h3>
+		<div class="inside">
+			<p><?php _e( 'Import a CSV file of payment records.', 'edd' ); ?></p>
+			<p>
+				<form id="edd-import-payments" class="edd-import-form edd-import-export-form" action="<?php echo esc_url( add_query_arg( 'edd_action', 'upload_import_file', admin_url() ) ); ?>" method="post" enctype="multipart/form-data">
+					<?php wp_nonce_field( 'edd_ajax_import', 'edd_ajax_import' ); ?>
+					<input type="hidden" name="edd-import-class" value="EDD_Batch_Payments_Import"/>
+					<p>
+						<input name="edd-import-file" id="edd-payments-import-file" type="file" />
+					</p>
+					<span>
+						<input type="submit" value="<?php _e( 'Import CSV', 'edd' ); ?>" class="button-secondary"/>
+						<span class="spinner"></span>
+					</span>
+				</form>
+			</p>
+		</div><!-- .inside -->
+	</div><!-- .postbox -->
+
 	<div class="postbox">
 		<h3><span><?php _e( 'Export Settings', 'edd' ); ?></span></h3>
 		<div class="inside">

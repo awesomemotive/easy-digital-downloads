@@ -171,6 +171,10 @@ function edd_load_admin_scripts( $hook ) {
 	wp_register_script( 'jquery-chosen', $js_dir . 'chosen.jquery' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
 	wp_enqueue_script( 'jquery-chosen' );
 
+	if( edd_is_admin_page( 'tools', 'import_export' ) ) {
+		wp_enqueue_script( 'jquery-form' );
+	}
+
 	wp_register_script( 'edd-admin-scripts', $js_dir . 'admin-scripts' . $suffix . '.js', array( 'jquery', 'inline-edit-post' ), EDD_VERSION, false );
 	wp_enqueue_script( 'edd-admin-scripts' );
 

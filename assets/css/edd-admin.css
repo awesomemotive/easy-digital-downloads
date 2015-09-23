@@ -232,18 +232,18 @@ td.edd_order_price { text-align: right; }
 #edd-graphs-date-options,
 #edd-date-range-options { float: left; }
 #edd-date-range-options span { float: left; margin-right: 6px; height: 24px; line-height: 24px; }
-.edd-export-form { position: relative; }
-.edd-export-form .edd-progress {background: #ddd; position: absolute; bottom: 15px; height: 15px; width: 95%; }
-.edd-export-form .edd-progress div { height: 100%; background: #ccc; width: 0; }
-.edd-export-form .notice-wrap { background-color: #f4f4f4; padding: 12px 12px 4px; margin: 20px -12px -23px; border-style: solid; border-width: 1px 0; border-color: #eae9e9; overflow: auto; }
-.edd-export-form .notice-wrap .spinner { margin: 4px 10px 8px; }
-.admin-color-fresh .edd-export-form .edd-progress div { background: #0073aa; }
-.admin-color-light .edd-export-form .edd-progress div { background: #888; }
-.admin-color-blue .edd-export-form .edd-progress div { background: #096484; }
-.admin-color-coffee .edd-export-form .edd-progress div { background: #c7a589; }
-.admin-color-ectoplasm .edd-export-form .edd-progress div { background: #a3b745; }
-.admin-color-midnight .edd-export-form .edd-progress div { background: #e14d43; }
-.admin-color-sunrise .edd-export-form .edd-progress div { background: #dd823b; }
+.edd-import-export-form { position: relative; }
+.edd-import-export-form .edd-progress {background: #ddd; position: absolute; bottom: 15px; height: 15px; width: 95%; }
+.edd-import-export-form .edd-progress div { height: 100%; background: #ccc; width: 0; }
+.edd-import-export-form .notice-wrap { background-color: #f4f4f4; padding: 12px 12px 4px; margin: 20px -12px -23px; border-style: solid; border-width: 1px 0; border-color: #eae9e9; overflow: auto; }
+.edd-import-export-form .notice-wrap .spinner { margin: 4px 10px 8px; }
+.admin-color-fresh .edd-import-export-form .edd-progress div { background: #0073aa; }
+.admin-color-light .edd-import-export-form .edd-progress div { background: #888; }
+.admin-color-blue .edd-import-export-form .edd-progress div { background: #096484; }
+.admin-color-coffee .edd-import-export-form .edd-progress div { background: #c7a589; }
+.admin-color-ectoplasm .edd-import-export-form .edd-progress div { background: #a3b745; }
+.admin-color-midnight .edd-import-export-form .edd-progress div { background: #e14d43; }
+.admin-color-sunrise .edd-import-export-form .edd-progress div { background: #dd823b; }
 #edd-graphs-filter label { vertical-align: inherit; }
 #edd-graphs-filter .graph-option-section { float: left; line-height: 2.5em; padding-right: 5px; }
 .edd-mix-totals { padding: 10px; background-color: #fff; box-shadow: 0 1px 1px rgba(0,0,0,0.04); border: 1px solid #e5e5e5; }
