@@ -80,7 +80,8 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 						$step_ids['downloads'][] = $item['id'];
 						break;
 					default:
-						$step_ids['other'][] = $item['id'];
+						$item_type = apply_filters( 'edd_reset_item_type', 'other', $item );
+						$step_ids[ $item_type ][] = $item['id'];
 						break;
 				}
 
@@ -111,6 +112,12 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 						$sql[] = "DELETE FROM $wpdb->comments WHERE comment_post_ID IN ($ids)";
 						$sql[] = "DELETE FROM $wpdb->commentmeta WHERE comment_id NOT IN (SELECT comment_ID FROM $wpdb->comments)";
 						break;
+				}
+
+				if ( ! in_array( $type, array( 'customers', 'downloads', 'other' ) ) ) {
+					// Allows other types of custom post types to filter on their own post_type
+					// and add items to the query list, for the IDs found in their post type.
+					$sql = apply_filters( 'edd_reset_add_queries' . $type, $sql, $ids );
 				}
 
 			}
