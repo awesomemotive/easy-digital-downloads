@@ -1301,6 +1301,168 @@ jQuery(document).ready(function ($) {
 	EDD_Export.init();
 
 	/**
+	 * Import screen JS
+	 */
+	var EDD_Import = {
+
+		init : function() {
+			this.submit();
+		},
+
+		submit : function() {
+
+			var self = this;
+
+			$('.edd-import-form').ajaxForm({
+				beforeSubmit: self.before_submit,
+				success: self.success,
+				complete: self.complete,
+				dataType: 'json',
+				error: self.error,
+				target: '#edd-import-payments-output'
+			});
+
+			/*
+			var submitButton = $(this).find( 'input[type="submit"]' );
+
+			if ( ! submitButton.hasClass( 'button-disabled' ) ) {
+
+				var data = $(this).serialize();
+
+				console.log( data ); return;
+
+				submitButton.addClass( 'button-disabled' );
+				$(this).find('.notice-wrap').remove();
+				$(this).append( '<div class="notice-wrap"><span class="spinner is-active"></span><div class="edd-progress"><div></div></div></div>' );
+
+				// start the process
+				self.process_step( 1, data, self );
+
+			}*/
+
+		},
+
+		before_submit : function( arr, $form, options ) {
+
+			$form.find('.notice-wrap').remove();
+			$form.append( '<div class="notice-wrap"><span class="spinner is-active"></span><div class="edd-progress"><div></div></div></div>' );
+
+			//check whether client browser fully supports all File API
+			if ( window.File && window.FileReader && window.FileList && window.Blob ) {
+
+				// HTML5 File API is supported by browser
+				console.log('before');
+			} else {
+				//Error for older unsupported browsers that doesn't support HTML5 File API
+				alert( "Please upgrade your browser, because your current browser lacks some new features we need!" );
+				return false;
+			}
+
+		},
+
+		success: function( responseText, statusText, xhr, $form ) {
+			//console.log( responseText );
+		},
+
+		complete: function( xhr ) {
+
+			var response = jQuery.parseJSON( xhr.responseText );
+
+			if( response.success ) {
+
+				EDD_Import.process_step( 1, response.data, self );
+
+			} else {
+
+				EDD_Import.error( xhr );
+
+			}
+
+			console.log( response );
+
+		},
+
+		error : function( xhr ) {
+
+			// Something went wrong. This will display error on form
+			console.log( 'error' );
+			//console.log( xhr );
+
+			var response    = jQuery.parseJSON( xhr.responseText );
+			var import_form = $('.edd-import-form').find('.edd-progress').parent().parent();
+			var notice_wrap = import_form.find('.notice-wrap');
+
+			import_form.find('.button-disabled').removeClass('button-disabled');
+
+			if ( response.data.error ) {
+
+				notice_wrap.html('<div class="update error"><p>' + response.data.error + '</p></div>');
+
+			} else {
+
+				notice_wrap.remove();
+
+			}
+		},
+
+		process_step : function( step, import_data, self ) {
+
+			$.ajax({
+				type: 'POST',
+				url: ajaxurl,
+				data: {
+					form: import_data.form,
+					nonce: import_data.nonce,
+					class: import_data.class,
+					file: import_data.file,
+					action: 'edd_do_ajax_import',
+					step: step,
+				},
+				dataType: "json",
+				success: function( response ) {
+
+					if( 'done' == response.data.step || response.data.error ) {
+
+						// We need to get the actual in progress form, not all forms on the page
+						var import_form    = $('.edd-import-form').find('.edd-progress').parent().parent();
+						var notice_wrap    = import_form.find('.notice-wrap');
+
+						import_form.find('.button-disabled').removeClass('button-disabled');
+
+						if ( response.data.error ) {
+
+							notice_wrap.html('<div class="update error"><p>' + response.data.error + '</p></div>');
+
+						} else {
+
+							notice_wrap.html('<div class="updated"><p>' + response.data.message + '</p></div>');
+
+						}
+
+					} else {
+
+						$('.edd-progress div').animate({
+							width: response.data.percentage + '%',
+						}, 50, function() {
+							// Animation complete.
+						});
+
+						EDD_Import.process_step( parseInt( response.data.step ), import_data, self );
+					}
+
+				}
+			}).fail(function (response) {
+				if ( window.console && window.console.log ) {
+					console.log( response );
+				}
+			});
+
+		}
+
+	};
+	EDD_Import.init();
+
+	/**
 	 * Customer management screen JS
 	 */
 	var EDD_Customer = {

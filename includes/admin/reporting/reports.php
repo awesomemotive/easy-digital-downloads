@@ -380,7 +380,7 @@ function edd_reports_tab_export() {
 						<div class="inside">
 							<p><?php _e( 'Download a CSV of all payments recorded.', 'edd' ); ?></p>
 							<p>
-								<form id="edd-export-payments" class="edd-export-form" method="post">
+								<form id="edd-export-payments" class="edd-export-form edd-import-export-form" method="post">
 									<?php echo EDD()->html->date_field( array( 'id' => 'edd-payment-export-start', 'name' => 'start', 'placeholder' => __( 'Choose start date', 'edd' ) )); ?>
 									<?php echo EDD()->html->date_field( array( 'id' => 'edd-payment-export-end','name' => 'end', 'placeholder' => __( 'Choose end date', 'edd' ) )); ?>
 									<select name="status">
@@ -408,7 +408,7 @@ function edd_reports_tab_export() {
 						<div class="inside">
 							<p><?php _e( 'Download a CSV of customers.', 'edd' ); ?></p>
 							<p>
-								<form id="edd-export-customers" class="edd-export-form" method="post">
+								<form id="edd-export-customers" class="edd-export-form edd-import-export-form" method="post">
 									<select name="download" id="edd_customer_export_download">
 										<option value="0"><?php printf( __( 'All %s', 'edd' ), edd_get_label_plural() ); ?></option>
 										<?php
@@ -433,7 +433,7 @@ function edd_reports_tab_export() {
 						<div class="inside">
 							<p><?php _e( 'Download a CSV of file downloads.', 'edd' ); ?></p>
 							<p>
-								<form id="edd-export-file-downloads" class="edd-export-form" method="post">
+								<form id="edd-export-file-downloads" class="edd-export-form edd-import-export-form" method="post">
 									<?php echo EDD()->html->date_field( array( 'id' => 'edd-file-download-export-start', 'name' => 'start', 'placeholder' => __( 'Choose start date', 'edd' ) )); ?>
 									<?php echo EDD()->html->date_field( array( 'id' => 'edd-file-download-export-end', 'name' => 'end', 'placeholder' => __( 'Choose end date', 'edd' ) )); ?>
 									<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
