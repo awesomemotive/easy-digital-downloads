@@ -39,7 +39,7 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 	 * @since  2.5
 	 * @var integer
 	 */
-	public $per_step = 10;
+	public $per_step = 30;
 
 	/**
 	 * Get the Export Data
@@ -51,21 +51,74 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 	 * @return array $data The data for the CSV file
 	 */
 	public function get_data() {
+		global $wpdb;
 
-		$args = apply_filters( 'edd_tools_reset_stats_args', array(
-			'post_type'      => 'download',
-			'posts_per_page' => $this->per_step,
-			'paged'          => $this->step,
-			'post_status'    => 'any',
-		) );
+		$items = get_option( 'edd_temp_reset_ids', false );
 
-		$downloads = get_posts( $args );
+		if ( ! is_array( $items ) ) {
+			return false;
+		}
 
-		if ( $downloads ) {
+		$offset     = ( $this->step - 1 ) * $this->per_step;
+		$step_items = array_slice( $items, $offset, $this->per_step );
 
-			foreach ( $downloads as $download ) {
-				update_post_meta( $download->ID, '_edd_download_sales'   , 0 );
-				update_post_meta( $download->ID, '_edd_download_earnings', 0 );
+		if ( $step_items ) {
+
+			$step_ids = array(
+				'customers' => array(),
+				'downloads' => array(),
+				'other'     => array(),
+			);
+
+			foreach ( $step_items as $item ) {
+
+				switch( $item['type'] ) {
+					case 'customer':
+						$step_ids['customers'][] = $item['id'];
+						break;
+					case 'download':
+						$step_ids['downloads'][] = $item['id'];
+						break;
+					default:
+						$step_ids['other'][] = $item['id'];
+						break;
+				}
+
+			}
+
+			$sql = array();
+
+			foreach ( $step_ids as $type => $ids ) {
+
+				if ( empty( $ids ) ) {
+					continue;
+				}
+
+				$ids = implode( ',', $ids );
+
+				switch( $type ) {
+					case 'customers':
+						$table_name = $wpdb->prefix . 'edd_customers';
+						$sql[] = "DELETE FROM $table_name WHERE id IN ($ids)";
+						break;
+					case 'downloads':
+						$sql[] = "UPDATE $wpdb->postmeta SET meta_value = 0 WHERE meta_key = '_edd_download_sales' AND post_id IN ($ids)";
+						$sql[] = "UPDATE $wpdb->postmeta SET meta_value = 0.00 WHERE meta_key = '_edd_download_earnings' AND post_id IN ($ids)";
+						break;
+					case 'other':
+						$sql[] = "DELETE FROM $wpdb->posts WHERE id IN ($ids)";
+						$sql[] = "DELETE FROM $wpdb->postmeta WHERE post_id IN ($ids)";
+						$sql[] = "DELETE FROM $wpdb->comments WHERE comment_post_ID IN ($ids)";
+						$sql[] = "DELETE FROM $wpdb->commentmeta WHERE comment_id NOT IN (SELECT comment_ID FROM $wpdb->comments)";
+						break;
+				}
+
+			}
+
+			if ( ! empty( $sql ) ) {
+				foreach ( $sql as $query ) {
+					$wpdb->query( $query );
+				}
 			}
 
 			return true;
@@ -84,14 +137,8 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 	 */
 	public function get_percentage_complete() {
 
-		$args = apply_filters( 'edd_tools_reset_stats_total_args', array(
-			'post_type'      => 'download',
-			'post_status'    => 'any',
-			'posts_per_page' => -1,
-		) );
-
-		$downloads = get_posts( $args );
-		$total     = count( $downloads );
+		$items = get_option( 'edd_temp_reset_ids', false );
+		$total = count( $items );
 
 		$percentage = 100;
 
@@ -133,8 +180,12 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 			return true;
 		} else {
 			update_option( 'edd_earnings_total', 0 );
+			delete_transient( 'edd_earnings_total' );
+			delete_transient( 'edd_estimated_monthly_stats' . true );
+			delete_transient( 'edd_estimated_monthly_stats' . false );
+			delete_option( 'edd_temp_reset_ids' );
 			$this->done    = true;
-			$this->message = __( 'Earnings and sales stats successfully reset.', 'edd' );
+			$this->message = __( 'Customers, earnings, sales, discounts and logs successfully reset.', 'edd' );
 			return false;
 		}
 	}
@@ -160,6 +211,48 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 		$this->headers();
 
 		edd_die();
+	}
+
+	public function pre_fetch() {
+
+		if ( $this->step == 1 ) {
+			delete_option( 'edd_temp_reset_ids' );
+		}
+
+		$items = get_option( 'edd_temp_reset_ids', false );
+
+		if ( false === $items ) {
+			$items = array();
+
+			$edd_types_for_reset = array( 'download', 'edd_log', 'edd_payment', 'edd_discount' );
+			$edd_types_for_reset = apply_filters( 'edd_reset_store_post_types', $edd_types_for_reset );
+
+			$args = apply_filters( 'edd_tools_reset_stats_total_args', array(
+				'post_type'      => $edd_types_for_reset,
+				'post_status'    => 'any',
+				'posts_per_page' => -1,
+			) );
+
+			$posts = get_posts( $args );
+			foreach ( $posts as $post ) {
+				$items[] = array(
+					'id'   => (int) $post->ID,
+					'type' => $post->post_type,
+				);
+			}
+
+			$customer_args = array( 'number' => -1 );
+			$customers     = EDD()->customers->get_customers( $customer_args );
+			foreach ( $customers as $customer ) {
+				$items[] = array(
+					'id'   => (int) $customer->id,
+					'type' => 'customer',
+				);
+			}
+
+			update_option( 'edd_temp_reset_ids', $items );
+		}
+
 	}
 
 }

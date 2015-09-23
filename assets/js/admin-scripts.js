@@ -1333,7 +1333,6 @@ jQuery(document).ready(function ($) {
 						}
 
 					} else {
-						console.log(response.downloads);
 						$('.edd-progress div').animate({
 							width: response.percentage + '%',
 						}, 50, function() {
