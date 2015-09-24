@@ -140,7 +140,7 @@ function edd_tools_recount_stats_display() {
 							<option data-type="recount-store" value="EDD_Tools_Recount_Store_Earnings"><?php _e( 'Recount Store Earnings', 'edd' ); ?></option>
 							<option data-type="recount-download" value="EDD_Tools_Recount_Download_Stats"><?php _e( 'Recount Product Earnings and Sales', 'edd' ); ?></option>
 							<option data-type="recount-all" value="EDD_Tools_Recount_All_Stats"><?php _e( 'Recount All Store and Product Stats', 'edd' ); ?></option>
-							<option data-type="reset-stats" value="EDD_Tools_Reset_Stats"><?php _e( 'Reset All Sales and Earnings Stats', 'edd' ); ?></option>
+							<option data-type="reset-stats" value="EDD_Tools_Reset_Stats"><?php _e( 'Reset Store', 'edd' ); ?></option>
 						</select>
 
 						<span id="tools-product-dropdown" style="display: none">
