@@ -1224,8 +1224,17 @@ jQuery(document).ready(function ($) {
 			} );
 
 			$( '#edd-tools-recount-form' ).submit( function(e) {
-				var selection   = $('#recount-stats-type').val();
-				var export_form = $(this);
+				var selection     = $('#recount-stats-type').val();
+				var export_form   = $(this);
+				var selected_type = $('option:selected', this).data('type');
+
+
+				if ( 'reset-stats' === selected_type ) {
+					var is_confirmed = $('#confirm-reset').is(':checked');
+					if ( is_confirmed ) {
+						return true;
+					}
+				}
 
 				export_form.find('.notice-wrap').remove();
 
@@ -1239,13 +1248,21 @@ jQuery(document).ready(function ($) {
 					has_errors = true;
 				}
 
-				var selected_type = $('option:selected', this).data('type');
 				if ( 'recount-download' === selected_type ) {
 
 					var selected_download = $('select[name="download_id"]').val();
 					if ( selected_download == 0 ) {
 						// Needs to pick download edd_vars.batch_export_no_reqs
 						notice_wrap.html('<div class="updated error"><p>' + edd_vars.batch_export_no_reqs + '</p></div>');
+						has_errors = true;
+					}
+
+				} else if ( 'reset-stats' === selected_type ) {
+
+					var is_confirmed = $('#confirm-reset').is(':checked');
+
+					if ( ! is_confirmed ) {
+						notice_wrap.html('<div class="notice notice-warning"><p><input type="checkbox" id="confirm-reset" name="confirm_reset_store" value="1" /> <label for="confirm-reset">' + edd_vars.reset_stats_warn + '</label></p></div>');
 						has_errors = true;
 					}
 
