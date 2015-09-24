@@ -1212,16 +1212,41 @@ jQuery(document).ready(function ($) {
 		},
 		recount_stats : function() {
 			$( 'body').on( 'change', '#recount-stats-type', function() {
+
+				var export_form = $('#edd-tools-recount-form');
+				export_form.find('.notice-wrap').remove();
 				var selected_type = $('option:selected', this).data('type');
 				var products      = $('#tools-product-dropdown');
-				if ( 'recount-download' === selected_type || 'reset-download' === selected_type ) {
+
+				if ( 'recount-download' === selected_type ) {
+
 					products.show();
 					products.find('.edd-select-chosen').css('width', 'auto');
+
+				} else if ( 'reset-stats' === selected_type ) {
+					export_form.append('<div class="notice-wrap"></div>');
+
+					var notice_wrap = export_form.find('.notice-wrap');
+					notice_wrap.html('<div class="notice notice-warning"><p><input type="checkbox" id="confirm-reset" name="confirm_reset_store" value="1" /> <label for="confirm-reset">' + edd_vars.reset_stats_warn + '</label></p></div>');
+
+					$('#recount-stats-submit').addClass('button-disabled').attr('disabled', 'disabled');
+
 				} else {
+
 					products.hide();
 					products.val(0);
+
 				}
 			} );
+
+			$('body').on('change', '#confirm-reset', function() {
+				var checked = $(this).is(':checked');
+				if ( checked ) {
+					$('#recount-stats-submit').removeClass('button-disabled').removeAttr('disabled');
+				} else {
+					$('#recount-stats-submit').addClass('button-disabled').attr('disabled', 'disabled');
+				}
+			});
 
 			$( '#edd-tools-recount-form' ).submit( function(e) {
 				var selection     = $('#recount-stats-type').val();
@@ -1233,6 +1258,8 @@ jQuery(document).ready(function ($) {
 					var is_confirmed = $('#confirm-reset').is(':checked');
 					if ( is_confirmed ) {
 						return true;
+					} else {
+						has_errors = true;
 					}
 				}
 
@@ -1254,15 +1281,6 @@ jQuery(document).ready(function ($) {
 					if ( selected_download == 0 ) {
 						// Needs to pick download edd_vars.batch_export_no_reqs
 						notice_wrap.html('<div class="updated error"><p>' + edd_vars.batch_export_no_reqs + '</p></div>');
-						has_errors = true;
-					}
-
-				} else if ( 'reset-stats' === selected_type ) {
-
-					var is_confirmed = $('#confirm-reset').is(':checked');
-
-					if ( ! is_confirmed ) {
-						notice_wrap.html('<div class="notice notice-warning"><p><input type="checkbox" id="confirm-reset" name="confirm_reset_store" value="1" /> <label for="confirm-reset">' + edd_vars.reset_stats_warn + '</label></p></div>');
 						has_errors = true;
 					}
 

@@ -154,7 +154,7 @@ function edd_tools_recount_stats_display() {
 							?>
 						</span>
 
-						<input type="submit" value="<?php _e( 'Submit', 'edd' ); ?>" class="button-secondary"/>
+						<input type="submit" id="recount-stats-submit" value="<?php _e( 'Submit', 'edd' ); ?>" class="button-secondary"/>
 
 						<span class="spinner"></span>
 
