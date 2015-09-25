@@ -685,7 +685,7 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 		$args['hour'] = $hour;
 
 	$args     = apply_filters( 'edd_get_earnings_by_date_args', $args );
-	$key      = md5( serialize( $args ) );
+	$key      = 'edd_stats_' . substr( md5( serialize( $args ) ), 0, 15 );
 	$earnings = get_transient( $key );
 
 	if( false === $earnings ) {
@@ -694,18 +694,17 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 		if ( $sales ) {
 			$sales = implode( ',', $sales );
 
-			if ( $include_taxes ) {
-				$earnings += $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN ({$sales})" );
-			} else {
-				$earnings_with_tax = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN ({$sales})" );
-				$total_tax         = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_tax' AND post_id IN ({$sales})" );
+			$total_earnings = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN ({$sales})" );
+			$total_tax      = 0;
 
-				$earnings += ( $earnings_with_tax - $total_tax );
+			if ( ! $include_taxes ) {
+				$total_tax = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_tax' AND post_id IN ({$sales})" );
 			}
 
+			$earnings += ( $total_earnings - $total_tax );
 		}
 		// Cache the results for one hour
-		set_transient( $key, $earnings, 60*60 );
+		set_transient( $key, $earnings, HOUR_IN_SECONDS );
 	}
 
 	return round( $earnings, 2 );
@@ -747,14 +746,14 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 
 	$args = apply_filters( 'edd_get_sales_by_date_args', $args  );
 
-	$key   = md5( serialize( $args ) );
+	$key   = 'edd_stats_' . substr( md5( serialize( $args ) ), 0, 15 );
 	$count = get_transient( $key );
 
 	if( false === $count ) {
 		$sales = new WP_Query( $args );
 		$count = (int) $sales->post_count;
 		// Cache the results for one hour
-		set_transient( $key, $count, 60*60 );
+		set_transient( $key, $count, HOUR_IN_SECONDS );
 	}
 
 	return $count;
