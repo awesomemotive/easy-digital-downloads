@@ -362,6 +362,24 @@ function edd_validate_username( $username ) {
 	return (bool) apply_filters( 'edd_validate_username', $valid, $username );
 }
 
+/**
+ * Attach the newly created user_id to a customer, if one exists
+ *
+ * @since  2.4.6
+ * @param  int $user_id The User ID that was created
+ * @return void
+ */
+function edd_connect_existing_customer_to_new_user( $user_id ) {
+	$email = get_the_author_meta( 'user_email', $user_id );
+
+	// Update the user ID on the customer
+	$customer = new EDD_Customer( $email );
+
+	if( $customer->id > 0 ) {
+		$customer->update( array( 'user_id' => $user_id ) );
+	}
+}
+add_action( 'user_register', 'edd_connect_existing_customer_to_new_user', 10, 1 );
 
 /**
  * Looks up purchases by email that match the registering user
@@ -388,8 +406,9 @@ function edd_add_past_purchases_to_new_user( $user_id ) {
 		edd_send_user_verification_email( $user_id );
 
 		foreach( $payments as $payment ) {
-			if( intval( edd_get_payment_user_id( $payment->ID ) ) > 0 )
+			if( intval( edd_get_payment_user_id( $payment->ID ) ) > 0 ) {
 				continue; // This payment already associated with an account
+			}
 
 			$meta                    = edd_get_payment_meta( $payment->ID );
 			$meta['user_info']       = maybe_unserialize( $meta['user_info'] );
@@ -403,7 +422,7 @@ function edd_add_past_purchases_to_new_user( $user_id ) {
 	}
 
 }
-add_action( 'user_register', 'edd_add_past_purchases_to_new_user' );
+add_action( 'user_register', 'edd_add_past_purchases_to_new_user', 10, 1 );
 
 
 /**
