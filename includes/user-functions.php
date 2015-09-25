@@ -469,9 +469,9 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 	$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
 	$message  = sprintf( __( 'New user registration on your site %s:' ), $blogname ) . "\r\n\r\n";
 	$message .= sprintf( __( 'Username: %s'), $user_data['user_login'] ) . "\r\n\r\n";
-	$message .= sprintf( __( 'E-mail: %s'), $user_data['user_email'] ) . "\r\n";	
+	$message .= sprintf( __( 'E-mail: %s'), $user_data['user_email'] ) . "\r\n";
 
-	@wp_mail( get_option( 'admin_email' ), sprintf( __('[%s] New User Registration' ), $blogname ), $message );	
+	@wp_mail( get_option( 'admin_email' ), sprintf( __('[%s] New User Registration' ), $blogname ), $message );
 
 	$message  = sprintf( __( 'Username: %s' ), $user_data['user_login'] ) . "\r\n";
 	$message .= sprintf( __( 'Password: %s' ), __( '[Password entered at checkout]', 'edd' ) ) . "\r\n";
@@ -843,3 +843,25 @@ function edd_process_user_account_verification() {
 
 }
 add_action( 'edd_verify_user', 'edd_process_user_account_verification' );
+
+/**
+ * When a user is deleted, detach that user id from the customer record
+ *
+ * @since  2.5
+ * @param  int $user_id The User ID being deleted
+ * @return bool         If the detachment was successful
+ */
+function edd_detach_deleted_user( $user_id ) {
+
+	$customer = new EDD_Customer( $user_id, true );
+	$detached = false;
+
+	if ( $customer->id > 0 ) {
+		$detached = $customer->update( array( 'user_id' => 0 ) );
+	}
+
+	do_action( 'edd_detach_deleted_user', $user_id, $customer, $detached );
+
+	return $detached;
+}
+add_action( 'delete_user', 'edd_detach_deleted_user', 10, 1 );
