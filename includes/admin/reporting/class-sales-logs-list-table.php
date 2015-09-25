@@ -80,7 +80,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 				break;
 
 			case 'amount' :
-				$return = edd_currency_filter( edd_format_amount( $item['amount'] ) );
+				$return = edd_currency_filter( edd_format_amount( $item['amount'] / $item['quantity'] ) );
 				break;
 
 			case 'payment_id' :
@@ -333,6 +333,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 							'user_id'    => $user_info['id'],
 							'user_name'  => $user_info['first_name'] . ' ' . $user_info['last_name'],
 							'date'       => get_post_field( 'post_date', $payment_id ),
+							'quantity'   => $item['quantity'],
 						);
 
 					}
