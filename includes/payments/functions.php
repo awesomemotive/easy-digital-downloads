@@ -491,48 +491,22 @@ function edd_count_payments( $args = array() ) {
 	}
 
 	// Limit payments count by date
-	if ( ! empty( $args['start-date'] ) && false !== strpos( $args['start-date'], '/' ) ) {
-
-		$date_parts = explode( '/', $args['start-date'] );
-		$month      = ! empty( $date_parts[0] ) && is_numeric( $date_parts[0] ) ? $date_parts[0] : 0;
-		$day        = ! empty( $date_parts[1] ) && is_numeric( $date_parts[1] ) ? $date_parts[1] : 0;
-		$year       = ! empty( $date_parts[2] ) && is_numeric( $date_parts[2] ) ? $date_parts[2] : 0;
-
-		$is_date    = checkdate( $month, $day, $year );
-		if ( false !== $is_date ) {
-
-			$date   = new DateTime( $args['start-date'] );
-			$where .= $wpdb->prepare( " AND p.post_date >= '%s'", $date->format( 'Y-m-d' ) );
-
-		}
-
-		// Fixes an issue with the payments list table counts when no end date is specified (partiy with stats class)
-		if ( empty( $args['end-date'] ) ) {
-			$args['end-date'] = $args['start-date'];
-		}
-
+	if ( ! empty( $args['start-date'] ) ) {
+		$date = new DateTime( $args['start-date'] );
+		$where .= "
+			AND p.post_date >= '" . $date->format( 'Y-m-d' ) . "'";
 	}
 
-	if ( ! empty ( $args['end-date'] ) && false !== strpos( $args['end-date'], '/' ) ) {
-
-		$date_parts = explode( '/', $args['end-date'] );
-
-		$month      = ! empty( $date_parts[0] ) ? $date_parts[0] : 0;
-		$day        = ! empty( $date_parts[1] ) ? $date_parts[1] : 0;
-		$year       = ! empty( $date_parts[2] ) ? $date_parts[2] : 0;
-
-		$is_date    = checkdate( $month, $day, $year );
-		if ( false !== $is_date ) {
-
-			$date   = new DateTime( $args['end-date'] );
-			$where .= $wpdb->prepare( " AND p.post_date <= '%s'", $date->format( 'Y-m-d' ) );
-
-		}
-
+	if ( ! empty ( $args['end-date'] ) ) {
+		$date = new DateTime( $args['end-date'] );
+		$where .= "
+			AND p.post_date <= '" . $date->format( 'Y-m-d' ) . "'";
 	}
 
 	$where = apply_filters( 'edd_count_payments_where', $where );
 	$join  = apply_filters( 'edd_count_payments_join', $join );
+
+	$cache_key = md5( implode( '|', $args ) . $where );
 
 	$query = "SELECT p.post_status,count( * ) AS num_posts
 		FROM $wpdb->posts p
@@ -541,12 +515,9 @@ function edd_count_payments( $args = array() ) {
 		GROUP BY p.post_status
 	";
 
-	$cache_key = md5( $query );
-
 	$count = wp_cache_get( $cache_key, 'counts');
-	if ( false !== $count ) {
+	if ( false !== $count )
 		return $count;
-	}
 
 	$count = $wpdb->get_results( $query, ARRAY_A );
 
@@ -664,7 +635,7 @@ function edd_get_payment_status_keys() {
  * @param int $hour Hour
  * @return int $earnings Earnings
  */
-function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour = null, $include_taxes = true ) {
+function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour = null ) {
 
 	// This is getting deprecated soon. Use EDD_Payment_Stats with the get_earnings() method instead
 
@@ -677,8 +648,7 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 		'monthnum'       => $month_num,
 		'post_status'    => array( 'publish', 'revoked' ),
 		'fields'         => 'ids',
-		'update_post_term_cache' => false,
-		'include_taxes'  => $include_taxes,
+		'update_post_term_cache' => false
 	);
 	if ( ! empty( $day ) )
 		$args['day'] = $day;
@@ -695,15 +665,7 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 		$earnings = 0;
 		if ( $sales ) {
 			$sales = implode( ',', $sales );
-
-			if ( $include_taxes ) {
-				$earnings += $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN ({$sales})" );
-			} else {
-				$earnings_with_tax = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN ({$sales})" );
-				$total_tax         = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_tax' AND post_id IN ({$sales})" );
-
-				$earnings += ( $earnings_with_tax - $total_tax );
-			}
+			$earnings += $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN({$sales})" );
 
 		}
 		// Cache the results for one hour
@@ -750,7 +712,7 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 	$args = apply_filters( 'edd_get_sales_by_date_args', $args  );
 
 	$key   = md5( serialize( $args ) );
-	$count = get_transient( $key );
+	$count = get_transient( $key, 'edd' );
 
 	if( false === $count ) {
 		$sales = new WP_Query( $args );
@@ -1058,20 +1020,6 @@ function edd_get_payment_user_email( $payment_id ) {
 }
 
 /**
- * Is the payment provided associated with a user account
- *
- * @since  2.4.4
- * @param  int $payment_id The payment ID
- * @return bool            If the payment is associted with a user (false) or not (true)
- */
-function edd_is_guest_payment( $payment_id ) {
-	$payment_user_id  = edd_get_payment_user_id( $payment_id );
-	$is_guest_payment = ! empty( $payment_user_id ) && $payment_user_id > 0 ? false : true;
-
-	return (bool) apply_filters( 'edd_is_guest_payment', $is_guest_payment, $payment_id );
-}
-
-/**
  * Get the user ID associated with a payment
  *
  * @since 1.5.1
@@ -1079,37 +1027,9 @@ function edd_is_guest_payment( $payment_id ) {
  * @return string $user_id User ID
  */
 function edd_get_payment_user_id( $payment_id ) {
+	$user_id = edd_get_payment_meta( $payment_id, '_edd_payment_user_id', true );
 
-	$user_id = -1;
-
-	// check the customer record first
-	$customer_id = edd_get_payment_customer_id( $payment_id );
-	$customer    = new EDD_Customer( $customer_id );
-
-	if ( ! empty( $customer->user_id ) && $customer->user_id > 0 ) {
-		$user_id = $customer->user_id;
-	}
-
-	// check the payment meta if we're still not finding a user with the customer record
-	if ( empty( $user_id ) || $user_id < 1 ) {
-		$payment_meta_user_id = edd_get_payment_meta( $payment_id, '_edd_payment_user_id', true );
-
-		if ( ! empty( $payment_meta_user_id ) ) {
-			$user_id = $payment_meta_user_id;
-		}
-	}
-
-	// Last ditch effort is to connect payment email with a user in the user table
-	if ( empty( $user_id ) || $user_id < 1 ) {
-		$payment_email = edd_get_payment_user_email( $payment_id );
-		$user          = get_user_by( 'email', $payment_email );
-
-		if ( false !== $user ) {
-			$user_id = $user->ID;
-		}
-	}
-
-	return apply_filters( 'edd_payment_user_id', (int) $user_id );
+	return apply_filters( 'edd_payment_user_id', $user_id );
 }
 
 /**
@@ -1529,26 +1449,6 @@ function edd_get_purchase_id_by_key( $key ) {
 	global $wpdb;
 
 	$purchase = $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_purchase_key' AND meta_value = %s LIMIT 1", $key ) );
-
-	if ( $purchase != NULL )
-		return $purchase;
-
-	return 0;
-}
-
-/**
- * Retrieve the purchase ID based on the transaction ID
- *
- * @since 2.4
- * @global object $wpdb Used to query the database using the WordPress
- *   Database API
- * @param string $key the transaction ID to search for
- * @return int $purchase Purchase ID
- */
-function edd_get_purchase_id_by_transaction_id( $key ) {
-	global $wpdb;
-
-	$purchase = $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_transaction_id' AND meta_value = %s LIMIT 1", $key ) );
 
 	if ( $purchase != NULL )
 		return $purchase;
