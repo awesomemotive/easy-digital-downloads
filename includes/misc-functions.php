@@ -296,33 +296,33 @@ function edd_is_host( $host = false ) {
  */
 function edd_get_currencies() {
 	$currencies = array(
-		'USD'  => __( 'US Dollars (&#36;)', 'edd' ),
-		'EUR'  => __( 'Euros (&euro;)', 'edd' ),
-		'GBP'  => __( 'Pounds Sterling (&pound;)', 'edd' ),
-		'AUD'  => __( 'Australian Dollars (&#36;)', 'edd' ),
-		'BRL'  => __( 'Brazilian Real (R&#36;)', 'edd' ),
-		'CAD'  => __( 'Canadian Dollars (&#36;)', 'edd' ),
-		'CZK'  => __( 'Czech Koruna', 'edd' ),
-		'DKK'  => __( 'Danish Krone', 'edd' ),
-		'HKD'  => __( 'Hong Kong Dollar (&#36;)', 'edd' ),
-		'HUF'  => __( 'Hungarian Forint', 'edd' ),
-		'ILS'  => __( 'Israeli Shekel (&#8362;)', 'edd' ),
-		'JPY'  => __( 'Japanese Yen (&yen;)', 'edd' ),
-		'MYR'  => __( 'Malaysian Ringgits', 'edd' ),
-		'MXN'  => __( 'Mexican Peso (&#36;)', 'edd' ),
-		'NZD'  => __( 'New Zealand Dollar (&#36;)', 'edd' ),
-		'NOK'  => __( 'Norwegian Krone', 'edd' ),
-		'PHP'  => __( 'Philippine Pesos', 'edd' ),
-		'PLN'  => __( 'Polish Zloty', 'edd' ),
-		'SGD'  => __( 'Singapore Dollar (&#36;)', 'edd' ),
-		'SEK'  => __( 'Swedish Krona', 'edd' ),
-		'CHF'  => __( 'Swiss Franc', 'edd' ),
-		'TWD'  => __( 'Taiwan New Dollars', 'edd' ),
-		'THB'  => __( 'Thai Baht (&#3647;)', 'edd' ),
-		'INR'  => __( 'Indian Rupee (&#8377;)', 'edd' ),
-		'TRY'  => __( 'Turkish Lira (&#8378;)', 'edd' ),
-		'RIAL' => __( 'Iranian Rial (&#65020;)', 'edd' ),
-		'RUB'  => __( 'Russian Rubles', 'edd' )
+		'USD'  => __( 'US Dollars (&#36;)', 'easy-digital-downloads' ),
+		'EUR'  => __( 'Euros (&euro;)', 'easy-digital-downloads' ),
+		'GBP'  => __( 'Pounds Sterling (&pound;)', 'easy-digital-downloads' ),
+		'AUD'  => __( 'Australian Dollars (&#36;)', 'easy-digital-downloads' ),
+		'BRL'  => __( 'Brazilian Real (R&#36;)', 'easy-digital-downloads' ),
+		'CAD'  => __( 'Canadian Dollars (&#36;)', 'easy-digital-downloads' ),
+		'CZK'  => __( 'Czech Koruna', 'easy-digital-downloads' ),
+		'DKK'  => __( 'Danish Krone', 'easy-digital-downloads' ),
+		'HKD'  => __( 'Hong Kong Dollar (&#36;)', 'easy-digital-downloads' ),
+		'HUF'  => __( 'Hungarian Forint', 'easy-digital-downloads' ),
+		'ILS'  => __( 'Israeli Shekel (&#8362;)', 'easy-digital-downloads' ),
+		'JPY'  => __( 'Japanese Yen (&yen;)', 'easy-digital-downloads' ),
+		'MYR'  => __( 'Malaysian Ringgits', 'easy-digital-downloads' ),
+		'MXN'  => __( 'Mexican Peso (&#36;)', 'easy-digital-downloads' ),
+		'NZD'  => __( 'New Zealand Dollar (&#36;)', 'easy-digital-downloads' ),
+		'NOK'  => __( 'Norwegian Krone', 'easy-digital-downloads' ),
+		'PHP'  => __( 'Philippine Pesos', 'easy-digital-downloads' ),
+		'PLN'  => __( 'Polish Zloty', 'easy-digital-downloads' ),
+		'SGD'  => __( 'Singapore Dollar (&#36;)', 'easy-digital-downloads' ),
+		'SEK'  => __( 'Swedish Krona', 'easy-digital-downloads' ),
+		'CHF'  => __( 'Swiss Franc', 'easy-digital-downloads' ),
+		'TWD'  => __( 'Taiwan New Dollars', 'easy-digital-downloads' ),
+		'THB'  => __( 'Thai Baht (&#3647;)', 'easy-digital-downloads' ),
+		'INR'  => __( 'Indian Rupee (&#8377;)', 'easy-digital-downloads' ),
+		'TRY'  => __( 'Turkish Lira (&#8378;)', 'easy-digital-downloads' ),
+		'RIAL' => __( 'Iranian Rial (&#65020;)', 'easy-digital-downloads' ),
+		'RUB'  => __( 'Russian Rubles', 'easy-digital-downloads' )
 	);
 
 	return apply_filters( 'edd_currencies', $currencies );
@@ -495,12 +495,12 @@ function _edd_deprecated_function( $function, $version, $replacement = null, $ba
 	// Allow plugin to filter the output error trigger
 	if ( WP_DEBUG && apply_filters( 'edd_deprecated_function_trigger_error', $show_errors ) ) {
 		if ( ! is_null( $replacement ) ) {
-			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead.', 'edd' ), $function, $version, $replacement ) );
+			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead.', 'easy-digital-downloads' ), $function, $version, $replacement ) );
 			trigger_error(  print_r( $backtrace, 1 ) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
 			// Alternatively we could dump this to a file.
 		}
 		else {
-			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'edd' ), $function, $version ) );
+			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'easy-digital-downloads' ), $function, $version ) );
 			trigger_error( print_r( $backtrace, 1 ) );// Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
 			// Alternatively we could dump this to a file.
 		}
