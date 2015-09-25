@@ -121,7 +121,7 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 
 		$transaction_id = 'FIR3SID3';
 		edd_set_payment_transaction_id( $payment_id, $transaction_id );
-		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'edd' ), $transaction_id ) );
+		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'easy-digital-downloads' ), $transaction_id ) );
 
 		return $payment_id;
 
@@ -226,7 +226,7 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 
 		$transaction_id = 'GUESTPURCHASE';
 		edd_set_payment_transaction_id( $payment_id, $transaction_id );
-		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'edd' ), $transaction_id ) );
+		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'easy-digital-downloads' ), $transaction_id ) );
 
 		return $payment_id;
 

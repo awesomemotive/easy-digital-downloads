@@ -129,13 +129,13 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'ID'		=> __( 'Log ID', 'edd' ),
+			'ID'		=> __( 'Log ID', 'easy-digital-downloads' ),
 			'download'	=> edd_get_label_singular(),
-			'user_id'  	=> __( 'User', 'edd' ),
-			'payment_id'=> __( 'Payment ID', 'edd' ),
-			'file'  	=> __( 'File', 'edd' ),
-			'ip'  		=> __( 'IP Address', 'edd' ),
-			'date'  	=> __( 'Date', 'edd' )
+			'user_id'  	=> __( 'User', 'easy-digital-downloads' ),
+			'payment_id'=> __( 'Payment ID', 'easy-digital-downloads' ),
+			'file'  	=> __( 'File', 'easy-digital-downloads' ),
+			'ip'  		=> __( 'IP Address', 'easy-digital-downloads' ),
+			'date'  	=> __( 'Date', 'easy-digital-downloads' )
 		);
 		return $columns;
 	}
@@ -333,7 +333,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 		if ( $downloads ) {
 			echo '<select name="download" id="edd-log-download-filter">';
-				echo '<option value="0">' . __( 'All', 'edd' ) . '</option>';
+				echo '<option value="0">' . __( 'All', 'easy-digital-downloads' ) . '</option>';
 				foreach ( $downloads as $download ) {
 					echo '<option value="' . $download . '"' . selected( $download, $this->get_filtered_download() ) . '>' . esc_html( get_the_title( $download ) ) . '</option>';
 				}

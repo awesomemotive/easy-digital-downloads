@@ -14,7 +14,7 @@ function edd_edit_customer( $args ) {
 	$customer_edit_role = apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
 
 	if ( ! is_admin() || ! current_user_can( $customer_edit_role ) ) {
-		wp_die( __( 'You do not have permission to edit this customer.', 'edd' ) );
+		wp_die( __( 'You do not have permission to edit this customer.', 'easy-digital-downloads' ) );
 	}
 
 	if ( empty( $args ) ) {
@@ -26,7 +26,7 @@ function edd_edit_customer( $args ) {
 	$nonce         = $args['_wpnonce'];
 
 	if ( ! wp_verify_nonce( $nonce, 'edit-customer' ) ) {
-		wp_die( __( 'Cheatin\' eh?!', 'edd' ) );
+		wp_die( __( 'Cheatin\' eh?!', 'easy-digital-downloads' ) );
 	}
 
 	$customer = new EDD_Customer( $customer_id );
@@ -43,20 +43,20 @@ function edd_edit_customer( $args ) {
 	$customer_info = wp_parse_args( $customer_info, $defaults );
 
 	if ( ! is_email( $customer_info['email'] ) ) {
-		edd_set_error( 'edd-invalid-email', __( 'Please enter a valid email address.', 'edd' ) );
+		edd_set_error( 'edd-invalid-email', __( 'Please enter a valid email address.', 'easy-digital-downloads' ) );
 	}
 
 	if ( (int) $customer_info['user_id'] != (int) $customer->user_id ) {
 
 		// Make sure we don't already have this user attached to a customer
 		if ( ! empty( $customer_info['user_id'] ) && false !== EDD()->customers->get_customer_by( 'user_id', $customer_info['user_id'] ) ) {
-			edd_set_error( 'edd-invalid-customer-user_id', sprintf( __( 'The User ID %d is already associated with a different customer.', 'edd' ), $customer_info['user_id'] ) );
+			edd_set_error( 'edd-invalid-customer-user_id', sprintf( __( 'The User ID %d is already associated with a different customer.', 'easy-digital-downloads' ), $customer_info['user_id'] ) );
 		}
 
 		// Make sure it's actually a user
 		$user = get_user_by( 'id', $customer_info['user_id'] );
 		if ( ! empty( $customer_info['user_id'] ) && false === $user ) {
-			edd_set_error( 'edd-invalid-user_id', sprintf( __( 'The User ID %d does not exist. Please assign an existing user.', 'edd' ), $customer_info['user_id'] ) );
+			edd_set_error( 'edd-invalid-user_id', sprintf( __( 'The User ID %d does not exist. Please assign an existing user.', 'easy-digital-downloads' ), $customer_info['user_id'] ) );
 		}
 
 	}
@@ -166,7 +166,7 @@ function edd_customer_save_note( $args ) {
 	$customer_view_role = apply_filters( 'edd_view_customers_role', 'view_shop_reports' );
 
 	if ( ! is_admin() || ! current_user_can( $customer_view_role ) ) {
-		wp_die( __( 'You do not have permission to edit this customer.', 'edd' ) );
+		wp_die( __( 'You do not have permission to edit this customer.', 'easy-digital-downloads' ) );
 	}
 
 	if ( empty( $args ) ) {
@@ -178,11 +178,11 @@ function edd_customer_save_note( $args ) {
 	$nonce         = $args['add_customer_note_nonce'];
 
 	if ( ! wp_verify_nonce( $nonce, 'add-customer-note' ) ) {
-		wp_die( __( 'Cheatin\' eh?!', 'edd' ) );
+		wp_die( __( 'Cheatin\' eh?!', 'easy-digital-downloads' ) );
 	}
 
 	if ( empty( $customer_note ) ) {
-		edd_set_error( 'empty-customer-note', __( 'A note is required', 'edd' ) );
+		edd_set_error( 'empty-customer-note', __( 'A note is required', 'easy-digital-downloads' ) );
 	}
 
 	if ( edd_get_errors() ) {
@@ -233,7 +233,7 @@ function edd_customer_delete( $args ) {
 	$customer_edit_role = apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
 
 	if ( ! is_admin() || ! current_user_can( $customer_edit_role ) ) {
-		wp_die( __( 'You do not have permission to delete this customer.', 'edd' ) );
+		wp_die( __( 'You do not have permission to delete this customer.', 'easy-digital-downloads' ) );
 	}
 
 	if ( empty( $args ) ) {
@@ -246,11 +246,11 @@ function edd_customer_delete( $args ) {
 	$nonce         = $args['_wpnonce'];
 
 	if ( ! wp_verify_nonce( $nonce, 'delete-customer' ) ) {
-		wp_die( __( 'Cheatin\' eh?!', 'edd' ) );
+		wp_die( __( 'Cheatin\' eh?!', 'easy-digital-downloads' ) );
 	}
 
 	if ( ! $confirm ) {
-		edd_set_error( 'customer-delete-no-confirm', __( 'Please confirm you want to delete this customer', 'edd' ) );
+		edd_set_error( 'customer-delete-no-confirm', __( 'Please confirm you want to delete this customer', 'easy-digital-downloads' ) );
 	}
 
 	if ( edd_get_errors() ) {
@@ -291,14 +291,14 @@ function edd_customer_delete( $args ) {
 
 		} else {
 
-			edd_set_error( 'edd-customer-delete-failed', __( 'Error deleting customer', 'edd' ) );
+			edd_set_error( 'edd-customer-delete-failed', __( 'Error deleting customer', 'easy-digital-downloads' ) );
 			$redirect = admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $customer_id );
 
 		}
 
 	} else {
 
-		edd_set_error( 'edd-customer-delete-invalid-id', __( 'Invalid Customer ID', 'edd' ) );
+		edd_set_error( 'edd-customer-delete-invalid-id', __( 'Invalid Customer ID', 'easy-digital-downloads' ) );
 		$redirect = admin_url( 'edit.php?post_type=download&page=edd-customers' );
 
 	}
@@ -321,7 +321,7 @@ function edd_disconnect_customer_user_id( $args ) {
 	$customer_edit_role = apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
 
 	if ( ! is_admin() || ! current_user_can( $customer_edit_role ) ) {
-		wp_die( __( 'You do not have permission to edit this customer.', 'edd' ) );
+		wp_die( __( 'You do not have permission to edit this customer.', 'easy-digital-downloads' ) );
 	}
 
 	if ( empty( $args ) ) {
@@ -332,7 +332,7 @@ function edd_disconnect_customer_user_id( $args ) {
 	$nonce         = $args['_wpnonce'];
 
 	if ( ! wp_verify_nonce( $nonce, 'edit-customer' ) ) {
-		wp_die( __( 'Cheatin\' eh?!', 'edd' ) );
+		wp_die( __( 'Cheatin\' eh?!', 'easy-digital-downloads' ) );
 	}
 
 	$customer = new EDD_Customer( $customer_id );
@@ -356,7 +356,7 @@ function edd_disconnect_customer_user_id( $args ) {
 	} else {
 
 		$output['success'] = false;
-		edd_set_error( 'edd-disconnect-user-fail', __( 'Failed to disconnect user from customer', 'edd' ) );
+		edd_set_error( 'edd-disconnect-user-fail', __( 'Failed to disconnect user from customer', 'easy-digital-downloads' ) );
 	}
 
 	do_action( 'edd_post_customer_disconnect_user_id', $customer_id );

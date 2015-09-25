@@ -474,7 +474,7 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 	@wp_mail( get_option( 'admin_email' ), sprintf( __('[%s] New User Registration' ), $blogname ), $message );
 
 	$message  = sprintf( __( 'Username: %s' ), $user_data['user_login'] ) . "\r\n";
-	$message .= sprintf( __( 'Password: %s' ), __( '[Password entered at checkout]', 'edd' ) ) . "\r\n";
+	$message .= sprintf( __( 'Password: %s' ), __( '[Password entered at checkout]', 'easy-digital-downloads' ) ) . "\r\n";
 	$message .= wp_login_url() . "\r\n";
 
 	wp_mail( $user_data['user_email'], sprintf( __( '[%s] Your username and password' ), $blogname ), $message );
@@ -628,9 +628,9 @@ function edd_send_user_verification_email( $user_id = 0 ) {
 	$url        = edd_get_user_verification_url( $user_id );
 	$from_name  = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
 	$from_email = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
-	$subject    = apply_filters( 'edd_user_verification_email_subject', __( 'Verify your account', 'edd' ), $user_id );
-	$heading    = apply_filters( 'edd_user_verification_email_heading', __( 'Verify your account', 'edd' ), $user_id );
-	$message    = sprintf( __( "Hello %s,\n\nYour account with %s needs to be verified before you can access your purchase history. <a href='%s'>Click here</a> to verify your account.", 'edd' ), $name, $from_name, $url );
+	$subject    = apply_filters( 'edd_user_verification_email_subject', __( 'Verify your account', 'easy-digital-downloads' ), $user_id );
+	$heading    = apply_filters( 'edd_user_verification_email_heading', __( 'Verify your account', 'easy-digital-downloads' ), $user_id );
+	$message    = sprintf( __( "Hello %s,\n\nYour account with %s needs to be verified before you can access your purchase history. <a href='%s'>Click here</a> to verify your account.", 'easy-digital-downloads' ), $name, $from_name, $url );
 	$message    = apply_filters( 'edd_user_verification_email_message', $message, $user_id );
 
 	$emails     = new EDD_Emails;
@@ -748,7 +748,7 @@ function edd_validate_user_verification_token( $url = '' ) {
 
 			do_action( 'edd_user_verification_token_expired' );
 
-			wp_die( apply_filters( 'edd_verification_link_expired_text', __( 'Sorry but your account verification link has expired. <a href="#">Click here</a> to request a new verification URL.', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+			wp_die( apply_filters( 'edd_verification_link_expired_text', __( 'Sorry but your account verification link has expired. <a href="#">Click here</a> to request a new verification URL.', 'easy-digital-downloads' ) ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 
 		}
 
@@ -773,15 +773,15 @@ function edd_validate_user_verification_token( $url = '' ) {
 function edd_process_user_verification_request() {
 
 	if( ! wp_verify_nonce( $_GET['_wpnonce'], 'edd-request-verification' ) ) {
-		wp_die( __( 'Nonce verification failed.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+		wp_die( __( 'Nonce verification failed.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	if( ! is_user_logged_in() ) {
-		wp_die( __( 'You must be logged in to verify your account.', 'edd' ), __( 'Notice', 'edd' ), array( 'response' => 403 ) );
+		wp_die( __( 'You must be logged in to verify your account.', 'easy-digital-downloads' ), __( 'Notice', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	if( ! edd_user_pending_verification( get_current_user_id() ) ) {
-		wp_die( __( 'Your account has already been verified.', 'edd' ), __( 'Notice', 'edd' ), array( 'response' => 403 ) );
+		wp_die( __( 'Your account has already been verified.', 'easy-digital-downloads' ), __( 'Notice', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	edd_send_user_verification_email( get_current_user_id() );
@@ -826,7 +826,7 @@ function edd_process_user_account_verification() {
 
 		do_action( 'edd_invalid_user_verification_token' );
 
-		wp_die( __( 'Invalid verification token provided.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+		wp_die( __( 'Invalid verification token provided.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	edd_set_user_to_verified( absint( $_GET['user_id'] ) );
