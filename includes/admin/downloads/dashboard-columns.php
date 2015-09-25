@@ -34,6 +34,7 @@ function edd_download_columns( $download_columns ) {
 		'price'             => __( 'Price', 'edd' ),
 		'sales'             => __( 'Sales', 'edd' ),
 		'earnings'          => __( 'Earnings', 'edd' ),
+		'shortcode'         => __( 'Purchase Short Code', 'edd' ),
 		'date'              => __( 'Date', 'edd' )
 	);
 
@@ -51,6 +52,11 @@ add_filter( 'manage_edit-download_columns', 'edd_download_columns' );
  */
 function edd_render_download_columns( $column_name, $post_id ) {
 	if ( get_post_type( $post_id ) == 'download' ) {
+		$style          = edd_get_option( 'button_style', 'button' );
+		$color          = edd_get_option( 'checkout_color', 'blue' );
+		$color          = ( $color == 'inherit' ) ? '' : $color;
+		$purchase_text  = edd_get_option( 'add_to_cart_text', __( 'Purchase', 'edd' ) );
+
 		switch ( $column_name ) {
 			case 'download_category':
 				echo get_the_term_list( $post_id, 'download_category', '', ', ', '');
@@ -83,6 +89,9 @@ function edd_render_download_columns( $column_name, $post_id ) {
 				} else {
 					echo '-';
 				}
+				break;
+			case 'shortcode':
+				echo '[purchase_link id="' . absint( $post_id ) . '" text="' . esc_html( $purchase_text ) . '" style="' . $style . '" color="' . esc_attr( $color ) . '"]';
 				break;
 		}
 	}
