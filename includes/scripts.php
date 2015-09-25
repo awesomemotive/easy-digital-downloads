@@ -205,7 +205,7 @@ function edd_load_admin_scripts( $hook ) {
 		'quantities_enabled'      => edd_item_quantities_enabled(),
 		'batch_export_no_class'   => __( 'You must choose a method.', 'edd' ),
 		'batch_export_no_reqs'    => __( 'Required fields not completed.', 'edd' ),
-		'reset_stats_warn'        => __( 'Are you sure you want to reset your store? This process is <strong><em>not reversable</em></strong>. Please be sure you have a recent backup.', 'edd' ),
+		'reset_stats_warn'        => __( 'Are you sure you want to reset your store? This process is <strong><em>not reversible</em></strong>. Please be sure you have a recent backup.', 'edd' ),
 	));
 
 	wp_enqueue_style( 'wp-color-picker' );
