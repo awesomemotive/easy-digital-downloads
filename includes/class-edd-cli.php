@@ -569,7 +569,7 @@ class EDD_CLI extends WP_CLI_Command {
 				}
 
 				if( $product->post_status != 'publish' ) {
-					WP_CLI::error( __( 'Specified ID is not a published', 'edd' ) );
+					WP_CLI::error( __( 'Specified ID is not published', 'edd' ) );
 					return;
 				}
 
