@@ -555,6 +555,7 @@ class EDD_CLI extends WP_CLI_Command {
 					'post_type'     => 'download',
 					'orderby'       => 'rand',
 					'order'         => 'ASC',
+					'post_status'   => 'publish',
 					'posts_per_page'=> 1
 				) );
 
@@ -564,6 +565,11 @@ class EDD_CLI extends WP_CLI_Command {
 
 				if( $product->post_type != 'download' ) {
 					WP_CLI::error( __( 'Specified ID is not a product', 'edd' ) );
+					return;
+				}
+
+				if( $product->post_status != 'publish' ) {
+					WP_CLI::error( __( 'Specified ID is not published', 'edd' ) );
 					return;
 				}
 
