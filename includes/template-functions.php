@@ -183,7 +183,7 @@ function edd_get_purchase_link( $args = array() ) {
 				<span class="edd-cart-ajax-alert">
 					<span class="edd-cart-added-alert" style="display: none;">
 						<?php printf(
-								'<i class="edd-icon-ok"></i> ' . __( 'Added to cart', 'edd' ),
+								'<i class="edd-icon-ok"></i>%s' . __( 'Added to cart', 'edd' ).'%s',
 								'<a href="' . esc_url( edd_get_checkout_uri() ) . '" title="' . __( 'Go to Checkout', 'edd' ) . '">',
 								'</a>'
 							);
