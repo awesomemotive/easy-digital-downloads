@@ -88,6 +88,10 @@ function edd_do_ajax_import() {
 
 	}
 
+	wp_send_json_error( array(
+		'error'  => $import->get_columns()
+	) );
+
 	$ret = $import->process_step( $step );
 
 	$percentage = $import->get_percentage_complete();
