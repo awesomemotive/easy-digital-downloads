@@ -357,7 +357,7 @@ final class Easy_Digital_Downloads {
 		 *
 		 */
 
-		add_filter( 'load_textdomain_mofile', array( $this, 'load_old_textdomaon' ), 10, 2 );
+		add_filter( 'load_textdomain_mofile', array( $this, 'load_old_textdomain' ), 10, 2 );
 
 		// Set filter for plugin's languages directory
 		$edd_lang_dir  = dirname( plugin_basename( EDD_PLUGIN_FILE ) ) . '/languages/';
@@ -395,7 +395,7 @@ final class Easy_Digital_Downloads {
 	 *
 	 * h/t: https://github.com/10up/grunt-wp-plugin/issues/21#issuecomment-62003284
 	 */
-	function load_old_textdomaon( $mofile, $textdomain ) {
+	function load_old_textdomain( $mofile, $textdomain ) {
 
 		if ( $textdomain === 'easy-digital-downloads' && ! file_exists( $mofile ) ) {
 			$mofile = dirname( $mofile ) . DIRECTORY_SEPARATOR . str_replace( $textdomain, 'edd', basename( $mofile ) );
