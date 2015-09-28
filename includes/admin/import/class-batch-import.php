@@ -79,6 +79,21 @@ class EDD_Batch_Import {
 	}
 
 	/**
+	 * Get the CSV columns
+	 *
+	 * @access public
+	 * @since 2.6
+	 * @return array The columns in the CSV
+	 */
+	public function get_columns() {
+
+		$csv = new parseCSV();
+		$csv->auto( $this->file );
+
+		return $csv->data;
+	}
+
+	/**
 	 * Process a step
 	 *
 	 * @since 2.6
