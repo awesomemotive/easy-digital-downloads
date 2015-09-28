@@ -5,9 +5,9 @@ Contributors: mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, 
 Donate link: https://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.9.2
-Tested up to: 4.3
+Tested up to: 4.4
 
-Stable Tag: 2.4.6
+Stable Tag: 2.4.7
 
 License: GNU Version 2 or Any Later Version
 
@@ -190,6 +190,12 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.4.7, September 29, 2015 =
+
+* Tweak: Changed text domain from "edd" to "easy-digital-downloads"
+* Fix: User ID not properly set on customer record when user account is created
+* Fix: Earnings / sales graph reporting 0 stats for some days incorrectly
 
 = 2.4.6, September 18, 2015 =
 
