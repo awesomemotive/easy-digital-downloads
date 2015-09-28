@@ -45,7 +45,7 @@ function edd_block_attachments() {
 		return;
 	}
 
-	wp_die( __( 'You do not have permission to view this file.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+	wp_die( __( 'You do not have permission to view this file.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 }
 add_action( 'template_redirect', 'edd_block_attachments' );
 

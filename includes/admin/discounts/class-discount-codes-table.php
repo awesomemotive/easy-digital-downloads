@@ -124,9 +124,9 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$inactive_count = '&nbsp;<span class="count">(' . $this->inactive_count  . ')</span>';
 
 		$views = array(
-			'all'		=> sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'status', $base ), $current === 'all' || $current == '' ? ' class="current"' : '', __('All', 'edd') . $total_count ),
-			'active'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'active', $base ), $current === 'active' ? ' class="current"' : '', __('Active', 'edd') . $active_count ),
-			'inactive'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'inactive', $base ), $current === 'inactive' ? ' class="current"' : '', __('Inactive', 'edd') . $inactive_count ),
+			'all'		=> sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'status', $base ), $current === 'all' || $current == '' ? ' class="current"' : '', __('All','easy-digital-downloads' ) . $total_count ),
+			'active'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'active', $base ), $current === 'active' ? ' class="current"' : '', __('Active','easy-digital-downloads' ) . $active_count ),
+			'inactive'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'inactive', $base ), $current === 'inactive' ? ' class="current"' : '', __('Inactive','easy-digital-downloads' ) . $inactive_count ),
 		);
 
 		return $views;
@@ -142,14 +142,14 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	public function get_columns() {
 		$columns = array(
 			'cb'        => '<input type="checkbox" />',
-			'name'  	=> __( 'Name', 'edd' ),
-			'code'  	=> __( 'Code', 'edd' ),
-			'amount'  	=> __( 'Amount', 'edd' ),
-			'uses'  	=> __( 'Uses', 'edd' ),
-			'max_uses' 	=> __( 'Max Uses', 'edd' ),
-			'start_date'=> __( 'Start Date', 'edd' ),
-			'expiration'=> __( 'Expiration', 'edd' ),
-			'status'  	=> __( 'Status', 'edd' ),
+			'name'  	=> __( 'Name', 'easy-digital-downloads' ),
+			'code'  	=> __( 'Code', 'easy-digital-downloads' ),
+			'amount'  	=> __( 'Amount', 'easy-digital-downloads' ),
+			'uses'  	=> __( 'Uses', 'easy-digital-downloads' ),
+			'max_uses' 	=> __( 'Max Uses', 'easy-digital-downloads' ),
+			'start_date'=> __( 'Start Date', 'easy-digital-downloads' ),
+			'expiration'=> __( 'Expiration', 'easy-digital-downloads' ),
+			'status'  	=> __( 'Status', 'easy-digital-downloads' ),
 		);
 
 		return $columns;
@@ -195,15 +195,15 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$discount     = get_post( $item['ID'] );
 		$row_actions  = array();
 
-		$row_actions['edit'] = '<a href="' . add_query_arg( array( 'edd-action' => 'edit_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Edit', 'edd' ) . '</a>';
+		$row_actions['edit'] = '<a href="' . add_query_arg( array( 'edd-action' => 'edit_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>';
 
 		if( strtolower( $item['status'] ) == 'active' ) {
-			$row_actions['deactivate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array( 'edd-action' => 'deactivate_discount', 'discount' => $discount->ID ) ), 'edd_discount_nonce' ) ) . '">' . __( 'Deactivate', 'edd' ) . '</a>';
+			$row_actions['deactivate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array( 'edd-action' => 'deactivate_discount', 'discount' => $discount->ID ) ), 'edd_discount_nonce' ) ) . '">' . __( 'Deactivate', 'easy-digital-downloads' ) . '</a>';
 		} elseif( strtolower( $item['status'] ) == 'inactive' ) {
-			$row_actions['activate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array( 'edd-action' => 'activate_discount', 'discount' => $discount->ID ) ), 'edd_discount_nonce' ) ) . '">' . __( 'Activate', 'edd' ) . '</a>';
+			$row_actions['activate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array( 'edd-action' => 'activate_discount', 'discount' => $discount->ID ) ), 'edd_discount_nonce' ) ) . '">' . __( 'Activate', 'easy-digital-downloads' ) . '</a>';
 		}
 
-		$row_actions['delete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array( 'edd-action' => 'delete_discount', 'discount' => $discount->ID ) ), 'edd_discount_nonce' ) ) . '">' . __( 'Delete', 'edd' ) . '</a>';
+		$row_actions['delete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array( 'edd-action' => 'delete_discount', 'discount' => $discount->ID ) ), 'edd_discount_nonce' ) ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 
 		$row_actions = apply_filters( 'edd_discount_row_actions', $row_actions, $discount );
 
@@ -237,14 +237,14 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	function column_status( $item ) {
 		switch( $item['status'] ){
 			case 'expired' :
-				$status = __( 'Expired', 'edd' );
+				$status = __( 'Expired', 'easy-digital-downloads' );
 				break;
 			case 'inactive' :
-				$status = __( 'Inactive', 'edd' );
+				$status = __( 'Inactive', 'easy-digital-downloads' );
 				break;
 			case 'active' :
 			default :
-				$status = __( 'Active', 'edd' );
+				$status = __( 'Active', 'easy-digital-downloads' );
 				break;
 		}
 		return $status;
@@ -257,7 +257,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @access public
 	 */
 	function no_items() {
-		_e( 'No discounts found.', 'edd' );
+		_e( 'No discounts found.', 'easy-digital-downloads' );
 	}
 
 	/**
@@ -269,9 +269,9 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 */
 	public function get_bulk_actions() {
 		$actions = array(
-			'activate'   => __( 'Activate', 'edd' ),
-			'deactivate' => __( 'Deactivate', 'edd' ),
-			'delete'     => __( 'Delete', 'edd' )
+			'activate'   => __( 'Activate', 'easy-digital-downloads' ),
+			'deactivate' => __( 'Deactivate', 'easy-digital-downloads' ),
+			'delete'     => __( 'Delete', 'easy-digital-downloads' )
 		);
 
 		return $actions;
@@ -365,9 +365,9 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 				}
 
 				if ( edd_get_discount_max_uses( $discount->ID ) ) {
-					$max_uses = edd_get_discount_max_uses( $discount->ID ) ? edd_get_discount_max_uses( $discount->ID ) : __( 'unlimited', 'edd' );
+					$max_uses = edd_get_discount_max_uses( $discount->ID ) ? edd_get_discount_max_uses( $discount->ID ) : __( 'unlimited', 'easy-digital-downloads' );
 				} else {
-					$max_uses = __( 'Unlimited', 'edd' );
+					$max_uses = __( 'Unlimited', 'easy-digital-downloads' );
 				}
 
 				$start_date = edd_get_discount_start_date( $discount->ID );
@@ -375,13 +375,13 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 				if ( ! empty( $start_date ) ) {
 					$discount_start_date =  date_i18n( get_option( 'date_format' ), strtotime( $start_date ) );
 				} else {
-					$discount_start_date = __( 'No start date', 'edd' );
+					$discount_start_date = __( 'No start date', 'easy-digital-downloads' );
 				}
 
 				if ( edd_get_discount_expiration( $discount->ID ) ) {
 					$expiration = date_i18n( get_option( 'date_format' ), strtotime( edd_get_discount_expiration( $discount->ID ) ) );
 				} else {
-					$expiration = __( 'No expiration', 'edd' );
+					$expiration = __( 'No expiration', 'easy-digital-downloads' );
 				}
 
 				$discount_codes_data[] = array(

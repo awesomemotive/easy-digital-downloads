@@ -371,13 +371,13 @@ function edd_is_discount_active( $code_id = null ) {
 	if ( $discount ) {
 		if ( edd_is_discount_expired( $code_id ) ) {
 			if( defined( 'DOING_AJAX' ) ) {
-				edd_set_error( 'edd-discount-error', __( 'This discount is expired.', 'edd' ) );
+				edd_set_error( 'edd-discount-error', __( 'This discount is expired.', 'easy-digital-downloads' ) );
 			}
 		} elseif ( $discount->post_status == 'active' ) {
 			$return = true;
 		} else {
 			if( defined( 'DOING_AJAX' ) ) {
-				edd_set_error( 'edd-discount-error', __( 'This discount is not active.', 'edd' ) );
+				edd_set_error( 'edd-discount-error', __( 'This discount is not active.', 'easy-digital-downloads' ) );
 			}
 		}
 	}
@@ -604,7 +604,7 @@ function edd_is_discount_started( $code_id = null ) {
 				// Discount has pased the start date
 				$return = true;
 			} else {
-				edd_set_error( 'edd-discount-error', __( 'This discount is not active yet.', 'edd' ) );
+				edd_set_error( 'edd-discount-error', __( 'This discount is not active yet.', 'easy-digital-downloads' ) );
 			}
 		} else {
 			// No start date for this discount, so has to be true
@@ -635,7 +635,7 @@ function edd_is_discount_maxed_out( $code_id = null ) {
 		// Should never be greater than, but just in case
 		if ( $uses >= $max_uses && ! empty( $max_uses ) ) {
 			// Discount is maxed out
-			edd_set_error( 'edd-discount-error', __( 'This discount has reached it\'s maximum usage.', 'edd' ) );
+			edd_set_error( 'edd-discount-error', __( 'This discount has reached it\'s maximum usage.', 'easy-digital-downloads' ) );
 			$return = true;
 		}
 	}
@@ -664,7 +664,7 @@ function edd_discount_is_min_met( $code_id = null ) {
 			// Minimum has been met
 			$return = true;
 		} else {
-			edd_set_error( 'edd-discount-error', sprintf( __( 'Minimum order of %s not met.', 'edd' ), edd_currency_filter( edd_format_amount( $min ) ) ) );
+			edd_set_error( 'edd-discount-error', sprintf( __( 'Minimum order of %s not met.', 'easy-digital-downloads' ), edd_currency_filter( edd_format_amount( $min ) ) ) );
 		}
 	}
 
@@ -726,7 +726,7 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 
 				foreach ( $product_reqs as $download_id ) {
 					if ( ! edd_item_in_cart( $download_id ) ) {
-						edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'edd' ) );
+						edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
 						$ret = false;
 						break;
 					}
@@ -746,7 +746,7 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 
 				if( ! $ret ) {
 
-					edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'edd' ) );
+					edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
 
 				}
 
@@ -762,7 +762,7 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 	if( ! empty( $excluded_ps ) ) {
 		// Check that there are products other than excluded ones in the cart
 		if( $cart_ids == $excluded_ps ) {
-			edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'edd' ) );
+			edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'easy-digital-downloads' ) );
 			$ret = false;
 		}
 	}
@@ -852,7 +852,7 @@ function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
 				$payment_meta = edd_get_payment_meta( $payment );
 				$user_info    = maybe_unserialize( $payment_meta['user_info'] );
 				if ( $user_info['discount'] == $code ) {
-					edd_set_error( 'edd-discount-error', __( 'This discount has already been redeemed.', 'edd' ) );
+					edd_set_error( 'edd-discount-error', __( 'This discount has already been redeemed.', 'easy-digital-downloads' ) );
 					$return = true;
 				}
 			}
@@ -891,7 +891,7 @@ function edd_is_discount_valid( $code = '', $user = '', $set_error = true ) {
 				$return = true;
 			}
 		} elseif( $set_error ) {
-			edd_set_error( 'edd-discount-error', __( 'This discount is invalid.', 'edd' ) );
+			edd_set_error( 'edd-discount-error', __( 'This discount is invalid.', 'easy-digital-downloads' ) );
 		}
 
 	}
