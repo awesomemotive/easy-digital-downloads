@@ -351,8 +351,9 @@ final class Easy_Digital_Downloads {
 		 * - wp-content/languages/edd/ (custom folder we have supported since 1.4)
 		 * - wp-content/plugins/easy-digital-downloads/languages/
 		 *
-		 * In wp-content/languages/plugins/easy-digital-downloads/ we only need to look for "easy-digital-downloads-{lang}_{country}.mo" as that is the new structure
+		 * In wp-content/languages/edd/ we must look for "easy-digital-downloads-{lang}_{country}.mo"
 		 * In wp-content/languages/edd/ we must look for "edd-{lang}_{country}.mo" as that was the old file naming convention
+		 * In wp-content/languages/plugins/easy-digital-downloads/ we only need to look for "easy-digital-downloads-{lang}_{country}.mo" as that is the new structure
 		 * In wp-content/plugins/easy-digital-downloads/languages/, we must look for both naming conventions. This is done by filtering "load_textdomain_mofile"
 		 *
 		 */
@@ -367,20 +368,26 @@ final class Easy_Digital_Downloads {
 		$locale        = apply_filters( 'plugin_locale',  get_locale(), 'easy-digital-downloads' );
 		$mofile        = sprintf( '%1$s-%2$s.mo', 'easy-digital-downloads', $locale );
 
-
-		// Look in wp-content/languages/plugins/easy-digital-downloads
-		$mofile_global = WP_LANG_DIR . '/plugins/easy-digital-downloads/' . $mofile;
+		// Look for wp-content/languages/edd/easy-digital-downloads-{lang}_{country}.mo
+		$mofile_global1 = WP_LANG_DIR . '/edd/easy-digital-downloads-' . $locale . '.mo';
 
 		// Look for wp-content/languages/edd/edd-{lang}_{country}.mo
 		$mofile_global2 = WP_LANG_DIR . '/edd/edd-' . $locale . '.mo';
 
-		if ( file_exists( $mofile_global ) ) {
+		// Look in wp-content/languages/plugins/easy-digital-downloads
+		$mofile_global3 = WP_LANG_DIR . '/plugins/easy-digital-downloads/' . $mofile;
 
-			load_textdomain( 'easy-digital-downloads', $mofile_global );
+		if ( file_exists( $mofile_global1 ) ) {
+
+			load_textdomain( 'easy-digital-downloads', $mofile_global1 );
 
 		} elseif ( file_exists( $mofile_global2 ) ) {
 
 			load_textdomain( 'easy-digital-downloads', $mofile_global2 );
+	
+		} elseif ( file_exists( $mofile_global3 ) ) {
+
+			load_textdomain( 'easy-digital-downloads', $mofile_global3 );
 	
 		} else {
 
