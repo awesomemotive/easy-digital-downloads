@@ -21,6 +21,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
+	public $field_mapping = array();
+
 	/**
 	 * Process a step
 	 *
@@ -35,16 +37,33 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 			wp_die( __( 'You do not have permission to import data.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 		}
 
-		//$csv = new parseCSV();
-		//$csv->auto( $this->file );
+		$csv = new parseCSV();
+		$csv->auto( $this->file );
 
-		//return $more;
+		if( $csv->data ) {
 
-		if( $this->step > 19 ) {
-			return false;
+			$i    = 0;
+			$more = true;
+
+			foreach( $csv->data as $key => $row ) {
+
+				// Done with this batch
+				if( $i >= 19 ) {
+					break;
+				}
+
+				// Import payment
+
+				// Once payment is imported, remove row
+				unset( $csv->data[ $key ] );
+				$i++;
+			}
+
+			$csv->save();
+
 		}
 
-		return true;
+		return $more;
 	}
 
 	/**

@@ -90,7 +90,7 @@ class EDD_Batch_Import {
 		$csv = new parseCSV();
 		$csv->auto( $this->file );
 
-		return $csv->data;
+		return $csv->titles;
 	}
 
 	/**

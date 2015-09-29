@@ -19,6 +19,8 @@ function edd_do_ajax_import_file_upload() {
 		require_once( ABSPATH . 'wp-admin/includes/file.php' );
 	}
 
+	require_once EDD_PLUGIN_DIR . 'includes/admin/import/class-batch-import.php';
+
 	if( ! wp_verify_nonce( $_REQUEST['edd_ajax_import'], 'edd_ajax_import' ) ) {
 		wp_send_json_error( array( 'error' => __( 'Nonce verification failed', 'edd' ) ) );
 	}
@@ -32,11 +34,16 @@ function edd_do_ajax_import_file_upload() {
 
 	if ( $import_file && empty( $import_file['error'] ) ) {
 
+		do_action( 'edd_batch_import_class_include', $_POST['edd-import-class'] );
+
+		$import = new $_POST['edd-import-class']( $import_file['file'] );
+
 		wp_send_json_success( array(
-			'form'  => $_POST,
-			'class' => $_POST['edd-import-class'],
-			'file'  => $import_file,
-			'nonce' => wp_create_nonce( 'edd_ajax_import', 'edd_ajax_import' )
+			'form'    => $_POST,
+			'class'   => $_POST['edd-import-class'],
+			'upload'  => $import_file,
+			'columns' => $import->get_columns(),
+			'nonce'   => wp_create_nonce( 'edd_ajax_import', 'edd_ajax_import' )
 		) );
 
 	} else {
@@ -72,15 +79,23 @@ function edd_do_ajax_import() {
 		wp_send_json_error( array( 'error' => __( 'Missing import parameters. Import class must be specified.', 'edd' ), 'request' => $_REQUEST ) );
 	}
 
-	if( empty( $_REQUEST['file'] ) ) {
+	if( empty( $_REQUEST['upload'] ) ) {
 		wp_send_json_error( array( 'error' => __( 'Missing import file. Please provide an import file.', 'edd' ), 'request' => $_REQUEST ) );
+	}
+
+	if( empty( $_REQUEST['upload']['type'] ) || 'text/csv' !== $_REQUEST['upload']['type'] ) {
+		wp_send_json_error( array( 'error' => __( 'The file you uploaded does not appear to be a CSV file.', 'edd' ), 'request' => $_REQUEST ) );
+	}
+
+	if( ! file_exists( $_REQUEST['upload']['file'] ) ) {
+		wp_send_json_error( array( 'error' => __( 'Something went wrong during the upload process, please try again.', 'edd' ), 'request' => $_REQUEST ) );
 	}
 
 	do_action( 'edd_batch_import_class_include', $_REQUEST['class'] );
 
 	$step     = absint( $_REQUEST['step'] );
 	$class    = $_REQUEST['class'];
-	$import   = new $class( $_REQUEST['file'], $step );
+	$import   = new $class( $_REQUEST['upload']['file'], $step );
 
 	if( ! $import->can_import() ) {
 
@@ -88,9 +103,9 @@ function edd_do_ajax_import() {
 
 	}
 
-	wp_send_json_error( array(
-		'error'  => $import->get_columns()
-	) );
+	parse_str( $_REQUEST['mapping'], $mapping );
+
+	$import->field_mapping = $mapping;
 
 	$ret = $import->process_step( $step );
 
@@ -101,7 +116,9 @@ function edd_do_ajax_import() {
 		$step += 1;
 		wp_send_json_success( array(
 			'step'       => $step,
-			'percentage' => $percentage
+			'percentage' => $percentage,
+			'columns'    => $import->get_columns(),
+			'mapping'    => $mapping
 		) );
 
 	} elseif ( true === $import->is_empty ) {
