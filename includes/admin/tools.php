@@ -258,8 +258,9 @@ function edd_tools_import_export_display() {
 		<h3><span><?php _e( 'Import Payment History', 'edd' ); ?></span></h3>
 		<div class="inside">
 			<p><?php _e( 'Import a CSV file of payment records.', 'edd' ); ?></p>
-			<p>
-				<form id="edd-import-payments" class="edd-import-form edd-import-export-form" action="<?php echo esc_url( add_query_arg( 'edd_action', 'upload_import_file', admin_url() ) ); ?>" method="post" enctype="multipart/form-data">
+			<form id="edd-import-payments" class="edd-import-form edd-import-export-form" action="<?php echo esc_url( add_query_arg( 'edd_action', 'upload_import_file', admin_url() ) ); ?>" method="post" enctype="multipart/form-data">
+				
+				<div class="edd-import-file-wrap">
 					<?php wp_nonce_field( 'edd_ajax_import', 'edd_ajax_import' ); ?>
 					<input type="hidden" name="edd-import-class" value="EDD_Batch_Payments_Import"/>
 					<p>
@@ -269,8 +270,62 @@ function edd_tools_import_export_display() {
 						<input type="submit" value="<?php _e( 'Import CSV', 'edd' ); ?>" class="button-secondary"/>
 						<span class="spinner"></span>
 					</span>
-				</form>
-			</p>
+				</div>
+
+				<div class="edd-import-options" id="edd-import-payments-options" style="display:none;">
+					<table class="widefat edd_repeatable_table" width="100%" cellpadding="0" cellspacing="0">
+						<thead>
+							<tr>
+								<th><?php _e( 'CSV Column', 'edd' ); ?></th>
+								<th><?php _e( 'Payment Field', 'edd' ); ?></th>
+								<th style="width: 2%"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="edd_repeatable_row" data-key="1">
+								<td>
+									<select name="edd-import-csv-column[1]" class="edd-import-csv-column">
+									</select>
+								</td>
+								<td>
+									<select name="edd-import-payment-field[1]" class="edd-import-payment-field">
+										<option value="_edd_payment_total"><?php _e( 'Total', 'easy-digital-downloads' ); ?></option>
+										<option value="_edd_payment_tax"><?php _e( 'Tax', 'easy-digital-downloads' ); ?></option>
+										<option value="_edd_payment_user_id"><?php _e( 'User ID', 'easy-digital-downloads' ); ?></option>
+										<option value="_edd_payment_user_email"><?php _e( 'Customer Email', 'easy-digital-downloads' ); ?></option>
+										<option value="first_name"><?php _e( 'Customer First Name', 'easy-digital-downloads' ); ?></option>
+										<option value="last_name"><?php _e( 'Customer Last Name', 'easy-digital-downloads' ); ?></option>
+										<option value="_edd_payment_user_ip"><?php _e( 'IP Address', 'easy-digital-downloads' ); ?></option>
+										<option value="_edd_payment_purchase_key"><?php _e( 'Purchase Key', 'easy-digital-downloads' ); ?></option>
+										<option value="_edd_payment_gateway"><?php _e( 'Payment Method', 'easy-digital-downloads' ); ?></option>
+										<option value="_edd_payment_number"><?php _e( 'Payment Number', 'easy-digital-downloads' ); ?></option>
+										<option value="products"><?php _e( 'Purchased Products', 'easy-digital-downloads' ); ?></option>
+										<option value="post_date"><?php _e( 'Purchase Date', 'easy-digital-downloads' ); ?></option>
+										<option value="post_status"><?php _e( 'Status', 'easy-digital-downloads' ); ?></option>
+										<option value="currency"><?php _e( 'Currency Code', 'easy-digital-downloads' ); ?></option>
+										<option value="custom"><?php _e( 'Custom Field', 'easy-digital-downloads' ); ?></option>
+									</select>
+									<span class="edd-import-payment-field-custom-wrap" style="display:none">
+										<label for="edd-import-payment-field-custom_1"><?php _e( 'Custom Field', 'easy-digital-downloads' ); ?></label>
+										<input name="edd-import-payment-field-custom[1]" id="edd-import-payment-field-custom_1" type="text" value="" />
+									</span>
+								</td>
+								<td>
+									<a href="#" class="edd_remove_repeatable" data-type="price" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;">&times;</a>
+								</td>
+							</tr>
+							<tr>
+								<td class="submit" colspan="3" style="float: none; clear:both; background:#fff;">
+									<a class="button-secondary edd_add_repeatable" style="margin: 6px 0;"><?php _e( 'Add New Field', 'edd' ); ?></a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<p class="submit">
+						<button class="edd-import-proceed button-primary"><?php _e( 'Process Import', 'easy-digital-downloads' ); ?></button>
+					</p>
+				</div>
+			</form>
 		</div><!-- .inside -->
 	</div><!-- .postbox -->
 

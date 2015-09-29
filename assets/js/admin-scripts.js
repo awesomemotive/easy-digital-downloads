@@ -1307,6 +1307,7 @@ jQuery(document).ready(function ($) {
 
 		init : function() {
 			this.submit();
+			this.toggle_fields();
 		},
 
 		submit : function() {
@@ -1318,27 +1319,8 @@ jQuery(document).ready(function ($) {
 				success: self.success,
 				complete: self.complete,
 				dataType: 'json',
-				error: self.error,
-				target: '#edd-import-payments-output'
+				error: self.error
 			});
-
-			/*
-			var submitButton = $(this).find( 'input[type="submit"]' );
-
-			if ( ! submitButton.hasClass( 'button-disabled' ) ) {
-
-				var data = $(this).serialize();
-
-				console.log( data ); return;
-
-				submitButton.addClass( 'button-disabled' );
-				$(this).find('.notice-wrap').remove();
-				$(this).append( '<div class="notice-wrap"><span class="spinner is-active"></span><div class="edd-progress"><div></div></div></div>' );
-
-				// start the process
-				self.process_step( 1, data, self );
-
-			}*/
 
 		},
 
@@ -1361,6 +1343,7 @@ jQuery(document).ready(function ($) {
 		},
 
 		success: function( responseText, statusText, xhr, $form ) {
+			//console.log('success');
 			//console.log( responseText );
 		},
 
@@ -1370,7 +1353,30 @@ jQuery(document).ready(function ($) {
 
 			if( response.success ) {
 
-				EDD_Import.process_step( 1, response.data, self );
+				console.log( response.data );
+
+				var $form = $('.edd-import-form .notice-wrap').parent();
+
+				$form.find('.edd-import-file-wrap,.notice-wrap').remove();
+
+				$form.find('.edd-import-options').slideDown();
+
+				// Show column mapping
+				var select = $form.find('select.edd-import-csv-column');
+				$.each( response.data.columns, function( key, value ) {
+					select.append( '<option value="' + key + '">' + value + '</option>' );
+				});
+
+				$('body').on('click', '.edd-import-proceed', function(e) {
+
+					e.preventDefault();
+
+					$form.append( '<div class="notice-wrap"><span class="spinner is-active"></span><div class="edd-progress"><div></div></div></div>' );
+
+					response.data.mapping = $form.serialize();
+
+					EDD_Import.process_step( 1, response.data, self );
+				});
 
 			} else {
 
@@ -1386,7 +1392,7 @@ jQuery(document).ready(function ($) {
 
 			// Something went wrong. This will display error on form
 			console.log( 'error' );
-			//console.log( xhr );
+			console.log( xhr );
 
 			var response    = jQuery.parseJSON( xhr.responseText );
 			var import_form = $('.edd-import-form').find('.edd-progress').parent().parent();
@@ -1414,7 +1420,8 @@ jQuery(document).ready(function ($) {
 					form: import_data.form,
 					nonce: import_data.nonce,
 					class: import_data.class,
-					file: import_data.file,
+					upload: import_data.upload,
+					mapping: import_data.mapping,
 					action: 'edd_do_ajax_import',
 					step: step,
 				},
@@ -1447,6 +1454,9 @@ jQuery(document).ready(function ($) {
 							// Animation complete.
 						});
 
+						console.log( 'step' );
+						console.log( response.data );
+
 						EDD_Import.process_step( parseInt( response.data.step ), import_data, self );
 					}
 
@@ -1454,6 +1464,18 @@ jQuery(document).ready(function ($) {
 			}).fail(function (response) {
 				if ( window.console && window.console.log ) {
 					console.log( response );
+				}
+			});
+
+		},
+
+		toggle_fields : function() {
+
+			$('body').on('change', '.edd-import-payment-field', function() {
+				if( 'custom' == $(this).val() ) {
+					$(this).parent().find( '.edd-import-payment-field-custom-wrap' ).show();
+				} else {
+					$(this).parent().find( '.edd-import-payment-field-custom-wrap' ).hide();
 				}
 			});
 
