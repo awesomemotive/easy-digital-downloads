@@ -193,7 +193,7 @@ class EDD_Download {
 
 		} else {
 
-			return new WP_Error( 'edd-download-invalid-property', sprintf( __( 'Can\'t get property %s', 'edd' ), $key ) );
+			return new WP_Error( 'edd-download-invalid-property', sprintf( __( 'Can\'t get property %s', 'easy-digital-downloads' ), $key ) );
 
 		}
 
@@ -215,7 +215,7 @@ class EDD_Download {
 		$defaults = array(
 			'post_type'   => 'download',
 			'post_status' => 'draft',
-			'post_title'  => __( 'New Download Product', 'edd' )
+			'post_title'  => __( 'New Download Product', 'easy-digital-downloads' )
 		);
 
 		$args = wp_parse_args( $data, $defaults );

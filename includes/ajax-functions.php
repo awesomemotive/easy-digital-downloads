@@ -541,7 +541,7 @@ function edd_ajax_download_search() {
 
 		$items[] = array(
 			'id'   => 0,
-			'name' => __( 'No results found', 'edd' )
+			'name' => __( 'No results found', 'easy-digital-downloads' )
 		);
 
 	}
@@ -592,7 +592,7 @@ function edd_ajax_customer_search() {
 
 		$customers[] = array(
 			'id'   => 0,
-			'name' => __( 'No results found', 'edd' )
+			'name' => __( 'No results found', 'easy-digital-downloads' )
 		);
 
 	}
@@ -679,7 +679,7 @@ function edd_ajax_search_users() {
 				$user_list .= '<li><a href="#" data-userid="' . esc_attr( $user->ID ) . '" data-login="' . esc_attr( $user->user_login ) . '">' . esc_html( $user->user_login ) . '</a></li>';
 			}
 		} else {
-			$user_list .= '<li>' . __( 'No users found', 'edd' ) . '</li>';
+			$user_list .= '<li>' . __( 'No users found', 'easy-digital-downloads' ) . '</li>';
 		}
 		$user_list .= '</ul>';
 

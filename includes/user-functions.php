@@ -362,6 +362,24 @@ function edd_validate_username( $username ) {
 	return (bool) apply_filters( 'edd_validate_username', $valid, $username );
 }
 
+/**
+ * Attach the newly created user_id to a customer, if one exists
+ *
+ * @since  2.4.6
+ * @param  int $user_id The User ID that was created
+ * @return void
+ */
+function edd_connect_existing_customer_to_new_user( $user_id ) {
+	$email = get_the_author_meta( 'user_email', $user_id );
+
+	// Update the user ID on the customer
+	$customer = new EDD_Customer( $email );
+
+	if( $customer->id > 0 ) {
+		$customer->update( array( 'user_id' => $user_id ) );
+	}
+}
+add_action( 'user_register', 'edd_connect_existing_customer_to_new_user', 10, 1 );
 
 /**
  * Looks up purchases by email that match the registering user
@@ -388,8 +406,9 @@ function edd_add_past_purchases_to_new_user( $user_id ) {
 		edd_send_user_verification_email( $user_id );
 
 		foreach( $payments as $payment ) {
-			if( intval( edd_get_payment_user_id( $payment->ID ) ) > 0 )
+			if( intval( edd_get_payment_user_id( $payment->ID ) ) > 0 ) {
 				continue; // This payment already associated with an account
+			}
 
 			$meta                    = edd_get_payment_meta( $payment->ID );
 			$meta['user_info']       = maybe_unserialize( $meta['user_info'] );
@@ -403,7 +422,7 @@ function edd_add_past_purchases_to_new_user( $user_id ) {
 	}
 
 }
-add_action( 'user_register', 'edd_add_past_purchases_to_new_user' );
+add_action( 'user_register', 'edd_add_past_purchases_to_new_user', 10, 1 );
 
 
 /**
@@ -474,7 +493,7 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 	@wp_mail( get_option( 'admin_email' ), sprintf( __('[%s] New User Registration' ), $blogname ), $message );
 
 	$message  = sprintf( __( 'Username: %s' ), $user_data['user_login'] ) . "\r\n";
-	$message .= sprintf( __( 'Password: %s' ), __( '[Password entered at checkout]', 'edd' ) ) . "\r\n";
+	$message .= sprintf( __( 'Password: %s' ), __( '[Password entered at checkout]', 'easy-digital-downloads' ) ) . "\r\n";
 	$message .= wp_login_url() . "\r\n";
 
 	wp_mail( $user_data['user_email'], sprintf( __( '[%s] Your username and password' ), $blogname ), $message );
@@ -628,9 +647,9 @@ function edd_send_user_verification_email( $user_id = 0 ) {
 	$url        = edd_get_user_verification_url( $user_id );
 	$from_name  = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
 	$from_email = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
-	$subject    = apply_filters( 'edd_user_verification_email_subject', __( 'Verify your account', 'edd' ), $user_id );
-	$heading    = apply_filters( 'edd_user_verification_email_heading', __( 'Verify your account', 'edd' ), $user_id );
-	$message    = sprintf( __( "Hello %s,\n\nYour account with %s needs to be verified before you can access your purchase history. <a href='%s'>Click here</a> to verify your account.", 'edd' ), $name, $from_name, $url );
+	$subject    = apply_filters( 'edd_user_verification_email_subject', __( 'Verify your account', 'easy-digital-downloads' ), $user_id );
+	$heading    = apply_filters( 'edd_user_verification_email_heading', __( 'Verify your account', 'easy-digital-downloads' ), $user_id );
+	$message    = sprintf( __( "Hello %s,\n\nYour account with %s needs to be verified before you can access your purchase history. <a href='%s'>Click here</a> to verify your account.", 'easy-digital-downloads' ), $name, $from_name, $url );
 	$message    = apply_filters( 'edd_user_verification_email_message', $message, $user_id );
 
 	$emails     = new EDD_Emails;
@@ -748,7 +767,7 @@ function edd_validate_user_verification_token( $url = '' ) {
 
 			do_action( 'edd_user_verification_token_expired' );
 
-			wp_die( apply_filters( 'edd_verification_link_expired_text', __( 'Sorry but your account verification link has expired. <a href="#">Click here</a> to request a new verification URL.', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+			wp_die( apply_filters( 'edd_verification_link_expired_text', __( 'Sorry but your account verification link has expired. <a href="#">Click here</a> to request a new verification URL.', 'easy-digital-downloads' ) ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 
 		}
 
@@ -773,15 +792,15 @@ function edd_validate_user_verification_token( $url = '' ) {
 function edd_process_user_verification_request() {
 
 	if( ! wp_verify_nonce( $_GET['_wpnonce'], 'edd-request-verification' ) ) {
-		wp_die( __( 'Nonce verification failed.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+		wp_die( __( 'Nonce verification failed.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	if( ! is_user_logged_in() ) {
-		wp_die( __( 'You must be logged in to verify your account.', 'edd' ), __( 'Notice', 'edd' ), array( 'response' => 403 ) );
+		wp_die( __( 'You must be logged in to verify your account.', 'easy-digital-downloads' ), __( 'Notice', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	if( ! edd_user_pending_verification( get_current_user_id() ) ) {
-		wp_die( __( 'Your account has already been verified.', 'edd' ), __( 'Notice', 'edd' ), array( 'response' => 403 ) );
+		wp_die( __( 'Your account has already been verified.', 'easy-digital-downloads' ), __( 'Notice', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	edd_send_user_verification_email( get_current_user_id() );
@@ -826,7 +845,7 @@ function edd_process_user_account_verification() {
 
 		do_action( 'edd_invalid_user_verification_token' );
 
-		wp_die( __( 'Invalid verification token provided.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+		wp_die( __( 'Invalid verification token provided.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	edd_set_user_to_verified( absint( $_GET['user_id'] ) );

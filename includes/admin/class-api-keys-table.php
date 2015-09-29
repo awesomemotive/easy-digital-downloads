@@ -49,8 +49,8 @@ class EDD_API_Keys_Table extends WP_List_Table {
 
 		// Set parent defaults
 		parent::__construct( array(
-			'singular'  => __( 'API Key', 'edd' ),     // Singular name of the listed records
-			'plural'    => __( 'API Keys', 'edd' ),    // Plural name of the listed records
+			'singular'  => __( 'API Key', 'easy-digital-downloads' ),     // Singular name of the listed records
+			'plural'    => __( 'API Keys', 'easy-digital-downloads' ),    // Plural name of the listed records
 			'ajax'      => false                       // Does this table support ajax?
 		) );
 
@@ -132,19 +132,19 @@ class EDD_API_Keys_Table extends WP_List_Table {
 			$actions['view'] = sprintf(
 				'<a href="%s">%s</a>',
 				esc_url( add_query_arg( array( 'view' => 'api_requests', 'post_type' => 'download', 'page' => 'edd-reports', 'tab' => 'logs', 's' => $item['email'] ), 'edit.php' ) ),
-				__( 'View API Log', 'edd' )
+				__( 'View API Log', 'easy-digital-downloads' )
 			);
 		}
 
 		$actions['reissue'] = sprintf(
 			'<a href="%s" class="edd-regenerate-api-key">%s</a>',
 			esc_url( wp_nonce_url( add_query_arg( array( 'user_id' => $item['id'], 'edd_action' => 'process_api_key', 'edd_api_process' => 'regenerate' ) ), 'edd-api-nonce' ) ),
-			__( 'Reissue', 'edd' )
+			__( 'Reissue', 'easy-digital-downloads' )
 		);
 		$actions['revoke'] = sprintf(
 			'<a href="%s" class="edd-revoke-api-key edd-delete">%s</a>',
 			esc_url( wp_nonce_url( add_query_arg( array( 'user_id' => $item['id'], 'edd_action' => 'process_api_key', 'edd_api_process' => 'revoke' ) ), 'edd-api-nonce' ) ),
-			__( 'Revoke', 'edd' )
+			__( 'Revoke', 'easy-digital-downloads' )
 		);
 
 		$actions = apply_filters( 'edd_api_row_actions', array_filter( $actions ) );
@@ -161,10 +161,10 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'user'         => __( 'Username', 'edd' ),
-			'key'          => __( 'Public Key', 'edd' ),
-			'token'        => __( 'Token', 'edd' ),
-			'secret'       => __( 'Secret Key', 'edd' )
+			'user'         => __( 'Username', 'easy-digital-downloads' ),
+			'key'          => __( 'Public Key', 'easy-digital-downloads' ),
+			'token'        => __( 'Token', 'easy-digital-downloads' ),
+			'secret'       => __( 'Secret Key', 'easy-digital-downloads' )
 		);
 
 		return $columns;
@@ -190,7 +190,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 			<input type="hidden" name="edd_api_process" value="generate" />
 			<?php wp_nonce_field( 'edd-api-nonce' ); ?>
 			<?php echo EDD()->html->ajax_user_search(); ?>
-			<?php submit_button( __( 'Generate New API Keys', 'edd' ), 'secondary', 'submit', false ); ?>
+			<?php submit_button( __( 'Generate New API Keys', 'easy-digital-downloads' ), 'secondary', 'submit', false ); ?>
 		</form>
 		<?php
 		$edd_api_is_bottom = true;
