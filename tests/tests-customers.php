@@ -352,6 +352,17 @@ class Tests_Customers extends WP_UnitTestCase {
 		$this->assertFalse( edd_validate_username( 'edd12345$%&+-!@£%^&()(*&^%$£@!' ) );
 	}
 
+	public function test_user_verification_base_url() {
+		$purchase_history_page = get_permalink( edd_get_option( 'purchase_history_page', 0 ) );
+		$this->assertEquals( $purchase_history_page, edd_get_user_verification_page() );
+
+		edd_update_option( 'purchase_history_page', 0 );
+		$home_url = home_url();
+		$this->assertEquals( $home_url, edd_get_user_verification_page() );
+
+		edd_update_option( 'purchase_history_page', $purchase_history_page );
+	}
+
 	public function test_user_activation_updates() {
 		// No user, no status updates
 		$this->assertFalse( edd_set_user_to_verified() );

@@ -45,7 +45,7 @@ function edd_resend_purchase_receipt( $data ) {
 	}
 
 	if( ! current_user_can( 'edit_shop_payments' ) ) {
-		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+		wp_die( __( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	edd_email_purchase_receipt( $purchase_id, false );

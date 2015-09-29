@@ -33,11 +33,11 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 
 	$to_email     = edd_get_payment_user_email( $payment_id );
 
-	$subject      = edd_get_option( 'purchase_subject', __( 'Purchase Receipt', 'edd' ) );
+	$subject      = edd_get_option( 'purchase_subject', __( 'Purchase Receipt', 'easy-digital-downloads' ) );
 	$subject      = apply_filters( 'edd_purchase_subject', wp_strip_all_tags( $subject ), $payment_id );
 	$subject      = edd_do_email_tags( $subject, $payment_id );
 
-	$heading      = edd_get_option( 'purchase_heading', __( 'Purchase Receipt', 'edd' ) );
+	$heading      = edd_get_option( 'purchase_heading', __( 'Purchase Receipt', 'easy-digital-downloads' ) );
 	$heading      = apply_filters( 'edd_purchase_heading', $heading, $payment_id, $payment_data );
 
 	$attachments  = apply_filters( 'edd_receipt_attachments', array(), $payment_id, $payment_data );
@@ -74,11 +74,11 @@ function edd_email_test_purchase_receipt() {
 	$from_email  = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
 	$from_email  = apply_filters( 'edd_test_purchase_from_address', $from_email, 0, array() );
 
-	$subject     = edd_get_option( 'purchase_subject', __( 'Purchase Receipt', 'edd' ) );
+	$subject     = edd_get_option( 'purchase_subject', __( 'Purchase Receipt', 'easy-digital-downloads' ) );
 	$subject     = apply_filters( 'edd_purchase_subject', wp_strip_all_tags( $subject ), 0 );
 	$subject     = edd_do_email_tags( $subject, 0 );
 
-	$heading     = edd_get_option( 'purchase_heading', __( 'Purchase Receipt', 'edd' ) );
+	$heading     = edd_get_option( 'purchase_heading', __( 'Purchase Receipt', 'easy-digital-downloads' ) );
 	$heading     = apply_filters( 'edd_purchase_heading', $heading, $payment_id, $payment_data );
 
 	$attachments = apply_filters( 'edd_receipt_attachments', array(), 0, array() );
@@ -123,7 +123,7 @@ function edd_admin_email_notice( $payment_id = 0, $payment_data = array() ) {
 	$from_email  = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
 	$from_email  = apply_filters( 'edd_admin_sale_from_address', $from_email, $payment_id, $payment_data );
 
-	$subject     = edd_get_option( 'sale_notification_subject', sprintf( __( 'New download purchase - Order #%1$s', 'edd' ), $payment_id ) );
+	$subject     = edd_get_option( 'sale_notification_subject', sprintf( __( 'New download purchase - Order #%1$s', 'easy-digital-downloads' ), $payment_id ) );
 	$subject     = apply_filters( 'edd_admin_sale_notification_subject', wp_strip_all_tags( $subject ), $payment_id );
 	$subject     = edd_do_email_tags( $subject, $payment_id );
 
@@ -141,7 +141,7 @@ function edd_admin_email_notice( $payment_id = 0, $payment_data = array() ) {
 	$emails->__set( 'from_name', $from_name );
 	$emails->__set( 'from_email', $from_email );
 	$emails->__set( 'headers', $headers );
-	$emails->__set( 'heading', __( 'New Sale!', 'edd' ) );
+	$emails->__set( 'heading', __( 'New Sale!', 'easy-digital-downloads' ) );
 
 	$emails->send( edd_get_admin_notice_emails(), $subject, $message, $attachments );
 
@@ -186,13 +186,13 @@ function edd_admin_notices_disabled( $payment_id = 0 ) {
  * @return string $message
  */
 function edd_get_default_sale_notification_email() {
-	$default_email_body = __( 'Hello', 'edd' ) . "\n\n" . sprintf( __( 'A %s purchase has been made', 'edd' ), edd_get_label_plural() ) . ".\n\n";
-	$default_email_body .= sprintf( __( '%s sold:', 'edd' ), edd_get_label_plural() ) . "\n\n";
+	$default_email_body = __( 'Hello', 'easy-digital-downloads' ) . "\n\n" . sprintf( __( 'A %s purchase has been made', 'easy-digital-downloads' ), edd_get_label_plural() ) . ".\n\n";
+	$default_email_body .= sprintf( __( '%s sold:', 'easy-digital-downloads' ), edd_get_label_plural() ) . "\n\n";
 	$default_email_body .= '{download_list}' . "\n\n";
-	$default_email_body .= __( 'Purchased by: ', 'edd' ) . ' {name}' . "\n";
-	$default_email_body .= __( 'Amount: ', 'edd' ) . ' {price}' . "\n";
-	$default_email_body .= __( 'Payment Method: ', 'edd' ) . ' {payment_method}' . "\n\n";
-	$default_email_body .= __( 'Thank you', 'edd' );
+	$default_email_body .= __( 'Purchased by: ', 'easy-digital-downloads' ) . ' {name}' . "\n";
+	$default_email_body .= __( 'Amount: ', 'easy-digital-downloads' ) . ' {price}' . "\n";
+	$default_email_body .= __( 'Payment Method: ', 'easy-digital-downloads' ) . ' {payment_method}' . "\n\n";
+	$default_email_body .= __( 'Thank you', 'easy-digital-downloads' );
 
 	$message = edd_get_option( 'sale_notification', false );
 	$message = ! empty( $message ) ? $message : $default_email_body;
