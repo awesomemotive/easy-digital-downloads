@@ -122,6 +122,8 @@ function edd_get_purchase_link( $args = array() ) {
 
 	}
 
+	$args[ 'display_price' ] = $data_price_value;
+	
 	$data_price  = 'data-price="' . $data_price_value . '"';
 
 	$button_text = ! empty( $args['text'] ) ? '&nbsp;&ndash;&nbsp;' . $args['text'] : '';
@@ -158,13 +160,13 @@ function edd_get_purchase_link( $args = array() ) {
 		$form_id .= '-' . $edd_displayed_form_ids[ $download->ID ];
 	}
 
-	$args = apply_filters( 'edd_purchase_link_args', $args, $price );
+	$args = apply_filters( 'edd_purchase_link_args', $args );
 
 	ob_start();
 ?>
 	<form id="<?php echo $form_id; ?>" class="edd_download_purchase_form edd_purchase_<?php echo absint( $download->ID ); ?>" method="post">
 
-		<?php do_action( 'edd_purchase_link_top', $download->ID, $args, $price ); ?>
+		<?php do_action( 'edd_purchase_link_top', $download->ID, $args ); ?>
 
 		<div class="edd_purchase_submit_wrapper">
 			<?php
