@@ -61,8 +61,8 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 		// Set parent defaults
 		parent::__construct( array(
-			'singular'  => __( 'Customer', 'edd' ),     // Singular name of the listed records
-			'plural'    => __( 'Customers', 'edd' ),    // Plural name of the listed records
+			'singular'  => __( 'Customer', 'easy-digital-downloads' ),     // Singular name of the listed records
+			'plural'    => __( 'Customers', 'easy-digital-downloads' ),    // Plural name of the listed records
 			'ajax'      => false                       // Does this table support ajax?
 		) );
 
@@ -132,13 +132,13 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 	public function column_name( $item ) {
 		$name        = '#' . $item['id'] . ' ';
-		$name       .= ! empty( $item['name'] ) ? $item['name'] : '<em>' . __( 'Unnamed Customer', 'edd') . '</em>';
+		$name       .= ! empty( $item['name'] ) ? $item['name'] : '<em>' . __( 'Unnamed Customer','easy-digital-downloads' ) . '</em>';
 		$user        = ! empty( $item['user_id'] ) ? $item['user_id'] : $item['email'];
 		$view_url    = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $item['id'] );
 		$actions     = array(
-			'view'   => sprintf( __( '<a href="%s">View</a>', 'edd' ), $view_url ),
-			'logs'   => sprintf( __( '<a href="%s">Download log</a>', 'edd' ), admin_url( '/edit.php?post_type=download&page=edd-reports&tab=logs&user=' . urlencode( $user ) ) ),
-			'delete' => sprintf( __( '<a href="%s">Delete</a>', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $item['id'] ) )
+			'view'   => sprintf( __( '<a href="%s">View</a>', 'easy-digital-downloads' ), $view_url ),
+			'logs'   => sprintf( __( '<a href="%s">Download log</a>', 'easy-digital-downloads' ), admin_url( '/edit.php?post_type=download&page=edd-reports&tab=logs&user=' . urlencode( $user ) ) ),
+			'delete' => sprintf( __( '<a href="%s">Delete</a>', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $item['id'] ) )
 		);
 
 		return '<a href="' . esc_url( $view_url ) . '">' . $name . '</a>' . $this->row_actions( $actions );
@@ -153,11 +153,11 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'name'           => __( 'Name', 'edd' ),
-			'email'          => __( 'Email', 'edd' ),
-			'num_purchases'  => __( 'Purchases', 'edd' ),
-			'amount_spent'   => __( 'Total Spent', 'edd' ),
-			'date_created'   => __( 'Date Created', 'edd' )
+			'name'           => __( 'Name', 'easy-digital-downloads' ),
+			'email'          => __( 'Email', 'easy-digital-downloads' ),
+			'num_purchases'  => __( 'Purchases', 'easy-digital-downloads' ),
+			'amount_spent'   => __( 'Total Spent', 'easy-digital-downloads' ),
+			'date_created'   => __( 'Date Created', 'easy-digital-downloads' )
 		);
 
 		return apply_filters( 'edd_report_customer_columns', $columns );

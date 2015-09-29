@@ -158,8 +158,8 @@ class EDD_Emails {
 	 */
 	public function get_templates() {
 		$templates = array(
-			'default' => __( 'Default Template', 'edd' ),
-			'none'    => __( 'No template, plain text only', 'edd' )
+			'default' => __( 'Default Template', 'easy-digital-downloads' ),
+			'none'    => __( 'No template, plain text only', 'easy-digital-downloads' )
 		);
 
 		return apply_filters( 'edd_email_templates', $templates );
@@ -275,7 +275,7 @@ class EDD_Emails {
 	public function send( $to, $subject, $message, $attachments = '' ) {
 
 		if ( ! did_action( 'init' ) && ! did_action( 'admin_init' ) ) {
-			_doing_it_wrong( __FUNCTION__, __( 'You cannot send email with EDD_Emails until init/admin_init has been reached', 'edd' ), null );
+			_doing_it_wrong( __FUNCTION__, __( 'You cannot send email with EDD_Emails until init/admin_init has been reached', 'easy-digital-downloads' ), null );
 			return false;
 		}
 
