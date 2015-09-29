@@ -785,7 +785,7 @@ function edd_reports_refresh_button() {
 		'edd-message' => 'refreshed-reports'
 	) ), 'edd-refresh-reports' );
 
-	echo '<a href="' . $url . '" title="' . __( 'Clicking this will clear the reports cache', 'edd' ) . '"  class="button edd-refresh-reports-button">' . __( 'Refresh Reports', 'edd' ) . '</a>';
+	echo '<a href="' . $url . '" title="' . __( 'Clicking this will refresh the reports', 'edd' ) . '"  class="button edd-refresh-reports-button">' . __( 'Refresh Reports', 'edd' ) . '</a>';
 
 }
 
