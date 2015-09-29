@@ -347,7 +347,7 @@ final class Easy_Digital_Downloads {
 		 *
 		 * To support existing translation files from before the change, we must look for translation files in several places and under several names.
 		 *
-		 * - wp-content/languages/plugins/easy-digitaldownloads (introduced with language packs)
+		 * - wp-content/languages/plugins/easy-digital-downloads (introduced with language packs)
 		 * - wp-content/languages/edd/ (custom folder we have supported since 1.4)
 		 * - wp-content/plugins/easy-digital-downloads/languages/
 		 *
