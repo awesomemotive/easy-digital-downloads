@@ -628,12 +628,12 @@ function edd_get_payment_status( $payment, $return_label = false ) {
  */
 function edd_get_payment_statuses() {
 	$payment_statuses = array(
-		'pending'   => __( 'Pending', 'edd' ),
-		'publish'   => __( 'Complete', 'edd' ),
-		'refunded'  => __( 'Refunded', 'edd' ),
-		'failed'    => __( 'Failed', 'edd' ),
-		'abandoned' => __( 'Abandoned', 'edd' ),
-		'revoked'   => __( 'Revoked', 'edd' )
+		'pending'   => __( 'Pending', 'easy-digital-downloads' ),
+		'publish'   => __( 'Complete', 'easy-digital-downloads' ),
+		'refunded'  => __( 'Refunded', 'easy-digital-downloads' ),
+		'failed'    => __( 'Failed', 'easy-digital-downloads' ),
+		'abandoned' => __( 'Abandoned', 'easy-digital-downloads' ),
+		'revoked'   => __( 'Revoked', 'easy-digital-downloads' )
 	);
 
 	return apply_filters( 'edd_payment_statuses', $payment_statuses );
@@ -685,7 +685,7 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 		$args['hour'] = $hour;
 
 	$args     = apply_filters( 'edd_get_earnings_by_date_args', $args );
-	$key      = md5( serialize( $args ) );
+	$key      = 'edd_stats_' . substr( md5( serialize( $args ) ), 0, 15 );
 	$earnings = get_transient( $key );
 
 	if( false === $earnings ) {
@@ -694,18 +694,17 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 		if ( $sales ) {
 			$sales = implode( ',', $sales );
 
-			if ( $include_taxes ) {
-				$earnings += $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN ({$sales})" );
-			} else {
-				$earnings_with_tax = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN ({$sales})" );
-				$total_tax         = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_tax' AND post_id IN ({$sales})" );
+			$total_earnings = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN ({$sales})" );
+			$total_tax      = 0;
 
-				$earnings += ( $earnings_with_tax - $total_tax );
+			if ( ! $include_taxes ) {
+				$total_tax = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_tax' AND post_id IN ({$sales})" );
 			}
 
+			$earnings += ( $total_earnings - $total_tax );
 		}
 		// Cache the results for one hour
-		set_transient( $key, $earnings, 60*60 );
+		set_transient( $key, $earnings, HOUR_IN_SECONDS );
 	}
 
 	return round( $earnings, 2 );
@@ -760,14 +759,14 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 
 	$args = apply_filters( 'edd_get_sales_by_date_args', $args  );
 
-	$key   = md5( serialize( $args ) );
+	$key   = 'edd_stats_' . substr( md5( serialize( $args ) ), 0, 15 );
 	$count = get_transient( $key );
 
 	if( false === $count ) {
 		$sales = new WP_Query( $args );
 		$count = (int) $sales->post_count;
 		// Cache the results for one hour
-		set_transient( $key, $count, 60*60 );
+		set_transient( $key, $count, HOUR_IN_SECONDS );
 	}
 
 	return $count;
@@ -1724,7 +1723,7 @@ function edd_get_payment_note_html( $note, $payment_id = 0 ) {
 		$user = get_userdata( $note->user_id );
 		$user = $user->display_name;
 	} else {
-		$user = __( 'EDD Bot', 'edd' );
+		$user = __( 'EDD Bot', 'easy-digital-downloads' );
 	}
 
 	$date_format = get_option( 'date_format' ) . ', ' . get_option( 'time_format' );
@@ -1739,7 +1738,7 @@ function edd_get_payment_note_html( $note, $payment_id = 0 ) {
 		$note_html .='<p>';
 			$note_html .= '<strong>' . $user . '</strong>&nbsp;&ndash;&nbsp;' . date_i18n( $date_format, strtotime( $note->comment_date ) ) . '<br/>';
 			$note_html .= $note->comment_content;
-			$note_html .= '&nbsp;&ndash;&nbsp;<a href="' . esc_url( $delete_note_url ) . '" class="edd-delete-payment-note" data-note-id="' . absint( $note->comment_ID ) . '" data-payment-id="' . absint( $payment_id ) . '" title="' . __( 'Delete this payment note', 'edd' ) . '">' . __( 'Delete', 'edd' ) . '</a>';
+			$note_html .= '&nbsp;&ndash;&nbsp;<a href="' . esc_url( $delete_note_url ) . '" class="edd-delete-payment-note" data-note-id="' . absint( $note->comment_ID ) . '" data-payment-id="' . absint( $payment_id ) . '" title="' . __( 'Delete this payment note', 'easy-digital-downloads' ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 		$note_html .= '</p>';
 	$note_html .= '</div>';
 

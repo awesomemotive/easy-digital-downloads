@@ -171,7 +171,7 @@ class EDD_Customer {
 
 		} else {
 
-			return new WP_Error( 'edd-customer-invalid-property', sprintf( __( 'Can\'t get property %s', 'edd' ), $key ) );
+			return new WP_Error( 'edd-customer-invalid-property', sprintf( __( 'Can\'t get property %s', 'easy-digital-downloads' ), $key ) );
 
 		}
 
