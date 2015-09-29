@@ -205,7 +205,7 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 										</div>
 										<?php endif; ?>
 
-										<div class="edd-admin-box-inside edd-unlimited-downloads">
+										<div class="edd-unlimited-downloads edd-admin-box-inside">
 											<p>
 												<span class="label" title="<?php _e( 'Grants the customer unlimited file downloads for this purchase, regardless of other limits set.', 'easy-digital-downloads' ); ?>"><i data-code="f316" class="dashicons dashicons-download"></i></span>&nbsp;
 												<input type="checkbox" name="edd-unlimited-downloads" id="edd_unlimited_downloads" value="1"<?php checked( true, $unlimited, true ); ?>/>
