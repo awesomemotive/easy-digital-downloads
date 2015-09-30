@@ -2,16 +2,16 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.4.6\n"
+"Project-Id-Version: Easy Digital Downloads 2.4.7\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2015-09-28 18:26:45+00:00\n"
+"POT-Creation-Date: 2015-09-30 06:44:28+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "PO-Revision-Date: 2015-MO-DA HO:MI+ZONE\n"
 "Last-Translator: WP-Translations (http://wp-translations.org/)\n"
 "Language-Team: WP-Translations <wpt@wp-translations.org>\n"
-"X-Generator: grunt-wp-i18n 0.5.0\n"
+"X-Generator: grunt-wp-i18n 0.5.3\n"
 "X-Poedit-KeywordsList: "
 "__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
 "attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
@@ -90,8 +90,8 @@ msgstr ""
 #: includes/error-tracking.php:36 includes/gateways/functions.php:221
 #: includes/gateways/manual.php:33 includes/gateways/paypal-standard.php:34
 #: includes/process-download.php:231 includes/process-download.php:698
-#: includes/query-filters.php:48 includes/user-functions.php:751
-#: includes/user-functions.php:776 includes/user-functions.php:829
+#: includes/query-filters.php:48 includes/user-functions.php:770
+#: includes/user-functions.php:795 includes/user-functions.php:848
 msgid "Error"
 msgstr ""
 
@@ -4710,8 +4710,8 @@ msgstr ""
 msgid "Customer User ID: %s"
 msgstr ""
 
-#: includes/class-edd-cli.php:318 includes/user-functions.php:471
-#: includes/user-functions.php:476
+#: includes/class-edd-cli.php:318 includes/user-functions.php:490
+#: includes/user-functions.php:495
 msgid "Username: %s"
 msgstr ""
 
@@ -6431,35 +6431,35 @@ msgstr ""
 msgid "Plain Text"
 msgstr ""
 
-#: includes/user-functions.php:470
+#: includes/user-functions.php:489
 msgid "New user registration on your site %s:"
 msgstr ""
 
-#: includes/user-functions.php:472
+#: includes/user-functions.php:491
 msgid "E-mail: %s"
 msgstr ""
 
-#: includes/user-functions.php:474
+#: includes/user-functions.php:493
 msgid "[%s] New User Registration"
 msgstr ""
 
-#: includes/user-functions.php:477
+#: includes/user-functions.php:496
 msgid "Password: %s"
 msgstr ""
 
-#: includes/user-functions.php:477
+#: includes/user-functions.php:496
 msgid "[Password entered at checkout]"
 msgstr ""
 
-#: includes/user-functions.php:480
+#: includes/user-functions.php:499
 msgid "[%s] Your username and password"
 msgstr ""
 
-#: includes/user-functions.php:631 includes/user-functions.php:632
+#: includes/user-functions.php:650 includes/user-functions.php:651
 msgid "Verify your account"
 msgstr ""
 
-#: includes/user-functions.php:633
+#: includes/user-functions.php:652
 msgid ""
 "Hello %s,\n"
 "\n"
@@ -6467,29 +6467,29 @@ msgid ""
 "purchase history. <a href='%s'>Click here</a> to verify your account."
 msgstr ""
 
-#: includes/user-functions.php:751
+#: includes/user-functions.php:770
 msgid ""
 "Sorry but your account verification link has expired. <a href=\"#\">Click "
 "here</a> to request a new verification URL."
 msgstr ""
 
-#: includes/user-functions.php:776
+#: includes/user-functions.php:795
 msgid "Nonce verification failed."
 msgstr ""
 
-#: includes/user-functions.php:780
+#: includes/user-functions.php:799
 msgid "You must be logged in to verify your account."
 msgstr ""
 
-#: includes/user-functions.php:780 includes/user-functions.php:784
+#: includes/user-functions.php:799 includes/user-functions.php:803
 msgid "Notice"
 msgstr ""
 
-#: includes/user-functions.php:784
+#: includes/user-functions.php:803
 msgid "Your account has already been verified."
 msgstr ""
 
-#: includes/user-functions.php:829
+#: includes/user-functions.php:848
 msgid "Invalid verification token provided."
 msgstr ""
 
