@@ -58,7 +58,7 @@
     -moz-animation: edd-icon-spin 2s infinite linear;
     -o-animation: edd-icon-spin 2s infinite linear;
     -webkit-animation: edd-icon-spin 2s infinite linear;
-    animation: edd-icon- spin 2s infinite linear;
+    animation: edd-icon-spin 2s infinite linear;
 }
 @-moz-keyframes edd-icon-spin {
     0% {
