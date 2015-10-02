@@ -97,6 +97,18 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Gets the name of the default primary column.
+	 *
+	 * @since 2.5
+	 * @access protected
+	 *
+	 * @return string Name of the default primary column.
+	 */
+	protected function get_default_primary_column_name() {
+		return 'ID';
+	}
+
+	/**
 	 * This function renders most of the columns in the list table.
 	 *
 	 * @access public
