@@ -26,11 +26,11 @@ function edd_media_button() {
 	if ( in_array( $pagenow, array( 'post.php', 'page.php', 'post-new.php', 'post-edit.php' ) ) && $typenow != 'download' ) {
 		/* check current WP version */
 		if ( version_compare( $wp_version, '3.5', '<' ) ) {
-			$img = '<img src="' . EDD_PLUGIN_URL . 'assets/images/edd-media.png" alt="' . sprintf( __( 'Insert %s', 'edd' ), edd_get_label_singular() ) . '"/>';
-			$output = '<a href="#TB_inline?width=640&inlineId=choose-download" class="thickbox" title="' . __( 'Insert Download', 'edd' ) . '">' . $img . '</a>';
+			$img = '<img src="' . EDD_PLUGIN_URL . 'assets/images/edd-media.png" alt="' . sprintf( __( 'Insert %s', 'easy-digital-downloads' ), edd_get_label_singular() ) . '"/>';
+			$output = '<a href="#TB_inline?width=640&inlineId=choose-download" class="thickbox" title="' . __( 'Insert Download', 'easy-digital-downloads' ) . '">' . $img . '</a>';
 		} else {
 			$img = '<span class="wp-media-buttons-icon" id="edd-media-button"></span>';
-			$output = '<a href="#TB_inline?width=640&inlineId=choose-download" class="thickbox button edd-thickbox" title="' . sprintf( __( 'Insert %s', 'edd' ), strtolower ( edd_get_label_singular() ) ) . '" style="padding-left: .4em;">' . $img . sprintf( __( 'Insert %s', 'edd' ), strtolower( edd_get_label_singular() ) ) . '</a>';
+			$output = '<a href="#TB_inline?width=640&inlineId=choose-download" class="thickbox button edd-thickbox" title="' . sprintf( __( 'Insert %s', 'easy-digital-downloads' ), strtolower ( edd_get_label_singular() ) ) . '" style="padding-left: .4em;">' . $img . sprintf( __( 'Insert %s', 'easy-digital-downloads' ), strtolower( edd_get_label_singular() ) ) . '</a>';
 		}
 	}
 	echo $output;
@@ -89,22 +89,22 @@ function edd_admin_footer_for_thickbox() {
 
 		<div id="choose-download" style="display: none;">
 			<div class="wrap" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
-				<p><?php echo sprintf( __( 'Use the form below to insert the short code for purchasing a %s', 'edd' ), edd_get_label_singular() ); ?></p>
+				<p><?php echo sprintf( __( 'Use the form below to insert the short code for purchasing a %s', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></p>
 				<div>
 					<?php echo EDD()->html->product_dropdown( array( 'chosen' => true )); ?>
 				</div>
 				<?php if( edd_shop_supports_buy_now() ) : ?>
 					<div>
 						<select id="select-edd-direct" style="clear: both; display: block; margin-bottom: 1em; margin-top: 1em;">
-							<option value="0"><?php _e( 'Choose the button behavior', 'edd' ); ?></option>
-							<option value="1"><?php _e( 'Add to Cart', 'edd' ); ?></option>
-							<option value="2"><?php _e( 'Direct Purchase Link', 'edd' ); ?></option>
+							<option value="0"><?php _e( 'Choose the button behavior', 'easy-digital-downloads' ); ?></option>
+							<option value="1"><?php _e( 'Add to Cart', 'easy-digital-downloads' ); ?></option>
+							<option value="2"><?php _e( 'Direct Purchase Link', 'easy-digital-downloads' ); ?></option>
 						</select>
 					</div>
 				<?php endif; ?>
 				<div>
 					<select id="select-edd-style" style="clear: both; display: block; margin-bottom: 1em; margin-top: 1em;">
-						<option value=""><?php _e( 'Choose a style', 'edd' ); ?></option>
+						<option value=""><?php _e( 'Choose a style', 'easy-digital-downloads' ); ?></option>
 						<?php
 							$styles = array( 'button', 'text link' );
 							foreach ( $styles as $style ) {
@@ -118,7 +118,7 @@ function edd_admin_footer_for_thickbox() {
 				if( $colors ) { ?>
 				<div id="edd-color-choice" style="display: none;">
 					<select id="select-edd-color" style="clear: both; display: block; margin-bottom: 1em;">
-						<option value=""><?php _e('Choose a button color', 'edd'); ?></option>
+						<option value=""><?php _e('Choose a button color','easy-digital-downloads' ); ?></option>
 						<?php
 							foreach ( $colors as $key => $color ) {
 								echo '<option value="' . str_replace( ' ', '_', $key ) . '">' . $color['label'] . '</option>';
@@ -128,11 +128,11 @@ function edd_admin_footer_for_thickbox() {
 				</div>
 				<?php } ?>
 				<div>
-					<input type="text" class="regular-text" id="edd-text" value="" placeholder="<?php _e( 'Link text . . .', 'edd' ); ?>"/>
+					<input type="text" class="regular-text" id="edd-text" value="" placeholder="<?php _e( 'Link text . . .', 'easy-digital-downloads' ); ?>"/>
 				</div>
 				<p class="submit">
-					<input type="button" id="edd-insert-download" class="button-primary" value="<?php echo sprintf( __( 'Insert %s', 'edd' ), edd_get_label_singular() ); ?>" onclick="insertDownload();" />
-					<a id="edd-cancel-download-insert" class="button-secondary" onclick="tb_remove();" title="<?php _e( 'Cancel', 'edd' ); ?>"><?php _e( 'Cancel', 'edd' ); ?></a>
+					<input type="button" id="edd-insert-download" class="button-primary" value="<?php echo sprintf( __( 'Insert %s', 'easy-digital-downloads' ), edd_get_label_singular() ); ?>" onclick="insertDownload();" />
+					<a id="edd-cancel-download-insert" class="button-secondary" onclick="tb_remove();" title="<?php _e( 'Cancel', 'easy-digital-downloads' ); ?>"><?php _e( 'Cancel', 'easy-digital-downloads' ); ?></a>
 				</p>
 			</div>
 		</div>

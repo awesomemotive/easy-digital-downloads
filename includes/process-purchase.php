@@ -28,7 +28,7 @@ function edd_process_purchase_form() {
 	// Make sure the cart isn't empty
 	if ( ! edd_get_cart_contents() && ! edd_cart_has_fees() ) {
 		$valid_data = false;
-		edd_set_error( 'empty_cart', __( 'Your cart is empty', 'edd' ) );
+		edd_set_error( 'empty_cart', __( 'Your cart is empty', 'easy-digital-downloads' ) );
 	} else {
 		// Validate the form $_POST data
 		$valid_data = edd_purchase_form_validate_fields();
@@ -237,7 +237,7 @@ function edd_purchase_form_validate_gateway() {
 
 		} elseif ( ! edd_is_gateway_active( $gateway ) ) {
 
-			edd_set_error( 'invalid_gateway', __( 'The selected payment gateway is not enabled', 'edd' ) );
+			edd_set_error( 'invalid_gateway', __( 'The selected payment gateway is not enabled', 'easy-digital-downloads' ) );
 
 		}
 
@@ -270,7 +270,7 @@ function edd_purchase_form_validate_discounts() {
 	$error = false;
 
 	// Check for valid discount(s) is present
-	if ( ! empty( $_POST['edd-discount'] ) && __( 'Enter discount', 'edd' ) != $_POST['edd-discount'] ) {
+	if ( ! empty( $_POST['edd-discount'] ) && __( 'Enter discount', 'easy-digital-downloads' ) != $_POST['edd-discount'] ) {
 		// Check for a posted discount
 		$posted_discount = isset( $_POST['edd-discount'] ) ? trim( $_POST['edd-discount'] ) : false;
 
@@ -297,7 +297,7 @@ function edd_purchase_form_validate_discounts() {
 	}
 
 	if ( $error ) {
-		edd_set_error( 'invalid_discount', __( 'One or more of the discounts you entered is invalid', 'edd' ) );
+		edd_set_error( 'invalid_discount', __( 'One or more of the discounts you entered is invalid', 'easy-digital-downloads' ) );
 	}
 
 	return implode( ', ', $discounts );
@@ -314,7 +314,7 @@ function edd_purchase_form_validate_agree_to_terms() {
 	// Validate agree to terms
 	if ( ! isset( $_POST['edd_agree_to_terms'] ) || $_POST['edd_agree_to_terms'] != 1 ) {
 		// User did not agree
-		edd_set_error( 'agree_to_terms', apply_filters( 'edd_agree_to_terms_text', __( 'You must agree to the terms of use', 'edd' ) ) );
+		edd_set_error( 'agree_to_terms', apply_filters( 'edd_agree_to_terms_text', __( 'You must agree to the terms of use', 'easy-digital-downloads' ) ) );
 	}
 }
 
@@ -329,11 +329,11 @@ function edd_purchase_form_required_fields() {
 	$required_fields = array(
 		'edd_email' => array(
 			'error_id' => 'invalid_email',
-			'error_message' => __( 'Please enter a valid email address', 'edd' )
+			'error_message' => __( 'Please enter a valid email address', 'easy-digital-downloads' )
 		),
 		'edd_first' => array(
 			'error_id' => 'invalid_first_name',
-			'error_message' => __( 'Please enter your first name', 'edd' )
+			'error_message' => __( 'Please enter your first name', 'easy-digital-downloads' )
 		)
 	);
 
@@ -343,19 +343,19 @@ function edd_purchase_form_required_fields() {
 	if ( $require_address ) {
 		$required_fields['card_zip'] = array(
 			'error_id' => 'invalid_zip_code',
-			'error_message' => __( 'Please enter your zip / postal code', 'edd' )
+			'error_message' => __( 'Please enter your zip / postal code', 'easy-digital-downloads' )
 		);
 		$required_fields['card_city'] = array(
 			'error_id' => 'invalid_city',
-			'error_message' => __( 'Please enter your billing city', 'edd' )
+			'error_message' => __( 'Please enter your billing city', 'easy-digital-downloads' )
 		);
 		$required_fields['billing_country'] = array(
 			'error_id' => 'invalid_country',
-			'error_message' => __( 'Please select your billing country', 'edd' )
+			'error_message' => __( 'Please select your billing country', 'easy-digital-downloads' )
 		);
 		$required_fields['card_state'] = array(
 			'error_id' => 'invalid_state',
-			'error_message' => __( 'Please enter billing state / province', 'edd' )
+			'error_message' => __( 'Please enter billing state / province', 'easy-digital-downloads' )
 		);
 	}
 
@@ -401,12 +401,12 @@ function edd_purchase_form_validate_logged_in_user() {
 			);
 
 			if ( ! is_email( $valid_user_data['user_email'] ) ) {
-				edd_set_error( 'email_invalid', __( 'Invalid email', 'edd' ) );
+				edd_set_error( 'email_invalid', __( 'Invalid email', 'easy-digital-downloads' ) );
 			}
 
 		} else {
 			// Set invalid user error
-			edd_set_error( 'invalid_user', __( 'The user information is invalid', 'edd' ) );
+			edd_set_error( 'invalid_user', __( 'The user information is invalid', 'easy-digital-downloads' ) );
 		}
 	}
 
@@ -454,21 +454,21 @@ function edd_purchase_form_validate_new_user() {
 		// We have an user name, check if it already exists
 		if ( username_exists( $user_login ) ) {
 			// Username already registered
-			edd_set_error( 'username_unavailable', __( 'Username already taken', 'edd' ) );
+			edd_set_error( 'username_unavailable', __( 'Username already taken', 'easy-digital-downloads' ) );
 			// Check if it's valid
 		} else if ( ! edd_validate_username( $user_login ) ) {
 				// Invalid username
 				if ( is_multisite() )
-					edd_set_error( 'username_invalid', __( 'Invalid username. Only lowercase letters (a-z) and numbers are allowed', 'edd' ) );
+					edd_set_error( 'username_invalid', __( 'Invalid username. Only lowercase letters (a-z) and numbers are allowed', 'easy-digital-downloads' ) );
 				else
-					edd_set_error( 'username_invalid', __( 'Invalid username', 'edd' ) );
+					edd_set_error( 'username_invalid', __( 'Invalid username', 'easy-digital-downloads' ) );
 			} else {
 			// All the checks have run and it's good to go
 			$valid_user_data['user_login'] = $user_login;
 		}
 	} else {
 		if ( edd_no_guest_checkout() ) {
-			edd_set_error( 'registration_required', __( 'You must register or login to complete your purchase', 'edd' ) );
+			edd_set_error( 'registration_required', __( 'You must register or login to complete your purchase', 'easy-digital-downloads' ) );
 		}
 	}
 
@@ -476,17 +476,17 @@ function edd_purchase_form_validate_new_user() {
 	if ( $user_email && strlen( $user_email ) > 0 ) {
 		// Validate email
 		if ( ! is_email( $user_email ) ) {
-			edd_set_error( 'email_invalid', __( 'Invalid email', 'edd' ) );
+			edd_set_error( 'email_invalid', __( 'Invalid email', 'easy-digital-downloads' ) );
 			// Check if email exists
 		} else if ( email_exists( $user_email ) && $registering_new_user ) {
-				edd_set_error( 'email_used', __( 'Email already used', 'edd' ) );
+				edd_set_error( 'email_used', __( 'Email already used', 'easy-digital-downloads' ) );
 			} else {
 			// All the checks have run and it's good to go
 			$valid_user_data['user_email'] = $user_email;
 		}
 	} else {
 		// No email
-		edd_set_error( 'email_empty', __( 'Enter an email', 'edd' ) );
+		edd_set_error( 'email_empty', __( 'Enter an email', 'easy-digital-downloads' ) );
 	}
 
 	// Check password
@@ -494,7 +494,7 @@ function edd_purchase_form_validate_new_user() {
 		// Verify confirmation matches
 		if ( $user_pass != $pass_confirm ) {
 			// Passwords do not match
-			edd_set_error( 'password_mismatch', __( 'Passwords don\'t match', 'edd' ) );
+			edd_set_error( 'password_mismatch', __( 'Passwords don\'t match', 'easy-digital-downloads' ) );
 		} else {
 			// All is good to go
 			$valid_user_data['user_pass'] = $user_pass;
@@ -503,10 +503,10 @@ function edd_purchase_form_validate_new_user() {
 		// Password or confirmation missing
 		if ( ! $user_pass && $registering_new_user ) {
 			// The password is invalid
-			edd_set_error( 'password_empty', __( 'Enter a password', 'edd' ) );
+			edd_set_error( 'password_empty', __( 'Enter a password', 'easy-digital-downloads' ) );
 		} else if ( ! $pass_confirm && $registering_new_user ) {
 			// Confirmation password is invalid
-			edd_set_error( 'confirmation_empty', __( 'Enter the password confirmation', 'edd' ) );
+			edd_set_error( 'confirmation_empty', __( 'Enter the password confirmation', 'easy-digital-downloads' ) );
 		}
 	}
 
@@ -530,7 +530,7 @@ function edd_purchase_form_validate_user_login() {
 
 	// Username
 	if ( ! isset( $_POST['edd_user_login'] ) || $_POST['edd_user_login'] == '' ) {
-		edd_set_error( 'must_log_in', __( 'You must login or register to complete your purchase', 'edd' ) );
+		edd_set_error( 'must_log_in', __( 'You must login or register to complete your purchase', 'easy-digital-downloads' ) );
 		return $valid_user_data;
 	}
 
@@ -550,8 +550,8 @@ function edd_purchase_form_validate_user_login() {
 				edd_set_error(
 					'password_incorrect',
 					sprintf(
-						__( 'The password you entered is incorrect. %sReset Password%s', 'edd' ),
-						'<a href="' . wp_lostpassword_url( edd_get_checkout_uri() ) . '" title="' . __( 'Lost Password', 'edd' ) . '">',
+						__( 'The password you entered is incorrect. %sReset Password%s', 'easy-digital-downloads' ),
+						'<a href="' . wp_lostpassword_url( edd_get_checkout_uri() ) . '" title="' . __( 'Lost Password', 'easy-digital-downloads' ) . '">',
 						'</a>'
 					)
 				);
@@ -569,11 +569,11 @@ function edd_purchase_form_validate_user_login() {
 			}
 		} else {
 			// Empty password
-			edd_set_error( 'password_empty', __( 'Enter a password', 'edd' ) );
+			edd_set_error( 'password_empty', __( 'Enter a password', 'easy-digital-downloads' ) );
 		}
 	} else {
 		// no username
-		edd_set_error( 'username_incorrect', __( 'The username you entered does not exist', 'edd' ) );
+		edd_set_error( 'username_incorrect', __( 'The username you entered does not exist', 'easy-digital-downloads' ) );
 	}
 
 	return $valid_user_data;
@@ -595,7 +595,7 @@ function edd_purchase_form_validate_guest_user() {
 
 	// Show error message if user must be logged in
 	if ( edd_logged_in_only() ) {
-		edd_set_error( 'logged_in_only', __( 'You must be logged into an account to purchase', 'edd' ) );
+		edd_set_error( 'logged_in_only', __( 'You must be logged into an account to purchase', 'easy-digital-downloads' ) );
 	}
 
 	// Get the guest email
@@ -606,14 +606,14 @@ function edd_purchase_form_validate_guest_user() {
 		// Validate email
 		if ( ! is_email( $guest_email ) ) {
 			// Invalid email
-			edd_set_error( 'email_invalid', __( 'Invalid email', 'edd' ) );
+			edd_set_error( 'email_invalid', __( 'Invalid email', 'easy-digital-downloads' ) );
 		} else {
 			// All is good to go
 			$valid_user_data['user_email'] = $guest_email;
 		}
 	} else {
 		// No email
-		edd_set_error( 'email_empty', __( 'Enter an email', 'edd' ) );
+		edd_set_error( 'email_empty', __( 'Enter an email', 'easy-digital-downloads' ) );
 	}
 
 	// Loop through required fields and show error messages
@@ -775,7 +775,7 @@ function edd_purchase_form_validate_cc() {
 	// Validate the card zip
 	if ( ! empty( $card_data['card_zip'] ) ) {
 		if ( ! edd_purchase_form_validate_cc_zip( $card_data['card_zip'], $card_data['card_country'] ) ) {
-			edd_set_error( 'invalid_cc_zip', __( 'The zip / postal code you entered for your billing address is invalid', 'edd' ) );
+			edd_set_error( 'invalid_cc_zip', __( 'The zip / postal code you entered for your billing address is invalid', 'easy-digital-downloads' ) );
 		}
 	}
 
@@ -1037,7 +1037,7 @@ function edd_check_purchase_email( $valid_data, $posted ) {
 
 	if( $is_banned ) {
 		// Set an error and give the customer a general error (don't alert them that they were banned)
-		edd_set_error( 'email_banned', __( 'An internal error has occurred, please try again or contact support.', 'edd' ) );
+		edd_set_error( 'email_banned', __( 'An internal error has occurred, please try again or contact support.', 'easy-digital-downloads' ) );
 	}
 }
 add_action( 'edd_checkout_error_checks', 'edd_check_purchase_email', 10, 2 );

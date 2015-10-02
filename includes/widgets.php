@@ -33,7 +33,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class edd_cart_widget extends WP_Widget {
 	/** Constructor */
 	function __construct() {
-		parent::__construct( 'edd_cart_widget', __( 'Downloads Cart', 'edd' ), array( 'description' => __( 'Display the downloads shopping cart', 'edd' ) ) );
+		parent::__construct( 'edd_cart_widget', __( 'Downloads Cart', 'easy-digital-downloads' ), array( 'description' => __( 'Display the downloads shopping cart', 'easy-digital-downloads' ) ) );
 	}
 
 	/** @see WP_Widget::widget */
@@ -83,14 +83,14 @@ class edd_cart_widget extends WP_Widget {
 
 		$instance = wp_parse_args( (array) $instance, $defaults ); ?>
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php _e( 'Title:', 'edd' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php _e( 'Title:', 'easy-digital-downloads' ); ?></label>
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo $instance['title']; ?>"/>
 		</p>
 
 		<!-- Hide on Checkout Page -->
 		<p>
 			<input <?php checked( $instance['hide_on_checkout'], true ); ?> id="<?php echo esc_attr( $this->get_field_id( 'hide_on_checkout' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'hide_on_checkout' ) ); ?>" type="checkbox" />
-			<label for="<?php echo esc_attr( $this->get_field_id( 'hide_on_checkout' ) ); ?>"><?php _e( 'Hide on Checkout Page', 'edd' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'hide_on_checkout' ) ); ?>"><?php _e( 'Hide on Checkout Page', 'easy-digital-downloads' ); ?></label>
 		</p>
 
 		<?php
@@ -108,7 +108,7 @@ class edd_cart_widget extends WP_Widget {
 class edd_categories_tags_widget extends WP_Widget {
 	/** Constructor */
 	function __construct() {
-		parent::__construct( 'edd_categories_tags_widget', __( 'Downloads Categories / Tags', 'edd' ), array( 'description' => __( 'Display the downloads categories or tags', 'edd' ) ) );
+		parent::__construct( 'edd_categories_tags_widget', __( 'Downloads Categories / Tags', 'easy-digital-downloads' ), array( 'description' => __( 'Display the downloads categories or tags', 'easy-digital-downloads' ) ) );
 	}
 
 	/** @see WP_Widget::widget */
@@ -162,11 +162,11 @@ class edd_categories_tags_widget extends WP_Widget {
 
 		$instance = wp_parse_args( (array) $instance, $defaults ); ?>
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php _e( 'Title:', 'edd' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php _e( 'Title:', 'easy-digital-downloads' ); ?></label>
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo $instance['title']; ?>"/>
 		</p>
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'taxonomy' ) ); ?>"><?php _e( 'Taxonomy:', 'edd' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'taxonomy' ) ); ?>"><?php _e( 'Taxonomy:', 'easy-digital-downloads' ); ?></label>
 			<select name="<?php echo esc_attr( $this->get_field_name( 'taxonomy' ) ); ?>" id="<?php echo esc_attr( $this->get_field_id( 'taxonomy' ) ); ?>">
 				<?php
 				$category_labels = edd_get_taxonomy_labels( 'download_category' );
@@ -177,11 +177,11 @@ class edd_categories_tags_widget extends WP_Widget {
 			</select>
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'count' ); ?>"><?php _e( 'Show Count:', 'edd' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'count' ); ?>"><?php _e( 'Show Count:', 'easy-digital-downloads' ); ?></label>
 			<input <?php checked( $instance['count'], 'on' ); ?> id="<?php echo $this->get_field_id( 'count' ); ?>" name="<?php echo $this->get_field_name( 'count' ); ?>" type="checkbox" />
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'hide_empty' ); ?>"><?php _e( 'Hide Empty Categories:', 'edd' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'hide_empty' ); ?>"><?php _e( 'Hide Empty Categories:', 'easy-digital-downloads' ); ?></label>
 			<input <?php checked( $instance['hide_empty'], 'on' ); ?> id="<?php echo $this->get_field_id( 'hide_empty' ); ?>" name="<?php echo $this->get_field_name( 'hide_empty' ); ?>" type="checkbox" />
 		</p>
 	<?php
@@ -203,9 +203,9 @@ class EDD_Product_Details_Widget extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 			'edd_product_details',
-			sprintf( __( '%s Details', 'edd' ), edd_get_label_singular() ),
+			sprintf( __( '%s Details', 'easy-digital-downloads' ), edd_get_label_singular() ),
 			array(
-				'description' => sprintf( __( 'Display the details of a specific %s', 'edd' ), edd_get_label_singular() ),
+				'description' => sprintf( __( 'Display the details of a specific %s', 'easy-digital-downloads' ), edd_get_label_singular() ),
 			)
 		);
 	}
@@ -291,7 +291,7 @@ class EDD_Product_Details_Widget extends WP_Widget {
 	public function form( $instance ) {
 		// Set up some default widget settings.
 		$defaults = array(
-			'title' 			=> sprintf( __( '%s Details', 'edd' ), edd_get_label_singular() ),
+			'title' 			=> sprintf( __( '%s Details', 'easy-digital-downloads' ), edd_get_label_singular() ),
 			'download_id' 		=> 'current',
 			'download_title' 	=> 'on',
 			'purchase_button' 	=> 'on',
@@ -303,7 +303,7 @@ class EDD_Product_Details_Widget extends WP_Widget {
 
 		<!-- Title -->
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php _e( 'Title:', 'edd' ) ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php _e( 'Title:', 'easy-digital-downloads' ) ?></label>
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo $instance['title']; ?>" />
 		</p>
 
@@ -317,9 +317,9 @@ class EDD_Product_Details_Widget extends WP_Widget {
 			$downloads = get_posts( $args );
 		?>
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'download_id' ) ); ?>"><?php printf( __( '%s', 'edd' ), edd_get_label_singular() ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'download_id' ) ); ?>"><?php printf( __( '%s', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></label>
 			<select class="widefat" name="<?php echo esc_attr( $this->get_field_name( 'download_id' ) ); ?>" id="<?php echo esc_attr( $this->get_field_id( 'download_id' ) ); ?>">
-				<option value="current"><?php _e( 'Use current', 'edd' ); ?></option>
+				<option value="current"><?php _e( 'Use current', 'easy-digital-downloads' ); ?></option>
 			<?php foreach ( $downloads as $download ) { ?>
 				<option <?php selected( absint( $instance['download_id'] ), $download->ID ); ?> value="<?php echo esc_attr( $download->ID ); ?>"><?php echo $download->post_title; ?></option>
 			<?php } ?>
@@ -329,27 +329,27 @@ class EDD_Product_Details_Widget extends WP_Widget {
 		<!-- Download title -->
 		<p>
 			<input <?php checked( $instance['download_title'], 'on' ); ?> id="<?php echo esc_attr( $this->get_field_id( 'download_title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'download_title' ) ); ?>" type="checkbox" />
-			<label for="<?php echo esc_attr( $this->get_field_id( 'download_title' ) ); ?>"><?php _e( 'Show Title', 'edd' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'download_title' ) ); ?>"><?php _e( 'Show Title', 'easy-digital-downloads' ); ?></label>
 		</p>
 
 		<!-- Show purchase button -->
 		<p>
 			<input <?php checked( $instance['purchase_button'], 'on' ); ?> id="<?php echo esc_attr( $this->get_field_id( 'purchase_button' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'purchase_button' ) ); ?>" type="checkbox" />
-			<label for="<?php echo esc_attr( $this->get_field_id( 'purchase_button' ) ); ?>"><?php _e( 'Show Purchase Button', 'edd' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'purchase_button' ) ); ?>"><?php _e( 'Show Purchase Button', 'easy-digital-downloads' ); ?></label>
 		</p>
 
 		<!-- Show download categories -->
 		<p>
 			<?php $category_labels = edd_get_taxonomy_labels( 'download_category' ); ?>
 			<input <?php checked( $instance['categories'], 'on' ); ?> id="<?php echo esc_attr( $this->get_field_id( 'categories' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'categories' ) ); ?>" type="checkbox" />
-			<label for="<?php echo esc_attr( $this->get_field_id( 'categories' ) ); ?>"><?php printf( __( 'Show %s', 'edd' ), $category_labels['name'] ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'categories' ) ); ?>"><?php printf( __( 'Show %s', 'easy-digital-downloads' ), $category_labels['name'] ); ?></label>
 		</p>
 
 		<!-- Show download tags -->
 		<p>
 			<?php $tag_labels = edd_get_taxonomy_labels( 'download_tag' ); ?>
 			<input <?php checked( $instance['tags'], 'on' ); ?> id="<?php echo esc_attr( $this->get_field_id( 'tags' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'tags' ) ); ?>" type="checkbox" />
-			<label for="<?php echo esc_attr( $this->get_field_id( 'tags' ) ); ?>"><?php printf( __( 'Show %s', 'edd' ), $tag_labels['name'] ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'tags' ) ); ?>"><?php printf( __( 'Show %s', 'easy-digital-downloads' ), $tag_labels['name'] ); ?></label>
 		</p>
 
 		<?php do_action( 'edd_product_details_widget_form' , $instance ); ?>
