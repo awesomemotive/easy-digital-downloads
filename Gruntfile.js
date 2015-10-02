@@ -9,7 +9,7 @@ grunt.initConfig({
 
 		checktextdomain: {
 			options:{
-				text_domain: 'edd',
+				text_domain: 'easy-digital-downloads',
 				create_report_file: true,
 				keywords: [
 					'__:1,2d',
@@ -48,7 +48,7 @@ grunt.initConfig({
 					domainPath: '/languages/',    // Where to save the POT file.
 					exclude: ['build/.*'],
 					mainFile: 'easy-digital-downloads.php',    // Main project file.
-					potFilename: 'edd.pot',    // Name of the POT file.
+					potFilename: 'easy-digital-downloads.pot',    // Name of the POT file.
 					potHeaders: {
 						poedit: true,                 // Includes common Poedit headers.
 						'x-poedit-keywordslist': true // Include a list of all possible gettext functions.

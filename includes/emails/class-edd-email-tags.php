@@ -267,92 +267,92 @@ function edd_setup_email_tags() {
 	$email_tags = array(
 		array(
 			'tag'         => 'download_list',
-			'description' => __( 'A list of download links for each download purchased', 'edd' ),
+			'description' => __( 'A list of download links for each download purchased', 'easy-digital-downloads' ),
 			'function'    => 'text/html' == EDD()->emails->get_content_type() ? 'edd_email_tag_download_list' : 'edd_email_tag_download_list_plain'
 		),
 		array(
 			'tag'         => 'file_urls',
-			'description' => __( 'A plain-text list of download URLs for each download purchased', 'edd' ),
+			'description' => __( 'A plain-text list of download URLs for each download purchased', 'easy-digital-downloads' ),
 			'function'    => 'edd_email_tag_file_urls'
 		),
 		array(
 			'tag'         => 'name',
-			'description' => __( "The buyer's first name", 'edd' ),
+			'description' => __( "The buyer's first name", 'easy-digital-downloads' ),
 			'function'    => 'edd_email_tag_first_name'
 		),
 		array(
 			'tag'         => 'fullname',
-			'description' => __( "The buyer's full name, first and last", 'edd' ),
+			'description' => __( "The buyer's full name, first and last", 'easy-digital-downloads' ),
 			'function'    => 'edd_email_tag_fullname'
 		),
 		array(
 			'tag'         => 'username',
-			'description' => __( "The buyer's user name on the site, if they registered an account", 'edd' ),
+			'description' => __( "The buyer's user name on the site, if they registered an account", 'easy-digital-downloads' ),
 			'function'    => 'edd_email_tag_username'
 		),
 		array(
 			'tag'         => 'user_email',
-			'description' => __( "The buyer's email address", 'edd' ),
+			'description' => __( "The buyer's email address", 'easy-digital-downloads' ),
 			'function'    => 'edd_email_tag_user_email'
 		),
 		array(
 			'tag'         => 'billing_address',
-			'description' => __( 'The buyer\'s billing address', 'edd' ),
+			'description' => __( 'The buyer\'s billing address', 'easy-digital-downloads' ),
 			'function'    => 'edd_email_tag_billing_address'
 		),
 		array(
 			'tag'         => 'date',
-			'description' => __( 'The date of the purchase', 'edd' ),
+			'description' => __( 'The date of the purchase', 'easy-digital-downloads' ),
 			'function'    => 'edd_email_tag_date'
 		),
 		array(
 			'tag'         => 'subtotal',
-			'description' => __( 'The price of the purchase before taxes', 'edd' ),
+			'description' => __( 'The price of the purchase before taxes', 'easy-digital-downloads' ),
 			'function'    => 'edd_email_tag_subtotal'
 		),
 		array(
 			'tag'         => 'tax',
-			'description' => __( 'The taxed amount of the purchase', 'edd' ),
+			'description' => __( 'The taxed amount of the purchase', 'easy-digital-downloads' ),
 			'function'    => 'edd_email_tag_tax'
 		),
 		array(
 			'tag'         => 'price',
-			'description' => __( 'The total price of the purchase', 'edd' ),
+			'description' => __( 'The total price of the purchase', 'easy-digital-downloads' ),
 			'function'    => 'edd_email_tag_price'
 		),
 		array(
 			'tag'         => 'payment_id',
-			'description' => __( 'The unique ID number for this purchase', 'edd' ),
+			'description' => __( 'The unique ID number for this purchase', 'easy-digital-downloads' ),
 			'function'    => 'edd_email_tag_payment_id'
 		),
 		array(
 			'tag'         => 'receipt_id',
-			'description' => __( 'The unique ID number for this purchase receipt', 'edd' ),
+			'description' => __( 'The unique ID number for this purchase receipt', 'easy-digital-downloads' ),
 			'function'    => 'edd_email_tag_receipt_id'
 		),
 		array(
 			'tag'         => 'payment_method',
-			'description' => __( 'The method of payment used for this purchase', 'edd' ),
+			'description' => __( 'The method of payment used for this purchase', 'easy-digital-downloads' ),
 			'function'    => 'edd_email_tag_payment_method'
 		),
 		array(
 			'tag'         => 'sitename',
-			'description' => __( 'Your site name', 'edd' ),
+			'description' => __( 'Your site name', 'easy-digital-downloads' ),
 			'function'    => 'edd_email_tag_sitename'
 		),
 		array(
 			'tag'         => 'receipt_link',
-			'description' => __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the browser correctly.', 'edd' ),
+			'description' => __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the browser correctly.', 'easy-digital-downloads' ),
 			'function'    => 'edd_email_tag_receipt_link'
 		),
 		array(
 			'tag'         => 'discount_codes',
-			'description' => __( 'Adds a list of any discount codes applied to this purchase', 'edd' ),
+			'description' => __( 'Adds a list of any discount codes applied to this purchase', 'easy-digital-downloads' ),
 			'function'    => 'edd_email_tag_discount_codes'
 		),
 		array(
 			'tag'         => 'ip_address',
-			'description' => __( 'The buyer\'s IP Address', 'edd' ),
+			'description' => __( 'The buyer\'s IP Address', 'easy-digital-downloads' ),
 			'function'    => 'edd_email_tag_ip_address'
 		)
 	);
@@ -403,11 +403,11 @@ function edd_email_tag_download_list( $payment_id ) {
 				$title = '<strong>' . get_the_title( $item['id'] ) . '</strong>';
 
 				if ( ! empty( $quantity ) && $quantity > 1 ) {
-					$title .= "&nbsp;&ndash;&nbsp;" . __( 'Quantity', 'edd' ) . ': ' . $quantity;
+					$title .= "&nbsp;&ndash;&nbsp;" . __( 'Quantity', 'easy-digital-downloads' ) . ': ' . $quantity;
 				}
 
 				if ( ! empty( $sku ) ) {
-					$title .= "&nbsp;&ndash;&nbsp;" . __( 'SKU', 'edd' ) . ': ' . $sku;
+					$title .= "&nbsp;&ndash;&nbsp;" . __( 'SKU', 'easy-digital-downloads' ) . ': ' . $sku;
 				}
 
 				if ( $price_id !== null ) {
@@ -513,11 +513,11 @@ function edd_email_tag_download_list_plain( $payment_id ) {
 				$title = get_the_title( $item['id'] );
 
 				if ( ! empty( $quantity ) && $quantity > 1 ) {
-					$title .= __( 'Quantity', 'edd' ) . ': ' . $quantity;
+					$title .= __( 'Quantity', 'easy-digital-downloads' ) . ': ' . $quantity;
 				}
 
 				if ( ! empty( $sku ) ) {
-					$title .= __( 'SKU', 'edd' ) . ': ' . $sku;
+					$title .= __( 'SKU', 'easy-digital-downloads' ) . ': ' . $sku;
 				}
 
 				if ( $price_id !== null ) {
@@ -818,7 +818,7 @@ function edd_email_tag_sitename( $payment_id ) {
  * @return string receipt_link
  */
 function edd_email_tag_receipt_link( $payment_id ) {
-	return sprintf( __( '%1$sView it in your browser.%2$s', 'edd' ), '<a href="' . esc_url( add_query_arg( array( 'payment_key' => edd_get_payment_key( $payment_id ), 'edd_action' => 'view_receipt' ), home_url() ) ) . '">', '</a>' );
+	return sprintf( __( '%1$sView it in your browser.%2$s', 'easy-digital-downloads' ), '<a href="' . esc_url( add_query_arg( array( 'payment_key' => edd_get_payment_key( $payment_id ), 'edd_action' => 'view_receipt' ), home_url() ) ) . '">', '</a>' );
 }
 
 /**

@@ -21,4 +21,10 @@ class Tests_Session extends WP_UnitTestCase {
 	public function test_get() {
 		$this->assertEquals( 'bar', EDD()->session->get( 'foo' ) );
 	}
+
+	public function test_use_cart_cookie() {
+		$this->assertTrue( EDD()->session->use_cart_cookie() );
+		define( 'EDD_USE_CART_COOKIE', false );
+		$this->assertFalse( EDD()->session->use_cart_cookie());
+	}
 }
