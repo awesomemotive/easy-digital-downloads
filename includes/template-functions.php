@@ -182,12 +182,7 @@ function edd_get_purchase_link( $args = array() ) {
 			<?php if ( ! edd_is_ajax_disabled() ) : ?>
 				<span class="edd-cart-ajax-alert">
 					<span class="edd-cart-added-alert" style="display: none;">
-						<?php printf(
-								'<i class="edd-icon-ok"></i> ' . __( 'Added to cart', 'easy-digital-downloads' ),
-								'<a href="' . esc_url( edd_get_checkout_uri() ) . '" title="' . __( 'Go to Checkout', 'easy-digital-downloads' ) . '">',
-								'</a>'
-							);
-						?>
+						<?php echo '<i class="edd-icon-ok"></i> ' . __( 'Added to cart', 'easy-digital-downloads' ); ?>
 					</span>
 				</span>
 			<?php endif; ?>
