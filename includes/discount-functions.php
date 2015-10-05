@@ -635,7 +635,7 @@ function edd_is_discount_maxed_out( $code_id = null ) {
 		// Should never be greater than, but just in case
 		if ( $uses >= $max_uses && ! empty( $max_uses ) ) {
 			// Discount is maxed out
-			edd_set_error( 'edd-discount-error', __( 'This discount has reached it\'s maximum usage.', 'easy-digital-downloads' ) );
+			edd_set_error( 'edd-discount-error', __( 'This discount has reached its maximum usage.', 'easy-digital-downloads' ) );
 			$return = true;
 		}
 	}
