@@ -43,7 +43,7 @@ function edd_payments_contextual_help() {
 		'content'	=>
 			'<p>' . __( "This screen provides access to all of your store's transactions.", 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( 'Payments can be searched by email address, user name, or filtered by status (completed, pending, etc.)', 'easy-digital-downloads' ) . '</p>' .
-			'<p>' . __( 'You also have the option to bulk delete payment should you wish.', 'easy-digital-downloads' ) . '</p>'
+			'<p>' . __( 'You also have the option to bulk delete payments should you wish.', 'easy-digital-downloads' ) . '</p>'
 	) );
 
 	$screen->add_help_tab( array(
@@ -53,7 +53,7 @@ function edd_payments_contextual_help() {
 			'<p>' . __( 'The payment history can be searched in several different ways:', 'easy-digital-downloads' ) . '</p>' .
 			'<ul>
 				<li>' . __( 'You can enter the customer\'s email address', 'easy-digital-downloads' ) . '</li>
-				<li>' . __( 'You can enter the customer\'s name or ID prefexed by \'user:\'', 'easy-digital-downloads' ) . '</li>
+				<li>' . __( 'You can enter the customer\'s name or ID prefixed by \'user:\'', 'easy-digital-downloads' ) . '</li>
 				<li>' . __( 'You can enter the 32-character purchase key', 'easy-digital-downloads' ) . '</li>
 				<li>' . __( 'You can enter the purchase ID', 'easy-digital-downloads' ) . '</li>
 				<li>' . __( 'You can enter a transaction ID prefixed by \'txn:\'', 'easy-digital-downloads' ) . '</li>
