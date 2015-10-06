@@ -78,7 +78,7 @@ function edd_settings_contextual_help() {
 			'<p>' . __( '<strong>Prices Entered with Tax</strong>: if enabled, this means that the price entered on the product edit screens is the total amount the customer will pay after taxes. For example, if enabled and the price of a product is $20, the customer will pay 20$ at checkout. The exact amount charged in tax will be calculated automatically.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( '<strong>Display Tax Rate on Prices</strong>: when enabled, the amount the customer is expected to pay in tax will be displayed below purchase buttons.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( '<strong>Display During Checkout</strong>: This determines whether prices are shown with taxes or without taxes on checkout. If set to Including Tax, a $10 product with a 10% tax will be shown as $11.', 'easy-digital-downloads' ) . '</p>' .
-			'<p>' . __( '<strong>Calculate Tax After Discounts</strong>: If enabled, this option will make it so that tax is calucated on the after-discount amount. If a purchase of $20 is made and a 20% discount is applied, tax will be calcuated off of $16 instead of $20.', 'easy-digital-downloads' ) . '</p>' .
+			'<p>' . __( '<strong>Calculate Tax After Discounts</strong>: If enabled, this option will make it so that tax is calculated on the after-discount amount. If a purchase of $20 is made and a 20% discount is applied, tax will be calculated off of $16 instead of $20.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( '<strong>Additional Tax Rates</strong>: This section lets you add tax rates for specific countries and/or states/provinces in those countries.', 'easy-digital-downloads' ) . '</p>'
 	) );
 
