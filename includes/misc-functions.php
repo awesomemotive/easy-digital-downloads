@@ -433,7 +433,7 @@ function edd_get_current_page_url( $nocache = false ) {
 	global $wp;
 
 	$scheme = is_ssl() ? 'https' : 'http';
-	$uri    = set_url_scheme( add_query_arg( $wp->query_string, '', home_url( $wp->request ) ), $scheme );
+	$uri    = set_url_scheme( home_url( $wp->request ), $scheme );
 
 	if ( is_front_page() ) {
 		$uri = home_url();
