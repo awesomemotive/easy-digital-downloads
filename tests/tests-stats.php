@@ -127,7 +127,7 @@ class Tests_Stats extends WP_UnitTestCase {
 			'this_month'   => 'This Month',
 			'last_month'   => 'Last Month',
 			'this_quarter' => 'This Quarter',
-			'last_quarter' => 'Last Quater',
+			'last_quarter' => 'Last Quarter',
 			'this_year'    => 'This Year',
 			'last_year'    => 'Last Year'
 		);
