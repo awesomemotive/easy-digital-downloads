@@ -430,8 +430,10 @@ function edd_get_php_arg_separator_output() {
  */
 function edd_get_current_page_url( $nocache = false ) {
 
+	global $wp;
+
 	$scheme = is_ssl() ? 'https' : 'http';
-	$uri    = esc_url( site_url( $_SERVER['REQUEST_URI'], $scheme ) );
+	$uri    = set_url_scheme( add_query_arg( $wp->query_string, '', home_url( $wp->request ) ), $scheme );
 
 	if ( is_front_page() ) {
 		$uri = home_url();
