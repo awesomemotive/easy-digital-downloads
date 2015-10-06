@@ -1,11 +1,8 @@
 <?php
 
-use \EDD_Roles;
-
 /**
  * @group edd_api
  */
-
 class Tests_API extends WP_UnitTestCase {
 	protected $_rewrite = null;
 

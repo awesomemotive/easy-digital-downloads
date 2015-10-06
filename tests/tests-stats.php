@@ -1,8 +1,5 @@
 <?php
 
-use \EDD_Stats;
-use \EDD_Payment_Stats;
-use \WP_Error;
 /**
  * @group edd_stats
  */
