@@ -70,7 +70,7 @@ function edd_settings_contextual_help() {
 		'id'	    => 'edd-settings-taxes',
 		'title'	    => __( 'Taxes', 'easy-digital-downloads' ),
 		'content'	=>
-			'<p>' . __( 'This screen allows youto configure the tax rules for your store.', 'easy-digital-downloads' ) . '</p>' .
+			'<p>' . __( 'This screen allows you to configure the tax rules for your store.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( 'If you do not wish to charge any tax on purchase, simply leave the Enable Taxes option unchecked.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( '<strong>Default Tax Rate</strong>: The default tax rate is the tax rate charged to customers located in your base country / state or province.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( '<strong>Base Country</strong>: This determines the country that is loaded by default on the checkout screen for customers that do not have an address stored in their account.', 'easy-digital-downloads' ) . '</p>' .
