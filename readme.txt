@@ -101,7 +101,7 @@ There are three ways you can show the downloads shopping cart:
 
 2. Use the included widget. Go to Appearance > Widgets and place the "Downloads Cart" widget into any widget area available.
 
-3. Use the template tag and place the following the template file of your choosing:
+3. Use the template tag and place the following in the template file of your choosing:
 
 `echo edd_shopping_cart();`
 

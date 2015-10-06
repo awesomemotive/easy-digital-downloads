@@ -212,7 +212,7 @@ class EDD_Welcome {
 					<p><?php _e( 'With the new export processing in Easy Digital Downloads 2.4, you can easily export massive amounts of data. Need to export 20,000 payment records? No problem.', 'easy-digital-downloads' );?></p>
 
 					<h4><?php _e( 'Standardized Customer Export', 'easy-digital-downloads' );?></h4>
-					<p><?php _e( 'The Customer export has been standarized so it now produces the same data during export for all export options. It can also easily handle 20,000 or even 50,000 customer records in a single export.', 'easy-digital-downloads' );?></p>
+					<p><?php _e( 'The Customer export has been standardized so it now produces the same data during export for all export options. It can also easily handle 20,000 or even 50,000 customer records in a single export.', 'easy-digital-downloads' );?></p>
 
 				</div>
 			</div>
