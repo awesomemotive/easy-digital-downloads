@@ -271,6 +271,9 @@ td.edd_order_price { text-align: right; }
 #edd_tax_rates .edd_tax_state { width: 180px; }
 #edd_tax_rates .edd_tax_rate { width: 80px; }
 #edd_tax_rates th { padding: 15px 10px; }
+.edd-license-data { position: relative; left: -220px; background-color: #fff; padding: 1px 12px; margin: 15px 0 0 0; border-left: 4px solid #7ad03a; overflow: auto; -webkit-box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 ); box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 ); }
+.edd-license-data.edd-license-error { border-left: 4px solid #dd3d36; }
+.edd-license-data p { padding: 4px 0; }
 
 /* Taxonomy styles
 -------------------------------------------------------------- */
