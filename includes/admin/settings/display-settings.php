@@ -47,8 +47,15 @@ function edd_options_page() {
 			<form method="post" action="options.php">
 				<table class="form-table">
 				<?php
+
 				settings_fields( 'edd_settings' );
+
+				do_action( 'edd_settings_tab_top', $active_tab );
+
 				do_settings_fields( 'edd_settings_' . $active_tab, 'edd_settings_' . $active_tab );
+
+				do_action( 'edd_settings_tab_bottom', $active_tab );
+
 				?>
 				</table>
 				<?php submit_button(); ?>
