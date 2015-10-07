@@ -879,3 +879,46 @@ function edd_get_user_verification_page() {
 
 	return apply_filters( 'edd_user_verification_base_url', $url );
 }
+
+function edd_process_admin_user_verification() {
+
+	if ( empty( $_GET['id'] ) || ! is_numeric( $_GET['id'] ) ) {
+		return false;
+	}
+
+	if ( empty( $_GET['_wpnonce'] ) ) {
+		return false;
+	}
+
+	$nonce = $_GET['_wpnonce'];
+	if ( ! wp_verify_nonce( $nonce, 'edd-verify-user' ) ) {
+		wp_die( __( 'Nonce verification failed', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
+
+	$customer = new EDD_Customer( $_GET['id'] );
+	edd_set_user_to_verified( $customer->user_id );
+
+	$url = add_query_arg( 'edd-message', 'user-verified', admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ) );
+
+	wp_safe_redirect( $url );
+	exit;
+
+}
+add_action( 'edd_verify_user_admin', 'edd_process_admin_user_verification' );
+
+function edd_verify_customer_notice( $customer ) {
+	if ( ! edd_user_pending_verification( $customer->user_id ) ) {
+		return;
+	}
+
+	$url = wp_nonce_url( admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&edd_action=verify_user_admin&id=' . $customer->id ), 'edd-verify-user' );
+
+	echo '<div class="update error"><p>';
+	_e( 'This customer\'s user account is pending verification.', 'easy-digital-downloads' );
+	echo ' ';
+	echo '<a href="' . $url . '">' . __( 'Verify account', 'easy-digital-downloads' ) . '</a>';
+	echo "\n\n";
+
+	echo '</p></div>';
+}
+add_action( 'edd_customer_card_top', 'edd_verify_customer_notice', 10, 1 );
