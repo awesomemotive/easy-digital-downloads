@@ -1688,6 +1688,11 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 					break;
 
+				case 'item_name_mismatch' :
+
+					$messages[] = sprintf( __( 'This license %s does not belong to %s.', 'easy-digital-downloads' ), $value, $args['name'] );
+					break;
+
 				case 'valid' :
 
 					$class = 'valid';
