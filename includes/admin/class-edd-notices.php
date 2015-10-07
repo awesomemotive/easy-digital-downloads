@@ -161,8 +161,12 @@ class EDD_Notices {
 					case 'customer-deleted' :
 						$notices['updated']['edd-customer-deleted'] = __( 'Customer successfully deleted', 'easy-digital-downloads' );
 						break;
+					case 'user-verified' :
+						$notices['updated']['edd-user-verified'] = __( 'User successfully verified', 'easy-digital-downloads' );
+						break;
 				}
 			}
+
 		}
 
 		if ( count( $notices['updated'] ) > 0 ) {
