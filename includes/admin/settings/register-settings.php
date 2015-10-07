@@ -1683,7 +1683,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 					$class = 'error';
 					$messages[] = sprintf(
-						__( 'Your license key for %s is not active for this URL. Please <a href="%s" target="_blank" title="Visit account page">visit your account page</a> to manage your license key URLs.', 'easy-digital-downloads' ),
+						__( 'Your %s is not active for this URL. Please <a href="%s" target="_blank" title="Visit account page">visit your account page</a> to manage your license key URLs.', 'easy-digital-downloads' ),
 						$args['name'],
 						'https://easydigitaldownloads.com/your-account'
 					);
