@@ -79,7 +79,9 @@ class EDD_License {
 	 * @return  void
 	 */
 	private function includes() {
-		if ( ! class_exists( 'EDD_SL_Plugin_Updater' ) ) require_once 'EDD_SL_Plugin_Updater.php';
+		if ( ! class_exists( 'EDD_SL_Plugin_Updater' ) )  {
+			require_once 'EDD_SL_Plugin_Updater.php';
+		}
 	}
 
 	/**
@@ -92,6 +94,9 @@ class EDD_License {
 
 		// Register settings
 		add_filter( 'edd_settings_licenses', array( $this, 'settings' ), 1 );
+
+		// Display help text at the top of the Licenses tab
+		add_action( 'edd_settings_tab_top', array( $this, 'license_help_text' ) );
 
 		// Activate license key on settings save
 		add_action( 'admin_init', array( $this, 'activate_license' ) );
@@ -157,6 +162,36 @@ class EDD_License {
 		);
 
 		return array_merge( $settings, $edd_license_settings );
+	}
+
+
+	/**
+	 * Display help text at the top of the Licenses tag
+	 *
+	 * @access  public
+	 * @since   1.5
+	 * @param   string   $active_tab
+	 * @return  void
+	 */
+	public function license_help_text( $active_tab = '' ) {
+
+		static $has_ran;
+
+		if( 'licenses' !== $active_tab ) {
+			return;
+		}
+
+		if( ! empty( $has_ran ) ) {
+			return;
+		}
+
+		echo '<p>' . sprintf( 
+			__( 'Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please <a href="%s" target="_blank" title="License renewal FAQ">renew your license</a>.', 'easy-digital-downloads' ),
+			'http://docs.easydigitaldownloads.com/article/1000-license-renewal'
+		) . '</p>';
+
+		$has_ran = true;
+
 	}
 
 
