@@ -271,9 +271,17 @@ td.edd_order_price { text-align: right; }
 #edd_tax_rates .edd_tax_state { width: 180px; }
 #edd_tax_rates .edd_tax_rate { width: 80px; }
 #edd_tax_rates th { padding: 15px 10px; }
-.edd-license-data { position: relative; left: -220px; background-color: #fff; padding: 1px 12px; margin: 15px 0 0 0; border-left: 4px solid #7ad03a; overflow: auto; -webkit-box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 ); box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 ); }
-.edd-license-data.edd-license-error { border-left: 4px solid #dd3d36; }
-.edd-license-data p { padding: 4px 0; }
+[class^="license-"] { padding: 10px; }
+[class^="license-"] input[type="text"] { margin-right: 3px; }
+[class*="license-error-"],
+[class*="license-expires-"] { background-color: #fff; padding: 10px; border-left: 4px solid #7ad03a; overflow: auto; -webkit-box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 ); box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 ); }
+[class*="license-error-"] { border-left: 4px solid #dd3d36; }
+.license-lifetime-notice,
+.license-expiration-date-notice,
+.license-null { padding: 0 0 0 14px; }
+.license-lifetime-notice .edd-license-data p,
+.license-expiration-date-notice .edd-license-data p { color: #666; font-size: 14px; font-style: italic; margin: 4px 0 0; }
+div[class^="license-"] .edd-license-data p { margin-left: 4px; }
 
 /* Taxonomy styles
 -------------------------------------------------------------- */
@@ -330,7 +338,14 @@ td.edd_order_price { text-align: right; }
 	.download_page_edd-tools .apikeys .column-user {
 		width: 80px;
 	}
-
+	.license-lifetime-notice,
+	.license-expiration-date-notice,
+	.license-null {
+		padding-left: 0;
+	}
+	[class^="license-"] input[type="text"] {
+		margin-bottom: 3px;
+	}
 }
 
 /* Customer Styles
