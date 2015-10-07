@@ -1669,8 +1669,8 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 					$class = 'error';
 					$messages[] = sprintf(
-						__( 'Your license key for %s has expired. Please <a href="%s" title="Renew your license key">renew your license key</a>.', 'easy-digital-downloads' ),
-						$args['name'],
+						__( 'Your license key expired on %s. Please <a href="%s" title="Renew your license key">renew your license key</a>.', 'easy-digital-downloads' ),
+						date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
 						'https://easydigitaldownloads.com/checkout/?edd_license_key=' . $value
 					);
 
@@ -1713,7 +1713,8 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 					} elseif( $expiration > $now && $expiration - $now < 2592000 ) {
 
 						$messages[] = sprintf(
-							__( 'Your license key expires soon! <a href="%s" target="_blank" title="Renew license">Renew your license</a>.', 'easy-digital-downloads' ),
+							__( 'Your license key expires soon! It expires on %s. <a href="%s" target="_blank" title="Renew license">Renew your license key</a>.', 'easy-digital-downloads' ),
+							date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
 							'https://easydigitaldownloads.com/checkout/?edd_license_key=' . $value
 						);
 
