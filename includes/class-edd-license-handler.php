@@ -222,8 +222,22 @@ class EDD_License {
 			return;
 		}
 
-		if ( ! isset( $_POST['edd_settings'][ $this->item_shortname . '_license_key'] ) ) {
+		if( ! wp_verify_nonce( $_REQUEST[ $this->item_shortname . '_license_key-nonce'], $this->item_shortname . '_license_key-nonce' ) ) {
+
 			return;
+
+		}
+
+		if( ! current_user_can( 'manage_shop_settings' ) ) {
+			return;
+		}
+
+		if ( empty( $_POST['edd_settings'][ $this->item_shortname . '_license_key'] ) ) {
+
+			delete_option( $this->item_shortname . '_license_active' );
+
+			return;
+
 		}
 
 		foreach( $_POST as $key => $value ) {
@@ -231,16 +245,6 @@ class EDD_License {
 				// Don't activate a key when deactivating a different key
 				return;
 			}
-		}
-
-		if( ! wp_verify_nonce( $_REQUEST[ $this->item_shortname . '_license_key-nonce'], $this->item_shortname . '_license_key-nonce' ) ) {
-
-			wp_die( __( 'Nonce verification failed', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
-
-		}
-
-		if( ! current_user_can( 'manage_shop_settings' ) ) {
-			return;
 		}
 
 		$details = get_option( $this->item_shortname . '_license_active' );
