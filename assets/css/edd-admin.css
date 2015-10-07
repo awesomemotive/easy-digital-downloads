@@ -273,9 +273,9 @@ td.edd_order_price { text-align: right; }
 #edd_tax_rates th { padding: 15px 10px; }
 [class^="license-"] { padding: 10px; }
 [class^="license-"] input[type="text"] { margin-right: 3px; }
-[class*="license-error-"],
-[class*="license-expires-"] { background-color: #fff; padding: 10px; border-left: 4px solid #7ad03a; overflow: auto; -webkit-box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 ); box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 ); }
-[class*="license-error-"] { border-left: 4px solid #dd3d36; }
+.license-error-notice,
+.license-expires-soon-notice { background-color: #fff; padding: 10px; border-left: 4px solid #7ad03a; overflow: auto; -webkit-box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 ); box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 ); }
+.license-error-notice { border-left: 4px solid #dd3d36; }
 .license-lifetime-notice,
 .license-expiration-date-notice,
 .license-null { padding: 0 0 0 14px; }
