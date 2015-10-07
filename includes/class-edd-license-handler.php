@@ -286,11 +286,6 @@ class EDD_License {
 
 		update_option( $this->item_shortname . '_license_active', $license_data );
 
-		if( ! (bool) $license_data->success ) {
-			set_transient( 'edd_license_error_' . $this->item_shortname, $license_data, 1000 );
-		} else {
-			delete_transient( 'edd_license_error_' . $this->item_shortname );
-		}
 	}
 
 
@@ -347,13 +342,8 @@ class EDD_License {
 			// Decode the license data
 			$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
-			delete_option( $this->item_shortname . '_license_active' );
+			update_option( $this->item_shortname . '_license_active' );
 
-			if( ! (bool) $license_data->success ) {
-				set_transient( 'edd_license_error_' . $this->item_shortname, $license_data, 1000 );
-			} else {
-				delete_transient( 'edd_license_error_' . $this->item_shortname );
-			}
 		}
 	}
 
@@ -419,37 +409,8 @@ class EDD_License {
 			return;
 		}
 
-		$messages      = array();
-		$license_error = get_transient( 'edd_license_error_' . $this->item_shortname );
-
-		if( ! empty( $license_error->error ) ) {
-
-			switch( $license_error->error ) {
-
-				case 'item_name_mismatch' :
-
-					$messages[] = sprintf( __( 'This license %s does not belong to %s.', 'easy-digital-downloads' ), $this->license, $this->item_name );
-					break;
-
-				case 'no_activations_left' :
-
-					$messages[] = sprintf( __( 'This license, %s, does not have any activations left', 'easy-digital-downloads' ), $this->license );
-					break;
-
-				case 'expired' :
-
-					$messages[] = sprintf( __( 'This license key, %s, is expired. Please renew it.', 'easy-digital-downloads' ), $this->license );
-					break;
-
-				default :
-
-					$messages[] = sprintf( __( 'There was a problem activating your license key, please try again or contact support. Error code: %s', 'easy-digital-downloads' ), $license_error->error );
-					break;
-
-			}
-
-		}
-
+		$messages = array();
+		
 		$license = get_option( $this->item_shortname . '_license_active' );
 
 		if( is_object( $license ) && 'valid' !== $license->license && empty( $showed_invalid_message ) ) {
@@ -476,12 +437,6 @@ class EDD_License {
 				echo '</div>';
 
 			}
-
-		}
-
-		if( ! empty( $license_error ) ){
-			
-			delete_transient( 'edd_license_error_' . $this->item_shortname );
 
 		}
 
