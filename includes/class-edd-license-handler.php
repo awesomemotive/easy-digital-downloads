@@ -108,7 +108,7 @@ class EDD_License {
 		add_action( 'edd_weekly_scheduled_events', array( $this, 'weekly_license_check' ) );
 		
 		// For testing license notices, uncomment this line to force checks on every page load
-		add_action( 'admin_init', array( $this, 'weekly_license_check' ) );
+		//add_action( 'admin_init', array( $this, 'weekly_license_check' ) );
 
 		// Updater
 		add_action( 'admin_init', array( $this, 'auto_updater' ), 0 );
