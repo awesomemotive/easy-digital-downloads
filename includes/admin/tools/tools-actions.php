@@ -109,3 +109,27 @@ function edd_include_reset_tool_batch_processer( $class ) {
 	}
 
 }
+
+/**
+ * Register the reset customer stats batch processor
+ * @since  2.5
+ */
+function edd_register_batch_customer_recount_tool() {
+	add_action( 'edd_batch_export_class_include', 'edd_include_customer_recount_tool_batch_processer', 10, 1 );
+}
+add_action( 'edd_register_batch_exporter', 'edd_register_batch_customer_recount_tool', 10 );
+
+/**
+ * Loads the tools batch processing class for resetting store and product earnings
+ *
+ * @since  2.5
+ * @param  string $class The class being requested to run for the batch export
+ * @return void
+ */
+function edd_include_customer_recount_tool_batch_processer( $class ) {
+
+	if ( 'EDD_Tools_Recount_Customer_Stats' === $class ) {
+		require_once EDD_PLUGIN_DIR . 'includes/admin/tools/class-edd-tools-recount-customer-stats.php';
+	}
+
+}

@@ -136,11 +136,12 @@ function edd_tools_recount_stats_display() {
 						<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 
 						<select name="edd-export-class" id="recount-stats-type">
-							<option value="0" selected="selected" disabled="disabled"><?php _e( 'Plase select an option', 'edd' ); ?></option>
-							<option data-type="recount-store" value="EDD_Tools_Recount_Store_Earnings"><?php _e( 'Recount Store Earnings', 'edd' ); ?></option>
-							<option data-type="recount-download" value="EDD_Tools_Recount_Download_Stats"><?php _e( 'Recount Product Earnings and Sales', 'edd' ); ?></option>
-							<option data-type="recount-all" value="EDD_Tools_Recount_All_Stats"><?php _e( 'Recount All Store and Product Stats', 'edd' ); ?></option>
-							<option data-type="reset-stats" value="EDD_Tools_Reset_Stats"><?php _e( 'Reset Store', 'edd' ); ?></option>
+							<option value="0" selected="selected" disabled="disabled"><?php _e( 'Plase select an option', 'easy-digital-downloads' ); ?></option>
+							<option data-type="recount-store" value="EDD_Tools_Recount_Store_Earnings"><?php _e( 'Recount Store Earnings', 'easy-digital-downloads' ); ?></option>
+							<option data-type="recount-download" value="EDD_Tools_Recount_Download_Stats"><?php _e( 'Recount Product Earnings and Sales', 'easy-digital-downloads' ); ?></option>
+							<option data-type="recount-all" value="EDD_Tools_Recount_All_Stats"><?php _e( 'Recount All Store and Product Stats', 'easy-digital-downloads' ); ?></option>
+							<option data-type="reset-stats" value="EDD_Tools_Reset_Stats"><?php _e( 'Reset Store', 'easy-digital-downloads' ); ?></option>
+							<option data-type="recount-customer-stats" value="EDD_Tools_Recount_Customer_Stats"><?php _e( 'Recount Customer Stats', 'easy-digital-downloads' ); ?></option>
 						</select>
 
 						<span id="tools-product-dropdown" style="display: none">
