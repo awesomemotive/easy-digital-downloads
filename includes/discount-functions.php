@@ -1014,7 +1014,7 @@ function edd_set_cart_discount( $code = '' ) {
 	}
 
 	if ( $discounts ) {
-		$key = array_search( $code, $discounts );
+		$key = array_search( strtolower( $code ), array_map( 'strtolower', $discounts ) );
 		if( false !== $key ) {
 			unset( $discounts[ $key ] ); // Can't set the same discount more than once
 		}
