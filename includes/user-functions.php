@@ -916,7 +916,7 @@ function edd_verify_customer_notice( $customer ) {
 	echo '<div class="update error"><p>';
 	_e( 'This customer\'s user account is pending verification.', 'easy-digital-downloads' );
 	echo ' ';
-	echo '<a href="' . $url . '">' . __( 'Verify account', 'easy-digital-downloads' ) . '</a>';
+	echo '<a href="' . $url . '" title="' . esc_attr( __( 'Verify this customer\'s account', 'easy-digital-downloads' ) ) . '">' . __( 'Verify account.', 'easy-digital-downloads' ) . '</a>';
 	echo "\n\n";
 
 	echo '</p></div>';
