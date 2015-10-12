@@ -191,6 +191,19 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
+= 2.4.8, October 12, 2015 =
+
+* New: Added option to manually verify a user account from the customer details screen
+* New: Added support for searching customer records by user ID
+* New: Added improved error logging for email sending
+* Fix: Incorrect CSS animation property
+* Fix: Removed unused code in edd_get_purchase_link() function
+* Fix: Corrected spelling error in EDD_Stats class
+* Fix: New customers improperly created when logged-in user completed purchases with a different email
+* Fix: User verification process should not run on the very first purchase by a customer
+* Fix: edd_get_current_page_url() returns improper URL when WordPress is installedin sub folder
+* Tweak: Improved formatting of the welcome screen to match the styles of WordPress core
+
 = 2.4.7, September 29, 2015 =
 
 * Tweak: Changed text domain from "edd" to "easy-digital-downloads"
