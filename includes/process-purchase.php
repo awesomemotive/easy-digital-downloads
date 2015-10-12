@@ -529,7 +529,7 @@ function edd_purchase_form_validate_user_login() {
 	);
 
 	// Username
-	if ( ! isset( $_POST['edd_user_login'] ) || $_POST['edd_user_login'] == '' ) {
+	if ( empty( $_POST['edd_user_login'] ) && edd_no_guest_checkout() ) {
 		edd_set_error( 'must_log_in', __( 'You must login or register to complete your purchase', 'easy-digital-downloads' ) );
 		return $valid_user_data;
 	}
