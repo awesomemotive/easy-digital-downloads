@@ -599,7 +599,7 @@ class Test_Misc extends WP_UnitTestCase {
 		$this->assertNotContains( 'nocache=true', $remove_url );
 
 		// Go home and test again
-		$this->go_to( home_url() );
+		$this->go_to( home_url( '/' ) );
 
 		add_filter( 'edd_is_caching_plugin_active', '__return_true' );
 
