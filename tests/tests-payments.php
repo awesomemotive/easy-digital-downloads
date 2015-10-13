@@ -1,6 +1,5 @@
 <?php
 
-use \EDD_Payments_Query;
 /**
  * @group edd_payments
  */
