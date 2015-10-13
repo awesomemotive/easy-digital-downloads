@@ -13,6 +13,7 @@ class Tests_Login_Register extends WP_UnitTestCase {
 	 * Test that the login form returns the expected string.
 	 */
 	public function test_login_form() {
+		wp_logout();
 		$this->assertContains( '<span><legend>Log into Your Account</legend></span>', edd_login_form() );
 	}
 
@@ -20,6 +21,7 @@ class Tests_Login_Register extends WP_UnitTestCase {
 	 * Test that the registration form return the expected output.
 	 */
 	public function test_register_form() {
+		wp_logout();
 		$this->assertContains( '<legend>Register New Account</legend>', edd_register_form() );
 	}
 
