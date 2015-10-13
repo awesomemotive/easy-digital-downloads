@@ -75,10 +75,10 @@ class EDD_Gateawy_Reports_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'label'          => __( 'Gateway', 'edd' ),
-			'complete_sales' => __( 'Complete Sales', 'edd' ),
-			'pending_sales'  => __( 'Pending / Failed Sales', 'edd' ),
-			'total_sales'    => __( 'Total Sales', 'edd' )
+			'label'          => __( 'Gateway', 'easy-digital-downloads' ),
+			'complete_sales' => __( 'Complete Sales', 'easy-digital-downloads' ),
+			'pending_sales'  => __( 'Pending / Failed Sales', 'easy-digital-downloads' ),
+			'total_sales'    => __( 'Total Sales', 'easy-digital-downloads' )
 		);
 
 		return $columns;
