@@ -88,7 +88,7 @@ class EDD_Stats {
 			'this_month'   => __( 'This Month',   'easy-digital-downloads' ),
 			'last_month'   => __( 'Last Month',   'easy-digital-downloads' ),
 			'this_quarter' => __( 'This Quarter', 'easy-digital-downloads' ),
-			'last_quarter' => __( 'Last Quater',  'easy-digital-downloads' ),
+			'last_quarter' => __( 'Last Quarter',  'easy-digital-downloads' ),
 			'this_year'    => __( 'This Year',    'easy-digital-downloads' ),
 			'last_year'    => __( 'Last Year',    'easy-digital-downloads' )
 		);

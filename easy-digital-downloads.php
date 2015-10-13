@@ -5,7 +5,7 @@
  * Description: Serve Digital Downloads Through WordPress
  * Author: Pippin Williamson
  * Author URI: https://pippinsplugins.com
- * Version: 2.4.7
+ * Version: 2.4.8
  * Text Domain: easy-digital-downloads
  * Domain Path: languages
  *
@@ -25,7 +25,7 @@
  * @package EDD
  * @category Core
  * @author Pippin Williamson
- * @version 2.4.7
+ * @version 2.4.8
  */
 
 // Exit if accessed directly
@@ -187,7 +187,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '2.4.7' );
+			define( 'EDD_VERSION', '2.4.8' );
 		}
 
 		// Plugin Folder Path
@@ -347,7 +347,7 @@ final class Easy_Digital_Downloads {
 		 *
 		 * To support existing translation files from before the change, we must look for translation files in several places and under several names.
 		 *
-		 * - wp-content/languages/plugins/easy-digitaldownloads (introduced with language packs)
+		 * - wp-content/languages/plugins/easy-digital-downloads (introduced with language packs)
 		 * - wp-content/languages/edd/ (custom folder we have supported since 1.4)
 		 * - wp-content/plugins/easy-digital-downloads/languages/
 		 *
