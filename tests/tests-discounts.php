@@ -236,7 +236,6 @@ class Tests_Discounts extends WP_UnitTestCase {
 		$this->assertEquals( '20.00', edd_get_cart_total() );
 
 		edd_set_cart_discount( edd_get_discount_code( $this->_post_id ) );
-
 		$this->assertEquals( '16.00', edd_get_cart_total() );
 	}
 

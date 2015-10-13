@@ -1101,12 +1101,14 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
 
 	$amount = 0.00;
 	$items  = edd_get_cart_content_details();
-	if( $items ) {
+
+	if ( $items ) {
 
 		$discounts = wp_list_pluck( $items, 'discount' );
 
-		if( is_array( $discounts ) ) {
-			$amount = array_sum( $discounts );
+		if ( is_array( $discounts ) ) {
+			$discounts = array_map( 'floatval', $discounts );
+			$amount    = array_sum( $discounts );
 		}
 
 	}
