@@ -851,7 +851,7 @@ function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
 				// Check all matching payments for discount code.
 				$payment_meta = edd_get_payment_meta( $payment );
 				$user_info    = maybe_unserialize( $payment_meta['user_info'] );
-				if ( $user_info['discount'] == $code ) {
+				if ( strtolower( $user_info['discount'] ) == strtolower( $code ) ) {
 					edd_set_error( 'edd-discount-error', __( 'This discount has already been redeemed.', 'easy-digital-downloads' ) );
 					$return = true;
 				}
