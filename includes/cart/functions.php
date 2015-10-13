@@ -638,10 +638,10 @@ function edd_get_cart_subtotal() {
  * @return float Cart amount
  */
 function edd_get_cart_total( $discounts = false ) {
-	$subtotal  = edd_get_cart_subtotal();
-	$discounts = edd_get_cart_discounted_amount();
-	$cart_tax  = edd_get_cart_tax();
-	$fees      = edd_get_cart_fee_total();
+	$subtotal  = (float) edd_get_cart_subtotal();
+	$discounts = (float) edd_get_cart_discounted_amount();
+	$cart_tax  = (float) edd_get_cart_tax();
+	$fees      = (float) edd_get_cart_fee_total();
 	$total     = $subtotal - $discounts + $cart_tax + $fees;
 
 	if( $total < 0 )

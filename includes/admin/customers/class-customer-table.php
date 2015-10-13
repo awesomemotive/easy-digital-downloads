@@ -127,7 +127,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 				$value = isset( $item[ $column_name ] ) ? $item[ $column_name ] : null;
 				break;
 		}
-		return apply_filters( 'edd_report_column_' . $column_name, $value, $item['id'] );
+		return apply_filters( 'edd_customers_column_' . $column_name, $value, $item['id'] );
 	}
 
 	public function column_name( $item ) {
@@ -141,7 +141,10 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			'delete' => sprintf( __( '<a href="%s">Delete</a>', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $item['id'] ) )
 		);
 
-		return '<a href="' . esc_url( $view_url ) . '">' . $name . '</a>' . $this->row_actions( $actions );
+		$customer = new EDD_Customer( $item['id'] );
+		$pending  = edd_user_pending_verification( $customer->user_id ) ? ' <em>' . __( '(Pending Verification)', 'easy-digital-downloads' ) . '</em>' : '';
+
+		return '<a href="' . esc_url( $view_url ) . '">' . $name . '</a>' . $pending . $this->row_actions( $actions );
 	}
 
 	/**
@@ -243,6 +246,8 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			$args['email'] = $search;
 		} elseif( is_numeric( $search ) ) {
 			$args['id']    = $search;
+		} elseif( strpos( $search, 'user:' ) !== false ) {
+			$args['user_id'] = trim( str_replace( 'user:', '', $search ) );
 		} else {
 			$args['name']  = $search;
 		}

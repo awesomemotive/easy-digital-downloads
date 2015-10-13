@@ -95,29 +95,50 @@ class EDD_Welcome {
 		remove_submenu_page( 'index.php', 'edd-changelog' );
 		remove_submenu_page( 'index.php', 'edd-getting-started' );
 		remove_submenu_page( 'index.php', 'edd-credits' );
-		
+
 		?>
 		<style type="text/css" media="screen">
-		/*<![CDATA[*/
-
-		.about-wrap .edd-badge {
-			position: absolute;
-			top: 0;
-			right: 0;
-			width: 100px;
-		}
-
-		.edd-welcome-screenshots {
-			float: right;
-			margin-left: 10px!important;
-		}
-
-		.about-wrap .feature-section {
-			margin-top: 20px;
-		}
-
-		/*]]>*/
+			/*<![CDATA[*/
+			.about-wrap .edd-badge { float: right; border-radius: 4px; margin: 0 0 15px 15px; max-width: 100px; }
+			.about-wrap #edd-header { margin-bottom: 15px; }
+			.about-wrap #edd-header h1 { margin-bottom: 15px !important; }
+			.about-wrap .about-text { margin: 0 0 15px; max-width: 670px; }
+			.about-wrap .feature-section { margin-top: 20px; }
+			.about-wrap .feature-section-content,
+			.about-wrap .feature-section-media { width: 50%; box-sizing: border-box; }
+			.about-wrap .feature-section-content { float: left; padding-right: 50px; }
+			.about-wrap .feature-section-content h4 { margin: 0 0 1em; }
+			.about-wrap .feature-section-media { float: right; text-align: right; margin-bottom: 20px; }
+			.about-wrap .feature-section-media img { border: 1px solid #ddd; }
+			.about-wrap .feature-section:not(.under-the-hood) .col { margin-top: 0; }
+			/* responsive */
+			@media all and ( max-width: 782px ) {
+				.about-wrap .feature-section-content,
+				.about-wrap .feature-section-media { float: none; padding-right: 0; width: 100%; text-align: left; }
+				.about-wrap .feature-section-media img { float: none; margin: 0 0 20px; }
+			}
+			/*]]>*/
 		</style>
+		<?php
+	}
+
+	/**
+	 * Welcome message
+	 *
+	 * @access public
+	 * @since 2.5
+	 * @return void
+	 */
+	public function welcome_message() {
+		list( $display_version ) = explode( '-', EDD_VERSION );
+		?>
+		<div id="edd-header">
+			<img class="edd-badge" src="<?php echo EDD_PLUGIN_URL . 'assets/images/edd-logo.svg'; ?>" alt="<?php _e( 'Easy Digital Downloads', 'easy-digital-downloads' ); ?>" / >
+			<h1><?php printf( __( 'Welcome to Easy Digital Downloads %s', 'easy-digital-downloads' ), $display_version ); ?></h1>
+			<p class="about-text">
+				<?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online store faster, safer, and better!', 'easy-digital-downloads' ), $display_version ); ?>
+			</p>
+		</div>
 		<?php
 	}
 
@@ -153,104 +174,97 @@ class EDD_Welcome {
 	 * @return void
 	 */
 	public function about_screen() {
-		list( $display_version ) = explode( '-', EDD_VERSION );
 		?>
 		<div class="wrap about-wrap">
-			<h1><?php printf( __( 'Welcome to Easy Digital Downloads %s', 'easy-digital-downloads' ), $display_version ); ?></h1>
-			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online store faster, safer, and better!', 'easy-digital-downloads' ), $display_version ); ?></div>
-			<div class="edd-badge"><img src="<?php echo EDD_PLUGIN_URL . 'assets/images/edd-logo.svg'; ?>" alt="<?php _e( 'Easy Digital Downloads', 'easy-digital-downloads' ); ?>" / ></div>
-
-			<?php $this->tabs(); ?>
-
+			<?php
+				// load welcome message and content tabs
+				$this->welcome_message();
+				$this->tabs();
+			?>
 			<div class="changelog">
 				<h3><?php _e( 'Amazon Payments', 'easy-digital-downloads' );?></h3>
-
 				<div class="feature-section">
+					<div class="feature-section-media">
+						<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/24-checkout.png'; ?>"/>
+					</div>
+					<div class="feature-section-content">
+						<p><?php _e( 'With Easy Digital Downloads version 2.4, you can now accept payments through Amazon\'s Login and Pay with the new built-in payment gateway.', 'easy-digital-downloads' );?></p>
 
-					<p><?php _e( 'With Easy Digital Downloads version 2.4, you can now accept payments through Amazon\'s Login and Pay with the new built-in payment gateway.', 'easy-digital-downloads' );?></p>
+						<h4><?php _e( 'Secure Checkout', 'easy-digital-downloads' );?></h4>
+						<p><?php _e( 'When using Amazon Payments, credit / debit card details are entered on Amazon\'s secure servers and never pass through your own server, making the entire process dramatically more secure and reliable.', 'easy-digital-downloads' );?></p>
 
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/24-checkout.png'; ?>" class="edd-welcome-screenshots"/>
+						<h4><?php _e( 'Accept Credit and Debit Card Payments', 'easy-digital-downloads' );?></h4>
+						<p><?php _e( 'Amazon Payments allows your customers to easily pay with their debit or credit cards. During checkout, customers will be provided an option to use a stored card or enter a new one.', 'easy-digital-downloads' );?></p>
 
-					<h4><?php _e( 'Secure Checkout', 'easy-digital-downloads' );?></h4>
-					<p><?php _e( 'When using Amazon Payments, credit / debit card details are entered on Amazon\'s secure servers and never pass through your own server, making the entire process dramatically more secure and reliable.', 'easy-digital-downloads' );?></p>
-
-					<h4><?php _e( 'Accept Credit and Debit Card Payments', 'easy-digital-downloads' );?></h4>
-					<p><?php _e( 'Amazon Payments allows your customers to easily pay with their debit or credit cards. During checkout, customers will be provided an option to use a stored card or enter a new one.', 'easy-digital-downloads' );?></p>
-
-					<h4><?php _e( 'Simple Customer Authentication', 'easy-digital-downloads' );?></h4>
-					<p><?php _e( 'Customers can log into their Amazon account from your checkout screen and have all of their billing details retrieved automatically from Amazon. With just a few clicks, customers can effortlessly complete their purchase.', 'easy-digital-downloads' );?></p>
-
+						<h4><?php _e( 'Simple Customer Authentication', 'easy-digital-downloads' );?></h4>
+						<p><?php _e( 'Customers can log into their Amazon account from your checkout screen and have all of their billing details retrieved automatically from Amazon. With just a few clicks, customers can effortlessly complete their purchase.', 'easy-digital-downloads' );?></p>
+					</div>
 				</div>
 			</div>
 
 			<div class="changelog">
 				<h3><?php _e( 'Earnings / Sales By Category', 'easy-digital-downloads' );?></h3>
-
 				<div class="feature-section">
+					<div class="feature-section-media">
+						<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/24-category-earnings.png'; ?>"/>
+					</div>
+					<div class="feature-section-content">
+						<p><?php _e( 'Easy Digital Downloads version 2.4 introduces a new Report that displays earnings and sales for your product categories.', 'easy-digital-downloads' );?></p>
 
-					<p><?php _e( 'Easy Digital Downloads version 2.4 introduces a new Report that displays earnings and sales for your product categories.', 'easy-digital-downloads' );?></p>
+						<h4><?php _e( 'Earnings and Sales Overview', 'easy-digital-downloads' );?></h4>
+						<p><?php _e( 'Quickly see how each of your categories has performed over the lifetime of your store. The total sales and earnings are displayed, as well as the average monthly sales and earnings for each category.', 'easy-digital-downloads' );?></p>
 
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/24-category-earnings.png'; ?>" class="edd-welcome-screenshots"/>
-
-					<h4><?php _e( 'Earnings and Sales Overview', 'easy-digital-downloads' );?></h4>
-					<p><?php _e( 'Quickly see how each of your categories has performed over the lifetime of your store. The total sales and earnings are displayed, as well as the average monthly sales and earnings for each category.', 'easy-digital-downloads' );?></p>
-
-					<h4><?php _e( 'Category Sales / Earnings Mix', 'easy-digital-downloads' );?></h4>
-					<p><?php _e( 'The report includes a visual break down of the sales / earnings mix for your categories. Quickly see which categories account for the highest (or lowest) percentage of your sales and earnings.', 'easy-digital-downloads' );?></p>
-
+						<h4><?php _e( 'Category Sales / Earnings Mix', 'easy-digital-downloads' );?></h4>
+						<p><?php _e( 'The report includes a visual break down of the sales / earnings mix for your categories. Quickly see which categories account for the highest (or lowest) percentage of your sales and earnings.', 'easy-digital-downloads' );?></p>
+					</div>
 				</div>
 			</div>
 
 			<div class="changelog">
 				<h3><?php _e( 'Improved Data Export', 'easy-digital-downloads' );?></h3>
-
 				<div class="feature-section">
+					<div class="feature-section-media">
+						<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/24-export.png'; ?>" class="edd-welcome-screenshots"/>
+					</div>
+					<div class="feature-section-content">
+						<h4><?php _e( 'Big Data Support', 'easy-digital-downloads' );?></h4>
+						<p><?php _e( 'With the new export processing in Easy Digital Downloads 2.4, you can easily export massive amounts of data. Need to export 20,000 payment records? No problem.', 'easy-digital-downloads' );?></p>
 
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/24-export.png'; ?>" class="edd-welcome-screenshots"/>
-
-					<h4><?php _e( 'Big Data Support', 'easy-digital-downloads' );?></h4>
-					<p><?php _e( 'With the new export processing in Easy Digital Downloads 2.4, you can easily export massive amounts of data. Need to export 20,000 payment records? No problem.', 'easy-digital-downloads' );?></p>
-
-					<h4><?php _e( 'Standardized Customer Export', 'easy-digital-downloads' );?></h4>
-					<p><?php _e( 'The Customer export has been standarized so it now produces the same data during export for all export options. It can also easily handle 20,000 or even 50,000 customer records in a single export.', 'easy-digital-downloads' );?></p>
-
+						<h4><?php _e( 'Standardized Customer Export', 'easy-digital-downloads' );?></h4>
+						<p><?php _e( 'The Customer export has been standardized so it now produces the same data during export for all export options. It can also easily handle 20,000 or even 50,000 customer records in a single export.', 'easy-digital-downloads' );?></p>
+					</div>
 				</div>
 			</div>
 
 			<div class="changelog">
 				<h3><?php _e( 'Additional Updates', 'easy-digital-downloads' );?></h3>
-
-				<div class="feature-section col three-col">
-					<div>
-
+				<div class="feature-section three-col">
+					<div class="col">
 						<h4><?php _e( 'REST API Versioning', 'easy-digital-downloads' );?></h4>
 						<p><?php _e( 'The REST API now supports a version parameter that allows you to specify which version of the API you wish to use.', 'easy-digital-downloads' );?></p>
-
+					</div>
+					<div class="col">
 						<h4><?php _e( 'Better Cart Tax Display', 'easy-digital-downloads' );?></h4>
 						<p><?php _e( 'Cart widgets now display estimated taxes for customers before reaching the checkout page.', 'easy-digital-downloads' );?></p>
-
 					</div>
-
-					<div>
-
+					<div class="col">
 						<h4><?php _e( 'Customer > User Synchronization', 'easy-digital-downloads' );?></h4>
 						<p><?php _e( 'Customer email addresses are now updated when the associated user account\'s email is changed.' ,'easy-digital-downloads' );?></p>
-
-						<h4><?php _e( 'Better Test Mode Settings', 'easy-digital-downloads' );?></h4>
-						<p><?php _e( 'Test Mode has been improved by moving the option to the Payment Gateways screen. Sales / earnings stats are now incremented in test mode.', 'easy-digital-downloads' );?></p>
-
 					</div>
-
-					<div class="last-feature">
-
-						<h4><?php _e( 'Exclude Taxes from Reports', 'easy-digital-downloads' );?></h4>
-						<p><?php _e( 'Earnings and sales reports can now be shown exclusive of tax, allowing you to easily see how your store is performing after taxes.', 'easy-digital-downloads' );?></p>
-
-						<h4><?php _e( 'Default Gateway First', 'easy-digital-downloads' );?></h4>
-						<p><?php _e( 'The gateway selected as the default option will always be displayed first on checkout.' ,'easy-digital-downloads' );?></p>
-
+					<div class="clear">
+						<div class="col">
+							<h4><?php _e( 'Better Test Mode Settings', 'easy-digital-downloads' );?></h4>
+							<p><?php _e( 'Test Mode has been improved by moving the option to the Payment Gateways screen. Sales / earnings stats are now incremented in test mode.', 'easy-digital-downloads' );?></p>
+						</div>
+						<div class="col">
+							<h4><?php _e( 'Exclude Taxes from Reports', 'easy-digital-downloads' );?></h4>
+							<p><?php _e( 'Earnings and sales reports can now be shown exclusive of tax, allowing you to easily see how your store is performing after taxes.', 'easy-digital-downloads' );?></p>
+						</div>
+						<div class="col">
+							<h4><?php _e( 'Default Gateway First', 'easy-digital-downloads' );?></h4>
+							<p><?php _e( 'The gateway selected as the default option will always be displayed first on checkout.' ,'easy-digital-downloads' );?></p>
+						</div>
 					</div>
-
 				</div>
 			</div>
 
@@ -270,15 +284,13 @@ class EDD_Welcome {
 	 * @return void
 	 */
 	public function changelog_screen() {
-		list( $display_version ) = explode( '-', EDD_VERSION );
 		?>
 		<div class="wrap about-wrap">
-			<h1><?php _e( 'Easy Digital Downloads Changelog', 'easy-digital-downloads' ); ?></h1>
-			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online store faster, safer, and better!', 'easy-digital-downloads' ), $display_version ); ?></div>
-			<div class="edd-badge"><img src="<?php echo EDD_PLUGIN_URL . 'assets/images/edd-logo.svg'; ?>" alt="<?php _e( 'Easy Digital Downloads', 'easy-digital-downloads' ); ?>" / ></div>
-
-			<?php $this->tabs(); ?>
-
+			<?php
+				// load welcome message and content tabs
+				$this->welcome_message();
+				$this->tabs();
+			?>
 			<div class="changelog">
 				<h3><?php _e( 'Full Changelog', 'easy-digital-downloads' );?></h3>
 
@@ -302,113 +314,111 @@ class EDD_Welcome {
 	 * @return void
 	 */
 	public function getting_started_screen() {
-		list( $display_version ) = explode( '-', EDD_VERSION );
 		?>
 		<div class="wrap about-wrap">
-			<h1><?php printf( __( 'Welcome to Easy Digital Downloads %s', 'easy-digital-downloads' ), $display_version ); ?></h1>
-			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online store faster, safer and better!', 'easy-digital-downloads' ), $display_version ); ?></div>
-			<div class="edd-badge"><img src="<?php echo EDD_PLUGIN_URL . 'assets/images/edd-logo.svg'; ?>" alt="<?php _e( 'Easy Digital Downloads', 'easy-digital-downloads' ); ?>" / ></div>
-
-			<?php $this->tabs(); ?>
-
+			<?php
+				// load welcome message and content tabs
+				$this->welcome_message();
+				$this->tabs();
+			?>
 			<p class="about-description"><?php _e( 'Use the tips below to get started using Easy Digital Downloads. You will be up and running in no time!', 'easy-digital-downloads' ); ?></p>
 
 			<div class="changelog">
 				<h3><?php _e( 'Creating Your First Download Product', 'easy-digital-downloads' );?></h3>
-
 				<div class="feature-section">
+					<div class="feature-section-media">
+						<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/edit-download.png'; ?>" class="edd-welcome-screenshots"/>
+					</div>
+					<div class="feature-section-content">
+						<h4><?php printf( __( '<a href="%s">%s &rarr; Add New</a>', 'easy-digital-downloads' ), admin_url( 'post-new.php?post_type=download' ), edd_get_label_plural() ); ?></h4>
+						<p><?php printf( __( 'The %s menu is your access point for all aspects of your Easy Digital Downloads product creation and setup. To create your first product, simply click Add New and then fill out the product details.', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></p>
 
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/edit-download.png'; ?>" class="edd-welcome-screenshots"/>
+						<h4><?php _e( 'Product Price', 'easy-digital-downloads' );?></h4>
+						<p><?php _e( 'Products can have simple prices or variable prices if you wish to have more than one price point for a product. For a single price, simply enter the price. For multiple price points, click <em>Enable variable pricing</em> and enter the options.', 'easy-digital-downloads' );?></p>
 
-					<h4><?php printf( __( '<a href="%s">%s &rarr; Add New</a>', 'easy-digital-downloads' ), admin_url( 'post-new.php?post_type=download' ), edd_get_label_plural() ); ?></h4>
-					<p><?php printf( __( 'The %s menu is your access point for all aspects of your Easy Digital Downloads product creation and setup. To create your first product, simply click Add New and then fill out the product details.', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></p>
-
-					<h4><?php _e( 'Product Price', 'easy-digital-downloads' );?></h4>
-					<p><?php _e( 'Products can have simple prices or variable prices if you wish to have more than one price point for a product. For a single price, simply enter the price. For multiple price points, click <em>Enable variable pricing</em> and enter the options.', 'easy-digital-downloads' );?></p>
-
-					<h4><?php _e( 'Download Files', 'easy-digital-downloads' );?></h4>
-					<p><?php _e( 'Uploading the downloadable files is simple. Click <em>Upload File</em> in the Download Files section and choose your download file. To add more than one file, simply click the <em>Add New</em> button.', 'easy-digital-downloads' );?></p>
-
+						<h4><?php _e( 'Download Files', 'easy-digital-downloads' );?></h4>
+						<p><?php _e( 'Uploading the downloadable files is simple. Click <em>Upload File</em> in the Download Files section and choose your download file. To add more than one file, simply click the <em>Add New</em> button.', 'easy-digital-downloads' );?></p>
+					</div>
 				</div>
 			</div>
 
 			<div class="changelog">
 				<h3><?php _e( 'Display a Product Grid', 'easy-digital-downloads' );?></h3>
-
 				<div class="feature-section">
+					<div class="feature-section-media">
+						<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/grid.png'; ?>"/>
+					</div>
+					<div class="feature-section-content">
+						<h4><?php _e( 'Flexible Product Grids','easy-digital-downloads' );?></h4>
+						<p><?php _e( 'The [downloads] shortcode will display a product grid that works with any theme, no matter the size. It is even responsive!', 'easy-digital-downloads' );?></p>
 
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/grid.png'; ?>" class="edd-welcome-screenshots"/>
+						<h4><?php _e( 'Change the Number of Columns', 'easy-digital-downloads' );?></h4>
+						<p><?php _e( 'You can easily change the number of columns by adding the columns="x" parameter:', 'easy-digital-downloads' );?></p>
+						<p><pre>[downloads columns="4"]</pre></p>
 
-					<h4><?php _e( 'Flexible Product Grids','easy-digital-downloads' );?></h4>
-					<p><?php _e( 'The [downloads] shortcode will display a product grid that works with any theme, no matter the size. It is even responsive!', 'easy-digital-downloads' );?></p>
-
-					<h4><?php _e( 'Change the Number of Columns', 'easy-digital-downloads' );?></h4>
-					<p><?php _e( 'You can easily change the number of columns by adding the columns="x" parameter:', 'easy-digital-downloads' );?></p>
-					<p><pre>[downloads columns="4"]</pre></p>
-
-					<h4><?php _e( 'Additional Display Options', 'easy-digital-downloads' ); ?></h4>
-					<p><?php printf( __( 'The product grids can be customized in any way you wish and there is <a href="%s">extensive documentation</a> to assist you.', 'easy-digital-downloads' ), 'http://docs.easydigitaldownloads.com/' ); ?></p>
+						<h4><?php _e( 'Additional Display Options', 'easy-digital-downloads' ); ?></h4>
+						<p><?php printf( __( 'The product grids can be customized in any way you wish and there is <a href="%s">extensive documentation</a> to assist you.', 'easy-digital-downloads' ), 'http://docs.easydigitaldownloads.com/' ); ?></p>
+					</div>
 				</div>
 			</div>
 
 			<div class="changelog">
 				<h3><?php _e( 'Purchase Buttons Anywhere', 'easy-digital-downloads' );?></h3>
-
 				<div class="feature-section">
+					<div class="feature-section-media">
+						<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/purchase-link.png'; ?>"/>
+					</div>
+					<div class="feature-section-content">
+						<h4><?php _e( 'The <em>[purchase_link]</em> Shortcode','easy-digital-downloads' );?></h4>
+						<p><?php _e( 'With easily accessible shortcodes to display purchase buttons, you can add a Buy Now or Add to Cart button for any product anywhere on your site in seconds.', 'easy-digital-downloads' );?></p>
 
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/purchase-link.png'; ?>" class="edd-welcome-screenshots"/>
-
-					<h4><?php _e( 'The <em>[purchase_link]</em> Shortcode','easy-digital-downloads' );?></h4>
-					<p><?php _e( 'With easily accessible shortcodes to display purchase buttons, you can add a Buy Now or Add to Cart button for any product anywhere on your site in seconds.', 'easy-digital-downloads' );?></p>
-
-					<h4><?php _e( 'Buy Now Buttons', 'easy-digital-downloads' );?></h4>
-					<p><?php _e( 'Purchase buttons can behave as either Add to Cart or Buy Now buttons. With Buy Now buttons customers are taken straight to PayPal, giving them the most frictionless purchasing experience possible.', 'easy-digital-downloads' );?></p>
-
+						<h4><?php _e( 'Buy Now Buttons', 'easy-digital-downloads' );?></h4>
+						<p><?php _e( 'Purchase buttons can behave as either Add to Cart or Buy Now buttons. With Buy Now buttons customers are taken straight to PayPal, giving them the most frictionless purchasing experience possible.', 'easy-digital-downloads' );?></p>
+					</div>
 				</div>
 			</div>
 
 			<div class="changelog">
 				<h3><?php _e( 'Need Help?', 'easy-digital-downloads' );?></h3>
-
-				<div class="feature-section">
-
-					<h4><?php _e( 'Phenomenal Support','easy-digital-downloads' );?></h4>
-					<p><?php _e( 'We do our best to provide the best support we can. If you encounter a problem or have a question, simply open a ticket using our <a href="https://easydigitaldownloads.com/support">support form</a>.', 'easy-digital-downloads' );?></p>
-
-					<h4><?php _e( 'Need Even Faster Support?', 'easy-digital-downloads' );?></h4>
-					<p><?php _e( 'Our <a href="https://easydigitaldownloads.com/support/pricing/">Priority Support</a> system is there for customers that need faster and/or more in-depth assistance.', 'easy-digital-downloads' );?></p>
-
+				<div class="feature-section two-col">
+					<div class="col">
+						<h4><?php _e( 'Phenomenal Support','easy-digital-downloads' );?></h4>
+						<p><?php _e( 'We do our best to provide the best support we can. If you encounter a problem or have a question, simply open a ticket using our <a href="https://easydigitaldownloads.com/support">support form</a>.', 'easy-digital-downloads' );?></p>
+					</div>
+					<div class="col">
+						<h4><?php _e( 'Need Even Faster Support?', 'easy-digital-downloads' );?></h4>
+						<p><?php _e( 'Our <a href="https://easydigitaldownloads.com/support/pricing/">Priority Support</a> system is there for customers that need faster and/or more in-depth assistance.', 'easy-digital-downloads' );?></p>
+					</div>
 				</div>
 			</div>
 
 			<div class="changelog">
 				<h3><?php _e( 'Stay Up to Date', 'easy-digital-downloads' );?></h3>
-
-				<div class="feature-section">
-
-					<h4><?php _e( 'Get Notified of Extension Releases','easy-digital-downloads' );?></h4>
-					<p><?php _e( 'New extensions that make Easy Digital Downloads even more powerful are released nearly every single week. Subscribe to the newsletter to stay up to date with our latest releases. <a href="http://eepurl.com/kaerz" target="_blank">Sign up now</a> to ensure you do not miss a release!', 'easy-digital-downloads' );?></p>
-
-					<h4><?php _e( 'Get Alerted About New Tutorials', 'easy-digital-downloads' );?></h4>
-					<p><?php _e( '<a href="http://eepurl.com/kaerz" target="_blank">Sign up now</a> to hear about the latest tutorial releases that explain how to take Easy Digital Downloads further.', 'easy-digital-downloads' );?></p>
-
+				<div class="feature-section two-col">
+					<div class="col">
+						<h4><?php _e( 'Get Notified of Extension Releases','easy-digital-downloads' );?></h4>
+						<p><?php _e( 'New extensions that make Easy Digital Downloads even more powerful are released nearly every single week. Subscribe to the newsletter to stay up to date with our latest releases. <a href="http://eepurl.com/kaerz" target="_blank">Sign up now</a> to ensure you do not miss a release!', 'easy-digital-downloads' );?></p>
+					</div>
+					<div class="col">
+						<h4><?php _e( 'Get Alerted About New Tutorials', 'easy-digital-downloads' );?></h4>
+						<p><?php _e( '<a href="http://eepurl.com/kaerz" target="_blank">Sign up now</a> to hear about the latest tutorial releases that explain how to take Easy Digital Downloads further.', 'easy-digital-downloads' );?></p>
+					</div>
 				</div>
 			</div>
 
 			<div class="changelog">
 				<h3><?php _e( 'Extensions for Everything', 'easy-digital-downloads' );?></h3>
-
-				<div class="feature-section">
-
-					<h4><?php _e( 'Over 250 Extensions','easy-digital-downloads' );?></h4>
-					<p><?php _e( 'Add-on plugins are available that greatly extend the default functionality of Easy Digital Downloads. There are extensions for payment processors, such as Stripe and PayPal, extensions for newsletter integrations, and many, many more.', 'easy-digital-downloads' );?></p>
-
-					<h4><?php _e( 'Visit the Extension Store', 'easy-digital-downloads' );?></h4>
-					<p><?php _e( '<a href="https://easydigitaldownloads.com/downloads" target="_blank">The Extensions store</a> has a list of all available extensions, including convenient category filters so you can find exactly what you are looking for.', 'easy-digital-downloads' );?></p>
-
+				<div class="feature-section two-col">
+					<div class="col">
+						<h4><?php _e( 'Over 250 Extensions','easy-digital-downloads' );?></h4>
+						<p><?php _e( 'Add-on plugins are available that greatly extend the default functionality of Easy Digital Downloads. There are extensions for payment processors, such as Stripe and PayPal, extensions for newsletter integrations, and many, many more.', 'easy-digital-downloads' );?></p>
+					</div>
+					<div class="col">
+						<h4><?php _e( 'Visit the Extension Store', 'easy-digital-downloads' );?></h4>
+						<p><?php _e( '<a href="https://easydigitaldownloads.com/downloads" target="_blank">The Extensions store</a> has a list of all available extensions, including convenient category filters so you can find exactly what you are looking for.', 'easy-digital-downloads' );?></p>
+					</div>
 				</div>
 			</div>
-
 		</div>
 		<?php
 	}
@@ -421,15 +431,13 @@ class EDD_Welcome {
 	 * @return void
 	 */
 	public function credits_screen() {
-		list( $display_version ) = explode( '-', EDD_VERSION );
 		?>
 		<div class="wrap about-wrap">
-			<h1><?php printf( __( 'Welcome to Easy Digital Downloads %s', 'easy-digital-downloads' ), $display_version ); ?></h1>
-			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online store faster, safer and better!', 'easy-digital-downloads' ), $display_version ); ?></div>
-			<div class="edd-badge"><img src="<?php echo EDD_PLUGIN_URL . 'assets/images/edd-logo.svg'; ?>" alt="<?php _e( 'Easy Digital Downloads', 'easy-digital-downloads' ); ?>" / ></div>
-
-			<?php $this->tabs(); ?>
-
+			<?php
+				// load welcome message and content tabs
+				$this->welcome_message();
+				$this->tabs();
+			?>
 			<p class="about-description"><?php _e( 'Easy Digital Downloads is created by a worldwide team of developers who aim to provide the #1 eCommerce platform for selling digital goods through WordPress.', 'easy-digital-downloads' ); ?></p>
 
 			<?php echo $this->contributors(); ?>
@@ -512,7 +520,7 @@ class EDD_Welcome {
 		if ( false !== $contributors )
 			return $contributors;
 
-		$response = wp_remote_get( 'https://api.github.com/repos/easydigitaldownloads/Easy-Digital-Downloads/contributors', array( 'sslverify' => false ) );
+		$response = wp_remote_get( 'https://api.github.com/repos/easydigitaldownloads/Easy-Digital-Downloads/contributors?per_page=999', array( 'sslverify' => false ) );
 
 		if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) )
 			return array();
