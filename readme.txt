@@ -201,7 +201,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Corrected spelling error in EDD_Stats class
 * Fix: New customers improperly created when logged-in user completed purchases with a different email
 * Fix: User verification process should not run on the very first purchase by a customer
-* Fix: edd_get_current_page_url() returns improper URL when WordPress is installedin sub folder
+* Fix: edd_get_current_page_url() returns improper URL when WordPress is installed in sub folder
 * Tweak: Improved formatting of the welcome screen to match the styles of WordPress core
 
 = 2.4.7, September 29, 2015 =
