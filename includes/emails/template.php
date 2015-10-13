@@ -154,8 +154,8 @@ add_action( 'template_redirect', 'edd_display_email_template_preview' );
  * @return string $email_body Body of the email
  */
 function edd_get_email_body_content( $payment_id = 0, $payment_data = array() ) {
-	$default_email_body = __( "Dear", "edd" ) . " {name},\n\n";
-	$default_email_body .= __( "Thank you for your purchase. Please click on the link(s) below to download your files.", "edd" ) . "\n\n";
+	$default_email_body = __( "Dear", "easy-digital-downloads" ) . " {name},\n\n";
+	$default_email_body .= __( "Thank you for your purchase. Please click on the link(s) below to download your files.", "easy-digital-downloads" ) . "\n\n";
 	$default_email_body .= "{download_list}\n\n";
 	$default_email_body .= "{sitename}";
 

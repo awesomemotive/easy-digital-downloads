@@ -463,9 +463,9 @@ function edd_get_registered_settings() {
 				'purchase_receipt' => array(
 					'id'   => 'purchase_receipt',
 					'name' => __( 'Purchase Receipt', 'easy-digital-downloads' ),
-					'desc' => __('Enter the email that is sent to users after completing a successful purchase. HTML is accepted. Available template tags:','easy-digital-downloads' ) . '<br/>' . edd_get_emails_tags_list(),
+					'desc' => __('Enter the text that is sent as purchase receipt email to users after completion of a successful purchase. HTML is accepted. Available template tags:','easy-digital-downloads' ) . '<br/>' . edd_get_emails_tags_list(),
 					'type' => 'rich_editor',
-					'std'  => __( "Dear", "edd" ) . " {name},\n\n" . __( "Thank you for your purchase. Please click on the link(s) below to download your files.", "edd" ) . "\n\n{download_list}\n\n{sitename}"
+					'std'  => __( "Dear", "easy-digital-downloads" ) . " {name},\n\n" . __( "Thank you for your purchase. Please click on the link(s) below to download your files.", "easy-digital-downloads" ) . "\n\n{download_list}\n\n{sitename}"
 				),
 				'sale_notification_header' => array(
 					'id' => 'sale_notification_header',
@@ -483,7 +483,7 @@ function edd_get_registered_settings() {
 				'sale_notification' => array(
 					'id'   => 'sale_notification',
 					'name' => __( 'Sale Notification', 'easy-digital-downloads' ),
-					'desc' => __( 'Enter the email that is sent to sale notification emails after completion of a purchase. HTML is accepted. Available template tags:', 'easy-digital-downloads' ) . '<br/>' . edd_get_emails_tags_list(),
+					'desc' => __( 'Enter the text that is sent as sale notification email after completion of a purchase. HTML is accepted. Available template tags:', 'easy-digital-downloads' ) . '<br/>' . edd_get_emails_tags_list(),
 					'type' => 'rich_editor',
 					'std'  => edd_get_default_sale_notification_email()
 				),
