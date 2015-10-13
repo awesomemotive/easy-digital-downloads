@@ -434,7 +434,7 @@ function edd_get_current_page_url( $nocache = false ) {
 
 	if( get_option( 'permalink_structure' ) ) {
 
-		$base = trailingslashig( home_url( $wp->request ) );
+		$base = trailingslashit( home_url( $wp->request ) );
 
 	} else {
 
