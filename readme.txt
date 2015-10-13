@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.9.2
 Tested up to: 4.4
 
-Stable Tag: 2.4.7
+Stable Tag: 2.4.8
 
 License: GNU Version 2 or Any Later Version
 
