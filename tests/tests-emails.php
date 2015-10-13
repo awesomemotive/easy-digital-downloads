@@ -1,7 +1,5 @@
 <?php
 
-use \EDD_Email_Template_Tags;
-
 /**
  * @group edd_emails
  */

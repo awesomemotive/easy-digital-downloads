@@ -175,6 +175,12 @@ function edd_insert_payment( $payment_data = array() ) {
 
 		// Create or update a customer
 		$customer      = new EDD_Customer( $payment_data['user_email'] );
+
+		// If we didn't find a customer and the user is logged in, check by user_id #3881
+		if ( empty( $customer->id ) && is_user_logged_in() ) {
+			$customer  = new EDD_customer( get_current_user_id(), true );
+		}
+
 		$customer_data = array(
 			'name'        => $payment_data['user_info']['first_name'] . ' ' . $payment_data['user_info']['last_name'],
 			'email'       => $payment_data['user_email'],
@@ -183,13 +189,6 @@ function edd_insert_payment( $payment_data = array() ) {
 
 		if ( empty( $customer->id ) ) {
 			$customer->create( $customer_data );
-		} else {
-			// Only update the customer if their name or email has changed
-			if ( $customer_data['email'] !== $customer->email || $customer_data['name'] !== $customer->name ) {
-				// We shouldn't be updating the User ID here, that is an admin task
-				unset( $customer_data['user_id'] );
-				$customer->update( $customer_data );
-			}
 		}
 
 		$customer->attach_payment( $payment, false );

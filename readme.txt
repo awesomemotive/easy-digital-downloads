@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.9.2
 Tested up to: 4.4
 
-Stable Tag: 2.4.7
+Stable Tag: 2.4.8
 
 License: GNU Version 2 or Any Later Version
 
@@ -101,7 +101,7 @@ There are three ways you can show the downloads shopping cart:
 
 2. Use the included widget. Go to Appearance > Widgets and place the "Downloads Cart" widget into any widget area available.
 
-3. Use the template tag and place the following the template file of your choosing:
+3. Use the template tag and place the following in the template file of your choosing:
 
 `echo edd_shopping_cart();`
 
@@ -190,6 +190,19 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.4.8, October 12, 2015 =
+
+* New: Added option to manually verify a user account from the customer details screen
+* New: Added support for searching customer records by user ID
+* New: Added improved error logging for email sending
+* Fix: Incorrect CSS animation property
+* Fix: Removed unused code in edd_get_purchase_link() function
+* Fix: Corrected spelling error in EDD_Stats class
+* Fix: New customers improperly created when logged-in user completed purchases with a different email
+* Fix: User verification process should not run on the very first purchase by a customer
+* Fix: edd_get_current_page_url() returns improper URL when WordPress is installedin sub folder
+* Tweak: Improved formatting of the welcome screen to match the styles of WordPress core
 
 = 2.4.7, September 29, 2015 =
 
