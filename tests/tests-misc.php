@@ -513,9 +513,9 @@ class Test_Misc extends WP_UnitTestCase {
 
 	public function test_add_cache_busting() {
 		add_filter( 'edd_is_caching_plugin_active', '__return_true' );
-		$this->assertEquals( 'http://example.org?nocache=true', edd_add_cache_busting( home_url() ) );
+		$this->assertEquals( 'http://example.org/?nocache=true', edd_add_cache_busting( home_url( '/') ) );
 		remove_filter( 'edd_is_caching_plugin_active', '__return_true' );
-		$this->assertEquals( 'http://example.org', edd_add_cache_busting( home_url() ) );
+		$this->assertEquals( 'http://example.org/', edd_add_cache_busting( home_url( '/' ) ) );
 	}
 
 	public function test_get_current_page_url() {
@@ -577,7 +577,7 @@ class Test_Misc extends WP_UnitTestCase {
 		$this->assertNotContains( 'nocache=true', $remove_url );
 
 		// Go home and test again
-		$this->go_to( home_url() );
+		$this->go_to( home_url( '/' ) );
 
 		add_filter( 'edd_is_caching_plugin_active', '__return_true' );
 
