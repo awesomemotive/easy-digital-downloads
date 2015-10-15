@@ -246,10 +246,11 @@ function edd_render_receipt_in_browser() {
 ?>
 <!DOCTYPE html>
 <html lang="en">
-	<title><?php _e( 'Receipt', 'easy-digital-downloads' ); ?></title>
-	<meta charset="utf-8" />
-	<?php wp_head(); ?>
-</html>
+	<head>
+		<title><?php _e( 'Receipt', 'easy-digital-downloads' ); ?></title>
+		<meta charset="utf-8" />
+		<?php wp_head(); ?>
+	</head>
 <body class="<?php echo apply_filters('edd_receipt_page_body_class', 'edd_receipt_page' ); ?>">
 	<div id="edd_receipt_wrapper">
 		<?php do_action( 'edd_render_receipt_in_browser_before' ); ?>
@@ -258,6 +259,7 @@ function edd_render_receipt_in_browser() {
 	</div>
 <?php wp_footer(); ?>
 </body>
+</html>
 <?php
 	echo ob_get_clean();
 	die();
