@@ -155,7 +155,7 @@ $status    = edd_get_payment_status( $payment, true );
 						</div>
 
 						<?php if ( $edd_receipt_args['notes'] ) : ?>
-							<div class="edd_purchase_receipt_product_notes"><p><?php echo esc_attr( edd_get_product_notes( $item['id'] ) ) ; ?></p></div>
+							<div class="edd_purchase_receipt_product_notes"><?php echo wp_kses_post(wpautop( edd_get_product_notes( $item['id']) ) ); ?></div>
 						<?php endif; ?>
 
 						<?php
