@@ -51,7 +51,6 @@ class EDD_Payment {
 	public $gateway;
 	public $currency;
 	public $cart_details;
-	public $downloads;
 
 
 	/**
@@ -187,7 +186,7 @@ class EDD_Payment {
 
 		// Retrieve the current meta
 		$downloads   = edd_get_payment_meta_downloads( $download_id );
-        $downloads[] = $download;
+		$downloads[] = $download;
 
 		$purchase_data = array(
 			'downloads'     => (array) $downloads,
@@ -196,11 +195,7 @@ class EDD_Payment {
 
 		$meta = edd_get_payment_meta( $download_id );
 
-		$new_meta = array(
-			'cart_details' = $cart_details
-		);
-
-		edd_update_payment_meta( $this->payment_id, '_edd_payment_meta', array_merge( $meta, $new_meta ) );
+		edd_update_payment_meta( $this->payment_id, '_edd_payment_meta', array_merge( $meta, $purcahse_data ) );
 
 		// TODO: Still need to update purchase_data... I don't see anywhere that's being done?
 	}
