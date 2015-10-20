@@ -1010,7 +1010,7 @@ function edd_checkbox_callback( $args ) {
 
 	$checked = isset( $edd_options[ $args['id'] ] ) ? checked( 1, $edd_options[ $args['id'] ], false ) : '';
 	$html = '<input type="checkbox" id="edd_settings[' . sanitize_key( $args['id'] ) . ']"' . $name . ' value="1" ' . $checked . '/>';
-	$html .= '<label for="edd_settings[' . sanitize_key( $args['id'] ) . ']"> '  . esc_html( $args['desc'] ) . '</label>';
+	$html .= '<label for="edd_settings[' . sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 
 	echo $html;
 }
@@ -1031,8 +1031,8 @@ function edd_multicheck_callback( $args ) {
 	if ( ! empty( $args['options'] ) ) {
 		foreach( $args['options'] as $key => $option ):
 			if( isset( $edd_options[$args['id']][$key] ) ) { $enabled = $option; } else { $enabled = NULL; }
-			echo '<input name="edd_settings[' . sanitize_key( $args['id'] ) . '][' . esc_attr( $key ) . ']" id="edd_settings[' . sanitize_key( $args['id'] ) . '][' . esc_attr( $key ) . ']" type="checkbox" value="' . $option . '" ' . checked($option, $enabled, false) . '/>&nbsp;';
-			echo '<label for="edd_settings[' . sanitize_key( $args['id'] ) . '][' . esc_attr( $key ) . ']">' . $option . '</label><br/>';
+			echo '<input name="edd_settings[' . sanitize_key( $args['id'] ) . '][' . esc_attr( $key ) . ']" id="edd_settings[' . sanitize_key( $args['id'] ) . '][' . esc_attr( $key ) . ']" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked($option, $enabled, false) . '/>&nbsp;';
+			echo '<label for="edd_settings[' . sanitize_key( $args['id'] ) . '][' . esc_attr( $key ) . ']">' . wp_kses_post( $option ) . '</label><br/>';
 		endforeach;
 		echo '<p class="description">' . $args['desc'] . '</p>';
 	}
@@ -1098,7 +1098,7 @@ function edd_payment_icons_callback( $args ) {
 			echo $option . '</label>';
 
 		}
-		echo '<p class="description" style="margin-top:16px;">' . esc_html( $args['desc'] ) . '</p>';
+		echo '<p class="description" style="margin-top:16px;">' . wp_kses_post( $args['desc'] ) . '</p>';
 	}
 }
 
@@ -1127,7 +1127,7 @@ function edd_radio_callback( $args ) {
 		echo '<label for="edd_settings[' . sanitize_key( $args['id'] ) . '][' . esc_attr( $key ) . ']">' . esc_html( $option ) . '</label><br/>';
 	endforeach;
 
-	echo '<p class="description">' . $args['desc'] . '</p>';
+	echo '<p class="description">' . wp_kses_post( $args['desc'] ) . '</p>';
 }
 
 /**
@@ -1175,7 +1175,7 @@ function edd_gateway_select_callback($args) {
 	endforeach;
 
 	echo '</select>';
-	echo '<label for="edd_settings[' . sanitize_key( $args['id'] ) . ']"> '  . esc_html( $args['desc'] ) . '</label>';
+	echo '<label for="edd_settings[' . sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 }
 
 /**
@@ -1208,7 +1208,7 @@ function edd_text_callback( $args ) {
 	$readonly = $args['readonly'] === true ? ' readonly="readonly"' : '';
 	$size     = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
 	$html     = '<input type="text" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . sanitize_key( $args['id'] ) . ']" ' . $name . ' value="' . esc_attr( stripslashes( $value ) ) . '"' . $readonly . '/>';
-	$html    .= '<label for="edd_settings[' . sanitize_key( $args['id'] ) . ']"> '  . esc_html( $args['desc'] ) . '</label>';
+	$html    .= '<label for="edd_settings[' . sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 
 	echo $html;
 }
@@ -1246,7 +1246,7 @@ function edd_number_callback( $args ) {
 
 	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
 	$html = '<input type="number" step="' . esc_attr( $step ) . '" max="' . esc_attr( $max ) . '" min="' . esc_attr( $min ) . '" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . sanitize_key( $args['id'] ) . ']" ' . $name . ' value="' . esc_attr( stripslashes( $value ) ) . '"/>';
-	$html .= '<label for="edd_settings[' . sanitize_key( $args['id'] ) . ']"> '  . esc_html( $args['desc'] ) . '</label>';
+	$html .= '<label for="edd_settings[' . sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 
 	echo $html;
 }
@@ -1271,7 +1271,7 @@ function edd_textarea_callback( $args ) {
 	}
 
 	$html = '<textarea class="large-text" cols="50" rows="5" id="edd_settings[' . sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
-	$html .= '<label for="edd_settings[' . sanitize_key( $args['id'] ) . ']"> '  . esc_html( $args['desc'] ) . '</label>';
+	$html .= '<label for="edd_settings[' . sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 
 	echo $html;
 }
@@ -1297,7 +1297,7 @@ function edd_password_callback( $args ) {
 
 	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
 	$html = '<input type="password" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']" value="' . esc_attr( $value ) . '"/>';
-	$html .= '<label for="edd_settings[' . sanitize_key( $args['id'] ) . ']"> ' . esc_html( $args['desc'] ) . '</label>';
+	$html .= '<label for="edd_settings[' . sanitize_key( $args['id'] ) . ']"> ' . wp_kses_post( $args['desc'] ) . '</label>';
 
 	echo $html;
 }
@@ -1354,7 +1354,7 @@ function edd_select_callback($args) {
 	}
 
 	$html .= '</select>';
-	$html .= '<label for="edd_settings[' . sanitize_key( $args['id'] ) . ']"> ' . esc_html( $args['desc'] ) . '</label>';
+	$html .= '<label for="edd_settings[' . sanitize_key( $args['id'] ) . ']"> ' . wp_kses_post( $args['desc'] ) . '</label>';
 
 	echo $html;
 }
@@ -1386,7 +1386,7 @@ function edd_color_select_callback( $args ) {
 	}
 
 	$html .= '</select>';
-	$html .= '<label for="edd_settings[' . sanitize_key( $args['id'] ) . ']"> '  . esc_html( $args['desc'] ) . '</label>';
+	$html .= '<label for="edd_settings[' . sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 
 	echo $html;
 }
@@ -1424,7 +1424,7 @@ function edd_rich_editor_callback( $args ) {
 		$html = '<textarea class="large-text" rows="10" id="edd_settings[' . sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
 	}
 
-	$html .= '<br/><label for="edd_settings[' . sanitize_key( $args['id'] ) . ']"> ' . esc_html( $args['desc'] ) . '</label>';
+	$html .= '<br/><label for="edd_settings[' . sanitize_key( $args['id'] ) . ']"> ' . wp_kses_post( $args['desc'] ) . '</label>';
 
 	echo $html;
 }
@@ -1451,7 +1451,7 @@ function edd_upload_callback( $args ) {
 	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
 	$html = '<input type="text" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
 	$html .= '<span>&nbsp;<input type="button" class="edd_settings_upload_button button-secondary" value="' . __( 'Upload File', 'easy-digital-downloads' ) . '"/></span>';
-	$html .= '<label for="edd_settings[' . sanitize_key( $args['id'] ) . ']"> ' . esc_html( $args['desc'] ) . '</label>';
+	$html .= '<label for="edd_settings[' . sanitize_key( $args['id'] ) . ']"> ' . wp_kses_post( $args['desc'] ) . '</label>';
 
 	echo $html;
 }
@@ -1479,7 +1479,7 @@ function edd_color_callback( $args ) {
 	$default = isset( $args['std'] ) ? $args['std'] : '';
 
 	$html = '<input type="text" class="edd-color-picker" id="edd_settings[' . sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']" value="' . esc_attr( $value ) . '" data-default-color="' . esc_attr( $default ) . '" />';
-	$html .= '<label for="edd_settings[' . sanitize_key( $args['id'] ) . ']"> '  . esc_html( $args['desc'] ) . '</label>';
+	$html .= '<label for="edd_settings[' . sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 
 	echo $html;
 }
@@ -1515,7 +1515,7 @@ function edd_shop_states_callback($args) {
 	}
 
 	$html .= '</select>';
-	$html .= '<label for="edd_settings[' . sanitize_key( $args['id'] ) . ']"> '  . esc_html( $args['desc'] ) . '</label>';
+	$html .= '<label for="edd_settings[' . sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 
 	echo $html;
 }
@@ -1663,7 +1663,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 		if ( 'valid' == get_option( $args['options']['is_valid_license_option'] ) ) {
 			$html .= '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __( 'Deactivate License',  'easy-digital-downloads' ) . '"/>';
 		}
-		$html .= '<label for="edd_settings[' . sanitize_key( $args['id'] ) . ']"> '  . esc_html( $args['desc'] ) . '</label>';
+		$html .= '<label for="edd_settings[' . sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 
 		wp_nonce_field( $args['id'] . '-nonce', $args['id'] . '-nonce' );
 
