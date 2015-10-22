@@ -1567,7 +1567,6 @@ class EDD_API {
 			$user_info  = isset( $log_meta['_edd_log_user_info'] ) ? maybe_unserialize( $log_meta['_edd_log_user_info'][0] ) : array();
 			$payment_id = isset( $log_meta['_edd_log_payment_id'] ) ? $log_meta['_edd_log_payment_id'][0] : false;
 
-
 			$payment_customer_id = edd_get_payment_customer_id( $payment_id );
 			$payment_customer    = new EDD_Customer( $payment_customer_id );
 			$user_id             = ( $payment_customer->user_id > 0 ) ? $payment_customer->user_id : false;
@@ -1579,13 +1578,15 @@ class EDD_API {
 			$file_name           = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
 
 			$item = array(
-				'ID'          => $log->ID,
-				'user_id'     => $user_id,
-				'customer_id' => $payment_customer_id,
-				'payment_id'  => $payment_id,
-				'file'        => $file_name,
-				'ip'          => $ip,
-				'date'        => $log->post_date,
+				'ID'           => $log->ID,
+				'user_id'      => $user_id,
+				'product_id'   => $log->post_parent,
+				'product_name' => get_the_title( $log->post_parent ),
+				'customer_id'  => $payment_customer_id,
+				'payment_id'   => $payment_id,
+				'file'         => $file_name,
+				'ip'           => $ip,
+				'date'         => $log->post_date,
 			);
 
 			$item = apply_filters( 'edd_api_download_log_item', $item, $log, $log_meta );
