@@ -194,7 +194,7 @@ function edd_user_info_fields() {
 				<?php } ?>
 			</label>
 			<span class="edd-description"><?php _e( 'We will use this to personalize your account experience.', 'easy-digital-downloads' ); ?></span>
-			<input class="edd-input required" type="text" name="edd_first" placeholder="<?php _e( 'First name', 'easy-digital-downloads' ); ?>" id="edd-first" value="<?php echo esc_attr( $customer['first_name'] ); ?>"/>
+			<input class="edd-input required" type="text" name="edd_first" placeholder="<?php _e( 'First name', 'easy-digital-downloads' ); ?>" id="edd-first" value="<?php echo esc_attr( $customer['first_name'] ); ?>"<?php if( edd_field_is_required( 'edd_first' ) ) {  echo ' required '; } ?>/>
 		</p>
 		<p id="edd-last-name-wrap">
 			<label class="edd-label" for="edd-last">
