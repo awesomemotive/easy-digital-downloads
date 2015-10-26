@@ -360,7 +360,7 @@ function edd_customers_view( $customer ) {
 								<a title="<?php _e( 'View Details for Payment', 'easy-digital-downloads' ); echo ' ' . $payment->ID; ?>" href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $payment->ID ); ?>">
 									<?php _e( 'View Details', 'easy-digital-downloads' ); ?>
 								</a>
-								<?php do_action( 'edd_customer_recent_purcahses_actions', $customer, $payment ); ?>
+								<?php do_action( 'edd_customer_recent_purchases_actions', $customer, $payment ); ?>
 							</td>
 						</tr>
 					<?php endforeach; ?>
