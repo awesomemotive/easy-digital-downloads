@@ -25,19 +25,23 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @return void
 */
 function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
-	if ( $old_status == 'publish' || $old_status == 'complete' )
+	if ( $old_status == 'publish' || $old_status == 'complete' ) {
 		return; // Make sure that payments are only completed once
+	}
 
 	// Make sure the payment completion is only processed when new status is complete
-	if ( $new_status != 'publish' && $new_status != 'complete' )
+	if ( $new_status != 'publish' && $new_status != 'complete' ) {
 		return;
+	}
+
+	$payment = new EDD_Payment( $payment_id );
 
 	$creation_date  = get_post_field( 'post_date', $payment_id, 'raw' );
-	$completed_date = edd_get_payment_completed_date( $payment_id );
-	$user_info      = edd_get_payment_meta_user_info( $payment_id );
-	$customer_id    = edd_get_payment_customer_id( $payment_id );
-	$amount         = edd_get_payment_amount( $payment_id );
-	$cart_details   = edd_get_payment_meta_cart_details( $payment_id );
+	$completed_date = $payment->completed_date;
+	$user_info      = $payment->user_info;
+	$customer_id    = $payment->customer_id;
+	$amount         = $payment->total;
+	$cart_details   = $payment->cart_details;
 
 	do_action( 'edd_pre_complete_purchase', $payment_id );
 
@@ -105,9 +109,11 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 	if( empty( $completed_date ) ) {
 
 		// Save the completed date
-		edd_update_payment_meta( $payment_id, '_edd_completed_date', current_time( 'mysql' ) );
+		$payment->completed_date = current_time( 'mysql' );
+		$payment->save();
 
 		do_action( 'edd_complete_purchase', $payment_id );
+
 	}
 
 	// Empty the shopping cart

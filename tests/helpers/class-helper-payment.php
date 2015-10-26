@@ -120,7 +120,10 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		$key        = $purchase_data['purchase_key'];
 
 		$transaction_id = 'FIR3SID3';
-		edd_set_payment_transaction_id( $payment_id, $transaction_id );
+		$payment = new EDD_Payment( $payment_id );
+		$payment->transaction_id = $transaction_id;
+		$payment->save();
+
 		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'edd' ), $transaction_id ) );
 
 		return $payment_id;

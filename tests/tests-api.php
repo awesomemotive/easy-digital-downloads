@@ -133,22 +133,22 @@ class Tests_API extends WP_UnitTestCase {
 		);
 
 		$purchase_data = array(
-			'price' => number_format( (float) $total, 2 ),
-			'date' => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
+			'price'        => number_format( (float) $total, 2 ),
+			'date'         => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
 			'purchase_key' => strtolower( md5( uniqid() ) ),
-			'user_email' => $user_info['email'],
-			'user_info' => $user_info,
-			'currency' => 'USD',
-			'downloads' => $download_details,
+			'user_email'   => $user_info['email'],
+			'user_info'    => $user_info,
+			'currency'     => 'USD',
+			'downloads'    => $download_details,
 			'cart_details' => $cart_details,
-			'status' => 'pending'
+			'status'       => 'pending'
 		);
 
 		$_SERVER['REMOTE_ADDR'] = '10.0.0.0';
 
-		$payment_id = edd_insert_payment( $purchase_data );
+		$this->_payment_id = edd_insert_payment( $purchase_data );
 
-		edd_update_payment_status( $payment_id, 'complete' );
+		edd_update_payment_status( $this->_payment_id, 'complete' );
 
 		$this->_api_output = EDD()->api->get_products();
 		$this->_api_output_sales = EDD()->api->get_recent_sales();
@@ -160,6 +160,7 @@ class Tests_API extends WP_UnitTestCase {
 	public function tearDown() {
 		parent::tearDown();
 		remove_action( 'edd_api_output_override_xml', array( $this, 'override_api_xml_format' ) );
+		EDD_Helper_Payment::delete_payment( $this->_payment_id );
 	}
 
 	public function test_endpoints() {
@@ -307,7 +308,6 @@ class Tests_API extends WP_UnitTestCase {
 
 	public function test_get_customers() {
 		$out = EDD()->api->get_customers();
-
 		$this->assertArrayHasKey( 'customers', $out );
 		$this->assertArrayHasKey( 'info', $out['customers'][0] );
 		$this->assertArrayHasKey( 'id', $out['customers'][0]['info'] );

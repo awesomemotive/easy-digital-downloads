@@ -50,7 +50,25 @@ class Tests_Payments extends WP_UnitTestCase {
 		$this->assertEquals( 'edd_payment', $out[0]->post_type );
 	}
 
-	public function test_payments_query() {
+	public function test_payments_query_edd_payments() {
+		$payments = new EDD_Payments_Query( array( 'output' => 'edd_payments' ) );
+		$out = $payments->get_payments();
+		$this->assertTrue( is_object( $out[0] ) );
+		$this->assertTrue( property_exists( $out[0], 'ID' ) );
+		$this->assertTrue( property_exists( $out[0], 'cart_details' ) );
+		$this->assertTrue( property_exists( $out[0], 'user_info' ) );
+	}
+
+	public function test_payments_query_payments() {
+		$payments = new EDD_Payments_Query( array( 'output' => 'payments' ) );
+		$out = $payments->get_payments();
+		$this->assertTrue( is_array( (array) $out[0] ) );
+		$this->assertArrayHasKey( 'ID', (array) $out[0] );
+		$this->assertArrayHasKey( 'cart_details', (array) $out[0] );
+		$this->assertArrayHasKey( 'user_info', (array) $out[0] );
+	}
+
+	public function test_payments_query_default() {
 		$payments = new EDD_Payments_Query;
 		$out = $payments->get_payments();
 		$this->assertTrue( is_array( (array) $out[0] ) );
@@ -60,8 +78,11 @@ class Tests_Payments extends WP_UnitTestCase {
 	}
 
 	public function test_edd_get_payment_by() {
-		$this->assertObjectHasAttribute( 'ID', edd_get_payment_by( 'id', $this->_payment_id ) );
-		$this->assertObjectHasAttribute( 'ID', edd_get_payment_by( 'key', $this->_key ) );
+		$payment = edd_get_payment_by( 'id', $this->_payment_id );
+		$this->assertObjectHasAttribute( 'ID', $payment );
+
+		$payment = edd_get_payment_by( 'key', $this->_key );
+		$this->assertObjectHasAttribute( 'ID', $payment );
 	}
 
 	public function test_fake_insert_payment() {

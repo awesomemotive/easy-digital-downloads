@@ -50,7 +50,9 @@ class Tests_Taxes extends WP_UnitTestCase {
 			'id' => $this->_post->ID,
 			'item_number' => array(
 				'id' => $this->_post->ID,
-				'options' => array()
+				'options' => array(
+					'price_id' => 1
+				)
 			),
 			'subtotal' => '10',
 			'discount' => '0',

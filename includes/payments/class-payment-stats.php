@@ -133,7 +133,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 				$sales = get_posts( $args );
 				$earnings = 0;
 				if ( $sales ) {
-					$sales = implode( ',', $sales );
+					$sales     = implode( ',', $sales );
 					$earnings += $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN({$sales})" );
 				}
 				// Cache the results for one hour

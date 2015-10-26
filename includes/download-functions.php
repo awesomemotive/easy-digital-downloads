@@ -403,7 +403,7 @@ function edd_get_lowest_price_id( $download_id = 0 ) {
 		}
 	}
 
-	return (int) $$min_id;
+	return (int) $min_id;
 }
 
 /**
@@ -982,6 +982,8 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $p
 	if ( ! $payment ) {
 		return false;
 	}
+
+	$args = array();
 
 	if ( ! empty( $payment->ID ) ) {
 
