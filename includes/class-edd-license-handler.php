@@ -113,9 +113,6 @@ class EDD_License {
 	 */
 	public function auto_updater() {
 
-		if ( 'valid' !== get_option( $this->item_shortname . '_license_active' ) )
-			return;
-
 		$args = array(
 			'version'   => $this->version,
 			'license'   => $this->license,
