@@ -265,6 +265,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/payments/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/payments/class-payment-stats.php';
 		require_once EDD_PLUGIN_DIR . 'includes/payments/class-payments-query.php';
+		require_once EDD_PLUGIN_DIR . 'includes/payments/class-edd-payment.php';
 		require_once EDD_PLUGIN_DIR . 'includes/misc-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/download-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/scripts.php';

@@ -104,8 +104,16 @@ class Tests_Stats extends WP_UnitTestCase {
 		$_SERVER['REMOTE_ADDR'] = '10.0.0.0';
 		$_SERVER['SERVER_NAME'] = 'edd_virtual';
 
-		$payment_id = edd_insert_payment( $purchase_data );
-		edd_update_payment_status( $payment_id );
+		$this->_payment_id = edd_insert_payment( $purchase_data );
+		edd_update_payment_status( $this->_payment_id );
+
+	}
+
+	public function tearDown() {
+
+		parent::tearDown();
+
+		EDD_Helper_Payment::delete_payment( $this->_payment_id );
 
 	}
 
@@ -161,7 +169,7 @@ class Tests_Stats extends WP_UnitTestCase {
 		$this->assertInternalType( 'numeric', $this->_stats->end_date );
 		$this->assertGreaterThan( $this->_stats->start_date, $this->_stats->end_date );
 
-		
+
 		// Set some valid timestamps
 		$this->_stats->setup_dates( '1379635200', '1379645200' );
 		$this->assertInternalType( 'numeric', $this->_stats->start_date );
@@ -172,7 +180,7 @@ class Tests_Stats extends WP_UnitTestCase {
 		$this->_stats->setup_dates( 'nonvaliddatestring', 'nonvaliddatestring' );
 		$this->assertInstanceOf( 'WP_Error', $this->_stats->start_date );
 		$this->assertInstanceOf( 'WP_Error', $this->_stats->end_date );
-		
+
 	}
 
 
