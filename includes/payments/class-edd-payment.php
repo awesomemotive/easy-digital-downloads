@@ -237,69 +237,67 @@ class EDD_Payment {
 						// Update totals for pending downloads
 						foreach ( $this->pending[ $key ] as $item ) {
 
-							if ( 'publish' === $this->status ) {
+							switch( $item['action'] ) {
 
-								switch( $item['action'] ) {
+								case 'add':
+									$price = $item['price'];
+									$taxes = $item['tax'];
 
-									case 'add':
-										$price = $item['price'];
-										$taxes = $item['tax'];
+									// Add sales logs
+									$log_date =  date( 'Y-m-d G:i:s', current_time( 'timestamp', true ) );
+									$price_id = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : 0;
 
-										// Add sales logs
-										$log_date =  date( 'Y-m-d G:i:s', current_time( 'timestamp', true ) );
-										$price_id = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : 0;
+									$y = 0;
 
-										$y = 0;
+									while ( $y < $item['quantity'] ) {
 
-										if ( false === $item['has_log'] ) {
+										edd_record_sale_in_log( $item['id'], $this->ID, $price_id, $log_date );
+										$y++;
 
-											while ( $y < $item['quantity'] ) {
+									}
 
-												edd_record_sale_in_log( $item['id'], $this->ID, $price_id, $log_date );
-												$y++;
-
-											}
-											$download = new EDD_Download( $item['id'] );
-											$download->increase_sales( $item['quantity'] );
-											$download->increase_earnings( $price );
-
-										}
+									if ( 'pending' !== $this->status ) {
+										$download = new EDD_Download( $item['id'] );
+										$download->increase_sales( $item['quantity'] );
+										$download->increase_earnings( $price );
 
 										$total_increase += $price;
-										break;
+									}
+									break;
 
-										case 'remove':
-											$log_args = array(
-												'post_type'   => 'edd_log',
-												'post_parent' => $item['id'],
-												'numberposts' => $item['quantity'],
-												'meta_query'  => array(
-													array(
-														'key'     => '_edd_log_payment_id',
-														'value'   => $this->ID,
-														'compare' => '=',
-													),
-													array(
-														'key'     => '_edd_log_price_id',
-														'value'   => $item['price_id'],
-														'compare' => '='
-													)
+									case 'remove':
+										$log_args = array(
+											'post_type'   => 'edd_log',
+											'post_parent' => $item['id'],
+											'numberposts' => $item['quantity'],
+											'meta_query'  => array(
+												array(
+													'key'     => '_edd_log_payment_id',
+													'value'   => $this->ID,
+													'compare' => '=',
+												),
+												array(
+													'key'     => '_edd_log_price_id',
+													'value'   => $item['price_id'],
+													'compare' => '='
 												)
-											);
+											)
+										);
 
-											$found_logs = get_posts( $log_args );
-											foreach ( $found_logs as $log ) {
-												wp_delete_post( $log->ID, true );
-											}
+										$found_logs = get_posts( $log_args );
+										foreach ( $found_logs as $log ) {
+											wp_delete_post( $log->ID, true );
+										}
 
+										if ( 'pending' !== $this->status ) {
 											$download = new EDD_Download( $item['id'] );
 											$download->decrease_sales( $item['quantity'] );
 											$download->decrease_earnings( $item['amount'] );
 
 											$total_decrease += $item['amount'];
-											break;
+										}
+										break;
 
-								}
 							}
 
 						}
@@ -370,7 +368,7 @@ class EDD_Payment {
 			$this->update_meta( '_edd_payment_total', $this->total );
 			$this->update_meta( '_edd_payment_tax', $this->tax );
 
-			if ( $this->status == 'publish' ) {
+			if ( 'pending' !== $this->status ) {
 
 				$customer = new EDD_Customer( $this->customer_id );
 
@@ -405,10 +403,9 @@ class EDD_Payment {
 	 * @since 2.5
 	 * @param int  $download_id The download to add
 	 * @param int  $args Other arguments to pass to the function
-	 * @param bool $has_log If the download we're adding has a log already (for backwards compat of editing a payment)
 	 * @return void
 	 */
-	public function add_download( $download_id = 0, $args = array(), $has_log = false ) {
+	public function add_download( $download_id = 0, $args = array() ) {
 		$download = new EDD_Download( $download_id );
 
 		// Bail if this post isn't a download
@@ -492,8 +489,7 @@ class EDD_Payment {
 			}
 		}
 
-		$added_download            = end( $this->cart_details );
-		$added_download['has_log'] = $has_log;
+		$added_download = end( $this->cart_details );
 		$added_download['action']  = 'add';
 
 		$this->pending['downloads'][] = $added_download;
@@ -508,6 +504,14 @@ class EDD_Payment {
 
 	public function remove_download( $download_id, $args ) {
 
+		// Set some defaults
+		$defaults = array(
+			'quantity'    => 1,
+			'amount'      => false,
+			'price_id'    => false,
+		);
+		$args = wp_parse_args( $args, $defaults );
+
 		$download = new EDD_Download( $download_id );
 
 		// Bail if this post isn't a download
@@ -518,10 +522,16 @@ class EDD_Payment {
 		$total = 0;
 		$tax   = 0;
 
-		foreach ( $this->downloads as $key => $download ) {
+		foreach ( $this->downloads as $key => $item ) {
 
-			if ( $download_id != $download['id'] ) {
+			if ( $download_id != $item['id'] ) {
 				continue;
+			}
+
+			if ( false !== $args['price_id'] ) {
+				if ( $args['price_id'] != $item['price_id'] ) {
+					continue;
+				}
 			}
 
 			unset( $this->downloads[ $key ] );
@@ -534,6 +544,12 @@ class EDD_Payment {
 				continue;
 			}
 
+			if ( false !== $args['price_id'] ) {
+				if ( $args['price_id'] != $item['item_number']['options']['price_id'] ) {
+					continue;
+				}
+			}
+
 			$total = $this->cart_details[ $cart_key ]['price'];
 			$tax   = $this->cart_details[ $cart_key ]['tax'];
 
@@ -543,6 +559,7 @@ class EDD_Payment {
 
 		$pending_args           = $args;
 		$pending_args['id']     = $download_id;
+		$pending_args['price_id'] = false !== $args['price_id'] ? $args['price_id'] : false;
 		$pending_args['action'] = 'remove';
 
 		$this->pending['downloads'][] = $pending_args;

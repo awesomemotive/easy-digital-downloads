@@ -114,7 +114,6 @@ class Tests_Stats extends WP_UnitTestCase {
 		parent::tearDown();
 
 		EDD_Helper_Payment::delete_payment( $this->_payment_id );
-
 	}
 
 	/*

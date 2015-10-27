@@ -68,52 +68,40 @@ function edd_update_payment_details( $data ) {
 
 	// Setup purchased Downloads and price options
 	$updated_downloads = isset( $_POST['edd-payment-details-downloads'] ) ? $_POST['edd-payment-details-downloads'] : false;
-	if( $updated_downloads && ! empty( $_POST['edd-payment-downloads-changed'] ) ) {
+	if ( $updated_downloads && ! empty( $_POST['edd-payment-downloads-changed'] ) ) {
 
-		$downloads    = array();
-		$cart_details = array();
-		$i = 0;
+		foreach ( $updated_downloads as $download ) {
 
-		foreach( $updated_downloads as $download ) {
+			// If this item doesn't have a log yet, add one for each quantity count
+			$has_log = absint( $download['has_log'] );
+			$has_log = empty( $has_log ) ? false : true;
 
-			if( empty( $download['amount'] ) ) {
-				$download['amount'] = '0.00';
+			if ( $has_log ) {
+				continue;
 			}
 
-			$item             = array();
-			$item['id']       = absint( $download['id'] );
-			$item['quantity'] = absint( $download['quantity'] ) > 0 ? absint( $download['quantity'] ) : 1;
-			$price_id         = (int) $download['price_id'];
-			$has_log          = absint( $download['has_log'] );
-
-			if( $price_id !== false && edd_has_variable_prices( $item['id'] ) ) {
-				$item['options'] = array(
-					'price_id'   => $price_id
-				);
+			if ( empty( $download['amount'] ) ) {
+				$download['amount'] = 0.00;
 			}
-			$downloads[] = $item;
 
-			$cart_item   = array();
-			$cart_item['item_number'] = $item;
+			$amount      = $download['amount'];
+			$download_id = absint( $download['id'] );
+			$quantity    = absint( $download['quantity'] ) > 0 ? absint( $download['quantity'] ) : 1;
+			$price_id    = false;
+
+			if ( edd_has_variable_prices( $download_id ) && isset( $download['price_id'] ) ) {
+				$price_id = absint( $download['price_id'] );
+			}
 
 			// Set some defaults
 			$args = array(
-				'quantity'    => $item['quantity'],
-				'amount'      => $item['amount'],
+				'quantity'    => $quantity,
+				'amount'      => $amount,
+				'price_id'    => $price_id,
 			);
 
-			if ( ! empty( $item['price_id'] ) ) {
-				$args['price_id'] = $item['price_id'];
-			}
+			$payment->add_download( $download_id, $args );
 
-			// If this item doesn't have a log yet, add one for each quantity count
-			$has_log = empty( $has_log ) ? false : true;
-
-			if ( false === $has_log ) {
-				$payment->add_download( $item['id'], $args, $has_log );
-			}
-
-			$i++;
 		}
 
 		$deleted_downloads = json_decode( stripcslashes( $data['edd-payment-removed'] ), true );
