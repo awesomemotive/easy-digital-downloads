@@ -164,10 +164,6 @@ class EDD_Payments_Query extends EDD_Stats {
 					$payment->payment_number = $payment->number;
 				}
 
-				if ( 'edd_payments' != $this->args['output'] ) {
-					$payment = $payment->array_convert();
-				}
-
 				$this->payments[] = apply_filters( 'edd_payment', $payment, $payment_id, $this );
 			}
 

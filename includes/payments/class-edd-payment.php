@@ -30,32 +30,33 @@ class EDD_Payment {
 	 * @access private
 	 * @since 2.5
 	 */
-	private $ID = 0;
-	private $number = '';
-	private $mode = 'live';
-	private $key = '';
-	private $total = 0;
-	private $subtotal = 0;
-	private $tax = 0;
-	private $fees = array();
-	private $discount = 0;
-	private $discounts = array();
-	private $date = '';
-	private $completed_date = '';
-	private $status = 'pending';
-	private $post_status = 'pending'; // Same as $status but here for backwards compat
-	private $customer_id = null;
-	private $user_id = 0;
-	private $email = '';
-	private $user_info = array();
-	private $transaction_id = '';
-	private $downloads = array();
-	private $ip = '';
-	private $gateway = '';
-	private $currency = '';
-	private $cart_details = array();
-	private $has_unlimited_downloads = false;
-	private $pending;
+
+	protected $ID = 0;
+	protected $number = '';
+	protected $mode = 'live';
+	protected $key = '';
+	protected $total = 0;
+	protected $subtotal = 0;
+	protected $tax = 0;
+	protected $fees = array();
+	protected $discount = 0;
+	protected $discounts = array();
+	protected $date = '';
+	protected $completed_date = '';
+	protected $status = 'pending';
+	protected $post_status = 'pending'; // Same as $status but here for backwards compat
+	protected $customer_id = null;
+	protected $user_id = 0;
+	protected $email = '';
+	protected $user_info = array();
+	protected $transaction_id = '';
+	protected $downloads = array();
+	protected $ip = '';
+	protected $gateway = '';
+	protected $currency = '';
+	protected $cart_details = array();
+	protected $has_unlimited_downloads = false;
+	protected $pending;
 
 	/**
 	 * Setup the EDD Payments class
@@ -71,7 +72,6 @@ class EDD_Payment {
 		}
 
 		$this->setup_payment( $payment_id );
-		$this->pending = array();
 	}
 
 	public function __get( $name ) {
@@ -95,6 +95,7 @@ class EDD_Payment {
 	 * @return bool            If the setup was successful or not
 	 */
 	private function setup_payment( $payment_id ) {
+		$this->pending = array();
 
 		if ( empty( $payment_id ) ) {
 			return false;
@@ -220,11 +221,15 @@ class EDD_Payment {
 		// Only save the payment meta if it's changed
 		if ( md5( serialize( $meta ) ) !== md5( serialize( $merged_meta) ) ) {
 			$updated     = $this->update_meta( '_edd_payment_meta', $merged_meta );
+			if ( false !== $updated ) {
+				$saved = true;
+			}
 		}
 
 		// If we have something pending, let's save it
 		if ( ! empty( $this->pending ) ) {
 			$total_increase = 0;
+			$total_decrease = 0;
 
 			foreach ( $this->pending as $key => $value ) {
 				switch( $key ) {
@@ -233,27 +238,68 @@ class EDD_Payment {
 						foreach ( $this->pending[ $key ] as $item ) {
 
 							if ( 'publish' === $this->status ) {
-								$price = $item['price'];
-								$taxes = $item['tax'];
 
-								// Add sales logs
-								$log_date =  date( 'Y-m-d G:i:s', current_time( 'timestamp', true ) );
-								$price_id = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : 0;
+								switch( $item['action'] ) {
 
-								$y = 0;
+									case 'add':
+										$price = $item['price'];
+										$taxes = $item['tax'];
 
-								while ( $y < $item['quantity'] ) {
+										// Add sales logs
+										$log_date =  date( 'Y-m-d G:i:s', current_time( 'timestamp', true ) );
+										$price_id = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : 0;
 
-									edd_record_sale_in_log( $item['id'], $this->ID, $price_id, $log_date );
-									$y++;
+										$y = 0;
+
+										if ( false === $item['has_log'] ) {
+
+											while ( $y < $item['quantity'] ) {
+
+												edd_record_sale_in_log( $item['id'], $this->ID, $price_id, $log_date );
+												$y++;
+
+											}
+											$download = new EDD_Download( $item['id'] );
+											$download->increase_sales( $item['quantity'] );
+											$download->increase_earnings( $price );
+
+										}
+
+										$total_increase += $price;
+										break;
+
+										case 'remove':
+											$log_args = array(
+												'post_type'   => 'edd_log',
+												'post_parent' => $item['id'],
+												'numberposts' => $item['quantity'],
+												'meta_query'  => array(
+													array(
+														'key'     => '_edd_log_payment_id',
+														'value'   => $this->ID,
+														'compare' => '=',
+													),
+													array(
+														'key'     => '_edd_log_price_id',
+														'value'   => $item['price_id'],
+														'compare' => '='
+													)
+												)
+											);
+
+											$found_logs = get_posts( $log_args );
+											foreach ( $found_logs as $log ) {
+												wp_delete_post( $log->ID, true );
+											}
+
+											$download = new EDD_Download( $item['id'] );
+											$download->decrease_sales( $item['quantity'] );
+											$download->decrease_earnings( $item['amount'] );
+
+											$total_decrease += $item['amount'];
+											break;
 
 								}
-
-								$download = new EDD_Download( $item['id'] );
-								$download->increase_sales( $item['quantity'] );
-								$download->increase_earnings( $price );
-
-								$total_increase += $price;
 							}
 
 						}
@@ -281,7 +327,7 @@ class EDD_Payment {
 						break;
 
 					case 'ip':
-						$this->update_meta( '_edd_payment_ip', $this->ip );
+						$this->update_meta( '_edd_payment_user_ip', $this->ip );
 						break;
 
 					case 'customer_id':
@@ -325,11 +371,25 @@ class EDD_Payment {
 			$this->update_meta( '_edd_payment_tax', $this->tax );
 
 			if ( $this->status == 'publish' ) {
-				// Increase the customer's purchase stats
-				$customer = new EDD_Customer( $this->customer_id );
-				$customer->increase_value( $total_increase );
 
-				edd_increase_total_earnings( $total_increase );
+				$customer = new EDD_Customer( $this->customer_id );
+
+				$total_change = $total_increase - $total_decrease;
+				if ( $total_change < 0 ) {
+
+					$total_chnage = -( $total_change );
+					// Decrease the customer's purchase stats
+					$customer->decrease_value( $total_change );
+					edd_decrease_total_earnings( $total_change );
+
+				} else if (  $total_change > 0 ) {
+
+					// Increase the customer's purchase stats
+					$customer->increase_value( $total_change );
+					edd_increase_total_earnings( $total_change );
+
+				}
+
 			}
 
 			$this->pending = array();
@@ -343,11 +403,12 @@ class EDD_Payment {
 	 * Add a download to a given payment
 	 *
 	 * @since 2.5
-	 * @param int $download_id The download to add
-	 * @param int $args Other arguments to pass to the function
+	 * @param int  $download_id The download to add
+	 * @param int  $args Other arguments to pass to the function
+	 * @param bool $has_log If the download we're adding has a log already (for backwards compat of editing a payment)
 	 * @return void
 	 */
-	public function add_download( $download_id = 0, $args = array() ) {
+	public function add_download( $download_id = 0, $args = array(), $has_log = false ) {
 		$download = new EDD_Download( $download_id );
 
 		// Bail if this post isn't a download
@@ -368,25 +429,26 @@ class EDD_Payment {
 
 		// Allow overriding the price
 		if( $args['amount'] ) {
-			$item_price = $args['amount'];
+			$amount = $args['amount'];
 		} else {
 			// Deal with variable pricing
 			if( edd_has_variable_prices( $download->ID ) ) {
 				$prices = get_post_meta( $download->ID, 'edd_variable_prices', true );
 
 				if( $args['price_id'] && array_key_exists( $args['price_id'], (array) $prices ) ) {
-					$item_price = $prices[$args['price_id']]['amount'];
+					$amount = $prices[$args['price_id']]['amount'];
 				} else {
-					$item_price = edd_get_lowest_price_option( $download->ID );
+					$amount = edd_get_lowest_price_option( $download->ID );
 					$args['price_id'] = edd_get_lowest_price_id( $download->ID );
 				}
 			} else {
-				$item_price = edd_get_download_price( $download->ID );
+				$amount = edd_get_download_price( $download->ID );
 			}
 		}
 
 		// Sanitizing the price here so we don't have a dozen calls later
-		$item_price = edd_sanitize_amount( $item_price );
+		$amount = edd_sanitize_amount( $amount );
+		$item_price = round( $amount / $args['quantity'], edd_currency_decimal_filter() );
 
 		// Silly item_number array
 		$item_number = array(
@@ -405,21 +467,24 @@ class EDD_Payment {
 			'name'        => $download->post_title,
 			'id'          => $download->ID,
 			'item_number' => $item_number,
-			'price'       => $item_price,
+			'price'       => $amount,
+			'item_price'  => $item_price,
 			'quantity'    => $args['quantity'],
 			'tax'         => $args['tax'],
 			'subtotal'    => ( $item_price * $args['quantity'] ),
 		);
 
 		// Setup the downloads meta item
-		$this->downloads[] = array(
+		$new_download = array(
 			'id'       => $download->ID,
 			'quantity' => (int) $args['quantity'],
 		);
 
-		if ( false !== $args['price_id'] ) {
-			$downloads[0]['options']['price_id'] = (int) $args['price_id'];
+		if ( ! empty( $args['price_id'] ) ) {
+			$new_download['options']['price_id'] = (int) $args['price_id'];
 		}
+
+		$this->downloads[] = $new_download;
 
 		if ( ! empty( $args['fees'] ) ) {
 			foreach ( $args['fees'] as $fee ) {
@@ -427,14 +492,65 @@ class EDD_Payment {
 			}
 		}
 
-		$this->pending['downloads'][] = end( $this->cart_details );
-		reset( $this->downloads );
+		$added_download            = end( $this->cart_details );
+		$added_download['has_log'] = $has_log;
+		$added_download['action']  = 'add';
 
-		$this->increase_subtotal( $item_price * $args['quantity'] );
+		$this->pending['downloads'][] = $added_download;
+		reset( $this->cart_details );
+
+		$this->increase_subtotal( $amount );
 		$this->increase_tax( $args['tax'] );
 
 		return true;
 
+	}
+
+	public function remove_download( $download_id, $args ) {
+
+		$download = new EDD_Download( $download_id );
+
+		// Bail if this post isn't a download
+		if( ! $download || $download->post_type !== 'download' ) {
+			return false;
+		}
+
+		$total = 0;
+		$tax   = 0;
+
+		foreach ( $this->downloads as $key => $download ) {
+
+			if ( $download_id != $download['id'] ) {
+				continue;
+			}
+
+			unset( $this->downloads[ $key ] );
+
+		}
+
+		foreach ( $this->cart_details as $cart_key => $item ) {
+
+			if ( $download_id != $item['id'] ) {
+				continue;
+			}
+
+			$total = $this->cart_details[ $cart_key ]['price'];
+			$tax   = $this->cart_details[ $cart_key ]['tax'];
+
+			unset( $this->cart_details[ $cart_key ] );
+
+		}
+
+		$pending_args           = $args;
+		$pending_args['id']     = $download_id;
+		$pending_args['action'] = 'remove';
+
+		$this->pending['downloads'][] = $pending_args;
+
+		$this->decrease_subtotal( $total );
+		$this->decrease_tax( $tax );
+
+		return true;
 	}
 
 	/**
@@ -473,8 +589,20 @@ class EDD_Payment {
 	}
 
 	public function increase_subtotal( $amount = 0.00 ) {
-		$amount = (float) $amount;
+		$amount          = (float) $amount;
 		$this->subtotal += $amount;
+
+		$this->recalculate_total();
+	}
+
+	public function decrease_subtotal( $amount = 0.00 ) {
+		$amount          = (float) $amount;
+		$this->subtotal -= $amount;
+
+		if ( $this->subtotal < 0 ) {
+			$this->subtotal = 0;
+		}
+
 		$this->recalculate_total();
 	}
 
@@ -490,8 +618,20 @@ class EDD_Payment {
 	}
 
 	public function increase_tax( $amount = 0.00 ) {
-		$amount = (float) $amount;
+		$amount       = (float) $amount;
 		$this->tax   += $amount;
+
+		$this->recalculate_total();
+	}
+
+	public function decrease_tax( $amount = 0.00 ) {
+		$amount     = (float) $amount;
+		$this->tax -= $amount;
+
+		if ( $this->tax < 0 ) {
+			$this->tax = 0;
+		}
+
 		$this->recalculate_total();
 	}
 
