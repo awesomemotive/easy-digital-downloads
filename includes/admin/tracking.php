@@ -53,8 +53,7 @@ class EDD_Tracking {
 	 */
 	private function tracking_allowed() {
 		$allow_tracking = edd_get_option( 'allow_tracking', false );
-
-		return isset( $allow_tracking );
+		return $allow_tracking;
 	}
 
 	/**
@@ -68,14 +67,9 @@ class EDD_Tracking {
 		$data = array();
 
 		// Retrieve current theme info
-		if ( get_bloginfo( 'version' ) < '3.4' ) {
-			$theme_data = get_theme_data( get_stylesheet_directory() . '/style.css' );
-			$theme      = $theme_data['Name'] . ' ' . $theme_data['Version'];
-		} else {
-			$theme_data = wp_get_theme();
-			$theme      = $theme_data->Name . ' ' . $theme_data->Version;
-		}
-
+		$theme_data = wp_get_theme();
+		$theme      = $theme_data->Name . ' ' . $theme_data->Version;
+		
 		$data['url']    = home_url();
 		$data['theme']  = $theme;
 		$data['email']  = get_bloginfo( 'admin_email' );
@@ -98,6 +92,7 @@ class EDD_Tracking {
 		$data['active_plugins']   = $active_plugins;
 		$data['inactive_plugins'] = $plugins;
 		$data['products']         = wp_count_posts( 'download' )->publish;
+		$data['download_label'] = edd_get_label_singular( true );
 
 		$this->data = $data;
 	}
@@ -221,16 +216,20 @@ class EDD_Tracking {
 	 * @return void
 	 */
 	public function admin_notice() {
+
 		$hide_notice = get_option( 'edd_tracking_notice' );
 
-		if( $hide_notice )
+		if( $hide_notice ) {
 			return;
+		}
 
-		if( edd_get_option( 'allow_tracking', false ) )
+		if( edd_get_option( 'allow_tracking', false ) ) {
 			return;
+		}
 
-		if( ! current_user_can( 'manage_options' ) )
+		if( ! current_user_can( 'manage_options' ) ) {
 			return;
+		}
 
 		if(
 			stristr( network_site_url( '/' ), 'dev'       ) !== false ||
@@ -242,10 +241,12 @@ class EDD_Tracking {
 			$optin_url  = add_query_arg( 'edd_action', 'opt_into_tracking' );
 			$optout_url = add_query_arg( 'edd_action', 'opt_out_of_tracking' );
 
+			$source         = substr( md5( get_bloginfo( 'name' ) ), 0, 10 );
+			$extensions_url = 'https://easydigitaldownloads.com/extensions?utm_source=' . $source . '&utm_medium=admin&utm_term=notice&utm_campaign=EDDUsageTracking';
 			echo '<div class="updated"><p>';
-				echo __( 'Allow Easy Digital Downloads to track plugin usage? Opt-in to tracking and our newsletter and immediately be emailed a 20% discount to the shop for <a href="https://easydigitaldownloads.com/extensions" target="_blank">Extensions and Themes</a>. No sensitive data is tracked.', 'edd' );
-				echo '&nbsp;<a href="' . esc_url( $optin_url ) . '" class="button-secondary">' . __( 'Allow', 'edd' ) . '</a>';
-				echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary">' . __( 'Do not allow', 'edd' ) . '</a>';
+				echo sprintf( __( 'Allow Easy Digital Downloads to track plugin usage? Opt-in to tracking and our newsletter and immediately be emailed a 20%% discount to the EDD shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'easy-digital-downloads' ), $extensions_url );
+				echo '&nbsp;<a href="' . esc_url( $optin_url ) . '" class="button-secondary">' . __( 'Allow', 'easy-digital-downloads' ) . '</a>';
+				echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary">' . __( 'Do not allow', 'easy-digital-downloads' ) . '</a>';
 			echo '</p></div>';
 		}
 	}

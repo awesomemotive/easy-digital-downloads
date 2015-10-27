@@ -49,8 +49,8 @@ class EDD_API_Keys_Table extends WP_List_Table {
 
 		// Set parent defaults
 		parent::__construct( array(
-			'singular'  => __( 'API Key', 'edd' ),     // Singular name of the listed records
-			'plural'    => __( 'API Keys', 'edd' ),    // Plural name of the listed records
+			'singular'  => __( 'API Key', 'easy-digital-downloads' ),     // Singular name of the listed records
+			'plural'    => __( 'API Keys', 'easy-digital-downloads' ),    // Plural name of the listed records
 			'ajax'      => false                       // Does this table support ajax?
 		) );
 
@@ -73,9 +73,54 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Displays the public key rows
+	 *
+	 * @access public
+	 * @since 2.4
+	 *
+	 * @param array $item Contains all the data of the keys
+	 * @param string $column_name The name of the column
+	 *
+	 * @return string Column Name
+	 */
+	public function column_key( $item ) {
+		return '<input readonly="readonly" type="text" class="large-text" value="' . esc_attr( $item[ 'key' ] ) . '"/>';
+	}
+
+	/**
+	 * Displays the token rows
+	 *
+	 * @access public
+	 * @since 2.4
+	 *
+	 * @param array $item Contains all the data of the keys
+	 * @param string $column_name The name of the column
+	 *
+	 * @return string Column Name
+	 */
+	public function column_token( $item ) {
+		return '<input readonly="readonly" type="text" class="large-text" value="' . esc_attr( $item[ 'token' ] ) . '"/>';
+	}
+
+	/**
+	 * Displays the secret key rows
+	 *
+	 * @access public
+	 * @since 2.4
+	 *
+	 * @param array $item Contains all the data of the keys
+	 * @param string $column_name The name of the column
+	 *
+	 * @return string Column Name
+	 */
+	public function column_secret( $item ) {
+		return '<input readonly="readonly" type="text" class="large-text" value="' . esc_attr( $item[ 'secret' ] ) . '"/>';
+	}
+
+	/**
 	 * Renders the column for the user field
 	 *
-	 * @access public 
+	 * @access public
 	 * @since 2.0
 	 * @return void
 	 */
@@ -87,19 +132,19 @@ class EDD_API_Keys_Table extends WP_List_Table {
 			$actions['view'] = sprintf(
 				'<a href="%s">%s</a>',
 				esc_url( add_query_arg( array( 'view' => 'api_requests', 'post_type' => 'download', 'page' => 'edd-reports', 'tab' => 'logs', 's' => $item['email'] ), 'edit.php' ) ),
-				__( 'View API Log', 'edd' )
+				__( 'View API Log', 'easy-digital-downloads' )
 			);
 		}
 
 		$actions['reissue'] = sprintf(
 			'<a href="%s" class="edd-regenerate-api-key">%s</a>',
 			esc_url( wp_nonce_url( add_query_arg( array( 'user_id' => $item['id'], 'edd_action' => 'process_api_key', 'edd_api_process' => 'regenerate' ) ), 'edd-api-nonce' ) ),
-			__( 'Reissue', 'edd' )
+			__( 'Reissue', 'easy-digital-downloads' )
 		);
 		$actions['revoke'] = sprintf(
 			'<a href="%s" class="edd-revoke-api-key edd-delete">%s</a>',
 			esc_url( wp_nonce_url( add_query_arg( array( 'user_id' => $item['id'], 'edd_action' => 'process_api_key', 'edd_api_process' => 'revoke' ) ), 'edd-api-nonce' ) ),
-			__( 'Revoke', 'edd' )
+			__( 'Revoke', 'easy-digital-downloads' )
 		);
 
 		$actions = apply_filters( 'edd_api_row_actions', array_filter( $actions ) );
@@ -116,10 +161,10 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'user'         => __( 'Username', 'edd' ),
-			'key'          => __( 'Public Key', 'edd' ),
-			'secret'       => __( 'Secret Key', 'edd' ),
-			'token'        => __( 'Token', 'edd' )
+			'user'         => __( 'Username', 'easy-digital-downloads' ),
+			'key'          => __( 'Public Key', 'easy-digital-downloads' ),
+			'token'        => __( 'Token', 'easy-digital-downloads' ),
+			'secret'       => __( 'Secret Key', 'easy-digital-downloads' )
 		);
 
 		return $columns;
@@ -145,7 +190,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 			<input type="hidden" name="edd_api_process" value="generate" />
 			<?php wp_nonce_field( 'edd-api-nonce' ); ?>
 			<?php echo EDD()->html->ajax_user_search(); ?>
-			<?php submit_button( __( 'Generate New API Keys', 'edd' ), 'secondary', 'submit', false ); ?>
+			<?php submit_button( __( 'Generate New API Keys', 'easy-digital-downloads' ), 'secondary', 'submit', false ); ?>
 		</form>
 		<?php
 		$edd_api_is_bottom = true;
@@ -170,10 +215,10 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function query() {
-		$users    = get_users( array( 
-			'meta_key' => 'edd_user_secret_key',
-			'number'   => $this->per_page,
-			'offset'   => $this->per_page * ( $this->get_paged() - 1 ) 
+		$users    = get_users( array(
+			'meta_value' => 'edd_user_secret_key',
+			'number'     => $this->per_page,
+			'offset'     => $this->per_page * ( $this->get_paged() - 1 )
 		) );
 		$keys     = array();
 
@@ -182,9 +227,9 @@ class EDD_API_Keys_Table extends WP_List_Table {
 			$keys[$user->ID]['email']  = $user->user_email;
 			$keys[$user->ID]['user']   = '<a href="' . add_query_arg( 'user_id', $user->ID, 'user-edit.php' ) . '"><strong>' . $user->user_login . '</strong></a>';
 
-			$keys[$user->ID]['key']    = get_user_meta( $user->ID, 'edd_user_public_key', true );
-			$keys[$user->ID]['secret'] = get_user_meta( $user->ID, 'edd_user_secret_key', true );
-			$keys[$user->ID]['token']  = hash( 'md5', get_user_meta( $user->ID, 'edd_user_secret_key', true ) . get_user_meta( $user->ID, 'edd_user_public_key', true ) );
+			$keys[$user->ID]['key']    = EDD()->api->get_user_public_key( $user->ID );
+			$keys[$user->ID]['secret'] = EDD()->api->get_user_secret_key( $user->ID );
+			$keys[$user->ID]['token']  = EDD()->api->get_token( $user->ID );
 		}
 
 		return $keys;
@@ -203,7 +248,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 		global $wpdb;
 
 		if( ! get_transient( 'edd_total_api_keys' ) ) {
-			$total_items = $wpdb->get_var( "SELECT count(user_id) FROM $wpdb->usermeta WHERE meta_key='edd_user_secret_key'" );
+			$total_items = $wpdb->get_var( "SELECT count(user_id) FROM $wpdb->usermeta WHERE meta_value='edd_user_secret_key'" );
 
 			set_transient( 'edd_total_api_keys', $total_items, 60 * 60 );
 		}
@@ -224,7 +269,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 		$hidden = array(); // No hidden columns
 		$sortable = array(); // Not sortable... for now
 
-		$this->_column_headers = array( $columns, $hidden, $sortable );
+		$this->_column_headers = array( $columns, $hidden, $sortable, 'id' );
 
 		$data = $this->query();
 

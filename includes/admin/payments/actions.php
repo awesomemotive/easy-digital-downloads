@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_update_payment_details( $data ) {
 
 	if( ! current_user_can( 'edit_shop_payments', $data['edd_payment_id'] ) ) {
-		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+		wp_die( __( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	check_admin_referer( 'edd_update_payment_details_nonce' );
@@ -122,6 +122,9 @@ function edd_update_payment_details( $data ) {
 			);
 
 			$payment->remove_download( $deleted_download['id'], $args );
+
+			do_action( 'edd_remove_download_from_payment', $payment_id, $deleted_download['id'] );
+			
 		}
 
 
@@ -133,7 +136,7 @@ function edd_update_payment_details( $data ) {
 	$updated       = $payment->save();
 
 	if ( 0 === $updated ) {
-		wp_die( __( 'Error Updating Payment', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 400 ) );
+		wp_die( __( 'Error Updating Payment', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 400 ) );
 	}
 
 	$customer_changed = false;
@@ -144,7 +147,7 @@ function edd_update_payment_details( $data ) {
 		$names      = isset( $data['edd-new-customer-name'] ) ? sanitize_text_field( $data['edd-new-customer-name'] ) : '';
 
 		if ( empty( $email ) || empty( $names ) ) {
-			wp_die( __( 'New Customers require a name and email address', 'edd' ) );
+			wp_die( __( 'New Customers require a name and email address', 'easy-digital-downloads' ) );
 		}
 
 		$customer = new EDD_Customer( $email );
@@ -159,7 +162,7 @@ function edd_update_payment_details( $data ) {
 				// Failed to crete the new customer, assume the previous customer
 				$customer_changed = false;
 				$customer = new EDD_Customer( $curr_customer_id );
-				edd_set_error( 'edd-payment-new-customer-fail', __( 'Error creating new customer', 'edd' ) );
+				edd_set_error( 'edd-payment-new-customer-fail', __( 'Error creating new customer', 'easy-digital-downloads' ) );
 			}
 		}
 
@@ -283,7 +286,7 @@ function edd_trigger_purchase_delete( $data ) {
 		$payment_id = absint( $data['purchase_id'] );
 
 		if( ! current_user_can( 'edit_shop_payments', $payment_id ) ) {
-			wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+			wp_die( __( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 		}
 
 		edd_delete_purchase( $payment_id );
@@ -299,7 +302,7 @@ function edd_ajax_store_payment_note() {
 	$note       = wp_kses( $_POST['note'], array() );
 
 	if( ! current_user_can( 'edit_shop_payments', $payment_id ) ) {
-		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+		wp_die( __( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	if( empty( $payment_id ) )
@@ -326,7 +329,7 @@ function edd_trigger_payment_note_deletion( $data ) {
 		return;
 
 	if( ! current_user_can( 'edit_shop_payments', $data['payment_id'] ) ) {
-		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+		wp_die( __( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	$edit_order_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&edd-message=payment-note-deleted&id=' . absint( $data['payment_id'] ) );
@@ -346,7 +349,7 @@ add_action( 'edd_delete_payment_note', 'edd_trigger_payment_note_deletion' );
 function edd_ajax_delete_payment_note() {
 
 	if( ! current_user_can( 'edit_shop_payments', $_POST['payment_id'] ) ) {
-		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+		wp_die( __( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	if( edd_delete_payment_note( $_POST['note_id'], $_POST['payment_id'] ) ) {

@@ -53,33 +53,33 @@ class Test_Misc extends WP_UnitTestCase {
 
 	public function test_get_currencies() {
 		$expected = array(
-			'USD'  => __( 'US Dollars (&#36;)', 'edd' ),
-			'EUR'  => __( 'Euros (&euro;)', 'edd' ),
-			'GBP'  => __( 'Pounds Sterling (&pound;)', 'edd' ),
-			'AUD'  => __( 'Australian Dollars (&#36;)', 'edd' ),
-			'BRL'  => __( 'Brazilian Real (R&#36;)', 'edd' ),
-			'CAD'  => __( 'Canadian Dollars (&#36;)', 'edd' ),
-			'CZK'  => __( 'Czech Koruna', 'edd' ),
-			'DKK'  => __( 'Danish Krone', 'edd' ),
-			'HKD'  => __( 'Hong Kong Dollar (&#36;)', 'edd' ),
-			'HUF'  => __( 'Hungarian Forint', 'edd' ),
-			'ILS'  => __( 'Israeli Shekel (&#8362;)', 'edd' ),
-			'JPY'  => __( 'Japanese Yen (&yen;)', 'edd' ),
-			'MYR'  => __( 'Malaysian Ringgits', 'edd' ),
-			'MXN'  => __( 'Mexican Peso (&#36;)', 'edd' ),
-			'NZD'  => __( 'New Zealand Dollar (&#36;)', 'edd' ),
-			'NOK'  => __( 'Norwegian Krone', 'edd' ),
-			'PHP'  => __( 'Philippine Pesos', 'edd' ),
-			'PLN'  => __( 'Polish Zloty', 'edd' ),
-			'SGD'  => __( 'Singapore Dollar (&#36;)', 'edd' ),
-			'SEK'  => __( 'Swedish Krona', 'edd' ),
-			'CHF'  => __( 'Swiss Franc', 'edd' ),
-			'TWD'  => __( 'Taiwan New Dollars', 'edd' ),
-			'THB'  => __( 'Thai Baht (&#3647;)', 'edd' ),
-			'INR'  => __( 'Indian Rupee (&#8377;)', 'edd' ),
-			'TRY'  => __( 'Turkish Lira (&#8378;)', 'edd' ),
-			'RIAL' => __( 'Iranian Rial (&#65020;)', 'edd' ),
-			'RUB'  => __( 'Russian Rubles', 'edd' )
+			'USD'  => __( 'US Dollars (&#36;)', 'easy-digital-downloads' ),
+			'EUR'  => __( 'Euros (&euro;)', 'easy-digital-downloads' ),
+			'GBP'  => __( 'Pounds Sterling (&pound;)', 'easy-digital-downloads' ),
+			'AUD'  => __( 'Australian Dollars (&#36;)', 'easy-digital-downloads' ),
+			'BRL'  => __( 'Brazilian Real (R&#36;)', 'easy-digital-downloads' ),
+			'CAD'  => __( 'Canadian Dollars (&#36;)', 'easy-digital-downloads' ),
+			'CZK'  => __( 'Czech Koruna', 'easy-digital-downloads' ),
+			'DKK'  => __( 'Danish Krone', 'easy-digital-downloads' ),
+			'HKD'  => __( 'Hong Kong Dollar (&#36;)', 'easy-digital-downloads' ),
+			'HUF'  => __( 'Hungarian Forint', 'easy-digital-downloads' ),
+			'ILS'  => __( 'Israeli Shekel (&#8362;)', 'easy-digital-downloads' ),
+			'JPY'  => __( 'Japanese Yen (&yen;)', 'easy-digital-downloads' ),
+			'MYR'  => __( 'Malaysian Ringgits', 'easy-digital-downloads' ),
+			'MXN'  => __( 'Mexican Peso (&#36;)', 'easy-digital-downloads' ),
+			'NZD'  => __( 'New Zealand Dollar (&#36;)', 'easy-digital-downloads' ),
+			'NOK'  => __( 'Norwegian Krone', 'easy-digital-downloads' ),
+			'PHP'  => __( 'Philippine Pesos', 'easy-digital-downloads' ),
+			'PLN'  => __( 'Polish Zloty', 'easy-digital-downloads' ),
+			'SGD'  => __( 'Singapore Dollar (&#36;)', 'easy-digital-downloads' ),
+			'SEK'  => __( 'Swedish Krona', 'easy-digital-downloads' ),
+			'CHF'  => __( 'Swiss Franc', 'easy-digital-downloads' ),
+			'TWD'  => __( 'Taiwan New Dollars', 'easy-digital-downloads' ),
+			'THB'  => __( 'Thai Baht (&#3647;)', 'easy-digital-downloads' ),
+			'INR'  => __( 'Indian Rupee (&#8377;)', 'easy-digital-downloads' ),
+			'TRY'  => __( 'Turkish Lira (&#8378;)', 'easy-digital-downloads' ),
+			'RIAL' => __( 'Iranian Rial (&#65020;)', 'easy-digital-downloads' ),
+			'RUB'  => __( 'Russian Rubles', 'easy-digital-downloads' )
 		);
 
 		$this->assertEquals( $expected, edd_get_currencies() );
@@ -509,5 +509,109 @@ class Test_Misc extends WP_UnitTestCase {
 		// The option retrieve should be false since it doesn't exist
 		$this->assertFalse( edd_get_option( $key, false ) );
 
+	}
+
+	public function test_add_cache_busting() {
+		add_filter( 'edd_is_caching_plugin_active', '__return_true' );
+		$this->assertEquals( 'http://example.org/?nocache=true', edd_add_cache_busting( home_url( '/') ) );
+		remove_filter( 'edd_is_caching_plugin_active', '__return_true' );
+		$this->assertEquals( 'http://example.org/', edd_add_cache_busting( home_url( '/' ) ) );
+	}
+
+	public function test_get_current_page_url() {
+		global $edd_options;
+		$this->go_to( home_url( '/' ) );
+		$this->assertEquals( 'http://example.org/', edd_get_current_page_url() );
+
+		$post = EDD_Helper_Download::create_simple_download();
+		$this->go_to( get_permalink( $post->ID ) );
+		$this->assertEquals( 'http://example.org/?download=test-download-product', edd_get_current_page_url() );
+
+		add_filter( 'edd_is_caching_plugin_active', '__return_true' );
+		$this->go_to( get_permalink( $post->ID ) );
+		$this->assertEquals( 'http://example.org/?download=test-download-product&nocache=true', edd_get_current_page_url( true ) );
+		EDD_Helper_Download::delete_download( $post->ID );
+		remove_filter( 'edd_is_caching_plugin_active', '__return_true' );
+
+
+		$checkout = edd_get_option( 'purchase_page', false );
+		$this->go_to( get_permalink( $checkout ) );
+		$this->assertEquals( edd_get_checkout_uri(), edd_get_current_page_url() );
+
+		add_filter( 'edd_is_caching_plugin_active', '__return_true' );
+		$edd_options['no_cache_checkout'] = true;
+		$this->assertEquals( edd_get_checkout_uri(), edd_get_current_page_url( true ) );
+		remove_filter( 'edd_is_caching_plugin_active', '__return_true' );
+
+	}
+
+	public function test_cart_url_formats() {
+		global $edd_options;
+		$post = EDD_Helper_Download::create_simple_download();
+
+		edd_add_to_cart( $post->ID );
+
+		$this->assertTrue( edd_item_in_cart( $post->ID ) );
+
+		$item_position = edd_get_item_position_in_cart( $post->ID );
+
+		// Go to checkout
+		$this->go_to( edd_get_checkout_uri() );
+
+		add_filter( 'edd_is_caching_plugin_active', '__return_true' );
+
+		$remove_url = edd_remove_item_url( $item_position );
+
+		$this->assertContains( 'page_id=3', $remove_url );
+		$this->assertContains( 'edd_action=remove', $remove_url );
+		$this->assertContains( 'nocache=true', $remove_url );
+		$this->assertContains( 'cart_item=' . $item_position, $remove_url );
+
+		remove_filter( 'edd_is_caching_plugin_active', '__return_true' );
+		unset( $edd_options['no_cache_checkout'] );
+		$remove_url = edd_remove_item_url( $item_position );
+
+		$this->assertContains( 'page_id=3', $remove_url );
+		$this->assertContains( 'edd_action=remove', $remove_url );
+		$this->assertContains( 'cart_item=' . $item_position, $remove_url );
+		$this->assertNotContains( 'nocache=true', $remove_url );
+
+		// Go home and test again
+		$this->go_to( home_url( '/' ) );
+
+		add_filter( 'edd_is_caching_plugin_active', '__return_true' );
+
+		$expected_url = 'http://example.org/?cart_item=' . $item_position . '&edd_action=remove&nocache=true';
+		$remove_url   = edd_remove_item_url( $item_position );
+
+		$this->assertNotContains( 'page_id=', $remove_url );
+		$this->assertContains( 'edd_action=remove', $remove_url );
+		$this->assertContains( 'cart_item=' . $item_position, $remove_url );
+		$this->assertContains( 'nocache=true', $remove_url );
+
+		remove_filter( 'edd_is_caching_plugin_active', '__return_true' );
+
+		$remove_url = edd_remove_item_url( $item_position );
+
+		$this->assertNotContains( 'page_id=', $remove_url );
+		$this->assertContains( 'edd_action=remove', $remove_url );
+		$this->assertContains( 'cart_item=' . $item_position, $remove_url );
+		$this->assertNotContains( 'nocache=true', $remove_url );
+
+		// Go home and test again
+		$this->go_to( home_url( '/' ) );
+
+		add_filter( 'edd_is_caching_plugin_active', '__return_true' );
+
+		$expected_url  = 'http://example.org/?cart_item=' . $item_position . '&edd_action=remove&nocache=true';
+		$remove_url    = edd_remove_item_url( $item_position );
+
+		$this->assertEquals( $expected_url, $remove_url );
+		remove_filter( 'edd_is_caching_plugin_active', '__return_true' );
+
+		$remove_url    = edd_remove_item_url( $item_position );
+		$expected_url  = 'http://example.org/?cart_item=' . $item_position . '&edd_action=remove';
+
+		EDD_Helper_Download::delete_download( $post->ID );
 	}
 }

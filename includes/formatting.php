@@ -44,6 +44,15 @@ function edd_sanitize_amount( $amount ) {
 	}
 
 	$amount   = preg_replace( '/[^0-9\.]/', '', $amount );
+
+	/**
+	 * Filter number of decimals to use for prices
+	 *
+	 * @since unknown
+	 *
+	 * @param int $number Number of decimals
+	 * @param int|string $amount Price
+	 */
 	$decimals = apply_filters( 'edd_sanitize_amount_decimals', 2, $amount );
 	$amount   = number_format( (double) $amount, $decimals, '.', '' );
 
@@ -51,6 +60,13 @@ function edd_sanitize_amount( $amount ) {
 		$amount *= -1;
 	}
 
+	/**
+	 * Filter the sanitized price before returning
+	 *
+	 * @since unknown
+	 *
+	 * @param string $amount Price
+	 */
 	return apply_filters( 'edd_sanitize_amount', $amount );
 }
 
@@ -107,7 +123,7 @@ function edd_currency_filter( $price = '', $currency = '' ) {
 	if( empty( $currency ) ) {
 
 		$currency = edd_get_currency();
-	
+
 	}
 
 	$position = edd_get_option( 'currency_position', 'before' );
@@ -184,6 +200,7 @@ function edd_currency_decimal_filter( $decimals = 2 ) {
 		case 'RIAL' :
 		case 'JPY' :
 		case 'TWD' :
+		case 'HUF' :
 
 			$decimals = 0;
 			break;

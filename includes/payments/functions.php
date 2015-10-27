@@ -139,23 +139,26 @@ function edd_insert_payment( $payment_data = array() ) {
 		$gateway = empty( $gateway ) && isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : $gateway;
 		$payment->gateway = $gateway;
 
-		// Create or update a customer
-		$customer      = new EDD_Customer( $payment_data['user_email'] );
-		$customer_data = array(
-			'name'        => $payment_data['user_info']['first_name'] . ' ' . $payment_data['user_info']['last_name'],
-			'email'       => $payment_data['user_email'],
-			'user_id'     => $payment_data['user_info']['id']
-		);
+		$customer = new stdClass;
+
+		if ( did_action( 'edd_pre_process_purchase' ) && is_user_logged_in() ) {
+			$customer  = new EDD_customer( get_current_user_id(), true );
+		}
 
 		if ( empty( $customer->id ) ) {
+			$customer = new EDD_Customer( $payment_data['user_email'] );
+		}
+
+		if ( empty( $customer->id ) ) {
+
+			$customer_data = array(
+				'name'        => $payment_data['user_info']['first_name'] . ' ' . $payment_data['user_info']['last_name'],
+				'email'       => $payment_data['user_email'],
+				'user_id'     => $payment_data['user_info']['id']
+			);
+
 			$customer->create( $customer_data );
-		} else {
-			// Only update the customer if their name or email has changed
-			if ( $customer_data['email'] !== $customer->email || $customer_data['name'] !== $customer->name ) {
-				// We shouldn't be updating the User ID here, that is an admin task
-				unset( $customer_data['user_id'] );
-				$customer->update( $customer_data );
-			}
+
 		}
 
 		$customer->attach_payment( $payment->ID, false );
@@ -431,22 +434,48 @@ function edd_count_payments( $args = array() ) {
 	}
 
 	// Limit payments count by date
-	if ( ! empty( $args['start-date'] ) ) {
-		$date = new DateTime( $args['start-date'] );
-		$where .= "
-			AND p.post_date >= '" . $date->format( 'Y-m-d' ) . "'";
+	if ( ! empty( $args['start-date'] ) && false !== strpos( $args['start-date'], '/' ) ) {
+
+		$date_parts = explode( '/', $args['start-date'] );
+		$month      = ! empty( $date_parts[0] ) && is_numeric( $date_parts[0] ) ? $date_parts[0] : 0;
+		$day        = ! empty( $date_parts[1] ) && is_numeric( $date_parts[1] ) ? $date_parts[1] : 0;
+		$year       = ! empty( $date_parts[2] ) && is_numeric( $date_parts[2] ) ? $date_parts[2] : 0;
+
+		$is_date    = checkdate( $month, $day, $year );
+		if ( false !== $is_date ) {
+
+			$date   = new DateTime( $args['start-date'] );
+			$where .= $wpdb->prepare( " AND p.post_date >= '%s'", $date->format( 'Y-m-d' ) );
+
+		}
+
+		// Fixes an issue with the payments list table counts when no end date is specified (partiy with stats class)
+		if ( empty( $args['end-date'] ) ) {
+			$args['end-date'] = $args['start-date'];
+		}
+
 	}
 
-	if ( ! empty ( $args['end-date'] ) ) {
-		$date = new DateTime( $args['end-date'] );
-		$where .= "
-			AND p.post_date <= '" . $date->format( 'Y-m-d' ) . "'";
+	if ( ! empty ( $args['end-date'] ) && false !== strpos( $args['end-date'], '/' ) ) {
+
+		$date_parts = explode( '/', $args['end-date'] );
+
+		$month      = ! empty( $date_parts[0] ) ? $date_parts[0] : 0;
+		$day        = ! empty( $date_parts[1] ) ? $date_parts[1] : 0;
+		$year       = ! empty( $date_parts[2] ) ? $date_parts[2] : 0;
+
+		$is_date    = checkdate( $month, $day, $year );
+		if ( false !== $is_date ) {
+
+			$date   = new DateTime( $args['end-date'] );
+			$where .= $wpdb->prepare( " AND p.post_date <= '%s'", $date->format( 'Y-m-d' ) );
+
+		}
+
 	}
 
 	$where = apply_filters( 'edd_count_payments_where', $where );
 	$join  = apply_filters( 'edd_count_payments_join', $join );
-
-	$cache_key = md5( implode( '|', $args ) . $where );
 
 	$query = "SELECT p.post_status,count( * ) AS num_posts
 		FROM $wpdb->posts p
@@ -455,9 +484,12 @@ function edd_count_payments( $args = array() ) {
 		GROUP BY p.post_status
 	";
 
+	$cache_key = md5( $query );
+
 	$count = wp_cache_get( $cache_key, 'counts');
-	if ( false !== $count )
+	if ( false !== $count ) {
 		return $count;
+	}
 
 	$count = $wpdb->get_results( $query, ARRAY_A );
 
@@ -550,12 +582,12 @@ function edd_get_payment_status( $payment, $return_label = false ) {
  */
 function edd_get_payment_statuses() {
 	$payment_statuses = array(
-		'pending'   => __( 'Pending', 'edd' ),
-		'publish'   => __( 'Complete', 'edd' ),
-		'refunded'  => __( 'Refunded', 'edd' ),
-		'failed'    => __( 'Failed', 'edd' ),
-		'abandoned' => __( 'Abandoned', 'edd' ),
-		'revoked'   => __( 'Revoked', 'edd' )
+		'pending'   => __( 'Pending', 'easy-digital-downloads' ),
+		'publish'   => __( 'Complete', 'easy-digital-downloads' ),
+		'refunded'  => __( 'Refunded', 'easy-digital-downloads' ),
+		'failed'    => __( 'Failed', 'easy-digital-downloads' ),
+		'abandoned' => __( 'Abandoned', 'easy-digital-downloads' ),
+		'revoked'   => __( 'Revoked', 'easy-digital-downloads' )
 	);
 
 	return apply_filters( 'edd_payment_statuses', $payment_statuses );
@@ -584,7 +616,7 @@ function edd_get_payment_status_keys() {
  * @param int $hour Hour
  * @return int $earnings Earnings
  */
-function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour = null ) {
+function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour = null, $include_taxes = true ) {
 
 	// This is getting deprecated soon. Use EDD_Payment_Stats with the get_earnings() method instead
 
@@ -597,7 +629,8 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 		'monthnum'       => $month_num,
 		'post_status'    => array( 'publish', 'revoked' ),
 		'fields'         => 'ids',
-		'update_post_term_cache' => false
+		'update_post_term_cache' => false,
+		'include_taxes'  => $include_taxes,
 	);
 	if ( ! empty( $day ) )
 		$args['day'] = $day;
@@ -606,7 +639,7 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 		$args['hour'] = $hour;
 
 	$args     = apply_filters( 'edd_get_earnings_by_date_args', $args );
-	$key      = md5( serialize( $args ) );
+	$key      = 'edd_stats_' . substr( md5( serialize( $args ) ), 0, 15 );
 	$earnings = get_transient( $key );
 
 	if( false === $earnings ) {
@@ -614,11 +647,18 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 		$earnings = 0;
 		if ( $sales ) {
 			$sales = implode( ',', $sales );
-			$earnings += $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN({$sales})" );
 
+			$total_earnings = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN ({$sales})" );
+			$total_tax      = 0;
+
+			if ( ! $include_taxes ) {
+				$total_tax = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_tax' AND post_id IN ({$sales})" );
+			}
+
+			$earnings += ( $total_earnings - $total_tax );
 		}
 		// Cache the results for one hour
-		set_transient( $key, $earnings, 60*60 );
+		set_transient( $key, $earnings, HOUR_IN_SECONDS );
 	}
 
 	return round( $earnings, 2 );
@@ -649,6 +689,19 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 		'update_post_term_cache' => false
 	);
 
+	$show_free = apply_filters( 'edd_sales_by_date_show_free', true, $args );
+
+	if ( false === $show_free ) {
+		$args['meta_query'] = array(
+			array(
+				'key' => '_edd_payment_total',
+				'value' => 0,
+				'compare' => '>',
+				'type' => 'NUMERIC',
+			),
+		);
+	}
+
 	if ( ! empty( $month_num ) )
 		$args['monthnum'] = $month_num;
 
@@ -660,14 +713,14 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 
 	$args = apply_filters( 'edd_get_sales_by_date_args', $args  );
 
-	$key   = md5( serialize( $args ) );
-	$count = get_transient( $key, 'edd' );
+	$key   = 'edd_stats_' . substr( md5( serialize( $args ) ), 0, 15 );
+	$count = get_transient( $key );
 
 	if( false === $count ) {
 		$sales = new WP_Query( $args );
 		$count = (int) $sales->post_count;
 		// Cache the results for one hour
-		set_transient( $key, $count, 60*60 );
+		set_transient( $key, $count, HOUR_IN_SECONDS );
 	}
 
 	return $count;
@@ -914,6 +967,20 @@ function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files =
 function edd_get_payment_user_email( $payment_id ) {
 	$payment = new EDD_Payment( $payment_id );
 	return $payment->email;
+}
+
+/**
+ * Is the payment provided associated with a user account
+ *
+ * @since  2.4.4
+ * @param  int $payment_id The payment ID
+ * @return bool            If the payment is associted with a user (false) or not (true)
+ */
+function edd_is_guest_payment( $payment_id ) {
+	$payment_user_id  = edd_get_payment_user_id( $payment_id );
+	$is_guest_payment = ! empty( $payment_user_id ) && $payment_user_id > 0 ? false : true;
+
+	return (bool) apply_filters( 'edd_is_guest_payment', $is_guest_payment, $payment_id );
 }
 
 /**
@@ -1329,6 +1396,26 @@ function edd_get_purchase_id_by_key( $key ) {
 }
 
 /**
+ * Retrieve the purchase ID based on the transaction ID
+ *
+ * @since 2.4
+ * @global object $wpdb Used to query the database using the WordPress
+ *   Database API
+ * @param string $key the transaction ID to search for
+ * @return int $purchase Purchase ID
+ */
+function edd_get_purchase_id_by_transaction_id( $key ) {
+	global $wpdb;
+
+	$purchase = $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_transaction_id' AND meta_value = %s LIMIT 1", $key ) );
+
+	if ( $purchase != NULL )
+		return $purchase;
+
+	return 0;
+}
+
+/**
  * Retrieve all notes attached to a purchase
  *
  * @since 1.4
@@ -1426,7 +1513,7 @@ function edd_get_payment_note_html( $note, $payment_id = 0 ) {
 		$user = get_userdata( $note->user_id );
 		$user = $user->display_name;
 	} else {
-		$user = __( 'EDD Bot', 'edd' );
+		$user = __( 'EDD Bot', 'easy-digital-downloads' );
 	}
 
 	$date_format = get_option( 'date_format' ) . ', ' . get_option( 'time_format' );
@@ -1441,7 +1528,7 @@ function edd_get_payment_note_html( $note, $payment_id = 0 ) {
 		$note_html .='<p>';
 			$note_html .= '<strong>' . $user . '</strong>&nbsp;&ndash;&nbsp;' . date_i18n( $date_format, strtotime( $note->comment_date ) ) . '<br/>';
 			$note_html .= $note->comment_content;
-			$note_html .= '&nbsp;&ndash;&nbsp;<a href="' . esc_url( $delete_note_url ) . '" class="edd-delete-payment-note" data-note-id="' . absint( $note->comment_ID ) . '" data-payment-id="' . absint( $payment_id ) . '" title="' . __( 'Delete this payment note', 'edd' ) . '">' . __( 'Delete', 'edd' ) . '</a>';
+			$note_html .= '&nbsp;&ndash;&nbsp;<a href="' . esc_url( $delete_note_url ) . '" class="edd-delete-payment-note" data-note-id="' . absint( $note->comment_ID ) . '" data-payment-id="' . absint( $payment_id ) . '" title="' . __( 'Delete this payment note', 'easy-digital-downloads' ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 		$note_html .= '</p>';
 	$note_html .= '</div>';
 

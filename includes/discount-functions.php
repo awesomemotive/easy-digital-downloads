@@ -236,7 +236,23 @@ function edd_store_discount( $details, $discount_id = null ) {
 
 	}
 
-	if ( edd_discount_exists( $discount_id ) && ! empty( $discount_id ) ) {
+	if( ! empty( $meta['product_reqs'] ) ) {
+		foreach( $meta['product_reqs'] as $key => $product ) {
+			if( 0 === intval( $product ) ) {
+				unset( $meta['product_reqs'][ $key ] );
+			}
+		}
+	}
+
+	if( ! empty( $meta['excluded_products'] ) ) {
+		foreach( $meta['excluded_products'] as $key => $product ) {
+			if( 0 === intval( $product ) ) {
+				unset( $meta['excluded_products'][ $key ] );
+			}
+		}
+	}
+
+	if ( ! empty( $discount_id ) && edd_discount_exists( $discount_id ) ) {
 
 		// Update an existing discount
 
@@ -355,13 +371,13 @@ function edd_is_discount_active( $code_id = null ) {
 	if ( $discount ) {
 		if ( edd_is_discount_expired( $code_id ) ) {
 			if( defined( 'DOING_AJAX' ) ) {
-				edd_set_error( 'edd-discount-error', __( 'This discount is expired.', 'edd' ) );
+				edd_set_error( 'edd-discount-error', __( 'This discount is expired.', 'easy-digital-downloads' ) );
 			}
 		} elseif ( $discount->post_status == 'active' ) {
 			$return = true;
 		} else {
 			if( defined( 'DOING_AJAX' ) ) {
-				edd_set_error( 'edd-discount-error', __( 'This discount is not active.', 'edd' ) );
+				edd_set_error( 'edd-discount-error', __( 'This discount is not active.', 'easy-digital-downloads' ) );
 			}
 		}
 	}
@@ -588,7 +604,7 @@ function edd_is_discount_started( $code_id = null ) {
 				// Discount has pased the start date
 				$return = true;
 			} else {
-				edd_set_error( 'edd-discount-error', __( 'This discount is not active yet.', 'edd' ) );
+				edd_set_error( 'edd-discount-error', __( 'This discount is not active yet.', 'easy-digital-downloads' ) );
 			}
 		} else {
 			// No start date for this discount, so has to be true
@@ -619,7 +635,7 @@ function edd_is_discount_maxed_out( $code_id = null ) {
 		// Should never be greater than, but just in case
 		if ( $uses >= $max_uses && ! empty( $max_uses ) ) {
 			// Discount is maxed out
-			edd_set_error( 'edd-discount-error', __( 'This discount has reached it\'s maximum usage.', 'edd' ) );
+			edd_set_error( 'edd-discount-error', __( 'This discount has reached its maximum usage.', 'easy-digital-downloads' ) );
 			$return = true;
 		}
 	}
@@ -648,7 +664,7 @@ function edd_discount_is_min_met( $code_id = null ) {
 			// Minimum has been met
 			$return = true;
 		} else {
-			edd_set_error( 'edd-discount-error', sprintf( __( 'Minimum order of %s not met.', 'edd' ), edd_currency_filter( edd_format_amount( $min ) ) ) );
+			edd_set_error( 'edd-discount-error', sprintf( __( 'Minimum order of %s not met.', 'easy-digital-downloads' ), edd_currency_filter( edd_format_amount( $min ) ) ) );
 		}
 	}
 
@@ -710,7 +726,7 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 
 				foreach ( $product_reqs as $download_id ) {
 					if ( ! edd_item_in_cart( $download_id ) ) {
-						edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'edd' ) );
+						edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
 						$ret = false;
 						break;
 					}
@@ -730,7 +746,7 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 
 				if( ! $ret ) {
 
-					edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'edd' ) );
+					edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
 
 				}
 
@@ -746,7 +762,7 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 	if( ! empty( $excluded_ps ) ) {
 		// Check that there are products other than excluded ones in the cart
 		if( $cart_ids == $excluded_ps ) {
-			edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'edd' ) );
+			edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'easy-digital-downloads' ) );
 			$ret = false;
 		}
 	}
@@ -770,7 +786,6 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
 
 	$return     = false;
-	$user_found = false;
 
 	if ( empty( $code_id ) ) {
 		$code_id = edd_get_discount_id_by_code( $code );
@@ -780,44 +795,65 @@ function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
 	}
 
 	if ( edd_discount_is_single_use( $code_id ) ) {
-		if ( is_email( $user ) ) {
-			$user_found = true; // All we need is the email
-			$key        = '_edd_payment_user_email';
-			$value      = $user;
-		} else {
-			$user_data = get_user_by( 'login', $user );
 
-			if ( $user_data ) {
-				$user_found	= true;
-				$key   		= '_edd_payment_user_id';
-				$value 		= $user_data->ID;
+		$payments = array();
+
+		if ( EDD()->customers->installed() ) {
+
+			$by_user_id = is_email( $user ) ? false : true;
+			$customer = new EDD_Customer( $user, $by_user_id );
+
+			$payments = explode( ',', $customer->payment_ids );
+
+		} else {
+
+			$user_found = false;
+
+			if ( is_email( $user ) ) {
+
+				$user_found = true; // All we need is the email
+				$key        = '_edd_payment_user_email';
+				$value      = $user;
+
+			} else {
+
+				$user_data = get_user_by( 'login', $user );
+
+				if ( $user_data ) {
+
+					$user_found = true;
+					$key        = '_edd_payment_user_id';
+					$value      = $user_data->ID;
+
+				}
+			}
+
+			if ( $user_found ) {
+				$query_args = array(
+				'post_type'  => 'edd_payment',
+					'meta_query' => array(
+						array(
+							'key'     => $key,
+							'value'   => $value,
+							'compare' => '='
+						)
+					),
+					'fields'     => 'ids'
+				);
+
+				$payments = get_posts( $query_args ); // Get all payments with matching email
+
 			}
 		}
 
-		if ( $user_found ) {
-			$query_args = array(
-				'post_type'  => 'edd_payment',
-				'meta_query' => array(
-					array(
-						'key'     => $key,
-						'value'   => $value,
-						'compare' => '='
-					)
-				),
-				'fields'     => 'ids'
-			);
-
-			$payments = get_posts( $query_args ); // Get all payments with matching email
-
-			if ( $payments ) {
-				foreach ( $payments as $payment ) {
-					// Check all matching payments for discount code.
-					$payment_meta = edd_get_payment_meta( $payment );
-					$user_info    = maybe_unserialize( $payment_meta['user_info'] );
-					if ( $user_info['discount'] == $code ) {
-						edd_set_error( 'edd-discount-error', __( 'This discount has already been redeemed.', 'edd' ) );
-						$return = true;
-					}
+		if ( $payments ) {
+			foreach ( $payments as $payment ) {
+				// Check all matching payments for discount code.
+				$payment_meta = edd_get_payment_meta( $payment );
+				$user_info    = maybe_unserialize( $payment_meta['user_info'] );
+				if ( strtolower( $user_info['discount'] ) == strtolower( $code ) ) {
+					edd_set_error( 'edd-discount-error', __( 'This discount has already been redeemed.', 'easy-digital-downloads' ) );
+					$return = true;
 				}
 			}
 		}
@@ -855,7 +891,7 @@ function edd_is_discount_valid( $code = '', $user = '', $set_error = true ) {
 				$return = true;
 			}
 		} elseif( $set_error ) {
-			edd_set_error( 'edd-discount-error', __( 'This discount is invalid.', 'edd' ) );
+			edd_set_error( 'edd-discount-error', __( 'This discount is invalid.', 'easy-digital-downloads' ) );
 		}
 
 	}
@@ -982,7 +1018,7 @@ function edd_set_cart_discount( $code = '' ) {
 	}
 
 	if ( $discounts ) {
-		$key = array_search( $code, $discounts );
+		$key = array_search( strtolower( $code ), array_map( 'strtolower', $discounts ) );
 		if( false !== $key ) {
 			unset( $discounts[ $key ] ); // Can't set the same discount more than once
 		}
@@ -1069,12 +1105,14 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
 
 	$amount = 0.00;
 	$items  = edd_get_cart_content_details();
-	if( $items ) {
+
+	if ( $items ) {
 
 		$discounts = wp_list_pluck( $items, 'discount' );
 
-		if( is_array( $discounts ) ) {
-			$amount = array_sum( $discounts );
+		if ( is_array( $discounts ) ) {
+			$discounts = array_map( 'floatval', $discounts );
+			$amount    = array_sum( $discounts );
 		}
 
 	}
@@ -1341,11 +1379,12 @@ function edd_multiple_discounts_allowed() {
  */
 function edd_listen_for_cart_discount() {
 
-	if ( empty( $_REQUEST['discount'] ) ) {
+	// Array stops the bulk delete of discount codes from storing as a preset_discount
+	if ( empty( $_REQUEST['discount'] ) || is_array( $_REQUEST['discount'] ) ) {
 		return;
 	}
 
-	$code = sanitize_text_field( $_REQUEST['discount'] );
+	$code = preg_replace('/[^a-zA-Z0-9-_]+/', '', $_REQUEST['discount'] );
 
 	EDD()->session->set( 'preset_discount', $code );
 }

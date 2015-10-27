@@ -40,7 +40,7 @@ class EDD_HTML_Elements {
 			'chosen'      => false,
 			'number'      => 30,
 			'bundles'     => true,
-			'placeholder' => sprintf( __( 'Select a %s', 'edd' ), edd_get_label_singular() )
+			'placeholder' => sprintf( __( 'Select a %s', 'easy-digital-downloads' ), edd_get_label_singular() )
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -69,11 +69,12 @@ class EDD_HTML_Elements {
 		$options = array();
 
 		if ( $products ) {
+			$options[0] = sprintf( __( 'Select a %s', 'easy-digital-downloads' ), edd_get_label_singular() );
 			foreach ( $products as $product ) {
 				$options[ absint( $product->ID ) ] = esc_html( $product->post_title );
 			}
 		} else {
-			$options[0] = __( 'No products found', 'edd' );
+			$options[0] = __( 'No products found', 'easy-digital-downloads' );
 		}
 
 		// This ensures that any selected products are included in the drop down
@@ -122,7 +123,7 @@ class EDD_HTML_Elements {
 			'multiple'    => false,
 			'selected'    => 0,
 			'chosen'      => true,
-			'placeholder' => __( 'Select a Customer', 'edd' ),
+			'placeholder' => __( 'Select a Customer', 'easy-digital-downloads' ),
 			'number'      => 30
 		);
 
@@ -135,12 +136,12 @@ class EDD_HTML_Elements {
 		$options = array();
 
 		if ( $customers ) {
-			$options[0] = __( 'No customer attached', 'edd' );
+			$options[0] = __( 'No customer attached', 'easy-digital-downloads' );
 			foreach ( $customers as $customer ) {
 				$options[ absint( $customer->id ) ] = esc_html( $customer->name . ' (' . $customer->email . ')' );
 			}
 		} else {
-			$options[0] = __( 'No customers found', 'edd' );
+			$options[0] = __( 'No customers found', 'easy-digital-downloads' );
 		}
 
 		if( ! empty( $args['selected'] ) ) {
@@ -200,7 +201,7 @@ class EDD_HTML_Elements {
 				$options[ absint( $discount->ID ) ] = esc_html( get_the_title( $discount->ID ) );
 			}
 		} else {
-			$options[0] = __( 'No discounts found', 'edd' );
+			$options[0] = __( 'No discounts found', 'easy-digital-downloads' );
 		}
 
 		$output = $this->select( array(
@@ -231,11 +232,12 @@ class EDD_HTML_Elements {
 			$options[ absint( $category->term_id ) ] = esc_html( $category->name );
 		}
 
+		$category_labels = edd_get_taxonomy_labels( 'download_category' );
 		$output = $this->select( array(
 			'name'             => $name,
 			'selected'         => $selected,
 			'options'          => $options,
-			'show_option_all'  => __( 'All Categories', 'edd' ),
+			'show_option_all'  => sprintf( _x( 'All %s', 'plural: Example: "All Categories"', 'easy-digital-downloads' ), $category_labels['name'] ),
 			'show_option_none' => false
 		) );
 
@@ -325,8 +327,8 @@ class EDD_HTML_Elements {
 			'chosen'           => false,
 			'placeholder'      => null,
 			'multiple'         => false,
-			'show_option_all'  => _x( 'All', 'all dropdown items', 'edd' ),
-			'show_option_none' => _x( 'None', 'no dropdown items', 'edd' )
+			'show_option_all'  => _x( 'All', 'all dropdown items', 'easy-digital-downloads' ),
+			'show_option_none' => _x( 'None', 'no dropdown items', 'easy-digital-downloads' )
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -441,6 +443,7 @@ class EDD_HTML_Elements {
 		}
 
 		$defaults = array(
+			'id'           => '',
 			'name'         => isset( $name )  ? $name  : 'text',
 			'value'        => isset( $value ) ? $value : null,
 			'label'        => isset( $label ) ? $label : null,
@@ -468,17 +471,35 @@ class EDD_HTML_Elements {
 
 		$output = '<span id="edd-' . sanitize_key( $args['name'] ) . '-wrap">';
 
-			$output .= '<label class="edd-label" for="edd-' . sanitize_key( $args['name'] ) . '">' . esc_html( $args['label'] ) . '</label>';
+			$output .= '<label class="edd-label" for="' . sanitize_key( $args['id'] ) . '">' . esc_html( $args['label'] ) . '</label>';
 
 			if ( ! empty( $args['desc'] ) ) {
 				$output .= '<span class="edd-description">' . esc_html( $args['desc'] ) . '</span>';
 			}
 
-			$output .= '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['name'] )  . '" autocomplete="' . esc_attr( $args['autocomplete'] )  . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="' . $args['class'] . '" ' . $data . '' . $disabled . '/>';
+			$output .= '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] )  . '" autocomplete="' . esc_attr( $args['autocomplete'] )  . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="' . $args['class'] . '" ' . $data . '' . $disabled . '/>';
 
 		$output .= '</span>';
 
 		return $output;
+	}
+	/**
+	 * Renders a date picker
+	 *
+	 * @since 2.4
+	 *
+	 * @param array $args Arguments for the text field
+	 * @return string Datepicker field
+	 */
+	public function date_field( $args = array() ) {
+
+		if( empty( $args['class'] ) ) {
+			$args['class'] = 'edd_datepicker';
+		} elseif( ! strpos( $args['class'], 'edd_datepicker' ) ) {
+			$args['class'] .= ' edd_datepicker';
+		}
+
+		return $this->text( $args );
 	}
 
 	/**
@@ -534,7 +555,7 @@ class EDD_HTML_Elements {
 		$defaults = array(
 			'name'        => 'user_id',
 			'value'       => null,
-			'placeholder' => __( 'Enter username', 'edd' ),
+			'placeholder' => __( 'Enter username', 'easy-digital-downloads' ),
 			'label'       => null,
 			'desc'        => null,
 			'class'       => '',
@@ -549,7 +570,7 @@ class EDD_HTML_Elements {
 
 		$output  = '<span class="edd_user_search_wrap">';
 			$output .= $this->text( $args );
-			$output .= '<span class="edd_user_search_results hidden"><a class="edd-ajax-user-cancel" title="' . __( 'Cancel', 'edd' ) . '" aria-label="' . __( 'Cancel', 'edd' ) . '" href="#">x</a><span></span></span>';
+			$output .= '<span class="edd_user_search_results hidden"><a class="edd-ajax-user-cancel" title="' . __( 'Cancel', 'easy-digital-downloads' ) . '" aria-label="' . __( 'Cancel', 'easy-digital-downloads' ) . '" href="#">x</a><span></span></span>';
 		$output .= '</span>';
 
 		return $output;
