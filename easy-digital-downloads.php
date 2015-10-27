@@ -1,12 +1,12 @@
 <?php
 /**
  * Plugin Name: Easy Digital Downloads
- * Plugin URI: http://easydigitaldownloads.com
+ * Plugin URI: https://easydigitaldownloads.com
  * Description: Serve Digital Downloads Through WordPress
  * Author: Pippin Williamson
- * Author URI: http://pippinsplugins.com
- * Version: 2.3.8
- * Text Domain: edd
+ * Author URI: https://pippinsplugins.com
+ * Version: 2.4.9
+ * Text Domain: easy-digital-downloads
  * Domain Path: languages
  *
  * Easy Digital Downloads is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@
  * @package EDD
  * @category Core
  * @author Pippin Williamson
- * @version 2.3.8
+ * @version 2.4.8
  */
 
 // Exit if accessed directly
@@ -161,7 +161,7 @@ final class Easy_Digital_Downloads {
 	 */
 	public function __clone() {
 		// Cloning instances of the class is forbidden
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'edd' ), '1.6' );
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'easy-digital-downloads' ), '1.6' );
 	}
 
 	/**
@@ -173,7 +173,7 @@ final class Easy_Digital_Downloads {
 	 */
 	public function __wakeup() {
 		// Unserializing instances of the class is forbidden
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'edd' ), '1.6' );
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'easy-digital-downloads' ), '1.6' );
 	}
 
 	/**
@@ -187,7 +187,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '2.3.8' );
+			define( 'EDD_VERSION', '2.4.9' );
 		}
 
 		// Plugin Folder Path
@@ -229,13 +229,13 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/deprecated-functions.php';
 		}
 		require_once EDD_PLUGIN_DIR . 'includes/ajax-functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/api/class-edd-api.php';
 		require_once EDD_PLUGIN_DIR . 'includes/template-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/checkout/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/checkout/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-api.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-customers.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer.php';
@@ -255,9 +255,13 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/country-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/formatting.php';
 		require_once EDD_PLUGIN_DIR . 'includes/widgets.php';
+		require_once EDD_PLUGIN_DIR . 'includes/misc-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/mime-types.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/functions.php';
+		if ( version_compare( phpversion(), 5.3, '>' ) ) {
+			require_once EDD_PLUGIN_DIR . 'includes/gateways/amazon-payments.php';
+		}
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal-standard.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/manual.php';
 		require_once EDD_PLUGIN_DIR . 'includes/discount-functions.php';
@@ -291,7 +295,6 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-notices.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/dashboard-widgets.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/export-functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/thickbox.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/upload-functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/downloads/dashboard-columns.php';
@@ -307,9 +310,11 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/payments-history.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/contextual-help.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/contextual-help.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/export-functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/reports.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/pdf-reports.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-graph.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-pie-graph.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/graphing.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/display-settings.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/contextual-help.php';
@@ -336,29 +341,78 @@ final class Easy_Digital_Downloads {
 	 * @return void
 	 */
 	public function load_textdomain() {
+
+		/*
+		 * Due to the introduction of language packs through translate.wordpress.org, loading our textdomain is complex
+		 *
+		 * In v2.4.6, our textdomain changed from "edd" to "easy-digital-downloads"
+		 *
+		 * To support existing translation files from before the change, we must look for translation files in several places and under several names.
+		 *
+		 * - wp-content/languages/plugins/easy-digital-downloads (introduced with language packs)
+		 * - wp-content/languages/edd/ (custom folder we have supported since 1.4)
+		 * - wp-content/plugins/easy-digital-downloads/languages/
+		 *
+		 * In wp-content/languages/edd/ we must look for "easy-digital-downloads-{lang}_{country}.mo"
+		 * In wp-content/languages/edd/ we must look for "edd-{lang}_{country}.mo" as that was the old file naming convention
+		 * In wp-content/languages/plugins/easy-digital-downloads/ we only need to look for "easy-digital-downloads-{lang}_{country}.mo" as that is the new structure
+		 * In wp-content/plugins/easy-digital-downloads/languages/, we must look for both naming conventions. This is done by filtering "load_textdomain_mofile"
+		 *
+		 */
+
+		add_filter( 'load_textdomain_mofile', array( $this, 'load_old_textdomain' ), 10, 2 );
+
 		// Set filter for plugin's languages directory
-		$edd_lang_dir = dirname( plugin_basename( EDD_PLUGIN_FILE ) ) . '/languages/';
-		$edd_lang_dir = apply_filters( 'edd_languages_directory', $edd_lang_dir );
+		$edd_lang_dir  = dirname( plugin_basename( EDD_PLUGIN_FILE ) ) . '/languages/';
+		$edd_lang_dir  = apply_filters( 'edd_languages_directory', $edd_lang_dir );
 
 		// Traditional WordPress plugin locale filter
-		$locale        = apply_filters( 'plugin_locale',  get_locale(), 'edd' );
-		$mofile        = sprintf( '%1$s-%2$s.mo', 'edd', $locale );
+		$locale        = apply_filters( 'plugin_locale',  get_locale(), 'easy-digital-downloads' );
+		$mofile        = sprintf( '%1$s-%2$s.mo', 'easy-digital-downloads', $locale );
 
-		// Setup paths to current locale file
-		$mofile_local  = $edd_lang_dir . $mofile;
-		$mofile_global = WP_LANG_DIR . '/edd/' . $mofile;
+		// Look for wp-content/languages/edd/easy-digital-downloads-{lang}_{country}.mo
+		$mofile_global1 = WP_LANG_DIR . '/edd/easy-digital-downloads-' . $locale . '.mo';
 
-		if ( file_exists( $mofile_global ) ) {
-			// Look in global /wp-content/languages/edd folder
-			load_textdomain( 'edd', $mofile_global );
-		} elseif ( file_exists( $mofile_local ) ) {
-			// Look in local /wp-content/plugins/easy-digital-downloads/languages/ folder
-			load_textdomain( 'edd', $mofile_local );
+		// Look for wp-content/languages/edd/edd-{lang}_{country}.mo
+		$mofile_global2 = WP_LANG_DIR . '/edd/edd-' . $locale . '.mo';
+
+		// Look in wp-content/languages/plugins/easy-digital-downloads
+		$mofile_global3 = WP_LANG_DIR . '/plugins/easy-digital-downloads/' . $mofile;
+
+		if ( file_exists( $mofile_global1 ) ) {
+
+			load_textdomain( 'easy-digital-downloads', $mofile_global1 );
+
+		} elseif ( file_exists( $mofile_global2 ) ) {
+
+			load_textdomain( 'easy-digital-downloads', $mofile_global2 );
+
+		} elseif ( file_exists( $mofile_global3 ) ) {
+
+			load_textdomain( 'easy-digital-downloads', $mofile_global3 );
+
 		} else {
+
 			// Load the default language files
-			load_plugin_textdomain( 'edd', false, $edd_lang_dir );
+			load_plugin_textdomain( 'easy-digital-downloads', false, $edd_lang_dir );
 		}
+
 	}
+
+	/**
+	 * Load a .mo file for the old textdomain if one exists
+	 *
+	 * h/t: https://github.com/10up/grunt-wp-plugin/issues/21#issuecomment-62003284
+	 */
+	function load_old_textdomain( $mofile, $textdomain ) {
+
+		if ( $textdomain === 'easy-digital-downloads' && ! file_exists( $mofile ) ) {
+			$mofile = dirname( $mofile ) . DIRECTORY_SEPARATOR . str_replace( $textdomain, 'edd', basename( $mofile ) );
+		}
+
+		return $mofile;
+	}
+
 }
 
 endif; // End if class_exists check

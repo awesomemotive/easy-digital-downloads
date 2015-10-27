@@ -1,8 +1,5 @@
 <?php
 
-use \EDD_Stats;
-use \EDD_Payment_Stats;
-use \WP_Error;
 /**
  * @group edd_stats
  */
@@ -77,7 +74,7 @@ class Tests_Stats extends WP_UnitTestCase {
 				'name'        => 'Test Download',
 				'id'          => $this->_post->ID,
 				'item_price'  => 100,
-				'tax'         => 0,
+				'tax'         => 10,
 				'price'       => 100,
 				'quantity'    => 1,
 				'item_number' => array(
@@ -134,7 +131,7 @@ class Tests_Stats extends WP_UnitTestCase {
 			'this_month'   => 'This Month',
 			'last_month'   => 'Last Month',
 			'this_quarter' => 'This Quarter',
-			'last_quarter' => 'Last Quater',
+			'last_quarter' => 'Last Quarter',
 			'this_year'    => 'This Year',
 			'last_year'    => 'Last Year'
 		);
@@ -193,8 +190,10 @@ class Tests_Stats extends WP_UnitTestCase {
 
 		$stats = new EDD_Payment_Stats;
 		$earnings = $stats->get_earnings( 0, 'this_month' );
-
 		$this->assertEquals( 100, $earnings );
+
+		$earnings_minus_taxes = $stats->get_earnings( 0, 'this_month', false, false );
+		$this->assertEquals( 90, $earnings_minus_taxes );
 	}
 
 	public function test_get_sales_by_date() {
@@ -209,8 +208,10 @@ class Tests_Stats extends WP_UnitTestCase {
 
 		$stats = new EDD_Payment_Stats;
 		$earnings = $stats->get_earnings( $this->_post->ID, 'this_month' );
-
 		$this->assertEquals( 100, $earnings );
+
+		$earnings_minus_taxes = $stats->get_earnings( $this->_post->ID, 'this_month', false, false );
+		$this->assertEquals( 90, $earnings_minus_taxes );
 	}
 
 	public function test_get_sales_by_date_of_download() {

@@ -141,7 +141,7 @@ function edd_get_download_price( $download_id = 0 ) {
 	}
 
 	$download = new EDD_Download( $download_id );
-	return $download->price;
+	return $download->get_price();
 }
 
 /**
@@ -232,7 +232,7 @@ function edd_get_variable_prices( $download_id = 0 ) {
 	}
 
 	$download = new EDD_Download( $download_id );
-	return $download->prices;
+	return $download->get_prices();
 }
 
 /**
@@ -500,8 +500,8 @@ function edd_single_price_option_mode( $download_id = 0 ) {
 function edd_get_download_types() {
 
 	$types = array(
-		'0'       => __( 'Default', 'edd' ),
-		'bundle'  => __( 'Bundle', 'edd' )
+		'0'       => __( 'Default', 'easy-digital-downloads' ),
+		'bundle'  => __( 'Bundle', 'easy-digital-downloads' )
 	);
 
 	return apply_filters( 'edd_download_types', $types );
@@ -588,7 +588,7 @@ function edd_record_sale_in_log( $download_id = 0, $payment_id, $price_id = fals
 		'post_parent'   => $download_id,
 		'log_type'      => 'sale',
 		'post_date'     => isset( $sale_date ) ? $sale_date : null,
-		'post_date_gmt' => isset( $sale_date ) ? $sale_date : null
+		'post_date_gmt' => isset( $sale_date ) ? get_gmt_from_date( $sale_date ) : null
 	);
 
 	$log_meta = array(
@@ -1193,7 +1193,7 @@ function edd_validate_url_token( $url = '' ) {
 
 		if ( isset( $query_args['ttl'] ) && current_time( 'timestamp' ) > $query_args['ttl'] ) {
 
-			wp_die( apply_filters( 'edd_download_link_expired_text', __( 'Sorry but your download link has expired.', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+			wp_die( apply_filters( 'edd_download_link_expired_text', __( 'Sorry but your download link has expired.', 'easy-digital-downloads' ) ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 
 		}
 

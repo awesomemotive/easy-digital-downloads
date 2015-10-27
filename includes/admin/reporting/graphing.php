@@ -49,6 +49,7 @@ function edd_reports_graph() {
 	$earnings_totals = 0.00; // Total earnings for time period shown
 	$sales_totals    = 0;    // Total sales for time period shown
 
+	$include_taxes = empty( $_GET['exclude_taxes'] ) ? true : false;
 	$earnings_data = array();
 	$sales_data    = array();
 
@@ -59,7 +60,7 @@ function edd_reports_graph() {
 		while ( $hour <= 23 ) :
 
 			$sales    = edd_get_sales_by_date( $dates['day'], $month, $dates['year'], $hour );
-			$earnings = edd_get_earnings_by_date( $dates['day'], $month, $dates['year'], $hour );
+			$earnings = edd_get_earnings_by_date( $dates['day'], $month, $dates['year'], $hour, $include_taxes );
 
 			$sales_totals += $sales;
 			$earnings_totals += $earnings;
@@ -81,7 +82,7 @@ function edd_reports_graph() {
 			$sales = edd_get_sales_by_date( $day, $month, $dates['year'] );
 			$sales_totals += $sales;
 
-			$earnings = edd_get_earnings_by_date( $day, $month, $dates['year'] );
+			$earnings = edd_get_earnings_by_date( $day, $month, $dates['year'], null, $include_taxes );
 			$earnings_totals += $earnings;
 
 			$date = mktime( 0, 0, 0, $month, $day, $dates['year'] ) * 1000;
@@ -93,11 +94,15 @@ function edd_reports_graph() {
 	} else {
 
 		$y = $dates['year'];
+
 		while( $y <= $dates['year_end'] ) :
+			
+			$last_year = false;
 
 			if( $dates['year'] == $dates['year_end'] ) {
 				$month_start = $dates['m_start'];
 				$month_end   = $dates['m_end'];
+				$last_year   = true;
 			} elseif( $y == $dates['year'] ) {
 				$month_start = $dates['m_start'];
 				$month_end   = 12;
@@ -131,7 +136,7 @@ function edd_reports_graph() {
 						$sales = edd_get_sales_by_date( $d, $i, $y );
 						$sales_totals += $sales;
 
-						$earnings = edd_get_earnings_by_date( $d, $i, $y );
+						$earnings = edd_get_earnings_by_date( $d, $i, $y, null, $include_taxes );
 						$earnings_totals += $earnings;
 
 						$date = mktime( 0, 0, 0, $i, $d, $y ) * 1000;
@@ -146,10 +151,10 @@ function edd_reports_graph() {
 					$sales = edd_get_sales_by_date( null, $i, $y );
 					$sales_totals += $sales;
 
-					$earnings = edd_get_earnings_by_date( null, $i, $y );
+					$earnings = edd_get_earnings_by_date( null, $i, $y, null, $include_taxes );
 					$earnings_totals += $earnings;
 
-					if( $i == $month_end ) {
+					if( $i == $month_end && $last_year ) {
 
 						$num_of_days = cal_days_in_month( CAL_GREGORIAN, $i, $y );
 
@@ -175,8 +180,8 @@ function edd_reports_graph() {
 	}
 
 	$data = array(
-		__( 'Earnings', 'edd' ) => $earnings_data,
-		__( 'Sales', 'edd' )    => $sales_data
+		__( 'Earnings', 'easy-digital-downloads' ) => $earnings_data,
+		__( 'Sales', 'easy-digital-downloads' )    => $sales_data
 	);
 
 	// start our own output buffer
@@ -185,7 +190,7 @@ function edd_reports_graph() {
 	<div id="edd-dashboard-widgets-wrap">
 		<div class="metabox-holder" style="padding-top: 0;">
 			<div class="postbox">
-				<h3><span><?php _e('Earnings Over Time', 'edd'); ?></span></h3>
+				<h3><span><?php _e('Earnings Over Time','easy-digital-downloads' ); ?></span></h3>
 
 				<div class="inside">
 					<?php
@@ -196,19 +201,45 @@ function edd_reports_graph() {
 					$graph->display();
 
 					if( 'this_month' == $dates['range'] ) {
-						$estimated = edd_estimated_monthly_stats();
+						$estimated = edd_estimated_monthly_stats( $include_taxes );
 					}
 					?>
 
-					<p class="edd_graph_totals"><strong><?php _e( 'Total earnings for period shown: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $earnings_totals ) ); ?></strong></p>
-					<p class="edd_graph_totals"><strong><?php _e( 'Total sales for period shown: ', 'edd' ); echo edd_format_amount( $sales_totals, false ); ?></strong></p>
+					<p class="edd_graph_totals">
+						<strong>
+							<?php
+								_e( 'Total earnings for period shown: ', 'easy-digital-downloads' );
+								echo edd_currency_filter( edd_format_amount( $earnings_totals ) );
+							?>
+						</strong>
+						<?php if ( ! $include_taxes ) : ?>
+							<sup>&dagger;</sup>
+						<?php endif; ?>
+					</p>
+					<p class="edd_graph_totals"><strong><?php _e( 'Total sales for period shown: ', 'easy-digital-downloads' ); echo edd_format_amount( $sales_totals, false ); ?></strong></p>
 
 					<?php if( 'this_month' == $dates['range'] ) : ?>
-						<p class="edd_graph_totals"><strong><?php _e( 'Estimated monthly earnings: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $estimated['earnings'] ) ); ?></strong></p>
-						<p class="edd_graph_totals"><strong><?php _e( 'Estimated monthly sales: ', 'edd' ); echo edd_format_amount( $estimated['sales'], false ); ?></strong></p>
+						<p class="edd_graph_totals">
+							<strong>
+								<?php
+									_e( 'Estimated monthly earnings: ', 'easy-digital-downloads' );
+									echo edd_currency_filter( edd_format_amount( $estimated['earnings'] ) );
+								?>
+							</strong>
+							<?php if ( ! $include_taxes ) : ?>
+								<sup>&dagger;</sup>
+							<?php endif; ?>
+						</p>
+						<p class="edd_graph_totals"><strong><?php _e( 'Estimated monthly sales: ', 'easy-digital-downloads' ); echo edd_format_amount( $estimated['sales'], false ); ?></strong></p>
 					<?php endif; ?>
 
 					<?php do_action( 'edd_reports_graph_additional_stats' ); ?>
+
+					<p class="edd_graph_notes">
+						<?php if ( false === $include_taxes ) : ?>
+							<em><sup>&dagger;</sup> <?php _e( 'Excludes sales tax.', 'easy-digital-downloads' ); ?></em>
+						<?php endif; ?>
+					</p>
 
 				</div>
 			</div>
@@ -265,6 +296,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 	$earnings_totals = (float) 0.00; // Total earnings for time period shown
 	$sales_totals    = 0;            // Total sales for time period shown
 
+	$include_taxes = empty( $_GET['exclude_taxes'] ) ? true : false;
 	$earnings_data = array();
 	$sales_data    = array();
 	$stats         = new EDD_Payment_Stats;
@@ -288,7 +320,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 			$sales = $stats->get_sales( $download_id, $date, $date_end );
 			$sales_totals += $sales;
 
-			$earnings = $stats->get_earnings( $download_id, $date, $date_end );
+			$earnings = $stats->get_earnings( $download_id, $date, $date_end, $include_taxes );
 			$earnings_totals += $earnings;
 
 			$sales_data[] = array( $date * 1000, $sales );
@@ -310,7 +342,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 			$sales = $stats->get_sales( $download_id, $date, $date_end );
 			$sales_totals += $sales;
 
-			$earnings = $stats->get_earnings( $download_id, $date, $date_end );
+			$earnings = $stats->get_earnings( $download_id, $date, $date_end, $include_taxes );
 			$earnings_totals += $earnings;
 
 			$sales_data[] = array( $date * 1000, $sales );
@@ -322,11 +354,15 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 	} else {
 
 		$y = $dates['year'];
+
 		while( $y <= $dates['year_end'] ) :
+
+			$last_year = false;
 
 			if( $dates['year'] == $dates['year_end'] ) {
 				$month_start = $dates['m_start'];
 				$month_end   = $dates['m_end'];
+				$last_year   = true;
 			} elseif( $y == $dates['year'] ) {
 				$month_start = $dates['m_start'];
 				$month_end   = 12;
@@ -340,7 +376,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 
 				if ( $day_by_day ) :
 
-					if( $i == $month_end ) {
+					if( $i == $month_end && $last_year ) {
 
 						$num_of_days = $dates['day_end'];
 
@@ -359,7 +395,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 						$sales = $stats->get_sales( $download_id, $date, $end_date );
 						$sales_totals += $sales;
 
-						$earnings = $stats->get_earnings( $download_id, $date, $end_date );
+						$earnings = $stats->get_earnings( $download_id, $date, $end_date, $include_taxes );
 						$earnings_totals += $earnings;
 
 						$sales_data[] = array( $date * 1000, $sales );
@@ -378,7 +414,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 					$sales = $stats->get_sales( $download_id, $date, $end_date );
 					$sales_totals += $sales;
 
-					$earnings = $stats->get_earnings( $download_id, $date, $end_date );
+					$earnings = $stats->get_earnings( $download_id, $date, $end_date, $include_taxes );
 					$earnings_totals += $earnings;
 
 					$sales_data[] = array( $date * 1000, $sales );
@@ -395,14 +431,14 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 	}
 
 	$data = array(
-		__( 'Earnings', 'edd' ) => $earnings_data,
-		__( 'Sales', 'edd' )    => $sales_data
+		__( 'Earnings', 'easy-digital-downloads' ) => $earnings_data,
+		__( 'Sales', 'easy-digital-downloads' )    => $sales_data
 	);
 
 	?>
 	<div class="metabox-holder" style="padding-top: 0;">
 		<div class="postbox">
-			<h3><span><?php printf( __('Earnings Over Time for %s', 'edd' ), get_the_title( $download_id ) ); ?></span></h3>
+			<h3><span><?php printf( __('Earnings Over Time for %s', 'easy-digital-downloads' ), get_the_title( $download_id ) ); ?></span></h3>
 
 			<div class="inside">
 				<?php
@@ -412,10 +448,10 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 				$graph->set( 'multiple_y_axes', true );
 				$graph->display();
 				?>
-				<p class="edd_graph_totals"><strong><?php _e( 'Total earnings for period shown: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $earnings_totals ) ); ?></strong></p>
-				<p class="edd_graph_totals"><strong><?php _e( 'Total sales for period shown: ', 'edd' ); echo $sales_totals; ?></strong></p>
-				<p class="edd_graph_totals"><strong><?php printf( __( 'Average monthly earnings: %s', 'edd' ), edd_currency_filter( edd_format_amount( edd_get_average_monthly_download_earnings( $download_id ) ) ) ); ?>
-				<p class="edd_graph_totals"><strong><?php printf( __( 'Average monthly sales: %s', 'edd' ), number_format( edd_get_average_monthly_download_sales( $download_id ), 0 ) ); ?>
+				<p class="edd_graph_totals"><strong><?php _e( 'Total earnings for period shown: ', 'easy-digital-downloads' ); echo edd_currency_filter( edd_format_amount( $earnings_totals ) ); ?></strong></p>
+				<p class="edd_graph_totals"><strong><?php _e( 'Total sales for period shown: ', 'easy-digital-downloads' ); echo $sales_totals; ?></strong></p>
+				<p class="edd_graph_totals"><strong><?php printf( __( 'Average monthly earnings: %s', 'easy-digital-downloads' ), edd_currency_filter( edd_format_amount( edd_get_average_monthly_download_earnings( $download_id ) ) ) ); ?>
+				<p class="edd_graph_totals"><strong><?php printf( __( 'Average monthly sales: %s', 'easy-digital-downloads' ), number_format( edd_get_average_monthly_download_sales( $download_id ), 0 ) ); ?>
 			</div>
 		</div>
 	</div>
@@ -431,22 +467,23 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 */
 function edd_reports_graph_controls() {
 	$date_options = apply_filters( 'edd_report_date_options', array(
-		'today' 	    => __( 'Today', 'edd' ),
-		'yesterday'     => __( 'Yesterday', 'edd' ),
-		'this_week' 	=> __( 'This Week', 'edd' ),
-		'last_week' 	=> __( 'Last Week', 'edd' ),
-		'this_month' 	=> __( 'This Month', 'edd' ),
-		'last_month' 	=> __( 'Last Month', 'edd' ),
-		'this_quarter'	=> __( 'This Quarter', 'edd' ),
-		'last_quarter'	=> __( 'Last Quarter', 'edd' ),
-		'this_year'		=> __( 'This Year', 'edd' ),
-		'last_year'		=> __( 'Last Year', 'edd' ),
-		'other'			=> __( 'Custom', 'edd' )
+		'today' 	    => __( 'Today', 'easy-digital-downloads' ),
+		'yesterday'     => __( 'Yesterday', 'easy-digital-downloads' ),
+		'this_week' 	=> __( 'This Week', 'easy-digital-downloads' ),
+		'last_week' 	=> __( 'Last Week', 'easy-digital-downloads' ),
+		'this_month' 	=> __( 'This Month', 'easy-digital-downloads' ),
+		'last_month' 	=> __( 'Last Month', 'easy-digital-downloads' ),
+		'this_quarter'	=> __( 'This Quarter', 'easy-digital-downloads' ),
+		'last_quarter'	=> __( 'Last Quarter', 'easy-digital-downloads' ),
+		'this_year'		=> __( 'This Year', 'easy-digital-downloads' ),
+		'last_year'		=> __( 'Last Year', 'easy-digital-downloads' ),
+		'other'			=> __( 'Custom', 'easy-digital-downloads' )
 	) );
 
 	$dates   = edd_get_report_dates();
 	$display = $dates['range'] == 'other' ? '' : 'style="display:none;"';
 	$view    = edd_get_reporting_view();
+	$taxes   = ! empty( $_GET['exclude_taxes'] ) ? false : true;
 
 	if( empty( $dates['day_end'] ) ) {
 		$dates['day_end'] = cal_days_in_month( CAL_GREGORIAN, date( 'n' ), date( 'Y' ) );
@@ -470,8 +507,9 @@ function edd_reports_graph_controls() {
 						<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $dates['range'] ); ?>><?php echo esc_html( $option ); ?></option>
 					<?php endforeach; ?>
 				</select>
+
 				<div id="edd-date-range-options" <?php echo $display; ?>>
-					<span><?php _e( 'From', 'edd' ); ?>&nbsp;</span>
+					<span><?php _e( 'From', 'easy-digital-downloads' ); ?>&nbsp;</span>
 					<select id="edd-graphs-month-start" name="m_start">
 						<?php for ( $i = 1; $i <= 12; $i++ ) : ?>
 							<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_start'] ); ?>><?php echo edd_month_num_to_name( $i ); ?></option>
@@ -487,7 +525,7 @@ function edd_reports_graph_controls() {
 							<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['year'] ); ?>><?php echo $i; ?></option>
 						<?php endfor; ?>
 					</select>
-					<span><?php _e( 'To', 'edd' ); ?>&nbsp;</span>
+					<span><?php _e( 'To', 'easy-digital-downloads' ); ?>&nbsp;</span>
 					<select id="edd-graphs-month-end" name="m_end">
 						<?php for ( $i = 1; $i <= 12; $i++ ) : ?>
 							<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_end'] ); ?>><?php echo edd_month_num_to_name( $i ); ?></option>
@@ -505,8 +543,15 @@ function edd_reports_graph_controls() {
 					</select>
 				</div>
 
-				<input type="hidden" name="edd_action" value="filter_reports" />
-				<input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'edd' ); ?>"/>
+				<div class="edd-graph-filter-options graph-option-section">
+					<input type="checkbox" id="exclude_taxes" <?php checked( false, $taxes, true ); ?> value="1" name="exclude_taxes" />
+					<label for="exclude_taxes"><?php _e( 'Exclude Taxes', 'easy-digital-downloads' ); ?></label>
+				</div>
+
+				<div class="edd-graph-filter-submit graph-option-section">
+					<input type="hidden" name="edd_action" value="filter_reports" />
+					<input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'easy-digital-downloads' ); ?>"/>
+				</div>
 			</div>
 		</div>
 	</form>
@@ -716,9 +761,10 @@ function edd_get_report_dates() {
 function edd_parse_report_dates( $data ) {
 	$dates = edd_get_report_dates();
 
-	$view = edd_get_reporting_view();
-	$id   = isset( $_GET['download-id'] ) ? $_GET['download-id'] : null;
+	$view          = edd_get_reporting_view();
+	$id            = isset( $_GET['download-id'] ) ? $_GET['download-id'] : null;
+	$exclude_taxes = isset( $_GET['exclude_taxes'] ) ? $_GET['exclude_taxes'] : null;
 
-	wp_redirect( add_query_arg( $dates, admin_url( 'edit.php?post_type=download&page=edd-reports&view=' . esc_attr( $view ) . '&download-id=' . absint( $id ) ) ) ); edd_die();
+	wp_redirect( add_query_arg( $dates, admin_url( 'edit.php?post_type=download&page=edd-reports&view=' . esc_attr( $view ) . '&download-id=' . absint( $id ) . '&exclude_taxes=' . absint( $exclude_taxes ) ) ) ); edd_die();
 }
 add_action( 'edd_filter_reports', 'edd_parse_report_dates' );

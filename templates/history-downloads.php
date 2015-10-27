@@ -1,4 +1,9 @@
+<?php if( ! empty( $_GET['edd-verify-success'] ) ) : ?>
+<p class="edd-account-verified edd_success">
+	<?php _e( 'Your account has been successfully verified!', 'easy-digital-downloads' ); ?>
+</p>
 <?php
+endif;
 /**
  * This template is used to display the download history of the current user.
  */
@@ -9,9 +14,9 @@ if ( $purchases ) :
 		<thead>
 			<tr class="edd_download_history_row">
 				<?php do_action( 'edd_download_history_header_start' ); ?>
-				<th class="edd_download_download_name"><?php _e( 'Download Name', 'edd' ); ?></th>
+				<th class="edd_download_download_name"><?php _e( 'Download Name', 'easy-digital-downloads' ); ?></th>
 				<?php if ( ! edd_no_redownload() ) : ?>
-					<th class="edd_download_download_files"><?php _e( 'Files', 'edd' ); ?></th>
+					<th class="edd_download_download_files"><?php _e( 'Files', 'easy-digital-downloads' ); ?></th>
 				<?php endif; //End if no redownload?>
 				<?php do_action( 'edd_download_history_header_end' ); ?>
 			</tr>
@@ -66,12 +71,12 @@ if ( $purchases ) :
 										endforeach;
 
 									else :
-										_e( 'No downloadable files found.', 'edd' );
+										_e( 'No downloadable files found.', 'easy-digital-downloads' );
 									endif; // End if payment complete
 
 								else : ?>
 									<span class="edd_download_payment_status">
-										<?php printf( __( 'Payment status is %s', 'edd' ), edd_get_payment_status( $payment, true) ); ?>
+										<?php printf( __( 'Payment status is %s', 'easy-digital-downloads' ), edd_get_payment_status( $payment, true) ); ?>
 									</span>
 									<?php
 								endif; // End if $download_files
@@ -99,9 +104,7 @@ if ( $purchases ) :
 		) );
 		?>
 	</div>
-	<?php
-	do_action( 'edd_after_download_history' );
-else : ?>
-	<p class="edd-no-downloads"><?php _e( 'You have not purchased any downloads', 'edd' ); ?></p>
-	<?php
-endif;
+	<?php do_action( 'edd_after_download_history' ); ?>
+<?php else : ?>
+	<p class="edd-no-downloads"><?php _e( 'You have not purchased any downloads', 'easy-digital-downloads' ); ?></p>
+<?php endif; ?>
