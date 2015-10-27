@@ -215,8 +215,6 @@ class Tests_API extends WP_UnitTestCase {
 
 	public function test_get_product_stats() {
 		$out = $this->_api_output;
-		// This one fails and haven't figured out why
-		$this->markTestIncomplete( 'This test needs to be fixed. The stats key doesn\'t exist due to not being able to correctly check the user\'s permissions' );
 		$this->assertArrayHasKey( 'stats', $out['products'][0] );
 		$this->assertArrayHasKey( 'total', $out['products'][0]['stats'] );
 		$this->assertArrayHasKey( 'sales', $out['products'][0]['stats']['total'] );
@@ -225,10 +223,10 @@ class Tests_API extends WP_UnitTestCase {
 		$this->assertArrayHasKey( 'sales', $out['products'][0]['stats']['monthly_average'] );
 		$this->assertArrayHasKey( 'earnings', $out['products'][0]['stats']['monthly_average'] );
 
-		$this->assertEquals( '59', $out['products'][0]['stats']['total']['sales'] );
-		$this->assertEquals( '129.43', $out['products'][0]['stats']['total']['earnings'] );
-		$this->assertEquals( '59', $out['products'][0]['stats']['monthly_average']['sales'] );
-		$this->assertEquals( '129.43', $out['products'][0]['stats']['monthly_average']['earnings'] );
+		$this->assertEquals( '60', $out['products'][0]['stats']['total']['sales'] );
+		$this->assertEquals( '229.43', $out['products'][0]['stats']['total']['earnings'] );
+		$this->assertEquals( '60', $out['products'][0]['stats']['monthly_average']['sales'] );
+		$this->assertEquals( '229.43', $out['products'][0]['stats']['monthly_average']['earnings'] );
 	}
 
 	public function test_get_products_pricing() {

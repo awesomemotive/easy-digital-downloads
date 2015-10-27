@@ -303,8 +303,6 @@ class Test_Cart extends WP_UnitTestCase {
 
 	public function test_get_cart_item_quantity() {
 
-		$this->markTestIncomplete( 'This fails due to some weird session issue. Works fine on sites, just not in tests. #2294' );
-
 		edd_empty_cart();
 
 		$options = array(
@@ -314,10 +312,12 @@ class Test_Cart extends WP_UnitTestCase {
 
 		$this->assertEquals( 1, edd_get_cart_item_quantity( $this->_post->ID, $options ) );
 
+		edd_update_option( 'item_quantities', true );
 		// Add the item to the cart again
 		edd_add_to_cart( $this->_post->ID, $options );
 
 		$this->assertEquals( 2, edd_get_cart_item_quantity( $this->_post->ID, $options ) );
+		edd_delete_option( 'item_quantities' );
 
 		// Now add a different price option to the cart
 		$options = array(
@@ -331,7 +331,7 @@ class Test_Cart extends WP_UnitTestCase {
 
 	public function test_set_cart_item_quantity() {
 
-		$this->markTestIncomplete( 'This fails due to some weird session issue. Works fine on sites, just not in tests. #2294' );
+		edd_update_option( 'item_quantities', true );
 
 		$options = array(
 			'price_id' => 0
@@ -340,6 +340,8 @@ class Test_Cart extends WP_UnitTestCase {
 		edd_set_cart_item_quantity( $this->_post->ID, 3, $options );
 
 		$this->assertEquals( 3, edd_get_cart_item_quantity( $this->_post->ID, $options ) );
+
+		edd_delete_option( 'item_quantities' );
 
 	}
 

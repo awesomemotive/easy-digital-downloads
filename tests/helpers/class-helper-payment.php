@@ -126,6 +126,9 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 
 		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'edd' ), $transaction_id ) );
 
+		unset( $edd_options['enable_sequential'] );
+		update_option( 'edd_settings', $edd_options );
+
 		return $payment_id;
 
 	}

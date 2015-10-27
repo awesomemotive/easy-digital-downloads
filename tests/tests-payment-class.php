@@ -75,12 +75,29 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$this->assertEquals( 120.00, $payment->total );
 
 		$new_download   = EDD_Helper_Download::create_simple_download();
-		$store_earnings = edd_get_total_earnings();
 
 		$payment->add_download( $new_download->ID );
 		$payment->save();
+
 		$this->assertEquals( 3, count( $payment->downloads ) );
 		$this->assertEquals( 140.00, $payment->total );
+	}
+
+	public function test_remove_download() {
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertEquals( 2, count( $payment->downloads ) );
+		$this->assertEquals( 120.00, $payment->total );
+
+		$download_id = $payment->cart_details[0]['id'];
+		$amount      = $payment->cart_details[0]['price'];
+		$quantity    = $payment->cart_details[0]['quantity'];
+
+		$remove_args = array( 'amount' => $amount, 'quantity' => $quantity );
+		$payment->remove_download( $download_id, array( 'amount' => $amount, 'quantity' => $quantity ) );
+		$payment->save();
+
+		$this->assertEquals( 1, count( $payment->downloads ) );
+		$this->assertEquals( 100.00, $payment->total );
 	}
 
 }
