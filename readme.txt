@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.9.2
 Tested up to: 4.4
 
-Stable Tag: 2.4.8
+Stable Tag: 2.4.9
 
 License: GNU Version 2 or Any Later Version
 
@@ -191,6 +191,11 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
+= 2.4.9, October 14, 2015 =
+
+* Fix: Importing payments caused payments to be associated with customer of user doing the import
+* Fix: Corrected spelling for edd_customer_recent_purchases_actions hook
+
 = 2.4.8, October 12, 2015 =
 
 * New: Added option to manually verify a user account from the customer details screen
@@ -201,7 +206,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Corrected spelling error in EDD_Stats class
 * Fix: New customers improperly created when logged-in user completed purchases with a different email
 * Fix: User verification process should not run on the very first purchase by a customer
-* Fix: edd_get_current_page_url() returns improper URL when WordPress is installedin sub folder
+* Fix: edd_get_current_page_url() returns improper URL when WordPress is installed in sub folder
 * Tweak: Improved formatting of the welcome screen to match the styles of WordPress core
 
 = 2.4.7, September 29, 2015 =
