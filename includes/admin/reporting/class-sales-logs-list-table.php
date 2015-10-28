@@ -265,8 +265,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 		if ( $downloads ) {
 			echo '<select name="download" id="edd-log-download-filter">';
-				echo '<option value="0">' . __( 'All', 'edd' ) . '</option>';
-
+				echo '<option value="0">' . __( 'All', 'easy-digital-downloads' ) . '</option>';
 				foreach ( $downloads as $download ) {
 					echo '<option value="' . $download . '"' . selected( $download, $this->get_filtered_download() ) . '>' . esc_html( get_the_title( $download ) ) . '</option>';
 				}
