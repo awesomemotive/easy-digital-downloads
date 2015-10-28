@@ -346,6 +346,7 @@ class Test_Cart extends WP_UnitTestCase {
 			'price_id' => 0
 		);
 
+		edd_add_to_cart( $this->_post->ID, $options );
 		edd_set_cart_item_quantity( $this->_post->ID, 3, $options );
 
 		$this->assertEquals( 3, edd_get_cart_item_quantity( $this->_post->ID, $options ) );

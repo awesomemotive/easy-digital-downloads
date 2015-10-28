@@ -243,17 +243,19 @@ class EDD_Payment {
 									$price = $item['price'];
 									$taxes = $item['tax'];
 
-									// Add sales logs
-									$log_date =  date( 'Y-m-d G:i:s', current_time( 'timestamp', true ) );
-									$price_id = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : 0;
+									if ( 'publish' == $this->status ) {
+										// Add sales logs
+										$log_date =  date( 'Y-m-d G:i:s', current_time( 'timestamp', true ) );
+										$price_id = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : 0;
 
-									$y = 0;
+										$y = 0;
 
-									while ( $y < $item['quantity'] ) {
+										while ( $y < $item['quantity'] ) {
+											echo 'logging: ' . $item['id'] . ' for payment ' . $this->ID; echo "\n";
+											edd_record_sale_in_log( $item['id'], $this->ID, $price_id, $log_date );
+											$y++;
 
-										edd_record_sale_in_log( $item['id'], $this->ID, $price_id, $log_date );
-										$y++;
-
+										}
 									}
 
 									if ( 'pending' !== $this->status ) {

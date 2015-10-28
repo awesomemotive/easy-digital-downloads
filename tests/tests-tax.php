@@ -95,6 +95,7 @@ class Tests_Taxes extends WP_UnitTestCase {
 
 	public function tearDown() {
 		parent::tearDown();
+		EDD_Helper_Payment::delete_payment( $this->_payment_id );
 	}
 
 	public function test_use_taxes() {
