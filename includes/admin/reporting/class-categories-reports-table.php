@@ -61,11 +61,11 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'label'			 => __( 'Category', 'edd' ),
-			'total_sales'	 => __( 'Total Sales', 'edd' ),
+			'label'          => __( 'Category', 'edd' ),
+			'total_sales'    => __( 'Total Sales', 'edd' ),
 			'total_earnings' => __( 'Total Earnings', 'edd' ),
-			'avg_sales'		 => __( 'Monthly Sales Avg', 'edd' ),
-			'avg_earnings'	 => __( 'Monthly Earnings Avg', 'edd' ),
+			'avg_sales'      => __( 'Monthly Sales Avg', 'edd' ),
+			'avg_earnings'   => __( 'Monthly Earnings Avg', 'edd' ),
 		);
 
 		return $columns;
@@ -109,17 +109,17 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 		$dates = edd_get_report_dates();
 
 		if ( !empty( $dates[ 'year' ] ) ) {
-			$date		 = new DateTime();
+			$date = new DateTime();
 			$date->setDate( $dates[ 'year' ], $dates[ 'm_start' ], $dates[ 'day' ] );
-			$start_date	 = $date->format( 'Y-m-d' );
+			$start_date = $date->format( 'Y-m-d' );
 
 			$date->setDate( $dates[ 'year_end' ], $dates[ 'm_end' ], $dates[ 'day_end' ] );
-			$end_date			 = $date->format( 'Y-m-d' );
-			$cached_report_key	 = 'edd_earnings_by_category_data' . $start_date . '_' . $end_date;
+			$end_date          = $date->format( 'Y-m-d' );
+			$cached_report_key = 'edd_earnings_by_category_data' . $start_date . '_' . $end_date;
 		} else {
-			$start_date			 = false;
-			$end_date			 = false;
-			$cached_report_key	 = 'edd_earnings_by_category_data';
+			$start_date        = false;
+			$end_date          = false;
+			$cached_report_key = 'edd_earnings_by_category_data';
 		}
 
 		$cached_reports = get_transient( $cached_report_key );
@@ -127,10 +127,10 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 			$reports_data = $cached_reports;
 		} else {
 
-			$reports_data	 = array();
-			$term_args		 = array(
-				'parent'		 => 0,
-				'hierarchical'	 => 0,
+			$reports_data = array();
+			$term_args    = array(
+				'parent'       => 0,
+				'hierarchical' => 0,
 			);
 
 			$categories = get_terms( 'download_category', $term_args );
@@ -140,8 +140,8 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 				$category_slugs = array( $category->slug );
 
 				$child_args = array(
-					'parent'		 => $category->term_id,
-					'hierarchical'	 => 0,
+					'parent'       => $category->term_id,
+					'hierarchical' => 0,
 				);
 
 				$child_terms = get_terms( 'download_category', $child_args );
@@ -153,116 +153,116 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 				}
 
 				$download_args = array(
-					'post_type'		 => 'download',
+					'post_type'      => 'download',
 					'posts_per_page' => -1,
-					'fields'		 => 'ids',
-					'tax_query'		 => array(
+					'fields'         => 'ids',
+					'tax_query'      => array(
 						array(
-							'taxonomy'	 => 'download_category',
-							'field'		 => 'slug',
-							'terms'		 => $category_slugs,
+							'taxonomy' => 'download_category',
+							'field'    => 'slug',
+							'terms'    => $category_slugs,
 						),
 					),
 				);
 
 				$downloads = get_posts( $download_args );
 
-				$sales			 = 0;
-				$earnings		 = 0.00;
-				$avg_sales		 = 0;
-				$avg_earnings	 = 0.00;
+				$sales        = 0;
+				$earnings     = 0.00;
+				$avg_sales    = 0;
+				$avg_earnings = 0.00;
 
 				$payment_stats = new EDD_Payment_Stats();
 
 				foreach ( $downloads as $download ) {
-					$current_average_sales		 = $current_sales				 = $payment_stats->get_sales( $download, $start_date, $end_date );
-					$current_average_earnings	 = $current_earnings			 = $payment_stats->get_earnings( $download, $start_date, $end_date );
+					$current_average_sales    = $current_sales    = $payment_stats->get_sales( $download, $start_date, $end_date );
+					$current_average_earnings = $current_earnings = $payment_stats->get_earnings( $download, $start_date, $end_date );
 
-					$release_date	 = get_post_field( 'post_date', $download );
-					$diff			 = abs( current_time( 'timestamp' ) - strtotime( $release_date ) );
-					$months			 = floor( $diff / ( 30 * 60 * 60 * 24 ) ); // Number of months since publication
+					$release_date = get_post_field( 'post_date', $download );
+					$diff         = abs( current_time( 'timestamp' ) - strtotime( $release_date ) );
+					$months       = floor( $diff / ( 30 * 60 * 60 * 24 ) ); // Number of months since publication
 
 					if ( $months > 0 ) {
-						$current_average_sales		 = ( $current_sales / $months );
-						$current_average_earnings	 = ( $current_earnings / $months );
+						$current_average_sales    = ( $current_sales / $months );
+						$current_average_earnings = ( $current_earnings / $months );
 					}
 
-					$sales += $current_sales;
-					$earnings += $current_earnings;
-					$avg_sales += $current_average_sales;
+					$sales        += $current_sales;
+					$earnings     += $current_earnings;
+					$avg_sales    += $current_average_sales;
 					$avg_earnings += $current_average_earnings;
 				}
 
-				$avg_sales		 = round( $avg_sales / count( $downloads ) );
-				$avg_earnings	 = round( $avg_earnings / count( $downloads ), edd_currency_decimal_filter() );
+				$avg_sales    = round( $avg_sales / count( $downloads ) );
+				$avg_earnings = round( $avg_earnings / count( $downloads ), edd_currency_decimal_filter() );
 
 				$reports_data[] = array(
-					'ID'				 => $category->term_id,
-					'label'				 => $category->name,
-					'total_sales'		 => edd_format_amount( $sales, false ),
-					'total_sales_raw'	 => $sales,
-					'total_earnings'	 => edd_currency_filter( edd_format_amount( $earnings ) ),
+					'ID'                 => $category->term_id,
+					'label'              => $category->name,
+					'total_sales'        => edd_format_amount( $sales, false ),
+					'total_sales_raw'    => $sales,
+					'total_earnings'     => edd_currency_filter( edd_format_amount( $earnings ) ),
 					'total_earnings_raw' => $earnings,
-					'avg_sales'			 => edd_format_amount( $avg_sales, false ),
-					'avg_earnings'		 => edd_currency_filter( edd_format_amount( $avg_earnings ) ),
-					'is_child'			 => false,
+					'avg_sales'          => edd_format_amount( $avg_sales, false ),
+					'avg_earnings'       => edd_currency_filter( edd_format_amount( $avg_earnings ) ),
+					'is_child'           => false,
 				);
 
 				if ( !empty( $child_terms ) ) {
 
 					foreach ( $child_terms as $child_term ) {
 						$child_args = array(
-							'post_type'		 => 'download',
+							'post_type'      => 'download',
 							'posts_per_page' => -1,
-							'fields'		 => 'ids',
-							'tax_query'		 => array(
+							'fields'         => 'ids',
+							'tax_query'      => array(
 								array(
-									'taxonomy'	 => 'download_category',
-									'field'		 => 'slug',
-									'terms'		 => $child_term->slug,
+									'taxonomy' => 'download_category',
+									'field'    => 'slug',
+									'terms'    => $child_term->slug,
 								),
 							),
 						);
 
 						$child_downloads = get_posts( $child_args );
 
-						$child_sales		 = 0;
-						$child_earnings		 = 0.00;
-						$child_avg_sales	 = 0;
-						$child_avg_earnings	 = 0.00;
+						$child_sales        = 0;
+						$child_earnings     = 0.00;
+						$child_avg_sales    = 0;
+						$child_avg_earnings = 0.00;
 
 						foreach ( $child_downloads as $child_download ) {
-							$current_average_sales		 = $current_sales				 = $payment_stats->get_sales( $child_download, $start_date, $end_date );
-							$current_average_earnings	 = $current_earnings			 = $payment_stats->get_earnings( $child_download, $start_date, $end_date );
+							$current_average_sales    = $current_sales    = $payment_stats->get_sales( $child_download, $start_date, $end_date );
+							$current_average_earnings = $current_earnings = $payment_stats->get_earnings( $child_download, $start_date, $end_date );
 
-							$release_date	 = get_post_field( 'post_date', $child_download );
-							$diff			 = abs( current_time( 'timestamp' ) - strtotime( $release_date ) );
-							$months			 = floor( $diff / ( 30 * 60 * 60 * 24 ) ); // Number of months since publication
+							$release_date = get_post_field( 'post_date', $child_download );
+							$diff         = abs( current_time( 'timestamp' ) - strtotime( $release_date ) );
+							$months       = floor( $diff / ( 30 * 60 * 60 * 24 ) ); // Number of months since publication
 
 							if ( $months > 0 ) {
-								$current_average_sales		 = ( $current_sales / $months );
-								$current_average_earnings	 = ( $current_earnings / $months );
+								$current_average_sales    = ( $current_sales / $months );
+								$current_average_earnings = ( $current_earnings / $months );
 							}
 
-							$child_sales += $current_sales;
-							$child_earnings += $current_earnings;
-							$child_avg_sales += $current_average_sales;
+							$child_sales        += $current_sales;
+							$child_earnings     += $current_earnings;
+							$child_avg_sales    += $current_average_sales;
 							$child_avg_earnings += $current_average_earnings;
 						}
 
-						$child_avg_sales	 = round( $child_avg_sales / count( $child_downloads ) );
-						$child_avg_earnings	 = round( $child_avg_earnings / count( $child_downloads ), edd_currency_decimal_filter() );
+						$child_avg_sales    = round( $child_avg_sales / count( $child_downloads ) );
+						$child_avg_earnings = round( $child_avg_earnings / count( $child_downloads ), edd_currency_decimal_filter() );
 
 						$reports_data[] = array(
-							'ID'				 => $child_term->term_id,
-							'label'				 => '&#8212; ' . $child_term->name,
-							'total_sales'		 => edd_format_amount( $child_sales, false ),
-							'total_sales_raw'	 => $child_sales,
-							'total_earnings'	 => edd_currency_filter( edd_format_amount( $child_earnings ) ),
+							'ID'                 => $child_term->term_id,
+							'label'              => '&#8212; ' . $child_term->name,
+							'total_sales'        => edd_format_amount( $child_sales, false ),
+							'total_sales_raw'    => $child_sales,
+							'total_earnings'     => edd_currency_filter( edd_format_amount( $child_earnings ) ),
 							'total_earnings_raw' => $child_earnings,
-							'avg_sales'			 => edd_format_amount( $child_avg_sales, false ),
-							'avg_earnings'		 => edd_currency_filter( edd_format_amount( $child_avg_earnings ) ),
-							'is_child'			 => true,
+							'avg_sales'          => edd_format_amount( $child_avg_sales, false ),
+							'avg_earnings'       => edd_currency_filter( edd_format_amount( $child_avg_earnings ) ),
+							'is_child'           => true,
 						);
 					}
 				}
@@ -347,11 +347,11 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function prepare_items() {
-		$columns				 = $this->get_columns();
-		$hidden					 = array(); // No hidden columns
-		$sortable				 = $this->get_sortable_columns();
-		$this->_column_headers	 = array( $columns, $hidden, $sortable );
-		$this->items			 = $this->reports_data();
+		$columns               = $this->get_columns();
+		$hidden                = array(); // No hidden columns
+		$sortable              = $this->get_sortable_columns();
+		$this->_column_headers = array( $columns, $hidden, $sortable );
+		$this->items           = $this->reports_data();
 	}
 
 }
