@@ -409,17 +409,7 @@ function edd_reports_tab_export() {
 							<p><?php _e( 'Download a CSV of customers.', 'easy-digital-downloads' ); ?></p>
 							<p>
 								<form id="edd-export-customers" class="edd-export-form" method="post">
-									<select name="download" id="edd_customer_export_download">
-										<option value="0"><?php printf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></option>
-										<?php
-										$downloads = get_posts( array( 'post_type' => 'download', 'posts_per_page' => -1 ) );
-										if( $downloads ) {
-											foreach( $downloads as $download ) {
-												echo '<option value="' . $download->ID . '">' . get_the_title( $download->ID ) . '</option>';
-											}
-										}
-										?>
-									</select>
+									<?php echo EDD()->html->product_dropdown( array( 'name' => 'download', 'id' => 'edd_customer_export_download', 'chosen' => true ) ); ?>
 									<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 									<input type="hidden" name="edd-export-class" value="EDD_Batch_Customers_Export"/>
 									<input type="submit" value="<?php _e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>

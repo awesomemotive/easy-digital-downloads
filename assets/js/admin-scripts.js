@@ -777,7 +777,7 @@ jQuery(document).ready(function ($) {
 
 					$.post(ajaxurl, data, function(response) {
 						price_options_select.remove();
-						$this.after( response );
+						$('#edd_customer_export_download_chosen').after( response );
 					});
 				} else {
 					price_options_select.remove();
