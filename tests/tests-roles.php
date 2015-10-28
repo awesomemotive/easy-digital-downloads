@@ -1,7 +1,5 @@
 <?php
 
-use \EDD_Roles;
-
 /**
  * @group edd_roles
  */

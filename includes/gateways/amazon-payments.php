@@ -225,8 +225,8 @@ final class EDD_Amazon_Payments {
 
 		$default_amazon_info = array(
 			$this->gateway_id => array(
-				'admin_label'    => __( 'Amazon', 'edd' ),
-				'checkout_label' => __( 'Amazon', 'edd' ),
+				'admin_label'    => __( 'Amazon', 'easy-digital-downloads' ),
+				'checkout_label' => __( 'Amazon', 'easy-digital-downloads' ),
 				'supports'       => array(),
 			),
 		);
@@ -265,48 +265,48 @@ final class EDD_Amazon_Payments {
 		$default_amazon_settings = array(
 			'amazon' => array(
 				'id'   => 'amazon',
-				'name' => '<span class="field-section-title">' . __( 'Amazon Payments Settings', 'edd' ) . '</span>',
-				'desc' => __( 'Configure the Amazon settings', 'edd' ),
+				'name' => '<span class="field-section-title">' . __( 'Amazon Payments Settings', 'easy-digital-downloads' ) . '</span>',
+				'desc' => __( 'Configure the Amazon settings', 'easy-digital-downloads' ),
 				'type' => 'header',
 			),
 			'amazon_register' => array(
 				'id'   => 'amazon_register',
-				'name' => __( 'Register with Amazon', 'edd' ),
-				'desc' => sprintf( __( '<p><a href="%s" class="button" target="_blank">Connect Easy Digital Downloads to Amazon</a></p><p class="description">Once registration is complete, enter your API credentials below.</p>', 'edd' ), $this->get_registration_url() ),
+				'name' => __( 'Register with Amazon', 'easy-digital-downloads' ),
+				'desc' => sprintf( __( '<p><a href="%s" class="button" target="_blank">Connect Easy Digital Downloads to Amazon</a></p><p class="description">Once registration is complete, enter your API credentials below.</p>', 'easy-digital-downloads' ), $this->get_registration_url() ),
 				'type' => 'descriptive_text',
 			),
 			'amazon_seller_id' => array(
 				'id'   => 'amazon_seller_id',
-				'name' => __( 'Seller ID', 'edd' ),
-				'desc' => __( 'Found in the Integration settings. Also called a Merchant ID', 'edd' ),
+				'name' => __( 'Seller ID', 'easy-digital-downloads' ),
+				'desc' => __( 'Found in the Integration settings. Also called a Merchant ID', 'easy-digital-downloads' ),
 				'type' => 'text',
 				'size' => 'regular',
 			),
 			'amazon_mws_access_key' => array(
 				'id'   => 'amazon_mws_access_key',
-				'name' => __( 'MWS Access Key', 'edd' ),
-				'desc' => __( 'Found on Seller Central in the MWS Keys section', 'edd' ),
+				'name' => __( 'MWS Access Key', 'easy-digital-downloads' ),
+				'desc' => __( 'Found on Seller Central in the MWS Keys section', 'easy-digital-downloads' ),
 				'type' => 'text',
 				'size' => 'regular',
 			),
 			'amazon_mws_secret_key' => array(
 				'id'   => 'amazon_mws_secret_key',
-				'name' => __( 'MWS Secret Key', 'edd' ),
-				'desc' => __( 'Found on Seller Central in the MWS Keys section', 'edd' ),
+				'name' => __( 'MWS Secret Key', 'easy-digital-downloads' ),
+				'desc' => __( 'Found on Seller Central in the MWS Keys section', 'easy-digital-downloads' ),
 				'type' => 'text',
 				'size' => 'regular',
 			),
 			'amazon_client_id' => array(
 				'id'   => 'amazon_client_id',
-				'name' => __( 'Client ID', 'edd' ),
-				'desc' => __( 'The Amazon Client ID. Should look like `amzn1.application-oa2...`', 'edd' ),
+				'name' => __( 'Client ID', 'easy-digital-downloads' ),
+				'desc' => __( 'The Amazon Client ID. Should look like `amzn1.application-oa2...`', 'easy-digital-downloads' ),
 				'type' => 'text',
 				'size' => 'regular',
 			),
 			'amazon_mws_callback_url' => array(
 				'id'       => 'amazon_callback_url',
-				'name'     => __( 'Amazon MWS Callback URL', 'edd' ),
-				'desc'     => __( 'The Return URL to provide in your MWS Application. Enter this under your Login and Pay &rarr; Web Settings', 'edd' ),
+				'name'     => __( 'Amazon MWS Callback URL', 'easy-digital-downloads' ),
+				'desc'     => __( 'The Return URL to provide in your MWS Application. Enter this under your Login and Pay &rarr; Web Settings', 'easy-digital-downloads' ),
 				'type'     => 'text',
 				'size'     => 'large',
 				'std'      => $this->get_amazon_authenticate_redirect(),
@@ -314,8 +314,8 @@ final class EDD_Amazon_Payments {
 			),
 			'amazon_mws_ipn_url' => array(
 				'id'       => 'amazon_ipn_url',
-				'name'     => __( 'Amazon Merchant IPN URL', 'edd' ),
-				'desc'     => sprintf( __( 'The IPN URL to provide in your MWS account. Enter this under your <a href="%s">Integration Settings</a>', 'edd' ), 'https://sellercentral.amazon.com/gp/pyop/seller/account/settings/user-settings-edit.html' ),
+				'name'     => __( 'Amazon Merchant IPN URL', 'easy-digital-downloads' ),
+				'desc'     => sprintf( __( 'The IPN URL to provide in your MWS account. Enter this under your <a href="%s">Integration Settings</a>', 'easy-digital-downloads' ), 'https://sellercentral.amazon.com/gp/pyop/seller/account/settings/user-settings-edit.html' ),
 				'type'     => 'text',
 				'size'     => 'large',
 				'std'      => $this->get_amazon_ipn_url(),
@@ -608,8 +608,8 @@ final class EDD_Amazon_Payments {
 		ob_start(); ?>
 		<fieldset id="edd_cc_fields" class="edd-amazon-fields">
 			<p class="edd-amazon-profile-wrapper">
-				<?php _e( 'Currently logged into Amazon as', 'edd' ); ?>: <span class="edd-amazon-profile-name"><?php echo $profile['name']; ?></span>
-				<span class="edd-amazon-logout">(<a id="Logout"><?php _e( 'Logout', 'edd' ); ?></a>)</span>
+				<?php _e( 'Currently logged into Amazon as', 'easy-digital-downloads' ); ?>: <span class="edd-amazon-profile-name"><?php echo $profile['name']; ?></span>
+				<span class="edd-amazon-logout">(<a id="Logout"><?php _e( 'Logout', 'easy-digital-downloads' ); ?></a>)</span>
 			</p>
 			<?php if( edd_use_taxes() ) : ?>
 				<div id="edd-amazon-address-box"></div>
@@ -762,7 +762,7 @@ final class EDD_Amazon_Payments {
 
 		// should validate that we have a reference ID here, perhaps even fire the API call here
 		if( empty( $post_data['edd_amazon_reference_id'] ) ) {
-			edd_set_error( 'missing_reference_id', __( 'Missing Reference ID, please try again', 'edd' ) );
+			edd_set_error( 'missing_reference_id', __( 'Missing Reference ID, please try again', 'easy-digital-downloads' ) );
 		}
 	}
 
@@ -777,7 +777,7 @@ final class EDD_Amazon_Payments {
 	public function process_purchase( $purchase_data ) {
 
 		if( empty( $purchase_data['post_data']['edd_amazon_reference_id'] ) ) {
-			edd_set_error( 'missing_reference_id', __( 'Missing Reference ID, please try again', 'edd' ) );
+			edd_set_error( 'missing_reference_id', __( 'Missing Reference ID, please try again', 'easy-digital-downloads' ) );
 		}
 
 		$errors = edd_get_errors();
@@ -813,7 +813,7 @@ final class EDD_Amazon_Payments {
 			if( 'Declined' === $status ) {
 
 				$reason = $charge['AuthorizeResult']['AuthorizationDetails']['AuthorizationStatus']['ReasonCode'];
-				edd_set_error( 'payment_declined', sprintf( __( 'Your payment could not be authorized, please try a different payment method. Reason: %s', 'edd' ), $reason ) );
+				edd_set_error( 'payment_declined', sprintf( __( 'Your payment could not be authorized, please try a different payment method. Reason: %s', 'easy-digital-downloads' ), $reason ) );
 				edd_send_back_to_checkout( '?payment-mode=amazon&amazon_reference_id=' . $purchase_data['post_data']['edd_amazon_reference_id'] );
 			}
 
@@ -860,7 +860,7 @@ final class EDD_Amazon_Payments {
 		} else {
 
 			// Set an error
-			edd_set_error( 'amazon_error',sprintf( __( 'There was an issue processing your payment. Amazon error: %s', 'edd' ), print_r( $charge, true ) ) );
+			edd_set_error( 'amazon_error',sprintf( __( 'There was an issue processing your payment. Amazon error: %s', 'easy-digital-downloads' ), print_r( $charge, true ) ) );
 			edd_send_back_to_checkout( '?payment-mode=amazon&amazon_reference_id=' . $purchase_data['post_data']['edd_amazon_reference_id'] );
 
 		}
@@ -996,7 +996,7 @@ final class EDD_Amazon_Payments {
 			$seller_id = $data['SellerId'];
 
 			if( $seller_id != edd_get_option( 'amazon_seller_id', '' ) ) {
-				wp_die( __( 'Invalid Amazon seller ID', 'edd' ), __( 'IPN Error', 'edd' ), array( 'response' => 401 ) );
+				wp_die( __( 'Invalid Amazon seller ID', 'easy-digital-downloads' ), __( 'IPN Error', 'easy-digital-downloads' ), array( 'response' => 401 ) );
 			}
 
 			switch( $data['NotificationType'] ) {
@@ -1020,7 +1020,7 @@ final class EDD_Amazon_Payments {
 
 						edd_update_payment_status( $payment_id, 'failed' );
 
-						edd_insert_payment_note( $payment_id, __( 'Capture declined in Amazon', 'edd' ) );
+						edd_insert_payment_note( $payment_id, __( 'Capture declined in Amazon', 'easy-digital-downloads' ) );
 
 					}
 
@@ -1038,7 +1038,7 @@ final class EDD_Amazon_Payments {
 
 						edd_update_payment_status( $payment_id, 'refunded' );
 
-						edd_insert_payment_note( $payment_id, sprintf( __( 'Refund completed in Amazon. Refund ID: %s', 'edd' ), $data['RefundDetails']['AmazonRefundId'] ) );
+						edd_insert_payment_note( $payment_id, sprintf( __( 'Refund completed in Amazon. Refund ID: %s', 'easy-digital-downloads' ), $data['RefundDetails']['AmazonRefundId'] ) );
 
 					}
 
@@ -1050,7 +1050,7 @@ final class EDD_Amazon_Payments {
 
 		} catch( Exception $e ) {
 
-			wp_die( $e->getErrorMessage(), __( 'IPN Error', 'edd' ), array( 'response' => 401 ) );
+			wp_die( $e->getErrorMessage(), __( 'IPN Error', 'easy-digital-downloads' ), array( 'response' => 401 ) );
 
 		}
 
@@ -1119,20 +1119,20 @@ final class EDD_Amazon_Payments {
 				case 'Declined' :
 
 					$code   = $refund['RefundResult']['RefundDetails']['RefundStatus']['ReasonCode'];
-					$note   = __( 'Refund declined in Amazon. Refund ID: %s', 'edd' );
+					$note   = __( 'Refund declined in Amazon. Refund ID: %s', 'easy-digital-downloads' );
 
 					break;
 
 				case 'Completed' :
 
 					$refund_id = $refund['RefundResult']['RefundDetails']['AmazonRefundId'];
-					$note      = sprintf( __( 'Refund completed in Amazon. Refund ID: %s', 'edd' ), $refund_id );
+					$note      = sprintf( __( 'Refund completed in Amazon. Refund ID: %s', 'easy-digital-downloads' ), $refund_id );
 
 					break;
 
 				case 'Pending' :
 
-					$note = sprintf( __( 'Refund initiated in Amazon. Reference ID: %s', 'edd' ), $reference_id );
+					$note = sprintf( __( 'Refund initiated in Amazon. Reference ID: %s', 'easy-digital-downloads' ), $reference_id );
 
 					break;
 			}
@@ -1141,7 +1141,7 @@ final class EDD_Amazon_Payments {
 
 		} else {
 
-			edd_insert_payment_note( $payment_id, __( 'Refund request failed in Amazon.', 'edd' ) );
+			edd_insert_payment_note( $payment_id, __( 'Refund request failed in Amazon.', 'easy-digital-downloads' ) );
 
 		}
 

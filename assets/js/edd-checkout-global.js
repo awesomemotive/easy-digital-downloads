@@ -229,7 +229,7 @@ window.EDD_Checkout = (function($) {
 
 						if( '0.00' == discount_response.total_plain ) {
 
-							$('#edd_cc_fields,#edd_cc_address').slideUp();
+							$('#edd_cc_fields,#edd_cc_address,#edd_payment_mode_select').slideUp();
 							$('input[name="edd-gateway"]').val( 'manual' );
 
 						} else {
