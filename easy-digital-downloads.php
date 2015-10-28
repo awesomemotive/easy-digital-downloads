@@ -5,7 +5,7 @@
  * Description: Serve Digital Downloads Through WordPress
  * Author: Pippin Williamson
  * Author URI: https://pippinsplugins.com
- * Version: 2.4.8
+ * Version: 2.4.9
  * Text Domain: easy-digital-downloads
  * Domain Path: languages
  *
@@ -187,7 +187,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '2.4.8' );
+			define( 'EDD_VERSION', '2.4.9' );
 		}
 
 		// Plugin Folder Path
@@ -384,11 +384,11 @@ final class Easy_Digital_Downloads {
 		} elseif ( file_exists( $mofile_global2 ) ) {
 
 			load_textdomain( 'easy-digital-downloads', $mofile_global2 );
-	
+
 		} elseif ( file_exists( $mofile_global3 ) ) {
 
 			load_textdomain( 'easy-digital-downloads', $mofile_global3 );
-	
+
 		} else {
 
 			// Load the default language files
