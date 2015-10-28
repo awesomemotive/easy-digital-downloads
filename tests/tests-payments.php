@@ -36,8 +36,8 @@ class Tests_Payments extends WP_UnitTestCase {
 	public function tearDown() {
 
 		parent::tearDown();
-
 		EDD_Helper_Payment::delete_payment( $this->_payment_id );
+		wp_cache_flush();
 
 	}
 
@@ -171,24 +171,30 @@ class Tests_Payments extends WP_UnitTestCase {
 	}
 
 	public function test_get_payment_number() {
-		edd_update_option( 'enable_sequential', true );
+		// Reset all items and start from scratch
+		EDD_Helper_Payment::delete_payment( $this->_payment_id );
+		wp_cache_flush();
 
+		global $edd_options;
+		$edd_options['enable_sequential'] = 1;
+
+		$payment_id = EDD_Helper_Payment::create_simple_payment();
 
 		$this->assertInternalType( 'int', edd_get_next_payment_number() );
 		$this->assertInternalType( 'string', edd_format_payment_number( edd_get_next_payment_number() ) );
 		$this->assertEquals( 'EDD-2', edd_format_payment_number( edd_get_next_payment_number() ) );
 
-		$payment             = new EDD_Payment( $this->_payment_id );
+		$payment             = new EDD_Payment( $payment_id );
 		$last_payment_number = edd_remove_payment_prefix_postfix( $payment->number );
 		$this->assertEquals( 1, $last_payment_number );
 		$this->assertEquals( 'EDD-1', $payment->number );
 		$this->assertEquals( 2, edd_get_next_payment_number() );
 
 		// Now disable sequential and ensure values come back as expected
-		edd_delete_option( 'enable_sequential' );
+		$edd_options['enable_sequential'] = 0;
 
-		$payment = new EDD_Payment( $this->_payment_id );
-		$this->assertEquals( $this->_payment_id, $payment->number );
+		$payment = new EDD_Payment( $payment_id );
+		$this->assertEquals( $payment_id, $payment->number );
 	}
 
 	public function test_get_payment_transaction_id() {

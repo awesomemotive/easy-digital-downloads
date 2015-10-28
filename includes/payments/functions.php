@@ -1164,13 +1164,13 @@ function edd_get_next_payment_number() {
 		$payments     = new EDD_Payments_Query( array( 'number' => 1, 'order' => 'DESC', 'orderby' => 'ID', 'output' => 'posts', 'fields' => 'ids' ) );
 		$last_payment = $payments->get_payments();
 
-		if ( $last_payment ) {
+		if ( ! empty( $last_payment ) ) {
 
 			$number = edd_get_payment_number( $last_payment[0] );
 
 		}
 
-		if( ! empty( $number ) && $number !== $last_payment[0] ) {
+		if( ! empty( $number ) && $number !== (int) $last_payment[0] ) {
 
 			$number = edd_remove_payment_prefix_postfix( $number );
 
