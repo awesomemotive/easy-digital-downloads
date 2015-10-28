@@ -167,6 +167,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 			'name'       => array( 'name', false ),
 			'code'       => array( 'code', false ),
 			'uses'       => array( 'uses', false ),
+			'start_date' => array( 'start', false ),
 			'expiration' => array( 'expiration', false ),
 		);
 	}
