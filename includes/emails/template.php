@@ -249,7 +249,7 @@ function edd_render_receipt_in_browser() {
 	<head>
 		<title><?php _e( 'Receipt', 'easy-digital-downloads' ); ?></title>
 		<meta charset="utf-8" />
-		<meta name="robots" content="noindex, nofollow">
+		<meta name="robots" content="noindex, nofollow" />
 		<?php wp_head(); ?>
 	</head>
 <body class="<?php echo apply_filters('edd_receipt_page_body_class', 'edd_receipt_page' ); ?>">
