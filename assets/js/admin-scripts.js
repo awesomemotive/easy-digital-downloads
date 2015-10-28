@@ -769,7 +769,8 @@ jQuery(document).ready(function ($) {
 				if ( parseInt( download_id ) != 0 ) {
 					var data = {
 						action : 'edd_check_for_download_price_variations',
-						download_id: download_id
+						download_id: download_id,
+						all_prices: true
 					};
 
 					var price_options_select = $('.edd_price_options_select');
