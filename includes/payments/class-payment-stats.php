@@ -110,7 +110,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 
 		add_filter( 'posts_where', array( $this, 'payments_where' ) );
 
-		if( empty( $download_id ) ) {
+		if ( empty( $download_id ) ) {
 
 			// Global earning stats
 
@@ -131,9 +131,11 @@ class EDD_Payment_Stats extends EDD_Stats {
 			$key      = 'edd_stats_' . substr( md5( serialize( $args ) ), 0, 15 );
 
 			$earnings = get_transient( $key );
+
 			if( false === $earnings ) {
-				$sales = get_posts( $args );
+				$sales    = get_posts( $args );
 				$earnings = 0;
+
 				if ( $sales ) {
 
 					$sales = implode( ',', array_map('intval', $sales ) );

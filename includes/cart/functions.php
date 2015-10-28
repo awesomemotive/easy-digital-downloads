@@ -342,8 +342,9 @@ function edd_set_cart_item_quantity( $download_id = 0, $quantity = 1, $options =
 	$cart = edd_get_cart_contents();
 	$key  = edd_get_item_position_in_cart( $download_id, $options );
 
-	if( $quantity < 1 )
+	if( $quantity < 1 ) {
 		$quantity = 1;
+	}
 
 	$cart[ $key ]['quantity'] = $quantity;
 	EDD()->session->set( 'edd_cart', $cart );

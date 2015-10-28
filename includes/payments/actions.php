@@ -57,7 +57,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 			for( $i = 0; $i < $download['quantity']; $i++ ) {
 
 				// Ensure these actions only run once, ever
-				if( empty( $completed_date ) ) {
+				if ( empty( $completed_date ) ) {
 
 					edd_record_sale_in_log( $download['id'], $payment_id, $price_id, $creation_date );
 					do_action( 'edd_complete_download_purchase', $download['id'], $payment_id, $download_type, $download, $cart_index );
