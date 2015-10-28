@@ -31,9 +31,7 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		global $edd_options;
 
 		// Enable a few options
-		$edd_options['enable_sequential'] = '1';
 		$edd_options['sequential_prefix'] = 'EDD-';
-		update_option( 'edd_settings', $edd_options );
 
 		$simple_download   = EDD_Helper_Download::create_simple_download();
 		$variable_download = EDD_Helper_Download::create_variable_download();
@@ -140,9 +138,7 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		global $edd_options;
 
 		// Enable a few options
-		$edd_options['enable_sequential'] = '1';
 		$edd_options['sequential_prefix'] = 'EDD-';
-		update_option( 'edd_settings', $edd_options );
 
 		$simple_download   = EDD_Helper_Download::create_simple_download();
 		$variable_download = EDD_Helper_Download::create_variable_download();
@@ -231,9 +227,6 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		edd_set_payment_transaction_id( $payment_id, $transaction_id );
 		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'easy-digital-downloads' ), $transaction_id ) );
 
-		unset( $edd_options['enable_sequential'] );
-		update_option( 'edd_settings', $edd_options );
-
 		return $payment_id;
 
 	}
@@ -248,9 +241,7 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		global $edd_options;
 
 		// Enable a few options
-		$edd_options['enable_sequential'] = '1';
 		$edd_options['sequential_prefix'] = 'EDD-';
-		update_option( 'edd_settings', $edd_options );
 
 		$simple_download   = EDD_Helper_Download::create_simple_download();
 		$variable_download = EDD_Helper_Download::create_variable_download();
