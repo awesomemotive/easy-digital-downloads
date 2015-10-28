@@ -91,7 +91,7 @@ function edd_get_payment_by( $field = '', $value = '' ) {
 			) );
 
 			if( $payment ) {
-				$payment = $payment[0];
+				$payment = new EDD_Payment( $payment[0] );
 			}
 
 			break;
@@ -322,8 +322,10 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
  */
 function edd_undo_purchase( $download_id, $payment_id ) {
 
-	$cart_details = edd_get_payment_meta_cart_details( $payment_id );
-	$user_info    = edd_get_payment_meta_user_info( $payment_id );
+	$payment = new EDD_Payment( $payment_id );
+
+	$cart_details = $payment->cart_details;
+	$user_info    = $payment->user_info;
 
 	if ( is_array( $cart_details ) ) {
 
@@ -527,13 +529,14 @@ function edd_count_payments( $args = array() ) {
  * @return bool true if payment exists, false otherwise
  */
 function edd_check_for_existing_payment( $payment_id ) {
-	$payment = get_post( $payment_id );
+	$exists  = false;
+	$payment = new EDD_Payment( $payment_id );
 
-	if ( $payment && $payment->post_status == 'publish' ) {
-		return true; // Payment exists
+	if ( $payment_id === $payment->ID && 'publish' === $payment->status ) {
+		$exists = true;
 	}
 
-	return false; // This payment doesn't exist
+	return $exists;
 }
 
 /**
@@ -547,7 +550,8 @@ function edd_check_for_existing_payment( $payment_id ) {
  * @return bool|mixed if payment status exists, false otherwise
  */
 function edd_get_payment_status( $payment, $return_label = false ) {
-	if ( ! is_object( $payment ) || !isset( $payment->post_status ) ) {
+
+	if ( ! is_object( $payment ) || ! isset( $payment->post_status ) ) {
 		return false;
 	}
 
@@ -734,11 +738,13 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
  * @return bool true if complete, false otherwise
  */
 function edd_is_payment_complete( $payment_id ) {
-	$payment = get_post( $payment_id );
+	$payment = new EDD_Payment( $payment_id );
+
 	$ret = false;
-	if ( $payment && $payment->post_status == 'publish' ) {
+	if ( $payment_id === $payment->ID && $payment->status == 'publish' ) {
 		$ret = true;
 	}
+
 	return apply_filters( 'edd_is_payment_complete', $ret, $payment_id, $payment->post_status );
 }
 
@@ -749,7 +755,6 @@ function edd_is_payment_complete( $payment_id ) {
  * @return int $count Total sales
  */
 function edd_get_total_sales() {
-
 	$payments = edd_count_payments();
 	return $payments->revoked + $payments->publish;
 }
