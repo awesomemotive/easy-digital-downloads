@@ -355,7 +355,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$customer_id = edd_get_payment_customer_id( $payment->ID );
 		$customer    = new EDD_Customer( $customer_id );
 
-		$value = '<a href="' . esc_url( add_query_arg( array( 'user' => urlencode( $customer->email ), 'paged' => false ) ) ) . '">' . $customer->name . '</a>';
+		$value = '<a href="' . esc_url( admin_url( "edit.php?post_type=download&page=edd-customers&view=overview&id=$customer_id" ) ) . '">' . $customer->name . '</a>';
 		return apply_filters( 'edd_payments_table_column', $value, $payment->ID, 'user' );
 	}
 
