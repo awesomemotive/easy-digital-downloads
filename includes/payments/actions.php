@@ -155,32 +155,31 @@ function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
 
 	global $edd_logs;
 
-	if( 'publish' != $old_status && 'revoked' != $old_status ) {
+	if ( 'publish' != $old_status && 'revoked' != $old_status ) {
 		return;
 	}
 
-	if( 'refunded' != $new_status ) {
+	if ( 'refunded' != $new_status ) {
 		return;
 	}
 
-	$downloads = edd_get_payment_meta_cart_details( $payment_id );
-	if( $downloads ) {
+	$payment   = new EDD_Payment( $payment_id );
+	$downloads = $payment->cart_details;
+
+	if ( $downloads ) {
 		foreach( $downloads as $download ) {
-			edd_undo_purchase( $download['id'], $payment_id );
+			edd_undo_purchase( $download['id'], $payment->ID );
 		}
 	}
 
 	// Decrease store earnings
-	$amount = edd_get_payment_amount( $payment_id );
-	edd_decrease_total_earnings( $amount );
+	edd_decrease_total_earnings( $payment->total );
 
 	// Decrement the stats for the customer
-	$customer_id = edd_get_payment_customer_id( $payment_id );
+	if ( ! empty( $payment->customer_id ) ) {
 
-	if( $customer_id ) {
-
-		$customer = new EDD_Customer( $customer_id );
-		$customer->decrease_value( $amount );
+		$customer = new EDD_Customer( $payment->customer_id );
+		$customer->decrease_value( $payment->total );
 		$customer->decrease_purchase_count();
 
 	}
@@ -192,8 +191,8 @@ function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
 		array(
 			array(
 				'key'   => '_edd_log_payment_id',
-				'value' => $payment_id
-			)
+				'value' => $payment->ID,
+			),
 		)
 	);
 
@@ -214,7 +213,8 @@ add_action( 'edd_update_payment_status', 'edd_undo_purchase_on_refund', 100, 3 )
  * @param $old_status the status of the payment prior to being marked as "complete", probably "pending"
  */
 function edd_clear_user_history_cache( $payment_id, $new_status, $old_status ) {
-	$user_info = edd_get_payment_meta_user_info( $payment_id );
+	$payment   = new EDD_Payment( $payment_id );
+	$user_info = $payment->user_info;
 
 	delete_transient( 'edd_user_' . $user_info['id'] . '_purchases' );
 }
@@ -231,22 +231,28 @@ add_action( 'edd_update_payment_status', 'edd_clear_user_history_cache', 10, 3 )
  * @return void
 */
 function edd_update_old_payments_with_totals( $data ) {
-	if ( ! wp_verify_nonce( $data['_wpnonce'], 'edd_upgrade_payments_nonce' ) )
+	if ( ! wp_verify_nonce( $data['_wpnonce'], 'edd_upgrade_payments_nonce' ) ) {
 		return;
+	}
 
-	if ( get_option( 'edd_payment_totals_upgraded' ) )
+	if ( get_option( 'edd_payment_totals_upgraded' ) ) {
 		return;
+	}
 
 	$payments = edd_get_payments( array(
 		'offset' => 0,
 		'number' => -1,
-		'mode'   => 'all'
+		'mode'   => 'all',
 	) );
 
 	if ( $payments ) {
 		foreach ( $payments as $payment ) {
-			$meta = edd_get_payment_meta( $payment->ID );
-			edd_update_payment_meta( $payment->ID, '_edd_payment_total', $meta['amount'] );
+
+			$payment = new EDD_Payment( $payment->ID );
+			$meta    = $payment->get_meta();
+
+			$payment->total = $meta['amount'];
+			$payment->save();
 		}
 	}
 
@@ -263,7 +269,8 @@ add_action( 'edd_upgrade_payments', 'edd_update_old_payments_with_totals' );
 function edd_mark_abandoned_orders() {
 	$args = array(
 		'status' => 'pending',
-		'number' => -1
+		'number' => -1,
+		'output' => 'edd_payments',
 	);
 
 	add_filter( 'posts_where', 'edd_filter_where_older_than_week' );
@@ -275,7 +282,8 @@ function edd_mark_abandoned_orders() {
 	if( $payments ) {
 		foreach( $payments as $payment ) {
 			if( 'pending' === $payment->post_status ) {
-				edd_update_payment_status( $payment->ID, 'abandoned' );
+				$payment->status = 'abandoned';
+				$payment->save();
 			}
 		}
 	}
@@ -306,7 +314,7 @@ function edd_update_payment_backwards_compat( $meta_id, $object_id, $meta_key, $
 		case '_edd_payment_meta':
 			$meta_value   = maybe_unserialize( $meta_value );
 
-			if( !isset( $meta_value['tax'] ) ){
+			if( ! isset( $meta_value['tax'] ) ){
 				return;
 			}
 

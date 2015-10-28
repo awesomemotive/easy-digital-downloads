@@ -314,6 +314,10 @@ class EDD_Payment {
 						}
 						break;
 
+					case 'status':
+						$this->update_status( $this->status );
+						break;
+
 					case 'gateway':
 						$this->update_meta( '_edd_payment_gateway', $this->gateway );
 						break;
