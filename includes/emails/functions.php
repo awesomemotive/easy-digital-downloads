@@ -79,7 +79,7 @@ function edd_email_test_purchase_receipt() {
 	$subject     = edd_do_email_tags( $subject, 0 );
 
 	$heading     = edd_get_option( 'purchase_heading', __( 'Purchase Receipt', 'easy-digital-downloads' ) );
-	$heading     = apply_filters( 'edd_purchase_heading', $heading, $payment_id, $payment_data );
+	$heading     = apply_filters( 'edd_purchase_heading', $heading, 0, $payment_data );
 
 	$attachments = apply_filters( 'edd_receipt_attachments', array(), 0, array() );
 
