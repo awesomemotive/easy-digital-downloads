@@ -128,7 +128,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 			);
 
 			$args     = apply_filters( 'edd_stats_earnings_args', $args );
-			$key      = md5( serialize( $args ) );
+			$key      = 'edd_stats_' . substr( md5( serialize( $args ) ), 0, 15 );
 
 			$earnings = get_transient( $key );
 			if( false === $earnings ) {
@@ -137,17 +137,17 @@ class EDD_Payment_Stats extends EDD_Stats {
 				if ( $sales ) {
 					$sales = implode( ',', array_map('intval', $sales ) );
 
-					if ( $include_taxes ) {
-						$earnings += $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN ({$sales})" );
-					} else {
-						$earnings_with_tax = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN ({$sales})" );
-						$total_tax         = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_tax' AND post_id IN ({$sales})" );
+					$total_earnings = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN ({$sales})" );
+					$total_tax      = 0;
 
-						$earnings += ( $earnings_with_tax - $total_tax );
+					if ( ! $include_taxes ) {
+						$total_tax = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_tax' AND post_id IN ({$sales})" );
 					}
+
+					$earnings += ( $total_earnings - $total_tax );
 				}
 				// Cache the results for one hour
-				set_transient( $key, $earnings, 60*60 );
+				set_transient( $key, $earnings, HOUR_IN_SECONDS );
 			}
 
 		} else {
@@ -169,7 +169,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 			);
 
 			$args     = apply_filters( 'edd_stats_earnings_args', $args );
-			$key      = md5( serialize( $args ) );
+			$key      = 'edd_stats_' . substr( md5( serialize( $args ) ), 0, 15 );
 
 			$earnings = get_transient( $key );
 			if( false === $earnings ) {
@@ -197,7 +197,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 				}
 
 				// Cache the results for one hour
-				set_transient( $key, $earnings, 60*60 );
+				set_transient( $key, $earnings, HOUR_IN_SECONDS );
 			}
 		}
 

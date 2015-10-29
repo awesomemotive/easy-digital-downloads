@@ -33,8 +33,8 @@ add_filter( 'edd_customer_views', 'edd_register_default_customer_views', 1, 1 );
 function edd_register_default_customer_tabs( $tabs ) {
 
 	$default_tabs = array(
-		'overview' => array( 'dashicon' => 'dashicons-admin-users', 'title' => __( 'Customer Profile', 'edd' ) ),
-		'notes'    => array( 'dashicon' => 'dashicons-admin-comments', 'title' => __( 'Customer Notes', 'edd' ) )
+		'overview' => array( 'dashicon' => 'dashicons-admin-users', 'title' => __( 'Customer Profile', 'easy-digital-downloads' ) ),
+		'notes'    => array( 'dashicon' => 'dashicons-admin-comments', 'title' => __( 'Customer Notes', 'easy-digital-downloads' ) )
 	);
 
 	return array_merge( $tabs, $default_tabs );
@@ -50,7 +50,7 @@ add_filter( 'edd_customer_tabs', 'edd_register_default_customer_tabs', 1, 1 );
  */
 function edd_register_delete_customer_tab( $tabs ) {
 
-	$tabs['delete'] = array( 'dashicon' => 'dashicons-trash', 'title' => __( 'Delete Customer', 'edd' ) );
+	$tabs['delete'] = array( 'dashicon' => 'dashicons-trash', 'title' => __( 'Delete Customer', 'easy-digital-downloads' ) );
 
 	return $tabs;
 }
@@ -94,8 +94,8 @@ function edd_maybe_remove_menu_profile_links() {
 
 		if( defined( 'IS_PROFILE_PAGE' ) && true === IS_PROFILE_PAGE ) {
 			$url     = esc_url( edd_get_user_verification_request_url() );
-			$message = sprintf( __( 'Your account is pending verification. Please click the link in your email to activate your account. No email? <a href="%s">Click here</a> to send a new activation code.', 'edd' ), $url );
-			$title   = __( 'Account Pending Verification', 'edd' );
+			$message = sprintf( __( 'Your account is pending verification. Please click the link in your email to activate your account. No email? <a href="%s">Click here</a> to send a new activation code.', 'easy-digital-downloads' ), $url );
+			$title   = __( 'Account Pending Verification', 'easy-digital-downloads' );
 			$args    = array(
 				'response' => 403,
 			);

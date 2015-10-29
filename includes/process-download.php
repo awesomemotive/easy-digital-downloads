@@ -227,8 +227,8 @@ function edd_process_download() {
 
 		edd_die();
 	} else {
-		$error_message = __( 'You do not have permission to download this file', 'edd' );
-		wp_die( apply_filters( 'edd_deny_download_message', $error_message, __( 'Purchase Verification Failed', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+		$error_message = __( 'You do not have permission to download this file', 'easy-digital-downloads' );
+		wp_die( apply_filters( 'edd_deny_download_message', $error_message, __( 'Purchase Verification Failed', 'easy-digital-downloads' ) ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	exit;
@@ -695,7 +695,7 @@ function edd_process_signed_download_url( $args ) {
 	
 	// Check to make sure not at download limit
 	if ( edd_is_file_at_download_limit( $order_parts[1], $order_parts[0], $order_parts[2], $order_parts[3] ) ) {
-		wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );	
+		wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'easy-digital-downloads' ) ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );	
 	}
 	
 	$args['expire']      = $_GET['ttl'];

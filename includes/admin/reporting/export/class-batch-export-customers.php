@@ -39,11 +39,11 @@ class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 	public function csv_cols() {
 
 		$cols = array(
-			'id'        => __( 'ID',   'edd' ),
-			'name'      => __( 'Name',   'edd' ),
-			'email'     => __( 'Email', 'edd' ),
-			'purchases' => __( 'Number of Purchases', 'edd' ),
-			'amount'    => __( 'Customer Value', 'edd' )
+			'id'        => __( 'ID',   'easy-digital-downloads' ),
+			'name'      => __( 'Name',   'easy-digital-downloads' ),
+			'email'     => __( 'Email', 'easy-digital-downloads' ),
+			'purchases' => __( 'Number of Purchases', 'easy-digital-downloads' ),
+			'amount'    => __( 'Customer Value', 'easy-digital-downloads' )
 		);
 
 		return $cols;

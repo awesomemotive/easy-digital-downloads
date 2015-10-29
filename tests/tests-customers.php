@@ -352,6 +352,17 @@ class Tests_Customers extends WP_UnitTestCase {
 		$this->assertFalse( edd_validate_username( 'edd12345$%&+-!@£%^&()(*&^%$£@!' ) );
 	}
 
+	public function test_user_verification_base_url() {
+		$purchase_history_page = get_permalink( edd_get_option( 'purchase_history_page', 0 ) );
+		$this->assertEquals( $purchase_history_page, edd_get_user_verification_page() );
+
+		edd_update_option( 'purchase_history_page', 0 );
+		$home_url = home_url();
+		$this->assertEquals( $home_url, edd_get_user_verification_page() );
+
+		edd_update_option( 'purchase_history_page', $purchase_history_page );
+	}
+
 	public function test_user_activation_updates() {
 		// No user, no status updates
 		$this->assertFalse( edd_set_user_to_verified() );
@@ -404,6 +415,18 @@ class Tests_Customers extends WP_UnitTestCase {
 
 		$this->assertFalse( edd_validate_user_verification_token( remove_query_arg( 'token', $url ) ) );
 
+	}
+
+	public function test_user_deletion_detachment() {
+		$customer      = new EDD_Customer( $this->_user_id, true );
+		$email_address = $customer->email;
+		$this->assertEquals( $this->_user_id, $customer->user_id );
+
+		wp_delete_user( $this->_user_id );
+		$customer2 = new EDD_Customer( $email_address );
+		// Make sure it's the same customer above (sanity check)
+		$this->assertEquals( $customer->id, $customer2->id );
+		$this->assertEquals( 0 ,$customer2->user_id );
 	}
 
 }
