@@ -85,6 +85,9 @@ jQuery(document).ready(function ($) {
 
 		var $this = $(this), form = $this.closest('form');
 
+		// Disable button, preventing rapid additions to cart during ajax request
+		$this.prop('disabled', true);
+
 		var $spinner = $this.find('.edd-loading');
 		var container = $this.closest('div');
 
@@ -241,6 +244,9 @@ jQuery(document).ready(function ($) {
 							$('.edd-cart-added-alert', container).fadeOut();
 						}, 3000);
 					}
+
+					// Re-enable the add to cart button
+					$this.prop('disabled', false);
 
 					$('body').trigger('edd_cart_item_added', [ response ]);
 
