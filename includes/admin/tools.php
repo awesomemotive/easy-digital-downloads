@@ -28,7 +28,7 @@ function edd_tools_page() {
 ?>
 	<div class="wrap">
 		<?php screen_icon(); ?>
-		<h2 class="nav-tab-wrapper">
+		<h1 class="nav-tab-wrapper">
 			<?php
 			foreach( edd_get_tools_tabs() as $tab_id => $tab_name ) {
 
@@ -45,7 +45,7 @@ function edd_tools_page() {
 
 			}
 			?>
-		</h2>
+		</h1>
 		<div class="metabox-holder">
 			<?php
 			do_action( 'edd_tools_tab_' . $active_tab );
