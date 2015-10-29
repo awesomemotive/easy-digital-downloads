@@ -147,7 +147,7 @@ class EDD_API {
 		}
 
 		add_action( 'init',                     array( $this, 'add_endpoint'     ) );
-		add_action( 'template_redirect',        array( $this, 'process_query'    ), -1 );
+		add_action( 'wp',                       array( $this, 'process_query'    ), -1 );
 		add_filter( 'query_vars',               array( $this, 'query_vars'       ) );
 		add_action( 'show_user_profile',        array( $this, 'user_key_field'   ) );
 		add_action( 'edit_user_profile',        array( $this, 'user_key_field'   ) );
@@ -441,7 +441,7 @@ class EDD_API {
 	 */
 	private function missing_auth() {
 		$error = array();
-		$error['error'] = __( 'You must specify both a token and API key!', 'edd' );
+		$error['error'] = __( 'You must specify both a token and API key!', 'easy-digital-downloads' );
 
 		$this->data = $error;
 		$this->output( 401 );
@@ -458,7 +458,7 @@ class EDD_API {
 	 */
 	private function invalid_auth() {
 		$error = array();
-		$error['error'] = __( 'Your request could not be authenticated!', 'edd' );
+		$error['error'] = __( 'Your request could not be authenticated!', 'easy-digital-downloads' );
 
 		$this->data = $error;
 		$this->output( 401 );
@@ -476,7 +476,7 @@ class EDD_API {
 	 */
 	private function invalid_key() {
 		$error = array();
-		$error['error'] = __( 'Invalid API key!', 'edd' );
+		$error['error'] = __( 'Invalid API key!', 'easy-digital-downloads' );
 
 		$this->data = $error;
 		$this->output( 401 );
@@ -492,7 +492,7 @@ class EDD_API {
 	 */
 	private function invalid_version() {
 		$error = array();
-		$error['error'] = __( 'Invalid API version!', 'edd' );
+		$error['error'] = __( 'Invalid API version!', 'easy-digital-downloads' );
 
 		$this->data = $error;
 		$this->output( 404 );
@@ -585,6 +585,14 @@ class EDD_API {
 
 				break;
 
+			case 'downloads' :
+
+				$customer = isset( $wp_query->query_vars['customer'] ) ? $wp_query->query_vars['customer']  : null;
+
+				$data = $this->get_download_logs( $customer );
+
+				break;
+
 		endswitch;
 
 		// Allow extensions to setup their own return data
@@ -630,7 +638,8 @@ class EDD_API {
 			'products',
 			'customers',
 			'sales',
-			'discounts'
+			'discounts',
+			'downloads'
 		) );
 
 		$query = isset( $wp_query->query_vars['edd-api'] ) ? $wp_query->query_vars['edd-api'] : null;
@@ -640,7 +649,7 @@ class EDD_API {
 
 		// Make sure our query is valid
 		if ( ! in_array( $query, $accepted ) ) {
-			$error['error'] = __( 'Invalid query!', 'edd' );
+			$error['error'] = __( 'Invalid query!', 'easy-digital-downloads' );
 
 			$this->data = $error;
 			$this->output();
@@ -940,12 +949,12 @@ class EDD_API {
 
 		} elseif( $customer ) {
 
-			$error['error'] = sprintf( __( 'Customer %s not found!', 'edd' ), $customer );
+			$error['error'] = sprintf( __( 'Customer %s not found!', 'easy-digital-downloads' ), $customer );
 			return $error;
 
 		} else {
 
-			$error['error'] = __( 'No customers found!', 'edd' );
+			$error['error'] = __( 'No customers found!', 'easy-digital-downloads' );
 			return $error;
 
 		}
@@ -991,7 +1000,7 @@ class EDD_API {
 				$products['products'][0] = $this->get_product_data( $product_info );
 
 			} else {
-				$error['error'] = sprintf( __( 'Product %s not found!', 'edd' ), $product );
+				$error['error'] = sprintf( __( 'Product %s not found!', 'easy-digital-downloads' ), $product );
 				return $error;
 			}
 		}
@@ -1096,12 +1105,12 @@ class EDD_API {
 
 					// Ensure the end date is later than the start date
 					if( $args['enddate'] < $args['startdate'] ) {
-						$error['error'] = __( 'The end date must be later than the start date!', 'edd' );
+						$error['error'] = __( 'The end date must be later than the start date!', 'easy-digital-downloads' );
 					}
 
 					// Ensure both the start and end date are specified
 					if ( empty( $args['startdate'] ) || empty( $args['enddate'] ) ) {
-						$error['error'] = __( 'Invalid or no date range specified!', 'edd' );
+						$error['error'] = __( 'Invalid or no date range specified!', 'easy-digital-downloads' );
 					}
 
 					$total = 0;
@@ -1185,7 +1194,7 @@ class EDD_API {
 					$product_info = get_post( $args['product'] );
 					$sales['sales'][0] = array( $product_info->post_name => edd_get_download_sales_stats( $args['product'] ) );
 				} else {
-					$error['error'] = sprintf( __( 'Product %s not found!', 'edd' ), $args['product'] );
+					$error['error'] = sprintf( __( 'Product %s not found!', 'easy-digital-downloads' ), $args['product'] );
 				}
 			}
 
@@ -1202,12 +1211,12 @@ class EDD_API {
 
 					// Ensure the end date is later than the start date
 					if ( $args['enddate'] < $args['startdate'] ) {
-						$error['error'] = __( 'The end date must be later than the start date!', 'edd' );
+						$error['error'] = __( 'The end date must be later than the start date!', 'easy-digital-downloads' );
 					}
 
 					// Ensure both the start and end date are specified
 					if ( empty( $args['startdate'] ) || empty( $args['enddate'] ) ) {
-						$error['error'] = __( 'Invalid or no date range specified!', 'edd' );
+						$error['error'] = __( 'Invalid or no date range specified!', 'easy-digital-downloads' );
 					}
 
 					$total = (float) 0.00;
@@ -1295,7 +1304,7 @@ class EDD_API {
 					$product_info = get_post( $args['product'] );
 					$earnings['earnings'][0] = array( $product_info->post_name => edd_get_download_earnings_stats( $args['product'] ) );
 				} else {
-					$error['error'] = sprintf( __( 'Product %s not found!', 'edd' ), $args['product'] );
+					$error['error'] = sprintf( __( 'Product %s not found!', 'easy-digital-downloads' ), $args['product'] );
 				}
 			}
 
@@ -1436,7 +1445,7 @@ class EDD_API {
 			$count     = 0;
 
 			if ( empty( $discounts ) ) {
-				$error['error'] = __( 'No discounts found!', 'edd' );
+				$error['error'] = __( 'No discounts found!', 'easy-digital-downloads' );
 				return $error;
 			}
 
@@ -1483,7 +1492,7 @@ class EDD_API {
 
 			} else {
 
-				$error['error'] = sprintf( __( 'Discount %s not found!', 'edd' ), $discount );
+				$error['error'] = sprintf( __( 'Discount %s not found!', 'easy-digital-downloads' ), $discount );
 				return $error;
 
 			}
@@ -1491,6 +1500,104 @@ class EDD_API {
 		}
 
 		return $discount_list;
+	}
+
+	/**
+	 * Process Get Downloads API Request to retrieve download logs
+	 *
+	 * @access public
+	 * @since 2.5
+	 * @author Daniel J Griffiths
+	 *
+	 * @param  int $customer_id The customer ID you wish to retrieve download logs for
+	 * @return array            Multidimensional array of the download logs
+	 */
+	public function get_download_logs( $customer_id = 0 ) {
+		global $edd_logs;
+
+		$downloads  = array();
+		$errors     = array();
+
+		$paged      = $this->get_paged();
+		$per_page   = $this->per_page();
+		$offset     = $per_page * ( $paged - 1 );
+
+		$meta_query = array();
+		if ( ! empty( $customer_id ) ) {
+
+			$customer = new EDD_Customer( $customer_id );
+
+			$meta_query['relation'] = 'OR';
+
+			if ( $customer->id > 0 ) {
+				// Based on customer->user_id
+				$meta_query[] = array(
+					'key'    => '_edd_log_user_id',
+					'value'  => $customer->user_id
+				);
+			}
+
+			// Based on customer->email
+			$meta_query[] = array(
+				'key'    => '_edd_log_user_info',
+				'value'  => $customer->email,
+				'compare'=> 'LIKE'
+			);
+
+		}
+
+		$query = array(
+			'log_type'      => 'file_download',
+			'paged'         => $paged,
+			'meta_query'    => $meta_query,
+			'posts_per_page'=> $per_page,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false
+		);
+
+		$logs = $edd_logs->get_connected_logs( $query );
+
+		if ( empty( $logs ) ) {
+			$error['error'] = __( 'No download logs found!', 'easy-digital-downloads' );
+			return $error;
+		}
+
+		foreach( $logs as $log ) {
+			$item = array();
+
+			$log_meta   = get_post_custom( $log->ID );
+			$user_info  = isset( $log_meta['_edd_log_user_info'] ) ? maybe_unserialize( $log_meta['_edd_log_user_info'][0] ) : array();
+			$payment_id = isset( $log_meta['_edd_log_payment_id'] ) ? $log_meta['_edd_log_payment_id'][0] : false;
+
+			$payment_customer_id = edd_get_payment_customer_id( $payment_id );
+			$payment_customer    = new EDD_Customer( $payment_customer_id );
+			$user_id             = ( $payment_customer->user_id > 0 ) ? $payment_customer->user_id : false;
+			$ip                  = $log_meta['_edd_log_ip'][0];
+			$files               = edd_get_payment_meta_downloads( $payment_id );
+			$files               = edd_get_download_files( $files[0]['id'] );
+			$file_id             = (int) $log_meta['_edd_log_file_id'][0];
+			$file_id             = $file_id !== false ? $file_id : 0;
+			$file_name           = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
+
+			$item = array(
+				'ID'           => $log->ID,
+				'user_id'      => $user_id,
+				'product_id'   => $log->post_parent,
+				'product_name' => get_the_title( $log->post_parent ),
+				'customer_id'  => $payment_customer_id,
+				'payment_id'   => $payment_id,
+				'file'         => $file_name,
+				'ip'           => $ip,
+				'date'         => $log->post_date,
+			);
+
+			$item = apply_filters( 'edd_api_download_log_item', $item, $log, $log_meta );
+
+			$downloads['download_logs'][] = $item;
+
+		}
+
+		return $downloads;
 	}
 
 	/**
@@ -1646,7 +1753,7 @@ class EDD_API {
 				<tbody>
 					<tr>
 						<th>
-							<?php _e( 'Easy Digital Downloads API Keys', 'edd' ); ?>
+							<?php _e( 'Easy Digital Downloads API Keys', 'easy-digital-downloads' ); ?>
 						</th>
 						<td>
 							<?php
@@ -1655,13 +1762,13 @@ class EDD_API {
 							?>
 							<?php if ( empty( $user->edd_user_public_key ) ) { ?>
 								<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
-								<span class="description"><?php _e( 'Generate API Key', 'edd' ); ?></span>
+								<span class="description"><?php _e( 'Generate API Key', 'easy-digital-downloads' ); ?></span>
 							<?php } else { ?>
-								<strong style="display:inline-block; width: 125px;"><?php _e( 'Public key:', 'edd' ); ?>&nbsp;</strong><input type="text" disabled="disabled" class="regular-text" id="publickey" value="<?php echo esc_attr( $public_key ); ?>"/><br/>
-								<strong style="display:inline-block; width: 125px;"><?php _e( 'Secret key:', 'edd' ); ?>&nbsp;</strong><input type="text" disabled="disabled" class="regular-text" id="privatekey" value="<?php echo esc_attr( $secret_key ); ?>"/><br/>
-								<strong style="display:inline-block; width: 125px;"><?php _e( 'Token:', 'edd' ); ?>&nbsp;</strong><input type="text" disabled="disabled" class="regular-text" id="token" value="<?php echo esc_attr( $this->get_token( $user->ID ) ); ?>"/><br/>
+								<strong style="display:inline-block; width: 125px;"><?php _e( 'Public key:', 'easy-digital-downloads' ); ?>&nbsp;</strong><input type="text" disabled="disabled" class="regular-text" id="publickey" value="<?php echo esc_attr( $public_key ); ?>"/><br/>
+								<strong style="display:inline-block; width: 125px;"><?php _e( 'Secret key:', 'easy-digital-downloads' ); ?>&nbsp;</strong><input type="text" disabled="disabled" class="regular-text" id="privatekey" value="<?php echo esc_attr( $secret_key ); ?>"/><br/>
+								<strong style="display:inline-block; width: 125px;"><?php _e( 'Token:', 'easy-digital-downloads' ); ?>&nbsp;</strong><input type="text" disabled="disabled" class="regular-text" id="token" value="<?php echo esc_attr( $this->get_token( $user->ID ) ); ?>"/><br/>
 								<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
-								<span class="description"><label for="edd_set_api_key"><?php _e( 'Revoke API Keys', 'edd' ); ?></label></span>
+								<span class="description"><label for="edd_set_api_key"><?php _e( 'Revoke API Keys', 'easy-digital-downloads' ); ?></label></span>
 							<?php } ?>
 						</td>
 					</tr>
@@ -1682,7 +1789,7 @@ class EDD_API {
 
 		if( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'edd-api-nonce' ) ) {
 
-			wp_die( __( 'Nonce verification failed', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+			wp_die( __( 'Nonce verification failed', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 
 		}
 
@@ -1695,9 +1802,9 @@ class EDD_API {
 		$process    = isset( $args['edd_api_process'] ) ? strtolower( $args['edd_api_process'] ) : false;
 
 		if( $user_id == get_current_user_id() && ! edd_get_option( 'allow_user_api_keys' ) && ! current_user_can( 'manage_shop_settings' ) ) {
-			wp_die( sprintf( __( 'You do not have permission to %s API keys for this user', 'edd' ), $process ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+			wp_die( sprintf( __( 'You do not have permission to %s API keys for this user', 'easy-digital-downloads' ), $process ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 		} elseif( ! current_user_can( 'manage_shop_settings' ) ) {
-			wp_die( sprintf( __( 'You do not have permission to %s API keys for this user', 'edd' ), $process ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+			wp_die( sprintf( __( 'You do not have permission to %s API keys for this user', 'easy-digital-downloads' ), $process ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 		}
 
 		switch( $process ) {
