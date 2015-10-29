@@ -1,4 +1,5 @@
 var edd_scripts;
+var edd_ajax_lock = {};
 jQuery(document).ready(function ($) {
 
 	// Hide unneeded elements. These are things that are required in case JS breaks or isn't present
@@ -161,6 +162,15 @@ jQuery(document).ready(function ($) {
 			post_data: $(form).serialize()
 		};
 
+		// Return early if there is a currently ongoing ajax request to add this
+		// item to the cart.
+		if ( edd_ajax_lock[download] === true ) {
+			return false;
+		} else {
+			// Prevent another ajax request before this one is complete
+			edd_ajax_lock[download] = true;
+		}
+
 		$.ajax({
 			type: "POST",
 			data: data,
@@ -241,6 +251,9 @@ jQuery(document).ready(function ($) {
 							$('.edd-cart-added-alert', container).fadeOut();
 						}, 3000);
 					}
+
+					// Release any ajax lock on this item
+					edd_ajax_lock[download] = false;
 
 					$('body').trigger('edd_cart_item_added', [ response ]);
 
