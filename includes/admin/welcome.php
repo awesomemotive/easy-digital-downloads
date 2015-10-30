@@ -152,7 +152,7 @@ class EDD_Welcome {
 	public function tabs() {
 		$selected = isset( $_GET['page'] ) ? $_GET['page'] : 'edd-about';
 		?>
-		<h2 class="nav-tab-wrapper">
+		<h1 class="nav-tab-wrapper">
 			<a class="nav-tab <?php echo $selected == 'edd-about' ? 'nav-tab-active' : ''; ?>" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-about' ), 'index.php' ) ) ); ?>">
 				<?php _e( "What's New", 'easy-digital-downloads' ); ?>
 			</a>
@@ -162,7 +162,7 @@ class EDD_Welcome {
 			<a class="nav-tab <?php echo $selected == 'edd-credits' ? 'nav-tab-active' : ''; ?>" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-credits' ), 'index.php' ) ) ); ?>">
 				<?php _e( 'Credits', 'easy-digital-downloads' ); ?>
 			</a>
-		</h2>
+		</h1>
 		<?php
 	}
 
