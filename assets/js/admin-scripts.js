@@ -1488,16 +1488,18 @@ jQuery(document).ready(function ($) {
 		$('.edd_user_search_results span').html('');
 	});
 
-	$.ajax({
-		type: "GET",
-		data: {
-			action: 'edd_load_dashboard_widget'
-		},
-		url: ajaxurl,
-		success: function (response) {
-			$('#edd_dashboard_sales .inside').html( response );
-		}
-	});
+	if( $('.edd_dashboard_sales').length ) {
+		$.ajax({
+			type: "GET",
+			data: {
+				action: 'edd_load_dashboard_widget'
+			},
+			url: ajaxurl,
+			success: function (response) {
+				$('#edd_dashboard_sales .inside').html( response );
+			}
+		});
+	}
 
 	$(document).on('keydown', '.customer-note-input', function(e) {
 		if(e.keyCode == 13 && (e.metaKey || e.ctrlKey)) {

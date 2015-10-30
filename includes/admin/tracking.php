@@ -67,14 +67,9 @@ class EDD_Tracking {
 		$data = array();
 
 		// Retrieve current theme info
-		if ( get_bloginfo( 'version' ) < '3.4' ) {
-			$theme_data = get_theme_data( get_stylesheet_directory() . '/style.css' );
-			$theme      = $theme_data['Name'] . ' ' . $theme_data['Version'];
-		} else {
-			$theme_data = wp_get_theme();
-			$theme      = $theme_data->Name . ' ' . $theme_data->Version;
-		}
-
+		$theme_data = wp_get_theme();
+		$theme      = $theme_data->Name . ' ' . $theme_data->Version;
+		
 		$data['url']    = home_url();
 		$data['theme']  = $theme;
 		$data['email']  = get_bloginfo( 'admin_email' );
@@ -97,6 +92,7 @@ class EDD_Tracking {
 		$data['active_plugins']   = $active_plugins;
 		$data['inactive_plugins'] = $plugins;
 		$data['products']         = wp_count_posts( 'download' )->publish;
+		$data['download_label'] = edd_get_label_singular( true );
 
 		$this->data = $data;
 	}

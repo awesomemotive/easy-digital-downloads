@@ -16,11 +16,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Get the contents of the cart
  *
  * @since 1.0
- * @return mixed array if cart isn't empty | false otherwise
+ * @return array Returns an array of cart contents, or an empty array if no items in the cart
  */
 function edd_get_cart_contents() {
 	$cart = EDD()->session->get( 'edd_cart' );
-	$cart = ! empty( $cart ) ? array_values( $cart ) : false;
+	$cart = ! empty( $cart ) ? array_values( $cart ) : array();
+
 	return apply_filters( 'edd_cart_contents', $cart );
 }
 

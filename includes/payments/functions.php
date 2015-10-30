@@ -738,6 +738,19 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 		'update_post_term_cache' => false
 	);
 
+	$show_free = apply_filters( 'edd_sales_by_date_show_free', true, $args );
+
+	if ( false === $show_free ) {
+		$args['meta_query'] = array(
+			array(
+				'key' => '_edd_payment_total',
+				'value' => 0,
+				'compare' => '>',
+				'type' => 'NUMERIC',
+			),
+		);
+	}
+
 	if ( ! empty( $month_num ) )
 		$args['monthnum'] = $month_num;
 
