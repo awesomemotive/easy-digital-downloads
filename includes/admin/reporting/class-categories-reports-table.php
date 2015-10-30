@@ -97,8 +97,13 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function bulk_actions( $which = '' ) {
+		if ( 'bottom' === $which ) {
+			return;
+		}
+
 		// These aren't really bulk actions but this outputs the markup in the right place
 		edd_report_views();
+		edd_reports_graph_controls();
 	}
 
 	/**
