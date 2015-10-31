@@ -2,6 +2,8 @@
 /**
  * Widgets
  *
+ * Widgets related funtions and widget registration.
+ *
  * @package     EDD
  * @subpackage  Widgets
  * @copyright   Copyright (c) 2015, Pippin Williamson
@@ -23,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 */
 
 /**
- * Cart Widget
+ * Cart Widget.
  *
  * Downloads cart widget class.
  *
@@ -98,7 +100,7 @@ class edd_cart_widget extends WP_Widget {
 }
 
 /**
- * Categories / Tags Widget
+ * Categories / Tags Widget.
  *
  * Downloads categories / tags widget class.
  *
@@ -113,7 +115,7 @@ class edd_categories_tags_widget extends WP_Widget {
 
 	/** @see WP_Widget::widget */
 	function widget( $args, $instance ) {
-		// Set defaults
+		// Set defaults,
 		$args['id']           = ( isset( $args['id'] ) ) ? $args['id'] : 'edd_categories_tags_widget';
 		$instance['title']    = ( isset( $instance['title'] ) ) ? $instance['title'] : '';
 		$instance['taxonomy'] = ( isset( $instance['taxonomy'] ) ) ? $instance['taxonomy'] : 'download_category';
@@ -190,9 +192,9 @@ class edd_categories_tags_widget extends WP_Widget {
 
 
 /**
- * Product Details Widget
+ * Product Details Widget.
  *
- * Displays a product's details in a widget
+ * Displays a product's details in a widget.
  *
  * @since 1.9
  * @return void
@@ -218,38 +220,38 @@ class EDD_Product_Details_Widget extends WP_Widget {
 			return;
 		}
 
-		// set correct download ID
+		// set correct download ID.
 		if ( 'current' == $instance['download_id'] && is_singular( 'download' ) ) {
 			$download_id = get_the_ID();
 		} else {
 			$download_id = absint( $instance['download_id'] );
 		}
 
-		// Variables from widget settings
+		// Variables from widget settings.
 		$title              = apply_filters( 'widget_title', $instance['title'], $instance, $args['id'] );
 		$download_title 	= $instance['download_title'] ? apply_filters( 'edd_product_details_widget_download_title', '<h3>' . get_the_title( $download_id ) . '</h3>', $download_id ) : '';
 		$purchase_button 	= $instance['purchase_button'] ? apply_filters( 'edd_product_details_widget_purchase_button', edd_get_purchase_link( array( 'download_id' => $download_id ) ), $download_id ) : '';
 		$categories 		= $instance['categories'] ? $instance['categories'] : '';
 		$tags 				= $instance['tags'] ? $instance['tags'] : '';
 
-		// Used by themes. Opens the widget
+		// Used by themes. Opens the widget.
 		echo $args['before_widget'];
 
-		// Display the widget title
+		// Display the widget title.
 		if( $title ) {
 			echo $args['before_title'] . $title . $args['after_title'];
 		}
 
 		do_action( 'edd_product_details_widget_before_title' , $instance , $download_id );
 
-		// download title
+		// download title.
 		echo $download_title;
 
 		do_action( 'edd_product_details_widget_before_purchase_button' , $instance , $download_id );
-		// purchase button
+		// purchase button.
 		echo $purchase_button;
 
-		// categories and tags
+		// categories and tags.
 		$category_list     = $categories ? get_the_term_list( $download_id, 'download_category', '', ', ' ) : '';
 		$category_count    = count( get_the_terms( $download_id, 'download_category' ) );
 		$category_labels   = edd_get_taxonomy_labels( 'download_category' );
@@ -283,7 +285,7 @@ class EDD_Product_Details_Widget extends WP_Widget {
 
 		do_action( 'edd_product_details_widget_before_end', $instance, $download_id );
 
-		// Used by themes. Closes the widget
+		// Used by themes. Closes the widget.
 		echo $args['after_widget'];
 	}
 
@@ -376,7 +378,7 @@ class EDD_Product_Details_Widget extends WP_Widget {
 
 
 /**
- * Register Widgets
+ * Register Widgets.
  *
  * Registers the EDD Widgets.
  *
