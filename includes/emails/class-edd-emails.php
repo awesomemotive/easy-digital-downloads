@@ -295,6 +295,21 @@ class EDD_Emails {
 
 		$sent = wp_mail( $to, $subject, $message, $this->get_headers(), $attachments );
 
+		if( ! $sent ) {
+			if ( is_array( $to ) ) {
+				$to = implode( ',', $to );
+			}
+
+			$log_message = sprintf(
+				__( "Email from Easy Digital Downloads failed to send.\nSend time: %s\nTo: %s\nSubject: %s\n\n", 'easy-digital-downloads' ),
+				date_i18n( 'F j Y H:i:s', current_time( 'timestamp' ) ),
+				$to,
+				$subject
+			);
+
+			error_log( $log_message );
+		}
+
 		/**
 		 * Hooks after the email is sent
 		 *

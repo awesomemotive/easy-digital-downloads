@@ -7,6 +7,7 @@
 class Tests_Discounts extends WP_UnitTestCase {
 	protected $_post = null;
 	protected $_post_id = null;
+	protected $_download = null;
 	protected $_flat_post_id = null;
 	protected $_negative_post_id = null;
 
@@ -15,6 +16,7 @@ class Tests_Discounts extends WP_UnitTestCase {
 		parent::setUp();
 
 		$this->_post_id = EDD_Helper_Discount::create_simple_percent_discount();
+		$this->_download = EDD_Helper_Download::create_simple_download();
 
 		$this->_negative_post_id = EDD_Helper_Discount::create_simple_percent_discount();
 		update_post_meta( $this->_negative_post_id, '_edd_discount_name', 'Double Double' );
@@ -223,5 +225,60 @@ class Tests_Discounts extends WP_UnitTestCase {
 
 		edd_remove_discount( $this->_negative_post_id );
 		$this->assertFalse( wp_cache_get( $this->_negative_post_id, 'posts' ) );
+	}
+
+	public function test_set_discount() {
+
+		EDD()->session->set( 'cart_discounts', null );
+
+		edd_add_to_cart( $this->_download->ID );
+
+		$this->assertEquals( '20.00', edd_get_cart_total() );
+
+		edd_set_cart_discount( edd_get_discount_code( $this->_post_id ) );
+		$this->assertEquals( '16.00', edd_get_cart_total() );
+	}
+
+	public function test_set_multiple_discounts() {
+
+		EDD()->session->set( 'cart_discounts', null );
+
+		edd_update_option( 'allow_multiple_discounts', true );
+
+		edd_add_to_cart( $this->_download->ID );
+
+		$this->assertEquals( '20.00', edd_get_cart_total() );
+
+		// Test a single discount code
+
+		$code = edd_get_discount_code( $this->_post_id );
+
+		$discounts = edd_set_cart_discount( $code );
+
+		$this->assertInternalType( 'array', $discounts );
+		$this->assertTrue( 1 == count( $discounts ) );
+		$this->assertEquals( '16.00', edd_get_cart_total() );
+
+		// Test a single discount code again but with lower case
+
+		$code = strtolower( $code );
+
+		$discounts = edd_set_cart_discount( $code );
+
+		$this->assertInternalType( 'array', $discounts );
+		$this->assertTrue( 1 == count( $discounts ) );
+		$this->assertEquals( '16.00', edd_get_cart_total() );
+
+		// Test a new code
+
+		$code_id = EDD_Helper_Discount::create_simple_percent_discount();
+		update_post_meta( $code_id, '_edd_discount_code', 'SECONDcode' );
+
+		$discounts = edd_set_cart_discount( 'SECONDCODE' );
+
+		$this->assertInternalType( 'array', $discounts );
+		$this->assertTrue( 2 == count( $discounts ) );
+		$this->assertEquals( '12.00', edd_get_cart_total() );
+
 	}
 }

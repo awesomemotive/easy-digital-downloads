@@ -32,7 +32,7 @@ function edd_options_page() {
 	ob_start();
 	?>
 	<div class="wrap">
-		<h2 class="nav-tab-wrapper">
+		<h1 class="nav-tab-wrapper">
 			<?php
 			foreach( edd_get_settings_tabs() as $tab_id => $tab_name ) {
 
@@ -48,7 +48,7 @@ function edd_options_page() {
 				echo '</a>';
 			}
 			?>
-		</h2>
+		</h1>
 		<?php
 		
 		$number_of_sections = count( $sections );

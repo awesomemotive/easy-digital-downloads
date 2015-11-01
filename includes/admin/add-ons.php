@@ -33,7 +33,7 @@ function edd_add_ons_page() {
 			</span>
 		</h2>
 		<p><?php _e( 'These extensions <em><strong>add functionality</strong></em> to your Easy Digital Downloads powered store.', 'easy-digital-downloads' ); ?></p>
-		<h2 class="nav-tab-wrapper">
+		<h1 class="nav-tab-wrapper">
 			<?php
 			foreach( $add_ons_tabs as $tab_id => $tab_name ) {
 
@@ -50,7 +50,7 @@ function edd_add_ons_page() {
 			}
 			?>
 			<span class="edd-tab-span"><img src="<?php echo EDD_PLUGIN_URL; ?>assets/images/edd-peeking.png" /></span>
-		</h2>
+		</h1>
 		<div id="tab_container">
 			<?php echo edd_add_ons_get_feed( $active_tab ); ?>
 			<div class="clear"></div>
