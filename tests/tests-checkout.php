@@ -39,6 +39,10 @@ class Tests_Checkout extends WP_UnitTestCase {
 		edd_add_to_cart( $this->_post->ID, $options );
 	}
 
+	public function tearDown() {
+		parent::tearDown();
+	}
+
 	/**
      * Test the can checkout function
      */

@@ -635,7 +635,7 @@ function edd_is_discount_maxed_out( $code_id = null ) {
 		// Should never be greater than, but just in case
 		if ( $uses >= $max_uses && ! empty( $max_uses ) ) {
 			// Discount is maxed out
-			edd_set_error( 'edd-discount-error', __( 'This discount has reached it\'s maximum usage.', 'easy-digital-downloads' ) );
+			edd_set_error( 'edd-discount-error', __( 'This discount has reached its maximum usage.', 'easy-digital-downloads' ) );
 			$return = true;
 		}
 	}
@@ -851,7 +851,7 @@ function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
 				// Check all matching payments for discount code.
 				$payment_meta = edd_get_payment_meta( $payment );
 				$user_info    = maybe_unserialize( $payment_meta['user_info'] );
-				if ( $user_info['discount'] == $code ) {
+				if ( strtolower( $user_info['discount'] ) == strtolower( $code ) ) {
 					edd_set_error( 'edd-discount-error', __( 'This discount has already been redeemed.', 'easy-digital-downloads' ) );
 					$return = true;
 				}
@@ -1014,7 +1014,7 @@ function edd_set_cart_discount( $code = '' ) {
 	}
 
 	if ( $discounts ) {
-		$key = array_search( $code, $discounts );
+		$key = array_search( strtolower( $code ), array_map( 'strtolower', $discounts ) );
 		if( false !== $key ) {
 			unset( $discounts[ $key ] ); // Can't set the same discount more than once
 		}
@@ -1101,12 +1101,14 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
 
 	$amount = 0.00;
 	$items  = edd_get_cart_content_details();
-	if( $items ) {
+
+	if ( $items ) {
 
 		$discounts = wp_list_pluck( $items, 'discount' );
 
-		if( is_array( $discounts ) ) {
-			$amount = array_sum( $discounts );
+		if ( is_array( $discounts ) ) {
+			$discounts = array_map( 'floatval', $discounts );
+			$amount    = array_sum( $discounts );
 		}
 
 	}

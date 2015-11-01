@@ -16,11 +16,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Get the contents of the cart
  *
  * @since 1.0
- * @return mixed array if cart isn't empty | false otherwise
+ * @return array Returns an array of cart contents, or an empty array if no items in the cart
  */
 function edd_get_cart_contents() {
 	$cart = EDD()->session->get( 'edd_cart' );
-	$cart = ! empty( $cart ) ? array_values( $cart ) : false;
+	$cart = ! empty( $cart ) ? array_values( $cart ) : array();
+
 	return apply_filters( 'edd_cart_contents', $cart );
 }
 
@@ -638,10 +639,10 @@ function edd_get_cart_subtotal() {
  * @return float Cart amount
  */
 function edd_get_cart_total( $discounts = false ) {
-	$subtotal  = edd_get_cart_subtotal();
-	$discounts = edd_get_cart_discounted_amount();
-	$cart_tax  = edd_get_cart_tax();
-	$fees      = edd_get_cart_fee_total();
+	$subtotal  = (float) edd_get_cart_subtotal();
+	$discounts = (float) edd_get_cart_discounted_amount();
+	$cart_tax  = (float) edd_get_cart_tax();
+	$fees      = (float) edd_get_cart_fee_total();
 	$total     = $subtotal - $discounts + $cart_tax + $fees;
 
 	if( $total < 0 )
