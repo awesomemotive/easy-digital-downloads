@@ -115,7 +115,7 @@ class edd_categories_tags_widget extends WP_Widget {
 
 	/** @see WP_Widget::widget */
 	function widget( $args, $instance ) {
-		// Set defaults,
+		// Set defaults.
 		$args['id']           = ( isset( $args['id'] ) ) ? $args['id'] : 'edd_categories_tags_widget';
 		$instance['title']    = ( isset( $instance['title'] ) ) ? $instance['title'] : '';
 		$instance['taxonomy'] = ( isset( $instance['taxonomy'] ) ) ? $instance['taxonomy'] : 'download_category';
