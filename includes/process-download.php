@@ -178,17 +178,17 @@ function edd_process_download() {
 					$file_path  = realpath( ABSPATH . $file_path );
 					$direct     = true;
 
-				} else if( strpos( $requested_file, WP_CONTENT_URL ) !== false ) {
+				} else if( strpos( $requested_file, content_url() ) !== false ) {
 
 					/** This is a local file given by URL so we need to figure out the path */
-					$file_path  = str_replace( WP_CONTENT_URL, WP_CONTENT_DIR, $requested_file );
+					$file_path  = str_replace( content_url(), WP_CONTENT_DIR, $requested_file );
 					$file_path  = realpath( $file_path );
 					$direct     = true;
 
-				} else if( strpos( $requested_file, set_url_scheme( WP_CONTENT_URL, 'https' ) ) !== false ) {
+				} else if( strpos( $requested_file, set_url_scheme( content_url(), 'https' ) ) !== false ) {
 
 					/** This is a local file given by an HTTPS URL so we need to figure out the path */
-					$file_path  = str_replace( set_url_scheme( WP_CONTENT_URL, 'https' ), WP_CONTENT_DIR, $requested_file );
+					$file_path  = str_replace( set_url_scheme( content_url(), 'https' ), WP_CONTENT_DIR, $requested_file );
 					$file_path  = realpath( $file_path );
 					$direct     = true;
 
@@ -692,12 +692,12 @@ function edd_process_signed_download_url( $args ) {
 	}
 
 	$order_parts = explode( ':', rawurldecode( $_GET['eddfile'] ) );
-	
+
 	// Check to make sure not at download limit
 	if ( edd_is_file_at_download_limit( $order_parts[1], $order_parts[0], $order_parts[2], $order_parts[3] ) ) {
-		wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'easy-digital-downloads' ) ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );	
+		wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'easy-digital-downloads' ) ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
-	
+
 	$args['expire']      = $_GET['ttl'];
 	$args['download']    = $order_parts[1];
 	$args['payment']     = $order_parts[0];
