@@ -348,7 +348,7 @@ class EDD_Payments_Query extends EDD_Stats {
 			return;
 		}
 
-        $is_email = is_email( $search ) || strpos( $search, '@' ) !== false;
+		$is_email = is_email( $search ) || strpos( $search, '@' ) !== false;
 		$is_user  = strpos( $search, strtolower( 'user:' ) ) !== false;
 
 		if ( ! empty( $this->args['search_in_notes'] ) ) {
@@ -435,9 +435,22 @@ class EDD_Payments_Query extends EDD_Stats {
 			$this->__set( 'download', str_replace( '#', '', $search ) );
 			$this->__unset( 's' );
 
+		} elseif ( 0 === strpos( $search, 'discount:' ) ) {
+
+			$search = str_replace( 'discount:', '', $search );
+			$search = 'discount.*' . $search;
+
+			$search_meta = array(
+				'key'     => '_edd_payment_meta',
+				'value'   => $search,
+				'compare' => 'REGEXP',
+			);
+
+			$this->__set( 'meta_query', $search_meta );
+			$this->__unset( 's' );
+
 		} else {
 			$this->__set( 's', $search );
-
 		}
 
 	}
