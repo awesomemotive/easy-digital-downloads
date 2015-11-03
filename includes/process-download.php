@@ -153,7 +153,7 @@ function edd_process_download() {
 			case 'redirect' :
 
 				// Redirect straight to the file
-				header( "Location: " . $requested_file );
+				edd_deliver_download( $requested_file, true );
 				break;
 
 			case 'direct' :
@@ -215,10 +215,14 @@ function edd_process_download() {
 				}
 
 				if( $direct ) {
+
 					edd_deliver_download( $file_path );
+
 				} else {
+
 					// The file supplied does not have a discoverable absolute path
-					header( "Location: " . $requested_file );
+					edd_deliver_download( $requested_file, true );
+
 				}
 
 				break;
@@ -241,12 +245,11 @@ add_action( 'init', 'edd_process_download', 100 );
  * If enabled, the file is symlinked to better support large file downloads
  *
  * @access   public
- * @param    string    file
+ * @param    string    $file
+ * @param    bool      $redirect True if we should perform a header redirect instead of calling edd_readfile_chunked()
  * @return   void
  */
-function edd_deliver_download( $file = '' ) {
-	$symlink = edd_get_option( 'symlink_file_downloads', false );
-	$symlink = (bool) apply_filters( 'edd_symlink_file_downloads', $symlink );
+function edd_deliver_download( $file = '', $redirect = false ) {
 
 	/*
 	 * If symlinks are enabled, a link to the file will be created
@@ -254,7 +257,7 @@ function edd_deliver_download( $file = '' ) {
 	 * The symlink is deleted after it is used
 	 */
 
-	if( $symlink && function_exists( 'symlink' ) ) {
+	if( edd_symlink_file_downloads() ) {
 
 		// Generate a symbolic link
 		$ext       = edd_get_file_extension( $file );
@@ -269,14 +272,16 @@ function edd_deliver_download( $file = '' ) {
 		set_transient( md5( $file_name ), '1', 30 );
 
 		// Schedule deletion of the symlink
-		if ( ! wp_next_scheduled( 'edd_cleanup_file_symlinks' ) )
-			wp_schedule_single_event( current_time( 'timestamp' )+60, 'edd_cleanup_file_symlinks' );
+		if ( ! wp_next_scheduled( 'edd_cleanup_file_symlinks' ) ) {
+			wp_schedule_single_event( current_time( 'timestamp' ) + 60, 'edd_cleanup_file_symlinks' );
+		}
 
 		// Make sure the symlink doesn't already exist before we create it
-		if( ! file_exists( $path ) )
+		if( ! file_exists( $path ) ) {
 			$link = symlink( $file, $path );
-		else
+		} else {
 			$link = true;
+		}
 
 		if( $link ) {
 			// Send the browser to the file
@@ -284,6 +289,10 @@ function edd_deliver_download( $file = '' ) {
 		} else {
 			edd_readfile_chunked( $file );
 		}
+
+	} elseif( $redirect ) {
+
+		header( 'Location: ' . $file );
 
 	} else {
 
@@ -692,12 +701,12 @@ function edd_process_signed_download_url( $args ) {
 	}
 
 	$order_parts = explode( ':', rawurldecode( $_GET['eddfile'] ) );
-	
+
 	// Check to make sure not at download limit
 	if ( edd_is_file_at_download_limit( $order_parts[1], $order_parts[0], $order_parts[2], $order_parts[3] ) ) {
-		wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'easy-digital-downloads' ) ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );	
+		wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'easy-digital-downloads' ) ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
-	
+
 	$args['expire']      = $_GET['ttl'];
 	$args['download']    = $order_parts[1];
 	$args['payment']     = $order_parts[0];
@@ -708,4 +717,15 @@ function edd_process_signed_download_url( $args ) {
 	$args['has_access']  = true;
 
 	return $args;
+}
+
+/**
+ * Determines if we should use symbolic links during the file download process
+ *
+ * @since  2.5
+ * @return bool
+ */
+function edd_symlink_file_downloads() {
+	$symlink = edd_get_option( 'symlink_file_downloads', false ) && function_exists( 'symlink' );
+	return (bool) apply_filters( 'edd_symlink_file_downloads', $symlink );
 }
