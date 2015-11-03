@@ -1223,6 +1223,7 @@ jQuery(document).ready(function ($) {
 				export_form.find('.notice-wrap').remove();
 				submit_button.removeClass('button-disabled').attr('disabled', false);
 				products.hide();
+				$('.edd-recount-stats-descriptions span').hide();
 
 				if ( 'recount-download' === selected_type ) {
 
@@ -1243,6 +1244,8 @@ jQuery(document).ready(function ($) {
 					products.val(0);
 
 				}
+
+				$('#' + selected_type ).show();
 			} );
 
 			$('body').on('change', '#confirm-reset', function() {
