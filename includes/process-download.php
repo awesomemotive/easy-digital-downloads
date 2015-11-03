@@ -678,7 +678,7 @@ function edd_process_signed_download_url( $args ) {
 
 	$parts = parse_url( add_query_arg( array() ) );
 	wp_parse_str( $parts['query'], $query_args );
-	$url = add_query_arg( $query_args, home_url() );
+	$url = add_query_arg( $query_args, site_url() );
 
 	$valid_token = edd_validate_url_token( $url );
 
