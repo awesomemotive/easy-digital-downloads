@@ -1214,10 +1214,15 @@ jQuery(document).ready(function ($) {
 		recount_stats : function() {
 			$( 'body').on( 'change', '#recount-stats-type', function() {
 
-				var export_form = $('#edd-tools-recount-form');
-				export_form.find('.notice-wrap').remove();
+				var export_form   = $('#edd-tools-recount-form');
 				var selected_type = $('option:selected', this).data('type');
+				var submit_button = $('#recount-stats-submit');
 				var products      = $('#tools-product-dropdown');
+
+				// Reset the form
+				export_form.find('.notice-wrap').remove();
+				submit_button.removeClass('button-disabled').attr('disabled', false);
+				products.hide();
 
 				if ( 'recount-download' === selected_type ) {
 
@@ -1225,8 +1230,8 @@ jQuery(document).ready(function ($) {
 					products.find('.edd-select-chosen').css('width', 'auto');
 
 				} else if ( 'reset-stats' === selected_type ) {
-					export_form.append('<div class="notice-wrap"></div>');
 
+					export_form.append('<div class="notice-wrap"></div>');
 					var notice_wrap = export_form.find('.notice-wrap');
 					notice_wrap.html('<div class="notice notice-warning"><p><input type="checkbox" id="confirm-reset" name="confirm_reset_store" value="1" /> <label for="confirm-reset">' + edd_vars.reset_stats_warn + '</label></p></div>');
 
