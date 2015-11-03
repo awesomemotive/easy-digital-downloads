@@ -15,7 +15,8 @@ function edd_register_default_customer_views( $views ) {
 	$default_views = array(
 		'overview'  => 'edd_customers_view',
 		'delete'    => 'edd_customers_delete_view',
-		'notes'     => 'edd_customer_notes_view'
+		'notes'     => 'edd_customer_notes_view',
+		'tools'      => 'edd_customer_tools_view',
 	);
 
 	return array_merge( $views, $default_views );
@@ -34,7 +35,8 @@ function edd_register_default_customer_tabs( $tabs ) {
 
 	$default_tabs = array(
 		'overview' => array( 'dashicon' => 'dashicons-admin-users', 'title' => __( 'Customer Profile', 'easy-digital-downloads' ) ),
-		'notes'    => array( 'dashicon' => 'dashicons-admin-comments', 'title' => __( 'Customer Notes', 'easy-digital-downloads' ) )
+		'notes'    => array( 'dashicon' => 'dashicons-admin-comments', 'title' => __( 'Customer Notes', 'easy-digital-downloads' ) ),
+		'tools'    => array( 'dashicon' => 'dashicons-admin-tools', 'title' => __( 'Customer Tools', 'easy-digital-downloads' ) ),
 	);
 
 	return array_merge( $tabs, $default_tabs );

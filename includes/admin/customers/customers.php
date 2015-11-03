@@ -530,6 +530,44 @@ function edd_customers_delete_view( $customer ) {
 	do_action( 'edd_customer_delete_bottom', $customer );
 }
 
+function edd_customer_tools_view( $customer ) {
+	$customer_edit_role = apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
+
+	?>
+
+	<?php do_action( 'edd_customer_tools_top', $customer ); ?>
+
+	<div class="info-wrapper customer-section">
+
+		<div class="customer-notes-header">
+			<?php echo get_avatar( $customer->email, 30 ); ?> <span><?php echo $customer->name; ?></span>
+		</div>
+		<h3><?php _e( 'Tools', 'easy-digital-downloads' ); ?></h3>
+
+		<div class="edd-item-info customer-info">
+			<h4><?php _e( 'Recount Customer Stats', 'easy-digital-downloads' ); ?></h4>
+			<p class="edd-item-description"><?php _e( 'Use this tool to recalculate the purchase count and total value of the customer.', 'easy-digital-downloads' ); ?></p>
+			<form method="post" id="edd-tools-recount-form" class="edd-export-form">
+				<span>
+					<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+
+					<input type="hidden" data-type="recount-single-customer-stats" value="EDD_Tools_Recount_Single_Customer_Stats" />
+					<input type="hidden" name="customer_id" value="<?php echo $customer->id; ?>" />
+					<input type="submit" id="recount-stats-submit" value="<?php _e( 'Recount Stats', 'edd' ); ?>" class="button-secondary"/>
+					<span class="spinner"></span>
+
+				</span>
+			</form>
+
+		</div>
+
+	</div>
+
+	<?php
+
+	do_action( 'edd_customer_tools_bottom', $customer );
+}
+
 /**
  * Display a notice on customer account if they are pending verification
  *
