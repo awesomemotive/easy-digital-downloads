@@ -108,6 +108,13 @@ class Test_Cart extends WP_UnitTestCase {
 		$this->assertEquals( 0, edd_add_to_cart( $this->_post->ID, $options ) );
 	}
 
+	public function test_empty_cart_is_array() {
+		$cart_contents = edd_get_cart_contents();
+
+		$this->assertInternalType( 'array', $cart_contents );
+		$this->assertEmpty( $cart_contents );
+	}
+
 	public function test_add_to_cart_multiple_price_ids_array() {
 
 		$options = array(

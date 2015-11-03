@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_get_shop_country() {
 	$country = edd_get_option( 'base_country', 'US' );
-	
+
 	return apply_filters( 'edd_shop_country', $country );
 }
 
@@ -305,7 +305,7 @@ function edd_get_country_list() {
 		'NG' => 'Nigeria',
 		'NU' => 'Niue',
 		'NF' => 'Norfolk Island',
-		'KR' => 'North Korea',
+		'KP' => 'North Korea',
 		'MP' => 'Northern Mariana Islands',
 		'NO' => 'Norway',
 		'OM' => 'Oman',
@@ -349,7 +349,7 @@ function edd_get_country_list() {
 		'SO' => 'Somalia',
 		'ZA' => 'South Africa',
 		'GS' => 'South Georgia',
-		'KP' => 'South Korea',
+		'KR' => 'South Korea',
 		'SS' => 'South Sudan',
 		'ES' => 'Spain',
 		'LK' => 'Sri Lanka',
