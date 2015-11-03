@@ -426,8 +426,8 @@ function edd_customer_notes_view( $customer ) {
 	$customer_notes = $customer->get_notes( $per_page, $paged );
 	?>
 
-	<div id="customer-notes-wrapper">
-		<div class="customer-notes-header">
+	<div id="edd-item-notes-wrapper">
+		<div class="edd-item-notes-header">
 			<?php echo get_avatar( $customer->email, 30 ); ?> <span><?php echo $customer->name; ?></span>
 		</div>
 		<h3><?php _e( 'Notes', 'edd' ); ?></h3>
@@ -491,7 +491,7 @@ function edd_customers_delete_view( $customer ) {
 
 		<form id="delete-customer" method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $customer->id ); ?>">
 
-			<div class="customer-notes-header">
+				<div class="edd-item-notes-header">
 				<?php echo get_avatar( $customer->email, 30 ); ?> <span><?php echo $customer->name; ?></span>
 			</div>
 
