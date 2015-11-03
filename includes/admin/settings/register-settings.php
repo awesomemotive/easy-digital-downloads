@@ -168,7 +168,7 @@ function edd_register_settings() {
 				'edd_settings_' . $tab . '_' . $section,
 				__return_null(),
 				'__return_false',
-				'edd_settings_' . $tab . '_' . $section,
+				'edd_settings_' . $tab . '_' . $section
 			);
 
 			foreach ( $settings as $option ) {
