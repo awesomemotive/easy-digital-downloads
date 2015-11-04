@@ -26,9 +26,15 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 	 *
 	 * @since 2.3
 	 */
-	public static function create_simple_payment() {
+	public static function create_simple_payment( $args = array() ) {
 
 		global $edd_options;
+
+		$defaults = array(
+			'discount' => 'none',
+		);
+
+		$args = wp_parse_args( $args, $defaults );
 
 		// Enable a few options
 		$edd_options['enable_sequential'] = '1';
@@ -45,7 +51,7 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 			'email'         => $user->user_email,
 			'first_name'    => $user->first_name,
 			'last_name'     => $user->last_name,
-			'discount'      => 'none'
+			'discount'      => $args['discount'],
 		);
 
 		$download_details = array(
