@@ -389,6 +389,7 @@ td.edd_order_price { text-align: right; }
 .customer-note-wrapper span { display: block; }
 .note-content-wrap { padding-top: 7px; }
 .delete-customer { text-align: center; }
+#edd-item-card-wrapper .notice-wrap { margin-left: -20px; margin-right: -20px; padding-left: 20px; padding-right: 20px; }
 
 /* Tools Styles
 -------------------------------------------------------------- */

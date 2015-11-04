@@ -39,7 +39,7 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 	 * @since  2.5
 	 * @var integer
 	 */
-	public $per_step = 10;
+	public $per_step = 5;
 
 	/**
 	 * Get the Export Data
@@ -58,33 +58,19 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 		$offset     = ( $this->step - 1 ) * $this->per_step;
 		$step_items = array_slice( $payment_ids, $offset, $this->per_step );
 
-		if ( $customers ) {
+		if ( count( $step_items ) > 0 ) {
 
-			foreach ( $customers as $customer ) {
+			$step_total = 0;
 
-				$payment_ids    = explode( ',', $customer->payment_ids );
-				$purcahse_count = count( $payment_ids );
+			foreach ( $step_items as $payment_id ) {
 
-				$payment_args = array(
-					'post__in' => $payment_ids,
-				);
-
-				$payments = edd_get_payments( $payment_args );
-
-				$purchase_value = 0.00;
-				foreach ( $payments as $payment ) {
-					$purchase_value += edd_get_payment_amount( $payment->ID );
-				}
-
-				$customer_update_data = array(
-					'purchase_count' => $purcahse_count,
-					'purchase_value' => $purchase_value,
-				);
-
-				$customer_instance = new EDD_Customer( $customer->id );
-				$customer_instance->update( $customer_update_data );
+				$payment_amount  = edd_payment_amount( $payment_id );
+				$step_total     += $payment_amount;
 
 			}
+
+			$updated_total = $customer->purchase_value + $step_total;
+			$customer->update( array( 'purchase_value' => $updated_total ) );
 
 			return true;
 		}
@@ -104,6 +90,10 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 		$customer    = new EDD_Customer( $this->customer_id );
 		$payment_ids = explode( ',', $customer->payment_ids );
 		$total       = count( $payment_ids );
+
+		if ( $this->step == 1 ) {
+			$customer->update( array('purchase_count' => $total ) );
+		}
 
 		$percentage = 100;
 

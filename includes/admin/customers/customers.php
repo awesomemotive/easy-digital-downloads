@@ -551,7 +551,7 @@ function edd_customer_tools_view( $customer ) {
 				<span>
 					<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 
-					<input type="hidden" data-type="recount-single-customer-stats" value="EDD_Tools_Recount_Single_Customer_Stats" />
+					<input type="hidden" name="edd-export-class" data-type="recount-single-customer-stats" value="EDD_Tools_Recount_Single_Customer_Stats" />
 					<input type="hidden" name="customer_id" value="<?php echo $customer->id; ?>" />
 					<input type="submit" id="recount-stats-submit" value="<?php _e( 'Recount Stats', 'edd' ); ?>" class="button-secondary"/>
 					<span class="spinner"></span>
