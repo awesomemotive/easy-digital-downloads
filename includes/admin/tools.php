@@ -329,6 +329,70 @@ function edd_tools_import_export_display() {
 		</div><!-- .inside -->
 	</div><!-- .postbox -->
 
+	<div class="postbox edd-import-payment-history">
+		<h3><span><?php _e( 'Import Download Products', 'edd' ); ?></span></h3>
+		<div class="inside">
+			<p><?php _e( 'Import a CSV file of products.', 'edd' ); ?></p>
+			<form id="edd-import-downloads" class="edd-import-form edd-import-export-form" action="<?php echo esc_url( add_query_arg( 'edd_action', 'upload_import_file', admin_url() ) ); ?>" method="post" enctype="multipart/form-data">
+				
+				<div class="edd-import-file-wrap">
+					<?php wp_nonce_field( 'edd_ajax_import', 'edd_ajax_import' ); ?>
+					<input type="hidden" name="edd-import-class" value="EDD_Batch_Downloads_Import"/>
+					<p>
+						<input name="edd-import-file" id="edd-downloads-import-file" type="file" />
+					</p>
+					<span>
+						<input type="submit" value="<?php _e( 'Import CSV', 'edd' ); ?>" class="button-secondary"/>
+						<span class="spinner"></span>
+					</span>
+				</div>
+
+				<div class="edd-import-options" id="edd-import-downloads-options" style="display:none;">
+					<table class="widefat edd_repeatable_table" width="100%" cellpadding="0" cellspacing="0">
+						<thead>
+							<tr>
+								<th><?php _e( 'CSV Column', 'edd' ); ?></th>
+								<th><?php _e( 'Product Field', 'edd' ); ?></th>
+								<th style="width: 2%"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="edd_repeatable_row" data-key="1">
+								<td>
+									<select name="edd-import-csv-column[1]" class="edd-import-csv-column">
+									</select>
+								</td>
+								<td>
+									<select name="edd-import-download-field[1]" class="edd-import-download-field">
+										<option value="post_title"><?php _e( 'Title', 'easy-digital-downloads' ); ?></option>
+										<option value="price"><?php _e( 'Price', 'easy-digital-downloads' ); ?></option>
+										<option value="post_content"><?php _e( 'Description', 'easy-digital-downloads' ); ?></option>
+										<option value="custom"><?php _e( 'Custom Field', 'easy-digital-downloads' ); ?></option>
+									</select>
+									<span class="edd-import-download-field-custom-wrap" style="display:none">
+										<label for="edd-import-download-field-custom_1"><?php _e( 'Custom Field', 'easy-digital-downloads' ); ?></label>
+										<input name="edd-import-download-field-custom[1]" id="edd-import-download-field-custom_1" type="text" value="" />
+									</span>
+								</td>
+								<td>
+									<a href="#" class="edd_remove_repeatable" data-type="price" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;">&times;</a>
+								</td>
+							</tr>
+							<tr>
+								<td class="submit" colspan="3" style="float: none; clear:both; background:#fff;">
+									<a class="button-secondary edd_add_repeatable" style="margin: 6px 0;"><?php _e( 'Add New Field', 'edd' ); ?></a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<p class="submit">
+						<button class="edd-import-proceed button-primary"><?php _e( 'Process Import', 'easy-digital-downloads' ); ?></button>
+					</p>
+				</div>
+			</form>
+		</div><!-- .inside -->
+	</div><!-- .postbox -->
+
 	<div class="postbox">
 		<h3><span><?php _e( 'Export Settings', 'edd' ); ?></span></h3>
 		<div class="inside">
