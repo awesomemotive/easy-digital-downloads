@@ -52,7 +52,6 @@ class EDD_Batch_Downloads_Export extends EDD_Batch_Export {
 			'edd_price'                => __( 'Price',   'easy-digital-downloads' ),
 			'_edd_files'               => __( 'Files',   'easy-digital-downloads' ),
 			'_edd_download_limit'      => __( 'File Download Limit',   'easy-digital-downloads' ),
-			'_edd_button_behavior'     => __( 'Button behavior',   'easy-digital-downloads' ),
 			'_thumbnail_id'            => __( 'Featured Image',   'easy-digital-downloads' ),
 			'edd_sku'                  => __( 'SKU',   'easy-digital-downloads' ),
 			'edd_product_notes'        => __( 'Notes',   'easy-digital-downloads' ),
@@ -78,7 +77,6 @@ class EDD_Batch_Downloads_Export extends EDD_Batch_Export {
 			'edd_price',
 			'_edd_files',
 			'_edd_download_limit',
-			'_edd_button_behavior',
 			'_thumbnail_id',
 			'edd_sku',
 			'edd_product_notes',
@@ -101,15 +99,17 @@ class EDD_Batch_Downloads_Export extends EDD_Batch_Export {
 
 				foreach( $this->csv_cols() as $key => $value ) {
 
+					// Setup default value
+					$row[ $key ] = '';
+
 					if( in_array( $key, $meta ) ) {
 
 						switch( $key ) {
 
 							case '_thumbnail_id' :
 
-								$image_id      = get_post_thumbnail_id( $download->ID );
-								$image_details = wp_get_attachment_image_src( $image_id );
-								$row[ $key ]   = $image_details[0];
+								$image_id    = get_post_thumbnail_id( $download->ID );
+								$row[ $key ] = wp_get_attachment_url( $image_id );
 
 								break;
 
@@ -119,10 +119,10 @@ class EDD_Batch_Downloads_Export extends EDD_Batch_Export {
 
 									$prices = array();
 									foreach( edd_get_variable_prices( $download->ID ) as $price ) {
-										$prices[] = $price['amount'];
+										$prices[] = $price['name'] . ': ' . $price['amount'];
 									}
 
-									$row[ $key ] = implode( '|', $prices );	
+									$row[ $key ] = implode( ' | ', $prices );	
 
 								} else {
 
@@ -140,7 +140,7 @@ class EDD_Batch_Downloads_Export extends EDD_Batch_Export {
 									$files[] = $file['file'];
 								}
 
-								$row[ $key ] = implode( '|', $files );
+								$row[ $key ] = implode( ' | ', $files );
 							
 								break;
 
@@ -154,14 +154,27 @@ class EDD_Batch_Downloads_Export extends EDD_Batch_Export {
 
 					} elseif( isset( $download->$key ) ) {
 
-						$row[ $key ] = $download->$key;
+						switch( $key ) {
+
+							case 'post_author' :
+
+								$row[ $key ] = get_the_author_meta( 'user_login', $download->post_author );
+
+								break;
+
+							default :
+
+								$row[ $key ] = $download->$key;
+
+								break;
+						}
 
 					} elseif( 'tags' == $key ) {
 
 						$terms = get_the_terms( $download->ID, 'download_tag' );
 						if( $terms ) {
 							$terms = wp_list_pluck( $terms, 'name' );
-							$row[ $key ] = implode( '|', $terms );
+							$row[ $key ] = implode( ' | ', $terms );
 						}
 
 
@@ -170,11 +183,8 @@ class EDD_Batch_Downloads_Export extends EDD_Batch_Export {
 						$terms = get_the_terms( $download->ID, 'download_category' );
 						if( $terms ) {
 							$terms = wp_list_pluck( $terms, 'name' );
-							$row[ $key ] = implode( '|', $terms );
+							$row[ $key ] = implode( ' | ', $terms );
 						}
-					} else {
-
-						$row[ $key ] = '';
 
 					}
 
