@@ -48,3 +48,28 @@ function edd_include_payments_batch_import_processer( $class ) {
 	}
 
 }
+
+/**
+ * Register the downloads batch importer
+ *
+ * @since  2.6
+ */
+function edd_register_downloads_batch_import() {
+	add_action( 'edd_batch_import_class_include', 'edd_include_downloads_batch_import_processer', 10 );
+}
+add_action( 'edd_register_batch_importer', 'edd_register_downloads_batch_import', 10 );
+
+/**
+ * Loads the downloads batch process if needed
+ *
+ * @since  2.6
+ * @param  string $class The class being requested to run for the batch import
+ * @return void
+ */
+function edd_include_downloads_batch_import_processer( $class ) {
+
+	if ( 'EDD_Batch_Downloads_Import' === $class ) {
+		require_once EDD_PLUGIN_DIR . 'includes/admin/import/class-batch-import-downloads.php';
+	}
+
+}

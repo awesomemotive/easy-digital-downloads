@@ -1364,7 +1364,7 @@ jQuery(document).ready(function ($) {
 				// Show column mapping
 				var select = $form.find('select.edd-import-csv-column');
 				$.each( response.data.columns, function( key, value ) {
-					select.append( '<option value="' + key + '">' + value + '</option>' );
+					select.append( '<option value="' + value + '">' + value + '</option>' );
 				});
 
 				$('body').on('click', '.edd-import-proceed', function(e) {
