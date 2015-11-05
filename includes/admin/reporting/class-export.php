@@ -66,8 +66,8 @@ class EDD_Export {
 	 */
 	public function csv_cols() {
 		$cols = array(
-			'id'   => __( 'ID',   'edd' ),
-			'date' => __( 'Date', 'edd' )
+			'id'   => __( 'ID',   'easy-digital-downloads' ),
+			'date' => __( 'Date', 'easy-digital-downloads' )
 		);
 		return $cols;
 	}
@@ -169,7 +169,7 @@ class EDD_Export {
 	 */
 	public function export() {
 		if ( ! $this->can_export() )
-			wp_die( __( 'You do not have permission to export data.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+			wp_die( __( 'You do not have permission to export data.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 
 		// Set headers
 		$this->headers();

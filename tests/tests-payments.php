@@ -1,6 +1,5 @@
 <?php
 
-use \EDD_Payments_Query;
 /**
  * @group edd_payments
  */
@@ -26,7 +25,7 @@ class Tests_Payments extends WP_UnitTestCase {
 
 		$this->_transaction_id = 'FIR3SID3';
 		edd_set_payment_transaction_id( $payment_id, $this->_transaction_id );
-		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'edd' ) , $this->_transaction_id ) );
+		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'easy-digital-downloads' ) , $this->_transaction_id ) );
 
 		// Make sure we're working off a clean object caching in WP Core.
 		// Prevents some payment_meta from not being present.
@@ -57,6 +56,21 @@ class Tests_Payments extends WP_UnitTestCase {
 		$this->assertArrayHasKey( 'ID', (array) $out[0] );
 		$this->assertArrayHasKey( 'cart_details', (array) $out[0] );
 		$this->assertArrayHasKey( 'user_info', (array) $out[0] );
+	}
+
+	public function test_payments_query_search_discount() {
+		$payment_id = EDD_Helper_Payment::create_simple_payment( array( 'discount' => 'ZERO' ) );
+
+		$payments_query = new EDD_Payments_Query( array( 's' => 'discount:ZERO' ) );
+		$out = $payments_query->get_payments();
+		$this->assertEquals( 1, count( $out ) );
+		$this->assertEquals( $payment_id, $out[0]->ID );
+
+		EDD_Helper_Payment::delete_payment( $payment_id );
+
+		$payments_query = new EDD_Payments_Query( array( 's' => 'discount:ZERO' ) );
+		$out = $payments_query->get_payments();
+		$this->assertEquals( 0, count( $out ) );
 	}
 
 	public function test_edd_get_payment_by() {

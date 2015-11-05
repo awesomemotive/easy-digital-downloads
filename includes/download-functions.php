@@ -458,8 +458,8 @@ function edd_single_price_option_mode( $download_id = 0 ) {
 function edd_get_download_types() {
 
 	$types = array(
-		'0'       => __( 'Default', 'edd' ),
-		'bundle'  => __( 'Bundle', 'edd' )
+		'0'       => __( 'Default', 'easy-digital-downloads' ),
+		'bundle'  => __( 'Bundle', 'easy-digital-downloads' )
 	);
 
 	return apply_filters( 'edd_download_types', $types );
@@ -958,10 +958,10 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $p
 		$args = apply_filters( 'edd_get_download_file_url_args', $args, $payment->ID, $params );
 
 		$args['file']  = $params['file'];
-		$args['token'] = edd_get_download_token( add_query_arg( $args, untrailingslashit( home_url() ) ) );
+		$args['token'] = edd_get_download_token( add_query_arg( $args, untrailingslashit( site_url() ) ) );
 	}
 
-	$download_url = add_query_arg( $args, home_url( 'index.php' ) );
+	$download_url = add_query_arg( $args, site_url( 'index.php' ) );
 
 	return $download_url;
 }
@@ -1149,7 +1149,7 @@ function edd_validate_url_token( $url = '' ) {
 
 		if ( isset( $query_args['ttl'] ) && current_time( 'timestamp' ) > $query_args['ttl'] ) {
 
-			wp_die( apply_filters( 'edd_download_link_expired_text', __( 'Sorry but your download link has expired.', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+			wp_die( apply_filters( 'edd_download_link_expired_text', __( 'Sorry but your download link has expired.', 'easy-digital-downloads' ) ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 
 		}
 

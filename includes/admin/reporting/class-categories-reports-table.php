@@ -60,11 +60,11 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'label'          => __( 'Category', 'edd' ),
-			'total_sales'    => __( 'Total Sales', 'edd' ),
-			'total_earnings' => __( 'Total Earnings', 'edd' ),
-			'avg_sales'      => __( 'Monthly Sales Avg', 'edd' ),
-			'avg_earnings'   => __( 'Monthly Earnings Avg', 'edd' ),
+			'label'          => __( 'Category', 'easy-digital-downloads' ),
+			'total_sales'    => __( 'Total Sales', 'easy-digital-downloads' ),
+			'total_earnings' => __( 'Total Earnings', 'easy-digital-downloads' ),
+			'avg_sales'      => __( 'Monthly Sales Avg', 'easy-digital-downloads' ),
+			'avg_earnings'   => __( 'Monthly Earnings Avg', 'easy-digital-downloads' ),
 		);
 
 		return $columns;

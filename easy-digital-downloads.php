@@ -2,11 +2,11 @@
 /**
  * Plugin Name: Easy Digital Downloads
  * Plugin URI: https://easydigitaldownloads.com
- * Description: Serve Digital Downloads Through WordPress
+ * Description: Serve Digital Downloads Through WordPress.
  * Author: Pippin Williamson
  * Author URI: https://pippinsplugins.com
- * Version: 2.4.6
- * Text Domain: edd
+ * Version: 2.4.9
+ * Text Domain: easy-digital-downloads
  * Domain Path: languages
  *
  * Easy Digital Downloads is free software: you can redistribute it and/or modify
@@ -25,16 +25,16 @@
  * @package EDD
  * @category Core
  * @author Pippin Williamson
- * @version 2.4.6
+ * @version 2.4.8
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 
 /**
- * Main Easy_Digital_Downloads Class
+ * Main Easy_Digital_Downloads Class.
  *
  * @since 1.4
  */
@@ -48,7 +48,7 @@ final class Easy_Digital_Downloads {
 	private static $instance;
 
 	/**
-	 * EDD Roles Object
+	 * EDD Roles Object.
 	 *
 	 * @var object
 	 * @since 1.5
@@ -56,7 +56,7 @@ final class Easy_Digital_Downloads {
 	public $roles;
 
 	/**
-	 * EDD Cart Fees Object
+	 * EDD Cart Fees Object.
 	 *
 	 * @var object
 	 * @since 1.5
@@ -64,7 +64,7 @@ final class Easy_Digital_Downloads {
 	public $fees;
 
 	/**
-	 * EDD API Object
+	 * EDD API Object.
 	 *
 	 * @var object
 	 * @since 1.5
@@ -72,10 +72,9 @@ final class Easy_Digital_Downloads {
 	public $api;
 
 	/**
-	 * EDD HTML Session Object
+	 * EDD HTML Session Object.
 	 *
-	 * This holds cart items, purchase sessions, and anything else stored in the session
-	 *
+	 * This holds cart items, purchase sessions, and anything else stored in the session.
 	 *
 	 * @var object
 	 * @since 1.5
@@ -83,7 +82,7 @@ final class Easy_Digital_Downloads {
 	public $session;
 
 	/**
-	 * EDD HTML Element Helper Object
+	 * EDD HTML Element Helper Object.
 	 *
 	 * @var object
 	 * @since 1.5
@@ -91,7 +90,7 @@ final class Easy_Digital_Downloads {
 	public $html;
 
 	/**
-	 * EDD Emails Object
+	 * EDD Emails Object.
 	 *
 	 * @var object
 	 * @since 2.1
@@ -99,7 +98,7 @@ final class Easy_Digital_Downloads {
 	public $emails;
 
 	/**
-	 * EDD Email Template Tags Object
+	 * EDD Email Template Tags Object.
 	 *
 	 * @var object
 	 * @since 1.9
@@ -107,7 +106,7 @@ final class Easy_Digital_Downloads {
 	public $email_tags;
 
 	/**
-	 * EDD Customers DB Object
+	 * EDD Customers DB Object.
 	 *
 	 * @var object
 	 * @since 2.1
@@ -115,7 +114,7 @@ final class Easy_Digital_Downloads {
 	public $customers;
 
 	/**
-	 * Main Easy_Digital_Downloads Instance
+	 * Main Easy_Digital_Downloads Instance.
 	 *
 	 * Insures that only one instance of Easy_Digital_Downloads exists in memory at any one
 	 * time. Also prevents needing to define globals all over the place.
@@ -123,9 +122,9 @@ final class Easy_Digital_Downloads {
 	 * @since 1.4
 	 * @static
 	 * @staticvar array $instance
-	 * @uses Easy_Digital_Downloads::setup_constants() Setup the constants needed
-	 * @uses Easy_Digital_Downloads::includes() Include the required files
-	 * @uses Easy_Digital_Downloads::load_textdomain() load the language files
+	 * @uses Easy_Digital_Downloads::setup_constants() Setup the constants needed.
+	 * @uses Easy_Digital_Downloads::includes() Include the required files.
+	 * @uses Easy_Digital_Downloads::load_textdomain() load the language files.
 	 * @see EDD()
 	 * @return The one true Easy_Digital_Downloads
 	 */
@@ -150,7 +149,7 @@ final class Easy_Digital_Downloads {
 	}
 
 	/**
-	 * Throw error on object clone
+	 * Throw error on object clone.
 	 *
 	 * The whole idea of the singleton design pattern is that there is a single
 	 * object therefore, we don't want the object to be cloned.
@@ -160,24 +159,24 @@ final class Easy_Digital_Downloads {
 	 * @return void
 	 */
 	public function __clone() {
-		// Cloning instances of the class is forbidden
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'edd' ), '1.6' );
+		// Cloning instances of the class is forbidden.
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'easy-digital-downloads' ), '1.6' );
 	}
 
 	/**
-	 * Disable unserializing of the class
+	 * Disable unserializing of the class.
 	 *
 	 * @since 1.6
 	 * @access protected
 	 * @return void
 	 */
 	public function __wakeup() {
-		// Unserializing instances of the class is forbidden
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'edd' ), '1.6' );
+		// Unserializing instances of the class is forbidden.
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'easy-digital-downloads' ), '1.6' );
 	}
 
 	/**
-	 * Setup plugin constants
+	 * Setup plugin constants.
 	 *
 	 * @access private
 	 * @since 1.4
@@ -185,34 +184,34 @@ final class Easy_Digital_Downloads {
 	 */
 	private function setup_constants() {
 
-		// Plugin version
+		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '2.4.6' );
+			define( 'EDD_VERSION', '2.4.9' );
 		}
 
-		// Plugin Folder Path
+		// Plugin Folder Path.
 		if ( ! defined( 'EDD_PLUGIN_DIR' ) ) {
 			define( 'EDD_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 		}
 
-		// Plugin Folder URL
+		// Plugin Folder URL.
 		if ( ! defined( 'EDD_PLUGIN_URL' ) ) {
 			define( 'EDD_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 		}
 
-		// Plugin Root File
+		// Plugin Root File.
 		if ( ! defined( 'EDD_PLUGIN_FILE' ) ) {
 			define( 'EDD_PLUGIN_FILE', __FILE__ );
 		}
 
-		// Make sure CAL_GREGORIAN is defined
+		// Make sure CAL_GREGORIAN is defined.
 		if ( ! defined( 'CAL_GREGORIAN' ) ) {
 			define( 'CAL_GREGORIAN', 1 );
 		}
 	}
 
 	/**
-	 * Include required files
+	 * Include required files.
 	 *
 	 * @access private
 	 * @since 1.4
@@ -334,42 +333,93 @@ final class Easy_Digital_Downloads {
 	}
 
 	/**
-	 * Loads the plugin language files
+	 * Loads the plugin language files.
 	 *
 	 * @access public
 	 * @since 1.4
 	 * @return void
 	 */
 	public function load_textdomain() {
-		// Set filter for plugin's languages directory
-		$edd_lang_dir = dirname( plugin_basename( EDD_PLUGIN_FILE ) ) . '/languages/';
-		$edd_lang_dir = apply_filters( 'edd_languages_directory', $edd_lang_dir );
 
-		// Traditional WordPress plugin locale filter
-		$locale        = apply_filters( 'plugin_locale',  get_locale(), 'edd' );
-		$mofile        = sprintf( '%1$s-%2$s.mo', 'edd', $locale );
+		/*
+		 * Due to the introduction of language packs through translate.wordpress.org, loading our textdomain is complex.
+		 *
+		 * In v2.4.6, our textdomain changed from "edd" to "easy-digital-downloads".
+		 *
+		 * To support existing translation files from before the change, we must look for translation files in several places and under several names.
+		 *
+		 * - wp-content/languages/plugins/easy-digital-downloads (introduced with language packs)
+		 * - wp-content/languages/edd/ (custom folder we have supported since 1.4)
+		 * - wp-content/plugins/easy-digital-downloads/languages/
+		 *
+		 * In wp-content/languages/edd/ we must look for "easy-digital-downloads-{lang}_{country}.mo"
+		 * In wp-content/languages/edd/ we must look for "edd-{lang}_{country}.mo" as that was the old file naming convention
+		 * In wp-content/languages/plugins/easy-digital-downloads/ we only need to look for "easy-digital-downloads-{lang}_{country}.mo" as that is the new structure
+		 * In wp-content/plugins/easy-digital-downloads/languages/, we must look for both naming conventions. This is done by filtering "load_textdomain_mofile"
+		 *
+		 */
 
-		// Setup paths to current locale file
-		$mofile_local  = $edd_lang_dir . $mofile;
-		$mofile_global = WP_LANG_DIR . '/edd/' . $mofile;
+		add_filter( 'load_textdomain_mofile', array( $this, 'load_old_textdomain' ), 10, 2 );
 
-		if ( file_exists( $mofile_global ) ) {
-			// Look in global /wp-content/languages/edd folder
-			load_textdomain( 'edd', $mofile_global );
-		} elseif ( file_exists( $mofile_local ) ) {
-			// Look in local /wp-content/plugins/easy-digital-downloads/languages/ folder
-			load_textdomain( 'edd', $mofile_local );
+		// Set filter for plugin's languages directory.
+		$edd_lang_dir  = dirname( plugin_basename( EDD_PLUGIN_FILE ) ) . '/languages/';
+		$edd_lang_dir  = apply_filters( 'edd_languages_directory', $edd_lang_dir );
+
+		// Traditional WordPress plugin locale filter.
+		$locale        = apply_filters( 'plugin_locale',  get_locale(), 'easy-digital-downloads' );
+		$mofile        = sprintf( '%1$s-%2$s.mo', 'easy-digital-downloads', $locale );
+
+		// Look for wp-content/languages/edd/easy-digital-downloads-{lang}_{country}.mo
+		$mofile_global1 = WP_LANG_DIR . '/edd/easy-digital-downloads-' . $locale . '.mo';
+
+		// Look for wp-content/languages/edd/edd-{lang}_{country}.mo
+		$mofile_global2 = WP_LANG_DIR . '/edd/edd-' . $locale . '.mo';
+
+		// Look in wp-content/languages/plugins/easy-digital-downloads
+		$mofile_global3 = WP_LANG_DIR . '/plugins/easy-digital-downloads/' . $mofile;
+
+		if ( file_exists( $mofile_global1 ) ) {
+
+			load_textdomain( 'easy-digital-downloads', $mofile_global1 );
+
+		} elseif ( file_exists( $mofile_global2 ) ) {
+
+			load_textdomain( 'easy-digital-downloads', $mofile_global2 );
+
+		} elseif ( file_exists( $mofile_global3 ) ) {
+
+			load_textdomain( 'easy-digital-downloads', $mofile_global3 );
+
 		} else {
-			// Load the default language files
-			load_plugin_textdomain( 'edd', false, $edd_lang_dir );
+
+			// Load the default language files.
+			load_plugin_textdomain( 'easy-digital-downloads', false, $edd_lang_dir );
 		}
+
 	}
+
+	/**
+	 * Load a .mo file for the old textdomain if one exists.
+	 *
+	 * h/t: https://github.com/10up/grunt-wp-plugin/issues/21#issuecomment-62003284
+	 */
+	function load_old_textdomain( $mofile, $textdomain ) {
+
+		if ( $textdomain === 'easy-digital-downloads' && ! file_exists( $mofile ) ) {
+			$mofile = dirname( $mofile ) . DIRECTORY_SEPARATOR . str_replace( $textdomain, 'edd', basename( $mofile ) );
+		}
+
+		return $mofile;
+	}
+
 }
 
-endif; // End if class_exists check
+endif; // End if class_exists check.
 
 
 /**
+ * The main function for that returns Easy_Digital_Downloads 
+ * 
  * The main function responsible for returning the one true Easy_Digital_Downloads
  * Instance to functions everywhere.
  *
@@ -379,11 +429,11 @@ endif; // End if class_exists check
  * Example: <?php $edd = EDD(); ?>
  *
  * @since 1.4
- * @return object The one true Easy_Digital_Downloads Instance
+ * @return object The one true Easy_Digital_Downloads Instance.
  */
 function EDD() {
 	return Easy_Digital_Downloads::instance();
 }
 
-// Get EDD Running
+// Get EDD Running.
 EDD();
