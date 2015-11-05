@@ -148,7 +148,7 @@ class EDD_License {
 		$edd_license_settings = array(
 			array(
 				'id'      => $this->item_shortname . '_license_key',
-				'name'    => sprintf( __( '%1$s License Key', 'edd' ), $this->item_name ),
+				'name'    => sprintf( __( '%1$s License Key', 'easy-digital-downloads' ), $this->item_name ),
 				'desc'    => '',
 				'type'    => 'license_key',
 				'options' => array( 'is_valid_license_option' => $this->item_shortname . '_license_active' ),
@@ -185,7 +185,7 @@ class EDD_License {
 
 		if( ! wp_verify_nonce( $_REQUEST[ $this->item_shortname . '_license_key-nonce'], $this->item_shortname . '_license_key-nonce' ) ) {
 
-			wp_die( __( 'Nonce verification failed', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+			wp_die( __( 'Nonce verification failed', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 
 		}
 
@@ -258,7 +258,7 @@ class EDD_License {
 
 		if( ! wp_verify_nonce( $_REQUEST[ $this->item_shortname . '_license_key-nonce'], $this->item_shortname . '_license_key-nonce' ) ) {
 
-			wp_die( __( 'Nonce verification failed', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+			wp_die( __( 'Nonce verification failed', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 
 		}
 
@@ -334,22 +334,22 @@ class EDD_License {
 
 				case 'item_name_mismatch' :
 
-					$message = __( 'This license does not belong to the product you have entered it for.', 'edd' );
+					$message = __( 'This license does not belong to the product you have entered it for.', 'easy-digital-downloads' );
 					break;
 
 				case 'no_activations_left' :
 
-					$message = __( 'This license does not have any activations left', 'edd' );
+					$message = __( 'This license does not have any activations left', 'easy-digital-downloads' );
 					break;
 
 				case 'expired' :
 
-					$message = __( 'This license key is expired. Please renew it.', 'edd' );
+					$message = __( 'This license key is expired. Please renew it.', 'easy-digital-downloads' );
 					break;
 
 				default :
 
-					$message = sprintf( __( 'There was a problem activating your license key, please try again or contact support. Error code: %s', 'edd' ), $license_error->error );
+					$message = sprintf( __( 'There was a problem activating your license key, please try again or contact support. Error code: %s', 'easy-digital-downloads' ), $license_error->error );
 					break;
 
 			}

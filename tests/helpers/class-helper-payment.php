@@ -26,9 +26,15 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 	 *
 	 * @since 2.3
 	 */
-	public static function create_simple_payment() {
+	public static function create_simple_payment( $args = array() ) {
 
 		global $edd_options;
+
+		$defaults = array(
+			'discount' => 'none',
+		);
+
+		$args = wp_parse_args( $args, $defaults );
 
 		// Enable a few options
 		$edd_options['enable_sequential'] = '1';
@@ -45,7 +51,7 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 			'email'         => $user->user_email,
 			'first_name'    => $user->first_name,
 			'last_name'     => $user->last_name,
-			'discount'      => 'none'
+			'discount'      => $args['discount'],
 		);
 
 		$download_details = array(
@@ -121,7 +127,7 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 
 		$transaction_id = 'FIR3SID3';
 		edd_set_payment_transaction_id( $payment_id, $transaction_id );
-		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'edd' ), $transaction_id ) );
+		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'easy-digital-downloads' ), $transaction_id ) );
 
 		return $payment_id;
 
@@ -226,7 +232,7 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 
 		$transaction_id = 'GUESTPURCHASE';
 		edd_set_payment_transaction_id( $payment_id, $transaction_id );
-		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'edd' ), $transaction_id ) );
+		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'easy-digital-downloads' ), $transaction_id ) );
 
 		return $payment_id;
 
