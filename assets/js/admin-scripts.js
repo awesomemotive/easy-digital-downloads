@@ -1397,7 +1397,7 @@ jQuery(document).ready(function ($) {
 
 		dismiss_message : function() {
 			$('body').on( 'click', '#edd-batch-success .notice-dismiss', function() {
-				$('#edd-batch-success').parent().remove();
+				$('#edd-batch-success').parent().slideUp('fast');
 			});
 		}
 
