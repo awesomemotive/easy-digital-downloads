@@ -212,8 +212,6 @@ class EDD_Batch_Downloads_Export extends EDD_Batch_Export {
 	 */
 	public function get_percentage_complete() {
 
-		global $edd_logs;
-
 		$args = array(
 			'post_type'		   => 'download',
 			'posts_per_page'   => -1,
@@ -221,8 +219,8 @@ class EDD_Batch_Downloads_Export extends EDD_Batch_Export {
 			'fields'           => 'ids',
 		);
 
-		$logs       = new WP_Query( $args );
-		$total      = (int) $logs->post_count;
+		$downloads  = new WP_Query( $args );
+		$total      = (int) $downloads->post_count;
 		$percentage = 100;
 
 		if( $total > 0 ) {
