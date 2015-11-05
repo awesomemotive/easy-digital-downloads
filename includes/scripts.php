@@ -314,3 +314,53 @@ function edd_admin_downloads_icon() {
 	<?php
 }
 add_action( 'admin_head','edd_admin_downloads_icon' );
+
+
+/**
+ * Load head styles
+ *
+ * Ensures download styling is still shown correctly if a theme is using the CSS template file
+ *
+ * @since 2.5
+ * @global $post
+ * @return void
+ */
+function edd_load_head_styles() {
+
+	global $post;
+
+	if ( edd_get_option( 'disable_styles', false ) || ! is_object( $post ) ) {
+		return;
+	}
+
+	// Use minified libraries if SCRIPT_DEBUG is turned off
+	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+
+	$file          = 'edd' . $suffix . '.css';
+	$templates_dir = edd_get_theme_template_dir_name();
+
+	$child_theme_style_sheet    = trailingslashit( get_stylesheet_directory() ) . $templates_dir . $file;
+	$child_theme_style_sheet_2  = trailingslashit( get_stylesheet_directory() ) . $templates_dir . 'edd.css';
+	$parent_theme_style_sheet   = trailingslashit( get_template_directory()   ) . $templates_dir . $file;
+	$parent_theme_style_sheet_2 = trailingslashit( get_template_directory()   ) . $templates_dir . 'edd.css';
+
+	$has_css_template = false;
+
+	if ( has_shortcode( $post->post_content, 'downloads' ) &&
+		file_exists( $child_theme_style_sheet ) ||
+		file_exists( $child_theme_style_sheet_2 ) ||
+		file_exists( $parent_theme_style_sheet ) ||
+		file_exists( $parent_theme_style_sheet_2 )
+	) {
+		$has_css_template = apply_filters( 'edd_load_head_styles', true );
+	}
+
+	if ( ! $has_css_template ) {
+		return;
+	}
+
+	?>
+	<style>.edd_download{float:left;}.edd_download_columns_1 .edd_download{width: 100%;}.edd_download_columns_2 .edd_download{width:50%;}.edd_download_columns_0 .edd_download,.edd_download_columns_3 .edd_download{width:33%;}.edd_download_columns_4 .edd_download{width:25%;}.edd_download_columns_5 .edd_download{width:20%;}.edd_download_columns_6 .edd_download{width:16.6%;}</style>
+	<?php
+}
+add_action( 'wp_head', 'edd_load_head_styles' );

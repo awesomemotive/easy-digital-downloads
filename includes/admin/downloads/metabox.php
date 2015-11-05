@@ -574,28 +574,70 @@ function edd_render_products_field( $post_id ) {
 ?>
 	<div id="edd_products"<?php echo $display; ?>>
 		<div id="edd_file_fields" class="edd_meta_table_wrap">
-			<table class="widefat" width="100%" cellpadding="0" cellspacing="0">
+			<table class="widefat edd_repeatable_table" width="100%" cellpadding="0" cellspacing="0">
 				<thead>
 					<tr>
+						<th style="width: 20px"></th>
 						<th><?php printf( __( 'Bundled %s:', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></th>
+						<th></th>
 						<?php do_action( 'edd_download_products_table_head', $post_id ); ?>
 					</tr>
 				</thead>
 				<tbody>
-					<tr class="edd_repeatable_product_wrapper">
+				<?php if ( $products ) : ?>
+					<?php $index = 1; ?>
+					<?php foreach ( $products as $product ) : ?>
+						<tr class="edd_repeatable_product_wrapper edd_repeatable_row">
+							<td>
+								<span class="edd_draghandle"></span>
+								<input type="hidden" name="edd_bundled_products[<?php echo $key; ?>][index]" class="edd_repeatable_index" value="<?php echo $index; ?>"/>
+							</td>
+							<td>
+								<?php
+								echo EDD()->html->product_dropdown( array(
+									'name'     => '_edd_bundled_products[]',
+									'id'       => 'edd_bundled_products',
+									'selected' => $product,
+									'multiple' => false,
+									'chosen'   => true,
+									'bundles'  => false
+								) );
+								?>
+							</td>
+							<td>
+								<a href="#" class="edd_remove_repeatable" data-type="file" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;">&times;</a>
+							</td>
+							<?php do_action( 'edd_download_products_table_row', $post_id ); ?>
+						</tr>
+						<?php $index++; ?>
+					<?php endforeach; ?>
+				<?php else: ?>
+					<tr class="edd_repeatable_product_wrapper edd_repeatable_row">
+						<td>
+							<span class="edd_draghandle"></span>
+							<input type="hidden" name="edd_bundled_products[1][index]" class="edd_repeatable_index" value="1"/>
+						</td>
 						<td>
 							<?php
 							echo EDD()->html->product_dropdown( array(
 								'name'     => '_edd_bundled_products[]',
 								'id'       => 'edd_bundled_products',
-								'selected' => $products,
-								'multiple' => true,
+								'multiple' => false,
 								'chosen'   => true,
 								'bundles'  => false
 							) );
 							?>
 						</td>
+						<td>
+							<a href="#" class="edd_remove_repeatable" data-type="file" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;">&times;</a>
+						</td>
 						<?php do_action( 'edd_download_products_table_row', $post_id ); ?>
+					</tr>
+				<?php endif; ?>
+					<tr>
+						<td class="submit" colspan="3" style="float: none; clear:both; background: #fff;">
+							<a class="button-secondary edd_add_repeatable" style="margin: 6px 0 10px;"><?php _e( 'Add New File', 'easy-digital-downloads' ); ?></a>
+						</td>
 					</tr>
 				</tbody>
 			</table>
