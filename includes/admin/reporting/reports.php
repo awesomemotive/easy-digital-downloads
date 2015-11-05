@@ -418,6 +418,20 @@ function edd_reports_tab_export() {
 						</div><!-- .inside -->
 					</div><!-- .postbox -->
 
+					<div class="postbox edd-export-downloads">
+						<h3><span><?php _e('Export Download Products in CSV','easy-digital-downloads' ); ?></span></h3>
+						<div class="inside">
+							<p><?php _e( 'Download a CSV of download products.', 'easy-digital-downloads' ); ?></p>
+							<p>
+								<form id="edd-export-file-downloads" class="edd-export-form" method="post">
+									<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+									<input type="hidden" name="edd-export-class" value="EDD_Batch_Downloads_Export"/>
+									<input type="submit" value="<?php _e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								</form>
+							</p>
+						</div><!-- .inside -->
+					</div><!-- .postbox -->
+
 					<div class="postbox edd-export-download-history">
 						<h3><span><?php _e('Export Download History in CSV','easy-digital-downloads' ); ?></span></h3>
 						<div class="inside">
