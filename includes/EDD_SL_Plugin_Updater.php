@@ -295,7 +295,7 @@ class EDD_SL_Plugin_Updater {
             'url'        => home_url()
         );
 
-	$cache_key = md5( 'edd_plugin_' . sanitize_key(  $api_params['license'] . $api_params['item_name'] . $api_params['item_id'] ) . '_' . $api_params['edd_action'] );
+	$cache_key = md5( 'edd_plugin_' . sanitize_key(  $api_params['license'] ) . '_' . $api_params['edd_action'] );
 	$cached_response = get_transient( $cache_key );
 	if ( $cached_response ) {
 		// if this has been checked within 24 hours, don't check again
