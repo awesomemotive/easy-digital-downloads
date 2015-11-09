@@ -868,6 +868,7 @@ function edd_get_new_zealand_states_list() {
 		'TK' => 'Taranaki',
 		'TM' => 'Tasman',
 		'WA' => 'Waikato',
+		'WR' => 'Wairarapa',
 		'WE' => 'Wellington',
 		'WC' => 'West Coast'
 	);
