@@ -76,6 +76,21 @@ class Tests_Payments extends WP_UnitTestCase {
 		$this->assertTrue( property_exists( $out[0], 'user_info' ) );
 	}
 
+	public function test_payments_query_search_discount() {
+		$payment_id = EDD_Helper_Payment::create_simple_payment( array( 'discount' => 'ZERO' ) );
+
+		$payments_query = new EDD_Payments_Query( array( 's' => 'discount:ZERO' ) );
+		$out = $payments_query->get_payments();
+		$this->assertEquals( 1, count( $out ) );
+		$this->assertEquals( $payment_id, $out[0]->ID );
+
+		EDD_Helper_Payment::delete_payment( $payment_id );
+
+		$payments_query = new EDD_Payments_Query( array( 's' => 'discount:ZERO' ) );
+		$out = $payments_query->get_payments();
+		$this->assertEquals( 0, count( $out ) );
+	}
+
 	public function test_edd_get_payment_by() {
 		$payment = edd_get_payment_by( 'id', $this->_payment_id );
 		$this->assertObjectHasAttribute( 'ID', $payment );

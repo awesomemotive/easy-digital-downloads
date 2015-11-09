@@ -58,6 +58,7 @@ function edd_payments_contextual_help() {
 				<li>' . __( 'You can enter the purchase ID', 'easy-digital-downloads' ) . '</li>
 				<li>' . __( 'You can enter a transaction ID prefixed by \'txn:\'', 'easy-digital-downloads' ) . '</li>
 				<li>' . sprintf( __( 'You can enter the %s ID prefixed by \'#\'', 'easy-digital-downloads' ), edd_get_label_singular() ) . '</li>
+				<li>' . __( 'You can enter the Discount Code prefixed by \'discount:\'', 'easy-digital-downloads' ) . '</li>
 			</ul>'
 	) );
 
