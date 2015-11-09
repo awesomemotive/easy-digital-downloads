@@ -664,7 +664,7 @@ function edd_show_payment_icons() {
 
 				}
 
-				$image = str_replace( $content_dir, WP_CONTENT_URL, $image );
+				$image = str_replace( $content_dir, content_url(), $image );
 
 			}
 
