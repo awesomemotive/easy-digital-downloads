@@ -1002,10 +1002,10 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $p
 		$args = apply_filters( 'edd_get_download_file_url_args', $args, $payment->ID, $params );
 
 		$args['file']  = $params['file'];
-		$args['token'] = edd_get_download_token( add_query_arg( $args, untrailingslashit( home_url() ) ) );
+		$args['token'] = edd_get_download_token( add_query_arg( $args, untrailingslashit( site_url() ) ) );
 	}
 
-	$download_url = add_query_arg( $args, home_url( 'index.php' ) );
+	$download_url = add_query_arg( $args, site_url( 'index.php' ) );
 
 	return $download_url;
 }
