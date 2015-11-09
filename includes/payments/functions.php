@@ -1325,6 +1325,28 @@ function edd_get_payment_tax( $payment_id = 0, $payment_meta = false ) {
 }
 
 /**
+ * Retrieve the tax for a cart item by the cart key
+ *
+ * @since  2.5
+ * @param  integer $payment_id The Payment ID
+ * @param  int     $cart_key   The cart key
+ * @return float               The item tax amount
+ */
+function edd_get_payment_item_tax( $payment_id = 0, $cart_key = false ) {
+	$payment = new EDD_Payment( $payment_id );
+	$item_tax = 0;
+
+	$cart_details = $payment->cart_details;
+
+	if ( false !== $cart_key && ! empty( $cart_details ) && array_key_exists( $cart_key, $cart_details ) ) {
+		$item_tax = ! empty( $cart_details[ $cart_key ]['tax'] ) ? $cart_details[ $cart_key ]['tax'] : 0;
+	}
+
+	return $item_tax;
+
+}
+
+/**
  * Retrieves arbitrary fees for the payment
  *
  * @since 1.5

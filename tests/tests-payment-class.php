@@ -1,6 +1,5 @@
 <?php
 
-use \EDD_Payments_Query;
 /**
  * @group edd_payments
  */
@@ -93,11 +92,56 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$quantity    = $payment->cart_details[0]['quantity'];
 
 		$remove_args = array( 'amount' => $amount, 'quantity' => $quantity );
-		$payment->remove_download( $download_id, array( 'amount' => $amount, 'quantity' => $quantity ) );
+		$payment->remove_download( $download_id, $remove_args );
 		$payment->save();
 
 		$this->assertEquals( 1, count( $payment->downloads ) );
 		$this->assertEquals( 100.00, $payment->total );
 	}
 
+	public function test_remove_download_by_index() {
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertEquals( 2, count( $payment->downloads ) );
+		$this->assertEquals( 120.00, $payment->total );
+
+		$download_id = $payment->cart_details[1]['id'];
+
+		$remove_args = array( 'cart_index' => 1 );
+		$payment->remove_download( $download_id, $remove_args );
+		$payment->save();
+
+		$this->assertEquals( 1, count( $payment->downloads ) );
+		$this->assertEquals( 20.00, $payment->total );
+	}
+
+	public function test_remove_download_with_quatity() {
+		global $edd_options;
+		EDD_Helper_Payment::delete_payment( $this->_payment_id );
+
+		$edd_options['item_quantities'] = true;
+		$payment_id = EDD_Helper_Payment::create_simple_payment_with_quantity_tax();
+
+		$payment = new EDD_Payment( $payment_id );
+		$this->assertEquals( 2, count( $payment->downloads ) );
+		$this->assertEquals( 240.00, $payment->subtotal );
+		$this->assertEquals( 22, $payment->tax );
+		$this->assertEquals( 262.00, $payment->total );
+
+		$testing_index = 1;
+		$download_id   = $payment->cart_details[ $testing_index ]['id'];
+
+		$remove_args = array( 'quantity' => 1 );
+		$payment->remove_download( $download_id, $remove_args );
+		$payment->save();
+
+		$payment = new EDD_Payment( $payment_id );
+		$this->assertEquals( 2, count( $payment->downloads ) );
+		$this->assertEquals( 1, $payment->cart_details[ $testing_index ]['quantity'] );
+		$this->assertEquals( 140.00, $payment->subtotal );
+		$this->assertEquals( 12, $payment->tax );
+		$this->assertEquals( 152.00, $payment->total );
+
+		EDD_Helper_Payment::delete_payment( $payment_id );
+		unset( $edd_options['item_quantities'] );
+	}
 }

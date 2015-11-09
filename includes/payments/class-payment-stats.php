@@ -187,16 +187,21 @@ class EDD_Payment_Stats extends EDD_Stats {
 
 					foreach( $payment_ids as $payment_id ) {
 						$items = edd_get_payment_meta_cart_details( $payment_id );
-						foreach( $items as $item ) {
-							if( $item['id'] != $download_id )
+
+						foreach( $items as $cart_key => $item ) {
+
+							if( $item['id'] != $download_id ) {
 								continue;
+							}
 
 							$earnings += $item['price'];
+
+							if ( ! $include_taxes ) {
+								$earnings -= edd_get_payment_item_tax( $payment_id, $cart_key );
+							}
+
 						}
 
-						if ( ! $include_taxes ) {
-							$earnings -= edd_get_payment_tax( $payment_id );
-						}
 					}
 				}
 
