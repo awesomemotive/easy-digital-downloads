@@ -123,10 +123,10 @@ class Tests_Stats extends WP_UnitTestCase {
 
 		$stats = new EDD_Payment_Stats;
 		$earnings = $stats->get_earnings( $download_id, 'this_month' );
-		$this->assertEquals( 20, $earnings );
+		$this->assertEquals( 21, $earnings );
 
 		$earnings_minus_taxes = $stats->get_earnings( $download_id, 'this_month', false, false );
-		$this->assertEquals( 9, $earnings_minus_taxes );
+		$this->assertEquals( 20, $earnings_minus_taxes );
 	}
 
 	public function test_get_sales_by_date_of_download() {
