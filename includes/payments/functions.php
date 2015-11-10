@@ -481,11 +481,12 @@ function edd_count_payments( $args = array() ) {
 
 		} elseif ( '#' == substr( $args['s'], 0, 1 ) ) {
 
-			$search = str_replace( '#', '', $args['s'] );
+			$search = str_replace( '#:', '', $args['s'] );
+			$search = str_replace( '#', '', $search );
 
 			$select = "SELECT p2.post_status,count( * ) AS num_posts ";
-			$join   = "LEFT JOIN wp_2_postmeta m ON m.meta_key = '_edd_log_payment_id' AND m.post_id = p.ID ";
-			$join  .= "INNER JOIN wp_2_posts p2 ON m.meta_value = p2.ID ";
+			$join   = "LEFT JOIN $wpdb->postmeta m ON m.meta_key = '_edd_log_payment_id' AND m.post_id = p.ID ";
+			$join  .= "INNER JOIN $wpdb->posts p2 ON m.meta_value = p2.ID ";
 			$where  = "WHERE p.post_type = 'edd_log' ";
 			$where .= "AND p.post_parent = {$search} ";
 
