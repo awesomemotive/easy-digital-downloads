@@ -144,4 +144,129 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		EDD_Helper_Payment::delete_payment( $payment_id );
 		unset( $edd_options['item_quantities'] );
 	}
+
+	public function test_payment_add_fee() {
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertEmpty( $payment->fees );
+
+		$payment->add_fee( 'Test Fee', 5, 'test' );
+		$this->assertEquals( 1, count( $payment->fees ) );
+		$this->assertEquals( 125, $payment->total );
+		$payment->save();
+
+		// Test that it saves to the DB
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertEquals( 1, count( $payment->fees ) );
+		$this->assertEquals( 125, $payment->total );
+	}
+
+	public function test_payment_remove_fee() {
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertEmpty( $payment->fees );
+
+		$payment->add_fee( 'Test Fee 1', 5, 'test' );
+		$payment->add_fee( 'Test Fee 2', 5, 'test' );
+		$payment->add_fee( 'Test Fee 3', 5, 'test' );
+		$this->assertEquals( 3, count( $payment->fees ) );
+		$this->assertEquals( 'Test Fee 2', $payment->fees[1]['label'] );
+		$payment->save();
+
+		$payment->remove_fee( 1 );
+		$this->assertEquals( 2, count( $payment->fees ) );
+		$this->assertEquals( 130, $payment->total );
+		$this->assertEquals( 'Test Fee 3', $payment->fees[1]['label'] );
+		$payment->save();
+
+		// Test that it saves to the DB
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertEquals( 2, count( $payment->fees ) );
+		$this->assertEquals( 130, $payment->total );
+		$this->assertEquals( 'Test Fee 3', $payment->fees[1]['label'] );
+	}
+
+	public function test_payment_remove_fee_by_label() {
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertEmpty( $payment->fees );
+
+		$payment->add_fee( 'Test Fee', 5, 'test' );
+		$this->assertEquals( 1, count( $payment->fees ) );
+		$this->assertEquals( 'Test Fee', $payment->fees[0]['label'] );
+		$payment->save();
+
+		$payment->remove_fee_by( 'label', 'Test Fee' );
+		$this->assertEmpty( $payment->fees );
+		$this->assertEquals( 120, $payment->total );
+		$payment->save();
+
+		// Test that it saves to the DB
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertEmpty( $payment->fees );
+		$this->assertEquals( 120, $payment->total );
+	}
+
+	public function test_payment_remove_fee_by_label_w_multi_no_global() {
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertEmpty( $payment->fees );
+
+		$payment->add_fee( 'Test Fee', 5, 'test' );
+		$payment->add_fee( 'Test Fee', 5, 'test' );
+		$this->assertEquals( 2, count( $payment->fees ) );
+		$this->assertEquals( 'Test Fee', $payment->fees[0]['label'] );
+		$payment->save();
+
+		$payment->remove_fee_by( 'label', 'Test Fee' );
+		$this->assertEquals( 1, count( $payment->fees ) );
+		$this->assertEquals( 125, $payment->total );
+		$payment->save();
+
+		// Test that it saves to the DB
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertEquals( 1, count( $payment->fees ) );
+		$this->assertEquals( 125, $payment->total );
+	}
+
+	public function test_payment_remove_fee_by_label_w_multi_w_global() {
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertEmpty( $payment->fees );
+
+		$payment->add_fee( 'Test Fee', 5, 'test' );
+		$payment->add_fee( 'Test Fee', 5, 'test' );
+		$this->assertEquals( 2, count( $payment->fees ) );
+		$this->assertEquals( 'Test Fee', $payment->fees[0]['label'] );
+		$payment->save();
+
+		$payment->remove_fee_by( 'label', 'Test Fee', true );
+		$this->assertEmpty( $payment->fees );
+		$this->assertEquals( 120, $payment->total );
+		$payment->save();
+
+		// Test that it saves to the DB
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertEmpty( $payment->fees );
+		$this->assertEquals( 120, $payment->total );
+	}
+
+	public function test_payment_remove_fee_by_index() {
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertEmpty( $payment->fees );
+
+		$payment->add_fee( 'Test Fee 1', 5, 'test' );
+		$payment->add_fee( 'Test Fee 2', 5, 'test' );
+		$payment->add_fee( 'Test Fee 3', 5, 'test' );
+		$this->assertEquals( 3, count( $payment->fees ) );
+		$this->assertEquals( 'Test Fee 2', $payment->fees[1]['label'] );
+		$payment->save();
+
+		$payment->remove_fee_by( 'index', 1, true );
+		$this->assertEquals( 2, count( $payment->fees ) );
+		$this->assertEquals( 130, $payment->total );
+		$this->assertEquals( 'Test Fee 3', $payment->fees[1]['label'] );
+		$payment->save();
+
+		// Test that it saves to the DB
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertEquals( 2, count( $payment->fees ) );
+		$this->assertEquals( 130, $payment->total );
+		$this->assertEquals( 'Test Fee 3', $payment->fees[1]['label'] );
+	}
 }

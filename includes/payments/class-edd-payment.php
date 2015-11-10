@@ -324,12 +324,25 @@ class EDD_Payment {
 						break;
 
 					case 'fees':
+
 						if ( ! empty( $this->pending[ $key ] ) ) {
-							// Update totals for pending fees
-							foreach ( $this->pending->fees as $fee ) {
-								$total_increase += $fee['amount'];
+							foreach ( $this->pending[ $key ] as $fee ) {
+
+								switch( $fee['action'] ) {
+
+									case 'add':
+										$total_increase += $fee['amount'];
+										break;
+
+									case 'remove':
+										$total_decrease += $fee['amount'];
+										break;
+
+								}
+
 							}
 						}
+
 						break;
 
 					case 'status':
@@ -687,10 +700,10 @@ class EDD_Payment {
 	/**
 	 * Add a fee to a given payment
 	 *
-	 * @since 2.5
-	 * @param string $label  The description of the fee
-	 * @param float  $amount The amount of the fee
-	 * @param string $type   The Fee Type
+	 * @since  2.5
+	 * @param  string $label  The description of the fee
+	 * @param  float  $amount The amount of the fee
+	 * @param  string $type   The Fee Type
 	 * @return void
 	 */
 	public function add_fee( $label = '', $amount = 0.00, $type = '' ) {
@@ -700,12 +713,87 @@ class EDD_Payment {
 			'type'   => $type,
 		);
 
-		$this->pending['fees'][] = end( $this->fees );
+		$added_fee               = end( $this->fees );
+		$added_fee['action']     = 'add';
+		$this->pending['fees'][] = $added_fee;
 		reset( $this->fees );
 
 		$this->increase_subtotal( $amount );
 
 		return true;
+	}
+
+	public function remove_fee( $key ) {
+		$removed = false;
+
+		if ( is_numeric( $key ) ) {
+			$removed = $this->remove_fee_by( 'index', $key );
+		}
+
+		return $removed;
+	}
+
+	/**
+	 * Remove a fee by the defined attributed
+	 *
+	 * @since  2.5
+	 * @param  string      $key    The key to remove by
+	 * @param  int|string  $value  The value to search for
+	 * @param  boolean $global     False - removes the first value it fines, True - removes all matches
+	 * @return boolean             If the item is removed
+	 */
+	public function remove_fee_by( $key, $value, $global = false ) {
+
+		$allowed_fee_keys = apply_filters( 'edd_payment_fee_keys', array(
+			'index', 'label', 'amount', 'type',
+		) );
+
+		if ( ! in_array( $key, $allowed_fee_keys ) ) {
+			return false;
+		}
+
+		$removed = false;
+		if ( 'index' === $key && array_key_exists( $value, $this->fees ) ) {
+
+			$removed_fee             = $this->fees[ $value ];
+			$removed_fee['action']   = 'remove';
+			$this->pending['fees'][] = $removed_fee;
+			unset( $this->fees[ $value ] );
+
+			$this->decrease_subtotal( $removed_fee['amount'] );
+
+			$removed = true;
+
+		} else if ( 'index' !== $key ) {
+
+			foreach ( $this->fees as $index => $fee ) {
+
+				if ( isset( $fee[ $key ] ) && $fee[ $key ] == $value ) {
+
+					$removed_fee             = $fee;
+					$removed_fee['action']   = 'remove';
+					$this->pending['fees'][] = $removed_fee;
+					unset( $this->fees[ $index ] );
+
+					$this->decrease_subtotal( $fee['amount'] );
+
+					$removed = true;
+
+					if ( false === $global ) {
+						break;
+					}
+
+				}
+
+			}
+
+		}
+
+		if ( true === $removed ) {
+			$this->fees = array_values( $this->fees );
+		}
+
+		return $removed;
 	}
 
 	/**
