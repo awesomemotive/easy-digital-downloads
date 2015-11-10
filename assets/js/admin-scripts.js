@@ -1489,7 +1489,7 @@ jQuery(document).ready(function ($) {
 		$('.edd_user_search_results span').html('');
 	});
 
-	if( $('.edd_dashboard_sales').length ) {
+	if( $('#edd_dashboard_sales').length ) {
 		$.ajax({
 			type: "GET",
 			data: {
