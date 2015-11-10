@@ -72,6 +72,7 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 						<?php echo EDD()->html->product_dropdown( array(
 							'name'        => 'products[]',
 							'id'          => 'products',
+							'number'      => -1,
 							'multiple'    => true,
                             'chosen'      => true,
                             'placeholder' => sprintf( __( 'Select one or more %s', 'easy-digital-downloads' ), edd_get_label_plural() )
