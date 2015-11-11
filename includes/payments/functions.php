@@ -485,6 +485,16 @@ function edd_count_payments( $args = array() ) {
 				AND m.meta_key = '_edd_payment_user_id'
 				AND m.meta_value = '{$args['s']}'";
 
+		} elseif ( 0 === strpos( $args['s'], 'discount:' ) ) {
+
+			$search = str_replace( 'discount:', '', $args['s'] );
+			$search = 'discount.*' . $search;
+
+			$join   = "LEFT JOIN $wpdb->postmeta m ON (p.ID = m.post_id)";
+			$where .= "
+				AND m.meta_key = '_edd_payment_meta'
+				AND m.meta_value REGEXP '$search'";
+
 		} else {
 			$where .= "AND ((p.post_title LIKE '%{$args['s']}%') OR (p.post_content LIKE '%{$args['s']}%'))";
 		}
