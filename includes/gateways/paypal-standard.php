@@ -508,7 +508,7 @@ function edd_process_paypal_refund( $data, $payment_id = 0 ) {
 	}
 
 	$payment_amount = edd_get_payment_amount( $payment_id );
-	$refund_amount  = $data['payment_gross'] * -1;
+	$refund_amount  = $data['mc_gross'] * -1;
 
 	if ( number_format( (float) $refund_amount, 2 ) < number_format( (float) $payment_amount, 2 ) ) {
 
