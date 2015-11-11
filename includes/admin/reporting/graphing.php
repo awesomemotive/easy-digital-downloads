@@ -637,15 +637,15 @@ function edd_get_report_dates() {
 
 			}
 
-			$dates['day']      = $day;
-			$dates['m_start']  = $month;
-			$dates['m_end']    = $month;
-			$dates['year']     = $year;
-			$dates['year_end'] = $year;
+			$dates['day']       = $day;
+			$dates['m_start']   = $month;
+			$dates['m_end']     = $month;
+			$dates['year']      = $year;
+			$dates['year_end']  = $year;
 		break;
 
 		case 'this_week' :
-			$dates['day']     = date( 'd', $current_time - ( date( 'w', $current_time ) - 1 ) *60*60*24 ) - 1;
+			$dates['day']     = date( 'd', $current_time - ( date( 'w', $current_time ) - 1 ) * DAY_IN_SECONDS ) - 1;
 			$dates['day']     += get_option( 'start_of_week' );
 			$dates['day_end'] = $dates['day'] + 6;
 			$dates['m_start'] = date( 'n', $current_time );
@@ -654,14 +654,14 @@ function edd_get_report_dates() {
 		break;
 
 		case 'last_week' :
-			$dates['day']     = date( 'd', $current_time - ( date( 'w' ) - 1 ) *60*60*24 ) - 8;
-			$dates['day']     += get_option( 'start_of_week' );
-			$dates['day_end'] = $dates['day'] + 6;
-			$dates['year']    = date( 'Y' );
+			$dates['day']       = date( 'd', $current_time - ( date( 'w' ) - 1 ) * DAY_IN_SECONDS ) - 8;
+			$dates['day']      += get_option( 'start_of_week' );
+			$dates['day_end']   = $dates['day'] + 6;
+			$dates['year']      = date( 'Y' );
 
 			if( date( 'j', $current_time ) <= 7 ) {
-				$dates['m_start'] = date( 'n', $current_time ) - 1;
-				$dates['m_end']   = date( 'n', $current_time ) - 1;
+				$dates['m_start']   = date( 'n', $current_time );
+				$dates['m_end']     = date( 'n', $current_time );
 				if( $dates['m_start'] <= 1 ) {
 					$dates['year']     = date( 'Y', $current_time ) - 1;
 					$dates['year_end'] = date( 'Y', $current_time ) - 1;
