@@ -141,7 +141,7 @@ class EDD_SL_Plugin_Updater {
 
                 $version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
 
-                set_transient( $cache_key, $version_info, 3600 );
+                set_transient( $cache_key, $version_info, HOUR_IN_SECONDS );
             }
 
 
@@ -295,12 +295,12 @@ class EDD_SL_Plugin_Updater {
             'url'        => home_url()
         );
 
-	$cache_key = md5( 'edd_plugin_' . sanitize_key(  $api_params['license'] . $this->version ) . '_' . $api_params['edd_action'] );
-	$cached_response = get_transient( $cache_key );
-	if ( $cached_response ) {
-		// if this has been checked within 24 hours, don't check again
-		return $cached_response;
-	}
+		$cache_key = 'edd_plugin_' . md5( sanitize_key( $api_params['license'] . $this->version ) . '_' . $api_params['edd_action'] );
+		$cached_response = get_transient( $cache_key );
+		if ( $cached_response !== false ) {
+			// if this has been checked within 24 hours, don't check again
+			return $cached_response;
+		}
 
         $request = wp_remote_post( $this->api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
 
@@ -314,7 +314,10 @@ class EDD_SL_Plugin_Updater {
             $request = false;
         }
 
-	set_transient( $cache_key, $request, 60*60*24 );
+		if ( $request === false ) {
+			// avoid saving false in the transient to prevent repeat checks
+			set_transient( $cache_key, 0, DAY_IN_SECONDS );
+		}
 
         return $request;
     }
