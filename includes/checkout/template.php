@@ -102,7 +102,7 @@ function edd_show_purchase_form() {
 			</div>
 		<?php endif; ?>
 
-		<?php if( ( !isset( $_GET['login'] ) && is_user_logged_in() ) || ! isset( $show_register_form ) || 'none' === $show_register_form ) {
+		<?php if( ( ! isset( $_GET['login'] ) && is_user_logged_in() ) || ! isset( $show_register_form ) || 'none' === $show_register_form || 'login' === $show_register_form ) {
 			do_action( 'edd_purchase_form_after_user_info' );
 		}
 
@@ -533,13 +533,25 @@ function edd_get_login_fields() {
 			<?php } ?>
 			<?php do_action('edd_checkout_login_fields_before'); ?>
 			<p id="edd-user-login-wrap">
-				<label class="edd-label" for="edd-username"><?php _e( 'Username', 'easy-digital-downloads' ); ?></label>
+				<label class="edd-label" for="edd-username">
+					<?php _e( 'Username', 'easy-digital-downloads' ); ?>
+					<?php if( edd_no_guest_checkout() ) { ?>
+					<span class="edd-required-indicator">*</span>
+					<?php } ?>
+				</label>
 				<input class="<?php if(edd_no_guest_checkout()) { echo 'required '; } ?>edd-input" type="text" name="edd_user_login" id="edd_user_login" value="" placeholder="<?php _e( 'Your username', 'easy-digital-downloads' ); ?>"/>
 			</p>
 			<p id="edd-user-pass-wrap" class="edd_login_password">
-				<label class="edd-label" for="edd-password"><?php _e( 'Password', 'easy-digital-downloads' ); ?></label>
+				<label class="edd-label" for="edd-password">
+					<?php _e( 'Password', 'easy-digital-downloads' ); ?>
+					<?php if( edd_no_guest_checkout() ) { ?>
+					<span class="edd-required-indicator">*</span>
+					<?php } ?>
+				</label>
 				<input class="<?php if(edd_no_guest_checkout()) { echo 'required '; } ?>edd-input" type="password" name="edd_user_pass" id="edd_user_pass" placeholder="<?php _e( 'Your password', 'easy-digital-downloads' ); ?>"/>
-				<input type="hidden" name="edd-purchase-var" value="needs-to-login"/>
+				<?php if( edd_no_guest_checkout() ) : ?>
+					<input type="hidden" name="edd-purchase-var" value="needs-to-login"/>
+				<?php endif; ?>
 			</p>
 			<p id="edd-user-login-submit">
 				<input type="submit" class="edd-submit button <?php echo $color; ?>" name="edd_login_submit" value="<?php _e( 'Login', 'easy-digital-downloads' ); ?>"/>

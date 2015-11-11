@@ -59,11 +59,11 @@ function edd_admin_footer_for_thickbox() {
                     direct = jQuery('#select-edd-direct').val(),
                     style = jQuery('#select-edd-style').val(),
                     color = jQuery('#select-edd-color').is(':visible') ? jQuery('#select-edd-color').val() : '',
-                    text = jQuery('#edd-text').val() || '<?php _e( "Purchase", "edd" ); ?>';
+                    text = jQuery('#edd-text').val() || '<?php _e( "Purchase", "easy-digital-downloads" ); ?>';
 
                 // Return early if no download is selected
                 if ('' === id) {
-                    alert('<?php _e( "You must choose a download", "edd" ); ?>');
+                    alert('<?php _e( "You must choose a download", "easy-digital-downloads" ); ?>');
                     return;
                 }
 

@@ -44,7 +44,7 @@ function edd_downloads_contextual_help() {
 
 			'<p>' . __( '<strong>Accounting Options</strong> - If enabled, define an individual SKU or product number for this download.', 'easy-digital-downloads' ) . '</p>' .
 
-			'<p>' . __( '<strong>Button Options</strong> - Disable the automatic output the purchase button. If disabled, no button will be added to the download page unless the <code>[purchase_link]</code> shortcode is used.', 'easy-digital-downloads' ) . '</p>'
+			'<p>' . __( '<strong>Button Options</strong> - Disable the automatic output of the purchase button. If disabled, no button will be added to the download page unless the <code>[purchase_link]</code> shortcode is used.', 'easy-digital-downloads' ) . '</p>'
 	) );
 
 	$screen->add_help_tab( array(
@@ -60,16 +60,16 @@ function edd_downloads_contextual_help() {
 		'id'	    => 'edd-download-files',
 		'title'	    => sprintf( __( '%s Files', 'easy-digital-downloads' ), edd_get_label_singular() ),
 		'content'	=>
-			'<p>' . __( '<strong>Product Type Options</strong> - Choose a default product type or a bundle. Bundled products automatically include access other download&#39;s files when purchased.', 'easy-digital-downloads' ) . '</p>' .
+			'<p>' . __( '<strong>Product Type Options</strong> - Choose a default product type or a bundle. Bundled products automatically include access to other download&#39;s files when purchased.', 'easy-digital-downloads' ) . '</p>' .
 
-			'<p>' . __( '<strong>File Downloads</strong> - Define download file names and their respsective file URL. Multiple files can be assigned to a single price, or variable prices.', 'easy-digital-downloads' ) . '</p>'
+			'<p>' . __( '<strong>File Downloads</strong> - Define download file names and their respective file URL. Multiple files can be assigned to a single price, or variable prices.', 'easy-digital-downloads' ) . '</p>'
 	) );
 
 
 	$screen->add_help_tab( array(
 		'id'	    => 'edd-product-notes',
 		'title'	    => sprintf( __( '%s Notes', 'easy-digital-downloads' ), edd_get_label_singular() ),
-		'content'	=> '<p>' . __( 'Special notes or instructions for the product. These notes will be added to the purchase receipt, and additionaly may be used by some extensions or themes on the frontend.', 'easy-digital-downloads' ) . '</p>'
+		'content'	=> '<p>' . __( 'Special notes or instructions for the product. These notes will be added to the purchase receipt, and additionally may be used by some extensions or themes on the frontend.', 'easy-digital-downloads' ) . '</p>'
 	) );
 
 	$colors = array(
