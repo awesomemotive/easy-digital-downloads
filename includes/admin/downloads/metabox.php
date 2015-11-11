@@ -135,7 +135,12 @@ function edd_download_meta_box_save( $post_id, $post ) {
 
 		} elseif ( '_edd_default_price_id' == $field && edd_has_variable_prices( $post_id ) ) {
 
-			$new_default_price_id = ( ! empty( $_POST[$field] ) && is_numeric( $_POST[$field] ) ) || ( 0 === (int)$_POST[$field] ) ? (int)$_POST[$field] : 1;
+			if ( isset( $_POST[ $field ] ) ) {
+				$new_default_price_id = ( ! empty( $_POST[ $field ] ) && is_numeric( $_POST[ $field ] ) ) || ( 0 === (int) $_POST[ $field ] ) ? (int) $_POST[ $field ] : 1;
+			} else {
+				$new_default_price_id = 1;
+			}
+
 			update_post_meta( $post_id, $field, $new_default_price_id );
 
 		} else {
