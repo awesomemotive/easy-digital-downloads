@@ -310,16 +310,11 @@ class EDD_SL_Plugin_Updater {
 
         if ( $request && isset( $request->sections ) ) {
             $request->sections = maybe_unserialize( $request->sections );
+            set_transient( $cache_key, $request, DAY_IN_SECONDS );
         } else {
             $request = false;
+            set_transient( $cache_key, 0, DAY_IN_SECONDS );
         }
-
-		if ( $request === false ) {
-			// avoid saving false in the transient to prevent repeat checks
-			set_transient( $cache_key, 0, DAY_IN_SECONDS );
-		} else {
-			set_transient( $cache_key, $request, DAY_IN_SECONDS );
-		}
 
         return $request;
     }
