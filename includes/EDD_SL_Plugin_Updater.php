@@ -317,6 +317,8 @@ class EDD_SL_Plugin_Updater {
 		if ( $request === false ) {
 			// avoid saving false in the transient to prevent repeat checks
 			set_transient( $cache_key, 0, DAY_IN_SECONDS );
+		} else {
+			set_transient( $cache_key, $request, DAY_IN_SECONDS );
 		}
 
         return $request;
