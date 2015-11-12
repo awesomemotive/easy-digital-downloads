@@ -147,6 +147,7 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 		}
 
 		$cached_reports = get_transient( $cached_report_key );
+
 		if ( false !== $cached_reports ) {
 			$reports_data = $cached_reports;
 		} else {
@@ -307,13 +308,22 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 			return;
 		}
 
-		$data = array();
+		$data        = array();
+		$total_sales = 0;
+
 		foreach ( $this->items as $item ) {
+			$total_sales += $item['total_sales_raw'];
+
 			if ( !empty( $item[ 'is_child' ] ) || empty( $item[ 'total_sales_raw' ] ) ) {
 				continue;
 			}
 
 			$data[ $item[ 'label' ] ] = $item[ 'total_sales_raw' ];
+		}
+
+
+		if ( empty( $total_sales ) ) {
+			echo '<p><em>' . __( 'No sales for dates provided.', 'easy-digital-downloads' ) . '</em></p>';
 		}
 
 		// Sort High to Low, prior to filter so people can reorder if they please
@@ -339,13 +349,22 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 			return;
 		}
 
-		$data = array();
+		$data           = array();
+		$total_earnings = 0;
+
 		foreach ( $this->items as $item ) {
-			if ( !empty( $item[ 'is_child' ] ) || empty( $item[ 'total_earnings_raw' ] ) ) {
+			$total_earnings += $item['total_earnings_raw'];
+
+			if ( ! empty( $item[ 'is_child' ] ) || empty( $item[ 'total_earnings_raw' ] ) ) {
 				continue;
 			}
 
 			$data[ $item[ 'label' ] ] = $item[ 'total_earnings_raw' ];
+
+		}
+
+		if ( empty( $total_earnings ) ) {
+			echo '<p><em>' . __( 'No earnings for dates provided.', 'easy-digital-downloads' ) . '</em></p>';
 		}
 
 		// Sort High to Low, prior to filter so people can reorder if they please
