@@ -91,6 +91,11 @@ class Test_Cart extends WP_UnitTestCase {
 		$this->_discount = edd_store_discount( $discount );
 	}
 
+	public function tearDown() {
+		parent::tearDown();
+		edd_empty_cart();
+	}
+
 	public function test_endpoints() {
 		$this->assertEquals('edd-add', $this->_rewrite->endpoints[0][1]);
 		$this->assertEquals('edd-remove', $this->_rewrite->endpoints[1][1]);
@@ -103,9 +108,7 @@ class Test_Cart extends WP_UnitTestCase {
 		$this->assertEquals( 0, edd_add_to_cart( $this->_post->ID, $options ) );
 	}
 
-	public function test_add_to_cart_multiple_price_ids() {
-
-		edd_empty_cart();
+	public function test_add_to_cart_multiple_price_ids_array() {
 
 		$options = array(
 			'price_id' => array( 0, 1 )
@@ -113,20 +116,17 @@ class Test_Cart extends WP_UnitTestCase {
 
 		edd_add_to_cart( $this->_post->ID, $options );
 		$this->assertEquals( 2, count( edd_get_cart_contents() ) );
+	}
 
-		edd_empty_cart();
-
+	public function test_add_to_cart_multiple_price_ids_string() {
 		$options = array(
 			'price_id' => '0,1'
 		);
 		edd_add_to_cart( $this->_post->ID, $options );
 		$this->assertEquals( 2, count( edd_get_cart_contents() ) );
-
 	}
 
 	public function test_get_cart_contents() {
-
-		edd_empty_cart();
 
 		$options = array(
 			'price_id' => 0
@@ -147,8 +147,6 @@ class Test_Cart extends WP_UnitTestCase {
 	}
 
 	public function test_get_cart_content_details() {
-
-		edd_empty_cart();
 
 		$options = array(
 			'price_id' => 0
@@ -271,9 +269,6 @@ class Test_Cart extends WP_UnitTestCase {
 		$expected = edd_get_cart_item_discount_amount( array( 'foo' => 'bar' ) );
 		$this->assertEquals( 0.00, $expected );
 
-		// Now setup a cart and make sure it works
-		edd_empty_cart();
-
 		$options = array(
 			'price_id' => 0
 		);
@@ -295,17 +290,22 @@ class Test_Cart extends WP_UnitTestCase {
 		$cart_item_args['options'] = $options;
 		$this->assertEquals( 4, edd_get_cart_item_discount_amount( $cart_item_args ) );
 
+		edd_unset_cart_discount( '20OFF' );
+
 	}
 
 	public function test_cart_quantity() {
+		$options = array(
+			'price_id' => 0
+		);
+		edd_add_to_cart( $this->_post->ID, $options );
+
 		$this->assertEquals(1, edd_get_cart_quantity());
 	}
 
 	public function test_get_cart_item_quantity() {
 
 		$this->markTestIncomplete( 'This fails due to some weird session issue. Works fine on sites, just not in tests. #2294' );
-
-		edd_empty_cart();
 
 		$options = array(
 			'price_id' => 0
@@ -436,8 +436,6 @@ class Test_Cart extends WP_UnitTestCase {
 	}
 
 	public function test_edd_get_cart_item_name() {
-
-		edd_empty_cart();
 
 		edd_add_to_cart( $this->_post->ID );
 

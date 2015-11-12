@@ -58,23 +58,23 @@ class EDD_CLI extends WP_CLI_Command {
 		$success_page           = edd_get_option( 'success_page', '' );
 		$failure_page           = edd_get_option( 'failure_page', '' );
 
-		WP_CLI::line( sprintf( __( 'You are running EDD version: %s', 'edd' ), EDD_VERSION ) );
-		WP_CLI::line( "\n" . sprintf( __( 'Test mode is: %s', 'edd' ), ( edd_is_test_mode() ? __( 'Enabled', 'edd' ) : __( 'Disabled', 'edd' ) ) ) );
-		WP_CLI::line( sprintf( __( 'Ajax is: %s', 'edd' ), ( edd_is_ajax_enabled() ? __( 'Enabled', 'edd' ) : __( 'Disabled', 'edd' ) ) ) );
-		WP_CLI::line( sprintf( __( 'Guest checkouts are: %s', 'edd' ), ( edd_no_guest_checkout() ? __( 'Disabled', 'edd' ) : __( 'Enabled', 'edd' ) ) ) );
-		WP_CLI::line( sprintf( __( 'Symlinks are: %s', 'edd' ), ( apply_filters( 'edd_symlink_file_downloads', isset( $symlink_file_downloads ) ) && function_exists( 'symlink' ) ? __( 'Enabled', 'edd' ) : __( 'Disabled', 'edd' ) ) ) );
-		WP_CLI::line( "\n" . sprintf( __( 'Checkout page is: %s', 'edd' ), ( ! edd_get_option( 'purchase_page', false ) ) ? __( 'Valid', 'edd' ) : __( 'Invalid', 'edd' ) ) );
-		WP_CLI::line( sprintf( __( 'Checkout URL is: %s', 'edd' ), ( ! empty( $purchase_page ) ? get_permalink( $purchase_page ) : __( 'Undefined', 'edd' ) ) ) );
-		WP_CLI::line( sprintf( __( 'Success URL is: %s', 'edd' ), ( ! empty( $success_page ) ? get_permalink( $success_page ) : __( 'Undefined', 'edd' ) ) ) );
-		WP_CLI::line( sprintf( __( 'Failure URL is: %s', 'edd' ), ( ! empty( $failure_page ) ? get_permalink( $failure_page ) : __( 'Undefined', 'edd' ) ) ) );
-		WP_CLI::line( sprintf( __( 'Downloads slug is: %s', 'edd' ), ( defined( 'EDD_SLUG' ) ? '/' . EDD_SLUG : '/downloads' ) ) );
-		WP_CLI::line( "\n" . sprintf( __( 'Taxes are: %s', 'edd' ), ( edd_use_taxes() ? __( 'Enabled', 'edd' ) : __( 'Disabled', 'edd' ) ) ) );
-		WP_CLI::line( sprintf( __( 'Tax rate is: %s', 'edd' ), edd_get_tax_rate() * 100 . '%' ) );
+		WP_CLI::line( sprintf( __( 'You are running EDD version: %s', 'easy-digital-downloads' ), EDD_VERSION ) );
+		WP_CLI::line( "\n" . sprintf( __( 'Test mode is: %s', 'easy-digital-downloads' ), ( edd_is_test_mode() ? __( 'Enabled', 'easy-digital-downloads' ) : __( 'Disabled', 'easy-digital-downloads' ) ) ) );
+		WP_CLI::line( sprintf( __( 'Ajax is: %s', 'easy-digital-downloads' ), ( edd_is_ajax_enabled() ? __( 'Enabled', 'easy-digital-downloads' ) : __( 'Disabled', 'easy-digital-downloads' ) ) ) );
+		WP_CLI::line( sprintf( __( 'Guest checkouts are: %s', 'easy-digital-downloads' ), ( edd_no_guest_checkout() ? __( 'Disabled', 'easy-digital-downloads' ) : __( 'Enabled', 'easy-digital-downloads' ) ) ) );
+		WP_CLI::line( sprintf( __( 'Symlinks are: %s', 'easy-digital-downloads' ), ( apply_filters( 'edd_symlink_file_downloads', isset( $symlink_file_downloads ) ) && function_exists( 'symlink' ) ? __( 'Enabled', 'easy-digital-downloads' ) : __( 'Disabled', 'easy-digital-downloads' ) ) ) );
+		WP_CLI::line( "\n" . sprintf( __( 'Checkout page is: %s', 'easy-digital-downloads' ), ( ! edd_get_option( 'purchase_page', false ) ) ? __( 'Valid', 'easy-digital-downloads' ) : __( 'Invalid', 'easy-digital-downloads' ) ) );
+		WP_CLI::line( sprintf( __( 'Checkout URL is: %s', 'easy-digital-downloads' ), ( ! empty( $purchase_page ) ? get_permalink( $purchase_page ) : __( 'Undefined', 'easy-digital-downloads' ) ) ) );
+		WP_CLI::line( sprintf( __( 'Success URL is: %s', 'easy-digital-downloads' ), ( ! empty( $success_page ) ? get_permalink( $success_page ) : __( 'Undefined', 'easy-digital-downloads' ) ) ) );
+		WP_CLI::line( sprintf( __( 'Failure URL is: %s', 'easy-digital-downloads' ), ( ! empty( $failure_page ) ? get_permalink( $failure_page ) : __( 'Undefined', 'easy-digital-downloads' ) ) ) );
+		WP_CLI::line( sprintf( __( 'Downloads slug is: %s', 'easy-digital-downloads' ), ( defined( 'EDD_SLUG' ) ? '/' . EDD_SLUG : '/downloads' ) ) );
+		WP_CLI::line( "\n" . sprintf( __( 'Taxes are: %s', 'easy-digital-downloads' ), ( edd_use_taxes() ? __( 'Enabled', 'easy-digital-downloads' ) : __( 'Disabled', 'easy-digital-downloads' ) ) ) );
+		WP_CLI::line( sprintf( __( 'Tax rate is: %s', 'easy-digital-downloads' ), edd_get_tax_rate() * 100 . '%' ) );
 
 		$rates = edd_get_tax_rates();
 		if( ! empty( $rates ) ) {
 			foreach( $rates as $rate ) {
-				WP_CLI::line( sprintf( __( 'Country: %s, State: %s, Rate: %s', 'edd' ), $rate['country'], $rate['state'], $rate['rate'] ) );
+				WP_CLI::line( sprintf( __( 'Country: %s, State: %s, Rate: %s', 'easy-digital-downloads' ), $rate['country'], $rate['state'], $rate['rate'] ) );
 			}
 		}
 	}
@@ -116,8 +116,8 @@ class EDD_CLI extends WP_CLI_Command {
 		$earnings   = $stats->get_earnings( $download, $start_date, $end_date );
 		$sales      = $stats->get_sales( $download, $start_date, $end_date );
 
-		WP_CLI::line( sprintf( __( 'Earnings: %s', 'edd' ), $earnings ) );
-		WP_CLI::line( sprintf( __( 'Sales: %s', 'edd' ), $sales ) );
+		WP_CLI::line( sprintf( __( 'Earnings: %s', 'easy-digital-downloads' ), $earnings ) );
+		WP_CLI::line( sprintf( __( 'Sales: %s', 'easy-digital-downloads' ), $sales ) );
 
 	}
 
@@ -144,7 +144,7 @@ class EDD_CLI extends WP_CLI_Command {
 		}
 
 		if( empty( $products ) ) {
-			WP_CLI::error( __( 'No Downloads found', 'edd' ) );
+			WP_CLI::error( __( 'No Downloads found', 'easy-digital-downloads' ) );
 			return;
 		}
 
@@ -190,30 +190,30 @@ class EDD_CLI extends WP_CLI_Command {
 			$pricing = implode( ', ', $pricing );
 
 			WP_CLI::line( WP_CLI::colorize( '%G' . $product['info']['title'] . '%N' ) );
-			WP_CLI::line( sprintf( __( 'ID: %d', 'edd' ), $product['info']['id'] ) );
-			WP_CLI::line( sprintf( __( 'Status: %s', 'edd' ), $product['info']['status'] ) );
-			WP_CLI::line( sprintf( __( 'Posted: %s', 'edd' ), $product['info']['create_date'] ) );
-			WP_CLI::line( sprintf( __( 'Categories: %s', 'edd' ), $categories ) );
-			WP_CLI::line( sprintf( __( 'Tags: %s', 'edd' ), ( is_array( $tags ) ? '' : $tags ) ) );
-			WP_CLI::line( sprintf( __( 'Pricing: %s', 'edd' ), $pricing ) );
-			WP_CLI::line( sprintf( __( 'Sales: %s', 'edd' ), $product['stats']['total']['sales'] ) );
-			WP_CLI::line( sprintf( __( 'Earnings: %s', 'edd' ), edd_format_amount( $product['stats']['total']['earnings'] ) ) ) . ' ' . edd_get_currency();
+			WP_CLI::line( sprintf( __( 'ID: %d', 'easy-digital-downloads' ), $product['info']['id'] ) );
+			WP_CLI::line( sprintf( __( 'Status: %s', 'easy-digital-downloads' ), $product['info']['status'] ) );
+			WP_CLI::line( sprintf( __( 'Posted: %s', 'easy-digital-downloads' ), $product['info']['create_date'] ) );
+			WP_CLI::line( sprintf( __( 'Categories: %s', 'easy-digital-downloads' ), $categories ) );
+			WP_CLI::line( sprintf( __( 'Tags: %s', 'easy-digital-downloads' ), ( is_array( $tags ) ? '' : $tags ) ) );
+			WP_CLI::line( sprintf( __( 'Pricing: %s', 'easy-digital-downloads' ), $pricing ) );
+			WP_CLI::line( sprintf( __( 'Sales: %s', 'easy-digital-downloads' ), $product['stats']['total']['sales'] ) );
+			WP_CLI::line( sprintf( __( 'Earnings: %s', 'easy-digital-downloads' ), edd_format_amount( $product['stats']['total']['earnings'] ) ) ) . ' ' . edd_get_currency();
 			WP_CLI::line( '' );
-			WP_CLI::line( sprintf( __( 'Slug: %s', 'edd' ), $product['info']['slug'] ) );
-			WP_CLI::line( sprintf( __( 'Permalink: %s', 'edd' ), $product['info']['link'] ) );
+			WP_CLI::line( sprintf( __( 'Slug: %s', 'easy-digital-downloads' ), $product['info']['slug'] ) );
+			WP_CLI::line( sprintf( __( 'Permalink: %s', 'easy-digital-downloads' ), $product['info']['link'] ) );
 
 			if( array_key_exists( 'files', $product ) ) {
 
 				WP_CLI::line( '' );
-				WP_CLI::line( __( 'Download Files:', 'edd' ) );
+				WP_CLI::line( __( 'Download Files:', 'easy-digital-downloads' ) );
 
 				foreach( $product['files'] as $file ) {
 
-					WP_CLI::line( '  ' . sprintf( __( 'File: %s (%s)', 'edd' ), $file['name'], $file['file'] ) );
+					WP_CLI::line( '  ' . sprintf( __( 'File: %s (%s)', 'easy-digital-downloads' ), $file['name'], $file['file'] ) );
 
 					if( isset( $file['condition'] ) && 'all' !== $file['condition'] ) {
 
-						WP_CLI::line( '  ' . sprintf( __( 'Price Assignment: %s', 'edd' ), $file['condition'] ) );
+						WP_CLI::line( '  ' . sprintf( __( 'Price Assignment: %s', 'easy-digital-downloads' ), $file['condition'] ) );
 
 					}
 
@@ -284,9 +284,9 @@ class EDD_CLI extends WP_CLI_Command {
 				$customer_id = EDD()->customers->add( $args );
 
 				if( $customer_id ) {
-					WP_CLI::line( sprintf( __( 'Customer %d created successfully', 'edd' ), $customer_id ) );
+					WP_CLI::line( sprintf( __( 'Customer %d created successfully', 'easy-digital-downloads' ), $customer_id ) );
 				} else {
-					WP_CLI::error( __( 'Failed to create customer', 'edd' ) );
+					WP_CLI::error( __( 'Failed to create customer', 'easy-digital-downloads' ) );
 				}
 
 				// Reset email to false so it is generated on the next loop (if creating customers)
@@ -294,7 +294,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 			}
 
-			WP_CLI::line( WP_CLI::colorize( '%G' . sprintf( __( '%d customers created in %d seconds', 'edd' ), $create, time() - $start ) . '%N' ) );
+			WP_CLI::line( WP_CLI::colorize( '%G' . sprintf( __( '%d customers created in %d seconds', 'easy-digital-downloads' ), $create, time() - $start ) . '%N' ) );
 
 		} else {
 
@@ -308,30 +308,30 @@ class EDD_CLI extends WP_CLI_Command {
 			}
 
 			if( empty( $customers ) ) {
-				WP_CLI::error( __( 'No customers found', 'edd' ) );
+				WP_CLI::error( __( 'No customers found', 'easy-digital-downloads' ) );
 				return;
 			}
 
 			foreach( $customers['customers'] as $customer ) {
 				WP_CLI::line( WP_CLI::colorize( '%G' . $customer['info']['email'] . '%N' ) );
-				WP_CLI::line( sprintf( __( 'Customer User ID: %s', 'edd' ), $customer['info']['id'] ) );
-				WP_CLI::line( sprintf( __( 'Username: %s', 'edd' ), $customer['info']['username'] ) );
-				WP_CLI::line( sprintf( __( 'Display Name: %s', 'edd' ), $customer['info']['display_name'] ) );
+				WP_CLI::line( sprintf( __( 'Customer User ID: %s', 'easy-digital-downloads' ), $customer['info']['id'] ) );
+				WP_CLI::line( sprintf( __( 'Username: %s', 'easy-digital-downloads' ), $customer['info']['username'] ) );
+				WP_CLI::line( sprintf( __( 'Display Name: %s', 'easy-digital-downloads' ), $customer['info']['display_name'] ) );
 
 				if( array_key_exists( 'first_name', $customer ) ) {
-					WP_CLI::line( sprintf( __( 'First Name: %s', 'edd' ), $customer['info']['first_name'] ) );
+					WP_CLI::line( sprintf( __( 'First Name: %s', 'easy-digital-downloads' ), $customer['info']['first_name'] ) );
 				}
 
 				if( array_key_exists( 'last_name', $customer ) ) {
-					WP_CLI::line( sprintf( __( 'Last Name: %s', 'edd' ), $customer['info']['last_name'] ) );
+					WP_CLI::line( sprintf( __( 'Last Name: %s', 'easy-digital-downloads' ), $customer['info']['last_name'] ) );
 				}
 
-				WP_CLI::line( sprintf( __( 'Email: %s', 'edd' ), $customer['info']['email'] ) );
+				WP_CLI::line( sprintf( __( 'Email: %s', 'easy-digital-downloads' ), $customer['info']['email'] ) );
 
 				WP_CLI::line( '' );
-				WP_CLI::line( sprintf( __( 'Purchases: %s', 'edd' ), $customer['stats']['total_purchases'] ) );
-				WP_CLI::line( sprintf( __( 'Total Spent: %s', 'edd' ), edd_format_amount( $customer['stats']['total_spent'] ) . ' ' . edd_get_currency() ) );
-				WP_CLI::line( sprintf( __( 'Total Downloads: %s', 'edd' ), $customer['stats']['total_downloads'] ) );
+				WP_CLI::line( sprintf( __( 'Purchases: %s', 'easy-digital-downloads' ), $customer['stats']['total_purchases'] ) );
+				WP_CLI::line( sprintf( __( 'Total Spent: %s', 'easy-digital-downloads' ), edd_format_amount( $customer['stats']['total_spent'] ) . ' ' . edd_get_currency() ) );
+				WP_CLI::line( sprintf( __( 'Total Downloads: %s', 'easy-digital-downloads' ), $customer['stats']['total_downloads'] ) );
 
 				WP_CLI::line( '' );
 			}
@@ -356,36 +356,36 @@ class EDD_CLI extends WP_CLI_Command {
 		$sales = $this->api->get_recent_sales();
 
 		if( empty( $sales ) ) {
-			WP_CLI::error( __( 'No sales found', 'edd' ) );
+			WP_CLI::error( __( 'No sales found', 'easy-digital-downloads' ) );
 			return;
 		}
 
 		foreach( $sales['sales'] as $sale ) {
 			WP_CLI::line( WP_CLI::colorize( '%G' . $sale['ID'] . '%N' ) );
-			WP_CLI::line( sprintf( __( 'Purchase Key: %s', 'edd' ), $sale['key'] ) );
-			WP_CLI::line( sprintf( __( 'Email: %s', 'edd' ), $sale['email'] ) );
-			WP_CLI::line( sprintf( __( 'Date: %s', 'edd' ), $sale['date'] ) );
-			WP_CLI::line( sprintf( __( 'Subtotal: %s', 'edd' ), edd_format_amount( $sale['subtotal'] ) . ' ' . edd_get_currency() ) );
-			WP_CLI::line( sprintf( __( 'Tax: %s', 'edd' ), edd_format_amount( $sale['tax'] ) . ' ' . edd_get_currency() ) );
+			WP_CLI::line( sprintf( __( 'Purchase Key: %s', 'easy-digital-downloads' ), $sale['key'] ) );
+			WP_CLI::line( sprintf( __( 'Email: %s', 'easy-digital-downloads' ), $sale['email'] ) );
+			WP_CLI::line( sprintf( __( 'Date: %s', 'easy-digital-downloads' ), $sale['date'] ) );
+			WP_CLI::line( sprintf( __( 'Subtotal: %s', 'easy-digital-downloads' ), edd_format_amount( $sale['subtotal'] ) . ' ' . edd_get_currency() ) );
+			WP_CLI::line( sprintf( __( 'Tax: %s', 'easy-digital-downloads' ), edd_format_amount( $sale['tax'] ) . ' ' . edd_get_currency() ) );
 
 			if( array_key_exists( 0, $sale['fees'] ) ) {
-				WP_CLI::line( __( 'Fees:', 'edd' ) );
+				WP_CLI::line( __( 'Fees:', 'easy-digital-downloads' ) );
 
 				foreach( $sale['fees'] as $fee ) {
-					WP_CLI::line( sprintf( __( '  Fee: %s - %s', 'edd' ), edd_format_amount( $fee['amount'] ), edd_get_currency() ) );
+					WP_CLI::line( sprintf( __( '  Fee: %s - %s', 'easy-digital-downloads' ), edd_format_amount( $fee['amount'] ), edd_get_currency() ) );
 				}
 			}
 
-			WP_CLI::line( sprintf( __( 'Total: %s', 'edd' ), edd_format_amount( $sale['total'] ) . ' ' . edd_get_currency() ) );
+			WP_CLI::line( sprintf( __( 'Total: %s', 'easy-digital-downloads' ), edd_format_amount( $sale['total'] ) . ' ' . edd_get_currency() ) );
 			WP_CLI::line( '' );
-			WP_CLI::line( sprintf( __( 'Gateway: %s', 'edd' ), $sale['gateway'] ) );
+			WP_CLI::line( sprintf( __( 'Gateway: %s', 'easy-digital-downloads' ), $sale['gateway'] ) );
 
 			if( array_key_exists( 0, $sale['products'] ) ) {
-				WP_CLI::line( __( 'Products:', 'edd' ) );
+				WP_CLI::line( __( 'Products:', 'easy-digital-downloads' ) );
 
 				foreach( $sale['products'] as $product ) {
 					$price_name = ! empty( $product['price_name'] ) ? ' (' . $product['price_name'] . ')' : '';
-					WP_CLI::line( sprintf( __( '  Product: %s - %s', 'edd' ), $product['name'], edd_format_amount( $product['price'] ) . ' ' . edd_get_currency() . $price_name ) );
+					WP_CLI::line( sprintf( __( '  Product: %s - %s', 'easy-digital-downloads' ), $product['name'], edd_format_amount( $product['price'] ) . ' ' . edd_get_currency() . $price_name ) );
 				}
 			}
 
@@ -416,14 +416,14 @@ class EDD_CLI extends WP_CLI_Command {
 		}
 
 		if( empty( $discounts ) ) {
-			WP_CLI::error( __( 'No discounts found', 'edd' ) );
+			WP_CLI::error( __( 'No discounts found', 'easy-digital-downloads' ) );
 			return;
 		}
 
 		foreach( $discounts['discounts'] as $discount ) {
 			WP_CLI::line( WP_CLI::colorize( '%G' . $discount['ID'] . '%N' ) );
-			WP_CLI::line( sprintf( __( 'Name: %s', 'edd' ), $discount['name'] ) );
-			WP_CLI::line( sprintf( __( 'Code: %s', 'edd' ), $discount['code'] ) );
+			WP_CLI::line( sprintf( __( 'Name: %s', 'easy-digital-downloads' ), $discount['name'] ) );
+			WP_CLI::line( sprintf( __( 'Code: %s', 'easy-digital-downloads' ), $discount['code'] ) );
 
 			if( $discount['type'] == 'percent' ) {
 				$amount = $discount['amount'] . '%';
@@ -431,27 +431,27 @@ class EDD_CLI extends WP_CLI_Command {
 				$amount = edd_format_amount( $discount['amount'] ) . ' ' . edd_get_currency();
 			}
 
-			WP_CLI::line( sprintf( __( 'Amount: %s', 'edd' ), $amount ) );
-			WP_CLI::line( sprintf( __( 'Uses: %s', 'edd' ), $discount['uses'] ) );
-			WP_CLI::line( sprintf( __( 'Max Uses: %s', 'edd' ), ( $discount['max_uses'] == '0' ? __( 'Unlimited', 'edd' ) : $discount['max_uses'] ) ) );
-			WP_CLI::line( sprintf( __( 'Start Date: %s', 'edd' ), ( empty( $discount['start_date'] ) ? __( 'No Start Date', 'edd' ) : $discount['start_date'] ) ) );
-			WP_CLI::line( sprintf( __( 'Expiration Date: %s', 'edd' ), ( empty( $discount['exp_date'] ) ? __( 'No Expiration', 'edd' ) : $discount['exp_date'] ) ) );
-			WP_CLI::line( sprintf( __( 'Status: %s', 'edd' ), ucwords( $discount['status'] ) ) );
+			WP_CLI::line( sprintf( __( 'Amount: %s', 'easy-digital-downloads' ), $amount ) );
+			WP_CLI::line( sprintf( __( 'Uses: %s', 'easy-digital-downloads' ), $discount['uses'] ) );
+			WP_CLI::line( sprintf( __( 'Max Uses: %s', 'easy-digital-downloads' ), ( $discount['max_uses'] == '0' ? __( 'Unlimited', 'easy-digital-downloads' ) : $discount['max_uses'] ) ) );
+			WP_CLI::line( sprintf( __( 'Start Date: %s', 'easy-digital-downloads' ), ( empty( $discount['start_date'] ) ? __( 'No Start Date', 'easy-digital-downloads' ) : $discount['start_date'] ) ) );
+			WP_CLI::line( sprintf( __( 'Expiration Date: %s', 'easy-digital-downloads' ), ( empty( $discount['exp_date'] ) ? __( 'No Expiration', 'easy-digital-downloads' ) : $discount['exp_date'] ) ) );
+			WP_CLI::line( sprintf( __( 'Status: %s', 'easy-digital-downloads' ), ucwords( $discount['status'] ) ) );
 
 			WP_CLI::line( '' );
 
 			if( array_key_exists( 0, $discount['product_requirements'] ) ) {
-				WP_CLI::line( __( 'Product Requirements:', 'edd' ) );
+				WP_CLI::line( __( 'Product Requirements:', 'easy-digital-downloads' ) );
 
 				foreach( $discount['product_requirements'] as $req => $req_id ) {
-					WP_CLI::line( sprintf( __( '  Product: %s', 'edd' ), $req_id ) );
+					WP_CLI::line( sprintf( __( '  Product: %s', 'easy-digital-downloads' ), $req_id ) );
 				}
 			}
 
 			WP_CLI::line( '' );
 
-			WP_CLI::line( sprintf( __( 'Global Discount: %s', 'edd' ), ( empty( $discount['global_discount'] ) ? 'False' : 'True' ) ) );
-			WP_CLI::line( sprintf( __( 'Single Use: %s', 'edd' ), ( empty( $discount['single_use'] ) ? 'False' : 'True' ) ) );
+			WP_CLI::line( sprintf( __( 'Global Discount: %s', 'easy-digital-downloads' ), ( empty( $discount['global_discount'] ) ? 'False' : 'True' ) ) );
+			WP_CLI::line( sprintf( __( 'Single Use: %s', 'easy-digital-downloads' ), ( empty( $discount['single_use'] ) ? 'False' : 'True' ) ) );
 
 			WP_CLI::line( '' );
 		}
@@ -479,9 +479,9 @@ class EDD_CLI extends WP_CLI_Command {
 
 		// At some point we'll likely add another action for payments
 		if( ! isset( $args ) ||  count( $args ) == 0 ) {
-			$error = __( 'No action specified, did you mean', 'edd' );
+			$error = __( 'No action specified, did you mean', 'easy-digital-downloads' );
 		} elseif( isset( $args ) && ! in_array( 'create', $args ) ) {
-			$error = __( 'Invalid action specified, did you mean', 'edd' );
+			$error = __( 'Invalid action specified, did you mean', 'easy-digital-downloads' );
 		}
 
 		if( $error ) {
@@ -527,7 +527,7 @@ class EDD_CLI extends WP_CLI_Command {
 					$status = ( $assoc_args['status'] == 'complete' ) ? 'publish' : $assoc_args['status'];
 				} else {
 					WP_CLI::warning( sprintf(
-						__( "Invalid status '%s', defaulting to 'complete'", 'edd' ),
+						__( "Invalid status '%s', defaulting to 'complete'", 'easy-digital-downloads' ),
 						$assoc_args['status']
 					) );
 				}
@@ -563,7 +563,7 @@ class EDD_CLI extends WP_CLI_Command {
 				$product = get_post( $id );
 
 				if( $product->post_type != 'download' ) {
-					WP_CLI::error( __( 'Specified ID is not a product', 'edd' ) );
+					WP_CLI::error( __( 'Specified ID is not a product', 'easy-digital-downloads' ) );
 					return;
 				}
 
@@ -646,7 +646,7 @@ class EDD_CLI extends WP_CLI_Command {
 			}
 		}
 
-		WP_CLI::success( sprintf( __( 'Created %s payments', 'edd' ), $number ) );
+		WP_CLI::success( sprintf( __( 'Created %s payments', 'easy-digital-downloads' ), $number ) );
 		return;
 	}
 }
