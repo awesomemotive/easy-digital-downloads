@@ -61,9 +61,9 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 		// Set parent defaults
 		parent::__construct( array(
-			'singular'  => __( 'Customer', 'easy-digital-downloads' ),     // Singular name of the listed records
-			'plural'    => __( 'Customers', 'easy-digital-downloads' ),    // Plural name of the listed records
-			'ajax'      => false                       // Does this table support ajax?
+			'singular' => __( 'Customer', 'easy-digital-downloads' ),
+			'plural'   => __( 'Customers', 'easy-digital-downloads' ),
+			'ajax'     => false,
 		) );
 
 	}
@@ -93,6 +93,18 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			<?php submit_button( $text, 'button', false, false, array('ID' => 'search-submit') ); ?>
 		</p>
 		<?php
+	}
+
+	/**
+	 * Gets the name of the primary column.
+	 *
+	 * @since 2.5
+	 * @access protected
+	 *
+	 * @return string Name of the primary column.
+	 */
+	protected function get_primary_column_name() {
+		return 'name';
 	}
 
 	/**
@@ -156,11 +168,11 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'name'           => __( 'Name', 'easy-digital-downloads' ),
-			'email'          => __( 'Email', 'easy-digital-downloads' ),
-			'num_purchases'  => __( 'Purchases', 'easy-digital-downloads' ),
-			'amount_spent'   => __( 'Total Spent', 'easy-digital-downloads' ),
-			'date_created'   => __( 'Date Created', 'easy-digital-downloads' )
+			'name'          => __( 'Name', 'easy-digital-downloads' ),
+			'email'         => __( 'Email', 'easy-digital-downloads' ),
+			'num_purchases' => __( 'Purchases', 'easy-digital-downloads' ),
+			'amount_spent'  => __( 'Total Spent', 'easy-digital-downloads' ),
+			'date_created'  => __( 'Date Created', 'easy-digital-downloads' ),
 		);
 
 		return apply_filters( 'edd_report_customer_columns', $columns );
@@ -301,7 +313,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		$this->set_pagination_args( array(
 			'total_items' => $this->total,
 			'per_page'    => $this->per_page,
-			'total_pages' => ceil( $this->total / $this->per_page )
+			'total_pages' => ceil( $this->total / $this->per_page ),
 		) );
 	}
 }
