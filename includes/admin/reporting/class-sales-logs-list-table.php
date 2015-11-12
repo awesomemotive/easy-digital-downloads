@@ -75,25 +75,36 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	 * @return string Column Name
 	 */
 	public function column_default( $item, $column_name ) {
+		$return = '';
+
 		switch ( $column_name ){
 			case 'download' :
-				return '<a href="' . add_query_arg( 'download', $item[ $column_name ] ) . '" >' . get_the_title( $item[ $column_name ] ) . '</a>';
+				$return = '<a href="' . add_query_arg( 'download', $item[ $column_name ] ) . '" >' . get_the_title( $item[ $column_name ] ) . '</a>';
+				break;
 
 			case 'user_id' :
 				$user = ! empty( $item['user_id'] ) ? $item['user_id'] : edd_get_payment_user_email( $item['payment_id'] );
-				return '<a href="' .
-					admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $user ) ) .
-					'">' . $item['user_name'] . '</a>';
+				$return = '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $user ) ) . '">' . $item['user_name'] . '</a>';
+				break;
+
+			case 'item_price' :
+				$return = edd_currency_filter( edd_format_amount( $item['item_price'] ) );
+				break;
 
 			case 'amount' :
-				return edd_currency_filter( edd_format_amount( $item['amount'] ) );
+				$return = edd_currency_filter( edd_format_amount( $item['amount'] / $item['quantity'] ) );
+				break;
 
 			case 'payment_id' :
-				return '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item['payment_id'] ) . '">' . edd_get_payment_number( $item['payment_id'] ) . '</a>';
+				$return = '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item['payment_id'] ) . '">' . edd_get_payment_number( $item['payment_id'] ) . '</a>';
+				break;
 
 			default:
-				return $item[ $column_name ];
+				$return = $item[ $column_name ];
+				break;
 		}
+
+		return $return;
 	}
 
 	/**
@@ -190,7 +201,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 				$compare = 'LIKE';
 			} else {
 				// Look for a user
-				$key = '_edd_log_user_id';
+				$key     = '_edd_log_user_id';
 				$compare = 'LIKE';
 
 				if ( ! is_numeric( $search ) ) {
@@ -269,6 +280,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 				foreach ( $downloads as $download ) {
 					echo '<option value="' . $download . '"' . selected( $download, $this->get_filtered_download() ) . '>' . esc_html( get_the_title( $download ) ) . '</option>';
 				}
+
 			echo '</select>';
 		}
 	}
@@ -305,15 +317,18 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 				$payment_id = get_post_meta( $log->ID, '_edd_log_payment_id', true );
 
 				// Make sure this payment hasn't been deleted
-				if ( get_post( $payment_id ) ) :
+				if ( get_post( $payment_id ) ) {
+
 					$user_info  = edd_get_payment_meta_user_info( $payment_id );
 					$cart_items = edd_get_payment_meta_cart_details( $payment_id );
 					$amount     = 0;
+
 					if ( is_array( $cart_items ) && is_array( $user_info ) ) {
+
 						foreach ( $cart_items as $item ) {
 
 							if ( $item['id'] == $log->post_parent ) {
-								$amount = isset( $item['item_price'] ) ? $item['item_price'] : $item['price'];
+								$amount = isset( $item['price'] ) ? $item['price'] : $item['item_price'];
 								break;
 							}
 
@@ -323,13 +338,17 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 							'ID'         => $log->ID,
 							'payment_id' => $payment_id,
 							'download'   => $log->post_parent,
+							'item_price' => isset( $item['item_price'] ) ? $item['item_price'] : $item['price'],
 							'amount'     => $amount,
 							'user_id'    => $user_info['id'],
 							'user_name'  => $user_info['first_name'] . ' ' . $user_info['last_name'],
 							'date'       => get_post_field( 'post_date', $payment_id ),
+							'quantity'   => $item['quantity'],
 						);
+
 					}
-				endif;
+
+				}
 			}
 		}
 

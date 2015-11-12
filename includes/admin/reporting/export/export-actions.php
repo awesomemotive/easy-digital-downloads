@@ -145,6 +145,31 @@ function edd_include_customers_batch_processer( $class ) {
 }
 
 /**
+ * Register the download products batch exporter
+ *
+ * @since  2.5
+ */
+function edd_register_downloads_batch_export() {
+	add_action( 'edd_batch_export_class_include', 'edd_include_downloads_batch_processer', 10, 1 );
+}
+add_action( 'edd_register_batch_exporter', 'edd_register_downloads_batch_export', 10 );
+
+/**
+ * Loads the file downloads batch process if needed
+ *
+ * @since  2.5
+ * @param  string $class The class being requested to run for the batch export
+ * @return void
+ */
+function edd_include_downloads_batch_processer( $class ) {
+
+	if ( 'EDD_Batch_Downloads_Export' === $class ) {
+		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-downloads.php';
+	}
+
+}
+
+/**
  * Register the file downloads batch exporter
  * @since  2.4.2
  */

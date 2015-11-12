@@ -441,6 +441,7 @@ function edd_count_payments( $args = array() ) {
 
 	$args = wp_parse_args( $args, $defaults );
 
+	$select = "SELECT p.post_status,count( * ) AS num_posts";
 	$join = '';
 	$where = "WHERE p.post_type = 'edd_payment'";
 
@@ -478,12 +479,33 @@ function edd_count_payments( $args = array() ) {
 				AND m.meta_key = '{$field}'
 				AND m.meta_value = '{$args['s']}'";
 
+		} elseif ( '#' == substr( $args['s'], 0, 1 ) ) {
+
+			$search = str_replace( '#:', '', $args['s'] );
+			$search = str_replace( '#', '', $search );
+
+			$select = "SELECT p2.post_status,count( * ) AS num_posts ";
+			$join   = "LEFT JOIN $wpdb->postmeta m ON m.meta_key = '_edd_log_payment_id' AND m.post_id = p.ID ";
+			$join  .= "INNER JOIN $wpdb->posts p2 ON m.meta_value = p2.ID ";
+			$where  = "WHERE p.post_type = 'edd_log' ";
+			$where .= "AND p.post_parent = {$search} ";
+
 		} elseif ( is_numeric( $args['s'] ) ) {
 
 			$join = "LEFT JOIN $wpdb->postmeta m ON (p.ID = m.post_id)";
 			$where .= "
 				AND m.meta_key = '_edd_payment_user_id'
 				AND m.meta_value = '{$args['s']}'";
+
+		} elseif ( 0 === strpos( $args['s'], 'discount:' ) ) {
+
+			$search = str_replace( 'discount:', '', $args['s'] );
+			$search = 'discount.*' . $search;
+
+			$join   = "LEFT JOIN $wpdb->postmeta m ON (p.ID = m.post_id)";
+			$where .= "
+				AND m.meta_key = '_edd_payment_meta'
+				AND m.meta_value REGEXP '$search'";
 
 		} else {
 			$where .= "AND ((p.post_title LIKE '%{$args['s']}%') OR (p.post_content LIKE '%{$args['s']}%'))";
@@ -535,7 +557,7 @@ function edd_count_payments( $args = array() ) {
 	$where = apply_filters( 'edd_count_payments_where', $where );
 	$join  = apply_filters( 'edd_count_payments_join', $join );
 
-	$query = "SELECT p.post_status,count( * ) AS num_posts
+	$query = "$select
 		FROM $wpdb->posts p
 		$join
 		$where
@@ -737,6 +759,19 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 		'update_post_meta_cache' => false,
 		'update_post_term_cache' => false
 	);
+
+	$show_free = apply_filters( 'edd_sales_by_date_show_free', true, $args );
+
+	if ( false === $show_free ) {
+		$args['meta_query'] = array(
+			array(
+				'key' => '_edd_payment_total',
+				'value' => 0,
+				'compare' => '>',
+				'type' => 'NUMERIC',
+			),
+		);
+	}
 
 	if ( ! empty( $month_num ) )
 		$args['monthnum'] = $month_num;

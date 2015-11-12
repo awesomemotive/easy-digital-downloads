@@ -147,7 +147,7 @@ class EDD_API {
 		}
 
 		add_action( 'init',                     array( $this, 'add_endpoint'     ) );
-		add_action( 'template_redirect',        array( $this, 'process_query'    ), -1 );
+		add_action( 'wp',                       array( $this, 'process_query'    ), -1 );
 		add_filter( 'query_vars',               array( $this, 'query_vars'       ) );
 		add_action( 'show_user_profile',        array( $this, 'user_key_field'   ) );
 		add_action( 'edit_user_profile',        array( $this, 'user_key_field'   ) );
@@ -585,6 +585,14 @@ class EDD_API {
 
 				break;
 
+			case 'downloads' :
+
+				$customer = isset( $wp_query->query_vars['customer'] ) ? $wp_query->query_vars['customer']  : null;
+
+				$data = $this->get_download_logs( $customer );
+
+				break;
+
 		endswitch;
 
 		// Allow extensions to setup their own return data
@@ -630,7 +638,8 @@ class EDD_API {
 			'products',
 			'customers',
 			'sales',
-			'discounts'
+			'discounts',
+			'downloads'
 		) );
 
 		$query = isset( $wp_query->query_vars['edd-api'] ) ? $wp_query->query_vars['edd-api'] : null;
@@ -1491,6 +1500,104 @@ class EDD_API {
 		}
 
 		return $discount_list;
+	}
+
+	/**
+	 * Process Get Downloads API Request to retrieve download logs
+	 *
+	 * @access public
+	 * @since 2.5
+	 * @author Daniel J Griffiths
+	 *
+	 * @param  int $customer_id The customer ID you wish to retrieve download logs for
+	 * @return array            Multidimensional array of the download logs
+	 */
+	public function get_download_logs( $customer_id = 0 ) {
+		global $edd_logs;
+
+		$downloads  = array();
+		$errors     = array();
+
+		$paged      = $this->get_paged();
+		$per_page   = $this->per_page();
+		$offset     = $per_page * ( $paged - 1 );
+
+		$meta_query = array();
+		if ( ! empty( $customer_id ) ) {
+
+			$customer = new EDD_Customer( $customer_id );
+
+			$meta_query['relation'] = 'OR';
+
+			if ( $customer->id > 0 ) {
+				// Based on customer->user_id
+				$meta_query[] = array(
+					'key'    => '_edd_log_user_id',
+					'value'  => $customer->user_id
+				);
+			}
+
+			// Based on customer->email
+			$meta_query[] = array(
+				'key'    => '_edd_log_user_info',
+				'value'  => $customer->email,
+				'compare'=> 'LIKE'
+			);
+
+		}
+
+		$query = array(
+			'log_type'      => 'file_download',
+			'paged'         => $paged,
+			'meta_query'    => $meta_query,
+			'posts_per_page'=> $per_page,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false
+		);
+
+		$logs = $edd_logs->get_connected_logs( $query );
+
+		if ( empty( $logs ) ) {
+			$error['error'] = __( 'No download logs found!', 'easy-digital-downloads' );
+			return $error;
+		}
+
+		foreach( $logs as $log ) {
+			$item = array();
+
+			$log_meta   = get_post_custom( $log->ID );
+			$user_info  = isset( $log_meta['_edd_log_user_info'] ) ? maybe_unserialize( $log_meta['_edd_log_user_info'][0] ) : array();
+			$payment_id = isset( $log_meta['_edd_log_payment_id'] ) ? $log_meta['_edd_log_payment_id'][0] : false;
+
+			$payment_customer_id = edd_get_payment_customer_id( $payment_id );
+			$payment_customer    = new EDD_Customer( $payment_customer_id );
+			$user_id             = ( $payment_customer->user_id > 0 ) ? $payment_customer->user_id : false;
+			$ip                  = $log_meta['_edd_log_ip'][0];
+			$files               = edd_get_payment_meta_downloads( $payment_id );
+			$files               = edd_get_download_files( $files[0]['id'] );
+			$file_id             = (int) $log_meta['_edd_log_file_id'][0];
+			$file_id             = $file_id !== false ? $file_id : 0;
+			$file_name           = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
+
+			$item = array(
+				'ID'           => $log->ID,
+				'user_id'      => $user_id,
+				'product_id'   => $log->post_parent,
+				'product_name' => get_the_title( $log->post_parent ),
+				'customer_id'  => $payment_customer_id,
+				'payment_id'   => $payment_id,
+				'file'         => $file_name,
+				'ip'           => $ip,
+				'date'         => $log->post_date,
+			);
+
+			$item = apply_filters( 'edd_api_download_log_item', $item, $log, $log_meta );
+
+			$downloads['download_logs'][] = $item;
+
+		}
+
+		return $downloads;
 	}
 
 	/**

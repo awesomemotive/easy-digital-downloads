@@ -124,9 +124,9 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$inactive_count = '&nbsp;<span class="count">(' . $this->inactive_count  . ')</span>';
 
 		$views = array(
-			'all'      => sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'status', $base ), $current === 'all' || $current == '' ? ' class="current"' : '', __('All','easy-digital-downloads' ) . $total_count ),
-			'active'   => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'active', $base ), $current === 'active' ? ' class="current"' : '', __('Active','easy-digital-downloads' ) . $active_count ),
-			'inactive' => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'inactive', $base ), $current === 'inactive' ? ' class="current"' : '', __('Inactive','easy-digital-downloads' ) . $inactive_count ),
+			'all'      => sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'status', $base ), $current === 'all' || $current == '' ? ' class="current"' : '', __('All', 'easy-digital-downloads') . $total_count ),
+			'active'   => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'active', $base ), $current === 'active' ? ' class="current"' : '', __('Active', 'easy-digital-downloads') . $active_count ),
+			'inactive' => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'inactive', $base ), $current === 'inactive' ? ' class="current"' : '', __('Inactive', 'easy-digital-downloads') . $inactive_count ),
 		);
 
 		return $views;
@@ -164,7 +164,11 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 */
 	public function get_sortable_columns() {
 		return array(
-			'name'   => array( 'name', false )
+			'name'       => array( 'name', false ),
+			'code'       => array( 'code', false ),
+			'uses'       => array( 'uses', false ),
+			'start_date' => array( 'start', false ),
+			'expiration' => array( 'expiration', false ),
 		);
 	}
 
@@ -358,15 +362,23 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$meta_key = isset( $_GET['meta_key'] ) ? $_GET['meta_key']                 : null;
 		$search   = isset( $_GET['s'] )        ? sanitize_text_field( $_GET['s'] ) : null;
 
-		$discounts = edd_get_discounts( array(
+		$args = array(
 			'posts_per_page' => $per_page,
 			'paged'          => isset( $_GET['paged'] ) ? $_GET['paged'] : 1,
 			'orderby'        => $orderby,
 			'order'          => $order,
 			'post_status'    => $status,
 			'meta_key'       => $meta_key,
-			's'              => $search,
-		) );
+			's'              => $search
+		);
+
+		if( array_key_exists( $orderby, $this->get_sortable_columns() ) && 'name' != $orderby ) {
+
+			$args['orderby']  = 'meta_value';
+			$args['meta_key'] = '_edd_discount_' . $orderby;
+		}
+
+		$discounts = edd_get_discounts( $args );
 
 		if ( $discounts ) {
 			foreach ( $discounts as $discount ) {
