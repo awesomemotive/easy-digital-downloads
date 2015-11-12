@@ -327,6 +327,7 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/theme-compatibility.php';
 		}
 
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-register-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/install.php';
 	}
 
@@ -416,8 +417,8 @@ endif; // End if class_exists check.
 
 
 /**
- * The main function for that returns Easy_Digital_Downloads 
- * 
+ * The main function for that returns Easy_Digital_Downloads
+ *
  * The main function responsible for returning the one true Easy_Digital_Downloads
  * Instance to functions everywhere.
  *
