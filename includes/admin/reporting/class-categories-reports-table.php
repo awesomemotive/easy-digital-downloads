@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Gateways Reports Table Class
+ * Earnings by Category Reports Table Class
  *
  * @package     EDD
  * @subpackage  Admin/Reports
@@ -42,6 +42,18 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 			'plural'    => edd_get_label_plural(),    	// Plural name of the listed records
 			'ajax'      => false             			// Does this table support ajax?
 		) );
+	}
+
+	/**
+	 * Gets the name of the primary column.
+	 *
+	 * @since 2.5
+	 * @access protected
+	 *
+	 * @return string Name of the primary column.
+	 */
+	protected function get_primary_column_name() {
+		return 'label';
 	}
 
 	/**
@@ -353,9 +365,9 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 	 *
 	 * @access public
 	 * @since 2.4
-	 * @uses EDD_Gateawy_Reports_Table::get_columns()
-	 * @uses EDD_Gateawy_Reports_Table::get_sortable_columns()
-	 * @uses EDD_Gateawy_Reports_Table::reports_data()
+	 * @uses EDD_Categories_Reports_Table::get_columns()
+	 * @uses EDD_Categories_Reports_Table::get_sortable_columns()
+	 * @uses EDD_Categories_Reports_Table::reports_data()
 	 * @return void
 	 */
 	public function prepare_items() {

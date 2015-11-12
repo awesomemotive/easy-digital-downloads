@@ -441,6 +441,7 @@ function edd_count_payments( $args = array() ) {
 
 	$args = wp_parse_args( $args, $defaults );
 
+	$select = "SELECT p.post_status,count( * ) AS num_posts";
 	$join = '';
 	$where = "WHERE p.post_type = 'edd_payment'";
 
@@ -477,6 +478,17 @@ function edd_count_payments( $args = array() ) {
 			$where .= "
 				AND m.meta_key = '{$field}'
 				AND m.meta_value = '{$args['s']}'";
+
+		} elseif ( '#' == substr( $args['s'], 0, 1 ) ) {
+
+			$search = str_replace( '#:', '', $args['s'] );
+			$search = str_replace( '#', '', $search );
+
+			$select = "SELECT p2.post_status,count( * ) AS num_posts ";
+			$join   = "LEFT JOIN $wpdb->postmeta m ON m.meta_key = '_edd_log_payment_id' AND m.post_id = p.ID ";
+			$join  .= "INNER JOIN $wpdb->posts p2 ON m.meta_value = p2.ID ";
+			$where  = "WHERE p.post_type = 'edd_log' ";
+			$where .= "AND p.post_parent = {$search} ";
 
 		} elseif ( is_numeric( $args['s'] ) ) {
 
@@ -545,7 +557,7 @@ function edd_count_payments( $args = array() ) {
 	$where = apply_filters( 'edd_count_payments_where', $where );
 	$join  = apply_filters( 'edd_count_payments_join', $join );
 
-	$query = "SELECT p.post_status,count( * ) AS num_posts
+	$query = "$select
 		FROM $wpdb->posts p
 		$join
 		$where
