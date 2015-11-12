@@ -105,7 +105,7 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 /* Payment Details
 -------------------------------------------------------------- */
 .edd-admin-box .label { font-weight: 600; }
-.edd-admin-box-inside { margin: 0; padding: 3px 12px; clear: both; border-bottom: 1px solid #eee; }
+.edd-admin-box-inside { margin: 0; padding: 3px 12px; clear: both; border-bottom: 1px solid #eee; word-break: break-word; }
 .rtl .edd-admin-box-inside { padding: 5px 10px 5px 0; }
 .edd-admin-box-inside .strong { font-weight: 600; }
 .edd-payment-fees .fee-label { font-weight: normal; color: #666; }
@@ -203,8 +203,11 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 }
 
 /** Stats */
-#edd_product_stats .label { width: 70px; display: inline-block; }
+#edd_product_stats .label { display: inline-block; }
 #edd_product_stats hr { border-style: solid; border-width: 1px; border-color: #ccc #fff #fff #ccc; }
+#edd_product_stats .product-sales-stats:before, #edd_product_stats .product-earnings-stats:before { color: #82878c; font: normal 20px/1 'dashicons'; speak: none; display: inline-block; padding: 0 2px 0 0; top: 0; left: -1px; position: relative; vertical-align: top; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-decoration: none !important; }
+#edd_product_stats .product-sales-stats:before { content: '\f174'; }
+#edd_product_stats .product-earnings-stats:before { content: '\f239'; }
 
 /* Dashboard Widget Styles
 -------------------------------------------------------------- */

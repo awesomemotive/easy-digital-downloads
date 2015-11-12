@@ -224,7 +224,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			'amount'   => __( 'Amount', 'easy-digital-downloads' ),
 			'date'     => __( 'Date', 'easy-digital-downloads' ),
 			'customer' => __( 'Customer', 'easy-digital-downloads' ),
-			'status'   => __( 'Status', 'easy-digital-downloads' )
+			'status'   => __( 'Status', 'easy-digital-downloads' ),
 		);
 
 		return apply_filters( 'edd_payments_table_columns', $columns );
@@ -365,9 +365,14 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	public function column_customer( $payment ) {
 
 		$customer_id = edd_get_payment_customer_id( $payment->ID );
-		$customer    = new EDD_Customer( $customer_id );
 
-		$value = '<a href="' . esc_url( add_query_arg( array( 'user' => urlencode( $customer->email ), 'paged' => false ) ) ) . '">' . $customer->name . '</a>';
+		if( ! empty( $customer_id ) ) {
+			$customer    = new EDD_Customer( $customer_id );
+			$value = '<a href="' . esc_url( admin_url( "edit.php?post_type=download&page=edd-customers&view=overview&id=$customer_id" ) ) . '">' . $customer->name . '</a>';
+		} else {
+			$email = edd_get_payment_user_email( $payment->ID );
+			$value = '<a href="' . esc_url( admin_url( "edit.php?post_type=download&page=edd-payment-history&s=$email" ) ) . '">' . __( '(customer missing)', 'easy-digital-downloads' ) . '</a>';
+		}
 		return apply_filters( 'edd_payments_table_column', $value, $payment->ID, 'user' );
 	}
 

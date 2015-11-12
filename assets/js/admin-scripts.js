@@ -769,14 +769,15 @@ jQuery(document).ready(function ($) {
 				if ( parseInt( download_id ) != 0 ) {
 					var data = {
 						action : 'edd_check_for_download_price_variations',
-						download_id: download_id
+						download_id: download_id,
+						all_prices: true
 					};
 
 					var price_options_select = $('.edd_price_options_select');
 
 					$.post(ajaxurl, data, function(response) {
 						price_options_select.remove();
-						$this.after( response );
+						$('#edd_customer_export_download_chosen').after( response );
 					});
 				} else {
 					price_options_select.remove();
@@ -1488,16 +1489,18 @@ jQuery(document).ready(function ($) {
 		$('.edd_user_search_results span').html('');
 	});
 
-	$.ajax({
-		type: "GET",
-		data: {
-			action: 'edd_load_dashboard_widget'
-		},
-		url: ajaxurl,
-		success: function (response) {
-			$('#edd_dashboard_sales .inside').html( response );
-		}
-	});
+	if( $('#edd_dashboard_sales').length ) {
+		$.ajax({
+			type: "GET",
+			data: {
+				action: 'edd_load_dashboard_widget'
+			},
+			url: ajaxurl,
+			success: function (response) {
+				$('#edd_dashboard_sales .inside').html( response );
+			}
+		});
+	}
 
 	$(document).on('keydown', '.customer-note-input', function(e) {
 		if(e.keyCode == 13 && (e.metaKey || e.ctrlKey)) {
