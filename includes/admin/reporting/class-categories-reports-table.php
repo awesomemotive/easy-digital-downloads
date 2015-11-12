@@ -37,14 +37,14 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Gets the name of the default primary column.
+	 * Gets the name of the primary column.
 	 *
 	 * @since 2.5
 	 * @access protected
 	 *
-	 * @return string Name of the default primary column.
+	 * @return string Name of the primary column.
 	 */
-	protected function get_default_primary_column_name() {
+	protected function get_primary_column_name() {
 		return 'label';
 	}
 
