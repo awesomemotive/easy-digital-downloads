@@ -70,9 +70,9 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		global $status, $page;
 
 		parent::__construct( array(
-			'singular'  => 'discount',  // Singular name of the listed records
-			'plural'    => 'discounts', // Plural name of the listed records
-			'ajax'      => false        // Does this table support ajax?
+			'singular' => 'discount',
+			'plural'   => 'discounts',
+			'ajax'     => false,
 		) );
 
 		$this->get_discount_code_counts();
@@ -124,9 +124,9 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$inactive_count = '&nbsp;<span class="count">(' . $this->inactive_count  . ')</span>';
 
 		$views = array(
-			'all'		=> sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'status', $base ), $current === 'all' || $current == '' ? ' class="current"' : '', __('All','easy-digital-downloads' ) . $total_count ),
-			'active'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'active', $base ), $current === 'active' ? ' class="current"' : '', __('Active','easy-digital-downloads' ) . $active_count ),
-			'inactive'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'inactive', $base ), $current === 'inactive' ? ' class="current"' : '', __('Inactive','easy-digital-downloads' ) . $inactive_count ),
+			'all'      => sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'status', $base ), $current === 'all' || $current == '' ? ' class="current"' : '', __('All','easy-digital-downloads' ) . $total_count ),
+			'active'   => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'active', $base ), $current === 'active' ? ' class="current"' : '', __('Active','easy-digital-downloads' ) . $active_count ),
+			'inactive' => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'inactive', $base ), $current === 'inactive' ? ' class="current"' : '', __('Inactive','easy-digital-downloads' ) . $inactive_count ),
 		);
 
 		return $views;
@@ -141,15 +141,15 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'cb'        => '<input type="checkbox" />',
-			'name'  	=> __( 'Name', 'easy-digital-downloads' ),
-			'code'  	=> __( 'Code', 'easy-digital-downloads' ),
-			'amount'  	=> __( 'Amount', 'easy-digital-downloads' ),
-			'uses'  	=> __( 'Uses', 'easy-digital-downloads' ),
-			'max_uses' 	=> __( 'Max Uses', 'easy-digital-downloads' ),
-			'start_date'=> __( 'Start Date', 'easy-digital-downloads' ),
-			'expiration'=> __( 'Expiration', 'easy-digital-downloads' ),
-			'status'  	=> __( 'Status', 'easy-digital-downloads' ),
+			'cb'         => '<input type="checkbox" />',
+			'name'       => __( 'Name', 'easy-digital-downloads' ),
+			'code'       => __( 'Code', 'easy-digital-downloads' ),
+			'amount'     => __( 'Amount', 'easy-digital-downloads' ),
+			'uses'       => __( 'Uses', 'easy-digital-downloads' ),
+			'max_uses'   => __( 'Max Uses', 'easy-digital-downloads' ),
+			'start_date' => __( 'Start Date', 'easy-digital-downloads' ),
+			'expiration' => __( 'Expiration', 'easy-digital-downloads' ),
+			'status'     => __( 'Status', 'easy-digital-downloads' ),
 		);
 
 		return $columns;
@@ -169,14 +169,14 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Gets the name of the default primary column.
+	 * Gets the name of the primary column.
 	 *
 	 * @since 2.5
 	 * @access protected
 	 *
-	 * @return string Name of the default primary column.
+	 * @return string Name of the primary column.
 	 */
-	protected function get_default_primary_column_name() {
+	protected function get_primary_column_name() {
 		return 'name';
 	}
 
@@ -283,7 +283,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$actions = array(
 			'activate'   => __( 'Activate', 'easy-digital-downloads' ),
 			'deactivate' => __( 'Deactivate', 'easy-digital-downloads' ),
-			'delete'     => __( 'Delete', 'easy-digital-downloads' )
+			'delete'     => __( 'Delete', 'easy-digital-downloads' ),
 		);
 
 		return $actions;
@@ -352,11 +352,11 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 
 		$per_page = $this->per_page;
 
-		$orderby 		= isset( $_GET['orderby'] )  ? $_GET['orderby']                  : 'ID';
-		$order 			= isset( $_GET['order'] )    ? $_GET['order']                    : 'DESC';
-		$status 		= isset( $_GET['status'] )   ? $_GET['status']                   : array( 'active', 'inactive' );
-		$meta_key		= isset( $_GET['meta_key'] ) ? $_GET['meta_key']                 : null;
-		$search         = isset( $_GET['s'] )        ? sanitize_text_field( $_GET['s'] ) : null;
+		$orderby  = isset( $_GET['orderby'] )  ? $_GET['orderby']                  : 'ID';
+		$order    = isset( $_GET['order'] )    ? $_GET['order']                    : 'DESC';
+		$status   = isset( $_GET['status'] )   ? $_GET['status']                   : array( 'active', 'inactive' );
+		$meta_key = isset( $_GET['meta_key'] ) ? $_GET['meta_key']                 : null;
+		$search   = isset( $_GET['s'] )        ? sanitize_text_field( $_GET['s'] ) : null;
 
 		$discounts = edd_get_discounts( array(
 			'posts_per_page' => $per_page,
@@ -365,7 +365,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 			'order'          => $order,
 			'post_status'    => $status,
 			'meta_key'       => $meta_key,
-			's'              => $search
+			's'              => $search,
 		) );
 
 		if ( $discounts ) {
@@ -397,15 +397,15 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 				}
 
 				$discount_codes_data[] = array(
-					'ID' 			=> $discount->ID,
-					'name' 			=> get_the_title( $discount->ID ),
-					'code' 			=> edd_get_discount_code( $discount->ID ),
-					'amount' 		=> edd_format_discount_rate( edd_get_discount_type( $discount->ID ), edd_get_discount_amount( $discount->ID ) ),
-					'uses' 			=> $uses,
-					'max_uses' 		=> $max_uses,
-					'start_date' 	=> $discount_start_date,
-					'expiration'	=> $expiration,
-					'status'		=> edd_is_discount_expired( $discount->ID ) ? 'expired' : $discount->post_status,
+					'ID'         => $discount->ID,
+					'name'       => get_the_title( $discount->ID ),
+					'code'       => edd_get_discount_code( $discount->ID ),
+					'amount'     => edd_format_discount_rate( edd_get_discount_type( $discount->ID ), edd_get_discount_amount( $discount->ID ) ),
+					'uses'       => $uses,
+					'max_uses'   => $max_uses,
+					'start_date' => $discount_start_date,
+					'expiration' => $expiration,
+					'status'     => edd_is_discount_expired( $discount->ID ) ? 'expired' : $discount->post_status,
 				);
 			}
 		}
@@ -461,7 +461,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$this->set_pagination_args( array(
 				'total_items' => $total_items,
 				'per_page'    => $per_page,
-				'total_pages' => ceil( $total_items / $per_page )
+				'total_pages' => ceil( $total_items / $per_page ),
 			)
 		);
 	}

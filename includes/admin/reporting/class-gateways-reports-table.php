@@ -44,22 +44,22 @@ class EDD_Gateawy_Reports_Table extends WP_List_Table {
 
 		// Set parent defaults
 		parent::__construct( array(
-			'singular'  => edd_get_label_singular(),    // Singular name of the listed records
-			'plural'    => edd_get_label_plural(),    	// Plural name of the listed records
-			'ajax'      => false             			// Does this table support ajax?
+			'singular' => edd_get_label_singular(),
+			'plural'   => edd_get_label_plural(),
+			'ajax'     => false,
 		) );
 
 	}
 
 	/**
-	 * Gets the name of the default primary column.
+	 * Gets the name of the primary column.
 	 *
 	 * @since 2.5
 	 * @access protected
 	 *
-	 * @return string Name of the default primary column.
+	 * @return string Name of the primary column.
 	 */
-	protected function get_default_primary_column_name() {
+	protected function get_primary_column_name() {
 		return 'label';
 	}
 
@@ -90,7 +90,7 @@ class EDD_Gateawy_Reports_Table extends WP_List_Table {
 			'label'          => __( 'Gateway', 'easy-digital-downloads' ),
 			'complete_sales' => __( 'Complete Sales', 'easy-digital-downloads' ),
 			'pending_sales'  => __( 'Pending / Failed Sales', 'easy-digital-downloads' ),
-			'total_sales'    => __( 'Total Sales', 'easy-digital-downloads' )
+			'total_sales'    => __( 'Total Sales', 'easy-digital-downloads' ),
 		);
 
 		return $columns;
@@ -144,7 +144,7 @@ class EDD_Gateawy_Reports_Table extends WP_List_Table {
 				'label'          => $gateway['admin_label'],
 				'complete_sales' => edd_format_amount( $complete_count, false ),
 				'pending_sales'  => edd_format_amount( $pending_count, false ),
-				'total_sales'    => edd_format_amount( $complete_count + $pending_count, false )
+				'total_sales'    => edd_format_amount( $complete_count + $pending_count, false ),
 			);
 		}
 
