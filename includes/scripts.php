@@ -171,7 +171,19 @@ function edd_load_admin_scripts( $hook ) {
 	wp_register_script( 'jquery-chosen', $js_dir . 'chosen.jquery' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
 	wp_enqueue_script( 'jquery-chosen' );
 
-	wp_register_script( 'edd-admin-scripts', $js_dir . 'admin-scripts' . $suffix . '.js', array( 'jquery', 'inline-edit-post' ), EDD_VERSION, false );
+	$admin_deps = array();
+	if ( empty( $_GET['action'] ) && 'download' === $_GET['post_type'] ) {
+		if ( 'edit-tags.php' === $hook || 'edit.php' === $hook ) {
+			$admin_deps = array(
+				'jquery',
+				'inline-edit-post',
+			);
+		}
+	} else {
+		$admin_deps = array( 'jquery' );
+	}
+
+	wp_register_script( 'edd-admin-scripts', $js_dir . 'admin-scripts' . $suffix . '.js', $admin_deps, EDD_VERSION, false );
 	wp_enqueue_script( 'edd-admin-scripts' );
 
 	wp_localize_script( 'edd-admin-scripts', 'edd_vars', array(
