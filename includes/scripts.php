@@ -172,7 +172,7 @@ function edd_load_admin_scripts( $hook ) {
 	wp_enqueue_script( 'jquery-chosen' );
 
 	$admin_deps = array();
-	if ( empty( $_GET['action'] ) && 'download' === $_GET['post_type'] ) {
+	if ( empty( $_GET['action'] ) && ( isset( $_GET['post_type'] ) && 'download' === $_GET['post_type'] ) ) {
 		if ( 'edit-tags.php' === $hook || 'edit.php' === $hook ) {
 			$admin_deps = array(
 				'jquery',
