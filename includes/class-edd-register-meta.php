@@ -69,9 +69,9 @@ class EDD_Register_Meta {
 		register_meta( 'post', '_edd_download_earnings' , 'edd_sanitize_amount' );
 		register_meta( 'post', '_edd_download_sales'    , array( $this, 'intval_wrapper' ) );
 		register_meta( 'post', 'edd_price'              , 'edd_sanitize_amount' );
-		register_meta( 'post', 'edd_variable_prices'    , '' );
-		register_meta( 'post', 'edd_download_files'     , '' );
-		register_meta( 'post', '_edd_bundled_products'  , '' );
+		register_meta( 'post', 'edd_variable_prices'    , array( $this, 'sanitize_array' ) );
+		register_meta( 'post', 'edd_download_files'     , array( $this, 'sanitize_array' ) );
+		register_meta( 'post', '_edd_bundled_products'  , array( $this, 'sanitize_array' ) );
 		register_meta( 'post', '_edd_button_behavior'   , 'sanitize_text_field' );
 		register_meta( 'post', '_edd_default_price_id'  , array( $this, 'intval_wrapper' ) );
 	}
@@ -90,8 +90,8 @@ class EDD_Register_Meta {
 		register_meta( 'post', '_edd_payment_purchase_key', 'sanitize_text_field' );
 		register_meta( 'post', '_edd_payment_total',        'edd_sanitize_amount' );
 		register_meta( 'post', '_edd_payment_mode',         'sanitize_text_field' );
-		register_meta( 'post', '_edd_payment_gateway',      'santiize_text_field' );
-		register_meta( 'post', '_edd_payment_meta',         '' );
+		register_meta( 'post', '_edd_payment_gateway',      'sanitize_text_field' );
+		register_meta( 'post', '_edd_payment_meta',         array( $this, 'sanitize_array' ) );
 		register_meta( 'post', '_edd_payment_tax',          'edd_sanitize_amount' );
 		register_meta( 'post', '_edd_completed_date',       'sanitize_text_field' );
 	}
@@ -106,6 +106,23 @@ class EDD_Register_Meta {
 	 */
 	public function intval_wrapper( $value ) {
 		return intval( $value );
+	}
+
+	public function sanitize_array( $value = array() ) {
+
+		if ( ! is_array( $value ) ) {
+
+			if ( is_object( $value ) ) {
+				$value = (array) $value;
+			}
+
+			if ( is_serialized( $value ) ) {
+				$value = (array) maybe_unserialize( $value );
+			}
+
+		}
+
+		return $value;
 	}
 
 }
