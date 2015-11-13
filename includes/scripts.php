@@ -172,13 +172,8 @@ function edd_load_admin_scripts( $hook ) {
 	wp_enqueue_script( 'jquery-chosen' );
 
 	$admin_deps = array();
-	if ( empty( $_GET['action'] ) && ( isset( $_GET['post_type'] ) && 'download' === $_GET['post_type'] ) ) {
-		if ( 'edit-tags.php' === $hook || 'edit.php' === $hook ) {
-			$admin_deps = array(
-				'jquery',
-				'inline-edit-post',
-			);
-		}
+	if ( ! edd_is_admin_page( $hook, 'edit' ) && ! edd_is_admin_page( $hook, 'new' ) ) {
+		$admin_deps = array( 'jquery', 'inline-edit-post' );
 	} else {
 		$admin_deps = array( 'jquery' );
 	}
