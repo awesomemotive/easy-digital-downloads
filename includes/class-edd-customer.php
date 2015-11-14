@@ -333,6 +333,10 @@ class EDD_Customer {
 			return false;
 		}
 
+		if ( 'publish' !== edd_get_payment_status( $payment_id, false ) ) {
+			$update_stats = false;
+		}
+
 		$new_payment_ids = '';
 
 		if( ! empty( $this->payment_ids ) ) {
