@@ -70,9 +70,9 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		global $status, $page;
 
 		parent::__construct( array(
-			'singular'  => 'discount',  // Singular name of the listed records
-			'plural'    => 'discounts', // Plural name of the listed records
-			'ajax'      => false        // Does this table support ajax?
+			'singular' => 'discount',
+			'plural'   => 'discounts',
+			'ajax'     => false,
 		) );
 
 		$this->get_discount_code_counts();
@@ -170,6 +170,18 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 			'start_date' => array( 'start', false ),
 			'expiration' => array( 'expiration', false ),
 		);
+	}
+
+	/**
+	 * Gets the name of the primary column.
+	 *
+	 * @since 2.5
+	 * @access protected
+	 *
+	 * @return string Name of the primary column.
+	 */
+	protected function get_primary_column_name() {
+		return 'name';
 	}
 
 	/**
@@ -275,7 +287,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$actions = array(
 			'activate'   => __( 'Activate', 'easy-digital-downloads' ),
 			'deactivate' => __( 'Deactivate', 'easy-digital-downloads' ),
-			'delete'     => __( 'Delete', 'easy-digital-downloads' )
+			'delete'     => __( 'Delete', 'easy-digital-downloads' ),
 		);
 
 		return $actions;
@@ -361,7 +373,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		);
 
 		if( array_key_exists( $orderby, $this->get_sortable_columns() ) && 'name' != $orderby ) {
-			
+
 			$args['orderby']  = 'meta_value';
 			$args['meta_key'] = '_edd_discount_' . $orderby;
 		}
@@ -461,7 +473,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$this->set_pagination_args( array(
 				'total_items' => $total_items,
 				'per_page'    => $per_page,
-				'total_pages' => ceil( $total_items / $per_page )
+				'total_pages' => ceil( $total_items / $per_page ),
 			)
 		);
 	}
