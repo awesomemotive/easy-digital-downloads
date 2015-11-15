@@ -53,6 +53,11 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 	public function get_data() {
 
 		$customer    = new EDD_Customer( $this->customer_id );
+
+		if ( $this->step == 1 ) {
+			$customer->update( array( 'purchase_value' => 0 ) );
+		}
+
 		$payment_ids = explode( ',', $customer->payment_ids );
 
 		$offset     = ( $this->step - 1 ) * $this->per_step;
@@ -63,6 +68,11 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 			$step_total = 0;
 
 			foreach ( $step_items as $payment_id ) {
+				$payment = get_post( $payment_id );
+
+				if ( is_null( $payment ) ) {
+					continue;
+				}
 
 				$payment_amount  = edd_get_payment_amount( $payment_id );
 				$step_total     += $payment_amount;
@@ -92,7 +102,7 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 		$total       = count( $payment_ids );
 
 		if ( $this->step == 1 ) {
-			$customer->update( array('purchase_count' => $total, 'purchase_value' => 0 ) );
+			$customer->update( array( 'purchase_count' => $total ) );
 		}
 
 		$percentage = 100;
