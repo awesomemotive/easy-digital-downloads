@@ -333,7 +333,9 @@ class EDD_Customer {
 			return false;
 		}
 
-		if ( 'publish' !== edd_get_payment_status( $payment_id, false ) ) {
+		$status = edd_get_payment_status( $payment_id, false );
+
+		if ( 'publish' !== $status && 'revoked' !== $status ) {
 			$update_stats = false;
 		}
 
