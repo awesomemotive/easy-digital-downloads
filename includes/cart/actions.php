@@ -73,7 +73,7 @@ function edd_process_add_to_cart( $data ) {
 
 	if ( is_array( $options['price_id'] ) ) {
 		foreach ( $options['price_id'] as  $key => $price_id ) {
-			$options['quantity'][ $key ] = absint( $data[ 'edd_download_quantity_' . ( $key + 1 ) ] );
+			$options['quantity'][ $key ] = absint( $data[ 'edd_download_quantity_' . $price_id ] );
 		}
 	}
 
