@@ -70,7 +70,12 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 			foreach ( $step_items as $payment_id ) {
 				$payment = get_post( $payment_id );
 
-				if ( is_null( $payment ) ) {
+				if ( is_null( $payment ) || is_wp_error( $payment ) || 'edd_payment' !== $payment->post_type ) {
+
+					$missing_payments   = get_option( 'edd_stats_missing_payments' . $customer->id, array() );
+					$missing_payments[] = $payment_id;
+					update_option( 'edd_stats_missing_payments' . $customer->id, $missing_payments );
+
 					continue;
 				}
 
@@ -100,10 +105,6 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 		$customer    = new EDD_Customer( $this->customer_id );
 		$payment_ids = explode( ',', $customer->payment_ids );
 		$total       = count( $payment_ids );
-
-		if ( $this->step == 1 ) {
-			$customer->update( array( 'purchase_count' => $total ) );
-		}
 
 		$percentage = 100;
 
@@ -146,6 +147,25 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 			$this->done = false;
 			return true;
 		} else {
+			$customer         = new EDD_Customer( $this->customer_id );
+			$payment_ids      = explode( ',', $customer->payment_ids );
+			$removed_payments = array_unique( get_option( 'edd_stats_missing_payments' . $customer->id, array() ) );
+
+			if ( ! empty( $removed_payments ) ) {
+
+				foreach( $payment_ids as $key => $payment_id ) {
+					if ( in_array( $payment_id, $removed_payments ) ) {
+						unset( $payment_ids[ $key ] );
+					}
+				}
+
+				delete_option( 'edd_stats_missing_payments' . $customer->id );
+			}
+
+			$purchase_count = count( $payment_ids );
+			$payment_ids    = implode( ',', $payment_ids );
+			$customer->update( array( 'payment_ids' => $payment_ids, 'purchase_count' => $purchase_count ) );
+
 			$this->done    = true;
 			$this->message = __( 'Customer stats successfully recounted.', 'easy-digital-downloads' );
 			return false;
