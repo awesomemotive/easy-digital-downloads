@@ -72,8 +72,7 @@ function edd_add_ons_page() {
  * @return void
  */
 function edd_add_ons_get_feed( $tab = 'popular' ) {
-	//$cache = get_transient( 'easydigitaldownloads_add_ons_feed_' . $tab );
-	$cache = false;
+	$cache = get_transient( 'easydigitaldownloads_add_ons_feed_' . $tab );
 
 	if ( false === $cache ) {
 		//$url = 'https://easydigitaldownloads.com/?feed=addons';
