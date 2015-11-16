@@ -24,7 +24,7 @@ a.edd-delete:hover { color: #f00; }
 
 /* =Add Ons Styles
 -------------------------------------------------------------- */
-.edd-tab-span { float: right; bottom: 15px; position: relative; }
+.edd-tab-span { float: right; bottom: 13px; position: relative; }
 .edd-add-ons-footer { padding-top: 10px; }
 #edd-add-ons h2 { margin: 0 0 15px; }
 #edd-add-ons h2 .button-primary { position: absolute; }
