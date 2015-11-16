@@ -75,8 +75,8 @@ function edd_add_ons_get_feed( $tab = 'popular' ) {
 	$cache = get_transient( 'easydigitaldownloads_add_ons_feed_' . $tab );
 
 	if ( false === $cache ) {
-		//$url = 'https://easydigitaldownloads.com/?feed=addons';
-		$url = 'http://local.dev/sl/?feed=addons';
+		$url = 'https://easydigitaldownloads.com/?feed=addons';
+
 		if ( 'popular' !== $tab ) {
 			$url = add_query_arg( array( 'display' => $tab ), $url );
 		}
