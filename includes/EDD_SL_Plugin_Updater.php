@@ -295,13 +295,6 @@ class EDD_SL_Plugin_Updater {
             'url'        => home_url()
         );
 
-	$cache_key = md5( 'edd_plugin_' . sanitize_key( $api_params['license'] . $api_params['item_name'] . $api_params['item_id'] ) . '_' . $api_params['edd_action'] );
-	$cached_response = get_transient( $cache_key );
-	if ( $cached_response ) {
-		// if this has been checked within 24 hours, don't check again
-		return $cached_response;
-	}
-
         $request = wp_remote_post( $this->api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
 
         if ( ! is_wp_error( $request ) ) {
@@ -313,8 +306,6 @@ class EDD_SL_Plugin_Updater {
         } else {
             $request = false;
         }
-
-	set_transient( $cache_key, $request, 60*60*24 );
 
         return $request;
     }
