@@ -272,7 +272,12 @@ final class EDD_Amazon_Payments {
 			'amazon_register' => array(
 				'id'   => 'amazon_register',
 				'name' => __( 'Register with Amazon', 'easy-digital-downloads' ),
-				'desc' => sprintf( __( '<p><a href="%s" class="button" target="_blank">Connect Easy Digital Downloads to Amazon</a></p><p class="description">Once registration is complete, enter your API credentials below.</p>', 'easy-digital-downloads' ), $this->get_registration_url() ),
+				'desc' => '<p><a href="' . $this->get_registration_url() . '" class="button" target="_blank">' .
+						__( 'Connect Easy Digital Downloads to Amazon', 'easy-digital-downloads' ) .
+						'</a></p>' .
+						'<p class="description">' .
+						__( 'Once registration is complete, enter your API credentials below.', 'easy-digital-downloads' ) .
+						'</p>',
 				'type' => 'descriptive_text',
 			),
 			'amazon_seller_id' => array(
