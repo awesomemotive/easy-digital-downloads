@@ -330,7 +330,7 @@ class EDD_Welcome {
 						<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/edit-download.png'; ?>" class="edd-welcome-screenshots"/>
 					</div>
 					<div class="feature-section-content">
-						<h4><a href="<?php echo admin_url( 'post-new.php?post_type=download' ) ?>"><?php _e( '&rarr; Add New', 'easy-digital-downloads' ); ?></a></h4>
+						<h4><a href="<?php echo admin_url( 'post-new.php?post_type=download' ) ?>"><?php printf( __( '%s &rarr; Add New', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></a></h4>
 						<p><?php printf( __( 'The %s menu is your access point for all aspects of your Easy Digital Downloads product creation and setup. To create your first product, simply click Add New and then fill out the product details.', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></p>
 
 
