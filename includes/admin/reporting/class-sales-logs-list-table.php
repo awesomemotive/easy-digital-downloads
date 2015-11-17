@@ -43,12 +43,24 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 		// Set parent defaults
 		parent::__construct( array(
-			'singular'  => edd_get_label_singular(),
-			'plural'    => edd_get_label_plural(),
-			'ajax'      => false,
+			'singular' => edd_get_label_singular(),
+			'plural'   => edd_get_label_plural(),
+			'ajax'     => false,
 		) );
 
 		add_action( 'edd_log_view_actions', array( $this, 'downloads_filter' ) );
+	}
+
+	/**
+	 * Gets the name of the primary column.
+	 *
+	 * @since 2.5
+	 * @access protected
+	 *
+	 * @return string Name of the primary column.
+	 */
+	protected function get_primary_column_name() {
+		return 'ID';
 	}
 
 	/**
@@ -104,13 +116,12 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'ID'         => __( 'Log ID', 'edd' ),
-			'user_id'    => __( 'User', 'edd' ),
+			'ID'         => __( 'Log ID', 'easy-digital-downloads' ),
+			'user_id'    => __( 'User', 'easy-digital-downloads' ),
 			'download'   => edd_get_label_singular(),
-			'item_price' => __( 'Item Price', 'edd' ),
-			'amount'     => __( 'Sale Amount', 'edd' ),
-			'payment_id' => __( 'Payment ID', 'edd' ),
-			'date'       => __( 'Date', 'edd' ),
+			'amount'     => __( 'Item Amount', 'easy-digital-downloads' ),
+			'payment_id' => __( 'Payment ID', 'easy-digital-downloads' ),
+			'date'       => __( 'Date', 'easy-digital-downloads' ),
 		);
 
 		return $columns;
@@ -368,9 +379,9 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 		$total_items           = $edd_logs->get_log_count( $this->get_filtered_download(), 'sale', $this->get_meta_query() );
 
 		$this->set_pagination_args( array(
-				'total_items'  => $total_items,
-				'per_page'     => $this->per_page,
-				'total_pages'  => ceil( $total_items / $this->per_page ),
+				'total_items' => $total_items,
+				'per_page'    => $this->per_page,
+				'total_pages' => ceil( $total_items / $this->per_page ),
 			)
 		);
 	}
