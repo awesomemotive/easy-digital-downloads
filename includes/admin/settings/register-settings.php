@@ -496,8 +496,8 @@ function edd_get_registered_settings() {
 				),
 				'disable_admin_notices' => array(
 					'id'   => 'disable_admin_notices',
-					'name' => __( 'Disable Admin Notifications', 'edd' ),
-					'desc' => __( 'Check this box if you do not want to receive sales notification emails.', 'edd' ),
+					'name' => __( 'Disable Admin Notifications', 'easy-digital-downloads' ),
+					'desc' => __( 'Check this box if you do not want to receive sales notification emails.', 'easy-digital-downloads' ),
 					'type' => 'checkbox'
 				)
 			)
@@ -715,8 +715,8 @@ function edd_get_registered_settings() {
 				),
 				'sequential_start' => array(
 					'id'   => 'sequential_start',
-					'name' => __( 'Sequential Starting Number', 'edd' ),
-					'desc' => __( 'The number at which the sequence should begin.', 'edd' ),
+					'name' => __( 'Sequential Starting Number', 'easy-digital-downloads' ),
+					'desc' => __( 'The number at which the sequence should begin.', 'easy-digital-downloads' ),
 					'type' => 'number',
 					'size' => 'small',
 					'std'  => '1'
@@ -1087,7 +1087,7 @@ function edd_payment_icons_callback( $args ) {
 
 						}
 
-						$image = str_replace( $content_dir, WP_CONTENT_URL, $image );
+						$image = str_replace( $content_dir, content_url(), $image );
 
 					}
 

@@ -16,11 +16,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Get the contents of the cart
  *
  * @since 1.0
- * @return mixed array if cart isn't empty | false otherwise
+ * @return array Returns an array of cart contents, or an empty array if no items in the cart
  */
 function edd_get_cart_contents() {
 	$cart = EDD()->session->get( 'edd_cart' );
-	$cart = ! empty( $cart ) ? array_values( $cart ) : false;
+	$cart = ! empty( $cart ) ? array_values( $cart ) : array();
+
 	return apply_filters( 'edd_cart_contents', $cart );
 }
 
@@ -129,7 +130,6 @@ function edd_get_cart_quantity() {
  * @return string Cart key of the new item
  */
 function edd_add_to_cart( $download_id, $options = array() ) {
-
 	$download = get_post( $download_id );
 
 	if( 'download' != $download->post_type )
@@ -149,7 +149,19 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 	}
 
 	if( isset( $options['quantity'] ) ) {
-		$quantity = absint( preg_replace( '/[^0-9\.]/', '', $options['quantity'] ) );
+		if ( is_array( $options['quantity'] ) ) {
+
+			$quantity = array();
+			foreach ( $options['quantity'] as $q ) {
+				$quantity[] = absint( preg_replace( '/[^0-9\.]/', '', $q ) );
+			}
+
+		} else {
+
+			$quantity = absint( preg_replace( '/[^0-9\.]/', '', $options['quantity'] ) );
+
+		}
+
 		unset( $options['quantity'] );
 	} else {
 		$quantity = 1;
@@ -163,14 +175,14 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 	if ( isset( $options['price_id'] ) && is_array( $options['price_id'] ) ) {
 
 		// Process multiple price options at once
-		foreach ( $options['price_id'] as $price ) {
+		foreach ( $options['price_id'] as $key => $price ) {
 
 			$items[] = array(
 				'id'           => $download_id,
 				'options'      => array(
 					'price_id' => preg_replace( '/[^0-9\.-]/', '', $price )
 				),
-				'quantity'     => $quantity
+				'quantity'     => $quantity[ $key ],
 			);
 
 		}

@@ -333,6 +333,12 @@ class EDD_Customer {
 			return false;
 		}
 
+		$status = edd_get_payment_status( $payment_id, false );
+
+		if ( 'publish' !== $status && 'revoked' !== $status ) {
+			$update_stats = false;
+		}
+
 		$new_payment_ids = '';
 
 		if( ! empty( $this->payment_ids ) ) {

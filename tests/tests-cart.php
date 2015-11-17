@@ -108,6 +108,13 @@ class Test_Cart extends WP_UnitTestCase {
 		$this->assertEquals( 0, edd_add_to_cart( $this->_post->ID, $options ) );
 	}
 
+	public function test_empty_cart_is_array() {
+		$cart_contents = edd_get_cart_contents();
+
+		$this->assertInternalType( 'array', $cart_contents );
+		$this->assertEmpty( $cart_contents );
+	}
+
 	public function test_add_to_cart_multiple_price_ids_array() {
 
 		$options = array(
@@ -116,6 +123,20 @@ class Test_Cart extends WP_UnitTestCase {
 
 		edd_add_to_cart( $this->_post->ID, $options );
 		$this->assertEquals( 2, count( edd_get_cart_contents() ) );
+	}
+
+	public function test_add_to_cart_multiple_price_ids_array_with_quantity() {
+		add_filter( 'edd_item_quantities_enabled', '__return_true' );
+		$options = array(
+			'price_id' => array( 0, 1 ),
+			'quantity' => array( 2, 3 ),
+		);
+
+		edd_add_to_cart( $this->_post->ID, $options );
+		$this->assertEquals( 2, count( edd_get_cart_contents() ) );
+		$this->assertEquals( 2, edd_get_cart_item_quantity( $this->_post->ID, array( 'price_id' => 0 ) ) );
+		$this->assertEquals( 3, edd_get_cart_item_quantity( $this->_post->ID, array( 'price_id' => 1 ) ) );
+		remove_filter( 'edd_item_quantities_enabled', '__return_true' );
 	}
 
 	public function test_add_to_cart_multiple_price_ids_string() {
