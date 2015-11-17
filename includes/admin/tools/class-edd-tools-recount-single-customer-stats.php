@@ -78,7 +78,7 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 				$step_total     += $payment_amount;
 
 			}
-			$this->debug = array( 'step_total' => $step_total, 'running_total' => $pending_total );
+
 			$updated_total = $pending_total + $step_total;
 			update_option( 'edd_stats_customer_pending_total' . $customer->id, $updated_total );
 
