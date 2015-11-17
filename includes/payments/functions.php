@@ -437,6 +437,7 @@ function edd_count_payments( $args = array() ) {
 		's'          => null,
 		'start-date' => null,
 		'end-date'   => null,
+		'download'   => null,
 	);
 
 	$args = wp_parse_args( $args, $defaults );
@@ -510,6 +511,12 @@ function edd_count_payments( $args = array() ) {
 		} else {
 			$where .= "AND ((p.post_title LIKE '%{$args['s']}%') OR (p.post_content LIKE '%{$args['s']}%'))";
 		}
+
+	}
+
+	if ( ! empty( $args['download'] ) && is_numeric( $args['download'] ) ) {
+
+		$where .= $wpdb->prepare( " AND p.post_parent = %d", $args['download'] );
 
 	}
 

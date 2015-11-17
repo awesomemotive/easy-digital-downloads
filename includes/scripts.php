@@ -209,7 +209,10 @@ function edd_load_admin_scripts( $hook ) {
 		'new_media_ui'            => apply_filters( 'edd_use_35_media_ui', 1 ),
 		'remove_text'             => __( 'Remove', 'easy-digital-downloads' ),
 		'type_to_search'          => sprintf( __( 'Type to search %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
-		'quantities_enabled'      => edd_item_quantities_enabled()
+		'quantities_enabled'      => edd_item_quantities_enabled(),
+		'batch_export_no_class'   => __( 'You must choose a method.', 'easy-digital-downloads' ),
+		'batch_export_no_reqs'    => __( 'Required fields not completed.', 'easy-digital-downloads' ),
+		'reset_stats_warn'        => __( 'Are you sure you want to reset your store? This process is <strong><em>not reversible</em></strong>. Please be sure you have a recent backup.', 'easy-digital-downloads' ),
 	));
 
 	wp_enqueue_style( 'wp-color-picker' );

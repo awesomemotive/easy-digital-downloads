@@ -291,12 +291,21 @@ class EDD_Batch_Export extends EDD_Export {
 		edd_die();
 	}
 
-	/**
+	/*
 	 * Set the properties specific to the export
 	 *
 	 * @since 2.4.2
 	 * @param array $request The Form Data passed into the batch processing
 	 */
 	public function set_properties( $request ) {}
+
+	/**
+	 * Allow for prefetching of data for the remainder of the exporter
+	 *
+	 * @access public
+	 * @since  2.5
+	 * @return void
+	 */
+	public function pre_fetch() {}
 
 }
