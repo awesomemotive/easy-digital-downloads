@@ -1006,16 +1006,6 @@ function edd_render_stats_meta_box() {
 	$sales    = edd_get_download_sales_stats( $post->ID );
 ?>
 
-<<<<<<< HEAD
-	<p>
-		<strong class="label"><?php _e( 'Sales:', 'easy-digital-downloads' ); ?></strong>
-		<span><?php echo $sales; ?> &mdash; <a href="<?php echo admin_url( '/edit.php?page=edd-reports&view=sales&post_type=download&tab=logs&download=' . $post->ID ); ?>"><?php _e( 'View Sales Log', 'easy-digital-downloads' ); ?></a></span>
-	</p>
-
-	<p>
-		<strong class="label"><?php _e( 'Earnings:', 'easy-digital-downloads' ); ?></strong>
-		<span><?php echo edd_currency_filter( edd_format_amount( $earnings ) ); ?></span>
-=======
 	<p class="product-sales-stats">
 		<span class="label"><?php _e( 'Sales:', 'edd' ); ?></span>
 		<span><a href="<?php echo admin_url( '/edit.php?page=edd-reports&view=sales&post_type=download&tab=logs&download=' . $post->ID ); ?>"><?php echo $sales; ?></a></span>
@@ -1024,7 +1014,6 @@ function edd_render_stats_meta_box() {
 	<p class="product-earnings-stats">
 		<span class="label"><?php _e( 'Earnings:', 'edd' ); ?></span>
 		<span><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-reports&view=downloads&download-id=' . $post->ID ); ?>"><?php echo edd_currency_filter( edd_format_amount( $earnings ) ); ?></a></span>
->>>>>>> 4eb4e05731fc75bbc27bb3b56039cecf01eeb434
 	</p>
 
 	<hr />
@@ -1032,12 +1021,6 @@ function edd_render_stats_meta_box() {
 	<p class="file-download-log">
 		<span><a href="<?php echo admin_url( 'edit.php?page=edd-reports&view=file_downloads&post_type=download&tab=logs&download=' . $post->ID ); ?>"><?php _e( 'View File Download Log', 'easy-digital-downloads' ); ?></a></span><br/>
 	</p>
-<<<<<<< HEAD
-	<p>
-		<span><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-reports&view=downloads&download-id=' . $post->ID ); ?>"><?php _e( 'View Detailed Earnings Report', 'easy-digital-downloads' ); ?></a></span>
-	</p>
-=======
->>>>>>> 4eb4e05731fc75bbc27bb3b56039cecf01eeb434
 <?php
 	do_action('edd_stats_meta_box');
 }
