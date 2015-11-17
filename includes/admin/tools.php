@@ -164,8 +164,8 @@ function edd_tools_recount_stats_display() {
 							<span id="recount-store"><?php _e( 'Recalculate the total store earnings and sales count.', 'easy-digital-downloads' ); ?></span>
 							<span id="recount-download"><?php _e( 'Recalculate the earnings and sales count for a specific download.', 'easy-digital-downloads' ); ?></span>
 							<span id="recount-all"><?php _e( 'Recalculate the earnings and sales counts for all downloads', 'easy-digital-downloads' ); ?></span>
-							<span id="reset-stats"><?php _e( '<strong>Delete</strong> all payment records, customers, and related logs.', 'easy-digital-downloads' ); ?></span>
 							<span id="recount-customer-stats"><?php _e( 'Recalculate lifetime value for all customers.', 'easy-digital-downloads' ); ?></span>
+							<span id="reset-stats"><?php _e( '<strong>Delete</strong> all payment records, customers, and related logs.', 'easy-digital-downloads' ); ?></span>
 						</span>
 
 						<span class="spinner"></span>
