@@ -194,7 +194,7 @@ class EDD_Batch_Export extends EDD_Export {
 				foreach ( $row as $col_id => $column ) {
 					// Make sure the column is valid
 					if ( array_key_exists( $col_id, $cols ) ) {
-						$row_data .= '"' . addslashes( $column ) . '"';
+						$row_data .= '"' . addslashes( preg_replace( "/\"/","'", $column ) ) . '"';
 						$row_data .= $i == count( $cols ) ? '' : ',';
 						$i++;
 					}
