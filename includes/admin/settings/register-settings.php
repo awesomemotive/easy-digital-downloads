@@ -1652,23 +1652,122 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 	function edd_license_key_callback( $args ) {
 		global $edd_options;
 
+		$messages = array();
+		$license  = get_option( $args['options']['is_valid_license_option'] );
+
 		if ( isset( $edd_options[ $args['id'] ] ) ) {
 			$value = $edd_options[ $args['id'] ];
 		} else {
 			$value = isset( $args['std'] ) ? $args['std'] : '';
 		}
 
+		if( ! empty( $license ) && is_object( $license ) ) {
+
+			switch( $license->license ) {
+
+				case 'expired' :
+
+					$class = 'error';
+					$messages[] = sprintf(
+						__( 'Your license key expired on %s. Please <a href="%s" title="Renew your license key">renew your license key</a>.', 'easy-digital-downloads' ),
+						date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
+						'https://easydigitaldownloads.com/checkout/?edd_license_key=' . $value
+					);
+
+					$license_status = 'license-' . $class . '-notice';
+
+					break;
+
+				case 'invalid' :
+				case 'site_inactive' :
+
+					$class = 'error';
+					$messages[] = sprintf(
+						__( 'Your %s is not active for this URL. Please <a href="%s" target="_blank" title="Visit account page">visit your account page</a> to manage your license key URLs.', 'easy-digital-downloads' ),
+						$args['name'],
+						'https://easydigitaldownloads.com/your-account'
+					);
+
+					$license_status = 'license-' . $class . '-notice';
+
+					break;
+
+				case 'item_name_mismatch' :
+
+					$class = 'error';
+					$messages[] = sprintf( __( 'This license %s does not belong to %s.', 'easy-digital-downloads' ), $value, $args['name'] );
+					
+					$license_status = 'license-' . $class . '-notice';
+
+					break;
+
+				case 'valid' :
+
+					$class = 'valid';
+						
+					$now        = current_time( 'timestamp' );
+					$expiration = strtotime( $license->expires, current_time( 'timestamp' ) );
+
+					if( 'lifetime' === $license->expires ) {
+						
+						$messages[] = __( 'License key never expires.', 'easy-digital-downloads' );
+
+						$license_status = 'license-lifetime-notice';
+						
+					} elseif( $expiration > $now && $expiration - $now < 2592000 ) {
+
+						$messages[] = sprintf(
+							__( 'Your license key expires soon! It expires on %s. <a href="%s" target="_blank" title="Renew license">Renew your license key</a>.', 'easy-digital-downloads' ),
+							date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
+							'https://easydigitaldownloads.com/checkout/?edd_license_key=' . $value
+						);
+
+						$license_status = 'license-expires-soon-notice';
+
+					} else {
+
+						$messages[] = sprintf(
+							__( 'Your license key expires on %s.', 'easy-digital-downloads' ),
+							date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) )
+						);
+
+						$license_status = 'license-expiration-date-notice';
+
+					}
+
+					break;
+
+			}
+
+		} else {
+			$license_status = null;
+		}
+
 		$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
 		$html = '<input type="text" class="' . $size . '-text" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']" value="' . esc_attr( $value ) . '"/>';
 
-		if ( 'valid' == get_option( $args['options']['is_valid_license_option'] ) ) {
+		if ( is_object( $license ) && 'valid' == $license->license ) {
 			$html .= '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __( 'Deactivate License',  'easy-digital-downloads' ) . '"/>';
 		}
-		$html .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
+		$html .= '<label for="edd_settings[' . $args['id'] . ']">'  . $args['desc'] . '</label>';
+
+		if ( ! empty( $messages ) ) {
+			foreach( $messages as $message ) {
+
+				$html .= '<div class="edd-license-data edd-license-' . $class . '">';
+					$html .= '<p>' . $message . '</p>';
+				$html .= '</div>';
+
+			}
+		}
 
 		wp_nonce_field( $args['id'] . '-nonce', $args['id'] . '-nonce' );
 
-		echo $html;
+		if ( isset( $license_status ) ) {
+			echo '<div class="' . $license_status . '">' . $html . '</div>';
+		} else {
+			echo '<div class="license-null">' . $html . '</div>';
+		}
 	}
 }
 
