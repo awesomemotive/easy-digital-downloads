@@ -1153,7 +1153,7 @@ function edd_payment_icons_callback( $args ) {
 
 						}
 
-						$image = str_replace( $content_dir, WP_CONTENT_URL, $image );
+						$image = str_replace( $content_dir, content_url(), $image );
 
 					}
 
