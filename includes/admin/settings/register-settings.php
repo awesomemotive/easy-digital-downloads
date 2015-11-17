@@ -496,8 +496,13 @@ function edd_get_registered_settings() {
 				),
 				'disable_admin_notices' => array(
 					'id'   => 'disable_admin_notices',
+<<<<<<< HEAD
 					'name' => __( 'Disable Admin Notifications', 'easy-digital-downloads' ),
 					'desc' => __( 'Check this box if you do not want to receive emails when new sales are made.', 'easy-digital-downloads' ),
+=======
+					'name' => __( 'Disable Admin Notifications', 'edd' ),
+					'desc' => __( 'Check this box if you do not want to receive sales notification emails.', 'edd' ),
+>>>>>>> 4eb4e05731fc75bbc27bb3b56039cecf01eeb434
 					'type' => 'checkbox'
 				)
 			)
@@ -715,8 +720,13 @@ function edd_get_registered_settings() {
 				),
 				'sequential_start' => array(
 					'id'   => 'sequential_start',
+<<<<<<< HEAD
 					'name' => __( 'Sequential Starting Number', 'easy-digital-downloads' ),
 					'desc' => __( 'The number that sequential order numbers should start at.', 'easy-digital-downloads' ),
+=======
+					'name' => __( 'Sequential Starting Number', 'edd' ),
+					'desc' => __( 'The number at which the sequence should begin.', 'edd' ),
+>>>>>>> 4eb4e05731fc75bbc27bb3b56039cecf01eeb434
 					'type' => 'number',
 					'size' => 'small',
 					'std'  => '1'

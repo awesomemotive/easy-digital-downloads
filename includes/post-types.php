@@ -37,7 +37,11 @@ function edd_setup_edd_post_types() {
 		'not_found'          => __( 'No %2$s found', 'easy-digital-downloads' ),
 		'not_found_in_trash' => __( 'No %2$s found in Trash', 'easy-digital-downloads' ),
 		'parent_item_colon'  => '',
-		'menu_name'          => _x( '%2$s', 'download post type menu name', 'easy-digital-downloads' )
+		'menu_name'          => _x( '%2$s', 'download post type menu name', 'edd' ),
+		'featured_image'        => __( '%1$s Image', 'edd' ),
+		'set_featured_image'    => __( 'Set %1$s Image', 'edd' ),
+		'remove_featured_image' => __( 'Remove %1$s Image', 'edd' ),
+		'use_featured_image'    => __( 'Use as %1$s Image', 'edd' ),
 	) );
 
 	foreach ( $download_labels as $key => $value ) {
