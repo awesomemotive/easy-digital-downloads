@@ -191,6 +191,12 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 			delete_transient( 'edd_estimated_monthly_stats' . true );
 			delete_transient( 'edd_estimated_monthly_stats' . false );
 			delete_option( 'edd_temp_reset_ids' );
+
+			// Reset the sequential order numbers
+			if ( edd_get_option( 'enable_sequential' ) ) {
+				delete_option( 'edd_last_payment_number' );
+			}
+
 			$this->done    = true;
 			$this->message = __( 'Customers, earnings, sales, discounts and logs successfully reset.', 'edd' );
 			return false;
