@@ -66,22 +66,29 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 			foreach ( $customers as $customer ) {
 
 				$payment_ids    = explode( ',', $customer->payment_ids );
-				$purcahse_count = count( $payment_ids );
 
 				$payment_args = array(
 					'post__in' => $payment_ids,
+					'number'   => -1,
 				);
 
 				$payments = edd_get_payments( $payment_args );
 
 				$purchase_value = 0.00;
+				$payment_ids    = array();
+
 				foreach ( $payments as $payment ) {
 					$purchase_value += edd_get_payment_amount( $payment->ID );
+					$payment_ids[] = $payment->ID;
 				}
 
+				$purchase_count = count( $payment_ids );
+				$payment_ids    = implode( ',', $payment_ids );
+
 				$customer_update_data = array(
-					'purchase_count' => $purcahse_count,
+					'purchase_count' => $purchase_count,
 					'purchase_value' => $purchase_value,
+					'payment_ids'    => $payment_ids,
 				);
 
 				$customer_instance = new EDD_Customer( $customer->id );

@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Gateways Reports Table Class
+ * Earnings by Category Reports Table Class
  *
  * @package     EDD
  * @subpackage  Admin/Reports
@@ -8,12 +9,12 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.4
  */
-
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( !defined( 'ABSPATH' ) )
+	exit;
 
 // Load WP_List_Table if not loaded
-if ( ! class_exists( 'WP_List_Table' ) ) {
+if ( !class_exists( 'WP_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
@@ -34,6 +35,25 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 	 */
 	public function __construct() {
 		global $status, $page;
+
+		// Set parent defaults
+		parent::__construct( array(
+			'singular'  => edd_get_label_singular(),    // Singular name of the listed records
+			'plural'    => edd_get_label_plural(),    	// Plural name of the listed records
+			'ajax'      => false             			// Does this table support ajax?
+		) );
+	}
+
+	/**
+	 * Gets the name of the primary column.
+	 *
+	 * @since 2.5
+	 * @access protected
+	 *
+	 * @return string Name of the primary column.
+	 */
+	protected function get_primary_column_name() {
+		return 'label';
 	}
 
 	/**
@@ -78,9 +98,8 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 	 * @return int Current page number
 	 */
 	public function get_paged() {
-		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
+		return isset( $_GET[ 'paged' ] ) ? absint( $_GET[ 'paged' ] ) : 1;
 	}
-
 
 	/**
 	 * Outputs the reporting views
@@ -90,10 +109,14 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function bulk_actions( $which = '' ) {
+		if ( 'bottom' === $which ) {
+			return;
+		}
+
 		// These aren't really bulk actions but this outputs the markup in the right place
 		edd_report_views();
+		edd_reports_graph_controls();
 	}
-
 
 	/**
 	 * Build all the reports data
@@ -104,34 +127,54 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 	 */
 	public function reports_data() {
 
-		$cached_reports = get_transient( 'edd_earnings_by_category_data' );
+		/*
+		 * Date filtering
+		 */
+		$dates = edd_get_report_dates();
+
+		if ( !empty( $dates[ 'year' ] ) ) {
+			$date = new DateTime();
+			$date->setDate( $dates[ 'year' ], $dates[ 'm_start' ], $dates[ 'day' ] );
+			$start_date = $date->format( 'Y-m-d' );
+
+			$date->setDate( $dates[ 'year_end' ], $dates[ 'm_end' ], $dates[ 'day_end' ] );
+			$end_date          = $date->format( 'Y-m-d' );
+			$cached_report_key = 'edd_earnings_by_category_data' . $start_date . '_' . $end_date;
+		} else {
+			$start_date        = false;
+			$end_date          = false;
+			$cached_report_key = 'edd_earnings_by_category_data';
+		}
+
+		$cached_reports = get_transient( $cached_report_key );
+
 		if ( false !== $cached_reports ) {
 			$reports_data = $cached_reports;
 		} else {
+
 			$reports_data = array();
 			$term_args    = array(
 				'parent'       => 0,
 				'hierarchical' => 0,
 			);
 
-			$categories   = get_terms( 'download_category', $term_args );
+			$categories = get_terms( 'download_category', $term_args );
 
 			foreach ( $categories as $category_id => $category ) {
 
 				$category_slugs = array( $category->slug );
 
-				$child_args  = array(
+				$child_args = array(
 					'parent'       => $category->term_id,
 					'hierarchical' => 0,
 				);
 
 				$child_terms = get_terms( 'download_category', $child_args );
-				if ( ! empty( $child_terms ) ) {
+				if ( !empty( $child_terms ) ) {
 
 					foreach ( $child_terms as $child_term ) {
 						$category_slugs[] = $child_term->slug;
 					}
-
 				}
 
 				$download_args = array(
@@ -154,14 +197,28 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 				$avg_sales    = 0;
 				$avg_earnings = 0.00;
 
+				$payment_stats = new EDD_Payment_Stats();
+
 				foreach ( $downloads as $download ) {
-					$sales        += edd_get_download_sales_stats( $download );
-					$earnings     += edd_get_download_earnings_stats( $download );
-					$avg_sales    += edd_get_average_monthly_download_sales( $download );
-					$avg_earnings += edd_get_average_monthly_download_earnings( $download );
+					$current_average_sales    = $current_sales    = $payment_stats->get_sales( $download, $start_date, $end_date );
+					$current_average_earnings = $current_earnings = $payment_stats->get_earnings( $download, $start_date, $end_date );
+
+					$release_date = get_post_field( 'post_date', $download );
+					$diff         = abs( current_time( 'timestamp' ) - strtotime( $release_date ) );
+					$months       = floor( $diff / ( 30 * 60 * 60 * 24 ) ); // Number of months since publication
+
+					if ( $months > 0 ) {
+						$current_average_sales    = ( $current_sales / $months );
+						$current_average_earnings = ( $current_earnings / $months );
+					}
+
+					$sales        += $current_sales;
+					$earnings     += $current_earnings;
+					$avg_sales    += $current_average_sales;
+					$avg_earnings += $current_average_earnings;
 				}
 
-				$avg_sales    = round( $avg_sales    / count( $downloads ) );
+				$avg_sales    = round( $avg_sales / count( $downloads ) );
 				$avg_earnings = round( $avg_earnings / count( $downloads ), edd_currency_decimal_filter() );
 
 				$reports_data[] = array(
@@ -176,7 +233,7 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 					'is_child'           => false,
 				);
 
-				if ( ! empty( $child_terms ) ) {
+				if ( !empty( $child_terms ) ) {
 
 					foreach ( $child_terms as $child_term ) {
 						$child_args = array(
@@ -200,13 +257,25 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 						$child_avg_earnings = 0.00;
 
 						foreach ( $child_downloads as $child_download ) {
-							$child_sales        += edd_get_download_sales_stats( $child_download );
-							$child_earnings     += edd_get_download_earnings_stats( $child_download );
-							$child_avg_sales    += edd_get_average_monthly_download_sales( $child_download );
-							$child_avg_earnings += edd_get_average_monthly_download_earnings( $child_download );
+							$current_average_sales    = $current_sales    = $payment_stats->get_sales( $child_download, $start_date, $end_date );
+							$current_average_earnings = $current_earnings = $payment_stats->get_earnings( $child_download, $start_date, $end_date );
+
+							$release_date = get_post_field( 'post_date', $child_download );
+							$diff         = abs( current_time( 'timestamp' ) - strtotime( $release_date ) );
+							$months       = floor( $diff / ( 30 * 60 * 60 * 24 ) ); // Number of months since publication
+
+							if ( $months > 0 ) {
+								$current_average_sales    = ( $current_sales / $months );
+								$current_average_earnings = ( $current_earnings / $months );
+							}
+
+							$child_sales        += $current_sales;
+							$child_earnings     += $current_earnings;
+							$child_avg_sales    += $current_average_sales;
+							$child_avg_earnings += $current_average_earnings;
 						}
 
-						$child_avg_sales    = round( $child_avg_sales    / count( $child_downloads ) );
+						$child_avg_sales    = round( $child_avg_sales / count( $child_downloads ) );
 						$child_avg_earnings = round( $child_avg_earnings / count( $child_downloads ), edd_currency_decimal_filter() );
 
 						$reports_data[] = array(
@@ -220,13 +289,9 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 							'avg_earnings'       => edd_currency_filter( edd_format_amount( $child_avg_earnings ) ),
 							'is_child'           => true,
 						);
-
 					}
 				}
-
 			}
-
-			set_transient( 'edd_earnings_by_category_data', $reports_data, ( HOUR_IN_SECONDS / 4 ) );
 		}
 
 		return $reports_data;
@@ -243,13 +308,22 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 			return;
 		}
 
-		$data = array();
+		$data        = array();
+		$total_sales = 0;
+
 		foreach ( $this->items as $item ) {
-			if ( ! empty( $item['is_child'] ) || empty( $item['total_sales_raw'] ) ) {
+			$total_sales += $item['total_sales_raw'];
+
+			if ( !empty( $item[ 'is_child' ] ) || empty( $item[ 'total_sales_raw' ] ) ) {
 				continue;
 			}
 
-			$data[ $item['label'] ] = $item['total_sales_raw'];
+			$data[ $item[ 'label' ] ] = $item[ 'total_sales_raw' ];
+		}
+
+
+		if ( empty( $total_sales ) ) {
+			echo '<p><em>' . __( 'No sales for dates provided.', 'easy-digital-downloads' ) . '</em></p>';
 		}
 
 		// Sort High to Low, prior to filter so people can reorder if they please
@@ -275,13 +349,22 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 			return;
 		}
 
-		$data = array();
+		$data           = array();
+		$total_earnings = 0;
+
 		foreach ( $this->items as $item ) {
-			if ( ! empty( $item['is_child'] ) || empty( $item['total_earnings_raw'] ) ) {
+			$total_earnings += $item['total_earnings_raw'];
+
+			if ( ! empty( $item[ 'is_child' ] ) || empty( $item[ 'total_earnings_raw' ] ) ) {
 				continue;
 			}
 
-			$data[ $item['label'] ] = $item['total_earnings_raw'];
+			$data[ $item[ 'label' ] ] = $item[ 'total_earnings_raw' ];
+
+		}
+
+		if ( empty( $total_earnings ) ) {
+			echo '<p><em>' . __( 'No earnings for dates provided.', 'easy-digital-downloads' ) . '</em></p>';
 		}
 
 		// Sort High to Low, prior to filter so people can reorder if they please
@@ -301,9 +384,9 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 	 *
 	 * @access public
 	 * @since 2.4
-	 * @uses EDD_Gateawy_Reports_Table::get_columns()
-	 * @uses EDD_Gateawy_Reports_Table::get_sortable_columns()
-	 * @uses EDD_Gateawy_Reports_Table::reports_data()
+	 * @uses EDD_Categories_Reports_Table::get_columns()
+	 * @uses EDD_Categories_Reports_Table::get_sortable_columns()
+	 * @uses EDD_Categories_Reports_Table::reports_data()
 	 * @return void
 	 */
 	public function prepare_items() {
@@ -312,6 +395,5 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 		$sortable              = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 		$this->items           = $this->reports_data();
-
 	}
 }

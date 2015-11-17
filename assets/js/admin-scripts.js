@@ -1351,7 +1351,6 @@ jQuery(document).ready(function ($) {
 				},
 				dataType: "json",
 				success: function( response ) {
-
 					if( 'done' == response.step || response.error || response.success ) {
 
 						// We need to get the actual in progress form, not all forms on the page
@@ -1397,7 +1396,7 @@ jQuery(document).ready(function ($) {
 
 		dismiss_message : function() {
 			$('body').on( 'click', '#edd-batch-success .notice-dismiss', function() {
-				$('#edd-batch-success').parent().remove();
+				$('#edd-batch-success').parent().slideUp('fast');
 			});
 		}
 
@@ -1592,7 +1591,7 @@ jQuery(document).ready(function ($) {
 		$('.edd_user_search_results span').html('');
 	});
 
-	if( $('.edd_dashboard_sales').length ) {
+	if( $('#edd_dashboard_sales').length ) {
 		$.ajax({
 			type: "GET",
 			data: {
