@@ -28,7 +28,7 @@ function edd_tools_page() {
 ?>
 	<div class="wrap">
 		<?php screen_icon(); ?>
-		<h2 class="nav-tab-wrapper">
+		<h1 class="nav-tab-wrapper">
 			<?php
 			foreach( edd_get_tools_tabs() as $tab_id => $tab_name ) {
 
@@ -45,7 +45,7 @@ function edd_tools_page() {
 
 			}
 			?>
-		</h2>
+		</h1>
 		<div class="metabox-holder">
 			<?php
 			do_action( 'edd_tools_tab_' . $active_tab );
@@ -568,12 +568,16 @@ function edd_tools_sysinfo_get() {
 		$return  = apply_filters( 'edd_sysinfo_after_edd_templates', $return );
 	}
 
-    // Must-use plugins
+	// Get plugins that have an update
+	$updates = get_plugin_updates();
+
+	// Must-use plugins
+	// NOTE: MU plugins can't show updates!
     $muplugins = get_mu_plugins();
     if( count( $muplugins > 0 ) ) {
         $return .= "\n" . '-- Must-Use Plugins' . "\n\n";
 
-        foreach( $muplugins as $plugin => $plugin_data ) {
+		foreach( $muplugins as $plugin => $plugin_data ) {
             $return .= $plugin_data['Name'] . ': ' . $plugin_data['Version'] . "\n";
         }
 
@@ -590,7 +594,8 @@ function edd_tools_sysinfo_get() {
 		if( !in_array( $plugin_path, $active_plugins ) )
 			continue;
 
-		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . "\n";
+		$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[$plugin_path]->update->new_version . ')' : '';
+		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
 	}
 
 	$return  = apply_filters( 'edd_sysinfo_after_wordpress_plugins', $return );
@@ -602,7 +607,8 @@ function edd_tools_sysinfo_get() {
 		if( in_array( $plugin_path, $active_plugins ) )
 			continue;
 
-		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . "\n";
+		$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[$plugin_path]->update->new_version . ')' : '';
+		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
 	}
 
 	$return  = apply_filters( 'edd_sysinfo_after_wordpress_plugins_inactive', $return );
@@ -620,8 +626,9 @@ function edd_tools_sysinfo_get() {
 			if( !array_key_exists( $plugin_base, $active_plugins ) )
 				continue;
 
+			$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[$plugin_path]->update->new_version . ')' : '';
 			$plugin  = get_plugin_data( $plugin_path );
-			$return .= $plugin['Name'] . ': ' . $plugin['Version'] . "\n";
+			$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
 		}
 
 		$return  = apply_filters( 'edd_sysinfo_after_wordpress_ms_plugins', $return );

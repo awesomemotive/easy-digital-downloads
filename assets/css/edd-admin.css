@@ -24,7 +24,7 @@ a.edd-delete:hover { color: #f00; }
 
 /* =Add Ons Styles
 -------------------------------------------------------------- */
-.edd-tab-span { float: right; bottom: 15px; position: relative; }
+.edd-tab-span { float: right; bottom: 13px; position: relative; }
 .edd-add-ons-footer { padding-top: 10px; }
 #edd-add-ons h2 { margin: 0 0 15px; }
 #edd-add-ons h2 .button-primary { position: absolute; }
@@ -105,7 +105,7 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 /* Payment Details
 -------------------------------------------------------------- */
 .edd-admin-box .label { font-weight: 600; }
-.edd-admin-box-inside { margin: 0; padding: 3px 12px; clear: both; border-bottom: 1px solid #eee; }
+.edd-admin-box-inside { margin: 0; padding: 3px 12px; clear: both; border-bottom: 1px solid #eee; word-break: break-word; }
 .rtl .edd-admin-box-inside { padding: 5px 10px 5px 0; }
 .edd-admin-box-inside .strong { font-weight: 600; }
 .edd-payment-fees .fee-label { font-weight: normal; color: #666; }
@@ -250,7 +250,7 @@ td.edd_order_price { text-align: right; }
 #edd-graphs-filter label { vertical-align: inherit; }
 #edd-graphs-filter .graph-option-section { float: left; line-height: 2.5em; padding-right: 5px; }
 .edd-mix-totals { padding: 10px; background-color: #fff; box-shadow: 0 1px 1px rgba(0,0,0,0.04); border: 1px solid #e5e5e5; }
-.edd-mix-chart { display: inline-block; width: 49%; }
+.edd-mix-chart { display: inline-block; width: 49%; vertical-align: top; }
 .edd-graph-notes { color: #9c9c9c; }
 .edd-graph-notes span { display: block; }
 .edd-pie-graph .legend { display: none; }

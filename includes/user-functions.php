@@ -649,7 +649,14 @@ function edd_send_user_verification_email( $user_id = 0 ) {
 	$from_email = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
 	$subject    = apply_filters( 'edd_user_verification_email_subject', __( 'Verify your account', 'easy-digital-downloads' ), $user_id );
 	$heading    = apply_filters( 'edd_user_verification_email_heading', __( 'Verify your account', 'easy-digital-downloads' ), $user_id );
-	$message    = sprintf( __( "Hello %s,\n\nYour account with %s needs to be verified before you can access your purchase history. <a href='%s'>Click here</a> to verify your account.", 'easy-digital-downloads' ), $name, $from_name, $url );
+	$message    = sprintf(
+		__( "Hello %s,\n\nYour account with %s needs to be verified before you can access your purchase history. <a href='%s'>Click here</a> to verify your account.\n\nLink missing? Visit the following URL: %s", 'easy-digital-downloads' ),
+		$name,
+		$from_name,
+		$url,
+		$url
+	);
+
 	$message    = apply_filters( 'edd_user_verification_email_message', $message, $user_id );
 
 	$emails     = new EDD_Emails;
@@ -879,3 +886,25 @@ function edd_get_user_verification_page() {
 
 	return apply_filters( 'edd_user_verification_base_url', $url );
 }
+
+/**
+ * When a user is deleted, detach that user id from the customer record
+ *
+ * @since  2.5
+ * @param  int $user_id The User ID being deleted
+ * @return bool         If the detachment was successful
+ */
+function edd_detach_deleted_user( $user_id ) {
+
+	$customer = new EDD_Customer( $user_id, true );
+	$detached = false;
+
+	if ( $customer->id > 0 ) {
+		$detached = $customer->update( array( 'user_id' => 0 ) );
+	}
+
+	do_action( 'edd_detach_deleted_user', $user_id, $customer, $detached );
+
+	return $detached;
+}
+add_action( 'delete_user', 'edd_detach_deleted_user', 10, 1 );
