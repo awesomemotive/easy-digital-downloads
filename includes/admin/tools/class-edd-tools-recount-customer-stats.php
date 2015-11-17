@@ -69,6 +69,7 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 
 				$payment_args = array(
 					'post__in' => $payment_ids,
+					'number'   => -1,
 				);
 
 				$payments = edd_get_payments( $payment_args );
