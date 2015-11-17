@@ -381,7 +381,7 @@ div[class^="license-"] .edd-license-data p { margin-left: 4px; }
 #edd-item-card-wrapper .customer-address-wrapper { max-width: 33%; margin-right: 25px; width: 202px; }
 #edd-item-card-wrapper .customer-address-wrapper select { width: 200px;}
 #edd-item-card-wrapper .customer-info { margin-top: 5px; min-height: 185px; margin-bottom: 10px; }
-#edd-item-card-wrapper .info-wrapper { min-height: 125px; }
+#edd-item-card-wrapper .info-wrapper { min-height: 125px; overflow: visible; }
 #edd-item-card-wrapper a.delete { text-decoration: none; color: #ff0000; margin-right: 5px; }
 .customer-info .customer-name { font-size: 24px; font-weight: 600; }
 .customer-edit-link a, .disconnect-user a { font-size: 12px; font-weight: normal; text-decoration: none; }
