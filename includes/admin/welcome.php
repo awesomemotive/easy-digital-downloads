@@ -330,11 +330,9 @@ class EDD_Welcome {
 						<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/edit-download.png'; ?>" class="edd-welcome-screenshots"/>
 					</div>
 					<div class="feature-section-content">
-						<h4><?php printf( __( '<a href="%s">%s &rarr; Add New</a>', 'easy-digital-downloads' ), admin_url( 'post-new.php?post_type=download' ), edd_get_label_plural() ); ?></h4>
+						<h4><a href="<?php echo admin_url( 'post-new.php?post_type=download' ) ?>"><?php _e( '&rarr; Add New', 'easy-digital-downloads' ); ?></a></h4>
 						<p><?php printf( __( 'The %s menu is your access point for all aspects of your Easy Digital Downloads product creation and setup. To create your first product, simply click Add New and then fill out the product details.', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></p>
 
-						<h4><?php _e( 'Product Price', 'easy-digital-downloads' );?></h4>
-						<p><?php _e( 'Products can have simple prices or variable prices if you wish to have more than one price point for a product. For a single price, simply enter the price. For multiple price points, click <em>Enable variable pricing</em> and enter the options.', 'easy-digital-downloads' );?></p>
 
 						<h4><?php _e( 'Download Files', 'easy-digital-downloads' );?></h4>
 						<p><?php _e( 'Uploading the downloadable files is simple. Click <em>Upload File</em> in the Download Files section and choose your download file. To add more than one file, simply click the <em>Add New</em> button.', 'easy-digital-downloads' );?></p>
