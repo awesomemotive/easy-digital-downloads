@@ -1,6 +1,5 @@
 <?php
 /**
- * Fees
  *
  * This class is for registering our meta
  *
@@ -33,7 +32,7 @@ class EDD_Register_Meta {
 	}
 
 	/**
-	 * Get the one true instance of EDD_Register_Meta
+	 * Get the one true instance of EDD_Register_Meta.
 	 *
 	 * @since  2.5
 	 * @return $instance
@@ -49,7 +48,7 @@ class EDD_Register_Meta {
 	}
 
 	/**
-	 * Register the hooks to kick off meta registration
+	 * Register the hooks to kick off meta registration.
 	 *
 	 * @since  2.5
 	 * @return void
@@ -60,7 +59,7 @@ class EDD_Register_Meta {
 	}
 
 	/**
-	 * Register the meta for the download post type
+	 * Register the meta for the download post type.
 	 *
 	 * @since  2.5
 	 * @return void
@@ -77,7 +76,7 @@ class EDD_Register_Meta {
 	}
 
 	/**
-	 * Register the meta for the edd_payment post type
+	 * Register the meta for the edd_payment post type.
 	 *
 	 * @since  2.5
 	 * @return void
@@ -98,16 +97,23 @@ class EDD_Register_Meta {
 
 	/**
 	 * Wrapper for intval
-	 * Setting intval as the callback was stating an improper number of arguements, this avoids that
+	 * Setting intval as the callback was stating an improper number of arguements, this avoids that.
 	 *
 	 * @since  2.5
-	 * @param  int $value The value to sanitize
-	 * @return int        The value sanitiezed to be an int
+	 * @param  int $value The value to sanitize.
+	 * @return int        The value sanitiezed to be an int.
 	 */
 	public function intval_wrapper( $value ) {
 		return intval( $value );
 	}
 
+	/**
+	 * Sanitize values that come in as arrays
+	 *
+	 * @since  2.5
+	 * @param  array  $value The value passed into the meta.
+	 * @return array         The sanitized value.
+	 */
 	public function sanitize_array( $value = array() ) {
 
 		if ( ! is_array( $value ) ) {
