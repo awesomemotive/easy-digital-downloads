@@ -136,9 +136,9 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		$user        = ! empty( $item['user_id'] ) ? $item['user_id'] : $item['email'];
 		$view_url    = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $item['id'] );
 		$actions     = array(
-			'view'   => sprintf( __( '<a href="%s">View</a>', 'easy-digital-downloads' ), $view_url ),
-			'logs'   => sprintf( __( '<a href="%s">Download log</a>', 'easy-digital-downloads' ), admin_url( '/edit.php?post_type=download&page=edd-reports&tab=logs&user=' . urlencode( $user ) ) ),
-			'delete' => sprintf( __( '<a href="%s">Delete</a>', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $item['id'] ) )
+			'view'   => '<a href="' . $view_url . '">' . __( 'View', 'easy-digital-downloads' ) . '</a>',
+			'logs'   => '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-reports&tab=logs&user=' . urlencode( $user ) ) . '">' . __( 'Download log', 'easy-digital-downloads' ) . '</a>',
+			'delete' => '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $item['id'] ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>'
 		);
 
 		$customer = new EDD_Customer( $item['id'] );
