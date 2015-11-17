@@ -61,7 +61,7 @@ function edd_do_ajax_export() {
 	if( $ret ) {
 
 		$step += 1;
-		echo json_encode( array( 'step' => $step, 'percentage' => $percentage ) ); exit;
+		echo json_encode( array( 'step' => $step, 'percentage' => $percentage, 'debug' => $export->debug ) ); exit;
 
 	} elseif ( true === $export->is_empty ) {
 
