@@ -39,7 +39,7 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 	 * @since  2.5
 	 * @var integer
 	 */
-	public $per_step = 5;
+	public $per_step = 10;
 
 	/**
 	 * Get the Export Data
@@ -53,19 +53,14 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 	public function get_data() {
 
 		$customer    = new EDD_Customer( $this->customer_id );
-
-		if ( $this->step == 1 ) {
-			$customer->update( array( 'purchase_value' => 0 ) );
-		}
-
 		$payment_ids = explode( ',', $customer->payment_ids );
 
 		$offset     = ( $this->step - 1 ) * $this->per_step;
 		$step_items = array_slice( $payment_ids, $offset, $this->per_step );
 
 		if ( count( $step_items ) > 0 ) {
-
-			$step_total = 0;
+			$pending_total = (float) get_option( 'edd_stats_customer_pending_total' . $customer->id, 0 );
+			$step_total    = 0;
 
 			foreach ( $step_items as $payment_id ) {
 				$payment = get_post( $payment_id );
@@ -83,9 +78,9 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 				$step_total     += $payment_amount;
 
 			}
-
-			$updated_total = $customer->purchase_value + $step_total;
-			$customer->update( array( 'purchase_value' => $updated_total ) );
+			$this->debug = array( 'step_total' => $step_total, 'running_total' => $pending_total );
+			$updated_total = $pending_total + $step_total;
+			update_option( 'edd_stats_customer_pending_total' . $customer->id, $updated_total );
 
 			return true;
 		}
@@ -162,9 +157,12 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 				delete_option( 'edd_stats_missing_payments' . $customer->id );
 			}
 
+			$pending_total = get_option( 'edd_stats_customer_pending_total' . $customer->id, 0 );
+			delete_option( 'edd_stats_customer_pending_total' . $customer->id );
+
 			$purchase_count = count( $payment_ids );
 			$payment_ids    = implode( ',', $payment_ids );
-			$customer->update( array( 'payment_ids' => $payment_ids, 'purchase_count' => $purchase_count ) );
+			$customer->update( array( 'payment_ids' => $payment_ids, 'purchase_count' => $purchase_count, 'purchase_value' => $pending_total ) );
 
 			$this->done    = true;
 			$this->message = __( 'Customer stats successfully recounted.', 'easy-digital-downloads' );
@@ -193,6 +191,21 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 		$this->headers();
 
 		edd_die();
+	}
+
+	/**
+	 * Zero out the data on step one
+	 *
+	 * @access public
+	 * @since 2.5
+	 * @return void
+	 */
+	public function pre_fetch() {
+		if ( $this->step === 1 ) {
+			// Before we start, let's zero out the customer's data
+			$customer = new EDD_Customer( $this->customer_id );
+			$customer->update( array( 'purchase_value' => edd_format_amount( 0 ), 'purchase_count' => 0 ) );
+		}
 	}
 
 }
