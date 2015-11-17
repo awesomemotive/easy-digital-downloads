@@ -81,7 +81,7 @@ Easy Digital Downloads has been translated into the following languages:
 25. Khmer
 26. Lithuanian
 
-Would you like to help translate the plugin into more languages? [Join our WP-Translations Community](https://www.transifex.com/projects/p/easy-digital-downloads/).
+Would you like to help translate the plugin into more languages? [Join our WP-Translations Community](http://docs.easydigitaldownloads.com/article/1023-translating-easy-digital-downloads).
 
 == Installation ==
 
