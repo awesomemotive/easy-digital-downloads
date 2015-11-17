@@ -21,7 +21,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return void
  */
 function edd_options_page() {
-	$active_tab = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], edd_get_settings_tabs() ) ? $_GET['tab'] : 'general';
+	$settings_tabs = edd_get_settings_tabs();
+	$settings_tabs = empty($settings_tabs) ? array() : $settings_tabs;
+	$active_tab = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $settings_tabs ) ? $_GET['tab'] : 'general';
 	$sections = edd_get_settings_sections( $active_tab );
 	$key = 'main';
 	if ( is_array( $sections ) ) {
