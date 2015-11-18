@@ -653,7 +653,7 @@ function edd_is_discount_maxed_out( $code_id = null ) {
  * @return bool $return
  */
 function edd_discount_is_min_met( $code_id = null ) {
-	$discount = edd_get_discount(  $code_id );
+	$discount = edd_get_discount( $code_id );
 	$return   = false;
 
 	if ( $discount ) {
@@ -929,7 +929,7 @@ function edd_get_discount_id_by_code( $code ) {
  * @return string $discounted_price Amount after discount
  */
 function edd_get_discounted_amount( $code, $base_price ) {
-	$amount      = 0;
+	$amount      = $base_price;
 	$discount_id = edd_get_discount_id_by_code( $code );
 
 	if( $discount_id ) {
