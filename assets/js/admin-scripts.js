@@ -52,6 +52,10 @@ jQuery(document).ready(function ($) {
 				$( this ).text( parseInt( key ) );
 			});
 
+			clone.find( 'span.edd_file_id' ).each(function() {
+				$( this ).text( parseInt( key ) );
+			});
+			
 			clone.find( '.edd_repeatable_default_input' ).each( function() {
 				$( this ).val( parseInt( key ) ).removeAttr('checked');
 			})
