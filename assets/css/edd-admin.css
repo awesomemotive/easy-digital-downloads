@@ -399,8 +399,8 @@ div[class^="license-"] .edd-license-data p { margin-left: 4px; }
 #edd-item-tables-wrapper th { text-align: center; }
 #edd-item-tables-wrapper .downloads tr > th:first-child, #edd-item-tables-wrapper .downloads tr > td:first-child { text-align: left; }
 #edd-item-tables-wrapper .downloads tr > td:only-child { text-align: center; }
-#customer-notes-wrapper { min-height: 50px; }
-.customer-notes-header span, .customer-notes-header img { font-weight: 600; line-height: 30px; vertical-align: middle; }
+#edd-item-notes-wrapper { min-height: 50px; }
+.edd-item-notes-header span, .edd-item-notes-header img { font-weight: 600; line-height: 30px; vertical-align: middle; }
 .customer-note-input { width: 100%; margin-bottom: 5px; }
 #edd-customer-notes div:nth-of-type(even) { background-color: #fcfcfc; }
 .customer-note-wrapper { border-bottom: 1px solid #f9f9f9; min-height: 38px; padding: 7px 0 7px 7px; }
