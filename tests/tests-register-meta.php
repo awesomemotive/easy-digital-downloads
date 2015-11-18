@@ -18,7 +18,6 @@ class Tests_Register_Meta extends WP_UnitTestCase {
 
 		// Uses standalone function callbacks
 		$this->assertarrayHasKey( 'edd_sanitize_amount', $wp_filter['sanitize_post_meta__edd_download_earnings'][10] );
-		$this->assertarrayHasKey( 'edd_sanitize_amount', $wp_filter['sanitize_post_meta_edd_price'][10] );
 		$this->assertarrayHasKey( 'sanitize_text_field', $wp_filter['sanitize_post_meta__edd_button_behavior'][10] );
 
 		// Callbacks are part of the object, so just make sure it got registered
@@ -27,6 +26,7 @@ class Tests_Register_Meta extends WP_UnitTestCase {
 		$this->assertNotEmpty( $wp_filter['sanitize_post_meta_edd_variable_prices'][10] );
 		$this->assertNotEmpty( $wp_filter['sanitize_post_meta_edd_download_files'][10] );
 		$this->assertNotEmpty( $wp_filter['sanitize_post_meta__edd_bundled_products'][10] );
+		$this->assertNotEmpty( $wp_filter['sanitize_post_meta_edd_price'][10] );
 
 	}
 
