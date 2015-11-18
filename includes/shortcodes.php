@@ -44,9 +44,9 @@ function edd_download_shortcode( $atts, $content = null ) {
 	// Override text only if not provided / empty
 	if ( ! $atts['text'] ) {
 		if( $atts['direct'] == '1' || $atts['direct'] == 'true' ) {
-			$atts['text'] = edd_get_option( 'buy_now_text', __( 'Buy Now', 'edd' ) );
+			$atts['text'] = edd_get_option( 'buy_now_text', __( 'Buy Now', 'easy-digital-downloads' ) );
 		} else {
-			$atts['text'] = edd_get_option( 'add_to_cart_text', __( 'Purchase', 'edd' ) );
+			$atts['text'] = edd_get_option( 'add_to_cart_text', __( 'Purchase', 'easy-digital-downloads' ) );
 		}
 	}
 
@@ -234,7 +234,7 @@ function edd_discounts_shortcode( $atts, $content = null ) {
 		}
 
 	} else {
-		$discounts_list .= '<li class="edd_discount">' . __( 'No discounts found', 'edd' ) . '</li>';
+		$discounts_list .= '<li class="edd_discount">' . __( 'No discounts found', 'easy-digital-downloads' ) . '</li>';
 	}
 
 	$discounts_list .= '</ul>';
@@ -258,7 +258,7 @@ function edd_purchase_collection_shortcode( $atts, $content = null ) {
 	extract( shortcode_atts( array(
 			'taxonomy'	=> '',
 			'terms'		=> '',
-			'text'		=> __('Purchase All Items', 'edd'),
+			'text'		=> __('Purchase All Items','easy-digital-downloads' ),
 			'style'     => edd_get_option( 'button_style', 'button' ),
 			'color'     => edd_get_option( 'checkout_color', 'blue' ),
 			'class'		=> 'edd-submit'
@@ -494,25 +494,6 @@ function edd_downloads_query( $atts, $content = null ) {
 	else
 		$query['paged'] = 1;
 
-	switch( intval( $atts['columns'] ) ) :
-		case 0:
-			$column_width = 'inherit'; break;
-		case 1:
-			$column_width = '100%'; break;
-		case 2:
-			$column_width = '50%'; break;
-		case 3:
-			$column_width = '33%'; break;
-		case 4:
-			$column_width = '25%'; break;
-		case 5:
-			$column_width = '20%'; break;
-		case 6:
-			$column_width = '16.6%'; break;
-		default:
-			$column_width = '33%'; break;
-	endswitch;
-
 	// Allow the query to be manipulated by other plugins
 	$query = apply_filters( 'edd_downloads_query', $query, $atts );
 
@@ -524,7 +505,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		<div class="edd_downloads_list <?php echo apply_filters( 'edd_downloads_list_wrapper_class', $wrapper_class, $atts ); ?>">
 			<?php while ( $downloads->have_posts() ) : $downloads->the_post(); ?>
 				<?php $schema = edd_add_schema_microdata() ? 'itemscope itemtype="http://schema.org/Product" ' : ''; ?>
-				<div <?php echo $schema; ?>class="<?php echo apply_filters( 'edd_download_class', 'edd_download', get_the_ID(), $atts, $i ); ?>" id="edd_download_<?php echo get_the_ID(); ?>" style="width: <?php echo $column_width; ?>; float: left;">
+				<div <?php echo $schema; ?>class="<?php echo apply_filters( 'edd_download_class', 'edd_download', get_the_ID(), $atts, $i ); ?>" id="edd_download_<?php echo get_the_ID(); ?>">
 					<div class="edd_download_inner">
 						<?php
 
@@ -599,10 +580,10 @@ function edd_downloads_query( $atts, $content = null ) {
 		<?php
 		$display = ob_get_clean();
 	else:
-		$display = sprintf( _x( 'No %s found', 'download post type name', 'edd' ), edd_get_label_plural() );
+		$display = sprintf( _x( 'No %s found', 'download post type name', 'easy-digital-downloads' ), edd_get_label_plural() );
 	endif;
 
-	return apply_filters( 'downloads_shortcode', $display, $atts, $atts['buy_button'], $atts['columns'], $column_width, $downloads, $atts['excerpt'], $atts['full_content'], $atts['price'], $atts['thumbnails'], $query );
+	return apply_filters( 'downloads_shortcode', $display, $atts, $atts['buy_button'], $atts['columns'], '', $downloads, $atts['excerpt'], $atts['full_content'], $atts['price'], $atts['thumbnails'], $query );
 }
 add_shortcode( 'downloads', 'edd_downloads_query' );
 
@@ -645,7 +626,7 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	global $edd_receipt_args;
 
 	$edd_receipt_args = shortcode_atts( array(
-		'error'           => __( 'Sorry, trouble retrieving payment receipt.', 'edd' ),
+		'error'           => __( 'Sorry, trouble retrieving payment receipt.', 'easy-digital-downloads' ),
 		'price'           => true,
 		'discount'        => true,
 		'products'        => true,
@@ -680,7 +661,7 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 
 		ob_start();
 
-		echo '<p class="edd-alert edd-alert-warn">' . __( 'You must be logged in to view this payment receipt.', 'edd' ) . '</p>';
+		echo '<p class="edd-alert edd-alert-warn">' . __( 'You must be logged in to view this payment receipt.', 'easy-digital-downloads' ) . '</p>';
 		edd_get_template_part( 'shortcode', 'login' );
 
 		$login_form = ob_get_clean();
@@ -815,7 +796,7 @@ function edd_process_profile_editor_updates( $data ) {
 	// New password
 	if ( ! empty( $data['edd_new_user_pass1'] ) ) {
 		if ( $data['edd_new_user_pass1'] !== $data['edd_new_user_pass2'] ) {
-			edd_set_error( 'password_mismatch', __( 'The passwords you entered do not match. Please try again.', 'edd' ) );
+			edd_set_error( 'password_mismatch', __( 'The passwords you entered do not match. Please try again.', 'easy-digital-downloads' ) );
 		} else {
 			$userdata['user_pass'] = $data['edd_new_user_pass1'];
 		}
@@ -825,12 +806,12 @@ function edd_process_profile_editor_updates( $data ) {
 	if( $email != $old_user_data->user_email ) {
 		// Make sure the new email is valid
 		if( ! is_email( $email ) ) {
-			edd_set_error( 'email_invalid', __( 'The email you entered is invalid. Please enter a valid email.', 'edd' ) );
+			edd_set_error( 'email_invalid', __( 'The email you entered is invalid. Please enter a valid email.', 'easy-digital-downloads' ) );
 		}
 
 		// Make sure the new email doesn't belong to another user
 		if( email_exists( $email ) ) {
-			edd_set_error( 'email_exists', __( 'The email you entered belongs to another user. Please use another.', 'edd' ) );
+			edd_set_error( 'email_exists', __( 'The email you entered belongs to another user. Please use another.', 'easy-digital-downloads' ) );
 		}
 	}
 
