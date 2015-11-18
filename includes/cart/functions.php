@@ -632,8 +632,8 @@ function edd_get_cart_subtotal() {
  */
 function edd_get_cart_discountable_subtotal( $code_id ) {
 
-	$cart_items    = edd_get_cart_content_details();
-	$items   = array();
+	$cart_items = edd_get_cart_content_details();
+	$items      = array();
 
 	$excluded_products = edd_get_discount_excluded_products( $code_id );
 
