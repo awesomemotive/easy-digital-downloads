@@ -137,7 +137,7 @@ function edd_tools_recount_stats_display() {
 						<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 
 						<select name="edd-export-class" id="recount-stats-type">
-							<option value="0" selected="selected" disabled="disabled"><?php _e( 'Plase select an option', 'easy-digital-downloads' ); ?></option>
+							<option value="0" selected="selected" disabled="disabled"><?php _e( 'Please select an option', 'easy-digital-downloads' ); ?></option>
 							<option data-type="recount-store" value="EDD_Tools_Recount_Store_Earnings"><?php _e( 'Recount Store Earnings and Sales', 'easy-digital-downloads' ); ?></option>
 							<option data-type="recount-download" value="EDD_Tools_Recount_Download_Stats"><?php printf( __( 'Recount Earnings and Sales for a %s', 'easy-digital-downloads' ), edd_get_label_singular( true ) ); ?></option>
 							<option data-type="recount-all" value="EDD_Tools_Recount_All_Stats"><?php printf( __( 'Recount Earnings and Sales for All %s', 'easy-digital-downloads' ), edd_get_label_plural( true ) ); ?></option>
