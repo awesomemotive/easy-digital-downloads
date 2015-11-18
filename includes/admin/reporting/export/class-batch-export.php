@@ -128,7 +128,7 @@ class EDD_Batch_Export extends EDD_Export {
 	public function process_step() {
 
 		if ( ! $this->can_export() ) {
-			wp_die( __( 'You do not have permission to export data.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+			wp_die( __( 'You do not have permission to export data.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 		}
 
 		if( $this->step < 2 ) {
@@ -194,7 +194,7 @@ class EDD_Batch_Export extends EDD_Export {
 				foreach ( $row as $col_id => $column ) {
 					// Make sure the column is valid
 					if ( array_key_exists( $col_id, $cols ) ) {
-						$row_data .= '"' . addslashes( $column ) . '"';
+						$row_data .= '"' . addslashes( preg_replace( "/\"/","'", $column ) ) . '"';
 						$row_data .= $i == count( $cols ) ? '' : ',';
 						$i++;
 					}
@@ -290,5 +290,22 @@ class EDD_Batch_Export extends EDD_Export {
 
 		edd_die();
 	}
+
+	/*
+	 * Set the properties specific to the export
+	 *
+	 * @since 2.4.2
+	 * @param array $request The Form Data passed into the batch processing
+	 */
+	public function set_properties( $request ) {}
+
+	/**
+	 * Allow for prefetching of data for the remainder of the exporter
+	 *
+	 * @access public
+	 * @since  2.5
+	 * @return void
+	 */
+	public function pre_fetch() {}
 
 }

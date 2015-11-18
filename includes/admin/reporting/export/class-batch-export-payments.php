@@ -37,28 +37,28 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 	 */
 	public function csv_cols() {
 		$cols = array(
-			'id'       => __( 'ID',   'edd' ), // unaltered payment ID (use for querying)
-			'seq_id'   => __( 'Payment Number',   'edd' ), // sequential payment ID
-			'email'    => __( 'Email', 'edd' ),
-			'first'    => __( 'First Name', 'edd' ),
-			'last'     => __( 'Last Name', 'edd' ),
-			'address1' => __( 'Address', 'edd' ),
-			'address2' => __( 'Address (Line 2)', 'edd' ),
-			'city'     => __( 'City', 'edd' ),
-			'state'    => __( 'State', 'edd' ),
-			'country'  => __( 'Country', 'edd' ),
-			'zip'      => __( 'Zip Code', 'edd' ),
-			'products' => __( 'Products', 'edd' ),
-			'skus'     => __( 'SKUs', 'edd' ),
-			'amount'   => __( 'Amount', 'edd' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')',
-			'tax'      => __( 'Tax', 'edd' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')',
-			'discount' => __( 'Discount Code', 'edd' ),
-			'gateway'  => __( 'Payment Method', 'edd' ),
-			'trans_id' => __( 'Transaction ID', 'edd' ),
-			'key'      => __( 'Purchase Key', 'edd' ),
-			'date'     => __( 'Date', 'edd' ),
-			'user'     => __( 'User', 'edd' ),
-			'status'   => __( 'Status', 'edd' )
+			'id'       => __( 'ID',   'easy-digital-downloads' ), // unaltered payment ID (use for querying)
+			'seq_id'   => __( 'Payment Number',   'easy-digital-downloads' ), // sequential payment ID
+			'email'    => __( 'Email', 'easy-digital-downloads' ),
+			'first'    => __( 'First Name', 'easy-digital-downloads' ),
+			'last'     => __( 'Last Name', 'easy-digital-downloads' ),
+			'address1' => __( 'Address', 'easy-digital-downloads' ),
+			'address2' => __( 'Address (Line 2)', 'easy-digital-downloads' ),
+			'city'     => __( 'City', 'easy-digital-downloads' ),
+			'state'    => __( 'State', 'easy-digital-downloads' ),
+			'country'  => __( 'Country', 'easy-digital-downloads' ),
+			'zip'      => __( 'Zip Code', 'easy-digital-downloads' ),
+			'products' => __( 'Products', 'easy-digital-downloads' ),
+			'skus'     => __( 'SKUs', 'easy-digital-downloads' ),
+			'amount'   => __( 'Amount', 'easy-digital-downloads' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')',
+			'tax'      => __( 'Tax', 'easy-digital-downloads' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')',
+			'discount' => __( 'Discount Code', 'easy-digital-downloads' ),
+			'gateway'  => __( 'Payment Method', 'easy-digital-downloads' ),
+			'trans_id' => __( 'Transaction ID', 'easy-digital-downloads' ),
+			'key'      => __( 'Purchase Key', 'easy-digital-downloads' ),
+			'date'     => __( 'Date', 'easy-digital-downloads' ),
+			'user'     => __( 'User', 'easy-digital-downloads' ),
+			'status'   => __( 'Status', 'easy-digital-downloads' )
 		);
 
 		if( ! edd_use_skus() ){
@@ -120,16 +120,28 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 
 				if ( $downloads ) {
 					foreach ( $downloads as $key => $download ) {
+
 						// Download ID
-						$id = isset( $payment_meta['cart_details'] ) ? $download['id'] : $download;
+						$id  = isset( $payment_meta['cart_details'] ) ? $download['id'] : $download;
+						$qty = isset( $download['quantity'] ) ? $download['quantity'] : 1;
 
-						// If the download has variable prices, override the default price
-						$price_override = isset( $payment_meta['cart_details'] ) ? $download['price'] : null;
+						if ( isset( $download['price'] ) ) {
+							$price = $download['price'];
+						} else {
+							// If the download has variable prices, override the default price
+							$price_override = isset( $payment_meta['cart_details'] ) ? $download['price'] : null;
+							$price = edd_get_download_final_price( $id, $user_info, $price_override );
+						}
 
-						$price = edd_get_download_final_price( $id, $user_info, $price_override );
 
 						// Display the Downoad Name
-						$products .= get_the_title( $id ) . ' - ';
+						$products .= html_entity_decode( get_the_title( $id ) );
+
+						if ( $qty > 1 ) {
+							$products .= html_entity_decode( ' (' . $qty . ')' );
+						}
+
+						$products .= ' - ';
 
 						if ( edd_use_skus() ) {
 							$sku = edd_get_download_sku( $id );
@@ -142,10 +154,11 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 							$price_options = $downloads[ $key ]['item_number']['options'];
 
 							if ( isset( $price_options['price_id'] ) ) {
-								$products .= edd_get_price_option_name( $id, $price_options['price_id'], $payment->ID ) . ' - ';
+								$products .= html_entity_decode( edd_get_price_option_name( $id, $price_options['price_id'], $payment->ID ) ) . ' - ';
 							}
 						}
-						$products .= html_entity_decode( edd_currency_filter( $price ) );
+
+						$products .= html_entity_decode( edd_currency_filter( edd_format_amount( $price ) ) );
 
 						if ( $key != ( count( $downloads ) -1 ) ) {
 							$products .= ' / ';
@@ -176,14 +189,14 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 					'zip'      => isset( $user_info['address']['zip'] )     ? $user_info['address']['zip']     : '',
 					'products' => $products,
 					'skus'     => $skus,
-					'amount'   => html_entity_decode( edd_format_amount( $total ) ),
+					'amount'   => html_entity_decode( edd_format_amount( $total ) ), // The non-discounted item price
 					'tax'      => html_entity_decode( edd_format_amount( edd_get_payment_tax( $payment->ID, $payment_meta ) ) ),
-					'discount' => isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ? $user_info['discount'] : __( 'none', 'edd' ),
+					'discount' => isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ? $user_info['discount'] : __( 'none', 'easy-digital-downloads' ),
 					'gateway'  => edd_get_gateway_admin_label( get_post_meta( $payment->ID, '_edd_payment_gateway', true ) ),
 					'trans_id' => edd_get_payment_transaction_id( $payment->ID ),
 					'key'      => $payment_meta['key'],
 					'date'     => $payment->post_date,
-					'user'     => $user ? $user->display_name : __( 'guest', 'edd' ),
+					'user'     => $user ? $user->display_name : __( 'guest', 'easy-digital-downloads' ),
 					'status'   => edd_get_payment_status( $payment, true )
 				);
 

@@ -81,16 +81,16 @@ class EDD_Stats {
 	 */
 	public function get_predefined_dates() {
 		$predefined = array(
-			'today'        => __( 'Today',        'edd' ),
-			'yesterday'    => __( 'Yesterday',    'edd' ),
-			'this_week'    => __( 'This Week',    'edd' ),
-			'last_week'    => __( 'Last Week',    'edd' ),
-			'this_month'   => __( 'This Month',   'edd' ),
-			'last_month'   => __( 'Last Month',   'edd' ),
-			'this_quarter' => __( 'This Quarter', 'edd' ),
-			'last_quarter' => __( 'Last Quater',  'edd' ),
-			'this_year'    => __( 'This Year',    'edd' ),
-			'last_year'    => __( 'Last Year',    'edd' )
+			'today'        => __( 'Today',        'easy-digital-downloads' ),
+			'yesterday'    => __( 'Yesterday',    'easy-digital-downloads' ),
+			'this_week'    => __( 'This Week',    'easy-digital-downloads' ),
+			'last_week'    => __( 'Last Week',    'easy-digital-downloads' ),
+			'this_month'   => __( 'This Month',   'easy-digital-downloads' ),
+			'last_month'   => __( 'Last Month',   'easy-digital-downloads' ),
+			'this_quarter' => __( 'This Quarter', 'easy-digital-downloads' ),
+			'last_quarter' => __( 'Last Quarter',  'easy-digital-downloads' ),
+			'this_year'    => __( 'This Year',    'easy-digital-downloads' ),
+			'last_year'    => __( 'Last Year',    'easy-digital-downloads' )
 		);
 		return apply_filters( 'edd_stats_predefined_dates', $predefined );
 	}
@@ -128,13 +128,13 @@ class EDD_Stats {
 	 */
 	public function convert_date( $date, $end_date = false ) {
 
-		$timestamp   = false;
-		$second      = 0;
-		$minute      = 0;
-		$hour        = 0;
-		$day         = 1;
-		$month       = date( 'n', current_time( 'timestamp' ) );
-		$year        = date( 'Y', current_time( 'timestamp' ) );
+		$this->timestamp = false;
+		$second          = 0;
+		$minute          = 0;
+		$hour            = 0;
+		$day             = 1;
+		$month           = date( 'n', current_time( 'timestamp' ) );
+		$year            = date( 'Y', current_time( 'timestamp' ) );
 
 		if ( array_key_exists( $date, $this->get_predefined_dates() ) ) {
 
@@ -145,7 +145,10 @@ class EDD_Stats {
 
 					if( $end_date ) {
 
-						$day = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+						$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+						$hour   = 23;
+						$minute = 59;
+						$second = 59;
 
 					}
 
@@ -430,11 +433,11 @@ class EDD_Stats {
 
 		} else {
 
-			return new WP_Error( 'invalid_date', __( 'Improper date provided.', 'edd' ) );
+			return new WP_Error( 'invalid_date', __( 'Improper date provided.', 'easy-digital-downloads' ) );
 
 		}
 
-		if( ! is_wp_error( $date ) && ! $this->timestamp ) {
+		if( ! is_wp_error( $date ) && false === $this->timestamp ) {
 
 			// Create an exact timestamp
 			$date = mktime( $hour, $minute, $second, $month, $day, $year );

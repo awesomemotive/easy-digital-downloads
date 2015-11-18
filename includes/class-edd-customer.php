@@ -171,7 +171,7 @@ class EDD_Customer {
 
 		} else {
 
-			return new WP_Error( 'edd-customer-invalid-property', sprintf( __( 'Can\'t get property %s', 'edd' ), $key ) );
+			return new WP_Error( 'edd-customer-invalid-property', sprintf( __( 'Can\'t get property %s', 'easy-digital-downloads' ), $key ) );
 
 		}
 
@@ -331,6 +331,12 @@ class EDD_Customer {
 
 		if( empty( $payment_id ) ) {
 			return false;
+		}
+
+		$status = edd_get_payment_status( $payment_id, false );
+
+		if ( 'publish' !== $status && 'revoked' !== $status ) {
+			$update_stats = false;
 		}
 
 		$new_payment_ids = '';

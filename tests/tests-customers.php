@@ -417,4 +417,16 @@ class Tests_Customers extends WP_UnitTestCase {
 
 	}
 
+	public function test_user_deletion_detachment() {
+		$customer      = new EDD_Customer( $this->_user_id, true );
+		$email_address = $customer->email;
+		$this->assertEquals( $this->_user_id, $customer->user_id );
+
+		wp_delete_user( $this->_user_id );
+		$customer2 = new EDD_Customer( $email_address );
+		// Make sure it's the same customer above (sanity check)
+		$this->assertEquals( $customer->id, $customer2->id );
+		$this->assertEquals( 0 ,$customer2->user_id );
+	}
+
 }

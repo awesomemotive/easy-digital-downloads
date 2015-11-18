@@ -4,10 +4,10 @@ Plugin URI: https://easydigitaldownloads.com
 Contributors: mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, topher1kenobe, sksmatt, SpencerFinnell
 Donate link: https://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
-Requires at least: 3.9.2
-Tested up to: 4.3
+Requires at least: 4.0
+Tested up to: 4.4
 
-Stable Tag: 2.4.6
+Stable Tag: 2.4.9
 
 License: GNU Version 2 or Any Later Version
 
@@ -81,7 +81,7 @@ Easy Digital Downloads has been translated into the following languages:
 25. Khmer
 26. Lithuanian
 
-Would you like to help translate the plugin into more languages? [Join our WP-Translations Community](https://www.transifex.com/projects/p/easy-digital-downloads/).
+Would you like to help translate the plugin into more languages? [Join our WP-Translations Community](http://docs.easydigitaldownloads.com/article/1023-translating-easy-digital-downloads).
 
 == Installation ==
 
@@ -101,7 +101,7 @@ There are three ways you can show the downloads shopping cart:
 
 2. Use the included widget. Go to Appearance > Widgets and place the "Downloads Cart" widget into any widget area available.
 
-3. Use the template tag and place the following the template file of your choosing:
+3. Use the template tag and place the following in the template file of your choosing:
 
 `echo edd_shopping_cart();`
 
@@ -190,6 +190,30 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.4.9, October 14, 2015 =
+
+* Fix: Importing payments caused payments to be associated with customer of user doing the import
+* Fix: Corrected spelling for edd_customer_recent_purchases_actions hook
+
+= 2.4.8, October 12, 2015 =
+
+* New: Added option to manually verify a user account from the customer details screen
+* New: Added support for searching customer records by user ID
+* New: Added improved error logging for email sending
+* Fix: Incorrect CSS animation property
+* Fix: Removed unused code in edd_get_purchase_link() function
+* Fix: Corrected spelling error in EDD_Stats class
+* Fix: New customers improperly created when logged-in user completed purchases with a different email
+* Fix: User verification process should not run on the very first purchase by a customer
+* Fix: edd_get_current_page_url() returns improper URL when WordPress is installed in sub folder
+* Tweak: Improved formatting of the welcome screen to match the styles of WordPress core
+
+= 2.4.7, September 29, 2015 =
+
+* Tweak: Changed text domain from "edd" to "easy-digital-downloads"
+* Fix: User ID not properly set on customer record when user account is created
+* Fix: Earnings / sales graph reporting 0 stats for some days incorrectly
 
 = 2.4.6, September 18, 2015 =
 

@@ -16,11 +16,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Get the contents of the cart
  *
  * @since 1.0
- * @return mixed array if cart isn't empty | false otherwise
+ * @return array Returns an array of cart contents, or an empty array if no items in the cart
  */
 function edd_get_cart_contents() {
 	$cart = EDD()->session->get( 'edd_cart' );
-	$cart = ! empty( $cart ) ? array_values( $cart ) : false;
+	$cart = ! empty( $cart ) ? array_values( $cart ) : array();
+
 	return apply_filters( 'edd_cart_contents', $cart );
 }
 
@@ -129,7 +130,6 @@ function edd_get_cart_quantity() {
  * @return string Cart key of the new item
  */
 function edd_add_to_cart( $download_id, $options = array() ) {
-
 	$download = get_post( $download_id );
 
 	if( 'download' != $download->post_type )
@@ -149,7 +149,19 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 	}
 
 	if( isset( $options['quantity'] ) ) {
-		$quantity = absint( preg_replace( '/[^0-9\.]/', '', $options['quantity'] ) );
+		if ( is_array( $options['quantity'] ) ) {
+
+			$quantity = array();
+			foreach ( $options['quantity'] as $q ) {
+				$quantity[] = absint( preg_replace( '/[^0-9\.]/', '', $q ) );
+			}
+
+		} else {
+
+			$quantity = absint( preg_replace( '/[^0-9\.]/', '', $options['quantity'] ) );
+
+		}
+
 		unset( $options['quantity'] );
 	} else {
 		$quantity = 1;
@@ -163,14 +175,14 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 	if ( isset( $options['price_id'] ) && is_array( $options['price_id'] ) ) {
 
 		// Process multiple price options at once
-		foreach ( $options['price_id'] as $price ) {
+		foreach ( $options['price_id'] as $key => $price ) {
 
 			$items[] = array(
 				'id'           => $download_id,
 				'options'      => array(
 					'price_id' => preg_replace( '/[^0-9\.-]/', '', $price )
 				),
-				'quantity'     => $quantity
+				'quantity'     => $quantity[ $key ],
 			);
 
 		}
@@ -400,9 +412,9 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
 			$label = '&nbsp;&ndash;&nbsp;';
 
 			if( edd_prices_show_tax_on_checkout() ) {
-				$label .= sprintf( __( 'includes %s tax', 'edd' ), edd_get_formatted_tax_rate() );
+				$label .= sprintf( __( 'includes %s tax', 'easy-digital-downloads' ), edd_get_formatted_tax_rate() );
 			} else {
-				$label .= sprintf( __( 'excludes %s tax', 'edd' ), edd_get_formatted_tax_rate() );
+				$label .= sprintf( __( 'excludes %s tax', 'easy-digital-downloads' ), edd_get_formatted_tax_rate() );
 			}
 
 			$label = apply_filters( 'edd_cart_item_tax_description', $label, $item_id, $options );
@@ -606,10 +618,50 @@ function edd_cart_subtotal() {
  * @return float Total amount before taxes
  */
 function edd_get_cart_subtotal() {
-	$subtotal = 0.00;
-	$items    = edd_get_cart_content_details();
 
-	if( $items ) {
+	$items    = edd_get_cart_content_details();
+	$subtotal = edd_get_cart_items_subtotal( $items );
+
+	return apply_filters( 'edd_get_cart_subtotal', $subtotal );
+}
+
+/**
+ * Get Cart Discountable Subtotal.
+ *
+ * @return float Total discountable amount before taxes
+ */
+function edd_get_cart_discountable_subtotal( $code_id ) {
+
+	$cart_items = edd_get_cart_content_details();
+	$items      = array();
+
+	$excluded_products = edd_get_discount_excluded_products( $code_id );
+
+	if( $cart_items ) {
+
+		foreach( $cart_items as $item ) {
+
+			if( ! in_array( $item['id'], $excluded_products ) ) {
+				$items[] =  $item;
+			}
+		}
+	}
+
+	$subtotal = edd_get_cart_items_subtotal( $items );
+
+	return apply_filters( 'edd_get_cart_discountable_subtotal', $subtotal );
+}
+
+/**
+ * Get cart items subtotal
+ * @param array $items Cart items array
+ *
+ * @return float items subtotal
+ */
+function edd_get_cart_items_subtotal( $items ) {
+	$subtotal = 0.00;
+
+	if( is_array( $items ) && ! empty( $items ) ) {
 
 		$prices = wp_list_pluck( $items, 'subtotal' );
 
@@ -625,9 +677,8 @@ function edd_get_cart_subtotal() {
 
 	}
 
-	return apply_filters( 'edd_get_cart_subtotal', $subtotal );
+	return apply_filters( 'edd_get_cart_items_subtotal', $subtotal );
 }
-
 /**
  * Get Total Cart Amount
  *
@@ -638,10 +689,10 @@ function edd_get_cart_subtotal() {
  * @return float Cart amount
  */
 function edd_get_cart_total( $discounts = false ) {
-	$subtotal  = edd_get_cart_subtotal();
-	$discounts = edd_get_cart_discounted_amount();
-	$cart_tax  = edd_get_cart_tax();
-	$fees      = edd_get_cart_fee_total();
+	$subtotal  = (float) edd_get_cart_subtotal();
+	$discounts = (float) edd_get_cart_discounted_amount();
+	$cart_tax  = (float) edd_get_cart_tax();
+	$fees      = (float) edd_get_cart_fee_total();
 	$total     = $subtotal - $discounts + $cart_tax + $fees;
 
 	if( $total < 0 )
@@ -1045,8 +1096,8 @@ function edd_save_cart() {
 
 	$messages['edd_cart_save_successful'] = sprintf(
 		'<strong>%1$s</strong>: %2$s',
-		__( 'Success', 'edd' ),
-		__( 'Cart saved successfully. You can restore your cart using this URL:', 'edd' ) . ' ' . '<a href="' .  edd_get_checkout_uri() . '?edd_action=restore_cart&edd_cart_token=' . $token . '">' .  edd_get_checkout_uri() . '?edd_action=restore_cart&edd_cart_token=' . $token . '</a>'
+		__( 'Success', 'easy-digital-downloads' ),
+		__( 'Cart saved successfully. You can restore your cart using this URL:', 'easy-digital-downloads' ) . ' ' . '<a href="' .  edd_get_checkout_uri() . '?edd_action=restore_cart&edd_cart_token=' . $token . '">' .  edd_get_checkout_uri() . '?edd_action=restore_cart&edd_cart_token=' . $token . '</a>'
 	);
 
 	EDD()->session->set( 'edd_cart_messages', $messages );
@@ -1083,7 +1134,7 @@ function edd_restore_cart() {
 
 		if ( isset( $_GET['edd_cart_token'] ) && $_GET['edd_cart_token'] != $token ) {
 
-			$messages['edd_cart_restoration_failed'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Error', 'edd' ), __( 'Cart restoration failed. Invalid token.', 'edd' ) );
+			$messages['edd_cart_restoration_failed'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Error', 'easy-digital-downloads' ), __( 'Cart restoration failed. Invalid token.', 'easy-digital-downloads' ) );
 			EDD()->session->set( 'edd_cart_messages', $messages );
 		}
 
@@ -1091,7 +1142,7 @@ function edd_restore_cart() {
 		delete_user_meta( $user_id, 'edd_cart_token' );
 
 		if ( isset( $_GET['edd_cart_token'] ) && $_GET['edd_cart_token'] != $token ) {
-			return new WP_Error( 'invalid_cart_token', __( 'The cart cannot be restored. Invalid token.', 'edd' ) );
+			return new WP_Error( 'invalid_cart_token', __( 'The cart cannot be restored. Invalid token.', 'easy-digital-downloads' ) );
 		}
 
 	} elseif ( ! is_user_logged_in() && isset( $_COOKIE['edd_saved_cart'] ) && $token ) {
@@ -1100,10 +1151,10 @@ function edd_restore_cart() {
 
 		if ( $_GET['edd_cart_token'] != $token ) {
 
-			$messages['edd_cart_restoration_failed'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Error', 'edd' ), __( 'Cart restoration failed. Invalid token.', 'edd' ) );
+			$messages['edd_cart_restoration_failed'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Error', 'easy-digital-downloads' ), __( 'Cart restoration failed. Invalid token.', 'easy-digital-downloads' ) );
 			EDD()->session->set( 'edd_cart_messages', $messages );
 
-			return new WP_Error( 'invalid_cart_token', __( 'The cart cannot be restored. Invalid token.', 'edd' ) );
+			return new WP_Error( 'invalid_cart_token', __( 'The cart cannot be restored. Invalid token.', 'easy-digital-downloads' ) );
 		}
 
 		$saved_cart = maybe_unserialize( stripslashes( $saved_cart ) );
@@ -1113,7 +1164,7 @@ function edd_restore_cart() {
 
 	}
 
-	$messages['edd_cart_restoration_successful'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Success', 'edd' ), __( 'Cart restored successfully.', 'edd' ) );
+	$messages['edd_cart_restoration_successful'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Success', 'easy-digital-downloads' ), __( 'Cart restored successfully.', 'easy-digital-downloads' ) );
 	EDD()->session->set( 'edd_cart', $saved_cart );
 	EDD()->session->set( 'edd_cart_messages', $messages );
 

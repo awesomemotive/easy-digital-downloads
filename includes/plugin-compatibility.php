@@ -70,8 +70,8 @@ function edd_append_no_cache_param( $settings ) {
 
 	$settings[] = array(
 		'id' => 'no_cache_checkout',
-		'name' => __('No Caching on Checkout?', 'edd'),
-		'desc' => __('Check this box in order to append a ?nocache parameter to the checkout URL to prevent caching plugins from caching the page.', 'edd'),
+		'name' => __('No Caching on Checkout?','easy-digital-downloads' ),
+		'desc' => __('Check this box in order to append a ?nocache parameter to the checkout URL to prevent caching plugins from caching the page.','easy-digital-downloads' ),
 		'type' => 'checkbox'
 	);
 
@@ -81,7 +81,7 @@ add_filter( 'edd_settings_misc', 'edd_append_no_cache_param', -1 );
 
 /**
  * Show the correct language on the [downloads] short code if qTranslate is active
-  *
+ *
  * @since 1.7
  * @param string $content Download content
  * @return string $content Download content
@@ -93,6 +93,23 @@ function edd_qtranslate_content( $content ) {
 }
 add_filter( 'edd_downloads_content', 'edd_qtranslate_content' );
 add_filter( 'edd_downloads_excerpt', 'edd_qtranslate_content' );
+
+/**
+ * Prevents qTranslate from redirecting to language-specific URL when downloading purchased files
+ *
+ * @since 2.5
+ * @param string       $target Target URL
+ * @return string|bool $target Target URL. False if redirect is disabled
+ */
+function edd_qtranslate_prevent_redirect( $target ) {
+
+	if( strpos( $target, 'eddfile' ) ) {
+		$target = false;
+	}
+
+	return $target;
+}
+add_filter( 'qtranslate_language_detect_redirect', 'edd_qtranslate_prevent_redirect' );
 
 /**
  * Disable the WooCommerce 'Un-force SSL when leaving checkout' option on EDD checkout
@@ -136,3 +153,17 @@ function edd_disable_404_redirected_redirect() {
 	}
 }
 add_action( 'template_redirect', 'edd_disable_404_redirected_redirect', 9 );
+
+/**
+ * Addes 'edd' to the list of Say What aliases after moving to WordPress.org language packs
+ *
+ * @since  2.4.6
+ * @param  array $aliases Say What domain aliases
+ * @return array          Say What domain alises with 'edd' added
+ */
+function edd_say_what_domain_aliases( $aliases ) {
+	$aliases['easy-digital-downloads'][] = 'edd';
+
+	return $aliases;
+}
+add_filter( 'say_what_domain_aliases', 'edd_say_what_domain_aliases', 10, 1 );
