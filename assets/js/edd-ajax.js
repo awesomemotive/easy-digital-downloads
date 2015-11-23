@@ -16,7 +16,7 @@ jQuery(document).ready(function ($) {
 				cart_item: item
 			};
 
-		 $.ajax({
+		$.ajax({
 			type: "POST",
 			data: data,
 			dataType: "json",
@@ -118,7 +118,7 @@ jQuery(document).ready(function ($) {
 				}
 			} else {
 				if( ! form.find('.edd_price_option_' + download + ':checked', form).length ) {
-					 // hide the spinner
+					// hide the spinner
 					$this.removeAttr( 'data-edd-loading' );
 					alert( edd_scripts.select_option );
 					return;
@@ -334,7 +334,9 @@ jQuery(document).ready(function ($) {
 		}, 200);
 	}
 
-	$(document).on('click', '#edd_purchase_form #edd_purchase_submit input[type=submit]', function(e) {
+	$(document).on('click', '#edd_purchase_form #edd_purchase_submit input[type=submit]', 'edd_click_event_on_purchase_submit');
+
+	function edd_click_event_on_purchase_submit(e) {
 
 		var eddPurchaseform = document.getElementById('edd_purchase_form');
 
@@ -364,8 +366,7 @@ jQuery(document).ready(function ($) {
 			}
 		});
 
-	});
-
+	}
 });
 
 function edd_load_gateway( payment_mode ) {
