@@ -336,38 +336,39 @@ jQuery(document).ready(function ($) {
 
 	$(document).on('click', '#edd_purchase_form #edd_purchase_submit input[type=submit]', 'edd_click_event_on_purchase_submit');
 
-	function edd_click_event_on_purchase_submit(e) {
-
-		var eddPurchaseform = document.getElementById('edd_purchase_form');
-
-		if( typeof eddPurchaseform.checkValidity === "function" && false === eddPurchaseform.checkValidity() ) {
-			return;
-		}
-
-		e.preventDefault();
-
-		var complete_purchase_val = $(this).val();
-
-		$(this).val(edd_global_vars.purchase_loading);
-
-		$(this).after('<span class="edd-cart-ajax"><i class="edd-icon-spinner edd-icon-spin"></i></span>');
-
-		$.post(edd_global_vars.ajaxurl, $('#edd_purchase_form').serialize() + '&action=edd_process_checkout&edd_ajax=true', function(data) {
-			if ( $.trim(data) == 'success' ) {
-				$('.edd_errors').remove();
-				$('.edd-error').hide();
-				$(eddPurchaseform).submit();
-			} else {
-				$('#edd-purchase-button').val(complete_purchase_val);
-				$('.edd-cart-ajax').remove();
-				$('.edd_errors').remove();
-				$('.edd-error').hide();
-				$('#edd_purchase_submit').before(data);
-			}
-		});
-
-	}
 });
+
+function edd_click_event_on_purchase_submit(e) {
+
+	var eddPurchaseform = document.getElementById('edd_purchase_form');
+
+	if( typeof eddPurchaseform.checkValidity === "function" && false === eddPurchaseform.checkValidity() ) {
+		return;
+	}
+
+	e.preventDefault();
+
+	var complete_purchase_val = $(this).val();
+
+	$(this).val(edd_global_vars.purchase_loading);
+
+	$(this).after('<span class="edd-cart-ajax"><i class="edd-icon-spinner edd-icon-spin"></i></span>');
+
+	$.post(edd_global_vars.ajaxurl, $('#edd_purchase_form').serialize() + '&action=edd_process_checkout&edd_ajax=true', function(data) {
+		if ( $.trim(data) == 'success' ) {
+			$('.edd_errors').remove();
+			$('.edd-error').hide();
+			$(eddPurchaseform).submit();
+		} else {
+			$('#edd-purchase-button').val(complete_purchase_val);
+			$('.edd-cart-ajax').remove();
+			$('.edd_errors').remove();
+			$('.edd-error').hide();
+			$('#edd_purchase_submit').before(data);
+		}
+	});
+
+}
 
 function edd_load_gateway( payment_mode ) {
 
