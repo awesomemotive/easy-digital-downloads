@@ -21,8 +21,16 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return void
  */
 function edd_options_page() {
-	$active_tab = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], edd_get_settings_tabs() ) ? $_GET['tab'] : 'general';
+	$settings_tabs = edd_get_settings_tabs();
+	$settings_tabs = empty($settings_tabs) ? array() : $settings_tabs;
+	$active_tab = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $settings_tabs ) ? $_GET['tab'] : 'general';
+	$sections = edd_get_settings_sections( $active_tab );
+	$key = 'main';
+	if ( is_array( $sections ) ) {
+		$key = key( $sections );
+	}
 
+	$section = isset( $_GET['section'] ) && ! empty( edd_get_settings_sections( $active_tab ) ) && array_key_exists( $_GET['section'], edd_get_settings_sections( $active_tab ) ) ? $_GET['section'] : $key;
 	ob_start();
 	?>
 	<div class="wrap">
@@ -32,8 +40,11 @@ function edd_options_page() {
 
 				$tab_url = add_query_arg( array(
 					'settings-updated' => false,
-					'tab' => $tab_id
+					'tab'              => $tab_id,
 				) );
+
+				// Remove the section from the tabs so we always end up at the main section
+				$tab_url = remove_query_arg( 'section', $tab_url );
 
 				$active = $active_tab == $tab_id ? ' nav-tab-active' : '';
 
@@ -43,6 +54,34 @@ function edd_options_page() {
 			}
 			?>
 		</h1>
+		<?php
+
+		$number_of_sections = count( $sections );
+		$number = 0;
+		if ( $number_of_sections > 1 ) {
+			echo '<div><ul class="subsubsub">';
+			foreach( $sections as $section_id => $section_name ) {
+				echo '<li>';
+				$number++;
+				$tab_url = add_query_arg( array(
+					'settings-updated' => false,
+					'tab' => $active_tab,
+					'section' => $section_id
+				) );
+				$class = '';
+				if ( $section == $section_id ) {
+					$class = 'current';
+				}
+				echo '<a class="' . $class . '" href="' . esc_url( $tab_url ) . '">' . $section_name . '</a>';
+
+				if ( $number != $number_of_sections ) {
+					echo ' | ';
+				}
+				echo '</li>';
+			}
+			echo '</ul></div>';
+		}
+		?>
 		<div id="tab_container">
 			<form method="post" action="options.php">
 				<table class="form-table">
@@ -50,11 +89,20 @@ function edd_options_page() {
 
 				settings_fields( 'edd_settings' );
 
-				do_action( 'edd_settings_tab_top', $active_tab );
+				if ( 'main' === $section ) {
+					do_action( 'edd_settings_tab_top', $active_tab );
+				}
 
-				do_settings_fields( 'edd_settings_' . $active_tab, 'edd_settings_' . $active_tab );
+				do_action( 'edd_settings_tab_top_' . $active_tab . '_' . $section );
 
-				do_action( 'edd_settings_tab_bottom', $active_tab );
+				do_settings_sections( 'edd_settings_' . $active_tab . '_' . $section );
+
+				do_action( 'edd_settings_tab_bottom_' . $active_tab . '_' . $section  );
+
+				// For backwards compatibility
+				if ( 'main' === $section ) {
+					do_action( 'edd_settings_tab_bottom', $active_tab );
+				}
 
 				?>
 				</table>
