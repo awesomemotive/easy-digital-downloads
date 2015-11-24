@@ -1667,8 +1667,18 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 		if( ! empty( $license ) && is_object( $license ) ) {
 
 			// activate_license returns 'invalid' on an expired license, make up for this by setting to 'expired' if needed
-			if ( false === $license->success && 'expired' === $license->error ) {
-				$license->license = 'expired';
+			if ( false === $license->success ) {
+
+				switch( $license->error ) {
+					case 'expired':
+						$license->license = 'expired';
+						break;
+
+					case 'missing':
+						$license->license = 'missing';
+						break;
+				}
+
 			}
 
 			switch( $license->license ) {
@@ -1686,6 +1696,18 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 					break;
 
+				case 'missing' :
+
+					$class = 'error';
+					$messages[] = sprintf(
+						__( 'Invalid license. Please <a href="%s" target="_blank" title="Visit account page">visit your account page</a> and verify it.', 'easy-digital-downloads' ),
+						'https://easydigitaldownloads.com/your-account?utm_campaign=admin&utm_source=licenses&utm_medium=missing'
+					);
+
+					$license_status = 'license-' . $class . '-notice';
+
+					break;
+
 				case 'invalid' :
 				case 'site_inactive' :
 
@@ -1693,7 +1715,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 					$messages[] = sprintf(
 						__( 'Your %s is not active for this URL. Please <a href="%s" target="_blank" title="Visit account page">visit your account page</a> to manage your license key URLs.', 'easy-digital-downloads' ),
 						$args['name'],
-						'https://easydigitaldownloads.com/your-account?utm_campaign=admin&utm_source=licenses&utm_medium=account'
+						'https://easydigitaldownloads.com/your-account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
 					);
 
 					$license_status = 'license-' . $class . '-notice';
