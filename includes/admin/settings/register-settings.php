@@ -1666,6 +1666,11 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 		if( ! empty( $license ) && is_object( $license ) ) {
 
+			// activate_license returns 'invalid' on an expired license, make up for this by setting to 'expired' if needed
+			if ( false === $license->success && 'expired' === $license->error ) {
+				$license->license = 'expired';
+			}
+
 			switch( $license->license ) {
 
 				case 'expired' :
@@ -1699,7 +1704,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 					$class = 'error';
 					$messages[] = sprintf( __( 'This license %s does not belong to %s.', 'easy-digital-downloads' ), $value, $args['name'] );
-					
+
 					$license_status = 'license-' . $class . '-notice';
 
 					break;
@@ -1707,16 +1712,16 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 				case 'valid' :
 
 					$class = 'valid';
-						
+
 					$now        = current_time( 'timestamp' );
 					$expiration = strtotime( $license->expires, current_time( 'timestamp' ) );
 
 					if( 'lifetime' === $license->expires ) {
-						
+
 						$messages[] = __( 'License key never expires.', 'easy-digital-downloads' );
 
 						$license_status = 'license-lifetime-notice';
-						
+
 					} elseif( $expiration > $now && $expiration - $now < 2592000 ) {
 
 						$messages[] = sprintf(
