@@ -93,7 +93,6 @@ function edd_delete_option( $key = '' ) {
 
 	// Next let's try to update the value
 	if( isset( $options[ $key ] ) ) {
-
 		unset( $options[ $key ] );
 
 	}
@@ -105,6 +104,8 @@ function edd_delete_option( $key = '' ) {
 		global $edd_options;
 		$edd_options = $options;
 	}
+	
+	do_action( 'edd_delete_option', $key, $did_update );
 
 	return $did_update;
 }
