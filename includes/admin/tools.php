@@ -111,6 +111,76 @@ function edd_tools_banned_emails_display() {
 }
 add_action( 'edd_tools_tab_general', 'edd_tools_banned_emails_display' );
 
+
+/**
+ * Display the recount stats
+ *
+ * @since       2.5
+ * @return      void
+ */
+function edd_tools_recount_stats_display() {
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
+	do_action( 'edd_tools_recount_stats_before' );
+?>
+	<div class="postbox">
+		<h3><span><?php _e( 'Recount Stats', 'edd' ); ?></span></h3>
+		<div class="inside recount-stats-controls">
+			<p><?php _e( 'Use these tools to recount / reset store stats.', 'edd' ); ?></p>
+			<p>
+				<form method="post" id="edd-tools-recount-form" class="edd-export-form">
+					<span>
+
+						<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+
+						<select name="edd-export-class" id="recount-stats-type">
+							<option value="0" selected="selected" disabled="disabled"><?php _e( 'Please select an option', 'easy-digital-downloads' ); ?></option>
+							<option data-type="recount-store" value="EDD_Tools_Recount_Store_Earnings"><?php _e( 'Recount Store Earnings and Sales', 'easy-digital-downloads' ); ?></option>
+							<option data-type="recount-download" value="EDD_Tools_Recount_Download_Stats"><?php printf( __( 'Recount Earnings and Sales for a %s', 'easy-digital-downloads' ), edd_get_label_singular( true ) ); ?></option>
+							<option data-type="recount-all" value="EDD_Tools_Recount_All_Stats"><?php printf( __( 'Recount Earnings and Sales for All %s', 'easy-digital-downloads' ), edd_get_label_plural( true ) ); ?></option>
+							<option data-type="recount-customer-stats" value="EDD_Tools_Recount_Customer_Stats"><?php _e( 'Recount Customer Stats', 'easy-digital-downloads' ); ?></option>
+							<option data-type="reset-stats" value="EDD_Tools_Reset_Stats"><?php _e( 'Reset Store', 'easy-digital-downloads' ); ?></option>
+						</select>
+
+						<span id="tools-product-dropdown" style="display: none">
+							<?php
+								$args = array(
+									'name'   => 'download_id',
+									'number' => -1,
+									'chosen' => true,
+								);
+								echo EDD()->html->product_dropdown( $args );
+							?>
+						</span>
+
+						<input type="submit" id="recount-stats-submit" value="<?php _e( 'Submit', 'edd' ); ?>" class="button-secondary"/>
+
+						<br />
+
+						<span class="edd-recount-stats-descriptions">
+							<span id="recount-store"><?php _e( 'Recalculates the total store earnings and sales.', 'easy-digital-downloads' ); ?></span>
+							<span id="recount-download"><?php printf( __( 'Recalculates the earnings and sales stats for a specific %s.', 'easy-digital-downloads' ), edd_get_label_singular( true ) ); ?></span>
+							<span id="recount-all"><?php printf( __( 'Recalculates the earnings and sales stats for all %s.', 'easy-digital-downloads' ), edd_get_label_plural( true ) ); ?></span>
+							<span id="recount-customer-stats"><?php _e( 'Recalculates the lifetime value and purchase counts for all customers.', 'easy-digital-downloads' ); ?></span>
+							<span id="reset-stats"><?php _e( '<strong>Deletes</strong> all payment records, customers, and related log entries.', 'easy-digital-downloads' ); ?></span>
+						</span>
+
+						<span class="spinner"></span>
+
+					</span>
+				</form>
+				<?php do_action( 'edd_tools_recount_forms' ); ?>
+			</p>
+		</div><!-- .inside -->
+	</div><!-- .postbox -->
+<?php
+	do_action( 'edd_tools_recount_stats_after' );
+}
+add_action( 'edd_tools_tab_general', 'edd_tools_recount_stats_display' );
+
 /**
  * Display the clear upgrades tab
  *
@@ -343,9 +413,9 @@ function edd_tools_import_export_process_import() {
 	if( ! current_user_can( 'manage_shop_settings' ) )
 		return;
 
-    if( edd_get_file_extension( $_FILES['import_file']['name'] ) != 'json' ) {
-        wp_die( __( 'Please upload a valid .json file', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 400 ) );
-    }
+	if( edd_get_file_extension( $_FILES['import_file']['name'] ) != 'json' ) {
+		wp_die( __( 'Please upload a valid .json file', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 400 ) );
+	}
 
 	$import_file = $_FILES['import_file']['tmp_name'];
 
@@ -573,16 +643,16 @@ function edd_tools_sysinfo_get() {
 
 	// Must-use plugins
 	// NOTE: MU plugins can't show updates!
-    $muplugins = get_mu_plugins();
-    if( count( $muplugins > 0 ) ) {
-        $return .= "\n" . '-- Must-Use Plugins' . "\n\n";
+	$muplugins = get_mu_plugins();
+	if( count( $muplugins > 0 ) ) {
+		$return .= "\n" . '-- Must-Use Plugins' . "\n\n";
 
 		foreach( $muplugins as $plugin => $plugin_data ) {
-            $return .= $plugin_data['Name'] . ': ' . $plugin_data['Version'] . "\n";
-        }
+			$return .= $plugin_data['Name'] . ': ' . $plugin_data['Version'] . "\n";
+		}
 
-        $return = apply_filters( 'edd_sysinfo_after_wordpress_mu_plugins', $return );
-    }
+		$return = apply_filters( 'edd_sysinfo_after_wordpress_mu_plugins', $return );
+	}
 
 	// WordPress active plugins
 	$return .= "\n" . '-- WordPress Active Plugins' . "\n\n";

@@ -124,8 +124,9 @@ class EDD_Payment {
 		$this->status          = $payment->post_status;
 		$this->post_status     = $this->status;
 		$this->mode            = $this->setup_mode();
+
 		$all_payment_statuses  = edd_get_payment_statuses();
-		$this->status_nicename = array_key_exists( $status, $all_payment_statuses ) ? $all_payment_statuses[ $status ] : ucfirst( $status );
+		$this->status_nicename = array_key_exists( $this->status, $all_payment_statuses ) ? $all_payment_statuses[ $this->status ] : ucfirst( $this->status );
 
 
 		// Items
@@ -930,7 +931,7 @@ class EDD_Payment {
 			$updated = wp_update_post( apply_filters( 'edd_update_payment_status_fields', $update_fields ) );
 
 			$all_payment_statuses  = edd_get_payment_statuses();
-			$this->status_nicename = array_key_exists( $status, $all_paument_statuses ) ? $all_payment_statuses[ $status ] : ucfirst( $status );
+			$this->status_nicename = array_key_exists( $status, $all_payment_statuses ) ? $all_payment_statuses[ $status ] : ucfirst( $status );
 
 			do_action( 'edd_update_payment_status', $this->ID, $status, $old_status );
 
