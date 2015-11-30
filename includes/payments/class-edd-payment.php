@@ -8,7 +8,7 @@
  * @subpackage  Classes/Payment
  * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       2.4
+ * @since       2.5
  */
 
 
@@ -269,7 +269,6 @@ class EDD_Payment {
 										$y = 0;
 
 										while ( $y < $item['quantity'] ) {
-											echo 'logging: ' . $item['id'] . ' for payment ' . $this->ID; echo "\n";
 											edd_record_sale_in_log( $item['id'], $this->ID, $price_id, $log_date );
 											$y++;
 
@@ -723,6 +722,13 @@ class EDD_Payment {
 		return true;
 	}
 
+	/**
+	 * Remove a fee from the payment
+	 *
+	 * @since  2.5
+	 * @param  int $key The array key index to remove
+	 * @return bool     If the fee was removed successfully
+	 */
 	public function remove_fee( $key ) {
 		$removed = false;
 
@@ -797,17 +803,6 @@ class EDD_Payment {
 	}
 
 	/**
-	 * Add a discount to a given payment
-	 *
-	 * @since 2.5
-	 * @param string $code The discount code to apply
-	 * @return void
-	 */
-	public function add_discount( $code ) {
-
-	}
-
-	/**
 	 * Add a note to a payment
 	 *
 	 * @since 2.5
@@ -823,6 +818,13 @@ class EDD_Payment {
 		edd_insert_payment_note( $this->ID, $note );
 	}
 
+	/**
+	 * Increase the payment's subtotal
+	 *
+	 * @since  2.5
+	 * @param  float  $amount The amount to increase the payment subtotal by
+	 * @return void
+	 */
 	public function increase_subtotal( $amount = 0.00 ) {
 		$amount          = (float) $amount;
 		$this->subtotal += $amount;
@@ -830,6 +832,13 @@ class EDD_Payment {
 		$this->recalculate_total();
 	}
 
+	/**
+	 * Decrease the payment's subtotal
+	 *
+	 * @since  2.5
+	 * @param  float  $amount The amount to decrease the payment subtotal by
+	 * @return void
+	 */
 	public function decrease_subtotal( $amount = 0.00 ) {
 		$amount          = (float) $amount;
 		$this->subtotal -= $amount;
@@ -852,6 +861,13 @@ class EDD_Payment {
 		$this->total = $this->subtotal + $this->tax;
 	}
 
+	/**
+	 * Increase the payment's tax by the provided amount
+	 *
+	 * @since  2.5
+	 * @param  float  $amount The amount to increase the payment tax by
+	 * @return void
+	 */
 	public function increase_tax( $amount = 0.00 ) {
 		$amount       = (float) $amount;
 		$this->tax   += $amount;
@@ -859,6 +875,13 @@ class EDD_Payment {
 		$this->recalculate_total();
 	}
 
+	/**
+	 * Decrease the payment's tax by the provided amount
+	 *
+	 * @since  2.5
+	 * @param  float  $amount The amount to reduce the payment tax by
+	 * @return void
+	 */
 	public function decrease_tax( $amount = 0.00 ) {
 		$amount     = (float) $amount;
 		$this->tax -= $amount;
@@ -868,10 +891,6 @@ class EDD_Payment {
 		}
 
 		$this->recalculate_total();
-	}
-
-	public function update_currency( $currency ) {
-		$this->currency = $currency;
 	}
 
 	/**
@@ -996,6 +1015,12 @@ class EDD_Payment {
 	 * To update an attribute, update it directly instead of re-running the setup routine
 	 */
 
+	/**
+	 * Setup the payment completed date
+	 *
+	 * @since  2.5
+	 * @return string The date the payment was completed
+	 */
 	private function setup_completed_date() {
 		$payment = get_post( $this->ID );
 
@@ -1012,6 +1037,12 @@ class EDD_Payment {
 		return $this->get_meta( '_edd_payment_mode' );
 	}
 
+	/**
+	 * Setup the payment total
+	 *
+	 * @since  2.5
+	 * @return float The payment total
+	 */
 	private function setup_total() {
 		$amount = $this->get_meta( '_edd_payment_total', true );
 
@@ -1027,6 +1058,12 @@ class EDD_Payment {
 		return $amount;
 	}
 
+	/**
+	 * Setup the payment tax
+	 *
+	 * @since  2.5
+	 * @return float The tax for the payment
+	 */
 	private function setup_tax() {
 		$tax = $this->get_meta( '_edd_payment_tax', true );
 
@@ -1040,6 +1077,12 @@ class EDD_Payment {
 		return apply_filters( 'edd_get_payment_tax', $tax, $this->ID );
 	}
 
+	/**
+	 * Setup the payment subtotal
+	 *
+	 * @since  2.5
+	 * @return float The subtotal of the payment
+	 */
 	private function setup_subtotal() {
 		$subtotal     = 0;
 		$cart_details = $this->cart_details;
@@ -1067,21 +1110,47 @@ class EDD_Payment {
 		return apply_filters( 'edd_get_payment_subtotal', $subtotal, $this->ID );
 	}
 
+	/**
+	 * Setup the currency code
+	 *
+	 * @since  2.5
+	 * @param  array $payment_meta The payment meta
+	 * @return string              The currency for the payment
+	 */
 	private function setup_currency( $payment_meta ) {
 		$currency = isset( $payment_meta['currency'] ) ? $payment_meta['currency'] : edd_get_currency();
 		return apply_filters( 'edd_payment_currency_code', $currency, $this->ID );
 	}
 
+	/**
+	 * Setup any fees associated with the payment
+	 *
+	 * @since  2.5
+	 * @param  arra $payment_meta The Payment Meta
+	 * @return array               The Fees
+	 */
 	private function setup_fees( $payment_meta ) {
 		$payment_fees = isset( $payment_meta['fees'] ) ? $payment_meta['fees'] : array();
 		return $payment_fees;
 	}
 
+	/**
+	 * Setup the gateway used for the payment
+	 *
+	 * @since  2.5
+	 * @return string The gateway
+	 */
 	private function setup_gateway() {
 		$gateway = $this->get_meta( '_edd_payment_gateway', true );
 		return apply_filters( 'edd_payment_gateway', $gateway );
 	}
 
+	/**
+	 * Setup the transaction ID
+	 *
+	 * @since  2.5
+	 * @return string The transaction ID for the payment
+	 */
 	private function setup_transaction_id() {
 		$transaction_id = false;
 		$transaction_id = $this->get_meta( '_edd_payment_transaction_id', true );
@@ -1096,36 +1165,79 @@ class EDD_Payment {
 		return apply_filters( 'edd_get_payment_transaction_id', $transaction_id, $this->ID );
 	}
 
+	/**
+	 * Setup the IP Address for the payment
+	 *
+	 * @since  2.5
+	 * @return string The IP address for the payment
+	 */
 	private function setup_ip() {
 		$ip = $this->get_meta( '_edd_payment_user_ip', true );
 		return apply_filters( 'edd_payment_user_ip', $ip );
 	}
 
+	/**
+	 * Setup the customer ID
+	 *
+	 * @since  2.5
+	 * @return int The Customer ID
+	 */
 	private function setup_customer_id() {
 		$customer_id = $this->get_meta( '_edd_payment_customer_id', true );
 		return apply_filters( 'edd_payment_customer_id', $customer_id );
 	}
 
+	/**
+	 * Setup the User ID associated with the purchase
+	 *
+	 * @since  2.5
+	 * @return int The User ID
+	 */
 	private function setup_user_id() {
 		$user_id = $this->get_meta( '_edd_payment_user_id', true );
 		return apply_filters( 'edd_payment_user_id', $user_id );
 	}
 
+	/**
+	 * Setup the email address for the purchase
+	 *
+	 * @since  2.5
+	 * @return string The email address for the payment
+	 */
 	private function setup_email() {
 		$email = $this->get_meta( '_edd_payment_user_email', true );
 		return apply_filters( 'edd_payment_user_email', $email );
 	}
 
+	/**
+	 * Setup the user info
+	 *
+	 * @since  2.5
+	 * @param  array $payment_meta The payment meta
+	 * @return array               The user info associated with the payment
+	 */
 	private function setup_user_info( $payment_meta ) {
 		$user_info    = isset( $payment_meta['user_info'] ) ? $payment_meta['user_info'] : false;
 		return apply_filters( 'edd_payment_meta_user_info', $user_info );
 	}
 
+	/**
+	 * Setup the payment key
+	 *
+	 * @since  2.5
+	 * @return string The Payment Key
+	 */
 	private function setup_payment_key() {
 		$key = $this->get_meta( '_edd_payment_purchase_key', true );
 		return apply_filters( 'edd_payment_key', $key, $this->ID );
 	}
 
+	/**
+	 * Setup the payment number
+	 *
+	 * @since  2.5
+	 * @return int|string Integer by default, or string if sequential order numbers is enabled
+	 */
 	private function setup_payment_number() {
 		$number = $this->ID;
 
@@ -1144,16 +1256,36 @@ class EDD_Payment {
 		return apply_filters( 'edd_payment_number', $number, $this->ID );
 	}
 
+	/**
+	 * Setup the cart details
+	 *
+	 * @since  2.5
+	 * @param  array $payment_meta The Payment Meta
+	 * @return array               The cart details
+	 */
 	private function setup_cart_details( $payment_meta ) {
 		$cart_details = isset( $payment_meta['cart_details'] ) ? maybe_unserialize( $payment_meta['cart_details'] ) : array();
 		return apply_filters( 'edd_payment_cart_details', $cart_details, $this->ID );
 	}
 
+	/**
+	 * Setup the downloads array
+	 *
+	 * @since  2.5
+	 * @param  array $payment_meta Payment Meta
+	 * @return array               Downloads associated with this payment
+	 */
 	private function setup_downloads( $payment_meta ) {
 		$downloads = isset( $payment_meta['downloads'] ) ? maybe_unserialize( $payment_meta['downloads'] ) : array();
 		return apply_filters( 'edd_payment_meta_downloads', $downloads, $this->ID );
 	}
 
+	/**
+	 * Setup the Unlimited downloads setting
+	 *
+	 * @since  2.5
+	 * @return bool If this payment has unlimited downloads
+	 */
 	private function setup_has_unlimited() {
 		$unlimited = (bool) $this->get_meta( '_edd_payment_unlimited_downloads', true );
 		return apply_filters( 'edd_payment_unlimited_downloads', $unlimited );
