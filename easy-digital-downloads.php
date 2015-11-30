@@ -417,8 +417,8 @@ endif; // End if class_exists check.
 
 
 /**
- * The main function for that returns Easy_Digital_Downloads 
- * 
+ * The main function for that returns Easy_Digital_Downloads
+ *
  * The main function responsible for returning the one true Easy_Digital_Downloads
  * Instance to functions everywhere.
  *

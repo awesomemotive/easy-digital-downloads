@@ -106,7 +106,7 @@ class EDD_License {
 
 		// Check that license is valid once per week
 		add_action( 'edd_weekly_scheduled_events', array( $this, 'weekly_license_check' ) );
-		
+
 		// For testing license notices, uncomment this line to force checks on every page load
 		//add_action( 'admin_init', array( $this, 'weekly_license_check' ) );
 
@@ -200,7 +200,7 @@ class EDD_License {
 			return;
 		}
 
-		echo '<p>' . sprintf( 
+		echo '<p>' . sprintf(
 			__( 'Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please <a href="%s" target="_blank" title="License renewal FAQ">renew your license</a>.', 'easy-digital-downloads' ),
 			'http://docs.easydigitaldownloads.com/article/1000-license-renewal'
 		) . '</p>';
@@ -222,13 +222,13 @@ class EDD_License {
 			return;
 		}
 
-		if( ! wp_verify_nonce( $_REQUEST[ $this->item_shortname . '_license_key-nonce'], $this->item_shortname . '_license_key-nonce' ) ) {
+		if ( ! isset( $_REQUEST[ $this->item_shortname . '_license_key-nonce'] ) || ! wp_verify_nonce( $_REQUEST[ $this->item_shortname . '_license_key-nonce'], $this->item_shortname . '_license_key-nonce' ) ) {
 
 			return;
 
 		}
 
-		if( ! current_user_can( 'manage_shop_settings' ) ) {
+		if ( ! current_user_can( 'manage_shop_settings' ) ) {
 			return;
 		}
 
@@ -240,7 +240,7 @@ class EDD_License {
 
 		}
 
-		foreach( $_POST as $key => $value ) {
+		foreach ( $_POST as $key => $value ) {
 			if( false !== strpos( $key, 'license_key_deactivate' ) ) {
 				// Don't activate a key when deactivating a different key
 				return;
@@ -414,7 +414,7 @@ class EDD_License {
 		}
 
 		$messages = array();
-		
+
 		$license = get_option( $this->item_shortname . '_license_active' );
 
 		if( is_object( $license ) && 'valid' !== $license->license && empty( $showed_invalid_message ) ) {
