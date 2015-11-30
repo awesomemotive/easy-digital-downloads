@@ -132,7 +132,7 @@ function edd_insert_payment( $payment_data = array() ) {
 		}
 
 		$payment->increase_tax( edd_get_cart_fee_tax() );
-		$payment->update_currency( $payment_data['currency'] );
+		$payment->currenty  = $payment_data['currency'];
 		$payment->user_info = $payment_data['user_info'];
 
 		$gateway = ! empty( $payment_data['gateway'] ) ? $payment_data['gateway'] : '';
