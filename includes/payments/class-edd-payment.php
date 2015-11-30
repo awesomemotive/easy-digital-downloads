@@ -39,17 +39,17 @@ class EDD_Payment {
 	protected $subtotal                = 0;
 	protected $tax                     = 0;
 	protected $fees                    = array();
-	protected $discount                = 0;
-	protected $discounts               = array();
+	protected $discounts               = 'none';
 	protected $date                    = '';
 	protected $completed_date          = '';
 	protected $status                  = 'pending';
 	protected $post_status             = 'pending'; // Same as $status but here for backwards compat
-	protected $status_nicename         = 'Pending';
+	protected $status_nicename         = '';
 	protected $customer_id             = null;
 	protected $user_id                 = 0;
 	protected $email                   = '';
 	protected $user_info               = array();
+	protected $address                 = array();
 	protected $transaction_id          = '';
 	protected $downloads               = array();
 	protected $ip                      = '';
@@ -150,6 +150,7 @@ class EDD_Payment {
 		$this->user_id        = $this->setup_user_id();
 		$this->email          = $this->setup_email();
 		$this->user_info      = $this->setup_user_info( $payment_meta );
+		$this->address        = $this->setup_address( $payment_meta );
 
 		// Other Identifiers
 		$this->key            = $this->setup_payment_key();
@@ -201,6 +202,25 @@ class EDD_Payment {
 		if( edd_get_option( 'enable_sequential' ) ) {
 			$number = edd_get_next_payment_number();
 		}
+
+		$payment_data = array(
+			'price'        => $this->total,
+			'date'         => $this->date,
+			'user_email'   => $this->email,
+			'purchase_key' => $this->key,
+			'currency'     => $this->currency,
+			'downloads'    => $this->downloads,
+			'user_info' => array(
+				'id'         => $this->user_id,
+				'email'      => $this->email,
+				'first_name' => $this->first_name,
+				'last_name'  => $this->last_name,
+				'discount'   => $this->discounts,
+				'address'    => $this->address,
+			),
+			'cart_details' => $this->cart_details,
+			'status'       => $this->status,
+		);
 
 		$args = apply_filters( 'edd_insert_payment_args', array(
 			'post_title'    => $payment_title,
@@ -1227,6 +1247,12 @@ class EDD_Payment {
 	private function setup_user_info( $payment_meta ) {
 		$user_info    = isset( $payment_meta['user_info'] ) ? $payment_meta['user_info'] : false;
 		return apply_filters( 'edd_payment_meta_user_info', $user_info );
+	}
+
+	private function setup_address( $payment_meta ) {
+		$address = ! empty( $payment_meta['user_info']['address'] ) ? $payment_meta['user_info']['address'] : array( 'line1' => '', 'line2' => '', 'city' => '', 'country' => '', 'state' => '', 'zip' => '' );
+
+		return apply_filters( 'edd_payment_address', $address );
 	}
 
 	/**
