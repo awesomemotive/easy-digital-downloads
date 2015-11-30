@@ -336,6 +336,10 @@ class EDD_Customer {
 
 		$payment = new EDD_Payment( $payment_id );
 
+		if ( 'publish' !== $payment->status && 'revoked' !== $payment->status ) {
+			$update_stats = false;
+		}
+
 		$new_payment_ids = '';
 
 		if( ! empty( $this->payment_ids ) ) {

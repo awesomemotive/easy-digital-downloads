@@ -52,6 +52,10 @@ jQuery(document).ready(function ($) {
 				$( this ).text( parseInt( key ) );
 			});
 
+			clone.find( 'span.edd_file_id' ).each(function() {
+				$( this ).text( parseInt( key ) );
+			});
+			
 			clone.find( '.edd_repeatable_default_input' ).each( function() {
 				$( this ).val( parseInt( key ) ).removeAttr('checked');
 			})
@@ -1198,6 +1202,7 @@ jQuery(document).ready(function ($) {
 		init : function() {
 			this.revoke_api_key();
 			this.regenerate_api_key();
+			this.recount_stats();
 		},
 
 		revoke_api_key : function() {
@@ -1210,6 +1215,96 @@ jQuery(document).ready(function ($) {
 				return confirm( edd_vars.regenerate_api_key );
 			} );
 		},
+		recount_stats : function() {
+			$( 'body').on( 'change', '#recount-stats-type', function() {
+
+				var export_form   = $('#edd-tools-recount-form');
+				var selected_type = $('option:selected', this).data('type');
+				var submit_button = $('#recount-stats-submit');
+				var products      = $('#tools-product-dropdown');
+
+				// Reset the form
+				export_form.find('.notice-wrap').remove();
+				submit_button.removeClass('button-disabled').attr('disabled', false);
+				products.hide();
+				$('.edd-recount-stats-descriptions span').hide();
+
+				if ( 'recount-download' === selected_type ) {
+
+					products.show();
+					products.find('.edd-select-chosen').css('width', 'auto');
+
+				} else if ( 'reset-stats' === selected_type ) {
+
+					export_form.append('<div class="notice-wrap"></div>');
+					var notice_wrap = export_form.find('.notice-wrap');
+					notice_wrap.html('<div class="notice notice-warning"><p><input type="checkbox" id="confirm-reset" name="confirm_reset_store" value="1" /> <label for="confirm-reset">' + edd_vars.reset_stats_warn + '</label></p></div>');
+
+					$('#recount-stats-submit').addClass('button-disabled').attr('disabled', 'disabled');
+
+				} else {
+
+					products.hide();
+					products.val(0);
+
+				}
+
+				$('#' + selected_type ).show();
+			} );
+
+			$('body').on('change', '#confirm-reset', function() {
+				var checked = $(this).is(':checked');
+				if ( checked ) {
+					$('#recount-stats-submit').removeClass('button-disabled').removeAttr('disabled');
+				} else {
+					$('#recount-stats-submit').addClass('button-disabled').attr('disabled', 'disabled');
+				}
+			});
+
+			$( '#edd-tools-recount-form' ).submit( function(e) {
+				var selection     = $('#recount-stats-type').val();
+				var export_form   = $(this);
+				var selected_type = $('option:selected', this).data('type');
+
+
+				if ( 'reset-stats' === selected_type ) {
+					var is_confirmed = $('#confirm-reset').is(':checked');
+					if ( is_confirmed ) {
+						return true;
+					} else {
+						has_errors = true;
+					}
+				}
+
+				export_form.find('.notice-wrap').remove();
+
+				export_form.append('<div class="notice-wrap"></div>');
+				var notice_wrap = export_form.find('.notice-wrap');
+				var has_errors  = false;
+
+				if ( null === selection || 0 === selection ) {
+					// Needs to pick a method edd_vars.batch_export_no_class
+					notice_wrap.html('<div class="updated error"><p>' + edd_vars.batch_export_no_class + '</p></div>');
+					has_errors = true;
+				}
+
+				if ( 'recount-download' === selected_type ) {
+
+					var selected_download = $('select[name="download_id"]').val();
+					if ( selected_download == 0 ) {
+						// Needs to pick download edd_vars.batch_export_no_reqs
+						notice_wrap.html('<div class="updated error"><p>' + edd_vars.batch_export_no_reqs + '</p></div>');
+						has_errors = true;
+					}
+
+				}
+
+				if ( has_errors ) {
+					export_form.find('.button-disabled').removeClass('button-disabled');
+					return false;
+				}
+			} );
+		},
 	};
 	EDD_Tools.init();
 
@@ -1220,6 +1315,7 @@ jQuery(document).ready(function ($) {
 
 		init : function() {
 			this.submit();
+			this.dismiss_message();
 		},
 
 		submit : function() {
@@ -1259,8 +1355,7 @@ jQuery(document).ready(function ($) {
 				},
 				dataType: "json",
 				success: function( response ) {
-
-					if( 'done' == response.step || response.error ) {
+					if( 'done' == response.step || response.error || response.success ) {
 
 						// We need to get the actual in progress form, not all forms on the page
 						var export_form    = $('.edd-export-form').find('.edd-progress').parent().parent();
@@ -1271,7 +1366,12 @@ jQuery(document).ready(function ($) {
 						if ( response.error ) {
 
 							var error_message = response.message;
-							notice_wrap.html('<div class="update error"><p>' + error_message + '</p></div>');
+							notice_wrap.html('<div class="updated error"><p>' + error_message + '</p></div>');
+
+						} else if ( response.success ) {
+
+							var success_message = response.message;
+							notice_wrap.html('<div id="edd-batch-success" class="updated notice is-dismissible"><p>' + success_message + '<span class="notice-dismiss"></span></p></div>');
 
 						} else {
 
@@ -1296,6 +1396,12 @@ jQuery(document).ready(function ($) {
 				}
 			});
 
+		},
+
+		dismiss_message : function() {
+			$('body').on( 'click', '#edd-batch-success .notice-dismiss', function() {
+				$('#edd-batch-success').parent().slideUp('fast');
+			});
 		}
 
 	};
@@ -1307,8 +1413,8 @@ jQuery(document).ready(function ($) {
 	var EDD_Customer = {
 
 		vars: {
-			customer_card_wrap_editable:  $( '#edd-customer-card-wrapper .editable' ),
-			customer_card_wrap_edit_item: $( '#edd-customer-card-wrapper .edit-item' ),
+			customer_card_wrap_editable:  $( '.edd-customer-card-wrapper .editable' ),
+			customer_card_wrap_edit_item: $( '.edd-customer-card-wrapper .edit-item' ),
 			user_id: $('input[name="customerinfo[user_id]"]'),
 			state_input: $(':input[name="customerinfo[state]"]'),
 			note: $( '#customer-note' ),
@@ -1489,7 +1595,7 @@ jQuery(document).ready(function ($) {
 		$('.edd_user_search_results span').html('');
 	});
 
-	if( $('.edd_dashboard_sales').length ) {
+	if( $('#edd_dashboard_sales').length ) {
 		$.ajax({
 			type: "GET",
 			data: {
