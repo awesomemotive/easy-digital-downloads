@@ -45,6 +45,7 @@ class EDD_Payment {
 	protected $completed_date          = '';
 	protected $status                  = 'pending';
 	protected $post_status             = 'pending'; // Same as $status but here for backwards compat
+	protected $status_nicename         = 'Pending';
 	protected $customer_id             = null;
 	protected $user_id                 = 0;
 	protected $email                   = '';
@@ -118,11 +119,14 @@ class EDD_Payment {
 		$payment_meta   = $this->get_meta();
 
 		// Status and Dates
-		$this->date           = $payment->post_date;
-		$this->completed_date = $this->setup_completed_date();
-		$this->status         = $payment->post_status;
-		$this->post_status    = $this->status;
-		$this->mode           = $this->setup_mode();
+		$this->date            = $payment->post_date;
+		$this->completed_date  = $this->setup_completed_date();
+		$this->status          = $payment->post_status;
+		$this->post_status     = $this->status;
+		$this->mode            = $this->setup_mode();
+		$all_payment_statuses  = edd_get_payment_statuses();
+		$this->status_nicename = array_key_exists( $status, $all_payment_statuses ) ? $all_payment_statuses[ $status ] : ucfirst( $status );
+
 
 		// Items
 		$this->fees           = $this->setup_fees( $payment_meta );
@@ -924,6 +928,9 @@ class EDD_Payment {
 			$update_fields = array( 'ID' => $this->ID, 'post_status' => $status, 'edit_date' => current_time( 'mysql' ) );
 
 			$updated = wp_update_post( apply_filters( 'edd_update_payment_status_fields', $update_fields ) );
+
+			$all_payment_statuses  = edd_get_payment_statuses();
+			$this->status_nicename = array_key_exists( $status, $all_paument_statuses ) ? $all_payment_statuses[ $status ] : ucfirst( $status );
 
 			do_action( 'edd_update_payment_status', $this->ID, $status, $old_status );
 
