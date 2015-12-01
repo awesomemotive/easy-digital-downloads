@@ -171,7 +171,14 @@ function edd_load_admin_scripts( $hook ) {
 	wp_register_script( 'jquery-chosen', $js_dir . 'chosen.jquery' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
 	wp_enqueue_script( 'jquery-chosen' );
 
-	wp_register_script( 'edd-admin-scripts', $js_dir . 'admin-scripts' . $suffix . '.js', array( 'jquery', 'inline-edit-post' ), EDD_VERSION, false );
+	$admin_deps = array();
+	if ( ! edd_is_admin_page( $hook, 'edit' ) && ! edd_is_admin_page( $hook, 'new' ) ) {
+		$admin_deps = array( 'jquery', 'inline-edit-post' );
+	} else {
+		$admin_deps = array( 'jquery' );
+	}
+
+	wp_register_script( 'edd-admin-scripts', $js_dir . 'admin-scripts' . $suffix . '.js', $admin_deps, EDD_VERSION, false );
 	wp_enqueue_script( 'edd-admin-scripts' );
 
 	wp_localize_script( 'edd-admin-scripts', 'edd_vars', array(
@@ -202,7 +209,10 @@ function edd_load_admin_scripts( $hook ) {
 		'new_media_ui'            => apply_filters( 'edd_use_35_media_ui', 1 ),
 		'remove_text'             => __( 'Remove', 'easy-digital-downloads' ),
 		'type_to_search'          => sprintf( __( 'Type to search %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
-		'quantities_enabled'      => edd_item_quantities_enabled()
+		'quantities_enabled'      => edd_item_quantities_enabled(),
+		'batch_export_no_class'   => __( 'You must choose a method.', 'easy-digital-downloads' ),
+		'batch_export_no_reqs'    => __( 'Required fields not completed.', 'easy-digital-downloads' ),
+		'reset_stats_warn'        => __( 'Are you sure you want to reset your store? This process is <strong><em>not reversible</em></strong>. Please be sure you have a recent backup.', 'easy-digital-downloads' ),
 	));
 
 	wp_enqueue_style( 'wp-color-picker' );
