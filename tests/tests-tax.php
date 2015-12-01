@@ -78,6 +78,7 @@ class Tests_Taxes extends WP_UnitTestCase {
 		$_SERVER['SERVER_NAME'] = 'edd_virtual';
 
 		$payment_id = edd_insert_payment( $purchase_data );
+		edd_update_payment_status( $payment_id, 'publish' );
 
 		$this->_payment_id = $payment_id;
 
