@@ -311,12 +311,6 @@ function edd_get_registered_settings() {
 						),
 						'type' => 'checkbox',
 					),
-					'uninstall_on_delete' => array(
-						'id'   => 'uninstall_on_delete',
-						'name' => __( 'Remove Data on Uninstall?', 'easy-digital-downloads' ),
-						'desc' => __( 'Check this box if you would like EDD to completely remove all of its data when the plugin is deleted.', 'easy-digital-downloads' ),
-						'type' => 'checkbox',
-					),
 				),
 				'currency' => array(
 					'currency_settings' => array(
@@ -689,7 +683,12 @@ function edd_get_registered_settings() {
 						'desc' => __('Allow item quantities to be changed.','easy-digital-downloads' ),
 						'type' => 'checkbox',
 					),
-
+					'uninstall_on_delete' => array(
+						'id'   => 'uninstall_on_delete',
+						'name' => __( 'Remove Data on Uninstall?', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this box if you would like EDD to completely remove all of its data when the plugin is deleted.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
 				),
 				'checkout' => array(
 					'checkout_settings' => array(
@@ -904,9 +903,11 @@ function edd_settings_sanitize( $input = array() ) {
 
 	$settings = edd_get_registered_settings();
 	$tab      = isset( $referrer['tab'] ) ? $referrer['tab'] : 'general';
+	$section  = isset( $referrer['section'] ) ? $referrer['section'] : 'main';
 
 	$input = $input ? $input : array();
 	$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
+	$input = apply_filters( 'edd_settings_' . $tab . '-' . $section . '_sanitize', $input );
 
 	// Loop through each setting being saved and pass it through a sanitization filter
 	foreach ( $input as $key => $value ) {
@@ -948,13 +949,37 @@ function edd_settings_sanitize( $input = array() ) {
 }
 
 /**
- * Misc Settings Sanitization
+ * Misc File Download Settings Sanitization
  *
- * @since 1.6
+ * @since 2.5
  * @param array $input The value inputted in the field
  * @return string $input Sanitizied value
  */
-function edd_settings_sanitize_misc( $input ) {
+function edd_settings_sanitize_misc_file_downloads( $input ) {
+
+	global $edd_options;
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return $input;
+	}
+
+	if( edd_get_file_download_method() != $input['download_method'] || ! edd_htaccess_exists() ) {
+		// Force the .htaccess files to be updated if the Download method was changed.
+		edd_create_protection_files( true, $input['download_method'] );
+	}
+
+	return $input;
+}
+add_filter( 'edd_settings_misc-file_downloads_sanitize', 'edd_settings_sanitize_misc_file_downloads' );
+
+/**
+ * Misc Accounting Settings Sanitization
+ *
+ * @since 2.5
+ * @param array $input The value inputted in the field
+ * @return string $input Sanitizied value
+ */
+function edd_settings_sanitize_misc_accounting( $input ) {
 
 	global $edd_options;
 
@@ -976,7 +1001,7 @@ function edd_settings_sanitize_misc( $input ) {
 
 	return $input;
 }
-add_filter( 'edd_settings_misc_sanitize', 'edd_settings_sanitize_misc' );
+add_filter( 'edd_settings_misc-accounting_sanitize', 'edd_settings_sanitize_misc_accounting' );
 
 /**
  * Taxes Settings Sanitization
