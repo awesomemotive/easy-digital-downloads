@@ -455,7 +455,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 			WP_CLI::line( '' );
 		}
-    }
+	}
 
 
 	/**
@@ -504,10 +504,13 @@ class EDD_CLI extends WP_CLI_Command {
 		$price_id   = false;
 
 		if( count( $assoc_args ) > 0 ) {
-			$number     = ( array_key_exists( 'number', $assoc_args ) )   ? absint( $assoc_args['number'] ) : $number;
-			$id         = ( array_key_exists( 'id', $assoc_args ) )       ? absint( $assoc_args['id'] )     : $id;
-			$price_id   = ( array_key_exists( 'price_id', $assoc_args ) ) ? absint( $assoc_args['id'] )     : false;
-			$tax        = ( array_key_exists( 'tax', $assoc_args ) )      ? floatval( $assoc_args['tax'] )  : 0;
+			$number     = ( array_key_exists( 'number', $assoc_args ) )   ? absint( $assoc_args['number'] )             : $number;
+			$id         = ( array_key_exists( 'id', $assoc_args ) )       ? absint( $assoc_args['id'] )                 : $id;
+			$price_id   = ( array_key_exists( 'price_id', $assoc_args ) ) ? absint( $assoc_args['id'] )                 : false;
+			$tax        = ( array_key_exists( 'tax', $assoc_args ) )      ? floatval( $assoc_args['tax'] )              : 0;
+			$email      = ( array_key_exists( 'email', $assoc_args ) )    ? sanitize_email( $assoc_args['email'] )      : 'guest@local.dev';
+			$fname      = ( array_key_exists( 'fname', $assoc_args ) )    ? sanitize_text_field( $assoc_args['fname'] ) : 'Pippin';
+			$lname      = ( array_key_exists( 'lname', $assoc_args ) )    ? sanitize_text_field( $assoc_args['lname'] ) : 'Williamson';
 
 			// Status requires a bit more validation
 			if( array_key_exists( 'status', $assoc_args ) ) {
@@ -537,9 +540,9 @@ class EDD_CLI extends WP_CLI_Command {
 		// Build the user info array
 		$user_info = array(
 			'id'            => 0,
-			'email'         => 'guest@local.dev',
-			'first_name'    => 'Pippin',
-			'last_name'     => 'Williamson',
+			'email'         => $email,
+			'first_name'    => $fname,
+			'last_name'     => $lname,
 			'discount'      => 'none'
 		);
 
@@ -629,7 +632,7 @@ class EDD_CLI extends WP_CLI_Command {
 				'price'	        => edd_sanitize_amount( $total ),
 				'tax'           => 0,
 				'purchase_key'  => strtolower( md5( uniqid() ) ),
-				'user_email'    => 'guest@local.dev',
+				'user_email'    => $email,
 				'user_info'     => $user_info,
 				'currency'      => edd_get_currency(),
 				'downloads'     => $final_downloads,
