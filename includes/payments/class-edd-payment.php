@@ -184,8 +184,9 @@ class EDD_Payment {
 		// Make sure the payment is inserted with the correct timezone
 		date_default_timezone_set( edd_get_timezone_id() );
 
-		$payment_tite = '';
 		// Construct the payment title
+		$payment_tite = '';
+
 		if ( ! empty( $this->first_name ) && ! empty( $this->last_name ) ) {
 			$payment_title = $this->first_name . ' ' . $this->last_name;
 		} else if ( ! empty( $this->email ) && is_email( $this->email ) ) {
@@ -194,6 +195,10 @@ class EDD_Payment {
 
 		if ( empty( $payment_title ) ) {
 			return false;
+		}
+
+		if( empty( $this->date ) ) {
+			$this->date = date( 'Y-m-d H:i:s', current_time( 'timestamp' ) );
 		}
 
 		$payment_data = array(

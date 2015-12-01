@@ -173,6 +173,12 @@ function edd_insert_payment( $payment_data = array() ) {
 	$payment->key         = $payment_data['purchase_key'];
 	$payment->mode        = edd_is_test_mode() ? 'test' : 'live';
 
+	if ( ! empty( $payment_data['date'] ) ) {
+		$payment->date    = $payment_data['date'];
+	} elseif ( ! empty( $payment_data['post_date'] ) ) {
+		$payment->date    = $payment_data['post_date'];
+	}
+
 	$payment->discounts = ! empty( $payment_data['user_info']['discount'] ) ? $payment_data['user_info']['discount'] : array();
 
 	if ( edd_get_option( 'enable_sequential' ) ) {
