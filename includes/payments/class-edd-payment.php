@@ -201,6 +201,19 @@ class EDD_Payment {
 			$this->date = date( 'Y-m-d H:i:s', current_time( 'timestamp' ) );
 		}
 
+		if ( empty( $this->key ) ) {
+
+			$auth_key  = defined( 'AUTH_KEY' ) ? AUTH_KEY : '';
+			$this->key = strtolower( md5( $this->email . date( 'Y-m-d H:i:s' ) . $auth_key . uniqid( 'edd', true ) ) );  // Unique key
+
+		}
+
+		if ( empty( $this->ip ) ) {
+
+			$this->ip = edd_get_ip();
+
+		}
+
 		$payment_data = array(
 			'price'        => $this->total,
 			'date'         => $this->date,
@@ -377,6 +390,7 @@ class EDD_Payment {
 						break;
 
 					case 'ip':
+
 						$this->update_meta( '_edd_payment_user_ip', $this->ip );
 						break;
 
