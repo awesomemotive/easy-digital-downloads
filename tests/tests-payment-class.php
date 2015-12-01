@@ -271,4 +271,11 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$this->assertEquals( 130, $payment->total );
 		$this->assertEquals( 'Test Fee 3', $payment->fees[1]['label'] );
 	}
+
+	public function test_user_info() {
+		$payment = new EDD_Payment( $this->_payment_id );
+
+		$this->assertEquals( 'Admin', $payment->first_name );
+		$this->assertEquals( 'User', $payment->last_name );
+	}
 }

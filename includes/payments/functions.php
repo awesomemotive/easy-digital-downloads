@@ -116,85 +116,86 @@ function edd_get_payment_by( $field = '', $value = '' ) {
  */
 function edd_insert_payment( $payment_data = array() ) {
 
-	$payment = new EDD_Payment();
-	$payment->create_payment( $payment_data );
-
-	if ( $payment->ID ) {
-		foreach ( $payment_data['cart_details'] as $item ) {
-			$args = array(
-				'quantity'    => $item['quantity'],
-				'price_id'    => $item['item_number']['options']['price_id'],
-				'tax'         => $item['tax'],
-				'amount'      => isset( $item['price'] ) ? $item['price'] : $item['item_price'],
-			);
-
-			$payment->add_download( $item['id'], $args );
-		}
-
-		$payment->increase_tax( edd_get_cart_fee_tax() );
-		$payment->currency  = $payment_data['currency'];
-		$payment->user_info = $payment_data['user_info'];
-
-		$gateway = ! empty( $payment_data['gateway'] ) ? $payment_data['gateway'] : '';
-		$gateway = empty( $gateway ) && isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : $gateway;
-		$payment->gateway = $gateway;
-
-		$customer = new stdClass;
-
-		if ( did_action( 'edd_pre_process_purchase' ) && is_user_logged_in() ) {
-			$customer  = new EDD_customer( get_current_user_id(), true );
-		}
-
-		if ( empty( $customer->id ) ) {
-			$customer = new EDD_Customer( $payment_data['user_email'] );
-		}
-
-		if ( empty( $customer->id ) ) {
-
-			$customer_data = array(
-				'name'        => $payment_data['user_info']['first_name'] . ' ' . $payment_data['user_info']['last_name'],
-				'email'       => $payment_data['user_email'],
-				'user_id'     => $payment_data['user_info']['id']
-			);
-
-			$customer->create( $customer_data );
-
-		}
-
-		$customer->attach_payment( $payment->ID, false );
-		$payment->customer_id = $customer->id;
-		$payment->user_id     = $payment_data['user_info']['id'];
-		$payment->user_info   = $payment_data['user_info'];
-		$payment->email       = $payment_data['user_email'];
-		$payment->ip          = edd_get_ip();
-		$payment->key         = $payment_data['purchase_key'];
-
-		$mode           = edd_is_test_mode() ? 'test' : 'live';
-		$payment->mode  = $mode;
-
-		$gateway          = ! empty( $payment_data['gateway'] ) ? $payment_data['gateway'] : '';
-		$gateway          = empty( $gateway ) && isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : $gateway;
-		$payment->gateway = $gateway;
-
-		if ( ! empty( $discount ) ) {
-			$payment->add_discount( $discount->ID );
-		}
-
-		if ( edd_get_option( 'enable_sequential' ) ) {
-			$number          = edd_get_next_payment_number();
-			$payment->number = edd_format_payment_number( $number );
-			update_option( 'edd_last_payment_number', $number );
-		}
-
-		// Clear the user's purchased cache
-		delete_transient( 'edd_user_' . $payment_data['user_info']['id'] . '_purchases' );
-
-		do_action( 'edd_insert_payment', $payment->ID, $payment_data );
-
-		$payment->save();
-
-		return $payment->ID; // Return the ID
+	if ( empty( $payment_data ) ) {
+		return false;
 	}
+
+	$payment = new EDD_Payment();
+
+	foreach ( $payment_data['cart_details'] as $item ) {
+		$args = array(
+			'quantity'    => $item['quantity'],
+			'price_id'    => $item['item_number']['options']['price_id'],
+			'tax'         => $item['tax'],
+			'amount'      => isset( $item['price'] ) ? $item['price'] : $item['item_price'],
+		);
+
+		$payment->add_download( $item['id'], $args );
+	}
+
+	$payment->increase_tax( edd_get_cart_fee_tax() );
+	$payment->currency  = $payment_data['currency'];
+	$payment->user_info = $payment_data['user_info'];
+
+	$gateway = ! empty( $payment_data['gateway'] ) ? $payment_data['gateway'] : '';
+	$gateway = empty( $gateway ) && isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : $gateway;
+	$payment->gateway = $gateway;
+
+	$customer = new stdClass;
+
+	if ( did_action( 'edd_pre_process_purchase' ) && is_user_logged_in() ) {
+		$customer  = new EDD_customer( get_current_user_id(), true );
+	}
+
+	if ( empty( $customer->id ) ) {
+		$customer = new EDD_Customer( $payment_data['user_email'] );
+	}
+
+	if ( empty( $customer->id ) ) {
+
+		$customer_data = array(
+			'name'        => $payment_data['user_info']['first_name'] . ' ' . $payment_data['user_info']['last_name'],
+			'email'       => $payment_data['user_email'],
+			'user_id'     => $payment_data['user_info']['id']
+		);
+
+		$customer->create( $customer_data );
+
+	}
+
+	$payment->customer_id = $customer->id;
+	$payment->user_id     = $payment_data['user_info']['id'];
+	$payment->email       = $payment_data['user_email'];
+	$payment->first_name  = $payment_data['user_info']['first_name'];
+	$payment->last_name   = $payment_data['user_info']['last_name'];
+	$payment->email       = $payment_data['user_info']['email'];
+	$payment->ip          = edd_get_ip();
+	$payment->key         = $payment_data['purchase_key'];
+	$payment->mode        = edd_is_test_mode() ? 'test' : 'live';
+
+	$gateway          = ! empty( $payment_data['gateway'] ) ? $payment_data['gateway'] : '';
+	$gateway          = empty( $gateway ) && isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : $gateway;
+	$payment->gateway = $gateway;
+
+	$payment->discounts = ! empty( $payment_data['user_info']['discount'] ) ? $payment_data['user_info']['discount'] : array();
+
+	if ( edd_get_option( 'enable_sequential' ) ) {
+		$number          = edd_get_next_payment_number();
+		$payment->number = edd_format_payment_number( $number );
+		update_option( 'edd_last_payment_number', $number );
+	}
+
+	// Clear the user's purchased cache
+	delete_transient( 'edd_user_' . $payment_data['user_info']['id'] . '_purchases' );
+
+	do_action( 'edd_insert_payment', $payment->ID, $payment_data );
+
+	$payment->save();
+
+	$customer->attach_payment( $payment->ID, false );
+
+	return $payment->ID; // Return the ID
+
 	// Return false if no payment was inserted
 	return false;
 }

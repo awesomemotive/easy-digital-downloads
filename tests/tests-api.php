@@ -369,8 +369,8 @@ class Tests_API extends WP_UnitTestCase {
 
 		$this->assertEquals( 1, $out['customers'][0]['info']['id'] );
 		$this->assertEquals( 'admin', $out['customers'][0]['info']['username'] );
-		$this->assertEquals( '', $out['customers'][0]['info']['first_name'] );
-		$this->assertEquals( '', $out['customers'][0]['info']['last_name'] );
+		$this->assertEquals( 'Admin', $out['customers'][0]['info']['first_name'] );
+		$this->assertEquals( 'User', $out['customers'][0]['info']['last_name'] );
 		$this->assertEquals( 'admin@example.org', $out['customers'][0]['info']['email'] );
 		$this->assertEquals( 1, $out['customers'][0]['stats']['total_purchases'] );
 		$this->assertEquals( 100.0, $out['customers'][0]['stats']['total_spent'] );

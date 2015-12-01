@@ -47,6 +47,8 @@ class EDD_Payment {
 	protected $status_nicename         = '';
 	protected $customer_id             = null;
 	protected $user_id                 = 0;
+	protected $first_name              = '';
+	protected $last_name               = '';
 	protected $email                   = '';
 	protected $user_info               = array();
 	protected $address                 = array();
@@ -58,6 +60,7 @@ class EDD_Payment {
 	protected $cart_details            = array();
 	protected $has_unlimited_downloads = false;
 	protected $pending;
+	protected $parent_payment          = 0;
 
 	/**
 	 * Setup the EDD Payments class
@@ -124,6 +127,7 @@ class EDD_Payment {
 		$this->status          = $payment->post_status;
 		$this->post_status     = $this->status;
 		$this->mode            = $this->setup_mode();
+		$this->parent_payment  = $payment->post_parent;
 
 		$all_payment_statuses  = edd_get_payment_statuses();
 		$this->status_nicename = array_key_exists( $this->status, $all_payment_statuses ) ? $all_payment_statuses[ $this->status ] : ucfirst( $this->status );
@@ -151,6 +155,9 @@ class EDD_Payment {
 		$this->email          = $this->setup_email();
 		$this->user_info      = $this->setup_user_info( $payment_meta );
 		$this->address        = $this->setup_address( $payment_meta );
+		$this->discounts      = $this->user_info['discount'];
+		$this->first_name     = $this->user_info['first_name'];
+		$this->last_name      = $this->user_info['last_name'];
 
 		// Other Identifiers
 		$this->key            = $this->setup_payment_key();
@@ -172,35 +179,21 @@ class EDD_Payment {
 	 * @param  array    $payment_data Base payment data.
 	 * @return int|bool Fale on failure, the payment ID on success.
 	 */
-	public function create_payment( $payment_data = array() ) {
-
-		// Don't allow creating a payment, if we have an ID already
-		if ( ! empty( $this->ID ) ) {
-			return false;
-		}
-
-		if ( empty( $payment_data ) ) {
-			return false;
-		}
+	private function insert_payment() {
 
 		// Make sure the payment is inserted with the correct timezone
 		date_default_timezone_set( edd_get_timezone_id() );
 
+		$payment_tite = '';
 		// Construct the payment title
-		if ( isset( $payment_data['user_info']['first_name'] ) || isset( $payment_data['user_info']['last_name'] ) ) {
-			$payment_title = $payment_data['user_info']['first_name'] . ' ' . $payment_data['user_info']['last_name'];
-		} else {
-			$payment_title = $payment_data['user_email'];
+		if ( ! empty( $this->first_name ) && ! empty( $this->last_name ) ) {
+			$payment_title = $this->first_name . ' ' . $this->last_name;
+		} else if ( ! empty( $this->email ) && is_email( $this->email ) ) {
+			$payment_title = $this->email;
 		}
 
-		// Retrieve the ID of the discount used, if any
-		if ( $payment_data['user_info']['discount'] != 'none' ) {
-			$discount = edd_get_discount_by( 'code', $payment_data['user_info']['discount'] );
-		}
-
-		// Find the next payment number, if enabled
-		if( edd_get_option( 'enable_sequential' ) ) {
-			$number = edd_get_next_payment_number();
+		if ( empty( $payment_title ) ) {
+			return false;
 		}
 
 		$payment_data = array(
@@ -224,11 +217,11 @@ class EDD_Payment {
 
 		$args = apply_filters( 'edd_insert_payment_args', array(
 			'post_title'    => $payment_title,
-			'post_status'   => isset( $payment_data['status'] ) ? $payment_data['status'] : 'pending',
+			'post_status'   => $this->status,
 			'post_type'     => 'edd_payment',
-			'post_parent'   => isset( $payment_data['parent'] ) ? $payment_data['parent'] : null,
-			'post_date'     => isset( $payment_data['post_date'] ) ? $payment_data['post_date'] : null,
-			'post_date_gmt' => isset( $payment_data['post_date'] ) ? get_gmt_from_date( $payment_data['post_date'] ) : null
+			'post_parent'   => $this->parent_payment,
+			'post_date'     => $this->date,
+			'post_date_gmt' => get_gmt_from_date( $this->date ),
 		), $payment_data );
 
 		// Create a blank payment
@@ -250,23 +243,16 @@ class EDD_Payment {
 	public function save() {
 		$saved = false;
 
-		$new_meta = array(
-			'downloads'     => $this->downloads,
-			'cart_details'  => $this->cart_details,
-			'fees'          => $this->fees,
-			'currency'      => $this->currency,
-			'user_info'     => $this->user_info,
-		);
+		if ( empty( $this->ID ) ) {
 
-		$meta        = $this->get_meta();
-		$merged_meta = array_merge( $meta, $new_meta );
+			$payment_id = $this->insert_payment();
 
-		// Only save the payment meta if it's changed
-		if ( md5( serialize( $meta ) ) !== md5( serialize( $merged_meta) ) ) {
-			$updated     = $this->update_meta( '_edd_payment_meta', $merged_meta );
-			if ( false !== $updated ) {
-				$saved = true;
+			if ( false === $payment_id ) {
+				$saved = false;
+			} else {
+				$this->ID = $payment_id;
 			}
+
 		}
 
 		// If we have something pending, let's save it
@@ -397,6 +383,18 @@ class EDD_Payment {
 						$this->update_meta( '_edd_payment_user_id', $this->user_id );
 						break;
 
+					case 'first_name':
+						$this->user_info['first_name'] = $this->first_name;
+						break;
+
+					case 'last_name':
+						$this->user_info['last_name'] = $this->last_name;
+						break;
+
+					case 'discounts':
+						$this->user_info['discount'] = $this->discounts;
+						break;
+
 					case 'email':
 						$this->update_meta( '_edd_payment_user_email', $this->email );
 						break;
@@ -417,15 +415,21 @@ class EDD_Payment {
 						$this->update_meta( '_edd_payment_unlimited_downloads', $this->has_unlimited_downloads );
 						break;
 
+					case 'parent_payment':
+						$args = array(
+							'ID'          => $this->ID,
+							'post_parent' => $this->parent_payment,
+						);
+
+						wp_update_post( $args );
+						break;
+
 					default:
 						do_action( 'edd_payment_save', $this, $key );
 						break;
 				}
 			}
 
-
-
-			// Kick off some actual updates of the details
 			$this->update_meta( '_edd_payment_total', $this->total );
 			$this->update_meta( '_edd_payment_tax', $this->tax );
 
@@ -449,6 +453,25 @@ class EDD_Payment {
 
 				}
 
+			}
+
+			$new_meta = array(
+				'downloads'     => $this->downloads,
+				'cart_details'  => $this->cart_details,
+				'fees'          => $this->fees,
+				'currency'      => $this->currency,
+				'user_info'     => $this->user_info,
+			);
+
+			$meta        = $this->get_meta();
+			$merged_meta = array_merge( $meta, $new_meta );
+
+			// Only save the payment meta if it's changed
+			if ( md5( serialize( $meta ) ) !== md5( serialize( $merged_meta) ) ) {
+				$updated     = $this->update_meta( '_edd_payment_meta', $merged_meta );
+				if ( false !== $updated ) {
+					$saved = true;
+				}
 			}
 
 			$this->pending = array();
@@ -575,7 +598,7 @@ class EDD_Payment {
 		reset( $this->cart_details );
 
 		$this->increase_subtotal( $amount );
-		$this->increase_tax( $args['tax'] );
+		$this->increase_tax( $tax );
 
 		return true;
 
@@ -1139,6 +1162,18 @@ class EDD_Payment {
 	}
 
 	/**
+	 * Setup the payments discount codes
+	 *
+	 * @since  2.5
+	 * @param  array $payment_meta The payment Meta
+	 * @return array               Array of discount codes on this payment
+	 */
+	private function setup_discounts( $payment_meta ) {
+		$discounts = ! empty( $payment_meta['user_info']['discount'] ) ? $payment_meta['user_info']['discount'] : array();
+		return apply_filters( 'edd_payment_discounts', $discounts, $this->ID );
+	}
+
+	/**
 	 * Setup the currency code
 	 *
 	 * @since  2.5
@@ -1245,7 +1280,14 @@ class EDD_Payment {
 	 * @return array               The user info associated with the payment
 	 */
 	private function setup_user_info( $payment_meta ) {
-		$user_info    = isset( $payment_meta['user_info'] ) ? $payment_meta['user_info'] : false;
+		$defaults = array(
+			'first_name' => $this->first_name,
+			'last_name'  => $this->last_name,
+			'discount'   => $this->discounts,
+		);
+
+		$user_info    = isset( $payment_meta['user_info'] ) ? $payment_meta['user_info'] : array();
+		$user_info    = wp_parse_args( $user_info, $defaults );
 		return apply_filters( 'edd_payment_meta_user_info', $user_info );
 	}
 
