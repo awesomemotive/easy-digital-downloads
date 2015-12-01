@@ -125,7 +125,7 @@ function edd_insert_payment( $payment_data = array() ) {
 	foreach ( $payment_data['cart_details'] as $item ) {
 		$args = array(
 			'quantity'    => $item['quantity'],
-			'price_id'    => $item['item_number']['options']['price_id'],
+			'price_id'    => isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null,
 			'tax'         => $item['tax'],
 			'amount'      => isset( $item['price'] ) ? $item['price'] : $item['item_price'],
 		);
