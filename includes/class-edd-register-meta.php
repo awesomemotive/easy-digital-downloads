@@ -141,18 +141,20 @@ class EDD_Register_Meta {
 	 * @return array $prices Array of the remapped variable prices
 	 */
 	function sanitize_variable_prices( $prices = array() ) {
+		$prices = $this->remove_blank_rows( $prices );
+
 		if ( ! is_array( $prices ) ) {
-			return $prices;
+			return array();
 		}
 
-		foreach( $prices as $id => $price ) {
+		foreach ( $prices as $id => $price ) {
 
-			if( empty( $price['amount'] ) && empty( $price['name'] ) ) {
+			if ( empty( $price['amount'] ) && empty( $price['name'] ) ) {
 
 				unset( $prices[ $id ] );
 				continue;
 
-			} elseif( empty( $price['amount'] ) ) {
+			} elseif ( empty( $price['amount'] ) ) {
 
 				$price['amount'] = 0;
 
@@ -175,6 +177,7 @@ class EDD_Register_Meta {
 	 * @return array $files Array of the remapped file downloads
 	 */
 	function sanitize_files( $files = array() ) {
+		$files = $this->remove_blank_rows( $files );
 
 		// Clean up filenames to ensure whitespaces are stripped
 		foreach( $files as $id => $file ) {
@@ -190,6 +193,29 @@ class EDD_Register_Meta {
 
 		// Make sure all files are rekeyed starting at 0
 		return array_values( $files );
+	}
+
+	/**
+	 * Don't save blank rows.
+	 *
+	 * When saving, check the price and file table for blank rows.
+	 * If the name of the price or file is empty, that row should not
+	 * be saved.
+	 *
+	 * @since 2.5
+	 * @param array $new Array of all the meta values
+	 * @return array $new New meta value with empty keys removed
+	 */
+	private function remove_blank_rows( $new ) {
+
+		if ( is_array( $new ) ) {
+			foreach ( $new as $key => $value ) {
+				if ( empty( $value['name'] ) && empty( $value['amount'] ) && empty( $value['file'] ) )
+					unset( $new[ $key ] );
+			}
+		}
+
+		return $new;
 	}
 
 }
