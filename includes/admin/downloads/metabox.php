@@ -207,8 +207,6 @@ function edd_metabox_save_check_blank_rows( $new ) {
 
 	return $new;
 }
-add_filter( 'edd_metabox_save_edd_variable_prices', 'edd_metabox_save_check_blank_rows' );
-add_filter( 'edd_metabox_save_edd_download_files', 'edd_metabox_save_check_blank_rows' );
 
 /** Download Configuration *****************************************************************/
 
