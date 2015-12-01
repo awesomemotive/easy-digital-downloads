@@ -32,6 +32,7 @@ class EDD_Payment {
 	 */
 
 	protected $ID                      = 0;
+	protected $new                     = false;
 	protected $number                  = '';
 	protected $mode                    = 'live';
 	protected $key                     = '';
@@ -205,12 +206,13 @@ class EDD_Payment {
 
 			$auth_key  = defined( 'AUTH_KEY' ) ? AUTH_KEY : '';
 			$this->key = strtolower( md5( $this->email . date( 'Y-m-d H:i:s' ) . $auth_key . uniqid( 'edd', true ) ) );  // Unique key
-
+			$this->pending['key'] = $this->key;
 		}
 
 		if ( empty( $this->ip ) ) {
 
 			$this->ip = edd_get_ip();
+			$this->pending['ip'] = $this->ip;
 
 		}
 
@@ -246,7 +248,8 @@ class EDD_Payment {
 		$payment_id = wp_insert_post( $args );
 
 		if ( ! empty( $payment_id ) ) {
-			$this->ID    = $payment_id;
+			$this->ID  = $payment_id;
+			$this->new = true;
 		}
 
 		return $this->ID;
@@ -275,6 +278,7 @@ class EDD_Payment {
 
 		// If we have something pending, let's save it
 		if ( ! empty( $this->pending ) ) {
+
 			$total_increase = 0;
 			$total_decrease = 0;
 
