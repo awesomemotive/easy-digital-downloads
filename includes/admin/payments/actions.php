@@ -124,7 +124,7 @@ function edd_update_payment_details( $data ) {
 			$payment->remove_download( $deleted_download['id'], $args );
 
 			do_action( 'edd_remove_download_from_payment', $payment_id, $deleted_download['id'] );
-			
+
 		}
 
 
@@ -223,14 +223,10 @@ function edd_update_payment_details( $data ) {
 	// Set new meta values
 	$payment->user_id        = $customer->user_id;
 	$payment->email          = $customer->email;
+	$payment->first_name     = $first_name;
+	$payment->last_name      = $last_name;
+	$payment->address        = $address;
 
-	$user_info['id']         = $customer->user_id;
-	$user_info['email']      = $customer->email;
-	$user_info['first_name'] = $first_name;
-	$user_info['last_name']  = $last_name;
-	$user_info['address']    = $address;
-
-	$payment->user_info      = $user_info;
 	$payment->total          = $new_total;
 	$payment->tax            = $tax;
 

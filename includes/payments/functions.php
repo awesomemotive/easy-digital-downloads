@@ -173,10 +173,6 @@ function edd_insert_payment( $payment_data = array() ) {
 	$payment->key         = $payment_data['purchase_key'];
 	$payment->mode        = edd_is_test_mode() ? 'test' : 'live';
 
-	$gateway          = ! empty( $payment_data['gateway'] ) ? $payment_data['gateway'] : '';
-	$gateway          = empty( $gateway ) && isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : $gateway;
-	$payment->gateway = $gateway;
-
 	$payment->discounts = ! empty( $payment_data['user_info']['discount'] ) ? $payment_data['user_info']['discount'] : array();
 
 	if ( edd_get_option( 'enable_sequential' ) ) {
