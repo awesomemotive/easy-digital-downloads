@@ -52,35 +52,39 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 	 */
 	public function get_data() {
 
-		$customer    = new EDD_Customer( $this->customer_id );
-		$payment_ids = explode( ',', $customer->payment_ids );
+		$customer = new EDD_Customer( $this->customer_id );
+		$payments = get_option( 'edd_recount_customer_payments_' . $customer->id, array() );
 
 		$offset     = ( $this->step - 1 ) * $this->per_step;
-		$step_items = array_slice( $payment_ids, $offset, $this->per_step );
+		$step_items = array_slice( $payments, $offset, $this->per_step );
 
 		if ( count( $step_items ) > 0 ) {
 			$pending_total = (float) get_option( 'edd_stats_customer_pending_total' . $customer->id, 0 );
 			$step_total    = 0;
 
-			foreach ( $step_items as $payment_id ) {
-				$payment = get_post( $payment_id );
+			$found_payment_ids = get_option( 'edd_stats_found_payments_' . $customer->id, array() );
+
+			foreach ( $step_items as $payment ) {
+				$payment = get_post( $payment->ID );
 
 				if ( is_null( $payment ) || is_wp_error( $payment ) || 'edd_payment' !== $payment->post_type ) {
 
 					$missing_payments   = get_option( 'edd_stats_missing_payments' . $customer->id, array() );
-					$missing_payments[] = $payment_id;
+					$missing_payments[] = $payment->ID;
 					update_option( 'edd_stats_missing_payments' . $customer->id, $missing_payments );
 
 					continue;
 				}
 
-				$payment_amount  = edd_get_payment_amount( $payment_id );
-				$step_total     += $payment_amount;
+				$found_payment_ids[] = $payment->ID;
+				$payment_amount      = edd_get_payment_amount( $payment->ID );
+				$step_total         += $payment_amount;
 
 			}
 
 			$updated_total = $pending_total + $step_total;
 			update_option( 'edd_stats_customer_pending_total' . $customer->id, $updated_total );
+			update_option( 'edd_stats_found_payments_' . $customer->id, $found_payment_ids );
 
 			return true;
 		}
@@ -143,7 +147,9 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 			return true;
 		} else {
 			$customer         = new EDD_Customer( $this->customer_id );
-			$payment_ids      = explode( ',', $customer->payment_ids );
+			$payment_ids      = get_option( 'edd_stats_found_payments_' . $customer->id, array() );
+			delete_option( 'edd_stats_found_payments_' . $customer->id );
+
 			$removed_payments = array_unique( get_option( 'edd_stats_missing_payments' . $customer->id, array() ) );
 
 			if ( ! empty( $removed_payments ) ) {
@@ -159,7 +165,7 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 
 			$pending_total = get_option( 'edd_stats_customer_pending_total' . $customer->id, 0 );
 			delete_option( 'edd_stats_customer_pending_total' . $customer->id );
-
+			delete_option( 'edd_recount_customer_stats_' . $customer->id );
 			$purchase_count = count( $payment_ids );
 			$payment_ids    = implode( ',', $payment_ids );
 			$customer->update( array( 'payment_ids' => $payment_ids, 'purchase_count' => $purchase_count, 'purchase_value' => $pending_total ) );
@@ -205,6 +211,30 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 			// Before we start, let's zero out the customer's data
 			$customer = new EDD_Customer( $this->customer_id );
 			$customer->update( array( 'purchase_value' => edd_format_amount( 0 ), 'purchase_count' => 0 ) );
+
+			$attached_payment_ids = explode( ',', $customer->payment_ids );
+
+			$attached_args = array(
+				'post__in' => $attached_payment_ids,
+				'number'   => -1,
+			);
+
+			$attached_payments = edd_get_payments( $attached_args );
+
+			$unattached_args = array(
+				'post__not_in' => $attached_payment_ids,
+				'number'       => -1,
+				'meta_query'   => array(
+					'key'     => '_edd_payment_email',
+					'value'   => $customer->email,
+				),
+			);
+
+			$unattached_payments = edd_get_payments( $unattached_args );
+
+			$payments = array_merge( $attached_payments, $unattached_payments );
+
+			update_option( 'edd_recount_customer_payments_' . $customer->id, $payments );
 		}
 	}
 
