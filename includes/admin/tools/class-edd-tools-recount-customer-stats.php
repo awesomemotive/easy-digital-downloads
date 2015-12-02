@@ -39,7 +39,7 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 	 * @since  2.5
 	 * @var integer
 	 */
-	public $per_step = 10;
+	public $per_step = 5;
 
 	/**
 	 * Get the Export Data
@@ -65,14 +65,28 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 
 			foreach ( $customers as $customer ) {
 
-				$payment_ids    = explode( ',', $customer->payment_ids );
+				$attached_payment_ids = explode( ',', $customer->payment_ids );
 
-				$payment_args = array(
-					'post__in' => $payment_ids,
+				$attached_args = array(
+					'post__in' => $attached_payment_ids,
 					'number'   => -1,
 				);
 
-				$payments = edd_get_payments( $payment_args );
+				$attached_payments = edd_get_payments( $attached_args );
+
+				$unattached_args = array(
+					'post__not_in' => $attached_payment_ids,
+					'number'       => -1,
+					'meta_query'   => array(
+						'key'     => '_edd_payment_email',
+						'value'   => $customer->email,
+						'compare' => '=',
+					),
+				);
+
+				$unattached_payments = edd_get_payments( $unattached_args );
+
+				$payments = array_merge( $attached_payments, $unattached_payments );
 
 				$purchase_value = 0.00;
 				$payment_ids    = array();
