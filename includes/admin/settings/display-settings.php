@@ -30,7 +30,8 @@ function edd_options_page() {
 		$key = key( $sections );
 	}
 
-	$section = isset( $_GET['section'] ) && ! empty( edd_get_settings_sections( $active_tab ) ) && array_key_exists( $_GET['section'], edd_get_settings_sections( $active_tab ) ) ? $_GET['section'] : $key;
+	$registered_sections = edd_get_settings_sections( $active_tab );
+	$section             = isset( $_GET['section'] ) && ! empty( $registered_sections ) && array_key_exists( $_GET['section'], $registered_sections ) ? $_GET['section'] : $key;
 	ob_start();
 	?>
 	<div class="wrap">
