@@ -127,9 +127,9 @@ function edd_tools_recount_stats_display() {
 	do_action( 'edd_tools_recount_stats_before' );
 ?>
 	<div class="postbox">
-		<h3><span><?php _e( 'Recount Stats', 'edd' ); ?></span></h3>
+		<h3><span><?php _e( 'Recount Stats', 'easy-digital-downloads' ); ?></span></h3>
 		<div class="inside recount-stats-controls">
-			<p><?php _e( 'Use these tools to recount / reset store stats.', 'edd' ); ?></p>
+			<p><?php _e( 'Use these tools to recount / reset store stats.', 'easy-digital-downloads' ); ?></p>
 			<p>
 				<form method="post" id="edd-tools-recount-form" class="edd-export-form">
 					<span>
@@ -156,7 +156,7 @@ function edd_tools_recount_stats_display() {
 							?>
 						</span>
 
-						<input type="submit" id="recount-stats-submit" value="<?php _e( 'Submit', 'edd' ); ?>" class="button-secondary"/>
+						<input type="submit" id="recount-stats-submit" value="<?php _e( 'Submit', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 
 						<br />
 

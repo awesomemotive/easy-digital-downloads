@@ -2,6 +2,16 @@
 /**
  * Uninstall Easy Digital Downloads
  *
+ * Deletes all the plugin data i.e.
+ * 		1. Custom Post types.
+ * 		2. Terms & Taxonomies.
+ * 		3. Plugin pages.
+ * 		4. Plugin options.
+ * 		5. Capabilities.
+ * 		6. Roles.
+ * 		7. Database tables.
+ * 		8. Cron events.
+ *
  * @package     EDD
  * @subpackage  Uninstall
  * @copyright   Copyright (c) 2015, Pippin Williamson
@@ -9,10 +19,10 @@
  * @since       1.4.3
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit;
 
-// Load EDD file
+// Load EDD file.
 include_once( 'easy-digital-downloads.php' );
 
 global $wpdb, $wp_roles;
@@ -39,7 +49,7 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 
 		$terms = $wpdb->get_results( $wpdb->prepare( "SELECT t.*, tt.* FROM $wpdb->terms AS t INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id WHERE tt.taxonomy IN ('%s') ORDER BY t.name ASC", $taxonomy ) );
 
-		// Delete Terms
+		// Delete Terms.
 		if ( $terms ) {
 			foreach ( $terms as $term ) {
 				$wpdb->delete( $wpdb->term_taxonomy, array( 'term_taxonomy_id' => $term->term_taxonomy_id ) );
@@ -47,7 +57,7 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 			}
 		}
 
-		// Delete Taxonomies
+		// Delete Taxonomies.
 		$wpdb->delete( $wpdb->term_taxonomy, array( 'taxonomy' => $taxonomy ), array( '%s' ) );
 	}
 
