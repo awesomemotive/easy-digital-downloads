@@ -235,7 +235,7 @@ class Tests_Emails extends WP_UnitTestCase {
 	}
 
 	public function test_email_tags_date() {
-		$this->assertEquals( date( 'F j, Y', strtotime( 'today' ) ), edd_email_tag_date( $this->_payment_id ) );
+		$this->assertEquals( date( 'F j, Y', strtotime( get_post_field( 'post_date', $this->_payment_id ) ) ), edd_email_tag_date( $this->_payment_id ) );
 	}
 
 	public function test_email_tags_subtotal() {

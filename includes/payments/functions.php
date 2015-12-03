@@ -213,13 +213,8 @@ function edd_insert_payment( $payment_data = array() ) {
 function edd_update_payment_status( $payment_id, $new_status = 'publish' ) {
 
 	$payment = new EDD_Payment( $payment_id );
-	$updated = $payment->update_status( $new_status );
-
-	if ( $updated ) {
-		$payment->status         = $new_status;
-		$payment->post_status    = $new_status;
-		$payment->save();
-	}
+	$payment->status = $new_status;
+	$updated = $payment->save();
 
 	return $updated;
 
