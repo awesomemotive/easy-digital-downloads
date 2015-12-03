@@ -91,6 +91,7 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 				$payments = array_merge( $attached_payments, $unattached_payments );
 
 				$purchase_value = 0.00;
+				$purchase_count = 0;
 				$payment_ids    = array();
 
 				if( $payments ) {
