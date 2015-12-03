@@ -225,8 +225,10 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 				'post__not_in' => $attached_payment_ids,
 				'number'       => -1,
 				'meta_query'   => array(
-					'key'     => '_edd_payment_email',
-					'value'   => $customer->email,
+					array(
+						'key'   => '_edd_payment_email',
+						'value' => $customer->email,
+					)
 				),
 			);
 
