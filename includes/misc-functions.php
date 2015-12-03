@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Is Test Mode
  *
  * @since 1.0
- * @return bool $ret True if return mode is enabled, false otherwise
+ * @return bool $ret True if test mode is enabled, false otherwise
  */
 function edd_is_test_mode() {
 	$ret = edd_get_option( 'test_mode', false );
