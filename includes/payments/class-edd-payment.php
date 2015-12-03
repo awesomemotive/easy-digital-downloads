@@ -255,6 +255,33 @@ class EDD_Payment {
 
 		if ( ! empty( $payment_id ) ) {
 			$this->ID  = $payment_id;
+
+			$customer = new stdClass;
+
+			if ( did_action( 'edd_pre_process_purchase' ) && is_user_logged_in() ) {
+				$customer  = new EDD_customer( get_current_user_id(), true );
+			}
+
+			if ( empty( $customer->id ) ) {
+				$customer = new EDD_Customer( $this->email );
+			}
+
+			if ( empty( $customer->id ) ) {
+
+				$customer_data = array(
+					'name'        => ! is_email( $payment_title ) ? $this->first_name . ' ' . $this->last_name : '',
+					'email'       => $this->email,
+					'user_id'     => $this->user_id,
+				);
+
+				$customer->create( $customer_data );
+
+			}
+
+			$this->customer_id            = $customer->id;
+			$this->pending['customer_id'] = $this->customer_id;
+			$customer->attach_payment( $this->ID, false );
+
 			$this->new = true;
 		}
 
@@ -464,6 +491,7 @@ class EDD_Payment {
 
 			$this->update_meta( '_edd_payment_total', $this->total );
 			$this->update_meta( '_edd_payment_tax', $this->tax );
+
 
 			if ( 'pending' !== $this->status ) {
 
