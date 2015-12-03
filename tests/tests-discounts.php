@@ -176,14 +176,13 @@ class Tests_Discounts extends WP_UnitTestCase {
 	public function test_get_discounted_amount() {
 		$this->assertEquals( '432', edd_get_discounted_amount( '20OFF', '540' ) );
 		$this->assertEquals( '150', edd_get_discounted_amount( 'DOUBLE', '75' ) );
-		$this->assertEquals( '9', edd_get_discounted_amount( '10FLAT', '19' ) );
+		$this->assertEquals( '10', edd_get_discounted_amount( '10FLAT', '20' ) );
 
-		// Test an invalid discount code
-		$this->assertEquals( '10', edd_get_discounted_amount( 'INVALID', '10' ) );
+		// Test that an invalid Code returns the base price
+		$this->assertEquals( '10', edd_get_discounted_amount( 'FAKEDISCOUNT', '10' ) );
 	}
 
 	public function test_increase_discount_usage() {
-		//$this->markTestIncomplete('Fix this per #2302');
 		$uses = edd_increase_discount_usage( '20OFF' );
 		$this->assertSame( 55, $uses );
 	}

@@ -1350,39 +1350,42 @@ class EDD_API {
 
 		if( isset( $wp_query->query_vars['id'] ) ) {
 			$query   = array();
-			$query[] = edd_get_payment_by( 'id', $wp_query->query_vars['id'] );
+			$query[] = new EDD_Payment( $wp_query->query_vars['id'] );
 		} elseif( isset( $wp_query->query_vars['purchasekey'] ) ) {
 			$query   = array();
 			$query[] = edd_get_payment_by( 'key', $wp_query->query_vars['purchasekey'] );
 		} elseif( isset( $wp_query->query_vars['email'] ) ) {
-			$query = edd_get_payments( array( 'meta_key' => '_edd_payment_user_email', 'meta_value' => $wp_query->query_vars['email'], 'number' => $this->per_page(), 'page' => $this->get_paged(), 'status' => 'publish' ) );
+			$query = edd_get_payments( array( 'fields' => 'ids', 'meta_key' => '_edd_payment_user_email', 'meta_value' => $wp_query->query_vars['email'], 'number' => $this->per_page(), 'page' => $this->get_paged(), 'status' => 'publish' ) );
 		} else {
-			$query = edd_get_payments( array( 'number' => $this->per_page(), 'page' => $this->get_paged(), 'status' => 'publish' ) );
+			$query = edd_get_payments( array( 'fields' => 'ids', 'number' => $this->per_page(), 'page' => $this->get_paged(), 'status' => 'publish' ) );
 		}
 
 		if ( $query ) {
 			$i = 0;
 			foreach ( $query as $payment ) {
-				$payment_meta = edd_get_payment_meta( $payment->ID );
-				$user_info    = edd_get_payment_meta_user_info( $payment->ID );
-				$cart_items   = edd_get_payment_meta_cart_details( $payment->ID );
+				if ( is_numeric( $payment ) ) {
+					$payment = new EDD_Payment( $payment );
+				}
 
-				$sales['sales'][ $i ]['ID']             = edd_get_payment_number( $payment->ID );
-				$sales['sales'][ $i ]['transaction_id'] = edd_get_payment_transaction_id( $payment->ID );
-				$sales['sales'][ $i ]['key']            = edd_get_payment_key( $payment->ID );
-				$sales['sales'][ $i ]['discount']       = isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ? explode( ',', $user_info['discount'] ) : array();
-				$sales['sales'][ $i ]['subtotal']       = edd_get_payment_subtotal( $payment->ID );
-				$sales['sales'][ $i ]['tax']            = edd_get_payment_tax( $payment->ID );
-				$sales['sales'][ $i ]['fees']           = edd_get_payment_fees( $payment->ID );
-				$sales['sales'][ $i ]['total']          = edd_get_payment_amount( $payment->ID );
-				$sales['sales'][ $i ]['gateway']        = edd_get_payment_gateway( $payment->ID );
-				$sales['sales'][ $i ]['email']          = edd_get_payment_user_email( $payment->ID );
-				$sales['sales'][ $i ]['date']           = $payment->post_date;
+				$payment_meta = $payment->get_meta();
+				$user_info    = $payment->user_info;
+
+				$sales['sales'][ $i ]['ID']             = $payment->number;
+				$sales['sales'][ $i ]['transaction_id'] = $payment->transaction_id;
+				$sales['sales'][ $i ]['key']            = $payment->key;
+				$sales['sales'][ $i ]['discount']       = ! empty( $payment->discounts ) ? explode( ',', $payment->discounts ) : array();
+				$sales['sales'][ $i ]['subtotal']       = $payment->subtotal;
+				$sales['sales'][ $i ]['tax']            = $payment->tax;
+				$sales['sales'][ $i ]['fees']           = $payment->fees;
+				$sales['sales'][ $i ]['total']          = $payment->total;
+				$sales['sales'][ $i ]['gateway']        = $payment->gateway;
+				$sales['sales'][ $i ]['email']          = $payment->email;
+				$sales['sales'][ $i ]['date']           = $payment->date;
 				$sales['sales'][ $i ]['products']       = array();
 
 				$c = 0;
 
-				foreach ( $cart_items as $key => $item ) {
+				foreach ( $payment->cart_details as $key => $item ) {
 
 					$item_id  = isset( $item['id']    ) ? $item['id']    : $item;
 					$price    = isset( $item['price'] ) ? $item['price'] : false;

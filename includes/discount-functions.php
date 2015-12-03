@@ -948,6 +948,10 @@ function edd_get_discounted_amount( $code, $base_price ) {
 			$amount = $base_price - ( $base_price * ( $rate / 100 ) );
 		}
 
+	} else {
+
+		$amount = $base_price;
+
 	}
 
 	return apply_filters( 'edd_discounted_amount', $amount );
