@@ -294,7 +294,7 @@ class EDD_Payment {
 									$price = $item['price'];
 									$taxes = $item['tax'];
 
-									if ( 'publish' == $this->status ) {
+									if ( 'publish' === $this->status || 'revoked' === $this->status ) {
 										// Add sales logs
 										$log_date =  date( 'Y-m-d G:i:s', current_time( 'timestamp', true ) );
 										$price_id = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : 0;
@@ -306,9 +306,7 @@ class EDD_Payment {
 											$y++;
 
 										}
-									}
 
-									if ( 'pending' !== $this->status ) {
 										$download = new EDD_Download( $item['id'] );
 										$download->increase_sales( $item['quantity'] );
 										$download->increase_earnings( $price );
@@ -341,7 +339,7 @@ class EDD_Payment {
 											wp_delete_post( $log->ID, true );
 										}
 
-										if ( 'pending' !== $this->status ) {
+										if ( 'publish' === $this->status || 'revoked' === $this->status ) {
 											$download = new EDD_Download( $item['id'] );
 											$download->decrease_sales( $item['quantity'] );
 											$download->decrease_earnings( $item['amount'] );
