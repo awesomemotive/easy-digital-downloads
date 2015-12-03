@@ -141,29 +141,6 @@ function edd_insert_payment( $payment_data = array() ) {
 	$gateway = empty( $gateway ) && isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : $gateway;
 	$payment->gateway = $gateway;
 
-	$customer = new stdClass;
-
-	if ( did_action( 'edd_pre_process_purchase' ) && is_user_logged_in() ) {
-		$customer  = new EDD_customer( get_current_user_id(), true );
-	}
-
-	if ( empty( $customer->id ) ) {
-		$customer = new EDD_Customer( $payment_data['user_email'] );
-	}
-
-	if ( empty( $customer->id ) ) {
-
-		$customer_data = array(
-			'name'        => $payment_data['user_info']['first_name'] . ' ' . $payment_data['user_info']['last_name'],
-			'email'       => $payment_data['user_email'],
-			'user_id'     => $payment_data['user_info']['id']
-		);
-
-		$customer->create( $customer_data );
-
-	}
-
-	$payment->customer_id = $customer->id;
 	$payment->user_id     = $payment_data['user_info']['id'];
 	$payment->email       = $payment_data['user_email'];
 	$payment->first_name  = $payment_data['user_info']['first_name'];
@@ -193,8 +170,6 @@ function edd_insert_payment( $payment_data = array() ) {
 	do_action( 'edd_insert_payment', $payment->ID, $payment_data );
 
 	$payment->save();
-
-	$customer->attach_payment( $payment->ID, false );
 
 	return $payment->ID; // Return the ID
 

@@ -282,7 +282,7 @@ class EDD_Customer {
 
 		} else {
 
-			$payment_ids = array_map( 'absint', explode( ',', $payment->ID ) );
+			$payment_ids = array_map( 'absint', explode( ',', $this->payment_ids ) );
 
 			if ( in_array( $payment->ID, $payment_ids ) ) {
 				$update_stats = false;
