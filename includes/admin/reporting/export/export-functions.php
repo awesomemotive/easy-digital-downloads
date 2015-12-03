@@ -69,7 +69,7 @@ function edd_do_ajax_export() {
 
 	} elseif ( true === $export->done && true === $export->is_void ) {
 
-		$message = ! empty( $export->message ) ? $export->message : __( 'Batch Processing Complete', 'edd' );
+		$message = ! empty( $export->message ) ? $export->message : __( 'Batch Processing Complete', 'easy-digital-downloads' );
 		echo json_encode( array( 'success' => true, 'message' => $message ) ); exit;
 
 	} else {
