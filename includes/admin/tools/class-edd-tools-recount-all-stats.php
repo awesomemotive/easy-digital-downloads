@@ -56,6 +56,7 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 		$totals             = get_option( 'edd_temp_recount_all_stats' , false );
 		$payment_items      = get_option( 'edd_temp_payment_items'     , false );
 		$processed_payments = get_option( 'edd_temp_processed_payments', false );
+		$accepted_statuses  = apply_filters( 'edd_recount_accepted_statuses', array( 'publish', 'revoked' ) );
 
 		if ( false === $totals ) {
 			$totals = array();
@@ -102,7 +103,7 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 					continue;
 				}
 
-				if ( in_array( $payment->post_status, array( 'revoked', 'published', 'edd_subscription' ) ) ) {
+				if ( in_array( $payment->post_status, $accepted_statuses ) ) {
 					$processed_payments[] = $payment->ID;
 					continue;
 				}
@@ -257,7 +258,8 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 			delete_option( 'edd_temp_processed_payments' );
 		}
 
-		$total   = get_option( 'edd_temp_recount_all_total', false );
+		$accepted_statuses = apply_filters( 'edd_recount_accepted_statuses', array( 'publish', 'revoked' ) );
+		$total             = get_option( 'edd_temp_recount_all_total', false );
 
 		if ( false === $total ) {
 			$total         = 0;
@@ -303,7 +305,7 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 				unset( $payment_ids );
 
 				foreach ( $payments as $payment ) {
-					if ( in_array( $payment->post_status, array( 'revoked', 'published', 'edd_subscription' ) ) ) {
+					if ( in_array( $payment->post_status, $accepted_statuses ) ) {
 						continue;
 					}
 
