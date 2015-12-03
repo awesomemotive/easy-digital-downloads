@@ -91,21 +91,26 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 			unset( $payment_ids );
 
 			foreach ( $payments as $payment ) {
-				if ( in_array( $payment->post_status, $accepted_statuses ) ) {
+
+				if ( ! in_array( $payment->post_status, $accepted_statuses ) ) {
 					continue;
 				}
 
 				$items = edd_get_payment_meta_cart_details( $payment->ID );
 
 				foreach ( $items as $item ) {
+
 					if ( $item['id'] != $this->download_id ) {
 						continue;
 					}
+
 					$this->_log_ids_debug[] = $payment->ID;
 
 					$totals['sales']++;
 					$totals['earnings'] += $item['price'];
+
 				}
+
 			}
 
 			update_option( 'edd_temp_recount_download_stats', $totals );
