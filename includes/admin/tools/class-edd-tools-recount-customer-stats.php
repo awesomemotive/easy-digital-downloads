@@ -39,7 +39,7 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 	 * @since  2.5
 	 * @var integer
 	 */
-	public $per_step = 10;
+	public $per_step = 5;
 
 	/**
 	 * Get the Export Data
@@ -65,25 +65,52 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 
 			foreach ( $customers as $customer ) {
 
-				$payment_ids    = explode( ',', $customer->payment_ids );
+				$attached_payment_ids = explode( ',', $customer->payment_ids );
 
-				$payment_args = array(
-					'post__in' => $payment_ids,
+				$attached_args = array(
+					'post__in' => $attached_payment_ids,
 					'number'   => -1,
 				);
 
-				$payments = edd_get_payments( $payment_args );
+				$attached_payments = edd_get_payments( $attached_args );
+
+				$unattached_args = array(
+					'post__not_in' => $attached_payment_ids,
+					'number'       => -1,
+					'meta_query'   => array(
+						array(
+							'key'     => '_edd_payment_user_email',
+							'value'   => $customer->email,
+							'compare' => '=',
+						)
+					),
+				);
+
+				$unattached_payments = edd_get_payments( $unattached_args );
+
+				$payments = array_merge( $attached_payments, $unattached_payments );
 
 				$purchase_value = 0.00;
+				$purchase_count = 0;
 				$payment_ids    = array();
 
-				foreach ( $payments as $payment ) {
-					$purchase_value += edd_get_payment_amount( $payment->ID );
-					$payment_ids[] = $payment->ID;
+				if( $payments ) {
+
+					foreach ( $payments as $payment ) {
+
+						if( 'publish' == $payment->post_status || 'revoked' == $payment->post_status ) {
+
+							$purchase_value += edd_get_payment_amount( $payment->ID );
+							$purchase_count++;
+
+						}
+
+						$payment_ids[] = $payment->ID;
+					}
+
 				}
 
-				$purchase_count = count( $payment_ids );
-				$payment_ids    = implode( ',', $payment_ids );
+				$payment_ids = implode( ',', $payment_ids );
 
 				$customer_update_data = array(
 					'purchase_count' => $purchase_count,
