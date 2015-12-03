@@ -634,7 +634,7 @@ function edd_check_for_download_price_variations() {
 			$ajax_response = '<select class="edd_price_options_select edd-select edd-select" name="edd_price_option">';
 				
 				if( isset( $_POST['all_prices'] ) ) {
-					$ajax_response .= '<option value="">' . __( 'All Prices', 'edd' ) . '</option>';
+					$ajax_response .= '<option value="">' . __( 'All Prices', 'easy-digital-downloads' ) . '</option>';
 				}
 
 				foreach ( $variable_prices as $key => $price ) {
