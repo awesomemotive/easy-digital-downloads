@@ -113,8 +113,8 @@ class Tests_Register_Meta extends WP_UnitTestCase {
 		update_post_meta( $this->download_id, 'edd_download_files', $files );
 		$saved_files = get_post_meta( $this->download_id, 'edd_download_files', true );
 		$this->assertEquals( 2, count( $saved_files ) );
-		$this->assertEquals( 'file2.zip', $saved_files[0]['file'] );
-		$this->assertEquals( 'File 3', $saved_files[1]['name'] );
+		$this->assertEquals( 'file2.zip', $saved_files[1]['file'] );
+		$this->assertEquals( 'File 3', $saved_files[2]['name'] );
 	}
 
 
