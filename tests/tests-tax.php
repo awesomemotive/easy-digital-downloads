@@ -50,7 +50,9 @@ class Tests_Taxes extends WP_UnitTestCase {
 			'id' => $this->_post->ID,
 			'item_number' => array(
 				'id' => $this->_post->ID,
-				'options' => array()
+				'options' => array(
+					'price_id' => 1
+				)
 			),
 			'subtotal' => '10',
 			'discount' => '0',
@@ -76,6 +78,7 @@ class Tests_Taxes extends WP_UnitTestCase {
 		$_SERVER['SERVER_NAME'] = 'edd_virtual';
 
 		$payment_id = edd_insert_payment( $purchase_data );
+		edd_update_payment_status( $payment_id, 'publish' );
 
 		$this->_payment_id = $payment_id;
 
@@ -93,6 +96,7 @@ class Tests_Taxes extends WP_UnitTestCase {
 
 	public function tearDown() {
 		parent::tearDown();
+		EDD_Helper_Payment::delete_payment( $this->_payment_id );
 	}
 
 	public function test_use_taxes() {
