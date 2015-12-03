@@ -151,7 +151,7 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 	public function process_step() {
 
 		if ( ! $this->can_export() ) {
-			wp_die( __( 'You do not have permission to export data.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+			wp_die( __( 'You do not have permission to export data.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 		}
 
 		$had_data = $this->get_data();
@@ -163,7 +163,7 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 			delete_option( 'edd_recount_earnings_total' );
 			delete_option( 'edd_temp_recount_earnings' );
 			$this->done    = true;
-			$this->message = __( 'Store earnings successfully recounted.', 'edd' );
+			$this->message = __( 'Store earnings successfully recounted.', 'easy-digital-downloads' );
 			return false;
 		}
 	}
