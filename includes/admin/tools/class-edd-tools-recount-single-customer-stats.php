@@ -76,9 +76,13 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 					continue;
 				}
 
-				$found_payment_ids[] = $payment->ID;
-				$payment_amount      = edd_get_payment_amount( $payment->ID );
-				$step_total         += $payment_amount;
+				if( 'publish' == $payment->post_status || 'revoked' == $payment->post_status ) {
+
+					$found_payment_ids[] = $payment->ID;
+					$payment_amount      = edd_get_payment_amount( $payment->ID );
+					$step_total         += $payment_amount;
+
+				}
 
 			}
 
