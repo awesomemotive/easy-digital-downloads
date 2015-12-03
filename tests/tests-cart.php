@@ -459,6 +459,7 @@ class Test_Cart extends WP_UnitTestCase {
 
 	public function test_generate_cart_token() {
 		$this->assertInternalType( 'string', edd_generate_cart_token() );
+		$this->assertTrue( 32 === strlen( edd_generate_cart_token() ) );
 	}
 
 	public function test_edd_get_cart_item_name() {
