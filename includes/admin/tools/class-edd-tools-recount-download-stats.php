@@ -203,7 +203,7 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 	public function process_step() {
 
 		if ( ! $this->can_export() ) {
-			wp_die( __( 'You do not have permission to export data.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+			wp_die( __( 'You do not have permission to export data.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 		}
 
 		$had_data = $this->get_data();
@@ -215,7 +215,7 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 			delete_option( 'edd_recount_total_' . $this->download_id );
 			delete_option( 'edd_temp_recount_download_stats' );
 			$this->done    = true;
-			$this->message = sprintf( __( 'Earnings and sales stats successfully recounted for %s.', 'edd' ), get_the_title( $this->download_id ) );
+			$this->message = sprintf( __( 'Earnings and sales stats successfully recounted for %s.', 'easy-digital-downloads' ), get_the_title( $this->download_id ) );
 			return false;
 		}
 	}

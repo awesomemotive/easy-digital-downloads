@@ -74,22 +74,39 @@ function edd_reports_graph() {
 
 	} elseif ( $dates['range'] == 'this_week' || $dates['range'] == 'last_week' ) {
 
-		// Day by day
-		$day     = $dates['day'];
-		$day_end = $dates['day_end'];
-		$month   = $dates['m_start'];
+		$num_of_days = cal_days_in_month( CAL_GREGORIAN, $dates['m_start'], $dates['year'] );
 
-		while ( $day <= $day_end ) {
-			$sales = edd_get_sales_by_date( $day, $month, $dates['year'] );
+		$report_dates = array();
+		$i = 0;
+		while ( $i <= 6 ) {
+
+			if ( ( $dates['day'] + $i ) <= $num_of_days ) {
+				$report_dates[ $i ] = array(
+					'day'   => (string) $dates['day'] + $i,
+					'month' => $dates['m_start'],
+					'year'  => $dates['year'],
+				);
+			} else {
+				$report_dates[ $i ] = array(
+					'day'   => (string) $i,
+					'month' => $dates['m_end'],
+					'year'  => $dates['year_end'],
+				);
+			}
+
+			$i++;
+		}
+
+		foreach ( $report_dates as $report_date ) {
+			$sales = edd_get_sales_by_date( $report_date['day'], $report_date['month'], $report_date['year'] );
 			$sales_totals += $sales;
 
-			$earnings        = edd_get_earnings_by_date( $day, $month, $dates['year'], null, $include_taxes );
+			$earnings        = edd_get_earnings_by_date( $report_date['day'], $report_date['month'], $report_date['year'] , null, $include_taxes );
 			$earnings_totals += $earnings;
 
-			$date            = mktime( 0, 0, 0, $month, $day, $dates['year'] ) * 1000;
+			$date            = mktime( 0, 0, 0,  $report_date['month'], $report_date['day'], $report_date['year']  ) * 1000;
 			$sales_data[]    = array( $date, $sales );
 			$earnings_data[] = array( $date, $earnings );
-			$day++;
 		}
 
 	} else {
@@ -341,14 +358,33 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 
 	} elseif( $dates['range'] == 'this_week' || $dates['range'] == 'last_week'  ) {
 
-		//Day by day
-		$day     = $dates['day'];
-		$day_end = $dates['day_end'];
-		$month   = $dates['m_start'];
-		while ( $day <= $day_end ) :
+		$num_of_days = cal_days_in_month( CAL_GREGORIAN, $dates['m_start'], $dates['year'] );
 
-			$date  = mktime( 0, 0, 0, $month, $day, $dates['year'] );
-			$date_end = mktime( 0, 0, 0, $month, $day + 1, $dates['year'] );
+		$report_dates = array();
+		$i = 0;
+		while ( $i <= 6 ) {
+
+			if ( ( $dates['day'] + $i ) <= $num_of_days ) {
+				$report_dates[ $i ] = array(
+					'day'   => (string) $dates['day'] + $i,
+					'month' => $dates['m_start'],
+					'year'  => $dates['year'],
+				);
+			} else {
+				$report_dates[ $i ] = array(
+					'day'   => (string) $i,
+					'month' => $dates['m_end'],
+					'year'  => $dates['year_end'],
+				);
+			}
+
+			$i++;
+		}
+
+		foreach ( $report_dates as $report_date ) {
+
+			$date  = mktime( 0, 0, 0, $report_date['month'], $report_date['day'], $report_date['year'] );
+			$date_end = mktime( 23, 59, 59, $report_date['month'], $report_date['day'], $report_date['year'] );
 			$sales = $stats->get_sales( $download_id, $date, $date_end );
 			$sales_totals += $sales;
 
@@ -358,8 +394,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 			$sales_data[] = array( $date * 1000, $sales );
 			$earnings_data[] = array( $date * 1000, $earnings );
 
-			$day++;
-		endwhile;
+		}
 
 	} else {
 
@@ -654,31 +689,17 @@ function edd_get_report_dates() {
 		break;
 
 		case 'this_week' :
-			$dates['day']     = date( 'd', $current_time - ( date( 'w', $current_time ) - 1 ) * DAY_IN_SECONDS ) - 1;
-			$dates['day']     += get_option( 'start_of_week' );
-			$dates['day_end'] = $dates['day'] + 6;
-			$dates['m_start'] = date( 'n', $current_time );
-			$dates['m_end']   = date( 'n', $current_time );
-			$dates['year']    = date( 'Y', $current_time );
-		break;
-
 		case 'last_week' :
-			$dates['day']       = date( 'd', $current_time - ( date( 'w' ) - 1 ) * DAY_IN_SECONDS ) - 8;
-			$dates['day']      += get_option( 'start_of_week' );
-			$dates['day_end']   = $dates['day'] + 6;
-			$dates['year']      = date( 'Y' );
+			$base_time = $dates['range'] === 'this_week' ? current_time( 'mysql' ) : date( 'Y-n-d h:i:s', current_time( 'timestamp' ) - WEEK_IN_SECONDS );
+			$start_end = get_weekstartend( $base_time, get_option( 'start_of_week' ) );
 
-			if( date( 'j', $current_time ) <= 7 ) {
-				$dates['m_start']   = date( 'n', $current_time );
-				$dates['m_end']     = date( 'n', $current_time );
-				if( $dates['m_start'] <= 1 ) {
-					$dates['year']     = date( 'Y', $current_time ) - 1;
-					$dates['year_end'] = date( 'Y', $current_time ) - 1;
-				}
-			} else {
-				$dates['m_start'] = date( 'n', $current_time );
-				$dates['m_end']   = date( 'n', $current_time );
-			}
+			$dates['day']      = date( 'd', $start_end['start'] );
+			$dates['m_start']  = date( 'n', $start_end['start'] );
+			$dates['year']     = date( 'Y', $start_end['start'] );
+
+			$dates['day_end']  = date( 'd', $start_end['end'] );
+			$dates['m_end']    = date( 'n', $start_end['end'] );
+			$dates['year_end'] = date( 'Y', $start_end['end'] );
 		break;
 
 		case 'this_quarter' :
