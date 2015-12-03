@@ -192,7 +192,7 @@ class EDD_Register_Meta {
 		}
 
 		// Make sure all files are rekeyed starting at 0
-		return array_values( $files );
+		return $files;
 	}
 
 	/**
