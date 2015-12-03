@@ -177,7 +177,7 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 	public function process_step() {
 
 		if ( ! $this->can_export() ) {
-			wp_die( __( 'You do not have permission to export data.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+			wp_die( __( 'You do not have permission to export data.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 		}
 
 		$had_data = $this->get_data();
@@ -198,7 +198,7 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 			}
 
 			$this->done    = true;
-			$this->message = __( 'Customers, earnings, sales, discounts and logs successfully reset.', 'edd' );
+			$this->message = __( 'Customers, earnings, sales, discounts and logs successfully reset.', 'easy-digital-downloads' );
 			return false;
 		}
 	}
