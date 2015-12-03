@@ -1132,7 +1132,7 @@ function edd_restore_cart() {
 		if ( ! $messages )
 			$messages = array();
 
-		if ( isset( $_GET['edd_cart_token'] ) && $_GET['edd_cart_token'] != $token ) {
+		if ( isset( $_GET['edd_cart_token'] ) && ! hash_equals( $_GET['edd_cart_token'], $token ) ) {
 
 			$messages['edd_cart_restoration_failed'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Error', 'easy-digital-downloads' ), __( 'Cart restoration failed. Invalid token.', 'easy-digital-downloads' ) );
 			EDD()->session->set( 'edd_cart_messages', $messages );
@@ -1149,7 +1149,7 @@ function edd_restore_cart() {
 
 		$saved_cart = $_COOKIE['edd_saved_cart'];
 
-		if ( $_GET['edd_cart_token'] != $token ) {
+		if ( ! hash_equals( $_GET['edd_cart_token'], $token ) ) {
 
 			$messages['edd_cart_restoration_failed'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Error', 'easy-digital-downloads' ), __( 'Cart restoration failed. Invalid token.', 'easy-digital-downloads' ) );
 			EDD()->session->set( 'edd_cart_messages', $messages );
@@ -1242,5 +1242,5 @@ add_action( 'edd_weekly_scheduled_events', 'edd_delete_saved_carts' );
  * @return string UNIX timestamp
  */
 function edd_generate_cart_token() {
-	return apply_filters( 'edd_generate_cart_token', time() );
+	return apply_filters( 'edd_generate_cart_token', md5( mt_rand() . time() ) );
 }
