@@ -45,6 +45,7 @@ class EDD_Payment {
 	protected $completed_date          = '';
 	protected $status                  = 'pending';
 	protected $post_status             = 'pending'; // Same as $status but here for backwards compat
+	protected $old_status              = '';
 	protected $status_nicename         = '';
 	protected $customer_id             = null;
 	protected $user_id                 = 0;
@@ -85,6 +86,11 @@ class EDD_Payment {
 
 	public function __set( $name, $value ) {
 		$ignore = array( 'downloads', 'cart_details', 'fees' );
+
+		if ( $name === 'status' ) {
+			$this->old_status = $this->status;
+		}
+
 		if ( ! in_array( $name, $ignore ) ) {
 			$this->pending[ $name ] = $value;
 		}
@@ -980,7 +986,7 @@ class EDD_Payment {
 			$status = 'publish';
 		}
 
-		$old_status = $this->status;
+		$old_status = ! empty( $this->old_status ) ? $this->old_status : false;
 
 		if ( $old_status === $status ) {
 			return false; // Don't permit status changes that aren't changes
