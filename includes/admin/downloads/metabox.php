@@ -166,52 +166,6 @@ function edd_download_meta_box_save( $post_id, $post ) {
 add_action( 'save_post', 'edd_download_meta_box_save', 10, 2 );
 
 /**
- * Sanitize the price before it is saved
- *
- * This is mostly for ensuring commas aren't saved in the price
- *
- * @since 1.3.2
- * @param string $price Price before sanitization
- * @return string $price Sanitized price
- */
-function edd_sanitize_price_save( $price ) {
-	return edd_sanitize_amount( $price );
-}
-add_filter( 'edd_metabox_save_edd_price', 'edd_sanitize_price_save' );
-
-/**
- * Sanitize the variable prices
- *
- * Ensures prices are correctly mapped to an array starting with an index of 0
- *
- * @since 1.4.2
- * @param array $prices Variable prices
- * @return array $prices Array of the remapped variable prices
- */
-function edd_sanitize_variable_prices_save( $prices ) {
-
-	foreach( $prices as $id => $price ) {
-
-		if( empty( $price['amount'] ) && empty( $price['name'] ) ) {
-
-			unset( $prices[ $id ] );
-			continue;
-
-		} elseif( empty( $price['amount'] ) ) {
-
-			$price['amount'] = 0;
-
-		}
-
-		$prices[ $id ]['amount'] = edd_sanitize_amount( $price['amount'] );
-
-	}
-
-	return $prices;
-}
-add_filter( 'edd_metabox_save_edd_variable_prices', 'edd_sanitize_variable_prices_save' );
-
-/**
  * Sanitize bundled products on save
  *
  * Ensures a user doesn't try and include a product's ID in the products bundled with that product
@@ -234,33 +188,6 @@ function edd_sanitize_bundled_products_save( $products = array() ) {
 }
 add_filter( 'edd_metabox_save__edd_bundled_products', 'edd_sanitize_bundled_products_save' );
 
-
-/**
- * Sanitize the file downloads
- *
- * @since 1.5.1
- * @param array $files Array of all the file downloads
- * @return array $files Array of the remapped file downloads
- */
-function edd_sanitize_files_save( $files ) {
-
-	// Clean up filenames to ensure whitespaces are stripped
-	foreach( $files as $id => $file ) {
-
-		if( ! empty( $files[ $id ]['file'] ) ) {
-			$files[ $id ]['file'] = trim( $file['file'] );
-		}
-
-		if( ! empty( $files[ $id ]['name'] ) ) {
-			$files[ $id ]['name'] = trim( $file['name'] );
-		}
-	}
-
-	// Make sure all files are rekeyed starting at 0
-	return $files;
-}
-add_filter( 'edd_metabox_save_edd_download_files', 'edd_sanitize_files_save' );
-
 /**
  * Don't save blank rows.
  *
@@ -280,9 +207,6 @@ function edd_metabox_save_check_blank_rows( $new ) {
 
 	return $new;
 }
-add_filter( 'edd_metabox_save_edd_variable_prices', 'edd_metabox_save_check_blank_rows' );
-add_filter( 'edd_metabox_save_edd_download_files', 'edd_metabox_save_check_blank_rows' );
-
 
 /** Download Configuration *****************************************************************/
 
@@ -517,7 +441,7 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 	<td class="edd_repeatable_default_wrapper">
 		<input type="radio" <?php checked( $default_price_id, $key, true ); ?> class="edd_repeatable_default_input" name="_edd_default_price_id" value="<?php echo $key; ?>" />
 	</td>
-	
+
 	<td>
 		<span class="edd_price_id"><?php echo $key; ?></span>
 	</td>
@@ -803,7 +727,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 	<td>
 		<span class="edd_file_id"><?php echo $key; ?></span>
 	</td>
-	
+
 	<?php do_action( 'edd_download_file_table_row', $post_id, $key, $args ); ?>
 
 	<td>
@@ -848,8 +772,9 @@ add_filter( 'media_view_strings', 'edd_download_media_strings', 10, 1 );
  * @return void
  */
 function edd_render_download_limit_row( $post_id ) {
-    if( ! current_user_can( 'manage_shop_settings' ) )
-        return;
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
 
 	$edd_download_limit = edd_get_file_download_limit( $post_id );
 	$display = 'bundle' == edd_get_download_type( $post_id ) ? ' style="display: none;"' : '';
@@ -879,8 +804,9 @@ add_action( 'edd_meta_box_settings_fields', 'edd_render_download_limit_row', 20 
  * @return void
  */
 function edd_render_dowwn_tax_options( $post_id = 0 ) {
-    if( ! current_user_can( 'manage_shop_settings' ) || ! edd_use_taxes() )
-        return;
+	if( ! current_user_can( 'manage_shop_settings' ) || ! edd_use_taxes() ) {
+		return;
+	}
 
 	$exclusive = edd_download_is_tax_exclusive( $post_id );
 ?>
