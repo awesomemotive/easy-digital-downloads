@@ -80,10 +80,26 @@ class EDD_Payment {
 		$this->setup_payment( $payment_id );
 	}
 
+	/**
+	 * Magic GET function
+	 *
+	 * @since  2.5
+	 * @param  string $name The property
+	 * @return mixed        The value
+	 */
 	public function __get( $name ) {
 		return $this->$name;
 	}
 
+	/**
+	 * Magic SET function
+	 *
+	 * Sets up the pending array for the save method
+	 *
+	 * @since  2.5
+	 * @param string $name  The property name
+	 * @param mixed $value  The value of the property
+	 */
 	public function __set( $name, $value ) {
 		$ignore = array( 'downloads', 'cart_details', 'fees' );
 
@@ -1351,6 +1367,13 @@ class EDD_Payment {
 		return apply_filters( 'edd_payment_meta_user_info', $user_info );
 	}
 
+	/**
+	 * Setup the Address for the payment
+	 *
+	 * @since  2.5
+	 * @param  array $payment_meta The Payment Meta
+	 * @return array               The Address information for the payment
+	 */
 	private function setup_address( $payment_meta ) {
 		$address = ! empty( $payment_meta['user_info']['address'] ) ? $payment_meta['user_info']['address'] : array( 'line1' => '', 'line2' => '', 'city' => '', 'country' => '', 'state' => '', 'zip' => '' );
 
