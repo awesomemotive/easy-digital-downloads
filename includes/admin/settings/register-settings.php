@@ -1075,11 +1075,20 @@ function edd_get_settings_tabs() {
  * @return array $section
  */
 function edd_get_settings_sections( $tab = false ) {
+	$sections = edd_get_registered_settings_sections();
 
-	$settings = edd_get_registered_settings();
-	$tabs     = edd_get_settings_tabs();
+	return $tab && !empty( $sections[ $tab ] ) ? $sections[ $tab ] : ( $tab ? false : $sections );
+}
 
-	$sections         = array(
+function edd_get_registered_settings_sections() {
+
+	static $sections = false;
+
+	if ( false !== $sections ) {
+		return $sections;
+	}
+
+	$registered_sections = array(
 		'general' => apply_filters( 'edd_settings_sections_general', array(
 			'main'     => __( 'General Settings', 'easy-digital-downloads' ),
 			'currency' => __( 'Currency Settings', 'easy-digital-downloads' ),
@@ -1112,8 +1121,9 @@ function edd_get_settings_sections( $tab = false ) {
 		) ),
 	);
 
-	$sections = apply_filters( 'edd_settings_sections', $sections );
-	return $tab && !empty( $sections[ $tab ] ) ? $sections[ $tab ] : ( $tab ? false : $sections );
+	$sections = apply_filters( 'edd_settings_sections', $registered_sections );
+
+	return $sections;
 }
 
 /**
