@@ -1080,6 +1080,13 @@ function edd_get_settings_sections( $tab = false ) {
 	return $tab && !empty( $sections[ $tab ] ) ? $sections[ $tab ] : ( $tab ? false : $sections );
 }
 
+/**
+ * Get the settings sections for each tab
+ * Uses a static to avoid running the filters on every request to this function
+ *
+ * @since  2.5
+ * @return array Array of tabs and sections
+ */
 function edd_get_registered_settings_sections() {
 
 	static $sections = false;
