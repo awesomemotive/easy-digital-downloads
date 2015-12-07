@@ -158,7 +158,7 @@ function edd_register_settings() {
 		foreach ( $sections as $section => $settings) {
 
 			// Check for backwards compatibility
-			$section_tabs = edd_get_settings_sections( $tab );
+			$section_tabs = edd_get_settings_tab_sections( $tab );
 			if ( ! is_array( $section_tabs ) || ! array_key_exists( $section, $section_tabs ) ) {
 				$section = 'main';
 				$settings = $sections;
@@ -1074,10 +1074,18 @@ function edd_get_settings_tabs() {
  * @since 2.5
  * @return array $section
  */
-function edd_get_settings_sections( $tab = false ) {
+function edd_get_settings_tab_sections( $tab = false ) {
+
+	$tabs     = false;
 	$sections = edd_get_registered_settings_sections();
 
-	return $tab && !empty( $sections[ $tab ] ) ? $sections[ $tab ] : ( $tab ? false : $sections );
+	if( $tab && ! empty( $sections[ $tab ] ) ) {
+		$tabs = $sections[ $tab ];
+	} else if ( $tab ) {
+		$tabs = false;
+	}
+
+	return $tabs;
 }
 
 /**
