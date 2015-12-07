@@ -1103,40 +1103,42 @@ function edd_get_registered_settings_sections() {
 		return $sections;
 	}
 
-	$registered_sections = array(
-		'general' => apply_filters( 'edd_settings_sections_general', array(
-			'main'     => __( 'General Settings', 'easy-digital-downloads' ),
-			'currency' => __( 'Currency Settings', 'easy-digital-downloads' ),
-			'api'      => __( 'API Settings', 'easy-digital-downloads' ),
+	$sections = array(
+		'general'    => apply_filters( 'edd_settings_sections_general', array(
+			'main'               => __( 'General Settings', 'easy-digital-downloads' ),
+			'currency'           => __( 'Currency Settings', 'easy-digital-downloads' ),
+			'api'                => __( 'API Settings', 'easy-digital-downloads' ),
 		) ),
-		'gateways' => apply_filters( 'edd_settings_sections_gateways', array(
-			'main'   => __( 'Gateway Settings', 'easy-digital-downloads' ),
-			'paypal' => __( 'PayPal Standard', 'easy-digital-downloads' ),
+		'gateways'   => apply_filters( 'edd_settings_sections_gateways', array(
+			'main'               => __( 'Gateway Settings', 'easy-digital-downloads' ),
+			'paypal'             => __( 'PayPal Standard', 'easy-digital-downloads' ),
 		) ),
-		'emails' => apply_filters( 'edd_settings_sections_emails', array(
+		'emails'     => apply_filters( 'edd_settings_sections_emails', array(
 			'main'               => __( 'Email Settings', 'easy-digital-downloads' ),
 			'purchase_receipts'  => __( 'Purchase Receipts', 'easy-digital-downloads' ),
 			'sale_notifications' => __( 'New Sale Notifications', 'easy-digital-downloads' ),
 		) ),
-		'styles' => apply_filters( 'edd_settings_sections_styles', array(
-			'main' => __( 'Style Settings', 'easy-digital-downloads' ),
+		'styles'     => apply_filters( 'edd_settings_sections_styles', array(
+			'main'               => __( 'Style Settings', 'easy-digital-downloads' ),
 		) ),
-		'taxes' => apply_filters( 'edd_settings_sections_taxes', array(
-			'main' => __( 'Tax Settings', 'easy-digital-downloads' ),
+		'taxes'      => apply_filters( 'edd_settings_sections_taxes', array(
+			'main'               => __( 'Tax Settings', 'easy-digital-downloads' ),
 		) ),
-		'extensions' => apply_filters( 'edd_settings_sections_extensions', array() ),
-		'licenses' => apply_filters( 'edd_settings_sections_licenses', array() ),
-		'misc' => apply_filters( 'edd_settings_sections_misc', array(
-			'main'           => __( 'Misc Settings', 'easy-digital-downloads' ),
-			'checkout'       => __( 'Checkout Settings', 'easy-digital-downloads' ),
-			'button_text'    => __( 'Button Text', 'easy-digital-downloads' ),
-			'file_downloads' => __( 'File Downloads', 'easy-digital-downloads' ),
-			'accounting'     => __( 'Accounting Settings', 'easy-digital-downloads' ),
-			'site_terms'     => __( 'Terms of Agreement', 'easy-digital-downloads' ),
+		'extensions' => apply_filters( 'edd_settings_sections_extensions', array(
+			'main'               => __( 'Main', 'easy-digital-downloads' )
+		) ),
+		'licenses'   => apply_filters( 'edd_settings_sections_licenses', array() ),
+		'misc'       => apply_filters( 'edd_settings_sections_misc', array(
+			'main'               => __( 'Misc Settings', 'easy-digital-downloads' ),
+			'checkout'           => __( 'Checkout Settings', 'easy-digital-downloads' ),
+			'button_text'        => __( 'Button Text', 'easy-digital-downloads' ),
+			'file_downloads'     => __( 'File Downloads', 'easy-digital-downloads' ),
+			'accounting'         => __( 'Accounting Settings', 'easy-digital-downloads' ),
+			'site_terms'         => __( 'Terms of Agreement', 'easy-digital-downloads' ),
 		) ),
 	);
 
-	$sections = apply_filters( 'edd_settings_sections', $registered_sections );
+	$sections = apply_filters( 'edd_settings_sections', $sections );
 
 	return $sections;
 }
