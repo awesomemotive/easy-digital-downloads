@@ -41,6 +41,20 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 
 	}
 
+	public function test_IDs() {
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertEquals( $this->_payment_id, $payment->ID );
+		$this->assertEquals( $payment->_ID, $payment->ID );
+	}
+
+	public function test_ID_save_block() {
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertEquals( $this->_payment_id, $payment->ID );
+		$payment->ID = 12121222;
+		$payment->save();
+		$this->assertEquals( $this->_payment_id, $payment->ID );
+	}
+
 	public function test_get_existing_payment() {
 		$payment = new EDD_Payment( $this->_payment_id );
 		$this->assertEquals( $this->_payment_id, $payment->ID );
