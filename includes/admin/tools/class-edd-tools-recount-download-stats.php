@@ -53,6 +53,8 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 	public function get_data() {
 		global $edd_logs, $wpdb;
 
+		$accepted_statuses  = apply_filters( 'edd_recount_accepted_statuses', array( 'publish', 'revoked' ) );
+
 		if ( $this->step == 1 ) {
 			delete_option( 'edd_temp_recount_download_stats' );
 		}
@@ -89,21 +91,26 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 			unset( $payment_ids );
 
 			foreach ( $payments as $payment ) {
-				if ( in_array( $payment->post_status, array( 'revoked', 'published', 'edd_subscription' ) ) ) {
+
+				if ( ! in_array( $payment->post_status, $accepted_statuses ) ) {
 					continue;
 				}
 
 				$items = edd_get_payment_meta_cart_details( $payment->ID );
 
 				foreach ( $items as $item ) {
+
 					if ( $item['id'] != $this->download_id ) {
 						continue;
 					}
+
 					$this->_log_ids_debug[] = $payment->ID;
 
 					$totals['sales']++;
 					$totals['earnings'] += $item['price'];
+
 				}
+
 			}
 
 			update_option( 'edd_temp_recount_download_stats', $totals );
@@ -132,6 +139,7 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 			delete_option( 'edd_recount_total_' . $this->download_id );
 		}
 
+		$accepted_statuses  = apply_filters( 'edd_recount_accepted_statuses', array( 'publish', 'revoked' ) );
 		$total   = get_option( 'edd_recount_total_' . $this->download_id, false );
 
 		if ( false === $total ) {
@@ -157,7 +165,7 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 				unset( $payment_ids );
 
 				foreach ( $payments as $payment ) {
-					if ( in_array( $payment->post_status, array( 'revoked', 'published', 'edd_subscription' ) ) ) {
+					if ( in_array( $payment->post_status, $accepted_statuses ) ) {
 						continue;
 					}
 

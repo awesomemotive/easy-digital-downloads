@@ -63,10 +63,12 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 			add_option( 'edd_temp_recount_earnings', $total, '', 'no' );
 		}
 
+		$accepted_statuses  = apply_filters( 'edd_recount_accepted_statuses', array( 'publish', 'revoked' ) );
+
 		$args = apply_filters( 'edd_recount_earnings_args', array(
 			'number' => $this->per_step,
 			'page'   => $this->step,
-			'status' => array( 'publish', 'revoked', 'edd_subscription' ),
+			'status' => $accepted_statuses,
 			'fields' => 'ids'
 		) );
 
@@ -114,9 +116,7 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 
 			$counts = edd_count_payments( $args );
 			$total  = absint( $counts->publish ) + absint( $counts->revoked );
-			if ( ! empty( $counts->edd_subscription ) ) {
-				$total += $counts->edd_subscription;
-			}
+			$total  = apply_filters( 'edd_recount_store_earnings_total', $total );
 
 			add_option( 'edd_recount_earnings_total', $total, '', 'no' );
 		}
