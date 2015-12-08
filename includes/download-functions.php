@@ -976,7 +976,6 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $p
 	);
 
 	$params  = apply_filters( 'edd_download_file_url_args', $old_args );
-
 	$payment = edd_get_payment_by( 'key', $params['download_key'] );
 
 	if ( ! $payment ) {
