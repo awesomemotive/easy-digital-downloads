@@ -579,7 +579,7 @@ final class EDD_Payment {
 	 * @param int  $args Other arguments to pass to the function
 	 * @return void
 	 */
-	public function add_download( $download_id = 0, $args = array() ) {
+	public function add_download( $download_id = 0, $args = array(), $options = array() ) {
 		$download = new EDD_Download( $download_id );
 
 		// Bail if this post isn't a download
@@ -628,9 +628,16 @@ final class EDD_Payment {
 			'quantity' => $quantity,
 		);
 
+		$default_options = array(
+			'quantity' => $quantity,
+		);
+
 		if ( ! empty( $args['price_id'] ) ) {
-			$new_download['options']['price_id'] = (int) $args['price_id'];
+			$default_options['price_id'] = (int) $args['price_id'];
 		}
+
+		$options                 = wp_parse_args( $options, $default_options );
+		$new_download['options'] = $options;
 
 		$this->downloads[] = $new_download;
 
@@ -654,14 +661,8 @@ final class EDD_Payment {
 		$item_number = array(
 			'id'        => $download->ID,
 			'quantity'  => $quantity,
-			'options'   => array(
-				'quantity'  => $quantity,
-			),
+			'options'   => $options,
 		);
-
-		if ( false !== $args['price_id'] ) {
-			$item_number['options']['price_id'] = $args['price_id'];
-		}
 
 		$this->cart_details[] = array(
 			'name'        => $download->post_title,
