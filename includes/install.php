@@ -146,14 +146,23 @@ function edd_run_install() {
 	}
 
 	// Populate some default values
-	foreach( edd_get_registered_settings() as $tab => $settings ) {
+	foreach( edd_get_registered_settings() as $tab => $sections ) {	
+		foreach( $sections as $section => $settings) {
 
-		foreach ( $settings as $option ) {
-
-			if( 'checkbox' == $option['type'] && ! empty( $option['std'] ) ) {
-				$options[ $option['id'] ] = '1';
+			// Check for backwards compatibility
+			$tab_sections = edd_get_settings_tab_sections( $tab );
+			if( ! is_array( $tab_sections ) || ! array_key_exists( $section, $tab_sections ) ) {
+				$section = 'main';
+				$settings = $sections;
 			}
 
+			foreach ( $settings as $option ) {
+
+				if( 'checkbox' == $option['type'] && ! empty( $option['std'] ) ) {
+					$options[ $option['id'] ] = '1';
+				}
+
+			}
 		}
 
 	}
