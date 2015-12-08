@@ -1347,6 +1347,11 @@ final class EDD_Payment {
 	 */
 	private function setup_email() {
 		$email = $this->get_meta( '_edd_payment_user_email', true );
+
+		if( empty( $email ) ) {
+			$email = EDD()->customers->get_column( 'email', $this->customer_id );
+		}
+
 		return apply_filters( 'edd_payment_user_email', $email, $this );
 	}
 
