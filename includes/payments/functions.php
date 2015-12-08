@@ -134,29 +134,29 @@ function edd_insert_payment( $payment_data = array() ) {
 	}
 
 	$payment->increase_tax( edd_get_cart_fee_tax() );
-	$payment->currency  = $payment_data['currency'];
-	$payment->user_info = $payment_data['user_info'];
 
 	$gateway = ! empty( $payment_data['gateway'] ) ? $payment_data['gateway'] : '';
 	$gateway = empty( $gateway ) && isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : $gateway;
-	$payment->gateway = $gateway;
 
-	$payment->user_id     = $payment_data['user_info']['id'];
-	$payment->email       = $payment_data['user_email'];
-	$payment->first_name  = $payment_data['user_info']['first_name'];
-	$payment->last_name   = $payment_data['user_info']['last_name'];
-	$payment->email       = $payment_data['user_info']['email'];
-	$payment->ip          = edd_get_ip();
-	$payment->key         = $payment_data['purchase_key'];
-	$payment->mode        = edd_is_test_mode() ? 'test' : 'live';
+	$payment->currency       = $payment_data['currency'];
+	$payment->user_info      = $payment_data['user_info'];
+	$payment->gateway        = $gateway;
+	$payment->user_id        = $payment_data['user_info']['id'];
+	$payment->email          = $payment_data['user_email'];
+	$payment->first_name     = $payment_data['user_info']['first_name'];
+	$payment->last_name      = $payment_data['user_info']['last_name'];
+	$payment->email          = $payment_data['user_info']['email'];
+	$payment->ip             = edd_get_ip();
+	$payment->key            = $payment_data['purchase_key'];
+	$payment->mode           = edd_is_test_mode() ? 'test' : 'live';
+	$payment->parent_payment = ! empty( $payment_data['parent'] ) ? absint( $payment_data['parent'] ) : '';
+	$payment->discounts      = ! empty( $payment_data['user_info']['discount'] ) ? $payment_data['user_info']['discount'] : array();
 
 	if ( ! empty( $payment_data['date'] ) ) {
-		$payment->date    = $payment_data['date'];
+		$payment->date       = $payment_data['date'];
 	} elseif ( ! empty( $payment_data['post_date'] ) ) {
-		$payment->date    = $payment_data['post_date'];
+		$payment->date       = $payment_data['post_date'];
 	}
-
-	$payment->discounts = ! empty( $payment_data['user_info']['discount'] ) ? $payment_data['user_info']['discount'] : array();
 
 	if ( edd_get_option( 'enable_sequential' ) ) {
 		$number          = edd_get_next_payment_number();
