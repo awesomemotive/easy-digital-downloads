@@ -213,7 +213,7 @@ add_action( 'edd_update_payment_status', 'edd_undo_purchase_on_refund', 100, 3 )
  * @param $old_status the status of the payment prior to being marked as "complete", probably "pending"
  */
 function edd_clear_user_history_cache( $payment_id, $new_status, $old_status ) {
-	$payment   = new EDD_Payment( $payment_id );
+	$payment = new EDD_Payment( $payment_id );
 
 	if( ! empty( $payment->user_id ) ) {
 		delete_transient( 'edd_user_' . $payment->user_id . '_purchases' );
