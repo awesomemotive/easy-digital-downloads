@@ -214,9 +214,10 @@ add_action( 'edd_update_payment_status', 'edd_undo_purchase_on_refund', 100, 3 )
  */
 function edd_clear_user_history_cache( $payment_id, $new_status, $old_status ) {
 	$payment   = new EDD_Payment( $payment_id );
-	$user_info = $payment->user_info;
 
-	delete_transient( 'edd_user_' . $user_info['id'] . '_purchases' );
+	if( ! empty( $payment->user_id ) ) {
+		delete_transient( 'edd_user_' . $payment->user_id . '_purchases' );
+	}
 }
 add_action( 'edd_update_payment_status', 'edd_clear_user_history_cache', 10, 3 );
 
