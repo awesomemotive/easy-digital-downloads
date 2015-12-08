@@ -130,7 +130,7 @@ function edd_insert_payment( $payment_data = array() ) {
 			'amount'      => isset( $item['price'] ) ? $item['price'] : $item['item_price'],
 		);
 
-		$payment->add_download( $item['id'], $args );
+		$payment->add_download( $item['id'], $args, $item['item_number']['options'] );
 	}
 
 	$payment->increase_tax( edd_get_cart_fee_tax() );
@@ -167,9 +167,9 @@ function edd_insert_payment( $payment_data = array() ) {
 	// Clear the user's purchased cache
 	delete_transient( 'edd_user_' . $payment_data['user_info']['id'] . '_purchases' );
 
-	do_action( 'edd_insert_payment', $payment->ID, $payment_data );
-
 	$payment->save();
+
+	do_action( 'edd_insert_payment', $payment->ID, $payment_data );
 
 	return $payment->ID; // Return the ID
 
