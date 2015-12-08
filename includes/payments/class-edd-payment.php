@@ -33,7 +33,8 @@ final class EDD_Payment {
 	 * @since 2.5
 	 */
 
-	protected $ID                      = 0;
+	public    $ID                      = 0;
+	protected $_ID                     = 0;
 	protected $new                     = false;
 	protected $number                  = '';
 	protected $mode                    = 'live';
@@ -103,7 +104,7 @@ final class EDD_Payment {
 	 * @param mixed $value  The value of the property
 	 */
 	public function __set( $name, $value ) {
-		$ignore = array( 'downloads', 'cart_details', 'fees' );
+		$ignore = array( 'downloads', 'cart_details', 'fees', '_ID' );
 
 		if ( $name === 'status' ) {
 			$this->old_status = $this->status;
@@ -113,7 +114,9 @@ final class EDD_Payment {
 			$this->pending[ $name ] = $value;
 		}
 
-		$this->$name = $value;
+		if( '_ID' !== $name ) {
+			$this->$name = $value;
+		}
 	}
 
 	/**
@@ -141,10 +144,13 @@ final class EDD_Payment {
 		}
 
 		// Primary Identifier
-		$this->ID             = absint( $payment_id );
+		$this->ID              = absint( $payment_id );
+
+		// Protected ID that can never be changed
+		$this->_ID             = absint( $payment_id );
 
 		// We have a payment, get the generic payment_meta item to reduce calls to it
-		$payment_meta   = $this->get_meta();
+		$payment_meta          = $this->get_meta();
 
 		// Status and Dates
 		$this->date            = $payment->post_date;
@@ -159,34 +165,34 @@ final class EDD_Payment {
 
 
 		// Items
-		$this->fees           = $this->setup_fees( $payment_meta );
-		$this->cart_details   = $this->setup_cart_details( $payment_meta );
-		$this->downloads      = $this->setup_downloads( $payment_meta );
+		$this->fees            = $this->setup_fees( $payment_meta );
+		$this->cart_details    = $this->setup_cart_details( $payment_meta );
+		$this->downloads       = $this->setup_downloads( $payment_meta );
 
 		// Currency Based
-		$this->total          = $this->setup_total();
-		$this->tax            = $this->setup_tax();
-		$this->subtotal       = $this->setup_subtotal();
-		$this->currency       = $this->setup_currency( $payment_meta );
+		$this->total           = $this->setup_total();
+		$this->tax             = $this->setup_tax();
+		$this->subtotal        = $this->setup_subtotal();
+		$this->currency        = $this->setup_currency( $payment_meta );
 
 		// Gateway based
-		$this->gateway        = $this->setup_gateway();
-		$this->transaction_id = $this->setup_transaction_id();
+		$this->gateway         = $this->setup_gateway();
+		$this->transaction_id  = $this->setup_transaction_id();
 
 		// User based
-		$this->ip             = $this->setup_ip();
-		$this->customer_id    = $this->setup_customer_id();
-		$this->user_id        = $this->setup_user_id();
-		$this->email          = $this->setup_email();
-		$this->user_info      = $this->setup_user_info( $payment_meta );
-		$this->address        = $this->setup_address( $payment_meta );
-		$this->discounts      = $this->user_info['discount'];
-		$this->first_name     = $this->user_info['first_name'];
-		$this->last_name      = $this->user_info['last_name'];
+		$this->ip              = $this->setup_ip();
+		$this->customer_id     = $this->setup_customer_id();
+		$this->user_id         = $this->setup_user_id();
+		$this->email           = $this->setup_email();
+		$this->user_info       = $this->setup_user_info( $payment_meta );
+		$this->address         = $this->setup_address( $payment_meta );
+		$this->discounts       = $this->user_info['discount'];
+		$this->first_name      = $this->user_info['first_name'];
+		$this->last_name       = $this->user_info['last_name'];
 
 		// Other Identifiers
-		$this->key            = $this->setup_payment_key();
-		$this->number         = $this->setup_payment_number();
+		$this->key             = $this->setup_payment_key();
+		$this->number          = $this->setup_payment_number();
 
 		// Additional Attributes
 		$this->has_unlimited_downloads = $this->setup_has_unlimited();
@@ -272,7 +278,9 @@ final class EDD_Payment {
 		$payment_id = wp_insert_post( $args );
 
 		if ( ! empty( $payment_id ) ) {
+
 			$this->ID  = $payment_id;
+			$this->_ID = $payment_id;
 
 			$customer = new stdClass;
 
@@ -325,6 +333,10 @@ final class EDD_Payment {
 				$this->ID = $payment_id;
 			}
 
+		}
+
+		if( $this->ID !== $this->_ID ) {
+			$this->ID = $this->_ID;
 		}
 
 		// If we have something pending, let's save it
