@@ -123,6 +123,7 @@ function edd_insert_payment( $payment_data = array() ) {
 	$payment = new EDD_Payment();
 
 	foreach ( $payment_data['cart_details'] as $item ) {
+		
 		$args = array(
 			'quantity'    => $item['quantity'],
 			'price_id'    => isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null,
@@ -130,7 +131,9 @@ function edd_insert_payment( $payment_data = array() ) {
 			'amount'      => isset( $item['price'] ) ? $item['price'] : $item['item_price'],
 		);
 
-		$payment->add_download( $item['id'], $args, $item['item_number']['options'] );
+		$options = isset( $item['item_number']['options'] ) ? $item['item_number']['options'] : array();
+
+		$payment->add_download( $item['id'], $args, $options );
 	}
 
 	$payment->increase_tax( edd_get_cart_fee_tax() );
