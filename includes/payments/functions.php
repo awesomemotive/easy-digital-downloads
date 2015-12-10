@@ -115,7 +115,7 @@ function edd_get_payment_by( $field = '', $value = '' ) {
  * @return int|bool Payment ID if payment is inserted, false otherwise
  */
 function edd_insert_payment( $payment_data = array() ) {
-var_dump($payment_data);
+
 	if ( empty( $payment_data ) ) {
 		return false;
 	}
@@ -125,28 +125,16 @@ var_dump($payment_data);
 	foreach ( $payment_data['cart_details'] as $item ) {
 
 		$args = array(
-			'quantity'    => $item['quantity'],
-			'price_id'    => isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null,
-			'tax'         => $item['tax'],
-			'amount'      => isset( $item['price'] ) ? $item['price'] : $item['item_price'],
+			'quantity'   => $item['quantity'],
+			'price_id'   => isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null,
+			'tax'        => $item['tax'],
+			'item_price' => isset( $item['item_price'] ) ? $item['item_price'] : $item['price'],
+			'fees'       => isset( $item['fees'] ) ? $item['fees'] : array(),
 		);
 
 		$options = isset( $item['item_number']['options'] ) ? $item['item_number']['options'] : array();
 
 		$payment->add_download( $item['id'], $args, $options );
-	}
-
-	if ( ! empty( $payment_data['fees'] ) ) {
-		foreach ( $payment_data['fees'] as $fee ) {
-			$amount      = $fee['amount'];
-			$label       =$fee['label'];
-			$id          = $fee['id'];
-			$type        = $fee['type'];
-			$no_tax      = $fee['no_tax'];
-			$download_id = $fee['download_id'];
-
-			$payment->add_fee( $amount, $label, $id, $type, $no_tax, $download_id );
-		}
 	}
 
 	$payment->increase_tax( edd_get_cart_fee_tax() );
