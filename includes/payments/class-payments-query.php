@@ -432,7 +432,7 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		} elseif ( 0 === strpos( $search, 'discount:' ) ) {
 
-			$search = str_replace( 'discount:', '', $search );
+			$search = trim( str_replace( 'discount:', '', $search ) );
 			$search = 'discount.*' . $search;
 
 			$search_meta = array(
