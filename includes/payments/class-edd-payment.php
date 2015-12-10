@@ -33,41 +33,208 @@ final class EDD_Payment {
 	 * @since 2.5
 	 */
 
-	public    $ID                      = 0;
-	protected $_ID                     = 0;
-	protected $new                     = false;
-	protected $number                  = '';
-	protected $mode                    = 'live';
-	protected $key                     = '';
-	protected $total                   = 0;
-	protected $subtotal                = 0;
-	protected $tax                     = 0;
-	protected $fees                    = array();
-	protected $fees_total              = 0;
-	protected $discounts               = 'none';
-	protected $date                    = '';
-	protected $completed_date          = '';
-	protected $status                  = 'pending';
-	protected $post_status             = 'pending'; // Same as $status but here for backwards compat
-	protected $old_status              = '';
-	protected $status_nicename         = '';
-	protected $customer_id             = null;
-	protected $user_id                 = 0;
-	protected $first_name              = '';
-	protected $last_name               = '';
-	protected $email                   = '';
-	private   $user_info               = array();
-	private   $payment_meta            = array();
-	protected $address                 = array();
-	protected $transaction_id          = '';
-	protected $downloads               = array();
-	protected $ip                      = '';
-	protected $gateway                 = '';
-	protected $currency                = '';
-	protected $cart_details            = array();
+	/**
+	 * The Payment ID
+	 * @var integer
+	 */
+	public    $ID  = 0;
+	protected $_ID = 0;
+
+	/**
+	 * Identify if the payment is a new one or existing
+	 * @var boolean
+	 */
+	protected $new = false;
+
+	/**
+	 * The Payment number (for use with sequential payments)
+	 * @var string
+	 */
+	protected $number = '';
+
+	/**
+	 * The Gateway mode the payment was made in
+	 * @var string
+	 */
+	protected $mode = 'live';
+
+	/**
+	 * The Unique Payment Key
+	 * @var string
+	 */
+	protected $key = '';
+
+	/**
+	 * The total amount the payment is for
+	 * Includes items, taxes, fees, and discounts
+	 *
+	 * @var integer
+	 */
+	protected $total = 0;
+
+	/**
+	 * The Subtotal fo the payment before taxes
+	 * @var integer
+	 */
+	protected $subtotal = 0;
+
+	/**
+	 * The amount of tax for this payment
+	 * @var integer
+	 */
+	protected $tax = 0;
+
+	/**
+	 * Array of global fees for this payment
+	 * @var array
+	 */
+	protected $fees = array();
+
+	/**
+	 * The sum of the fee amounts
+	 * @var integer
+	 */
+	protected $fees_total = 0;
+
+	/**
+	 * Any discounts applied to the payment
+	 * @var string
+	 */
+	protected $discounts = 'none';
+
+	/**
+	 * The date the payment was created
+	 * @var string
+	 */
+	protected $date = '';
+
+	/**
+	 * The date the payment was marked as 'complete'
+	 * @var string
+	 */
+	protected $completed_date = '';
+
+	/**
+	 * The status of the payment
+	 * @var string
+	 */
+	protected $status      = 'pending';
+	protected $post_status = 'pending'; // Same as $status but here for backwards compat
+
+	/**
+	 * When updating, the old status prior to the change
+	 * @var string
+	 */
+	protected $old_status = '';
+
+	/**
+	 * The display name of the current payment status
+	 * @var string
+	 */
+	protected $status_nicename = '';
+
+	/**
+	 * The customer ID that made the payment
+	 * @var null
+	 */
+	protected $customer_id = null;
+
+	/**
+	 * The User ID (if logged in) that made the payment
+	 * @var integer
+	 */
+	protected $user_id = 0;
+
+	/**
+	 * The first name of the payee
+	 * @var string
+	 */
+	protected $first_name = '';
+
+	/**
+	 * The last name of the payee
+	 * @var string
+	 */
+	protected $last_name = '';
+
+	/**
+	 * The email used for the payment
+	 * @var string
+	 */
+	protected $email = '';
+
+	/**
+	 * Legacy (not to be accessed) array of user information
+	 * @var array
+	 */
+	private   $user_info = array();
+
+	/**
+	 * Legacy (not to be accessed) payment meta array
+	 * @var array
+	 */
+	private   $payment_meta = array();
+
+	/**
+	 * The physical address used for the payment if provided
+	 * @var array
+	 */
+	protected $address = array();
+
+	/**
+	 * The transaction ID returned by the gateway
+	 * @var string
+	 */
+	protected $transaction_id = '';
+
+	/**
+	 * Array of downloads for this payment
+	 * @var array
+	 */
+	protected $downloads = array();
+
+	/**
+	 * IP Address payment was made from
+	 * @var string
+	 */
+	protected $ip = '';
+
+	/**
+	 * The gateway used to process the payment
+	 * @var string
+	 */
+	protected $gateway = '';
+
+	/**
+	 * The the payment was made with
+	 * @var string
+	 */
+	protected $currency = '';
+
+	/**
+	 * The cart details array
+	 * @var array
+	 */
+	protected $cart_details = array();
+
+	/**
+	 * Allows the files for this payment to be downloaded unlimited times (when download limits are enabled)
+	 * @var boolean
+	 */
 	protected $has_unlimited_downloads = false;
-	protected $pending;
-	protected $parent_payment          = 0;
+
+	/**
+	 * Array of items that have changed since the last save() was run
+	 * This is for internal use, to allow fewer update_payment_meta calls to be run
+	 * @var array
+	 */
+	private $pending;
+
+	/**
+	 * The parent payment (if applicable)
+	 * @var integer
+	 */
+	protected $parent_payment = 0;
 
 	/**
 	 * Setup the EDD Payments class
@@ -869,10 +1036,8 @@ final class EDD_Payment {
 	 * Add a fee to a given payment
 	 *
 	 * @since  2.5
-	 * @param  string $label  The description of the fee
-	 * @param  float  $amount The amount of the fee
-	 * @param  string $type   The Fee Type
-	 * @return void
+	 * @param  array $args Array of arguements for the fee to add
+	 * @return If the fee was added
 	 */
 	public function add_fee( $args, $global = true ) {
 
