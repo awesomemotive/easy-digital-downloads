@@ -626,6 +626,7 @@ final class EDD_Payment {
 		$new_download = array(
 			'id'       => $download->ID,
 			'quantity' => $quantity,
+			'fees'     => $args['fees'],
 		);
 
 		$default_options = array(
@@ -844,11 +845,15 @@ final class EDD_Payment {
 	 * @param  string $type   The Fee Type
 	 * @return void
 	 */
-	public function add_fee( $label = '', $amount = 0.00, $type = '' ) {
+	public function add_fee( $amount = 0, $label = '', $id = '', $type = 'fee', $no_tax = false, $download_id = 0 ) {
+
 		$this->fees[] = array(
-			'label'  => $label,
-			'amount' => $amount,
-			'type'   => $type,
+			'label'       => $label,
+			'amount'      => $amount,
+			'type'        => $type,
+			'id'          => $id,
+			'no_tax'      => $no_tax,
+			'download_id' => $download_id,
 		);
 
 		$added_fee               = end( $this->fees );
