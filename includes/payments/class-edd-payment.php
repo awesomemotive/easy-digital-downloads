@@ -35,31 +35,41 @@ final class EDD_Payment {
 
 	/**
 	 * The Payment ID
-	 * @var integer
+	 *
+	 * @since  2.5
+	 * @var    integer
 	 */
 	public    $ID  = 0;
 	protected $_ID = 0;
 
 	/**
 	 * Identify if the payment is a new one or existing
+	 *
+	 * @since  2.5
 	 * @var boolean
 	 */
 	protected $new = false;
 
 	/**
 	 * The Payment number (for use with sequential payments)
+	 *
+	 * @since  2.5
 	 * @var string
 	 */
 	protected $number = '';
 
 	/**
 	 * The Gateway mode the payment was made in
+	 *
+	 * @since  2.5
 	 * @var string
 	 */
 	protected $mode = 'live';
 
 	/**
 	 * The Unique Payment Key
+	 *
+	 * @since  2.5
 	 * @var string
 	 */
 	protected $key = '';
@@ -68,54 +78,71 @@ final class EDD_Payment {
 	 * The total amount the payment is for
 	 * Includes items, taxes, fees, and discounts
 	 *
-	 * @var integer
+	 * @since  2.5
+	 * @var float
 	 */
-	protected $total = 0;
+	protected $total = 0.00;
 
 	/**
 	 * The Subtotal fo the payment before taxes
-	 * @var integer
+	 *
+	 * @since  2.5
+	 * @var float
 	 */
 	protected $subtotal = 0;
 
 	/**
 	 * The amount of tax for this payment
-	 * @var integer
+	 *
+	 * @since  2.5
+	 * @var float
 	 */
 	protected $tax = 0;
 
 	/**
 	 * Array of global fees for this payment
+	 *
+	 * @since  2.5
 	 * @var array
 	 */
 	protected $fees = array();
 
 	/**
 	 * The sum of the fee amounts
-	 * @var integer
+	 *
+	 * @since  2.5
+	 * @var float
 	 */
 	protected $fees_total = 0;
 
 	/**
 	 * Any discounts applied to the payment
+	 *
+	 * @since  2.5
 	 * @var string
 	 */
 	protected $discounts = 'none';
 
 	/**
 	 * The date the payment was created
+	 *
+	 * @since  2.5
 	 * @var string
 	 */
 	protected $date = '';
 
 	/**
 	 * The date the payment was marked as 'complete'
+	 *
+	 * @since  2.5
 	 * @var string
 	 */
 	protected $completed_date = '';
 
 	/**
 	 * The status of the payment
+	 *
+	 * @since  2.5
 	 * @var string
 	 */
 	protected $status      = 'pending';
@@ -123,102 +150,136 @@ final class EDD_Payment {
 
 	/**
 	 * When updating, the old status prior to the change
+	 *
+	 * @since  2.5
 	 * @var string
 	 */
 	protected $old_status = '';
 
 	/**
 	 * The display name of the current payment status
+	 *
+	 * @since  2.5
 	 * @var string
 	 */
 	protected $status_nicename = '';
 
 	/**
 	 * The customer ID that made the payment
-	 * @var null
+	 *
+	 * @since  2.5
+	 * @var integer
 	 */
 	protected $customer_id = null;
 
 	/**
 	 * The User ID (if logged in) that made the payment
+	 *
+	 * @since  2.5
 	 * @var integer
 	 */
 	protected $user_id = 0;
 
 	/**
 	 * The first name of the payee
+	 *
+	 * @since  2.5
 	 * @var string
 	 */
 	protected $first_name = '';
 
 	/**
 	 * The last name of the payee
+	 *
+	 * @since  2.5
 	 * @var string
 	 */
 	protected $last_name = '';
 
 	/**
 	 * The email used for the payment
+	 *
+	 * @since  2.5
 	 * @var string
 	 */
 	protected $email = '';
 
 	/**
 	 * Legacy (not to be accessed) array of user information
+	 *
+	 * @since  2.5
 	 * @var array
 	 */
 	private   $user_info = array();
 
 	/**
 	 * Legacy (not to be accessed) payment meta array
+	 *
+	 * @since  2.5
 	 * @var array
 	 */
 	private   $payment_meta = array();
 
 	/**
 	 * The physical address used for the payment if provided
+	 *
+	 * @since  2.5
 	 * @var array
 	 */
 	protected $address = array();
 
 	/**
 	 * The transaction ID returned by the gateway
+	 *
+	 * @since  2.5
 	 * @var string
 	 */
 	protected $transaction_id = '';
 
 	/**
 	 * Array of downloads for this payment
+	 *
+	 * @since  2.5
 	 * @var array
 	 */
 	protected $downloads = array();
 
 	/**
 	 * IP Address payment was made from
+	 *
+	 * @since  2.5
 	 * @var string
 	 */
 	protected $ip = '';
 
 	/**
 	 * The gateway used to process the payment
+	 *
+	 * @since  2.5
 	 * @var string
 	 */
 	protected $gateway = '';
 
 	/**
 	 * The the payment was made with
+	 *
+	 * @since  2.5
 	 * @var string
 	 */
 	protected $currency = '';
 
 	/**
 	 * The cart details array
+	 *
+	 * @since  2.5
 	 * @var array
 	 */
 	protected $cart_details = array();
 
 	/**
 	 * Allows the files for this payment to be downloaded unlimited times (when download limits are enabled)
+	 *
+	 * @since  2.5
 	 * @var boolean
 	 */
 	protected $has_unlimited_downloads = false;
@@ -226,12 +287,16 @@ final class EDD_Payment {
 	/**
 	 * Array of items that have changed since the last save() was run
 	 * This is for internal use, to allow fewer update_payment_meta calls to be run
+	 *
+	 * @since  2.5
 	 * @var array
 	 */
 	private $pending;
 
 	/**
 	 * The parent payment (if applicable)
+	 *
+	 * @since  2.5
 	 * @var integer
 	 */
 	protected $parent_payment = 0;
@@ -818,6 +883,18 @@ final class EDD_Payment {
 		$quantity   = edd_item_quantities_enabled() ? absint( $args['quantity'] ) : 1;
 		$amount     = round( $item_price * $quantity, edd_currency_decimal_filter() );
 
+		if ( ! empty( $args['fees'] ) ) {
+			foreach ( $args['fees'] as $key => $fee ) {
+
+				if ( empty( $fee['download_id'] ) ) {
+					$args['fees'][ $key ]['download_id'] = $download_id;
+				}
+
+				$this->add_fee( $args['fees'][ $key ], false );
+
+			}
+		}
+
 		// Setup the downloads meta item
 		$new_download = array(
 			'id'       => $download->ID,
@@ -872,12 +949,6 @@ final class EDD_Payment {
 			'fees'        => $args['fees'],
 			'price'       => round( $total, edd_currency_decimal_filter() ),
 		);
-
-		if ( ! empty( $args['fees'] ) ) {
-			foreach ( $args['fees'] as $fee ) {
-				$this->add_fee( $fee );
-			}
-		}
 
 		$added_download = end( $this->cart_details );
 		$added_download['action']  = 'add';

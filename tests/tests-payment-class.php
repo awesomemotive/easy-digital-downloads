@@ -99,6 +99,27 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$this->assertEquals( 140.00, $payment->total );
 	}
 
+	public function test_add_download_with_fee() {
+		$payment = new EDD_Payment( $this->_payment_id );
+		$args = array(
+			'fees' => array(
+				array(
+					'amount' => 5,
+					'label'  => 'Test Fee',
+				),
+			),
+		);
+
+		$new_download   = EDD_Helper_Download::create_simple_download();
+
+		$payment->add_download( $new_download->ID, $args );
+		$payment->save();
+
+		$this->assertFalse( empty( $payment->downloads[2]['fees'] ) );
+		$this->assertEquals( $new_download->ID, $payment->downloads[2]['fees'][0]['download_id'] );
+		$this->assertEquals( 145, $payment->total );
+	}
+
 	public function test_remove_download() {
 		$payment = new EDD_Payment( $this->_payment_id );
 		$this->assertEquals( 2, count( $payment->downloads ) );
