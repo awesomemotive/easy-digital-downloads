@@ -325,7 +325,13 @@ final class EDD_Payment {
 	 * @return mixed        The value
 	 */
 	public function __get( $name ) {
+
+		if ( 'fees' === $name ) {
+			return $this->get_fees();
+		}
+
 		return $this->$name;
+
 	}
 
 	/**
@@ -1217,6 +1223,33 @@ final class EDD_Payment {
 	}
 
 	/**
+	 * Get the fees, filterable by type
+	 *
+	 * @since  2.5
+	 * @param  string $type All, item, fee
+	 * @return array        The Fees for the type specified
+	 */
+	public function get_fees( $type = 'all' ) {
+		$fees    = array();
+
+		if ( ! empty( $this->fees ) && is_array( $this->fees ) ) {
+
+			foreach ( $this->fees as $fee_id => $fee ) {
+
+				if( 'all' != $type && ! empty( $fee['type'] ) && $type != $fee['type'] ) {
+					continue;
+				}
+
+				$fee['id'] = $fee_id;
+				$fees[]    = $fee;
+
+			}
+		}
+
+		return $fees;
+	}
+
+	/**
 	 * Add a note to a payment
 	 *
 	 * @since 2.5
@@ -1592,7 +1625,7 @@ final class EDD_Payment {
 	 */
 	private function setup_fees() {
 		$payment_fees = isset( $this->payment_meta['fees'] ) ? $this->payment_meta['fees'] : array();
-		return $payment_fees;
+		return apply_filters( 'edd_get_payment_fees', $payment_fees, $this->ID );
 	}
 
 	/**

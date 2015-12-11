@@ -122,19 +122,21 @@ function edd_insert_payment( $payment_data = array() ) {
 
 	$payment = new EDD_Payment();
 
-	foreach ( $payment_data['cart_details'] as $item ) {
+	if ( ! empty( $payment_data['cart_details'] ) ) {
+		foreach ( $payment_data['cart_details'] as $item ) {
 
-		$args = array(
-			'quantity'   => $item['quantity'],
-			'price_id'   => isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null,
-			'tax'        => $item['tax'],
-			'item_price' => isset( $item['item_price'] ) ? $item['item_price'] : $item['price'],
-			'fees'       => isset( $item['fees'] ) ? $item['fees'] : array(),
-		);
+			$args = array(
+				'quantity'   => $item['quantity'],
+				'price_id'   => isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null,
+				'tax'        => $item['tax'],
+				'item_price' => isset( $item['item_price'] ) ? $item['item_price'] : $item['price'],
+				'fees'       => isset( $item['fees'] ) ? $item['fees'] : array(),
+			);
 
-		$options = isset( $item['item_number']['options'] ) ? $item['item_number']['options'] : array();
+			$options = isset( $item['item_number']['options'] ) ? $item['item_number']['options'] : array();
 
-		$payment->add_download( $item['id'], $args, $options );
+			$payment->add_download( $item['id'], $args, $options );
+		}
 	}
 
 	$payment->increase_tax( edd_get_cart_fee_tax() );
@@ -1351,31 +1353,8 @@ function edd_get_payment_item_tax( $payment_id = 0, $cart_key = false ) {
  * @return mixed array if payment fees found, false otherwise
  */
 function edd_get_payment_fees( $payment_id = 0, $type = 'all' ) {
-
 	$payment = new EDD_Payment( $payment_id );
-	$fees    = $payment->fees;
-
-	if ( ! empty( $payment_fees ) && is_array( $payment_fees ) ) {
-
-		foreach ( $payment_fees as $fee_id => $fee ) {
-
-			if( 'all' != $type && ! empty( $fee['type'] ) && $type != $fee['type'] ) {
-
-				unset( $payment_fees[ $fee_id ] );
-
-			} else {
-
-				$fees[] = array(
-					'id'     => $fee_id,
-					'amount' => $fee['amount'],
-					'label'  => $fee['label']
-				);
-
-			}
-		}
-	}
-
-	return apply_filters( 'edd_get_payment_fees', $fees, $payment_id );
+	return $payment->get_fees( $type );
 }
 
 /**
