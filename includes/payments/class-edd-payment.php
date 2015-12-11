@@ -999,7 +999,7 @@ final class EDD_Payment {
 			}
 
 			if ( false !== $args['price_id'] ) {
-				if ( $args['price_id'] != $item['price_id'] ) {
+				if ( isset( $item['price_id'] ) && $args['price_id'] != $item['price_id'] ) {
 					continue;
 				}
 			}
@@ -1029,7 +1029,7 @@ final class EDD_Payment {
 				}
 
 				if ( false !== $args['price_id'] ) {
-					if ( $args['price_id'] != $item['item_number']['options']['price_id'] ) {
+					if ( isset( $item['price_id'] ) && $args['price_id'] != $item['item_number']['options']['price_id'] ) {
 						continue;
 					}
 				}
