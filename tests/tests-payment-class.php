@@ -57,6 +57,7 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 
 	public function test_get_existing_payment() {
 		$payment = new EDD_Payment( $this->_payment_id );
+
 		$this->assertEquals( $this->_payment_id, $payment->ID );
 		$this->assertEquals( 120.00, $payment->total );
 	}
@@ -98,6 +99,27 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$this->assertEquals( 140.00, $payment->total );
 	}
 
+	public function test_add_download_with_fee() {
+		$payment = new EDD_Payment( $this->_payment_id );
+		$args = array(
+			'fees' => array(
+				array(
+					'amount' => 5,
+					'label'  => 'Test Fee',
+				),
+			),
+		);
+
+		$new_download   = EDD_Helper_Download::create_simple_download();
+
+		$payment->add_download( $new_download->ID, $args );
+		$payment->save();
+
+		$this->assertFalse( empty( $payment->downloads[2]['fees'] ) );
+		$this->assertEquals( $new_download->ID, $payment->downloads[2]['fees'][0]['download_id'] );
+		$this->assertEquals( 145, $payment->total );
+	}
+
 	public function test_remove_download() {
 		$payment = new EDD_Payment( $this->_payment_id );
 		$this->assertEquals( 2, count( $payment->downloads ) );
@@ -130,7 +152,7 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$this->assertEquals( 20.00, $payment->total );
 	}
 
-	public function test_remove_download_with_quatity() {
+	public function test_remove_download_with_quantity() {
 		global $edd_options;
 		EDD_Helper_Payment::delete_payment( $this->_payment_id );
 
@@ -164,47 +186,49 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 	public function test_payment_add_fee() {
 		$payment = new EDD_Payment( $this->_payment_id );
 		$this->assertEmpty( $payment->fees );
-
-		$payment->add_fee( 'Test Fee', 5, 'test' );
+		$payment->add_fee( array( 'amount' => 5, 'label' => 'Test Fee 1' ) );
 		$this->assertEquals( 1, count( $payment->fees ) );
 		$this->assertEquals( 125, $payment->total );
 		$payment->save();
 
 		// Test that it saves to the DB
-		$payment = new EDD_Payment( $this->_payment_id );
-		$this->assertEquals( 1, count( $payment->fees ) );
-		$this->assertEquals( 125, $payment->total );
+		$payment_meta = get_post_meta( $this->_payment_id, '_edd_payment_meta', true );
+		$this->assertArrayHasKey( 'fees', $payment_meta );
+		$fees = $payment_meta['fees'];
+		$this->assertEquals( 1, count( $fees ) );
 	}
 
 	public function test_payment_remove_fee() {
 		$payment = new EDD_Payment( $this->_payment_id );
 		$this->assertEmpty( $payment->fees );
 
-		$payment->add_fee( 'Test Fee 1', 5, 'test' );
-		$payment->add_fee( 'Test Fee 2', 5, 'test' );
-		$payment->add_fee( 'Test Fee 3', 5, 'test' );
+		$payment->add_fee( array( 'amount' => 5, 'label' => 'Test Fee 1', 'type' => 'fee' ) );
+		$payment->add_fee( array( 'amount' => 5, 'label' => 'Test Fee 2', 'type' => 'fee' ) );
+		$payment->add_fee( array( 'amount' => 5, 'label' => 'Test Fee 3', 'type' => 'fee' ) );
+		$payment->save();
 		$this->assertEquals( 3, count( $payment->fees ) );
 		$this->assertEquals( 'Test Fee 2', $payment->fees[1]['label'] );
-		$payment->save();
+		$this->assertEquals( 135, $payment->total );
 
 		$payment->remove_fee( 1 );
+		$payment->save();
 		$this->assertEquals( 2, count( $payment->fees ) );
 		$this->assertEquals( 130, $payment->total );
 		$this->assertEquals( 'Test Fee 3', $payment->fees[1]['label'] );
-		$payment->save();
 
 		// Test that it saves to the DB
-		$payment = new EDD_Payment( $this->_payment_id );
-		$this->assertEquals( 2, count( $payment->fees ) );
-		$this->assertEquals( 130, $payment->total );
-		$this->assertEquals( 'Test Fee 3', $payment->fees[1]['label'] );
+		$payment_meta = get_post_meta( $this->_payment_id, '_edd_payment_meta', true );
+		$this->assertArrayHasKey( 'fees', $payment_meta );
+		$fees = $payment_meta['fees'];
+		$this->assertEquals( 2, count( $fees ) );
+		$this->assertEquals( 'Test Fee 3', $fees[1]['label'] );
 	}
 
 	public function test_payment_remove_fee_by_label() {
 		$payment = new EDD_Payment( $this->_payment_id );
 		$this->assertEmpty( $payment->fees );
 
-		$payment->add_fee( 'Test Fee', 5, 'test' );
+		$payment->add_fee( array( 'amount' => 5, 'label' => 'Test Fee', 'type' => 'fee' ) );
 		$this->assertEquals( 1, count( $payment->fees ) );
 		$this->assertEquals( 'Test Fee', $payment->fees[0]['label'] );
 		$payment->save();
@@ -215,17 +239,18 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$payment->save();
 
 		// Test that it saves to the DB
-		$payment = new EDD_Payment( $this->_payment_id );
-		$this->assertEmpty( $payment->fees );
-		$this->assertEquals( 120, $payment->total );
+		$payment_meta = get_post_meta( $this->_payment_id, '_edd_payment_meta', true );
+		$this->assertArrayHasKey( 'fees', $payment_meta );
+		$fees = $payment_meta['fees'];
+		$this->assertEmpty( $fees );
 	}
 
 	public function test_payment_remove_fee_by_label_w_multi_no_global() {
 		$payment = new EDD_Payment( $this->_payment_id );
 		$this->assertEmpty( $payment->fees );
 
-		$payment->add_fee( 'Test Fee', 5, 'test' );
-		$payment->add_fee( 'Test Fee', 5, 'test' );
+		$payment->add_fee( array( 'amount' => 5, 'label' => 'Test Fee', 'type' => 'fee' ) );
+		$payment->add_fee( array( 'amount' => 5, 'label' => 'Test Fee', 'type' => 'fee' ) );
 		$this->assertEquals( 2, count( $payment->fees ) );
 		$this->assertEquals( 'Test Fee', $payment->fees[0]['label'] );
 		$payment->save();
@@ -236,17 +261,18 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$payment->save();
 
 		// Test that it saves to the DB
-		$payment = new EDD_Payment( $this->_payment_id );
-		$this->assertEquals( 1, count( $payment->fees ) );
-		$this->assertEquals( 125, $payment->total );
+		$payment_meta = get_post_meta( $this->_payment_id, '_edd_payment_meta', true );
+		$this->assertArrayHasKey( 'fees', $payment_meta );
+		$fees = $payment_meta['fees'];
+		$this->assertEquals( 1, count( $fees ) );
 	}
 
 	public function test_payment_remove_fee_by_label_w_multi_w_global() {
 		$payment = new EDD_Payment( $this->_payment_id );
 		$this->assertEmpty( $payment->fees );
 
-		$payment->add_fee( 'Test Fee', 5, 'test' );
-		$payment->add_fee( 'Test Fee', 5, 'test' );
+		$payment->add_fee( array( 'amount' => 5, 'label' => 'Test Fee', 'type' => 'fee' ) );
+		$payment->add_fee( array( 'amount' => 5, 'label' => 'Test Fee', 'type' => 'fee' ) );
 		$this->assertEquals( 2, count( $payment->fees ) );
 		$this->assertEquals( 'Test Fee', $payment->fees[0]['label'] );
 		$payment->save();
@@ -257,18 +283,19 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$payment->save();
 
 		// Test that it saves to the DB
-		$payment = new EDD_Payment( $this->_payment_id );
-		$this->assertEmpty( $payment->fees );
-		$this->assertEquals( 120, $payment->total );
+		$payment_meta = get_post_meta( $this->_payment_id, '_edd_payment_meta', true );
+		$this->assertArrayHasKey( 'fees', $payment_meta );
+		$fees = $payment_meta['fees'];
+		$this->assertEmpty( $fees );
 	}
 
 	public function test_payment_remove_fee_by_index() {
 		$payment = new EDD_Payment( $this->_payment_id );
 		$this->assertEmpty( $payment->fees );
 
-		$payment->add_fee( 'Test Fee 1', 5, 'test' );
-		$payment->add_fee( 'Test Fee 2', 5, 'test' );
-		$payment->add_fee( 'Test Fee 3', 5, 'test' );
+		$payment->add_fee( array( 'amount' => 5, 'label' => 'Test Fee 1', 'type' => 'fee' ) );
+		$payment->add_fee( array( 'amount' => 5, 'label' => 'Test Fee 2', 'type' => 'fee' ) );
+		$payment->add_fee( array( 'amount' => 5, 'label' => 'Test Fee 3', 'type' => 'fee' ) );
 		$this->assertEquals( 3, count( $payment->fees ) );
 		$this->assertEquals( 'Test Fee 2', $payment->fees[1]['label'] );
 		$payment->save();
@@ -280,10 +307,11 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$payment->save();
 
 		// Test that it saves to the DB
-		$payment = new EDD_Payment( $this->_payment_id );
-		$this->assertEquals( 2, count( $payment->fees ) );
-		$this->assertEquals( 130, $payment->total );
-		$this->assertEquals( 'Test Fee 3', $payment->fees[1]['label'] );
+		$payment_meta = get_post_meta( $this->_payment_id, '_edd_payment_meta', true );
+		$this->assertArrayHasKey( 'fees', $payment_meta );
+		$fees = $payment_meta['fees'];
+		$this->assertEquals( 2, count( $fees ) );
+		$this->assertEquals( 'Test Fee 3', $fees[1]['label'] );
 	}
 
 	public function test_user_info() {
@@ -291,5 +319,20 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 
 		$this->assertEquals( 'Admin', $payment->first_name );
 		$this->assertEquals( 'User', $payment->last_name );
+	}
+
+	public function test_payment_with_initial_fee() {
+		EDD_Helper_Payment::delete_payment( $this->_payment_id );
+
+		add_filter( 'edd_cart_contents', '__return_true' );
+		add_filter( 'edd_item_quantities_enabled', '__return_true' );
+		$payment_id = EDD_Helper_Payment::create_simple_payment_with_fee();
+
+		$payment = new EDD_Payment( $payment_id );
+		$this->assertFalse( empty( $payment->fees ) );
+		$this->assertEquals( 47, $payment->total );
+
+		remove_filter( 'edd_cart_contents', '__return_true' );
+		remove_filter( 'edd_item_quantities_enabled', '__return_true' );
 	}
 }
