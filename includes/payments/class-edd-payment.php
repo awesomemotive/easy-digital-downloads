@@ -971,7 +971,7 @@ final class EDD_Payment {
 	 * @param  array $args        Arguements to pass to identify (quantity, amount, price_id)
 	 * @return bool               If the item was remvoed or not
 	 */
-	public function remove_download( $download_id, $args ) {
+	public function remove_download( $download_id, $args = array() ) {
 
 		// Set some defaults
 		$defaults = array(
