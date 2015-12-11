@@ -852,8 +852,8 @@ final class EDD_Payment {
 		$defaults = array(
 			'quantity'    => 1,
 			'price_id'    => false,
-			'item_price'  => false,
-			'tax'         => 0,
+			'item_price'  => 0.00,
+			'tax'         => 0.00,
 			'fees'        => array(),
 		);
 
