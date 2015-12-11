@@ -88,6 +88,10 @@ add_action( 'wp_before_admin_bar_render', 'edd_maybe_remove_adminbar_profile_lin
  */
 function edd_maybe_remove_menu_profile_links() {
 
+	if( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		return;
+	}
+
 	if ( current_user_can( 'manage_shop_settings' ) ) {
 		return;
 	}
