@@ -33,39 +33,273 @@ final class EDD_Payment {
 	 * @since 2.5
 	 */
 
-	public    $ID                      = 0;
-	protected $_ID                     = 0;
-	protected $new                     = false;
-	protected $number                  = '';
-	protected $mode                    = 'live';
-	protected $key                     = '';
-	protected $total                   = 0;
-	protected $subtotal                = 0;
-	protected $tax                     = 0;
-	protected $fees                    = array();
-	protected $discounts               = 'none';
-	protected $date                    = '';
-	protected $completed_date          = '';
-	protected $status                  = 'pending';
-	protected $post_status             = 'pending'; // Same as $status but here for backwards compat
-	protected $old_status              = '';
-	protected $status_nicename         = '';
-	protected $customer_id             = null;
-	protected $user_id                 = 0;
-	protected $first_name              = '';
-	protected $last_name               = '';
-	protected $email                   = '';
-	private   $user_info               = array();
-	protected $address                 = array();
-	protected $transaction_id          = '';
-	protected $downloads               = array();
-	protected $ip                      = '';
-	protected $gateway                 = '';
-	protected $currency                = '';
-	protected $cart_details            = array();
+	/**
+	 * The Payment ID
+	 *
+	 * @since  2.5
+	 * @var    integer
+	 */
+	public    $ID  = 0;
+	protected $_ID = 0;
+
+	/**
+	 * Identify if the payment is a new one or existing
+	 *
+	 * @since  2.5
+	 * @var boolean
+	 */
+	protected $new = false;
+
+	/**
+	 * The Payment number (for use with sequential payments)
+	 *
+	 * @since  2.5
+	 * @var string
+	 */
+	protected $number = '';
+
+	/**
+	 * The Gateway mode the payment was made in
+	 *
+	 * @since  2.5
+	 * @var string
+	 */
+	protected $mode = 'live';
+
+	/**
+	 * The Unique Payment Key
+	 *
+	 * @since  2.5
+	 * @var string
+	 */
+	protected $key = '';
+
+	/**
+	 * The total amount the payment is for
+	 * Includes items, taxes, fees, and discounts
+	 *
+	 * @since  2.5
+	 * @var float
+	 */
+	protected $total = 0.00;
+
+	/**
+	 * The Subtotal fo the payment before taxes
+	 *
+	 * @since  2.5
+	 * @var float
+	 */
+	protected $subtotal = 0;
+
+	/**
+	 * The amount of tax for this payment
+	 *
+	 * @since  2.5
+	 * @var float
+	 */
+	protected $tax = 0;
+
+	/**
+	 * Array of global fees for this payment
+	 *
+	 * @since  2.5
+	 * @var array
+	 */
+	protected $fees = array();
+
+	/**
+	 * The sum of the fee amounts
+	 *
+	 * @since  2.5
+	 * @var float
+	 */
+	protected $fees_total = 0;
+
+	/**
+	 * Any discounts applied to the payment
+	 *
+	 * @since  2.5
+	 * @var string
+	 */
+	protected $discounts = 'none';
+
+	/**
+	 * The date the payment was created
+	 *
+	 * @since  2.5
+	 * @var string
+	 */
+	protected $date = '';
+
+	/**
+	 * The date the payment was marked as 'complete'
+	 *
+	 * @since  2.5
+	 * @var string
+	 */
+	protected $completed_date = '';
+
+	/**
+	 * The status of the payment
+	 *
+	 * @since  2.5
+	 * @var string
+	 */
+	protected $status      = 'pending';
+	protected $post_status = 'pending'; // Same as $status but here for backwards compat
+
+	/**
+	 * When updating, the old status prior to the change
+	 *
+	 * @since  2.5
+	 * @var string
+	 */
+	protected $old_status = '';
+
+	/**
+	 * The display name of the current payment status
+	 *
+	 * @since  2.5
+	 * @var string
+	 */
+	protected $status_nicename = '';
+
+	/**
+	 * The customer ID that made the payment
+	 *
+	 * @since  2.5
+	 * @var integer
+	 */
+	protected $customer_id = null;
+
+	/**
+	 * The User ID (if logged in) that made the payment
+	 *
+	 * @since  2.5
+	 * @var integer
+	 */
+	protected $user_id = 0;
+
+	/**
+	 * The first name of the payee
+	 *
+	 * @since  2.5
+	 * @var string
+	 */
+	protected $first_name = '';
+
+	/**
+	 * The last name of the payee
+	 *
+	 * @since  2.5
+	 * @var string
+	 */
+	protected $last_name = '';
+
+	/**
+	 * The email used for the payment
+	 *
+	 * @since  2.5
+	 * @var string
+	 */
+	protected $email = '';
+
+	/**
+	 * Legacy (not to be accessed) array of user information
+	 *
+	 * @since  2.5
+	 * @var array
+	 */
+	private   $user_info = array();
+
+	/**
+	 * Legacy (not to be accessed) payment meta array
+	 *
+	 * @since  2.5
+	 * @var array
+	 */
+	private   $payment_meta = array();
+
+	/**
+	 * The physical address used for the payment if provided
+	 *
+	 * @since  2.5
+	 * @var array
+	 */
+	protected $address = array();
+
+	/**
+	 * The transaction ID returned by the gateway
+	 *
+	 * @since  2.5
+	 * @var string
+	 */
+	protected $transaction_id = '';
+
+	/**
+	 * Array of downloads for this payment
+	 *
+	 * @since  2.5
+	 * @var array
+	 */
+	protected $downloads = array();
+
+	/**
+	 * IP Address payment was made from
+	 *
+	 * @since  2.5
+	 * @var string
+	 */
+	protected $ip = '';
+
+	/**
+	 * The gateway used to process the payment
+	 *
+	 * @since  2.5
+	 * @var string
+	 */
+	protected $gateway = '';
+
+	/**
+	 * The the payment was made with
+	 *
+	 * @since  2.5
+	 * @var string
+	 */
+	protected $currency = '';
+
+	/**
+	 * The cart details array
+	 *
+	 * @since  2.5
+	 * @var array
+	 */
+	protected $cart_details = array();
+
+	/**
+	 * Allows the files for this payment to be downloaded unlimited times (when download limits are enabled)
+	 *
+	 * @since  2.5
+	 * @var boolean
+	 */
 	protected $has_unlimited_downloads = false;
-	protected $pending;
-	protected $parent_payment          = 0;
+
+	/**
+	 * Array of items that have changed since the last save() was run
+	 * This is for internal use, to allow fewer update_payment_meta calls to be run
+	 *
+	 * @since  2.5
+	 * @var array
+	 */
+	private $pending;
+
+	/**
+	 * The parent payment (if applicable)
+	 *
+	 * @since  2.5
+	 * @var integer
+	 */
+	protected $parent_payment = 0;
 
 	/**
 	 * Setup the EDD Payments class
@@ -120,6 +354,21 @@ final class EDD_Payment {
 	}
 
 	/**
+	 * Magic ISSET function, which allows empty checks on protected elemetns
+	 *
+	 * @since  2.5
+	 * @param  string  $name The attribute to get
+	 * @return boolean       If the item is set or not
+	 */
+	public function __isset( $name ) {
+		if ( property_exists( $this, $name) ) {
+			return false === empty( $this->$name );
+		} else {
+			return null;
+		}
+	}
+
+	/**
 	 * Setup payment properties
 	 *
 	 * @since  2.5
@@ -150,7 +399,7 @@ final class EDD_Payment {
 		$this->_ID             = absint( $payment_id );
 
 		// We have a payment, get the generic payment_meta item to reduce calls to it
-		$payment_meta          = $this->get_meta();
+		$this->payment_meta    = $this->get_meta();
 
 		// Status and Dates
 		$this->date            = $payment->post_date;
@@ -165,15 +414,15 @@ final class EDD_Payment {
 
 
 		// Items
-		$this->fees            = $this->setup_fees( $payment_meta );
-		$this->cart_details    = $this->setup_cart_details( $payment_meta );
-		$this->downloads       = $this->setup_downloads( $payment_meta );
+		$this->fees            = $this->setup_fees();
+		$this->cart_details    = $this->setup_cart_details();
+		$this->downloads       = $this->setup_downloads();
 
 		// Currency Based
 		$this->total           = $this->setup_total();
 		$this->tax             = $this->setup_tax();
 		$this->subtotal        = $this->setup_subtotal();
-		$this->currency        = $this->setup_currency( $payment_meta );
+		$this->currency        = $this->setup_currency();
 
 		// Gateway based
 		$this->gateway         = $this->setup_gateway();
@@ -184,8 +433,8 @@ final class EDD_Payment {
 		$this->customer_id     = $this->setup_customer_id();
 		$this->user_id         = $this->setup_user_id();
 		$this->email           = $this->setup_email();
-		$this->user_info       = $this->setup_user_info( $payment_meta );
-		$this->address         = $this->setup_address( $payment_meta );
+		$this->user_info       = $this->setup_user_info();
+		$this->address         = $this->setup_address();
 		$this->discounts       = $this->user_info['discount'];
 		$this->first_name      = $this->user_info['first_name'];
 		$this->last_name       = $this->user_info['last_name'];
@@ -263,6 +512,7 @@ final class EDD_Payment {
 			),
 			'cart_details' => $this->cart_details,
 			'status'       => $this->status,
+			'fees'         => $this->fees,
 		);
 
 		$args = apply_filters( 'edd_insert_payment_args', array(
@@ -308,7 +558,16 @@ final class EDD_Payment {
 			$this->pending['customer_id'] = $this->customer_id;
 			$customer->attach_payment( $this->ID, false );
 
-			$this->new = true;
+			$this->payment_meta = apply_filters( 'edd_payment_meta', $this->payment_meta, $payment_data );
+			if ( ! empty( $this->payment_meta['fees'] ) ) {
+				$this->fees = array_merge( $this->fees, $this->payment_meta['fees'] );
+				foreach( $this->fees as $fee ) {
+					$this->increase_fees( $fee['amount'] );
+				}
+			}
+
+			$this->update_meta( '_edd_payment_meta', $this->payment_meta );
+			$this->new          = true;
 		}
 
 		return $this->ID;
@@ -421,7 +680,6 @@ final class EDD_Payment {
 
 						if ( ! empty( $this->pending[ $key ] ) ) {
 							foreach ( $this->pending[ $key ] as $fee ) {
-
 								switch( $fee['action'] ) {
 
 									case 'add':
@@ -519,10 +777,6 @@ final class EDD_Payment {
 				}
 			}
 
-			$this->update_meta( '_edd_payment_total', $this->total );
-			$this->update_meta( '_edd_payment_tax', $this->tax );
-
-
 			if ( 'pending' !== $this->status ) {
 
 				$customer = new EDD_Customer( $this->customer_id );
@@ -545,6 +799,9 @@ final class EDD_Payment {
 
 			}
 
+			$this->update_meta( '_edd_payment_total', $this->total );
+			$this->update_meta( '_edd_payment_tax', $this->tax );
+
 			$new_meta = array(
 				'downloads'     => $this->downloads,
 				'cart_details'  => $this->cart_details,
@@ -566,6 +823,10 @@ final class EDD_Payment {
 
 			$this->pending = array();
 			$saved         = true;
+		}
+
+		if ( true === $saved ) {
+			$this->setup_payment( $this->ID );
 		}
 
 		return $saved;
@@ -591,41 +852,54 @@ final class EDD_Payment {
 		$defaults = array(
 			'quantity'    => 1,
 			'price_id'    => false,
-			'amount'      => false,
-			'tax'         => 0,
+			'item_price'  => 0.00,
+			'tax'         => 0.00,
 			'fees'        => array(),
 		);
 
 		$args = wp_parse_args( apply_filters( 'edd_payment_add_download_args', $args, $download->ID ), $defaults );
 
 		// Allow overriding the price
-		if( $args['amount'] ) {
-			$amount = $args['amount'];
+		if( $args['item_price'] ) {
+			$item_price = $args['item_price'];
 		} else {
 			// Deal with variable pricing
 			if( edd_has_variable_prices( $download->ID ) ) {
 				$prices = get_post_meta( $download->ID, 'edd_variable_prices', true );
 
 				if( $args['price_id'] && array_key_exists( $args['price_id'], (array) $prices ) ) {
-					$amount = $prices[$args['price_id']]['amount'];
+					$item_price = $prices[$args['price_id']]['amount'];
 				} else {
-					$amount = edd_get_lowest_price_option( $download->ID );
+					$item_price       = edd_get_lowest_price_option( $download->ID );
 					$args['price_id'] = edd_get_lowest_price_id( $download->ID );
 				}
 			} else {
-				$amount = edd_get_download_price( $download->ID );
+				$item_price = edd_get_download_price( $download->ID );
 			}
 		}
 
 		// Sanitizing the price here so we don't have a dozen calls later
-		$amount     = edd_sanitize_amount( $amount );
+		$item_price = edd_sanitize_amount( $item_price );
 		$quantity   = edd_item_quantities_enabled() ? absint( $args['quantity'] ) : 1;
-		$item_price = round( $amount / $quantity, edd_currency_decimal_filter() );
+		$amount     = round( $item_price * $quantity, edd_currency_decimal_filter() );
+
+		if ( ! empty( $args['fees'] ) ) {
+			foreach ( $args['fees'] as $key => $fee ) {
+
+				if ( empty( $fee['download_id'] ) ) {
+					$args['fees'][ $key ]['download_id'] = $download_id;
+				}
+
+				$this->add_fee( $args['fees'][ $key ], false );
+
+			}
+		}
 
 		// Setup the downloads meta item
 		$new_download = array(
 			'id'       => $download->ID,
 			'quantity' => $quantity,
+			'fees'     => $args['fees'],
 		);
 
 		$default_options = array(
@@ -643,7 +917,7 @@ final class EDD_Payment {
 
 		$discount   = 0;
 		$discount   = apply_filters( 'edd_get_cart_content_details_item_discount_amount', $discount, $new_download );
-		$subtotal   = $item_price * $quantity;
+		$subtotal   = $amount;
 		$tax        = $args['tax'];
 
 		if ( edd_prices_include_tax() ) {
@@ -676,12 +950,6 @@ final class EDD_Payment {
 			'price'       => round( $total, edd_currency_decimal_filter() ),
 		);
 
-		if ( ! empty( $args['fees'] ) ) {
-			foreach ( $args['fees'] as $fee ) {
-				$this->add_fee( $fee['label'], $fee['amount'], $fee['type'] );
-			}
-		}
-
 		$added_download = end( $this->cart_details );
 		$added_download['action']  = 'add';
 
@@ -707,10 +975,10 @@ final class EDD_Payment {
 
 		// Set some defaults
 		$defaults = array(
-			'quantity'    => 1,
-			'amount'      => false,
-			'price_id'    => false,
-			'cart_index'  => false,
+			'quantity'   => 1,
+			'item_price' => false,
+			'price_id'   => false,
+			'cart_index' => false,
 		);
 		$args = wp_parse_args( $args, $defaults );
 
@@ -839,25 +1107,32 @@ final class EDD_Payment {
 	 * Add a fee to a given payment
 	 *
 	 * @since  2.5
-	 * @param  string $label  The description of the fee
-	 * @param  float  $amount The amount of the fee
-	 * @param  string $type   The Fee Type
-	 * @return void
+	 * @param  array $args Array of arguements for the fee to add
+	 * @return If the fee was added
 	 */
-	public function add_fee( $label = '', $amount = 0.00, $type = '' ) {
-		$this->fees[] = array(
-			'label'  => $label,
-			'amount' => $amount,
-			'type'   => $type,
+	public function add_fee( $args, $global = true ) {
+
+		$default_args = array(
+			'label'       => '',
+			'amount'      => 0,
+			'type'        => 'fee',
+			'id'          => '',
+			'no_tax'      => false,
+			'download_id' => 0,
 		);
 
-		$added_fee               = end( $this->fees );
+		$fee = wp_parse_args( $args, $default_args );
+		if ( true === $global ) {
+			$this->fees[] = $fee;
+		}
+
+
+		$added_fee               = $fee;
 		$added_fee['action']     = 'add';
 		$this->pending['fees'][] = $added_fee;
 		reset( $this->fees );
 
-		$this->increase_subtotal( $amount );
-
+		$this->increase_fees( $fee['amount'] );
 		return true;
 	}
 
@@ -903,10 +1178,10 @@ final class EDD_Payment {
 			$removed_fee             = $this->fees[ $value ];
 			$removed_fee['action']   = 'remove';
 			$this->pending['fees'][] = $removed_fee;
+
+			$this->decrease_fees( $removed_fee['amount'] );
+
 			unset( $this->fees[ $value ] );
-
-			$this->decrease_subtotal( $removed_fee['amount'] );
-
 			$removed = true;
 
 		} else if ( 'index' !== $key ) {
@@ -918,10 +1193,10 @@ final class EDD_Payment {
 					$removed_fee             = $fee;
 					$removed_fee['action']   = 'remove';
 					$this->pending['fees'][] = $removed_fee;
+
+					$this->decrease_fees( $removed_fee['amount'] );
+
 					unset( $this->fees[ $index ] );
-
-					$this->decrease_subtotal( $fee['amount'] );
-
 					$removed = true;
 
 					if ( false === $global ) {
@@ -990,6 +1265,38 @@ final class EDD_Payment {
 	}
 
 	/**
+	 * Increase the payment's subtotal
+	 *
+	 * @since  2.5
+	 * @param  float  $amount The amount to increase the payment subtotal by
+	 * @return void
+	 */
+	public function increase_fees( $amount = 0.00 ) {
+		$amount            = (float) $amount;
+		$this->fees_total += $amount;
+
+		$this->recalculate_total();
+	}
+
+	/**
+	 * Decrease the payment's subtotal
+	 *
+	 * @since  2.5
+	 * @param  float  $amount The amount to decrease the payment subtotal by
+	 * @return void
+	 */
+	public function decrease_fees( $amount = 0.00 ) {
+		$amount            = (float) $amount;
+		$this->fees_total -= $amount;
+
+		if ( $this->fees_total < 0 ) {
+			$this->fees_total = 0;
+		}
+
+		$this->recalculate_total();
+	}
+
+	/**
 	 * Set or update the total for a payment
 	 *
 	 * @since 2.5
@@ -997,7 +1304,7 @@ final class EDD_Payment {
 	 * @return void
 	 */
 	private function recalculate_total() {
-		$this->total = $this->subtotal + $this->tax;
+		$this->total = $this->subtotal + $this->tax + $this->fees_total;
 	}
 
 	/**
@@ -1259,8 +1566,8 @@ final class EDD_Payment {
 	 * @param  array $payment_meta The payment Meta
 	 * @return array               Array of discount codes on this payment
 	 */
-	private function setup_discounts( $payment_meta ) {
-		$discounts = ! empty( $payment_meta['user_info']['discount'] ) ? $payment_meta['user_info']['discount'] : array();
+	private function setup_discounts() {
+		$discounts = ! empty( $this->payment_meta['user_info']['discount'] ) ? $this->payment_meta['user_info']['discount'] : array();
 		return apply_filters( 'edd_payment_discounts', $discounts, $this->ID );
 	}
 
@@ -1271,8 +1578,8 @@ final class EDD_Payment {
 	 * @param  array $payment_meta The payment meta
 	 * @return string              The currency for the payment
 	 */
-	private function setup_currency( $payment_meta ) {
-		$currency = isset( $payment_meta['currency'] ) ? $payment_meta['currency'] : edd_get_currency();
+	private function setup_currency() {
+		$currency = isset( $this->payment_meta['currency'] ) ? $this->payment_meta['currency'] : edd_get_currency();
 		return apply_filters( 'edd_payment_currency_code', $currency, $this->ID, $this );
 	}
 
@@ -1283,8 +1590,8 @@ final class EDD_Payment {
 	 * @param  arra $payment_meta The Payment Meta
 	 * @return array               The Fees
 	 */
-	private function setup_fees( $payment_meta ) {
-		$payment_fees = isset( $payment_meta['fees'] ) ? $payment_meta['fees'] : array();
+	private function setup_fees() {
+		$payment_fees = isset( $this->payment_meta['fees'] ) ? $this->payment_meta['fees'] : array();
 		return $payment_fees;
 	}
 
@@ -1375,14 +1682,14 @@ final class EDD_Payment {
 	 * @param  array $payment_meta The payment meta
 	 * @return array               The user info associated with the payment
 	 */
-	private function setup_user_info( $payment_meta ) {
+	private function setup_user_info() {
 		$defaults = array(
 			'first_name' => $this->first_name,
 			'last_name'  => $this->last_name,
 			'discount'   => $this->discounts,
 		);
 
-		$user_info    = isset( $payment_meta['user_info'] ) ? $payment_meta['user_info'] : array();
+		$user_info    = isset( $this->payment_meta['user_info'] ) ? $this->payment_meta['user_info'] : array();
 		$user_info    = wp_parse_args( $user_info, $defaults );
 		return apply_filters( 'edd_payment_meta_user_info', $user_info );
 	}
@@ -1394,8 +1701,8 @@ final class EDD_Payment {
 	 * @param  array $payment_meta The Payment Meta
 	 * @return array               The Address information for the payment
 	 */
-	private function setup_address( $payment_meta ) {
-		$address = ! empty( $payment_meta['user_info']['address'] ) ? $payment_meta['user_info']['address'] : array( 'line1' => '', 'line2' => '', 'city' => '', 'country' => '', 'state' => '', 'zip' => '' );
+	private function setup_address() {
+		$address = ! empty( $this->payment_meta['user_info']['address'] ) ? $this->payment_meta['user_info']['address'] : array( 'line1' => '', 'line2' => '', 'city' => '', 'country' => '', 'state' => '', 'zip' => '' );
 
 		return apply_filters( 'edd_payment_address', $address, $this );
 	}
@@ -1442,8 +1749,8 @@ final class EDD_Payment {
 	 * @param  array $payment_meta The Payment Meta
 	 * @return array               The cart details
 	 */
-	private function setup_cart_details( $payment_meta ) {
-		$cart_details = isset( $payment_meta['cart_details'] ) ? maybe_unserialize( $payment_meta['cart_details'] ) : array();
+	private function setup_cart_details() {
+		$cart_details = isset( $this->payment_meta['cart_details'] ) ? maybe_unserialize( $this->payment_meta['cart_details'] ) : array();
 		return apply_filters( 'edd_payment_cart_details', $cart_details, $this->ID, $this );
 	}
 
@@ -1454,8 +1761,8 @@ final class EDD_Payment {
 	 * @param  array $payment_meta Payment Meta
 	 * @return array               Downloads associated with this payment
 	 */
-	private function setup_downloads( $payment_meta ) {
-		$downloads = isset( $payment_meta['downloads'] ) ? maybe_unserialize( $payment_meta['downloads'] ) : array();
+	private function setup_downloads() {
+		$downloads = isset( $this->payment_meta['downloads'] ) ? maybe_unserialize( $this->payment_meta['downloads'] ) : array();
 		return apply_filters( 'edd_payment_meta_downloads', $downloads, $this->ID, $this );
 	}
 
