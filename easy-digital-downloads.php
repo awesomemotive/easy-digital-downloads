@@ -25,7 +25,7 @@
  * @package EDD
  * @category Core
  * @author Pippin Williamson
- * @version 2.4.8
+ * @version 2.4.10
  */
 
 // Exit if accessed directly.
