@@ -575,12 +575,13 @@ class EDD_Download {
 	public function get_sales() {
 
 		if( ! isset( $this->sales ) ) {
-
-			if ( '' == get_post_meta( $this->ID, '_edd_download_sales', true ) ) {
+			$sales = get_post_meta( $this->ID, '_edd_download_sales', true );
+			if ( '' ==  ) {
 				add_post_meta( $this->ID, '_edd_download_sales', 0 );
+				$sales = 0;
 			} // End if
 
-			$this->sales = get_post_meta( $this->ID, '_edd_download_sales', true );
+			$this->sales = $sales;
 
 			if ( $this->sales < 0 ) {
 				// Never let sales be less than zero
@@ -655,12 +656,13 @@ class EDD_Download {
 	public function get_earnings() {
 
 		if ( ! isset( $this->earnings ) ) {
-
-			if ( '' == get_post_meta( $this->ID, '_edd_download_earnings', true ) ) {
+			$earnings = get_post_meta( $this->ID, '_edd_download_earnings', true );
+			if ( '' == $earnings ) {
 				add_post_meta( $this->ID, '_edd_download_earnings', 0 );
+				$earnings = 0;
 			}
 
-			$this->earnings = get_post_meta( $this->ID, '_edd_download_earnings', true );
+			$this->earnings = $earnings;
 
 			if ( $this->earnings < 0 ) {
 				// Never let earnings be less than zero
