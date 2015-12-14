@@ -55,7 +55,7 @@ class EDD_Notices {
 		if( stristr( $_SERVER['SERVER_SOFTWARE'], 'nginx' ) && ! get_user_meta( get_current_user_id(), '_edd_nginx_redirect_dismissed', true ) && current_user_can( 'manage_shop_settings' ) ) {
 
 			echo '<div class="error">';
-				echo '<p>' . sprintf( __( 'The download files in <strong>%s</strong> are not currently protected due to your site running on NGINX.', 'easy-digital-downloads' ), edd_get_upload_dir() ) . '</p>';
+				echo '<p>' . sprintf( __( 'The download files in %s are not currently protected due to your site running on NGINX.', 'easy-digital-downloads' ), '<strong>' . edd_get_upload_dir() . '</strong>' ) . '</p>';
 				echo '<p>' . __( 'To protect them, you must add a redirect rule as explained in <a href="http://docs.easydigitaldownloads.com/article/682-protected-download-files-on-nginx">this guide</a>.', 'easy-digital-downloads' ) . '</p>';
 				echo '<p>' . __( 'If you have already added the redirect rule, you may safely dismiss this notice', 'easy-digital-downloads' ) . '</p>';
 				echo '<p><a href="' . add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'nginx_redirect' ) ) . '">' . __( 'Dismiss Notice', 'easy-digital-downloads' ) . '</a></p>';
@@ -68,8 +68,8 @@ class EDD_Notices {
 				return; // Bail if we aren't using Apache... nginx doesn't use htaccess!
 
 			echo '<div class="error">';
-				echo '<p>' . sprintf( __( 'The Easy Digital Downloads .htaccess file is missing from <strong>%s</strong>!', 'easy-digital-downloads' ), edd_get_upload_dir() ) . '</p>';
-				echo '<p>' . sprintf( __( 'First, please resave the Misc settings tab a few times. If this warning continues to appear, create a file called ".htaccess" in the <strong>%s</strong> directory, and copy the following into it:', 'easy-digital-downloads' ), edd_get_upload_dir() ) . '</p>';
+				echo '<p>' . sprintf( __( 'The Easy Digital Downloads .htaccess file is missing from %s!', 'easy-digital-downloads' ), '<strong>' . edd_get_upload_dir() . '</strong>' ) . '</p>';
+				echo '<p>' . sprintf( __( 'First, please resave the Misc settings tab a few times. If this warning continues to appear, create a file called ".htaccess" in the %s directory, and copy the following into it:', 'easy-digital-downloads' ), '<strong>' . edd_get_upload_dir() . '</strong>' ) . '</p>';
 				echo '<p><pre>' . edd_get_htaccess_rules() . '</pre>';
 				echo '<p><a href="' . add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'htaccess_missing' ) ) . '">' . __( 'Dismiss Notice', 'easy-digital-downloads' ) . '</a></p>';
 			echo '</div>';
