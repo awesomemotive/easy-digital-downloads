@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.9.2
 Tested up to: 4.4
 
-Stable Tag: 2.4.9
+Stable Tag: 2.4.10
 
 License: GNU Version 2 or Any Later Version
 
@@ -81,7 +81,7 @@ Easy Digital Downloads has been translated into the following languages:
 25. Khmer
 26. Lithuanian
 
-Would you like to help translate the plugin into more languages? [Join our WP-Translations Community](https://www.transifex.com/projects/p/easy-digital-downloads/).
+Would you like to help translate the plugin into more languages? [Join our WP-Translations Community](http://docs.easydigitaldownloads.com/article/1023-translating-easy-digital-downloads).
 
 == Installation ==
 
@@ -190,6 +190,10 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.4.10, December 12, 2015 =
+
+* Fix: Security vulnerability related to session IDs
 
 = 2.4.9, October 14, 2015 =
 
