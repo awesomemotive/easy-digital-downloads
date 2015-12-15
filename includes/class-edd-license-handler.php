@@ -168,7 +168,7 @@ class EDD_License {
 		$edd_license_settings = array(
 			array(
 				'id'      => $this->item_shortname . '_license_key',
-				'name'    => sprintf( __( '%1$s License Key', 'easy-digital-downloads' ), $this->item_name ),
+				'name'    => sprintf( __( '%1$s', 'easy-digital-downloads' ), $this->item_name ),
 				'desc'    => '',
 				'type'    => 'license_key',
 				'options' => array( 'is_valid_license_option' => $this->item_shortname . '_license_active' ),
