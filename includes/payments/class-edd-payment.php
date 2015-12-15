@@ -1272,7 +1272,7 @@ final class EDD_Payment {
 	 * @param  float  $amount The amount to increase the payment subtotal by
 	 * @return void
 	 */
-	public function increase_subtotal( $amount = 0.00 ) {
+	private function increase_subtotal( $amount = 0.00 ) {
 		$amount          = (float) $amount;
 		$this->subtotal += $amount;
 
@@ -1286,7 +1286,7 @@ final class EDD_Payment {
 	 * @param  float  $amount The amount to decrease the payment subtotal by
 	 * @return void
 	 */
-	public function decrease_subtotal( $amount = 0.00 ) {
+	private function decrease_subtotal( $amount = 0.00 ) {
 		$amount          = (float) $amount;
 		$this->subtotal -= $amount;
 
@@ -1304,7 +1304,7 @@ final class EDD_Payment {
 	 * @param  float  $amount The amount to increase the payment subtotal by
 	 * @return void
 	 */
-	public function increase_fees( $amount = 0.00 ) {
+	private function increase_fees( $amount = 0.00 ) {
 		$amount            = (float) $amount;
 		$this->fees_total += $amount;
 
@@ -1318,7 +1318,7 @@ final class EDD_Payment {
 	 * @param  float  $amount The amount to decrease the payment subtotal by
 	 * @return void
 	 */
-	public function decrease_fees( $amount = 0.00 ) {
+	private function decrease_fees( $amount = 0.00 ) {
 		$amount            = (float) $amount;
 		$this->fees_total -= $amount;
 
@@ -1347,7 +1347,7 @@ final class EDD_Payment {
 	 * @param  float  $amount The amount to increase the payment tax by
 	 * @return void
 	 */
-	public function increase_tax( $amount = 0.00 ) {
+	private function increase_tax( $amount = 0.00 ) {
 		$amount       = (float) $amount;
 		$this->tax   += $amount;
 
@@ -1361,7 +1361,7 @@ final class EDD_Payment {
 	 * @param  float  $amount The amount to reduce the payment tax by
 	 * @return void
 	 */
-	public function decrease_tax( $amount = 0.00 ) {
+	private function decrease_tax( $amount = 0.00 ) {
 		$amount     = (float) $amount;
 		$this->tax -= $amount;
 
