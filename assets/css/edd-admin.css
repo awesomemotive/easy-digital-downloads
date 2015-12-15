@@ -273,17 +273,20 @@ td.edd_order_price { text-align: right; }
 #edd_tax_rates .edd_tax_state { width: 180px; }
 #edd_tax_rates .edd_tax_rate { width: 80px; }
 #edd_tax_rates th { padding: 15px 10px; }
-[class^="license-"] { padding: 10px; }
-[class^="license-"] input[type="text"] { margin-right: 3px; }
-.license-error-notice,
-.license-expires-soon-notice { background-color: #fff; padding: 10px; border-left: 4px solid #7ad03a; overflow: auto; -webkit-box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 ); box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 ); }
-.license-error-notice { border-left: 4px solid #dd3d36; }
-.license-lifetime-notice,
-.license-expiration-date-notice,
-.license-null { padding: 0 0 0 14px; }
-.license-lifetime-notice .edd-license-data p,
-.license-expiration-date-notice .edd-license-data p { color: #666; font-size: 14px; font-style: italic; margin: 4px 0 0; }
-div[class^="license-"] .edd-license-data p { margin-left: 4px; }
+.wrap-licenses .form-table, .wrap-licenses thead, .wrap-licenses tbody, .wrap-licenses tfoot, .wrap-licenses tr, .wrap-licenses td, .wrap-licenses th, .wrap-licenses caption { display: block; }
+.wrap-licenses .form-table tr { float: left; margin: 0 15px 15px 0; background: #fff; border: 1px solid #ccc; width: 320px; padding: 14px; min-height: 190px; position: relative; }
+.wrap-licenses .form-table th { background: #f9f9f9; padding: 14px; border-bottom: 1px solid #ccc; margin: -14px -14px 20px; width: 100%; }
+.wrap-licenses .form-table td { padding: 0; }
+.wrap-licenses td input.regular-text { margin: 0 0 8px; width: 100%; }
+.wrap-licenses .edd-license-data[class*="edd-license-"] { position: absolute; background: #fafafa; padding: 14px; border-top: 1px solid #eee; margin: 20px -14px -14px; min-height: 67px; width: 100%; bottom: 14px; box-sizing: border-box; }
+.wrap-licenses .edd-license-data.edd-license-expired { background-color: #fdeded; border-color: #f5d8d8; }
+.wrap-licenses .edd-license-data.edd-license-error,
+.wrap-licenses .edd-license-data.edd-license-missing,
+.wrap-licenses .edd-license-data.edd-license-invalid,
+.wrap-licenses .edd-license-data.edd-license-site_inactive,
+.wrap-licenses .edd-license-data.edd-license-item_name_mismatch { background-color: #fbfbe7; border-color: #eaeaca; }
+.wrap-licenses .edd-license-data p { font-size: 13px; margin-top: 0; }
+.wrap-licenses p.submit { clear: both; }
 
 /* Taxonomy styles
 -------------------------------------------------------------- */

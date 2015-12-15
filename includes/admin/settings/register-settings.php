@@ -1879,7 +1879,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 				case 'expired' :
 
-					$class = 'error';
+					$class = 'expired';
 					$messages[] = sprintf(
 						__( 'Your license key expired on %s. Please <a href="%s" target="_blank" title="Renew your license key">renew your license key</a>.', 'easy-digital-downloads' ),
 						date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
@@ -1892,7 +1892,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 				case 'missing' :
 
-					$class = 'error';
+					$class = 'missing';
 					$messages[] = sprintf(
 						__( 'Invalid license. Please <a href="%s" target="_blank" title="Visit account page">visit your account page</a> and verify it.', 'easy-digital-downloads' ),
 						'https://easydigitaldownloads.com/your-account?utm_campaign=admin&utm_source=licenses&utm_medium=missing'
@@ -1905,7 +1905,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 				case 'invalid' :
 				case 'site_inactive' :
 
-					$class = 'error';
+					$class = 'invalid';
 					$messages[] = sprintf(
 						__( 'Your %s is not active for this URL. Please <a href="%s" target="_blank" title="Visit account page">visit your account page</a> to manage your license key URLs.', 'easy-digital-downloads' ),
 						$args['name'],
@@ -1968,7 +1968,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 		}
 
 		$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-		$html = '<input type="text" class="' . $size . '-text" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']" value="' . esc_attr( $value ) . '"/>';
+		$html = '<input type="text" class="' . $size . '-text" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']" value="' . esc_attr( $value ) . '" placeholder="' . __( 'Enter license key', 'easy-digital-downloads' ) . '" />';
 
 		if ( is_object( $license ) && 'valid' == $license->license ) {
 			$html .= '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __( 'Deactivate License',  'easy-digital-downloads' ) . '"/>';
@@ -1978,7 +1978,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 		if ( ! empty( $messages ) ) {
 			foreach( $messages as $message ) {
 
-				$html .= '<div class="edd-license-data edd-license-' . $class . '">';
+				$html .= '<div class="edd-license-data edd-license-' . $class . ' ' . $license_status . '">';
 					$html .= '<p>' . $message . '</p>';
 				$html .= '</div>';
 
@@ -1987,11 +1987,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 		wp_nonce_field( $args['id'] . '-nonce', $args['id'] . '-nonce' );
 
-		if ( isset( $license_status ) ) {
-			echo '<div class="' . $license_status . '">' . $html . '</div>';
-		} else {
-			echo '<div class="license-null">' . $html . '</div>';
-		}
+		echo $html;
 	}
 }
 
