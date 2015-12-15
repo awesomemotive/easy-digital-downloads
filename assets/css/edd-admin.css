@@ -274,7 +274,7 @@ td.edd_order_price { text-align: right; }
 #edd_tax_rates .edd_tax_rate { width: 80px; }
 #edd_tax_rates th { padding: 15px 10px; }
 .wrap-licenses .form-table, .wrap-licenses thead, .wrap-licenses tbody, .wrap-licenses tfoot, .wrap-licenses tr, .wrap-licenses td, .wrap-licenses th, .wrap-licenses caption { display: block; }
-.wrap-licenses .form-table tr { float: left; margin: 0 15px 15px 0; background: #fff; border: 1px solid #ccc; width: 320px; padding: 14px; min-height: 190px; position: relative; }
+.wrap-licenses .form-table tr { float: left; margin: 0 15px 15px 0; background: #fff; border: 1px solid #ccc; width: 320px; padding: 14px; min-height: 200px; position: relative; }
 .wrap-licenses .form-table th { background: #f9f9f9; padding: 14px; border-bottom: 1px solid #ccc; margin: -14px -14px 20px; width: 100%; }
 .wrap-licenses .form-table td { padding: 0; }
 .wrap-licenses td input.regular-text { margin: 0 0 8px; width: 100%; }
