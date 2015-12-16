@@ -1347,7 +1347,7 @@ final class EDD_Payment {
 	 * @param  float  $amount The amount to increase the payment tax by
 	 * @return void
 	 */
-	private function increase_tax( $amount = 0.00 ) {
+	public function increase_tax( $amount = 0.00 ) {
 		$amount       = (float) $amount;
 		$this->tax   += $amount;
 
@@ -1361,7 +1361,7 @@ final class EDD_Payment {
 	 * @param  float  $amount The amount to reduce the payment tax by
 	 * @return void
 	 */
-	private function decrease_tax( $amount = 0.00 ) {
+	public function decrease_tax( $amount = 0.00 ) {
 		$amount     = (float) $amount;
 		$this->tax -= $amount;
 
