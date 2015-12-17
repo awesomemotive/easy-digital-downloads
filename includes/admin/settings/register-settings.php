@@ -925,16 +925,16 @@ function edd_settings_sanitize( $input = array() ) {
 	}
 
 	// Loop through the whitelist and unset any that are empty for the tab being saved
-	if ( ! empty( $settings[$tab] ) ) {
-		foreach ( $settings[$tab] as $key => $value ) {
+	if ( ! empty( $settings[ $tab ][ $section ] ) ) {
+		foreach ( $settings[ $tab ][ $section ] as $key => $value ) {
 
 			// settings used to have numeric keys, now they have keys that match the option ID. This ensures both methods work
 			if ( is_numeric( $key ) ) {
 				$key = $value['id'];
 			}
 
-			if ( empty( $input[$key] ) ) {
-				unset( $edd_options[$key] );
+			if ( empty( $input[ $key ] ) ) {
+				unset( $edd_options[ $key ] );
 			}
 
 		}
@@ -1862,17 +1862,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 			// activate_license returns 'invalid' on an expired license, make up for this by setting to 'expired' if needed
 			if ( false === $license->success ) {
-
-				switch( $license->error ) {
-					case 'expired':
-						$license->license = 'expired';
-						break;
-
-					case 'missing':
-						$license->license = 'missing';
-						break;
-				}
-
+				$license->license = $license->error;
 			}
 
 			switch( $license->license ) {
