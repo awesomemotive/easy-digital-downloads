@@ -1088,7 +1088,7 @@ final class EDD_Payment {
 
 		} else {
 
-			$total_reduced = $this->cart_details[ $found_cart_key ]['price'];
+			$total_reduced = $this->cart_details[ $found_cart_key ]['item_price'];
 			$tax_reduced   = $this->cart_details[ $found_cart_key ]['tax'];
 
 			unset( $this->cart_details[ $found_cart_key ] );

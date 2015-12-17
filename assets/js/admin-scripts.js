@@ -55,7 +55,7 @@ jQuery(document).ready(function ($) {
 			clone.find( 'span.edd_file_id' ).each(function() {
 				$( this ).text( parseInt( key ) );
 			});
-			
+
 			clone.find( '.edd_repeatable_default_input' ).each( function() {
 				$( this ).val( parseInt( key ) ).removeAttr('checked');
 			})
@@ -533,7 +533,7 @@ jQuery(document).ready(function ($) {
 						total += parseFloat( $(this).data('fee') );
 					});
 				}
-				$('input[name=edd-payment-total]').val( total );
+				$('input[name=edd-payment-total]').val( total.toFixed(edd_vars.currency_decimals));
 			});
 
 		},
