@@ -108,26 +108,27 @@ function edd_process_paypal_purchase( $purchase_data ) {
 
 		// Add cart items
 		$i = 1;
-		foreach ( $purchase_data['cart_details'] as $item ) {
+		if( is_array( $purchase_data['cart_details'] ) && ! empty( $purchase_data['cart_details'] ) ) {
+			foreach ( $purchase_data['cart_details'] as $item ) {
 
-			$item_amount = round( ( $item['subtotal'] / $item['quantity'] ) - ( $item['discount'] / $item['quantity'] ), 2 );
+				$item_amount = round( ( $item['subtotal'] / $item['quantity'] ) - ( $item['discount'] / $item['quantity'] ), 2 );
 
-			if( $item_amount <= 0 ) {
-				$item_amount = 0;
+				if( $item_amount <= 0 ) {
+					$item_amount = 0;
+				}
+
+				$paypal_args['item_name_' . $i ] = stripslashes_deep( html_entity_decode( edd_get_cart_item_name( $item ), ENT_COMPAT, 'UTF-8' ) );
+				$paypal_args['quantity_' . $i ]  = $item['quantity'];
+				$paypal_args['amount_' . $i ]    = $item_amount;
+
+				if ( edd_use_skus() ) {
+					$paypal_args['item_number_' . $i ] = edd_get_download_sku( $item['id'] );
+				}
+
+				$i++;
+
 			}
-
-			$paypal_args['item_name_' . $i ] = stripslashes_deep( html_entity_decode( edd_get_cart_item_name( $item ), ENT_COMPAT, 'UTF-8' ) );
-			$paypal_args['quantity_' . $i ]  = $item['quantity'];
-			$paypal_args['amount_' . $i ]    = $item_amount;
-
-			if ( edd_use_skus() ) {
-				$paypal_args['item_number_' . $i ] = edd_get_download_sku( $item['id'] );
-			}
-
-			$i++;
-
 		}
-
 
 		// Calculate discount
 		$discounted_amount = 0.00;
