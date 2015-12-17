@@ -346,7 +346,7 @@ class EDD_License {
 			// Decode the license data
 			$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
-			update_option( $this->item_shortname . '_license_active' );
+			delete_option( $this->item_shortname . '_license_active' );
 
 		}
 	}
