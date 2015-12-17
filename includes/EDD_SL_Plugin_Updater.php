@@ -95,6 +95,21 @@ class EDD_SL_Plugin_Updater {
 
 					$_transient_data->response[ $this->name ] = $version_info;
 
+					// Convert mixed array object to only array
+					$update_data = json_decode( json_encode( $version_info ), true );
+					
+					// If no there no translations do nothing
+					if ( ! empty( $update_data['translations'] ) ) {
+						if ( property_exists( $_transient_data, 'translations' ) ) {
+							$_transient_data->translations = array_merge(
+								$_transient_data->translations,
+								$update_data['translations']
+							);
+						} else {
+							$_transient_data->translations = $update_data['translations'];
+						}
+					}
+
 				}
 
 				$_transient_data->last_checked = time();
