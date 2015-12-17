@@ -925,16 +925,16 @@ function edd_settings_sanitize( $input = array() ) {
 	}
 
 	// Loop through the whitelist and unset any that are empty for the tab being saved
-	if ( ! empty( $settings[$tab] ) ) {
-		foreach ( $settings[$tab] as $key => $value ) {
+	if ( ! empty( $settings[ $tab ][ $section ] ) ) {
+		foreach ( $settings[ $tab ][ $section ] as $key => $value ) {
 
 			// settings used to have numeric keys, now they have keys that match the option ID. This ensures both methods work
 			if ( is_numeric( $key ) ) {
 				$key = $value['id'];
 			}
 
-			if ( empty( $input[$key] ) ) {
-				unset( $edd_options[$key] );
+			if ( empty( $input[ $key ] ) ) {
+				unset( $edd_options[ $key ] );
 			}
 
 		}
