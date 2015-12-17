@@ -325,7 +325,13 @@ final class EDD_Payment {
 	 * @return mixed        The value
 	 */
 	public function __get( $name ) {
+
+		if ( 'fees' === $name ) {
+			return $this->get_fees();
+		}
+
 		return $this->$name;
+
 	}
 
 	/**
@@ -971,7 +977,7 @@ final class EDD_Payment {
 	 * @param  array $args        Arguements to pass to identify (quantity, amount, price_id)
 	 * @return bool               If the item was remvoed or not
 	 */
-	public function remove_download( $download_id, $args ) {
+	public function remove_download( $download_id, $args = array() ) {
 
 		// Set some defaults
 		$defaults = array(
@@ -999,7 +1005,7 @@ final class EDD_Payment {
 			}
 
 			if ( false !== $args['price_id'] ) {
-				if ( $args['price_id'] != $item['price_id'] ) {
+				if ( isset( $item['price_id'] ) && $args['price_id'] != $item['price_id'] ) {
 					continue;
 				}
 			}
@@ -1029,7 +1035,7 @@ final class EDD_Payment {
 				}
 
 				if ( false !== $args['price_id'] ) {
-					if ( $args['price_id'] != $item['item_number']['options']['price_id'] ) {
+					if ( isset( $item['price_id'] ) && $args['price_id'] != $item['item_number']['options']['price_id'] ) {
 						continue;
 					}
 				}
@@ -1217,6 +1223,33 @@ final class EDD_Payment {
 	}
 
 	/**
+	 * Get the fees, filterable by type
+	 *
+	 * @since  2.5
+	 * @param  string $type All, item, fee
+	 * @return array        The Fees for the type specified
+	 */
+	public function get_fees( $type = 'all' ) {
+		$fees    = array();
+
+		if ( ! empty( $this->fees ) && is_array( $this->fees ) ) {
+
+			foreach ( $this->fees as $fee_id => $fee ) {
+
+				if( 'all' != $type && ! empty( $fee['type'] ) && $type != $fee['type'] ) {
+					continue;
+				}
+
+				$fee['id'] = $fee_id;
+				$fees[]    = $fee;
+
+			}
+		}
+
+		return $fees;
+	}
+
+	/**
 	 * Add a note to a payment
 	 *
 	 * @since 2.5
@@ -1239,7 +1272,7 @@ final class EDD_Payment {
 	 * @param  float  $amount The amount to increase the payment subtotal by
 	 * @return void
 	 */
-	public function increase_subtotal( $amount = 0.00 ) {
+	private function increase_subtotal( $amount = 0.00 ) {
 		$amount          = (float) $amount;
 		$this->subtotal += $amount;
 
@@ -1253,7 +1286,7 @@ final class EDD_Payment {
 	 * @param  float  $amount The amount to decrease the payment subtotal by
 	 * @return void
 	 */
-	public function decrease_subtotal( $amount = 0.00 ) {
+	private function decrease_subtotal( $amount = 0.00 ) {
 		$amount          = (float) $amount;
 		$this->subtotal -= $amount;
 
@@ -1271,7 +1304,7 @@ final class EDD_Payment {
 	 * @param  float  $amount The amount to increase the payment subtotal by
 	 * @return void
 	 */
-	public function increase_fees( $amount = 0.00 ) {
+	private function increase_fees( $amount = 0.00 ) {
 		$amount            = (float) $amount;
 		$this->fees_total += $amount;
 
@@ -1285,7 +1318,7 @@ final class EDD_Payment {
 	 * @param  float  $amount The amount to decrease the payment subtotal by
 	 * @return void
 	 */
-	public function decrease_fees( $amount = 0.00 ) {
+	private function decrease_fees( $amount = 0.00 ) {
 		$amount            = (float) $amount;
 		$this->fees_total -= $amount;
 
@@ -1592,7 +1625,7 @@ final class EDD_Payment {
 	 */
 	private function setup_fees() {
 		$payment_fees = isset( $this->payment_meta['fees'] ) ? $this->payment_meta['fees'] : array();
-		return $payment_fees;
+		return apply_filters( 'edd_get_payment_fees', $payment_fees, $this->ID );
 	}
 
 	/**

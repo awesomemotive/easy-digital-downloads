@@ -1355,31 +1355,8 @@ function edd_get_payment_item_tax( $payment_id = 0, $cart_key = false ) {
  * @return mixed array if payment fees found, false otherwise
  */
 function edd_get_payment_fees( $payment_id = 0, $type = 'all' ) {
-
 	$payment = new EDD_Payment( $payment_id );
-	$fees    = $payment->fees;
-
-	if ( ! empty( $payment_fees ) && is_array( $payment_fees ) ) {
-
-		foreach ( $payment_fees as $fee_id => $fee ) {
-
-			if( 'all' != $type && ! empty( $fee['type'] ) && $type != $fee['type'] ) {
-
-				unset( $payment_fees[ $fee_id ] );
-
-			} else {
-
-				$fees[] = array(
-					'id'     => $fee_id,
-					'amount' => $fee['amount'],
-					'label'  => $fee['label']
-				);
-
-			}
-		}
-	}
-
-	return apply_filters( 'edd_get_payment_fees', $fees, $payment_id );
+	return $payment->get_fees( $type );
 }
 
 /**
