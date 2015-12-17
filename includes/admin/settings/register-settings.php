@@ -1862,17 +1862,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 			// activate_license returns 'invalid' on an expired license, make up for this by setting to 'expired' if needed
 			if ( false === $license->success ) {
-
-				switch( $license->error ) {
-					case 'expired':
-						$license->license = 'expired';
-						break;
-
-					case 'missing':
-						$license->license = 'missing';
-						break;
-				}
-
+				$license->license = $license->error;
 			}
 
 			switch( $license->license ) {
