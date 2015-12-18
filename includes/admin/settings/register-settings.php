@@ -1916,7 +1916,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 					case 'no_activations_left':
 
 						$class = 'error';
-						$messages[] = sprintf( __( 'Your license key has reached it\'s activation limit. <a href="%s">View possible upgrades</a> now.', 'easy-digital-downloads' ), 'https://easydigitaldownloads.com/your-account/' );
+						$messages[] = sprintf( __( 'Your license key has reached its activation limit. <a href="%s">View possible upgrades</a> now.', 'easy-digital-downloads' ), 'https://easydigitaldownloads.com/your-account/' );
 
 						$license_status = 'license-' . $class . '-notice';
 
