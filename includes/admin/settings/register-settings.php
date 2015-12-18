@@ -1031,8 +1031,8 @@ function edd_multicheck_callback( $args ) {
 	if ( ! empty( $args['options'] ) ) {
 		foreach( $args['options'] as $key => $option ):
 			if( isset( $edd_options[$args['id']][$key] ) ) { $enabled = $option; } else { $enabled = NULL; }
-			echo '<input name="edd_settings[' . sanitize_key( $args['id'] ) . '][' . esc_attr( $key ) . ']" id="edd_settings[' . sanitize_key( $args['id'] ) . '][' . esc_attr( $key ) . ']" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked($option, $enabled, false) . '/>&nbsp;';
-			echo '<label for="edd_settings[' . sanitize_key( $args['id'] ) . '][' . esc_attr( $key ) . ']">' . wp_kses_post( $option ) . '</label><br/>';
+			echo '<input name="edd_settings[' . sanitize_key( $args['id'] ) . '][' . sanitize_key( $key ) . ']" id="edd_settings[' . sanitize_key( $args['id'] ) . '][' . sanitize_key( $key ) . ']" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked($option, $enabled, false) . '/>&nbsp;';
+			echo '<label for="edd_settings[' . sanitize_key( $args['id'] ) . '][' . sanitize_key( $key ) . ']">' . wp_kses_post( $option ) . '</label><br/>';
 		endforeach;
 		echo '<p class="description">' . $args['desc'] . '</p>';
 	}
@@ -1058,9 +1058,9 @@ function edd_payment_icons_callback( $args ) {
 				$enabled = NULL;
 			}
 
-			echo '<label for="edd_settings[' . sanitize_key( $args['id'] ) . '][' . esc_attr( $key ) . ']" style="margin-right:10px;line-height:16px;height:16px;display:inline-block;">';
+			echo '<label for="edd_settings[' . sanitize_key( $args['id'] ) . '][' . sanitize_key( $key ) . ']" style="margin-right:10px;line-height:16px;height:16px;display:inline-block;">';
 
-				echo '<input name="edd_settings[' . sanitize_key( $args['id'] ) . '][' . esc_attr( $key ) . ']" id="edd_settings[' . sanitize_key( $args['id'] ) . '][' . esc_attr( $key ) . ']" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked( $option, $enabled, false ) . '/>&nbsp;';
+				echo '<input name="edd_settings[' . sanitize_key( $args['id'] ) . '][' . sanitize_key( $key ) . ']" id="edd_settings[' . sanitize_key( $args['id'] ) . '][' . sanitize_key( $key ) . ']" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked( $option, $enabled, false ) . '/>&nbsp;';
 
 				if( edd_string_is_image_url( $key ) ) {
 
@@ -1123,8 +1123,8 @@ function edd_radio_callback( $args ) {
 		elseif( isset( $args['std'] ) && $args['std'] == $key && ! isset( $edd_options[ $args['id'] ] ) )
 			$checked = true;
 
-		echo '<input name="edd_settings[' . sanitize_key( $args['id'] ) . ']"" id="edd_settings[' . sanitize_key( $args['id'] ) . '][' . esc_attr( $key ) . ']" type="radio" value="' . esc_html( $key ) . '" ' . checked(true, $checked, false) . '/>&nbsp;';
-		echo '<label for="edd_settings[' . sanitize_key( $args['id'] ) . '][' . esc_attr( $key ) . ']">' . esc_html( $option ) . '</label><br/>';
+		echo '<input name="edd_settings[' . sanitize_key( $args['id'] ) . ']" id="edd_settings[' . sanitize_key( $args['id'] ) . '][' . sanitize_key( $key ) . ']" type="radio" value="' . sanitize_key( $key ) . '" ' . checked(true, $checked, false) . '/>&nbsp;';
+		echo '<label for="edd_settings[' . sanitize_key( $args['id'] ) . '][' . sanitize_key( $key ) . ']">' . esc_html( $option ) . '</label><br/>';
 	endforeach;
 
 	echo '<p class="description">' . wp_kses_post( $args['desc'] ) . '</p>';
@@ -1149,8 +1149,8 @@ function edd_gateways_callback( $args ) {
 		else
 			$enabled = null;
 
-		echo '<input name="edd_settings[' . esc_attr( $args['id'] ) . '][' . esc_attr( $key ) . ']"" id="edd_settings[' . sanitize_key( $args['id'] ) . '][' . esc_attr( $key ) . ']" type="checkbox" value="1" ' . checked('1', $enabled, false) . '/>&nbsp;';
-		echo '<label for="edd_settings[' . sanitize_key( $args['id'] ) . '][' . esc_attr( $key ) . ']">' . esc_html( $option['admin_label'] ) . '</label><br/>';
+		echo '<input name="edd_settings[' . esc_attr( $args['id'] ) . '][' . sanitize_key( $key ) . ']"" id="edd_settings[' . sanitize_key( $args['id'] ) . '][' . sanitize_key( $key ) . ']" type="checkbox" value="1" ' . checked('1', $enabled, false) . '/>&nbsp;';
+		echo '<label for="edd_settings[' . sanitize_key( $args['id'] ) . '][' . sanitize_key( $key ) . ']">' . esc_html( $option['admin_label'] ) . '</label><br/>';
 	endforeach;
 }
 
@@ -1171,7 +1171,7 @@ function edd_gateway_select_callback($args) {
 
 	foreach ( $args['options'] as $key => $option ) :
 		$selected = isset( $edd_options[ $args['id'] ] ) ? selected( $key, $edd_options[$args['id']], false ) : '';
-		echo '<option value="' . esc_attr( $key ) . '"' . $selected . '>' . esc_html( $option['admin_label'] ) . '</option>';
+		echo '<option value="' . sanitize_key( $key ) . '"' . $selected . '>' . esc_html( $option['admin_label'] ) . '</option>';
 	endforeach;
 
 	echo '</select>';
@@ -1552,7 +1552,7 @@ function edd_tax_rates_callback($args) {
 					<?php
 					echo EDD()->html->select( array(
 						'options'          => edd_get_country_list(),
-						'name'             => 'tax_rates[' . esc_attr( $key ) . '][country]',
+						'name'             => 'tax_rates[' . sanitize_key( $key ) . '][country]',
 						'selected'         => $rate['country'],
 						'show_option_all'  => false,
 						'show_option_none' => false,
@@ -1568,7 +1568,7 @@ function edd_tax_rates_callback($args) {
 					if( ! empty( $states ) ) {
 						echo EDD()->html->select( array(
 							'options'          => $states,
-							'name'             => 'tax_rates[' . esc_attr( $key ) . '][state]',
+							'name'             => 'tax_rates[' . sanitize_key( $key ) . '][state]',
 							'selected'         => $rate['state'],
 							'show_option_all'  => false,
 							'show_option_none' => false,
@@ -1577,17 +1577,17 @@ function edd_tax_rates_callback($args) {
 						) );
 					} else {
 						echo EDD()->html->text( array(
-							'name'  => 'tax_rates[' . esc_attr( $key ) . '][state]', $rate['state'],
+							'name'  => 'tax_rates[' . sanitize_key( $key ) . '][state]', $rate['state'],
 							'value' => ! empty( $rate['state'] ) ? $rate['state'] : '',
 						) );
 					}
 					?>
 				</td>
 				<td class="edd_tax_global">
-					<input type="checkbox" name="tax_rates[<?php echo esc_attr( $key ); ?>][global]" id="tax_rates[<?php echo esc_attr( $key ); ?>][global]" value="1"<?php checked( true, ! empty( $rate['global'] ) ); ?>/>
-					<label for="tax_rates[<?php echo esc_attr( $key ); ?>][global]"><?php _e( 'Apply to whole country', 'easy-digital-downloads' ); ?></label>
+					<input type="checkbox" name="tax_rates[<?php echo sanitize_key( $key ); ?>][global]" id="tax_rates[<?php echo sanitize_key( $key ); ?>][global]" value="1"<?php checked( true, ! empty( $rate['global'] ) ); ?>/>
+					<label for="tax_rates[<?php echo sanitize_key( $key ); ?>][global]"><?php _e( 'Apply to whole country', 'easy-digital-downloads' ); ?></label>
 				</td>
-				<td class="edd_tax_rate"><input type="number" class="small-text" step="0.0001" min="0.0" max="99" name="tax_rates[<?php echo esc_attr( $key ); ?>][rate]" value="<?php echo esc_html( $rate['rate'] ); ?>"/></td>
+				<td class="edd_tax_rate"><input type="number" class="small-text" step="0.0001" min="0.0" max="99" name="tax_rates[<?php echo sanitize_key( $key ); ?>][rate]" value="<?php echo esc_html( $rate['rate'] ); ?>"/></td>
 				<td><span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove Rate', 'easy-digital-downloads' ); ?></span></td>
 			</tr>
 			<?php endforeach; ?>
