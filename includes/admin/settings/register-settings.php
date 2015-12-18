@@ -928,9 +928,10 @@ function edd_settings_sanitize( $input = array() ) {
 
 	// Loop through the whitelist and unset any that are empty for the tab being saved
 	$main_settings    = $section == 'main' ? $settings[ $tab ] : array(); // Check for extensions that aren't using new sections
-	$section_settings = $settings[ $tab ][ $section ];
+	$section_settings = ! empty( $settings[ $tab ][ $section ] ) ? $settings[ $tab ][ $section ] : array();
 
 	$found_settings = array_merge( $main_settings, $section_settings );
+
 	if ( ! empty( $found_settings ) ) {
 		foreach ( $found_settings as $key => $value ) {
 
