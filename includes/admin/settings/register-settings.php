@@ -1867,7 +1867,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 					case 'expired' :
 
-						$class = 'error';
+						$class = 'expired';
 						$messages[] = sprintf(
 							__( 'Your license key expired on %s. Please <a href="%s" target="_blank" title="Renew your license key">renew your license key</a>.', 'easy-digital-downloads' ),
 							date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
