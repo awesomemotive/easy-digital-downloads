@@ -279,13 +279,20 @@ td.edd_order_price { text-align: right; }
 .wrap-licenses .form-table td { padding: 0; }
 .wrap-licenses td input.regular-text { margin: 0 0 8px; width: 100%; }
 .wrap-licenses .edd-license-data[class*="edd-license-"] { position: absolute; background: #fafafa; padding: 14px; border-top: 1px solid #eee; margin: 20px -14px -14px; min-height: 67px; width: 100%; bottom: 14px; box-sizing: border-box; }
-.wrap-licenses .edd-license-data.edd-license-expired { background-color: #fdeded; border-color: #f5d8d8; }
+.wrap-licenses .edd-license-data[class*="edd-license-"] a { color: #444; }
+.wrap-licenses .edd-license-data[class*="edd-license-"] a:hover { text-decoration: none; }
+.wrap-licenses .edd-license-data.license-expires-soon-notice { background-color: #00a0d2; color: #fff; border-color: #00a0d2; }
+.wrap-licenses .edd-license-data.edd-license-expired { background-color: #e24e4e; color: #fff; border-color: #e24e4e; }
 .wrap-licenses .edd-license-data.edd-license-error,
 .wrap-licenses .edd-license-data.edd-license-missing,
 .wrap-licenses .edd-license-data.edd-license-invalid,
 .wrap-licenses .edd-license-data.edd-license-site_inactive,
-.wrap-licenses .edd-license-data.edd-license-item_name_mismatch { background-color: #fbfbe7; border-color: #eaeaca; }
+.wrap-licenses .edd-license-data.edd-license-item_name_mismatch { background-color: #ffebcd; border-color: #ffebcd; }
 .wrap-licenses .edd-license-data p { font-size: 13px; margin-top: 0; }
+.wrap-licenses .edd-license-data.license-expires-soon-notice a,
+.wrap-licenses .edd-license-data.edd-license-expired a { color: #fff; }
+.wrap-licenses .edd-license-data.license-expires-soon-notice a:hover,
+.wrap-licenses .edd-license-data.edd-license-expired a:hover { text-decoration: none; }
 .wrap-licenses p.submit { clear: both; }
 
 /* Taxonomy styles
