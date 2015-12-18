@@ -585,7 +585,7 @@ class EDD_API {
 
 				break;
 
-			case 'downloads' :
+			case 'file-download-logs' :
 
 				$customer = isset( $wp_query->query_vars['customer'] ) ? $wp_query->query_vars['customer']  : null;
 
@@ -598,8 +598,8 @@ class EDD_API {
 		// Allow extensions to setup their own return data
 		$this->data = apply_filters( 'edd_api_output_data', $data, $this->endpoint, $this );
 
-		$after        = microtime( true );
-		$request_time = ( $after - $before );
+		$after                       = microtime( true );
+		$request_time                = ( $after - $before );
 		$this->data['request_speed'] = $request_time;
 
 		// Log this API request, if enabled. We log it here because we have access to errors.
@@ -639,7 +639,7 @@ class EDD_API {
 			'customers',
 			'sales',
 			'discounts',
-			'downloads'
+			'file-download-logs',
 		) );
 
 		$query = isset( $wp_query->query_vars['edd-api'] ) ? $wp_query->query_vars['edd-api'] : null;
@@ -686,8 +686,9 @@ class EDD_API {
 
 		$per_page = isset( $wp_query->query_vars['number'] ) ? $wp_query->query_vars['number'] : 10;
 
-		if( $per_page < 0 && $this->get_query_mode() == 'customers' )
+		if( $per_page < 0 && $this->get_query_mode() == 'customers' ) {
 			$per_page = 99999999; // Customers query doesn't support -1
+		}
 
 		return apply_filters( 'edd_api_results_per_page', $per_page );
 	}
@@ -708,7 +709,7 @@ class EDD_API {
 			'product'   => null,
 			'date'      => null,
 			'startdate' => null,
-			'enddate'   => null
+			'enddate'   => null,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -1528,37 +1529,44 @@ class EDD_API {
 		$meta_query = array();
 		if ( ! empty( $customer_id ) ) {
 
-			$customer = new EDD_Customer( $customer_id );
-
-			$meta_query['relation'] = 'OR';
+			$customer         = new EDD_Customer( $customer_id );
+			$invalid_customer = false;
 
 			if ( $customer->id > 0 ) {
-				// Based on customer->user_id
+				$meta_query['relation'] = 'OR';
+
+				if ( $customer->id > 0 ) {
+					// Based on customer->user_id
+					$meta_query[] = array(
+						'key'    => '_edd_log_user_id',
+						'value'  => $customer->user_id,
+					);
+				}
+
+				// Based on customer->email
 				$meta_query[] = array(
-					'key'    => '_edd_log_user_id',
-					'value'  => $customer->user_id
+					'key'    => '_edd_log_user_info',
+					'value'  => $customer->email,
+					'compare'=> 'LIKE',
 				);
+			} else {
+				$invalid_customer = true;
 			}
-
-			// Based on customer->email
-			$meta_query[] = array(
-				'key'    => '_edd_log_user_info',
-				'value'  => $customer->email,
-				'compare'=> 'LIKE'
-			);
-
 		}
 
 		$query = array(
-			'log_type'      => 'file_download',
-			'paged'         => $paged,
-			'meta_query'    => $meta_query,
-			'posts_per_page'=> $per_page,
+			'log_type'               => 'file_download',
+			'paged'                  => $paged,
+			'meta_query'             => $meta_query,
+			'posts_per_page'         => $per_page,
 			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false
+			'update_post_term_cache' => false,
 		);
 
-		$logs = $edd_logs->get_connected_logs( $query );
+		$logs = array();
+		if ( ! $invalid_customer ) {
+			$logs = $edd_logs->get_connected_logs( $query );
+		}
 
 		if ( empty( $logs ) ) {
 			$error['error'] = __( 'No download logs found!', 'easy-digital-downloads' );
