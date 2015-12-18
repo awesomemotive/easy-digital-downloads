@@ -906,14 +906,16 @@ function edd_settings_sanitize( $input = array() ) {
 	$section  = isset( $referrer['section'] ) ? $referrer['section'] : 'main';
 
 	$input = $input ? $input : array();
-	$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
-	$input = apply_filters( 'edd_settings_' . $tab . '-' . $section . '_sanitize', $input );
+	$legacy_inputs  = apply_filters( 'edd_settings_' . $tab . '_sanitize', $input ); // Check for extensions that aren't using new sections
+	$section_inputs = apply_filters( 'edd_settings_' . $tab . '-' . $section . '_sanitize', $input );
+
+	$input = array_merge( $legacy_inputs, $section_inputs );
 
 	// Loop through each setting being saved and pass it through a sanitization filter
 	foreach ( $input as $key => $value ) {
 
 		// Get the setting type (checkbox, select, etc)
-		$type = isset( $settings[$tab][$key]['type'] ) ? $settings[$tab][$key]['type'] : false;
+		$type = isset( $settings[ $tab ][ $key ]['type'] ) ? $settings[ $tab ][ $key ]['type'] : false;
 
 		if ( $type ) {
 			// Field type specific filter
@@ -921,12 +923,16 @@ function edd_settings_sanitize( $input = array() ) {
 		}
 
 		// General filter
-		$input[$key] = apply_filters( 'edd_settings_sanitize', $input[$key], $key );
+		$input[ $key ] = apply_filters( 'edd_settings_sanitize', $input[ $key ], $key );
 	}
 
 	// Loop through the whitelist and unset any that are empty for the tab being saved
-	if ( ! empty( $settings[ $tab ][ $section ] ) ) {
-		foreach ( $settings[ $tab ][ $section ] as $key => $value ) {
+	$main_settings    = $section == 'main' ? $settings[ $tab ] : array(); // Check for extensions that aren't using new sections
+	$section_settings = $settings[ $tab ][ $section ];
+
+	$found_settings = array_merge( $main_settings, $section_settings );
+	if ( ! empty( $found_settings ) ) {
+		foreach ( $found_settings as $key => $value ) {
 
 			// settings used to have numeric keys, now they have keys that match the option ID. This ensures both methods work
 			if ( is_numeric( $key ) ) {
