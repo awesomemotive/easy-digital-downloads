@@ -40,13 +40,13 @@ jQuery(document).ready(function ($) {
 						$(this).attr('data-cart-item', cart_item_counter);
 						cart_item_counter = cart_item_counter + 1;
 					});
-
-					// Check to see if the purchase form for this download is present on this page
-					if( $( '#edd_purchase_' + id ).length ) {
-						$( '#edd_purchase_' + id + ' .edd_go_to_checkout' ).hide();
-						$( '#edd_purchase_' + id + ' a.edd-add-to-cart' ).show().removeAttr('data-edd-loading');
+                                                                                
+					// Check to see if the purchase form(s) for this download is present on this page
+					if( $( '[id^=edd_purchase_' + id + ']' ).length ) {
+						$( '[id^=edd_purchase_' + id + '] .edd_go_to_checkout' ).hide();
+						$( '[id^=edd_purchase_' + id + '] a.edd-add-to-cart' ).show().removeAttr('data-edd-loading');
 						if ( edd_scripts.quantities_enabled == '1' ) {
-							$( '#edd_purchase_' + id + ' .edd_download_quantity_wrapper' ).show();
+							$( '[id^=edd_purchase_' + id + '] .edd_download_quantity_wrapper' ).show();
 						}
 					}
 
@@ -84,6 +84,9 @@ jQuery(document).ready(function ($) {
 		e.preventDefault();
 
 		var $this = $(this), form = $this.closest('form');
+
+		// Disable button, preventing rapid additions to cart during ajax request
+		$this.prop('disabled', true);
 
 		var $spinner = $this.find('.edd-loading');
 		var container = $this.closest('div');
@@ -241,6 +244,9 @@ jQuery(document).ready(function ($) {
 							$('.edd-cart-added-alert', container).fadeOut();
 						}, 3000);
 					}
+
+					// Re-enable the add to cart button
+					$this.prop('disabled', false);
 
 					$('body').trigger('edd_cart_item_added', [ response ]);
 

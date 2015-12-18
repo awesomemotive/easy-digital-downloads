@@ -1312,7 +1312,10 @@ function edd_password_callback( $args ) {
  * @return void
  */
 function edd_missing_callback($args) {
-	printf( __( 'The callback function used for the <strong>%s</strong> setting is missing.', 'easy-digital-downloads' ), esc_html( $args['id'] ) );
+	printf(
+		__( 'The callback function used for the %s setting is missing.', 'easy-digital-downloads' ),
+		'<strong>' . $args['id'] . '</strong>'
+	);
 }
 
 /**
