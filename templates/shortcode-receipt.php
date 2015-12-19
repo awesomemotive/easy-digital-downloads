@@ -4,7 +4,8 @@
  */
 global $edd_receipt_args;
 
-$payment   = get_post( $edd_receipt_args['id'] );
+$edd_receipt_args = apply_filters( 'edd_receipt_args', $edd_receipt_args );
+$payment          = get_post( $edd_receipt_args['id'] );
 
 if( empty( $payment ) ) : ?>
 
