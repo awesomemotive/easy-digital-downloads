@@ -1849,7 +1849,7 @@ function edd_descriptive_text_callback( $args ) {
  *
  * @since 1.5
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ * @global $edd_options Array of all the EDD options
  * @return void
  */
 if ( ! function_exists( 'edd_license_key_callback' ) ) {
@@ -1914,7 +1914,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 					case 'item_name_mismatch' :
 
 						$class = 'error';
-						$messages[] = sprintf( __( 'This license %s does not belong to %s.', 'easy-digital-downloads' ), $value, $args['name'] );
+						$messages[] = sprintf( __( 'This is not a %s.', 'easy-digital-downloads' ), $args['name'] );
 
 						$license_status = 'license-' . $class . '-notice';
 
