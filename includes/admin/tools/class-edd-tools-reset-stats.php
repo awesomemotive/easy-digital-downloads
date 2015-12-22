@@ -53,7 +53,7 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 	public function get_data() {
 		global $wpdb;
 
-		$items = get_option( 'edd_temp_reset_ids', false );
+		$items = $this->get_stored_data( 'edd_temp_reset_ids' );
 
 		if ( ! is_array( $items ) ) {
 			return false;
@@ -144,7 +144,7 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 	 */
 	public function get_percentage_complete() {
 
-		$items = get_option( 'edd_temp_reset_ids', false );
+		$items = $this->get_stored_data( 'edd_temp_reset_ids', false );
 		$total = count( $items );
 
 		$percentage = 100;
@@ -190,7 +190,7 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 			delete_transient( 'edd_earnings_total' );
 			delete_transient( 'edd_estimated_monthly_stats' . true );
 			delete_transient( 'edd_estimated_monthly_stats' . false );
-			delete_option( 'edd_temp_reset_ids' );
+			$this->delete_data( 'edd_temp_reset_ids' );
 
 			// Reset the sequential order numbers
 			if ( edd_get_option( 'enable_sequential' ) ) {
@@ -229,7 +229,7 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 	public function pre_fetch() {
 
 		if ( $this->step == 1 ) {
-			delete_option( 'edd_temp_reset_ids' );
+			$this->delete_data( 'edd_temp_reset_ids' );
 		}
 
 		$items = get_option( 'edd_temp_reset_ids', false );
@@ -263,9 +263,61 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 				);
 			}
 
-			update_option( 'edd_temp_reset_ids', $items );
+			$this->store_data( 'edd_temp_reset_ids', $items );
 		}
 
+	}
+
+	/**
+	 * Given a key, get the information from the Database Directly
+	 *
+	 * @since  2.5
+	 * @param  string $key The option_name
+	 * @return mixed       Returns the data from the database
+	 */
+	private function get_stored_data( $key ) {
+		global $wpdb;
+		$value = $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = '$key'" ) );
+
+		return empty( $value ) ? false : maybe_unserialize( $value );
+	}
+
+	/**
+	 * Give a key, store the value
+	 *
+	 * @since  2.5
+	 * @param  string $key   The option_name
+	 * @param  mixed  $value  The value to store
+	 * @return void
+	 */
+	private function store_data( $key, $value ) {
+		global $wpdb;
+
+		$value = maybe_serialize( $value );
+
+		$data = array(
+			'option_name'  => $key,
+			'option_value' => $value,
+			'autoload'     => 'no',
+		);
+
+		$formats = array(
+			'%s', '%s', '%s',
+		);
+
+		$wpdb->replace( $wpdb->options, $data, $formats );
+	}
+
+	/**
+	 * Delete an option
+	 *
+	 * @since  2.5
+	 * @param  string $key The option_name to delete
+	 * @return void
+	 */
+	private function delete_data( $key ) {
+		global $wpdb;
+		$wpdb->delete( $wpdb->options, array( 'option_name' => $key ) );
 	}
 
 }

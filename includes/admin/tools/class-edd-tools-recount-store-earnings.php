@@ -53,14 +53,14 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 	public function get_data() {
 
 		if ( $this->step == 1 ) {
-			delete_option( 'edd_temp_recount_earnings' );
+			$this->delete_data( 'edd_temp_recount_earnings' );
 		}
 
 		$total = get_option( 'edd_temp_recount_earnings', false );
 
 		if ( false === $total ) {
 			$total = (float) 0;
-			add_option( 'edd_temp_recount_earnings', $total, '', 'no' );
+			$this->store_data( 'edd_temp_recount_earnings', $total );
 		}
 
 		$accepted_statuses  = apply_filters( 'edd_recount_accepted_statuses', array( 'publish', 'revoked' ) );
@@ -88,7 +88,7 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 
 			$total = round( $total, edd_currency_decimal_filter() );
 
-			update_option( 'edd_temp_recount_earnings', $total );
+			$this->store_data( 'edd_temp_recount_earnings', $total );
 
 			return true;
 
@@ -109,7 +109,7 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 	 */
 	public function get_percentage_complete() {
 
-		$total = get_option( 'edd_recount_earnings_total', false );
+		$total = $this->get_stored_data( 'edd_recount_earnings_total' );
 
 		if ( false === $total ) {
 			$args = apply_filters( 'edd_recount_earnings_total_args', array() );
@@ -118,7 +118,7 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 			$total  = absint( $counts->publish ) + absint( $counts->revoked );
 			$total  = apply_filters( 'edd_recount_store_earnings_total', $total );
 
-			add_option( 'edd_recount_earnings_total', $total, '', 'no' );
+			$this->store_data( 'edd_recount_earnings_total', $total );
 		}
 
 		$percentage = 100;
@@ -160,8 +160,8 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 			$this->done = false;
 			return true;
 		} else {
-			delete_option( 'edd_recount_earnings_total' );
-			delete_option( 'edd_temp_recount_earnings' );
+			$this->delete_data( 'edd_recount_earnings_total' );
+			$this->delete_data( 'edd_temp_recount_earnings' );
 			$this->done    = true;
 			$this->message = __( 'Store earnings successfully recounted.', 'easy-digital-downloads' );
 			return false;
@@ -189,6 +189,58 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 		$this->headers();
 
 		edd_die();
+	}
+
+	/**
+	 * Given a key, get the information from the Database Directly
+	 *
+	 * @since  2.5
+	 * @param  string $key The option_name
+	 * @return mixed       Returns the data from the database
+	 */
+	private function get_stored_data( $key ) {
+		global $wpdb;
+		$value = $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = '$key'" ) );
+
+		return empty( $value ) ? false : maybe_unserialize( $value );
+	}
+
+	/**
+	 * Give a key, store the value
+	 *
+	 * @since  2.5
+	 * @param  string $key   The option_name
+	 * @param  mixed  $value  The value to store
+	 * @return void
+	 */
+	private function store_data( $key, $value ) {
+		global $wpdb;
+
+		$value = maybe_serialize( $value );
+
+		$data = array(
+			'option_name'  => $key,
+			'option_value' => $value,
+			'autoload'     => 'no',
+		);
+
+		$formats = array(
+			'%s', '%s', '%s',
+		);
+
+		$wpdb->replace( $wpdb->options, $data, $formats );
+	}
+
+	/**
+	 * Delete an option
+	 *
+	 * @since  2.5
+	 * @param  string $key The option_name to delete
+	 * @return void
+	 */
+	private function delete_data( $key ) {
+		global $wpdb;
+		$wpdb->delete( $wpdb->options, array( 'option_name' => $key ) );
 	}
 
 }
