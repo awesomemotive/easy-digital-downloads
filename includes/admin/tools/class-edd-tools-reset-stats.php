@@ -277,7 +277,7 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 	 */
 	private function get_stored_data( $key ) {
 		global $wpdb;
-		$value = $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = '%s'" ), $key );
+		$value = $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = '%s'", $key ) );
 
 		return empty( $value ) ? false : maybe_unserialize( $value );
 	}
