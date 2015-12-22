@@ -200,7 +200,7 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 	 */
 	private function get_stored_data( $key ) {
 		global $wpdb;
-		$value = $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = '$key'" ) );
+		$value = $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = '%s'" ), $key );
 
 		return empty( $value ) ? false : maybe_unserialize( $value );
 	}
