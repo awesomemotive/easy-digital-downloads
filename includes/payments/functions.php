@@ -132,6 +132,7 @@ function edd_insert_payment( $payment_data = array() ) {
 				'tax'        => $item['tax'],
 				'item_price' => isset( $item['item_price'] ) ? $item['item_price'] : $item['price'],
 				'fees'       => isset( $item['fees'] ) ? $item['fees'] : array(),
+				'discount'   => isset( $item['discount'] ) ? $item['discount'] : 0,
 			);
 
 			$options = isset( $item['item_number']['options'] ) ? $item['item_number']['options'] : array();

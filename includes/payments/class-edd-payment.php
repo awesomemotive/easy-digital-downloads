@@ -859,6 +859,7 @@ final class EDD_Payment {
 			'quantity'    => 1,
 			'price_id'    => false,
 			'item_price'  => 0.00,
+			'discount'    => 0,
 			'tax'         => 0.00,
 			'fees'        => array(),
 		);
@@ -921,7 +922,7 @@ final class EDD_Payment {
 
 		$this->downloads[] = $new_download;
 
-		$discount   = 0;
+		$discount   = $args['discount'];
 		$discount   = apply_filters( 'edd_get_cart_content_details_item_discount_amount', $discount, $new_download );
 		$subtotal   = $amount;
 		$tax        = $args['tax'];
@@ -950,6 +951,7 @@ final class EDD_Payment {
 			'item_number' => $item_number,
 			'item_price'  => round( $item_price, edd_currency_decimal_filter() ),
 			'quantity'    => $quantity,
+			'discount'    => $discount,
 			'subtotal'    => round( $subtotal, edd_currency_decimal_filter() ),
 			'tax'         => round( $tax, edd_currency_decimal_filter() ),
 			'fees'        => $args['fees'],
@@ -962,7 +964,7 @@ final class EDD_Payment {
 		$this->pending['downloads'][] = $added_download;
 		reset( $this->cart_details );
 
-		$this->increase_subtotal( $amount );
+		$this->increase_subtotal( $total );
 		$this->increase_tax( $tax );
 
 		return true;
