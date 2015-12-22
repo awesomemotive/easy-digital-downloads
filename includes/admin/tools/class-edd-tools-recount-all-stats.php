@@ -60,17 +60,14 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 
 		if ( false === $totals ) {
 			$totals = array();
-			$this->store_data( 'edd_temp_recount_all_stats', $totals );
 		}
 
 		if ( false === $payment_items ) {
 			$payment_items = array();
-			$this->store_data( 'edd_temp_payment_items', $payment_items );
 		}
 
 		if ( false === $processed_payments ) {
 			$processed_payments = array();
-			$this->store_data( 'edd_temp_processed_payments', $processed_payments );
 		}
 
 		$all_downloads = $this->get_stored_data( 'edd_temp_download_ids' );
@@ -127,12 +124,6 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 					$totals[ $download_id ]['sales']++;
 					$totals[ $download_id ]['earnings'] += $item['price'];
 
-					if ( ! array_key_exists( 'edd_earnings_total', $totals ) ) {
-						$totals['edd_earnings_total'] = $item['price'];
-					} else {
-						$totals['edd_earnings_total'] += $item['price'];
-					}
-
 				}
 
 				$processed_payments[] = $payment->ID;
@@ -145,13 +136,8 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 		}
 
 		foreach ( $totals as $key => $stats ) {
-			if ( is_numeric( $key ) ) {
-				update_post_meta( $key, '_edd_download_sales'   , $stats['sales'] );
-				update_post_meta( $key, '_edd_download_earnings', $stats['earnings'] );
-			} else {
-				update_option( $key, $stats );
-				set_transient( $key, $stats, 86400 );
-			}
+			update_post_meta( $key, '_edd_download_sales'   , $stats['sales'] );
+			update_post_meta( $key, '_edd_download_earnings', $stats['earnings'] );
 		}
 
 		return false;
