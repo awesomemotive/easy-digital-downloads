@@ -964,7 +964,7 @@ final class EDD_Payment {
 		$this->pending['downloads'][] = $added_download;
 		reset( $this->cart_details );
 
-		$this->increase_subtotal( $total );
+		$this->increase_subtotal( $subtotal - $discount );
 		$this->increase_tax( $tax );
 
 		return true;
