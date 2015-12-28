@@ -923,7 +923,6 @@ final class EDD_Payment {
 		$this->downloads[] = $new_download;
 
 		$discount   = $args['discount'];
-		$discount   = apply_filters( 'edd_get_cart_content_details_item_discount_amount', $discount, $new_download );
 		$subtotal   = $amount;
 		$tax        = $args['tax'];
 
