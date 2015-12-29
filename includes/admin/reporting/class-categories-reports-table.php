@@ -33,7 +33,12 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		global $status, $page;
+		// Set parent defaults
+		parent::__construct( array(
+			'singular'  => __( 'Earnings', 'edd' ),     // Singular name of the listed records
+			'plural'    => __( 'Earnings', 'edd' ),     // Plural name of the listed records
+			'ajax'      => false             			// Does this table support ajax?
+		) );
 	}
 
 	/**
