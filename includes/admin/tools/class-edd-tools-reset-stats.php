@@ -117,7 +117,7 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 				if ( ! in_array( $type, array( 'customers', 'downloads', 'other' ) ) ) {
 					// Allows other types of custom post types to filter on their own post_type
 					// and add items to the query list, for the IDs found in their post type.
-					$sql = apply_filters( 'edd_reset_add_queries' . $type, $sql, $ids );
+					$sql = apply_filters( 'edd_reset_add_queries_' . $type, $sql, $ids );
 				}
 
 			}
@@ -262,6 +262,10 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 					'type' => 'customer',
 				);
 			}
+
+			// Allow filtering of items to remove with an unassociative array for each item
+			// The array contains the unique ID of the item, and a 'type' for you to use in the execution of the get_data method
+			$items = apply_filters( 'edd_reset_store_items', $items );
 
 			$this->store_data( 'edd_temp_reset_ids', $items );
 		}
