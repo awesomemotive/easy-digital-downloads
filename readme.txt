@@ -95,9 +95,9 @@ Would you like to help translate the plugin into more languages? [Join our WP-Tr
 
 = Where can I find complete documentation? =
 
-On our web site you can find [our support page](http://docs.easydigitaldownloads.com/?utm_source=docs&utm_medium=faq_tab&utm_content=documentation&utm_campaign=readme)
+Full searchable docs can be found at [http://docs.easydigitaldownloads.com/](http://docs.easydigitaldownloads.com/?utm_source=docs&utm_medium=faq_tab&utm_content=documentation&utm_campaign=readme)
 
-=  an SSL certificate required? =
+= Is an SSL certificate required? =
 
 Easy Digital Downloads can function without one just fine, making it easy to set up in a testing or development environment.  We still strongly recommend you have an SSL certificate for your production web site, both for security and for the peace of mind of your customers. [Documentation here](http://docs.easydigitaldownloads.com/article/994-how-to-set-up-ssl?utm_source=docs&utm_medium=faq_tab&utm_content=documentation&utm_campaign=readme)
 
@@ -111,15 +111,11 @@ That said, we have a nice collection of free themes that come with support for E
 
 = How do I Show My Shopping Cart? =
 
-There are three ways you can show the downloads shopping cart:
+There are two ways you can show the downloads shopping cart:
 
 1. Use the short code and simply place [download_cart] on a page or within a text widget.
 
 2. Use the included widget. Go to Appearance > Widgets and place the "Downloads Cart" widget into any widget area available.
-
-3. Use the template tag and place the following in the template file of your choosing:
-
-`echo edd_shopping_cart();`
 
 = Is there a sample import file I can use to setup a demo store? =
 
@@ -143,6 +139,10 @@ Place the [purchase_history] short code on any page.
 
 If you want to just show a list of the files the user has purchased, use the [download_history] short code instead.
 
+= How do I display products? =
+
+There are several different ways, each well [documented](http://docs.easydigitaldownloads.com/category/870-product-display?utm_source=edd_readme&utm_medium=faq_tab&utm_content=faqs&utm_campaign=readme).
+
 = Can I Setup an Affiliate System? =
 
 Yes! EDD integrates directly with several affiliate platforms that provide complete affiliate systems you can use to award commissions to your affiliate marketers.
@@ -160,7 +160,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 
 = Can Users Purchase Products without Using PayPal? =
 
-Yes, through the addition of one or more of the add-on payment gateways, you can accept payments in many different ways. The add-on gateways currently available:
+Yes, through the addition of one or more of the add-on payment gateways, you can accept payments in many different ways. Here are some of the gateways currently found on our [complete list](https://easydigitaldownloads.com/downloads/category/extensions/gateways/?utm_source=docs&utm_medium=faq_tab&utm_term=gateways&utm_content=faqs&utm_campaign=readme):
 
 * [Stripe](https://easydigitaldownloads.com/downloads/stripe-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=stripe-payment-gateway&utm_campaign=readme)
 * [Recurly](https://easydigitaldownloads.com/downloads/recurly-com-checkout/?utm_source=gateway&utm_medium=faq_tab&utm_content=recurly-com-checkout&utm_campaign=readme)
