@@ -95,15 +95,15 @@ Would you like to help translate the plugin into more languages? [Join our WP-Tr
 
 = Where can I find complete documentation? =
 
-On our web site in the top right you can find [our support page](http://docs.easydigitaldownloads.com/?utm_source=docs&utm_medium=installation_tab&utm_content=documentation&utm_campaign=readme)
+On our web site you can find [our support page](http://docs.easydigitaldownloads.com/?utm_source=docs&utm_medium=faq_tab&utm_content=documentation&utm_campaign=readme)
 
 =  an SSL certificate required? =
 
-Easy Digital Downloads can function without one just fine, making it easy to set up in a testing or development environment.  We still strongly recommend you have an SSL certificate for your production web site, both for security and for the peace of mind of your customers.
+Easy Digital Downloads can function without one just fine, making it easy to set up in a testing or development environment.  We still strongly recommend you have an SSL certificate for your production web site, both for security and for the peace of mind of your customers. [Documentation here](http://docs.easydigitaldownloads.com/article/994-how-to-set-up-ssl?utm_source=docs&utm_medium=faq_tab&utm_content=documentation&utm_campaign=readme)
 
 = What themes work with Easy Digital Downloads? =
 
-Any properly written theme will work with Easy Digital Downloads.  Without specific design support you may need to write some custom CSS to make things look like your custom site design.
+Any properly written theme will work with Easy Digital Downloads.
 
 That said, we have a nice collection of free themes that come with support for Easy Digital Downloads, requiring much less design work on the part of the store owner.
 
@@ -127,7 +127,7 @@ Yes! Simply go to Tools > Import and install the WordPress Importer, then naviga
 
 = Can I import all the products from my existing store into EDD? =
 
-At this time there is not a grand importer that will simply set things up for you. We do have an [import solution](http://docs.easydigitaldownloads.com/article/216-can-i-import-and-export-products?utm_source=docs&utm_medium=faq_tab&utm_term=import_addon&utm_content=faqs&utm_campaign=readme) that imports a CSV file, so if you can get your data into the appropriate format then we can import it.
+We do have a [basic import solution](http://docs.easydigitaldownloads.com/article/216-can-i-import-and-export-products?utm_source=docs&utm_medium=faq_tab&utm_term=import_addon&utm_content=faqs&utm_campaign=readme) that imports a CSV file, so if you can get your data into the appropriate format then we can import it.
 
 = My Payments Marked as Pending =
 
