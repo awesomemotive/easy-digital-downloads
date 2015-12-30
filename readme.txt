@@ -93,21 +93,37 @@ Would you like to help translate the plugin into more languages? [Join our WP-Tr
 
 == Frequently Asked Questions ==
 
+= Where can I find complete documentation? =
+
+Full searchable docs can be found at [http://docs.easydigitaldownloads.com/](http://docs.easydigitaldownloads.com/?utm_source=docs&utm_medium=faq_tab&utm_content=documentation&utm_campaign=readme)
+
+= Is an SSL certificate required? =
+
+Easy Digital Downloads can function without one just fine, making it easy to set up in a testing or development environment.  We still strongly recommend you have an SSL certificate for your production web site, both for security and for the peace of mind of your customers. [Documentation here](http://docs.easydigitaldownloads.com/article/994-how-to-set-up-ssl?utm_source=docs&utm_medium=faq_tab&utm_content=documentation&utm_campaign=readme)
+
+= What themes work with Easy Digital Downloads? =
+
+Any properly written theme will work with Easy Digital Downloads.
+
+That said, we have a nice collection of free themes that come with support for Easy Digital Downloads, requiring much less design work on the part of the store owner.
+
+[See the free themes here.](https://easydigitaldownloads.com/themes/?utm_source=docs&utm_medium=faq_tab&utm_term=free_themes&utm_content=faqs&utm_campaign=readme)
+
 = How do I Show My Shopping Cart? =
 
-There are three ways you can show the downloads shopping cart:
+There are two ways you can show the downloads shopping cart:
 
 1. Use the short code and simply place [download_cart] on a page or within a text widget.
 
 2. Use the included widget. Go to Appearance > Widgets and place the "Downloads Cart" widget into any widget area available.
 
-3. Use the template tag and place the following in the template file of your choosing:
-
-`echo edd_shopping_cart();`
-
 = Is there a sample import file I can use to setup a demo store? =
 
 Yes! Simply go to Tools > Import and install the WordPress Importer, then navigate to wp-content/plugins/easy-digital-downloads/assets/ and select the sample-products-import.xml file. This will create several sample products and plugin pages for you.
+
+= Can I import all the products from my existing store into EDD? =
+
+We do have a [basic import solution](http://docs.easydigitaldownloads.com/article/216-can-i-import-and-export-products?utm_source=docs&utm_medium=faq_tab&utm_term=import_addon&utm_content=faqs&utm_campaign=readme) that imports a CSV file, so if you can get your data into the appropriate format then we can import it.
 
 = My Payments Marked as Pending =
 
@@ -123,20 +139,28 @@ Place the [purchase_history] short code on any page.
 
 If you want to just show a list of the files the user has purchased, use the [download_history] short code instead.
 
+= How do I display products? =
+
+There are several different ways, each well [documented](http://docs.easydigitaldownloads.com/category/870-product-display?utm_source=edd_readme&utm_medium=faq_tab&utm_content=faqs&utm_campaign=readme).
+
 = Can I Setup an Affiliate System? =
 
 Yes! EDD integrates directly with several affiliate platforms that provide complete affiliate systems you can use to award commissions to your affiliate marketers.
 
-[Checkout AffiliateWP](https://affiliatewp.com?utm_source=edd_readme&utm_medium=faq_tab&utm_content=home&utm_campaign=readme)
+[Check out AffiliateWP](https://affiliatewp.com?utm_source=edd_readme&utm_medium=faq_tab&utm_content=home&utm_campaign=readme)
 
 = Can I give my customers downloadable PDF Invoices? =
 Yes, EDD has an extension that allows for downloadable invoices to be generated for each payment.
 
 [PDF Invoices](https://easydigitaldownloads.com/downloads/pdf-invoices/?utm_source=pdf-invoices&utm_medium=faq_tab&utm_content=pdf-invoices&utm_campaign=readme)
 
+= Are recurring payments supported? =
+
+Yes, through the use of our commercial addon called [Recurring Payments](https://easydigitaldownloads.com/downloads/recurring-payments/?utm_source=docs&utm_medium=faq_tab&utm_term=recurring_addon&utm_content=faqs&utm_campaign=readme).  [Full documentation here](http://docs.easydigitaldownloads.com/article/346-recurring-payments-setup-documentation?utm_source=docs&utm_medium=faq_tab&utm_term=recurring_addon&utm_content=faqs&utm_campaign=readme)
+
 = Can Users Purchase Products without Using PayPal? =
 
-Yes, through the addition of one or more of the add-on payment gateways, you can accept payments in many different ways. The add-on gateways currently available:
+Yes, through the addition of one or more of the add-on payment gateways, you can accept payments in many different ways. Here are some of the gateways currently found on our [complete list](https://easydigitaldownloads.com/downloads/category/extensions/gateways/?utm_source=docs&utm_medium=faq_tab&utm_term=gateways&utm_content=faqs&utm_campaign=readme):
 
 * [Stripe](https://easydigitaldownloads.com/downloads/stripe-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=stripe-payment-gateway&utm_campaign=readme)
 * [Recurly](https://easydigitaldownloads.com/downloads/recurly-com-checkout/?utm_source=gateway&utm_medium=faq_tab&utm_content=recurly-com-checkout&utm_campaign=readme)
