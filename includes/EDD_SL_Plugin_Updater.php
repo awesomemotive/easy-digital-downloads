@@ -198,6 +198,8 @@ class EDD_SL_Plugin_Updater {
 				);
 			}
 
+			do_action( "in_plugin_update_message-{$file}", $plugin, $version_info );
+
 			echo '</div></td></tr>';
 		}
 	}
