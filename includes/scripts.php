@@ -48,6 +48,8 @@ function edd_load_scripts() {
 			'checkout_nonce'     => wp_create_nonce( 'edd_checkout_nonce' ),
 			'currency_sign'      => edd_currency_filter(''),
 			'currency_pos'       => edd_get_option( 'currency_position', 'before' ),
+			'decimal_separator'  => edd_get_option( 'decimal_separator', '.' ),
+			'thousands_separator'=> edd_get_option( 'thousands_separator', ',' ),
 			'no_gateway'         => __( 'Please select a payment method', 'easy-digital-downloads' ),
 			'no_discount'        => __( 'Please enter a discount code', 'easy-digital-downloads' ), // Blank discount code message
 			'enter_discount'     => __( 'Enter discount', 'easy-digital-downloads' ),
