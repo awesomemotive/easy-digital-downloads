@@ -14,7 +14,7 @@
  * To replace tags in content, use: edd_do_email_tags( $content, payment_id );
  *
  * To add tags, use: edd_add_email_tag( $tag, $description, $func ). Be sure to wrap edd_add_email_tag()
- * in a function hooked to the 'edd_email_tags' action
+ * in a function hooked to the 'edd_add_email_tags' action
  *
  * @package     EDD
  * @subpackage  Emails
@@ -377,11 +377,12 @@ add_action( 'edd_add_email_tags', 'edd_setup_email_tags' );
  * @return string download_list
  */
 function edd_email_tag_download_list( $payment_id ) {
+	$payment = new EDD_Payment( $payment_id );
 
-	$payment_data  = edd_get_payment_meta( $payment_id );
+	$payment_data  = $payment->get_meta();
 	$download_list = '<ul>';
-	$cart_items    = edd_get_payment_meta_cart_details( $payment_id );
-	$email         = edd_get_payment_user_email( $payment_id );
+	$cart_items    = $payment->cart_details;
+	$email         = $payment->email;
 
 	if ( $cart_items ) {
 		$show_names = apply_filters( 'edd_email_show_names', true );
@@ -487,10 +488,11 @@ function edd_email_tag_download_list( $payment_id ) {
  * @return string download_list
  */
 function edd_email_tag_download_list_plain( $payment_id ) {
+	$payment = new EDD_Payment( $payment_id );
 
-	$payment_data  = edd_get_payment_meta( $payment_id );
-	$cart_items    = edd_get_payment_meta_cart_details( $payment_id );
-	$email         = edd_get_payment_user_email( $payment_id );
+	$payment_data  = $payment->get_meta();
+	$cart_items    = $payment->cart_details;
+	$email         = $payment->email;
 	$download_list = '';
 
 	if ( $cart_items ) {
@@ -534,14 +536,14 @@ function edd_email_tag_download_list_plain( $payment_id ) {
 			if ( ! empty( $files ) ) {
 
 				foreach ( $files as $filekey => $file ) {
-                    if( $show_links ) {
-    					$download_list .= "\n";
-	    				$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $item['id'], $price_id );
-		    			$download_list .= edd_get_file_name( $file ) . ': ' . $file_url . "\n";
-                    } else {
-                        $download_list .= "\n";
-                        $download_list .= edd_get_file_name( $file ) . "\n";
-                    }
+					if( $show_links ) {
+						$download_list .= "\n";
+						$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $item['id'], $price_id );
+						$download_list .= edd_get_file_name( $file ) . ': ' . $file_url . "\n";
+					} else {
+						$download_list .= "\n";
+						$download_list .= edd_get_file_name( $file ) . "\n";
+					}
 				}
 
 			} elseif ( edd_is_bundled_product( $item['id'] ) ) {
@@ -554,13 +556,13 @@ function edd_email_tag_download_list_plain( $payment_id ) {
 
 					$files = edd_get_download_files( $bundle_item );
 
-                    foreach ( $files as $filekey => $file ) {
-                        if( $show_links ) {
-    						$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $bundle_item, $price_id );
-                            $download_list .= $file['name'] . ': ' . $file_url . "\n";
-                        } else {
-                            $download_list .= $file['name'] . "\n";
-                        }
+					foreach ( $files as $filekey => $file ) {
+						if( $show_links ) {
+							$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $bundle_item, $price_id );
+							$download_list .= $file['name'] . ': ' . $file_url . "\n";
+						} else {
+							$download_list .= $file['name'] . "\n";
+						}
 					}
 				}
 			}
@@ -585,11 +587,12 @@ function edd_email_tag_download_list_plain( $payment_id ) {
  * @return string $file_urls
  */
 function edd_email_tag_file_urls( $payment_id ) {
+	$payment = new EDD_Payment( $payment_id );
 
-	$payment_data = edd_get_payment_meta( $payment_id );
+	$payment_data = $payment->get_meta();
 	$file_urls    = '';
-	$cart_items   = edd_get_payment_meta_cart_details( $payment_id );
-	$email        = edd_get_payment_user_email( $payment_id );
+	$cart_items   = $payment->cart_details;
+	$email        = $payment->email;
 
 	foreach ( $cart_items as $item ) {
 
@@ -632,11 +635,15 @@ function edd_email_tag_file_urls( $payment_id ) {
  * @return string name
  */
 function edd_email_tag_first_name( $payment_id ) {
-	$payment_data = edd_get_payment_meta( $payment_id );
-	if( empty( $payment_data['user_info'] ) ) {
+	$payment   = new EDD_Payment( $payment_id );
+	$user_info = $payment->user_info;
+
+	if( empty( $user_info) ) {
 		return '';
 	}
-	$email_name   = edd_get_email_names( $payment_data['user_info'] );
+
+	$email_name   = edd_get_email_names( $user_info );
+
 	return $email_name['name'];
 }
 
@@ -649,11 +656,14 @@ function edd_email_tag_first_name( $payment_id ) {
  * @return string fullname
  */
 function edd_email_tag_fullname( $payment_id ) {
-	$payment_data = edd_get_payment_meta( $payment_id );
-	if( empty( $payment_data['user_info'] ) ) {
+	$payment   = new EDD_Payment( $payment_id );
+	$user_info = $payment->user_info;
+
+	if( empty( $user_info ) ) {
 		return '';
 	}
-	$email_name   = edd_get_email_names( $payment_data['user_info'] );
+
+	$email_name   = edd_get_email_names( $user_info );
 	return $email_name['fullname'];
 }
 
@@ -666,11 +676,14 @@ function edd_email_tag_fullname( $payment_id ) {
  * @return string username
  */
 function edd_email_tag_username( $payment_id ) {
-	$payment_data = edd_get_payment_meta( $payment_id );
-	if( empty( $payment_data['user_info'] ) ) {
+	$payment   = new EDD_Payment( $payment_id );
+	$user_info = $payment->user_info;
+
+	if( empty( $user_info ) ) {
 		return '';
 	}
-	$email_name   = edd_get_email_names( $payment_data['user_info'] );
+
+	$email_name   = edd_get_email_names( $user_info );
 	return $email_name['username'];
 }
 
@@ -683,7 +696,9 @@ function edd_email_tag_username( $payment_id ) {
  * @return string user_email
  */
 function edd_email_tag_user_email( $payment_id ) {
-	return edd_get_payment_user_email( $payment_id );
+	$payment = new EDD_Payment( $payment_id );
+
+	return $payment->email;
 }
 
 /**
@@ -718,8 +733,8 @@ function edd_email_tag_billing_address( $payment_id ) {
  * @return string date
  */
 function edd_email_tag_date( $payment_id ) {
-	$payment_data = edd_get_payment_meta( $payment_id );
-	return date_i18n( get_option( 'date_format' ), strtotime( $payment_data['date'] ) );
+	$payment = new EDD_Payment( $payment_id );
+	return date_i18n( get_option( 'date_format' ), strtotime( $payment->date ) );
 }
 
 /**
@@ -731,7 +746,8 @@ function edd_email_tag_date( $payment_id ) {
  * @return string subtotal
  */
 function edd_email_tag_subtotal( $payment_id ) {
-	$subtotal = edd_currency_filter( edd_format_amount( edd_get_payment_subtotal( $payment_id ) ), edd_get_payment_currency_code( $payment_id ) );
+	$payment  = new EDD_Payment( $payment_id );
+	$subtotal = edd_currency_filter( edd_format_amount( $payment->subtotal ), $payment->currency );
 	return html_entity_decode( $subtotal, ENT_COMPAT, 'UTF-8' );
 }
 
@@ -744,7 +760,8 @@ function edd_email_tag_subtotal( $payment_id ) {
  * @return string tax
  */
 function edd_email_tag_tax( $payment_id ) {
-	$tax = edd_currency_filter( edd_format_amount( edd_get_payment_tax( $payment_id ) ), edd_get_payment_currency_code( $payment_id ) );
+	$payment = new EDD_Payment( $payment_id );
+	$tax     = edd_currency_filter( edd_format_amount( $payment->tax ), $payment->currency );
 	return html_entity_decode( $tax, ENT_COMPAT, 'UTF-8' );
 }
 
@@ -757,7 +774,8 @@ function edd_email_tag_tax( $payment_id ) {
  * @return string price
  */
 function edd_email_tag_price( $payment_id ) {
-	$price = edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ), edd_get_payment_currency_code( $payment_id ) );
+	$payment = new EDD_Payment( $payment_id );
+	$price   = edd_currency_filter( edd_format_amount( $payment->total ), $payment->currency );
 	return html_entity_decode( $price, ENT_COMPAT, 'UTF-8' );
 }
 
@@ -770,7 +788,8 @@ function edd_email_tag_price( $payment_id ) {
  * @return int payment_id
  */
 function edd_email_tag_payment_id( $payment_id ) {
-	return edd_get_payment_number( $payment_id );
+	$payment = new EDD_Payment( $payment_id );
+	return $payment->number;
 }
 
 /**
@@ -782,7 +801,8 @@ function edd_email_tag_payment_id( $payment_id ) {
  * @return string receipt_id
  */
 function edd_email_tag_receipt_id( $payment_id ) {
-	return edd_get_payment_key( $payment_id );
+	$payment = new EDD_Payment( $payment_id );
+	return $payment->key;
 }
 
 /**
@@ -794,7 +814,8 @@ function edd_email_tag_receipt_id( $payment_id ) {
  * @return string gateway
  */
 function edd_email_tag_payment_method( $payment_id ) {
-	return edd_get_gateway_checkout_label( edd_get_payment_gateway( $payment_id ) );
+	$payment = new EDD_Payment( $payment_id );
+	return edd_get_gateway_checkout_label( $payment->gateway );
 }
 
 /**
@@ -850,5 +871,6 @@ function edd_email_tag_discount_codes( $payment_id ) {
  * @return string IP address
  */
 function edd_email_tag_ip_address( $payment_id ) {
-	return edd_get_payment_user_ip( $payment_id );
+	$payment = new EDD_Payment( $payment_id );
+	return $payment->ip;
 }

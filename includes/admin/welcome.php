@@ -99,23 +99,23 @@ class EDD_Welcome {
 		?>
 		<style type="text/css" media="screen">
 			/*<![CDATA[*/
-			.about-wrap .edd-badge { float: right; border-radius: 4px; margin: 0 0 15px 15px; max-width: 100px; }
-			.about-wrap #edd-header { margin-bottom: 15px; }
-			.about-wrap #edd-header h1 { margin-bottom: 15px !important; }
-			.about-wrap .about-text { margin: 0 0 15px; max-width: 670px; }
-			.about-wrap .feature-section { margin-top: 20px; }
-			.about-wrap .feature-section-content,
-			.about-wrap .feature-section-media { width: 50%; box-sizing: border-box; }
-			.about-wrap .feature-section-content { float: left; padding-right: 50px; }
-			.about-wrap .feature-section-content h4 { margin: 0 0 1em; }
-			.about-wrap .feature-section-media { float: right; text-align: right; margin-bottom: 20px; }
-			.about-wrap .feature-section-media img { border: 1px solid #ddd; }
-			.about-wrap .feature-section:not(.under-the-hood) .col { margin-top: 0; }
+			.edd-about-wrap .edd-badge { float: right; border-radius: 4px; margin: 0 0 15px 15px; max-width: 100px; }
+			.edd-about-wrap #edd-header { margin-bottom: 15px; }
+			.edd-about-wrap #edd-header h1 { margin-bottom: 15px !important; }
+			.edd-about-wrap .about-text { margin: 0 0 15px; max-width: 670px; }
+			.edd-about-wrap .feature-section { margin-top: 20px; }
+			.edd-about-wrap .feature-section-content,
+			.edd-about-wrap .feature-section-media { width: 50%; box-sizing: border-box; }
+			.edd-about-wrap .feature-section-content { float: left; padding-right: 50px; }
+			.edd-about-wrap .feature-section-content h4 { margin: 0 0 1em; }
+			.edd-about-wrap .feature-section-media { float: right; text-align: right; margin-bottom: 20px; }
+			.edd-about-wrap .feature-section-media img { border: 1px solid #ddd; }
+			.edd-about-wrap .feature-section:not(.under-the-hood) .col { margin-top: 0; }
 			/* responsive */
 			@media all and ( max-width: 782px ) {
-				.about-wrap .feature-section-content,
-				.about-wrap .feature-section-media { float: none; padding-right: 0; width: 100%; text-align: left; }
-				.about-wrap .feature-section-media img { float: none; margin: 0 0 20px; }
+				.edd-about-wrap .feature-section-content,
+				.edd-about-wrap .feature-section-media { float: none; padding-right: 0; width: 100%; text-align: left; }
+				.edd-about-wrap .feature-section-media img { float: none; margin: 0 0 20px; }
 			}
 			/*]]>*/
 		</style>
@@ -152,7 +152,7 @@ class EDD_Welcome {
 	public function tabs() {
 		$selected = isset( $_GET['page'] ) ? $_GET['page'] : 'edd-about';
 		?>
-		<h2 class="nav-tab-wrapper">
+		<h1 class="nav-tab-wrapper">
 			<a class="nav-tab <?php echo $selected == 'edd-about' ? 'nav-tab-active' : ''; ?>" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-about' ), 'index.php' ) ) ); ?>">
 				<?php _e( "What's New", 'easy-digital-downloads' ); ?>
 			</a>
@@ -162,7 +162,7 @@ class EDD_Welcome {
 			<a class="nav-tab <?php echo $selected == 'edd-credits' ? 'nav-tab-active' : ''; ?>" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-credits' ), 'index.php' ) ) ); ?>">
 				<?php _e( 'Credits', 'easy-digital-downloads' ); ?>
 			</a>
-		</h2>
+		</h1>
 		<?php
 	}
 
@@ -175,7 +175,7 @@ class EDD_Welcome {
 	 */
 	public function about_screen() {
 		?>
-		<div class="wrap about-wrap">
+		<div class="wrap about-wrap edd-about-wrap">
 			<?php
 				// load welcome message and content tabs
 				$this->welcome_message();
@@ -285,7 +285,7 @@ class EDD_Welcome {
 	 */
 	public function changelog_screen() {
 		?>
-		<div class="wrap about-wrap">
+		<div class="wrap about-wrap edd-about-wrap">
 			<?php
 				// load welcome message and content tabs
 				$this->welcome_message();
@@ -315,7 +315,7 @@ class EDD_Welcome {
 	 */
 	public function getting_started_screen() {
 		?>
-		<div class="wrap about-wrap">
+		<div class="wrap about-wrap edd-about-wrap">
 			<?php
 				// load welcome message and content tabs
 				$this->welcome_message();
@@ -330,11 +330,9 @@ class EDD_Welcome {
 						<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/edit-download.png'; ?>" class="edd-welcome-screenshots"/>
 					</div>
 					<div class="feature-section-content">
-						<h4><?php printf( __( '<a href="%s">%s &rarr; Add New</a>', 'easy-digital-downloads' ), admin_url( 'post-new.php?post_type=download' ), edd_get_label_plural() ); ?></h4>
+						<h4><a href="<?php echo admin_url( 'post-new.php?post_type=download' ) ?>"><?php printf( __( '%s &rarr; Add New', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></a></h4>
 						<p><?php printf( __( 'The %s menu is your access point for all aspects of your Easy Digital Downloads product creation and setup. To create your first product, simply click Add New and then fill out the product details.', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></p>
 
-						<h4><?php _e( 'Product Price', 'easy-digital-downloads' );?></h4>
-						<p><?php _e( 'Products can have simple prices or variable prices if you wish to have more than one price point for a product. For a single price, simply enter the price. For multiple price points, click <em>Enable variable pricing</em> and enter the options.', 'easy-digital-downloads' );?></p>
 
 						<h4><?php _e( 'Download Files', 'easy-digital-downloads' );?></h4>
 						<p><?php _e( 'Uploading the downloadable files is simple. Click <em>Upload File</em> in the Download Files section and choose your download file. To add more than one file, simply click the <em>Add New</em> button.', 'easy-digital-downloads' );?></p>
@@ -432,7 +430,7 @@ class EDD_Welcome {
 	 */
 	public function credits_screen() {
 		?>
-		<div class="wrap about-wrap">
+		<div class="wrap about-wrap edd-about-wrap">
 			<?php
 				// load welcome message and content tabs
 				$this->welcome_message();

@@ -67,7 +67,7 @@ class EDD_Session {
 			if( is_multisite() ) {
 
 				$this->prefix = '_' . get_current_blog_id();
-	
+
 			}
 
 			// Use PHP SESSION (must be enabled via the EDD_USE_PHP_SESSIONS constant)
@@ -118,13 +118,16 @@ class EDD_Session {
 			$this->session = WP_Session::get_instance();
 		}
 
-		$cart     = $this->get( 'edd_cart' );
-		$purchase = $this->get( 'edd_purchase' );
+		$use_cookie = $this->use_cart_cookie();
+		$cart       = $this->get( 'edd_cart' );
+		$purchase   = $this->get( 'edd_purchase' );
 
-		if( ! empty( $cart ) || ! empty( $purchase ) ) {
-			$this->set_cart_cookie();
-		} else {
-			$this->set_cart_cookie( false );
+		if ( $use_cookie ) {
+			if( ! empty( $cart ) || ! empty( $purchase ) ) {
+				$this->set_cart_cookie();
+			} else {
+				$this->set_cart_cookie( false );
+			}
 		}
 
 		return $this->session;
@@ -199,8 +202,8 @@ class EDD_Session {
 				@setcookie( 'edd_items_in_cart', '1', time() + 30 * 60, COOKIEPATH, COOKIE_DOMAIN, false );
 			} else {
 				if ( isset($_COOKIE['edd_items_in_cart']) ) {
-					@setcookie( 'edd_items_in_cart', '', time() - 3600, COOKIEPATH, COOKIE_DOMAIN, false );	
-				}				
+					@setcookie( 'edd_items_in_cart', '', time() - 3600, COOKIEPATH, COOKIE_DOMAIN, false );
+				}
 			}
 		}
 	}
@@ -278,6 +281,22 @@ class EDD_Session {
 		}
 
 		return (bool) apply_filters( 'edd_use_php_sessions', $ret );
+	}
+
+	/**
+	 * Determines if a user has set the EDD_USE_CART_COOKIE
+	 *
+	 * @since  2.5
+	 * @return bool If the store should use the edd_items_in_cart cookie to help avoid caching
+	 */
+	public function use_cart_cookie() {
+		$ret = true;
+
+		if ( defined( 'EDD_USE_CART_COOKIE' ) && ! EDD_USE_CART_COOKIE ) {
+			$ret = false;
+		}
+
+		return (bool) apply_filters( 'edd_use_cart_cookie', $ret );
 	}
 
 	/**
