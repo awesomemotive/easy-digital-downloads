@@ -279,8 +279,10 @@ window.EDD_Checkout = (function($) {
 			},
 			success: function (discount_response) {
 
+				var zero = '0' + edd_global_vars.decimal_separator + '00';
+
 				$('.edd_cart_amount').each(function() {
-					if( edd_global_vars.currency_sign + '0.00' == $(this).text() || '0.00' + edd_global_vars.currency_sign == $(this).text() ) {
+					if( edd_global_vars.currency_sign + zero == $(this).text() || zero + edd_global_vars.currency_sign == $(this).text() ) {
 						// We're removing a 100% discount code so we need to force the payment gateway to reload
 						window.location.reload();
 					}
