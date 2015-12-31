@@ -285,7 +285,7 @@ class EDD_SL_Plugin_Updater {
 
 		$api_params = array(
 			'edd_action' => 'get_version',
-			'license'    => $data['license'],
+			'license'    => isset( $data['license'] ) ? $data['license'] : '',
 			'item_name'  => isset( $data['item_name'] ) ? $data['item_name'] : false,
 			'item_id'    => isset( $data['item_id'] ) ? $data['item_id'] : false,
 			'slug'       => $data['slug'],
