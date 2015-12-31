@@ -97,6 +97,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 	$show_price       = $args['price'] && $args['price'] !== 'no';
 	$data_price_value = 0;
+	$price            = false;
 
 	if ( $variable_pricing && false !== $args['price_id'] ) {
 
@@ -121,11 +122,13 @@ function edd_get_purchase_link( $args = array() ) {
 
 	}
 
+	$args['display_price'] = $data_price_value;
+
 	$data_price  = 'data-price="' . $data_price_value . '"';
 
 	$button_text = ! empty( $args['text'] ) ? '&nbsp;&ndash;&nbsp;' . $args['text'] : '';
 
-	if ( isset( $price ) && false !== $price ) {
+	if ( false !== $price ) {
 
 		if ( 0 == $price ) {
 			$args['text'] = __( 'Free', 'easy-digital-downloads' ) . $button_text;

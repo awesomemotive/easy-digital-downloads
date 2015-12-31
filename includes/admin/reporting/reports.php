@@ -25,14 +25,14 @@ function edd_reports_page() {
 	$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'reports';
 	?>
 	<div class="wrap">
-		<h2 class="nav-tab-wrapper">
+		<h1 class="nav-tab-wrapper">
 			<a href="<?php echo add_query_arg( array( 'tab' => 'reports', 'settings-updated' => false ), $current_page ); ?>" class="nav-tab <?php echo $active_tab == 'reports' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Reports', 'easy-digital-downloads' ); ?></a>
 			<?php if ( current_user_can( 'export_shop_reports' ) ) { ?>
 				<a href="<?php echo add_query_arg( array( 'tab' => 'export', 'settings-updated' => false ), $current_page ); ?>" class="nav-tab <?php echo $active_tab == 'export' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Export', 'easy-digital-downloads' ); ?></a>
 			<?php } ?>
 			<a href="<?php echo add_query_arg( array( 'tab' => 'logs', 'settings-updated' => false ), $current_page ); ?>" class="nav-tab <?php echo $active_tab == 'logs' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Logs', 'easy-digital-downloads' ); ?></a>
 			<?php do_action( 'edd_reports_tabs' ); ?>
-		</h2>
+		</h1>
 
 		<?php
 		do_action( 'edd_reports_page_top' );
@@ -251,38 +251,39 @@ function edd_reports_categories() {
 
 	include( dirname( __FILE__ ) . '/class-categories-reports-table.php' );
 	?>
-	<div class="inside">
-		<?php
-		$categories_table = new EDD_Categories_Reports_Table();
-		$categories_table->prepare_items();
-		$categories_table->display();
-		?>
+			<div class="inside">
+				<?php
 
-		<?php echo $categories_table->load_scripts(); ?>
+				$categories_table = new EDD_Categories_Reports_Table();
+				$categories_table->prepare_items();
+				$categories_table->display();
+				?>
 
-		<div class="edd-mix-totals">
-			<div class="edd-mix-chart">
-				<strong><?php _e( 'Category Sales Mix: ', 'easy-digital-downloads' ); ?></strong>
-				<?php $categories_table->output_sales_graph(); ?>
+				<?php echo $categories_table->load_scripts(); ?>
+
+				<div class="edd-mix-totals">
+					<div class="edd-mix-chart">
+						<strong><?php _e( 'Category Sales Mix: ', 'easy-digital-downloads' ); ?></strong>
+						<?php $categories_table->output_sales_graph(); ?>
+					</div>
+					<div class="edd-mix-chart">
+						<strong><?php _e( 'Category Earnings Mix: ', 'easy-digital-downloads' ); ?></strong>
+						<?php $categories_table->output_earnings_graph(); ?>
+					</div>
+				</div>
+
+				<?php do_action( 'edd_reports_graph_additional_stats' ); ?>
+
+				<p class="edd-graph-notes">
+					<span>
+						<em><sup>&dagger;</sup> <?php _e( 'All Parent categories include sales and earnings stats from child categories.', 'easy-digital-downloads' ); ?></em>
+					</span>
+					<span>
+						<em><?php _e( 'Stats include all sales and earnings for the lifetime of the store.', 'easy-digital-downloads' ); ?></em>
+					</span>
+				</p>
+
 			</div>
-			<div class="edd-mix-chart">
-				<strong><?php _e( 'Category Earnings Mix: ', 'easy-digital-downloads' ); ?></strong>
-				<?php $categories_table->output_earnings_graph(); ?>
-			</div>
-		</div>
-
-		<?php do_action( 'edd_reports_graph_additional_stats' ); ?>
-
-		<p class="edd-graph-notes">
-			<span>
-				<em><sup>&dagger;</sup> <?php _e( 'All Parent categories include sales and earnings stats from child categories.', 'easy-digital-downloads' ); ?></em>
-			</span>
-			<span>
-				<em><?php _e( 'Stats include all sales and earnings for the lifetime of the store.', 'easy-digital-downloads' ); ?></em>
-			</span>
-		</p>
-
-	</div>
 	<?php
 }
 add_action( 'edd_reports_view_categories', 'edd_reports_categories' );
@@ -409,19 +410,23 @@ function edd_reports_tab_export() {
 							<p><?php _e( 'Download a CSV of customers.', 'easy-digital-downloads' ); ?></p>
 							<p>
 								<form id="edd-export-customers" class="edd-export-form" method="post">
-									<select name="download" id="edd_customer_export_download">
-										<option value="0"><?php printf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></option>
-										<?php
-										$downloads = get_posts( array( 'post_type' => 'download', 'posts_per_page' => -1 ) );
-										if( $downloads ) {
-											foreach( $downloads as $download ) {
-												echo '<option value="' . $download->ID . '">' . get_the_title( $download->ID ) . '</option>';
-											}
-										}
-										?>
-									</select>
+									<?php echo EDD()->html->product_dropdown( array( 'name' => 'download', 'id' => 'edd_customer_export_download', 'chosen' => true ) ); ?>
 									<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 									<input type="hidden" name="edd-export-class" value="EDD_Batch_Customers_Export"/>
+									<input type="submit" value="<?php _e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								</form>
+							</p>
+						</div><!-- .inside -->
+					</div><!-- .postbox -->
+
+					<div class="postbox edd-export-downloads">
+						<h3><span><?php _e('Export Download Products in CSV','easy-digital-downloads' ); ?></span></h3>
+						<div class="inside">
+							<p><?php _e( 'Download a CSV of download products.', 'easy-digital-downloads' ); ?></p>
+							<p>
+								<form id="edd-export-file-downloads" class="edd-export-form" method="post">
+									<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+									<input type="hidden" name="edd-export-class" value="EDD_Batch_Downloads_Export"/>
 									<input type="submit" value="<?php _e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 								</form>
 							</p>
