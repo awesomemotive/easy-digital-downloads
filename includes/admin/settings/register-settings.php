@@ -19,6 +19,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * Looks to see if the specified setting exists, returns default if not
  *
  * @since 1.8.4
+ * @global $edd_options Array of all the EDD Options
  * @return mixed
  */
 function edd_get_option( $key = '', $default = false ) {
@@ -38,6 +39,7 @@ function edd_get_option( $key = '', $default = false ) {
  * @since 2.3
  * @param string $key The Key to update
  * @param string|bool|int $value The value to set the key to
+ * @global $edd_options Array of all the EDD Options
  * @return boolean True if updated, false if not.
  */
 function edd_update_option( $key = '', $value = false ) {
@@ -79,6 +81,7 @@ function edd_update_option( $key = '', $value = false ) {
  *
  * @since 2.3
  * @param string $key The Key to delete
+ * @global $edd_options Array of all the EDD Options
  * @return boolean True if updated, false if not.
  */
 function edd_delete_option( $key = '' ) {
@@ -795,6 +798,7 @@ function edd_get_registered_settings() {
  * @since 1.0.8.2
  *
  * @param array $input The value inputted in the field
+ * @global $edd_options Array of all the EDD Options
  *
  * @return string $input Sanitizied value
  */
@@ -861,8 +865,6 @@ function edd_settings_sanitize( $input = array() ) {
  * @return string $input Sanitizied value
  */
 function edd_settings_sanitize_misc( $input ) {
-
-	global $edd_options;
 
 	if( ! current_user_can( 'manage_shop_settings' ) ) {
 		return $input;
@@ -996,11 +998,11 @@ function edd_header_callback( $args ) {
  *
  * @since 1.0
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 function edd_checkbox_callback( $args ) {
-	global $edd_options;
+	$edd_options = edd_get_option( $args['id'] );
 
 	if ( isset( $args['faux'] ) && true === $args['faux'] ) {
 		$name = '';
@@ -1008,7 +1010,7 @@ function edd_checkbox_callback( $args ) {
 		$name = 'name="edd_settings[' . $args['id'] . ']"';
 	}
 
-	$checked = isset( $edd_options[ $args['id'] ] ) ? checked( 1, $edd_options[ $args['id'] ], false ) : '';
+	$checked = $edd_options ? checked( 1, $edd_options, false ) : '';
 	$html = '<input type="checkbox" id="edd_settings[' . $args['id'] . ']"' . $name . ' value="1" ' . $checked . '/>';
 	$html .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
 
@@ -1022,15 +1024,15 @@ function edd_checkbox_callback( $args ) {
  *
  * @since 1.0
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 function edd_multicheck_callback( $args ) {
-	global $edd_options;
+	$edd_options = edd_get_option( $args['id'] );
 
 	if ( ! empty( $args['options'] ) ) {
 		foreach( $args['options'] as $key => $option ):
-			if( isset( $edd_options[$args['id']][$key] ) ) { $enabled = $option; } else { $enabled = NULL; }
+			if( isset( $edd_options[$key] ) ) { $enabled = $option; } else { $enabled = NULL; }
 			echo '<input name="edd_settings[' . $args['id'] . '][' . $key . ']" id="edd_settings[' . $args['id'] . '][' . $key . ']" type="checkbox" value="' . $option . '" ' . checked($option, $enabled, false) . '/>&nbsp;';
 			echo '<label for="edd_settings[' . $args['id'] . '][' . $key . ']">' . $option . '</label><br/>';
 		endforeach;
@@ -1043,16 +1045,16 @@ function edd_multicheck_callback( $args ) {
  *
  * @since 2.1
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 function edd_payment_icons_callback( $args ) {
-	global $edd_options;
+	$edd_options = edd_get_option( $args['id'] );
 
 	if ( ! empty( $args['options'] ) ) {
 		foreach( $args['options'] as $key => $option ) {
 
-			if( isset( $edd_options[$args['id']][$key] ) ) {
+			if( isset( $edd_options[$key] ) ) {
 				$enabled = $option;
 			} else {
 				$enabled = NULL;
@@ -1109,18 +1111,18 @@ function edd_payment_icons_callback( $args ) {
  *
  * @since 1.3.3
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 function edd_radio_callback( $args ) {
-	global $edd_options;
+	$edd_options = edd_get_option( $args['id'] );
 
 	foreach ( $args['options'] as $key => $option ) :
 		$checked = false;
 
-		if ( isset( $edd_options[ $args['id'] ] ) && $edd_options[ $args['id'] ] == $key )
+		if ( $edd_options && $edd_options == $key )
 			$checked = true;
-		elseif( isset( $args['std'] ) && $args['std'] == $key && ! isset( $edd_options[ $args['id'] ] ) )
+		elseif( isset( $args['std'] ) && $args['std'] == $key && ! $edd_options )
 			$checked = true;
 
 		echo '<input name="edd_settings[' . $args['id'] . ']"" id="edd_settings[' . $args['id'] . '][' . $key . ']" type="radio" value="' . $key . '" ' . checked(true, $checked, false) . '/>&nbsp;';
@@ -1137,14 +1139,14 @@ function edd_radio_callback( $args ) {
  *
  * @since 1.0
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 function edd_gateways_callback( $args ) {
-	global $edd_options;
+	$edd_options = edd_get_option( $args['id'] );
 
 	foreach ( $args['options'] as $key => $option ) :
-		if ( isset( $edd_options['gateways'][ $key ] ) )
+		if ( isset( $edd_options[ $key ] ) )
 			$enabled = '1';
 		else
 			$enabled = null;
@@ -1161,16 +1163,16 @@ function edd_gateways_callback( $args ) {
  *
  * @since 1.5
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 function edd_gateway_select_callback($args) {
-	global $edd_options;
+	$edd_options = edd_get_option( $args['id'] );
 
 	echo '<select name="edd_settings[' . $args['id'] . ']"" id="edd_settings[' . $args['id'] . ']">';
 
 	foreach ( $args['options'] as $key => $option ) :
-		$selected = isset( $edd_options[ $args['id'] ] ) ? selected( $key, $edd_options[$args['id']], false ) : '';
+		$selected = $edd_options ? selected( $key, $edd_options, false ) : '';
 		echo '<option value="' . esc_attr( $key ) . '"' . $selected . '>' . esc_html( $option['admin_label'] ) . '</option>';
 	endforeach;
 
@@ -1185,14 +1187,14 @@ function edd_gateway_select_callback($args) {
  *
  * @since 1.0
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 function edd_text_callback( $args ) {
-	global $edd_options;
+	$edd_options = edd_get_option( $args['id'] );
 
-	if ( isset( $edd_options[ $args['id'] ] ) ) {
-		$value = $edd_options[ $args['id'] ];
+	if ( $edd_options ) {
+		$value = $edd_options;
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
@@ -1220,14 +1222,14 @@ function edd_text_callback( $args ) {
  *
  * @since 1.9
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 function edd_number_callback( $args ) {
-	global $edd_options;
+	$edd_options = edd_get_option( $args['id'] );
 
-	if ( isset( $edd_options[ $args['id'] ] ) ) {
-		$value = $edd_options[ $args['id'] ];
+	if ( $edd_options ) {
+		$value = $edd_options;
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
@@ -1258,14 +1260,14 @@ function edd_number_callback( $args ) {
  *
  * @since 1.0
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 function edd_textarea_callback( $args ) {
-	global $edd_options;
+	$edd_options = edd_get_option( $args['id'] );
 
-	if ( isset( $edd_options[ $args['id'] ] ) ) {
-		$value = $edd_options[ $args['id'] ];
+	if ( $edd_options ) {
+		$value = $edd_options;
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
@@ -1283,14 +1285,14 @@ function edd_textarea_callback( $args ) {
  *
  * @since 1.3
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 function edd_password_callback( $args ) {
-	global $edd_options;
+	$edd_options = edd_get_option( $args['id'] );
 
-	if ( isset( $edd_options[ $args['id'] ] ) ) {
-		$value = $edd_options[ $args['id'] ];
+	if ( $edd_options ) {
+		$value = $edd_options;
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
@@ -1325,14 +1327,14 @@ function edd_missing_callback($args) {
  *
  * @since 1.0
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 function edd_select_callback($args) {
-	global $edd_options;
+	$edd_options = edd_get_option( $args['id'] );
 
-	if ( isset( $edd_options[ $args['id'] ] ) ) {
-		$value = $edd_options[ $args['id'] ];
+	if ( $edd_options ) {
+		$value = $edd_options;
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
@@ -1369,14 +1371,14 @@ function edd_select_callback($args) {
  *
  * @since 1.8
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 function edd_color_select_callback( $args ) {
-	global $edd_options;
+	$edd_options = edd_get_option( $args['id'] );
 
-	if ( isset( $edd_options[ $args['id'] ] ) ) {
-		$value = $edd_options[ $args['id'] ];
+	if ( $edd_options ) {
+		$value = $edd_options;
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
@@ -1401,14 +1403,16 @@ function edd_color_select_callback( $args ) {
  *
  * @since 1.0
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @global $wp_version WordPress Version
  */
 function edd_rich_editor_callback( $args ) {
-	global $edd_options, $wp_version;
+	global $wp_version;
 
-	if ( isset( $edd_options[ $args['id'] ] ) ) {
-		$value = $edd_options[ $args['id'] ];
+	$edd_options = edd_get_option( $args['id'] );
+
+	if ( $edd_options ) {
+		$value = $edd_options;
 
 		if( empty( $args['allow_blank'] ) && empty( $value ) ) {
 			$value = isset( $args['std'] ) ? $args['std'] : '';
@@ -1439,14 +1443,14 @@ function edd_rich_editor_callback( $args ) {
  *
  * @since 1.0
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 function edd_upload_callback( $args ) {
-	global $edd_options;
+	$edd_options = edd_get_option( $args['id'] );
 
-	if ( isset( $edd_options[ $args['id'] ] ) ) {
-		$value = $edd_options[$args['id']];
+	if ( $edd_options ) {
+		$value = $edd_options;
 	} else {
 		$value = isset($args['std']) ? $args['std'] : '';
 	}
@@ -1467,14 +1471,14 @@ function edd_upload_callback( $args ) {
  *
  * @since 1.6
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 function edd_color_callback( $args ) {
-	global $edd_options;
+	$edd_options = edd_get_option( $args['id'] );
 
-	if ( isset( $edd_options[ $args['id'] ] ) ) {
-		$value = $edd_options[ $args['id'] ];
+	if ( $edd_options ) {
+		$value = $edd_options;
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
@@ -1495,11 +1499,11 @@ function edd_color_callback( $args ) {
  *
  * @since 1.6
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 function edd_shop_states_callback($args) {
-	global $edd_options;
+	$edd_options = edd_get_option( $args['id'] );
 
 	if ( isset( $args['placeholder'] ) ) {
 		$placeholder = $args['placeholder'];
@@ -1514,7 +1518,7 @@ function edd_shop_states_callback($args) {
 	$html = '<select id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']"' . $class . 'data-placeholder="' . $placeholder . '"/>';
 
 	foreach ( $states as $option => $name ) {
-		$selected = isset( $edd_options[ $args['id'] ] ) ? selected( $option, $edd_options[$args['id']], false ) : '';
+		$selected = $edd_options ? selected( $option, $edd_options, false ) : '';
 		$html .= '<option value="' . $option . '" ' . $selected . '>' . $name . '</option>';
 	}
 
@@ -1531,11 +1535,9 @@ function edd_shop_states_callback($args) {
  *
  * @since 1.6
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
  * @return void
  */
 function edd_tax_rates_callback($args) {
-	global $edd_options;
 	$rates = edd_get_tax_rates();
 	ob_start(); ?>
 	<p><?php echo $args['desc']; ?></p>
@@ -1648,15 +1650,15 @@ function edd_descriptive_text_callback( $args ) {
  *
  * @since 1.5
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 if ( ! function_exists( 'edd_license_key_callback' ) ) {
 	function edd_license_key_callback( $args ) {
-		global $edd_options;
+		$edd_options = edd_get_option( $args['id'] );
 
-		if ( isset( $edd_options[ $args['id'] ] ) ) {
-			$value = $edd_options[ $args['id'] ];
+		if ( $edd_options ) {
+			$value = $edd_options;
 		} else {
 			$value = isset( $args['std'] ) ? $args['std'] : '';
 		}
