@@ -29,7 +29,7 @@ class EDD_SL_Plugin_Updater {
 	 * @param string  $_plugin_file Path to the plugin file.
 	 * @param array   $_api_data    Optional data to send with API calls.
 	 */
-	function __construct( $_api_url, $_plugin_file, $_api_data = null ) {
+	public function __construct( $_api_url, $_plugin_file, $_api_data = null ) {
 
 		global $edd_plugin_data;
 
@@ -76,7 +76,7 @@ class EDD_SL_Plugin_Updater {
 	 * @param array   $_transient_data Update array build by WordPress.
 	 * @return array Modified update array with custom plugin data.
 	 */
-	function check_update( $_transient_data ) {
+	public function check_update( $_transient_data ) {
 
 		global $pagenow;
 
@@ -215,7 +215,7 @@ class EDD_SL_Plugin_Updater {
 	 * @param object  $_args
 	 * @return object $_data
 	 */
-	function plugins_api_filter( $_data, $_action = '', $_args = null ) {
+	public function plugins_api_filter( $_data, $_action = '', $_args = null ) {
 
 
 		if ( $_action != 'plugin_information' ) {
@@ -256,7 +256,7 @@ class EDD_SL_Plugin_Updater {
 	 * @param string  $url
 	 * @return object $array
 	 */
-	function http_request_args( $args, $url ) {
+	public function http_request_args( $args, $url ) {
 		// If it is an https request and we are performing a package download, disable ssl verification
 		if ( strpos( $url, 'https://' ) !== false && strpos( $url, 'edd_action=package_download' ) ) {
 			$args['sslverify'] = false;
