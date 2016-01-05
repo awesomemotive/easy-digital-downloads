@@ -100,7 +100,7 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 					continue;
 				}
 
-				if ( in_array( $payment->post_status, $accepted_statuses ) ) {
+				if ( ! in_array( $payment->post_status, $accepted_statuses ) ) {
 					$processed_payments[] = $payment->ID;
 					continue;
 				}
