@@ -73,13 +73,13 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 		$all_downloads = $this->get_stored_data( 'edd_temp_download_ids' );
 
 		$args = apply_filters( 'edd_recount_download_stats_args', array(
-			'post_parent'    => $all_downloads,
-			'post_type'      => 'edd_log',
-			'posts_per_page' => $this->per_step,
-			'post_status'    => 'publish',
-			'paged'          => $this->step,
-			'log_type'       => 'sale',
-			'fields'         => 'ids',
+			'post_parent__in' => $all_downloads,
+			'post_type'       => 'edd_log',
+			'posts_per_page'  => $this->per_step,
+			'post_status'     => 'publish',
+			'paged'           => $this->step,
+			'log_type'        => 'sale',
+			'fields'          => 'ids',
 		) );
 
 		$log_ids = $edd_logs->get_connected_logs( $args, 'sale' );
@@ -100,7 +100,7 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 					continue;
 				}
 
-				if ( in_array( $payment->post_status, $accepted_statuses ) ) {
+				if ( ! in_array( $payment->post_status, $accepted_statuses ) ) {
 					$processed_payments[] = $payment->ID;
 					continue;
 				}
@@ -271,12 +271,12 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 			}
 
 			$args  = apply_filters( 'edd_recount_download_stats_total_args', array(
-				'post_parent'    => $all_downloads,
-				'post_type'      => 'edd_log',
-				'post_status'    => 'publish',
-				'log_type'       => 'sale',
-				'fields'         => 'ids',
-				'nopaging'       => true,
+				'post_parent__in' => $all_downloads,
+				'post_type'       => 'edd_log',
+				'post_status'     => 'publish',
+				'log_type'        => 'sale',
+				'fields'          => 'ids',
+				'nopaging'        => true,
 			) );
 
 			$all_logs = $edd_logs->get_connected_logs( $args, 'sale' );
@@ -291,7 +291,7 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 				unset( $payment_ids );
 
 				foreach ( $payments as $payment ) {
-					if ( in_array( $payment->post_status, $accepted_statuses ) ) {
+					if ( ! in_array( $payment->post_status, $accepted_statuses ) ) {
 						continue;
 					}
 
