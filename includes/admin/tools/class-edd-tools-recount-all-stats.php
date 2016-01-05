@@ -291,7 +291,7 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 				unset( $payment_ids );
 
 				foreach ( $payments as $payment ) {
-					if ( in_array( $payment->post_status, $accepted_statuses ) ) {
+					if ( ! in_array( $payment->post_status, $accepted_statuses ) ) {
 						continue;
 					}
 
