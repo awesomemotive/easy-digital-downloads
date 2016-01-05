@@ -511,7 +511,7 @@ function edd_render_products_field( $post_id ) {
 				<?php if ( $products ) : ?>
 					<?php $index = 1; ?>
 					<?php foreach ( $products as $key => $product ) : ?>
-						<tr class="edd_repeatable_product_wrapper edd_repeatable_row">
+						<tr class="edd_repeatable_product_wrapper edd_repeatable_row" data-key="<?php echo esc_attr( $key ); ?>">
 							<td>
 								<span class="edd_draghandle"></span>
 								<input type="hidden" name="edd_bundled_products[<?php echo $key; ?>][index]" class="edd_repeatable_index" value="<?php echo $index; ?>"/>
@@ -520,11 +520,11 @@ function edd_render_products_field( $post_id ) {
 								<?php
 								echo EDD()->html->product_dropdown( array(
 									'name'     => '_edd_bundled_products[]',
-									'id'       => 'edd_bundled_products',
+									'id'       => 'edd_bundled_products_' . $key,
 									'selected' => $product,
 									'multiple' => false,
 									'chosen'   => true,
-									'bundles'  => false
+									'bundles'  => false,
 								) );
 								?>
 							</td>
@@ -536,7 +536,7 @@ function edd_render_products_field( $post_id ) {
 						<?php $index++; ?>
 					<?php endforeach; ?>
 				<?php else: ?>
-					<tr class="edd_repeatable_product_wrapper edd_repeatable_row">
+					<tr class="edd_repeatable_product_wrapper edd_repeatable_row" data-key="1">
 						<td>
 							<span class="edd_draghandle"></span>
 							<input type="hidden" name="edd_bundled_products[1][index]" class="edd_repeatable_index" value="1"/>
@@ -545,7 +545,7 @@ function edd_render_products_field( $post_id ) {
 							<?php
 							echo EDD()->html->product_dropdown( array(
 								'name'     => '_edd_bundled_products[]',
-								'id'       => 'edd_bundled_products',
+								'id'       => 'edd_bundled_products_1',
 								'multiple' => false,
 								'chosen'   => true,
 								'bundles'  => false
