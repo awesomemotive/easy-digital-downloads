@@ -38,11 +38,19 @@ jQuery(document).ready(function ($) {
 			clone.find( 'td input, td select, textarea' ).val( '' );
 			clone.find( 'input, select, textarea' ).each(function() {
 				var name = $( this ).attr( 'name' );
+				var id   = $( this ).attr( 'id' );
 
 				if( name ) {
 
 					name = name.replace( /\[(\d+)\]/, '[' + parseInt( key ) + ']');
-					$( this ).attr( 'name', name ).attr( 'id', name );
+					$( this ).attr( 'name', name );
+
+				}
+
+				if( typeof id != 'undefined' ) {
+
+					id = id.replace( /(\d+)/, parseInt( key ) );
+					$( this ).attr( 'id', id );
 
 				}
 
@@ -1127,7 +1135,6 @@ jQuery(document).ready(function ($) {
 		var menu_id = container.attr('id').replace( '_chosen', '' );
 		var lastKey = e.which;
 		var search_type = 'edd_download_search';
-
 		if( container.attr( 'id' ).indexOf( "customer" ) >= 0 ) {
 			search_type = 'edd_customer_search';
 		}
@@ -1173,7 +1180,7 @@ jQuery(document).ready(function ($) {
 								$('#' + menu_id).prepend( '<option value="' + item.id + '">' + item.name + '</option>' );
 							}
 						});
-						 // Update the options
+						// Update the options
 						$('.edd-select-chosen').trigger('chosen:updated');
 						$('#' + menu_id).next().find('input').val(val);
 					}
