@@ -57,12 +57,12 @@ function edd_reports_graph() {
 		// Hour by hour
 		$hour  = 1;
 		$month = $dates['m_start'];
-		while ( $hour <= 23 ) :
+		while ( $hour <= 23 ) {
 
 			$sales    = edd_get_sales_by_date( $dates['day'], $month, $dates['year'], $hour );
 			$earnings = edd_get_earnings_by_date( $dates['day'], $month, $dates['year'], $hour, $include_taxes );
 
-			$sales_totals += $sales;
+			$sales_totals    += $sales;
 			$earnings_totals += $earnings;
 
 			$date            = mktime( $hour, 0, 0, $month, $dates['day'], $dates['year'] ) * 1000;
@@ -70,33 +70,51 @@ function edd_reports_graph() {
 			$earnings_data[] = array( $date, $earnings );
 
 			$hour++;
-		endwhile;
+		}
 
-	} elseif( $dates['range'] == 'this_week' || $dates['range'] == 'last_week' ) {
+	} elseif ( $dates['range'] == 'this_week' || $dates['range'] == 'last_week' ) {
 
-		// Day by day
-		$day     = $dates['day'];
-		$day_end = $dates['day_end'];
-		$month   = $dates['m_start'];
-		while ( $day <= $day_end ) :
-			$sales = edd_get_sales_by_date( $day, $month, $dates['year'] );
+		$num_of_days = cal_days_in_month( CAL_GREGORIAN, $dates['m_start'], $dates['year'] );
+
+		$report_dates = array();
+		$i = 0;
+		while ( $i <= 6 ) {
+
+			if ( ( $dates['day'] + $i ) <= $num_of_days ) {
+				$report_dates[ $i ] = array(
+					'day'   => (string) $dates['day'] + $i,
+					'month' => $dates['m_start'],
+					'year'  => $dates['year'],
+				);
+			} else {
+				$report_dates[ $i ] = array(
+					'day'   => (string) $i,
+					'month' => $dates['m_end'],
+					'year'  => $dates['year_end'],
+				);
+			}
+
+			$i++;
+		}
+
+		foreach ( $report_dates as $report_date ) {
+			$sales = edd_get_sales_by_date( $report_date['day'], $report_date['month'], $report_date['year'] );
 			$sales_totals += $sales;
 
-			$earnings = edd_get_earnings_by_date( $day, $month, $dates['year'], null, $include_taxes );
+			$earnings        = edd_get_earnings_by_date( $report_date['day'], $report_date['month'], $report_date['year'] , null, $include_taxes );
 			$earnings_totals += $earnings;
 
-			$date = mktime( 0, 0, 0, $month, $day, $dates['year'] ) * 1000;
-			$sales_data[] = array( $date, $sales );
+			$date            = mktime( 0, 0, 0,  $report_date['month'], $report_date['day'], $report_date['year']  ) * 1000;
+			$sales_data[]    = array( $date, $sales );
 			$earnings_data[] = array( $date, $earnings );
-			$day++;
-		endwhile;
+		}
 
 	} else {
 
 		$y = $dates['year'];
 
-		while( $y <= $dates['year_end'] ) :
-			
+		while( $y <= $dates['year_end'] ) {
+
 			$last_year = false;
 
 			if( $dates['year'] == $dates['year_end'] ) {
@@ -115,13 +133,21 @@ function edd_reports_graph() {
 			}
 
 			$i = $month_start;
-			while ( $i <= $month_end ) :
+			while ( $i <= $month_end ) {
 
-				if ( $day_by_day ) :
+				if ( $day_by_day ) {
+
+					$d = $dates['day'];
 
 					if( $i == $month_end ) {
 
 						$num_of_days = $dates['day_end'];
+
+						if ( $month_start < $month_end ) {
+
+							$d = 1;
+
+						}
 
 					} else {
 
@@ -129,9 +155,10 @@ function edd_reports_graph() {
 
 					}
 
-					$d = $dates['day'];
 
-					while ( $d <= $num_of_days ) :
+
+
+					while ( $d <= $num_of_days ) {
 
 						$sales = edd_get_sales_by_date( $d, $i, $y );
 						$sales_totals += $sales;
@@ -144,9 +171,9 @@ function edd_reports_graph() {
 						$earnings_data[] = array( $date, $earnings );
 						$d++;
 
-					endwhile;
+					}
 
-				else :
+				} else {
 
 					$sales = edd_get_sales_by_date( null, $i, $y );
 					$sales_totals += $sales;
@@ -168,14 +195,14 @@ function edd_reports_graph() {
 					$sales_data[] = array( $date, $sales );
 					$earnings_data[] = array( $date, $earnings );
 
-				endif;
+				}
 
 				$i++;
 
-			endwhile;
+			}
 
 			$y++;
-		endwhile;
+		}
 
 	}
 
@@ -331,14 +358,33 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 
 	} elseif( $dates['range'] == 'this_week' || $dates['range'] == 'last_week'  ) {
 
-		//Day by day
-		$day     = $dates['day'];
-		$day_end = $dates['day_end'];
-		$month   = $dates['m_start'];
-		while ( $day <= $day_end ) :
+		$num_of_days = cal_days_in_month( CAL_GREGORIAN, $dates['m_start'], $dates['year'] );
 
-			$date  = mktime( 0, 0, 0, $month, $day, $dates['year'] );
-			$date_end = mktime( 0, 0, 0, $month, $day + 1, $dates['year'] );
+		$report_dates = array();
+		$i = 0;
+		while ( $i <= 6 ) {
+
+			if ( ( $dates['day'] + $i ) <= $num_of_days ) {
+				$report_dates[ $i ] = array(
+					'day'   => (string) $dates['day'] + $i,
+					'month' => $dates['m_start'],
+					'year'  => $dates['year'],
+				);
+			} else {
+				$report_dates[ $i ] = array(
+					'day'   => (string) $i,
+					'month' => $dates['m_end'],
+					'year'  => $dates['year_end'],
+				);
+			}
+
+			$i++;
+		}
+
+		foreach ( $report_dates as $report_date ) {
+
+			$date  = mktime( 0, 0, 0, $report_date['month'], $report_date['day'], $report_date['year'] );
+			$date_end = mktime( 23, 59, 59, $report_date['month'], $report_date['day'], $report_date['year'] );
 			$sales = $stats->get_sales( $download_id, $date, $date_end );
 			$sales_totals += $sales;
 
@@ -348,8 +394,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 			$sales_data[] = array( $date * 1000, $sales );
 			$earnings_data[] = array( $date * 1000, $earnings );
 
-			$day++;
-		endwhile;
+		}
 
 	} else {
 
@@ -467,17 +512,17 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 */
 function edd_reports_graph_controls() {
 	$date_options = apply_filters( 'edd_report_date_options', array(
-		'today' 	    => __( 'Today', 'easy-digital-downloads' ),
-		'yesterday'     => __( 'Yesterday', 'easy-digital-downloads' ),
-		'this_week' 	=> __( 'This Week', 'easy-digital-downloads' ),
-		'last_week' 	=> __( 'Last Week', 'easy-digital-downloads' ),
-		'this_month' 	=> __( 'This Month', 'easy-digital-downloads' ),
-		'last_month' 	=> __( 'Last Month', 'easy-digital-downloads' ),
-		'this_quarter'	=> __( 'This Quarter', 'easy-digital-downloads' ),
-		'last_quarter'	=> __( 'Last Quarter', 'easy-digital-downloads' ),
-		'this_year'		=> __( 'This Year', 'easy-digital-downloads' ),
-		'last_year'		=> __( 'Last Year', 'easy-digital-downloads' ),
-		'other'			=> __( 'Custom', 'easy-digital-downloads' )
+		'today'        => __( 'Today', 'easy-digital-downloads' ),
+		'yesterday'    => __( 'Yesterday', 'easy-digital-downloads' ),
+		'this_week'    => __( 'This Week', 'easy-digital-downloads' ),
+		'last_week'    => __( 'Last Week', 'easy-digital-downloads' ),
+		'this_month'   => __( 'This Month', 'easy-digital-downloads' ),
+		'last_month'   => __( 'Last Month', 'easy-digital-downloads' ),
+		'this_quarter' => __( 'This Quarter', 'easy-digital-downloads' ),
+		'last_quarter' => __( 'Last Quarter', 'easy-digital-downloads' ),
+		'this_year'    => __( 'This Year', 'easy-digital-downloads' ),
+		'last_year'    => __( 'Last Year', 'easy-digital-downloads' ),
+		'other'        => __( 'Custom', 'easy-digital-downloads' )
 	) );
 
 	$dates   = edd_get_report_dates();
@@ -594,34 +639,34 @@ function edd_get_report_dates() {
 
 		case 'last_month' :
 			if( date( 'n' ) == 1 ) {
-				$dates['m_start'] = 12;
-				$dates['m_end']	  = 12;
-				$dates['year']    = date( 'Y', $current_time ) - 1;
-				$dates['year_end']= date( 'Y', $current_time ) - 1;
+				$dates['m_start']  = 12;
+				$dates['m_end']    = 12;
+				$dates['year']     = date( 'Y', $current_time ) - 1;
+				$dates['year_end'] = date( 'Y', $current_time ) - 1;
 			} else {
-				$dates['m_start'] = date( 'n' ) - 1;
-				$dates['m_end']	  = date( 'n' ) - 1;
-				$dates['year_end']= $dates['year'];
+				$dates['m_start']  = date( 'n' ) - 1;
+				$dates['m_end']    = date( 'n' ) - 1;
+				$dates['year_end'] = $dates['year'];
 			}
 			$dates['day_end'] = cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] );
 		break;
 
 		case 'today' :
-			$dates['day']		= date( 'd', $current_time );
-			$dates['m_start'] 	= date( 'n', $current_time );
-			$dates['m_end']		= date( 'n', $current_time );
-			$dates['year']		= date( 'Y', $current_time );
+			$dates['day']     = date( 'd', $current_time );
+			$dates['m_start'] = date( 'n', $current_time );
+			$dates['m_end']   = date( 'n', $current_time );
+			$dates['year']    = date( 'Y', $current_time );
 		break;
 
 		case 'yesterday' :
 
-			$year               = date( 'Y', $current_time );
-			$month              = date( 'n', $current_time );
-			$day                = date( 'd', $current_time );
+			$year  = date( 'Y', $current_time );
+			$month = date( 'n', $current_time );
+			$day   = date( 'd', $current_time );
 
 			if ( $month == 1 && $day == 1 ) {
 
-				$year -= 1;
+				$year  -= 1;
 				$month = 12;
 				$day   = cal_days_in_month( CAL_GREGORIAN, $month, $year );
 
@@ -640,35 +685,21 @@ function edd_get_report_dates() {
 			$dates['m_start']   = $month;
 			$dates['m_end']     = $month;
 			$dates['year']      = $year;
-			$dates['year_end']      = $year;
+			$dates['year_end']  = $year;
 		break;
 
 		case 'this_week' :
-			$dates['day']       = date( 'd', $current_time - ( date( 'w', $current_time ) - 1 ) *60*60*24 ) - 1;
-			$dates['day']      += get_option( 'start_of_week' );
-			$dates['day_end']   = $dates['day'] + 6;
-			$dates['m_start'] 	= date( 'n', $current_time );
-			$dates['m_end']		= date( 'n', $current_time );
-			$dates['year']		= date( 'Y', $current_time );
-		break;
-
 		case 'last_week' :
-			$dates['day']       = date( 'd', $current_time - ( date( 'w' ) - 1 ) *60*60*24 ) - 8;
-			$dates['day']      += get_option( 'start_of_week' );
-			$dates['day_end']   = $dates['day'] + 6;
-			$dates['year']		= date( 'Y' );
+			$base_time = $dates['range'] === 'this_week' ? current_time( 'mysql' ) : date( 'Y-n-d h:i:s', current_time( 'timestamp' ) - WEEK_IN_SECONDS );
+			$start_end = get_weekstartend( $base_time, get_option( 'start_of_week' ) );
 
-			if( date( 'j', $current_time ) <= 7 ) {
-				$dates['m_start'] 	= date( 'n', $current_time ) - 1;
-				$dates['m_end']		= date( 'n', $current_time ) - 1;
-				if( $dates['m_start'] <= 1 ) {
-					$dates['year'] = date( 'Y', $current_time ) - 1;
-					$dates['year_end'] = date( 'Y', $current_time ) - 1;
-				}
-			} else {
-				$dates['m_start'] 	= date( 'n', $current_time );
-				$dates['m_end']		= date( 'n', $current_time );
-			}
+			$dates['day']      = date( 'd', $start_end['start'] );
+			$dates['m_start']  = date( 'n', $start_end['start'] );
+			$dates['year']     = date( 'Y', $start_end['start'] );
+
+			$dates['day_end']  = date( 'd', $start_end['end'] );
+			$dates['m_end']    = date( 'n', $start_end['end'] );
+			$dates['year_end'] = date( 'Y', $start_end['end'] );
 		break;
 
 		case 'this_quarter' :
@@ -676,28 +707,28 @@ function edd_get_report_dates() {
 
 			if ( $month_now <= 3 ) {
 
-				$dates['m_start'] 	= 1;
-				$dates['m_end']		= 4;
-				$dates['year']		= date( 'Y', $current_time );
+				$dates['m_start'] = 1;
+				$dates['m_end']   = 4;
+				$dates['year']    = date( 'Y', $current_time );
 
 			} else if ( $month_now <= 6 ) {
 
-				$dates['m_start'] 	= 4;
-				$dates['m_end']		= 7;
-				$dates['year']		= date( 'Y', $current_time );
+				$dates['m_start'] = 4;
+				$dates['m_end']   = 7;
+				$dates['year']    = date( 'Y', $current_time );
 
 			} else if ( $month_now <= 9 ) {
 
-				$dates['m_start'] 	= 7;
-				$dates['m_end']		= 10;
-				$dates['year']		= date( 'Y', $current_time );
+				$dates['m_start'] = 7;
+				$dates['m_end']   = 10;
+				$dates['year']    = date( 'Y', $current_time );
 
 			} else {
 
-				$dates['m_start'] 	= 10;
-				$dates['m_end']		= 1;
-				$dates['year']		= date( 'Y', $current_time );
-				$dates['year_end']  = date( 'Y', $current_time ) + 1;
+				$dates['m_start']  = 10;
+				$dates['m_end']    = 1;
+				$dates['year']     = date( 'Y', $current_time );
+				$dates['year_end'] = date( 'Y', $current_time ) + 1;
 
 			}
 		break;
@@ -707,43 +738,43 @@ function edd_get_report_dates() {
 
 			if ( $month_now <= 3 ) {
 
-				$dates['m_start']   = 10;
-				$dates['m_end']     = 12;
-				$dates['year']      = date( 'Y', $current_time ) - 1; // Previous year
-				$dates['year_end']  = date( 'Y', $current_time ) - 1; // Previous year
+				$dates['m_start']  = 10;
+				$dates['m_end']    = 12;
+				$dates['year']     = date( 'Y', $current_time ) - 1; // Previous year
+				$dates['year_end'] = date( 'Y', $current_time ) - 1; // Previous year
 
 			} else if ( $month_now <= 6 ) {
 
-				$dates['m_start'] 	= 1;
-				$dates['m_end']		= 3;
-				$dates['year']		= date( 'Y', $current_time );
+				$dates['m_start'] = 1;
+				$dates['m_end']   = 3;
+				$dates['year']    = date( 'Y', $current_time );
 
 			} else if ( $month_now <= 9 ) {
 
-				$dates['m_start'] 	= 4;
-				$dates['m_end']		= 6;
-				$dates['year']		= date( 'Y', $current_time );
+				$dates['m_start'] = 4;
+				$dates['m_end']   = 6;
+				$dates['year']    = date( 'Y', $current_time );
 
 			} else {
 
-				$dates['m_start'] 	= 7;
-				$dates['m_end']		= 9;
-				$dates['year']		= date( 'Y', $current_time );
+				$dates['m_start'] = 7;
+				$dates['m_end']   = 9;
+				$dates['year']    = date( 'Y', $current_time );
 
 			}
 		break;
 
 		case 'this_year' :
-			$dates['m_start'] 	= 1;
-			$dates['m_end']		= 12;
-			$dates['year']		= date( 'Y', $current_time );
+			$dates['m_start'] = 1;
+			$dates['m_end']   = 12;
+			$dates['year']    = date( 'Y', $current_time );
 		break;
 
 		case 'last_year' :
-			$dates['m_start'] 	= 1;
-			$dates['m_end']		= 12;
-			$dates['year']		= date( 'Y', $current_time ) - 1;
-			$dates['year_end']  = date( 'Y', $current_time ) - 1;
+			$dates['m_start']  = 1;
+			$dates['m_end']    = 12;
+			$dates['year']     = date( 'Y', $current_time ) - 1;
+			$dates['year_end'] = date( 'Y', $current_time ) - 1;
 		break;
 
 	endswitch;

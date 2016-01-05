@@ -195,15 +195,15 @@ function edd_has_user_purchased( $user_id, $downloads, $variable_price_id = null
 
 	if ( $users_purchases ) {
 		foreach ( $users_purchases as $purchase ) {
-
-			$purchased_files = edd_get_payment_meta_downloads( $purchase->ID );
+			$payment         = new EDD_Payment( $purchase->ID );
+			$purchased_files = $payment->cart_details;
 
 			if ( is_array( $purchased_files ) ) {
 				foreach ( $purchased_files as $download ) {
 					if ( in_array( $download['id'], $downloads ) ) {
 						$variable_prices = edd_has_variable_prices( $download['id'] );
 						if ( $variable_prices && ! is_null( $variable_price_id ) && $variable_price_id !== false ) {
-							if ( isset( $download['options']['price_id'] ) && $variable_price_id == $download['options']['price_id'] ) {
+							if ( isset( $download['item_number']['options']['price_id'] ) && $variable_price_id == $download['item_number']['options']['price_id'] ) {
 								return true;
 							} else {
 								$return = false;
@@ -649,7 +649,14 @@ function edd_send_user_verification_email( $user_id = 0 ) {
 	$from_email = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
 	$subject    = apply_filters( 'edd_user_verification_email_subject', __( 'Verify your account', 'easy-digital-downloads' ), $user_id );
 	$heading    = apply_filters( 'edd_user_verification_email_heading', __( 'Verify your account', 'easy-digital-downloads' ), $user_id );
-	$message    = sprintf( __( "Hello %s,\n\nYour account with %s needs to be verified before you can access your purchase history. <a href='%s'>Click here</a> to verify your account.", 'easy-digital-downloads' ), $name, $from_name, $url );
+	$message    = sprintf(
+		__( "Hello %s,\n\nYour account with %s needs to be verified before you can access your purchase history. <a href='%s'>Click here</a> to verify your account.\n\nLink missing? Visit the following URL: %s", 'easy-digital-downloads' ),
+		$name,
+		$from_name,
+		$url,
+		$url
+	);
+
 	$message    = apply_filters( 'edd_user_verification_email_message', $message, $user_id );
 
 	$emails     = new EDD_Emails;

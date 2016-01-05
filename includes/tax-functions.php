@@ -178,11 +178,11 @@ function edd_get_sales_tax_for_year( $year = null ) {
 
 
 		$args = array(
-			'post_type' 		=> 'edd_payment',
-			'post_status'       => array( 'publish', 'revoked' ),
-			'posts_per_page' 	=> -1,
-			'year' 				=> $year,
-			'fields'			=> 'ids'
+			'post_type'      => 'edd_payment',
+			'post_status'    => array( 'publish', 'revoked' ),
+			'posts_per_page' => -1,
+			'year'           => $year,
+			'fields'         => 'ids'
 		);
 
 		$payments    = get_posts( $args );
@@ -230,7 +230,7 @@ function edd_prices_include_tax() {
  */
 function edd_prices_show_tax_on_checkout() {
 	$ret = ( edd_get_option( 'checkout_include_tax', false ) == 'yes' && edd_use_taxes() );
-	
+
 	return apply_filters( 'edd_taxes_on_prices_on_checkout', $ret );
 }
 
