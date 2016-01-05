@@ -183,18 +183,21 @@ class EDD_SL_Plugin_Updater {
 
 			if ( empty( $version_info->download_link ) ) {
 				printf(
-					__( 'There is a new version of %1$s available. <a target="_blank" class="thickbox" href="%2$s">View version %3$s details</a>.', 'easy-digital-downloads' ),
+					__( 'There is a new version of %1$s available. %2$sView version %3$s details%4$s.', 'easy-digital-downloads' ),
 					esc_html( $version_info->name ),
-					esc_url( $changelog_link ),
-					esc_html( $version_info->new_version )
+					'<a target="_blank" class="thickbox" href="' . esc_url( $changelog_link ) . '">',
+					esc_html( $version_info->new_version ),
+					'</a>'
 				);
 			} else {
 				printf(
-					__( 'There is a new version of %1$s available. <a target="_blank" class="thickbox" href="%2$s">View version %3$s details</a> or <a href="%4$s">update now</a>.', 'easy-digital-downloads' ),
+					__( 'There is a new version of %1$s available. %2$sView version %3$s details%4$s or %5$supdate now%6$s.', 'easy-digital-downloads' ),
 					esc_html( $version_info->name ),
-					esc_url( $changelog_link ),
+					'<a target="_blank" class="thickbox" href="' . esc_url( $changelog_link ) . '">',
 					esc_html( $version_info->new_version ),
-					esc_url( wp_nonce_url( self_admin_url( 'update.php?action=upgrade-plugin&plugin=' ) . $this->name, 'upgrade-plugin_' . $this->name ) )
+					'</a>',
+					'<a href="' . esc_url( wp_nonce_url( self_admin_url( 'update.php?action=upgrade-plugin&plugin=' ) . $this->name, 'upgrade-plugin_' . $this->name ) ) .'">',
+					'</a>'
 				);
 			}
 
