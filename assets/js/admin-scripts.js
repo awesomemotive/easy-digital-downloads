@@ -1133,6 +1133,7 @@ jQuery(document).ready(function ($) {
 
 		var val = $(this).val(), container = $(this).closest( '.edd-select-chosen' );
 		var menu_id = container.attr('id').replace( '_chosen', '' );
+		var no_bundles = container.hasClass( 'no-bundles' );
 		var lastKey = e.which;
 		var search_type = 'edd_download_search';
 		if( container.attr( 'id' ).indexOf( "customer" ) >= 0 ) {
@@ -1165,6 +1166,7 @@ jQuery(document).ready(function ($) {
 						action: search_type,
 						s: val,
 						current_id: edd_vars.post_id,
+						no_bundles: no_bundles
 					},
 					dataType: "json",
 					beforeSend: function(){
