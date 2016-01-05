@@ -26,7 +26,7 @@ $status    = edd_get_payment_status( $payment, true );
 	<thead>
 		<?php do_action( 'edd_payment_receipt_before', $payment, $edd_receipt_args ); ?>
 
-		<?php if ( $edd_receipt_args['payment_id'] ) : ?>
+		<?php if ( filter_var( $edd_receipt_args['payment_id'], FILTER_VALIDATE_BOOLEAN ) ) : ?>
 		<tr>
 			<th><strong><?php _e( 'Payment', 'easy-digital-downloads' ); ?>:</strong></th>
 			<th><?php echo edd_get_payment_number( $payment->ID ); ?></th>
@@ -41,20 +41,20 @@ $status    = edd_get_payment_status( $payment, true );
 			<td class="edd_receipt_payment_status <?php echo strtolower( $status ); ?>"><?php echo $status; ?></td>
 		</tr>
 
-		<?php if ( $edd_receipt_args['payment_key'] ) : ?>
+		<?php if ( filter_var( $edd_receipt_args['payment_key'], FILTER_VALIDATE_BOOLEAN ) ) : ?>
 			<tr>
 				<td><strong><?php _e( 'Payment Key', 'easy-digital-downloads' ); ?>:</strong></td>
 				<td><?php echo get_post_meta( $payment->ID, '_edd_payment_purchase_key', true ); ?></td>
 			</tr>
 		<?php endif; ?>
 
-		<?php if ( $edd_receipt_args['payment_method'] ) : ?>
+		<?php if ( filter_var( $edd_receipt_args['payment_method'], FILTER_VALIDATE_BOOLEAN ) ) : ?>
 			<tr>
 				<td><strong><?php _e( 'Payment Method', 'easy-digital-downloads' ); ?>:</strong></td>
 				<td><?php echo edd_get_gateway_checkout_label( edd_get_payment_gateway( $payment->ID ) ); ?></td>
 			</tr>
 		<?php endif; ?>
-		<?php if ( $edd_receipt_args['date'] ) : ?>
+		<?php if ( filter_var( $edd_receipt_args['date'], FILTER_VALIDATE_BOOLEAN ) ) : ?>
 		<tr>
 			<td><strong><?php _e( 'Date', 'easy-digital-downloads' ); ?>:</strong></td>
 			<td><?php echo date_i18n( get_option( 'date_format' ), strtotime( $meta['date'] ) ); ?></td>
@@ -78,7 +78,7 @@ $status    = edd_get_payment_status( $payment, true );
 		</tr>
 		<?php endif; ?>
 
-		<?php if ( $edd_receipt_args['discount'] && isset( $user['discount'] ) && $user['discount'] != 'none' ) : ?>
+		<?php if ( filter_var( $edd_receipt_args['discount'], FILTER_VALIDATE_BOOLEAN ) && isset( $user['discount'] ) && $user['discount'] != 'none' ) : ?>
 			<tr>
 				<td><strong><?php _e( 'Discount(s)', 'easy-digital-downloads' ); ?>:</strong></td>
 				<td><?php echo $user['discount']; ?></td>
@@ -92,7 +92,7 @@ $status    = edd_get_payment_status( $payment, true );
 			</tr>
 		<?php endif; ?>
 
-		<?php if ( $edd_receipt_args[ 'price' ] ) : ?>
+		<?php if ( filter_var( $edd_receipt_args['price'], FILTER_VALIDATE_BOOLEAN ) ) : ?>
 
 			<tr>
 				<td><strong><?php _e( 'Subtotal', 'easy-digital-downloads' ); ?></strong></td>
@@ -114,7 +114,7 @@ $status    = edd_get_payment_status( $payment, true );
 
 <?php do_action( 'edd_payment_receipt_after_table', $payment, $edd_receipt_args ); ?>
 
-<?php if ( $edd_receipt_args[ 'products' ] ) : ?>
+<?php if ( filter_var( $edd_receipt_args['products'], FILTER_VALIDATE_BOOLEAN ) ) : ?>
 
 	<h3><?php echo apply_filters( 'edd_payment_receipt_products_title', __( 'Products', 'easy-digital-downloads' ) ); ?></h3>
 

@@ -171,7 +171,14 @@ function edd_load_admin_scripts( $hook ) {
 	wp_register_script( 'jquery-chosen', $js_dir . 'chosen.jquery' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
 	wp_enqueue_script( 'jquery-chosen' );
 
-	wp_register_script( 'edd-admin-scripts', $js_dir . 'admin-scripts' . $suffix . '.js', array( 'jquery', 'inline-edit-post' ), EDD_VERSION, false );
+	$admin_deps = array();
+	if ( ! edd_is_admin_page( $hook, 'edit' ) && ! edd_is_admin_page( $hook, 'new' ) ) {
+		$admin_deps = array( 'jquery', 'inline-edit-post' );
+	} else {
+		$admin_deps = array( 'jquery' );
+	}
+
+	wp_register_script( 'edd-admin-scripts', $js_dir . 'admin-scripts' . $suffix . '.js', $admin_deps, EDD_VERSION, false );
 	wp_enqueue_script( 'edd-admin-scripts' );
 
 	wp_localize_script( 'edd-admin-scripts', 'edd_vars', array(
@@ -202,7 +209,10 @@ function edd_load_admin_scripts( $hook ) {
 		'new_media_ui'            => apply_filters( 'edd_use_35_media_ui', 1 ),
 		'remove_text'             => __( 'Remove', 'easy-digital-downloads' ),
 		'type_to_search'          => sprintf( __( 'Type to search %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
-		'quantities_enabled'      => edd_item_quantities_enabled()
+		'quantities_enabled'      => edd_item_quantities_enabled(),
+		'batch_export_no_class'   => __( 'You must choose a method.', 'easy-digital-downloads' ),
+		'batch_export_no_reqs'    => __( 'Required fields not completed.', 'easy-digital-downloads' ),
+		'reset_stats_warn'        => __( 'Are you sure you want to reset your store? This process is <strong><em>not reversible</em></strong>. Please be sure you have a recent backup.', 'easy-digital-downloads' ),
 	));
 
 	wp_enqueue_style( 'wp-color-picker' );
@@ -311,3 +321,53 @@ function edd_admin_downloads_icon() {
 	<?php
 }
 add_action( 'admin_head','edd_admin_downloads_icon' );
+
+
+/**
+ * Load head styles
+ *
+ * Ensures download styling is still shown correctly if a theme is using the CSS template file
+ *
+ * @since 2.5
+ * @global $post
+ * @return void
+ */
+function edd_load_head_styles() {
+
+	global $post;
+
+	if ( edd_get_option( 'disable_styles', false ) || ! is_object( $post ) ) {
+		return;
+	}
+
+	// Use minified libraries if SCRIPT_DEBUG is turned off
+	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+
+	$file          = 'edd' . $suffix . '.css';
+	$templates_dir = edd_get_theme_template_dir_name();
+
+	$child_theme_style_sheet    = trailingslashit( get_stylesheet_directory() ) . $templates_dir . $file;
+	$child_theme_style_sheet_2  = trailingslashit( get_stylesheet_directory() ) . $templates_dir . 'edd.css';
+	$parent_theme_style_sheet   = trailingslashit( get_template_directory()   ) . $templates_dir . $file;
+	$parent_theme_style_sheet_2 = trailingslashit( get_template_directory()   ) . $templates_dir . 'edd.css';
+
+	$has_css_template = false;
+
+	if ( has_shortcode( $post->post_content, 'downloads' ) &&
+		file_exists( $child_theme_style_sheet ) ||
+		file_exists( $child_theme_style_sheet_2 ) ||
+		file_exists( $parent_theme_style_sheet ) ||
+		file_exists( $parent_theme_style_sheet_2 )
+	) {
+		$has_css_template = apply_filters( 'edd_load_head_styles', true );
+	}
+
+	if ( ! $has_css_template ) {
+		return;
+	}
+
+	?>
+	<style>.edd_download{float:left;}.edd_download_columns_1 .edd_download{width: 100%;}.edd_download_columns_2 .edd_download{width:50%;}.edd_download_columns_0 .edd_download,.edd_download_columns_3 .edd_download{width:33%;}.edd_download_columns_4 .edd_download{width:25%;}.edd_download_columns_5 .edd_download{width:20%;}.edd_download_columns_6 .edd_download{width:16.6%;}</style>
+	<?php
+}
+add_action( 'wp_head', 'edd_load_head_styles' );

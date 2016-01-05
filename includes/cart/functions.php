@@ -130,7 +130,6 @@ function edd_get_cart_quantity() {
  * @return string Cart key of the new item
  */
 function edd_add_to_cart( $download_id, $options = array() ) {
-
 	$download = get_post( $download_id );
 
 	if( 'download' != $download->post_type )
@@ -150,7 +149,19 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 	}
 
 	if( isset( $options['quantity'] ) ) {
-		$quantity = absint( preg_replace( '/[^0-9\.]/', '', $options['quantity'] ) );
+		if ( is_array( $options['quantity'] ) ) {
+
+			$quantity = array();
+			foreach ( $options['quantity'] as $q ) {
+				$quantity[] = absint( preg_replace( '/[^0-9\.]/', '', $q ) );
+			}
+
+		} else {
+
+			$quantity = absint( preg_replace( '/[^0-9\.]/', '', $options['quantity'] ) );
+
+		}
+
 		unset( $options['quantity'] );
 	} else {
 		$quantity = 1;
@@ -164,14 +175,14 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 	if ( isset( $options['price_id'] ) && is_array( $options['price_id'] ) ) {
 
 		// Process multiple price options at once
-		foreach ( $options['price_id'] as $price ) {
+		foreach ( $options['price_id'] as $key => $price ) {
 
 			$items[] = array(
 				'id'           => $download_id,
 				'options'      => array(
 					'price_id' => preg_replace( '/[^0-9\.-]/', '', $price )
 				),
-				'quantity'     => $quantity
+				'quantity'     => $quantity[ $key ],
 			);
 
 		}
@@ -342,8 +353,9 @@ function edd_set_cart_item_quantity( $download_id = 0, $quantity = 1, $options =
 	$cart = edd_get_cart_contents();
 	$key  = edd_get_item_position_in_cart( $download_id, $options );
 
-	if( $quantity < 1 )
+	if( $quantity < 1 ) {
 		$quantity = 1;
+	}
 
 	$cart[ $key ]['quantity'] = $quantity;
 	EDD()->session->set( 'edd_cart', $cart );
@@ -607,10 +619,50 @@ function edd_cart_subtotal() {
  * @return float Total amount before taxes
  */
 function edd_get_cart_subtotal() {
-	$subtotal = 0.00;
-	$items    = edd_get_cart_content_details();
 
-	if( $items ) {
+	$items    = edd_get_cart_content_details();
+	$subtotal = edd_get_cart_items_subtotal( $items );
+
+	return apply_filters( 'edd_get_cart_subtotal', $subtotal );
+}
+
+/**
+ * Get Cart Discountable Subtotal.
+ *
+ * @return float Total discountable amount before taxes
+ */
+function edd_get_cart_discountable_subtotal( $code_id ) {
+
+	$cart_items = edd_get_cart_content_details();
+	$items      = array();
+
+	$excluded_products = edd_get_discount_excluded_products( $code_id );
+
+	if( $cart_items ) {
+
+		foreach( $cart_items as $item ) {
+
+			if( ! in_array( $item['id'], $excluded_products ) ) {
+				$items[] =  $item;
+			}
+		}
+	}
+
+	$subtotal = edd_get_cart_items_subtotal( $items );
+
+	return apply_filters( 'edd_get_cart_discountable_subtotal', $subtotal );
+}
+
+/**
+ * Get cart items subtotal
+ * @param array $items Cart items array
+ *
+ * @return float items subtotal
+ */
+function edd_get_cart_items_subtotal( $items ) {
+	$subtotal = 0.00;
+
+	if( is_array( $items ) && ! empty( $items ) ) {
 
 		$prices = wp_list_pluck( $items, 'subtotal' );
 
@@ -626,9 +678,8 @@ function edd_get_cart_subtotal() {
 
 	}
 
-	return apply_filters( 'edd_get_cart_subtotal', $subtotal );
+	return apply_filters( 'edd_get_cart_items_subtotal', $subtotal );
 }
-
 /**
  * Get Total Cart Amount
  *
@@ -1082,7 +1133,7 @@ function edd_restore_cart() {
 		if ( ! $messages )
 			$messages = array();
 
-		if ( isset( $_GET['edd_cart_token'] ) && $_GET['edd_cart_token'] != $token ) {
+		if ( isset( $_GET['edd_cart_token'] ) && ! hash_equals( $_GET['edd_cart_token'], $token ) ) {
 
 			$messages['edd_cart_restoration_failed'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Error', 'easy-digital-downloads' ), __( 'Cart restoration failed. Invalid token.', 'easy-digital-downloads' ) );
 			EDD()->session->set( 'edd_cart_messages', $messages );
@@ -1099,7 +1150,7 @@ function edd_restore_cart() {
 
 		$saved_cart = $_COOKIE['edd_saved_cart'];
 
-		if ( $_GET['edd_cart_token'] != $token ) {
+		if ( ! hash_equals( $_GET['edd_cart_token'], $token ) ) {
 
 			$messages['edd_cart_restoration_failed'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Error', 'easy-digital-downloads' ), __( 'Cart restoration failed. Invalid token.', 'easy-digital-downloads' ) );
 			EDD()->session->set( 'edd_cart_messages', $messages );
@@ -1192,5 +1243,5 @@ add_action( 'edd_weekly_scheduled_events', 'edd_delete_saved_carts' );
  * @return string UNIX timestamp
  */
 function edd_generate_cart_token() {
-	return apply_filters( 'edd_generate_cart_token', time() );
+	return apply_filters( 'edd_generate_cart_token', md5( mt_rand() . time() ) );
 }
