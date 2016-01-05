@@ -11,4 +11,11 @@
 			<directory prefix="tests-" suffix=".php">./tests/</directory>
 		</testsuite>
 	</testsuites>
+	<filter>
+		<whitelist processUncoveredFilesFromWhitelist="true">
+			<directory suffix=".php">./includes</directory>
+			<file>easy-digital-downloads.php</file>
+			<file>uninstall.php</file>
+		</whitelist>
+	</filter>
 </phpunit>
