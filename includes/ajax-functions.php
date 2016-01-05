@@ -462,7 +462,7 @@ function edd_ajax_get_states_field() {
 			'name'    => $_POST['field_name'],
 			'id'      => $_POST['field_name'],
 			'class'   => $_POST['field_name'] . '  edd-select',
-			'options' => edd_get_shop_states( $_POST['country'] ),
+			'options' => $states,
 			'show_option_all'  => false,
 			'show_option_none' => false
 		);
