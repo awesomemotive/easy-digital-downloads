@@ -210,3 +210,36 @@ function edd_currency_decimal_filter( $decimals = 2 ) {
 }
 add_filter( 'edd_sanitize_amount_decimals', 'edd_currency_decimal_filter' );
 add_filter( 'edd_format_amount_decimals', 'edd_currency_decimal_filter' );
+
+/**
+ * Return a pattern for use on HTML5 elements for currency
+ *
+ * @since  2.4.2
+ * @return string The pattern regex for a currency
+ */
+function edd_currency_pattern() {
+	$thousands_sep = edd_get_option( 'thousands_separator', ',' );
+	$decimal_sep   = edd_get_option( 'decimal_separator', '.' );
+	$decimals      = edd_currency_decimal_filter();
+
+	$regex_dec_sep = '.' === $decimal_sep ? '\.' : ',';
+	$regex_tho_sep = ',' === $thousands_sep ? ',' : '\.';
+
+	$pattern = '(-?\d{1,3}(' . $regex_tho_sep . '?\d{3})*('. $regex_dec_sep . '\d{2}?))(\D|$)';
+
+	return $pattern;
+}
+
+/**
+ * Format a placeholder for text inputs for the currency
+ *
+ * @since  2.4.2
+ * @param  integer $amount The dollar amount to format
+ * @return string          A String number format
+ */
+function edd_currency_placeholder( $amount = 1000 ) {
+	$decimal_sep   = edd_get_option( 'decimal_separator', '.' );
+	$decimals      = edd_currency_decimal_filter();
+
+	return number_format( $amount, $decimals, $decimal_sep, '' );
+}
