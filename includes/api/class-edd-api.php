@@ -147,7 +147,7 @@ class EDD_API {
 		}
 
 		add_action( 'init',                     array( $this, 'add_endpoint'     ) );
-		add_action( 'template_redirect',        array( $this, 'process_query'    ), -1 );
+		add_action( 'wp',                       array( $this, 'process_query'    ), -1 );
 		add_filter( 'query_vars',               array( $this, 'query_vars'       ) );
 		add_action( 'show_user_profile',        array( $this, 'user_key_field'   ) );
 		add_action( 'edit_user_profile',        array( $this, 'user_key_field'   ) );
@@ -585,13 +585,21 @@ class EDD_API {
 
 				break;
 
+			case 'file-download-logs' :
+
+				$customer = isset( $wp_query->query_vars['customer'] ) ? $wp_query->query_vars['customer']  : null;
+
+				$data = $this->get_download_logs( $customer );
+
+				break;
+
 		endswitch;
 
 		// Allow extensions to setup their own return data
 		$this->data = apply_filters( 'edd_api_output_data', $data, $this->endpoint, $this );
 
-		$after        = microtime( true );
-		$request_time = ( $after - $before );
+		$after                       = microtime( true );
+		$request_time                = ( $after - $before );
 		$this->data['request_speed'] = $request_time;
 
 		// Log this API request, if enabled. We log it here because we have access to errors.
@@ -630,7 +638,8 @@ class EDD_API {
 			'products',
 			'customers',
 			'sales',
-			'discounts'
+			'discounts',
+			'file-download-logs',
 		) );
 
 		$query = isset( $wp_query->query_vars['edd-api'] ) ? $wp_query->query_vars['edd-api'] : null;
@@ -677,8 +686,9 @@ class EDD_API {
 
 		$per_page = isset( $wp_query->query_vars['number'] ) ? $wp_query->query_vars['number'] : 10;
 
-		if( $per_page < 0 && $this->get_query_mode() == 'customers' )
+		if( $per_page < 0 && $this->get_query_mode() == 'customers' ) {
 			$per_page = 99999999; // Customers query doesn't support -1
+		}
 
 		return apply_filters( 'edd_api_results_per_page', $per_page );
 	}
@@ -699,7 +709,7 @@ class EDD_API {
 			'product'   => null,
 			'date'      => null,
 			'startdate' => null,
-			'enddate'   => null
+			'enddate'   => null,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -1341,39 +1351,42 @@ class EDD_API {
 
 		if( isset( $wp_query->query_vars['id'] ) ) {
 			$query   = array();
-			$query[] = edd_get_payment_by( 'id', $wp_query->query_vars['id'] );
+			$query[] = new EDD_Payment( $wp_query->query_vars['id'] );
 		} elseif( isset( $wp_query->query_vars['purchasekey'] ) ) {
 			$query   = array();
 			$query[] = edd_get_payment_by( 'key', $wp_query->query_vars['purchasekey'] );
 		} elseif( isset( $wp_query->query_vars['email'] ) ) {
-			$query = edd_get_payments( array( 'meta_key' => '_edd_payment_user_email', 'meta_value' => $wp_query->query_vars['email'], 'number' => $this->per_page(), 'page' => $this->get_paged(), 'status' => 'publish' ) );
+			$query = edd_get_payments( array( 'fields' => 'ids', 'meta_key' => '_edd_payment_user_email', 'meta_value' => $wp_query->query_vars['email'], 'number' => $this->per_page(), 'page' => $this->get_paged(), 'status' => 'publish' ) );
 		} else {
-			$query = edd_get_payments( array( 'number' => $this->per_page(), 'page' => $this->get_paged(), 'status' => 'publish' ) );
+			$query = edd_get_payments( array( 'fields' => 'ids', 'number' => $this->per_page(), 'page' => $this->get_paged(), 'status' => 'publish' ) );
 		}
 
 		if ( $query ) {
 			$i = 0;
 			foreach ( $query as $payment ) {
-				$payment_meta = edd_get_payment_meta( $payment->ID );
-				$user_info    = edd_get_payment_meta_user_info( $payment->ID );
-				$cart_items   = edd_get_payment_meta_cart_details( $payment->ID );
+				if ( is_numeric( $payment ) ) {
+					$payment = new EDD_Payment( $payment );
+				}
 
-				$sales['sales'][ $i ]['ID']             = edd_get_payment_number( $payment->ID );
-				$sales['sales'][ $i ]['transaction_id'] = edd_get_payment_transaction_id( $payment->ID );
-				$sales['sales'][ $i ]['key']            = edd_get_payment_key( $payment->ID );
-				$sales['sales'][ $i ]['discount']       = isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ? explode( ',', $user_info['discount'] ) : array();
-				$sales['sales'][ $i ]['subtotal']       = edd_get_payment_subtotal( $payment->ID );
-				$sales['sales'][ $i ]['tax']            = edd_get_payment_tax( $payment->ID );
-				$sales['sales'][ $i ]['fees']           = edd_get_payment_fees( $payment->ID );
-				$sales['sales'][ $i ]['total']          = edd_get_payment_amount( $payment->ID );
-				$sales['sales'][ $i ]['gateway']        = edd_get_payment_gateway( $payment->ID );
-				$sales['sales'][ $i ]['email']          = edd_get_payment_user_email( $payment->ID );
-				$sales['sales'][ $i ]['date']           = $payment->post_date;
+				$payment_meta = $payment->get_meta();
+				$user_info    = $payment->user_info;
+
+				$sales['sales'][ $i ]['ID']             = $payment->number;
+				$sales['sales'][ $i ]['transaction_id'] = $payment->transaction_id;
+				$sales['sales'][ $i ]['key']            = $payment->key;
+				$sales['sales'][ $i ]['discount']       = ! empty( $payment->discounts ) ? explode( ',', $payment->discounts ) : array();
+				$sales['sales'][ $i ]['subtotal']       = $payment->subtotal;
+				$sales['sales'][ $i ]['tax']            = $payment->tax;
+				$sales['sales'][ $i ]['fees']           = $payment->fees;
+				$sales['sales'][ $i ]['total']          = $payment->total;
+				$sales['sales'][ $i ]['gateway']        = $payment->gateway;
+				$sales['sales'][ $i ]['email']          = $payment->email;
+				$sales['sales'][ $i ]['date']           = $payment->date;
 				$sales['sales'][ $i ]['products']       = array();
 
 				$c = 0;
 
-				foreach ( $cart_items as $key => $item ) {
+				foreach ( $payment->cart_details as $key => $item ) {
 
 					$item_id  = isset( $item['id']    ) ? $item['id']    : $item;
 					$price    = isset( $item['price'] ) ? $item['price'] : false;
@@ -1491,6 +1504,111 @@ class EDD_API {
 		}
 
 		return $discount_list;
+	}
+
+	/**
+	 * Process Get Downloads API Request to retrieve download logs
+	 *
+	 * @access public
+	 * @since 2.5
+	 * @author Daniel J Griffiths
+	 *
+	 * @param  int $customer_id The customer ID you wish to retrieve download logs for
+	 * @return array            Multidimensional array of the download logs
+	 */
+	public function get_download_logs( $customer_id = 0 ) {
+		global $edd_logs;
+
+		$downloads  = array();
+		$errors     = array();
+
+		$paged      = $this->get_paged();
+		$per_page   = $this->per_page();
+		$offset     = $per_page * ( $paged - 1 );
+
+		$meta_query = array();
+		if ( ! empty( $customer_id ) ) {
+
+			$customer         = new EDD_Customer( $customer_id );
+			$invalid_customer = false;
+
+			if ( $customer->id > 0 ) {
+				$meta_query['relation'] = 'OR';
+
+				if ( $customer->id > 0 ) {
+					// Based on customer->user_id
+					$meta_query[] = array(
+						'key'    => '_edd_log_user_id',
+						'value'  => $customer->user_id,
+					);
+				}
+
+				// Based on customer->email
+				$meta_query[] = array(
+					'key'    => '_edd_log_user_info',
+					'value'  => $customer->email,
+					'compare'=> 'LIKE',
+				);
+			} else {
+				$invalid_customer = true;
+			}
+		}
+
+		$query = array(
+			'log_type'               => 'file_download',
+			'paged'                  => $paged,
+			'meta_query'             => $meta_query,
+			'posts_per_page'         => $per_page,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+		);
+
+		$logs = array();
+		if ( ! $invalid_customer ) {
+			$logs = $edd_logs->get_connected_logs( $query );
+		}
+
+		if ( empty( $logs ) ) {
+			$error['error'] = __( 'No download logs found!', 'easy-digital-downloads' );
+			return $error;
+		}
+
+		foreach( $logs as $log ) {
+			$item = array();
+
+			$log_meta   = get_post_custom( $log->ID );
+			$user_info  = isset( $log_meta['_edd_log_user_info'] ) ? maybe_unserialize( $log_meta['_edd_log_user_info'][0] ) : array();
+			$payment_id = isset( $log_meta['_edd_log_payment_id'] ) ? $log_meta['_edd_log_payment_id'][0] : false;
+
+			$payment_customer_id = edd_get_payment_customer_id( $payment_id );
+			$payment_customer    = new EDD_Customer( $payment_customer_id );
+			$user_id             = ( $payment_customer->user_id > 0 ) ? $payment_customer->user_id : false;
+			$ip                  = $log_meta['_edd_log_ip'][0];
+			$files               = edd_get_payment_meta_downloads( $payment_id );
+			$files               = edd_get_download_files( $files[0]['id'] );
+			$file_id             = (int) $log_meta['_edd_log_file_id'][0];
+			$file_id             = $file_id !== false ? $file_id : 0;
+			$file_name           = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
+
+			$item = array(
+				'ID'           => $log->ID,
+				'user_id'      => $user_id,
+				'product_id'   => $log->post_parent,
+				'product_name' => get_the_title( $log->post_parent ),
+				'customer_id'  => $payment_customer_id,
+				'payment_id'   => $payment_id,
+				'file'         => $file_name,
+				'ip'           => $ip,
+				'date'         => $log->post_date,
+			);
+
+			$item = apply_filters( 'edd_api_download_log_item', $item, $log, $log_meta );
+
+			$downloads['download_logs'][] = $item;
+
+		}
+
+		return $downloads;
 	}
 
 	/**

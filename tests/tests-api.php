@@ -134,22 +134,22 @@ class Tests_API extends WP_UnitTestCase {
 		);
 
 		$purchase_data = array(
-			'price' => number_format( (float) $total, 2 ),
-			'date' => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
+			'price'        => number_format( (float) $total, 2 ),
+			'date'         => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
 			'purchase_key' => strtolower( md5( uniqid() ) ),
-			'user_email' => $user_info['email'],
-			'user_info' => $user_info,
-			'currency' => 'USD',
-			'downloads' => $download_details,
+			'user_email'   => $user_info['email'],
+			'user_info'    => $user_info,
+			'currency'     => 'USD',
+			'downloads'    => $download_details,
 			'cart_details' => $cart_details,
-			'status' => 'pending'
+			'status'       => 'pending'
 		);
 
 		$_SERVER['REMOTE_ADDR'] = '10.0.0.0';
 
-		$payment_id = edd_insert_payment( $purchase_data );
+		$this->_payment_id = edd_insert_payment( $purchase_data );
 
-		edd_update_payment_status( $payment_id, 'complete' );
+		edd_update_payment_status( $this->_payment_id, 'complete' );
 
 		$this->_api_output = $this->_api->get_products();
 		$this->_api_output_sales = $this->_api->get_recent_sales();
@@ -161,6 +161,7 @@ class Tests_API extends WP_UnitTestCase {
 	public function tearDown() {
 		parent::tearDown();
 		remove_action( 'edd_api_output_override_xml', array( $this, 'override_api_xml_format' ) );
+		EDD_Helper_Payment::delete_payment( $this->_payment_id );
 	}
 
 	public function test_endpoints() {
@@ -241,14 +242,12 @@ class Tests_API extends WP_UnitTestCase {
 		$this->assertEquals( 'test-download', $out['products'][0]['info']['slug'] );
 		$this->assertEquals( 'Test Download', $out['products'][0]['info']['title'] );
 		$this->assertEquals( 'publish', $out['products'][0]['info']['status'] );
-		$this->assertEquals( 'Post content 1', $out['products'][0]['info']['content'] );
+		$this->assertEquals( $this->_post->post_content, $out['products'][0]['info']['content'] );
 		$this->assertEquals( '', $out['products'][0]['info']['thumbnail'] );
 	}
 
 	public function test_get_product_stats() {
 		$out = $this->_api_output;
-		// This one fails and haven't figured out why
-		$this->markTestIncomplete( 'This test needs to be fixed. The stats key doesn\'t exist due to not being able to correctly check the user\'s permissions' );
 		$this->assertArrayHasKey( 'stats', $out['products'][0] );
 		$this->assertArrayHasKey( 'total', $out['products'][0]['stats'] );
 		$this->assertArrayHasKey( 'sales', $out['products'][0]['stats']['total'] );
@@ -257,10 +256,10 @@ class Tests_API extends WP_UnitTestCase {
 		$this->assertArrayHasKey( 'sales', $out['products'][0]['stats']['monthly_average'] );
 		$this->assertArrayHasKey( 'earnings', $out['products'][0]['stats']['monthly_average'] );
 
-		$this->assertEquals( '59', $out['products'][0]['stats']['total']['sales'] );
-		$this->assertEquals( '129.43', $out['products'][0]['stats']['total']['earnings'] );
-		$this->assertEquals( '59', $out['products'][0]['stats']['monthly_average']['sales'] );
-		$this->assertEquals( '129.43', $out['products'][0]['stats']['monthly_average']['earnings'] );
+		$this->assertEquals( '60', $out['products'][0]['stats']['total']['sales'] );
+		$this->assertEquals( '229.43', $out['products'][0]['stats']['total']['earnings'] );
+		$this->assertEquals( '60', $out['products'][0]['stats']['monthly_average']['sales'] );
+		$this->assertEquals( '229.43', $out['products'][0]['stats']['monthly_average']['earnings'] );
 	}
 
 	public function test_get_products_pricing() {
@@ -353,7 +352,7 @@ class Tests_API extends WP_UnitTestCase {
 	}
 
 	public function test_get_customers() {
-		$out = $this->_api->get_customers();
+		$out = EDD()->api->get_customers();
 
 		$this->assertArrayHasKey( 'customers', $out );
 		$this->assertArrayHasKey( 'info', $out['customers'][0] );
@@ -370,8 +369,8 @@ class Tests_API extends WP_UnitTestCase {
 
 		$this->assertEquals( 1, $out['customers'][0]['info']['id'] );
 		$this->assertEquals( 'admin', $out['customers'][0]['info']['username'] );
-		$this->assertEquals( '', $out['customers'][0]['info']['first_name'] );
-		$this->assertEquals( '', $out['customers'][0]['info']['last_name'] );
+		$this->assertEquals( 'Admin', $out['customers'][0]['info']['first_name'] );
+		$this->assertEquals( 'User', $out['customers'][0]['info']['last_name'] );
 		$this->assertEquals( 'admin@example.org', $out['customers'][0]['info']['email'] );
 		$this->assertEquals( 1, $out['customers'][0]['stats']['total_purchases'] );
 		$this->assertEquals( 100.0, $out['customers'][0]['stats']['total_spent'] );
@@ -472,4 +471,3 @@ class Tests_API extends WP_UnitTestCase {
 	}
 
 }
-

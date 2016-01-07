@@ -653,12 +653,12 @@ function edd_is_discount_maxed_out( $code_id = null ) {
  * @return bool $return
  */
 function edd_discount_is_min_met( $code_id = null ) {
-	$discount = edd_get_discount(  $code_id );
+	$discount = edd_get_discount( $code_id );
 	$return   = false;
 
 	if ( $discount ) {
 		$min         = edd_get_discount_min_price( $code_id );
-		$cart_amount = edd_get_cart_subtotal();
+		$cart_amount = edd_get_cart_discountable_subtotal( $code_id );
 
 		if ( (float) $cart_amount >= (float) $min ) {
 			// Minimum has been met
@@ -929,7 +929,7 @@ function edd_get_discount_id_by_code( $code ) {
  * @return string $discounted_price Amount after discount
  */
 function edd_get_discounted_amount( $code, $base_price ) {
-	$amount      = 0;
+	$amount      = $base_price;
 	$discount_id = edd_get_discount_id_by_code( $code );
 
 	if( $discount_id ) {
@@ -947,6 +947,10 @@ function edd_get_discounted_amount( $code, $base_price ) {
 			// Percentage discount
 			$amount = $base_price - ( $base_price * ( $rate / 100 ) );
 		}
+
+	} else {
+
+		$amount = $base_price;
 
 	}
 
