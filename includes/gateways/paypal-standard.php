@@ -238,8 +238,22 @@ function edd_process_paypal_ipn() {
 		}
 	}
 
+
+
 	// Convert collected post data to an array
 	parse_str( $encoded_data, $encoded_data_array );
+
+	foreach ( $encoded_data_array as $key => $value ) {
+
+		if ( false !== strpos( $key, 'amp;' ) ) {
+			$new_key = str_replace( '&amp;', '&', $key );
+			$new_key = str_replace( 'amp;', '&' , $new_key );
+
+			unset( $encoded_data_array[ $key ] );
+			$encoded_data_array[ $new_key ] = $value;
+		}
+
+	}
 
 	// Get the PayPal redirect uri
 	$paypal_redirect = edd_get_paypal_redirect( true );
