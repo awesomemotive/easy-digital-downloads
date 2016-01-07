@@ -5,9 +5,9 @@ Contributors: mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, 
 Donate link: https://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 4.0
-Tested up to: 4.4
+Tested up to: 4.5
 
-Stable Tag: 2.4.10
+Stable Tag: 2.5
 
 License: GNU Version 2 or Any Later Version
 
@@ -214,6 +214,72 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.5, January 7, 2016 =
+
+* New: Improved settings organization with subsections
+* New: Product export to CSV tool
+* New: Recount stats tool
+* New: EDD_Payment class for developers
+* New: Credit card fields now include HTML5 attributes
+* New: Improved license key fields for extensions
+* New: Discount codes can now be sorted
+* New: 0.00 value sales can now be excluded from sales graphs
+* New: File download history now available in REST API at /edd-api/file-download-logs
+* New: Quantities now included in payment history export
+* New: Payment History can be searched by discount code
+* New: File Downloads on products can now be re-ordered with drag-and-drop
+* New: Added filter to disable "edd_items_in_cart" cookie
+* Tweak: Improved customer options in purchase history export
+* Tweak: All meta keys now registered with WordPress
+* Tweak: EDD_API now runs on wp hook for improved performance
+* Tweak: Show item price instead of sale price in sales log
+* Tweak: Post type labels now used for Featured Image labels
+* Tweak: Inline styles have been removed from [downloads] shortcode
+* Tweak: Improved labels for checkbox options in Emails settings tab
+* Tweak: Improved SSL detection
+* Tweak: Improved abstraction of Customer UI so it can be re-used
+* Tweak: edd_get_cart_contents() standardized
+* Tweak: Set minimum WordPress version to 4.0
+* Tweak: Customer name on Payment History now goes to Customer details screen
+* Tweak: Properties in EDD_Amazon class are now public
+* Fix: Bulk actions not shown when list tables have no items
+* Fix: Fatal error in earnings by category reports
+* Fix: edd_maybe_remove_menu_profile_links() breaks some AJAX actions
+* Fix: PHP notices in PayPal if cart_details is not an array
+* Fix: "This Week" reports fail when crossing a month or year boundary
+* Fix: Deleting non-complete payment updates customer stats
+* Fix: inline-edit-post loaded when it shouldn't be
+* Fix: PayPal IPN listener using deprecated mc_gross key
+* Fix: PayPal listener not properly decoding data keys in some server environments
+* Fix: Downloads cannot be sorted in DESC order
+* Fix: User verification URL missing from email when plain text template is used
+* Fix: Incorrectly spelled UTM tags in Add Ons page
+* Fix: CSS for Welcome Page affects other pages
+* Fix: Properly run install routine when network activating EDD
+* Fix: Remove use of WP_CONTENT_URL constant
+* Fix: North/South Korea country codes reversed
+* Fix: WordPress 4.4 tab styles fix
+* Fix: Extension updates do not display if license key is not entered
+* Fix: Undefined variable $payment_id when seding test email
+* Fix: Cart widgets break add to cart button
+* Fix: edd_render_receipt_in_browser() outputs invalid markup
+* Fix: Parameters for [edd_receipt] shortcode not working properly
+* Fix: Payment Method fields not hidden when 100% discount code is applied
+* Fix: Running EDD_Payment_Stats::get_earnings() twice gives inconsistent values
+* Fix: Running EDD_Payment_Stats::get_sales() twice gives inconsistent values
+* Fix: AJAX call to load dashboard sales widget fires on all admin pages
+* Fix: Quantity not added with variable prices and multi-purchase mode when AJAX is disabled
+* Fix: user_id field not removed when customer's user account is deleted
+* Fix: Symlink File Download option not functioning
+* Fix: Order of bundled products not kept when saving Download product
+* Fix: Ugly display of long transaction IDs in View Order Details
+* Fix: File download links break when language parameter from qTranslate and WPML are present
+* Fix: Excluded products improperly count towards minimum purchase total of discount codes
+* Fix: Incorrect dates displayed when using custom date ranges in earnings reports
+* Fix: Subtotal should be removed from checkout when prices are inclusive of tax
+* Fix: price="0" fails when price_id="x" is used in [purchase_link] shortcode
+* Fix: Pagination fails when searching Payment History by download ID
 
 = 2.4.10, December 12, 2015 =
 
