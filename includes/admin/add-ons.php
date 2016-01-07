@@ -26,12 +26,12 @@ function edd_add_ons_page() {
 
 	ob_start(); ?>
 	<div class="wrap" id="edd-add-ons">
-		<h2>
+		<h1>
 			<?php _e( 'Extensions for Easy Digital Downloads', 'easy-digital-downloads' ); ?>
 			<span>
 				&nbsp;&nbsp;<a href="http://easydigitaldownloads.com/extensions/?utm_source=plugin-addons-page&utm_medium=plugin&utm_campaign=EDD%20Addons%20Page&utm_content=All%20Extensions" class="button-primary" title="<?php _e( 'Browse All Extensions', 'easy-digital-downloads' ); ?>" target="_blank"><?php _e( 'Browse All Extensions', 'easy-digital-downloads' ); ?></a>
 			</span>
-		</h2>
+		</h1>
 		<p><?php _e( 'These extensions <em><strong>add functionality</strong></em> to your Easy Digital Downloads powered store.', 'easy-digital-downloads' ); ?></p>
 		<h2 class="nav-tab-wrapper">
 			<?php
@@ -72,8 +72,11 @@ function edd_add_ons_page() {
  * @return void
  */
 function edd_add_ons_get_feed( $tab = 'popular' ) {
-	if ( false === ( $cache = get_transient( 'easydigitaldownloads_add_ons_feed_' . $tab ) ) ) {
+	$cache = get_transient( 'easydigitaldownloads_add_ons_feed_' . $tab );
+
+	if ( false === $cache ) {
 		$url = 'https://easydigitaldownloads.com/?feed=addons';
+
 		if ( 'popular' !== $tab ) {
 			$url = add_query_arg( array( 'display' => $tab ), $url );
 		}

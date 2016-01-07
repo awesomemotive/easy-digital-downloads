@@ -168,6 +168,6 @@ class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 		$this->start    = isset( $request['start'] )            ? sanitize_text_field( $request['start'] ) : '';
 		$this->end      = isset( $request['end']  )             ? sanitize_text_field( $request['end']  )  : '';
 		$this->download = isset( $request['download']         ) ? absint( $request['download']         )   : null;
-		$this->price_id = isset( $request['edd_price_option'] ) ? absint( $request['edd_price_option'] )   : null;
+		$this->price_id = ! empty( $request['edd_price_option'] ) && 0 !== $request['edd_price_option'] ? absint( $request['edd_price_option'] )   : null;
 	}
 }

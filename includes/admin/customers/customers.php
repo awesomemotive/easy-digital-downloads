@@ -121,8 +121,8 @@ function edd_render_customer_view( $view, $callbacks ) {
 
 		<?php if ( $customer && $render ) : ?>
 
-			<div id="customer-tab-wrapper">
-				<ul id="customer-tab-wrapper-list">
+			<div id="edd-item-tab-wrapper" class="customer-tab-wrapper">
+				<ul id="edd-item-tab-wrapper-list" class="ustomer-tab-wrapper-list">
 				<?php foreach ( $customer_tabs as $key => $tab ) : ?>
 					<?php $active = $key === $view ? true : false; ?>
 					<?php $class  = $active ? 'active' : 'inactive'; ?>
@@ -141,7 +141,7 @@ function edd_render_customer_view( $view, $callbacks ) {
 				</ul>
 			</div>
 
-			<div id="edd-customer-card-wrapper" style="float: left">
+			<div id="edd-item-card-wrapper" class="edd-customer-card-wrapper" style="float: left">
 				<?php $callbacks[$view]( $customer ) ?>
 			</div>
 
@@ -172,7 +172,7 @@ function edd_customers_view( $customer ) {
 
 		<form id="edit-customer-info" method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ); ?>">
 
-			<div class="customer-info">
+			<div class="edd-item-info customer-info">
 
 				<div class="avatar-wrap left" id="customer-avatar">
 					<?php echo get_avatar( $customer->email ); ?><br />
@@ -310,7 +310,7 @@ function edd_customers_view( $customer ) {
 
 	<?php do_action( 'edd_customer_before_stats', $customer ); ?>
 
-	<div id="customer-stats-wrapper" class="customer-section">
+	<div id="edd-item-stats-wrapper" class="customer-stats-wrapper customer-section">
 		<ul>
 			<li>
 				<a title="<?php _e( 'View All Purchases', 'easy-digital-downloads' ); ?>" href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $customer->email ) ); ?>">
@@ -328,7 +328,7 @@ function edd_customers_view( $customer ) {
 
 	<?php do_action( 'edd_customer_before_tables_wrapper', $customer ); ?>
 
-	<div id="customer-tables-wrapper" class="customer-section">
+	<div id="edd-item-tables-wrapper" class="customer-tables-wrapper customer-section">
 
 		<?php do_action( 'edd_customer_before_tables', $customer ); ?>
 
@@ -426,8 +426,8 @@ function edd_customer_notes_view( $customer ) {
 	$customer_notes = $customer->get_notes( $per_page, $paged );
 	?>
 
-	<div id="customer-notes-wrapper">
-		<div class="customer-notes-header">
+	<div id="edd-item-notes-wrapper">
+		<div class="edd-item-notes-header">
 			<?php echo get_avatar( $customer->email, 30 ); ?> <span><?php echo $customer->name; ?></span>
 		</div>
 		<h3><?php _e( 'Notes', 'easy-digital-downloads' ); ?></h3>
@@ -491,7 +491,7 @@ function edd_customers_delete_view( $customer ) {
 
 		<form id="delete-customer" method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $customer->id ); ?>">
 
-			<div class="customer-notes-header">
+				<div class="edd-item-notes-header">
 				<?php echo get_avatar( $customer->email, 30 ); ?> <span><?php echo $customer->name; ?></span>
 			</div>
 
@@ -528,6 +528,44 @@ function edd_customers_delete_view( $customer ) {
 	<?php
 
 	do_action( 'edd_customer_delete_bottom', $customer );
+}
+
+function edd_customer_tools_view( $customer ) {
+	$customer_edit_role = apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
+
+	?>
+
+	<?php do_action( 'edd_customer_tools_top', $customer ); ?>
+
+	<div class="info-wrapper customer-section">
+
+		<div class="customer-notes-header">
+			<?php echo get_avatar( $customer->email, 30 ); ?> <span><?php echo $customer->name; ?></span>
+		</div>
+		<h3><?php _e( 'Tools', 'easy-digital-downloads' ); ?></h3>
+
+		<div class="edd-item-info customer-info">
+			<h4><?php _e( 'Recount Customer Stats', 'easy-digital-downloads' ); ?></h4>
+			<p class="edd-item-description"><?php _e( 'Use this tool to recalculate the purchase count and total value of the customer.', 'easy-digital-downloads' ); ?></p>
+			<form method="post" id="edd-tools-recount-form" class="edd-export-form">
+				<span>
+					<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+
+					<input type="hidden" name="edd-export-class" data-type="recount-single-customer-stats" value="EDD_Tools_Recount_Single_Customer_Stats" />
+					<input type="hidden" name="customer_id" value="<?php echo $customer->id; ?>" />
+					<input type="submit" id="recount-stats-submit" value="<?php _e( 'Recount Stats', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+					<span class="spinner"></span>
+
+				</span>
+			</form>
+
+		</div>
+
+	</div>
+
+	<?php
+
+	do_action( 'edd_customer_tools_bottom', $customer );
 }
 
 /**

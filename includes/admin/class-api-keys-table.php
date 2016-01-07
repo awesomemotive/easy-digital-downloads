@@ -49,12 +49,24 @@ class EDD_API_Keys_Table extends WP_List_Table {
 
 		// Set parent defaults
 		parent::__construct( array(
-			'singular'  => __( 'API Key', 'easy-digital-downloads' ),     // Singular name of the listed records
-			'plural'    => __( 'API Keys', 'easy-digital-downloads' ),    // Plural name of the listed records
-			'ajax'      => false                       // Does this table support ajax?
+			'singular'  => __( 'API Key', 'easy-digital-downloads' ),
+			'plural'    => __( 'API Keys', 'easy-digital-downloads' ),
+			'ajax'      => false,
 		) );
 
 		$this->query();
+	}
+
+	/**
+	 * Gets the name of the primary column.
+	 *
+	 * @since 2.5
+	 * @access protected
+	 *
+	 * @return string Name of the primary column.
+	 */
+	protected function get_primary_column_name() {
+		return 'user';
 	}
 
 	/**
@@ -161,10 +173,10 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'user'         => __( 'Username', 'easy-digital-downloads' ),
-			'key'          => __( 'Public Key', 'easy-digital-downloads' ),
-			'token'        => __( 'Token', 'easy-digital-downloads' ),
-			'secret'       => __( 'Secret Key', 'easy-digital-downloads' )
+			'user'   => __( 'Username', 'easy-digital-downloads' ),
+			'key'    => __( 'Public Key', 'easy-digital-downloads' ),
+			'token'  => __( 'Token', 'easy-digital-downloads' ),
+			'secret' => __( 'Secret Key', 'easy-digital-downloads' ),
 		);
 
 		return $columns;
@@ -218,7 +230,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 		$users    = get_users( array(
 			'meta_value' => 'edd_user_secret_key',
 			'number'     => $this->per_page,
-			'offset'     => $this->per_page * ( $this->get_paged() - 1 )
+			'offset'     => $this->per_page * ( $this->get_paged() - 1 ),
 		) );
 		$keys     = array();
 
@@ -280,7 +292,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 		$this->set_pagination_args( array(
 				'total_items' => $total_items,
 				'per_page'    => $this->per_page,
-				'total_pages' => ceil( $total_items / $this->per_page )
+				'total_pages' => ceil( $total_items / $this->per_page ),
 			)
 		);
 	}
