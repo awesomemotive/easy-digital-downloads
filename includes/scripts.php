@@ -48,14 +48,14 @@ function edd_load_scripts() {
 			'checkout_nonce'     => wp_create_nonce( 'edd_checkout_nonce' ),
 			'currency_sign'      => edd_currency_filter(''),
 			'currency_pos'       => edd_get_option( 'currency_position', 'before' ),
-			'no_gateway'         => __( 'Please select a payment method', 'edd' ),
-			'no_discount'        => __( 'Please enter a discount code', 'edd' ), // Blank discount code message
-			'enter_discount'     => __( 'Enter discount', 'edd' ),
-			'discount_applied'   => __( 'Discount Applied', 'edd' ), // Discount verified message
-			'no_email'           => __( 'Please enter an email address before applying a discount code', 'edd' ),
-			'no_username'        => __( 'Please enter a username before applying a discount code', 'edd' ),
-			'purchase_loading'   => __( 'Please Wait...', 'edd' ),
-			'complete_purchase'  => __( 'Purchase', 'edd' ),
+			'no_gateway'         => __( 'Please select a payment method', 'easy-digital-downloads' ),
+			'no_discount'        => __( 'Please enter a discount code', 'easy-digital-downloads' ), // Blank discount code message
+			'enter_discount'     => __( 'Enter discount', 'easy-digital-downloads' ),
+			'discount_applied'   => __( 'Discount Applied', 'easy-digital-downloads' ), // Discount verified message
+			'no_email'           => __( 'Please enter an email address before applying a discount code', 'easy-digital-downloads' ),
+			'no_username'        => __( 'Please enter a username before applying a discount code', 'easy-digital-downloads' ),
+			'purchase_loading'   => __( 'Please Wait...', 'easy-digital-downloads' ),
+			'complete_purchase'  => __( 'Purchase', 'easy-digital-downloads' ),
 			'taxes_enabled'      => edd_use_taxes() ? '1' : '0',
 			'edd_version'        => EDD_VERSION
 		) ) );
@@ -69,10 +69,10 @@ function edd_load_scripts() {
 		wp_localize_script( 'edd-ajax', 'edd_scripts', apply_filters( 'edd_ajax_script_vars', array(
 			'ajaxurl'                 => edd_get_ajax_url(),
 			'position_in_cart'        => isset( $position ) ? $position : -1,
-			'already_in_cart_message' => __('You have already added this item to your cart', 'edd'), // Item already in the cart message
-			'empty_cart_message'      => __('Your cart is empty', 'edd'), // Item already in the cart message
-			'loading'                 => __('Loading', 'edd') , // General loading message
-			'select_option'           => __('Please select an option', 'edd') , // Variable pricing error with multi-purchase option enabled
+			'already_in_cart_message' => __('You have already added this item to your cart','easy-digital-downloads' ), // Item already in the cart message
+			'empty_cart_message'      => __('Your cart is empty','easy-digital-downloads' ), // Item already in the cart message
+			'loading'                 => __('Loading','easy-digital-downloads' ) , // General loading message
+			'select_option'           => __('Please select an option','easy-digital-downloads' ) , // Variable pricing error with multi-purchase option enabled
 			'ajax_loader'             => set_url_scheme( EDD_PLUGIN_URL . 'assets/images/loading.gif', 'relative' ), // Ajax loading image
 			'is_checkout'             => edd_is_checkout() ? '1' : '0',
 			'default_gateway'         => edd_get_default_gateway(),
@@ -171,37 +171,37 @@ function edd_load_admin_scripts( $hook ) {
 	wp_register_script( 'jquery-chosen', $js_dir . 'chosen.jquery' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
 	wp_enqueue_script( 'jquery-chosen' );
 
-	wp_register_script( 'edd-admin-scripts', $js_dir . 'admin-scripts' . $suffix . '.js', array( 'jquery' ), EDD_VERSION, false );
+	wp_register_script( 'edd-admin-scripts', $js_dir . 'admin-scripts' . $suffix . '.js', array( 'jquery', 'inline-edit-post' ), EDD_VERSION, false );
 	wp_enqueue_script( 'edd-admin-scripts' );
 
 	wp_localize_script( 'edd-admin-scripts', 'edd_vars', array(
 		'post_id'                 => isset( $post->ID ) ? $post->ID : null,
 		'edd_version'             => EDD_VERSION,
-		'add_new_download'        => __( 'Add New Download', 'edd' ),
-		'use_this_file'           => __( 'Use This File','edd' ),
-		'quick_edit_warning'      => __( 'Sorry, not available for variable priced products.', 'edd' ),
-		'delete_payment'          => __( 'Are you sure you wish to delete this payment?', 'edd' ),
-		'delete_payment_note'     => __( 'Are you sure you wish to delete this note?', 'edd' ),
-		'delete_tax_rate'         => __( 'Are you sure you wish to delete this tax rate?', 'edd' ),
-		'revoke_api_key'          => __( 'Are you sure you wish to revoke this API key?', 'edd' ),
-		'regenerate_api_key'      => __( 'Are you sure you wish to regenerate this API key?', 'edd' ),
-		'resend_receipt'          => __( 'Are you sure you wish to resend the purchase receipt?', 'edd' ),
-		'copy_download_link_text' => __( 'Copy these links to your clipboard and give them to your customer', 'edd' ),
-		'delete_payment_download' => sprintf( __( 'Are you sure you wish to delete this %s?', 'edd' ), edd_get_label_singular() ),
-		'one_price_min'           => __( 'You must have at least one price', 'edd' ),
-		'one_field_min'           => __( 'You must have at least one field', 'edd' ),
-		'one_download_min'        => __( 'Payments must contain at least one item', 'edd' ),
-		'one_option'              => sprintf( __( 'Choose a %s', 'edd' ), edd_get_label_singular() ),
-		'one_or_more_option'      => sprintf( __( 'Choose one or more %s', 'edd' ), edd_get_label_plural() ),
-		'numeric_item_price'      => __( 'Item price must be numeric', 'edd' ),
-		'numeric_quantity'        => __( 'Quantity must be numeric', 'edd' ),
+		'add_new_download'        => __( 'Add New Download', 'easy-digital-downloads' ),
+		'use_this_file'           => __( 'Use This File','easy-digital-downloads' ),
+		'quick_edit_warning'      => __( 'Sorry, not available for variable priced products.', 'easy-digital-downloads' ),
+		'delete_payment'          => __( 'Are you sure you wish to delete this payment?', 'easy-digital-downloads' ),
+		'delete_payment_note'     => __( 'Are you sure you wish to delete this note?', 'easy-digital-downloads' ),
+		'delete_tax_rate'         => __( 'Are you sure you wish to delete this tax rate?', 'easy-digital-downloads' ),
+		'revoke_api_key'          => __( 'Are you sure you wish to revoke this API key?', 'easy-digital-downloads' ),
+		'regenerate_api_key'      => __( 'Are you sure you wish to regenerate this API key?', 'easy-digital-downloads' ),
+		'resend_receipt'          => __( 'Are you sure you wish to resend the purchase receipt?', 'easy-digital-downloads' ),
+		'copy_download_link_text' => __( 'Copy these links to your clipboard and give them to your customer', 'easy-digital-downloads' ),
+		'delete_payment_download' => sprintf( __( 'Are you sure you wish to delete this %s?', 'easy-digital-downloads' ), edd_get_label_singular() ),
+		'one_price_min'           => __( 'You must have at least one price', 'easy-digital-downloads' ),
+		'one_field_min'           => __( 'You must have at least one field', 'easy-digital-downloads' ),
+		'one_download_min'        => __( 'Payments must contain at least one item', 'easy-digital-downloads' ),
+		'one_option'              => sprintf( __( 'Choose a %s', 'easy-digital-downloads' ), edd_get_label_singular() ),
+		'one_or_more_option'      => sprintf( __( 'Choose one or more %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
+		'numeric_item_price'      => __( 'Item price must be numeric', 'easy-digital-downloads' ),
+		'numeric_quantity'        => __( 'Quantity must be numeric', 'easy-digital-downloads' ),
 		'currency'                => edd_get_currency(),
 		'currency_sign'           => edd_currency_filter(''),
 		'currency_pos'            => edd_get_option( 'currency_position', 'before' ),
 		'currency_decimals'       => edd_currency_decimal_filter(),
 		'new_media_ui'            => apply_filters( 'edd_use_35_media_ui', 1 ),
-		'remove_text'             => __( 'Remove', 'edd' ),
-		'type_to_search'          => sprintf( __( 'Type to search %s', 'edd' ), edd_get_label_plural() ),
+		'remove_text'             => __( 'Remove', 'easy-digital-downloads' ),
+		'type_to_search'          => sprintf( __( 'Type to search %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
 		'quantities_enabled'      => edd_item_quantities_enabled()
 	));
 

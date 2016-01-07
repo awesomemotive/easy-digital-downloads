@@ -1,4 +1,9 @@
+<?php if( ! empty( $_GET['edd-verify-success'] ) ) : ?>
+<p class="edd-account-verified edd_success">
+	<?php _e( 'Your account has been successfully verified!', 'easy-digital-downloads' ); ?>
+</p>
 <?php
+endif;
 /**
  * This template is used to display the purchase history of the current user.
  */
@@ -10,10 +15,10 @@ if ( is_user_logged_in() ):
 			<thead>
 				<tr class="edd_purchase_row">
 					<?php do_action('edd_purchase_history_header_before'); ?>
-					<th class="edd_purchase_id"><?php _e('ID', 'edd'); ?></th>
-					<th class="edd_purchase_date"><?php _e('Date', 'edd'); ?></th>
-					<th class="edd_purchase_amount"><?php _e('Amount', 'edd'); ?></th>
-					<th class="edd_purchase_details"><?php _e('Details', 'edd'); ?></th>
+					<th class="edd_purchase_id"><?php _e('ID','easy-digital-downloads' ); ?></th>
+					<th class="edd_purchase_date"><?php _e('Date','easy-digital-downloads' ); ?></th>
+					<th class="edd_purchase_amount"><?php _e('Amount','easy-digital-downloads' ); ?></th>
+					<th class="edd_purchase_details"><?php _e('Details','easy-digital-downloads' ); ?></th>
 					<?php do_action('edd_purchase_history_header_after'); ?>
 				</tr>
 			</thead>
@@ -31,7 +36,7 @@ if ( is_user_logged_in() ):
 						<span class="edd_purchase_status <?php echo $post->post_status; ?>"><?php echo edd_get_payment_status( $post, true ); ?></span>
 						<a href="<?php echo esc_url( add_query_arg( 'payment_key', edd_get_payment_key( $post->ID ), edd_get_success_page_uri() ) ); ?>">&raquo;</a>
 						<?php else: ?>
-						<a href="<?php echo esc_url( add_query_arg( 'payment_key', edd_get_payment_key( $post->ID ), edd_get_success_page_uri() ) ); ?>"><?php _e( 'View Details and Downloads', 'edd' ); ?></a>
+						<a href="<?php echo esc_url( add_query_arg( 'payment_key', edd_get_payment_key( $post->ID ), edd_get_success_page_uri() ) ); ?>"><?php _e( 'View Details and Downloads', 'easy-digital-downloads' ); ?></a>
 						<?php endif; ?>
 					</td>
 					<?php do_action( 'edd_purchase_history_row_end', $post->ID, $purchase_data ); ?>
@@ -52,6 +57,6 @@ if ( is_user_logged_in() ):
 		<?php do_action( 'edd_after_purchase_history' ); ?>
 		<?php wp_reset_postdata(); ?>
 	<?php else : ?>
-		<p class="edd-no-purchases"><?php _e('You have not made any purchases', 'edd'); ?></p>
+		<p class="edd-no-purchases"><?php _e('You have not made any purchases','easy-digital-downloads' ); ?></p>
 	<?php endif;
 endif;

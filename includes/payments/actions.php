@@ -132,7 +132,7 @@ function edd_record_status_change( $payment_id, $new_status, $old_status ) {
 	$old_status = isset( $stati[ $old_status ] ) ? $stati[ $old_status ] : $old_status;
 	$new_status = isset( $stati[ $new_status ] ) ? $stati[ $new_status ] : $new_status;
 
-	$status_change = sprintf( __( 'Status changed from %s to %s', 'edd' ), $old_status, $new_status );
+	$status_change = sprintf( __( 'Status changed from %s to %s', 'easy-digital-downloads' ), $old_status, $new_status );
 
 	edd_insert_payment_note( $payment_id, $status_change );
 }
@@ -147,11 +147,15 @@ add_action( 'edd_update_payment_status', 'edd_record_status_change', 100, 3 );
  */
 function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
 
-	if( 'publish' != $old_status && 'revoked' != $old_status )
-		return;
+	global $edd_logs;
 
-	if( 'refunded' != $new_status )
+	if( 'publish' != $old_status && 'revoked' != $old_status ) {
 		return;
+	}
+
+	if( 'refunded' != $new_status ) {
+		return;
+	}
 
 	$downloads = edd_get_payment_meta_cart_details( $payment_id );
 	if( $downloads ) {
@@ -174,6 +178,18 @@ function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
 		$customer->decrease_purchase_count();
 
 	}
+
+	// Remove related sale log entries
+	$edd_logs->delete_logs(
+		null,
+		'sale',
+		array(
+			array(
+				'key'   => '_edd_log_payment_id',
+				'value' => $payment_id
+			)
+		)
+	);
 
 	// Clear the This Month earnings (this_monththis_month is NOT a typo)
 	delete_transient( md5( 'edd_earnings_this_monththis_month' ) );

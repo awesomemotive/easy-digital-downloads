@@ -1,6 +1,5 @@
 <?php
 
-use \EDD_Payments_Query;
 /**
  * @group edd_payments
  */
@@ -26,7 +25,7 @@ class Tests_Payments extends WP_UnitTestCase {
 
 		$this->_transaction_id = 'FIR3SID3';
 		edd_set_payment_transaction_id( $payment_id, $this->_transaction_id );
-		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'edd' ) , $this->_transaction_id ) );
+		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'easy-digital-downloads' ) , $this->_transaction_id ) );
 
 		// Make sure we're working off a clean object caching in WP Core.
 		// Prevents some payment_meta from not being present.
@@ -215,6 +214,15 @@ class Tests_Payments extends WP_UnitTestCase {
 		$this->assertEquals( '&#36;120.00', $total1 );
 		$this->assertEquals( '&#36;120.00', $total2 );
 
+	}
+
+	public function test_is_guest_payment() {
+		// setUp defines a payment with a known user, use this
+		$this->assertFalse( edd_is_guest_payment( $this->_payment_id ) );
+
+		// Create a guest payment
+		$guest_payment_id   = EDD_Helper_Payment::create_simple_guest_payment();
+		$this->assertTrue( edd_is_guest_payment( $guest_payment_id ) );
 	}
 
 }

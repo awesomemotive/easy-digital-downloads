@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Is Test Mode
  *
  * @since 1.0
- * @return bool $ret True if return mode is enabled, false otherwise
+ * @return bool $ret True if test mode is enabled, false otherwise
  */
 function edd_is_test_mode() {
 	$ret = edd_get_option( 'test_mode', false );
@@ -296,33 +296,33 @@ function edd_is_host( $host = false ) {
  */
 function edd_get_currencies() {
 	$currencies = array(
-		'USD'  => __( 'US Dollars (&#36;)', 'edd' ),
-		'EUR'  => __( 'Euros (&euro;)', 'edd' ),
-		'GBP'  => __( 'Pounds Sterling (&pound;)', 'edd' ),
-		'AUD'  => __( 'Australian Dollars (&#36;)', 'edd' ),
-		'BRL'  => __( 'Brazilian Real (R&#36;)', 'edd' ),
-		'CAD'  => __( 'Canadian Dollars (&#36;)', 'edd' ),
-		'CZK'  => __( 'Czech Koruna', 'edd' ),
-		'DKK'  => __( 'Danish Krone', 'edd' ),
-		'HKD'  => __( 'Hong Kong Dollar (&#36;)', 'edd' ),
-		'HUF'  => __( 'Hungarian Forint', 'edd' ),
-		'ILS'  => __( 'Israeli Shekel (&#8362;)', 'edd' ),
-		'JPY'  => __( 'Japanese Yen (&yen;)', 'edd' ),
-		'MYR'  => __( 'Malaysian Ringgits', 'edd' ),
-		'MXN'  => __( 'Mexican Peso (&#36;)', 'edd' ),
-		'NZD'  => __( 'New Zealand Dollar (&#36;)', 'edd' ),
-		'NOK'  => __( 'Norwegian Krone', 'edd' ),
-		'PHP'  => __( 'Philippine Pesos', 'edd' ),
-		'PLN'  => __( 'Polish Zloty', 'edd' ),
-		'SGD'  => __( 'Singapore Dollar (&#36;)', 'edd' ),
-		'SEK'  => __( 'Swedish Krona', 'edd' ),
-		'CHF'  => __( 'Swiss Franc', 'edd' ),
-		'TWD'  => __( 'Taiwan New Dollars', 'edd' ),
-		'THB'  => __( 'Thai Baht (&#3647;)', 'edd' ),
-		'INR'  => __( 'Indian Rupee (&#8377;)', 'edd' ),
-		'TRY'  => __( 'Turkish Lira (&#8378;)', 'edd' ),
-		'RIAL' => __( 'Iranian Rial (&#65020;)', 'edd' ),
-		'RUB'  => __( 'Russian Rubles', 'edd' )
+		'USD'  => __( 'US Dollars (&#36;)', 'easy-digital-downloads' ),
+		'EUR'  => __( 'Euros (&euro;)', 'easy-digital-downloads' ),
+		'GBP'  => __( 'Pounds Sterling (&pound;)', 'easy-digital-downloads' ),
+		'AUD'  => __( 'Australian Dollars (&#36;)', 'easy-digital-downloads' ),
+		'BRL'  => __( 'Brazilian Real (R&#36;)', 'easy-digital-downloads' ),
+		'CAD'  => __( 'Canadian Dollars (&#36;)', 'easy-digital-downloads' ),
+		'CZK'  => __( 'Czech Koruna', 'easy-digital-downloads' ),
+		'DKK'  => __( 'Danish Krone', 'easy-digital-downloads' ),
+		'HKD'  => __( 'Hong Kong Dollar (&#36;)', 'easy-digital-downloads' ),
+		'HUF'  => __( 'Hungarian Forint', 'easy-digital-downloads' ),
+		'ILS'  => __( 'Israeli Shekel (&#8362;)', 'easy-digital-downloads' ),
+		'JPY'  => __( 'Japanese Yen (&yen;)', 'easy-digital-downloads' ),
+		'MYR'  => __( 'Malaysian Ringgits', 'easy-digital-downloads' ),
+		'MXN'  => __( 'Mexican Peso (&#36;)', 'easy-digital-downloads' ),
+		'NZD'  => __( 'New Zealand Dollar (&#36;)', 'easy-digital-downloads' ),
+		'NOK'  => __( 'Norwegian Krone', 'easy-digital-downloads' ),
+		'PHP'  => __( 'Philippine Pesos', 'easy-digital-downloads' ),
+		'PLN'  => __( 'Polish Zloty', 'easy-digital-downloads' ),
+		'SGD'  => __( 'Singapore Dollar (&#36;)', 'easy-digital-downloads' ),
+		'SEK'  => __( 'Swedish Krona', 'easy-digital-downloads' ),
+		'CHF'  => __( 'Swiss Franc', 'easy-digital-downloads' ),
+		'TWD'  => __( 'Taiwan New Dollars', 'easy-digital-downloads' ),
+		'THB'  => __( 'Thai Baht (&#3647;)', 'easy-digital-downloads' ),
+		'INR'  => __( 'Indian Rupee (&#8377;)', 'easy-digital-downloads' ),
+		'TRY'  => __( 'Turkish Lira (&#8378;)', 'easy-digital-downloads' ),
+		'RIAL' => __( 'Iranian Rial (&#65020;)', 'easy-digital-downloads' ),
+		'RUB'  => __( 'Russian Rubles', 'easy-digital-downloads' )
 	);
 
 	return apply_filters( 'edd_currencies', $currencies );
@@ -425,29 +425,58 @@ function edd_get_php_arg_separator_output() {
  * Get the current page URL
  *
  * @since 1.3
- * @global $post
+ * @param  bool   $nocache  If we should bust cache on the returned URL
  * @return string $page_url Current page URL
  */
-function edd_get_current_page_url() {
-	global $post;
+function edd_get_current_page_url( $nocache = false ) {
 
-	if ( is_front_page() ) :
-		$page_url = home_url();
-	else :
-		$page_url = 'http';
+	global $wp;
 
-	if ( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" )
-		$page_url .= "s";
+	if( get_option( 'permalink_structure' ) ) {
 
-	$page_url .= "://";
+		$base = trailingslashit( home_url( $wp->request ) );
 
-	if ( isset( $_SERVER["SERVER_PORT"] ) && $_SERVER["SERVER_PORT"] != "80" )
-		$page_url .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
-	else
-		$page_url .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
-	endif;
+	} else {
 
-	return apply_filters( 'edd_get_current_page_url', esc_url( $page_url ) );
+		$base = add_query_arg( $wp->query_string, '', trailingslashit( home_url( $wp->request ) ) );
+		$base = remove_query_arg( array( 'post_type', 'name' ), $base );
+
+	}
+
+	$scheme = is_ssl() ? 'https' : 'http';
+	$uri    = set_url_scheme( $base, $scheme );
+
+	if ( is_front_page() ) {
+		$uri = home_url( '/' );
+	} elseif ( edd_is_checkout( array(), false ) ) {
+		$uri = edd_get_checkout_uri();
+	}
+
+	$uri = apply_filters( 'edd_get_current_page_url', $uri );
+
+	if ( $nocache ) {
+		$uri = edd_add_cache_busting( $uri );
+	}
+
+	return $uri;
+}
+
+/**
+ * Adds the 'nocache' parameter to the provided URL
+ *
+ * @since  2.4.4
+ * @param  string $url The URL being requested
+ * @return string      The URL with cache busting added or not
+ */
+function edd_add_cache_busting( $url = '' ) {
+
+	$no_cache_checkout = edd_get_option( 'no_cache_checkout', false );
+
+	if ( edd_is_caching_plugin_active() || ( edd_is_checkout() && $no_cache_checkout ) ) {
+		$url = add_query_arg( 'nocache', 'true', $url );
+	}
+
+	return $url;
 }
 
 /**
@@ -479,12 +508,12 @@ function _edd_deprecated_function( $function, $version, $replacement = null, $ba
 	// Allow plugin to filter the output error trigger
 	if ( WP_DEBUG && apply_filters( 'edd_deprecated_function_trigger_error', $show_errors ) ) {
 		if ( ! is_null( $replacement ) ) {
-			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead.', 'edd' ), $function, $version, $replacement ) );
+			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead.', 'easy-digital-downloads' ), $function, $version, $replacement ) );
 			trigger_error(  print_r( $backtrace, 1 ) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
 			// Alternatively we could dump this to a file.
 		}
 		else {
-			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'edd' ), $function, $version ) );
+			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'easy-digital-downloads' ), $function, $version ) );
 			trigger_error( print_r( $backtrace, 1 ) );// Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
 			// Alternatively we could dump this to a file.
 		}
@@ -794,3 +823,44 @@ if ( ! function_exists( 'getallheaders' ) ) :
 	}
 
 endif;
+
+/**
+ * Determines the receipt visibility status
+ *
+ * @return bool Whether the receipt is visible or not.
+ */
+function edd_can_view_receipt( $payment_key = '' ) {
+
+	$return = false;
+
+	if ( empty( $payment_key ) ) {
+		return $return;
+	}
+
+	global $edd_receipt_args;
+
+	$edd_receipt_args['id'] = edd_get_purchase_id_by_key( $payment_key );
+
+	$user_id = (int) edd_get_payment_user_id( $edd_receipt_args['id'] );
+
+	$payment_meta = edd_get_payment_meta( $edd_receipt_args['id'] );
+
+	if ( is_user_logged_in() ) {
+		if ( $user_id === (int) get_current_user_id() ) {
+			$return = true;
+		} elseif ( wp_get_current_user()->user_email === edd_get_payment_user_email( $edd_receipt_args['id'] ) ) {
+			$return = true;
+		} elseif ( current_user_can( 'view_shop_sensitive_data' ) ) {
+			$return = true;
+		}
+	}
+
+	$session = edd_get_purchase_session();
+	if ( ! empty( $session ) && ! is_user_logged_in() ) {
+		if ( $session['purchase_key'] === $payment_meta['key'] ) {
+			$return = true;
+		}
+	}
+
+	return (bool) apply_filters( 'edd_can_view_receipt', $return, $payment_key );
+}

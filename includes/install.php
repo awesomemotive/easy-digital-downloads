@@ -57,7 +57,7 @@ function edd_install() {
 	  // Checkout Page
 		$checkout = wp_insert_post(
 			array(
-				'post_title'     => __( 'Checkout', 'edd' ),
+				'post_title'     => __( 'Checkout', 'easy-digital-downloads' ),
 				'post_content'   => '[download_checkout]',
 				'post_status'    => 'publish',
 				'post_author'    => 1,
@@ -69,8 +69,8 @@ function edd_install() {
 		// Purchase Confirmation (Success) Page
 		$success = wp_insert_post(
 			array(
-				'post_title'     => __( 'Purchase Confirmation', 'edd' ),
-				'post_content'   => __( 'Thank you for your purchase! [edd_receipt]', 'edd' ),
+				'post_title'     => __( 'Purchase Confirmation', 'easy-digital-downloads' ),
+				'post_content'   => __( 'Thank you for your purchase! [edd_receipt]', 'easy-digital-downloads' ),
 				'post_status'    => 'publish',
 				'post_author'    => 1,
 				'post_parent'    => $checkout,
@@ -82,8 +82,8 @@ function edd_install() {
 		// Failed Purchase Page
 		$failed = wp_insert_post(
 			array(
-				'post_title'     => __( 'Transaction Failed', 'edd' ),
-				'post_content'   => __( 'Your transaction failed, please try again or contact site support.', 'edd' ),
+				'post_title'     => __( 'Transaction Failed', 'easy-digital-downloads' ),
+				'post_content'   => __( 'Your transaction failed, please try again or contact site support.', 'easy-digital-downloads' ),
 				'post_status'    => 'publish',
 				'post_author'    => 1,
 				'post_type'      => 'page',
@@ -95,7 +95,7 @@ function edd_install() {
 		// Purchase History (History) Page
 		$history = wp_insert_post(
 			array(
-				'post_title'     => __( 'Purchase History', 'edd' ),
+				'post_title'     => __( 'Purchase History', 'easy-digital-downloads' ),
 				'post_content'   => '[purchase_history]',
 				'post_status'    => 'publish',
 				'post_author'    => 1,
@@ -162,6 +162,7 @@ function edd_install() {
 			'upgrade_payment_taxes',
 			'upgrade_customer_payments_association',
 			'upgrade_user_api_keys',
+			'remove_refunded_sale_logs'
 		);
 
 		foreach ( $upgrade_routines as $upgrade ) {

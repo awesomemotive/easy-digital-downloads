@@ -33,7 +33,7 @@ function edd_download_shortcode( $atts, $content = null ) {
 		'sku'			=> '',
 		'price'         => '1',
 		'direct'        => '0',
-		'text'          => edd_get_option( 'add_to_cart_text', __( 'Purchase', 'edd' ) ),
+		'text'          => '',
 		'style'         => edd_get_option( 'button_style', 'button' ),
 		'color'         => edd_get_option( 'checkout_color', 'blue' ),
 		'class'         => 'edd-submit',
@@ -41,9 +41,13 @@ function edd_download_shortcode( $atts, $content = null ) {
 	),
 	$atts, 'purchase_link' );
 
-	// Override text if direct == 1
-	if( $atts['direct'] == '1' ) {
-		$atts['text'] = edd_get_option( 'buy_now_text', __( 'Buy Now', 'edd' ) );
+	// Override text only if not provided / empty
+	if ( ! $atts['text'] ) {
+		if( $atts['direct'] == '1' || $atts['direct'] == 'true' ) {
+			$atts['text'] = edd_get_option( 'buy_now_text', __( 'Buy Now', 'easy-digital-downloads' ) );
+		} else {
+			$atts['text'] = edd_get_option( 'add_to_cart_text', __( 'Purchase', 'easy-digital-downloads' ) );
+		}
 	}
 
 	// Override color if color == inherit
@@ -82,7 +86,17 @@ add_shortcode( 'purchase_link', 'edd_download_shortcode' );
 function edd_download_history() {
 	if ( is_user_logged_in() ) {
 		ob_start();
-		edd_get_template_part( 'history', 'downloads' );
+
+		if( ! edd_user_pending_verification() ) {
+
+			edd_get_template_part( 'history', 'downloads' );
+
+		} else {
+
+			edd_get_template_part( 'account', 'pending' );
+
+		}
+
 		return ob_get_clean();
 	}
 }
@@ -98,7 +112,17 @@ add_shortcode( 'download_history', 'edd_download_history' );
  */
 function edd_purchase_history() {
 	ob_start();
-	edd_get_template_part( 'history', 'purchases' );
+
+	if( ! edd_user_pending_verification() ) {
+
+		edd_get_template_part( 'history', 'purchases' );
+
+	} else {
+
+		edd_get_template_part( 'account', 'pending' );
+
+	}
+
 	return ob_get_clean();
 }
 add_shortcode( 'purchase_history', 'edd_purchase_history' );
@@ -210,7 +234,7 @@ function edd_discounts_shortcode( $atts, $content = null ) {
 		}
 
 	} else {
-		$discounts_list .= '<li class="edd_discount">' . __( 'No discounts found', 'edd' ) . '</li>';
+		$discounts_list .= '<li class="edd_discount">' . __( 'No discounts found', 'easy-digital-downloads' ) . '</li>';
 	}
 
 	$discounts_list .= '</ul>';
@@ -234,7 +258,7 @@ function edd_purchase_collection_shortcode( $atts, $content = null ) {
 	extract( shortcode_atts( array(
 			'taxonomy'	=> '',
 			'terms'		=> '',
-			'text'		=> __('Purchase All Items', 'edd'),
+			'text'		=> __('Purchase All Items','easy-digital-downloads' ),
 			'style'     => edd_get_option( 'button_style', 'button' ),
 			'color'     => edd_get_option( 'checkout_color', 'blue' ),
 			'class'		=> 'edd-submit'
@@ -277,19 +301,28 @@ function edd_downloads_query( $atts, $content = null ) {
 		'thumbnails'       => 'true',
 		'orderby'          => 'post_date',
 		'order'            => 'DESC',
-		'ids'              => ''
+		'ids'              => '',
+		'pagination'       => 'true'
 	), $atts, 'downloads' );
 
 	$query = array(
 		'post_type'      => 'download',
-		'posts_per_page' => (int) $atts['number'],
 		'orderby'        => $atts['orderby'],
 		'order'          => $atts['order']
 	);
 
-	if ( $query['posts_per_page'] < -1 ) {
-		$query['posts_per_page'] = abs( $query['posts_per_page'] );
+	if(  'true' === $atts['pagination']  ) {
+
+		$query['posts_per_page'] = (int) $atts['number'];
+
+		if ( $query['posts_per_page'] < 0 ) {
+			$query['posts_per_page'] = abs( $query['posts_per_page'] );
+		}
+	} else {
+		$query['nopaging'] = true;
 	}
+
+
 
 	switch ( $atts['orderby'] ) {
 		case 'price':
@@ -566,7 +599,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		<?php
 		$display = ob_get_clean();
 	else:
-		$display = sprintf( _x( 'No %s found', 'download post type name', 'edd' ), edd_get_label_plural() );
+		$display = sprintf( _x( 'No %s found', 'download post type name', 'easy-digital-downloads' ), edd_get_label_plural() );
 	endif;
 
 	return apply_filters( 'downloads_shortcode', $display, $atts, $atts['buy_button'], $atts['columns'], $column_width, $downloads, $atts['excerpt'], $atts['full_content'], $atts['price'], $atts['thumbnails'], $query );
@@ -612,7 +645,7 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	global $edd_receipt_args;
 
 	$edd_receipt_args = shortcode_atts( array(
-		'error'           => __( 'Sorry, trouble retrieving payment receipt.', 'edd' ),
+		'error'           => __( 'Sorry, trouble retrieving payment receipt.', 'easy-digital-downloads' ),
 		'price'           => true,
 		'discount'        => true,
 		'products'        => true,
@@ -633,11 +666,27 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	}
 
 	// No key found
-	if ( ! isset( $payment_key ) )
-		return $edd_receipt_args['error'];
+	if ( ! isset( $payment_key ) ) {
+		return '<p class="edd-alert edd-alert-error">' . $edd_receipt_args['error'] . '</p>';
+	}
 
-	$edd_receipt_args['id'] = edd_get_purchase_id_by_key( $payment_key );
-	$customer_id              = edd_get_payment_user_id( $edd_receipt_args['id'] );
+	$payment_id    = edd_get_purchase_id_by_key( $payment_key );
+	$user_can_view = edd_can_view_receipt( $payment_key );
+
+	// Key was provided, but user is logged out. Offer them the ability to login and view the receipt
+	if ( ! $user_can_view && ! empty( $payment_key ) && ! is_user_logged_in() && ! edd_is_guest_payment( $payment_id ) ) {
+		global $edd_login_redirect;
+		$edd_login_redirect = edd_get_current_page_url();
+
+		ob_start();
+
+		echo '<p class="edd-alert edd-alert-warn">' . __( 'You must be logged in to view this payment receipt.', 'easy-digital-downloads' ) . '</p>';
+		edd_get_template_part( 'shortcode', 'login' );
+
+		$login_form = ob_get_clean();
+
+		return $login_form;
+	}
 
 	/*
 	 * Check if the user has permission to view the receipt
@@ -650,10 +699,9 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	 *
 	 */
 
-	$user_can_view = ( is_user_logged_in() && $customer_id == get_current_user_id() ) || ( ( $customer_id == 0 || $customer_id == '-1' ) && ! is_user_logged_in() && edd_get_purchase_session() ) || current_user_can( 'view_shop_sensitive_data' );
 
 	if ( ! apply_filters( 'edd_user_can_view_receipt', $user_can_view, $edd_receipt_args ) ) {
-		return $edd_receipt_args['error'];
+		return '<p class="edd-alert edd-alert-error">' . $edd_receipt_args['error'] . '</p>';
 	}
 
 	ob_start();
@@ -688,7 +736,15 @@ add_shortcode( 'edd_receipt', 'edd_receipt_shortcode' );
 function edd_profile_editor_shortcode( $atts, $content = null ) {
 	ob_start();
 
-	edd_get_template_part( 'shortcode', 'profile-editor' );
+	if( ! edd_user_pending_verification() ) {
+
+		edd_get_template_part( 'shortcode', 'profile-editor' );
+
+	} else {
+
+		edd_get_template_part( 'account', 'pending' );
+
+	}
 
 	$display = ob_get_clean();
 
@@ -708,12 +764,19 @@ add_shortcode( 'edd_profile_editor', 'edd_profile_editor_shortcode' );
  */
 function edd_process_profile_editor_updates( $data ) {
 	// Profile field change request
-	if ( empty( $_POST['edd_profile_editor_submit'] ) && !is_user_logged_in() )
+	if ( empty( $_POST['edd_profile_editor_submit'] ) && !is_user_logged_in() ) {
 		return false;
+	}
+
+	// Pending users can't edit their profile
+	if ( edd_user_pending_verification() ) {
+		return false;
+	}
 
 	// Nonce security
-	if ( ! wp_verify_nonce( $data['edd_profile_editor_nonce'], 'edd-profile-editor-nonce' ) )
+	if ( ! wp_verify_nonce( $data['edd_profile_editor_nonce'], 'edd-profile-editor-nonce' ) ) {
 		return false;
+	}
 
 	$user_id       = get_current_user_id();
 	$old_user_data = get_userdata( $user_id );
@@ -752,7 +815,7 @@ function edd_process_profile_editor_updates( $data ) {
 	// New password
 	if ( ! empty( $data['edd_new_user_pass1'] ) ) {
 		if ( $data['edd_new_user_pass1'] !== $data['edd_new_user_pass2'] ) {
-			edd_set_error( 'password_mismatch', __( 'The passwords you entered do not match. Please try again.', 'edd' ) );
+			edd_set_error( 'password_mismatch', __( 'The passwords you entered do not match. Please try again.', 'easy-digital-downloads' ) );
 		} else {
 			$userdata['user_pass'] = $data['edd_new_user_pass1'];
 		}
@@ -762,12 +825,12 @@ function edd_process_profile_editor_updates( $data ) {
 	if( $email != $old_user_data->user_email ) {
 		// Make sure the new email is valid
 		if( ! is_email( $email ) ) {
-			edd_set_error( 'email_invalid', __( 'The email you entered is invalid. Please enter a valid email.', 'edd' ) );
+			edd_set_error( 'email_invalid', __( 'The email you entered is invalid. Please enter a valid email.', 'easy-digital-downloads' ) );
 		}
 
 		// Make sure the new email doesn't belong to another user
 		if( email_exists( $email ) ) {
-			edd_set_error( 'email_exists', __( 'The email you entered belongs to another user. Please use another.', 'edd' ) );
+			edd_set_error( 'email_exists', __( 'The email you entered belongs to another user. Please use another.', 'easy-digital-downloads' ) );
 		}
 	}
 

@@ -45,6 +45,10 @@ function edd_do_ajax_export() {
 		die( '-1' );
 	}
 
+	if ( ! $export->is_writable ) {
+		echo json_encode( array( 'error' => true, 'message' => __( 'Export location or file not writable', 'easy-digital-downloads' ) ) ); exit;
+	}
+
 	$export->set_properties( $_REQUEST );
 
 	$ret = $export->process_step( $step );
@@ -55,6 +59,10 @@ function edd_do_ajax_export() {
 
 		$step += 1;
 		echo json_encode( array( 'step' => $step, 'percentage' => $percentage ) ); exit;
+
+	} elseif ( true === $export->is_empty ) {
+
+		echo json_encode( array( 'error' => true, 'message' => __( 'No data found for export parameters', 'easy-digital-downloads' ) ) ); exit;
 
 	} else {
 

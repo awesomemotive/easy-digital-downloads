@@ -225,8 +225,8 @@ final class EDD_Amazon_Payments {
 
 		$default_amazon_info = array(
 			$this->gateway_id => array(
-				'admin_label'    => __( 'Amazon', 'edd' ),
-				'checkout_label' => __( 'Amazon', 'edd' ),
+				'admin_label'    => __( 'Amazon', 'easy-digital-downloads' ),
+				'checkout_label' => __( 'Amazon', 'easy-digital-downloads' ),
 				'supports'       => array(),
 			),
 		);
@@ -265,48 +265,53 @@ final class EDD_Amazon_Payments {
 		$default_amazon_settings = array(
 			'amazon' => array(
 				'id'   => 'amazon',
-				'name' => '<span class="field-section-title">' . __( 'Amazon Payments Settings', 'edd' ) . '</span>',
-				'desc' => __( 'Configure the Amazon settings', 'edd' ),
+				'name' => '<span class="field-section-title">' . __( 'Amazon Payments Settings', 'easy-digital-downloads' ) . '</span>',
+				'desc' => __( 'Configure the Amazon settings', 'easy-digital-downloads' ),
 				'type' => 'header',
 			),
 			'amazon_register' => array(
 				'id'   => 'amazon_register',
-				'name' => __( 'Register with Amazon', 'edd' ),
-				'desc' => sprintf( __( '<p><a href="%s" class="button" target="_blank">Connect Easy Digital Downloads to Amazon</a></p><p class="description">Once registration is complete, enter your API credentials below.</p>', 'edd' ), $this->get_registration_url() ),
+				'name' => __( 'Register with Amazon', 'easy-digital-downloads' ),
+				'desc' => '<p><a href="' . $this->get_registration_url() . '" class="button" target="_blank">' .
+						__( 'Connect Easy Digital Downloads to Amazon', 'easy-digital-downloads' ) .
+						'</a></p>' .
+						'<p class="description">' .
+						__( 'Once registration is complete, enter your API credentials below.', 'easy-digital-downloads' ) .
+						'</p>',
 				'type' => 'descriptive_text',
 			),
 			'amazon_seller_id' => array(
 				'id'   => 'amazon_seller_id',
-				'name' => __( 'Seller ID', 'edd' ),
-				'desc' => __( 'Found in the Integration settings. Also called a Merchant ID', 'edd' ),
+				'name' => __( 'Seller ID', 'easy-digital-downloads' ),
+				'desc' => __( 'Found in the Integration settings. Also called a Merchant ID', 'easy-digital-downloads' ),
 				'type' => 'text',
 				'size' => 'regular',
 			),
 			'amazon_mws_access_key' => array(
 				'id'   => 'amazon_mws_access_key',
-				'name' => __( 'MWS Access Key', 'edd' ),
-				'desc' => __( 'Found on Seller Central in the MWS Keys section', 'edd' ),
+				'name' => __( 'MWS Access Key', 'easy-digital-downloads' ),
+				'desc' => __( 'Found on Seller Central in the MWS Keys section', 'easy-digital-downloads' ),
 				'type' => 'text',
 				'size' => 'regular',
 			),
 			'amazon_mws_secret_key' => array(
 				'id'   => 'amazon_mws_secret_key',
-				'name' => __( 'MWS Secret Key', 'edd' ),
-				'desc' => __( 'Found on Seller Central in the MWS Keys section', 'edd' ),
+				'name' => __( 'MWS Secret Key', 'easy-digital-downloads' ),
+				'desc' => __( 'Found on Seller Central in the MWS Keys section', 'easy-digital-downloads' ),
 				'type' => 'text',
 				'size' => 'regular',
 			),
 			'amazon_client_id' => array(
 				'id'   => 'amazon_client_id',
-				'name' => __( 'Client ID', 'edd' ),
-				'desc' => __( 'The Amazon Client ID. Should look like `amzn1.application-oa2...`', 'edd' ),
+				'name' => __( 'Client ID', 'easy-digital-downloads' ),
+				'desc' => __( 'The Amazon Client ID. Should look like `amzn1.application-oa2...`', 'easy-digital-downloads' ),
 				'type' => 'text',
 				'size' => 'regular',
 			),
 			'amazon_mws_callback_url' => array(
 				'id'       => 'amazon_callback_url',
-				'name'     => __( 'Amazon MWS Callback URL', 'edd' ),
-				'desc'     => __( 'The Return URL to provide in your MWS Application. Enter this under your Login and Pay &rarr; Web Settings', 'edd' ),
+				'name'     => __( 'Amazon MWS Callback URL', 'easy-digital-downloads' ),
+				'desc'     => __( 'The Return URL to provide in your MWS Application. Enter this under your Login and Pay &rarr; Web Settings', 'easy-digital-downloads' ),
 				'type'     => 'text',
 				'size'     => 'large',
 				'std'      => $this->get_amazon_authenticate_redirect(),
@@ -314,8 +319,8 @@ final class EDD_Amazon_Payments {
 			),
 			'amazon_mws_ipn_url' => array(
 				'id'       => 'amazon_ipn_url',
-				'name'     => __( 'Amazon Merchant IPN URL', 'edd' ),
-				'desc'     => sprintf( __( 'The IPN URL to provide in your MWS account. Enter this under your <a href="%s">Integration Settings</a>', 'edd' ), 'https://sellercentral.amazon.com/gp/pyop/seller/account/settings/user-settings-edit.html' ),
+				'name'     => __( 'Amazon Merchant IPN URL', 'easy-digital-downloads' ),
+				'desc'     => sprintf( __( 'The IPN URL to provide in your MWS account. Enter this under your <a href="%s">Integration Settings</a>', 'easy-digital-downloads' ), 'https://sellercentral.amazon.com/gp/pyop/seller/account/settings/user-settings-edit.html' ),
 				'type'     => 'text',
 				'size'     => 'large',
 				'std'      => $this->get_amazon_ipn_url(),
@@ -608,72 +613,99 @@ final class EDD_Amazon_Payments {
 		ob_start(); ?>
 		<fieldset id="edd_cc_fields" class="edd-amazon-fields">
 			<p class="edd-amazon-profile-wrapper">
-				<?php _e( 'Currently logged into Amazon as', 'edd' ); ?>: <span class="edd-amazon-profile-name"><?php echo $profile['name']; ?></span>
-				<span class="edd-amazon-logout">(<a id="Logout"><?php _e( 'Logout', 'edd' ); ?></a>)</span>
+				<?php _e( 'Currently logged into Amazon as', 'easy-digital-downloads' ); ?>: <span class="edd-amazon-profile-name"><?php echo $profile['name']; ?></span>
+				<span class="edd-amazon-logout">(<a id="Logout"><?php _e( 'Logout', 'easy-digital-downloads' ); ?></a>)</span>
 			</p>
-
-			<div id="edd-amazon-address-box"></div>
+			<?php if( edd_use_taxes() ) : ?>
+				<div id="edd-amazon-address-box"></div>
+			<?php endif; ?>
 			<div id="edd-amazon-wallet-box"></div>
 			<script>
 				var edd_scripts;
-				new OffAmazonPayments.Widgets.AddressBook({
-					sellerId: edd_amazon.sellerId,
-					amazonOrderReferenceId: edd_amazon.referenceID,
+				if( '1' == edd_scripts.taxes_enabled ) {
+					new OffAmazonPayments.Widgets.AddressBook({
+						sellerId: edd_amazon.sellerId,
+						amazonOrderReferenceId: edd_amazon.referenceID,
 						onOrderReferenceCreate: function(orderReference) {
-						orderReference.getAmazonOrderReferenceId();
-					},
-					onAddressSelect: function(orderReference) {
-						jQuery.ajax({
-							type: "POST",
-							data: {
-								action       : 'edd_amazon_get_address',
-								reference_id : edd_amazon.referenceID
-							},
-							dataType: "json",
-							url: edd_scripts.ajaxurl,
-							xhrFields: {
-								withCredentials: true
-							},
-							success: function (response) {
-								jQuery('#card_city').val( response.City );
-								jQuery('#card_zip').val( response.PostalCode );
-								jQuery('#billing_country').val( response.CountryCode );
-								jQuery('#card_state').val( response.StateOrRegion ).trigger( 'change' );
-							}
-						}).fail(function (response) {
-							if ( window.console && window.console.log ) {
-								console.log( response );
-							}
-						}).done(function (response) {
+							orderReference.getAmazonOrderReferenceId();
+						},
+						onAddressSelect: function(orderReference) {
+							jQuery.ajax({
+								type: "POST",
+								data: {
+									action       : 'edd_amazon_get_address',
+									reference_id : edd_amazon.referenceID
+								},
+								dataType: "json",
+								url: edd_scripts.ajaxurl,
+								xhrFields: {
+									withCredentials: true
+								},
+								success: function (response) {
+									jQuery('#card_city').val( response.City );
+									jQuery('#card_address').val( response.AddressLine1 );
+									jQuery('#card_address_2').val( response.AddressLine2 );
+									jQuery('#card_zip').val( response.PostalCode );
+									jQuery('#billing_country').val( response.CountryCode );
+									jQuery('#card_state').val( response.StateOrRegion ).trigger( 'change' );
+								}
+							}).fail(function (response) {
+								if ( window.console && window.console.log ) {
+									console.log( response );
+								}
+							}).done(function (response) {
 
-						});
-					},
-					design: {
-						designMode: 'responsive'
-					},
-					onError: function(error) {
-						jQuery('#edd_purchase_submit').prepend( '<div class="edd_errors"><p class="edd_error" id="edd_error_"' + error.getErrorCode() + '>' + error.getErrorMessage() + '</p></div>' );
-					}
-				}).bind("edd-amazon-address-box");
+							});
+						},
+						design: {
+							designMode: 'responsive'
+						},
+						onError: function(error) {
+							jQuery('#edd-amazon-address-box').hide();
+							jQuery('#edd_purchase_submit').prepend( '<div class="edd_errors"><p class="edd_error" id="edd_error_"' + error.getErrorCode() + '>' + error.getErrorMessage() + '</p></div>' );
+						}
+					}).bind("edd-amazon-address-box");
 
-				new OffAmazonPayments.Widgets.Wallet({
-					sellerId: edd_amazon.sellerId,
-					amazonOrderReferenceId: edd_amazon.referenceID,
-					design: {
-						designMode: 'responsive'
-					},
-					onPaymentSelect: function(orderReference) {
-						// Display your custom complete purchase button
-					},
-					onError: function(error) {
-						jQuery('#edd_purchase_submit').prepend( '<div class="edd_errors"><p class="edd_error" id="edd_error_"' + error.getErrorCode() + '>' + error.getErrorMessage() + '</p></div>' );
-					}
-				}).bind("edd-amazon-wallet-box");
+					new OffAmazonPayments.Widgets.Wallet({
+						sellerId: edd_amazon.sellerId,
+						amazonOrderReferenceId: edd_amazon.referenceID,
+						design: {
+							designMode: 'responsive'
+						},
+						onPaymentSelect: function(orderReference) {
+							// Display your custom complete purchase button
+						},
+						onError: function(error) {
+							jQuery('#edd_purchase_submit').prepend( '<div class="edd_errors"><p class="edd_error" id="edd_error_"' + error.getErrorCode() + '>' + error.getErrorMessage() + '</p></div>' );
+						}
+					}).bind("edd-amazon-wallet-box");
+
+				} else {
+
+					new OffAmazonPayments.Widgets.Wallet({
+						sellerId: edd_amazon.sellerId,
+						design: {
+							designMode: 'responsive'
+						},
+						onOrderReferenceCreate: function(orderReference) {
+							jQuery( '#edd_amazon_reference_id' ).val( orderReference.getAmazonOrderReferenceId() );
+						},
+						onPaymentSelect: function(orderReference) {
+							// Display your custom complete purchase button
+						},
+						onError: function(error) {
+							jQuery('#edd_purchase_submit').prepend( '<div class="edd_errors"><p class="edd_error" id="edd_error_"' + error.getErrorCode() + '>' + error.getErrorMessage() + '</p></div>' );
+						}
+					}).bind("edd-amazon-wallet-box");
+
+				}
 			</script>
 
 			<div id="edd_cc_address">
-				<input type="hidden" name="edd_amazon_reference_id" value="<?php echo esc_attr( $this->reference_id ); ?>"/>
+				<input type="hidden" name="edd_amazon_reference_id" id="edd_amazon_reference_id" value="<?php echo esc_attr( $this->reference_id ); ?>"/>
 				<input type="hidden" name="card_city" class="card_city" id="card_city" value=""/>
+				<input type="hidden" name="card_address" class="card_address" id="card_address" value=""/>
+				<input type="hidden" name="card_address_2" class="card_address_2" id="card_address_2" value=""/>
 				<input type="hidden" name="card_zip" class="card_zip" id="card_zip" value=""/>
 				<input type="hidden" name="card_state" class="card_state" id="card_state" value=""/>
 				<input type="hidden" name="billing_country" class="billing_country" id="billing_country" value=""/>
@@ -703,6 +735,7 @@ final class EDD_Amazon_Payments {
 		$request = $this->client->getOrderReferenceDetails( array(
 			'merchant_id'               => edd_get_option( 'amazon_seller_id', '' ),
 			'amazon_order_reference_id' => $_POST['reference_id'],
+			'address_consent_token'     => EDD()->session->get( 'amazon_access_token' )
 		) );
 
 
@@ -713,7 +746,7 @@ final class EDD_Amazon_Payments {
 		if( isset( $data['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['Destination']['PhysicalDestination'] ) ) {
 
 			$address = $data['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['Destination']['PhysicalDestination'];
-			$address = wp_parse_args( $address, array( 'City', 'CountryCode', 'StateOrRegion', 'PostalCode' ) );
+			$address = wp_parse_args( $address, array( 'City', 'CountryCode', 'StateOrRegion', 'PostalCode', 'AddressLine1', 'AddressLine2' ) );
 
 		}
 
@@ -734,7 +767,7 @@ final class EDD_Amazon_Payments {
 
 		// should validate that we have a reference ID here, perhaps even fire the API call here
 		if( empty( $post_data['edd_amazon_reference_id'] ) ) {
-			edd_set_error( 'missing_reference_id', __( 'Missing Reference ID, please try again', 'edd' ) );
+			edd_set_error( 'missing_reference_id', __( 'Missing Reference ID, please try again', 'easy-digital-downloads' ) );
 		}
 	}
 
@@ -749,7 +782,7 @@ final class EDD_Amazon_Payments {
 	public function process_purchase( $purchase_data ) {
 
 		if( empty( $purchase_data['post_data']['edd_amazon_reference_id'] ) ) {
-			edd_set_error( 'missing_reference_id', __( 'Missing Reference ID, please try again', 'edd' ) );
+			edd_set_error( 'missing_reference_id', __( 'Missing Reference ID, please try again', 'easy-digital-downloads' ) );
 		}
 
 		$errors = edd_get_errors();
@@ -785,7 +818,7 @@ final class EDD_Amazon_Payments {
 			if( 'Declined' === $status ) {
 
 				$reason = $charge['AuthorizeResult']['AuthorizationDetails']['AuthorizationStatus']['ReasonCode'];
-				edd_set_error( 'payment_declined', sprintf( __( 'Your payment could not be authorized, please try a different payment method. Reason: %s', 'edd' ), $reason ) );
+				edd_set_error( 'payment_declined', sprintf( __( 'Your payment could not be authorized, please try a different payment method. Reason: %s', 'easy-digital-downloads' ), $reason ) );
 				edd_send_back_to_checkout( '?payment-mode=amazon&amazon_reference_id=' . $purchase_data['post_data']['edd_amazon_reference_id'] );
 			}
 
@@ -817,9 +850,7 @@ final class EDD_Amazon_Payments {
 
 			$capture = new ResponseParser( $capture->response );
 			$capture = $capture->toArray();
-
-			// Check capture status
-
+	
 			edd_update_payment_meta( $payment_id, '_edd_amazon_authorization_id', $authorization_id );
 			edd_update_payment_meta( $payment_id, '_edd_amazon_capture_id', $capture_id );
 
@@ -834,7 +865,7 @@ final class EDD_Amazon_Payments {
 		} else {
 
 			// Set an error
-			edd_set_error( 'amazon_error',sprintf( __( 'There was an issue processing your payment. Amazon error: %s', 'edd' ), print_r( $charge, true ) ) );
+			edd_set_error( 'amazon_error',sprintf( __( 'There was an issue processing your payment. Amazon error: %s', 'easy-digital-downloads' ), print_r( $charge, true ) ) );
 			edd_send_back_to_checkout( '?payment-mode=amazon&amazon_reference_id=' . $purchase_data['post_data']['edd_amazon_reference_id'] );
 
 		}
@@ -970,7 +1001,7 @@ final class EDD_Amazon_Payments {
 			$seller_id = $data['SellerId'];
 
 			if( $seller_id != edd_get_option( 'amazon_seller_id', '' ) ) {
-				wp_die( __( 'Invalid Amazon seller ID', 'edd' ), __( 'IPN Error', 'edd' ), array( 'response' => 401 ) );
+				wp_die( __( 'Invalid Amazon seller ID', 'easy-digital-downloads' ), __( 'IPN Error', 'easy-digital-downloads' ), array( 'response' => 401 ) );
 			}
 
 			switch( $data['NotificationType'] ) {
@@ -994,7 +1025,7 @@ final class EDD_Amazon_Payments {
 
 						edd_update_payment_status( $payment_id, 'failed' );
 
-						edd_insert_payment_note( $payment_id, __( 'Capture declined in Amazon', 'edd' ) );
+						edd_insert_payment_note( $payment_id, __( 'Capture declined in Amazon', 'easy-digital-downloads' ) );
 
 					}
 
@@ -1012,7 +1043,7 @@ final class EDD_Amazon_Payments {
 
 						edd_update_payment_status( $payment_id, 'refunded' );
 
-						edd_insert_payment_note( $payment_id, sprintf( __( 'Refund completed in Amazon. Refund ID: %s', 'edd' ), $data['RefundDetails']['AmazonRefundId'] ) );
+						edd_insert_payment_note( $payment_id, sprintf( __( 'Refund completed in Amazon. Refund ID: %s', 'easy-digital-downloads' ), $data['RefundDetails']['AmazonRefundId'] ) );
 
 					}
 
@@ -1024,7 +1055,7 @@ final class EDD_Amazon_Payments {
 
 		} catch( Exception $e ) {
 
-			wp_die( $e->getErrorMessage(), __( 'IPN Error', 'edd' ), array( 'response' => 401 ) );
+			wp_die( $e->getErrorMessage(), __( 'IPN Error', 'easy-digital-downloads' ), array( 'response' => 401 ) );
 
 		}
 
@@ -1093,20 +1124,20 @@ final class EDD_Amazon_Payments {
 				case 'Declined' :
 
 					$code   = $refund['RefundResult']['RefundDetails']['RefundStatus']['ReasonCode'];
-					$note   = __( 'Refund declined in Amazon. Refund ID: %s', 'edd' );
+					$note   = __( 'Refund declined in Amazon. Refund ID: %s', 'easy-digital-downloads' );
 
 					break;
 
 				case 'Completed' :
 
 					$refund_id = $refund['RefundResult']['RefundDetails']['AmazonRefundId'];
-					$note      = sprintf( __( 'Refund completed in Amazon. Refund ID: %s', 'edd' ), $refund_id );
+					$note      = sprintf( __( 'Refund completed in Amazon. Refund ID: %s', 'easy-digital-downloads' ), $refund_id );
 
 					break;
 
 				case 'Pending' :
 
-					$note = sprintf( __( 'Refund initiated in Amazon. Reference ID: %s', 'edd' ), $reference_id );
+					$note = sprintf( __( 'Refund initiated in Amazon. Reference ID: %s', 'easy-digital-downloads' ), $reference_id );
 
 					break;
 			}
@@ -1115,7 +1146,7 @@ final class EDD_Amazon_Payments {
 
 		} else {
 
-			edd_insert_payment_note( $payment_id, __( 'Refund request failed in Amazon.', 'edd' ) );
+			edd_insert_payment_note( $payment_id, __( 'Refund request failed in Amazon.', 'easy-digital-downloads' ) );
 
 		}
 
@@ -1129,7 +1160,27 @@ final class EDD_Amazon_Payments {
 	 * @return string
 	 */
 	private function get_registration_url() {
-		return 'https://sellercentral.amazon.com/hz/me/sp/signup?solutionProviderId=A3JST9YM1SX7LB&marketplaceId=AGWSWK15IEJJ7&solutionProviderToken=AAAAAQAAAAEAAAAQnngerc8vYweGDt8byl2smgAAAHBgMm923quugHaGmPi%2B3sqo93TSL1aKwU85v71Zh7EXVK8De%2FuahjCFHft3cxN3rwAF4Iwg03sDW0jnkLULmFk7M1Fr69IV2XF477m0kU1EM0Z%2FbQssHdLai%2Fzoce1jZVmw8So3F2jhiDyfTHUK2AYP&solutionProviderOptions=lwa%3Bmws-acc%3B';
+
+		switch ( edd_get_shop_country() ) {
+			case 'GB':
+				$base_url = 'https://payments.amazon.co.uk/preregistration/lpa';
+			break;
+			case 'DE':
+				$base_url = 'https://payments.amazon.de/preregistration/lpa';
+			break;
+			default:
+				$base_url = 'https://sellercentral.amazon.com/hz/me/sp/signup';
+			break;
+		}
+
+		$query_args = array(
+			'solutionProviderId' => 'A3JST9YM1SX7LB',
+			'marketplaceId'      => 'AGWSWK15IEJJ7',
+			'solutionProviderToken' => 'AAAAAQAAAAEAAAAQnngerc8vYweGDt8byl2smgAAAHBgMm923quugHaGmPi%2B3sqo93TSL1aKwU85v71Zh7EXVK8De%2FuahjCFHft3cxN3rwAF4Iwg03sDW0jnkLULmFk7M1Fr69IV2XF477m0kU1EM0Z%2FbQssHdLai%2Fzoce1jZVmw8So3F2jhiDyfTHUK2AYP',
+			'solutionProviderOptions' => 'lwa%3Bmws-acc%3B',
+		);
+
+		return add_query_arg( $query_args, $base_url );
 	}
 
 }

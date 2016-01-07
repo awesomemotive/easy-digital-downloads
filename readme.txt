@@ -5,9 +5,9 @@ Contributors: mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, 
 Donate link: https://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.9.2
-Tested up to: 4.2
+Tested up to: 4.4
 
-Stable Tag: 2.4.2
+Stable Tag: 2.4.10
 
 License: GNU Version 2 or Any Later Version
 
@@ -81,7 +81,7 @@ Easy Digital Downloads has been translated into the following languages:
 25. Khmer
 26. Lithuanian
 
-Would you like to help translate the plugin into more languages? [Join our WP-Translations Community](https://www.transifex.com/projects/p/easy-digital-downloads/).
+Would you like to help translate the plugin into more languages? [Join our WP-Translations Community](http://docs.easydigitaldownloads.com/article/1023-translating-easy-digital-downloads).
 
 == Installation ==
 
@@ -101,7 +101,7 @@ There are three ways you can show the downloads shopping cart:
 
 2. Use the included widget. Go to Appearance > Widgets and place the "Downloads Cart" widget into any widget area available.
 
-3. Use the template tag and place the following the template file of your choosing:
+3. Use the template tag and place the following in the template file of your choosing:
 
 `echo edd_shopping_cart();`
 
@@ -190,6 +190,95 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.4.10, December 12, 2015 =
+
+* Fix: Security vulnerability related to session IDs
+
+= 2.4.9, October 14, 2015 =
+
+* Fix: Importing payments caused payments to be associated with customer of user doing the import
+* Fix: Corrected spelling for edd_customer_recent_purchases_actions hook
+
+= 2.4.8, October 12, 2015 =
+
+* New: Added option to manually verify a user account from the customer details screen
+* New: Added support for searching customer records by user ID
+* New: Added improved error logging for email sending
+* Fix: Incorrect CSS animation property
+* Fix: Removed unused code in edd_get_purchase_link() function
+* Fix: Corrected spelling error in EDD_Stats class
+* Fix: New customers improperly created when logged-in user completed purchases with a different email
+* Fix: User verification process should not run on the very first purchase by a customer
+* Fix: edd_get_current_page_url() returns improper URL when WordPress is installed in sub folder
+* Tweak: Improved formatting of the welcome screen to match the styles of WordPress core
+
+= 2.4.7, September 29, 2015 =
+
+* Tweak: Changed text domain from "edd" to "easy-digital-downloads"
+* Fix: User ID not properly set on customer record when user account is created
+* Fix: Earnings / sales graph reporting 0 stats for some days incorrectly
+
+= 2.4.6, September 18, 2015 =
+
+* Fix: Bug in user verification process causing redirect loop when Purchase History page is not set
+* Fix: Warning: Missing argument 3 for edd_receipt_show_download_files()
+* Fix: Quick Edits on Downloads not always expanding the form
+* Fix: Occasional redirect loop caused by edd_enforced_ssl_redirect_handler()
+* Fix: Item quantity not properly added to cart when AJAX is disabled
+* Tweak: Fix extra parameter being provided in get sales by date
+
+= 2.4.5, September 16, 2015 =
+
+* Fix: Bug with AJAX URL on checkout and mixed-content error messages for sites that use HTTPS on checkout but not in /wp-admin/
+
+= 2.4.4, September 14, 2015 =
+
+* Fix: Incorrectly shown "Sorry, trouble retrieving payment receipt" error
+* Fix: Credit / debit cards with an expiration more than 10 years in the future cannot be used
+* Fix: Non-object notice on /edd-api/customers endpoint
+* Fix: Javascript error on category / tag quick edit screen
+* Fix: Not array PHP error on customer details screen when customer has purchases without any items
+* Fix: Cart item quantities cannnot be changed in HTML structure of cart items is changed
+* Fix: Purchase link shortcode attributes for "text" not working properly
+* Fix: Default price ID cannot be saved with ID of 0
+* Fix: New user notifications not working properly since WordPress 4.3
+* Fix: Incorrect URl returned by edd_get_current_page_url() in some instances
+* Tweak: Improved account creation process
+* Tweak: Introduced "pagination" parameter for downloads shortcode to disable pagination
+* Tweak: Introduced edd_protected_directory_allowed_filetypes filter
+* Tweak: Add $item to edd_receipt_show_download_files filter
+* Tweak: Better error reporting when batch export process fails
+
+= 2.4.3, August 18, 2015 =
+
+* Tweak: Added new action hooks to the Sales Summary widget
+* Tweak: Added new action hook that fires when an item is removed from a payment record
+* Tweak: Updated logo on PDF reports
+* Tweak: Updated logo on welcome screen
+* Tweak: Improved order of operations when updating discount codes
+* Tweak: Amazon Payments Address widget is hidden on reload when a charge is declined
+* Tweak: Only show address widget for Amazon Payments when taxes are enabled
+* Tweak: Update Amazon Payment registration URLs for EU and DE
+* Tweak: Retrieve complete billing address from Amazon
+* Tweak: Updated language files
+* Fix: Profile editor missing P tag when user is logged out
+* Fix: Email headers should only be added if header text is set
+* Fix: Undefined index "plugin"
+* Fix: Sale log entries not deleted when purchase is refunded
+* Fix: Preset discount code logic tries to run when bulk deleting discount codes
+* Fix: Adding ?discount={code} to static home page URL causes blog page to be shown
+* Fix: Ensure we have a user before trying to get purchase history
+* Fix: Properly format decimals for HUF currency
+* Fix: Prevent fatal errors when entering invalid date in start/end date of payment history
+* Fix: Removed unused function edd_add_ons_init()
+* Fix: Prevent multiple batch processes from being started at the same time
+* Fix: Re-instantiate Chosen when cloning a repeatable row with a Chosen field
+* Fix: Variable typo in edd_is_admin_page()
+* Fix: Customer name not stored properly if three names are entered when purchasing through Amazon Payments
+* Fix: Sales report column fails does not work for guest customers
+* Fix: direct="true" does not work properly if price_id="1" is also set
+* Fix: Products without a title cannot be purchased through PayPal
 
 = 2.4.2, July 13, 2015 =
 

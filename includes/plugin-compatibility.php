@@ -51,7 +51,7 @@ add_action( 'template_redirect', 'edd_disable_jetpack_og_on_checkout' );
  * @return bool $caching True if caching plugin is enabled, false otherwise
  */
 function edd_is_caching_plugin_active() {
-	$caching = ( function_exists( 'wpsupercache_site_admin' ) || defined( 'W3TC' ) );
+	$caching = ( function_exists( 'wpsupercache_site_admin' ) || defined( 'W3TC' ) || function_exists( 'rocket_init' ) );
 	return apply_filters( 'edd_is_caching_plugin_active', $caching );
 }
 
@@ -70,8 +70,8 @@ function edd_append_no_cache_param( $settings ) {
 
 	$settings[] = array(
 		'id' => 'no_cache_checkout',
-		'name' => __('No Caching on Checkout?', 'edd'),
-		'desc' => __('Check this box in order to append a ?nocache parameter to the checkout URL to prevent caching plugins from caching the page.', 'edd'),
+		'name' => __('No Caching on Checkout?','easy-digital-downloads' ),
+		'desc' => __('Check this box in order to append a ?nocache parameter to the checkout URL to prevent caching plugins from caching the page.','easy-digital-downloads' ),
 		'type' => 'checkbox'
 	);
 
@@ -136,3 +136,17 @@ function edd_disable_404_redirected_redirect() {
 	}
 }
 add_action( 'template_redirect', 'edd_disable_404_redirected_redirect', 9 );
+
+/**
+ * Addes 'edd' to the list of Say What aliases after moving to WordPress.org language packs
+ *
+ * @since  2.4.6
+ * @param  array $aliases Say What domain aliases
+ * @return array          Say What domain alises with 'edd' added
+ */
+function edd_say_what_domain_aliases( $aliases ) {
+	$aliases['easy-digital-downloads'][] = 'edd';
+
+	return $aliases;
+}
+add_filter( 'say_what_domain_aliases', 'edd_say_what_domain_aliases', 10, 1 );
