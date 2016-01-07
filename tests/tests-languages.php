@@ -46,7 +46,6 @@ class Tests_Languages extends WP_UnitTestCase {
 		$this->assertTrue( file_exists( EDD_PLUGIN_DIR . '/languages/easy-digital-downloads-fa_IR.mo') );
 		$this->assertTrue( file_exists( EDD_PLUGIN_DIR . '/languages/easy-digital-downloads-fi.mo') );
 		$this->assertTrue( file_exists( EDD_PLUGIN_DIR . '/languages/easy-digital-downloads-fo.mo') );
-		$this->assertTrue( file_exists( EDD_PLUGIN_DIR . '/languages/easy-digital-downloads-fr_FR.mo') );
 		$this->assertTrue( file_exists( EDD_PLUGIN_DIR . '/languages/easy-digital-downloads-fy.mo') );
 		$this->assertTrue( file_exists( EDD_PLUGIN_DIR . '/languages/easy-digital-downloads-ga.mo') );
 		$this->assertTrue( file_exists( EDD_PLUGIN_DIR . '/languages/easy-digital-downloads-gd.mo') );
