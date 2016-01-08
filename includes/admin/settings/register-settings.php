@@ -1983,7 +1983,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 		$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
 		$html = '<input type="text" class="' . $size . '-text" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']" value="' . esc_attr( $value ) . '"/>';
 
-		if ( is_object( $license ) && 'valid' == $license->license ) {
+		if ( ( is_object( $license ) && 'valid' == $license->license ) || 'valid' == $license ) {
 			$html .= '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __( 'Deactivate License',  'easy-digital-downloads' ) . '"/>';
 		}
 		$html .= '<label for="edd_settings[' . $args['id'] . ']">'  . $args['desc'] . '</label>';
