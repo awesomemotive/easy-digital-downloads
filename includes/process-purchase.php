@@ -710,7 +710,7 @@ function edd_get_purchase_form_user( $valid_data = array() ) {
 			}
 
 			// Update, if we have info
-			if ( ! empty( $update_args ) ) {
+			if ( ! empty( $user_args ) ) {
 				$user_args['ID'] = $user['user_id'];
 
 				wp_update_user( $user_args );
