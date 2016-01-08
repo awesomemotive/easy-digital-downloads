@@ -691,26 +691,28 @@ final class EDD_Payment {
 
 					case 'fees':
 
-						if ( 'publish' === $this->status || 'complete' === $this->status || 'revoked' === $this->status ) {
-							if ( ! empty( $this->pending[ $key ] ) ) {
+						if ( 'publish' !== $this->status && 'complete' !== $this->status && 'revoked' !== $this->status ) {
+							break;	
+						}
 
-								foreach ( $this->pending[ $key ] as $fee ) {
+						if ( empty( $this->pending[ $key ] ) ) {
+							break;
+						}
 
-									switch( $fee['action'] ) {
+						foreach ( $this->pending[ $key ] as $fee ) {
 
-										case 'add':
-											$total_increase += $fee['amount'];
-											break;
+							switch( $fee['action'] ) {
 
-										case 'remove':
-											$total_decrease += $fee['amount'];
-											break;
+								case 'add':
+									$total_increase += $fee['amount'];
+									break;
 
-									}
-
-								}
+								case 'remove':
+									$total_decrease += $fee['amount'];
+									break;
 
 							}
+
 						}
 
 						break;
