@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 4.0
 Tested up to: 4.5
 
-Stable Tag: 2.5
+Stable Tag: 2.5.1
 
 License: GNU Version 2 or Any Later Version
 
@@ -214,6 +214,14 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.5.1, January 7, 2016 =
+
+* Fix: Infinite loop in some instances where add_filter() is used by extensions
+* Fix: Deactivate License button missing on valid license keys
+* Fix: Payments not properly attached to customer records if last name is not supplied during checkout while logged out
+* Fix: Item amounts not saving properly when adding new Download to payment record
+* Fix: PHP warning on explode() due to empty customer notes field
 
 = 2.5, January 7, 2016 =
 
