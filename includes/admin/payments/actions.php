@@ -96,7 +96,7 @@ function edd_update_payment_details( $data ) {
 			// Set some defaults
 			$args = array(
 				'quantity'    => $quantity,
-				'amount'      => $amount,
+				'item_price'  => $amount,
 				'price_id'    => $price_id,
 			);
 
