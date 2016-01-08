@@ -1793,11 +1793,6 @@ final class EDD_Payment {
 	 */
 	private function setup_cart_details() {
 		$cart_details = isset( $this->payment_meta['cart_details'] ) ? maybe_unserialize( $this->payment_meta['cart_details'] ) : array();
-
-		if ( 1 === edd_did_filter( 'edd_payment_cart_details' ) ) {
-			$cart_details = apply_filters( 'edd_payment_cart_details', $cart_details, $this->ID, $this );
-		}
-
 		return $cart_details;
 	}
 
