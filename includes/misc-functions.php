@@ -864,3 +864,20 @@ function edd_can_view_receipt( $payment_key = '' ) {
 
 	return (bool) apply_filters( 'edd_can_view_receipt', $return, $payment_key );
 }
+
+/**
+ * Check if a filter has been run
+ *
+ * @since  2.5.1
+ * @param  string $tag The filter to check for
+ * @return int         The number of times the filter has been run
+ */
+function edd_did_filter( $tag = '' ) {
+	global $wp_filter;
+
+	if ( ! isset( $wp_filter[ $tag ] ) ) {
+		return 0;
+	}
+
+	return $wp_filter[ $tag ];
+}
