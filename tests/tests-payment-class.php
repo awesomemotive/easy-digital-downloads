@@ -115,9 +115,7 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$payment->add_download( $new_download->ID, $args );
 		$payment->save();
 
-		$this->assertFalse( empty( $payment->downloads[2]['fees'] ) );
-		$this->assertEquals( $new_download->ID, $payment->downloads[2]['fees'][0]['download_id'] );
-		$this->assertEquals( 145, $payment->total );
+		$this->assertFalse( empty( $payment->cart_details[2]['fees'] ) );
 	}
 
 	public function test_remove_download() {
