@@ -1828,74 +1828,182 @@ final class EDD_Payment {
 		return get_object_vars( $this );
 	}
 
+	/**
+	 * Retrieve payment cart details
+	 *
+	 * @since  2.5.1
+	 * @return array Cart details array
+	 */
 	private function get_cart_details() {
 		return apply_filters( 'edd_payment_cart_details', $this->cart_details, $this->ID, $this );
 	}
 
+	/**
+	 * Retrieve payment completion date
+	 *
+	 * @since  2.5.1
+	 * @return string Date payment was completed
+	 */
 	private function get_completed_date() {
 		return apply_filters( 'edd_payment_completed_date', $this->completed_date, $this->ID, $this );
 	}
 
+	/**
+	 * Retrieve payment tax
+	 *
+	 * @since  2.5.1
+	 * @return float Payment tax
+	 */
 	private function get_tax() {
 		return apply_filters( 'edd_get_payment_tax', $this->tax, $this->ID, $this );
 	}
 
+	/**
+	 * Retrieve payment subtotal
+	 *
+	 * @since  2.5.1
+	 * @return float Payment subtotal
+	 */
 	private function get_subtotal() {
 		return apply_filters( 'edd_get_payment_subtotal', $this->subtotal, $this->ID, $this );
 	}
 
+	/**
+	 * Retrieve payment discounts
+	 *
+	 * @since  2.5.1
+	 * @return array Discount codes on payment
+	 */
 	private function get_discounts() {
 		return apply_filters( 'edd_payment_discounts', $this->discounts, $this->ID, $this );
 	}
 
+	/**
+	 * Retrieve payment currency
+	 *
+	 * @since  2.5.1
+	 * @return string Payment currency code
+	 */
 	private function get_currency() {
 		return apply_filters( 'edd_payment_currency_code', $this->currency, $this->ID, $this );
 	}
 
+	/**
+	 * Retrieve payment gateway
+	 *
+	 * @since  2.5.1
+	 * @return string Gateway used
+	 */
 	private function get_gateway() {
 		return apply_filters( 'edd_payment_gateway', $this->gateway, $this->ID, $this );
 	}
 
+	/**
+	 * Retrieve payment transaction ID
+	 *
+	 * @since  2.5.1
+	 * @return string Transaction ID from merchant processor
+	 */
 	private function get_transaction_id() {
 		return apply_filters( 'edd_get_payment_transaction_id', $this->transaction_id, $this->ID, $this );
 	}
 
+	/**
+	 * Retrieve payment IP
+	 *
+	 * @since  2.5.1
+	 * @return string Payment IP address
+	 */
 	private function get_ip() {
 		return apply_filters( 'edd_payment_user_ip', $this->ip, $this->ID, $this );
 	}
 
+	/**
+	 * Retrieve payment customer ID
+	 *
+	 * @since  2.5.1
+	 * @return int Payment customer ID
+	 */
 	private function get_customer_id() {
 		return apply_filters( 'edd_payment_customer_id', $this->customer_id, $this->ID, $this );
 	}
 
+	/**
+	 * Retrieve payment user ID
+	 *
+	 * @since  2.5.1
+	 * @return int Payment user ID
+	 */
 	private function get_user_id() {
 		return apply_filters( 'edd_payment_user_id', $this->user_id, $this->ID, $this );
 	}
 
+	/**
+	 * Retrieve payment email
+	 *
+	 * @since  2.5.1
+	 * @return string Payment customer email
+	 */
 	private function get_email() {
 		return apply_filters( 'edd_payment_user_email', $this->email, $this->ID, $this );
 	}
 
+	/**
+	 * Retrieve payment user info
+	 *
+	 * @since  2.5.1
+	 * @return array Payment user info
+	 */
 	private function get_user_info() {
 		return apply_filters( 'edd_payment_meta_user_info', $this->user_info, $this->ID, $this );
 	}
 
+	/**
+	 * Retrieve payment billing address
+	 *
+	 * @since  2.5.1
+	 * @return array Payment billing address
+	 */
 	private function get_address() {
 		return apply_filters( 'edd_payment_address', $this->address, $this->ID, $this );
 	}
 
+	/**
+	 * Retrieve payment key
+	 *
+	 * @since  2.5.1
+	 * @return string Payment key
+	 */
 	private function get_key() {
 		return apply_filters( 'edd_payment_key', $this->key, $this->ID, $this );
 	}
 
+	/**
+	 * Retrieve payment number
+	 *
+	 * @since  2.5.1
+	 * @return int|string Payment number
+	 */
 	private function get_number() {
 		return apply_filters( 'edd_payment_number', $this->number, $this->ID, $this );
 	}
 
+	/**
+	 * Retrieve downloads on payment
+	 *
+	 * @since  2.5.1
+	 * @return array Payment downloads
+	 */
 	private function get_downloads() {
 		return apply_filters( 'edd_payment_meta_downloads', $this->downloads, $this->ID, $this );
 	}
 
+	/**
+	 * Retrieve unlimited file downloads status
+	 *
+	 * @since  2.5.1
+	 * @return bool Is unlimted
+	 */
 	private function get_unlimited() {
 		return apply_filters( 'edd_payment_unlimited_downloads', $this->unlimited, $this->ID, $this );
 	}
