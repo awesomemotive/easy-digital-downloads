@@ -1828,7 +1828,11 @@ final class EDD_Payment {
 		return get_object_vars( $this );
 	}
 
-	private function get_completed_dated() {
+	private function get_cart_details() {
+		return apply_filters( 'edd_payment_cart_details', $this->cart_details, $this->ID, $this );
+	}
+
+	private function get_completed_date() {
 		return apply_filters( 'edd_payment_completed_date', $this->completed_date, $this->ID, $this );
 	}
 
