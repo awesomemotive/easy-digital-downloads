@@ -471,10 +471,12 @@ final class EDD_Payment {
 		date_default_timezone_set( edd_get_timezone_id() );
 
 		// Construct the payment title
-		$payment_tite = '';
+		$payment_title = '';
 
 		if ( ! empty( $this->first_name ) && ! empty( $this->last_name ) ) {
 			$payment_title = $this->first_name . ' ' . $this->last_name;
+		} else if ( ! empty( $this->first_name ) && empty( $this->last_name ) ) {
+			$payment_title = $this->first_name;
 		} else if ( ! empty( $this->email ) && is_email( $this->email ) ) {
 			$payment_title = $this->email;
 		}
