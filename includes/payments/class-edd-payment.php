@@ -691,21 +691,28 @@ final class EDD_Payment {
 
 					case 'fees':
 
-						if ( ! empty( $this->pending[ $key ] ) ) {
-							foreach ( $this->pending[ $key ] as $fee ) {
-								switch( $fee['action'] ) {
+						if ( 'publish' !== $this->status && 'complete' !== $this->status && 'revoked' !== $this->status ) {
+							break;	
+						}
 
-									case 'add':
-										$total_increase += $fee['amount'];
-										break;
+						if ( empty( $this->pending[ $key ] ) ) {
+							break;
+						}
 
-									case 'remove':
-										$total_decrease += $fee['amount'];
-										break;
+						foreach ( $this->pending[ $key ] as $fee ) {
 
-								}
+							switch( $fee['action'] ) {
+
+								case 'add':
+									$total_increase += $fee['amount'];
+									break;
+
+								case 'remove':
+									$total_decrease += $fee['amount'];
+									break;
 
 							}
+
 						}
 
 						break;
@@ -897,23 +904,10 @@ final class EDD_Payment {
 		$quantity   = edd_item_quantities_enabled() ? absint( $args['quantity'] ) : 1;
 		$amount     = round( $item_price * $quantity, edd_currency_decimal_filter() );
 
-		if ( ! empty( $args['fees'] ) ) {
-			foreach ( $args['fees'] as $key => $fee ) {
-
-				if ( empty( $fee['download_id'] ) ) {
-					$args['fees'][ $key ]['download_id'] = $download_id;
-				}
-
-				$this->add_fee( $args['fees'][ $key ], false );
-
-			}
-		}
-
 		// Setup the downloads meta item
 		$new_download = array(
 			'id'       => $download->ID,
 			'quantity' => $quantity,
-			'fees'     => $args['fees'],
 		);
 
 		$default_options = array(
@@ -1136,9 +1130,7 @@ final class EDD_Payment {
 		);
 
 		$fee = wp_parse_args( $args, $default_args );
-		if ( true === $global ) {
-			$this->fees[] = $fee;
-		}
+		$this->fees[] = $fee;
 
 
 		$added_fee               = $fee;

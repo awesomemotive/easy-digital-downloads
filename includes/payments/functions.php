@@ -180,7 +180,9 @@ function edd_insert_payment( $payment_data = array() ) {
 
 	do_action( 'edd_insert_payment', $payment->ID, $payment_data );
 
-	return $payment->ID; // Return the ID
+	if ( ! empty( $payment->ID ) ) {
+		return $payment->ID;
+	}
 
 	// Return false if no payment was inserted
 	return false;
