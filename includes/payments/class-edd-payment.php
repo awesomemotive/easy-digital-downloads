@@ -486,10 +486,6 @@ final class EDD_Payment {
 			$payment_title = $this->email;
 		}
 
-		if ( empty( $payment_title ) ) {
-			return false;
-		}
-
 		if( empty( $this->date ) ) {
 			$this->date = date( 'Y-m-d H:i:s', current_time( 'timestamp' ) );
 		}
@@ -692,7 +688,7 @@ final class EDD_Payment {
 					case 'fees':
 
 						if ( 'publish' !== $this->status && 'complete' !== $this->status && 'revoked' !== $this->status ) {
-							break;	
+							break;
 						}
 
 						if ( empty( $this->pending[ $key ] ) ) {
