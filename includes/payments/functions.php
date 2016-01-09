@@ -750,12 +750,17 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
  * @param int $payment_id Payment ID to check against
  * @return bool true if complete, false otherwise
  */
-function edd_is_payment_complete( $payment_id ) {
+function edd_is_payment_complete( $payment_id = 0 ) {
 	$payment = new EDD_Payment( $payment_id );
 
 	$ret = false;
-	if ( $payment_id === $payment->ID && $payment->status == 'publish' ) {
-		$ret = true;
+
+	if( $payment->ID > 0 ) {
+
+		if ( (int) $payment_id === (int) $payment->ID && 'publish' == $payment->status ) {
+			$ret = true;
+		}
+
 	}
 
 	return apply_filters( 'edd_is_payment_complete', $ret, $payment_id, $payment->post_status );
