@@ -6,8 +6,7 @@ Donate link: https://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 4.0
 Tested up to: 4.5
-
-Stable Tag: 2.5.2
+Stable Tag: 2.5.3
 
 License: GNU Version 2 or Any Later Version
 
@@ -214,6 +213,13 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.5.3, January 9, 2016 =
+
+* Fix: Status passed to edd_insert_payment() not respected. Caused subscription payments to be marked as pending
+* Fix: edd_is_payment_complete() returns false improperly
+* Fix: Buy Now links going to empty checkout screen when customer is not logged in
+* Tweak: Removed redundant Max Uses column on Discounts screen
 
 = 2.5.2, January 8, 2016 =
 
