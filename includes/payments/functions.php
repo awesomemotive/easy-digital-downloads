@@ -147,6 +147,7 @@ function edd_insert_payment( $payment_data = array() ) {
 	$gateway = ! empty( $payment_data['gateway'] ) ? $payment_data['gateway'] : '';
 	$gateway = empty( $gateway ) && isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : $gateway;
 
+	$payment->status         = ! empty( $payment_data['status'] ) ? $payment_data['status'] : 'pending';
 	$payment->currency       = $payment_data['currency'];
 	$payment->user_info      = $payment_data['user_info'];
 	$payment->gateway        = $gateway;
