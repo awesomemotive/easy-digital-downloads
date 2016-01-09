@@ -146,7 +146,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 			'code'       => __( 'Code', 'easy-digital-downloads' ),
 			'amount'     => __( 'Amount', 'easy-digital-downloads' ),
 			'uses'       => __( 'Uses', 'easy-digital-downloads' ),
-			'max_uses'   => __( 'Max Uses', 'easy-digital-downloads' ),
 			'start_date' => __( 'Start Date', 'easy-digital-downloads' ),
 			'expiration' => __( 'Expiration', 'easy-digital-downloads' ),
 			'status'     => __( 'Status', 'easy-digital-downloads' ),
@@ -388,12 +387,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 					$uses = edd_get_discount_uses( $discount->ID );
 				}
 
-				if ( edd_get_discount_max_uses( $discount->ID ) ) {
-					$max_uses = edd_get_discount_max_uses( $discount->ID ) ? edd_get_discount_max_uses( $discount->ID ) : __( 'unlimited', 'easy-digital-downloads' );
-				} else {
-					$max_uses = __( 'Unlimited', 'easy-digital-downloads' );
-				}
-
 				$start_date = edd_get_discount_start_date( $discount->ID );
 
 				if ( ! empty( $start_date ) ) {
@@ -414,7 +407,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 					'code'       => edd_get_discount_code( $discount->ID ),
 					'amount'     => edd_format_discount_rate( edd_get_discount_type( $discount->ID ), edd_get_discount_amount( $discount->ID ) ),
 					'uses'       => $uses,
-					'max_uses'   => $max_uses,
 					'start_date' => $discount_start_date,
 					'expiration' => $expiration,
 					'status'     => edd_is_discount_expired( $discount->ID ) ? 'expired' : $discount->post_status,
