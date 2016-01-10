@@ -194,7 +194,7 @@ function edd_user_info_fields() {
 				<?php } ?>
 			</label>
 			<span class="edd-description"><?php _e( 'We will use this to personalize your account experience.', 'easy-digital-downloads' ); ?></span>
-			<input class="edd-input required" type="text" name="edd_first" placeholder="<?php _e( 'First name', 'easy-digital-downloads' ); ?>" id="edd-first" value="<?php echo esc_attr( $customer['first_name'] ); ?>"/>
+			<input class="edd-input required" type="text" name="edd_first" placeholder="<?php _e( 'First name', 'easy-digital-downloads' ); ?>" id="edd-first" value="<?php echo esc_attr( $customer['first_name'] ); ?>"<?php if( edd_field_is_required( 'edd_first' ) ) {  echo ' required '; } ?>/>
 		</p>
 		<p id="edd-last-name-wrap">
 			<label class="edd-label" for="edd-last">
@@ -204,7 +204,7 @@ function edd_user_info_fields() {
 				<?php } ?>
 			</label>
 			<span class="edd-description"><?php _e( 'We will use this as well to personalize your account experience.', 'easy-digital-downloads' ); ?></span>
-			<input class="edd-input<?php if( edd_field_is_required( 'edd_last' ) ) { echo ' required'; } ?>" type="text" name="edd_last" id="edd-last" placeholder="<?php _e( 'Last name', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $customer['last_name'] ); ?>"/>
+			<input class="edd-input<?php if( edd_field_is_required( 'edd_last' ) ) { echo ' required'; } ?>" type="text" name="edd_last" id="edd-last" placeholder="<?php _e( 'Last name', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $customer['last_name'] ); ?>"<?php if( edd_field_is_required( 'edd_last' ) ) {  echo ' required '; } ?>/>
 		</p>
 		<?php do_action( 'edd_purchase_form_user_info' ); ?>
 		<?php do_action( 'edd_purchase_form_user_info_fields' ); ?>
@@ -332,7 +332,7 @@ function edd_default_cc_address_fields() {
 				<?php } ?>
 			</label>
 			<span class="edd-description"><?php _e( 'The primary billing address for your credit card.', 'easy-digital-downloads' ); ?></span>
-			<input type="text" id="card_address" name="card_address" class="card-address edd-input<?php if( edd_field_is_required( 'card_address' ) ) { echo ' required'; } ?>" placeholder="<?php _e( 'Address line 1', 'easy-digital-downloads' ); ?>" value="<?php echo $customer['address']['line1']; ?>"/>
+			<input type="text" id="card_address" name="card_address" class="card-address edd-input<?php if( edd_field_is_required( 'card_address' ) ) { echo ' required'; } ?>" placeholder="<?php _e( 'Address line 1', 'easy-digital-downloads' ); ?>" value="<?php echo $customer['address']['line1']; ?>"<?php if( edd_field_is_required( 'card_address' ) ) {  echo ' required '; } ?>/>
 		</p>
 		<p id="edd-card-address-2-wrap">
 			<label for="card_address_2" class="edd-label">
@@ -342,7 +342,7 @@ function edd_default_cc_address_fields() {
 				<?php } ?>
 			</label>
 			<span class="edd-description"><?php _e( 'The suite, apt no, PO box, etc, associated with your billing address.', 'easy-digital-downloads' ); ?></span>
-			<input type="text" id="card_address_2" name="card_address_2" class="card-address-2 edd-input<?php if( edd_field_is_required( 'card_address_2' ) ) { echo ' required'; } ?>" placeholder="<?php _e( 'Address line 2', 'easy-digital-downloads' ); ?>" value="<?php echo $customer['address']['line2']; ?>"/>
+			<input type="text" id="card_address_2" name="card_address_2" class="card-address-2 edd-input<?php if( edd_field_is_required( 'card_address_2' ) ) { echo ' required'; } ?>" placeholder="<?php _e( 'Address line 2', 'easy-digital-downloads' ); ?>" value="<?php echo $customer['address']['line2']; ?>"<?php if( edd_field_is_required( 'card_address_2' ) ) {  echo ' required '; } ?>/>
 		</p>
 		<p id="edd-card-city-wrap">
 			<label for="card_city" class="edd-label">
@@ -352,7 +352,7 @@ function edd_default_cc_address_fields() {
 				<?php } ?>
 			</label>
 			<span class="edd-description"><?php _e( 'The city for your billing address.', 'easy-digital-downloads' ); ?></span>
-			<input type="text" id="card_city" name="card_city" class="card-city edd-input<?php if( edd_field_is_required( 'card_city' ) ) { echo ' required'; } ?>" placeholder="<?php _e( 'City', 'easy-digital-downloads' ); ?>" value="<?php echo $customer['address']['city']; ?>"/>
+			<input type="text" id="card_city" name="card_city" class="card-city edd-input<?php if( edd_field_is_required( 'card_city' ) ) { echo ' required'; } ?>" placeholder="<?php _e( 'City', 'easy-digital-downloads' ); ?>" value="<?php echo $customer['address']['city']; ?>"<?php if( edd_field_is_required( 'card_city' ) ) {  echo ' required '; } ?>/>
 		</p>
 		<p id="edd-card-zip-wrap">
 			<label for="card_zip" class="edd-label">
@@ -362,7 +362,7 @@ function edd_default_cc_address_fields() {
 				<?php } ?>
 			</label>
 			<span class="edd-description"><?php _e( 'The zip or postal code for your billing address.', 'easy-digital-downloads' ); ?></span>
-			<input type="text" size="4" name="card_zip" class="card-zip edd-input<?php if( edd_field_is_required( 'card_zip' ) ) { echo ' required'; } ?>" placeholder="<?php _e( 'Zip / Postal Code', 'easy-digital-downloads' ); ?>" value="<?php echo $customer['address']['zip']; ?>"/>
+			<input type="text" size="4" name="card_zip" class="card-zip edd-input<?php if( edd_field_is_required( 'card_zip' ) ) { echo ' required'; } ?>" placeholder="<?php _e( 'Zip / Postal Code', 'easy-digital-downloads' ); ?>" value="<?php echo $customer['address']['zip']; ?>"<?php if( edd_field_is_required( 'card_zip' ) ) {  echo ' required '; } ?>/>
 		</p>
 		<p id="edd-card-country-wrap">
 			<label for="billing_country" class="edd-label">
@@ -372,7 +372,7 @@ function edd_default_cc_address_fields() {
 				<?php } ?>
 			</label>
 			<span class="edd-description"><?php _e( 'The country for your billing address.', 'easy-digital-downloads' ); ?></span>
-			<select name="billing_country" id="billing_country" class="billing_country edd-select<?php if( edd_field_is_required( 'billing_country' ) ) { echo ' required'; } ?>">
+			<select name="billing_country" id="billing_country" class="billing_country edd-select<?php if( edd_field_is_required( 'billing_country' ) ) { echo ' required'; } ?>"<?php if( edd_field_is_required( 'billing_country' ) ) {  echo ' required '; } ?>>
 				<?php
 
 				$selected_country = edd_get_shop_country();
@@ -664,7 +664,7 @@ function edd_show_payment_icons() {
 
 				}
 
-				$image = str_replace( $content_dir, WP_CONTENT_URL, $image );
+				$image = str_replace( $content_dir, content_url(), $image );
 
 			}
 

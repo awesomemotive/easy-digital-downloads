@@ -139,7 +139,6 @@ class EDD_Fees {
 	public function has_fees( $type = 'fee' ) {
 
 		if( 'all' == $type || 'fee' == $type ) {
-
 			if( ! edd_get_cart_contents() ) {
 				$type = 'item';
 			}
