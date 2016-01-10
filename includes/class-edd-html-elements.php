@@ -90,6 +90,10 @@ class EDD_HTML_Elements {
 			}
 		}
 
+		if( ! $args['bundles'] ) {
+			$args['class'] .= ' no-bundles';
+		}
+
 		$output = $this->select( array(
 			'name'             => $args['name'],
 			'selected'         => $args['selected'],

@@ -17,13 +17,13 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 final class EDD_Amazon_Payments {
 
 	private static $instance;
-	private $gateway_id      = 'amazon';
-	private $client          = null;
-	private $redirect_uri    = null;
-	private $checkout_uri    = null;
-	private $signin_redirect = null;
-	private $reference_id    = null;
-	private $doing_ipn       = false;
+	public $gateway_id      = 'amazon';
+	public $client          = null;
+	public $redirect_uri    = null;
+	public $checkout_uri    = null;
+	public $signin_redirect = null;
+	public $reference_id    = null;
+	public $doing_ipn       = false;
 
 	/**
 	 * Get things going
@@ -129,6 +129,7 @@ final class EDD_Amazon_Payments {
 		add_filter( 'edd_accepted_payment_icons', array( $this, 'register_payment_icon' ), 10, 1 );
 
 		if ( is_admin() ) {
+			add_filter( 'edd_settings_sections_gateways', array( $this, 'register_gateway_section' ), 1, 1 );
 			add_filter( 'edd_settings_gateways', array( $this, 'register_gateway_settings' ), 1, 1 );
 			add_filter( 'edd_payment_details_transaction_id-' . $this->gateway_id, array( $this, 'link_transaction_id' ), 10, 2 );
 		}
@@ -253,6 +254,19 @@ final class EDD_Amazon_Payments {
 	}
 
 	/**
+	 * Register the payment gateways setting section
+	 *
+	 * @since  2.5
+	 * @param  array $gateway_sections Array of sections for the gateways tab
+	 * @return array                   Added Amazon Payments into sub-sections
+	 */
+	public function register_gateway_section( $gateway_sections ) {
+		$gateway_sections['amazon'] = __( 'Amazon Payments', 'easy-digital-downloads' );
+
+		return $gateway_sections;
+	}
+
+	/**
 	 * Register the gateway settings
 	 *
 	 * @access public
@@ -265,8 +279,7 @@ final class EDD_Amazon_Payments {
 		$default_amazon_settings = array(
 			'amazon' => array(
 				'id'   => 'amazon',
-				'name' => '<span class="field-section-title">' . __( 'Amazon Payments Settings', 'easy-digital-downloads' ) . '</span>',
-				'desc' => __( 'Configure the Amazon settings', 'easy-digital-downloads' ),
+				'name' => '<strong>' . __( 'Amazon Payments Settings', 'easy-digital-downloads' ) . '</strong>',
 				'type' => 'header',
 			),
 			'amazon_register' => array(
@@ -328,8 +341,8 @@ final class EDD_Amazon_Payments {
 			),
 		);
 
-		$default_amazon_settings = apply_filters( 'edd_default_amazon_settings', $default_amazon_settings );
-		$gateway_settings        = array_merge( $gateway_settings, $default_amazon_settings );
+		$default_amazon_settings    = apply_filters( 'edd_default_amazon_settings', $default_amazon_settings );
+		$gateway_settings['amazon'] = $default_amazon_settings;
 
 		return $gateway_settings;
 
@@ -850,7 +863,7 @@ final class EDD_Amazon_Payments {
 
 			$capture = new ResponseParser( $capture->response );
 			$capture = $capture->toArray();
-	
+
 			edd_update_payment_meta( $payment_id, '_edd_amazon_authorization_id', $authorization_id );
 			edd_update_payment_meta( $payment_id, '_edd_amazon_capture_id', $capture_id );
 

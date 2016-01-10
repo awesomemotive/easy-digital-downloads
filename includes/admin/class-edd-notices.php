@@ -36,16 +36,20 @@ class EDD_Notices {
 	 */
 	public function show_notices() {
 		$notices = array(
-			'updated'	=> array(),
-			'error'		=> array()
+			'updated' => array(),
+			'error'   => array(),
 		);
 
 		// Global (non-action-based) messages
 		if ( edd_get_option( 'purchase_page', '' ) == '' || 'trash' == get_post_status( edd_get_option( 'purchase_page', '' ) ) && current_user_can( 'edit_pages' ) && ! get_user_meta( get_current_user_id(), '_edd_set_checkout_dismissed' ) ) {
-			echo '<div class="error">';
-				echo '<p>' . sprintf( __( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings' ) ) . '</p>';
-				echo '<p><a href="' . add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'set_checkout' ) ) . '">' . __( 'Dismiss Notice', 'easy-digital-downloads' ) . '</a></p>';
-			echo '</div>';
+			ob_start();
+			?>
+			<div class="error">
+				<p><?php printf( __( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings' ) ); ?></p>
+				<p><a href="<?php echo add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'set_checkout' ) ); ?>"><?php _e( 'Dismiss Notice', 'easy-digital-downloads' ); ?></a></p>
+			</div>
+			<?php
+			echo ob_get_clean();
 		}
 
 		if ( isset( $_GET['page'] ) && 'edd-payment-history' == $_GET['page'] && current_user_can( 'view_shop_reports' ) && edd_is_test_mode() ) {
@@ -54,25 +58,46 @@ class EDD_Notices {
 
 		if( stristr( $_SERVER['SERVER_SOFTWARE'], 'nginx' ) && ! get_user_meta( get_current_user_id(), '_edd_nginx_redirect_dismissed', true ) && current_user_can( 'manage_shop_settings' ) ) {
 
-			echo '<div class="error">';
-				echo '<p>' . sprintf( __( 'The download files in %s are not currently protected due to your site running on NGINX.', 'easy-digital-downloads' ), '<strong>' . edd_get_upload_dir() . '</strong>' ) . '</p>';
-				echo '<p>' . __( 'To protect them, you must add a redirect rule as explained in <a href="http://docs.easydigitaldownloads.com/article/682-protected-download-files-on-nginx">this guide</a>.', 'easy-digital-downloads' ) . '</p>';
-				echo '<p>' . __( 'If you have already added the redirect rule, you may safely dismiss this notice', 'easy-digital-downloads' ) . '</p>';
-				echo '<p><a href="' . add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'nginx_redirect' ) ) . '">' . __( 'Dismiss Notice', 'easy-digital-downloads' ) . '</a></p>';
-			echo '</div>';
-
+			ob_start();
+			?>
+			<div class="error">
+				<p><?php printf( __( 'The download files in %s are not currently protected due to your site running on NGINX.', 'easy-digital-downloads' ), '<strong>' . edd_get_upload_dir() . '</strong>' ); ?></p>
+				<p><?php _e( 'To protect them, you must add a redirect rule as explained in <a href="http://docs.easydigitaldownloads.com/article/682-protected-download-files-on-nginx">this guide</a>.', 'easy-digital-downloads' ); ?></p>
+				<p><?php _e( 'If you have already added the redirect rule, you may safely dismiss this notice', 'easy-digital-downloads' ); ?></p>
+				<p><a href="<?php echo add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'nginx_redirect' ) ); ?>"><?php _e( 'Dismiss Notice', 'easy-digital-downloads' ); ?></a></p>
+			</div>
+			<?php
+			echo ob_get_clean();
 		}
 
 		if( ! edd_htaccess_exists() && ! get_user_meta( get_current_user_id(), '_edd_htaccess_missing_dismissed', true ) && current_user_can( 'manage_shop_settings' ) ) {
-			if( ! stristr( $_SERVER['SERVER_SOFTWARE'], 'apache' ) )
+			if( ! stristr( $_SERVER['SERVER_SOFTWARE'], 'apache' ) ) {
 				return; // Bail if we aren't using Apache... nginx doesn't use htaccess!
+			}
 
-			echo '<div class="error">';
-				echo '<p>' . sprintf( __( 'The Easy Digital Downloads .htaccess file is missing from %s!', 'easy-digital-downloads' ), '<strong>' . edd_get_upload_dir() . '</strong>' ) . '</p>';
-				echo '<p>' . sprintf( __( 'First, please resave the Misc settings tab a few times. If this warning continues to appear, create a file called ".htaccess" in the %s directory, and copy the following into it:', 'easy-digital-downloads' ), '<strong>' . edd_get_upload_dir() . '</strong>' ) . '</p>';
-				echo '<p><pre>' . edd_get_htaccess_rules() . '</pre>';
-				echo '<p><a href="' . add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'htaccess_missing' ) ) . '">' . __( 'Dismiss Notice', 'easy-digital-downloads' ) . '</a></p>';
-			echo '</div>';
+			ob_start();
+			?>
+			<div class="error">
+				<p><?php printf( __( 'The Easy Digital Downloads .htaccess file is missing from %s!', 'easy-digital-downloads' ), '<strong>' . edd_get_upload_dir() . '</strong>' ); ?></p>
+				<p><?php printf( __( 'First, please resave the Misc settings tab a few times. If this warning continues to appear, create a file called ".htaccess" in the %s directory, and copy the following into it:', 'easy-digital-downloads' ), '<strong>' . edd_get_upload_dir() . '</strong>' ); ?></p>
+				<p><pre><?php echo edd_get_htaccess_rules(); ?></pre></p>
+				<p><a href="<?php echo add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'htaccess_missing' ) ); ?>"><?php _e( 'Dismiss Notice', 'easy-digital-downloads' ); ?></a></p>
+			</div>
+			<?php
+			echo ob_get_clean();
+		}
+
+
+		if ( class_exists( 'EDD_Recount_Earnings' ) && current_user_can( 'manage_shop_settings' ) ) {
+
+			ob_start();
+			?>
+			<div class="error">
+				<p><?php printf( __( 'Easy Digital Downloads 2.5 contains a <a href="%s">built in recount tool</a>. Please <a href="%s">deactivate the Easy Digital Downloads - Recount Earnings plugin</a>', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ), admin_url( 'plugins.php' ) ); ?></p>
+			</div>
+			<?php
+			echo ob_get_clean();
+
 		}
 
 		/* Commented out per https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/3475

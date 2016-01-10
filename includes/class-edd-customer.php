@@ -274,25 +274,27 @@ class EDD_Customer {
 			return false;
 		}
 
+		$payment = new EDD_Payment( $payment_id );
+
 		if( empty( $this->payment_ids ) ) {
 
-			$new_payment_ids = $payment_id;
+			$new_payment_ids = $payment->ID;
 
 		} else {
 
 			$payment_ids = array_map( 'absint', explode( ',', $this->payment_ids ) );
 
-			if ( in_array( $payment_id, $payment_ids ) ) {
+			if ( in_array( $payment->ID, $payment_ids ) ) {
 				$update_stats = false;
 			}
 
-			$payment_ids[] = $payment_id;
+			$payment_ids[] = $payment->ID;
 
 			$new_payment_ids = implode( ',', array_unique( array_values( $payment_ids ) ) );
 
 		}
 
-		do_action( 'edd_customer_pre_attach_payment', $payment_id, $this->id );
+		do_action( 'edd_customer_pre_attach_payment', $payment->ID, $this->id );
 
 		$payment_added = $this->update( array( 'payment_ids' => $new_payment_ids ) );
 
@@ -302,10 +304,9 @@ class EDD_Customer {
 
 			// We added this payment successfully, increment the stats
 			if ( $update_stats ) {
-				$payment_amount = edd_get_payment_amount( $payment_id );
 
-				if ( ! empty( $payment_amount ) ) {
-					$this->increase_value( $payment_amount );
+				if ( ! empty( $payment->total ) ) {
+					$this->increase_value( $payment->total );
 				}
 
 				$this->increase_purchase_count();
@@ -313,7 +314,7 @@ class EDD_Customer {
 
 		}
 
-		do_action( 'edd_customer_post_attach_payment', $payment_added, $payment_id, $this->id );
+		do_action( 'edd_customer_post_attach_payment', $payment_added, $payment->ID, $this->id );
 
 		return $payment_added;
 	}
@@ -333,25 +334,31 @@ class EDD_Customer {
 			return false;
 		}
 
+		$payment = new EDD_Payment( $payment_id );
+
+		if ( 'publish' !== $payment->status && 'revoked' !== $payment->status ) {
+			$update_stats = false;
+		}
+
 		$new_payment_ids = '';
 
 		if( ! empty( $this->payment_ids ) ) {
 
 			$payment_ids = array_map( 'absint', explode( ',', $this->payment_ids ) );
 
-			$pos = array_search( $payment_id, $payment_ids );
+			$pos = array_search( $payment->ID, $payment_ids );
 			if ( false === $pos ) {
 				return false;
 			}
 
-			unset( $payment_ids[$pos] );
+			unset( $payment_ids[ $pos ] );
 			$payment_ids = array_filter( $payment_ids );
 
 			$new_payment_ids = implode( ',', array_unique( array_values( $payment_ids ) ) );
 
 		}
 
-		do_action( 'edd_customer_pre_remove_payment', $payment_id, $this->id );
+		do_action( 'edd_customer_pre_remove_payment', $payment->ID, $this->id );
 
 		$payment_removed = $this->update( array( 'payment_ids' => $new_payment_ids ) );
 
@@ -361,10 +368,8 @@ class EDD_Customer {
 
 			if ( $update_stats ) {
 				// We removed this payment successfully, decrement the stats
-				$payment_amount = edd_get_payment_amount( $payment_id );
-
-				if ( ! empty( $payment_amount ) ) {
-					$this->decrease_value( $payment_amount );
+				if ( ! empty( $payment->total ) ) {
+					$this->decrease_value( $payment->total );
 				}
 
 				$this->decrease_purchase_count();
@@ -372,7 +377,7 @@ class EDD_Customer {
 
 		}
 
-		do_action( 'edd_customer_post_remove_payment', $payment_removed, $payment_id, $this->id );
+		do_action( 'edd_customer_post_remove_payment', $payment_removed, $payment->ID, $this->id );
 
 		return $payment_removed;
 
@@ -570,7 +575,7 @@ class EDD_Customer {
 
 		$all_notes = $this->db->get_column( 'notes', $this->id );
 
-		return $all_notes;
+		return (string) $all_notes;
 
 	}
 
