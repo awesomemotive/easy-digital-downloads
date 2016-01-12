@@ -280,7 +280,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 		'price'        => $price * $quantity,
 		'purchase_key' => strtolower( md5( uniqid() ) ),
 		'user_email'   => $user_info['email'],
-		'date'         => date( 'Y-m-d H:i:s' ),
+		'date'         => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
 		'user_info'    => $user_info,
 		'post_data'    => array(),
 		'cart_details' => $cart_details,
