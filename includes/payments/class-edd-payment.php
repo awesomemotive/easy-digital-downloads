@@ -488,6 +488,8 @@ final class EDD_Payment {
 
 		if( empty( $this->date ) ) {
 			$this->date = date( 'Y-m-d H:i:s', current_time( 'timestamp' ) );
+		} else {
+			$this->date = date( 'Y-m-d H:i:s', strtotime( $this->date, current_time( 'timestamp' ) ) );
 		}
 
 		if ( empty( $this->key ) ) {
