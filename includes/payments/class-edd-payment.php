@@ -770,6 +770,15 @@ final class EDD_Payment {
 						$this->update_meta( '_edd_payment_number', $this->number );
 						break;
 
+					case 'date':
+						$args = array(
+							'ID'        => $this->ID,
+							'post_date' => $this->date,
+						);
+
+						wp_update_post( $args );
+						break;
+
 					case 'completed_date':
 						$this->update_meta( '_edd_completed_date', $this->completed_date );
 						break;
