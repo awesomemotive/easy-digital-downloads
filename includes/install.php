@@ -25,9 +25,38 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @global $wpdb
  * @global $edd_options
  * @global $wp_version
+ * @param  bool $network_side If the plugin is being network-activated
  * @return void
  */
-function edd_install() {
+function edd_install( $network_wide = false ) {
+	global $wpdb;
+
+	if ( is_multisite() && $network_wide ) {
+
+		foreach ( $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs LIMIT 100" ) as $blog_id ) {
+
+			switch_to_blog( $blog_id );
+			edd_run_install();
+			restore_current_blog();
+
+		}
+
+	} else {
+
+		edd_run_install();
+
+	}
+
+}
+register_activation_hook( EDD_PLUGIN_FILE, 'edd_install' );
+
+/**
+ * Run the EDD Instsall process
+ *
+ * @since  2.5
+ * @return void
+ */
+function edd_run_install() {
 	global $wpdb, $edd_options, $wp_version;
 
 	if( ! function_exists( 'edd_create_protection_files' ) ) {
@@ -52,9 +81,12 @@ function edd_install() {
 	// Setup some default options
 	$options = array();
 
+	// Pull options from WP, not EDD's global
+	$current_options = get_option( 'edd_settings', array() );
+
 	// Checks if the purchase page option exists
-	if ( ! edd_get_option( 'purchase_page', false ) ) {
-	  // Checkout Page
+	if ( ! array_key_exists( 'purchase_page', $current_options ) ) {
+		// Checkout Page
 		$checkout = wp_insert_post(
 			array(
 				'post_title'     => __( 'Checkout', 'easy-digital-downloads' ),
@@ -114,19 +146,31 @@ function edd_install() {
 	}
 
 	// Populate some default values
-	foreach( edd_get_registered_settings() as $tab => $settings ) {
+	foreach( edd_get_registered_settings() as $tab => $sections ) {	
+		foreach( $sections as $section => $settings) {
 
-		foreach ( $settings as $option ) {
-
-			if( 'checkbox' == $option['type'] && ! empty( $option['std'] ) ) {
-				$options[ $option['id'] ] = '1';
+			// Check for backwards compatibility
+			$tab_sections = edd_get_settings_tab_sections( $tab );
+			if( ! is_array( $tab_sections ) || ! array_key_exists( $section, $tab_sections ) ) {
+				$section = 'main';
+				$settings = $sections;
 			}
 
+			foreach ( $settings as $option ) {
+
+				if( 'checkbox' == $option['type'] && ! empty( $option['std'] ) ) {
+					$options[ $option['id'] ] = '1';
+				}
+
+			}
 		}
 
 	}
 
-	update_option( 'edd_settings', array_merge( $edd_options, $options ) );
+	$merged_options = array_merge( $edd_options, $options );
+	$edd_options    = $merged_options;
+
+	update_option( 'edd_settings', $merged_options );
 	update_option( 'edd_version', EDD_VERSION );
 
 	// Create wp-content/uploads/edd/ folder and the .htaccess file
@@ -147,12 +191,7 @@ function edd_install() {
 	EDD()->session->use_php_sessions();
 
 	// Add a temporary option to note that EDD pages have been created
-	set_transient( '_edd_installed', $options, 30 );
-
-	// Bail if activating from network, or bulk
-	if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
-		return;
-	}
+	set_transient( '_edd_installed', $merged_options, 30 );
 
 	if ( ! $current_version ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
@@ -170,10 +209,62 @@ function edd_install() {
 		}
 	}
 
+	// Bail if activating from network, or bulk
+	if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
+		return;
+	}
+
 	// Add the transient to redirect
 	set_transient( '_edd_activation_redirect', true, 30 );
 }
-register_activation_hook( EDD_PLUGIN_FILE, 'edd_install' );
+
+/**
+ * When a new Blog is created in multisite, see if EDD is network activated, and run the installer
+ *
+ * @since  2.5
+ * @param  int    $blog_id The Blog ID created
+ * @param  int    $user_id The User ID set as the admin
+ * @param  string $domain  The URL
+ * @param  string $path    Site Path
+ * @param  int    $site_id The Site ID
+ * @param  array  $meta    Blog Meta
+ * @return void
+ */
+function edd_new_blog_created( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
+
+	if ( is_plugin_active_for_network( plugin_basename( EDD_PLUGIN_FILE ) ) ) {
+
+		switch_to_blog( $blog_id );
+		edd_install();
+		restore_current_blog();
+
+	}
+
+}
+add_action( 'wpmu_new_blog', 'edd_new_blog_created', 10, 6 );
+
+
+/**
+ * Drop our custom tables when a mu site is deleted
+ *
+ * @since  2.5
+ * @param  array $tables  The tables to drop
+ * @param  int   $blog_id The Blog ID being deleted
+ * @return array          The tables to drop
+ */
+function edd_wpmu_drop_tables( $tables, $blog_id ) {
+
+	switch_to_blog( $blog_id );
+	$customers_db = new EDD_DB_Customers();
+	if ( $customers_db->installed() ) {
+		$tables[] = $customers_db->table_name;
+	}
+	restore_current_blog();
+
+	return $tables;
+
+}
+add_filter( 'wpmu_drop_tables', 'edd_wpmu_drop_tables', 10, 2 );
 
 /**
  * Post-installation
@@ -190,20 +281,28 @@ function edd_after_install() {
 		return;
 	}
 
-	$edd_options = get_transient( '_edd_installed' );
+	$edd_options     = get_transient( '_edd_installed' );
+	$edd_table_check = get_option( '_edd_table_check', false );
 
-	// Exit if not in admin or the transient doesn't exist
-	if ( false === $edd_options ) {
-		return;
+	if ( false === $edd_table_check || current_time( 'timestamp' ) > $edd_table_check ) {
+
+		if ( ! @EDD()->customers->installed() ) {
+			// Create the customers database (this ensures it creates it on multisite instances where it is network activated)
+			@EDD()->customers->create_table();
+
+			do_action( 'edd_after_install', $edd_options );
+		}
+
+		update_option( '_edd_table_check', ( current_time( 'timestamp' ) + WEEK_IN_SECONDS ) );
+
 	}
 
-	// Create the customers database (this ensures it creates it on multisite instances where it is network activated)
-	@EDD()->customers->create_table();
+	if ( false !== $edd_options ) {
+		// Delete the transient
+		delete_transient( '_edd_installed' );
+	}
 
-	// Delete the transient
-	delete_transient( '_edd_installed' );
 
-	do_action( 'edd_after_install', $edd_options );
 }
 add_action( 'admin_init', 'edd_after_install' );
 

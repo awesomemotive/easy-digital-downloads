@@ -462,7 +462,7 @@ function edd_ajax_get_states_field() {
 			'name'    => $_POST['field_name'],
 			'id'      => $_POST['field_name'],
 			'class'   => $_POST['field_name'] . '  edd-select',
-			'options' => edd_get_shop_states( $_POST['country'] ),
+			'options' => $states,
 			'show_option_all'  => false,
 			'show_option_none' => false
 		);
@@ -492,8 +492,15 @@ function edd_ajax_download_search() {
 
 	$search   = esc_sql( sanitize_text_field( $_GET['s'] ) );
 	$excludes = ( isset( $_GET['current_id'] ) ? (array) $_GET['current_id'] : array() );
-	$excludes = array_map( 'absint', $excludes );
-	$exclude  = implode( ',', $excludes );
+
+	if( ! empty( $_GET['no_bundles'] ) ) {
+		$bundles  = $wpdb->get_results( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_edd_product_type' AND meta_value = 'bundle';", ARRAY_A );
+		$bundles  = wp_list_pluck( $bundles, 'post_id' );
+		$excludes = array_merge( $excludes, $bundles );
+	}
+
+	$excludes = array_unique( array_map( 'absint', $excludes ) );
+	$exclude  = implode( ",", $excludes );
 
 	$results = array();
 
@@ -505,7 +512,7 @@ function edd_ajax_download_search() {
 
 	// If we have items to exclude, exclude them
 	if( ! empty( $exclude ) ) {
-		$where .= "AND `ID` NOT IN (%s) ";
+		$where .= "AND `ID` NOT IN (" . $exclude . ") ";
 	}
 
 	// If the user can't edit products, limit to just published items
@@ -518,12 +525,7 @@ function edd_ajax_download_search() {
 
 	$sql = $select . $where . $limit;
 
-	if( ! empty( $exclude ) ) {
-		$prepared_statement = $wpdb->prepare( $sql, '%' . $search . '%', $exclude );
-	} else {
-		$prepared_statement = $wpdb->prepare( $sql, '%' . $search . '%' );
-	}
-
+	$prepared_statement = $wpdb->prepare( $sql, '%' . $search . '%' );
 
 	$items = $wpdb->get_results( $prepared_statement );
 
@@ -632,6 +634,11 @@ function edd_check_for_download_price_variations() {
 
 		if ( $variable_prices ) {
 			$ajax_response = '<select class="edd_price_options_select edd-select edd-select" name="edd_price_option">';
+				
+				if( isset( $_POST['all_prices'] ) ) {
+					$ajax_response .= '<option value="">' . __( 'All Prices', 'easy-digital-downloads' ) . '</option>';
+				}
+
 				foreach ( $variable_prices as $key => $price ) {
 					$ajax_response .= '<option value="' . esc_attr( $key ) . '">' . esc_html( $price['name'] )  . '</option>';
 				}

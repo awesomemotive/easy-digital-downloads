@@ -54,17 +54,17 @@ class Tests_Discounts extends WP_UnitTestCase {
 
 	public function test_updating_discount_code() {
 		$post = array(
-			'name' => '20 Percent Off',
-			'type' => 'percent',
-			'amount' => '20',
-			'code' => '20OFF',
+			'name'              => '20 Percent Off',
+			'type'              => 'percent',
+			'amount'            => '20',
+			'code'              => '20OFF',
 			'product_condition' => 'all',
-			'start' => '12/12/2050 00:00:00',
-			'expiration' => '12/31/2050 00:00:00',
-			'max' => 10,
-			'uses' => 54,
-			'min_price' => 128,
-			'status' => 'active'
+			'start'             => '12/12/2050 00:00:00',
+			'expiration'        => '12/31/2050 00:00:00',
+			'max'               => 10,
+			'uses'              => 54,
+			'min_price'         => 128,
+			'status'            => 'active'
 		);
 
 		$updated_post_id = edd_store_discount( $post, $this->_post_id );
@@ -174,14 +174,15 @@ class Tests_Discounts extends WP_UnitTestCase {
 
 
 	public function test_get_discounted_amount() {
-		$this->markTestIncomplete('Fix this per #2302');
 		$this->assertEquals( '432', edd_get_discounted_amount( '20OFF', '540' ) );
-		$this->assertEqual( '150', edd_get_discounted_amount( 'DOUBLE', '75' ) );
-		$this->assertEqual( '9', edd_get_discounted_amount( 'FLAT', '1' ) );
+		$this->assertEquals( '150', edd_get_discounted_amount( 'DOUBLE', '75' ) );
+		$this->assertEquals( '10', edd_get_discounted_amount( '10FLAT', '20' ) );
+
+		// Test that an invalid Code returns the base price
+		$this->assertEquals( '10', edd_get_discounted_amount( 'FAKEDISCOUNT', '10' ) );
 	}
 
 	public function test_increase_discount_usage() {
-		//$this->markTestIncomplete('Fix this per #2302');
 		$uses = edd_increase_discount_usage( '20OFF' );
 		$this->assertSame( 55, $uses );
 	}
@@ -280,5 +281,73 @@ class Tests_Discounts extends WP_UnitTestCase {
 		$this->assertTrue( 2 == count( $discounts ) );
 		$this->assertEquals( '12.00', edd_get_cart_total() );
 
+	}
+
+	public function test_discountable_subtotal() {
+		edd_empty_cart();
+		$download_1 = EDD_Helper_Download::create_simple_download();
+		$download_2 = EDD_Helper_Download::create_simple_download();
+		$discount   = EDD_Helper_Discount::create_simple_flat_discount();
+
+		$post = array(
+			'name'              => 'Excludes',
+			'amount'            => '1',
+			'code'              => 'EXCLUDES',
+			'product_condition' => 'all',
+			'start'             => '12/12/2050 00:00:00',
+			'expiration'        => '12/31/2050 00:00:00',
+			'min_price'         => 23,
+			'status'            => 'active',
+			'excluded-products' => array( $download_2->ID ),
+		);
+
+		edd_store_discount( $post, $discount );
+
+		edd_add_to_cart( $download_1->ID );
+		edd_add_to_cart( $download_2->ID );
+		$this->assertEquals( '20', edd_get_cart_discountable_subtotal( $discount ) );
+
+		$download_3 = EDD_Helper_Download::create_simple_download();
+		edd_add_to_cart( $download_3->ID );
+		$this->assertEquals( '40', edd_get_cart_discountable_subtotal( $discount ) );
+
+		EDD_Helper_Download::delete_download( $download_1->ID );
+		EDD_Helper_Download::delete_download( $download_2->ID );
+		EDD_Helper_Download::delete_download( $download_3->ID );
+		EDD_Helper_Discount::delete_discount( $discount );
+	}
+
+	public function test_discount_min_excluded_products() {
+		edd_empty_cart();
+		$download_1 = EDD_Helper_Download::create_simple_download();
+		$download_2 = EDD_Helper_Download::create_simple_download();
+		$discount   = EDD_Helper_Discount::create_simple_flat_discount();
+
+		$post = array(
+			'name'              => 'Excludes',
+			'amount'            => '1',
+			'code'              => 'EXCLUDES',
+			'product_condition' => 'all',
+			'start'             => '12/12/2050 00:00:00',
+			'expiration'        => '12/31/2050 00:00:00',
+			'min_price'         => 23,
+			'status'            => 'active',
+			'excluded-products' => array( $download_2->ID ),
+		);
+
+		edd_store_discount( $post, $discount );
+
+		edd_add_to_cart( $download_1->ID );
+		edd_add_to_cart( $download_2->ID );
+		$this->assertFalse( edd_discount_is_min_met( $discount ) );
+
+		$download_3 = EDD_Helper_Download::create_simple_download();
+		edd_add_to_cart( $download_3->ID );
+		$this->assertTrue( edd_discount_is_min_met( $discount ) );
+
+		EDD_Helper_Download::delete_download( $download_1->ID );
+		EDD_Helper_Download::delete_download( $download_2->ID );
+		EDD_Helper_Download::delete_download( $download_3->ID );
+		EDD_Helper_Discount::delete_discount( $discount );
 	}
 }
