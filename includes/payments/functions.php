@@ -169,6 +169,8 @@ function edd_insert_payment( $payment_data = array() ) {
 		$payment->date       = $payment_data['date'];
 	} elseif ( ! empty( $payment_data['post_date'] ) ) {
 		$payment->date       = $payment_data['post_date'];
+	} else {
+		$payment->date       = null;
 	}
 
 	if ( edd_get_option( 'enable_sequential' ) ) {
