@@ -120,6 +120,9 @@ function edd_insert_payment( $payment_data = array() ) {
 		return false;
 	}
 
+	// Make sure the payment is inserted with the correct timezone
+	date_default_timezone_set( edd_get_timezone_id() );
+
 	$payment = new EDD_Payment();
 
 	if( is_array( $payment_data['cart_details'] ) && ! empty( $payment_data['cart_details'] ) ) {
