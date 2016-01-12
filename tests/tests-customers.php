@@ -174,15 +174,19 @@ class Tests_Customers extends WP_UnitTestCase {
 
 	public function test_attach_payment() {
 
+		$payment_id = EDD_Helper_Payment::create_simple_payment();
+
 		$customer = new EDD_Customer( 'testadmin@domain.com' );
-		$customer->attach_payment( 5222222 );
+		$customer->attach_payment( $payment_id );
 
 		$payment_ids = array_map( 'absint', explode( ',', $customer->payment_ids ) );
 
-		$this->assertTrue( in_array( 5222222, $payment_ids ) );
+		$this->assertTrue( in_array( $payment_id, $payment_ids ) );
 
 		// Verify if we don't send a payment, we get false
 		$this->assertFalse( $customer->attach_payment() );
+
+		EDD_Helper_Payment::delete_payment( $payment_id );
 
 	}
 
@@ -202,17 +206,21 @@ class Tests_Customers extends WP_UnitTestCase {
 	}
 
 	public function test_remove_payment() {
+		$payment_id = EDD_Helper_Payment::create_simple_payment();
 
 		$customer = new EDD_Customer( 'testadmin@domain.com' );
-		$customer->attach_payment( 5222223, false );
+		$customer->attach_payment( $payment_id, false );
 
 		$payment_ids = array_map( 'absint', explode( ',', $customer->payment_ids ) );
-		$this->assertTrue( in_array( 5222223, $payment_ids ) );
+		$this->assertTrue( in_array( $payment_id, $payment_ids ) );
 
-		$customer->remove_payment( 5222223, false );
+		$customer->remove_payment( $payment_id, false );
 
 		$payment_ids = array_map( 'absint', explode( ',', $customer->payment_ids ) );
-		$this->assertFalse( in_array( 5222223, $payment_ids ) );
+		$this->assertFalse( in_array( $payment_id, $payment_ids ) );
+
+		EDD_Helper_Payment::delete_payment( $payment_id );
+
 	}
 
 	public function test_increment_stats() {
@@ -415,6 +423,18 @@ class Tests_Customers extends WP_UnitTestCase {
 
 		$this->assertFalse( edd_validate_user_verification_token( remove_query_arg( 'token', $url ) ) );
 
+	}
+
+	public function test_user_deletion_detachment() {
+		$customer      = new EDD_Customer( $this->_user_id, true );
+		$email_address = $customer->email;
+		$this->assertEquals( $this->_user_id, $customer->user_id );
+
+		wp_delete_user( $this->_user_id );
+		$customer2 = new EDD_Customer( $email_address );
+		// Make sure it's the same customer above (sanity check)
+		$this->assertEquals( $customer->id, $customer2->id );
+		$this->assertEquals( 0 ,$customer2->user_id );
 	}
 
 }

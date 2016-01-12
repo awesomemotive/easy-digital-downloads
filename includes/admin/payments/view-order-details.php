@@ -24,25 +24,26 @@ if ( ! isset( $_GET['id'] ) || ! is_numeric( $_GET['id'] ) ) {
 
 // Setup the variables
 $payment_id   = absint( $_GET['id'] );
-$number       = edd_get_payment_number( $payment_id );
-$item         = get_post( $payment_id );
+$payment      = new EDD_Payment( $payment_id );
 
 // Sanity check... fail if purchase ID is invalid
-if ( !is_object( $item ) || $item->post_type != 'edd_payment' ) {
+$payment_exists = $payment->ID;
+if ( empty( $payment_exists ) ) {
 	wp_die( __( 'The specified ID does not belong to a payment. Please try again', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ) );
 }
 
-$payment_meta   = edd_get_payment_meta( $payment_id );
-$transaction_id = esc_attr( edd_get_payment_transaction_id( $payment_id ) );
-$cart_items     = edd_get_payment_meta_cart_details( $payment_id );
-$user_id        = edd_get_payment_user_id( $payment_id );
-$customer_id    = edd_get_payment_customer_id( $payment_id );
-$payment_date   = strtotime( $item->post_date );
-$unlimited      = edd_payment_has_unlimited_downloads( $payment_id );
+$number         = $payment->number;
+$payment_meta   = $payment->get_meta();
+$transaction_id = esc_attr( $payment->transaction_id );
+$cart_items     = $payment->cart_details;
+$user_id        = $payment->user_id;
+$customer_id    = $payment->customer_id;
+$payment_date   = strtotime( $payment->date );
+$unlimited      = $payment->has_unlimited_downloads;
 $user_info      = edd_get_payment_meta_user_info( $payment_id );
-$address        = ! empty( $user_info['address'] ) ? $user_info['address'] : array( 'line1' => '', 'line2' => '', 'city' => '', 'country' => '', 'state' => '', 'zip' => '' );
-$gateway        = edd_get_payment_gateway( $payment_id );
-$currency_code  = edd_get_payment_currency_code( $payment_id );
+$address        = $payment->address;
+$gateway        = $payment->gateway;
+$currency_code  = $payment->currency;
 ?>
 <div class="wrap edd-wrap">
 	<h2><?php printf( __( 'Payment %s', 'easy-digital-downloads' ), $number ); ?></h2>
@@ -69,11 +70,10 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 										<?php do_action( 'edd_view_order_details_totals_before', $payment_id ); ?>
 
 										<div class="edd-admin-box-inside">
-											<p>
 												<span class="label"><?php _e( 'Status:', 'easy-digital-downloads' ); ?></span>&nbsp;
 												<select name="edd-payment-status" class="medium-text">
 													<?php foreach( edd_get_payment_statuses() as $key => $status ) : ?>
-														<option value="<?php echo esc_attr( $key ); ?>"<?php selected( edd_get_payment_status( $item, true ), $status ); ?>><?php echo esc_html( $status ); ?></option>
+														<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $payment->status, $key, true ); ?>><?php echo esc_html( $status ); ?></option>
 													<?php endforeach; ?>
 												</select>
 											</p>
@@ -99,12 +99,12 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 										<div class="edd-order-discount edd-admin-box-inside">
 											<p>
 												<span class="label"><?php _e( 'Discount Code', 'easy-digital-downloads' ); ?>:</span>&nbsp;
-												<span><?php if ( isset( $user_info['discount'] ) && $user_info['discount'] !== 'none' ) { echo '<code>' . $user_info['discount'] . '</code>'; } else { _e( 'None', 'easy-digital-downloads' ); } ?></span>
+												<span><?php if ( $payment->discounts !== 'none' ) { echo '<code>' . $payment->discounts . '</code>'; } else { _e( 'None', 'easy-digital-downloads' ); } ?></span>
 											</p>
 										</div>
 
 										<?php
-										$fees = edd_get_payment_fees( $payment_id );
+										$fees = $payment->fees;
 										if ( ! empty( $fees ) ) : ?>
 										<div class="edd-order-fees edd-admin-box-inside">
 											<p class="strong"><?php _e( 'Fees', 'easy-digital-downloads' ); ?>:</p>
@@ -120,7 +120,7 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 										<div class="edd-order-taxes edd-admin-box-inside">
 											<p>
 												<span class="label"><?php _e( 'Tax', 'easy-digital-downloads' ); ?>:</span>&nbsp;
-												<input name="edd-payment-tax" class="med-text" type="text" value="<?php echo esc_attr( edd_format_amount( edd_get_payment_tax( $payment_id ) ) ); ?>"/>
+												<input name="edd-payment-tax" class="med-text" type="text" value="<?php echo esc_attr( edd_format_amount( $payment->tax ) ); ?>"/>
 											</p>
 										</div>
 										<?php endif; ?>
@@ -128,7 +128,7 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 										<div class="edd-order-payment edd-admin-box-inside">
 											<p>
 												<span class="label"><?php _e( 'Total Price', 'easy-digital-downloads' ); ?>:</span>&nbsp;
-												<?php echo edd_currency_symbol( $payment_meta['currency'] ); ?>&nbsp;<input name="edd-payment-total" type="text" class="med-text" value="<?php echo esc_attr( edd_format_amount( edd_get_payment_amount( $payment_id ) ) ); ?>"/>
+												<?php echo edd_currency_symbol( $payment->currency ); ?>&nbsp;<input name="edd-payment-total" type="text" class="med-text" value="<?php echo esc_attr( edd_format_amount( $payment->total ) ); ?>"/>
 											</p>
 										</div>
 
@@ -172,7 +172,6 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 										<?php do_action( 'edd_view_order_details_payment_meta_before', $payment_id ); ?>
 
 										<?php
-										$gateway = edd_get_payment_gateway( $payment_id );
 										if ( $gateway ) : ?>
 											<div class="edd-order-gateway edd-admin-box-inside">
 												<p>
@@ -185,14 +184,14 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 										<div class="edd-order-payment-key edd-admin-box-inside">
 											<p>
 												<span class="label"><?php _e( 'Key:', 'easy-digital-downloads' ); ?></span>&nbsp;
-												<span><?php echo edd_get_payment_key( $payment_id ); ?></span>
+												<span><?php echo $payment->key; ?></span>
 											</p>
 										</div>
 
 										<div class="edd-order-ip edd-admin-box-inside">
 											<p>
 												<span class="label"><?php _e( 'IP:', 'easy-digital-downloads' ); ?></span>&nbsp;
-												<span><?php echo esc_attr( edd_get_payment_user_ip( $payment_id )); ?></span>
+												<span><?php echo esc_attr( $payment->ip ); ?></span>
 											</p>
 										</div>
 
@@ -205,7 +204,7 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 										</div>
 										<?php endif; ?>
 
-										<div class="edd-admin-box-inside edd-unlimited-downloads">
+										<div class="edd-unlimited-downloads edd-admin-box-inside">
 											<p>
 												<span class="label" title="<?php _e( 'Grants the customer unlimited file downloads for this purchase, regardless of other limits set.', 'easy-digital-downloads' ); ?>"><i data-code="f316" class="dashicons dashicons-download"></i></span>&nbsp;
 												<input type="checkbox" name="edd-unlimited-downloads" id="edd_unlimited_downloads" value="1"<?php checked( true, $unlimited, true ); ?>/>
@@ -276,11 +275,11 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 										<ul>
 											<?php
 											// Item ID is checked if isset due to the near-1.0 cart data
-											$item_id  = isset( $cart_item['id']    ) ? $cart_item['id']    : $cart_item;
-											$price    = isset( $cart_item['price'] ) ? $cart_item['price'] : false;
-											$item_price = isset( $cart_item['item_price'] ) ? $cart_item['item_price'] : $price;
-											$price_id = isset( $cart_item['item_number']['options']['price_id'] ) ? $cart_item['item_number']['options']['price_id'] : null;
-											$quantity = isset( $cart_item['quantity'] ) && $cart_item['quantity'] > 0 ? $cart_item['quantity'] : 1;
+											$item_id    = isset( $cart_item['id']    )                                  ? $cart_item['id']                                 : $cart_item;
+											$price      = isset( $cart_item['price'] )                                  ? $cart_item['price']                              : false;
+											$item_price = isset( $cart_item['item_price'] )                             ? $cart_item['item_price']                         : $price;
+											$price_id   = isset( $cart_item['item_number']['options']['price_id'] )     ? $cart_item['item_number']['options']['price_id'] : null;
+											$quantity   = isset( $cart_item['quantity'] ) && $cart_item['quantity'] > 0 ? $cart_item['quantity']                           : 1;
 
 											if( false === $price ) {
 
@@ -394,7 +393,7 @@ $currency_code  = edd_get_payment_currency_code( $payment_id );
 								</h3>
 								<div class="inside edd-clearfix">
 
-									<?php $customer = new EDD_Customer( edd_get_payment_customer_id( $payment_id ) ); ?>
+									<?php $customer = new EDD_Customer( $customer_id ); ?>
 
 									<div class="column-container customer-info">
 										<div class="column">

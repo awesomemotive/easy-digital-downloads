@@ -25,23 +25,27 @@ function edd_setup_edd_post_types() {
 	$rewrite  = defined( 'EDD_DISABLE_REWRITE' ) && EDD_DISABLE_REWRITE ? false : array('slug' => $slug, 'with_front' => false);
 
 	$download_labels =  apply_filters( 'edd_download_labels', array(
-		'name'               => _x( '%2$s', 'download post type name', 'easy-digital-downloads' ),
-		'singular_name'      => _x( '%1$s', 'singular download post type name', 'easy-digital-downloads' ),
-		'add_new'            => __( 'Add New', 'easy-digital-downloads' ),
-		'add_new_item'       => __( 'Add New %1$s', 'easy-digital-downloads' ),
-		'edit_item'          => __( 'Edit %1$s', 'easy-digital-downloads' ),
-		'new_item'           => __( 'New %1$s', 'easy-digital-downloads' ),
-		'all_items'          => __( 'All %2$s', 'easy-digital-downloads' ),
-		'view_item'          => __( 'View %1$s', 'easy-digital-downloads' ),
-		'search_items'       => __( 'Search %2$s', 'easy-digital-downloads' ),
-		'not_found'          => __( 'No %2$s found', 'easy-digital-downloads' ),
-		'not_found_in_trash' => __( 'No %2$s found in Trash', 'easy-digital-downloads' ),
-		'parent_item_colon'  => '',
-		'menu_name'          => _x( '%2$s', 'download post type menu name', 'easy-digital-downloads' )
+		'name'                  => _x( '%2$s', 'download post type name', 'easy-digital-downloads' ),
+		'singular_name'         => _x( '%1$s', 'singular download post type name', 'easy-digital-downloads' ),
+		'add_new'               => __( 'Add New', 'easy-digital-downloads' ),
+		'add_new_item'          => __( 'Add New %1$s', 'easy-digital-downloads' ),
+		'edit_item'             => __( 'Edit %1$s', 'easy-digital-downloads' ),
+		'new_item'              => __( 'New %1$s', 'easy-digital-downloads' ),
+		'all_items'             => __( 'All %2$s', 'easy-digital-downloads' ),
+		'view_item'             => __( 'View %1$s', 'easy-digital-downloads' ),
+		'search_items'          => __( 'Search %2$s', 'easy-digital-downloads' ),
+		'not_found'             => __( 'No %2$s found', 'easy-digital-downloads' ),
+		'not_found_in_trash'    => __( 'No %2$s found in Trash', 'easy-digital-downloads' ),
+		'parent_item_colon'     => '',
+		'menu_name'             => _x( '%2$s', 'download post type menu name', 'easy-digital-downloads' ),
+		'featured_image'        => __( '%1$s Image', 'easy-digital-downloads' ),
+		'set_featured_image'    => __( 'Set %1$s Image', 'easy-digital-downloads' ),
+		'remove_featured_image' => __( 'Remove %1$s Image', 'easy-digital-downloads' ),
+		'use_featured_image'    => __( 'Use as %1$s Image', 'easy-digital-downloads' ),
 	) );
 
 	foreach ( $download_labels as $key => $value ) {
-	   $download_labels[ $key ] = sprintf( $value, edd_get_label_singular(), edd_get_label_plural() );
+		$download_labels[ $key ] = sprintf( $value, edd_get_label_singular(), edd_get_label_plural() );
 	}
 
 	$download_args = array(
