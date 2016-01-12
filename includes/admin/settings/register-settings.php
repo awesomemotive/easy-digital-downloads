@@ -907,10 +907,10 @@ function edd_settings_sanitize( $input = array() ) {
 
 	$input = $input ? $input : array();
 
-	$section_inputs = apply_filters( 'edd_settings_' . $tab . '-' . $section . '_sanitize', $input );
+	$input = apply_filters( 'edd_settings_' . $tab . '-' . $section . '_sanitize', $input );
 	if ( 'main' === $section )  {
 		// Check for extensions that aren't using new sections
-		$input          = apply_filters( 'edd_settings_' . $tab . '_sanitize', $section_inputs );
+		$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
 	}
 
 	// Loop through each setting being saved and pass it through a sanitization filter
