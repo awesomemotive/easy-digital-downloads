@@ -472,9 +472,6 @@ final class EDD_Payment {
 	 */
 	private function insert_payment() {
 
-		// Make sure the payment is inserted with the correct timezone
-		date_default_timezone_set( edd_get_timezone_id() );
-
 		// Construct the payment title
 		$payment_title = '';
 
