@@ -120,9 +120,6 @@ function edd_insert_payment( $payment_data = array() ) {
 		return false;
 	}
 
-	// Make sure the payment is inserted with the correct timezone
-	date_default_timezone_set( edd_get_timezone_id() );
-
 	$payment = new EDD_Payment();
 
 	if( is_array( $payment_data['cart_details'] ) && ! empty( $payment_data['cart_details'] ) ) {
@@ -165,12 +162,8 @@ function edd_insert_payment( $payment_data = array() ) {
 	$payment->parent_payment = ! empty( $payment_data['parent'] ) ? absint( $payment_data['parent'] ) : '';
 	$payment->discounts      = ! empty( $payment_data['user_info']['discount'] ) ? $payment_data['user_info']['discount'] : array();
 
-	if ( ! empty( $payment_data['date'] ) ) {
-		$payment->date       = $payment_data['date'];
-	} elseif ( ! empty( $payment_data['post_date'] ) ) {
-		$payment->date       = $payment_data['post_date'];
-	} else {
-		$payment->date       = null;
+	if ( isset( $payment_data['post_date'] ) ) {
+		$payment->date = $payment_data['post_date'];
 	}
 
 	if ( edd_get_option( 'enable_sequential' ) ) {
