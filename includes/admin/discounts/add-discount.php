@@ -11,7 +11,6 @@
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
-$downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) );
 ?>
 <h2><?php _e( 'Add New Discount', 'easy-digital-downloads' ); ?> - <a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-discounts' ); ?>" class="button-secondary"><?php _e( 'Go Back', 'easy-digital-downloads' ); ?></a></h2>
 <form id="edd-add-discount" action="" method="POST">
@@ -92,7 +91,7 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 							<label>
 								<input type="radio" class="tog" name="not_global" value="1"/>
 								<?php printf( __( 'Apply discount only to selected %s.', 'easy-digital-downloads' ), edd_get_label_plural() ); ?>
-							</label>	
+							</label>
 						</p>
 					</div>
 					<p class="description"><?php printf( __( 'Select %s relevant to this discount.', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></p>
