@@ -472,9 +472,6 @@ final class EDD_Payment {
 	 */
 	private function insert_payment() {
 
-		// Make sure the payment is inserted with the correct timezone
-		date_default_timezone_set( edd_get_timezone_id() );
-
 		// Construct the payment title
 		$payment_title = '';
 
@@ -764,6 +761,15 @@ final class EDD_Payment {
 
 					case 'number':
 						$this->update_meta( '_edd_payment_number', $this->number );
+						break;
+
+					case 'date':
+						$args = array(
+							'ID'        => $this->ID,
+							'post_date' => $this->date,
+						);
+
+						wp_update_post( $args );
 						break;
 
 					case 'completed_date':

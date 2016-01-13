@@ -6,7 +6,7 @@ Donate link: https://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 4.0
 Tested up to: 4.5
-Stable Tag: 2.5.3
+Stable Tag: 2.5.5
 
 License: GNU Version 2 or Any Later Version
 
@@ -213,6 +213,22 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.5.5, January 12, 2016 =
+
+* Fix: Timezones still not set properly for some sites. This resulted in download links missing from purchase receipts.
+
+= 2.5.4, January 12, 2016 =
+
+* Fix: Timezones set improperly sometimes when payments are created
+* Fix: PHP notices in edd_process_add_to_cart() when AJAX is disabled
+* Fix: PHP warning in Recount Single Customer Stats tool
+* Fix: Payment date cannot be changed in the admin
+* Fix: Currency code not properly returned if payment is missing currency metadata
+* Fix: "Sorry trouble retrieving payment receipt" error shown occasionally
+* Fix: Sanitization process for settings breaks some extension's settings
+* Fix: Download links blank for some customers
+* Fix: Prevent default placeholder from showing as an option in multi-select fields
 
 = 2.5.3, January 9, 2016 =
 
