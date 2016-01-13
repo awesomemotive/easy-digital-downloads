@@ -906,10 +906,12 @@ function edd_settings_sanitize( $input = array() ) {
 	$section  = isset( $referrer['section'] ) ? $referrer['section'] : 'main';
 
 	$input = $input ? $input : array();
-	$legacy_inputs  = apply_filters( 'edd_settings_' . $tab . '_sanitize', $input ); // Check for extensions that aren't using new sections
-	$section_inputs = apply_filters( 'edd_settings_' . $tab . '-' . $section . '_sanitize', $input );
 
-	$input = array_merge( $legacy_inputs, $section_inputs );
+	$input = apply_filters( 'edd_settings_' . $tab . '-' . $section . '_sanitize', $input );
+	if ( 'main' === $section )  {
+		// Check for extensions that aren't using new sections
+		$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
+	}
 
 	// Loop through each setting being saved and pass it through a sanitization filter
 	foreach ( $input as $key => $value ) {

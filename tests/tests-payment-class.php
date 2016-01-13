@@ -333,4 +333,17 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		remove_filter( 'edd_cart_contents', '__return_true' );
 		remove_filter( 'edd_item_quantities_enabled', '__return_true' );
 	}
+
+	public function test_update_date() {
+		$payment      = new EDD_Payment( $this->_payment_id );
+		$current_date = $payment->date;
+
+		$new_date = strtotime( $current_date ) + DAY_IN_SECONDS;
+		$payment->date = date( 'Y-m-d H:i:s', $new_date );
+		$payment->save();
+
+		$payment2 = new EDD_Payment( $this->_payment_id );
+		$date2    = strtotime( $payment2->date );
+		$this->assertEquals( $new_date, $date2 );
+	}
 }
