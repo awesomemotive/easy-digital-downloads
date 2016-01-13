@@ -61,9 +61,6 @@ function edd_process_purchase_form() {
 		edd_die();
 	}
 
-	// Make sure the payment is inserted with the correct timezone
-	date_default_timezone_set( edd_get_timezone_id() );
-
 	// Setup user information
 	$user_info = array(
 		'id'         => $user['user_id'],

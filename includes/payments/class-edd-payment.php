@@ -472,9 +472,6 @@ final class EDD_Payment {
 	 */
 	private function insert_payment() {
 
-		// Make sure the payment is inserted with the correct timezone
-		date_default_timezone_set( edd_get_timezone_id() );
-
 		// Construct the payment title
 		$payment_title = '';
 
@@ -484,12 +481,6 @@ final class EDD_Payment {
 			$payment_title = $this->first_name;
 		} else if ( ! empty( $this->email ) && is_email( $this->email ) ) {
 			$payment_title = $this->email;
-		}
-
-		if( empty( $this->date ) ) {
-			$this->date = date( 'Y-m-d H:i:s', current_time( 'timestamp' ) );
-		} else {
-			$this->date = date( 'Y-m-d H:i:s', strtotime( $this->date, current_time( 'timestamp' ) ) );
 		}
 
 		if ( empty( $this->key ) ) {
@@ -530,9 +521,9 @@ final class EDD_Payment {
 			'post_title'    => $payment_title,
 			'post_status'   => $this->status,
 			'post_type'     => 'edd_payment',
+			'post_date'     => ! empty( $this->date ) ? $this->date : null,
+			'post_date_gmt' => ! empty( $this->date ) ? get_gmt_from_date( $this->date ) : null,
 			'post_parent'   => $this->parent_payment,
-			'post_date'     => $this->date,
-			'post_date_gmt' => get_gmt_from_date( $this->date ),
 		), $payment_data );
 
 		// Create a blank payment
