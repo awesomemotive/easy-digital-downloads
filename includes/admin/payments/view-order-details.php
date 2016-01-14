@@ -72,9 +72,13 @@ $currency_code  = $payment->currency;
 										<div class="edd-admin-box-inside">
 												<span class="label"><?php _e( 'Status:', 'easy-digital-downloads' ); ?></span>&nbsp;
 												<select name="edd-payment-status" class="medium-text">
-													<?php foreach( edd_get_payment_statuses() as $key => $status ) : ?>
+													<?php $statuses = edd_get_payment_status_keys();
+													foreach( $statuses as $key => $status ) : ?>
 														<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $payment->status, $key, true ); ?>><?php echo esc_html( $status ); ?></option>
 													<?php endforeach; ?>
+													<?php if( ! array_key_exists( $payment->status, $statuses ) ) { ?>
+														<option value="<?php echo esc_attr( $payment->status ); ?>" selected="selected"><?php echo esc_html( ucfirst( $payment->status ) ); ?></option>
+													<?php } ?>
 												</select>
 											</p>
 										</div>
