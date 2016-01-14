@@ -767,6 +767,7 @@ final class EDD_Payment {
 						$args = array(
 							'ID'        => $this->ID,
 							'post_date' => $this->date,
+							'edit_date' => true,
 						);
 
 						wp_update_post( $args );
