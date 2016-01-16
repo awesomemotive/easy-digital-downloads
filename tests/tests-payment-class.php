@@ -115,9 +115,7 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$payment->add_download( $new_download->ID, $args );
 		$payment->save();
 
-		$this->assertFalse( empty( $payment->downloads[2]['fees'] ) );
-		$this->assertEquals( $new_download->ID, $payment->downloads[2]['fees'][0]['download_id'] );
-		$this->assertEquals( 145, $payment->total );
+		$this->assertFalse( empty( $payment->cart_details[2]['fees'] ) );
 	}
 
 	public function test_remove_download() {
@@ -334,5 +332,29 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 
 		remove_filter( 'edd_cart_contents', '__return_true' );
 		remove_filter( 'edd_item_quantities_enabled', '__return_true' );
+	}
+
+	public function test_update_date_future() {
+		$payment      = new EDD_Payment( $this->_payment_id );
+		$current_date = $payment->date;
+
+		$new_date = strtotime( $payment->date ) + DAY_IN_SECONDS;
+		$payment->date = date( 'Y-m-d H:i:s', $new_date );
+		$payment->save();
+
+		$date2    = strtotime( $payment->date );
+		$this->assertEquals( $new_date, $date2 );
+	}
+
+	public function test_update_date_past() {
+		$payment      = new EDD_Payment( $this->_payment_id );
+		$current_date = $payment->date;
+
+		$new_date = strtotime( $payment->date ) - DAY_IN_SECONDS;
+		$payment->date = date( 'Y-m-d H:i:s', $new_date );
+		$payment->save();
+
+		$date2    = strtotime( $payment->date );
+		$this->assertEquals( $new_date, $date2 );
 	}
 }
