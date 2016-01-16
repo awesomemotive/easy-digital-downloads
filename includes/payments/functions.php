@@ -147,7 +147,8 @@ function edd_insert_payment( $payment_data = array() ) {
 	$gateway = ! empty( $payment_data['gateway'] ) ? $payment_data['gateway'] : '';
 	$gateway = empty( $gateway ) && isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : $gateway;
 
-	$payment->currency       = $payment_data['currency'];
+	$payment->status         = ! empty( $payment_data['status'] ) ? $payment_data['status'] : 'pending';
+	$payment->currency       = ! empty( $payment_data['currency'] ) ? $payment_data['currency'] : edd_get_currency();
 	$payment->user_info      = $payment_data['user_info'];
 	$payment->gateway        = $gateway;
 	$payment->user_id        = $payment_data['user_info']['id'];
@@ -161,10 +162,8 @@ function edd_insert_payment( $payment_data = array() ) {
 	$payment->parent_payment = ! empty( $payment_data['parent'] ) ? absint( $payment_data['parent'] ) : '';
 	$payment->discounts      = ! empty( $payment_data['user_info']['discount'] ) ? $payment_data['user_info']['discount'] : array();
 
-	if ( ! empty( $payment_data['date'] ) ) {
-		$payment->date       = $payment_data['date'];
-	} elseif ( ! empty( $payment_data['post_date'] ) ) {
-		$payment->date       = $payment_data['post_date'];
+	if ( isset( $payment_data['post_date'] ) ) {
+		$payment->date = $payment_data['post_date'];
 	}
 
 	if ( edd_get_option( 'enable_sequential' ) ) {
@@ -180,7 +179,9 @@ function edd_insert_payment( $payment_data = array() ) {
 
 	do_action( 'edd_insert_payment', $payment->ID, $payment_data );
 
-	return $payment->ID; // Return the ID
+	if ( ! empty( $payment->ID ) ) {
+		return $payment->ID;
+	}
 
 	// Return false if no payment was inserted
 	return false;
@@ -748,12 +749,17 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
  * @param int $payment_id Payment ID to check against
  * @return bool true if complete, false otherwise
  */
-function edd_is_payment_complete( $payment_id ) {
+function edd_is_payment_complete( $payment_id = 0 ) {
 	$payment = new EDD_Payment( $payment_id );
 
 	$ret = false;
-	if ( $payment_id === $payment->ID && $payment->status == 'publish' ) {
-		$ret = true;
+
+	if( $payment->ID > 0 ) {
+
+		if ( (int) $payment_id === (int) $payment->ID && 'publish' == $payment->status ) {
+			$ret = true;
+		}
+
 	}
 
 	return apply_filters( 'edd_is_payment_complete', $ret, $payment_id, $payment->post_status );

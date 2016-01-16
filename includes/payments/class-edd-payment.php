@@ -321,17 +321,22 @@ final class EDD_Payment {
 	 * Magic GET function
 	 *
 	 * @since  2.5
-	 * @param  string $name The property
+	 * @param  string $key  The property
 	 * @return mixed        The value
 	 */
-	public function __get( $name ) {
+	public function __get( $key ) {
 
-		if ( 'fees' === $name ) {
-			return $this->get_fees();
+		if ( method_exists( $this, 'get_' . $key ) ) {
+
+			$value = call_user_func( array( $this, 'get_' . $key ) );
+
+		} else {
+
+			$value = $this->$key;
+
 		}
 
-		return $this->$name;
-
+		return $value;
 	}
 
 	/**
@@ -340,22 +345,22 @@ final class EDD_Payment {
 	 * Sets up the pending array for the save method
 	 *
 	 * @since  2.5
-	 * @param string $name  The property name
+	 * @param string $key   The property name
 	 * @param mixed $value  The value of the property
 	 */
-	public function __set( $name, $value ) {
+	public function __set( $key, $value ) {
 		$ignore = array( 'downloads', 'cart_details', 'fees', '_ID' );
 
-		if ( $name === 'status' ) {
+		if ( $key === 'status' ) {
 			$this->old_status = $this->status;
 		}
 
-		if ( ! in_array( $name, $ignore ) ) {
-			$this->pending[ $name ] = $value;
+		if ( ! in_array( $key, $ignore ) ) {
+			$this->pending[ $key ] = $value;
 		}
 
-		if( '_ID' !== $name ) {
-			$this->$name = $value;
+		if( '_ID' !== $key ) {
+			$this->$key = $value;
 		}
 	}
 
@@ -467,24 +472,15 @@ final class EDD_Payment {
 	 */
 	private function insert_payment() {
 
-		// Make sure the payment is inserted with the correct timezone
-		date_default_timezone_set( edd_get_timezone_id() );
-
 		// Construct the payment title
-		$payment_tite = '';
+		$payment_title = '';
 
 		if ( ! empty( $this->first_name ) && ! empty( $this->last_name ) ) {
 			$payment_title = $this->first_name . ' ' . $this->last_name;
+		} else if ( ! empty( $this->first_name ) && empty( $this->last_name ) ) {
+			$payment_title = $this->first_name;
 		} else if ( ! empty( $this->email ) && is_email( $this->email ) ) {
 			$payment_title = $this->email;
-		}
-
-		if ( empty( $payment_title ) ) {
-			return false;
-		}
-
-		if( empty( $this->date ) ) {
-			$this->date = date( 'Y-m-d H:i:s', current_time( 'timestamp' ) );
 		}
 
 		if ( empty( $this->key ) ) {
@@ -525,9 +521,9 @@ final class EDD_Payment {
 			'post_title'    => $payment_title,
 			'post_status'   => $this->status,
 			'post_type'     => 'edd_payment',
+			'post_date'     => ! empty( $this->date ) ? $this->date : null,
+			'post_date_gmt' => ! empty( $this->date ) ? get_gmt_from_date( $this->date ) : null,
 			'post_parent'   => $this->parent_payment,
-			'post_date'     => $this->date,
-			'post_date_gmt' => get_gmt_from_date( $this->date ),
 		), $payment_data );
 
 		// Create a blank payment
@@ -684,21 +680,28 @@ final class EDD_Payment {
 
 					case 'fees':
 
-						if ( ! empty( $this->pending[ $key ] ) ) {
-							foreach ( $this->pending[ $key ] as $fee ) {
-								switch( $fee['action'] ) {
+						if ( 'publish' !== $this->status && 'complete' !== $this->status && 'revoked' !== $this->status ) {
+							break;
+						}
 
-									case 'add':
-										$total_increase += $fee['amount'];
-										break;
+						if ( empty( $this->pending[ $key ] ) ) {
+							break;
+						}
 
-									case 'remove':
-										$total_decrease += $fee['amount'];
-										break;
+						foreach ( $this->pending[ $key ] as $fee ) {
 
-								}
+							switch( $fee['action'] ) {
+
+								case 'add':
+									$total_increase += $fee['amount'];
+									break;
+
+								case 'remove':
+									$total_decrease += $fee['amount'];
+									break;
 
 							}
+
 						}
 
 						break;
@@ -758,6 +761,16 @@ final class EDD_Payment {
 
 					case 'number':
 						$this->update_meta( '_edd_payment_number', $this->number );
+						break;
+
+					case 'date':
+						$args = array(
+							'ID'        => $this->ID,
+							'post_date' => $this->date,
+							'edit_date' => true,
+						);
+
+						wp_update_post( $args );
 						break;
 
 					case 'completed_date':
@@ -890,23 +903,10 @@ final class EDD_Payment {
 		$quantity   = edd_item_quantities_enabled() ? absint( $args['quantity'] ) : 1;
 		$amount     = round( $item_price * $quantity, edd_currency_decimal_filter() );
 
-		if ( ! empty( $args['fees'] ) ) {
-			foreach ( $args['fees'] as $key => $fee ) {
-
-				if ( empty( $fee['download_id'] ) ) {
-					$args['fees'][ $key ]['download_id'] = $download_id;
-				}
-
-				$this->add_fee( $args['fees'][ $key ], false );
-
-			}
-		}
-
 		// Setup the downloads meta item
 		$new_download = array(
 			'id'       => $download->ID,
 			'quantity' => $quantity,
-			'fees'     => $args['fees'],
 		);
 
 		$default_options = array(
@@ -1129,9 +1129,7 @@ final class EDD_Payment {
 		);
 
 		$fee = wp_parse_args( $args, $default_args );
-		if ( true === $global ) {
-			$this->fees[] = $fee;
-		}
+		$this->fees[] = $fee;
 
 
 		$added_fee               = $fee;
@@ -1247,7 +1245,7 @@ final class EDD_Payment {
 			}
 		}
 
-		return $fees;
+		return apply_filters( 'edd_get_payment_fees', $fees, $this->ID, $this );
 	}
 
 	/**
@@ -1513,7 +1511,7 @@ final class EDD_Payment {
 
 		$date = ( $date = $this->get_meta( '_edd_completed_date', true ) ) ? $date : $payment->modified_date;
 
-		return apply_filters( 'edd_payment_completed_date', $date, $this->ID, $this );
+		return $date;
 	}
 
 	private function setup_mode() {
@@ -1557,7 +1555,8 @@ final class EDD_Payment {
 
 		}
 
-		return apply_filters( 'edd_get_payment_tax', $tax, $this->ID, $this );
+		return $tax;
+
 	}
 
 	/**
@@ -1590,7 +1589,7 @@ final class EDD_Payment {
 
 		}
 
-		return apply_filters( 'edd_get_payment_subtotal', $subtotal, $this->ID, $this );
+		return $subtotal;
 	}
 
 	/**
@@ -1602,7 +1601,7 @@ final class EDD_Payment {
 	 */
 	private function setup_discounts() {
 		$discounts = ! empty( $this->payment_meta['user_info']['discount'] ) ? $this->payment_meta['user_info']['discount'] : array();
-		return apply_filters( 'edd_payment_discounts', $discounts, $this->ID );
+		return $discounts;
 	}
 
 	/**
@@ -1614,7 +1613,7 @@ final class EDD_Payment {
 	 */
 	private function setup_currency() {
 		$currency = isset( $this->payment_meta['currency'] ) ? $this->payment_meta['currency'] : edd_get_currency();
-		return apply_filters( 'edd_payment_currency_code', $currency, $this->ID, $this );
+		return $currency;
 	}
 
 	/**
@@ -1626,7 +1625,7 @@ final class EDD_Payment {
 	 */
 	private function setup_fees() {
 		$payment_fees = isset( $this->payment_meta['fees'] ) ? $this->payment_meta['fees'] : array();
-		return apply_filters( 'edd_get_payment_fees', $payment_fees, $this->ID );
+		return $payment_fees;
 	}
 
 	/**
@@ -1637,7 +1636,7 @@ final class EDD_Payment {
 	 */
 	private function setup_gateway() {
 		$gateway = $this->get_meta( '_edd_payment_gateway', true );
-		return apply_filters( 'edd_payment_gateway', $gateway, $this );
+		return $gateway;
 	}
 
 	/**
@@ -1657,7 +1656,7 @@ final class EDD_Payment {
 
 		}
 
-		return apply_filters( 'edd_get_payment_transaction_id', $transaction_id, $this->ID, $this );
+		return $transaction_id;
 	}
 
 	/**
@@ -1668,7 +1667,7 @@ final class EDD_Payment {
 	 */
 	private function setup_ip() {
 		$ip = $this->get_meta( '_edd_payment_user_ip', true );
-		return apply_filters( 'edd_payment_user_ip', $ip, $this );
+		return $ip;
 	}
 
 	/**
@@ -1679,7 +1678,7 @@ final class EDD_Payment {
 	 */
 	private function setup_customer_id() {
 		$customer_id = $this->get_meta( '_edd_payment_customer_id', true );
-		return apply_filters( 'edd_payment_customer_id', $customer_id, $this );
+		return $customer_id;
 	}
 
 	/**
@@ -1690,7 +1689,7 @@ final class EDD_Payment {
 	 */
 	private function setup_user_id() {
 		$user_id = $this->get_meta( '_edd_payment_user_id', true );
-		return apply_filters( 'edd_payment_user_id', $user_id, $this );
+		return $user_id;
 	}
 
 	/**
@@ -1706,7 +1705,7 @@ final class EDD_Payment {
 			$email = EDD()->customers->get_column( 'email', $this->customer_id );
 		}
 
-		return apply_filters( 'edd_payment_user_email', $email, $this );
+		return $email;
 	}
 
 	/**
@@ -1725,7 +1724,8 @@ final class EDD_Payment {
 
 		$user_info    = isset( $this->payment_meta['user_info'] ) ? $this->payment_meta['user_info'] : array();
 		$user_info    = wp_parse_args( $user_info, $defaults );
-		return apply_filters( 'edd_payment_meta_user_info', $user_info );
+
+		return $user_info;
 	}
 
 	/**
@@ -1737,8 +1737,7 @@ final class EDD_Payment {
 	 */
 	private function setup_address() {
 		$address = ! empty( $this->payment_meta['user_info']['address'] ) ? $this->payment_meta['user_info']['address'] : array( 'line1' => '', 'line2' => '', 'city' => '', 'country' => '', 'state' => '', 'zip' => '' );
-
-		return apply_filters( 'edd_payment_address', $address, $this );
+		return $address;
 	}
 
 	/**
@@ -1749,7 +1748,7 @@ final class EDD_Payment {
 	 */
 	private function setup_payment_key() {
 		$key = $this->get_meta( '_edd_payment_purchase_key', true );
-		return apply_filters( 'edd_payment_key', $key, $this->ID, $this );
+		return $key;
 	}
 
 	/**
@@ -1773,7 +1772,7 @@ final class EDD_Payment {
 
 		}
 
-		return apply_filters( 'edd_payment_number', $number, $this->ID, $this );
+		return $number;
 	}
 
 	/**
@@ -1785,7 +1784,7 @@ final class EDD_Payment {
 	 */
 	private function setup_cart_details() {
 		$cart_details = isset( $this->payment_meta['cart_details'] ) ? maybe_unserialize( $this->payment_meta['cart_details'] ) : array();
-		return apply_filters( 'edd_payment_cart_details', $cart_details, $this->ID, $this );
+		return $cart_details;
 	}
 
 	/**
@@ -1797,7 +1796,7 @@ final class EDD_Payment {
 	 */
 	private function setup_downloads() {
 		$downloads = isset( $this->payment_meta['downloads'] ) ? maybe_unserialize( $this->payment_meta['downloads'] ) : array();
-		return apply_filters( 'edd_payment_meta_downloads', $downloads, $this->ID, $this );
+		return $downloads;
 	}
 
 	/**
@@ -1808,7 +1807,7 @@ final class EDD_Payment {
 	 */
 	private function setup_has_unlimited() {
 		$unlimited = (bool) $this->get_meta( '_edd_payment_unlimited_downloads', true );
-		return apply_filters( 'edd_payment_unlimited_downloads', $unlimited, $this );
+		return $unlimited;
 	}
 
 	/**
@@ -1818,6 +1817,186 @@ final class EDD_Payment {
 	 */
 	public function array_convert() {
 		return get_object_vars( $this );
+	}
+
+	/**
+	 * Retrieve payment cart details
+	 *
+	 * @since  2.5.1
+	 * @return array Cart details array
+	 */
+	private function get_cart_details() {
+		return apply_filters( 'edd_payment_cart_details', $this->cart_details, $this->ID, $this );
+	}
+
+	/**
+	 * Retrieve payment completion date
+	 *
+	 * @since  2.5.1
+	 * @return string Date payment was completed
+	 */
+	private function get_completed_date() {
+		return apply_filters( 'edd_payment_completed_date', $this->completed_date, $this->ID, $this );
+	}
+
+	/**
+	 * Retrieve payment tax
+	 *
+	 * @since  2.5.1
+	 * @return float Payment tax
+	 */
+	private function get_tax() {
+		return apply_filters( 'edd_get_payment_tax', $this->tax, $this->ID, $this );
+	}
+
+	/**
+	 * Retrieve payment subtotal
+	 *
+	 * @since  2.5.1
+	 * @return float Payment subtotal
+	 */
+	private function get_subtotal() {
+		return apply_filters( 'edd_get_payment_subtotal', $this->subtotal, $this->ID, $this );
+	}
+
+	/**
+	 * Retrieve payment discounts
+	 *
+	 * @since  2.5.1
+	 * @return array Discount codes on payment
+	 */
+	private function get_discounts() {
+		return apply_filters( 'edd_payment_discounts', $this->discounts, $this->ID, $this );
+	}
+
+	/**
+	 * Retrieve payment currency
+	 *
+	 * @since  2.5.1
+	 * @return string Payment currency code
+	 */
+	private function get_currency() {
+		return apply_filters( 'edd_payment_currency_code', $this->currency, $this->ID, $this );
+	}
+
+	/**
+	 * Retrieve payment gateway
+	 *
+	 * @since  2.5.1
+	 * @return string Gateway used
+	 */
+	private function get_gateway() {
+		return apply_filters( 'edd_payment_gateway', $this->gateway, $this->ID, $this );
+	}
+
+	/**
+	 * Retrieve payment transaction ID
+	 *
+	 * @since  2.5.1
+	 * @return string Transaction ID from merchant processor
+	 */
+	private function get_transaction_id() {
+		return apply_filters( 'edd_get_payment_transaction_id', $this->transaction_id, $this->ID, $this );
+	}
+
+	/**
+	 * Retrieve payment IP
+	 *
+	 * @since  2.5.1
+	 * @return string Payment IP address
+	 */
+	private function get_ip() {
+		return apply_filters( 'edd_payment_user_ip', $this->ip, $this->ID, $this );
+	}
+
+	/**
+	 * Retrieve payment customer ID
+	 *
+	 * @since  2.5.1
+	 * @return int Payment customer ID
+	 */
+	private function get_customer_id() {
+		return apply_filters( 'edd_payment_customer_id', $this->customer_id, $this->ID, $this );
+	}
+
+	/**
+	 * Retrieve payment user ID
+	 *
+	 * @since  2.5.1
+	 * @return int Payment user ID
+	 */
+	private function get_user_id() {
+		return apply_filters( 'edd_payment_user_id', $this->user_id, $this->ID, $this );
+	}
+
+	/**
+	 * Retrieve payment email
+	 *
+	 * @since  2.5.1
+	 * @return string Payment customer email
+	 */
+	private function get_email() {
+		return apply_filters( 'edd_payment_user_email', $this->email, $this->ID, $this );
+	}
+
+	/**
+	 * Retrieve payment user info
+	 *
+	 * @since  2.5.1
+	 * @return array Payment user info
+	 */
+	private function get_user_info() {
+		return apply_filters( 'edd_payment_meta_user_info', $this->user_info, $this->ID, $this );
+	}
+
+	/**
+	 * Retrieve payment billing address
+	 *
+	 * @since  2.5.1
+	 * @return array Payment billing address
+	 */
+	private function get_address() {
+		return apply_filters( 'edd_payment_address', $this->address, $this->ID, $this );
+	}
+
+	/**
+	 * Retrieve payment key
+	 *
+	 * @since  2.5.1
+	 * @return string Payment key
+	 */
+	private function get_key() {
+		return apply_filters( 'edd_payment_key', $this->key, $this->ID, $this );
+	}
+
+	/**
+	 * Retrieve payment number
+	 *
+	 * @since  2.5.1
+	 * @return int|string Payment number
+	 */
+	private function get_number() {
+		return apply_filters( 'edd_payment_number', $this->number, $this->ID, $this );
+	}
+
+	/**
+	 * Retrieve downloads on payment
+	 *
+	 * @since  2.5.1
+	 * @return array Payment downloads
+	 */
+	private function get_downloads() {
+		return apply_filters( 'edd_payment_meta_downloads', $this->downloads, $this->ID, $this );
+	}
+
+	/**
+	 * Retrieve unlimited file downloads status
+	 *
+	 * @since  2.5.1
+	 * @return bool Is unlimted
+	 */
+	private function get_unlimited() {
+		return apply_filters( 'edd_payment_unlimited_downloads', $this->unlimited, $this->ID, $this );
 	}
 
 }
