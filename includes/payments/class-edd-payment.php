@@ -467,7 +467,6 @@ final class EDD_Payment {
 	 * Create the base of a payment.
 	 *
 	 * @since  2.5
-	 * @param  array    $payment_data Base payment data.
 	 * @return int|bool Fale on failure, the payment ID on success.
 	 */
 	private function insert_payment() {
@@ -579,7 +578,7 @@ final class EDD_Payment {
 	/**
 	 * One items have been set, an update is needed to save them to the database.
 	 *
-	 * @return bool  True of the save occured, false if it failed or wasn't needed
+	 * @return bool  True of the save occurred, false if it failed or wasn't needed
 	 */
 	public function save() {
 		$saved = false;
@@ -629,7 +628,6 @@ final class EDD_Payment {
 										while ( $y < $item['quantity'] ) {
 											edd_record_sale_in_log( $item['id'], $this->ID, $price_id, $log_date );
 											$y++;
-
 										}
 
 										$download = new EDD_Download( $item['id'] );
@@ -855,8 +853,9 @@ final class EDD_Payment {
 	 * Add a download to a given payment
 	 *
 	 * @since 2.5
-	 * @param int  $download_id The download to add
-	 * @param int  $args Other arguments to pass to the function
+	 * @param int   $download_id The download to add
+	 * @param array $args Other arguments to pass to the function
+	 * @param array $options List of download options
 	 * @return void
 	 */
 	public function add_download( $download_id = 0, $args = array(), $options = array() ) {
@@ -932,7 +931,7 @@ final class EDD_Payment {
 
 		$total      = $subtotal - $discount + $tax;
 
-		// Do not allow totals to go negatve
+		// Do not allow totals to go negative
 		if( $total < 0 ) {
 			$total = 0;
 		}
@@ -971,12 +970,12 @@ final class EDD_Payment {
 	}
 
 	/**
-	 * Remove a downoad from the payment
+	 * Remove a download from the payment
 	 *
 	 * @since  2.5
 	 * @param  int   $download_id The download ID to remove
-	 * @param  array $args        Arguements to pass to identify (quantity, amount, price_id)
-	 * @return bool               If the item was remvoed or not
+	 * @param  array $args        Arguments to pass to identify (quantity, amount, price_id)
+	 * @return bool               If the item was removed or not
 	 */
 	public function remove_download( $download_id, $args = array() ) {
 
@@ -995,9 +994,6 @@ final class EDD_Payment {
 		if( ! $download || $download->post_type !== 'download' ) {
 			return false;
 		}
-
-		$total_reduced = 0;
-		$tax_reduced   = 0;
 
 		foreach ( $this->downloads as $key => $item ) {
 
@@ -1114,8 +1110,8 @@ final class EDD_Payment {
 	 * Add a fee to a given payment
 	 *
 	 * @since  2.5
-	 * @param  array $args Array of arguements for the fee to add
-	 * @return If the fee was added
+	 * @param  array $args Array of arguments for the fee to add
+	 * @return bool If the fee was added
 	 */
 	public function add_fee( $args, $global = true ) {
 
@@ -1332,7 +1328,6 @@ final class EDD_Payment {
 	 * Set or update the total for a payment
 	 *
 	 * @since 2.5
-	 * @param int $amount The amount of the payment
 	 * @return void
 	 */
 	private function recalculate_total() {
@@ -1596,7 +1591,6 @@ final class EDD_Payment {
 	 * Setup the payments discount codes
 	 *
 	 * @since  2.5
-	 * @param  array $payment_meta The payment Meta
 	 * @return array               Array of discount codes on this payment
 	 */
 	private function setup_discounts() {
@@ -1608,7 +1602,6 @@ final class EDD_Payment {
 	 * Setup the currency code
 	 *
 	 * @since  2.5
-	 * @param  array $payment_meta The payment meta
 	 * @return string              The currency for the payment
 	 */
 	private function setup_currency() {
@@ -1620,7 +1613,6 @@ final class EDD_Payment {
 	 * Setup any fees associated with the payment
 	 *
 	 * @since  2.5
-	 * @param  arra $payment_meta The Payment Meta
 	 * @return array               The Fees
 	 */
 	private function setup_fees() {
@@ -1646,7 +1638,6 @@ final class EDD_Payment {
 	 * @return string The transaction ID for the payment
 	 */
 	private function setup_transaction_id() {
-		$transaction_id = false;
 		$transaction_id = $this->get_meta( '_edd_payment_transaction_id', true );
 
 		if ( empty( $transaction_id ) ) {
@@ -1712,7 +1703,6 @@ final class EDD_Payment {
 	 * Setup the user info
 	 *
 	 * @since  2.5
-	 * @param  array $payment_meta The payment meta
 	 * @return array               The user info associated with the payment
 	 */
 	private function setup_user_info() {
@@ -1732,7 +1722,6 @@ final class EDD_Payment {
 	 * Setup the Address for the payment
 	 *
 	 * @since  2.5
-	 * @param  array $payment_meta The Payment Meta
 	 * @return array               The Address information for the payment
 	 */
 	private function setup_address() {
@@ -1779,7 +1768,6 @@ final class EDD_Payment {
 	 * Setup the cart details
 	 *
 	 * @since  2.5
-	 * @param  array $payment_meta The Payment Meta
 	 * @return array               The cart details
 	 */
 	private function setup_cart_details() {
@@ -1791,7 +1779,6 @@ final class EDD_Payment {
 	 * Setup the downloads array
 	 *
 	 * @since  2.5
-	 * @param  array $payment_meta Payment Meta
 	 * @return array               Downloads associated with this payment
 	 */
 	private function setup_downloads() {
