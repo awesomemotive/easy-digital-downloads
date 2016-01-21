@@ -249,8 +249,8 @@ class EDD_Product_Details_Widget extends WP_Widget {
 		echo $download_title;
 		
 		if($image) {
-			if(wp_get_attachment_url( get_post_thumbnail_id($download_id) ) !='') {
-				$feat_image = wp_get_attachment_url( get_post_thumbnail_id($download_id) );
+			if( wp_get_attachment_url( get_post_thumbnail_id( $download_id ) ) == '' ) {
+				$feat_image = wp_get_attachment_url( get_post_thumbnail_id( $download_id ) );
 				echo '<p><img src="'. $feat_image .'" alt="'. get_the_title( $download_id )  .'" /></p>';
 			}
 		}
