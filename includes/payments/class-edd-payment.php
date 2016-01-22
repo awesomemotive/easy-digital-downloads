@@ -1372,7 +1372,7 @@ final class EDD_Payment {
 	}
 
 	/**
-	 * Set the payment status
+	 * Set the payment status and run any status specific changes necessary
 	 *
 	 * @since 2.5
 	 *
@@ -1406,11 +1406,74 @@ final class EDD_Payment {
 			$all_payment_statuses  = edd_get_payment_statuses();
 			$this->status_nicename = array_key_exists( $status, $all_payment_statuses ) ? $all_payment_statuses[ $status ] : ucfirst( $status );
 
+			// Process any specific status functions
+			switch( $status ) {
+				case 'refunded':
+					$this->refund();
+					break;
+			}
+
 			do_action( 'edd_update_payment_status', $this->ID, $status, $old_status );
 
 		}
 
 		return $updated;
+
+	}
+
+	/**
+	 * Refund the a payment, decreses earnings/sales counts
+	 *
+	 * @return void
+	 */
+	public function refund() {
+
+		global $edd_logs;
+
+		$process_refund = true;
+
+		if ( ( 'publish' != $this->old_status && 'revoked' != $this->old_status ) || 'refunded' != $this->status ) {
+			$process_refund = false;
+		}
+
+		$process_refund = apply_filters( 'edd_should_process_refund', $process_refund, $this );
+
+		if ( false === $process_refund ) {
+			return;
+		}
+
+		if ( ! empty( $this->downloads ) ) {
+			foreach( $this->downloads as $download ) {
+				edd_undo_purchase( $download['id'], $this->ID );
+			}
+		}
+
+		// Decrease store earnings
+		edd_decrease_total_earnings( $this->total );
+
+		// Decrement the stats for the customer
+		if ( ! empty( $this->customer_id ) ) {
+
+			$customer = new EDD_Customer( $this->customer_id );
+			$customer->decrease_value( $this->total );
+			$customer->decrease_purchase_count();
+
+		}
+
+		// Remove related sale log entries
+		$edd_logs->delete_logs(
+			null,
+			'sale',
+			array(
+				array(
+					'key'   => '_edd_log_payment_id',
+					'value' => $this->ID,
+				),
+			)
+		);
+
+		// Clear the This Month earnings (this_monththis_month is NOT a typo)
+		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
 
 	}
 
