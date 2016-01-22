@@ -1422,7 +1422,7 @@ final class EDD_Payment {
 	}
 
 	/**
-	 * Refund the a payment, decreses earnings/sales counts
+	 * Refund the payment, decreses earnings/sales counts
 	 *
 	 * @return void
 	 */
