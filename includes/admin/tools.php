@@ -523,6 +523,8 @@ function edd_tools_sysinfo_get() {
 		$return .= 'Page For Posts:           ' . ( $blog_page_id != 0 ? get_the_title( $blog_page_id ) . ' (#' . $blog_page_id . ')' : 'Unset' ) . "\n";
 	}
 
+	$return .= 'ABSPATH:                  ' . ABSPATH . "\n";
+
 	// Make sure wp_remote_post() is working
 	$request['cmd'] = '_notify-validate';
 
