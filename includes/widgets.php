@@ -228,12 +228,12 @@ class EDD_Product_Details_Widget extends WP_Widget {
 		}
 
 		// Variables from widget settings.
-		$title              = apply_filters( 'widget_title', $instance['title'], $instance, $args['id'] );
+		$title              	= apply_filters( 'widget_title', $instance['title'], $instance, $args['id'] );
 		$download_title 	= $instance['download_title'] ? apply_filters( 'edd_product_details_widget_download_title', '<h3>' . get_the_title( $download_id ) . '</h3>', $download_id ) : '';
 		$purchase_button 	= $instance['purchase_button'] ? apply_filters( 'edd_product_details_widget_purchase_button', edd_get_purchase_link( array( 'download_id' => $download_id ) ), $download_id ) : '';
 		$categories 		= $instance['categories'] ? $instance['categories'] : '';
-		$tags 				= $instance['tags'] ? $instance['tags'] : '';
-		$image 				= $instance['image'] ? $instance['image'] : '';
+		$tags 			= $instance['tags'] ? $instance['tags'] : '';
+		$image 			= $instance['image'] ? $instance['image'] : '';
 
 		// Used by themes. Opens the widget.
 		echo $args['before_widget'];
@@ -248,10 +248,10 @@ class EDD_Product_Details_Widget extends WP_Widget {
 		// download title.
 		echo $download_title;
 		
-		if($image) {
+		if( $image ) {
 			if( wp_get_attachment_url( get_post_thumbnail_id( $download_id ) ) == '' ) {
 				$feat_image = wp_get_attachment_url( get_post_thumbnail_id( $download_id ) );
-				echo '<p><img src="'. $feat_image .'" alt="'. get_the_title( $download_id )  .'" /></p>';
+				echo "<p><img src=\"". $feat_image ."\" alt=\"". get_the_title( $download_id )  ."\" /></p>';
 			}
 		}
 
@@ -301,13 +301,13 @@ class EDD_Product_Details_Widget extends WP_Widget {
 	public function form( $instance ) {
 		// Set up some default widget settings.
 		$defaults = array(
-			'title' 			=> sprintf( __( '%s Details', 'easy-digital-downloads' ), edd_get_label_singular() ),
+			'title' 		=> sprintf( __( '%s Details', 'easy-digital-downloads' ), edd_get_label_singular() ),
 			'download_id' 		=> 'current',
 			'download_title' 	=> 'on',
 			'purchase_button' 	=> 'on',
 			'categories' 		=> 'on',
-			'tags' 				=> 'on',
-			'image' 			=> 'on'
+			'tags' 			=> 'on',
+			'image' 		=> 'on'
 		);
 
 		$instance = wp_parse_args( (array) $instance, $defaults ); ?>
