@@ -233,11 +233,6 @@
 #edd_checkout_form_wrap textarea.edd-input.error {
     border-color: #c4554e
 }
-#edd_checkout_form_wrap #edd_terms_agreement label,
-#edd_checkout_form_wrap #edd_tax_opt_in_fields label {
-    display: inline-block;
-    width: auto;
-}
 #edd_checkout_form_wrap > p {
     margin: 0 0 21px
 }
@@ -256,8 +251,12 @@
     margin-right: 5px;
 }
 #edd_checkout_form_wrap input[type="checkbox"] {
-    float: left;
-    margin: 0 8px 0 0;
+	display: inline-block;
+    margin: 0 5px 0 0;
+}
+#edd_checkout_form_wrap input[type="checkbox"] + label,
+#edd_checkout_form_wrap input[type="checkbox"] + label:after {
+	display: inline;
 }
 #edd_checkout_form_wrap .edd-payment-icons {
     height: 32px;
