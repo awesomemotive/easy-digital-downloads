@@ -228,11 +228,12 @@ class EDD_Product_Details_Widget extends WP_Widget {
 		}
 
 		// Variables from widget settings.
-		$title              = apply_filters( 'widget_title', $instance['title'], $instance, $args['id'] );
+		$title              	= apply_filters( 'widget_title', $instance['title'], $instance, $args['id'] );
 		$download_title 	= $instance['download_title'] ? apply_filters( 'edd_product_details_widget_download_title', '<h3>' . get_the_title( $download_id ) . '</h3>', $download_id ) : '';
 		$purchase_button 	= $instance['purchase_button'] ? apply_filters( 'edd_product_details_widget_purchase_button', edd_get_purchase_link( array( 'download_id' => $download_id ) ), $download_id ) : '';
 		$categories 		= $instance['categories'] ? $instance['categories'] : '';
-		$tags 				= $instance['tags'] ? $instance['tags'] : '';
+		$tags 			= $instance['tags'] ? $instance['tags'] : '';
+		$image 			= $instance['image'] ? $instance['image'] : '';
 
 		// Used by themes. Opens the widget.
 		echo $args['before_widget'];
@@ -246,6 +247,12 @@ class EDD_Product_Details_Widget extends WP_Widget {
 
 		// download title.
 		echo $download_title;
+		
+		$feat_image = wp_get_attachment_url( get_post_thumbnail_id( $download_id ) );
+
+		if( $image ) {
+			echo '<p><img src="'. $feat_image .'" alt="'. get_the_title( $download_id )  .'" /></p>';
+		}
 
 		do_action( 'edd_product_details_widget_before_purchase_button' , $instance , $download_id );
 		// purchase button.
@@ -293,12 +300,13 @@ class EDD_Product_Details_Widget extends WP_Widget {
 	public function form( $instance ) {
 		// Set up some default widget settings.
 		$defaults = array(
-			'title' 			=> sprintf( __( '%s Details', 'easy-digital-downloads' ), edd_get_label_singular() ),
+			'title' 		=> sprintf( __( '%s Details', 'easy-digital-downloads' ), edd_get_label_singular() ),
 			'download_id' 		=> 'current',
 			'download_title' 	=> 'on',
 			'purchase_button' 	=> 'on',
 			'categories' 		=> 'on',
-			'tags' 				=> 'on'
+			'tags' 			=> 'on',
+			'image' 		=> 'on'
 		);
 
 		$instance = wp_parse_args( (array) $instance, $defaults ); ?>
@@ -334,6 +342,12 @@ class EDD_Product_Details_Widget extends WP_Widget {
 			<label for="<?php echo esc_attr( $this->get_field_id( 'download_title' ) ); ?>"><?php _e( 'Show Title', 'easy-digital-downloads' ); ?></label>
 		</p>
 
+		<!-- Show download featured image -->
+		<p>
+			<input <?php checked( $instance['image'], 'on' ); ?> id="<?php echo esc_attr( $this->get_field_id( 'image' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'image' ) ); ?>" type="checkbox" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'image' ) ); ?>"><?php printf( __( 'Show Featured Image', 'easy-digital-downloads' ) ); ?></label>
+		</p>
+
 		<!-- Show purchase button -->
 		<p>
 			<input <?php checked( $instance['purchase_button'], 'on' ); ?> id="<?php echo esc_attr( $this->get_field_id( 'purchase_button' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'purchase_button' ) ); ?>" type="checkbox" />
@@ -367,6 +381,7 @@ class EDD_Product_Details_Widget extends WP_Widget {
 		$instance['purchase_button'] = isset( $new_instance['purchase_button'] ) ? $new_instance['purchase_button'] : '';
 		$instance['categories']      = isset( $new_instance['categories'] )      ? $new_instance['categories']      : '';
 		$instance['tags']            = isset( $new_instance['tags'] )            ? $new_instance['tags']            : '';
+		$instance['image']           = isset( $new_instance['image'] )           ? $new_instance['image']           : '';
 
 		do_action( 'edd_product_details_widget_update', $instance );
 
