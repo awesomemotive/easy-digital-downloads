@@ -754,8 +754,10 @@ function edd_terms_agreement() {
 				<a href="#" class="edd_terms_links"><?php _e( 'Show Terms', 'easy-digital-downloads' ); ?></a>
 				<a href="#" class="edd_terms_links" style="display:none;"><?php _e( 'Hide Terms', 'easy-digital-downloads' ); ?></a>
 			</div>
-			<label for="edd_agree_to_terms"><?php echo stripslashes( $agree_label ); ?></label>
-			<input name="edd_agree_to_terms" class="required" type="checkbox" id="edd_agree_to_terms" value="1"/>
+			<div class="edd-terms-agreement">
+				<input name="edd_agree_to_terms" class="required" type="checkbox" id="edd_agree_to_terms" value="1"/>
+				<label for="edd_agree_to_terms"><?php echo stripslashes( $agree_label ); ?></label>
+			</div>
 		</fieldset>
 <?php
 	}
