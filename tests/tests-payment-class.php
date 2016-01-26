@@ -357,4 +357,58 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$date2    = strtotime( $payment->date );
 		$this->assertEquals( $new_date, $date2 );
 	}
+
+	public function test_remove_with_multi_price_points_by_price_id() {
+		EDD_Helper_Payment::delete_payment( $this->_payment_id );
+
+		$download = EDD_Helper_Download::create_variable_download_with_multi_price_purchase();
+		$payment  = new EDD_Payment();
+
+		$payment->add_download( $download->ID, array( 'price_id' => 0 ) );
+		$payment->add_download( $download->ID, array( 'price_id' => 1 ) );
+		$payment->add_download( $download->ID, array( 'price_id' => 2 ) );
+		$payment->add_download( $download->ID, array( 'price_id' => 3 ) );
+
+		$this->assertEquals( 4, count( $payment->downloads ) );
+		$this->assertEquals( 620, $payment->total );
+
+		$payment->status = 'complete';
+		$payment->save();
+
+		$payment->remove_download( $download->ID, array( 'price_id' => 1 ) );
+		$payment->save();
+
+		$this->assertEquals( 3, count( $payment->downloads ) );
+		$this->assertEquals( 0, $payment->downloads[0]['options']['price_id'] );
+		$this->assertEquals( 2, $payment->downloads[1]['options']['price_id'] );
+		$this->assertEquals( 3, $payment->downloads[2]['options']['price_id'] );
+
+	}
+
+	public function test_remove_with_multi_price_points_by_cart_index() {
+		EDD_Helper_Payment::delete_payment( $this->_payment_id );
+
+		$download = EDD_Helper_Download::create_variable_download_with_multi_price_purchase();
+		$payment  = new EDD_Payment();
+
+		$payment->add_download( $download->ID, array( 'price_id' => 0 ) );
+		$payment->add_download( $download->ID, array( 'price_id' => 1 ) );
+		$payment->add_download( $download->ID, array( 'price_id' => 2 ) );
+		$payment->add_download( $download->ID, array( 'price_id' => 3 ) );
+
+		$this->assertEquals( 4, count( $payment->downloads ) );
+		$this->assertEquals( 620, $payment->total );
+
+		$payment->status = 'complete';
+		$payment->save();
+
+		$payment->remove_download( $download->ID, array( 'cart_index' => 1 ) );
+		$payment->remove_download( $download->ID, array( 'cart_index' => 2 ) );
+		$payment->save();
+
+		$this->assertEquals( 2, count( $payment->downloads ) );
+		$this->assertEquals( 0, $payment->downloads[0]['options']['price_id'] );
+		$this->assertEquals( 3, $payment->downloads[1]['options']['price_id'] );
+
+	}
 }
