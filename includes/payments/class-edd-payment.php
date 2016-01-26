@@ -1004,9 +1004,11 @@ final class EDD_Payment {
 			}
 
 			if ( false !== $args['price_id'] ) {
+
 				if ( isset( $item['options']['price_id'] ) && $args['price_id'] != $item['options']['price_id'] ) {
 					continue;
 				}
+
 			} elseif ( false !== $args['cart_index'] ) {
 
 				$cart_index = absint( $args['cart_index'] );
@@ -1033,10 +1035,12 @@ final class EDD_Payment {
 			if ( $item_quantity > $args['quantity'] ) {
 
 				$this->downloads[ $key ]['quantity'] -= $args['quantity'];
+				break;
 
 			} else {
 
 				unset( $this->downloads[ $key ] );
+				break;
 
 			}
 
@@ -1058,8 +1062,14 @@ final class EDD_Payment {
 					}
 				}
 
-				$found_cart_key = $cart_key;
+				if ( false !== $args['item_price'] ) {
+					if ( isset( $item['item_price'] ) && $args['item_price'] != $item['item_price'] ) {
+						continue;
+					}
+				}
 
+				$found_cart_key = $cart_key;
+				break;
 			}
 
 		} else {
@@ -1075,9 +1085,7 @@ final class EDD_Payment {
 			}
 
 			$found_cart_key = $cart_index;
-
 		}
-
 
 		$orig_quantity = $this->cart_details[ $found_cart_key ]['quantity'];
 
