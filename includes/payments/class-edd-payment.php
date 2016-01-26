@@ -819,6 +819,8 @@ final class EDD_Payment {
 			$this->update_meta( '_edd_payment_total', $this->total );
 			$this->update_meta( '_edd_payment_tax', $this->tax );
 
+			$this->downloads    = array_values( $this->downloads );
+
 			$new_meta = array(
 				'downloads'     => $this->downloads,
 				'cart_details'  => $this->cart_details,
@@ -912,7 +914,7 @@ final class EDD_Payment {
 			'quantity' => $quantity,
 		);
 
-		if ( ! empty( $args['price_id'] ) ) {
+		if ( false !== $args['price_id'] ) {
 			$default_options['price_id'] = (int) $args['price_id'];
 		}
 
@@ -1002,9 +1004,30 @@ final class EDD_Payment {
 			}
 
 			if ( false !== $args['price_id'] ) {
-				if ( isset( $item['price_id'] ) && $args['price_id'] != $item['price_id'] ) {
+
+				if ( isset( $item['options']['price_id'] ) && $args['price_id'] != $item['options']['price_id'] ) {
 					continue;
 				}
+
+			} elseif ( false !== $args['cart_index'] ) {
+
+				$cart_index = absint( $args['cart_index'] );
+				$cart_item  = ! empty( $this->cart_details[ $cart_index ] ) ? $this->cart_details[ $cart_index ] : false;
+
+				if ( ! empty( $cart_item ) ) {
+
+					// If the cart index item isn't the same download ID, don't remove it
+					if ( $cart_item['id'] != $item['id'] ) {
+						continue;
+					}
+
+					// If this item has a price ID, make sure it matches the cart indexed item's price ID before removing
+					if ( isset( $item['options']['price_id'] ) && $item['options']['price_id'] != $cart_item['item_number']['options']['price_id'] ) {
+						continue;
+					}
+
+				}
+
 			}
 
 			$item_quantity = $this->downloads[ $key ]['quantity'];
@@ -1012,10 +1035,12 @@ final class EDD_Payment {
 			if ( $item_quantity > $args['quantity'] ) {
 
 				$this->downloads[ $key ]['quantity'] -= $args['quantity'];
+				break;
 
 			} else {
 
 				unset( $this->downloads[ $key ] );
+				break;
 
 			}
 
@@ -1032,13 +1057,19 @@ final class EDD_Payment {
 				}
 
 				if ( false !== $args['price_id'] ) {
-					if ( isset( $item['price_id'] ) && $args['price_id'] != $item['item_number']['options']['price_id'] ) {
+					if ( isset( $item['item_number']['options']['price_id'] ) && $args['price_id'] != $item['item_number']['options']['price_id'] ) {
+						continue;
+					}
+				}
+
+				if ( false !== $args['item_price'] ) {
+					if ( isset( $item['item_price'] ) && $args['item_price'] != $item['item_price'] ) {
 						continue;
 					}
 				}
 
 				$found_cart_key = $cart_key;
-
+				break;
 			}
 
 		} else {
@@ -1054,9 +1085,7 @@ final class EDD_Payment {
 			}
 
 			$found_cart_key = $cart_index;
-
 		}
-
 
 		$orig_quantity = $this->cart_details[ $found_cart_key ]['quantity'];
 
@@ -1094,6 +1123,7 @@ final class EDD_Payment {
 
 		$pending_args             = $args;
 		$pending_args['id']       = $download_id;
+		$pending_args['amount']   = $total_reduced;
 		$pending_args['price_id'] = false !== $args['price_id'] ? $args['price_id'] : false;
 		$pending_args['quantity'] = $args['quantity'];
 		$pending_args['action']   = 'remove';
