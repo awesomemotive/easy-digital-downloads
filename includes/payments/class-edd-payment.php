@@ -673,8 +673,6 @@ final class EDD_Payment {
 
 							}
 
-							$this->downloads = array_values( $this->downloads );
-
 						}
 						break;
 
@@ -820,6 +818,8 @@ final class EDD_Payment {
 
 			$this->update_meta( '_edd_payment_total', $this->total );
 			$this->update_meta( '_edd_payment_tax', $this->tax );
+
+			$this->downloads    = array_values( $this->downloads );
 
 			$new_meta = array(
 				'downloads'     => $this->downloads,
