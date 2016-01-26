@@ -379,9 +379,16 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$payment->save();
 
 		$this->assertEquals( 3, count( $payment->downloads ) );
+
 		$this->assertEquals( 0, $payment->downloads[0]['options']['price_id'] );
+		$this->assertEquals( 0, $payment->cart_details[0]['item_number']['options']['price_id'] );
+
 		$this->assertEquals( 2, $payment->downloads[1]['options']['price_id'] );
+		$this->assertEquals( 2, $payment->cart_details[2]['item_number']['options']['price_id'] );
+
 		$this->assertEquals( 3, $payment->downloads[2]['options']['price_id'] );
+		$this->assertEquals( 3, $payment->cart_details[3]['item_number']['options']['price_id'] );
+
 
 	}
 
@@ -407,8 +414,12 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$payment->save();
 
 		$this->assertEquals( 2, count( $payment->downloads ) );
+
 		$this->assertEquals( 0, $payment->downloads[0]['options']['price_id'] );
+		$this->assertEquals( 0, $payment->cart_details[0]['item_number']['options']['price_id'] );
+
 		$this->assertEquals( 3, $payment->downloads[1]['options']['price_id'] );
+		$this->assertEquals( 3, $payment->cart_details[3]['item_number']['options']['price_id'] );
 
 	}
 }
