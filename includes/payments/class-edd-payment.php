@@ -673,6 +673,8 @@ final class EDD_Payment {
 
 							}
 
+							$this->downloads = array_values( $this->downloads );
+
 						}
 						break;
 
@@ -912,7 +914,7 @@ final class EDD_Payment {
 			'quantity' => $quantity,
 		);
 
-		if ( ! empty( $args['price_id'] ) ) {
+		if ( false !== $args['price_id'] ) {
 			$default_options['price_id'] = (int) $args['price_id'];
 		}
 
@@ -1002,9 +1004,28 @@ final class EDD_Payment {
 			}
 
 			if ( false !== $args['price_id'] ) {
-				if ( isset( $item['price_id'] ) && $args['price_id'] != $item['price_id'] ) {
+				if ( isset( $item['options']['price_id'] ) && $args['price_id'] != $item['options']['price_id'] ) {
 					continue;
 				}
+			} elseif ( false !== $args['cart_index'] ) {
+
+				$cart_index = absint( $args['cart_index'] );
+				$cart_item  = ! empty( $this->cart_details[ $cart_index ] ) ? $this->cart_details[ $cart_index ] : false;
+
+				if ( ! empty( $cart_item ) ) {
+
+					// If the cart index item isn't the same download ID, don't remove it
+					if ( $cart_item['id'] != $item['id'] ) {
+						continue;
+					}
+
+					// If this item has a price ID, make sure it matches the cart indexed item's price ID before removing
+					if ( isset( $item['options']['price_id'] ) && $item['options']['price_id'] != $cart_item['item_number']['options']['price_id'] ) {
+						continue;
+					}
+
+				}
+
 			}
 
 			$item_quantity = $this->downloads[ $key ]['quantity'];
@@ -1032,7 +1053,7 @@ final class EDD_Payment {
 				}
 
 				if ( false !== $args['price_id'] ) {
-					if ( isset( $item['price_id'] ) && $args['price_id'] != $item['item_number']['options']['price_id'] ) {
+					if ( isset( $item['item_number']['options']['price_id'] ) && $args['price_id'] != $item['item_number']['options']['price_id'] ) {
 						continue;
 					}
 				}
@@ -1094,6 +1115,7 @@ final class EDD_Payment {
 
 		$pending_args             = $args;
 		$pending_args['id']       = $download_id;
+		$pending_args['amount']   = $total_reduced;
 		$pending_args['price_id'] = false !== $args['price_id'] ? $args['price_id'] : false;
 		$pending_args['quantity'] = $args['quantity'];
 		$pending_args['action']   = 'remove';
