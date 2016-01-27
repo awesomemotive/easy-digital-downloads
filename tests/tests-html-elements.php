@@ -15,8 +15,13 @@ class Test_HTML_Elements extends WP_UnitTestCase {
 	}
 
 	public function test_product_dropdown() {
-		$expected = '<select name="products" id="products" class="edd-select " data-placeholder="Select a Download">';
+		$expected = '<select name="products" id="products" class="edd-select " data-placeholder="Select a Download" data-search-type="download">';
 		$this->assertContains( $expected, EDD()->html->product_dropdown() );
+	}
+
+	public function test_customer_dropdown() {
+		$expected = '<select name="customers" id="customers" class="edd-select  edd-customer-select edd-select-chosen" data-placeholder="" data-search-type="customer">';
+		$this->assertContains( $expected, EDD()->html->customer_dropdown() );
 	}
 
 	public function test_discount_dropdown() {
