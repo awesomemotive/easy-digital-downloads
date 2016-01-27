@@ -1131,13 +1131,15 @@ jQuery(document).ready(function ($) {
 	// Replace options with search results
 	$( document.body ).on( 'keyup', '.edd-select.chosen-container .chosen-search input, .edd-select.chosen-container .search-field input', function(e) {
 
-		var val = $(this).val(), container = $(this).closest( '.edd-select-chosen' );
-		var menu_id = container.attr('id').replace( '_chosen', '' );
-		var no_bundles = container.hasClass( 'no-bundles' );
-		var lastKey = e.which;
+		var val         = $(this).val(), container = $(this).closest( '.edd-select-chosen' );
+		var menu_id     = container.attr('id').replace( '_chosen', '' );
+		var no_bundles  = container.hasClass( 'no-bundles' );
+		var lastKey     = e.which;
 		var search_type = 'edd_download_search';
-		if( container.attr( 'id' ).indexOf( "customer" ) >= 0 ) {
-			search_type = 'edd_customer_search';
+
+		// Detect if we have a defined search type, otherwise default to downloads
+		if ( container.prev().data('search-type') ) {
+			search_type = 'edd_' + container.prev().data('search-type') + '_search';
 		}
 
 		// Don't fire if short or is a modifier key (shift, ctrl, apple command key, or arrow keys)
