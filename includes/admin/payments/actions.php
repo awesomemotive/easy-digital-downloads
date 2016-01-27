@@ -116,9 +116,9 @@ function edd_update_payment_details( $data ) {
 			$price_id = empty( $deleted_download['price_id'] ) ? 0 : (int) $deleted_download['price_id'];
 
 			$args = array(
-				'quantity' => $deleted_download['quantity'],
-				'price_id' => $price_id,
-				'amount'   => $deleted_download['amount'],
+				'quantity'   => (int) $deleted_download['quantity'],
+				'price_id'   => (int) $price_id,
+				'item_price' => (float) $deleted_download['amount'],
 			);
 
 			$payment->remove_download( $deleted_download['id'], $args );
@@ -241,7 +241,7 @@ function edd_update_payment_details( $data ) {
 	}
 
 	// Set new status
-	edd_update_payment_status( $payment_id, $status );
+	$payment->status = $status;
 
 	// Adjust total store earnings if the payment total has been changed
 	if ( $new_total !== $curr_total && ( 'publish' == $status || 'revoked' == $status ) ) {
