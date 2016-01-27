@@ -1442,6 +1442,8 @@ final class EDD_Payment {
 			return;
 		}
 
+		do_action( 'edd_pre_refund_payment', $this );
+
 		if ( ! empty( $this->downloads ) ) {
 			foreach( $this->downloads as $download ) {
 				edd_undo_purchase( $download['id'], $this->ID );
@@ -1474,6 +1476,8 @@ final class EDD_Payment {
 
 		// Clear the This Month earnings (this_monththis_month is NOT a typo)
 		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
+
+		do_action( 'edd_post_refund_payment', $this );
 
 	}
 
