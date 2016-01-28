@@ -80,11 +80,11 @@ function edd_update_payment_details( $data ) {
 				continue;
 			}
 
-			if ( empty( $download['amount'] ) ) {
-				$download['amount'] = 0.00;
+			if ( empty( $download['item_price'] ) ) {
+				$download['item_price'] = 0.00;
 			}
 
-			$amount      = $download['amount'];
+			$item_price  = $download['item_price'];
 			$download_id = absint( $download['id'] );
 			$quantity    = absint( $download['quantity'] ) > 0 ? absint( $download['quantity'] ) : 1;
 			$price_id    = false;
@@ -96,7 +96,7 @@ function edd_update_payment_details( $data ) {
 			// Set some defaults
 			$args = array(
 				'quantity'    => $quantity,
-				'item_price'  => $amount,
+				'item_price'  => $item_price,
 				'price_id'    => $price_id,
 			);
 
