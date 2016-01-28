@@ -319,6 +319,19 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$this->assertEquals( 'User', $payment->last_name );
 	}
 
+	public function test_for_searlized_user_info() {
+		// Issue #4248
+		$payment = new EDD_Payment( $this->_payment_id );
+		$payment->user_info = serialize( array( 'first_name' => 'John', 'last_name' => 'Doe' ) );
+		// Save re-runs the setup process
+		$payment->save();
+
+		$this->assertInternalType( 'array', $payment->user_info );
+		foreach ( $payment->user_info as $key => $value ) {
+			$this->assertFalse( is_serialized( $value ), $key . ' returned a searlized value' );
+		}
+	}
+
 	public function test_payment_with_initial_fee() {
 		EDD_Helper_Payment::delete_payment( $this->_payment_id );
 
