@@ -40,7 +40,8 @@ class EDD_HTML_Elements {
 			'chosen'      => false,
 			'number'      => 30,
 			'bundles'     => true,
-			'placeholder' => sprintf( __( 'Select a %s', 'easy-digital-downloads' ), edd_get_label_singular() )
+			'placeholder' => sprintf( __( 'Select a %s', 'easy-digital-downloads' ), edd_get_label_singular() ),
+			'data'        => array( 'search-type' => 'download' ),
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -104,7 +105,8 @@ class EDD_HTML_Elements {
 			'multiple'         => $args['multiple'],
 			'placeholder'      => $args['placeholder'],
 			'show_option_all'  => false,
-			'show_option_none' => false
+			'show_option_none' => false,
+			'data'             => $args['data'],
 		) );
 
 		return $output;
@@ -128,7 +130,8 @@ class EDD_HTML_Elements {
 			'selected'    => 0,
 			'chosen'      => true,
 			'placeholder' => __( 'Select a Customer', 'easy-digital-downloads' ),
-			'number'      => 30
+			'number'      => 30,
+			'data'        => array( 'search-type' => 'customer' ),
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -175,7 +178,8 @@ class EDD_HTML_Elements {
 			'multiple'         => $args['multiple'],
 			'chosen'           => $args['chosen'],
 			'show_option_all'  => false,
-			'show_option_none' => false
+			'show_option_none' => false,
+			'data'             => $args['data'],
 		) );
 
 		return $output;
@@ -332,11 +336,16 @@ class EDD_HTML_Elements {
 			'placeholder'      => null,
 			'multiple'         => false,
 			'show_option_all'  => _x( 'All', 'all dropdown items', 'easy-digital-downloads' ),
-			'show_option_none' => _x( 'None', 'no dropdown items', 'easy-digital-downloads' )
+			'show_option_none' => _x( 'None', 'no dropdown items', 'easy-digital-downloads' ),
+			'data'             => array(),
 		);
 
 		$args = wp_parse_args( $args, $defaults );
 
+		$data_elements = '';
+		foreach ( $args['data'] as $key => $value ) {
+			$data_elements .= ' data-' . esc_attr( $key ) . '="' . esc_attr( $value ) . '"';
+		}
 
 		if( $args['multiple'] ) {
 			$multiple = ' MULTIPLE';
@@ -354,7 +363,7 @@ class EDD_HTML_Elements {
 			$placeholder = '';
 		}
 
-		$output = '<select name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( sanitize_key( str_replace( '-', '_', $args['id'] ) ) ) . '" class="edd-select ' . esc_attr( $args['class'] ) . '"' . $multiple . ' data-placeholder="' . $placeholder . '">';
+		$output = '<select name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( sanitize_key( str_replace( '-', '_', $args['id'] ) ) ) . '" class="edd-select ' . esc_attr( $args['class'] ) . '"' . $multiple . ' data-placeholder="' . $placeholder . '"'. $data_elements . '>';
 
 		if ( $args['show_option_all'] ) {
 			if( $args['multiple'] ) {
