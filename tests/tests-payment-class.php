@@ -383,8 +383,7 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$store_earnings = edd_get_total_earnings();
 		$store_sales    = edd_get_total_sales();
 
-		$payment->status = 'refunded';
-		$payment->save();
+		$payment->refund();
 
 		wp_cache_flush();
 

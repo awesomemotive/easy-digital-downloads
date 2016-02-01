@@ -1434,7 +1434,7 @@ final class EDD_Payment {
 			// Process any specific status functions
 			switch( $status ) {
 				case 'refunded':
-					$this->refund();
+					$this->process_refund();
 					break;
 			}
 
@@ -1447,59 +1447,17 @@ final class EDD_Payment {
 	}
 
 	/**
-	 * Refund the payment, decreses earnings/sales counts
+	 * Change the status of the payment to refunded, and run the necessary changes
 	 *
+	 * @since  2.5.7
 	 * @return void
 	 */
 	public function refund() {
+		$this->old_status        = $this->status;
+		$this->status            = 'refunded';
+		$this->pending['status'] = $this->status;
 
-		global $edd_logs;
-
-		$process_refund = true;
-
-		if ( ( 'publish' != $this->old_status && 'revoked' != $this->old_status ) || 'refunded' != $this->status ) {
-			$process_refund = false;
-		}
-
-		$process_refund = apply_filters( 'edd_should_process_refund', $process_refund, $this );
-
-		if ( false === $process_refund ) {
-			return;
-		}
-
-		do_action( 'edd_pre_refund_payment', $this );
-
-		edd_undo_purchase( false, $this->ID );
-
-		// Decrease store earnings
-		edd_decrease_total_earnings( $this->total );
-
-		// Decrement the stats for the customer
-		if ( ! empty( $this->customer_id ) ) {
-
-			$customer = new EDD_Customer( $this->customer_id );
-			$customer->decrease_value( $this->total );
-			$customer->decrease_purchase_count();
-
-		}
-
-		// Remove related sale log entries
-		$edd_logs->delete_logs(
-			null,
-			'sale',
-			array(
-				array(
-					'key'   => '_edd_log_payment_id',
-					'value' => $this->ID,
-				),
-			)
-		);
-
-		// Clear the This Month earnings (this_monththis_month is NOT a typo)
-		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
-
-		do_action( 'edd_post_refund_payment', $this );
-
+		$this->save();
 	}
 
 	/**
@@ -1573,6 +1531,64 @@ final class EDD_Payment {
 		$meta_value = apply_filters( 'edd_update_payment_meta_' . $meta_key, $meta_value, $this->ID );
 
 		return update_post_meta( $this->ID, $meta_key, $meta_value, $prev_value );
+	}
+
+	/**
+	 * When a payment is set to a status of 'refunded' process the necessary actions to reduce stats
+	 *
+	 * @since  2.5.7
+	 * @access private
+	 * @return void
+	 */
+	private function process_refund() {
+		global $edd_logs;
+
+		$process_refund = true;
+
+		// If the payment was not in publish or revoked status, don't decrement stats as they were never incremented
+		if ( ( 'publish' != $this->old_status && 'revoked' != $this->old_status ) || 'refunded' != $this->status ) {
+			$process_refund = false;
+		}
+
+		// Allow extensions to filter for their own payment types, Example: Recurring Payments
+		$process_refund = apply_filters( 'edd_should_process_refund', $process_refund, $this );
+
+		if ( false === $process_refund ) {
+			return;
+		}
+
+		do_action( 'edd_pre_refund_payment', $this );
+
+		edd_undo_purchase( false, $this->ID );
+
+		// Decrease store earnings
+		edd_decrease_total_earnings( $this->total );
+
+		// Decrement the stats for the customer
+		if ( ! empty( $this->customer_id ) ) {
+
+			$customer = new EDD_Customer( $this->customer_id );
+			$customer->decrease_value( $this->total );
+			$customer->decrease_purchase_count();
+
+		}
+
+		// Remove related sale log entries
+		$edd_logs->delete_logs(
+			null,
+			'sale',
+			array(
+				array(
+					'key'   => '_edd_log_payment_id',
+					'value' => $this->ID,
+				),
+			)
+		);
+
+		// Clear the This Month earnings (this_monththis_month is NOT a typo)
+		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
+
+		do_action( 'edd_post_refund_payment', $this );
 	}
 
 	/**
