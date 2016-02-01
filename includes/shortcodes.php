@@ -311,7 +311,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		'order'          => $atts['order']
 	);
 
-	if(  'true' === $atts['pagination']  ) {
+	if ( filter_var( $atts['pagination'], FILTER_VALIDATE_BOOLEAN ) || ( ! filter_var( $atts['pagination'], FILTER_VALIDATE_BOOLEAN ) && $atts[ 'number' ] ) ) {
 
 		$query['posts_per_page'] = (int) $atts['number'];
 
@@ -321,8 +321,6 @@ function edd_downloads_query( $atts, $content = null ) {
 	} else {
 		$query['nopaging'] = true;
 	}
-
-
 
 	switch ( $atts['orderby'] ) {
 		case 'price':
@@ -547,6 +545,8 @@ function edd_downloads_query( $atts, $content = null ) {
 
 			<?php wp_reset_postdata(); ?>
 
+			<?php if ( filter_var( $atts['pagination'], FILTER_VALIDATE_BOOLEAN ) ) : ?>
+
 			<?php
 				$pagination = false;
 
@@ -574,6 +574,8 @@ function edd_downloads_query( $atts, $content = null ) {
 			<div id="edd_download_pagination" class="navigation">
 				<?php echo $pagination; ?>
 			</div>
+			<?php endif; ?>
+
 			<?php endif; ?>
 
 		</div>

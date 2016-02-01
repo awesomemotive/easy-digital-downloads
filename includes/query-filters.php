@@ -111,3 +111,41 @@ function edd_prevent_canonical_redirect( $redirect_url, $requested_url ) {
 
 }
 add_action( 'redirect_canonical', 'edd_prevent_canonical_redirect', 0, 2 );
+
+/**
+ * Auto flush permalinks wth a soft flush when a 404 error is detected on an EDD page
+ *
+ * @since 2.4.3
+ * @return string
+ */
+function edd_refresh_permalinks_on_bad_404() {
+
+	global $wp;
+
+	if( ! is_404() ) {
+		return;
+	}
+
+	if( isset( $_GET['edd-flush'] ) ) {
+		return;
+	}
+
+	if( false === get_transient( 'edd_refresh_404_permalinks' ) ) {
+
+		$slug  = defined( 'EDD_SLUG' ) ? EDD_SLUG : 'downloads';
+
+		$parts = explode( '/', $wp->request );
+
+		if( $slug !== $parts[0] ) {
+			return;
+		}
+
+		flush_rewrite_rules( false );
+
+		set_transient( 'edd_refresh_404_permalinks', 1, HOUR_IN_SECONDS * 12 );
+
+		wp_redirect( home_url( add_query_arg( array( 'edd-flush' => 1 ), $wp->request ) ) ); exit;
+
+	}
+}
+add_action( 'template_redirect', 'edd_refresh_permalinks_on_bad_404' );

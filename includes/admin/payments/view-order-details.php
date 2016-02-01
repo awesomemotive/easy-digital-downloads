@@ -274,6 +274,7 @@ $currency_code  = $payment->currency;
 									<div class="row">
 										<ul>
 											<?php
+
 											// Item ID is checked if isset due to the near-1.0 cart data
 											$item_id    = isset( $cart_item['id']    )                                  ? $cart_item['id']                                 : $cart_item;
 											$price      = isset( $cart_item['price'] )                                  ? $cart_item['price']                              : false;
@@ -305,6 +306,7 @@ $currency_code  = $payment->currency;
 												</span>
 												<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][id]" class="edd-payment-details-download-id" value="<?php echo esc_attr( $item_id ); ?>"/>
 												<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][price_id]" class="edd-payment-details-download-price-id" value="<?php echo esc_attr( $price_id ); ?>"/>
+												<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][item_price]" class="edd-payment-details-download-item-price" value="<?php echo esc_attr( $item_price ); ?>"/>
 												<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][amount]" class="edd-payment-details-download-amount" value="<?php echo esc_attr( $price ); ?>"/>
 												<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][quantity]" class="edd-payment-details-download-quantity" value="<?php echo esc_attr( $quantity ); ?>"/>
 
