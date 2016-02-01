@@ -206,7 +206,7 @@ function edd_setup_download_taxonomies() {
 		'name'              => sprintf( _x( '%s Categories', 'taxonomy general name', 'easy-digital-downloads' ), edd_get_label_singular() ),
 		'singular_name'     => sprintf( _x( '%s Category', 'taxonomy singular name', 'easy-digital-downloads' ), edd_get_label_singular() ),
 		'search_items'      => sprintf( __( 'Search %s Categories', 'easy-digital-downloads' ), edd_get_label_singular() ),
-		'all_items'         => sprintf( __( 'All %s Categories', 'easy-digital-downloads' ), edd_get_label_plural() ),
+		'all_items'         => sprintf( __( 'All %s Categories', 'easy-digital-downloads' ), edd_get_label_singular() ),
 		'parent_item'       => sprintf( __( 'Parent %s Category', 'easy-digital-downloads' ), edd_get_label_singular() ),
 		'parent_item_colon' => sprintf( __( 'Parent %s Category:', 'easy-digital-downloads' ), edd_get_label_singular() ),
 		'edit_item'         => sprintf( __( 'Edit %s Category', 'easy-digital-downloads' ), edd_get_label_singular() ),
