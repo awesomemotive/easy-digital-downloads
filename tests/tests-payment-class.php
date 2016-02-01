@@ -359,18 +359,56 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 	}
 
 	public function test_refund_payment() {
-		$payment         = new EDD_Payment( $this->_payment_id );
+		$payment  = new EDD_Payment( $this->_payment_id );
+		$payment->status = 'complete';
+		$payment->save();
+
+		$download = new EDD_Download( $payment->downloads[0]['id'] );
+		$earnings = $download->earnings;
+		$sales    = $download->sales;
+
+		$store_earnings = edd_get_total_earnings();
+		$store_sales    = edd_get_total_sales();
+
 		$payment->status = 'refunded';
 		$payment->save();
 
+		wp_cache_flush();
+
 		$status = get_post_status( $payment->ID );
 		$this->assertEquals( 'refunded', $status );
+		$this->assertEquals( 'refunded', $payment->status );
+
+		$download2 = new EDD_Download( $download->ID );
+
+		$this->assertEquals( $earnings - $download->price, $download2->earnings );
+		$this->assertEquals( $sales - 1, $download2->sales );
+
+		$this->assertEquals( $store_earnings - $payment->total, edd_get_total_earnings() );
+		$this->assertEquals( $store_sales - 1, edd_get_total_sales() );
 	}
 
 	public function test_refund_payment_legacy() {
-		edd_undo_purchase_on_refund( $this->_payment_id, 'refunded', 'publish' );
+		$payment  = new EDD_Payment( $this->_payment_id );
+		$payment->status = 'complete';
+		$payment->save();
+
+		$download = new EDD_Download( $payment->downloads[0]['id'] );
+		$earnings = $download->earnings;
+		$sales    = $download->sales;
+
+		edd_undo_purchase_on_refund( $payment->ID, 'refunded', 'publish' );
+
+		wp_cache_flush();
 
 		$payment = new EDD_Payment( $this->_payment_id );
+		$status  = get_post_status( $payment->ID );
+		$this->assertEquals( 'refunded', $status );
 		$this->assertEquals( 'refunded', $payment->status );
+
+		$download2 = new EDD_Download( $download->ID );
+
+		$this->assertEquals( $earnings - $download->price, $download2->earnings );
+		$this->assertEquals( $sales - 1, $download2->sales );
 	}
 }
