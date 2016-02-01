@@ -357,4 +357,20 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$date2    = strtotime( $payment->date );
 		$this->assertEquals( $new_date, $date2 );
 	}
+
+	public function test_refund_payment() {
+		$payment         = new EDD_Payment( $this->_payment_id );
+		$payment->status = 'refunded';
+		$payment->save();
+
+		$status = get_post_status( $payment->ID );
+		$this->assertEquals( 'refunded', $status );
+	}
+
+	public function test_refund_payment_legacy() {
+		edd_undo_purchase_on_refund( $this->_payment_id, 'refunded', 'publish' );
+
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertEquals( 'refunded', $payment->status );
+	}
 }
