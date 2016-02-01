@@ -157,8 +157,6 @@ function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
 	$payment->refund();
 
 }
-// add_action( 'edd_update_payment_status', 'edd_undo_purchase_on_refund', 100, 3 );
-
 
 /**
  * Flushes the current user's purchase history transient when a payment status
