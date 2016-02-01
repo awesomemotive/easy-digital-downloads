@@ -223,15 +223,9 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
 	global $edd_logs;
 
 	$payment   = new EDD_Payment( $payment_id );
-	$downloads = $payment->downloads;
 
-	if ( is_array( $downloads ) ) {
-		// Update sale counts and earnings for all purchased products
-		foreach ( $downloads as $download ) {
-			edd_undo_purchase( $download['id'], $payment_id );
-		}
-	}
-
+	// Update sale counts and earnings for all purchased products
+	edd_undo_purchase( false, $payment_id );
 
 	$amount      = edd_get_payment_amount( $payment_id );
 	$status      = $payment->post_status;
@@ -305,6 +299,11 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
  */
 function edd_undo_purchase( $download_id, $payment_id ) {
 
+	/**
+	 * In 2.5.7, a bug was found that $download_id was an incorrect usage. Passing it in
+	 * now does nothing, but we're holding it in place for legacy support of the argument order.
+	 */
+
 	$payment = new EDD_Payment( $payment_id );
 
 	$cart_details = $payment->cart_details;
@@ -320,24 +319,24 @@ function edd_undo_purchase( $download_id, $payment_id ) {
 			// Decrease earnings/sales and fire action once per quantity number
 			for( $i = 0; $i < $item['quantity']; $i++ ) {
 
- 				// variable priced downloads
-				if ( false === $amount && edd_has_variable_prices( $download_id ) ) {
+				// variable priced downloads
+				if ( false === $amount && edd_has_variable_prices( $item['id'] ) ) {
 					$price_id = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
-					$amount   = ! isset( $item['price'] ) && 0 !== $item['price'] ? edd_get_price_option_amount( $download_id, $price_id ) : $item['price'];
+					$amount   = ! isset( $item['price'] ) && 0 !== $item['price'] ? edd_get_price_option_amount( $item['id'], $price_id ) : $item['price'];
 				}
 
- 				if ( ! $amount ) {
- 					// This function is only used on payments with near 1.0 cart data structure
- 					$amount = edd_get_download_final_price( $download_id, $user_info, $amount );
- 				}
+				if ( ! $amount ) {
+					// This function is only used on payments with near 1.0 cart data structure
+					$amount = edd_get_download_final_price( $item['id'], $user_info, $amount );
+				}
 
 			}
 
 			// decrease earnings
-			edd_decrease_earnings( $download_id, $amount );
+			edd_decrease_earnings( $item['id'], $amount );
 
 			// decrease purchase count
-			edd_decrease_purchase_count( $download_id, $item['quantity'] );
+			edd_decrease_purchase_count( $item['id'], $item['quantity'] );
 
 		}
 

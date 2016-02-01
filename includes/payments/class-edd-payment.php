@@ -1444,11 +1444,7 @@ final class EDD_Payment {
 
 		do_action( 'edd_pre_refund_payment', $this );
 
-		if ( ! empty( $this->downloads ) ) {
-			foreach( $this->downloads as $download ) {
-				edd_undo_purchase( $download['id'], $this->ID );
-			}
-		}
+		edd_undo_purchase( false, $this->ID );
 
 		// Decrease store earnings
 		edd_decrease_total_earnings( $this->total );
