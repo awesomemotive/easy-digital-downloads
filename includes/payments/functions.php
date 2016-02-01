@@ -297,12 +297,17 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
  * @param int $payment_id Payment ID
  * @return void
  */
-function edd_undo_purchase( $download_id, $payment_id ) {
+function edd_undo_purchase( $download_id = false, $payment_id ) {
 
 	/**
 	 * In 2.5.7, a bug was found that $download_id was an incorrect usage. Passing it in
 	 * now does nothing, but we're holding it in place for legacy support of the argument order.
 	 */
+
+	if ( ! empty( $download_id ) ) {
+		$download_id = false;
+		_edd_deprected_argument( 'download_id', 'edd_undo_purchase', '2.5.7' );
+	}
 
 	$payment = new EDD_Payment( $payment_id );
 
