@@ -40,7 +40,7 @@ class Test_HTML_Elements extends WP_UnitTestCase {
 	}
 
 	public function test_category_dropdown() {
-		$expected = '<select name="edd_categories" id="" class="edd-select " data-placeholder=""><option value="all" selected=\'selected\'>All Categories</option></select>';
+		$expected = '<select name="edd_categories" id="" class="edd-select " data-placeholder=""><option value="all" selected=\'selected\'>All Download Categories</option></select>';
 		$this->assertEquals( $expected, EDD()->html->category_dropdown() );
 	}
 
