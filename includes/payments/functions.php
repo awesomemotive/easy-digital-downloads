@@ -337,11 +337,18 @@ function edd_undo_purchase( $download_id = false, $payment_id ) {
 
 			}
 
-			// decrease earnings
-			edd_decrease_earnings( $item['id'], $amount );
+			$maybe_decrease_earnings = apply_filters( 'edd_decrease_earnings_on_undo', true, $payment_id, $item['id'] );
+			if ( true === $maybe_decrease_earnings ) {
+				// decrease earnings
+				edd_decrease_earnings( $item['id'], $amount );
+			}
 
-			// decrease purchase count
-			edd_decrease_purchase_count( $item['id'], $item['quantity'] );
+
+			$maybe_decrease_sales = apply_filters( 'edd_decrease_sales_on_undo', true, $payment_id, $item['id'] );
+			if ( true === $maybe_decrease_sales ) {
+				// decrease purchase count
+				edd_decrease_purchase_count( $item['id'], $item['quantity'] );
+			}
 
 		}
 

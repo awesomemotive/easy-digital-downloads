@@ -1562,14 +1562,25 @@ final class EDD_Payment {
 		edd_undo_purchase( false, $this->ID );
 
 		// Decrease store earnings
-		edd_decrease_total_earnings( $this->total );
+		$maybe_decrease_store_earnings = apply_filters( 'edd_decrease_store_earnings_on_refund', true, $this );
+		if ( true === $maybe_decrease_store_earnings ) {
+			edd_decrease_total_earnings( $this->total );
+		}
 
 		// Decrement the stats for the customer
 		if ( ! empty( $this->customer_id ) ) {
 
 			$customer = new EDD_Customer( $this->customer_id );
-			$customer->decrease_value( $this->total );
-			$customer->decrease_purchase_count();
+
+			$maybe_decrease_value = apply_filters( 'edd_decrease_customer_value_on_refund', true, $this );
+			if ( true === $maybe_decrease_value ) {
+				$customer->decrease_value( $this->total );
+			}
+
+			$maybe_decrease_purchase_count = apply_filters( 'edd_decrease_customer_purchase_count_on_refund', true, $this );
+			if ( true === $maybe_decrease_purchase_count ) {
+				$customer->decrease_purchase_count();
+			}
 
 		}
 
