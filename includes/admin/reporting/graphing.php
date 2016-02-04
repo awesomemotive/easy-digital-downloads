@@ -690,7 +690,7 @@ function edd_get_report_dates() {
 
 		case 'this_week' :
 		case 'last_week' :
-			$base_time = $dates['range'] === 'this_week' ? current_time( 'mysql' ) : date( 'Y-n-d h:i:s', current_time( 'timestamp' ) - WEEK_IN_SECONDS );
+			$base_time = $dates['range'] === 'this_week' ? current_time( 'mysql' ) : date( 'Y-m-d h:i:s', current_time( 'timestamp' ) - WEEK_IN_SECONDS );
 			$start_end = get_weekstartend( $base_time, get_option( 'start_of_week' ) );
 
 			$dates['day']      = date( 'd', $start_end['start'] );
