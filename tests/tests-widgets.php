@@ -341,7 +341,7 @@ class Tests_Widgets extends WP_UnitTestCase {
 		$this->assertContains( '<input type="hidden" name="edd_action" class="edd_action_input" value="add_to_cart">', $output );
 		$this->assertContains( '<input type="hidden" name="download_id" value="' . $download->ID . '">', $output );
 		$this->assertContains( '<p class="edd-meta">', $output );
-		$this->assertContains( '<span class="categories">Category: ', $output );
+		$this->assertContains( '<span class="categories">Download Category: ', $output );
 
 		EDD_Helper_Download::delete_download( $download->ID );
 
@@ -370,9 +370,9 @@ class Tests_Widgets extends WP_UnitTestCase {
 		$this->assertRegExp( '/<input  checked=\'checked\' id="widget-edd_product_details--purchase_button" name="widget-edd_product_details\[\]\[purchase_button\]" type="checkbox" \/>/', $output );
 		$this->assertRegExp( '/<label for="widget-edd_product_details--purchase_button">Show Purchase Button<\/label>/', $output );
 		$this->assertRegExp( '/<input  checked=\'checked\' id="widget-edd_product_details--categories" name="widget-edd_product_details\[\]\[categories\]" type="checkbox" \/>/', $output );
-		$this->assertRegExp( '/<label for="widget-edd_product_details--categories">Show Categories<\/label>/', $output );
+		$this->assertRegExp( '/<label for="widget-edd_product_details--categories">Show Download Categories<\/label>/', $output );
 		$this->assertRegExp( '/<input  checked=\'checked\' id="widget-edd_product_details--tags" name="widget-edd_product_details\[\]\[tags\]" type="checkbox" \/>/', $output );
-		$this->assertRegExp( '/<label for="widget-edd_product_details--tags">Show Tags<\/label>/', $output );
+		$this->assertRegExp( '/<label for="widget-edd_product_details--tags">Show Download Tags<\/label>/', $output );
 
 	}
 
