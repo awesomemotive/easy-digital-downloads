@@ -1216,6 +1216,7 @@ jQuery(document).ready(function ($) {
 		init : function() {
 			this.revoke_api_key();
 			this.regenerate_api_key();
+			this.create_api_key();
 			this.recount_stats();
 		},
 
@@ -1227,6 +1228,19 @@ jQuery(document).ready(function ($) {
 		regenerate_api_key : function() {
 			$( document.body ).on( 'click', '.edd-regenerate-api-key', function( e ) {
 				return confirm( edd_vars.regenerate_api_key );
+			} );
+		},
+		create_api_key : function() {
+			$( document.body).on( 'submit', '#api-key-generate-form', function( e ) {
+				var input = $( 'input[type="text"][name="user_id"]' );
+
+				input.css('border-color', '#ddd');
+
+				var user_id = input.val();
+				if ( user_id.length < 1 || user_id == 0 ) {
+					input.css('border-color', '#ff0000');
+					return false;
+				}
 			} );
 		},
 		recount_stats : function() {
