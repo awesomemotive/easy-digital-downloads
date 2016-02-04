@@ -152,6 +152,10 @@ add_action( 'edd_update_payment_status', 'edd_record_status_change', 100, 3 );
  * @return void
  */
 function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
+
+	$backtrace = debug_backtrace();
+	_edd_deprecated_function( 'edd_undo_purchase_on_refund', '2.5.7', 'EDD_Payment->refund()', $backtrace );
+
 	$payment = new EDD_Payment( $payment_id );
 	$payment->refund();
 }
