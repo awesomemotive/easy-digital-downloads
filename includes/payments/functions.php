@@ -784,10 +784,10 @@ function edd_get_total_sales() {
  */
 function edd_get_total_earnings() {
 
-	$total = get_option( 'edd_earnings_total', 0 );
+	$total = get_option( 'edd_earnings_total', false );
 
 	// If no total stored in DB, use old method of calculating total earnings
-	if( ! $total ) {
+	if( false === $total ) {
 
 		global $wpdb;
 
