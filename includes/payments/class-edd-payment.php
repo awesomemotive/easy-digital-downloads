@@ -403,6 +403,9 @@ final class EDD_Payment {
 			return false;
 		}
 
+		// Allow extensions to perform actions before the payment is loaded
+		do_action( 'edd_pre_setup_payment', $this, $payment_id );
+
 		// Primary Identifier
 		$this->ID              = absint( $payment_id );
 
@@ -1635,7 +1638,7 @@ final class EDD_Payment {
 	 * @return string              The currency for the payment
 	 */
 	private function setup_currency() {
-		$currency = isset( $this->payment_meta['currency'] ) ? $this->payment_meta['currency'] : edd_get_currency();
+		$currency = isset( $this->payment_meta['currency'] ) ? $this->payment_meta['currency'] : apply_filters( 'edd_payment_currency_default', edd_get_currency(), $this );
 		return $currency;
 	}
 
