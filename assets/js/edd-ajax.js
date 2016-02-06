@@ -375,7 +375,8 @@ function edd_load_gateway( payment_mode ) {
 	jQuery('#edd_purchase_form_wrap').html('<img src="' + edd_scripts.ajax_loader + '"/>');
 
 	var url = edd_scripts.ajaxurl;
-	if ( url.indexOf( '?' ) ) {
+
+	if ( url.indexOf( '?' ) > 0 ) {
 		url = url + '&';
 	} else {
 		url = url + '?';
