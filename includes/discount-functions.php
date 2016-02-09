@@ -1007,6 +1007,36 @@ function edd_increase_discount_usage( $code ) {
 }
 
 /**
+ * Decrease Discount Usage
+ *
+ * Decreases the use count of a discount code.
+ *
+ * @since 2.5.7
+ * @param string $code Discount code to be decremented
+ * @return int
+ */
+function edd_decrease_discount_usage( $code ) {
+
+	$id   = edd_get_discount_id_by_code( $code );
+	$uses = edd_get_discount_uses( $id );
+
+	if ( $uses ) {
+		$uses--;
+	}
+
+	if ( $uses < 0 ) {
+		$users = 0;
+	}
+
+	update_post_meta( $id, '_edd_discount_uses', $uses );
+
+	do_action( 'edd_discount_decrease_use_count', $uses, $id, $code );
+
+	return $uses;
+
+}
+
+/**
  * Format Discount Rate
  *
  * @since 1.0

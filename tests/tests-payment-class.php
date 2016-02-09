@@ -455,8 +455,6 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 
 		$this->assertEquals( 3, $payment->downloads[2]['options']['price_id'] );
 		$this->assertEquals( 3, $payment->cart_details[3]['item_number']['options']['price_id'] );
-
-
 	}
 
 	public function test_remove_with_multi_price_points_by_cart_index() {
@@ -629,5 +627,28 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		remove_filter( 'edd_decrease_customer_value_on_refund', '__return_false' );
 		remove_filter( 'edd_decrease_customer_purchase_count_on_refund', '__return_false' );
 		remove_filter( 'edd_decrease_store_earnings_on_refund', '__return_false ' );
+	}
+
+	public function test_failed_payment_discount() {
+		$id   = EDD_Helper_Discount::create_simple_percent_discount();
+		$uses = edd_get_discount_uses( $id );
+
+		$payment = new EDD_Payment( $this->_payment_id );
+		$payment->discounts = array( '20OFF' );
+		$payment->save();
+
+		$payment->status = 'complete';
+		$payment->save();
+
+		$new_complete = edd_get_discount_uses( $id );
+
+		$this->assertEquals( $uses + 1, $new_complete );
+
+		$payment->status = 'failed';
+		$payment->save();
+
+		$new_failed = edd_get_discount_uses( $id );
+		$this->assertEquals( $uses, $new_failed );
+
 	}
 }
