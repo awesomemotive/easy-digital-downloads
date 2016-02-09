@@ -3,9 +3,9 @@
  * Plugin Name: Easy Digital Downloads
  * Plugin URI: https://easydigitaldownloads.com
  * Description: Serve Digital Downloads Through WordPress.
- * Author: Pippin Williamson
- * Author URI: https://pippinsplugins.com
- * Version: 2.4.10
+ * Author: Pippin Williamson and Company
+ * Author URI: https://easydigitaldownloads.com
+ * Version: 2.5.6
  * Text Domain: easy-digital-downloads
  * Domain Path: languages
  *
@@ -25,7 +25,7 @@
  * @package EDD
  * @category Core
  * @author Pippin Williamson
- * @version 2.4.10
+ * @version 2.5.6
  */
 
 // Exit if accessed directly.
@@ -186,7 +186,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '2.4.10' );
+			define( 'EDD_VERSION', '2.5.6' );
 		}
 
 		// Plugin Folder Path.
@@ -268,6 +268,8 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/payments/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/payments/class-payment-stats.php';
 		require_once EDD_PLUGIN_DIR . 'includes/payments/class-payments-query.php';
+		require_once EDD_PLUGIN_DIR . 'includes/payments/class-edd-payment.php';
+		require_once EDD_PLUGIN_DIR . 'includes/misc-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/download-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/scripts.php';
 		require_once EDD_PLUGIN_DIR . 'includes/post-types.php';
@@ -322,11 +324,13 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrades.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/welcome.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-heartbeat.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/tools/tools-actions.php';
 		} else {
 			require_once EDD_PLUGIN_DIR . 'includes/process-download.php';
 			require_once EDD_PLUGIN_DIR . 'includes/theme-compatibility.php';
 		}
 
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-register-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/install.php';
 	}
 
@@ -416,8 +420,8 @@ endif; // End if class_exists check.
 
 
 /**
- * The main function for that returns Easy_Digital_Downloads 
- * 
+ * The main function for that returns Easy_Digital_Downloads
+ *
  * The main function responsible for returning the one true Easy_Digital_Downloads
  * Instance to functions everywhere.
  *

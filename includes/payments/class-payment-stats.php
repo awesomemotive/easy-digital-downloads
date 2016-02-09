@@ -110,7 +110,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 
 		add_filter( 'posts_where', array( $this, 'payments_where' ) );
 
-		if( empty( $download_id ) ) {
+		if ( empty( $download_id ) ) {
 
 			// Global earning stats
 
@@ -131,10 +131,13 @@ class EDD_Payment_Stats extends EDD_Stats {
 			$key      = 'edd_stats_' . substr( md5( serialize( $args ) ), 0, 15 );
 
 			$earnings = get_transient( $key );
+
 			if( false === $earnings ) {
-				$sales = get_posts( $args );
+				$sales    = get_posts( $args );
 				$earnings = 0;
+
 				if ( $sales ) {
+
 					$sales = implode( ',', array_map('intval', $sales ) );
 
 					$total_earnings = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN ({$sales})" );
@@ -145,6 +148,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 					}
 
 					$earnings += ( $total_earnings - $total_tax );
+
 				}
 				// Cache the results for one hour
 				set_transient( $key, $earnings, HOUR_IN_SECONDS );
@@ -179,20 +183,25 @@ class EDD_Payment_Stats extends EDD_Stats {
 
 				if( $log_ids ) {
 					$log_ids     = implode( ',', array_map('intval', $log_ids ) );
-					$payment_ids = $wpdb->get_col( "SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_log_payment_id' AND post_id IN ($log_ids);" );
+					$payment_ids = $wpdb->get_col( "SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_log_payment_id' AND post_id IN ($log_ids);" );
 
 					foreach( $payment_ids as $payment_id ) {
 						$items = edd_get_payment_meta_cart_details( $payment_id );
-						foreach( $items as $item ) {
-							if( $item['id'] != $download_id )
+
+						foreach( $items as $cart_key => $item ) {
+
+							if( $item['id'] != $download_id ) {
 								continue;
+							}
 
 							$earnings += $item['price'];
+
+							if ( ! $include_taxes ) {
+								$earnings -= edd_get_payment_item_tax( $payment_id, $cart_key );
+							}
+
 						}
 
-						if ( ! $include_taxes ) {
-							$earnings -= edd_get_payment_tax( $payment_id );
-						}
 					}
 				}
 

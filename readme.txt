@@ -4,10 +4,9 @@ Plugin URI: https://easydigitaldownloads.com
 Contributors: mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, topher1kenobe, sksmatt, SpencerFinnell
 Donate link: https://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
-Requires at least: 3.9.2
-Tested up to: 4.4
-
-Stable Tag: 2.4.10
+Requires at least: 4.0
+Tested up to: 4.5
+Stable Tag: 2.5.6
 
 License: GNU Version 2 or Any Later Version
 
@@ -15,7 +14,7 @@ Sell digital downloads through WordPress with this complete digital downloads ma
 
 == Description ==
 
-Easy Digital Downloads is a complete e-commerce solution for selling digital products in a light, performant, and easy to use plugin. Rather that attempting to provide every feature under the sun, Easy Digital Downloads makes selling digital simple and complete by providing just the features you need.
+Easy Digital Downloads is a complete e-commerce solution for selling digital and other non-physical products in a light, performant, and easy to use plugin. Rather than attempting to provide every feature under the sun, Easy Digital Downloads makes selling digital simple and complete by providing just the features you need.
 
 Features of the plugin include:
 
@@ -42,7 +41,7 @@ More information at [Easy Digital Downloads.com](https://easydigitaldownloads.co
 
 **Sell and Track Software License Keys**
 
-[Software Licensing](https://easydigitaldownloads.com/downloads/software-licensing/?utm_source=extension&utm_medium=description_tab&utm_content=software-licensing&utm_campaign=readme) for Easy Digital Downloads provides a complete license key generation, activation, and checking system. It allows you to provide license keys along with your digital products that can then be used to properly license and activate the buyer’s copy of the software.
+[Software Licensing](https://easydigitaldownloads.com/downloads/software-licensing/?utm_source=extension&utm_medium=description_tab&utm_content=software-licensing&utm_campaign=readme) for Easy Digital Downloads provides a complete license key generation, activation, and checking system. It allows you to provide license keys along with your digital products that can then be used to properly license and activate the buyer's copy of the software.
 
 Includes a complete integration pack for delivering automatic upgrades for premium WordPress plugins and themes.
 
@@ -93,25 +92,41 @@ Would you like to help translate the plugin into more languages? [Join our WP-Tr
 
 == Frequently Asked Questions ==
 
+= Where can I find complete documentation? =
+
+Full searchable docs can be found at [http://docs.easydigitaldownloads.com/](http://docs.easydigitaldownloads.com/?utm_source=docs&utm_medium=faq_tab&utm_content=documentation&utm_campaign=readme)
+
+= Is an SSL certificate required? =
+
+Easy Digital Downloads can function without one just fine, making it easy to set up in a testing or development environment.  We still strongly recommend you have an SSL certificate for your production web site, both for security and for the peace of mind of your customers. [Documentation here](http://docs.easydigitaldownloads.com/article/994-how-to-set-up-ssl?utm_source=docs&utm_medium=faq_tab&utm_content=documentation&utm_campaign=readme)
+
+= What themes work with Easy Digital Downloads? =
+
+Any properly written theme will work with Easy Digital Downloads.
+
+That said, we have a nice collection of free themes that come with support for Easy Digital Downloads, requiring much less design work on the part of the store owner.
+
+[See the free themes here.](https://easydigitaldownloads.com/themes/?utm_source=docs&utm_medium=faq_tab&utm_term=free_themes&utm_content=faqs&utm_campaign=readme)
+
 = How do I Show My Shopping Cart? =
 
-There are three ways you can show the downloads shopping cart:
+There are two ways you can show the downloads shopping cart:
 
 1. Use the short code and simply place [download_cart] on a page or within a text widget.
 
 2. Use the included widget. Go to Appearance > Widgets and place the "Downloads Cart" widget into any widget area available.
 
-3. Use the template tag and place the following in the template file of your choosing:
-
-`echo edd_shopping_cart();`
-
-4. Is there a sample import file I can use to setup a demo store?
+= Is there a sample import file I can use to setup a demo store? =
 
 Yes! Simply go to Tools > Import and install the WordPress Importer, then navigate to wp-content/plugins/easy-digital-downloads/assets/ and select the sample-products-import.xml file. This will create several sample products and plugin pages for you.
 
+= Can I import all the products from my existing store into EDD? =
+
+We do have a [basic import solution](http://docs.easydigitaldownloads.com/article/216-can-i-import-and-export-products?utm_source=docs&utm_medium=faq_tab&utm_term=import_addon&utm_content=faqs&utm_campaign=readme) that imports a CSV file, so if you can get your data into the appropriate format then we can import it.
+
 = My Payments Marked as Pending =
 
-There are several reasons this happens. Please follow the suggestions [here](https://easydigitaldownloads.com/documentation/faqs/?utm_source=docs&utm_medium=faq_tab&utm_content=faqs&utm_campaign=readme).
+There are several reasons this happens. Please follow the suggestions [here](http://docs.easydigitaldownloads.com/article/190-payments-not-marked-as-complete?utm_source=docs&utm_medium=faq_tab&utm_content=faqs&utm_campaign=readme).
 
 = Getting a 404 error? =
 
@@ -123,20 +138,28 @@ Place the [purchase_history] short code on any page.
 
 If you want to just show a list of the files the user has purchased, use the [download_history] short code instead.
 
+= How do I display products? =
+
+There are several different ways, each well [documented](http://docs.easydigitaldownloads.com/category/870-product-display?utm_source=edd_readme&utm_medium=faq_tab&utm_content=faqs&utm_campaign=readme).
+
 = Can I Setup an Affiliate System? =
 
 Yes! EDD integrates directly with several affiliate platforms that provide complete affiliate systems you can use to award commissions to your affiliate marketers.
 
-[Checkout AffiliateWP](https://affiliatewp.com?utm_source=edd_readme&utm_medium=faq_tab&utm_content=home&utm_campaign=readme)
+[Check out AffiliateWP](https://affiliatewp.com?utm_source=edd_readme&utm_medium=faq_tab&utm_content=home&utm_campaign=readme)
 
 = Can I give my customers downloadable PDF Invoices? =
 Yes, EDD has an extension that allows for downloadable invoices to be generated for each payment.
 
 [PDF Invoices](https://easydigitaldownloads.com/downloads/pdf-invoices/?utm_source=pdf-invoices&utm_medium=faq_tab&utm_content=pdf-invoices&utm_campaign=readme)
 
+= Are recurring payments supported? =
+
+Yes, through the use of our commercial addon called [Recurring Payments](https://easydigitaldownloads.com/downloads/recurring-payments/?utm_source=docs&utm_medium=faq_tab&utm_term=recurring_addon&utm_content=faqs&utm_campaign=readme).  [Full documentation here](http://docs.easydigitaldownloads.com/article/346-recurring-payments-setup-documentation?utm_source=docs&utm_medium=faq_tab&utm_term=recurring_addon&utm_content=faqs&utm_campaign=readme)
+
 = Can Users Purchase Products without Using PayPal? =
 
-Yes, through the addition of one or more of the add-on payment gateways, you can accept payments in many different ways. The add-on gateways currently available:
+Yes, through the addition of one or more of the add-on payment gateways, you can accept payments in many different ways. Here are some of the gateways currently found on our [complete list](https://easydigitaldownloads.com/downloads/category/extensions/gateways/?utm_source=docs&utm_medium=faq_tab&utm_term=gateways&utm_content=faqs&utm_campaign=readme):
 
 * [Stripe](https://easydigitaldownloads.com/downloads/stripe-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=stripe-payment-gateway&utm_campaign=readme)
 * [Recurly](https://easydigitaldownloads.com/downloads/recurly-com-checkout/?utm_source=gateway&utm_medium=faq_tab&utm_content=recurly-com-checkout&utm_campaign=readme)
@@ -190,6 +213,112 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.5.6, January 13, 2016 =
+
+* Fix: Payment dates recorded with incorrect dates depending on the timezone selected in settings
+* Fix: Download links missing from purchase receipts for some sites
+
+= 2.5.5, January 12, 2016 =
+
+* Fix: Timezones still not set properly for some sites. This resulted in download links missing from purchase receipts.
+
+= 2.5.4, January 12, 2016 =
+
+* Fix: Timezones set improperly sometimes when payments are created
+* Fix: PHP notices in edd_process_add_to_cart() when AJAX is disabled
+* Fix: PHP warning in Recount Single Customer Stats tool
+* Fix: Payment date cannot be changed in the admin
+* Fix: Currency code not properly returned if payment is missing currency metadata
+* Fix: "Sorry trouble retrieving payment receipt" error shown occasionally
+* Fix: Sanitization process for settings breaks some extension's settings
+* Fix: Download links blank for some customers
+* Fix: Prevent default placeholder from showing as an option in multi-select fields
+
+= 2.5.3, January 9, 2016 =
+
+* Fix: Status passed to edd_insert_payment() not respected. Caused subscription payments to be marked as pending
+* Fix: edd_is_payment_complete() returns false improperly
+* Fix: Buy Now links going to empty checkout screen when customer is not logged in
+* Tweak: Removed redundant Max Uses column on Discounts screen
+
+= 2.5.2, January 8, 2016 =
+
+* Fix: Item specific fees applying twice
+
+= 2.5.1, January 7, 2016 =
+
+* Fix: Infinite loop in some instances where add_filter() is used by extensions
+* Fix: Deactivate License button missing on valid license keys
+* Fix: Payments not properly attached to customer records if last name is not supplied during checkout while logged out
+* Fix: Item amounts not saving properly when adding new Download to payment record
+* Fix: PHP warning on explode() due to empty customer notes field
+
+= 2.5, January 7, 2016 =
+
+* New: Improved settings organization with subsections
+* New: Product export to CSV tool
+* New: Recount stats tool
+* New: EDD_Payment class for developers
+* New: Credit card fields now include HTML5 attributes
+* New: Improved license key fields for extensions
+* New: Discount codes can now be sorted
+* New: 0.00 value sales can now be excluded from sales graphs
+* New: File download history now available in REST API at /edd-api/file-download-logs
+* New: Quantities now included in payment history export
+* New: Payment History can be searched by discount code
+* New: File Downloads on products can now be re-ordered with drag-and-drop
+* New: Added filter to disable "edd_items_in_cart" cookie
+* Tweak: Improved customer options in purchase history export
+* Tweak: All meta keys now registered with WordPress
+* Tweak: EDD_API now runs on wp hook for improved performance
+* Tweak: Show item price instead of sale price in sales log
+* Tweak: Post type labels now used for Featured Image labels
+* Tweak: Inline styles have been removed from [downloads] shortcode
+* Tweak: Improved labels for checkbox options in Emails settings tab
+* Tweak: Improved SSL detection
+* Tweak: Improved abstraction of Customer UI so it can be re-used
+* Tweak: edd_get_cart_contents() standardized
+* Tweak: Set minimum WordPress version to 4.0
+* Tweak: Customer name on Payment History now goes to Customer details screen
+* Tweak: Properties in EDD_Amazon class are now public
+* Fix: Bulk actions not shown when list tables have no items
+* Fix: Fatal error in earnings by category reports
+* Fix: edd_maybe_remove_menu_profile_links() breaks some AJAX actions
+* Fix: PHP notices in PayPal if cart_details is not an array
+* Fix: "This Week" reports fail when crossing a month or year boundary
+* Fix: Deleting non-complete payment updates customer stats
+* Fix: inline-edit-post loaded when it shouldn't be
+* Fix: PayPal IPN listener using deprecated mc_gross key
+* Fix: PayPal listener not properly decoding data keys in some server environments
+* Fix: Downloads cannot be sorted in DESC order
+* Fix: User verification URL missing from email when plain text template is used
+* Fix: Incorrectly spelled UTM tags in Add Ons page
+* Fix: CSS for Welcome Page affects other pages
+* Fix: Properly run install routine when network activating EDD
+* Fix: Remove use of WP_CONTENT_URL constant
+* Fix: North/South Korea country codes reversed
+* Fix: WordPress 4.4 tab styles fix
+* Fix: Extension updates do not display if license key is not entered
+* Fix: Undefined variable $payment_id when seding test email
+* Fix: Cart widgets break add to cart button
+* Fix: edd_render_receipt_in_browser() outputs invalid markup
+* Fix: Parameters for [edd_receipt] shortcode not working properly
+* Fix: Payment Method fields not hidden when 100% discount code is applied
+* Fix: Running EDD_Payment_Stats::get_earnings() twice gives inconsistent values
+* Fix: Running EDD_Payment_Stats::get_sales() twice gives inconsistent values
+* Fix: AJAX call to load dashboard sales widget fires on all admin pages
+* Fix: Quantity not added with variable prices and multi-purchase mode when AJAX is disabled
+* Fix: user_id field not removed when customer's user account is deleted
+* Fix: Symlink File Download option not functioning
+* Fix: Order of bundled products not kept when saving Download product
+* Fix: Ugly display of long transaction IDs in View Order Details
+* Fix: File download links break when language parameter from qTranslate and WPML are present
+* Fix: Excluded products improperly count towards minimum purchase total of discount codes
+* Fix: Incorrect dates displayed when using custom date ranges in earnings reports
+* Fix: Subtotal should be removed from checkout when prices are inclusive of tax
+* Fix: price="0" fails when price_id="x" is used in [purchase_link] shortcode
+* Fix: Pagination fails when searching Payment History by download ID
 
 = 2.4.10, December 12, 2015 =
 

@@ -28,7 +28,7 @@ class EDD_Cron {
 	 */
 	public function __construct() {
 		add_filter( 'cron_schedules', array( $this, 'add_schedules'   ) );
-		add_action( 'wp',             array( $this, 'schedule_Events' ) );
+		add_action( 'wp',             array( $this, 'schedule_events' ) );
 	}
 
 	/**
@@ -56,7 +56,7 @@ class EDD_Cron {
 	 * @since 1.6
 	 * @return void
 	 */
-	public function schedule_Events() {
+	public function schedule_events() {
 		$this->weekly_events();
 		$this->daily_events();
 	}

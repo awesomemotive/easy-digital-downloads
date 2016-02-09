@@ -108,26 +108,27 @@ function edd_process_paypal_purchase( $purchase_data ) {
 
 		// Add cart items
 		$i = 1;
-		foreach ( $purchase_data['cart_details'] as $item ) {
+		if( is_array( $purchase_data['cart_details'] ) && ! empty( $purchase_data['cart_details'] ) ) {
+			foreach ( $purchase_data['cart_details'] as $item ) {
 
-			$item_amount = round( ( $item['subtotal'] / $item['quantity'] ) - ( $item['discount'] / $item['quantity'] ), 2 );
+				$item_amount = round( ( $item['subtotal'] / $item['quantity'] ) - ( $item['discount'] / $item['quantity'] ), 2 );
 
-			if( $item_amount <= 0 ) {
-				$item_amount = 0;
+				if( $item_amount <= 0 ) {
+					$item_amount = 0;
+				}
+
+				$paypal_args['item_name_' . $i ] = stripslashes_deep( html_entity_decode( edd_get_cart_item_name( $item ), ENT_COMPAT, 'UTF-8' ) );
+				$paypal_args['quantity_' . $i ]  = $item['quantity'];
+				$paypal_args['amount_' . $i ]    = $item_amount;
+
+				if ( edd_use_skus() ) {
+					$paypal_args['item_number_' . $i ] = edd_get_download_sku( $item['id'] );
+				}
+
+				$i++;
+
 			}
-
-			$paypal_args['item_name_' . $i ] = stripslashes_deep( html_entity_decode( edd_get_cart_item_name( $item ), ENT_COMPAT, 'UTF-8' ) );
-			$paypal_args['quantity_' . $i ]  = $item['quantity'];
-			$paypal_args['amount_' . $i ]    = $item_amount;
-
-			if ( edd_use_skus() ) {
-				$paypal_args['item_number_' . $i ] = edd_get_download_sku( $item['id'] );
-			}
-
-			$i++;
-
 		}
-
 
 		// Calculate discount
 		$discounted_amount = 0.00;
@@ -237,8 +238,22 @@ function edd_process_paypal_ipn() {
 		}
 	}
 
+
+
 	// Convert collected post data to an array
 	parse_str( $encoded_data, $encoded_data_array );
+
+	foreach ( $encoded_data_array as $key => $value ) {
+
+		if ( false !== strpos( $key, 'amp;' ) ) {
+			$new_key = str_replace( '&amp;', '&', $key );
+			$new_key = str_replace( 'amp;', '&' , $new_key );
+
+			unset( $encoded_data_array[ $key ] );
+			$encoded_data_array[ $new_key ] = $value;
+		}
+
+	}
 
 	// Get the PayPal redirect uri
 	$paypal_redirect = edd_get_paypal_redirect( true );
@@ -508,7 +523,7 @@ function edd_process_paypal_refund( $data, $payment_id = 0 ) {
 	}
 
 	$payment_amount = edd_get_payment_amount( $payment_id );
-	$refund_amount  = $data['payment_gross'] * -1;
+	$refund_amount  = $data['mc_gross'] * -1;
 
 	if ( number_format( (float) $refund_amount, 2 ) < number_format( (float) $payment_amount, 2 ) ) {
 

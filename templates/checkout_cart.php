@@ -87,7 +87,7 @@ global $post; ?>
 			</tr>
 		<?php endif; ?>
 
-		<?php if( edd_use_taxes() ) : ?>
+		<?php if( edd_use_taxes() && ! edd_prices_include_tax() ) : ?>
 			<tr class="edd_cart_footer_row edd_cart_subtotal_row"<?php if ( ! edd_is_cart_taxed() ) echo ' style="display:none;"'; ?>>
 				<?php do_action( 'edd_checkout_table_subtotal_first' ); ?>
 				<th colspan="<?php echo edd_checkout_cart_columns(); ?>" class="edd_cart_subtotal">

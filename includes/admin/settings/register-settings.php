@@ -154,43 +154,56 @@ function edd_register_settings() {
 		add_option( 'edd_settings' );
 	}
 
-	foreach( edd_get_registered_settings() as $tab => $settings ) {
+	foreach ( edd_get_registered_settings() as $tab => $sections ) {
+		foreach ( $sections as $section => $settings) {
 
-		add_settings_section(
-			'edd_settings_' . $tab,
-			__return_null(),
-			'__return_false',
-			'edd_settings_' . $tab
-		);
+			// Check for backwards compatibility
+			$section_tabs = edd_get_settings_tab_sections( $tab );
+			if ( ! is_array( $section_tabs ) || ! array_key_exists( $section, $section_tabs ) ) {
+				$section = 'main';
+				$settings = $sections;
+			}
 
-		foreach ( $settings as $option ) {
-
-			$name = isset( $option['name'] ) ? $option['name'] : '';
-
-			add_settings_field(
-				'edd_settings[' . $option['id'] . ']',
-				$name,
-				function_exists( 'edd_' . $option['type'] . '_callback' ) ? 'edd_' . $option['type'] . '_callback' : 'edd_missing_callback',
-				'edd_settings_' . $tab,
-				'edd_settings_' . $tab,
-				array(
-					'section'     => $tab,
-					'id'          => isset( $option['id'] )          ? $option['id']          : null,
-					'desc'        => ! empty( $option['desc'] )      ? $option['desc']        : '',
-					'name'        => isset( $option['name'] )        ? $option['name']        : null,
-					'size'        => isset( $option['size'] )        ? $option['size']        : null,
-					'options'     => isset( $option['options'] )     ? $option['options']     : '',
-					'std'         => isset( $option['std'] )         ? $option['std']         : '',
-					'min'         => isset( $option['min'] )         ? $option['min']         : null,
-					'max'         => isset( $option['max'] )         ? $option['max']         : null,
-					'step'        => isset( $option['step'] )        ? $option['step']        : null,
-					'chosen'      => isset( $option['chosen'] )      ? $option['chosen']      : null,
-					'placeholder' => isset( $option['placeholder'] ) ? $option['placeholder'] : null,
-					'allow_blank' => isset( $option['allow_blank'] ) ? $option['allow_blank'] : true,
-					'readonly'    => isset( $option['readonly'] )    ? $option['readonly']    : false,
-					'faux'        => isset( $option['faux'] )        ? $option['faux']        : false,
-				)
+			add_settings_section(
+				'edd_settings_' . $tab . '_' . $section,
+				__return_null(),
+				'__return_false',
+				'edd_settings_' . $tab . '_' . $section
 			);
+
+			foreach ( $settings as $option ) {
+				// For backwards compatibility
+				if ( empty( $option['id'] ) ) {
+					continue;
+				}
+
+				$name = isset( $option['name'] ) ? $option['name'] : '';
+
+				add_settings_field(
+					'edd_settings[' . $option['id'] . ']',
+					$name,
+					function_exists( 'edd_' . $option['type'] . '_callback' ) ? 'edd_' . $option['type'] . '_callback' : 'edd_missing_callback',
+					'edd_settings_' . $tab . '_' . $section,
+					'edd_settings_' . $tab . '_' . $section,
+					array(
+						'section'     => $section,
+						'id'          => isset( $option['id'] )          ? $option['id']          : null,
+						'desc'        => ! empty( $option['desc'] )      ? $option['desc']        : '',
+						'name'        => isset( $option['name'] )        ? $option['name']        : null,
+						'size'        => isset( $option['size'] )        ? $option['size']        : null,
+						'options'     => isset( $option['options'] )     ? $option['options']     : '',
+						'std'         => isset( $option['std'] )         ? $option['std']         : '',
+						'min'         => isset( $option['min'] )         ? $option['min']         : null,
+						'max'         => isset( $option['max'] )         ? $option['max']         : null,
+						'step'        => isset( $option['step'] )        ? $option['step']        : null,
+						'chosen'      => isset( $option['chosen'] )      ? $option['chosen']      : null,
+						'placeholder' => isset( $option['placeholder'] ) ? $option['placeholder'] : null,
+						'allow_blank' => isset( $option['allow_blank'] ) ? $option['allow_blank'] : true,
+						'readonly'    => isset( $option['readonly'] )    ? $option['readonly']    : false,
+						'faux'        => isset( $option['faux'] )        ? $option['faux']        : false,
+					)
+				);
+			}
 		}
 
 	}
@@ -199,7 +212,7 @@ function edd_register_settings() {
 	register_setting( 'edd_settings', 'edd_settings', 'edd_settings_sanitize' );
 
 }
-add_action('admin_init', 'edd_register_settings');
+add_action( 'admin_init', 'edd_register_settings' );
 
 /**
  * Retrieve the array of plugin settings
@@ -217,372 +230,422 @@ function edd_get_registered_settings() {
 		/** General Settings */
 		'general' => apply_filters( 'edd_settings_general',
 			array(
-				'purchase_page' => array(
-					'id' => 'purchase_page',
-					'name' => __( 'Checkout Page', 'easy-digital-downloads' ),
-					'desc' => __( 'This is the checkout page where buyers will complete their purchases. The [download_checkout] short code must be on this page.', 'easy-digital-downloads' ),
-					'type' => 'select',
-					'options' => edd_get_pages(),
-					'chosen' => true,
-					'placeholder' => __( 'Select a page', 'easy-digital-downloads' )
-				),
-				'success_page' => array(
-					'id' => 'success_page',
-					'name' => __( 'Success Page', 'easy-digital-downloads' ),
-					'desc' => __( 'This is the page buyers are sent to after completing their purchases. The [edd_receipt] short code should be on this page.', 'easy-digital-downloads' ),
-					'type' => 'select',
-					'options' => edd_get_pages(),
-					'chosen' => true,
-					'placeholder' => __( 'Select a page', 'easy-digital-downloads' )
-				),
-				'failure_page' => array(
-					'id' => 'failure_page',
-					'name' => __( 'Failed Transaction Page', 'easy-digital-downloads' ),
-					'desc' => __( 'This is the page buyers are sent to if their transaction is cancelled or fails', 'easy-digital-downloads' ),
-					'type' => 'select',
-					'options' => edd_get_pages(),
-					'chosen' => true,
-					'placeholder' => __( 'Select a page', 'easy-digital-downloads' )
-				),
-				'purchase_history_page' => array(
-					'id' => 'purchase_history_page',
-					'name' => __( 'Purchase History Page', 'easy-digital-downloads' ),
-					'desc' => __( 'This page shows a complete purchase history for the current user, including download links', 'easy-digital-downloads' ),
-					'type' => 'select',
-					'options' => edd_get_pages(),
-					'chosen' => true,
-					'placeholder' => __( 'Select a page', 'easy-digital-downloads' )
-				),
-				'base_country' => array(
-					'id' => 'base_country',
-					'name' => __( 'Base Country', 'easy-digital-downloads' ),
-					'desc' => __( 'Where does your store operate from?', 'easy-digital-downloads' ),
-					'type' => 'select',
-					'options' => edd_get_country_list(),
-					'chosen' => true,
-					'placeholder' => __( 'Select a country', 'easy-digital-downloads' )
-				),
-				'base_state' => array(
-					'id' => 'base_state',
-					'name' => __( 'Base State / Province', 'easy-digital-downloads' ),
-					'desc' => __( 'What state / province does your store operate from?', 'easy-digital-downloads' ),
-					'type' => 'shop_states',
-					'chosen' => true,
-					'placeholder' => __( 'Select a state', 'easy-digital-downloads' )
-				),
-				'currency_settings' => array(
-					'id' => 'currency_settings',
-					'name' => '<strong>' . __( 'Currency Settings', 'easy-digital-downloads' ) . '</strong>',
-					'desc' => __( 'Configure the currency options', 'easy-digital-downloads' ),
-					'type' => 'header'
+				'main' => array(
+					'page_settings' => array(
+						'id'   => 'page_settings',
+						'name' => '<h3>' . __( 'Page Settings', 'easy-digital-downloads' ) . '</h3>',
+						'desc' => '',
+						'type' => 'header',
+					),
+					'purchase_page' => array(
+						'id'          => 'purchase_page',
+						'name'        => __( 'Checkout Page', 'easy-digital-downloads' ),
+						'desc'        => __( 'This is the checkout page where buyers will complete their purchases. The [download_checkout] short code must be on this page.', 'easy-digital-downloads' ),
+						'type'        => 'select',
+						'options'     => edd_get_pages(),
+						'chosen'      => true,
+						'placeholder' => __( 'Select a page', 'easy-digital-downloads' ),
+					),
+					'success_page' => array(
+						'id'          => 'success_page',
+						'name'        => __( 'Success Page', 'easy-digital-downloads' ),
+						'desc'        => __( 'This is the page buyers are sent to after completing their purchases. The [edd_receipt] short code should be on this page.', 'easy-digital-downloads' ),
+						'type'        => 'select',
+						'options'     => edd_get_pages(),
+						'chosen'      => true,
+						'placeholder' => __( 'Select a page', 'easy-digital-downloads' ),
+					),
+					'failure_page' => array(
+						'id'          => 'failure_page',
+						'name'        => __( 'Failed Transaction Page', 'easy-digital-downloads' ),
+						'desc'        => __( 'This is the page buyers are sent to if their transaction is cancelled or fails', 'easy-digital-downloads' ),
+						'type'        => 'select',
+						'options'     => edd_get_pages(),
+						'chosen'      => true,
+						'placeholder' => __( 'Select a page', 'easy-digital-downloads' ),
+					),
+					'purchase_history_page' => array(
+						'id'          => 'purchase_history_page',
+						'name'        => __( 'Purchase History Page', 'easy-digital-downloads' ),
+						'desc'        => __( 'This page shows a complete purchase history for the current user, including download links', 'easy-digital-downloads' ),
+						'type'        => 'select',
+						'options'     => edd_get_pages(),
+						'chosen'      => true,
+						'placeholder' => __( 'Select a page', 'easy-digital-downloads' ),
+					),
+					'locale_settings' => array(
+						'id'   => 'locale_settings',
+						'name' => '<h3>' . __( 'Store Location', 'easy-digital-downloads' ) . '</h3>',
+						'desc' => '',
+						'type' => 'header',
+					),
+					'base_country' => array(
+						'id'          => 'base_country',
+						'name'        => __( 'Base Country', 'easy-digital-downloads' ),
+						'desc'        => __( 'Where does your store operate from?', 'easy-digital-downloads' ),
+						'type'        => 'select',
+						'options'     => edd_get_country_list(),
+						'chosen'      => true,
+						'placeholder' => __( 'Select a country', 'easy-digital-downloads' ),
+					),
+					'base_state' => array(
+						'id'          => 'base_state',
+						'name'        => __( 'Base State / Province', 'easy-digital-downloads' ),
+						'desc'        => __( 'What state / province does your store operate from?', 'easy-digital-downloads' ),
+						'type'        => 'shop_states',
+						'chosen'      => true,
+						'placeholder' => __( 'Select a state', 'easy-digital-downloads' ),
+					),
+					'tracking_settings' => array(
+						'id'   => 'tracking_settings',
+						'name' => '<h3>' . __( 'Tracking Settings', 'easy-digital-downloads' ) . '</h3>',
+						'desc' => '',
+						'type' => 'header',
+					),
+					'allow_tracking' => array(
+						'id'   => 'allow_tracking',
+						'name' => __( 'Allow Usage Tracking?', 'easy-digital-downloads' ),
+						'desc' => sprintf(
+							__( 'Allow Easy Digital Downloads to anonymously track how this plugin is used and help us make the plugin better. Opt-in to tracking and our newsletter and immediately be emailed a 20&#37; discount to the EDD shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'easy-digital-downloads' ),
+							'https://easydigitaldownloads.com/extensions?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking'
+						),
+						'type' => 'checkbox',
+					),
 				),
 				'currency' => array(
-					'id' => 'currency',
-					'name' => __( 'Currency', 'easy-digital-downloads' ),
-					'desc' => __( 'Choose your currency. Note that some payment gateways have currency restrictions.', 'easy-digital-downloads' ),
-					'type' => 'select',
-					'options' => edd_get_currencies(),
-					'chosen' => true
-				),
-				'currency_position' => array(
-					'id'      => 'currency_position',
-					'name'    => __( 'Currency Position', 'easy-digital-downloads' ),
-					'desc'    => __( 'Choose the location of the currency sign.', 'easy-digital-downloads' ),
-					'type'    => 'select',
-					'options' => array(
-						'before' => __( 'Before - $10', 'easy-digital-downloads' ),
-						'after'  => __( 'After - 10$', 'easy-digital-downloads' )
-					)
-				),
-				'thousands_separator' => array(
-					'id'   => 'thousands_separator',
-					'name' => __( 'Thousands Separator', 'easy-digital-downloads' ),
-					'desc' => __( 'The symbol (usually , or .) to separate thousands', 'easy-digital-downloads' ),
-					'type' => 'text',
-					'size' => 'small',
-					'std'  => ','
-				),
-				'decimal_separator' => array(
-					'id'   => 'decimal_separator',
-					'name' => __( 'Decimal Separator', 'easy-digital-downloads' ),
-					'desc' => __( 'The symbol (usually , or .) to separate decimal points', 'easy-digital-downloads' ),
-					'type' => 'text',
-					'size' => 'small',
-					'std'  => '.'
-				),
-				'api_settings' => array(
-					'id' => 'api_settings',
-					'name' => '<strong>' . __( 'API Settings', 'easy-digital-downloads' ) . '</strong>',
-					'desc' => '',
-					'type' => 'header'
-				),
-				'api_allow_user_keys' => array(
-					'id'   => 'api_allow_user_keys',
-					'name' => __( 'Allow User Keys', 'easy-digital-downloads' ),
-					'desc' => __( 'Check this box to allow all users to generate API keys. Users with the \'manage_shop_settings\' capability are always allowed to generate keys.', 'easy-digital-downloads' ),
-					'type' => 'checkbox'
-				),
-				'tracking_settings' => array(
-					'id' => 'tracking_settings',
-					'name' => '<strong>' . __( 'Tracking Settings', 'easy-digital-downloads' ) . '</strong>',
-					'desc' => '',
-					'type' => 'header'
-				),
-				'allow_tracking' => array(
-					'id'   => 'allow_tracking',
-					'name' => __( 'Allow Usage Tracking?', 'easy-digital-downloads' ),
-					'desc' => sprintf(
-						__( 'Allow Easy Digital Downloads to anonymously track how this plugin is used and help us make the plugin better. Opt-in to tracking and our newsletter and immediately be emailed a 20&#37; discount to the EDD shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'easy-digital-downloads' ),
-						'https://easydigitaldownloads.com/extensions?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking'
+					'currency_settings' => array(
+						'id'   => 'currency_settings',
+						'name' => '<h3>' . __( 'Currency Settings', 'easy-digital-downloads' ) . '</h3>',
+						'desc' => '',
+						'type' => 'header',
 					),
-					'type' => 'checkbox'
+					'currency' => array(
+						'id'      => 'currency',
+						'name'    => __( 'Currency', 'easy-digital-downloads' ),
+						'desc'    => __( 'Choose your currency. Note that some payment gateways have currency restrictions.', 'easy-digital-downloads' ),
+						'type'    => 'select',
+						'options' => edd_get_currencies(),
+						'chosen'  => true,
+					),
+					'currency_position' => array(
+						'id'      => 'currency_position',
+						'name'    => __( 'Currency Position', 'easy-digital-downloads' ),
+						'desc'    => __( 'Choose the location of the currency sign.', 'easy-digital-downloads' ),
+						'type'    => 'select',
+						'options' => array(
+							'before' => __( 'Before - $10', 'easy-digital-downloads' ),
+							'after'  => __( 'After - 10$', 'easy-digital-downloads' ),
+						),
+					),
+					'thousands_separator' => array(
+						'id'   => 'thousands_separator',
+						'name' => __( 'Thousands Separator', 'easy-digital-downloads' ),
+						'desc' => __( 'The symbol (usually , or .) to separate thousands', 'easy-digital-downloads' ),
+						'type' => 'text',
+						'size' => 'small',
+						'std'  => ',',
+					),
+					'decimal_separator' => array(
+						'id'   => 'decimal_separator',
+						'name' => __( 'Decimal Separator', 'easy-digital-downloads' ),
+						'desc' => __( 'The symbol (usually , or .) to separate decimal points', 'easy-digital-downloads' ),
+						'type' => 'text',
+						'size' => 'small',
+						'std'  => '.',
+					),
 				),
-				'uninstall_on_delete' => array(
-					'id'   => 'uninstall_on_delete',
-					'name' => __( 'Remove Data on Uninstall?', 'easy-digital-downloads' ),
-					'desc' => __( 'Check this box if you would like EDD to completely remove all of its data when the plugin is deleted.', 'easy-digital-downloads' ),
-					'type' => 'checkbox'
-				)
+				'api' => array(
+					'api_settings' => array(
+						'id'   => 'api_settings',
+						'name' => '<h3>' . __( 'API Settings', 'easy-digital-downloads' ) . '</h3>',
+						'desc' => '',
+						'type' => 'header',
+					),
+					'api_allow_user_keys' => array(
+						'id'   => 'api_allow_user_keys',
+						'name' => __( 'Allow User Keys', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this box to allow all users to generate API keys. Users with the \'manage_shop_settings\' capability are always allowed to generate keys.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
+				),
 			)
 		),
 		/** Payment Gateways Settings */
 		'gateways' => apply_filters('edd_settings_gateways',
 			array(
-				'test_mode' => array(
-					'id' => 'test_mode',
-					'name' => __( 'Test Mode', 'easy-digital-downloads' ),
-					'desc' => __( 'While in test mode no live transactions are processed. To fully use test mode, you must have a sandbox (test) account for the payment gateway you are testing.', 'easy-digital-downloads' ),
-					'type' => 'checkbox'
-				),
-				'gateways' => array(
-					'id'      => 'gateways',
-					'name'    => __( 'Payment Gateways', 'easy-digital-downloads' ),
-					'desc'    => __( 'Choose the payment gateways you want to enable.', 'easy-digital-downloads' ),
-					'type'    => 'gateways',
-					'options' => edd_get_payment_gateways()
-				),
-				'default_gateway' => array(
-					'id'      => 'default_gateway',
-					'name'    => __( 'Default Gateway', 'easy-digital-downloads' ),
-					'desc'    => __( 'This gateway will be loaded automatically with the checkout page.', 'easy-digital-downloads' ),
-					'type'    => 'gateway_select',
-					'options' => edd_get_payment_gateways()
-				),
-				'accepted_cards' => array(
-					'id'      => 'accepted_cards',
-					'name'    => __( 'Accepted Payment Method Icons', 'easy-digital-downloads' ),
-					'desc'    => __( 'Display icons for the selected payment methods', 'easy-digital-downloads' ) . '<br/>' . __( 'You will also need to configure your gateway settings if you are accepting credit cards', 'easy-digital-downloads' ),
-					'type'    => 'payment_icons',
-					'options' => apply_filters('edd_accepted_payment_icons', array(
-							'mastercard'      => 'Mastercard',
-							'visa'            => 'Visa',
-							'americanexpress' => 'American Express',
-							'discover'        => 'Discover',
-							'paypal'          => 'PayPal',
-						)
-					)
+				'main' => array(
+					'gateway_settings' => array(
+						'id'   => 'api_header',
+						'name' => '<h3>' . __( 'Gateway Settings', 'easy-digital-downloads' ) . '</h3>',
+						'desc' => '',
+						'type' => 'header',
+					),
+					'test_mode' => array(
+						'id'   => 'test_mode',
+						'name' => __( 'Test Mode', 'easy-digital-downloads' ),
+						'desc' => __( 'While in test mode no live transactions are processed. To fully use test mode, you must have a sandbox (test) account for the payment gateway you are testing.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
+					'gateways' => array(
+						'id'      => 'gateways',
+						'name'    => __( 'Payment Gateways', 'easy-digital-downloads' ),
+						'desc'    => __( 'Choose the payment gateways you want to enable.', 'easy-digital-downloads' ),
+						'type'    => 'gateways',
+						'options' => edd_get_payment_gateways(),
+					),
+					'default_gateway' => array(
+						'id'      => 'default_gateway',
+						'name'    => __( 'Default Gateway', 'easy-digital-downloads' ),
+						'desc'    => __( 'This gateway will be loaded automatically with the checkout page.', 'easy-digital-downloads' ),
+						'type'    => 'gateway_select',
+						'options' => edd_get_payment_gateways(),
+					),
+					'accepted_cards' => array(
+						'id'      => 'accepted_cards',
+						'name'    => __( 'Accepted Payment Method Icons', 'easy-digital-downloads' ),
+						'desc'    => __( 'Display icons for the selected payment methods', 'easy-digital-downloads' ) . '<br/>' . __( 'You will also need to configure your gateway settings if you are accepting credit cards', 'easy-digital-downloads' ),
+						'type'    => 'payment_icons',
+						'options' => apply_filters('edd_accepted_payment_icons', array(
+								'mastercard'      => 'Mastercard',
+								'visa'            => 'Visa',
+								'americanexpress' => 'American Express',
+								'discover'        => 'Discover',
+								'paypal'          => 'PayPal',
+							)
+						),
+					),
 				),
 				'paypal' => array(
-					'id' => 'paypal',
-					'name' => '<strong>' . __( 'PayPal Settings', 'easy-digital-downloads' ) . '</strong>',
-					'desc' => __( 'Configure the PayPal settings', 'easy-digital-downloads' ),
-					'type' => 'header'
-				),
-				'paypal_email' => array(
-					'id'   => 'paypal_email',
-					'name' => __( 'PayPal Email', 'easy-digital-downloads' ),
-					'desc' => __( 'Enter your PayPal account\'s email', 'easy-digital-downloads' ),
-					'type' => 'text',
-					'size' => 'regular'
-				),
-				'paypal_page_style' => array(
-					'id'   => 'paypal_page_style',
-					'name' => __( 'PayPal Page Style', 'easy-digital-downloads' ),
-					'desc' => __( 'Enter the name of the page style to use, or leave blank for default', 'easy-digital-downloads' ),
-					'type' => 'text',
-					'size' => 'regular'
-				),
-				'disable_paypal_verification' => array(
-					'id'   => 'disable_paypal_verification',
-					'name' => __( 'Disable PayPal IPN Verification', 'easy-digital-downloads' ),
-					'desc' => __( 'If payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases.', 'easy-digital-downloads' ),
-					'type' => 'checkbox'
+					'paypal_settings' => array(
+						'id'   => 'paypal_settings',
+						'name' => '<h3>' . __( 'PayPal Standard Settings', 'easy-digital-downloads' ) . '</h3>',
+						'type' => 'header',
+					),
+					'paypal_email' => array(
+						'id'   => 'paypal_email',
+						'name' => __( 'PayPal Email', 'easy-digital-downloads' ),
+						'desc' => __( 'Enter your PayPal account\'s email', 'easy-digital-downloads' ),
+						'type' => 'text',
+						'size' => 'regular',
+					),
+					'paypal_page_style' => array(
+						'id'   => 'paypal_page_style',
+						'name' => __( 'PayPal Page Style', 'easy-digital-downloads' ),
+						'desc' => __( 'Enter the name of the page style to use, or leave blank for default', 'easy-digital-downloads' ),
+						'type' => 'text',
+						'size' => 'regular',
+					),
+					'disable_paypal_verification' => array(
+						'id'   => 'disable_paypal_verification',
+						'name' => __( 'Disable PayPal IPN Verification', 'easy-digital-downloads' ),
+						'desc' => __( 'If payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
 				),
 			)
 		),
 		/** Emails Settings */
 		'emails' => apply_filters('edd_settings_emails',
 			array(
-				'email_template' => array(
-					'id'      => 'email_template',
-					'name'    => __( 'Email Template', 'easy-digital-downloads' ),
-					'desc'    => __( 'Choose a template. Click "Save Changes" then "Preview Purchase Receipt" to see the new template.', 'easy-digital-downloads' ),
-					'type'    => 'select',
-					'options' => edd_get_email_templates()
+				'main' => array(
+					'email_settings_header' => array(
+						'id'   => 'email_settings_header',
+						'name' => '<h3>' . __( 'Email Settings', 'easy-digital-downloads' ) . '</h3>',
+						'type' => 'header',
+					),
+					'email_template' => array(
+						'id'      => 'email_template',
+						'name'    => __( 'Email Template', 'easy-digital-downloads' ),
+						'desc'    => __( 'Choose a template. Click "Save Changes" then "Preview Purchase Receipt" to see the new template.', 'easy-digital-downloads' ),
+						'type'    => 'select',
+						'options' => edd_get_email_templates(),
+					),
+					'email_logo' => array(
+						'id'   => 'email_logo',
+						'name' => __( 'Logo', 'easy-digital-downloads' ),
+						'desc' => __( 'Upload or choose a logo to be displayed at the top of the purchase receipt emails. Displayed on HTML emails only.', 'easy-digital-downloads' ),
+						'type' => 'upload',
+					),
+					'email_settings' => array(
+						'id'   => 'email_settings',
+						'name' => '',
+						'desc' => '',
+						'type' => 'hook',
+					),
 				),
-				'email_logo' => array(
-					'id'   => 'email_logo',
-					'name' => __( 'Logo', 'easy-digital-downloads' ),
-					'desc' => __( 'Upload or choose a logo to be displayed at the top of the purchase receipt emails. Displayed on HTML emails only.', 'easy-digital-downloads' ),
-					'type' => 'upload'
+				'purchase_receipts' => array(
+					'purchase_receipt_settings' => array(
+						'id'   => 'purchase_receipt_settings',
+						'name' => '<h3>' . __( 'Purchase Receipts', 'easy-digital-downloads' ) . '</h3>',
+						'type' => 'header',
+					),
+					'from_name' => array(
+						'id'   => 'from_name',
+						'name' => __( 'From Name', 'easy-digital-downloads' ),
+						'desc' => __( 'The name purchase receipts are said to come from. This should probably be your site or shop name.', 'easy-digital-downloads' ),
+						'type' => 'text',
+						'std'  => get_bloginfo( 'name' ),
+					),
+					'from_email' => array(
+						'id'   => 'from_email',
+						'name' => __( 'From Email', 'easy-digital-downloads' ),
+						'desc' => __( 'Email to send purchase receipts from. This will act as the "from" and "reply-to" address.', 'easy-digital-downloads' ),
+						'type' => 'text',
+						'std'  => get_bloginfo( 'admin_email' ),
+					),
+					'purchase_subject' => array(
+						'id'   => 'purchase_subject',
+						'name' => __( 'Purchase Email Subject', 'easy-digital-downloads' ),
+						'desc' => __( 'Enter the subject line for the purchase receipt email', 'easy-digital-downloads' ),
+						'type' => 'text',
+						'std'  => __( 'Purchase Receipt', 'easy-digital-downloads' ),
+					),
+					'purchase_heading' => array(
+						'id'   => 'purchase_heading',
+						'name' => __( 'Purchase Email Heading', 'easy-digital-downloads' ),
+						'desc' => __( 'Enter the heading for the purchase receipt email', 'easy-digital-downloads' ),
+						'type' => 'text',
+						'std'  => __( 'Purchase Receipt', 'easy-digital-downloads' ),
+					),
+					'purchase_receipt' => array(
+						'id'   => 'purchase_receipt',
+						'name' => __( 'Purchase Receipt', 'easy-digital-downloads' ),
+						'desc' => __('Enter the text that is sent as purchase receipt email to users after completion of a successful purchase. HTML is accepted. Available template tags:','easy-digital-downloads' ) . '<br/>' . edd_get_emails_tags_list(),
+						'type' => 'rich_editor',
+						'std'  => __( "Dear", "easy-digital-downloads" ) . " {name},\n\n" . __( "Thank you for your purchase. Please click on the link(s) below to download your files.", "easy-digital-downloads" ) . "\n\n{download_list}\n\n{sitename}",
+					),
 				),
-				'email_settings' => array(
-					'id'   => 'email_settings',
-					'name' => '',
-					'desc' => '',
-					'type' => 'hook'
+				'sale_notifications' => array(
+					'sale_notification_settings' => array(
+						'id'   => 'sale_notification_settings',
+						'name' => '<h3>' . __( 'Sale Notifications', 'easy-digital-downloads' ) . '</h3>',
+						'type' => 'header',
+					),
+					'sale_notification_subject' => array(
+						'id'   => 'sale_notification_subject',
+						'name' => __( 'Sale Notification Subject', 'easy-digital-downloads' ),
+						'desc' => __( 'Enter the subject line for the sale notification email', 'easy-digital-downloads' ),
+						'type' => 'text',
+						'std'  => 'New download purchase - Order #{payment_id}',
+					),
+					'sale_notification' => array(
+						'id'   => 'sale_notification',
+						'name' => __( 'Sale Notification', 'easy-digital-downloads' ),
+						'desc' => __( 'Enter the text that is sent as sale notification email after completion of a purchase. HTML is accepted. Available template tags:', 'easy-digital-downloads' ) . '<br/>' . edd_get_emails_tags_list(),
+						'type' => 'rich_editor',
+						'std'  => edd_get_default_sale_notification_email(),
+					),
+					'admin_notice_emails' => array(
+						'id'   => 'admin_notice_emails',
+						'name' => __( 'Sale Notification Emails', 'easy-digital-downloads' ),
+						'desc' => __( 'Enter the email address(es) that should receive a notification anytime a sale is made, one per line', 'easy-digital-downloads' ),
+						'type' => 'textarea',
+						'std'  => get_bloginfo( 'admin_email' ),
+					),
+					'disable_admin_notices' => array(
+						'id'   => 'disable_admin_notices',
+						'name' => __( 'Disable Admin Notifications', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this box if you do not want to receive sales notification emails.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
 				),
-				'from_name' => array(
-					'id'   => 'from_name',
-					'name' => __( 'From Name', 'easy-digital-downloads' ),
-					'desc' => __( 'The name purchase receipts are said to come from. This should probably be your site or shop name.', 'easy-digital-downloads' ),
-					'type' => 'text',
-					'std'  => get_bloginfo( 'name' )
-				),
-				'from_email' => array(
-					'id'   => 'from_email',
-					'name' => __( 'From Email', 'easy-digital-downloads' ),
-					'desc' => __( 'Email to send purchase receipts from. This will act as the "from" and "reply-to" address.', 'easy-digital-downloads' ),
-					'type' => 'text',
-					'std'  => get_bloginfo( 'admin_email' )
-				),
-				'purchase_subject' => array(
-					'id'   => 'purchase_subject',
-					'name' => __( 'Purchase Email Subject', 'easy-digital-downloads' ),
-					'desc' => __( 'Enter the subject line for the purchase receipt email', 'easy-digital-downloads' ),
-					'type' => 'text',
-					'std'  => __( 'Purchase Receipt', 'easy-digital-downloads' )
-				),
-				'purchase_heading' => array(
-					'id'   => 'purchase_heading',
-					'name' => __( 'Purchase Email Heading', 'easy-digital-downloads' ),
-					'desc' => __( 'Enter the heading for the purchase receipt email', 'easy-digital-downloads' ),
-					'type' => 'text',
-					'std'  => __( 'Purchase Receipt', 'easy-digital-downloads' )
-				),
-				'purchase_receipt' => array(
-					'id'   => 'purchase_receipt',
-					'name' => __( 'Purchase Receipt', 'easy-digital-downloads' ),
-					'desc' => __('Enter the text that is sent as purchase receipt email to users after completion of a successful purchase. HTML is accepted. Available template tags:','easy-digital-downloads' ) . '<br/>' . edd_get_emails_tags_list(),
-					'type' => 'rich_editor',
-					'std'  => __( "Dear", "easy-digital-downloads" ) . " {name},\n\n" . __( "Thank you for your purchase. Please click on the link(s) below to download your files.", "easy-digital-downloads" ) . "\n\n{download_list}\n\n{sitename}"
-				),
-				'sale_notification_header' => array(
-					'id' => 'sale_notification_header',
-					'name' => '<strong>' . __('New Sale Notifications','easy-digital-downloads' ) . '</strong>',
-					'desc' => __('Configure new sale notification emails','easy-digital-downloads' ),
-					'type' => 'header'
-				),
-				'sale_notification_subject' => array(
-					'id'   => 'sale_notification_subject',
-					'name' => __( 'Sale Notification Subject', 'easy-digital-downloads' ),
-					'desc' => __( 'Enter the subject line for the sale notification email', 'easy-digital-downloads' ),
-					'type' => 'text',
-					'std'  => 'New download purchase - Order #{payment_id}'
-				),
-				'sale_notification' => array(
-					'id'   => 'sale_notification',
-					'name' => __( 'Sale Notification', 'easy-digital-downloads' ),
-					'desc' => __( 'Enter the text that is sent as sale notification email after completion of a purchase. HTML is accepted. Available template tags:', 'easy-digital-downloads' ) . '<br/>' . edd_get_emails_tags_list(),
-					'type' => 'rich_editor',
-					'std'  => edd_get_default_sale_notification_email()
-				),
-				'admin_notice_emails' => array(
-					'id'   => 'admin_notice_emails',
-					'name' => __( 'Sale Notification Emails', 'easy-digital-downloads' ),
-					'desc' => __( 'Enter the email address(es) that should receive a notification anytime a sale is made, one per line', 'easy-digital-downloads' ),
-					'type' => 'textarea',
-					'std'  => get_bloginfo( 'admin_email' )
-				),
-				'disable_admin_notices' => array(
-					'id'   => 'disable_admin_notices',
-					'name' => __( 'Disable Admin Notifications', 'easy-digital-downloads' ),
-					'desc' => __( 'Check this box if you do not want to receive emails when new sales are made.', 'easy-digital-downloads' ),
-					'type' => 'checkbox'
-				)
 			)
 		),
 		/** Styles Settings */
 		'styles' => apply_filters('edd_settings_styles',
 			array(
-				'disable_styles' => array(
-					'id'   => 'disable_styles',
-					'name' => __( 'Disable Styles', 'easy-digital-downloads' ),
-					'desc' => __( 'Check this to disable all included styling of buttons, checkout fields, and all other elements.', 'easy-digital-downloads' ),
-					'type' => 'checkbox'
+				'main' => array(
+					'style_settings' => array(
+						'id'   => 'style_settings',
+						'name' => '<h3>' . __( 'Style Settings', 'easy-digital-downloads' ) . '</h3>',
+						'type' => 'header',
+					),
+					'disable_styles' => array(
+						'id'   => 'disable_styles',
+						'name' => __( 'Disable Styles', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this to disable all included styling of buttons, checkout fields, and all other elements.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
+					'button_header' => array(
+						'id'   => 'button_header',
+						'name' => '<strong>' . __( 'Buttons', 'easy-digital-downloads' ) . '</strong>',
+						'desc' => __( 'Options for add to cart and purchase buttons', 'easy-digital-downloads' ),
+						'type' => 'header',
+					),
+					'button_style' => array(
+						'id'      => 'button_style',
+						'name'    => __( 'Default Button Style', 'easy-digital-downloads' ),
+						'desc'    => __( 'Choose the style you want to use for the buttons.', 'easy-digital-downloads' ),
+						'type'    => 'select',
+						'options' => edd_get_button_styles(),
+					),
+					'checkout_color' => array(
+						'id'      => 'checkout_color',
+						'name'    => __( 'Default Button Color', 'easy-digital-downloads' ),
+						'desc'    => __( 'Choose the color you want to use for the buttons.', 'easy-digital-downloads' ),
+						'type'    => 'color_select',
+						'options' => edd_get_button_colors(),
+					),
 				),
-				'button_header' => array(
-					'id' => 'button_header',
-					'name' => '<strong>' . __( 'Buttons', 'easy-digital-downloads' ) . '</strong>',
-					'desc' => __( 'Options for add to cart and purchase buttons', 'easy-digital-downloads' ),
-					'type' => 'header'
-				),
-				'button_style' => array(
-					'id'      => 'button_style',
-					'name'    => __( 'Default Button Style', 'easy-digital-downloads' ),
-					'desc'    => __( 'Choose the style you want to use for the buttons.', 'easy-digital-downloads' ),
-					'type'    => 'select',
-					'options' => edd_get_button_styles()
-				),
-				'checkout_color' => array(
-					'id'      => 'checkout_color',
-					'name'    => __( 'Default Button Color', 'easy-digital-downloads' ),
-					'desc'    => __( 'Choose the color you want to use for the buttons.', 'easy-digital-downloads' ),
-					'type'    => 'color_select',
-					'options' => edd_get_button_colors()
-				)
 			)
 		),
 		/** Taxes Settings */
 		'taxes' => apply_filters('edd_settings_taxes',
 			array(
-				'enable_taxes' => array(
-					'id'   => 'enable_taxes',
-					'name' => __( 'Enable Taxes', 'easy-digital-downloads' ),
-					'desc' => __( 'Check this to enable taxes on purchases.', 'easy-digital-downloads' ),
-					'type' => 'checkbox',
+				'main' => array(
+					'tax_settings' => array(
+						'id'   => 'tax_settings',
+						'name' => '<h3>' . __( 'Tax Settings', 'easy-digital-downloads' ) . '</h3>',
+						'type' => 'header',
+					),
+					'enable_taxes' => array(
+						'id'   => 'enable_taxes',
+						'name' => __( 'Enable Taxes', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this to enable taxes on purchases.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
+					'tax_rates' => array(
+						'id'   => 'tax_rates',
+						'name' => '<strong>' . __( 'Tax Rates', 'easy-digital-downloads' ) . '</strong>',
+						'desc' => __( 'Enter tax rates for specific regions.', 'easy-digital-downloads' ),
+						'type' => 'tax_rates',
+					),
+					'tax_rate' => array(
+						'id'   => 'tax_rate',
+						'name' => __( 'Fallback Tax Rate', 'easy-digital-downloads' ),
+						'desc' => __( 'Enter a percentage, such as 6.5. Customers not in a specific rate will be charged this rate.', 'easy-digital-downloads' ),
+						'type' => 'text',
+						'size' => 'small',
+					),
+					'prices_include_tax' => array(
+						'id'   => 'prices_include_tax',
+						'name' => __( 'Prices entered with tax', 'easy-digital-downloads' ),
+						'desc' => __( 'This option affects how you enter prices.', 'easy-digital-downloads' ),
+						'type' => 'radio',
+						'std'  => 'no',
+						'options' => array(
+							'yes' => __( 'Yes, I will enter prices inclusive of tax', 'easy-digital-downloads' ),
+							'no'  => __( 'No, I will enter prices exclusive of tax', 'easy-digital-downloads' ),
+						),
+					),
+					'display_tax_rate' => array(
+						'id'   => 'display_tax_rate',
+						'name' => __( 'Display Tax Rate on Prices', 'easy-digital-downloads' ),
+						'desc' => __( 'Some countries require a notice when product prices include tax.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
+					'checkout_include_tax' => array(
+						'id'   => 'checkout_include_tax',
+						'name' => __( 'Display during checkout', 'easy-digital-downloads' ),
+						'desc' => __( 'Should prices on the checkout page be shown with or without tax?', 'easy-digital-downloads' ),
+						'type' => 'select',
+						'std'  => 'no',
+						'options' => array(
+							'yes' => __( 'Including tax', 'easy-digital-downloads' ),
+							'no'  => __( 'Excluding tax', 'easy-digital-downloads' ),
+						),
+					),
 				),
-				'tax_rates' => array(
-					'id' => 'tax_rates',
-					'name' => '<strong>' . __( 'Tax Rates', 'easy-digital-downloads' ) . '</strong>',
-					'desc' => __( 'Enter tax rates for specific regions.', 'easy-digital-downloads' ),
-					'type' => 'tax_rates'
-				),
-				'tax_rate' => array(
-					'id'   => 'tax_rate',
-					'name' => __( 'Fallback Tax Rate', 'easy-digital-downloads' ),
-					'desc' => __( 'Enter a percentage, such as 6.5. Customers not in a specific rate will be charged this rate.', 'easy-digital-downloads' ),
-					'type' => 'text',
-					'size' => 'small'
-				),
-				'prices_include_tax' => array(
-					'id'   => 'prices_include_tax',
-					'name' => __( 'Prices entered with tax', 'easy-digital-downloads' ),
-					'desc' => __( 'This option affects how you enter prices.', 'easy-digital-downloads' ),
-					'type' => 'radio',
-					'std'  => 'no',
-					'options' => array(
-						'yes' => __( 'Yes, I will enter prices inclusive of tax', 'easy-digital-downloads' ),
-						'no'  => __( 'No, I will enter prices exclusive of tax', 'easy-digital-downloads' )
-					)
-				),
-				'display_tax_rate' => array(
-					'id'   => 'display_tax_rate',
-					'name' => __( 'Display Tax Rate on Prices', 'easy-digital-downloads' ),
-					'desc' => __( 'Some countries require a notice when product prices include tax.', 'easy-digital-downloads' ),
-					'type' => 'checkbox',
-				),
-				'checkout_include_tax' => array(
-					'id'   => 'checkout_include_tax',
-					'name' => __( 'Display during checkout', 'easy-digital-downloads' ),
-					'desc' => __( 'Should prices on the checkout page be shown with or without tax?', 'easy-digital-downloads' ),
-					'type' => 'select',
-					'std'  => 'no',
-					'options' => array(
-						'yes' => __( 'Including tax', 'easy-digital-downloads' ),
-						'no'  => __( 'Excluding tax', 'easy-digital-downloads' )
-					)
-				)
 			)
 		),
 		/** Extension Settings */
@@ -595,190 +658,220 @@ function edd_get_registered_settings() {
 		/** Misc Settings */
 		'misc' => apply_filters('edd_settings_misc',
 			array(
-				'enable_ajax_cart' => array(
-					'id'   => 'enable_ajax_cart',
-					'name' => __( 'Enable Ajax', 'easy-digital-downloads' ),
-					'desc' => __( 'Check this to enable AJAX for the shopping cart.', 'easy-digital-downloads' ),
-					'type' => 'checkbox',
-					'std'  => '1'
-				),
-				'redirect_on_add' => array(
-					'id'   => 'redirect_on_add',
-					'name' => __( 'Redirect to Checkout', 'easy-digital-downloads' ),
-					'desc' => __( 'Immediately redirect to checkout after adding an item to the cart?', 'easy-digital-downloads' ),
-					'type' => 'checkbox'
-				),
-				'enforce_ssl' => array(
-					'id'   => 'enforce_ssl',
-					'name' => __( 'Enforce SSL on Checkout', 'easy-digital-downloads' ),
-					'desc' => __( 'Check this to force users to be redirected to the secure checkout page. You must have an SSL certificate installed to use this option.', 'easy-digital-downloads' ),
-					'type' => 'checkbox'
-				),
-				'logged_in_only' => array(
-					'id'   => 'logged_in_only',
-					'name' => __( 'Disable Guest Checkout', 'easy-digital-downloads' ),
-					'desc' => __( 'Require that users be logged-in to purchase files.', 'easy-digital-downloads' ),
-					'type' => 'checkbox'
-				),
-				'show_register_form' => array(
-					'id'      => 'show_register_form',
-					'name'    => __( 'Show Register / Login Form?', 'easy-digital-downloads' ),
-					'desc'    => __( 'Display the registration and login forms on the checkout page for non-logged-in users.', 'easy-digital-downloads' ),
-					'type'    => 'select',
-					'std'     => 'none',
-					'options' => array(
-						'both'         => __( 'Registration and Login Forms', 'easy-digital-downloads' ),
-						'registration' => __( 'Registration Form Only', 'easy-digital-downloads' ),
-						'login'        => __( 'Login Form Only', 'easy-digital-downloads' ),
-						'none'         => __( 'None', 'easy-digital-downloads' )
+				'main' => array(
+					'misc_settings' => array(
+						'id'   => 'misc_settings',
+						'name' => '<h3>' . __( 'Misc Settings', 'easy-digital-downloads' ) . '</h3>',
+						'type' => 'header',
+					),
+					'enable_ajax_cart' => array(
+						'id'   => 'enable_ajax_cart',
+						'name' => __( 'Enable Ajax', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this to enable AJAX for the shopping cart.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+						'std'  => '1',
+					),
+					'redirect_on_add' => array(
+						'id'   => 'redirect_on_add',
+						'name' => __( 'Redirect to Checkout', 'easy-digital-downloads' ),
+						'desc' => __( 'Immediately redirect to checkout after adding an item to the cart?', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
+					'item_quantities' => array(
+						'id'   => 'item_quantities',
+						'name' => __('Item Quantities','easy-digital-downloads' ),
+						'desc' => __('Allow item quantities to be changed.','easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
+					'uninstall_on_delete' => array(
+						'id'   => 'uninstall_on_delete',
+						'name' => __( 'Remove Data on Uninstall?', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this box if you would like EDD to completely remove all of its data when the plugin is deleted.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
 					),
 				),
-				'item_quantities' => array(
-					'id'   => 'item_quantities',
-					'name' => __('Item Quantities','easy-digital-downloads' ),
-					'desc' => __('Allow item quantities to be changed.','easy-digital-downloads' ),
-					'type' => 'checkbox'
+				'checkout' => array(
+					'checkout_settings' => array(
+						'id'   => 'checkout_settings',
+						'name' => '<h3>' . __( 'Checkout Settings', 'easy-digital-downloads' ) . '</h3>',
+						'type' => 'header',
+					),
+					'enforce_ssl' => array(
+						'id'   => 'enforce_ssl',
+						'name' => __( 'Enforce SSL on Checkout', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this to force users to be redirected to the secure checkout page. You must have an SSL certificate installed to use this option.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
+					'logged_in_only' => array(
+						'id'   => 'logged_in_only',
+						'name' => __( 'Disable Guest Checkout', 'easy-digital-downloads' ),
+						'desc' => __( 'Require that users be logged-in to purchase files.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
+					'show_register_form' => array(
+						'id'      => 'show_register_form',
+						'name'    => __( 'Show Register / Login Form?', 'easy-digital-downloads' ),
+						'desc'    => __( 'Display the registration and login forms on the checkout page for non-logged-in users.', 'easy-digital-downloads' ),
+						'type'    => 'select',
+						'std'     => 'none',
+						'options' => array(
+							'both'         => __( 'Registration and Login Forms', 'easy-digital-downloads' ),
+							'registration' => __( 'Registration Form Only', 'easy-digital-downloads' ),
+							'login'        => __( 'Login Form Only', 'easy-digital-downloads' ),
+							'none'         => __( 'None', 'easy-digital-downloads' ),
+						),
+					),
+					'allow_multiple_discounts' => array(
+						'id'   => 'allow_multiple_discounts',
+						'name' => __('Multiple Discounts','easy-digital-downloads' ),
+						'desc' => __('Allow customers to use multiple discounts on the same purchase?','easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
+					'enable_cart_saving' => array(
+						'id'   => 'enable_cart_saving',
+						'name' => __( 'Enable Cart Saving', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this to enable cart saving on the checkout.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
 				),
-				'allow_multiple_discounts' => array(
-					'id'   => 'allow_multiple_discounts',
-					'name' => __('Multiple Discounts','easy-digital-downloads' ),
-					'desc' => __('Allow customers to use multiple discounts on the same purchase?','easy-digital-downloads' ),
-					'type' => 'checkbox'
+				'button_text' => array(
+					'button_settings' => array(
+						'id'   => 'button_settings',
+						'name' => '<h3>' . __( 'Button Text', 'easy-digital-downloads' ) . '</h3>',
+						'type' => 'header',
+					),
+					'checkout_label' => array(
+						'id'   => 'checkout_label',
+						'name' => __( 'Complete Purchase Text', 'easy-digital-downloads' ),
+						'desc' => __( 'The button label for completing a purchase.', 'easy-digital-downloads' ),
+						'type' => 'text',
+						'std'  => __( 'Purchase', 'easy-digital-downloads' ),
+					),
+					'add_to_cart_text' => array(
+						'id'   => 'add_to_cart_text',
+						'name' => __( 'Add to Cart Text', 'easy-digital-downloads' ),
+						'desc' => __( 'Text shown on the Add to Cart Buttons.', 'easy-digital-downloads' ),
+						'type' => 'text',
+						'std'  => __( 'Add to Cart', 'easy-digital-downloads' ),
+					),
+					'buy_now_text' => array(
+						'id'   => 'buy_now_text',
+						'name' => __( 'Buy Now Text', 'easy-digital-downloads' ),
+						'desc' => __( 'Text shown on the Buy Now Buttons.', 'easy-digital-downloads' ),
+						'type' => 'text',
+						'std'  => __( 'Buy Now', 'easy-digital-downloads' ),
+					),
 				),
-				'enable_cart_saving' => array(
-					'id'   => 'enable_cart_saving',
-					'name' => __( 'Enable Cart Saving', 'easy-digital-downloads' ),
-					'desc' => __( 'Check this to enable cart saving on the checkout.', 'easy-digital-downloads' ),
-					'type' => 'checkbox'
+				'file_downloads' => array(
+					'file_settings' => array(
+						'id'   => 'file_settings',
+						'name' => '<h3>' . __( 'File Download Settings', 'easy-digital-downloads' ) . '</h3>',
+						'type' => 'header',
+					),
+					'download_method' => array(
+						'id'      => 'download_method',
+						'name'    => __( 'Download Method', 'easy-digital-downloads' ),
+						'desc'    => sprintf( __( 'Select the file download method. Note, not all methods work on all servers.', 'easy-digital-downloads' ), edd_get_label_singular() ),
+						'type'    => 'select',
+						'options' => array(
+							'direct'   => __( 'Forced', 'easy-digital-downloads' ),
+							'redirect' => __( 'Redirect', 'easy-digital-downloads' ),
+						),
+					),
+					'symlink_file_downloads' => array(
+						'id'   => 'symlink_file_downloads',
+						'name' => __( 'Symlink File Downloads?', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this if you are delivering really large files or having problems with file downloads completing.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
+					'file_download_limit' => array(
+						'id'   => 'file_download_limit',
+						'name' => __( 'File Download Limit', 'easy-digital-downloads' ),
+						'desc' => sprintf( __( 'The maximum number of times files can be downloaded for purchases. Can be overwritten for each %s.', 'easy-digital-downloads' ), edd_get_label_singular() ),
+						'type' => 'number',
+						'size' => 'small',
+					),
+					'download_link_expiration' => array(
+						'id'   => 'download_link_expiration',
+						'name' => __( 'Download Link Expiration', 'easy-digital-downloads' ),
+						'desc' => __( 'How long should download links be valid for? Default is 24 hours from the time they are generated. Enter a time in hours.', 'easy-digital-downloads' ),
+						'type' => 'number',
+						'size' => 'small',
+						'std'  => '24',
+						'min'  => '0',
+					),
+					'disable_redownload' => array(
+						'id'   => 'disable_redownload',
+						'name' => __( 'Disable Redownload?', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this if you do not want to allow users to redownload items from their purchase history.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
 				),
-				'field_downloads' => array(
-					'id' => 'field_downloads',
-					'name' => '<strong>' . __( 'File Downloads', 'easy-digital-downloads' ) . '</strong>',
-					'desc' => '',
-					'type' => 'header'
+				'accounting'     => array(
+					'accounting_settings' => array(
+						'id'   => 'accounting_settings',
+						'name' => '<h3>' . __( 'Accounting Settings', 'easy-digital-downloads' ) . '</h3>',
+						'type' => 'header',
+					),
+					'enable_skus' => array(
+						'id'   => 'enable_skus',
+						'name' => __( 'Enable SKU Entry', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this box to allow entry of product SKUs. SKUs will be shown on purchase receipt and exported purchase histories.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
+					'enable_sequential' => array(
+						'id'   => 'enable_sequential',
+						'name' => __( 'Sequential Order Numbers', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this box to enable sequential order numbers.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
+					'sequential_start' => array(
+						'id'   => 'sequential_start',
+						'name' => __( 'Sequential Starting Number', 'easy-digital-downloads' ),
+						'desc' => __( 'The number at which the sequence should begin.', 'easy-digital-downloads' ),
+						'type' => 'number',
+						'size' => 'small',
+						'std'  => '1',
+					),
+					'sequential_prefix' => array(
+						'id'   => 'sequential_prefix',
+						'name' => __( 'Sequential Number Prefix', 'easy-digital-downloads' ),
+						'desc' => __( 'A prefix to prepend to all sequential order numbers.', 'easy-digital-downloads' ),
+						'type' => 'text',
+					),
+					'sequential_postfix' => array(
+						'id'   => 'sequential_postfix',
+						'name' => __( 'Sequential Number Postfix', 'easy-digital-downloads' ),
+						'desc' => __( 'A postfix to append to all sequential order numbers.', 'easy-digital-downloads' ),
+						'type' => 'text',
+					),
 				),
-				'download_method' => array(
-					'id'      => 'download_method',
-					'name'    => __( 'Download Method', 'easy-digital-downloads' ),
-					'desc'    => sprintf( __( 'Select the file download method. Note, not all methods work on all servers.', 'easy-digital-downloads' ), edd_get_label_singular() ),
-					'type'    => 'select',
-					'options' => array(
-						'direct'   => __( 'Forced', 'easy-digital-downloads' ),
-						'redirect' => __( 'Redirect', 'easy-digital-downloads' )
-					)
+				'site_terms'     => array(
+					'terms_settings' => array(
+						'id'   => 'terms_settings',
+						'name' => '<h3>' . __( 'Agreement Settings', 'easy-digital-downloads' ) . '</h3>',
+						'type' => 'header',
+					),
+					'show_agree_to_terms' => array(
+						'id'   => 'show_agree_to_terms',
+						'name' => __( 'Agree to Terms', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this to show an agree to terms on the checkout that users must agree to before purchasing.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
+					'agree_label' => array(
+						'id'   => 'agree_label',
+						'name' => __( 'Agree to Terms Label', 'easy-digital-downloads' ),
+						'desc' => __( 'Label shown next to the agree to terms check box.', 'easy-digital-downloads' ),
+						'type' => 'text',
+						'size' => 'regular',
+					),
+					'agree_text' => array(
+						'id'   => 'agree_text',
+						'name' => __( 'Agreement Text', 'easy-digital-downloads' ),
+						'desc' => __( 'If Agree to Terms is checked, enter the agreement terms here.', 'easy-digital-downloads' ),
+						'type' => 'rich_editor',
+					),
 				),
-				'symlink_file_downloads' => array(
-					'id'   => 'symlink_file_downloads',
-					'name' => __( 'Symlink File Downloads?', 'easy-digital-downloads' ),
-					'desc' => __( 'Check this if you are delivering really large files or having problems with file downloads completing.', 'easy-digital-downloads' ),
-					'type' => 'checkbox'
-				),
-				'file_download_limit' => array(
-					'id'   => 'file_download_limit',
-					'name' => __( 'File Download Limit', 'easy-digital-downloads' ),
-					'desc' => sprintf( __( 'The maximum number of times files can be downloaded for purchases. Can be overwritten for each %s.', 'easy-digital-downloads' ), edd_get_label_singular() ),
-					'type' => 'number',
-					'size' => 'small'
-				),
-				'download_link_expiration' => array(
-					'id'   => 'download_link_expiration',
-					'name' => __( 'Download Link Expiration', 'easy-digital-downloads' ),
-					'desc' => __( 'How long should download links be valid for? Default is 24 hours from the time they are generated. Enter a time in hours.', 'easy-digital-downloads' ),
-					'type' => 'number',
-					'size' => 'small',
-					'std'  => '24',
-					'min'  => '0'
-				),
-				'disable_redownload' => array(
-					'id'   => 'disable_redownload',
-					'name' => __( 'Disable Redownload?', 'easy-digital-downloads' ),
-					'desc' => __( 'Check this if you do not want to allow users to redownload items from their purchase history.', 'easy-digital-downloads' ),
-					'type' => 'checkbox'
-				),
-				'accounting_settings' => array(
-					'id' => 'accounting_settings',
-					'name' => '<strong>' . __( 'Accounting Settings', 'easy-digital-downloads' ) . '</strong>',
-					'desc' => '',
-					'type' => 'header'
-				),
-				'enable_skus' => array(
-					'id'   => 'enable_skus',
-					'name' => __( 'Enable SKU Entry', 'easy-digital-downloads' ),
-					'desc' => __( 'Check this box to allow entry of product SKUs. SKUs will be shown on purchase receipt and exported purchase histories.', 'easy-digital-downloads' ),
-					'type' => 'checkbox'
-				),
-				'enable_sequential' => array(
-					'id'   => 'enable_sequential',
-					'name' => __( 'Sequential Order Numbers', 'easy-digital-downloads' ),
-					'desc' => __( 'Check this box to enable sequential order numbers.', 'easy-digital-downloads' ),
-					'type' => 'checkbox'
-				),
-				'sequential_start' => array(
-					'id'   => 'sequential_start',
-					'name' => __( 'Sequential Starting Number', 'easy-digital-downloads' ),
-					'desc' => __( 'The number that sequential order numbers should start at.', 'easy-digital-downloads' ),
-					'type' => 'number',
-					'size' => 'small',
-					'std'  => '1'
-				),
-				'sequential_prefix' => array(
-					'id'   => 'sequential_prefix',
-					'name' => __( 'Sequential Number Prefix', 'easy-digital-downloads' ),
-					'desc' => __( 'A prefix to prepend to all sequential order numbers.', 'easy-digital-downloads' ),
-					'type' => 'text'
-				),
-				'sequential_postfix' => array(
-					'id'   => 'sequential_postfix',
-					'name' => __( 'Sequential Number Postfix', 'easy-digital-downloads' ),
-					'desc' => __( 'A postfix to append to all sequential order numbers.', 'easy-digital-downloads' ),
-					'type' => 'text',
-				),
-				'terms' => array(
-					'id' => 'terms',
-					'name' => '<strong>' . __( 'Terms of Agreement', 'easy-digital-downloads' ) . '</strong>',
-					'desc' => '',
-					'type' => 'header'
-				),
-				'show_agree_to_terms' => array(
-					'id'   => 'show_agree_to_terms',
-					'name' => __( 'Agree to Terms', 'easy-digital-downloads' ),
-					'desc' => __( 'Check this to show an agree to terms on the checkout that users must agree to before purchasing.', 'easy-digital-downloads' ),
-					'type' => 'checkbox'
-				),
-				'agree_label' => array(
-					'id'   => 'agree_label',
-					'name' => __( 'Agree to Terms Label', 'easy-digital-downloads' ),
-					'desc' => __( 'Label shown next to the agree to terms check box.', 'easy-digital-downloads' ),
-					'type' => 'text',
-					'size' => 'regular'
-				),
-				'agree_text' => array(
-					'id'   => 'agree_text',
-					'name' => __( 'Agreement Text', 'easy-digital-downloads' ),
-					'desc' => __( 'If Agree to Terms is checked, enter the agreement terms here.', 'easy-digital-downloads' ),
-					'type' => 'rich_editor'
-				),
-				'checkout_label' => array(
-					'id'   => 'checkout_label',
-					'name' => __( 'Complete Purchase Text', 'easy-digital-downloads' ),
-					'desc' => __( 'The button label for completing a purchase.', 'easy-digital-downloads' ),
-					'type' => 'text',
-					'std'  => __( 'Purchase', 'easy-digital-downloads' )
-				),
-				'add_to_cart_text' => array(
-					'id'   => 'add_to_cart_text',
-					'name' => __( 'Add to Cart Text', 'easy-digital-downloads' ),
-					'desc' => __( 'Text shown on the Add to Cart Buttons.', 'easy-digital-downloads' ),
-					'type' => 'text',
-					'std'  => __( 'Add to Cart', 'easy-digital-downloads' )
-				),
-				'buy_now_text' => array(
-					'id' => 'buy_now_text',
-					'name' => __( 'Buy Now Text', 'easy-digital-downloads' ),
-					'desc' => __( 'Text shown on the Buy Now Buttons.', 'easy-digital-downloads' ),
-					'type' => 'text',
-					'std' => __( 'Buy Now', 'easy-digital-downloads' )
-				)
 			)
 		)
 	);
@@ -810,15 +903,21 @@ function edd_settings_sanitize( $input = array() ) {
 
 	$settings = edd_get_registered_settings();
 	$tab      = isset( $referrer['tab'] ) ? $referrer['tab'] : 'general';
+	$section  = isset( $referrer['section'] ) ? $referrer['section'] : 'main';
 
 	$input = $input ? $input : array();
-	$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
+
+	$input = apply_filters( 'edd_settings_' . $tab . '-' . $section . '_sanitize', $input );
+	if ( 'main' === $section )  {
+		// Check for extensions that aren't using new sections
+		$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
+	}
 
 	// Loop through each setting being saved and pass it through a sanitization filter
 	foreach ( $input as $key => $value ) {
 
 		// Get the setting type (checkbox, select, etc)
-		$type = isset( $settings[$tab][$key]['type'] ) ? $settings[$tab][$key]['type'] : false;
+		$type = isset( $settings[ $tab ][ $key ]['type'] ) ? $settings[ $tab ][ $key ]['type'] : false;
 
 		if ( $type ) {
 			// Field type specific filter
@@ -826,20 +925,25 @@ function edd_settings_sanitize( $input = array() ) {
 		}
 
 		// General filter
-		$input[$key] = apply_filters( 'edd_settings_sanitize', $input[$key], $key );
+		$input[ $key ] = apply_filters( 'edd_settings_sanitize', $input[ $key ], $key );
 	}
 
 	// Loop through the whitelist and unset any that are empty for the tab being saved
-	if ( ! empty( $settings[$tab] ) ) {
-		foreach ( $settings[$tab] as $key => $value ) {
+	$main_settings    = $section == 'main' ? $settings[ $tab ] : array(); // Check for extensions that aren't using new sections
+	$section_settings = ! empty( $settings[ $tab ][ $section ] ) ? $settings[ $tab ][ $section ] : array();
+
+	$found_settings = array_merge( $main_settings, $section_settings );
+
+	if ( ! empty( $found_settings ) ) {
+		foreach ( $found_settings as $key => $value ) {
 
 			// settings used to have numeric keys, now they have keys that match the option ID. This ensures both methods work
 			if ( is_numeric( $key ) ) {
 				$key = $value['id'];
 			}
 
-			if ( empty( $input[$key] ) ) {
-				unset( $edd_options[$key] );
+			if ( empty( $input[ $key ] ) ) {
+				unset( $edd_options[ $key ] );
 			}
 
 		}
@@ -854,13 +958,37 @@ function edd_settings_sanitize( $input = array() ) {
 }
 
 /**
- * Misc Settings Sanitization
+ * Misc File Download Settings Sanitization
  *
- * @since 1.6
+ * @since 2.5
  * @param array $input The value inputted in the field
  * @return string $input Sanitizied value
  */
-function edd_settings_sanitize_misc( $input ) {
+function edd_settings_sanitize_misc_file_downloads( $input ) {
+
+	global $edd_options;
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return $input;
+	}
+
+	if( edd_get_file_download_method() != $input['download_method'] || ! edd_htaccess_exists() ) {
+		// Force the .htaccess files to be updated if the Download method was changed.
+		edd_create_protection_files( true, $input['download_method'] );
+	}
+
+	return $input;
+}
+add_filter( 'edd_settings_misc-file_downloads_sanitize', 'edd_settings_sanitize_misc_file_downloads' );
+
+/**
+ * Misc Accounting Settings Sanitization
+ *
+ * @since 2.5
+ * @param array $input The value inputted in the field
+ * @return string $input Sanitizied value
+ */
+function edd_settings_sanitize_misc_accounting( $input ) {
 
 	global $edd_options;
 
@@ -882,7 +1010,7 @@ function edd_settings_sanitize_misc( $input ) {
 
 	return $input;
 }
-add_filter( 'edd_settings_misc_sanitize', 'edd_settings_sanitize_misc' );
+add_filter( 'edd_settings_misc-accounting_sanitize', 'edd_settings_sanitize_misc_accounting' );
 
 /**
  * Taxes Settings Sanitization
@@ -950,6 +1078,81 @@ function edd_get_settings_tabs() {
 }
 
 /**
+ * Retrieve settings tabs
+ *
+ * @since 2.5
+ * @return array $section
+ */
+function edd_get_settings_tab_sections( $tab = false ) {
+
+	$tabs     = false;
+	$sections = edd_get_registered_settings_sections();
+
+	if( $tab && ! empty( $sections[ $tab ] ) ) {
+		$tabs = $sections[ $tab ];
+	} else if ( $tab ) {
+		$tabs = false;
+	}
+
+	return $tabs;
+}
+
+/**
+ * Get the settings sections for each tab
+ * Uses a static to avoid running the filters on every request to this function
+ *
+ * @since  2.5
+ * @return array Array of tabs and sections
+ */
+function edd_get_registered_settings_sections() {
+
+	static $sections = false;
+
+	if ( false !== $sections ) {
+		return $sections;
+	}
+
+	$sections = array(
+		'general'    => apply_filters( 'edd_settings_sections_general', array(
+			'main'               => __( 'General Settings', 'easy-digital-downloads' ),
+			'currency'           => __( 'Currency Settings', 'easy-digital-downloads' ),
+			'api'                => __( 'API Settings', 'easy-digital-downloads' ),
+		) ),
+		'gateways'   => apply_filters( 'edd_settings_sections_gateways', array(
+			'main'               => __( 'Gateway Settings', 'easy-digital-downloads' ),
+			'paypal'             => __( 'PayPal Standard', 'easy-digital-downloads' ),
+		) ),
+		'emails'     => apply_filters( 'edd_settings_sections_emails', array(
+			'main'               => __( 'Email Settings', 'easy-digital-downloads' ),
+			'purchase_receipts'  => __( 'Purchase Receipts', 'easy-digital-downloads' ),
+			'sale_notifications' => __( 'New Sale Notifications', 'easy-digital-downloads' ),
+		) ),
+		'styles'     => apply_filters( 'edd_settings_sections_styles', array(
+			'main'               => __( 'Style Settings', 'easy-digital-downloads' ),
+		) ),
+		'taxes'      => apply_filters( 'edd_settings_sections_taxes', array(
+			'main'               => __( 'Tax Settings', 'easy-digital-downloads' ),
+		) ),
+		'extensions' => apply_filters( 'edd_settings_sections_extensions', array(
+			'main'               => __( 'Main', 'easy-digital-downloads' )
+		) ),
+		'licenses'   => apply_filters( 'edd_settings_sections_licenses', array() ),
+		'misc'       => apply_filters( 'edd_settings_sections_misc', array(
+			'main'               => __( 'Misc Settings', 'easy-digital-downloads' ),
+			'checkout'           => __( 'Checkout Settings', 'easy-digital-downloads' ),
+			'button_text'        => __( 'Button Text', 'easy-digital-downloads' ),
+			'file_downloads'     => __( 'File Downloads', 'easy-digital-downloads' ),
+			'accounting'         => __( 'Accounting Settings', 'easy-digital-downloads' ),
+			'site_terms'         => __( 'Terms of Agreement', 'easy-digital-downloads' ),
+		) ),
+	);
+
+	$sections = apply_filters( 'edd_settings_sections', $sections );
+
+	return $sections;
+}
+
+/**
  * Retrieve a list of all published pages
  *
  * On large sites this can be expensive, so only load if on the settings page or $force is set to true
@@ -986,7 +1189,7 @@ function edd_get_pages( $force = false ) {
  * @return void
  */
 function edd_header_callback( $args ) {
-	echo '<hr/>';
+	echo '';
 }
 
 /**
@@ -1087,7 +1290,7 @@ function edd_payment_icons_callback( $args ) {
 
 						}
 
-						$image = str_replace( $content_dir, WP_CONTENT_URL, $image );
+						$image = str_replace( $content_dir, content_url(), $image );
 
 					}
 
@@ -1648,12 +1851,15 @@ function edd_descriptive_text_callback( $args ) {
  *
  * @since 1.5
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ * @global $edd_options Array of all the EDD options
  * @return void
  */
 if ( ! function_exists( 'edd_license_key_callback' ) ) {
 	function edd_license_key_callback( $args ) {
 		global $edd_options;
+
+		$messages = array();
+		$license  = get_option( $args['options']['is_valid_license_option'] );
 
 		if ( isset( $edd_options[ $args['id'] ] ) ) {
 			$value = $edd_options[ $args['id'] ];
@@ -1661,17 +1867,146 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 			$value = isset( $args['std'] ) ? $args['std'] : '';
 		}
 
+		if( ! empty( $license ) && is_object( $license ) ) {
+
+			// activate_license 'invalid' on anything other than valid, so if there was an error capture it
+			if ( false === $license->success ) {
+
+				switch( $license->error ) {
+
+					case 'expired' :
+
+						$class = 'error';
+						$messages[] = sprintf(
+							__( 'Your license key expired on %s. Please <a href="%s" target="_blank" title="Renew your license key">renew your license key</a>.', 'easy-digital-downloads' ),
+							date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
+							'https://easydigitaldownloads.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
+						);
+
+						$license_status = 'license-' . $class . '-notice';
+
+						break;
+
+					case 'missing' :
+
+						$class = 'error';
+						$messages[] = sprintf(
+							__( 'Invalid license. Please <a href="%s" target="_blank" title="Visit account page">visit your account page</a> and verify it.', 'easy-digital-downloads' ),
+							'https://easydigitaldownloads.com/your-account?utm_campaign=admin&utm_source=licenses&utm_medium=missing'
+						);
+
+						$license_status = 'license-' . $class . '-notice';
+
+						break;
+
+					case 'invalid' :
+					case 'site_inactive' :
+
+						$class = 'error';
+						$messages[] = sprintf(
+							__( 'Your %s is not active for this URL. Please <a href="%s" target="_blank" title="Visit account page">visit your account page</a> to manage your license key URLs.', 'easy-digital-downloads' ),
+							$args['name'],
+							'https://easydigitaldownloads.com/your-account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
+						);
+
+						$license_status = 'license-' . $class . '-notice';
+
+						break;
+
+					case 'item_name_mismatch' :
+
+						$class = 'error';
+						$messages[] = sprintf( __( 'This is not a %s.', 'easy-digital-downloads' ), $args['name'] );
+
+						$license_status = 'license-' . $class . '-notice';
+
+						break;
+
+					case 'no_activations_left':
+
+						$class = 'error';
+						$messages[] = sprintf( __( 'Your license key has reached its activation limit. <a href="%s">View possible upgrades</a> now.', 'easy-digital-downloads' ), 'https://easydigitaldownloads.com/your-account/' );
+
+						$license_status = 'license-' . $class . '-notice';
+
+						break;
+
+				}
+
+			} else {
+
+				switch( $license->license ) {
+
+					case 'valid' :
+					default:
+
+						$class = 'valid';
+
+						$now        = current_time( 'timestamp' );
+						$expiration = strtotime( $license->expires, current_time( 'timestamp' ) );
+
+						if( 'lifetime' === $license->expires ) {
+
+							$messages[] = __( 'License key never expires.', 'easy-digital-downloads' );
+
+							$license_status = 'license-lifetime-notice';
+
+						} elseif( $expiration > $now && $expiration - $now < ( DAY_IN_SECONDS * 30 ) ) {
+
+							$messages[] = sprintf(
+								__( 'Your license key expires soon! It expires on %s. <a href="%s" target="_blank" title="Renew license">Renew your license key</a>.', 'easy-digital-downloads' ),
+								date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
+								'https://easydigitaldownloads.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=renew'
+							);
+
+							$license_status = 'license-expires-soon-notice';
+
+						} else {
+
+							$messages[] = sprintf(
+								__( 'Your license key expires on %s.', 'easy-digital-downloads' ),
+								date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) )
+							);
+
+							$license_status = 'license-expiration-date-notice';
+
+						}
+
+						break;
+
+				}
+
+			}
+
+		} else {
+			$license_status = null;
+		}
+
 		$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
 		$html = '<input type="text" class="' . $size . '-text" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']" value="' . esc_attr( $value ) . '"/>';
 
-		if ( 'valid' == get_option( $args['options']['is_valid_license_option'] ) ) {
+		if ( ( is_object( $license ) && 'valid' == $license->license ) || 'valid' == $license ) {
 			$html .= '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __( 'Deactivate License',  'easy-digital-downloads' ) . '"/>';
 		}
-		$html .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
+		$html .= '<label for="edd_settings[' . $args['id'] . ']">'  . $args['desc'] . '</label>';
+
+		if ( ! empty( $messages ) ) {
+			foreach( $messages as $message ) {
+
+				$html .= '<div class="edd-license-data edd-license-' . $class . '">';
+					$html .= '<p>' . $message . '</p>';
+				$html .= '</div>';
+
+			}
+		}
 
 		wp_nonce_field( $args['id'] . '-nonce', $args['id'] . '-nonce' );
 
-		echo $html;
+		if ( isset( $license_status ) ) {
+			echo '<div class="' . $license_status . '">' . $html . '</div>';
+		} else {
+			echo '<div class="license-null">' . $html . '</div>';
+		}
 	}
 }
 
