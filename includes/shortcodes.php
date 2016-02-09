@@ -817,6 +817,11 @@ function edd_process_profile_editor_updates( $data ) {
 		}
 	}
 
+	$customer = new EDD_Customer( $email );
+	if( $customer->id > 0 ) {
+		$customer->update( array( 'name' => trim( $first_name . ' ' . $last_name ) ) );
+	}
+
 	// Check for errors
 	$errors = edd_get_errors();
 
