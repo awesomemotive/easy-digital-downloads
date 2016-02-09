@@ -439,6 +439,14 @@ class EDD_Stats {
 
 		if( ! is_wp_error( $date ) && false === $this->timestamp ) {
 
+			if( $end_date ) {
+
+				$second = 59;
+				$minute = 59;
+				$hour   = 23;
+
+			}
+
 			// Create an exact timestamp
 			$date = mktime( $hour, $minute, $second, $month, $day, $year );
 
