@@ -183,8 +183,19 @@ class Tests_Discounts extends WP_UnitTestCase {
 	}
 
 	public function test_increase_discount_usage() {
-		$uses = edd_increase_discount_usage( '20OFF' );
-		$this->assertSame( 55, $uses );
+		$id   = edd_get_discount_id_by_code( '20OFF' );
+		$uses = edd_get_discount_uses( $id );
+
+		$increased = edd_increase_discount_usage( '20OFF' );
+		$this->assertSame( $increased, $uses + 1 );
+	}
+
+	public function test_decrease_discount_usage() {
+		$id   = edd_get_discount_id_by_code( '20OFF' );
+		$uses = edd_get_discount_uses( $id );
+
+		$decreased = edd_decrease_discount_usage( '20OFF' );
+		$this->assertSame( $decreased, $uses - 1 );
 	}
 
 	public function test_formatted_discount_amount() {

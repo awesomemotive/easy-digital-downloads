@@ -745,7 +745,11 @@ final class EDD_Payment {
 						break;
 
 					case 'discounts':
-						$this->user_info['discount'] = $this->discounts;
+						if ( ! is_array( $this->discounts ) ) {
+							$this->discounts = explode( ',', $this->discounts );
+						}
+
+						$this->user_info['discount'] = implode( ',', $this->discounts );
 						break;
 
 					case 'address':
@@ -1439,6 +1443,9 @@ final class EDD_Payment {
 				case 'refunded':
 					$this->process_refund();
 					break;
+				case 'failed':
+					$this->process_failure();
+					break;
 			}
 
 			do_action( 'edd_update_payment_status', $this->ID, $status, $old_status );
@@ -1603,6 +1610,29 @@ final class EDD_Payment {
 		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
 
 		do_action( 'edd_post_refund_payment', $this );
+	}
+
+	/**
+	 * Process when a payment is set to failed, decrement discount usages and other stats
+	 *
+	 * @since  2.5.7
+	 * @return void
+	 */
+	private function process_failure() {
+
+		$discounts = $this->discounts;
+		if ( 'none' === $discounts || empty( $discounts ) ) {
+			return;
+		}
+
+		if ( ! is_array( $discounts ) ) {
+			$discounts = array_map( 'trim', explode( ',', $discounts ) );
+		}
+
+		foreach ( $discounts as $discount ) {
+			edd_decrease_discount_usage( $discount );
+		}
+
 	}
 
 	/**
