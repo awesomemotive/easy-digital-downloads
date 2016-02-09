@@ -371,6 +371,60 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$this->assertEquals( $new_date, $date2 );
 	}
 
+	public function test_refund_payment() {
+		$payment  = new EDD_Payment( $this->_payment_id );
+		$payment->status = 'complete';
+		$payment->save();
+
+		$download = new EDD_Download( $payment->downloads[0]['id'] );
+		$earnings = $download->earnings;
+		$sales    = $download->sales;
+
+		$store_earnings = edd_get_total_earnings();
+		$store_sales    = edd_get_total_sales();
+
+		$payment->refund();
+
+		wp_cache_flush();
+
+		$status = get_post_status( $payment->ID );
+		$this->assertEquals( 'refunded', $status );
+		$this->assertEquals( 'refunded', $payment->status );
+
+		$download2 = new EDD_Download( $download->ID );
+
+		$this->assertEquals( $earnings - $download->price, $download2->earnings );
+		$this->assertEquals( $sales - 1, $download2->sales );
+
+		$this->assertEquals( $store_earnings - $payment->total, edd_get_total_earnings() );
+		$this->assertEquals( $store_sales - 1, edd_get_total_sales() );
+	}
+
+	public function test_refund_payment_legacy() {
+		$payment  = new EDD_Payment( $this->_payment_id );
+		$payment->status = 'complete';
+		$payment->save();
+
+		$download = new EDD_Download( $payment->downloads[0]['id'] );
+		$earnings = $download->earnings;
+		$sales    = $download->sales;
+
+		edd_undo_purchase_on_refund( $payment->ID, 'refunded', 'publish' );
+
+		wp_cache_flush();
+
+		$payment = new EDD_Payment( $this->_payment_id );
+		$status  = get_post_status( $payment->ID );
+		$this->assertEquals( 'refunded', $status );
+		$this->assertEquals( 'refunded', $payment->status );
+
+		$download2 = new EDD_Download( $download->ID );
+
+		$this->assertEquals( $earnings - $download->price, $download2->earnings );
+		$this->assertEquals( $sales - 1, $download2->sales );
+
+	}
+
 	public function test_remove_with_multi_price_points_by_price_id() {
 		EDD_Helper_Payment::delete_payment( $this->_payment_id );
 
@@ -496,5 +550,84 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$this->assertEquals( 0, $payment->cart_details[2]['item_number']['options']['price_id'] );
 		$this->assertEquals( 10, $payment->cart_details[2]['item_price'] );
 
+	}
+
+	public function test_refund_affecting_stats() {
+		$payment         = new EDD_Payment( $this->_payment_id );
+		$payment->status = 'complete';
+		$payment->save();
+
+		$customer = new EDD_Customer( $payment->customer_id );
+		$download = new EDD_Download( $payment->downloads[0]['id'] );
+
+		$customer_sales    = $customer->purchase_count;
+		$customer_earnings = $customer->purchase_value;
+
+		$download_sales    = $download->sales;
+		$download_earnings = $download->earnings;
+
+		$store_earnings    = edd_get_total_earnings();
+		$store_sales       = edd_get_total_sales();
+
+		$payment->refund();
+		wp_cache_flush();
+
+		$customer = new EDD_Customer( $payment->customer_id );
+		$download = new EDD_Download( $payment->downloads[0]['id'] );
+
+		$this->assertEquals( $customer_earnings - $payment->total, $customer->purchase_value );
+		$this->assertEquals( $customer_sales - 1, $customer->purchase_count );
+
+		$this->assertEquals( $download_earnings - $payment->cart_details[0]['price'], $download->earnings );
+		$this->assertEquals( $download_sales - $payment->downloads[0]['quantity'], $download->sales );
+
+		$this->assertEquals( $store_earnings - $payment->total, edd_get_total_earnings() );
+		$this->assertEquals( $store_sales - 1, edd_get_total_sales() );
+	}
+
+	public function test_refund_without_affecting_stats() {
+		add_filter( 'edd_decrease_earnings_on_undo', '__return_false' );
+		add_filter( 'edd_decrease_sales_on_undo', '__return_false' );
+		add_filter( 'edd_decrease_customer_value_on_refund', '__return_false' );
+		add_filter( 'edd_decrease_customer_purchase_count_on_refund', '__return_false' );
+		add_filter( 'edd_decrease_store_earnings_on_refund', '__return_false' );
+
+		$payment         = new EDD_Payment( $this->_payment_id );
+		$payment->status = 'complete';
+		$payment->save();
+
+		$customer = new EDD_Customer( $payment->customer_id );
+		$download = new EDD_Download( $payment->downloads[0]['id'] );
+
+		$customer_sales    = $customer->purchase_count;
+		$customer_earnings = $customer->purchase_value;
+
+		$download_sales    = $download->sales;
+		$download_earnings = $download->earnings;
+
+		$store_earnings    = edd_get_total_earnings();
+		$store_sales       = edd_get_total_sales();
+
+		$payment->refund();
+		wp_cache_flush();
+
+		$customer = new EDD_Customer( $payment->customer_id );
+		$download = new EDD_Download( $payment->downloads[0]['id'] );
+
+		$this->assertEquals( $customer_earnings, $customer->purchase_value );
+		$this->assertEquals( $customer_sales, $customer->purchase_count );
+
+		$this->assertEquals( $download_earnings, $download->earnings );
+		$this->assertEquals( $download_sales, $download->sales );
+
+		$this->assertEquals( $store_earnings, edd_get_total_earnings() );
+		// Store sales are based off 'publish' & 'revoked' status. So it reduces this count
+		$this->assertEquals( $store_sales - 1, edd_get_total_sales() );
+
+		remove_filter( 'edd_decrease_earnings_on_undo', '__return_false' );
+		remove_filter( 'edd_decrease_sales_on_undo', '__return_false' );
+		remove_filter( 'edd_decrease_customer_value_on_refund', '__return_false' );
+		remove_filter( 'edd_decrease_customer_purchase_count_on_refund', '__return_false' );
+		remove_filter( 'edd_decrease_store_earnings_on_refund', '__return_false ' );
 	}
 }

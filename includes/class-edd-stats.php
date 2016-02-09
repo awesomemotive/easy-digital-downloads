@@ -129,9 +129,9 @@ class EDD_Stats {
 	public function convert_date( $date, $end_date = false ) {
 
 		$this->timestamp = false;
-		$second          = 0;
-		$minute          = 0;
-		$hour            = 0;
+		$second          = $end_date ? 59 : 0;
+		$minute          = $end_date ? 59 : 0;
+		$hour            = $end_date ? 23 : 0;
 		$day             = 1;
 		$month           = date( 'n', current_time( 'timestamp' ) );
 		$year            = date( 'Y', current_time( 'timestamp' ) );
@@ -178,7 +178,7 @@ class EDD_Stats {
 					$day = date( 'd', current_time( 'timestamp' ) );
 
 					if( $end_date ) {
-						$hour   = 11;
+						$hour   = 23;
 						$minute = 59;
 						$second = 59;
 					}
@@ -287,7 +287,7 @@ class EDD_Stats {
 						} else {
 							$month = 3;
 							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
-							$hour   = 11;
+							$hour   = 23;
 							$minute = 59;
 							$second = 59;
 						}
@@ -299,7 +299,7 @@ class EDD_Stats {
 						} else {
 							$month = 6;
 							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
-							$hour   = 11;
+							$hour   = 23;
 							$minute = 59;
 							$second = 59;
 						}
@@ -311,7 +311,7 @@ class EDD_Stats {
 						} else {
 							$month = 9;
 							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
-							$hour   = 11;
+							$hour   = 23;
 							$minute = 59;
 							$second = 59;
 						}
@@ -323,7 +323,7 @@ class EDD_Stats {
 						} else {
 							$month = 12;
 							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
-							$hour   = 11;
+							$hour   = 23;
 							$minute = 59;
 							$second = 59;
 						}
@@ -344,7 +344,7 @@ class EDD_Stats {
 							$year -= 1;
 							$month = 12;
 							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
-							$hour   = 11;
+							$hour   = 23;
 							$minute = 59;
 							$second = 59;
 						}
@@ -356,7 +356,7 @@ class EDD_Stats {
 						} else {
 							$month = 3;
 							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
-							$hour   = 11;
+							$hour   = 23;
 							$minute = 59;
 							$second = 59;
 						}
@@ -368,7 +368,7 @@ class EDD_Stats {
 						} else {
 							$month = 6;
 							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
-							$hour   = 11;
+							$hour   = 23;
 							$minute = 59;
 							$second = 59;
 						}
@@ -380,7 +380,7 @@ class EDD_Stats {
 						} else {
 							$month = 9;
 							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
-							$hour   = 11;
+							$hour   = 23;
 							$minute = 59;
 							$second = 59;
 						}
@@ -396,7 +396,7 @@ class EDD_Stats {
 					} else {
 						$month  = 12;
 						$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
-						$hour   = 11;
+						$hour   = 23;
 						$minute = 59;
 						$second = 59;
 					}
@@ -411,7 +411,7 @@ class EDD_Stats {
 					} else {
 						$month  = 12;
 						$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
-						$hour   = 11;
+						$hour   = 23;
 						$minute = 59;
 						$second = 59;
 					}
@@ -437,7 +437,7 @@ class EDD_Stats {
 
 		}
 
-		if( ! is_wp_error( $date ) && false === $this->timestamp ) {
+		if( ! is_wp_error( $end_date ) && false === $this->timestamp ) {
 
 			// Create an exact timestamp
 			$date = mktime( $hour, $minute, $second, $month, $day, $year );

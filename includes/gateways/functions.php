@@ -255,8 +255,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 	);
 
 	if( is_user_logged_in() ) {
-		global $current_user;
-		get_currentuserinfo();
+		$current_user = wp_get_current_user();
 	}
 
 
