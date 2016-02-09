@@ -460,9 +460,9 @@ function edd_get_highest_price_option( $download_id = 0 ) {
 function edd_price_range( $download_id = 0 ) {
 	$low   = edd_get_lowest_price_option( $download_id );
 	$high  = edd_get_highest_price_option( $download_id );
-	$range = '<span class="edd_price_range_low">' . edd_currency_filter( edd_format_amount( $low ) ) . '</span>';
+	$range = '<span class="edd_price edd_price_range_low" id="edd_price_low_' . $download_id . '">' . edd_currency_filter( edd_format_amount( $low ) ) . '</span>';
 	$range .= '<span class="edd_price_range_sep">&nbsp;&ndash;&nbsp;</span>';
-	$range .= '<span class="edd_price_range_high">' . edd_currency_filter( edd_format_amount( $high ) ) . '</span>';
+	$range .= '<span class="edd_price edd_price_range_high" id="edd_price_high_' . $download_id . '">' . edd_currency_filter( edd_format_amount( $high ) ) . '</span>';
 
 	return apply_filters( 'edd_price_range', $range, $download_id, $low, $high );
 }
