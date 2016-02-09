@@ -1190,6 +1190,29 @@ function edd_validate_url_token( $url = '' ) {
 
 		wp_parse_str( $parts['query'], $query_args );
 
+		// These are the only URL parameters that are allowed to affect the token validation
+		$allowed = apply_filters( 'edd_url_token_allowed_params', array(
+			'eddfile',
+			'file',
+			'ttl',
+			'token'
+		) );
+
+		// Parameters that will be removed from the URL before testing the token
+		$remove = array();
+
+		foreach( $query_args as $key => $value ) {
+			if( false === in_array( $key, $allowed ) ) {
+				$remove[] = $key;
+			}
+		}
+
+		if( ! empty( $remove ) ) {
+
+			$url = remove_query_arg( $remove, $url );
+
+		}
+
 		if ( isset( $query_args['ttl'] ) && current_time( 'timestamp' ) > $query_args['ttl'] ) {
 
 			wp_die( apply_filters( 'edd_download_link_expired_text', __( 'Sorry but your download link has expired.', 'easy-digital-downloads' ) ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
