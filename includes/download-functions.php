@@ -1191,12 +1191,12 @@ function edd_validate_url_token( $url = '' ) {
 		wp_parse_str( $parts['query'], $query_args );
 
 		// These are the only URL parameters that are allowed to affect the token validation
-		$allowed = array(
+		$allowed = apply_filters( 'edd_url_token_allowed_params', array(
 			'eddfile',
 			'file',
 			'ttl',
 			'token'
-		);
+		) );
 
 		// Parameters that will be removed from the URL before testing the token
 		$remove = array();
