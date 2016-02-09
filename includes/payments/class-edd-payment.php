@@ -623,11 +623,10 @@ final class EDD_Payment {
 									if ( 'publish' === $this->status || 'complete' === $this->status || 'revoked' === $this->status ) {
 
 										// Add sales logs
-										$log_date =  date( 'Y-m-d G:i:s', current_time( 'timestamp', true ) );
+										$log_date =  date_i18n( 'Y-m-d G:i:s', current_time( 'timestamp' ) );
 										$price_id = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : 0;
 
 										$y = 0;
-
 										while ( $y < $item['quantity'] ) {
 											edd_record_sale_in_log( $item['id'], $this->ID, $price_id, $log_date );
 											$y++;
