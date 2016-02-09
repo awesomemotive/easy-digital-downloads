@@ -461,7 +461,7 @@ class EDD_API {
 		$error['error'] = __( 'Your request could not be authenticated!', 'easy-digital-downloads' );
 
 		$this->data = $error;
-		$this->output( 401 );
+		$this->output( 403 );
 	}
 
 	/**
@@ -479,7 +479,7 @@ class EDD_API {
 		$error['error'] = __( 'Invalid API key!', 'easy-digital-downloads' );
 
 		$this->data = $error;
-		$this->output( 401 );
+		$this->output( 403 );
 	}
 
 	/**
@@ -652,7 +652,8 @@ class EDD_API {
 			$error['error'] = __( 'Invalid query!', 'easy-digital-downloads' );
 
 			$this->data = $error;
-			$this->output();
+			// 400 is Bad Request
+			$this->output( 400 );
 		}
 
 		$this->endpoint = $query;
