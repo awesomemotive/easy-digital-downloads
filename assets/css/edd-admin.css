@@ -20,11 +20,13 @@ a.edd-delete:hover { color: #f00; }
 .download_page_edd-settings .form-table input.regular-text ~ label { display:block; }
 .download_page_edd-settings .form-table input.small-text ~ label,
 .download_page_edd-settings .form-table input[type="checkbox"] + label { display: inline; }
-.download_page_edd-settings .form-table tr > th > strong { font-size: 18px; font-style: italic; }
+.download_page_edd-settings .form-table tr > th > strong,
+.download_page_edd-settings .form-table tr > th > h3
+{ font-size: 1.2em; font-weight: 600; margin: 0 auto; }
 
 /* =Add Ons Styles
 -------------------------------------------------------------- */
-.edd-tab-span { float: right; bottom: 15px; position: relative; }
+.edd-tab-span { float: right; bottom: 13px; position: relative; }
 .edd-add-ons-footer { padding-top: 10px; }
 #edd-add-ons h2 { margin: 0 0 15px; }
 #edd-add-ons h2 .button-primary { position: absolute; }
@@ -105,7 +107,7 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 /* Payment Details
 -------------------------------------------------------------- */
 .edd-admin-box .label { font-weight: 600; }
-.edd-admin-box-inside { margin: 0; padding: 3px 12px; clear: both; border-bottom: 1px solid #eee; }
+.edd-admin-box-inside { margin: 0; padding: 3px 12px; clear: both; border-bottom: 1px solid #eee; word-break: break-word; }
 .rtl .edd-admin-box-inside { padding: 5px 10px 5px 0; }
 .edd-admin-box-inside .strong { font-weight: 600; }
 .edd-payment-fees .fee-label { font-weight: normal; color: #666; }
@@ -203,8 +205,11 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 }
 
 /** Stats */
-#edd_product_stats .label { width: 70px; display: inline-block; }
+#edd_product_stats .label { display: inline-block; }
 #edd_product_stats hr { border-style: solid; border-width: 1px; border-color: #ccc #fff #fff #ccc; }
+#edd_product_stats .product-sales-stats:before, #edd_product_stats .product-earnings-stats:before { color: #82878c; font: normal 20px/1 'dashicons'; speak: none; display: inline-block; padding: 0 2px 0 0; top: 0; left: -1px; position: relative; vertical-align: top; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-decoration: none !important; }
+#edd_product_stats .product-sales-stats:before { content: '\f174'; }
+#edd_product_stats .product-earnings-stats:before { content: '\f239'; }
 
 /* Dashboard Widget Styles
 -------------------------------------------------------------- */
@@ -247,7 +252,7 @@ td.edd_order_price { text-align: right; }
 #edd-graphs-filter label { vertical-align: inherit; }
 #edd-graphs-filter .graph-option-section { float: left; line-height: 2.5em; padding-right: 5px; }
 .edd-mix-totals { padding: 10px; background-color: #fff; box-shadow: 0 1px 1px rgba(0,0,0,0.04); border: 1px solid #e5e5e5; }
-.edd-mix-chart { display: inline-block; width: 49%; }
+.edd-mix-chart { display: inline-block; width: 49%; vertical-align: top; }
 .edd-graph-notes { color: #9c9c9c; }
 .edd-graph-notes span { display: block; }
 .edd-pie-graph .legend { display: none; }
@@ -268,6 +273,17 @@ td.edd_order_price { text-align: right; }
 #edd_tax_rates .edd_tax_state { width: 180px; }
 #edd_tax_rates .edd_tax_rate { width: 80px; }
 #edd_tax_rates th { padding: 15px 10px; }
+[class^="license-"] { padding: 10px; }
+[class^="license-"] input[type="text"] { margin-right: 3px; }
+.license-error-notice,
+.license-expires-soon-notice { background-color: #fff; padding: 10px; border-left: 4px solid #7ad03a; overflow: auto; -webkit-box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 ); box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 ); }
+.license-error-notice { border-left: 4px solid #dd3d36; }
+.license-lifetime-notice,
+.license-expiration-date-notice,
+.license-null { padding: 0 0 0 14px; }
+.license-lifetime-notice .edd-license-data p,
+.license-expiration-date-notice .edd-license-data p { color: #666; font-size: 14px; font-style: italic; margin: 4px 0 0; }
+div[class^="license-"] .edd-license-data p { margin-left: 4px; }
 
 /* Taxonomy styles
 -------------------------------------------------------------- */
@@ -324,21 +340,28 @@ td.edd_order_price { text-align: right; }
 	.download_page_edd-tools .apikeys .column-user {
 		width: 80px;
 	}
-
+	.license-lifetime-notice,
+	.license-expiration-date-notice,
+	.license-null {
+		padding-left: 0;
+	}
+	[class^="license-"] input[type="text"] {
+		margin-bottom: 3px;
+	}
 }
 
 /* Customer Styles
 -------------------------------------------------------------- */
-#customer-tab-wrapper { margin-left: -1px; z-index: 1; text-align: center; display: inline-block; }
-#customer-tab-wrapper-list li { background-color: #fff; width: 32px; height: 32px; }
-#customer-tab-wrapper-list .inactive { background-color: #fff; color: #eee; border-left: 1px solid #e5e5e5; }
-#customer-tab-wrapper-list .active { border-width: 1px 1px 1px 0; border-style: solid; border-color: #e5e5e5; }
-#customer-tab-wrapper-list :not(:last-child) { margin-bottom: 3px; }
-#customer-tab-wrapper-list .dashicons { font-size: 24px; line-height: 32px; }
-#edd-customer-card-wrapper .left { float: left; }
-#edd-customer-card-wrapper .right { float: right; }
-#edd-customer-card-wrapper input { font-weight: normal; }
-#edd-customer-card-wrapper {
+#edd-item-tab-wrapper { margin-left: -1px; z-index: 1; text-align: center; display: inline-block; }
+#edd-item-tab-wrapper-list li { background-color: #fff; width: 32px; height: 32px; }
+#edd-item-tab-wrapper-list .inactive { background-color: #fff; color: #eee; border-left: 1px solid #e5e5e5; }
+#edd-item-tab-wrapper-list .active { border-width: 1px 1px 1px 0; border-style: solid; border-color: #e5e5e5; }
+#edd-item-tab-wrapper-list :not(:last-child) { margin-bottom: 3px; }
+#edd-item-tab-wrapper-list .dashicons { font-size: 24px; line-height: 32px; }
+#edd-item-card-wrapper .left { float: left; }
+#edd-item-card-wrapper .right { float: right; }
+#edd-item-card-wrapper input { font-weight: normal; }
+#edd-item-card-wrapper {
 	display: inline-block;
 	margin-left: -1px;
 	z-index: 2;
@@ -349,41 +372,46 @@ td.edd_order_price { text-align: right; }
 	webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
 	box-shadow: 0 1px 1px rgba(0,0,0,0.04);
 }
-#edd-customer-card-wrapper .customer-section { border-bottom: 1px solid #eee; margin-bottom: 10px; overflow: auto; }
-#edd-customer-card-wrapper .customer-section table { margin-bottom: 20px; }
-#edd-customer-card-wrapper > div { padding: 0px 20px; }
-#edd-customer-card-wrapper > div:first-child { padding-top: 20px; }
-#edd-customer-card-wrapper > div:last-child { padding-bottom: 20px; border: none; }
-#edd-customer-card-wrapper .avatar-wrap { padding-right: 10px; text-align: center; }
-#edd-customer-card-wrapper .customer-id { font-size: 24px; font-weight: 600; }
-#edd-customer-card-wrapper .customer-main-wrapper input { width: 200px; }
-#edd-customer-card-wrapper .customer-address-wrapper { max-width: 33%; margin-right: 25px; width: 202px; }
-#edd-customer-card-wrapper .customer-address-wrapper select { width: 200px;}
-#edd-customer-card-wrapper .customer-info { margin-top: 5px; min-height: 185px; margin-bottom: 10px; }
-#edd-customer-card-wrapper .info-wrapper { min-height: 125px; }
-#edd-customer-card-wrapper a.delete { text-decoration: none; color: #ff0000; margin-right: 5px; }
+#edd-item-card-wrapper .customer-section { border-bottom: 1px solid #eee; margin-bottom: 10px; overflow: auto; }
+#edd-item-card-wrapper .customer-section table { margin-bottom: 20px; }
+#edd-item-card-wrapper > div { padding: 0px 20px; }
+#edd-item-card-wrapper > div:first-child { padding-top: 20px; }
+#edd-item-card-wrapper > div:last-child { padding-bottom: 20px; border: none; }
+#edd-item-card-wrapper .avatar-wrap { padding-right: 10px; text-align: center; }
+#edd-item-card-wrapper .customer-id { font-size: 24px; font-weight: 600; }
+#edd-item-card-wrapper .customer-main-wrapper input { width: 200px; }
+#edd-item-card-wrapper .customer-address-wrapper { max-width: 33%; margin-right: 25px; width: 202px; }
+#edd-item-card-wrapper .customer-address-wrapper select { width: 200px;}
+#edd-item-card-wrapper .customer-info { margin-top: 5px; min-height: 185px; margin-bottom: 10px; }
+#edd-item-card-wrapper .info-wrapper { min-height: 125px; overflow: visible; }
+#edd-item-card-wrapper a.delete { text-decoration: none; color: #ff0000; margin-right: 5px; }
 .customer-info .customer-name { font-size: 24px; font-weight: 600; }
 .customer-edit-link a, .disconnect-user a { font-size: 12px; font-weight: normal; text-decoration: none; }
 #customer-edit-actions { text-align: center; margin-bottom: 20px; line-height: 28px; }
 #customer-edit-actions .button-secondary { margin-right: 10px; }
-#edd-customer-card-wrapper .info-item { line-height: 16px; display: block; padding-bottom: 5px; }
-#edd-customer-card-wrapper .edit-item { display: none; }
-#edd-customer-card-wrapper .edd_user_search_results { left: 1px; top: 16px;}
-#edd-customer-card-wrapper .edd_user_search_results ul { width: 200px }
-#customer-stats-wrapper { margin: 0 auto; text-align: center; min-height: 30px; }
-#customer-stats-wrapper li { width: 50%; float: left; line-height: 22px; font-size: 14px; }
-#customer-stats-wrapper a { text-decoration: none; }
-#customer-stats-wrapper .dashicons { color: #888; }
-#customer-tables-wrapper table { width: 100%; text-align: center; }
-#customer-tables-wrapper th { text-align: center; }
-#customer-tables-wrapper .downloads tr > th:first-child, #customer-tables-wrapper .downloads tr > td:first-child { text-align: left; }
-#customer-tables-wrapper .downloads tr > td:only-child { text-align: center; }
-#customer-notes-wrapper { min-height: 50px; }
-.customer-notes-header span, .customer-notes-header img { font-weight: 600; line-height: 30px; vertical-align: middle; }
+#edd-item-card-wrapper .info-item { line-height: 16px; display: block; padding-bottom: 5px; }
+#edd-item-card-wrapper .edit-item { display: none; }
+#edd-item-card-wrapper .edd_user_search_results { left: 1px; top: 16px;}
+#edd-item-card-wrapper .edd_user_search_results ul { width: 200px }
+#edd-item-stats-wrapper { margin: 0 auto; text-align: center; min-height: 30px; }
+#edd-item-stats-wrapper li { width: 50%; float: left; line-height: 22px; font-size: 14px; }
+#edd-item-stats-wrapper a { text-decoration: none; }
+#edd-item-stats-wrapper .dashicons { color: #888; }
+#edd-item-tables-wrapper table { width: 100%; text-align: center; }
+#edd-item-tables-wrapper th { text-align: center; }
+#edd-item-tables-wrapper .downloads tr > th:first-child, #edd-item-tables-wrapper .downloads tr > td:first-child { text-align: left; }
+#edd-item-tables-wrapper .downloads tr > td:only-child { text-align: center; }
+#edd-item-notes-wrapper { min-height: 50px; }
+.edd-item-notes-header span, .edd-item-notes-header img { font-weight: 600; line-height: 30px; vertical-align: middle; }
 .customer-note-input { width: 100%; margin-bottom: 5px; }
 #edd-customer-notes div:nth-of-type(even) { background-color: #fcfcfc; }
 .customer-note-wrapper { border-bottom: 1px solid #f9f9f9; min-height: 38px; padding: 7px 0 7px 7px; }
 .customer-note-wrapper span { display: block; }
 .note-content-wrap { padding-top: 7px; }
 .delete-customer { text-align: center; }
+#edd-item-card-wrapper .notice-wrap { margin-left: -20px; margin-right: -20px; padding-left: 20px; padding-right: 20px; }
 
+/* Tools Styles
+-------------------------------------------------------------- */
+.recount-stats-controls form { display: inline; }
+.edd-recount-stats-descriptions span { line-height: 24px; display: none; }

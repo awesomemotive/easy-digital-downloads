@@ -71,6 +71,12 @@ function edd_process_add_to_cart( $data ) {
 		$options['quantity'] = absint( $data['edd_download_quantity'] );
 	}
 
+	if ( isset( $options['price_id'] ) && is_array( $options['price_id'] ) ) {
+		foreach ( $options['price_id'] as  $key => $price_id ) {
+			$options['quantity'][ $key ] = isset( $data[ 'edd_download_quantity_' . $price_id ] ) ? absint( $data[ 'edd_download_quantity_' . $price_id ] ) : 1;
+		}
+	}
+
 	$cart        = edd_add_to_cart( $download_id, $options );
 
 	if ( edd_straight_to_checkout() && ! edd_is_checkout() ) {

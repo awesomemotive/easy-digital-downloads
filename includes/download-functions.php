@@ -365,6 +365,48 @@ function edd_get_lowest_price_option( $download_id = 0 ) {
 }
 
 /**
+ * Retrieves the ID for the cheapest price option of a variable priced download
+ *
+ * @since 2.2
+ * @param int $download_id ID of the download
+ * @return int ID of the lowest price
+ */
+function edd_get_lowest_price_id( $download_id = 0 ) {
+	if ( empty( $download_id ) )
+		$download_id = get_the_ID();
+
+	if ( ! edd_has_variable_prices( $download_id ) ) {
+		return edd_get_download_price( $download_id );
+	}
+
+	$prices = edd_get_variable_prices( $download_id );
+
+	$low = 0.00;
+
+	if ( ! empty( $prices ) ) {
+
+		foreach ( $prices as $key => $price ) {
+
+			if ( empty( $price['amount'] ) ) {
+				continue;
+			}
+
+			if ( ! isset( $min ) ) {
+				$min = $price['amount'];
+			} else {
+				$min = min( $min, $price['amount'] );
+			}
+
+			if ( $price['amount'] == $min ) {
+				$min_id = $key;
+			}
+		}
+	}
+
+	return (int) $min_id;
+}
+
+/**
  * Retrieves most expensive price option of a variable priced download
  *
  * @since 1.4.4
@@ -418,9 +460,9 @@ function edd_get_highest_price_option( $download_id = 0 ) {
 function edd_price_range( $download_id = 0 ) {
 	$low   = edd_get_lowest_price_option( $download_id );
 	$high  = edd_get_highest_price_option( $download_id );
-	$range = '<span class="edd_price_range_low">' . edd_currency_filter( edd_format_amount( $low ) ) . '</span>';
+	$range = '<span class="edd_price edd_price_range_low" id="edd_price_low_' . $download_id . '">' . edd_currency_filter( edd_format_amount( $low ) ) . '</span>';
 	$range .= '<span class="edd_price_range_sep">&nbsp;&ndash;&nbsp;</span>';
-	$range .= '<span class="edd_price_range_high">' . edd_currency_filter( edd_format_amount( $high ) ) . '</span>';
+	$range .= '<span class="edd_price edd_price_range_high" id="edd_price_high_' . $download_id . '">' . edd_currency_filter( edd_format_amount( $high ) ) . '</span>';
 
 	return apply_filters( 'edd_price_range', $range, $download_id, $low, $high );
 }
@@ -934,12 +976,13 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $p
 	);
 
 	$params  = apply_filters( 'edd_download_file_url_args', $old_args );
-
 	$payment = edd_get_payment_by( 'key', $params['download_key'] );
 
 	if ( ! $payment ) {
 		return false;
 	}
+
+	$args = array();
 
 	if ( ! empty( $payment->ID ) ) {
 
@@ -958,10 +1001,10 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $p
 		$args = apply_filters( 'edd_get_download_file_url_args', $args, $payment->ID, $params );
 
 		$args['file']  = $params['file'];
-		$args['token'] = edd_get_download_token( add_query_arg( $args, untrailingslashit( home_url() ) ) );
+		$args['token'] = edd_get_download_token( add_query_arg( $args, untrailingslashit( site_url() ) ) );
 	}
 
-	$download_url = add_query_arg( $args, home_url( 'index.php' ) );
+	$download_url = add_query_arg( $args, site_url( 'index.php' ) );
 
 	return $download_url;
 }

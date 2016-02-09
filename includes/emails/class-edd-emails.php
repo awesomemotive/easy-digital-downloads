@@ -293,9 +293,10 @@ class EDD_Emails {
 
 		$attachments = apply_filters( 'edd_email_attachments', $attachments, $this );
 
-		$sent = wp_mail( $to, $subject, $message, $this->get_headers(), $attachments );
+		$sent       = wp_mail( $to, $subject, $message, $this->get_headers(), $attachments );
+		$log_errors = apply_filters( 'edd_log_email_errors', true, $to, $subject, $message );
 
-		if( ! $sent ) {
+		if( ! $sent && true === $log_errors ) {
 			if ( is_array( $to ) ) {
 				$to = implode( ',', $to );
 			}
