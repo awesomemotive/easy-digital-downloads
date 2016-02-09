@@ -1804,6 +1804,10 @@ class EDD_API {
 
 		}
 
+		if ( empty( $args['user_id'] ) ) {
+			wp_die( sprintf( __( 'User ID Required', 'easy-digital-downloads' ), $process ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 401 ) );
+		}
+
 		if( is_numeric( $args['user_id'] ) ) {
 			$user_id    = isset( $args['user_id'] ) ? absint( $args['user_id'] ) : get_current_user_id();
 		} else {
