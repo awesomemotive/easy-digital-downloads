@@ -75,9 +75,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	 * @return string Column Name
 	 */
 	public function column_default( $item, $column_name ) {
-		$return = '';
-		// Use the currency associated with the payment from which each item is
-		// extracted
+		$return   = '';
 		$currency = $item['currency'];
 
 		switch ( $column_name ){

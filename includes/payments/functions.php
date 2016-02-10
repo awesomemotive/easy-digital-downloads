@@ -949,9 +949,6 @@ function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files =
 	if ( ! empty( $cart_details ) && is_array( $cart_details ) ) {
 
 		foreach ( $cart_details as $key => $cart_item ) {
-			// Carry the currency with each item, it's necessary to identify the amounts
-			// correctly (the currency it's an attribute of the payment, but we don'
-			// t have the parent payment in the returned array)
 			$cart_details[ $key ]['currency'] = $payment_currency;
 
 			// Ensure subtotal is set, for pre-1.9 orders
