@@ -1025,7 +1025,7 @@ function edd_decrease_discount_usage( $code ) {
 	}
 
 	if ( $uses < 0 ) {
-		$users = 0;
+		$uses = 0;
 	}
 
 	update_post_meta( $id, '_edd_discount_uses', $uses );
