@@ -363,7 +363,8 @@ class EDD_HTML_Elements {
 			$placeholder = '';
 		}
 
-		$output = '<select name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( sanitize_key( str_replace( '-', '_', $args['id'] ) ) ) . '" class="edd-select ' . esc_attr( $args['class'] ) . '"' . $multiple . ' data-placeholder="' . $placeholder . '"'. $data_elements . '>';
+		$class  = implode( ' ', array_map( 'sanitize_html_class', explode( ' ', $args['class'] ) ) );
+		$output = '<select name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( sanitize_key( str_replace( '-', '_', $args['id'] ) ) ) . '" class="edd-select ' . $class . '"' . $multiple . ' data-placeholder="' . $placeholder . '"'. $data_elements . '>';
 
 		if ( $args['show_option_all'] ) {
 			if( $args['multiple'] ) {
@@ -424,6 +425,7 @@ class EDD_HTML_Elements {
 
 		$args = wp_parse_args( $args, $defaults );
 
+		$class = implode( ' ', array_map( 'sanitize_html_class', explode( ' ', $args['class'] ) ) );
 		$options = '';
 		if ( ! empty( $args['options']['disabled'] ) ) {
 			$options .= ' disabled="disabled"';
@@ -431,7 +433,7 @@ class EDD_HTML_Elements {
 			$options .= ' readonly';
 		}
 
-		$output = '<input type="checkbox"' . $options . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['name'] ) . '" class="' . $args['class'] . ' ' . esc_attr( $args['name'] ) . '" ' . checked( 1, $args['current'], false ) . ' />';
+		$output = '<input type="checkbox"' . $options . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['name'] ) . '" class="' . $class . ' ' . esc_attr( $args['name'] ) . '" ' . checked( 1, $args['current'], false ) . ' />';
 
 		return $output;
 	}
@@ -470,6 +472,7 @@ class EDD_HTML_Elements {
 
 		$args = wp_parse_args( $args, $defaults );
 
+		$class = implode( ' ', array_map( 'sanitize_html_class', explode( ' ', $args['class'] ) ) );
 		$disabled = '';
 		if( $args['disabled'] ) {
 			$disabled = ' disabled="disabled"';
@@ -478,7 +481,7 @@ class EDD_HTML_Elements {
 		$data = '';
 		if ( ! empty( $args['data'] ) ) {
 			foreach ( $args['data'] as $key => $value ) {
-				$data .= 'data-' . $key . '="' . $value . '" ';
+				$data .= 'data-' . sanitize_key( $key ) . '="' . esc_attr( $value ) . '" ';
 			}
 		}
 
@@ -490,7 +493,7 @@ class EDD_HTML_Elements {
 				$output .= '<span class="edd-description">' . esc_html( $args['desc'] ) . '</span>';
 			}
 
-			$output .= '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] )  . '" autocomplete="' . esc_attr( $args['autocomplete'] )  . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="' . $args['class'] . '" ' . $data . '' . $disabled . '/>';
+			$output .= '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] )  . '" autocomplete="' . esc_attr( $args['autocomplete'] )  . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="' . $class . '" ' . $data . '' . $disabled . '/>';
 
 		$output .= '</span>';
 
@@ -535,6 +538,7 @@ class EDD_HTML_Elements {
 
 		$args = wp_parse_args( $args, $defaults );
 
+		$class = implode( ' ', array_map( 'sanitize_html_class', explode( ' ', $args['class'] ) ) );
 		$disabled = '';
 		if( $args['disabled'] ) {
 			$disabled = ' disabled="disabled"';
@@ -542,9 +546,9 @@ class EDD_HTML_Elements {
 
 		$output = '<span id="edd-' . sanitize_key( $args['name'] ) . '-wrap">';
 
-			$output .= '<label class="edd-label" for="edd-' . sanitize_key( $args['name'] ) . '">' . esc_html( $args['label'] ) . '</label>';
+			$output .= '<label class="edd-label" for="' . sanitize_key( $args['name'] ) . '">' . esc_html( $args['label'] ) . '</label>';
 
-			$output .= '<textarea name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['name'] ) . '" class="' . $args['class'] . '"' . $disabled . '>' . esc_attr( $args['value'] ) . '</textarea>';
+			$output .= '<textarea name="' . esc_attr( $args['name'] ) . '" id="' . sanitize_key( $args['name'] ) . '" class="' . $class . '"' . $disabled . '>' . esc_attr( $args['value'] ) . '</textarea>';
 
 			if ( ! empty( $args['desc'] ) ) {
 				$output .= '<span class="edd-description">' . esc_html( $args['desc'] ) . '</span>';
