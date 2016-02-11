@@ -425,7 +425,7 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 			$price_args = array(
 				'name'  => 'edd_variable_prices[' . $key . '][amount]',
 				'value' => $args['amount'],
-				'placeholder' => '9.99',
+				'placeholder' => edd_format_amount( 9.99 ),
 				'class' => 'edd-price-field'
 			);
 		?>

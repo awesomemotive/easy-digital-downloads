@@ -6,7 +6,7 @@ Donate link: https://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 4.0
 Tested up to: 4.5
-Stable Tag: 2.5.3
+Stable Tag: 2.5.7
 
 License: GNU Version 2 or Any Later Version
 
@@ -213,6 +213,63 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.5.7, February 10, 2016 =
+
+* New: Added refund() method to EDD_Payment class
+* New: Added filters to enable/disable product and customer stat adjustments during refunds
+* New: Addded new hooks to EDD_Payment class that run before payment is setup
+* Tweak: Improved taxonomy labels for categories and tags
+* Tweak: Automatically flush permalinks when a 404 is detected on EDD archive pages
+* Tweak: Add proper 403 headers to REST API
+* Tweak: Removed usage of soon-to-be-deprecated function get_currentuserinfo()
+* Tweak: Improved CSS formatting for edd.css
+* Tweak: Improved label/field HTML markup on checkout
+* Fix: Store earnings reports can cause memory problems when store has only 0.00 sales
+* Fix: Incorrect query arguments when redirecting back to checkout with ?payment-mode if query args are already present
+* Fix: Maybe unserialize user_info array in EDD_Payment
+* Fix: Recalculate Totals button ignores item quantities
+* Fix: Incorrect item price stored in sales log when adding item to existing payment
+* Fix: .jpeg files blocked by .htaccess file
+* Fix: Product search on customer export returns customer names instead of products
+* Fix: Editing items on payment do not save properly in some instances
+* Fix: File download links fail with qTranslate-X plugin active
+* Fix: Admin notice about expired and invalid keys should show only to site admins
+* Fix: Cart widget cannot be shown on checkout screen
+* Fix: Incorrect date format when viewing Last Week report
+* Fix: PHP notice when sending test payment receipt
+* Fix: edit_date not passed in when updating payment record
+* Fix: Unneeded product query on discount add/edit screen
+* Fix: Profile editor does not update customer name
+* Fix: Price not formatted in placeholder for price field
+* Fix: Unnecessary paragraph tags inside of form elements on Export screen
+* Fix: Payments list filters are off by one day
+* Fix: File download links break if UTM variables are added to them
+* Fix: pagination=false parameter in [downloads] shortcode does not work
+* Fix: Coupon code use count not decremented when payment marked as failed
+* Fix: Username field not validated before submitting form to generate new API key
+* Fix: Download Details widget requires settings to be saved before it displays
+
+= 2.5.6, January 13, 2016 =
+
+* Fix: Payment dates recorded with incorrect dates depending on the timezone selected in settings
+* Fix: Download links missing from purchase receipts for some sites
+
+= 2.5.5, January 12, 2016 =
+
+* Fix: Timezones still not set properly for some sites. This resulted in download links missing from purchase receipts.
+
+= 2.5.4, January 12, 2016 =
+
+* Fix: Timezones set improperly sometimes when payments are created
+* Fix: PHP notices in edd_process_add_to_cart() when AJAX is disabled
+* Fix: PHP warning in Recount Single Customer Stats tool
+* Fix: Payment date cannot be changed in the admin
+* Fix: Currency code not properly returned if payment is missing currency metadata
+* Fix: "Sorry trouble retrieving payment receipt" error shown occasionally
+* Fix: Sanitization process for settings breaks some extension's settings
+* Fix: Download links blank for some customers
+* Fix: Prevent default placeholder from showing as an option in multi-select fields
 
 = 2.5.3, January 9, 2016 =
 
