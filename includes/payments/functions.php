@@ -148,7 +148,7 @@ function edd_insert_payment( $payment_data = array() ) {
 	$gateway = empty( $gateway ) && isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : $gateway;
 
 	$payment->status         = ! empty( $payment_data['status'] ) ? $payment_data['status'] : 'pending';
-	$payment->currency       = $payment_data['currency'];
+	$payment->currency       = ! empty( $payment_data['currency'] ) ? $payment_data['currency'] : edd_get_currency();
 	$payment->user_info      = $payment_data['user_info'];
 	$payment->gateway        = $gateway;
 	$payment->user_id        = $payment_data['user_info']['id'];
@@ -162,10 +162,8 @@ function edd_insert_payment( $payment_data = array() ) {
 	$payment->parent_payment = ! empty( $payment_data['parent'] ) ? absint( $payment_data['parent'] ) : '';
 	$payment->discounts      = ! empty( $payment_data['user_info']['discount'] ) ? $payment_data['user_info']['discount'] : array();
 
-	if ( ! empty( $payment_data['date'] ) ) {
-		$payment->date       = $payment_data['date'];
-	} elseif ( ! empty( $payment_data['post_date'] ) ) {
-		$payment->date       = $payment_data['post_date'];
+	if ( isset( $payment_data['post_date'] ) ) {
+		$payment->date = $payment_data['post_date'];
 	}
 
 	if ( edd_get_option( 'enable_sequential' ) ) {
@@ -225,15 +223,9 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
 	global $edd_logs;
 
 	$payment   = new EDD_Payment( $payment_id );
-	$downloads = $payment->downloads;
 
-	if ( is_array( $downloads ) ) {
-		// Update sale counts and earnings for all purchased products
-		foreach ( $downloads as $download ) {
-			edd_undo_purchase( $download['id'], $payment_id );
-		}
-	}
-
+	// Update sale counts and earnings for all purchased products
+	edd_undo_purchase( false, $payment_id );
 
 	$amount      = edd_get_payment_amount( $payment_id );
 	$status      = $payment->post_status;
@@ -305,7 +297,17 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
  * @param int $payment_id Payment ID
  * @return void
  */
-function edd_undo_purchase( $download_id, $payment_id ) {
+function edd_undo_purchase( $download_id = false, $payment_id ) {
+
+	/**
+	 * In 2.5.7, a bug was found that $download_id was an incorrect usage. Passing it in
+	 * now does nothing, but we're holding it in place for legacy support of the argument order.
+	 */
+
+	if ( ! empty( $download_id ) ) {
+		$download_id = false;
+		_edd_deprected_argument( 'download_id', 'edd_undo_purchase', '2.5.7' );
+	}
 
 	$payment = new EDD_Payment( $payment_id );
 
@@ -322,24 +324,30 @@ function edd_undo_purchase( $download_id, $payment_id ) {
 			// Decrease earnings/sales and fire action once per quantity number
 			for( $i = 0; $i < $item['quantity']; $i++ ) {
 
- 				// variable priced downloads
-				if ( false === $amount && edd_has_variable_prices( $download_id ) ) {
+				// variable priced downloads
+				if ( false === $amount && edd_has_variable_prices( $item['id'] ) ) {
 					$price_id = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
-					$amount   = ! isset( $item['price'] ) && 0 !== $item['price'] ? edd_get_price_option_amount( $download_id, $price_id ) : $item['price'];
+					$amount   = ! isset( $item['price'] ) && 0 !== $item['price'] ? edd_get_price_option_amount( $item['id'], $price_id ) : $item['price'];
 				}
 
- 				if ( ! $amount ) {
- 					// This function is only used on payments with near 1.0 cart data structure
- 					$amount = edd_get_download_final_price( $download_id, $user_info, $amount );
- 				}
+				if ( ! $amount ) {
+					// This function is only used on payments with near 1.0 cart data structure
+					$amount = edd_get_download_final_price( $item['id'], $user_info, $amount );
+				}
 
 			}
 
-			// decrease earnings
-			edd_decrease_earnings( $download_id, $amount );
+			$maybe_decrease_earnings = apply_filters( 'edd_decrease_earnings_on_undo', true, $payment, $item['id'] );
+			if ( true === $maybe_decrease_earnings ) {
+				// decrease earnings
+				edd_decrease_earnings( $item['id'], $amount );
+			}
 
-			// decrease purchase count
-			edd_decrease_purchase_count( $download_id, $item['quantity'] );
+			$maybe_decrease_sales = apply_filters( 'edd_decrease_sales_on_undo', true, $payment, $item['id'] );
+			if ( true === $maybe_decrease_sales ) {
+				// decrease purchase count
+				edd_decrease_purchase_count( $item['id'], $item['quantity'] );
+			}
 
 		}
 
@@ -796,10 +804,10 @@ function edd_get_total_sales() {
  */
 function edd_get_total_earnings() {
 
-	$total = get_option( 'edd_earnings_total', 0 );
+	$total = get_option( 'edd_earnings_total', false );
 
 	// If no total stored in DB, use old method of calculating total earnings
-	if( ! $total ) {
+	if( false === $total ) {
 
 		global $wpdb;
 
@@ -946,9 +954,12 @@ function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files =
 	$payment      = new EDD_Payment( $payment_id );
 	$cart_details = $payment->cart_details;
 
+	$payment_currency = $payment->currency;
+
 	if ( ! empty( $cart_details ) && is_array( $cart_details ) ) {
 
 		foreach ( $cart_details as $key => $cart_item ) {
+			$cart_details[ $key ]['currency'] = $payment_currency;
 
 			// Ensure subtotal is set, for pre-1.9 orders
 			if ( ! isset( $cart_item['subtotal'] ) ) {

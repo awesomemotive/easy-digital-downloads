@@ -444,10 +444,10 @@ jQuery(document).ready(function ($) {
 
 				e.preventDefault();
 
-				var order_download_select   = $( '#edd_order_download_select' ),
-					order_download_quantity = $( '#edd-order-download-quantity' ),
-					order_download_amount   = $( '#edd-order-download-amount' ),
-					selected_price_option   = $( '.edd_price_options_select option:selected' );
+				var order_download_select     = $( '#edd_order_download_select' ),
+					order_download_quantity   = $( '#edd-order-download-quantity' ),
+					order_download_amount     = $( '#edd-order-download-amount' ),
+					selected_price_option     = $( '.edd_price_options_select option:selected' );
 
 				var download_id    = order_download_select.val();
 				var download_title = order_download_select.find(':selected').text();
@@ -469,6 +469,8 @@ jQuery(document).ready(function ($) {
 					alert( edd_vars.numeric_item_price );
 					return false;
 				}
+
+				var item_price     = amount;
 
 				if ( edd_vars.quantities_enabled === '1' ) {
 					if ( !isNaN( parseInt( quantity ) ) ) {
@@ -501,6 +503,7 @@ jQuery(document).ready(function ($) {
 				clone.find( '.item-price' ).text( edd_vars.currency_sign + ( amount / quantity ).toFixed( edd_vars.currency_decimals ) );
 				clone.find( 'input.edd-payment-details-download-id' ).val( download_id );
 				clone.find( 'input.edd-payment-details-download-price-id' ).val( price_id );
+				clone.find( 'input.edd-payment-details-download-item-price' ).val( item_price );
 				clone.find( 'input.edd-payment-details-download-amount' ).val( amount );
 				clone.find( 'input.edd-payment-details-download-quantity' ).val( quantity );
 				clone.find( 'input.edd-payment-details-download-has-log').val(0);
@@ -1131,13 +1134,15 @@ jQuery(document).ready(function ($) {
 	// Replace options with search results
 	$( document.body ).on( 'keyup', '.edd-select.chosen-container .chosen-search input, .edd-select.chosen-container .search-field input', function(e) {
 
-		var val = $(this).val(), container = $(this).closest( '.edd-select-chosen' );
-		var menu_id = container.attr('id').replace( '_chosen', '' );
-		var no_bundles = container.hasClass( 'no-bundles' );
-		var lastKey = e.which;
+		var val         = $(this).val(), container = $(this).closest( '.edd-select-chosen' );
+		var menu_id     = container.attr('id').replace( '_chosen', '' );
+		var no_bundles  = container.hasClass( 'no-bundles' );
+		var lastKey     = e.which;
 		var search_type = 'edd_download_search';
-		if( container.attr( 'id' ).indexOf( "customer" ) >= 0 ) {
-			search_type = 'edd_customer_search';
+
+		// Detect if we have a defined search type, otherwise default to downloads
+		if ( container.prev().data('search-type') ) {
+			search_type = 'edd_' + container.prev().data('search-type') + '_search';
 		}
 
 		// Don't fire if short or is a modifier key (shift, ctrl, apple command key, or arrow keys)
@@ -1211,6 +1216,7 @@ jQuery(document).ready(function ($) {
 		init : function() {
 			this.revoke_api_key();
 			this.regenerate_api_key();
+			this.create_api_key();
 			this.recount_stats();
 		},
 
@@ -1222,6 +1228,19 @@ jQuery(document).ready(function ($) {
 		regenerate_api_key : function() {
 			$( document.body ).on( 'click', '.edd-regenerate-api-key', function( e ) {
 				return confirm( edd_vars.regenerate_api_key );
+			} );
+		},
+		create_api_key : function() {
+			$( document.body).on( 'submit', '#api-key-generate-form', function( e ) {
+				var input = $( 'input[type="text"][name="user_id"]' );
+
+				input.css('border-color', '#ddd');
+
+				var user_id = input.val();
+				if ( user_id.length < 1 || user_id == 0 ) {
+					input.css('border-color', '#ff0000');
+					return false;
+				}
 			} );
 		},
 		recount_stats : function() {

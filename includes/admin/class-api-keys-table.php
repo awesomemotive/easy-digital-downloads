@@ -197,7 +197,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 			return;
 		}
 		?>
-		<form method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ); ?>">
+		<form id="api-key-generate-form" method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ); ?>">
 			<input type="hidden" name="edd_action" value="process_api_key" />
 			<input type="hidden" name="edd_api_process" value="generate" />
 			<?php wp_nonce_field( 'edd-api-nonce' ); ?>

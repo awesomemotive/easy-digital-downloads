@@ -311,7 +311,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		'order'          => $atts['order']
 	);
 
-	if(  'true' === $atts['pagination']  ) {
+	if ( filter_var( $atts['pagination'], FILTER_VALIDATE_BOOLEAN ) || ( ! filter_var( $atts['pagination'], FILTER_VALIDATE_BOOLEAN ) && $atts[ 'number' ] ) ) {
 
 		$query['posts_per_page'] = (int) $atts['number'];
 
@@ -321,8 +321,6 @@ function edd_downloads_query( $atts, $content = null ) {
 	} else {
 		$query['nopaging'] = true;
 	}
-
-
 
 	switch ( $atts['orderby'] ) {
 		case 'price':
@@ -547,6 +545,8 @@ function edd_downloads_query( $atts, $content = null ) {
 
 			<?php wp_reset_postdata(); ?>
 
+			<?php if ( filter_var( $atts['pagination'], FILTER_VALIDATE_BOOLEAN ) ) : ?>
+
 			<?php
 				$pagination = false;
 
@@ -574,6 +574,8 @@ function edd_downloads_query( $atts, $content = null ) {
 			<div id="edd_download_pagination" class="navigation">
 				<?php echo $pagination; ?>
 			</div>
+			<?php endif; ?>
+
 			<?php endif; ?>
 
 		</div>
@@ -762,16 +764,16 @@ function edd_process_profile_editor_updates( $data ) {
 	$user_id       = get_current_user_id();
 	$old_user_data = get_userdata( $user_id );
 
-	$display_name = isset( $data['edd_display_name'] ) ? sanitize_text_field( $data['edd_display_name'] ) : $old_user_data->display_name;
-	$first_name   = isset( $data['edd_first_name'] ) ? sanitize_text_field( $data['edd_first_name'] ) : $old_user_data->first_name;
-	$last_name    = isset( $data['edd_last_name'] ) ? sanitize_text_field( $data['edd_last_name'] ) : $old_user_data->last_name;
-	$email        = isset( $data['edd_email'] ) ? sanitize_email( $data['edd_email'] ) : $old_user_data->user_email;
-	$line1        = ( isset( $data['edd_address_line1'] ) ? sanitize_text_field( $data['edd_address_line1'] ) : '' );
-	$line2        = ( isset( $data['edd_address_line2'] ) ? sanitize_text_field( $data['edd_address_line2'] ) : '' );
-	$city         = ( isset( $data['edd_address_city'] ) ? sanitize_text_field( $data['edd_address_city'] ) : '' );
-	$state        = ( isset( $data['edd_address_state'] ) ? sanitize_text_field( $data['edd_address_state'] ) : '' );
-	$zip          = ( isset( $data['edd_address_zip'] ) ? sanitize_text_field( $data['edd_address_zip'] ) : '' );
-	$country      = ( isset( $data['edd_address_country'] ) ? sanitize_text_field( $data['edd_address_country'] ) : '' );
+	$display_name = isset( $data['edd_display_name'] )    ? sanitize_text_field( $data['edd_display_name'] )    : $old_user_data->display_name;
+	$first_name   = isset( $data['edd_first_name'] )      ? sanitize_text_field( $data['edd_first_name'] )      : $old_user_data->first_name;
+	$last_name    = isset( $data['edd_last_name'] )       ? sanitize_text_field( $data['edd_last_name'] )       : $old_user_data->last_name;
+	$email        = isset( $data['edd_email'] )           ? sanitize_email( $data['edd_email'] )                : $old_user_data->user_email;
+	$line1        = isset( $data['edd_address_line1'] )   ? sanitize_text_field( $data['edd_address_line1'] )   : '';
+	$line2        = isset( $data['edd_address_line2'] )   ? sanitize_text_field( $data['edd_address_line2'] )   : '';
+	$city         = isset( $data['edd_address_city'] )    ? sanitize_text_field( $data['edd_address_city'] )    : '';
+	$state        = isset( $data['edd_address_state'] )   ? sanitize_text_field( $data['edd_address_state'] )   : '';
+	$zip          = isset( $data['edd_address_zip'] )     ? sanitize_text_field( $data['edd_address_zip'] )     : '';
+	$country      = isset( $data['edd_address_country'] ) ? sanitize_text_field( $data['edd_address_country'] ) : '';
 
 	$userdata = array(
 		'ID'           => $user_id,
@@ -827,6 +829,16 @@ function edd_process_profile_editor_updates( $data ) {
 	// Update the user
 	$meta    = update_user_meta( $user_id, '_edd_user_address', $address );
 	$updated = wp_update_user( $userdata );
+
+	// Possibly update the customer
+	$customer = new EDD_Customer( $user_id, true );
+	if ( $customer->id > 0 ) {
+		$update_args = array(
+			'name' => $first_name . ' ' . $last_name,
+		);
+
+		$customer->update( $update_args );
+	}
 
 	if ( $updated ) {
 		do_action( 'edd_user_profile_updated', $user_id, $userdata );

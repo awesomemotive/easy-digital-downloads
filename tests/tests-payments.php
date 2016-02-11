@@ -153,13 +153,6 @@ class Tests_Payments extends WP_UnitTestCase {
 		$this->assertEquals( $expected, $out );
 	}
 
-	public function test_undo_purchase() {
-		$purchase_download_ids = wp_list_pluck( edd_get_payment_meta_downloads( $this->_payment_id ), 'id' );
-		edd_undo_purchase( reset( $purchase_download_ids ), $this->_payment_id );
-		$this->assertEquals( 0, edd_get_total_earnings() );
-		$this->markTestIncomplete( "When testing edd_get_total_earnings, it is always 0, no matter the undo." );
-	}
-
 	public function test_delete_purchase() {
 		edd_delete_purchase( $this->_payment_id );
 		// This returns an empty array(), so empty makes it false

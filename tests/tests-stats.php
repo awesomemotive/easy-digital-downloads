@@ -58,7 +58,8 @@ class Tests_Stats extends WP_UnitTestCase {
 		// Set start date only
 		$stats->setup_dates( 'yesterday' );
 		$this->assertInternalType( 'numeric', $stats->start_date );
-		$this->assertEquals( $stats->start_date, $stats->end_date );
+		$this->assertGreaterThan( $stats->start_date, $stats->end_date );
+		$this->assertEquals( $stats->end_date - $stats->start_date, DAY_IN_SECONDS - 1 );
 
 		// Set some valid predefined date ranges
 		$stats->setup_dates( 'yesterday', 'today' );

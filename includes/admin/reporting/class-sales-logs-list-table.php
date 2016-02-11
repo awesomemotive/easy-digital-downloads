@@ -75,7 +75,8 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	 * @return string Column Name
 	 */
 	public function column_default( $item, $column_name ) {
-		$return = '';
+		$return   = '';
+		$currency = $item['currency'];
 
 		switch ( $column_name ){
 			case 'download' :
@@ -88,11 +89,11 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 				break;
 
 			case 'item_price' :
-				$return = edd_currency_filter( edd_format_amount( $item['item_price'] ) );
+				$return = edd_currency_filter( edd_format_amount( $item['item_price'] ), $currency );
 				break;
 
 			case 'amount' :
-				$return = edd_currency_filter( edd_format_amount( $item['amount'] / $item['quantity'] ) );
+				$return = edd_currency_filter( edd_format_amount( $item['amount'] / $item['quantity'] ), $currency );
 				break;
 
 			case 'payment_id' :
@@ -344,6 +345,8 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 							'user_name'  => $user_info['first_name'] . ' ' . $user_info['last_name'],
 							'date'       => get_post_field( 'post_date', $payment_id ),
 							'quantity'   => $item['quantity'],
+							// Keep track of the currency. Vital to produce the correct report
+							'currency'   => $item['currency'],
 						);
 
 					}
