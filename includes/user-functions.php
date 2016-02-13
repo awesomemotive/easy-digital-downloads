@@ -477,6 +477,8 @@ function edd_get_customer_address( $user_id = 0 ) {
  *
  * @access 		public
  * @since 		1.8.8
+ * @param int   $user_id
+ * @param array $user_data
  * @return 		void
  */
 function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
