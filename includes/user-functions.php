@@ -494,7 +494,7 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 
 	$message  = sprintf( __( 'Username: %s' ), $user_data['user_login'] ) . "\r\n";
 	$message .= sprintf( __( 'Password: %s' ), __( '[Password entered at checkout]', 'easy-digital-downloads' ) ) . "\r\n";
-	$message .= wp_login_url() . "\r\n";
+	$message .= '<a href="' . wp_login_url() . '"> ' . esc_attr__( 'Click Here to Login', 'easy-digital-downloads' ) . ' &raquo;</a>' . "\r\n";
 
 	wp_mail( $user_data['user_email'], sprintf( __( '[%s] Your username and password' ), $blogname ), $message );
 
