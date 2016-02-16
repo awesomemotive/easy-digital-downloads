@@ -143,8 +143,8 @@ $status    = edd_get_payment_status( $payment, true );
 					<td>
 
 						<?php
-						$price_id             = edd_get_cart_item_price_id( $item );
-						$download_files       = edd_get_download_files( $item['id'], $price_id );
+						$price_id       = edd_get_cart_item_price_id( $item );
+						$download_files = edd_get_download_files( $item['id'], $price_id );
 						?>
 
 						<div class="edd_purchase_receipt_product_name">
