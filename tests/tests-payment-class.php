@@ -99,6 +99,26 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$this->assertEquals( 140.00, $payment->total );
 	}
 
+	public function test_add_download_zero_item_price() {
+
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertEquals( 2, count( $payment->downloads ) );
+		$this->assertEquals( 120.00, $payment->total );
+
+		$new_download = EDD_Helper_Download::create_simple_download();
+
+		$args = array(
+			'item_price' => 0,
+		);
+
+		$payment->add_download( $new_download->ID, $args );
+		$payment->save();
+
+		$this->assertEquals( 3, count( $payment->downloads ) );
+		$this->assertEquals( 120.00, $payment->total );
+
+	}
+
 	public function test_add_download_with_fee() {
 		$payment = new EDD_Payment( $this->_payment_id );
 		$args = array(
@@ -630,6 +650,7 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 	}
 
 	public function test_failed_payment_discount() {
+
 		$id   = EDD_Helper_Discount::create_simple_percent_discount();
 		$uses = edd_get_discount_uses( $id );
 
