@@ -164,9 +164,17 @@ function edd_price( $download_id = 0, $echo = true, $price_id = false ) {
 		$prices = edd_get_variable_prices( $download_id );
 
 		if ( false !== $price_id && isset( $prices[$price_id] ) ) {
-			$price = (float) $prices[$price_id]['amount'];
+
+			$price = edd_get_price_option_amount( $download_id, $price_id );
+
+		} elseif( $default = edd_get_default_variable_price( $download_id ) ) {
+
+			$price = edd_get_price_option_amount( $download_id, $default );
+
 		} else {
+
 			$price = edd_get_lowest_price_option( $download_id );
+
 		}
 
 		$price = edd_sanitize_amount( $price );
