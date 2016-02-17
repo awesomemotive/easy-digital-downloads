@@ -520,17 +520,6 @@ function edd_get_download_type( $download_id = 0 ) {
 }
 
 /**
- * Gets the Download name
- *
- * @since 2.5.8 ?
- * @param int $download_id Download ID
- * @return string $type Download name
- */
-function edd_get_download_name( $download_id ) {
-	return get_the_title( $download_id );
-}
-
-/**
  * Determines if a product is a bundle
  *
  * @since 1.6
