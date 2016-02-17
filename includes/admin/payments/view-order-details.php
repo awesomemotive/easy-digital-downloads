@@ -70,6 +70,7 @@ $currency_code  = $payment->currency;
 										<?php do_action( 'edd_view_order_details_totals_before', $payment_id ); ?>
 
 										<div class="edd-admin-box-inside">
+											<p>
 												<span class="label"><?php _e( 'Status:', 'easy-digital-downloads' ); ?></span>&nbsp;
 												<select name="edd-payment-status" class="medium-text">
 													<?php foreach( edd_get_payment_statuses() as $key => $status ) : ?>
