@@ -268,7 +268,7 @@ function edd_ajax_apply_discount() {
 		if ( is_user_logged_in() ) {
 			$user = get_current_user_id();
 		} else {
-			$form = maybe_unserialize( $_POST['form'] );
+			parse_str( $_POST['form'], $form );
 			if ( ! empty( $form['edd_email'] ) ) {
 				$user = urldecode( $form['edd_email'] );
 			}
@@ -315,7 +315,7 @@ function edd_ajax_update_cart_item_quantity() {
 
 		$download_id = absint( $_POST['download_id'] );
 		$quantity    = absint( $_POST['quantity'] );
-		$options     = maybe_unserialize( stripslashes( $_POST['options'] ) );
+		$options     = json_decode( stripslashes( $_POST['options'] ), true );
 
 		edd_set_cart_item_quantity( $download_id, absint( $_POST['quantity'] ), $options );
 		$total = edd_get_cart_total();
