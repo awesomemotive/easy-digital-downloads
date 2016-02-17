@@ -159,7 +159,8 @@ function edd_process_download() {
 			case 'direct' :
 			default:
 
-				$direct = false;
+				$direct    = false;
+				$file_path = $requested_file;
 
 				if ( ( ! isset( $file_details['scheme'] ) || ! in_array( $file_details['scheme'], $schemes ) ) && isset( $file_details['path'] ) && file_exists( $requested_file ) ) {
 
