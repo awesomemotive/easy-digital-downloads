@@ -1053,7 +1053,7 @@ function edd_is_cart_saved() {
 			return false;
 
 		// Check that the saved cart is not the same as the current cart
-		if ( maybe_unserialize( stripslashes( $_COOKIE['edd_saved_cart'] ) ) === EDD()->session->get( 'edd_cart' ) )
+		if ( json_decode( stripslashes( $_COOKIE['edd_saved_cart'] ), true ) === EDD()->session->get( 'edd_cart' ) )
 			return false;
 
 		return true;
@@ -1083,7 +1083,7 @@ function edd_save_cart() {
 
 	} else {
 
-		$cart = serialize( $cart );
+		$cart = json_encode( $cart );
 
 		setcookie( 'edd_saved_cart', $cart, time()+3600*24*7, COOKIEPATH, COOKIE_DOMAIN );
 		setcookie( 'edd_cart_token', $token, time()+3600*24*7, COOKIEPATH, COOKIE_DOMAIN );
@@ -1158,7 +1158,7 @@ function edd_restore_cart() {
 			return new WP_Error( 'invalid_cart_token', __( 'The cart cannot be restored. Invalid token.', 'easy-digital-downloads' ) );
 		}
 
-		$saved_cart = maybe_unserialize( stripslashes( $saved_cart ) );
+		$saved_cart = json_decode( stripslashes( $saved_cart ), true );
 
 		setcookie( 'edd_saved_cart', '', time()-3600, COOKIEPATH, COOKIE_DOMAIN );
 		setcookie( 'edd_cart_token', '', time()-3600, COOKIEPATH, COOKIE_DOMAIN );
