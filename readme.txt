@@ -6,7 +6,7 @@ Donate link: https://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 4.0
 Tested up to: 4.5
-Stable Tag: 2.5.8
+Stable Tag: 2.5.9
 
 License: GNU Version 2 or Any Later Version
 
@@ -213,6 +213,10 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.5.9, February 18, 2016 =
+
+* Fix: Settings cannot be saved
 
 = 2.5.8, February 18, 2016 =
 
