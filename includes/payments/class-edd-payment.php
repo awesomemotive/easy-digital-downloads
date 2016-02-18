@@ -1792,7 +1792,7 @@ final class EDD_Payment {
 	private function setup_transaction_id() {
 		$transaction_id = $this->get_meta( '_edd_payment_transaction_id', true );
 
-		if ( empty( $transaction_id ) ) {
+		if ( empty( $transaction_id ) || (int) $transaction_id === (int) $this->ID ) {
 
 			$gateway        = $this->gateway;
 			$transaction_id = apply_filters( 'edd_get_payment_transaction_id-' . $gateway, $this->ID );
