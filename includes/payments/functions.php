@@ -413,9 +413,12 @@ function edd_count_payments( $args = array() ) {
 
 
 			$join = "LEFT JOIN $wpdb->postmeta m ON (p.ID = m.post_id)";
-			$where .= "
-				AND m.meta_key = '{$field}'
-				AND m.meta_value = '{$args['s']}'";
+			$where .= $wpdb->prepare( "
+				AND m.meta_key = %s
+				AND m.meta_value = %s",
+				$field,
+				$args['s']
+			);
 
 		} elseif ( '#' == substr( $args['s'], 0, 1 ) ) {
 
@@ -426,14 +429,16 @@ function edd_count_payments( $args = array() ) {
 			$join   = "LEFT JOIN $wpdb->postmeta m ON m.meta_key = '_edd_log_payment_id' AND m.post_id = p.ID ";
 			$join  .= "INNER JOIN $wpdb->posts p2 ON m.meta_value = p2.ID ";
 			$where  = "WHERE p.post_type = 'edd_log' ";
-			$where .= "AND p.post_parent = {$search} ";
+			$where .= $wpdb->prepare( "AND p.post_parent = %d} ", $search );
 
 		} elseif ( is_numeric( $args['s'] ) ) {
 
 			$join = "LEFT JOIN $wpdb->postmeta m ON (p.ID = m.post_id)";
-			$where .= "
+			$where .= $wpdb->prepare( "
 				AND m.meta_key = '_edd_payment_user_id'
-				AND m.meta_value = '{$args['s']}'";
+				AND m.meta_value = %d",
+				$args['s']
+			);
 
 		} elseif ( 0 === strpos( $args['s'], 'discount:' ) ) {
 
@@ -441,12 +446,17 @@ function edd_count_payments( $args = array() ) {
 			$search = 'discount.*' . $search;
 
 			$join   = "LEFT JOIN $wpdb->postmeta m ON (p.ID = m.post_id)";
-			$where .= "
+			$where .= $wpdb->prepare( "
 				AND m.meta_key = '_edd_payment_meta'
-				AND m.meta_value REGEXP '$search'";
+				AND m.meta_value REGEXP %s",
+				$search
+			);
 
 		} else {
-			$where .= "AND ((p.post_title LIKE '%{$args['s']}%') OR (p.post_content LIKE '%{$args['s']}%'))";
+			$search = $wpdb->esc_like( $args['s'] );
+			$search = '%' . $search . '%';
+
+			$where .= $wpdb->prepare( "AND ((p.post_title LIKE %s) OR (p.post_content LIKE %s))", $search, $search );
 		}
 
 	}
@@ -473,7 +483,7 @@ function edd_count_payments( $args = array() ) {
 
 		}
 
-		// Fixes an issue with the payments list table counts when no end date is specified (partiy with stats class)
+		// Fixes an issue with the payments list table counts when no end date is specified (partly with stats class)
 		if ( empty( $args['end-date'] ) ) {
 			$args['end-date'] = $args['start-date'];
 		}
