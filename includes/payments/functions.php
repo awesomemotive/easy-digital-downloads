@@ -899,7 +899,7 @@ function edd_get_payment_meta( $payment_id = 0, $meta_key = '_edd_payment_meta',
  * Update the meta for a payment
  * @param  integer $payment_id Payment ID
  * @param  string  $meta_key   Meta key to update
- * @param  string  $meta_value Value to udpate to
+ * @param  string  $meta_value Value to update to
  * @param  string  $prev_value Previous value
  * @return mixed               Meta ID if successful, false if unsuccessful
  */
@@ -1009,7 +1009,7 @@ function edd_get_payment_user_email( $payment_id ) {
  *
  * @since  2.4.4
  * @param  int $payment_id The payment ID
- * @return bool            If the payment is associted with a user (false) or not (true)
+ * @return bool            If the payment is associated with a user (false) or not (true)
  */
 function edd_is_guest_payment( $payment_id ) {
 	$payment_user_id  = edd_get_payment_user_id( $payment_id );
@@ -1383,7 +1383,7 @@ function edd_get_payment_fees( $payment_id = 0, $type = 'all' ) {
  * Retrieves the transaction ID for the given payment
  *
  * @since  2.1
- * @param int payment_id Payment ID
+ * @param int $payment_id Payment ID
  * @return string The Transaction ID
  */
 function edd_get_payment_transaction_id( $payment_id = 0 ) {
@@ -1395,8 +1395,9 @@ function edd_get_payment_transaction_id( $payment_id = 0 ) {
  * Sets a Transaction ID in post meta for the given Payment ID
  *
  * @since  2.1
- * @param int payment_id Payment ID
- * @param string transaction_id The transaciton ID from the gateway
+ * @param int $payment_id Payment ID
+ * @param string $transaction_id The transaction ID from the gateway
+ * @return mixed Meta ID if successful, false if unsuccessful
  */
 function edd_set_payment_transaction_id( $payment_id = 0, $transaction_id = '' ) {
 
@@ -1464,7 +1465,7 @@ function edd_get_payment_notes( $payment_id = 0, $search = '' ) {
 	}
 
 	remove_action( 'pre_get_comments', 'edd_hide_payment_notes', 10 );
-	remove_filter( 'comments_clauses', 'edd_hide_payment_notes_pre_41', 10, 2 );
+	remove_filter( 'comments_clauses', 'edd_hide_payment_notes_pre_41', 10 );
 
 	$notes = get_comments( array( 'post_id' => $payment_id, 'order' => 'ASC', 'search' => $search ) );
 

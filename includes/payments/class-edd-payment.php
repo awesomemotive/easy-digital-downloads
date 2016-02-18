@@ -305,7 +305,7 @@ final class EDD_Payment {
 	 * Setup the EDD Payments class
 	 *
 	 * @since 2.5
-	 * @param int $payment_id A given payment
+	 * @param int $payment_id A given payment ID
 	 * @return mixed void|false
 	 */
 	public function __construct( $payment_id = false ) {
@@ -365,7 +365,7 @@ final class EDD_Payment {
 	}
 
 	/**
-	 * Magic ISSET function, which allows empty checks on protected elemetns
+	 * Magic ISSET function, which allows empty checks on protected elements
 	 *
 	 * @since  2.5
 	 * @param  string  $name The attribute to get
@@ -470,7 +470,7 @@ final class EDD_Payment {
 	 * Create the base of a payment.
 	 *
 	 * @since  2.5
-	 * @return int|bool Fale on failure, the payment ID on success.
+	 * @return int|bool False on failure, the payment ID on success.
 	 */
 	private function insert_payment() {
 
@@ -841,9 +841,6 @@ final class EDD_Payment {
 			// Only save the payment meta if it's changed
 			if ( md5( serialize( $meta ) ) !== md5( serialize( $merged_meta) ) ) {
 				$updated     = $this->update_meta( '_edd_payment_meta', $merged_meta );
-				if ( false !== $updated ) {
-					$saved = true;
-				}
 			}
 
 			$this->pending = array();
@@ -864,7 +861,7 @@ final class EDD_Payment {
 	 * @param int   $download_id The download to add
 	 * @param array $args Other arguments to pass to the function
 	 * @param array $options List of download options
-	 * @return void
+	 * @return bool True on success, false on failure
 	 */
 	public function add_download( $download_id = 0, $args = array(), $options = array() ) {
 		$download = new EDD_Download( $download_id );
@@ -1103,7 +1100,7 @@ final class EDD_Payment {
 			$tax          = $this->cart_details[ $found_cart_key ]['tax'];
 			$discount     = ! empty( $this->cart_details[ $found_cart_key ]['discount'] ) ? $this->cart_details[ $found_cart_key ]['discount'] : 0;
 
-			// The total reduction quals the number removed * the item_price
+			// The total reduction equals the number removed * the item_price
 			$total_reduced = round( $item_price * $args['quantity'], edd_currency_decimal_filter() );
 			$tax_reduced   = round( ( $tax / $orig_quantity ) * $args['quantity'], edd_currency_decimal_filter() );
 
@@ -1162,7 +1159,6 @@ final class EDD_Payment {
 
 		$fee = wp_parse_args( $args, $default_args );
 		$this->fees[] = $fee;
-
 
 		$added_fee               = $fee;
 		$added_fee['action']     = 'add';
@@ -1721,9 +1717,7 @@ final class EDD_Payment {
 			foreach ( $cart_details as $item ) {
 
 				if ( isset( $item['subtotal'] ) ) {
-
 					$subtotal += $item['subtotal'];
-
 				}
 
 			}
@@ -1950,7 +1944,7 @@ final class EDD_Payment {
 	}
 
 	/**
-	 * Converts this ojbect into an array for special cases
+	 * Converts this object into an array for special cases
 	 *
 	 * @return array The payment object as an array
 	 */

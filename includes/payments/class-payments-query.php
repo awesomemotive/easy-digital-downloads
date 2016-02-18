@@ -160,7 +160,7 @@ class EDD_Payments_Query extends EDD_Stats {
 				$payment    = new EDD_Payment( $payment_id );
 
 				if ( edd_get_option( 'enable_sequential' ) ) {
-					// Backwards Compability, needs to set `payment_number` attribute
+					// Backwards Compatibility, needs to set `payment_number` attribute
 					$payment->payment_number = $payment->number;
 				}
 
