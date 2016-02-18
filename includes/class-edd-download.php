@@ -245,6 +245,16 @@ class EDD_Download {
 	}
 
 	/**
+	 * Retrieve the download name
+	 *
+	 * @since
+	 * @return string
+	 */
+	public function get_name() {
+		return get_the_title( $this->ID );
+	}
+
+	/**
 	 * Retrieve the price
 	 *
 	 * @since 2.2
