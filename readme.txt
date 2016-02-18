@@ -6,7 +6,7 @@ Donate link: https://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 4.0
 Tested up to: 4.5
-Stable Tag: 2.5.7
+Stable Tag: 2.5.8
 
 License: GNU Version 2 or Any Later Version
 
@@ -213,6 +213,24 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.5.8, February 18, 2016 =
+
+* Fix: Transaction ID detection not working properly for old payment records that stored transaction ID in notes
+* Fix: 100% discount codes not properly removing billing fields when decimal separator is not a period
+* Fix: [edd_receipt payment_key="false"] results in error retrieving receipt message
+* Fix: Unused variable in Javascript
+* Fix: File downloads failing with Force download method on nginx
+* Fix: Undefined variable $file_path during file downloads on some servers
+* Fix: Incorrect inline PHP documentation
+* Fix: Settings with some non-alphanumeric keys not saved properly
+* Fix: Price override in add_download() method of EDD_Payment does not respect price of 0
+* Fix: Dash incorrectly shown after product name on the receipt page
+* Fix: Missing P tag on View Order Details screen
+* Tweak: Replace usage of $edd_options with edd_get_option() helper function 
+* Tweak: URL in New User Notification email now linked
+* Tweak: edd_price() now displays the value of the Default price option
+* New: Introduced edd_payment_currency_default filter 
 
 = 2.5.7, February 10, 2016 =
 
