@@ -313,7 +313,7 @@ class EDD_Product_Details_Widget extends WP_Widget {
 		 <?php
 			$args = array(
 				'post_type'      => 'download',
-				'posts_per_page' => -1,
+				'posts_per_page' => 1000,
 				'post_status'    => 'publish',
 			);
 			$downloads = get_posts( $args );
