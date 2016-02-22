@@ -306,7 +306,10 @@ function edd_deliver_download( $file = '', $redirect = false ) {
 }
 
 function edd_is_local_file( $requested_file ) {
-	return false !== strpos( $requested_file, home_url() );
+	$home_url       = preg_replace('#^https?://#', '', home_url() );
+	$requested_file = preg_replace('#^https?://#', '', $requested_file );
+
+	return false !== strpos( $requested_file, $home_url );
 }
 
 function edd_get_local_path_from_url( $url ) {
