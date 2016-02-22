@@ -308,7 +308,7 @@ function edd_deliver_download( $file = '', $redirect = false ) {
 /**
  * Determine if the file being requested is hosted locally or not
  *
- * @since  2.5.11
+ * @since  2.5.10
  * @param  string $requested_file The file being requested
  * @return bool                   If the file is hosted locally or not
  */
@@ -324,7 +324,7 @@ function edd_is_local_file( $requested_file ) {
  *
  * Used during the symlink process to determine where to make the symlink point to
  *
- * @since  2.5.11
+ * @since  2.5.10
  * @param  string $url The URL of the file requested
  * @return string      If found to be locally hosted, the path to the file
  */
