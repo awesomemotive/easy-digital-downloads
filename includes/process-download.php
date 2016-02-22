@@ -123,12 +123,14 @@ function edd_process_download() {
 
 		do_action( 'edd_process_download_headers', $requested_file, $args['download'], $args['email'], $args['payment'] );
 
+/*
 		nocache_headers();
 		header("Robots: none");
 		header("Content-Type: " . $ctype . "");
 		header("Content-Description: File Transfer");
 		header("Content-Disposition: attachment; filename=\"" . apply_filters( 'edd_requested_file_name', basename( $requested_file ) ) . "\"");
 		header("Content-Transfer-Encoding: binary");
+*/
 
 		if( 'x_sendfile' == $method && ( ! function_exists( 'apache_get_modules' ) || ! in_array( 'mod_xsendfile', apache_get_modules() ) ) ) {
 			// If X-Sendfile is selected but is not supported, fallback to Direct
@@ -257,8 +259,9 @@ function edd_deliver_download( $file = '', $redirect = false ) {
 	 * This symlink is used to hide the true location of the file, even when the file URL is revealed
 	 * The symlink is deleted after it is used
 	 */
+	if( edd_symlink_file_downloads() && edd_is_local_file( $file ) ) {
 
-	if( edd_symlink_file_downloads() ) {
+		$file = edd_get_local_path_from_url( $file );
 
 		// Generate a symbolic link
 		$ext       = edd_get_file_extension( $file );
@@ -279,7 +282,7 @@ function edd_deliver_download( $file = '', $redirect = false ) {
 
 		// Make sure the symlink doesn't already exist before we create it
 		if( ! file_exists( $path ) ) {
-			$link = symlink( $file, $path );
+			$link = @symlink( $file, $path );
 		} else {
 			$link = true;
 		}
@@ -304,6 +307,44 @@ function edd_deliver_download( $file = '', $redirect = false ) {
 
 }
 
+function edd_is_local_file( $requested_file ) {
+	return false !== strpos( $requested_file, home_url() );
+}
+
+function edd_get_local_path_from_url( $url ) {
+
+	$file       = $url;
+	$upload_dir = wp_upload_dir();
+	$upload_url = $upload_dir['baseurl'] . '/edd';
+
+	if( defined( 'UPLOADS' ) && strpos( $file, UPLOADS ) !== false ) {
+
+		/**
+		 * This is a local file given by URL so we need to figure out the path
+		 * UPLOADS is always relative to ABSPATH
+		 * site_url() is the URL to where WordPress is installed
+		 */
+		$file = str_replace( site_url(), '', $file );
+
+	} else if( strpos( $file, $upload_url ) !== false ) {
+
+		/** This is a local file given by URL so we need to figure out the path */
+		$file = str_replace( $upload_url, edd_get_upload_dir(), $file );
+
+	} else if( strpos( $file, set_url_scheme( $upload_url, 'https' ) ) !== false ) {
+
+		/** This is a local file given by an HTTPS URL so we need to figure out the path */
+		$file = str_replace( set_url_scheme( $upload_url, 'https' ), edd_get_upload_dir(), $file );
+
+	} elseif( strpos( $file, content_url() ) !== false ) {
+
+		$file = str_replace( content_url(), WP_CONTENT_DIR, $file );
+
+	}
+
+	return $file;
+
+}
 
 /**
  * Get the file content type
