@@ -247,7 +247,7 @@ class EDD_Download {
 	/**
 	 * Retrieve the download name
 	 *
-	 * @since
+	 * @since 2.5.8
 	 * @return string
 	 */
 	public function get_name() {
