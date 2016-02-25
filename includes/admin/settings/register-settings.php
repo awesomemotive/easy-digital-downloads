@@ -996,11 +996,6 @@ function edd_settings_sanitize_misc_accounting( $input ) {
 		return $input;
 	}
 
-	if( edd_get_file_download_method() != $input['download_method'] || ! edd_htaccess_exists() ) {
-		// Force the .htaccess files to be updated if the Download method was changed.
-		edd_create_protection_files( true, $input['download_method'] );
-	}
-
 	if( ! empty( $input['enable_sequential'] ) && ! edd_get_option( 'enable_sequential' ) ) {
 
 		// Shows an admin notice about upgrading previous order numbers
