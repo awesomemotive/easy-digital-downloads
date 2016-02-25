@@ -309,6 +309,12 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 		$email = edd_get_payment_user_email( $payment->ID );
 
+		// Add search term string back to base URL
+		$search_terms = ( isset( $_GET['s'] ) ? trim( $_GET['s'] ) : '' );
+		if ( ! empty( $search_terms ) ) {
+			$this->base_url = add_query_arg( 's', $search_terms, $this->base_url );
+		}
+		
 		if ( edd_is_payment_complete( $payment->ID ) && ! empty( $email ) ) {
 			$row_actions['email_links'] = '<a href="' . add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $payment->ID ), $this->base_url ) . '">' . __( 'Resend Purchase Receipt', 'easy-digital-downloads' ) . '</a>';
 		}
