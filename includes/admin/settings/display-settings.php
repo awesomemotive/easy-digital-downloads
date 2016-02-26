@@ -34,6 +34,22 @@ function edd_options_page() {
 
 	$registered_sections = edd_get_settings_tab_sections( $active_tab );
 	$section             = isset( $_GET['section'] ) && ! empty( $registered_sections ) && array_key_exists( $_GET['section'], $registered_sections ) ? $_GET['section'] : $key;
+
+	// Unset 'main' if it's empty and default to the first non-empty if it's the chosen section
+	$all_settings = edd_get_registered_settings();
+	if ( empty( $all_settings[ $active_tab ][ 'main' ] ) ) {
+		unset( $sections['main'] );
+
+		if ( 'main' === $section ) {
+			foreach ( $sections as $section_key => $section_title ) {
+				if ( ! empty( $all_settings[ $active_tab ][ $section_key ] ) ) {
+					$section = $section_key;
+					break;
+				}
+			}
+		}
+	}
+
 	ob_start();
 	?>
 	<div class="wrap">
