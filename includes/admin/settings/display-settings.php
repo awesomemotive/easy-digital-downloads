@@ -37,7 +37,14 @@ function edd_options_page() {
 
 	// Unset 'main' if it's empty and default to the first non-empty if it's the chosen section
 	$all_settings = edd_get_registered_settings();
-	if ( empty( $all_settings[ $active_tab ][ 'main' ] ) ) {
+
+	// Let's verify we have a 'main' section to show
+	ob_start();
+	do_settings_sections( 'edd_settings_' . $active_tab . '_main' );
+	$has_main_settings = strlen( ob_get_contents() ) > 0;
+	ob_end_clean();
+
+	if ( false === $has_main_settings ) {
 		unset( $sections['main'] );
 
 		if ( 'main' === $section ) {
