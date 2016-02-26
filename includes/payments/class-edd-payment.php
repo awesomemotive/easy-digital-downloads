@@ -1620,8 +1620,6 @@ final class EDD_Payment {
 			return;
 		}
 
-		do_action( 'edd_pre_pending_payment', $this );
-
 		$decrease_store_earnings = apply_filters( 'edd_decrease_store_earnings_on_pending', true, $this );
 		$decrease_customer_value = apply_filters( 'edd_decrease_customer_value_on_pending', true, $this );
 		$decrease_purchase_count = apply_filters( 'edd_decrease_customer_purchase_count_on_pending', true, $this );
@@ -1634,8 +1632,6 @@ final class EDD_Payment {
 
 		// Clear the This Month earnings (this_monththis_month is NOT a typo)
 		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
-
-		do_action( 'edd_post_pending_payment', $this );
 	}
 
 	private function maybe_alter_stats( $alter_store_earnings, $alter_customer_value, $alter_customer_purchase_count ) {
