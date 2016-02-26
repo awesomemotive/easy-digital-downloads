@@ -439,7 +439,10 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 		<?php endif; ?>
 	</td>
 	<td class="edd_repeatable_default_wrapper">
-		<input type="radio" <?php checked( $default_price_id, $key, true ); ?> class="edd_repeatable_default_input" name="_edd_default_price_id" value="<?php echo $key; ?>" />
+		<label class="edd-default-price">
+			<input type="radio" <?php checked( $default_price_id, $key, true ); ?> class="edd_repeatable_default_input" name="_edd_default_price_id" value="<?php echo $key; ?>" />
+			<span class="screen-reader-text"><?php printf( __( 'Set ID %s as default price', 'easy-digital-downloads' ), $key ); ?></span>
+		</label>
 	</td>
 
 	<td>
