@@ -878,7 +878,7 @@ final class EDD_Payment {
 		$defaults = array(
 			'quantity'    => 1,
 			'price_id'    => false,
-			'item_price'  => 0.00,
+			'item_price'  => false,
 			'discount'    => 0,
 			'tax'         => 0.00,
 			'fees'        => array(),
@@ -887,7 +887,7 @@ final class EDD_Payment {
 		$args = wp_parse_args( apply_filters( 'edd_payment_add_download_args', $args, $download->ID ), $defaults );
 
 		// Allow overriding the price
-		if( $args['item_price'] ) {
+		if( false !== $args['item_price'] ) {
 			$item_price = $args['item_price'];
 		} else {
 			// Deal with variable pricing
@@ -1792,7 +1792,7 @@ final class EDD_Payment {
 	private function setup_transaction_id() {
 		$transaction_id = $this->get_meta( '_edd_payment_transaction_id', true );
 
-		if ( empty( $transaction_id ) ) {
+		if ( empty( $transaction_id ) || (int) $transaction_id === (int) $this->ID ) {
 
 			$gateway        = $this->gateway;
 			$transaction_id = apply_filters( 'edd_get_payment_transaction_id-' . $gateway, $this->ID );

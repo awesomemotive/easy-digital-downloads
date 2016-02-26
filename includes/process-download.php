@@ -159,7 +159,8 @@ function edd_process_download() {
 			case 'direct' :
 			default:
 
-				$direct = false;
+				$direct    = false;
+				$file_path = $requested_file;
 
 				if ( ( ! isset( $file_details['scheme'] ) || ! in_array( $file_details['scheme'], $schemes ) ) && isset( $file_details['path'] ) && file_exists( $requested_file ) ) {
 
@@ -209,7 +210,7 @@ function edd_process_download() {
 				} elseif ( $direct && ( stristr( getenv( 'SERVER_SOFTWARE' ), 'nginx' ) || stristr( getenv( 'SERVER_SOFTWARE' ), 'cherokee' ) ) ) {
 
 					// We need a path relative to the domain
-					$file_path = str_ireplace( $_SERVER['DOCUMENT_ROOT'], '', $file_path );
+					$file_path = str_ireplace( realpath( $_SERVER['DOCUMENT_ROOT'] ), '', $file_path );
 					header( "X-Accel-Redirect: /$file_path" );
 
 				}

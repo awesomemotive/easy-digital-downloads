@@ -1149,14 +1149,14 @@ jQuery(document).ready(function ($) {
 		if(
 			( val.length <= 3 && 'edd_download_search' == search_type ) ||
 			(
-				e.which == 16 ||
-				e.which == 13 ||
-				e.which == 91 ||
-				e.which == 17 ||
-				e.which == 37 ||
-				e.which == 38 ||
-				e.which == 39 ||
-				e.which == 40
+				lastKey == 16 ||
+				lastKey == 13 ||
+				lastKey == 91 ||
+				lastKey == 17 ||
+				lastKey == 37 ||
+				lastKey == 38 ||
+				lastKey == 39 ||
+				lastKey == 40
 			)
 		) {
 			return;
