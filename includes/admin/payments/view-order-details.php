@@ -70,6 +70,7 @@ $currency_code  = $payment->currency;
 										<?php do_action( 'edd_view_order_details_totals_before', $payment_id ); ?>
 
 										<div class="edd-admin-box-inside">
+											<p>
 												<span class="label"><?php _e( 'Status:', 'easy-digital-downloads' ); ?></span>&nbsp;
 												<select name="edd-payment-status" class="medium-text">
 													<?php foreach( edd_get_payment_statuses() as $key => $status ) : ?>
@@ -297,7 +298,7 @@ $currency_code  = $payment->currency;
 														if ( isset( $cart_items[ $key ]['item_number'] ) && isset( $cart_items[ $key ]['item_number']['options'] ) ) {
 															$price_options = $cart_items[ $key ]['item_number']['options'];
 
-															if ( isset( $price_id ) ) {
+															if ( edd_has_variable_prices( $item_id ) && isset( $price_id ) ) {
 																echo ' - ' . edd_get_price_option_name( $item_id, $price_id, $payment_id );
 															}
 														}
