@@ -845,10 +845,10 @@ function edd_email_tag_receipt_link( $payment_id ) {
 	), home_url() ) );
 	$formatted   = sprintf( __( '%1$sView it in your browser %2$s', 'edd' ), '<a href="' . $receipt_url . '">', '&raquo;</a>' );
 
-	if ( edd_get_option( 'email_template' ) == 'none' ) {
-		return $receipt_url;
-	} else {
+	if ( edd_get_option( 'email_template' ) !== 'none' ) {
 		return $formatted;
+	} else {
+		return $receipt_url;
 	}
 }
 
