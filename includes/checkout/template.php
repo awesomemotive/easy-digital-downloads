@@ -413,7 +413,7 @@ function edd_default_cc_address_fields() {
                 ?>
             </select>
         	<?php else : ?>
-			<input type="text" size="6" name="card_state" id="card_state" class="card_state edd-input" placeholder="<?php _e( 'State / Province', 'easy-digital-downloads' ); ?>"/>
+			<input value="<?php echo esc_attr( $selected_state ); ?>" type="text" size="6" name="card_state" id="card_state" class="card_state edd-input" placeholder="<?php _e( 'State / Province', 'easy-digital-downloads' ); ?>"/>
 			<?php endif; ?>
 		</p>
 		<?php do_action( 'edd_cc_billing_bottom' ); ?>

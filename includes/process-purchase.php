@@ -693,7 +693,30 @@ function edd_get_purchase_form_user( $valid_data = array() ) {
 	} else if ( is_user_logged_in() ) {
 		// Set the valid user as the logged in collected data
 		$user = $valid_data['logged_in_user'];
-	} else if ( $valid_data['need_new_user'] === true || $valid_data['need_user_login'] === true  ) {
+
+		// Update the user meta
+		if ( isset( $user['user_id'] ) ) {
+			// Set defaults
+			$user_args = array();
+
+			// Check first name
+			if ( ! empty( $user['user_first'] ) ) {
+				$user_args['first_name'] = $user['user_first'];
+			}
+
+			// Check last name
+			if ( ! empty( $user['user_last'] ) ) {
+				$user_args['last_name'] = $user['user_last'];
+			}
+
+			// Update, if we have info
+			if ( ! empty( $user_args ) ) {
+				$user_args['ID'] = $user['user_id'];
+
+				wp_update_user( $user_args );
+			}
+		}
+	} else if ( $valid_data['need_new_user'] === true || $valid_data['need_user_login'] === true ) {
 		// New user registration
 		if ( $valid_data['need_new_user'] === true ) {
 			// Set user
