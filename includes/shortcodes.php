@@ -842,6 +842,9 @@ function edd_process_profile_editor_updates( $data ) {
 
 	if ( $updated ) {
 		do_action( 'edd_user_profile_updated', $user_id, $userdata );
+		if ( isset( $userdata['user_pass'] ) ) {
+			wp_logout();
+		}
 		wp_redirect( add_query_arg( 'updated', 'true', $data['edd_redirect'] ) );
 		edd_die();
 	}
