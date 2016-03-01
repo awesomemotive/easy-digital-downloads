@@ -1605,6 +1605,12 @@ final class EDD_Payment {
 
 	}
 
+	/**
+	 * Process when a payment moves to pending
+	 *
+	 * @since  2.5.10
+	 * @return void
+	 */
 	private function process_pending() {
 		$process_pending = true;
 
@@ -1634,6 +1640,15 @@ final class EDD_Payment {
 		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
 	}
 
+	/**
+	 * Used during the process of moving to refunded or pending, to decrement stats
+	 *
+	 * @since  2.5.10
+	 * @param  bool   $alter_store_earnings          If the method should alter the store earnings
+	 * @param  bool   $alter_customer_value          If the method should reduce the customer value
+	 * @param  bool   $alter_customer_purchase_count If the method should reduce the customer's purchase count
+	 * @return void
+	 */
 	private function maybe_alter_stats( $alter_store_earnings, $alter_customer_value, $alter_customer_purchase_count ) {
 
 		edd_undo_purchase( false, $this->ID );
@@ -1660,6 +1675,12 @@ final class EDD_Payment {
 
 	}
 
+	/**
+	 * Delete sales logs for this purcahse
+	 *
+	 * @since  2.5.10
+	 * @return void
+	 */
 	private function delete_sales_logs() {
 		global $edd_logs;
 
@@ -1703,6 +1724,12 @@ final class EDD_Payment {
 		return $date;
 	}
 
+	/**
+	 * Setup the payment mode
+	 *
+	 * @since  2.5
+	 * @return string The payment mode
+	 */
 	private function setup_mode() {
 		return $this->get_meta( '_edd_payment_mode' );
 	}
