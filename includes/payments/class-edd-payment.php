@@ -1710,7 +1710,7 @@ final class EDD_Payment {
 	/**
 	 * Setup the payment fees
 	 *
-	 * @since  XXX
+	 * @since  2.5.10
 	 * @return float The fees total for the payment
 	 */
 	private function setup_fees_total() {
