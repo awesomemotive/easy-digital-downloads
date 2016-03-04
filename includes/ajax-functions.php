@@ -567,7 +567,8 @@ function edd_ajax_customer_search() {
 
 	$search  = esc_sql( sanitize_text_field( $_GET['s'] ) );
 	$results = array();
-	if ( ! current_user_can( 'view_shop_reports' ) ) {
+	$customer_view_role = apply_filters( 'edd_view_customers_role', 'view_shop_reports' );
+	if ( ! current_user_can( $customer_view_role ) ) {
 		$customers = array();
 	} else {
 		$select = "SELECT id, name, email FROM {$wpdb->prefix}edd_customers ";
