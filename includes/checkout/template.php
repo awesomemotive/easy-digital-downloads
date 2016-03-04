@@ -396,24 +396,25 @@ function edd_default_cc_address_fields() {
 				<?php } ?>
 			</label>
 			<span class="edd-description"><?php _e( 'The state or province for your billing address.', 'easy-digital-downloads' ); ?></span>
-            <?php
-            $selected_state = edd_get_shop_state();
-            $states         = edd_get_shop_states( $selected_country );
+			<?php
+			$selected_state = edd_get_shop_state();
+			$states         = edd_get_shop_states( $selected_country );
 
-            if( ! empty( $customer['address']['state'] ) ) {
+			if( ! empty( $customer['address']['state'] ) ) {
 				$selected_state = $customer['address']['state'];
 			}
 
-            if( ! empty( $states ) ) : ?>
-            <select name="card_state" id="card_state" class="card_state edd-select<?php if( edd_field_is_required( 'card_state' ) ) { echo ' required'; } ?>">
-                <?php
-                    foreach( $states as $state_code => $state ) {
-                        echo '<option value="' . $state_code . '"' . selected( $state_code, $selected_state, false ) . '>' . $state . '</option>';
-                    }
-                ?>
-            </select>
-        	<?php else : ?>
-			<input type="text" size="6" name="card_state" id="card_state" class="card_state edd-input" placeholder="<?php _e( 'State / Province', 'easy-digital-downloads' ); ?>"/>
+			if( ! empty( $states ) ) : ?>
+			<select name="card_state" id="card_state" class="card_state edd-select<?php if( edd_field_is_required( 'card_state' ) ) { echo ' required'; } ?>">
+				<?php
+					foreach( $states as $state_code => $state ) {
+						echo '<option value="' . $state_code . '"' . selected( $state_code, $selected_state, false ) . '>' . $state . '</option>';
+					}
+				?>
+			</select>
+			<?php else : ?>
+			<?php $customer_state = ! empty( $customer['address']['state'] ) ? $customer['address']['state'] : ''; ?>
+			<input type="text" size="6" name="card_state" id="card_state" class="card_state edd-input" value="<?php echo esc_attr( $customer_state ); ?>" placeholder="<?php _e( 'State / Province', 'easy-digital-downloads' ); ?>"/>
 			<?php endif; ?>
 		</p>
 		<?php do_action( 'edd_cc_billing_bottom' ); ?>
