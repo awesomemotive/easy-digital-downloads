@@ -209,6 +209,10 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$this->assertEquals( 125, $payment->total );
 		$payment->save();
 
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertEquals( 5, $payment->fees_total );
+		$this->assertEquals( 125, $payment->total );
+
 		// Test that it saves to the DB
 		$payment_meta = get_post_meta( $this->_payment_id, '_edd_payment_meta', true );
 		$this->assertArrayHasKey( 'fees', $payment_meta );
