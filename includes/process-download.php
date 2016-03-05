@@ -95,11 +95,6 @@ function edd_process_download() {
 		// Allow the file to be altered before any headers are sent
 		$requested_file = apply_filters( 'edd_requested_file', $requested_file, $download_files, $args['file_key'] );
 
-		// If the file isn't locally hosted, process the redirect
-		if ( ! edd_is_local_file( $requested_file ) ) {
-			edd_deliver_download( $requested_file, true );
-		}
-
 		// Record this file download in the log
 		$user_info = array();
 		$user_info['email'] = $args['email'];
@@ -109,6 +104,13 @@ function edd_process_download() {
 			$user_info['name'] = $user_data->display_name;
 		}
 		edd_record_download_in_log( $args['download'], $args['file_key'], $user_info, edd_get_ip(), $args['payment'], $args['price_id'] );
+
+		// If the file isn't locally hosted, process the redirect
+		if ( ! edd_is_local_file( $requested_file ) ) {
+			edd_deliver_download( $requested_file, true );
+			exit;
+		}
+
 
 		$file_extension = edd_get_file_extension( $requested_file );
 		$ctype          = edd_get_file_ctype( $file_extension );
