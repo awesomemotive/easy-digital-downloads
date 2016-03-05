@@ -95,6 +95,11 @@ function edd_process_download() {
 		// Allow the file to be altered before any headers are sent
 		$requested_file = apply_filters( 'edd_requested_file', $requested_file, $download_files, $args['file_key'] );
 
+		// If the file isn't locally hosted, process the redirect
+		if ( ! edd_is_local_file( $requested_file ) ) {
+			edd_deliver_download( $requested_file, true );
+		}
+
 		// Record this file download in the log
 		$user_info = array();
 		$user_info['email'] = $args['email'];
