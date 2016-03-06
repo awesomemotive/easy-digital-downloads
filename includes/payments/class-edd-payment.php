@@ -435,6 +435,7 @@ final class EDD_Payment {
 		// Currency Based
 		$this->total           = $this->setup_total();
 		$this->tax             = $this->setup_tax();
+		$this->fees_total      = $this->setup_fees_total();
 		$this->subtotal        = $this->setup_subtotal();
 		$this->currency        = $this->setup_currency();
 
@@ -1703,6 +1704,26 @@ final class EDD_Payment {
 		}
 
 		return $tax;
+
+	}
+
+	/**
+	 * Setup the payment fees
+	 *
+	 * @since  2.5.10
+	 * @return float The fees total for the payment
+	 */
+	private function setup_fees_total() {
+		$fees_total = (float) 0.00;
+
+		$payment_fees = isset( $this->payment_meta['fees'] ) ? $this->payment_meta['fees'] : array();
+		if ( ! empty( $payment_fees ) ) {
+			foreach ( $payment_fees as $fee ) {
+				$fees_total += (float) $fee['amount'];
+			}
+		}
+
+		return $fees_total;
 
 	}
 
