@@ -544,3 +544,16 @@ function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $ex
 	// Payment not verified
 	return false;
 }
+
+/**
+ * Get Success Page URL
+ *
+ * @param string $query_string
+ * @access      public
+ * @since       1.0
+ * @deprecated  2.6
+ * @return      string
+*/
+function edd_get_success_page_url( $query_string = null ) {
+	return apply_filters( 'edd_success_page_url', edd_get_success_page_uri( $query_string ) );
+}
