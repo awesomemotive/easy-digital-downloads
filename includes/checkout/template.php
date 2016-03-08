@@ -30,7 +30,7 @@ function edd_checkout_form() {
 ?>
 			<div id="edd_checkout_form_wrap" class="edd_clearfix">
 				<?php do_action( 'edd_before_purchase_form' ); ?>
-				<form id="edd_purchase_form" class="edd_form" action="<?php echo $form_action; ?>" method="POST">
+				<form id="edd_purchase_form" class="edd_form" target="edd_form_ajax_handler" action="<?php echo $form_action; ?>" method="POST">
 					<?php
 					/**
 					 * Hooks in at the top of the checkout form
@@ -55,6 +55,7 @@ function edd_checkout_form() {
 				</form>
 				<?php do_action( 'edd_after_purchase_form' ); ?>
 			</div><!--end #edd_checkout_form_wrap-->
+			<iframe style="display:none;width:0px;height:0px;" src="about:blank" name='edd_form_ajax_handler' id="edd_form_ajax_handler" title="EDD Ajax Checkout Form Frame"></iframe>
 		<?php
 		else:
 			/**
