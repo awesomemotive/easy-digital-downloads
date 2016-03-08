@@ -496,7 +496,7 @@ function edd_add_cache_busting( $url = '' ) {
  *   trigger or false to not trigger error.
  *
  * @param string  $function    The function that was called
- * @param string  $version     The version of WordPress that deprecated the function
+ * @param string  $version     The version of EDD that deprecated the function
  * @param string  $replacement Optional. The function that should have been called
  * @param array   $backtrace   Optional. Contains stack backtrace of deprecated function
  */
