@@ -324,13 +324,13 @@ function edd_is_local_file( $requested_file ) {
 	$requested_file = preg_replace('#^https?://#', '', $requested_file );
 
 	$is_local_url  = strpos( $requested_file, $home_url );
-	$is_local_path = strpos( $requested_file, '/' ) !== 0;
+	$is_local_path = strpos( $requested_file, '/' ) === 0;
 
 	return ( $is_local_url || $is_local_path );
 }
 
 /**
- * Given the URL to a file, determine it's local pathr
+ * Given the URL to a file, determine it's local path
  *
  * Used during the symlink process to determine where to make the symlink point to
  *
