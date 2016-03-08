@@ -80,16 +80,31 @@ function edd_process_download() {
 		 * If we have an attachment ID stored, use get_attached_file() to retrieve absolute URL
 		 * If this fails or returns a relative path, we fail back to our own absolute URL detection
 		 */
-		if( $attachment_id && 'attachment' == get_post_type( $attachment_id ) && 'redirect' != $method ) {
-			$attached_file = get_attached_file( $attachment_id, false );
-			if( $attached_file ) {
-				$requested_file = $attached_file;
+		if( $attachment_id && 'attachment' == get_post_type( $attachment_id ) ) {
+
+			if( 'redirect' == $method ) {
+
+				$attached_file = wp_get_attachment_url( $attachment_id );
+
+			} else {
+
+				$attached_file = get_attached_file( $attachment_id, false );
+
 			}
+
+			if( $attached_file ) {
+
+				$requested_file = $attached_file;
+
+			}
+
 		}
 
 		// If we didn't find a file from the attachment, grab the given URL
 		if( ! isset( $requested_file ) ) {
+
 			$requested_file = isset( $download_files[ $args['file_key'] ]['file'] ) ? $download_files[ $args['file_key'] ]['file'] : '';
+
 		}
 
 		// Allow the file to be altered before any headers are sent
