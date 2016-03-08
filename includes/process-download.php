@@ -221,11 +221,7 @@ function edd_process_download() {
 				header( "Content-Length: " . filesize( $file_path ) );
 
 				// Now deliver the file based on the kind of software the server is running / has enabled
-				if ( function_exists( 'apache_get_modules' ) && in_array( 'mod_xsendfile', apache_get_modules() ) ) {
-
-					header("X-Sendfile: $file_path");
-
-				} elseif ( stristr( getenv( 'SERVER_SOFTWARE' ), 'lighttpd' ) ) {
+				if ( stristr( getenv( 'SERVER_SOFTWARE' ), 'lighttpd' ) ) {
 
 					header( "X-LIGHTTPD-send-file: $file_path" );
 
