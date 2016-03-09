@@ -336,13 +336,13 @@ class EDD_Product_Details_Widget extends WP_Widget {
 
 		<p>
 			<?php _e( 'Display Type:', 'easy-digital-downloads' ); ?><br />
-			<input type="radio" onchange="jQuery(this).parent().next('.download-details-selctor').hide();" <?php checked( 'current', $instance['display_type'], true ); ?> value="current" name="<?php echo esc_attr( $this->get_field_name( 'display_type' ) ); ?>" id="<?php echo esc_attr( $this->get_field_id( 'display_type' ) ); ?>-current"><label for="<?php echo esc_attr( $this->get_field_id( 'display_type' ) ); ?>-current"><?php _e( 'Current', 'easy-digital-downloads' ); ?></label>
-			<input type="radio" onchange="jQuery(this).parent().next('.download-details-selctor').show();" <?php checked( 'specific', $instance['display_type'], true ); ?> value="specific" name="<?php echo esc_attr( $this->get_field_name( 'display_type' ) ); ?>" id="<?php echo esc_attr( $this->get_field_id( 'display_type' ) ); ?>-specific"><label for="<?php echo esc_attr( $this->get_field_id( 'display_type' ) ); ?>-specific"><?php _e( 'Specific', 'easy-digital-downloads' ); ?></label>
+			<input type="radio" onchange="jQuery(this).parent().next('.download-details-selector').hide();" <?php checked( 'current', $instance['display_type'], true ); ?> value="current" name="<?php echo esc_attr( $this->get_field_name( 'display_type' ) ); ?>" id="<?php echo esc_attr( $this->get_field_id( 'display_type' ) ); ?>-current"><label for="<?php echo esc_attr( $this->get_field_id( 'display_type' ) ); ?>-current"><?php _e( 'Current', 'easy-digital-downloads' ); ?></label>
+			<input type="radio" onchange="jQuery(this).parent().next('.download-details-selector').show();" <?php checked( 'specific', $instance['display_type'], true ); ?> value="specific" name="<?php echo esc_attr( $this->get_field_name( 'display_type' ) ); ?>" id="<?php echo esc_attr( $this->get_field_id( 'display_type' ) ); ?>-specific"><label for="<?php echo esc_attr( $this->get_field_id( 'display_type' ) ); ?>-specific"><?php _e( 'Specific', 'easy-digital-downloads' ); ?></label>
 		</p>
 
 		<!-- Download -->
 		<?php $display = 'current' === $instance['display_type'] ? ' style="display: none;"' : ''; ?>
-		<p class="download-details-selctor" <?php echo $display; ?>>
+		<p class="download-details-selector" <?php echo $display; ?>>
 		<label for="<?php echo esc_attr( $this->get_field_id( 'download_id' ) ); ?>"><?php printf( __( '%s:', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></label>
 		<?php $download_count = wp_count_posts( 'download' ); ?>
 		<?php if ( $download_count->publish < 1000 ) : ?>
