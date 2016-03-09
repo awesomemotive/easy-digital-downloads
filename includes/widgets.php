@@ -345,7 +345,7 @@ class EDD_Product_Details_Widget extends WP_Widget {
 		<p class="download-details-selctor" <?php echo $display; ?>>
 		<label for="<?php echo esc_attr( $this->get_field_id( 'download_id' ) ); ?>"><?php printf( __( '%s:', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></label>
 		<?php $download_count = wp_count_posts( 'download' ); ?>
-		<?php if ( $download_count->publish < 100 ) : ?>
+		<?php if ( $download_count->publish < 1000 ) : ?>
 			<?php
 			$args = array(
 				'post_type'      => 'download',
