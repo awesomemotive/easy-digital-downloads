@@ -399,8 +399,8 @@ class EDD_Product_Details_Widget extends WP_Widget {
 		$instance = $old_instance;
 
 		$instance['title']           = strip_tags( $new_instance['title'] );
-		$instance['display_type']    = strip_tags( $new_instance['display_type'] );
 		$instance['download_id']     = strip_tags( $new_instance['download_id'] );
+		$instance['display_type']    = isset( $new_instance['display_type'] )    ? strip_tags( $new_instance['display_type'] ) : '';
 		$instance['download_title']  = isset( $new_instance['download_title'] )  ? $new_instance['download_title']  : '';
 		$instance['purchase_button'] = isset( $new_instance['purchase_button'] ) ? $new_instance['purchase_button'] : '';
 		$instance['categories']      = isset( $new_instance['categories'] )      ? $new_instance['categories']      : '';
