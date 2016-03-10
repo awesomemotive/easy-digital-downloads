@@ -363,7 +363,8 @@ class Tests_Widgets extends WP_UnitTestCase {
 
 		$this->assertRegExp( '/<label for="widget-edd_product_details--title">Title:<\/label>/', $output );
 		$this->assertRegExp( '/<input class="widefat" id="widget-edd_product_details--title" name="widget-edd_product_details\[\]\[title\]" type="text" value="(.*)" \/>/', $output );
-		$this->assertRegExp( '/<label for="widget-edd_product_details--download_id">Download<\/label>/', $output );
+		$this->assertRegExp( '/Display Type:/', $output );
+		$this->assertRegExp( '/<label for="widget-edd_product_details--download_id">Download:<\/label>/', $output );
 		$this->assertRegExp( '/<select class="widefat" name="widget-edd_product_details\[\]\[download_id\]" id="widget-edd_product_details--download_id">/', $output );
 		$this->assertRegExp( '/<input  checked=\'checked\' id="widget-edd_product_details--download_title" name="widget-edd_product_details\[\]\[download_title\]" type="checkbox" \/>/', $output );
 		$this->assertRegExp( '/<label for="widget-edd_product_details--download_title">Show Title<\/label>/', $output );
