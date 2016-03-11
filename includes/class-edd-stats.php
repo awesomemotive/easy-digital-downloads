@@ -520,7 +520,7 @@ class EDD_Stats {
 		if( ! is_wp_error( $this->end_date ) ) {
 
 			if( $this->timestamp ) {
-				$format = 'Y-m-d H:i:s';
+				$format = 'Y-m-d 00:00:00';
 			} else {
 				$format = 'Y-m-d 23:59:59';
 			}
