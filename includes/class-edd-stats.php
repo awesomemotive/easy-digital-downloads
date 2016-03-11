@@ -428,8 +428,10 @@ class EDD_Stats {
 
 		} else if( false !== strtotime( $date ) ) {
 
-			$this->timestamp = true;
-			$date = strtotime( $date, current_time( 'timestamp' ) );
+			$date  = strtotime( $date, current_time( 'timestamp' ) );
+			$year  = date( 'Y', $date );
+			$month = date( 'm', $date );
+			$day   = date( 'd', $date );
 
 		} else {
 
@@ -437,8 +439,7 @@ class EDD_Stats {
 
 		}
 
-		if( ! is_wp_error( $end_date ) && false === $this->timestamp ) {
-
+		if( false === $this->timestamp ) {
 			// Create an exact timestamp
 			$date = mktime( $hour, $minute, $second, $month, $day, $year );
 
