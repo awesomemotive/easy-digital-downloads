@@ -95,7 +95,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 
 			$args['date_query'] = array(
 				array(
-					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
+					'after'     => date( 'Y-n-d 00:00:00', strtotime( $this->start ) ),
 					'before'    => date( 'Y-n-d 23:59:59', strtotime( $this->end ) ),
 					'inclusive' => true
 				)
