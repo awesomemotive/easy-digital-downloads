@@ -217,7 +217,13 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		if( edd_item_in_cart( $to_add['id'], $to_add['options'] ) && edd_item_quantities_enabled() ) {
 
 			$key = edd_get_item_position_in_cart( $to_add['id'], $to_add['options'] );
-			$cart[ $key ]['quantity'] += $quantity;
+
+			if ( is_array( $quantity ) ) {
+				$cart[ $key ]['quantity'] += $quantity[ $key ];
+			} else {
+				$cart[ $key ]['quantity'] += $quantity;
+			}
+
 
 		} else {
 
