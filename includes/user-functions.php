@@ -658,7 +658,6 @@ function edd_send_user_verification_email( $user_id = 0 ) {
 		return;
 	}
 
-	$verify_url = edd_get_user_verification_url( $user_id );
 	$name       = $user_data->display_name;
 	$url        = edd_get_user_verification_url( $user_id );
 	$from_name  = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
