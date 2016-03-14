@@ -406,7 +406,8 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
 
 		if( edd_prices_show_tax_on_checkout() && ! edd_prices_include_tax() ) {
 			$price += edd_get_cart_item_tax( $item_id, $options, $price );
-		} else if( ! edd_prices_show_tax_on_checkout() && edd_prices_include_tax() ) {
+		} 
+		if( ! edd_prices_show_tax_on_checkout() && edd_prices_include_tax() ) {
 			$price -= edd_get_cart_item_tax( $item_id, $options, $price );
 		}
 
