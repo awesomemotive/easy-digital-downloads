@@ -445,7 +445,7 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
  * @since 1.0
  * @param int   $download_id Download ID number
  * @param array $options Optional parameters, used for defining variable prices
- * @param bool  $$remove_tax_from_inclusive Remove the tax amount from tax inclusive priced products.
+ * @param bool  $remove_tax_from_inclusive Remove the tax amount from tax inclusive priced products.
  * @return float|bool Price for this item
  */
 function edd_get_cart_item_price( $download_id = 0, $options = array(), $remove_tax_from_inclusive = false ) {
