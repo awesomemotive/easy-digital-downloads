@@ -405,13 +405,13 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
 	if ( ! edd_is_free_download( $item_id, $price_id ) && ! edd_download_is_tax_exclusive( $item_id ) ) {
 
 		if( edd_prices_show_tax_on_checkout() && ! edd_prices_include_tax() ) {
-			
+
 			$price += edd_get_cart_item_tax( $item_id, $options, $price );
-			
+
 		} if( ! edd_prices_show_tax_on_checkout() && edd_prices_include_tax() ) {
-			
+
 			$price -= edd_get_cart_item_tax( $item_id, $options, $price );
-			
+
 		}
 
 		if( edd_display_tax_rate() ) {
