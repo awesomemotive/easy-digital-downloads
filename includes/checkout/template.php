@@ -800,7 +800,7 @@ function edd_checkout_submit() {
 		<?php do_action( 'edd_purchase_form_after_submit' ); ?>
 
 		<?php if ( edd_is_ajax_disabled() ) { ?>
-			<p class="edd-cancel"><a href="javascript:history.go(-1)"><?php _e( 'Go back', 'easy-digital-downloads' ); ?></a></p>
+			<p class="edd-cancel"><a href="<?php echo edd_get_checkout_uri(); ?>"><?php _e( 'Go back', 'easy-digital-downloads' ); ?></a></p>
 		<?php } ?>
 	</fieldset>
 <?php
