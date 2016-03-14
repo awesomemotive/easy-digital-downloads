@@ -480,7 +480,7 @@ function edd_get_cart_item_price( $download_id = 0, $options = array(), $remove_
 	
 	if ( $remove_tax_from_inclusive && edd_prices_include_tax() ) {
 
-		$price -= edd_get_cart_item_tax( $item_id, $options, $price );
+		$price -= edd_get_cart_item_tax( $download_id, $options, $price );
 	}	
 
 	return apply_filters( 'edd_cart_item_price', $price, $download_id, $options );
