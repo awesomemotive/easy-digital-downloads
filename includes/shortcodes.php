@@ -170,8 +170,15 @@ add_shortcode( 'download_cart', 'edd_cart_shortcode' );
  * @return string
  */
 function edd_login_form_shortcode( $atts, $content = null ) {
+	$redirect         = home_url();
+	$purchase_history = edd_get_option( 'purchase_history_page', 0 );
+
+	if ( ! empty( $purchase_history ) ) {
+		$redirect = get_permalink( $purchase_history );
+	}
+	
 	extract( shortcode_atts( array(
-			'redirect' => '',
+			'redirect' => $redirect
 		), $atts, 'edd_login' )
 	);
 	return edd_login_form( $redirect );
@@ -190,8 +197,15 @@ add_shortcode( 'edd_login', 'edd_login_form_shortcode' );
  * @return string
  */
 function edd_register_form_shortcode( $atts, $content = null ) {
+	$redirect         = home_url();
+	$purchase_history = edd_get_option( 'purchase_history_page', 0 );
+
+	if ( ! empty( $purchase_history ) ) {
+		$redirect = get_permalink( $purchase_history );
+	}
+
 	extract( shortcode_atts( array(
-			'redirect' => '',
+			'redirect' => $redirect
 		), $atts, 'edd_register' )
 	);
 	return edd_register_form( $redirect );
