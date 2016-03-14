@@ -355,6 +355,10 @@ function edd_downloads_query( $atts, $content = null ) {
 			$query['orderby'] = 'rand';
 		break;
 
+		case 'post__in':
+			$query['orderby'] = 'post__in';
+		break;
+
 		default:
 			$query['orderby'] = 'post_date';
 		break;
