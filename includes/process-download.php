@@ -298,7 +298,7 @@ function edd_deliver_download( $file = '', $redirect = false ) {
 
 		// Make sure the symlink doesn't already exist before we create it
 		if( ! file_exists( $path ) ) {
-			$link = @symlink( $file, $path );
+			$link = @symlink( realpath( $file ), $path );
 		} else {
 			$link = true;
 		}
