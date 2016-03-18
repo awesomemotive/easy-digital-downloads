@@ -43,33 +43,29 @@ function edd_show_upgrade_notices() {
 
 	if ( version_compare( $edd_version, '1.3.2', '<' ) && ! get_option( 'edd_logs_upgraded' ) ) {
 		printf(
-			'<div class="updated"><p>' . esc_html__( 'The Purchase and File Download History in Easy Digital Downloads needs to be upgraded, click %shere%s to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
-			'<a href="' . esc_url( admin_url( 'options.php?page=edd-upgrades' ) ) . '">',
-			'</a>'
+			'<div class="updated"><p>' . esc_html__( 'The Purchase and File Download History in Easy Digital Downloads needs to be upgraded, <a href="%s">click here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+			esc_url( admin_url( 'options.php?page=edd-upgrades' ) ),
 		);
 	}
 
 	if ( version_compare( $edd_version, '1.3.4', '<' ) || version_compare( $edd_version, '1.4', '<' ) ) {
 		printf(
-			'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the plugin pages, click %shere%s to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
-			'<a href="' . esc_url( admin_url( 'options.php?page=edd-upgrades' ) ) . '">',
-			'</a>'
+			'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the plugin pages, <a href="%s">click here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+			esc_url( admin_url( 'options.php?page=edd-upgrades' ) )
 		);
 	}
 
 	if ( version_compare( $edd_version, '1.5', '<' ) ) {
 		printf(
-			'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the database, click %shere%s to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
-			'<a href="' . esc_url( admin_url( 'options.php?page=edd-upgrades' ) ) . '">',
-			'</a>'
+			'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the database, <a href="%s">click here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+			esc_url( admin_url( 'options.php?page=edd-upgrades' ) )
 		);
 	}
 
 	if ( version_compare( $edd_version, '2.0', '<' ) ) {
 		printf(
-			'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the database, click %shere%s to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
-			'<a href="' . esc_url( admin_url( 'options.php?page=edd-upgrades' ) ) . '">',
-			'</a>'
+			'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the database, <a href="%s">click here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+			esc_url( admin_url( 'options.php?page=edd-upgrades' ) )
 		);
 	}
 
@@ -79,7 +75,7 @@ function edd_show_upgrade_notices() {
 
 		$resume_url = add_query_arg( $resume_upgrade, admin_url( 'index.php' ) );
 		printf(
-			'<div class="error"><p>' . __( 'Easy Digital Downloads needs to complete a database upgrade that was previously started, click <a href="%s">here</a> to resume the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+			'<div class="error"><p>' . __( 'Easy Digital Downloads needs to complete a database upgrade that was previously started, <a href="%s">click here</a> to resume the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
 			esc_url( $resume_url )
 		);
 
@@ -90,50 +86,49 @@ function edd_show_upgrade_notices() {
 
 		if ( EDD()->session->get( 'upgrade_sequential' ) && edd_get_payments() ) {
 			printf(
-				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade past order numbers to make them sequential, click <a href="%s">here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade past order numbers to make them sequential, <a href="%s">click here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
 				admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_sequential_payment_numbers' )
 			);
 		}
 
 		if ( version_compare( $edd_version, '2.1', '<' ) ) {
 			printf(
-				'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the customer database, click %shere%s to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
-				'<a href="' . esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_customers_db' ) ) . '">',
-				'</a>'
+				'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the customer database, <a href="%s">click here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_customers_db' ) )
 			);
 		}
 
 		if ( version_compare( $edd_version, '2.2.6', '<' ) ) {
 			printf(
-				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the payment database, click <a href="%s">here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the payment database, <a href="%s">click here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
 				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_payments_price_logs_db' ) )
 			);
 		}
 
 		if ( version_compare( $edd_version, '2.3', '<' ) || ! edd_has_upgrade_completed( 'upgrade_customer_payments_association' ) ) {
 			printf(
-				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the customer database, click <a href="%s">here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the customer database, <a href="%s">click here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
 				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_customer_payments_association' ) )
 			);
 		}
 
 		if ( version_compare( $edd_version, '2.3', '<' ) || ! edd_has_upgrade_completed( 'upgrade_payment_taxes' ) ) {
 			printf(
-				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the payment database, click <a href="%s">here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the payment database, <a href="%s">click here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
 				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_payment_taxes' ) )
 			);
 		}
 
 		if ( version_compare( $edd_version, '2.4', '<' ) || ! edd_has_upgrade_completed( 'upgrade_user_api_keys' ) ) {
 			printf(
-				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the API Key database, click <a href="%s">here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the API Key database, <a href="%s">click here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
 				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_user_api_keys' ) )
 			);
 		}
 
 		if ( version_compare( $edd_version, '2.4.3', '<' ) || ! edd_has_upgrade_completed( 'remove_refunded_sale_logs' ) ) {
 			printf(
-				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the payments database, click <a href="%s">here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the payments database, <a href="%s">click here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
 				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=remove_refunded_sale_logs' ) )
 			);
 		}
