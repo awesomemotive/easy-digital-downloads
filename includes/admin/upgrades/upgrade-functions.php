@@ -75,7 +75,7 @@ function edd_show_upgrade_notices() {
 
 		$resume_url = add_query_arg( $resume_upgrade, admin_url( 'index.php' ) );
 		printf(
-			'<div class="error"><p>' . __( 'Easy Digital Downloads needs to complete a database upgrade that was previously started, <a href="%s">click here</a> to resume the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+			'<div class="error"><p>' . esc_html__( 'Easy Digital Downloads needs to complete a database upgrade that was previously started, <a href="%s">click here</a> to resume the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
 			esc_url( $resume_url )
 		);
 
@@ -86,7 +86,7 @@ function edd_show_upgrade_notices() {
 
 		if ( EDD()->session->get( 'upgrade_sequential' ) && edd_get_payments() ) {
 			printf(
-				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade past order numbers to make them sequential, <a href="%s">click here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+				'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade past order numbers to make them sequential, <a href="%s">click here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
 				admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_sequential_payment_numbers' )
 			);
 		}
@@ -100,35 +100,35 @@ function edd_show_upgrade_notices() {
 
 		if ( version_compare( $edd_version, '2.2.6', '<' ) ) {
 			printf(
-				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the payment database, <a href="%s">click here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+				'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the payment database, <a href="%s">click here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
 				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_payments_price_logs_db' ) )
 			);
 		}
 
 		if ( version_compare( $edd_version, '2.3', '<' ) || ! edd_has_upgrade_completed( 'upgrade_customer_payments_association' ) ) {
 			printf(
-				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the customer database, <a href="%s">click here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+				'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the customer database, <a href="%s">click here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
 				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_customer_payments_association' ) )
 			);
 		}
 
 		if ( version_compare( $edd_version, '2.3', '<' ) || ! edd_has_upgrade_completed( 'upgrade_payment_taxes' ) ) {
 			printf(
-				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the payment database, <a href="%s">click here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+				'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the payment database, <a href="%s">click here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
 				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_payment_taxes' ) )
 			);
 		}
 
 		if ( version_compare( $edd_version, '2.4', '<' ) || ! edd_has_upgrade_completed( 'upgrade_user_api_keys' ) ) {
 			printf(
-				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the API Key database, <a href="%s">click here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+				'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the API Key database, <a href="%s">click here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
 				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_user_api_keys' ) )
 			);
 		}
 
 		if ( version_compare( $edd_version, '2.4.3', '<' ) || ! edd_has_upgrade_completed( 'remove_refunded_sale_logs' ) ) {
 			printf(
-				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the payments database, <a href="%s">click here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+				'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the payments database, <a href="%s">click here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
 				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=remove_refunded_sale_logs' ) )
 			);
 		}
