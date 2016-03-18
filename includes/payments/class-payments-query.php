@@ -143,7 +143,12 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		$query = new WP_Query( $this->args );
 
-		if ( 'payments' != $this->args['output'] ) {
+		$custom_output = array(
+			'payments',
+			'edd_payments',
+		);
+
+		if ( ! in_array( $this->args['output'], $custom_output ) ) {
 			return $query->posts;
 		}
 
@@ -151,27 +156,15 @@ class EDD_Payments_Query extends EDD_Stats {
 			while ( $query->have_posts() ) {
 				$query->the_post();
 
-				$details = new stdClass;
+				$payment_id = get_post()->ID;
+				$payment    = new EDD_Payment( $payment_id );
 
-				$payment_id            = get_post()->ID;
-
-				$details->ID           = $payment_id;
-				$details->date         = get_post()->post_date;
-				$details->post_status  = get_post()->post_status;
-				$details->total        = edd_get_payment_amount( $payment_id );
-				$details->subtotal     = edd_get_payment_subtotal( $payment_id );
-				$details->tax          = edd_get_payment_tax( $payment_id );
-				$details->fees         = edd_get_payment_fees( $payment_id );
-				$details->key          = edd_get_payment_key( $payment_id );
-				$details->gateway      = edd_get_payment_gateway( $payment_id );
-				$details->user_info    = edd_get_payment_meta_user_info( $payment_id );
-				$details->cart_details = edd_get_payment_meta_cart_details( $payment_id, true );
-
-				if( edd_get_option( 'enable_sequential' ) ) {
-					$details->payment_number = edd_get_payment_number( $payment_id );
+				if ( edd_get_option( 'enable_sequential' ) ) {
+					// Backwards Compability, needs to set `payment_number` attribute
+					$payment->payment_number = $payment->number;
 				}
 
-				$this->payments[] = apply_filters( 'edd_payment', $details, $payment_id, $this );
+				$this->payments[] = apply_filters( 'edd_payment', $payment, $payment_id, $this );
 			}
 
 			wp_reset_postdata();
@@ -348,7 +341,7 @@ class EDD_Payments_Query extends EDD_Stats {
 			return;
 		}
 
-        $is_email = is_email( $search ) || strpos( $search, '@' ) !== false;
+		$is_email = is_email( $search ) || strpos( $search, '@' ) !== false;
 		$is_user  = strpos( $search, strtolower( 'user:' ) ) !== false;
 
 		if ( ! empty( $this->args['search_in_notes'] ) ) {
@@ -432,12 +425,27 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		} elseif ( '#' == substr( $search, 0, 1 ) ) {
 
-			$this->__set( 'download', str_replace( '#', '', $search ) );
+			$search = str_replace( '#:', '', $search );
+			$search = str_replace( '#', '', $search );
+			$this->__set( 'download', $search );
+			$this->__unset( 's' );
+
+		} elseif ( 0 === strpos( $search, 'discount:' ) ) {
+
+			$search = trim( str_replace( 'discount:', '', $search ) );
+			$search = 'discount.*' . $search;
+
+			$search_meta = array(
+				'key'     => '_edd_payment_meta',
+				'value'   => $search,
+				'compare' => 'REGEXP',
+			);
+
+			$this->__set( 'meta_query', $search_meta );
 			$this->__unset( 's' );
 
 		} else {
 			$this->__set( 's', $search );
-
 		}
 
 	}

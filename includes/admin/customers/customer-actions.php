@@ -371,3 +371,59 @@ function edd_disconnect_customer_user_id( $args ) {
 
 }
 add_action( 'edd_disconnect-userid', 'edd_disconnect_customer_user_id', 10, 1 );
+
+/**
+ * Process manual verification of customer account by admin
+ *
+ * @since  2.4.8
+ * @return void
+ */
+function edd_process_admin_user_verification() {
+
+	if ( empty( $_GET['id'] ) || ! is_numeric( $_GET['id'] ) ) {
+		return false;
+	}
+
+	if ( empty( $_GET['_wpnonce'] ) ) {
+		return false;
+	}
+
+	$nonce = $_GET['_wpnonce'];
+	if ( ! wp_verify_nonce( $nonce, 'edd-verify-user' ) ) {
+		wp_die( __( 'Nonce verification failed', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
+
+	$customer = new EDD_Customer( $_GET['id'] );
+	edd_set_user_to_verified( $customer->user_id );
+
+	$url = add_query_arg( 'edd-message', 'user-verified', admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ) );
+
+	wp_safe_redirect( $url );
+	exit;
+
+}
+add_action( 'edd_verify_user_admin', 'edd_process_admin_user_verification' );
+
+/**
+ * Register the reset single customer stats batch processor
+ * @since  2.5
+ */
+function edd_register_batch_single_customer_recount_tool() {
+	add_action( 'edd_batch_export_class_include', 'edd_include_single_customer_recount_tool_batch_processer', 10, 1 );
+}
+add_action( 'edd_register_batch_exporter', 'edd_register_batch_single_customer_recount_tool', 10 );
+
+/**
+ * Loads the tools batch processing class for recounding stats for a single customer
+ *
+ * @since  2.5
+ * @param  string $class The class being requested to run for the batch export
+ * @return void
+ */
+function edd_include_single_customer_recount_tool_batch_processer( $class ) {
+
+	if ( 'EDD_Tools_Recount_Single_Customer_Stats' === $class ) {
+		require_once EDD_PLUGIN_DIR . 'includes/admin/tools/class-edd-tools-recount-single-customer-stats.php';
+	}
+
+}

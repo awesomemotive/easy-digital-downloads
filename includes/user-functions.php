@@ -195,15 +195,15 @@ function edd_has_user_purchased( $user_id, $downloads, $variable_price_id = null
 
 	if ( $users_purchases ) {
 		foreach ( $users_purchases as $purchase ) {
-
-			$purchased_files = edd_get_payment_meta_downloads( $purchase->ID );
+			$payment         = new EDD_Payment( $purchase->ID );
+			$purchased_files = $payment->cart_details;
 
 			if ( is_array( $purchased_files ) ) {
 				foreach ( $purchased_files as $download ) {
 					if ( in_array( $download['id'], $downloads ) ) {
 						$variable_prices = edd_has_variable_prices( $download['id'] );
 						if ( $variable_prices && ! is_null( $variable_price_id ) && $variable_price_id !== false ) {
-							if ( isset( $download['options']['price_id'] ) && $variable_price_id == $download['options']['price_id'] ) {
+							if ( isset( $download['item_number']['options']['price_id'] ) && $variable_price_id == $download['item_number']['options']['price_id'] ) {
 								return true;
 							} else {
 								$return = false;
@@ -477,6 +477,8 @@ function edd_get_customer_address( $user_id = 0 ) {
  *
  * @access 		public
  * @since 		1.8.8
+ * @param int   $user_id
+ * @param array $user_data
  * @return 		void
  */
 function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
@@ -485,18 +487,32 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 		return;
 	}
 
-	$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
-	$message  = sprintf( __( 'New user registration on your site %s:' ), $blogname ) . "\r\n\r\n";
-	$message .= sprintf( __( 'Username: %s'), $user_data['user_login'] ) . "\r\n\r\n";
-	$message .= sprintf( __( 'E-mail: %s'), $user_data['user_email'] ) . "\r\n";
+	$from_name  = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
+	$from_email = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
 
-	@wp_mail( get_option( 'admin_email' ), sprintf( __('[%s] New User Registration' ), $blogname ), $message );
+	$emails = EDD()->emails;
 
-	$message  = sprintf( __( 'Username: %s' ), $user_data['user_login'] ) . "\r\n";
-	$message .= sprintf( __( 'Password: %s' ), __( '[Password entered at checkout]', 'easy-digital-downloads' ) ) . "\r\n";
-	$message .= wp_login_url() . "\r\n";
+	$emails->__set( 'from_name', $from_name );
+	$emails->__set( 'from_email', $from_email );
 
-	wp_mail( $user_data['user_email'], sprintf( __( '[%s] Your username and password' ), $blogname ), $message );
+	$admin_subject  = sprintf( __('[%s] New User Registration', 'easy-digital-downloads' ), $from_name );
+	$admin_heading  = __( 'New user registration', 'easy-digital-downloads' );
+	$admin_message  = sprintf( __( 'Username: %s', 'easy-digital-downloads'), $user_data['user_login'] ) . "\r\n\r\n";
+	$admin_message .= sprintf( __( 'E-mail: %s', 'easy-digital-downloads'), $user_data['user_email'] ) . "\r\n";
+
+	$emails->__set( 'heading', $admin_heading );
+
+	$emails->send( get_option( 'admin_email' ), $admin_subject, $admin_message );
+
+	$user_subject  = sprintf( __( '[%s] Your username and password', 'easy-digital-downloads' ), $from_name );
+	$user_heading  = __( 'Your account info', 'easy-digital-downloads' );
+	$user_message  = sprintf( __( 'Username: %s', 'easy-digital-downloads' ), $user_data['user_login'] ) . "\r\n";
+	$user_message .= sprintf( __( 'Password: %s' ), __( '[Password entered at checkout]', 'easy-digital-downloads' ) ) . "\r\n";
+	$user_message .= '<a href="' . wp_login_url() . '"> ' . esc_attr__( 'Click Here to Log In', 'easy-digital-downloads' ) . ' &raquo;</a>' . "\r\n";
+
+	$emails->__set( 'heading', $user_heading );
+
+	$emails->send( $user_data['user_email'], $user_subject, $user_message );
 
 }
 add_action( 'edd_insert_user', 'edd_new_user_notification', 10, 2 );
@@ -642,14 +658,20 @@ function edd_send_user_verification_email( $user_id = 0 ) {
 		return;
 	}
 
-	$verify_url = edd_get_user_verification_url( $user_id );
 	$name       = $user_data->display_name;
 	$url        = edd_get_user_verification_url( $user_id );
 	$from_name  = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
 	$from_email = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
 	$subject    = apply_filters( 'edd_user_verification_email_subject', __( 'Verify your account', 'easy-digital-downloads' ), $user_id );
 	$heading    = apply_filters( 'edd_user_verification_email_heading', __( 'Verify your account', 'easy-digital-downloads' ), $user_id );
-	$message    = sprintf( __( "Hello %s,\n\nYour account with %s needs to be verified before you can access your purchase history. <a href='%s'>Click here</a> to verify your account.", 'easy-digital-downloads' ), $name, $from_name, $url );
+	$message    = sprintf(
+		__( "Hello %s,\n\nYour account with %s needs to be verified before you can access your purchase history. <a href='%s'>Click here</a> to verify your account.\n\nLink missing? Visit the following URL: %s", 'easy-digital-downloads' ),
+		$name,
+		$from_name,
+		$url,
+		$url
+	);
+
 	$message    = apply_filters( 'edd_user_verification_email_message', $message, $user_id );
 
 	$emails     = new EDD_Emails;
@@ -879,3 +901,25 @@ function edd_get_user_verification_page() {
 
 	return apply_filters( 'edd_user_verification_base_url', $url );
 }
+
+/**
+ * When a user is deleted, detach that user id from the customer record
+ *
+ * @since  2.5
+ * @param  int $user_id The User ID being deleted
+ * @return bool         If the detachment was successful
+ */
+function edd_detach_deleted_user( $user_id ) {
+
+	$customer = new EDD_Customer( $user_id, true );
+	$detached = false;
+
+	if ( $customer->id > 0 ) {
+		$detached = $customer->update( array( 'user_id' => 0 ) );
+	}
+
+	do_action( 'edd_detach_deleted_user', $user_id, $customer, $detached );
+
+	return $detached;
+}
+add_action( 'delete_user', 'edd_detach_deleted_user', 10, 1 );

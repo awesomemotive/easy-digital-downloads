@@ -21,8 +21,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_trigger_purchase_receipt( $payment_id ) {
 	// Make sure we don't send a purchase receipt while editing a payment
-	if ( isset( $_POST['edd-action'] ) && 'edit_payment' == $_POST['edd-action'] )
+	if ( isset( $_POST['edd-action'] ) && 'edit_payment' == $_POST['edd-action'] ) {
 		return;
+	}
 
 	// Send email with secure download link
 	edd_email_purchase_receipt( $payment_id );
@@ -76,13 +77,14 @@ add_action( 'edd_email_links', 'edd_resend_purchase_receipt' );
  * @return void
  */
 function edd_send_test_email( $data ) {
-	if ( ! wp_verify_nonce( $data['_wpnonce'], 'edd-test-email' ) )
+	if ( ! wp_verify_nonce( $data['_wpnonce'], 'edd-test-email' ) ) {
 		return;
+	}
 
 	// Send a test email
-    edd_email_test_purchase_receipt();
+	edd_email_test_purchase_receipt();
 
-    // Remove the test email query arg
-    wp_redirect( remove_query_arg( 'edd_action' ) ); exit;
+	// Remove the test email query arg
+	wp_redirect( remove_query_arg( 'edd_action' ) ); exit;
 }
 add_action( 'edd_send_test_email', 'edd_send_test_email' );
