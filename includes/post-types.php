@@ -364,16 +364,15 @@ add_action( 'init', 'edd_register_post_type_statuses', 2 );
 function edd_updated_messages( $messages ) {
 	global $post, $post_ID;
 
-	$url1 = '<a href="' . get_permalink( $post_ID ) . '">';
-	$url2 = edd_get_label_singular();
-	$url3 = '</a>';
+	$label = edd_get_label_singular();
+	$url   = get_permalink( $post_ID );
 
 	$messages['download'] = array(
-		1 => sprintf( __( '%2$s updated. %1$sView %2$s%3$s.', 'easy-digital-downloads' ), $url1, $url2, $url3 ),
-		4 => sprintf( __( '%2$s updated. %1$sView %2$s%3$s.', 'easy-digital-downloads' ), $url1, $url2, $url3 ),
-		6 => sprintf( __( '%2$s published. %1$sView %2$s%3$s.', 'easy-digital-downloads' ), $url1, $url2, $url3 ),
-		7 => sprintf( __( '%2$s saved. %1$sView %2$s%3$s.', 'easy-digital-downloads' ), $url1, $url2, $url3 ),
-		8 => sprintf( __( '%2$s submitted. %1$sView %2$s%3$s.', 'easy-digital-downloads' ), $url1, $url2, $url3 )
+		1 => sprintf( __( '%1$s updated. <a href="%2$s">View %1$s</a>.',   'easy-digital-downloads' ), $label, $url ),
+		4 => sprintf( __( '%1$s updated. <a href="%2$s">View %1$s</a>.',   'easy-digital-downloads' ), $label, $url ),
+		6 => sprintf( __( '%1$s published. <a href="%2$s">View %1$s</a>.', 'easy-digital-downloads' ), $label, $url ),
+		7 => sprintf( __( '%1$s saved. <a href="%2$s">View %1$s</a>.',     'easy-digital-downloads' ), $label, $url ),
+		8 => sprintf( __( '%1$s submitted. <a href="%2$s">View %1$s</a>.', 'easy-digital-downloads' ), $label, $url )
 	);
 
 	return $messages;
