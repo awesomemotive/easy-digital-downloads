@@ -78,8 +78,8 @@ class EDD_Notices {
 			ob_start();
 			?>
 			<div class="error">
-				<p><?php printf( __( 'The Easy Digital Downloads .htaccess file is missing from %s!', 'easy-digital-downloads' ), '<strong>' . edd_get_upload_dir() . '</strong>' ); ?></p>
-				<p><?php printf( __( 'First, please resave the Misc settings tab a few times. If this warning continues to appear, create a file called ".htaccess" in the %s directory, and copy the following into it:', 'easy-digital-downloads' ), '<strong>' . edd_get_upload_dir() . '</strong>' ); ?></p>
+				<p><?php printf( __( 'The Easy Digital Downloads %1$s file is missing from %2$s!', 'easy-digital-downloads' ), '<code>.htaccess</code>', '<strong>' . edd_get_upload_dir() . '</strong>' ); ?></p>
+				<p><?php printf( __( 'First, please resave the Misc settings tab a few times. If this warning continues to appear, create a file called %1$s in the %2$s directory, and copy the following into it:', 'easy-digital-downloads' ), '<code>.htaccess</code>', '<strong>' . edd_get_upload_dir() . '</strong>' ); ?></p>
 				<p><pre><?php echo edd_get_htaccess_rules(); ?></pre></p>
 				<p><a href="<?php echo add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'htaccess_missing' ) ); ?>"><?php _e( 'Dismiss Notice', 'easy-digital-downloads' ); ?></a></p>
 			</div>
