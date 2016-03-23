@@ -217,7 +217,13 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		if( edd_item_in_cart( $to_add['id'], $to_add['options'] ) && edd_item_quantities_enabled() ) {
 
 			$key = edd_get_item_position_in_cart( $to_add['id'], $to_add['options'] );
-			$cart[ $key ]['quantity'] += $quantity;
+
+			if ( is_array( $quantity ) ) {
+				$cart[ $key ]['quantity'] += $quantity[ $key ];
+			} else {
+				$cart[ $key ]['quantity'] += $quantity;
+			}
+
 
 		} else {
 
@@ -439,9 +445,10 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
  * @since 1.0
  * @param int   $download_id Download ID number
  * @param array $options Optional parameters, used for defining variable prices
+ * @param bool  $remove_tax_from_inclusive Remove the tax amount from tax inclusive priced products.
  * @return float|bool Price for this item
  */
-function edd_get_cart_item_price( $download_id = 0, $options = array() ) {
+function edd_get_cart_item_price( $download_id = 0, $options = array(), $remove_tax_from_inclusive = false ) {
 
 	$price = 0;
 	$variable_prices = edd_has_variable_prices( $download_id );
@@ -470,6 +477,11 @@ function edd_get_cart_item_price( $download_id = 0, $options = array() ) {
 		// Get the standard Download price if not using variable prices
 		$price = edd_get_download_price( $download_id );
 	}
+	
+	if ( $remove_tax_from_inclusive && edd_prices_include_tax() ) {
+
+		$price -= edd_get_cart_item_tax( $download_id, $options, $price );
+	}	
 
 	return apply_filters( 'edd_cart_item_price', $price, $download_id, $options );
 }
