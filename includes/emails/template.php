@@ -62,7 +62,7 @@ function edd_email_preview_template_tags( $message ) {
 
 	$price = edd_currency_filter( edd_format_amount( 10.50 ) );
 
-	$gateway = 'PayPal';
+	$gateway = edd_get_gateway_admin_label( edd_get_default_gateway );
 
 	$receipt_id = strtolower( md5( uniqid() ) );
 
