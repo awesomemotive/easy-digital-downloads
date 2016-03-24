@@ -6,7 +6,7 @@ Donate link: https://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 4.0
 Tested up to: 4.5
-Stable Tag: 2.5.9
+Stable Tag: 2.5.10
 
 License: GNU Version 2 or Any Later Version
 
@@ -213,6 +213,34 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.5.10, March 24, 2016 =
+
+* Fix: Fatal PHP error when adding multiple price IDs to the card when same item is already in cart
+* Fix: New user registration notification email does not support HTML
+* Fix: {receipt_link} HTML stripped from plain text emails
+* Fix: fees_total property not set up in EDD_Payment object
+* Fix: Payment History not properly setting end date filter
+* Fix: filesize() being run on external files during file download
+* Fix: Symlinked file downloads result in 0 byte files
+* Fix: 100% discount codes with taxes enabled fail to allow purchase
+* Fix: Extraneous hyphen after product name for products without price options
+* Fix: Payments cannot be searched by user ID
+* Fix: Undefined index "download_method"
+* Fix: Ajax Download search excludes bundles improperly
+* Fix: Custom date range over multiple years does not work well in earnings reports
+* Fix: HTTP/HTTPS protocol stored on file URLs in database, resulting in failed downloads if site protocol changes
+* Fix: Extensions settings tab displays empty Main section in some cases
+* Fix: "No checkout page has been configured" notice cannot be dismissed properly
+* Fix: EDD transients not deleted during uninstall
+* Fix: Sales logs not deleted when payment is changed from Complete to Pending
+* Fix: Inconsistent formatting in Dashboard stats widget
+* Fix: About and Welcome pages not compatible with Admin Menu Editor plugin
+* Fix: State / Province field not populating saved country / state / province when shown as text field
+* Fix: discount_dropdown() method of EDD_HTML_Elements does not support non-item label
+* Fix: widgets.php page dies if site has large number of products
+* Fix: Form to create new API key not shown
+* Tweak: Re-adding support for retrieving card item price without tax
 
 = 2.5.9, February 18, 2016 =
 
