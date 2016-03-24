@@ -809,3 +809,30 @@ function edd_symlink_file_downloads() {
 	$symlink = edd_get_option( 'symlink_file_downloads', false ) && function_exists( 'symlink' );
 	return (bool) apply_filters( 'edd_symlink_file_downloads', $symlink );
 }
+
+/**
+ * Given a local URL, make sure the requests matches the request scheme
+ *
+ * @since  2.5.10
+ * @param  string $requested_file The Requested File
+ * @param  array  $download_files The download files
+ * @param  string $file_key       The file key
+ * @return string                 The file (if local) with the matched scheme
+ */
+function edd_set_requested_file_scheme( $requested_file, $download_files, $file_key ) {
+
+	// If it's a URL and it's local, let's make sure the scheme matches the requested scheme
+	if ( filter_var( $requested_file, FILTER_VALIDATE_URL ) && edd_is_local_file( $requested_file ) ) {
+
+		if ( false === strpos( $requested_file, 'https://' ) && is_ssl() ) {
+			$requested_file = str_replace( 'http://', 'https://', $requested_file );
+		} elseif ( ! is_ssl() && 0 === strpos( $requested_file, 'https://' ) ) {
+			$requested_file = str_replace( 'https://', 'http://', $requested_file );
+		}
+
+	}
+
+	return $requested_file;
+
+}
+add_filter( 'edd_requested_file', 'edd_set_requested_file_scheme', 10, 3 );
