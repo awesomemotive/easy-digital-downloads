@@ -224,7 +224,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: filesize() being run on external files during file download
 * Fix: Symlinked file downloads result in 0 byte files
 * Fix: 100% discount codes with taxes enabled fail to allow purchase
-* Fix: Extraneous hypen after product name for products without price options
+* Fix: Extraneous hyphen after product name for products without price options
 * Fix: Payments cannot be searched by user ID
 * Fix: Undefined index "download_method"
 * Fix: Ajax Download search excludes bundles improperly
@@ -236,8 +236,8 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Sales logs not deleted when payment is changed from Complete to Pending
 * Fix: Inconsistent formatting in Dashboard stats widget
 * Fix: About and Welcome pages not compatible with Admin Menu Editor plugin
-* Fix: State / Province field not populating saved country / state/province when shown as text field
-* Fix: discount_dropdown() methof of EDD_HTML_Elements does not support non-item label
+* Fix: State / Province field not populating saved country / state / province when shown as text field
+* Fix: discount_dropdown() method of EDD_HTML_Elements does not support non-item label
 * Fix: widgets.php page dies if site has large number of products
 * Fix: Form to create new API key not shown
 * Tweak: Re-adding support for retrieving card item price without tax
