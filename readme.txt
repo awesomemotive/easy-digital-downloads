@@ -239,6 +239,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: State / Province field not populating saved country / state/province when shown as text field
 * Fix: discount_dropdown() methof of EDD_HTML_Elements does not support non-item label
 * Fix: widgets.php page dies if site has large number of products
+* Fix: Form to create new API key not shown
 * Tweak: Re-adding support for retrieving card item price without tax
 
 = 2.5.9, February 18, 2016 =
