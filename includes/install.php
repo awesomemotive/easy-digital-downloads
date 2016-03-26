@@ -24,7 +24,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since 1.0
  * @global $wpdb
  * @global $edd_options
- * @global $wp_version
  * @param  bool $network_side If the plugin is being network-activated
  * @return void
  */
@@ -57,7 +56,7 @@ register_activation_hook( EDD_PLUGIN_FILE, 'edd_install' );
  * @return void
  */
 function edd_run_install() {
-	global $wpdb, $edd_options, $wp_version;
+	global $wpdb, $edd_options;
 
 	if( ! function_exists( 'edd_create_protection_files' ) ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upload-functions.php';
