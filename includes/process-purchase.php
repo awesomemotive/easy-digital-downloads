@@ -46,6 +46,9 @@ function edd_process_purchase_form() {
 
 	// Validate the user
 	$user = edd_get_purchase_form_user( $valid_data );
+	
+	// Let extensions validate fields after user is logged in if user has used login/registration form
+	do_action( 'edd_checkout_user_error_checks', $user, $valid_data, $_POST );
 
 	if ( false === $valid_data || edd_get_errors() || ! $user ) {
 		if ( $is_ajax ) {
