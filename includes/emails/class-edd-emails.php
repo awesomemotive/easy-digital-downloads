@@ -355,7 +355,7 @@ class EDD_Emails {
 	public function text_to_html( $message ) {
 
 		if ( 'text/html' == $this->content_type || true === $this->html ) {
-			$message = wpautop( $message );
+			$message = apply_filters( 'edd_email_template_wpautop', true ) ? wpautop( $message ) : $message;
 		}
 
 		return $message;

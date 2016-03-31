@@ -653,6 +653,93 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		remove_filter( 'edd_decrease_store_earnings_on_refund', '__return_false ' );
 	}
 
+	public function test_pending_affecting_stats() {
+		$payment         = new EDD_Payment( $this->_payment_id );
+		$payment->status = 'complete';
+		$payment->save();
+
+		$customer = new EDD_Customer( $payment->customer_id );
+		$download = new EDD_Download( $payment->downloads[0]['id'] );
+
+		$customer_sales    = $customer->purchase_count;
+		$customer_earnings = $customer->purchase_value;
+
+		$download_sales    = $download->sales;
+		$download_earnings = $download->earnings;
+
+		$store_earnings    = edd_get_total_earnings();
+		$store_sales       = edd_get_total_sales();
+
+		$payment->status = 'pending';
+		$payment->save();
+		wp_cache_flush();
+
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertEmpty( $payment->completed_date );
+
+		$customer = new EDD_Customer( $payment->customer_id );
+		$download = new EDD_Download( $payment->downloads[0]['id'] );
+
+		$this->assertEquals( $customer_earnings - $payment->total, $customer->purchase_value );
+		$this->assertEquals( $customer_sales - 1, $customer->purchase_count );
+
+		$this->assertEquals( $download_earnings - $payment->cart_details[0]['price'], $download->earnings );
+		$this->assertEquals( $download_sales - $payment->downloads[0]['quantity'], $download->sales );
+
+		$this->assertEquals( $store_earnings - $payment->total, edd_get_total_earnings() );
+		$this->assertEquals( $store_sales - 1, edd_get_total_sales() );
+	}
+
+	public function test_pending_without_affecting_stats() {
+		add_filter( 'edd_decrease_earnings_on_undo', '__return_false' );
+		add_filter( 'edd_decrease_sales_on_undo', '__return_false' );
+		add_filter( 'edd_decrease_customer_value_on_pending', '__return_false' );
+		add_filter( 'edd_decrease_customer_purchase_count_on_pending', '__return_false' );
+		add_filter( 'edd_decrease_store_earnings_on_pending', '__return_false' );
+
+		$payment         = new EDD_Payment( $this->_payment_id );
+		$payment->status = 'complete';
+		$payment->save();
+
+		$customer = new EDD_Customer( $payment->customer_id );
+		$download = new EDD_Download( $payment->downloads[0]['id'] );
+
+		$customer_sales    = $customer->purchase_count;
+		$customer_earnings = $customer->purchase_value;
+
+		$download_sales    = $download->sales;
+		$download_earnings = $download->earnings;
+
+		$store_earnings    = edd_get_total_earnings();
+		$store_sales       = edd_get_total_sales();
+
+		$payment->status = 'pending';
+		$payment->save();
+		wp_cache_flush();
+
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertEmpty( $payment->completed_date );
+
+		$customer = new EDD_Customer( $payment->customer_id );
+		$download = new EDD_Download( $payment->downloads[0]['id'] );
+
+		$this->assertEquals( $customer_earnings, $customer->purchase_value );
+		$this->assertEquals( $customer_sales, $customer->purchase_count );
+
+		$this->assertEquals( $download_earnings, $download->earnings );
+		$this->assertEquals( $download_sales, $download->sales );
+
+		$this->assertEquals( $store_earnings, edd_get_total_earnings() );
+		// Store sales are based off 'publish' & 'revoked' status. So it reduces this count
+		$this->assertEquals( $store_sales - 1, edd_get_total_sales() );
+
+		remove_filter( 'edd_decrease_earnings_on_undo', '__return_false' );
+		remove_filter( 'edd_decrease_sales_on_undo', '__return_false' );
+		remove_filter( 'edd_decrease_customer_value_on_pending', '__return_false' );
+		remove_filter( 'edd_decrease_customer_purchase_count_on_pending', '__return_false' );
+		remove_filter( 'edd_decrease_store_earnings_on_pending', '__return_false ' );
+	}
+
 	public function test_failed_payment_discount() {
 
 		$id   = EDD_Helper_Discount::create_simple_percent_discount();
