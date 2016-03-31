@@ -315,18 +315,9 @@ class EDD_Session {
 
 		if( ! empty( $_SERVER[ 'REQUEST_URI' ] ) ) {
 
-			$blacklist = apply_filters( 'edd_session_start_uri_blacklist', array(
-				'feed',
-				'feed',
-				'feed/rss',
-				'feed/rss2',
-				'feed/rdf',
-				'feed/atom',
-				'comments/feed/'
-			) );
-
-			$uri = ltrim( $_SERVER[ 'REQUEST_URI' ], '/' );
-			$uri = untrailingslashit( $uri );
+			$blacklist = $this->get_blacklist();
+			$uri       = ltrim( $_SERVER[ 'REQUEST_URI' ], '/' );
+			$uri       = untrailingslashit( $uri );
 
 			if( in_array( $uri, $blacklist ) ) {
 				$start_session = false;
@@ -340,6 +331,37 @@ class EDD_Session {
 
 		return apply_filters( 'edd_start_session', $start_session );
 
+	}
+
+	/**
+	 * Retrieve the URI blacklist
+	 *
+	 * These are the URIs where we never start sessions
+	 *
+	 * @since  2.5
+	 * @return array
+	 */
+	public function get_blacklist() {
+
+		$blacklist = apply_filters( 'edd_session_start_uri_blacklist', array(
+			'feed',
+			'feed/rss',
+			'feed/rss2',
+			'feed/rdf',
+			'feed/atom',
+			'comments/feed'
+		) );
+
+		// Look to see if WordPress is in a sub folder or this is a network site that uses sub folders
+		$folder = str_replace( network_home_url(), '', get_site_url() );
+
+		if( ! empty( $folder ) ) {
+			foreach( $blacklist as $path ) {
+				$blacklist[] = $folder . '/' . $path;
+			}
+		}
+
+		return $blacklist;
 	}
 
 	/**
