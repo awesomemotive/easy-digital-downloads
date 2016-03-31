@@ -355,6 +355,18 @@ div[class^="license-"] .edd-license-data p { margin-left: 4px; }
 #edd-item-tab-wrapper { margin-left: -1px; z-index: 1; text-align: center; display: inline-block; }
 #edd-item-tab-wrapper-list li { background-color: #fff; width: 32px; height: 32px; }
 #edd-item-tab-wrapper-list .inactive { background-color: #fff; color: #eee; border-left: 1px solid #e5e5e5; }
+#edd-item-tab-wrapper-list .inactive a,
+#edd-item-tab-wrapper-list .inactive a:visited {
+	color: #eee;
+	display: block;
+	line-height: 32px;
+	text-decoration: none;
+}
+#edd-item-tab-wrapper-list .inactive a:hover,
+#edd-item-tab-wrapper-list .inactive a:focus,
+#edd-item-tab-wrapper-list .inactive a:active {
+	color: #444;
+}
 #edd-item-tab-wrapper-list .active { border-width: 1px 1px 1px 0; border-style: solid; border-color: #e5e5e5; }
 #edd-item-tab-wrapper-list :not(:last-child) { margin-bottom: 3px; }
 #edd-item-tab-wrapper-list .dashicons { font-size: 24px; line-height: 32px; }
