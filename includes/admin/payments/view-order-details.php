@@ -408,10 +408,10 @@ $currency_code  = $payment->currency;
 										<div class="column">
 											<?php if( ! empty( $customer->id ) ) : ?>
 												<?php $customer_url = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ); ?>
-												<a href="<?php echo $customer_url; ?>" title="<?php _e( 'View Customer Details', 'easy-digital-downloads' ); ?>"><?php _e( 'View Customer Details', 'easy-digital-downloads' ); ?></a>
+												<a href="<?php echo $customer_url; ?>"><?php _e( 'View Customer Details', 'easy-digital-downloads' ); ?></a>
 												&nbsp;|&nbsp;
 											<?php endif; ?>
-											<a href="#new" class="edd-payment-new-customer" title="<?php _e( 'New Customer', 'easy-digital-downloads' ); ?>"><?php _e( 'New Customer', 'easy-digital-downloads' ); ?></a>
+											<a href="#new" class="edd-payment-new-customer"><?php _e( 'New Customer', 'easy-digital-downloads' ); ?></a>
 										</div>
 									</div>
 

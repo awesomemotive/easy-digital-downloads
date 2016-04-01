@@ -193,7 +193,7 @@ class EDD_License {
 		}
 
 		echo '<p>' . sprintf(
-			__( 'Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please <a href="%s" target="_blank" title="License renewal FAQ">renew your license</a>.', 'easy-digital-downloads' ),
+			__( 'Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please <a href="%s" target="_blank">renew your license</a>.', 'easy-digital-downloads' ),
 			'http://docs.easydigitaldownloads.com/article/1000-license-renewal'
 		) . '</p>';
 
@@ -418,7 +418,7 @@ class EDD_License {
 			if( empty( $_GET['tab'] ) || 'licenses' !== $_GET['tab'] ) {
 
 				$messages[] = sprintf(
-					__( 'You have invalid or expired license keys for Easy Digital Downloads. Please go to the <a href="%s" title="Go to Licenses page">Licenses page</a> to correct this issue.', 'easy-digital-downloads' ),
+					__( 'You have invalid or expired license keys for Easy Digital Downloads. Please go to the <a href="%s">Licenses page</a> to correct this issue.', 'easy-digital-downloads' ),
 					admin_url( 'edit.php?post_type=download&page=edd-settings&tab=licenses' )
 				);
 
