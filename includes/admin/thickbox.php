@@ -27,10 +27,10 @@ function edd_media_button() {
 		/* check current WP version */
 		if ( version_compare( $wp_version, '3.5', '<' ) ) {
 			$img = '<img src="' . EDD_PLUGIN_URL . 'assets/images/edd-media.png" alt="' . sprintf( __( 'Insert %s', 'easy-digital-downloads' ), edd_get_label_singular() ) . '"/>';
-			$output = '<a href="#TB_inline?width=640&inlineId=choose-download" class="thickbox" title="' . __( 'Insert Download', 'easy-digital-downloads' ) . '">' . $img . '</a>';
+			$output = '<a href="#TB_inline?width=640&inlineId=choose-download" class="thickbox">' . $img . '</a>';
 		} else {
 			$img = '<span class="wp-media-buttons-icon" id="edd-media-button"></span>';
-			$output = '<a href="#TB_inline?width=640&inlineId=choose-download" class="thickbox button edd-thickbox" title="' . sprintf( __( 'Insert %s', 'easy-digital-downloads' ), strtolower ( edd_get_label_singular() ) ) . '" style="padding-left: .4em;">' . $img . sprintf( __( 'Insert %s', 'easy-digital-downloads' ), strtolower( edd_get_label_singular() ) ) . '</a>';
+			$output = '<a href="#TB_inline?width=640&inlineId=choose-download" class="thickbox button edd-thickbox" style="padding-left: .4em;">' . $img . sprintf( __( 'Insert %s', 'easy-digital-downloads' ), strtolower( edd_get_label_singular() ) ) . '</a>';
 		}
 	}
 	echo $output;
@@ -132,7 +132,7 @@ function edd_admin_footer_for_thickbox() {
 				</div>
 				<p class="submit">
 					<input type="button" id="edd-insert-download" class="button-primary" value="<?php echo sprintf( __( 'Insert %s', 'easy-digital-downloads' ), edd_get_label_singular() ); ?>" onclick="insertDownload();" />
-					<a id="edd-cancel-download-insert" class="button-secondary" onclick="tb_remove();" title="<?php _e( 'Cancel', 'easy-digital-downloads' ); ?>"><?php _e( 'Cancel', 'easy-digital-downloads' ); ?></a>
+					<a id="edd-cancel-download-insert" class="button-secondary" onclick="tb_remove();"><?php _e( 'Cancel', 'easy-digital-downloads' ); ?></a>
 				</p>
 			</div>
 		</div>

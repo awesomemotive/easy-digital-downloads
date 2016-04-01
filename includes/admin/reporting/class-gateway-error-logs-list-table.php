@@ -92,7 +92,7 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	 */
 	public function column_message( $item ) {
 	?>
-		<a href="#TB_inline?width=640&amp;inlineId=log-message-<?php echo $item['ID']; ?>" class="thickbox" title="<?php _e( 'View Log Message', 'easy-digital-downloads' ); ?> "><?php _e( 'View Log Message', 'easy-digital-downloads' ); ?></a>
+		<a href="#TB_inline?width=640&amp;inlineId=log-message-<?php echo $item['ID']; ?>" class="thickbox"><?php _e( 'View Log Message', 'easy-digital-downloads' ); ?></a>
 		<div id="log-message-<?php echo $item['ID']; ?>" style="display:none;">
 			<?php
 
