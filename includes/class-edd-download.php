@@ -455,7 +455,7 @@ class EDD_Download {
 	 */
 	public function get_file_price_condition( $file_key = 0 ) {
 
-		$files    = edd_get_download_files( $this->ID );
+		$files    = $this->get_files();
 		$condition = isset( $files[ $file_key ]['condition']) ? $files[ $file_key ]['condition'] : 'all';
 
 		return apply_filters( 'edd_get_file_price_condition', $condition, $this->ID, $files );
@@ -588,14 +588,12 @@ class EDD_Download {
 
 			if ( '' == get_post_meta( $this->ID, '_edd_download_sales', true ) ) {
 				add_post_meta( $this->ID, '_edd_download_sales', 0 );
-			} // End if
+			}
 
 			$this->sales = get_post_meta( $this->ID, '_edd_download_sales', true );
 
-			if ( $this->sales < 0 ) {
-				// Never let sales be less than zero
-				$this->sales = 0;
-			}
+			// Never let sales be less than zero
+			$this->sales = max( $this->sales, 0 );
 
 		}
 
@@ -612,9 +610,8 @@ class EDD_Download {
 	 */
 	public function increase_sales( $quantity = 1 ) {
 
-		$sales       = edd_get_download_sales_stats( $this->ID );
 		$quantity    = absint( $quantity );
-		$total_sales = $sales + $quantity;
+		$total_sales = $this->sales + $quantity;
 
 		if ( $this->update_meta( '_edd_download_sales', $total_sales ) ) {
 
@@ -635,13 +632,11 @@ class EDD_Download {
 	 */
 	public function decrease_sales( $quantity = 1 ) {
 
-		$sales = edd_get_download_sales_stats( $this->ID );
-
 		// Only decrease if not already zero
-		if ( $sales > 0 ) {
+		if ( $this->sales > 0 ) {
 
 			$quantity    = absint( $quantity );
-			$total_sales = $sales - $quantity;
+			$total_sales = $this->sales - $quantity;
 
 			if ( $this->update_meta( '_edd_download_sales', $total_sales ) ) {
 
@@ -672,10 +667,8 @@ class EDD_Download {
 
 			$this->earnings = get_post_meta( $this->ID, '_edd_download_earnings', true );
 
-			if ( $this->earnings < 0 ) {
-				// Never let earnings be less than zero
-				$this->earnings = 0;
-			}
+			// Never let earnings be less than zero
+			$this->earnings = max( $this->earnings, 0 );
 
 		}
 
@@ -692,8 +685,7 @@ class EDD_Download {
 	 */
 	public function increase_earnings( $amount = 0 ) {
 
-		$earnings   = edd_get_download_earnings_stats( $this->ID );
-		$new_amount = $earnings + (float) $amount;
+		$new_amount = $this->earnings + (float) $amount;
 
 		if ( $this->update_meta( '_edd_download_earnings', $new_amount ) ) {
 
@@ -715,12 +707,10 @@ class EDD_Download {
 	 */
 	public function decrease_earnings( $amount ) {
 
-		$earnings = edd_get_download_earnings_stats( $this->ID );
+		// Only decrease if greater than zero
+		if ( $this->earnings > 0 ) {
 
-		if ( $earnings > 0 ) {
-
-			// Only decrease if greater than zero
-			$new_amount = $earnings - (float) $amount;
+			$new_amount = $this->earnings - (float) $amount;
 
 			if ( $this->update_meta( '_edd_download_earnings', $new_amount ) ) {
 
