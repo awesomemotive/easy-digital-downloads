@@ -189,7 +189,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	 * @since 1.5
 	 * @return void
 	 */
-	function bulk_actions( $which = '' ) {
+	public function bulk_actions( $which = '' ) {
 		// These aren't really bulk actions but this outputs the markup in the right place
 		static $edd_api_is_bottom;
 
@@ -206,6 +206,33 @@ class EDD_API_Keys_Table extends WP_List_Table {
 		</form>
 		<?php
 		$edd_api_is_bottom = true;
+	}
+
+	/**
+	 * Generate the table navigation above or below the table
+	 *
+	 * @since 3.1.0
+	 * @access protected
+	 * @param string $which
+	 */
+	protected function display_tablenav( $which ) {
+		if ( 'top' === $which ) {
+			wp_nonce_field( 'bulk-' . $this->_args['plural'] );
+		}
+?>
+	<div class="tablenav <?php echo esc_attr( $which ); ?>">
+
+		<div class="alignleft actions bulkactions">
+			<?php $this->bulk_actions( $which ); ?>
+		</div>
+<?php
+		$this->extra_tablenav( $which );
+		$this->pagination( $which );
+?>
+
+		<br class="clear" />
+	</div>
+<?php
 	}
 
 	/**

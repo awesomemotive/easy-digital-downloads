@@ -834,12 +834,22 @@ function edd_email_tag_sitename( $payment_id ) {
  * Email template tag: receipt_link
  * Adds a link so users can view their receipt directly on your website if they are unable to view it in the browser correctly
  *
- * @param $int payment_id
+ * @param $payment_id int
  *
  * @return string receipt_link
  */
 function edd_email_tag_receipt_link( $payment_id ) {
-	return sprintf( __( '%1$sView it in your browser.%2$s', 'easy-digital-downloads' ), '<a href="' . esc_url( add_query_arg( array( 'payment_key' => edd_get_payment_key( $payment_id ), 'edd_action' => 'view_receipt' ), home_url() ) ) . '">', '</a>' );
+	$receipt_url = esc_url( add_query_arg( array(
+		'payment_key' => edd_get_payment_key( $payment_id ),
+		'edd_action'  => 'view_receipt'
+	), home_url() ) );
+	$formatted   = sprintf( __( '%1$sView it in your browser %2$s', 'edd' ), '<a href="' . $receipt_url . '">', '&raquo;</a>' );
+
+	if ( edd_get_option( 'email_template' ) !== 'none' ) {
+		return $formatted;
+	} else {
+		return $receipt_url;
+	}
 }
 
 /**

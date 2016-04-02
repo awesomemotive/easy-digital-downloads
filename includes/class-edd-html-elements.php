@@ -217,7 +217,7 @@ class EDD_HTML_Elements {
 			'selected'         => $selected,
 			'options'          => $options,
 			'show_option_all'  => false,
-			'show_option_none' => false,
+			'show_option_none' => __( 'Select a discount', 'easy-digital-downloads' ),
 		) );
 
 		return $output;
@@ -364,7 +364,7 @@ class EDD_HTML_Elements {
 		}
 
 		$class  = implode( ' ', array_map( 'sanitize_html_class', explode( ' ', $args['class'] ) ) );
-		$output = '<select name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( sanitize_key( str_replace( '-', '_', $args['id'] ) ) ) . '" class="edd-select ' . $class . '"' . $multiple . ' data-placeholder="' . $placeholder . '"'. $data_elements . '>';
+		$output = '<select name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( edd_sanitize_key( str_replace( '-', '_', $args['id'] ) ) ) . '" class="edd-select ' . $class . '"' . $multiple . ' data-placeholder="' . $placeholder . '"'. $data_elements . '>';
 
 		if ( $args['show_option_all'] ) {
 			if( $args['multiple'] ) {
@@ -481,13 +481,13 @@ class EDD_HTML_Elements {
 		$data = '';
 		if ( ! empty( $args['data'] ) ) {
 			foreach ( $args['data'] as $key => $value ) {
-				$data .= 'data-' . sanitize_key( $key ) . '="' . esc_attr( $value ) . '" ';
+				$data .= 'data-' . edd_sanitize_key( $key ) . '="' . esc_attr( $value ) . '" ';
 			}
 		}
 
-		$output = '<span id="edd-' . sanitize_key( $args['name'] ) . '-wrap">';
+		$output = '<span id="edd-' . edd_sanitize_key( $args['name'] ) . '-wrap">';
 
-			$output .= '<label class="edd-label" for="' . sanitize_key( $args['id'] ) . '">' . esc_html( $args['label'] ) . '</label>';
+			$output .= '<label class="edd-label" for="' . edd_sanitize_key( $args['id'] ) . '">' . esc_html( $args['label'] ) . '</label>';
 
 			if ( ! empty( $args['desc'] ) ) {
 				$output .= '<span class="edd-description">' . esc_html( $args['desc'] ) . '</span>';
@@ -544,11 +544,11 @@ class EDD_HTML_Elements {
 			$disabled = ' disabled="disabled"';
 		}
 
-		$output = '<span id="edd-' . sanitize_key( $args['name'] ) . '-wrap">';
+		$output = '<span id="edd-' . edd_sanitize_key( $args['name'] ) . '-wrap">';
 
-			$output .= '<label class="edd-label" for="' . sanitize_key( $args['name'] ) . '">' . esc_html( $args['label'] ) . '</label>';
+			$output .= '<label class="edd-label" for="' . edd_sanitize_key( $args['name'] ) . '">' . esc_html( $args['label'] ) . '</label>';
 
-			$output .= '<textarea name="' . esc_attr( $args['name'] ) . '" id="' . sanitize_key( $args['name'] ) . '" class="' . $class . '"' . $disabled . '>' . esc_attr( $args['value'] ) . '</textarea>';
+			$output .= '<textarea name="' . esc_attr( $args['name'] ) . '" id="' . edd_sanitize_key( $args['name'] ) . '" class="' . $class . '"' . $disabled . '>' . esc_attr( $args['value'] ) . '</textarea>';
 
 			if ( ! empty( $args['desc'] ) ) {
 				$output .= '<span class="edd-description">' . esc_html( $args['desc'] ) . '</span>';
