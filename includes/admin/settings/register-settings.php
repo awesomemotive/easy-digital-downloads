@@ -2015,7 +2015,6 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
  * @return void
  */
 function edd_hook_callback( $args ) {
-	error_log( print_r( $args, 1 ) );
 	do_action( 'edd_' . $args['id'], $args );
 }
 
