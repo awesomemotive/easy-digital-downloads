@@ -365,7 +365,7 @@ final class EDD_Payment {
 	}
 
 	/**
-	 * Magic ISSET function, which allows empty checks on protected elemetns
+	 * Magic ISSET function, which allows empty checks on protected elements
 	 *
 	 * @since  2.5
 	 * @param  string  $name The attribute to get
@@ -471,7 +471,7 @@ final class EDD_Payment {
 	 * Create the base of a payment.
 	 *
 	 * @since  2.5
-	 * @return int|bool Fale on failure, the payment ID on success.
+	 * @return int|bool False on failure, the payment ID on success.
 	 */
 	private function insert_payment() {
 
@@ -865,7 +865,7 @@ final class EDD_Payment {
 	 * @param int   $download_id The download to add
 	 * @param array $args Other arguments to pass to the function
 	 * @param array $options List of download options
-	 * @return void
+	 * @return bool True when successful, false otherwise
 	 */
 	public function add_download( $download_id = 0, $args = array(), $options = array() ) {
 		$download = new EDD_Download( $download_id );
@@ -1104,7 +1104,7 @@ final class EDD_Payment {
 			$tax          = $this->cart_details[ $found_cart_key ]['tax'];
 			$discount     = ! empty( $this->cart_details[ $found_cart_key ]['discount'] ) ? $this->cart_details[ $found_cart_key ]['discount'] : 0;
 
-			// The total reduction quals the number removed * the item_price
+			// The total reduction equals the number removed * the item_price
 			$total_reduced = round( $item_price * $args['quantity'], edd_currency_decimal_filter() );
 			$tax_reduced   = round( ( $tax / $orig_quantity ) * $args['quantity'], edd_currency_decimal_filter() );
 
@@ -1148,6 +1148,7 @@ final class EDD_Payment {
 	 *
 	 * @since  2.5
 	 * @param  array $args Array of arguments for the fee to add
+	 * @param bool $global
 	 * @return bool If the fee was added
 	 */
 	public function add_fee( $args, $global = true ) {
@@ -1677,7 +1678,7 @@ final class EDD_Payment {
 	}
 
 	/**
-	 * Delete sales logs for this purcahse
+	 * Delete sales logs for this purchase
 	 *
 	 * @since  2.5.10
 	 * @return void
@@ -2222,7 +2223,7 @@ final class EDD_Payment {
 	 * Retrieve unlimited file downloads status
 	 *
 	 * @since  2.5.1
-	 * @return bool Is unlimted
+	 * @return bool Is unlimited
 	 */
 	private function get_unlimited() {
 		return apply_filters( 'edd_payment_unlimited_downloads', $this->unlimited, $this->ID, $this );
