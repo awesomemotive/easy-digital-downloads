@@ -611,7 +611,7 @@ class EDD_Download {
 	public function increase_sales( $quantity = 1 ) {
 
 		$quantity    = absint( $quantity );
-		$total_sales = $this->sales + $quantity;
+		$total_sales = $this->get_sales() + $quantity;
 
 		if ( $this->update_meta( '_edd_download_sales', $total_sales ) ) {
 
@@ -633,10 +633,10 @@ class EDD_Download {
 	public function decrease_sales( $quantity = 1 ) {
 
 		// Only decrease if not already zero
-		if ( $this->sales > 0 ) {
+		if ( $this->get_sales() > 0 ) {
 
 			$quantity    = absint( $quantity );
-			$total_sales = $this->sales - $quantity;
+			$total_sales = $this->get_sales() - $quantity;
 
 			if ( $this->update_meta( '_edd_download_sales', $total_sales ) ) {
 
@@ -685,7 +685,7 @@ class EDD_Download {
 	 */
 	public function increase_earnings( $amount = 0 ) {
 
-		$new_amount = $this->earnings + (float) $amount;
+		$new_amount = $this->get_earnings() + (float) $amount;
 
 		if ( $this->update_meta( '_edd_download_earnings', $new_amount ) ) {
 
@@ -708,9 +708,9 @@ class EDD_Download {
 	public function decrease_earnings( $amount ) {
 
 		// Only decrease if greater than zero
-		if ( $this->earnings > 0 ) {
+		if ( $this->get_earnings() > 0 ) {
 
-			$new_amount = $this->earnings - (float) $amount;
+			$new_amount = $this->get_earnings() - (float) $amount;
 
 			if ( $this->update_meta( '_edd_download_earnings', $new_amount ) ) {
 
