@@ -268,7 +268,7 @@ function edd_ajax_apply_discount() {
 		if ( is_user_logged_in() ) {
 			$user = get_current_user_id();
 		} else {
-			$form = maybe_unserialize( $_POST['form'] );
+			parse_str( $_POST['form'], $form );
 			if ( ! empty( $form['edd_email'] ) ) {
 				$user = urldecode( $form['edd_email'] );
 			}
@@ -315,7 +315,7 @@ function edd_ajax_update_cart_item_quantity() {
 
 		$download_id = absint( $_POST['download_id'] );
 		$quantity    = absint( $_POST['quantity'] );
-		$options     = maybe_unserialize( stripslashes( $_POST['options'] ) );
+		$options     = json_decode( stripslashes( $_POST['options'] ), true );
 
 		edd_set_cart_item_quantity( $download_id, absint( $_POST['quantity'] ), $options );
 		$total = edd_get_cart_total();
@@ -493,7 +493,8 @@ function edd_ajax_download_search() {
 	$search   = esc_sql( sanitize_text_field( $_GET['s'] ) );
 	$excludes = ( isset( $_GET['current_id'] ) ? (array) $_GET['current_id'] : array() );
 
-	if( ! empty( $_GET['no_bundles'] ) ) {
+	$no_bundles = isset( $_GET['no_bundles'] ) ? filter_var( $_GET['no_bundles'], FILTER_VALIDATE_BOOLEAN ) : false;
+	if( true === $no_bundles ) {
 		$bundles  = $wpdb->get_results( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_edd_product_type' AND meta_value = 'bundle';", ARRAY_A );
 		$bundles  = wp_list_pluck( $bundles, 'post_id' );
 		$excludes = array_merge( $excludes, $bundles );
@@ -566,7 +567,8 @@ function edd_ajax_customer_search() {
 
 	$search  = esc_sql( sanitize_text_field( $_GET['s'] ) );
 	$results = array();
-	if ( ! current_user_can( 'view_shop_reports' ) ) {
+	$customer_view_role = apply_filters( 'edd_view_customers_role', 'view_shop_reports' );
+	if ( ! current_user_can( $customer_view_role ) ) {
 		$customers = array();
 	} else {
 		$select = "SELECT id, name, email FROM {$wpdb->prefix}edd_customers ";
@@ -634,7 +636,7 @@ function edd_check_for_download_price_variations() {
 
 		if ( $variable_prices ) {
 			$ajax_response = '<select class="edd_price_options_select edd-select edd-select" name="edd_price_option">';
-				
+
 				if( isset( $_POST['all_prices'] ) ) {
 					$ajax_response .= '<option value="">' . __( 'All Prices', 'easy-digital-downloads' ) . '</option>';
 				}
