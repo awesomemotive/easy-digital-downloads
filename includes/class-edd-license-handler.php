@@ -30,7 +30,7 @@ class EDD_License {
 	 * Class constructor
 	 *
 	 * @param string  $_file
-	 * @param string  $_item_name
+	 * @param string  $_item
 	 * @param string  $_version
 	 * @param string  $_author
 	 * @param string  $_optname

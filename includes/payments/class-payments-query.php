@@ -49,7 +49,7 @@ class EDD_Payments_Query extends EDD_Stats {
 	 *
 	 * @access public
 	 * @since 1.8
-	 * @param $args array The array of arguments that can be passed in and used for setting up this payment query.
+	 * @param array $args The array of arguments that can be passed in and used for setting up this payment query.
 	 */
 	public function __construct( $args = array() ) {
 		$defaults = array(

@@ -410,7 +410,7 @@ class EDD_HTML_Elements {
 	 *
 	 * @param array $args
 	 *
-	 * @return string
+	 * @return string Checkbox HTML code
 	 */
 	public function checkbox( $args = array() ) {
 		$defaults = array(
@@ -447,7 +447,7 @@ class EDD_HTML_Elements {
 	 * @return string Text field
 	 */
 	public function text( $args = array() ) {
-		// Backwards compatabliity
+		// Backwards compatibility
 		if ( func_num_args() > 1 ) {
 			$args = func_get_args();
 
