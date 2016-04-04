@@ -216,15 +216,16 @@ class EDD_Product_Details_Widget extends WP_Widget {
 	public function widget( $args, $instance ) {
 		$args['id'] = ( isset( $args['id'] ) ) ? $args['id'] : 'edd_download_details_widget';
 
-		if ( 'current' === ( $instance['download_id'] ) ) {
-			$instance['display_type'] = 'current';
-			$instance['download_id']  = false;
-		} elseif ( is_numeric( $instance['download_id'] ) ) {
-			$instance['display_type'] = 'specific';
+		if ( ! empty( $instance['download_id'] ) ) {
+			if ( 'current' === ( $instance['download_id'] ) ) {
+				$instance['display_type'] = 'current';
+				unset( $instance['download_id'] );
+			} elseif ( is_numeric( $instance['download_id'] ) ) {
+				$instance['display_type'] = 'specific';
+			}
 		}
 
-
-		if ( ! isset( $instance['download_id'] ) || ( 'current' == $instance['display_type'] && ! is_singular( 'download' ) ) ) {
+		if ( ( 'specific' === $instance['display_type'] && ! isset( $instance['download_id'] ) ) || ( 'current' == $instance['display_type'] && ! is_singular( 'download' ) ) ) {
 			return;
 		}
 
@@ -236,7 +237,7 @@ class EDD_Product_Details_Widget extends WP_Widget {
 		}
 
 		// Since we can take a typed in value, make sure it's a download we're looking for
-		$download = get_post( $instance['download_id'] );
+		$download = get_post( $download_id );
 		if ( ! is_object( $download ) || 'download' !== $download->post_type ) {
 			return;
 		}
