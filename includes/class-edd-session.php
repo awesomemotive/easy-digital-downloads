@@ -306,7 +306,7 @@ class EDD_Session {
 	/**
 	 * Determines if we should start sessions
 	 *
-	 * @since  2.5
+	 * @since  2.5.11
 	 * @return bool
 	 */
 	public function should_start_session() {
@@ -338,7 +338,7 @@ class EDD_Session {
 	 *
 	 * These are the URIs where we never start sessions
 	 *
-	 * @since  2.5
+	 * @since  2.5.11
 	 * @return array
 	 */
 	public function get_blacklist() {
