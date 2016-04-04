@@ -481,7 +481,14 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		if( isset( $_GET['user'] ) ) {
 			$args['user'] = urldecode( $_GET['user'] );
 		} elseif( isset( $_GET['s'] ) ) {
-			$args['s'] = urldecode( $_GET['s'] );
+
+			$is_user  = strpos( $_GET['s'], strtolower( 'user:' ) ) !== false;
+			if ( $is_user ) {
+				$args['user'] = absint( trim( str_replace( 'user:', '', strtolower( $_GET['s'] ) ) ) );
+				unset( $args['s'] );
+			} else {
+				$args['s'] = sanitize_text_field( $_GET['s'] );
+			}
 		}
 
 		if ( ! empty( $_GET['start-date'] ) ) {
