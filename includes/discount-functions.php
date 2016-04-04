@@ -990,6 +990,11 @@ function edd_get_discounted_amount( $code, $base_price ) {
 function edd_increase_discount_usage( $code ) {
 
 	$id   = edd_get_discount_id_by_code( $code );
+
+	if ( false === $id ) {
+		return false;
+	}
+
 	$uses = edd_get_discount_uses( $id );
 
 	if ( $uses ) {
@@ -1018,6 +1023,11 @@ function edd_increase_discount_usage( $code ) {
 function edd_decrease_discount_usage( $code ) {
 
 	$id   = edd_get_discount_id_by_code( $code );
+
+	if ( false === $id ) {
+		return false;
+	}
+
 	$uses = edd_get_discount_uses( $id );
 
 	if ( $uses ) {
