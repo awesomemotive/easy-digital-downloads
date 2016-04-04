@@ -45,16 +45,16 @@ class EDD_Logging {
 	public function register_post_type() {
 		/* Logs post type */
 		$log_args = array(
-			'labels'			  => array( 'name' => __( 'Logs', 'easy-digital-downloads' ) ),
-			'public'			  => false,
+			'labels'              => array( 'name' => __( 'Logs', 'easy-digital-downloads' ) ),
+			'public'              => false,
 			'exclude_from_search' => true,
 			'publicly_queryable'  => false,
 			'show_ui'             => false,
-			'query_var'			  => false,
-			'rewrite'			  => false,
-			'capability_type'	  => 'post',
-			'supports'			  => array( 'title', 'editor' ),
-			'can_export'		  => true
+			'query_var'           => false,
+			'rewrite'             => false,
+			'capability_type'     => 'post',
+			'supports'            => array( 'title', 'editor' ),
+			'can_export'          => true,
 		);
 
 		register_post_type( 'edd_log', $log_args );
@@ -122,10 +122,10 @@ class EDD_Logging {
 	 */
 	public function add( $title = '', $message = '', $parent = 0, $type = null ) {
 		$log_data = array(
-			'post_title' 	=> $title,
-			'post_content'	=> $message,
-			'post_parent'	=> $parent,
-			'log_type'		=> $type
+			'post_title'   => $title,
+			'post_content' => $message,
+			'post_parent'  => $parent,
+			'log_type'     => $type,
 		);
 
 		return $this->insert_log( $log_data );
@@ -158,11 +158,11 @@ class EDD_Logging {
 	 */
 	function insert_log( $log_data = array(), $log_meta = array() ) {
 		$defaults = array(
-			'post_type' 	=> 'edd_log',
-			'post_status'	=> 'publish',
-			'post_parent'	=> 0,
-			'post_content'	=> '',
-			'log_type'		=> false
+			'post_type'    => 'edd_log',
+			'post_status'  => 'publish',
+			'post_parent'  => 0,
+			'post_content' => '',
+			'log_type'     => false,
 		);
 
 		$args = wp_parse_args( $log_data, $defaults );
@@ -203,9 +203,9 @@ class EDD_Logging {
 		do_action( 'edd_pre_update_log', $log_data, $log_meta );
 
 		$defaults = array(
-			'post_type' 	=> 'edd_log',
-			'post_status'	=> 'publish',
-			'post_parent'	=> 0
+			'post_type'   => 'edd_log',
+			'post_status' => 'publish',
+			'post_parent' => 0,
 		);
 
 		$args = wp_parse_args( $log_data, $defaults );
@@ -239,7 +239,7 @@ class EDD_Logging {
 			'posts_per_page' => 20,
 			'post_status'    => 'publish',
 			'paged'          => get_query_var( 'paged' ),
-			'log_type'       => false
+			'log_type'       => false,
 		);
 
 		$query_args = wp_parse_args( $args, $defaults );
@@ -247,9 +247,9 @@ class EDD_Logging {
 		if ( $query_args['log_type'] && $this->valid_type( $query_args['log_type'] ) ) {
 			$query_args['tax_query'] = array(
 				array(
-					'taxonomy' 	=> 'edd_log_type',
-					'field'		=> 'slug',
-					'terms'		=> $query_args['log_type']
+					'taxonomy'  => 'edd_log_type',
+					'field'     => 'slug',
+					'terms'     => $query_args['log_type'],
 				)
 			);
 		}
@@ -276,22 +276,20 @@ class EDD_Logging {
 	 */
 	public function get_log_count( $object_id = 0, $type = null, $meta_query = null, $date_query = null ) {
 
-		global $pagenow, $typenow;
-
 		$query_args = array(
-			'post_parent' 	   => $object_id,
-			'post_type'		   => 'edd_log',
+			'post_parent'      => $object_id,
+			'post_type'        => 'edd_log',
 			'posts_per_page'   => -1,
-			'post_status'	   => 'publish',
+			'post_status'      => 'publish',
 			'fields'           => 'ids',
 		);
 
 		if ( ! empty( $type ) && $this->valid_type( $type ) ) {
 			$query_args['tax_query'] = array(
 				array(
-					'taxonomy' 	=> 'edd_log_type',
-					'field'		=> 'slug',
-					'terms'		=> $type
+					'taxonomy'  => 'edd_log_type',
+					'field'     => 'slug',
+					'terms'     => $type,
 				)
 			);
 		}
@@ -326,7 +324,7 @@ class EDD_Logging {
 			'post_type'      => 'edd_log',
 			'posts_per_page' => -1,
 			'post_status'    => 'publish',
-			'fields'         => 'ids'
+			'fields'         => 'ids',
 		);
 
 		if ( ! empty( $type ) && $this->valid_type( $type ) ) {
