@@ -408,6 +408,11 @@ class EDD_Product_Details_Widget extends WP_Widget {
 
 		do_action( 'edd_product_details_widget_update', $instance );
 
+		// If the new view is 'current download' then remove the specific download ID
+		if ( 'current' === $instance['display_type'] ) {
+			unset( $instance['download_id'] );
+		}
+
 		return $instance;
 	}
 
