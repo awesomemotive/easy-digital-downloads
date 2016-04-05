@@ -3,9 +3,9 @@
  * Plugin Name: Easy Digital Downloads
  * Plugin URI: https://easydigitaldownloads.com
  * Description: Serve Digital Downloads Through WordPress.
- * Author: Pippin Williamson
- * Author URI: https://pippinsplugins.com
- * Version: 2.4.9
+ * Author: Pippin Williamson and Company
+ * Author URI: https://easydigitaldownloads.com
+ * Version: 2.5.10
  * Text Domain: easy-digital-downloads
  * Domain Path: languages
  *
@@ -25,7 +25,7 @@
  * @package EDD
  * @category Core
  * @author Pippin Williamson
- * @version 2.4.8
+ * @version 2.5.10
  */
 
 // Exit if accessed directly.
@@ -50,7 +50,7 @@ final class Easy_Digital_Downloads {
 	/**
 	 * EDD Roles Object.
 	 *
-	 * @var object
+	 * @var object|EDD_Roles
 	 * @since 1.5
 	 */
 	public $roles;
@@ -58,7 +58,7 @@ final class Easy_Digital_Downloads {
 	/**
 	 * EDD Cart Fees Object.
 	 *
-	 * @var object
+	 * @var object|EDD_Fees
 	 * @since 1.5
 	 */
 	public $fees;
@@ -66,7 +66,7 @@ final class Easy_Digital_Downloads {
 	/**
 	 * EDD API Object.
 	 *
-	 * @var object
+	 * @var object|EDD_API
 	 * @since 1.5
 	 */
 	public $api;
@@ -76,7 +76,7 @@ final class Easy_Digital_Downloads {
 	 *
 	 * This holds cart items, purchase sessions, and anything else stored in the session.
 	 *
-	 * @var object
+	 * @var object|EDD_Session
 	 * @since 1.5
 	 */
 	public $session;
@@ -84,7 +84,7 @@ final class Easy_Digital_Downloads {
 	/**
 	 * EDD HTML Element Helper Object.
 	 *
-	 * @var object
+	 * @var object|EDD_HTML_Elements
 	 * @since 1.5
 	 */
 	public $html;
@@ -92,7 +92,7 @@ final class Easy_Digital_Downloads {
 	/**
 	 * EDD Emails Object.
 	 *
-	 * @var object
+	 * @var object|EDD_Emails
 	 * @since 2.1
 	 */
 	public $emails;
@@ -100,7 +100,7 @@ final class Easy_Digital_Downloads {
 	/**
 	 * EDD Email Template Tags Object.
 	 *
-	 * @var object
+	 * @var object|EDD_Email_Template_Tags
 	 * @since 1.9
 	 */
 	public $email_tags;
@@ -108,7 +108,7 @@ final class Easy_Digital_Downloads {
 	/**
 	 * EDD Customers DB Object.
 	 *
-	 * @var object
+	 * @var object|EDD_DB_Customers
 	 * @since 2.1
 	 */
 	public $customers;
@@ -126,7 +126,7 @@ final class Easy_Digital_Downloads {
 	 * @uses Easy_Digital_Downloads::includes() Include the required files.
 	 * @uses Easy_Digital_Downloads::load_textdomain() load the language files.
 	 * @see EDD()
-	 * @return The one true Easy_Digital_Downloads
+	 * @return object|Easy_Digital_Downloads The one true Easy_Digital_Downloads
 	 */
 	public static function instance() {
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Easy_Digital_Downloads ) ) {
@@ -186,7 +186,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '2.4.9' );
+			define( 'EDD_VERSION', '2.5.10' );
 		}
 
 		// Plugin Folder Path.
@@ -268,6 +268,8 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/payments/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/payments/class-payment-stats.php';
 		require_once EDD_PLUGIN_DIR . 'includes/payments/class-payments-query.php';
+		require_once EDD_PLUGIN_DIR . 'includes/payments/class-edd-payment.php';
+		require_once EDD_PLUGIN_DIR . 'includes/misc-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/download-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/scripts.php';
 		require_once EDD_PLUGIN_DIR . 'includes/post-types.php';
@@ -324,11 +326,13 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrades.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/welcome.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-heartbeat.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/tools/tools-actions.php';
 		} else {
 			require_once EDD_PLUGIN_DIR . 'includes/process-download.php';
 			require_once EDD_PLUGIN_DIR . 'includes/theme-compatibility.php';
 		}
 
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-register-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/install.php';
 	}
 
@@ -418,8 +422,8 @@ endif; // End if class_exists check.
 
 
 /**
- * The main function for that returns Easy_Digital_Downloads 
- * 
+ * The main function for that returns Easy_Digital_Downloads
+ *
  * The main function responsible for returning the one true Easy_Digital_Downloads
  * Instance to functions everywhere.
  *
@@ -429,7 +433,7 @@ endif; // End if class_exists check.
  * Example: <?php $edd = EDD(); ?>
  *
  * @since 1.4
- * @return object The one true Easy_Digital_Downloads Instance.
+* @return object|Easy_Digital_Downloads The one true Easy_Digital_Downloads Instance.
  */
 function EDD() {
 	return Easy_Digital_Downloads::instance();

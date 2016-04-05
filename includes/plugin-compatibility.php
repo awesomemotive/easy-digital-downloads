@@ -105,6 +105,8 @@ function edd_qtranslate_prevent_redirect( $target ) {
 
 	if( strpos( $target, 'eddfile' ) ) {
 		$target = false;
+		global $q_config;
+		$q_config['url_mode'] = '';
 	}
 
 	return $target;

@@ -27,7 +27,9 @@ class Tests_EDD extends WP_UnitTestCase {
 
 		// Plugin Folder Path
 		$path = str_replace( 'tests/', '', plugin_dir_path( __FILE__ ) );
-		$this->assertSame( EDD_PLUGIN_DIR, $path );
+		$path = substr( $path, 0, -1 );
+		$edd  = substr( EDD_PLUGIN_DIR, 0, -1 );
+		$this->assertSame( $edd, $path );
 
 		// Plugin Root File
 		$path = str_replace( 'tests/', '', plugin_dir_path( __FILE__ ) );

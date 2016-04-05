@@ -42,8 +42,8 @@ function edd_get_shop_state() {
  *
  * @since 1.6
  *
- * @param null $country
- * @return mixed|void  A list of states for the shop's base country
+ * @param string $country
+ * @return array A list of states for the selected country
  */
 function edd_get_shop_states( $country = null ) {
 	if( empty( $country ) )
@@ -126,7 +126,7 @@ function edd_get_shop_states( $country = null ) {
 
 	endswitch;
 
-	return apply_filters( 'edd_shop_states', $states );
+	return apply_filters( 'edd_shop_states', $states, $country );
 }
 
 
@@ -868,6 +868,7 @@ function edd_get_new_zealand_states_list() {
 		'TK' => 'Taranaki',
 		'TM' => 'Tasman',
 		'WA' => 'Waikato',
+		'WR' => 'Wairarapa',
 		'WE' => 'Wellington',
 		'WC' => 'West Coast'
 	);

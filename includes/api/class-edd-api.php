@@ -149,10 +149,6 @@ class EDD_API {
 		add_action( 'init',                     array( $this, 'add_endpoint'     ) );
 		add_action( 'wp',                       array( $this, 'process_query'    ), -1 );
 		add_filter( 'query_vars',               array( $this, 'query_vars'       ) );
-		add_action( 'show_user_profile',        array( $this, 'user_key_field'   ) );
-		add_action( 'edit_user_profile',        array( $this, 'user_key_field'   ) );
-		add_action( 'personal_options_update',  array( $this, 'update_key'       ) );
-		add_action( 'edit_user_profile_update', array( $this, 'update_key'       ) );
 		add_action( 'edd_process_api_key',      array( $this, 'process_api_key'  ) );
 
 		// Setup a backwards compatibilty check for user API Keys
@@ -461,7 +457,7 @@ class EDD_API {
 		$error['error'] = __( 'Your request could not be authenticated!', 'easy-digital-downloads' );
 
 		$this->data = $error;
-		$this->output( 401 );
+		$this->output( 403 );
 	}
 
 	/**
@@ -479,7 +475,7 @@ class EDD_API {
 		$error['error'] = __( 'Invalid API key!', 'easy-digital-downloads' );
 
 		$this->data = $error;
-		$this->output( 401 );
+		$this->output( 403 );
 	}
 
 	/**
@@ -585,7 +581,7 @@ class EDD_API {
 
 				break;
 
-			case 'downloads' :
+			case 'file-download-logs' :
 
 				$customer = isset( $wp_query->query_vars['customer'] ) ? $wp_query->query_vars['customer']  : null;
 
@@ -598,8 +594,8 @@ class EDD_API {
 		// Allow extensions to setup their own return data
 		$this->data = apply_filters( 'edd_api_output_data', $data, $this->endpoint, $this );
 
-		$after        = microtime( true );
-		$request_time = ( $after - $before );
+		$after                       = microtime( true );
+		$request_time                = ( $after - $before );
 		$this->data['request_speed'] = $request_time;
 
 		// Log this API request, if enabled. We log it here because we have access to errors.
@@ -639,7 +635,7 @@ class EDD_API {
 			'customers',
 			'sales',
 			'discounts',
-			'downloads'
+			'file-download-logs',
 		) );
 
 		$query = isset( $wp_query->query_vars['edd-api'] ) ? $wp_query->query_vars['edd-api'] : null;
@@ -652,7 +648,8 @@ class EDD_API {
 			$error['error'] = __( 'Invalid query!', 'easy-digital-downloads' );
 
 			$this->data = $error;
-			$this->output();
+			// 400 is Bad Request
+			$this->output( 400 );
 		}
 
 		$this->endpoint = $query;
@@ -686,8 +683,9 @@ class EDD_API {
 
 		$per_page = isset( $wp_query->query_vars['number'] ) ? $wp_query->query_vars['number'] : 10;
 
-		if( $per_page < 0 && $this->get_query_mode() == 'customers' )
+		if( $per_page < 0 && $this->get_query_mode() == 'customers' ) {
 			$per_page = 99999999; // Customers query doesn't support -1
+		}
 
 		return apply_filters( 'edd_api_results_per_page', $per_page );
 	}
@@ -708,7 +706,7 @@ class EDD_API {
 			'product'   => null,
 			'date'      => null,
 			'startdate' => null,
-			'enddate'   => null
+			'enddate'   => null,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -1350,39 +1348,42 @@ class EDD_API {
 
 		if( isset( $wp_query->query_vars['id'] ) ) {
 			$query   = array();
-			$query[] = edd_get_payment_by( 'id', $wp_query->query_vars['id'] );
+			$query[] = new EDD_Payment( $wp_query->query_vars['id'] );
 		} elseif( isset( $wp_query->query_vars['purchasekey'] ) ) {
 			$query   = array();
 			$query[] = edd_get_payment_by( 'key', $wp_query->query_vars['purchasekey'] );
 		} elseif( isset( $wp_query->query_vars['email'] ) ) {
-			$query = edd_get_payments( array( 'meta_key' => '_edd_payment_user_email', 'meta_value' => $wp_query->query_vars['email'], 'number' => $this->per_page(), 'page' => $this->get_paged(), 'status' => 'publish' ) );
+			$query = edd_get_payments( array( 'fields' => 'ids', 'meta_key' => '_edd_payment_user_email', 'meta_value' => $wp_query->query_vars['email'], 'number' => $this->per_page(), 'page' => $this->get_paged(), 'status' => 'publish' ) );
 		} else {
-			$query = edd_get_payments( array( 'number' => $this->per_page(), 'page' => $this->get_paged(), 'status' => 'publish' ) );
+			$query = edd_get_payments( array( 'fields' => 'ids', 'number' => $this->per_page(), 'page' => $this->get_paged(), 'status' => 'publish' ) );
 		}
 
 		if ( $query ) {
 			$i = 0;
 			foreach ( $query as $payment ) {
-				$payment_meta = edd_get_payment_meta( $payment->ID );
-				$user_info    = edd_get_payment_meta_user_info( $payment->ID );
-				$cart_items   = edd_get_payment_meta_cart_details( $payment->ID );
+				if ( is_numeric( $payment ) ) {
+					$payment = new EDD_Payment( $payment );
+				}
 
-				$sales['sales'][ $i ]['ID']             = edd_get_payment_number( $payment->ID );
-				$sales['sales'][ $i ]['transaction_id'] = edd_get_payment_transaction_id( $payment->ID );
-				$sales['sales'][ $i ]['key']            = edd_get_payment_key( $payment->ID );
-				$sales['sales'][ $i ]['discount']       = isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ? explode( ',', $user_info['discount'] ) : array();
-				$sales['sales'][ $i ]['subtotal']       = edd_get_payment_subtotal( $payment->ID );
-				$sales['sales'][ $i ]['tax']            = edd_get_payment_tax( $payment->ID );
-				$sales['sales'][ $i ]['fees']           = edd_get_payment_fees( $payment->ID );
-				$sales['sales'][ $i ]['total']          = edd_get_payment_amount( $payment->ID );
-				$sales['sales'][ $i ]['gateway']        = edd_get_payment_gateway( $payment->ID );
-				$sales['sales'][ $i ]['email']          = edd_get_payment_user_email( $payment->ID );
-				$sales['sales'][ $i ]['date']           = $payment->post_date;
+				$payment_meta = $payment->get_meta();
+				$user_info    = $payment->user_info;
+
+				$sales['sales'][ $i ]['ID']             = $payment->number;
+				$sales['sales'][ $i ]['transaction_id'] = $payment->transaction_id;
+				$sales['sales'][ $i ]['key']            = $payment->key;
+				$sales['sales'][ $i ]['discount']       = ! empty( $payment->discounts ) ? explode( ',', $payment->discounts ) : array();
+				$sales['sales'][ $i ]['subtotal']       = $payment->subtotal;
+				$sales['sales'][ $i ]['tax']            = $payment->tax;
+				$sales['sales'][ $i ]['fees']           = $payment->fees;
+				$sales['sales'][ $i ]['total']          = $payment->total;
+				$sales['sales'][ $i ]['gateway']        = $payment->gateway;
+				$sales['sales'][ $i ]['email']          = $payment->email;
+				$sales['sales'][ $i ]['date']           = $payment->date;
 				$sales['sales'][ $i ]['products']       = array();
 
 				$c = 0;
 
-				foreach ( $cart_items as $key => $item ) {
+				foreach ( $payment->cart_details as $key => $item ) {
 
 					$item_id  = isset( $item['id']    ) ? $item['id']    : $item;
 					$price    = isset( $item['price'] ) ? $item['price'] : false;
@@ -1525,37 +1526,44 @@ class EDD_API {
 		$meta_query = array();
 		if ( ! empty( $customer_id ) ) {
 
-			$customer = new EDD_Customer( $customer_id );
-
-			$meta_query['relation'] = 'OR';
+			$customer         = new EDD_Customer( $customer_id );
+			$invalid_customer = false;
 
 			if ( $customer->id > 0 ) {
-				// Based on customer->user_id
+				$meta_query['relation'] = 'OR';
+
+				if ( $customer->id > 0 ) {
+					// Based on customer->user_id
+					$meta_query[] = array(
+						'key'    => '_edd_log_user_id',
+						'value'  => $customer->user_id,
+					);
+				}
+
+				// Based on customer->email
 				$meta_query[] = array(
-					'key'    => '_edd_log_user_id',
-					'value'  => $customer->user_id
+					'key'    => '_edd_log_user_info',
+					'value'  => $customer->email,
+					'compare'=> 'LIKE',
 				);
+			} else {
+				$invalid_customer = true;
 			}
-
-			// Based on customer->email
-			$meta_query[] = array(
-				'key'    => '_edd_log_user_info',
-				'value'  => $customer->email,
-				'compare'=> 'LIKE'
-			);
-
 		}
 
 		$query = array(
-			'log_type'      => 'file_download',
-			'paged'         => $paged,
-			'meta_query'    => $meta_query,
-			'posts_per_page'=> $per_page,
+			'log_type'               => 'file_download',
+			'paged'                  => $paged,
+			'meta_query'             => $meta_query,
+			'posts_per_page'         => $per_page,
 			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false
+			'update_post_term_cache' => false,
 		);
 
-		$logs = $edd_logs->get_connected_logs( $query );
+		$logs = array();
+		if ( ! $invalid_customer ) {
+			$logs = $edd_logs->get_connected_logs( $query );
+		}
 
 		if ( empty( $logs ) ) {
 			$error['error'] = __( 'No download logs found!', 'easy-digital-downloads' );
@@ -1793,6 +1801,10 @@ class EDD_API {
 
 		}
 
+		if ( empty( $args['user_id'] ) ) {
+			wp_die( sprintf( __( 'User ID Required', 'easy-digital-downloads' ), $process ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 401 ) );
+		}
+
 		if( is_numeric( $args['user_id'] ) ) {
 			$user_id    = isset( $args['user_id'] ) ? absint( $args['user_id'] ) : get_current_user_id();
 		} else {
@@ -1924,23 +1936,7 @@ class EDD_API {
 	 * @return void
 	 */
 	public function update_key( $user_id ) {
-		if ( current_user_can( 'edit_user', $user_id ) && isset( $_POST['edd_set_api_key'] ) ) {
-
-			$user = get_userdata( $user_id );
-
-			$public_key = $this->get_user_public_key( $user_id );
-			$secret_key = $this->get_user_secret_key( $user_id );
-
-			if ( empty( $public_key ) ) {
-				$new_public_key = $this->generate_public_key( $user->user_email );
-				$new_secret_key = $this->generate_private_key( $user->ID );
-
-				update_user_meta( $user_id, $new_public_key, 'edd_user_public_key' );
-				update_user_meta( $user_id, $new_secret_key, 'edd_user_secret_key' );
-			} else {
-				$this->revoke_api_key( $user_id );
-			}
-		}
+		edd_update_user_api_key( $user_id );
 	}
 
 	/**
@@ -1951,7 +1947,7 @@ class EDD_API {
 	 * @param string $user_email
 	 * @return string
 	 */
-	private function generate_public_key( $user_email = '' ) {
+	public function generate_public_key( $user_email = '' ) {
 		$auth_key = defined( 'AUTH_KEY' ) ? AUTH_KEY : '';
 		$public   = hash( 'md5', $user_email . $auth_key . date( 'U' ) );
 		return $public;
@@ -1965,7 +1961,7 @@ class EDD_API {
 	 * @param int $user_id
 	 * @return string
 	 */
-	private function generate_private_key( $user_id = 0 ) {
+	public function generate_private_key( $user_id = 0 ) {
 		$auth_key = defined( 'AUTH_KEY' ) ? AUTH_KEY : '';
 		$secret   = hash( 'md5', $user_id . $auth_key . date( 'U' ) );
 		return $secret;
