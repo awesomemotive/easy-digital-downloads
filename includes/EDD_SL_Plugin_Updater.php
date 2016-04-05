@@ -241,11 +241,22 @@ class EDD_SL_Plugin_Updater {
 				'reviews' => false
 			)
 		);
+		
+		//Get the transient where we store the api request for this plugin for 24 hours
+		$edd_api_request_transient = get_site_transient( 'edd_api_request_' . $this->slug );
+			
+		//If we have no transient-saved value, run the API, set a fresh transient with the API value, and return that value too right now.
+		if ( empty( $edd_api_request_transient ) ){ 
 
-		$api_response = $this->api_request( 'plugin_information', $to_send );
-
-		if ( false !== $api_response ) {
-			$_data = $api_response;
+			$api_response = $this->api_request( 'plugin_information', $to_send );
+			
+			//Expires in 1 day (86400 seconds)
+			set_site_transient( 'edd_api_request_' . $this->slug, $api_response, 86400 );
+			
+			if ( false !== $api_response ) {
+				$_data = $api_response;
+			}
+			
 		}
 
 		return $_data;
