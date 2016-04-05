@@ -79,35 +79,47 @@ class EDD_SL_Plugin_Updater {
 	public function check_update( $_transient_data ) {
 
 		global $pagenow;
-
-		if( ! is_object( $_transient_data ) ) {
-			$_transient_data = new stdClass;
-		}
-
-		if( 'plugins.php' == $pagenow && is_multisite() ) {
-			return $_transient_data;
-		}
-
-		if ( empty( $_transient_data->response ) || empty( $_transient_data->response[ $this->name ] ) ) {
-
-			$version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
-
-			if ( false !== $version_info && is_object( $version_info ) && isset( $version_info->new_version ) ) {
-
-				if( version_compare( $this->version, $version_info->new_version, '<' ) ) {
-
-					$_transient_data->response[ $this->name ] = $version_info;
-
-				}
-
-				$_transient_data->last_checked = time();
-				$_transient_data->checked[ $this->name ] = $this->version;
-
+		
+		global $edd_update_plugins_flag;
+	
+		//If flag is true, this is our second go around with pre_set_site_transient_update_plugins
+		if ( $edd_update_plugins_flag ){
+			
+			if( ! is_object( $_transient_data ) ) {
+				$_transient_data = new stdClass;
 			}
-
+	
+			if( 'plugins.php' == $pagenow && is_multisite() ) {
+				return $_transient_data;
+			}
+	
+			if ( empty( $_transient_data->response ) || empty( $_transient_data->response[ $this->name ] ) ) {
+	
+				$version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
+	
+				if ( false !== $version_info && is_object( $version_info ) && isset( $version_info->new_version ) ) {
+	
+					if( version_compare( $this->version, $version_info->new_version, '<' ) ) {
+	
+						$_transient_data->response[ $this->name ] = $version_info;
+	
+					}
+	
+					$_transient_data->last_checked = time();
+					$_transient_data->checked[ $this->name ] = $this->version;
+	
+				}
+	
+			}
+		
+			$edd_update_plugins_flag = false;
 		}
-
+		else{
+			$edd_update_plugins_flag = true;	
+		}
+		
 		return $_transient_data;
+
 	}
 
 	/**
