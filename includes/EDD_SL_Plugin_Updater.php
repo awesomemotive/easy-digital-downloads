@@ -262,8 +262,8 @@ class EDD_SL_Plugin_Updater {
 
 			$api_response = $this->api_request( 'plugin_information', $to_send );
 			
-			//Expires in 1 day (86400 seconds)
-			set_site_transient( 'edd_api_request_' . $this->slug, $api_response, 86400 );
+			//Expires in 1 day
+			set_site_transient( 'edd_api_request_' . $this->slug, $api_response, DAY_IN_SECONDS );
 			
 			if ( false !== $api_response ) {
 				$_data = $api_response;
