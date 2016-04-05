@@ -78,15 +78,7 @@ class EDD_SL_Plugin_Updater {
 	 */
 	public function check_update( $_transient_data ) {
 
-		global $pagenow, $edd_update_plugins_flag;
-		
-		//If flag is false, this is our first go around with pre_set_site_transient_update_plugins
-		if ( ! $edd_update_plugins_flag ){
-			
-			//Set flag to true so next time this function is run, it actually executes instead of returning here.
-			$edd_update_plugins_flag = true;
-			return $_transient_data;
-		}
+		global $pagenow;
 				
 		if( ! is_object( $_transient_data ) ) {
 			$_transient_data = new stdClass;
@@ -97,7 +89,7 @@ class EDD_SL_Plugin_Updater {
 		}
 
 		if ( empty( $_transient_data->response ) || empty( $_transient_data->response[ $this->name ] ) ) {
-
+					
 			$version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
 
 			if ( false !== $version_info && is_object( $version_info ) && isset( $version_info->new_version ) ) {
@@ -114,9 +106,6 @@ class EDD_SL_Plugin_Updater {
 			}
 
 		}
-		
-		//Reset flag to false so it skips the first call of pre_set_site_transient_update_plugins for any other plugins using this class as well.
-		$edd_update_plugins_flag = false;
 		
 		return $_transient_data;
 
