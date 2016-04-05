@@ -923,3 +923,75 @@ function edd_detach_deleted_user( $user_id ) {
 	return $detached;
 }
 add_action( 'delete_user', 'edd_detach_deleted_user', 10, 1 );
+
+/**
+ * Modify User Profile
+ *
+ * Modifies the output of profile.php to add key generation/revocation
+ *
+ * @since 2.6
+ * @param object $user Current user info
+ * @return void
+ */
+function edd_show_user_api_key_field( $user ) {
+	if ( ( edd_get_option( 'api_allow_user_keys', false ) || current_user_can( 'manage_shop_settings' ) ) && current_user_can( 'edit_user', $user->ID ) ) {
+		$user = get_userdata( $user->ID );
+		?>
+		<table class="form-table">
+			<tbody>
+			<tr>
+				<th>
+					<?php _e( 'Easy Digital Downloads API Keys', 'easy-digital-downloads' ); ?>
+				</th>
+				<td>
+					<?php
+					$public_key = EDD()->api->get_user_public_key( $user->ID );
+					$secret_key = EDD()->api->get_user_secret_key( $user->ID );
+					?>
+					<?php if ( empty( $user->edd_user_public_key ) ) { ?>
+						<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
+						<span class="description"><?php _e( 'Generate API Key', 'easy-digital-downloads' ); ?></span>
+					<?php } else { ?>
+						<strong style="display:inline-block; width: 125px;"><?php _e( 'Public key:', 'easy-digital-downloads' ); ?>&nbsp;</strong><input type="text" disabled="disabled" class="regular-text" id="publickey" value="<?php echo esc_attr( $public_key ); ?>"/><br/>
+						<strong style="display:inline-block; width: 125px;"><?php _e( 'Secret key:', 'easy-digital-downloads' ); ?>&nbsp;</strong><input type="text" disabled="disabled" class="regular-text" id="privatekey" value="<?php echo esc_attr( $secret_key ); ?>"/><br/>
+						<strong style="display:inline-block; width: 125px;"><?php _e( 'Token:', 'easy-digital-downloads' ); ?>&nbsp;</strong><input type="text" disabled="disabled" class="regular-text" id="token" value="<?php echo esc_attr( EDD()->api->get_token( $user->ID ) ); ?>"/><br/>
+						<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
+						<span class="description"><label for="edd_set_api_key"><?php _e( 'Revoke API Keys', 'easy-digital-downloads' ); ?></label></span>
+					<?php } ?>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	<?php }
+}
+add_action( 'show_user_profile', 'edd_show_user_api_key_field' );
+add_action( 'edit_user_profile', 'edd_show_user_api_key_field' );
+
+/**
+ * Generate and Save API key
+ *
+ * Generates the key requested by user_key_field and stores it in the database
+ *
+ * @since 2.6
+ * @param int $user_id
+ * @return void
+ */
+function edd_update_user_api_key( $user_id ) {
+	if ( current_user_can( 'edit_user', $user_id ) && isset( $_POST['edd_set_api_key'] ) ) {
+
+		$user       = get_userdata( $user_id );
+		$public_key = EDD()->api->get_user_public_key( $user_id );
+
+		if ( empty( $public_key ) ) {
+			$new_public_key = EDD()->api->generate_public_key( $user->user_email );
+			$new_secret_key = EDD()->api->generate_private_key( $user->ID );
+
+			update_user_meta( $user_id, $new_public_key, 'edd_user_public_key' );
+			update_user_meta( $user_id, $new_secret_key, 'edd_user_secret_key' );
+		} else {
+			EDD()->api->revoke_api_key( $user_id );
+		}
+	}
+}
+add_action( 'personal_options_update',  'edd_update_user_api_key' );
+add_action( 'edit_user_profile_update', 'edd_update_user_api_key' );
