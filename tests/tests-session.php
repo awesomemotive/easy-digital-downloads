@@ -27,4 +27,17 @@ class Tests_Session extends WP_UnitTestCase {
 		define( 'EDD_USE_CART_COOKIE', false );
 		$this->assertFalse( EDD()->session->use_cart_cookie());
 	}
+
+	public function test_should_start_session() {
+
+		$blacklist = EDD()->session->get_blacklist();
+
+		foreach( $blacklist as $uri ) {
+
+			$this->go_to( '/' . $uri );
+			$this->assertFalse( EDD()->session->should_start_session() );
+
+		}
+
+	}
 }

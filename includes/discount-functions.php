@@ -653,12 +653,12 @@ function edd_is_discount_maxed_out( $code_id = null ) {
  * @return bool $return
  */
 function edd_discount_is_min_met( $code_id = null ) {
-	$discount = edd_get_discount(  $code_id );
+	$discount = edd_get_discount( $code_id );
 	$return   = false;
 
 	if ( $discount ) {
 		$min         = edd_get_discount_min_price( $code_id );
-		$cart_amount = edd_get_cart_subtotal();
+		$cart_amount = edd_get_cart_discountable_subtotal( $code_id );
 
 		if ( (float) $cart_amount >= (float) $min ) {
 			// Minimum has been met
@@ -785,7 +785,7 @@ function edd_discount_product_reqs_met( $code_id = null ) {
  */
 function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
 
-	$return     = false;
+	$return = false;
 
 	if ( empty( $code_id ) ) {
 		$code_id = edd_get_discount_id_by_code( $code );
@@ -830,15 +830,15 @@ function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
 
 			if ( $user_found ) {
 				$query_args = array(
-				'post_type'  => 'edd_payment',
-					'meta_query' => array(
+					'post_type'       => 'edd_payment',
+					'meta_query'      => array(
 						array(
 							'key'     => $key,
 							'value'   => $value,
 							'compare' => '='
 						)
 					),
-					'fields'     => 'ids'
+					'fields'          => 'ids'
 				);
 
 				$payments = get_posts( $query_args ); // Get all payments with matching email
@@ -847,16 +847,37 @@ function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
 		}
 
 		if ( $payments ) {
+
 			foreach ( $payments as $payment ) {
-				// Check all matching payments for discount code.
-				$payment_meta = edd_get_payment_meta( $payment );
-				$user_info    = maybe_unserialize( $payment_meta['user_info'] );
-				if ( strtolower( $user_info['discount'] ) == strtolower( $code ) ) {
-					edd_set_error( 'edd-discount-error', __( 'This discount has already been redeemed.', 'easy-digital-downloads' ) );
-					$return = true;
+
+				$payment = new EDD_Payment( $payment );
+
+				if( empty( $payment->discounts ) ) {
+					continue;
 				}
+
+				if( in_array( $payment->status, array( 'abandoned', 'failed' ) ) ) {
+					continue;
+				}
+
+				$discounts = explode( ',', $payment->discounts );
+
+				if( is_array( $discounts ) ) {
+
+					if( in_array( strtolower( $code ), $discounts ) ) {
+
+						edd_set_error( 'edd-discount-error', __( 'This discount has already been redeemed.', 'easy-digital-downloads' ) );
+						$return = true;
+						break;
+
+					}
+
+				}
+
 			}
+
 		}
+
 	}
 
 	return apply_filters( 'edd_is_discount_used', $return, $code, $user );
@@ -929,7 +950,7 @@ function edd_get_discount_id_by_code( $code ) {
  * @return string $discounted_price Amount after discount
  */
 function edd_get_discounted_amount( $code, $base_price ) {
-	$amount      = 0;
+	$amount      = $base_price;
 	$discount_id = edd_get_discount_id_by_code( $code );
 
 	if( $discount_id ) {
@@ -948,6 +969,10 @@ function edd_get_discounted_amount( $code, $base_price ) {
 			$amount = $base_price - ( $base_price * ( $rate / 100 ) );
 		}
 
+	} else {
+
+		$amount = $base_price;
+
 	}
 
 	return apply_filters( 'edd_discounted_amount', $amount );
@@ -965,6 +990,11 @@ function edd_get_discounted_amount( $code, $base_price ) {
 function edd_increase_discount_usage( $code ) {
 
 	$id   = edd_get_discount_id_by_code( $code );
+
+	if ( false === $id ) {
+		return false;
+	}
+
 	$uses = edd_get_discount_uses( $id );
 
 	if ( $uses ) {
@@ -976,6 +1006,41 @@ function edd_increase_discount_usage( $code ) {
 	update_post_meta( $id, '_edd_discount_uses', $uses );
 
 	do_action( 'edd_discount_increase_use_count', $uses, $id, $code );
+
+	return $uses;
+
+}
+
+/**
+ * Decrease Discount Usage
+ *
+ * Decreases the use count of a discount code.
+ *
+ * @since 2.5.7
+ * @param string $code Discount code to be decremented
+ * @return int
+ */
+function edd_decrease_discount_usage( $code ) {
+
+	$id   = edd_get_discount_id_by_code( $code );
+
+	if ( false === $id ) {
+		return false;
+	}
+
+	$uses = edd_get_discount_uses( $id );
+
+	if ( $uses ) {
+		$uses--;
+	}
+
+	if ( $uses < 0 ) {
+		$uses = 0;
+	}
+
+	update_post_meta( $id, '_edd_discount_uses', $uses );
+
+	do_action( 'edd_discount_decrease_use_count', $uses, $id, $code );
 
 	return $uses;
 

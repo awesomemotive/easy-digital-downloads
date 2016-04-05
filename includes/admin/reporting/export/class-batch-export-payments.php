@@ -47,7 +47,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			'city'     => __( 'City', 'easy-digital-downloads' ),
 			'state'    => __( 'State', 'easy-digital-downloads' ),
 			'country'  => __( 'Country', 'easy-digital-downloads' ),
-			'zip'      => __( 'Zip Code', 'easy-digital-downloads' ),
+			'zip'      => __( 'Zip / Postal Code', 'easy-digital-downloads' ),
 			'products' => __( 'Products', 'easy-digital-downloads' ),
 			'skus'     => __( 'SKUs', 'easy-digital-downloads' ),
 			'amount'   => __( 'Amount', 'easy-digital-downloads' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')',
@@ -95,8 +95,8 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 
 			$args['date_query'] = array(
 				array(
-					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
-					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
+					'after'     => date( 'Y-n-d 00:00:00', strtotime( $this->start ) ),
+					'before'    => date( 'Y-n-d 23:59:59', strtotime( $this->end ) ),
 					'inclusive' => true
 				)
 			);

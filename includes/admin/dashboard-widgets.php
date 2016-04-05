@@ -70,7 +70,7 @@ function edd_load_dashboard_sales_widget( ) {
 					<tr>
 						<?php $monthly_sales = $stats->get_sales( 0, 'this_month', false, array( 'publish', 'revoked' ) ); ?>
 						<td class="first t monthly_sales"><?php echo _n( 'Sale', 'Sales', $monthly_sales, 'easy-digital-downloads' ); ?></td>
-						<td class="b b-sales"><?php echo $monthly_sales; ?></td>
+						<td class="b b-sales"><?php echo edd_format_amount( $monthly_sales, false ); ?></td>
 					</tr>
 				</tbody>
 			</table>
@@ -88,7 +88,7 @@ function edd_load_dashboard_sales_widget( ) {
 					<tr>
 						<td class="first t sales">
 							<?php $last_month_sales = $stats->get_sales( 0, 'last_month', false, array( 'publish', 'revoked' ) ); ?>
-							<?php echo _n( 'Sale', 'Sales', $last_month_sales, 'easy-digital-downloads' ); ?>
+							<?php echo _n( 'Sale', 'Sales', edd_format_amount( $last_month_sales, false ), 'easy-digital-downloads' ); ?>
 						</td>
 						<td class="b b-last-month-sales">
 							<?php echo $last_month_sales; ?>

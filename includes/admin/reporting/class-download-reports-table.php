@@ -49,15 +49,27 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 
 		// Set parent defaults
 		parent::__construct( array(
-			'singular'  => edd_get_label_singular(),    // Singular name of the listed records
-			'plural'    => edd_get_label_plural(),    	// Plural name of the listed records
-			'ajax'      => false             			// Does this table support ajax?
+			'singular' => edd_get_label_singular(),
+			'plural'   => edd_get_label_plural(),
+			'ajax'     => false,
 		) );
 
 		add_action( 'edd_report_view_actions', array( $this, 'category_filter' ) );
 
 		$this->query();
 
+	}
+
+	/**
+	 * Gets the name of the primary column.
+	 *
+	 * @since 2.5
+	 * @access protected
+	 *
+	 * @return string Name of the primary column.
+	 */
+	protected function get_primary_column_name() {
+		return 'title';
 	}
 
 	/**
@@ -95,12 +107,12 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'title'     		=> edd_get_label_singular(),
-			'sales'  			=> __( 'Sales', 'easy-digital-downloads' ),
-			'earnings'  		=> __( 'Earnings', 'easy-digital-downloads' ),
-			'average_sales'  	=> __( 'Monthly Average Sales', 'easy-digital-downloads' ),
-			'average_earnings'  => __( 'Monthly Average Earnings', 'easy-digital-downloads' ),
-			'details'           => __( 'Detailed Report', 'easy-digital-downloads' )
+			'title'            => edd_get_label_singular(),
+			'sales'            => __( 'Sales', 'easy-digital-downloads' ),
+			'earnings'         => __( 'Earnings', 'easy-digital-downloads' ),
+			'average_sales'    => __( 'Monthly Average Sales', 'easy-digital-downloads' ),
+			'average_earnings' => __( 'Monthly Average Earnings', 'easy-digital-downloads' ),
+			'details'          => __( 'Detailed Report', 'easy-digital-downloads' ),
 		);
 
 		return $columns;
@@ -115,9 +127,9 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 */
 	public function get_sortable_columns() {
 		return array(
-			'title' 	=> array( 'title', true ),
-			'sales' 	=> array( 'sales', false ),
-			'earnings' 	=> array( 'earnings', false ),
+			'title'    => array( 'title', true ),
+			'sales'    => array( 'sales', false ),
+			'earnings' => array( 'earnings', false ),
 		);
 	}
 
@@ -202,20 +214,20 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 		$category = $this->get_category();
 
 		$args = array(
-			'post_type' 	=> 'download',
-			'post_status'	=> 'publish',
-			'order'			=> $order,
-			'fields'        => 'ids',
-			'posts_per_page'=> $this->per_page,
-			'paged'         => $this->get_paged(),
-			'suppress_filters' => true
+			'post_type'        => 'download',
+			'post_status'      => 'publish',
+			'order'            => $order,
+			'fields'           => 'ids',
+			'posts_per_page'   => $this->per_page,
+			'paged'            => $this->get_paged(),
+			'suppress_filters' => true,
 		);
 
 		if( ! empty( $category ) ) {
 			$args['tax_query'] = array(
 				array(
 					'taxonomy' => 'download_category',
-					'terms'    => $category
+					'terms'    => $category,
 				)
 			);
 		}
@@ -257,12 +269,12 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 		if ( $downloads ) {
 			foreach ( $downloads as $download ) {
 				$reports_data[] = array(
-					'ID' 				=> $download,
-					'title' 			=> get_the_title( $download ),
-					'sales' 			=> edd_get_download_sales_stats( $download ),
-					'earnings'			=> edd_get_download_earnings_stats( $download ),
-					'average_sales'   	=> edd_get_average_monthly_download_sales( $download ),
-					'average_earnings'  => edd_get_average_monthly_download_earnings( $download )
+					'ID'               => $download,
+					'title'            => get_the_title( $download ),
+					'sales'            => edd_get_download_sales_stats( $download ),
+					'earnings'         => edd_get_download_earnings_stats( $download ),
+					'average_sales'    => edd_get_average_monthly_download_sales( $download ),
+					'average_earnings' => edd_get_average_monthly_download_earnings( $download ),
 				);
 			}
 		}
@@ -301,7 +313,7 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 		$this->set_pagination_args( array(
 				'total_items' => $total_items,
 				'per_page'    => $this->per_page,
-				'total_pages' => ceil( $total_items / $this->per_page )
+				'total_pages' => ceil( $total_items / $this->per_page ),
 			)
 		);
 	}

@@ -38,17 +38,29 @@ jQuery(document).ready(function ($) {
 			clone.find( 'td input, td select, textarea' ).val( '' );
 			clone.find( 'input, select, textarea' ).each(function() {
 				var name = $( this ).attr( 'name' );
+				var id   = $( this ).attr( 'id' );
 
 				if( name ) {
 
 					name = name.replace( /\[(\d+)\]/, '[' + parseInt( key ) + ']');
-					$( this ).attr( 'name', name ).attr( 'id', name );
+					$( this ).attr( 'name', name );
+
+				}
+
+				if( typeof id != 'undefined' ) {
+
+					id = id.replace( /(\d+)/, parseInt( key ) );
+					$( this ).attr( 'id', id );
 
 				}
 
 			});
 
 			clone.find( 'span.edd_price_id' ).each(function() {
+				$( this ).text( parseInt( key ) );
+			});
+
+			clone.find( 'span.edd_file_id' ).each(function() {
 				$( this ).text( parseInt( key ) );
 			});
 
@@ -432,10 +444,10 @@ jQuery(document).ready(function ($) {
 
 				e.preventDefault();
 
-				var order_download_select   = $( '#edd_order_download_select' ),
-					order_download_quantity = $( '#edd-order-download-quantity' ),
-					order_download_amount   = $( '#edd-order-download-amount' ),
-					selected_price_option   = $( '.edd_price_options_select option:selected' );
+				var order_download_select     = $( '#edd_order_download_select' ),
+					order_download_quantity   = $( '#edd-order-download-quantity' ),
+					order_download_amount     = $( '#edd-order-download-amount' ),
+					selected_price_option     = $( '.edd_price_options_select option:selected' );
 
 				var download_id    = order_download_select.val();
 				var download_title = order_download_select.find(':selected').text();
@@ -457,6 +469,8 @@ jQuery(document).ready(function ($) {
 					alert( edd_vars.numeric_item_price );
 					return false;
 				}
+
+				var item_price     = amount;
 
 				if ( edd_vars.quantities_enabled === '1' ) {
 					if ( !isNaN( parseInt( quantity ) ) ) {
@@ -489,6 +503,7 @@ jQuery(document).ready(function ($) {
 				clone.find( '.item-price' ).text( edd_vars.currency_sign + ( amount / quantity ).toFixed( edd_vars.currency_decimals ) );
 				clone.find( 'input.edd-payment-details-download-id' ).val( download_id );
 				clone.find( 'input.edd-payment-details-download-price-id' ).val( price_id );
+				clone.find( 'input.edd-payment-details-download-item-price' ).val( item_price );
 				clone.find( 'input.edd-payment-details-download-amount' ).val( amount );
 				clone.find( 'input.edd-payment-details-download-quantity' ).val( quantity );
 				clone.find( 'input.edd-payment-details-download-has-log').val(0);
@@ -529,7 +544,7 @@ jQuery(document).ready(function ($) {
 						total += parseFloat( $(this).data('fee') );
 					});
 				}
-				$('input[name=edd-payment-total]').val( total );
+				$('input[name=edd-payment-total]').val( total.toFixed(edd_vars.currency_decimals));
 			});
 
 		},
@@ -1117,29 +1132,31 @@ jQuery(document).ready(function ($) {
 	var doneTypingInterval = 342;  // Time in ms, Slow - 521ms, Moderate - 342ms, Fast - 300ms
 
 	// Replace options with search results
-	$('.edd-select.chosen-container .chosen-search input, .edd-select.chosen-container .search-field input').keyup(function(e) {
+	$( document.body ).on( 'keyup', '.edd-select.chosen-container .chosen-search input, .edd-select.chosen-container .search-field input', function(e) {
 
-		var val = $(this).val(), container = $(this).closest( '.edd-select-chosen' );
-		var menu_id = container.attr('id').replace( '_chosen', '' );
-		var lastKey = e.which;
+		var val         = $(this).val(), container = $(this).closest( '.edd-select-chosen' );
+		var menu_id     = container.attr('id').replace( '_chosen', '' );
+		var no_bundles  = container.hasClass( 'no-bundles' );
+		var lastKey     = e.which;
 		var search_type = 'edd_download_search';
 
-		if( container.attr( 'id' ).indexOf( "customer" ) >= 0 ) {
-			search_type = 'edd_customer_search';
+		// Detect if we have a defined search type, otherwise default to downloads
+		if ( container.prev().data('search-type') ) {
+			search_type = 'edd_' + container.prev().data('search-type') + '_search';
 		}
 
 		// Don't fire if short or is a modifier key (shift, ctrl, apple command key, or arrow keys)
 		if(
 			( val.length <= 3 && 'edd_download_search' == search_type ) ||
 			(
-				e.which == 16 ||
-				e.which == 13 ||
-				e.which == 91 ||
-				e.which == 17 ||
-				e.which == 37 ||
-				e.which == 38 ||
-				e.which == 39 ||
-				e.which == 40
+				lastKey == 16 ||
+				lastKey == 13 ||
+				lastKey == 91 ||
+				lastKey == 17 ||
+				lastKey == 37 ||
+				lastKey == 38 ||
+				lastKey == 39 ||
+				lastKey == 40
 			)
 		) {
 			return;
@@ -1154,6 +1171,7 @@ jQuery(document).ready(function ($) {
 						action: search_type,
 						s: val,
 						current_id: edd_vars.post_id,
+						no_bundles: no_bundles
 					},
 					dataType: "json",
 					beforeSend: function(){
@@ -1169,7 +1187,7 @@ jQuery(document).ready(function ($) {
 								$('#' + menu_id).prepend( '<option value="' + item.id + '">' + item.name + '</option>' );
 							}
 						});
-						 // Update the options
+						// Update the options
 						$('.edd-select-chosen').trigger('chosen:updated');
 						$('#' + menu_id).next().find('input').val(val);
 					}
@@ -1198,6 +1216,8 @@ jQuery(document).ready(function ($) {
 		init : function() {
 			this.revoke_api_key();
 			this.regenerate_api_key();
+			this.create_api_key();
+			this.recount_stats();
 		},
 
 		revoke_api_key : function() {
@@ -1210,6 +1230,109 @@ jQuery(document).ready(function ($) {
 				return confirm( edd_vars.regenerate_api_key );
 			} );
 		},
+		create_api_key : function() {
+			$( document.body).on( 'submit', '#api-key-generate-form', function( e ) {
+				var input = $( 'input[type="text"][name="user_id"]' );
+
+				input.css('border-color', '#ddd');
+
+				var user_id = input.val();
+				if ( user_id.length < 1 || user_id == 0 ) {
+					input.css('border-color', '#ff0000');
+					return false;
+				}
+			} );
+		},
+		recount_stats : function() {
+			$( 'body').on( 'change', '#recount-stats-type', function() {
+
+				var export_form   = $('#edd-tools-recount-form');
+				var selected_type = $('option:selected', this).data('type');
+				var submit_button = $('#recount-stats-submit');
+				var products      = $('#tools-product-dropdown');
+
+				// Reset the form
+				export_form.find('.notice-wrap').remove();
+				submit_button.removeClass('button-disabled').attr('disabled', false);
+				products.hide();
+				$('.edd-recount-stats-descriptions span').hide();
+
+				if ( 'recount-download' === selected_type ) {
+
+					products.show();
+					products.find('.edd-select-chosen').css('width', 'auto');
+
+				} else if ( 'reset-stats' === selected_type ) {
+
+					export_form.append('<div class="notice-wrap"></div>');
+					var notice_wrap = export_form.find('.notice-wrap');
+					notice_wrap.html('<div class="notice notice-warning"><p><input type="checkbox" id="confirm-reset" name="confirm_reset_store" value="1" /> <label for="confirm-reset">' + edd_vars.reset_stats_warn + '</label></p></div>');
+
+					$('#recount-stats-submit').addClass('button-disabled').attr('disabled', 'disabled');
+
+				} else {
+
+					products.hide();
+					products.val(0);
+
+				}
+
+				$('#' + selected_type ).show();
+			} );
+
+			$('body').on('change', '#confirm-reset', function() {
+				var checked = $(this).is(':checked');
+				if ( checked ) {
+					$('#recount-stats-submit').removeClass('button-disabled').removeAttr('disabled');
+				} else {
+					$('#recount-stats-submit').addClass('button-disabled').attr('disabled', 'disabled');
+				}
+			});
+
+			$( '#edd-tools-recount-form' ).submit( function(e) {
+				var selection     = $('#recount-stats-type').val();
+				var export_form   = $(this);
+				var selected_type = $('option:selected', this).data('type');
+
+
+				if ( 'reset-stats' === selected_type ) {
+					var is_confirmed = $('#confirm-reset').is(':checked');
+					if ( is_confirmed ) {
+						return true;
+					} else {
+						has_errors = true;
+					}
+				}
+
+				export_form.find('.notice-wrap').remove();
+
+				export_form.append('<div class="notice-wrap"></div>');
+				var notice_wrap = export_form.find('.notice-wrap');
+				var has_errors  = false;
+
+				if ( null === selection || 0 === selection ) {
+					// Needs to pick a method edd_vars.batch_export_no_class
+					notice_wrap.html('<div class="updated error"><p>' + edd_vars.batch_export_no_class + '</p></div>');
+					has_errors = true;
+				}
+
+				if ( 'recount-download' === selected_type ) {
+
+					var selected_download = $('select[name="download_id"]').val();
+					if ( selected_download == 0 ) {
+						// Needs to pick download edd_vars.batch_export_no_reqs
+						notice_wrap.html('<div class="updated error"><p>' + edd_vars.batch_export_no_reqs + '</p></div>');
+						has_errors = true;
+					}
+
+				}
+
+				if ( has_errors ) {
+					export_form.find('.button-disabled').removeClass('button-disabled');
+					return false;
+				}
+			} );
+		},
 	};
 	EDD_Tools.init();
 
@@ -1220,6 +1343,7 @@ jQuery(document).ready(function ($) {
 
 		init : function() {
 			this.submit();
+			this.dismiss_message();
 		},
 
 		submit : function() {
@@ -1259,8 +1383,7 @@ jQuery(document).ready(function ($) {
 				},
 				dataType: "json",
 				success: function( response ) {
-
-					if( 'done' == response.step || response.error ) {
+					if( 'done' == response.step || response.error || response.success ) {
 
 						// We need to get the actual in progress form, not all forms on the page
 						var export_form    = $('.edd-export-form').find('.edd-progress').parent().parent();
@@ -1271,7 +1394,12 @@ jQuery(document).ready(function ($) {
 						if ( response.error ) {
 
 							var error_message = response.message;
-							notice_wrap.html('<div class="update error"><p>' + error_message + '</p></div>');
+							notice_wrap.html('<div class="updated error"><p>' + error_message + '</p></div>');
+
+						} else if ( response.success ) {
+
+							var success_message = response.message;
+							notice_wrap.html('<div id="edd-batch-success" class="updated notice is-dismissible"><p>' + success_message + '<span class="notice-dismiss"></span></p></div>');
 
 						} else {
 
@@ -1296,6 +1424,12 @@ jQuery(document).ready(function ($) {
 				}
 			});
 
+		},
+
+		dismiss_message : function() {
+			$('body').on( 'click', '#edd-batch-success .notice-dismiss', function() {
+				$('#edd-batch-success').parent().slideUp('fast');
+			});
 		}
 
 	};
@@ -1491,8 +1625,8 @@ jQuery(document).ready(function ($) {
 	var EDD_Customer = {
 
 		vars: {
-			customer_card_wrap_editable:  $( '#edd-customer-card-wrapper .editable' ),
-			customer_card_wrap_edit_item: $( '#edd-customer-card-wrapper .edit-item' ),
+			customer_card_wrap_editable:  $( '.edd-customer-card-wrapper .editable' ),
+			customer_card_wrap_edit_item: $( '.edd-customer-card-wrapper .edit-item' ),
 			user_id: $('input[name="customerinfo[user_id]"]'),
 			state_input: $(':input[name="customerinfo[state]"]'),
 			note: $( '#customer-note' ),
@@ -1673,7 +1807,7 @@ jQuery(document).ready(function ($) {
 		$('.edd_user_search_results span').html('');
 	});
 
-	if( $('.edd_dashboard_sales').length ) {
+	if( $('#edd_dashboard_sales').length ) {
 		$.ajax({
 			type: "GET",
 			data: {

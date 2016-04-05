@@ -111,9 +111,9 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 		// Set parent defaults
 		parent::__construct( array(
-			'singular'  => edd_get_label_singular(),    // Singular name of the listed records
-			'plural'    => edd_get_label_plural(),    	// Plural name of the listed records
-			'ajax'      => false             			// Does this table support ajax?
+			'singular' => edd_get_label_singular(),
+			'plural'   => edd_get_label_plural(),
+			'ajax'     => false,
 		) );
 
 		$this->get_payment_counts();
@@ -202,7 +202,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			'refunded'  => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( array( 'status' => 'refunded', 'paged' => FALSE ) ), $current === 'refunded' ? ' class="current"' : '', __('Refunded','easy-digital-downloads' ) . $refunded_count ),
 			'revoked'   => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( array( 'status' => 'revoked', 'paged' => FALSE ) ), $current === 'revoked' ? ' class="current"' : '', __('Revoked','easy-digital-downloads' ) . $revoked_count ),
 			'failed'    => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( array( 'status' => 'failed', 'paged' => FALSE ) ), $current === 'failed' ? ' class="current"' : '', __('Failed','easy-digital-downloads' ) . $failed_count ),
-			'abandoned' => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( array( 'status' => 'abandoned', 'paged' => FALSE ) ), $current === 'abandoned' ? ' class="current"' : '', __('Abandoned','easy-digital-downloads' ) . $abandoned_count )
+			'abandoned' => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( array( 'status' => 'abandoned', 'paged' => FALSE ) ), $current === 'abandoned' ? ' class="current"' : '', __('Abandoned','easy-digital-downloads' ) . $abandoned_count ),
 		);
 
 		return apply_filters( 'edd_payments_table_views', $views );
@@ -247,6 +247,18 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Gets the name of the primary column.
+	 *
+	 * @since 2.5
+	 * @access protected
+	 *
+	 * @return string Name of the primary column.
+	 */
+	protected function get_primary_column_name() {
+		return 'ID';
+	}
+
+	/**
 	 * This function renders most of the columns in the list table.
 	 *
 	 * @access public
@@ -260,7 +272,8 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	public function column_default( $payment, $column_name ) {
 		switch ( $column_name ) {
 			case 'amount' :
-				$amount  = ! empty( $payment->total ) ? $payment->total : 0;
+				$amount  = $payment->total;
+				$amount  = ! empty( $amount ) ? $amount : 0;
 				$value   = edd_currency_filter( edd_format_amount( $amount ), edd_get_payment_currency_code( $payment->ID ) );
 				break;
 			case 'date' :
@@ -294,19 +307,18 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 		$row_actions = array();
 
-		if ( edd_is_payment_complete( $payment->ID ) ) {
-			$row_actions['email_links'] = '<a href="' . add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $payment->ID ), $this->base_url ) . '">' . __( 'Resend Purchase Receipt', 'easy-digital-downloads' ) . '</a>';
+		$email = edd_get_payment_user_email( $payment->ID );
 
+		if ( edd_is_payment_complete( $payment->ID ) && ! empty( $email ) ) {
+			$row_actions['email_links'] = '<a href="' . add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $payment->ID ), $this->base_url ) . '">' . __( 'Resend Purchase Receipt', 'easy-digital-downloads' ) . '</a>';
 		}
 
 		$row_actions['delete'] = '<a href="' . wp_nonce_url( add_query_arg( array( 'edd-action' => 'delete_payment', 'purchase_id' => $payment->ID ), $this->base_url ), 'edd_payment_nonce') . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 
 		$row_actions = apply_filters( 'edd_payment_row_actions', $row_actions, $payment );
 
-		$email = edd_get_payment_user_email( $payment->ID );
-
 		if ( empty( $email ) ) {
-			$payment->user_info['email'] = __( '(unknown)', 'easy-digital-downloads' );
+			$email = __( '(unknown)', 'easy-digital-downloads' );
 		}
 
 		$value = $email . $this->row_actions( $row_actions );
@@ -469,7 +481,14 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		if( isset( $_GET['user'] ) ) {
 			$args['user'] = urldecode( $_GET['user'] );
 		} elseif( isset( $_GET['s'] ) ) {
-			$args['s'] = urldecode( $_GET['s'] );
+
+			$is_user  = strpos( $_GET['s'], strtolower( 'user:' ) ) !== false;
+			if ( $is_user ) {
+				$args['user'] = absint( trim( str_replace( 'user:', '', strtolower( $_GET['s'] ) ) ) );
+				unset( $args['s'] );
+			} else {
+				$args['s'] = sanitize_text_field( $_GET['s'] );
+			}
 		}
 
 		if ( ! empty( $_GET['start-date'] ) ) {

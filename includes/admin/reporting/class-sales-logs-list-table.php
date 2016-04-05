@@ -43,12 +43,24 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 		// Set parent defaults
 		parent::__construct( array(
-			'singular'  => edd_get_label_singular(),
-			'plural'    => edd_get_label_plural(),
-			'ajax'      => false,
+			'singular' => edd_get_label_singular(),
+			'plural'   => edd_get_label_plural(),
+			'ajax'     => false,
 		) );
 
 		add_action( 'edd_log_view_actions', array( $this, 'downloads_filter' ) );
+	}
+
+	/**
+	 * Gets the name of the primary column.
+	 *
+	 * @since 2.5
+	 * @access protected
+	 *
+	 * @return string Name of the primary column.
+	 */
+	protected function get_primary_column_name() {
+		return 'ID';
 	}
 
 	/**
@@ -63,7 +75,8 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	 * @return string Column Name
 	 */
 	public function column_default( $item, $column_name ) {
-		$return = '';
+		$return   = '';
+		$currency = $item['currency'];
 
 		switch ( $column_name ){
 			case 'download' :
@@ -76,11 +89,11 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 				break;
 
 			case 'item_price' :
-				$return = edd_currency_filter( edd_format_amount( $item['item_price'] ) );
+				$return = edd_currency_filter( edd_format_amount( $item['item_price'] ), $currency );
 				break;
 
 			case 'amount' :
-				$return = edd_currency_filter( edd_format_amount( $item['amount'] / $item['quantity'] ) );
+				$return = edd_currency_filter( edd_format_amount( $item['amount'] / $item['quantity'] ), $currency );
 				break;
 
 			case 'payment_id' :
@@ -104,13 +117,12 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'ID'         => __( 'Log ID', 'edd' ),
-			'user_id'    => __( 'User', 'edd' ),
+			'ID'         => __( 'Log ID', 'easy-digital-downloads' ),
+			'user_id'    => __( 'User', 'easy-digital-downloads' ),
 			'download'   => edd_get_label_singular(),
-			'item_price' => __( 'Item Price', 'edd' ),
-			'amount'     => __( 'Sale Amount', 'edd' ),
-			'payment_id' => __( 'Payment ID', 'edd' ),
-			'date'       => __( 'Date', 'edd' ),
+			'amount'     => __( 'Item Amount', 'easy-digital-downloads' ),
+			'payment_id' => __( 'Payment ID', 'easy-digital-downloads' ),
+			'date'       => __( 'Date', 'easy-digital-downloads' ),
 		);
 
 		return $columns;
@@ -333,6 +345,8 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 							'user_name'  => $user_info['first_name'] . ' ' . $user_info['last_name'],
 							'date'       => get_post_field( 'post_date', $payment_id ),
 							'quantity'   => $item['quantity'],
+							// Keep track of the currency. Vital to produce the correct report
+							'currency'   => $item['currency'],
 						);
 
 					}
@@ -368,10 +382,21 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 		$total_items           = $edd_logs->get_log_count( $this->get_filtered_download(), 'sale', $this->get_meta_query() );
 
 		$this->set_pagination_args( array(
-				'total_items'  => $total_items,
-				'per_page'     => $this->per_page,
-				'total_pages'  => ceil( $total_items / $this->per_page ),
+				'total_items' => $total_items,
+				'per_page'    => $this->per_page,
+				'total_pages' => ceil( $total_items / $this->per_page ),
 			)
 		);
+	}
+
+	/**
+	 * Since our "bulk actions" are navigational, we want them to always show, not just when there's items
+	 *
+	 * @access public
+	 * @since 2.5
+	 * @return bool
+	 */
+	public function has_items() {
+		return true;
 	}
 }

@@ -36,8 +36,8 @@ class Tests_Payments extends WP_UnitTestCase {
 	public function tearDown() {
 
 		parent::tearDown();
-
 		EDD_Helper_Payment::delete_payment( $this->_payment_id );
+		wp_cache_flush();
 
 	}
 
@@ -49,13 +49,31 @@ class Tests_Payments extends WP_UnitTestCase {
 		$this->assertEquals( 'edd_payment', $out[0]->post_type );
 	}
 
-	public function test_payments_query() {
+	public function test_payments_query_edd_payments() {
+		$payments = new EDD_Payments_Query( array( 'output' => 'edd_payments' ) );
+		$out = $payments->get_payments();
+		$this->assertTrue( is_object( $out[0] ) );
+		$this->assertTrue( property_exists( $out[0], 'ID' ) );
+		$this->assertTrue( property_exists( $out[0], 'cart_details' ) );
+		$this->assertTrue( property_exists( $out[0], 'user_info' ) );
+	}
+
+	public function test_payments_query_payments() {
+		$payments = new EDD_Payments_Query( array( 'output' => 'payments' ) );
+		$out = $payments->get_payments();
+		$this->assertTrue( is_object( $out[0] ) );
+		$this->assertTrue( property_exists( $out[0], 'ID' ) );
+		$this->assertTrue( property_exists( $out[0], 'cart_details' ) );
+		$this->assertTrue( property_exists( $out[0], 'user_info' ) );
+	}
+
+	public function test_payments_query_default() {
 		$payments = new EDD_Payments_Query;
 		$out = $payments->get_payments();
-		$this->assertTrue( is_array( (array) $out[0] ) );
-		$this->assertArrayHasKey( 'ID', (array) $out[0] );
-		$this->assertArrayHasKey( 'cart_details', (array) $out[0] );
-		$this->assertArrayHasKey( 'user_info', (array) $out[0] );
+		$this->assertTrue( is_object( $out[0] ) );
+		$this->assertTrue( property_exists( $out[0], 'ID' ) );
+		$this->assertTrue( property_exists( $out[0], 'cart_details' ) );
+		$this->assertTrue( property_exists( $out[0], 'user_info' ) );
 	}
 
 	public function test_payments_query_search_discount() {
@@ -74,8 +92,11 @@ class Tests_Payments extends WP_UnitTestCase {
 	}
 
 	public function test_edd_get_payment_by() {
-		$this->assertObjectHasAttribute( 'ID', edd_get_payment_by( 'id', $this->_payment_id ) );
-		$this->assertObjectHasAttribute( 'ID', edd_get_payment_by( 'key', $this->_key ) );
+		$payment = edd_get_payment_by( 'id', $this->_payment_id );
+		$this->assertObjectHasAttribute( 'ID', $payment );
+
+		$payment = edd_get_payment_by( 'key', $this->_key );
+		$this->assertObjectHasAttribute( 'ID', $payment );
 	}
 
 	public function test_fake_insert_payment() {
@@ -132,13 +153,6 @@ class Tests_Payments extends WP_UnitTestCase {
 		$this->assertEquals( $expected, $out );
 	}
 
-	public function test_undo_purchase() {
-		$purchase_download_ids = wp_list_pluck( edd_get_payment_meta_downloads( $this->_payment_id ), 'id' );
-		edd_undo_purchase( reset( $purchase_download_ids ), $this->_payment_id );
-		$this->assertEquals( 0, edd_get_total_earnings() );
-		$this->markTestIncomplete( "When testing edd_get_total_earnings, it is always 0, no matter the undo." );
-	}
-
 	public function test_delete_purchase() {
 		edd_delete_purchase( $this->_payment_id );
 		// This returns an empty array(), so empty makes it false
@@ -149,6 +163,15 @@ class Tests_Payments extends WP_UnitTestCase {
 	public function test_get_payment_completed_date() {
 
 		edd_update_payment_status( $this->_payment_id, 'publish' );
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertInternalType( 'string', $payment->completed_date );
+		$this->assertEquals( date( 'Y-m-d' ), date( 'Y-m-d', strtotime( $payment->completed_date ) ) );
+
+	}
+
+	public function test_get_payment_completed_date_bc() {
+
+		edd_update_payment_status( $this->_payment_id, 'publish' );
 		$completed_date = edd_get_payment_completed_date( $this->_payment_id );
 		$this->assertInternalType( 'string', $completed_date );
 		$this->assertEquals( date( 'Y-m-d' ), date( 'Y-m-d', strtotime( $completed_date ) ) );
@@ -156,23 +179,38 @@ class Tests_Payments extends WP_UnitTestCase {
 	}
 
 	public function test_get_payment_number() {
+		// Reset all items and start from scratch
+		EDD_Helper_Payment::delete_payment( $this->_payment_id );
+		wp_cache_flush();
+
+		global $edd_options;
+		$edd_options['enable_sequential'] = 1;
+
+		$payment_id = EDD_Helper_Payment::create_simple_payment();
 
 		$this->assertInternalType( 'int', edd_get_next_payment_number() );
 		$this->assertInternalType( 'string', edd_format_payment_number( edd_get_next_payment_number() ) );
 		$this->assertEquals( 'EDD-2', edd_format_payment_number( edd_get_next_payment_number() ) );
 
-		$last_payment_number = edd_remove_payment_prefix_postfix( edd_get_payment_number( $this->_payment_id ) );
+		$payment             = new EDD_Payment( $payment_id );
+		$last_payment_number = edd_remove_payment_prefix_postfix( $payment->number );
 		$this->assertEquals( 1, $last_payment_number );
-		$this->assertEquals( 'EDD-1', edd_get_payment_number( $this->_payment_id ) );
+		$this->assertEquals( 'EDD-1', $payment->number );
 		$this->assertEquals( 2, edd_get_next_payment_number() );
 
 		// Now disable sequential and ensure values come back as expected
-		edd_delete_option( 'enable_sequential' );
+		$edd_options['enable_sequential'] = 0;
 
-		$this->assertEquals( $this->_payment_id, edd_get_payment_number( $this->_payment_id ) );
+		$payment = new EDD_Payment( $payment_id );
+		$this->assertEquals( $payment_id, $payment->number );
 	}
 
 	public function test_get_payment_transaction_id() {
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertEquals( $this->_transaction_id, $payment->transaction_id );
+	}
+
+	public function test_get_payment_transaction_id_bc() {
 		$this->assertEquals( $this->_transaction_id, edd_get_payment_transaction_id( $this->_payment_id ) );
 	}
 
@@ -181,6 +219,22 @@ class Tests_Payments extends WP_UnitTestCase {
 	}
 
 	public function test_get_payment_meta() {
+
+		$payment = new EDD_Payment( $this->_payment_id );
+
+		// Test by getting the payment key with three different methods
+		$this->assertEquals( $this->_payment_key, $payment->get_meta( '_edd_payment_purchase_key' ) );
+		$this->assertEquals( $this->_payment_key, get_post_meta( $this->_payment_id, '_edd_payment_purchase_key', true ) );
+		$this->assertEquals( $this->_payment_key, $payment->key );
+
+		// Try and retrieve the transaction ID
+		$this->assertEquals( $this->_transaction_id, $payment->get_meta( '_edd_payment_transaction_id' ) );
+
+		$this->assertEquals( $payment->email, $payment->get_meta( '_edd_payment_user_email' ) );
+
+	}
+
+	public function test_get_payment_meta_bc() {
 
 		// Test by getting the payment key with three different methods
 		$this->assertEquals( $this->_payment_key, edd_get_payment_meta( $this->_payment_id, '_edd_payment_purchase_key' ) );
@@ -196,6 +250,29 @@ class Tests_Payments extends WP_UnitTestCase {
 	}
 
 	public function test_update_payment_meta() {
+
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertEquals( $payment->key, $payment->get_meta( '_edd_payment_purchase_key' ) );
+
+		$new_value = 'test12345';
+		$this->assertNotEquals( $payment->key, $new_value );
+
+		$payment->key = $new_value;
+		$ret = $payment->save();
+
+		$this->assertTrue( $ret );
+		$this->assertEquals( $new_value, $payment->key );
+
+		$payment->email = 'test@test.com';
+		$ret = $payment->save();
+
+		$this->assertTrue( $ret );
+
+		$this->assertEquals( 'test@test.com', $payment->email );
+
+	}
+
+	public function test_update_payment_meta_bc() {
 
 		$old_value = $this->_payment_key;
 		$this->assertEquals( $old_value, edd_get_payment_meta( $this->_payment_id, '_edd_payment_purchase_key' ) );
@@ -219,6 +296,21 @@ class Tests_Payments extends WP_UnitTestCase {
 	}
 
 	public function test_get_payment_currency_code() {
+
+		$payment = new EDD_Payment( $this->_payment_id );
+
+		$this->assertEquals( 'USD', $payment->currency );
+		$this->assertEquals( 'US Dollars (&#36;)', edd_get_payment_currency( $payment->ID ) );
+
+		$total1 = edd_currency_filter( edd_format_amount( $payment->total ), $payment->currency );
+		$total2 = edd_currency_filter( edd_format_amount( $payment->total ) );
+
+		$this->assertEquals( '&#36;120.00', $total1 );
+		$this->assertEquals( '&#36;120.00', $total2 );
+
+	}
+
+	public function test_get_payment_currency_code_bc() {
 
 		$this->assertEquals( 'USD', edd_get_payment_currency_code( $this->_payment_id ) );
 		$this->assertEquals( 'US Dollars (&#36;)', edd_get_payment_currency( $this->_payment_id ) );

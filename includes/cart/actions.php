@@ -71,6 +71,12 @@ function edd_process_add_to_cart( $data ) {
 		$options['quantity'] = absint( $data['edd_download_quantity'] );
 	}
 
+	if ( isset( $options['price_id'] ) && is_array( $options['price_id'] ) ) {
+		foreach ( $options['price_id'] as  $key => $price_id ) {
+			$options['quantity'][ $key ] = isset( $data[ 'edd_download_quantity_' . $price_id ] ) ? absint( $data[ 'edd_download_quantity_' . $price_id ] ) : 1;
+		}
+	}
+
 	$cart        = edd_add_to_cart( $download_id, $options );
 
 	if ( edd_straight_to_checkout() && ! edd_is_checkout() ) {
@@ -135,7 +141,7 @@ add_action( 'edd_purchase_collection', 'edd_process_collection_purchase' );
 function edd_process_cart_update( $data ) {
 
 	foreach( $data['edd-cart-downloads'] as $key => $cart_download_id ) {
-		$options  = maybe_unserialize( stripslashes( $data['edd-cart-download-' . $key . '-options'] ) );
+		$options  = json_decode( stripslashes( $data['edd-cart-download-' . $key . '-options'] ), true );
 		$quantity = absint( $data['edd-cart-download-' . $key . '-quantity'] );
 		edd_set_cart_item_quantity( $cart_download_id, $quantity, $options );
 	}

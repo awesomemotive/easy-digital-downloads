@@ -28,29 +28,29 @@ class Tests_Emails extends WP_UnitTestCase {
 
 		$_download_files = array(
 			array(
-				'name' => 'File 1',
-				'file' => 'http://localhost/file1.jpg',
+				'name'      => 'File 1',
+				'file'      => 'http://localhost/file1.jpg',
 				'condition' => 0
 			),
 			array(
-				'name' => 'File 2',
-				'file' => 'http://localhost/file2.jpg',
+				'name'      => 'File 2',
+				'file'      => 'http://localhost/file2.jpg',
 				'condition' => 'all'
 			)
 		);
 
 		$meta = array(
-			'edd_price' => '0.00',
-			'_variable_pricing' => 1,
-			'_edd_price_options_mode' => 'on',
-			'edd_variable_prices' => array_values( $_variable_pricing ),
-			'edd_download_files' => array_values( $_download_files ),
-			'_edd_download_limit' => 20,
-			'_edd_hide_purchase_link' => 1,
-			'edd_product_notes' => 'Purchase Notes',
-			'_edd_product_type' => 'default',
-			'_edd_download_earnings' => 129.43,
-			'_edd_download_sales' => 59,
+			'edd_price'                      => '0.00',
+			'_variable_pricing'              => 1,
+			'_edd_price_options_mode'        => 'on',
+			'edd_variable_prices'            => array_values( $_variable_pricing ),
+			'edd_download_files'             => array_values( $_download_files ),
+			'_edd_download_limit'            => 20,
+			'_edd_hide_purchase_link'        => 1,
+			'edd_product_notes'              => 'Purchase Notes',
+			'_edd_product_type'              => 'default',
+			'_edd_download_earnings'         => 129.43,
+			'_edd_download_sales'            => 59,
 			'_edd_download_limit_override_1' => 1
 		);
 		foreach( $meta as $key => $value ) {
@@ -63,11 +63,11 @@ class Tests_Emails extends WP_UnitTestCase {
 		$user = get_userdata(1);
 
 		$user_info = array(
-			'id' => $user->ID,
-			'email' => $user->user_email,
+			'id'         => $user->ID,
+			'email'      => $user->user_email,
 			'first_name' => 'Network',
-			'last_name' => 'Administrator',
-			'discount' => 'none'
+			'last_name'  => 'Administrator',
+			'discount'   => 'none'
 		);
 
 		$download_details = array(
@@ -90,37 +90,37 @@ class Tests_Emails extends WP_UnitTestCase {
 
 		$cart_details = array(
 			array(
-				'name' => 'Test Download',
-				'id' => $this->_post->ID,
+				'name'        => 'Test Download',
+				'id'          => $this->_post->ID,
 				'item_number' => array(
-					'id' => $this->_post->ID,
+					'id'      => $this->_post->ID,
 					'options' => array(
 						'price_id' => 1
 					)
 				),
-				'discount' => 0,
-				'subtotal' => 100,
-				'price' => 100,
+				'discount'   => 0,
+				'subtotal'   => 100,
+				'price'      => 100,
 				'item_price' => 100,
-				'tax' => 0,
-				'quantity' => 1
+				'tax'        => 0,
+				'quantity'   => 1
 			)
 		);
 
 		$purchase_data = array(
-			'price' => number_format( (float) $total, 2 ),
-			'date' => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
+			'price'        => number_format( (float) $total, 2 ),
+			'date'         => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
 			'purchase_key' => strtolower( md5( uniqid() ) ),
-			'key' => strtolower( md5( uniqid() ) ),
-			'user_email' => $user_info['email'],
-			'user_info' => $user_info,
-			'currency' => 'USD',
-			'downloads' => $download_details,
+			'key'          => strtolower( md5( uniqid() ) ),
+			'user_email'   => $user_info['email'],
+			'user_info'    => $user_info,
+			'currency'     => 'USD',
+			'downloads'    => $download_details,
 			'cart_details' => $cart_details,
-			'status' => 'pending',
-			'gateway' => 'manual',
-			'email' => 'admin@example.org',
-			'amount' => number_format( (float) $total, 2 ),
+			'status'       => 'pending',
+			'gateway'      => 'manual',
+			'email'        => 'admin@example.org',
+			'amount'       => number_format( (float) $total, 2 ),
 		);
 
 		$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
@@ -235,7 +235,7 @@ class Tests_Emails extends WP_UnitTestCase {
 	}
 
 	public function test_email_tags_date() {
-		$this->assertEquals( date( 'F j, Y', strtotime( 'today' ) ), edd_email_tag_date( $this->_payment_id ) );
+		$this->assertEquals( date( 'F j, Y', strtotime( get_post_field( 'post_date', $this->_payment_id ) ) ), edd_email_tag_date( $this->_payment_id ) );
 	}
 
 	public function test_email_tags_subtotal() {
@@ -267,7 +267,7 @@ class Tests_Emails extends WP_UnitTestCase {
 	}
 
 	public function test_email_tags_receipt_link() {
-		$this->assertContains( 'View it in your browser.', edd_email_tag_receipt_link( $this->_payment_id ) );
+		$this->assertContains( 'View it in your browser &raquo;', edd_email_tag_receipt_link( $this->_payment_id ) );
 	}
 
 	public function test_get_from_name() {
