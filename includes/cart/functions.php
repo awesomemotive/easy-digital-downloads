@@ -870,6 +870,22 @@ function edd_get_cart_tax() {
 }
 
 /**
+ * Gets the tax rate charged on the cart
+ *
+ * @since 2.6
+ *
+ * @return float
+ */
+function edd_get_cart_tax_rate() {
+
+	$country = ! empty( $_POST['billing_country'] ) ? $_POST['billing_country'] : false;
+	$state   = ! empty( $_POST['card_state'] )      ? $_POST['card_state']      : false;
+	$rate    = edd_get_tax_rate( $country, $state );
+
+	return apply_filters( 'edd_get_cart_tax_rate', floatval( $rate ) );
+}
+
+/**
  * Gets the total tax amount for the cart contents in a fully formatted way
  *
  * @since 1.2.3

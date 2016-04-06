@@ -80,6 +80,7 @@ function edd_process_purchase_form() {
 		'subtotal'     => edd_get_cart_subtotal(),    // Amount before taxes and discounts
 		'discount'     => edd_get_cart_discounted_amount(), // Discounted amount
 		'tax'          => edd_get_cart_tax(),               // Taxed amount
+		'tax_rate'     => edd_get_cart_tax_rate(),          // Tax rate
 		'price'        => edd_get_cart_total(),    // Amount after taxes
 		'purchase_key' => strtolower( md5( $user['user_email'] . date( 'Y-m-d H:i:s' ) . $auth_key . uniqid( 'edd', true ) ) ),  // Unique key
 		'user_email'   => $user['user_email'],
