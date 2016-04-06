@@ -925,3 +925,26 @@ function edd_add_download_post_classes( $classes, $class = '', $post_id = false 
 	return $classes;
 }
 add_filter( 'post_class', 'edd_add_download_post_classes', 20, 3 );
+
+/**
+ * Adds Download product price to oembed display
+ *
+ * @since 2.6
+ * @return void
+ */
+function edd_add_oembed_price() {
+
+	if( 'download' !== get_post_type( get_the_ID() ) ) {
+		return;
+	}
+
+	$show = ! get_post_meta( get_the_ID(), '_edd_hide_purchase_link', true );
+
+	if ( apply_filters( 'edd_show_oembed_purchase_links', $show ) ) {
+		echo '<style>.wp-embed-edd-price { margin: 20px 0 0 0; }</style>';
+		echo '<div class="wp-embed-edd-price">';
+			edd_price( get_the_ID(), true );
+		echo '</div>';
+	}
+}
+add_action( 'embed_content', 'edd_add_oembed_price' );
