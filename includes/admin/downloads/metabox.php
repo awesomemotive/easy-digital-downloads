@@ -449,7 +449,7 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 	<?php do_action( 'edd_download_price_table_row', $post_id, $key, $args ); ?>
 
 	<td>
-		<a href="#" class="edd_remove_repeatable" data-type="price" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;">&times;</a>
+		<button class="edd_remove_repeatable" data-type="price" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;"><span class="screen-reader-text"><?php printf( __( 'Remove price option %s', 'easy-digital-downloads' ), $key ); ?></span><span aria-hidden="true">&times;</span></button>
 	</td>
 <?php
 }
@@ -529,7 +529,7 @@ function edd_render_products_field( $post_id ) {
 								?>
 							</td>
 							<td>
-								<a href="#" class="edd_remove_repeatable" data-type="file" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;">&times;</a>
+								<button class="edd_remove_repeatable" data-type="file" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;"><span class="screen-reader-text"><?php printf( __( 'Remove bundle option %s', 'easy-digital-downloads' ), $key ); ?></span><span aria-hidden="true">&times;</span></button>
 							</td>
 							<?php do_action( 'edd_download_products_table_row', $post_id ); ?>
 						</tr>
@@ -553,7 +553,7 @@ function edd_render_products_field( $post_id ) {
 							?>
 						</td>
 						<td>
-							<a href="#" class="edd_remove_repeatable" data-type="file" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;">&times;</a>
+							<button class="edd_remove_repeatable" data-type="file" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;"><span class="screen-reader-text"><?php echo __( 'Remove bundle option', 'easy-digital-downloads' ); ?></span><span aria-hidden="true">&times;</span></button>
 						</td>
 						<?php do_action( 'edd_download_products_table_row', $post_id ); ?>
 					</tr>
@@ -731,7 +731,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 	<?php do_action( 'edd_download_file_table_row', $post_id, $key, $args ); ?>
 
 	<td>
-		<a href="#" class="edd_remove_repeatable" data-type="file" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;">&times;</a>
+		<button class="edd_remove_repeatable" data-type="file" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;"><span class="screen-reader-text"><?php printf( __( 'Remove file option %s', 'easy-digital-downloads' ), $key ); ?></span><span aria-hidden="true">&times;</span></button>
 	</td>
 <?php
 }
