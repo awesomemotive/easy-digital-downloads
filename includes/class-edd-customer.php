@@ -205,6 +205,11 @@ class EDD_Customer {
 			$args['payment_ids'] = implode( ',', array_unique( array_values( $args['payment_ids'] ) ) );
 		}
 
+		/**
+		 * Fires before a customer is created
+		 *
+		 * @param array $args Contains customer information such as payment ID, name, and email.
+		 */
 		do_action( 'edd_customer_pre_create', $args );
 
 		$created = false;
@@ -221,6 +226,12 @@ class EDD_Customer {
 			$created = $this->id;
 		}
 
+		/**
+		 * Fires after a customer is created
+		 *
+		 * @param int   $created If created successfully, the customer ID.  Defaults to false.
+		 * @param array $args Contains customer information such as payment ID, name, and email.
+		 */
 		do_action( 'edd_customer_post_create', $created, $args );
 
 		return $created;
