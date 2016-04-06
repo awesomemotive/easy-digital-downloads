@@ -17,13 +17,13 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 final class EDD_Amazon_Payments {
 
 	private static $instance;
-	private $gateway_id      = 'amazon';
-	private $client          = null;
-	private $redirect_uri    = null;
-	private $checkout_uri    = null;
-	private $signin_redirect = null;
-	private $reference_id    = null;
-	private $doing_ipn       = false;
+	public $gateway_id      = 'amazon';
+	public $client          = null;
+	public $redirect_uri    = null;
+	public $checkout_uri    = null;
+	public $signin_redirect = null;
+	public $reference_id    = null;
+	public $doing_ipn       = false;
 
 	/**
 	 * Get things going

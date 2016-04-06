@@ -575,7 +575,7 @@ class EDD_Customer {
 
 		$all_notes = $this->db->get_column( 'notes', $this->id );
 
-		return $all_notes;
+		return (string) $all_notes;
 
 	}
 

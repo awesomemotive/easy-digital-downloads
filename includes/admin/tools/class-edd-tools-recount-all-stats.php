@@ -53,36 +53,33 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 	public function get_data() {
 		global $edd_logs, $wpdb;
 
-		$totals             = get_option( 'edd_temp_recount_all_stats' , false );
-		$payment_items      = get_option( 'edd_temp_payment_items'     , false );
-		$processed_payments = get_option( 'edd_temp_processed_payments', false );
+		$totals             = $this->get_stored_data( 'edd_temp_recount_all_stats'  );
+		$payment_items      = $this->get_stored_data( 'edd_temp_payment_items'      );
+		$processed_payments = $this->get_stored_data( 'edd_temp_processed_payments' );
 		$accepted_statuses  = apply_filters( 'edd_recount_accepted_statuses', array( 'publish', 'revoked' ) );
 
 		if ( false === $totals ) {
 			$totals = array();
-			add_option( 'edd_temp_recount_all_stats', $totals, '', 'no' );
 		}
 
 		if ( false === $payment_items ) {
 			$payment_items = array();
-			add_option( 'edd_temp_payment_items', $payment_items, '', 'no' );
 		}
 
 		if ( false === $processed_payments ) {
 			$processed_payments = array();
-			add_option( 'edd_temp_processed_payments', $processed_payments, '', 'no' );
 		}
 
-		$all_downloads = get_option( 'edd_temp_download_ids' );
+		$all_downloads = $this->get_stored_data( 'edd_temp_download_ids' );
 
 		$args = apply_filters( 'edd_recount_download_stats_args', array(
-			'post_parent'    => $all_downloads,
-			'post_type'      => 'edd_log',
-			'posts_per_page' => $this->per_step,
-			'post_status'    => 'publish',
-			'paged'          => $this->step,
-			'log_type'       => 'sale',
-			'fields'         => 'ids',
+			'post_parent__in' => $all_downloads,
+			'post_type'       => 'edd_log',
+			'posts_per_page'  => $this->per_step,
+			'post_status'     => 'publish',
+			'paged'           => $this->step,
+			'log_type'        => 'sale',
+			'fields'          => 'ids',
 		) );
 
 		$log_ids = $edd_logs->get_connected_logs( $args, 'sale' );
@@ -103,7 +100,7 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 					continue;
 				}
 
-				if ( in_array( $payment->post_status, $accepted_statuses ) ) {
+				if ( ! in_array( $payment->post_status, $accepted_statuses ) ) {
 					$processed_payments[] = $payment->ID;
 					continue;
 				}
@@ -127,31 +124,20 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 					$totals[ $download_id ]['sales']++;
 					$totals[ $download_id ]['earnings'] += $item['price'];
 
-					if ( ! array_key_exists( 'edd_earnings_total', $totals ) ) {
-						$totals['edd_earnings_total'] = $item['price'];
-					} else {
-						$totals['edd_earnings_total'] += $item['price'];
-					}
-
 				}
 
 				$processed_payments[] = $payment->ID;
 			}
 
-			update_option( 'edd_temp_processed_payments', $processed_payments );
-			update_option( 'edd_temp_recount_all_stats', $totals );
+			$this->store_data( 'edd_temp_processed_payments', $processed_payments );
+			$this->store_data( 'edd_temp_recount_all_stats', $totals );
 
 			return true;
 		}
 
 		foreach ( $totals as $key => $stats ) {
-			if ( is_numeric( $key ) ) {
-				update_post_meta( $key, '_edd_download_sales'   , $stats['sales'] );
-				update_post_meta( $key, '_edd_download_earnings', $stats['earnings'] );
-			} else {
-				update_option( $key, $stats );
-				set_transient( $key, $stats, 86400 );
-			}
+			update_post_meta( $key, '_edd_download_sales'   , $stats['sales'] );
+			update_post_meta( $key, '_edd_download_earnings', $stats['earnings'] );
 		}
 
 		return false;
@@ -166,11 +152,11 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 	 */
 	public function get_percentage_complete() {
 
-		$total = get_option( 'edd_recount_all_total', false );
+		$total = $this->get_stored_data( 'edd_recount_all_total', false );
 
 		if ( false === $total ) {
 			$this->pre_fetch();
-			$total = get_option( 'edd_recount_all_total', 0 );
+			$total = $this->get_stored_data( 'edd_recount_all_total', 0 );
 		}
 
 		$percentage = 100;
@@ -214,11 +200,11 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 			$this->done = false;
 			return true;
 		} else {
-			delete_option( 'edd_recount_all_total' );
-			delete_option( 'edd_temp_recount_all_stats' );
-			delete_option( 'edd_temp_payment_items' );
-			delete_option( 'edd_temp_download_ids' );
-			delete_option( 'edd_temp_processed_payments' );
+			$this->delete_data( 'edd_recount_all_total' );
+			$this->delete_data( 'edd_temp_recount_all_stats' );
+			$this->delete_data( 'edd_temp_payment_items' );
+			$this->delete_data( 'edd_temp_download_ids' );
+			$this->delete_data( 'edd_temp_processed_payments' );
 			$this->done    = true;
 			$this->message = __( 'Earnings and sales stats successfully recounted.', 'easy-digital-downloads' );
 			return false;
@@ -252,25 +238,25 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 		global $edd_logs, $wpdb;
 
 		if ( $this->step == 1 ) {
-			delete_option( 'edd_temp_recount_all_total' );
-			delete_option( 'edd_temp_recount_all_stats' );
-			delete_option( 'edd_temp_payment_items' );
-			delete_option( 'edd_temp_processed_payments' );
+			$this->delete_data( 'edd_temp_recount_all_total' );
+			$this->delete_data( 'edd_temp_recount_all_stats' );
+			$this->delete_data( 'edd_temp_payment_items' );
+			$this->delete_data( 'edd_temp_processed_payments' );
 		}
 
 		$accepted_statuses = apply_filters( 'edd_recount_accepted_statuses', array( 'publish', 'revoked' ) );
-		$total             = get_option( 'edd_temp_recount_all_total', false );
+		$total             = $this->get_stored_data( 'edd_temp_recount_all_total' );
 
 		if ( false === $total ) {
 			$total         = 0;
-			$payment_items = get_option( 'edd_temp_payment_items', false );
+			$payment_items = $this->get_stored_data( 'edd_temp_payment_items' );
 
 			if ( false === $payment_items ) {
 				$payment_items = array();
-				add_option( 'edd_temp_payment_items', $payment_items, '', 'no' );
+				$this->store_data( 'edd_temp_payment_items', $payment_items );
 			}
 
-			$all_downloads = get_option( 'edd_temp_download_ids', false );
+			$all_downloads = $this->get_stored_data( 'edd_temp_download_ids' );
 
 			if ( false === $all_downloads ) {
 				$args = array(
@@ -281,16 +267,16 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 				);
 
 				$all_downloads = get_posts( $args );
-				add_option( 'edd_temp_download_ids', $all_downloads, '', 'no' );
+				$this->store_data( 'edd_temp_download_ids', $all_downloads );
 			}
 
 			$args  = apply_filters( 'edd_recount_download_stats_total_args', array(
-				'post_parent'    => $all_downloads,
-				'post_type'      => 'edd_log',
-				'post_status'    => 'publish',
-				'log_type'       => 'sale',
-				'fields'         => 'ids',
-				'nopaging'       => true,
+				'post_parent__in' => $all_downloads,
+				'post_type'       => 'edd_log',
+				'post_status'     => 'publish',
+				'log_type'        => 'sale',
+				'fields'          => 'ids',
+				'nopaging'        => true,
 			) );
 
 			$all_logs = $edd_logs->get_connected_logs( $args, 'sale' );
@@ -305,7 +291,7 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 				unset( $payment_ids );
 
 				foreach ( $payments as $payment ) {
-					if ( in_array( $payment->post_status, $accepted_statuses ) ) {
+					if ( ! in_array( $payment->post_status, $accepted_statuses ) ) {
 						continue;
 					}
 
@@ -321,10 +307,62 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 				$total = count( $all_logs );
 			}
 
-			update_option( 'edd_temp_payment_items', $payment_items );
-			update_option( 'edd_recount_all_total' , $total );
+			$this->store_data( 'edd_temp_payment_items', $payment_items );
+			$this->store_data( 'edd_recount_all_total' , $total );
 		}
 
+	}
+
+	/**
+	 * Given a key, get the information from the Database Directly
+	 *
+	 * @since  2.5
+	 * @param  string $key The option_name
+	 * @return mixed       Returns the data from the database
+	 */
+	private function get_stored_data( $key ) {
+		global $wpdb;
+		$value = $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = '%s'", $key ) );
+
+		return empty( $value ) ? false : maybe_unserialize( $value );
+	}
+
+	/**
+	 * Give a key, store the value
+	 *
+	 * @since  2.5
+	 * @param  string $key   The option_name
+	 * @param  mixed  $value  The value to store
+	 * @return void
+	 */
+	private function store_data( $key, $value ) {
+		global $wpdb;
+
+		$value = maybe_serialize( $value );
+
+		$data = array(
+			'option_name'  => $key,
+			'option_value' => $value,
+			'autoload'     => 'no',
+		);
+
+		$formats = array(
+			'%s', '%s', '%s',
+		);
+
+		$wpdb->replace( $wpdb->options, $data, $formats );
+	}
+
+	/**
+	 * Delete an option
+	 *
+	 * @since  2.5
+	 * @param  string $key The option_name to delete
+	 * @return void
+	 */
+	private function delete_data( $key ) {
+		global $wpdb;
+		$wpdb->delete( $wpdb->options, array( 'option_name' => $key ) );
 	}
 
 }

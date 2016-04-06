@@ -107,6 +107,7 @@ class Test_Gateways extends WP_UnitTestCase {
 	}
 
 	public function test_show_gateways() {
+		edd_empty_cart();
 		$this->assertFalse( edd_show_gateways() );
 	}
 

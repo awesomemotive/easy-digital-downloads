@@ -164,9 +164,17 @@ function edd_price( $download_id = 0, $echo = true, $price_id = false ) {
 		$prices = edd_get_variable_prices( $download_id );
 
 		if ( false !== $price_id && isset( $prices[$price_id] ) ) {
-			$price = (float) $prices[$price_id]['amount'];
+
+			$price = edd_get_price_option_amount( $download_id, $price_id );
+
+		} elseif( $default = edd_get_default_variable_price( $download_id ) ) {
+
+			$price = edd_get_price_option_amount( $download_id, $default );
+
 		} else {
+
 			$price = edd_get_lowest_price_option( $download_id );
+
 		}
 
 		$price = edd_sanitize_amount( $price );
@@ -460,9 +468,9 @@ function edd_get_highest_price_option( $download_id = 0 ) {
 function edd_price_range( $download_id = 0 ) {
 	$low   = edd_get_lowest_price_option( $download_id );
 	$high  = edd_get_highest_price_option( $download_id );
-	$range = '<span class="edd_price_range_low">' . edd_currency_filter( edd_format_amount( $low ) ) . '</span>';
+	$range = '<span class="edd_price edd_price_range_low" id="edd_price_low_' . $download_id . '">' . edd_currency_filter( edd_format_amount( $low ) ) . '</span>';
 	$range .= '<span class="edd_price_range_sep">&nbsp;&ndash;&nbsp;</span>';
-	$range .= '<span class="edd_price_range_high">' . edd_currency_filter( edd_format_amount( $high ) ) . '</span>';
+	$range .= '<span class="edd_price edd_price_range_high" id="edd_price_high_' . $download_id . '">' . edd_currency_filter( edd_format_amount( $high ) ) . '</span>';
 
 	return apply_filters( 'edd_price_range', $range, $download_id, $low, $high );
 }
@@ -587,8 +595,8 @@ function edd_record_sale_in_log( $download_id = 0, $payment_id, $price_id = fals
 	$log_data = array(
 		'post_parent'   => $download_id,
 		'log_type'      => 'sale',
-		'post_date'     => isset( $sale_date ) ? $sale_date : null,
-		'post_date_gmt' => isset( $sale_date ) ? get_gmt_from_date( $sale_date ) : null
+		'post_date'     => ! empty( $sale_date ) ? $sale_date : null,
+		'post_date_gmt' => ! empty( $sale_date ) ? get_gmt_from_date( $sale_date ) : null
 	);
 
 	$log_meta = array(
@@ -1189,6 +1197,29 @@ function edd_validate_url_token( $url = '' ) {
 	if ( isset( $parts['query'] ) ) {
 
 		wp_parse_str( $parts['query'], $query_args );
+
+		// These are the only URL parameters that are allowed to affect the token validation
+		$allowed = apply_filters( 'edd_url_token_allowed_params', array(
+			'eddfile',
+			'file',
+			'ttl',
+			'token'
+		) );
+
+		// Parameters that will be removed from the URL before testing the token
+		$remove = array();
+
+		foreach( $query_args as $key => $value ) {
+			if( false === in_array( $key, $allowed ) ) {
+				$remove[] = $key;
+			}
+		}
+
+		if( ! empty( $remove ) ) {
+
+			$url = remove_query_arg( $remove, $url );
+
+		}
 
 		if ( isset( $query_args['ttl'] ) && current_time( 'timestamp' ) > $query_args['ttl'] ) {
 

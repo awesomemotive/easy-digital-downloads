@@ -81,6 +81,12 @@ class EDD_Welcome {
 			'edd-credits',
 			array( $this, 'credits_screen' )
 		);
+
+		// Now remove them from the menus so plugins that allow customizing the admin menu don't show them
+		remove_submenu_page( 'index.php', 'edd-about' );
+		remove_submenu_page( 'index.php', 'edd-changelog' );
+		remove_submenu_page( 'index.php', 'edd-getting-started' );
+		remove_submenu_page( 'index.php', 'edd-credits' );
 	}
 
 	/**
@@ -91,11 +97,6 @@ class EDD_Welcome {
 	 * @return void
 	 */
 	public function admin_head() {
-		remove_submenu_page( 'index.php', 'edd-about' );
-		remove_submenu_page( 'index.php', 'edd-changelog' );
-		remove_submenu_page( 'index.php', 'edd-getting-started' );
-		remove_submenu_page( 'index.php', 'edd-credits' );
-
 		?>
 		<style type="text/css" media="screen">
 			/*<![CDATA[*/
@@ -489,7 +490,7 @@ class EDD_Welcome {
 
 		foreach ( $contributors as $contributor ) {
 			$contributor_list .= '<li class="wp-person">';
-			$contributor_list .= sprintf( '<a href="%s" title="%s">',
+			$contributor_list .= sprintf( '<a href="%s">',
 				esc_url( 'https://github.com/' . $contributor->login ),
 				esc_html( sprintf( __( 'View %s', 'easy-digital-downloads' ), $contributor->login ) )
 			);

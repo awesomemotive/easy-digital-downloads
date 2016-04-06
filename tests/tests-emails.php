@@ -267,7 +267,7 @@ class Tests_Emails extends WP_UnitTestCase {
 	}
 
 	public function test_email_tags_receipt_link() {
-		$this->assertContains( 'View it in your browser.', edd_email_tag_receipt_link( $this->_payment_id ) );
+		$this->assertContains( 'View it in your browser &raquo;', edd_email_tag_receipt_link( $this->_payment_id ) );
 	}
 
 	public function test_get_from_name() {

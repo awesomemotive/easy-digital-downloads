@@ -69,7 +69,7 @@ class EDD_License {
 		// Setup hooks
 		$this->includes();
 		$this->hooks();
-		//$this->auto_updater();
+
 	}
 
 	/**
@@ -116,6 +116,8 @@ class EDD_License {
 		// Display notices to admins
 		add_action( 'admin_notices', array( $this, 'notices' ) );
 
+		add_action( 'in_plugin_update_message-' . plugin_basename( $this->file ), array( $this, 'plugin_row_license_missing' ), 10, 2 );
+
 	}
 
 	/**
@@ -125,16 +127,6 @@ class EDD_License {
 	 * @return  void
 	 */
 	public function auto_updater() {
-
-		$license = get_option( $this->item_shortname . '_license_active' );
-
-		if( ! is_object( $license ) ) {
-			return;
-		}
-
-		if ( 'valid' !== $license->license ) {
-			return;
-		}
 
 		$args = array(
 			'version'   => $this->version,
@@ -201,7 +193,7 @@ class EDD_License {
 		}
 
 		echo '<p>' . sprintf(
-			__( 'Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please <a href="%s" target="_blank" title="License renewal FAQ">renew your license</a>.', 'easy-digital-downloads' ),
+			__( 'Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please <a href="%s" target="_blank">renew your license</a>.', 'easy-digital-downloads' ),
 			'http://docs.easydigitaldownloads.com/article/1000-license-renewal'
 		) . '</p>';
 
@@ -413,6 +405,10 @@ class EDD_License {
 			return;
 		}
 
+		if( ! current_user_can( 'manage_shop_settings' ) ) {
+			return;
+		}
+
 		$messages = array();
 
 		$license = get_option( $this->item_shortname . '_license_active' );
@@ -422,7 +418,7 @@ class EDD_License {
 			if( empty( $_GET['tab'] ) || 'licenses' !== $_GET['tab'] ) {
 
 				$messages[] = sprintf(
-					__( 'You have invalid or expired license keys for Easy Digital Downloads. Please go to the <a href="%s" title="Go to Licenses page">Licenses page</a> to correct this issue.', 'easy-digital-downloads' ),
+					__( 'You have invalid or expired license keys for Easy Digital Downloads. Please go to the <a href="%s">Licenses page</a> to correct this issue.', 'easy-digital-downloads' ),
 					admin_url( 'edit.php?post_type=download&page=edd-settings&tab=licenses' )
 				);
 
@@ -442,6 +438,27 @@ class EDD_License {
 
 			}
 
+		}
+
+	}
+
+	/**
+	 * Displays message inline on plugin row that the license key is missing
+	 *
+	 * @access  public
+	 * @since   2.5
+	 * @return  void
+	 */
+	public function plugin_row_license_missing( $plugin_data, $version_info ) {
+
+		static $showed_imissing_key_message;
+
+		$license = get_option( $this->item_shortname . '_license_active' );
+
+		if( ( ! is_object( $license ) || 'valid' !== $license->license ) && empty( $showed_imissing_key_message[ $this->item_shortname ] ) ) {
+
+			echo '&nbsp;<strong><a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-settings&tab=licenses' ) ) . '">' . __( 'Enter valid license key for automatic updates.', 'easy-digital-downloads' ) . '</a></strong>';
+			$showed_imissing_key_message[ $this->item_shortname ] = true;
 		}
 
 	}

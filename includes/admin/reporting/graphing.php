@@ -35,7 +35,7 @@ function edd_reports_graph() {
 			$day_by_day = false;
 			break;
 		case 'other' :
-			if( $dates['m_end'] - $dates['m_start'] >= 2 || $dates['year_end'] > $dates['year'] && ( $dates['m_start'] != '12' && $dates['m_end'] != '1' ) ) {
+			if( $dates['m_end'] - $dates['m_start'] >= 2 || ( $dates['year_end'] > $dates['year'] && ( $dates['m_start'] - $dates['m_end'] ) != 11 ) ) {
 				$day_by_day = false;
 			} else {
 				$day_by_day = true;
@@ -690,7 +690,7 @@ function edd_get_report_dates() {
 
 		case 'this_week' :
 		case 'last_week' :
-			$base_time = $dates['range'] === 'this_week' ? current_time( 'mysql' ) : date( 'Y-n-d h:i:s', current_time( 'timestamp' ) - WEEK_IN_SECONDS );
+			$base_time = $dates['range'] === 'this_week' ? current_time( 'mysql' ) : date( 'Y-m-d h:i:s', current_time( 'timestamp' ) - WEEK_IN_SECONDS );
 			$start_end = get_weekstartend( $base_time, get_option( 'start_of_week' ) );
 
 			$dates['day']      = date( 'd', $start_end['start'] );
