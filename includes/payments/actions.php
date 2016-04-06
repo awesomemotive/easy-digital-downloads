@@ -87,7 +87,6 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 	edd_increase_total_earnings( $amount );
 
-
 	// Check for discount codes and increment their use counts
 	if ( ! empty( $user_info['discount'] ) && $user_info['discount'] !== 'none' ) {
 
@@ -148,59 +147,19 @@ add_action( 'edd_update_payment_status', 'edd_record_status_change', 100, 3 );
  * Reduces earnings and sales stats when a purchase is refunded
  *
  * @since 1.8.2
- * @param $data Arguments passed
- * @return void
+ * @param int $payment_id the ID number of the payment
+ * @param string $new_status the status of the payment, probably "publish"
+ * @param string $old_status the status of the payment prior to being marked as "complete", probably "pending"
+ * @internal param Arguments $data passed
  */
 function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
 
-	global $edd_logs;
+	$backtrace = debug_backtrace();
+	_edd_deprecated_function( 'edd_undo_purchase_on_refund', '2.5.7', 'EDD_Payment->refund()', $backtrace );
 
-	if ( 'publish' != $old_status && 'revoked' != $old_status ) {
-		return;
-	}
-
-	if ( 'refunded' != $new_status ) {
-		return;
-	}
-
-	$payment   = new EDD_Payment( $payment_id );
-	$downloads = $payment->cart_details;
-
-	if ( $downloads ) {
-		foreach( $downloads as $download ) {
-			edd_undo_purchase( $download['id'], $payment->ID );
-		}
-	}
-
-	// Decrease store earnings
-	edd_decrease_total_earnings( $payment->total );
-
-	// Decrement the stats for the customer
-	if ( ! empty( $payment->customer_id ) ) {
-
-		$customer = new EDD_Customer( $payment->customer_id );
-		$customer->decrease_value( $payment->total );
-		$customer->decrease_purchase_count();
-
-	}
-
-	// Remove related sale log entries
-	$edd_logs->delete_logs(
-		null,
-		'sale',
-		array(
-			array(
-				'key'   => '_edd_log_payment_id',
-				'value' => $payment->ID,
-			),
-		)
-	);
-
-	// Clear the This Month earnings (this_monththis_month is NOT a typo)
-	delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
+	$payment = new EDD_Payment( $payment_id );
+	$payment->refund();
 }
-add_action( 'edd_update_payment_status', 'edd_undo_purchase_on_refund', 100, 3 );
-
 
 /**
  * Flushes the current user's purchase history transient when a payment status
@@ -208,9 +167,9 @@ add_action( 'edd_update_payment_status', 'edd_undo_purchase_on_refund', 100, 3 )
  *
  * @since 1.2.2
  *
- * @param $payment_id
- * @param $new_status the status of the payment, probably "publish"
- * @param $old_status the status of the payment prior to being marked as "complete", probably "pending"
+ * @param int $payment_id the ID number of the payment
+ * @param string $new_status the status of the payment, probably "publish"
+ * @param string $old_status the status of the payment prior to being marked as "complete", probably "pending"
  */
 function edd_clear_user_history_cache( $payment_id, $new_status, $old_status ) {
 	$payment = new EDD_Payment( $payment_id );

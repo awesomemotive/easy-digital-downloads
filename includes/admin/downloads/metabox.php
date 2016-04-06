@@ -372,7 +372,7 @@ function edd_render_price_field( $post_id ) {
 
 					<tr>
 						<td class="submit" colspan="4" style="float: none; clear:both; background:#fff;">
-							<a class="button-secondary edd_add_repeatable" style="margin: 6px 0;"><?php _e( 'Add New Price', 'easy-digital-downloads' ); ?></a>
+							<button class="button-secondary edd_add_repeatable" style="margin: 6px 0;"><?php _e( 'Add New Price', 'easy-digital-downloads' ); ?></button>
 						</td>
 					</tr>
 				</tbody>
@@ -425,7 +425,7 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 			$price_args = array(
 				'name'  => 'edd_variable_prices[' . $key . '][amount]',
 				'value' => $args['amount'],
-				'placeholder' => '9.99',
+				'placeholder' => edd_format_amount( 9.99 ),
 				'class' => 'edd-price-field'
 			);
 		?>
@@ -439,7 +439,10 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 		<?php endif; ?>
 	</td>
 	<td class="edd_repeatable_default_wrapper">
-		<input type="radio" <?php checked( $default_price_id, $key, true ); ?> class="edd_repeatable_default_input" name="_edd_default_price_id" value="<?php echo $key; ?>" />
+		<label class="edd-default-price">
+			<input type="radio" <?php checked( $default_price_id, $key, true ); ?> class="edd_repeatable_default_input" name="_edd_default_price_id" value="<?php echo $key; ?>" />
+			<span class="screen-reader-text"><?php printf( __( 'Set ID %s as default price', 'easy-digital-downloads' ), $key ); ?></span>
+		</label>
 	</td>
 
 	<td>
@@ -449,7 +452,7 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 	<?php do_action( 'edd_download_price_table_row', $post_id, $key, $args ); ?>
 
 	<td>
-		<a href="#" class="edd_remove_repeatable" data-type="price" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;">&times;</a>
+		<button class="edd_remove_repeatable" data-type="price" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;"><span class="screen-reader-text"><?php printf( __( 'Remove price option %s', 'easy-digital-downloads' ), $key ); ?></span><span aria-hidden="true">&times;</span></button>
 	</td>
 <?php
 }
@@ -510,8 +513,8 @@ function edd_render_products_field( $post_id ) {
 				<tbody>
 				<?php if ( $products ) : ?>
 					<?php $index = 1; ?>
-					<?php foreach ( $products as $product ) : ?>
-						<tr class="edd_repeatable_product_wrapper edd_repeatable_row">
+					<?php foreach ( $products as $key => $product ) : ?>
+						<tr class="edd_repeatable_product_wrapper edd_repeatable_row" data-key="<?php echo esc_attr( $key ); ?>">
 							<td>
 								<span class="edd_draghandle"></span>
 								<input type="hidden" name="edd_bundled_products[<?php echo $key; ?>][index]" class="edd_repeatable_index" value="<?php echo $index; ?>"/>
@@ -520,23 +523,23 @@ function edd_render_products_field( $post_id ) {
 								<?php
 								echo EDD()->html->product_dropdown( array(
 									'name'     => '_edd_bundled_products[]',
-									'id'       => 'edd_bundled_products',
+									'id'       => 'edd_bundled_products_' . $key,
 									'selected' => $product,
 									'multiple' => false,
 									'chosen'   => true,
-									'bundles'  => false
+									'bundles'  => false,
 								) );
 								?>
 							</td>
 							<td>
-								<a href="#" class="edd_remove_repeatable" data-type="file" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;">&times;</a>
+								<button class="edd_remove_repeatable" data-type="file" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;"><span class="screen-reader-text"><?php printf( __( 'Remove bundle option %s', 'easy-digital-downloads' ), $key ); ?></span><span aria-hidden="true">&times;</span></button>
 							</td>
 							<?php do_action( 'edd_download_products_table_row', $post_id ); ?>
 						</tr>
 						<?php $index++; ?>
 					<?php endforeach; ?>
 				<?php else: ?>
-					<tr class="edd_repeatable_product_wrapper edd_repeatable_row">
+					<tr class="edd_repeatable_product_wrapper edd_repeatable_row" data-key="1">
 						<td>
 							<span class="edd_draghandle"></span>
 							<input type="hidden" name="edd_bundled_products[1][index]" class="edd_repeatable_index" value="1"/>
@@ -545,7 +548,7 @@ function edd_render_products_field( $post_id ) {
 							<?php
 							echo EDD()->html->product_dropdown( array(
 								'name'     => '_edd_bundled_products[]',
-								'id'       => 'edd_bundled_products',
+								'id'       => 'edd_bundled_products_1',
 								'multiple' => false,
 								'chosen'   => true,
 								'bundles'  => false
@@ -553,14 +556,14 @@ function edd_render_products_field( $post_id ) {
 							?>
 						</td>
 						<td>
-							<a href="#" class="edd_remove_repeatable" data-type="file" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;">&times;</a>
+							<button class="edd_remove_repeatable" data-type="file" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;"><span class="screen-reader-text"><?php echo __( 'Remove bundle option', 'easy-digital-downloads' ); ?></span><span aria-hidden="true">&times;</span></button>
 						</td>
 						<?php do_action( 'edd_download_products_table_row', $post_id ); ?>
 					</tr>
 				<?php endif; ?>
 					<tr>
 						<td class="submit" colspan="3" style="float: none; clear:both; background: #fff;">
-							<a class="button-secondary edd_add_repeatable" style="margin: 6px 0 10px;"><?php _e( 'Add New File', 'easy-digital-downloads' ); ?></a>
+							<button class="button-secondary edd_add_repeatable" style="margin: 6px 0 10px;"><?php _e( 'Add New File', 'easy-digital-downloads' ); ?></button>
 						</td>
 					</tr>
 				</tbody>
@@ -635,7 +638,7 @@ function edd_render_files_field( $post_id = 0 ) {
 				<?php endif; ?>
 					<tr>
 						<td class="submit" colspan="4" style="float: none; clear:both; background: #fff;">
-							<a class="button-secondary edd_add_repeatable" style="margin: 6px 0 10px;"><?php _e( 'Add New File', 'easy-digital-downloads' ); ?></a>
+							<button class="button-secondary edd_add_repeatable" style="margin: 6px 0 10px;"><?php _e( 'Add New File', 'easy-digital-downloads' ); ?></button>
 						</td>
 					</tr>
 				</tbody>
@@ -731,7 +734,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 	<?php do_action( 'edd_download_file_table_row', $post_id, $key, $args ); ?>
 
 	<td>
-		<a href="#" class="edd_remove_repeatable" data-type="file" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;">&times;</a>
+		<button class="edd_remove_repeatable" data-type="file" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;"><span class="screen-reader-text"><?php printf( __( 'Remove file option %s', 'easy-digital-downloads' ), $key ); ?></span><span aria-hidden="true">&times;</span></button>
 	</td>
 <?php
 }

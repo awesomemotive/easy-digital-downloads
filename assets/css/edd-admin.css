@@ -95,8 +95,8 @@ tr.status-refunded td { background: #cecece; border-top-color: #ccc; }
 .edd_repeatable_upload_wrapper .edd_repeatable_upload_field_container { position: relative; }
 .edd_upload_file { position: absolute; top: 3px; right: 7px; padding: 2px 8px 2px; display: block; background: #fff; }
 .edd_upload_field { padding-right: 8em; }
-.edd_remove_repeatable { margin: 8px 0 0 0; cursor: pointer; width: 10px; height: 10px; display: inline-block; text-indent: -9999px; overflow: hidden; }
-.edd_remove_repeatable:active, .edd_remove_repeatable:hover { background-position: -10px 0!important }
+.edd_remove_repeatable { border: none; padding: 0; margin: 8px 0 0 0; cursor: pointer; width: 10px; height: 10px; display: inline-block; text-indent: -9999px; overflow: hidden; }
+.edd_remove_repeatable:active, .edd_remove_repeatable:hover, .edd_remove_repeatable:focus  { background-position: -10px 0!important }
 .edd_draghandle { display: block; width: 20px; height: 20px; background: url(../images/edd-cross-hair.png); cursor: move; margin: 4px 0 0 0; }
 textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 .edd-price-field { width: 80px; }
@@ -377,6 +377,18 @@ td.edd_order_price { text-align: right; }
 #edd-item-tab-wrapper { margin-left: -1px; z-index: 1; text-align: center; display: inline-block; }
 #edd-item-tab-wrapper-list li { background-color: #fff; width: 32px; height: 32px; }
 #edd-item-tab-wrapper-list .inactive { background-color: #fff; color: #eee; border-left: 1px solid #e5e5e5; }
+#edd-item-tab-wrapper-list .inactive a,
+#edd-item-tab-wrapper-list .inactive a:visited {
+	color: #eee;
+	display: block;
+	line-height: 32px;
+	text-decoration: none;
+}
+#edd-item-tab-wrapper-list .inactive a:hover,
+#edd-item-tab-wrapper-list .inactive a:focus,
+#edd-item-tab-wrapper-list .inactive a:active {
+	color: #444;
+}
 #edd-item-tab-wrapper-list .active { border-width: 1px 1px 1px 0; border-style: solid; border-color: #e5e5e5; }
 #edd-item-tab-wrapper-list :not(:last-child) { margin-bottom: 3px; }
 #edd-item-tab-wrapper-list .dashicons { font-size: 24px; line-height: 32px; }

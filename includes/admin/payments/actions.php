@@ -80,11 +80,11 @@ function edd_update_payment_details( $data ) {
 				continue;
 			}
 
-			if ( empty( $download['amount'] ) ) {
-				$download['amount'] = 0.00;
+			if ( empty( $download['item_price'] ) ) {
+				$download['item_price'] = 0.00;
 			}
 
-			$amount      = $download['amount'];
+			$item_price  = $download['item_price'];
 			$download_id = absint( $download['id'] );
 			$quantity    = absint( $download['quantity'] ) > 0 ? absint( $download['quantity'] ) : 1;
 			$price_id    = false;
@@ -96,7 +96,7 @@ function edd_update_payment_details( $data ) {
 			// Set some defaults
 			$args = array(
 				'quantity'    => $quantity,
-				'amount'      => $amount,
+				'item_price'  => $item_price,
 				'price_id'    => $price_id,
 			);
 
@@ -116,9 +116,9 @@ function edd_update_payment_details( $data ) {
 			$price_id = empty( $deleted_download['price_id'] ) ? 0 : (int) $deleted_download['price_id'];
 
 			$args = array(
-				'quantity' => $deleted_download['quantity'],
-				'price_id' => $price_id,
-				'amount'   => $deleted_download['amount'],
+				'quantity'   => (int) $deleted_download['quantity'],
+				'price_id'   => (int) $price_id,
+				'item_price' => (float) $deleted_download['amount'],
 			);
 
 			$payment->remove_download( $deleted_download['id'], $args );
@@ -241,7 +241,7 @@ function edd_update_payment_details( $data ) {
 	}
 
 	// Set new status
-	edd_update_payment_status( $payment_id, $status );
+	$payment->status = $status;
 
 	// Adjust total store earnings if the payment total has been changed
 	if ( $new_total !== $curr_total && ( 'publish' == $status || 'revoked' == $status ) ) {
@@ -365,7 +365,8 @@ add_action( 'wp_ajax_edd_delete_payment_note', 'edd_ajax_delete_payment_note' );
 */
 function edd_ajax_generate_file_download_link() {
 
-	if( ! current_user_can( 'view_shop_reports' ) ) {
+	$customer_view_role = apply_filters( 'edd_view_customers_role', 'view_shop_reports' );
+	if ( ! current_user_can( $customer_view_role ) ) {
 		die( '-1' );
 	}
 

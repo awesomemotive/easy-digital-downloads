@@ -227,13 +227,17 @@ window.EDD_Checkout = (function($) {
 
 						recalculate_taxes();
 
+						var inputs = $('#edd_cc_fields .edd-input, #edd_cc_fields .edd-select,#edd_cc_address .edd-input, #edd_cc_address .edd-select,#edd_payment_mode_select .edd-input, #edd_payment_mode_select .edd-select');
+
 						if( '0.00' == discount_response.total_plain ) {
 
 							$('#edd_cc_fields,#edd_cc_address,#edd_payment_mode_select').slideUp();
+							inputs.removeAttr('required');
 							$('input[name="edd-gateway"]').val( 'manual' );
 
 						} else {
 
+							inputs.attr('required','required');
 							$('#edd_cc_fields,#edd_cc_address').slideDown();
 
 						}
@@ -279,8 +283,10 @@ window.EDD_Checkout = (function($) {
 			},
 			success: function (discount_response) {
 
+				var zero = '0' + edd_global_vars.decimal_separator + '00';
+
 				$('.edd_cart_amount').each(function() {
-					if( edd_global_vars.currency_sign + '0.00' == $(this).text() || '0.00' + edd_global_vars.currency_sign == $(this).text() ) {
+					if( edd_global_vars.currency_sign + zero == $(this).text() || zero + edd_global_vars.currency_sign == $(this).text() ) {
 						// We're removing a 100% discount code so we need to force the payment gateway to reload
 						window.location.reload();
 					}

@@ -451,4 +451,15 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 			)
 		);
 	}
+
+	/**
+	 * Since our "bulk actions" are navigational, we want them to always show, not just when there's items
+	 *
+	 * @access public
+	 * @since 2.5
+	 * @return bool
+	 */
+	public function has_items() {
+		return true;
+	}
 }

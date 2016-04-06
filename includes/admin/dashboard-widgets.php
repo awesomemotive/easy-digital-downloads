@@ -70,7 +70,7 @@ function edd_load_dashboard_sales_widget( ) {
 					<tr>
 						<?php $monthly_sales = $stats->get_sales( 0, 'this_month', false, array( 'publish', 'revoked' ) ); ?>
 						<td class="first t monthly_sales"><?php echo _n( 'Sale', 'Sales', $monthly_sales, 'easy-digital-downloads' ); ?></td>
-						<td class="b b-sales"><?php echo $monthly_sales; ?></td>
+						<td class="b b-sales"><?php echo edd_format_amount( $monthly_sales, false ); ?></td>
 					</tr>
 				</tbody>
 			</table>
@@ -88,7 +88,7 @@ function edd_load_dashboard_sales_widget( ) {
 					<tr>
 						<td class="first t sales">
 							<?php $last_month_sales = $stats->get_sales( 0, 'last_month', false, array( 'publish', 'revoked' ) ); ?>
-							<?php echo _n( 'Sale', 'Sales', $last_month_sales, 'easy-digital-downloads' ); ?>
+							<?php echo _n( 'Sale', 'Sales', edd_format_amount( $last_month_sales, false ), 'easy-digital-downloads' ); ?>
 						</td>
 						<td class="b b-last-month-sales">
 							<?php echo $last_month_sales; ?>
@@ -171,7 +171,7 @@ function edd_load_dashboard_sales_widget( ) {
 					foreach ( $payments as $payment ) { ?>
 						<tr>
 							<td class="edd_order_label">
-								<a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>" title="<?php printf( __( 'Purchase Details for Payment #%s', 'easy-digital-downloads' ), $payment->ID ); ?> ">
+								<a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>">
 									<?php echo get_the_title( $payment->ID ) ?>
 									&mdash; <?php echo $payment->user_info['email'] ?>
 								</a>
@@ -183,7 +183,7 @@ function edd_load_dashboard_sales_widget( ) {
 								} ?>
 							</td>
 							<td class="edd_order_price">
-								<a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>" title="<?php printf( __( 'Purchase Details for Payment #%s', 'easy-digital-downloads' ), $payment->ID ); ?> ">
+								<a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>">
 									<span class="edd_price_label"><?php echo edd_currency_filter( edd_format_amount( $payment->total ), edd_get_payment_currency_code( $payment->ID ) ); ?></span>
 								</a>
 							</td>

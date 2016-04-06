@@ -40,7 +40,7 @@ jQuery(document).ready(function ($) {
 						$(this).attr('data-cart-item', cart_item_counter);
 						cart_item_counter = cart_item_counter + 1;
 					});
-                                                                                
+
 					// Check to see if the purchase form(s) for this download is present on this page
 					if( $( '[id^=edd_purchase_' + id + ']' ).length ) {
 						$( '[id^=edd_purchase_' + id + '] .edd_go_to_checkout' ).hide();
@@ -374,7 +374,17 @@ function edd_load_gateway( payment_mode ) {
 	jQuery('.edd-cart-ajax').show();
 	jQuery('#edd_purchase_form_wrap').html('<img src="' + edd_scripts.ajax_loader + '"/>');
 
-	jQuery.post(edd_scripts.ajaxurl + '?payment-mode=' + payment_mode, { action: 'edd_load_gateway', edd_payment_mode: payment_mode },
+	var url = edd_scripts.ajaxurl;
+
+	if ( url.indexOf( '?' ) > 0 ) {
+		url = url + '&';
+	} else {
+		url = url + '?';
+	}
+
+	url = url + 'payment-mode=' + payment_mode;
+
+	jQuery.post(url, { action: 'edd_load_gateway', edd_payment_mode: payment_mode },
 		function(response){
 			jQuery('#edd_purchase_form_wrap').html(response);
 			jQuery('.edd-no-js').hide();
