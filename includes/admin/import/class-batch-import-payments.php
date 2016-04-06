@@ -53,6 +53,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 				}
 
 				// Import payment
+				$this->create_payment( $row );
 
 				// Once payment is imported, remove row
 				unset( $csv->data[ $key ] );
@@ -64,6 +65,15 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 		}
 
 		return $more;
+	}
+
+	public function create_payment( $row = array() ) {
+
+		$payment = new EDD_Payment;
+
+		
+
+
 	}
 
 	/**
