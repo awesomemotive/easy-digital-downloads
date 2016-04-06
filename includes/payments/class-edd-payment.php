@@ -100,6 +100,14 @@ final class EDD_Payment {
 	protected $tax = 0;
 
 	/**
+	 * The tax rate charged on this payment
+	 *
+	 * @since  2.6
+	 * @var float
+	 */
+	protected $tax_rate = '';
+
+	/**
 	 * Array of global fees for this payment
 	 *
 	 * @since  2.5
@@ -435,6 +443,7 @@ final class EDD_Payment {
 		// Currency Based
 		$this->total           = $this->setup_total();
 		$this->tax             = $this->setup_tax();
+		$this->tax_rate        = $this->setup_tax_rate();
 		$this->fees_total      = $this->setup_fees_total();
 		$this->subtotal        = $this->setup_subtotal();
 		$this->currency        = $this->setup_currency();
@@ -762,6 +771,10 @@ final class EDD_Payment {
 
 					case 'key':
 						$this->update_meta( '_edd_payment_purchase_key', $this->key );
+						break;
+
+					case 'tax_rate':
+						$this->update_meta( '_edd_payment_tax_rate', $this->tax_rate );
 						break;
 
 					case 'number':
@@ -1774,6 +1787,18 @@ final class EDD_Payment {
 		}
 
 		return $tax;
+
+	}
+
+	/**
+	 * Setup the payment tax rate
+	 *
+	 * @since  2.6
+	 * @return float The tax rate for the payment
+	 */
+	private function setup_tax_rate() {
+
+		return $this->get_meta( '_edd_payment_tax_rate', true );
 
 	}
 
