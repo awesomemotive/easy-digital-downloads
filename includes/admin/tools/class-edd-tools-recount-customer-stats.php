@@ -102,13 +102,18 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 
 					foreach ( $payments as $payment ) {
 
-							$should_process_payment = 'publish' == $payment->post_status || 'revoked' == $payment->post_status ? true : false;
-							$should_process_payment = apply_filters( 'edd_customer_recount_should_process_payment', $should_process_payment, $payment );
+						$should_process_payment = 'publish' == $payment->post_status || 'revoked' == $payment->post_status ? true : false;
+						$should_process_payment = apply_filters( 'edd_customer_recount_should_process_payment', $should_process_payment, $payment );
 
-							if( true === $should_process_payment ) {
+						if( true === $should_process_payment ) {
 
-							$purchase_value += edd_get_payment_amount( $payment->ID );
-							$purchase_count++;
+							if ( apply_filters( 'edd_customer_recount_sholud_increase_value', true, $payment ) ) {
+								$purchase_value += edd_get_payment_amount( $payment->ID );
+							}
+
+							if ( apply_filters( 'edd_customer_recount_sholud_increase_count', true, $payment ) ) {
+								$purchase_count++;
+							}
 
 						}
 
