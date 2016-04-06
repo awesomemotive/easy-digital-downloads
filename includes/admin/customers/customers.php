@@ -127,15 +127,16 @@ function edd_render_customer_view( $view, $callbacks ) {
 					<?php $active = $key === $view ? true : false; ?>
 					<?php $class  = $active ? 'active' : 'inactive'; ?>
 
+					<li class="<?php echo sanitize_html_class( $class ); ?>">
 					<?php if ( ! $active ) : ?>
-					<a title="<?php echo esc_attr( $tab['title'] ); ?>" aria-label="<?php echo esc_attr( $tab['title'] ); ?>" href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-customers&view=' . $key . '&id=' . $customer->id ) ); ?>">
+						<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-customers&view=' . $key . '&id=' . $customer->id . '#wpbody-content' ) ); ?>">
 					<?php endif; ?>
-
-					<li class="<?php echo sanitize_html_class( $class ); ?>"><span class="dashicons <?php echo sanitize_html_class( $tab['dashicon'] ); ?>"></span></li>
-
+						<span class="dashicons <?php echo sanitize_html_class( $tab['dashicon'] ); ?>" aria-hidden="true"></span>
+						<span class="screen-reader-text"><?php echo esc_attr( $tab['title'] ); ?></span>
 					<?php if ( ! $active ) : ?>
-					</a>
+						</a>
 					<?php endif; ?>
+					</li>
 
 				<?php endforeach; ?>
 				</ul>
