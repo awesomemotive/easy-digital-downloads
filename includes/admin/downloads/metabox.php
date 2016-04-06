@@ -372,7 +372,7 @@ function edd_render_price_field( $post_id ) {
 
 					<tr>
 						<td class="submit" colspan="4" style="float: none; clear:both; background:#fff;">
-							<a class="button-secondary edd_add_repeatable" style="margin: 6px 0;"><?php _e( 'Add New Price', 'easy-digital-downloads' ); ?></a>
+							<button class="button-secondary edd_add_repeatable" style="margin: 6px 0;"><?php _e( 'Add New Price', 'easy-digital-downloads' ); ?></button>
 						</td>
 					</tr>
 				</tbody>
@@ -560,7 +560,7 @@ function edd_render_products_field( $post_id ) {
 				<?php endif; ?>
 					<tr>
 						<td class="submit" colspan="3" style="float: none; clear:both; background: #fff;">
-							<a class="button-secondary edd_add_repeatable" style="margin: 6px 0 10px;"><?php _e( 'Add New File', 'easy-digital-downloads' ); ?></a>
+							<button class="button-secondary edd_add_repeatable" style="margin: 6px 0 10px;"><?php _e( 'Add New File', 'easy-digital-downloads' ); ?></button>
 						</td>
 					</tr>
 				</tbody>
@@ -635,7 +635,7 @@ function edd_render_files_field( $post_id = 0 ) {
 				<?php endif; ?>
 					<tr>
 						<td class="submit" colspan="4" style="float: none; clear:both; background: #fff;">
-							<a class="button-secondary edd_add_repeatable" style="margin: 6px 0 10px;"><?php _e( 'Add New File', 'easy-digital-downloads' ); ?></a>
+							<button class="button-secondary edd_add_repeatable" style="margin: 6px 0 10px;"><?php _e( 'Add New File', 'easy-digital-downloads' ); ?></button>
 						</td>
 					</tr>
 				</tbody>
