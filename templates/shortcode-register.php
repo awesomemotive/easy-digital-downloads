@@ -16,12 +16,12 @@ edd_print_errors(); ?>
 
 		<p>
 			<label for="edd-user-login"><?php _e( 'Username', 'easy-digital-downloads' ); ?></label>
-			<input id="edd-user-login" class="required edd-input" type="text" name="edd_user_login" title="<?php esc_attr_e( 'Username', 'easy-digital-downloads' ); ?>" />
+			<input id="edd-user-login" class="required edd-input" type="text" name="edd_user_login" />
 		</p>
 
 		<p>
 			<label for="edd-user-email"><?php _e( 'Email', 'easy-digital-downloads' ); ?></label>
-			<input id="edd-user-email" class="required edd-input" type="email" name="edd_user_email" title="<?php esc_attr_e( 'Email Address', 'easy-digital-downloads' ); ?>" />
+			<input id="edd-user-email" class="required edd-input" type="email" name="edd_user_email" />
 		</p>
 
 		<p>

@@ -1741,7 +1741,7 @@ function edd_tax_rates_callback($args) {
 			<tr>
 				<th scope="col" class="edd_tax_country"><?php _e( 'Country', 'easy-digital-downloads' ); ?></th>
 				<th scope="col" class="edd_tax_state"><?php _e( 'State / Province', 'easy-digital-downloads' ); ?></th>
-				<th scope="col" class="edd_tax_global" title="<?php _e( 'Apply rate to whole country, regardless of state / province', 'easy-digital-downloads' ); ?>"><?php _e( 'Country Wide', 'easy-digital-downloads' ); ?></th>
+				<th scope="col" class="edd_tax_global"><?php _e( 'Country Wide', 'easy-digital-downloads' ); ?></th>
 				<th scope="col" class="edd_tax_rate"><?php _e( 'Rate', 'easy-digital-downloads' ); ?></th>
 				<th scope="col"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></th>
 			</tr>
