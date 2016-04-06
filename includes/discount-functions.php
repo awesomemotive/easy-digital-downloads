@@ -194,7 +194,7 @@ function edd_get_discount_by( $field = '', $value = '' ) {
  * @since 1.0
  * @param string $details
  * @param int $discount_id
- * @return bool Whether or not discount code was created
+ * @return int The discount ID of the discount code, or WP_Error on failure.
  */
 function edd_store_discount( $details, $discount_id = null ) {
 
