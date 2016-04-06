@@ -117,7 +117,20 @@ jQuery(document).ready(function ($) {
 				var row   = $(this).parent().parent( 'tr' ),
 					count = row.parent().find( 'tr' ).length - 1,
 					type  = $(this).data('type'),
-					repeatable = 'tr.edd_repeatable_' + type + 's';
+					repeatable = 'tr.edd_repeatable_' + type + 's',
+					focusElement,
+					focusable,
+					firstFocusable;
+					
+					// Set focus on next element if removing the first row. Otherwise set focus on previous element.
+					if ( $(this).is( '.ui-sortable tr:first-child .edd_remove_repeatable:first-child' ) ) {
+						focusElement  = row.next( 'tr' );
+					} else {
+						focusElement  = row.prev( 'tr' );
+					}
+					
+					focusable  = focusElement.find( 'select, input, textarea, button' ).filter( ':visible' );
+					firstFocusable = focusable.eq(0);
 
 				if ( type === 'price' ) {
 					var price_row_id = row.data('key');
@@ -128,6 +141,7 @@ jQuery(document).ready(function ($) {
 				if( count > 1 ) {
 					$( 'input, select', row ).val( '' );
 					row.fadeOut( 'fast' ).remove();
+					firstFocusable.focus();
 				} else {
 					switch( type ) {
 						case 'price' :
