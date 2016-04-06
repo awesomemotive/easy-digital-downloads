@@ -774,7 +774,7 @@ function edd_process_signed_download_url( $args ) {
 	// Bail if the token isn't valid.
 	// The request should pass through EDD, or custom handling can be enabled with the action.
 	if ( ! $valid_token ) {
-		$args['payment'] = false;
+		$args['payment']    = false;
 		$args['has_access'] = false;
 
 		return $args;
@@ -794,7 +794,9 @@ function edd_process_signed_download_url( $args ) {
 	$args['price_id']    = $order_parts[3];
 	$args['email']       = get_post_meta( $order_parts[0], '_edd_payment_user_email', true );
 	$args['key']         = get_post_meta( $order_parts[0], '_edd_payment_purchase_key', true );
-	$args['has_access']  = true;
+
+	$payment = new EDD_Payment( $args['payment'] );
+	$args['has_access']  = 'publish' === $payment->status ? true : false;
 
 	return $args;
 }
