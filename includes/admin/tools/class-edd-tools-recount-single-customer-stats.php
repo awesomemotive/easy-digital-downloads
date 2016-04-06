@@ -82,8 +82,11 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 				if( true === $should_process_payment ) {
 
 					$found_payment_ids[] = $payment->ID;
-					$payment_amount      = edd_get_payment_amount( $payment->ID );
-					$step_total         += $payment_amount;
+
+					if ( apply_filters( 'edd_customer_recount_sholud_increase_value', true, $payment ) ) {
+						$payment_amount      = edd_get_payment_amount( $payment->ID );
+						$step_total         += $payment_amount;
+					}
 
 				}
 
@@ -158,22 +161,27 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 
 			$removed_payments = array_unique( get_option( 'edd_stats_missing_payments' . $customer->id, array() ) );
 
-			if ( ! empty( $removed_payments ) ) {
-
-				foreach( $payment_ids as $key => $payment_id ) {
-					if ( in_array( $payment_id, $removed_payments ) ) {
-						unset( $payment_ids[ $key ] );
-					}
+			// Find non-existing payments (deleted) and total up the purchase count
+			$purchase_count   = 0;
+			foreach( $payment_ids as $key => $payment_id ) {
+				if ( in_array( $payment_id, $removed_payments ) ) {
+					unset( $payment_ids[ $key ] );
+					continue;
 				}
 
-				$this->delete_data( 'edd_stats_missing_payments' . $customer->id );
+				$payment = get_post( $payment_id );
+				if ( apply_filters( 'edd_customer_recount_sholud_increase_count', true, $payment ) ) {
+					$purchase_count++;
+				}
 			}
+
+			$this->delete_data( 'edd_stats_missing_payments' . $customer->id );
 
 			$pending_total = $this->get_stored_data( 'edd_stats_customer_pending_total' . $customer->id, 0 );
 			$this->delete_data( 'edd_stats_customer_pending_total' . $customer->id );
 			$this->delete_data( 'edd_recount_customer_stats_' . $customer->id );
 			$this->delete_data( 'edd_recount_customer_payments_' . $this->customer_id );
-			$purchase_count = count( $payment_ids );
+
 			$payment_ids    = implode( ',', $payment_ids );
 			$customer->update( array( 'payment_ids' => $payment_ids, 'purchase_count' => $purchase_count, 'purchase_value' => $pending_total ) );
 
