@@ -76,7 +76,10 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 					continue;
 				}
 
-				if( 'publish' == $payment->post_status || 'revoked' == $payment->post_status ) {
+				$should_process_payment = 'publish' == $payment->post_status || 'revoked' == $payment->post_status ? true : false;
+				$should_process_payment = apply_filters( 'edd_customer_recount_should_process_payment', $should_process_payment, $payment );
+
+				if( true === $should_process_payment ) {
 
 					$found_payment_ids[] = $payment->ID;
 					$payment_amount      = edd_get_payment_amount( $payment->ID );
@@ -212,6 +215,8 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 	 */
 	public function pre_fetch() {
 		if ( $this->step === 1 ) {
+			$allowed_payment_status = apply_filters( 'edd_recount_customer_payment_statuses', edd_get_payment_status_keys() );
+
 			// Before we start, let's zero out the customer's data
 			$customer = new EDD_Customer( $this->customer_id );
 			$customer->update( array( 'purchase_value' => edd_format_amount( 0 ), 'purchase_count' => 0 ) );
@@ -221,6 +226,7 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 			$attached_args = array(
 				'post__in' => $attached_payment_ids,
 				'number'   => -1,
+				'status'   => $allowed_post_status,
 			);
 
 			$attached_payments = edd_get_payments( $attached_args );
@@ -228,6 +234,7 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 			$unattached_args = array(
 				'post__not_in' => $attached_payment_ids,
 				'number'       => -1,
+				'status'       => $allowed_post_status,
 				'meta_query'   => array(
 					array(
 						'key'   => '_edd_payment_user_email',
