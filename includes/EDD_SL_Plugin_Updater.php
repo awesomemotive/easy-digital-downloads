@@ -79,7 +79,7 @@ class EDD_SL_Plugin_Updater {
 	public function check_update( $_transient_data ) {
 
 		global $pagenow;
-				
+
 		if( ! is_object( $_transient_data ) ) {
 			$_transient_data = new stdClass;
 		}
@@ -89,7 +89,7 @@ class EDD_SL_Plugin_Updater {
 		}
 
 		if ( empty( $_transient_data->response ) || empty( $_transient_data->response[ $this->name ] ) ) {
-					
+
 			$version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
 
 			if ( false !== $version_info && is_object( $version_info ) && isset( $version_info->new_version ) ) {
@@ -106,7 +106,7 @@ class EDD_SL_Plugin_Updater {
 			}
 
 		}
-		
+
 		return $_transient_data;
 
 	}
@@ -135,7 +135,7 @@ class EDD_SL_Plugin_Updater {
 		remove_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_update' ), 10 );
 
 		$update_cache = get_site_transient( 'update_plugins' );
-		
+
 		$update_cache = is_object( $update_cache ) ? $update_cache : new stdClass();
 
 		if ( empty( $update_cache->response ) || empty( $update_cache->response[ $this->name ] ) ) {
@@ -242,22 +242,24 @@ class EDD_SL_Plugin_Updater {
 				'reviews' => false
 			)
 		);
-		
+
+		$cache_key = 'edd_api_request_' . substr( md5( serialize( $this->slug ) ), 0, 15 );
+
 		//Get the transient where we store the api request for this plugin for 24 hours
-		$edd_api_request_transient = get_site_transient( 'edd_api_request_' . $this->slug );
-			
+		$edd_api_request_transient = get_site_transient( $cache_key );
+
 		//If we have no transient-saved value, run the API, set a fresh transient with the API value, and return that value too right now.
-		if ( empty( $edd_api_request_transient ) ){ 
+		if ( empty( $edd_api_request_transient ) ){
 
 			$api_response = $this->api_request( 'plugin_information', $to_send );
-			
+
 			//Expires in 1 day
-			set_site_transient( 'edd_api_request_' . 'edd_api_request_' . substr( md5( serialize( $this->slug ) ), 0, 15 ), $api_response, DAY_IN_SECONDS );
-			
+			set_site_transient( $cache_key, $api_response, DAY_IN_SECONDS );
+
 			if ( false !== $api_response ) {
 				$_data = $api_response;
 			}
-			
+
 		}
 
 		return $_data;
