@@ -65,6 +65,8 @@ class EDD_Payment_Stats extends EDD_Stats {
 
 		} else {
 
+			$this->timestamp = false;
+
 			// Product specific stats
 			global $edd_logs;
 
@@ -95,7 +97,6 @@ class EDD_Payment_Stats extends EDD_Stats {
 	public function get_earnings( $download_id = 0, $start_date = false, $end_date = false, $include_taxes = true ) {
 
 		global $wpdb;
-
 		$this->setup_dates( $start_date, $end_date );
 
 		// Make sure start date is valid
@@ -157,7 +158,6 @@ class EDD_Payment_Stats extends EDD_Stats {
 		} else {
 
 			// Download specific earning stats
-
 			global $edd_logs, $wpdb;
 
 			$args = array(
@@ -176,9 +176,14 @@ class EDD_Payment_Stats extends EDD_Stats {
 			$key      = 'edd_stats_' . substr( md5( serialize( $args ) ), 0, 15 );
 
 			$earnings = get_transient( $key );
+			$earnings = false;
 			if( false === $earnings ) {
 
+				$this->timestamp = false;
+				add_filter( 'posts_where', array( $this, 'payments_where' ) );
 				$log_ids  = $edd_logs->get_connected_logs( $args, 'sale' );
+				remove_filter( 'posts_where', array( $this, 'payments_where' ) );
+
 				$earnings = 0;
 
 				if( $log_ids ) {

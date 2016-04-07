@@ -60,7 +60,7 @@ function edd_customers_list() {
 	$customers_table->prepare_items();
 	?>
 	<div class="wrap">
-		<h2><?php _e( 'Customers', 'easy-digital-downloads' ); ?></h2>
+		<h1><?php _e( 'Customers', 'easy-digital-downloads' ); ?></h1>
 		<?php do_action( 'edd_customers_table_top' ); ?>
 		<form id="edd-customers-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers' ); ?>">
 			<?php
