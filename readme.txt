@@ -6,7 +6,7 @@ Donate link: https://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
 Tested up to: 4.5
-Stable Tag: 2.5.10
+Stable Tag: 2.5.11
 
 License: GNU Version 2 or Any Later Version
 
@@ -213,6 +213,23 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.5.11, April 7, 2016 =
+
+* Fix: Non-complete payments permitting file downloads
+* Fix: Double POST requests for plugin update checks
+* Fix: Missing validation for discount code ID in edd_decrease_discount_usage()
+* Fix: Default view of Sales / Earnings graphs for individual products not working
+* Fix: Download Details widget will not save "Current" display option
+* Fix: Sessions should never start on RSS feeds
+* Fix: Missing screen reader text for Default Price Option radio buttons
+* Fix: Incorrect heading size for some admin screens
+* Fix: Payment History Search results now stay after performing actions on shown payments 
+* Tweak: Added new filters to recount stats tool for customers to allow support for other payment statuses
+* Tweak: Added new filters to allow URIs to be added to the session blacklist to prevent sessions from starting on those URIs
+* Tweak: Added filter to permit disabling wpautop() in emails
+* Tweak: Set "filter_items_list", "items_list_navigation", and "items_list" labels for Download post type
+* Tweak: Added new "edd_payment_advanced_filters_row" filter
 
 = 2.5.10, March 24, 2016 =
 
