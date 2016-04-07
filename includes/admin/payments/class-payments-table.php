@@ -140,6 +140,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			<?php if( ! empty( $start_date ) || ! empty( $end_date ) ) : ?>
 				<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>" class="button-secondary"><?php _e( 'Clear Filter', 'easy-digital-downloads' ); ?></a>
 			<?php endif; ?>
+			<?php do_action( 'edd_payment_advanced_filter_row' ); ?>
 			<?php $this->search_box( __( 'Search', 'easy-digital-downloads' ), 'edd-payments' ); ?>
 		</div>
 
