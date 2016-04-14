@@ -47,11 +47,11 @@ class EDD_Fees {
 		// Backwards compatabliity with pre 2.0
 		if ( func_num_args() > 1 ) {
 
-			$args   = func_get_args();
-			$amount = $args[0];
-			$label  = isset( $args[1] ) ? $args[1] : '';
-			$id     = isset( $args[2] ) ? $args[2] : '';
-			$type   = 'fee';
+			$args     = func_get_args();
+			$amount   = $args[0];
+			$label    = isset( $args[1] ) ? $args[1] : '';
+			$id       = isset( $args[2] ) ? $args[2] : '';
+			$type     = 'fee';
 
 			$args = array(
 				'amount' => $amount,
@@ -59,7 +59,8 @@ class EDD_Fees {
 				'id'     => $id,
 				'type'   => $type,
 				'no_tax' => false,
-				'download_id' => 0
+				'download_id' => 0,
+				'price_id'    => 0
 			);
 
 		} else {
@@ -70,7 +71,8 @@ class EDD_Fees {
 				'id'          => '',
 				'no_tax'      => false,
 				'type'        => 'fee',
-				'download_id' => 0
+				'download_id' => 0,
+				'price_id'    => 0
 			);
 
 			$args = wp_parse_args( $args, $defaults );
