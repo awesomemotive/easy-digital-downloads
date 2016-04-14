@@ -152,10 +152,6 @@ $currency_code  = $payment->currency;
 										<div id="delete-action">
 											<a href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'delete_payment', 'purchase_id' => $payment_id ), admin_url( 'edit.php?post_type=download&page=edd-payment-history' ) ), 'edd_payment_nonce' ) ?>" class="edd-delete-payment edd-delete"><?php _e( 'Delete Payment', 'easy-digital-downloads' ); ?></a>
 										</div>
-										<div class="clear"></div>
-										<?php if( edd_is_payment_complete( $payment_id ) ) : ?>
-											<a href="<?php echo add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $payment_id ) ); ?>" id="edd-resend-receipt" class="button-secondary alignleft"><?php _e( 'Resend Receipt', 'easy-digital-downloads' ); ?></a>
-										<?php endif; ?>
 										<input type="submit" class="button button-primary right" value="<?php esc_attr_e( 'Save Payment', 'easy-digital-downloads' ); ?>"/>
 										<div class="clear"></div>
 									</div>
@@ -163,6 +159,19 @@ $currency_code  = $payment->currency;
 								</div><!-- /.edd-order-update-box -->
 
 							</div><!-- /#edd-order-data -->
+
+							<div id="edd-order-resend-receipt" class="postbox edd-order-data">
+								<div class="inside">
+									<div class="edd-order-resend-receipt-box edd-admin-box">
+									<?php do_action( 'edd_view_order_details_resend_receipt_before', $payment_id ); ?>
+										<?php if( edd_is_payment_complete( $payment_id ) ) : ?>
+											<a href="<?php echo add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $payment_id ) ); ?>" id="edd-resend-receipt" class="button-secondary alignleft"><?php _e( 'Resend Receipt', 'easy-digital-downloads' ); ?></a>
+										<?php endif; ?>
+										<div class="clear"></div>
+										<?php do_action( 'edd_view_order_details_resend_receipt_after', $payment_id ); ?>
+									</div><!-- /.edd-order-resend-receipt-box -->
+								</div>
+							</div>
 
 							<div id="edd-order-details" class="postbox edd-order-data">
 
