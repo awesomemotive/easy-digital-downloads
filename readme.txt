@@ -6,7 +6,7 @@ Donate link: https://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
 Tested up to: 4.5
-Stable Tag: 2.5.11
+Stable Tag: 2.5.12
 
 License: GNU Version 2 or Any Later Version
 
@@ -213,6 +213,13 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.5.12, April 14, 2016 =
+
+* Fix: Removed incorrect title attribute from Send Test Email button
+* Fix: Made add to cart AJAX action Accessible
+* Tweak: Added Delete Payment option to View Order Details screen
+* Tweak: Moved Resend Receipt button to separate box on View Order Details screen
 
 = 2.5.11, April 7, 2016 =
 
