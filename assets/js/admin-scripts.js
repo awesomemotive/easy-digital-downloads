@@ -1498,8 +1498,20 @@ jQuery(document).ready(function ($) {
 
 				// Show column mapping
 				var select = $form.find('select.edd-import-csv-column');
+				var row    = select.parent().parent();
 				$.each( response.data.columns, function( key, value ) {
 					select.append( '<option value="' + value + '">' + value + '</option>' );
+				});
+				$.each( response.data.columns, function( key, value ) {
+
+					if( key >= 1 ) {
+
+						var clone = EDD_Download_Configuration.clone_repeatable( row );
+						clone.find('select').val( value );
+						$( clone ).insertAfter( row );
+
+					}
+
 				});
 
 				$('body').on('click', '.edd-import-proceed', function(e) {
