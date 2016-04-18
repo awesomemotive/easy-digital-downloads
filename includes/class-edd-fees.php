@@ -60,7 +60,7 @@ class EDD_Fees {
 				'type'   => $type,
 				'no_tax' => false,
 				'download_id' => 0,
-				'price_id'    => 0
+				'price_id'    => NULL
 			);
 
 		} else {
@@ -72,7 +72,7 @@ class EDD_Fees {
 				'no_tax'      => false,
 				'type'        => 'fee',
 				'download_id' => 0,
-				'price_id'    => 0
+				'price_id'    => NULL
 			);
 
 			$args = wp_parse_args( $args, $defaults );
