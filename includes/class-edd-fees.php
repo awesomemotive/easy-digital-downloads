@@ -162,7 +162,7 @@ class EDD_Fees {
 	 * @uses EDD_Session::get()
 	 * @return mixed array|bool
 	 */
-	public function get_fees( $type = 'fee', $download_id = 0, $price_id = 0 ) {
+	public function get_fees( $type = 'fee', $download_id = 0, $price_id = NULL ) {
 			
 		$fees = EDD()->session->get( 'edd_cart_fees' );
 
