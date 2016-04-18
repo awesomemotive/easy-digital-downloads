@@ -37,18 +37,26 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 			wp_die( __( 'You do not have permission to import data.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 		}
 
-		$csv = new parseCSV();
-		$csv->auto( $this->file );
+		$i      = 1;
+		$offset = ( $i * $this->step );
 
-		if( $csv->data ) {
+		if( $offset > $this->total ) {
+			$this->done = true;
+		}
 
-			$i    = 0;
+		if( ! $this->done && $this->csv->data ) {
+
 			$more = true;
 
 			foreach( $csv->data as $key => $row ) {
 
+				// Skip all rows until we reach pass our offset
+				if( $key + 1 < $offset ) {
+					continue;
+				}
+
 				// Done with this batch
-				if( $i >= 19 ) {
+				if( $i >= 20 ) {
 					break;
 				}
 
@@ -142,11 +150,11 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 				// setup other metadata
 
 				// Once download is imported, remove row
-				unset( $csv->data[ $key ] );
+				unset( $this->csv->data[ $key ] );
 				$i++;
 			}
 
-			$csv->save();
+			//$this->csv->save( null, $this->csv->data );
 
 		}
 
@@ -161,10 +169,8 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 	 */
 	public function get_percentage_complete() {
 
-		$total = 20;
-
-		if( $total > 0 ) {
-			$percentage = ( $this->step / $total ) * 100;
+		if( $this->total > 0 ) {
+			$percentage = ( $this->step / $this->total ) * 100;
 		}
 
 		if( $percentage > 100 ) {

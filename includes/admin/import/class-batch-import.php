@@ -27,6 +27,20 @@ class EDD_Batch_Import {
 	 * @since 2.6
 	 */
 	public $file;
+	
+	/**
+	 * The parsed CSV file being imported
+	 *
+	 * @since 2.6
+	 */
+	public $csv;
+
+	/**
+	 * Total rows in the CSV file
+	 *
+	 * @since 2.6
+	 */
+	public $total;
 
 	/**
 	 * The current step being processed
@@ -61,9 +75,12 @@ class EDD_Batch_Import {
 			require_once EDD_PLUGIN_DIR . 'includes/libraries/parsecsv.lib.php';
 		}
 
-		$this->step = $_step;
-		$this->file = $_file;
-		$this->done = false;
+		$this->step  = $_step;
+		$this->file  = $_file;
+		$this->done  = false;
+		$this->csv   = new parseCSV();
+		$this->csv->auto( $this->file );
+		$this->total = count( $this->csv->data );
 
 	}
 
@@ -87,10 +104,7 @@ class EDD_Batch_Import {
 	 */
 	public function get_columns() {
 
-		$csv = new parseCSV();
-		$csv->auto( $this->file );
-
-		return $csv->titles;
+		return $this->csv->titles;
 	}
 
 	/**
@@ -106,9 +120,6 @@ class EDD_Batch_Import {
 		if ( ! $this->can_import() ) {
 			wp_die( __( 'You do not have permission to import data.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
 		}
-
-		$csv = new parseCSV();
-		$csv->auto( $this->file );
 
 		return $more;
 	}

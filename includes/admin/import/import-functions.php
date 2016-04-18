@@ -139,7 +139,8 @@ function edd_do_ajax_import() {
 			'step'       => $step,
 			'percentage' => $percentage,
 			'columns'    => $import->get_columns(),
-			'mapping'    => $field_mapping
+			'mapping'    => $field_mapping,
+			'total'      => $import->total
 		) );
 
 	} elseif ( true === $import->is_empty ) {
