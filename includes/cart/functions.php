@@ -53,12 +53,14 @@ function edd_get_cart_content_details() {
 		}
 
 		$item['quantity'] = edd_item_quantities_enabled() ? absint( $item['quantity'] ) : 1;
+		
+		$price_id = isset( $item['options']['price_id'] ) ? $item['options']['price_id'] : NULL;
 
 		$item_price = edd_get_cart_item_price( $item['id'], $item['options'] );
 		$discount   = edd_get_cart_item_discount_amount( $item );
 		$discount   = apply_filters( 'edd_get_cart_content_details_item_discount_amount', $discount, $item );
 		$quantity   = edd_get_cart_item_quantity( $item['id'], $item['options'] );
-		$fees       = edd_get_cart_fees( 'fee', $item['id'], isset( $item['options']['price_id'] ) ? $item['options']['price_id'] : NULL );
+		$fees       = edd_get_cart_fees( 'fee', $item['id'], $price_id );
 		$subtotal   = $item_price * $quantity;
 		$tax        = edd_get_cart_item_tax( $item['id'], $item['options'], $subtotal - $discount );
 
