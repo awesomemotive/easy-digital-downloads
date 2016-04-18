@@ -765,7 +765,7 @@ function edd_cart_has_fees( $type = 'all' ) {
  * @uses EDD()->fees->get_fees()
  * @return array All the cart fees that have been applied
  */
-function edd_get_cart_fees( $type = 'all', $download_id = 0, $price_id = 0 ) {
+function edd_get_cart_fees( $type = 'all', $download_id = 0, $price_id = NULL ) {
 	
 	return EDD()->fees->get_fees( $type, $download_id, $price_id );
 }
