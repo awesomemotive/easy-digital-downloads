@@ -1488,7 +1488,7 @@ jQuery(document).ready(function ($) {
 
 			if( response.success ) {
 
-				console.log( response.data );
+				//console.log( response.data );
 
 				var $form = $('.edd-import-form .notice-wrap').parent();
 
@@ -1589,8 +1589,8 @@ jQuery(document).ready(function ($) {
 							// Animation complete.
 						});
 
-						console.log( 'step' );
-						console.log( response.data );
+						console.log( 'Step ' + response.data.step );
+						console.log( 'Total ' + response.data.total );
 
 						EDD_Import.process_step( parseInt( response.data.step ), import_data, self );
 					}
