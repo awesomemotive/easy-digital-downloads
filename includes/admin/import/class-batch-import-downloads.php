@@ -149,12 +149,9 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 
 				// setup other metadata
 
-				// Once download is imported, remove row
-				unset( $this->csv->data[ $key ] );
+
 				$i++;
 			}
-
-			//$this->csv->save( null, $this->csv->data );
 
 		}
 
