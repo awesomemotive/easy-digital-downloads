@@ -48,7 +48,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 
 			$more = true;
 
-			foreach( $csv->data as $key => $row ) {
+			foreach( $this->csv->data as $key => $row ) {
 
 				// Skip all rows until we reach pass our offset
 				if( $key + 1 < $offset ) {
