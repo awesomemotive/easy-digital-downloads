@@ -50,6 +50,13 @@ class EDD_Batch_Import {
 	public $step;
 
 	/**
+	 * The number of items to process per step
+	 *
+	 * @since 2.6
+	 */
+	public $per_step = 20;
+
+	/**
 	 * The capability required to import data
 	 *
 	 * @since 2.6
