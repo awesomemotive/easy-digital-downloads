@@ -38,7 +38,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 		}
 
 		$i      = 1;
-		$offset = ( $i * $this->step );
+		$offset = $this->step > 1 ? ( $this->per_step * $this->step ) : 0;
 
 		if( $offset > $this->total ) {
 			$this->done = true;
@@ -56,7 +56,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 				}
 
 				// Done with this batch
-				if( $i >= 20 ) {
+				if( $i >= $this->per_step ) {
 					break;
 				}
 
