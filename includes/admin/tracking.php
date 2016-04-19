@@ -74,6 +74,7 @@ class EDD_Tracking {
 		$data['php_version'] = phpversion();
 		$data['edd_version'] = EDD_VERSION;
 		$data['wp_version']  = get_bloginfo( 'version' );
+		$data['server']      = isset( $_SERVER['SERVER_SOFTWARE'] ) ? $_SERVER['SERVER_SOFTWARE'] : '';
 
 		$checkout_page        = ! empty( $edd_options['purchase_page'] ) ? $edd_options['purchase_page'] : false;
 		$data['install_date'] = false !== $checkout_page ? get_post_field( 'post_date', $checkout_page ) : 'not set';
