@@ -5,8 +5,8 @@ Contributors: mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, 
 Donate link: https://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
-Tested up to: 4.5
-Stable Tag: 2.5.12
+Tested up to: 4.6
+Stable Tag: 2.5.13
 
 License: GNU Version 2 or Any Later Version
 
@@ -213,6 +213,13 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.5.13, April 21, 2016 =
+
+* Fix: User info data not properly populated from customer record when missing in payment meta
+* Fix: filesize() run on external files during download process
+* Tweak: Changed log in form label to include email address
+* Tweak: Added PHP version, EDD version, install date, and WordPress version to opt-in tracking payload
 
 = 2.5.12, April 14, 2016 =
 
