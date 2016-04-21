@@ -218,6 +218,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 * Fix: User info data not properly populated from customer record when missing in payment meta
 * Fix: filesize() run on external files during download process
+* Tweak: Changed log in form label to include email address
 * Tweak: Added PHP version, EDD version, install date, and WordPress version to opt-in tracking payload
 
 = 2.5.12, April 14, 2016 =
