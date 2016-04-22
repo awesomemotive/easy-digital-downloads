@@ -83,8 +83,10 @@ class EDD_Fees {
 
 		}
 
+		//If the fee is for an "item" but we passed in a download id
 		if( 'item' === $args['type'] && ! empty( $args['download_id'] ) ) {
 			unset( $args['download_id'] );
+			unset( $args['price_id'] );
 		}
 
 		$fees = $this->get_fees( 'all' );
