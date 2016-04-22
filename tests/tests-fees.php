@@ -53,7 +53,7 @@ class Tests_Fee extends WP_UnitTestCase {
 			'download_id' => $this->_post->ID, 
 			'price_id' => 1, 
 			'id' => 'shipping_fee_with_variable_price_id', 
-			'type' => 'item' 
+			'type' => 'fee' 
 		) );
 		
 		//Arbitrary fee test.
