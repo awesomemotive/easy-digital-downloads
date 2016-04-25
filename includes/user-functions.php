@@ -487,8 +487,13 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 		return;
 	}
 
-	$emails         = new EDD_Emails;
-	
+	$emails     = new EDD_Emails;
+	$from_name  = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
+	$from_email = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
+
+	$emails->__set( 'from_name', $from_name );
+	$emails->__set( 'from_email', $from_email );
+
 	$admin_subject  = sprintf( __('[%s] New User Registration', 'easy-digital-downloads' ), $from_name );
 	$admin_heading  = __( 'New user registration', 'easy-digital-downloads' );
 	$admin_message  = sprintf( __( 'Username: %s', 'easy-digital-downloads'), $user_data['user_login'] ) . "\r\n\r\n";
