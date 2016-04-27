@@ -1514,6 +1514,14 @@ jQuery(document).ready(function ($) {
 
 				});
 
+				$('body').on('change', '.edd-import-download-field', function(e) {
+					if( 'custom' == $(this).val() ) {
+						$(this).next().show();
+					} else {
+						$(this).next().hide();
+					}
+				});
+
 				$('body').on('click', '.edd-import-proceed', function(e) {
 
 					e.preventDefault();
