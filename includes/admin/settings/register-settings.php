@@ -1266,7 +1266,9 @@ function edd_payment_icons_callback( $args ) {
 
 				} else {
 
-					$card = strtolower( str_replace( ' ', '', $option ) );
+					/*$card = strtolower( str_replace( ' ', '', $option ) );*/
+					$card = strtolower( str_replace( ' ', '', $key ) );
+
 
 					if( has_filter( 'edd_accepted_payment_' . $card . '_image' ) ) {
 
