@@ -1958,6 +1958,52 @@ final class EDD_Payment {
 		$user_info    = isset( $this->payment_meta['user_info'] ) ? maybe_unserialize( $this->payment_meta['user_info'] ) : array();
 		$user_info    = wp_parse_args( $user_info, $defaults );
 
+
+		if ( empty( $user_info ) ) {
+			// Get the customer, but only if it's been created
+			$customer = new EDD_Customer( $this->customer_id );
+
+			if ( $customer->id > 0 ) {
+				$name = explode( ' ', $customer->name, 2 );
+				$user_info = array(
+					'first_name' => $name[0],
+					'last_name'  => $name[1],
+					'email'      => $customer->email,
+					'discount'   => 'none',
+				);
+			}
+		} else {
+			// Get the customer, but only if it's been created
+			$customer = new EDD_Customer( $this->customer_id );
+			if ( $customer->id > 0 ) {
+				foreach ( $user_info as $key => $value ) {
+					if ( ! empty( $value ) ) {
+						continue;
+					}
+
+					switch( $key ) {
+						case 'first_name':
+							$name = explode( ' ', $customer->name, 2 );
+
+							$user_info[ $key ] = $name[0];
+							break;
+
+						case 'last_name':
+							$name      = explode( ' ', $customer->name, 2 );
+							$last_name = ! empty( $name[1] ) ? $name[1] : '';
+
+							$user_info[ $key ] = $last_name;
+							break;
+
+						case 'email':
+							$user_info[ $key ] = $customer->email;
+							break;
+					}
+				}
+
+			}
+		}
+
 		return $user_info;
 	}
 
