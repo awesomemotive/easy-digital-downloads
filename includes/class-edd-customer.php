@@ -157,6 +157,9 @@ class EDD_Customer {
 
 		}
 
+		$this->emails   = (array) $this->get_meta( 'additional_emails', false );
+		$this->emails[] = $this->email;
+
 		// Customer ID and email are the only things that are necessary, make sure they exist
 		if ( ! empty( $this->id ) && ! empty( $this->email ) ) {
 			return true;
