@@ -19,11 +19,9 @@ if( ! defined( 'ABSPATH' ) ) exit;
 /**
  * EDD_Payment Class
  *
- * Note: Will remain in Final status for a few point releases
- *
  * @since 2.5
  */
-final class EDD_Payment {
+class EDD_Payment {
 
 	/**
 	 * The Payment we are working with
