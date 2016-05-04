@@ -896,7 +896,8 @@ function edd_settings_sanitize( $input = array() ) {
 	global $edd_options;
 
 	if ( empty( $_POST['_wp_http_referer'] ) ) {
-		return $input;
+		// If we didn't get the referer, just return the settings with nothing changed
+		return $edd_options;
 	}
 
 	parse_str( $_POST['_wp_http_referer'], $referrer );
@@ -917,7 +918,7 @@ function edd_settings_sanitize( $input = array() ) {
 	foreach ( $input as $key => $value ) {
 
 		// Get the setting type (checkbox, select, etc)
-		$type = isset( $settings[ $tab ][ $key ]['type'] ) ? $settings[ $tab ][ $key ]['type'] : false;
+		$type = isset( $settings[ $tab ][ $section ][ $key ]['type'] ) ? $settings[ $tab ][ $section ][ $key ]['type'] : false;
 
 		if ( $type ) {
 			// Field type specific filter
@@ -1039,7 +1040,7 @@ add_filter( 'edd_settings_taxes_sanitize', 'edd_settings_sanitize_taxes' );
  * @return string $input Sanitizied value
  */
 function edd_sanitize_text_field( $input ) {
-	return trim( $input );
+	return trim( wp_strip_all_tags( $input, true ) );
 }
 add_filter( 'edd_settings_sanitize_text', 'edd_sanitize_text_field' );
 
