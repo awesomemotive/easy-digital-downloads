@@ -41,11 +41,18 @@ class EDD_Customer {
 	public $purchase_value = 0;
 
 	/**
-	 * The customer's email
+	 * The customer's primary email
 	 *
 	 * @since 2.3
 	 */
 	public $email;
+
+	/**
+	 * The customer's emails
+	 *
+	 * @since 2.6
+	 */
+	public $emails;
 
 	/**
 	 * The customer's name
@@ -113,6 +120,7 @@ class EDD_Customer {
 		$customer = $this->db->get_customer_by( $field, $_id_or_email );
 
 		if ( empty( $customer ) || ! is_object( $customer ) ) {
+
 			return false;
 		}
 
@@ -270,6 +278,59 @@ class EDD_Customer {
 		return $updated;
 	}
 
+	/**
+	 * Attach an email to the customer
+	 *
+	 * @since  2.6
+	 * @param  int $email The email address to attach to the customer
+	 * @return bool       If the email was added successfully
+	 */
+	public function add_email( $email = '' ) {
+
+		if( ! is_email( $email ) ) {
+			return false;
+		}
+
+		$existing = new EDD_Customer( $email );
+
+		if( $existing->id > 0 && $existing->id !== $this->id ) {
+			// Email address already belongs to another customer
+			return false;
+		}
+
+		do_action( 'edd_customer_pre_add_email', $email, $this->id, $this );
+
+		// Update is used to ensure duplicate emails are not added
+		$ret = (bool) $this->update_meta( 'additional_emails', $email, $email );
+
+		do_action( 'edd_customer_post_add_email', $email, $this->id, $this );
+
+		return $ret;
+
+	}
+
+	/**
+	 * Remove an email from the customer
+	 *
+	 * @since  2.6
+	 * @param  int $email The email address to remove from the customer
+	 * @return bool       If the email was removeed successfully
+	 */
+	public function remove_email( $email = '' ) {
+
+		if( ! is_email( $email ) ) {
+			return false;
+		}
+
+		do_action( 'edd_customer_pre_remove_email', $email, $this->id, $this );
+
+		$ret = (bool) $this->delete_meta( 'additional_emails', $email );
+
+		do_action( 'edd_customer_post_remove_email', $email, $this->id, $this );
+
+		return $ret;
+
+	}
 
 	/**
 	 * Attach payment to the customer then triggers increasing stats
