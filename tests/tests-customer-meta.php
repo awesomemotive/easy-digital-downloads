@@ -8,7 +8,7 @@ class Tests_Customer_Meta extends WP_UnitTestCase {
 		parent::setUp();
 
 		$args = array(
-			'user_id' => 1
+			'email' => 'customer@test.com'
 		);
 
 		$this->_customer_id = EDD()->customers->add( $args );
