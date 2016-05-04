@@ -86,7 +86,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 				$title = $download->post_title;
 				if ( edd_has_variable_prices( $download->ID ) ) {
 					$price_id = $item['price_id'];
-					if ( ! empty( $download->prices[ $price_id] ) ) {
+					if ( ! is_null( $price_id ) && ! empty( $download->prices[ $price_id] ) ) {
 						$title .= ' &mdash; ' . $download->prices[ $price_id ]['name'];
 					}
 				}
