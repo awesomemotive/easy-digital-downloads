@@ -296,15 +296,15 @@ class EDD_Customer {
 
 		$existing = new EDD_Customer( $email );
 
-		if( $existing->id > 0 && $existing->id !== $this->id ) {
-			// Email address already belongs to another customer
+		if( $existing->id > 0 ) {
+			// Email address already belongs to a customer
 			return false;
 		}
 
 		do_action( 'edd_customer_pre_add_email', $email, $this->id, $this );
 
 		// Update is used to ensure duplicate emails are not added
-		$ret = (bool) $this->update_meta( 'additional_email', $email, $email );
+		$ret = (bool) $this->add_meta( 'additional_email', $email );
 
 		do_action( 'edd_customer_post_add_email', $email, $this->id, $this );
 
