@@ -371,8 +371,9 @@ class EDD_DB_Customers extends EDD_DB  {
 			// Look for customer from an additional email
 			if( 'email' === $field ) {
 
-				$customer_id = $wpdb->get_var( $wpdb->prepare( "SELECT customer_id FROM {$wpdb->prefix}edd_customermeta WHERE meta_key = 'additional_email' AND meta_value = %s LIMIT 1", $value ) );
-
+				$meta_table  = EDD()->customer_meta->table_name;
+				$customer_id = $wpdb->get_var( $wpdb->prepare( "SELECT customer_id FROM $meta_table WHERE meta_key = 'additional_email' AND meta_value = '%s' LIMIT 1", $value ) );
+				var_dump( $customer_id );
 				if( ! empty( $customer_id ) ) {
 					return $this->get( $customer_id );
 				}

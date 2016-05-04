@@ -157,7 +157,7 @@ class EDD_Customer {
 
 		}
 
-		$this->emails   = (array) $this->get_meta( 'additional_emails', false );
+		$this->emails   = (array) $this->get_meta( 'additional_email', false );
 		$this->emails[] = $this->email;
 
 		// Customer ID and email are the only things that are necessary, make sure they exist
@@ -304,7 +304,7 @@ class EDD_Customer {
 		do_action( 'edd_customer_pre_add_email', $email, $this->id, $this );
 
 		// Update is used to ensure duplicate emails are not added
-		$ret = (bool) $this->update_meta( 'additional_emails', $email, $email );
+		$ret = (bool) $this->update_meta( 'additional_email', $email, $email );
 
 		do_action( 'edd_customer_post_add_email', $email, $this->id, $this );
 
@@ -327,7 +327,7 @@ class EDD_Customer {
 
 		do_action( 'edd_customer_pre_remove_email', $email, $this->id, $this );
 
-		$ret = (bool) $this->delete_meta( 'additional_emails', $email );
+		$ret = (bool) $this->delete_meta( 'additional_email', $email );
 
 		do_action( 'edd_customer_post_remove_email', $email, $this->id, $this );
 
