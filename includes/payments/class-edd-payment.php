@@ -540,7 +540,14 @@ final class EDD_Payment {
 			$customer = new stdClass;
 
 			if ( did_action( 'edd_pre_process_purchase' ) && is_user_logged_in() ) {
-				$customer  = new EDD_customer( get_current_user_id(), true );
+
+				$customer = new EDD_customer( get_current_user_id(), true );
+
+				// Customer is logged in but used a different email to purchase with so assign to their customer record
+				if( ! empty( $customer->id ) && $this->email != $customer->email ) {
+					$customer->add_email( $this->email );
+				}
+
 			}
 
 			if ( empty( $customer->id ) ) {
@@ -558,6 +565,7 @@ final class EDD_Payment {
 				$customer->create( $customer_data );
 
 			}
+
 
 			$this->customer_id            = $customer->id;
 			$this->pending['customer_id'] = $this->customer_id;
