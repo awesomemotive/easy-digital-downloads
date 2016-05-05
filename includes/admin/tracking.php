@@ -121,7 +121,7 @@ class EDD_Tracking {
 
 		// Send a maximum of once per week
 		$last_send = $this->get_last_send();
-		if( ! $last_send || $last_send < strtotime( '-1 week' ) ) {
+		if( ! $last_send || $last_send > strtotime( '-1 week' ) ) {
 			return false;
 		}
 
