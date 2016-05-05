@@ -102,6 +102,7 @@ class EDD_Tracking {
 		$data['inactive_plugins'] = $plugins;
 		$data['products']         = wp_count_posts( 'download' )->publish;
 		$data['download_label']   = edd_get_label_singular( true );
+		$data['locale']           = get_locale();
 
 		$this->data = $data;
 	}
