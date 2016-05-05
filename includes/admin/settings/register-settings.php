@@ -926,7 +926,7 @@ function edd_settings_sanitize( $input = array() ) {
 	} else {
 		// We need our key/values to have IDs not numerical keys
 		foreach ( $settings[ $tab ][ $section ] as $key => $setting ) {
-			// If the key is numeric, we've got a legacy setting, and not a subsection
+			// If the key is numeric, update it to match the expected name coming from the front end inputs
 			if ( is_int( $key ) ) {
 				$settings[ $tab ][ $section ][ $setting['id'] ] = $setting;
 				unset( $settings[ $tab ][ $section ][ $key ] );
