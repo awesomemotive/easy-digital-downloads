@@ -584,7 +584,13 @@ function edd_check_for_existing_payment( $payment_id ) {
 function edd_get_payment_status( $payment, $return_label = false ) {
 
 	if( is_numeric( $payment ) ) {
+
 		$payment = new EDD_Payment( $payment );
+
+		if( ! $payment->ID > 0 ) {
+			return false;
+		}
+
 	}
 
 	if ( ! is_object( $payment ) || ! isset( $payment->post_status ) ) {
