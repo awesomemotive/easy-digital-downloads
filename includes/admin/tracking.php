@@ -136,7 +136,13 @@ class EDD_Tracking {
 			'user-agent'  => 'EDD/' . EDD_VERSION . '; ' . get_bloginfo( 'url' )
 		) );
 
+		if( is_wp_error( $request ) ) {
+			return $request;
+		}
+
 		update_option( 'edd_tracking_last_send', time() );
+
+		return true;
 
 	}
 
