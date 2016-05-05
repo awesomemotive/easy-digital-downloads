@@ -140,6 +140,7 @@ class EDD_API {
 
 		$this->versions = array(
 			'v1' => 'EDD_API_V1',
+			'v2' => 'EDD_API_V2'
 		);
 
 		foreach( $this->get_versions() as $version => $class ) {
@@ -193,6 +194,8 @@ class EDD_API {
 		$vars[] = 'query';
 		$vars[] = 'type';
 		$vars[] = 'product';
+		$vars[] = 'category';
+		$vars[] = 'tag';
 		$vars[] = 'number';
 		$vars[] = 'date';
 		$vars[] = 'startdate';
@@ -498,7 +501,6 @@ class EDD_API {
 	 * Listens for the API and then processes the API requests
 	 *
 	 * @access public
-	 * @author Daniel J Griffiths
 	 * @global $wp_query
 	 * @since 1.5
 	 * @return void
@@ -553,10 +555,14 @@ class EDD_API {
 
 			case 'products' :
 
-				$product = isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null;
-				$search  = isset( $wp_query->query_vars['s'] )         ? $wp_query->query_vars['s']         : '';
+				$args = array(
+					'product'  => isset( $wp_query->query_vars['product'] )  ? absint( $wp_query->query_vars['product'] )                        : null,
+					'category' => isset( $wp_query->query_vars['category'] ) ? $this->sanitize_request_term( $wp_query->query_vars['category'] ) : null,
+					'tag'      => isset( $wp_query->query_vars['tag'] )      ? $this->sanitize_request_term( $wp_query->query_vars['tag'] )      : null,
+					's'        => isset( $wp_query->query_vars['s'] )        ? sanitize_text_field( $wp_query->query_vars['s'] )                 : null,
+				);
 
-				$data = $this->routes->get_products( $product, $search );
+				$data = $this->routes->get_products( $args );
 
 				break;
 
@@ -968,30 +974,23 @@ class EDD_API {
 	 * @author Daniel J Griffiths
 	 * @since 1.5
 	 * @param int $product Product (Download) ID
-	 * @param string $search Search term
 	 * @return array $customers Multidimensional array of the products
 	 */
-	public function get_products( $product = null, $search = '' ) {
+	public function get_products( $args = array() ) {
 
 		$products = array();
 		$error = array();
 
-		if ( $product == null ) {
+		if ( empty( $args['product'] ) ) {
 
 			$products['products'] = array();
 
-			$args = array(
+			$product_list = get_posts( array(
 				'post_type'        => 'download',
 				'posts_per_page'   => $this->per_page(),
 				'suppress_filters' => true,
 				'paged'            => $this->get_paged()
-			);
-
-			if( ! empty( $search ) ) {
-				$args['s'] = sanitize_text_field( $search );
-			}
-
-			$product_list = get_posts( $args );
+			) );
 
 			if ( $product_list ) {
 				$i = 0;
@@ -1000,16 +999,15 @@ class EDD_API {
 					$i++;
 				}
 			}
-
 		} else {
 
-			if ( get_post_type( $product ) == 'download' ) {
-				$product_info = get_post( $product );
+			if ( get_post_type( $args['product'] ) == 'download' ) {
+				$product_info = get_post( $args['product'] );
 
 				$products['products'][0] = $this->get_product_data( $product_info );
 
 			} else {
-				$error['error'] = sprintf( __( 'Product %s not found!', 'easy-digital-downloads' ), $product );
+				$error['error'] = sprintf( __( 'Product %s not found!', 'easy-digital-downloads' ), $args['product'] );
 				return $error;
 			}
 		}
@@ -1024,7 +1022,7 @@ class EDD_API {
 	 * @param  object $product_info The Download Post Object
 	 * @return array                Array of post data to return back in the API
 	 */
-	private function get_product_data( $product_info ) {
+	public function get_product_data( $product_info ) {
 
 		$product = array();
 
@@ -2060,6 +2058,28 @@ class EDD_API {
 		}
 
 		return $return;
+
+	}
+
+	/**
+	 * Sanitizes category and tag terms
+	 *
+	 * @access private
+	 * @since 2.6
+	 * @param mixed $term Request variable
+	 * @return mixed Sanitized term/s
+	 */
+	public function sanitize_request_term( $term ) {
+
+		if( is_array( $term ) ) {
+			$term = array_map( 'sanitize_text_field', $term );
+		} else if( is_int( $term ) ) {
+			$term = absint( $term );
+		} else {
+			$term = sanitize_text_field( $term );
+		}
+
+		return $term;
 
 	}
 
