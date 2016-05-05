@@ -554,8 +554,9 @@ class EDD_API {
 			case 'products' :
 
 				$product = isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null;
+				$search  = isset( $wp_query->query_vars['s'] )         ? $wp_query->query_vars['s']         : '';
 
-				$data = $this->routes->get_products( $product );
+				$data = $this->routes->get_products( $product, $search );
 
 				break;
 
@@ -967,22 +968,30 @@ class EDD_API {
 	 * @author Daniel J Griffiths
 	 * @since 1.5
 	 * @param int $product Product (Download) ID
+	 * @param string $search Search term
 	 * @return array $customers Multidimensional array of the products
 	 */
-	public function get_products( $product = null ) {
+	public function get_products( $product = null, $search = '' ) {
 
 		$products = array();
 		$error = array();
 
 		if ( $product == null ) {
+
 			$products['products'] = array();
 
-			$product_list = get_posts( array(
+			$args = array(
 				'post_type'        => 'download',
 				'posts_per_page'   => $this->per_page(),
 				'suppress_filters' => true,
 				'paged'            => $this->get_paged()
-			) );
+			);
+
+			if( ! empty( $search ) ) {
+				$args['s'] = sanitize_text_field( $search );
+			}
+
+			$product_list = get_posts( $args );
 
 			if ( $product_list ) {
 				$i = 0;
@@ -991,7 +1000,9 @@ class EDD_API {
 					$i++;
 				}
 			}
+
 		} else {
+
 			if ( get_post_type( $product ) == 'download' ) {
 				$product_info = get_post( $product );
 
