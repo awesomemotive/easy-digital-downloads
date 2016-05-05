@@ -912,6 +912,26 @@ function edd_settings_sanitize( $input = array() ) {
 	if ( 'main' === $section )  {
 		// Check for extensions that aren't using new sections
 		$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
+
+		$settings[ $tab ]['main'] = array();
+
+		// Since main doesn't have a section, let's create it and setup the keys here for further sanitization
+		foreach ( $settings[ $tab ] as $key => $setting ) {
+			// If the key is numeric, we've got a legacy setting, and not a subsection
+			if ( is_int( $key ) ) {
+				$settings[ $tab ]['main'][ $setting['id'] ] = $setting;
+				unset( $settings[ $tab ][ $key ] );
+			}
+		}
+	} else {
+		// We need our key/values to have IDs not numerical keys
+		foreach ( $settings[ $tab ][ $section ] as $key => $setting ) {
+			// If the key is numeric, we've got a legacy setting, and not a subsection
+			if ( is_int( $key ) ) {
+				$settings[ $tab ][ $section ][ $setting['id'] ] = $setting;
+				unset( $settings[ $tab ][ $section ][ $key ] );
+			}
+		}
 	}
 
 	// Loop through each setting being saved and pass it through a sanitization filter
