@@ -112,10 +112,10 @@ add_action( 'edd_user_login', 'edd_process_login_form' );
  * @param int $user_id User ID
  * @param string $user_login Username
  * @param string $user_pass Password
- * @param string $remember Remember me
+ * @param boolean $remember Remember me
  * @return void
 */
-function edd_log_user_in( $user_id, $user_login, $user_pass, $remember ) {
+function edd_log_user_in( $user_id, $user_login, $user_pass, $remember = false ) {
 	if ( $user_id < 1 )
 		return;
 
