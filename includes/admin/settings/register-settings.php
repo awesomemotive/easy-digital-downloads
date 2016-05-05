@@ -1060,7 +1060,48 @@ add_filter( 'edd_settings_taxes_sanitize', 'edd_settings_sanitize_taxes' );
  * @return string $input Sanitizied value
  */
 function edd_sanitize_text_field( $input ) {
-	return trim( wp_strip_all_tags( $input, true ) );
+	$tags = array(
+		'p' => array(
+			'class' => array(),
+			'id'    => array(),
+		),
+		'span' => array(
+			'class' => array(),
+			'id'    => array(),
+		),
+		'a' => array(
+			'href' => array(),
+			'title' => array(),
+			'class' => array(),
+			'title' => array(),
+			'id'    => array(),
+		),
+		'strong' => array(),
+		'em' => array(),
+		'br' => array(),
+		'img' => array(
+			'src'   => array(),
+			'title' => array(),
+			'alt'   => array(),
+			'id'    => array(),
+		),
+		'div' => array(
+			'class' => array(),
+			'id'    => array(),
+		),
+		'ul' => array(
+			'class' => array(),
+			'id'    => array(),
+		),
+		'li' => array(
+			'class' => array(),
+			'id'    => array(),
+		)
+	);
+
+	$allowed_tags = apply_filters( 'edd_allowed_html_tags', $tags );
+
+	return trim( wp_kses( $input, $allowed_tags ) );
 }
 add_filter( 'edd_settings_sanitize_text', 'edd_sanitize_text_field' );
 
