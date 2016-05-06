@@ -1973,6 +1973,13 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 			}
 
 		} else {
+			$class = 'empty';
+
+			$messages[] = sprintf(
+				__( 'To receive updates, please enter your valid %s license key.', 'easy-digital-downloads' ),
+				$args['name']
+			);
+
 			$license_status = null;
 		}
 
