@@ -183,9 +183,9 @@ function edd_get_purchase_link( $args = array() ) {
 			?>
 
 			<?php if ( ! edd_is_ajax_disabled() ) : ?>
-				<span class="edd-cart-ajax-alert">
+				<span class="edd-cart-ajax-alert" aria-live="assertive">
 					<span class="edd-cart-added-alert" style="display: none;">
-						<?php echo '<i class="edd-icon-ok"></i> ' . __( 'Added to cart', 'easy-digital-downloads' ); ?>
+						<?php echo '<i class="edd-icon-ok" aria-hidden="true"></i> ' . __( 'Added to cart', 'easy-digital-downloads' ); ?>
 					</span>
 				</span>
 			<?php endif; ?>
