@@ -896,7 +896,8 @@ function edd_settings_sanitize( $input = array() ) {
 	global $edd_options;
 
 	if ( empty( $_POST['_wp_http_referer'] ) ) {
-		return $input;
+		// If we didn't get the referer, just return the settings with nothing changed
+		return $edd_options;
 	}
 
 	parse_str( $_POST['_wp_http_referer'], $referrer );
@@ -911,13 +912,33 @@ function edd_settings_sanitize( $input = array() ) {
 	if ( 'main' === $section )  {
 		// Check for extensions that aren't using new sections
 		$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
+
+		$settings[ $tab ]['main'] = array();
+
+		// Since main doesn't have a section, let's create it and setup the keys here for further sanitization
+		foreach ( $settings[ $tab ] as $key => $setting ) {
+			// If the key is numeric, we've got a legacy setting, and not a subsection
+			if ( is_int( $key ) ) {
+				$settings[ $tab ]['main'][ $setting['id'] ] = $setting;
+				unset( $settings[ $tab ][ $key ] );
+			}
+		}
+	} else {
+		// We need our key/values to have IDs not numerical keys
+		foreach ( $settings[ $tab ][ $section ] as $key => $setting ) {
+			// If the key is numeric, update it to match the expected name coming from the front end inputs
+			if ( is_int( $key ) ) {
+				$settings[ $tab ][ $section ][ $setting['id'] ] = $setting;
+				unset( $settings[ $tab ][ $section ][ $key ] );
+			}
+		}
 	}
 
 	// Loop through each setting being saved and pass it through a sanitization filter
 	foreach ( $input as $key => $value ) {
 
 		// Get the setting type (checkbox, select, etc)
-		$type = isset( $settings[ $tab ][ $key ]['type'] ) ? $settings[ $tab ][ $key ]['type'] : false;
+		$type = isset( $settings[ $tab ][ $section ][ $key ]['type'] ) ? $settings[ $tab ][ $section ][ $key ]['type'] : false;
 
 		if ( $type ) {
 			// Field type specific filter
@@ -1039,7 +1060,48 @@ add_filter( 'edd_settings_taxes_sanitize', 'edd_settings_sanitize_taxes' );
  * @return string $input Sanitizied value
  */
 function edd_sanitize_text_field( $input ) {
-	return trim( $input );
+	$tags = array(
+		'p' => array(
+			'class' => array(),
+			'id'    => array(),
+		),
+		'span' => array(
+			'class' => array(),
+			'id'    => array(),
+		),
+		'a' => array(
+			'href' => array(),
+			'title' => array(),
+			'class' => array(),
+			'title' => array(),
+			'id'    => array(),
+		),
+		'strong' => array(),
+		'em' => array(),
+		'br' => array(),
+		'img' => array(
+			'src'   => array(),
+			'title' => array(),
+			'alt'   => array(),
+			'id'    => array(),
+		),
+		'div' => array(
+			'class' => array(),
+			'id'    => array(),
+		),
+		'ul' => array(
+			'class' => array(),
+			'id'    => array(),
+		),
+		'li' => array(
+			'class' => array(),
+			'id'    => array(),
+		)
+	);
+
+	$allowed_tags = apply_filters( 'edd_allowed_html_tags', $tags );
+
+	return trim( wp_kses( $input, $allowed_tags ) );
 }
 add_filter( 'edd_settings_sanitize_text', 'edd_sanitize_text_field' );
 

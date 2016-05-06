@@ -220,12 +220,23 @@ class EDD_Download {
 
 		$args = wp_parse_args( $data, $defaults );
 
+		/**
+		 * Fired before a download is created
+		 *
+		 * @param array $args The post object arguments used for creation.
+		 */
 		do_action( 'edd_download_pre_create', $args );
 
 		$id = wp_insert_post( $args, true );
 
 		$download = WP_Post::get_instance( $id );
 
+		/**
+		 * Fired after a download is created
+		 *
+		 * @param int   $id   The post ID of the created item.
+		 * @param array $args The post object arguments used for creation.
+		 */
 		do_action( 'edd_download_post_create', $id, $args );
 
 		return $this->setup_download( $download );

@@ -1075,7 +1075,7 @@ jQuery(document).ready(function ($) {
 	EDD_Settings.init();
 
 
-	$('.download_page_edd-payment-history .row-actions .delete a').on('click', function() {
+	$('.download_page_edd-payment-history .row-actions .delete a, a.edd-delete-payment').on('click', function() {
 		if( confirm( edd_vars.delete_payment ) ) {
 			return true;
 		}
