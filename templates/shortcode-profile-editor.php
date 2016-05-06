@@ -94,7 +94,6 @@ if ( is_user_logged_in() ):
 				<input name="edd_new_user_pass2" id="edd_new_user_pass2" class="password edd-input" type="password"/>
 				<?php do_action( 'edd_profile_editor_password' ); ?>
 			</p>
-			<p class="edd_password_change_notice"><?php _e( 'Please note after changing your password, you must log back in.', 'easy-digital-downloads' ); ?></p>
 			<?php do_action( 'edd_profile_editor_after_password' ); ?>
 			<p id="edd_profile_submit_wrap">
 				<input type="hidden" name="edd_profile_editor_nonce" value="<?php echo wp_create_nonce( 'edd-profile-editor-nonce' ); ?>"/>
