@@ -52,8 +52,7 @@ class EDD_Tracking {
 	 * @return bool
 	 */
 	private function tracking_allowed() {
-		$allow_tracking = edd_get_option( 'allow_tracking', false );
-		return $allow_tracking;
+		return (bool) edd_get_option( 'allow_tracking', false );
 	}
 
 	/**
@@ -103,6 +102,7 @@ class EDD_Tracking {
 		$data['inactive_plugins'] = $plugins;
 		$data['products']         = wp_count_posts( 'download' )->publish;
 		$data['download_label']   = edd_get_label_singular( true );
+		$data['locale']           = get_locale();
 
 		$this->data = $data;
 	}
@@ -115,13 +115,15 @@ class EDD_Tracking {
 	 */
 	public function send_checkin( $override = false ) {
 
-		if( ! $this->tracking_allowed() && ! $override )
-			return;
+		if( ! $this->tracking_allowed() && ! $override ) {
+			return false;
+		}
 
 		// Send a maximum of once per week
 		$last_send = $this->get_last_send();
-		if( $last_send && $last_send > strtotime( '-1 week' ) )
-			return;
+		if( ! $last_send || $last_send > strtotime( '-1 week' ) ) {
+			return false;
+		}
 
 		$this->setup_data();
 
@@ -135,7 +137,13 @@ class EDD_Tracking {
 			'user-agent'  => 'EDD/' . EDD_VERSION . '; ' . get_bloginfo( 'url' )
 		) );
 
+		if( is_wp_error( $request ) ) {
+			return $request;
+		}
+
 		update_option( 'edd_tracking_last_send', time() );
+
+		return true;
 
 	}
 
