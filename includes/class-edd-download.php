@@ -576,7 +576,7 @@ class EDD_Download {
 
 		if( ! isset( $this->sales ) ) {
 			$sales = get_post_meta( $this->ID, '_edd_download_sales', true );
-			if ( '' ==  ) {
+			if ( '' == $sales ) {
 				add_post_meta( $this->ID, '_edd_download_sales', 0 );
 				$sales = 0;
 			} // End if
