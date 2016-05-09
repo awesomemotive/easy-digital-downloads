@@ -1921,6 +1921,22 @@ class EDD_Payment {
 	 */
 	private function setup_user_id() {
 		$user_id = $this->get_meta( '_edd_payment_user_id', true );
+
+		if( empty( $user_id ) ) {
+
+			$customer = new EDD_Customer( $this->customer_id );
+
+			if( ! empty( $customer->user_id ) ) {
+
+				$user_id = $customer->user_id;
+
+				// Backfill the user ID
+				$this->update_meta( '_edd_payment_user_id', $user_id );
+
+			}
+
+		}
+
 		return $user_id;
 	}
 
