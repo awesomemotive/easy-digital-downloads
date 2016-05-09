@@ -92,13 +92,9 @@ function edd_show_purchase_form() {
 		do_action( 'edd_purchase_form_before_register_login' );
 
 		$show_register_form = edd_get_option( 'show_register_form', 'none' ) ;
-		if( ( $show_register_form === 'registration' || ( $show_register_form === 'both' && ! isset( $_GET['login'] ) ) ) && ! is_user_logged_in() ) : ?>
+		if( ! isset( $_GET['login'] ) && ! is_user_logged_in() ) : ?>
 			<div id="edd_checkout_login_register">
 				<?php do_action( 'edd_purchase_form_register_fields' ); ?>
-			</div>
-		<?php elseif( ( $show_register_form === 'login' || ( $show_register_form === 'both' && isset( $_GET['login'] ) ) ) && ! is_user_logged_in() ) : ?>
-			<div id="edd_checkout_login_register">
-				<?php do_action( 'edd_purchase_form_login_fields' ); ?>
 			</div>
 		<?php endif; ?>
 
@@ -452,9 +448,7 @@ function edd_get_register_fields() {
 	ob_start(); ?>
 	<fieldset id="edd_register_fields">
 
-		<?php if( $show_register_form == 'both' ) { ?>
-			<p id="edd-login-account-wrap"><?php _e( 'Already have an account?', 'easy-digital-downloads' ); ?> <a href="<?php echo esc_url( add_query_arg( 'login', 1 ) ); ?>" class="edd_checkout_register_login" data-action="checkout_login"><?php _e( 'Login', 'easy-digital-downloads' ); ?></a></p>
-		<?php } ?>
+		<p id="edd-login-account-wrap"><?php _e( 'Already have an account?', 'easy-digital-downloads' ); ?> <a href="<?php echo esc_url( add_query_arg( 'login', 1 ) ); ?>" class="edd_checkout_register_login" data-action="checkout_login"><?php _e( 'Login', 'easy-digital-downloads' ); ?></a></p>
 
 		<?php do_action('edd_register_fields_before'); ?>
 
