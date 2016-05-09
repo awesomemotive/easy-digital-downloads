@@ -423,6 +423,82 @@ div[class^="license-"] .edd-license-data p { margin-left: 4px; }
 .note-content-wrap { padding-top: 7px; }
 .delete-customer { text-align: center; }
 #edd-item-card-wrapper .notice-wrap { margin-left: -20px; margin-right: -20px; padding-left: 20px; padding-right: 20px; }
+@media screen and ( max-width: 782px ) and ( min-width: 656px ) {
+	#edd-item-card-wrapper {
+		width: 600px;
+	}
+	.customer-info .customer-name {
+		font-size: 16px;
+	}
+	#edd-item-card-wrapper .widefat td, .widefat th {
+		padding: 4px 6px;
+		max-width: 100px!important;
+		display: table-cell;
+	}
+}
+@media screen and ( max-width: 656px ) {
+	#edd-item-card-wrapper {
+		width: 380px;
+	}
+	#edd-item-card-wrapper > div:first-child {
+		height: 230px;
+	}
+	#edd-item-tab-wrapper-list {
+		height: 32px;
+		margin: 0;
+	}
+	#edd-item-tab-wrapper-list li {
+		float: left;
+		margin: 0!important;
+		width: 32px;
+		height: 32px;
+	}
+	#edd-item-tab-wrapper-list li span {
+		width: 32px;
+		height: 32px;
+		margin: 0!important;
+	}
+	#edd-item-card-wrapper .customer-info { 
+		min-height: 210px;
+	}
+	.edd-item-info.customer-info {
+		position: relative;
+	}
+	#edd-item-card-wrapper .customer-address-wrapper {
+		float: none;
+		position: absolute;
+		top: 84px;
+		left: 110px;
+		max-width: 200px;
+	}
+	#edd-item-card-wrapper .customer-main-wrapper {
+		float: none;
+		position: absolute;
+		left: 110px;
+	}
+	.customer-info .customer-name {
+		font-size: 16px;
+	}
+	#edd-item-card-wrapper #edd-item-stats-wrapper {
+		padding-left: 0;
+		padding-right: 0;
+	}
+	#edd-item-card-wrapper .customer-section {
+		margin-bottom: 0;
+	}
+	#edd-item-card-wrapper .widefat td, .widefat th {
+		padding: 4px 6px;
+		max-width: 100px!important;
+		display: table-cell;
+		overflow: hidden;
+	}
+	#edd-item-card-wrapper .customer-id {
+		font-size: 16px;
+	}
+	#edd-item-card-wrapper > div:first-child {
+		height: auto;
+	}
+}
 
 /* Tools Styles
 -------------------------------------------------------------- */
