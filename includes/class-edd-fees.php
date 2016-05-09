@@ -97,7 +97,7 @@ class EDD_Fees {
 		$args['amount'] = edd_sanitize_amount( $args['amount'] );
 
 		// Set the fee
-		$fees[ $key ] = apply_filters( 'edd_fees_add_fees', $args, $this );
+		$fees[ $key ] = apply_filters( 'edd_fees_add_fee', $args, $this );
 
 		// Allow 3rd parties to process the fees before storing them in the session
 		$fees = apply_filters( 'edd_fees_set_fees', $fees, $this );
