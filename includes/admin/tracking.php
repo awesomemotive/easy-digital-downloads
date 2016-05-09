@@ -52,8 +52,7 @@ class EDD_Tracking {
 	 * @return bool
 	 */
 	private function tracking_allowed() {
-		$allow_tracking = edd_get_option( 'allow_tracking', false );
-		return $allow_tracking;
+		return (bool) edd_get_option( 'allow_tracking', false );
 	}
 
 	/**
@@ -63,16 +62,26 @@ class EDD_Tracking {
 	 * @return void
 	 */
 	private function setup_data() {
+		global $edd_options;
 
 		$data = array();
 
 		// Retrieve current theme info
 		$theme_data = wp_get_theme();
 		$theme      = $theme_data->Name . ' ' . $theme_data->Version;
-		
-		$data['url']    = home_url();
-		$data['theme']  = $theme;
-		$data['email']  = get_bloginfo( 'admin_email' );
+
+		$data['php_version'] = phpversion();
+		$data['edd_version'] = EDD_VERSION;
+		$data['wp_version']  = get_bloginfo( 'version' );
+		$data['server']      = isset( $_SERVER['SERVER_SOFTWARE'] ) ? $_SERVER['SERVER_SOFTWARE'] : '';
+
+		$checkout_page        = ! empty( $edd_options['purchase_page'] ) ? $edd_options['purchase_page'] : false;
+		$data['install_date'] = false !== $checkout_page ? get_post_field( 'post_date', $checkout_page ) : 'not set';
+
+		$data['multisite']   = is_multisite();
+		$data['url']         = home_url();
+		$data['theme']       = $theme;
+		$data['email']       = get_bloginfo( 'admin_email' );
 
 		// Retrieve current plugin information
 		if( ! function_exists( 'get_plugins' ) ) {
@@ -92,7 +101,8 @@ class EDD_Tracking {
 		$data['active_plugins']   = $active_plugins;
 		$data['inactive_plugins'] = $plugins;
 		$data['products']         = wp_count_posts( 'download' )->publish;
-		$data['download_label'] = edd_get_label_singular( true );
+		$data['download_label']   = edd_get_label_singular( true );
+		$data['locale']           = get_locale();
 
 		$this->data = $data;
 	}
@@ -105,13 +115,15 @@ class EDD_Tracking {
 	 */
 	public function send_checkin( $override = false ) {
 
-		if( ! $this->tracking_allowed() && ! $override )
-			return;
+		if( ! $this->tracking_allowed() && ! $override ) {
+			return false;
+		}
 
 		// Send a maximum of once per week
 		$last_send = $this->get_last_send();
-		if( $last_send && $last_send > strtotime( '-1 week' ) )
-			return;
+		if( ! $last_send || $last_send > strtotime( '-1 week' ) ) {
+			return false;
+		}
 
 		$this->setup_data();
 
@@ -125,7 +137,13 @@ class EDD_Tracking {
 			'user-agent'  => 'EDD/' . EDD_VERSION . '; ' . get_bloginfo( 'url' )
 		) );
 
+		if( is_wp_error( $request ) ) {
+			return $request;
+		}
+
 		update_option( 'edd_tracking_last_send', time() );
+
+		return true;
 
 	}
 

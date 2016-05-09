@@ -5,8 +5,8 @@ Contributors: mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, 
 Donate link: https://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
-Tested up to: 4.5
-Stable Tag: 2.5.11
+Tested up to: 4.6
+Stable Tag: 2.5.14
 
 License: GNU Version 2 or Any Later Version
 
@@ -214,6 +214,26 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
+= 2.5.14, May 5, 2016 =
+
+* Fix: New user emails do not have the proper heading
+* Fix: Opt-in tracking not always sending when allowed
+* Tweak: Added Locale to opt-in tracking
+
+= 2.5.13, April 21, 2016 =
+
+* Fix: User info data not properly populated from customer record when missing in payment meta
+* Fix: filesize() run on external files during download process
+* Tweak: Changed log in form label to include email address
+* Tweak: Added PHP version, EDD version, install date, and WordPress version to opt-in tracking payload
+
+= 2.5.12, April 14, 2016 =
+
+* Fix: Removed incorrect title attribute from Send Test Email button
+* Fix: Made add to cart AJAX action Accessible
+* Tweak: Added Delete Payment option to View Order Details screen
+* Tweak: Moved Resend Receipt button to separate box on View Order Details screen
+
 = 2.5.11, April 7, 2016 =
 
 * Fix: Non-complete payments permitting file downloads
@@ -224,7 +244,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Sessions should never start on RSS feeds
 * Fix: Missing screen reader text for Default Price Option radio buttons
 * Fix: Incorrect heading size for some admin screens
-* Fix: Payment History Search results now stay after performing actions on shown payments 
+* Fix: Payment History Search results now stay after performing actions on shown payments
 * Tweak: Added new filters to recount stats tool for customers to allow support for other payment statuses
 * Tweak: Added new filters to allow URIs to be added to the session blacklist to prevent sessions from starting on those URIs
 * Tweak: Added filter to permit disabling wpautop() in emails
@@ -276,10 +296,10 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Price override in add_download() method of EDD_Payment does not respect price of 0
 * Fix: Dash incorrectly shown after product name on the receipt page
 * Fix: Missing P tag on View Order Details screen
-* Tweak: Replace usage of $edd_options with edd_get_option() helper function 
+* Tweak: Replace usage of $edd_options with edd_get_option() helper function
 * Tweak: URL in New User Notification email now linked
 * Tweak: edd_price() now displays the value of the Default price option
-* New: Introduced edd_payment_currency_default filter 
+* New: Introduced edd_payment_currency_default filter
 
 = 2.5.7, February 10, 2016 =
 
