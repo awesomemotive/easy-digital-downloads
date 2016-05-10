@@ -1925,11 +1925,23 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 					case 'expired' :
 
-						$class = 'error';
+						$class = 'expired';
 						$messages[] = sprintf(
 							__( 'Your license key expired on %s. Please <a href="%s" target="_blank">renew your license key</a>.', 'easy-digital-downloads' ),
 							date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
 							'https://easydigitaldownloads.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
+						);
+
+						$license_status = 'license-' . $class . '-notice';
+
+						break;
+
+					case 'revoked' :
+
+						$class = 'error';
+						$messages[] = sprintf(
+							__( 'Your license key has been disabled. Please <a href="%s" target="_blank">contact support</a> for more information.', 'easy-digital-downloads' ),
+							'https://easydigitaldownloads.com/support?utm_campaign=admin&utm_source=licenses&utm_medium=revoked'
 						);
 
 						$license_status = 'license-' . $class . '-notice';
@@ -1965,7 +1977,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 					case 'item_name_mismatch' :
 
 						$class = 'error';
-						$messages[] = sprintf( __( 'This is not a %s.', 'easy-digital-downloads' ), $args['name'] );
+						$messages[] = sprintf( __( 'This appears to be an invalid license key for %s.', 'easy-digital-downloads' ), $args['name'] );
 
 						$license_status = 'license-' . $class . '-notice';
 
@@ -1980,6 +1992,10 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 						break;
 
+					default :
+
+						$messages[] = print_r( $license, true );
+						break;
 				}
 
 			} else {
@@ -2028,6 +2044,13 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 			}
 
 		} else {
+			$class = 'empty';
+
+			$messages[] = sprintf(
+				__( 'To receive updates, please enter your valid %s license key.', 'easy-digital-downloads' ),
+				$args['name']
+			);
+
 			$license_status = null;
 		}
 
@@ -2043,7 +2066,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 		if ( ! empty( $messages ) ) {
 			foreach( $messages as $message ) {
 
-				$html .= '<div class="edd-license-data edd-license-' . $class . '">';
+				$html .= '<div class="edd-license-data edd-license-' . $class . ' ' . $license_status . '">';
 					$html .= '<p>' . $message . '</p>';
 				$html .= '</div>';
 
@@ -2052,11 +2075,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 		wp_nonce_field( edd_sanitize_key( $args['id'] ) . '-nonce', edd_sanitize_key( $args['id'] ) . '-nonce' );
 
-		if ( isset( $license_status ) ) {
-			echo '<div class="' . $license_status . '">' . $html . '</div>';
-		} else {
-			echo '<div class="license-null">' . $html . '</div>';
-		}
+		echo $html;
 	}
 }
 
