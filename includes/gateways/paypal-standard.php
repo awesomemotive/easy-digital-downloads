@@ -775,14 +775,11 @@ function edd_refund_paypal_purchase( $payment_id = 0 ) {
 			continue;
 		}
 
-		if ( preg_match( '/^PayPal Express Transaction ID: ([^\s]+)/', $note->comment_content, $match ) ) {
-			$payid = $match[1];
-			continue;
-		}
 	}
 
 	// If we cannot grab the PayPal Transaction ID from comment notes, try from the transaction ID instead.
 	if ( ! $payid ) {
+
 		$payid = edd_get_payment_transaction_id( $payment_id );
 
 		if ( ! $payid ) {
