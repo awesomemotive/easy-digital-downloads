@@ -1977,7 +1977,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 					case 'item_name_mismatch' :
 
 						$class = 'error';
-						$messages[] = sprintf( __( 'This is not a %s.', 'easy-digital-downloads' ), $args['name'] );
+						$messages[] = sprintf( __( 'This appears to be an invalid license key for %s.', 'easy-digital-downloads' ), $args['name'] );
 
 						$license_status = 'license-' . $class . '-notice';
 
@@ -1992,6 +1992,10 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 						break;
 
+					default :
+
+						$messages[] = print_r( $license, true );
+						break;
 				}
 
 			} else {
