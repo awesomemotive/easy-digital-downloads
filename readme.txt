@@ -1149,7 +1149,6 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 * First offical release!
 
-
 == Upgrade Notice ==
 
 Fixed a very important bug with prices over 1000. Added new views the reports page. Improved the purchase confirmation page. Fixed a large number of other small bugs and made a significant number of minor improvements throughout the plugin.
