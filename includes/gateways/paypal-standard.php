@@ -731,7 +731,7 @@ function edd_maybe_refund_paypal_purchase( $payment_id = 0 ) {
 	}
 
 	// If not PayPal/PayPal Express, return early.
-	if ( 'paypal' !== $gateway && 'paypalexpress' !== $gateway ) {
+	if ( 'paypal' !== $gateway ) {
 		return;
 	}
 
