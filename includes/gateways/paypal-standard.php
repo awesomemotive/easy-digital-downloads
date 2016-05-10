@@ -664,8 +664,9 @@ add_filter( 'edd_payment_details_transaction_id-paypal', 'edd_paypal_link_transa
  * @return void
  */
 function edd_paypal_refund_admin_js( $payment_id = 0 ) {
+
 	// If not the proper gateway, return early.
-	if ( 'paypal' !== edd_get_payment_gateway( $payment_id ) && 'paypalexpress' !== edd_get_payment_gateway( $payment_id ) ) {
+	if ( 'paypal' !== edd_get_payment_gateway( $payment_id ) ) {
 		return;
 	}
 
