@@ -48,12 +48,14 @@ class EDD_DB_Customer_Meta extends EDD_DB {
 	/**
 	 * Retrieve customer meta field for a customer.
 	 *
+	 * For internal use only. Use EDD_Customer->get_meta() for public usage.
+	 *
 	 * @param   int    $customer_id   Customer ID.
 	 * @param   string $meta_key      The meta key to retrieve.
 	 * @param   bool   $single        Whether to return a single value.
 	 * @return  mixed                 Will be an array if $single is false. Will be value of meta data field if $single is true.
 	 *
-	 * @access  public
+	 * @access  private
 	 * @since   2.6
 	 */
 	public function get_meta( $customer_id = 0, $meta_key = '', $single = false ) {
@@ -63,13 +65,15 @@ class EDD_DB_Customer_Meta extends EDD_DB {
 	/**
 	 * Add meta data field to a customer.
 	 *
+	 * For internal use only. Use EDD_Customer->add_meta() for public usage.
+	 *
 	 * @param   int    $customer_id   Customer ID.
 	 * @param   string $meta_key      Metadata name.
 	 * @param   mixed  $meta_value    Metadata value.
 	 * @param   bool   $unique        Optional, default is false. Whether the same key should not be added.
 	 * @return  bool                  False for failure. True for success.
 	 *
-	 * @access  public
+	 * @access  private
 	 * @since   2.6
 	 */
 	public function add_meta( $customer_id = 0, $meta_key = '', $meta_value, $unique = false ) {
@@ -78,6 +82,8 @@ class EDD_DB_Customer_Meta extends EDD_DB {
 
 	/**
 	 * Update customer meta field based on Customer ID.
+	 *
+	 * For internal use only. Use EDD_Customer->update_meta() for public usage.
 	 *
 	 * Use the $prev_value parameter to differentiate between meta fields with the
 	 * same key and Customer ID.
@@ -90,7 +96,7 @@ class EDD_DB_Customer_Meta extends EDD_DB {
 	 * @param   mixed  $prev_value    Optional. Previous value to check before removing.
 	 * @return  bool                  False on failure, true if success.
 	 *
-	 * @access  public
+	 * @access  private
 	 * @since   2.6
 	 */
 	public function update_meta( $customer_id = 0, $meta_key = '', $meta_value, $prev_value = '' ) {
@@ -99,6 +105,8 @@ class EDD_DB_Customer_Meta extends EDD_DB {
 
 	/**
 	 * Remove metadata matching criteria from a customer.
+	 *
+	 * For internal use only. Use EDD_Customer->delete_meta() for public usage.
 	 *
 	 * You can match based on the key, or key and value. Removing based on key and
 	 * value, will keep from removing duplicate metadata with the same key. It also
@@ -109,7 +117,7 @@ class EDD_DB_Customer_Meta extends EDD_DB {
 	 * @param   mixed  $meta_value    Optional. Metadata value.
 	 * @return  bool                  False for failure. True for success.
 	 *
-	 * @access  public
+	 * @access  private
 	 * @since   2.6
 	 */
 	public function delete_meta( $customer_id = 0, $meta_key = '', $meta_value = '' ) {
