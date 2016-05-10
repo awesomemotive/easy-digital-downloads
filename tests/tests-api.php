@@ -105,13 +105,9 @@ class Tests_API extends WP_UnitTestCase {
 			)
 		);
 
-		$price = '100.00';
-
 		$total = 0;
-
 		$prices = get_post_meta( $download_details[0]['id'], 'edd_variable_prices', true );
 		$item_price = $prices[1]['amount'];
-
 		$total += $item_price;
 
 		$cart_details = array(
@@ -127,7 +123,6 @@ class Tests_API extends WP_UnitTestCase {
 				'item_price' =>  100,
 				'subtotal' =>  100,
 				'price' =>  100,
-				'item_price' => 100,
 				'tax' => 0,
 				'quantity' => 1
 			)
