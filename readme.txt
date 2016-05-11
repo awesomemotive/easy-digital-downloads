@@ -10,7 +10,7 @@ Stable Tag: 2.5.14
 
 License: GNU Version 2 or Any Later Version
 
-Sell digital downloads through WordPress with this complete digital downloads management plugin
+The easiest way to sell digital products with WordPress.
 
 == Description ==
 
