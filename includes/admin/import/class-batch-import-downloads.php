@@ -322,4 +322,12 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 		return $term_ids;
 	}
 
+	public function get_list_table_url() {
+		return admin_url( 'edit.php?post_type=download' );
+	}
+
+	public function get_import_type_label() {
+		return edd_get_label_plural( true );
+	}
+
 }
