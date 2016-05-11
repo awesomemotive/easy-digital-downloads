@@ -117,7 +117,7 @@ final class Easy_Digital_Downloads {
 	 * EDD Customer meta DB Object.
 	 *
 	 * @var object|EDD_DB_Customer_Meta
-	 * @since 2.1
+	 * @since 2.6
 	 */
 	public $customer_meta;
 
