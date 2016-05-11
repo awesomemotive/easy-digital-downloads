@@ -103,23 +103,26 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 
 					$categories = $this->str_to_array( $row[ $this->field_mapping['categories'] ] );
 
+					$categories = $this->maybe_create_terms( $categories, 'download_category' );
+
 					if( ! empty( $categories ) ) {
 
-						wp_set_object_terms( $download_id, $terms, 'download_category' );
+						wp_set_object_terms( $download_id, $categories, 'download_category' );
 
 					}
 
 				}
-
 
 				// setup tags
 				if( ! empty( $row[ $this->field_mapping['tags'] ] ) ) {
 
 					$tags = $this->str_to_array( $row[ $this->field_mapping['tags'] ] );
 
+					$tags = $this->maybe_create_terms( $tags, 'download_tag' );
+
 					if( ! empty( $tags ) ) {
 
-						wp_set_object_terms( $download_id, $terms, 'download_tag' );
+						wp_set_object_terms( $download_id, $tags, 'download_tag' );
 
 					}
 
@@ -133,7 +136,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 					if( is_numeric( $price ) ) {
 
 						update_post_meta( $download_id, 'edd_price', edd_sanitize_amount( $price ) );
-					
+
 					} else {
 
 						$prices = $this->str_to_array( $price );
@@ -223,4 +226,43 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 		return array();
 
 	}
+
+	private function maybe_create_terms( $terms = array(), $taxonomy = 'download_category' ) {
+
+		// Return of term IDs
+		$term_ids = array();
+
+		foreach( $terms as $term ) {
+
+			if( is_numeric( $term ) && 0 === (int) $term ) {
+
+				$term = get_term( $term, $taxonomy );
+
+			} else {
+
+				$term = get_term_by( 'name', $term, $taxonomy );
+
+				if( ! $term ) {
+
+					$term = get_term_by( 'slug', $term, $taxonomy );
+
+				}
+
+			}
+
+			if( ! empty( $term ) ) {
+
+				$term_ids[] = $term->term_id;
+
+			} else {
+
+				$term_ids[] = wp_insert_term( $term, $taxonomy );
+
+			}
+
+		}
+
+		return $term_ids;
+	}
+
 }

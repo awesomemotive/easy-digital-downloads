@@ -1609,6 +1609,7 @@ jQuery(document).ready(function ($) {
 							// Animation complete.
 						});
 
+						console.log( response.data.mapping );
 						console.log( 'Step ' + response.data.step );
 						console.log( 'Total ' + response.data.total );
 
