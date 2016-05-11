@@ -154,4 +154,7 @@ class EDD_Batch_Import {
 
 		}
 	}
+
+	public function get_list_table_url() {}
+	public function get_import_type_label() {}
 }
