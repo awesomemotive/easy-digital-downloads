@@ -130,7 +130,7 @@ class EDD_Batch_Import {
 		$more = false;
 
 		if ( ! $this->can_import() ) {
-			wp_die( __( 'You do not have permission to import data.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+			wp_die( __( 'You do not have permission to import data.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 		}
 
 		return $more;
