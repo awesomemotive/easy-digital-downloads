@@ -598,7 +598,7 @@ class EDD_Customer {
 	 * @return  mixed                 Will be an array if $single is false. Will be value of meta data field if $single is true.
 	 *
 	 * @access  public
-	 * @since   1.6
+	 * @since   2.6
 	 */
 	public function get_meta( $meta_key = '', $single = true ) {
 		return EDD()->customer_meta->get_meta( $this->id, $meta_key, $single );
@@ -613,7 +613,7 @@ class EDD_Customer {
 	 * @return  bool                  False for failure. True for success.
 	 *
 	 * @access  public
-	 * @since   1.6
+	 * @since   2.6
 	 */
 	public function add_meta( $meta_key = '', $meta_value, $unique = false ) {
 		return EDD()->customer_meta->add_meta( $this->id, $meta_key, $meta_value, $unique );
@@ -628,7 +628,7 @@ class EDD_Customer {
 	 * @return  bool                  False on failure, true if success.
 	 *
 	 * @access  public
-	 * @since   1.6
+	 * @since   2.6
 	 */
 	public function update_meta( $meta_key = '', $meta_value, $prev_value = '' ) {
 		return EDD()->customer_meta->update_meta( $this->id, $meta_key, $meta_value, $prev_value );
@@ -642,7 +642,7 @@ class EDD_Customer {
 	 * @return  bool                  False for failure. True for success.
 	 *
 	 * @access  public
-	 * @since   1.6
+	 * @since   2.6
 	 */
 	public function delete_meta( $meta_key = '', $meta_value = '' ) {
 		return EDD()->customer_meta->delete_meta( $this->id, $meta_key, $meta_value );
