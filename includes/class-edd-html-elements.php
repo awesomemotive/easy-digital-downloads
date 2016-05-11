@@ -40,7 +40,7 @@ class EDD_HTML_Elements {
 			'chosen'      => false,
 			'number'      => 30,
 			'bundles'     => true,
-			'placeholder' => sprintf( __( 'Select a %s', 'easy-digital-downloads' ), edd_get_label_singular() ),
+			'placeholder' => sprintf( __( 'Choose a %s', 'easy-digital-downloads' ), edd_get_label_singular() ),
 			'data'        => array( 'search-type' => 'download' ),
 		);
 
@@ -65,17 +65,13 @@ class EDD_HTML_Elements {
 			);
 		}
 
-		$products = get_posts( $product_args );
-
-		$options = array();
-
+		$products   = get_posts( $product_args );
+		$options    = array();
+		$options[0] = '';
 		if ( $products ) {
-			$options[0] = sprintf( __( 'Select a %s', 'easy-digital-downloads' ), edd_get_label_singular() );
 			foreach ( $products as $product ) {
 				$options[ absint( $product->ID ) ] = esc_html( $product->post_title );
 			}
-		} else {
-			$options[0] = __( 'No products found', 'easy-digital-downloads' );
 		}
 
 		// This ensures that any selected products are included in the drop down
