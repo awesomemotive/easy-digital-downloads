@@ -73,6 +73,11 @@ class EDD_DB_Customer_Meta extends EDD_DB {
 	 * @since   2.6
 	 */
 	public function get_meta( $customer_id = 0, $meta_key = '', $single = false ) {
+		$customer_id = $this->sanitize_customer_id( $customer_id );
+		if ( false === $customer_id ) {
+			return false;
+		}
+
 		return get_metadata( 'customer', $customer_id, $meta_key, $single );
 	}
 
@@ -91,6 +96,11 @@ class EDD_DB_Customer_Meta extends EDD_DB {
 	 * @since   2.6
 	 */
 	public function add_meta( $customer_id = 0, $meta_key = '', $meta_value, $unique = false ) {
+		$customer_id = $this->sanitize_customer_id( $customer_id );
+		if ( false === $customer_id ) {
+			return false;
+		}
+
 		return add_metadata( 'customer', $customer_id, $meta_key, $meta_value, $unique );
 	}
 
@@ -114,6 +124,11 @@ class EDD_DB_Customer_Meta extends EDD_DB {
 	 * @since   2.6
 	 */
 	public function update_meta( $customer_id = 0, $meta_key = '', $meta_value, $prev_value = '' ) {
+		$customer_id = $this->sanitize_customer_id( $customer_id );
+		if ( false === $customer_id ) {
+			return false;
+		}
+
 		return update_metadata( 'customer', $customer_id, $meta_key, $meta_value, $prev_value );
 	}
 
@@ -150,9 +165,10 @@ class EDD_DB_Customer_Meta extends EDD_DB {
 
 		$sql = "CREATE TABLE {$this->table_name} (
 			meta_id bigint(20) NOT NULL AUTO_INCREMENT,
-			customer_id bigint(20) NOT NULL DEFAULT '0',
+			customer_id bigint(20) NOT NULL,
 			meta_key varchar(255) DEFAULT NULL,
 			meta_value longtext,
+			CONSTRAINT chk_customer_id CHECK (customer_id>0),
 			PRIMARY KEY  (meta_id),
 			KEY customer_id (customer_id),
 			KEY meta_key (meta_key)
@@ -161,6 +177,33 @@ class EDD_DB_Customer_Meta extends EDD_DB {
 		dbDelta( $sql );
 
 		update_option( $this->table_name . '_db_version', $this->version );
+	}
+
+	/**
+	 * Given a customer ID, make sure it's a positive number, greater than zero before inserting or adding.
+	 *
+	 * @since  2.6
+	 * @param  int|stirng $customer_id A passed customer ID.
+	 * @return int|bool                The normalized customer ID or false if it's found to not be valid.
+	 */
+	private function sanitize_customer_id( $customer_id ) {
+		if ( ! is_numeric( $customer_id ) ) {
+			return false;
+		}
+
+		$customer_id = (int) $custoemr_id;
+
+		// We were given a non positive number
+		if ( absint( $customer_id ) !== $customer_id ) {
+			return false;
+		}
+
+		if ( empty( $customer_id ) ) {
+			return false;
+		}
+
+		return absint( $customer_id );
+
 	}
 
 }
