@@ -70,6 +70,8 @@ class EDD_Batch_Import {
 	 */
 	public $is_empty = false;
 
+	public $field_mapping = array();
+
 	/**
 	 * Get things started
 	 *
@@ -88,8 +90,11 @@ class EDD_Batch_Import {
 		$this->csv   = new parseCSV();
 		$this->csv->auto( $this->file );
 		$this->total = count( $this->csv->data );
+		$this->init();
 
 	}
+
+	public function init() {}
 
 	/**
 	 * Can we import?
@@ -139,5 +144,14 @@ class EDD_Batch_Import {
 	 */
 	public function get_percentage_complete() {
 		return 100;
+	}
+
+	public function map_fields( $csv_columns = array(), $import_fields = array() ) {
+
+		foreach( $csv_columns as $key => $column ) {
+
+			$this->field_mapping[ $import_fields[ $key ] ] = $column;
+
+		}
 	}
 }
