@@ -418,6 +418,16 @@ function edd_tools_import_export_display() {
 				</div>
 
 				<div class="edd-import-options" id="edd-import-downloads-options" style="display:none;">
+
+					<p>
+						<?php
+						printf(
+							__( 'Each column loaded from the CSV needs to be mapped to a Download product field. Select the column that should be mapped to each field below. Any columns not needed can be ignored or removed. See <a href="%s" target="_blank">this guide</a> for assistance with importing Download products.', 'easy-digital-downloads' ),
+							'#'
+						);
+						?>
+					</p>
+
 					<table class="widefat edd_repeatable_table" width="100%" cellpadding="0" cellspacing="0">
 						<thead>
 							<tr>
