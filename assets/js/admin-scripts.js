@@ -404,7 +404,7 @@ jQuery(document).ready(function ($) {
 						currently_removed  = {};
 					}
 
-					var removed_item       = [ { 'id': download_id, 'price_id': price_id, 'quantity': quantity, 'amount': amount } ];
+					var removed_item       = [ { 'id': download_id, 'price_id': price_id, 'quantity': quantity, 'amount': amount, 'cart_index': key } ];
 					currently_removed[key] = removed_item
 
 					$('input[name="edd-payment-removed"]').val(JSON.stringify(currently_removed));
