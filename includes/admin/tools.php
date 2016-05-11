@@ -434,9 +434,25 @@ function edd_tools_import_export_display() {
 								</td>
 								<td>
 									<select name="edd-import-download-field[1]" class="edd-import-download-field">
-										<option value="post_title"><?php _e( 'Title', 'easy-digital-downloads' ); ?></option>
-										<option value="price"><?php _e( 'Price', 'easy-digital-downloads' ); ?></option>
-										<option value="post_content"><?php _e( 'Description', 'easy-digital-downloads' ); ?></option>
+										<option value=""><?php _e( '- Ignore Field -', 'easy-digital-downloads' ); ?></option>
+										<option value="ID"><?php _e( 'Product ID', 'easy-digital-downloads' ); ?></option>
+										<option value="post_title"><?php _e( 'Product Title', 'easy-digital-downloads' ); ?></option>
+										<option value="post_name"><?php _e( 'Product Slug', 'easy-digital-downloads' ); ?></option>
+										<option value="price"><?php _e( 'Price(s)', 'easy-digital-downloads' ); ?></option>
+										<option value="post_content"><?php _e( 'Product Description', 'easy-digital-downloads' ); ?></option>
+										<option value="post_excerpt"><?php _e( 'Product Excerpt', 'easy-digital-downloads' ); ?></option>
+										<option value="post_status"><?php _e( 'Product Status', 'easy-digital-downloads' ); ?></option>
+										<option value="post_author"><?php _e( 'Product Author', 'easy-digital-downloads' ); ?></option>
+										<option value="post_date"><?php _e( 'Product Creation Date', 'easy-digital-downloads' ); ?></option>
+										<option value="featured_image"><?php _e( 'Product Image', 'easy-digital-downloads' ); ?></option>
+										<option value="categories"><?php _e( 'Categories', 'easy-digital-downloads' ); ?></option>
+										<option value="tags"><?php _e( 'Tags', 'easy-digital-downloads' ); ?></option>
+										<option value="files"><?php _e( 'Download Files', 'easy-digital-downloads' ); ?></option>
+										<option value="notes"><?php _e( 'Product Notes', 'easy-digital-downloads' ); ?></option>
+										<option value="download_limit"><?php _e( 'File Download Limit', 'easy-digital-downloads' ); ?></option>
+										<option value="sku"><?php _e( 'SKU', 'easy-digital-downloads' ); ?></option>
+										<option value="sales"><?php _e( 'Sale Count', 'easy-digital-downloads' ); ?></option>
+										<option value="earnings"><?php _e( 'Total Earnings', 'easy-digital-downloads' ); ?></option>
 										<option value="custom"><?php _e( 'Custom Field', 'easy-digital-downloads' ); ?></option>
 									</select>
 									<span class="edd-import-download-field-custom-wrap" style="display:none">
