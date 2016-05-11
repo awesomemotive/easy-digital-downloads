@@ -1006,13 +1006,13 @@ final class EDD_Payment {
 
 		foreach ( $this->downloads as $key => $item ) {
 
-			if ( $download_id != $item['id'] ) {
+			if ( (int) $download_id !== (int) $item['id'] ) {
 				continue;
 			}
 
 			if ( false !== $args['price_id'] ) {
 
-				if ( isset( $item['options']['price_id'] ) && $args['price_id'] != $item['options']['price_id'] ) {
+				if ( isset( $item['options']['price_id'] ) && (int) $args['price_id'] !== (int) $item['options']['price_id'] ) {
 					continue;
 				}
 
@@ -1029,7 +1029,7 @@ final class EDD_Payment {
 					}
 
 					// If this item has a price ID, make sure it matches the cart indexed item's price ID before removing
-					if ( isset( $item['options']['price_id'] ) && $item['options']['price_id'] != $cart_item['item_number']['options']['price_id'] ) {
+					if ( isset( $item['options']['price_id'] ) && (int) $item['options']['price_id'] !== (int) $cart_item['item_number']['options']['price_id'] ) {
 						continue;
 					}
 
@@ -1064,13 +1064,13 @@ final class EDD_Payment {
 				}
 
 				if ( false !== $args['price_id'] ) {
-					if ( isset( $item['item_number']['options']['price_id'] ) && $args['price_id'] != $item['item_number']['options']['price_id'] ) {
+					if ( isset( $item['item_number']['options']['price_id'] ) && (int) $args['price_id'] !== (int) $item['item_number']['options']['price_id'] ) {
 						continue;
 					}
 				}
 
 				if ( false !== $args['item_price'] ) {
-					if ( isset( $item['item_price'] ) && $args['item_price'] != $item['item_price'] ) {
+					if ( isset( $item['item_price'] ) && (float) $args['item_price'] != (float) $item['item_price'] ) {
 						continue;
 					}
 				}
@@ -1087,7 +1087,7 @@ final class EDD_Payment {
 				return false; // Invalid cart index passed.
 			}
 
-			if ( $this->cart_details[ $cart_index ]['id'] !== $download_id ) {
+			if ( (int) $this->cart_details[ $cart_index ]['id'] !== (int) $download_id ) {
 				return false; // We still need the proper Download ID to be sure.
 			}
 
