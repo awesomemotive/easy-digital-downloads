@@ -25,10 +25,6 @@ function edd_do_ajax_import_file_upload() {
 		wp_send_json_error( array( 'error' => __( 'Nonce verification failed', 'edd' ) ) );
 	}
 
-	if( ! current_user_can( 'manage_shop_settings' ) ) {
-		wp_send_json_error( array( 'error' => __( 'You do not have permission to import data', 'edd' ) ) );
-	}
-
 	// Let WordPress import the file. We will remove it after import is complete
 	$import_file = wp_handle_upload( $_FILES['edd-import-file'], array( 'test_form' => false ) );
 
@@ -37,6 +33,10 @@ function edd_do_ajax_import_file_upload() {
 		do_action( 'edd_batch_import_class_include', $_POST['edd-import-class'] );
 
 		$import = new $_POST['edd-import-class']( $import_file['file'] );
+
+		if( ! $import->can_import() ) {
+			wp_send_json_error( array( 'error' => __( 'You do not have permission to import data', 'easy-digital-downloads' ) ) );
+		}
 
 		wp_send_json_success( array(
 			'form'    => $_POST,
