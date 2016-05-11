@@ -103,30 +103,9 @@ function edd_do_ajax_import() {
 
 	}
 
-	$field_mapping = array(
-		'post_title'   => '',
-		'post_name'    => '',
-		'post_status'  => 'draft',
-		'post_author'  => '',
-		'post_date'    => '',
-		'post_content' => '',
-		'post_excerpt' => '',
-		'price'        => '',
-		'files'        => '',
-		'categories'   => '',
-		'tags'         => '',
-		'notes'        => ''
-	);
-
 	parse_str( $_REQUEST['mapping'], $map );
 
-	foreach( $map['edd-import-csv-column'] as $key => $column ) {
-
-		$field_mapping[ $map['edd-import-download-field'][ $key ] ] = $column;
-
-	}
-
-	$import->field_mapping = $field_mapping;
+	$import->map_fields( $map['edd-import-csv-column'], $map['edd-import-download-field'] );
 
 	$ret = $import->process_step( $step );
 
@@ -139,7 +118,7 @@ function edd_do_ajax_import() {
 			'step'       => $step,
 			'percentage' => $percentage,
 			'columns'    => $import->get_columns(),
-			'mapping'    => $field_mapping,
+			'mapping'    => $import->field_mapping,
 			'total'      => $import->total
 		) );
 

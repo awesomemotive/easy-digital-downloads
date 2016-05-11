@@ -21,8 +21,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
-	public $field_mapping = array();
-
 	/**
 	 * Process a step
 	 *

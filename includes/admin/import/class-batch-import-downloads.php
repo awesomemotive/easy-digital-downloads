@@ -21,7 +21,25 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 
-	public $field_mapping = array();
+
+	public function init() {
+
+		// Set up default field map values
+		$this->field_mapping = array(
+			'post_title'   => '',
+			'post_name'    => '',
+			'post_status'  => 'draft',
+			'post_author'  => '',
+			'post_date'    => '',
+			'post_content' => '',
+			'post_excerpt' => '',
+			'price'        => '',
+			'files'        => '',
+			'categories'   => '',
+			'tags'         => '',
+			'notes'        => ''
+		);
+	}
 
 	/**
 	 * Process a step
