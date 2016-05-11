@@ -157,6 +157,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 
 							}
 
+							update_post_meta( $download_id, '_variable_pricing', 1 );
 							update_post_meta( $download_id, 'edd_variable_prices', $variable_prices );
 
 						}
@@ -166,9 +167,65 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 				}
 
 				// setup files
+				if( ! empty( $row[ $this->field_mapping['files'] ] ) ) {
 
+					$files = $this->str_to_array( $row[ $this->field_mapping['files'] ] );
 
-				// setup other metadata
+					if( ! empty( $files ) ) {
+
+						$download_files = array();
+						foreach( $files as $file ) {
+
+							$download_files[] = array( 'file' => $file, 'name' => basename( $file ) );
+
+						}
+
+						update_post_meta( $download_id, 'edd_download_files', $download_files );
+
+					}
+
+				}
+
+				// Product Image
+				if( ! empty( $row[ $this->field_mapping['featured_image'] ] ) ) {
+
+					// Set up image here
+					$image_id = 0;
+
+					update_post_meta( $download_id, '_thumbnail_id', $image_id );
+				}
+
+				// File download limit
+				if( ! empty( $row[ $this->field_mapping['download_limit'] ] ) ) {
+
+					update_post_meta( $download_id, '_edd_download_limit', absint( $row[ $this->field_mapping['download_limit'] ] ) );
+				}
+
+				// Sale count
+				if( ! empty( $row[ $this->field_mapping['sales'] ] ) ) {
+
+					update_post_meta( $download_id, '_edd_download_sales', absint( $row[ $this->field_mapping['sales'] ] ) );
+				}
+
+				// Earnings
+				if( ! empty( $row[ $this->field_mapping['earnings'] ] ) ) {
+
+					update_post_meta( $download_id, '_edd_download_earnings', edd_sanitize_amount( $row[ $this->field_mapping['earnings'] ] ) );
+				}
+
+				// Notes
+				if( ! empty( $row[ $this->field_mapping['notes'] ] ) ) {
+
+					update_post_meta( $download_id, 'edd_product_notes', sanitize_text_field( $row[ $this->field_mapping['notes'] ] ) );
+				}
+
+				// SKU
+				if( ! empty( $row[ $this->field_mapping['sku'] ] ) ) {
+
+					update_post_meta( $download_id, 'edd_sku', sanitize_text_field( $row[ $this->field_mapping['sku'] ] ) );
+				}
+
+				// Custom fields
 
 
 				$i++;
