@@ -168,7 +168,6 @@ class EDD_DB_Customer_Meta extends EDD_DB {
 			customer_id bigint(20) NOT NULL,
 			meta_key varchar(255) DEFAULT NULL,
 			meta_value longtext,
-			CONSTRAINT chk_customer_id CHECK (customer_id>0),
 			PRIMARY KEY  (meta_id),
 			KEY customer_id (customer_id),
 			KEY meta_key (meta_key)
@@ -191,7 +190,7 @@ class EDD_DB_Customer_Meta extends EDD_DB {
 			return false;
 		}
 
-		$customer_id = (int) $custoemr_id;
+		$customer_id = (int) $customer_id;
 
 		// We were given a non positive number
 		if ( absint( $customer_id ) !== $customer_id ) {
