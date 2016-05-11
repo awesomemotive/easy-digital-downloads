@@ -6,7 +6,7 @@ Donate link: https://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
 Tested up to: 4.6
-Stable Tag: 2.5.14
+Stable Tag: 2.5.15
 
 License: GNU Version 2 or Any Later Version
 
@@ -213,6 +213,14 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.5.15, May 11, 2016 =
+
+* Fix: Removed unused variables and typos in unit tests
+* Fix: Non-standardized display of file names for items in bundles on receipts
+* Fix: Downloads not always removed from payment records when removed from the View Order Details screen
+* Tweak: Introduced new edd_checkout_user_error_checks action during purchase processing
+* Tweak: Placeholders on product dropdowns improved to help indicate searchability
 
 = 2.5.14, May 5, 2016 =
 
