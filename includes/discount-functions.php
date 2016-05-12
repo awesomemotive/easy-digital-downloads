@@ -1256,7 +1256,9 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 				foreach ( $reqs as $download_id ) {
 
 					if ( $download_id == $item['id'] && ! in_array( $item['id'], $excluded_products ) ) {
+		
 						$discounted_price -= $price - edd_get_discounted_amount( $discount, $price );
+
 					}
 
 				}
@@ -1297,10 +1299,15 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 					} else {
 
 						$discounted_price -= $price - edd_get_discounted_amount( $discount, $price );
+					
 					}
 
 				}
 
+			}
+
+			if( $discounted_price < 0 ) {
+				$discounted_price = 0;
 			}
 
 		}
