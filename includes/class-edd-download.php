@@ -630,6 +630,9 @@ class EDD_Download {
 		if ( $this->update_meta( '_edd_download_sales', $total_sales ) ) {
 
 			$this->sales = $total_sales;
+
+			do_action( 'edd_download_increase_sales', $this->ID, $this->sales, $this );
+
 			return $this->sales;
 
 		}
@@ -657,6 +660,9 @@ class EDD_Download {
 			if ( $this->update_meta( '_edd_download_sales', $total_sales ) ) {
 
 				$this->sales = $total_sales;
+
+				do_action( 'edd_download_decrease_sales', $this->ID, $this->sales, $this );
+
 				return $this->sales;
 
 			}
@@ -709,6 +715,9 @@ class EDD_Download {
 		if ( $this->update_meta( '_edd_download_earnings', $new_amount ) ) {
 
 			$this->earnings = $new_amount;
+
+			do_action( 'edd_download_increase_earnings', $this->ID, $this->earnings, $this );
+
 			return $this->earnings;
 
 		}
@@ -736,6 +745,9 @@ class EDD_Download {
 			if ( $this->update_meta( '_edd_download_earnings', $new_amount ) ) {
 
 				$this->earnings = $new_amount;
+
+				do_action( 'edd_download_decrease_earnings', $this->ID, $this->earnings, $this );
+
 				return $this->earnings;
 
 			}
