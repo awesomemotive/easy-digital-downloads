@@ -336,7 +336,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		$query['nopaging'] = true;
 	}
 
-	if( 'rand' == $atts['orderby'] ) {
+	if( 'random' == $atts['orderby'] ) {
 		$atts['pagination'] = false;
 	}
 
