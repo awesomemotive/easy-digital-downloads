@@ -79,8 +79,6 @@ class Tests_Customers_DB extends WP_UnitTestCase {
 			)
 		);
 
-		$price = '100.00';
-
 		$total = 0;
 
 		$prices = get_post_meta($download_details[0]['id'], 'edd_variable_prices', true);
@@ -130,7 +128,7 @@ class Tests_Customers_DB extends WP_UnitTestCase {
 		parent::tearDown();
 	}
 
-	public function test_intalled() {
+	public function test_installed() {
 		$this->assertTrue( EDD()->customers->installed() );
 	}
 
