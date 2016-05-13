@@ -97,10 +97,7 @@ class EDD_Fees {
 		$args['amount'] = edd_sanitize_amount( $args['amount'] );
 
 		// Set the fee
-		$fees[ $key ] = apply_filters( 'edd_fees_add_fee', $args, $this );
-
-		// Allow 3rd parties to process the fees before storing them in the session
-		$fees = apply_filters( 'edd_fees_set_fees', $fees, $this );
+		$fees[ $key ] = $args;
 
 		// Update fees
 		EDD()->session->set( 'edd_cart_fees', $fees );
@@ -219,8 +216,7 @@ class EDD_Fees {
 
 		}
 
-		// Allow 3rd parties to process the fees before returning them
-		return apply_filters( 'edd_fees_get_fees', ! empty( $fees ) ? $fees : array(), $this );
+		return ! empty( $fees ) ? $fees : array();
 	}
 
 	/**
