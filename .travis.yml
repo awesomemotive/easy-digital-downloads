@@ -45,7 +45,7 @@ after_script:
 
 branches:
   only:
-    = master
+    - master
     - /^release\/.*$/
 
 notifications:
