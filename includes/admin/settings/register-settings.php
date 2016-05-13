@@ -1253,7 +1253,7 @@ function edd_header_callback( $args ) {
  * @return void
  */
 function edd_checkbox_callback( $args ) {
-	$edd_options = edd_get_option( $args['id'] );
+	$edd_option = edd_get_option( $args['id'] );
 
 	if ( isset( $args['faux'] ) && true === $args['faux'] ) {
 		$name = '';
@@ -1261,7 +1261,7 @@ function edd_checkbox_callback( $args ) {
 		$name = 'name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"';
 	}
 
-	$checked = isset( $edd_options[ $args['id'] ] ) ? checked( 1, $edd_options[ $args['id'] ], false ) : '';
+	$checked = isset( $edd_option ) ? checked( 1, $edd_option, false ) : '';
 	$html = '<input type="checkbox" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"' . $name . ' value="1" ' . $checked . '/>';
 	$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 
@@ -1279,11 +1279,11 @@ function edd_checkbox_callback( $args ) {
  * @return void
  */
 function edd_multicheck_callback( $args ) {
-	$edd_options = edd_get_option( $args['id'] );
+	$edd_option = edd_get_option( $args['id'] );
 
 	if ( ! empty( $args['options'] ) ) {
 		foreach( $args['options'] as $key => $option ):
-			if( isset( $edd_options[$args['id']][$key] ) ) { $enabled = $option; } else { $enabled = NULL; }
+			if( isset( $edd_option[ $key ] ) ) { $enabled = $option; } else { $enabled = NULL; }
 			echo '<input name="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked($option, $enabled, false) . '/>&nbsp;';
 			echo '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']">' . wp_kses_post( $option ) . '</label><br/>';
 		endforeach;
@@ -1300,12 +1300,12 @@ function edd_multicheck_callback( $args ) {
  * @return void
  */
 function edd_payment_icons_callback( $args ) {
-	$edd_options = edd_get_option( $args['id'] );
+	$edd_option = edd_get_option( $args['id'] );
 
 	if ( ! empty( $args['options'] ) ) {
 		foreach( $args['options'] as $key => $option ) {
 
-			if( isset( $edd_options[$key] ) ) {
+			if( isset( $edd_option[$key] ) ) {
 				$enabled = $option;
 			} else {
 				$enabled = NULL;
@@ -1394,10 +1394,10 @@ function edd_radio_callback( $args ) {
  * @return void
  */
 function edd_gateways_callback( $args ) {
-	$edd_options = edd_get_option( $args['id'] );
+	$edd_option = edd_get_option( $args['id'] );
 
 	foreach ( $args['options'] as $key => $option ) :
-		if ( isset( $edd_options[ $key ] ) )
+		if ( isset( $edd_option[ $key ] ) )
 			$enabled = '1';
 		else
 			$enabled = null;
@@ -1417,13 +1417,13 @@ function edd_gateways_callback( $args ) {
  *
  * @return void
  */
-function edd_gateway_select_callback($args) {
-	$edd_options = edd_get_option( $args['id'] );
+function edd_gateway_select_callback( $args ) {
+	$edd_option = edd_get_option( $args['id'] );
 
 	echo '<select name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']">';
 
 	foreach ( $args['options'] as $key => $option ) :
-		$selected = isset( $edd_options[ $args['id'] ] ) ? selected( $key, $edd_options[$args['id']], false ) : '';
+		$selected = isset( $edd_option ) ? selected( $key, $edd_option, false ) : '';
 		echo '<option value="' . edd_sanitize_key( $key ) . '"' . $selected . '>' . esc_html( $option['admin_label'] ) . '</option>';
 	endforeach;
 
@@ -1442,10 +1442,10 @@ function edd_gateway_select_callback($args) {
  * @return void
  */
 function edd_text_callback( $args ) {
-	$edd_options = edd_get_option( $args['id'] );
+	$edd_option = edd_get_option( $args['id'] );
 
-	if ( $edd_options ) {
-		$value = $edd_options;
+	if ( $edd_option ) {
+		$value = $edd_option;
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
@@ -1477,10 +1477,10 @@ function edd_text_callback( $args ) {
  * @return void
  */
 function edd_number_callback( $args ) {
-	$edd_options = edd_get_option( $args['id'] );
+	$edd_option = edd_get_option( $args['id'] );
 
-	if ( $edd_options ) {
-		$value = $edd_options;
+	if ( $edd_option ) {
+		$value = $edd_option;
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
@@ -1515,10 +1515,10 @@ function edd_number_callback( $args ) {
  * @return void
  */
 function edd_textarea_callback( $args ) {
-	$edd_options = edd_get_option( $args['id'] );
+	$edd_option = edd_get_option( $args['id'] );
 
-	if ( $edd_options ) {
-		$value = $edd_options;
+	if ( $edd_option ) {
+		$value = $edd_option;
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
@@ -1582,10 +1582,10 @@ function edd_missing_callback($args) {
  * @return void
  */
 function edd_select_callback($args) {
-	$edd_options = edd_get_option( $args['id'] );
+	$edd_option = edd_get_option( $args['id'] );
 
-	if ( $edd_options ) {
-		$value = $edd_options;
+	if ( $edd_option ) {
+		$value = $edd_option;
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
@@ -1626,10 +1626,10 @@ function edd_select_callback($args) {
  * @return void
  */
 function edd_color_select_callback( $args ) {
-	$edd_options = edd_get_option( $args['id'] );
+	$edd_option = edd_get_option( $args['id'] );
 
-	if ( $edd_options ) {
-		$value = $edd_options;
+	if ( $edd_option ) {
+		$value = $edd_option;
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
@@ -1660,10 +1660,10 @@ function edd_color_select_callback( $args ) {
 function edd_rich_editor_callback( $args ) {
 	global $wp_version;
 
-	$edd_options = edd_get_option( $args['id'] );
+	$edd_option = edd_get_option( $args['id'] );
 
-	if ( $edd_options ) {
-		$value = $edd_options;
+	if ( $edd_option ) {
+		$value = $edd_option;
 
 		if( empty( $args['allow_blank'] ) && empty( $value ) ) {
 			$value = isset( $args['std'] ) ? $args['std'] : '';
@@ -1698,10 +1698,10 @@ function edd_rich_editor_callback( $args ) {
  * @return void
  */
 function edd_upload_callback( $args ) {
-	$edd_options = edd_get_option( $args['id'] );
+	$edd_option = edd_get_option( $args['id'] );
 
-	if ( $edd_options ) {
-		$value = $edd_options;
+	if ( $edd_option ) {
+		$value = $edd_option;
 	} else {
 		$value = isset($args['std']) ? $args['std'] : '';
 	}
@@ -1726,10 +1726,10 @@ function edd_upload_callback( $args ) {
  * @return void
  */
 function edd_color_callback( $args ) {
-	$edd_options = edd_get_option( $args['id'] );
+	$edd_option = edd_get_option( $args['id'] );
 
-	if ( $edd_options ) {
-		$value = $edd_options;
+	if ( $edd_option ) {
+		$value = $edd_option;
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
@@ -1753,7 +1753,7 @@ function edd_color_callback( $args ) {
  * @return void
  */
 function edd_shop_states_callback($args) {
-	$edd_options = edd_get_option( $args['id'] );
+	$edd_option = edd_get_option( $args['id'] );
 
 	if ( isset( $args['placeholder'] ) ) {
 		$placeholder = $args['placeholder'];
@@ -1768,7 +1768,7 @@ function edd_shop_states_callback($args) {
 	$html = '<select id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']"' . $class . 'data-placeholder="' . esc_html( $placeholder ) . '"/>';
 
 	foreach ( $states as $option => $name ) {
-		$selected = isset( $edd_options[ $args['id'] ] ) ? selected( $option, $edd_options[$args['id']], false ) : '';
+		$selected = isset( $edd_option ) ? selected( $option, $edd_option, false ) : '';
 		$html .= '<option value="' . esc_attr( $option ) . '" ' . $selected . '>' . esc_html( $name ) . '</option>';
 	}
 
@@ -1905,13 +1905,13 @@ function edd_descriptive_text_callback( $args ) {
  */
 if ( ! function_exists( 'edd_license_key_callback' ) ) {
 	function edd_license_key_callback( $args ) {
-		$edd_options = edd_get_option( $args['id'] );
+		$edd_option = edd_get_option( $args['id'] );
 
 		$messages = array();
 		$license  = get_option( $args['options']['is_valid_license_option'] );
 
-		if ( $edd_options ) {
-			$value = $edd_options;
+		if ( $edd_option ) {
+			$value = $edd_option;
 		} else {
 			$value = isset( $args['std'] ) ? $args['std'] : '';
 		}
