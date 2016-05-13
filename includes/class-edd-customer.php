@@ -461,15 +461,15 @@ class EDD_Customer {
 	 */
 	public function increase_value( $value = 0.00 ) {
 
-		$new_value = floatval( $this->purchase_value ) + $value;
+		$value = apply_filters( 'edd_customer_pre_increase_value', $value, $this->id, $this );
 
-		do_action( 'edd_customer_pre_increase_value', $value, $this->id );
+		$new_value = floatval( $this->purchase_value ) + $value;
 
 		if ( $this->update( array( 'purchase_value' => $new_value ) ) ) {
 			$this->purchase_value = $new_value;
 		}
 
-		do_action( 'edd_customer_post_increase_value', $this->purchase_value, $value, $this->id );
+		do_action( 'edd_customer_post_increase_value', $this->purchase_value, $value, $this->id, $this );
 
 		return $this->purchase_value;
 	}
@@ -483,19 +483,19 @@ class EDD_Customer {
 	 */
 	public function decrease_value( $value = 0.00 ) {
 
+		$value = apply_filters( 'edd_customer_pre_decrease_value', $value, $this->id, $this );
+
 		$new_value = floatval( $this->purchase_value ) - $value;
 
 		if( $new_value < 0 ) {
 			$new_value = 0.00;
 		}
 
-		do_action( 'edd_customer_pre_decrease_value', $value, $this->id );
-
 		if ( $this->update( array( 'purchase_value' => $new_value ) ) ) {
 			$this->purchase_value = $new_value;
 		}
 
-		do_action( 'edd_customer_post_decrease_value', $this->purchase_value, $value, $this->id );
+		do_action( 'edd_customer_post_decrease_value', $this->purchase_value, $value, $this->id, $this );
 
 		return $this->purchase_value;
 	}
