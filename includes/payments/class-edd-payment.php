@@ -805,7 +805,12 @@ final class EDD_Payment {
 
 				$customer = new EDD_Customer( $this->customer_id );
 
-				$total_change = $total_increase - $total_decrease;
+				// Allow 3rd parties to process the totals before they are used to update the
+				// total earnings. This will be useful to perform currency conversions, as
+				// the total earnings are always in base currency, while the payment itself
+				// may be in another one
+				$total_change = apply_filters( 'payment_save_update_total_earnings_total_increase', $total_increase, $this ) -
+												apply_filters( 'payment_save_update_total_earnings_total_decrease', $total_decrease, $this );
 				if ( $total_change < 0 ) {
 
 					$total_change = -( $total_change );

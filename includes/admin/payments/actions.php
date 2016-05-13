@@ -251,6 +251,12 @@ function edd_update_payment_details( $data ) {
 
 	// Adjust total store earnings if the payment total has been changed
 	if ( $new_total !== $curr_total && ( 'publish' == $status || 'revoked' == $status ) ) {
+		// Allow 3rd parties to process the totals before they are used to update the
+		// total earnings. This will be useful to perform currency conversions, as
+		// the total earnings are always in base currency, while the payment itself
+		// may be in another one
+		$new_total = apply_filters( 'edd_update_payment_details_set_total_earnings_new_total', $new_total, $payment );
+		$curr_total = apply_filters( 'edd_update_payment_details_set_total_earnings_curr_total', $curr_total, $payment );
 
 		if ( $new_total > $curr_total ) {
 			// Increase if our new total is higher

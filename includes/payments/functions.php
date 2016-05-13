@@ -840,7 +840,10 @@ function edd_get_total_earnings() {
 
 				if( ! empty( $payments ) ) {
 					$payments = implode( ',', $payments );
-					$total += $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN({$payments})" );
+
+					foreach( $payments as $payment_id ) {
+						$total += apply_filters( 'edd_get_total_earnings_get_payment_amount', edd_get_payment_amount( $payment ), $payment_id );
+					}
 				}
 
 			}
