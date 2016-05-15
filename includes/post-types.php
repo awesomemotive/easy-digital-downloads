@@ -406,3 +406,20 @@ function edd_bulk_updated_messages( $bulk_messages, $bulk_counts ) {
 	return $bulk_messages;
 }
 add_filter( 'bulk_post_updated_messages', 'edd_bulk_updated_messages', 10, 2 );
+
+/**
+ * Add row actions for the downloads custom post type
+ *
+ * @since 2.5
+ * @param  array $actions
+ * @param  WP_Post $post
+ * @return array
+ */
+function  edd_download_row_actions( $actions, $post ) {
+	if ( 'download' === $post->post_type ) {
+		return array_merge( array( 'id' => 'ID: ' . $post->ID ), $actions );
+	}
+
+	return $actions;
+}
+add_filter( 'post_row_actions', 'edd_download_row_actions', 2, 100 );
