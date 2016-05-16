@@ -614,4 +614,24 @@ class Test_Misc extends WP_UnitTestCase {
 
 		EDD_Helper_Download::delete_download( $post->ID );
 	}
+
+	public function test_array_convert() {
+		$customer1_id = EDD()->customers->add( array( 'email' => 'test10@example.com' ) );
+		$customer2_id = EDD()->customers->add( array( 'email' => 'test11@example.com' ) );
+
+		// Test sending a single object in
+		$customer_object = new EDD_Customer( $customer1_id );
+		$customer_array  = edd_array_convert( $customer_object );
+		$this->assertInternalType( 'array', $customer_array );
+		$this->assertEquals( $customer_object->id, $customer_array['id'] );
+
+		// Negative tests (no alterations should occur)
+		$this->assertEquals( 'string', edd_array_convert( 'string' ) );
+		$this->assertEquals( array( 'foo', 'bar', 'baz' ), edd_array_convert( array( 'foo', 'bar', 'baz' ) ) );
+
+		// Test sending in an array of objects
+		$customers = EDD()->customers->get_customers();
+		$converted = edd_array_convert( $customers );
+		$this->assertInternalType( 'array', $converted[0] );
+	}
 }
