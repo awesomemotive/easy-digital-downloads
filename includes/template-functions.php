@@ -943,7 +943,12 @@ function edd_add_oembed_price() {
 	if ( apply_filters( 'edd_show_oembed_purchase_links', $show ) ) {
 		echo '<style>.wp-embed-edd-price { margin: 20px 0 0 0; }</style>';
 		echo '<div class="wp-embed-edd-price">';
-			edd_price( get_the_ID(), true );
+			if ( edd_has_variable_prices( get_the_ID() ) ) {
+				echo edd_price_range( get_the_ID() );
+			} else {
+				edd_price( get_the_ID(), true );
+			}
+
 		echo '</div>';
 	}
 }
