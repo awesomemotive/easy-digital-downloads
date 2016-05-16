@@ -22,6 +22,59 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 add_action( 'edd_paypal_cc_form', '__return_false' );
 
+
+function edd_register_paypal_gateway_section( $gateway_sections ) {
+	$gateway_sections['paypal'] = __( 'PayPal Standard', 'easy-digital-downloads' );
+
+	return $gateway_sections;
+}
+add_filter( 'edd_settings_sections_gateways', 'edd_register_paypal_gateway_section', 1, 1 );
+
+function edd_register_paypal_gateway_settings( $gateway_settings ) {
+
+		$paypal_settings = array (
+			'paypal_settings' => array(
+				'id'   => 'paypal_settings',
+				'name' => '<strong>' . __( 'PayPal Standard Settings', 'easy-digital-downloads' ) . '</strong>',
+				'type' => 'header',
+			),
+			'paypal_email' => array(
+				'id'   => 'paypal_email',
+				'name' => __( 'PayPal Email', 'easy-digital-downloads' ),
+				'desc' => __( 'Enter your PayPal account\'s email', 'easy-digital-downloads' ),
+				'type' => 'text',
+				'size' => 'regular',
+			),
+			'paypal_page_style' => array(
+				'id'   => 'paypal_page_style',
+				'name' => __( 'PayPal Page Style', 'easy-digital-downloads' ),
+				'desc' => __( 'Enter the name of the page style to use, or leave blank for default', 'easy-digital-downloads' ),
+				'type' => 'text',
+				'size' => 'regular',
+			),
+		);
+
+		$disable_ipn_desc   = __( 'If payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases.', 'easy-digital-downloads' );
+
+		if ( ! is_ssl() ) {
+			$disable_ipn_desc .= '<div class="notice notice-warning inline"><p>' . __( 'For PayPal IPN verification to successfully complete, your site must have an SSL certificate.', 'easy-digital-downloads' ) . '</p></div>';
+		}
+
+		$paypal_settings['disable_paypal_verification'] = array(
+			'id'   => 'disable_paypal_verification',
+			'name' => __( 'Disable PayPal IPN Verification', 'easy-digital-downloads' ),
+			'desc' => $disable_ipn_desc,
+			'type' => 'checkbox',
+		);
+
+		$paypal_settings            = apply_filters( 'edd_paypal_settings', $paypal_settings );
+		$gateway_settings['paypal'] = $paypal_settings;
+
+		return $gateway_settings;
+}
+add_filter( 'edd_settings_gateways', 'edd_register_paypal_gateway_settings', 1, 1 );
+
+
 /**
  * Process PayPal Purchase
  *
