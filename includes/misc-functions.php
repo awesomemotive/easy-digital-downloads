@@ -904,3 +904,29 @@ function edd_can_view_receipt( $payment_key = '' ) {
 
 	return (bool) apply_filters( 'edd_can_view_receipt', $return, $payment_key );
 }
+
+/**
+ * Given an object or array of objects, convert them to arrays
+ *
+ * @since  2.6
+ * @param  object|array $object An object or an array of objects
+ * @return array                An array or array of arrays, converted from the provided object(s)
+ */
+function edd_array_convert( $object = array() ) {
+
+	if ( empty( $object ) || ( ! is_object( $object ) && ! is_array( $object ) ) ) {
+		return $object;
+	}
+
+	if ( is_array( $object ) ) {
+		$return = array();
+		foreach ( $object as $item ) {
+			$return[] = edd_array_convert( $item );
+		}
+	} else {
+		$return = get_object_vars( $object );
+	}
+
+	return $return;
+
+}
