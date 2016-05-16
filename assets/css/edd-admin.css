@@ -1353,7 +1353,7 @@ td.edd_order_price {
 	padding-right: 20px;
 }
 
-@media screen and ( max-width: 782px ) and ( min-width: 656px ) {
+@media screen and ( max-width: 810px ) and ( min-width: 656px ) {
 	#edd-item-card-wrapper {
 		width: 600px;
 	}
@@ -1368,21 +1368,29 @@ td.edd_order_price {
 }
 @media screen and ( max-width: 656px ) {
 	#edd-item-card-wrapper {
-		width: 380px;
+		margin: 0;
+		width: 100%;
 	}
 	#edd-item-card-wrapper > div:first-child {
 		height: 230px;
 	}
 	#edd-item-tab-wrapper {
-		margin: 0 0 -7px 0;
+		margin: 0 0 -5px;
 	}
 	#edd-item-tab-wrapper-list {
 		height: 32px;
 		margin: 0;
 	}
+	#edd-item-tab-wrapper-list .inactive {
+		border-bottom: 1px solid #e5e5e5;
+		border-left: none;
+	}
+	#edd-item-tab-wrapper-list .active {
+		border-width: 1px 1px 0 1px;
+	}
 	#edd-item-tab-wrapper-list li {
 		float: left;
-		margin: 0!important;
+		margin: 0 0 0 5px !important;
 		width: 32px;
 		height: 32px;
 	}
