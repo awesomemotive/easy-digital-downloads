@@ -948,6 +948,10 @@ td.edd_order_price {
 	width: 300px;
 }
 
+.wp-list-table .type-download .row-actions {
+	color: #999;
+}
+
 @media screen and ( max-width: 1100px ) {
 
 	.edd-mix-chart {
