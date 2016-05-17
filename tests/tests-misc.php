@@ -621,17 +621,17 @@ class Test_Misc extends WP_UnitTestCase {
 
 		// Test sending a single object in
 		$customer_object = new EDD_Customer( $customer1_id );
-		$customer_array  = edd_array_convert( $customer_object );
+		$customer_array  = edd_object_to_array( $customer_object );
 		$this->assertInternalType( 'array', $customer_array );
 		$this->assertEquals( $customer_object->id, $customer_array['id'] );
 
 		// Negative tests (no alterations should occur)
-		$this->assertEquals( 'string', edd_array_convert( 'string' ) );
-		$this->assertEquals( array( 'foo', 'bar', 'baz' ), edd_array_convert( array( 'foo', 'bar', 'baz' ) ) );
+		$this->assertEquals( 'string', edd_object_to_array( 'string' ) );
+		$this->assertEquals( array( 'foo', 'bar', 'baz' ), edd_object_to_array( array( 'foo', 'bar', 'baz' ) ) );
 
 		// Test sending in an array of objects
 		$customers = EDD()->customers->get_customers();
-		$converted = edd_array_convert( $customers );
+		$converted = edd_object_to_array( $customers );
 		$this->assertInternalType( 'array', $converted[0] );
 	}
 }
