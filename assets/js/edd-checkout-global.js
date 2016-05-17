@@ -98,7 +98,7 @@ window.EDD_Checkout = (function($) {
 					withCredentials: true
 				},
 				success: function (response) {
-					if( 'nostates' == response ) {
+					if( 'nostates' == $.trim(response) ) {
 						var text_field = '<input type="text" name="card_state" class="cart-state edd-input required" value=""/>';
 						$form.find('input[name="card_state"], select[name="card_state"]').replaceWith( text_field );
 					} else {
