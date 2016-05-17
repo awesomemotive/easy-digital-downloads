@@ -22,7 +22,13 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 add_action( 'edd_paypal_cc_form', '__return_false' );
 
-
+/**
+ * Register the PayPal Standard gateway subsection
+ *
+ * @since  2.6
+ * @param  array $gateway_sections  Current Gateway Tab subsections
+ * @return array                    Gateway subsections with PayPal Standard
+ */
 function edd_register_paypal_gateway_section( $gateway_sections ) {
 	$gateway_sections['paypal'] = __( 'PayPal Standard', 'easy-digital-downloads' );
 
@@ -30,6 +36,13 @@ function edd_register_paypal_gateway_section( $gateway_sections ) {
 }
 add_filter( 'edd_settings_sections_gateways', 'edd_register_paypal_gateway_section', 1, 1 );
 
+/**
+ * Registers the PayPal Standard settings for the PayPal Standard subsection
+ *
+ * @since  2.6
+ * @param  array $gateway_settings  Gateway tab settings
+ * @return array                    Gateway tab settings with the PayPal Standard settings
+ */
 function edd_register_paypal_gateway_settings( $gateway_settings ) {
 
 		$paypal_settings = array (
