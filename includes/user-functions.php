@@ -227,7 +227,7 @@ function edd_has_user_purchased( $user_id, $downloads, $variable_price_id = null
  *
  * @access      public
  * @since       1.0
- * @param       $user_id int - the ID of the user to check
+ * @param       int $user_id - the ID of the user to check
  * @return      bool - true if has purchased, false other wise.
  */
 function edd_has_purchases( $user_id = null ) {
@@ -249,8 +249,8 @@ function edd_has_purchases( $user_id = null ) {
  *
  * @access      public
  * @since       1.6
- * @param       $user int|string - the ID or email of the customer to retrieve stats for
- * @param       $mode string - "test" or "live"
+ * @param       int|string $user - the ID or email of the customer to retrieve stats for
+ * @param       string $mode - "test" or "live"
  * @return      array
  */
 function edd_get_purchase_stats_by_user( $user = '' ) {
@@ -289,7 +289,7 @@ function edd_get_purchase_stats_by_user( $user = '' ) {
  *
  * @access      public
  * @since       1.3
- * @param       $user mixed - ID or email
+ * @param       mixed $user - ID or email
  * @return      int - the total number of purchases
  */
 function edd_count_purchases_of_customer( $user = null ) {
@@ -307,7 +307,7 @@ function edd_count_purchases_of_customer( $user = null ) {
  *
  * @access      public
  * @since       1.3
- * @param       $user mixed - ID or email
+ * @param       mixed $user - ID or email
  * @return      float - the total amount the user has spent
  */
 function edd_purchase_total_of_user( $user = null ) {
@@ -322,7 +322,7 @@ function edd_purchase_total_of_user( $user = null ) {
  *
  * @access      public
  * @since       1.3
- * @param       $user mixed - ID or email
+ * @param       mixed $user - ID or email
  * @return      int - The total number of files the user has downloaded
  */
 function edd_count_file_downloads_of_user( $user ) {
@@ -389,7 +389,7 @@ add_action( 'user_register', 'edd_connect_existing_customer_to_new_user', 10, 1 
  *
  * @access      public
  * @since       1.6
- * @param       $user_id INT - the new user's ID
+ * @param       int $user_id - the new user's ID
  * @return      void
  */
 function edd_add_past_purchases_to_new_user( $user_id ) {
