@@ -6,7 +6,7 @@
  * @subpackage  Classes/API
  * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       2.4
+ * @since       2.6
  */
 
 // Exit if accessed directly
@@ -19,20 +19,20 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @since  2.6
  */
-class EDD_API_V2 extends EDD_API {
+class EDD_API_V2 extends EDD_API_V1 {
 
 	/**
 	 * Process Get Products API Request
 	 *
 	 * @access public
-	 * @since 2.0
+	 * @since 2.6
 	 * @param array $args Query arguments
 	 * @return array $customers Multidimensional array of the products
 	 */
 	public function get_products( $args = array() ) {
 
 		$products = array();
-		$error = array();
+		$error    = array();
 
 		if ( empty( $args['product'] ) ) {
 
@@ -42,7 +42,7 @@ class EDD_API_V2 extends EDD_API {
 				'post_type'        => 'download',
 				'posts_per_page'   => $this->per_page(),
 				'suppress_filters' => true,
-				'paged'            => $this->get_paged()
+				'paged'            => $this->get_paged(),
 			);
 
 			if( ! empty( $args['s'] ) ) {
@@ -50,11 +50,76 @@ class EDD_API_V2 extends EDD_API {
 			}
 
 			if( ! empty( $args['category'] ) ) {
-				$query_args['download_category'] = $args['category'];
+				if ( strpos( $args['category'], ',' ) ) {
+					$args['category'] = explode( ',', $args['category'] );
+				}
+
+				if ( is_numeric( $args['category'] ) ) {
+					$query_args['tax_query'] = array(
+						array(
+							'taxonomy' => 'download_category',
+							'field'    => 'ID',
+							'terms'    => (int) $args['category']
+						),
+					);
+				} else if ( is_array( $args['category'] ) ) {
+
+					foreach ( $args['category'] as $category ) {
+
+
+						$field = is_numeric( $category ) ? 'ID': 'slug';
+
+						$query_args['tax_query'][] = array(
+							'taxonomy' => 'download_category',
+							'field'    => $field,
+							'terms'    => $category,
+						);
+
+					}
+
+				} else {
+					$query_args['download_category'] = $args['category'];
+				}
 			}
 
 			if( ! empty( $args['tag'] ) ) {
-				$query_args['download_tag'] = $args['tag'];
+				if ( strpos( $args['tag'], ',' ) ) {
+					$args['tag'] = explode( ',', $args['tag'] );
+				}
+
+				if ( is_numeric( $args['tag'] ) ) {
+					$query_args['tax_query'] = array(
+						array(
+							'taxonomy' => 'download_tag',
+							'field'    => 'ID',
+							'terms'    => (int) $args['tag']
+						),
+					);
+				} else if ( is_array( $args['tag'] ) ) {
+
+					foreach ( $args['tag'] as $tag ) {
+
+
+						$field = is_numeric( $tag ) ? 'ID': 'slug';
+
+						$query_args['tax_query'][] = array(
+							'taxonomy' => 'download_tag',
+							'field'    => $field,
+							'terms'    => $tag,
+						);
+
+					}
+
+				} else {
+					$query_args['download_tag'] = $args['tag'];
+				}
+			}
+
+			if ( ! empty( $query_args['tax_query'] ) ) {
+
+				$relation = ! empty( $args['term_relation'] ) ? sanitize_text_field( $args['term_relation'] ) : 'OR';
+				$query_args['tax_query']['relation'] = $relation;
+
 			}
 
 			$product_list = get_posts( $query_args );
