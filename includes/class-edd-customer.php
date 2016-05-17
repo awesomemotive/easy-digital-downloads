@@ -270,6 +270,51 @@ class EDD_Customer {
 		return $updated;
 	}
 
+	/**
+	 * Get the payment ids of the customer in an array.
+	 *
+	 * @since 2.6
+	 * @return array An array of payment IDs for the customer, or an empty array if none exist.
+	 */
+	public function get_payment_ids() {
+
+		$payment_ids = $this->payment_ids;
+
+		if ( ! empty( $payment_ids ) ) {
+			$payment_ids = array_map( 'absint', explode( ',', $payment_ids ) );
+		} else {
+			$payment_ids = array();
+		}
+
+		return $payment_ids;
+
+	}
+
+	/**
+	 * Get an array of EDD_Payment objects from the payment_ids attached to the customer
+	 *
+	 * @since  2.6
+	 * @param  array|string  $status A single status as a string or an array of statuses
+	 * @return array                 An array of EDD_Payment objects or an empty array
+	 */
+	public function get_payments( $status = array() ) {
+
+		$payment_ids = $this->get_payment_ids();
+
+		$payments = array();
+		foreach ( $payment_ids as $payment_id ) {
+
+			$payment = new EDD_Payment( $payment_id );
+			if ( empty( $status ) || ( is_array( $status ) && in_array( $payment->status, $status ) ) || $status == $payment->status ) {
+				$payments[] = new EDD_Payment( $payment_id );
+			}
+
+		}
+
+		return $payments;
+
+	}
+
 
 	/**
 	 * Attach payment to the customer then triggers increasing stats
