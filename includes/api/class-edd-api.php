@@ -196,6 +196,7 @@ class EDD_API {
 		$vars[] = 'product';
 		$vars[] = 'category';
 		$vars[] = 'tag';
+		$vars[] = 'term_relation';
 		$vars[] = 'number';
 		$vars[] = 'date';
 		$vars[] = 'startdate';
@@ -556,10 +557,11 @@ class EDD_API {
 			case 'products' :
 
 				$args = array(
-					'product'  => isset( $wp_query->query_vars['product'] )  ? absint( $wp_query->query_vars['product'] )                        : null,
-					'category' => isset( $wp_query->query_vars['category'] ) ? $this->sanitize_request_term( $wp_query->query_vars['category'] ) : null,
-					'tag'      => isset( $wp_query->query_vars['tag'] )      ? $this->sanitize_request_term( $wp_query->query_vars['tag'] )      : null,
-					's'        => isset( $wp_query->query_vars['s'] )        ? sanitize_text_field( $wp_query->query_vars['s'] )                 : null,
+					'product'       => isset( $wp_query->query_vars['product'] )       ? absint( $wp_query->query_vars['product'] )                             : null,
+					'category'      => isset( $wp_query->query_vars['category'] )      ? $this->sanitize_request_term( $wp_query->query_vars['category'] )      : null,
+					'tag'           => isset( $wp_query->query_vars['tag'] )           ? $this->sanitize_request_term( $wp_query->query_vars['tag'] )           : null,
+					'term_relation' => isset( $wp_query->query_vars['term_relation'] ) ? $this->sanitize_request_term( $wp_query->query_vars['term_relation'] ) : null,
+					's'             => isset( $wp_query->query_vars['s'] )             ? sanitize_text_field( $wp_query->query_vars['s'] )                      : null,
 				);
 
 				$data = $this->routes->get_products( $args );
