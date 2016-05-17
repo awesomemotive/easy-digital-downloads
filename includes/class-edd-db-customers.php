@@ -578,13 +578,4 @@ class EDD_DB_Customers extends EDD_DB  {
 		update_option( $this->table_name . '_db_version', $this->version );
 	}
 
-	/**
-	 * Check if the Customers table was ever installed
-	 *
-	 * @since  2.4
-	 * @return bool Returns if the customers table was installed and upgrade routine run
-	 */
-	public function installed() {
-		return $this->table_exists( $this->table_name );
-	}
 }
