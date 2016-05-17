@@ -197,7 +197,7 @@ class EDD_Session {
 	 *
 	 * @access public
 	 * @since 1.8
-	 * @param string $set Whether to set or destroy
+	 * @param bool $set Whether to set or destroy
 	 * @return void
 	 */
 	public function set_cart_cookie( $set = true ) {
@@ -230,7 +230,7 @@ class EDD_Session {
 	 * @access public
 	 * @since 1.9
 	 * @param int $exp Default expiration (1 hour)
-	 * @return int
+	 * @return int Cookie expiration time
 	 */
 	public function set_expiration_time( $exp ) {
 		return ( 30 * 60 * 24 );
