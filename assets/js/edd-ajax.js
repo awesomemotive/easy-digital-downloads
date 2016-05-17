@@ -348,7 +348,7 @@ jQuery(document).ready(function ($) {
 
 		$(this).val(edd_global_vars.purchase_loading);
 
-		$(this).attr( 'disabled', true );
+		$(this).prop( 'disabled', true );
 
 		$(this).after('<span class="edd-cart-ajax"><i class="edd-icon-spinner edd-icon-spin"></i></span>');
 
@@ -363,7 +363,7 @@ jQuery(document).ready(function ($) {
 				$('.edd_errors').remove();
 				$('.edd-error').hide();
 				$('#edd_purchase_submit').before(data);
-				$('#edd-purchase-button').attr( 'disabled', false );
+				$('#edd-purchase-button').prop( 'disabled', false );
 			}
 		});
 
