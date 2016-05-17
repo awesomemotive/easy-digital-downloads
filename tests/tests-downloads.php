@@ -189,7 +189,7 @@ class Tests_Downloads extends WP_UnitTestCase {
 
 	public function test_price_range() {
 		$range = edd_price_range( $this->_post->ID );
-		$expected = '<span class="edd_price_range_low">&#36;20.00</span><span class="edd_price_range_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_range_high">&#36;100.00</span>';
+		$expected = '<span class="edd_price edd_price_range_low" id="edd_price_low_' . $this->_post->ID . '">&#36;20.00</span><span class="edd_price_range_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price edd_price_range_high" id="edd_price_high_' . $this->_post->ID . '">&#36;100.00</span>';
 		$this->assertInternalType( 'string', $range );
 		$this->assertEquals( $expected, $range );
 	}

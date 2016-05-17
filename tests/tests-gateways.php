@@ -107,6 +107,7 @@ class Test_Gateways extends WP_UnitTestCase {
 	}
 
 	public function test_show_gateways() {
+		edd_empty_cart();
 		$this->assertFalse( edd_show_gateways() );
 	}
 
@@ -117,6 +118,9 @@ class Test_Gateways extends WP_UnitTestCase {
 	public function test_no_gateway_error() {
 
 		global $edd_options;
+
+		$download = EDD_Helper_Download::create_simple_download();
+		edd_add_to_cart( $download->ID );
 
 		$edd_options['gateways'] = array();
 

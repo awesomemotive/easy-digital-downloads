@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 function edd_process_batch_export_download() {
 
 	if( ! wp_verify_nonce( $_REQUEST['nonce'], 'edd-batch-export' ) ) {
-		wp_die( __( 'Nonce verification failed', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+		wp_die( __( 'Nonce verification failed', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export.php';
@@ -140,6 +140,31 @@ function edd_include_customers_batch_processer( $class ) {
 
 	if ( 'EDD_Batch_Customers_Export' === $class ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-customers.php';
+	}
+
+}
+
+/**
+ * Register the download products batch exporter
+ *
+ * @since  2.5
+ */
+function edd_register_downloads_batch_export() {
+	add_action( 'edd_batch_export_class_include', 'edd_include_downloads_batch_processer', 10, 1 );
+}
+add_action( 'edd_register_batch_exporter', 'edd_register_downloads_batch_export', 10 );
+
+/**
+ * Loads the file downloads batch process if needed
+ *
+ * @since  2.5
+ * @param  string $class The class being requested to run for the batch export
+ * @return void
+ */
+function edd_include_downloads_batch_processer( $class ) {
+
+	if ( 'EDD_Batch_Downloads_Export' === $class ) {
+		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-downloads.php';
 	}
 
 }

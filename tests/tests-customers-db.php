@@ -79,8 +79,6 @@ class Tests_Customers_DB extends WP_UnitTestCase {
 			)
 		);
 
-		$price = '100.00';
-
 		$total = 0;
 
 		$prices = get_post_meta($download_details[0]['id'], 'edd_variable_prices', true);
@@ -130,7 +128,7 @@ class Tests_Customers_DB extends WP_UnitTestCase {
 		parent::tearDown();
 	}
 
-	public function test_intalled() {
+	public function test_installed() {
 		$this->assertTrue( EDD()->customers->installed() );
 	}
 
@@ -174,31 +172,37 @@ class Tests_Customers_DB extends WP_UnitTestCase {
 	}
 
 	public function test_legacy_attach_payment() {
+		$payment_id = EDD_Helper_Payment::create_simple_payment();
 
-		$customer = new EDD_Customer( 'testadmin@domain.com' );
-		EDD()->customers->attach_payment( $customer->id, 999999 );
+		$customer   = new EDD_Customer( 'testadmin@domain.com' );
+		EDD()->customers->attach_payment( $customer->id, $payment_id );
 
 		$updated_customer = new EDD_Customer( 'testadmin@domain.com' );
 		$payment_ids = array_map( 'absint', explode( ',', $updated_customer->payment_ids ) );
 
-		$this->assertTrue( in_array( 999999, $payment_ids ) );
+		$this->assertTrue( in_array( $payment_id, $payment_ids ) );
+
+		EDD_Helper_Payment::delete_payment( $payment_id );
 
 	}
 
 	public function test_legacy_remove_payment() {
+		$payment_id = EDD_Helper_Payment::create_simple_payment();
 
 		$customer = new EDD_Customer( 'testadmin@domain.com' );
-		EDD()->customers->attach_payment( $customer->id, 91919191 );
+		EDD()->customers->attach_payment( $customer->id, $payment_id );
 
 		$updated_customer = new EDD_Customer( 'testadmin@domain.com' );
 		$payment_ids = array_map( 'absint', explode( ',', $updated_customer->payment_ids ) );
-		$this->assertTrue( in_array( 91919191, $payment_ids ) );
+		$this->assertTrue( in_array( $payment_id, $payment_ids ) );
 
-		EDD()->customers->remove_payment( $updated_customer->id, 91919191 );
+		EDD()->customers->remove_payment( $updated_customer->id, $payment_id );
 		$updated_customer = new EDD_Customer( 'testadmin@domain.com' );
 		$payment_ids = array_map( 'absint', explode( ',', $updated_customer->payment_ids ) );
 
-		$this->assertFalse( in_array( 91919191, $payment_ids ) );
+		$this->assertFalse( in_array( $payment_id, $payment_ids ) );
+
+		EDD_Helper_Payment::delete_payment( $payment_id );
 
 	}
 

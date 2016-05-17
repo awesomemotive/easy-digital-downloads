@@ -22,13 +22,13 @@ function edd_get_payment_gateways() {
 	// Default, built-in gateways
 	$gateways = array(
 		'paypal' => array(
-			'admin_label'    => __( 'PayPal Standard', 'edd' ),
-			'checkout_label' => __( 'PayPal', 'edd' ),
+			'admin_label'    => __( 'PayPal Standard', 'easy-digital-downloads' ),
+			'checkout_label' => __( 'PayPal', 'easy-digital-downloads' ),
 			'supports'       => array( 'buy_now' )
 		),
 		'manual' => array(
-			'admin_label'    => __( 'Test Payment', 'edd' ),
-			'checkout_label' => __( 'Test Payment', 'edd' )
+			'admin_label'    => __( 'Test Payment', 'easy-digital-downloads' ),
+			'checkout_label' => __( 'Test Payment', 'easy-digital-downloads' )
 		),
 	);
 
@@ -117,7 +117,7 @@ function edd_get_gateway_admin_label( $gateway ) {
 
 	if( $gateway == 'manual' && $payment ) {
 		if( edd_get_payment_amount( $payment ) == 0 ) {
-			$label = __( 'Free Purchase', 'edd' );
+			$label = __( 'Free Purchase', 'easy-digital-downloads' );
 		}
 	}
 
@@ -136,7 +136,7 @@ function edd_get_gateway_checkout_label( $gateway ) {
 	$label    = isset( $gateways[ $gateway ] ) ? $gateways[ $gateway ]['checkout_label'] : $gateway;
 
 	if( $gateway == 'manual' ) {
-		$label = __( 'Free Purchase', 'edd' );
+		$label = __( 'Free Purchase', 'easy-digital-downloads' );
 	}
 
 	return apply_filters( 'edd_gateway_checkout_label', $label, $gateway );
@@ -218,7 +218,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 
 		// Make sure a valid price ID was supplied
 		if( ! isset( $prices[ $price_id ] ) ) {
-			wp_die( __( 'The requested price ID does not exist.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 404 ) );
+			wp_die( __( 'The requested price ID does not exist.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 404 ) );
 		}
 
 		$price_options = array(
@@ -255,8 +255,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 	);
 
 	if( is_user_logged_in() ) {
-		global $current_user;
-		get_currentuserinfo();
+		$current_user = wp_get_current_user();
 	}
 
 
@@ -280,7 +279,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 		'price'        => $price * $quantity,
 		'purchase_key' => strtolower( md5( uniqid() ) ),
 		'user_email'   => $user_info['email'],
-		'date'         => date( 'Y-m-d H:i:s' ),
+		'date'         => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
 		'user_info'    => $user_info,
 		'post_data'    => array(),
 		'cart_details' => $cart_details,

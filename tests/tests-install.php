@@ -36,14 +36,14 @@ class Tests_Activation extends WP_UnitTestCase {
 
 		global $edd_options;
 
-		$origin_edd_options		= $edd_options;
-		$origin_upgraded_from 	= get_option( 'edd_version_upgraded_from' );
-		$origin_edd_version		= get_option( 'edd_version' );
+		$origin_edd_options   = $edd_options;
+		$origin_upgraded_from = get_option( 'edd_version_upgraded_from' );
+		$origin_edd_version   = get_option( 'edd_version' );
 
 		// Prepare values for testing
+		delete_option( 'edd_settings' ); // Needed for the install test to succeed
 		update_option( 'edd_version', '2.1' );
 		$edd_options = array();
-
 
 		edd_install();
 

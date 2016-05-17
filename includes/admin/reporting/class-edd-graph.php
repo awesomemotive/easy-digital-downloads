@@ -206,7 +206,7 @@ class EDD_Graph {
 						xaxis: {
 							mode: "<?php echo $this->options['x_mode']; ?>",
 							timeFormat: "<?php echo $this->options['x_mode'] == 'time' ? $this->options['time_format'] : ''; ?>",
-							tickSize: "<?php echo $this->options['x_mode'] == 'time' ? '' : 1; ?>",
+							tickSize: "<?php echo $this->options['x_mode'] == 'time' ? '' : $this->options['ticksize_num']; ?>",
 							<?php if( $this->options['x_mode'] != 'time' ) : ?>
 							tickDecimals: <?php echo $this->options['x_decimals']; ?>
 							<?php endif; ?>
