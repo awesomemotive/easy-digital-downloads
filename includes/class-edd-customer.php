@@ -281,7 +281,7 @@ class EDD_Customer {
 		$payment_ids = $this->payment_ids;
 
 		if ( ! empty( $payment_ids ) ) {
-			$payment_ids = explode( ',', $payment_ids );
+			$payment_ids = array_map( 'absint', explode( ',', $payment_ids ) );
 		} else {
 			$payment_ids = array();
 		}
@@ -304,7 +304,7 @@ class EDD_Customer {
 		$payments = array();
 		foreach ( $payment_ids as $payment_id ) {
 
-			$payment    = new EDD_Payment( $payment_id );
+			$payment = new EDD_Payment( $payment_id );
 			if ( empty( $status ) || ( is_array( $status ) && in_array( $payment->status, $status ) ) || $status == $payment->status ) {
 				$payments[] = new EDD_Payment( $payment_id );
 			}
