@@ -176,7 +176,7 @@ function edd_login_form_shortcode( $atts, $content = null ) {
 	if ( ! empty( $purchase_history ) ) {
 		$redirect = get_permalink( $purchase_history );
 	}
-	
+
 	extract( shortcode_atts( array(
 			'redirect' => $redirect
 		), $atts, 'edd_login' )
@@ -336,6 +336,10 @@ function edd_downloads_query( $atts, $content = null ) {
 		$query['nopaging'] = true;
 	}
 
+	if( 'random' == $atts['orderby'] ) {
+		$atts['pagination'] = false;
+	}
+
 	switch ( $atts['orderby'] ) {
 		case 'price':
 			$atts['orderby']   = 'meta_value';
@@ -376,7 +380,10 @@ function edd_downloads_query( $atts, $content = null ) {
 
 			foreach( $tag_list as $tag ) {
 
-				if( is_numeric( $tag ) ) {
+				$t_id  = (int) $tag;
+				$is_id = is_int( $t_id ) && ! empty( $t_id );
+
+				if( $is_id ) {
 
 					$term_id = $tag;
 
@@ -406,7 +413,10 @@ function edd_downloads_query( $atts, $content = null ) {
 
 			foreach( $categories as $category ) {
 
-				if( is_numeric( $category ) ) {
+				$t_id  = (int) $category;
+				$is_id = is_int( $t_id ) && ! empty( $t_id );
+
+				if( $is_id ) {
 
 					$term_id = $category;
 
@@ -438,7 +448,10 @@ function edd_downloads_query( $atts, $content = null ) {
 
 			foreach( $categories as $category ) {
 
-				if( is_numeric( $category ) ) {
+				$t_id  = (int) $category;
+				$is_id = is_int( $t_id ) && ! empty( $t_id );
+
+				if( $is_id ) {
 
 					$term_id = $category;
 
@@ -469,8 +482,11 @@ function edd_downloads_query( $atts, $content = null ) {
 
 			foreach( $tag_list as $tag ) {
 
-				if( is_numeric( $tag ) ) {
+				$t_id  = (int) $tag;
+				$is_id = is_int( $t_id ) && ! empty( $t_id );
 
+				if( $is_id ) {
+				
 					$term_id = $tag;
 
 				} else {
