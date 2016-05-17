@@ -139,24 +139,26 @@ function wp_session_cleanup() {
 		$expired_sessions = array();
 
 		foreach( $expiration_keys as $expiration ) {
+
 			// If the session has expired
 			if ( $now > intval( $expiration->option_value ) ) {
+
 				// Get the session ID by parsing the option_name
 				$session_id = substr( $expiration->option_name, 20 );
 
-				if( (int) -1 === (int) $session_id ) {
+				if( (int) -1 === (int) $session_id || ! preg_match( '/^[a-f0-9]{32}$/', $session_id ) ) {
 					continue;
 				}
 
 				$expired_sessions[] = $expiration->option_name;
-				$expired_sessions[] = "_wp_session_$session_id";
+				$expired_sessions[] = esc_sql( "_wp_session_$session_id" );
 			}
 		}
 
 		// Delete all expired sessions in a single query
 		if ( ! empty( $expired_sessions ) ) {
 			$option_names = implode( "','", $expired_sessions );
-			$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name IN ('$option_names')" );
+			$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name IN ('$option_names')"  );
 		}
 	}
 

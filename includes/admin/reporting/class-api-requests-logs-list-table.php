@@ -44,9 +44,9 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 
 		// Set parent defaults
 		parent::__construct( array(
-			'singular'  => edd_get_label_singular(),    // Singular name of the listed records
-			'plural'    => edd_get_label_plural(),    	// Plural name of the listed records
-			'ajax'      => false             			// Does this table support ajax?
+			'singular' => edd_get_label_singular(),
+			'plural'   => edd_get_label_plural(),
+			'ajax'     => false,
 		) );
 	}
 
@@ -86,15 +86,27 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'ID'         => __( 'Log ID', 'edd' ),
-			'details'    => __( 'Request Details', 'edd' ),
-			'version'    => __( 'API Version', 'edd' ),
-			'ip'         => __( 'Request IP', 'edd' ),
-			'speed'      => __( 'Request Speed', 'edd' ),
-			'date'       => __( 'Date', 'edd' )
+			'ID'      => __( 'Log ID', 'easy-digital-downloads' ),
+			'details' => __( 'Request Details', 'easy-digital-downloads' ),
+			'version' => __( 'API Version', 'easy-digital-downloads' ),
+			'ip'      => __( 'Request IP', 'easy-digital-downloads' ),
+			'speed'   => __( 'Request Speed', 'easy-digital-downloads' ),
+			'date'    => __( 'Date', 'easy-digital-downloads' ),
 		);
 
 		return $columns;
+	}
+
+	/**
+	 * Gets the name of the primary column.
+	 *
+	 * @since 2.5
+	 * @access protected
+	 *
+	 * @return string Name of the primary column.
+	 */
+	protected function get_primary_column_name() {
+		return 'ID';
 	}
 
 	/**
@@ -122,23 +134,23 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	 */
 	public function column_details( $item ) {
 	?>
-		<a href="#TB_inline?width=640&amp;inlineId=log-details-<?php echo $item['ID']; ?>" class="thickbox" title="<?php _e( 'View Request Details', 'edd' ); ?> "><?php _e( 'View Request', 'edd' ); ?></a>
+		<a href="#TB_inline?width=640&amp;inlineId=log-details-<?php echo $item['ID']; ?>" class="thickbox"><?php _e( 'View Request', 'easy-digital-downloads' ); ?></a>
 		<div id="log-details-<?php echo $item['ID']; ?>" style="display:none;">
 			<?php
 
 			$request = get_post_field( 'post_excerpt', $item['ID'] );
 			$error   = get_post_field( 'post_content', $item['ID'] );
-			echo '<p><strong>' . __( 'API Request:', 'edd' ) . '</strong></p>';
+			echo '<p><strong>' . __( 'API Request:', 'easy-digital-downloads' ) . '</strong></p>';
 			echo '<div>' . $request . '</div>';
 			if( ! empty( $error ) ) {
-				echo '<p><strong>' . __( 'Error', 'edd' ) . '</strong></p>';
+				echo '<p><strong>' . __( 'Error', 'easy-digital-downloads' ) . '</strong></p>';
 				echo '<div>' . esc_html( $error ) . '</div>';
 			}
-			echo '<p><strong>' . __( 'API User:', 'edd' ) . '</strong></p>';
+			echo '<p><strong>' . __( 'API User:', 'easy-digital-downloads' ) . '</strong></p>';
 			echo '<div>' . get_post_meta( $item['ID'], '_edd_log_user', true ) . '</div>';
-			echo '<p><strong>' . __( 'API Key:', 'edd' ) . '</strong></p>';
+			echo '<p><strong>' . __( 'API Key:', 'easy-digital-downloads' ) . '</strong></p>';
 			echo '<div>' . get_post_meta( $item['ID'], '_edd_log_key', true ) . '</div>';
-			echo '<p><strong>' . __( 'Request Date:', 'edd' ) . '</strong></p>';
+			echo '<p><strong>' . __( 'Request Date:', 'easy-digital-downloads' ) . '</strong></p>';
 			echo '<div>' . get_post_field( 'post_date', $item['ID'] ) . '</div>';
 			?>
 		</div>
@@ -205,7 +217,7 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 			$meta_query[] = array(
 				'key'     => $key,
 				'value'   => $search,
-				'compare' => '='
+				'compare' => '=',
 			);
 		}
 
@@ -249,9 +261,9 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 		$logs_data = array();
 		$paged     = $this->get_paged();
 		$log_query = array(
-			'log_type'    => 'api_request',
-			'paged'       => $paged,
-			'meta_query'  => $this->get_meta_query()
+			'log_type'   => 'api_request',
+			'paged'      => $paged,
+			'meta_query' => $this->get_meta_query(),
 		);
 
 		$logs = $edd_logs->get_connected_logs( $log_query );
@@ -264,7 +276,7 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 					'version' => get_post_meta( $log->ID, '_edd_log_version', true ),
 					'speed'   => get_post_meta( $log->ID, '_edd_log_time', true ),
 					'ip'      => get_post_meta( $log->ID, '_edd_log_request_ip', true ),
-					'date'    => $log->post_date
+					'date'    => $log->post_date,
 				);
 			}
 		}
@@ -296,10 +308,21 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 		$total_items           = $edd_logs->get_log_count( 0, 'api_requests' );
 
 		$this->set_pagination_args( array(
-				'total_items'  => $total_items,
-				'per_page'     => $this->per_page,
-				'total_pages'  => ceil( $total_items / $this->per_page )
+				'total_items' => $total_items,
+				'per_page'    => $this->per_page,
+				'total_pages' => ceil( $total_items / $this->per_page ),
 			)
 		);
+	}
+
+	/**
+	 * Since our "bulk actions" are navigational, we want them to always show, not just when there's items
+	 *
+	 * @access public
+	 * @since 2.5
+	 * @return bool
+	 */
+	public function has_items() {
+		return true;
 	}
 }

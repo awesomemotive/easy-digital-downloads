@@ -40,11 +40,11 @@ class EDD_Fees {
 	 * @uses EDD_Fees::get_fees()
 	 * @uses EDD_Session::set()
 	 *
-	 * @return mixed
+	 * @return array The fees.
 	 */
 	public function add_fee( $args = array() ) {
 
-		// Backwards compatabliity with pre 2.0
+		// Backwards compatibility with pre 2.0
 		if ( func_num_args() > 1 ) {
 
 			$args   = func_get_args();
@@ -97,7 +97,10 @@ class EDD_Fees {
 		$args['amount'] = edd_sanitize_amount( $args['amount'] );
 
 		// Set the fee
-		$fees[ $key ] = $args;
+		$fees[ $key ] = apply_filters( 'edd_fees_add_fee', $args, $this );
+
+		// Allow 3rd parties to process the fees before storing them in the session
+		$fees = apply_filters( 'edd_fees_set_fees', $fees, $this );
 
 		// Update fees
 		EDD()->session->set( 'edd_cart_fees', $fees );
@@ -113,7 +116,7 @@ class EDD_Fees {
 	 * @param string $id Fee ID
 	 * @uses EDD_Fees::get_fees()
 	 * @uses EDD_Session::set()
-	 * @return array $fees
+	 * @return array Remaining fees
 	 */
 	public function remove_fee( $id = '' ) {
 
@@ -134,12 +137,11 @@ class EDD_Fees {
 	 * @since 1.5
 	 * @param string $type Fee type, "fee" or "item"
 	 * @uses EDD_Fees::get_fees()
-	 * @return bool
+	 * @return bool True if there are fees, false otherwise
 	 */
 	public function has_fees( $type = 'fee' ) {
 
 		if( 'all' == $type || 'fee' == $type ) {
-
 			if( ! edd_get_cart_contents() ) {
 				$type = 'item';
 			}
@@ -158,7 +160,7 @@ class EDD_Fees {
 	 * @param string $type Fee type, "fee" or "item"
 	 * @param int $download_id The download ID whose fees to retrieve
 	 * @uses EDD_Session::get()
-	 * @return mixed array|bool
+	 * @return array|bool List of fees when available, false when there are no fees
 	 */
 	public function get_fees( $type = 'fee', $download_id = 0 ) {
 
@@ -217,7 +219,8 @@ class EDD_Fees {
 
 		}
 
-		return ! empty( $fees ) ? $fees : array();
+		// Allow 3rd parties to process the fees before returning them
+		return apply_filters( 'edd_fees_get_fees', ! empty( $fees ) ? $fees : array(), $this );
 	}
 
 	/**
@@ -225,8 +228,8 @@ class EDD_Fees {
 	 *
 	 * @since 1.5
 	 *
-	 * @param string $id
-	 * @return bool
+	 * @param string $id ID of the fee to get
+	 * @return array|bool The fee array when available, false otherwise
 	 */
 	public function get_fee( $id = '' ) {
 		$fees = $this->get_fees( 'all' );
@@ -247,7 +250,7 @@ class EDD_Fees {
 	 * @param string $type Fee type, "fee" or "item"
 	 * @uses EDD_Fees::get_fees()
 	 * @uses EDD_Fees::has_fees()
-	 * @return float $total Total fee amount
+	 * @return float Total fee amount
 	 */
 	public function type_total( $type = 'fee' ) {
 		$fees  = $this->get_fees( $type );
@@ -272,7 +275,7 @@ class EDD_Fees {
 	 * @uses EDD_Fees::get_fees()
 	 * @uses EDD_Fees::has_fees()
 	 * @param int $download_id The download ID whose fees to retrieve
-	 * @return float $total Total fee amount
+	 * @return float Total fee amount
 	 */
 	public function total( $download_id = 0 ) {
 		$fees  = $this->get_fees( 'all', $download_id );
@@ -295,7 +298,7 @@ class EDD_Fees {
 	 * @uses EDD_Session::set()
 	 * @param array $payment_meta The meta data to store with the payment
 	 * @param array $payment_data The info sent from process-purchase.php
-	 * @return array $payment_meta Return the payment meta with the fees added
+	 * @return array Return the payment meta with the fees added
 	*/
 	public function record_fees( $payment_meta, $payment_data ) {
 		if ( $this->has_fees( 'all' ) ) {
