@@ -307,7 +307,7 @@ function edd_get_registered_settings() {
 						'name' => __( 'Allow Usage Tracking?', 'easy-digital-downloads' ),
 						'desc' => sprintf(
 							__( 'Allow Easy Digital Downloads to anonymously track how this plugin is used and help us make the plugin better. Opt-in to tracking and our newsletter and immediately be emailed a 20&#37; discount to the EDD shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'easy-digital-downloads' ),
-							'https://easydigitaldownloads.com/extensions?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking'
+							'https://easydigitaldownloads.com/downloads/?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking'
 						),
 						'type' => 'checkbox',
 					),
@@ -908,28 +908,21 @@ function edd_settings_sanitize( $input = array() ) {
 
 	$input = $input ? $input : array();
 
+	// Run a general sanitization for the tab for special fields (like taxes)
+	$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
+
+	// Run a general sanitization for the section so custom tabs with sub-sections can save special data
 	$input = apply_filters( 'edd_settings_' . $tab . '-' . $section . '_sanitize', $input );
-	if ( 'main' === $section )  {
+
+	if ( 'main' === $section && empty( $settings[ $tab ]['main'] ) )  {
 		// Check for extensions that aren't using new sections
 		$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
 
 		$settings[ $tab ]['main'] = array();
-
-		// Since main doesn't have a section, let's create it and setup the keys here for further sanitization
 		foreach ( $settings[ $tab ] as $key => $setting ) {
-			// If the key is numeric, we've got a legacy setting, and not a subsection
 			if ( is_int( $key ) ) {
-				$settings[ $tab ]['main'][ $setting['id'] ] = $setting;
-				unset( $settings[ $tab ][ $key ] );
-			}
-		}
-	} else {
-		// We need our key/values to have IDs not numerical keys
-		foreach ( $settings[ $tab ][ $section ] as $key => $setting ) {
-			// If the key is numeric, update it to match the expected name coming from the front end inputs
-			if ( is_int( $key ) ) {
-				$settings[ $tab ][ $section ][ $setting['id'] ] = $setting;
-				unset( $settings[ $tab ][ $section ][ $key ] );
+				$settings[ $tab ]['main'][ $setting[ 'id' ] ] = $setting;
+				unset( $settings[ $tab ][ $key ]);
 			}
 		}
 	}
@@ -950,10 +943,10 @@ function edd_settings_sanitize( $input = array() ) {
 	}
 
 	// Loop through the whitelist and unset any that are empty for the tab being saved
-	$main_settings    = $section == 'main' ? $settings[ $tab ] : array(); // Check for extensions that aren't using new sections
+	$main_settings    = $section == 'main' ? $settings[ $tab ]['main'] : array(); // Check for extensions that aren't using new sections
 	$section_settings = ! empty( $settings[ $tab ][ $section ] ) ? $settings[ $tab ][ $section ] : array();
 
-	$found_settings = array_merge( $main_settings, $section_settings );
+	$found_settings   = array_merge( $main_settings, $section_settings );
 
 	if ( ! empty( $found_settings ) ) {
 		foreach ( $found_settings as $key => $value ) {
@@ -1932,11 +1925,23 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 					case 'expired' :
 
-						$class = 'error';
+						$class = 'expired';
 						$messages[] = sprintf(
 							__( 'Your license key expired on %s. Please <a href="%s" target="_blank">renew your license key</a>.', 'easy-digital-downloads' ),
 							date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
 							'https://easydigitaldownloads.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
+						);
+
+						$license_status = 'license-' . $class . '-notice';
+
+						break;
+
+					case 'revoked' :
+
+						$class = 'error';
+						$messages[] = sprintf(
+							__( 'Your license key has been disabled. Please <a href="%s" target="_blank">contact support</a> for more information.', 'easy-digital-downloads' ),
+							'https://easydigitaldownloads.com/support?utm_campaign=admin&utm_source=licenses&utm_medium=revoked'
 						);
 
 						$license_status = 'license-' . $class . '-notice';
@@ -1972,7 +1977,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 					case 'item_name_mismatch' :
 
 						$class = 'error';
-						$messages[] = sprintf( __( 'This is not a %s.', 'easy-digital-downloads' ), $args['name'] );
+						$messages[] = sprintf( __( 'This appears to be an invalid license key for %s.', 'easy-digital-downloads' ), $args['name'] );
 
 						$license_status = 'license-' . $class . '-notice';
 
@@ -1987,6 +1992,10 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 						break;
 
+					default :
+
+						$messages[] = print_r( $license, true );
+						break;
 				}
 
 			} else {
@@ -2035,6 +2044,13 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 			}
 
 		} else {
+			$class = 'empty';
+
+			$messages[] = sprintf(
+				__( 'To receive updates, please enter your valid %s license key.', 'easy-digital-downloads' ),
+				$args['name']
+			);
+
 			$license_status = null;
 		}
 
@@ -2050,7 +2066,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 		if ( ! empty( $messages ) ) {
 			foreach( $messages as $message ) {
 
-				$html .= '<div class="edd-license-data edd-license-' . $class . '">';
+				$html .= '<div class="edd-license-data edd-license-' . $class . ' ' . $license_status . '">';
 					$html .= '<p>' . $message . '</p>';
 				$html .= '</div>';
 
@@ -2059,11 +2075,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 		wp_nonce_field( edd_sanitize_key( $args['id'] ) . '-nonce', edd_sanitize_key( $args['id'] ) . '-nonce' );
 
-		if ( isset( $license_status ) ) {
-			echo '<div class="' . $license_status . '">' . $html . '</div>';
-		} else {
-			echo '<div class="license-null">' . $html . '</div>';
-		}
+		echo $html;
 	}
 }
 

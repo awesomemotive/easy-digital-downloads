@@ -132,7 +132,7 @@ function edd_is_free_download( $download_id = 0, $price_id = false ) {
  *
  * @since 1.0
  * @param int $download_id ID number of the download to retrieve a price for
- * @return mixed string|int Price of the download
+ * @return mixed|string|int Price of the download
  */
 function edd_get_download_price( $download_id = 0 ) {
 
@@ -312,7 +312,7 @@ function edd_get_price_option_name( $download_id = 0, $price_id = 0, $payment_id
  * @since 1.8.2
  * @param int $download_id ID of the download
  * @param int $price_id ID of the price option
- * @param int @payment_id ID of the payment
+ * @param int $payment_id ID of the payment
  * @return float $amount Amount of the price option
  */
 function edd_get_price_option_amount( $download_id = 0, $price_id = 0 ) {
@@ -787,8 +787,10 @@ function edd_get_download_files( $download_id = 0, $variable_price_id = null ) {
  * @return string The file name
  */
 function edd_get_file_name( $file = array() ) {
-	if( empty( $file ) || ! is_array( $file ) )
+	if( empty( $file ) || ! is_array( $file ) ) {
 		return false;
+	}
+
 	$name = ! empty( $file['name'] ) ? esc_html( $file['name'] ) : basename( $file['file'] );
 
 	return $name;

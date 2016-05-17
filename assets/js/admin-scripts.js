@@ -91,6 +91,7 @@ jQuery(document).ready(function ($) {
 					placeholder_text_multiple: edd_vars.one_or_more_option,
 				});
 				clone.find( '.edd-select-chosen' ).css( 'width', '100%' );
+				clone.find( '.edd-select-chosen .chosen-search input' ).attr( 'placeholder', edd_vars.search_placeholder );
 			});
 		},
 
@@ -417,7 +418,7 @@ jQuery(document).ready(function ($) {
 						currently_removed  = {};
 					}
 
-					var removed_item       = [ { 'id': download_id, 'price_id': price_id, 'quantity': quantity, 'amount': amount } ];
+					var removed_item       = [ { 'id': download_id, 'price_id': price_id, 'quantity': quantity, 'amount': amount, 'cart_index': key } ];
 					currently_removed[key] = removed_item
 
 					$('input[name="edd-payment-removed"]').val(JSON.stringify(currently_removed));
@@ -1135,6 +1136,8 @@ jQuery(document).ready(function ($) {
 		placeholder_text_single: edd_vars.one_option,
 		placeholder_text_multiple: edd_vars.one_or_more_option,
 	});
+
+	$('.edd-select-chosen .chosen-search input' ).attr( 'placeholder', edd_vars.search_placeholder );
 
 	// Add placeholders for Chosen input fields
 	$( '.chosen-choices' ).on( 'click', function () {

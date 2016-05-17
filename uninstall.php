@@ -85,6 +85,7 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 
 	// Remove all database tables
 	$wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "edd_customers" );
+	$wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "edd_customermeta" );
 
 	/** Cleanup Cron Events */
 	wp_clear_scheduled_hook( 'edd_daily_scheduled_events' );
@@ -92,6 +93,6 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 	wp_clear_scheduled_hook( 'edd_weekly_cron' );
 
 	// Remove any transients we've left behind
-	$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE '_transient_edd_%'" );
-	$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE '_transient_timeout_edd_%'" );
+	$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE '\_transient\_edd\_%'" );
+	$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE '\_transient\_timeout\_edd\_%'" );
 }
