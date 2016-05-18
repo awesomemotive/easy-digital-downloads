@@ -624,6 +624,8 @@ class Test_Misc extends WP_UnitTestCase {
 		$customer_array  = edd_object_to_array( $customer_object );
 		$this->assertInternalType( 'array', $customer_array );
 		$this->assertEquals( $customer_object->id, $customer_array['id'] );
+		$this->assertEquals( $customer_object->email, $customer_array['email'] );
+		$this->assertEquals( $customer_object->purchase_count, $customer_array['purchase_count'] );
 
 		// Negative tests (no alterations should occur)
 		$this->assertEquals( 'string', edd_object_to_array( 'string' ) );
