@@ -895,7 +895,7 @@ class EDD_API {
 	 */
 	public function get_customers( $customer = null ) {
 
-		$customer  = is_array( $customer ) && ! empty( $customer['customer'] ) ? $customer['customer'] : $customer;
+		$customer  = is_array( $customer ) ? $customer['customer'] : $customer;
 		$customers = array();
 		$error     = array();
 
