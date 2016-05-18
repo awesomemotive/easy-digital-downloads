@@ -24,18 +24,46 @@ class Tests_Fee extends WP_UnitTestCase {
 				'label' => 'Shipping Fee',
 				'type'  => 'fee',
 				'no_tax' => false,
-			'download_id' => 0
+				'download_id' => 0,
+				'price_id'    => NULL
 			),
-			'item_fee' => array(
+			'shipping_fee_with_variable_price_id' => array(
+				'amount' => '10.00',
+				'label' => 'Shipping Fee (Small)',
+				'type'  => 'fee',
+				'no_tax' => false,
+				'download_id' => $this->_post->ID,
+				'price_id'    => 1
+			),
+			'arbitrary_fee' => array(
 				'amount' => '20.00',
 				'label' => 'Arbitrary Item',
 				'type' => 'item',
 				'no_tax' => false
 			)
 		);
-
+		
+		//This is not using the $args array because it's for backwards compatibility.
 		EDD()->fees->add_fee( 10, 'Shipping Fee', 'shipping_fee' );
-		EDD()->fees->add_fee( array( 'amount' => '20.00', 'label' => 'Arbitrary Item', 'download_id' => $this->_post->ID, 'id' => 'item_fee', 'type' => 'item' ) );
+		
+		//Test with variable price id attached to a fee.
+		EDD()->fees->add_fee( array( 
+			'amount' => '10.00', 
+			'label' => 'Shipping Fee (Small)', 
+			'download_id' => $this->_post->ID, 
+			'price_id' => 1, 
+			'id' => 'shipping_fee_with_variable_price_id', 
+			'type' => 'fee' 
+		) );
+		
+		//Arbitrary fee test.
+		EDD()->fees->add_fee( array( 
+			'amount' => '20.00', 
+			'label' => 'Arbitrary Item', 
+			'download_id' => $this->_post->ID, 
+			'id' => 'arbitrary_fee', 
+			'type' => 'item' 
+		) );
 
 		$this->assertEquals( $expected, EDD()->fees->get_fees( 'all' ) );
 	}
