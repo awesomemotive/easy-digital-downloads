@@ -59,9 +59,9 @@ class EDD_Earnings_Export extends EDD_Export {
 	public function csv_cols() {
 
 		$cols = array(
-			'date'     => __( 'Date',   'edd' ),
-			'sales'    => __( 'Sales',   'edd' ),
-			'earnings' => __( 'Earnings', 'edd' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')'
+			'date'     => __( 'Date',   'easy-digital-downloads' ),
+			'sales'    => __( 'Sales',   'easy-digital-downloads' ),
+			'earnings' => __( 'Earnings', 'easy-digital-downloads' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')'
 		);
 
 		return $cols;

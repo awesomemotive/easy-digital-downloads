@@ -27,7 +27,9 @@ class Tests_EDD extends WP_UnitTestCase {
 
 		// Plugin Folder Path
 		$path = str_replace( 'tests/', '', plugin_dir_path( __FILE__ ) );
-		$this->assertSame( EDD_PLUGIN_DIR, $path );
+		$path = substr( $path, 0, -1 );
+		$edd  = substr( EDD_PLUGIN_DIR, 0, -1 );
+		$this->assertSame( $edd, $path );
 
 		// Plugin Root File
 		$path = str_replace( 'tests/', '', plugin_dir_path( __FILE__ ) );
@@ -147,7 +149,6 @@ class Tests_EDD extends WP_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/icons/mastercard.gif' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/icons/paypal.gif' );
         $this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/icons/visa.gif' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-badge.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-cpt-2x.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-cpt.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-icon-2x.png' );
