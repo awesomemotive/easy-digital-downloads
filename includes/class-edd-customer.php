@@ -171,7 +171,7 @@ class EDD_Customer {
 
 		} else {
 
-			return new WP_Error( 'edd-customer-invalid-property', sprintf( __( 'Can\'t get property %s', 'edd' ), $key ) );
+			return new WP_Error( 'edd-customer-invalid-property', sprintf( __( 'Can\'t get property %s', 'easy-digital-downloads' ), $key ) );
 
 		}
 
@@ -205,6 +205,11 @@ class EDD_Customer {
 			$args['payment_ids'] = implode( ',', array_unique( array_values( $args['payment_ids'] ) ) );
 		}
 
+		/**
+		 * Fires before a customer is created
+		 *
+		 * @param array $args Contains customer information such as payment ID, name, and email.
+		 */
 		do_action( 'edd_customer_pre_create', $args );
 
 		$created = false;
@@ -221,6 +226,12 @@ class EDD_Customer {
 			$created = $this->id;
 		}
 
+		/**
+		 * Fires after a customer is created
+		 *
+		 * @param int   $created If created successfully, the customer ID.  Defaults to false.
+		 * @param array $args Contains customer information such as payment ID, name, and email.
+		 */
 		do_action( 'edd_customer_post_create', $created, $args );
 
 		return $created;
@@ -259,6 +270,51 @@ class EDD_Customer {
 		return $updated;
 	}
 
+	/**
+	 * Get the payment ids of the customer in an array.
+	 *
+	 * @since 2.6
+	 * @return array An array of payment IDs for the customer, or an empty array if none exist.
+	 */
+	public function get_payment_ids() {
+
+		$payment_ids = $this->payment_ids;
+
+		if ( ! empty( $payment_ids ) ) {
+			$payment_ids = array_map( 'absint', explode( ',', $payment_ids ) );
+		} else {
+			$payment_ids = array();
+		}
+
+		return $payment_ids;
+
+	}
+
+	/**
+	 * Get an array of EDD_Payment objects from the payment_ids attached to the customer
+	 *
+	 * @since  2.6
+	 * @param  array|string  $status A single status as a string or an array of statuses
+	 * @return array                 An array of EDD_Payment objects or an empty array
+	 */
+	public function get_payments( $status = array() ) {
+
+		$payment_ids = $this->get_payment_ids();
+
+		$payments = array();
+		foreach ( $payment_ids as $payment_id ) {
+
+			$payment = new EDD_Payment( $payment_id );
+			if ( empty( $status ) || ( is_array( $status ) && in_array( $payment->status, $status ) ) || $status == $payment->status ) {
+				$payments[] = new EDD_Payment( $payment_id );
+			}
+
+		}
+
+		return $payments;
+
+	}
+
 
 	/**
 	 * Attach payment to the customer then triggers increasing stats
@@ -274,25 +330,27 @@ class EDD_Customer {
 			return false;
 		}
 
+		$payment = new EDD_Payment( $payment_id );
+
 		if( empty( $this->payment_ids ) ) {
 
-			$new_payment_ids = $payment_id;
+			$new_payment_ids = $payment->ID;
 
 		} else {
 
 			$payment_ids = array_map( 'absint', explode( ',', $this->payment_ids ) );
 
-			if ( in_array( $payment_id, $payment_ids ) ) {
+			if ( in_array( $payment->ID, $payment_ids ) ) {
 				$update_stats = false;
 			}
 
-			$payment_ids[] = $payment_id;
+			$payment_ids[] = $payment->ID;
 
 			$new_payment_ids = implode( ',', array_unique( array_values( $payment_ids ) ) );
 
 		}
 
-		do_action( 'edd_customer_pre_attach_payment', $payment_id, $this->id );
+		do_action( 'edd_customer_pre_attach_payment', $payment->ID, $this->id );
 
 		$payment_added = $this->update( array( 'payment_ids' => $new_payment_ids ) );
 
@@ -302,10 +360,9 @@ class EDD_Customer {
 
 			// We added this payment successfully, increment the stats
 			if ( $update_stats ) {
-				$payment_amount = edd_get_payment_amount( $payment_id );
 
-				if ( ! empty( $payment_amount ) ) {
-					$this->increase_value( $payment_amount );
+				if ( ! empty( $payment->total ) ) {
+					$this->increase_value( $payment->total );
 				}
 
 				$this->increase_purchase_count();
@@ -313,7 +370,7 @@ class EDD_Customer {
 
 		}
 
-		do_action( 'edd_customer_post_attach_payment', $payment_added, $payment_id, $this->id );
+		do_action( 'edd_customer_post_attach_payment', $payment_added, $payment->ID, $this->id );
 
 		return $payment_added;
 	}
@@ -333,25 +390,31 @@ class EDD_Customer {
 			return false;
 		}
 
+		$payment = new EDD_Payment( $payment_id );
+
+		if ( 'publish' !== $payment->status && 'revoked' !== $payment->status ) {
+			$update_stats = false;
+		}
+
 		$new_payment_ids = '';
 
 		if( ! empty( $this->payment_ids ) ) {
 
 			$payment_ids = array_map( 'absint', explode( ',', $this->payment_ids ) );
 
-			$pos = array_search( $payment_id, $payment_ids );
+			$pos = array_search( $payment->ID, $payment_ids );
 			if ( false === $pos ) {
 				return false;
 			}
 
-			unset( $payment_ids[$pos] );
+			unset( $payment_ids[ $pos ] );
 			$payment_ids = array_filter( $payment_ids );
 
 			$new_payment_ids = implode( ',', array_unique( array_values( $payment_ids ) ) );
 
 		}
 
-		do_action( 'edd_customer_pre_remove_payment', $payment_id, $this->id );
+		do_action( 'edd_customer_pre_remove_payment', $payment->ID, $this->id );
 
 		$payment_removed = $this->update( array( 'payment_ids' => $new_payment_ids ) );
 
@@ -361,10 +424,8 @@ class EDD_Customer {
 
 			if ( $update_stats ) {
 				// We removed this payment successfully, decrement the stats
-				$payment_amount = edd_get_payment_amount( $payment_id );
-
-				if ( ! empty( $payment_amount ) ) {
-					$this->decrease_value( $payment_amount );
+				if ( ! empty( $payment->total ) ) {
+					$this->decrease_value( $payment->total );
 				}
 
 				$this->decrease_purchase_count();
@@ -372,7 +433,7 @@ class EDD_Customer {
 
 		}
 
-		do_action( 'edd_customer_post_remove_payment', $payment_removed, $payment_id, $this->id );
+		do_action( 'edd_customer_post_remove_payment', $payment_removed, $payment->ID, $this->id );
 
 		return $payment_removed;
 
@@ -570,8 +631,66 @@ class EDD_Customer {
 
 		$all_notes = $this->db->get_column( 'notes', $this->id );
 
-		return $all_notes;
+		return (string) $all_notes;
 
+	}
+
+	/**
+	 * Retrieve customer meta field for a customer.
+	 *
+	 * @param   string $meta_key      The meta key to retrieve.
+	 * @param   bool   $single        Whether to return a single value.
+	 * @return  mixed                 Will be an array if $single is false. Will be value of meta data field if $single is true.
+	 *
+	 * @access  public
+	 * @since   2.6
+	 */
+	public function get_meta( $meta_key = '', $single = true ) {
+		return EDD()->customer_meta->get_meta( $this->id, $meta_key, $single );
+	}
+
+	/**
+	 * Add meta data field to a customer.
+	 *
+	 * @param   string $meta_key      Metadata name.
+	 * @param   mixed  $meta_value    Metadata value.
+	 * @param   bool   $unique        Optional, default is false. Whether the same key should not be added.
+	 * @return  bool                  False for failure. True for success.
+	 *
+	 * @access  public
+	 * @since   2.6
+	 */
+	public function add_meta( $meta_key = '', $meta_value, $unique = false ) {
+		return EDD()->customer_meta->add_meta( $this->id, $meta_key, $meta_value, $unique );
+	}
+
+	/**
+	 * Update customer meta field based on customer ID.
+	 *
+	 * @param   string $meta_key      Metadata key.
+	 * @param   mixed  $meta_value    Metadata value.
+	 * @param   mixed  $prev_value    Optional. Previous value to check before removing.
+	 * @return  bool                  False on failure, true if success.
+	 *
+	 * @access  public
+	 * @since   2.6
+	 */
+	public function update_meta( $meta_key = '', $meta_value, $prev_value = '' ) {
+		return EDD()->customer_meta->update_meta( $this->id, $meta_key, $meta_value, $prev_value );
+	}
+
+	/**
+	 * Remove metadata matching criteria from a customer.
+	 *
+	 * @param   string $meta_key      Metadata name.
+	 * @param   mixed  $meta_value    Optional. Metadata value.
+	 * @return  bool                  False for failure. True for success.
+	 *
+	 * @access  public
+	 * @since   2.6
+	 */
+	public function delete_meta( $meta_key = '', $meta_value = '' ) {
+		return EDD()->customer_meta->delete_meta( $this->id, $meta_key, $meta_value );
 	}
 
 	/**
