@@ -451,11 +451,11 @@ function edd_email_tag_download_list( $payment_id ) {
 						if ( $show_links ) {
 							$download_list .= '<div>';
 							$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $bundle_item, $price_id );
-							$download_list .= '<a href="' . esc_url( $file_url ) . '">' . $file['name'] . '</a>';
+							$download_list .= '<a href="' . esc_url( $file_url ) . '">' . edd_get_file_name( $file ) . '</a>';
 							$download_list .= '</div>';
 						} else {
 							$download_list .= '<div>';
-							$download_list .= $file['name'];
+							$download_list .= edd_get_file_name( $file );
 							$download_list .= '</div>';
 						}
 					}
@@ -559,9 +559,9 @@ function edd_email_tag_download_list_plain( $payment_id ) {
 					foreach ( $files as $filekey => $file ) {
 						if( $show_links ) {
 							$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $bundle_item, $price_id );
-							$download_list .= $file['name'] . ': ' . $file_url . "\n";
+							$download_list .= edd_get_file_name( $file ) . ': ' . $file_url . "\n";
 						} else {
-							$download_list .= $file['name'] . "\n";
+							$download_list .= edd_get_file_name( $file ) . "\n";
 						}
 					}
 				}
