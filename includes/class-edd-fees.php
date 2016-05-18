@@ -205,10 +205,10 @@ class EDD_Fees {
 
 		}
 		
-		//Now that we've removed any fees that are for other Downloads, lets also remove any fees that don't match this price id (or Variable Price)
-		if( ! empty( $fees ) && ! empty( $download_id ) && ( ! empty( $price_id ) || (int) $price_id === 0 ) ) {
+		// Now that we've removed any fees that are for other Downloads, lets also remove any fees that don't match this price id
+		if( ! empty( $fees ) && ! empty( $download_id ) && ! is_null( $price_id ) ) {
 		
-			// Remove fees that don't belong to the specified Download AND Price ID (Variable price)
+			// Remove fees that don't belong to the specified Download AND Price ID
 			foreach( $fees as $key => $fee ) {
 				
 				if ( (int) $price_id !== (int) $fee['price_id'] ){
