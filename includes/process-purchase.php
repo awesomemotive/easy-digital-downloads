@@ -46,6 +46,9 @@ function edd_process_purchase_form() {
 
 	// Validate the user
 	$user = edd_get_purchase_form_user( $valid_data );
+	
+	// Let extensions validate fields after user is logged in if user has used login/registration form
+	do_action( 'edd_checkout_user_error_checks', $user, $valid_data, $_POST );
 
 	if ( false === $valid_data || edd_get_errors() || ! $user ) {
 		if ( $is_ajax ) {
@@ -551,7 +554,7 @@ function edd_purchase_form_validate_user_login() {
 					'password_incorrect',
 					sprintf(
 						__( 'The password you entered is incorrect. %sReset Password%s', 'easy-digital-downloads' ),
-						'<a href="' . wp_lostpassword_url( edd_get_checkout_uri() ) . '" title="' . __( 'Lost Password', 'easy-digital-downloads' ) . '">',
+						'<a href="' . wp_lostpassword_url( edd_get_checkout_uri() ) . '">',
 						'</a>'
 					)
 				);

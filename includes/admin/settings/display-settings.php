@@ -59,7 +59,7 @@ function edd_options_page() {
 
 	ob_start();
 	?>
-	<div class="wrap">
+	<div class="wrap <?php echo 'wrap-' . $active_tab; ?>">
 		<h1 class="nav-tab-wrapper">
 			<?php
 			foreach( edd_get_settings_tabs() as $tab_id => $tab_name ) {
@@ -74,7 +74,7 @@ function edd_options_page() {
 
 				$active = $active_tab == $tab_id ? ' nav-tab-active' : '';
 
-				echo '<a href="' . esc_url( $tab_url ) . '" title="' . esc_attr( $tab_name ) . '" class="nav-tab' . $active . '">';
+				echo '<a href="' . esc_url( $tab_url ) . '" class="nav-tab' . $active . '">';
 					echo esc_html( $tab_name );
 				echo '</a>';
 			}

@@ -60,11 +60,17 @@ function edd_can_checkout() {
  * @since       1.6
  * @return      string
 */
-function edd_get_success_page_uri() {
+function edd_get_success_page_uri( $query_string = null ) {
 	$page_id = edd_get_option( 'success_page', 0 );
 	$page_id = absint( $page_id );
 
-	return apply_filters( 'edd_get_success_page_uri', get_permalink( $page_id ) );
+	$success_page = get_permalink( $page_id );
+
+	if ( $query_string ) {
+		$success_page .= $query_string;
+	}
+
+	return apply_filters( 'edd_get_success_page_uri', $success_page );
 }
 
 /**
@@ -164,26 +170,6 @@ function edd_send_back_to_checkout( $args = array() ) {
 
 	wp_redirect( apply_filters( 'edd_send_back_to_checkout', $redirect, $args ) );
 	edd_die();
-}
-
-/**
- * Get Success Page URL
- *
- * Gets the success page URL.
- *
- * @param string $query_string
- * @access      public
- * @since       1.0
- * @return      string
-*/
-function edd_get_success_page_url( $query_string = null ) {
-	$success_page = edd_get_option( 'success_page', 0 );
-	$success_page = get_permalink( $success_page );
-
-	if ( $query_string )
-		$success_page .= $query_string;
-
-	return apply_filters( 'edd_success_page_url', $success_page );
 }
 
 /**
