@@ -105,7 +105,6 @@ function edd_update_payment_details( $data ) {
 		}
 
 		$deleted_downloads = json_decode( stripcslashes( $data['edd-payment-removed'] ), true );
-
 		foreach ( $deleted_downloads as $deleted_download ) {
 			$deleted_download = $deleted_download[0];
 
@@ -113,12 +112,19 @@ function edd_update_payment_details( $data ) {
 				continue;
 			}
 
-			$price_id = empty( $deleted_download['price_id'] ) ? 0 : (int) $deleted_download['price_id'];
+			$price_id = false;
+
+			if ( edd_has_variable_prices( $deleted_download['id'] ) && isset( $deleted_download['price_id'] ) ) {
+				$price_id = absint( $deleted_download['price_id'] );
+			}
+
+			$cart_index = isset( $deleted_download['cart_index'] ) ? absint( $deleted_download['cart_index'] ) : false;
 
 			$args = array(
 				'quantity'   => (int) $deleted_download['quantity'],
-				'price_id'   => (int) $price_id,
+				'price_id'   => $price_id,
 				'item_price' => (float) $deleted_download['amount'],
+				'cart_index' => $cart_index
 			);
 
 			$payment->remove_download( $deleted_download['id'], $args );

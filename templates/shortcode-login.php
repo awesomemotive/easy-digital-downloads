@@ -13,7 +13,7 @@ if ( ! is_user_logged_in() ) :
 			<?php do_action( 'edd_login_fields_before' ); ?>
 			<p>
 				<label for="edd_user_login"><?php _e( 'Username', 'easy-digital-downloads' ); ?></label>
-				<input name="edd_user_login" id="edd_user_login" class="required edd-input" type="text" title="<?php _e( 'Username', 'easy-digital-downloads' ); ?>"/>
+				<input name="edd_user_login" id="edd_user_login" class="required edd-input" type="text"/>
 			</p>
 			<p>
 				<label for="edd_user_pass"><?php _e( 'Password', 'easy-digital-downloads' ); ?></label>
@@ -26,7 +26,7 @@ if ( ! is_user_logged_in() ) :
 				<input id="edd_login_submit" type="submit" class="edd_submit" value="<?php _e( 'Log In', 'easy-digital-downloads' ); ?>"/>
 			</p>
 			<p class="edd-lost-password">
-				<a href="<?php echo wp_lostpassword_url(); ?>" title="<?php _e( 'Lost Password', 'easy-digital-downloads' ); ?>">
+				<a href="<?php echo wp_lostpassword_url(); ?>">
 					<?php _e( 'Lost Password?', 'easy-digital-downloads' ); ?>
 				</a>
 			</p>
