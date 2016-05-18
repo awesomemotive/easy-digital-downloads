@@ -15,7 +15,7 @@ class Test_HTML_Elements extends WP_UnitTestCase {
 	}
 
 	public function test_product_dropdown() {
-		$expected = '<select name="products" id="products" class="edd-select " data-placeholder="Select a Download" data-search-type="download">';
+		$expected = '<select name="products" id="products" class="edd-select " data-placeholder="Choose a Download" data-search-type="download">';
 		$this->assertContains( $expected, EDD()->html->product_dropdown() );
 	}
 
