@@ -388,6 +388,7 @@ function edd_load_gateway( payment_mode ) {
 		function(response){
 			jQuery('#edd_purchase_form_wrap').html(response);
 			jQuery('.edd-no-js').hide();
+			jQuery('body').trigger('edd_gateway_loaded', [ payment_mode ]);
 		}
 	);
 

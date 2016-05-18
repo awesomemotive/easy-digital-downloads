@@ -111,7 +111,7 @@ function edd_get_payment_by( $field = '', $value = '' ) {
  * Insert Payment
  *
  * @since 1.0
- * @param array $payment_data
+ * @param array $payment_data Payment date to process
  * @return int|bool Payment ID if payment is inserted, false otherwise
  */
 function edd_insert_payment( $payment_data = array() ) {
@@ -362,7 +362,7 @@ function edd_undo_purchase( $download_id = false, $payment_id ) {
  * Returns the total number of payments recorded.
  *
  * @since 1.0
- * @param array $args
+ * @param array $args List of arguments to base the payments count on
  * @return array $count Number of payments sorted by payment status
  */
 function edd_count_payments( $args = array() ) {
@@ -576,12 +576,22 @@ function edd_check_for_existing_payment( $payment_id ) {
  *
  * @since 1.0
  *
- * @param WP_Post $payment
+ * @param mixed  WP_Post|EDD_Payment|Payment ID $payment Payment post object, EDD_Payment object, or payment/post ID
  * @param bool   $return_label Whether to return the payment status or not
  *
  * @return bool|mixed if payment status exists, false otherwise
  */
 function edd_get_payment_status( $payment, $return_label = false ) {
+
+	if( is_numeric( $payment ) ) {
+
+		$payment = new EDD_Payment( $payment );
+
+		if( ! $payment->ID > 0 ) {
+			return false;
+		}
+
+	}
 
 	if ( ! is_object( $payment ) || ! isset( $payment->post_status ) ) {
 		return false;
@@ -909,7 +919,7 @@ function edd_get_payment_meta( $payment_id = 0, $meta_key = '_edd_payment_meta',
  * Update the meta for a payment
  * @param  integer $payment_id Payment ID
  * @param  string  $meta_key   Meta key to update
- * @param  string  $meta_value Value to udpate to
+ * @param  string  $meta_value Value to update to
  * @param  string  $prev_value Previous value
  * @return mixed               Meta ID if successful, false if unsuccessful
  */
@@ -1019,7 +1029,7 @@ function edd_get_payment_user_email( $payment_id ) {
  *
  * @since  2.4.4
  * @param  int $payment_id The payment ID
- * @return bool            If the payment is associted with a user (false) or not (true)
+ * @return bool            If the payment is associated with a user (false) or not (true)
  */
 function edd_is_guest_payment( $payment_id ) {
 	$payment_user_id  = edd_get_payment_user_id( $payment_id );
@@ -1278,12 +1288,14 @@ function edd_payment_amount( $payment_id = 0 ) {
 	$amount = edd_get_payment_amount( $payment_id );
 	return edd_currency_filter( edd_format_amount( $amount ), edd_get_payment_currency_code( $payment_id ) );
 }
+
 /**
  * Get the amount associated with a payment
  *
  * @access public
  * @since 1.2
  * @param int $payment_id Payment ID
+ * @return float Payment amount
  */
 function edd_get_payment_amount( $payment_id ) {
 	$payment = new EDD_Payment( $payment_id );
@@ -1393,7 +1405,7 @@ function edd_get_payment_fees( $payment_id = 0, $type = 'all' ) {
  * Retrieves the transaction ID for the given payment
  *
  * @since  2.1
- * @param int payment_id Payment ID
+ * @param int $payment_id Payment ID
  * @return string The Transaction ID
  */
 function edd_get_payment_transaction_id( $payment_id = 0 ) {
@@ -1405,8 +1417,9 @@ function edd_get_payment_transaction_id( $payment_id = 0 ) {
  * Sets a Transaction ID in post meta for the given Payment ID
  *
  * @since  2.1
- * @param int payment_id Payment ID
- * @param string transaction_id The transaciton ID from the gateway
+ * @param int $payment_id Payment ID
+ * @param string $transaction_id The transaction ID from the gateway
+ * @return mixed Meta ID if successful, false if unsuccessful
  */
 function edd_set_payment_transaction_id( $payment_id = 0, $transaction_id = '' ) {
 
@@ -1474,7 +1487,7 @@ function edd_get_payment_notes( $payment_id = 0, $search = '' ) {
 	}
 
 	remove_action( 'pre_get_comments', 'edd_hide_payment_notes', 10 );
-	remove_filter( 'comments_clauses', 'edd_hide_payment_notes_pre_41', 10, 2 );
+	remove_filter( 'comments_clauses', 'edd_hide_payment_notes_pre_41', 10 );
 
 	$notes = get_comments( array( 'post_id' => $payment_id, 'order' => 'ASC', 'search' => $search ) );
 
@@ -1572,7 +1585,7 @@ function edd_get_payment_note_html( $note, $payment_id = 0 ) {
 		$note_html .='<p>';
 			$note_html .= '<strong>' . $user . '</strong>&nbsp;&ndash;&nbsp;' . date_i18n( $date_format, strtotime( $note->comment_date ) ) . '<br/>';
 			$note_html .= $note->comment_content;
-			$note_html .= '&nbsp;&ndash;&nbsp;<a href="' . esc_url( $delete_note_url ) . '" class="edd-delete-payment-note" data-note-id="' . absint( $note->comment_ID ) . '" data-payment-id="' . absint( $payment_id ) . '" title="' . __( 'Delete this payment note', 'easy-digital-downloads' ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
+			$note_html .= '&nbsp;&ndash;&nbsp;<a href="' . esc_url( $delete_note_url ) . '" class="edd-delete-payment-note" data-note-id="' . absint( $note->comment_ID ) . '" data-payment-id="' . absint( $payment_id ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 		$note_html .= '</p>';
 	$note_html .= '</div>';
 
