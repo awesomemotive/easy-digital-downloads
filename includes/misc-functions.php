@@ -735,10 +735,19 @@ function edd_object_to_array( $object = array() ) {
 	if ( is_array( $object ) ) {
 		$return = array();
 		foreach ( $object as $item ) {
-			$return[] = edd_object_to_array( $item );
+			if ( is_a( $object, 'EDD_Payment' ) ) {
+				$return[] = $object->array_convert();
+			} else {
+				$return[] = edd_object_to_array( $item );
+			}
+
 		}
 	} else {
-		$return = get_object_vars( $object );
+		if ( is_a( $object, 'EDD_Payment' ) ) {
+			$return = $object->array_convert();
+		} else {
+			$return = get_object_vars( $object );
+		}
 	}
 
 	return $return;
