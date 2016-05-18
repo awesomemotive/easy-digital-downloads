@@ -911,6 +911,11 @@ function edd_settings_sanitize( $input = array() ) {
 	if ( 'main' === $section )  {
 		// Check for extensions that aren't using new sections
 		$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
+
+		// Check for an override on the section for when main is empty
+		if ( ! empty( $_POST['edd_section_override'] ) ) {
+			$section = sanitize_text_field( $_POST['edd_section_override'] );
+		}
 	}
 
 	// Loop through each setting being saved and pass it through a sanitization filter
