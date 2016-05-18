@@ -549,7 +549,7 @@ class EDD_API {
 					'product'   => isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null,
 					'date'      => isset( $wp_query->query_vars['date'] )      ? $wp_query->query_vars['date']      : null,
 					'startdate' => isset( $wp_query->query_vars['startdate'] ) ? $wp_query->query_vars['startdate'] : null,
-					'enddate'   => isset( $wp_query->query_vars['enddate'] )   ? $wp_query->query_vars['enddate']   : null
+					'enddate'   => isset( $wp_query->query_vars['enddate'] )   ? $wp_query->query_vars['enddate']   : null,
 				) );
 
 				break;
@@ -570,9 +570,14 @@ class EDD_API {
 
 			case 'customers' :
 
-				$customer = isset( $wp_query->query_vars['customer'] ) ? $wp_query->query_vars['customer']  : null;
+				$args = array(
+					'customer'  => isset( $wp_query->query_vars['customer'] )  ? $wp_query->query_vars['customer']  : null,
+					'date'      => isset( $wp_query->query_vars['date'] )      ? $wp_query->query_vars['date']      : null,
+					'startdate' => isset( $wp_query->query_vars['startdate'] ) ? $wp_query->query_vars['startdate'] : null,
+					'enddate'   => isset( $wp_query->query_vars['enddate'] )   ? $wp_query->query_vars['enddate']   : null,
+				);
 
-				$data = $this->routes->get_customers( $customer );
+				$data = $this->routes->get_customers( $args );
 
 				break;
 
@@ -890,8 +895,10 @@ class EDD_API {
 	 */
 	public function get_customers( $customer = null ) {
 
+		$customer  = is_array( $customer ) && ! empty( $customer['customer'] ) ? $customer['customer'] : $customer;
 		$customers = array();
-		$error = array();
+		$error     = array();
+
 		if( ! user_can( $this->user_id, 'view_shop_sensitive_data' ) && ! $this->override ) {
 			return $customers;
 		}

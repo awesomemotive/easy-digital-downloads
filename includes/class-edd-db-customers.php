@@ -452,16 +452,14 @@ class EDD_DB_Customers extends EDD_DB  {
 
 				if( ! empty( $args['date']['start'] ) ) {
 
-					$start = date( 'Y-m-d H:i:s', strtotime( $args['date']['start'] ) );
-
+					$start = date( 'Y-m-d 00:00:00', strtotime( $args['date']['start'] ) );
 					$where .= " AND `date_created` >= '{$start}'";
 
 				}
 
 				if( ! empty( $args['date']['end'] ) ) {
 
-					$end = date( 'Y-m-d H:i:s', strtotime( $args['date']['end'] ) );
-
+					$end = date( 'Y-m-d 23:59:59', strtotime( $args['date']['end'] ) );
 					$where .= " AND `date_created` <= '{$end}'";
 
 				}
