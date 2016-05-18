@@ -924,6 +924,11 @@ function edd_settings_sanitize( $input = array() ) {
 				$settings[ $tab ]['main'][ $setting[ 'id' ] ] = $setting;
 				unset( $settings[ $tab ][ $key ]);
 			}
+
+			// Check for an override on the section for when main is empty
+			if ( ! empty( $_POST['edd_section_override'] ) ) {
+				$section = sanitize_text_field( $_POST['edd_section_override'] );
+			}
 		}
 	}
 
