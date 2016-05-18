@@ -183,9 +183,9 @@ function edd_get_purchase_link( $args = array() ) {
 			?>
 
 			<?php if ( ! edd_is_ajax_disabled() ) : ?>
-				<span class="edd-cart-ajax-alert">
+				<span class="edd-cart-ajax-alert" aria-live="assertive">
 					<span class="edd-cart-added-alert" style="display: none;">
-						<?php echo '<i class="edd-icon-ok"></i> ' . __( 'Added to cart', 'easy-digital-downloads' ); ?>
+						<?php echo '<i class="edd-icon-ok" aria-hidden="true"></i> ' . __( 'Added to cart', 'easy-digital-downloads' ); ?>
 					</span>
 				</span>
 			<?php endif; ?>
@@ -529,10 +529,7 @@ function edd_get_purchase_download_links( $payment_id = 0 ) {
 				foreach ( $files as $filekey => $file ) {
 					$links .= '<div class="edd_download_link_file">';
 						$links .= '<a href="' . esc_url( edd_get_download_file_url( $payment_key, $email, $filekey, $download['id'], $price_id ) ) . '">';
-							if ( isset( $file['name'] ) )
-								$links .= esc_html( $file['name'] );
-							else
-								$links .= esc_html( $file['file'] );
+						$links .= edd_get_file_name( $file );
 						$links .= '</a>';
 					$links .= '</div>';
 				}

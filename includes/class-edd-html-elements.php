@@ -40,7 +40,7 @@ class EDD_HTML_Elements {
 			'chosen'      => false,
 			'number'      => 30,
 			'bundles'     => true,
-			'placeholder' => sprintf( __( 'Select a %s', 'easy-digital-downloads' ), edd_get_label_singular() ),
+			'placeholder' => sprintf( __( 'Choose a %s', 'easy-digital-downloads' ), edd_get_label_singular() ),
 			'data'        => array( 'search-type' => 'download' ),
 		);
 
@@ -65,17 +65,13 @@ class EDD_HTML_Elements {
 			);
 		}
 
-		$products = get_posts( $product_args );
-
-		$options = array();
-
+		$products   = get_posts( $product_args );
+		$options    = array();
+		$options[0] = '';
 		if ( $products ) {
-			$options[0] = sprintf( __( 'Select a %s', 'easy-digital-downloads' ), edd_get_label_singular() );
 			foreach ( $products as $product ) {
 				$options[ absint( $product->ID ) ] = esc_html( $product->post_title );
 			}
-		} else {
-			$options[0] = __( 'No products found', 'easy-digital-downloads' );
 		}
 
 		// This ensures that any selected products are included in the drop down
@@ -217,7 +213,7 @@ class EDD_HTML_Elements {
 			'selected'         => $selected,
 			'options'          => $options,
 			'show_option_all'  => false,
-			'show_option_none' => false,
+			'show_option_none' => __( 'Select a discount', 'easy-digital-downloads' ),
 		) );
 
 		return $output;
@@ -587,7 +583,7 @@ class EDD_HTML_Elements {
 
 		$output  = '<span class="edd_user_search_wrap">';
 			$output .= $this->text( $args );
-			$output .= '<span class="edd_user_search_results hidden"><a class="edd-ajax-user-cancel" title="' . __( 'Cancel', 'easy-digital-downloads' ) . '" aria-label="' . __( 'Cancel', 'easy-digital-downloads' ) . '" href="#">x</a><span></span></span>';
+			$output .= '<span class="edd_user_search_results hidden"><a class="edd-ajax-user-cancel" aria-label="' . __( 'Cancel', 'easy-digital-downloads' ) . '" href="#">x</a><span></span></span>';
 		$output .= '</span>';
 
 		return $output;

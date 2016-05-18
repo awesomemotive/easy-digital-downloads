@@ -310,7 +310,7 @@ function edd_get_registered_settings() {
 						'name' => __( 'Allow Usage Tracking?', 'easy-digital-downloads' ),
 						'desc' => sprintf(
 							__( 'Allow Easy Digital Downloads to anonymously track how this plugin is used and help us make the plugin better. Opt-in to tracking and our newsletter and immediately be emailed a 20&#37; discount to the EDD shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'easy-digital-downloads' ),
-							'https://easydigitaldownloads.com/extensions?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking'
+							'https://easydigitaldownloads.com/downloads/?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking'
 						),
 						'type' => 'checkbox',
 					),
@@ -900,7 +900,8 @@ function edd_settings_sanitize( $input = array() ) {
 	global $edd_options;
 
 	if ( empty( $_POST['_wp_http_referer'] ) ) {
-		return $input;
+		// If we didn't get the referer, just return the settings with nothing changed
+		return $edd_options;
 	}
 
 	parse_str( $_POST['_wp_http_referer'], $referrer );
@@ -911,17 +912,30 @@ function edd_settings_sanitize( $input = array() ) {
 
 	$input = $input ? $input : array();
 
+	// Run a general sanitization for the tab for special fields (like taxes)
+	$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
+
+	// Run a general sanitization for the section so custom tabs with sub-sections can save special data
 	$input = apply_filters( 'edd_settings_' . $tab . '-' . $section . '_sanitize', $input );
-	if ( 'main' === $section )  {
+
+	if ( 'main' === $section && empty( $settings[ $tab ]['main'] ) )  {
 		// Check for extensions that aren't using new sections
 		$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
+
+		$settings[ $tab ]['main'] = array();
+		foreach ( $settings[ $tab ] as $key => $setting ) {
+			if ( is_int( $key ) ) {
+				$settings[ $tab ]['main'][ $setting[ 'id' ] ] = $setting;
+				unset( $settings[ $tab ][ $key ]);
+			}
+		}
 	}
 
 	// Loop through each setting being saved and pass it through a sanitization filter
 	foreach ( $input as $key => $value ) {
 
 		// Get the setting type (checkbox, select, etc)
-		$type = isset( $settings[ $tab ][ $key ]['type'] ) ? $settings[ $tab ][ $key ]['type'] : false;
+		$type = isset( $settings[ $tab ][ $section ][ $key ]['type'] ) ? $settings[ $tab ][ $section ][ $key ]['type'] : false;
 
 		if ( $type ) {
 			// Field type specific filter
@@ -933,10 +947,10 @@ function edd_settings_sanitize( $input = array() ) {
 	}
 
 	// Loop through the whitelist and unset any that are empty for the tab being saved
-	$main_settings    = $section == 'main' ? $settings[ $tab ] : array(); // Check for extensions that aren't using new sections
+	$main_settings    = $section == 'main' ? $settings[ $tab ]['main'] : array(); // Check for extensions that aren't using new sections
 	$section_settings = ! empty( $settings[ $tab ][ $section ] ) ? $settings[ $tab ][ $section ] : array();
 
-	$found_settings = array_merge( $main_settings, $section_settings );
+	$found_settings   = array_merge( $main_settings, $section_settings );
 
 	if ( ! empty( $found_settings ) ) {
 		foreach ( $found_settings as $key => $value ) {
@@ -1039,7 +1053,48 @@ add_filter( 'edd_settings_taxes_sanitize', 'edd_settings_sanitize_taxes' );
  * @return string $input Sanitizied value
  */
 function edd_sanitize_text_field( $input ) {
-	return trim( $input );
+	$tags = array(
+		'p' => array(
+			'class' => array(),
+			'id'    => array(),
+		),
+		'span' => array(
+			'class' => array(),
+			'id'    => array(),
+		),
+		'a' => array(
+			'href' => array(),
+			'title' => array(),
+			'class' => array(),
+			'title' => array(),
+			'id'    => array(),
+		),
+		'strong' => array(),
+		'em' => array(),
+		'br' => array(),
+		'img' => array(
+			'src'   => array(),
+			'title' => array(),
+			'alt'   => array(),
+			'id'    => array(),
+		),
+		'div' => array(
+			'class' => array(),
+			'id'    => array(),
+		),
+		'ul' => array(
+			'class' => array(),
+			'id'    => array(),
+		),
+		'li' => array(
+			'class' => array(),
+			'id'    => array(),
+		)
+	);
+
+	$allowed_tags = apply_filters( 'edd_allowed_html_tags', $tags );
+
+	return trim( wp_kses( $input, $allowed_tags ) );
 }
 add_filter( 'edd_settings_sanitize_text', 'edd_sanitize_text_field' );
 
@@ -1741,7 +1796,7 @@ function edd_tax_rates_callback($args) {
 			<tr>
 				<th scope="col" class="edd_tax_country"><?php _e( 'Country', 'easy-digital-downloads' ); ?></th>
 				<th scope="col" class="edd_tax_state"><?php _e( 'State / Province', 'easy-digital-downloads' ); ?></th>
-				<th scope="col" class="edd_tax_global" title="<?php _e( 'Apply rate to whole country, regardless of state / province', 'easy-digital-downloads' ); ?>"><?php _e( 'Country Wide', 'easy-digital-downloads' ); ?></th>
+				<th scope="col" class="edd_tax_global"><?php _e( 'Country Wide', 'easy-digital-downloads' ); ?></th>
 				<th scope="col" class="edd_tax_rate"><?php _e( 'Rate', 'easy-digital-downloads' ); ?></th>
 				<th scope="col"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></th>
 			</tr>
@@ -1870,11 +1925,23 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 					case 'expired' :
 
-						$class = 'error';
+						$class = 'expired';
 						$messages[] = sprintf(
-							__( 'Your license key expired on %s. Please <a href="%s" target="_blank" title="Renew your license key">renew your license key</a>.', 'easy-digital-downloads' ),
+							__( 'Your license key expired on %s. Please <a href="%s" target="_blank">renew your license key</a>.', 'easy-digital-downloads' ),
 							date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
 							'https://easydigitaldownloads.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
+						);
+
+						$license_status = 'license-' . $class . '-notice';
+
+						break;
+
+					case 'revoked' :
+
+						$class = 'error';
+						$messages[] = sprintf(
+							__( 'Your license key has been disabled. Please <a href="%s" target="_blank">contact support</a> for more information.', 'easy-digital-downloads' ),
+							'https://easydigitaldownloads.com/support?utm_campaign=admin&utm_source=licenses&utm_medium=revoked'
 						);
 
 						$license_status = 'license-' . $class . '-notice';
@@ -1885,7 +1952,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 						$class = 'error';
 						$messages[] = sprintf(
-							__( 'Invalid license. Please <a href="%s" target="_blank" title="Visit account page">visit your account page</a> and verify it.', 'easy-digital-downloads' ),
+							__( 'Invalid license. Please <a href="%s" target="_blank">visit your account page</a> and verify it.', 'easy-digital-downloads' ),
 							'https://easydigitaldownloads.com/your-account?utm_campaign=admin&utm_source=licenses&utm_medium=missing'
 						);
 
@@ -1898,7 +1965,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 						$class = 'error';
 						$messages[] = sprintf(
-							__( 'Your %s is not active for this URL. Please <a href="%s" target="_blank" title="Visit account page">visit your account page</a> to manage your license key URLs.', 'easy-digital-downloads' ),
+							__( 'Your %s is not active for this URL. Please <a href="%s" target="_blank">visit your account page</a> to manage your license key URLs.', 'easy-digital-downloads' ),
 							$args['name'],
 							'https://easydigitaldownloads.com/your-account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
 						);
@@ -1910,7 +1977,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 					case 'item_name_mismatch' :
 
 						$class = 'error';
-						$messages[] = sprintf( __( 'This is not a %s.', 'easy-digital-downloads' ), $args['name'] );
+						$messages[] = sprintf( __( 'This appears to be an invalid license key for %s.', 'easy-digital-downloads' ), $args['name'] );
 
 						$license_status = 'license-' . $class . '-notice';
 
@@ -1925,6 +1992,10 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 						break;
 
+					default :
+
+						$messages[] = print_r( $license, true );
+						break;
 				}
 
 			} else {
@@ -1948,7 +2019,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 						} elseif( $expiration > $now && $expiration - $now < ( DAY_IN_SECONDS * 30 ) ) {
 
 							$messages[] = sprintf(
-								__( 'Your license key expires soon! It expires on %s. <a href="%s" target="_blank" title="Renew license">Renew your license key</a>.', 'easy-digital-downloads' ),
+								__( 'Your license key expires soon! It expires on %s. <a href="%s" target="_blank">Renew your license key</a>.', 'easy-digital-downloads' ),
 								date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
 								'https://easydigitaldownloads.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=renew'
 							);
@@ -1973,6 +2044,13 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 			}
 
 		} else {
+			$class = 'empty';
+
+			$messages[] = sprintf(
+				__( 'To receive updates, please enter your valid %s license key.', 'easy-digital-downloads' ),
+				$args['name']
+			);
+
 			$license_status = null;
 		}
 
@@ -1988,7 +2066,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 		if ( ! empty( $messages ) ) {
 			foreach( $messages as $message ) {
 
-				$html .= '<div class="edd-license-data edd-license-' . $class . '">';
+				$html .= '<div class="edd-license-data edd-license-' . $class . ' ' . $license_status . '">';
 					$html .= '<p>' . $message . '</p>';
 				$html .= '</div>';
 
@@ -1997,11 +2075,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 		wp_nonce_field( edd_sanitize_key( $args['id'] ) . '-nonce', edd_sanitize_key( $args['id'] ) . '-nonce' );
 
-		if ( isset( $license_status ) ) {
-			echo '<div class="' . $license_status . '">' . $html . '</div>';
-		} else {
-			echo '<div class="license-null">' . $html . '</div>';
-		}
+		echo $html;
 	}
 }
 
