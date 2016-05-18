@@ -787,8 +787,10 @@ function edd_get_download_files( $download_id = 0, $variable_price_id = null ) {
  * @return string The file name
  */
 function edd_get_file_name( $file = array() ) {
-	if( empty( $file ) || ! is_array( $file ) )
+	if( empty( $file ) || ! is_array( $file ) ) {
 		return false;
+	}
+
 	$name = ! empty( $file['name'] ) ? esc_html( $file['name'] ) : basename( $file['file'] );
 
 	return $name;
