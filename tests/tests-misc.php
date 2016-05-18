@@ -633,5 +633,26 @@ class Test_Misc extends WP_UnitTestCase {
 		$customers = EDD()->customers->get_customers();
 		$converted = edd_object_to_array( $customers );
 		$this->assertInternalType( 'array', $converted[0] );
+
+		// Test payments
+		$payment_1 = EDD_Helper_Payment::create_simple_payment();
+		$payment_2 = EDD_Helper_Payment::create_simple_payment();
+
+		$payment_1_obj = new EDD_Payment( $payment_1 );
+		$payment_2_obj = new EDD_Payment( $payment_2 );
+
+		// Test a single convert
+		$payment_1_array = edd_object_to_array( $payment_1_obj );
+		$this->assertInternalType( 'array',  $payment_1_array );
+		$this->assertEquals( $payment_1_obj->ID, $payment_1_array['ID'] );
+
+		$payments = array(
+			$payment_1_obj,
+			$payment_2_obj,
+		);
+
+		$payments_array = edd_object_to_array( $payments );
+		$this->assertInternalType( 'array', $payments_array[0] );
+		$this->assertEquals( 2, count( $payments_array ) );
 	}
 }
