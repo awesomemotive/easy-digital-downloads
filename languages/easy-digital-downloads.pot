@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.5.12\n"
+"Project-Id-Version: Easy Digital Downloads 2.5.14\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2016-04-14 18:29:30+00:00\n"
+"POT-Creation-Date: 2016-05-11 20:14:45+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -53,13 +53,12 @@ msgstr ""
 #: includes/admin/discounts/discount-actions.php:194
 #: includes/admin/discounts/edit-discount.php:16
 #: includes/admin/downloads/dashboard-columns.php:171
-#: includes/admin/import/class-batch-import-downloads.php:37
 #: includes/admin/payments/actions.php:25
-#: includes/admin/payments/actions.php:139
-#: includes/admin/payments/actions.php:285
-#: includes/admin/payments/actions.php:301
-#: includes/admin/payments/actions.php:328
-#: includes/admin/payments/actions.php:348
+#: includes/admin/payments/actions.php:145
+#: includes/admin/payments/actions.php:291
+#: includes/admin/payments/actions.php:307
+#: includes/admin/payments/actions.php:334
+#: includes/admin/payments/actions.php:354
 #: includes/admin/payments/view-order-details.php:22
 #: includes/admin/payments/view-order-details.php:32
 #: includes/admin/reporting/class-api-requests-logs-list-table.php:146
@@ -90,13 +89,13 @@ msgstr ""
 #: includes/cart/functions.php:1150 includes/cart/functions.php:1167
 #: includes/class-edd-license-handler.php:304
 #: includes/deprecated-functions.php:517 includes/deprecated-functions.php:532
-#: includes/deprecated-functions.php:542 includes/download-functions.php:1226
+#: includes/deprecated-functions.php:542 includes/download-functions.php:1228
 #: includes/emails/actions.php:49 includes/emails/template.php:245
 #: includes/error-tracking.php:36 includes/gateways/functions.php:221
 #: includes/gateways/manual.php:33 includes/gateways/paypal-standard.php:34
 #: includes/process-download.php:254 includes/process-download.php:787
-#: includes/query-filters.php:48 includes/user-functions.php:792
-#: includes/user-functions.php:817 includes/user-functions.php:870
+#: includes/query-filters.php:48 includes/user-functions.php:791
+#: includes/user-functions.php:816 includes/user-functions.php:869
 msgid "Error"
 msgstr ""
 
@@ -200,8 +199,7 @@ msgstr ""
 
 #: includes/admin/class-api-keys-table.php:176
 #: includes/checkout/template.php:466 includes/checkout/template.php:472
-#: includes/checkout/template.php:538 templates/shortcode-login.php:15
-#: templates/shortcode-login.php:16 templates/shortcode-register.php:18
+#: includes/checkout/template.php:538 templates/shortcode-register.php:18
 #: templates/shortcode-register.php:19
 msgid "Username"
 msgstr ""
@@ -585,7 +583,7 @@ msgstr ""
 #: includes/admin/customers/customers.php:305
 #: includes/admin/customers/customers.php:520
 #: includes/admin/payments/view-order-details.php:440
-#: includes/admin/thickbox.php:135 includes/class-edd-html-elements.php:590
+#: includes/admin/thickbox.php:135 includes/class-edd-html-elements.php:586
 msgid "Cancel"
 msgstr ""
 
@@ -1535,27 +1533,23 @@ msgstr ""
 msgid "View File Download Log"
 msgstr ""
 
-#: includes/admin/import/class-batch-import-downloads.php:37
-msgid "You do not have permission to import data."
-msgstr ""
-
 #: includes/admin/payments/actions.php:25
-#: includes/admin/payments/actions.php:285
-#: includes/admin/payments/actions.php:301
-#: includes/admin/payments/actions.php:328
-#: includes/admin/payments/actions.php:348 includes/emails/actions.php:49
+#: includes/admin/payments/actions.php:291
+#: includes/admin/payments/actions.php:307
+#: includes/admin/payments/actions.php:334
+#: includes/admin/payments/actions.php:354 includes/emails/actions.php:49
 msgid "You do not have permission to edit this payment record"
 msgstr ""
 
-#: includes/admin/payments/actions.php:139
+#: includes/admin/payments/actions.php:145
 msgid "Error Updating Payment"
 msgstr ""
 
-#: includes/admin/payments/actions.php:150
+#: includes/admin/payments/actions.php:156
 msgid "New Customers require a name and email address"
 msgstr ""
 
-#: includes/admin/payments/actions.php:165
+#: includes/admin/payments/actions.php:171
 msgid "Error creating new customer"
 msgstr ""
 
@@ -3910,7 +3904,7 @@ msgstr ""
 msgid "Please upload a file to import"
 msgstr ""
 
-#: includes/admin/tracking.php:247
+#: includes/admin/tracking.php:265
 msgid ""
 "Allow Easy Digital Downloads to track plugin usage? Opt-in to tracking and "
 "our newsletter and immediately be emailed a 20%% discount to the EDD shop, "
@@ -3918,11 +3912,11 @@ msgid ""
 "extensions</a>. No sensitive data is tracked."
 msgstr ""
 
-#: includes/admin/tracking.php:248
+#: includes/admin/tracking.php:266
 msgid "Allow"
 msgstr ""
 
-#: includes/admin/tracking.php:249
+#: includes/admin/tracking.php:267
 msgid "Do not allow"
 msgstr ""
 
@@ -4798,7 +4792,7 @@ msgstr ""
 msgid "Enter a coupon code if you have one."
 msgstr ""
 
-#: includes/checkout/template.php:723 includes/process-purchase.php:273
+#: includes/checkout/template.php:723 includes/process-purchase.php:276
 #: includes/scripts.php:55
 msgid "Enter discount"
 msgstr ""
@@ -4983,7 +4977,7 @@ msgstr ""
 msgid "%d customers created in %d seconds"
 msgstr ""
 
-#: includes/class-edd-cli.php:311 includes/class-edd-html-elements.php:151
+#: includes/class-edd-cli.php:311 includes/class-edd-html-elements.php:147
 msgid "No customers found"
 msgstr ""
 
@@ -4991,8 +4985,8 @@ msgstr ""
 msgid "Customer User ID: %s"
 msgstr ""
 
-#: includes/class-edd-cli.php:318 includes/user-functions.php:500
-#: includes/user-functions.php:509
+#: includes/class-edd-cli.php:318 includes/user-functions.php:499
+#: includes/user-functions.php:508
 msgid "Username: %s"
 msgstr ""
 
@@ -5068,7 +5062,7 @@ msgstr ""
 msgid "  Product: %s - %s"
 msgstr ""
 
-#: includes/class-edd-cli.php:419 includes/class-edd-html-elements.php:212
+#: includes/class-edd-cli.php:419 includes/class-edd-html-elements.php:208
 #: includes/shortcodes.php:237
 msgid "No discounts found"
 msgstr ""
@@ -5161,28 +5155,23 @@ msgstr ""
 msgid "New Download Product"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:43
-#: includes/class-edd-html-elements.php:73
-msgid "Select a %s"
+#: includes/class-edd-html-elements.php:43 includes/scripts.php:203
+msgid "Choose a %s"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:78
-msgid "No products found"
-msgstr ""
-
-#: includes/class-edd-html-elements.php:132
+#: includes/class-edd-html-elements.php:128
 msgid "Select a Customer"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:146
+#: includes/class-edd-html-elements.php:142
 msgid "No customer attached"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:220
+#: includes/class-edd-html-elements.php:216
 msgid "Select a discount"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:575
+#: includes/class-edd-html-elements.php:571
 msgid "Enter username"
 msgstr ""
 
@@ -5538,7 +5527,7 @@ msgstr ""
 msgid "Sorry but you have hit your download limit for this file."
 msgstr ""
 
-#: includes/deprecated-functions.php:532 includes/download-functions.php:1226
+#: includes/deprecated-functions.php:532 includes/download-functions.php:1228
 msgid "Sorry but your download link has expired."
 msgstr ""
 
@@ -5986,16 +5975,16 @@ msgstr ""
 msgid "The password you entered is incorrect"
 msgstr ""
 
-#: includes/login-register.php:87 includes/process-purchase.php:576
+#: includes/login-register.php:87 includes/process-purchase.php:579
 msgid "The username you entered does not exist"
 msgstr ""
 
 #: includes/login-register.php:140 includes/login-register.php:148
-#: includes/process-purchase.php:464
+#: includes/process-purchase.php:467
 msgid "Invalid username"
 msgstr ""
 
-#: includes/login-register.php:144 includes/process-purchase.php:457
+#: includes/login-register.php:144 includes/process-purchase.php:460
 msgid "Username already taken"
 msgstr ""
 
@@ -6003,8 +5992,8 @@ msgstr ""
 msgid "Email address already taken"
 msgstr ""
 
-#: includes/login-register.php:156 includes/process-purchase.php:404
-#: includes/process-purchase.php:479 includes/process-purchase.php:609
+#: includes/login-register.php:156 includes/process-purchase.php:407
+#: includes/process-purchase.php:482 includes/process-purchase.php:612
 msgid "Invalid email"
 msgstr ""
 
@@ -6468,95 +6457,95 @@ msgstr ""
 msgid "Your cart is empty"
 msgstr ""
 
-#: includes/process-purchase.php:240
+#: includes/process-purchase.php:243
 msgid "The selected payment gateway is not enabled"
 msgstr ""
 
-#: includes/process-purchase.php:300
+#: includes/process-purchase.php:303
 msgid "One or more of the discounts you entered is invalid"
 msgstr ""
 
-#: includes/process-purchase.php:317
+#: includes/process-purchase.php:320
 msgid "You must agree to the terms of use"
 msgstr ""
 
-#: includes/process-purchase.php:332
+#: includes/process-purchase.php:335
 msgid "Please enter a valid email address"
 msgstr ""
 
-#: includes/process-purchase.php:336
+#: includes/process-purchase.php:339
 msgid "Please enter your first name"
 msgstr ""
 
-#: includes/process-purchase.php:346
+#: includes/process-purchase.php:349
 msgid "Please enter your zip / postal code"
 msgstr ""
 
-#: includes/process-purchase.php:350
+#: includes/process-purchase.php:353
 msgid "Please enter your billing city"
 msgstr ""
 
-#: includes/process-purchase.php:354
+#: includes/process-purchase.php:357
 msgid "Please select your billing country"
 msgstr ""
 
-#: includes/process-purchase.php:358
+#: includes/process-purchase.php:361
 msgid "Please enter billing state / province"
 msgstr ""
 
-#: includes/process-purchase.php:409
+#: includes/process-purchase.php:412
 msgid "The user information is invalid"
 msgstr ""
 
-#: includes/process-purchase.php:462
+#: includes/process-purchase.php:465
 msgid "Invalid username. Only lowercase letters (a-z) and numbers are allowed"
 msgstr ""
 
-#: includes/process-purchase.php:471
+#: includes/process-purchase.php:474
 msgid "You must register or login to complete your purchase"
 msgstr ""
 
-#: includes/process-purchase.php:482
+#: includes/process-purchase.php:485
 msgid "Email already used"
 msgstr ""
 
-#: includes/process-purchase.php:489 includes/process-purchase.php:616
+#: includes/process-purchase.php:492 includes/process-purchase.php:619
 msgid "Enter an email"
 msgstr ""
 
-#: includes/process-purchase.php:497
+#: includes/process-purchase.php:500
 msgid "Passwords don't match"
 msgstr ""
 
-#: includes/process-purchase.php:506 includes/process-purchase.php:572
+#: includes/process-purchase.php:509 includes/process-purchase.php:575
 msgid "Enter a password"
 msgstr ""
 
-#: includes/process-purchase.php:509
+#: includes/process-purchase.php:512
 msgid "Enter the password confirmation"
 msgstr ""
 
-#: includes/process-purchase.php:533
+#: includes/process-purchase.php:536
 msgid "You must login or register to complete your purchase"
 msgstr ""
 
-#: includes/process-purchase.php:553
+#: includes/process-purchase.php:556
 msgid "The password you entered is incorrect. %sReset Password%s"
 msgstr ""
 
-#: includes/process-purchase.php:554 templates/shortcode-login.php:29
+#: includes/process-purchase.php:557 templates/shortcode-login.php:29
 msgid "Lost Password"
 msgstr ""
 
-#: includes/process-purchase.php:598
+#: includes/process-purchase.php:601
 msgid "You must be logged into an account to purchase"
 msgstr ""
 
-#: includes/process-purchase.php:778
+#: includes/process-purchase.php:781
 msgid "The zip / postal code you entered for your billing address is invalid"
 msgstr ""
 
-#: includes/process-purchase.php:1040
+#: includes/process-purchase.php:1043
 msgid "An internal error has occurred, please try again or contact support."
 msgstr ""
 
@@ -6652,10 +6641,6 @@ msgstr ""
 msgid "Payments must contain at least one item"
 msgstr ""
 
-#: includes/scripts.php:203
-msgid "Choose a %s"
-msgstr ""
-
 #: includes/scripts.php:204
 msgid "Choose one or more %s"
 msgstr ""
@@ -6684,6 +6669,10 @@ msgstr ""
 msgid ""
 "Are you sure you want to reset your store? This process is <strong><em>not "
 "reversible</em></strong>. Please be sure you have a recent backup."
+msgstr ""
+
+#: includes/scripts.php:218
+msgid "Type to search all %s"
 msgstr ""
 
 #: includes/shortcodes.php:261
@@ -6770,43 +6759,43 @@ msgstr ""
 msgid "Plain Text"
 msgstr ""
 
-#: includes/user-functions.php:498
+#: includes/user-functions.php:497
 msgid "[%s] New User Registration"
 msgstr ""
 
-#: includes/user-functions.php:499
+#: includes/user-functions.php:498
 msgid "New user registration"
 msgstr ""
 
-#: includes/user-functions.php:501
+#: includes/user-functions.php:500
 msgid "E-mail: %s"
 msgstr ""
 
-#: includes/user-functions.php:507
+#: includes/user-functions.php:506
 msgid "[%s] Your username and password"
 msgstr ""
 
-#: includes/user-functions.php:508
+#: includes/user-functions.php:507
 msgid "Your account info"
 msgstr ""
 
-#: includes/user-functions.php:510
+#: includes/user-functions.php:509
 msgid "Password: %s"
 msgstr ""
 
-#: includes/user-functions.php:510
+#: includes/user-functions.php:509
 msgid "[Password entered at checkout]"
 msgstr ""
 
-#: includes/user-functions.php:511
+#: includes/user-functions.php:510
 msgid "Click Here to Log In"
 msgstr ""
 
-#: includes/user-functions.php:665 includes/user-functions.php:666
+#: includes/user-functions.php:664 includes/user-functions.php:665
 msgid "Verify your account"
 msgstr ""
 
-#: includes/user-functions.php:668
+#: includes/user-functions.php:667
 msgid ""
 "Hello %s,\n"
 "\n"
@@ -6816,29 +6805,29 @@ msgid ""
 "Link missing? Visit the following URL: %s"
 msgstr ""
 
-#: includes/user-functions.php:792
+#: includes/user-functions.php:791
 msgid ""
 "Sorry but your account verification link has expired. <a href=\"#\">Click "
 "here</a> to request a new verification URL."
 msgstr ""
 
-#: includes/user-functions.php:817
+#: includes/user-functions.php:816
 msgid "Nonce verification failed."
 msgstr ""
 
-#: includes/user-functions.php:821
+#: includes/user-functions.php:820
 msgid "You must be logged in to verify your account."
 msgstr ""
 
-#: includes/user-functions.php:821 includes/user-functions.php:825
+#: includes/user-functions.php:820 includes/user-functions.php:824
 msgid "Notice"
 msgstr ""
 
-#: includes/user-functions.php:825
+#: includes/user-functions.php:824
 msgid "Your account has already been verified."
 msgstr ""
 
-#: includes/user-functions.php:870
+#: includes/user-functions.php:869
 msgid "Invalid verification token provided."
 msgstr ""
 
@@ -6976,6 +6965,10 @@ msgstr ""
 msgid "Log into Your Account"
 msgstr ""
 
+#: templates/shortcode-login.php:15 templates/shortcode-login.php:16
+msgid "Username or Email"
+msgstr ""
+
 #: templates/shortcode-login.php:26
 msgid "Log In"
 msgstr ""
@@ -7093,7 +7086,7 @@ msgid "Number of items in cart"
 msgstr ""
 
 #. Description of the plugin/theme
-msgid "Serve Digital Downloads Through WordPress."
+msgid "The easiest way to sell digital products with WordPress."
 msgstr ""
 
 #: includes/admin/payments/view-order-details.php:479
@@ -7131,17 +7124,17 @@ msgctxt "Apply discount at checkout"
 msgid "Apply"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:248
+#: includes/class-edd-html-elements.php:244
 msgctxt "plural: Example: \"All Categories\""
 msgid "All %s"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:338
+#: includes/class-edd-html-elements.php:334
 msgctxt "all dropdown items"
 msgid "All"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:339
+#: includes/class-edd-html-elements.php:335
 msgctxt "no dropdown items"
 msgid "None"
 msgstr ""

@@ -307,7 +307,7 @@ function edd_get_registered_settings() {
 						'name' => __( 'Allow Usage Tracking?', 'easy-digital-downloads' ),
 						'desc' => sprintf(
 							__( 'Allow Easy Digital Downloads to anonymously track how this plugin is used and help us make the plugin better. Opt-in to tracking and our newsletter and immediately be emailed a 20&#37; discount to the EDD shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'easy-digital-downloads' ),
-							'https://easydigitaldownloads.com/extensions?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking'
+							'https://easydigitaldownloads.com/downloads/?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking'
 						),
 						'type' => 'checkbox',
 					),
@@ -911,6 +911,11 @@ function edd_settings_sanitize( $input = array() ) {
 	if ( 'main' === $section )  {
 		// Check for extensions that aren't using new sections
 		$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
+
+		// Check for an override on the section for when main is empty
+		if ( ! empty( $_POST['edd_section_override'] ) ) {
+			$section = sanitize_text_field( $_POST['edd_section_override'] );
+		}
 	}
 
 	// Loop through each setting being saved and pass it through a sanitization filter
