@@ -238,7 +238,7 @@ function edd_tools_api_keys_display() {
 	<?php printf(
 		__( 'These API keys allow you to use the <a href="%s">EDD REST API</a> to retrieve store data in JSON or XML for external applications or devices, such as the <a href="%s">EDD mobile app</a>.', 'easy-digital-downloads' ),
 		'http://docs.easydigitaldownloads.com/article/544-edd-api-reference/',
-		'https://easydigitaldownloads.com/downloads/ios-sales-earnings-tracker/'
+		'https://easydigitaldownloads.com/downloads/ios-sales-earnings-tracker/?utm_source=plugin-tools-page&utm_medium=api_keys_tab&utm_term=ios-app&utm_campaign=EDDMobileApp'
 	); ?>
 	</p>
 <?php
