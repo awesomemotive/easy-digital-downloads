@@ -50,10 +50,14 @@ a.edd-delete:hover {
 /* =Add Ons Styles
 -------------------------------------------------------------- */
 
-.edd-tab-span {
-	float: right;
-	bottom: 13px;
+#edd-add-ons h2.nav-tab-wrapper {
 	position: relative;
+}
+
+.edd-tab-span {
+	top: -6px;
+	right: 0;
+	position: absolute;
 }
 .edd-add-ons-footer {
 	padding-top: 10px;

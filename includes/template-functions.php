@@ -234,6 +234,14 @@ function edd_get_purchase_link( $args = array() ) {
  * @return void
  */
 function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
+	global $edd_displayed_form_ids;
+
+	// If we've already generated a form ID for this download ID, apped -#
+	$form_id = '';
+	if ( $edd_displayed_form_ids[ $download_id ] > 1 ) {
+		$form_id .= '-' . $edd_displayed_form_ids[ $download_id ];
+	}
+
 	$variable_pricing = edd_has_variable_prices( $download_id );
 
 	if ( ! $variable_pricing ) {
@@ -262,9 +270,9 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 			if ( $prices ) :
 				$checked_key = isset( $_GET['price_option'] ) ? absint( $_GET['price_option'] ) : edd_get_default_variable_price( $download_id );
 				foreach ( $prices as $key => $price ) :
-					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . '"' . $schema . '>';
-						echo '<label for="'	. esc_attr( 'edd_price_option_' . $download_id . '_' . $key ) . '">';
-							echo '<input type="' . $type . '" ' . checked( apply_filters( 'edd_price_option_checked', $checked_key, $download_id, $key ), $key, false ) . ' name="edd_options[price_id][]" id="' . esc_attr( 'edd_price_option_' . $download_id . '_' . $key ) . '" class="' . esc_attr( 'edd_price_option_' . $download_id ) . '" value="' . esc_attr( $key ) . '" data-price="' . edd_get_price_option_amount( $download_id, $key ) .'"/>&nbsp;';
+					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . $form_id . '"' . $schema . '>';
+						echo '<label for="' . esc_attr( 'edd_price_option_' . $download_id . '_' . $key . $form_id ) . '">';
+							echo '<input type="' . $type . '" ' . checked( apply_filters( 'edd_price_option_checked', $checked_key, $download_id, $key ), $key, false ) . ' name="edd_options[price_id][]" id="' . esc_attr( 'edd_price_option_' . $download_id . '_' . $key . $form_id ) . '" class="' . esc_attr( 'edd_price_option_' . $download_id ) . '" value="' . esc_attr( $key ) . '" data-price="' . edd_get_price_option_amount( $download_id, $key ) .'"/>&nbsp;';
 							echo '<span class="edd_price_option_name" itemprop="description">' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price">' . edd_currency_filter( edd_format_amount( $price['amount'] ) ) . '</span>';
 							echo '<meta itemprop="price" content="' . esc_attr( $price['amount'] ) .'" />';
 							echo '<meta itemprop="priceCurrency" content="' . esc_attr( edd_get_currency() ) .'" />';
@@ -924,3 +932,31 @@ function edd_add_download_post_classes( $classes, $class = '', $post_id = false 
 	return $classes;
 }
 add_filter( 'post_class', 'edd_add_download_post_classes', 20, 3 );
+
+/**
+ * Adds Download product price to oembed display
+ *
+ * @since 2.6
+ * @return void
+ */
+function edd_add_oembed_price() {
+
+	if( 'download' !== get_post_type( get_the_ID() ) ) {
+		return;
+	}
+
+	$show = ! get_post_meta( get_the_ID(), '_edd_hide_purchase_link', true );
+
+	if ( apply_filters( 'edd_show_oembed_purchase_links', $show ) ) {
+		echo '<style>.wp-embed-edd-price { margin: 20px 0 0 0; }</style>';
+		echo '<div class="wp-embed-edd-price">';
+			if ( edd_has_variable_prices( get_the_ID() ) ) {
+				echo edd_price_range( get_the_ID() );
+			} else {
+				edd_price( get_the_ID(), true );
+			}
+
+		echo '</div>';
+	}
+}
+add_action( 'embed_content', 'edd_add_oembed_price' );
