@@ -209,7 +209,8 @@ class EDD_API_V2 extends EDD_API_V1 {
 
 			$args['date'] = $date_range;
 
-		} else {
+		} elseif( ! empty( $args['date'] ) ) {
+
 			if( $args['date'] == 'this_quarter' || $args['date'] == 'last_quarter'  ) {
 
 				$args['date'] = array(
