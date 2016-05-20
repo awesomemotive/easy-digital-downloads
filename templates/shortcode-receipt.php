@@ -22,7 +22,7 @@ $user      = edd_get_payment_meta_user_info( $payment->ID );
 $email     = edd_get_payment_user_email( $payment->ID );
 $status    = edd_get_payment_status( $payment, true );
 ?>
-<table id="edd_purchase_receipt">
+<table id="edd_purchase_receipt" class="edd-table">
 	<thead>
 		<?php do_action( 'edd_payment_receipt_before', $payment, $edd_receipt_args ); ?>
 
@@ -118,7 +118,7 @@ $status    = edd_get_payment_status( $payment, true );
 
 	<h3><?php echo apply_filters( 'edd_payment_receipt_products_title', __( 'Products', 'easy-digital-downloads' ) ); ?></h3>
 
-	<table id="edd_purchase_receipt_products">
+	<table id="edd_purchase_receipt_products" class="edd-table">
 		<thead>
 			<th><?php _e( 'Name', 'easy-digital-downloads' ); ?></th>
 			<?php if ( edd_use_skus() ) { ?>
