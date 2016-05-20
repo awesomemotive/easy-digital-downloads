@@ -149,6 +149,26 @@ class EDD_API_V2 extends EDD_API_V1 {
 	}
 
 	/**
+	 * Given a download post object, generate the data for the API output
+	 *
+	 * @since  2.6
+	 * @param  object $product_info The Download Post Object
+	 * @return array                Array of post data to return back in the API
+	 */
+	public function get_product_data( $product_info ) {
+
+		// Use the parent's get_product_data to reduce code duplication
+		$product = parent::get_product_data( $product_info );
+
+		if ( edd_use_skus() ) {
+			$product['info']['sku'] = edd_get_download_sku( $product['info']['id'] );
+		}
+
+		return apply_filters( 'edd_api_products_product_v2', $product );
+
+	}
+
+	/**
 	 * Process Get Customers API Request
 	 *
 	 * @access public

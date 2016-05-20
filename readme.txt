@@ -6,7 +6,7 @@ Donate link: https://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
 Tested up to: 4.6
-Stable Tag: 2.5.15
+Stable Tag: 2.5.16
 
 License: GNU Version 2 or Any Later Version
 
@@ -213,6 +213,10 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.5.16, May 18, 2016 =
+
+* Fix: Checkboxes cannot be unchecked in the settings screens of some extensions if only one extension is activated
 
 = 2.5.15, May 11, 2016 =
 

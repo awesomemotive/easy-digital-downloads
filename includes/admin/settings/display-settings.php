@@ -44,13 +44,15 @@ function edd_options_page() {
 	$has_main_settings = strlen( ob_get_contents() ) > 0;
 	ob_end_clean();
 
+	$override = false;
 	if ( false === $has_main_settings ) {
 		unset( $sections['main'] );
 
 		if ( 'main' === $section ) {
 			foreach ( $sections as $section_key => $section_title ) {
 				if ( ! empty( $all_settings[ $active_tab ][ $section_key ] ) ) {
-					$section = $section_key;
+					$section  = $section_key;
+					$override = true;
 					break;
 				}
 			}
@@ -130,6 +132,10 @@ function edd_options_page() {
 					do_action( 'edd_settings_tab_bottom', $active_tab );
 				}
 
+				// If the main section was empty and we overrode the view with the next subsection, prepare the section for saving
+				if ( true === $override ) {
+					?><input type="hidden" name="edd_section_override" value="<?php echo $section; ?>" /><?php
+				}
 				?>
 				</table>
 				<?php submit_button(); ?>
