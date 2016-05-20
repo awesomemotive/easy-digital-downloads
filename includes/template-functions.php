@@ -234,6 +234,14 @@ function edd_get_purchase_link( $args = array() ) {
  * @return void
  */
 function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
+	global $edd_displayed_form_ids;
+
+	// If we've already generated a form ID for this download ID, apped -#
+	$form_id = '';
+	if ( $edd_displayed_form_ids[ $download_id ] > 1 ) {
+		$form_id .= '-' . $edd_displayed_form_ids[ $download_id ];
+	}
+
 	$variable_pricing = edd_has_variable_prices( $download_id );
 
 	if ( ! $variable_pricing ) {
@@ -262,9 +270,9 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 			if ( $prices ) :
 				$checked_key = isset( $_GET['price_option'] ) ? absint( $_GET['price_option'] ) : edd_get_default_variable_price( $download_id );
 				foreach ( $prices as $key => $price ) :
-					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . '"' . $schema . '>';
-						echo '<label for="'	. esc_attr( 'edd_price_option_' . $download_id . '_' . $key ) . '">';
-							echo '<input type="' . $type . '" ' . checked( apply_filters( 'edd_price_option_checked', $checked_key, $download_id, $key ), $key, false ) . ' name="edd_options[price_id][]" id="' . esc_attr( 'edd_price_option_' . $download_id . '_' . $key ) . '" class="' . esc_attr( 'edd_price_option_' . $download_id ) . '" value="' . esc_attr( $key ) . '" data-price="' . edd_get_price_option_amount( $download_id, $key ) .'"/>&nbsp;';
+					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . $form_id . '"' . $schema . '>';
+						echo '<label for="' . esc_attr( 'edd_price_option_' . $download_id . '_' . $key . $form_id ) . '">';
+							echo '<input type="' . $type . '" ' . checked( apply_filters( 'edd_price_option_checked', $checked_key, $download_id, $key ), $key, false ) . ' name="edd_options[price_id][]" id="' . esc_attr( 'edd_price_option_' . $download_id . '_' . $key . $form_id ) . '" class="' . esc_attr( 'edd_price_option_' . $download_id ) . '" value="' . esc_attr( $key ) . '" data-price="' . edd_get_price_option_amount( $download_id, $key ) .'"/>&nbsp;';
 							echo '<span class="edd_price_option_name" itemprop="description">' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price">' . edd_currency_filter( edd_format_amount( $price['amount'] ) ) . '</span>';
 							echo '<meta itemprop="price" content="' . esc_attr( $price['amount'] ) .'" />';
 							echo '<meta itemprop="priceCurrency" content="' . esc_attr( edd_get_currency() ) .'" />';
