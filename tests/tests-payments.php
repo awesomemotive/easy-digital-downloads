@@ -122,6 +122,21 @@ class Tests_Payments extends WP_UnitTestCase {
 		$this->assertTrue( edd_check_for_existing_payment( $this->_payment_id ) );
 	}
 
+	public function test_get_payment_status() {
+		$this->assertEquals( 'pending', edd_get_payment_status( $this->_payment_id ) );
+		$this->assertEquals( 'pending', edd_get_payment_status( get_post( $this->_payment_id ) ) );
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertEquals( 'pending', edd_get_payment_status( $payment ) );
+		$this->assertFalse( edd_get_payment_status( 1212121212121 ) );
+	}
+
+	public function test_get_payment_status_label() {
+		$this->assertEquals( 'Pending', edd_get_payment_status( $this->_payment_id, true ) );
+		$this->assertEquals( 'Pending', edd_get_payment_status( get_post( $this->_payment_id ), true ) );
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertEquals( 'Pending', edd_get_payment_status( $payment, true ) );
+	}
+
 	public function test_get_payment_statuses() {
 		$out = edd_get_payment_statuses();
 

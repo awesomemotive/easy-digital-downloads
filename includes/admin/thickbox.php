@@ -24,8 +24,10 @@ function edd_media_button() {
 
 	/** Only run in post/page creation and edit screens */
 	if ( in_array( $pagenow, array( 'post.php', 'page.php', 'post-new.php', 'post-edit.php' ) ) && $typenow != 'download' ) {
+
 		$img = '<span class="wp-media-buttons-icon" id="edd-media-button"></span>';
-		$output = '<a href="#TB_inline?width=640&inlineId=choose-download" class="thickbox button edd-thickbox" title="' . sprintf( __( 'Insert %s', 'easy-digital-downloads' ), strtolower ( edd_get_label_singular() ) ) . '" style="padding-left: .4em;">' . $img . sprintf( __( 'Insert %s', 'easy-digital-downloads' ), strtolower( edd_get_label_singular() ) ) . '</a>';
+		$output = '<a href="#TB_inline?width=640&inlineId=choose-download" class="thickbox button edd-thickbox" style="padding-left: .4em;">' . $img . sprintf( __( 'Insert %s', 'easy-digital-downloads' ), strtolower( edd_get_label_singular() ) ) . '</a>';
+
 	}
 	echo $output;
 }
@@ -48,37 +50,37 @@ function edd_admin_footer_for_thickbox() {
 	// Only run in post/page creation and edit screens
 	if ( in_array( $pagenow, array( 'post.php', 'page.php', 'post-new.php', 'post-edit.php' ) ) && $typenow != 'download' ) { ?>
 		<script type="text/javascript">
-            function insertDownload() {
-                var id = jQuery('#products').val(),
-                    direct = jQuery('#select-edd-direct').val(),
-                    style = jQuery('#select-edd-style').val(),
-                    color = jQuery('#select-edd-color').is(':visible') ? jQuery('#select-edd-color').val() : '',
-                    text = jQuery('#edd-text').val() || '<?php _e( "Purchase", "easy-digital-downloads" ); ?>';
+			function insertDownload() {
+				var id = jQuery('#products').val(),
+					direct = jQuery('#select-edd-direct').val(),
+					style = jQuery('#select-edd-style').val(),
+					color = jQuery('#select-edd-color').is(':visible') ? jQuery('#select-edd-color').val() : '',
+					text = jQuery('#edd-text').val() || '<?php _e( "Purchase", "easy-digital-downloads" ); ?>';
 
-                // Return early if no download is selected
-                if ('' === id) {
-                    alert('<?php _e( "You must choose a download", "easy-digital-downloads" ); ?>');
-                    return;
-                }
+				// Return early if no download is selected
+				if ('' === id) {
+					alert('<?php _e( "You must choose a download", "easy-digital-downloads" ); ?>');
+					return;
+				}
 
-                if( '2' == direct ) {
-                	direct = ' direct="true"';
-                } else {
-                	direct = '';
-                }
+				if( '2' == direct ) {
+					direct = ' direct="true"';
+				} else {
+					direct = '';
+				}
 
-                // Send the shortcode to the editor
-                window.send_to_editor('[purchase_link id="' + id + '" style="' + style + '" color="' + color + '" text="' + text + '"' + direct +']');
-            }
-            jQuery(document).ready(function ($) {
-                $('#select-edd-style').change(function () {
-                    if ($(this).val() === 'button') {
-                        $('#edd-color-choice').slideDown();
-                    } else {
-                        $('#edd-color-choice').slideUp();
-                    }
-                });
-            });
+				// Send the shortcode to the editor
+				window.send_to_editor('[purchase_link id="' + id + '" style="' + style + '" color="' + color + '" text="' + text + '"' + direct +']');
+			}
+			jQuery(document).ready(function ($) {
+				$('#select-edd-style').change(function () {
+					if ($(this).val() === 'button') {
+						$('#edd-color-choice').slideDown();
+					} else {
+						$('#edd-color-choice').slideUp();
+					}
+				});
+			});
 		</script>
 
 		<div id="choose-download" style="display: none;">
@@ -126,7 +128,7 @@ function edd_admin_footer_for_thickbox() {
 				</div>
 				<p class="submit">
 					<input type="button" id="edd-insert-download" class="button-primary" value="<?php echo sprintf( __( 'Insert %s', 'easy-digital-downloads' ), edd_get_label_singular() ); ?>" onclick="insertDownload();" />
-					<a id="edd-cancel-download-insert" class="button-secondary" onclick="tb_remove();" title="<?php _e( 'Cancel', 'easy-digital-downloads' ); ?>"><?php _e( 'Cancel', 'easy-digital-downloads' ); ?></a>
+					<a id="edd-cancel-download-insert" class="button-secondary" onclick="tb_remove();"><?php _e( 'Cancel', 'easy-digital-downloads' ); ?></a>
 				</p>
 			</div>
 		</div>

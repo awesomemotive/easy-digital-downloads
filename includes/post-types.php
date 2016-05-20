@@ -42,6 +42,9 @@ function edd_setup_edd_post_types() {
 		'set_featured_image'    => __( 'Set %1$s Image', 'easy-digital-downloads' ),
 		'remove_featured_image' => __( 'Remove %1$s Image', 'easy-digital-downloads' ),
 		'use_featured_image'    => __( 'Use as %1$s Image', 'easy-digital-downloads' ),
+		'filter_items_list'     => __( 'Filter %2$s list', 'easy-digital-downloads' ),
+		'items_list_navigation' => __( '%2$s list navigation', 'easy-digital-downloads' ),
+		'items_list'            => __( '%2$s list', 'easy-digital-downloads' ),
 	) );
 
 	foreach ( $download_labels as $key => $value ) {
@@ -403,3 +406,20 @@ function edd_bulk_updated_messages( $bulk_messages, $bulk_counts ) {
 	return $bulk_messages;
 }
 add_filter( 'bulk_post_updated_messages', 'edd_bulk_updated_messages', 10, 2 );
+
+/**
+ * Add row actions for the downloads custom post type
+ *
+ * @since 2.5
+ * @param  array $actions
+ * @param  WP_Post $post
+ * @return array
+ */
+function  edd_download_row_actions( $actions, $post ) {
+	if ( 'download' === $post->post_type ) {
+		return array_merge( array( 'id' => 'ID: ' . $post->ID ), $actions );
+	}
+
+	return $actions;
+}
+add_filter( 'post_row_actions', 'edd_download_row_actions', 2, 100 );

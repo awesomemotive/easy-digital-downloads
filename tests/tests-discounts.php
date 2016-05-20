@@ -188,6 +188,9 @@ class Tests_Discounts extends WP_UnitTestCase {
 
 		$increased = edd_increase_discount_usage( '20OFF' );
 		$this->assertSame( $increased, $uses + 1 );
+
+		// Test missing codes
+		$this->assertFalse( edd_increase_discount_usage( 'INVALIDDISCOUNTCODE' ) );
 	}
 
 	public function test_decrease_discount_usage() {
@@ -196,6 +199,9 @@ class Tests_Discounts extends WP_UnitTestCase {
 
 		$decreased = edd_decrease_discount_usage( '20OFF' );
 		$this->assertSame( $decreased, $uses - 1 );
+
+		// Test missing codes
+		$this->assertFalse( edd_decrease_discount_usage( 'INVALIDDISCOUNTCODE' ) );
 	}
 
 	public function test_formatted_discount_amount() {

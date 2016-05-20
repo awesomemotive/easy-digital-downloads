@@ -80,7 +80,18 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 		switch ( $column_name ){
 			case 'download' :
-				$return = '<a href="' . add_query_arg( 'download', $item[ $column_name ] ) . '" >' . get_the_title( $item[ $column_name ] ) . '</a>';
+				$download_id = $item[ $column_name ];
+				$download    = new EDD_Download( $download_id );
+
+				$title = $download->post_title;
+				if ( edd_has_variable_prices( $download->ID ) ) {
+					$price_id = $item['price_id'];
+					if ( ! is_null( $price_id ) && ! empty( $download->prices[ $price_id] ) ) {
+						$title .= ' &mdash; ' . $download->prices[ $price_id ]['name'];
+					}
+				}
+
+				$return = '<a href="' . add_query_arg( 'download', $item[ $column_name ] ) . '" >' . $title . '</a>';
 				break;
 
 			case 'user_id' :
@@ -315,20 +326,31 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 		if ( $logs ) {
 			foreach ( $logs as $log ) {
+
 				$payment_id = get_post_meta( $log->ID, '_edd_log_payment_id', true );
+				$payment    = new EDD_Payment( $payment_id );
 
 				// Make sure this payment hasn't been deleted
-				if ( get_post( $payment_id ) ) {
+				if ( ! empty( $payment->ID ) ) {
 
-					$user_info  = edd_get_payment_meta_user_info( $payment_id );
-					$cart_items = edd_get_payment_meta_cart_details( $payment_id );
+					$customer   = new EDD_Customer( $payment->customer_id );
+					$cart_items = $payment->cart_details;
 					$amount     = 0;
 
-					if ( is_array( $cart_items ) && is_array( $user_info ) ) {
+					if ( is_array( $cart_items ) ) {
 
 						foreach ( $cart_items as $item ) {
 
+							// If the item has variable pricing, make sure it's the right variation
 							if ( $item['id'] == $log->post_parent ) {
+								if ( isset( $item['item_number']['options']['price_id'] ) ) {
+									$log_price_id = get_post_meta( $log->ID, '_edd_log_price_id', true );
+
+									if ( (int) $item['item_number']['options']['price_id'] !== (int) $log_price_id ) {
+										continue;
+									}
+								}
+
 								$amount = isset( $item['price'] ) ? $item['price'] : $item['item_price'];
 								break;
 							}
@@ -337,21 +359,23 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 						$logs_data[] = array(
 							'ID'         => $log->ID,
-							'payment_id' => $payment_id,
+							'payment_id' => $payment->ID,
 							'download'   => $log->post_parent,
+							'price_id'   => isset( $log_price_id ) ? $log_price_id : null,
 							'item_price' => isset( $item['item_price'] ) ? $item['item_price'] : $item['price'],
 							'amount'     => $amount,
-							'user_id'    => $user_info['id'],
-							'user_name'  => $user_info['first_name'] . ' ' . $user_info['last_name'],
+							'user_id'    => $customer->user_id,
+							'user_name'  => $customer->name,
 							'date'       => get_post_field( 'post_date', $payment_id ),
 							'quantity'   => $item['quantity'],
 							// Keep track of the currency. Vital to produce the correct report
-							'currency'   => $item['currency'],
+							'currency'   => $payment->currency,
 						);
 
 					}
 
 				}
+
 			}
 		}
 

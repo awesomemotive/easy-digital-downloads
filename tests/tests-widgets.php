@@ -363,7 +363,8 @@ class Tests_Widgets extends WP_UnitTestCase {
 
 		$this->assertRegExp( '/<label for="widget-edd_product_details--title">Title:<\/label>/', $output );
 		$this->assertRegExp( '/<input class="widefat" id="widget-edd_product_details--title" name="widget-edd_product_details\[\]\[title\]" type="text" value="(.*)" \/>/', $output );
-		$this->assertRegExp( '/<label for="widget-edd_product_details--download_id">Download<\/label>/', $output );
+		$this->assertRegExp( '/Display Type:/', $output );
+		$this->assertRegExp( '/<label for="widget-edd_product_details--download_id">Download:<\/label>/', $output );
 		$this->assertRegExp( '/<select class="widefat" name="widget-edd_product_details\[\]\[download_id\]" id="widget-edd_product_details--download_id">/', $output );
 		$this->assertRegExp( '/<input  checked=\'checked\' id="widget-edd_product_details--download_title" name="widget-edd_product_details\[\]\[download_title\]" type="checkbox" \/>/', $output );
 		$this->assertRegExp( '/<label for="widget-edd_product_details--download_title">Show Title<\/label>/', $output );
@@ -387,11 +388,11 @@ class Tests_Widgets extends WP_UnitTestCase {
 		$details_widget = $widgets['edd_product_details_widget'];
 
 		$updated = $details_widget->update(
-			array( 'title' => 'Details', 'download_id' => 123, 'download_title' => true, 'purchase_button' => true, 'categories' => true, 'tags' => true ),
-			array( 'title' => 'OLD Details', 'download_id' => 123, 'download_title' => false, 'purchase_button' => false, 'categories' => false, 'tags' => false )
+			array( 'title' => 'Details', 'download_id' => 123, 'display_type' => 'specific', 'download_title' => true, 'purchase_button' => true, 'categories' => true, 'tags' => true ),
+			array( 'title' => 'OLD Details', 'display_type' => 'specific', 'download_id' => 123, 'download_title' => false, 'purchase_button' => false, 'categories' => false, 'tags' => false )
 		);
 
-		$this->assertEquals( $updated, array( 'title' => 'Details', 'download_id' => 123, 'download_title' => true, 'purchase_button' => true, 'categories' => true, 'tags' => true ) );
+		$this->assertEquals( $updated, array( 'title' => 'Details', 'display_type' => 'specific', 'download_id' => 123, 'download_title' => true, 'purchase_button' => true, 'categories' => true, 'tags' => true ) );
 
 	}
 
