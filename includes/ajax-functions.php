@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * This will be deprecated soon in favor of edd_is_ajax_disabled()
  *
  * @since 1.0
- * @return bool
+ * @return bool True when EDD AJAX is enabled (for the cart), false otherwise.
  */
 function edd_is_ajax_enabled() {
 	$retval = ! edd_is_ajax_disabled();
@@ -106,7 +106,7 @@ function edd_test_ajax_works() {
  * Checks whether AJAX is disabled.
  *
  * @since 2.0
- * @return bool
+ * @return bool True when EDD AJAX is disabled (for the cart), false otherwise.
  */
 function edd_is_ajax_disabled() {
 	$retval = ! edd_get_option( 'enable_ajax_cart' );
@@ -118,7 +118,7 @@ function edd_is_ajax_disabled() {
  * Get AJAX URL
  *
  * @since 1.3
- * @return string
+ * @return string URL to the AJAX file to call during AJAX requests.
 */
 function edd_get_ajax_url() {
 	$scheme = defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN ? 'https' : 'admin';

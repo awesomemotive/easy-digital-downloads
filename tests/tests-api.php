@@ -105,8 +105,6 @@ class Tests_API extends WP_UnitTestCase {
 			)
 		);
 
-		$price = '100.00';
-
 		$total = 0;
 
 		$prices = get_post_meta( $download_details[0]['id'], 'edd_variable_prices', true );
@@ -127,7 +125,6 @@ class Tests_API extends WP_UnitTestCase {
 				'item_price' =>  100,
 				'subtotal' =>  100,
 				'price' =>  100,
-				'item_price' => 100,
 				'tax' => 0,
 				'quantity' => 1
 			)
@@ -185,13 +182,16 @@ class Tests_API extends WP_UnitTestCase {
 		$this->assertEquals( 'query', $out[2] );
 		$this->assertEquals( 'type', $out[3] );
 		$this->assertEquals( 'product', $out[4] );
-		$this->assertEquals( 'number', $out[5] );
-		$this->assertEquals( 'date', $out[6] );
-		$this->assertEquals( 'startdate', $out[7] );
-		$this->assertEquals( 'enddate', $out[8] );
-		$this->assertEquals( 'customer', $out[9] );
-		$this->assertEquals( 'discount', $out[10] );
-		$this->assertEquals( 'format', $out[11] );
+		$this->assertEquals( 'category', $out[5] );
+		$this->assertEquals( 'tag', $out[6] );
+		$this->assertEquals( 'term_relation', $out[7] );
+		$this->assertEquals( 'number', $out[8] );
+		$this->assertEquals( 'date', $out[9] );
+		$this->assertEquals( 'startdate', $out[10] );
+		$this->assertEquals( 'enddate', $out[11] );
+		$this->assertEquals( 'customer', $out[12] );
+		$this->assertEquals( 'discount', $out[13] );
+		$this->assertEquals( 'format', $out[14] );
 	}
 
 	public function test_get_versions() {

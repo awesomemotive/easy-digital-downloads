@@ -41,7 +41,7 @@ function edd_tools_page() {
 				), $tab_url );
 
 				$active = $active_tab == $tab_id ? ' nav-tab-active' : '';
-				echo '<a href="' . esc_url( $tab_url ) . '" title="' . esc_attr( $tab_name ) . '" class="nav-tab' . $active . '">' . esc_html( $tab_name ) . '</a>';
+				echo '<a href="' . esc_url( $tab_url ) . '" class="nav-tab' . $active . '">' . esc_html( $tab_name ) . '</a>';
 
 			}
 			?>
@@ -238,7 +238,7 @@ function edd_tools_api_keys_display() {
 	<?php printf(
 		__( 'These API keys allow you to use the <a href="%s">EDD REST API</a> to retrieve store data in JSON or XML for external applications or devices, such as the <a href="%s">EDD mobile app</a>.', 'easy-digital-downloads' ),
 		'http://docs.easydigitaldownloads.com/article/544-edd-api-reference/',
-		'https://easydigitaldownloads.com/downloads/ios-sales-earnings-tracker/'
+		'https://easydigitaldownloads.com/downloads/ios-sales-earnings-tracker/?utm_source=plugin-tools-page&utm_medium=api_keys_tab&utm_term=ios-app&utm_campaign=EDDMobileApp'
 	); ?>
 	</p>
 <?php
@@ -448,7 +448,7 @@ function edd_tools_sysinfo_display() {
 
 ?>
 	<form action="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-tools&tab=system_info' ) ); ?>" method="post" dir="ltr">
-		<textarea readonly="readonly" onclick="this.focus(); this.select()" id="system-info-textarea" name="edd-sysinfo" title="To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac)."><?php echo edd_tools_sysinfo_get(); ?></textarea>
+		<textarea readonly="readonly" onclick="this.focus(); this.select()" id="system-info-textarea" name="edd-sysinfo"><?php echo edd_tools_sysinfo_get(); ?></textarea>
 		<p class="submit">
 			<input type="hidden" name="edd-action" value="download_sysinfo" />
 			<?php submit_button( 'Download System Info File', 'primary', 'edd-download-sysinfo', false ); ?>

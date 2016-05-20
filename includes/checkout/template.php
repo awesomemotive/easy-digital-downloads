@@ -469,7 +469,7 @@ function edd_get_register_fields() {
 					<?php } ?>
 				</label>
 				<span class="edd-description"><?php _e( 'The username you will use to log into your account.', 'easy-digital-downloads' ); ?></span>
-				<input name="edd_user_login" id="edd_user_login" class="<?php if(edd_no_guest_checkout()) { echo 'required '; } ?>edd-input" type="text" placeholder="<?php _e( 'Username', 'easy-digital-downloads' ); ?>" title="<?php _e( 'Username', 'easy-digital-downloads' ); ?>"/>
+				<input name="edd_user_login" id="edd_user_login" class="<?php if(edd_no_guest_checkout()) { echo 'required '; } ?>edd-input" type="text" placeholder="<?php _e( 'Username', 'easy-digital-downloads' ); ?>"/>
 			</p>
 			<p id="edd-user-pass-wrap">
 				<label for="edd_user_pass">
@@ -800,7 +800,7 @@ function edd_checkout_submit() {
 		<?php do_action( 'edd_purchase_form_after_submit' ); ?>
 
 		<?php if ( edd_is_ajax_disabled() ) { ?>
-			<p class="edd-cancel"><a href="javascript:history.go(-1)"><?php _e( 'Go back', 'easy-digital-downloads' ); ?></a></p>
+			<p class="edd-cancel"><a href="<?php echo edd_get_checkout_uri(); ?>"><?php _e( 'Go back', 'easy-digital-downloads' ); ?></a></p>
 		<?php } ?>
 	</fieldset>
 <?php

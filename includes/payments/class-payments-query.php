@@ -49,7 +49,7 @@ class EDD_Payments_Query extends EDD_Stats {
 	 *
 	 * @access public
 	 * @since 1.8
-	 * @param $args array The array of arguments that can be passed in and used for setting up this payment query.
+	 * @param array $args The array of arguments that can be passed in and used for setting up this payment query.
 	 */
 	public function __construct( $args = array() ) {
 		$defaults = array(
@@ -160,7 +160,7 @@ class EDD_Payments_Query extends EDD_Stats {
 				$payment    = new EDD_Payment( $payment_id );
 
 				if ( edd_get_option( 'enable_sequential' ) ) {
-					// Backwards Compability, needs to set `payment_number` attribute
+					// Backwards Compatibility, needs to set `payment_number` attribute
 					$payment->payment_number = $payment->number;
 				}
 
@@ -280,7 +280,7 @@ class EDD_Payments_Query extends EDD_Stats {
 	}
 
 	/**
-	 * Order
+	 * Order by
 	 *
 	 * @access public
 	 * @since 1.8
