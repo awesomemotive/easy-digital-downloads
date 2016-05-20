@@ -671,7 +671,7 @@ function edd_paypal_refund_admin_js( $payment_id = 0 ) {
 	}
 
 	// If our credentials are not set, return early.
-	$key       = get_post_meta( $payment_id, '_edd_payment_mode', true );
+	$key       = edd_get_payment_meta( $payment_id, '_edd_payment_mode', true );
 	$username  = edd_get_option( 'paypal_' . $key . '_api_username' );
 	$password  = edd_get_option( 'paypal_' . $key . '_api_password' );
 	$signature = edd_get_option( 'paypal_' . $key . '_api_signature' );
