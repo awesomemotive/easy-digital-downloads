@@ -671,8 +671,12 @@ function edd_paypal_refund_admin_js( $payment_id = 0 ) {
 	}
 
 	// If our credentials are not set, return early.
-	$key = get_post_meta( $payment_id, '_edd_payment_mode', true );
-	if ( empty( edd_get_option( 'paypal_' . $key . '_api_username' ) ) || empty( edd_get_option( 'paypal_' . $key . '_api_password' ) ) || empty( edd_get_option( 'paypal_' . $key . '_api_signature' ) ) ) {
+	$key       = get_post_meta( $payment_id, '_edd_payment_mode', true );
+	$username  = edd_get_option( 'paypal_' . $key . '_api_username' );
+	$password  = edd_get_option( 'paypal_' . $key . '_api_password' );
+	$signature = edd_get_option( 'paypal_' . $key . '_api_signature' );
+
+	if ( empty( $username ) || empty( $password ) || empty( $signature ) ) {
 		return;
 	}
 
@@ -706,32 +710,26 @@ add_action( 'edd_view_order_details_before', 'edd_paypal_refund_admin_js', 100 )
  * @param int $payment_id The current payment ID.
  * @return void
  */
-function edd_maybe_refund_paypal_purchase( $payment_id = 0 ) {
-	// Prepare variables.
-	$payment_id = absint( $payment_id );
-	$status  	= isset( $_POST['edd-payment-status'] ) ? stripslashes( strip_tags( $_POST['edd-payment-status'] ) ) : false;
-	$refund     = isset( $_POST['edd-paypal-refund'] ) ? stripslashes( strip_tags( $_POST['edd-paypal-refund'] ) ) : false;
-	$user_id 	= edd_get_payment_user_id( $payment_id );
-	$gateway 	= edd_get_payment_gateway( $payment_id );
-	$processed 	= get_post_meta( $payment_id, '_edd_paypal_refunded', true );
+function edd_maybe_refund_paypal_purchase( EDD_Payment $payment ) {
 
-	// If not status is found, return early.
-	if ( ! $status ) {
+
+	if( ! current_user_can( 'edit_shop_payments', $payment->ID ) ) {
 		return;
 	}
+
+	if( empty( $_POST['edd-paypal-refund'] ) ) {
+		return;
+	}
+
+	$processed = $payment->get_meta( '_edd_paypal_refunded', true );
 
 	// If the status is not set to "refunded", return early.
-	if ( 'refunded' !== $status ) {
-		return;
-	}
-
-	// If the refund box wasn't checked, return false.
-	if ( ! $refund ) {
+	if ( 'publish' !== $payment->old_status && 'revoked' !== $payment->old_status ) {
 		return;
 	}
 
 	// If not PayPal/PayPal Express, return early.
-	if ( 'paypal' !== $gateway ) {
+	if ( 'paypal' !== $payment->gateway ) {
 		return;
 	}
 
@@ -741,9 +739,10 @@ function edd_maybe_refund_paypal_purchase( $payment_id = 0 ) {
 	}
 
 	// Process the refund in PayPal.
-	edd_refund_paypal_purchase( $payment_id );
+	edd_refund_paypal_purchase( $payment );
+
 }
-add_action( 'edd_updated_edited_purchase', 'edd_maybe_refund_paypal_purchase', 999 );
+add_action( 'edd_pre_refund_payment', 'edd_maybe_refund_paypal_purchase', 999 );
 
 /**
  * Refunds a purchase made via PayPal.
@@ -751,106 +750,101 @@ add_action( 'edd_updated_edited_purchase', 'edd_maybe_refund_paypal_purchase', 9
  * @access public
  * @since  2.6.0
  *
- * @param int $payment_id The current payment ID.
+ * @param object|int $payment The payment ID or object to refund.
  * @return void
  */
-function edd_refund_paypal_purchase( $payment_id = 0 ) {
-	// Verify the payment ID is a valid integer.
-	$payment_id = absint( $payment_id );
-	if ( ! $payment_id ) {
-		echo '<pre>' . var_export( __( 'Payment could not be refunded because the payment ID was invalid.', 'easy-digital-downloads' ), true ) . '</pre>';
-		die;
-	}
+function edd_refund_paypal_purchase( $payment ) {
 
-	// Grab the transaction ID for the payment. Try notes first since transaction IDs weren't stored in transaction ID field originally.
-	$notes = edd_get_payment_notes( $payment_id );
-	$payid = false;
-	foreach ( $notes as $note ) {
-		if ( ! isset( $note->comment_content ) ) {
-			continue;
-		}
-
-		if ( preg_match( '/^PayPal Transaction ID: ([^\s]+)/', $note->comment_content, $match ) ) {
-			$payid = $match[1];
-			continue;
-		}
-
-	}
-
-	// If we cannot grab the PayPal Transaction ID from comment notes, try from the transaction ID instead.
-	if ( ! $payid ) {
-
-		$payid = edd_get_payment_transaction_id( $payment_id );
-
-		if ( ! $payid ) {
-			echo '<pre>' . var_export( __( 'There was an issue grabbing the transaction ID for the PayPal payment. This payment should be refunded from the PayPal website.', 'easy-digital-downloads' ), true ) . '</pre>';
-			die;
-		}
+	if( ! is_a( $payment, 'EDD_Payment' ) && is_numeric( $payment ) ) {
+		$payment = new EDD_Payment( $payment );
 	}
 
 	// Set PayPal API key credentials.
-	$key		 = get_post_meta( $payment_id, '_edd_payment_mode', true );
 	$credentials = array(
-		'api_endpoint'  => 'test' == $key ? 'https://api-3t.sandbox.paypal.com/nvp' : 'https://api-3t.paypal.com/nvp',
-		'api_username'  => edd_get_option( 'paypal_' . $key . '_api_username' ),
-		'api_password'  => edd_get_option( 'paypal_' . $key . '_api_password' ),
-		'api_signature' => edd_get_option( 'paypal_' . $key . '_api_signature' )
+		'api_endpoint'  => 'test' == $payment->mode ? 'https://api-3t.sandbox.paypal.com/nvp' : 'https://api-3t.paypal.com/nvp',
+		'api_username'  => edd_get_option( 'paypal_' . $payment->mode . '_api_username' ),
+		'api_password'  => edd_get_option( 'paypal_' . $payment->mode . '_api_password' ),
+		'api_signature' => edd_get_option( 'paypal_' . $payment->mode . '_api_signature' )
 	);
-	$credentials = apply_filters( 'edd_refund_paypal_api_credentials', $credentials, $payment_id );
 
-	// Prepare body of the refund request.
+	$credentials = apply_filters( 'edd_paypal_refund_api_credentials', $credentials, $payment );
+
 	$body = array(
 		'USER' 			=> $credentials['api_username'],
 		'PWD'  			=> $credentials['api_password'],
 		'SIGNATURE' 	=> $credentials['api_signature'],
-		'VERSION' 		=> '94',
-		'METHOD' 		=> 'RefundTransaction',
-		'TRANSACTIONID' => $payid,
-		'REFUNDTYPE' 	=> 'Full'
+		'VERSION'       => '124',
+		'METHOD'        => 'RefundTransaction',
+		'TRANSACTIONID' => $payment->transaction_id,
+		'REFUNDTYPE'    => 'Full'
 	);
-	$body = apply_filters( 'edd_refund_paypal_body_args', $body, $payment_id );
-	foreach ( $body as $k => $v ) {
-		$body[ $k ] = urlencode( $v );
-	}
-	$body = http_build_query( $body, '', '&' );
+
+	$body = apply_filters( 'edd_paypal_refund_body_args', $body, $payment );
 
 	// Prepare the headers of the refund request.
 	$headers = array(
 		'Content-Type'  => 'application/x-www-form-urlencoded',
 		'Cache-Control' => 'no-cache'
 	);
-	$headers = apply_filters( 'edd_refund_paypal_header_args', $headers, $payment_id );
+
+	$headers = apply_filters( 'edd_paypal_refund_header_args', $headers, $payment );
 
 	// Prepare args of the refund request.
 	$args = array(
 		'body' 	      => $body,
 		'headers'     => $headers,
-		'sslverify'   => false,
 		'httpversion' => '1.1'
 	);
-	$args = apply_filters( 'edd_refund_paypal_request_args', $args, $payment_id );
 
-	// Make the request to PayPal.
-	$request  = wp_remote_post( esc_url_raw( $credentials['api_endpoint'] ), $args );
-	$response = wp_remote_retrieve_body( $request );
+	$args = apply_filters( 'edd_paypal_refund_request_args', $args, $payment );
 
-    // If the request failed, return early with the notice.
-    if ( ! $response ) {
-		echo '<pre>' . var_export( sprintf( __( 'The refund request to PayPal failed: %s. This payment needs to be managed from the PayPal website directly.', 'easy-digital-downloads' ), $response ), true ) . '</pre>';
-		die;
-    }
+	$error_msg = '';
+	$request   = wp_remote_post( $credentials['api_endpoint'], $args );
 
-    // Build out the response into an array.
-    wp_parse_str( $response, $parsed_response );
-	if ( 'Success' !== $parsed_response['ACK'] ) {
-		echo '<pre>' . var_export( sprintf( __( '%s. This payment needs to be managed from the PayPal website directly.', 'easy-digital-downloads' ), $parsed_response['L_LONGMESSAGE0'] ), true ) . '</pre>';
-		die;
+	if ( is_wp_error( $request ) ) {
+
+		$success   = false;
+		$error_msg = $request->get_error_message();
+
+	} else {
+
+		$body = wp_remote_retrieve_body( $request );
+		if( is_string( $body ) ) {
+			wp_parse_str( $body, $body );
+		}
+
+		if( empty( $request['response'] ) ) {
+			$success = false;
+		}
+
+		if( empty( $request['response']['code'] ) || 200 !== (int) $request['response']['code'] ) {
+			$success = false;
+		}
+
+		if( empty( $request['response']['message'] ) || 'OK' !== $request['response']['message'] ) {
+			$success = false;
+		}
+
+		if( isset( $body['ACK'] ) && 'success' === strtolower( $body['ACK'] ) ) {
+			$success = true;
+		} else {
+			$success = false;
+			if( isset( $body['L_LONGMESSAGE0'] ) ) {
+				$error_msg = $body['L_LONGMESSAGE0'];
+				$payment->add_note( sprintf( __( 'PayPal refund failed: %s', 'edd-recurring' ), $error_msg ) );
+			}
+		}
+
 	}
 
-	// Insert a payment note with the refund ID and set our meta field so we don't accidentally try to refund again in the future.
-	edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Refund Transaction ID: %s', 'easy-digital-downloads' ) , $parsed_response['REFUNDTRANSACTIONID'] ) );
-	update_post_meta( $payment_id, '_edd_paypal_refunded', true );
+	if( $success ) {
+
+		// Prevents the PayPal Express one-time gateway from trying to process the refundl
+		$payment->update_meta( '_edd_paypal_refunded', true );
+		$payment->add_note( sprintf( __( 'PayPal refund transaction ID: %s', 'edd-recurring' ), $body['REFUNDTRANSACTIONID'] ) );
+
+	}
 
 	// Run hook letting people know the payment has been refunded successfully.
-	do_action( 'edd_refund_paypal_purchase', $payment_id );
+	do_action( 'edd_paypal_refund_purchase', $payment );
 }
