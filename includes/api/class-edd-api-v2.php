@@ -209,7 +209,8 @@ class EDD_API_V2 extends EDD_API_V1 {
 
 			$args['date'] = $date_range;
 
-		} else {
+		} elseif( ! empty( $args['date'] ) ) {
+
 			if( $args['date'] == 'this_quarter' || $args['date'] == 'last_quarter'  ) {
 
 				$args['date'] = array(
@@ -266,7 +267,7 @@ class EDD_API_V2 extends EDD_API_V1 {
 					// Customer with registered account
 
 					// id is going to get deprecated in the future, user user_id or customer_id instead
-					$customers['customers'][$customer_count]['info']['id']           = $customer_obj->user_id;
+					$customers['customers'][$customer_count]['info']['id']           = $customer_obj->id;
 					$customers['customers'][$customer_count]['info']['user_id']      = $customer_obj->user_id;
 					$customers['customers'][$customer_count]['info']['username']     = $user_data->user_login;
 					$customers['customers'][$customer_count]['info']['display_name'] = $user_data->display_name;
