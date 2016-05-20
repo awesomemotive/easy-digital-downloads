@@ -67,10 +67,13 @@ function edd_register_paypal_gateway_settings( $gateway_settings ) {
 			),
 		);
 
-		$disable_ipn_desc   = __( 'If payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases.', 'easy-digital-downloads' );
+		$disable_ipn_desc = sprintf(
+			__( 'If payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases. See our <a href="%s" target="_blank">FAQ</a> for further information.', 'easy-digital-downloads' ),
+			'http://docs.easydigitaldownloads.com/article/190-payments-not-marked-as-complete'
+		);
 
 		if ( ! is_ssl() ) {
-			$disable_ipn_desc .= '<div class="notice notice-warning inline"><p>' . __( 'For PayPal IPN verification to successfully complete, your site must have an SSL certificate.', 'easy-digital-downloads' ) . '</p></div>';
+			$disable_ipn_desc .= '<div class="notice notice-warning inline"><p>' . sprintf( __( 'PayPal IPN verification requires an SSL certificate. See our <a href="%s" target="_blank">PayPal SSL FAQ</a> for more information.', 'easy-digital-downloads' ), 'http://docs.easydigitaldownloads.com/article/1244-do-i-need-ssl-if-i-use-paypal' ) . '</p></div>';
 		}
 
 		$paypal_settings['disable_paypal_verification'] = array(
