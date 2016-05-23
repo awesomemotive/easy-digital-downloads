@@ -2,10 +2,10 @@
 /**
  * Plugin Name: Easy Digital Downloads
  * Plugin URI: https://easydigitaldownloads.com
- * Description: Serve Digital Downloads Through WordPress.
+ * Description: The easiest way to sell digital products with WordPress.
  * Author: Pippin Williamson and Company
  * Author URI: https://easydigitaldownloads.com
- * Version: 2.5.13
+ * Version: 2.5.16
  * Text Domain: easy-digital-downloads
  * Domain Path: languages
  *
@@ -25,7 +25,7 @@
  * @package EDD
  * @category Core
  * @author Pippin Williamson
- * @version 2.5.13
+ * @version 2.5.16
  */
 
 // Exit if accessed directly.
@@ -117,7 +117,7 @@ final class Easy_Digital_Downloads {
 	 * EDD Customer meta DB Object.
 	 *
 	 * @var object|EDD_DB_Customer_Meta
-	 * @since 2.1
+	 * @since 2.6
 	 */
 	public $customer_meta;
 
@@ -195,7 +195,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '2.5.13' );
+			define( 'EDD_VERSION', '2.5.16' );
 		}
 
 		// Plugin Folder Path.
