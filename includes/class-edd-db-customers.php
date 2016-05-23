@@ -452,16 +452,14 @@ class EDD_DB_Customers extends EDD_DB  {
 
 				if( ! empty( $args['date']['start'] ) ) {
 
-					$start = date( 'Y-m-d H:i:s', strtotime( $args['date']['start'] ) );
-
+					$start = date( 'Y-m-d 00:00:00', strtotime( $args['date']['start'] ) );
 					$where .= " AND `date_created` >= '{$start}'";
 
 				}
 
 				if( ! empty( $args['date']['end'] ) ) {
 
-					$end = date( 'Y-m-d H:i:s', strtotime( $args['date']['end'] ) );
-
+					$end = date( 'Y-m-d 23:59:59', strtotime( $args['date']['end'] ) );
 					$where .= " AND `date_created` <= '{$end}'";
 
 				}
@@ -578,13 +576,4 @@ class EDD_DB_Customers extends EDD_DB  {
 		update_option( $this->table_name . '_db_version', $this->version );
 	}
 
-	/**
-	 * Check if the Customers table was ever installed
-	 *
-	 * @since  2.4
-	 * @return bool Returns if the customers table was installed and upgrade routine run
-	 */
-	public function installed() {
-		return $this->table_exists( $this->table_name );
-	}
 }

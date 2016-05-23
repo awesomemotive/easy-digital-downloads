@@ -18,6 +18,7 @@ env:
 - WP_VERSION=4.1 WP_MULTISITE=0
 - WP_VERSION=4.0 WP_MULTISITE=0
 
+
 matrix:
   include:
     - php: 5.3
@@ -41,6 +42,11 @@ after_script:
 - if [[ $TRAVIS_PHP_VERSION = '5.5' && $WP_VERSION = 'latest' && $WP_MULTISITE = '0'
   ]]; then php ocular.phar code-coverage:upload --format=php-clover coverage.clover;
   fi
+
+branches:
+  only:
+    - master
+    - /^release\/.*$/
 
 notifications:
   slack:
