@@ -27,7 +27,7 @@ class EDD_Batch_Import {
 	 * @since 2.6
 	 */
 	public $file;
-	
+
 	/**
 	 * The parsed CSV file being imported
 	 *
@@ -150,7 +150,11 @@ class EDD_Batch_Import {
 
 		foreach( $csv_columns as $key => $column ) {
 
-			$this->field_mapping[ $import_fields[ $key ] ] = $column;
+			if( ! empty( $import_fields[ $key ] ) ) {
+
+				$this->field_mapping[ $import_fields[ $key ] ] = $column;
+
+			}
 
 		}
 	}

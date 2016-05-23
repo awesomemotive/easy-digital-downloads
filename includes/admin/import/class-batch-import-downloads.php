@@ -26,18 +26,23 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 
 		// Set up default field map values
 		$this->field_mapping = array(
-			'post_title'   => '',
-			'post_name'    => '',
-			'post_status'  => 'draft',
-			'post_author'  => '',
-			'post_date'    => '',
-			'post_content' => '',
-			'post_excerpt' => '',
-			'price'        => '',
-			'files'        => '',
-			'categories'   => '',
-			'tags'         => '',
-			'notes'        => ''
+			'post_title'     => '',
+			'post_name'      => '',
+			'post_status'    => 'draft',
+			'post_author'    => '',
+			'post_date'      => '',
+			'post_content'   => '',
+			'post_excerpt'   => '',
+			'price'          => '',
+			'files'          => '',
+			'categories'     => '',
+			'tags'           => '',
+			'sku'            => '',
+			'earnings'       => '',
+			'sales'          => '',
+			'featured_image' => '',
+			'download_limit' => '',
+			'notes'          => ''
 		);
 	}
 
@@ -99,7 +104,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 				$download_id = wp_insert_post( $args );
 
 				// setup categories
-				if( ! empty( $row[ $this->field_mapping['categories'] ] ) ) {
+				if( ! empty( $this->field_mapping['categories'] ) && ! empty( $row[ $this->field_mapping['categories'] ] ) ) {
 
 					$categories = $this->str_to_array( $row[ $this->field_mapping['categories'] ] );
 
@@ -108,7 +113,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 				}
 
 				// setup tags
-				if( ! empty( $row[ $this->field_mapping['tags'] ] ) ) {
+				if( ! empty( $this->field_mapping['tags'] ) && ! empty( $row[ $this->field_mapping['tags'] ] ) ) {
 
 					$tags = $this->str_to_array( $row[ $this->field_mapping['tags'] ] );
 
@@ -117,7 +122,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 				}
 
 				// setup price(s)
-				if( ! empty( $row[ $this->field_mapping['price'] ] ) ) {
+				if( ! empty( $this->field_mapping['price'] ) && ! empty( $row[ $this->field_mapping['price'] ] ) ) {
 
 					$price = $row[ $this->field_mapping['price'] ];
 
@@ -126,7 +131,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 				}
 
 				// setup files
-				if( ! empty( $row[ $this->field_mapping['files'] ] ) ) {
+				if( ! empty( $this->field_mapping['files'] ) && ! empty( $row[ $this->field_mapping['files'] ] ) ) {
 
 					$files = $this->str_to_array( $row[ $this->field_mapping['files'] ] );
 
@@ -135,7 +140,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 				}
 
 				// Product Image
-				if( ! empty( $row[ $this->field_mapping['featured_image'] ] ) ) {
+				if( ! empty( $this->field_mapping['featured_image'] ) && ! empty( $row[ $this->field_mapping['featured_image'] ] ) ) {
 
 					$image = sanitize_text_field( $row[ $this->field_mapping['featured_image'] ] );
 
@@ -144,31 +149,31 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 				}
 
 				// File download limit
-				if( ! empty( $row[ $this->field_mapping['download_limit'] ] ) ) {
+				if( ! empty( $this->field_mapping['download_limit'] ) && ! empty( $row[ $this->field_mapping['download_limit'] ] ) ) {
 
 					update_post_meta( $download_id, '_edd_download_limit', absint( $row[ $this->field_mapping['download_limit'] ] ) );
 				}
 
 				// Sale count
-				if( ! empty( $row[ $this->field_mapping['sales'] ] ) ) {
+				if( ! empty( $this->field_mapping['sales'] ) && ! empty( $row[ $this->field_mapping['sales'] ] ) ) {
 
 					update_post_meta( $download_id, '_edd_download_sales', absint( $row[ $this->field_mapping['sales'] ] ) );
 				}
 
 				// Earnings
-				if( ! empty( $row[ $this->field_mapping['earnings'] ] ) ) {
+				if( ! empty( $this->field_mapping['earnings'] ) && ! empty( $row[ $this->field_mapping['earnings'] ] ) ) {
 
 					update_post_meta( $download_id, '_edd_download_earnings', edd_sanitize_amount( $row[ $this->field_mapping['earnings'] ] ) );
 				}
 
 				// Notes
-				if( ! empty( $row[ $this->field_mapping['notes'] ] ) ) {
+				if( ! empty( $this->field_mapping['notes'] ) && ! empty( $row[ $this->field_mapping['notes'] ] ) ) {
 
 					update_post_meta( $download_id, 'edd_product_notes', sanitize_text_field( $row[ $this->field_mapping['notes'] ] ) );
 				}
 
 				// SKU
-				if( ! empty( $row[ $this->field_mapping['sku'] ] ) ) {
+				if( ! empty( $this->field_mapping[ 'sku' ] ) && ! empty( $row[ $this->field_mapping[ 'sku' ] ] ) ) {
 
 					update_post_meta( $download_id, 'edd_sku', sanitize_text_field( $row[ $this->field_mapping['sku'] ] ) );
 				}
@@ -440,7 +445,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 
 		}
 
-		return $term_ids;
+		return array_map( 'absint', $term_ids );
 	}
 
 	public function get_list_table_url() {
