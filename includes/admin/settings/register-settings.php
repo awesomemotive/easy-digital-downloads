@@ -1632,12 +1632,8 @@ function edd_color_select_callback( $args ) {
  *
  * @since 1.0
  * @param array $args Arguments passed by the setting
- *
- * @global $wp_version WordPress Version
  */
 function edd_rich_editor_callback( $args ) {
-	global $wp_version;
-
 	$edd_option = edd_get_option( $args['id'] );
 
 	if ( $edd_option ) {
