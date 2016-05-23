@@ -441,45 +441,54 @@ function edd_get_registered_settings() {
 						'desc' => __( 'If payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
 					),
+					'paypal_api_keys_desc' => array(
+						'id'   => 'paypal_api_keys_desc',
+						'name' => __( 'API Credentials', 'easy-digital-downloads' ),
+						'type' => 'descriptive_text',
+						'desc' => sprintf(
+							__( 'API credentials are necessary to process PayPal refunds from inside WordPress. These can be obtained from <a href="%s" target="_blank">your PayPal account</a>.', 'easy-digital-downloads' ),
+							'https://developer.paypal.com/docs/classic/api/apiCredentials/#creating-an-api-signature'
+						)
+					),
 					'paypal_live_api_username' => array(
 						'id'   => 'paypal_live_api_username',
 						'name' => __( 'Live API Username', 'easy-digital-downloads' ),
-						'desc' => __( 'Your PayPal live API username. Necessary if you want to refund PayPal payments inside the WordPress admin.', 'easy-digital-downloads' ),
+						'desc' => __( 'Your PayPal live API username. ', 'easy-digital-downloads' ),
 						'type' => 'text',
 						'size' => 'regular'
 					),
 					'paypal_live_api_password' => array(
 						'id'   => 'paypal_live_api_password',
 						'name' => __( 'Live API Password', 'easy-digital-downloads' ),
-						'desc' => __( 'Your PayPal live API password. Necessary if you want to refund PayPal payments inside the WordPress admin.', 'easy-digital-downloads' ),
+						'desc' => __( 'Your PayPal live API password.', 'easy-digital-downloads' ),
 						'type' => 'text',
 						'size' => 'regular'
 					),
 					'paypal_live_api_signature' => array(
 						'id'   => 'paypal_live_api_signature',
 						'name' => __( 'Live API Signature', 'easy-digital-downloads' ),
-						'desc' => __( 'Your PayPal live API signature. Necessary if you want to refund PayPal payments inside the WordPress admin.', 'easy-digital-downloads' ),
+						'desc' => __( 'Your PayPal live API signature.', 'easy-digital-downloads' ),
 						'type' => 'text',
 						'size' => 'regular'
 					),
 					'paypal_test_api_username' => array(
 						'id'   => 'paypal_test_api_username',
 						'name' => __( 'Test API Username', 'easy-digital-downloads' ),
-						'desc' => __( 'Your PayPal test API username. Necessary if you want to refund PayPal payments inside the WordPress admin.', 'easy-digital-downloads' ),
+						'desc' => __( 'Your PayPal test API username.', 'easy-digital-downloads' ),
 						'type' => 'text',
 						'size' => 'regular'
 					),
 					'paypal_test_api_password' => array(
 						'id'   => 'paypal_test_api_password',
 						'name' => __( 'Test API Password', 'easy-digital-downloads' ),
-						'desc' => __( 'Your PayPal test API password. Necessary if you want to refund PayPal payments inside the WordPress admin.', 'easy-digital-downloads' ),
+						'desc' => __( 'Your PayPal test API password.', 'easy-digital-downloads' ),
 						'type' => 'text',
 						'size' => 'regular'
 					),
 					'paypal_test_api_signature' => array(
 						'id'   => 'paypal_test_api_signature',
 						'name' => __( 'Test API Signature', 'easy-digital-downloads' ),
-						'desc' => __( 'Your PayPal test API signature. Necessary if you want to refund PayPal payments inside the WordPress admin.', 'easy-digital-downloads' ),
+						'desc' => __( 'Your PayPal test API signature.', 'easy-digital-downloads' ),
 						'type' => 'text',
 						'size' => 'regular'
 					),
