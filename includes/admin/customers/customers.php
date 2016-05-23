@@ -257,6 +257,10 @@ function edd_customers_view( $customer ) {
 					<span class="customer-name info-item editable"><span data-key="name"><?php echo $customer->name; ?></span></span>
 					<span class="customer-name info-item edit-item"><input size="20" data-key="email" name="customerinfo[email]" type="text" value="<?php echo $customer->email; ?>" placeholder="<?php _e( 'Customer Email', 'easy-digital-downloads' ); ?>" /></span>
 					<span class="customer-email info-item editable" data-key="email"><?php echo $customer->email; ?></span>
+					<?php foreach( $customer->emails as $key => $email ): if( $customer->email == $email ) { continue; } ?>
+						<span class="customer-email-<?php echo $key; ?> info-item editable">&nbsp;&ndash;&nbsp;<?php echo $email; ?></span>
+						<span class="customer-email-<?php echo $key; ?> info-item edit-item"><input size="20" data-key="emails[<?php echo absint( $key ); ?>]" name="customerinfo[emails][<?php echo absint( $key ); ?>]" type="text" value="<?php echo esc_attr( $email ); ?>" placeholder="<?php _e( 'Alternate Email', 'easy-digital-downloads' ); ?>" /></span>
+					<?php endforeach; ?>
 					<span class="customer-since info-item">
 						<?php _e( 'Customer since', 'easy-digital-downloads' ); ?>
 						<?php echo date_i18n( get_option( 'date_format' ), strtotime( $customer->date_created ) ) ?>
