@@ -215,6 +215,7 @@ function edd_load_admin_scripts( $hook ) {
 		'batch_export_no_class'   => __( 'You must choose a method.', 'easy-digital-downloads' ),
 		'batch_export_no_reqs'    => __( 'Required fields not completed.', 'easy-digital-downloads' ),
 		'reset_stats_warn'        => __( 'Are you sure you want to reset your store? This process is <strong><em>not reversible</em></strong>. Please be sure you have a recent backup.', 'easy-digital-downloads' ),
+		'search_placeholder'      => sprintf( __( 'Type to search all %s', 'easy-digital-downloads' ), edd_get_label_plural() )
 	));
 
 	wp_enqueue_style( 'wp-color-picker' );
@@ -226,10 +227,7 @@ function edd_load_admin_scripts( $hook ) {
 	wp_register_script( 'colorbox', $js_dir . 'jquery.colorbox-min.js', array( 'jquery' ), '1.3.20' );
 	wp_enqueue_script( 'colorbox' );
 
-	if( function_exists( 'wp_enqueue_media' ) && version_compare( $wp_version, '3.5', '>=' ) ) {
-		//call for new media manager
-		wp_enqueue_media();
-	}
+	wp_enqueue_media();
 
 	wp_register_script( 'jquery-flot', $js_dir . 'jquery.flot' . $suffix . '.js' );
 	wp_enqueue_script( 'jquery-flot' );
