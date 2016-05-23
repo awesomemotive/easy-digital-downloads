@@ -168,4 +168,153 @@ class EDD_API_V2 extends EDD_API_V1 {
 
 	}
 
+	/**
+	 * Process Get Customers API Request
+	 *
+	 * @access public
+	 * @since 2.6
+	 * @global object $wpdb Used to query the database using the WordPress Database API
+	 * @param array $args Array of arguments for filters customers
+	 * @return array $customers Multidimensional array of the customers
+	 */
+	public function get_customers( $args = array() ) {
+		global $wpdb;
+
+		$paged    = $this->get_paged();
+		$per_page = $this->per_page();
+		$offset   = $per_page * ( $paged - 1 );
+
+		$defaults = array(
+			'customer'  => null,
+			'date'      => null,
+			'startdate' => null,
+			'enddate'   => null,
+			'number'    => $per_page,
+			'offset'    => $offset,
+		);
+
+		$args      = wp_parse_args( $args, $defaults );
+		$customers = array();
+		$error     = array();
+
+		if( ! user_can( $this->user_id, 'view_shop_sensitive_data' ) && ! $this->override ) {
+			return $customers;
+		}
+
+		if( is_numeric( $args['customer'] ) ) {
+			$field = 'id';
+		} else {
+			$field = 'email';
+		}
+
+		$args[ $field ] = $args['customer'];
+
+		$dates = $this->get_dates( $args );
+
+		if( $args['date'] === 'range' ) {
+
+			// Ensure the end date is later than the start date
+			if( ( ! empty( $args['enddate'] ) && ! empty( $args['enddate'] ) ) && $args['enddate'] < $args['startdate'] ) {
+				$error['error'] = __( 'The end date must be later than the start date!', 'easy-digital-downloads' );
+			}
+
+			$date_range = array();
+			if ( ! empty( $args['startdate'] ) ) {
+				$date_range['start'] = $dates['year']     . sprintf('%02d', $dates['m_start'] ) . $dates['day_start'];
+			}
+
+			if ( ! empty( $args['enddate'] ) ) {
+				$date_range['end'] = $dates['year_end'] . sprintf('%02d', $dates['m_end'] )   . $dates['day_end'];
+			}
+
+			$args['date'] = $date_range;
+
+		} elseif( ! empty( $args['date'] ) ) {
+
+			if( $args['date'] == 'this_quarter' || $args['date'] == 'last_quarter'  ) {
+
+				$args['date'] = array(
+					'start' => $dates['year'] . sprintf('%02d', $dates['m_start'] ) . '01',
+					'end'   => $dates['year'] . sprintf('%02d', $dates['m_end'] )   . cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] ),
+				);
+
+			} else if ( $args['date'] == 'this_month' || $args['date'] == 'last_month' ) {
+				$args['date'] = array(
+					'start' => $dates['year'] . sprintf( '%02d', $dates['m_start'] ) . '01',
+					'end'   => $dates['year'] . sprintf( '%02d', $dates['m_end'] ). cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] ),
+				);
+			} else if ( $args['date'] == 'this_year' || $args['date'] == 'last_year' ) {
+				$args['date'] = array(
+					'start' => $dates['year'] . '0101',
+					'end'   => $dates['year'] . '1231',
+				);
+			} else {
+				$args['date'] = $dates['year'] . sprintf('%02d', $dates['m_start'] ) . $dates['day'];
+			}
+		}
+
+		unset( $args['startdate'], $args['enddate'] );
+
+		$customer_query = EDD()->customers->get_customers( $args );
+		$customer_count = 0;
+
+		if( $customer_query ) {
+
+			foreach ( $customer_query as $customer_obj ) {
+
+				$names      = explode( ' ', $customer_obj->name );
+				$first_name = ! empty( $names[0] ) ? $names[0] : '';
+				$last_name  = '';
+				if( ! empty( $names[1] ) ) {
+					unset( $names[0] );
+					$last_name = implode( ' ', $names );
+				}
+
+				$customers['customers'][$customer_count]['info']['id']           = '';
+				$customers['customers'][$customer_count]['info']['user_id']      = '';
+				$customers['customers'][$customer_count]['info']['username']     = '';
+				$customers['customers'][$customer_count]['info']['display_name'] = '';
+				$customers['customers'][$customer_count]['info']['customer_id']  = $customer_obj->id;
+				$customers['customers'][$customer_count]['info']['first_name']   = $first_name;
+				$customers['customers'][$customer_count]['info']['last_name']    = $last_name;
+				$customers['customers'][$customer_count]['info']['email']        = $customer_obj->email;
+				$customers['customers'][$customer_count]['info']['date_created'] = $customer_obj->date_created;
+
+				if ( ! empty( $customer_obj->user_id ) && $customer_obj->user_id > 0 ) {
+
+					$user_data = get_userdata( $customer_obj->user_id );
+
+					// Customer with registered account
+
+					// id is going to get deprecated in the future, user user_id or customer_id instead
+					$customers['customers'][$customer_count]['info']['id']           = $customer_obj->id;
+					$customers['customers'][$customer_count]['info']['user_id']      = $customer_obj->user_id;
+					$customers['customers'][$customer_count]['info']['username']     = $user_data->user_login;
+					$customers['customers'][$customer_count]['info']['display_name'] = $user_data->display_name;
+
+				}
+
+				$customers['customers'][$customer_count]['stats']['total_purchases'] = $customer_obj->purchase_count;
+				$customers['customers'][$customer_count]['stats']['total_spent']     = $customer_obj->purchase_value;
+				$customers['customers'][$customer_count]['stats']['total_downloads'] = edd_count_file_downloads_of_user( $customer_obj->email );
+
+				$customer_count++;
+
+			}
+
+		} elseif( $args['customer'] ) {
+
+			$error['error'] = sprintf( __( 'Customer %s not found!', 'easy-digital-downloads' ), $customer );
+			return $error;
+
+		} else {
+
+			$error['error'] = __( 'No customers found!', 'easy-digital-downloads' );
+			return $error;
+
+		}
+
+		return $customers;
+	}
+
 }
