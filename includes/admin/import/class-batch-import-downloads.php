@@ -103,13 +103,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 
 					$categories = $this->str_to_array( $row[ $this->field_mapping['categories'] ] );
 
-					$categories = $this->maybe_create_terms( $categories, 'download_category' );
-
-					if( ! empty( $categories ) ) {
-
-						wp_set_object_terms( $download_id, $categories, 'download_category' );
-
-					}
+					$this->set_taxonomy_terms( $download_id, $categories, 'download_category' );
 
 				}
 
@@ -118,13 +112,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 
 					$tags = $this->str_to_array( $row[ $this->field_mapping['tags'] ] );
 
-					$tags = $this->maybe_create_terms( $tags, 'download_tag' );
-
-					if( ! empty( $tags ) ) {
-
-						wp_set_object_terms( $download_id, $tags, 'download_tag' );
-
-					}
+					$this->set_taxonomy_terms( $download_id, $tags, 'download_tag' );
 
 				}
 
@@ -133,36 +121,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 
 					$price = $row[ $this->field_mapping['price'] ];
 
-					if( is_numeric( $price ) ) {
-
-						update_post_meta( $download_id, 'edd_price', edd_sanitize_amount( $price ) );
-
-					} else {
-
-						$prices = $this->str_to_array( $price );
-
-						if( ! empty( $prices ) ) {
-
-							$variable_prices = array();
-							foreach( $prices as $price ) {
-
-								// See if this matches the EDD Download export for variable prices
-								if( false !== strpos( $price, ':' ) ) {
-
-									$price = array_map( 'trim', explode( ':', $price ) );
-
-									$variable_prices[] = array( 'name' => $price[0], 'amount' => $price[1] );
-
-								}
-
-							}
-
-							update_post_meta( $download_id, '_variable_pricing', 1 );
-							update_post_meta( $download_id, 'edd_variable_prices', $variable_prices );
-
-						}
-
-					}
+					$this->set_price( $download_id, $price );
 
 				}
 
@@ -171,28 +130,17 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 
 					$files = $this->str_to_array( $row[ $this->field_mapping['files'] ] );
 
-					if( ! empty( $files ) ) {
-
-						$download_files = array();
-						foreach( $files as $file ) {
-
-							$download_files[] = array( 'file' => $file, 'name' => basename( $file ) );
-
-						}
-
-						update_post_meta( $download_id, 'edd_download_files', $download_files );
-
-					}
+					$this->set_files( $download_id, $files );
 
 				}
 
 				// Product Image
 				if( ! empty( $row[ $this->field_mapping['featured_image'] ] ) ) {
 
-					// Set up image here
-					$image_id = 0;
+					$image = sanitize_text_field( $row[ $this->field_mapping['featured_image'] ] );
 
-					update_post_meta( $download_id, '_thumbnail_id', $image_id );
+					$this->set_image( $download_id, $image );
+
 				}
 
 				// File download limit
@@ -281,6 +229,179 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 		}
 
 		return array();
+
+	}
+
+	private function set_price( $download_id = 0, $price = '' ) {
+
+		if( is_numeric( $price ) ) {
+
+			update_post_meta( $download_id, 'edd_price', edd_sanitize_amount( $price ) );
+
+		} else {
+
+			$prices = $this->str_to_array( $price );
+
+			if( ! empty( $prices ) ) {
+
+				$variable_prices = array();
+				foreach( $prices as $price ) {
+
+					// See if this matches the EDD Download export for variable prices
+					if( false !== strpos( $price, ':' ) ) {
+
+						$price = array_map( 'trim', explode( ':', $price ) );
+
+						$variable_prices[] = array( 'name' => $price[0], 'amount' => $price[1] );
+
+					}
+
+				}
+
+				update_post_meta( $download_id, '_variable_pricing', 1 );
+				update_post_meta( $download_id, 'edd_variable_prices', $variable_prices );
+
+			}
+
+		}
+
+	}
+
+	private function set_files( $download_id = 0, $files = array() ) {
+
+		if( ! empty( $files ) ) {
+
+			$download_files = array();
+			foreach( $files as $file ) {
+
+				$download_files[] = array( 'file' => $file, 'name' => basename( $file ) );
+
+			}
+
+			update_post_meta( $download_id, 'edd_download_files', $download_files );
+
+		}
+
+	}
+
+	private function set_image( $download_id = 0, $image = '' ) {
+
+		$is_url   = false !== filter_var( $image, FILTER_VALIDATE_URL );
+		$is_local = $is_url && false !== strpos( $image, site_url() );
+		$ext      = edd_get_file_extension( $image );
+
+		if( $is_url && $is_local ) {
+
+			// Image given by URL, see if we have an attachment already
+			$attachment_id = attachment_url_to_postid( $image );
+
+		} elseif( $is_url ) {
+
+			if( ! function_exists( 'media_sideload_image' ) ) {
+
+				require_once( ABSPATH . 'wp-admin/includes/file.php' );
+
+			}
+
+			// Image given by external URL
+			$url = media_sideload_image( $image, $download_id, '', 'src' );
+
+			if( ! is_wp_error( $url ) ) {
+
+				$attachment_id = attachment_url_to_postid( $url );
+
+			}
+
+
+		} elseif( false === strpos( $image, '/' ) && edd_get_file_extension( $image ) ) {
+
+			// Image given by name only
+
+			$upload_dir = wp_upload_dir();
+
+			if( file_exists( trailingslashit( $upload_dir['path'] ) . $image ) ) {
+
+				// Look in current upload directory first
+				$file = trailingslashit( $upload_dir['path'] ) . $image;
+
+			} else {
+
+				// Now look through year/month sub folders of upload directory for files with our image's same extension
+				$files = glob( $upload_dir['basedir'] . '/*/*/*{' . $ext . '}', GLOB_BRACE );
+				foreach( $files as $file ) {
+
+					if( basename( $file ) == $image ) {
+
+						// Found our file
+						break;
+
+					}
+
+					// Make sure $file is unset so our empty check below does not return a false positive
+					unset( $file );
+
+				}
+
+			}
+
+			if( ! empty( $file ) ) {
+
+				// We found the file, let's see if it already exists in the media library
+
+				$guid          = str_replace( $upload_dir['basedir'], $upload_dir['baseurl'], $file );
+				$attachment_id = attachment_url_to_postid( $guid );
+
+
+				if( empty( $attachment_id ) ) {
+
+					// Doesn't exist in the media library, let's add it
+
+					$filetype = wp_check_filetype( basename( $file ), null );
+
+					// Prepare an array of post data for the attachment.
+					$attachment = array(
+						'guid'           => $guid,
+						'post_mime_type' => $filetype['type'],
+						'post_title'     => preg_replace( '/\.[^.]+$/', '', $image ),
+						'post_content'   => '',
+						'post_status'    => 'inherit'
+					);
+
+					// Insert the attachment.
+					$attachment_id = wp_insert_attachment( $attachment, $file, $download_id );
+
+					// Make sure that this file is included, as wp_generate_attachment_metadata() depends on it.
+					require_once( ABSPATH . 'wp-admin/includes/image.php' );
+
+					// Generate the metadata for the attachment, and update the database record.
+					$attach_data = wp_generate_attachment_metadata( $attachment_id, $file );
+					wp_update_attachment_metadata( $attachment_id, $attach_data );
+
+				}
+
+			}
+
+		}
+
+		if( ! empty( $attachment_id ) ) {
+
+			return set_post_thumbnail( $download_id, $attachment_id );
+
+		}
+
+		return false;
+
+	}
+
+	private function set_taxonomy_terms( $download_id = 0, $terms = array(), $taxonomy = 'download_category' ) {
+
+		$terms = $this->maybe_create_terms( $terms, $taxonomy );
+
+		if( ! empty( $terms ) ) {
+
+			wp_set_object_terms( $download_id, $terms, $taxonomy );
+
+		}
 
 	}
 
