@@ -133,7 +133,16 @@ function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
 	// Grab only the post ids of the products purchased on this order
 	$purchase_product_ids = array();
 	foreach ( $purchase_data as $purchase_meta ) {
-		$purchase_product_ids[] = @wp_list_pluck( $purchase_meta, 'id' );
+
+		$purchase_ids = @wp_list_pluck( $purchase_meta, 'id' );
+
+		if ( ! is_array( $purchase_ids ) || empty( $purchase_ids ) ) {
+			continue;
+		}
+
+		$purchase_ids           = array_values( $purchase_ids );
+		$purchase_product_ids[] = $purchase_ids;
+
 	}
 
 	// Ensure that grabbed products actually HAVE downloads
@@ -153,15 +162,16 @@ function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
 	$product_ids = array_unique( $purchased_products );
 
 	// Make sure we still have some products and a first item
-	if ( empty ( $product_ids ) || ! isset( $product_ids[0] ) )
+	if ( empty ( $product_ids ) || ! isset( $product_ids[0] ) ) {
 		return false;
+	}
 
 	$post_type 	 = get_post_type( $product_ids[0] );
 
 	$args = apply_filters( 'edd_get_users_purchased_products_args', array(
-		'include'			=> $product_ids,
-		'post_type' 		=> $post_type,
-		'posts_per_page'  	=> -1
+		'include'        => $product_ids,
+		'post_type'      => $post_type,
+		'posts_per_page' => -1,
 	) );
 
 	return apply_filters( 'edd_users_purchased_products_list', get_posts( $args ) );
@@ -227,7 +237,7 @@ function edd_has_user_purchased( $user_id, $downloads, $variable_price_id = null
  *
  * @access      public
  * @since       1.0
- * @param       $user_id int - the ID of the user to check
+ * @param       int $user_id - the ID of the user to check
  * @return      bool - true if has purchased, false other wise.
  */
 function edd_has_purchases( $user_id = null ) {
@@ -249,8 +259,8 @@ function edd_has_purchases( $user_id = null ) {
  *
  * @access      public
  * @since       1.6
- * @param       $user int|string - the ID or email of the customer to retrieve stats for
- * @param       $mode string - "test" or "live"
+ * @param       int|string $user - the ID or email of the customer to retrieve stats for
+ * @param       string $mode - "test" or "live"
  * @return      array
  */
 function edd_get_purchase_stats_by_user( $user = '' ) {
@@ -289,7 +299,7 @@ function edd_get_purchase_stats_by_user( $user = '' ) {
  *
  * @access      public
  * @since       1.3
- * @param       $user mixed - ID or email
+ * @param       mixed $user - ID or email
  * @return      int - the total number of purchases
  */
 function edd_count_purchases_of_customer( $user = null ) {
@@ -307,7 +317,7 @@ function edd_count_purchases_of_customer( $user = null ) {
  *
  * @access      public
  * @since       1.3
- * @param       $user mixed - ID or email
+ * @param       mixed $user - ID or email
  * @return      float - the total amount the user has spent
  */
 function edd_purchase_total_of_user( $user = null ) {
@@ -322,7 +332,7 @@ function edd_purchase_total_of_user( $user = null ) {
  *
  * @access      public
  * @since       1.3
- * @param       $user mixed - ID or email
+ * @param       mixed $user - ID or email
  * @return      int - The total number of files the user has downloaded
  */
 function edd_count_file_downloads_of_user( $user ) {
@@ -389,7 +399,7 @@ add_action( 'user_register', 'edd_connect_existing_customer_to_new_user', 10, 1 
  *
  * @access      public
  * @since       1.6
- * @param       $user_id INT - the new user's ID
+ * @param       int $user_id - the new user's ID
  * @return      void
  */
 function edd_add_past_purchases_to_new_user( $user_id ) {
@@ -487,10 +497,9 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 		return;
 	}
 
+	$emails     = new EDD_Emails;
 	$from_name  = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
 	$from_email = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
-
-	$emails = EDD()->emails;
 
 	$emails->__set( 'from_name', $from_name );
 	$emails->__set( 'from_email', $from_email );

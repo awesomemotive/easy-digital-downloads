@@ -719,24 +719,39 @@ function edd_get_timezone_id() {
 }
 
 /**
- * Convert an object to an associative array.
+ * Given an object or array of objects, convert them to arrays
  *
- * Can handle multidimensional arrays
- *
- * @since 1.7
- *
- * @param unknown $data
- * @return array
+ * @since    1.7
+ * @internal Updated in 2.6
+ * @param    object|array $object An object or an array of objects
+ * @return   array                An array or array of arrays, converted from the provided object(s)
  */
-function edd_object_to_array( $data ) {
-	if ( is_array( $data ) || is_object( $data ) ) {
-		$result = array();
-		foreach ( $data as $key => $value ) {
-			$result[ $key ] = edd_object_to_array( $value );
-		}
-		return $result;
+function edd_object_to_array( $object = array() ) {
+
+	if ( empty( $object ) || ( ! is_object( $object ) && ! is_array( $object ) ) ) {
+		return $object;
 	}
-	return $data;
+
+	if ( is_array( $object ) ) {
+		$return = array();
+		foreach ( $object as $item ) {
+			if ( is_a( $object, 'EDD_Payment' ) ) {
+				$return[] = $object->array_convert();
+			} else {
+				$return[] = edd_object_to_array( $item );
+			}
+
+		}
+	} else {
+		if ( is_a( $object, 'EDD_Payment' ) ) {
+			$return = $object->array_convert();
+		} else {
+			$return = get_object_vars( $object );
+		}
+	}
+
+	return $return;
+
 }
 
 /**
