@@ -418,33 +418,6 @@ function edd_get_registered_settings() {
 						),
 					),
 				),
-				'paypal' => array(
-					'paypal_settings' => array(
-						'id'   => 'paypal_settings',
-						'name' => '<h3>' . __( 'PayPal Standard Settings', 'easy-digital-downloads' ) . '</h3>',
-						'type' => 'header',
-					),
-					'paypal_email' => array(
-						'id'   => 'paypal_email',
-						'name' => __( 'PayPal Email', 'easy-digital-downloads' ),
-						'desc' => __( 'Enter your PayPal account\'s email', 'easy-digital-downloads' ),
-						'type' => 'text',
-						'size' => 'regular',
-					),
-					'paypal_page_style' => array(
-						'id'   => 'paypal_page_style',
-						'name' => __( 'PayPal Page Style', 'easy-digital-downloads' ),
-						'desc' => __( 'Enter the name of the page style to use, or leave blank for default', 'easy-digital-downloads' ),
-						'type' => 'text',
-						'size' => 'regular',
-					),
-					'disable_paypal_verification' => array(
-						'id'   => 'disable_paypal_verification',
-						'name' => __( 'Disable PayPal IPN Verification', 'easy-digital-downloads' ),
-						'desc' => __( 'If payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases.', 'easy-digital-downloads' ),
-						'type' => 'checkbox',
-					),
-				),
 			)
 		),
 		/** Emails Settings */
