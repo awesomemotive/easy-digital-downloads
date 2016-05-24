@@ -1177,6 +1177,10 @@ td.edd_order_price {
 #edd-item-tables-wrapper .downloads tr > td:only-child {
 	text-align: center;
 }
+#edd-item-tables-wrapper .emails .add-customer-email-row td {
+	background-color: #f9f9f9;
+	border-top: 1px solid #e5e5e5;
+}
 #edd-item-tables-wrapper .emails .primary-email-icon {
 	font-size: 13px;
 	vertical-align: middle;
