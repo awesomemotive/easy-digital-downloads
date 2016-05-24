@@ -314,7 +314,7 @@ function edd_customers_view( $customer ) {
 	<div id="edd-item-stats-wrapper" class="customer-stats-wrapper customer-section">
 		<ul>
 			<li>
-				<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $customer->email ) ); ?>">
+				<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history&customer=' . $customer->id ); ?>">
 					<span class="dashicons dashicons-cart"></span>
 					<?php printf( _n( '%d Completed Sale', '%d Completed Sales', $customer->purchase_count, 'easy-digital-downloads' ), $customer->purchase_count ); ?>
 				</a>
@@ -378,7 +378,7 @@ function edd_customers_view( $customer ) {
 							</td>
 						</tr>
 					<?php endforeach; ?>
-					<tr>
+					<tr class="add-customer-email-row">
 						<td colspan="2" class="add-customer-email-td">
 							<div class="add-customer-email-wrapper">
 								<input type="hidden" name="customer-id" value="<?php echo $customer->id; ?>" />
