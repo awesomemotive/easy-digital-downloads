@@ -286,9 +286,10 @@ class EDD_Customer {
 	 *
 	 * @since  2.6
 	 * @param  string $email The email address to remove from the customer
+	 * @param  bool   $primary Allows setting the email added as the primary
 	 * @return bool   If the email was added successfully
 	 */
-	public function add_email( $email = '' ) {
+	public function add_email( $email = '', $primary = false ) {
 
 		if( ! is_email( $email ) ) {
 			return false;
@@ -307,6 +308,10 @@ class EDD_Customer {
 		$ret = (bool) $this->add_meta( 'additional_email', $email );
 
 		do_action( 'edd_customer_post_add_email', $email, $this->id, $this );
+
+		if ( $ret && true === $primary ) {
+			$this->set_primary_email( $email );
+		}
 
 		return $ret;
 
@@ -364,7 +369,7 @@ class EDD_Customer {
 
 		// Update customer record with new email
 		$update = $this->update( array( 'email' => $new_primary_email ) );
-		
+
 		// Remove new primary from list of additional emails
 		$remove = $this->remove_email( $new_primary_email );
 
