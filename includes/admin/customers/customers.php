@@ -257,10 +257,6 @@ function edd_customers_view( $customer ) {
 					<span class="customer-name info-item editable"><span data-key="name"><?php echo $customer->name; ?></span></span>
 					<span class="customer-name info-item edit-item"><input size="20" data-key="email" name="customerinfo[email]" type="text" value="<?php echo $customer->email; ?>" placeholder="<?php _e( 'Customer Email', 'easy-digital-downloads' ); ?>" /></span>
 					<span class="customer-email info-item editable" data-key="email"><?php echo $customer->email; ?></span>
-					<?php foreach( $customer->emails as $key => $email ): if( $customer->email == $email ) { continue; } ?>
-						<span class="customer-email-<?php echo $key; ?> info-item editable">&nbsp;&ndash;&nbsp;<?php echo $email; ?></span>
-						<span class="customer-email-<?php echo $key; ?> info-item edit-item"><input size="20" data-key="emails[<?php echo absint( $key ); ?>]" name="customerinfo[emails][<?php echo absint( $key ); ?>]" type="text" value="<?php echo esc_attr( $email ); ?>" placeholder="<?php _e( 'Alternate Email', 'easy-digital-downloads' ); ?>" /></span>
-					<?php endforeach; ?>
 					<span class="customer-since info-item">
 						<?php _e( 'Customer since', 'easy-digital-downloads' ); ?>
 						<?php echo date_i18n( get_option( 'date_format' ), strtotime( $customer->date_created ) ) ?>
@@ -336,6 +332,70 @@ function edd_customers_view( $customer ) {
 	<div id="edd-item-tables-wrapper" class="customer-tables-wrapper customer-section">
 
 		<?php do_action( 'edd_customer_before_tables', $customer ); ?>
+
+		<h3><?php _e( 'Customer Emails', 'easy-digital-downloads' ); ?></h3>
+		<?php
+			$primary_email     = $customer->email;
+			$additional_emails = $customer->emails;
+
+			$all_emails = array( 'primary' => $primary_email );
+			foreach ( $additional_emails as $key => $email ) {
+				if ( $primary_email === $email ) {
+					continue;
+				}
+
+				$all_emails[ $key ] = $email;
+			}
+		?>
+		<table class="wp-list-table widefat striped emails">
+			<thead>
+				<tr>
+					<th><?php _e( 'Email', 'easy-digital-downloads' ); ?></th>
+					<th><?php _e( 'Actions', 'easy-digital-downloads' ); ?></th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php if ( ! empty( $all_emails ) ) : ?>
+					<?php foreach ( $all_emails as $key => $email ) : ?>
+						<tr data-key="<?php echo $key; ?>">
+							<td>
+								<?php echo $email; ?>
+								<?php if ( 'primary' === $key ) : ?>
+									<span class="dashicons dashicons-star-filled primary-email-icon"></span>
+								<?php endif; ?>
+							</td>
+							<td>
+								<?php if ( 'primary' !== $key ) : ?>
+									<?php
+										$base_url    = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id );
+										$promote_url = wp_nonce_url( add_query_arg( array( 'email' => $email, 'edd_action' => 'customer-primary-email'), $base_url ), 'edd-set-customer-primary-email' );
+										$remove_url  = wp_nonce_url( add_query_arg( array( 'email' => $email, 'edd_action' => 'customer-remove-email'), $base_url ), 'edd-remove-customer-email' );
+									?>
+									<a href="<?php echo $promote_url; ?>"><?php _e( 'Make Primary', 'easy-digital-downloads' ); ?></a>
+									&nbsp;|&nbsp;
+									<a href="<?php echo $remove_url; ?>" class="delete"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></a>
+								<?php endif; ?>
+							</td>
+						</tr>
+					<?php endforeach; ?>
+					<tr>
+						<td colspan="2" class="add-customer-email-td">
+							<div class="add-customer-email-wrapper">
+								<input type="hidden" name="customer-id" value="<?php echo $customer->id; ?>" />
+								<?php wp_nonce_field( 'edd-add-customer-email', 'add_email_nonce', false, true ); ?>
+								<input type="email" name="additional-email" value="" placeholder="<?php _e( 'Email Address', 'easy-digital-downloads' ); ?>" />&nbsp;
+								<input type="checkbox" name="make-additional-primary" value="1" id="make-additional-primary" />&nbsp;<label for="make-additional-primary"><?php _e( 'Make Primary', 'easy-digital-downloads' ); ?></label>
+								<button class="button-secondary edd-add-customer-email" id="add-customer-email" style="margin: 6px 0;"><?php _e( 'Add Email', 'easy-digital-downloads' ); ?></button>
+								<span class="spinner"></span>
+							</div>
+							<div class="notice-wrap"></div>
+						</td>
+					</tr>
+				<?php else: ?>
+					<tr><td colspan="2"><?php _e( 'No Emails Found', 'easy-digital-downloads' ); ?></td></tr>
+				<?php endif; ?>
+			</tbody>
+		</table>
 
 		<h3><?php _e( 'Recent Payments', 'easy-digital-downloads' ); ?></h3>
 		<?php
