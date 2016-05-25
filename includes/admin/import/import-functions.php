@@ -25,6 +25,22 @@ function edd_do_ajax_import_file_upload() {
 		wp_send_json_error( array( 'error' => __( 'Nonce verification failed', 'easy-digital-downloads' ) ) );
 	}
 
+	if( empty( $_POST['edd-import-class'] ) ) {
+		wp_send_json_error( array( 'error' => __( 'Missing import parameters. Import class must be specified.', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
+	}
+
+	if( empty( $_FILES['edd-import-file'] ) ) {
+		wp_send_json_error( array( 'error' => __( 'Missing import file. Please provide an import file.', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
+	}
+
+	if( empty( $_FILES['edd-import-file']['type'] ) || 'text/csv' !== $_FILES['edd-import-file']['type'] ) {
+		wp_send_json_error( array( 'error' => __( 'The file you uploaded does not appear to be a CSV file.', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
+	}
+
+	if( ! file_exists( $_FILES['edd-import-file']['tmp_name'] ) ) {
+		wp_send_json_error( array( 'error' => __( 'Something went wrong during the upload process, please try again.', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
+	}
+
 	// Let WordPress import the file. We will remove it after import is complete
 	$import_file = wp_handle_upload( $_FILES['edd-import-file'], array( 'test_form' => false ) );
 
@@ -77,14 +93,6 @@ function edd_do_ajax_import() {
 
 	if( empty( $_REQUEST['class'] ) ) {
 		wp_send_json_error( array( 'error' => __( 'Missing import parameters. Import class must be specified.', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
-	}
-
-	if( empty( $_REQUEST['upload'] ) ) {
-		wp_send_json_error( array( 'error' => __( 'Missing import file. Please provide an import file.', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
-	}
-
-	if( empty( $_REQUEST['upload']['type'] ) || 'text/csv' !== $_REQUEST['upload']['type'] ) {
-		wp_send_json_error( array( 'error' => __( 'The file you uploaded does not appear to be a CSV file.', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
 	}
 
 	if( ! file_exists( $_REQUEST['upload']['file'] ) ) {
