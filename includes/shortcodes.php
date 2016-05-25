@@ -176,7 +176,7 @@ function edd_login_form_shortcode( $atts, $content = null ) {
 	if ( ! empty( $purchase_history ) ) {
 		$redirect = get_permalink( $purchase_history );
 	}
-	
+
 	extract( shortcode_atts( array(
 			'redirect' => $redirect
 		), $atts, 'edd_login' )
@@ -334,6 +334,10 @@ function edd_downloads_query( $atts, $content = null ) {
 		}
 	} else {
 		$query['nopaging'] = true;
+	}
+
+	if( 'random' == $atts['orderby'] ) {
+		$atts['pagination'] = false;
 	}
 
 	switch ( $atts['orderby'] ) {

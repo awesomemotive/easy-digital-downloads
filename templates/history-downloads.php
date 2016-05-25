@@ -10,7 +10,7 @@ endif;
 $purchases = edd_get_users_purchases( get_current_user_id(), 20, true, 'any' );
 if ( $purchases ) :
 	do_action( 'edd_before_download_history' ); ?>
-	<table id="edd_user_history">
+	<table id="edd_user_history" class="edd-table">
 		<thead>
 			<tr class="edd_download_history_row">
 				<?php do_action( 'edd_download_history_header_start' ); ?>
@@ -63,7 +63,7 @@ if ( $purchases ) :
 
 											<div class="edd_download_file">
 												<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link">
-													<?php echo isset( $file['name'] ) ? esc_html( $file['name'] ) : esc_html( $name ); ?>
+													<?php echo edd_get_file_name( $file ); ?>
 												</a>
 											</div>
 
