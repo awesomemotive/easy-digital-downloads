@@ -831,7 +831,8 @@ function edd_refund_paypal_purchase( $payment ) {
 			$success = false;
 			if( isset( $body['L_LONGMESSAGE0'] ) ) {
 				$error_msg = $body['L_LONGMESSAGE0'];
-				$payment->add_note( sprintf( __( 'PayPal refund failed: %s', 'edd-recurring' ), $error_msg ) );
+			} else {
+				$error_msg = __( 'PayPal refund failed for unknown reason.', 'edd-recurring' );
 			}
 		}
 
@@ -842,6 +843,10 @@ function edd_refund_paypal_purchase( $payment ) {
 		// Prevents the PayPal Express one-time gateway from trying to process the refundl
 		$payment->update_meta( '_edd_paypal_refunded', true );
 		$payment->add_note( sprintf( __( 'PayPal refund transaction ID: %s', 'edd-recurring' ), $body['REFUNDTRANSACTIONID'] ) );
+
+	} else {
+
+		$payment->add_note( sprintf( __( 'PayPal refund failed: %s', 'edd-recurring' ), $error_msg ) );
 
 	}
 
