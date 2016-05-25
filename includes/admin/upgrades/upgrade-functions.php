@@ -12,6 +12,33 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+
+/**
+ * Perform automatic database upgrades when necessary
+ *
+ * @since 2.6
+ * @return void
+*/
+function edd_do_automatic_upgrades() {
+
+	$did_upgrade = false;
+	$edd_version = preg_replace( '/[^0-9.].*/', '', get_option( 'edd_version' ) );
+
+	if( version_compare( $edd_version, EDD_VERSION, '<' ) ) {
+
+		edd_v26_upgrades();
+		$did_upgrade = true;
+
+	}
+
+	if( $did_upgrade ) {
+		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+	}
+
+}
+add_action( 'admin_init', 'edd_do_automatic_upgrades' );
+
+
 /**
  * Display Upgrade Notices
  *
@@ -1114,3 +1141,14 @@ function edd_remove_refunded_sale_logs() {
 	}
 }
 add_action( 'edd_remove_refunded_sale_logs', 'edd_remove_refunded_sale_logs' );
+
+/**
+ * 2.6 Upgrade routine to create the customer meta table
+ *
+ * @since  2.6
+ * @return void
+ */
+function edd_v26_upgrades() {
+	@EDD()->customers->create_table();
+	@EDD()->customer_meta->create_table();
+}
