@@ -106,9 +106,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 		// Make sure end date is valid
 		if( is_wp_error( $this->end_date ) )
 			return $this->end_date;
-
-		$earnings = false;
-
+		
 		add_filter( 'posts_where', array( $this, 'payments_where' ) );
 
 		if ( empty( $download_id ) ) {
@@ -176,13 +174,10 @@ class EDD_Payment_Stats extends EDD_Stats {
 			$key      = 'edd_stats_' . substr( md5( serialize( $args ) ), 0, 15 );
 
 			$earnings = get_transient( $key );
-			$earnings = false;
 			if( false === $earnings ) {
 
 				$this->timestamp = false;
-				add_filter( 'posts_where', array( $this, 'payments_where' ) );
 				$log_ids  = $edd_logs->get_connected_logs( $args, 'sale' );
-				remove_filter( 'posts_where', array( $this, 'payments_where' ) );
 
 				$earnings = 0;
 
