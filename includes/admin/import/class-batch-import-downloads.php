@@ -144,7 +144,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 
 					$image = sanitize_text_field( $row[ $this->field_mapping['featured_image'] ] );
 
-					$this->set_image( $download_id, $image );
+					$this->set_image( $download_id, $image, $args['post_author'] );
 
 				}
 
@@ -289,7 +289,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 
 	}
 
-	private function set_image( $download_id = 0, $image = '' ) {
+	private function set_image( $download_id = 0, $image = '', $post_author = 0 ) {
 
 		$is_url   = false !== filter_var( $image, FILTER_VALIDATE_URL );
 		$is_local = $is_url && false !== strpos( $image, site_url() );
@@ -369,7 +369,8 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 						'post_mime_type' => $filetype['type'],
 						'post_title'     => preg_replace( '/\.[^.]+$/', '', $image ),
 						'post_content'   => '',
-						'post_status'    => 'inherit'
+						'post_status'    => 'inherit',
+						'post_author'    => $post_author
 					);
 
 					// Insert the attachment.
