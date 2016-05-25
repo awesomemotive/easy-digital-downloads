@@ -23,6 +23,131 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 add_action( 'edd_paypal_cc_form', '__return_false' );
 
 /**
+ * Register the PayPal Standard gateway subsection
+ *
+ * @since  2.6
+ * @param  array $gateway_sections  Current Gateway Tab subsections
+ * @return array                    Gateway subsections with PayPal Standard
+ */
+function edd_register_paypal_gateway_section( $gateway_sections ) {
+	$gateway_sections['paypal'] = __( 'PayPal Standard', 'easy-digital-downloads' );
+
+	return $gateway_sections;
+}
+add_filter( 'edd_settings_sections_gateways', 'edd_register_paypal_gateway_section', 1, 1 );
+
+/**
+ * Registers the PayPal Standard settings for the PayPal Standard subsection
+ *
+ * @since  2.6
+ * @param  array $gateway_settings  Gateway tab settings
+ * @return array                    Gateway tab settings with the PayPal Standard settings
+ */
+function edd_register_paypal_gateway_settings( $gateway_settings ) {
+
+		$paypal_settings = array (
+			'paypal_settings' => array(
+				'id'   => 'paypal_settings',
+				'name' => '<strong>' . __( 'PayPal Standard Settings', 'easy-digital-downloads' ) . '</strong>',
+				'type' => 'header',
+			),
+			'paypal_email' => array(
+				'id'   => 'paypal_email',
+				'name' => __( 'PayPal Email', 'easy-digital-downloads' ),
+				'desc' => __( 'Enter your PayPal account\'s email', 'easy-digital-downloads' ),
+				'type' => 'text',
+				'size' => 'regular',
+			),
+			'paypal_page_style' => array(
+				'id'   => 'paypal_page_style',
+				'name' => __( 'PayPal Page Style', 'easy-digital-downloads' ),
+				'desc' => __( 'Enter the name of the page style to use, or leave blank for default', 'easy-digital-downloads' ),
+				'type' => 'text',
+				'size' => 'regular',
+			),
+		);
+
+		$disable_ipn_desc = sprintf(
+			__( 'If payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases. See our <a href="%s" target="_blank">FAQ</a> for further information.', 'easy-digital-downloads' ),
+			'http://docs.easydigitaldownloads.com/article/190-payments-not-marked-as-complete'
+		);
+
+		if ( ! is_ssl() ) {
+			$disable_ipn_desc .= '<div class="notice notice-warning inline"><p>' . sprintf( __( 'PayPal IPN verification requires an SSL certificate. See our <a href="%s" target="_blank">PayPal SSL FAQ</a> for more information.', 'easy-digital-downloads' ), 'http://docs.easydigitaldownloads.com/article/1244-do-i-need-ssl-if-i-use-paypal' ) . '</p></div>';
+		}
+
+		$paypal_settings['disable_paypal_verification'] = array(
+			'id'   => 'disable_paypal_verification',
+			'name' => __( 'Disable PayPal IPN Verification', 'easy-digital-downloads' ),
+			'desc' => $disable_ipn_desc,
+			'type' => 'checkbox',
+		);
+
+		$api_key_settings = array(
+			'paypal_api_keys_desc' => array(
+				'id'   => 'paypal_api_keys_desc',
+				'name' => __( 'API Credentials', 'easy-digital-downloads' ),
+				'type' => 'descriptive_text',
+				'desc' => sprintf(
+					__( 'API credentials are necessary to process PayPal refunds from inside WordPress. These can be obtained from <a href="%s" target="_blank">your PayPal account</a>.', 'easy-digital-downloads' ),
+					'https://developer.paypal.com/docs/classic/api/apiCredentials/#creating-an-api-signature'
+				)
+			),
+			'paypal_live_api_username' => array(
+				'id'   => 'paypal_live_api_username',
+				'name' => __( 'Live API Username', 'easy-digital-downloads' ),
+				'desc' => __( 'Your PayPal live API username. ', 'easy-digital-downloads' ),
+				'type' => 'text',
+				'size' => 'regular'
+			),
+			'paypal_live_api_password' => array(
+				'id'   => 'paypal_live_api_password',
+				'name' => __( 'Live API Password', 'easy-digital-downloads' ),
+				'desc' => __( 'Your PayPal live API password.', 'easy-digital-downloads' ),
+				'type' => 'text',
+				'size' => 'regular'
+			),
+			'paypal_live_api_signature' => array(
+				'id'   => 'paypal_live_api_signature',
+				'name' => __( 'Live API Signature', 'easy-digital-downloads' ),
+				'desc' => __( 'Your PayPal live API signature.', 'easy-digital-downloads' ),
+				'type' => 'text',
+				'size' => 'regular'
+			),
+			'paypal_test_api_username' => array(
+				'id'   => 'paypal_test_api_username',
+				'name' => __( 'Test API Username', 'easy-digital-downloads' ),
+				'desc' => __( 'Your PayPal test API username.', 'easy-digital-downloads' ),
+				'type' => 'text',
+				'size' => 'regular'
+			),
+			'paypal_test_api_password' => array(
+				'id'   => 'paypal_test_api_password',
+				'name' => __( 'Test API Password', 'easy-digital-downloads' ),
+				'desc' => __( 'Your PayPal test API password.', 'easy-digital-downloads' ),
+				'type' => 'text',
+				'size' => 'regular'
+			),
+			'paypal_test_api_signature' => array(
+				'id'   => 'paypal_test_api_signature',
+				'name' => __( 'Test API Signature', 'easy-digital-downloads' ),
+				'desc' => __( 'Your PayPal test API signature.', 'easy-digital-downloads' ),
+				'type' => 'text',
+				'size' => 'regular'
+			)
+		);
+
+		$paypal_settings = array_merge( $paypal_settings, $api_key_settings );
+
+		$paypal_settings            = apply_filters( 'edd_paypal_settings', $paypal_settings );
+		$gateway_settings['paypal'] = $paypal_settings;
+
+		return $gateway_settings;
+}
+add_filter( 'edd_settings_gateways', 'edd_register_paypal_gateway_settings', 1, 1 );
+
+
+/**
  * Process PayPal Purchase
  *
  * @since 1.0
@@ -545,19 +670,18 @@ function edd_process_paypal_refund( $data, $payment_id = 0 ) {
  * @return string
  */
 function edd_get_paypal_redirect( $ssl_check = false ) {
+	$protocol = 'http://';
 	if ( is_ssl() || ! $ssl_check ) {
-		$protocal = 'https://';
-	} else {
-		$protocal = 'http://';
+		$protocol = 'https://';
 	}
 
 	// Check the current payment mode
 	if ( edd_is_test_mode() ) {
 		// Test mode
-		$paypal_uri = $protocal . 'www.sandbox.paypal.com/cgi-bin/webscr';
+		$paypal_uri = $protocol . 'www.sandbox.paypal.com/cgi-bin/webscr';
 	} else {
 		// Live mode
-		$paypal_uri = $protocal . 'www.paypal.com/cgi-bin/webscr';
+		$paypal_uri = $protocol . 'www.paypal.com/cgi-bin/webscr';
 	}
 
 	return apply_filters( 'edd_paypal_uri', $paypal_uri );

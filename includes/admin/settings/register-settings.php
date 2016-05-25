@@ -19,6 +19,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * Looks to see if the specified setting exists, returns default if not
  *
  * @since 1.8.4
+ * @global $edd_options Array of all the EDD Options
  * @return mixed
  */
 function edd_get_option( $key = '', $default = false ) {
@@ -38,6 +39,7 @@ function edd_get_option( $key = '', $default = false ) {
  * @since 2.3
  * @param string $key The Key to update
  * @param string|bool|int $value The value to set the key to
+ * @global $edd_options Array of all the EDD Options
  * @return boolean True if updated, false if not.
  */
 function edd_update_option( $key = '', $value = false ) {
@@ -79,6 +81,7 @@ function edd_update_option( $key = '', $value = false ) {
  *
  * @since 2.3
  * @param string $key The Key to delete
+ * @global $edd_options Array of all the EDD Options
  * @return boolean True if updated, false if not.
  */
 function edd_delete_option( $key = '' ) {
@@ -307,7 +310,7 @@ function edd_get_registered_settings() {
 						'name' => __( 'Allow Usage Tracking?', 'easy-digital-downloads' ),
 						'desc' => sprintf(
 							__( 'Allow Easy Digital Downloads to anonymously track how this plugin is used and help us make the plugin better. Opt-in to tracking and our newsletter and immediately be emailed a 20&#37; discount to the EDD shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'easy-digital-downloads' ),
-							'https://easydigitaldownloads.com/extensions?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking'
+							'https://easydigitaldownloads.com/downloads/?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking'
 						),
 						'type' => 'checkbox',
 					),
@@ -413,84 +416,6 @@ function edd_get_registered_settings() {
 								'paypal'          => 'PayPal',
 							)
 						),
-					),
-				),
-				'paypal' => array(
-					'paypal_settings' => array(
-						'id'   => 'paypal_settings',
-						'name' => '<h3>' . __( 'PayPal Standard Settings', 'easy-digital-downloads' ) . '</h3>',
-						'type' => 'header',
-					),
-					'paypal_email' => array(
-						'id'   => 'paypal_email',
-						'name' => __( 'PayPal Email', 'easy-digital-downloads' ),
-						'desc' => __( 'Enter your PayPal account\'s email', 'easy-digital-downloads' ),
-						'type' => 'text',
-						'size' => 'regular',
-					),
-					'paypal_page_style' => array(
-						'id'   => 'paypal_page_style',
-						'name' => __( 'PayPal Page Style', 'easy-digital-downloads' ),
-						'desc' => __( 'Enter the name of the page style to use, or leave blank for default', 'easy-digital-downloads' ),
-						'type' => 'text',
-						'size' => 'regular',
-					),
-					'disable_paypal_verification' => array(
-						'id'   => 'disable_paypal_verification',
-						'name' => __( 'Disable PayPal IPN Verification', 'easy-digital-downloads' ),
-						'desc' => __( 'If payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases.', 'easy-digital-downloads' ),
-						'type' => 'checkbox',
-					),
-					'paypal_api_keys_desc' => array(
-						'id'   => 'paypal_api_keys_desc',
-						'name' => __( 'API Credentials', 'easy-digital-downloads' ),
-						'type' => 'descriptive_text',
-						'desc' => sprintf(
-							__( 'API credentials are necessary to process PayPal refunds from inside WordPress. These can be obtained from <a href="%s" target="_blank">your PayPal account</a>.', 'easy-digital-downloads' ),
-							'https://developer.paypal.com/docs/classic/api/apiCredentials/#creating-an-api-signature'
-						)
-					),
-					'paypal_live_api_username' => array(
-						'id'   => 'paypal_live_api_username',
-						'name' => __( 'Live API Username', 'easy-digital-downloads' ),
-						'desc' => __( 'Your PayPal live API username. ', 'easy-digital-downloads' ),
-						'type' => 'text',
-						'size' => 'regular'
-					),
-					'paypal_live_api_password' => array(
-						'id'   => 'paypal_live_api_password',
-						'name' => __( 'Live API Password', 'easy-digital-downloads' ),
-						'desc' => __( 'Your PayPal live API password.', 'easy-digital-downloads' ),
-						'type' => 'text',
-						'size' => 'regular'
-					),
-					'paypal_live_api_signature' => array(
-						'id'   => 'paypal_live_api_signature',
-						'name' => __( 'Live API Signature', 'easy-digital-downloads' ),
-						'desc' => __( 'Your PayPal live API signature.', 'easy-digital-downloads' ),
-						'type' => 'text',
-						'size' => 'regular'
-					),
-					'paypal_test_api_username' => array(
-						'id'   => 'paypal_test_api_username',
-						'name' => __( 'Test API Username', 'easy-digital-downloads' ),
-						'desc' => __( 'Your PayPal test API username.', 'easy-digital-downloads' ),
-						'type' => 'text',
-						'size' => 'regular'
-					),
-					'paypal_test_api_password' => array(
-						'id'   => 'paypal_test_api_password',
-						'name' => __( 'Test API Password', 'easy-digital-downloads' ),
-						'desc' => __( 'Your PayPal test API password.', 'easy-digital-downloads' ),
-						'type' => 'text',
-						'size' => 'regular'
-					),
-					'paypal_test_api_signature' => array(
-						'id'   => 'paypal_test_api_signature',
-						'name' => __( 'Test API Signature', 'easy-digital-downloads' ),
-						'desc' => __( 'Your PayPal test API signature.', 'easy-digital-downloads' ),
-						'type' => 'text',
-						'size' => 'regular'
 					),
 				),
 			)
@@ -939,6 +864,7 @@ function edd_get_registered_settings() {
  * @since 1.0.8.2
  *
  * @param array $input The value inputted in the field
+ * @global $edd_options Array of all the EDD Options
  *
  * @return string $input Sanitizied value
  */
@@ -974,6 +900,11 @@ function edd_settings_sanitize( $input = array() ) {
 			if ( is_int( $key ) ) {
 				$settings[ $tab ]['main'][ $setting[ 'id' ] ] = $setting;
 				unset( $settings[ $tab ][ $key ]);
+			}
+
+			// Check for an override on the section for when main is empty
+			if ( ! empty( $_POST['edd_section_override'] ) ) {
+				$section = sanitize_text_field( $_POST['edd_section_override'] );
 			}
 		}
 	}
@@ -1031,8 +962,6 @@ function edd_settings_sanitize( $input = array() ) {
  */
 function edd_settings_sanitize_misc_file_downloads( $input ) {
 
-	global $edd_options;
-
 	if( ! current_user_can( 'manage_shop_settings' ) ) {
 		return $input;
 	}
@@ -1054,8 +983,6 @@ add_filter( 'edd_settings_misc-file_downloads_sanitize', 'edd_settings_sanitize_
  * @return string $input Sanitizied value
  */
 function edd_settings_sanitize_misc_accounting( $input ) {
-
-	global $edd_options;
 
 	if( ! current_user_can( 'manage_shop_settings' ) ) {
 		return $input;
@@ -1300,11 +1227,11 @@ function edd_header_callback( $args ) {
  *
  * @since 1.0
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 function edd_checkbox_callback( $args ) {
-	global $edd_options;
+	$edd_option = edd_get_option( $args['id'] );
 
 	if ( isset( $args['faux'] ) && true === $args['faux'] ) {
 		$name = '';
@@ -1312,9 +1239,9 @@ function edd_checkbox_callback( $args ) {
 		$name = 'name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"';
 	}
 
-	$checked = isset( $edd_options[ $args['id'] ] ) ? checked( 1, $edd_options[ $args['id'] ], false ) : '';
-	$html = '<input type="checkbox" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"' . $name . ' value="1" ' . $checked . '/>';
-	$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
+	$checked  = ! empty( $edd_option ) ? checked( 1, $edd_option, false ) : '';
+	$html     = '<input type="checkbox" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"' . $name . ' value="1" ' . $checked . '/>';
+	$html    .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 
 	echo $html;
 }
@@ -1326,15 +1253,15 @@ function edd_checkbox_callback( $args ) {
  *
  * @since 1.0
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 function edd_multicheck_callback( $args ) {
-	global $edd_options;
+	$edd_option = edd_get_option( $args['id'] );
 
 	if ( ! empty( $args['options'] ) ) {
 		foreach( $args['options'] as $key => $option ):
-			if( isset( $edd_options[$args['id']][$key] ) ) { $enabled = $option; } else { $enabled = NULL; }
+			if( isset( $edd_option[ $key ] ) ) { $enabled = $option; } else { $enabled = NULL; }
 			echo '<input name="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked($option, $enabled, false) . '/>&nbsp;';
 			echo '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']">' . wp_kses_post( $option ) . '</label><br/>';
 		endforeach;
@@ -1347,16 +1274,16 @@ function edd_multicheck_callback( $args ) {
  *
  * @since 2.1
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 function edd_payment_icons_callback( $args ) {
-	global $edd_options;
+	$edd_option = edd_get_option( $args['id'] );
 
 	if ( ! empty( $args['options'] ) ) {
 		foreach( $args['options'] as $key => $option ) {
 
-			if( isset( $edd_options[$args['id']][$key] ) ) {
+			if( isset( $edd_option[$key] ) ) {
 				$enabled = $option;
 			} else {
 				$enabled = NULL;
@@ -1413,18 +1340,18 @@ function edd_payment_icons_callback( $args ) {
  *
  * @since 1.3.3
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 function edd_radio_callback( $args ) {
-	global $edd_options;
+	$edd_options = edd_get_option( $args['id'] );
 
 	foreach ( $args['options'] as $key => $option ) :
 		$checked = false;
 
-		if ( isset( $edd_options[ $args['id'] ] ) && $edd_options[ $args['id'] ] == $key )
+		if ( $edd_options && $edd_options == $key )
 			$checked = true;
-		elseif( isset( $args['std'] ) && $args['std'] == $key && ! isset( $edd_options[ $args['id'] ] ) )
+		elseif( isset( $args['std'] ) && $args['std'] == $key && ! $edd_options )
 			$checked = true;
 
 		echo '<input name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" type="radio" value="' . edd_sanitize_key( $key ) . '" ' . checked(true, $checked, false) . '/>&nbsp;';
@@ -1441,14 +1368,14 @@ function edd_radio_callback( $args ) {
  *
  * @since 1.0
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 function edd_gateways_callback( $args ) {
-	global $edd_options;
+	$edd_option = edd_get_option( $args['id'] );
 
 	foreach ( $args['options'] as $key => $option ) :
-		if ( isset( $edd_options['gateways'][ $key ] ) )
+		if ( isset( $edd_option[ $key ] ) )
 			$enabled = '1';
 		else
 			$enabled = null;
@@ -1465,16 +1392,16 @@ function edd_gateways_callback( $args ) {
  *
  * @since 1.5
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
-function edd_gateway_select_callback($args) {
-	global $edd_options;
+function edd_gateway_select_callback( $args ) {
+	$edd_option = edd_get_option( $args['id'] );
 
 	echo '<select name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']">';
 
 	foreach ( $args['options'] as $key => $option ) :
-		$selected = isset( $edd_options[ $args['id'] ] ) ? selected( $key, $edd_options[$args['id']], false ) : '';
+		$selected = isset( $edd_option ) ? selected( $key, $edd_option, false ) : '';
 		echo '<option value="' . edd_sanitize_key( $key ) . '"' . $selected . '>' . esc_html( $option['admin_label'] ) . '</option>';
 	endforeach;
 
@@ -1489,14 +1416,14 @@ function edd_gateway_select_callback($args) {
  *
  * @since 1.0
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 function edd_text_callback( $args ) {
-	global $edd_options;
+	$edd_option = edd_get_option( $args['id'] );
 
-	if ( isset( $edd_options[ $args['id'] ] ) ) {
-		$value = $edd_options[ $args['id'] ];
+	if ( $edd_option ) {
+		$value = $edd_option;
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
@@ -1524,14 +1451,14 @@ function edd_text_callback( $args ) {
  *
  * @since 1.9
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 function edd_number_callback( $args ) {
-	global $edd_options;
+	$edd_option = edd_get_option( $args['id'] );
 
-	if ( isset( $edd_options[ $args['id'] ] ) ) {
-		$value = $edd_options[ $args['id'] ];
+	if ( $edd_option ) {
+		$value = $edd_option;
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
@@ -1562,14 +1489,14 @@ function edd_number_callback( $args ) {
  *
  * @since 1.0
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 function edd_textarea_callback( $args ) {
-	global $edd_options;
+	$edd_option = edd_get_option( $args['id'] );
 
-	if ( isset( $edd_options[ $args['id'] ] ) ) {
-		$value = $edd_options[ $args['id'] ];
+	if ( $edd_option ) {
+		$value = $edd_option;
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
@@ -1587,14 +1514,14 @@ function edd_textarea_callback( $args ) {
  *
  * @since 1.3
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 function edd_password_callback( $args ) {
-	global $edd_options;
+	$edd_options = edd_get_option( $args['id'] );
 
-	if ( isset( $edd_options[ $args['id'] ] ) ) {
-		$value = $edd_options[ $args['id'] ];
+	if ( $edd_options ) {
+		$value = $edd_options;
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
@@ -1629,14 +1556,14 @@ function edd_missing_callback($args) {
  *
  * @since 1.0
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 function edd_select_callback($args) {
-	global $edd_options;
+	$edd_option = edd_get_option( $args['id'] );
 
-	if ( isset( $edd_options[ $args['id'] ] ) ) {
-		$value = $edd_options[ $args['id'] ];
+	if ( $edd_option ) {
+		$value = $edd_option;
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
@@ -1673,14 +1600,14 @@ function edd_select_callback($args) {
  *
  * @since 1.8
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 function edd_color_select_callback( $args ) {
-	global $edd_options;
+	$edd_option = edd_get_option( $args['id'] );
 
-	if ( isset( $edd_options[ $args['id'] ] ) ) {
-		$value = $edd_options[ $args['id'] ];
+	if ( $edd_option ) {
+		$value = $edd_option;
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
@@ -1705,14 +1632,12 @@ function edd_color_select_callback( $args ) {
  *
  * @since 1.0
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
- * @global $wp_version WordPress Version
  */
 function edd_rich_editor_callback( $args ) {
-	global $edd_options, $wp_version;
+	$edd_option = edd_get_option( $args['id'] );
 
-	if ( isset( $edd_options[ $args['id'] ] ) ) {
-		$value = $edd_options[ $args['id'] ];
+	if ( $edd_option ) {
+		$value = $edd_option;
 
 		if( empty( $args['allow_blank'] ) && empty( $value ) ) {
 			$value = isset( $args['std'] ) ? $args['std'] : '';
@@ -1723,13 +1648,10 @@ function edd_rich_editor_callback( $args ) {
 
 	$rows = isset( $args['size'] ) ? $args['size'] : 20;
 
-	if ( $wp_version >= 3.3 && function_exists( 'wp_editor' ) ) {
-		ob_start();
-		wp_editor( stripslashes( $value ), 'edd_settings_' . esc_attr( $args['id'] ), array( 'textarea_name' => 'edd_settings[' . esc_attr( $args['id'] ) . ']', 'textarea_rows' => absint( $rows ) ) );
-		$html = ob_get_clean();
-	} else {
-		$html = '<textarea class="large-text" rows="10" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
-	}
+
+	ob_start();
+	wp_editor( stripslashes( $value ), 'edd_settings_' . esc_attr( $args['id'] ), array( 'textarea_name' => 'edd_settings[' . esc_attr( $args['id'] ) . ']', 'textarea_rows' => absint( $rows ) ) );
+	$html = ob_get_clean();
 
 	$html .= '<br/><label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> ' . wp_kses_post( $args['desc'] ) . '</label>';
 
@@ -1743,14 +1665,14 @@ function edd_rich_editor_callback( $args ) {
  *
  * @since 1.0
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 function edd_upload_callback( $args ) {
-	global $edd_options;
+	$edd_option = edd_get_option( $args['id'] );
 
-	if ( isset( $edd_options[ $args['id'] ] ) ) {
-		$value = $edd_options[$args['id']];
+	if ( $edd_option ) {
+		$value = $edd_option;
 	} else {
 		$value = isset($args['std']) ? $args['std'] : '';
 	}
@@ -1771,14 +1693,14 @@ function edd_upload_callback( $args ) {
  *
  * @since 1.6
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 function edd_color_callback( $args ) {
-	global $edd_options;
+	$edd_option = edd_get_option( $args['id'] );
 
-	if ( isset( $edd_options[ $args['id'] ] ) ) {
-		$value = $edd_options[ $args['id'] ];
+	if ( $edd_option ) {
+		$value = $edd_option;
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
@@ -1798,11 +1720,11 @@ function edd_color_callback( $args ) {
  *
  * @since 1.6
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
+ *
  * @return void
  */
 function edd_shop_states_callback($args) {
-	global $edd_options;
+	$edd_option = edd_get_option( $args['id'] );
 
 	if ( isset( $args['placeholder'] ) ) {
 		$placeholder = $args['placeholder'];
@@ -1817,7 +1739,7 @@ function edd_shop_states_callback($args) {
 	$html = '<select id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']"' . $class . 'data-placeholder="' . esc_html( $placeholder ) . '"/>';
 
 	foreach ( $states as $option => $name ) {
-		$selected = isset( $edd_options[ $args['id'] ] ) ? selected( $option, $edd_options[$args['id']], false ) : '';
+		$selected = isset( $edd_option ) ? selected( $option, $edd_option, false ) : '';
 		$html .= '<option value="' . esc_attr( $option ) . '" ' . $selected . '>' . esc_html( $name ) . '</option>';
 	}
 
@@ -1834,11 +1756,9 @@ function edd_shop_states_callback($args) {
  *
  * @since 1.6
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
  * @return void
  */
 function edd_tax_rates_callback($args) {
-	global $edd_options;
 	$rates = edd_get_tax_rates();
 	ob_start(); ?>
 	<p><?php echo $args['desc']; ?></p>
@@ -1951,18 +1871,18 @@ function edd_descriptive_text_callback( $args ) {
  *
  * @since 1.5
  * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD options
+ *
  * @return void
  */
 if ( ! function_exists( 'edd_license_key_callback' ) ) {
 	function edd_license_key_callback( $args ) {
-		global $edd_options;
+		$edd_option = edd_get_option( $args['id'] );
 
 		$messages = array();
 		$license  = get_option( $args['options']['is_valid_license_option'] );
 
-		if ( isset( $edd_options[ $args['id'] ] ) ) {
-			$value = $edd_options[ $args['id'] ];
+		if ( $edd_option ) {
+			$value = $edd_option;
 		} else {
 			$value = isset( $args['std'] ) ? $args['std'] : '';
 		}

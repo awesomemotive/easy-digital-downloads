@@ -382,11 +382,11 @@ class EDD_Welcome {
 				<div class="feature-section two-col">
 					<div class="col">
 						<h4><?php _e( 'Phenomenal Support','easy-digital-downloads' );?></h4>
-						<p><?php _e( 'We do our best to provide the best support we can. If you encounter a problem or have a question, simply open a ticket using our <a href="https://easydigitaldownloads.com/support">support form</a>.', 'easy-digital-downloads' );?></p>
+						<p><?php _e( 'We do our best to provide the best support we can. If you encounter a problem or have a question, simply open a ticket using our <a href="https://easydigitaldownloads.com/support/?utm_source=plugin-welcome-page&utm_medium=support-link&utm_term=support&utm_campaign=EDDWelcomeSupport">support form</a>.', 'easy-digital-downloads' );?></p>
 					</div>
 					<div class="col">
 						<h4><?php _e( 'Need Even Faster Support?', 'easy-digital-downloads' );?></h4>
-						<p><?php _e( 'Our <a href="https://easydigitaldownloads.com/support/pricing/">Priority Support</a> system is there for customers that need faster and/or more in-depth assistance.', 'easy-digital-downloads' );?></p>
+						<p><?php _e( 'Our <a href="https://easydigitaldownloads.com/support/pricing/?utm_source=plugin-welcome-page&utm_medium=support-link&utm_term=priority-support&utm_campaign=EDDWelcomeSupport">Priority Support</a> system is there for customers that need faster and/or more in-depth assistance.', 'easy-digital-downloads' );?></p>
 					</div>
 				</div>
 			</div>
@@ -396,11 +396,11 @@ class EDD_Welcome {
 				<div class="feature-section two-col">
 					<div class="col">
 						<h4><?php _e( 'Get Notified of Extension Releases','easy-digital-downloads' );?></h4>
-						<p><?php _e( 'New extensions that make Easy Digital Downloads even more powerful are released nearly every single week. Subscribe to the newsletter to stay up to date with our latest releases. <a href="http://eepurl.com/kaerz" target="_blank">Sign up now</a> to ensure you do not miss a release!', 'easy-digital-downloads' );?></p>
+						<p><?php _e( 'New extensions that make Easy Digital Downloads even more powerful are released nearly every single week. Subscribe to the newsletter to stay up to date with our latest releases. <a href="https://easydigitaldownloads.com/subscribe" target="_blank">Sign up now</a> to ensure you do not miss a release!', 'easy-digital-downloads' );?></p>
 					</div>
 					<div class="col">
 						<h4><?php _e( 'Get Alerted About New Tutorials', 'easy-digital-downloads' );?></h4>
-						<p><?php _e( '<a href="http://eepurl.com/kaerz" target="_blank">Sign up now</a> to hear about the latest tutorial releases that explain how to take Easy Digital Downloads further.', 'easy-digital-downloads' );?></p>
+						<p><?php _e( '<a href="https://easydigitaldownloads.com/subscribe" target="_blank">Sign up now</a> to hear about the latest tutorial releases that explain how to take Easy Digital Downloads further.', 'easy-digital-downloads' );?></p>
 					</div>
 				</div>
 			</div>
@@ -414,7 +414,7 @@ class EDD_Welcome {
 					</div>
 					<div class="col">
 						<h4><?php _e( 'Visit the Extension Store', 'easy-digital-downloads' );?></h4>
-						<p><?php _e( '<a href="https://easydigitaldownloads.com/downloads" target="_blank">The Extensions store</a> has a list of all available extensions, including convenient category filters so you can find exactly what you are looking for.', 'easy-digital-downloads' );?></p>
+						<p><?php _e( '<a href="https://easydigitaldownloads.com/downloads/?utm_source=plugin-welcome-page&utm_medium=extensions-link&utm_term=extensions&utm_campaign=EDDWelcomeExtensions" target="_blank">The Extensions store</a> has a list of all available extensions, including convenient category filters so you can find exactly what you are looking for.', 'easy-digital-downloads' );?></p>
 					</div>
 				</div>
 			</div>
