@@ -497,7 +497,7 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 		return;
 	}
 
-	$emails     = new EDD_Emails;
+	$emails     = EDD()->emails;
 	$from_name  = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
 	$from_email = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
 
