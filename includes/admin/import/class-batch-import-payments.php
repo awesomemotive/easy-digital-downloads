@@ -45,7 +45,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 		}
 
 		$i      = 1;
-		$offset = $this->step > 1 ? ( $this->per_step * $this->step ) : 0;
+		$offset = $this->step > 1 ? ( $this->per_step * ( $this->step - 1 ) ) : 0;
 
 		if( $offset > $this->total ) {
 			$this->done = true;
