@@ -614,19 +614,18 @@ function edd_process_paypal_refund( $data, $payment_id = 0 ) {
  * @return string
  */
 function edd_get_paypal_redirect( $ssl_check = false ) {
+	$protocol = 'http://';
 	if ( is_ssl() || ! $ssl_check ) {
-		$protocal = 'https://';
-	} else {
-		$protocal = 'http://';
+		$protocol = 'https://';
 	}
 
 	// Check the current payment mode
 	if ( edd_is_test_mode() ) {
 		// Test mode
-		$paypal_uri = $protocal . 'www.sandbox.paypal.com/cgi-bin/webscr';
+		$paypal_uri = $protocol . 'www.sandbox.paypal.com/cgi-bin/webscr';
 	} else {
 		// Live mode
-		$paypal_uri = $protocal . 'www.paypal.com/cgi-bin/webscr';
+		$paypal_uri = $protocol . 'www.paypal.com/cgi-bin/webscr';
 	}
 
 	return apply_filters( 'edd_paypal_uri', $paypal_uri );
