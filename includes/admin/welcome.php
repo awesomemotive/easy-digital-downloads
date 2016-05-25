@@ -396,11 +396,11 @@ class EDD_Welcome {
 				<div class="feature-section two-col">
 					<div class="col">
 						<h4><?php _e( 'Get Notified of Extension Releases','easy-digital-downloads' );?></h4>
-						<p><?php _e( 'New extensions that make Easy Digital Downloads even more powerful are released nearly every single week. Subscribe to the newsletter to stay up to date with our latest releases. <a href="http://eepurl.com/kaerz" target="_blank">Sign up now</a> to ensure you do not miss a release!', 'easy-digital-downloads' );?></p>
+						<p><?php _e( 'New extensions that make Easy Digital Downloads even more powerful are released nearly every single week. Subscribe to the newsletter to stay up to date with our latest releases. <a href="https://easydigitaldownloads.com/subscribe" target="_blank">Sign up now</a> to ensure you do not miss a release!', 'easy-digital-downloads' );?></p>
 					</div>
 					<div class="col">
 						<h4><?php _e( 'Get Alerted About New Tutorials', 'easy-digital-downloads' );?></h4>
-						<p><?php _e( '<a href="http://eepurl.com/kaerz" target="_blank">Sign up now</a> to hear about the latest tutorial releases that explain how to take Easy Digital Downloads further.', 'easy-digital-downloads' );?></p>
+						<p><?php _e( '<a href="https://easydigitaldownloads.com/subscribe" target="_blank">Sign up now</a> to hear about the latest tutorial releases that explain how to take Easy Digital Downloads further.', 'easy-digital-downloads' );?></p>
 					</div>
 				</div>
 			</div>
@@ -490,7 +490,7 @@ class EDD_Welcome {
 
 		foreach ( $contributors as $contributor ) {
 			$contributor_list .= '<li class="wp-person">';
-			$contributor_list .= sprintf( '<a href="%s" title="%s">',
+			$contributor_list .= sprintf( '<a href="%s">',
 				esc_url( 'https://github.com/' . $contributor->login ),
 				esc_html( sprintf( __( 'View %s', 'easy-digital-downloads' ), $contributor->login ) )
 			);
