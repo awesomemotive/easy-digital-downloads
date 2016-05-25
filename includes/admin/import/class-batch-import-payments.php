@@ -57,7 +57,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 			foreach( $this->csv->data as $key => $row ) {
 
-				// Skip all rows until we reach pass our offset
+				// Skip all rows until we pass our offset
 				if( $key + 1 < $offset ) {
 					continue;
 				}
