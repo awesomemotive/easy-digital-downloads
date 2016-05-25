@@ -11,7 +11,7 @@ if ( is_user_logged_in() ):
 	$purchases = edd_get_users_purchases( get_current_user_id(), 20, true, 'any' );
 	if ( $purchases ) :
 		do_action( 'edd_before_purchase_history' ); ?>
-		<table id="edd_user_history">
+		<table id="edd_user_history" class="edd-table">
 			<thead>
 				<tr class="edd_purchase_row">
 					<?php do_action('edd_purchase_history_header_before'); ?>

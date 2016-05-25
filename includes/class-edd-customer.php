@@ -270,6 +270,51 @@ class EDD_Customer {
 		return $updated;
 	}
 
+	/**
+	 * Get the payment ids of the customer in an array.
+	 *
+	 * @since 2.6
+	 * @return array An array of payment IDs for the customer, or an empty array if none exist.
+	 */
+	public function get_payment_ids() {
+
+		$payment_ids = $this->payment_ids;
+
+		if ( ! empty( $payment_ids ) ) {
+			$payment_ids = array_map( 'absint', explode( ',', $payment_ids ) );
+		} else {
+			$payment_ids = array();
+		}
+
+		return $payment_ids;
+
+	}
+
+	/**
+	 * Get an array of EDD_Payment objects from the payment_ids attached to the customer
+	 *
+	 * @since  2.6
+	 * @param  array|string  $status A single status as a string or an array of statuses
+	 * @return array                 An array of EDD_Payment objects or an empty array
+	 */
+	public function get_payments( $status = array() ) {
+
+		$payment_ids = $this->get_payment_ids();
+
+		$payments = array();
+		foreach ( $payment_ids as $payment_id ) {
+
+			$payment = new EDD_Payment( $payment_id );
+			if ( empty( $status ) || ( is_array( $status ) && in_array( $payment->status, $status ) ) || $status == $payment->status ) {
+				$payments[] = new EDD_Payment( $payment_id );
+			}
+
+		}
+
+		return $payments;
+
+	}
+
 
 	/**
 	 * Attach payment to the customer then triggers increasing stats
@@ -590,6 +635,64 @@ class EDD_Customer {
 
 		return (string) $all_notes;
 
+	}
+
+	/**
+	 * Retrieve customer meta field for a customer.
+	 *
+	 * @param   string $meta_key      The meta key to retrieve.
+	 * @param   bool   $single        Whether to return a single value.
+	 * @return  mixed                 Will be an array if $single is false. Will be value of meta data field if $single is true.
+	 *
+	 * @access  public
+	 * @since   2.6
+	 */
+	public function get_meta( $meta_key = '', $single = true ) {
+		return EDD()->customer_meta->get_meta( $this->id, $meta_key, $single );
+	}
+
+	/**
+	 * Add meta data field to a customer.
+	 *
+	 * @param   string $meta_key      Metadata name.
+	 * @param   mixed  $meta_value    Metadata value.
+	 * @param   bool   $unique        Optional, default is false. Whether the same key should not be added.
+	 * @return  bool                  False for failure. True for success.
+	 *
+	 * @access  public
+	 * @since   2.6
+	 */
+	public function add_meta( $meta_key = '', $meta_value, $unique = false ) {
+		return EDD()->customer_meta->add_meta( $this->id, $meta_key, $meta_value, $unique );
+	}
+
+	/**
+	 * Update customer meta field based on customer ID.
+	 *
+	 * @param   string $meta_key      Metadata key.
+	 * @param   mixed  $meta_value    Metadata value.
+	 * @param   mixed  $prev_value    Optional. Previous value to check before removing.
+	 * @return  bool                  False on failure, true if success.
+	 *
+	 * @access  public
+	 * @since   2.6
+	 */
+	public function update_meta( $meta_key = '', $meta_value, $prev_value = '' ) {
+		return EDD()->customer_meta->update_meta( $this->id, $meta_key, $meta_value, $prev_value );
+	}
+
+	/**
+	 * Remove metadata matching criteria from a customer.
+	 *
+	 * @param   string $meta_key      Metadata name.
+	 * @param   mixed  $meta_value    Optional. Metadata value.
+	 * @return  bool                  False for failure. True for success.
+	 *
+	 * @access  public
+	 * @since   2.6
+	 */
+	public function delete_meta( $meta_key = '', $meta_value = '' ) {
+		return EDD()->customer_meta->delete_meta( $this->id, $meta_key, $meta_value );
 	}
 
 	/**
