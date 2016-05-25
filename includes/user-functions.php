@@ -442,8 +442,8 @@ add_action( 'user_register', 'edd_add_past_purchases_to_new_user', 10, 1 );
  * @since 		1.7
  * @return 		int - The total number of customers.
  */
-function edd_count_total_customers() {
-	return EDD()->customers->count();
+function edd_count_total_customers( $args = array() ) {
+	return EDD()->customers->count( $args );
 }
 
 
