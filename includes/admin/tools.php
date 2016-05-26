@@ -358,27 +358,29 @@ function edd_tools_import_export_display() {
 									</select>
 								</td>
 								<td>
-									<select name="edd-import-payment-field[1]" class="edd-import-payment-field">
-										<option value="_edd_payment_total"><?php _e( 'Total', 'easy-digital-downloads' ); ?></option>
-										<option value="_edd_payment_tax"><?php _e( 'Tax', 'easy-digital-downloads' ); ?></option>
-										<option value="_edd_payment_user_id"><?php _e( 'User ID', 'easy-digital-downloads' ); ?></option>
-										<option value="_edd_payment_user_email"><?php _e( 'Customer Email', 'easy-digital-downloads' ); ?></option>
+									<select name="edd-import-field[1]" class="edd-import-field">
+										<option value=""><?php _e( '- Ignore Field -', 'easy-digital-downloads' ); ?></option>
+										<option value="total"><?php _e( 'Total', 'easy-digital-downloads' ); ?></option>
+										<option value="subtotal"><?php _e( 'Subtotal', 'easy-digital-downloads' ); ?></option>
+										<option value="tax"><?php _e( 'Tax', 'easy-digital-downloads' ); ?></option>
+										<option value="user_id"><?php _e( 'User ID', 'easy-digital-downloads' ); ?></option>
+										<option value="customer_id"><?php _e( 'Customer ID', 'easy-digital-downloads' ); ?></option>
+										<option value="email"><?php _e( 'Customer Email', 'easy-digital-downloads' ); ?></option>
 										<option value="first_name"><?php _e( 'Customer First Name', 'easy-digital-downloads' ); ?></option>
 										<option value="last_name"><?php _e( 'Customer Last Name', 'easy-digital-downloads' ); ?></option>
-										<option value="_edd_payment_user_ip"><?php _e( 'IP Address', 'easy-digital-downloads' ); ?></option>
-										<option value="_edd_payment_purchase_key"><?php _e( 'Purchase Key', 'easy-digital-downloads' ); ?></option>
-										<option value="_edd_payment_gateway"><?php _e( 'Payment Method', 'easy-digital-downloads' ); ?></option>
-										<option value="_edd_payment_number"><?php _e( 'Payment Number', 'easy-digital-downloads' ); ?></option>
-										<option value="products"><?php _e( 'Purchased Products', 'easy-digital-downloads' ); ?></option>
-										<option value="post_date"><?php _e( 'Purchase Date', 'easy-digital-downloads' ); ?></option>
-										<option value="post_status"><?php _e( 'Status', 'easy-digital-downloads' ); ?></option>
+										<option value="ip"><?php _e( 'IP Address', 'easy-digital-downloads' ); ?></option>
+										<option value="key"><?php _e( 'Purchase Key', 'easy-digital-downloads' ); ?></option>
+										<option value="gateway"><?php _e( 'Payment Method', 'easy-digital-downloads' ); ?></option>
+										<option value="number"><?php _e( 'Payment Number', 'easy-digital-downloads' ); ?></option>
+										<option value="downloads"><?php _e( 'Purchased Products', 'easy-digital-downloads' ); ?></option>
+										<option value="date"><?php _e( 'Purchase Date', 'easy-digital-downloads' ); ?></option>
+										<option value="status"><?php _e( 'Status', 'easy-digital-downloads' ); ?></option>
 										<option value="currency"><?php _e( 'Currency Code', 'easy-digital-downloads' ); ?></option>
-										<option value="custom"><?php _e( 'Custom Field', 'easy-digital-downloads' ); ?></option>
+										<option value="mode"><?php _e( 'Mode', 'easy-digital-downloads' ); ?></option>
+										<option value="discounts"><?php _e( 'Discount Codes', 'easy-digital-downloads' ); ?></option>
+										<option value="transaction_id"><?php _e( 'Transaction ID', 'easy-digital-downloads' ); ?></option>
+										<option value="parent_payment_id"><?php _e( 'Parent Payment ID', 'easy-digital-downloads' ); ?></option>
 									</select>
-									<span class="edd-import-payment-field-custom-wrap" style="display:none">
-										<label for="edd-import-payment-field-custom_1"><?php _e( 'Custom Field', 'easy-digital-downloads' ); ?></label>
-										<input name="edd-import-payment-field-custom[1]" id="edd-import-payment-field-custom_1" type="text" value="" />
-									</span>
 								</td>
 								<td>
 									<a href="#" class="edd_remove_repeatable" data-type="price" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;">&times;</a>
@@ -443,7 +445,7 @@ function edd_tools_import_export_display() {
 									</select>
 								</td>
 								<td>
-									<select name="edd-import-download-field[1]" class="edd-import-download-field">
+									<select name="edd-import-field[1]" class="edd-import-field">
 										<option value=""><?php _e( '- Ignore Field -', 'easy-digital-downloads' ); ?></option>
 										<option value="post_author"><?php _e( 'Product Author', 'easy-digital-downloads' ); ?></option>
 										<option value="categories"><?php _e( 'Product Categories', 'easy-digital-downloads' ); ?></option>
@@ -465,10 +467,11 @@ function edd_tools_import_export_display() {
 										<option value="earnings"><?php _e( 'Total Earnings', 'easy-digital-downloads' ); ?></option>
 										<option value="custom"><?php _e( 'Custom Field', 'easy-digital-downloads' ); ?></option>
 									</select>
+									<!--
 									<span class="edd-import-download-field-custom-wrap" style="display:none">
 										<label for="edd-import-download-field-custom_1"><?php _e( 'Custom Field', 'easy-digital-downloads' ); ?></label>
 										<input name="edd-import-download-field-custom[1]" id="edd-import-download-field-custom_1" type="text" value="" />
-									</span>
+									</span>-->
 								</td>
 								<td>
 									<a href="#" class="edd_remove_repeatable" data-type="price" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;">&times;</a>

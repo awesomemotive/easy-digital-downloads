@@ -1531,7 +1531,7 @@ jQuery(document).ready(function ($) {
 
 				});
 
-				$('body').on('change', '.edd-import-download-field', function(e) {
+				$('body').on('change', '.edd-import-field', function(e) {
 					if( 'custom' == $(this).val() ) {
 						$(this).next().show();
 					} else {
@@ -1571,6 +1571,7 @@ jQuery(document).ready(function ($) {
 			var notice_wrap = import_form.find('.notice-wrap');
 
 			import_form.find('.button-disabled').removeClass('button-disabled');
+			console.log( response );
 
 			if ( response.data.error ) {
 
