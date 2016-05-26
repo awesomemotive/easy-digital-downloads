@@ -70,6 +70,11 @@ class EDD_Batch_Import {
 	 */
 	public $is_empty = false;
 
+	/**
+	 * Map of CSV columns > database fields
+	 *
+	 * @since 2.6
+	 */
 	public $field_mapping = array();
 
 	/**
@@ -94,6 +99,12 @@ class EDD_Batch_Import {
 
 	}
 
+	/**
+	 * Initialize the updater. Runs after import file is loaded but before any processing is done.
+	 *
+	 * @since 2.6
+	 * @return void
+	 */
 	public function init() {}
 
 	/**
@@ -146,6 +157,12 @@ class EDD_Batch_Import {
 		return 100;
 	}
 
+	/**
+	 * Map CSV columns to import fields
+	 *
+	 * @since 2.6
+	 * @return void
+	 */
 	public function map_fields( $csv_columns = array(), $import_fields = array() ) {
 
 		foreach( $csv_columns as $key => $column ) {
@@ -159,9 +176,29 @@ class EDD_Batch_Import {
 		}
 	}
 
+	/**
+	 * Retrieve the URL to the list table for the import data type
+	 *
+	 * @since 2.6
+	 * @return string
+	 */
 	public function get_list_table_url() {}
+
+	/**
+	 * Retrieve the label for the import type. Example: Payments
+	 *
+	 * @since 2.6
+	 * @return string
+	 */
 	public function get_import_type_label() {}
 
+	/**
+	 * Convert a string containing delimiters to an array
+	 *
+	 * @since 2.6
+	 * @param $str Input string to convert to an array
+	 * @return array
+	 */
 	public function str_to_array( $str = '' ) {
 
 		$array = array();
