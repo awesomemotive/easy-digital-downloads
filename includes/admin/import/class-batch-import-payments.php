@@ -24,9 +24,6 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 	public function init() {
 
 		// Set up default field map values
-		$payment = new EDD_Payment;
-
-		// Set up default field map values
 		$this->field_mapping = array(
 			'total'             => '',
 			'subtotal'          => '',
