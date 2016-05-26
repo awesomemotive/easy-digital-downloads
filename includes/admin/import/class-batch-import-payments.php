@@ -225,7 +225,25 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 		if( ! empty( $this->field_mapping['gateway'] ) && ! empty( $row[ $this->field_mapping['gateway'] ] ) ) {
 
-			$payment->gateway = sanitize_text_field( $row[ $this->field_mapping['gateway'] ] );
+			$gateways = edd_get_payment_gateways();
+			$gateway  = strtolower( sanitize_text_field( $row[ $this->field_mapping['gateway'] ] ) );
+
+			if( ! array_key_exists( $gateway, $gateways ) ) {
+
+				foreach( $gateways as $key => $enabled_gateway ) {
+
+					if( $enabled_gateway['checkout_label'] == $gateway ) {
+
+						$gateway = $key;
+						break;
+
+					}
+
+				}
+
+			}
+
+			$payment->gateway = $gateway;
 
 		}
 
@@ -257,7 +275,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 						continue;
 					}
 
-					$item_price = $download_count > 1 ? 0.00 : $payment->subtotal;
+					$item_price = edd_get_download_price( $download_id );
 					$item_tax   = $download_count > 1 ? 0.00 : $payment->tax;
 
 					$payment->add_download( $download_id, array(
