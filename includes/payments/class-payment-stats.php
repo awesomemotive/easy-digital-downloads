@@ -129,7 +129,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 			);
 
 			$args     = apply_filters( 'edd_stats_earnings_args', $args );
-			$key      = 'edd_stats_' . substr( md5( serialize( $args ) ), 0, 15 );
+			$key      = 'edd_stats_' . substr( md5( serialize( $args ) ), 0, 45 );
 
 			$earnings = get_transient( $key );
 
