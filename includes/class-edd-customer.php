@@ -302,6 +302,13 @@ class EDD_Customer {
 			return false;
 		}
 
+		if ( email_exists( $email ) ) {
+			$user = get_user_by( 'email', $email );
+			if ( $user->ID != $this->user_id ) {
+				return false;
+			}
+		}
+
 		do_action( 'edd_customer_pre_add_email', $email, $this->id, $this );
 
 		// Update is used to ensure duplicate emails are not added
