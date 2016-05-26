@@ -1487,9 +1487,16 @@ jQuery(document).ready(function ($) {
 				// HTML5 File API is supported by browser
 
 			} else {
+
+				var import_form = $('.edd-import-form').find('.edd-progress').parent().parent();
+				var notice_wrap = import_form.find('.notice-wrap');
+
+				import_form.find('.button-disabled').removeClass('button-disabled');
+
 				//Error for older unsupported browsers that doesn't support HTML5 File API
-				alert( edd_vars.unsupported_browser );
+				notice_wrap.html('<div class="update error"><p>' + edd_vars.unsupported_browser + '</p></div>');
 				return false;
+	
 			}
 
 		},
