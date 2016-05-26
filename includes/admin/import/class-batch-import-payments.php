@@ -118,6 +118,8 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 	public function create_payment( $row = array() ) {
 
 		$payment = new EDD_Payment;
+		$payment->status = 'pending';
+
 
 		if( ! empty( $this->field_mapping['total'] ) && ! empty( $row[ $this->field_mapping['total'] ] ) ) {
 
@@ -173,9 +175,9 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 		}
 
-		if( ! empty( $this->field_mapping['status'] ) && ! empty( $row[ $this->field_mapping['status'] ] ) ) {
+		if( ! empty( $this->field_mapping['email'] ) && ! empty( $row[ $this->field_mapping['email'] ] ) ) {
 
-			$payment->status = strtolower( sanitize_text_field( $row[ $this->field_mapping['status'] ] ) );
+			$payment->email = sanitize_text_field( $row[ $this->field_mapping['email'] ] );
 
 		}
 
@@ -193,12 +195,6 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 		}
 
-		if( ! empty( $this->field_mapping['email'] ) && ! empty( $row[ $this->field_mapping['email'] ] ) ) {
-
-			$payment->email = sanitize_text_field( $row[ $this->field_mapping['email'] ] );
-
-		}
-
 		if( ! empty( $this->field_mapping['first_name'] ) && ! empty( $row[ $this->field_mapping['first_name'] ] ) ) {
 
 			$payment->first_name = sanitize_text_field( $row[ $this->field_mapping['first_name'] ] );
@@ -213,9 +209,22 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 		if( ! empty( $this->field_mapping['user_id'] ) && ! empty( $row[ $this->field_mapping['user_id'] ] ) ) {
 
-			$user_id = absint( $row[ $this->field_mapping['user_id'] ] );
+			$user_id = sanitize_text_field( $row[ $this->field_mapping['user_id'] ] );
 
-			$user = get_userdata( $user_id );
+			if( is_numeric( $user_id ) ) {
+
+				$user_id = absint( $row[ $this->field_mapping['user_id'] ] );
+				$user    = get_userdata( $user_id );
+
+			} elseif( is_email( $user_id ) ) {
+
+				$user = get_user_by( 'email', $user_id );
+
+			} else {
+
+				$user = get_user_by( 'user_login', $user_id );
+
+			}
 
 			if( $user ) {
 
@@ -309,7 +318,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 		}
 
-		$payment->address = array( 'line1', 'line2', 'city', 'state', 'zip', 'country' );
+		$payment->address = array( 'line1' => '', 'line2' => '', 'city' => '', 'state' => '', 'zip' => '', 'country' => '' );
 
 		foreach( $payment->address as $key => $address_field ) {
 
@@ -320,6 +329,16 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 			}
 		}
 
+		$payment->save();
+
+		// The status has to be set after payment is created to ensure status update properly
+		if( ! empty( $this->field_mapping['status'] ) && ! empty( $row[ $this->field_mapping['status'] ] ) ) {
+
+			$payment->status = strtolower( sanitize_text_field( $row[ $this->field_mapping['status'] ] ) );
+
+		}
+
+		// Save a second time to update stats
 		$payment->save();
 
 	}
