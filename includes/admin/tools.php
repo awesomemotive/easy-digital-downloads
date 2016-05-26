@@ -360,26 +360,26 @@ function edd_tools_import_export_display() {
 								<td>
 									<select name="edd-import-field[1]" class="edd-import-field">
 										<option value=""><?php _e( '- Ignore Field -', 'easy-digital-downloads' ); ?></option>
-										<option value="total"><?php _e( 'Total', 'easy-digital-downloads' ); ?></option>
-										<option value="subtotal"><?php _e( 'Subtotal', 'easy-digital-downloads' ); ?></option>
-										<option value="tax"><?php _e( 'Tax', 'easy-digital-downloads' ); ?></option>
-										<option value="user_id"><?php _e( 'User ID', 'easy-digital-downloads' ); ?></option>
-										<option value="customer_id"><?php _e( 'Customer ID', 'easy-digital-downloads' ); ?></option>
+										<option value="currency"><?php _e( 'Currency Code', 'easy-digital-downloads' ); ?></option>
 										<option value="email"><?php _e( 'Customer Email', 'easy-digital-downloads' ); ?></option>
 										<option value="first_name"><?php _e( 'Customer First Name', 'easy-digital-downloads' ); ?></option>
 										<option value="last_name"><?php _e( 'Customer Last Name', 'easy-digital-downloads' ); ?></option>
+										<option value="customer_id"><?php _e( 'Customer ID', 'easy-digital-downloads' ); ?></option>
+										<option value="discounts"><?php _e( 'Discount Codes', 'easy-digital-downloads' ); ?></option>
 										<option value="ip"><?php _e( 'IP Address', 'easy-digital-downloads' ); ?></option>
-										<option value="key"><?php _e( 'Purchase Key', 'easy-digital-downloads' ); ?></option>
+										<option value="mode"><?php _e( 'Mode (Live|Test)', 'easy-digital-downloads' ); ?></option>
+										<option value="parent_payment_id"><?php _e( 'Parent Payment ID', 'easy-digital-downloads' ); ?></option>
 										<option value="gateway"><?php _e( 'Payment Method', 'easy-digital-downloads' ); ?></option>
 										<option value="number"><?php _e( 'Payment Number', 'easy-digital-downloads' ); ?></option>
-										<option value="downloads"><?php _e( 'Purchased Products', 'easy-digital-downloads' ); ?></option>
 										<option value="date"><?php _e( 'Purchase Date', 'easy-digital-downloads' ); ?></option>
+										<option value="key"><?php _e( 'Purchase Key', 'easy-digital-downloads' ); ?></option>
+										<option value="downloads"><?php _e( 'Purchased Product(s)', 'easy-digital-downloads' ); ?></option>
 										<option value="status"><?php _e( 'Status', 'easy-digital-downloads' ); ?></option>
-										<option value="currency"><?php _e( 'Currency Code', 'easy-digital-downloads' ); ?></option>
-										<option value="mode"><?php _e( 'Mode', 'easy-digital-downloads' ); ?></option>
-										<option value="discounts"><?php _e( 'Discount Codes', 'easy-digital-downloads' ); ?></option>
+										<option value="subtotal"><?php _e( 'Subtotal', 'easy-digital-downloads' ); ?></option>
+										<option value="tax"><?php _e( 'Tax', 'easy-digital-downloads' ); ?></option>
+										<option value="total"><?php _e( 'Total', 'easy-digital-downloads' ); ?></option>
 										<option value="transaction_id"><?php _e( 'Transaction ID', 'easy-digital-downloads' ); ?></option>
-										<option value="parent_payment_id"><?php _e( 'Parent Payment ID', 'easy-digital-downloads' ); ?></option>
+										<option value="user_id"><?php _e( 'User ID', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
 								<td>
