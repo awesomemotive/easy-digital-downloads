@@ -122,14 +122,14 @@ jQuery(document).ready(function ($) {
 					focusElement,
 					focusable,
 					firstFocusable;
-					
+
 					// Set focus on next element if removing the first row. Otherwise set focus on previous element.
 					if ( $(this).is( '.ui-sortable tr:first-child .edd_remove_repeatable:first-child' ) ) {
 						focusElement  = row.next( 'tr' );
 					} else {
 						focusElement  = row.prev( 'tr' );
 					}
-					
+
 					focusable  = focusElement.find( 'select, input, textarea, button' ).filter( ':visible' );
 					firstFocusable = focusable.eq(0);
 
@@ -1672,6 +1672,7 @@ jQuery(document).ready(function ($) {
 		},
 		init : function() {
 			this.edit_customer();
+			this.add_email();
 			this.user_search();
 			this.remove_user();
 			this.cancel_edit();
@@ -1685,6 +1686,43 @@ jQuery(document).ready(function ($) {
 
 				EDD_Customer.vars.customer_card_wrap_editable.hide();
 				EDD_Customer.vars.customer_card_wrap_edit_item.fadeIn().css( 'display', 'block' );
+			});
+		},
+		add_email: function() {
+			$( document.body ).on( 'click', '#add-customer-email', function(e) {
+				e.preventDefault();
+				var button  = $(this);
+				var wrapper = button.parent();
+
+				wrapper.parent().find('.notice-wrap').remove();
+				wrapper.find('.spinner').css('visibility', 'visible');
+				button.attr('disabled', true);
+
+				var customer_id = wrapper.find('input[name="customer-id"]').val();
+				var email       = wrapper.find('input[name="additional-email"]').val();
+				var primary     = wrapper.find('input[name="make-additional-primary"]').is(':checked');
+				var nonce       = wrapper.find('input[name="add_email_nonce"]').val();
+
+				var postData = {
+					edd_action:  'customer-add-email',
+					customer_id: customer_id,
+					email:       email,
+					primary:     primary,
+					_wpnonce:    nonce,
+				};
+
+				$.post(ajaxurl, postData, function( response ) {
+
+					if ( true === response.success ) {
+						window.location.href=response.redirect;
+					} else {
+						button.attr('disabled', false);
+						wrapper.after('<div class="notice-wrap"><div class="notice notice-error inline"><p>' + response.message + '</p></div></div>');
+						wrapper.find('.spinner').css('visibility', 'hidden');
+					}
+
+				}, 'json');
+
 			});
 		},
 		user_search: function() {
