@@ -29,6 +29,8 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 	 */
 	public function init() {
 
+		$this->per_step = 5;
+
 		// Set up default field map values
 		$this->field_mapping = array(
 			'total'             => '',
@@ -363,7 +365,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 	 */
 	public function get_percentage_complete() {
 
-		$total = 20;
+		$total = count( $this->csv->data );
 
 		if( $total > 0 ) {
 			$percentage = ( $this->step / $total ) * 100;
