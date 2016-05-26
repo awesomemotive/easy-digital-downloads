@@ -1,8 +1,8 @@
 <?php
 /**
- * Batch Downloads Import Class
+ * Download import class
  *
- * This class handles importing download products
+ * This class handles importing downloads with the batch processing API
  *
  * @package     EDD
  * @subpackage  Admin/Import
@@ -21,7 +21,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 
-
+	/**
+	 * Set up our import config.
+	 *
+	 * @since 2.6
+	 * @return void
+	 */
 	public function init() {
 
 		// Set up default field map values
@@ -208,6 +213,12 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 		return $percentage;
 	}
 
+	/**
+	 * Set up and store the price for the download
+	 *
+	 * @since 2.6
+	 * @return void
+	 */
 	private function set_price( $download_id = 0, $price = '' ) {
 
 		if( is_numeric( $price ) ) {
@@ -243,6 +254,12 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 
 	}
 
+	/**
+	 * Set up and store the file downloads
+	 *
+	 * @since 2.6
+	 * @return void
+	 */
 	private function set_files( $download_id = 0, $files = array() ) {
 
 		if( ! empty( $files ) ) {
@@ -260,6 +277,12 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 
 	}
 
+	/**
+	 * Set up and store the Featured Image
+	 *
+	 * @since 2.6
+	 * @return void
+	 */
 	private function set_image( $download_id = 0, $image = '', $post_author = 0 ) {
 
 		$is_url   = false !== filter_var( $image, FILTER_VALIDATE_URL );
@@ -370,6 +393,12 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 
 	}
 
+	/**
+	 * Set up and taxonomy terms
+	 *
+	 * @since 2.6
+	 * @return void
+	 */
 	private function set_taxonomy_terms( $download_id = 0, $terms = array(), $taxonomy = 'download_category' ) {
 
 		$terms = $this->maybe_create_terms( $terms, $taxonomy );
@@ -382,6 +411,12 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 
 	}
 
+	/**
+	 * Locate term IDs or create terms if none are found
+	 *
+	 * @since 2.6
+	 * @return array
+	 */
 	private function maybe_create_terms( $terms = array(), $taxonomy = 'download_category' ) {
 
 		// Return of term IDs
@@ -420,10 +455,22 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 		return array_map( 'absint', $term_ids );
 	}
 
+	/**
+	 * Retrieve URL to Downloads list table
+	 *
+	 * @since 2.6
+	 * @return string
+	 */
 	public function get_list_table_url() {
 		return admin_url( 'edit.php?post_type=download' );
 	}
 
+	/**
+	 * Retrieve Download label
+	 *
+	 * @since 2.6
+	 * @return void
+	 */
 	public function get_import_type_label() {
 		return edd_get_label_plural( true );
 	}

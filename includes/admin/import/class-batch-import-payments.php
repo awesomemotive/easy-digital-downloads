@@ -1,8 +1,8 @@
 <?php
 /**
- * Batch Import Class
+ * Payment Import Class
  *
- * This is the base class for all batch import methods. Each data import type (customers, payments, etc) extend this class
+ * This class handles importing payments with the batch processing API
  *
  * @package     EDD
  * @subpackage  Admin/Import
@@ -21,6 +21,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
+	/**
+	 * Set up our import config.
+	 *
+	 * @since 2.6
+	 * @return void
+	 */
 	public function init() {
 
 		// Set up default field map values
@@ -101,9 +107,15 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 		return $more;
 	}
 
+	/**
+	 * Set up and store a payment record from a CSV row
+	 *
+	 * @since 2.6
+	 * @return void
+	 */
 	public function create_payment( $row = array() ) {
 
-		$payment = new EDD_Payment;		
+		$payment = new EDD_Payment;
 
 		if( ! empty( $this->field_mapping['total'] ) && ! empty( $row[ $this->field_mapping['total'] ] ) ) {
 
@@ -174,7 +186,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 			if( $customer->id > 0 ) {
 
 				$payment->customer_id = $customer_id;
-	
+
 			}
 
 		}
@@ -206,7 +218,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 			if( $user ) {
 
 				$payment->user_id = $user->ID;
-	
+
 			}
 
 		}
@@ -275,7 +287,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 				foreach( $downloads as $download ) {
 
-					$download_id = $this->maybe_create_download( $download ); 
+					$download_id = $this->maybe_create_download( $download );
 
 					if( ! $download_id ) {
 						continue;
@@ -290,7 +302,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 					) );
 
 				}
-				
+
 			}
 
 		}
@@ -310,6 +322,12 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 	}
 
+	/**
+	 * Look up Download by title and create one if none is found
+	 *
+	 * @since 2.6
+	 * @return int Download ID
+	 */
 	private function maybe_create_download( $title = '' ) {
 
 		if( ! is_string( $title ) ) {
@@ -358,10 +376,22 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 		return $percentage;
 	}
 
+	/**
+	 * Retrieve the URL to the payments list table
+	 *
+	 * @since 2.6
+	 * @return string
+	 */
 	public function get_list_table_url() {
 		return admin_url( 'edit.php?post_type=download&page=edd-payment-history' );
 	}
 
+	/**
+	 * Retrieve the payments labels
+	 *
+	 * @since 2.6
+	 * @return string
+	 */
 	public function get_import_type_label() {
 		return __( 'payments', 'easy-digital-downloads' );
 	}
