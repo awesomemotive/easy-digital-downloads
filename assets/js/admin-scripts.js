@@ -1453,6 +1453,205 @@ jQuery(document).ready(function ($) {
 	EDD_Export.init();
 
 	/**
+	 * Import screen JS
+	 */
+	var EDD_Import = {
+
+		init : function() {
+			this.submit();
+			this.toggle_fields();
+		},
+
+		submit : function() {
+
+			var self = this;
+
+			$('.edd-import-form').ajaxForm({
+				beforeSubmit: self.before_submit,
+				success: self.success,
+				complete: self.complete,
+				dataType: 'json',
+				error: self.error
+			});
+
+		},
+
+		before_submit : function( arr, $form, options ) {
+
+			$form.find('.notice-wrap').remove();
+			$form.append( '<div class="notice-wrap"><span class="spinner is-active"></span><div class="edd-progress"><div></div></div></div>' );
+
+			//check whether client browser fully supports all File API
+			if ( window.File && window.FileReader && window.FileList && window.Blob ) {
+
+				// HTML5 File API is supported by browser
+
+			} else {
+
+				var import_form = $('.edd-import-form').find('.edd-progress').parent().parent();
+				var notice_wrap = import_form.find('.notice-wrap');
+
+				import_form.find('.button-disabled').removeClass('button-disabled');
+
+				//Error for older unsupported browsers that doesn't support HTML5 File API
+				notice_wrap.html('<div class="update error"><p>' + edd_vars.unsupported_browser + '</p></div>');
+				return false;
+	
+			}
+
+		},
+
+		success: function( responseText, statusText, xhr, $form ) {},
+
+		complete: function( xhr ) {
+
+			var response = jQuery.parseJSON( xhr.responseText );
+
+			if( response.success ) {
+
+				var $form = $('.edd-import-form .notice-wrap').parent();
+
+				$form.find('.edd-import-file-wrap,.notice-wrap').remove();
+
+				$form.find('.edd-import-options').slideDown();
+
+				// Show column mapping
+				var select = $form.find('select.edd-import-csv-column');
+				var row    = select.parent().parent();
+				$.each( response.data.columns, function( key, value ) {
+					select.append( '<option value="' + value + '">' + value + '</option>' );
+				});
+				$.each( response.data.columns, function( key, value ) {
+
+					if( key >= 1 ) {
+
+						var clone = EDD_Download_Configuration.clone_repeatable( row );
+						clone.find('select').val( value );
+						$( clone ).insertAfter( row );
+
+					}
+
+				});
+
+				$('body').on('change', '.edd-import-field', function(e) {
+					if( 'custom' == $(this).val() ) {
+						$(this).next().show();
+					} else {
+						$(this).next().hide();
+					}
+				});
+
+				$('body').on('click', '.edd-import-proceed', function(e) {
+
+					e.preventDefault();
+
+					$form.append( '<div class="notice-wrap"><span class="spinner is-active"></span><div class="edd-progress"><div></div></div></div>' );
+
+					response.data.mapping = $form.serialize();
+
+					EDD_Import.process_step( 1, response.data, self );
+				});
+
+			} else {
+
+				EDD_Import.error( xhr );
+
+			}
+
+		},
+
+		error : function( xhr ) {
+
+			// Something went wrong. This will display error on form
+
+			var response    = jQuery.parseJSON( xhr.responseText );
+			var import_form = $('.edd-import-form').find('.edd-progress').parent().parent();
+			var notice_wrap = import_form.find('.notice-wrap');
+
+			import_form.find('.button-disabled').removeClass('button-disabled');
+
+			if ( response.data.error ) {
+
+				notice_wrap.html('<div class="update error"><p>' + response.data.error + '</p></div>');
+
+			} else {
+
+				notice_wrap.remove();
+
+			}
+		},
+
+		process_step : function( step, import_data, self ) {
+
+			$.ajax({
+				type: 'POST',
+				url: ajaxurl,
+				data: {
+					form: import_data.form,
+					nonce: import_data.nonce,
+					class: import_data.class,
+					upload: import_data.upload,
+					mapping: import_data.mapping,
+					action: 'edd_do_ajax_import',
+					step: step,
+				},
+				dataType: "json",
+				success: function( response ) {
+
+					if( 'done' == response.data.step || response.data.error ) {
+
+						// We need to get the actual in progress form, not all forms on the page
+						var import_form  = $('.edd-import-form').find('.edd-progress').parent().parent();
+						var notice_wrap  = import_form.find('.notice-wrap');
+
+						import_form.find('.button-disabled').removeClass('button-disabled');
+
+						if ( response.data.error ) {
+
+							notice_wrap.html('<div class="update error"><p>' + response.data.error + '</p></div>');
+
+						} else {
+
+							notice_wrap.html('<div class="updated"><p>' + response.data.message + '</p></div>');
+
+						}
+
+					} else {
+
+						$('.edd-progress div').animate({
+							width: response.data.percentage + '%',
+						}, 50, function() {
+							// Animation complete.
+						});
+
+						EDD_Import.process_step( parseInt( response.data.step ), import_data, self );
+					}
+
+				}
+			}).fail(function (response) {
+				if ( window.console && window.console.log ) {
+					console.log( response );
+				}
+			});
+
+		},
+
+		toggle_fields : function() {
+
+			$('body').on('change', '.edd-import-payment-field', function() {
+				if( 'custom' == $(this).val() ) {
+					$(this).parent().find( '.edd-import-payment-field-custom-wrap' ).show();
+				} else {
+					$(this).parent().find( '.edd-import-payment-field-custom-wrap' ).hide();
+				}
+			});
+
+		}
+
+	};
+	EDD_Import.init();
+
+	/**
 	 * Customer management screen JS
 	 */
 	var EDD_Customer = {
