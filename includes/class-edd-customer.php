@@ -41,11 +41,18 @@ class EDD_Customer {
 	public $purchase_value = 0;
 
 	/**
-	 * The customer's email
+	 * The customer's primary email
 	 *
 	 * @since 2.3
 	 */
 	public $email;
+
+	/**
+	 * The customer's emails
+	 *
+	 * @since 2.6
+	 */
+	public $emails;
 
 	/**
 	 * The customer's name
@@ -113,6 +120,7 @@ class EDD_Customer {
 		$customer = $this->db->get_customer_by( $field, $_id_or_email );
 
 		if ( empty( $customer ) || ! is_object( $customer ) ) {
+
 			return false;
 		}
 
@@ -148,6 +156,9 @@ class EDD_Customer {
 			}
 
 		}
+
+		$this->emails   = (array) $this->get_meta( 'additional_email', false );
+		$this->emails[] = $this->email;
 
 		// Customer ID and email are the only things that are necessary, make sure they exist
 		if ( ! empty( $this->id ) && ! empty( $this->email ) ) {
@@ -271,6 +282,120 @@ class EDD_Customer {
 	}
 
 	/**
+	 * Attach an email to the customer
+	 *
+	 * @since  2.6
+	 * @param  string $email The email address to remove from the customer
+	 * @param  bool   $primary Allows setting the email added as the primary
+	 * @return bool   If the email was added successfully
+	 */
+	public function add_email( $email = '', $primary = false ) {
+
+		if( ! is_email( $email ) ) {
+			return false;
+		}
+
+		$existing = new EDD_Customer( $email );
+
+		if( $existing->id > 0 ) {
+			// Email address already belongs to a customer
+			return false;
+		}
+
+		if ( email_exists( $email ) ) {
+			$user = get_user_by( 'email', $email );
+			if ( $user->ID != $this->user_id ) {
+				return false;
+			}
+		}
+
+		do_action( 'edd_customer_pre_add_email', $email, $this->id, $this );
+
+		// Update is used to ensure duplicate emails are not added
+		$ret = (bool) $this->add_meta( 'additional_email', $email );
+
+		do_action( 'edd_customer_post_add_email', $email, $this->id, $this );
+
+		if ( $ret && true === $primary ) {
+			$this->set_primary_email( $email );
+		}
+
+		return $ret;
+
+	}
+
+	/**
+	 * Remove an email from the customer
+	 *
+	 * @since  2.6
+	 * @param  string $email The email address to remove from the customer
+	 * @return bool   If the email was removeed successfully
+	 */
+	public function remove_email( $email = '' ) {
+
+		if( ! is_email( $email ) ) {
+			return false;
+		}
+
+		do_action( 'edd_customer_pre_remove_email', $email, $this->id, $this );
+
+		$ret = (bool) $this->delete_meta( 'additional_email', $email );
+
+		do_action( 'edd_customer_post_remove_email', $email, $this->id, $this );
+
+		return $ret;
+
+	}
+
+	/**
+	 * Set an email address as the customer's primary email
+	 *
+	 * This will move the customer's previous primary email to an additional email
+	 *
+	 * @since  2.6
+	 * @param  string $new_primary_email The email address to remove from the customer
+	 * @return bool                      If the email was set as primary successfully
+	 */
+	public function set_primary_email( $new_primary_email = '' ) {
+
+		if( ! is_email( $new_primary_email ) ) {
+			return false;
+		}
+
+		do_action( 'edd_customer_pre_set_primary_email', $new_primary_email, $this->id, $this );
+
+		$existing = new EDD_Customer( $new_primary_email );
+
+		if( $existing->id > 0 && (int) $existing->id !== (int) $this->id ) {
+
+			// This email belongs to another customer
+			return false;
+		}
+
+		$old_email = $this->email;
+
+		// Update customer record with new email
+		$update = $this->update( array( 'email' => $new_primary_email ) );
+
+		// Remove new primary from list of additional emails
+		$remove = $this->remove_email( $new_primary_email );
+
+		// Add old email to additional emails list
+		$add = $this->add_email( $old_email );
+
+		$ret = $update && $remove && $add;
+
+		if( $ret ) {
+			$this->email = $new_primary_email;
+		}
+
+		do_action( 'edd_customer_post_set_primary_email', $new_primary_email, $this->id, $this );
+
+		return $ret;
+
+	}
+
+	/*
 	 * Get the payment ids of the customer in an array.
 	 *
 	 * @since 2.6
@@ -290,7 +415,7 @@ class EDD_Customer {
 
 	}
 
-	/**
+	/*
 	 * Get an array of EDD_Payment objects from the payment_ids attached to the customer
 	 *
 	 * @since  2.6
@@ -314,7 +439,6 @@ class EDD_Customer {
 		return $payments;
 
 	}
-
 
 	/**
 	 * Attach payment to the customer then triggers increasing stats

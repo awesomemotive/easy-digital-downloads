@@ -462,4 +462,29 @@ class Tests_Customers extends WP_UnitTestCase {
 		$this->assertEmpty( $new_customer->get_payments() );
 	}
 
+	public function test_add_email() {
+		$customer = new EDD_Customer( $this->_user_id, true );
+
+		$this->assertTrue( $customer->add_email( 'test2@example.org' ) );
+
+		$customer2 = new EDD_Customer( $customer->id );
+		$this->assertTrue( in_array( 'test2@example.org', $customer2->emails ) );
+
+		// Test with the primary parameter
+		$this->assertTrue( $customer->add_email( 'test3@example.org', true ) );
+
+		$customer3 = new EDD_Customer( $customer2->id );
+		$this->assertEquals( $customer3->email, 'test3@example.org' );
+		$this->assertTrue( in_array( $customer2->email, $customer3->emails ) );
+	}
+
+	public function test_remove_email() {
+		$customer = new EDD_Customer( $this->_user_id, true );
+		$customer->add_email( 'test1@example.org' );
+
+		$customer = new EDD_Customer( $customer->id );
+		$this->assertTrue( $customer->remove_email( 'test1@example.org' ) );
+		$this->assertFalse( $customer->remove_email( 'test9999@example.org' ) );
+	}
+
 }
