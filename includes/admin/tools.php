@@ -380,6 +380,12 @@ function edd_tools_import_export_display() {
 										<option value="total"><?php _e( 'Total', 'easy-digital-downloads' ); ?></option>
 										<option value="transaction_id"><?php _e( 'Transaction ID', 'easy-digital-downloads' ); ?></option>
 										<option value="user_id"><?php _e( 'User ID', 'easy-digital-downloads' ); ?></option>
+										<option value="line1"><?php _e( 'Address Line 1', 'easy-digital-downloads' ); ?></option>
+										<option value="line2"><?php _e( 'Address Line 2', 'easy-digital-downloads' ); ?></option>
+										<option value="city"><?php _e( 'City', 'easy-digital-downloads' ); ?></option>
+										<option value="state"><?php _e( 'State / Province', 'easy-digital-downloads' ); ?></option>
+										<option value="zip"><?php _e( 'Zip / Postal Code', 'easy-digital-downloads' ); ?></option>
+										<option value="country"><?php _e( 'Country', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
 								<td>
