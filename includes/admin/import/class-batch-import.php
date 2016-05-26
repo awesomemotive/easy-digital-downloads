@@ -161,4 +161,40 @@ class EDD_Batch_Import {
 
 	public function get_list_table_url() {}
 	public function get_import_type_label() {}
+
+	public function str_to_array( $str = '' ) {
+
+		$array = array();
+
+		if( is_array( $str ) ) {
+			return array_map( 'trim', $str );
+		}
+
+		// Look for standard delimiters
+		if( false !== strpos( $str, '|' ) ) {
+
+			$delimiter = '|';
+
+		} elseif( false !== strpos( $str, ',' ) ) {
+
+			$delimiter = ',';
+
+		} elseif( false !== strpos( $str, ';' ) ) {
+
+			$delimiter = ';';
+
+		}
+
+		if( ! empty( $delimiter ) ) {
+
+			$array = (array) explode( $delimiter, $str );
+
+		} else {
+
+			$array[] = $str;
+		}
+
+		return array_map( 'trim', $array );
+
+	}
 }

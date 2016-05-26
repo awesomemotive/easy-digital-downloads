@@ -24,10 +24,30 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 	public function init() {
 
 		// Set up default field map values
-		$payment = new EDD_Paymet;
+		$payment = new EDD_Payment;
 
-		$this->field_mapping = $payment->array_convert();
-
+		// Set up default field map values
+		$this->field_mapping = array(
+			'total'             => '',
+			'subtotal'          => '',
+			'tax'               => 'draft',
+			'number'            => '',
+			'mode'              => '',
+			'gateway'           => '',
+			'date'              => '',
+			'status'            => '',
+			'email'             => '',
+			'first_name'        => '',
+			'last_name'         => '',
+			'customer_id'       => '',
+			'user_id'           => '',
+			'discounts'         => '',
+			'transaction_id'    => '',
+			'ip'                => '',
+			'currency'          => '',
+			'parent_payment_id' => '',
+			'downloads'         => ''
+		);
 	}
 
 	/**
@@ -88,15 +108,19 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 		}
 
+		if( ! empty( $this->field_mapping['tax'] ) && ! empty( $row[ $this->field_mapping['tax'] ] ) ) {
+
+			$payment->tax = edd_sanitize_amount( $row[ $this->field_mapping['tax'] ] );
+
+		}
+
 		if( ! empty( $this->field_mapping['subtotal'] ) && ! empty( $row[ $this->field_mapping['subtotal'] ] ) ) {
 
 			$payment->subtotal = edd_sanitize_amount( $row[ $this->field_mapping['subtotal'] ] );
 
-		}
+		} else {
 
-		if( ! empty( $this->field_mapping['tax'] ) && ! empty( $row[ $this->field_mapping['tax'] ] ) ) {
-
-			$payment->tax = edd_sanitize_amount( $row[ $this->field_mapping['tax'] ] );
+			$payment->subtotal = $payment->total - $payment->tax;
 
 		}
 
@@ -132,32 +156,9 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 		}
 
-		if( ! empty( $this->field_mapping['completed_date'] ) && ! empty( $row[ $this->field_mapping['completed_date'] ] ) ) {
-
-			$completed_date = sanitize_text_field( $row[ $this->field_mapping['completed_date'] ] );
-
-			if( ! strtotime( $completed_date ) ) {
-
-				$completed_date = date( 'Y-n-d H:i:s', current_time( 'timestamp' ) );
-
-			}
-
-			$payment->completed_date = $completed_date;
-
-		}
-
 		if( ! empty( $this->field_mapping['status'] ) && ! empty( $row[ $this->field_mapping['status'] ] ) ) {
 
-			$status   = sanitize_text_field( $row[ $this->field_mapping['status'] ] );
-			$statuses = edd_get_payment_statuses();
-
-			if( ! array_key_exists( $status, $statuses ) ) {
-
-				$status = 'pending';
-	
-			}
-
-			$payment->status = $status;
+			$payment->status = strtolower( sanitize_text_field( $row[ $this->field_mapping['status'] ] ) );
 
 		}
 
@@ -207,6 +208,12 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 		}
 
+		if( ! empty( $this->field_mapping['discounts'] ) && ! empty( $row[ $this->field_mapping['discounts'] ] ) ) {
+
+			$payment->discounts = sanitize_text_field( $row[ $this->field_mapping['discounts'] ] );
+
+		}
+
 		if( ! empty( $this->field_mapping['transaction_id'] ) && ! empty( $row[ $this->field_mapping['transaction_id'] ] ) ) {
 
 			$payment->transaction_id = sanitize_text_field( $row[ $this->field_mapping['transaction_id'] ] );
@@ -240,11 +247,26 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 		if( ! empty( $this->field_mapping['downloads'] ) && ! empty( $row[ $this->field_mapping['downloads'] ] ) ) {
 
 			$downloads = $this->str_to_array( $row[ $this->field_mapping['downloads'] ] );
+
 			if( is_array( $downloads ) ) {
+
+				$download_count = count( $downloads );
 
 				foreach( $downloads as $download ) {
 
-					
+					$download_id = $this->maybe_create_download( $download ); 
+
+					if( ! $download_id ) {
+						continue;
+					}
+
+					$item_price = $download_count > 1 ? 0.00 : $payment->subtotal;
+					$item_tax   = $download_count > 1 ? 0.00 : $payment->tax;
+
+					$payment->add_download( $download_id, array(
+						'item_price' => $item_price,
+						'tax'        => $item_tax
+					) );
 
 				}
 				
@@ -252,6 +274,35 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 		}
 
+		$payment->save();
+
+	}
+
+	private function maybe_create_download( $title = '' ) {
+
+		if( ! is_string( $title ) ) {
+			return false;
+		}
+
+		$download = get_page_by_title( $title, OBJECT, 'download' );
+
+		if( $download ) {
+
+			$download_id = $download->ID;
+
+		} else {
+
+			$args = array(
+				'post_type'   => 'download',
+				'post_title'  => $title,
+				'post_author' => get_current_user_id()
+			);
+
+			$download_id = wp_insert_post( $args );
+
+		}
+
+		return $download_id;
 	}
 
 	/**
@@ -273,5 +324,13 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 		}
 
 		return $percentage;
+	}
+
+	public function get_list_table_url() {
+		return admin_url( 'edit.php?post_type=download&page=edd-payment-history' );
+	}
+
+	public function get_import_type_label() {
+		return __( 'payments', 'easy-digital-downloads' );
 	}
 }

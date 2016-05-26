@@ -208,35 +208,6 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 		return $percentage;
 	}
 
-	private function str_to_array( $str = '' ) {
-
-		// Look for standard delimiters
-		if( false !== strpos( $str, '|' ) ) {
-
-			$delimiter = '|';
-
-		} elseif( false !== strpos( $str, ',' ) ) {
-
-			$delimiter = ',';
-
-		} elseif( false !== strpos( $str, ';' ) ) {
-
-			$delimiter = ';';
-
-		}
-
-		if( ! empty( $delimiter ) ) {
-
-			$array = (array) explode( $delimiter, $str );
-
-			return array_map( 'trim', $array );
-
-		}
-
-		return array();
-
-	}
-
 	private function set_price( $download_id = 0, $price = '' ) {
 
 		if( is_numeric( $price ) ) {
