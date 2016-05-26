@@ -219,7 +219,8 @@ function edd_load_admin_scripts( $hook ) {
 		'batch_export_no_class'   => __( 'You must choose a method.', 'easy-digital-downloads' ),
 		'batch_export_no_reqs'    => __( 'Required fields not completed.', 'easy-digital-downloads' ),
 		'reset_stats_warn'        => __( 'Are you sure you want to reset your store? This process is <strong><em>not reversible</em></strong>. Please be sure you have a recent backup.', 'easy-digital-downloads' ),
-		'search_placeholder'      => sprintf( __( 'Type to search all %s', 'easy-digital-downloads' ), edd_get_label_plural() )
+		'search_placeholder'      => sprintf( __( 'Type to search all %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
+		'unsupported_browser'     => __( 'We are sorry but your browser is not compatible with this kind of file upload. Please upgrade your browser.', 'easy-digital-downloads' )
 	));
 
 	wp_enqueue_style( 'wp-color-picker' );

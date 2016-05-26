@@ -1485,27 +1485,22 @@ jQuery(document).ready(function ($) {
 			if ( window.File && window.FileReader && window.FileList && window.Blob ) {
 
 				// HTML5 File API is supported by browser
-				console.log('before');
+
 			} else {
 				//Error for older unsupported browsers that doesn't support HTML5 File API
-				alert( "Please upgrade your browser, because your current browser lacks some new features we need!" );
+				alert( edd_vars.unsupported_browser );
 				return false;
 			}
 
 		},
 
-		success: function( responseText, statusText, xhr, $form ) {
-			//console.log('success');
-			//console.log( responseText );
-		},
+		success: function( responseText, statusText, xhr, $form ) {},
 
 		complete: function( xhr ) {
 
 			var response = jQuery.parseJSON( xhr.responseText );
 
 			if( response.success ) {
-
-				//console.log( response.data );
 
 				var $form = $('.edd-import-form .notice-wrap').parent();
 
@@ -1556,22 +1551,17 @@ jQuery(document).ready(function ($) {
 
 			}
 
-			console.log( response );
-
 		},
 
 		error : function( xhr ) {
 
 			// Something went wrong. This will display error on form
-			console.log( 'error' );
-			console.log( xhr );
 
 			var response    = jQuery.parseJSON( xhr.responseText );
 			var import_form = $('.edd-import-form').find('.edd-progress').parent().parent();
 			var notice_wrap = import_form.find('.notice-wrap');
 
 			import_form.find('.button-disabled').removeClass('button-disabled');
-			console.log( response );
 
 			if ( response.data.error ) {
 
@@ -1604,8 +1594,8 @@ jQuery(document).ready(function ($) {
 					if( 'done' == response.data.step || response.data.error ) {
 
 						// We need to get the actual in progress form, not all forms on the page
-						var import_form    = $('.edd-import-form').find('.edd-progress').parent().parent();
-						var notice_wrap    = import_form.find('.notice-wrap');
+						var import_form  = $('.edd-import-form').find('.edd-progress').parent().parent();
+						var notice_wrap  = import_form.find('.notice-wrap');
 
 						import_form.find('.button-disabled').removeClass('button-disabled');
 
@@ -1626,10 +1616,6 @@ jQuery(document).ready(function ($) {
 						}, 50, function() {
 							// Animation complete.
 						});
-
-						console.log( response.data.mapping );
-						console.log( 'Step ' + response.data.step );
-						console.log( 'Total ' + response.data.total );
 
 						EDD_Import.process_step( parseInt( response.data.step ), import_data, self );
 					}
