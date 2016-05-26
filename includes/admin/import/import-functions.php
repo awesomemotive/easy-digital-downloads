@@ -21,10 +21,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_do_ajax_import_file_upload() {
 
-	if( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) {
-		return;
-	}
-
 	if ( ! function_exists( 'wp_handle_upload' ) ) {
 		require_once( ABSPATH . 'wp-admin/includes/file.php' );
 	}
@@ -94,10 +90,6 @@ add_action( 'edd_upload_import_file', 'edd_do_ajax_import_file_upload' );
  * @return void
  */
 function edd_do_ajax_import() {
-
-	if( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) {
-		return;
-	}
 
 	require_once EDD_PLUGIN_DIR . 'includes/admin/import/class-batch-import.php';
 
