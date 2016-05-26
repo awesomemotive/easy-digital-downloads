@@ -358,27 +358,6 @@ class EDD_API_V2 extends EDD_API_V1 {
 				$sales['sales'][ $i ]['ID']             = $payment->number;
 				$sales['sales'][ $i ]['transaction_id'] = $payment->transaction_id;
 				$sales['sales'][ $i ]['key']            = $payment->key;
-
-				$discounts       = ! empty( $payment->discounts ) ? explode( ',', $payment->discounts ) : array();
-				$discount_values = array();
-
-				foreach ( $discounts as $discount ) {
-					if ( 'none' === $discount ) {
-						continue;
-					}
-
-					// Clean up the discount code for use in the JSON
-					$code  = trim( $discount );
-					$total = $payment->subtotal;
-
-					if ( edd_use_taxes() && edd_prices_include_tax() ) {
-						$total += $payment->tax;
-					}
-
-					$discount_values[ $code ] = (float) $total - ( edd_get_discounted_amount( $code, $total ) );
-				}
-				$sales['sales'][ $i ]['discounts']      = $discount_values;
-
 				$sales['sales'][ $i ]['subtotal']       = $payment->subtotal;
 				$sales['sales'][ $i ]['tax']            = $payment->tax;
 				$sales['sales'][ $i ]['fees']           = $payment->fees;
@@ -386,16 +365,29 @@ class EDD_API_V2 extends EDD_API_V1 {
 				$sales['sales'][ $i ]['gateway']        = $payment->gateway;
 				$sales['sales'][ $i ]['email']          = $payment->email;
 				$sales['sales'][ $i ]['date']           = $payment->date;
-				$sales['sales'][ $i ]['products']       = array();
 
 				$c = 0;
 
+				$discounts       = ! empty( $payment->discounts ) ? explode( ',', $payment->discounts ) : array();
+				$discounts       = array_map( 'trim', $discounts );
+				$discount_values = array();
+
+				foreach ( $discounts as $discount ) {
+					if ( 'none' === $discount ) { continue; }
+
+					$discount_values[ $discount ] = 0;
+				}
+
+				$cart_items = array();
+
 				foreach ( $payment->cart_details as $key => $item ) {
 
-					$item_id  = isset( $item['id']    ) ? $item['id']    : $item;
-					$price    = isset( $item['price'] ) ? $item['price'] : false;
-					$price_id = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
-					$quantity = isset( $item['quantity'] ) && $item['quantity'] > 0 ? $item['quantity'] : 1;
+					$item_id    = isset( $item['id']    )      ? $item['id']         : $item;
+					$price      = isset( $item['price'] )      ? $item['price']      : false; // The final price for the item
+					$item_price = isset( $item['item_price'] ) ? $item['item_price'] : false; // The price before discounts
+
+					$price_id   = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
+					$quantity   = isset( $item['quantity'] ) && $item['quantity'] > 0  ? $item['quantity']                           : 1;
 
 					if( ! $price ) {
 						// This function is only used on payments with near 1.0 cart data structure
@@ -410,13 +402,25 @@ class EDD_API_V2 extends EDD_API_V1 {
 						}
 					}
 
-					$sales['sales'][ $i ]['products'][ $c ]['id']         = $item_id;
-					$sales['sales'][ $i ]['products'][ $c ]['quantity']   = $quantity;
-					$sales['sales'][ $i ]['products'][ $c ]['name']       = get_the_title( $item_id );
-					$sales['sales'][ $i ]['products'][ $c ]['price']      = $price;
-					$sales['sales'][ $i ]['products'][ $c ]['price_name'] = $price_name;
+					$cart_items[ $c ]['id']         = $item_id;
+					$cart_items[ $c ]['quantity']   = $quantity;
+					$cart_items[ $c ]['name']       = get_the_title( $item_id );
+					$cart_items[ $c ]['price']      = $price;
+					$cart_items[ $c ]['price_name'] = $price_name;
+
+					// Determine the discount amount for the item, if there is one
+					foreach ( $discount_values as $discount => $amount ) {
+
+						$item_discount = edd_get_cart_item_discount_amount( $item, $discount );
+						$discount_values[ $discount ] += $item_discount;
+
+					}
+
 					$c++;
 				}
+
+				$sales['sales'][ $i ]['discounts'] = $discount_values;
+				$sales['sales'][ $i ]['products']  = $cart_items;
 
 				$i++;
 			}
