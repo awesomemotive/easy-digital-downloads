@@ -152,9 +152,6 @@ class Tests_API extends WP_UnitTestCase {
 
 		edd_update_payment_status( $this->_payment_id, 'complete' );
 
-		$this->_api_output = $this->_api->get_products();
-		$this->_api_output_sales = $this->_api->get_recent_sales();
-
 		$wp_query->query_vars['format'] = 'return';
 	}
 
@@ -353,7 +350,7 @@ class Tests_API extends WP_UnitTestCase {
 		$this->setAuth();
 
 		$this->_api->process_query();
-		$out = $this->_api_output;
+		$out = $this->_api->output();
 
 		$this->assertArrayHasKey( 'stats', $out['products'][0] );
 		$this->assertArrayHasKey( 'total', $out['products'][0]['stats'] );
@@ -375,9 +372,9 @@ class Tests_API extends WP_UnitTestCase {
 		$wp_query->query_vars['edd-api'] = 'products';
 
 		$this->_api->process_query();
-		$out = $this->_api_output;
+		$out = $this->_api->output();
 
-		$this->assertFalse( array_key_exists( 'stats', $out['products'][0]['stats'] ) );
+		$this->assertFalse( array_key_exists( 'stats', $out['products'][0] ) );
 	}
 
 	public function test_get_products_pricing() {
@@ -529,7 +526,6 @@ class Tests_API extends WP_UnitTestCase {
 		$this->setAuth();
 
 		$this->_api->process_query();
-
 		$out = $this->_api->get_output();
 
 		$download = new EDD_Download( $out['products'][0]['info']['id'] );
