@@ -351,7 +351,7 @@ class Tests_API extends WP_UnitTestCase {
 
 		$this->_api->process_query();
 		$out = $this->_api->output();
-var_dump($output);
+var_dump($out);
 		$this->assertArrayHasKey( 'stats', $out['products'][0] );
 		$this->assertArrayHasKey( 'total', $out['products'][0]['stats'] );
 		$this->assertArrayHasKey( 'sales', $out['products'][0]['stats']['total'] );
