@@ -956,7 +956,7 @@ function edd_refund_paypal_purchase( $payment ) {
 			if( isset( $body['L_LONGMESSAGE0'] ) ) {
 				$error_msg = $body['L_LONGMESSAGE0'];
 			} else {
-				$error_msg = __( 'PayPal refund failed for unknown reason.', 'edd-recurring' );
+				$error_msg = __( 'PayPal refund failed for unknown reason.', 'easy-digital-downloads' );
 			}
 		}
 
@@ -966,11 +966,11 @@ function edd_refund_paypal_purchase( $payment ) {
 
 		// Prevents the PayPal Express one-time gateway from trying to process the refundl
 		$payment->update_meta( '_edd_paypal_refunded', true );
-		$payment->add_note( sprintf( __( 'PayPal refund transaction ID: %s', 'edd-recurring' ), $body['REFUNDTRANSACTIONID'] ) );
+		$payment->add_note( sprintf( __( 'PayPal refund transaction ID: %s', 'easy-digital-downloads' ), $body['REFUNDTRANSACTIONID'] ) );
 
 	} else {
 
-		$payment->add_note( sprintf( __( 'PayPal refund failed: %s', 'edd-recurring' ), $error_msg ) );
+		$payment->add_note( sprintf( __( 'PayPal refund failed: %s', 'easy-digital-downloads' ), $error_msg ) );
 
 	}
 
