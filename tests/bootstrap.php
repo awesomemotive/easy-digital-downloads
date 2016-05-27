@@ -25,7 +25,7 @@ echo "Installing Easy Digital Downloads...\n";
 // Install Easy Digital Downloads
 edd_install();
 
-global $current_user, $edd_options;
+global $current_user, $edd_options, $wp_query;
 
 $edd_options = get_option( 'edd_settings' );
 
