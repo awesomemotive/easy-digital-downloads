@@ -320,21 +320,24 @@ class EDD_API {
 			// Auth was provided, include the upgrade routine so we can use the fallback api checks
 			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
 
-			// Retrieve the user by public API key and ensure they exist
-			if ( ! ( $user = $this->get_user( $wp_query->query_vars['key'] ) ) ) {
+			// Only proceed if  we have auth
+			if ( empty( $this->data['error'] ) ) {
+				// Retrieve the user by public API key and ensure they exist
+				if ( ! ( $user = $this->get_user( $wp_query->query_vars['key'] ) ) ) {
 
-				$this->invalid_key();
+					$this->invalid_key();
 
-			} else {
-
-				$token  = urldecode( $wp_query->query_vars['token'] );
-				$secret = $this->get_user_secret_key( $user );
-				$public = urldecode( $wp_query->query_vars['key'] );
-
-				if ( hash_equals( md5( $secret . $public ), $token ) ) {
-					$this->is_valid_request = true;
 				} else {
-					$this->invalid_auth();
+
+					$token  = urldecode( $wp_query->query_vars['token'] );
+					$secret = $this->get_user_secret_key( $user );
+					$public = urldecode( $wp_query->query_vars['key'] );
+
+					if ( hash_equals( md5( $secret . $public ), $token ) ) {
+						$this->is_valid_request = true;
+					} else {
+						$this->invalid_auth();
+					}
 				}
 			}
 		} elseif ( ! empty( $wp_query->query_vars['edd-api'] ) && $wp_query->query_vars['edd-api'] == 'products' ) {
@@ -529,7 +532,11 @@ class EDD_API {
 
 		// Only proceed if no errors have been noted
 		if( ! $this->is_valid_request ) {
-			return;
+			if ( 'return' === $this->get_output_format() ) {
+				return $this->data;
+			} else {
+				return;
+			}
 		}
 
 		if( ! defined( 'EDD_DOING_API' ) ) {
@@ -537,7 +544,9 @@ class EDD_API {
 		}
 
 		$data = array();
+
 		$this->routes = new $this->versions[ $this->get_queried_version() ];
+
 		$this->routes->validate_request();
 
 		switch( $this->endpoint ) :
@@ -1743,6 +1752,10 @@ class EDD_API {
 				else
 					echo json_encode( $this->data );
 
+				break;
+
+			case 'return' :
+				return $this->data;
 				break;
 
 
