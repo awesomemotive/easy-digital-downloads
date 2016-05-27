@@ -222,6 +222,8 @@ class Tests_API extends WP_UnitTestCase {
 		update_option( 'edd_default_api_version', 'v2' );
 		$this->assertEquals( 'v2', $this->_api->get_default_version() );
 
+		delete_option( 'edd_default_api_version' );
+
 	}
 
 	public function test_get_queried_version() {
@@ -233,11 +235,6 @@ class Tests_API extends WP_UnitTestCase {
 		$this->_api->process_query();
 
 		$this->assertEquals( 'v1', $this->_api->get_queried_version() );
-
-		update_option( 'edd_default_api_version', 'v2' );
-		$this->_api->process_query();
-
-		$this->assertEquals( 'v2', $this->_api->get_queried_version() );
 
 	}
 
@@ -351,7 +348,7 @@ class Tests_API extends WP_UnitTestCase {
 
 		$this->_api->process_query();
 		$out = $this->_api->output();
-var_dump($out);
+
 		$this->assertArrayHasKey( 'stats', $out['products'][0] );
 		$this->assertArrayHasKey( 'total', $out['products'][0]['stats'] );
 		$this->assertArrayHasKey( 'sales', $out['products'][0]['stats']['total'] );
