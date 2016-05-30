@@ -524,6 +524,8 @@ function edd_get_cart_item_tax( $download_id = 0, $options = array(), $subtotal 
 
 	}
 
+	$tax = max( $tax, 0 );
+
 	return apply_filters( 'edd_get_cart_item_tax', $tax, $download_id, $options, $subtotal );
 }
 
