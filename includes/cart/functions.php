@@ -887,6 +887,8 @@ function edd_cart_tax( $echo = false ) {
 		$cart_tax = edd_currency_filter( edd_format_amount( $cart_tax ) );
 	}
 
+	$tax = max( $cart_tax, 0 );
+
 	$tax = apply_filters( 'edd_cart_tax', $cart_tax );
 
 	if ( ! $echo ) {
