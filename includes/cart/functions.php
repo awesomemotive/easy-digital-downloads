@@ -53,7 +53,7 @@ function edd_get_cart_content_details() {
 		}
 
 		$item['quantity'] = edd_item_quantities_enabled() ? absint( $item['quantity'] ) : 1;
-		
+
 		$price_id = isset( $item['options']['price_id'] ) ? $item['options']['price_id'] : NULL;
 
 		$item_price = edd_get_cart_item_price( $item['id'], $item['options'] );
@@ -479,11 +479,11 @@ function edd_get_cart_item_price( $download_id = 0, $options = array(), $remove_
 		// Get the standard Download price if not using variable prices
 		$price = edd_get_download_price( $download_id );
 	}
-	
+
 	if ( $remove_tax_from_inclusive && edd_prices_include_tax() ) {
 
 		$price -= edd_get_cart_item_tax( $download_id, $options, $price );
-	}	
+	}
 
 	return apply_filters( 'edd_cart_item_price', $price, $download_id, $options );
 }
@@ -766,7 +766,7 @@ function edd_cart_has_fees( $type = 'all' ) {
  * @return array All the cart fees that have been applied
  */
 function edd_get_cart_fees( $type = 'all', $download_id = 0, $price_id = NULL ) {
-	
+
 	return EDD()->fees->get_fees( $type, $download_id, $price_id );
 }
 
@@ -799,7 +799,7 @@ function edd_get_cart_fee_tax() {
 
 		foreach ( $fees as $fee_id => $fee ) {
 
-			if( ! empty( $fee['no_tax'] ) ) {
+			if( ! empty( $fee['no_tax'] ) || $fee['amount'] < 0 ) {
 				continue;
 			}
 
