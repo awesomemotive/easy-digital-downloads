@@ -171,6 +171,7 @@ class Tests_API extends WP_UnitTestCase {
 	private function setAuth() {
 		global $wp_query;
 
+		$this->_api->override = true;
 		$wp_query->query_vars['key']     = $this->_api->get_user_public_key( $this->_user_id );
 		$wp_query->query_vars['token']   = hash( 'md5', $this->_api->get_user_secret_key( $this->_user_id ) . $this->_api->get_user_public_key( $this->_user_id ) );
 	}
