@@ -548,7 +548,7 @@ class EDD_API {
 		$this->routes = new $this->versions[ $this->get_queried_version() ];
 
 		$this->routes->validate_request();
-var_dump($this->endpoint);
+
 		switch( $this->endpoint ) :
 
 			case 'stats' :
