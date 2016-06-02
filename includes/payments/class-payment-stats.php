@@ -198,6 +198,13 @@ class EDD_Payment_Stats extends EDD_Stats {
 
 							$earnings += $item['price'];
 
+							// Check if there are any item specific fees
+							if ( ! empty( $item['fees'] ) ) {
+								foreach ( $item['fees'] as $key => $fee ) {
+									$earnings += $fee['amount'];
+								}
+							}
+
 							$earnings = apply_filters( 'edd_payment_stats_item_earnings', $earnings, $payment_id, $cart_key, $item );
 
 							if ( ! $include_taxes ) {
