@@ -594,6 +594,7 @@ function edd_is_discount_expired( $code_id = null ) {
 			if ( $expiration < current_time( 'timestamp' ) ) {
 				// Discount is expired
 				edd_update_discount_status( $code_id, 'inactive' );
+				update_post_meta( $code_id, '_edd_discount_status', 'expired' );
 				$return = true;
 			}
 		}
@@ -1026,6 +1027,12 @@ function edd_increase_discount_usage( $code ) {
 
 	update_post_meta( $id, '_edd_discount_uses', $uses );
 
+	$max_uses = edd_get_discount_max_uses( $id );
+	if ( $max_uses == $uses ) {
+		edd_update_discount_status( $id, 'inactive' );
+		update_post_meta( $id, '_edd_discount_status', 'inactive' );
+	}
+
 	do_action( 'edd_discount_increase_use_count', $uses, $id, $code );
 
 	return $uses;
@@ -1060,6 +1067,12 @@ function edd_decrease_discount_usage( $code ) {
 	}
 
 	update_post_meta( $id, '_edd_discount_uses', $uses );
+
+	$max_uses = edd_get_discount_max_uses( $id );
+	if ( $max_uses > $uses ) {
+		edd_update_discount_status( $id, 'active' );
+		update_post_meta( $id, '_edd_discount_status', 'active' );
+	}
 
 	do_action( 'edd_discount_decrease_use_count', $uses, $id, $code );
 
@@ -1504,3 +1517,77 @@ function edd_apply_preset_discount() {
 	EDD()->session->set( 'preset_discount', null );
 }
 add_action( 'init', 'edd_apply_preset_discount', 999 );
+
+/**
+ * Updates discounts that are expired or at max use (that aren't already marked as so) as inactive or expired
+ *
+ * @since 2.6
+ * @return void
+*/
+function edd_discount_status_cleanup() {
+	// We only want to get 100 active discounts to check their status
+	$args = array(
+		'post_status' => array( 'active' ),
+		'number'      => 100,
+		'order'       => 'ASC',
+		'meta_query'  => array(
+			'relation' => 'OR',
+			array(
+				'relation' => 'AND',
+				array(
+					'key'     => '_edd_discount_expiration',
+					'value'   => '',
+					'compare' => '!=',
+				),
+				array(
+					'key'     => '_edd_discount_expiration',
+					'value'   => current_time( 'mysql' ),
+					'compare' => '<',
+				),
+			),
+			array(
+				'relation' => 'AND',
+				array(
+					'key'     => '_edd_discount_uses',
+					'value'   => 'mt1.meta_value',
+					'compare' => '>=',
+					'type'    => 'NUMERIC',
+				),
+				array(
+					'key'     => '_edd_discount_max_uses',
+					'value'   => array( '', 0 ),
+					'compare' => 'NOT IN',
+				),
+				array(
+					'key'     => '_edd_discount_uses',
+					'value'   => '',
+					'compare' => '!=',
+				),
+			),
+		),
+	);
+
+	$discounts = edd_get_discounts( $args );
+
+	if ( $discounts ) {
+		foreach ( $discounts as $discount ) {
+
+			// post_status is always 'inactive' for expired and inactive
+			edd_update_discount_status( $discount->ID, 'inactive' );
+
+			// If it's at max use the postmeta _edd_discount_status will be 'inactive'
+			if ( edd_is_discount_maxed_out( $discount->ID ) ) {
+				update_post_meta( $discount->ID, '_edd_discount_status', 'inactive' );
+				continue;
+			}
+
+			// If it's past expiration but not at max use _edd_discount_status will be 'expired'
+			if ( edd_is_discount_expired( $discount->ID ) ) {
+				update_post_meta( $discount->ID, '_edd_discount_status', 'expired' );
+			}
+
+		}
+	}
+
+}
+add_action( 'edd_daily_scheduled_events', 'edd_discount_status_cleanup' );
