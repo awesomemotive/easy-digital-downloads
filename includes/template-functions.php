@@ -922,3 +922,17 @@ function edd_add_download_post_classes( $classes, $class = '', $post_id = false 
 	return $classes;
 }
 add_filter( 'post_class', 'edd_add_download_post_classes', 20, 3 );
+
+/**
+ * Remove comments button for download embeds
+ *
+ * @since 2.7.0
+ */
+function edd_remove_embed_comments_button() {
+	global $post;
+
+	if ( ! empty( $post ) && $post->post_type == 'download' ) {
+		remove_action( 'embed_content_meta', 'print_embed_comments_button' );
+	}
+}
+add_action( 'embed_content_meta', 'edd_remove_embed_comments_button', 5 );
