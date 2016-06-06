@@ -36,8 +36,7 @@ a.edd-delete:hover {
 	font-style: italic;
 	margin: 4px 0 0;
 }
-.download_page_edd-settings .form-table select + label,
-.download_page_edd-settings .form-table input.regular-text ~ label { display:block; }
+
 .download_page_edd-settings .form-table input.small-text ~ label,
 .download_page_edd-settings .form-table input[type="checkbox"] + label { display: inline; }
 .download_page_edd-settings .form-table tr > th > strong,
@@ -45,6 +44,21 @@ a.edd-delete:hover {
 	font-size: 1.2em;
 	font-weight: 600;
 	margin: 0 auto;
+}
+
+/* Tooltips */
+.edd-help-tip {
+	cursor: help;
+}
+
+.ui-tooltip {
+	background: #333 !important;
+	border-radius: 3px !important;
+	box-shadow: 1px 1px 2px 1px rgba(214,214,214,0.5);
+	color: #dedede !important;
+	max-width: 300px;
+	padding: 7px;
+	text-rendering: optimizeLegibility;
 }
 
 /* =Add Ons Styles
