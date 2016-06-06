@@ -1525,7 +1525,7 @@ add_action( 'init', 'edd_apply_preset_discount', 999 );
  * @return void
 */
 function edd_discount_status_cleanup() {
-	// We only want to get 100 active discounts to check their status
+	// We only want to get 50 active discounts to check their status
 	$cron_discount_number = apply_filters( 'edd_discount_status_cleanup_count', 50 );
 
 	$args = array(
