@@ -1,5 +1,23 @@
 jQuery(document).ready(function ($) {
 
+	// Tooltips
+	$('.edd-help-tip').tooltip({
+		content: function() {
+			return $(this).prop('title');
+		},
+		position: {
+			my: 'center top',
+			at: 'center bottom+10',
+			collision: 'flipfit'
+		},
+		hide: {
+			duration: 500
+		},
+		show: {
+			duration: 500
+		}
+	});
+
 	/**
 	 * Download Configuration Metabox
 	 */
@@ -1496,7 +1514,7 @@ jQuery(document).ready(function ($) {
 				//Error for older unsupported browsers that doesn't support HTML5 File API
 				notice_wrap.html('<div class="update error"><p>' + edd_vars.unsupported_browser + '</p></div>');
 				return false;
-	
+
 			}
 
 		},
