@@ -176,7 +176,6 @@ class EDD_Payment_Stats extends EDD_Stats {
 			$key      = 'edd_stats_' . substr( md5( serialize( $args ) ), 0, 15 );
 
 			$earnings = get_transient( $key );
-			$earnings = false;
 			if( false === $earnings ) {
 
 				$this->timestamp = false;
