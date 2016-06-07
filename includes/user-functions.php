@@ -442,8 +442,8 @@ add_action( 'user_register', 'edd_add_past_purchases_to_new_user', 10, 1 );
  * @since 		1.7
  * @return 		int - The total number of customers.
  */
-function edd_count_total_customers() {
-	return EDD()->customers->count();
+function edd_count_total_customers( $args = array() ) {
+	return EDD()->customers->count( $args );
 }
 
 
@@ -497,7 +497,7 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 		return;
 	}
 
-	$emails     = new EDD_Emails;
+	$emails     = EDD()->emails;
 	$from_name  = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
 	$from_email = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
 
@@ -516,7 +516,15 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 	$user_subject  = sprintf( __( '[%s] Your username and password', 'easy-digital-downloads' ), $from_name );
 	$user_heading  = __( 'Your account info', 'easy-digital-downloads' );
 	$user_message  = sprintf( __( 'Username: %s', 'easy-digital-downloads' ), $user_data['user_login'] ) . "\r\n";
-	$user_message .= sprintf( __( 'Password: %s' ), __( '[Password entered at checkout]', 'easy-digital-downloads' ) ) . "\r\n";
+
+	if ( did_action( 'edd_pre_process_purchase' ) ) {
+		$password_message = __( 'Password entered at checkout', 'easy-digital-downloads' );
+	} else {
+		$password_message = __( 'Password entered at registration', 'easy-digital-downloads' );
+	}
+
+	$user_message .= sprintf( __( 'Password: %s', 'easy-digital-downloads' ), '[' . $password_message . ']' ) . "\r\n";
+
 	$user_message .= '<a href="' . wp_login_url() . '"> ' . esc_attr__( 'Click Here to Log In', 'easy-digital-downloads' ) . ' &raquo;</a>' . "\r\n";
 
 	$emails->__set( 'heading', $user_heading );

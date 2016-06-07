@@ -46,7 +46,7 @@ function edd_process_purchase_form() {
 
 	// Validate the user
 	$user = edd_get_purchase_form_user( $valid_data );
-	
+
 	// Let extensions validate fields after user is logged in if user has used login/registration form
 	do_action( 'edd_checkout_user_error_checks', $user, $valid_data, $_POST );
 
@@ -130,6 +130,36 @@ function edd_process_purchase_form() {
 add_action( 'edd_purchase', 'edd_process_purchase_form' );
 add_action( 'wp_ajax_edd_process_checkout', 'edd_process_purchase_form' );
 add_action( 'wp_ajax_nopriv_edd_process_checkout', 'edd_process_purchase_form' );
+
+/**
+ * Verify that when a logged in user makes a purchase that the email address used doesn't belong to a different customer
+ *
+ * @since  2.6
+ * @param  array $valid_data Validated data submitted for the purchase
+ * @param  array $post       Additional $_POST data submitted
+ * @return void
+ */
+function edd_checkout_check_existing_email( $valid_data, $post ) {
+
+	// Verify that the email address belongs to this customer
+	if ( is_user_logged_in() ) {
+
+		$email    = $valid_data['logged_in_user']['user_email'];
+		$customer = new EDD_Customer( get_current_user_id(), true );
+
+		// If this email address is not registered with this customer, see if it belongs to any other customer
+		if ( $email != $customer->email && ( is_array( $customer->emails ) && ! in_array( $email, $customer->emails ) ) ) {
+			$found_customer = new EDD_Customer( $email );
+			if ( $found_customer->id > 0 ) {
+				edd_set_error( 'edd-customer-email-exists', __( sprintf( 'The email address %s is already in use.', $email ), 'easy-digital-downloads' ) );
+			}
+		}
+
+
+	}
+
+}
+add_action( 'edd_checkout_error_checks', 'edd_checkout_check_existing_email', 10, 2 );
 
 /**
  * Process the checkout login form
@@ -481,11 +511,14 @@ function edd_purchase_form_validate_new_user() {
 		if ( ! is_email( $user_email ) ) {
 			edd_set_error( 'email_invalid', __( 'Invalid email', 'easy-digital-downloads' ) );
 			// Check if email exists
-		} else if ( email_exists( $user_email ) && $registering_new_user ) {
+		} else {
+			$customer = new EDD_Customer( $user_email );
+			if ( $registering_new_user && ( $customer->id > 0 || email_exists( $user_email ) ) ) {
 				edd_set_error( 'email_used', __( 'Email already used', 'easy-digital-downloads' ) );
 			} else {
-			// All the checks have run and it's good to go
-			$valid_user_data['user_email'] = $user_email;
+				// All the checks have run and it's good to go
+				$valid_user_data['user_email'] = $user_email;
+			}
 		}
 	} else {
 		// No email

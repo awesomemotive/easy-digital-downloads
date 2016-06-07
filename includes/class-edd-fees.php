@@ -47,11 +47,11 @@ class EDD_Fees {
 		// Backwards compatibility with pre 2.0
 		if ( func_num_args() > 1 ) {
 
-			$args   = func_get_args();
-			$amount = $args[0];
-			$label  = isset( $args[1] ) ? $args[1] : '';
-			$id     = isset( $args[2] ) ? $args[2] : '';
-			$type   = 'fee';
+			$args     = func_get_args();
+			$amount   = $args[0];
+			$label    = isset( $args[1] ) ? $args[1] : '';
+			$id       = isset( $args[2] ) ? $args[2] : '';
+			$type     = 'fee';
 
 			$args = array(
 				'amount' => $amount,
@@ -59,7 +59,8 @@ class EDD_Fees {
 				'id'     => $id,
 				'type'   => $type,
 				'no_tax' => false,
-				'download_id' => 0
+				'download_id' => 0,
+				'price_id'    => NULL
 			);
 
 		} else {
@@ -70,7 +71,8 @@ class EDD_Fees {
 				'id'          => '',
 				'no_tax'      => false,
 				'type'        => 'fee',
-				'download_id' => 0
+				'download_id' => 0,
+				'price_id'    => NULL
 			);
 
 			$args = wp_parse_args( $args, $defaults );
@@ -81,8 +83,10 @@ class EDD_Fees {
 
 		}
 
+		//If the fee is for an "item" but we passed in a download id
 		if( 'item' === $args['type'] && ! empty( $args['download_id'] ) ) {
 			unset( $args['download_id'] );
+			unset( $args['price_id'] );
 		}
 
 		$fees = $this->get_fees( 'all' );
@@ -159,10 +163,11 @@ class EDD_Fees {
 	 * @since 1.5
 	 * @param string $type Fee type, "fee" or "item"
 	 * @param int $download_id The download ID whose fees to retrieve
+	 * @param int $price_id The variable price ID whose fees to retrieve
 	 * @uses EDD_Session::get()
 	 * @return array|bool List of fees when available, false when there are no fees
 	 */
-	public function get_fees( $type = 'fee', $download_id = 0 ) {
+	public function get_fees( $type = 'fee', $download_id = 0, $price_id = NULL ) {
 
 		$fees = EDD()->session->get( 'edd_cart_fees' );
 
@@ -191,6 +196,22 @@ class EDD_Fees {
 			foreach( $fees as $key => $fee ) {
 
 				if( (int) $download_id !== (int) $fee['download_id'] ) {
+
+					unset( $fees[ $key ] );
+
+				}
+
+			}
+
+		}
+
+		// Now that we've removed any fees that are for other Downloads, lets also remove any fees that don't match this price id
+		if( ! empty( $fees ) && ! empty( $download_id ) && ! is_null( $price_id ) ) {
+
+			// Remove fees that don't belong to the specified Download AND Price ID
+			foreach( $fees as $key => $fee ) {
+
+				if ( (int) $price_id !== (int) $fee['price_id'] ){
 
 					unset( $fees[ $key ] );
 

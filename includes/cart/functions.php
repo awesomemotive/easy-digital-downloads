@@ -54,11 +54,13 @@ function edd_get_cart_content_details() {
 
 		$item['quantity'] = edd_item_quantities_enabled() ? absint( $item['quantity'] ) : 1;
 
+		$price_id = isset( $item['options']['price_id'] ) ? $item['options']['price_id'] : NULL;
+
 		$item_price = edd_get_cart_item_price( $item['id'], $item['options'] );
 		$discount   = edd_get_cart_item_discount_amount( $item );
 		$discount   = apply_filters( 'edd_get_cart_content_details_item_discount_amount', $discount, $item );
 		$quantity   = edd_get_cart_item_quantity( $item['id'], $item['options'] );
-		$fees       = edd_get_cart_fees( 'fee', $item['id'] );
+		$fees       = edd_get_cart_fees( 'fee', $item['id'], $price_id );
 		$subtotal   = $item_price * $quantity;
 		$tax        = edd_get_cart_item_tax( $item['id'], $item['options'], $subtotal - $discount );
 
@@ -477,11 +479,11 @@ function edd_get_cart_item_price( $download_id = 0, $options = array(), $remove_
 		// Get the standard Download price if not using variable prices
 		$price = edd_get_download_price( $download_id );
 	}
-	
+
 	if ( $remove_tax_from_inclusive && edd_prices_include_tax() ) {
 
 		$price -= edd_get_cart_item_tax( $download_id, $options, $price );
-	}	
+	}
 
 	return apply_filters( 'edd_cart_item_price', $price, $download_id, $options );
 }
@@ -521,6 +523,8 @@ function edd_get_cart_item_tax( $download_id = 0, $options = array(), $subtotal 
 		$tax = edd_calculate_tax( $subtotal, $country, $state );
 
 	}
+
+	$tax = max( $tax, 0 );
 
 	return apply_filters( 'edd_get_cart_item_tax', $tax, $download_id, $options, $subtotal );
 }
@@ -763,8 +767,9 @@ function edd_cart_has_fees( $type = 'all' ) {
  * @uses EDD()->fees->get_fees()
  * @return array All the cart fees that have been applied
  */
-function edd_get_cart_fees( $type = 'all', $download_id = 0 ) {
-	return EDD()->fees->get_fees( $type, $download_id );
+function edd_get_cart_fees( $type = 'all', $download_id = 0, $price_id = NULL ) {
+
+	return EDD()->fees->get_fees( $type, $download_id, $price_id );
 }
 
 /**
@@ -796,7 +801,7 @@ function edd_get_cart_fee_tax() {
 
 		foreach ( $fees as $fee_id => $fee ) {
 
-			if( ! empty( $fee['no_tax'] ) ) {
+			if( ! empty( $fee['no_tax'] ) || $fee['amount'] < 0 ) {
 				continue;
 			}
 
@@ -883,6 +888,8 @@ function edd_cart_tax( $echo = false ) {
 		$cart_tax = edd_get_cart_tax();
 		$cart_tax = edd_currency_filter( edd_format_amount( $cart_tax ) );
 	}
+
+	$tax = max( $cart_tax, 0 );
 
 	$tax = apply_filters( 'edd_cart_tax', $cart_tax );
 

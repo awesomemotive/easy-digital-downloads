@@ -317,4 +317,115 @@ class EDD_API_V2 extends EDD_API_V1 {
 		return $customers;
 	}
 
+	/**
+	 * Retrieves Recent Sales
+	 *
+	 * @access public
+	 * @since  2.6
+	 * @return array
+	 */
+	public function get_recent_sales() {
+		global $wp_query;
+
+		$sales = array();
+
+		if( ! user_can( $this->user_id, 'view_shop_reports' ) && ! $this->override ) {
+			return $sales;
+		}
+
+		if( isset( $wp_query->query_vars['id'] ) ) {
+			$query   = array();
+			$query[] = new EDD_Payment( $wp_query->query_vars['id'] );
+		} elseif( isset( $wp_query->query_vars['purchasekey'] ) ) {
+			$query   = array();
+			$query[] = edd_get_payment_by( 'key', $wp_query->query_vars['purchasekey'] );
+		} elseif( isset( $wp_query->query_vars['email'] ) ) {
+			$query = edd_get_payments( array( 'fields' => 'ids', 'meta_key' => '_edd_payment_user_email', 'meta_value' => $wp_query->query_vars['email'], 'number' => $this->per_page(), 'page' => $this->get_paged(), 'status' => 'publish' ) );
+		} else {
+			$query = edd_get_payments( array( 'fields' => 'ids', 'number' => $this->per_page(), 'page' => $this->get_paged(), 'status' => 'publish' ) );
+		}
+
+		if ( $query ) {
+			$i = 0;
+			foreach ( $query as $payment ) {
+				if ( is_numeric( $payment ) ) {
+					$payment = new EDD_Payment( $payment );
+				}
+
+				$payment_meta = $payment->get_meta();
+				$user_info    = $payment->user_info;
+
+				$sales['sales'][ $i ]['ID']             = $payment->number;
+				$sales['sales'][ $i ]['transaction_id'] = $payment->transaction_id;
+				$sales['sales'][ $i ]['key']            = $payment->key;
+				$sales['sales'][ $i ]['subtotal']       = $payment->subtotal;
+				$sales['sales'][ $i ]['tax']            = $payment->tax;
+				$sales['sales'][ $i ]['fees']           = $payment->fees;
+				$sales['sales'][ $i ]['total']          = $payment->total;
+				$sales['sales'][ $i ]['gateway']        = $payment->gateway;
+				$sales['sales'][ $i ]['email']          = $payment->email;
+				$sales['sales'][ $i ]['date']           = $payment->date;
+
+				$c = 0;
+
+				$discounts       = ! empty( $payment->discounts ) ? explode( ',', $payment->discounts ) : array();
+				$discounts       = array_map( 'trim', $discounts );
+				$discount_values = array();
+
+				foreach ( $discounts as $discount ) {
+					if ( 'none' === $discount ) { continue; }
+
+					$discount_values[ $discount ] = 0;
+				}
+
+				$cart_items = array();
+
+				foreach ( $payment->cart_details as $key => $item ) {
+
+					$item_id    = isset( $item['id']    )      ? $item['id']         : $item;
+					$price      = isset( $item['price'] )      ? $item['price']      : false; // The final price for the item
+					$item_price = isset( $item['item_price'] ) ? $item['item_price'] : false; // The price before discounts
+
+					$price_id   = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
+					$quantity   = isset( $item['quantity'] ) && $item['quantity'] > 0  ? $item['quantity']                           : 1;
+
+					if( ! $price ) {
+						// This function is only used on payments with near 1.0 cart data structure
+						$price = edd_get_download_final_price( $item_id, $user_info, null );
+					}
+
+					$price_name = '';
+					if ( isset( $item['item_number'] ) && isset( $item['item_number']['options'] ) ) {
+						$price_options  = $item['item_number']['options'];
+						if ( isset( $price_options['price_id'] ) ) {
+							$price_name = edd_get_price_option_name( $item_id, $price_options['price_id'], $payment->ID );
+						}
+					}
+
+					$cart_items[ $c ]['id']         = $item_id;
+					$cart_items[ $c ]['quantity']   = $quantity;
+					$cart_items[ $c ]['name']       = get_the_title( $item_id );
+					$cart_items[ $c ]['price']      = $price;
+					$cart_items[ $c ]['price_name'] = $price_name;
+
+					// Determine the discount amount for the item, if there is one
+					foreach ( $discount_values as $discount => $amount ) {
+
+						$item_discount = edd_get_cart_item_discount_amount( $item, $discount );
+						$discount_values[ $discount ] += $item_discount;
+
+					}
+
+					$c++;
+				}
+
+				$sales['sales'][ $i ]['discounts'] = $discount_values;
+				$sales['sales'][ $i ]['products']  = $cart_items;
+
+				$i++;
+			}
+		}
+		return $sales;
+	}
+
 }
