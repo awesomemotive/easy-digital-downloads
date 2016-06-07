@@ -752,7 +752,7 @@ function edd_get_registered_settings() {
 						'desc'    => sprintf( __( 'Select the file download method. Note, not all methods work on all servers.', 'easy-digital-downloads' ), edd_get_label_singular() ),
 						'type'    => 'select',
 						'tooltip_title' => __( 'Download Method', 'easy-digital-downloads' ),
-						'tooltip_desc' => __( 'Due to it\'s consistency in multiple platforms and better file protection, \'forced\' is the default method. Because Easy Digital Downloads uses PHP to process the file with the \'forced\' method, larger files can cause problems with delivery, resulting in hitting the \'max execution time\' of the server. If user\'s are getting 404 or 403 errors when trying to access their purchased files when using the \'forced\' method, changing to the \'redirect\' method can help resolve this.', 'easy-digital-downloads' ),
+						'tooltip_desc' => __( 'Due to its consistency in multiple platforms and better file protection, \'forced\' is the default method. Because Easy Digital Downloads uses PHP to process the file with the \'forced\' method, larger files can cause problems with delivery, resulting in hitting the \'max execution time\' of the server. If users are getting 404 or 403 errors when trying to access their purchased files when using the \'forced\' method, changing to the \'redirect\' method can help resolve this.', 'easy-digital-downloads' ),
 						'options' => array(
 							'direct'   => __( 'Forced', 'easy-digital-downloads' ),
 							'redirect' => __( 'Redirect', 'easy-digital-downloads' ),
@@ -776,7 +776,7 @@ function edd_get_registered_settings() {
 						'name'          => __( 'Download Link Expiration', 'easy-digital-downloads' ),
 						'desc'          => __( 'How long should download links be valid for? Default is 24 hours from the time they are generated. Enter a time in hours.', 'easy-digital-downloads' ),
 						'tooltip_title' => __( 'Download Link Expiration', 'easy-digital-downloads' ),
-						'tooltip_desc'  => __( 'When a customer recieves a link to their downloads via email, in their receipt, or in their purchase history, the link will only be valid for the timeframe (in hours) defined in this setting. Sending a new purcahse receipt or visiting the account page will re-generate a valid link for the customer.', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'When a customer receives a link to their downloads via email, in their receipt, or in their purchase history, the link will only be valid for the timeframe (in hours) defined in this setting. Sending a new purchase receipt or visiting the account page will re-generate a valid link for the customer.', 'easy-digital-downloads' ),
 						'type'          => 'number',
 						'size'          => 'small',
 						'std'           => '24',
