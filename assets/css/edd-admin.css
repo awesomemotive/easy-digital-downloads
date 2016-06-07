@@ -1169,11 +1169,29 @@ td.edd_order_price {
 	text-align: center;
 }
 #edd-item-tables-wrapper .downloads tr > th:first-child,
-#edd-item-tables-wrapper .downloads tr > td:first-child {
+#edd-item-tables-wrapper .downloads tr > td:first-child,
+#edd-item-tables-wrapper .emails tr > th:first-child,
+#edd-item-tables-wrapper .emails tr > td:first-child  {
 	text-align: left;
 }
 #edd-item-tables-wrapper .downloads tr > td:only-child {
 	text-align: center;
+}
+#edd-item-tables-wrapper .emails .add-customer-email-row td {
+	background-color: #f9f9f9;
+	border-top: 1px solid #e5e5e5;
+}
+#edd-item-tables-wrapper .emails .primary-email-icon {
+	font-size: 13px;
+	vertical-align: middle;
+	line-height: 1.5em;
+}
+#edd-item-tables-wrapper .emails input {
+	vertical-align: middle;
+	margin: 6px 0;
+}
+#edd-item-tables-wrapper .emails .spinner {
+	float: none;
 }
 #edd-item-notes-wrapper {
 	min-height: 50px;
@@ -1210,155 +1228,6 @@ td.edd_order_price {
 	padding-right: 20px;
 	margin-left: -20px;
 	margin-right: -20px;
-}
-#edd-item-card-wrapper .customer-section {
-	border-bottom: 1px solid #eee;
-	margin-bottom: 10px;
-	overflow: auto;
-}
-#edd-item-card-wrapper .customer-section table {
-	margin-bottom: 20px;
-}
-#edd-item-card-wrapper > div {
-	padding: 0px 20px;
-}
-#edd-item-card-wrapper > div:first-child {
-	padding-top: 20px;
-}
-#edd-item-card-wrapper > div:last-child {
-	padding-bottom: 20px; border: none;
-}
-#edd-item-card-wrapper .avatar-wrap {
-	padding-right: 10px;
-	text-align: center;
-}
-#edd-item-card-wrapper .customer-id {
-	font-size: 24px;
-	font-weight: 600;
-}
-#edd-item-card-wrapper .customer-main-wrapper input {
-	width: 200px;
-}
-#edd-item-card-wrapper .customer-address-wrapper {
-	max-width: 33%;
-	margin-right: 25px;
-	width: 202px;
-}
-#edd-item-card-wrapper .customer-address-wrapper select {
-	width: 200px;
-}
-#edd-item-card-wrapper .customer-info {
-	margin-top: 5px;
-	min-height: 185px;
-	margin-bottom: 10px;
-}
-#edd-item-card-wrapper .info-wrapper {
-	min-height: 125px;
-	overflow: visible;
-}
-#edd-item-card-wrapper a.delete {
-	text-decoration: none;
-	color: #ff0000;
-	margin-right: 5px;
-}
-.customer-info .customer-name {
-	font-size: 24px;
-	font-weight: 600;
-}
-.customer-edit-link a, .disconnect-user a {
-	font-size: 12px;
-	font-weight: normal;
-	text-decoration: none;
-}
-#customer-edit-actions {
-	text-align: center;
-	margin-bottom: 20px;
-	line-height: 28px;
-}
-#customer-edit-actions .button-secondary {
-	margin-right: 10px;
-}
-#edd-item-card-wrapper .info-item {
-	line-height: 16px;
-	display: block;
-	padding-bottom: 5px;
-}
-#edd-item-card-wrapper .edit-item {
-	display: none;
-}
-#edd-item-card-wrapper .edd_user_search_results {
-	left: 1px;
-	top: 16px;
-}
-#edd-item-card-wrapper .edd_user_search_results ul {
-	width: 200px
-}
-#edd-item-stats-wrapper {
-	margin: 0 auto;
-	text-align: center;
-	min-height: 30px;
-}
-#edd-item-stats-wrapper li {
-	width: 50%;
-	float: left;
-	line-height: 22px;
-	font-size: 14px;
-}
-#edd-item-stats-wrapper a {
-	text-decoration: none;
-}
-#edd-item-stats-wrapper .dashicons {
-	color: #888;
-}
-#edd-item-tables-wrapper table {
-	width: 100%;
-	text-align: center;
-}
-#edd-item-tables-wrapper th {
-	text-align: center;
-}
-#edd-item-tables-wrapper .downloads tr > th:first-child,
-#edd-item-tables-wrapper .downloads tr > td:first-child {
-	text-align: left;
-}
-#edd-item-tables-wrapper .downloads tr > td:only-child {
-	text-align: center;
-}
-#edd-item-notes-wrapper {
-	min-height: 50px;
-}
-.edd-item-notes-header span,
-.edd-item-notes-header img {
-	font-weight: 600;
-	line-height: 30px;
-	vertical-align: middle;
-}
-.customer-note-input {
-	width: 100%;
-	margin-bottom: 5px;
-}
-#edd-customer-notes div:nth-of-type(even) {
-	background-color: #fcfcfc;
-}
-.customer-note-wrapper {
-	border-bottom: 1px solid #f9f9f9;
-	min-height: 38px;
-	padding: 7px 0 7px 7px;
-}
-.customer-note-wrapper span {
-	display: block;
-}
-.note-content-wrap {
-	padding-top: 7px;
-}
-.delete-customer {
-	text-align: center;
-}
-#edd-item-card-wrapper .notice-wrap {
-	margin-left: -20px;
-	margin-right: -20px;
-	padding-left: 20px;
-	padding-right: 20px;
 }
 
 @media screen and ( max-width: 810px ) and ( min-width: 656px ) {

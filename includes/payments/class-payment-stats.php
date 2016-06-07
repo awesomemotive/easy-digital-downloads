@@ -107,8 +107,6 @@ class EDD_Payment_Stats extends EDD_Stats {
 		if( is_wp_error( $this->end_date ) )
 			return $this->end_date;
 
-		$earnings = false;
-
 		add_filter( 'posts_where', array( $this, 'payments_where' ) );
 
 		if ( empty( $download_id ) ) {
@@ -128,8 +126,8 @@ class EDD_Payment_Stats extends EDD_Stats {
 				'include_taxes'          => $include_taxes,
 			);
 
-			$args     = apply_filters( 'edd_stats_earnings_args', $args );
-			$key      = 'edd_stats_' . substr( md5( serialize( $args ) ), 0, 15 );
+			$args = apply_filters( 'edd_stats_earnings_args', $args );
+			$key  = 'edd_stats_' . md5( serialize( $args ) );
 
 			$earnings = get_transient( $key );
 
@@ -173,16 +171,13 @@ class EDD_Payment_Stats extends EDD_Stats {
 			);
 
 			$args     = apply_filters( 'edd_stats_earnings_args', $args );
-			$key      = 'edd_stats_' . substr( md5( serialize( $args ) ), 0, 15 );
+			$key      = 'edd_stats_' . md5( serialize( $args ) );
 
 			$earnings = get_transient( $key );
-			$earnings = false;
 			if( false === $earnings ) {
 
 				$this->timestamp = false;
-				add_filter( 'posts_where', array( $this, 'payments_where' ) );
 				$log_ids  = $edd_logs->get_connected_logs( $args, 'sale' );
-				remove_filter( 'posts_where', array( $this, 'payments_where' ) );
 
 				$earnings = 0;
 

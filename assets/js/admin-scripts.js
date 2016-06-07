@@ -122,14 +122,14 @@ jQuery(document).ready(function ($) {
 					focusElement,
 					focusable,
 					firstFocusable;
-					
+
 					// Set focus on next element if removing the first row. Otherwise set focus on previous element.
 					if ( $(this).is( '.ui-sortable tr:first-child .edd_remove_repeatable:first-child' ) ) {
 						focusElement  = row.next( 'tr' );
 					} else {
 						focusElement  = row.prev( 'tr' );
 					}
-					
+
 					focusable  = focusElement.find( 'select, input, textarea, button' ).filter( ':visible' );
 					firstFocusable = focusable.eq(0);
 
@@ -1485,27 +1485,29 @@ jQuery(document).ready(function ($) {
 			if ( window.File && window.FileReader && window.FileList && window.Blob ) {
 
 				// HTML5 File API is supported by browser
-				console.log('before');
+
 			} else {
+
+				var import_form = $('.edd-import-form').find('.edd-progress').parent().parent();
+				var notice_wrap = import_form.find('.notice-wrap');
+
+				import_form.find('.button-disabled').removeClass('button-disabled');
+
 				//Error for older unsupported browsers that doesn't support HTML5 File API
-				alert( "Please upgrade your browser, because your current browser lacks some new features we need!" );
+				notice_wrap.html('<div class="update error"><p>' + edd_vars.unsupported_browser + '</p></div>');
 				return false;
+	
 			}
 
 		},
 
-		success: function( responseText, statusText, xhr, $form ) {
-			//console.log('success');
-			//console.log( responseText );
-		},
+		success: function( responseText, statusText, xhr, $form ) {},
 
 		complete: function( xhr ) {
 
 			var response = jQuery.parseJSON( xhr.responseText );
 
 			if( response.success ) {
-
-				//console.log( response.data );
 
 				var $form = $('.edd-import-form .notice-wrap').parent();
 
@@ -1556,22 +1558,17 @@ jQuery(document).ready(function ($) {
 
 			}
 
-			console.log( response );
-
 		},
 
 		error : function( xhr ) {
 
 			// Something went wrong. This will display error on form
-			console.log( 'error' );
-			console.log( xhr );
 
 			var response    = jQuery.parseJSON( xhr.responseText );
 			var import_form = $('.edd-import-form').find('.edd-progress').parent().parent();
 			var notice_wrap = import_form.find('.notice-wrap');
 
 			import_form.find('.button-disabled').removeClass('button-disabled');
-			console.log( response );
 
 			if ( response.data.error ) {
 
@@ -1604,8 +1601,8 @@ jQuery(document).ready(function ($) {
 					if( 'done' == response.data.step || response.data.error ) {
 
 						// We need to get the actual in progress form, not all forms on the page
-						var import_form    = $('.edd-import-form').find('.edd-progress').parent().parent();
-						var notice_wrap    = import_form.find('.notice-wrap');
+						var import_form  = $('.edd-import-form').find('.edd-progress').parent().parent();
+						var notice_wrap  = import_form.find('.notice-wrap');
 
 						import_form.find('.button-disabled').removeClass('button-disabled');
 
@@ -1626,10 +1623,6 @@ jQuery(document).ready(function ($) {
 						}, 50, function() {
 							// Animation complete.
 						});
-
-						console.log( response.data.mapping );
-						console.log( 'Step ' + response.data.step );
-						console.log( 'Total ' + response.data.total );
 
 						EDD_Import.process_step( parseInt( response.data.step ), import_data, self );
 					}
@@ -1672,6 +1665,7 @@ jQuery(document).ready(function ($) {
 		},
 		init : function() {
 			this.edit_customer();
+			this.add_email();
 			this.user_search();
 			this.remove_user();
 			this.cancel_edit();
@@ -1685,6 +1679,43 @@ jQuery(document).ready(function ($) {
 
 				EDD_Customer.vars.customer_card_wrap_editable.hide();
 				EDD_Customer.vars.customer_card_wrap_edit_item.fadeIn().css( 'display', 'block' );
+			});
+		},
+		add_email: function() {
+			$( document.body ).on( 'click', '#add-customer-email', function(e) {
+				e.preventDefault();
+				var button  = $(this);
+				var wrapper = button.parent();
+
+				wrapper.parent().find('.notice-wrap').remove();
+				wrapper.find('.spinner').css('visibility', 'visible');
+				button.attr('disabled', true);
+
+				var customer_id = wrapper.find('input[name="customer-id"]').val();
+				var email       = wrapper.find('input[name="additional-email"]').val();
+				var primary     = wrapper.find('input[name="make-additional-primary"]').is(':checked');
+				var nonce       = wrapper.find('input[name="add_email_nonce"]').val();
+
+				var postData = {
+					edd_action:  'customer-add-email',
+					customer_id: customer_id,
+					email:       email,
+					primary:     primary,
+					_wpnonce:    nonce,
+				};
+
+				$.post(ajaxurl, postData, function( response ) {
+
+					if ( true === response.success ) {
+						window.location.href=response.redirect;
+					} else {
+						button.attr('disabled', false);
+						wrapper.after('<div class="notice-wrap"><div class="notice notice-error inline"><p>' + response.message + '</p></div></div>');
+						wrapper.find('.spinner').css('visibility', 'hidden');
+					}
+
+				}, 'json');
+
 			});
 		},
 		user_search: function() {

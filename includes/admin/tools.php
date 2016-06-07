@@ -325,9 +325,9 @@ function edd_tools_import_export_display() {
 ?>
 
 	<div class="postbox edd-import-payment-history">
-		<h3><span><?php _e( 'Import Payment History', 'edd' ); ?></span></h3>
+		<h3><span><?php _e( 'Import Payment History', 'easy-digital-downloads' ); ?></span></h3>
 		<div class="inside">
-			<p><?php _e( 'Import a CSV file of payment records.', 'edd' ); ?></p>
+			<p><?php _e( 'Import a CSV file of payment records.', 'easy-digital-downloads' ); ?></p>
 			<form id="edd-import-payments" class="edd-import-form edd-import-export-form" action="<?php echo esc_url( add_query_arg( 'edd_action', 'upload_import_file', admin_url() ) ); ?>" method="post" enctype="multipart/form-data">
 				
 				<div class="edd-import-file-wrap">
@@ -337,7 +337,7 @@ function edd_tools_import_export_display() {
 						<input name="edd-import-file" id="edd-payments-import-file" type="file" />
 					</p>
 					<span>
-						<input type="submit" value="<?php _e( 'Import CSV', 'edd' ); ?>" class="button-secondary"/>
+						<input type="submit" value="<?php _e( 'Import CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 						<span class="spinner"></span>
 					</span>
 				</div>
@@ -346,8 +346,8 @@ function edd_tools_import_export_display() {
 					<table class="widefat edd_repeatable_table" width="100%" cellpadding="0" cellspacing="0">
 						<thead>
 							<tr>
-								<th><?php _e( 'CSV Column', 'edd' ); ?></th>
-								<th><?php _e( 'Payment Field', 'edd' ); ?></th>
+								<th><?php _e( 'CSV Column', 'easy-digital-downloads' ); ?></th>
+								<th><?php _e( 'Payment Field', 'easy-digital-downloads' ); ?></th>
 								<th style="width: 2%"></th>
 							</tr>
 						</thead>
@@ -394,7 +394,7 @@ function edd_tools_import_export_display() {
 							</tr>
 							<tr>
 								<td class="submit" colspan="3" style="float: none; clear:both; background:#fff;">
-									<a class="button-secondary edd_add_repeatable" style="margin: 6px 0;"><?php _e( 'Add New Field', 'edd' ); ?></a>
+									<a class="button-secondary edd_add_repeatable" style="margin: 6px 0;"><?php _e( 'Add New Field', 'easy-digital-downloads' ); ?></a>
 								</td>
 							</tr>
 						</tbody>
@@ -408,9 +408,9 @@ function edd_tools_import_export_display() {
 	</div><!-- .postbox -->
 
 	<div class="postbox edd-import-payment-history">
-		<h3><span><?php _e( 'Import Download Products', 'edd' ); ?></span></h3>
+		<h3><span><?php _e( 'Import Download Products', 'easy-digital-downloads' ); ?></span></h3>
 		<div class="inside">
-			<p><?php _e( 'Import a CSV file of products.', 'edd' ); ?></p>
+			<p><?php _e( 'Import a CSV file of products.', 'easy-digital-downloads' ); ?></p>
 			<form id="edd-import-downloads" class="edd-import-form edd-import-export-form" action="<?php echo esc_url( add_query_arg( 'edd_action', 'upload_import_file', admin_url() ) ); ?>" method="post" enctype="multipart/form-data">
 				
 				<div class="edd-import-file-wrap">
@@ -420,7 +420,7 @@ function edd_tools_import_export_display() {
 						<input name="edd-import-file" id="edd-downloads-import-file" type="file" />
 					</p>
 					<span>
-						<input type="submit" value="<?php _e( 'Import CSV', 'edd' ); ?>" class="button-secondary"/>
+						<input type="submit" value="<?php _e( 'Import CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 						<span class="spinner"></span>
 					</span>
 				</div>
@@ -439,8 +439,8 @@ function edd_tools_import_export_display() {
 					<table class="widefat edd_repeatable_table" width="100%" cellpadding="0" cellspacing="0">
 						<thead>
 							<tr>
-								<th><?php _e( 'CSV Column', 'edd' ); ?></th>
-								<th><?php _e( 'Product Field', 'edd' ); ?></th>
+								<th><?php _e( 'CSV Column', 'easy-digital-downloads' ); ?></th>
+								<th><?php _e( 'Product Field', 'easy-digital-downloads' ); ?></th>
 								<th style="width: 2%"></th>
 							</tr>
 						</thead>
@@ -485,7 +485,7 @@ function edd_tools_import_export_display() {
 							</tr>
 							<tr>
 								<td class="submit" colspan="3" style="float: none; clear:both; background:#fff;">
-									<a class="button-secondary edd_add_repeatable" style="margin: 6px 0;"><?php _e( 'Add New Field', 'edd' ); ?></a>
+									<a class="button-secondary edd_add_repeatable" style="margin: 6px 0;"><?php _e( 'Add New Field', 'easy-digital-downloads' ); ?></a>
 								</td>
 							</tr>
 						</tbody>
