@@ -706,14 +706,16 @@ function edd_get_cart_items_subtotal( $items ) {
  * @return float Cart amount
  */
 function edd_get_cart_total( $discounts = false ) {
-	$subtotal  = (float) edd_get_cart_subtotal();
-	$discounts = (float) edd_get_cart_discounted_amount();
-	$cart_tax  = (float) edd_get_cart_tax();
-	$fees      = (float) edd_get_cart_fee_total();
-	$total     = $subtotal - $discounts + $cart_tax + $fees;
+	$subtotal     = (float) edd_get_cart_subtotal();
+	$discounts    = (float) edd_get_cart_discounted_amount();
+	$fees         = (float) edd_get_cart_fee_total();
+	$cart_tax     = (float) edd_get_cart_tax();
+	$total_wo_tax = $subtotal - $discounts + $fees;
+	$total        = $subtotal - $discounts + $cart_tax + $fees;
 
-	if( $total < 0 )
+	if( $total < 0 || ! $total_wo_tax > 0 ) {
 		$total = 0.00;
+	}
 
 	return (float) apply_filters( 'edd_get_cart_total', $total );
 }
@@ -856,10 +858,14 @@ function edd_get_purchase_summary( $purchase_data, $email = true ) {
  */
 function edd_get_cart_tax() {
 
-	$cart_tax = 0;
-	$items    = edd_get_cart_content_details();
+	$cart_tax     = 0;
+	$items        = edd_get_cart_content_details();
+	$subtotal     = (float) edd_get_cart_subtotal();
+	$discounts    = (float) edd_get_cart_discounted_amount();
+	$fees         = (float) edd_get_cart_fee_total();
+	$total_wo_tax = $subtotal - $discounts + $fees; 
 
-	if( $items ) {
+	if( $items && $total_wo_tax > 0 ) {
 
 		$taxes = wp_list_pluck( $items, 'tax' );
 
