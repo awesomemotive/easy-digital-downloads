@@ -1,4 +1,4 @@
-<?php
+4<?php
 /**
  * Metabox Functions
  *
@@ -610,7 +610,7 @@ function edd_render_files_field( $post_id = 0 ) {
 						<th><?php _e( 'File URL', 'easy-digital-downloads' ); ?></th>
 						<th class="pricing" style="width: 20%; <?php echo $variable_display; ?>">
 							<?php _e( 'Price Assignment', 'easy-digital-downloads' ); ?>
-							<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Price Assignment</strong>: With variable pricing enabled, you can choose to allow certian price variations access to specific files, or allow all price variations to access a file.', 'easy-digital-downloads' ); ?>"></span>
+							<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Price Assignment</strong>: With variable pricing enabled, you can choose to allow certain price variations access to specific files, or allow all price variations to access a file.', 'easy-digital-downloads' ); ?>"></span>
 						</th>
 						<th style="width: 15px"><?php _e( 'ID', 'easy-digital-downloads' ); ?></th>
 						<?php do_action( 'edd_download_file_table_head', $post_id ); ?>
@@ -920,7 +920,7 @@ function edd_render_disable_button( $post_id ) {
 				'selected' => $behavior
 			) ); ?>
 			<?php _e( 'Purchase button behavior', 'easy-digital-downloads' ); ?>
-			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Button Behavior</strong>: Add to Cart buttons follow a traditional eCommerce flow. A Buy Now button by-passes most of the process, taking the customer directly from button click to payment, greatly speeding up the process of getting the product.', 'easy-digital-downloads' ); ?>"></span>
+			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Button Behavior</strong>: Add to Cart buttons follow a traditional eCommerce flow. A Buy Now button bypasses most of the process, taking the customer directly from button click to payment, greatly speeding up the process of getting the product.', 'easy-digital-downloads' ); ?>"></span>
 		</label>
 	</p>
 <?php
