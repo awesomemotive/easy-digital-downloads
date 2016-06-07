@@ -100,6 +100,11 @@ class EDD_Fees {
 		// Sanitize the amount
 		$args['amount'] = edd_sanitize_amount( $args['amount'] );
 
+		// Force no_tax to true if the amount is negative
+		if( $args['amount'] < 0 ) {
+			$args['no_tax'] = true;
+		}
+
 		// Set the fee
 		$fees[ $key ] = apply_filters( 'edd_fees_add_fee', $args, $this );
 
