@@ -1575,6 +1575,7 @@ jQuery(document).ready(function ($) {
 					class: import_data.class,
 					upload: import_data.upload,
 					mapping: import_data.mapping,
+					has_headers: import_data.has_headers,
 					action: 'edd_do_ajax_import',
 					step: step,
 				},

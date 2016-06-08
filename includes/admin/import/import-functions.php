@@ -54,18 +54,26 @@ function edd_do_ajax_import_file_upload() {
 
 		do_action( 'edd_batch_import_class_include', $_POST['edd-import-class'] );
 
-		$import = new $_POST['edd-import-class']( $import_file['file'] );
+		$class = sanitize_text_field( $_POST['edd-import-class'] );
+
+		if( ! class_exists( $class ) ) {
+			wp_send_json_error( array( 'error' => __( 'Import class does not exist', 'easy-digital-downloads' ) ) );
+		}
+
+		$import      = new $class( $import_file['file'] );
+		$has_headers = isset( $_POST['edd-import-has-headers'] );
 
 		if( ! $import->can_import() ) {
 			wp_send_json_error( array( 'error' => __( 'You do not have permission to import data', 'easy-digital-downloads' ) ) );
 		}
 
 		wp_send_json_success( array(
-			'form'    => $_POST,
-			'class'   => $_POST['edd-import-class'],
-			'upload'  => $import_file,
-			'columns' => $import->get_columns(),
-			'nonce'   => wp_create_nonce( 'edd_ajax_import', 'edd_ajax_import' )
+			'form'        => $_POST,
+			'class'       => $_POST['edd-import-class'],
+			'upload'      => $import_file,
+			'columns'     => $import->get_columns(),
+			'has_headers' => $has_headers,
+			'nonce'       => wp_create_nonce( 'edd_ajax_import', 'edd_ajax_import' )
 		) );
 
 	} else {
@@ -108,8 +116,14 @@ function edd_do_ajax_import() {
 	do_action( 'edd_batch_import_class_include', $_REQUEST['class'] );
 
 	$step     = absint( $_REQUEST['step'] );
-	$class    = $_REQUEST['class'];
-	$import   = new $class( $_REQUEST['upload']['file'], $step );
+	$class    = sanitize_text_field( $_REQUEST['class'] );
+
+	if( ! class_exists( $class ) ) {
+		wp_send_json_error( array( 'error' => __( 'Import class does not exist', 'easy-digital-downloads' ) ) );
+	}
+
+	$headers  = (bool) $_REQUEST['has_headers'];
+	$import   = new $class( $_REQUEST['upload']['file'], $step, $headers );
 
 	if( ! $import->can_import() ) {
 
