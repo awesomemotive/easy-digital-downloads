@@ -207,6 +207,7 @@ class EDD_API {
 		$vars[] = 'id';
 		$vars[] = 'purchasekey';
 		$vars[] = 'email';
+		$vars[] = 'info';
 
 		return $vars;
 	}
@@ -640,6 +641,7 @@ class EDD_API {
 			'sales',
 			'discounts',
 			'file-download-logs',
+			'info'
 		) );
 
 		$query = isset( $wp_query->query_vars['edd-api'] ) ? $wp_query->query_vars['edd-api'] : null;
