@@ -261,9 +261,17 @@ class EDD_Batch_Import {
 	 */
 	public function trim_preview( $str = '' ) {
 
-		$long = strlen( $str ) >= 30;
-		$str  = substr( $str, 0, 30 );
-		$str  = $long ? $str . '...' : $str;
+		if( is_numeric( $str ) ) {
+
+			$str = edd_sanitize_amount( $str );
+
+		} else {
+
+			$long = strlen( $str ) >= 30;
+			$str  = substr( $str, 0, 30 );
+			$str  = $long ? $str . '...' : $str;
+
+		}
 
 		return $str;
 
