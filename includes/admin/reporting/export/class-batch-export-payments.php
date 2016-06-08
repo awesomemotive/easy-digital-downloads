@@ -40,6 +40,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			'id'           => __( 'ID',   'easy-digital-downloads' ), // unaltered payment ID (use for querying)
 			'seq_id'       => __( 'Payment Number',   'easy-digital-downloads' ), // sequential payment ID
 			'email'        => __( 'Email', 'easy-digital-downloads' ),
+			'customer_id'  => __( 'Customer ID', 'easy-digital-downloads' ),
 			'first'        => __( 'First Name', 'easy-digital-downloads' ),
 			'last'         => __( 'Last Name', 'easy-digital-downloads' ),
 			'address1'     => __( 'Address', 'easy-digital-downloads' ),
@@ -192,6 +193,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 					'id'           => $payment->ID,
 					'seq_id'       => edd_get_payment_number( $payment->ID ),
 					'email'        => $payment_meta['email'],
+					'customer_id'  => edd_get_payment_customer_id( $payment->ID ),
 					'first'        => $user_info['first_name'],
 					'last'         => $user_info['last_name'],
 					'address1'     => isset( $user_info['address']['line1'] )   ? $user_info['address']['line1']   : '',
