@@ -8,14 +8,14 @@ jQuery(document).ready(function ($) {
 		position: {
 			my: 'center top',
 			at: 'center bottom+10',
-			collision: 'flipfit'
+			collision: 'flipfit',
 		},
 		hide: {
-			duration: 500
+			duration: 200,
 		},
 		show: {
-			duration: 500
-		}
+			duration: 200,
+		},
 	});
 
 	/**

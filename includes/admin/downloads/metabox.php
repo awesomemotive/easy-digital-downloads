@@ -1,4 +1,4 @@
-4<?php
+<?php
 /**
  * Metabox Functions
  *
@@ -796,6 +796,7 @@ function edd_render_download_limit_row( $post_id ) {
 			) ); ?>
 			<?php _e( 'Leave blank for global setting or 0 for unlimited', 'easy-digital-downloads' ); ?>
 		</label>
+		<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>File Download Limit</strong>: Limit the number of times a customer who purchased this product can access their download links.', 'easy-digital-downloads' ); ?>"></span>
 	</div>
 <?php
 }
@@ -849,7 +850,10 @@ function edd_render_meta_box_shortcode() {
 	$color         = ( $color == 'inherit' ) ? '' : $color;
 	$shortcode     = '[purchase_link id="' . absint( $post->ID ) . '" text="' . esc_html( $purchase_text ) . '" style="' . $style . '" color="' . esc_attr( $color ) . '"]';
 ?>
-	<p><strong><?php _e( 'Purchase Shortcode:', 'easy-digital-downloads' ); ?></strong></p>
+	<p>
+		<strong><?php _e( 'Purchase Shortcode:', 'easy-digital-downloads' ); ?></strong>
+		<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Purchse Shortcode</strong>: Use this shortcode to output a purchase link for this product in the location of your choosing.', 'easy-digital-downloads' ); ?>"></span>
+	</p>
 	<input type="text" id="edd-purchase-shortcode" class="widefat" readonly="readonly" value="<?php echo htmlentities( $shortcode ); ?>">
 <?php
 }
@@ -904,6 +908,7 @@ function edd_render_disable_button( $post_id ) {
 				'current' => $hide_button
 			) ); ?>
 			<?php _e( 'Disable the automatic output of the purchase button', 'easy-digital-downloads' ); ?>
+			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Automatic Output</strong>: By default, the purchase buttons will be displayed at the bottom of the download, when disabled you will need to use the Purchase link shortcode below to output the ability to buy the product where you prefer.', 'easy-digital-downloads' ); ?>"></span>
 		</label>
 	</p>
 	<?php if( edd_shop_supports_buy_now() ) : ?>

@@ -190,22 +190,22 @@ function edd_register_settings() {
 					'edd_settings_' . $tab . '_' . $section,
 					array(
 						'section'       => $section,
-						'id'            => isset( $option['id'] )          ? $option['id']          : null,
-						'desc'          => ! empty( $option['desc'] )      ? $option['desc']        : '',
-						'name'          => isset( $option['name'] )        ? $option['name']        : null,
-						'size'          => isset( $option['size'] )        ? $option['size']        : null,
-						'options'       => isset( $option['options'] )     ? $option['options']     : '',
-						'std'           => isset( $option['std'] )         ? $option['std']         : '',
-						'min'           => isset( $option['min'] )         ? $option['min']         : null,
-						'max'           => isset( $option['max'] )         ? $option['max']         : null,
-						'step'          => isset( $option['step'] )        ? $option['step']        : null,
-						'chosen'        => isset( $option['chosen'] )      ? $option['chosen']      : null,
-						'placeholder'   => isset( $option['placeholder'] ) ? $option['placeholder'] : null,
-						'allow_blank'   => isset( $option['allow_blank'] ) ? $option['allow_blank'] : true,
-						'readonly'      => isset( $option['readonly'] )    ? $option['readonly']    : false,
-						'faux'          => isset( $option['faux'] )        ? $option['faux']        : false,
+						'id'            => isset( $option['id'] )            ? $option['id']            : null,
+						'desc'          => ! empty( $option['desc'] )        ? $option['desc']          : '',
+						'name'          => isset( $option['name'] )          ? $option['name']          : null,
+						'size'          => isset( $option['size'] )          ? $option['size']          : null,
+						'options'       => isset( $option['options'] )       ? $option['options']       : '',
+						'std'           => isset( $option['std'] )           ? $option['std']           : '',
+						'min'           => isset( $option['min'] )           ? $option['min']           : null,
+						'max'           => isset( $option['max'] )           ? $option['max']           : null,
+						'step'          => isset( $option['step'] )          ? $option['step']          : null,
+						'chosen'        => isset( $option['chosen'] )        ? $option['chosen']        : null,
+						'placeholder'   => isset( $option['placeholder'] )   ? $option['placeholder']   : null,
+						'allow_blank'   => isset( $option['allow_blank'] )   ? $option['allow_blank']   : true,
+						'readonly'      => isset( $option['readonly'] )      ? $option['readonly']      : false,
+						'faux'          => isset( $option['faux'] )          ? $option['faux']          : false,
 						'tooltip_title' => isset( $option['tooltip_title'] ) ? $option['tooltip_title'] : false,
-						'tooltip_desc'  => isset( $option['tooltip_desc'] ) ? $option['tooltip_desc'] : false,
+						'tooltip_desc'  => isset( $option['tooltip_desc'] )  ? $option['tooltip_desc']  : false,
 					)
 				);
 			}
@@ -279,10 +279,12 @@ function edd_get_registered_settings() {
 						'placeholder' => __( 'Select a page', 'easy-digital-downloads' ),
 					),
 					'locale_settings' => array(
-						'id'   => 'locale_settings',
-						'name' => '<h3>' . __( 'Store Location', 'easy-digital-downloads' ) . '</h3>',
-						'desc' => '',
-						'type' => 'header',
+						'id'            => 'locale_settings',
+						'name'          => '<h3>' . __( 'Store Location', 'easy-digital-downloads' ) . '</h3>',
+						'desc'          => '',
+						'type'          => 'header',
+						'tooltip_title' => __( 'Store Location Settings', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'Easy Digital Downloads will use the following Country and State to pre-fill fields at checkout. This will also pre-calculate any taxes defined if the location below has taxes enabled.','easy-digital-downloads' ),
 					),
 					'base_country' => array(
 						'id'          => 'base_country',
@@ -539,10 +541,12 @@ function edd_get_registered_settings() {
 						'type' => 'header',
 					),
 					'disable_styles' => array(
-						'id'   => 'disable_styles',
-						'name' => __( 'Disable Styles', 'easy-digital-downloads' ),
-						'desc' => __( 'Check this to disable all included styling of buttons, checkout fields, and all other elements.', 'easy-digital-downloads' ),
-						'type' => 'checkbox',
+						'id'            => 'disable_styles',
+						'name'          => __( 'Disable Styles', 'easy-digital-downloads' ),
+						'desc'          => __( 'Check this to disable all included styling of buttons, checkout fields, and all other elements.', 'easy-digital-downloads' ),
+						'type'          => 'checkbox',
+						'tooltip_title' => __( 'Disabling Styles', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'If your theme has a complete custom CSS file for Easy Digital Downloads, you may with to disable our default styles. This is not recommended unless your sure your theme has a complete custom CSS.', 'easy-digital-downloads' ),
 					),
 					'button_header' => array(
 						'id'   => 'button_header',
@@ -577,10 +581,12 @@ function edd_get_registered_settings() {
 						'type' => 'header',
 					),
 					'enable_taxes' => array(
-						'id'   => 'enable_taxes',
-						'name' => __( 'Enable Taxes', 'easy-digital-downloads' ),
-						'desc' => __( 'Check this to enable taxes on purchases.', 'easy-digital-downloads' ),
-						'type' => 'checkbox',
+						'id'            => 'enable_taxes',
+						'name'          => __( 'Enable Taxes', 'easy-digital-downloads' ),
+						'desc'          => __( 'Check this to enable taxes on purchases.', 'easy-digital-downloads' ),
+						'type'          => 'checkbox',
+						'tooltip_title' => __( 'Enabling Taxes', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'With taxes enabled, Easy Digital Downloads will use the rules below to charge tax to customers. With taxes enabled, customers are required to input their address on checkout so that taxes can be properly calculated.', 'easy-digital-downloads' ),
 					),
 					'tax_rates' => array(
 						'id'   => 'tax_rates',
@@ -594,6 +600,8 @@ function edd_get_registered_settings() {
 						'desc' => __( 'Enter a percentage, such as 6.5. Customers not in a specific rate will be charged this rate.', 'easy-digital-downloads' ),
 						'type' => 'text',
 						'size' => 'small',
+						'tooltip_title' => __( 'Fallback Tax Rate', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'If the customer\'s address fails to meet the above tax rules, you can define a `default` tax rate to be applied to all other customers.', 'easy-digital-downloads' ),
 					),
 					'prices_include_tax' => array(
 						'id'   => 'prices_include_tax',
@@ -605,6 +613,8 @@ function edd_get_registered_settings() {
 							'yes' => __( 'Yes, I will enter prices inclusive of tax', 'easy-digital-downloads' ),
 							'no'  => __( 'No, I will enter prices exclusive of tax', 'easy-digital-downloads' ),
 						),
+						'tooltip_title' => __( 'Prices Inclusive of Tax', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'When using prices inclusive of tax, you will be entering your prices as the total amount you want a customer to pay for the download, including tax. Easy Digital Downloads will calculate the proper amount to tax the customer for the defined total price.', 'easy-digital-downloads' ),
 					),
 					'display_tax_rate' => array(
 						'id'   => 'display_tax_rate',
@@ -648,12 +658,16 @@ function edd_get_registered_settings() {
 						'desc' => __( 'Check this to enable AJAX for the shopping cart.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
 						'std'  => '1',
+						'tooltip_title' => __( 'Enabling AJAX', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'With AJAX enabled, customers can perform cart actions like adding and removing items from their shopping cart without pages having to be reloaded. This also creates fewer steps during the checkout process.', 'easy-digital-downloads' ),
 					),
 					'redirect_on_add' => array(
 						'id'   => 'redirect_on_add',
 						'name' => __( 'Redirect to Checkout', 'easy-digital-downloads' ),
 						'desc' => __( 'Immediately redirect to checkout after adding an item to the cart?', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
+						'tooltip_title' => __( 'Redirect to Checkout', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'When enabled, once an item has been added to the cart, the customer will be redirected directly to your checkout page. This is useful for stores that sell single items.', 'easy-digital-downloads' ),
 					),
 					'item_quantities' => array(
 						'id'   => 'item_quantities',
@@ -685,6 +699,8 @@ function edd_get_registered_settings() {
 						'name' => __( 'Disable Guest Checkout', 'easy-digital-downloads' ),
 						'desc' => __( 'Require that users be logged-in to purchase files.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
+						'tooltip_title' => __( 'Disabling Guest Checkout', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'You can require that customers create and login to user accounts prior to purchasing from your store by enabling this option. When unchecked, users can purchase without being logged in by using their name and email address.', 'easy-digital-downloads' ),
 					),
 					'show_register_form' => array(
 						'id'      => 'show_register_form',
@@ -710,6 +726,8 @@ function edd_get_registered_settings() {
 						'name' => __( 'Enable Cart Saving', 'easy-digital-downloads' ),
 						'desc' => __( 'Check this to enable cart saving on the checkout.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
+						'tooltip_title' => __( 'Cart Saving', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'Cart saving allows shoppers to create a temporary link to their current shopping cart so they can come back to it later, or share it with someone..', 'easy-digital-downloads' ),
 					),
 				),
 				'button_text' => array(
@@ -770,6 +788,8 @@ function edd_get_registered_settings() {
 						'desc' => sprintf( __( 'The maximum number of times files can be downloaded for purchases. Can be overwritten for each %s.', 'easy-digital-downloads' ), edd_get_label_singular() ),
 						'type' => 'number',
 						'size' => 'small',
+						'tooltip_title' => __( 'File Download Limits', 'easy-digital-downloads' ),
+						'tooltip_desc'  => sprintf( __( 'Set the global default for the number of times a customer can download items they purchase. Using a valud of 0 is unlimited. This can be defined on a %s-specific level as well. Download limits can also be reset for an individual purcahse.', 'easy-digital-downloads' ), edd_get_label_singular( true ) ),
 					),
 					'download_link_expiration' => array(
 						'id'            => 'download_link_expiration',
@@ -1223,7 +1243,7 @@ function edd_get_pages( $force = false ) {
  * @return void
  */
 function edd_header_callback( $args ) {
-	echo '';
+	echo apply_filters( 'edd_after_setting_output', '', $args );
 }
 
 /**
@@ -1372,9 +1392,9 @@ function edd_radio_callback( $args ) {
 		$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']">' . esc_html( $option ) . '</label><br/>';
 	endforeach;
 
-	$html .= '<p class="description">' . wp_kses_post( $args['desc'] ) . '</p>';
+	$html .= '<p class="description">' . apply_filters( 'edd_after_setting_output', wp_kses_post( $args['desc'] ), $args ) . '</p>';
 
-	echo apply_filters( 'edd_after_setting_output', $html, $args );
+	echo $html;
 }
 
 /**
