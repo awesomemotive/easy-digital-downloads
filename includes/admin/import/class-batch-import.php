@@ -139,6 +139,21 @@ class EDD_Batch_Import {
 	}
 
 	/**
+	 * Get the first row of the CSV
+	 *
+	 * This is used for showing an example of what the import will look like
+	 *
+	 * @access public
+	 * @since 2.6
+	 * @return array The first row after the header of the CSV
+	 */
+	public function get_first_row() {
+
+		return array_map( array( $this, 'trim_preview' ), next( $this->csv->data ) );
+
+	}
+
+	/**
 	 * Process a step
 	 *
 	 * @since 2.6
@@ -234,6 +249,23 @@ class EDD_Batch_Import {
 		}
 
 		return array_map( 'trim', $array );
+
+	}
+
+	/**
+	 * Trims a column value for preview
+	 *
+	 * @since 2.6
+	 * @param $str Input string to trim down
+	 * @return string
+	 */
+	public function trim_preview( $str = '' ) {
+
+		$long = strlen( $str ) >= 30;
+		$str  = substr( $str, 0, 30 );
+		$str  = $long ? $str . '...' : $str;
+
+		return $str;
 
 	}
 }

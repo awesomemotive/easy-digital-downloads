@@ -72,6 +72,7 @@ function edd_do_ajax_import_file_upload() {
 			'class'       => $_POST['edd-import-class'],
 			'upload'      => $import_file,
 			'columns'     => $import->get_columns(),
+			'first_row'   => $import->get_first_row(),
 			'has_headers' => $has_headers,
 			'nonce'       => wp_create_nonce( 'edd_ajax_import', 'edd_ajax_import' )
 		) );

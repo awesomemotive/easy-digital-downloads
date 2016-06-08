@@ -364,6 +364,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<th><strong><?php _e( 'Payment Field', 'edd' ); ?></strong></th>
 								<th><strong><?php _e( 'CSV Column', 'edd' ); ?></strong></th>
+								<th><strong><?php _e( 'Data Preview', 'edd' ); ?></strong></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -374,6 +375,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr class="alternate">
 								<td><?php _e( 'Customer Email', 'easy-digital-downloads' ); ?></td>
@@ -382,6 +384,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr>
 								<td><?php _e( 'Customer First Name', 'easy-digital-downloads' ); ?></td>
@@ -390,6 +393,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr class="alternate">
 								<td><?php _e( 'Customer Last Name', 'easy-digital-downloads' ); ?></td>
@@ -398,6 +402,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr>
 								<td><?php _e( 'Customer ID', 'easy-digital-downloads' ); ?></td>
@@ -406,6 +411,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr class="alternate">
 								<td><?php _e( 'Discount Codes', 'easy-digital-downloads' ); ?></td>
@@ -414,6 +420,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr>
 								<td><?php _e( 'IP Address', 'easy-digital-downloads' ); ?></td>
@@ -422,6 +429,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr class="alternate">
 								<td><?php _e( 'Mode (Live|Test)', 'easy-digital-downloads' ); ?></td>
@@ -430,6 +438,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr>
 								<td><?php _e( 'Parent Payment ID', 'easy-digital-downloads' ); ?></td>
@@ -438,6 +447,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr class="alternate">
 								<td><?php _e( 'Payment Method', 'easy-digital-downloads' ); ?></td>
@@ -446,6 +456,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr>
 								<td><?php _e( 'Payment Number', 'easy-digital-downloads' ); ?></td>
@@ -454,6 +465,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr class="alternate">
 								<td><?php _e( 'Purchase Date', 'easy-digital-downloads' ); ?></td>
@@ -462,6 +474,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr>
 								<td><?php _e( 'Purchase Key', 'easy-digital-downloads' ); ?></td>
@@ -470,6 +483,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr class="alternate">
 								<td><?php _e( 'Purchased Product(s)', 'easy-digital-downloads' ); ?></td>
@@ -478,6 +492,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr>
 								<td><?php _e( 'Status', 'easy-digital-downloads' ); ?></td>
@@ -486,6 +501,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr class="alternate">
 								<td><?php _e( 'Subtotal', 'easy-digital-downloads' ); ?></td>
@@ -494,6 +510,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr>
 								<td><?php _e( 'Tax', 'easy-digital-downloads' ); ?></td>
@@ -502,6 +519,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr class="alternate">
 								<td><?php _e( 'Total', 'easy-digital-downloads' ); ?></td>
@@ -510,6 +528,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr>
 								<td><?php _e( 'Transaction ID', 'easy-digital-downloads' ); ?></td>
@@ -518,6 +537,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr class="alternate">
 								<td><?php _e( 'User ID', 'easy-digital-downloads' ); ?></td>
@@ -526,6 +546,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr>
 								<td><?php _e( 'Address Line 1', 'easy-digital-downloads' ); ?></td>
@@ -534,6 +555,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr class="alternate">
 								<td><?php _e( 'Address Line 2', 'easy-digital-downloads' ); ?></td>
@@ -542,6 +564,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr class="alternate">
 								<td><?php _e( 'City', 'easy-digital-downloads' ); ?></td>
@@ -550,6 +573,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr>
 								<td><?php _e( 'State / Province', 'easy-digital-downloads' ); ?></td>
@@ -558,6 +582,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr class="alternate">
 								<td><?php _e( 'Zip / Postal Code', 'easy-digital-downloads' ); ?></td>
@@ -566,6 +591,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr>
 								<td><?php _e( 'Country', 'easy-digital-downloads' ); ?></td>
@@ -574,6 +600,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 						</tbody>
 					</table>
@@ -625,6 +652,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<th><strong><?php _e( 'Product Field', 'edd' ); ?></strong></th>
 								<th><strong><?php _e( 'CSV Column', 'edd' ); ?></strong></th>
+								<th><strong><?php _e( 'Data Preview', 'edd' ); ?></strong></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -635,6 +663,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr class="alternate">
 								<td><?php _e( 'Product Categories', 'easy-digital-downloads' ); ?></td>
@@ -643,6 +672,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr>
 								<td><?php _e( 'Product Creation Date', 'easy-digital-downloads' ); ?></td>
@@ -651,6 +681,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr class="alternate">
 								<td><?php _e( 'Product Description', 'easy-digital-downloads' ); ?></td>
@@ -659,6 +690,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr>
 								<td><?php _e( 'Product Excerpt', 'easy-digital-downloads' ); ?></td>
@@ -667,6 +699,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr class="alternate">
 								<td><?php _e( 'Product Image', 'easy-digital-downloads' ); ?></td>
@@ -675,6 +708,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr>
 								<td><?php _e( 'Product Notes', 'easy-digital-downloads' ); ?></td>
@@ -683,6 +717,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr class="alternate">
 								<td><?php _e( 'Product Price(s)', 'easy-digital-downloads' ); ?></td>
@@ -691,6 +726,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr>
 								<td><?php _e( 'Product SKU', 'easy-digital-downloads' ); ?></td>
@@ -699,6 +735,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr class="alternate">
 								<td><?php _e( 'Product Slug', 'easy-digital-downloads' ); ?></td>
@@ -707,6 +744,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr>
 								<td><?php _e( 'Product Status', 'easy-digital-downloads' ); ?></td>
@@ -715,6 +753,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr class="alternate">
 								<td><?php _e( 'Product Tags', 'easy-digital-downloads' ); ?></td>
@@ -723,6 +762,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr>
 								<td><?php _e( 'Product Title', 'easy-digital-downloads' ); ?></td>
@@ -731,6 +771,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr class="alternate">
 								<td><?php _e( 'Download Files', 'easy-digital-downloads' ); ?></td>
@@ -739,6 +780,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr>
 								<td><?php _e( 'File Download Limit', 'easy-digital-downloads' ); ?></td>
@@ -747,6 +789,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr class="alternate">
 								<td><?php _e( 'Sale Count', 'easy-digital-downloads' ); ?></td>
@@ -755,6 +798,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 							<tr>
 								<td><?php _e( 'Total Earnings', 'easy-digital-downloads' ); ?></td>
@@ -763,6 +807,7 @@ function edd_tools_import_export_display() {
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
+								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
 						</tbody>
 					</table>
