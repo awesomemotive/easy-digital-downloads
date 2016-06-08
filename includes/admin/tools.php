@@ -471,13 +471,7 @@ function edd_tools_import_export_display() {
 										<option value="download_limit"><?php _e( 'File Download Limit', 'easy-digital-downloads' ); ?></option>
 										<option value="sales"><?php _e( 'Sale Count', 'easy-digital-downloads' ); ?></option>
 										<option value="earnings"><?php _e( 'Total Earnings', 'easy-digital-downloads' ); ?></option>
-										<option value="custom"><?php _e( 'Custom Field', 'easy-digital-downloads' ); ?></option>
 									</select>
-									<!--
-									<span class="edd-import-download-field-custom-wrap" style="display:none">
-										<label for="edd-import-download-field-custom_1"><?php _e( 'Custom Field', 'easy-digital-downloads' ); ?></label>
-										<input name="edd-import-download-field-custom[1]" id="edd-import-download-field-custom_1" type="text" value="" />
-									</span>-->
 								</td>
 								<td>
 									<a href="#" class="edd_remove_repeatable" data-type="price" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;">&times;</a>
