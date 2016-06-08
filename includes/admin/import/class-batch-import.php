@@ -71,6 +71,13 @@ class EDD_Batch_Import {
 	public $is_empty = false;
 
 	/**
+	 * CSV file has header row
+	 *
+	 * @since 2.6
+	 */
+	public $headers = true;
+
+	/**
 	 * Map of CSV columns > database fields
 	 *
 	 * @since 2.6
@@ -83,18 +90,19 @@ class EDD_Batch_Import {
 	 * @param $_step int The step to process
 	 * @since 2.6
 	 */
-	public function __construct( $_file = '', $_step = 1 ) {
+	public function __construct( $_file = '', $_step = 1, $headers = true ) {
 
 		if( ! class_exists( 'parseCSV' ) ) {
 			require_once EDD_PLUGIN_DIR . 'includes/libraries/parsecsv.lib.php';
 		}
 
-		$this->step  = $_step;
-		$this->file  = $_file;
-		$this->done  = false;
-		$this->csv   = new parseCSV();
+		$this->step    = $_step;
+		$this->file    = $_file;
+		$this->done    = false;
+		$this->csv     = new parseCSV();
 		$this->csv->auto( $this->file );
-		$this->total = count( $this->csv->data );
+		$this->csv->heading = $headers;
+		$this->total   = count( $this->csv->data );
 		$this->init();
 
 	}
