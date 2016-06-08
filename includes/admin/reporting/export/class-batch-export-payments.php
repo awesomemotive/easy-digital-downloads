@@ -60,6 +60,8 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			'key'          => __( 'Purchase Key', 'easy-digital-downloads' ),
 			'date'         => __( 'Date', 'easy-digital-downloads' ),
 			'user'         => __( 'User', 'easy-digital-downloads' ),
+			'currency'     => __( 'Currency', 'easy-digital-downloads' ),
+			'ip'           => __( 'IP Address', 'easy-digital-downloads' ),
 			'status'       => __( 'Status', 'easy-digital-downloads' )
 		);
 
@@ -213,6 +215,8 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 					'key'          => $payment_meta['key'],
 					'date'         => $payment->post_date,
 					'user'         => $user ? $user->display_name : __( 'guest', 'easy-digital-downloads' ),
+					'currency'     => edd_get_payment_currency_code( $payment->ID ),
+					'ip'           => edd_get_payment_user_ip( $payment->ID ),
 					'status'       => edd_get_payment_status( $payment, true )
 				);
 
