@@ -1526,11 +1526,21 @@ jQuery(document).ready(function ($) {
 
 				select.on('change', function() {
 					var $key = $(this).val();
-					if( false != response.data.first_row[$key] ) {
-						$(this).parent().next().html( response.data.first_row[$key] );
-					} else {
+
+					if( ! $key ) {
+
 						$(this).parent().next().html( '' );
+
+					} else {
+
+						if( false != response.data.first_row[$key] ) {
+							$(this).parent().next().html( response.data.first_row[$key] );
+						} else {
+							$(this).parent().next().html( '' );
+						}
+
 					}
+
 				});
 
 				$('body').on('click', '.edd-import-proceed', function(e) {
