@@ -1459,7 +1459,6 @@ jQuery(document).ready(function ($) {
 
 		init : function() {
 			this.submit();
-			this.toggle_fields();
 		},
 
 		submit : function() {
@@ -1516,30 +1515,14 @@ jQuery(document).ready(function ($) {
 				$form.find('.edd-import-options').slideDown();
 
 				// Show column mapping
-				var select = $form.find('select.edd-import-csv-column');
-				var row    = select.parent().parent();
+				var select  = $form.find('select.edd-import-csv-column');
+				var row     = select.parent().parent();
+				var options = '';
 				$.each( response.data.columns, function( key, value ) {
-					select.append( '<option value="' + value + '">' + value + '</option>' );
-				});
-				$.each( response.data.columns, function( key, value ) {
-
-					if( key >= 1 ) {
-
-						var clone = EDD_Download_Configuration.clone_repeatable( row );
-						clone.find('select').val( value );
-						$( clone ).insertAfter( row );
-
-					}
-
+					options = options + '<option value="' + value + '">' + value + '</option>'
 				});
 
-				$('body').on('change', '.edd-import-field', function(e) {
-					if( 'custom' == $(this).val() ) {
-						$(this).next().show();
-					} else {
-						$(this).next().hide();
-					}
-				});
+				select.append( options );
 
 				$('body').on('click', '.edd-import-proceed', function(e) {
 
@@ -1631,18 +1614,6 @@ jQuery(document).ready(function ($) {
 			}).fail(function (response) {
 				if ( window.console && window.console.log ) {
 					console.log( response );
-				}
-			});
-
-		},
-
-		toggle_fields : function() {
-
-			$('body').on('change', '.edd-import-payment-field', function() {
-				if( 'custom' == $(this).val() ) {
-					$(this).parent().find( '.edd-import-payment-field-custom-wrap' ).show();
-				} else {
-					$(this).parent().find( '.edd-import-payment-field-custom-wrap' ).hide();
 				}
 			});
 

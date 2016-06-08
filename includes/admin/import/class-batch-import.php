@@ -163,17 +163,11 @@ class EDD_Batch_Import {
 	 * @since 2.6
 	 * @return void
 	 */
-	public function map_fields( $csv_columns = array(), $import_fields = array() ) {
+	public function map_fields( $import_fields = array() ) {
 
-		foreach( $csv_columns as $key => $column ) {
+		// Probably add some sanitization here later
 
-			if( ! empty( $import_fields[ $key ] ) ) {
-
-				$this->field_mapping[ $import_fields[ $key ] ] = $column;
-
-			}
-
-		}
+		$this->field_mapping = $import_fields;
 	}
 
 	/**

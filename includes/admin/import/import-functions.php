@@ -119,7 +119,7 @@ function edd_do_ajax_import() {
 
 	parse_str( $_REQUEST['mapping'], $map );
 
-	$import->map_fields( $map['edd-import-csv-column'], $map['edd-import-field'] );
+	$import->map_fields( $map['edd-import-field'] );
 
 	$ret = $import->process_step( $step );
 
