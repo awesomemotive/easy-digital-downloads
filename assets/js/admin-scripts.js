@@ -1596,6 +1596,11 @@ jQuery(document).ready(function ($) {
 
 						} else {
 
+							import_form.find( '.edd-import-options' ).hide();
+							$('html, body').animate({
+								scrollTop: import_form.parent().offset().top
+							}, 500 );
+
 							notice_wrap.html('<div class="updated"><p>' + response.data.message + '</p></div>');
 
 						}
