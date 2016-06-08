@@ -594,6 +594,12 @@ class EDD_API {
 
 				break;
 
+			case 'info' :
+
+				$data = $this->routes->get_info();
+
+				break;
+
 		endswitch;
 
 		// Allow extensions to setup their own return data
@@ -1612,6 +1618,39 @@ class EDD_API {
 		}
 
 		return $downloads;
+	}
+
+	/**
+	 * Process Get Info API Request
+	 *
+	 * @param array $args Arguments provided by API Request
+	 * @return array
+	 */
+	public function get_info( $args ) {
+		$data = array();
+
+		// Integrations
+		if ( class_exists( 'EDD_Commissions' ) ) {
+			$data['integrations']['commissions'] = true;
+		}
+
+		if ( class_exists( 'EDD_Software_Licensing' ) ) {
+			$data['integrations']['software_licensing'] = true;
+		}
+
+		if ( class_exists( 'EDD_Front_End_Submissions' ) ) {
+			$data['integrations']['fes'] = true;
+		}
+
+		if ( class_exists( 'EDD_Reviews' ) ) {
+			$data['integrations']['reviews'] = true;
+		}
+
+		if ( class_exists( 'EDD_Recurring' ) ) {
+			$data['integrations']['recurring'] = true;
+		}
+
+		return $data;
 	}
 
 	/**
