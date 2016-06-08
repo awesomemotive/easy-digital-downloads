@@ -364,7 +364,6 @@ function edd_tools_import_export_display() {
 							<tr>
 								<th><?php _e( 'Payment Field', 'edd' ); ?></th>
 								<th><?php _e( 'CSV Column', 'edd' ); ?></th>
-								<th style="width: 2%"></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -626,7 +625,6 @@ function edd_tools_import_export_display() {
 							<tr>
 								<th><?php _e( 'Product Field', 'edd' ); ?></th>
 								<th><?php _e( 'CSV Column', 'edd' ); ?></th>
-								<th style="width: 2%"></th>
 							</tr>
 						</thead>
 						<tbody>
