@@ -261,6 +261,8 @@ class EDD_API_V2 extends EDD_API_V1 {
 		if( $customer_query ) {
 
 			foreach ( $customer_query as $customer_obj ) {
+				// Setup a new EDD_Customer object so additional details are defined (like additional emails)
+				$customer_obj = new EDD_Customer( $customer_obj->id );
 
 				$names      = explode( ' ', $customer_obj->name );
 				$first_name = ! empty( $names[0] ) ? $names[0] : '';
@@ -270,15 +272,26 @@ class EDD_API_V2 extends EDD_API_V1 {
 					$last_name = implode( ' ', $names );
 				}
 
-				$customers['customers'][$customer_count]['info']['id']           = '';
-				$customers['customers'][$customer_count]['info']['user_id']      = '';
-				$customers['customers'][$customer_count]['info']['username']     = '';
-				$customers['customers'][$customer_count]['info']['display_name'] = '';
-				$customers['customers'][$customer_count]['info']['customer_id']  = $customer_obj->id;
-				$customers['customers'][$customer_count]['info']['first_name']   = $first_name;
-				$customers['customers'][$customer_count]['info']['last_name']    = $last_name;
-				$customers['customers'][$customer_count]['info']['email']        = $customer_obj->email;
-				$customers['customers'][$customer_count]['info']['date_created'] = $customer_obj->date_created;
+				$customers['customers'][ $customer_count ]['info']['customer_id']       = $customer_obj->id;
+				$customers['customers'][ $customer_count ]['info']['user_id']           = 0;
+				$customers['customers'][ $customer_count ]['info']['username']          = '';
+				$customers['customers'][ $customer_count ]['info']['display_name']      = '';
+				$customers['customers'][ $customer_count ]['info']['first_name']        = $first_name;
+				$customers['customers'][ $customer_count ]['info']['last_name']         = $last_name;
+				$customers['customers'][ $customer_count ]['info']['email']             = $customer_obj->email;
+				$customers['customers'][ $customer_count ]['info']['additional_emails'] = array();
+				$customers['customers'][ $customer_count ]['info']['date_created']      = $customer_obj->date_created;
+
+				if ( ! empty( $customer_obj->emails ) && count( $customer_obj->emails ) > 1 ) {
+					$additional_emails = $customer_obj->emails;
+
+					$primary_email_key = array_search( $customer_obj->email, $customer_obj->emails );
+					if ( false !== $primary_email_key ) {
+						unset( $additional_emails[ $primary_email_key ] );
+					}
+
+					$customers['customers'][ $customer_count ]['info']['additional_emails'] = $additional_emails;
+				}
 
 				if ( ! empty( $customer_obj->user_id ) && $customer_obj->user_id > 0 ) {
 
@@ -287,16 +300,15 @@ class EDD_API_V2 extends EDD_API_V1 {
 					// Customer with registered account
 
 					// id is going to get deprecated in the future, user user_id or customer_id instead
-					$customers['customers'][$customer_count]['info']['id']           = $customer_obj->id;
-					$customers['customers'][$customer_count]['info']['user_id']      = $customer_obj->user_id;
-					$customers['customers'][$customer_count]['info']['username']     = $user_data->user_login;
-					$customers['customers'][$customer_count]['info']['display_name'] = $user_data->display_name;
+					$customers['customers'][ $customer_count ]['info']['user_id']      = $customer_obj->user_id;
+					$customers['customers'][ $customer_count ]['info']['username']     = $user_data->user_login;
+					$customers['customers'][ $customer_count ]['info']['display_name'] = $user_data->display_name;
 
 				}
 
-				$customers['customers'][$customer_count]['stats']['total_purchases'] = $customer_obj->purchase_count;
-				$customers['customers'][$customer_count]['stats']['total_spent']     = $customer_obj->purchase_value;
-				$customers['customers'][$customer_count]['stats']['total_downloads'] = edd_count_file_downloads_of_user( $customer_obj->email );
+				$customers['customers'][ $customer_count ]['stats']['total_purchases'] = $customer_obj->purchase_count;
+				$customers['customers'][ $customer_count ]['stats']['total_spent']     = $customer_obj->purchase_value;
+				$customers['customers'][ $customer_count ]['stats']['total_downloads'] = edd_count_file_downloads_of_user( $customer_obj->email );
 
 				$customer_count++;
 
