@@ -1495,7 +1495,7 @@ jQuery(document).ready(function ($) {
 				//Error for older unsupported browsers that doesn't support HTML5 File API
 				notice_wrap.html('<div class="update error"><p>' + edd_vars.unsupported_browser + '</p></div>');
 				return false;
-	
+
 			}
 
 		},
@@ -1519,10 +1519,19 @@ jQuery(document).ready(function ($) {
 				var row     = select.parent().parent();
 				var options = '';
 				$.each( response.data.columns, function( key, value ) {
-					options = options + '<option value="' + value + '">' + value + '</option>'
+					options += '<option value="' + value + '">' + value + '</option>';
 				});
 
 				select.append( options );
+
+				select.on('change', function() {
+					var $key = $(this).val();
+					if( false != response.data.first_row[$key] ) {
+						$(this).parent().next().html( response.data.first_row[$key] );
+					} else {
+						$(this).parent().next().html( '' );
+					}
+				});
 
 				$('body').on('click', '.edd-import-proceed', function(e) {
 
