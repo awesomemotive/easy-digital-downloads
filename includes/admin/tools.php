@@ -336,12 +336,6 @@ function edd_tools_import_export_display() {
 					<p>
 						<input name="edd-import-file" id="edd-payments-import-file" type="file" />
 					</p>
-					<p>
-						<label>
-							<input name="edd-import-has-headers" type="checkbox" value="1"/>
-							<?php _e( 'Does this CSV have a header row?', 'easy-digital-downloads' ); ?>
-						</label>
-					</p>
 					<span>
 						<input type="submit" value="<?php _e( 'Import CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 						<span class="spinner"></span>
@@ -623,12 +617,6 @@ function edd_tools_import_export_display() {
 					<input type="hidden" name="edd-import-class" value="EDD_Batch_Downloads_Import"/>
 					<p>
 						<input name="edd-import-file" id="edd-downloads-import-file" type="file" />
-					</p>
-					<p>
-						<label>
-							<input name="edd-import-has-headers" type="checkbox" value="1"/>
-							<?php _e( 'Does this CSV have a header row?', 'easy-digital-downloads' ); ?>
-						</label>
 					</p>
 					<span>
 						<input type="submit" value="<?php _e( 'Import CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
