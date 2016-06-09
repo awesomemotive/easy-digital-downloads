@@ -237,6 +237,10 @@ class EDD_Batch_Import {
 
 			$delimiter = ';';
 
+		} elseif( false !== strpos( $str, '/' ) ) {
+
+			$delimiter = '/';
+
 		}
 
 		if( ! empty( $delimiter ) ) {

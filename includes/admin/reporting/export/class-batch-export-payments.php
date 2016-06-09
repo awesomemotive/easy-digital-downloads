@@ -140,6 +140,8 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 							$price = edd_get_download_final_price( $id, $user_info, $price_override );
 						}
 
+						$download_tax = isset( $download['tax'] ) ? $download['tax'] : 0;
+
 						/* Set up verbose product column */
 
 						$products .= html_entity_decode( get_the_title( $id ) );
@@ -178,7 +180,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 						}
 
 						/* Set up raw products column - Nothing but product names */
-						$products_raw .= html_entity_decode( get_the_title( $id ) );
+						$products_raw .= html_entity_decode( get_the_title( $id ) ) . '|' . $price . '{' . $download_tax . '}';
 						if ( $key != ( count( $downloads ) -1 ) ) {
 
 							$products_raw .= ' / ';
