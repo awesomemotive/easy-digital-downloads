@@ -6,7 +6,7 @@ Donate link: https://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
 Tested up to: 4.6
-Stable Tag: 2.5.16
+Stable Tag: 2.5.17
 
 License: GNU Version 2 or Any Later Version
 
@@ -213,6 +213,12 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.5.17, June 3, 2016 =
+
+* Fix: Discount codes are not always sent when opt-in tracking is enabled
+* Fix: Correct a capitilzation error in EDD_Customer class usage during edd_insert_payment
+* Fix: Correct error in the System Info browser detection
 
 = 2.5.16, May 18, 2016 =
 
