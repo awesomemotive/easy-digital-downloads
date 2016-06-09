@@ -1525,46 +1525,31 @@ add_action( 'init', 'edd_apply_preset_discount', 999 );
  * @return void
 */
 function edd_discount_status_cleanup() {
-	// We only want to get 50 active discounts to check their status
-	$cron_discount_number = apply_filters( 'edd_discount_status_cleanup_count', 50 );
+	// We only want to get 25 active discounts to check their status per step here
+	$cron_discount_number = apply_filters( 'edd_discount_status_cleanup_count', 25 );
 
+	// start by getting the last 25 that hit their maximum usage
 	$args = array(
 		'post_status' => array( 'active' ),
 		'number'      => $cron_discount_number,
 		'order'       => 'ASC',
 		'meta_query'  => array(
-			'relation' => 'OR',
+			'relation' => 'AND',
 			array(
-				'relation' => 'AND',
-				array(
-					'key'     => '_edd_discount_expiration',
-					'value'   => '',
-					'compare' => '!=',
-				),
-				array(
-					'key'     => '_edd_discount_expiration',
-					'value'   => current_time( 'mysql' ),
-					'compare' => '<',
-				),
+				'key'     => '_edd_discount_uses',
+				'value'   => 'mt1.meta_value',
+				'compare' => '>=',
+				'type'    => 'NUMERIC',
 			),
 			array(
-				'relation' => 'AND',
-				array(
-					'key'     => '_edd_discount_uses',
-					'value'   => 'mt1.meta_value',
-					'compare' => '>=',
-					'type'    => 'NUMERIC',
-				),
-				array(
-					'key'     => '_edd_discount_max_uses',
-					'value'   => array( '', 0 ),
-					'compare' => 'NOT IN',
-				),
-				array(
-					'key'     => '_edd_discount_uses',
-					'value'   => '',
-					'compare' => '!=',
-				),
+				'key'     => '_edd_discount_max_uses',
+				'value'   => array( '', 0 ),
+				'compare' => 'NOT IN',
+			),
+			array(
+				'key'     => '_edd_discount_uses',
+				'value'   => '',
+				'compare' => '!=',
 			),
 		),
 	);
@@ -1574,19 +1559,39 @@ function edd_discount_status_cleanup() {
 	if ( $discounts ) {
 		foreach ( $discounts as $discount ) {
 
-			// post_status is always 'inactive' for expired and inactive
 			edd_update_discount_status( $discount->ID, 'inactive' );
+			update_post_metam( $discount->ID, '_edd_discount_status', 'inactive' );
 
-			// If it's at max use the postmeta _edd_discount_status will be 'inactive'
-			if ( edd_is_discount_maxed_out( $discount->ID ) ) {
-				update_post_meta( $discount->ID, '_edd_discount_status', 'inactive' );
-				continue;
-			}
+		}
+	}
 
-			// If it's past expiration but not at max use _edd_discount_status will be 'expired'
-			if ( edd_is_discount_expired( $discount->ID ) ) {
-				update_post_meta( $discount->ID, '_edd_discount_status', 'expired' );
-			}
+	// Now lets look at the last 25 that hit their expiration without hitting their limit
+	$args = array(
+		'post_status' => array( 'active' ),
+		'number'      => $cron_discount_number,
+		'order'       => 'ASC',
+		'meta_query'  => array(
+			'relation' => 'AND',
+			array(
+				'key'     => '_edd_discount_expiration',
+				'value'   => '',
+				'compare' => '!=',
+			),
+			array(
+				'key'     => '_edd_discount_expiration',
+				'value'   => current_time( 'mysql' ),
+				'compare' => '<',
+			),
+		),
+	);
+
+	$discounts = edd_get_discounts( $args );
+
+	if ( $discounts ) {
+		foreach ( $discounts as $discount ) {
+
+			edd_update_discount_status( $discount->ID, 'inactive' );
+			update_post_metam( $discount->ID, '_edd_discount_status', 'expired' );
 
 		}
 	}
