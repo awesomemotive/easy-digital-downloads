@@ -141,7 +141,7 @@ class EDD_Batch_Import {
 	 */
 	public function get_first_row() {
 
-		return array_map( array( $this, 'trim_preview' ), next( $this->csv->data ) );
+		return array_map( array( $this, 'trim_preview' ), current( $this->csv->data ) );
 
 	}
 
