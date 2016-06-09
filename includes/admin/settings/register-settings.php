@@ -241,6 +241,8 @@ function edd_get_registered_settings() {
 						'name' => '<h3>' . __( 'Page Settings', 'easy-digital-downloads' ) . '</h3>',
 						'desc' => '',
 						'type' => 'header',
+						'tooltip_title' => __( 'Page Settings', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'Easy Digital Downloads uses the pages below for handling the display of checkout, purchase confirmation, purchase history, and purchase failures. If pages are deleted or removed in some way, they can be recreated manually from the Pages menu. When re-creating the pages, enter the shortcode shown in the page content area.','easy-digital-downloads' ),
 					),
 					'purchase_page' => array(
 						'id'          => 'purchase_page',
@@ -263,7 +265,7 @@ function edd_get_registered_settings() {
 					'failure_page' => array(
 						'id'          => 'failure_page',
 						'name'        => __( 'Failed Transaction Page', 'easy-digital-downloads' ),
-						'desc'        => __( 'This is the page buyers are sent to if their transaction is cancelled or fails', 'easy-digital-downloads' ),
+						'desc'        => __( 'This is the page buyers are sent to if their transaction is cancelled or fails.', 'easy-digital-downloads' ),
 						'type'        => 'select',
 						'options'     => edd_get_pages(),
 						'chosen'      => true,
@@ -272,7 +274,7 @@ function edd_get_registered_settings() {
 					'purchase_history_page' => array(
 						'id'          => 'purchase_history_page',
 						'name'        => __( 'Purchase History Page', 'easy-digital-downloads' ),
-						'desc'        => __( 'This page shows a complete purchase history for the current user, including download links', 'easy-digital-downloads' ),
+						'desc'        => __( 'This page shows a complete purchase history for the current user, including download links. The [purchase_history] short code should be on this page.', 'easy-digital-downloads' ),
 						'type'        => 'select',
 						'options'     => edd_get_pages(),
 						'chosen'      => true,
@@ -367,12 +369,19 @@ function edd_get_registered_settings() {
 						'name' => '<h3>' . __( 'API Settings', 'easy-digital-downloads' ) . '</h3>',
 						'desc' => '',
 						'type' => 'header',
+						'tooltip_title' => __( 'API Settings', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'The Easy Digital Downloads REST API provides access to store data through our API endpoints. Enable this setting if you would like all user accounts to be able to generate their own API keys.', 'easy-digital-downloads' ),
 					),
 					'api_allow_user_keys' => array(
 						'id'   => 'api_allow_user_keys',
 						'name' => __( 'Allow User Keys', 'easy-digital-downloads' ),
 						'desc' => __( 'Check this box to allow all users to generate API keys. Users with the \'manage_shop_settings\' capability are always allowed to generate keys.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
+					),
+					'api_help' => array(
+						'id'   => 'api_help',
+						'desc' => sprintf( __( 'Visit the <a href="%s" target="_blank">REST API documentation</a> for further information.', 'easy-digital-downloads' ), 'http://docs.easydigitaldownloads.com/article/1131-edd-rest-api-introduction' ),
+						'type' => 'descriptive_text',
 					),
 				),
 			)
@@ -579,6 +588,12 @@ function edd_get_registered_settings() {
 						'id'   => 'tax_settings',
 						'name' => '<h3>' . __( 'Tax Settings', 'easy-digital-downloads' ) . '</h3>',
 						'type' => 'header',
+					),
+					'tax_help' => array(
+						'id'   => 'tax_help',
+						'name' => __( 'Need help?', 'easy-digital-downloads' ),
+						'desc' => sprintf( __( 'Visit the <a href="%s" target="_blank">Tax setup documentation</a> for further information. If you need VAT support, there are options listed on the documentation page.', 'easy-digital-downloads' ), 'http://docs.easydigitaldownloads.com/article/238-tax-settings' ),
+						'type' => 'descriptive_text',
 					),
 					'enable_taxes' => array(
 						'id'            => 'enable_taxes',
