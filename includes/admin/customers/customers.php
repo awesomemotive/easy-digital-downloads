@@ -333,7 +333,10 @@ function edd_customers_view( $customer ) {
 
 		<?php do_action( 'edd_customer_before_tables', $customer ); ?>
 
-		<h3><?php _e( 'Customer Emails', 'easy-digital-downloads' ); ?></h3>
+		<h3>
+			<?php _e( 'Customer Emails', 'easy-digital-downloads' ); ?>
+			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( 'This customer can use any of the emails listed here when making new purchases.', 'easy-digital-downloads' ); ?>"></span>
+		</h3>
 		<?php
 			$primary_email     = $customer->email;
 			$additional_emails = $customer->emails;

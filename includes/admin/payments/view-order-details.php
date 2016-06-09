@@ -166,6 +166,7 @@ $currency_code  = $payment->currency;
 									<?php do_action( 'edd_view_order_details_resend_receipt_before', $payment_id ); ?>
 										<?php if( edd_is_payment_complete( $payment_id ) ) : ?>
 											<a href="<?php echo add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $payment_id ) ); ?>" id="edd-resend-receipt" class="button-secondary alignleft"><?php _e( 'Resend Receipt', 'easy-digital-downloads' ); ?></a>
+											<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Resend Receipt</strong>: This will send a new copy of the purchase receipt to the customer&#8217;s email address. If download URLs are included on the receipt, new file download URLs will be included with the receipt.', 'easy-digital-downloads' ); ?>"></span>
 										<?php endif; ?>
 										<div class="clear"></div>
 										<?php do_action( 'edd_view_order_details_resend_receipt_after', $payment_id ); ?>
@@ -221,6 +222,7 @@ $currency_code  = $payment->currency;
 												<span class="label"><i data-code="f316" class="dashicons dashicons-download"></i></span>&nbsp;
 												<input type="checkbox" name="edd-unlimited-downloads" id="edd_unlimited_downloads" value="1"<?php checked( true, $unlimited, true ); ?>/>
 												<label class="description" for="edd_unlimited_downloads"><?php _e( 'Unlimited file downloads', 'easy-digital-downloads' ); ?></label>
+												<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Unlimited file downloads</strong>: checking this box will override all other file download limits for this purchase, granting the customer unliimited downloads of all files included on the purchase.', 'easy-digital-downloads' ); ?>"></span>
 											</p>
 										</div>
 
