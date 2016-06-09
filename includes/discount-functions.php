@@ -1596,7 +1596,9 @@ function edd_discount_status_cleanup() {
 		foreach ( $discounts as $discount ) {
 
 			$discount_ids_to_update[] = (int) $discount->ID;
-			$needs_expired_meta[] = (int) $discount->ID;
+			if ( ! in_array( $discount->ID, $needs_inactive_meta ) ) {
+				$needs_expired_meta[] = (int) $discount->ID;
+			}
 
 		}
 	}
