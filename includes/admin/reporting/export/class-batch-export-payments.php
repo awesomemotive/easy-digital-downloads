@@ -40,6 +40,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			'id'           => __( 'ID',   'easy-digital-downloads' ), // unaltered payment ID (use for querying)
 			'seq_id'       => __( 'Payment Number',   'easy-digital-downloads' ), // sequential payment ID
 			'email'        => __( 'Email', 'easy-digital-downloads' ),
+			'customer_id'  => __( 'Customer ID', 'easy-digital-downloads' ),
 			'first'        => __( 'First Name', 'easy-digital-downloads' ),
 			'last'         => __( 'Last Name', 'easy-digital-downloads' ),
 			'address1'     => __( 'Address', 'easy-digital-downloads' ),
@@ -59,6 +60,9 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			'key'          => __( 'Purchase Key', 'easy-digital-downloads' ),
 			'date'         => __( 'Date', 'easy-digital-downloads' ),
 			'user'         => __( 'User', 'easy-digital-downloads' ),
+			'currency'     => __( 'Currency', 'easy-digital-downloads' ),
+			'ip'           => __( 'IP Address', 'easy-digital-downloads' ),
+			'mode'         => __( 'Mode (Live|Test)', 'easy-digital-downloads' ),
 			'status'       => __( 'Status', 'easy-digital-downloads' )
 		);
 
@@ -89,7 +93,9 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 		$args = array(
 			'number'   => 30,
 			'page'     => $this->step,
-			'status'   => $this->status
+			'status'   => $this->status,
+			'order'    => 'ASC',
+			'orderby'  => 'date'
 		);
 
 		if( ! empty( $this->start ) || ! empty( $this->end ) ) {
@@ -135,6 +141,8 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 							$price = edd_get_download_final_price( $id, $user_info, $price_override );
 						}
 
+						$download_tax = isset( $download['tax'] ) ? $download['tax'] : 0;
+
 						/* Set up verbose product column */
 
 						$products .= html_entity_decode( get_the_title( $id ) );
@@ -173,7 +181,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 						}
 
 						/* Set up raw products column - Nothing but product names */
-						$products_raw .= html_entity_decode( get_the_title( $id ) );
+						$products_raw .= html_entity_decode( get_the_title( $id ) ) . '|' . $price . '{' . $download_tax . '}';
 						if ( $key != ( count( $downloads ) -1 ) ) {
 
 							$products_raw .= ' / ';
@@ -192,6 +200,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 					'id'           => $payment->ID,
 					'seq_id'       => edd_get_payment_number( $payment->ID ),
 					'email'        => $payment_meta['email'],
+					'customer_id'  => edd_get_payment_customer_id( $payment->ID ),
 					'first'        => $user_info['first_name'],
 					'last'         => $user_info['last_name'],
 					'address1'     => isset( $user_info['address']['line1'] )   ? $user_info['address']['line1']   : '',
@@ -211,6 +220,9 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 					'key'          => $payment_meta['key'],
 					'date'         => $payment->post_date,
 					'user'         => $user ? $user->display_name : __( 'guest', 'easy-digital-downloads' ),
+					'currency'     => edd_get_payment_currency_code( $payment->ID ),
+					'ip'           => edd_get_payment_user_ip( $payment->ID ),
+					'mode'         => edd_get_payment_meta( $payment->ID, '_edd_payment_mode', true ),
 					'status'       => edd_get_payment_status( $payment, true )
 				);
 
