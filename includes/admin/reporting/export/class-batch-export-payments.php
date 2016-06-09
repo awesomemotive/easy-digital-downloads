@@ -61,6 +61,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			'user'         => __( 'User', 'easy-digital-downloads' ),
 			'currency'     => __( 'Currency', 'easy-digital-downloads' ),
 			'ip'           => __( 'IP Address', 'easy-digital-downloads' ),
+			'mode'         => __( 'Mode (Live|Test)', 'easy-digital-downloads' ),
 			'status'       => __( 'Status', 'easy-digital-downloads' )
 		);
 
@@ -215,6 +216,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 					'user'         => $user ? $user->display_name : __( 'guest', 'easy-digital-downloads' ),
 					'currency'     => edd_get_payment_currency_code( $payment->ID ),
 					'ip'           => edd_get_payment_user_ip( $payment->ID ),
+					'mode'         => edd_get_payment_meta( $payment->ID, '_edd_payment_mode', true ),
 					'status'       => edd_get_payment_status( $payment, true )
 				);
 
