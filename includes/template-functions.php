@@ -250,13 +250,27 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 	$type   = edd_single_price_option_mode( $download_id ) ? 'checkbox' : 'radio';
 	$mode   = edd_single_price_option_mode( $download_id ) ? 'multi' : 'single';
 	$schema = edd_add_schema_microdata() ? ' itemprop="offers" itemscope itemtype="http://schema.org/Offer"' : '';
+	
+	//Set the default classes string
+	$css_classes_string = NULL;
+	
+	//Filter the class names for the edd_price_options div
+	$css_classes_array = apply_filters( 'edd_price_options_classes', array(
+		'edd_price_options',
+		'edd_' . esc_attr( $mode ) . '_mode'
+	), $download_id );
+	
+	//Sanitize those class names and form them into a string
+	foreach( $css_classes_array as $css_class ){
+		$css_classes_string .= sanitize_html_class( $css_class ) . ' ';
+	}
 
 	if ( edd_item_in_cart( $download_id ) && ! edd_single_price_option_mode( $download_id ) ) {
 		return;
 	}
 
 	do_action( 'edd_before_price_options', $download_id ); ?>
-	<div class="edd_price_options edd_<?php echo esc_attr( $mode ); ?>_mode">
+	<div class="<?php echo rtrim( $css_classes_string ); ?>">
 		<ul>
 			<?php
 			if ( $prices ) :
