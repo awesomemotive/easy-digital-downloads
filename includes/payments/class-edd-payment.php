@@ -540,7 +540,7 @@ final class EDD_Payment {
 			$customer = new stdClass;
 
 			if ( did_action( 'edd_pre_process_purchase' ) && is_user_logged_in() ) {
-				$customer  = new EDD_customer( get_current_user_id(), true );
+				$customer  = new EDD_Customer( get_current_user_id(), true );
 			}
 
 			if ( empty( $customer->id ) ) {
