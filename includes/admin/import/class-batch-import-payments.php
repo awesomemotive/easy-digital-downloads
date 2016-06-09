@@ -346,10 +346,15 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 		$payment->save();
 
+
 		// The status has to be set after payment is created to ensure status update properly
 		if( ! empty( $this->field_mapping['status'] ) && ! empty( $row[ $this->field_mapping['status'] ] ) ) {
 
 			$payment->status = strtolower( sanitize_text_field( $row[ $this->field_mapping['status'] ] ) );
+
+		} else {
+
+			$payment->status = 'complete';
 
 		}
 
