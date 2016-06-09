@@ -92,7 +92,9 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 		$args = array(
 			'number'   => 30,
 			'page'     => $this->step,
-			'status'   => $this->status
+			'status'   => $this->status,
+			'order'    => 'ASC',
+			'orderby'  => 'date'
 		);
 
 		if( ! empty( $this->start ) || ! empty( $this->end ) ) {
