@@ -1525,8 +1525,13 @@ add_action( 'init', 'edd_apply_preset_discount', 999 );
  * @return void
 */
 function edd_discount_status_cleanup() {
+	global $wpdb;
+
 	// We only want to get 25 active discounts to check their status per step here
 	$cron_discount_number = apply_filters( 'edd_discount_status_cleanup_count', 25 );
+	$discount_ids_to_update = array();
+	$needs_inactive_meta    = array();
+	$needs_expired_meta     = array();
 
 	// start by getting the last 25 that hit their maximum usage
 	$args = array(
@@ -1559,8 +1564,8 @@ function edd_discount_status_cleanup() {
 	if ( $discounts ) {
 		foreach ( $discounts as $discount ) {
 
-			edd_update_discount_status( $discount->ID, 'inactive' );
-			update_post_meta( $discount->ID, '_edd_discount_status', 'inactive' );
+			$discount_ids_to_update[] = (int) $discount->ID;
+			$needs_inactive_meta[] = (int) $discount->ID;
 
 		}
 	}
@@ -1590,11 +1595,29 @@ function edd_discount_status_cleanup() {
 	if ( $discounts ) {
 		foreach ( $discounts as $discount ) {
 
-			edd_update_discount_status( $discount->ID, 'inactive' );
-			update_post_meta( $discount->ID, '_edd_discount_status', 'expired' );
+			$discount_ids_to_update[] = (int) $discount->ID;
+			$needs_expired_meta[] = (int) $discount->ID;
 
 		}
 	}
+
+	$discount_ids_to_update = array_unique( $discount_ids_to_update );
+	$discount_ids_string    = implode( "','", $discount_ids_to_update );
+	$sql = "UPDATE $wpdb->posts SET post_status = 'inactive' WHERE ID IN ($discount_ids_string)";
+	var_dump($sql);
+	//$wpdb->query( $sql );
+
+	$needs_inactive_meta = array_unique( $needs_inactive_meta );
+	$inactive_ids = implode( "','", $needs_inactive_meta );
+	$sql = "UPDATE $wpdb->postmeta SET meta_value = 'inactive' WHERE meta_key = '_edd_discount_status' AND post_id IN ($inactive_ids)";
+	var_dump($sql);
+	//$wpdb->query( $sql );
+
+	$needs_expired_meta = array_unique( $needs_expired_meta );
+	$expired_ids = implode( "','", $needs_expired_meta );
+	$sql = "UPDATE $wpdb->postmeta SET meta_value = 'inactive' WHERE meta_key = '_edd_discount_status' AND post_id IN ($expired_ids)";
+	var_dump($sql);
+	//$wpdb->query( $sql );
 
 }
 add_action( 'edd_daily_scheduled_events', 'edd_discount_status_cleanup' );
