@@ -1560,7 +1560,7 @@ function edd_discount_status_cleanup() {
 		foreach ( $discounts as $discount ) {
 
 			edd_update_discount_status( $discount->ID, 'inactive' );
-			update_post_metam( $discount->ID, '_edd_discount_status', 'inactive' );
+			update_post_meta( $discount->ID, '_edd_discount_status', 'inactive' );
 
 		}
 	}
@@ -1591,7 +1591,7 @@ function edd_discount_status_cleanup() {
 		foreach ( $discounts as $discount ) {
 
 			edd_update_discount_status( $discount->ID, 'inactive' );
-			update_post_metam( $discount->ID, '_edd_discount_status', 'expired' );
+			update_post_meta( $discount->ID, '_edd_discount_status', 'expired' );
 
 		}
 	}
