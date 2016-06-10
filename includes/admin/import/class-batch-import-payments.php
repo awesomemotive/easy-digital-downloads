@@ -409,7 +409,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 			// Now compare customer records. If they don't match, customer_id will be stored in meta and we will use the customer that matches the email
 
-			if( empty( $customer_by_id ) || $customer_by_id->id !== $customer_by_email->id ) {
+			if( ( empty( $customer_by_id ) || $customer_by_id->id !== $customer_by_email->id ) && ! empty( $customer_by_email ) )  {
 
 				$customer = $customer_by_email;
 
@@ -513,7 +513,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 				$d   = (array) explode( '|', $download );
 				preg_match( '/\{(\d+(\.\d+|\d+))\}/', $d[1], $matches );
 				$price = substr( $d[1], 0, strpos( $d[1], '{' ) );
-				$tax   = $matches[1];
+				$tax   = isset( $matches[1] ) ? $matches[1] : 0;
 
 				$d_array[] = array(
 					'download' => $d[0],
