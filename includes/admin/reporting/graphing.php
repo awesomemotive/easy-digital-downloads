@@ -271,7 +271,7 @@ function edd_reports_graph() {
 					$graph->set( 'multiple_y_axes', true );
 					$graph->display();
 
-					if( 'this_month' == $dates['range'] ) {
+					if( ! empty( $dates['range'] ) && 'this_month' == $dates['range'] ) {
 						$estimated = edd_estimated_monthly_stats( $include_taxes );
 					}
 					?>
@@ -289,7 +289,7 @@ function edd_reports_graph() {
 					</p>
 					<p class="edd_graph_totals"><strong><?php _e( 'Total sales for period shown: ', 'easy-digital-downloads' ); echo edd_format_amount( $sales_totals, false ); ?></strong></p>
 
-					<?php if( 'this_month' == $dates['range'] ) : ?>
+					<?php if( ! empty( $dates['range'] ) && 'this_month' == $dates['range'] ) : ?>
 						<p class="edd_graph_totals">
 							<strong>
 								<?php
