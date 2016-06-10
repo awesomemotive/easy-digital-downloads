@@ -164,7 +164,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 						if ( isset( $downloads[ $key ]['item_number'] ) && isset( $downloads[ $key ]['item_number']['options'] ) ) {
 							$price_options = $downloads[ $key ]['item_number']['options'];
 
-							if ( ! is_null( $price_options['price_id'] ) ) {
+							if ( isset( $price_options['price_id'] ) && ! is_null( $price_options['price_id'] ) ) {
 								$products .= html_entity_decode( edd_get_price_option_name( $id, $price_options['price_id'], $payment->ID ) ) . ' - ';
 							}
 						}
