@@ -81,6 +81,27 @@ function edd_add_ons_get_feed( $tab = 'popular' ) {
 			$url = add_query_arg( array( 'display' => $tab ), $url );
 		}
 
+		// Get all installed plugins
+		$plugins = get_plugins();
+		$edd_addons = array();
+		if ( is_array( $plugins ) ) {
+			foreach ( $plugins as $plugin => $data ) {
+				// If it is an EDD extension, add it to an array
+				if ( strrpos( $plugin, 'edd' ) ) {
+					$trim = strlen( $plugin ) - strcspn( $plugin, '/' );
+					$string = substr( $plugin, 0, - $trim );
+					$edd_addons[] = $string;
+				}
+			}
+		}
+		// Convert the array to a comma separated list of strings
+		$edd_addons = implode( ',', $edd_addons );
+
+		// Add the directory names for each EDD extension that is installed to the 'exclude' query arg
+		if ( $edd_addons ) {
+			$url = add_query_arg( array( 'exclude' => $edd_addons ), $url );
+		}
+		
 		$feed = wp_remote_get( esc_url_raw( $url ), array( 'sslverify' => false ) );
 
 		if ( ! is_wp_error( $feed ) ) {
