@@ -311,7 +311,7 @@ class EDD_API {
 		$this->override = false;
 
 		// Make sure we have both user and api key
-		if ( ! empty( $wp_query->query_vars['edd-api'] ) && ( $wp_query->query_vars['edd-api'] != 'products' || ! empty( $wp_query->query_vars['token'] ) ) ) {
+		if ( ! empty( $wp_query->query_vars['edd-api'] ) && ( ! $this->is_public_query() || ! empty( $wp_query->query_vars['token'] ) ) ) {
 
 			if ( empty( $wp_query->query_vars['token'] ) || empty( $wp_query->query_vars['key'] ) ) {
 				$this->missing_auth();
@@ -337,11 +337,29 @@ class EDD_API {
 					$this->invalid_auth();
 				}
 			}
-		} elseif ( ! empty( $wp_query->query_vars['edd-api'] ) && $wp_query->query_vars['edd-api'] == 'products' ) {
+		} elseif ( ! empty( $wp_query->query_vars['edd-api'] ) && $this->is_public_query() ) {
 			$this->is_valid_request = true;
 			$wp_query->set( 'key', 'public' );
 		}
 
+	}
+
+	/**
+	 * Return whether this is a public query. 
+	 *
+	 * @access private
+	 * @global object $wp_query WordPress Query
+	 * @since version
+	 * @return boolean   
+	 */
+	private function is_public_query() {
+		global $wp_query;
+
+	    $public_modes = apply_filters( 'edd_api_public_query_modes', array(
+	        'products'
+	    ) );
+
+	    return in_array( $wp_query->query_vars['edd-api'], $public_modes );
 	}
 
 	/**
