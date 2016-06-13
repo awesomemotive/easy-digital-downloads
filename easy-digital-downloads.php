@@ -5,7 +5,7 @@
  * Description: The easiest way to sell digital products with WordPress.
  * Author: Pippin Williamson and Company
  * Author URI: https://easydigitaldownloads.com
- * Version: 2.5.16
+ * Version: 2.6-beta2
  * Text Domain: easy-digital-downloads
  * Domain Path: languages
  *
@@ -25,7 +25,7 @@
  * @package EDD
  * @category Core
  * @author Pippin Williamson
- * @version 2.5.16
+ * @version 2.6-beta2
  */
 
 // Exit if accessed directly.
@@ -195,7 +195,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '2.5.16' );
+			define( 'EDD_VERSION', '2.6-beta2' );
 		}
 
 		// Plugin Folder Path.
@@ -315,6 +315,8 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/contextual-help.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-actions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-codes.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/import/import-actions.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/import/import-functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/actions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/payments-history.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/contextual-help.php';

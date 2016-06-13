@@ -53,11 +53,72 @@ if ( is_user_logged_in() ):
 			</p>
 			<?php do_action( 'edd_profile_editor_after_name' ); ?>
 			<p>
-				<label for="edd_email"><?php _e( 'Email Address', 'easy-digital-downloads' ); ?></label>
-				<input name="edd_email" id="edd_email" class="text edd-input required" type="email" value="<?php echo esc_attr( $current_user->user_email ); ?>" />
+				<label for="edd_email"><?php _e( 'Primary Email Address', 'easy-digital-downloads' ); ?></label>
+				<?php $customer = new EDD_Customer( $user_id, true ); ?>
+				<?php if ( $customer->id > 0 ) : ?>
+
+					<?php if ( 1 === count( $customer->emails ) ) : ?>
+						<input name="edd_email" id="edd_email" class="text edd-input required" type="email" value="<?php echo esc_attr( $customer->email ); ?>" />
+					<?php else: ?>
+						<?php
+							$emails           = array();
+							$customer->emails = array_reverse( $customer->emails, true );
+
+							foreach ( $customer->emails as $email ) {
+								$emails[ $email ] = $email;
+							}
+
+							$email_select_args = array(
+								'options'          => $emails,
+								'name'             => 'edd_email',
+								'id'               => 'edd_email',
+								'selected'         => $customer->email,
+								'show_option_none' => false,
+								'show_option_all'  => false,
+							);
+
+							echo EDD()->html->select( $email_select_args );
+						?>
+					<?php endif; ?>
+				<?php else: ?>
+					<input name="edd_email" id="edd_email" class="text edd-input required" type="email" value="<?php echo esc_attr( $current_user->user_email ); ?>" />
+				<?php endif; ?>
+
 				<?php do_action( 'edd_profile_editor_email' ); ?>
+
 			</p>
+
+			<?php if ( $customer->id > 0 && count( $customer->emails ) > 1 ) : ?>
+			<div>
+				<label for="edd_emails"><?php _e( 'Additional Email Addresses', 'easy-digital-downloads' ); ?></label>
+				<ul class="edd-profile-emails">
+				<?php foreach ( $customer->emails as $email ) : ?>
+					<?php if ( $email === $customer->email ) { continue; } ?>
+					<li class="edd-profile-email">
+						<?php echo $email; ?>
+						<span class="actions">
+							<?php
+								$remove_url = wp_nonce_url(
+									add_query_arg(
+										array(
+											'email'      => $email,
+											'edd_action' => 'profile-remove-email',
+											'redirect'   => esc_url( edd_get_current_page_url() ),
+										)
+									),
+									'edd-remove-customer-email'
+								);
+							?>
+							<a href="<?php echo $remove_url ?>" class="delete"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></a>
+						</span>
+					</li>
+				<?php endforeach; ?>
+				</ul>
+			</div>
+			<?php endif; ?>
+
 			<?php do_action( 'edd_profile_editor_after_email' ); ?>
+
 			<span id="edd_profile_billing_address_label"><legend><?php _e( 'Change your Billing Address', 'easy-digital-downloads' ); ?></legend></span>
 			<p id="edd_profile_billing_address_wrap">
 				<label for="edd_address_line1"><?php _e( 'Line 1', 'easy-digital-downloads' ); ?></label>

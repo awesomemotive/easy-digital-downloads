@@ -51,6 +51,14 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	public $total = 0;
 
 	/**
+	 * The arguments for the data set
+	 *
+	 * @var array
+	 * @since  2.6
+	 */
+	public $args = array();
+
+	/**
 	 * Get things started
 	 *
 	 * @since 1.5
@@ -169,7 +177,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	public function get_columns() {
 		$columns = array(
 			'name'          => __( 'Name', 'easy-digital-downloads' ),
-			'email'         => __( 'Email', 'easy-digital-downloads' ),
+			'email'         => __( 'Primary Email', 'easy-digital-downloads' ),
 			'num_purchases' => __( 'Purchases', 'easy-digital-downloads' ),
 			'amount_spent'  => __( 'Total Spent', 'easy-digital-downloads' ),
 			'date_created'  => __( 'Date Created', 'easy-digital-downloads' ),
@@ -264,7 +272,8 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			$args['name']  = $search;
 		}
 
-		$customers = EDD()->customers->get_customers( $args );
+		$this->args = $args;
+		$customers  = EDD()->customers->get_customers( $args );
 
 		if ( $customers ) {
 
@@ -308,7 +317,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 		$this->items = $this->reports_data();
 
-		$this->total = edd_count_total_customers();
+		$this->total = edd_count_total_customers( $this->args );
 
 		$this->set_pagination_args( array(
 			'total_items' => $this->total,

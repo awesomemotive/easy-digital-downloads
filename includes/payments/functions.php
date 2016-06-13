@@ -371,6 +371,7 @@ function edd_count_payments( $args = array() ) {
 
 	$defaults = array(
 		'user'       => null,
+		'customer'   => null,
 		's'          => null,
 		'start-date' => null,
 		'end-date'   => null,
@@ -400,6 +401,13 @@ function edd_count_payments( $args = array() ) {
 				AND m.meta_key = '_edd_payment_user_{$field}'
 				AND m.meta_value = '{$args['user']}'";
 		}
+
+	} elseif ( ! empty( $args['customer'] ) ) {
+
+		$join = "LEFT JOIN $wpdb->postmeta m ON (p.ID = m.post_id)";
+		$where .= "
+			AND m.meta_key = '_edd_payment_customer_id'
+			AND m.meta_value = '{$args['customer']}'";
 
 	// Count payments for a search
 	} elseif( ! empty( $args['s'] ) ) {
