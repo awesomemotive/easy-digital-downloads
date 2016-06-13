@@ -30,9 +30,11 @@ function edd_reports_graph() {
 			break;
 		case 'last_year' :
 		case 'this_year' :
+			$day_by_day = false;
+			break;
 		case 'last_quarter' :
 		case 'this_quarter' :
-			$day_by_day = false;
+			$day_by_day = true;
 			break;
 		case 'other' :
 			if( $dates['m_end'] - $dates['m_start'] >= 2 || ( $dates['year_end'] > $dates['year'] && ( $dates['m_start'] - $dates['m_end'] ) != 11 ) ) {
@@ -180,7 +182,7 @@ function edd_reports_graph() {
 		$sales_data    = array();
 		$earnings_data = array();
 
-		// When using 2 months or smaller as the custom range, show each day individually on the graph
+		// When using 3 months or smaller as the custom range, show each day individually on the graph
 		if ( $day_by_day ) {
 
 			foreach ( $temp_data[ 'sales' ] as $year => $months ) {
@@ -195,7 +197,7 @@ function edd_reports_graph() {
 
 			foreach ( $temp_data[ 'earnings' ] as $year => $months ) {
 				foreach( $months as $month => $dates ) {
-					foreach ( $dates as $day => $sales ) {
+					foreach ( $dates as $day => $earnings ) {
 						$date         = mktime( 0, 0, 0, $month, $day, $year ) * 1000;
 						$earnings_data[] = array( $date, $earnings );
 					}
@@ -203,7 +205,7 @@ function edd_reports_graph() {
 				}
 			}
 
-		// When showing more than 2 months of results, group them by month, by the first (except for the last month, group on the last day of the month selected)
+		// When showing more than 3 months of results, group them by month, by the first (except for the last month, group on the last day of the month selected)
 		} else {
 
 			foreach ( $temp_data[ 'sales' ] as $year => $months ) {
