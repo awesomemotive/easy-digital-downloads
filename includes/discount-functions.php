@@ -1207,9 +1207,10 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
  *
  * @since 1.9
  * @param array $item Cart item array
+ * @param bool|string $discount False to use the cart discounts or a string to check with a discount code
  * @return float The discounted amount
  */
-function edd_get_cart_item_discount_amount( $item = array() ) {
+function edd_get_cart_item_discount_amount( $item = array(), $discount = false ) {
 
 	global $edd_is_last_cart_item, $edd_flat_discount_total;
 
@@ -1231,8 +1232,7 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 	$price            = edd_get_cart_item_price( $item['id'], $item['options'] );
 	$discounted_price = $price;
 
-	// Retrieve all discounts applied to the cart
-	$discounts = edd_get_cart_discounts();
+	$discounts = false === $discount ? edd_get_cart_discounts() : array( $discount );
 
 	if( $discounts ) {
 
@@ -1256,7 +1256,7 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 				foreach ( $reqs as $download_id ) {
 
 					if ( $download_id == $item['id'] && ! in_array( $item['id'], $excluded_products ) ) {
-		
+
 						$discounted_price -= $price - edd_get_discounted_amount( $discount, $price );
 
 					}
@@ -1299,7 +1299,7 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 					} else {
 
 						$discounted_price -= $price - edd_get_discounted_amount( $discount, $price );
-					
+
 					}
 
 				}

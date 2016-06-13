@@ -30,6 +30,8 @@
 				<file>./includes/admin/tools/class-edd-tools-recount-single-customer-stats.php</file>
 				<file>./includes/admin/tools/class-edd-tools-recount-store-earnings.php</file>
 				<file>./includes/admin/tools/class-edd-tools-reset-stats.php</file>
+				<file>./includes/admin/import/class-batch-import-downloads.php</file>
+				<file>./includes/admin/import/class-batch-import-payments.php</file>
 				<file>./includes/class-edd-cli.php</file>
 				<directory suffix=".php">./includes/admin/reporting/export</directory>
 				<directory>./includes/libraries/</directory>

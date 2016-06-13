@@ -173,7 +173,10 @@ function edd_load_admin_scripts( $hook ) {
 	wp_register_script( 'jquery-chosen', $js_dir . 'chosen.jquery' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
 	wp_enqueue_script( 'jquery-chosen' );
 
+	wp_enqueue_script( 'jquery-form' );
+
 	$admin_deps = array();
+
 	if ( ! edd_is_admin_page( $hook, 'edit' ) && ! edd_is_admin_page( $hook, 'new' ) ) {
 		$admin_deps = array( 'jquery', 'inline-edit-post' );
 	} else {
@@ -181,6 +184,7 @@ function edd_load_admin_scripts( $hook ) {
 	}
 
 	wp_register_script( 'edd-admin-scripts', $js_dir . 'admin-scripts' . $suffix . '.js', $admin_deps, EDD_VERSION, false );
+
 	wp_enqueue_script( 'edd-admin-scripts' );
 
 	wp_localize_script( 'edd-admin-scripts', 'edd_vars', array(
@@ -215,7 +219,8 @@ function edd_load_admin_scripts( $hook ) {
 		'batch_export_no_class'   => __( 'You must choose a method.', 'easy-digital-downloads' ),
 		'batch_export_no_reqs'    => __( 'Required fields not completed.', 'easy-digital-downloads' ),
 		'reset_stats_warn'        => __( 'Are you sure you want to reset your store? This process is <strong><em>not reversible</em></strong>. Please be sure you have a recent backup.', 'easy-digital-downloads' ),
-		'search_placeholder'      => sprintf( __( 'Type to search all %s', 'easy-digital-downloads' ), edd_get_label_plural() )
+		'search_placeholder'      => sprintf( __( 'Type to search all %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
+		'unsupported_browser'     => __( 'We are sorry but your browser is not compatible with this kind of file upload. Please upgrade your browser.', 'easy-digital-downloads' )
 	));
 
 	wp_enqueue_style( 'wp-color-picker' );
@@ -235,6 +240,7 @@ function edd_load_admin_scripts( $hook ) {
 
 	wp_enqueue_script( 'jquery-ui-datepicker' );
 	wp_enqueue_script( 'jquery-ui-dialog' );
+	wp_enqueue_script( 'jquery-ui-tooltip' );
 
 	$ui_style = ( 'classic' == get_user_option( 'admin_color' ) ) ? 'classic' : 'fresh';
 	wp_register_style( 'jquery-ui-css', $css_dir . 'jquery-ui-' . $ui_style . $suffix . '.css' );

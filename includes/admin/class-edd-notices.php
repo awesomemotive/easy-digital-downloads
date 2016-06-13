@@ -189,6 +189,21 @@ class EDD_Notices {
 					case 'user-verified' :
 						$notices['updated']['edd-user-verified'] = __( 'User successfully verified', 'easy-digital-downloads' );
 						break;
+					case 'email-added' :
+						$notices['updated']['edd-customer-email-added'] = __( 'Customer email added', 'easy-digital-downloads' );
+						break;
+					case 'email-removed' :
+						$notices['updated']['edd-customer-email-removed'] = __( 'Customer email removed', 'easy-digital-downloads');
+						break;
+					case 'email-remove-failed' :
+						$notices['error']['edd-customer-email-remove-failed'] = __( 'Failed to remove customer email', 'easy-digital-downloads');
+						break;
+					case 'primary-email-updated' :
+						$notices['updated']['edd-customer-primary-email-updated'] = __( 'Primary email updated for customer', 'easy-digital-downloads');
+						break;
+					case 'primary-email-failed' :
+						$notices['error']['edd-customer-primary-email-failed'] = __( 'Failed to set primary email', 'easy-digital-downloads');
+						break;
 				}
 			}
 

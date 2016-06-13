@@ -666,6 +666,21 @@ table#edd_purchase_receipt_products .edd_bundled_product_name {
 	display: inline-block;
 	width: 200px;
 }
+#edd_profile_editor_form .edd-profile-emails {
+	list-style-type: none;
+	display: inline-table;
+	margin-left: 0;
+}
+#edd_profile_editor_form .edd-profile-email {
+	width: auto;
+}
+#edd_profile_editor_form .edd-profile-email .actions {
+	display: none;
+}
+#edd_profile_editor_form .edd-profile-email:hover > span {
+	display: inline-block;
+}
+
 
 
 /* =Alerts
