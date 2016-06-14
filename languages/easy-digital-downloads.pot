@@ -4,14 +4,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 2.6-beta2\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2016-06-09 20:05:05+00:00\n"
+"POT-Creation-Date: 2016-06-14 15:00:40+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "PO-Revision-Date: 2016-MO-DA HO:MI+ZONE\n"
 "Last-Translator: WP-Translations (http://wp-translations.org/)\n"
 "Language-Team: WP-Translations <wpt@wp-translations.org>\n"
-"X-Generator: grunt-wp-i18n 0.5.0\n"
+"X-Generator: grunt-wp-i18n 0.5.4\n"
 "X-Poedit-KeywordsList: "
 "__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
 "attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
@@ -57,7 +57,7 @@ msgstr ""
 #: includes/admin/downloads/dashboard-columns.php:171
 #: includes/admin/import/class-batch-import-downloads.php:65
 #: includes/admin/import/class-batch-import-payments.php:76
-#: includes/admin/import/class-batch-import.php:167
+#: includes/admin/import/class-batch-import.php:159
 #: includes/admin/payments/actions.php:25
 #: includes/admin/payments/actions.php:145
 #: includes/admin/payments/actions.php:291
@@ -80,7 +80,7 @@ msgstr ""
 #: includes/admin/tools/class-edd-tools-recount-single-customer-stats.php:149
 #: includes/admin/tools/class-edd-tools-recount-store-earnings.php:154
 #: includes/admin/tools/class-edd-tools-reset-stats.php:180
-#: includes/admin/tools.php:913 includes/admin/tools.php:919
+#: includes/admin/tools.php:901 includes/admin/tools.php:907
 #: includes/admin/upgrades/upgrade-functions.php:194
 #: includes/admin/upgrades/upgrade-functions.php:510
 #: includes/admin/upgrades/upgrade-functions.php:592
@@ -138,7 +138,7 @@ msgid "Customers"
 msgstr ""
 
 #: includes/admin/admin-pages.php:39
-#: includes/admin/discounts/discount-codes.php:33 includes/admin/tools.php:417
+#: includes/admin/discounts/discount-codes.php:33 includes/admin/tools.php:411
 msgid "Discount Codes"
 msgstr ""
 
@@ -490,7 +490,7 @@ msgstr ""
 #: includes/admin/customers/customer-actions.php:328
 #: includes/admin/customers/customer-actions.php:586
 #: includes/admin/import/import-functions.php:31
-#: includes/admin/import/import-functions.php:106
+#: includes/admin/import/import-functions.php:98
 #: includes/admin/reporting/export/export-actions.php:23
 #: includes/admin/reporting/pdf-reports.php:33
 #: includes/api/class-edd-api.php:1818
@@ -588,14 +588,14 @@ msgstr ""
 #: includes/admin/customers/customers.php:220
 #: includes/admin/reporting/class-export-payments.php:68
 #: includes/admin/reporting/export/class-batch-export-payments.php:48
-#: includes/admin/tools.php:570 includes/checkout/template.php:355
+#: includes/admin/tools.php:564 includes/checkout/template.php:355
 #: templates/shortcode-profile-editor.php:130
 msgid "City"
 msgstr ""
 
 #: includes/admin/customers/customers.php:247
 #: includes/admin/settings/register-settings.php:1828
-#: includes/admin/tools.php:579 includes/checkout/template.php:417
+#: includes/admin/tools.php:573 includes/checkout/template.php:417
 #: templates/shortcode-profile-editor.php:143
 msgid "State / Province"
 msgstr ""
@@ -608,7 +608,7 @@ msgstr ""
 msgid "Customer Name"
 msgstr ""
 
-#: includes/admin/customers/customers.php:258 includes/admin/tools.php:381
+#: includes/admin/customers/customers.php:258 includes/admin/tools.php:375
 msgid "Customer Email"
 msgstr ""
 
@@ -616,7 +616,7 @@ msgstr ""
 msgid "Customer since"
 msgstr ""
 
-#: includes/admin/customers/customers.php:286 includes/admin/tools.php:543
+#: includes/admin/customers/customers.php:286 includes/admin/tools.php:537
 msgid "User ID"
 msgstr ""
 
@@ -755,7 +755,7 @@ msgstr ""
 #: includes/admin/reporting/class-export-payments.php:82
 #: includes/admin/reporting/export/class-batch-export-downloads.php:49
 #: includes/admin/reporting/export/class-batch-export-payments.php:66
-#: includes/admin/tools.php:498
+#: includes/admin/tools.php:492
 msgid "Status"
 msgstr ""
 
@@ -834,8 +834,8 @@ msgstr ""
 #: includes/admin/reporting/class-download-reports-table.php:112
 #: includes/admin/reporting/class-export-earnings.php:64
 #: includes/admin/reporting/export/class-batch-export-downloads.php:59
-#: includes/admin/reporting/graphing.php:210
-#: includes/admin/reporting/graphing.php:479
+#: includes/admin/reporting/graphing.php:257
+#: includes/admin/reporting/graphing.php:591
 #: includes/admin/reporting/pdf-reports.php:206
 #: includes/admin/reporting/reports.php:54
 msgid "Earnings"
@@ -849,12 +849,12 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: includes/admin/dashboard-widgets.php:80
-#: includes/admin/reporting/graphing.php:520 includes/class-edd-stats.php:89
+#: includes/admin/reporting/graphing.php:632 includes/class-edd-stats.php:89
 msgid "Last Month"
 msgstr ""
 
 #: includes/admin/dashboard-widgets.php:105
-#: includes/admin/reporting/graphing.php:515 includes/class-edd-stats.php:84
+#: includes/admin/reporting/graphing.php:627 includes/class-edd-stats.php:84
 msgid "Today"
 msgstr ""
 
@@ -863,8 +863,8 @@ msgstr ""
 #: includes/admin/reporting/class-download-reports-table.php:111
 #: includes/admin/reporting/class-export-earnings.php:63
 #: includes/admin/reporting/export/class-batch-export-downloads.php:58
-#: includes/admin/reporting/graphing.php:211
-#: includes/admin/reporting/graphing.php:480
+#: includes/admin/reporting/graphing.php:258
+#: includes/admin/reporting/graphing.php:592
 #: includes/admin/reporting/logs.php:145
 #: includes/admin/reporting/pdf-reports.php:223
 msgid "Sales"
@@ -876,7 +876,7 @@ msgstr ""
 
 #: includes/admin/dashboard-widgets.php:138
 #: includes/admin/reporting/class-categories-reports-table.php:85
-#: includes/admin/tools.php:804
+#: includes/admin/tools.php:792
 msgid "Total Earnings"
 msgstr ""
 
@@ -1677,7 +1677,7 @@ msgstr ""
 
 #: includes/admin/import/class-batch-import-downloads.php:65
 #: includes/admin/import/class-batch-import-payments.php:76
-#: includes/admin/import/class-batch-import.php:167
+#: includes/admin/import/class-batch-import.php:159
 msgid "You do not have permission to import data."
 msgstr ""
 
@@ -1686,12 +1686,12 @@ msgstr ""
 msgid "Products (Raw)"
 msgstr ""
 
-#: includes/admin/import/class-batch-import-payments.php:565
+#: includes/admin/import/class-batch-import-payments.php:570
 msgid "payments"
 msgstr ""
 
 #: includes/admin/import/import-functions.php:35
-#: includes/admin/import/import-functions.php:110
+#: includes/admin/import/import-functions.php:102
 msgid "Missing import parameters. Import class must be specified."
 msgstr ""
 
@@ -1704,25 +1704,20 @@ msgid "The file you uploaded does not appear to be a CSV file."
 msgstr ""
 
 #: includes/admin/import/import-functions.php:47
-#: includes/admin/import/import-functions.php:114
+#: includes/admin/import/import-functions.php:106
 msgid "Something went wrong during the upload process, please try again."
 msgstr ""
 
 #: includes/admin/import/import-functions.php:60
-#: includes/admin/import/import-functions.php:123
-msgid "Import class does not exist"
-msgstr ""
-
-#: includes/admin/import/import-functions.php:67
-#: includes/admin/import/import-functions.php:131
+#: includes/admin/import/import-functions.php:117
 msgid "You do not have permission to import data"
 msgstr ""
 
-#: includes/admin/import/import-functions.php:157
+#: includes/admin/import/import-functions.php:143
 msgid "No data found for import parameters"
 msgstr ""
 
-#: includes/admin/import/import-functions.php:165
+#: includes/admin/import/import-functions.php:151
 msgid "Import complete! <a href=\"%s\">View imported %s</a>."
 msgstr ""
 
@@ -2003,7 +1998,7 @@ msgstr ""
 #: includes/admin/payments/view-order-details.php:123
 #: includes/admin/reporting/class-export-payments.php:75
 #: includes/admin/reporting/export/class-batch-export-payments.php:56
-#: includes/admin/tools.php:516 templates/checkout_cart.php:112
+#: includes/admin/tools.php:510 templates/checkout_cart.php:112
 #: templates/shortcode-receipt.php:90
 msgid "Tax"
 msgstr ""
@@ -2295,7 +2290,7 @@ msgstr ""
 #: includes/admin/reporting/class-file-downloads-logs-list-table.php:149
 #: includes/admin/reporting/export/class-batch-export-file-downloads.php:44
 #: includes/admin/reporting/export/class-batch-export-payments.php:64
-#: includes/admin/tools.php:426
+#: includes/admin/tools.php:420
 msgid "IP Address"
 msgstr ""
 
@@ -2312,7 +2307,7 @@ msgstr ""
 
 #: includes/admin/reporting/class-export-payments.php:62
 #: includes/admin/reporting/export/class-batch-export-payments.php:41
-#: includes/admin/tools.php:462
+#: includes/admin/tools.php:456
 msgid "Payment Number"
 msgstr ""
 
@@ -2334,13 +2329,13 @@ msgstr ""
 #: includes/admin/reporting/class-export-payments.php:70
 #: includes/admin/reporting/export/class-batch-export-payments.php:50
 #: includes/admin/settings/register-settings.php:1827
-#: includes/admin/tools.php:597 templates/shortcode-profile-editor.php:136
+#: includes/admin/tools.php:591 templates/shortcode-profile-editor.php:136
 msgid "Country"
 msgstr ""
 
 #: includes/admin/reporting/class-export-payments.php:71
 #: includes/admin/reporting/export/class-batch-export-payments.php:51
-#: includes/admin/tools.php:588 includes/checkout/template.php:365
+#: includes/admin/tools.php:582 includes/checkout/template.php:365
 #: templates/shortcode-profile-editor.php:133
 msgid "Zip / Postal Code"
 msgstr ""
@@ -2357,19 +2352,19 @@ msgstr ""
 
 #: includes/admin/reporting/class-export-payments.php:77
 #: includes/admin/reporting/export/class-batch-export-payments.php:58
-#: includes/admin/tools.php:453 templates/shortcode-receipt.php:53
+#: includes/admin/tools.php:447 templates/shortcode-receipt.php:53
 msgid "Payment Method"
 msgstr ""
 
 #: includes/admin/reporting/class-export-payments.php:78
 #: includes/admin/reporting/export/class-batch-export-payments.php:59
-#: includes/admin/tools.php:534
+#: includes/admin/tools.php:528
 msgid "Transaction ID"
 msgstr ""
 
 #: includes/admin/reporting/class-export-payments.php:79
 #: includes/admin/reporting/export/class-batch-export-payments.php:60
-#: includes/admin/tools.php:480
+#: includes/admin/tools.php:474
 msgid "Purchase Key"
 msgstr ""
 
@@ -2443,7 +2438,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/reporting/contextual-help.php:48
-#: includes/admin/reporting/reports.php:31 includes/admin/tools.php:831
+#: includes/admin/reporting/reports.php:31 includes/admin/tools.php:819
 msgid "Export"
 msgstr ""
 
@@ -2540,7 +2535,7 @@ msgstr ""
 
 #: includes/admin/reporting/export/class-batch-export-downloads.php:54
 #: includes/admin/settings/register-settings.php:802
-#: includes/admin/tools.php:786
+#: includes/admin/tools.php:774
 msgid "File Download Limit"
 msgstr ""
 
@@ -2556,7 +2551,7 @@ msgid "SKU"
 msgstr ""
 
 #: includes/admin/reporting/export/class-batch-export-payments.php:43
-#: includes/admin/tools.php:408
+#: includes/admin/tools.php:402
 msgid "Customer ID"
 msgstr ""
 
@@ -2570,7 +2565,7 @@ msgid "Currency"
 msgstr ""
 
 #: includes/admin/reporting/export/class-batch-export-payments.php:65
-#: includes/admin/tools.php:435
+#: includes/admin/tools.php:429
 msgid "Mode (Live|Test)"
 msgstr ""
 
@@ -2586,93 +2581,93 @@ msgstr ""
 msgid "Batch Processing Complete"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:220
+#: includes/admin/reporting/graphing.php:267
 msgid "Earnings Over Time"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:238
-#: includes/admin/reporting/graphing.php:496
+#: includes/admin/reporting/graphing.php:285
+#: includes/admin/reporting/graphing.php:608
 msgid "Total earnings for period shown: "
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:246
-#: includes/admin/reporting/graphing.php:497
+#: includes/admin/reporting/graphing.php:293
+#: includes/admin/reporting/graphing.php:609
 msgid "Total sales for period shown: "
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:252
+#: includes/admin/reporting/graphing.php:299
 msgid "Estimated monthly earnings: "
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:260
+#: includes/admin/reporting/graphing.php:307
 msgid "Estimated monthly sales: "
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:267
+#: includes/admin/reporting/graphing.php:314
 msgid "Excludes sales tax."
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:486
+#: includes/admin/reporting/graphing.php:598
 msgid "Earnings Over Time for %s"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:498
+#: includes/admin/reporting/graphing.php:610
 msgid "Average monthly earnings: %s"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:499
+#: includes/admin/reporting/graphing.php:611
 msgid "Average monthly sales: %s"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:516 includes/class-edd-stats.php:85
+#: includes/admin/reporting/graphing.php:628 includes/class-edd-stats.php:85
 msgid "Yesterday"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:517 includes/class-edd-stats.php:86
+#: includes/admin/reporting/graphing.php:629 includes/class-edd-stats.php:86
 msgid "This Week"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:518 includes/class-edd-stats.php:87
+#: includes/admin/reporting/graphing.php:630 includes/class-edd-stats.php:87
 msgid "Last Week"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:519 includes/class-edd-stats.php:88
+#: includes/admin/reporting/graphing.php:631 includes/class-edd-stats.php:88
 msgid "This Month"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:521 includes/class-edd-stats.php:90
+#: includes/admin/reporting/graphing.php:633 includes/class-edd-stats.php:90
 msgid "This Quarter"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:522 includes/class-edd-stats.php:91
+#: includes/admin/reporting/graphing.php:634 includes/class-edd-stats.php:91
 msgid "Last Quarter"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:523 includes/class-edd-stats.php:92
+#: includes/admin/reporting/graphing.php:635 includes/class-edd-stats.php:92
 msgid "This Year"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:524 includes/class-edd-stats.php:93
+#: includes/admin/reporting/graphing.php:636 includes/class-edd-stats.php:93
 msgid "Last Year"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:525
+#: includes/admin/reporting/graphing.php:637
 msgid "Custom"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:557
+#: includes/admin/reporting/graphing.php:669
 msgid "From"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:573
+#: includes/admin/reporting/graphing.php:685
 msgid "To"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:593
+#: includes/admin/reporting/graphing.php:705
 msgid "Exclude Taxes"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:598
+#: includes/admin/reporting/graphing.php:710
 msgid "Filter"
 msgstr ""
 
@@ -4220,15 +4215,11 @@ msgstr ""
 msgid "Import a CSV file of payment records."
 msgstr ""
 
-#: includes/admin/tools.php:342 includes/admin/tools.php:630
-msgid "Does this CSV have a header row?"
-msgstr ""
-
-#: includes/admin/tools.php:346 includes/admin/tools.php:634
+#: includes/admin/tools.php:340 includes/admin/tools.php:622
 msgid "Import CSV"
 msgstr ""
 
-#: includes/admin/tools.php:356
+#: includes/admin/tools.php:350
 msgid ""
 "Each column loaded from the CSV needs to be mapped to a payment field. "
 "Select the column that should be mapped to each field below. Any columns "
@@ -4236,122 +4227,122 @@ msgid ""
 "guide</a> for assistance with importing payment records."
 msgstr ""
 
-#: includes/admin/tools.php:365
+#: includes/admin/tools.php:359
 msgid "Payment Field"
 msgstr ""
 
-#: includes/admin/tools.php:366 includes/admin/tools.php:654
+#: includes/admin/tools.php:360 includes/admin/tools.php:642
 msgid "CSV Column"
 msgstr ""
 
-#: includes/admin/tools.php:367 includes/admin/tools.php:655
+#: includes/admin/tools.php:361 includes/admin/tools.php:643
 msgid "Data Preview"
 msgstr ""
 
-#: includes/admin/tools.php:372
+#: includes/admin/tools.php:366
 msgid "Currency Code"
 msgstr ""
 
-#: includes/admin/tools.php:375 includes/admin/tools.php:384
-#: includes/admin/tools.php:393 includes/admin/tools.php:402
-#: includes/admin/tools.php:411 includes/admin/tools.php:420
-#: includes/admin/tools.php:429 includes/admin/tools.php:438
-#: includes/admin/tools.php:447 includes/admin/tools.php:456
-#: includes/admin/tools.php:465 includes/admin/tools.php:474
-#: includes/admin/tools.php:483 includes/admin/tools.php:492
-#: includes/admin/tools.php:501 includes/admin/tools.php:510
-#: includes/admin/tools.php:519 includes/admin/tools.php:528
-#: includes/admin/tools.php:537 includes/admin/tools.php:546
-#: includes/admin/tools.php:555 includes/admin/tools.php:564
-#: includes/admin/tools.php:573 includes/admin/tools.php:582
-#: includes/admin/tools.php:591 includes/admin/tools.php:600
-#: includes/admin/tools.php:663 includes/admin/tools.php:672
-#: includes/admin/tools.php:681 includes/admin/tools.php:690
-#: includes/admin/tools.php:699 includes/admin/tools.php:708
-#: includes/admin/tools.php:717 includes/admin/tools.php:726
-#: includes/admin/tools.php:735 includes/admin/tools.php:744
-#: includes/admin/tools.php:753 includes/admin/tools.php:762
-#: includes/admin/tools.php:771 includes/admin/tools.php:780
-#: includes/admin/tools.php:789 includes/admin/tools.php:798
-#: includes/admin/tools.php:807
+#: includes/admin/tools.php:369 includes/admin/tools.php:378
+#: includes/admin/tools.php:387 includes/admin/tools.php:396
+#: includes/admin/tools.php:405 includes/admin/tools.php:414
+#: includes/admin/tools.php:423 includes/admin/tools.php:432
+#: includes/admin/tools.php:441 includes/admin/tools.php:450
+#: includes/admin/tools.php:459 includes/admin/tools.php:468
+#: includes/admin/tools.php:477 includes/admin/tools.php:486
+#: includes/admin/tools.php:495 includes/admin/tools.php:504
+#: includes/admin/tools.php:513 includes/admin/tools.php:522
+#: includes/admin/tools.php:531 includes/admin/tools.php:540
+#: includes/admin/tools.php:549 includes/admin/tools.php:558
+#: includes/admin/tools.php:567 includes/admin/tools.php:576
+#: includes/admin/tools.php:585 includes/admin/tools.php:594
+#: includes/admin/tools.php:651 includes/admin/tools.php:660
+#: includes/admin/tools.php:669 includes/admin/tools.php:678
+#: includes/admin/tools.php:687 includes/admin/tools.php:696
+#: includes/admin/tools.php:705 includes/admin/tools.php:714
+#: includes/admin/tools.php:723 includes/admin/tools.php:732
+#: includes/admin/tools.php:741 includes/admin/tools.php:750
+#: includes/admin/tools.php:759 includes/admin/tools.php:768
+#: includes/admin/tools.php:777 includes/admin/tools.php:786
+#: includes/admin/tools.php:795
 msgid "- Ignore this field -"
 msgstr ""
 
-#: includes/admin/tools.php:378 includes/admin/tools.php:387
-#: includes/admin/tools.php:396 includes/admin/tools.php:405
-#: includes/admin/tools.php:414 includes/admin/tools.php:423
-#: includes/admin/tools.php:432 includes/admin/tools.php:441
-#: includes/admin/tools.php:450 includes/admin/tools.php:459
-#: includes/admin/tools.php:468 includes/admin/tools.php:477
-#: includes/admin/tools.php:486 includes/admin/tools.php:495
-#: includes/admin/tools.php:504 includes/admin/tools.php:513
-#: includes/admin/tools.php:522 includes/admin/tools.php:531
-#: includes/admin/tools.php:540 includes/admin/tools.php:549
-#: includes/admin/tools.php:558 includes/admin/tools.php:567
-#: includes/admin/tools.php:576 includes/admin/tools.php:585
-#: includes/admin/tools.php:594 includes/admin/tools.php:603
-#: includes/admin/tools.php:666 includes/admin/tools.php:675
-#: includes/admin/tools.php:684 includes/admin/tools.php:693
-#: includes/admin/tools.php:702 includes/admin/tools.php:711
-#: includes/admin/tools.php:720 includes/admin/tools.php:729
-#: includes/admin/tools.php:738 includes/admin/tools.php:747
-#: includes/admin/tools.php:756 includes/admin/tools.php:765
-#: includes/admin/tools.php:774 includes/admin/tools.php:783
-#: includes/admin/tools.php:792 includes/admin/tools.php:801
-#: includes/admin/tools.php:810
+#: includes/admin/tools.php:372 includes/admin/tools.php:381
+#: includes/admin/tools.php:390 includes/admin/tools.php:399
+#: includes/admin/tools.php:408 includes/admin/tools.php:417
+#: includes/admin/tools.php:426 includes/admin/tools.php:435
+#: includes/admin/tools.php:444 includes/admin/tools.php:453
+#: includes/admin/tools.php:462 includes/admin/tools.php:471
+#: includes/admin/tools.php:480 includes/admin/tools.php:489
+#: includes/admin/tools.php:498 includes/admin/tools.php:507
+#: includes/admin/tools.php:516 includes/admin/tools.php:525
+#: includes/admin/tools.php:534 includes/admin/tools.php:543
+#: includes/admin/tools.php:552 includes/admin/tools.php:561
+#: includes/admin/tools.php:570 includes/admin/tools.php:579
+#: includes/admin/tools.php:588 includes/admin/tools.php:597
+#: includes/admin/tools.php:654 includes/admin/tools.php:663
+#: includes/admin/tools.php:672 includes/admin/tools.php:681
+#: includes/admin/tools.php:690 includes/admin/tools.php:699
+#: includes/admin/tools.php:708 includes/admin/tools.php:717
+#: includes/admin/tools.php:726 includes/admin/tools.php:735
+#: includes/admin/tools.php:744 includes/admin/tools.php:753
+#: includes/admin/tools.php:762 includes/admin/tools.php:771
+#: includes/admin/tools.php:780 includes/admin/tools.php:789
+#: includes/admin/tools.php:798
 msgid "- select field to preview data -"
 msgstr ""
 
-#: includes/admin/tools.php:390
+#: includes/admin/tools.php:384
 msgid "Customer First Name"
 msgstr ""
 
-#: includes/admin/tools.php:399
+#: includes/admin/tools.php:393
 msgid "Customer Last Name"
 msgstr ""
 
-#: includes/admin/tools.php:444
+#: includes/admin/tools.php:438
 msgid "Parent Payment ID"
 msgstr ""
 
-#: includes/admin/tools.php:471
+#: includes/admin/tools.php:465
 msgid "Purchase Date"
 msgstr ""
 
-#: includes/admin/tools.php:489
+#: includes/admin/tools.php:483
 msgid "Purchased Product(s)"
 msgstr ""
 
-#: includes/admin/tools.php:507 templates/checkout_cart.php:94
+#: includes/admin/tools.php:501 templates/checkout_cart.php:94
 #: templates/shortcode-receipt.php:98
 msgid "Subtotal"
 msgstr ""
 
-#: includes/admin/tools.php:525 templates/checkout_cart.php:121
+#: includes/admin/tools.php:519 templates/checkout_cart.php:121
 msgid "Total"
 msgstr ""
 
-#: includes/admin/tools.php:552
+#: includes/admin/tools.php:546
 msgid "Address Line 1"
 msgstr ""
 
-#: includes/admin/tools.php:561
+#: includes/admin/tools.php:555
 msgid "Address Line 2"
 msgstr ""
 
-#: includes/admin/tools.php:608 includes/admin/tools.php:815
+#: includes/admin/tools.php:602 includes/admin/tools.php:803
 msgid "Process Import"
 msgstr ""
 
-#: includes/admin/tools.php:616
+#: includes/admin/tools.php:610
 msgid "Import Download Products"
 msgstr ""
 
-#: includes/admin/tools.php:618
+#: includes/admin/tools.php:612
 msgid "Import a CSV file of products."
 msgstr ""
 
-#: includes/admin/tools.php:644
+#: includes/admin/tools.php:632
 msgid ""
 "Each column loaded from the CSV needs to be mapped to a Download product "
 "field. Select the column that should be mapped to each field below. Any "
@@ -4360,105 +4351,105 @@ msgid ""
 "products."
 msgstr ""
 
-#: includes/admin/tools.php:653
+#: includes/admin/tools.php:641
 msgid "Product Field"
 msgstr ""
 
-#: includes/admin/tools.php:660
+#: includes/admin/tools.php:648
 msgid "Product Author"
 msgstr ""
 
-#: includes/admin/tools.php:669
+#: includes/admin/tools.php:657
 msgid "Product Categories"
 msgstr ""
 
-#: includes/admin/tools.php:678
+#: includes/admin/tools.php:666
 msgid "Product Creation Date"
 msgstr ""
 
-#: includes/admin/tools.php:687
+#: includes/admin/tools.php:675
 msgid "Product Description"
 msgstr ""
 
-#: includes/admin/tools.php:696
+#: includes/admin/tools.php:684
 msgid "Product Excerpt"
 msgstr ""
 
-#: includes/admin/tools.php:705
+#: includes/admin/tools.php:693
 msgid "Product Image"
 msgstr ""
 
-#: includes/admin/tools.php:714
+#: includes/admin/tools.php:702
 msgid "Product Notes"
 msgstr ""
 
-#: includes/admin/tools.php:723
+#: includes/admin/tools.php:711
 msgid "Product Price(s)"
 msgstr ""
 
-#: includes/admin/tools.php:732
+#: includes/admin/tools.php:720
 msgid "Product SKU"
 msgstr ""
 
-#: includes/admin/tools.php:741
+#: includes/admin/tools.php:729
 msgid "Product Slug"
 msgstr ""
 
-#: includes/admin/tools.php:750
+#: includes/admin/tools.php:738
 msgid "Product Status"
 msgstr ""
 
-#: includes/admin/tools.php:759
+#: includes/admin/tools.php:747
 msgid "Product Tags"
 msgstr ""
 
-#: includes/admin/tools.php:768
+#: includes/admin/tools.php:756
 msgid "Product Title"
 msgstr ""
 
-#: includes/admin/tools.php:777 includes/admin/welcome.php:338
+#: includes/admin/tools.php:765 includes/admin/welcome.php:338
 msgid "Download Files"
 msgstr ""
 
-#: includes/admin/tools.php:795
+#: includes/admin/tools.php:783
 msgid "Sale Count"
 msgstr ""
 
-#: includes/admin/tools.php:823
+#: includes/admin/tools.php:811
 msgid "Export Settings"
 msgstr ""
 
-#: includes/admin/tools.php:825
+#: includes/admin/tools.php:813
 msgid ""
 "Export the Easy Digital Downloads settings for this site as a .json file. "
 "This allows you to easily import the configuration into another site."
 msgstr ""
 
-#: includes/admin/tools.php:826
+#: includes/admin/tools.php:814
 msgid ""
 "To export shop data (purchases, customers, etc), visit the <a "
 "href=\"%s\">Reports</a> page."
 msgstr ""
 
-#: includes/admin/tools.php:838
+#: includes/admin/tools.php:826
 msgid "Import Settings"
 msgstr ""
 
-#: includes/admin/tools.php:840
+#: includes/admin/tools.php:828
 msgid ""
 "Import the Easy Digital Downloads settings from a .json file. This file can "
 "be obtained by exporting the settings on another site using the form above."
 msgstr ""
 
-#: includes/admin/tools.php:848
+#: includes/admin/tools.php:836
 msgid "Import"
 msgstr ""
 
-#: includes/admin/tools.php:913
+#: includes/admin/tools.php:901
 msgid "Please upload a valid .json file"
 msgstr ""
 
-#: includes/admin/tools.php:919
+#: includes/admin/tools.php:907
 msgid "Please upload a file to import"
 msgstr ""
 
