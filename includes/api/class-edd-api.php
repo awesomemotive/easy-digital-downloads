@@ -349,7 +349,7 @@ class EDD_API {
 	 *
 	 * @access private
 	 * @global object $wp_query WordPress Query
-	 * @since version
+	 * @since 2.6
 	 * @return boolean   
 	 */
 	private function is_public_query() {
