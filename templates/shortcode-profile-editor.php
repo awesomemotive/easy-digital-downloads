@@ -10,6 +10,8 @@ if ( is_user_logged_in() ):
 	$last_name    = get_user_meta( $user_id, 'last_name', true );
 	$display_name = $current_user->display_name;
 	$address      = edd_get_customer_address( $user_id );
+	$states       = edd_get_shop_states( $address['country'] );
+	$state 		  = ( ! empty( $address['state'] ) ) ? $address['state'] : '';
 
 	if ( edd_is_cart_saved() ): ?>
 		<?php $restore_url = add_query_arg( array( 'edd_action' => 'restore_cart', 'edd_cart_token' => edd_get_cart_token() ), edd_get_checkout_uri() ); ?>
@@ -79,8 +81,19 @@ if ( is_user_logged_in() ):
 					<?php endforeach; ?>
 				</select>
 				<br/>
-				<label for="edd_address_state"><?php _e( 'State / Province', 'easy-digital-downloads' ); ?></label>
-				<input name="edd_address_state" id="edd_address_state" class="text edd-input" type="text" value="<?php echo esc_attr( $address['state'] ); ?>" />
+				<label for="edd_address_state"><?php _e( 'State / Province', 'edd' ); ?></label>
+				<?php
+			        if( ! empty( $states ) ) : ?>
+			        <select name="edd_address_state" id="edd_address_state" class="select edd-select">
+		                <?php
+		                    foreach( $states as $state_code => $state_name ) {
+		                        echo '<option value="' . $state_code . '"' . selected( $state_code, $state, false ) . '>' . $state_name . '</option>';
+		                    }
+		                ?>
+			        </select>
+			       	<?php else : ?>
+				<input name="edd_address_state" id="edd_address_state" class="text edd-input" type="text" value="<?php echo esc_attr( $state ); ?>" />
+				<?php endif; ?>
 				<br/>
 				<?php do_action( 'edd_profile_editor_address' ); ?>
 			</p>
