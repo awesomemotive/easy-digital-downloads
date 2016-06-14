@@ -371,8 +371,8 @@ function edd_customers_view( $customer ) {
 								<?php if ( 'primary' !== $key ) : ?>
 									<?php
 										$base_url    = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id );
-										$promote_url = wp_nonce_url( add_query_arg( array( 'email' => $email, 'edd_action' => 'customer-primary-email'), $base_url ), 'edd-set-customer-primary-email' );
-										$remove_url  = wp_nonce_url( add_query_arg( array( 'email' => $email, 'edd_action' => 'customer-remove-email'), $base_url ), 'edd-remove-customer-email' );
+										$promote_url = wp_nonce_url( add_query_arg( array( 'email' => rawurlencode( $email ), 'edd_action' => 'customer-primary-email'), $base_url ), 'edd-set-customer-primary-email' );
+										$remove_url  = wp_nonce_url( add_query_arg( array( 'email' => rawurlencode( $email ), 'edd_action' => 'customer-remove-email'), $base_url ), 'edd-remove-customer-email' );
 									?>
 									<a href="<?php echo $promote_url; ?>"><?php _e( 'Make Primary', 'easy-digital-downloads' ); ?></a>
 									&nbsp;|&nbsp;
