@@ -419,7 +419,7 @@ class Tests_API_V2 extends WP_UnitTestCase {
 
 		$this->assertArrayHasKey( 'customers', $out );
 		$this->assertArrayHasKey( 'info', $out['customers'][0] );
-		$this->assertArrayHasKey( 'id', $out['customers'][0]['info'] );
+		$this->assertArrayHasKey( 'customer_id', $out['customers'][0]['info'] );
 		$this->assertArrayHasKey( 'username', $out['customers'][0]['info'] );
 		$this->assertArrayHasKey( 'display_name', $out['customers'][0]['info'] );
 		$this->assertArrayHasKey( 'first_name', $out['customers'][0]['info'] );
@@ -430,8 +430,8 @@ class Tests_API_V2 extends WP_UnitTestCase {
 		$this->assertArrayHasKey( 'total_spent', $out['customers'][0]['stats'] );
 		$this->assertArrayHasKey( 'total_downloads', $out['customers'][0]['stats'] );
 
-		$customer = new EDD_Customer( $out['customers'][0]['info']['id'] );
-		$this->assertEquals( $customer->id, $out['customers'][0]['info']['id'] );
+		$customer = new EDD_Customer( $out['customers'][0]['info']['customer_id'] );
+		$this->assertEquals( $customer->id, $out['customers'][0]['info']['customer_id'] );
 		$this->assertEquals( 'admin', $out['customers'][0]['info']['username'] );
 		$this->assertEquals( 'Admin', $out['customers'][0]['info']['first_name'] );
 		$this->assertEquals( 'User', $out['customers'][0]['info']['last_name'] );
