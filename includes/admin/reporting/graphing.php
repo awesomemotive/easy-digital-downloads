@@ -187,8 +187,8 @@ function edd_reports_graph() {
 		if ( $day_by_day ) {
 
 			foreach ( $temp_data[ 'sales' ] as $year => $months ) {
-				foreach( $months as $month => $dates ) {
-					foreach ( $dates as $day => $sales ) {
+				foreach( $months as $month => $days ) {
+					foreach ( $days as $day => $sales ) {
 						$date         = mktime( 0, 0, 0, $month, $day, $year ) * 1000;
 						$sales_data[] = array( $date, $sales );
 					}
@@ -197,8 +197,8 @@ function edd_reports_graph() {
 			}
 
 			foreach ( $temp_data[ 'earnings' ] as $year => $months ) {
-				foreach( $months as $month => $dates ) {
-					foreach ( $dates as $day => $earnings ) {
+				foreach( $months as $month => $days ) {
+					foreach ( $days as $day => $earnings ) {
 						$date         = mktime( 0, 0, 0, $month, $day, $year ) * 1000;
 						$earnings_data[] = array( $date, $earnings );
 					}
