@@ -131,6 +131,21 @@ class EDD_Batch_Import {
 	}
 
 	/**
+	 * Get the first row of the CSV
+	 *
+	 * This is used for showing an example of what the import will look like
+	 *
+	 * @access public
+	 * @since 2.6
+	 * @return array The first row after the header of the CSV
+	 */
+	public function get_first_row() {
+
+		return array_map( array( $this, 'trim_preview' ), current( $this->csv->data ) );
+
+	}
+
+	/**
 	 * Process a step
 	 *
 	 * @since 2.6
@@ -163,17 +178,11 @@ class EDD_Batch_Import {
 	 * @since 2.6
 	 * @return void
 	 */
-	public function map_fields( $csv_columns = array(), $import_fields = array() ) {
+	public function map_fields( $import_fields = array() ) {
 
-		foreach( $csv_columns as $key => $column ) {
+		// Probably add some sanitization here later
 
-			if( ! empty( $import_fields[ $key ] ) ) {
-
-				$this->field_mapping[ $import_fields[ $key ] ] = $column;
-
-			}
-
-		}
+		$this->field_mapping = $import_fields;
 	}
 
 	/**
@@ -220,6 +229,10 @@ class EDD_Batch_Import {
 
 			$delimiter = ';';
 
+		} elseif( false !== strpos( $str, '/' ) ) {
+
+			$delimiter = '/';
+
 		}
 
 		if( ! empty( $delimiter ) ) {
@@ -232,6 +245,27 @@ class EDD_Batch_Import {
 		}
 
 		return array_map( 'trim', $array );
+
+	}
+
+	/**
+	 * Trims a column value for preview
+	 *
+	 * @since 2.6
+	 * @param $str Input string to trim down
+	 * @return string
+	 */
+	public function trim_preview( $str = '' ) {
+
+		if( ! is_numeric( $str ) ) {
+
+			$long = strlen( $str ) >= 30;
+			$str  = substr( $str, 0, 30 );
+			$str  = $long ? $str . '...' : $str;
+
+		}
+
+		return $str;
 
 	}
 }

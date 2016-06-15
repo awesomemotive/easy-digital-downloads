@@ -61,11 +61,12 @@ function edd_do_ajax_import_file_upload() {
 		}
 
 		wp_send_json_success( array(
-			'form'    => $_POST,
-			'class'   => $_POST['edd-import-class'],
-			'upload'  => $import_file,
-			'columns' => $import->get_columns(),
-			'nonce'   => wp_create_nonce( 'edd_ajax_import', 'edd_ajax_import' )
+			'form'      => $_POST,
+			'class'     => $_POST['edd-import-class'],
+			'upload'    => $import_file,
+			'first_row' => $import->get_first_row(),
+			'columns'   => $import->get_columns(),
+			'nonce'     => wp_create_nonce( 'edd_ajax_import', 'edd_ajax_import' )
 		) );
 
 	} else {
@@ -119,7 +120,7 @@ function edd_do_ajax_import() {
 
 	parse_str( $_REQUEST['mapping'], $map );
 
-	$import->map_fields( $map['edd-import-csv-column'], $map['edd-import-field'] );
+	$import->map_fields( $map['edd-import-field'] );
 
 	$ret = $import->process_step( $step );
 

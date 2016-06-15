@@ -459,16 +459,17 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 		return;
 	}
 
+	$payment = new EDD_Payment( $payment_id );
+
 	// Collect payment details
 	$purchase_key   = isset( $data['invoice'] ) ? $data['invoice'] : $data['item_number'];
 	$paypal_amount  = $data['mc_gross'];
 	$payment_status = strtolower( $data['payment_status'] );
 	$currency_code  = strtolower( $data['mc_currency'] );
 	$business_email = isset( $data['business'] ) && is_email( $data['business'] ) ? trim( $data['business'] ) : trim( $data['receiver_email'] );
-	$payment_meta   = edd_get_payment_meta( $payment_id );
 
 
-	if ( edd_get_payment_gateway( $payment_id ) != 'paypal' ) {
+	if ( $payment->gateway != 'paypal' ) {
 		return; // this isn't a PayPal standard IPN
 	}
 
@@ -481,7 +482,7 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 	}
 
 	// Verify payment currency
-	if ( $currency_code != strtolower( $payment_meta['currency'] ) ) {
+	if ( $currency_code != strtolower( $payment->currency ) ) {
 
 		edd_record_gateway_error( __( 'IPN Error', 'easy-digital-downloads' ), sprintf( __( 'Invalid currency in IPN response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $data ) ), $payment_id );
 		edd_update_payment_status( $payment_id, 'failed' );
@@ -489,32 +490,41 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 		return;
 	}
 
-	if ( ! edd_get_payment_user_email( $payment_id ) ) {
+	if ( empty( $payment->email ) ) {
 
 		// This runs when a Buy Now purchase was made. It bypasses checkout so no personal info is collected until PayPal
 
-		// No email associated with purchase, so store from PayPal
-		edd_update_payment_meta( $payment_id, '_edd_payment_user_email', $data['payer_email'] );
-
 		// Setup and store the customers's details
 		$address = array();
-		$address['line1']   = ! empty( $data['address_street']       ) ? sanitize_text_field( $data['address_street'] )       : false;
-		$address['city']    = ! empty( $data['address_city']         ) ? sanitize_text_field( $data['address_city'] )         : false;
-		$address['state']   = ! empty( $data['address_state']        ) ? sanitize_text_field( $data['address_state'] )        : false;
-		$address['country'] = ! empty( $data['address_country_code'] ) ? sanitize_text_field( $data['address_country_code'] ) : false;
-		$address['zip']     = ! empty( $data['address_zip']          ) ? sanitize_text_field( $data['address_zip'] )          : false;
+		$address['line1']    = ! empty( $data['address_street']       ) ? sanitize_text_field( $data['address_street'] )       : false;
+		$address['city']     = ! empty( $data['address_city']         ) ? sanitize_text_field( $data['address_city'] )         : false;
+		$address['state']    = ! empty( $data['address_state']        ) ? sanitize_text_field( $data['address_state'] )        : false;
+		$address['country']  = ! empty( $data['address_country_code'] ) ? sanitize_text_field( $data['address_country_code'] ) : false;
+		$address['zip']      = ! empty( $data['address_zip']          ) ? sanitize_text_field( $data['address_zip'] )          : false;
 
-		$user_info = array(
-			'id'         => '-1',
-			'email'      => sanitize_text_field( $data['payer_email'] ),
-			'first_name' => sanitize_text_field( $data['first_name'] ),
-			'last_name'  => sanitize_text_field( $data['last_name'] ),
-			'discount'   => '',
-			'address'    => $address
-		);
+		$payment->email      = sanitize_text_field( $data['payer_email'] );
+		$payment->first_name = sanitize_text_field( $data['first_name'] );
+		$payment->last_name  = sanitize_text_field( $data['last_name'] );
+		$payment->address    = $address;
 
-		$payment_meta['user_info'] = $user_info;
-		edd_update_payment_meta( $payment_id, '_edd_payment_meta', $payment_meta );
+		if( empty( $payment->customer_id ) ) {
+
+			$customer = new EDD_Customer( $payment->email );
+			if( ! $customer || $customer->id < 1 ) {
+
+				$customer->create( array(
+					'email'   => $payment->email,
+					'name'    => $payment->first_name . ' ' . $payment->last_name,
+					'user_id' => $payment->user_id
+				) );
+
+			}
+
+			$payment->customer_id = $customer->id;
+		}
+
+		$payment->save();
+
 	}
 
 	if ( $payment_status == 'refunded' || $payment_status == 'reversed' ) {
@@ -956,7 +966,7 @@ function edd_refund_paypal_purchase( $payment ) {
 			if( isset( $body['L_LONGMESSAGE0'] ) ) {
 				$error_msg = $body['L_LONGMESSAGE0'];
 			} else {
-				$error_msg = __( 'PayPal refund failed for unknown reason.', 'edd-recurring' );
+				$error_msg = __( 'PayPal refund failed for unknown reason.', 'easy-digital-downloads' );
 			}
 		}
 
@@ -966,11 +976,11 @@ function edd_refund_paypal_purchase( $payment ) {
 
 		// Prevents the PayPal Express one-time gateway from trying to process the refundl
 		$payment->update_meta( '_edd_paypal_refunded', true );
-		$payment->add_note( sprintf( __( 'PayPal refund transaction ID: %s', 'edd-recurring' ), $body['REFUNDTRANSACTIONID'] ) );
+		$payment->add_note( sprintf( __( 'PayPal refund transaction ID: %s', 'easy-digital-downloads' ), $body['REFUNDTRANSACTIONID'] ) );
 
 	} else {
 
-		$payment->add_note( sprintf( __( 'PayPal refund failed: %s', 'edd-recurring' ), $error_msg ) );
+		$payment->add_note( sprintf( __( 'PayPal refund failed: %s', 'easy-digital-downloads' ), $error_msg ) );
 
 	}
 
