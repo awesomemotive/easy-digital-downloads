@@ -33,7 +33,7 @@ global $post; ?>
 						
 							/**
 							 * Runs after the item in cart's title is echoed
-							 * @since unknown
+							 * @since 2.6
 							 *
 							 * @param array $item Cart Item
 							 * @param int $key Cart key
