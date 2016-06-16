@@ -159,6 +159,9 @@ grunt.initConfig({
 				url: 'https://translate.wordpress.org',
 				slug: 'wp-plugins/easy-digital-downloads/dev',
 				textdomain: 'easy-digital-downloads',
+				filter: {
+					minimum_percentage: 1,
+				}
 			}
 		},
 	},
