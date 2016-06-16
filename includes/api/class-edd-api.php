@@ -348,21 +348,21 @@ class EDD_API {
 	}
 
 	/**
-	 * Return whether this is a public query. 
+	 * Return whether this is a public query.
 	 *
 	 * @access private
 	 * @global object $wp_query WordPress Query
 	 * @since 2.6
-	 * @return boolean   
+	 * @return boolean
 	 */
 	private function is_public_query() {
 		global $wp_query;
 
-	    $public_modes = apply_filters( 'edd_api_public_query_modes', array(
-	        'products'
-	    ) );
+		$public_modes = apply_filters( 'edd_api_public_query_modes', array(
+			'products'
+		) );
 
-	    return in_array( $wp_query->query_vars['edd-api'], $public_modes );
+		return in_array( $wp_query->query_vars['edd-api'], $public_modes );
 	}
 
 	/**

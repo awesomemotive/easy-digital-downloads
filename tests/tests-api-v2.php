@@ -160,8 +160,8 @@ class Tests_API_V2 extends WP_UnitTestCase {
 
 		parent::tearDown();
 
-		unset( $wp_query->query_vars['key'] );
-		unset( $wp_query->query_vars['token'] );
+		//unset( $wp_query->query_vars['key'] );
+		//unset( $wp_query->query_vars['token'] );
 
 		remove_action( 'edd_api_output_override_xml', array( $this, 'override_api_xml_format' ) );
 		EDD_Helper_Payment::delete_payment( $this->_payment_id );

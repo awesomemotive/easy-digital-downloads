@@ -160,8 +160,8 @@ class Tests_API extends WP_UnitTestCase {
 
 		parent::tearDown();
 
-		unset( $wp_query->query_vars['key'] );
-		unset( $wp_query->query_vars['token'] );
+		//unset( $wp_query->query_vars['key'] );
+		//unset( $wp_query->query_vars['token'] );
 
 		remove_action( 'edd_api_output_override_xml', array( $this, 'override_api_xml_format' ) );
 		EDD_Helper_Payment::delete_payment( $this->_payment_id );
@@ -285,7 +285,6 @@ class Tests_API extends WP_UnitTestCase {
 
 	}
 
-/*
 	public function test_update_key() {
 		global $wp_query;
 
@@ -306,7 +305,6 @@ class Tests_API extends WP_UnitTestCase {
 		$this->assertEquals( $user_secret, get_user_meta( $this->_user_id, 'edd_user_secret_key', true ) );
 
 	}
-*/
 
 	public function test_get_user() {
 		$_POST['edd_set_api_key'] = 1;
