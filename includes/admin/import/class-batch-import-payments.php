@@ -47,6 +47,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 			'customer_id'       => '',
 			'user_id'           => '',
 			'discounts'         => '',
+			'key'               => '',
 			'transaction_id'    => '',
 			'ip'                => '',
 			'currency'          => '',
@@ -124,29 +125,6 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 		$payment = new EDD_Payment;
 		$payment->status = 'pending';
 
-
-		if( ! empty( $this->field_mapping['total'] ) && ! empty( $row[ $this->field_mapping['total'] ] ) ) {
-
-			$payment->total = edd_sanitize_amount( $row[ $this->field_mapping['total'] ] );
-
-		}
-
-		if( ! empty( $this->field_mapping['tax'] ) && ! empty( $row[ $this->field_mapping['tax'] ] ) ) {
-
-			$payment->tax = edd_sanitize_amount( $row[ $this->field_mapping['tax'] ] );
-
-		}
-
-		if( ! empty( $this->field_mapping['subtotal'] ) && ! empty( $row[ $this->field_mapping['subtotal'] ] ) ) {
-
-			$payment->subtotal = edd_sanitize_amount( $row[ $this->field_mapping['subtotal'] ] );
-
-		} else {
-
-			$payment->subtotal = $payment->total - $payment->tax;
-
-		}
-
 		if( ! empty( $this->field_mapping['number'] ) && ! empty( $row[ $this->field_mapping['number'] ] ) ) {
 
 			$payment->number = sanitize_text_field( $row[ $this->field_mapping['number'] ] );
@@ -179,23 +157,11 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 		}
 
+		$payment->customer_id = $this->set_customer( $row );
+
 		if( ! empty( $this->field_mapping['email'] ) && ! empty( $row[ $this->field_mapping['email'] ] ) ) {
 
 			$payment->email = sanitize_text_field( $row[ $this->field_mapping['email'] ] );
-
-		}
-
-		if( ! empty( $this->field_mapping['customer_id'] ) && ! empty( $row[ $this->field_mapping['customer_id'] ] ) ) {
-
-			$customer_id = absint( $row[ $this->field_mapping['customer_id'] ] );
-
-			$customer = new EDD_Customer( $customer_id );
-
-			if( $customer->id > 0 ) {
-
-				$payment->customer_id = $customer_id;
-
-			}
 
 		}
 
@@ -286,6 +252,12 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 		}
 
+		if( ! empty( $this->field_mapping['key'] ) && ! empty( $row[ $this->field_mapping['key'] ] ) ) {
+
+			$payment->key = sanitize_text_field( $row[ $this->field_mapping['key'] ] );
+
+		}
+
 		if( ! empty( $this->field_mapping['parent_payment_id'] ) && ! empty( $row[ $this->field_mapping['parent_payment_id'] ] ) ) {
 
 			$payment->parent_payment_id = absint( $row[ $this->field_mapping['parent_payment_id'] ] );
@@ -294,7 +266,16 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 		if( ! empty( $this->field_mapping['downloads'] ) && ! empty( $row[ $this->field_mapping['downloads'] ] ) ) {
 
-			$downloads = $this->str_to_array( $row[ $this->field_mapping['downloads'] ] );
+			if( __( 'Products (Raw)', 'easy-digital-downloads' ) == $this->field_mapping['downloads'] ) {
+
+				// This is an EDD export so we can extract prices
+				$downloads = $this->get_downloads_from_edd( $row[ $this->field_mapping['downloads'] ] );
+
+			} else {
+
+				$downloads = $this->str_to_array( $row[ $this->field_mapping['downloads'] ] );
+
+			}
 
 			if( is_array( $downloads ) ) {
 
@@ -302,14 +283,22 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 				foreach( $downloads as $download ) {
 
-					$download_id = $this->maybe_create_download( $download );
+					if( is_array( $download ) ) {
+						$download_name = $download['download'];
+						$price         = $download['price'];
+						$tax           = $download['tax'];
+					} else {
+						$download_name = $download;
+					}
+
+					$download_id = $this->maybe_create_download( $download_name );
 
 					if( ! $download_id ) {
 						continue;
 					}
 
-					$item_price = edd_get_download_price( $download_id );
-					$item_tax   = $download_count > 1 ? 0.00 : $payment->tax;
+					$item_price = ! isset( $price ) ? edd_get_download_price( $download_id ) : $price;
+					$item_tax   = ! isset( $tax ) ? ( $download_count > 1 ? 0.00 : $payment->tax ) : $tax;
 
 					$payment->add_download( $download_id, array(
 						'item_price' => $item_price,
@@ -319,6 +308,28 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 				}
 
 			}
+
+		}
+
+		if( ! empty( $this->field_mapping['total'] ) && ! empty( $row[ $this->field_mapping['total'] ] ) ) {
+
+			$payment->total = edd_sanitize_amount( $row[ $this->field_mapping['total'] ] );
+
+		}
+
+		if( ! empty( $this->field_mapping['tax'] ) && ! empty( $row[ $this->field_mapping['tax'] ] ) ) {
+
+			$payment->tax = edd_sanitize_amount( $row[ $this->field_mapping['tax'] ] );
+
+		}
+
+		if( ! empty( $this->field_mapping['subtotal'] ) && ! empty( $row[ $this->field_mapping['subtotal'] ] ) ) {
+
+			$payment->subtotal = edd_sanitize_amount( $row[ $this->field_mapping['subtotal'] ] );
+
+		} else {
+
+			$payment->subtotal = $payment->total - $payment->tax;
 
 		}
 
@@ -335,15 +346,117 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 		$payment->save();
 
+
 		// The status has to be set after payment is created to ensure status update properly
 		if( ! empty( $this->field_mapping['status'] ) && ! empty( $row[ $this->field_mapping['status'] ] ) ) {
 
 			$payment->status = strtolower( sanitize_text_field( $row[ $this->field_mapping['status'] ] ) );
 
+		} else {
+
+			$payment->status = 'complete';
+
 		}
 
 		// Save a second time to update stats
 		$payment->save();
+
+	}
+
+	private function set_customer( $row ) {
+
+		global $wpdb;
+
+		if( ! empty( $this->field_mapping['email'] ) && ! empty( $row[ $this->field_mapping['email'] ] ) ) {
+
+			$email = sanitize_text_field( $row[ $this->field_mapping['email'] ] );
+
+		}
+
+		// Look for a customer from the canonical source, if any
+		if( ! empty( $this->field_mapping['customer_id'] ) && ! empty( $row[ $this->field_mapping['customer_id'] ] ) ) {
+
+			$canonical_id = absint( $row[ $this->field_mapping['customer_id'] ] );
+			$mapped_id    = $wpdb->get_var( $wpdb->prepare( "SELECT customer_id FROM $wpdb->customermeta WHERE meta_key = '_canonical_import_id' AND meta_value = %d LIMIT 1", $canonical_id ) );
+
+		}
+
+		if( ! empty( $mapped_id ) ) {
+
+			$customer = new EDD_Customer( $mapped_id );
+
+		}
+
+		if( empty( $mapped_id ) || ! $customer->id > 0 ) {
+
+			// Look for a customer based on provided ID, if any
+
+			if( ! empty( $this->field_mapping['customer_id'] ) && ! empty( $row[ $this->field_mapping['customer_id'] ] ) ) {
+
+				$customer_id = absint( $row[ $this->field_mapping['customer_id'] ] );
+
+				$customer_by_id = new EDD_Customer( $customer_id );
+
+			}
+
+			// Now look for a customer based on provided email
+
+			if( ! empty( $email ) ) {
+
+				$customer_by_email = new EDD_Customer( $email );
+
+			}
+
+			// Now compare customer records. If they don't match, customer_id will be stored in meta and we will use the customer that matches the email
+
+			if( ( empty( $customer_by_id ) || $customer_by_id->id !== $customer_by_email->id ) && ! empty( $customer_by_email ) )  {
+
+				$customer = $customer_by_email;
+
+			} else {
+
+				$customer = $customer_by_id;
+
+				if( ! empty( $email ) ) {
+					$customer->add_email( $email );
+				}
+
+			}
+
+			// Make sure we found a customer. Create one if not.
+			if( ! $customer->id > 0 ) {
+
+				if( ! empty( $this->field_mapping['first_name'] ) && ! empty( $row[ $this->field_mapping['first_name'] ] ) ) {
+
+					$first_name = sanitize_text_field( $row[ $this->field_mapping['first_name'] ] );
+
+				}
+
+				if( ! empty( $this->field_mapping['last_name'] ) && ! empty( $row[ $this->field_mapping['last_name'] ] ) ) {
+
+					$last_name = sanitize_text_field( $row[ $this->field_mapping['last_name'] ] );
+
+				}
+
+				$customer->create( array(
+					'name'  => $first_name . ' ' . $last_name,
+					'email' => $email
+				) );
+
+				if( ! empty( $canonical_id ) && (int) $canonical_id !== (int) $customer->id ) {
+					$customer->update_meta( '_canonical_import_id', $canonical_id );
+				}
+
+			}
+
+
+		}
+
+		if( $email && $email != $customer->email ) {
+			$customer->add_email( $email );
+		}
+
+		return $customer->id;
 
 	}
 
@@ -378,6 +491,42 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 		}
 
 		return $download_id;
+	}
+
+	/**
+	 * Return the calculated completion percentage
+	 *
+	 * @since 2.6
+	 * @return int
+	 */
+	public function get_downloads_from_edd( $data_str ) {
+
+		// Break string into separate products
+
+		$d_array   = array();
+		$downloads = (array) explode( '/', $data_str );
+
+		if( $downloads ) {
+
+			foreach( $downloads as $key => $download ) {
+
+				$d   = (array) explode( '|', $download );
+				preg_match( '/\{(\d+(\.\d+|\d+))\}/', $d[1], $matches );
+				$price = substr( $d[1], 0, strpos( $d[1], '{' ) );
+				$tax   = isset( $matches[1] ) ? $matches[1] : 0;
+
+				$d_array[] = array(
+					'download' => $d[0],
+					'price'    => $price - $tax,
+					'tax'      => $tax
+				);
+
+			}
+
+		}
+
+		return $d_array;
+
 	}
 
 	/**

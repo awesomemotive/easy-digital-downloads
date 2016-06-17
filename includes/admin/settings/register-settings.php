@@ -189,21 +189,23 @@ function edd_register_settings() {
 					'edd_settings_' . $tab . '_' . $section,
 					'edd_settings_' . $tab . '_' . $section,
 					array(
-						'section'     => $section,
-						'id'          => isset( $option['id'] )          ? $option['id']          : null,
-						'desc'        => ! empty( $option['desc'] )      ? $option['desc']        : '',
-						'name'        => isset( $option['name'] )        ? $option['name']        : null,
-						'size'        => isset( $option['size'] )        ? $option['size']        : null,
-						'options'     => isset( $option['options'] )     ? $option['options']     : '',
-						'std'         => isset( $option['std'] )         ? $option['std']         : '',
-						'min'         => isset( $option['min'] )         ? $option['min']         : null,
-						'max'         => isset( $option['max'] )         ? $option['max']         : null,
-						'step'        => isset( $option['step'] )        ? $option['step']        : null,
-						'chosen'      => isset( $option['chosen'] )      ? $option['chosen']      : null,
-						'placeholder' => isset( $option['placeholder'] ) ? $option['placeholder'] : null,
-						'allow_blank' => isset( $option['allow_blank'] ) ? $option['allow_blank'] : true,
-						'readonly'    => isset( $option['readonly'] )    ? $option['readonly']    : false,
-						'faux'        => isset( $option['faux'] )        ? $option['faux']        : false,
+						'section'       => $section,
+						'id'            => isset( $option['id'] )            ? $option['id']            : null,
+						'desc'          => ! empty( $option['desc'] )        ? $option['desc']          : '',
+						'name'          => isset( $option['name'] )          ? $option['name']          : null,
+						'size'          => isset( $option['size'] )          ? $option['size']          : null,
+						'options'       => isset( $option['options'] )       ? $option['options']       : '',
+						'std'           => isset( $option['std'] )           ? $option['std']           : '',
+						'min'           => isset( $option['min'] )           ? $option['min']           : null,
+						'max'           => isset( $option['max'] )           ? $option['max']           : null,
+						'step'          => isset( $option['step'] )          ? $option['step']          : null,
+						'chosen'        => isset( $option['chosen'] )        ? $option['chosen']        : null,
+						'placeholder'   => isset( $option['placeholder'] )   ? $option['placeholder']   : null,
+						'allow_blank'   => isset( $option['allow_blank'] )   ? $option['allow_blank']   : true,
+						'readonly'      => isset( $option['readonly'] )      ? $option['readonly']      : false,
+						'faux'          => isset( $option['faux'] )          ? $option['faux']          : false,
+						'tooltip_title' => isset( $option['tooltip_title'] ) ? $option['tooltip_title'] : false,
+						'tooltip_desc'  => isset( $option['tooltip_desc'] )  ? $option['tooltip_desc']  : false,
 					)
 				);
 			}
@@ -239,6 +241,8 @@ function edd_get_registered_settings() {
 						'name' => '<h3>' . __( 'Page Settings', 'easy-digital-downloads' ) . '</h3>',
 						'desc' => '',
 						'type' => 'header',
+						'tooltip_title' => __( 'Page Settings', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'Easy Digital Downloads uses the pages below for handling the display of checkout, purchase confirmation, purchase history, and purchase failures. If pages are deleted or removed in some way, they can be recreated manually from the Pages menu. When re-creating the pages, enter the shortcode shown in the page content area.','easy-digital-downloads' ),
 					),
 					'purchase_page' => array(
 						'id'          => 'purchase_page',
@@ -261,7 +265,7 @@ function edd_get_registered_settings() {
 					'failure_page' => array(
 						'id'          => 'failure_page',
 						'name'        => __( 'Failed Transaction Page', 'easy-digital-downloads' ),
-						'desc'        => __( 'This is the page buyers are sent to if their transaction is cancelled or fails', 'easy-digital-downloads' ),
+						'desc'        => __( 'This is the page buyers are sent to if their transaction is cancelled or fails.', 'easy-digital-downloads' ),
 						'type'        => 'select',
 						'options'     => edd_get_pages(),
 						'chosen'      => true,
@@ -270,17 +274,19 @@ function edd_get_registered_settings() {
 					'purchase_history_page' => array(
 						'id'          => 'purchase_history_page',
 						'name'        => __( 'Purchase History Page', 'easy-digital-downloads' ),
-						'desc'        => __( 'This page shows a complete purchase history for the current user, including download links', 'easy-digital-downloads' ),
+						'desc'        => __( 'This page shows a complete purchase history for the current user, including download links. The [purchase_history] short code should be on this page.', 'easy-digital-downloads' ),
 						'type'        => 'select',
 						'options'     => edd_get_pages(),
 						'chosen'      => true,
 						'placeholder' => __( 'Select a page', 'easy-digital-downloads' ),
 					),
 					'locale_settings' => array(
-						'id'   => 'locale_settings',
-						'name' => '<h3>' . __( 'Store Location', 'easy-digital-downloads' ) . '</h3>',
-						'desc' => '',
-						'type' => 'header',
+						'id'            => 'locale_settings',
+						'name'          => '<h3>' . __( 'Store Location', 'easy-digital-downloads' ) . '</h3>',
+						'desc'          => '',
+						'type'          => 'header',
+						'tooltip_title' => __( 'Store Location Settings', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'Easy Digital Downloads will use the following Country and State to pre-fill fields at checkout. This will also pre-calculate any taxes defined if the location below has taxes enabled.','easy-digital-downloads' ),
 					),
 					'base_country' => array(
 						'id'          => 'base_country',
@@ -363,12 +369,19 @@ function edd_get_registered_settings() {
 						'name' => '<h3>' . __( 'API Settings', 'easy-digital-downloads' ) . '</h3>',
 						'desc' => '',
 						'type' => 'header',
+						'tooltip_title' => __( 'API Settings', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'The Easy Digital Downloads REST API provides access to store data through our API endpoints. Enable this setting if you would like all user accounts to be able to generate their own API keys.', 'easy-digital-downloads' ),
 					),
 					'api_allow_user_keys' => array(
 						'id'   => 'api_allow_user_keys',
 						'name' => __( 'Allow User Keys', 'easy-digital-downloads' ),
 						'desc' => __( 'Check this box to allow all users to generate API keys. Users with the \'manage_shop_settings\' capability are always allowed to generate keys.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
+					),
+					'api_help' => array(
+						'id'   => 'api_help',
+						'desc' => sprintf( __( 'Visit the <a href="%s" target="_blank">REST API documentation</a> for further information.', 'easy-digital-downloads' ), 'http://docs.easydigitaldownloads.com/article/1131-edd-rest-api-introduction' ),
+						'type' => 'descriptive_text',
 					),
 				),
 			)
@@ -537,10 +550,12 @@ function edd_get_registered_settings() {
 						'type' => 'header',
 					),
 					'disable_styles' => array(
-						'id'   => 'disable_styles',
-						'name' => __( 'Disable Styles', 'easy-digital-downloads' ),
-						'desc' => __( 'Check this to disable all included styling of buttons, checkout fields, and all other elements.', 'easy-digital-downloads' ),
-						'type' => 'checkbox',
+						'id'            => 'disable_styles',
+						'name'          => __( 'Disable Styles', 'easy-digital-downloads' ),
+						'desc'          => __( 'Check this to disable all included styling of buttons, checkout fields, and all other elements.', 'easy-digital-downloads' ),
+						'type'          => 'checkbox',
+						'tooltip_title' => __( 'Disabling Styles', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'If your theme has a complete custom CSS file for Easy Digital Downloads, you may wish to disable our default styles. This is not recommended unless your sure your theme has a complete custom CSS.', 'easy-digital-downloads' ),
 					),
 					'button_header' => array(
 						'id'   => 'button_header',
@@ -574,11 +589,19 @@ function edd_get_registered_settings() {
 						'name' => '<h3>' . __( 'Tax Settings', 'easy-digital-downloads' ) . '</h3>',
 						'type' => 'header',
 					),
+					'tax_help' => array(
+						'id'   => 'tax_help',
+						'name' => __( 'Need help?', 'easy-digital-downloads' ),
+						'desc' => sprintf( __( 'Visit the <a href="%s" target="_blank">Tax setup documentation</a> for further information. If you need VAT support, there are options listed on the documentation page.', 'easy-digital-downloads' ), 'http://docs.easydigitaldownloads.com/article/238-tax-settings' ),
+						'type' => 'descriptive_text',
+					),
 					'enable_taxes' => array(
-						'id'   => 'enable_taxes',
-						'name' => __( 'Enable Taxes', 'easy-digital-downloads' ),
-						'desc' => __( 'Check this to enable taxes on purchases.', 'easy-digital-downloads' ),
-						'type' => 'checkbox',
+						'id'            => 'enable_taxes',
+						'name'          => __( 'Enable Taxes', 'easy-digital-downloads' ),
+						'desc'          => __( 'Check this to enable taxes on purchases.', 'easy-digital-downloads' ),
+						'type'          => 'checkbox',
+						'tooltip_title' => __( 'Enabling Taxes', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'With taxes enabled, Easy Digital Downloads will use the rules below to charge tax to customers. With taxes enabled, customers are required to input their address on checkout so that taxes can be properly calculated.', 'easy-digital-downloads' ),
 					),
 					'tax_rates' => array(
 						'id'   => 'tax_rates',
@@ -592,6 +615,8 @@ function edd_get_registered_settings() {
 						'desc' => __( 'Enter a percentage, such as 6.5. Customers not in a specific rate will be charged this rate.', 'easy-digital-downloads' ),
 						'type' => 'text',
 						'size' => 'small',
+						'tooltip_title' => __( 'Fallback Tax Rate', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'If the customer\'s address fails to meet the above tax rules, you can define a `default` tax rate to be applied to all other customers.', 'easy-digital-downloads' ),
 					),
 					'prices_include_tax' => array(
 						'id'   => 'prices_include_tax',
@@ -603,6 +628,8 @@ function edd_get_registered_settings() {
 							'yes' => __( 'Yes, I will enter prices inclusive of tax', 'easy-digital-downloads' ),
 							'no'  => __( 'No, I will enter prices exclusive of tax', 'easy-digital-downloads' ),
 						),
+						'tooltip_title' => __( 'Prices Inclusive of Tax', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'When using prices inclusive of tax, you will be entering your prices as the total amount you want a customer to pay for the download, including tax. Easy Digital Downloads will calculate the proper amount to tax the customer for the defined total price.', 'easy-digital-downloads' ),
 					),
 					'display_tax_rate' => array(
 						'id'   => 'display_tax_rate',
@@ -646,12 +673,16 @@ function edd_get_registered_settings() {
 						'desc' => __( 'Check this to enable AJAX for the shopping cart.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
 						'std'  => '1',
+						'tooltip_title' => __( 'Enabling AJAX', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'With AJAX enabled, customers can perform cart actions like adding and removing items from their shopping cart without pages having to be reloaded. This also creates fewer steps during the checkout process.', 'easy-digital-downloads' ),
 					),
 					'redirect_on_add' => array(
 						'id'   => 'redirect_on_add',
 						'name' => __( 'Redirect to Checkout', 'easy-digital-downloads' ),
 						'desc' => __( 'Immediately redirect to checkout after adding an item to the cart?', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
+						'tooltip_title' => __( 'Redirect to Checkout', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'When enabled, once an item has been added to the cart, the customer will be redirected directly to your checkout page. This is useful for stores that sell single items.', 'easy-digital-downloads' ),
 					),
 					'item_quantities' => array(
 						'id'   => 'item_quantities',
@@ -683,6 +714,8 @@ function edd_get_registered_settings() {
 						'name' => __( 'Disable Guest Checkout', 'easy-digital-downloads' ),
 						'desc' => __( 'Require that users be logged-in to purchase files.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
+						'tooltip_title' => __( 'Disabling Guest Checkout', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'You can require that customers create and login to user accounts prior to purchasing from your store by enabling this option. When unchecked, users can purchase without being logged in by using their name and email address.', 'easy-digital-downloads' ),
 					),
 					'show_register_form' => array(
 						'id'      => 'show_register_form',
@@ -708,6 +741,8 @@ function edd_get_registered_settings() {
 						'name' => __( 'Enable Cart Saving', 'easy-digital-downloads' ),
 						'desc' => __( 'Check this to enable cart saving on the checkout.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
+						'tooltip_title' => __( 'Cart Saving', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'Cart saving allows shoppers to create a temporary link to their current shopping cart so they can come back to it later, or share it with someone..', 'easy-digital-downloads' ),
 					),
 				),
 				'button_text' => array(
@@ -749,6 +784,8 @@ function edd_get_registered_settings() {
 						'name'    => __( 'Download Method', 'easy-digital-downloads' ),
 						'desc'    => sprintf( __( 'Select the file download method. Note, not all methods work on all servers.', 'easy-digital-downloads' ), edd_get_label_singular() ),
 						'type'    => 'select',
+						'tooltip_title' => __( 'Download Method', 'easy-digital-downloads' ),
+						'tooltip_desc' => __( 'Due to its consistency in multiple platforms and better file protection, \'forced\' is the default method. Because Easy Digital Downloads uses PHP to process the file with the \'forced\' method, larger files can cause problems with delivery, resulting in hitting the \'max execution time\' of the server. If users are getting 404 or 403 errors when trying to access their purchased files when using the \'forced\' method, changing to the \'redirect\' method can help resolve this.', 'easy-digital-downloads' ),
 						'options' => array(
 							'direct'   => __( 'Forced', 'easy-digital-downloads' ),
 							'redirect' => __( 'Redirect', 'easy-digital-downloads' ),
@@ -766,15 +803,19 @@ function edd_get_registered_settings() {
 						'desc' => sprintf( __( 'The maximum number of times files can be downloaded for purchases. Can be overwritten for each %s.', 'easy-digital-downloads' ), edd_get_label_singular() ),
 						'type' => 'number',
 						'size' => 'small',
+						'tooltip_title' => __( 'File Download Limits', 'easy-digital-downloads' ),
+						'tooltip_desc'  => sprintf( __( 'Set the global default for the number of times a customer can download items they purchase. Using a valud of 0 is unlimited. This can be defined on a %s-specific level as well. Download limits can also be reset for an individual purchase.', 'easy-digital-downloads' ), edd_get_label_singular( true ) ),
 					),
 					'download_link_expiration' => array(
-						'id'   => 'download_link_expiration',
-						'name' => __( 'Download Link Expiration', 'easy-digital-downloads' ),
-						'desc' => __( 'How long should download links be valid for? Default is 24 hours from the time they are generated. Enter a time in hours.', 'easy-digital-downloads' ),
-						'type' => 'number',
-						'size' => 'small',
-						'std'  => '24',
-						'min'  => '0',
+						'id'            => 'download_link_expiration',
+						'name'          => __( 'Download Link Expiration', 'easy-digital-downloads' ),
+						'desc'          => __( 'How long should download links be valid for? Default is 24 hours from the time they are generated. Enter a time in hours.', 'easy-digital-downloads' ),
+						'tooltip_title' => __( 'Download Link Expiration', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'When a customer receives a link to their downloads via email, in their receipt, or in their purchase history, the link will only be valid for the timeframe (in hours) defined in this setting. Sending a new purchase receipt or visiting the account page will re-generate a valid link for the customer.', 'easy-digital-downloads' ),
+						'type'          => 'number',
+						'size'          => 'small',
+						'std'           => '24',
+						'min'           => '0',
 					),
 					'disable_redownload' => array(
 						'id'   => 'disable_redownload',
@@ -1217,7 +1258,7 @@ function edd_get_pages( $force = false ) {
  * @return void
  */
 function edd_header_callback( $args ) {
-	echo '';
+	echo apply_filters( 'edd_after_setting_output', '', $args );
 }
 
 /**
@@ -1243,7 +1284,7 @@ function edd_checkbox_callback( $args ) {
 	$html     = '<input type="checkbox" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"' . $name . ' value="1" ' . $checked . '/>';
 	$html    .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 
-	echo $html;
+	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
 
 /**
@@ -1259,14 +1300,17 @@ function edd_checkbox_callback( $args ) {
 function edd_multicheck_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
 
+	$html = '';
 	if ( ! empty( $args['options'] ) ) {
 		foreach( $args['options'] as $key => $option ):
 			if( isset( $edd_option[ $key ] ) ) { $enabled = $option; } else { $enabled = NULL; }
-			echo '<input name="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked($option, $enabled, false) . '/>&nbsp;';
-			echo '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']">' . wp_kses_post( $option ) . '</label><br/>';
+			$html .= '<input name="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked($option, $enabled, false) . '/>&nbsp;';
+			$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']">' . wp_kses_post( $option ) . '</label><br/>';
 		endforeach;
-		echo '<p class="description">' . $args['desc'] . '</p>';
+		$html .= '<p class="description">' . $args['desc'] . '</p>';
 	}
+
+	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
 
 /**
@@ -1280,6 +1324,7 @@ function edd_multicheck_callback( $args ) {
 function edd_payment_icons_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
 
+	$html = '';
 	if ( ! empty( $args['options'] ) ) {
 		foreach( $args['options'] as $key => $option ) {
 
@@ -1289,9 +1334,9 @@ function edd_payment_icons_callback( $args ) {
 				$enabled = NULL;
 			}
 
-			echo '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" style="margin-right:10px;line-height:16px;height:16px;display:inline-block;">';
+			$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" style="margin-right:10px;line-height:16px;height:16px;display:inline-block;">';
 
-				echo '<input name="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked( $option, $enabled, false ) . '/>&nbsp;';
+				$html .= '<input name="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked( $option, $enabled, false ) . '/>&nbsp;';
 
 				if( edd_string_is_image_url( $key ) ) {
 
@@ -1322,15 +1367,17 @@ function edd_payment_icons_callback( $args ) {
 
 					}
 
-					echo '<img class="payment-icon" src="' . esc_url( $image ) . '" style="width:32px;height:24px;position:relative;top:6px;margin-right:5px;"/>';
+					$html .= '<img class="payment-icon" src="' . esc_url( $image ) . '" style="width:32px;height:24px;position:relative;top:6px;margin-right:5px;"/>';
 				}
 
 
-			echo $option . '</label>';
+			$html .= $option . '</label>';
 
 		}
-		echo '<p class="description" style="margin-top:16px;">' . wp_kses_post( $args['desc'] ) . '</p>';
+		$html .= '<p class="description" style="margin-top:16px;">' . wp_kses_post( $args['desc'] ) . '</p>';
 	}
+
+	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
 
 /**
@@ -1346,6 +1393,8 @@ function edd_payment_icons_callback( $args ) {
 function edd_radio_callback( $args ) {
 	$edd_options = edd_get_option( $args['id'] );
 
+	$html = '';
+
 	foreach ( $args['options'] as $key => $option ) :
 		$checked = false;
 
@@ -1354,11 +1403,13 @@ function edd_radio_callback( $args ) {
 		elseif( isset( $args['std'] ) && $args['std'] == $key && ! $edd_options )
 			$checked = true;
 
-		echo '<input name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" type="radio" value="' . edd_sanitize_key( $key ) . '" ' . checked(true, $checked, false) . '/>&nbsp;';
-		echo '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']">' . esc_html( $option ) . '</label><br/>';
+		$html .= '<input name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" type="radio" value="' . edd_sanitize_key( $key ) . '" ' . checked(true, $checked, false) . '/>&nbsp;';
+		$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']">' . esc_html( $option ) . '</label><br/>';
 	endforeach;
 
-	echo '<p class="description">' . wp_kses_post( $args['desc'] ) . '</p>';
+	$html .= '<p class="description">' . apply_filters( 'edd_after_setting_output', wp_kses_post( $args['desc'] ), $args ) . '</p>';
+
+	echo $html;
 }
 
 /**
@@ -1374,15 +1425,19 @@ function edd_radio_callback( $args ) {
 function edd_gateways_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
 
+	$html = '';
+
 	foreach ( $args['options'] as $key => $option ) :
 		if ( isset( $edd_option[ $key ] ) )
 			$enabled = '1';
 		else
 			$enabled = null;
 
-		echo '<input name="edd_settings[' . esc_attr( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']"" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" type="checkbox" value="1" ' . checked('1', $enabled, false) . '/>&nbsp;';
-		echo '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']">' . esc_html( $option['admin_label'] ) . '</label><br/>';
+		$html .= '<input name="edd_settings[' . esc_attr( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']"" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" type="checkbox" value="1" ' . checked('1', $enabled, false) . '/>&nbsp;';
+		$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']">' . esc_html( $option['admin_label'] ) . '</label><br/>';
 	endforeach;
+
+	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
 
 /**
@@ -1398,15 +1453,19 @@ function edd_gateways_callback( $args ) {
 function edd_gateway_select_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
 
-	echo '<select name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']">';
+	$html = '';
+
+	$html .= '<select name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']">';
 
 	foreach ( $args['options'] as $key => $option ) :
 		$selected = isset( $edd_option ) ? selected( $key, $edd_option, false ) : '';
-		echo '<option value="' . edd_sanitize_key( $key ) . '"' . $selected . '>' . esc_html( $option['admin_label'] ) . '</option>';
+		$html .= '<option value="' . edd_sanitize_key( $key ) . '"' . $selected . '>' . esc_html( $option['admin_label'] ) . '</option>';
 	endforeach;
 
-	echo '</select>';
-	echo '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
+	$html .= '</select>';
+	$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
+
+	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
 
 /**
@@ -1441,7 +1500,7 @@ function edd_text_callback( $args ) {
 	$html     = '<input type="text" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" ' . $name . ' value="' . esc_attr( stripslashes( $value ) ) . '"' . $readonly . '/>';
 	$html    .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 
-	echo $html;
+	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
 
 /**
@@ -1479,7 +1538,7 @@ function edd_number_callback( $args ) {
 	$html = '<input type="number" step="' . esc_attr( $step ) . '" max="' . esc_attr( $max ) . '" min="' . esc_attr( $min ) . '" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" ' . $name . ' value="' . esc_attr( stripslashes( $value ) ) . '"/>';
 	$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 
-	echo $html;
+	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
 
 /**
@@ -1504,7 +1563,7 @@ function edd_textarea_callback( $args ) {
 	$html = '<textarea class="large-text" cols="50" rows="5" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
 	$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 
-	echo $html;
+	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
 
 /**
@@ -1530,7 +1589,7 @@ function edd_password_callback( $args ) {
 	$html = '<input type="password" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']" value="' . esc_attr( $value ) . '"/>';
 	$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> ' . wp_kses_post( $args['desc'] ) . '</label>';
 
-	echo $html;
+	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
 
 /**
@@ -1590,7 +1649,7 @@ function edd_select_callback($args) {
 	$html .= '</select>';
 	$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> ' . wp_kses_post( $args['desc'] ) . '</label>';
 
-	echo $html;
+	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
 
 /**
@@ -1622,7 +1681,7 @@ function edd_color_select_callback( $args ) {
 	$html .= '</select>';
 	$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 
-	echo $html;
+	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
 
 /**
@@ -1655,7 +1714,7 @@ function edd_rich_editor_callback( $args ) {
 
 	$html .= '<br/><label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> ' . wp_kses_post( $args['desc'] ) . '</label>';
 
-	echo $html;
+	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
 
 /**
@@ -1682,7 +1741,7 @@ function edd_upload_callback( $args ) {
 	$html .= '<span>&nbsp;<input type="button" class="edd_settings_upload_button button-secondary" value="' . __( 'Upload File', 'easy-digital-downloads' ) . '"/></span>';
 	$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> ' . wp_kses_post( $args['desc'] ) . '</label>';
 
-	echo $html;
+	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
 
 
@@ -1710,7 +1769,7 @@ function edd_color_callback( $args ) {
 	$html = '<input type="text" class="edd-color-picker" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']" value="' . esc_attr( $value ) . '" data-default-color="' . esc_attr( $default ) . '" />';
 	$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 
-	echo $html;
+	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
 
 /**
@@ -1746,7 +1805,7 @@ function edd_shop_states_callback($args) {
 	$html .= '</select>';
 	$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 
-	echo $html;
+	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
 
 /**
@@ -1863,7 +1922,9 @@ function edd_tax_rates_callback($args) {
  * @return void
  */
 function edd_descriptive_text_callback( $args ) {
-	echo wp_kses_post( $args['desc'] );
+	$html = wp_kses_post( $args['desc'] );
+
+	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
 
 /**
@@ -2073,3 +2134,14 @@ function edd_set_settings_cap() {
 	return 'manage_shop_settings';
 }
 add_filter( 'option_page_capability_edd_settings', 'edd_set_settings_cap' );
+
+function edd_add_setting_tooltip( $html, $args ) {
+
+	if ( ! empty( $args['tooltip_title'] ) && ! empty( $args['tooltip_desc'] ) ) {
+		$tooltip = '<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong>' . $args['tooltip_title'] . '</strong>: ' . $args['tooltip_desc'] . '"></span>';
+		$html .= $tooltip;
+	}
+
+	return $html;
+}
+add_filter( 'edd_after_setting_output', 'edd_add_setting_tooltip', 10, 2 );

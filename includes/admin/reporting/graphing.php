@@ -30,12 +30,14 @@ function edd_reports_graph() {
 			break;
 		case 'last_year' :
 		case 'this_year' :
-		case 'last_quarter' :
-		case 'this_quarter' :
 			$day_by_day = false;
 			break;
+		case 'last_quarter' :
+		case 'this_quarter' :
+			$day_by_day = true;
+			break;
 		case 'other' :
-			if( $dates['m_end'] - $dates['m_start'] >= 2 || ( $dates['year_end'] > $dates['year'] && ( $dates['m_start'] - $dates['m_end'] ) != 11 ) ) {
+			if( $dates['m_end'] - $dates['m_start'] >= 3 || ( $dates['year_end'] > $dates['year'] && ( $dates['m_start'] - $dates['m_end'] ) != 10 ) ) {
 				$day_by_day = false;
 			} else {
 				$day_by_day = true;
@@ -50,8 +52,6 @@ function edd_reports_graph() {
 	$sales_totals    = 0;    // Total sales for time period shown
 
 	$include_taxes = empty( $_GET['exclude_taxes'] ) ? true : false;
-	$earnings_data = array();
-	$sales_data    = array();
 
 	if( $dates['range'] == 'today' || $dates['range'] == 'yesterday' ) {
 		// Hour by hour
@@ -112,6 +112,10 @@ function edd_reports_graph() {
 	} else {
 
 		$y = $dates['year'];
+		$temp_data = array(
+			'sales'    => array(),
+			'earnings' => array(),
+		);
 
 		while( $y <= $dates['year_end'] ) {
 
@@ -135,65 +139,37 @@ function edd_reports_graph() {
 			$i = $month_start;
 			while ( $i <= $month_end ) {
 
-				if ( $day_by_day ) {
 
-					$d = $dates['day'];
+				$d = $dates['day'];
 
-					if( $i == $month_end ) {
+				if( $i == $month_end ) {
 
-						$num_of_days = $dates['day_end'];
+					$num_of_days = $dates['day_end'];
 
-						if ( $month_start < $month_end ) {
+					if ( $month_start < $month_end ) {
 
-							$d = 1;
-
-						}
-
-					} else {
-
-						$num_of_days = cal_days_in_month( CAL_GREGORIAN, $i, $y );
-
-					}
-
-
-
-
-					while ( $d <= $num_of_days ) {
-
-						$sales = edd_get_sales_by_date( $d, $i, $y );
-						$sales_totals += $sales;
-
-						$earnings = edd_get_earnings_by_date( $d, $i, $y, null, $include_taxes );
-						$earnings_totals += $earnings;
-
-						$date = mktime( 0, 0, 0, $i, $d, $y ) * 1000;
-						$sales_data[] = array( $date, $sales );
-						$earnings_data[] = array( $date, $earnings );
-						$d++;
+						$d = 1;
 
 					}
 
 				} else {
 
-					$sales = edd_get_sales_by_date( null, $i, $y );
-					$sales_totals += $sales;
+					$num_of_days = cal_days_in_month( CAL_GREGORIAN, $i, $y );
 
-					$earnings = edd_get_earnings_by_date( null, $i, $y, null, $include_taxes );
+				}
+
+				while ( $d <= $num_of_days ) {
+
+					$earnings         = edd_get_earnings_by_date( $d, $i, $y, null, $include_taxes );
 					$earnings_totals += $earnings;
 
-					if( $i == $month_end && $last_year ) {
+					$sales         = edd_get_sales_by_date( $d, $i, $y );
+					$sales_totals += $sales;
 
-						$num_of_days = cal_days_in_month( CAL_GREGORIAN, $i, $y );
+					$temp_data['earnings'][ $y ][ $i ][ $d ] = $earnings;
+					$temp_data['sales'][ $y ][ $i ][ $d ]    = $sales;
 
-					} else {
-
-						$num_of_days = 1;
-
-					}
-
-					$date = mktime( 0, 0, 0, $i, $num_of_days, $y ) * 1000;
-					$sales_data[] = array( $date, $sales );
-					$earnings_data[] = array( $date, $earnings );
+					$d++;
 
 				}
 
@@ -202,6 +178,77 @@ function edd_reports_graph() {
 			}
 
 			$y++;
+		}
+
+		$sales_data    = array();
+		$earnings_data = array();
+
+		// When using 3 months or smaller as the custom range, show each day individually on the graph
+		if ( $day_by_day ) {
+
+			foreach ( $temp_data[ 'sales' ] as $year => $months ) {
+				foreach( $months as $month => $days ) {
+					foreach ( $days as $day => $sales ) {
+						$date         = mktime( 0, 0, 0, $month, $day, $year ) * 1000;
+						$sales_data[] = array( $date, $sales );
+					}
+
+				}
+			}
+
+			foreach ( $temp_data[ 'earnings' ] as $year => $months ) {
+				foreach( $months as $month => $days ) {
+					foreach ( $days as $day => $earnings ) {
+						$date         = mktime( 0, 0, 0, $month, $day, $year ) * 1000;
+						$earnings_data[] = array( $date, $earnings );
+					}
+
+				}
+			}
+
+		// When showing more than 3 months of results, group them by month, by the first (except for the last month, group on the last day of the month selected)
+		} else {
+
+			foreach ( $temp_data[ 'sales' ] as $year => $months ) {
+
+				$month_keys = array_keys( $months );
+				$last_month = end( $month_keys );
+
+				foreach( $months as $month => $days ) {
+
+					$day_keys = array_keys( $days );
+					$last_day = end( $day_keys );
+
+					$consolidated_date = $month === $last_month ? $last_day : 1;
+
+					$sales        = array_sum( $days );
+					$date         = mktime( 0, 0, 0, $month, $consolidated_date, $year ) * 1000;
+					$sales_data[] = array( $date, $sales );
+
+				}
+
+			}
+
+			foreach ( $temp_data[ 'earnings' ] as $year => $months ) {
+
+				$month_keys = array_keys( $months );
+				$last_month = end( $month_keys );
+
+				foreach( $months as $month => $days ) {
+
+					$day_keys = array_keys( $days );
+					$last_day = end( $day_keys );
+
+					$consolidated_date = $month === $last_month ? $last_day : 1;
+
+					$earnings        = array_sum( $days );
+					$date            = mktime( 0, 0, 0, $month, $consolidated_date, $year ) * 1000;
+					$earnings_data[] = array( $date, $earnings );
+
+				}
+
+			}
+
 		}
 
 	}
@@ -227,7 +274,7 @@ function edd_reports_graph() {
 					$graph->set( 'multiple_y_axes', true );
 					$graph->display();
 
-					if( 'this_month' == $dates['range'] ) {
+					if( ! empty( $dates['range'] ) && 'this_month' == $dates['range'] ) {
 						$estimated = edd_estimated_monthly_stats( $include_taxes );
 					}
 					?>
@@ -245,7 +292,7 @@ function edd_reports_graph() {
 					</p>
 					<p class="edd_graph_totals"><strong><?php _e( 'Total sales for period shown: ', 'easy-digital-downloads' ); echo edd_format_amount( $sales_totals, false ); ?></strong></p>
 
-					<?php if( 'this_month' == $dates['range'] ) : ?>
+					<?php if( ! empty( $dates['range'] ) && 'this_month' == $dates['range'] ) : ?>
 						<p class="edd_graph_totals">
 							<strong>
 								<?php
@@ -399,8 +446,9 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 	} else {
 
 		$y = $dates['year'];
+		$temp_data = array();
 
-		while( $y <= $dates['year_end'] ) :
+		while( $y <= $dates['year_end'] ) {
 
 			$last_year = false;
 
@@ -411,67 +459,131 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 			} elseif( $y == $dates['year'] ) {
 				$month_start = $dates['m_start'];
 				$month_end   = 12;
+			} elseif ( $y == $dates['year_end'] ) {
+				$month_start = 1;
+				$month_end   = $dates['m_end'];
 			} else {
 				$month_start = 1;
 				$month_end   = 12;
 			}
 
 			$i = $month_start;
-			while ( $i <= $month_end ) :
+			while ( $i <= $month_end ) {
 
-				if ( $day_by_day ) :
 
-					if( $i == $month_end && $last_year ) {
+				$d = $dates['day'];
 
-						$num_of_days = $dates['day_end'];
+				if( $i == $month_end ) {
 
-					} else {
+					$num_of_days = $dates['day_end'];
 
-						$num_of_days = cal_days_in_month( CAL_GREGORIAN, $i, $y );
+					if ( $month_start < $month_end ) {
+
+						$d = 1;
 
 					}
 
-					$d = $dates['day'];
-					while ( $d <= $num_of_days ) :
-
-						$date      = mktime( 0, 0, 0, $i, $d, $y );
-						$end_date  = mktime( 23, 59, 59, $i, $d, $y );
-
-						$sales = $stats->get_sales( $download_id, $date, $end_date );
-						$sales_totals += $sales;
-
-						$earnings = $stats->get_earnings( $download_id, $date, $end_date, $include_taxes );
-						$earnings_totals += $earnings;
-
-						$sales_data[] = array( $date * 1000, $sales );
-						$earnings_data[] = array( $date * 1000, $earnings );
-					$d++;
-
-					endwhile;
-
-				else :
+				} else {
 
 					$num_of_days = cal_days_in_month( CAL_GREGORIAN, $i, $y );
 
-					$date        = mktime( 0, 0, 0, $i, 1, $y );
-					$end_date    = mktime( 23, 59, 59, $i, $num_of_days, $y );
+				}
 
-					$sales = $stats->get_sales( $download_id, $date, $end_date );
-					$sales_totals += $sales;
+				while ( $d <= $num_of_days ) {
 
-					$earnings = $stats->get_earnings( $download_id, $date, $end_date, $include_taxes );
+					$date      = mktime( 0, 0, 0, $i, $d, $y );
+					$end_date  = mktime( 23, 59, 59, $i, $d, $y );
+
+					$earnings         = $stats->get_earnings( $download_id, $date, $end_date, $include_taxes );
 					$earnings_totals += $earnings;
 
-					$sales_data[] = array( $date * 1000, $sales );
-					$earnings_data[] = array( $date * 1000, $earnings );
-				endif;
+					$sales         = $stats->get_sales( $download_id, $date, $end_date );
+					$sales_totals += $sales;
+
+					$temp_data['earnings'][ $y ][ $i ][ $d ] = $earnings;
+					$temp_data['sales'][ $y ][ $i ][ $d ]    = $sales;
+
+					$d++;
+
+				}
 
 				$i++;
 
-			endwhile;
+			}
 
 			$y++;
-		endwhile;
+		}
+
+		$sales_data    = array();
+		$earnings_data = array();
+
+		// When using 2 months or smaller as the custom range, show each day individually on the graph
+		if ( $day_by_day ) {
+
+			foreach ( $temp_data[ 'sales' ] as $year => $months ) {
+				foreach( $months as $month => $dates ) {
+					foreach ( $dates as $day => $sales ) {
+						$date         = mktime( 0, 0, 0, $month, $day, $year ) * 1000;
+						$sales_data[] = array( $date, $sales );
+					}
+
+				}
+			}
+
+			foreach ( $temp_data[ 'earnings' ] as $year => $months ) {
+				foreach( $months as $month => $dates ) {
+					foreach ( $dates as $day => $sales ) {
+						$date         = mktime( 0, 0, 0, $month, $day, $year ) * 1000;
+						$earnings_data[] = array( $date, $earnings );
+					}
+
+				}
+			}
+
+		// When showing more than 2 months of results, group them by month, by the first (except for the last month, group on the last day of the month selected)
+		} else {
+
+			foreach ( $temp_data[ 'sales' ] as $year => $months ) {
+
+				$month_keys = array_keys( $months );
+				$last_month = end( $month_keys );
+
+				foreach( $months as $month => $days ) {
+
+					$day_keys = array_keys( $days );
+					$last_day = end( $day_keys );
+
+					$consolidated_date = $month === $last_month ? $last_day : 1;
+
+					$sales        = array_sum( $days );
+					$date         = mktime( 0, 0, 0, $month, $consolidated_date, $year ) * 1000;
+					$sales_data[] = array( $date, $sales );
+
+				}
+
+			}
+
+			foreach ( $temp_data[ 'earnings' ] as $year => $months ) {
+
+				$month_keys = array_keys( $months );
+				$last_month = end( $month_keys );
+
+				foreach( $months as $month => $days ) {
+
+					$day_keys = array_keys( $days );
+					$last_day = end( $day_keys );
+
+					$consolidated_date = $month === $last_month ? $last_day : 1;
+
+					$earnings        = array_sum( $days );
+					$date            = mktime( 0, 0, 0, $month, $consolidated_date, $year ) * 1000;
+					$earnings_data[] = array( $date, $earnings );
+
+				}
+
+			}
+
+		}
 
 	}
 
@@ -618,12 +730,15 @@ function edd_get_report_dates() {
 	$current_time = current_time( 'timestamp' );
 
 	$dates['range']      = isset( $_GET['range'] )   ? $_GET['range']   : 'this_month';
-	$dates['year']       = isset( $_GET['year'] )    ? $_GET['year']    : date( 'Y' );
-	$dates['year_end']   = isset( $_GET['year_end'] )? $_GET['year_end']: date( 'Y' );
-	$dates['m_start']    = isset( $_GET['m_start'] ) ? $_GET['m_start'] : 1;
-	$dates['m_end']      = isset( $_GET['m_end'] )   ? $_GET['m_end']   : 12;
-	$dates['day']        = isset( $_GET['day'] )     ? $_GET['day']     : 1;
-	$dates['day_end']    = isset( $_GET['day_end'] ) ? $_GET['day_end'] : cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] );
+
+	if ( 'custom' !== $dates['range'] ) {
+		$dates['year']       = isset( $_GET['year'] )    ? $_GET['year']    : date( 'Y' );
+		$dates['year_end']   = isset( $_GET['year_end'] )? $_GET['year_end']: date( 'Y' );
+		$dates['m_start']    = isset( $_GET['m_start'] ) ? $_GET['m_start'] : 1;
+		$dates['m_end']      = isset( $_GET['m_end'] )   ? $_GET['m_end']   : 12;
+		$dates['day']        = isset( $_GET['day'] )     ? $_GET['day']     : 1;
+		$dates['day_end']    = isset( $_GET['day_end'] ) ? $_GET['day_end'] : cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] );
+	}
 
 	// Modify dates based on predefined ranges
 	switch ( $dates['range'] ) :
@@ -704,33 +819,34 @@ function edd_get_report_dates() {
 
 		case 'this_quarter' :
 			$month_now = date( 'n', $current_time );
+			$dates['year']     = date( 'Y', $current_time );
+			$dates['year_end'] = $dates['year'];
 
 			if ( $month_now <= 3 ) {
 
-				$dates['m_start'] = 1;
-				$dates['m_end']   = 4;
-				$dates['year']    = date( 'Y', $current_time );
+				$dates['m_start']  = 1;
+				$dates['m_end']    = 3;
+
 
 			} else if ( $month_now <= 6 ) {
 
 				$dates['m_start'] = 4;
-				$dates['m_end']   = 7;
-				$dates['year']    = date( 'Y', $current_time );
+				$dates['m_end']   = 6;
+
 
 			} else if ( $month_now <= 9 ) {
 
 				$dates['m_start'] = 7;
-				$dates['m_end']   = 10;
-				$dates['year']    = date( 'Y', $current_time );
+				$dates['m_end']   = 9;
 
 			} else {
 
 				$dates['m_start']  = 10;
-				$dates['m_end']    = 1;
-				$dates['year']     = date( 'Y', $current_time );
-				$dates['year_end'] = date( 'Y', $current_time ) + 1;
+				$dates['m_end']    = 12;
 
 			}
+
+			$dates['day_end'] = cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] );
 		break;
 
 		case 'last_quarter' :
@@ -741,7 +857,6 @@ function edd_get_report_dates() {
 				$dates['m_start']  = 10;
 				$dates['m_end']    = 12;
 				$dates['year']     = date( 'Y', $current_time ) - 1; // Previous year
-				$dates['year_end'] = date( 'Y', $current_time ) - 1; // Previous year
 
 			} else if ( $month_now <= 6 ) {
 
@@ -762,12 +877,16 @@ function edd_get_report_dates() {
 				$dates['year']    = date( 'Y', $current_time );
 
 			}
+
+			$dates['day_end']  = cal_days_in_month( CAL_GREGORIAN, $dates['m_end'],  $dates['year'] );
+			$dates['year_end'] = $dates['year'];
 		break;
 
 		case 'this_year' :
-			$dates['m_start'] = 1;
-			$dates['m_end']   = 12;
-			$dates['year']    = date( 'Y', $current_time );
+			$dates['m_start']  = 1;
+			$dates['m_end']    = 12;
+			$dates['year']     = date( 'Y', $current_time );
+			$dates['year_end'] = $dates['year'];
 		break;
 
 		case 'last_year' :
