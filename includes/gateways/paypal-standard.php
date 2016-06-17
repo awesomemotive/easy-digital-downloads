@@ -72,10 +72,6 @@ function edd_register_paypal_gateway_settings( $gateway_settings ) {
 			'http://docs.easydigitaldownloads.com/article/190-payments-not-marked-as-complete'
 		);
 
-		if ( ! is_ssl() ) {
-			$disable_ipn_desc .= '<div class="notice notice-warning inline"><p>' . sprintf( __( 'PayPal IPN verification requires an SSL certificate. See our <a href="%s" target="_blank">PayPal SSL FAQ</a> for more information.', 'easy-digital-downloads' ), 'http://docs.easydigitaldownloads.com/article/1244-do-i-need-ssl-if-i-use-paypal' ) . '</p></div>';
-		}
-
 		$paypal_settings['disable_paypal_verification'] = array(
 			'id'   => 'disable_paypal_verification',
 			'name' => __( 'Disable PayPal IPN Verification', 'easy-digital-downloads' ),
@@ -405,7 +401,7 @@ function edd_process_paypal_ipn() {
 		);
 
 		// Get response
-		$api_response = wp_remote_post( edd_get_paypal_redirect(), $remote_post_vars );
+		$api_response = wp_remote_post( edd_get_paypal_redirect( true ), $remote_post_vars );
 
 		if ( is_wp_error( $api_response ) ) {
 			edd_record_gateway_error( __( 'IPN Error', 'easy-digital-downloads' ), sprintf( __( 'Invalid IPN verification response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $api_response ) ) );
