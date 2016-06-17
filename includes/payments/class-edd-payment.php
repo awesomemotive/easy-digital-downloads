@@ -1980,6 +1980,10 @@ class EDD_Payment {
 		$user_info    = isset( $this->payment_meta['user_info'] ) ? maybe_unserialize( $this->payment_meta['user_info'] ) : array();
 		$user_info    = wp_parse_args( $user_info, $defaults );
 
+		// Ensure email index is in the old user info array
+		if( empty( $user_info['email'] ) ) {
+			$user_info['email'] = $this->email;
+		}
 
 		if ( empty( $user_info ) ) {
 			// Get the customer, but only if it's been created
