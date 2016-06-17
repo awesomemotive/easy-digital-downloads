@@ -408,7 +408,7 @@ function edd_process_paypal_ipn() {
 			return; // Something went wrong
 		}
 
-		if ( $api_response['body'] !== 'VERIFIED' && edd_get_option( 'disable_paypal_verification', false ) ) {
+		if ( wp_remote_retrieve_body( $api_response ) !== 'VERIFIED' && edd_get_option( 'disable_paypal_verification', false ) ) {
 			edd_record_gateway_error( __( 'IPN Error', 'easy-digital-downloads' ), sprintf( __( 'Invalid IPN verification response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $api_response ) ) );
 			return; // Response not okay
 		}
@@ -416,8 +416,9 @@ function edd_process_paypal_ipn() {
 	}
 
 	// Check if $post_data_array has been populated
-	if ( ! is_array( $encoded_data_array ) && !empty( $encoded_data_array ) )
+	if ( ! is_array( $encoded_data_array ) && !empty( $encoded_data_array ) ) {
 		return;
+	}
 
 	$defaults = array(
 		'txn_type'       => '',
@@ -938,20 +939,18 @@ function edd_refund_paypal_purchase( $payment ) {
 
 	} else {
 
-		$body = wp_remote_retrieve_body( $request );
+		$body    = wp_remote_retrieve_body( $request );
+		$code    = wp_remote_retrieve_response_code( $request );
+		$message = wp_remote_retrieve_response_message( $request );
 		if( is_string( $body ) ) {
 			wp_parse_str( $body, $body );
 		}
 
-		if( empty( $request['response'] ) ) {
+		if( empty( $code ) || 200 !== (int) $code ) {
 			$success = false;
 		}
 
-		if( empty( $request['response']['code'] ) || 200 !== (int) $request['response']['code'] ) {
-			$success = false;
-		}
-
-		if( empty( $request['response']['message'] ) || 'OK' !== $request['response']['message'] ) {
+		if( empty( $message ) || 'OK' !== $message ) {
 			$success = false;
 		}
 
