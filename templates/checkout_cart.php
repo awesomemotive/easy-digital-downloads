@@ -30,7 +30,15 @@ global $post; ?>
 							}
 							$item_title = edd_get_cart_item_name( $item );
 							echo '<span class="edd_checkout_cart_item_title">' . esc_html( $item_title ) . '</span>';
-							do_action( 'edd_checkout_cart_item_title_after', $item );
+						
+							/**
+							 * Runs after the item in cart's title is echoed
+							 * @since 2.6
+							 *
+							 * @param array $item Cart Item
+							 * @param int $key Cart key
+							 */
+							do_action( 'edd_checkout_cart_item_title_after', $item, $key );
 						?>
 					</td>
 					<td class="edd_cart_item_price">
