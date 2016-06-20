@@ -333,16 +333,19 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 		}
 
-		$payment->address = array( 'line1' => '', 'line2' => '', 'city' => '', 'state' => '', 'zip' => '', 'country' => '' );
+		$address = array( 'line1' => '', 'line2' => '', 'city' => '', 'state' => '', 'zip' => '', 'country' => '' );
 
-		foreach( $payment->address as $key => $address_field ) {
+		foreach( $address as $key => $address_field ) {
 
 			if( ! empty( $this->field_mapping[ $key ] ) && ! empty( $row[ $this->field_mapping[ $key ] ] ) ) {
 
-				$payment->address[ $key ] = sanitize_text_field( $row[ $this->field_mapping[ $key ] ] );
+				$address[ $key ] = sanitize_text_field( $row[ $this->field_mapping[ $key ] ] );
 
 			}
+
 		}
+
+		$payment->address = $address;
 
 		$payment->save();
 
