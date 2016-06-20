@@ -413,7 +413,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 				$customer = $customer_by_email;
 
-			} else {
+			} else if ( ! empty( $customer_by_id ) ) {
 
 				$customer = $customer_by_id;
 
@@ -424,7 +424,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 			}
 
 			// Make sure we found a customer. Create one if not.
-			if( ! $customer->id > 0 ) {
+			if( ! is_a( $customer, 'EDD_Customer' ) || empty( $customer->id ) ) {
 
 				$first_name = '';
 				$last_name  = '';
