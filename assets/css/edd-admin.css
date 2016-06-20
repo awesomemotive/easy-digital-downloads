@@ -51,7 +51,7 @@ a.edd-delete:hover {
 	cursor: help;
 }
 
-.ui-tooltip {
+.edd-ui-tooltip {
 	background: #333 !important;
 	border-radius: 3px !important;
 	box-shadow: 1px 1px 2px 1px rgba(214,214,214,0.5);
