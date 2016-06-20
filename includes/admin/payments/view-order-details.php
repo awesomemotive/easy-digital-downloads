@@ -178,7 +178,7 @@ $currency_code  = $payment->currency;
 									<?php do_action( 'edd_view_order_details_resend_receipt_before', $payment_id ); ?>
 										<?php if( edd_is_payment_complete( $payment_id ) ) : ?>
 											<a href="<?php echo add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $payment_id ) ); ?>" id="edd-resend-receipt" class="button-secondary alignleft"><?php _e( 'Resend Receipt', 'easy-digital-downloads' ); ?></a>
-											<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Resend Receipt</strong>: This will send a new copy of the purchase receipt to the customer&#8217;s email address. If download URLs are included on the receipt, new file download URLs will be included with the receipt.', 'easy-digital-downloads' ); ?>"></span>
+											<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Resend Receipt</strong>: This will send a new copy of the purchase receipt to the customer&#8217;s email address. If download URLs are included in the receipt, new file download URLs will also be included with the receipt.', 'easy-digital-downloads' ); ?>"></span>
 										<?php endif; ?>
 										<div class="clear"></div>
 										<?php do_action( 'edd_view_order_details_resend_receipt_after', $payment_id ); ?>
