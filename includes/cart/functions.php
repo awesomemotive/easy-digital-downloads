@@ -62,6 +62,13 @@ function edd_get_cart_content_details() {
 		$quantity   = edd_get_cart_item_quantity( $item['id'], $item['options'] );
 		$fees       = edd_get_cart_fees( 'fee', $item['id'], $price_id );
 		$subtotal   = $item_price * $quantity;
+
+		foreach ( $fees as $fee ) {
+			if ( $fee['amount'] < 0 ) {
+				$subtotal += $fee['amount'];
+			}
+		}
+
 		$tax        = edd_get_cart_item_tax( $item['id'], $item['options'], $subtotal - $discount );
 
 		if( edd_prices_include_tax() ) {
@@ -784,7 +791,19 @@ function edd_get_cart_fees( $type = 'all', $download_id = 0, $price_id = NULL ) 
  * @return float Total Cart Fees
  */
 function edd_get_cart_fee_total() {
-	return EDD()->fees->total();
+	$fees = EDD()->fees->get_fees( 'all' );
+
+	$fee_total = 0.00;
+	foreach ( $fees as $fee ) {
+		if ( ! empty( $fee['download_id'] ) && ( $fee['amount'] <= 0 || $fee['no_tax'] === true ) ) {
+			continue;
+		}
+
+		$fee_total += $fee['amount'];
+
+	}
+
+	return apply_filters( 'edd_get_fee_total', $fee_total, $fees );
 }
 
 /**
@@ -860,12 +879,8 @@ function edd_get_cart_tax() {
 
 	$cart_tax     = 0;
 	$items        = edd_get_cart_content_details();
-	$subtotal     = (float) edd_get_cart_subtotal();
-	$discounts    = (float) edd_get_cart_discounted_amount();
-	$fees         = (float) edd_get_cart_fee_total();
-	$total_wo_tax = $subtotal - $discounts + $fees; 
 
-	if( $items && $total_wo_tax > 0 ) {
+	if( $items ) {
 
 		$taxes = wp_list_pluck( $items, 'tax' );
 
