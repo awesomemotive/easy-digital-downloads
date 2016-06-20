@@ -426,6 +426,9 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 			// Make sure we found a customer. Create one if not.
 			if( ! $customer->id > 0 ) {
 
+				$first_name = '';
+				$last_name  = '';
+
 				if( ! empty( $this->field_mapping['first_name'] ) && ! empty( $row[ $this->field_mapping['first_name'] ] ) ) {
 
 					$first_name = sanitize_text_field( $row[ $this->field_mapping['first_name'] ] );
