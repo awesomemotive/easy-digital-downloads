@@ -107,7 +107,7 @@ function edd_add_ons_get_feed( $tab = 'popular' ) {
 		if ( ! is_wp_error( $feed ) ) {
 			if ( isset( $feed['body'] ) && strlen( $feed['body'] ) > 0 ) {
 				$cache = wp_remote_retrieve_body( $feed );
-				set_transient( 'easydigitaldownloads_add_ons_feed_' . $tab, $cache, 3600 );
+				set_transient( 'easydigitaldownloads_add_ons_feed_' . $tab, $cache, DAY_IN_SECONDS * 2 );
 			}
 		} else {
 			$cache = '<div class="error"><p>' . __( 'There was an error retrieving the extensions list from the server. Please try again later.', 'easy-digital-downloads' ) . '</div>';
