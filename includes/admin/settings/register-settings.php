@@ -804,7 +804,7 @@ function edd_get_registered_settings() {
 						'type' => 'number',
 						'size' => 'small',
 						'tooltip_title' => __( 'File Download Limits', 'easy-digital-downloads' ),
-						'tooltip_desc'  => sprintf( __( 'Set the global default for the number of times a customer can download items they purchase. Using a valud of 0 is unlimited. This can be defined on a %s-specific level as well. Download limits can also be reset for an individual purchase.', 'easy-digital-downloads' ), edd_get_label_singular( true ) ),
+						'tooltip_desc'  => sprintf( __( 'Set the global default for the number of times a customer can download items they purchase. Using a value of 0 is unlimited. This can be defined on a %s-specific level as well. Download limits can also be reset for an individual purchase.', 'easy-digital-downloads' ), edd_get_label_singular( true ) ),
 					),
 					'download_link_expiration' => array(
 						'id'            => 'download_link_expiration',
