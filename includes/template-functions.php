@@ -967,3 +967,18 @@ function edd_add_oembed_price() {
 	}
 }
 add_action( 'embed_content', 'edd_add_oembed_price' );
+
+/**
+ * Remove comments button for download embeds
+ *
+ * @since 2.6
+ * @return  void
+ */
+function edd_remove_embed_comments_button() {
+	global $post;
+
+	if ( ! empty( $post ) && $post->post_type == 'download' ) {
+		remove_action( 'embed_content_meta', 'print_embed_comments_button' );
+	}
+}
+add_action( 'embed_content_meta', 'edd_remove_embed_comments_button', 5 );
