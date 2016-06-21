@@ -669,7 +669,7 @@ function edd_get_registered_settings() {
 					),
 					'enable_ajax_cart' => array(
 						'id'   => 'enable_ajax_cart',
-						'name' => __( 'Enable Ajax', 'easy-digital-downloads' ),
+						'name' => __( 'Enable AJAX', 'easy-digital-downloads' ),
 						'desc' => __( 'Check this to enable AJAX for the shopping cart.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
 						'std'  => '1',
