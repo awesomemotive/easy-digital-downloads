@@ -795,7 +795,7 @@ function edd_get_cart_fee_total() {
 
 	$fee_total = 0.00;
 	foreach ( $fees as $fee ) {
-		if ( ! empty( $fee['download_id'] ) && ( $fee['amount'] <= 0 || $fee['no_tax'] === true ) ) {
+		if ( ! empty( $fee['download_id'] ) && $fee['amount'] <= 0 ) {
 			continue;
 		}
 
