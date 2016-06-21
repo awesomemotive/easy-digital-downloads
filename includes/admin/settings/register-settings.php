@@ -742,7 +742,7 @@ function edd_get_registered_settings() {
 						'desc' => __( 'Check this to enable cart saving on the checkout.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
 						'tooltip_title' => __( 'Cart Saving', 'easy-digital-downloads' ),
-						'tooltip_desc'  => __( 'Cart saving allows shoppers to create a temporary link to their current shopping cart so they can come back to it later, or share it with someone..', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'Cart saving allows shoppers to create a temporary link to their current shopping cart so they can come back to it later, or share it with someone.', 'easy-digital-downloads' ),
 					),
 				),
 				'button_text' => array(
