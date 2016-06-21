@@ -174,6 +174,11 @@ function edd_login_form_shortcode( $atts, $content = null ) {
 			'redirect' => '',
 		), $atts, 'edd_login' )
 	);
+
+	if ( empty( $redirect ) ) {
+		$redirect = get_permalink( edd_get_option( 'redirect_page', '' ) );
+	}
+
 	return edd_login_form( $redirect );
 }
 add_shortcode( 'edd_login', 'edd_login_form_shortcode' );
