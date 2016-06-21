@@ -977,7 +977,9 @@ add_action( 'embed_content', 'edd_add_oembed_price' );
 function edd_remove_embed_comments_button() {
 	global $post;
 
-	if ( ! empty( $post ) && $post->post_type == 'download' ) {
+	$hide_comments = apply_filters( 'edd_embed_hide_comments', true, $post );
+
+	if ( ! empty( $post ) && $post->post_type == 'download' && true === $hide_comments ) {
 		remove_action( 'embed_content_meta', 'print_embed_comments_button' );
 	}
 }
