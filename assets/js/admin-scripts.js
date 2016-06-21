@@ -5,6 +5,7 @@ jQuery(document).ready(function ($) {
 		content: function() {
 			return $(this).prop('title');
 		},
+		tooltipClass: 'edd-ui-tooltip',
 		position: {
 			my: 'center top',
 			at: 'center bottom+10',
