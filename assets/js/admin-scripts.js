@@ -1842,7 +1842,7 @@ jQuery(document).ready(function ($) {
 	};
 	EDD_Customer.init();
 
-	// Ajax user search
+	// AJAX user search
 	$('.edd-ajax-user-search').keyup(function() {
 		var user_search = $(this).val();
 		var exclude     = '';
