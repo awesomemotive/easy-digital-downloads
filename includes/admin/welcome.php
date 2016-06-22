@@ -197,7 +197,7 @@ class EDD_Welcome {
 						<p><?php _e( 'While we strive to make Easy Digital Downloads live up to its name, there are always times when certain things are not quite clear. To help alleviate any uncertainty, we have introduced improved descriptions and help texts throughout the plugin. Along with the improved descriptions, we have also added tooltips in many places that offer verbose definitions of options.', 'easy-digital-downloads' );?></p>
 
 						<h4><?php _e( 'Better Mobile Checkout', 'easy-digital-downloads' );?></h4>
-						<p><?php _e( 'When purchasing with a debit or credit card from a mobile phone, the card number input field will not properly set the phone’s keyboard to a numerical keyboard.', 'easy-digital-downloads' );?></p>
+						<p><?php _e( 'When purchasing with a debit or credit card from a mobile phone, the card number input field will now properly set the phone’s keyboard to a numerical keyboard.', 'easy-digital-downloads' );?></p>
 					</div>
 				</div>
 			</div>
