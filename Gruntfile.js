@@ -157,7 +157,7 @@ grunt.initConfig({
 			options: {
 				domainPath: 'languages',
 				url: 'https://translate.wordpress.org',
-				slug: 'wp-plugins/easy-digital-downloads/dev',
+				slug: 'wp-plugins/easy-digital-downloads/stable',
 				textdomain: 'easy-digital-downloads',
 				filter: {
 					minimum_percentage: 1,
