@@ -1206,7 +1206,6 @@ jQuery(document).ready(function ($) {
 					data: {
 						action: search_type,
 						s: val,
-						current_id: edd_vars.post_id,
 						no_bundles: no_bundles
 					},
 					dataType: "json",
