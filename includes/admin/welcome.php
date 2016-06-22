@@ -215,7 +215,7 @@ class EDD_Welcome {
 						<p><?php _e( 'With the new import options, Easy Digital Downloads now makes it easy to import products from a CSV file into your store. Whether you wish to import five products or 50,000, Easy Digital Downloads can now effortlessly handle the import for you.', 'easy-digital-downloads' );?></p>
 
 						<h4><?php _e( 'Payment Import', 'easy-digital-downloads' );?></h4>
-						<p><?php _e( 'Sometimes it is necessary to move purchase reecords from one location to another. Perhaps you are transition from another eCommerce system, or from a separate Easy Digital Downloads store; whatever the reason, Easy Digital Downloads now allows you to easily import purchase records from a CSV file.', 'easy-digital-downloads' );?></p>
+						<p><?php _e( 'Sometimes it is necessary to move purchase reecords from one location to another. Perhaps you are transitioning from another eCommerce system, or from a separate Easy Digital Downloads store; whatever the reason, Easy Digital Downloads now allows you to easily import purchase records from a CSV file.', 'easy-digital-downloads' );?></p>
 					</div>
 				</div>
 			</div>
