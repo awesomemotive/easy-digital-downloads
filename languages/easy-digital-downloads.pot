@@ -4,14 +4,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 2.6-beta2\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2016-06-14 15:00:40+00:00\n"
+"POT-Creation-Date: 2016-06-22 15:34:51+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "PO-Revision-Date: 2016-MO-DA HO:MI+ZONE\n"
 "Last-Translator: WP-Translations (http://wp-translations.org/)\n"
 "Language-Team: WP-Translations <wpt@wp-translations.org>\n"
-"X-Generator: grunt-wp-i18n 0.5.4\n"
+"X-Generator: grunt-wp-i18n 0.5.0\n"
 "X-Poedit-KeywordsList: "
 "__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
 "attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
@@ -89,15 +89,15 @@ msgstr ""
 #: includes/admin/upgrades/upgrade-functions.php:874
 #: includes/admin/upgrades/upgrade-functions.php:1002
 #: includes/admin/upgrades/upgrade-functions.php:1087
-#: includes/api/class-edd-api.php:1818 includes/api/class-edd-api.php:1823
-#: includes/api/class-edd-api.php:1835 includes/api/class-edd-api.php:1837
+#: includes/api/class-edd-api.php:1836 includes/api/class-edd-api.php:1841
+#: includes/api/class-edd-api.php:1853 includes/api/class-edd-api.php:1855
 #: includes/cart/functions.php:1157 includes/cart/functions.php:1174
 #: includes/class-edd-license-handler.php:304
 #: includes/deprecated-functions.php:517 includes/deprecated-functions.php:532
 #: includes/deprecated-functions.php:542 includes/download-functions.php:1228
 #: includes/emails/actions.php:49 includes/emails/template.php:245
 #: includes/error-tracking.php:36 includes/gateways/functions.php:221
-#: includes/gateways/manual.php:33 includes/gateways/paypal-standard.php:159
+#: includes/gateways/manual.php:33 includes/gateways/paypal-standard.php:155
 #: includes/process-download.php:254 includes/process-download.php:787
 #: includes/query-filters.php:48 includes/user-functions.php:809
 #: includes/user-functions.php:834 includes/user-functions.php:887
@@ -138,7 +138,7 @@ msgid "Customers"
 msgstr ""
 
 #: includes/admin/admin-pages.php:39
-#: includes/admin/discounts/discount-codes.php:33 includes/admin/tools.php:411
+#: includes/admin/discounts/discount-codes.php:33
 msgid "Discount Codes"
 msgstr ""
 
@@ -493,7 +493,7 @@ msgstr ""
 #: includes/admin/import/import-functions.php:98
 #: includes/admin/reporting/export/export-actions.php:23
 #: includes/admin/reporting/pdf-reports.php:33
-#: includes/api/class-edd-api.php:1818
+#: includes/api/class-edd-api.php:1836
 #: includes/class-edd-license-handler.php:304
 msgid "Nonce verification failed"
 msgstr ""
@@ -565,7 +565,7 @@ msgid "Invalid Customer ID Provided."
 msgstr ""
 
 #: includes/admin/customers/customers.php:115
-#: includes/admin/payments/view-order-details.php:408
+#: includes/admin/payments/view-order-details.php:420
 msgid "Customer Details"
 msgstr ""
 
@@ -608,7 +608,7 @@ msgstr ""
 msgid "Customer Name"
 msgstr ""
 
-#: includes/admin/customers/customers.php:258 includes/admin/tools.php:375
+#: includes/admin/customers/customers.php:258
 msgid "Customer Email"
 msgstr ""
 
@@ -616,7 +616,7 @@ msgstr ""
 msgid "Customer since"
 msgstr ""
 
-#: includes/admin/customers/customers.php:286 includes/admin/tools.php:537
+#: includes/admin/customers/customers.php:286
 msgid "User ID"
 msgstr ""
 
@@ -636,7 +636,7 @@ msgstr ""
 
 #: includes/admin/customers/customers.php:306
 #: includes/admin/customers/customers.php:588
-#: includes/admin/payments/view-order-details.php:442
+#: includes/admin/payments/view-order-details.php:454
 #: includes/admin/thickbox.php:131 includes/class-edd-html-elements.php:586
 msgid "Cancel"
 msgstr ""
@@ -668,7 +668,7 @@ msgstr ""
 #: includes/admin/reporting/class-export-payments.php:63
 #: includes/admin/reporting/export/class-batch-export-customers.php:44
 #: includes/admin/reporting/export/class-batch-export-payments.php:42
-#: templates/shortcode-register.php:23
+#: includes/admin/tools.php:375 templates/shortcode-register.php:23
 msgid "Email"
 msgstr ""
 
@@ -684,9 +684,9 @@ msgid "Make Primary"
 msgstr ""
 
 #: includes/admin/customers/customers.php:379
-#: includes/admin/payments/view-order-details.php:348
+#: includes/admin/payments/view-order-details.php:360
 #: includes/admin/settings/register-settings.php:1831 includes/scripts.php:216
-#: templates/checkout_cart.php:49 templates/checkout_cart.php:67
+#: templates/checkout_cart.php:57 templates/checkout_cart.php:75
 #: templates/shortcode-profile-editor.php:112
 msgid "Remove"
 msgstr ""
@@ -744,7 +744,8 @@ msgstr ""
 #: includes/admin/reporting/class-sales-logs-list-table.php:136
 #: includes/admin/reporting/export/class-batch-export-file-downloads.php:42
 #: includes/admin/reporting/export/class-batch-export-payments.php:61
-#: templates/history-purchases.php:19 templates/shortcode-receipt.php:59
+#: includes/admin/tools.php:465 templates/history-purchases.php:19
+#: templates/shortcode-receipt.php:59
 msgid "Date"
 msgstr ""
 
@@ -768,7 +769,7 @@ msgid "No Payments Found"
 msgstr ""
 
 #: includes/admin/customers/customers.php:441
-#: includes/admin/payments/view-order-details.php:281
+#: includes/admin/payments/view-order-details.php:293
 msgid "Purchased %s"
 msgstr ""
 
@@ -984,7 +985,9 @@ msgstr ""
 
 #: includes/admin/discounts/add-discount.php:97
 #: includes/admin/discounts/edit-discount.php:112
-msgid "Select %s relevant to this discount."
+msgid ""
+"Select %s relevant to this discount. If left blank, this discount can be "
+"used on any product."
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:103
@@ -1686,7 +1689,7 @@ msgstr ""
 msgid "Products (Raw)"
 msgstr ""
 
-#: includes/admin/import/class-batch-import-payments.php:570
+#: includes/admin/import/class-batch-import-payments.php:580
 msgid "payments"
 msgstr ""
 
@@ -1971,199 +1974,234 @@ msgstr ""
 msgid "Status:"
 msgstr ""
 
+#: includes/admin/payments/view-order-details.php:83
+msgid ""
+"<strong>Pending</strong>: payment is still processing or was abandoned by "
+"customer. Successful payments will be marked as Complete automatically once "
+"processing is finalized."
+msgstr ""
+
+#: includes/admin/payments/view-order-details.php:84
+msgid "<strong>Complete</strong>: all processing is completed for this purchase."
+msgstr ""
+
 #: includes/admin/payments/view-order-details.php:85
+msgid ""
+"<strong>Revoked</strong>: access to purchased items is disabled, perhaps "
+"due to policy violation or fraud."
+msgstr ""
+
+#: includes/admin/payments/view-order-details.php:86
+msgid ""
+"<strong>Refunded</strong>: the purchase amount is returned to the customer "
+"and access to items is disabled."
+msgstr ""
+
+#: includes/admin/payments/view-order-details.php:87
+msgid ""
+"<strong>Abandoned</strong>: the purchase attempt was not completed by the "
+"customer."
+msgstr ""
+
+#: includes/admin/payments/view-order-details.php:88
+msgid ""
+"<strong>Failed</strong>: customer clicked Cancel before completing the "
+"purchase."
+msgstr ""
+
+#: includes/admin/payments/view-order-details.php:97
 msgid "Date:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:92
+#: includes/admin/payments/view-order-details.php:104
 msgid "Time:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:102
+#: includes/admin/payments/view-order-details.php:114
 #: includes/admin/reporting/class-export-payments.php:76
 #: includes/admin/reporting/export/class-batch-export-payments.php:57
 msgid "Discount Code"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:103
+#: includes/admin/payments/view-order-details.php:115
 #: includes/admin/settings/register-settings.php:730
 msgid "None"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:111
+#: includes/admin/payments/view-order-details.php:123
 #: templates/shortcode-receipt.php:66
 msgid "Fees"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:123
+#: includes/admin/payments/view-order-details.php:135
 #: includes/admin/reporting/class-export-payments.php:75
 #: includes/admin/reporting/export/class-batch-export-payments.php:56
-#: includes/admin/tools.php:510 templates/checkout_cart.php:112
+#: includes/admin/tools.php:510 templates/checkout_cart.php:120
 #: templates/shortcode-receipt.php:90
 msgid "Tax"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:131
+#: includes/admin/payments/view-order-details.php:143
 #: templates/shortcode-receipt.php:105
 msgid "Total Price"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:138
+#: includes/admin/payments/view-order-details.php:150
 msgid "Recalculate Totals"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:139
+#: includes/admin/payments/view-order-details.php:151
 msgid "Recalculate"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:153
+#: includes/admin/payments/view-order-details.php:165
 msgid "Delete Payment"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:155
+#: includes/admin/payments/view-order-details.php:167
 msgid "Save Payment"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:168
+#: includes/admin/payments/view-order-details.php:180
 msgid "Resend Receipt"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:169
+#: includes/admin/payments/view-order-details.php:181
 msgid ""
 "<strong>Resend Receipt</strong>: This will send a new copy of the purchase "
 "receipt to the customer&#8217;s email address. If download URLs are "
-"included on the receipt, new file download URLs will be included with the "
-"receipt."
+"included in the receipt, new file download URLs will also be included with "
+"the receipt."
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:180
+#: includes/admin/payments/view-order-details.php:192
 msgid "Payment Meta"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:191
+#: includes/admin/payments/view-order-details.php:203
 msgid "Gateway:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:199
+#: includes/admin/payments/view-order-details.php:211
 msgid "Key:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:206
+#: includes/admin/payments/view-order-details.php:218
 msgid "IP:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:214
+#: includes/admin/payments/view-order-details.php:226
 msgid "Transaction ID:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:224
+#: includes/admin/payments/view-order-details.php:236
 msgid "Unlimited file downloads"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:225
+#: includes/admin/payments/view-order-details.php:237
 msgid ""
 "<strong>Unlimited file downloads</strong>: checking this box will override "
 "all other file download limits for this purchase, granting the customer "
 "unliimited downloads of all files included on the purchase."
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:240
+#: includes/admin/payments/view-order-details.php:252
 #: includes/admin/reporting/reports.php:33 includes/class-edd-logging.php:48
 msgid "Logs"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:248
+#: includes/admin/payments/view-order-details.php:260
 msgid "View file download log for purchase"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:252
+#: includes/admin/payments/view-order-details.php:264
 msgid "View customer download log"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:256
+#: includes/admin/payments/view-order-details.php:268
 msgid "View all purchases of customer"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:338
+#: includes/admin/payments/view-order-details.php:350
 #: templates/widget-cart-checkout.php:5 templates/widget-cart-empty.php:6
 msgid "Total:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:346
+#: includes/admin/payments/view-order-details.php:358
 msgid "Copy Download Link(s)"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:367
+#: includes/admin/payments/view-order-details.php:379
 #: includes/emails/class-edd-email-tags.php:407
 #: includes/emails/class-edd-email-tags.php:518
 #: templates/shortcode-receipt.php:128
 msgid "Quantity"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:378
+#: includes/admin/payments/view-order-details.php:390
 msgid "Item Price: "
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:386
+#: includes/admin/payments/view-order-details.php:398
 msgid "Add %s to Payment"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:397
+#: includes/admin/payments/view-order-details.php:409
 msgid "No %s included with this purchase"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:424
+#: includes/admin/payments/view-order-details.php:436
 msgid "View Customer Details"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:427
+#: includes/admin/payments/view-order-details.php:439
 msgid "New Customer"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:433
+#: includes/admin/payments/view-order-details.php:445
 msgid "Name:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:437
+#: includes/admin/payments/view-order-details.php:449
 msgid "Email:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:445
+#: includes/admin/payments/view-order-details.php:457
 msgid "Click \"Save Payment\" to create new customer"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:460
+#: includes/admin/payments/view-order-details.php:472
 #: includes/checkout/template.php:329
 msgid "Billing Address"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:470
+#: includes/admin/payments/view-order-details.php:482
 msgid "Street Address Line 1:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:474
+#: includes/admin/payments/view-order-details.php:486
 msgid "Street Address Line 2:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:502
+#: includes/admin/payments/view-order-details.php:514
 #: includes/admin/settings/register-settings.php:298
 msgid "Select a country"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:518
+#: includes/admin/payments/view-order-details.php:530
 #: includes/admin/settings/register-settings.php:306
 msgid "Select a state"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:538
+#: includes/admin/payments/view-order-details.php:550
 msgid "Payment Notes"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:553
+#: includes/admin/payments/view-order-details.php:565
 msgid "No payment notes"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:559
+#: includes/admin/payments/view-order-details.php:571
 msgid "Add Note"
 msgstr ""
 
@@ -2258,14 +2296,16 @@ msgstr ""
 #: includes/admin/reporting/class-export-customers.php:66
 #: includes/admin/reporting/class-export-payments.php:64
 #: includes/admin/reporting/export/class-batch-export-payments.php:44
-#: includes/checkout/template.php:191 templates/shortcode-profile-editor.php:31
+#: includes/admin/tools.php:384 includes/checkout/template.php:191
+#: templates/shortcode-profile-editor.php:31
 msgid "First Name"
 msgstr ""
 
 #: includes/admin/reporting/class-export-customers.php:67
 #: includes/admin/reporting/class-export-payments.php:65
 #: includes/admin/reporting/export/class-batch-export-payments.php:45
-#: includes/checkout/template.php:201 templates/shortcode-profile-editor.php:34
+#: includes/admin/tools.php:393 includes/checkout/template.php:201
+#: templates/shortcode-profile-editor.php:34
 msgid "Last Name"
 msgstr ""
 
@@ -2372,6 +2412,7 @@ msgstr ""
 #: includes/admin/reporting/class-file-downloads-logs-list-table.php:146
 #: includes/admin/reporting/class-sales-logs-list-table.php:132
 #: includes/admin/reporting/export/class-batch-export-payments.php:62
+#: includes/admin/tools.php:537
 msgid "User"
 msgstr ""
 
@@ -2398,7 +2439,7 @@ msgid "Payment ID"
 msgstr ""
 
 #: includes/admin/reporting/class-gateway-error-logs-list-table.php:79
-#: includes/gateways/manual.php:73 includes/gateways/paypal-standard.php:182
+#: includes/gateways/manual.php:73 includes/gateways/paypal-standard.php:178
 msgid "Payment Error"
 msgstr ""
 
@@ -3598,7 +3639,7 @@ msgid "Misc Settings"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:672
-msgid "Enable Ajax"
+msgid "Enable AJAX"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:673
@@ -3729,7 +3770,7 @@ msgstr ""
 #: includes/admin/settings/register-settings.php:745
 msgid ""
 "Cart saving allows shoppers to create a temporary link to their current "
-"shopping cart so they can come back to it later, or share it with someone.."
+"shopping cart so they can come back to it later, or share it with someone."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:751
@@ -3816,7 +3857,7 @@ msgstr ""
 #: includes/admin/settings/register-settings.php:807
 msgid ""
 "Set the global default for the number of times a customer can download "
-"items they purchase. Using a valud of 0 is unlimited. This can be defined "
+"items they purchase. Using a value of 0 is unlimited. This can be defined "
 "on a %s-specific level as well. Download limits can also be reset for an "
 "individual purchase."
 msgstr ""
@@ -4293,32 +4334,24 @@ msgstr ""
 msgid "- select field to preview data -"
 msgstr ""
 
-#: includes/admin/tools.php:384
-msgid "Customer First Name"
-msgstr ""
-
-#: includes/admin/tools.php:393
-msgid "Customer Last Name"
+#: includes/admin/tools.php:411
+msgid "Discount Code(s)"
 msgstr ""
 
 #: includes/admin/tools.php:438
 msgid "Parent Payment ID"
 msgstr ""
 
-#: includes/admin/tools.php:465
-msgid "Purchase Date"
-msgstr ""
-
 #: includes/admin/tools.php:483
 msgid "Purchased Product(s)"
 msgstr ""
 
-#: includes/admin/tools.php:501 templates/checkout_cart.php:94
+#: includes/admin/tools.php:501 templates/checkout_cart.php:102
 #: templates/shortcode-receipt.php:98
 msgid "Subtotal"
 msgstr ""
 
-#: includes/admin/tools.php:519 templates/checkout_cart.php:121
+#: includes/admin/tools.php:519 templates/checkout_cart.php:129
 msgid "Total"
 msgstr ""
 
@@ -4983,89 +5016,89 @@ msgstr ""
 msgid "No users found"
 msgstr ""
 
-#: includes/api/class-edd-api-v2.php:143 includes/api/class-edd-api.php:1019
-#: includes/api/class-edd-api.php:1213 includes/api/class-edd-api.php:1323
+#: includes/api/class-edd-api-v2.php:143 includes/api/class-edd-api.php:1037
+#: includes/api/class-edd-api.php:1231 includes/api/class-edd-api.php:1341
 msgid "Product %s not found!"
 msgstr ""
 
-#: includes/api/class-edd-api-v2.php:218 includes/api/class-edd-api.php:1124
-#: includes/api/class-edd-api.php:1230
+#: includes/api/class-edd-api-v2.php:218 includes/api/class-edd-api.php:1142
+#: includes/api/class-edd-api.php:1248
 msgid "The end date must be later than the start date!"
 msgstr ""
 
-#: includes/api/class-edd-api-v2.php:319 includes/api/class-edd-api.php:966
+#: includes/api/class-edd-api-v2.php:319 includes/api/class-edd-api.php:984
 msgid "Customer %s not found!"
 msgstr ""
 
-#: includes/api/class-edd-api-v2.php:324 includes/api/class-edd-api.php:971
+#: includes/api/class-edd-api-v2.php:324 includes/api/class-edd-api.php:989
 msgid "No customers found!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:444
+#: includes/api/class-edd-api.php:462
 msgid "You must specify both a token and API key!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:461
+#: includes/api/class-edd-api.php:479
 msgid "Your request could not be authenticated!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:479
+#: includes/api/class-edd-api.php:497
 msgid "Invalid API key!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:495
+#: includes/api/class-edd-api.php:513
 msgid "Invalid API version!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:662
+#: includes/api/class-edd-api.php:680
 msgid "Invalid query!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1129 includes/api/class-edd-api.php:1235
+#: includes/api/class-edd-api.php:1147 includes/api/class-edd-api.php:1253
 msgid "Invalid or no date range specified!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1467
+#: includes/api/class-edd-api.php:1485
 msgid "No discounts found!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1514
+#: includes/api/class-edd-api.php:1532
 msgid "Discount %s not found!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1587
+#: includes/api/class-edd-api.php:1605
 msgid "No download logs found!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1782 includes/user-functions.php:961
+#: includes/api/class-edd-api.php:1800 includes/user-functions.php:961
 msgid "Easy Digital Downloads API Keys"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1791 includes/user-functions.php:970
+#: includes/api/class-edd-api.php:1809 includes/user-functions.php:970
 msgid "Generate API Key"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1793 includes/user-functions.php:972
+#: includes/api/class-edd-api.php:1811 includes/user-functions.php:972
 msgid "Public key:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1794 includes/user-functions.php:973
+#: includes/api/class-edd-api.php:1812 includes/user-functions.php:973
 msgid "Secret key:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1795 includes/user-functions.php:974
+#: includes/api/class-edd-api.php:1813 includes/user-functions.php:974
 msgid "Token:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1797 includes/user-functions.php:976
+#: includes/api/class-edd-api.php:1815 includes/user-functions.php:976
 msgid "Revoke API Keys"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1823
+#: includes/api/class-edd-api.php:1841
 msgid "User ID Required"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1835 includes/api/class-edd-api.php:1837
+#: includes/api/class-edd-api.php:1853 includes/api/class-edd-api.php:1855
 msgid "You do not have permission to %s API keys for this user"
 msgstr ""
 
@@ -5401,7 +5434,7 @@ msgid "Disabled"
 msgstr ""
 
 #: includes/class-edd-cli.php:63
-msgid "Ajax is: %s"
+msgid "AJAX is: %s"
 msgstr ""
 
 #: includes/class-edd-cli.php:64
@@ -6090,31 +6123,31 @@ msgstr ""
 msgid "This discount is not active."
 msgstr ""
 
-#: includes/discount-functions.php:628
+#: includes/discount-functions.php:629
 msgid "This discount is not active yet."
 msgstr ""
 
-#: includes/discount-functions.php:659
+#: includes/discount-functions.php:660
 msgid "This discount has reached its maximum usage."
 msgstr ""
 
-#: includes/discount-functions.php:688
+#: includes/discount-functions.php:689
 msgid "Minimum order of %s not met."
 msgstr ""
 
-#: includes/discount-functions.php:750 includes/discount-functions.php:770
+#: includes/discount-functions.php:751 includes/discount-functions.php:771
 msgid "The product requirements for this discount are not met."
 msgstr ""
 
-#: includes/discount-functions.php:786
+#: includes/discount-functions.php:787
 msgid "This discount is not valid for the cart contents."
 msgstr ""
 
-#: includes/discount-functions.php:890
+#: includes/discount-functions.php:891
 msgid "This discount has already been redeemed."
 msgstr ""
 
-#: includes/discount-functions.php:936
+#: includes/discount-functions.php:937
 msgid "This discount is invalid."
 msgstr ""
 
@@ -6205,10 +6238,6 @@ msgstr ""
 
 #: includes/emails/template.php:69
 msgid "These are some sample notes added to a product."
-msgstr ""
-
-#: includes/emails/template.php:93
-msgid "%1$sView it in your browser.%2$s"
 msgstr ""
 
 #: includes/emails/template.php:113
@@ -6330,12 +6359,12 @@ msgstr ""
 
 #: includes/gateways/amazon-payments.php:1017
 #: includes/gateways/amazon-payments.php:1071
-#: includes/gateways/paypal-standard.php:411
-#: includes/gateways/paypal-standard.php:416
-#: includes/gateways/paypal-standard.php:478
-#: includes/gateways/paypal-standard.php:487
-#: includes/gateways/paypal-standard.php:546
-#: includes/gateways/paypal-standard.php:553
+#: includes/gateways/paypal-standard.php:407
+#: includes/gateways/paypal-standard.php:412
+#: includes/gateways/paypal-standard.php:475
+#: includes/gateways/paypal-standard.php:484
+#: includes/gateways/paypal-standard.php:543
+#: includes/gateways/paypal-standard.php:550
 msgid "IPN Error"
 msgstr ""
 
@@ -6376,7 +6405,7 @@ msgstr ""
 msgid "The requested price ID does not exist."
 msgstr ""
 
-#: includes/gateways/manual.php:33 includes/gateways/paypal-standard.php:159
+#: includes/gateways/manual.php:33 includes/gateways/paypal-standard.php:155
 msgid "Nonce verification has failed"
 msgstr ""
 
@@ -6414,117 +6443,111 @@ msgid ""
 "information."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:76
-msgid ""
-"PayPal IPN verification requires an SSL certificate. See our <a href=\"%s\" "
-"target=\"_blank\">PayPal SSL FAQ</a> for more information."
-msgstr ""
-
-#: includes/gateways/paypal-standard.php:81
+#: includes/gateways/paypal-standard.php:77
 msgid "Disable PayPal IPN Verification"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:89
+#: includes/gateways/paypal-standard.php:85
 msgid "API Credentials"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:92
+#: includes/gateways/paypal-standard.php:88
 msgid ""
 "API credentials are necessary to process PayPal refunds from inside "
 "WordPress. These can be obtained from <a href=\"%s\" target=\"_blank\">your "
 "PayPal account</a>."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:98
+#: includes/gateways/paypal-standard.php:94
 msgid "Live API Username"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:99
+#: includes/gateways/paypal-standard.php:95
 msgid "Your PayPal live API username. "
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:105
+#: includes/gateways/paypal-standard.php:101
 msgid "Live API Password"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:106
+#: includes/gateways/paypal-standard.php:102
 msgid "Your PayPal live API password."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:112
+#: includes/gateways/paypal-standard.php:108
 msgid "Live API Signature"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:113
+#: includes/gateways/paypal-standard.php:109
 msgid "Your PayPal live API signature."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:119
+#: includes/gateways/paypal-standard.php:115
 msgid "Test API Username"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:120
+#: includes/gateways/paypal-standard.php:116
 msgid "Your PayPal test API username."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:126
+#: includes/gateways/paypal-standard.php:122
 msgid "Test API Password"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:127
+#: includes/gateways/paypal-standard.php:123
 msgid "Your PayPal test API password."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:133
+#: includes/gateways/paypal-standard.php:129
 msgid "Test API Signature"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:134
+#: includes/gateways/paypal-standard.php:130
 msgid "Your PayPal test API signature."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:182
+#: includes/gateways/paypal-standard.php:178
 msgid "Payment creation failed before sending buyer to PayPal. Payment data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:411
-#: includes/gateways/paypal-standard.php:416
+#: includes/gateways/paypal-standard.php:407
+#: includes/gateways/paypal-standard.php:412
 msgid "Invalid IPN verification response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:478
+#: includes/gateways/paypal-standard.php:475
 msgid "Invalid business email in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:480
+#: includes/gateways/paypal-standard.php:477
 msgid "Payment failed due to invalid PayPal business email."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:487
+#: includes/gateways/paypal-standard.php:484
 msgid "Invalid currency in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:489
+#: includes/gateways/paypal-standard.php:486
 msgid "Payment failed due to invalid currency in PayPal IPN."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:546
+#: includes/gateways/paypal-standard.php:543
 msgid "Invalid payment amount in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:548
+#: includes/gateways/paypal-standard.php:545
 msgid "Payment failed due to invalid amount in PayPal IPN."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:553
+#: includes/gateways/paypal-standard.php:550
 msgid "Invalid purchase key in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:555
+#: includes/gateways/paypal-standard.php:552
 msgid "Payment failed due to invalid purchase key in PayPal IPN."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:561
+#: includes/gateways/paypal-standard.php:558
 #: tests/helpers/class-helper-payment.php:131
 #: tests/helpers/class-helper-payment.php:234
 #: tests/helpers/class-helper-payment.php:342
@@ -6534,79 +6557,79 @@ msgstr ""
 msgid "PayPal Transaction ID: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:575
+#: includes/gateways/paypal-standard.php:572
 msgid "Payment made via eCheck and will clear automatically in 5-8 days"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:581
+#: includes/gateways/paypal-standard.php:578
 msgid ""
 "Payment requires a confirmed customer address and must be accepted manually "
 "through PayPal"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:587
+#: includes/gateways/paypal-standard.php:584
 msgid ""
 "Payment must be accepted manually through PayPal due to international "
 "account regulations"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:593
+#: includes/gateways/paypal-standard.php:590
 msgid ""
 "Payment received in non-shop currency and must be accepted manually through "
 "PayPal"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:600
+#: includes/gateways/paypal-standard.php:597
 msgid ""
 "Payment is being reviewed by PayPal staff as high-risk or in possible "
 "violation of government regulations"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:606
+#: includes/gateways/paypal-standard.php:603
 msgid "Payment was sent to non-confirmed or non-registered email address."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:612
+#: includes/gateways/paypal-standard.php:609
 msgid "PayPal account must be upgraded before this payment can be accepted"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:618
+#: includes/gateways/paypal-standard.php:615
 msgid ""
 "PayPal account is not verified. Verify account in order to accept this "
 "payment"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:624
+#: includes/gateways/paypal-standard.php:621
 msgid ""
 "Payment is pending for unknown reasons. Contact PayPal support for "
 "assistance"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:665
+#: includes/gateways/paypal-standard.php:662
 msgid "Partial PayPal refund processed: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:670
+#: includes/gateways/paypal-standard.php:667
 msgid "PayPal Payment #%s Refunded for reason: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:671
+#: includes/gateways/paypal-standard.php:668
 msgid "PayPal Refund Transaction ID: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:818
+#: includes/gateways/paypal-standard.php:815
 msgid "Refund Payment in PayPal"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:969
+#: includes/gateways/paypal-standard.php:964
 msgid "PayPal refund failed for unknown reason."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:979
+#: includes/gateways/paypal-standard.php:974
 msgid "PayPal refund transaction ID: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:983
+#: includes/gateways/paypal-standard.php:978
 msgid "PayPal refund failed: %s"
 msgstr ""
 
@@ -7739,22 +7762,22 @@ msgstr ""
 msgid "The easiest way to sell digital products with WordPress."
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:481
+#: includes/admin/payments/view-order-details.php:493
 msgctxt "Address City"
 msgid "City:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:486
+#: includes/admin/payments/view-order-details.php:498
 msgctxt "Zip / Postal code of address"
 msgid "Zip / Postal Code:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:493
+#: includes/admin/payments/view-order-details.php:505
 msgctxt "Address country"
 msgid "Country:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:507
+#: includes/admin/payments/view-order-details.php:519
 msgctxt "State / province of address"
 msgid "State / Province:"
 msgstr ""
