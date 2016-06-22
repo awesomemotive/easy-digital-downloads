@@ -356,9 +356,9 @@ function edd_tools_import_export_display() {
 					<table class="widefat edd_repeatable_table" width="100%" cellpadding="0" cellspacing="0">
 						<thead>
 							<tr>
-								<th><strong><?php _e( 'Payment Field', 'edd' ); ?></strong></th>
-								<th><strong><?php _e( 'CSV Column', 'edd' ); ?></strong></th>
-								<th><strong><?php _e( 'Data Preview', 'edd' ); ?></strong></th>
+								<th><strong><?php _e( 'Payment Field', 'easy-digital-downloads' ); ?></strong></th>
+								<th><strong><?php _e( 'CSV Column', 'easy-digital-downloads' ); ?></strong></th>
+								<th><strong><?php _e( 'Data Preview', 'easy-digital-downloads' ); ?></strong></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -638,9 +638,9 @@ function edd_tools_import_export_display() {
 					<table class="widefat edd_repeatable_table" width="100%" cellpadding="0" cellspacing="0">
 						<thead>
 							<tr>
-								<th><strong><?php _e( 'Product Field', 'edd' ); ?></strong></th>
-								<th><strong><?php _e( 'CSV Column', 'edd' ); ?></strong></th>
-								<th><strong><?php _e( 'Data Preview', 'edd' ); ?></strong></th>
+								<th><strong><?php _e( 'Product Field', 'easy-digital-downloads' ); ?></strong></th>
+								<th><strong><?php _e( 'CSV Column', 'easy-digital-downloads' ); ?></strong></th>
+								<th><strong><?php _e( 'Data Preview', 'easy-digital-downloads' ); ?></strong></th>
 							</tr>
 						</thead>
 						<tbody>
