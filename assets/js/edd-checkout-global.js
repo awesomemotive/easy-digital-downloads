@@ -14,9 +14,6 @@ window.EDD_Checkout = (function($) {
 		before_discount = $edd_cart_amount.text();
 		$checkout_form_wrap = $('#edd_checkout_form_wrap');
 
-		// Update state/province field on checkout page
-		$body.on('change', '#edd_cc_address input.card_state, #edd_cc_address select', update_state_field);
-
 		$body.on('keyup change', '.edd-do-validate .card-number', function() {
 			edd_validate_card( $(this) );
 		});
@@ -76,91 +73,6 @@ window.EDD_Checkout = (function($) {
 			window.location = edd_amazon.checkoutUri;
 		});
 
-	}
-
-	function update_state_field() {
-
-		var $this = $(this);
-		if( 'card_state' != $this.attr('id') ) {
-
-			// If the country field has changed, we need to update the state/province field
-			var postData = {
-				action: 'edd_get_shop_states',
-				country: $this.val(),
-				field_name: 'card_state'
-			};
-
-			$.ajax({
-				type: "POST",
-				data: postData,
-				url: edd_global_vars.ajaxurl,
-				xhrFields: {
-					withCredentials: true
-				},
-				success: function (response) {
-					if( 'nostates' == $.trim(response) ) {
-						var text_field = '<input type="text" name="card_state" class="cart-state edd-input required" value=""/>';
-						$form.find('input[name="card_state"], select[name="card_state"]').replaceWith( text_field );
-					} else {
-						$form.find('input[name="card_state"], select[name="card_state"]').replaceWith( response );
-					}
-
-					$body.trigger('edd_cart_billing_address_updated', [ response ]);
-
-				}
-			}).fail(function (data) {
-				if ( window.console && window.console.log ) {
-					console.log( data );
-				}
-			}).done(function (data) {
-				recalculate_taxes();
-			});
-		} else {
-			recalculate_taxes();
-		}
-
-		return false;
-	}
-
-	function recalculate_taxes(state) {
-
-		if( '1' != edd_global_vars.taxes_enabled )
-			return; // Taxes not enabled
-
-		var $edd_cc_address = $('#edd_cc_address');
-
-		if( ! state ) {
-			state = $edd_cc_address.find('#card_state').val();
-		}
-
-		var postData = {
-			action: 'edd_recalculate_taxes',
-			billing_country: $edd_cc_address.find('#billing_country').val(),
-			state: state
-		};
-
-		$.ajax({
-			type: "POST",
-			data: postData,
-			dataType: "json",
-			url: edd_global_vars.ajaxurl,
-			xhrFields: {
-				withCredentials: true
-			},
-			success: function (tax_response) {
-				$('#edd_checkout_cart_form').replaceWith(tax_response.html);
-				$('.edd_cart_amount').html(tax_response.total);
-				var tax_data = new Object();
-				tax_data.postdata = postData;
-				tax_data.response = tax_response;
-				$body.trigger('edd_taxes_recalculated', [ tax_data ]);
-			}
-		}).fail(function (data) {
-			if ( window.console && window.console.log ) {
-				console.log( data );
-				$body.trigger('edd_taxes_recalculated', [ tax_data ]);
-			}
-		});
 	}
 
 	function edd_validate_card(field) {
@@ -376,3 +288,44 @@ window.EDD_Checkout = (function($) {
 
 // init on document.ready
 window.jQuery(document).ready(EDD_Checkout.init);
+
+function recalculate_taxes(state) {
+
+	if( '1' != edd_global_vars.taxes_enabled )
+		return; // Taxes not enabled
+
+	var $edd_cc_address = jQuery('#edd_cc_address');
+
+	if( ! state ) {
+		state = $edd_cc_address.find('#card_state').val();
+	}
+
+	var postData = {
+		action: 'edd_recalculate_taxes',
+		billing_country: $edd_cc_address.find('#billing_country').val(),
+		state: state
+	};
+
+	jQuery.ajax({
+		type: "POST",
+		data: postData,
+		dataType: "json",
+		url: edd_global_vars.ajaxurl,
+		xhrFields: {
+			withCredentials: true
+		},
+		success: function (tax_response) {
+			jQuery('#edd_checkout_cart_form').replaceWith(tax_response.html);
+			jQuery('.edd_cart_amount').html(tax_response.total);
+			var tax_data = new Object();
+			tax_data.postdata = postData;
+			tax_data.response = tax_response;
+			jQuery('body').trigger('edd_taxes_recalculated', [ tax_data ]);
+		}
+	}).fail(function (data) {
+		if ( window.console && window.console.log ) {
+			console.log( data );
+			jQuery('body').trigger('edd_taxes_recalculated', [ tax_data ]);
+		}
+	});
+}

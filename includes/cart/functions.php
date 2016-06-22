@@ -62,6 +62,13 @@ function edd_get_cart_content_details() {
 		$quantity   = edd_get_cart_item_quantity( $item['id'], $item['options'] );
 		$fees       = edd_get_cart_fees( 'fee', $item['id'], $price_id );
 		$subtotal   = $item_price * $quantity;
+
+		foreach ( $fees as $fee ) {
+			if ( $fee['amount'] < 0 ) {
+				$subtotal += $fee['amount'];
+			}
+		}
+
 		$tax        = edd_get_cart_item_tax( $item['id'], $item['options'], $subtotal - $discount );
 
 		if( edd_prices_include_tax() ) {
@@ -706,14 +713,16 @@ function edd_get_cart_items_subtotal( $items ) {
  * @return float Cart amount
  */
 function edd_get_cart_total( $discounts = false ) {
-	$subtotal  = (float) edd_get_cart_subtotal();
-	$discounts = (float) edd_get_cart_discounted_amount();
-	$cart_tax  = (float) edd_get_cart_tax();
-	$fees      = (float) edd_get_cart_fee_total();
-	$total     = $subtotal - $discounts + $cart_tax + $fees;
+	$subtotal     = (float) edd_get_cart_subtotal();
+	$discounts    = (float) edd_get_cart_discounted_amount();
+	$fees         = (float) edd_get_cart_fee_total();
+	$cart_tax     = (float) edd_get_cart_tax();
+	$total_wo_tax = $subtotal - $discounts + $fees;
+	$total        = $subtotal - $discounts + $cart_tax + $fees;
 
-	if( $total < 0 )
+	if( $total < 0 || ! $total_wo_tax > 0 ) {
 		$total = 0.00;
+	}
 
 	return (float) apply_filters( 'edd_get_cart_total', $total );
 }
@@ -782,7 +791,19 @@ function edd_get_cart_fees( $type = 'all', $download_id = 0, $price_id = NULL ) 
  * @return float Total Cart Fees
  */
 function edd_get_cart_fee_total() {
-	return EDD()->fees->total();
+	$fees = EDD()->fees->get_fees( 'all' );
+
+	$fee_total = 0.00;
+	foreach ( $fees as $fee ) {
+		if ( ! empty( $fee['download_id'] ) && $fee['amount'] <= 0 ) {
+			continue;
+		}
+
+		$fee_total += $fee['amount'];
+
+	}
+
+	return apply_filters( 'edd_get_fee_total', $fee_total, $fees );
 }
 
 /**
@@ -856,8 +877,8 @@ function edd_get_purchase_summary( $purchase_data, $email = true ) {
  */
 function edd_get_cart_tax() {
 
-	$cart_tax = 0;
-	$items    = edd_get_cart_content_details();
+	$cart_tax     = 0;
+	$items        = edd_get_cart_content_details();
 
 	if( $items ) {
 
