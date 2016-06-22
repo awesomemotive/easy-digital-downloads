@@ -702,7 +702,8 @@ class EDD_Download {
 	 */
 	public function increase_earnings( $amount = 0 ) {
 
-		$new_amount = $this->get_earnings() + (float) $amount;
+		$current_earnings = $this->get_earnings();
+		$new_amount = apply_filters( 'edd_download_increase_earnings_amount', $current_earnings + (float) $amount, $current_earnings, $amount, $this );
 
 		if ( $this->update_meta( '_edd_download_earnings', $new_amount ) ) {
 
@@ -730,7 +731,8 @@ class EDD_Download {
 		// Only decrease if greater than zero
 		if ( $this->get_earnings() > 0 ) {
 
-			$new_amount = $this->get_earnings() - (float) $amount;
+			$current_earnings = $this->get_earnings();
+			$new_amount = apply_filters( 'edd_download_decrease_earnings_amount', $current_earnings - (float) $amount, $current_earnings, $amount, $this );
 
 			if ( $this->update_meta( '_edd_download_earnings', $new_amount ) ) {
 
