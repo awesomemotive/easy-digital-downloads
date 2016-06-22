@@ -252,7 +252,7 @@ class EDD_Welcome {
 					<div class="clear">
 						<div class="col">
 							<h4><?php _e( 'Improved Accessibility', 'easy-digital-downloads' );?></h4>
-							<p><?php _e( 'Easy Digital Downloads is now more accessible to more users thanks to a member of the WordPress accessibility team whom helped resolve accessibility issues throughout the administrative interfaces.', 'easy-digital-downloads' );?></p>
+							<p><?php _e( 'Easy Digital Downloads is now more accessible to more users thanks to a member of the WordPress accessibility team who helped resolve accessibility issues throughout the administrative interfaces.', 'easy-digital-downloads' );?></p>
 						</div>
 						<div class="col">
 							<h4><?php _e( 'Resolved Schema Problems', 'easy-digital-downloads' );?></h4>
