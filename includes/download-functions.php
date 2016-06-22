@@ -955,18 +955,18 @@ function edd_get_file_price_condition( $download_id = 0, $file_key ) {
 
 /**
  * Get Download File Url
- * Constructs the file download url for a specific file.
+ * Constructs a secure file download url for a specific file.
  *
  * @since 1.0
  *
- * @param string $key
- * @param string $email Customer email address
- * @param int    $filekey
- * @param int    $download_id
- * @param bool   $price_id
+ * @param string    $key Payment key. Use edd_get_payment_key() to get key.
+ * @param string    $email Customer email address. Use edd_get_payment_user_email() to get user email.
+ * @param int       $filekey Index of array of files returned by edd_get_download_files() that this download link is for. 
+ * @param int       $download_id Optional. ID of download this download link is for. Default is 0.
+ * @param bool|int  $price_id Optional. Price ID when using variable prices. Default is false.
  *
- * @return string Constructed download URL
- */
+ * @return string A secure download URL
+ */ 
 function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $price_id = false ) {
 
 	$hours = absint( edd_get_option( 'download_link_expiration', 24 ) );
