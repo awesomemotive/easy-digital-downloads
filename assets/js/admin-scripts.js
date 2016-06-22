@@ -5,6 +5,7 @@ jQuery(document).ready(function ($) {
 		content: function() {
 			return $(this).prop('title');
 		},
+		tooltipClass: 'edd-ui-tooltip',
 		position: {
 			my: 'center top',
 			at: 'center bottom+10',
@@ -1841,7 +1842,7 @@ jQuery(document).ready(function ($) {
 	};
 	EDD_Customer.init();
 
-	// Ajax user search
+	// AJAX user search
 	$('.edd-ajax-user-search').keyup(function() {
 		var user_search = $(this).val();
 		var exclude     = '';

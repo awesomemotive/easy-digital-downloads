@@ -669,7 +669,7 @@ function edd_get_registered_settings() {
 					),
 					'enable_ajax_cart' => array(
 						'id'   => 'enable_ajax_cart',
-						'name' => __( 'Enable Ajax', 'easy-digital-downloads' ),
+						'name' => __( 'Enable AJAX', 'easy-digital-downloads' ),
 						'desc' => __( 'Check this to enable AJAX for the shopping cart.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
 						'std'  => '1',
@@ -742,7 +742,7 @@ function edd_get_registered_settings() {
 						'desc' => __( 'Check this to enable cart saving on the checkout.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
 						'tooltip_title' => __( 'Cart Saving', 'easy-digital-downloads' ),
-						'tooltip_desc'  => __( 'Cart saving allows shoppers to create a temporary link to their current shopping cart so they can come back to it later, or share it with someone..', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'Cart saving allows shoppers to create a temporary link to their current shopping cart so they can come back to it later, or share it with someone.', 'easy-digital-downloads' ),
 					),
 				),
 				'button_text' => array(
@@ -804,7 +804,7 @@ function edd_get_registered_settings() {
 						'type' => 'number',
 						'size' => 'small',
 						'tooltip_title' => __( 'File Download Limits', 'easy-digital-downloads' ),
-						'tooltip_desc'  => sprintf( __( 'Set the global default for the number of times a customer can download items they purchase. Using a valud of 0 is unlimited. This can be defined on a %s-specific level as well. Download limits can also be reset for an individual purchase.', 'easy-digital-downloads' ), edd_get_label_singular( true ) ),
+						'tooltip_desc'  => sprintf( __( 'Set the global default for the number of times a customer can download items they purchase. Using a value of 0 is unlimited. This can be defined on a %s-specific level as well. Download limits can also be reset for an individual purchase.', 'easy-digital-downloads' ), edd_get_label_singular( true ) ),
 					),
 					'download_link_expiration' => array(
 						'id'            => 'download_link_expiration',

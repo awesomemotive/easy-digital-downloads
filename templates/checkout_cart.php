@@ -30,7 +30,7 @@ global $post; ?>
 							}
 							$item_title = edd_get_cart_item_name( $item );
 							echo '<span class="edd_checkout_cart_item_title">' . esc_html( $item_title ) . '</span>';
-						
+
 							/**
 							 * Runs after the item in cart's title is echoed
 							 * @since 2.6
@@ -42,7 +42,7 @@ global $post; ?>
 						?>
 					</td>
 					<td class="edd_cart_item_price">
-						<?php 
+						<?php
 						echo edd_cart_item_price( $item['id'], $item['options'] );
 						do_action( 'edd_checkout_cart_item_price_after', $item );
 						?>
@@ -126,7 +126,7 @@ global $post; ?>
 
 		<tr class="edd_cart_footer_row">
 			<?php do_action( 'edd_checkout_table_footer_first' ); ?>
-			<th colspan="<?php echo edd_checkout_cart_columns(); ?>" class="edd_cart_total"><?php _e( 'Total', 'easy-digital-downloads' ); ?>: <span class="edd_cart_amount" data-subtotal="<?php echo edd_get_cart_total(); ?>" data-total="<?php echo edd_get_cart_total(); ?>"><?php edd_cart_total(); ?></span></th>
+			<th colspan="<?php echo edd_checkout_cart_columns(); ?>" class="edd_cart_total"><?php _e( 'Total', 'easy-digital-downloads' ); ?>: <span class="edd_cart_amount" data-subtotal="<?php echo edd_get_cart_subtotal(); ?>" data-total="<?php echo edd_get_cart_total(); ?>"><?php edd_cart_total(); ?></span></th>
 			<?php do_action( 'edd_checkout_table_footer_last' ); ?>
 		</tr>
 	</tfoot>
