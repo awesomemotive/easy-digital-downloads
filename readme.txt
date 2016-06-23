@@ -217,44 +217,44 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 = 2.6, June 22, 2016 =
 * New: Added filters to process the earnings as they are updated.
 * New: Profile Editor state field shows as dropdown when possible.
-* New: Public API query mode to allow extension developers to create API endpoints that do not require API keys
+* New: Public API query mode to allow extension developers the ability to create API endpoints that do not require API keys.
 * New: Add/Improve inline help throughout the plugin with UI Tooltip.
-* New: Purchsed Products column in payment export improved for better parsing.
+* New: Purchased Products column in payment export improved for better parsing.
 * New: Filters added to EDD_Customer increase and decrease methods.
 * New: Introduce Version 2 (v2) of the REST API.
 * New: (API v2) Products endpoint supports category and tag filtering.
-* New: (API v2) Customers endpoint support filtering customers by creation date.
+* New: (API v2) Customers endpoint supports filtering customers by creation date.
 * New: (API v2) Support searching products.
 * New: (API v2) Improve discount code reporting.
-* New: Add price(s) to oEmbed output for downloads
+* New: Add price(s) to oEmbed output for downloads.
 * New: Remove comment/trackback counts from oEmbed output for downloads.
 * New: Add new edd-table class to all tables outputted by Easy Digital Downloads.
 * New: Improve discount code status updates by setting inactive when usage reaches max.
 * New: Add daily cron to mark expired and discount codes at max usage as expired or inactive.
 * New: Add get_payments() method to the EDD_Customer class.
 * New: Make download ID more visible on the downloads list table.
-* New: Add fitlers to the add_fee() and get_fees() methods of EDD_Fees class.
+* New: Add filters to the add_fee() and get_fees() methods of EDD_Fees class.
 * New: Add price_id support for the Fees API.
-* New: PayPal payments are now able to be refunded within the WordPress admin.
+* New: PayPal Standard payments are now able to be refunded within the WordPress admin.
 * New: Deprecate edd_get_success_page_url().
-* New: Add default redirect option to [edd_login] ad [edd_register] shortcodes.
+* New: Add default redirect option to [edd_login] and [edd_register] shortcodes.
 * New: Introduce customer meta table.
-* New: Add JavaScript trigger edd_load_gateway() for 3rd party hooks.
+* New: Add JavaScript trigger to edd_load_gateway() for 3rd party hooks.
 * New: Support post__in as an argument in [downloads] shortcode.
 * New: Final declaration removed from EDD_Payment class.
 * New: Allow edd_get_payment_status to also accept a payment ID.
-* New: Support additional email address for customers.
+* New: Support additional email addresses for customers.
 * New: Add actions into the increase/decrease sales/earnings methods of the EDD_Download class.
 * New: Added CSV Import functionality.
 * Tweak: Use internal methods when getting sales counts and files in EDD_Download class.
 * Tweak: Add campaign tracking to links in the contextual help menus.
 * Tweak: Improve edd-admin.css coding standards.
-* Tweak: Update translation .mo files and add development tool for downloading translations from Langauge Packs.
+* Tweak: Update translation .mo files and add development tool for downloading translations from Language Packs.
 * Tweak: Improve EDD Licenses tab in settings.
 * Tweak: Improve edd_object_to_array method.
 * Tweak: Improve mobile breakpoints for customer details view.
 * Tweak: Remove pagination when [download] shortcode uses 'random' for the sort.
-* Tweak: Use existing fuction to build {receipt_link} email tag.
+* Tweak: Use existing function to build {receipt_link} email tag.
 * Tweak: PayPal Standard Buy Now was updated to use EDD_Payment.
 * Fix: New User Email alerts have incorrect header.
 * Fix: Transient being bypassed in EDD_Payment_Stats::get_earnings().
@@ -263,9 +263,9 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Improved cache key generation in EDD_Payment_Stats::get_earnings().
 * Fix: Remove deprecated constructor method in System Info browser class.
 * Fix: Negative cart fees should not have tax charged on them.
-* Fix: Roles are being initilaized on every admin request.
+* Fix: Roles are being initialized on every admin request.
 * Fix: Negative item fees did not alter the taxation on the item.
-* Fix: System info only shows Must-Use plugins when present.
+* Fix: System info shows Must-Use plugins when none are present.
 * Fix: Cart position (key) is not passed to the hooks in the cart.
 * Fix: Product dropdown search never shows the current download in results.
 * Fix: Trim response from country state lookup.
@@ -273,14 +273,14 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: edd_get_users_purchased_products() can sometimes try an array_mege on a non-array value.
 * Fix: PayPal IPN Verification forced to HTTPS.
 * Fix: Incorrect earnings across a custom date range report.
-* Fix: Flat rate discoutns can apply an amount larger than the cart total.
-* Fix: Improve performance of transient deletion when uninstalling Easy Digtial Downloads.
+* Fix: Flat rate discounts can apply an amount larger than the cart total.
+* Fix: Improve performance of transient deletion when uninstalling Easy Digital Downloads.
 * Fix: Sales logs show incorrect item amounts with variable pricing sales.
 * Fix: (a11y) Customer details page icons are not focused.
 * Fix: (a11y) Removed title attributes.
 * Fix: (a11y) Focus is lost when removing price option.
 * Fix: (a11y) Make Add New Price a button when working with variable pricing.
-* Fix: (a11y) Remove repeatable field link should be a button.
+* Fix: (a11y) Repeatable field link to remove row should be a button.
 * Fix: Creating a payment sometimes doesn't save the correct user_id or customer_id.
 * Fix: Remove old WordPress version compatibility checks for WordPress versions less than 4.0.
 * Fix: Preview emails use default gateway.
