@@ -634,8 +634,8 @@ final class EDD_Amazon_Payments {
 			<?php endif; ?>
 			<div id="edd-amazon-wallet-box"></div>
 			<script>
-				var edd_scripts;
-				if( '1' == edd_scripts.taxes_enabled ) {
+				var edd_global_vars;
+				if( '1' == edd_global_vars.taxes_enabled ) {
 					new OffAmazonPayments.Widgets.AddressBook({
 						sellerId: edd_amazon.sellerId,
 						amazonOrderReferenceId: edd_amazon.referenceID,
@@ -650,7 +650,7 @@ final class EDD_Amazon_Payments {
 									reference_id : edd_amazon.referenceID
 								},
 								dataType: "json",
-								url: edd_scripts.ajaxurl,
+								url: edd_global_vars.ajaxurl,
 								xhrFields: {
 									withCredentials: true
 								},

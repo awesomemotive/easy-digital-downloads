@@ -41,11 +41,18 @@ class EDD_Customer {
 	public $purchase_value = 0;
 
 	/**
-	 * The customer's email
+	 * The customer's primary email
 	 *
 	 * @since 2.3
 	 */
 	public $email;
+
+	/**
+	 * The customer's emails
+	 *
+	 * @since 2.6
+	 */
+	public $emails;
 
 	/**
 	 * The customer's name
@@ -113,6 +120,7 @@ class EDD_Customer {
 		$customer = $this->db->get_customer_by( $field, $_id_or_email );
 
 		if ( empty( $customer ) || ! is_object( $customer ) ) {
+
 			return false;
 		}
 
@@ -148,6 +156,9 @@ class EDD_Customer {
 			}
 
 		}
+
+		$this->emails   = (array) $this->get_meta( 'additional_email', false );
+		$this->emails[] = $this->email;
 
 		// Customer ID and email are the only things that are necessary, make sure they exist
 		if ( ! empty( $this->id ) && ! empty( $this->email ) ) {
@@ -270,6 +281,164 @@ class EDD_Customer {
 		return $updated;
 	}
 
+	/**
+	 * Attach an email to the customer
+	 *
+	 * @since  2.6
+	 * @param  string $email The email address to remove from the customer
+	 * @param  bool   $primary Allows setting the email added as the primary
+	 * @return bool   If the email was added successfully
+	 */
+	public function add_email( $email = '', $primary = false ) {
+
+		if( ! is_email( $email ) ) {
+			return false;
+		}
+
+		$existing = new EDD_Customer( $email );
+
+		if( $existing->id > 0 ) {
+			// Email address already belongs to a customer
+			return false;
+		}
+
+		if ( email_exists( $email ) ) {
+			$user = get_user_by( 'email', $email );
+			if ( $user->ID != $this->user_id ) {
+				return false;
+			}
+		}
+
+		do_action( 'edd_customer_pre_add_email', $email, $this->id, $this );
+
+		// Update is used to ensure duplicate emails are not added
+		$ret = (bool) $this->add_meta( 'additional_email', $email );
+
+		do_action( 'edd_customer_post_add_email', $email, $this->id, $this );
+
+		if ( $ret && true === $primary ) {
+			$this->set_primary_email( $email );
+		}
+
+		return $ret;
+
+	}
+
+	/**
+	 * Remove an email from the customer
+	 *
+	 * @since  2.6
+	 * @param  string $email The email address to remove from the customer
+	 * @return bool   If the email was removeed successfully
+	 */
+	public function remove_email( $email = '' ) {
+
+		if( ! is_email( $email ) ) {
+			return false;
+		}
+
+		do_action( 'edd_customer_pre_remove_email', $email, $this->id, $this );
+
+		$ret = (bool) $this->delete_meta( 'additional_email', $email );
+
+		do_action( 'edd_customer_post_remove_email', $email, $this->id, $this );
+
+		return $ret;
+
+	}
+
+	/**
+	 * Set an email address as the customer's primary email
+	 *
+	 * This will move the customer's previous primary email to an additional email
+	 *
+	 * @since  2.6
+	 * @param  string $new_primary_email The email address to remove from the customer
+	 * @return bool                      If the email was set as primary successfully
+	 */
+	public function set_primary_email( $new_primary_email = '' ) {
+
+		if( ! is_email( $new_primary_email ) ) {
+			return false;
+		}
+
+		do_action( 'edd_customer_pre_set_primary_email', $new_primary_email, $this->id, $this );
+
+		$existing = new EDD_Customer( $new_primary_email );
+
+		if( $existing->id > 0 && (int) $existing->id !== (int) $this->id ) {
+
+			// This email belongs to another customer
+			return false;
+		}
+
+		$old_email = $this->email;
+
+		// Update customer record with new email
+		$update = $this->update( array( 'email' => $new_primary_email ) );
+
+		// Remove new primary from list of additional emails
+		$remove = $this->remove_email( $new_primary_email );
+
+		// Add old email to additional emails list
+		$add = $this->add_email( $old_email );
+
+		$ret = $update && $remove && $add;
+
+		if( $ret ) {
+			$this->email = $new_primary_email;
+		}
+
+		do_action( 'edd_customer_post_set_primary_email', $new_primary_email, $this->id, $this );
+
+		return $ret;
+
+	}
+
+	/*
+	 * Get the payment ids of the customer in an array.
+	 *
+	 * @since 2.6
+	 * @return array An array of payment IDs for the customer, or an empty array if none exist.
+	 */
+	public function get_payment_ids() {
+
+		$payment_ids = $this->payment_ids;
+
+		if ( ! empty( $payment_ids ) ) {
+			$payment_ids = array_map( 'absint', explode( ',', $payment_ids ) );
+		} else {
+			$payment_ids = array();
+		}
+
+		return $payment_ids;
+
+	}
+
+	/*
+	 * Get an array of EDD_Payment objects from the payment_ids attached to the customer
+	 *
+	 * @since  2.6
+	 * @param  array|string  $status A single status as a string or an array of statuses
+	 * @return array                 An array of EDD_Payment objects or an empty array
+	 */
+	public function get_payments( $status = array() ) {
+
+		$payment_ids = $this->get_payment_ids();
+
+		$payments = array();
+		foreach ( $payment_ids as $payment_id ) {
+
+			$payment = new EDD_Payment( $payment_id );
+			if ( empty( $status ) || ( is_array( $status ) && in_array( $payment->status, $status ) ) || $status == $payment->status ) {
+				$payments[] = new EDD_Payment( $payment_id );
+			}
+
+		}
+
+		return $payments;
+
+	}
 
 	/**
 	 * Attach payment to the customer then triggers increasing stats
@@ -460,16 +629,17 @@ class EDD_Customer {
 	 * @return mixed         If successful, the new value, otherwise false
 	 */
 	public function increase_value( $value = 0.00 ) {
+		$value = apply_filters( 'edd_customer_increase_value', $value, $this );
 
 		$new_value = floatval( $this->purchase_value ) + $value;
 
-		do_action( 'edd_customer_pre_increase_value', $value, $this->id );
+		do_action( 'edd_customer_pre_increase_value', $value, $this->id, $this );
 
 		if ( $this->update( array( 'purchase_value' => $new_value ) ) ) {
 			$this->purchase_value = $new_value;
 		}
 
-		do_action( 'edd_customer_post_increase_value', $this->purchase_value, $value, $this->id );
+		do_action( 'edd_customer_post_increase_value', $this->purchase_value, $value, $this->id, $this );
 
 		return $this->purchase_value;
 	}
@@ -482,6 +652,7 @@ class EDD_Customer {
 	 * @return mixed         If successful, the new value, otherwise false
 	 */
 	public function decrease_value( $value = 0.00 ) {
+		$value = apply_filters( 'edd_customer_decrease_value', $value, $this );
 
 		$new_value = floatval( $this->purchase_value ) - $value;
 
@@ -489,13 +660,13 @@ class EDD_Customer {
 			$new_value = 0.00;
 		}
 
-		do_action( 'edd_customer_pre_decrease_value', $value, $this->id );
+		do_action( 'edd_customer_pre_decrease_value', $value, $this->id, $this );
 
 		if ( $this->update( array( 'purchase_value' => $new_value ) ) ) {
 			$this->purchase_value = $new_value;
 		}
 
-		do_action( 'edd_customer_post_decrease_value', $this->purchase_value, $value, $this->id );
+		do_action( 'edd_customer_post_decrease_value', $this->purchase_value, $value, $this->id, $this );
 
 		return $this->purchase_value;
 	}
@@ -588,6 +759,64 @@ class EDD_Customer {
 
 		return (string) $all_notes;
 
+	}
+
+	/**
+	 * Retrieve customer meta field for a customer.
+	 *
+	 * @param   string $meta_key      The meta key to retrieve.
+	 * @param   bool   $single        Whether to return a single value.
+	 * @return  mixed                 Will be an array if $single is false. Will be value of meta data field if $single is true.
+	 *
+	 * @access  public
+	 * @since   2.6
+	 */
+	public function get_meta( $meta_key = '', $single = true ) {
+		return EDD()->customer_meta->get_meta( $this->id, $meta_key, $single );
+	}
+
+	/**
+	 * Add meta data field to a customer.
+	 *
+	 * @param   string $meta_key      Metadata name.
+	 * @param   mixed  $meta_value    Metadata value.
+	 * @param   bool   $unique        Optional, default is false. Whether the same key should not be added.
+	 * @return  bool                  False for failure. True for success.
+	 *
+	 * @access  public
+	 * @since   2.6
+	 */
+	public function add_meta( $meta_key = '', $meta_value, $unique = false ) {
+		return EDD()->customer_meta->add_meta( $this->id, $meta_key, $meta_value, $unique );
+	}
+
+	/**
+	 * Update customer meta field based on customer ID.
+	 *
+	 * @param   string $meta_key      Metadata key.
+	 * @param   mixed  $meta_value    Metadata value.
+	 * @param   mixed  $prev_value    Optional. Previous value to check before removing.
+	 * @return  bool                  False on failure, true if success.
+	 *
+	 * @access  public
+	 * @since   2.6
+	 */
+	public function update_meta( $meta_key = '', $meta_value, $prev_value = '' ) {
+		return EDD()->customer_meta->update_meta( $this->id, $meta_key, $meta_value, $prev_value );
+	}
+
+	/**
+	 * Remove metadata matching criteria from a customer.
+	 *
+	 * @param   string $meta_key      Metadata name.
+	 * @param   mixed  $meta_value    Optional. Metadata value.
+	 * @return  bool                  False for failure. True for success.
+	 *
+	 * @access  public
+	 * @since   2.6
+	 */
+	public function delete_meta( $meta_key = '', $meta_value = '' ) {
+		return EDD()->customer_meta->delete_meta( $this->id, $meta_key, $meta_value );
 	}
 
 	/**

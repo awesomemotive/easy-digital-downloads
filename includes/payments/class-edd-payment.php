@@ -19,11 +19,9 @@ if( ! defined( 'ABSPATH' ) ) exit;
 /**
  * EDD_Payment Class
  *
- * Note: Will remain in Final status for a few point releases
- *
  * @since 2.5
  */
-final class EDD_Payment {
+class EDD_Payment {
 
 	/**
 	 * The Payment we are working with
@@ -540,7 +538,14 @@ final class EDD_Payment {
 			$customer = new stdClass;
 
 			if ( did_action( 'edd_pre_process_purchase' ) && is_user_logged_in() ) {
-				$customer  = new EDD_Customer( get_current_user_id(), true );
+
+				$customer = new EDD_customer( get_current_user_id(), true );
+
+				// Customer is logged in but used a different email to purchase with so assign to their customer record
+				if( ! empty( $customer->id ) && $this->email != $customer->email ) {
+					$customer->add_email( $this->email );
+				}
+
 			}
 
 			if ( empty( $customer->id ) ) {
@@ -558,6 +563,7 @@ final class EDD_Payment {
 				$customer->create( $customer_data );
 
 			}
+
 
 			$this->customer_id            = $customer->id;
 			$this->pending['customer_id'] = $this->customer_id;
@@ -1923,6 +1929,22 @@ final class EDD_Payment {
 	 */
 	private function setup_user_id() {
 		$user_id = $this->get_meta( '_edd_payment_user_id', true );
+
+		if( empty( $user_id ) ) {
+
+			$customer = new EDD_Customer( $this->customer_id );
+
+			if( ! empty( $customer->user_id ) ) {
+
+				$user_id = $customer->user_id;
+
+				// Backfill the user ID
+				$this->update_meta( '_edd_payment_user_id', $user_id );
+
+			}
+
+		}
+
 		return $user_id;
 	}
 
@@ -1958,6 +1980,10 @@ final class EDD_Payment {
 		$user_info    = isset( $this->payment_meta['user_info'] ) ? maybe_unserialize( $this->payment_meta['user_info'] ) : array();
 		$user_info    = wp_parse_args( $user_info, $defaults );
 
+		// Ensure email index is in the old user info array
+		if( empty( $user_info['email'] ) ) {
+			$user_info['email'] = $this->email;
+		}
 
 		if ( empty( $user_info ) ) {
 			// Get the customer, but only if it's been created

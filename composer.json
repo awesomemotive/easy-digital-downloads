@@ -1,7 +1,7 @@
 {
     "name": "easydigitaldownloads/easy-digital-downloads",
     "type": "wordpress-plugin",
-    "description": "The world's easiest way to sell digital downloads through WordPress for free",
+    "description": "The easiest way to sell digital products with WordPress.",
     "keywords": ["edd", "eddwp", "easy digital downloads"],
     "homepage": "https://easydigitaldownloads.com/",
     "license": "GPL-2.0+",

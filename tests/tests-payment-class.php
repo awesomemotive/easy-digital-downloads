@@ -25,7 +25,7 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 
 		$this->_transaction_id = 'FIR3SID3';
 		edd_set_payment_transaction_id( $payment_id, $this->_transaction_id );
-		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'edd' ) , $this->_transaction_id ) );
+		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'easy-digital-downloads' ) , $this->_transaction_id ) );
 
 		// Make sure we're working off a clean object caching in WP Core.
 		// Prevents some payment_meta from not being present.
