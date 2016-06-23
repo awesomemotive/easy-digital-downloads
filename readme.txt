@@ -301,6 +301,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Correct HTML validation for the legend tag on forms by removing span wrappers.
 * Fix: Schema.org markup missing priceCurrency attribute.
 * Fix: Use tel input type and patterns to force numeric keyboard on checkout for card number and CVC inputs.
+* Fix: Settings sanitization for subsections unsets tax rates when a subsection is registered under taxes.
 
 = 2.5.17, June 3, 2016 =
 
