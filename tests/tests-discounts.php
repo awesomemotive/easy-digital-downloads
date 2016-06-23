@@ -193,6 +193,25 @@ class Tests_Discounts extends WP_UnitTestCase {
 		$this->assertFalse( edd_increase_discount_usage( 'INVALIDDISCOUNTCODE' ) );
 	}
 
+	public function test_discount_inactive_at_max() {
+		$current_usage = edd_get_discount_uses( $this->_post_id );
+		$max_uses      = edd_get_discount_max_uses( $this->_post_id );
+
+		update_post_meta( $this->_post_id, '_edd_discount_uses', $max_uses - 1 );
+
+		$this->assertEquals( get_post_meta( $this->_post_id, '_edd_discount_status', true ), 'active' );
+
+		$code = edd_get_discount_code( $this->_post_id );
+		edd_increase_discount_usage( $code );
+
+		$this->assertEquals( get_post_meta( $this->_post_id, '_edd_discount_status', true ), 'inactive' );
+		$this->assertEquals( get_post_status( $this->_post_id ), 'inactive' );
+
+		edd_decrease_discount_usage( $code );
+		$this->assertEquals( get_post_meta( $this->_post_id, '_edd_discount_status', true ), 'active' );
+		$this->assertEquals( get_post_status( $this->_post_id ), 'active' );
+	}
+
 	public function test_decrease_discount_usage() {
 		$id   = edd_get_discount_id_by_code( '20OFF' );
 		$uses = edd_get_discount_uses( $id );
@@ -367,4 +386,5 @@ class Tests_Discounts extends WP_UnitTestCase {
 		EDD_Helper_Download::delete_download( $download_3->ID );
 		EDD_Helper_Discount::delete_discount( $discount );
 	}
+
 }

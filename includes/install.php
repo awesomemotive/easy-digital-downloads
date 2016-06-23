@@ -24,7 +24,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since 1.0
  * @global $wpdb
  * @global $edd_options
- * @global $wp_version
  * @param  bool $network_side If the plugin is being network-activated
  * @return void
  */
@@ -57,7 +56,7 @@ register_activation_hook( EDD_PLUGIN_FILE, 'edd_install' );
  * @return void
  */
 function edd_run_install() {
-	global $wpdb, $edd_options, $wp_version;
+	global $wpdb, $edd_options;
 
 	if( ! function_exists( 'edd_create_protection_files' ) ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upload-functions.php';
@@ -184,8 +183,9 @@ function edd_run_install() {
 	$api = new EDD_API;
 	update_option( 'edd_default_api_version', 'v' . $api->get_version() );
 
-	// Create the customers database
+	// Create the customer databases
 	@EDD()->customers->create_table();
+	@EDD()->customer_meta->create_table();
 
 	// Check for PHP Session support, and enable if available
 	EDD()->session->use_php_sessions();
@@ -255,9 +255,11 @@ add_action( 'wpmu_new_blog', 'edd_new_blog_created', 10, 6 );
 function edd_wpmu_drop_tables( $tables, $blog_id ) {
 
 	switch_to_blog( $blog_id );
-	$customers_db = new EDD_DB_Customers();
+	$customers_db     = new EDD_DB_Customers();
+	$customer_meta_db = new EDD_DB_Customer_Meta();
 	if ( $customers_db->installed() ) {
 		$tables[] = $customers_db->table_name;
+		$tables[] = $customer_meta_db->table_name;
 	}
 	restore_current_blog();
 
@@ -286,9 +288,17 @@ function edd_after_install() {
 
 	if ( false === $edd_table_check || current_time( 'timestamp' ) > $edd_table_check ) {
 
+		if ( ! @EDD()->customer_meta->installed() ) {
+
+			// Create the customer meta database (this ensures it creates it on multisite instances where it is network activated)
+			@EDD()->customer_meta->create_table();
+
+		}
+
 		if ( ! @EDD()->customers->installed() ) {
 			// Create the customers database (this ensures it creates it on multisite instances where it is network activated)
 			@EDD()->customers->create_table();
+			@EDD()->customer_meta->create_table();
 
 			do_action( 'edd_after_install', $edd_options );
 		}
@@ -322,7 +332,7 @@ function edd_install_roles_on_network() {
 		return;
 	}
 
-	if( ! in_array( 'shop_manager', $wp_roles->roles ) ) {
+	if( ! array_key_exists( 'shop_manager', $wp_roles->roles ) ) {
 
 		// Create EDD shop roles
 		$roles = new EDD_Roles;

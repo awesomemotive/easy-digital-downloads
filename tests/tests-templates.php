@@ -65,6 +65,7 @@ class Tests_Templates extends WP_UnitTestCase {
 	}
 
 	public function test_get_purchase_link() {
+		add_filter( 'edd_add_schema_microdata', '__return_true' );
 		$link = edd_get_purchase_link( array( 'download_id' => $this->_post->ID ) );
 		$this->assertInternalType( 'string', $link );
 		$this->assertContains( '<form id="edd_purchase_', $link );

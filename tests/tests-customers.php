@@ -120,9 +120,9 @@ class Tests_Customers extends WP_UnitTestCase {
 		$_SERVER['REMOTE_ADDR'] = '10.0.0.0';
 		$_SERVER['SERVER_NAME'] = 'edd_virtual';
 
-		$payment_id = edd_insert_payment( $purchase_data );
+		$this->_payment_id = edd_insert_payment( $purchase_data );
 
-		edd_update_payment_status( $payment_id, 'complete' );
+		edd_update_payment_status( $this->_payment_id, 'complete' );
 
 	}
 
@@ -435,6 +435,56 @@ class Tests_Customers extends WP_UnitTestCase {
 		// Make sure it's the same customer above (sanity check)
 		$this->assertEquals( $customer->id, $customer2->id );
 		$this->assertEquals( 0 ,$customer2->user_id );
+	}
+
+	public function test_get_payment_ids() {
+		$customer = new EDD_Customer( $this->_user_id, true );
+		$this->assertInternalType( 'array', $customer->get_payment_ids());
+
+		// Create a new customer to test no payments
+		$customer_id  = EDD()->customers->add( array( 'email' => 'test_user@example.com' ) );
+		$new_customer = new EDD_Customer( $customer_id );
+		$this->assertEmpty( $new_customer->get_payment_ids() );
+	}
+
+	public function test_get_payments() {
+		$customer = new EDD_Customer( $this->_user_id, true );
+		$payments = $customer->get_payments();
+		$this->assertEquals( 1, count( $payments ) );
+		$this->assertEquals( $this->_payment_id, $payments[0]->ID );
+		$this->assertEmpty( $customer->get_payments( 'pending' ) );
+		$this->assertEmpty( $customer->get_payments( array( 'pending' ) ) );
+		$this->assertEquals( 1, count( $customer->get_payments( array( 'pending', 'publish' ) ) ) );
+
+
+		// Create a new customer to test no payments
+		$new_customer = new EDD_Customer( 'test_user@example.com' );
+		$this->assertEmpty( $new_customer->get_payments() );
+	}
+
+	public function test_add_email() {
+		$customer = new EDD_Customer( $this->_user_id, true );
+
+		$this->assertTrue( $customer->add_email( 'test2@example.org' ) );
+
+		$customer2 = new EDD_Customer( $customer->id );
+		$this->assertTrue( in_array( 'test2@example.org', $customer2->emails ) );
+
+		// Test with the primary parameter
+		$this->assertTrue( $customer->add_email( 'test3@example.org', true ) );
+
+		$customer3 = new EDD_Customer( $customer2->id );
+		$this->assertEquals( $customer3->email, 'test3@example.org' );
+		$this->assertTrue( in_array( $customer2->email, $customer3->emails ) );
+	}
+
+	public function test_remove_email() {
+		$customer = new EDD_Customer( $this->_user_id, true );
+		$customer->add_email( 'test1@example.org' );
+
+		$customer = new EDD_Customer( $customer->id );
+		$this->assertTrue( $customer->remove_email( 'test1@example.org' ) );
+		$this->assertFalse( $customer->remove_email( 'test9999@example.org' ) );
 	}
 
 }

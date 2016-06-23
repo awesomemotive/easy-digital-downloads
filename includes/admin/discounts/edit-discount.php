@@ -109,7 +109,7 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 							</label>
 						</p>
 					</div>
-					<p class="description"><?php printf( __( 'Select %s relevant to this discount.', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></p>
+					<p class="description"><?php printf( __( 'Select %s relevant to this discount. If left blank, this discount can be used on any product.', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></p>
 				</td>
 			</tr>
 			<?php do_action( 'edd_edit_discount_form_before_excluded_products', $discount_id, $discount ); ?>

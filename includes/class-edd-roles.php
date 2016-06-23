@@ -187,7 +187,8 @@ class EDD_Roles {
 				"assign_{$capability_type}_terms",
 
 				// Custom
-				"view_{$capability_type}_stats"
+				"view_{$capability_type}_stats",
+				"import_{$capability_type}s",
 			);
 		}
 

@@ -75,7 +75,7 @@ function edd_load_scripts() {
 			'empty_cart_message'      => __('Your cart is empty','easy-digital-downloads' ), // Item already in the cart message
 			'loading'                 => __('Loading','easy-digital-downloads' ) , // General loading message
 			'select_option'           => __('Please select an option','easy-digital-downloads' ) , // Variable pricing error with multi-purchase option enabled
-			'ajax_loader'             => set_url_scheme( EDD_PLUGIN_URL . 'assets/images/loading.gif', 'relative' ), // Ajax loading image
+			'ajax_loader'             => set_url_scheme( EDD_PLUGIN_URL . 'assets/images/loading.gif', 'relative' ), // AJAX loading image
 			'is_checkout'             => edd_is_checkout() ? '1' : '0',
 			'default_gateway'         => edd_get_default_gateway(),
 			'redirect_to_checkout'    => ( edd_straight_to_checkout() || edd_is_checkout() ) ? '1' : '0',
@@ -158,7 +158,7 @@ function edd_load_admin_scripts( $hook ) {
 		return;
 	}
 
-	global $wp_version, $post;
+	global $post;
 
 	$js_dir  = EDD_PLUGIN_URL . 'assets/js/';
 	$css_dir = EDD_PLUGIN_URL . 'assets/css/';
@@ -173,7 +173,10 @@ function edd_load_admin_scripts( $hook ) {
 	wp_register_script( 'jquery-chosen', $js_dir . 'chosen.jquery' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
 	wp_enqueue_script( 'jquery-chosen' );
 
+	wp_enqueue_script( 'jquery-form' );
+
 	$admin_deps = array();
+
 	if ( ! edd_is_admin_page( $hook, 'edit' ) && ! edd_is_admin_page( $hook, 'new' ) ) {
 		$admin_deps = array( 'jquery', 'inline-edit-post' );
 	} else {
@@ -181,6 +184,7 @@ function edd_load_admin_scripts( $hook ) {
 	}
 
 	wp_register_script( 'edd-admin-scripts', $js_dir . 'admin-scripts' . $suffix . '.js', $admin_deps, EDD_VERSION, false );
+
 	wp_enqueue_script( 'edd-admin-scripts' );
 
 	wp_localize_script( 'edd-admin-scripts', 'edd_vars', array(
@@ -215,7 +219,8 @@ function edd_load_admin_scripts( $hook ) {
 		'batch_export_no_class'   => __( 'You must choose a method.', 'easy-digital-downloads' ),
 		'batch_export_no_reqs'    => __( 'Required fields not completed.', 'easy-digital-downloads' ),
 		'reset_stats_warn'        => __( 'Are you sure you want to reset your store? This process is <strong><em>not reversible</em></strong>. Please be sure you have a recent backup.', 'easy-digital-downloads' ),
-		'search_placeholder'      => sprintf( __( 'Type to search all %s', 'easy-digital-downloads' ), edd_get_label_plural() )
+		'search_placeholder'      => sprintf( __( 'Type to search all %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
+		'unsupported_browser'     => __( 'We are sorry but your browser is not compatible with this kind of file upload. Please upgrade your browser.', 'easy-digital-downloads' )
 	));
 
 	wp_enqueue_style( 'wp-color-picker' );
@@ -227,16 +232,15 @@ function edd_load_admin_scripts( $hook ) {
 	wp_register_script( 'colorbox', $js_dir . 'jquery.colorbox-min.js', array( 'jquery' ), '1.3.20' );
 	wp_enqueue_script( 'colorbox' );
 
-	if( function_exists( 'wp_enqueue_media' ) && version_compare( $wp_version, '3.5', '>=' ) ) {
-		//call for new media manager
-		wp_enqueue_media();
-	}
+	//call for media manager
+	wp_enqueue_media();
 
 	wp_register_script( 'jquery-flot', $js_dir . 'jquery.flot' . $suffix . '.js' );
 	wp_enqueue_script( 'jquery-flot' );
 
 	wp_enqueue_script( 'jquery-ui-datepicker' );
 	wp_enqueue_script( 'jquery-ui-dialog' );
+	wp_enqueue_script( 'jquery-ui-tooltip' );
 
 	$ui_style = ( 'classic' == get_user_option( 'admin_color' ) ) ? 'classic' : 'fresh';
 	wp_register_style( 'jquery-ui-css', $css_dir . 'jquery-ui-' . $ui_style . $suffix . '.css' );
@@ -272,21 +276,10 @@ function edd_admin_downloads_icon() {
 	$icon_cpt_2x_url = $images_url . 'edd-cpt-2x.png';
 	?>
 	<style type="text/css" media="screen">
-		<?php if( version_compare( $wp_version, '3.8-RC', '>=' ) || version_compare( $wp_version, '3.8', '>=' ) ) { ?>
-			#adminmenu #menu-posts-download .wp-menu-image:before,
-			#dashboard_right_now .download-count:before {
-				content: '<?php echo $menu_icon; ?>';
-			}
-		<?php } else { ?>
-			/** Fallback for outdated WP installations */
-			#adminmenu #menu-posts-download div.wp-menu-image {
-				background: url(<?php echo $icon_url; ?>) no-repeat 7px -17px;
-			}
-			#adminmenu #menu-posts-download:hover div.wp-menu-image,
-			#adminmenu #menu-posts-download.wp-has-current-submenu div.wp-menu-image {
-				background-position: 7px 6px;
-			}
-		<?php } ?>
+		#adminmenu #menu-posts-download .wp-menu-image:before,
+		#dashboard_right_now .download-count:before {
+			content: '<?php echo $menu_icon; ?>';
+		}
 		#icon-edit.icon32-posts-download {
 			background: url(<?php echo $icon_cpt_url; ?>) -7px -5px no-repeat;
 		}
@@ -300,17 +293,6 @@ function edd_admin_downloads_icon() {
 		only screen and (     -o-min-device-pixel-ratio: 3/2),
 		only screen and (        min-device-pixel-ratio: 1.5),
 		only screen and (        		 min-resolution: 1.5dppx) {
-			<?php if( version_compare( $wp_version, '3.7', '<=' ) ) { ?>
-				#adminmenu #menu-posts-download div.wp-menu-image {
-					background-image: url(<?php echo $icon_2x_url; ?>);
-					background-position: 7px -18px;
-					background-size: 16px 40px;
-				}
-				#adminmenu #menu-posts-download:hover div.wp-menu-image,
-				#adminmenu #menu-posts-download.wp-has-current-submenu div.wp-menu-image {
-					background-position: 7px 6px;
-				}
-			<?php } ?>
 			#icon-edit.icon32-posts-download {
 				background: url(<?php echo $icon_cpt_2x_url; ?>) no-repeat -7px -5px !important;
 				background-size: 55px 45px !important;
