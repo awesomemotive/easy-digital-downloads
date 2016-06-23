@@ -1056,6 +1056,10 @@ function edd_settings_sanitize_taxes( $input ) {
 		return $input;
 	}
 
+	if( ! isset( $_POST['tax_rates'] ) ) {
+		return $input;
+	}
+
 	$new_rates = ! empty( $_POST['tax_rates'] ) ? array_values( $_POST['tax_rates'] ) : array();
 
 	update_option( 'edd_tax_rates', $new_rates );
