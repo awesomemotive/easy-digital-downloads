@@ -34,7 +34,7 @@ class EDD_Welcome {
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'admin_menus') );
 		add_action( 'admin_head', array( $this, 'admin_head' ) );
-		add_action( 'admin_init', array( $this, 'welcome'    ) );
+		add_action( 'admin_init', array( $this, 'welcome'    ), 11 );
 	}
 
 	/**
