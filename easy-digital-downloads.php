@@ -329,7 +329,6 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/graphing.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/display-settings.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/contextual-help.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/tracking.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/tools.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/plugins.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
@@ -342,6 +341,7 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/theme-compatibility.php';
 		}
 
+		require_once EDD_PLUGIN_DIR . 'includes/admin/tracking.php'; // Must be loaded on frontend to ensure cron runs
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-register-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/install.php';
 	}
