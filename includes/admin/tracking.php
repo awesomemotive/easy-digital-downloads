@@ -113,7 +113,7 @@ class EDD_Tracking {
 	 * @access private
 	 * @return void
 	 */
-	public function send_checkin( $override = false ) {
+	public function send_checkin( $override = false, $ignore_last_checkin = false ) {
 
 		if( ! $this->tracking_allowed() && ! $override ) {
 			return false;
@@ -121,7 +121,7 @@ class EDD_Tracking {
 
 		// Send a maximum of once per week
 		$last_send = $this->get_last_send();
-		if( is_numeric( $last_send ) && $last_send > strtotime( '-1 week' ) ) {
+		if( is_numeric( $last_send ) && $last_send > strtotime( '-1 week' ) && ! $ignore_last_checkin ) {
 			return false;
 		}
 
