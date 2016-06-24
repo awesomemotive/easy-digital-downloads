@@ -32,6 +32,12 @@ function edd_do_automatic_upgrades() {
 	}
 
 	if( $did_upgrade ) {
+
+		// If it is a major version, send to what's new page
+		if( substr_count( EDD_VERSION, '.' ) < 2 ) {
+			set_transient( '_edd_activation_redirect', true, 30 );
+		}
+
 		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
 	}
 
