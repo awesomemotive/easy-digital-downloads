@@ -36,8 +36,7 @@ class EDD_Tracking {
 	 */
 	public function __construct() {
 
-		$this->schedule_send();
-
+		add_action( 'init', array( $this, 'schedule_send' ) );
 		add_action( 'edd_settings_general_sanitize', array( $this, 'check_for_settings_optin' ) );
 		add_action( 'edd_opt_into_tracking', array( $this, 'check_for_optin' ) );
 		add_action( 'edd_opt_out_of_tracking', array( $this, 'check_for_optout' ) );
@@ -219,10 +218,10 @@ class EDD_Tracking {
 	/**
 	 * Schedule a weekly checkin
 	 *
-	 * @access private
+	 * @access public
 	 * @return void
 	 */
-	private function schedule_send() {
+	public function schedule_send() {
 		// We send once a week (while tracking is allowed) to check in, which can be used to determine active sites
 		add_action( 'edd_weekly_scheduled_events', array( $this, 'send_checkin' ) );
 	}
