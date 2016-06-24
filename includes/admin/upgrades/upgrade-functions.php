@@ -24,9 +24,15 @@ function edd_do_automatic_upgrades() {
 	$did_upgrade = false;
 	$edd_version = preg_replace( '/[^0-9.].*/', '', get_option( 'edd_version' ) );
 
-	if( version_compare( $edd_version, EDD_VERSION, '<' ) ) {
+	if( version_compare( $edd_version, '2.6', '<' ) ) {
 
 		edd_v26_upgrades();
+
+	}
+
+	if( version_compare( $edd_version, EDD_VERSION, '<' ) ) {
+
+		// Let us know that an upgrade has happened
 		$did_upgrade = true;
 
 	}
@@ -39,6 +45,10 @@ function edd_do_automatic_upgrades() {
 		}
 
 		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+
+		// Send a check in. Note: this only sends if data tracking has been enabled
+		$tracking = new EDD_Tracking;
+		$tracking->send_checkin( false, true );
 	}
 
 }
