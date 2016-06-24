@@ -6,7 +6,7 @@ Donate link: https://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
 Tested up to: 4.6
-Stable Tag: 2.6
+Stable Tag: 2.6.1
 
 License: GNU Version 2 or Any Later Version
 
@@ -214,7 +214,15 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
-= 2.6, June 22, 2016 =
+= 2.6.1, June 24, 2016 =
+* Fix: PayPal Standard transaction ID links don't link to PayPal Sandbox when payment was made in test mode.
+* Fix: Opt-in tracking not sending after initial activation.
+* Tweak: Welcome page not showing on upgrade.
+* Tweak: Only show welcome page on major versions.
+* New: If enabled, send checkin data when Easy Digital Downloads is upgraded.
+* New: Add a filter for edd_price_options() that allows adding classes to the output.
+
+= 2.6, June 23, 2016 =
 * New: Added filters to process the earnings as they are updated.
 * New: Profile Editor state field shows as dropdown when possible.
 * New: Public API query mode to allow extension developers the ability to create API endpoints that do not require API keys.
