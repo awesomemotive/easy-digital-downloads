@@ -82,7 +82,7 @@ function edd_update_option( $key = '', $value = false ) {
  * @since 2.3
  * @param string $key The Key to delete
  * @global $edd_options Array of all the EDD Options
- * @return boolean True if updated, false if not.
+ * @return boolean True if removed, false if not.
  */
 function edd_delete_option( $key = '' ) {
 
