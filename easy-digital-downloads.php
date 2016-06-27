@@ -5,7 +5,7 @@
  * Description: The easiest way to sell digital products with WordPress.
  * Author: Pippin Williamson and Company
  * Author URI: https://easydigitaldownloads.com
- * Version: 2.5.17
+ * Version: 2.6.1
  * Text Domain: easy-digital-downloads
  * Domain Path: languages
  *
@@ -25,7 +25,7 @@
  * @package EDD
  * @category Core
  * @author Pippin Williamson
- * @version 2.5.17
+ * @version 2.6.1
  */
 
 // Exit if accessed directly.
@@ -114,6 +114,14 @@ final class Easy_Digital_Downloads {
 	public $customers;
 
 	/**
+	 * EDD Customer meta DB Object.
+	 *
+	 * @var object|EDD_DB_Customer_Meta
+	 * @since 2.6
+	 */
+	public $customer_meta;
+
+	/**
 	 * Main Easy_Digital_Downloads Instance.
 	 *
 	 * Insures that only one instance of Easy_Digital_Downloads exists in memory at any one
@@ -136,14 +144,15 @@ final class Easy_Digital_Downloads {
 			add_action( 'plugins_loaded', array( self::$instance, 'load_textdomain' ) );
 
 			self::$instance->includes();
-			self::$instance->roles      = new EDD_Roles();
-			self::$instance->fees       = new EDD_Fees();
-			self::$instance->api        = new EDD_API();
-			self::$instance->session    = new EDD_Session();
-			self::$instance->html       = new EDD_HTML_Elements();
-			self::$instance->emails     = new EDD_Emails();
-			self::$instance->email_tags = new EDD_Email_Template_Tags();
-			self::$instance->customers  = new EDD_DB_Customers();
+			self::$instance->roles         = new EDD_Roles();
+			self::$instance->fees          = new EDD_Fees();
+			self::$instance->api           = new EDD_API();
+			self::$instance->session       = new EDD_Session();
+			self::$instance->html          = new EDD_HTML_Elements();
+			self::$instance->emails        = new EDD_Emails();
+			self::$instance->email_tags    = new EDD_Email_Template_Tags();
+			self::$instance->customers     = new EDD_DB_Customers();
+			self::$instance->customer_meta = new EDD_DB_Customer_Meta();
 		}
 		return self::$instance;
 	}
@@ -186,7 +195,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '2.5.17' );
+			define( 'EDD_VERSION', '2.6.1' );
 		}
 
 		// Plugin Folder Path.
@@ -237,6 +246,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-customers.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-customer-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-download.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cache-helper.php';
@@ -286,6 +296,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/process-purchase.php';
 		require_once EDD_PLUGIN_DIR . 'includes/login-register.php';
 		require_once EDD_PLUGIN_DIR . 'includes/shortcodes.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/tracking.php'; // Must be loaded on frontend to ensure cron runs
 
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/add-ons.php';
@@ -305,6 +316,8 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/contextual-help.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-actions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-codes.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/import/import-actions.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/import/import-functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/actions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/payments-history.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/contextual-help.php';
@@ -317,7 +330,6 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/graphing.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/display-settings.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/contextual-help.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/tracking.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/tools.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/plugins.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';

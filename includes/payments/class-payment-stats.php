@@ -106,7 +106,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 		// Make sure end date is valid
 		if( is_wp_error( $this->end_date ) )
 			return $this->end_date;
-		
+
 		add_filter( 'posts_where', array( $this, 'payments_where' ) );
 
 		if ( empty( $download_id ) ) {
@@ -126,8 +126,8 @@ class EDD_Payment_Stats extends EDD_Stats {
 				'include_taxes'          => $include_taxes,
 			);
 
-			$args     = apply_filters( 'edd_stats_earnings_args', $args );
-			$key      = 'edd_stats_' . substr( md5( serialize( $args ) ), 0, 15 );
+			$args = apply_filters( 'edd_stats_earnings_args', $args );
+			$key  = 'edd_stats_' . md5( serialize( $args ) );
 
 			$earnings = get_transient( $key );
 
@@ -145,6 +145,8 @@ class EDD_Payment_Stats extends EDD_Stats {
 					if ( ! $include_taxes ) {
 						$total_tax = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_tax' AND post_id IN ({$sales})" );
 					}
+
+					$total_earnings = apply_filters( 'edd_payment_stats_earnings_total', $total_earnings, $sales, $args );
 
 					$earnings += ( $total_earnings - $total_tax );
 
@@ -171,7 +173,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 			);
 
 			$args     = apply_filters( 'edd_stats_earnings_args', $args );
-			$key      = 'edd_stats_' . substr( md5( serialize( $args ) ), 0, 15 );
+			$key      = 'edd_stats_' . md5( serialize( $args ) );
 
 			$earnings = get_transient( $key );
 			if( false === $earnings ) {
@@ -195,6 +197,15 @@ class EDD_Payment_Stats extends EDD_Stats {
 							}
 
 							$earnings += $item['price'];
+
+							// Check if there are any item specific fees
+							if ( ! empty( $item['fees'] ) ) {
+								foreach ( $item['fees'] as $key => $fee ) {
+									$earnings += $fee['amount'];
+								}
+							}
+
+							$earnings = apply_filters( 'edd_payment_stats_item_earnings', $earnings, $payment_id, $cart_key, $item );
 
 							if ( ! $include_taxes ) {
 								$earnings -= edd_get_payment_item_tax( $payment_id, $cart_key );
