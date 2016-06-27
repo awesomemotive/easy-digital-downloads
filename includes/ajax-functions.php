@@ -557,7 +557,7 @@ add_action( 'wp_ajax_edd_download_search', 'edd_ajax_download_search' );
 add_action( 'wp_ajax_nopriv_edd_download_search', 'edd_ajax_download_search' );
 
 /**
- * Search the customers database via Ajax
+ * Search the customers database via AJAX
  *
  * @since 2.2
  * @return void

@@ -50,7 +50,7 @@ add_action( 'wp_ajax_nopriv_edd_load_gateway', 'edd_load_ajax_gateway' );
 function edd_no_gateway_error() {
 	$gateways = edd_get_enabled_payment_gateways();
 
-	if ( empty( $gateways ) )
+	if ( empty( $gateways ) && edd_get_cart_total() > 0 )
 		edd_set_error( 'no_gateways', __( 'You must enable a payment gateway to use Easy Digital Downloads', 'easy-digital-downloads' ) );
 	else
 		edd_unset_error( 'no_gateways' );

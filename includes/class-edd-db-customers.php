@@ -367,6 +367,20 @@ class EDD_DB_Customers extends EDD_DB  {
 		}
 
 		if ( ! $customer = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $this->table_name WHERE $db_field = %s LIMIT 1", $value ) ) ) {
+
+			// Look for customer from an additional email
+			if( 'email' === $field ) {
+
+				$meta_table  = EDD()->customer_meta->table_name;
+				$customer_id = $wpdb->get_var( $wpdb->prepare( "SELECT customer_id FROM $meta_table WHERE meta_key = 'additional_email' AND meta_value = '%s' LIMIT 1", $value ) );
+
+				if( ! empty( $customer_id ) ) {
+					return $this->get( $customer_id );
+				}
+
+			}
+
+
 			return false;
 		}
 
@@ -388,7 +402,7 @@ class EDD_DB_Customers extends EDD_DB  {
 			'offset'       => 0,
 			'user_id'      => 0,
 			'orderby'      => 'id',
-			'order'        => 'DESC'
+			'order'        => 'DESC',
 		);
 
 		$args  = wp_parse_args( $args, $defaults );
@@ -397,6 +411,7 @@ class EDD_DB_Customers extends EDD_DB  {
 			$args['number'] = 999999999999;
 		}
 
+		$join  = '';
 		$where = ' WHERE 1=1 ';
 
 		// specific customers
@@ -436,7 +451,11 @@ class EDD_DB_Customers extends EDD_DB  {
 
 				$where .= $wpdb->prepare( " AND `email` IN( $emails ) ", $args['email'] );
 			} else {
-				$where .= $wpdb->prepare( " AND `email` = %s ", $args['email'] );
+				$meta_table      = $wpdb->prefix . 'edd_customermeta';
+				$customers_table = $this->table_name;
+
+				$join  .= " LEFT JOIN $meta_table ON $customers_table.id = $meta_table.customer_id";
+				$where .= $wpdb->prepare( " AND ( ( `meta_key` = 'additional_email' AND `meta_value` = %s ) OR `email` = %s )", $args['email'], $args['email'] );
 			}
 		}
 
@@ -452,16 +471,14 @@ class EDD_DB_Customers extends EDD_DB  {
 
 				if( ! empty( $args['date']['start'] ) ) {
 
-					$start = date( 'Y-m-d H:i:s', strtotime( $args['date']['start'] ) );
-
+					$start = date( 'Y-m-d 00:00:00', strtotime( $args['date']['start'] ) );
 					$where .= " AND `date_created` >= '{$start}'";
 
 				}
 
 				if( ! empty( $args['date']['end'] ) ) {
 
-					$end = date( 'Y-m-d H:i:s', strtotime( $args['date']['end'] ) );
-
+					$end = date( 'Y-m-d 23:59:59', strtotime( $args['date']['end'] ) );
 					$where .= " AND `date_created` <= '{$end}'";
 
 				}
@@ -490,8 +507,11 @@ class EDD_DB_Customers extends EDD_DB  {
 		$args['orderby'] = esc_sql( $args['orderby'] );
 		$args['order']   = esc_sql( $args['order'] );
 
+		$customers = false;
+
 		if( $customers === false ) {
-			$customers = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM  $this->table_name $where ORDER BY {$args['orderby']} {$args['order']} LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) ) );
+			$query     = $wpdb->prepare( "SELECT * FROM  $this->table_name $join $where GROUP BY $this->primary_key ORDER BY {$args['orderby']} {$args['order']} LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) );
+			$customers = $wpdb->get_results( $query );
 			wp_cache_set( $cache_key, $customers, 'customers', 3600 );
 		}
 
@@ -510,16 +530,77 @@ class EDD_DB_Customers extends EDD_DB  {
 
 		global $wpdb;
 
+		$join  = '';
 		$where = ' WHERE 1=1 ';
 
+		// specific customers
+		if( ! empty( $args['id'] ) ) {
+
+			if( is_array( $args['id'] ) ) {
+				$ids = implode( ',', array_map('intval', $args['id'] ) );
+			} else {
+				$ids = intval( $args['id'] );
+			}
+
+			$where .= " AND `id` IN( {$ids} ) ";
+
+		}
+
+		// customers for specific user accounts
+		if( ! empty( $args['user_id'] ) ) {
+
+			if( is_array( $args['user_id'] ) ) {
+				$user_ids = implode( ',', array_map('intval', $args['user_id'] ) );
+			} else {
+				$user_ids = intval( $args['user_id'] );
+			}
+
+			$where .= " AND `user_id` IN( {$user_ids} ) ";
+
+		}
+
+		//specific customers by email
+		if( ! empty( $args['email'] ) ) {
+
+			if( is_array( $args['email'] ) ) {
+
+				$emails_count       = count( $args['email'] );
+				$emails_placeholder = array_fill( 0, $emails_count, '%s' );
+				$emails             = implode( ', ', $emails_placeholder );
+
+				$where .= $wpdb->prepare( " AND `email` IN( $emails ) ", $args['email'] );
+			} else {
+				$meta_table      = $wpdb->prefix . 'edd_customermeta';
+				$customers_table = $this->table_name;
+
+				$join  .= " LEFT JOIN $meta_table ON $customers_table.id = $meta_table.customer_id";
+				$where .= $wpdb->prepare( " AND ( ( `meta_key` = 'additional_email' AND `meta_value` = %s ) OR `email` = %s )", $args['email'], $args['email'] );
+			}
+		}
+
+		// specific customers by name
+		if( ! empty( $args['name'] ) ) {
+			$where .= $wpdb->prepare( " AND `name` LIKE '%%%%" . '%s' . "%%%%' ", $args['name'] );
+		}
+
+		// Customers created for a specific date or in a date range
 		if( ! empty( $args['date'] ) ) {
 
 			if( is_array( $args['date'] ) ) {
 
-				$start = date( 'Y-m-d H:i:s', strtotime( $args['date']['start'] ) );
-				$end   = date( 'Y-m-d H:i:s', strtotime( $args['date']['end'] ) );
+				if( ! empty( $args['date']['start'] ) ) {
 
-				$where .= " AND `date_created` >= '{$start}' AND `date_created` <= '{$end}'";
+					$start = date( 'Y-m-d 00:00:00', strtotime( $args['date']['start'] ) );
+					$where .= " AND `date_created` >= '{$start}'";
+
+				}
+
+				if( ! empty( $args['date']['end'] ) ) {
+
+					$end = date( 'Y-m-d 23:59:59', strtotime( $args['date']['end'] ) );
+					$where .= " AND `date_created` <= '{$end}'";
+
+				}
 
 			} else {
 
@@ -532,13 +613,13 @@ class EDD_DB_Customers extends EDD_DB  {
 
 		}
 
-
 		$cache_key = md5( 'edd_customers_count' . serialize( $args ) );
 
 		$count = wp_cache_get( $cache_key, 'customers' );
 
 		if( $count === false ) {
-			$count = $wpdb->get_var( "SELECT COUNT($this->primary_key) FROM " . $this->table_name . "{$where};" );
+			$query = "SELECT COUNT($this->primary_key) FROM " . $this->table_name . "{$join} {$where};";
+			$count = $wpdb->get_var( $query);
 			wp_cache_set( $cache_key, $count, 'customers', 3600 );
 		}
 
@@ -578,13 +659,4 @@ class EDD_DB_Customers extends EDD_DB  {
 		update_option( $this->table_name . '_db_version', $this->version );
 	}
 
-	/**
-	 * Check if the Customers table was ever installed
-	 *
-	 * @since  2.4
-	 * @return bool Returns if the customers table was installed and upgrade routine run
-	 */
-	public function installed() {
-		return $this->table_exists( $this->table_name );
-	}
 }

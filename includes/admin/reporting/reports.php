@@ -378,7 +378,8 @@ function edd_reports_tab_export() {
 						<h3><span><?php _e('Export Payment History','easy-digital-downloads' ); ?></span></h3>
 						<div class="inside">
 							<p><?php _e( 'Download a CSV of all payments recorded.', 'easy-digital-downloads' ); ?></p>
-							<form id="edd-export-payments" class="edd-export-form" method="post">
+
+							<form id="edd-export-payments" class="edd-export-form edd-import-export-form" method="post">
 								<?php echo EDD()->html->date_field( array( 'id' => 'edd-payment-export-start', 'name' => 'start', 'placeholder' => __( 'Choose start date', 'easy-digital-downloads' ) )); ?>
 								<?php echo EDD()->html->date_field( array( 'id' => 'edd-payment-export-end','name' => 'end', 'placeholder' => __( 'Choose end date', 'easy-digital-downloads' ) )); ?>
 								<select name="status">
@@ -397,6 +398,7 @@ function edd_reports_tab_export() {
 									<span class="spinner"></span>
 								</span>
 							</form>
+
 						</div><!-- .inside -->
 					</div><!-- .postbox -->
 
@@ -404,7 +406,7 @@ function edd_reports_tab_export() {
 						<h3><span><?php _e('Export Customers in CSV','easy-digital-downloads' ); ?></span></h3>
 						<div class="inside">
 							<p><?php _e( 'Download a CSV of customers.', 'easy-digital-downloads' ); ?></p>
-							<form id="edd-export-customers" class="edd-export-form" method="post">
+							<form id="edd-export-customers" class="edd-export-form edd-import-export-form" method="post">
 								<?php echo EDD()->html->product_dropdown( array( 'name' => 'download', 'id' => 'edd_customer_export_download', 'chosen' => true ) ); ?>
 								<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 								<input type="hidden" name="edd-export-class" value="EDD_Batch_Customers_Export"/>
@@ -417,7 +419,7 @@ function edd_reports_tab_export() {
 						<h3><span><?php _e('Export Download Products in CSV','easy-digital-downloads' ); ?></span></h3>
 						<div class="inside">
 							<p><?php _e( 'Download a CSV of download products.', 'easy-digital-downloads' ); ?></p>
-							<form id="edd-export-file-downloads" class="edd-export-form" method="post">
+							<form id="edd-export-file-downloads" class="edd-export-form edd-import-export-form" method="post">
 								<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 								<input type="hidden" name="edd-export-class" value="EDD_Batch_Downloads_Export"/>
 								<input type="submit" value="<?php _e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
@@ -429,7 +431,7 @@ function edd_reports_tab_export() {
 						<h3><span><?php _e('Export Download History in CSV','easy-digital-downloads' ); ?></span></h3>
 						<div class="inside">
 							<p><?php _e( 'Download a CSV of file downloads.', 'easy-digital-downloads' ); ?></p>
-							<form id="edd-export-file-downloads" class="edd-export-form" method="post">
+							<form id="edd-export-file-downloads" class="edd-export-form edd-import-export-form" method="post">
 								<?php echo EDD()->html->date_field( array( 'id' => 'edd-file-download-export-start', 'name' => 'start', 'placeholder' => __( 'Choose start date', 'easy-digital-downloads' ) )); ?>
 								<?php echo EDD()->html->date_field( array( 'id' => 'edd-file-download-export-end', 'name' => 'end', 'placeholder' => __( 'Choose end date', 'easy-digital-downloads' ) )); ?>
 								<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>

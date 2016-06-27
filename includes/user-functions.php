@@ -133,7 +133,16 @@ function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
 	// Grab only the post ids of the products purchased on this order
 	$purchase_product_ids = array();
 	foreach ( $purchase_data as $purchase_meta ) {
-		$purchase_product_ids[] = @wp_list_pluck( $purchase_meta, 'id' );
+
+		$purchase_ids = @wp_list_pluck( $purchase_meta, 'id' );
+
+		if ( ! is_array( $purchase_ids ) || empty( $purchase_ids ) ) {
+			continue;
+		}
+
+		$purchase_ids           = array_values( $purchase_ids );
+		$purchase_product_ids[] = $purchase_ids;
+
 	}
 
 	// Ensure that grabbed products actually HAVE downloads
@@ -153,15 +162,16 @@ function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
 	$product_ids = array_unique( $purchased_products );
 
 	// Make sure we still have some products and a first item
-	if ( empty ( $product_ids ) || ! isset( $product_ids[0] ) )
+	if ( empty ( $product_ids ) || ! isset( $product_ids[0] ) ) {
 		return false;
+	}
 
 	$post_type 	 = get_post_type( $product_ids[0] );
 
 	$args = apply_filters( 'edd_get_users_purchased_products_args', array(
-		'include'			=> $product_ids,
-		'post_type' 		=> $post_type,
-		'posts_per_page'  	=> -1
+		'include'        => $product_ids,
+		'post_type'      => $post_type,
+		'posts_per_page' => -1,
 	) );
 
 	return apply_filters( 'edd_users_purchased_products_list', get_posts( $args ) );
@@ -227,7 +237,7 @@ function edd_has_user_purchased( $user_id, $downloads, $variable_price_id = null
  *
  * @access      public
  * @since       1.0
- * @param       $user_id int - the ID of the user to check
+ * @param       int $user_id - the ID of the user to check
  * @return      bool - true if has purchased, false other wise.
  */
 function edd_has_purchases( $user_id = null ) {
@@ -249,8 +259,8 @@ function edd_has_purchases( $user_id = null ) {
  *
  * @access      public
  * @since       1.6
- * @param       $user int|string - the ID or email of the customer to retrieve stats for
- * @param       $mode string - "test" or "live"
+ * @param       int|string $user - the ID or email of the customer to retrieve stats for
+ * @param       string $mode - "test" or "live"
  * @return      array
  */
 function edd_get_purchase_stats_by_user( $user = '' ) {
@@ -289,7 +299,7 @@ function edd_get_purchase_stats_by_user( $user = '' ) {
  *
  * @access      public
  * @since       1.3
- * @param       $user mixed - ID or email
+ * @param       mixed $user - ID or email
  * @return      int - the total number of purchases
  */
 function edd_count_purchases_of_customer( $user = null ) {
@@ -307,7 +317,7 @@ function edd_count_purchases_of_customer( $user = null ) {
  *
  * @access      public
  * @since       1.3
- * @param       $user mixed - ID or email
+ * @param       mixed $user - ID or email
  * @return      float - the total amount the user has spent
  */
 function edd_purchase_total_of_user( $user = null ) {
@@ -322,7 +332,7 @@ function edd_purchase_total_of_user( $user = null ) {
  *
  * @access      public
  * @since       1.3
- * @param       $user mixed - ID or email
+ * @param       mixed $user - ID or email
  * @return      int - The total number of files the user has downloaded
  */
 function edd_count_file_downloads_of_user( $user ) {
@@ -389,7 +399,7 @@ add_action( 'user_register', 'edd_connect_existing_customer_to_new_user', 10, 1 
  *
  * @access      public
  * @since       1.6
- * @param       $user_id INT - the new user's ID
+ * @param       int $user_id - the new user's ID
  * @return      void
  */
 function edd_add_past_purchases_to_new_user( $user_id ) {
@@ -432,8 +442,8 @@ add_action( 'user_register', 'edd_add_past_purchases_to_new_user', 10, 1 );
  * @since 		1.7
  * @return 		int - The total number of customers.
  */
-function edd_count_total_customers() {
-	return EDD()->customers->count();
+function edd_count_total_customers( $args = array() ) {
+	return EDD()->customers->count( $args );
 }
 
 
@@ -487,7 +497,7 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 		return;
 	}
 
-	$emails     = new EDD_Emails;
+	$emails     = EDD()->emails;
 	$from_name  = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
 	$from_email = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
 
@@ -506,7 +516,15 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 	$user_subject  = sprintf( __( '[%s] Your username and password', 'easy-digital-downloads' ), $from_name );
 	$user_heading  = __( 'Your account info', 'easy-digital-downloads' );
 	$user_message  = sprintf( __( 'Username: %s', 'easy-digital-downloads' ), $user_data['user_login'] ) . "\r\n";
-	$user_message .= sprintf( __( 'Password: %s' ), __( '[Password entered at checkout]', 'easy-digital-downloads' ) ) . "\r\n";
+
+	if ( did_action( 'edd_pre_process_purchase' ) ) {
+		$password_message = __( 'Password entered at checkout', 'easy-digital-downloads' );
+	} else {
+		$password_message = __( 'Password entered at registration', 'easy-digital-downloads' );
+	}
+
+	$user_message .= sprintf( __( 'Password: %s', 'easy-digital-downloads' ), '[' . $password_message . ']' ) . "\r\n";
+
 	$user_message .= '<a href="' . wp_login_url() . '"> ' . esc_attr__( 'Click Here to Log In', 'easy-digital-downloads' ) . ' &raquo;</a>' . "\r\n";
 
 	$emails->__set( 'heading', $user_heading );
@@ -922,3 +940,75 @@ function edd_detach_deleted_user( $user_id ) {
 	return $detached;
 }
 add_action( 'delete_user', 'edd_detach_deleted_user', 10, 1 );
+
+/**
+ * Modify User Profile
+ *
+ * Modifies the output of profile.php to add key generation/revocation
+ *
+ * @since 2.6
+ * @param object $user Current user info
+ * @return void
+ */
+function edd_show_user_api_key_field( $user ) {
+	if ( ( edd_get_option( 'api_allow_user_keys', false ) || current_user_can( 'manage_shop_settings' ) ) && current_user_can( 'edit_user', $user->ID ) ) {
+		$user = get_userdata( $user->ID );
+		?>
+		<table class="form-table">
+			<tbody>
+			<tr>
+				<th>
+					<?php _e( 'Easy Digital Downloads API Keys', 'easy-digital-downloads' ); ?>
+				</th>
+				<td>
+					<?php
+					$public_key = EDD()->api->get_user_public_key( $user->ID );
+					$secret_key = EDD()->api->get_user_secret_key( $user->ID );
+					?>
+					<?php if ( empty( $user->edd_user_public_key ) ) { ?>
+						<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
+						<span class="description"><?php _e( 'Generate API Key', 'easy-digital-downloads' ); ?></span>
+					<?php } else { ?>
+						<strong style="display:inline-block; width: 125px;"><?php _e( 'Public key:', 'easy-digital-downloads' ); ?>&nbsp;</strong><input type="text" disabled="disabled" class="regular-text" id="publickey" value="<?php echo esc_attr( $public_key ); ?>"/><br/>
+						<strong style="display:inline-block; width: 125px;"><?php _e( 'Secret key:', 'easy-digital-downloads' ); ?>&nbsp;</strong><input type="text" disabled="disabled" class="regular-text" id="privatekey" value="<?php echo esc_attr( $secret_key ); ?>"/><br/>
+						<strong style="display:inline-block; width: 125px;"><?php _e( 'Token:', 'easy-digital-downloads' ); ?>&nbsp;</strong><input type="text" disabled="disabled" class="regular-text" id="token" value="<?php echo esc_attr( EDD()->api->get_token( $user->ID ) ); ?>"/><br/>
+						<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
+						<span class="description"><label for="edd_set_api_key"><?php _e( 'Revoke API Keys', 'easy-digital-downloads' ); ?></label></span>
+					<?php } ?>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	<?php }
+}
+add_action( 'show_user_profile', 'edd_show_user_api_key_field' );
+add_action( 'edit_user_profile', 'edd_show_user_api_key_field' );
+
+/**
+ * Generate and Save API key
+ *
+ * Generates the key requested by user_key_field and stores it in the database
+ *
+ * @since 2.6
+ * @param int $user_id
+ * @return void
+ */
+function edd_update_user_api_key( $user_id ) {
+	if ( current_user_can( 'edit_user', $user_id ) && isset( $_POST['edd_set_api_key'] ) ) {
+
+		$user       = get_userdata( $user_id );
+		$public_key = EDD()->api->get_user_public_key( $user_id );
+
+		if ( empty( $public_key ) ) {
+			$new_public_key = EDD()->api->generate_public_key( $user->user_email );
+			$new_secret_key = EDD()->api->generate_private_key( $user->ID );
+
+			update_user_meta( $user_id, $new_public_key, 'edd_user_public_key' );
+			update_user_meta( $user_id, $new_secret_key, 'edd_user_secret_key' );
+		} else {
+			EDD()->api->revoke_api_key( $user_id );
+		}
+	}
+}
+add_action( 'personal_options_update',  'edd_update_user_api_key' );
+add_action( 'edit_user_profile_update', 'edd_update_user_api_key' );

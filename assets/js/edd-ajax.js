@@ -348,6 +348,8 @@ jQuery(document).ready(function ($) {
 
 		$(this).val(edd_global_vars.purchase_loading);
 
+		$(this).prop( 'disabled', true );
+
 		$(this).after('<span class="edd-cart-ajax"><i class="edd-icon-spinner edd-icon-spin"></i></span>');
 
 		$.post(edd_global_vars.ajaxurl, $('#edd_purchase_form').serialize() + '&action=edd_process_checkout&edd_ajax=true', function(data) {
@@ -361,11 +363,75 @@ jQuery(document).ready(function ($) {
 				$('.edd_errors').remove();
 				$('.edd-error').hide();
 				$('#edd_purchase_submit').before(data);
+				$('#edd-purchase-button').prop( 'disabled', false );
 			}
 		});
 
 	});
 
+	$('body').on('change', '#edd_cc_address input.card_state, #edd_cc_address select, #edd_address_country', update_state_field);
+
+	function update_state_field() {
+
+		var $this = $(this);
+		var $form;
+		var is_checkout = typeof edd_global_vars !== 'undefined';
+
+		if( 'card_state' != $this.attr('id') ) {
+
+			// If the country field has changed, we need to update the state/province field
+			var postData = {
+				action: 'edd_get_shop_states',
+				country: $this.val(),
+				field_name: 'card_state'
+			};
+
+			$.ajax({
+				type: "POST",
+				data: postData,
+				url: edd_scripts.ajaxurl,
+				xhrFields: {
+					withCredentials: true
+				},
+				success: function (response) {
+console.log( response); console.log(is_checkout);
+					if ( is_checkout ) {
+						$form = $("#edd_purchase_form");
+					} else {
+						$form = $this.closest("form");
+					}
+
+					var state_inputs = 'input[name="card_state"], select[name="card_state"], input[name="edd_address_state"], select[name="edd_address_state"]';
+
+					if( 'nostates' == $.trim(response) ) {
+						var text_field = '<input type="text" name="card_state" class="cart-state edd-input required" value=""/>';
+						$form.find(state_inputs).replaceWith( text_field );
+					} else {
+						$form.find(state_inputs).replaceWith( response );
+					}
+
+					if ( is_checkout ) {
+						$('body').trigger('edd_cart_billing_address_updated', [ response ]);
+					}
+
+				}
+			}).fail(function (data) {
+				if ( window.console && window.console.log ) {
+					console.log( data );
+				}
+			}).done(function (data) {
+				if ( is_checkout ) {
+					recalculate_taxes();
+				}
+			});
+		} else {
+			if ( is_checkout ) {
+				recalculate_taxes();
+			}
+		}
+
+		return false;
+	}
 });
 
 function edd_load_gateway( payment_mode ) {
@@ -388,7 +454,9 @@ function edd_load_gateway( payment_mode ) {
 		function(response){
 			jQuery('#edd_purchase_form_wrap').html(response);
 			jQuery('.edd-no-js').hide();
+			jQuery('body').trigger('edd_gateway_loaded', [ payment_mode ]);
 		}
 	);
 
 }
+
