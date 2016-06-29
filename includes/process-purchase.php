@@ -513,7 +513,7 @@ function edd_purchase_form_validate_new_user() {
 			// Check if email exists
 		} else {
 			$customer = new EDD_Customer( $user_email );
-			if ( $registering_new_user && ( $customer->id > 0 || email_exists( $user_email ) ) ) {
+			if ( $registering_new_user && email_exists( $user_email ) ) {
 				edd_set_error( 'email_used', __( 'Email already used', 'easy-digital-downloads' ) );
 			} else {
 				// All the checks have run and it's good to go
