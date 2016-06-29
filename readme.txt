@@ -6,7 +6,7 @@ Donate link: https://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
 Tested up to: 4.6
-Stable Tag: 2.6.1
+Stable Tag: 2.6.2
 
 License: GNU Version 2 or Any Later Version
 
@@ -213,6 +213,10 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.6.2, June 28, 2016 =
+* Fix: Existing guest customers cannot register a user account on checkout using the email address associated with their existing customer profile.
+* Fix: DocBloc for edd_delete_option function is incorrect.
 
 = 2.6.1, June 24, 2016 =
 * Fix: PayPal Standard transaction ID links don't link to PayPal Sandbox when payment was made in test mode.
