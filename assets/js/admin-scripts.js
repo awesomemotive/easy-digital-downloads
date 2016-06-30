@@ -1536,7 +1536,14 @@ jQuery(document).ready(function ($) {
 				var select  = $form.find('select.edd-import-csv-column');
 				var row     = select.parent().parent();
 				var options = '';
-				$.each( response.data.columns, function( key, value ) {
+
+				var columns = response.data.columns.sort(function(a,b) {
+					if( a < b ) return -1;
+					if( a > b ) return 1;
+					return 0;
+				});
+
+				$.each( columns, function( key, value ) {
 					options += '<option value="' + value + '">' + value + '</option>';
 				});
 
