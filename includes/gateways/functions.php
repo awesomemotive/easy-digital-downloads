@@ -44,7 +44,7 @@ function edd_get_payment_gateways() {
 */
 function edd_get_enabled_payment_gateways( $sort = false ) {
 	$gateways = edd_get_payment_gateways();
-	$enabled  = edd_get_option( 'gateways', false );
+	$enabled  = (array) edd_get_option( 'gateways', false );
 
 	$gateway_list = array();
 
