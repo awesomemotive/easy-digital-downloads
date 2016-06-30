@@ -1239,3 +1239,18 @@ function edd_validate_url_token( $url = '' ) {
 
 	return apply_filters( 'edd_validate_url_token', $ret, $url, $query_args );
 }
+
+function edd_user_can_purcahse_download( $download_id = 0 ) {
+	$can_purchase = true;
+
+	if ( empty( $download_id ) ) {
+		return false;
+	}
+
+	$download = new EDD_Download( $download_id );
+	if ( ! current_user_can( 'edit_post', $download->ID ) && $download->post_status != 'publish' ) {
+		$can_purchase = false;
+	}
+
+	return (bool) apply_filters( 'edd_user_can_purcahse_download', $can_purchase, $download_id );
+}
