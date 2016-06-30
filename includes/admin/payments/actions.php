@@ -287,7 +287,7 @@ function edd_trigger_purchase_delete( $data ) {
 
 		$payment_id = absint( $data['purchase_id'] );
 
-		if( ! current_user_can( 'edit_shop_payments', $payment_id ) ) {
+		if( ! current_user_can( 'delete_shop_payments', $payment_id ) ) {
 			wp_die( __( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 		}
 
