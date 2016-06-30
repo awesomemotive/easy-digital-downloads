@@ -210,7 +210,6 @@ class EDD_SL_Plugin_Updater {
 		}
 	}
 
-
 	/**
 	 * Updates information on the "View version x.x details" page with custom data.
 	 *
@@ -245,15 +244,27 @@ class EDD_SL_Plugin_Updater {
 			)
 		);
 
-		$api_response = $this->api_request( 'plugin_information', $to_send );
+		$cache_key = 'edd_api_request_' . substr( md5( serialize( $this->slug ) ), 0, 15 );
 
-		if ( false !== $api_response ) {
-			$_data = $api_response;
+		//Get the transient where we store the api request for this plugin for 24 hours
+		$edd_api_request_transient = get_site_transient( $cache_key );
+
+		//If we have no transient-saved value, run the API, set a fresh transient with the API value, and return that value too right now.
+		if ( empty( $edd_api_request_transient ) ){
+
+			$api_response = $this->api_request( 'plugin_information', $to_send );
+
+			//Expires in 1 day
+			set_site_transient( $cache_key, $api_response, DAY_IN_SECONDS );
+
+			if ( false !== $api_response ) {
+				$_data = $api_response;
+			}
+
 		}
 
 		return $_data;
 	}
-
 
 	/**
 	 * Disable SSL verification in order to prevent download update failures
