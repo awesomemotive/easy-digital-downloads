@@ -1584,8 +1584,8 @@ function edd_discount_status_cleanup() {
 			),
 			array(
 				'key'     => '_edd_discount_expiration',
-				'value'   => current_time( 'mysql' ),
-				'compare' => '>',
+				'value'   => date( 'm/d/Y H:i:s' ),
+				'compare' => '<',
 			),
 		),
 	);
