@@ -747,6 +747,12 @@ function edd_object_to_array( $object = array() ) {
 			$return = $object->array_convert();
 		} else {
 			$return = get_object_vars( $object );
+
+			// Now look at the items that came back and convert any nested objects to arrays
+			foreach ( $return as $key => $value ) {
+				$value = ( is_array( $value ) || is_object( $value ) ) ? edd_object_to_array( $value ) : $value;
+				$return[ $key ] = $value;
+			}
 		}
 	}
 
