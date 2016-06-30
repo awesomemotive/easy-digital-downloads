@@ -149,7 +149,9 @@ window.EDD_Checkout = (function($) {
 
 						} else {
 
-							inputs.attr('required','required');
+							if (!inputs.is('.card-address-2')) {
+								inputs.attr('required','required');
+							}
 							$('#edd_cc_fields,#edd_cc_address').slideDown();
 
 						}
