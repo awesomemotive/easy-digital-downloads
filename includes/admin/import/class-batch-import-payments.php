@@ -522,11 +522,11 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 				$d   = (array) explode( '|', $download );
 				preg_match( '/\{(\d+(\.\d+|\d+))\}/', $d[1], $matches );
-				$price = substr( $d[1], 0, strpos( $d[1], '{' ) );
-				$tax   = isset( $matches[1] ) ? $matches[1] : 0;
+				$price = trim( substr( $d[1], 0, strpos( $d[1], '{' ) ) );
+				$tax   = isset( $matches[1] ) ? trim( $matches[1] ) : 0;
 
 				$d_array[] = array(
-					'download' => $d[0],
+					'download' => trim( $d[0] ),
 					'price'    => $price - $tax,
 					'tax'      => $tax
 				);
