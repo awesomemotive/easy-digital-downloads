@@ -183,7 +183,7 @@ function edd_login_form_shortcode( $atts, $content = null ) {
 	);
 
 	if ( empty( $redirect ) ) {
-		$redirect = get_permalink( edd_get_option( 'redirect_page', '' ) );
+		$redirect = get_permalink( edd_get_option( 'login_redirect_page', '' ) );
 	}
 
 	return edd_login_form( $redirect );
