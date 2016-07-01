@@ -1,12 +1,12 @@
 === Easy Digital Downloads ===
 Author URI: https://pippinsplugins.com
 Plugin URI: https://easydigitaldownloads.com
-Contributors: mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, topher1kenobe, sksmatt, SpencerFinnell, johnstonphilip
+Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, topher1kenobe, sksmatt, SpencerFinnell, johnstonphilip
 Donate link: https://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
 Tested up to: 4.6
-Stable Tag: 2.6.2
+Stable Tag: 2.6.3
 
 License: GNU Version 2 or Any Later Version
 
@@ -213,6 +213,15 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.6.3, June 30, 2016 =
+
+* Fix: Product name needs to be trimmed during payment import to prevent duplicate products being created
+* Fix: Discount codes getting erroneously marked as Inactive
+* Fix: Importing settings causes a fatal error
+* Fix: Address Line 2 erroneously marked as required in some cases
+* Tweak: Improved inline documentation for edd_get_download_file_url()
+* Tweak: Add-on updater updated to 1.6.4
 
 = 2.6.2, June 28, 2016 =
 * Fix: Existing guest customers cannot register a user account on checkout using the email address associated with their existing customer profile.
