@@ -280,6 +280,15 @@ function edd_get_registered_settings() {
 						'chosen'      => true,
 						'placeholder' => __( 'Select a page', 'easy-digital-downloads' ),
 					),
+					'login_redirect_page' => array(
+						'id'          => 'login_redirect_page',
+						'name'        => __( 'Login Redirect Page', 'easy-digital-downloads' ),
+						'desc'        => __( 'This is the page where buyers will be redirected by default once they log in. The [edd_login redirect="'.trailingslashit( home_url() ).'"] short code with the redirect attribute can override this setting.', 'easy-digital-downloads' ),
+						'type'        => 'select',
+						'options'     => edd_get_pages(),
+						'chosen'      => true,
+						'placeholder' => __( 'Select a page', 'easy-digital-downloads' ),
+					),
 					'locale_settings' => array(
 						'id'            => 'locale_settings',
 						'name'          => '<h3>' . __( 'Store Location', 'easy-digital-downloads' ) . '</h3>',
