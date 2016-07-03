@@ -194,7 +194,6 @@ class Tests_Activation extends WP_UnitTestCase {
 
 		// Prepare variables for test
 		unset( $wp_roles->roles['shop_manager'] );
-		$wp_roles->roles = false;
 
 		edd_install_roles_on_network();
 
