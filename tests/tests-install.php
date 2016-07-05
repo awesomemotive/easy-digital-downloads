@@ -182,7 +182,7 @@ class Tests_Activation extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test that edd_install_roles_on_network() bails when $wp_roles is no object.
+	 * Test that edd_install_roles_on_network() creates the roles when 'shop_manager' is not defined.
 	 *
 	 * @since 2.2.4
 	 */
@@ -206,6 +206,34 @@ class Tests_Activation extends WP_UnitTestCase {
 
 		// Reset to origin
 		$wp_roles = $origin_roles;
+
+	}
+
+	/**
+	 * Test that edd_install_roles_on_network() creates the roles when $wp_roles->roles is initially false.
+	 *
+	 * @since 2.6.3
+	 */
+	public function test_edd_install_roles_on_network_when_roles_false() {
+
+		global $wp_roles;
+
+		$origin_roles = $wp_roles->roles;
+
+		// Prepare variables for test
+		$wp_roles->roles = false;
+
+		edd_install_roles_on_network();
+
+		// Test that the roles are created
+		$this->assertInstanceOf( 'WP_Role', get_role( 'shop_manager' ) );
+		$this->assertInstanceOf( 'WP_Role', get_role( 'shop_accountant' ) );
+		$this->assertInstanceOf( 'WP_Role', get_role( 'shop_worker' ) );
+		$this->assertInstanceOf( 'WP_Role', get_role( 'shop_vendor' ) );
+
+
+		// Reset to origin
+		$wp_roles->roles = $origin_roles;
 
 	}
 
