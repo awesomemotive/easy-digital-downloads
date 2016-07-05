@@ -1634,35 +1634,35 @@ class EDD_API {
 
 		// Integrations
 		if ( is_plugin_active( 'edd-commissions/edd-commissions.php' ) ) {
-			$data['integrations']['commissions'] = true;
+			$data['info']['integrations']['commissions'] = true;
 		}
 
 		if ( class_exists( 'EDD_Software_Licensing' ) ) {
-			$data['integrations']['software_licensing'] = true;
+			$data['info']['integrations']['software_licensing'] = true;
 		}
 
 		if ( class_exists( 'EDD_Front_End_Submissions' ) ) {
-			$data['integrations']['fes'] = true;
+			$data['info']['integrations']['fes'] = true;
 		}
 
 		if ( class_exists( 'EDD_Reviews' ) ) {
-			$data['integrations']['reviews'] = true;
+			$data['info']['integrations']['reviews'] = true;
 		}
 
 		if ( class_exists( 'EDD_Recurring' ) ) {
-			$data['integrations']['recurring'] = true;
+			$data['info']['integrations']['recurring'] = true;
 		}
 
 		// Site Information
 		if ( ! user_can( $this->user_id, 'view_shop_sensitive_data' ) && ! $this->override ) {
-			$data['site']['wp_version'] = get_bloginfo( 'version' );
-			$data['site']['edd_version'] = EDD_VERSION;
+			$data['info']['site']['wp_version'] = get_bloginfo( 'version' );
+			$data['info']['site']['edd_version'] = EDD_VERSION;
 		}
 
-		$data['site']['currency']            = edd_get_currency();
-		$data['site']['currency_position']   = edd_get_option( 'currency_position', 'before' );
-		$data['site']['decimal_separator']   = edd_get_option( 'decimal_separator', '.' );
-		$data['site']['thousands_separator'] = edd_get_option( 'thousands_separator', ',' );
+		$data['info']['site']['currency']            = edd_get_currency();
+		$data['info']['site']['currency_position']   = edd_get_option( 'currency_position', 'before' );
+		$data['info']['site']['decimal_separator']   = edd_get_option( 'decimal_separator', '.' );
+		$data['info']['site']['thousands_separator'] = edd_get_option( 'thousands_separator', ',' );
 
 		return $data;
 	}
