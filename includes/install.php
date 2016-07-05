@@ -331,8 +331,9 @@ function edd_install_roles_on_network() {
 	if( ! is_object( $wp_roles ) ) {
 		return;
 	}
+	
 
-	if( ! array_key_exists( 'shop_manager', $wp_roles->roles ) ) {
+	if( empty( $wp_roles->roles ) || ! array_key_exists( 'shop_manager', $wp_roles->roles ) ) {
 
 		// Create EDD shop roles
 		$roles = new EDD_Roles;
