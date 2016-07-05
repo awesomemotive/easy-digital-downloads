@@ -1932,7 +1932,7 @@ class EDD_Payment {
 		$customer = new EDD_Customer( $this->customer_id );
 
 		// Make sure it exists, and that it matches that of the associted customer record
-		if( empty( $user_id ) || ( ! empty( $customer->user_id ) && $user_id !== $customer->user_id ) ) {
+		if( empty( $user_id ) || ( ! empty( $customer->user_id ) && (int) $user_id !== (int) $customer->user_id ) ) {
 
 			$user_id = $customer->user_id;
 
