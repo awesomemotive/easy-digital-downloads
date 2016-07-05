@@ -208,7 +208,7 @@ class Tests_Activation extends WP_UnitTestCase {
 		$wp_roles = $origin_roles;
 
 	}
-	
+
 	/**
 	 * Test that edd_install_roles_on_network() creates the roles when $wp_roles->roles is initially false.
 	 *
@@ -218,7 +218,7 @@ class Tests_Activation extends WP_UnitTestCase {
 
 		global $wp_roles;
 
-		$origin_roles = $wp_roles;
+		$origin_roles = $wp_roles->roles;
 
 		// Prepare variables for test
 		$wp_roles->roles = false;
@@ -233,7 +233,7 @@ class Tests_Activation extends WP_UnitTestCase {
 
 
 		// Reset to origin
-		$wp_roles = $origin_roles;
+		$wp_roles->roles = $origin_roles;
 
 	}
 
