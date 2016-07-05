@@ -58,7 +58,10 @@ function edd_download_shortcode( $atts, $content = null ) {
 	if( ! empty( $atts['sku'] ) ) {
 
 		$download = edd_get_download_by( 'sku', $atts['sku'] );
-		$atts['download_id'] = $download->ID;
+		
+		if ( $download ) {
+			$atts['download_id'] = $download->ID;
+		}
 
 	} elseif( isset( $atts['id'] ) ) {
 
