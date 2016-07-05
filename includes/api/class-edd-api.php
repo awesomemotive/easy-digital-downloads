@@ -1651,8 +1651,11 @@ class EDD_API {
 		}
 
 		// Site Information
-		$data['site']['wp_version']          = get_bloginfo( 'version' );
-		$data['site']['edd_version']         = EDD_VERSION;
+		if ( ! user_can( $this->user_id, 'view_shop_sensitive_data' ) && ! $this->override ) {
+			$data['site']['wp_version'] = get_bloginfo( 'version' );
+			$data['site']['edd_version'] = EDD_VERSION;
+		}
+
 		$data['site']['currency']            = edd_get_currency();
 		$data['site']['currency_position']   = edd_get_option( 'currency_position', 'before' );
 		$data['site']['decimal_separator']   = edd_get_option( 'decimal_separator', '.' );
