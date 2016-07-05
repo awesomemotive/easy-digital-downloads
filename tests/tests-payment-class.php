@@ -763,4 +763,12 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$this->assertEquals( $uses, $new_failed );
 
 	}
+
+	public function test_user_id_mismatch() {
+		update_post_meta( $this->_payment_id, '_edd_payment_user_id', 99999 );
+		$payment  = new EDD_Payment( $this->_payment_id );
+		$customer = new EDD_Customer( $payment->customer_id );
+
+		$this->assertEquals( $payment->user_id, $customer->user_id );
+	}
 }
