@@ -1629,8 +1629,11 @@ class EDD_API {
 	public function get_info( $args ) {
 		$data = array();
 
+		// plugin.php required to use is_plugin_active()
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
 		// Integrations
-		if ( class_exists( 'EDD_Commissions' ) ) {
+		if ( is_plugin_active( 'edd-commissions/edd-commissions.php' ) ) {
 			$data['integrations']['commissions'] = true;
 		}
 
