@@ -107,6 +107,12 @@ class Tests_Templates extends WP_UnitTestCase {
 		$this->assertContains( 'data-price="10.00"', $single_link_no_price );
 	}
 
+	// For issue #4755
+	public function test_get_purchase_link_invalid_sku() {
+		$link = edd_get_purchase_link( array( 'sku' => 'SKU' ) );
+		$this->assertTrue( empty( $link ) );
+	}
+
 	public function test_button_colors() {
 		$colors = edd_get_button_colors();
 		$this->assertInternalType( 'array', $colors );
