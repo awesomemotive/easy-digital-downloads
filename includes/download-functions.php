@@ -1240,6 +1240,13 @@ function edd_validate_url_token( $url = '' ) {
 	return apply_filters( 'edd_validate_url_token', $ret, $url, $query_args );
 }
 
+/**
+ * Checks if the current user can purchase the specified download ID
+ *
+ * @since  2.6.4
+ * @param  integer $download_id The Download ID
+ * @return bool                 If the current user can purcahse the download ID
+ */
 function edd_user_can_purcahse_download( $download_id = 0 ) {
 	$can_purchase = true;
 
