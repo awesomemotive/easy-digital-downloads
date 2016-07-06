@@ -262,9 +262,6 @@ function edd_process_paypal_purchase( $purchase_data ) {
 					$paypal_args['quantity_' . $i ]  = '1';
 					$paypal_args['amount_' . $i ]    = edd_sanitize_amount( $fee['amount'] );
 					$i++;
-				} else {
-					// This is a negative fee (discount)
-					$discounted_amount += abs( $fee['amount'] );
 				}
 			}
 		}
