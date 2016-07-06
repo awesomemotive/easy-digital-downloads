@@ -6,7 +6,7 @@ Donate link: https://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
 Tested up to: 4.6
-Stable Tag: 2.6.3
+Stable Tag: 2.6.4
 
 License: GNU Version 2 or Any Later Version
 
@@ -213,6 +213,16 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.6.4, July 6, 2016 =
+* Fix: Negative fees getting included twice with PayPal Standard
+* Fix: Non-standard status in the product import caused silent failure.
+* Fix: Rely on Customer's User ID when EDD_Payment::setup_user_id has incorrect data.
+* Fix: Date strings are not properly parsed in product import.
+* Fix: PHP notice is triggered when using purchase_link shortcode with an invalid SKU attribute.
+* Fix: PHP warning when activating on Multisite due to roles not being correcly instantiated.
+* Fix: It is possible for edd_get_ip() to return a CSV of IP addresses.
+* Fix: Products deleted after being added to the cart creates invalid cart data.
 
 = 2.6.3, June 30, 2016 =
 
