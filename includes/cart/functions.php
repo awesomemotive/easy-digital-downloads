@@ -28,7 +28,7 @@ function edd_get_cart_contents() {
 		$download = new EDD_Download( $item['id'] );
 
 		// If the item is not a download or it's status has changed since it was added to the cart.
-		if ( empty( $download->ID ) || ! $download->current_user_can_purchase() ) {
+		if ( empty( $download->ID ) || ! $download->can_purchase() ) {
 			unset( $cart[ $key ] );
 		}
 
@@ -162,7 +162,7 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		return; // Not a download product
 	}
 
-	if ( ! $download->current_user_can_purchase() ) {
+	if ( ! $download->can_purchase() ) {
 		return; // Do not allow draft/pending to be purchased if can't edit. Fixes #1056
 	}
 
