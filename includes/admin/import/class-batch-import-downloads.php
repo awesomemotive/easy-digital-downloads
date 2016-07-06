@@ -117,6 +117,10 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 						$args['post_date'] = $date;
 					} else {
 						$date = '';
+					}
+
+				}
+
 
 				// Detect any status that could map to `publish`
 				if ( ! empty( $args['post_status'] ) ) {
