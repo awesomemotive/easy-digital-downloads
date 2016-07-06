@@ -173,10 +173,11 @@ function edd_get_ip() {
 	} elseif( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
 		$ip = $_SERVER['REMOTE_ADDR'];
 	}
-	
+
 	// Fix potential CSV returned from $_SERVER variables
 	$ip_array = explode( ',', $ip );
-	
+	$ip_array = array_map( 'trim', $ip_array );
+
 	return apply_filters( 'edd_get_ip', $ip_array[0] );
 }
 
