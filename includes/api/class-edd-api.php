@@ -1653,6 +1653,19 @@ class EDD_API {
 			$data['info']['integrations']['recurring'] = true;
 		}
 
+		// Permissions
+		if ( user_can( $this->user_id, 'view_shop_reports' ) ) {
+			$data['permissions']['view_shop_reports'] = true;
+		}
+
+		if ( user_can( $this->user_id, 'view_shop_sensitive_data' ) ) {
+			$data['permissions']['view_shop_sensitive_data'] = true;
+		}
+
+		if ( user_can( $this->user_id, 'manage_shop_discounts' ) ) {
+			$data['permissions']['manage_shop_discounts'] = true;
+		}
+
 		// Site Information
 		if ( ! user_can( $this->user_id, 'view_shop_sensitive_data' ) && ! $this->override ) {
 			$data['info']['site']['wp_version'] = get_bloginfo( 'version' );
