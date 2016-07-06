@@ -151,6 +151,10 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 				$date = date( 'Y-n-d H:i:s', current_time( 'timestamp' ) );
 
+			} else {
+
+				$date = date( 'Y-n-d H:i:s', strtotime( $date ) );
+
 			}
 
 			$payment->date = $date;
