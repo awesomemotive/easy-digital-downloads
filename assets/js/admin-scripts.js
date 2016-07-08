@@ -1961,3 +1961,8 @@ var eddLegendFormatterEarnings = function (label, series) {
 	jQuery('#edd-pie-legend-' + series.edd_vars.id).append( item );
 	return item;
 }
+
+// Enable toggles for EDD meta boxes
+if ( typeof postboxes !== 'undefined' ) {
+	postboxes.add_postbox_toggles( pagenow );
+}
