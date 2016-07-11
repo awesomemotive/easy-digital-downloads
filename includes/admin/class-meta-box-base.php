@@ -1,7 +1,7 @@
 <?php
 /**
- * EDD Admin Meta Box Base class
- * Provides a base structure for EDD content meta boxes
+ * EDD Admin Meta Box Base class.
+ * Provides a base structure for EDD content meta boxes.
  *
  * @package     EDD
  * @subpackage  Admin/Tools/EDD_Meta_Box_Base
@@ -82,13 +82,14 @@ abstract class EDD_Meta_Box_Base {
      * @since   2.7
      */
     private $edd_screen = array(
-                                'edit-download',
-                                'download',
-                                'download_page_edd-payment-history',
-                                'download_page_edd-customers',
-                                'download_page_edd-discounts',
-                                'download_page_edd-reports'
-                            );
+        'edit-download',
+        'download',
+        'download_page_edd-payment-history',
+        'download_page_edd-customers',
+        'download_page_edd-discounts',
+        'download_page_edd-reports'
+    );
+
     /**
      * The position in which the meta box will be loaded.
      * EDD uses custom meta box contexts.
@@ -142,7 +143,7 @@ abstract class EDD_Meta_Box_Base {
         add_meta_box(
             $this->meta_box_id,
             __( $this->meta_box_name, 'easy-digital-downloads' ),
-            array( $this, 'content' ),
+            array( $this, 'get_content' ),
             $this->edd_screen,
             $this->context,
             'default'
@@ -150,8 +151,40 @@ abstract class EDD_Meta_Box_Base {
     }
 
     /**
+     * Gets the content set in $this->content(),
+     * which is retrieved by $this->_content().
+     *
+     * @return mixed string The content of the meta box.
+     * @since  1.9
+     */
+    public function get_content() {
+        /**
+         * Filter the title tag content for an admin page.
+         *
+         * @param string $content The content of the meta box, set in $this->content()
+         * @since 2.7
+         *
+         */
+        $content = $this->_content();
+        return apply_filters( 'edd_meta_box_' . $this->meta_box_id, $content );
+    }
+
+    /**
+     * A protected method which echoes the $this->content().
+     *
+     * @return mixed string The content of the meta box.
+     * @since  2.7
+     */
+    protected function _content() {
+        return $this->content();
+    }
+
+    /**
      * Defines the meta box content, as well as a
      * filter by which the content may be adjusted.
+     *
+     * Use this method in your child class to define
+     * the content of your meta box.
      *
      * Given a $meta_box_id value of 'my-metabox-id',
      * the filter would be: edd_meta_box_my-meta-box-id.
@@ -159,7 +192,5 @@ abstract class EDD_Meta_Box_Base {
      * @return mixed string The content of the meta box
      * @since  2.7
      */
-    public function content() {
-        echo apply_filters( 'edd_meta_box_' . $this->meta_box_id, $this->content );
-    }
+    abstract public function content();
 }
