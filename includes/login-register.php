@@ -137,43 +137,35 @@ function edd_process_register_form( $data ) {
 	do_action( 'edd_pre_process_register_form' );
 
 	if( empty( $data['edd_user_login'] ) ) {
-		$empty_username_message = apply_filters( 'empty_username_message', 'Invalid username' );
-		edd_set_error( 'empty_username', __( $empty_username_message, 'easy-digital-downloads' ) );
+		edd_set_error( 'empty_username', __( 'Invalid username', 'easy-digital-downloads' ) );
 	}
 
 	if( username_exists( $data['edd_user_login'] ) ) {
-		$username_unavailable_message = apply_filters( 'username_unavailable_message', 'Username already taken' );
-		edd_set_error( 'username_unavailable', __( $username_unavailable_message, 'easy-digital-downloads' ) );
+		edd_set_error( 'username_unavailable', __( 'Username already taken', 'easy-digital-downloads' ) );
 	}
 
 	if( ! validate_username( $data['edd_user_login'] ) ) {
-		$sername_invalid_message = apply_filters( 'sername_invalid_message', 'Invalid username' );
-		edd_set_error( 'username_invalid', __( $sername_invalid_message, 'easy-digital-downloads' ) );
+		edd_set_error( 'username_invalid', __( 'Invalid username', 'easy-digital-downloads' ) );
 	}
 
 	if( email_exists( $data['edd_user_email'] ) ) {
-		$email_unavailable_message = apply_filters( 'email_unavailable_message', 'Email address already taken' );
-		edd_set_error( 'email_unavailable', __( $email_unavailable_message, 'easy-digital-downloads' ) );
+		edd_set_error( 'email_unavailable', __( 'Email address already taken', 'easy-digital-downloads' ) );
 	}
 
 	if( empty( $data['edd_user_email'] ) || ! is_email( $data['edd_user_email'] ) ) {
-		$email_invalid_message = apply_filters( 'email_invalid_message', 'Invalid email' );
-		edd_set_error( 'email_invalid', __( $email_invalid_message, 'easy-digital-downloads' ) );
+		edd_set_error( 'email_invalid', __( 'Invalid email', 'easy-digital-downloads' ) );
 	}
 
 	if( ! empty( $data['edd_payment_email'] ) && $data['edd_payment_email'] != $data['edd_user_email'] && ! is_email( $data['edd_payment_email'] ) ) {
-		$payment_email_invalid_message = apply_filters( 'payment_email_invalid_message', 'Invalid payment email' );
-		edd_set_error( 'payment_email_invalid', __( $payment_email_invalid_message, 'easy-digital-downloads' ) );
+		edd_set_error( 'payment_email_invalid', __( 'Invalid payment email', 'easy-digital-downloads' ) );
 	}
 
 	if( empty( $_POST['edd_user_pass'] ) ) {
-		$empty_password_message = apply_filters( 'empty_password_message', 'Please enter a password' );
-		edd_set_error( 'empty_password', __( $empty_password_message, 'easy-digital-downloads' ) );
+		edd_set_error( 'empty_password', __( 'Please enter a password', 'easy-digital-downloads' ) );
 	}
 
 	if( ( ! empty( $_POST['edd_user_pass'] ) && empty( $_POST['edd_user_pass2'] ) ) || ( $_POST['edd_user_pass'] !== $_POST['edd_user_pass2'] ) ) {
-		$password_mismatch_message = apply_filters( 'password_mismatch_message', 'Passwords do not match' );
-		edd_set_error( 'password_mismatch', __( $password_mismatch_message, 'easy-digital-downloads' ) );
+		edd_set_error( 'password_mismatch', __( 'Passwords do not match', 'easy-digital-downloads' ) );
 	}
 
 	do_action( 'edd_process_register_form' );
