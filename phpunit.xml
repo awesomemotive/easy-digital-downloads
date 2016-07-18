@@ -12,7 +12,7 @@
 		</testsuite>
 	</testsuites>
 	<filter>
-		<whitelist processUncoveredFilesFromWhitelist="true">
+		<whitelist addUncoveredFilesFromWhitelist="true">
 			<directory suffix=".php">./includes</directory>
 			<file>easy-digital-downloads.php</file>
 			<file>uninstall.php</file>

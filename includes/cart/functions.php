@@ -22,6 +22,23 @@ function edd_get_cart_contents() {
 	$cart = EDD()->session->get( 'edd_cart' );
 	$cart = ! empty( $cart ) ? array_values( $cart ) : array();
 
+	$cart_count       = count( $cart );
+
+	foreach ( $cart as $key => $item ) {
+		$download = new EDD_Download( $item['id'] );
+
+		// If the item is not a download or it's status has changed since it was added to the cart.
+		if ( empty( $download->ID ) || ! $download->can_purchase() ) {
+			unset( $cart[ $key ] );
+		}
+
+	}
+
+	// We've removed items, reset the cart session
+	if ( count( $cart ) < $cart_count ) {
+		EDD()->session->set( 'edd_cart', $cart );
+	}
+
 	return apply_filters( 'edd_cart_contents', $cart );
 }
 
@@ -139,12 +156,13 @@ function edd_get_cart_quantity() {
  * @return string Cart key of the new item
  */
 function edd_add_to_cart( $download_id, $options = array() ) {
-	$download = get_post( $download_id );
+	$download = new EDD_Download( $download_id );
 
-	if( 'download' != $download->post_type )
+	if( empty( $download->ID ) ) {
 		return; // Not a download product
+	}
 
-	if ( ! current_user_can( 'edit_post', $download->ID ) && $download->post_status != 'publish' ) {
+	if ( ! $download->can_purchase() ) {
 		return; // Do not allow draft/pending to be purchased if can't edit. Fixes #1056
 	}
 
