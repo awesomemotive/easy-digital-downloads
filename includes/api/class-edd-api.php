@@ -1667,7 +1667,7 @@ class EDD_API {
 		}
 
 		// Site Information
-		if ( ! user_can( $this->user_id, 'view_shop_sensitive_data' ) && ! $this->override ) {
+		if ( user_can( $this->user_id, 'view_shop_sensitive_data' ) ) {
 			$data['info']['site']['wp_version'] = get_bloginfo( 'version' );
 			$data['info']['site']['edd_version'] = EDD_VERSION;
 		}
