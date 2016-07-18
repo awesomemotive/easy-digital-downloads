@@ -185,6 +185,24 @@ class Tests_Shortcode extends WP_UnitTestCase {
 	public function test_login_form() {
 		$this->assertInternalType( 'string', edd_login_form_shortcode( array() ) );
 		$this->assertContains( '<p class="edd-logged-in">You are already logged in</p>', edd_login_form_shortcode( array() ) );
+
+		// Log out the user so we can see the login form
+		wp_set_current_user( 0 );
+
+		$args = array(
+			'redirect' => get_option( 'site_url' ),
+		);
+
+		$login_form = edd_login_form_shortcode( $args );
+		$this->assertInternalType( 'string', $login_form );
+		$this->assertContains( '"' . get_option( 'site_url' ) . '"', $login_form );
+
+		$page = get_page_by_title( 'Purchase History' );
+		edd_update_option( 'login_redirect_page', $page->ID );
+
+		$login_form = edd_login_form_shortcode( array() );
+		$this->assertInternalType( 'string', $login_form );
+		$this->assertContains( '"' . get_permalink( $page->ID ) . '"', $login_form );
 	}
 
 	public function test_discounts_shortcode() {

@@ -72,7 +72,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 	$args = wp_parse_args( $args, $defaults );
 
-	// Override the stright_to_gateway if the shop doesn't support it
+	// Override the straight_to_gateway if the shop doesn't support it
 	if ( ! edd_shop_supports_buy_now() ) {
 		$args['direct'] = false;
 	}
@@ -155,7 +155,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 	$form_id = ! empty( $args['form_id'] ) ? $args['form_id'] : 'edd_purchase_' . $download->ID;
 
-	// If we've already generated a form ID for this download ID, apped -#
+	// If we've already generated a form ID for this download ID, append -#
 	if ( $edd_displayed_form_ids[ $download->ID ] > 1 ) {
 		$form_id .= '-' . $edd_displayed_form_ids[ $download->ID ];
 	}
@@ -236,7 +236,7 @@ function edd_get_purchase_link( $args = array() ) {
 function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 	global $edd_displayed_form_ids;
 
-	// If we've already generated a form ID for this download ID, apped -#
+	// If we've already generated a form ID for this download ID, append -#
 	$form_id = '';
 	if ( $edd_displayed_form_ids[ $download_id ] > 1 ) {
 		$form_id .= '-' . $edd_displayed_form_ids[ $download_id ];

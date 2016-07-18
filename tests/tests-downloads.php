@@ -135,6 +135,23 @@ class Tests_Downloads extends WP_UnitTestCase {
 
 	}
 
+	public function test_can_purchase() {
+		$download = new EDD_Download( $this->_post->ID );
+		$this->assertTrue( $download->can_purchase() );
+
+		add_filter( 'edd_can_purchase_download', '__return_false' );
+		$this->assertFalse( $download->can_purchase() );
+		remove_filter( 'edd_can_purchase_download', '__return_false' );
+
+		$download->post_status = 'draft';
+		wp_set_current_user( 0 );
+		$this->assertFalse( $download->can_purchase() );
+
+		add_filter( 'edd_can_purchase_download', '__return_true' );
+		$this->assertTrue( $download->can_purchase() );
+		remove_filter( 'edd_can_purchase_download', '__return_true' );
+	}
+
 	public function test_download_price() {
 		// This is correct and should equal 0.00 because this download uses variable pricing
 		$this->assertEquals( 0.00, edd_get_download_price( $this->_post->ID ) );

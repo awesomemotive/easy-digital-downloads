@@ -106,6 +106,38 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 					}
 				}
 
+				// Format the date properly
+				if ( ! empty( $args['post_date'] ) ) {
+
+					$timestamp = strtotime( $args['post_date'], current_time( 'timestamp' ) );
+					$date      = date( 'Y-n-d H:i:s', $timestamp );
+
+					// If the date provided results in a date string, use it, or just default to today so it imports
+					if ( ! empty( $date ) ) {
+						$args['post_date'] = $date;
+					} else {
+						$date = '';
+					}
+
+				}
+
+
+				// Detect any status that could map to `publish`
+				if ( ! empty( $args['post_status'] ) ) {
+
+					$published_statuses = array(
+						'live',
+						'published',
+					);
+
+					$current_status = strtolower( $args['post_status'] );
+
+					if ( in_array( $current_status, $published_statuses ) ) {
+						$args['post_status'] = 'publish';
+					}
+
+				}
+
 				$download_id = wp_insert_post( $args );
 
 				// setup categories

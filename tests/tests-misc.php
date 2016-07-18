@@ -49,6 +49,11 @@ class Test_Misc extends WP_UnitTestCase {
 
 	public function test_get_ip() {
 		$this->assertEquals( '127.0.0.1', edd_get_ip() );
+
+		$_SERVER['REMOTE_ADDR'] = ' 192.168.0.1 , 192.168.1.1 ';
+		$this->assertEquals( '192.168.0.1', edd_get_ip() );
+
+		$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 	}
 
 	public function test_get_currencies() {

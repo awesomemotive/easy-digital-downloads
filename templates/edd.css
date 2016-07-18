@@ -246,7 +246,8 @@
 #edd_checkout_form_wrap textarea,
 #edd_checkout_form_wrap input[type="text"],
 #edd_checkout_form_wrap input[type="email"],
-#edd_checkout_form_wrap input[type="password"] {
+#edd_checkout_form_wrap input[type="password"],
+#edd_checkout_form_wrap input[type="tel"] {
 	padding: 4px 6px;
 }
 #edd_checkout_form_wrap input[type="radio"] {
