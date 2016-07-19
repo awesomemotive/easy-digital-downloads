@@ -149,11 +149,11 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 			if( ! strtotime( $date ) ) {
 
-				$date = date( 'Y-n-d H:i:s', current_time( 'timestamp' ) );
+				$date = date( 'Y-m-d H:i:s', current_time( 'timestamp' ) );
 
 			} else {
 
-				$date = date( 'Y-n-d H:i:s', strtotime( $date ) );
+				$date = date( 'Y-m-d H:i:s', strtotime( $date ) );
 
 			}
 

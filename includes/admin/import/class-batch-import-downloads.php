@@ -110,7 +110,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 				if ( ! empty( $args['post_date'] ) ) {
 
 					$timestamp = strtotime( $args['post_date'], current_time( 'timestamp' ) );
-					$date      = date( 'Y-n-d H:i:s', $timestamp );
+					$date      = date( 'Y-m-d H:i:s', $timestamp );
 
 					// If the date provided results in a date string, use it, or just default to today so it imports
 					if ( ! empty( $date ) ) {
