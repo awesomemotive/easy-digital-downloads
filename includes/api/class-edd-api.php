@@ -1655,15 +1655,15 @@ class EDD_API {
 
 		// Permissions
 		if ( user_can( $this->user_id, 'view_shop_reports' ) ) {
-			$data['permissions']['view_shop_reports'] = true;
+			$data['info']['permissions']['view_shop_reports'] = true;
 		}
 
 		if ( user_can( $this->user_id, 'view_shop_sensitive_data' ) ) {
-			$data['permissions']['view_shop_sensitive_data'] = true;
+			$data['info']['permissions']['view_shop_sensitive_data'] = true;
 		}
 
 		if ( user_can( $this->user_id, 'manage_shop_discounts' ) ) {
-			$data['permissions']['manage_shop_discounts'] = true;
+			$dat['info']['permissions']['manage_shop_discounts'] = true;
 		}
 
 		// Site Information
