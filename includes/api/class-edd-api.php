@@ -1626,7 +1626,7 @@ class EDD_API {
 	 * @param array $args Arguments provided by API Request
 	 * @return array
 	 */
-	public function get_info( $args ) {
+	public function get_info() {
 		$data = array();
 
 		// plugin.php required to use is_plugin_active()
@@ -1663,7 +1663,7 @@ class EDD_API {
 		}
 
 		if ( user_can( $this->user_id, 'manage_shop_discounts' ) ) {
-			$dat['info']['permissions']['manage_shop_discounts'] = true;
+			$data['info']['permissions']['manage_shop_discounts'] = true;
 		}
 
 		// Site Information
