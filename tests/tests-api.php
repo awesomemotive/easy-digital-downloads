@@ -402,6 +402,20 @@ class Tests_API extends WP_UnitTestCase {
 		//$this->assertEquals( 'Invalid API key!', $out['error'] );
 	}
 
+	public function test_info() {
+		$out = EDD()->api->get_info();
+
+		$this->assertArrayHasKey( 'info', $out );
+		$this->assertArrayHasKey( 'site', $out['info'] );
+		$this->assertArrayHasKey( 'currency', $out['info']['site'] );
+		$this->assertArrayHasKey( 'currency_position', $out['info']['site'] );
+		$this->assertArrayHasKey( 'decimal_separator', $out['info']['site'] );
+		$this->assertArrayHasKey( 'thousands_separator', $out['info']['site'] );
+		$this->assertArrayNotHasKey( 'integrations', $out['info'] ); // By default we shouldn't have any integrations
+
+		$this->markTestIncomplete( 'This test needs to be fixed. The permissions key doesn\'t exist due to not being able to correctly check the user\'s permissions' );
+	}
+
 	public function test_process_query() {
 		global $wp_query;
 
