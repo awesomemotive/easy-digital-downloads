@@ -65,14 +65,103 @@ class EDD_Register_Meta {
 	 * @return void
 	 */
 	public function register_download_meta() {
-		register_meta( 'post', '_edd_download_earnings', 'edd_sanitize_amount' );
-		register_meta( 'post', '_edd_download_sales',    array( $this, 'intval_wrapper' ) );
-		register_meta( 'post', 'edd_price',              'edd_sanitize_amount' );
-		register_meta( 'post', 'edd_variable_prices',    array( $this, 'sanitize_variable_prices' ) );
-		register_meta( 'post', 'edd_download_files',     array( $this, 'sanitize_files' ) );
-		register_meta( 'post', '_edd_bundled_products',  array( $this, 'sanitize_array' ) );
-		register_meta( 'post', '_edd_button_behavior',   'sanitize_text_field' );
-		register_meta( 'post', '_edd_default_price_id',  array( $this, 'intval_wrapper' ) );
+		register_meta(
+			'post:download',
+			'_edd_download_earnings',
+			array(
+				'sanitize_callback' => 'edd_sanitize_amount',
+			)
+		);
+
+		// Pre-WordPress 4.6 compatibility
+		if ( ! has_filter( 'sanitize_post_meta__edd_download_earnings' ) ) {
+			add_filter( 'sanitize_post_meta__edd_download_earnings', 'edd_sanitize_amount', 10, 4 );
+		}
+
+		register_meta(
+			'post:download',
+			'_edd_download_sales',
+			array(
+				'sanitize_callback' => array( $this, 'intval_wrapper' ),
+			)
+		);
+
+		if ( ! has_filter( 'sanitize_post_meta__edd_download_sales' ) ) {
+			add_filter( 'sanitize_post_meta__edd_download_sales', array( $this, 'intval_wrapper' ), 10, 4 );
+		}
+
+		register_meta(
+			'post:download',
+			'edd_price',
+			array(
+				'sanitize_callback' => 'edd_sanitize_amount',
+			)
+		);
+
+		if ( ! has_filter( 'sanitize_post_meta_edd_price' ) ) {
+			add_filter( 'sanitize_post_meta_edd_price', 'edd_sanitize_amount', 10, 4 );
+		}
+
+		register_meta(
+			'post:download',
+			'edd_variable_prices',
+			array(
+				'sanitize_callback' => array( $this, 'sanitize_variable_prices'),
+			)
+		);
+
+		if ( ! has_filter( 'sanitize_post_meta_edd_variable_prices' ) ) {
+			add_filter( 'sanitize_post_meta_edd_variable_prices', array( $this, 'sanitize_variable_prices'), 10, 4 );
+		}
+
+		register_meta(
+			'post:download',
+			'edd_download_files',
+			array(
+				'sanitize_callback' => array( $this, 'sanitize_files' ),
+			)
+		);
+
+		if ( ! has_filter( 'sanitize_post_meta_edd_download_files' ) ) {
+			add_filter( 'sanitize_post_meta_edd_download_files', array( $this, 'sanitize_files' ), 10, 4 );
+		}
+
+		register_meta(
+			'post:download',
+			'_edd_bundled_products',
+			array(
+				'sanitize_callback' => array( $this, 'sanitize_array' ),
+			)
+		);
+
+		if ( ! has_filter( 'sanitize_post_meta__edd_bundled_products' ) ) {
+			add_filter( 'sanitize_post_meta__edd_bundled_products', array( $this, 'sanitize_array' ), 10, 4 );
+		}
+
+		register_meta(
+			'post:download',
+			'_edd_button_behavior',
+			array(
+				'sanitize_callback' => 'sanitize_text_field',
+			)
+		);
+
+		if ( ! has_filter( 'sanitize_post_meta__edd_button_behavior' ) ) {
+			add_filter( 'sanitize_post_meta__edd_button_behavior', 'sanitize_text_field', 10, 4 );
+		}
+
+		register_meta(
+			'post:download',
+			'_edd_default_price_id',
+			array(
+				'sanitize_callback' => array( $this, 'intval_wrapper' ),
+			)
+		);
+
+		if ( ! has_filter( 'sanitize_post_meta__edd_default_price_id' ) ) {
+			add_filter( 'sanitize_post_meta__edd_default_price_id', array( $this, 'intval_wrapper' ), 10, 4 );
+		}
+
 	}
 
 	/**
@@ -82,17 +171,141 @@ class EDD_Register_Meta {
 	 * @return void
 	 */
 	public function register_payment_meta() {
-		register_meta( 'post', '_edd_payment_user_email',   'sanitize_email' );
-		register_meta( 'post', '_edd_payment_customer_id',  array( $this, 'intval_wrapper' ) );
-		register_meta( 'post', '_edd_payment_user_id',      array( $this, 'intval_wrapper' ) );
-		register_meta( 'post', '_edd_payment_user_ip',      'sanitize_text_field' );
-		register_meta( 'post', '_edd_payment_purchase_key', 'sanitize_text_field' );
-		register_meta( 'post', '_edd_payment_total',        'edd_sanitize_amount' );
-		register_meta( 'post', '_edd_payment_mode',         'sanitize_text_field' );
-		register_meta( 'post', '_edd_payment_gateway',      'sanitize_text_field' );
-		register_meta( 'post', '_edd_payment_meta',         array( $this, 'sanitize_array' ) );
-		register_meta( 'post', '_edd_payment_tax',          'edd_sanitize_amount' );
-		register_meta( 'post', '_edd_completed_date',       'sanitize_text_field' );
+
+		register_meta(
+			'post:edd_payment',
+			'_edd_payment_user_email',
+			array(
+				'sanitize_callback' => 'sanitize_email',
+			)
+		);
+
+		// Pre-WordPress 4.6 compatibility
+		if ( ! has_filter( 'sanitize_post_meta__edd_payment_user_email' ) ) {
+			add_filter( 'sanitize_post_meta__edd_payment_user_email', 'sanitize_email', 10, 4 );
+		}
+
+		register_meta(
+			'post:edd_payment',
+			'_edd_payment_customer_id',
+			array(
+				'sanitize_callback' => array( $this, 'intval_wrapper' ),
+			)
+		);
+
+		if ( ! has_filter( 'sanitize_post_meta__edd_payment_customer_id' ) ) {
+			add_filter( 'sanitize_post_meta__edd_payment_customer_id', array( $this, 'intval_wrapper' ), 10, 4 );
+		}
+
+		register_meta(
+			'post:edd_payment',
+			'_edd_payment_user_id',
+			array(
+				'sanitize_callback' => array( $this, 'intval_wrapper' ),
+			)
+		);
+
+		if ( ! has_filter( 'sanitize_post_meta__edd_payment_user_id' ) ) {
+			add_filter( 'sanitize_post_meta__edd_payment_user_id', array( $this, 'intval_wrapper' ), 10, 4 );
+		}
+
+		register_meta(
+			'post:edd_payment',
+			'_edd_payment_user_ip',
+			array(
+				'sanitize_callback' => 'sanitize_text_field',
+			)
+		);
+
+		if ( ! has_filter( 'sanitize_post_meta__edd_payment_user_ip' ) ) {
+			add_filter( 'sanitize_post_meta__edd_payment_user_ip', 'sanitize_text_field', 10, 4 );
+		}
+
+		register_meta(
+			'post:edd_payment',
+			'_edd_payment_purchase_key',
+			array(
+				'sanitize_callback' => 'sanitize_text_field',
+			)
+		);
+
+		if ( ! has_filter( 'sanitize_post_meta__edd_payment_purchase_key' ) ) {
+			add_filter( 'sanitize_post_meta__edd_payment_purchase_key', 'sanitize_text_field', 10, 4 );
+		}
+
+		register_meta(
+			'post:edd_payment',
+			'_edd_payment_total',
+			array(
+				'sanitize_callback' => 'edd_sanitize_amount',
+			)
+		);
+
+		if ( ! has_filter( 'sanitize_post_meta__edd_payment_total' ) ) {
+			add_filter( 'sanitize_post_meta__edd_payment_total', 'edd_sanitize_amount', 10, 4 );
+		}
+
+		register_meta(
+			'post:edd_payment',
+			'_edd_payment_mode',
+			array(
+				'sanitize_callback' => 'sanitize_text_field',
+			)
+		);
+
+		if ( ! has_filter( 'sanitize_post_meta__edd_payment_mode' ) ) {
+			add_filter( 'sanitize_post_meta__edd_payment_mode', 'sanitize_text_field', 10, 4 );
+		}
+
+		register_meta(
+			'post:edd_payment',
+			'_edd_payment_gateway',
+			array(
+				'sanitize_callback' => 'sanitize_text_field',
+			)
+		);
+
+		if ( ! has_filter( 'sanitize_post_meta__edd_payment_gateway' ) ) {
+			add_filter( 'sanitize_post_meta__edd_payment_gateway', 'sanitize_text_field', 10, 4 );
+		}
+
+		register_meta(
+			'post:edd_payment',
+			'_edd_payment_meta',
+			array(
+				'sanitize_callback' => array( $this, 'sanitize_array' ),
+			)
+		);
+
+		if ( ! has_filter( 'sanitize_post_meta__edd_payment_meta' ) ) {
+			add_filter( 'sanitize_post_meta__edd_payment_meta', array( $this, 'sanitize_array' ), 10, 4 );
+		}
+
+		register_meta(
+			'post:edd_payment',
+			'_edd_payment_tax',
+			array(
+				'sanitize_callback' => 'edd_sanitize_amount',
+			)
+		);
+
+		if ( ! has_filter( 'sanitize_post_meta__edd_payment_tax' ) ) {
+			add_filter( 'sanitize_post_meta__edd_payment_tax', 'edd_sanitize_amount', 10, 4 );
+		}
+
+		register_meta(
+			'post:edd_payment',
+			'_edd_completed_date',
+			array(
+				'sanitize_callback' => 'sanitize_text_field',
+			)
+		);
+
+		if ( ! has_filter( 'sanitize_post_meta__edd_completed_date' ) ) {
+			add_filter( 'sanitize_post_meta__edd_completed_date', 'sanitize_text_field', 10, 4 );
+		}
+
+
 	}
 
 	/**
