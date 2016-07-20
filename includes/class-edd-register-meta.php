@@ -66,10 +66,12 @@ class EDD_Register_Meta {
 	 */
 	public function register_download_meta() {
 		register_meta(
-			'post:download',
+			'post',
 			'_edd_download_earnings',
 			array(
 				'sanitize_callback' => 'edd_sanitize_amount',
+				'type'              => 'float',
+				'description'       => __( 'The total earnings for the specified product', 'easy-digital-downloads' ),
 			)
 		);
 
@@ -79,10 +81,12 @@ class EDD_Register_Meta {
 		}
 
 		register_meta(
-			'post:download',
+			'post',
 			'_edd_download_sales',
 			array(
 				'sanitize_callback' => array( $this, 'intval_wrapper' ),
+				'type'              => 'float',
+				'description'       => __( 'The nubmer of sales for the specified product.', 'easy-digital-downloads' ),
 			)
 		);
 
@@ -91,10 +95,13 @@ class EDD_Register_Meta {
 		}
 
 		register_meta(
-			'post:download',
+			'post',
 			'edd_price',
 			array(
 				'sanitize_callback' => array( $this, 'sanitize_price' ),
+				'type'              => 'float',
+				'description'       => __( 'The price of the product.', 'easy-digital-downloads' ),
+				'show_in_rest'      => true,
 			)
 		);
 
@@ -103,10 +110,13 @@ class EDD_Register_Meta {
 		}
 
 		register_meta(
-			'post:download',
+			'post',
 			'edd_variable_prices',
 			array(
 				'sanitize_callback' => array( $this, 'sanitize_variable_prices'),
+				'type'              => 'array',
+				'description'       => __( 'An array of variable prices for the product.', 'easy-digital-downloads' ),
+				'show_in_rest'      => true,
 			)
 		);
 
@@ -115,10 +125,12 @@ class EDD_Register_Meta {
 		}
 
 		register_meta(
-			'post:download',
+			'post',
 			'edd_download_files',
 			array(
 				'sanitize_callback' => array( $this, 'sanitize_files' ),
+				'type'              => 'array',
+				'description'       => __( 'The files associated with the product, available for download.', 'easy-digital-downloads' ),
 			)
 		);
 
@@ -127,10 +139,13 @@ class EDD_Register_Meta {
 		}
 
 		register_meta(
-			'post:download',
+			'post',
 			'_edd_bundled_products',
 			array(
 				'sanitize_callback' => array( $this, 'sanitize_array' ),
+				'type'              => 'array',
+				'description'       => __( 'An array of product IDs to associate with a bundle.', 'easy-digital-downloads' ),
+				'show_in_rest'      => true,
 			)
 		);
 
@@ -139,10 +154,13 @@ class EDD_Register_Meta {
 		}
 
 		register_meta(
-			'post:download',
+			'post',
 			'_edd_button_behavior',
 			array(
 				'sanitize_callback' => 'sanitize_text_field',
+				'type'              => 'string',
+				'description'       => __( 'Defines how this products `Purchase` button should behave, either add to cart or buy now.', 'easy-digital-downloads' ),
+				'show_in_rest'      => true,
 			)
 		);
 
@@ -151,10 +169,13 @@ class EDD_Register_Meta {
 		}
 
 		register_meta(
-			'post:download',
+			'post',
 			'_edd_default_price_id',
 			array(
 				'sanitize_callback' => array( $this, 'intval_wrapper' ),
+				'type'              => 'int',
+				'description'       => __( 'When variable pricing is enabled, this value defines which option should be chosen by default.', 'easy-digital-downloads' ),
+				'show_in_rest'      => true,
 			)
 		);
 
@@ -173,10 +194,12 @@ class EDD_Register_Meta {
 	public function register_payment_meta() {
 
 		register_meta(
-			'post:edd_payment',
+			'post',
 			'_edd_payment_user_email',
 			array(
 				'sanitize_callback' => 'sanitize_email',
+				'type'              => 'string',
+				'description'       => __( 'The email address associated with the purchase.', 'easy-digital-downloads' ),
 			)
 		);
 
@@ -186,10 +209,12 @@ class EDD_Register_Meta {
 		}
 
 		register_meta(
-			'post:edd_payment',
+			'post',
 			'_edd_payment_customer_id',
 			array(
 				'sanitize_callback' => array( $this, 'intval_wrapper' ),
+				'type'              => 'int',
+				'description'       => __( 'The Customer ID associated with the payment.', 'easy-digital-downloads' ),
 			)
 		);
 
@@ -198,10 +223,12 @@ class EDD_Register_Meta {
 		}
 
 		register_meta(
-			'post:edd_payment',
+			'post',
 			'_edd_payment_user_id',
 			array(
 				'sanitize_callback' => array( $this, 'intval_wrapper' ),
+				'type'              => 'int',
+				'description'       => __( 'The User ID assocaited with the payment.', 'easy-digital-downloads' ),
 			)
 		);
 
@@ -210,10 +237,12 @@ class EDD_Register_Meta {
 		}
 
 		register_meta(
-			'post:edd_payment',
+			'post',
 			'_edd_payment_user_ip',
 			array(
 				'sanitize_callback' => 'sanitize_text_field',
+				'type'              => 'string',
+				'description'       => __( 'The IP address the payment was made from.', 'easy-digital-downloads' ),
 			)
 		);
 
@@ -222,10 +251,12 @@ class EDD_Register_Meta {
 		}
 
 		register_meta(
-			'post:edd_payment',
+			'post',
 			'_edd_payment_purchase_key',
 			array(
 				'sanitize_callback' => 'sanitize_text_field',
+				'type'              => 'string',
+				'description'       => __( 'The unique purchase key for this payment.', 'easy-digital-downloads' ),
 			)
 		);
 
@@ -234,10 +265,12 @@ class EDD_Register_Meta {
 		}
 
 		register_meta(
-			'post:edd_payment',
+			'post',
 			'_edd_payment_total',
 			array(
 				'sanitize_callback' => 'edd_sanitize_amount',
+				'type'              => 'float',
+				'description'       => __( 'The purchase total for this payment.', 'easy-digital-downloads' ),
 			)
 		);
 
@@ -246,10 +279,12 @@ class EDD_Register_Meta {
 		}
 
 		register_meta(
-			'post:edd_payment',
+			'post',
 			'_edd_payment_mode',
 			array(
 				'sanitize_callback' => 'sanitize_text_field',
+				'type'              => 'string',
+				'description'       => __( 'Identifes if the purchase was made in Test or Live mode.', 'easy-digital-downloads' ),
 			)
 		);
 
@@ -258,10 +293,12 @@ class EDD_Register_Meta {
 		}
 
 		register_meta(
-			'post:edd_payment',
+			'post',
 			'_edd_payment_gateway',
 			array(
 				'sanitize_callback' => 'sanitize_text_field',
+				'type'              => 'string',
+				'description'       => __( 'The registered gateway that was used to process this payment.', 'easy-digital-downloads' ),
 			)
 		);
 
@@ -270,10 +307,12 @@ class EDD_Register_Meta {
 		}
 
 		register_meta(
-			'post:edd_payment',
+			'post',
 			'_edd_payment_meta',
 			array(
 				'sanitize_callback' => array( $this, 'sanitize_array' ),
+				'type'              => 'array',
+				'description'       => __( 'Array of payment meta that contains cart details, downloads, amounts, taxes, discounts, and subtotals, etc.', 'easy-digital-downloads' ),
 			)
 		);
 
@@ -282,10 +321,12 @@ class EDD_Register_Meta {
 		}
 
 		register_meta(
-			'post:edd_payment',
+			'post',
 			'_edd_payment_tax',
 			array(
 				'sanitize_callback' => 'edd_sanitize_amount',
+				'type'              => 'float',
+				'description'       => __( 'The total amount of tax paid for this payment.', 'easy-digital-downloads' ),
 			)
 		);
 
@@ -294,10 +335,12 @@ class EDD_Register_Meta {
 		}
 
 		register_meta(
-			'post:edd_payment',
+			'post',
 			'_edd_completed_date',
 			array(
 				'sanitize_callback' => 'sanitize_text_field',
+				'type'              => 'string',
+				'description'       => __( 'The date this payment was changed to the `completed` status.', 'easy-digital-downloads' ),
 			)
 		);
 
