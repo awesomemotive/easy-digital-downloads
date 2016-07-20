@@ -309,9 +309,13 @@ class EDD_Download {
 	 */
 	public function get_prices() {
 
-		if( ! isset( $this->prices ) ) {
+		$this->prices = array();
 
-			$this->prices = get_post_meta( $this->ID, 'edd_variable_prices', true );
+		if( true === $this->has_variable_prices() ) {
+
+			if ( empty( $this->prices ) ) {
+				$this->prices = get_post_meta( $this->ID, 'edd_variable_prices', true );
+			}
 
 		}
 
