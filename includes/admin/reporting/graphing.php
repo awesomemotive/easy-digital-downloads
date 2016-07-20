@@ -532,7 +532,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 
 			foreach ( $temp_data[ 'earnings' ] as $year => $months ) {
 				foreach( $months as $month => $dates ) {
-					foreach ( $dates as $day => $sales ) {
+					foreach ( $dates as $day => $earnings ) {
 						$date         = mktime( 0, 0, 0, $month, $day, $year ) * 1000;
 						$earnings_data[] = array( $date, $earnings );
 					}
