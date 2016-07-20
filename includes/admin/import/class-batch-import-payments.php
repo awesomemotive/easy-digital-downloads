@@ -99,7 +99,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 				}
 
 				// Done with this batch
-				if( $i >= $this->per_step ) {
+				if( $i > $this->per_step ) {
 					break;
 				}
 
