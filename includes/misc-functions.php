@@ -453,7 +453,7 @@ function edd_get_current_page_url( $nocache = false ) {
 
 	if ( is_front_page() ) {
 		$uri = home_url( '/' );
-	} elseif ( edd_is_checkout( array(), false ) ) {
+	} elseif ( edd_is_checkout() ) {
 		$uri = edd_get_checkout_uri();
 	}
 
