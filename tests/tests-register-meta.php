@@ -101,6 +101,14 @@ class Tests_Register_Meta extends WP_UnitTestCase {
 		$saved_price = get_post_meta( $this->download_id, 'edd_price', true );
 		$this->assertEquals( 0, $saved_price );
 
+		// Test negative values with the filter now
+		add_filter( 'edd_allow_negative_prices', '__return_true' );
+		$price = -1;
+		update_post_meta( $this->download_id, 'edd_price', $price );
+		$saved_price = get_post_meta( $this->download_id, 'edd_price', true );
+		$this->assertEquals( -1, $saved_price );
+		remove_filter( 'edd_allow_negative_prices', '__return_true' );
+
 	}
 
 	public function test_sanitize_variable_prices() {
