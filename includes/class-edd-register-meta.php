@@ -94,12 +94,12 @@ class EDD_Register_Meta {
 			'post:download',
 			'edd_price',
 			array(
-				'sanitize_callback' => 'edd_sanitize_amount',
+				'sanitize_callback' => array( $this, 'sanitize_price' ),
 			)
 		);
 
 		if ( ! has_filter( 'sanitize_post_meta_edd_price' ) ) {
-			add_filter( 'sanitize_post_meta_edd_price', 'edd_sanitize_amount', 10, 4 );
+			add_filter( 'sanitize_post_meta_edd_price', array( $this, 'sanitize_price' ), 10, 4 );
 		}
 
 		register_meta(
@@ -345,6 +345,24 @@ class EDD_Register_Meta {
 	}
 
 	/**
+	 * Perform some sanitization on the amount field including not allowing negative values by default
+	 *
+	 * @since  2.6.5
+	 * @param  float $price The price to sanitize
+	 * @return float        A sanitized price
+	 */
+	public function sanitize_price( $price ) {
+
+		$allow_negative_prices = apply_filters( 'edd_allow_negative_prices', false );
+
+		if ( ! $allow_negative_prices && $price < 0 ) {
+			$price = 0;
+		}
+
+		return edd_sanitize_amount( $price );
+	}
+
+	/**
 	 * Sanitize the variable prices
 	 *
 	 * Ensures prices are correctly mapped to an array starting with an index of 0
@@ -353,7 +371,7 @@ class EDD_Register_Meta {
 	 * @param array $prices Variable prices
 	 * @return array $prices Array of the remapped variable prices
 	 */
-	function sanitize_variable_prices( $prices = array() ) {
+	public function sanitize_variable_prices( $prices = array() ) {
 		$prices = $this->remove_blank_rows( $prices );
 
 		if ( ! is_array( $prices ) ) {
@@ -373,7 +391,7 @@ class EDD_Register_Meta {
 
 			}
 
-			$prices[ $id ]['amount'] = edd_sanitize_amount( $price['amount'] );
+			$prices[ $id ]['amount'] = $this->sanitize_price( $price['amount'] );
 
 		}
 
