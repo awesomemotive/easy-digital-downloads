@@ -14,7 +14,7 @@ class Tests_Login_Register extends WP_UnitTestCase {
 	 * Test that the login form returns the expected string.
 	 */
 	public function test_login_form() {
-		$this->assertContains( '<span><legend>Log into Your Account</legend></span>', edd_login_form() );
+		$this->assertContains( '<legend>Log into Your Account</legend>', edd_login_form() );
 	}
 
 	/**
