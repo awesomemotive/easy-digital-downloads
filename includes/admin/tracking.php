@@ -157,7 +157,7 @@ class EDD_Tracking {
 	public function check_for_settings_optin( $input ) {
 		// Send an intial check in on settings save
 
-		if( isset( $input['allow_tracking'] ) ) {
+		if( isset( $input['allow_tracking'] ) && $input['allow_tracking'] == 1 ) {
 			$this->send_checkin( true );
 		}
 
