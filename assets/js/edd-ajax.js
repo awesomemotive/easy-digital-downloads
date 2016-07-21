@@ -111,7 +111,7 @@ jQuery(document).ready(function ($) {
 
 		if( variable_price == 'yes' ) {
 
-			if ( form.find('.edd_price_option_' + download).is('input:hidden') ) {
+			if ( form.find('.edd_price_option_' + download + '[type="hidden"]').length > 0 ) {
 				item_price_ids[0] = $('.edd_price_option_' + download, form).val();
 				if ( form.find('.edd-submit').data('price') && form.find('.edd-submit').data('price') > 0 ) {
 					free_items = false;
