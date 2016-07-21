@@ -81,6 +81,36 @@ class Tests_Register_Meta extends WP_UnitTestCase {
 		$this->assertFalse( is_serialized( get_post_meta( $this->payment_id, '_edd_payment_meta', true ) ) );
 	}
 
+	public function test_sanitize_price() {
+
+		// Test saving a normal postitive value
+		$price = '9';
+		update_post_meta( $this->download_id, 'edd_price', $price );
+		$saved_price = get_post_meta( $this->download_id, 'edd_price', true );
+		$this->assertEquals( 9, $saved_price );
+
+		// Test saving a negative value
+		$price = -1;
+		update_post_meta( $this->download_id, 'edd_price', $price );
+		$saved_price = get_post_meta( $this->download_id, 'edd_price', true );
+		$this->assertEquals( 0, $saved_price );
+
+		// Test saving a zero value
+		$price = 0;
+		update_post_meta( $this->download_id, 'edd_price', $price );
+		$saved_price = get_post_meta( $this->download_id, 'edd_price', true );
+		$this->assertEquals( 0, $saved_price );
+
+		// Test negative values with the filter now
+		add_filter( 'edd_allow_negative_prices', '__return_true' );
+		$price = -1;
+		update_post_meta( $this->download_id, 'edd_price', $price );
+		$saved_price = get_post_meta( $this->download_id, 'edd_price', true );
+		$this->assertEquals( -1, $saved_price );
+		remove_filter( 'edd_allow_negative_prices', '__return_true' );
+
+	}
+
 	public function test_sanitize_variable_prices() {
 		$variable_prices = array(
 			array( 'name'   => 'First Option' ),
