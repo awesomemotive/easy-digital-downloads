@@ -36,6 +36,11 @@ else
 	WP_TESTS_TAG="tags/$LATEST_VERSION"
 fi
 
+if [[ $WP_TESTS_TAG == *"beta"* ]]
+then
+	WP_TESTS_TAG="trunk"
+fi
+
 set -ex
 
 install_wp() {
