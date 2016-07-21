@@ -129,6 +129,10 @@ class Tests_Downloads extends WP_UnitTestCase {
 		$this->assertFalse( $download3->is_free( 0 ) );
 		$this->assertFalse( $download3->is_free( 1 ) );
 
+		update_post_meta( $download3->ID, '_variable_pricing', false );
+		$download4 = new EDD_Download( $download3->ID );
+		$this->assertEmpty( $download4->prices );
+
 		// Test the magic __get function
 		$this->assertEquals( 20, $download3->file_download_limit );
 		$this->assertTrue( is_wp_error( $download3->__get( 'asdf') ) );
