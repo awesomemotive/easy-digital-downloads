@@ -262,7 +262,7 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 
 	EDD()->session->set( 'edd_cart', $cart );
 
-	do_action( 'edd_post_add_to_cart', $download_id, $options );
+	do_action( 'edd_post_add_to_cart', $download_id, $options, $items );
 
 	// Clear all the checkout errors, if any
 	edd_clear_errors();
