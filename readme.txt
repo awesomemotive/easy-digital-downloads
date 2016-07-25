@@ -5,8 +5,8 @@ Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214
 Donate link: https://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
-Tested up to: 4.6
-Stable Tag: 2.6.4
+Tested up to: 4.7
+Stable Tag: 2.6.5
 
 License: GNU Version 2 or Any Later Version
 
@@ -213,6 +213,24 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.6.5, July 25, 2016 =
+* Fix: Incorrect parameters passed to edd_is_checkout()
+* Fix: Some records skipped during CSV import
+* Fix: update_option() cannot be used to update EDD settings
+* Fix: Incorrect date format used in CSV payment import
+* Fix: Product-specific sales / earnings graphs show no earnings
+* Fix: Spelling errors in PHPDocs
+* Fix: Resend Receipt box visible even when payment is not Complete
+* Fix: File URLs split on / during product import
+* Fix: Setting display:none on variable price options breaks add to cart processing
+* Fix: Prices can be set as negative
+* Fix: edd_get_variable_prices() returns prices even when variable prices are disabled
+* Tweak: Added filters to payment gateway labels on checkout screen
+* Tweak: Modified how metadata is registered in anticipation of WordPress 4.6
+* Tweak: Changed role required for deleting payment records to delete_shop_payments
+* New: Added Remember Me option to log in form
+* New: Added /info/ endpoint to REST API
 
 = 2.6.4, July 6, 2016 =
 * Fix: Negative fees getting included twice with PayPal Standard
