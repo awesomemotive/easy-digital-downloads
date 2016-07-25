@@ -229,7 +229,7 @@ class EDD_Batch_Import {
 
 			$delimiter = ';';
 
-		} elseif( false !== strpos( $str, '/' ) ) {
+		} elseif( false !== strpos( $str, '/' ) && ! filter_var( $str, FILTER_VALIDATE_URL ) ) {
 
 			$delimiter = '/';
 
