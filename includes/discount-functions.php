@@ -1242,7 +1242,7 @@ function edd_get_cart_item_discount_amount( $item = array(), $discount = false )
 	}
 
 	$amount           = 0;
-	$price            = edd_get_cart_item_price( $item['id'], $item['options'] );
+	$price            = edd_get_cart_item_price( $item['id'], $item['options'], true );
 	$discounted_price = $price;
 
 	$discounts = false === $discount ? edd_get_cart_discounts() : array( $discount );
