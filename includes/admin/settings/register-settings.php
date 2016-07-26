@@ -179,34 +179,34 @@ function edd_register_settings() {
 				if ( empty( $option['id'] ) ) {
 					continue;
 				}
-
-				$name = isset( $option['name'] ) ? $option['name'] : '';
+                
+				$args = wp_parse_args( $option, array(
+				    'section'       => $section,
+				    'id'            => null,
+				    'desc'          => '',
+				    'name'          => '',
+				    'size'          => null,
+				    'options'       => '',
+				    'std'           => '',
+				    'min'           => null,
+				    'max'           => null,
+				    'step'          => null,
+				    'chosen'        => null,
+				    'placeholder'   => null,
+				    'allow_blank'   => true,
+				    'readonly'      => false,
+				    'faux'          => false,
+				    'tooltip_title' => false,
+				    'tooltip_desc'  => false,
+				) );
 
 				add_settings_field(
-					'edd_settings[' . $option['id'] . ']',
-					$name,
-					function_exists( 'edd_' . $option['type'] . '_callback' ) ? 'edd_' . $option['type'] . '_callback' : 'edd_missing_callback',
+					'edd_settings[' . $args['id'] . ']',
+					$args['name'],
+					function_exists( 'edd_' . $args['type'] . '_callback' ) ? 'edd_' . $args['type'] . '_callback' : 'edd_missing_callback',
 					'edd_settings_' . $tab . '_' . $section,
 					'edd_settings_' . $tab . '_' . $section,
-					array(
-						'section'       => $section,
-						'id'            => isset( $option['id'] )            ? $option['id']            : null,
-						'desc'          => ! empty( $option['desc'] )        ? $option['desc']          : '',
-						'name'          => isset( $option['name'] )          ? $option['name']          : null,
-						'size'          => isset( $option['size'] )          ? $option['size']          : null,
-						'options'       => isset( $option['options'] )       ? $option['options']       : '',
-						'std'           => isset( $option['std'] )           ? $option['std']           : '',
-						'min'           => isset( $option['min'] )           ? $option['min']           : null,
-						'max'           => isset( $option['max'] )           ? $option['max']           : null,
-						'step'          => isset( $option['step'] )          ? $option['step']          : null,
-						'chosen'        => isset( $option['chosen'] )        ? $option['chosen']        : null,
-						'placeholder'   => isset( $option['placeholder'] )   ? $option['placeholder']   : null,
-						'allow_blank'   => isset( $option['allow_blank'] )   ? $option['allow_blank']   : true,
-						'readonly'      => isset( $option['readonly'] )      ? $option['readonly']      : false,
-						'faux'          => isset( $option['faux'] )          ? $option['faux']          : false,
-						'tooltip_title' => isset( $option['tooltip_title'] ) ? $option['tooltip_title'] : false,
-						'tooltip_desc'  => isset( $option['tooltip_desc'] )  ? $option['tooltip_desc']  : false,
-					)
+					$args
 				);
 			}
 		}
