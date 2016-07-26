@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Allows plugins to use their own update API.
  *
  * @author Pippin Williamson
- * @version 1.6.4
+ * @version 1.6.5
  */
 class EDD_SL_Plugin_Updater {
 
@@ -121,6 +121,10 @@ class EDD_SL_Plugin_Updater {
 	 */
 	public function show_update_notification( $file, $plugin ) {
 
+		if ( is_network_admin() ) {
+			return;
+		}
+
 		if( ! current_user_can( 'update_plugins' ) ) {
 			return;
 		}
@@ -180,7 +184,10 @@ class EDD_SL_Plugin_Updater {
 
 			// build a plugin list row, with update notification
 			$wp_list_table = _get_list_table( 'WP_Plugins_List_Table' );
-			echo '<tr class="plugin-update-tr"><td colspan="' . $wp_list_table->get_column_count() . '" class="plugin-update colspanchange"><div class="update-message">';
+			# <tr class="plugin-update-tr"><td colspan="' . $wp_list_table->get_column_count() . '" class="plugin-update colspanchange">
+			echo '<tr class="plugin-update-tr" id="' . $this->slug . '-update" data-slug="' . $this->slug . '" data-plugin="' . $this->slug . '/' . $file . '">';
+			echo '<td colspan="3" class="plugin-update colspanchange">';
+			echo '<div class="update-message notice inline notice-warning notice-alt"><p>';
 
 			$changelog_link = self_admin_url( 'index.php?edd_sl_action=view_plugin_changelog&plugin=' . $this->name . '&slug=' . $this->slug . '&TB_iframe=true&width=772&height=911' );
 
@@ -206,7 +213,7 @@ class EDD_SL_Plugin_Updater {
 
 			do_action( "in_plugin_update_message-{$file}", $plugin, $version_info );
 
-			echo '</div></td></tr>';
+			echo '</p></div></td></tr>';
 		}
 	}
 
