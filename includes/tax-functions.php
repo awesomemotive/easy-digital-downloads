@@ -64,6 +64,8 @@ function edd_get_tax_rate( $country = false, $state = false ) {
 	if( empty( $state ) ) {
 		if( ! empty( $_POST['state'] ) ) {
 			$state = $_POST['state'];
+		} elseif( ! empty( $_POST['card_state'] ) ) {
+			$state = $_POST['card_state'];
 		} elseif( is_user_logged_in() && ! empty( $user_address ) ) {
 			$state = $user_address['state'];
 		}
