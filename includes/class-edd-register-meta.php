@@ -353,7 +353,7 @@ class EDD_Register_Meta {
 
 	/**
 	 * Wrapper for intval
-	 * Setting intval as the callback was stating an improper number of arguements, this avoids that.
+	 * Setting intval as the callback was stating an improper number of arguments, this avoids that.
 	 *
 	 * @since  2.5
 	 * @param  int $value The value to sanitize.
