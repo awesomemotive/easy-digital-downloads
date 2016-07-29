@@ -86,7 +86,7 @@ class EDD_Register_Meta {
 			array(
 				'sanitize_callback' => array( $this, 'intval_wrapper' ),
 				'type'              => 'float',
-				'description'       => __( 'The nubmer of sales for the specified product.', 'easy-digital-downloads' ),
+				'description'       => __( 'The number of sales for the specified product.', 'easy-digital-downloads' ),
 			)
 		);
 
@@ -228,7 +228,7 @@ class EDD_Register_Meta {
 			array(
 				'sanitize_callback' => array( $this, 'intval_wrapper' ),
 				'type'              => 'int',
-				'description'       => __( 'The User ID assocaited with the payment.', 'easy-digital-downloads' ),
+				'description'       => __( 'The User ID associated with the payment.', 'easy-digital-downloads' ),
 			)
 		);
 
@@ -284,7 +284,7 @@ class EDD_Register_Meta {
 			array(
 				'sanitize_callback' => 'sanitize_text_field',
 				'type'              => 'string',
-				'description'       => __( 'Identifes if the purchase was made in Test or Live mode.', 'easy-digital-downloads' ),
+				'description'       => __( 'Identifies if the purchase was made in Test or Live mode.', 'easy-digital-downloads' ),
 			)
 		);
 
