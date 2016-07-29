@@ -236,6 +236,8 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 	foreach ( $items as &$item ) {
 		$item = apply_filters( 'edd_add_to_cart_item', $item );
 		$to_add = $item;
+		unset( $item );
+
 		if ( ! is_array( $to_add ) )
 			return;
 
