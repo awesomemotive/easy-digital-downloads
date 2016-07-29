@@ -199,6 +199,8 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		$options['price_id'] = explode( ',', $options['price_id'] );
 	}
 
+	$items = array();
+
 	if ( isset( $options['price_id'] ) && is_array( $options['price_id'] ) ) {
 
 		// Process multiple price options at once
