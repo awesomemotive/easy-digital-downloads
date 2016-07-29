@@ -1156,7 +1156,21 @@ jQuery(document).ready(function ($) {
 		placeholder_text_multiple: edd_vars.one_or_more_option,
 	});
 
-	$('.edd-select-chosen .chosen-search input' ).attr( 'placeholder', edd_vars.search_placeholder );
+	$('.edd-select-chosen .chosen-search input').each( function() {
+		var type = $(this).parent().parent().parent().prev('select.edd-select-chosen').data('search-type');
+		var placeholder = '';
+
+		if ( type === 'download' ) {
+			placeholder = edd_vars.search_placeholder;
+		} else {
+			var type = 'search_placeholder_' + type;
+			if ( edd_vars[type] ) {
+				placeholder = edd_vars[type];
+			}
+		}
+
+		$(this).attr( 'placeholder', placeholder );
+	});
 
 	// Add placeholders for Chosen input fields
 	$( '.chosen-choices' ).on( 'click', function () {
