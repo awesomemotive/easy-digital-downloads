@@ -173,12 +173,7 @@ add_shortcode( 'download_cart', 'edd_cart_shortcode' );
  * @return string
  */
 function edd_login_form_shortcode( $atts, $content = null ) {
-	$redirect         = home_url();
-	$purchase_history = edd_get_option( 'purchase_history_page', 0 );
-
-	if ( ! empty( $purchase_history ) ) {
-		$redirect = get_permalink( $purchase_history );
-	}
+	$redirect = '';
 
 	extract( shortcode_atts( array(
 			'redirect' => $redirect
@@ -186,7 +181,23 @@ function edd_login_form_shortcode( $atts, $content = null ) {
 	);
 
 	if ( empty( $redirect ) ) {
-		$redirect = get_permalink( edd_get_option( 'login_redirect_page', '' ) );
+		$login_redirect_page = edd_get_option( 'login_redirect_page', '' );
+
+		if ( ! empty( $login_redirect_page ) ) {
+			$redirect = get_permalink( $login_redirect_page );
+		}
+	}
+
+	if ( empty( $redirect ) ) {
+		$purchase_history = edd_get_option( 'purchase_history_page', 0 );
+
+		if ( ! empty( $purchase_history ) ) {
+			$redirect = get_permalink( $purchase_history );
+		}
+	}
+
+	if ( empty( $redirect ) ) {
+		$redirect = home_url();
 	}
 
 	return edd_login_form( $redirect );
