@@ -506,7 +506,7 @@ add_action( 'edd_delete-customer', 'edd_customer_delete', 10, 1 );
  * Disconnect a user ID from a customer
  *
  * @since  2.3
- * @param  array $args Array of arguements
+ * @param  array $args Array of arguments
  * @return bool        If the disconnect was sucessful
  */
 function edd_disconnect_customer_user_id( $args ) {
