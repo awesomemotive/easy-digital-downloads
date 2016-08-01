@@ -171,7 +171,7 @@ $currency_code  = $payment->currency;
 								</div><!-- /.edd-order-update-box -->
 
 							</div><!-- /#edd-order-data -->
-							
+
 							<?php if( edd_is_payment_complete( $payment_id ) ) : ?>
 							<div id="edd-order-resend-receipt" class="postbox edd-order-data">
 								<div class="inside">
@@ -185,7 +185,7 @@ $currency_code  = $payment->currency;
 								</div>
 							</div>
 							<?php endif; ?>
-							
+
 							<div id="edd-order-details" class="postbox edd-order-data">
 
 								<h3 class="hndle">
@@ -425,7 +425,15 @@ $currency_code  = $payment->currency;
 
 									<div class="column-container customer-info">
 										<div class="column">
-											<?php echo EDD()->html->customer_dropdown( array( 'selected' => $customer->id, 'name' => 'customer-id' ) ); ?>
+											<?php
+												$args = array(
+													'selected' => $customer->id,
+													'name' => 'customer-id',
+													'placeholder' => __( 'Type to search all Customers', 'easy-digital-downloads' ),
+												);
+
+												echo EDD()->html->customer_dropdown( $args );
+											?>
 										</div>
 										<div class="column">
 											<input type="hidden" name="edd-current-customer" value="<?php echo $customer->id; ?>" />
@@ -507,11 +515,12 @@ $currency_code  = $payment->currency;
 														echo EDD()->html->select( array(
 															'options'          => edd_get_country_list(),
 															'name'             => 'edd-payment-address[0][country]',
-															'selected'         => $address['country'],
+															'selected'         => $address[ 'country' ],
 															'show_option_all'  => false,
 															'show_option_none' => false,
 															'chosen'           => true,
-															'placeholder' => __( 'Select a country', 'easy-digital-downloads' )
+															'placeholder'      => __( 'Select a country', 'easy-digital-downloads' ),
+															'data'             => array( 'search-type' => 'country' ),
 														) );
 														?>
 													</p>
@@ -523,11 +532,12 @@ $currency_code  = $payment->currency;
 															echo EDD()->html->select( array(
 																'options'          => $states,
 																'name'             => 'edd-payment-address[0][state]',
-																'selected'         => $address['state'],
+																'selected'         => $address[ 'state' ],
 																'show_option_all'  => false,
 																'show_option_none' => false,
 																'chosen'           => true,
-																'placeholder' => __( 'Select a state', 'easy-digital-downloads' )
+																'placeholder'      => __( 'Select a state', 'easy-digital-downloads' ),
+																'data'             => array( 'search-type' => 'state' ),
 															) );
 														} else { ?>
 															<input type="text" name="edd-payment-address[0][state]" value="<?php echo esc_attr( $address['state'] ); ?>" class="medium-text"/>

@@ -172,6 +172,7 @@ class EDD_HTML_Elements {
 			'class'            => $args['class'] . ' edd-customer-select',
 			'options'          => $options,
 			'multiple'         => $args['multiple'],
+			'placeholder'      => $args['placeholder'],
 			'chosen'           => $args['chosen'],
 			'show_option_all'  => false,
 			'show_option_none' => false,
