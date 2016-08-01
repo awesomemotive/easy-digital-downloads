@@ -51,34 +51,7 @@ With extensions for [MailChimp](https://easydigitaldownloads.com/downloads/mail-
 
 **Languages**
 
-Easy Digital Downloads has been translated into the following languages:
-
-1. English (and British English)
-2. German
-3. Spanish
-4. French
-5. Italian
-6. Dutch
-7. European Portuguese
-8. Brazilian Portuguese
-9. Turkish
-10. Arabic
-11. Polish
-12. Russian
-13. Czech
-14. Japanese
-15. Farsi
-16. Finnish
-17. Hebrew
-18. Persian
-19. Finnish
-20. Slovak
-21. Swedish
-22. Romanian
-23. Hungarian
-24. Norwegian
-25. Khmer
-26. Lithuanian
+Easy Digital Downloads has been translated into more than two dozen languages. The complete list of languages can be found in our [FAQ](http://docs.easydigitaldownloads.com/article/1082-what-spoken-languages-does-easy-digital-downloads-support).
 
 Would you like to help translate the plugin into more languages? [Join our WP-Translations Community](http://docs.easydigitaldownloads.com/article/1023-translating-easy-digital-downloads).
 
