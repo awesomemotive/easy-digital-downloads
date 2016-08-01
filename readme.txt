@@ -187,6 +187,14 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
+= 2.6.6, August 1, 2016 =
+* Fix: Discount codes being marked as inactive
+* Fix: Incorrect state/province used in tax calculations in certain scenarios
+* Fix: Incorrect placeholder for Select Customer drop down
+* Fix: Incorrect redirect URL for [edd_login] shortcode
+* Fix: Spelling errors in internal documentation
+* New: Added $items parameter to edd_post_add_to_cart action
+
 = 2.6.5, July 25, 2016 =
 * Fix: Incorrect parameters passed to edd_is_checkout()
 * Fix: Some records skipped during CSV import
