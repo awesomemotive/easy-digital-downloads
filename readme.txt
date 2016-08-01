@@ -6,7 +6,7 @@ Donate link: https://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
 Tested up to: 4.7
-Stable Tag: 2.6.5
+Stable Tag: 2.6.6
 
 License: GNU Version 2 or Any Later Version
 
