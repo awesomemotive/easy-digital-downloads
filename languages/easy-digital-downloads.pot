@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.6.4\n"
+"Project-Id-Version: Easy Digital Downloads 2.6.5\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2016-07-25 14:08:48+00:00\n"
+"POT-Creation-Date: 2016-08-01 15:37:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -91,7 +91,7 @@ msgstr ""
 #: includes/admin/upgrades/upgrade-functions.php:1103
 #: includes/api/class-edd-api.php:1904 includes/api/class-edd-api.php:1909
 #: includes/api/class-edd-api.php:1921 includes/api/class-edd-api.php:1923
-#: includes/cart/functions.php:1196 includes/cart/functions.php:1213
+#: includes/cart/functions.php:1202 includes/cart/functions.php:1219
 #: includes/class-edd-license-handler.php:304
 #: includes/deprecated-functions.php:517 includes/deprecated-functions.php:532
 #: includes/deprecated-functions.php:542 includes/download-functions.php:1228
@@ -635,8 +635,8 @@ msgstr ""
 
 #: includes/admin/customers/customers.php:306
 #: includes/admin/customers/customers.php:588
-#: includes/admin/payments/view-order-details.php:454
-#: includes/admin/thickbox.php:131 includes/class-edd-html-elements.php:586
+#: includes/admin/payments/view-order-details.php:462
+#: includes/admin/thickbox.php:131 includes/class-edd-html-elements.php:587
 msgid "Cancel"
 msgstr ""
 
@@ -2149,58 +2149,62 @@ msgstr ""
 msgid "No %s included with this purchase"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:436
+#: includes/admin/payments/view-order-details.php:432 includes/scripts.php:223
+msgid "Type to search all Customers"
+msgstr ""
+
+#: includes/admin/payments/view-order-details.php:444
 msgid "View Customer Details"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:439
+#: includes/admin/payments/view-order-details.php:447
 msgid "New Customer"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:445
+#: includes/admin/payments/view-order-details.php:453
 msgid "Name:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:449
+#: includes/admin/payments/view-order-details.php:457
 msgid "Email:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:457
+#: includes/admin/payments/view-order-details.php:465
 msgid "Click \"Save Payment\" to create new customer"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:472
+#: includes/admin/payments/view-order-details.php:480
 #: includes/checkout/template.php:329
 msgid "Billing Address"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:482
+#: includes/admin/payments/view-order-details.php:490
 msgid "Street Address Line 1:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:486
+#: includes/admin/payments/view-order-details.php:494
 msgid "Street Address Line 2:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:514
+#: includes/admin/payments/view-order-details.php:522
 #: includes/admin/settings/register-settings.php:307
 msgid "Select a country"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:530
+#: includes/admin/payments/view-order-details.php:539
 #: includes/admin/settings/register-settings.php:315
 msgid "Select a state"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:550
+#: includes/admin/payments/view-order-details.php:560
 msgid "Payment Notes"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:565
+#: includes/admin/payments/view-order-details.php:575
 msgid "No payment notes"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:571
+#: includes/admin/payments/view-order-details.php:581
 msgid "Add Note"
 msgstr ""
 
@@ -5106,32 +5110,32 @@ msgstr ""
 msgid "You do not have permission to %s API keys for this user"
 msgstr ""
 
-#: includes/cart/functions.php:449
+#: includes/cart/functions.php:455
 msgid "includes %s tax"
 msgstr ""
 
-#: includes/cart/functions.php:451
+#: includes/cart/functions.php:457
 msgid "excludes %s tax"
 msgstr ""
 
-#: includes/cart/functions.php:1158 includes/cart/functions.php:1226
+#: includes/cart/functions.php:1164 includes/cart/functions.php:1232
 #: templates/shortcode-profile-editor.php:22
 msgid "Success"
 msgstr ""
 
-#: includes/cart/functions.php:1159
+#: includes/cart/functions.php:1165
 msgid "Cart saved successfully. You can restore your cart using this URL:"
 msgstr ""
 
-#: includes/cart/functions.php:1196 includes/cart/functions.php:1213
+#: includes/cart/functions.php:1202 includes/cart/functions.php:1219
 msgid "Cart restoration failed. Invalid token."
 msgstr ""
 
-#: includes/cart/functions.php:1204 includes/cart/functions.php:1216
+#: includes/cart/functions.php:1210 includes/cart/functions.php:1222
 msgid "The cart cannot be restored. Invalid token."
 msgstr ""
 
-#: includes/cart/functions.php:1226
+#: includes/cart/functions.php:1232
 msgid "Cart restored successfully."
 msgstr ""
 
@@ -5647,8 +5651,8 @@ msgstr ""
 msgid "  Product: %s - %s"
 msgstr ""
 
-#: includes/class-edd-cli.php:419 includes/class-edd-html-elements.php:208
-#: includes/shortcodes.php:259
+#: includes/class-edd-cli.php:419 includes/class-edd-html-elements.php:209
+#: includes/shortcodes.php:270
 msgid "No discounts found"
 msgstr ""
 
@@ -5752,11 +5756,11 @@ msgstr ""
 msgid "No customer attached"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:216
+#: includes/class-edd-html-elements.php:217
 msgid "Select a discount"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:571
+#: includes/class-edd-html-elements.php:572
 msgid "Enter username"
 msgstr ""
 
@@ -5786,7 +5790,7 @@ msgid "The total earnings for the specified product"
 msgstr ""
 
 #: includes/class-edd-register-meta.php:89
-msgid "The nubmer of sales for the specified product."
+msgid "The number of sales for the specified product."
 msgstr ""
 
 #: includes/class-edd-register-meta.php:103
@@ -5826,7 +5830,7 @@ msgid "The Customer ID associated with the payment."
 msgstr ""
 
 #: includes/class-edd-register-meta.php:231
-msgid "The User ID assocaited with the payment."
+msgid "The User ID associated with the payment."
 msgstr ""
 
 #: includes/class-edd-register-meta.php:245
@@ -5842,7 +5846,7 @@ msgid "The purchase total for this payment."
 msgstr ""
 
 #: includes/class-edd-register-meta.php:287
-msgid "Identifes if the purchase was made in Test or Live mode."
+msgid "Identifies if the purchase was made in Test or Live mode."
 msgstr ""
 
 #: includes/class-edd-register-meta.php:301
@@ -7436,37 +7440,45 @@ msgstr ""
 msgid "Type to search all %s"
 msgstr ""
 
-#: includes/scripts.php:223
+#: includes/scripts.php:224
+msgid "Type to search all Countries"
+msgstr ""
+
+#: includes/scripts.php:225
+msgid "Type to search all States/Provinces"
+msgstr ""
+
+#: includes/scripts.php:226
 msgid ""
 "We are sorry but your browser is not compatible with this kind of file "
 "upload. Please upgrade your browser."
 msgstr ""
 
-#: includes/shortcodes.php:283
+#: includes/shortcodes.php:294
 msgid "Purchase All Items"
 msgstr ""
 
-#: includes/shortcodes.php:673
+#: includes/shortcodes.php:684
 msgid "Sorry, trouble retrieving payment receipt."
 msgstr ""
 
-#: includes/shortcodes.php:708
+#: includes/shortcodes.php:719
 msgid "You must be logged in to view this payment receipt."
 msgstr ""
 
-#: includes/shortcodes.php:843
+#: includes/shortcodes.php:854
 msgid "The passwords you entered do not match. Please try again."
 msgstr ""
 
-#: includes/shortcodes.php:853
+#: includes/shortcodes.php:864
 msgid "The email you entered is invalid. Please enter a valid email."
 msgstr ""
 
-#: includes/shortcodes.php:858
+#: includes/shortcodes.php:869
 msgid "The email you entered belongs to another user. Please use another."
 msgstr ""
 
-#: includes/shortcodes.php:933
+#: includes/shortcodes.php:944
 msgid "Error removing email address from profile. Please try again later."
 msgstr ""
 
@@ -7860,22 +7872,22 @@ msgstr ""
 msgid "The easiest way to sell digital products with WordPress."
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:493
+#: includes/admin/payments/view-order-details.php:501
 msgctxt "Address City"
 msgid "City:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:498
+#: includes/admin/payments/view-order-details.php:506
 msgctxt "Zip / Postal code of address"
 msgid "Zip / Postal Code:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:505
+#: includes/admin/payments/view-order-details.php:513
 msgctxt "Address country"
 msgid "Country:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:519
+#: includes/admin/payments/view-order-details.php:528
 msgctxt "State / province of address"
 msgid "State / Province:"
 msgstr ""
@@ -7895,17 +7907,17 @@ msgctxt "Apply discount at checkout"
 msgid "Apply"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:244
+#: includes/class-edd-html-elements.php:245
 msgctxt "plural: Example: \"All Categories\""
 msgid "All %s"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:334
+#: includes/class-edd-html-elements.php:335
 msgctxt "all dropdown items"
 msgid "All"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:335
+#: includes/class-edd-html-elements.php:336
 msgctxt "no dropdown items"
 msgid "None"
 msgstr ""
@@ -7915,7 +7927,7 @@ msgctxt "download post type name"
 msgid "%2$s"
 msgstr ""
 
-#: includes/shortcodes.php:627
+#: includes/shortcodes.php:638
 msgctxt "download post type name"
 msgid "No %s found"
 msgstr ""
