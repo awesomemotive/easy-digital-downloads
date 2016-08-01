@@ -1519,7 +1519,7 @@ function edd_apply_preset_discount() {
 add_action( 'init', 'edd_apply_preset_discount', 999 );
 
 /**
- * Updates discounts that are expired or at max use (that aren't already marked as so) as inactive or expired
+ * Updates discounts that are expired or at max use (that are not already marked as so) as inactive or expired
  *
  * @since 2.6
  * @return void
@@ -1528,17 +1528,18 @@ function edd_discount_status_cleanup() {
 	global $wpdb;
 
 	// We only want to get 25 active discounts to check their status per step here
-	$cron_discount_number = apply_filters( 'edd_discount_status_cleanup_count', 25 );
+	$cron_discount_number   = apply_filters( 'edd_discount_status_cleanup_count', 25 );
 	$discount_ids_to_update = array();
 	$needs_inactive_meta    = array();
 	$needs_expired_meta     = array();
 
 	// start by getting the last 25 that hit their maximum usage
 	$args = array(
-		'post_status'    => array( 'active' ),
-		'posts_per_page' => $cron_discount_number,
-		'order'          => 'ASC',
-		'meta_query'     => array(
+		'suppress_filters' => false,
+		'post_status'      => array( 'active' ),
+		'posts_per_page'   => $cron_discount_number,
+		'order'            => 'ASC',
+		'meta_query'       => array(
 			'relation' => 'AND',
 			array(
 				'key'     => '_edd_discount_uses',
@@ -1552,14 +1553,15 @@ function edd_discount_status_cleanup() {
 				'compare' => 'NOT IN',
 			),
 			array(
-				'key'     => '_edd_discount_uses',
-				'value'   => '',
-				'compare' => '!=',
+				'key'     => '_edd_discount_max_uses',
+				'compare' => 'EXISTS',
 			),
 		),
 	);
 
+	add_filter( 'posts_request', 'edd_filter_discount_code_cleanup' );
 	$discounts = edd_get_discounts( $args );
+	remove_filter( 'posts_request', 'edd_filter_discount_code_cleanup' );
 
 	if ( $discounts ) {
 		foreach ( $discounts as $discount ) {
@@ -1604,19 +1606,37 @@ function edd_discount_status_cleanup() {
 	}
 
 	$discount_ids_to_update = array_unique( $discount_ids_to_update );
-	$discount_ids_string    = "'" . implode( "','", $discount_ids_to_update ) . "'";
-	$sql = "UPDATE $wpdb->posts SET post_status = 'inactive' WHERE ID IN ($discount_ids_string)";
-	$wpdb->query( $sql );
+	if ( ! empty ( $discount_ids_to_update ) ) {
+		$discount_ids_string = "'" . implode( "','", $discount_ids_to_update ) . "'";
+		$sql                 = "UPDATE $wpdb->posts SET post_status = 'inactive' WHERE ID IN ($discount_ids_string)";
+		$wpdb->query( $sql );
+	}
 
 	$needs_inactive_meta = array_unique( $needs_inactive_meta );
-	$inactive_ids = "'" . implode( "','", $needs_inactive_meta ) . "'";
-	$sql = "UPDATE $wpdb->postmeta SET meta_value = 'inactive' WHERE meta_key = '_edd_discount_status' AND post_id IN ($inactive_ids)";
-	$wpdb->query( $sql );
+	if ( ! empty( $needs_inactive_meta ) ) {
+		$inactive_ids = "'" . implode( "','", $needs_inactive_meta ) . "'";
+		$sql          = "UPDATE $wpdb->postmeta SET meta_value = 'inactive' WHERE meta_key = '_edd_discount_status' AND post_id IN ($inactive_ids)";
+		$wpdb->query( $sql );
+	}
 
 	$needs_expired_meta = array_unique( $needs_expired_meta );
-	$expired_ids = "'" . implode( "','", $needs_expired_meta ) . "'";
-	$sql = "UPDATE $wpdb->postmeta SET meta_value = 'inactive' WHERE meta_key = '_edd_discount_status' AND post_id IN ($expired_ids)";
-	$wpdb->query( $sql );
+	if ( ! empty( $needs_expired_meta ) ) {
+		$expired_ids = "'" . implode( "','", $needs_expired_meta ) . "'";
+		$sql         = "UPDATE $wpdb->postmeta SET meta_value = 'inactive' WHERE meta_key = '_edd_discount_status' AND post_id IN ($expired_ids)";
+		$wpdb->query( $sql );
+	}
 
 }
 add_action( 'edd_daily_scheduled_events', 'edd_discount_status_cleanup' );
+
+/**
+ * Used during edd_discount_status_cleanup to filter out a meta query properly
+ *
+ * @since  2.6.6
+ * @param  string  $sql The unmodified SQL statement.
+ * @return string      The sql statement with removed quotes from the column.
+ */
+function edd_filter_discount_code_cleanup( $sql ) {
+	return str_replace( "'mt1.meta_value'", "mt1.meta_value", $sql );
+}
+
