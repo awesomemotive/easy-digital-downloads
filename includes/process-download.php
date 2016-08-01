@@ -739,8 +739,8 @@ function edd_readfile_chunked( $file, $retbytes = true ) {
  * Used to process an old URL format for downloads
  *
  * @since  2.3
- * @param  array $args Arguements provided to download a file
- * @return array       Same arguements, with the status of verification added
+ * @param  array $args Arguments provided to download a file
+ * @return array       Same arguments, with the status of verification added
  */
 function edd_process_legacy_download_url( $args ) {
 
@@ -760,8 +760,8 @@ function edd_process_legacy_download_url( $args ) {
  * Used to process a signed URL for processing downloads
  *
  * @since  2.3
- * @param  array $args Arguements provided to download a file
- * @return array       Same arguements, with the status of verification added
+ * @param  array $args Arguments provided to download a file
+ * @return array       Same arguments, with the status of verification added
  */
 function edd_process_signed_download_url( $args ) {
 

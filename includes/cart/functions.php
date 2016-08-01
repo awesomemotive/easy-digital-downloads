@@ -199,6 +199,8 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		$options['price_id'] = explode( ',', $options['price_id'] );
 	}
 
+	$items = array();
+
 	if ( isset( $options['price_id'] ) && is_array( $options['price_id'] ) ) {
 
 		// Process multiple price options at once
@@ -233,8 +235,10 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		);
 	}
 
-	foreach ( $items as $item ) {
-		$to_add = apply_filters( 'edd_add_to_cart_item', $item );
+	foreach ( $items as &$item ) {
+		$item = apply_filters( 'edd_add_to_cart_item', $item );
+		$to_add = $item;
+
 		if ( ! is_array( $to_add ) )
 			return;
 
@@ -259,9 +263,11 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		}
 	}
 
+	unset( $item );
+
 	EDD()->session->set( 'edd_cart', $cart );
 
-	do_action( 'edd_post_add_to_cart', $download_id, $options );
+	do_action( 'edd_post_add_to_cart', $download_id, $options, $items );
 
 	// Clear all the checkout errors, if any
 	edd_clear_errors();
