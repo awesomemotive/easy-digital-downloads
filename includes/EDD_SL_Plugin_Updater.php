@@ -187,7 +187,7 @@ class EDD_SL_Plugin_Updater {
 			# <tr class="plugin-update-tr"><td colspan="' . $wp_list_table->get_column_count() . '" class="plugin-update colspanchange">
 			echo '<tr class="plugin-update-tr" id="' . $this->slug . '-update" data-slug="' . $this->slug . '" data-plugin="' . $this->slug . '/' . $file . '">';
 			echo '<td colspan="3" class="plugin-update colspanchange">';
-			echo '<div class="update-message notice inline notice-warning notice-alt"><p>';
+			echo '<div class="update-message notice inline notice-warning notice-alt">';
 
 			$changelog_link = self_admin_url( 'index.php?edd_sl_action=view_plugin_changelog&plugin=' . $this->name . '&slug=' . $this->slug . '&TB_iframe=true&width=772&height=911' );
 
@@ -213,7 +213,7 @@ class EDD_SL_Plugin_Updater {
 
 			do_action( "in_plugin_update_message-{$file}", $plugin, $version_info );
 
-			echo '</p></div></td></tr>';
+			echo '</div></td></tr>';
 		}
 	}
 
