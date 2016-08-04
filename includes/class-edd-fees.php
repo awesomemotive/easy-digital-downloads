@@ -114,6 +114,8 @@ class EDD_Fees {
 		// Update fees
 		EDD()->session->set( 'edd_cart_fees', $fees );
 
+		do_action( 'edd_post_add_fee', $fees, $key, $args );
+
 		return $fees;
 	}
 
@@ -134,6 +136,8 @@ class EDD_Fees {
 		if ( isset( $fees[ $id ] ) ) {
 			unset( $fees[ $id ] );
 			EDD()->session->set( 'edd_cart_fees', $fees );
+
+			do_action( 'edd_post_remove_fee', $fees, $id );
 		}
 
 		return $fees;
