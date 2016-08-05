@@ -94,7 +94,7 @@ function edd_get_cart_content_details() {
 
 		$total      = $subtotal - $discount + $tax;
 
-		// Do not allow totals to go negatve
+		// Do not allow totals to go negative
 		if( $total < 0 ) {
 			$total = 0;
 		}
