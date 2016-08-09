@@ -314,3 +314,37 @@ function edd_update_payment_backwards_compat( $meta_id, $object_id, $meta_key, $
 
 }
 add_action( 'updated_postmeta', 'edd_update_payment_backwards_compat', 10, 4 );
+
+/**
+ * Deletes edd_stats_ transients that have expired to prevent database clogs
+ *
+ * @since 2.6.7
+ * @return void
+*/
+function edd_cleanup_stats_transients() {
+	global $wpdb;
+
+	if ( defined( 'WP_SETUP_CONFIG' ) ) {
+		return;
+	}
+
+	if ( defined( 'WP_INSTALLING' ) ) {
+		return;
+	}
+
+	$now        = current_time( 'timestamp' );
+	$transients = $wpdb->get_results( "SELECT option_name, option_value FROM $wpdb->options WHERE option_name LIKE '%_transient_timeout_edd_stats_%' AND option_value+0 < $now LIMIT 0, 200;" );
+
+	if( ! empty( $transients ) ) {
+
+		foreach( $transients as $transient ) {
+
+			$name = str_replace( '_transient_timeout_', '', $transient->option_name );
+			delete_transient( $name );
+
+		}
+
+	}
+
+}
+add_action( 'edd_daily_scheduled_events', 'edd_cleanup_stats_transients' );
