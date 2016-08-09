@@ -334,15 +334,23 @@ function edd_cleanup_stats_transients() {
 
 	$now        = current_time( 'timestamp' );
 	$transients = $wpdb->get_results( "SELECT option_name, option_value FROM $wpdb->options WHERE option_name LIKE '%\_transient_timeout\_edd\_stats\_%' AND option_value+0 < $now LIMIT 0, 200;" );
+	$to_delete  = array();
 
 	if( ! empty( $transients ) ) {
 
 		foreach( $transients as $transient ) {
 
-			$name = str_replace( '_transient_timeout_', '', $transient->option_name );
-			delete_transient( $name );
+			$to_delete[] = $transient->option_name;
+			$to_delete[] = str_replace( '_timeout', '', $transient->option_name );
 
 		}
+
+	}
+
+	if ( ! empty( $to_delete ) ) {
+
+		$option_names = implode( "','", $to_delete );
+		$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name IN ('$option_names')"  );
 
 	}
 
