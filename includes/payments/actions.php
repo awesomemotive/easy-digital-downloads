@@ -333,7 +333,7 @@ function edd_cleanup_stats_transients() {
 	}
 
 	$now        = current_time( 'timestamp' );
-	$transients = $wpdb->get_results( "SELECT option_name, option_value FROM $wpdb->options WHERE option_name LIKE '%_transient_timeout_edd_stats_%' AND option_value+0 < $now LIMIT 0, 200;" );
+	$transients = $wpdb->get_results( "SELECT option_name, option_value FROM $wpdb->options WHERE option_name LIKE '%\_transient_timeout\_edd\_stats\_%' AND option_value+0 < $now LIMIT 0, 200;" );
 
 	if( ! empty( $transients ) ) {
 
