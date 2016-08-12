@@ -1,7 +1,7 @@
 === Easy Digital Downloads ===
 Author URI: https://pippinsplugins.com
 Plugin URI: https://easydigitaldownloads.com
-Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, topher1kenobe, sksmatt, SpencerFinnell, johnstonphilip
+Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip
 Donate link: https://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
@@ -31,7 +31,7 @@ Features of the plugin include:
 * Detailed purchase and file download logs
 * Data export options for CSV and PDF
 * Add functionality with many [extensions](https://easydigitaldownloads.com/downloads/?utm_source=extensions&utm_medium=description_tab&utm_content=extensions&utm_campaign=readme)
-* Developer friendly with dozens of actions and filters. [View Codex](https://easydigitaldownloads.com/codex/index.html)
+* Developer friendly with dozens of actions and filters. [View developer documentation](http://docs.easydigitaldownloads.com/collection/174-developer-docs)
 
 More information at [Easy Digital Downloads.com](https://easydigitaldownloads.com/?utm_source=home&utm_medium=description_tab&utm_content=home&utm_campaign=readme).
 
