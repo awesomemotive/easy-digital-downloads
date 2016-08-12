@@ -349,14 +349,6 @@ function edd_reports_tab_export() {
 
 					<?php do_action( 'edd_reports_tab_export_content_top' ); ?>
 
-					<div class="postbox edd-export-pdf-sales-earnings">
-						<h3><span><?php _e( 'Export PDF of Sales and Earnings', 'easy-digital-downloads' ); ?></span></h3>
-						<div class="inside">
-							<p><?php _e( 'Download a PDF of Sales and Earnings reports for all products for the current year.', 'easy-digital-downloads' ); ?> <?php _e( 'Date range reports will be coming soon.', 'easy-digital-downloads' ); ?></p>
-							<p><a class="button" href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'generate_pdf' ) ), 'edd_generate_pdf' ); ?>"><?php _e( 'Generate PDF', 'easy-digital-downloads' ); ?></a></p>
-						</div><!-- .inside -->
-					</div><!-- .postbox -->
-
 					<div class="postbox edd-export-sales-earnings">
 						<h3><span><?php _e( 'Export Earnings and Sales Stats', 'easy-digital-downloads' ); ?></span></h3>
 						<div class="inside">
