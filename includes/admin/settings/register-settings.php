@@ -1388,7 +1388,7 @@ function edd_payment_icons_callback( $args ) {
 
 					} else {
 
-						$image       = edd_locate_template( 'images' . DIRECTORY_SEPARATOR . 'icons' . DIRECTORY_SEPARATOR . $card . '.gif', false );
+						$image       = edd_locate_template( 'images' . DIRECTORY_SEPARATOR . 'icons' . DIRECTORY_SEPARATOR . $card . '.png', false );
 						$content_dir = WP_CONTENT_DIR;
 
 						if( function_exists( 'wp_normalize_path' ) ) {
