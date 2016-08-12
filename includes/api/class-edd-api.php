@@ -999,7 +999,7 @@ class EDD_API {
 
 		}
 
-		return apply_filters( 'edd_api_customers', $customers );
+		return apply_filters( 'edd_api_customers', $customers, $this );
 	}
 
 	/**
@@ -1047,7 +1047,7 @@ class EDD_API {
 			}
 		}
 
-		return apply_filters( 'edd_api_products', $products );
+		return apply_filters( 'edd_api_products', $products, $this );
 	}
 
 	/**
@@ -1243,7 +1243,7 @@ class EDD_API {
 			if ( ! empty( $error ) )
 				return $error;
 
-			return apply_filters( 'edd_api_stats_sales', $sales );
+			return apply_filters( 'edd_api_stats_sales', $sales, $this );
 		} elseif ( $args['type'] == 'earnings' ) {
 			if ( $args['product'] == null ) {
 				if ( $args['date'] == null ) {
@@ -1353,24 +1353,24 @@ class EDD_API {
 			if ( ! empty( $error ) )
 				return $error;
 
-			return apply_filters( 'edd_api_stats_earnings', $earnings );
+			return apply_filters( 'edd_api_stats_earnings', $earnings, $this );
 		} elseif ( $args['type'] == 'customers' ) {
 			if ( version_compare( $edd_version, '2.3', '<' ) || ! edd_has_upgrade_completed( 'upgrade_customer_payments_association' ) ) {
 				global $wpdb;
 				$stats = array();
 				$count = $wpdb->get_col( "SELECT COUNT(DISTINCT meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email'" );
 				$stats['customers']['total_customers'] = $count[0];
-				return apply_filters( 'edd_api_stats_customers', $stats );
+				return apply_filters( 'edd_api_stats_customers', $stats, $this );
 			} else {
 				$customers = new EDD_DB_Customers();
 				$stats['customers']['total_customers'] = $customers->count();
-				return apply_filters( 'edd_api_stats_customers', $stats );
+				return apply_filters( 'edd_api_stats_customers', $stats, $this );
 			}
 		} elseif ( empty( $args['type'] ) ) {
 			$stats = array_merge( $stats, $this->get_default_sales_stats() );
 			$stats = array_merge ( $stats, $this->get_default_earnings_stats() );
 
-			return apply_filters( 'edd_api_stats', array( 'stats' => $stats ) );
+			return apply_filters( 'edd_api_stats', array( 'stats' => $stats, $this ) );
 		}
 	}
 
@@ -1458,7 +1458,7 @@ class EDD_API {
 				$i++;
 			}
 		}
-		return apply_filters( 'edd_api_sales', $sales );
+		return apply_filters( 'edd_api_sales', $sales, $this );
 	}
 
 	/**
@@ -1544,7 +1544,7 @@ class EDD_API {
 
 		}
 
-		return apply_filters( 'edd_api_discounts', $discount_list );
+		return apply_filters( 'edd_api_discounts', $discount_list, $this );
 	}
 
 	/**
@@ -1649,7 +1649,7 @@ class EDD_API {
 
 		}
 
-		return apply_filters( 'edd_api_download_logs', $downloads );
+		return apply_filters( 'edd_api_download_logs', $downloads, $this );
 	}
 
 	/**
@@ -1709,7 +1709,7 @@ class EDD_API {
 		$data['info']['site']['decimal_separator']   = edd_get_option( 'decimal_separator', '.' );
 		$data['info']['site']['thousands_separator'] = edd_get_option( 'thousands_separator', ',' );
 
-		return apply_filters( 'edd_api_info', $data );
+		return apply_filters( 'edd_api_info', $data, $this );
 	}
 
 	/**
