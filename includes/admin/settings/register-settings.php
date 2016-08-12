@@ -676,15 +676,6 @@ function edd_get_registered_settings() {
 						'name' => '<h3>' . __( 'Misc Settings', 'easy-digital-downloads' ) . '</h3>',
 						'type' => 'header',
 					),
-					'enable_ajax_cart' => array(
-						'id'   => 'enable_ajax_cart',
-						'name' => __( 'Enable AJAX', 'easy-digital-downloads' ),
-						'desc' => __( 'Check this to enable AJAX for the shopping cart.', 'easy-digital-downloads' ),
-						'type' => 'checkbox',
-						'std'  => '1',
-						'tooltip_title' => __( 'Enabling AJAX', 'easy-digital-downloads' ),
-						'tooltip_desc'  => __( 'With AJAX enabled, customers can perform cart actions like adding and removing items from their shopping cart without pages having to be reloaded. This also creates fewer steps during the checkout process.', 'easy-digital-downloads' ),
-					),
 					'redirect_on_add' => array(
 						'id'   => 'redirect_on_add',
 						'name' => __( 'Redirect to Checkout', 'easy-digital-downloads' ),
