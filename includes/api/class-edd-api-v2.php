@@ -145,7 +145,7 @@ class EDD_API_V2 extends EDD_API_V1 {
 			}
 		}
 
-		return $products;
+		return apply_filters( 'edd_api_products_product_v2', $product );
 	}
 
 	/**
@@ -326,7 +326,7 @@ class EDD_API_V2 extends EDD_API_V1 {
 
 		}
 
-		return $customers;
+		return apply_filters( 'edd_api_customers_v2', $customers, $this );
 	}
 
 	/**
@@ -437,7 +437,7 @@ class EDD_API_V2 extends EDD_API_V1 {
 				$i++;
 			}
 		}
-		return $sales;
+		return apply_filters( 'edd_api_sales_v2', $sales, $this );
 	}
 
 }
