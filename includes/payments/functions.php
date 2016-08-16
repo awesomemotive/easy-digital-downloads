@@ -166,12 +166,6 @@ function edd_insert_payment( $payment_data = array() ) {
 		$payment->date = $payment_data['post_date'];
 	}
 
-	if ( edd_get_option( 'enable_sequential' ) ) {
-		$number          = edd_get_next_payment_number();
-		$payment->number = edd_format_payment_number( $number );
-		update_option( 'edd_last_payment_number', $number );
-	}
-
 	// Clear the user's purchased cache
 	delete_transient( 'edd_user_' . $payment_data['user_info']['id'] . '_purchases' );
 
