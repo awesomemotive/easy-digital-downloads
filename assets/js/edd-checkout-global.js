@@ -314,7 +314,8 @@ function recalculate_taxes(state) {
 	var postData = {
 		action: 'edd_recalculate_taxes',
 		billing_country: $edd_cc_address.find('#billing_country').val(),
-		state: state
+		state: state,
+		card_zip: $edd_cc_address.find('input[name=card_zip]').val()
 	};
 
 	jQuery.ajax({
