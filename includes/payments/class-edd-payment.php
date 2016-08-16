@@ -581,7 +581,7 @@ class EDD_Payment {
 				$number       = edd_get_next_payment_number();
 				$this->number = edd_format_payment_number( $number );
 				$this->update_meta( '_edd_payment_number', $this->number );
-				update_option( 'edd_last_payment_number', $this->number );
+				update_option( 'edd_last_payment_number', $number );
 			}
 
 			$this->update_meta( '_edd_payment_meta', $this->payment_meta );
