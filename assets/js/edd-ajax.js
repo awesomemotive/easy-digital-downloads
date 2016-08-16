@@ -441,6 +441,13 @@ jQuery(document).ready(function ($) {
 
 		return false;
 	}
+
+	// If is_checkout, recalculate sales tax on postalCode change.
+	$('body').on('change', '#edd_cc_address input[name=card_zip]', function () {
+		if (typeof edd_global_vars !== 'undefined') {
+			recalculate_taxes();
+		}
+	});
 });
 
 function edd_load_gateway( payment_mode ) {
