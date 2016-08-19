@@ -269,7 +269,6 @@ add_action( 'init', 'edd_setup_download_taxonomies', 0 );
  * @return array            Associative array of labels (name = plural)
  */
 function edd_get_taxonomy_labels( $taxonomy = 'download_category' ) {
-
 	$allowed_taxonomies = apply_filters( 'edd_allowed_download_taxonomies', array( 'download_category', 'download_tag' ) );
 
 	if ( ! in_array( $taxonomy, $allowed_taxonomies ) ) {
@@ -280,17 +279,18 @@ function edd_get_taxonomy_labels( $taxonomy = 'download_category' ) {
 	$taxonomy = get_taxonomy( $taxonomy );
 
 	if ( false !== $taxonomy ) {
-		$singular = $taxonomy->labels->singular_name;
-		$name     = $taxonomy->labels->name;
+		$singular  = $taxonomy->labels->singular_name;
+		$name      = $taxonomy->labels->name;
+		$menu_name = $taxonomy->labels->menu_name;
 
 		$labels = array(
 			'name'          => $name,
 			'singular_name' => $singular,
+			'menu_name'     => $menu_name,
 		);
 	}
 
 	return apply_filters( 'edd_get_taxonomy_labels', $labels, $taxonomy );
-
 }
 
 /**
