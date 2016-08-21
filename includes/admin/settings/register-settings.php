@@ -247,7 +247,7 @@ function edd_get_registered_settings() {
 					'purchase_page' => array(
 						'id'          => 'purchase_page',
 						'name'        => __( 'Checkout Page', 'easy-digital-downloads' ),
-						'desc'        => __( 'This is the checkout page where buyers will complete their purchases. The [download_checkout] short code must be on this page.', 'easy-digital-downloads' ),
+						'desc'        => __( 'This is the checkout page where buyers will complete their purchases. The [download_checkout] shortcode must be on this page.', 'easy-digital-downloads' ),
 						'type'        => 'select',
 						'options'     => edd_get_pages(),
 						'chosen'      => true,
@@ -256,7 +256,7 @@ function edd_get_registered_settings() {
 					'success_page' => array(
 						'id'          => 'success_page',
 						'name'        => __( 'Success Page', 'easy-digital-downloads' ),
-						'desc'        => __( 'This is the page buyers are sent to after completing their purchases. The [edd_receipt] short code should be on this page.', 'easy-digital-downloads' ),
+						'desc'        => __( 'This is the page buyers are sent to after completing their purchases. The [edd_receipt] shortcode should be on this page.', 'easy-digital-downloads' ),
 						'type'        => 'select',
 						'options'     => edd_get_pages(),
 						'chosen'      => true,
@@ -274,7 +274,7 @@ function edd_get_registered_settings() {
 					'purchase_history_page' => array(
 						'id'          => 'purchase_history_page',
 						'name'        => __( 'Purchase History Page', 'easy-digital-downloads' ),
-						'desc'        => __( 'This page shows a complete purchase history for the current user, including download links. The [purchase_history] short code should be on this page.', 'easy-digital-downloads' ),
+						'desc'        => __( 'This page shows a complete purchase history for the current user, including download links. The [purchase_history] shortcode should be on this page.', 'easy-digital-downloads' ),
 						'type'        => 'select',
 						'options'     => edd_get_pages(),
 						'chosen'      => true,
@@ -283,7 +283,7 @@ function edd_get_registered_settings() {
 					'login_redirect_page' => array(
 						'id'          => 'login_redirect_page',
 						'name'        => __( 'Login Redirect Page', 'easy-digital-downloads' ),
-						'desc'        => __( 'This is the page where buyers will be redirected by default once they log in. The [edd_login redirect="'.trailingslashit( home_url() ).'"] short code with the redirect attribute can override this setting.', 'easy-digital-downloads' ),
+						'desc'        => __( 'This is the page where buyers will be redirected by default once they log in. The [edd_login redirect="'.trailingslashit( home_url() ).'"] shortcode with the redirect attribute can override this setting.', 'easy-digital-downloads' ),
 						'type'        => 'select',
 						'options'     => edd_get_pages(),
 						'chosen'      => true,
