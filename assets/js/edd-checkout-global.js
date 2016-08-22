@@ -300,6 +300,7 @@ window.EDD_Checkout = (function($) {
 // init on document.ready
 window.jQuery(document).ready(EDD_Checkout.init);
 
+var ajax_tax_count = 0;
 function recalculate_taxes(state) {
 
 	if( '1' != edd_global_vars.taxes_enabled )
@@ -318,6 +319,7 @@ function recalculate_taxes(state) {
 		card_zip: $edd_cc_address.find('input[name=card_zip]').val()
 	};
 
+	var current_ajax_count = ++ajax_tax_count;
 	jQuery.ajax({
 		type: "POST",
 		data: postData,
@@ -327,17 +329,24 @@ function recalculate_taxes(state) {
 			withCredentials: true
 		},
 		success: function (tax_response) {
-			jQuery('#edd_checkout_cart_form').replaceWith(tax_response.html);
-			jQuery('.edd_cart_amount').html(tax_response.total);
-			var tax_data = new Object();
-			tax_data.postdata = postData;
-			tax_data.response = tax_response;
-			jQuery('body').trigger('edd_taxes_recalculated', [ tax_data ]);
+			// Only update tax info if this response is the most recent ajax call.
+			// Avoids bug with form autocomplete firing multiple ajax calls at the same time and not
+			// being able to predict the call response order.
+			if (current_ajax_count === ajax_tax_count) {
+				jQuery('#edd_checkout_cart_form').replaceWith(tax_response.html);
+				jQuery('.edd_cart_amount').html(tax_response.total);
+				var tax_data = new Object();
+				tax_data.postdata = postData;
+				tax_data.response = tax_response;
+				jQuery('body').trigger('edd_taxes_recalculated', [ tax_data ]);
+			}
 		}
 	}).fail(function (data) {
 		if ( window.console && window.console.log ) {
 			console.log( data );
-			jQuery('body').trigger('edd_taxes_recalculated', [ tax_data ]);
+			if (current_ajax_count === ajax_tax_count) {
+				jQuery('body').trigger('edd_taxes_recalculated', [ tax_data ]);
+			}
 		}
 	});
 }
