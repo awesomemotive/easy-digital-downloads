@@ -93,14 +93,15 @@ class EDD_HTML_Elements {
 				if( ! in_array( $item, $options ) ) {
 					if ( strpos( $item, '_' ) !== false ) {
 						$pieces = explode( '_' , $item );
-						if ( empty( $pieces[0] ) && ! isset( $pieces[1] ) );
-						$prices = edd_get_variable_prices( (int) $pieces[0] );
-						foreach ( $prices as $key => $value ) {
-							$name   = isset( $value['name'] )   ? $value['name']   : '';
-							$amount = isset( $value['amount'] ) ? $value['amount'] : '';
-							$index  = isset( $value['index'] )  ? $value['index']  : $key;
-							if ( $name && $index && (int) $pieces[1] === (int) $index  ) {
-								$options[ absint( $product->ID ) . '_' . $index ] = esc_html( get_the_title( (int) $pieces[0] ) . ': ' . $name );
+						if ( ! empty( $pieces[0] ) && isset( $pieces[1] ) && absint( $pieces[1] ) > -1 ) {
+							$prices = edd_get_variable_prices( (int) $pieces[0] );
+							foreach ( $prices as $key => $value ) {
+								$name   = isset( $value['name'] )   ? $value['name']   : '';
+								$amount = isset( $value['amount'] ) ? $value['amount'] : '';
+								$index  = isset( $value['index'] )  ? $value['index']  : $key;
+								if ( $name && $index && (int) $pieces[1] === (int) $index  ) {
+									$options[ absint( $product->ID ) . '_' . $index ] = esc_html( get_the_title( (int) $pieces[0] ) . ': ' . $name );
+								}
 							}
 						}
 					} else {
@@ -112,14 +113,15 @@ class EDD_HTML_Elements {
 			if ( ! in_array( $args['selected'], $options ) ) {
 				if ( strpos( $args['selected'], '_' ) !== false ) {
 					$pieces = explode( '_' , $item );
-					if ( empty( $pieces[0] ) && ! isset( $pieces[1] ) );
-					$prices = edd_get_variable_prices( (int) $pieces[0] );
-					foreach ( $prices as $key => $value ) {
-						$name   = isset( $value['name'] )   ? $value['name']   : '';
-						$amount = isset( $value['amount'] ) ? $value['amount'] : '';
-						$index  = isset( $value['index'] )  ? $value['index']  : $key;
-						if ( $name && $index && (int) $pieces[1] === (int) $index  ) {
-							$options[ absint( $product->ID ) . '_' . $index ] = esc_html( get_the_title( (int) $pieces[0] ) . ': ' . $name );
+					if ( ! empty( $pieces[0] ) && isset( $pieces[1] ) && absint( $pieces[1] ) > -1 ) {
+						$prices = edd_get_variable_prices( (int) $pieces[0] );
+						foreach ( $prices as $key => $value ) {
+							$name   = isset( $value['name'] )   ? $value['name']   : '';
+							$amount = isset( $value['amount'] ) ? $value['amount'] : '';
+							$index  = isset( $value['index'] )  ? $value['index']  : $key;
+							if ( $name && $index && (int) $pieces[1] === (int) $index  ) {
+								$options[ absint( $product->ID ) . '_' . $index ] = esc_html( get_the_title( (int) $pieces[0] ) . ': ' . $name );
+							}
 						}
 					}
 				} else {
