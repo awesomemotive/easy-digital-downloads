@@ -90,7 +90,7 @@ class EDD_HTML_Elements {
 		// This ensures that any selected products are included in the drop down
 		if( is_array( $args['selected'] ) ) {
 			foreach( $args['selected'] as $item ) {
-				if( ! in_array( $item, $options ) ) {
+				if ( ! in_array( $item, $options ) ) {
 					if ( strpos( $item, '_' ) !== false ) {
 						$pieces = explode( '_' , $item );
 						if ( ! empty( $pieces[0] ) && isset( $pieces[1] ) && absint( $pieces[1] ) > -1 ) {
@@ -130,7 +130,7 @@ class EDD_HTML_Elements {
 			}
 		}
 
-		if( ! $args['bundles'] ) {
+		if ( ! $args['bundles'] ) {
 			$args['class'] .= ' no-bundles';
 		}
 
@@ -426,10 +426,10 @@ class EDD_HTML_Elements {
 				$output .= '<option value="-1"' . $selected . '>' . esc_html( $args['show_option_none'] ) . '</option>';
 			}
 
-			foreach( $args['options'] as $key => $option ) {
+			foreach ( $args['options'] as $key => $option ) {
 
-				if( $args['multiple'] && is_array( $args['selected'] ) ) {
-					$selected = selected( true, in_array( $key, $args['selected'], true ), false );
+				if ( $args['multiple'] && is_array( $args['selected'] ) ) {
+					$selected = selected( true, in_array( $key, $args['selected'] ), false );
 				} else {
 					$selected = selected( $args['selected'], $key, false );
 				}
