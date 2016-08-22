@@ -238,16 +238,26 @@ function edd_store_discount( $details, $discount_id = null ) {
 
 	if( ! empty( $meta['product_reqs'] ) ) {
 		foreach( $meta['product_reqs'] as $key => $product ) {
-			if( 0 === intval( $product ) ) {
-				unset( $meta['product_reqs'][ $key ] );
+			if ( 0 === intval( $product ) ) {
+				$pieces = explode( '_', $product );
+				if ( isset( $pieces[0] ) && isset( $pieces[1] ) && !isset( $pieces[2] ) && absint( $pieces[0] ) && absint( $pieces[1] ) ) {
+					// variation
+				} else {
+					unset( $meta['product_reqs'][ $key ] );
+				}
 			}
 		}
 	}
 
 	if( ! empty( $meta['excluded_products'] ) ) {
 		foreach( $meta['excluded_products'] as $key => $product ) {
-			if( 0 === intval( $product ) ) {
-				unset( $meta['excluded_products'][ $key ] );
+			if ( 0 === intval( $product ) ) {
+				$pieces = explode( '_', $product );
+				if ( isset( $pieces[0] ) && isset( $pieces[1] ) && !isset( $pieces[2] ) && absint( $pieces[0] ) && absint( $pieces[1] ) ) {
+					// variation
+				} else {
+					unset( $meta['excluded_products'][ $key ] );
+				}
 			}
 		}
 	}
@@ -724,13 +734,11 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 		$ret = true;
 	}
 
-	// Normalize our data for product requiremetns, exlusions and cart data
+	// Normalize our data for product requirements, exlusions and cart data
 	// First absint the items, then sort, and reset the array keys
-	$product_reqs = array_map( 'absint', $product_reqs );
 	asort( $product_reqs );
 	$product_reqs = array_values( $product_reqs );
 
-	$excluded_ps  = array_map( 'absint', $excluded_ps );
 	asort( $excluded_ps );
 	$excluded_ps  = array_values( $excluded_ps );
 
@@ -747,10 +755,19 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 				$ret = true;
 
 				foreach ( $product_reqs as $download_id ) {
-					if ( ! edd_item_in_cart( $download_id ) ) {
-						edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
-						$ret = false;
-						break;
+					$pieces = explode( '_', $download_id );
+					if ( isset( $pieces[0] ) && isset( $pieces[1] ) && !isset( $pieces[2] ) && absint( $pieces[0] ) && absint( $pieces[1] ) ) {
+						if ( ! edd_item_in_cart( $download_id, array( 'price_id' => $pieces[1] ) ) ) {
+							edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
+							$ret = false;
+							break;
+						}
+					} else {
+						if ( ! edd_item_in_cart( $download_id ) ) {
+							edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
+							$ret = false;
+							break;
+						}
 					}
 				}
 
@@ -758,10 +775,17 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 
 			default : // Any
 				foreach ( $product_reqs as $download_id ) {
-
-					if ( edd_item_in_cart( $download_id ) ) {
-						$ret = true;
-						break;
+					$pieces = explode( '_', $download_id );
+					if ( isset( $pieces[0] ) && isset( $pieces[1] ) && !isset( $pieces[2] ) && absint( $pieces[0] ) && absint( $pieces[1] ) ) {
+						if ( edd_item_in_cart( $download_id, array( 'price_id' => $pieces[1] ) ) ) {
+							$ret = true;
+							break;
+						}
+					} else {
+						if ( edd_item_in_cart( $download_id ) ) {
+							$ret = true;
+							break;
+						}
 					}
 
 				}
@@ -781,11 +805,22 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 
 	}
 
-	if( ! empty( $excluded_ps ) ) {
-		// Check that there are products other than excluded ones in the cart
-		if( $cart_ids == $excluded_ps ) {
-			edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'easy-digital-downloads' ) );
-			$ret = false;
+	if (  ! empty( $excluded_ps ) ) {
+		foreach ( $excluded_ps as $download_id ) {
+			
+			$pieces = explode( '_', $download_id );
+			if ( isset( $pieces[0] ) && isset( $pieces[1] ) && !isset( $pieces[2] ) && absint( $pieces[0] ) && absint( $pieces[1] ) > -1 ) {
+				if ( edd_item_in_cart( $download_id, array( 'price_id' => $pieces[1] ) ) ) {
+					edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'easy-digital-downloads' ) );
+					$ret = false;
+				}
+			} else {
+				if ( edd_item_in_cart( $download_id ) ) {
+					edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'easy-digital-downloads' ) );
+					$ret = false;
+				}
+			}
+
 		}
 	}
 
@@ -1272,6 +1307,10 @@ function edd_get_cart_item_discount_amount( $item = array(), $discount = false )
 
 						$discounted_price -= $price - edd_get_discounted_amount( $discount, $price );
 
+					} else {
+						if ( isset( $item['price_id'] ) && $download_id == $item['id'] . '_' .  $item['price_id'] && ! in_array( $item['id'] . '_' .  $item['price_id'], $excluded_products ) ) {
+							$discounted_price -= $price - edd_get_discounted_amount( $discount, $price );
+						}
 					}
 
 				}
@@ -1291,7 +1330,10 @@ function edd_get_cart_item_discount_amount( $item = array(), $discount = false )
 						$items_subtotal    = 0.00;
 						$cart_items        = edd_get_cart_contents();
 						foreach( $cart_items as $cart_item ) {
-							if( ! in_array( $cart_item['id'], $excluded_products ) ) {
+							if ( ! in_array( $cart_item['id'], $excluded_products ) ) {
+								$item_price      = edd_get_cart_item_price( $cart_item['id'], $cart_item['options'] );
+								$items_subtotal += $item_price * $cart_item['quantity'];
+							} else if ( isset( $item['price_id'] ) &&  ! in_array( $cart_item['id'] . '_' .  $cart_item['price_id'], $excluded_products ) ) {
 								$item_price      = edd_get_cart_item_price( $cart_item['id'], $cart_item['options'] );
 								$items_subtotal += $item_price * $cart_item['quantity'];
 							}

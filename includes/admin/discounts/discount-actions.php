@@ -105,8 +105,11 @@ function edd_edit_discount( $data ) {
 
 			} elseif ( is_array( $value ) ) {
 
-				$discount[ $key ] = array_map( 'absint', $value );
-
+				if ( $key !== 'products' && $key !== 'excluded-products' ){
+					$discount[ $key ] = array_map( 'absint', $value );
+				} else {
+					$discount[ $key ] = array_map( 'sanitize_key', $value );
+				}
 			}
 
 		}
