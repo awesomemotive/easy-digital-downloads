@@ -145,7 +145,7 @@ class EDD_API_V2 extends EDD_API_V1 {
 			}
 		}
 
-		return apply_filters( 'edd_api_products_product', $product );
+		return apply_filters( 'edd_api_products', $product );
 	}
 
 	/**
