@@ -226,6 +226,58 @@ class EDD_HTML_Elements {
 	}
 
 	/**
+	 * Renders an HTML Dropdown of all the Users
+	 *
+	 * @access public
+	 * @since 2.7.0
+	 * @param array $args
+	 * @return string $output User dropdown
+	 */
+	public function user_dropdown( $args = array() ) {
+
+		$defaults = array(
+			'name'        => 'users',
+			'id'          => 'users',
+			'class'       => '',
+			'multiple'    => false,
+			'selected'    => 0,
+			'chosen'      => true,
+			'placeholder' => __( 'Select a User', 'easy-digital-downloads' ),
+			'number'      => 30,
+			'data'        => array( 'search-type' => 'customer' ),
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$users = get_users();
+		$options   = array();
+
+		if ( $users ) {
+			foreach ( $users as $user ) {
+				$options[ $user->user_login ] = esc_html( $user->user_login );
+			}
+		} else {
+			$options[0] = __( 'No users found', 'easy-digital-downloads' );
+		}
+
+		$output = $this->select( array(
+			'name'             => $args['name'],
+			'selected'         => $args['selected'],
+			'id'               => $args['id'],
+			'class'            => $args['class'] . ' edd-customer-select',
+			'options'          => $options,
+			'multiple'         => $args['multiple'],
+			'placeholder'      => $args['placeholder'],
+			'chosen'           => $args['chosen'],
+			'show_option_all'  => false,
+			'show_option_none' => false,
+			'data'             => $args['data'],
+		) );
+
+		return $output;
+	}
+
+	/**
 	 * Renders an HTML Dropdown of all the Discounts
 	 *
 	 * @access public
@@ -371,7 +423,7 @@ class EDD_HTML_Elements {
 			'name'             => null,
 			'class'            => '',
 			'id'               => '',
-			'selected'         => 0,
+			'selected'         => array(),
 			'chosen'           => false,
 			'placeholder'      => null,
 			'multiple'         => false,
