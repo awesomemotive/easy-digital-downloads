@@ -234,7 +234,7 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 			$attached_args = array(
 				'post__in' => $attached_payment_ids,
 				'number'   => -1,
-				'status'   => $allowed_post_status,
+				'status'   => $allowed_payment_status,
 			);
 
 			$attached_payments = edd_get_payments( $attached_args );
@@ -242,7 +242,7 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 			$unattached_args = array(
 				'post__not_in' => $attached_payment_ids,
 				'number'       => -1,
-				'status'       => $allowed_post_status,
+				'status'       => $allowed_payment_status,
 				'meta_query'   => array(
 					array(
 						'key'   => '_edd_payment_user_email',
