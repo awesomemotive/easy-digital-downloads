@@ -404,7 +404,7 @@ function edd_v14_upgrades() {
 	/** Add [edd_receipt] to success page **/
 	$success_page = get_post( $edd_options['success_page'] );
 
-	// Check for the [edd_receipt] short code and add it if not present
+	// Check for the [edd_receipt] shortcode and add it if not present
 	if( strpos( $success_page->post_content, '[edd_receipt' ) === false ) {
 		$page_content = $success_page->post_content .= "\n[edd_receipt]";
 		wp_update_post( array( 'ID' => $edd_options['success_page'], 'post_content' => $page_content ) );
