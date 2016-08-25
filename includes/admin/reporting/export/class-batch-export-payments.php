@@ -117,8 +117,9 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 		if( $payments ) {
 
 			foreach ( $payments as $payment ) {
+				$payment = new EDD_Payment( $payment->ID );
 				$payment_meta   = $payment->payment_meta;
-				$user_info      = $payment->user_info
+				$user_info      = $payment->user_info;
 				$downloads      = $payment->cart_details;
 				$total          = $payment->total;
 				$user_id        = isset( $user_info['id'] ) && $user_info['id'] != -1 ? $user_info['id'] : $user_info['email'];
