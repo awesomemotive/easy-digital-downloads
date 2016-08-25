@@ -80,8 +80,8 @@ function edd_process_add_to_cart( $data ) {
 	$cart        = edd_add_to_cart( $download_id, $options );
 
 	if ( edd_straight_to_checkout() && ! edd_is_checkout() ) {
-		$query_args = remove_query_arg( array( 'edd_action', 'download_id', 'edd_options' ) );
-		$query_part = strpos( $query_args, "?" );
+		$query_args 	= remove_query_arg( array( 'edd_action', 'download_id', 'edd_options' ) );
+		$query_part 	= strpos( $query_args, "?" );
 		$url_parameters = '';
 
 		if ( false !== $query_part ) { 
