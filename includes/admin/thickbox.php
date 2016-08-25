@@ -85,7 +85,7 @@ function edd_admin_footer_for_thickbox() {
 
 		<div id="choose-download" style="display: none;">
 			<div class="wrap" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
-				<p><?php echo sprintf( __( 'Use the form below to insert the short code for purchasing a %s', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></p>
+				<p><?php echo sprintf( __( 'Use the form below to insert the shortcode for purchasing a %s', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></p>
 				<div>
 					<?php echo EDD()->html->product_dropdown( array( 'chosen' => true )); ?>
 				</div>
