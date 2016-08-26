@@ -2060,9 +2060,21 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 						break;
 
+					case 'license_not_activable':
+
+						$class = 'error';
+						$messages[] = __( 'The key you entered belongs to a bundle, please use the product specific license key.', 'easy-digital-downloads' );
+
+						$license_status = 'license-' . $class . '-notice';
+						break;
+
 					default :
 
-						$messages[] = print_r( $license, true );
+						$class = 'error';
+						$error = ! empty(  $license->error ) ?  $license->error : __( 'unknown_error', 'easy-digital-downloads' );
+						$messages[] = sprintf( __( 'There was an error with this license key: %s. Please <a href="%s">contact our support team</a>.', 'easy-digital-downloads' ), $error, 'https://easydigitaldownlaods.com/support' );
+
+						$license_status = 'license-' . $class . '-notice';
 						break;
 				}
 
