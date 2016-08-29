@@ -335,6 +335,8 @@ class EDD_HTML_Elements {
 			'show_option_all'  => _x( 'All', 'all dropdown items', 'easy-digital-downloads' ),
 			'show_option_none' => _x( 'None', 'no dropdown items', 'easy-digital-downloads' ),
 			'data'             => array(),
+			'readonly'         => false,
+			'disabled'         => false,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -360,8 +362,20 @@ class EDD_HTML_Elements {
 			$placeholder = '';
 		}
 
+		if ( isset( $args['readonly'] ) && $args['readonly'] ) {
+			$readonly = ' readonly="readonly"';
+		} else {
+			$readonly = '';
+		}
+
+		if ( isset( $args['disabled'] ) && $args['disabled'] ) {
+			$disabled = ' disabled="disabled"';
+		} else {
+			$disabled = '';
+		}
+
 		$class  = implode( ' ', array_map( 'sanitize_html_class', explode( ' ', $args['class'] ) ) );
-		$output = '<select name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( edd_sanitize_key( str_replace( '-', '_', $args['id'] ) ) ) . '" class="edd-select ' . $class . '"' . $multiple . ' data-placeholder="' . $placeholder . '"'. $data_elements . '>';
+		$output = '<select ' . $disabled . $readonly . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( edd_sanitize_key( str_replace( '-', '_', $args['id'] ) ) ) . '" class="edd-select ' . $class . '"' . $multiple . ' data-placeholder="' . $placeholder . '"'. $data_elements . '>';
 
 		if ( $args['show_option_all'] ) {
 			if( $args['multiple'] ) {
