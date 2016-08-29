@@ -368,7 +368,7 @@ class EDD_API_V2 extends EDD_API_V1 {
 				$user_info    = $payment->user_info;
 
 				$sales['sales'][ $i ]['ID']             = $payment->number;
-				$sales['sales'][ $i ]['transaction_id'] = ( ! empty( $payment->transaction_id ) ? $payment->transaction_id : null );;
+				$sales['sales'][ $i ]['transaction_id'] = ( ! empty( $payment->transaction_id ) ) ? $payment->transaction_id : null;
 				$sales['sales'][ $i ]['key']            = $payment->key;
 				$sales['sales'][ $i ]['subtotal']       = $payment->subtotal;
 				$sales['sales'][ $i ]['tax']            = $payment->tax;
