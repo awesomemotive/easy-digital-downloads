@@ -375,7 +375,7 @@ class EDD_HTML_Elements {
 		}
 
 		$class  = implode( ' ', array_map( 'sanitize_html_class', explode( ' ', $args['class'] ) ) );
-		$output = '<select ' . $disabled . $readonly . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( edd_sanitize_key( str_replace( '-', '_', $args['id'] ) ) ) . '" class="edd-select ' . $class . '"' . $multiple . ' data-placeholder="' . $placeholder . '"'. $data_elements . '>';
+		$output = '<select' . $disabled . $readonly . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( edd_sanitize_key( str_replace( '-', '_', $args['id'] ) ) ) . '" class="edd-select ' . $class . '"' . $multiple . ' data-placeholder="' . $placeholder . '"'. $data_elements . '>';
 
 		if ( $args['show_option_all'] ) {
 			if( $args['multiple'] ) {
