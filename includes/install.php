@@ -50,7 +50,7 @@ function edd_install( $network_wide = false ) {
 register_activation_hook( EDD_PLUGIN_FILE, 'edd_install' );
 
 /**
- * Run the EDD Instsall process
+ * Run the EDD Install process
  *
  * @since  2.5
  * @return void

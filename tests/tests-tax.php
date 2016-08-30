@@ -190,6 +190,7 @@ class Tests_Taxes extends WP_UnitTestCase {
 		$this->assertEquals( '9.29916', edd_calculate_tax( 258.31 ) );
 		$this->assertEquals( '37.41552', edd_calculate_tax( 1039.32 ) );
 		$this->assertEquals( '361.58724', edd_calculate_tax( 10044.09 ) );
+		$this->assertEquals( '0', edd_calculate_tax( -1.50 ) );
 	}
 
 	public function test_calculate_tax_price_includes_tax() {
