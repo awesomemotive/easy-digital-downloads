@@ -3138,7 +3138,7 @@ msgstr ""
 #: includes/admin/settings/register-settings.php:250
 msgid ""
 "This is the checkout page where buyers will complete their purchases. The "
-"[download_checkout] short code must be on this page."
+"[download_checkout] shortcode must be on this page."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:254
@@ -3156,7 +3156,7 @@ msgstr ""
 #: includes/admin/settings/register-settings.php:259
 msgid ""
 "This is the page buyers are sent to after completing their purchases. The "
-"[edd_receipt] short code should be on this page."
+"[edd_receipt] shortcode should be on this page."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:267
@@ -3176,7 +3176,7 @@ msgstr ""
 #: includes/admin/settings/register-settings.php:277
 msgid ""
 "This page shows a complete purchase history for the current user, including "
-"download links. The [purchase_history] short code should be on this page."
+"download links. The [purchase_history] shortcode should be on this page."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:285
@@ -4111,7 +4111,7 @@ msgid "You must choose a download"
 msgstr ""
 
 #: includes/admin/thickbox.php:88
-msgid "Use the form below to insert the short code for purchasing a %s"
+msgid "Use the form below to insert the shortcode for purchasing a %s"
 msgstr ""
 
 #: includes/admin/thickbox.php:95
