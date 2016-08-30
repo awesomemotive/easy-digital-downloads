@@ -911,25 +911,37 @@ function edd_render_disable_button( $post_id ) {
 			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Automatic Output</strong>: By default, the purchase buttons will be displayed at the bottom of the download, when disabled you will need to use the Purchase link shortcode below to output the ability to buy the product where you prefer.', 'easy-digital-downloads' ); ?>"></span>
 		</label>
 	</p>
-	<?php if( edd_shop_supports_buy_now() ) : ?>
+	<?php $supports_buy_now = edd_shop_supports_buy_now(); ?>
 	<p>
 		<label for="_edd_button_behavior">
-			<?php echo EDD()->html->select( array(
+			<?php
+			$args = array(
 				'name'    => '_edd_button_behavior',
 				'options' => array(
 					'add_to_cart' => __( 'Add to Cart', 'easy-digital-downloads' ),
-					'direct'      => __( 'Buy Now', 'easy-digital-downloads' )
+					'direct'      => __( 'Buy Now', 'easy-digital-downloads' ),
 				),
 				'show_option_all'  => null,
 				'show_option_none' => null,
 				'selected' => $behavior
-			) ); ?>
+			);
+
+			if ( ! $supports_buy_now ) {
+				$args['disabled'] = true;
+				$args['readonly'] = true;
+			}
+			?>
+			<?php echo EDD()->html->select( $args ); ?>
 			<?php _e( 'Purchase button behavior', 'easy-digital-downloads' ); ?>
-			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Button Behavior</strong>: Add to Cart buttons follow a traditional eCommerce flow. A Buy Now button bypasses most of the process, taking the customer directly from button click to payment, greatly speeding up the process of getting the product.', 'easy-digital-downloads' ); ?>"></span>
+			<?php if ( $supports_buy_now ) : ?>
+				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Button Behavior</strong>: Add to Cart buttons follow a traditional eCommerce flow. A Buy Now button bypasses most of the process, taking the customer directly from button click to payment, greatly speeding up the process of buying the product.', 'easy-digital-downloads' ); ?>"></span>
+			<?php else: ?>
+				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Button Behavior</strong>: Add to Cart buttons follow a traditional eCommerce flow. Buy Now buttons are only available for supported gateways and stores that do not use taxes.', 'easy-digital-downloads' ); ?>"></span>
+			<?php endif; ?>
+
 		</label>
 	</p>
 <?php
-	endif;
 }
 add_action( 'edd_meta_box_settings_fields', 'edd_render_disable_button', 30 );
 
