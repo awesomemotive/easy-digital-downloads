@@ -35,7 +35,7 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 
 	$subject      = edd_get_option( 'purchase_subject', __( 'Purchase Receipt', 'easy-digital-downloads' ) );
 	$subject      = apply_filters( 'edd_purchase_subject', wp_strip_all_tags( $subject ), $payment_id );
-	$subject      = edd_do_email_tags( $subject, $payment_id );
+	$subject      = wp_specialchars_decode( edd_do_email_tags( $subject, $payment_id ) );
 
 	$heading      = edd_get_option( 'purchase_heading', __( 'Purchase Receipt', 'easy-digital-downloads' ) );
 	$heading      = apply_filters( 'edd_purchase_heading', $heading, $payment_id, $payment_data );
