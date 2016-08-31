@@ -1208,6 +1208,7 @@ function edd_tools_sysinfo_get() {
 	$return .= 'Time Limit:               ' . ini_get( 'max_execution_time' ) . "\n";
 	$return .= 'Max Input Vars:           ' . ini_get( 'max_input_vars' ) . "\n";
 	$return .= 'Display Errors:           ' . ( ini_get( 'display_errors' ) ? 'On (' . ini_get( 'display_errors' ) . ')' : 'N/A' ) . "\n";
+	$return .= 'PHP Arg Separator:        ' . edd_get_php_arg_separator_output() . "\n";
 
 	$return  = apply_filters( 'edd_sysinfo_after_php_config', $return );
 
