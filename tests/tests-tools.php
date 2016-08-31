@@ -8,7 +8,7 @@ class Tests_Tools extends WP_UnitTestCase {
 
 	public function setUp() {
 		parent::setUp();
-		require_once EDD_PLUGIN_DIR . '/includes/admin/tools.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/tools.php';
 	}
 
 	public function tearDown() {
