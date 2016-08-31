@@ -17,9 +17,9 @@ class Tests_Tools extends WP_UnitTestCase {
 
 	public function test_system_info() {
 		$system_info = edd_tools_sysinfo_get();
-		$this->assertContains( 'Site URL:                 ' . site_url(), $system_info );
-		$this->assertContains( 'Home URL:                 ' . home_url(), $system_info );
-		$this->assertContains( 'Multisite:                No',            $system_info );
+		$this->assertContains( 'Site URL:                 ' . site_url()                       , $system_info );
+		$this->assertContains( 'Home URL:                 ' . home_url()                       , $system_info );
+		$this->assertContains( 'Multisite:                ' . ( is_multisite() ? 'Yes' : 'No' ), $system_info );
 
 		$this->assertContains( 'Host:', $system_info );
 		$this->assertContains( 'Version:                  ' . get_bloginfo( 'version' ), $system_info );
