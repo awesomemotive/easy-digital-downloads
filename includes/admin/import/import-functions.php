@@ -41,8 +41,17 @@ function edd_do_ajax_import_file_upload() {
 
 	$accepted_mime_types = array(
 		'text/csv',
-		'application/excel',
 		'text/comma-separated-values',
+		'text/plain',
+		'text/anytext',
+		'text/*',
+		'text/plain',
+		'text/anytext',
+		'text/*',
+		'application/csv',
+		'application/excel',
+		'application/vnd.ms-excel',
+		'application/vnd.msexcel',
 	);
 
 	if( empty( $_FILES['edd-import-file']['type'] ) || ! in_array( strtolower( $_FILES['edd-import-file']['type'] ), $accepted_mime_types ) ) {
