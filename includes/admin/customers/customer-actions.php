@@ -74,7 +74,7 @@ function edd_edit_customer( $args ) {
 
 		$current_address = get_user_meta( $customer_info['user_id'], '_edd_user_address', true );
 
-		if ( false === $current_address ) {
+		if ( empty( $current_address ) ) {
 			$address['line1']   = isset( $customer_info['line1'] )   ? $customer_info['line1']   : '';
 			$address['line2']   = isset( $customer_info['line2'] )   ? $customer_info['line2']   : '';
 			$address['city']    = isset( $customer_info['city'] )    ? $customer_info['city']    : '';
