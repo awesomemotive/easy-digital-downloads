@@ -68,9 +68,25 @@ function edd_edit_customer( $args ) {
 		return;
 	}
 
+	$user_id = intval( $customer_info['user_id'] );
+	if ( empty( $user_id ) && ! empty( $customer_info['user_login'] ) ) {
+		// See if they gave an email, otherwise we'll assume login
+		$user_by_field = 'login';
+		if ( is_email( $customer_info['user_login'] ) ) {
+			$user_by_field = 'email';
+		}
+
+		$user = get_user_by( $user_by_field, $customer_info['user_login'] );
+		if ( $user ) {
+			$user_id = $user->ID;
+		} else {
+			edd_set_error( 'edd-invalid-user-string', sprintf( __( 'Failed to attach user. The login or email address %s was not found.', 'easy-digital-downloads' ), $customer_info['user_login'] ) );
+		}
+	}
+
 	// Setup the customer address, if present
 	$address = array();
-	if ( intval( $customer_info['user_id'] ) > 0 ) {
+	if ( ! empty( $user_id ) ) {
 
 		$current_address = get_user_meta( $customer_info['user_id'], '_edd_user_address', true );
 
@@ -97,7 +113,7 @@ function edd_edit_customer( $args ) {
 	$customer_data            = array();
 	$customer_data['name']    = strip_tags( stripslashes( $customer_info['name'] ) );
 	$customer_data['email']   = $customer_info['email'];
-	$customer_data['user_id'] = $customer_info['user_id'];
+	$customer_data['user_id'] = $user_id;
 
 	$customer_data = apply_filters( 'edd_edit_customer_info', $customer_data, $customer_id );
 	$address       = apply_filters( 'edd_edit_customer_address', $address, $customer_id );
