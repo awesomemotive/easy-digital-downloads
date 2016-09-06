@@ -312,7 +312,11 @@ class EDD_Payment {
 			return false;
 		}
 
-		$this->setup_payment( $payment_id );
+		$setup_successful = $this->setup_payment( $payment_id );
+
+		if( false === $setup_successful ) {
+			return false;
+		}
 	}
 
 	/**
