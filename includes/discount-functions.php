@@ -1140,7 +1140,9 @@ function edd_unset_cart_discount( $code = '' ) {
 
 	if ( $discounts ) {
 		$key = array_search( $code, $discounts );
-		unset( $discounts[ $key ] );
+		if ( false !== $key ) {
+			unset( $discounts[ $key ] );
+		}
 		$discounts = implode( '|', array_values( $discounts ) );
 		// update the active discounts
 		EDD()->session->set( 'cart_discounts', $discounts );
