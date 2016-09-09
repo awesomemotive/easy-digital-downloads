@@ -1364,7 +1364,7 @@ function edd_multicheck_callback( $args ) {
 function edd_payment_icons_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
 
-	$html .= '<input type="hidden" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="-1" />';
+	$html = '<input type="hidden" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="-1" />';
 	if ( ! empty( $args['options'] ) ) {
 		foreach( $args['options'] as $key => $option ) {
 
