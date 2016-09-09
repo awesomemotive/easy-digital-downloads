@@ -969,6 +969,9 @@ function edd_settings_sanitize( $input = array() ) {
 		if ( $doing_section ) {
 			switch( $type ) {
 				case 'checkbox':
+				case 'gateways':
+				case 'multicheck':
+				case 'payment_icons':
 					if ( array_key_exists( $key, $input ) && $output[ $key ] === '-1' ) {
 						unset( $output[ $key ] );
 					}
@@ -1338,6 +1341,7 @@ function edd_multicheck_callback( $args ) {
 
 	$html = '';
 	if ( ! empty( $args['options'] ) ) {
+		$html .= '<input type="hidden" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="-1" />';
 		foreach( $args['options'] as $key => $option ):
 			if( isset( $edd_option[ $key ] ) ) { $enabled = $option; } else { $enabled = NULL; }
 			$html .= '<input name="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked($option, $enabled, false) . '/>&nbsp;';
@@ -1360,7 +1364,7 @@ function edd_multicheck_callback( $args ) {
 function edd_payment_icons_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
 
-	$html = '';
+	$html = '<input type="hidden" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="-1" />';
 	if ( ! empty( $args['options'] ) ) {
 		foreach( $args['options'] as $key => $option ) {
 
@@ -1461,7 +1465,7 @@ function edd_radio_callback( $args ) {
 function edd_gateways_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
 
-	$html = '';
+	$html = '<input type="hidden" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="-1" />';
 
 	foreach ( $args['options'] as $key => $option ) :
 		if ( isset( $edd_option[ $key ] ) )
@@ -1469,7 +1473,7 @@ function edd_gateways_callback( $args ) {
 		else
 			$enabled = null;
 
-		$html .= '<input name="edd_settings[' . esc_attr( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']"" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" type="checkbox" value="1" ' . checked('1', $enabled, false) . '/>&nbsp;';
+		$html .= '<input name="edd_settings[' . esc_attr( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" type="checkbox" value="1" ' . checked('1', $enabled, false) . '/>&nbsp;';
 		$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']">' . esc_html( $option['admin_label'] ) . '</label><br/>';
 	endforeach;
 
