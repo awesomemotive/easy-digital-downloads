@@ -1388,7 +1388,7 @@ function edd_get_cart_discounts_html( $discounts = false ) {
 			$discount_html .= "<span class=\"edd_discount_rate\">$discount&nbsp;&ndash;&nbsp;$rate</span>\n";
 			$discount_html .= "<a href=\"$remove_url\" data-code=\"$discount\" class=\"edd_discount_remove\"></a>\n";
 		$discount_html .= "</span>\n";
-		
+
 		$html .= apply_filters( 'edd_get_cart_discount_html', $discount_html, $discount, $rate, $remove_url );
 	}
 
@@ -1632,7 +1632,7 @@ function edd_discount_status_cleanup() {
 	}
 
 }
-add_action( 'edd_daily_scheduled_events', 'edd_discount_status_cleanup' );
+//add_action( 'edd_daily_scheduled_events', 'edd_discount_status_cleanup' );
 
 /**
  * Used during edd_discount_status_cleanup to filter out a meta query properly
