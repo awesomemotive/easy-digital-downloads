@@ -478,11 +478,11 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 
 			} else {
 
-				$term_id = wp_insert_term( $term, $taxonomy, array( 'slug' => sanitize_title( $term ) ) );
+				$term_data = wp_insert_term( $term, $taxonomy, array( 'slug' => sanitize_title( $term ) ) );
 
-				if( ! is_wp_error( $term_id ) ) {
+				if( ! is_wp_error( $term_data ) ) {
 
-					$term_ids[] = $term_id;
+					$term_ids[] = $term_data['term_id'];
 
 				}
 
