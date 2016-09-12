@@ -65,16 +65,42 @@ function edd_get_discounts( $args = array() ) {
 function edd_has_active_discounts() {
 	$has_active = false;
 
-	$discounts  = edd_get_discounts();
+	$page = 1;
+	do {
+		/*
+		 * Get active discounts in bulk of 100
+		 * we can do such a large number because we are only fetching ids
+		 *
+		 * We need to fetch them all to do a manual check for expiration.
+		 */
+		$discounts = edd_get_discounts(
+			array(
+				'post_status'    => 'active',
+				'posts_per_page' => 100,
+				'paged'          => $page,
+				'fields'         => 'ids'
+			)
+		);
 
-	if ( $discounts) {
+		// When there are no discounts found anymore there are no active ones.
+		if ( ! is_array( $discounts ) || array() === $discounts ) {
+			$has_active = false;
+			break;
+		}
+
 		foreach ( $discounts as $discount ) {
-			if ( edd_is_discount_active( $discount->ID ) ) {
+			// If we catch an active one, we can quit and return true.
+			if ( edd_is_discount_active( $discount ) ) {
 				$has_active = true;
-				break;
+				break( 2 );
 			}
 		}
-	}
+
+		// Next 100 discounts.
+		$page ++;
+
+	} while ( true );
+
 	return $has_active;
 }
 
