@@ -569,6 +569,7 @@ class EDD_Payment {
 			$this->pending['customer_id'] = $this->customer_id;
 			$customer->attach_payment( $this->ID, false );
 
+			$this->payment_meta = apply_filters( 'edd_payment_meta', $this->payment_meta, $payment_data );
 			if ( ! empty( $this->payment_meta['fees'] ) ) {
 				$this->fees = array_merge( $this->fees, $this->payment_meta['fees'] );
 				foreach( $this->fees as $fee ) {
@@ -845,11 +846,24 @@ class EDD_Payment {
 				'cart_details'  => $this->cart_details,
 				'fees'          => $this->fees,
 				'currency'      => $this->currency,
-				'user_info'     => $this->user_info,
+				'user_info'     => is_array( $this->user_info ) ? $this->user_info : array(),
 			);
 
+			// Do some merging of user_info before we merge it all, to honor the edd_payment_meta filter
+			if ( ! empty( $this->payment_meta['user_info'] ) ) {
+
+				$stored_discount = ! empty( $new_meta['user_info']['discount'] ) ? $new_meta['user_info']['discount'] : '';
+
+				$new_meta[ 'user_info' ] = array_replace( $new_meta[ 'user_info' ], $this->payment_meta[ 'user_info' ] );
+
+				if ( 'none' !== $stored_discount ) {
+					$new_meta['user_info']['discount'] = $stored_discount;
+				}
+
+			}
+
 			$meta        = $this->get_meta();
-			$merged_meta = array_replace_recursive( $meta, $new_meta );
+			$merged_meta = array_merge( $meta, $new_meta );
 
 			// Only save the payment meta if it's changed
 			if ( md5( serialize( $meta ) ) !== md5( serialize( $merged_meta) ) ) {
@@ -1513,8 +1527,6 @@ class EDD_Payment {
 				$meta['date'] = get_post_field( 'post_date', $this->ID );
 			}
 
-			$meta = apply_filters( 'edd_payment_meta', $meta, $this );
-
 		}
 
 		$meta = apply_filters( 'edd_get_payment_meta_' . $meta_key, $meta, $this->ID );
@@ -2045,7 +2057,10 @@ class EDD_Payment {
 	 * @return array               The Address information for the payment
 	 */
 	private function setup_address() {
-		$address = ! empty( $this->payment_meta['user_info']['address'] ) ? $this->payment_meta['user_info']['address'] : array( 'line1' => '', 'line2' => '', 'city' => '', 'country' => '', 'state' => '', 'zip' => '' );
+		$address  = ! empty( $this->payment_meta['user_info']['address'] ) ? $this->payment_meta['user_info']['address'] : array();
+		$defaults = array( 'line1' => '', 'line2' => '', 'city' => '', 'country' => '', 'state' => '', 'zip' => '' );
+
+		$address = wp_parse_args( $address, $defaults );
 		return $address;
 	}
 
