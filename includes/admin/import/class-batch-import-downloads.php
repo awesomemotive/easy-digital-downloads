@@ -458,27 +458,33 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 
 			if( is_numeric( $term ) && 0 === (int) $term ) {
 
-				$term = get_term( $term, $taxonomy );
+				$t = get_term( $term, $taxonomy );
 
 			} else {
 
-				$term = get_term_by( 'name', $term, $taxonomy );
+				$t = get_term_by( 'name', $term, $taxonomy );
 
-				if( ! $term ) {
+				if( ! $t ) {
 
-					$term = get_term_by( 'slug', $term, $taxonomy );
+					$t = get_term_by( 'slug', $term, $taxonomy );
 
 				}
 
 			}
 
-			if( ! empty( $term ) ) {
+			if( ! empty( $t ) ) {
 
-				$term_ids[] = $term->term_id;
+				$term_ids[] = $t->term_id;
 
 			} else {
 
-				$term_ids[] = wp_insert_term( $term, $taxonomy );
+				$term_id = wp_insert_term( $term, $taxonomy, array( 'slug' => sanitize_title( $term ) ) );
+
+				if( ! is_wp_error( $term_id ) ) {
+
+					$term_ids[] = $term_id;
+
+				}
 
 			}
 
