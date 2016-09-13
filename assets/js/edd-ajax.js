@@ -26,7 +26,8 @@ jQuery(document).ready(function ($) {
 			},
 			success: function (response) {
 				if (response.removed) {
-					if ( parseInt( edd_scripts.position_in_cart, 10 ) === parseInt( item, 10 ) ) {
+
+					if ( ( parseInt( edd_scripts.position_in_cart, 10 ) === parseInt( item, 10 ) ) || edd_scripts.has_purchase_links ) {
 						window.location = window.location;
 						return false;
 					}
