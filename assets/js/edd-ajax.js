@@ -395,7 +395,6 @@ jQuery(document).ready(function ($) {
 					withCredentials: true
 				},
 				success: function (response) {
-console.log( response); console.log(is_checkout);
 					if ( is_checkout ) {
 						$form = $("#edd_purchase_form");
 					} else {
