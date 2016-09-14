@@ -1223,11 +1223,8 @@ jQuery(document).ready(function ($) {
 						no_bundles: no_bundles
 					},
 					dataType: "json",
-					beforeSend: function(){
-						$('ul.chosen-results').empty();
-					},
 					success: function( data ) {
-
+						$(this).find('ul.chosen-results').empty();
 						// Remove all options but those that are selected
 						$('#' + menu_id + ' option:not(:selected)').remove();
 						$.each( data, function( key, item ) {
@@ -1239,7 +1236,6 @@ jQuery(document).ready(function ($) {
 						// Update the options
 						if ( data.length ) {
 							$('.edd-select-chosen').trigger('chosen:updated');
-							$('#' + menu_id).next().find('input').val(val);
 						}
 					}
 				}).fail(function (response) {
