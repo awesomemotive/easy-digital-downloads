@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
 Tested up to: 4.7
-Stable Tag: 2.6.6
+Stable Tag: 2.6.7
 
 License: GNU Version 2 or Any Later Version
 
@@ -186,6 +186,43 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.6.7, September 14, 2016 =
+* Fix: Improved CSV file type detection to avid 'invalid CSV' error.
+* Fix: The edd_payment_meta filter was not respecting values modified during the filter when saving a payment.
+* Fix: Redirect to Checkout setting was not keeping custom query string varaibles when direct cart URLs.
+* Fix: Cart Widget did not properly refresh the page when purchase links were present on the page.
+* Fix: Categories/Tags not created and assigned during product import.
+* Fix: Remove discount cron which could cause discount codes incorrectly changing to inactive without warning.
+* Fix: Can't Uncheck All Checkboxes in Multi-Check.
+* Fix: Verify discount is in array before unsetting the discount.
+* Fix: edd_stats_{key} transients causing performance issues.
+* Fix: Undefined Indexes when assigning new user ID to customer details.
+* Fix: Purchase Email Subject ampersands getting improperly HTML encoded.
+* Fix: Local files not being properly found when on a Windows server.
+* Fix: Properly catch default case for license activation callback.
+* Fix: Sequential payment number not assigned when creating payments with EDD_Payment.
+* Fix: Tax calculation should only run on values greater than 0.
+* Fix: Fix variable name in customer recount tool for post status array.
+* Fix: Discount functions not always having user_info array key.
+* Tweak: Rename Download List Table Taxonomy Headers.
+* Tweak: Fix horizontal alignment of items in the dashboard widget.
+* Tweak: Update codex link in readme.txt.
+* Tweak: Update EDD_SL_Plugin_Updater.php to latest version.
+* Tweak: Correct references of 'short code' to 'shortcode'.
+* Tweak: Filter "edd_get_cart_discounts_html" does not pass relevant arguments for developers.
+* Tweak: Update payments export to use EDD_Payment.
+* Tweak: Return null for all empty data returned from the API instead of an empty array.
+* Tweak: Update readme.txt with new donate link.
+* Tweak: Allow custom Arguments for Settings API Callbacks.
+* New: Accepted payment method icons have been updated to PNGs with transparent backgrounds.
+* New: Update MasterCard Logo.
+* New: Add filters to API endpoints.
+* New: Added actions to the adding and removing of fees.
+* New: Buy Now button option on Add/Edit Download now always shows, but is disabled when requirements are not.
+* New: Customer address can now be edited for customers who do not previously hgave an address on file.
+* New: Add edd_get_php_arg_separator_output on System Info.
+* New: Linking a Customer to a WordPress user now allows login or email address as a valid input.
 
 = 2.6.6, August 1, 2016 =
 * Fix: Discount codes being marked as inactive
