@@ -188,9 +188,9 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 == Changelog ==
 
 = 2.6.7, September 14, 2016 =
-* Fix: Improved CSV file type detection to avid 'invalid CSV' error.
+* Fix: Improved CSV file type detection to avoid 'invalid CSV' error.
 * Fix: The edd_payment_meta filter was not respecting values modified during the filter when saving a payment.
-* Fix: Redirect to Checkout setting was not keeping custom query string varaibles when direct cart URLs.
+* Fix: Redirect to Checkout setting was not keeping custom query string variables when direct cart URLs.
 * Fix: Cart Widget did not properly refresh the page when purchase links were present on the page.
 * Fix: Categories/Tags not created and assigned during product import.
 * Fix: Remove discount cron which could cause discount codes incorrectly changing to inactive without warning.
@@ -220,7 +220,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * New: Add filters to API endpoints.
 * New: Added actions to the adding and removing of fees.
 * New: Buy Now button option on Add/Edit Download now always shows, but is disabled when requirements are not.
-* New: Customer address can now be edited for customers who do not previously hgave an address on file.
+* New: Customer address can now be edited for customers who do not previously have an address on file.
 * New: Add edd_get_php_arg_separator_output on System Info.
 * New: Linking a Customer to a WordPress user now allows login or email address as a valid input.
 
