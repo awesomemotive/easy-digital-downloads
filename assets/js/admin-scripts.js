@@ -66,6 +66,8 @@ jQuery(document).ready(function ($) {
 
 				}
 
+				$( this ).attr( 'data-key', key );
+
 				if( typeof id != 'undefined' ) {
 
 					id = id.replace( /(\d+)/, parseInt( key ) );
