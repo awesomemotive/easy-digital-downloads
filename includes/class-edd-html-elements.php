@@ -254,7 +254,7 @@ class EDD_HTML_Elements {
 
 		if ( $users ) {
 			foreach ( $users as $user ) {
-				$options[ $user->user_login ] = esc_html( $user->user_login );
+				$options[ $user->ID ] = esc_html( $user->user_login );
 			}
 		} else {
 			$options[0] = __( 'No users found', 'easy-digital-downloads' );
