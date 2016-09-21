@@ -35,7 +35,7 @@ function edd_load_scripts() {
 	}
 
 	$has_purchase_links = false;
-	if ( has_shortcode( $post->post_content, 'purchase_link' ) || has_shortcode( $post->post_content, 'downloads' ) || is_post_type_archive( 'download' ) ) {
+	if ( isset($post) && ( has_shortcode( $post->post_content, 'purchase_link' ) || has_shortcode( $post->post_content, 'downloads' ) || is_post_type_archive( 'download' ) ) ) {
 		$has_purchase_links = true;
 	}
 
