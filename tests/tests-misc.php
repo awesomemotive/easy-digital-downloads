@@ -271,7 +271,7 @@ class Test_Misc extends WP_UnitTestCase {
 			'PG' => 'Papua New Guinea',
 			'PY' => 'Paraguay',
 			'PE' => 'Peru',
-			'PH' => 'Phillipines',
+			'PH' => 'Philippines',
 			'PN' => 'Pitcairn Island',
 			'PL' => 'Poland',
 			'PT' => 'Portugal',
