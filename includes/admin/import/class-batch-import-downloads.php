@@ -299,7 +299,24 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 			$download_files = array();
 			foreach( $files as $file ) {
 
-				$download_files[] = array( 'file' => $file, 'name' => basename( $file ) );
+				$condition = '';
+
+				if ( strpos( $file, ';' ) ) {
+					$split_on  = strpos( $file, ';' );
+					$file_url  = substr( $file, 0, $split_on );
+					$condition = substr( $file, $split_on + 1 );
+				}
+
+				$download_file_args = array(
+					'file' => $file_url,
+					'name' => basename( $file_url ),
+				);
+
+				if ( ! empty( $condition ) ) {
+					$download_file_args['condition'] = $condition;
+				}
+
+				$download_files[] = $download_file_args;
 
 			}
 
