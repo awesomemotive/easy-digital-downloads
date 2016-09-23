@@ -1020,12 +1020,18 @@ class EDD_API {
 
 			$products['products'] = array();
 
-			$product_list = get_posts( array(
+			$parameters = array(
 				'post_type'        => 'download',
 				'posts_per_page'   => $this->per_page(),
 				'suppress_filters' => true,
-				'paged'            => $this->get_paged()
-			) );
+				'paged'            => $this->get_paged(),
+			);
+
+			if ( isset( $args['s'] ) && !empty( $args['s'] ) ) {
+				$parameters['s'] = $args['s'];
+			}
+
+			$product_list = get_posts( $parameters );
 
 			if ( $product_list ) {
 				$i = 0;
