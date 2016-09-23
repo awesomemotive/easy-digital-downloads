@@ -189,11 +189,17 @@ function edd_insert_payment( $payment_data = array() ) {
  * @param  string $new_status New Payment Status (default: publish)
  * @return bool               If the payment was successfully updated
  */
-function edd_update_payment_status( $payment_id, $new_status = 'publish' ) {
+function edd_update_payment_status( $payment_id = 0, $new_status = 'publish' ) {
 
+	$updated = false;
 	$payment = new EDD_Payment( $payment_id );
-	$payment->status = $new_status;
-	$updated = $payment->save();
+
+	if( $payment && $payment->ID > 0 ) {
+
+		$payment->status = $new_status;
+		$updated = $payment->save();
+
+	}
 
 	return $updated;
 
