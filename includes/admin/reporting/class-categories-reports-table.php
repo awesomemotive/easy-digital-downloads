@@ -101,7 +101,12 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 		?>
 		<div class="tablenav <?php echo esc_attr( $which ); ?>">
 			<div class="alignleft actions bulkactions">
-				<?php if ( 'top' === $which ) { edd_report_views(); } ?>
+				<?php
+				if ( 'top' === $which ) {
+					edd_report_views();
+					edd_reports_graph_controls();
+				}
+				?>
 			</div>
 		</div>
 	<?php
