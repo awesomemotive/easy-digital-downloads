@@ -264,6 +264,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 			if( ! empty( $prices ) ) {
 
 				$variable_prices = array();
+				$price_id        = 1;
 				foreach( $prices as $price ) {
 
 					// See if this matches the EDD Download export for variable prices
@@ -271,7 +272,8 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 
 						$price = array_map( 'trim', explode( ':', $price ) );
 
-						$variable_prices[] = array( 'name' => $price[0], 'amount' => $price[1] );
+						$variable_prices[ $price_id ] = array( 'name' => $price[ 0 ], 'amount' => $price[ 1 ] );
+						$price_id++;
 
 					}
 
