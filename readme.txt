@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
 Tested up to: 4.7
-Stable Tag: 2.6.7
+Stable Tag: 2.6.8
 
 License: GNU Version 2 or Any Later Version
 
@@ -186,6 +186,18 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.6.8, September 26, 2016 =
+* Fix: Category earnings report does not recover when the site has no download categories.
+* Fix: PHP notice caused by localized script loader.
+* Fix: CSV Product exporter/importer does not honor file conditions for variable pricing.
+* Fix: CSV importer improperly started variable pricing IDs as 0 instead of 1.
+* Fix: Repeatable rows not properly adding data-key attribute for variable price select boxes.
+* Fix: Undefined index warning when adding download details widget within the customizer.
+* Fix: edd_update_payment_status() creates new blank payment record if given an invalid payment ID.
+* Fix: REST API Products endpoint doesn't take into account search parameter API.
+* Tweak: Correct typo in country list for Philippines.
+* Tweak: Upload file text is misaligned within the input field.
 
 = 2.6.7, September 14, 2016 =
 * Fix: Improved CSV file type detection to avoid 'invalid CSV' error.
