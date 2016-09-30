@@ -1093,9 +1093,9 @@ function edd_get_random_download( $post_ids = true ) {
  */
 function edd_get_random_downloads( $num = 3, $post_ids = true ) {
 	if ( $post_ids ) {
-		$args = array( 'post_type' => 'download', 'orderby' => 'rand', 'post_count' => $num, 'fields' => 'ids' );
+		$args = array( 'post_type' => 'download', 'orderby' => 'rand', 'numberposts' => $num, 'fields' => 'ids' );
 	} else {
-		$args = array( 'post_type' => 'download', 'orderby' => 'rand', 'post_count' => $num );
+		$args = array( 'post_type' => 'download', 'orderby' => 'rand', 'numberposts' => $num );
 	}
 	$args  = apply_filters( 'edd_get_random_downloads', $args );
 	return get_posts( $args );
