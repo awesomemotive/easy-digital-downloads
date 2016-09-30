@@ -1076,9 +1076,10 @@ function edd_get_file_download_method() {
  * @since 1.7
  * @author Chris Christoff
  * @param bool $post_ids True for array of post ids, false if array of posts
+ * @return array Returns an array of post ids or post objects
  */
 function edd_get_random_download( $post_ids = true ) {
-	 edd_get_random_downloads( 1, $post_ids );
+	 return edd_get_random_downloads( 1, $post_ids );
 }
 
 /**
