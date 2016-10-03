@@ -854,7 +854,7 @@ class EDD_Payment {
 
 				$stored_discount = ! empty( $new_meta['user_info']['discount'] ) ? $new_meta['user_info']['discount'] : '';
 
-				$new_meta[ 'user_info' ] = array_replace_recursive( $new_meta[ 'user_info' ], $this->payment_meta[ 'user_info' ] );
+				$new_meta[ 'user_info' ] = array_replace_recursive( $new_meta[ 'user_info' ], (array) $this->payment_meta[ 'user_info' ] );
 
 				if ( 'none' !== $stored_discount ) {
 					$new_meta['user_info']['discount'] = $stored_discount;
