@@ -52,6 +52,7 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 		// Delete Terms.
 		if ( $terms ) {
 			foreach ( $terms as $term ) {
+				$wpdb->delete( $wpdb->term_relationships, array( 'term_taxonomy_id' => $term->term_taxonomy_id ) );
 				$wpdb->delete( $wpdb->term_taxonomy, array( 'term_taxonomy_id' => $term->term_taxonomy_id ) );
 				$wpdb->delete( $wpdb->terms, array( 'term_id' => $term->term_id ) );
 			}
@@ -73,6 +74,18 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 	/** Delete all the Plugin Options */
 	delete_option( 'edd_settings' );
 	delete_option( 'edd_version' );
+	delete_option( 'edd_use_php_sessions' );
+	delete_option( 'edd_default_api_version' );
+	delete_option( 'wp_edd_customers_db_version' );
+	delete_option( 'wp_edd_customermeta_db_version' );
+	delete_option( 'edd_completed_upgrades' );
+	delete_option( 'widget_edd_cart_widget' );
+	delete_option( 'widget_edd_categories_tags_widget' );
+	delete_option( 'widget_edd_product_details' );
+	delete_option( '_edd_table_check' );
+	delete_option( 'edd_tracking_notice' );
+	delete_option( 'edd_earnings_total' );
+	delete_option( 'edd_tax_rates' );
 
 	/** Delete Capabilities */
 	EDD()->roles->remove_caps();
