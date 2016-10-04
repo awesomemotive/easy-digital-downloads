@@ -472,13 +472,10 @@ class Tests_Fee extends WP_UnitTestCase {
 		$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 		$_SERVER['SERVER_NAME'] = 'edd_virtual';
 		$payment_id = edd_insert_payment( $purchase_data );
-		var_dump( $payment_id );
 		edd_complete_purchase( $payment_id, 'publish',  'pending' );
 		$payment = new EDD_Payment( $payment_id );
-		var_dump( $payment );
 		$stats = new EDD_Payment_Stats();
 		$total_earnings = $stats->get_earnings( $this->_post2->ID );
-		var_dump( 'Total Earnings: ' .$total_earnings ); 
 		$this->assertEquals( '80.00', $total_earnings );
 		EDD()->session->set( 'edd_cart_fees', null );
 	}
