@@ -440,8 +440,40 @@ class Tests_Fee extends WP_UnitTestCase {
 			'id' => 'arbitrary_fee', 
 			'type' => 'item' 
 		) );
-		$payment_id = edd_insert_payment();
-		$stats = new EDD_Payment_Stats;
+		
+		$user = get_userdata(1);
+		$user_info = array(
+			'id'         => $user->ID,
+			'email'      => $user->user_email,
+			'first_name' => 'Network',
+			'last_name'  => 'Administrator',
+			'discount'   => 'none'
+		);
+		
+		$purchase_data = array(
+			'downloads'    => edd_get_cart_contents(),
+			'fees'         => edd_get_cart_fees(),        // Any arbitrary fees that have been added to the cart
+			'subtotal'     => edd_get_cart_subtotal(),    // Amount before taxes and discounts
+			'discount'     => edd_get_cart_discounted_amount(), // Discounted amount
+			'tax'          => edd_get_cart_tax(),               // Taxed amount
+			'price'        => edd_get_cart_total(),    // Amount after taxes
+			'date'         => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
+			'purchase_key' => strtolower( md5( uniqid() ) ),
+			'key'          => strtolower( md5( uniqid() ) ),
+			'user_email'   => $user['user_email'],
+			'user_info'    => stripslashes_deep( $user_info ),
+			'post_data'    => $_POST,
+			'cart_details' => edd_get_cart_content_details(),
+			'status'       => 'pending',
+			'gateway'      => 'manual',
+			'currency'     => 'USD',
+			'email'        => 'admin@example.org',
+		);
+		$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+		$_SERVER['SERVER_NAME'] = 'edd_virtual';
+		$payment_id = edd_insert_payment( $purchase_data );
+		edd_complete_purchase( $payment_id, 'pending', 'publish' );
+		$stats = new EDD_Payment_Stats();
 		$total_earnings = $stats->get_earnings( $this->_post2->ID );
 		var_dump( 'Total Earnings: ' .$total_earnings ); 
 		$this->assertEquals( '80.00', $total_earnings );
