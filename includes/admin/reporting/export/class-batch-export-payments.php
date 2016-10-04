@@ -219,7 +219,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 					'gateway'      => edd_get_gateway_admin_label( get_post_meta( $payment->ID, '_edd_payment_gateway', true ) ),
 					'trans_id'     => $payment->transaction_id,
 					'key'          => $payment_meta['key'],
-					'date'         => $payment->post_date,
+					'date'         => $payment->date,
 					'user'         => $user ? $user->display_name : __( 'guest', 'easy-digital-downloads' ),
 					'currency'     => $payment->currency,
 					'ip'           => $payment->ip,
