@@ -315,6 +315,18 @@ class Tests_Payments extends WP_UnitTestCase {
 
 	}
 
+	public function test_update_payment_data() {
+
+		$payment = new EDD_Payment( $this->_payment_id );
+		$payment->date = date( 'Y-n-d' );
+		$payment->save();
+		$meta = $payment->get_meta();
+
+		$this->assertSame( $payment->date, $meta['date'] );
+
+
+	}
+
 	public function test_get_payment_currency_code() {
 
 		$payment = new EDD_Payment( $this->_payment_id );
