@@ -473,7 +473,7 @@ class Tests_Fee extends WP_UnitTestCase {
 		$_SERVER['SERVER_NAME'] = 'edd_virtual';
 		$payment_id = edd_insert_payment( $purchase_data );
 		var_dump( $payment_id );
-		edd_complete_purchase( $payment_id, 'pending', 'publish' );
+		edd_complete_purchase( $payment_id, 'publish',  'pending' );
 		$payment = new EDD_Payment( $payment_id );
 		var_dump( $payment );
 		$stats = new EDD_Payment_Stats();
