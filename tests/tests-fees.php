@@ -6,12 +6,16 @@
  */
 class Tests_Fee extends WP_UnitTestCase {
 	protected $_post = null;
+	
+	protected $_post2 = null;
 
 	public function setUp() {
 
 		parent::setUp();
-		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );;
+		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
 		$this->_post = get_post( $post_id );
+		
+		$this->_post2 = EDD_Helper_Download::create_variable_download();
 
 		edd_add_to_cart( $this->_post->ID );
 
@@ -419,4 +423,28 @@ class Tests_Fee extends WP_UnitTestCase {
 
 		$this->assertEquals( $expected, $actual );
 	}
+	
+	public function test_product_earnings_fee() {
+		EDD()->session->set( 'edd_cart_fees', null );
+		$options = array(
+			'price_id' => 1
+		);
+		$this->assertEquals( 0, edd_add_to_cart( $this->_post2->ID, $options ) ); // Add price 100 to cart
+		
+		//Arbitrary fee test.
+		EDD()->fees->add_fee( array( 
+			'amount' => '-20.00', 
+			'label' => 'Arbitrary Item', 
+			'download_id' => $this->_post->ID,
+			'price_id'    => 1,
+			'id' => 'arbitrary_fee', 
+			'type' => 'item' 
+		) );
+		$payment_id = edd_insert_payment();
+		$stats = new EDD_Payment_Stats;
+		$total_earnings = $stats->get_earnings( $this->_post2->ID );
+		$this->assertEquals( '80.00', $total_earnings );
+		EDD()->session->set( 'edd_cart_fees', null );
+	}
+
 }
