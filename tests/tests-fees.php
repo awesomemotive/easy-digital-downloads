@@ -432,15 +432,27 @@ class Tests_Fee extends WP_UnitTestCase {
 		);
 		$this->assertEquals( 0, edd_add_to_cart( $this->_post2->ID, $options ) ); // Add price 100 to cart
 		
-		//Arbitrary fee test.
+		//Test with variable price id attached to a fee.
 		EDD()->fees->add_fee( array( 
 			'amount' => '-20.00', 
-			'label' => 'Arbitrary Item', 
-			'download_id' => $this->_post2->ID,
-			'price_id'    => 1,
-			'id' => 'arbitrary_fee', 
-			'type' => 'item' 
+			'label' => 'Shipping Fee (Small)', 
+			'download_id' => $this->_post2->ID, 
+			'price_id' => 1, 
+			'id' => 'shipping_fee_with_variable_price_id', 
+			'type' => 'fee' 
 		) );
+		
+		$expected = array(
+			'shipping_fee_with_variable_price_id' => array(
+				'amount' => '-20.00',
+				'label' => 'Shipping Fee (Small)',
+				'type'  => 'fee',
+				'no_tax' => false,
+				'download_id' => $this->_post2->ID,
+				'price_id'    => 1
+			),
+		);
+		$this->assertEquals( $expected, EDD()->fees->get_fees( 'all' ) );
 		
 		$user = get_userdata(1);
 		$user_info = array(
