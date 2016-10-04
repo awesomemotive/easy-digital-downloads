@@ -436,7 +436,7 @@ class Tests_Fee extends WP_UnitTestCase {
 		EDD()->fees->add_fee( array( 
 			'amount' => '-20.00', 
 			'label' => 'Arbitrary Item', 
-			'download_id' => $this->_post->ID,
+			'download_id' => $this->_post2->ID,
 			'price_id'    => 1,
 			'id' => 'arbitrary_fee', 
 			'type' => 'item' 
