@@ -448,7 +448,7 @@ class Tests_Fee extends WP_UnitTestCase {
 				'amount' => -20.0,
 				'label' => 'Shipping Fee (Small)',
 				'type'  => 'fee',
-				'no_tax' => false,
+				'no_tax' => true,
 				'download_id' => $this->_post2->ID,
 				'price_id'    => 1
 			),
