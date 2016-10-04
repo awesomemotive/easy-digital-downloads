@@ -425,11 +425,12 @@ class Tests_Fee extends WP_UnitTestCase {
 	}
 	
 	public function test_product_earnings_fee() {
+		edd_empty_cart();
 		EDD()->session->set( 'edd_cart_fees', null );
 		$options = array(
 			'price_id' => 1
 		);
-		$this->assertEquals( 1, edd_add_to_cart( $this->_post2->ID, $options ) ); // Add price 100 to cart
+		$this->assertEquals( 0, edd_add_to_cart( $this->_post2->ID, $options ) ); // Add price 100 to cart
 		
 		//Arbitrary fee test.
 		EDD()->fees->add_fee( array( 
@@ -471,7 +472,10 @@ class Tests_Fee extends WP_UnitTestCase {
 		$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 		$_SERVER['SERVER_NAME'] = 'edd_virtual';
 		$payment_id = edd_insert_payment( $purchase_data );
+		var_dump( $payment_id );
 		edd_complete_purchase( $payment_id, 'pending', 'publish' );
+		$payment = new EDD_Payment( $payment_id );
+		var_dump( $payment );
 		$stats = new EDD_Payment_Stats();
 		$total_earnings = $stats->get_earnings( $this->_post2->ID );
 		var_dump( 'Total Earnings: ' .$total_earnings ); 
