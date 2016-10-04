@@ -439,12 +439,13 @@ class Tests_Fee extends WP_UnitTestCase {
 			'download_id' => $this->_post2->ID, 
 			'price_id' => 1, 
 			'id' => 'shipping_fee_with_variable_price_id', 
-			'type' => 'fee' 
+			'type' => 'fee',
+			 'no_tax' => true
 		) );
 		
 		$expected = array(
 			'shipping_fee_with_variable_price_id' => array(
-				'amount' => '-20.00',
+				'amount' => -20.0,
 				'label' => 'Shipping Fee (Small)',
 				'type'  => 'fee',
 				'no_tax' => false,
@@ -489,7 +490,7 @@ class Tests_Fee extends WP_UnitTestCase {
 		var_dump( $payment );
 		$stats = new EDD_Payment_Stats();
 		$total_earnings = $stats->get_earnings( $this->_post2->ID );
-		$this->assertEquals( '80.00', $total_earnings );
+		$this->assertEquals( 80.00, $total_earnings );
 		EDD()->session->set( 'edd_cart_fees', null );
 	}
 
