@@ -179,7 +179,7 @@ function edd_register_settings() {
 				if ( empty( $option['id'] ) ) {
 					continue;
 				}
-                
+
 				$args = wp_parse_args( $option, array(
 				    'section'       => $section,
 				    'id'            => null,
@@ -720,7 +720,7 @@ function edd_get_registered_settings() {
 					),
 					'logged_in_only' => array(
 						'id'   => 'logged_in_only',
-						'name' => __( 'Disable Guest Checkout', 'easy-digital-downloads' ),
+						'name' => __( 'Require Login', 'easy-digital-downloads' ),
 						'desc' => __( 'Require that users be logged-in to purchase files.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
 						'tooltip_title' => __( 'Disabling Guest Checkout', 'easy-digital-downloads' ),
