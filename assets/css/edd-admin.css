@@ -341,6 +341,9 @@ textarea#edd-payment-note {
 #edd-order-resend-receipt .inside {
 	margin-top: 11px;
 }
+#edd-order-resend-receipt .edd-order-resend-receipt-addresses {
+	margin-top: 10px;
+}
 .edd-admin-box-inside:last-child {
 	border-bottom: 0;
 }
