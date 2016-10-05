@@ -179,7 +179,7 @@ function edd_register_settings() {
 				if ( empty( $option['id'] ) ) {
 					continue;
 				}
-                
+
 				$args = wp_parse_args( $option, array(
 				    'section'       => $section,
 				    'id'            => null,
@@ -720,10 +720,10 @@ function edd_get_registered_settings() {
 					),
 					'logged_in_only' => array(
 						'id'   => 'logged_in_only',
-						'name' => __( 'Disable Guest Checkout', 'easy-digital-downloads' ),
+						'name' => __( 'Require Login', 'easy-digital-downloads' ),
 						'desc' => __( 'Require that users be logged-in to purchase files.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
-						'tooltip_title' => __( 'Disabling Guest Checkout', 'easy-digital-downloads' ),
+						'tooltip_title' => __( 'Require Login', 'easy-digital-downloads' ),
 						'tooltip_desc'  => __( 'You can require that customers create and login to user accounts prior to purchasing from your store by enabling this option. When unchecked, users can purchase without being logged in by using their name and email address.', 'easy-digital-downloads' ),
 					),
 					'show_register_form' => array(
