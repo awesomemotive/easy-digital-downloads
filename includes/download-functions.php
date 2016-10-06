@@ -1060,6 +1060,18 @@ function edd_get_download_button_behavior( $download_id = 0 ) {
 }
 
 /**
+ * Is quantity input disabled on this product?
+ *
+ * @since 2.7
+ * @return bool
+ */
+function edd_download_quantities_disabled( $download_id = 0 ) {
+
+	$download = new EDD_Download( $download_id );
+	return $download->quantities_disabled();
+}
+
+/**
  * Get the file Download method
  *
  * @since 1.6
