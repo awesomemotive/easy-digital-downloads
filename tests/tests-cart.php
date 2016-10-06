@@ -352,6 +352,35 @@ class Test_Cart extends WP_UnitTestCase {
 
 	}
 
+	public function test_add_to_cart_with_quantities_enabled_on_product() {
+
+		add_filter( 'edd_item_quantities_enabled', '__return_true' );
+
+		$options = array(
+			'price_id' => 0,
+			'quantity' => 2
+		);
+		edd_add_to_cart( $this->_post->ID, $options );
+
+		$this->assertEquals( 2, edd_get_cart_item_quantity( $this->_post->ID, $options ) );
+	}
+
+	public function test_add_to_cart_with_quantities_disabled_on_product() {
+
+		add_filter( 'edd_item_quantities_enabled', '__return_true' );
+
+		update_post_meta( $this->_post->ID, '_edd_quantities_disabled', 1 );
+
+		$options = array(
+			'price_id' => 0,
+			'quantity' => 2
+		);
+		edd_add_to_cart( $this->_post->ID, $options );
+
+		$this->assertEquals( 1, edd_get_cart_item_quantity( $this->_post->ID, $options ) );
+
+	}
+
 	public function test_set_cart_item_quantity() {
 
 		edd_update_option( 'item_quantities', true );
