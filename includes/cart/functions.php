@@ -175,7 +175,7 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		$options['price_id'] = '0';
 	}
 
-	if( isset( $options['quantity'] ) ) {
+	if( isset( $options['quantity'] ) && ! $download->quantities_disabled() ) {
 		if ( is_array( $options['quantity'] ) ) {
 
 			$quantity = array();

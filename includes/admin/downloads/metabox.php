@@ -68,6 +68,7 @@ function edd_download_metabox_fields() {
 			'_edd_hide_purchase_link',
 			'_edd_download_tax_exclusive',
 			'_edd_button_behavior',
+			'_edd_quantities_disabled',
 			'edd_product_notes',
 			'_edd_default_price_id'
 		);
@@ -829,6 +830,35 @@ function edd_render_dowwn_tax_options( $post_id = 0 ) {
 <?php
 }
 add_action( 'edd_meta_box_settings_fields', 'edd_render_dowwn_tax_options', 30 );
+
+/**
+ * Product quantity settings
+ *
+ * Outputs the option to disable quantify field on product
+ *
+ * @since 2.7
+ * @param int $post_id Download (Post) ID
+ * @return void
+ */
+function edd_render_download_quantity_option( $post_id = 0 ) {
+	if( ! current_user_can( 'manage_shop_settings' ) || ! edd_item_quantities_enabled() ) {
+		return;
+	}
+
+	$disabled = edd_download_quantities_disabled( $post_id );
+?>
+	<p><strong><?php _e( 'Item Quantities:', 'easy-digital-downloads' ); ?></strong></p>
+	<label for="_edd_quantities_disabled">
+		<?php echo EDD()->html->checkbox( array(
+			'name'    => '_edd_quantities_disabled',
+			'current' => $disabled
+		) ); ?>
+		<?php _e( 'Disable quantity input for this product', 'easy-digital-downloads' ); ?>
+	</label>
+	<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Item Quantities</strong>: if disabled, customers will not be provided an option to change the number they wish to purchase.', 'easy-digital-downloads' ); ?>"></span>
+<?php
+}
+add_action( 'edd_meta_box_settings_fields', 'edd_render_download_quantity_option', 30 );
 
 /**
  * Add shortcode to settings meta box
