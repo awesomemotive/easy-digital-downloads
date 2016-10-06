@@ -220,6 +220,10 @@ class EDD_Fees {
 			// Remove fees that don't belong to the specified Download AND Price ID
 			foreach( $fees as $key => $fee ) {
 
+				if( is_null( $fee['price_id'] ) ) {
+					continue;
+				}
+
 				if ( (int) $price_id !== (int) $fee['price_id'] ){
 
 					unset( $fees[ $key ] );
