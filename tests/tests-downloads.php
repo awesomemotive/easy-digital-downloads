@@ -345,7 +345,7 @@ class Tests_Downloads extends WP_UnitTestCase {
 
 		update_post_meta( $this->_post->ID, '_edd_quantities_disabled', 1 );
 
-		$this->assertFalse( edd_download_quantities_disabled( $this->_post->ID ) );
+		$this->assertTrue( edd_download_quantities_disabled( $this->_post->ID ) );
 	}
 	
 }
