@@ -577,6 +577,13 @@ class EDD_Payment {
 				}
 			}
 
+			if ( edd_get_option( 'enable_sequential' ) ) {
+				$number       = edd_get_next_payment_number();
+				$this->number = edd_format_payment_number( $number );
+				$this->update_meta( '_edd_payment_number', $this->number );
+				update_option( 'edd_last_payment_number', $number );
+			}
+
 			$this->update_meta( '_edd_payment_meta', $this->payment_meta );
 			$this->new          = true;
 		}
@@ -839,8 +846,21 @@ class EDD_Payment {
 				'cart_details'  => $this->cart_details,
 				'fees'          => $this->fees,
 				'currency'      => $this->currency,
-				'user_info'     => $this->user_info,
+				'user_info'     => is_array( $this->user_info ) ? $this->user_info : array(),
 			);
+
+			// Do some merging of user_info before we merge it all, to honor the edd_payment_meta filter
+			if ( ! empty( $this->payment_meta['user_info'] ) ) {
+
+				$stored_discount = ! empty( $new_meta['user_info']['discount'] ) ? $new_meta['user_info']['discount'] : '';
+
+				$new_meta[ 'user_info' ] = array_replace_recursive( $new_meta[ 'user_info' ], (array) $this->payment_meta[ 'user_info' ] );
+
+				if ( 'none' !== $stored_discount ) {
+					$new_meta['user_info']['discount'] = $stored_discount;
+				}
+
+			}
 
 			$meta        = $this->get_meta();
 			$merged_meta = array_merge( $meta, $new_meta );
@@ -1506,6 +1526,7 @@ class EDD_Payment {
 			if ( empty( $meta['date'] ) ) {
 				$meta['date'] = get_post_field( 'post_date', $this->ID );
 			}
+
 		}
 
 		$meta = apply_filters( 'edd_get_payment_meta_' . $meta_key, $meta, $this->ID );
@@ -2036,7 +2057,10 @@ class EDD_Payment {
 	 * @return array               The Address information for the payment
 	 */
 	private function setup_address() {
-		$address = ! empty( $this->payment_meta['user_info']['address'] ) ? $this->payment_meta['user_info']['address'] : array( 'line1' => '', 'line2' => '', 'city' => '', 'country' => '', 'state' => '', 'zip' => '' );
+		$address  = ! empty( $this->payment_meta['user_info']['address'] ) ? $this->payment_meta['user_info']['address'] : array();
+		$defaults = array( 'line1' => '', 'line2' => '', 'city' => '', 'country' => '', 'state' => '', 'zip' => '' );
+
+		$address = wp_parse_args( $address, $defaults );
 		return $address;
 	}
 

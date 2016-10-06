@@ -771,4 +771,37 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 
 		$this->assertEquals( $payment->user_id, $customer->user_id );
 	}
+
+	public function test_filtering_payment_meta() {
+		add_filter( 'edd_payment_meta', array( $this, 'alter_payment_meta' ), 10, 2 );
+		$payment_id         = EDD_Helper_Payment::create_simple_payment();
+		remove_filter( 'edd_payment_meta', array( $this, 'alter_payment_meta' ), 10, 2 );
+
+		$payment = new EDD_Payment( $payment_id );
+		$this->assertEquals( 'PL', $payment->payment_meta['user_info']['address']['country'] );
+	}
+
+	public function test_modifying_address() {
+		$payment_id = EDD_Helper_Payment::create_simple_payment();
+		$payment    = new EDD_Payment( $payment_id );
+		$payment->address = array(
+			'line1'   => '123 Main St',
+			'line2'   => '',
+			'city'    => 'New York City',
+			'state'   => 'New York',
+			'zip'     => '10010',
+			'country' => 'US',
+		);
+		$payment->save();
+
+		$payment_2 = new EDD_Payment( $payment_id );
+		$this->assertEquals( $payment_2->address, $payment_2->user_info['address'] );
+	}
+
+	/** Helpers **/
+	public function alter_payment_meta( $meta, $payment_data ) {
+		$meta['user_info']['address']['country'] = 'PL';
+
+		return $meta;
+	}
 }

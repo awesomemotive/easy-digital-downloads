@@ -232,7 +232,7 @@ function edd_register_form_shortcode( $atts, $content = null ) {
 add_shortcode( 'edd_register', 'edd_register_form_shortcode' );
 
 /**
- * Discounts short code
+ * Discounts shortcode
  *
  * Displays a list of all the active discounts. The active discounts can be configured
  * from the Discount Codes admin screen.

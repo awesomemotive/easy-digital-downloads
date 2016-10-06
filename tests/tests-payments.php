@@ -117,6 +117,11 @@ class Tests_Payments extends WP_UnitTestCase {
 		$this->assertEquals( 'publish', $out[0]->post_status );
 	}
 
+	public function test_update_payment_status_with_invalid_id() {
+		$updated = edd_update_payment_status( 1212121212121212121212112, 'publish' );
+		$this->assertFalse( $updated );
+	}
+
 	public function test_check_for_existing_payment() {
 		edd_update_payment_status( $this->_payment_id, 'publish' );
 		$this->assertTrue( edd_check_for_existing_payment( $this->_payment_id ) );

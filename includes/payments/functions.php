@@ -166,12 +166,6 @@ function edd_insert_payment( $payment_data = array() ) {
 		$payment->date = $payment_data['post_date'];
 	}
 
-	if ( edd_get_option( 'enable_sequential' ) ) {
-		$number          = edd_get_next_payment_number();
-		$payment->number = edd_format_payment_number( $number );
-		update_option( 'edd_last_payment_number', $number );
-	}
-
 	// Clear the user's purchased cache
 	delete_transient( 'edd_user_' . $payment_data['user_info']['id'] . '_purchases' );
 
@@ -195,11 +189,17 @@ function edd_insert_payment( $payment_data = array() ) {
  * @param  string $new_status New Payment Status (default: publish)
  * @return bool               If the payment was successfully updated
  */
-function edd_update_payment_status( $payment_id, $new_status = 'publish' ) {
+function edd_update_payment_status( $payment_id = 0, $new_status = 'publish' ) {
 
+	$updated = false;
 	$payment = new EDD_Payment( $payment_id );
-	$payment->status = $new_status;
-	$updated = $payment->save();
+
+	if( $payment && $payment->ID > 0 ) {
+
+		$payment->status = $new_status;
+		$updated = $payment->save();
+
+	}
 
 	return $updated;
 

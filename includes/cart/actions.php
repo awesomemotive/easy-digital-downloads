@@ -80,7 +80,15 @@ function edd_process_add_to_cart( $data ) {
 	$cart        = edd_add_to_cart( $download_id, $options );
 
 	if ( edd_straight_to_checkout() && ! edd_is_checkout() ) {
-		wp_redirect( edd_get_checkout_uri(), 303 );
+		$query_args 	= remove_query_arg( array( 'edd_action', 'download_id', 'edd_options' ) );
+		$query_part 	= strpos( $query_args, "?" );
+		$url_parameters = '';
+
+		if ( false !== $query_part ) { 
+			$url_parameters = substr( $query_args, $query_part ); 
+		}
+
+		wp_redirect( edd_get_checkout_uri() . $url_parameters, 303 );
 		edd_die();
 	} else {
 		wp_redirect( remove_query_arg( array( 'edd_action', 'download_id', 'edd_options' ) ) ); edd_die();
