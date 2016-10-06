@@ -180,33 +180,33 @@ function edd_register_settings() {
 					continue;
 				}
 
-				$name = isset( $option['name'] ) ? $option['name'] : '';
+				$args = wp_parse_args( $option, array(
+				    'section'       => $section,
+				    'id'            => null,
+				    'desc'          => '',
+				    'name'          => '',
+				    'size'          => null,
+				    'options'       => '',
+				    'std'           => '',
+				    'min'           => null,
+				    'max'           => null,
+				    'step'          => null,
+				    'chosen'        => null,
+				    'placeholder'   => null,
+				    'allow_blank'   => true,
+				    'readonly'      => false,
+				    'faux'          => false,
+				    'tooltip_title' => false,
+				    'tooltip_desc'  => false,
+				) );
 
 				add_settings_field(
-					'edd_settings[' . $option['id'] . ']',
-					$name,
-					function_exists( 'edd_' . $option['type'] . '_callback' ) ? 'edd_' . $option['type'] . '_callback' : 'edd_missing_callback',
+					'edd_settings[' . $args['id'] . ']',
+					$args['name'],
+					function_exists( 'edd_' . $args['type'] . '_callback' ) ? 'edd_' . $args['type'] . '_callback' : 'edd_missing_callback',
 					'edd_settings_' . $tab . '_' . $section,
 					'edd_settings_' . $tab . '_' . $section,
-					array(
-						'section'       => $section,
-						'id'            => isset( $option['id'] )            ? $option['id']            : null,
-						'desc'          => ! empty( $option['desc'] )        ? $option['desc']          : '',
-						'name'          => isset( $option['name'] )          ? $option['name']          : null,
-						'size'          => isset( $option['size'] )          ? $option['size']          : null,
-						'options'       => isset( $option['options'] )       ? $option['options']       : '',
-						'std'           => isset( $option['std'] )           ? $option['std']           : '',
-						'min'           => isset( $option['min'] )           ? $option['min']           : null,
-						'max'           => isset( $option['max'] )           ? $option['max']           : null,
-						'step'          => isset( $option['step'] )          ? $option['step']          : null,
-						'chosen'        => isset( $option['chosen'] )        ? $option['chosen']        : null,
-						'placeholder'   => isset( $option['placeholder'] )   ? $option['placeholder']   : null,
-						'allow_blank'   => isset( $option['allow_blank'] )   ? $option['allow_blank']   : true,
-						'readonly'      => isset( $option['readonly'] )      ? $option['readonly']      : false,
-						'faux'          => isset( $option['faux'] )          ? $option['faux']          : false,
-						'tooltip_title' => isset( $option['tooltip_title'] ) ? $option['tooltip_title'] : false,
-						'tooltip_desc'  => isset( $option['tooltip_desc'] )  ? $option['tooltip_desc']  : false,
-					)
+					$args
 				);
 			}
 		}
@@ -247,7 +247,7 @@ function edd_get_registered_settings() {
 					'purchase_page' => array(
 						'id'          => 'purchase_page',
 						'name'        => __( 'Checkout Page', 'easy-digital-downloads' ),
-						'desc'        => __( 'This is the checkout page where buyers will complete their purchases. The [download_checkout] short code must be on this page.', 'easy-digital-downloads' ),
+						'desc'        => __( 'This is the checkout page where buyers will complete their purchases. The [download_checkout] shortcode must be on this page.', 'easy-digital-downloads' ),
 						'type'        => 'select',
 						'options'     => edd_get_pages(),
 						'chosen'      => true,
@@ -256,7 +256,7 @@ function edd_get_registered_settings() {
 					'success_page' => array(
 						'id'          => 'success_page',
 						'name'        => __( 'Success Page', 'easy-digital-downloads' ),
-						'desc'        => __( 'This is the page buyers are sent to after completing their purchases. The [edd_receipt] short code should be on this page.', 'easy-digital-downloads' ),
+						'desc'        => __( 'This is the page buyers are sent to after completing their purchases. The [edd_receipt] shortcode should be on this page.', 'easy-digital-downloads' ),
 						'type'        => 'select',
 						'options'     => edd_get_pages(),
 						'chosen'      => true,
@@ -274,7 +274,7 @@ function edd_get_registered_settings() {
 					'purchase_history_page' => array(
 						'id'          => 'purchase_history_page',
 						'name'        => __( 'Purchase History Page', 'easy-digital-downloads' ),
-						'desc'        => __( 'This page shows a complete purchase history for the current user, including download links. The [purchase_history] short code should be on this page.', 'easy-digital-downloads' ),
+						'desc'        => __( 'This page shows a complete purchase history for the current user, including download links. The [purchase_history] shortcode should be on this page.', 'easy-digital-downloads' ),
 						'type'        => 'select',
 						'options'     => edd_get_pages(),
 						'chosen'      => true,
@@ -283,7 +283,7 @@ function edd_get_registered_settings() {
 					'login_redirect_page' => array(
 						'id'          => 'login_redirect_page',
 						'name'        => __( 'Login Redirect Page', 'easy-digital-downloads' ),
-						'desc'        => __( 'This is the page where buyers will be redirected by default once they log in. The [edd_login redirect="'.trailingslashit( home_url() ).'"] short code with the redirect attribute can override this setting.', 'easy-digital-downloads' ),
+						'desc'        => __( 'This is the page where buyers will be redirected by default once they log in. The [edd_login redirect="'.trailingslashit( home_url() ).'"] shortcode with the redirect attribute can override this setting.', 'easy-digital-downloads' ),
 						'type'        => 'select',
 						'options'     => edd_get_pages(),
 						'chosen'      => true,
@@ -720,10 +720,10 @@ function edd_get_registered_settings() {
 					),
 					'logged_in_only' => array(
 						'id'   => 'logged_in_only',
-						'name' => __( 'Disable Guest Checkout', 'easy-digital-downloads' ),
+						'name' => __( 'Require Login', 'easy-digital-downloads' ),
 						'desc' => __( 'Require that users be logged-in to purchase files.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
-						'tooltip_title' => __( 'Disabling Guest Checkout', 'easy-digital-downloads' ),
+						'tooltip_title' => __( 'Require Login', 'easy-digital-downloads' ),
 						'tooltip_desc'  => __( 'You can require that customers create and login to user accounts prior to purchasing from your store by enabling this option. When unchecked, users can purchase without being logged in by using their name and email address.', 'easy-digital-downloads' ),
 					),
 					'show_register_form' => array(
@@ -969,6 +969,9 @@ function edd_settings_sanitize( $input = array() ) {
 		if ( $doing_section ) {
 			switch( $type ) {
 				case 'checkbox':
+				case 'gateways':
+				case 'multicheck':
+				case 'payment_icons':
 					if ( array_key_exists( $key, $input ) && $output[ $key ] === '-1' ) {
 						unset( $output[ $key ] );
 					}
@@ -1338,6 +1341,7 @@ function edd_multicheck_callback( $args ) {
 
 	$html = '';
 	if ( ! empty( $args['options'] ) ) {
+		$html .= '<input type="hidden" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="-1" />';
 		foreach( $args['options'] as $key => $option ):
 			if( isset( $edd_option[ $key ] ) ) { $enabled = $option; } else { $enabled = NULL; }
 			$html .= '<input name="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked($option, $enabled, false) . '/>&nbsp;';
@@ -1360,7 +1364,7 @@ function edd_multicheck_callback( $args ) {
 function edd_payment_icons_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
 
-	$html = '';
+	$html = '<input type="hidden" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="-1" />';
 	if ( ! empty( $args['options'] ) ) {
 		foreach( $args['options'] as $key => $option ) {
 
@@ -1388,7 +1392,7 @@ function edd_payment_icons_callback( $args ) {
 
 					} else {
 
-						$image       = edd_locate_template( 'images' . DIRECTORY_SEPARATOR . 'icons' . DIRECTORY_SEPARATOR . $card . '.gif', false );
+						$image       = edd_locate_template( 'images' . DIRECTORY_SEPARATOR . 'icons' . DIRECTORY_SEPARATOR . $card . '.png', false );
 						$content_dir = WP_CONTENT_DIR;
 
 						if( function_exists( 'wp_normalize_path' ) ) {
@@ -1461,7 +1465,7 @@ function edd_radio_callback( $args ) {
 function edd_gateways_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
 
-	$html = '';
+	$html = '<input type="hidden" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="-1" />';
 
 	foreach ( $args['options'] as $key => $option ) :
 		if ( isset( $edd_option[ $key ] ) )
@@ -1469,7 +1473,7 @@ function edd_gateways_callback( $args ) {
 		else
 			$enabled = null;
 
-		$html .= '<input name="edd_settings[' . esc_attr( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']"" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" type="checkbox" value="1" ' . checked('1', $enabled, false) . '/>&nbsp;';
+		$html .= '<input name="edd_settings[' . esc_attr( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" type="checkbox" value="1" ' . checked('1', $enabled, false) . '/>&nbsp;';
 		$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']">' . esc_html( $option['admin_label'] ) . '</label><br/>';
 	endforeach;
 
@@ -2060,9 +2064,21 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 						break;
 
+					case 'license_not_activable':
+
+						$class = 'error';
+						$messages[] = __( 'The key you entered belongs to a bundle, please use the product specific license key.', 'easy-digital-downloads' );
+
+						$license_status = 'license-' . $class . '-notice';
+						break;
+
 					default :
 
-						$messages[] = print_r( $license, true );
+						$class = 'error';
+						$error = ! empty(  $license->error ) ?  $license->error : __( 'unknown_error', 'easy-digital-downloads' );
+						$messages[] = sprintf( __( 'There was an error with this license key: %s. Please <a href="%s">contact our support team</a>.', 'easy-digital-downloads' ), $error, 'https://easydigitaldownlaods.com/support' );
+
+						$license_status = 'license-' . $class . '-notice';
 						break;
 				}
 

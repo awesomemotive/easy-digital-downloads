@@ -117,10 +117,11 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 		if( $payments ) {
 
 			foreach ( $payments as $payment ) {
-				$payment_meta   = edd_get_payment_meta( $payment->ID );
-				$user_info      = edd_get_payment_meta_user_info( $payment->ID );
-				$downloads      = edd_get_payment_meta_cart_details( $payment->ID );
-				$total          = edd_get_payment_amount( $payment->ID );
+				$payment = new EDD_Payment( $payment->ID );
+				$payment_meta   = $payment->payment_meta;
+				$user_info      = $payment->user_info;
+				$downloads      = $payment->cart_details;
+				$total          = $payment->total;
 				$user_id        = isset( $user_info['id'] ) && $user_info['id'] != -1 ? $user_info['id'] : $user_info['email'];
 				$products       = '';
 				$products_raw   = '';
@@ -198,9 +199,9 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 
 				$data[] = array(
 					'id'           => $payment->ID,
-					'seq_id'       => edd_get_payment_number( $payment->ID ),
+					'seq_id'       => $payment->number,
 					'email'        => $payment_meta['email'],
-					'customer_id'  => edd_get_payment_customer_id( $payment->ID ),
+					'customer_id'  => $payment->customer_id,
 					'first'        => $user_info['first_name'],
 					'last'         => $user_info['last_name'],
 					'address1'     => isset( $user_info['address']['line1'] )   ? $user_info['address']['line1']   : '',
@@ -216,14 +217,14 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 					'tax'          => html_entity_decode( edd_format_amount( edd_get_payment_tax( $payment->ID, $payment_meta ) ) ),
 					'discount'     => isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ? $user_info['discount'] : __( 'none', 'easy-digital-downloads' ),
 					'gateway'      => edd_get_gateway_admin_label( get_post_meta( $payment->ID, '_edd_payment_gateway', true ) ),
-					'trans_id'     => edd_get_payment_transaction_id( $payment->ID ),
+					'trans_id'     => $payment->transaction_id,
 					'key'          => $payment_meta['key'],
-					'date'         => $payment->post_date,
+					'date'         => $payment->date,
 					'user'         => $user ? $user->display_name : __( 'guest', 'easy-digital-downloads' ),
-					'currency'     => edd_get_payment_currency_code( $payment->ID ),
-					'ip'           => edd_get_payment_user_ip( $payment->ID ),
-					'mode'         => edd_get_payment_meta( $payment->ID, '_edd_payment_mode', true ),
-					'status'       => edd_get_payment_status( $payment, true )
+					'currency'     => $payment->currency,
+					'ip'           => $payment->ip,
+					'mode'         => $payment->get_meta( '_edd_payment_mode', true ),
+					'status'       => $payment->status
 				);
 
 			}

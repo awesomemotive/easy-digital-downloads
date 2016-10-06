@@ -24,7 +24,8 @@ function edd_options_page() {
 
 	$settings_tabs = edd_get_settings_tabs();
 	$settings_tabs = empty($settings_tabs) ? array() : $settings_tabs;
-	$active_tab    = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $settings_tabs ) ? $_GET['tab'] : 'general';
+	$active_tab    = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : 'general';
+	$active_tab    = array_key_exists( $active_tab, $settings_tabs ) ? $active_tab : 'general';
 	$sections      = edd_get_settings_tab_sections( $active_tab );
 	$key           = 'main';
 
@@ -33,7 +34,7 @@ function edd_options_page() {
 	}
 
 	$registered_sections = edd_get_settings_tab_sections( $active_tab );
-	$section             = isset( $_GET['section'] ) && ! empty( $registered_sections ) && array_key_exists( $_GET['section'], $registered_sections ) ? $_GET['section'] : $key;
+	$section             = isset( $_GET['section'] ) && ! empty( $registered_sections ) && array_key_exists( $_GET['section'], $registered_sections ) ? sanitize_text_field( $_GET['section'] ) : $key;
 
 	// Unset 'main' if it's empty and default to the first non-empty if it's the chosen section
 	$all_settings = edd_get_registered_settings();

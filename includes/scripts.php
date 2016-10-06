@@ -34,6 +34,11 @@ function edd_load_scripts() {
 		$position = edd_get_item_position_in_cart( $post->ID );
 	}
 
+	$has_purchase_links = false;
+	if ( ( ! empty( $post->post_content ) && ( has_shortcode( $post->post_content, 'purchase_link' ) || has_shortcode( $post->post_content, 'downloads' ) ) ) || is_post_type_archive( 'download' ) ) {
+		$has_purchase_links = true;
+	}
+
 	if ( edd_is_checkout() ) {
 		if ( edd_is_cc_verify_enabled() ) {
 			wp_register_script( 'creditCardValidator', $js_dir . 'jquery.creditCardValidator' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
@@ -71,6 +76,7 @@ function edd_load_scripts() {
 		wp_localize_script( 'edd-ajax', 'edd_scripts', apply_filters( 'edd_ajax_script_vars', array(
 			'ajaxurl'                 => edd_get_ajax_url(),
 			'position_in_cart'        => isset( $position ) ? $position : -1,
+			'has_purchase_links'      => $has_purchase_links,
 			'already_in_cart_message' => __('You have already added this item to your cart','easy-digital-downloads' ), // Item already in the cart message
 			'empty_cart_message'      => __('Your cart is empty','easy-digital-downloads' ), // Item already in the cart message
 			'loading'                 => __('Loading','easy-digital-downloads' ) , // General loading message
