@@ -1428,6 +1428,8 @@ class EDD_API {
 				$sales['sales'][ $i ]['total']          = $payment->total;
 				$sales['sales'][ $i ]['gateway']        = $payment->gateway;
 				$sales['sales'][ $i ]['email']          = $payment->email;
+				$sales['sales'][ $i ]['user_id']       = $payment->user_id;
+				$sales['sales'][ $i ]['customer_id']       = $payment->customer_id;
 				$sales['sales'][ $i ]['date']           = $payment->date;
 				$sales['sales'][ $i ]['products']       = array();
 
