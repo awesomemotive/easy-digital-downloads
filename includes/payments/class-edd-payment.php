@@ -847,6 +847,7 @@ class EDD_Payment {
 				'fees'          => $this->fees,
 				'currency'      => $this->currency,
 				'user_info'     => is_array( $this->user_info ) ? $this->user_info : array(),
+				'date'          => $this->date
 			);
 
 			// Do some merging of user_info before we merge it all, to honor the edd_payment_meta filter
