@@ -86,6 +86,7 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 	delete_option( 'edd_tracking_notice' );
 	delete_option( 'edd_earnings_total' );
 	delete_option( 'edd_tax_rates' );
+	delete_option( 'edd_version_upgraded_from' );
 
 	/** Delete Capabilities */
 	EDD()->roles->remove_caps();
