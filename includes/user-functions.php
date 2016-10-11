@@ -525,7 +525,15 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 
 	$user_message .= sprintf( __( 'Password: %s', 'easy-digital-downloads' ), '[' . $password_message . ']' ) . "\r\n";
 
-	$user_message .= '<a href="' . wp_login_url() . '"> ' . esc_attr__( 'Click Here to Log In', 'easy-digital-downloads' ) . ' &raquo;</a>' . "\r\n";
+	if( $emails->html ) {
+
+		$user_message .= '<a href="' . wp_login_url() . '"> ' . esc_attr__( 'Click here to log in', 'easy-digital-downloads' ) . ' &raquo;</a>' . "\r\n";
+
+	} else {
+
+		$user_message .= sprintf( __( 'To log in, visit: %s', 'easy-digital-downloads' ), wp_login_url() ) . "\r\n";
+
+	}
 
 	$emails->__set( 'heading', $user_heading );
 
