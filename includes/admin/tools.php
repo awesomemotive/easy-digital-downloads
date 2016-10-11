@@ -316,6 +316,25 @@ function edd_has_beta_support() {
 
 
 /**
+ * Check if a given product has beta support enabled
+ *
+ * @since       2.6.9
+ * @param       string $slug The slug of the product to check
+ * @return      bool True if enabled, false otherwise
+ */
+function edd_is_beta_support_enabled( $slug ) {
+	$enabled_betas = edd_get_option( 'enabled_betas', array() );
+	$return        = false;
+
+	if( array_key_exists( $slug, $enabled_betas ) ) {
+		$return = true;
+	}
+
+	return $return;
+}
+
+
+/**
  * Save enabled betas
  *
  * @since       2.6.9
