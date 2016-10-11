@@ -187,58 +187,80 @@ class EDD_HTML_Elements {
 	}
 
 	/**
-	 * Renders an HTML Dropdown of all the Users
- 	 *
- 	 * @access public
- 	 * @since 2.6.9
- 	 * @param array $args
- 	 * @return string $output User dropdown
- 	 */
- 	public function user_dropdown( $args = array() ) {
+	 * Renders an HTML Dropdown of all customers
+	 *
+	 * @access public
+	 * @since 2.2
+	 * @param array $args
+	 * @return string $output Customer dropdown
+	 */
+	public function customer_dropdown( $args = array() ) {
 
- 		$defaults = array(
- 			'name'        => 'users',
- 			'id'          => 'users',
- 			'class'       => '',
- 			'multiple'    => false,
- 			'selected'    => 0,
- 			'chosen'      => true,
- 			'placeholder' => __( 'Select a User', 'easy-digital-downloads' ),
- 			'number'      => 30,
- 			'data'        => array( 'search-type' => 'customer' ),
- 		);
+		$defaults = array(
+			'name'        => 'customers',
+			'id'          => 'customers',
+			'class'       => '',
+			'multiple'    => false,
+			'selected'    => 0,
+			'chosen'      => true,
+			'placeholder' => __( 'Select a Customer', 'easy-digital-downloads' ),
+			'number'      => 30,
+			'data'        => array( 'search-type' => 'customer' ),
+		);
 
- 		$args = wp_parse_args( $args, $defaults );
+		$args = wp_parse_args( $args, $defaults );
 
- 		$users = get_users();
- 		$options   = array();
+		$customers = EDD()->customers->get_customers( array(
+			'number' => $args['number']
+		) );
 
- 		if ( $users ) {
- 			foreach ( $users as $user ) {
- 				$options[ $user->ID ] = esc_html( $user->user_login );
- 			}
- 		} else {
- 			$options[0] = __( 'No users found', 'easy-digital-downloads' );
- 		}
+		$options = array();
 
- 		$output = $this->select( array(
- 			'name'             => $args['name'],
- 			'selected'         => $args['selected'],
- 			'id'               => $args['id'],
- 			'class'            => $args['class'] . ' edd-customer-select',
- 			'options'          => $options,
- 			'multiple'         => $args['multiple'],
- 			'placeholder'      => $args['placeholder'],
- 			'chosen'           => $args['chosen'],
- 			'show_option_all'  => false,
- 			'show_option_none' => false,
- 			'data'             => $args['data'],
- 		) );
+		if ( $customers ) {
+			$options[0] = __( 'No customer attached', 'easy-digital-downloads' );
+			foreach ( $customers as $customer ) {
+				$options[ absint( $customer->id ) ] = esc_html( $customer->name . ' (' . $customer->email . ')' );
+			}
+		} else {
+			$options[0] = __( 'No customers found', 'easy-digital-downloads' );
+		}
 
- 		return $output;
- 	}
+		if( ! empty( $args['selected'] ) ) {
 
- 	/**
+			// If a selected customer has been specified, we need to ensure it's in the initial list of customers displayed
+
+			if( ! array_key_exists( $args['selected'], $options ) ) {
+
+				$customer = new EDD_Customer( $args['selected'] );
+
+				if( $customer ) {
+
+					$options[ absint( $args['selected'] ) ] = esc_html( $customer->name . ' (' . $customer->email . ')' );
+
+				}
+
+			}
+
+		}
+
+		$output = $this->select( array(
+			'name'             => $args['name'],
+			'selected'         => $args['selected'],
+			'id'               => $args['id'],
+			'class'            => $args['class'] . ' edd-customer-select',
+			'options'          => $options,
+			'multiple'         => $args['multiple'],
+			'placeholder'      => $args['placeholder'],
+			'chosen'           => $args['chosen'],
+			'show_option_all'  => false,
+			'show_option_none' => false,
+			'data'             => $args['data'],
+		) );
+
+		return $output;
+	}
+
+	/**
 	 * Renders an HTML Dropdown of all the Discounts
 	 *
 	 * @access public
