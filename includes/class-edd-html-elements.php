@@ -75,61 +75,98 @@ class EDD_HTML_Elements {
 				if ( $args['variations'] && edd_has_variable_prices( $product->ID ) ) {
  					$prices = edd_get_variable_prices( $product->ID );
  					foreach ( $prices as $key => $value ) {
- 						$name   = isset( $value['name'] )   ? $value['name']   : '';
- 						$amount = isset( $value['amount'] ) ? $value['amount'] : '';
- 						$index  = isset( $value['index'] )  ? $value['index']  : $key;
+ 						$name   = ! empty( $value['name'] )   ? $value['name']   : '';
+ 						$amount = ! empty( $value['amount'] ) ? $value['amount'] : '';
+ 						$index  = ! empty( $value['index'] )  ? $value['index']  : $key;
  						if ( $name && $index ) {
  							$options[ absint( $product->ID ) . '_' . $index ] = esc_html( $product->post_title . ': ' . $name );
  						}
  					}
- 				} 
+ 				}
 			}
 		}
 
 		// This ensures that any selected products are included in the drop down
-		if( is_array( $args['selected'] ) ) {
+		if ( is_array( $args['selected'] ) ) {
+
 			foreach( $args['selected'] as $item ) {
-				if ( ! in_array( $item, $options ) ) {
+
+				if ( ! array_key_exists( $item, $options ) ) {
+
  					if ( strpos( $item, '_' ) !== false ) {
+
  						$pieces = explode( '_' , $item );
+
  						if ( ! empty( $pieces[0] ) && isset( $pieces[1] ) && absint( $pieces[1] ) > -1 ) {
+
  							$prices = edd_get_variable_prices( (int) $pieces[0] );
  							foreach ( $prices as $key => $value ) {
+
  								$name   = isset( $value['name'] )   ? $value['name']   : '';
  								$amount = isset( $value['amount'] ) ? $value['amount'] : '';
  								$index  = isset( $value['index'] )  ? $value['index']  : $key;
+
  								if ( $name && $index && (int) $pieces[1] === (int) $index  ) {
+
  									$options[ absint( $product->ID ) . '_' . $index ] = esc_html( get_the_title( (int) $pieces[0] ) . ': ' . $name );
+
  								}
+
  							}
+
  						}
+
  					} else {
- 						$options[$item] = get_the_title( $item );
+
+ 						$options[ $item ] = get_the_title( $item );
+
  					}
+ 				}
+
 			}
+
 		} elseif ( is_numeric( $args['selected'] ) && $args['selected'] !== 0 ) {
-			if ( ! in_array( $args['selected'], $options ) ) {
+
+			if ( ! array_key_exists( $args['selected'], $options ) ) {
+
 				if ( strpos( $args['selected'], '_' ) !== false ) {
+
 					$pieces = explode( '_' , $item );
 					if ( ! empty( $pieces[0] ) && isset( $pieces[1] ) && absint( $pieces[1] ) > -1 ) {
+
 						$prices = edd_get_variable_prices( (int) $pieces[0] );
+
 						foreach ( $prices as $key => $value ) {
+
 							$name   = isset( $value['name'] )   ? $value['name']   : '';
 							$amount = isset( $value['amount'] ) ? $value['amount'] : '';
 							$index  = isset( $value['index'] )  ? $value['index']  : $key;
+
 							if ( $name && $index && (int) $pieces[1] === (int) $index  ) {
+
 								$options[ absint( $product->ID ) . '_' . $index ] = esc_html( get_the_title( (int) $pieces[0] ) . ': ' . $name );
+
 							}
+
 						}
+
 					}
 				} else {
+
 					$options[$item] = get_the_title( $item );
+
 				}
+
 			}
+
 		}
 
 		if ( ! $args['bundles'] ) {
 			$args['class'] .= ' no-bundles';
+		}
+
+		if ( $args['variations'] ) {
+			$args['class'] .= ' variations';
 		}
 
 		$output = $this->select( array(
@@ -232,7 +269,7 @@ class EDD_HTML_Elements {
  	 * @return string $output User dropdown
  	 */
  	public function user_dropdown( $args = array() ) {
- 
+
  		$defaults = array(
  			'name'        => 'users',
  			'id'          => 'users',
@@ -244,12 +281,12 @@ class EDD_HTML_Elements {
  			'number'      => 30,
  			'data'        => array( 'search-type' => 'customer' ),
  		);
- 
+
  		$args = wp_parse_args( $args, $defaults );
- 
+
  		$users = get_users();
  		$options   = array();
- 
+
  		if ( $users ) {
  			foreach ( $users as $user ) {
  				$options[ $user->ID ] = esc_html( $user->user_login );
@@ -257,7 +294,7 @@ class EDD_HTML_Elements {
  		} else {
  			$options[0] = __( 'No users found', 'easy-digital-downloads' );
  		}
- 
+
  		$output = $this->select( array(
  			'name'             => $args['name'],
  			'selected'         => $args['selected'],
@@ -271,10 +308,10 @@ class EDD_HTML_Elements {
  			'show_option_none' => false,
  			'data'             => $args['data'],
  		) );
- 
+
  		return $output;
  	}
- 
+
  	/**
 	 * Renders an HTML Dropdown of all the Discounts
 	 *
@@ -493,7 +530,7 @@ class EDD_HTML_Elements {
 			foreach ( $args['options'] as $key => $option ) {
 
 				if ( $args['multiple'] && is_array( $args['selected'] ) ) {
-					$selected = selected( true, in_array( $key, $args['selected'] ), false );
+					$selected = selected( true, in_array( (string) $key, $args['selected'], true ), false );
 				} else {
 					$selected = selected( $args['selected'], $key, false );
 				}
@@ -593,7 +630,7 @@ class EDD_HTML_Elements {
 			if ( ! empty( $args['label'] ) ) {
 				$output .= '<label class="edd-label" for="' . edd_sanitize_key( $args['id'] ) . '">' . esc_html( $args['label'] ) . '</label>';
 			}
-			
+
 			if ( ! empty( $args['desc'] ) ) {
 				$output .= '<span class="edd-description">' . esc_html( $args['desc'] ) . '</span>';
 			}
@@ -654,7 +691,7 @@ class EDD_HTML_Elements {
 			if ( ! empty( $args['label'] ) ) {
 				$output .= '<label class="edd-label" for="' . edd_sanitize_key( $args['name'] ) . '">' . esc_html( $args['label'] ) . '</label>';
 			}
-			
+
 			$output .= '<textarea name="' . esc_attr( $args['name'] ) . '" id="' . edd_sanitize_key( $args['name'] ) . '" class="' . $class . '"' . $disabled . '>' . esc_attr( $args['value'] ) . '</textarea>';
 
 			if ( ! empty( $args['desc'] ) ) {
