@@ -226,7 +226,7 @@ function edd_add_customer_email( $args ) {
 
 				$output = array(
 					'success'  => false,
-					'message'  => __( 'Email already assocaited with this customer.', 'easy-digital-downloads' ),
+					'message'  => __( 'Email already associated with this customer.', 'easy-digital-downloads' ),
 				);
 
 			} else {
