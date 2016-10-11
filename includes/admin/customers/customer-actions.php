@@ -179,6 +179,7 @@ add_action( 'edd_edit-customer', 'edd_edit_customer', 10, 1 );
  * @return mixed        If DOING_AJAX echos out JSON, otherwise returns array of success (bool) and message (string)
  */
 function edd_add_customer_email( $args ) {
+
 	$customer_edit_role = apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
 
 	if ( ! is_admin() || ! current_user_can( $customer_edit_role ) ) {
@@ -215,7 +216,7 @@ function edd_add_customer_email( $args ) {
 
 	} else {
 
-		$email       = sanitize_email($args['email'] );
+		$email       = sanitize_email( $args['email'] );
 		$customer_id = (int) $args['customer_id'];
 		$primary     = 'true' === $args['primary'] ? true : false;
 		$customer    = new EDD_Customer( $customer_id );

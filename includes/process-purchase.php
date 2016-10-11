@@ -144,11 +144,11 @@ function edd_checkout_check_existing_email( $valid_data, $post ) {
 	// Verify that the email address belongs to this customer
 	if ( is_user_logged_in() ) {
 
-		$email    = $valid_data['logged_in_user']['user_email'];
+		$email    = strtolower( $valid_data['logged_in_user']['user_email'] );
 		$customer = new EDD_Customer( get_current_user_id(), true );
 
 		// If this email address is not registered with this customer, see if it belongs to any other customer
-		if ( $email != $customer->email && ( is_array( $customer->emails ) && ! in_array( $email, $customer->emails ) ) ) {
+		if ( $email != strtolower( $customer->email ) && ( is_array( $customer->emails ) && ! in_array( $email, array_map( 'strtolower', $customer->emails ) ) ) ) {
 			$found_customer = new EDD_Customer( $email );
 			if ( $found_customer->id > 0 ) {
 				edd_set_error( 'edd-customer-email-exists', __( sprintf( 'The email address %s is already in use.', $email ), 'easy-digital-downloads' ) );
