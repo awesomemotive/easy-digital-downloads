@@ -25,6 +25,7 @@ class EDD_License {
 	private $version;
 	private $author;
 	private $api_url = 'https://easydigitaldownloads.com/edd-sl-api/';
+	private $beta;
 
 	/**
 	 * Class constructor
@@ -36,7 +37,7 @@ class EDD_License {
 	 * @param string  $_optname
 	 * @param string  $_api_url
 	 */
-	function __construct( $_file, $_item, $_version, $_author, $_optname = null, $_api_url = null ) {
+	function __construct( $_file, $_item, $_version, $_author, $_optname = null, $_api_url = null, $_beta = false ) {
 
 		$this->file           = $_file;
 
@@ -51,6 +52,7 @@ class EDD_License {
 		$this->license        = trim( edd_get_option( $this->item_shortname . '_license_key', '' ) );
 		$this->author         = $_author;
 		$this->api_url        = is_null( $_api_url ) ? $this->api_url : $_api_url;
+		$this->beta           = $_beta;
 
 		/**
 		 * Allows for backwards compatibility with old license options,
@@ -131,7 +133,8 @@ class EDD_License {
 		$args = array(
 			'version'   => $this->version,
 			'license'   => $this->license,
-			'author'    => $this->author
+			'author'    => $this->author,
+			'beta'      => $this->beta
 		);
 
 		if( ! empty( $this->item_id ) ) {

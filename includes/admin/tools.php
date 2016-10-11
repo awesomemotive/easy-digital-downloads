@@ -67,6 +67,11 @@ function edd_get_tools_tabs() {
 	$tabs                  = array();
 	$tabs['general']       = __( 'General', 'easy-digital-downloads' );
 	$tabs['api_keys']      = __( 'API Keys', 'easy-digital-downloads' );
+
+	if( count( edd_has_beta_support() ) > 0 ) {
+		$tabs['betas'] = __( 'Beta Support', 'easy-digital-downloads' );
+	}
+
 	$tabs['system_info']   = __( 'System Info', 'easy-digital-downloads' );
 	$tabs['import_export'] = __( 'Import/Export', 'easy-digital-downloads' );
 
@@ -246,6 +251,92 @@ function edd_tools_api_keys_display() {
 	do_action( 'edd_tools_api_keys_after' );
 }
 add_action( 'edd_tools_tab_api_keys', 'edd_tools_api_keys_display' );
+
+
+/**
+ * Display beta opt-ins
+ *
+ * @since       2.6.9
+ * @return      void
+ */
+function edd_tools_betas_display() {
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
+	$has_beta      = edd_has_beta_support();
+	$enabled_betas = edd_get_option( 'enabled_betas', array() );
+
+	do_action( 'edd_tools_betas_before' );
+	?>
+
+	<div class="postbox edd-beta-support">
+		<h3><span><?php _e( 'Enable Beta Support', 'easy-digital-downloads' ); ?></span></h3>
+		<div class="inside">
+			<p><?php _e( 'Checking any of the below checkboxes will opt you in to receive pre-release update notifications. You can opt-out at any time. Pre-release updates do not install automatically, you will still have the opportunity to ignore update notifications.', 'easy-digital-downloads' ); ?></p>
+			<form method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=betas' ); ?>">
+				<table class="form-table edd-beta-support">
+					<tbody>
+						<?php foreach( $has_beta as $slug => $product ) : ?>
+							<tr>
+								<?php $checked = ( array_key_exists( $slug, $enabled_betas ) ? ' checked="checked"' : '' ); ?>
+								<th scope="row"><?php echo esc_html( $product ); ?></th>
+								<td>
+									<input type="checkbox" name="enabled_betas[<?php echo esc_attr( $slug ); ?>]" id="enabled_betas[<?php echo esc_attr( $slug ); ?>]"<?php echo $checked; ?> />
+									<label for="enabled_betas[<?php echo esc_attr( $slug ); ?>]"><?php printf( __( 'Get updates for pre-release versions of %s', 'easy-digital-downloads' ), $product ); ?></label>
+								</td>
+							</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+				<input type="hidden" name="edd_action" value="save_enabled_betas" />
+				<?php wp_nonce_field( 'edd_save_betas_nonce', 'edd_save_betas_nonce' ); ?>
+				<?php submit_button( __( 'Save', 'easy-digital-downloads' ), 'secondary', 'submit', false ); ?>
+			</form>
+		</div>
+	</div>
+
+	<?php
+	do_action( 'edd_tools_betas_after' );
+}
+add_action( 'edd_tools_tab_betas', 'edd_tools_betas_display' );
+
+
+/**
+ * Return an array of all products with beta support
+ *
+ * Products should be added as 'product-slug' => 'Product Name'
+ *
+ * @since       2.6.9
+ * @return      array $products The array of products
+ */
+function edd_has_beta_support() {
+	return apply_filters( 'edd_has_beta_support', array() );
+}
+
+
+/**
+ * Save enabled betas
+ *
+ * @since       2.6.9
+ * @return      void
+ */
+function edd_tools_enabled_betas_save() {
+	if( ! wp_verify_nonce( $_POST['edd_save_betas_nonce'], 'edd_save_betas_nonce' ) ) {
+		return;
+	}
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
+	if( ! empty( $_POST['enabled_betas'] ) ) {
+		edd_update_option( 'enabled_betas', $_POST['enabled_betas'] );
+	} else {
+		edd_delete_option( 'enabled_betas' );
+	}
+}
+add_action( 'edd_save_enabled_betas', 'edd_tools_enabled_betas_save' );
 
 
 /**
