@@ -400,6 +400,8 @@ jQuery(document).ready(function ($) {
 				};
 				$.post(ajaxurl, data, function (response) {
 					var state_wrapper = $( '#edd-order-address-state-wrap select, #edd-order-address-state-wrap input' );
+					// Remove any chosen containers here too
+					$( '#edd-order-address-state-wrap .chosen-container' ).remove();
 					if( 'nostates' == response ) {
 						state_wrapper.replaceWith( '<input type="text" name="edd-payment-address[0][state]" value="" class="edd-edit-toggles medium-text"/>' );
 					} else {
@@ -1186,7 +1188,8 @@ jQuery(document).ready(function ($) {
 	// Replace options with search results
 	$( document.body ).on( 'keyup', '.edd-select.chosen-container .chosen-search input, .edd-select.chosen-container .search-field input', function(e) {
 
-		var val         = $(this).val(), container = $(this).closest( '.edd-select-chosen' );
+		var val         = $(this).val()
+		var container   = $(this).closest( '.edd-select-chosen' );
 		var menu_id     = container.attr('id').replace( '_chosen', '' );
 		var no_bundles  = container.hasClass( 'no-bundles' );
 		var lastKey     = e.which;
@@ -1194,6 +1197,12 @@ jQuery(document).ready(function ($) {
 
 		// Detect if we have a defined search type, otherwise default to downloads
 		if ( container.prev().data('search-type') ) {
+
+			// Don't trigger AJAX if this select has all options loaded
+			if ( 'no_ajax' == container.prev().data('search-type') ) {
+				return;
+			}
+
 			search_type = 'edd_' + container.prev().data('search-type') + '_search';
 		}
 

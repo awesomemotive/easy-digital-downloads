@@ -515,12 +515,13 @@ $currency_code  = $payment->currency;
 														echo EDD()->html->select( array(
 															'options'          => edd_get_country_list(),
 															'name'             => 'edd-payment-address[0][country]',
+															'id'               => 'edd-payment-address-country',
 															'selected'         => $address[ 'country' ],
 															'show_option_all'  => false,
 															'show_option_none' => false,
 															'chosen'           => true,
 															'placeholder'      => __( 'Select a country', 'easy-digital-downloads' ),
-															'data'             => array( 'search-type' => 'country' ),
+															'data'             => array( 'search-type' => 'no_ajax' ),
 														) );
 														?>
 													</p>
@@ -532,12 +533,13 @@ $currency_code  = $payment->currency;
 															echo EDD()->html->select( array(
 																'options'          => $states,
 																'name'             => 'edd-payment-address[0][state]',
+																'id'               => 'edd-payment-address-state',
 																'selected'         => $address[ 'state' ],
 																'show_option_all'  => false,
 																'show_option_none' => false,
 																'chosen'           => true,
 																'placeholder'      => __( 'Select a state', 'easy-digital-downloads' ),
-																'data'             => array( 'search-type' => 'state' ),
+																'data'             => array( 'search-type' => 'no_ajax' ),
 															) );
 														} else { ?>
 															<input type="text" name="edd-payment-address[0][state]" value="<?php echo esc_attr( $address['state'] ); ?>" class="medium-text"/>
