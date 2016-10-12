@@ -410,6 +410,9 @@ class EDD_HTML_Elements {
 
 		if( $args['chosen'] ) {
 			$args['class'] .= ' edd-select-chosen';
+			if ( is_rtl() ) {
+				$args['class'] .= ' chosen-rtl';
+			}
 		}
 
 		if( $args['placeholder'] ) {
