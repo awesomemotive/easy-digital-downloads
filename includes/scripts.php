@@ -285,7 +285,6 @@ function edd_admin_downloads_icon() {
 	$icon_cpt_2x_url = $images_url . 'edd-cpt-2x.png';
 	?>
 	<style type="text/css" media="screen">
-		#adminmenu #menu-posts-download .wp-menu-image:before,
 		#dashboard_right_now .download-count:before {
 			content: '<?php echo $menu_icon; ?>';
 		}
