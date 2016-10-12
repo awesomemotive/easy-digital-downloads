@@ -337,7 +337,7 @@ class EDD_Fees {
 			$payment_meta['fees'] = $this->get_fees( 'all' );
 
 			// Only clear fees from session when status is not pending
-			if( 'pending' !== strtolower( $payment_data['status'] ) ) {
+			if( ! empty( $payment_data['status'] ) && 'pending' !== strtolower( $payment_data['status'] ) ) {
 
 				EDD()->session->set( 'edd_cart_fees', null );
 
