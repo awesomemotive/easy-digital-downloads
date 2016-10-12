@@ -608,6 +608,55 @@ function edd_ajax_customer_search() {
 add_action( 'wp_ajax_edd_customer_search', 'edd_ajax_customer_search' );
 
 /**
+ * Search the users database via AJAX
+ *
+ * @since 2.6.9
+ * @return void
+ */
+function edd_ajax_user_search() {
+	global $wpdb;
+
+	$search         = esc_sql( sanitize_text_field( $_GET['s'] ) );
+	$results        = array();
+	$user_view_role = apply_filters( 'edd_view_users_role', 'view_shop_reports' );
+
+	if ( ! current_user_can( $user_view_role ) ) {
+		$results = array();
+	} else {
+		$user_args = array(
+			'search' => '*' . esc_attr( $search ) . '*',
+			'number' => 50,
+		);
+
+		$users = get_users( $user_args );
+	}
+
+	if ( $users ) {
+
+		foreach( $users as $user ) {
+
+			$results[] = array(
+				'id'   => $user->ID,
+				'name' => $user->display_name,
+			);
+		}
+
+	} else {
+
+		$results[] = array(
+			'id'   => 0,
+			'name' => __( 'No users found', 'easy-digital-downloads' )
+		);
+
+	}
+
+	echo json_encode( $results );
+
+	edd_die();
+}
+add_action( 'wp_ajax_edd_user_search', 'edd_ajax_user_search' );
+
+/**
  * Check for Download Price Variations via AJAX (this function can only be used
  * in WordPress Admin). This function is used for the Edit Payment screen when downloads
  * are added to the purchase. When each download is chosen, an AJAX call is fired
