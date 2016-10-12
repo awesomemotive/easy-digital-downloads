@@ -183,6 +183,62 @@ class EDD_HTML_Elements {
 	}
 
 	/**
+	 * Renders an HTML Dropdown of all the Users
+	 *
+	 * @access public
+	 * @since 2.6.9
+	 * @param array $args
+	 * @return string $output User dropdown
+	 */
+	public function user_dropdown( $args = array() ) {
+
+		$defaults = array(
+			'name'        => 'users',
+			'id'          => 'users',
+			'class'       => '',
+			'multiple'    => false,
+			'selected'    => 0,
+			'chosen'      => true,
+			'placeholder' => __( 'Select a User', 'easy-digital-downloads' ),
+			'number'      => 30,
+			'data'        => array( 'search-type' => 'user' ),
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+
+		$user_args = array(
+			'number' => $args['number'],
+		);
+		$users   = get_users( $user_args );
+		$options = array();
+
+		if ( $users ) {
+			foreach ( $users as $user ) {
+				$options[ $user->ID ] = esc_html( $user->display_name );
+			}
+		} else {
+			$options[0] = __( 'No users found', 'easy-digital-downloads' );
+		}
+
+		$output = $this->select( array(
+			'name'             => $args['name'],
+			'selected'         => $args['selected'],
+			'id'               => $args['id'],
+			'class'            => $args['class'] . ' edd-user-select',
+			'options'          => $options,
+			'multiple'         => $args['multiple'],
+			'placeholder'      => $args['placeholder'],
+			'chosen'           => $args['chosen'],
+			'show_option_all'  => false,
+			'show_option_none' => false,
+			'data'             => $args['data'],
+		) );
+
+		return $output;
+	}
+
+	/**
 	 * Renders an HTML Dropdown of all the Discounts
 	 *
 	 * @access public
@@ -500,7 +556,7 @@ class EDD_HTML_Elements {
 			if ( ! empty( $args['label'] ) ) {
 				$output .= '<label class="edd-label" for="' . edd_sanitize_key( $args['id'] ) . '">' . esc_html( $args['label'] ) . '</label>';
 			}
-			
+
 			if ( ! empty( $args['desc'] ) ) {
 				$output .= '<span class="edd-description">' . esc_html( $args['desc'] ) . '</span>';
 			}
@@ -561,7 +617,7 @@ class EDD_HTML_Elements {
 			if ( ! empty( $args['label'] ) ) {
 				$output .= '<label class="edd-label" for="' . edd_sanitize_key( $args['name'] ) . '">' . esc_html( $args['label'] ) . '</label>';
 			}
-			
+
 			$output .= '<textarea name="' . esc_attr( $args['name'] ) . '" id="' . edd_sanitize_key( $args['name'] ) . '" class="' . $class . '"' . $disabled . '>' . esc_attr( $args['value'] ) . '</textarea>';
 
 			if ( ! empty( $args['desc'] ) ) {
