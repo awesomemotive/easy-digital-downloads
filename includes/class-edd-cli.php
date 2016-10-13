@@ -300,7 +300,24 @@ class EDD_CLI extends WP_CLI_Command {
 
 			// Search for customers
 
-			$search    = $customer_id ? $customer_id : $email;
+			$search = false;
+
+			// Checking if search is being done by id, email or user_id fields.
+			if ( $customer_id || $email || ( 'null' !== $user_id ) ) {
+				$search           = array();
+				$customer_details = array();
+
+				if ( $customer_id ) {
+					$customer_details['id'] = $customer_id;
+				} elseif ( $email ) {
+					$customer_details['email'] = $email;
+				} elseif ( null !== $user_id ) {
+					$customer_details['user_id'] = $user_id;
+				}
+
+				$search['customer'] = $customer_details;
+			}
+
 			$customers = $this->api->get_customers( $search );
 
 			if( isset( $customers['error'] ) ) {
