@@ -40,6 +40,7 @@ class EDD_HTML_Elements {
 			'chosen'      => false,
 			'number'      => 30,
 			'bundles'     => true,
+			'variations'  => false,
 			'placeholder' => sprintf( __( 'Choose a %s', 'easy-digital-downloads' ), edd_get_label_singular() ),
 			'data'        => array( 'search-type' => 'download' ),
 		);
@@ -71,24 +72,91 @@ class EDD_HTML_Elements {
 		if ( $products ) {
 			foreach ( $products as $product ) {
 				$options[ absint( $product->ID ) ] = esc_html( $product->post_title );
+				if ( $args['variations'] && edd_has_variable_prices( $product->ID ) ) {
+ 					$prices = edd_get_variable_prices( $product->ID );
+ 					foreach ( $prices as $key => $value ) {
+ 						$name   = ! empty( $value['name'] )   ? $value['name']   : '';
+ 						$index  = ! empty( $value['index'] )  ? $value['index']  : $key;
+ 						if ( $name && $index ) {
+ 							$options[ absint( $product->ID ) . '_' . $index ] = esc_html( $product->post_title . ': ' . $name );
+ 						}
+ 					}
+ 				}
 			}
 		}
 
 		// This ensures that any selected products are included in the drop down
-		if( is_array( $args['selected'] ) ) {
+		if ( is_array( $args['selected'] ) ) {
+
 			foreach( $args['selected'] as $item ) {
-				if( ! in_array( $item, $options ) ) {
-					$options[$item] = get_the_title( $item );
+
+				if ( ! array_key_exists( $item, $options ) ) {
+
+					$parsed_item = edd_parse_product_dropdown_value( $item );
+
+ 					if ( $parsed_item['price_id'] !== false ) {
+
+						$prices = edd_get_variable_prices( (int) $parsed_item['download_id'] );
+						foreach ( $prices as $key => $value ) {
+
+							$name   = isset( $value['name'] )   ? $value['name']   : '';
+							$index  = isset( $value['index'] )  ? $value['index']  : $key;
+
+							if ( $name && $index && (int) $parsed_item['price_id'] === (int) $index  ) {
+
+								$options[ absint( $product->ID ) . '_' . $index ] = esc_html( get_the_title( (int) $parsed_item['download_id'] ) . ': ' . $name );
+
+						    }
+
+ 						}
+
+ 					} else {
+
+ 						$options[ $parsed_item['download_id'] ] = get_the_title( $parsed_item['download_id'] );
+
+ 					}
+ 				}
+
+			}
+
+		} elseif ( $args['selected'] !== 0 ) {
+
+			if ( ! array_key_exists( $args['selected'], $options ) ) {
+
+				$parsed_item = edd_parse_product_dropdown_value( $args['selected'] );
+				if ( $parsed_item['price_id'] !== false ) {
+
+					$prices = edd_get_variable_prices( (int) $parsed_item['download_id'] );
+
+					foreach ( $prices as $key => $value ) {
+
+						$name   = isset( $value['name'] )   ? $value['name']   : '';
+						$index  = isset( $value['index'] )  ? $value['index']  : $key;
+
+						if ( $name && $index && (int) $parsed_item['price_id'] === (int) $index  ) {
+
+							$options[ absint( $product->ID ) . '_' . $index ] = esc_html( get_the_title( (int) $parsed_item['download_id'] ) . ': ' . $name );
+
+						}
+
+					}
+
+				} else {
+
+					$options[ $parsed_item['download_id'] ] = get_the_title( $parsed_item['download_id'] );
+
 				}
+
 			}
-		} elseif ( is_numeric( $args['selected'] ) && $args['selected'] !== 0 ) {
-			if ( ! in_array( $args['selected'], $options ) ) {
-				$options[$args['selected']] = get_the_title( $args['selected'] );
-			}
+
 		}
 
-		if( ! $args['bundles'] ) {
+		if ( ! $args['bundles'] ) {
 			$args['class'] .= ' no-bundles';
+		}
+
+		if ( $args['variations'] ) {
+			$args['class'] .= ' variations';
 		}
 
 		$output = $this->select( array(
@@ -384,7 +452,7 @@ class EDD_HTML_Elements {
 			'name'             => null,
 			'class'            => '',
 			'id'               => '',
-			'selected'         => 0,
+			'selected'         => array(),
 			'chosen'           => false,
 			'placeholder'      => null,
 			'multiple'         => false,
@@ -453,10 +521,10 @@ class EDD_HTML_Elements {
 				$output .= '<option value="-1"' . $selected . '>' . esc_html( $args['show_option_none'] ) . '</option>';
 			}
 
-			foreach( $args['options'] as $key => $option ) {
+			foreach ( $args['options'] as $key => $option ) {
 
-				if( $args['multiple'] && is_array( $args['selected'] ) ) {
-					$selected = selected( true, in_array( $key, $args['selected'], true ), false );
+				if ( $args['multiple'] && is_array( $args['selected'] ) ) {
+					$selected = selected( true, in_array( (string) $key, $args['selected'], true ), false );
 				} else {
 					$selected = selected( $args['selected'], $key, false );
 				}
