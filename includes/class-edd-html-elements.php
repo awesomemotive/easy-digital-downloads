@@ -119,7 +119,7 @@ class EDD_HTML_Elements {
 
 			}
 
-		} elseif ( $args['selected'] !== 0 ) {
+		} elseif ( false !== $args['selected'] && $args['selected'] !== 0 ) {
 
 			if ( ! array_key_exists( $args['selected'], $options ) ) {
 
