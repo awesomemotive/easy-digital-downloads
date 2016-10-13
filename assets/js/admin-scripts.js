@@ -1192,6 +1192,7 @@ jQuery(document).ready(function ($) {
 		var container   = $(this).closest( '.edd-select-chosen' );
 		var menu_id     = container.attr('id').replace( '_chosen', '' );
 		var no_bundles  = container.hasClass( 'no-bundles' );
+		var variations  = container.hasClass( 'variations' );
 		var lastKey     = e.which;
 		var search_type = 'edd_download_search';
 
@@ -1231,14 +1232,14 @@ jQuery(document).ready(function ($) {
 					data: {
 						action: search_type,
 						s: val,
-						no_bundles: no_bundles
+						no_bundles: no_bundles,
+						variations: variations,
 					},
 					dataType: "json",
 					beforeSend: function(){
 						$('ul.chosen-results').empty();
 					},
 					success: function( data ) {
-
 						// Remove all options but those that are selected
 						$('#' + menu_id + ' option:not(:selected)').remove();
 						$.each( data, function( key, item ) {

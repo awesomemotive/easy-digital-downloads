@@ -336,4 +336,5 @@ class Tests_Downloads extends WP_UnitTestCase {
 	public function test_get_download_is_bundle() {
 		$this->assertFalse( edd_is_bundled_product( $this->_post->ID ) );
 	}
+
 }
