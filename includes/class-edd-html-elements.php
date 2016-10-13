@@ -76,7 +76,6 @@ class EDD_HTML_Elements {
  					$prices = edd_get_variable_prices( $product->ID );
  					foreach ( $prices as $key => $value ) {
  						$name   = ! empty( $value['name'] )   ? $value['name']   : '';
- 						$amount = ! empty( $value['amount'] ) ? $value['amount'] : '';
  						$index  = ! empty( $value['index'] )  ? $value['index']  : $key;
  						if ( $name && $index ) {
  							$options[ absint( $product->ID ) . '_' . $index ] = esc_html( $product->post_title . ': ' . $name );
@@ -93,67 +92,58 @@ class EDD_HTML_Elements {
 
 				if ( ! array_key_exists( $item, $options ) ) {
 
- 					if ( strpos( $item, '_' ) !== false ) {
+					$parsed_item = edd_parse_product_dropdown_value( $item );
 
- 						$pieces = explode( '_' , $item );
+ 					if ( $parsed_item['price_id'] !== false ) {
 
- 						if ( ! empty( $pieces[0] ) && isset( $pieces[1] ) && absint( $pieces[1] ) > -1 ) {
+						$prices = edd_get_variable_prices( (int) $parsed_item['download_id'] );
+						foreach ( $prices as $key => $value ) {
 
- 							$prices = edd_get_variable_prices( (int) $pieces[0] );
- 							foreach ( $prices as $key => $value ) {
+							$name   = isset( $value['name'] )   ? $value['name']   : '';
+							$index  = isset( $value['index'] )  ? $value['index']  : $key;
 
- 								$name   = isset( $value['name'] )   ? $value['name']   : '';
- 								$amount = isset( $value['amount'] ) ? $value['amount'] : '';
- 								$index  = isset( $value['index'] )  ? $value['index']  : $key;
+							if ( $name && $index && (int) $parsed_item['price_id'] === (int) $index  ) {
 
- 								if ( $name && $index && (int) $pieces[1] === (int) $index  ) {
+								$options[ absint( $product->ID ) . '_' . $index ] = esc_html( get_the_title( (int) $parsed_item['download_id'] ) . ': ' . $name );
 
- 									$options[ absint( $product->ID ) . '_' . $index ] = esc_html( get_the_title( (int) $pieces[0] ) . ': ' . $name );
-
- 								}
-
- 							}
+						    }
 
  						}
 
  					} else {
 
- 						$options[ $item ] = get_the_title( $item );
+ 						$options[ $parsed_item['download_id'] ] = get_the_title( $parsed_item['download_id'] );
 
  					}
  				}
 
 			}
 
-		} elseif ( is_numeric( $args['selected'] ) && $args['selected'] !== 0 ) {
+		} elseif ( $args['selected'] !== 0 ) {
 
 			if ( ! array_key_exists( $args['selected'], $options ) ) {
 
-				if ( strpos( $args['selected'], '_' ) !== false ) {
+				$parsed_item = edd_parse_product_dropdown_value( $args['selected'] );
+				if ( $parsed_item['price_id'] !== false ) {
 
-					$pieces = explode( '_' , $item );
-					if ( ! empty( $pieces[0] ) && isset( $pieces[1] ) && absint( $pieces[1] ) > -1 ) {
+					$prices = edd_get_variable_prices( (int) $parsed_item['download_id'] );
 
-						$prices = edd_get_variable_prices( (int) $pieces[0] );
+					foreach ( $prices as $key => $value ) {
 
-						foreach ( $prices as $key => $value ) {
+						$name   = isset( $value['name'] )   ? $value['name']   : '';
+						$index  = isset( $value['index'] )  ? $value['index']  : $key;
 
-							$name   = isset( $value['name'] )   ? $value['name']   : '';
-							$amount = isset( $value['amount'] ) ? $value['amount'] : '';
-							$index  = isset( $value['index'] )  ? $value['index']  : $key;
+						if ( $name && $index && (int) $parsed_item['price_id'] === (int) $index  ) {
 
-							if ( $name && $index && (int) $pieces[1] === (int) $index  ) {
-
-								$options[ absint( $product->ID ) . '_' . $index ] = esc_html( get_the_title( (int) $pieces[0] ) . ': ' . $name );
-
-							}
+							$options[ absint( $product->ID ) . '_' . $index ] = esc_html( get_the_title( (int) $parsed_item['download_id'] ) . ': ' . $name );
 
 						}
 
 					}
+
 				} else {
 
-					$options[$item] = get_the_title( $item );
+					$options[ $parsed_item['download_id'] ] = get_the_title( $parsed_item['download_id'] );
 
 				}
 
