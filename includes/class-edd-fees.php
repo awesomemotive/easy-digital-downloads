@@ -331,9 +331,17 @@ class EDD_Fees {
 	 * @return array Return the payment meta with the fees added
 	*/
 	public function record_fees( $payment_meta, $payment_data ) {
+
 		if ( $this->has_fees( 'all' ) ) {
+
 			$payment_meta['fees'] = $this->get_fees( 'all' );
-			EDD()->session->set( 'edd_cart_fees', null );
+
+			// Only clear fees from session when status is not pending
+			if( ! empty( $payment_data['status'] ) && 'pending' !== strtolower( $payment_data['status'] ) ) {
+
+				EDD()->session->set( 'edd_cart_fees', null );
+
+			}
 		}
 
 		return $payment_meta;
