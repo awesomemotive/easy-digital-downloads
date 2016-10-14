@@ -646,9 +646,16 @@ class EDD_Payment {
 											$y++;
 										}
 
+										$increase_earnings = $price;
+										if ( ! empty( $item['fees'] ) ) {
+											foreach ( $item['fees'] as $fee ) {
+												$increase_earnings += (float) $fee['amount'];
+											}
+										}
+
 										$download = new EDD_Download( $item['id'] );
 										$download->increase_sales( $item['quantity'] );
-										$download->increase_earnings( $price );
+										$download->increase_earnings( $increase_earnings );
 
 										$total_increase += $price;
 									}
@@ -681,7 +688,14 @@ class EDD_Payment {
 										if ( 'publish' === $this->status || 'complete' === $this->status || 'revoked' === $this->status ) {
 											$download = new EDD_Download( $item['id'] );
 											$download->decrease_sales( $item['quantity'] );
-											$download->decrease_earnings( $item['amount'] );
+
+											$decrease_amount = $item['amount'];
+											if ( ! empty( $item['fees'] ) ) {
+												foreach( $item['fees'] as $fee ) {
+													$decrease_amount += $fee['amount'];
+												}
+											}
+											$download->decrease_earnings( $decrease_amount );
 
 											$total_decrease += $item['amount'];
 										}
@@ -1153,6 +1167,18 @@ class EDD_Payment {
 			$total_reduced = $this->cart_details[ $found_cart_key ]['item_price'];
 			$tax_reduced   = $this->cart_details[ $found_cart_key ]['tax'];
 
+			$found_fees = array();
+
+			if ( ! empty( $this->cart_details[ $found_cart_key ]['fees'] ) ) {
+
+				$found_fees = $this->cart_details[ $found_cart_key ]['fees'];
+
+				foreach ( $found_fees as $key => $fee ) {
+					$this->remove_fee( $key );
+				}
+
+			}
+
 			unset( $this->cart_details[ $found_cart_key ] );
 
 		}
@@ -1163,6 +1189,7 @@ class EDD_Payment {
 		$pending_args['price_id'] = false !== $args['price_id'] ? $args['price_id'] : false;
 		$pending_args['quantity'] = $args['quantity'];
 		$pending_args['action']   = 'remove';
+		$pending_args['fees']     = isset( $found_fees ) ? $found_fees : array();
 
 		$this->pending['downloads'][] = $pending_args;
 
@@ -1212,11 +1239,7 @@ class EDD_Payment {
 	 * @return bool     If the fee was removed successfully
 	 */
 	public function remove_fee( $key ) {
-		$removed = false;
-
-		if ( is_numeric( $key ) ) {
-			$removed = $this->remove_fee_by( 'index', $key );
-		}
+		$removed = $this->remove_fee_by( 'index', $key );
 
 		return $removed;
 	}

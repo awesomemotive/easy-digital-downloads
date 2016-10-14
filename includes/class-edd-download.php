@@ -733,12 +733,13 @@ class EDD_Download {
 	public function decrease_earnings( $amount ) {
 
 		// Only decrease if greater than zero
-		if ( $this->get_earnings() > 0 ) {
+		if ( (float) $this->get_earnings() > 0 ) {
 
-			$current_earnings = $this->get_earnings();
-			$new_amount = apply_filters( 'edd_download_decrease_earnings_amount', $current_earnings - (float) $amount, $current_earnings, $amount, $this );
+			$current_earnings = (float) $this->get_earnings();
+			$new_amount       = apply_filters( 'edd_download_decrease_earnings_amount', $current_earnings - (float) $amount, $current_earnings, $amount, $this );
 
-			if ( $this->update_meta( '_edd_download_earnings', $new_amount ) ) {
+			$updated = $this->update_meta( '_edd_download_earnings', $new_amount );
+			if ( $updated ) {
 
 				$this->earnings = $new_amount;
 
@@ -806,7 +807,7 @@ class EDD_Download {
 
 		global $wpdb;
 
-		if ( empty( $meta_key ) || empty( $meta_value ) ) {
+		if ( empty( $meta_key ) ) {
 			return false;
 		}
 

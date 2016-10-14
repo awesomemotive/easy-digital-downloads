@@ -130,12 +130,19 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 			),
 		);
 
-		$new_download   = EDD_Helper_Download::create_simple_download();
+		$new_download     = EDD_Helper_Download::create_simple_download();
+		$download         = new EDD_Download( $new_download->ID );
+		$current_earnings = $download->earnings;
 
 		$payment->add_download( $new_download->ID, $args );
+		$payment->status = 'complete';
 		$payment->save();
 
+		$expected_earnings = $current_earnings + $download->price + 5;
+
+		$download = new EDD_Download( $download->ID );
 		$this->assertFalse( empty( $payment->cart_details[2]['fees'] ) );
+		$this->assertEquals( $expected_earnings, $download->earnings );
 	}
 
 	public function test_remove_download() {

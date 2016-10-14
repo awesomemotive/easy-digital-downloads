@@ -582,11 +582,13 @@ jQuery(document).ready(function ($) {
 						total += parseFloat( $(this).val() );
 					});
 				}
-				if( $('.edd-payment-fees').length ) {
-					$('.edd-payment-fees span.fee-amount').each(function() {
+
+				if( $('ul.edd-fee-row > li.price').length ) {
+					$('ul.edd-fee-row > li.price').each(function() {
 						total += parseFloat( $(this).data('fee') );
 					});
 				}
+
 				$('input[name=edd-payment-total]').val( total.toFixed(edd_vars.currency_decimals));
 			});
 

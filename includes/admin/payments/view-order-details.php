@@ -117,19 +117,6 @@ $fees           = $payment->fees;
 											</p>
 										</div>
 
-										<?php
-										$fees = $payment->fees;
-										if ( ! empty( $fees ) ) : ?>
-										<div class="edd-order-fees edd-admin-box-inside">
-											<p class="strong"><?php _e( 'Fees', 'easy-digital-downloads' ); ?>:</p>
-											<ul class="edd-payment-fees">
-												<?php foreach( $fees as $fee ) : ?>
-												<li><span class="fee-label"><?php echo $fee['label'] . ':</span> ' . '<span class="fee-amount" data-fee="' . esc_attr( $fee['amount'] ) . '">' . edd_currency_filter( $fee['amount'], $currency_code ); ?></span></li>
-												<?php endforeach; ?>
-											</ul>
-										</div>
-										<?php endif; ?>
-
 										<?php if ( edd_use_taxes() ) : ?>
 										<div class="edd-order-taxes edd-admin-box-inside">
 											<p>
@@ -374,7 +361,7 @@ $fees           = $payment->fees;
 
 													<?php if( edd_item_quantities_enabled() ) : ?><li><!-- // Blank spot for the possible quantity li --></li><?php endif; ?>
 
-													<li class="price<?php echo $amount_class; ?>">
+													<li class="price<?php echo $amount_class; ?>"  data-fee="<?php echo $fee['amount']; ?>">
 														<?php echo $fee['amount'] > 0 ? '&plus;' : ''; ?>
 														<?php echo edd_currency_filter( edd_format_amount( $fee['amount'] ), $currency_code ); ?>
 													</li>
