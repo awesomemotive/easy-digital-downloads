@@ -696,9 +696,33 @@ jQuery(document).ready(function ($) {
 		},
 
 		resend_receipt : function() {
-			$( document.body ).on( 'click', '#edd-resend-receipt', function( e ) {
-				return confirm( edd_vars.resend_receipt );
+
+			var emails_wrap = $('.edd-order-resend-receipt-addresses');
+
+			$( document.body ).on( 'click', '#edd-select-receipt-email', function( e ) {
+
+				e.preventDefault();
+				emails_wrap.slideDown();
+
 			} );
+
+			$( document.body ).on( 'change', '.edd-order-resend-receipt-email', function() {
+
+				var href = $('#edd-select-receipt-email').prop( 'href' ) + '&email=' + $(this).val();
+
+				if( confirm( edd_vars.resend_receipt ) ) {
+					window.location = href;
+				}
+
+			} );
+
+
+			$( document.body ).on( 'click', '#edd-resend-receipt', function( e ) {
+
+				return confirm( edd_vars.resend_receipt );
+
+			} );
+
 		},
 
 		copy_download_link : function() {
