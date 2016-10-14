@@ -665,12 +665,14 @@ table#edd_purchase_receipt_products .edd_bundled_product_name {
 }
 #edd_profile_editor_form label {
 	display: inline-block;
-	width: 200px;
 }
 #edd_profile_editor_form .edd-profile-emails {
 	list-style-type: none;
 	display: inline-table;
 	margin-left: 0;
+}
+#edd_profile_editor_form .edd-profile-emails {
+	margin-bottom: 0;
 }
 #edd_profile_editor_form .edd-profile-email {
 	width: auto;
