@@ -548,6 +548,7 @@ jQuery(document).ready(function ($) {
 
 				if ( clone.find( 'ul.edd-fee-row' ) ) {
 					clone.find('ul.edd-fee-row').remove();
+					clone.find('ul.edd-fee-total-row').remove();
 				}
 
 				// Replace the name / id attributes
