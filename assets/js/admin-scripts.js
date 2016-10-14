@@ -419,7 +419,7 @@ jQuery(document).ready(function ($) {
 			// Remove a download from a purchase
 			$('#edd-purchased-files').on('click', '.edd-order-remove-download', function() {
 
-				var count = $( document.body ).find( '#edd-purchased-files > .row' ).length;
+				var count = $( document.body ).find( '#edd-purchased-files div.row.item' ).length;
 
 				if ( count === 1 ) {
 					alert( edd_vars.one_download_min );
@@ -531,8 +531,8 @@ jQuery(document).ready(function ($) {
 					download_title = download_title + ' - ' + price_name;
 				}
 
-				var count = $('#edd-purchased-files div.row').length;
-				var clone = $('#edd-purchased-files div.row:last').clone();
+				var count = $('#edd-purchased-files div.row.item').length;
+				var clone = $('#edd-purchased-files div.row.item:last').clone();
 
 				clone.find( '.download span' ).html( '<a href="post.php?post=' + download_id + '&action=edit"></a>' );
 				clone.find( '.download span a' ).text( download_title );
@@ -546,6 +546,11 @@ jQuery(document).ready(function ($) {
 				clone.find( 'input.edd-payment-details-download-quantity' ).val( quantity );
 				clone.find( 'input.edd-payment-details-download-has-log').val(0);
 
+				if ( clone.find( 'ul.edd-fee-row' ) ) {
+					clone.find('ul.edd-fee-row').remove();
+					clone.find('ul.edd-fee-total-row').remove();
+				}
+
 				// Replace the name / id attributes
 				clone.find( 'input' ).each(function() {
 					var name = $( this ).attr( 'name' );
@@ -558,7 +563,7 @@ jQuery(document).ready(function ($) {
 				// Flag the Downloads section as changed
 				$('#edd-payment-downloads-changed').val(1);
 
-				$(clone).insertAfter( '#edd-purchased-files div.row:last' );
+				$(clone).insertAfter( '#edd-purchased-files div.row.item:last' );
 				$( '.edd-order-payment-recalc-totals' ).show();
 
 			});
@@ -570,18 +575,20 @@ jQuery(document).ready(function ($) {
 			$('#edd-order-recalc-total').on('click', function(e) {
 				e.preventDefault();
 				var total           = 0,
-					purchased_files = $( '#edd-purchased-files .row .edd-payment-details-download-amount' );
+					purchased_files = $( '#edd-purchased-files .row.item .edd-payment-details-download-amount' );
 
 				if( purchased_files.length ) {
 					purchased_files.each(function() {
 						total += parseFloat( $(this).val() );
 					});
 				}
-				if( $('.edd-payment-fees').length ) {
-					$('.edd-payment-fees span.fee-amount').each(function() {
+
+				if( $('ul.edd-fee-row > li.price').length ) {
+					$('ul.edd-fee-row > li.price').each(function() {
 						total += parseFloat( $(this).data('fee') );
 					});
 				}
+
 				$('input[name=edd-payment-total]').val( total.toFixed(edd_vars.currency_decimals));
 			});
 
