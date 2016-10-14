@@ -107,7 +107,6 @@ class Tests_EDD extends WP_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/reporting/contextual-help.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/reporting/export/export-functions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/reporting/reports.php' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/reporting/pdf-reports.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/reporting/graphing.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/settings/display-settings.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/settings/contextual-help.php' );
