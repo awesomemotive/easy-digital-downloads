@@ -44,6 +44,7 @@ $user_info      = edd_get_payment_meta_user_info( $payment_id );
 $address        = $payment->address;
 $gateway        = $payment->gateway;
 $currency_code  = $payment->currency;
+$fees           = $payment->fees;
 ?>
 <div class="wrap edd-wrap">
 	<h2><?php printf( __( 'Payment %s', 'easy-digital-downloads' ), $number ); ?></h2>
@@ -290,15 +291,15 @@ $currency_code  = $payment->currency;
 							<?php $column_count = edd_item_quantities_enabled() ? 'columns-4' : 'columns-3'; ?>
 							<div id="edd-purchased-files" class="postbox <?php echo $column_count; ?>">
 								<h3 class="hndle">
-									<span><?php printf( __( 'Purchased %s', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></span>
+									<span><?php _e( 'Cart Contents', 'easy-digital-downloads' ); ?></span>
 								</h3>
 
 								<?php if ( is_array( $cart_items ) ) :
 
 									$i = 0;
 									foreach ( $cart_items as $key => $cart_item ) : ?>
-									<div class="row">
-										<ul>
+									<div class="row item">
+										<ul class="edd-item-row">
 											<?php
 
 											// Item ID is checked if isset due to the near-1.0 cart data
@@ -360,10 +361,78 @@ $currency_code  = $payment->currency;
 												<a href="" class="edd-order-remove-download edd-delete" data-key="<?php echo esc_attr( $key ); ?>"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></a>
 											</li>
 										</ul>
+
+										<?php // List any fees for this specific cart item ?>
+										<?php if ( ! empty( $cart_item['fees'] ) ) : ?>
+
+											<?php $fee_totals = 0; ?>
+
+											<?php foreach ( $cart_item['fees'] as $fee ): ?>
+												<?php $amount_class = $fee['amount'] < 0 ? ' negative' : ''; ?>
+												<ul class="edd-fee-row">
+													<li class="label">&mdash; <?php echo $fee['label']; ?></li>
+
+													<?php if( edd_item_quantities_enabled() ) : ?><li><!-- // Blank spot for the possible quantity li --></li><?php endif; ?>
+
+													<li class="price<?php echo $amount_class; ?>">
+														<?php echo $fee['amount'] > 0 ? '&plus;' : ''; ?>
+														<?php echo edd_currency_filter( edd_format_amount( $fee['amount'] ), $currency_code ); ?>
+													</li>
+
+													<?php $fee_totals += $fee['amount']; ?>
+
+													<li><!-- // Blank li for the actions, none for fees --></li>
+												</ul>
+
+												<ul class="edd-fee-total-row">
+													<li></li>
+													<?php if( edd_item_quantities_enabled() ) : ?><li><!-- // Blank spot for the possible quantity li --></li><?php endif; ?>
+													<li class="price"><?php echo edd_currency_filter( edd_format_amount( $price + $fee_totals ), $currency_code ); ?></li>
+													<li><!-- // Blank li for the actions, none for fees --></li>
+												</ul>
+											<?php endforeach; ?>
+
+										<?php endif; ?>
+
 									</div>
+
+									<?php do_action( 'edd_payment_details_item_after', $cart_item, $payment_id ); ?>
+
 									<?php
 									$i++;
 									endforeach; ?>
+
+									<?php
+									$cart_based_fees = array();
+
+									foreach ( $fees as $fee ) {
+										if ( ! empty( $fee['download_id'] ) ) {
+											continue;
+										}
+
+										$cart_based_fees[] = $fee;
+									}
+									?>
+
+									<?php if ( ! empty( $cart_based_fees ) ) : ?>
+										<?php foreach ( $cart_based_fees as $cart_fee ) : ?>
+										<?php $amount_class = $fee['amount'] < 0 ? ' negative' : ''; ?>
+										<div class="row fee">
+											<ul class="edd-fee-row">
+												<li class="label"><?php _e( 'Fee', 'easy-digital-downloads' ); ?>: <?php echo $fee['label']; ?></li>
+
+												<?php if( edd_item_quantities_enabled() ) : ?><li><!-- // Blank spot for the possible quantity li --></li><?php endif; ?>
+
+												<li class="price<?php echo $amount_class; ?>">
+													<?php echo edd_currency_filter( edd_format_amount( $fee['amount'] ), $currency_code ); ?>
+												</li>
+
+												<li><!-- // Blank li for the actions, none for fees --></li>
+											</ul>
+										</div>
+										<?php endforeach; ?>
+									<?php endif; ?>
+
 									<div class="inside">
 										<ul>
 											<li class="download">

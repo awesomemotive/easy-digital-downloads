@@ -385,10 +385,18 @@ textarea#edd-payment-note {
 #edd-purchased-files .row > ul > li,
 #edd-purchased-files .inside > ul > li {
 	display: inline-block;
-	line-height: 30px;
+	line-height: 20px;
 	position: relative;
 	margin-right: 5%;
 	vertical-align: middle;
+}
+#edd-purchased-files .item ul > li.price,
+#edd-purchased-files .fee ul > li.price {
+	text-align: right;
+}
+#edd-purchased-files .item ul.edd-fee-row > li.price.negative,
+#edd-purchased-files .fee ul.edd-fee-row > li.price.negative {
+	color: #a00;
 }
 #edd-purchased-files li.actions {
 	min-width: 200px;
