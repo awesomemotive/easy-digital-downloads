@@ -962,12 +962,19 @@ class EDD_Payment {
 		$discount   = $args['discount'];
 		$subtotal   = $amount;
 		$tax        = $args['tax'];
+		$fees       = 0;
+
+		if ( ! empty( $args['fees'] ) ) {
+			foreach ( $args['fees'] as $fee ) {
+				$fees += $fee['amount'] < 0 ? $fee['amount'] : 0;
+			}
+		}
 
 		if ( edd_prices_include_tax() ) {
 			$subtotal -= round( $tax, edd_currency_decimal_filter() );
 		}
 
-		$total      = $subtotal - $discount + $tax;
+		$total      = $subtotal - $discount + $tax + $fees;
 
 		// Do not allow totals to go negative
 		if( $total < 0 ) {
@@ -1189,6 +1196,7 @@ class EDD_Payment {
 			'id'          => '',
 			'no_tax'      => false,
 			'download_id' => 0,
+			'price_id'    => NULL,
 		);
 
 		$fee = wp_parse_args( $args, $default_args );
