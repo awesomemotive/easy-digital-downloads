@@ -958,23 +958,23 @@ class EDD_Payment {
 		$new_download['options'] = $options;
 
 		$this->downloads[] = $new_download;
-
-		$discount   = $args['discount'];
-		$subtotal   = $amount;
-		$tax        = $args['tax'];
+		
 		$fees       = 0;
-
 		if ( ! empty( $args['fees'] ) ) {
 			foreach ( $args['fees'] as $fee ) {
 				$fees += $fee['amount'] < 0 ? $fee['amount'] : 0;
 			}
 		}
+		$discount   = $args['discount'];
+		$subtotal   = $amount + $fees;
+		$tax        = $args['tax'];
+
 
 		if ( edd_prices_include_tax() ) {
 			$subtotal -= round( $tax, edd_currency_decimal_filter() );
 		}
 
-		$total      = $subtotal - $discount + $tax + $fees;
+		$total      = $subtotal - $discount + $tax;
 
 		// Do not allow totals to go negative
 		if( $total < 0 ) {
