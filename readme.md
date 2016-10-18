@@ -21,7 +21,7 @@ This will download the latest developer copy of Easy Digital Downloads.
 If you find an issue, let us know [here](https://github.com/easydigitaldownloads/easy-digital-downloads/issues?state=open)!
 
 ## Support ##
-This is a developer's portal for Easy Digital Downloads and should _not_ be used for support. Please visit the [support forums](https://easydigitaldownloads.com/support).
+This is a developer's portal for Easy Digital Downloads and should _not_ be used for support. Please visit the [support page](https://easydigitaldownloads.com/support) if you need to submit a support request.
 
 ## Contributions ##
 Anyone is welcome to contribute to Easy Digital Downloads. Please read the [guidelines for contributing](https://github.com/easydigitaldownloads/easy-digital-downloads/blob/master/CONTRIBUTING.md) to this repository.
