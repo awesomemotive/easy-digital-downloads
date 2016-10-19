@@ -1247,11 +1247,7 @@ class EDD_Payment {
 	 * @return bool     If the fee was removed successfully
 	 */
 	public function remove_fee( $key ) {
-		$removed = false;
-
-		if ( is_numeric( $key ) ) {
-			$removed = $this->remove_fee_by( 'index', $key );
-		}
+		$removed = $this->remove_fee_by( 'index', $key );
 
 		return $removed;
 	}
