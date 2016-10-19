@@ -338,6 +338,7 @@ function edd_undo_purchase( $download_id = false, $payment_id ) {
 
 			if ( ! empty( $item['fees'] ) ) {
 				foreach ( $item['fees'] as $fee ) {
+					// Only let negative fees affect the earnings
 					if ( $fee['amount'] > 0 ) {
 						continue;
 					}
