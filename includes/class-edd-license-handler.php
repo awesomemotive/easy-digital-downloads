@@ -25,7 +25,6 @@ class EDD_License {
 	private $version;
 	private $author;
 	private $api_url = 'https://easydigitaldownloads.com/edd-sl-api/';
-	private $beta;
 
 	/**
 	 * Class constructor
@@ -37,7 +36,7 @@ class EDD_License {
 	 * @param string  $_optname
 	 * @param string  $_api_url
 	 */
-	function __construct( $_file, $_item, $_version, $_author, $_optname = null, $_api_url = null, $_beta = false ) {
+	function __construct( $_file, $_item, $_version, $_author, $_optname = null, $_api_url = null ) {
 
 		$this->file           = $_file;
 
@@ -52,7 +51,6 @@ class EDD_License {
 		$this->license        = trim( edd_get_option( $this->item_shortname . '_license_key', '' ) );
 		$this->author         = $_author;
 		$this->api_url        = is_null( $_api_url ) ? $this->api_url : $_api_url;
-		$this->beta           = $_beta;
 
 		/**
 		 * Allows for backwards compatibility with old license options,
@@ -120,6 +118,8 @@ class EDD_License {
 
 		add_action( 'in_plugin_update_message-' . plugin_basename( $this->file ), array( $this, 'plugin_row_license_missing' ), 10, 2 );
 
+		// Register plugins for beta support
+		add_filter( 'edd_has_beta_support', array( $this, 'register_beta_support' ) );
 	}
 
 	/**
@@ -129,12 +129,13 @@ class EDD_License {
 	 * @return  void
 	 */
 	public function auto_updater() {
+		$betas = edd_get_option( 'enabled_betas', array() );
 
 		$args = array(
 			'version'   => $this->version,
 			'license'   => $this->license,
 			'author'    => $this->author,
-			'beta'      => $this->beta
+			'beta'      => ( array_key_exists( $this->item_shortname, $betas ) ? true : false )
 		);
 
 		if( ! empty( $this->item_id ) ) {
@@ -464,6 +465,20 @@ class EDD_License {
 			$showed_imissing_key_message[ $this->item_shortname ] = true;
 		}
 
+	}
+
+	/**
+	 * Adds this plugin to the beta page
+	 *
+	 * @access  public
+	 * @param   array $products
+	 * @since   2.6.10
+	 * @return  void
+	 */
+	public function register_beta_support( $products ) {
+		$products[ $this->item_shortname ] = $this->item_name;
+
+		return $products;
 	}
 }
 
