@@ -324,6 +324,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		'exclude_category' => '',
 		'tags'             => '',
 		'exclude_tags'     => '',
+		'author'           => false,
 		'relation'         => 'OR',
 		'number'           => 9,
 		'price'            => 'no',
@@ -335,7 +336,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		'orderby'          => 'post_date',
 		'order'            => 'DESC',
 		'ids'              => '',
-		'pagination'       => 'true'
+		'pagination'       => 'true',
 	), $atts, 'downloads' );
 
 	$query = array(
@@ -533,6 +534,10 @@ function edd_downloads_query( $atts, $content = null ) {
 
 	if ( $atts['exclude_tags'] || $atts['exclude_category'] ) {
 		$query['tax_query']['relation'] = 'AND';
+	}
+
+	if ( $atts['author'] && is_numeric( $atts['author'] ) ) {
+		$query['author'] = absint( $atts['author'] );
 	}
 
 	if( ! empty( $atts['ids'] ) )
