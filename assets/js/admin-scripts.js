@@ -696,9 +696,33 @@ jQuery(document).ready(function ($) {
 		},
 
 		resend_receipt : function() {
-			$( document.body ).on( 'click', '#edd-resend-receipt', function( e ) {
-				return confirm( edd_vars.resend_receipt );
+
+			var emails_wrap = $('.edd-order-resend-receipt-addresses');
+
+			$( document.body ).on( 'click', '#edd-select-receipt-email', function( e ) {
+
+				e.preventDefault();
+				emails_wrap.slideDown();
+
 			} );
+
+			$( document.body ).on( 'change', '.edd-order-resend-receipt-email', function() {
+
+				var href = $('#edd-select-receipt-email').prop( 'href' ) + '&email=' + $(this).val();
+
+				if( confirm( edd_vars.resend_receipt ) ) {
+					window.location = href;
+				}
+
+			} );
+
+
+			$( document.body ).on( 'click', '#edd-resend-receipt', function( e ) {
+
+				return confirm( edd_vars.resend_receipt );
+
+			} );
+
 		},
 
 		copy_download_link : function() {
@@ -1192,6 +1216,7 @@ jQuery(document).ready(function ($) {
 		var container   = $(this).closest( '.edd-select-chosen' );
 		var menu_id     = container.attr('id').replace( '_chosen', '' );
 		var no_bundles  = container.hasClass( 'no-bundles' );
+		var variations  = container.hasClass( 'variations' );
 		var lastKey     = e.which;
 		var search_type = 'edd_download_search';
 
@@ -1231,14 +1256,14 @@ jQuery(document).ready(function ($) {
 					data: {
 						action: search_type,
 						s: val,
-						no_bundles: no_bundles
+						no_bundles: no_bundles,
+						variations: variations,
 					},
 					dataType: "json",
 					beforeSend: function(){
 						$('ul.chosen-results').empty();
 					},
 					success: function( data ) {
-
 						// Remove all options but those that are selected
 						$('#' + menu_id + ' option:not(:selected)').remove();
 						$.each( data, function( key, item ) {
