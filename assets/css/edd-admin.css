@@ -59,6 +59,7 @@ a.edd-delete:hover {
 	max-width: 300px;
 	padding: 7px;
 	text-rendering: optimizeLegibility;
+	z-index: 9999 !important;
 }
 
 /* =Add Ons Styles
