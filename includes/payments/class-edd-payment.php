@@ -646,9 +646,20 @@ class EDD_Payment {
 											$y++;
 										}
 
+										$increase_earnings = $price;
+										if ( ! empty( $item['fees'] ) ) {
+											foreach ( $item['fees'] as $fee ) {
+												// Only let negative fees affect the earnings
+												if ( $fee['amount'] > 0 ) {
+													continue;
+												}
+												$increase_earnings += (float) $fee['amount'];
+											}
+										}
+
 										$download = new EDD_Download( $item['id'] );
 										$download->increase_sales( $item['quantity'] );
-										$download->increase_earnings( $price );
+										$download->increase_earnings( $increase_earnings );
 
 										$total_increase += $price;
 									}
@@ -681,7 +692,18 @@ class EDD_Payment {
 										if ( 'publish' === $this->status || 'complete' === $this->status || 'revoked' === $this->status ) {
 											$download = new EDD_Download( $item['id'] );
 											$download->decrease_sales( $item['quantity'] );
-											$download->decrease_earnings( $item['amount'] );
+
+											$decrease_amount = $item['amount'];
+											if ( ! empty( $item['fees'] ) ) {
+												foreach( $item['fees'] as $fee ) {
+													// Only let negative fees affect the earnings
+													if ( $fee['amount'] > 0 ) {
+														continue;
+													}
+													$decrease_amount += $fee['amount'];
+												}
+											}
+											$download->decrease_earnings( $decrease_amount );
 
 											$total_decrease += $item['amount'];
 										}
