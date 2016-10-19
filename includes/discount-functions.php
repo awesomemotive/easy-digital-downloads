@@ -236,14 +236,6 @@ function edd_store_discount( $details, $discount_id = null ) {
 
 	}
 
-	if( ! empty( $meta['product_reqs'] ) ) {
-		foreach( $meta['product_reqs'] as $key => $product ) {
-			if( 0 === intval( $product ) ) {
-				unset( $meta['product_reqs'][ $key ] );
-			}
-		}
-	}
-
 	if( ! empty( $meta['excluded_products'] ) ) {
 		foreach( $meta['excluded_products'] as $key => $product ) {
 			if( 0 === intval( $product ) ) {

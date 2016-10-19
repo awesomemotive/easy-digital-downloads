@@ -500,6 +500,8 @@ function edd_ajax_download_search() {
 		$excludes = array_merge( $excludes, $bundles );
 	}
 
+	$variations = isset( $_GET['variations'] ) ? filter_var( $_GET['variations'], FILTER_VALIDATE_BOOLEAN ) : false;
+
 	$excludes = array_unique( array_map( 'absint', $excludes ) );
 	$exclude  = implode( ",", $excludes );
 
@@ -538,11 +540,28 @@ function edd_ajax_download_search() {
 				'id'   => $item->ID,
 				'name' => $item->post_title
 			);
+
+			if ( $variations && edd_has_variable_prices( $item->ID ) ) {
+				$prices = edd_get_variable_prices( $item->ID );
+
+				foreach ( $prices as $key => $value ) {
+					$name   = ! empty( $value['name'] )   ? $value['name']   : '';
+					$amount = ! empty( $value['amount'] ) ? $value['amount'] : '';
+					$index  = ! empty( $value['index'] )  ? $value['index']  : $key;
+
+					if ( $name && $index ) {
+						$results[] = array(
+							'id'   => $item->ID . '_' . $key,
+							'name' => esc_html( $item->post_title . ': ' . $name ),
+						);
+					}
+				}
+			}
 		}
 
 	} else {
 
-		$items[] = array(
+		$results[] = array(
 			'id'   => 0,
 			'name' => __( 'No results found', 'easy-digital-downloads' )
 		);

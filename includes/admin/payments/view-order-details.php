@@ -37,13 +37,13 @@ $payment_meta   = $payment->get_meta();
 $transaction_id = esc_attr( $payment->transaction_id );
 $cart_items     = $payment->cart_details;
 $user_id        = $payment->user_id;
-$customer_id    = $payment->customer_id;
 $payment_date   = strtotime( $payment->date );
 $unlimited      = $payment->has_unlimited_downloads;
 $user_info      = edd_get_payment_meta_user_info( $payment_id );
 $address        = $payment->address;
 $gateway        = $payment->gateway;
 $currency_code  = $payment->currency;
+$customer       = new EDD_Customer( $payment->customer_id );
 ?>
 <div class="wrap edd-wrap">
 	<h2><?php printf( __( 'Payment %s', 'easy-digital-downloads' ), $number ); ?></h2>
@@ -176,9 +176,20 @@ $currency_code  = $payment->currency;
 							<div id="edd-order-resend-receipt" class="postbox edd-order-data">
 								<div class="inside">
 									<div class="edd-order-resend-receipt-box edd-admin-box">
-									<?php do_action( 'edd_view_order_details_resend_receipt_before', $payment_id ); ?>
-											<a href="<?php echo add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $payment_id ) ); ?>" id="edd-resend-receipt" class="button-secondary alignleft"><?php _e( 'Resend Receipt', 'easy-digital-downloads' ); ?></a>
-											<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Resend Receipt</strong>: This will send a new copy of the purchase receipt to the customer&#8217;s email address. If download URLs are included in the receipt, new file download URLs will also be included with the receipt.', 'easy-digital-downloads' ); ?>"></span>
+										<?php do_action( 'edd_view_order_details_resend_receipt_before', $payment_id ); ?>
+										<a href="<?php echo add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $payment_id ) ); ?>" id="<?php if( count( $customer->emails ) > 1 ) { echo 'edd-select-receipt-email'; } else { echo 'edd-resend-receipt'; } ?>" class="button-secondary alignleft"><?php _e( 'Resend Receipt', 'easy-digital-downloads' ); ?></a>
+										<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Resend Receipt</strong>: This will send a new copy of the purchase receipt to the customer&#8217;s email address. If download URLs are included in the receipt, new file download URLs will also be included with the receipt.', 'easy-digital-downloads' ); ?>"></span>
+										<?php if( count( $customer->emails ) > 1 ) : ?>
+											<div class="clear"></div>
+											<div class="edd-order-resend-receipt-addresses" style="display:none;">
+												<select class="edd-order-resend-receipt-email">
+													<option value=""><?php _e( ' -- select email --', 'easy-digital-downloads' ); ?></option>
+													<?php foreach( $customer->emails as $email ) : ?>
+														<option value="<?php echo esc_attr( $email ); ?>"><?php echo $email; ?></option>
+													<?php endforeach; ?>
+												</select>
+											</div>
+										<?php endif; ?>
 										<div class="clear"></div>
 										<?php do_action( 'edd_view_order_details_resend_receipt_after', $payment_id ); ?>
 									</div><!-- /.edd-order-resend-receipt-box -->
@@ -420,8 +431,6 @@ $currency_code  = $payment->currency;
 									<span><?php _e( 'Customer Details', 'easy-digital-downloads' ); ?></span>
 								</h3>
 								<div class="inside edd-clearfix">
-
-									<?php $customer = new EDD_Customer( $customer_id ); ?>
 
 									<div class="column-container customer-info">
 										<div class="column">
