@@ -573,6 +573,10 @@ class EDD_Payment {
 			if ( ! empty( $this->payment_meta['fees'] ) ) {
 				$this->fees = array_merge( $this->fees, $this->payment_meta['fees'] );
 				foreach( $this->fees as $fee ) {
+					if ( ! empty( $fee['download_id'] ) && $fee['amount'] < 0 ) {
+						continue;
+					}
+
 					$this->increase_fees( $fee['amount'] );
 				}
 			}
@@ -958,7 +962,7 @@ class EDD_Payment {
 		$new_download['options'] = $options;
 
 		$this->downloads[] = $new_download;
-		
+
 		$fees       = 0;
 		if ( ! empty( $args['fees'] ) ) {
 			foreach ( $args['fees'] as $fee ) {
@@ -1827,6 +1831,11 @@ class EDD_Payment {
 		$payment_fees = isset( $this->payment_meta['fees'] ) ? $this->payment_meta['fees'] : array();
 		if ( ! empty( $payment_fees ) ) {
 			foreach ( $payment_fees as $fee ) {
+
+				if ( ! empty( $fee['download_id'] ) && $fee['amount'] < 0 ) {
+					continue;
+				}
+
 				$fees_total += (float) $fee['amount'];
 			}
 		}
