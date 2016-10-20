@@ -336,6 +336,17 @@ function edd_undo_purchase( $download_id = false, $payment_id ) {
 
 			}
 
+			if ( ! empty( $item['fees'] ) ) {
+				foreach ( $item['fees'] as $fee ) {
+					// Only let negative fees affect the earnings
+					if ( $fee['amount'] > 0 ) {
+						continue;
+					}
+
+					$amount += $fee['amount'];
+				}
+			}
+
 			$maybe_decrease_earnings = apply_filters( 'edd_decrease_earnings_on_undo', true, $payment, $item['id'] );
 			if ( true === $maybe_decrease_earnings ) {
 				// decrease earnings
