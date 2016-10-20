@@ -123,7 +123,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 											<p class="strong"><?php _e( 'Fees', 'easy-digital-downloads' ); ?>:</p>
 											<ul class="edd-payment-fees">
 												<?php foreach( $fees as $fee ) : ?>
-												<li><span class="fee-label"><?php echo $fee['label'] . ':</span> ' . '<span class="fee-amount" data-fee="' . esc_attr( $fee['amount'] ) . '">' . edd_currency_filter( $fee['amount'], $currency_code ); ?></span></li>
+												<li data-fee-id="<?php echo $fee['id']; ?>"><span class="fee-label"><?php echo $fee['label'] . ':</span> ' . '<span class="fee-amount" data-fee="' . esc_attr( $fee['amount'] ) . '">' . edd_currency_filter( $fee['amount'], $currency_code ); ?></span></li>
 												<?php endforeach; ?>
 											</ul>
 										</div>
@@ -346,6 +346,10 @@ $customer       = new EDD_Customer( $payment->customer_id );
 												<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][item_price]" class="edd-payment-details-download-item-price" value="<?php echo esc_attr( $item_price ); ?>"/>
 												<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][amount]" class="edd-payment-details-download-amount" value="<?php echo esc_attr( $price ); ?>"/>
 												<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][quantity]" class="edd-payment-details-download-quantity" value="<?php echo esc_attr( $quantity ); ?>"/>
+												<?php if ( ! empty( $cart_items[ $key ]['fees'] ) ) : ?>
+													<?php $fees = array_keys( $cart_items[ $key ]['fees'] ); ?>
+													<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][fees]" class="edd-payment-details-download-fees" value="<?php echo esc_attr( json_encode( $fees ) ); ?>"/>
+												<?php endif; ?>
 
 											</li>
 

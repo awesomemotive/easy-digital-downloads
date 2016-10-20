@@ -434,6 +434,9 @@ jQuery(document).ready(function ($) {
 					var price_id    = $('input[name="edd-payment-details-downloads['+key+'][price_id]"]').val();
 					var quantity    = $('input[name="edd-payment-details-downloads['+key+'][quantity]"]').val();
 					var amount      = $('input[name="edd-payment-details-downloads['+key+'][amount]"]').val();
+					if ( $('input[name="edd-payment-details-downloads['+key+'][fees]"]') ) {
+						var fees = $.parseJSON( $('input[name="edd-payment-details-downloads['+key+'][fees]"]').val() );
+					}
 
 					var currently_removed  = $('input[name="edd-payment-removed"]').val();
 					currently_removed      = $.parseJSON(currently_removed);
@@ -447,6 +450,11 @@ jQuery(document).ready(function ($) {
 					$('input[name="edd-payment-removed"]').val(JSON.stringify(currently_removed));
 
 					$(this).parent().parent().parent().remove();
+					if (fees.length) {
+						$.each( fees, function( key, value ) {
+							$('*li[data-fee-id="' + value + '"]').remove();
+						});
+					}
 
 					// Flag the Downloads section as changed
 					$('#edd-payment-downloads-changed').val(1);
