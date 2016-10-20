@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
 Tested up to: 4.7
-Stable Tag: 2.6.8
+Stable Tag: 2.6.9
 
 License: GNU Version 2 or Any Later Version
 
@@ -186,6 +186,30 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.6.9, October 20, 2016 =
+* Fix: Negative fees associated with cart item do not affect cart item earnings.
+* Fix: Z-index of tooltips needs to be increased.
+* Fix: Products endpoint returns empty response on v2 of the API.
+* Fix: Email property set twice in edd_insert_payment().
+* Fix: "Email already in use" error if capitalization does not match.
+* Fix: Chosen dropdowns cause a horizontal scroll bug in RTL.
+* Fix: record_fees() clears fees in the session before purchases are completed.
+* Fix: New user email strips login link on plain text email.
+* Fix: Country and state chosen fields on view order details broken.
+* Fix: Billing address fields are not saving in the payment details page when edited.
+* Fix: Not all settings and data removed when uninstall is run.
+* Fix: Don't output a label if one isn't set for text and select HTML elements.
+* Fix: Date in payment_meta should match the payment date when modified.
+* Fix: The edd_get_random_download() should return an item.
+* Fix: Potential PHP warning when using EDD_Payment->save().
+* Fix: Payment date is not included in the payment history export.
+* New: API sales endpoints now include both user_id and customer_id.
+* New: Add user_dropdown to HTML elements that support chosen.
+* New: Add support for product variations in the HTML elements product_dropdown.
+* Tweak: Change "Disable Guest Checkout" to "Require Login".
+* Tweak: Typo "assocaited" in error messages when adding emails to a customer.
+* Tweak: Resend Receipt button allows selecting which associated customer email address to send receipt to.
 
 = 2.6.8, September 26, 2016 =
 * Fix: Category earnings report does not recover when the site has no download categories.
