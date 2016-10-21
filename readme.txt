@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
 Tested up to: 4.7
-Stable Tag: 2.6.9
+Stable Tag: 2.6.10
 
 License: GNU Version 2 or Any Later Version
 
@@ -186,6 +186,9 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.6.10, October 21, 2016 =
+* Fix: JavaScript error when removing a product from a payment that does not contain a fee.
 
 = 2.6.9, October 20, 2016 =
 * Fix: Negative fees associated with cart item do not affect cart item earnings.
