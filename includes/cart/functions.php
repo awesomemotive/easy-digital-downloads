@@ -398,6 +398,7 @@ function edd_set_cart_item_quantity( $download_id = 0, $quantity = 1, $options =
 
 	$cart[ $key ]['quantity'] = $quantity;
 	EDD()->session->set( 'edd_cart', $cart );
+	do_action( 'edd_after_set_cart_item_quantity', $cart );
 	return $cart;
 
 }
