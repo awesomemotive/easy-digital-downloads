@@ -904,6 +904,7 @@ class EDD_Payment {
 
 		if ( true === $saved ) {
 			$this->setup_payment( $this->ID );
+			do_action( 'edd_payment_saved', $this->ID, $this );
 		}
 
 		return $saved;
