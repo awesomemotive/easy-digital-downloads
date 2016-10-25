@@ -959,8 +959,16 @@ add_action( 'delete_user', 'edd_detach_deleted_user', 10, 1 );
  * @return void
  */
 function edd_show_user_api_key_field( $user ) {
+
+	if ( get_current_user_id() !== $user->ID ) {
+		return;
+	}
+
 	if ( ( edd_get_option( 'api_allow_user_keys', false ) || current_user_can( 'manage_shop_settings' ) ) && current_user_can( 'edit_user', $user->ID ) ) {
 		$user = get_userdata( $user->ID );
+		$public_key = EDD()->api->get_user_public_key( $user->ID );
+		$secret_key = EDD()->api->get_user_secret_key( $user->ID );
+		$token      = EDD()->api->get_token( $user->ID );
 		?>
 		<table class="form-table">
 			<tbody>
@@ -969,10 +977,6 @@ function edd_show_user_api_key_field( $user ) {
 					<?php _e( 'Easy Digital Downloads API Keys', 'easy-digital-downloads' ); ?>
 				</th>
 				<td>
-					<?php
-					$public_key = EDD()->api->get_user_public_key( $user->ID );
-					$secret_key = EDD()->api->get_user_secret_key( $user->ID );
-					?>
 					<?php if ( empty( $user->edd_user_public_key ) ) { ?>
 						<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
 						<span class="description"><?php _e( 'Generate API Key', 'easy-digital-downloads' ); ?></span>
@@ -983,6 +987,22 @@ function edd_show_user_api_key_field( $user ) {
 						<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
 						<span class="description"><label for="edd_set_api_key"><?php _e( 'Revoke API Keys', 'easy-digital-downloads' ); ?></label></span>
 					<?php } ?>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+		<table class="form-table">
+			<tbody>
+			<tr>
+				<th>
+					<?php printf( __( 'Easy Digital Downloads <a href="%s">iOS App</a>', 'easy-digital-downloads' ), 'https://itunes.apple.com/us/app/easy-digital-downloads/id625303275?ls=1&mt=8' ); ?>
+				</th>
+				<td>
+					<?php
+					$sitename = get_bloginfo( 'name' );
+					$ios_url  = 'edd://new?sitename=' . $sitename . '&siteurl=' . home_url() . '&key=' . $public_key . '&token=' . $token;
+					?>
+					<a class="button-secondary" href="<?php echo $ios_url; ?>"><?php _e( 'Add to iOS App', 'easy-digital-downloads' ); ?></a>
 				</td>
 			</tr>
 			</tbody>
