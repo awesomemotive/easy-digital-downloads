@@ -536,8 +536,28 @@ function edd_downloads_query( $atts, $content = null ) {
 		$query['tax_query']['relation'] = 'AND';
 	}
 
-	if ( $atts['author'] && is_numeric( $atts['author'] ) ) {
-		$query['author'] = absint( $atts['author'] );
+	if ( $atts['author'] ) {
+		$authors = explode( ',', $atts['author'] );
+		if ( ! empty( $authors ) ) {
+			$author_ids = array();
+			$author_names = array();
+
+			foreach ( $authors as $author ) {
+				if ( is_numeric( $author ) ) {
+					$author_ids[] = $author;
+				} else {
+					$user = get_user_by( 'login', $author );
+					if ( $user ) {
+						$author_ids[] = $user->ID;
+					}
+				}
+			}
+
+			if ( ! empty( $author_ids ) ) {
+				$author_ids      = array_unique( array_map( 'absint', $author_ids ) );
+				$query['author'] = implode( ',', $author_ids );
+			}
+		}
 	}
 
 	if( ! empty( $atts['ids'] ) )
