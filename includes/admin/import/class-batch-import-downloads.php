@@ -303,10 +303,16 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 
 				$condition = '';
 
-				if ( strpos( $file, ';' ) ) {
+				if ( false !== strpos( $file, ';' ) ) {
+
 					$split_on  = strpos( $file, ';' );
 					$file_url  = substr( $file, 0, $split_on );
 					$condition = substr( $file, $split_on + 1 );
+
+				} else {
+
+					$file_url = $file;
+
 				}
 
 				$download_file_args = array(
