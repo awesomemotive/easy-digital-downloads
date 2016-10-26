@@ -81,6 +81,10 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 
 		}
 
+		if ( 0 !== $this->download_id ) {
+			$args['post_parent'] = $this->download_id;
+		}
+
 		$logs = $edd_logs->get_connected_logs( $args );
 
 		if ( $logs ) {
@@ -142,6 +146,10 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 			)
 		);
 
+		if ( 0 !== $this->download_id ) {
+			$args['post_parent'] = $this->download_id;
+		}
+
 		$logs       = new WP_Query( $args );
 		$total      = (int) $logs->post_count;
 		$percentage = 100;
@@ -158,7 +166,8 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 	}
 
 	public function set_properties( $request ) {
-		$this->start = isset( $request['start'] ) ? sanitize_text_field( $request['start'] ) : '';
-		$this->end   = isset( $request['end']  )  ? sanitize_text_field( $request['end']  )  : '';
+		$this->start       = isset( $request['start'] )         ? sanitize_text_field( $request['start'] ) : '';
+		$this->end         = isset( $request['end']  )          ? sanitize_text_field( $request['end']  )  : '';
+		$this->download_id = isset( $request['download_id'] )   ? absint( $request['download_id'] )        : 0;
 	}
 }
