@@ -213,7 +213,13 @@ jQuery(document).ready(function ($) {
 
 		prices : function() {
 			$( document.body ).on( 'change', '#edd_variable_pricing', function(e) {
-				$( '.edd_pricing_fields,.edd_repeatable_table .pricing' ).toggle();
+				var checked = $(this).is(':checked');
+				var target  = $( '.edd_pricing_fields,.edd_repeatable_table .pricing' );
+				if ( checked ) {
+					target.show();
+				} else {
+					target.hide();
+				}
 			});
 		},
 
@@ -469,8 +475,18 @@ jQuery(document).ready(function ($) {
 
 			$('#edd-customer-details').on('click', '.edd-payment-new-customer, .edd-payment-new-customer-cancel', function(e) {
 				e.preventDefault();
-				$('.customer-info').toggle();
-				$('.new-customer').toggle();
+
+				var new_customer = $(this).hasClass('edd-payment-new-customer');
+				var cancel       = $(this).hasClass('edd-payment-new-customer-cancel');
+
+				if ( new_customer ) {
+					$('.customer-info').hide();
+					$('.new-customer').show();
+				} else if( cancel) {
+					$('.customer-info').show();
+					$('.new-customer').hide();
+				}
+
 
 				var new_customer = $( '#edd-new-customer' );
 				if ($('.new-customer').is(":visible")) {
@@ -781,8 +797,9 @@ jQuery(document).ready(function ($) {
 		type_select : function() {
 
 			$('#edd-edit-discount #edd-type, #edd-add-discount #edd-type').change(function() {
-
-				$('.edd-amount-description').toggle();
+				var val = $(this).val();
+				$('.edd-amount-description').hide();
+				$('.edd-amount-description.' + val + '-discount').show();
 
 			});
 
