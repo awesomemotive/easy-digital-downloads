@@ -831,6 +831,10 @@ class EDD_Payment {
 						break;
 
 					default:
+						/**
+						 * Used to save non-standard data. Developers can hook here if they want to save
+						 * specific payment data when $payment->save() is run and their item is in the $pending array
+						 */
 						do_action( 'edd_payment_save', $this, $key );
 						break;
 				}
@@ -904,6 +908,12 @@ class EDD_Payment {
 
 		if ( true === $saved ) {
 			$this->setup_payment( $this->ID );
+
+			/**
+			 * This action fires anytime that $payment->save() is run, allowing developers to run actions
+			 * when a payment is updated
+			 */
+			do_action( 'edd_payment_saved', $this->ID, $this );
 		}
 
 		return $saved;
