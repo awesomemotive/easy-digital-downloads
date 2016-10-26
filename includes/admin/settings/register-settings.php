@@ -1926,6 +1926,7 @@ function edd_tax_rates_callback($args) {
 					echo EDD()->html->select( array(
 						'options'          => edd_get_country_list(),
 						'name'             => 'tax_rates[0][country]',
+						'selected'         => '',
 						'show_option_all'  => false,
 						'show_option_none' => false,
 						'class'            => 'edd-tax-country',
