@@ -991,6 +991,8 @@ function edd_show_user_api_key_field( $user ) {
 			</tr>
 			</tbody>
 		</table>
+
+		<?php if ( wp_is_mobile() ) : ?>
 		<table class="form-table">
 			<tbody>
 			<tr>
@@ -1007,6 +1009,8 @@ function edd_show_user_api_key_field( $user ) {
 			</tr>
 			</tbody>
 		</table>
+		<?php endif; ?>
+
 	<?php }
 }
 add_action( 'show_user_profile', 'edd_show_user_api_key_field' );
