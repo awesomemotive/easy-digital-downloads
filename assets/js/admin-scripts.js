@@ -790,9 +790,8 @@ jQuery(document).ready(function ($) {
 
 			$('#edd-edit-discount #edd-type, #edd-add-discount #edd-type').change(function() {
 				var val = $(this).val();
-				console.log(val);
 				$('.edd-amount-description').hide();
-				$('.edd-amount-description.' + val).show();
+				$('.edd-amount-description.' + val + '-discount').show();
 
 			});
 
