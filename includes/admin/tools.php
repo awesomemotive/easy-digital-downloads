@@ -68,7 +68,7 @@ function edd_get_tools_tabs() {
 	$tabs['general']       = __( 'General', 'easy-digital-downloads' );
 	$tabs['api_keys']      = __( 'API Keys', 'easy-digital-downloads' );
 
-	if( count( edd_has_beta_support() ) > 0 ) {
+	if( count( edd_get_beta_enabled_extensions() ) > 0 ) {
 		$tabs['betas'] = __( 'Beta Support', 'easy-digital-downloads' );
 	}
 
@@ -256,7 +256,7 @@ add_action( 'edd_tools_tab_api_keys', 'edd_tools_api_keys_display' );
 /**
  * Display beta opt-ins
  *
- * @since       2.6.9
+ * @since       2.6.11
  * @return      void
  */
 function edd_tools_betas_display() {
@@ -264,7 +264,7 @@ function edd_tools_betas_display() {
 		return;
 	}
 
-	$has_beta      = edd_has_beta_support();
+	$has_beta      = edd_get_beta_enabled_extensions();
 	$enabled_betas = edd_get_option( 'enabled_betas', array() );
 
 	do_action( 'edd_tools_betas_before' );
@@ -303,26 +303,26 @@ add_action( 'edd_tools_tab_betas', 'edd_tools_betas_display' );
 
 
 /**
- * Return an array of all products with beta support
+ * Return an array of all extensions with beta support
  *
- * Products should be added as 'product-slug' => 'Product Name'
+ * Extensions should be added as 'extension-slug' => 'Extension Name'
  *
- * @since       2.6.9
- * @return      array $products The array of products
+ * @since       2.6.11
+ * @return      array $extensions The array of extensions
  */
-function edd_has_beta_support() {
-	return apply_filters( 'edd_has_beta_support', array() );
+function edd_get_beta_enabled_extensions() {
+	return apply_filters( 'edd_beta_enabled_extensions', array() );
 }
 
 
 /**
- * Check if a given product has beta support enabled
+ * Check if a given extensions has beta support enabled
  *
- * @since       2.6.9
- * @param       string $slug The slug of the product to check
+ * @since       2.6.11
+ * @param       string $slug The slug of the extension to check
  * @return      bool True if enabled, false otherwise
  */
-function edd_is_beta_support_enabled( $slug ) {
+function edd_extension_has_beta_support( $slug ) {
 	$enabled_betas = edd_get_option( 'enabled_betas', array() );
 	$return        = false;
 
@@ -337,7 +337,7 @@ function edd_is_beta_support_enabled( $slug ) {
 /**
  * Save enabled betas
  *
- * @since       2.6.9
+ * @since       2.6.11
  * @return      void
  */
 function edd_tools_enabled_betas_save() {
