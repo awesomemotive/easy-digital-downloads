@@ -1372,7 +1372,7 @@ function edd_payment_icons_callback( $args ) {
 	if ( ! empty( $args['options'] ) ) {
 		foreach( $args['options'] as $key => $option ) {
 
-			if( isset( $edd_option[$key] ) ) {
+			if( isset( $edd_option[ $key ] ) ) {
 				$enabled = $option;
 			} else {
 				$enabled = NULL;
@@ -1384,7 +1384,7 @@ function edd_payment_icons_callback( $args ) {
 
 				if( edd_string_is_image_url( $key ) ) {
 
-					echo '<img class="payment-icon" src="' . esc_url( $key ) . '" style="width:32px;height:24px;position:relative;top:6px;margin-right:5px;"/>';
+					$html .= '<img class="payment-icon" src="' . esc_url( $key ) . '" style="width:32px;height:24px;position:relative;top:6px;margin-right:5px;"/>';
 
 				} else {
 
