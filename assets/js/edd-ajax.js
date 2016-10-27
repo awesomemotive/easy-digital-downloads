@@ -190,11 +190,13 @@ jQuery(document).ready(function ($) {
 					$('.cart_item.edd_checkout').show();
 
 					if ($('.cart_item.empty').length) {
-						$(response.cart_item).insertBefore('.edd-cart-meta:first');
 						$('.cart_item.empty').hide();
-					} else {
-						$(response.cart_item).insertBefore('.edd-cart-meta:first');
 					}
+
+					$('.widget_edd_cart_widget .edd-cart').each( function( cart ) {
+						var target = $(this).find('.edd-cart-meta:first');
+						$(response.cart_item).insertBefore(target);
+					});
 
 					// Update the totals
 					if ( edd_scripts.taxes_enabled === '1' ) {
