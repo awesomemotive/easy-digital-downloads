@@ -119,7 +119,7 @@ class EDD_License {
 		add_action( 'in_plugin_update_message-' . plugin_basename( $this->file ), array( $this, 'plugin_row_license_missing' ), 10, 2 );
 
 		// Register plugins for beta support
-		add_filter( 'edd_has_beta_support', array( $this, 'register_beta_support' ) );
+		add_filter( 'edd_beta_enabled_extensions', array( $this, 'register_beta_support' ) );
 	}
 
 	/**
