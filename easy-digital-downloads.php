@@ -3,7 +3,7 @@
  * Plugin Name: Easy Digital Downloads
  * Plugin URI: https://easydigitaldownloads.com
  * Description: The easiest way to sell digital products with WordPress.
- * Author: Pippin Williamson and Company
+ * Author: Easy Digital Downloads
  * Author URI: https://easydigitaldownloads.com
  * Version: 2.6.10
  * Text Domain: easy-digital-downloads
