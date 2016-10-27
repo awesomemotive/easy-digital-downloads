@@ -270,13 +270,9 @@ add_action( 'admin_enqueue_scripts', 'edd_load_admin_scripts', 100 );
  * Echoes the CSS for the downloads post type icon.
  *
  * @since 1.0
- * @global $post_type
- * @global $wp_version
  * @return void
 */
 function edd_admin_downloads_icon() {
-	global $post_type, $wp_version;
-
 	$images_url      = EDD_PLUGIN_URL . 'assets/images/';
 	$menu_icon       = '\f316';
 	$icon_url        = $images_url . 'edd-icon.png';
