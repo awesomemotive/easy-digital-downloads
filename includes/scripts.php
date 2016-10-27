@@ -275,13 +275,10 @@ add_action( 'admin_enqueue_scripts', 'edd_load_admin_scripts', 100 );
  * @return void
 */
 function edd_admin_downloads_icon() {
-	global $post_type, $wp_version;
 
 	$images_url      = EDD_PLUGIN_URL . 'assets/images/';
 	$menu_icon       = '\f316';
-	$icon_url        = $images_url . 'edd-icon.png';
 	$icon_cpt_url    = $images_url . 'edd-cpt.png';
-	$icon_2x_url     = $images_url . 'edd-icon-2x.png';
 	$icon_cpt_2x_url = $images_url . 'edd-cpt-2x.png';
 	?>
 	<style type="text/css" media="screen">
@@ -300,10 +297,6 @@ function edd_admin_downloads_icon() {
 			#icon-edit.icon32-posts-download {
 				background: url(<?php echo $icon_cpt_2x_url; ?>) no-repeat -7px -5px !important;
 				background-size: 55px 45px !important;
-			}
-			#edd-media-button {
-				background-image: url(<?php echo $icon_2x_url; ?>);
-				background-position: 0 -17px;
 			}
 		}
 	</style>
