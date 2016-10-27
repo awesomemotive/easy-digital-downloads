@@ -270,8 +270,7 @@ add_action( 'admin_enqueue_scripts', 'edd_load_admin_scripts', 100 );
  * Echoes the CSS for the downloads post type icon.
  *
  * @since 1.0
- * @global $post_type
- * @global $wp_version
+ * @since 2.6.11 Removed globals and CSS for custom icon
  * @return void
 */
 function edd_admin_downloads_icon() {
