@@ -658,6 +658,8 @@ function edd_get_registered_settings() {
 							'yes' => __( 'Including tax', 'easy-digital-downloads' ),
 							'no'  => __( 'Excluding tax', 'easy-digital-downloads' ),
 						),
+						'tooltip_title' => __( 'Taxes Displayed for Products on Checkout', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'This option will determine whether the product price displays with or without tax on checkout.', 'easy-digital-downloads' ),
 					),
 				),
 			)
