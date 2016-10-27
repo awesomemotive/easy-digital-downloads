@@ -30,7 +30,7 @@ class EDD_API {
 	/**
 	 * Latest API Version
 	 */
-	const VERSION = 1;
+	const VERSION = 2;
 
 	/**
 	 * Pretty Print?
