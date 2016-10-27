@@ -149,20 +149,4 @@ class Tests_Scripts extends WP_UnitTestCase {
 
 	}
 
-	/**
-	 * Test that the edd_admin_downloads_icon() function will display the proper styles.
-	 *
-	 * @since 2.3.6
-	 */
-	public function test_admin_downloads_icon() {
-
-		ob_start();
-			edd_admin_downloads_icon();
-		$return = ob_get_clean();
-
-		$this->assertContains( '#edd-media-button', $return );
-
-	}
-
-
 }
