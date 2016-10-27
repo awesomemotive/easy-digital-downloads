@@ -55,9 +55,9 @@ a.edd-delete:hover {
 	background: #333 !important;
 	border-width: 1px !important;
 	border-radius: 3px !important;
-	box-shadow: 1px 1px 2px 1px rgba(214,214,214,0.5);
+	box-shadow: 1px 1px 2px 1px rgba(214,214,214,0.5) !important;
 	color: #dedede !important;
-	max-width: 300px;
+	max-width: 300px !important;
 	padding: 7px !important;
 	text-rendering: optimizeLegibility;
 	text-shadow: none !important;
