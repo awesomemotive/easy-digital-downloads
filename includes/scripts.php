@@ -291,10 +291,6 @@ function edd_admin_downloads_icon() {
 		#icon-edit.icon32-posts-download {
 			background: url(<?php echo $icon_cpt_url; ?>) -7px -5px no-repeat;
 		}
-		#edd-media-button {
-			background: url(<?php echo $icon_url; ?>) 0 -16px no-repeat;
-			background-size: 12px 30px;
-		}
 		@media
 		only screen and (-webkit-min-device-pixel-ratio: 1.5),
 		only screen and (   min--moz-device-pixel-ratio: 1.5),
