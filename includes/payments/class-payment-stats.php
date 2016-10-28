@@ -128,7 +128,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 
 			$args = apply_filters( 'edd_stats_earnings_args', $args );
 			$cached   = get_transient( 'edd_stats_earnings' );
-			$key      = substr( md5( serialize( $args ) ), 0, 15 );
+			$key      = md5( serialize( $args ) );
 			$earnings = $cached[ $key ];
 
 			$earnings = get_transient( $key );
@@ -177,7 +177,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 
 			$args     = apply_filters( 'edd_stats_earnings_args', $args );
 			$cached   = get_transient( 'edd_stats_earnings' );
-			$key      = substr( md5( serialize( $args ) ), 0, 15 );
+			$key      = md5( serialize( $args ) );
 			$earnings = $cached[ $key ];
 
 			if( false === $earnings ) {

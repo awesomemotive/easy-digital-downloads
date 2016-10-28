@@ -704,7 +704,7 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 
 	$args     = apply_filters( 'edd_get_earnings_by_date_args', $args );
 	$cached   = get_transient( 'edd_stats_earnings' );
-	$key      = substr( md5( serialize( $args ) ), 0, 15 );
+	$key      = md5( serialize( $args ) );
 	$earnings = $cached[ $key ];
 
 	if( false === $earnings ) {
@@ -780,7 +780,7 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 	$args = apply_filters( 'edd_get_sales_by_date_args', $args  );
 
 	$cached   = get_transient( 'edd_stats_sales' );
-	$key      = substr( md5( serialize( $args ) ), 0, 15 );
+	$key      = md5( serialize( $args ) );
 	$earnings = $cached[ $key ];
 
 	if ( false === $count ) {
