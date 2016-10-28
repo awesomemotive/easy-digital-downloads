@@ -299,6 +299,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 		if( ! empty( $files ) ) {
 
 			$download_files = array();
+			$file_id        = 1;
 			foreach( $files as $file ) {
 
 				$condition = '';
@@ -324,7 +325,8 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 					$download_file_args['condition'] = $condition;
 				}
 
-				$download_files[] = $download_file_args;
+				$download_files[ $file_id ] = $download_file_args;
+				$file_id++;
 
 			}
 
