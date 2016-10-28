@@ -1,5 +1,5 @@
 === Easy Digital Downloads ===
-Author URI: https://pippinsplugins.com
+Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
 Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip
 Donate link: https://easydigitaldownloads.com/donate/

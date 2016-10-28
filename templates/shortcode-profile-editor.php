@@ -142,7 +142,7 @@ if ( is_user_logged_in() ):
 					<?php endforeach; ?>
 				</select>
 				<br/>
-				<label for="edd_address_state"><?php _e( 'State / Province', 'edd' ); ?></label>
+				<label for="edd_address_state"><?php _e( 'State / Province', 'easy-digital-downloads' ); ?></label>
 				<?php
 			        if( ! empty( $states ) ) : ?>
 			        <select name="edd_address_state" id="edd_address_state" class="select edd-select">

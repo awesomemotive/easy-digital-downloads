@@ -132,6 +132,7 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 							$amount += $fee['amount'];
 						}
 					}
+
 					$totals[ $download_id ]['sales']++;
 					$totals[ $download_id ]['earnings'] += $amount;
 
@@ -279,6 +280,13 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 
 				$all_downloads = get_posts( $args );
 				$this->store_data( 'edd_temp_download_ids', $all_downloads );
+
+				if ( $this->step == 1 ) {
+					foreach ( $all_downloads as $download ) {
+						update_post_meta( $download, '_edd_download_sales'   , 0 );
+						update_post_meta( $download, '_edd_download_earnings', 0 );
+					}
+				}
 			}
 
 			$args  = apply_filters( 'edd_recount_download_stats_total_args', array(

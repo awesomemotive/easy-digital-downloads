@@ -89,6 +89,13 @@ class EDD_Fees {
 			unset( $args['price_id'] );
 		}
 
+		if ( ! empty( $args['download_id'] ) ) {
+			$options = isset( $args['price_id'] ) ? array( 'price_id' => $args['price_id'] ) : array();
+			if ( ! edd_item_in_cart( $args['download_id'], $options ) ) {
+				return false;
+			}
+		}
+
 		$fees = $this->get_fees( 'all' );
 
 		// Determine the key

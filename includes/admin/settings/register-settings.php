@@ -283,7 +283,9 @@ function edd_get_registered_settings() {
 					'login_redirect_page' => array(
 						'id'          => 'login_redirect_page',
 						'name'        => __( 'Login Redirect Page', 'easy-digital-downloads' ),
-						'desc'        => __( 'This is the page where buyers will be redirected by default once they log in. The [edd_login redirect="'.trailingslashit( home_url() ).'"] shortcode with the redirect attribute can override this setting.', 'easy-digital-downloads' ),
+						'desc'        => sprintf(
+								__( 'This is the page where buyers will be redirected by default once they log in. The [edd_login redirect="%s"] shortcode with the redirect attribute can override this setting.', 'easy-digital-downloads' ), trailingslashit( home_url() )
+						),
 						'type'        => 'select',
 						'options'     => edd_get_pages(),
 						'chosen'      => true,
@@ -656,6 +658,8 @@ function edd_get_registered_settings() {
 							'yes' => __( 'Including tax', 'easy-digital-downloads' ),
 							'no'  => __( 'Excluding tax', 'easy-digital-downloads' ),
 						),
+						'tooltip_title' => __( 'Taxes Displayed for Products on Checkout', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'This option will determine whether the product price displays with or without tax on checkout.', 'easy-digital-downloads' ),
 					),
 				),
 			)
@@ -1368,7 +1372,7 @@ function edd_payment_icons_callback( $args ) {
 	if ( ! empty( $args['options'] ) ) {
 		foreach( $args['options'] as $key => $option ) {
 
-			if( isset( $edd_option[$key] ) ) {
+			if( isset( $edd_option[ $key ] ) ) {
 				$enabled = $option;
 			} else {
 				$enabled = NULL;
@@ -1380,7 +1384,7 @@ function edd_payment_icons_callback( $args ) {
 
 				if( edd_string_is_image_url( $key ) ) {
 
-					echo '<img class="payment-icon" src="' . esc_url( $key ) . '" style="width:32px;height:24px;position:relative;top:6px;margin-right:5px;"/>';
+					$html .= '<img class="payment-icon" src="' . esc_url( $key ) . '" style="width:32px;height:24px;position:relative;top:6px;margin-right:5px;"/>';
 
 				} else {
 
@@ -1924,6 +1928,7 @@ function edd_tax_rates_callback($args) {
 					echo EDD()->html->select( array(
 						'options'          => edd_get_country_list(),
 						'name'             => 'tax_rates[0][country]',
+						'selected'         => '',
 						'show_option_all'  => false,
 						'show_option_none' => false,
 						'class'            => 'edd-tax-country',
