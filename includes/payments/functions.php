@@ -706,8 +706,7 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 	$cached = get_transient( 'edd_stats_earnings' );
 	$key    = md5( serialize( $args ) );
 
-	if( ! in_array( $key, $cached ) ) {
-		$earnings = $cached[ $key ];
+	if( false === $cached ) {
 		$sales = get_posts( $args );
 		$earnings = 0;
 		if ( $sales ) {
@@ -782,7 +781,7 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 	$cached = get_transient( 'edd_stats_sales' );
 	$key    = md5( serialize( $args ) );
 
-	if ( ! in_array( $key, $cached) ) {
+	if ( false === $cached ) {
 		$sales = new WP_Query( $args );
 		$count = (int) $sales->post_count;
 

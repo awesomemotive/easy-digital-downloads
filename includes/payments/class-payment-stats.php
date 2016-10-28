@@ -130,7 +130,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 			$cached   = get_transient( 'edd_stats_earnings' );
 			$key      = md5( serialize( $args ) );
 
-			if ( ! in_array( $key, $cached ) ) {
+			if ( false === $cached ) {
 				$sales    = get_posts( $args );
 				$earnings = 0;
 
@@ -176,8 +176,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 			$cached   = get_transient( 'edd_stats_earnings' );
 			$key      = md5( serialize( $args ) );
 
-			if ( ! in_array( $key, $cached ) ) {
-				$earnings = $cached[ $key ];
+			if ( false === $cached ) {
 				$this->timestamp = false;
 				$log_ids  = $edd_logs->get_connected_logs( $args, 'sale' );
 
