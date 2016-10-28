@@ -221,7 +221,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 				}
 
 				// Cache the results for one hour
-				$cache[ $key ] = $earnings;
+				$cached[ $key ] = $earnings;
 				set_transient( 'edd_stats_earnings', $cached, HOUR_IN_SECONDS );
 			}
 		}
