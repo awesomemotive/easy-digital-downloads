@@ -128,7 +128,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 
 			$args = apply_filters( 'edd_stats_earnings_args', $args );
 			$cached   = get_transient( 'edd_stats_earnings' );
-			$key      = md5( serialize( $args ) );
+			$key      = md5( json_encode( $args ) );
 
 			if ( ! isset( $cached[ $key ] ) ) {
 				$sales    = get_posts( $args );
@@ -174,7 +174,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 
 			$args     = apply_filters( 'edd_stats_earnings_args', $args );
 			$cached   = get_transient( 'edd_stats_earnings' );
-			$key      = md5( serialize( $args ) );
+			$key      = md5( json_encode( $args ) );
 
 			if ( ! isset( $cached[ $key ] ) ) {
 				$this->timestamp = false;

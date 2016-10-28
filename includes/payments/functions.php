@@ -704,7 +704,7 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 
 	$args   = apply_filters( 'edd_get_earnings_by_date_args', $args );
 	$cached = get_transient( 'edd_stats_earnings' );
-	$key    = md5( serialize( $args ) );
+	$key    = md5( json_encode( $args ) );
 
 	if ( ! isset( $cached[ $key ] ) ) {
 		$sales = get_posts( $args );
@@ -781,7 +781,7 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 	$args = apply_filters( 'edd_get_sales_by_date_args', $args  );
 
 	$cached = get_transient( 'edd_stats_sales' );
-	$key    = md5( serialize( $args ) );
+	$key    = md5( json_encode( $args ) );
 
 	if ( ! isset( $cached[ $key ] ) ) {
 		$sales = new WP_Query( $args );
