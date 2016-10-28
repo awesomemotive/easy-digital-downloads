@@ -702,12 +702,12 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 	if ( ! empty( $hour ) )
 		$args['hour'] = $hour;
 
-	$args     = apply_filters( 'edd_get_earnings_by_date_args', $args );
-	$cached   = get_transient( 'edd_stats_earnings' );
-	$key      = md5( serialize( $args ) );
-	$earnings = $cached[ $key ];
+	$args   = apply_filters( 'edd_get_earnings_by_date_args', $args );
+	$cached = get_transient( 'edd_stats_earnings' );
+	$key    = md5( serialize( $args ) );
 
-	if( false === $earnings ) {
+	if( ! in_array( $key, $cached ) ) {
+		$earnings = $cached[ $key ];
 		$sales = get_posts( $args );
 		$earnings = 0;
 		if ( $sales ) {
@@ -727,7 +727,7 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 		set_transient( 'edd_stats_earnings', $cached, HOUR_IN_SECONDS );
 	}
 
-	return round( $earnings, 2 );
+	return round( $cached[ $key ], 2 );
 }
 
 /**
@@ -779,11 +779,10 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 
 	$args = apply_filters( 'edd_get_sales_by_date_args', $args  );
 
-	$cached   = get_transient( 'edd_stats_sales' );
-	$key      = md5( serialize( $args ) );
-	$earnings = $cached[ $key ];
+	$cached = get_transient( 'edd_stats_sales' );
+	$key    = md5( serialize( $args ) );
 
-	if ( false === $count ) {
+	if ( ! in_array( $key, $cached) ) {
 		$sales = new WP_Query( $args );
 		$count = (int) $sales->post_count;
 
@@ -792,7 +791,7 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 		set_transient( 'edd_stats_sales', $cached, HOUR_IN_SECONDS );
 	}
 
-	return $count;
+	return $cached[ $key ];
 }
 
 /**
