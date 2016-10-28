@@ -224,7 +224,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 					'currency'     => $payment->currency,
 					'ip'           => $payment->ip,
 					'mode'         => $payment->get_meta( '_edd_payment_mode', true ),
-					'status'       => $payment->status
+					'status'       => ( 'publish' === $payment->status ) ? 'complete' : $payment->status
 				);
 
 			}
