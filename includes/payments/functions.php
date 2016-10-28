@@ -703,8 +703,9 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 		$args['hour'] = $hour;
 
 	$args     = apply_filters( 'edd_get_earnings_by_date_args', $args );
-	$key      = 'edd_stats_' . substr( md5( serialize( $args ) ), 0, 15 );
-	$earnings = get_transient( $key );
+	$cached   = get_transient( 'edd_stats_earnings' );
+	$key      = substr( md5( serialize( $args ) ), 0, 15 );
+	$earnings = $cached[ $key ];
 
 	if( false === $earnings ) {
 		$sales = get_posts( $args );
@@ -722,7 +723,8 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 			$earnings += ( $total_earnings - $total_tax );
 		}
 		// Cache the results for one hour
-		set_transient( $key, $earnings, HOUR_IN_SECONDS );
+		$cached[ $key ] = $earnings;
+		set_transient( 'edd_stats_earnings', $cached, HOUR_IN_SECONDS );
 	}
 
 	return round( $earnings, 2 );
