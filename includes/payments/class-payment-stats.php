@@ -176,9 +176,10 @@ class EDD_Payment_Stats extends EDD_Stats {
 			);
 
 			$args     = apply_filters( 'edd_stats_earnings_args', $args );
-			$key      = 'edd_stats_' . md5( serialize( $args ) );
+			$cached   = get_transient( 'edd_stats_earnings' );
+			$key      = substr( md5( serialize( $args ) ), 0, 15 );
+			$earnings = $cached[ $key ];
 
-			$earnings = get_transient( $key );
 			if( false === $earnings ) {
 
 				$this->timestamp = false;
@@ -220,7 +221,8 @@ class EDD_Payment_Stats extends EDD_Stats {
 				}
 
 				// Cache the results for one hour
-				set_transient( $key, $earnings, HOUR_IN_SECONDS );
+				$cache[ $key ] = $earnings;
+				set_transient( 'edd_stats_earnings', $cached, HOUR_IN_SECONDS );
 			}
 		}
 
