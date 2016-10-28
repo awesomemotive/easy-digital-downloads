@@ -779,14 +779,17 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 
 	$args = apply_filters( 'edd_get_sales_by_date_args', $args  );
 
-	$key   = 'edd_stats_' . substr( md5( serialize( $args ) ), 0, 15 );
-	$count = get_transient( $key );
+	$cached   = get_transient( 'edd_stats_sales' );
+	$key      = substr( md5( serialize( $args ) ), 0, 15 );
+	$earnings = $cached[ $key ];
 
-	if( false === $count ) {
+	if ( false === $count ) {
 		$sales = new WP_Query( $args );
 		$count = (int) $sales->post_count;
+
 		// Cache the results for one hour
-		set_transient( $key, $count, HOUR_IN_SECONDS );
+		$cached[ $key ] = $count;
+		set_transient( 'edd_stats_sales', $cached, HOUR_IN_SECONDS );
 	}
 
 	return $count;
