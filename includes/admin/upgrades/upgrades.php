@@ -25,7 +25,7 @@ function edd_upgrades_screen() {
 	$custom = isset( $_GET['custom'] )      ? absint( $_GET['custom'] )                   : 0;
 	$number = isset( $_GET['number'] )      ? absint( $_GET['number'] )                   : 100;
 	$steps  = round( ( $total / $number ), 0 );
-	if ( ( $steps * 100 ) < $total ) {
+	if ( ( $steps * $number ) < $total ) {
 		$steps++;
 	}
 	
