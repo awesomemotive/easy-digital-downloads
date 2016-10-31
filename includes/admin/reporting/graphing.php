@@ -57,21 +57,31 @@ function edd_reports_graph() {
 		// Hour by hour
 		$hour  = 1;
 		$month = $dates['m_start'];
+
+		$i = 0;
+
+		$start = $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day'];
+		$end = $dates['year_end'] . '-' . $dates['m_end'] . '-' . $dates['day_end'];
+
+		$sales = EDD()->payment_stats->get_hourly_sales(0, $start, $end);
+
 		while ( $hour <= 23 ) {
+			$date = mktime( $hour, 0, 0, $month, $dates['day'], $dates['year'] ) * 1000;
 
-			$sales    = edd_get_sales_by_date( $dates['day'], $month, $dates['year'], $hour );
 			$earnings = edd_get_earnings_by_date( $dates['day'], $month, $dates['year'], $hour, $include_taxes );
-
-			$sales_totals    += $sales;
 			$earnings_totals += $earnings;
-
-			$date            = mktime( $hour, 0, 0, $month, $dates['day'], $dates['year'] ) * 1000;
-			$sales_data[]    = array( $date, $sales );
 			$earnings_data[] = array( $date, $earnings );
+
+			if ( $sales[ $i ]['h'] == $hour ) {
+				$sales_data[] = array( $date, $sales[ $i ]['count'] );
+				$sales_totals += $sales[ $i ]['count'];
+				$i++;
+			} else {
+				$sales_data[] = array( $date, 0 );
+			}
 
 			$hour++;
 		}
-
 	} elseif ( $dates['range'] == 'this_week' || $dates['range'] == 'last_week' ) {
 
 		$num_of_days = cal_days_in_month( CAL_GREGORIAN, $dates['m_start'], $dates['year'] );

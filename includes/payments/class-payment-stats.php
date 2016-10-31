@@ -252,7 +252,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 	}
 
 	/**
-	 * Retrieve earnings stats on a hourly basis
+	 * Retrieve sales stats on a hourly basis
 	 *
 	 * @access public
 	 * @since  2.6.11
@@ -261,7 +261,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 	 * @param string|bool $start_date The starting date for which we'd like to filter our sale stats. If false, we'll use the default start date of `this_month`
 	 * @param string|bool $end_date The end date for which we'd like to filter our sale stats. If false, we'll use the default end date of `this_month`
 	 * @param string|array $status The sale status(es) to count. Only valid when retrieving global stats
-	 * @return float|int Total amount of sales based on the passed arguments.
+	 * @return array Total amount of sales based on the passed arguments.
 	 */
 	public function get_hourly_sales( $download_id = 0, $start_date = false, $end_date = false, $status = 'publish' ) {
 		global $wpdb;
@@ -279,15 +279,15 @@ class EDD_Payment_Stats extends EDD_Stats {
 		}
 
 		$sales = $wpdb->get_results( $wpdb->prepare(
-			"SELECT HOUR(posts.post_date) AS h, COUNT(*)
+			"SELECT HOUR(posts.post_date) AS h, COUNT(*) as count
 			 FROM {$wpdb->posts} AS posts
 			 WHERE posts.post_type IN ('edd_payment')
 			 AND posts.post_status IN (%s)
 			 AND posts.post_date >= %s
 			 AND posts.post_date < %s
+			 AND ((posts.post_status = 'publish' OR posts.post_status = 'revoked' OR posts.post_status = 'cancelled' OR posts.post_status = 'edd_subscription'))
 			 GROUP BY HOUR(posts.post_date)
-			 ORDER by posts.post_date ASC"
-		), $status, $start_date, $end_date );
+			 ORDER by posts.post_date ASC", $status, date( 'Y-m-d', $this->start_date ), date( 'Y-m-d', strtotime( '+1 DAY', $this->end_date ) ) ), ARRAY_A );
 
 		return $sales;
 	}
