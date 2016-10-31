@@ -264,7 +264,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 	 *
 	 * @return array Total amount of sales based on the passed arguments.
 	 */
-	public function get_sales_by_range( $range = 'today', $start_date = false, $end_date = false, $status = 'publish' ) {
+	public function get_sales_by_range( $range = 'today', $day_by_day = false, $start_date = false, $end_date = false, $status = 'publish' ) {
 		global $wpdb;
 
 		$this->setup_dates( $start_date, $end_date );
@@ -286,18 +286,28 @@ class EDD_Payment_Stats extends EDD_Stats {
 		$cached = get_transient( 'edd_stats_sales' );
 		$key = md5( $range . '_' . date( 'Y-m-d', $this->start_date ) . '_' . date( 'Y-m-d', strtotime( '+1 DAY', $this->end_date ) ) );
 
-		$hour_grouping = ( $range == 'today' ) ? ", HOUR(posts.post_date)" : "";
-
 		if ( ! isset( $cached[ $key ] ) ) {
+			if ( ! $day_by_day ) {
+				$select = "DATE_FORMAT(posts.post_date, '%%m') AS m, YEAR(posts.post_date) AS y, COUNT(DISTINCT posts.ID) as count";
+				$grouping = "YEAR(posts.post_date), MONTH(posts.post_date)";
+			} else {
+				$select = "DATE_FORMAT(posts.post_date, '%%d') AS d, DATE_FORMAT(posts.post_date, '%%m') AS m, YEAR(posts.post_date) AS y, HOUR(posts.post_date) AS h, COUNT(DISTINCT posts.ID) as count";
+				$grouping = "YEAR(posts.post_date), MONTH(posts.post_date), DAY(posts.post_date), HOUR(posts.post_date)";
+			}
+
+			if ( $range == 'today' ) {
+				$grouping = "YEAR(posts.post_date), MONTH(posts.post_date), DAY(posts.post_date), HOUR(posts.post_date)";
+			}
+
 			$sales = $wpdb->get_results( $wpdb->prepare(
-				"SELECT DATE_FORMAT(posts.post_date, '%d') AS d, DATE_FORMAT(posts.post_date, '%m') AS m, YEAR(posts.post_date) AS y, HOUR(posts.post_date) AS h, COUNT(DISTINCT posts.ID) as count
+				"SELECT $select
 				 FROM {$wpdb->posts} AS posts
 				 WHERE posts.post_type IN ('edd_payment')
 				 AND posts.post_status IN (%s)
 				 AND posts.post_date >= %s
 				 AND posts.post_date < %s
 				 AND ((posts.post_status = 'publish' OR posts.post_status = 'revoked' OR posts.post_status = 'cancelled' OR posts.post_status = 'edd_subscription'))
-				 GROUP BY YEAR(posts.post_date), MONTH(posts.post_date), DAY(posts.post_date) $hour_grouping
+				 GROUP BY $grouping
 				 ORDER by posts.post_date ASC", $status, date( 'Y-m-d', $this->start_date ), date( 'Y-m-d', strtotime( '+1 DAY', $this->end_date ) ) ), ARRAY_A );
 
 			$cached[ $key ] = $sales;
