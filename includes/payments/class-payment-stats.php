@@ -268,6 +268,10 @@ class EDD_Payment_Stats extends EDD_Stats {
 
 		$this->setup_dates( $start_date, $end_date );
 
+		if ( $range == 'today' ) {
+			$this->end_date = strtotime( '+1 DAY', $this->end_date );
+		}
+
 		// Make sure start date is valid
 		if ( is_wp_error( $this->start_date ) ) {
 			return $this->start_date;
@@ -276,12 +280,6 @@ class EDD_Payment_Stats extends EDD_Stats {
 		// Make sure end date is valid
 		if ( is_wp_error( $this->end_date ) ) {
 			return $this->end_date;
-		}
-
-		if ( $range == 'today' ) {
-			$end_date = date( 'Y-m-d', strtotime( '+1 DAY', $this->end_date ) );
-		} else {
-			$end_date = date( 'Y-m-d', $this->end_date );
 		}
 
 		$cached = get_transient( 'edd_stats_sales' );
@@ -297,7 +295,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 				 AND posts.post_date < %s
 				 AND ((posts.post_status = 'publish' OR posts.post_status = 'revoked' OR posts.post_status = 'cancelled' OR posts.post_status = 'edd_subscription'))
 				 GROUP BY YEAR(posts.post_date), MONTH(posts.post_date), DAY(posts.post_date), HOUR(posts.post_date)
-				 ORDER by posts.post_date ASC", $status, date( 'Y-m-d', $this->start_date ), $end_date ), ARRAY_A );
+				 ORDER by posts.post_date ASC", $status, date( 'Y-m-d', $this->start_date ), date( 'Y-m-d', strtotime( '+1 DAY', $this->end_date ) ) ), ARRAY_A );
 
 			$cached[ $key ] = $sales;
 			set_transient( 'edd_stats_sales', $cached, HOUR_IN_SECONDS );
