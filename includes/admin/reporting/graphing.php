@@ -147,6 +147,7 @@ function edd_reports_graph() {
 			} else {
 				$data['sales'][ $sale['y'] ][ $sale['m'] ] = $sale['count'];
 			}
+			$sales_totals += $sale['count'];
 		}
 
 		while ( $day_by_day && ( strtotime( $date_start ) <= strtotime( $date_end ) ) ) {
@@ -197,11 +198,7 @@ function edd_reports_graph() {
 					$earnings         = edd_get_earnings_by_date( $d, $i, $y, null, $include_taxes );
 					$earnings_totals += $earnings;
 
-					$sales         = edd_get_sales_by_date( $d, $i, $y );
-					$sales_totals += $sales;
-
 					$temp_data['earnings'][ $y ][ $i ][ $d ] = $earnings;
-					$temp_data['sales'][ $y ][ $i ][ $d ]    = $sales;
 
 					$d++;
 				}

@@ -267,8 +267,6 @@ class EDD_Payment_Stats extends EDD_Stats {
 	public function get_sales_by_range( $range = 'today', $day_by_day = false, $start_date = false, $end_date = false, $status = 'publish' ) {
 		global $wpdb;
 
-		// if ( $range == 'last_year' || $ )
-
 		$this->setup_dates( $start_date, $end_date );
 
 		if ( $range == 'today' ) {
@@ -288,7 +286,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 		$cached = get_transient( 'edd_stats_sales' );
 		$key = md5( $range . '_' . date( 'Y-m-d', $this->start_date ) . '_' . date( 'Y-m-d', strtotime( '+1 DAY', $this->end_date ) ) );
 
-		if ( ! isset( $cached[ $key ] ) ) {
+		if ( ! isset( $cached[ $key ] ) || ! $this->is_cacheable( $range ) ) {
 			if ( ! $day_by_day ) {
 				$select = "DATE_FORMAT(posts.post_date, '%%m') AS m, YEAR(posts.post_date) AS y, COUNT(DISTINCT posts.ID) as count";
 				$grouping = "YEAR(posts.post_date), MONTH(posts.post_date)";
@@ -312,13 +310,41 @@ class EDD_Payment_Stats extends EDD_Stats {
 				 GROUP BY $grouping
 				 ORDER by posts.post_date ASC", $status, date( 'Y-m-d', $this->start_date ), date( 'Y-m-d', strtotime( '+1 DAY', $this->end_date ) ) ), ARRAY_A );
 
-			$cached[ $key ] = $sales;
-			set_transient( 'edd_stats_sales', $cached, HOUR_IN_SECONDS );
+			if ( $this->is_cacheable( $range ) ) {
+				$cached[ $key ] = $sales;
+				set_transient( 'edd_stats_sales', $cached, HOUR_IN_SECONDS );
+			}
 		}
 
-		$sales = $cached[ $key ];
-
 		return $sales;
+	}
+
+	/**
+	 * Is the date range cachable
+	 *
+	 * @access public
+	 * @since  2.6.11
+	 *
+	 * @param  string $range Date range of the report
+	 * @return boolean Whether the date range is allowed to be cached or not
+	 */
+	public function is_cacheable( $date_range = "" ) {
+		if ( empty( $date_range ) ) {
+			return false;
+		}
+
+		$cacheable_ranges = array(
+			'today',
+			'yesterday',
+			'this_week',
+			'last_week',
+			'this_month',
+			'last_month',
+			'this_quarter',
+			'last_quarter'
+		);
+
+		return in_array( $date_range, $cacheable_ranges );
 	}
 
 }
