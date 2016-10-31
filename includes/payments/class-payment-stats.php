@@ -252,7 +252,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 	}
 
 	/**
-	 * Retrieve sales stats based on range provided (used for reports)
+	 * Retrieve sales stats based on range provided (used for Reporting)
 	 *
 	 * @access public
 	 * @since  2.6.11
