@@ -214,15 +214,20 @@ function edd_reports_graph() {
 
 		// When using 3 months or smaller as the custom range, show each day individually on the graph
 		if ( $day_by_day ) {
-			foreach ( $temp_data[ 'sales' ] as $year => $months ) {
+			foreach ( $data['sales'] as $year => $months ) {
 				foreach ( $months as $month => $days ) {
-					foreach ( $days as $day => $sales ) {
+					foreach ( $days as $day => $count ) {
 						$date         = mktime( 0, 0, 0, $month, $day, $year ) * 1000;
-						$sales_data[] = array( $date, $sales );
+						$sales_data[] = array( $date, $count );
 					}
-
 				}
 			}
+
+			// Sort dates in ascending order
+			foreach ( $sales_data as $key => $value ) {
+				$timestamps[ $key ] = $value[0];
+			}
+			array_multisort( $timestamps, SORT_ASC, $sales_data );
 
 			foreach ( $temp_data[ 'earnings' ] as $year => $months ) {
 				foreach ( $months as $month => $days ) {
@@ -246,7 +251,7 @@ function edd_reports_graph() {
 						$day_keys = array_keys( $days );
 						$last_day = end( $day_keys );
 
-						$consolidated_date = $month === $last_month ? $last_day : 1;
+						$consolidated_date = $month == end( $months ) ? cal_days_in_month(CAL_GREGORIAN, $month, $year) : 1;
 
 						$sales        = array_sum( $days );
 						$date         = mktime( 0, 0, 0, $month, $consolidated_date, $year ) * 1000;
@@ -254,8 +259,7 @@ function edd_reports_graph() {
 					}
 				} else {
 					foreach ( $months as $month => $count ) {
-						$consolidated_date = $month === end( $months ) ? cal_days_in_month(CAL_GREGORIAN, $month, $year) : 1;
-						$date = mktime( 0, 0, 0, $month, $consolidated_date, $year ) * 1000;
+						$date = mktime( 0, 0, 0, $month, cal_days_in_month(CAL_GREGORIAN, $month, $year), $year ) * 1000;
 						$sales_data[] = array( $date, $count );
 					}
 				}
