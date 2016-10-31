@@ -267,10 +267,12 @@ class EDD_Payment_Stats extends EDD_Stats {
 	public function get_sales_by_range( $range = 'today', $day_by_day = false, $start_date = false, $end_date = false, $status = 'publish' ) {
 		global $wpdb;
 
+		// if ( $range == 'last_year' || $ )
+
 		$this->setup_dates( $start_date, $end_date );
 
 		if ( $range == 'today' ) {
-			$this->end_date = strtotime( '+1 DAY', $this->end_date );
+			$this->end_date = strtotime( '+1 day', $this->end_date );
 		}
 
 		// Make sure start date is valid
