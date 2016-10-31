@@ -63,7 +63,7 @@ function edd_reports_graph() {
 		$start = $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day'];
 		$end = $dates['year_end'] . '-' . $dates['m_end'] . '-' . $dates['day_end'];
 
-		$sales = EDD()->payment_stats->get_sales_by_range( $dates['range'], $start, $end );
+		$sales = EDD()->payment_stats->get_sales_by_range( $dates['range'], true, $start, $end );
 
 		while ( $hour <= 23 ) {
 			$date = mktime( $hour, 0, 0, $month, $dates['day'], $dates['year'] ) * 1000;
@@ -110,7 +110,7 @@ function edd_reports_graph() {
 		$start_date = $report_dates[0];
 		$end_date = end( $report_dates );
 
-		$sales = EDD()->payment_stats->get_sales_by_range( $dates['range'], $start_date['year'] . '-' . $start_date['month'] . '-' . $start_date['day'], $end_date['year'] . '-' . $end_date['month'] . '-' . $end_date['day'] );
+		$sales = EDD()->payment_stats->get_sales_by_range( $dates['range'], true, $start_date['year'] . '-' . date( 'm', strtotime( $start_date['month'] ) ) . '-' . date( 'd', strtotime( $start_date['day'] ) ), $end_date['year'] . '-' . date( 'm', strtotime( $end_date['month'] ) ) . '-' . date( 'd', strtotime( $end_date['day'] ) ) );
 
 		$i = 0;
 		foreach ( $report_dates as $report_date ) {
@@ -130,12 +130,36 @@ function edd_reports_graph() {
 		}
 
 	} else {
+		$date_start = $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day'];
+		$date_end = $dates['year_end'] . '-' . $dates['m_end'] . '-' . $dates['day_end'];
+
+		$sales = EDD()->payment_stats->get_sales_by_range( $dates['range'], $day_by_day, $date_start, $date_end );
 
 		$y = $dates['year'];
 		$temp_data = array(
 			'sales'    => array(),
 			'earnings' => array(),
 		);
+
+		foreach ( $sales as $sale ) {
+			if ( $day_by_day ) {
+				$data['sales'][ $sale['y'] ][ $sale['m'] ][ $sale['d'] ] = $sale['count'];
+			} else {
+				$data['sales'][ $sale['y'] ][ $sale['m'] ] = $sale['count'];
+			}
+		}
+
+		while ( $day_by_day && ( strtotime( $date_start ) <= strtotime( $date_end ) ) ) {
+			$d = date( 'd', strtotime( $date_start ) );
+			$m = date( 'm', strtotime( $date_start ) );
+			$y = date( 'Y', strtotime( $date_start ) );
+
+			if ( ! isset( $data['sales'][ $y ][ $m ][ $d ] ) ) {
+				$data['sales'][ $y ][ $m ][ $d ] = 0;
+			}
+
+			$date_start = date( 'Y-m-d', strtotime( '+1 day', strtotime( $date_start ) ) );
+		}
 
 		while ( $y <= $dates['year_end'] ) {
 			$last_year = false;
@@ -216,19 +240,27 @@ function edd_reports_graph() {
 		// When showing more than 3 months of results, group them by month, by the first (except for the last month, group on the last day of the month selected)
 		} else {
 
-			foreach ( $temp_data[ 'sales' ] as $year => $months ) {
+			foreach ( $data['sales'] as $year => $months ) {
 				$month_keys = array_keys( $months );
 				$last_month = end( $month_keys );
 
-				foreach ( $months as $month => $days ) {
-					$day_keys = array_keys( $days );
-					$last_day = end( $day_keys );
+				if ( $day_by_day ) {
+					foreach ( $months as $month => $days ) {
+						$day_keys = array_keys( $days );
+						$last_day = end( $day_keys );
 
-					$consolidated_date = $month === $last_month ? $last_day : 1;
+						$consolidated_date = $month === $last_month ? $last_day : 1;
 
-					$sales        = array_sum( $days );
-					$date         = mktime( 0, 0, 0, $month, $consolidated_date, $year ) * 1000;
-					$sales_data[] = array( $date, $sales );
+						$sales        = array_sum( $days );
+						$date         = mktime( 0, 0, 0, $month, $consolidated_date, $year ) * 1000;
+						$sales_data[] = array( $date, $sales );
+					}
+				} else {
+					foreach ( $months as $month => $count ) {
+						$consolidated_date = $month === end( $months ) ? cal_days_in_month(CAL_GREGORIAN, $month, $year) : 1;
+						$date = mktime( 0, 0, 0, $month, $consolidated_date, $year ) * 1000;
+						$sales_data[] = array( $date, $count );
+					}
 				}
 			}
 
