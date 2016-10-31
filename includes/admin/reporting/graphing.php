@@ -63,7 +63,7 @@ function edd_reports_graph() {
 		$start = $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day'];
 		$end = $dates['year_end'] . '-' . $dates['m_end'] . '-' . $dates['day_end'];
 
-		$sales = EDD()->payment_stats->get_hourly_sales(0, $start, $end);
+		$sales = EDD()->payment_stats->get_hourly_sales(0, $dates['range'], $start, $end);
 
 		while ( $hour <= 23 ) {
 			$date = mktime( $hour, 0, 0, $month, $dates['day'], $dates['year'] ) * 1000;

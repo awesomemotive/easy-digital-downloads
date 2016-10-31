@@ -263,7 +263,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 	 * @param string|array $status The sale status(es) to count. Only valid when retrieving global stats
 	 * @return array Total amount of sales based on the passed arguments.
 	 */
-	public function get_hourly_sales( $download_id = 0, $start_date = false, $end_date = false, $status = 'publish' ) {
+	public function get_hourly_sales( $download_id = 0, $range = 'today', $start_date = false, $end_date = false, $status = 'publish' ) {
 		global $wpdb;
 
 		$this->setup_dates( $start_date, $end_date );
@@ -278,16 +278,32 @@ class EDD_Payment_Stats extends EDD_Stats {
 			return $this->end_date;
 		}
 
-		$sales = $wpdb->get_results( $wpdb->prepare(
-			"SELECT HOUR(posts.post_date) AS h, COUNT(*) as count
-			 FROM {$wpdb->posts} AS posts
-			 WHERE posts.post_type IN ('edd_payment')
-			 AND posts.post_status IN (%s)
-			 AND posts.post_date >= %s
-			 AND posts.post_date < %s
-			 AND ((posts.post_status = 'publish' OR posts.post_status = 'revoked' OR posts.post_status = 'cancelled' OR posts.post_status = 'edd_subscription'))
-			 GROUP BY HOUR(posts.post_date)
-			 ORDER by posts.post_date ASC", $status, date( 'Y-m-d', $this->start_date ), date( 'Y-m-d', strtotime( '+1 DAY', $this->end_date ) ) ), ARRAY_A );
+		if ( $range == 'today' ) {
+			$end_date = date( 'Y-m-d', strtotime( '+1 DAY', $this->end_date ) );
+		} else {
+			$end_date = date( 'Y-m-d', $this->end_date );
+		}
+
+		$cached = get_transient( 'edd_stats_sales' );
+		$key = md5( 'hourly_' . date( 'Y-m-d', $this->start_date ) . '_' . date( 'Y-m-d', strtotime( '+1 DAY', $this->end_date ) ) );
+
+		if ( ! isset( $cached[ $key ] ) ) {
+			$sales = $wpdb->get_results( $wpdb->prepare(
+				"SELECT HOUR(posts.post_date) AS h, COUNT(*) as count
+				 FROM {$wpdb->posts} AS posts
+				 WHERE posts.post_type IN ('edd_payment')
+				 AND posts.post_status IN (%s)
+				 AND posts.post_date >= %s
+				 AND posts.post_date < %s
+				 AND ((posts.post_status = 'publish' OR posts.post_status = 'revoked' OR posts.post_status = 'cancelled' OR posts.post_status = 'edd_subscription'))
+				 GROUP BY HOUR(posts.post_date)
+				 ORDER by posts.post_date ASC", $status, date( 'Y-m-d', $this->start_date ), $end_date ), ARRAY_A );
+
+			$cached[ $key ] = $sales;
+			set_transient( 'edd_stats_sales', $cached, HOUR_IN_SECONDS );
+		}
+
+		$sales = $cached[ $key ];
 
 		return $sales;
 	}
