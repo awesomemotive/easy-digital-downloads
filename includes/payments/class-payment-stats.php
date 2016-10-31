@@ -252,7 +252,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 	}
 
 	/**
-	 * Retrieve sales stats on a hourly basis
+	 * Retrieve sales stats based on range provided (used for reports)
 	 *
 	 * @access public
 	 * @since  2.6.11
@@ -263,7 +263,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 	 * @param string|array $status The sale status(es) to count. Only valid when retrieving global stats
 	 * @return array Total amount of sales based on the passed arguments.
 	 */
-	public function get_hourly_sales( $download_id = 0, $range = 'today', $start_date = false, $end_date = false, $status = 'publish' ) {
+	public function get_sales_by_range( $range = 'today', $start_date = false, $end_date = false, $status = 'publish' ) {
 		global $wpdb;
 
 		$this->setup_dates( $start_date, $end_date );
@@ -285,18 +285,18 @@ class EDD_Payment_Stats extends EDD_Stats {
 		}
 
 		$cached = get_transient( 'edd_stats_sales' );
-		$key = md5( 'hourly_' . date( 'Y-m-d', $this->start_date ) . '_' . date( 'Y-m-d', strtotime( '+1 DAY', $this->end_date ) ) );
+		$key = md5( $range . '_' . date( 'Y-m-d', $this->start_date ) . '_' . date( 'Y-m-d', strtotime( '+1 DAY', $this->end_date ) ) );
 
 		if ( ! isset( $cached[ $key ] ) ) {
 			$sales = $wpdb->get_results( $wpdb->prepare(
-				"SELECT HOUR(posts.post_date) AS h, COUNT(*) as count
+				"SELECT DAY(posts.post_date) AS d, MONTH(posts.post_date) AS m, YEAR(posts.post_date) AS y, HOUR(posts.post_date) AS h, COUNT(DISTINCT posts.ID) as count
 				 FROM {$wpdb->posts} AS posts
 				 WHERE posts.post_type IN ('edd_payment')
 				 AND posts.post_status IN (%s)
 				 AND posts.post_date >= %s
 				 AND posts.post_date < %s
 				 AND ((posts.post_status = 'publish' OR posts.post_status = 'revoked' OR posts.post_status = 'cancelled' OR posts.post_status = 'edd_subscription'))
-				 GROUP BY HOUR(posts.post_date)
+				 GROUP BY YEAR(posts.post_date), MONTH(posts.post_date), DAY(posts.post_date), HOUR(posts.post_date)
 				 ORDER by posts.post_date ASC", $status, date( 'Y-m-d', $this->start_date ), $end_date ), ARRAY_A );
 
 			$cached[ $key ] = $sales;
