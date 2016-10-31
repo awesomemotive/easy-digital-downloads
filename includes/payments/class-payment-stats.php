@@ -251,4 +251,45 @@ class EDD_Payment_Stats extends EDD_Stats {
 		return $downloads;
 	}
 
+	/**
+	 * Retrieve earnings stats on a hourly basis
+	 *
+	 * @access public
+	 * @since  2.6.11
+	 *
+	 * @param INT $download_id The download product to retrieve stats for. If false, gets stats for all products
+	 * @param string|bool $start_date The starting date for which we'd like to filter our sale stats. If false, we'll use the default start date of `this_month`
+	 * @param string|bool $end_date The end date for which we'd like to filter our sale stats. If false, we'll use the default end date of `this_month`
+	 * @param string|array $status The sale status(es) to count. Only valid when retrieving global stats
+	 * @return float|int Total amount of sales based on the passed arguments.
+	 */
+	public function get_hourly_sales( $download_id = 0, $start_date = false, $end_date = false, $status = 'publish' ) {
+		global $wpdb;
+
+		$this->setup_dates( $start_date, $end_date );
+
+		// Make sure start date is valid
+		if ( is_wp_error( $this->start_date ) ) {
+			return $this->start_date;
+		}
+
+		// Make sure end date is valid
+		if ( is_wp_error( $this->end_date ) ) {
+			return $this->end_date;
+		}
+
+		$sales = $wpdb->get_results( $wpdb->prepare(
+			"SELECT HOUR(posts.post_date) AS h, COUNT(*)
+			 FROM {$wpdb->posts} AS posts
+			 WHERE posts.post_type IN ('edd_payment')
+			 AND posts.post_status IN (%s)
+			 AND posts.post_date >= %s
+			 AND posts.post_date < %s
+			 GROUP BY HOUR(posts.post_date)
+			 ORDER by posts.post_date ASC"
+		), $status, $start_date, $end_date );
+
+		return $sales;
+	}
+
 }
