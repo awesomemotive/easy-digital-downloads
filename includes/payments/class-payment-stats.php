@@ -257,10 +257,11 @@ class EDD_Payment_Stats extends EDD_Stats {
 	 * @access public
 	 * @since  2.6.11
 	 *
-	 * @param INT $download_id The download product to retrieve stats for. If false, gets stats for all products
-	 * @param string|bool $start_date The starting date for which we'd like to filter our sale stats. If false, we'll use the default start date of `this_month`
-	 * @param string|bool $end_date The end date for which we'd like to filter our sale stats. If false, we'll use the default end date of `this_month`
+	 * @param int          $download_id The download product to retrieve stats for. If false, gets stats for all products
+	 * @param string|bool  $start_date The starting date for which we'd like to filter our sale stats. If false, we'll use the default start date of `this_month`
+	 * @param string|bool  $end_date The end date for which we'd like to filter our sale stats. If false, we'll use the default end date of `this_month`
 	 * @param string|array $status The sale status(es) to count. Only valid when retrieving global stats
+	 *
 	 * @return array Total amount of sales based on the passed arguments.
 	 */
 	public function get_sales_by_range( $range = 'today', $start_date = false, $end_date = false, $status = 'publish' ) {
@@ -289,7 +290,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 
 		if ( ! isset( $cached[ $key ] ) ) {
 			$sales = $wpdb->get_results( $wpdb->prepare(
-				"SELECT DAY(posts.post_date) AS d, MONTH(posts.post_date) AS m, YEAR(posts.post_date) AS y, HOUR(posts.post_date) AS h, COUNT(DISTINCT posts.ID) as count
+				"SELECT DATE_FORMAT(posts.post_date, '%d') AS d, DATE_FORMAT(posts.post_date, '%m') AS m, YEAR(posts.post_date) AS y, HOUR(posts.post_date) AS h, COUNT(DISTINCT posts.ID) as count
 				 FROM {$wpdb->posts} AS posts
 				 WHERE posts.post_type IN ('edd_payment')
 				 AND posts.post_status IN (%s)
