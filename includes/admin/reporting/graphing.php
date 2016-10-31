@@ -53,7 +53,7 @@ function edd_reports_graph() {
 
 	$include_taxes = empty( $_GET['exclude_taxes'] ) ? true : false;
 
-	if( $dates['range'] == 'today' || $dates['range'] == 'yesterday' ) {
+	if ( $dates['range'] == 'today' || $dates['range'] == 'yesterday' ) {
 		// Hour by hour
 		$hour  = 1;
 		$month = $dates['m_start'];
@@ -82,6 +82,7 @@ function edd_reports_graph() {
 
 			$hour++;
 		}
+
 	} elseif ( $dates['range'] == 'this_week' || $dates['range'] == 'last_week' ) {
 
 		$num_of_days = cal_days_in_month( CAL_GREGORIAN, $dates['m_start'], $dates['year'] );
@@ -89,7 +90,6 @@ function edd_reports_graph() {
 		$report_dates = array();
 		$i = 0;
 		while ( $i <= 6 ) {
-
 			if ( ( $dates['day'] + $i ) <= $num_of_days ) {
 				$report_dates[ $i ] = array(
 					'day'   => (string) $dates['day'] + $i,
@@ -107,15 +107,25 @@ function edd_reports_graph() {
 			$i++;
 		}
 
+		$start_date = $report_dates[0];
+		$end_date = end( $report_dates );
+
+		$sales = EDD()->payment_stats->get_sales_by_range( $dates['range'], $start_date['year'] . '-' . $start_date['month'] . '-' . $start_date['day'], $end_date['year'] . '-' . $end_date['month'] . '-' . $end_date['day'] );
+
+		$i = 0;
 		foreach ( $report_dates as $report_date ) {
-			$sales = edd_get_sales_by_date( $report_date['day'], $report_date['month'], $report_date['year'] );
-			$sales_totals += $sales;
+			$date = mktime( 0, 0, 0,  $report_date['month'], $report_date['day'], $report_date['year']  ) * 1000;
+
+			if ( $report_date['day'] == $sales[ $i ]['d'] && $report_date['month'] == $sales[ $i ]['m'] && $report_date['year'] == $sales[ $i ]['y'] ) {
+				$sales_data[] = array( $date, $sales[ $i ]['count'] );
+				$sales_totals += $sales[ $i ]['count'];
+				$i++;
+			} else {
+				$sales_data[] = array( $date, 0 );
+			}
 
 			$earnings        = edd_get_earnings_by_date( $report_date['day'], $report_date['month'], $report_date['year'] , null, $include_taxes );
 			$earnings_totals += $earnings;
-
-			$date            = mktime( 0, 0, 0,  $report_date['month'], $report_date['day'], $report_date['year']  ) * 1000;
-			$sales_data[]    = array( $date, $sales );
 			$earnings_data[] = array( $date, $earnings );
 		}
 

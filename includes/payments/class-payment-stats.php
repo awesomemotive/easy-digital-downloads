@@ -285,6 +285,8 @@ class EDD_Payment_Stats extends EDD_Stats {
 		$cached = get_transient( 'edd_stats_sales' );
 		$key = md5( $range . '_' . date( 'Y-m-d', $this->start_date ) . '_' . date( 'Y-m-d', strtotime( '+1 DAY', $this->end_date ) ) );
 
+		$hour_grouping = ( $range == 'today' ) ? ", HOUR(posts.post_date)" : "";
+
 		if ( ! isset( $cached[ $key ] ) ) {
 			$sales = $wpdb->get_results( $wpdb->prepare(
 				"SELECT DAY(posts.post_date) AS d, MONTH(posts.post_date) AS m, YEAR(posts.post_date) AS y, HOUR(posts.post_date) AS h, COUNT(DISTINCT posts.ID) as count
@@ -294,7 +296,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 				 AND posts.post_date >= %s
 				 AND posts.post_date < %s
 				 AND ((posts.post_status = 'publish' OR posts.post_status = 'revoked' OR posts.post_status = 'cancelled' OR posts.post_status = 'edd_subscription'))
-				 GROUP BY YEAR(posts.post_date), MONTH(posts.post_date), DAY(posts.post_date), HOUR(posts.post_date)
+				 GROUP BY YEAR(posts.post_date), MONTH(posts.post_date), DAY(posts.post_date) $hour_grouping
 				 ORDER by posts.post_date ASC", $status, date( 'Y-m-d', $this->start_date ), date( 'Y-m-d', strtotime( '+1 DAY', $this->end_date ) ) ), ARRAY_A );
 
 			$cached[ $key ] = $sales;
