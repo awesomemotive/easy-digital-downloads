@@ -162,6 +162,17 @@ function edd_reports_graph() {
 			$date_start = date( 'Y-m-d', strtotime( '+1 day', strtotime( $date_start ) ) );
 		}
 
+		while ( ! $day_by_day && ( strtotime( $date_start ) <= strtotime( $date_end ) ) ) {
+			$m = date( 'm', strtotime( $date_start ) );
+			$y = date( 'Y', strtotime( $date_start ) );
+
+			if ( ! isset( $data['sales'][ $y ][ $m ] ) ) {
+				$data['sales'][ $y ][ $m ] = 0;
+			}
+
+			$date_start = date( 'Y-m', strtotime( '+1 month', strtotime( $date_start ) ) );
+		}
+
 		while ( $y <= $dates['year_end'] ) {
 			$last_year = false;
 
@@ -251,7 +262,7 @@ function edd_reports_graph() {
 						$day_keys = array_keys( $days );
 						$last_day = end( $day_keys );
 
-						$consolidated_date = $month == end( $months ) ? cal_days_in_month(CAL_GREGORIAN, $month, $year) : 1;
+						$consolidated_date = $month === end( array_keys( $months ) ) ? cal_days_in_month( CAL_GREGORIAN, $month, $year ) : 1;
 
 						$sales        = array_sum( $days );
 						$date         = mktime( 0, 0, 0, $month, $consolidated_date, $year ) * 1000;
@@ -259,11 +270,19 @@ function edd_reports_graph() {
 					}
 				} else {
 					foreach ( $months as $month => $count ) {
-						$date = mktime( 0, 0, 0, $month, 1, $year ) * 1000;
+						$consolidated_date = $month === end( array_keys( $months ) ) ? cal_days_in_month( CAL_GREGORIAN, $month, $year ) : 1;
+
+						$date = mktime( 0, 0, 0, $month, $consolidated_date, $year ) * 1000;
 						$sales_data[] = array( $date, $count );
 					}
 				}
 			}
+
+			// Sort dates in ascending order
+			foreach ( $sales_data as $key => $value ) {
+				$timestamps[ $key ] = $value[0];
+			}
+			array_multisort( $timestamps, SORT_ASC, $sales_data );
 
 			foreach ( $temp_data[ 'earnings' ] as $year => $months ) {
 				$month_keys = array_keys( $months );
