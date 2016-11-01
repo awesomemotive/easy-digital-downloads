@@ -997,7 +997,7 @@ function edd_show_user_api_key_field( $user ) {
 			<tbody>
 			<tr>
 				<th>
-					<?php printf( __( 'Easy Digital Downloads <a href="%s">iOS App</a>', 'easy-digital-downloads' ), 'https://itunes.apple.com/us/app/easy-digital-downloads/id625303275?ls=1&mt=8' ); ?>
+					<?php printf( __( 'Easy Digital Downloads <a href="%s">iOS App</a>', 'easy-digital-downloads' ), 'https://itunes.apple.com/us/app/easy-digital-downloads-2/id1169488828?ls=1&mt=8' ); ?>
 				</th>
 				<td>
 					<?php
