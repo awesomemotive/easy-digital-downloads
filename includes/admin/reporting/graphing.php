@@ -262,7 +262,9 @@ function edd_reports_graph() {
 						$day_keys = array_keys( $days );
 						$last_day = end( $day_keys );
 
-						$consolidated_date = $month === end( array_keys( $months ) ) ? cal_days_in_month( CAL_GREGORIAN, $month, $year ) : 1;
+						$month_keys = array_keys( $months );
+
+						$consolidated_date = $month === end( $month_keys ) ? cal_days_in_month( CAL_GREGORIAN, $month, $year ) : 1;
 
 						$sales        = array_sum( $days );
 						$date         = mktime( 0, 0, 0, $month, $consolidated_date, $year ) * 1000;
@@ -270,7 +272,8 @@ function edd_reports_graph() {
 					}
 				} else {
 					foreach ( $months as $month => $count ) {
-						$consolidated_date = $month === end( array_keys( $months ) ) ? cal_days_in_month( CAL_GREGORIAN, $month, $year ) : 1;
+						$month_keys = array_keys( $months );
+						$consolidated_date = $month === end( $month_keys ) ? cal_days_in_month( CAL_GREGORIAN, $month, $year ) : 1;
 
 						$date = mktime( 0, 0, 0, $month, $consolidated_date, $year ) * 1000;
 						$sales_data[] = array( $date, $count );
