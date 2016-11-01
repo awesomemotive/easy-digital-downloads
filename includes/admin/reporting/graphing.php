@@ -259,7 +259,7 @@ function edd_reports_graph() {
 					}
 				} else {
 					foreach ( $months as $month => $count ) {
-						$date = mktime( 0, 0, 0, $month, cal_days_in_month(CAL_GREGORIAN, $month, $year), $year ) * 1000;
+						$date = mktime( 0, 0, 0, $month, 1, $year ) * 1000;
 						$sales_data[] = array( $date, $count );
 					}
 				}
