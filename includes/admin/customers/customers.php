@@ -614,7 +614,7 @@ function edd_customer_tools_view( $customer ) {
 		<div class="edd-item-info customer-info">
 			<h4><?php _e( 'Recount Customer Stats', 'easy-digital-downloads' ); ?></h4>
 			<p class="edd-item-description"><?php _e( 'Use this tool to recalculate the purchase count and total value of the customer.', 'easy-digital-downloads' ); ?></p>
-			<form method="post" id="edd-tools-recount-form" class="edd-export-form">
+			<form method="post" id="edd-tools-recount-form" class="edd-export-form edd-import-export-form">
 				<span>
 					<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 

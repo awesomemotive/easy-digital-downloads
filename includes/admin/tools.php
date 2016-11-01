@@ -130,7 +130,7 @@ function edd_tools_recount_stats_display() {
 		<h3><span><?php _e( 'Recount Stats', 'easy-digital-downloads' ); ?></span></h3>
 		<div class="inside recount-stats-controls">
 			<p><?php _e( 'Use these tools to recount / reset store stats.', 'easy-digital-downloads' ); ?></p>
-			<form method="post" id="edd-tools-recount-form" class="edd-export-form">
+			<form method="post" id="edd-tools-recount-form" class="edd-export-form edd-import-export-form">
 				<span>
 
 					<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
