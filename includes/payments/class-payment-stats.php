@@ -269,9 +269,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 
 		$this->setup_dates( $start_date, $end_date );
 
-		if ( $range == 'today' ) {
-			$this->end_date = strtotime( '+1 day', $this->end_date );
-		}
+		$this->end_date = strtotime( '+1 day', $this->end_date );
 
 		// Make sure start date is valid
 		if ( is_wp_error( $this->start_date ) ) {
@@ -313,7 +311,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 				 AND posts.post_date < %s
 				 AND ((posts.post_status = 'publish' OR posts.post_status = 'revoked' OR posts.post_status = 'cancelled' OR posts.post_status = 'edd_subscription'))
 				 GROUP BY $grouping
-				 ORDER by posts.post_date ASC", $status, date( 'Y-m-d', $this->start_date ), date( 'Y-m-d', strtotime( '+1 DAY', $this->end_date ) ) ), ARRAY_A );
+				 ORDER by posts.post_date ASC", $status, date( 'Y-m-d', $this->start_date ), date( 'Y-m-d', strtotime( '+1 day', $this->end_date ) ) ), ARRAY_A );
 
 			if ( $this->is_cacheable( $range ) ) {
 				$cached[ $key ] = $sales;
