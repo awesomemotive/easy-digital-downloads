@@ -282,9 +282,10 @@ class EDD_Payment_Stats extends EDD_Stats {
 		}
 
 		$cached = get_transient( 'edd_stats_sales' );
-		$key = md5( $range . '_' . date( 'Y-m-d', $this->start_date ) . '_' . date( 'Y-m-d', strtotime( '+1 DAY', $this->end_date ) ) );
+		$key    = md5( $range . '_' . date( 'Y-m-d', $this->start_date ) . '_' . date( 'Y-m-d', strtotime( '+1 DAY', $this->end_date ) ) );
+		$sales  = isset( $cached[ $key ] ) ? $cached[ $key ] : false;
 
-		if ( ! isset( $cached[ $key ] ) || ! $this->is_cacheable( $range ) ) {
+		if ( false === $sales || ! $this->is_cacheable( $range ) ) {
 			if ( ! $day_by_day ) {
 				$select = "DATE_FORMAT(posts.post_date, '%%m') AS m, YEAR(posts.post_date) AS y, COUNT(DISTINCT posts.ID) as count";
 				$grouping = "YEAR(posts.post_date), MONTH(posts.post_date)";
