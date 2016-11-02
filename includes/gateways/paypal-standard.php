@@ -428,7 +428,7 @@ function edd_process_paypal_ipn() {
 
 	$encoded_data_array = wp_parse_args( $encoded_data_array, $defaults );
 
-	$payment_id = isset( $encoded_data_array['custom'] ) ? absint( $encoded_data_array['custom'] ) : 0;
+	$payment_id = edd_get_purchase_id_by_transaction_id( $encoded_data_array['parent_txn_id'] );
 
 	if ( has_action( 'edd_paypal_' . $encoded_data_array['txn_type'] ) ) {
 		// Allow PayPal IPN types to be processed separately
