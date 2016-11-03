@@ -269,7 +269,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 
 		$this->setup_dates( $start_date, $end_date );
 
-		$this->end_date = strtotime( '+1 day', $this->end_date );
+		$this->end_date = strtotime( 'midnight', $this->end_date );
 
 		// Make sure start date is valid
 		if ( is_wp_error( $this->start_date ) ) {
