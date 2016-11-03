@@ -198,6 +198,7 @@ function edd_register_settings() {
 				    'faux'          => false,
 				    'tooltip_title' => false,
 				    'tooltip_desc'  => false,
+				    'field_class'   => '',
 				) );
 
 				add_settings_field(
@@ -1160,6 +1161,26 @@ function edd_sanitize_text_field( $input ) {
 add_filter( 'edd_settings_sanitize_text', 'edd_sanitize_text_field' );
 
 /**
+ * Sanitize HTML Class Names
+ * 
+ * @since 2.6.11
+ * @param  string|array $class HTML Class Name(s)
+ * @return string $class
+ */
+function edd_sanitize_html_class( $class = '' ) {
+        
+	if ( is_string( $class ) ) {
+		$class = sanitize_html_class( $class );
+	} else if ( is_array( $class ) ) {
+		$class = array_values( array_map( 'sanitize_html_class', $class ) );
+		$class = implode( ' ', array_unique( $class ) );
+	}
+    
+	return $class;
+    
+}
+
+/**
  * Retrieve settings tabs
  *
  * @since 1.8
@@ -1321,10 +1342,12 @@ function edd_checkbox_callback( $args ) {
 	} else {
 		$name = 'name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"';
 	}
+    
+	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$checked  = ! empty( $edd_option ) ? checked( 1, $edd_option, false ) : '';
 	$html     = '<input type="hidden"' . $name . ' value="-1" />';
-	$html    .= '<input type="checkbox" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"' . $name . ' value="1" ' . $checked . '/>';
+	$html    .= '<input type="checkbox" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"' . $name . ' value="1" ' . $checked . ' class="' . $class . '"/>';
 	$html    .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
@@ -1342,13 +1365,15 @@ function edd_checkbox_callback( $args ) {
  */
 function edd_multicheck_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
+    
+	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$html = '';
 	if ( ! empty( $args['options'] ) ) {
 		$html .= '<input type="hidden" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="-1" />';
 		foreach( $args['options'] as $key => $option ):
 			if( isset( $edd_option[ $key ] ) ) { $enabled = $option; } else { $enabled = NULL; }
-			$html .= '<input name="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked($option, $enabled, false) . '/>&nbsp;';
+			$html .= '<input name="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" class="' . $class . '" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked($option, $enabled, false) . '/>&nbsp;';
 			$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']">' . wp_kses_post( $option ) . '</label><br/>';
 		endforeach;
 		$html .= '<p class="description">' . $args['desc'] . '</p>';
@@ -1367,6 +1392,8 @@ function edd_multicheck_callback( $args ) {
  */
 function edd_payment_icons_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
+    
+	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$html = '<input type="hidden" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="-1" />';
 	if ( ! empty( $args['options'] ) ) {
@@ -1380,7 +1407,7 @@ function edd_payment_icons_callback( $args ) {
 
 			$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" style="margin-right:10px;line-height:16px;height:16px;display:inline-block;">';
 
-				$html .= '<input name="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked( $option, $enabled, false ) . '/>&nbsp;';
+				$html .= '<input name="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" class="' . $class . '" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked( $option, $enabled, false ) . '/>&nbsp;';
 
 				if( edd_string_is_image_url( $key ) ) {
 
@@ -1438,6 +1465,8 @@ function edd_radio_callback( $args ) {
 	$edd_options = edd_get_option( $args['id'] );
 
 	$html = '';
+    
+	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	foreach ( $args['options'] as $key => $option ) :
 		$checked = false;
@@ -1447,7 +1476,7 @@ function edd_radio_callback( $args ) {
 		elseif( isset( $args['std'] ) && $args['std'] == $key && ! $edd_options )
 			$checked = true;
 
-		$html .= '<input name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" type="radio" value="' . edd_sanitize_key( $key ) . '" ' . checked(true, $checked, false) . '/>&nbsp;';
+		$html .= '<input name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" class="' . $class . '" type="radio" value="' . edd_sanitize_key( $key ) . '" ' . checked(true, $checked, false) . '/>&nbsp;';
 		$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']">' . esc_html( $option ) . '</label><br/>';
 	endforeach;
 
@@ -1468,6 +1497,8 @@ function edd_radio_callback( $args ) {
  */
 function edd_gateways_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
+    
+	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$html = '<input type="hidden" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="-1" />';
 
@@ -1477,7 +1508,7 @@ function edd_gateways_callback( $args ) {
 		else
 			$enabled = null;
 
-		$html .= '<input name="edd_settings[' . esc_attr( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" type="checkbox" value="1" ' . checked('1', $enabled, false) . '/>&nbsp;';
+		$html .= '<input name="edd_settings[' . esc_attr( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" class="' . $class . '" type="checkbox" value="1" ' . checked('1', $enabled, false) . '/>&nbsp;';
 		$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']">' . esc_html( $option['admin_label'] ) . '</label><br/>';
 	endforeach;
 
@@ -1496,10 +1527,12 @@ function edd_gateways_callback( $args ) {
  */
 function edd_gateway_select_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
+    
+	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$html = '';
 
-	$html .= '<select name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']">';
+	$html .= '<select name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" class="' . $class . '">';
 
 	foreach ( $args['options'] as $key => $option ) :
 		$selected = isset( $edd_option ) ? selected( $key, $edd_option, false ) : '';
@@ -1538,10 +1571,12 @@ function edd_text_callback( $args ) {
 	} else {
 		$name = 'name="edd_settings[' . esc_attr( $args['id'] ) . ']"';
 	}
+    
+	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$readonly = $args['readonly'] === true ? ' readonly="readonly"' : '';
 	$size     = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$html     = '<input type="text" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" ' . $name . ' value="' . esc_attr( stripslashes( $value ) ) . '"' . $readonly . '/>';
+	$html     = '<input type="text" class="' . $class . ' ' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" ' . $name . ' value="' . esc_attr( stripslashes( $value ) ) . '"' . $readonly . '/>';
 	$html    .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
@@ -1573,13 +1608,15 @@ function edd_number_callback( $args ) {
 	} else {
 		$name = 'name="edd_settings[' . esc_attr( $args['id'] ) . ']"';
 	}
+    
+	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$max  = isset( $args['max'] ) ? $args['max'] : 999999;
 	$min  = isset( $args['min'] ) ? $args['min'] : 0;
 	$step = isset( $args['step'] ) ? $args['step'] : 1;
 
 	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$html = '<input type="number" step="' . esc_attr( $step ) . '" max="' . esc_attr( $max ) . '" min="' . esc_attr( $min ) . '" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" ' . $name . ' value="' . esc_attr( stripslashes( $value ) ) . '"/>';
+	$html = '<input type="number" step="' . esc_attr( $step ) . '" max="' . esc_attr( $max ) . '" min="' . esc_attr( $min ) . '" class="' . $class . ' ' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" ' . $name . ' value="' . esc_attr( stripslashes( $value ) ) . '"/>';
 	$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
@@ -1603,8 +1640,10 @@ function edd_textarea_callback( $args ) {
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
+    
+	$class = edd_sanitize_html_class( $args['field_class'] );
 
-	$html = '<textarea class="large-text" cols="50" rows="5" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
+	$html = '<textarea class="' . $class . ' large-text" cols="50" rows="5" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
 	$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
@@ -1628,9 +1667,11 @@ function edd_password_callback( $args ) {
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
+    
+	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$html = '<input type="password" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']" value="' . esc_attr( $value ) . '"/>';
+	$html = '<input type="password" class="' . $class . ' ' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']" value="' . esc_attr( $value ) . '"/>';
 	$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> ' . wp_kses_post( $args['desc'] ) . '</label>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
@@ -1676,14 +1717,14 @@ function edd_select_callback($args) {
 	} else {
 		$placeholder = '';
 	}
+    
+	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	if ( isset( $args['chosen'] ) ) {
-		$chosen = 'class="edd-chosen"';
-	} else {
-		$chosen = '';
+		$class .= ' edd-chosen';
 	}
 
-	$html = '<select id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']" ' . $chosen . 'data-placeholder="' . esc_html( $placeholder ) . '" />';
+	$html = '<select id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']" class="' . $class . '" data-placeholder="' . esc_html( $placeholder ) . '" />';
 
 	foreach ( $args['options'] as $option => $name ) {
 		$selected = selected( $option, $value, false );
@@ -1714,8 +1755,10 @@ function edd_color_select_callback( $args ) {
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
+    
+	$class = edd_sanitize_html_class( $args['field_class'] );
 
-	$html = '<select id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']"/>';
+	$html = '<select id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" class="' . $class . '" name="edd_settings[' . esc_attr( $args['id'] ) . ']"/>';
 
 	foreach ( $args['options'] as $option => $color ) {
 		$selected = selected( $option, $value, false );
@@ -1751,9 +1794,10 @@ function edd_rich_editor_callback( $args ) {
 
 	$rows = isset( $args['size'] ) ? $args['size'] : 20;
 
+	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	ob_start();
-	wp_editor( stripslashes( $value ), 'edd_settings_' . esc_attr( $args['id'] ), array( 'textarea_name' => 'edd_settings[' . esc_attr( $args['id'] ) . ']', 'textarea_rows' => absint( $rows ) ) );
+	wp_editor( stripslashes( $value ), 'edd_settings_' . esc_attr( $args['id'] ), array( 'textarea_name' => 'edd_settings[' . esc_attr( $args['id'] ) . ']', 'textarea_rows' => absint( $rows ), 'editor_class' => $class ) );
 	$html = ob_get_clean();
 
 	$html .= '<br/><label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> ' . wp_kses_post( $args['desc'] ) . '</label>';
@@ -1779,9 +1823,11 @@ function edd_upload_callback( $args ) {
 	} else {
 		$value = isset($args['std']) ? $args['std'] : '';
 	}
+    
+	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$html = '<input type="text" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
+	$html = '<input type="text" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" clas="' . $class . '" name="edd_settings[' . esc_attr( $args['id'] ) . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
 	$html .= '<span>&nbsp;<input type="button" class="edd_settings_upload_button button-secondary" value="' . __( 'Upload File', 'easy-digital-downloads' ) . '"/></span>';
 	$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> ' . wp_kses_post( $args['desc'] ) . '</label>';
 
@@ -1809,8 +1855,10 @@ function edd_color_callback( $args ) {
 	}
 
 	$default = isset( $args['std'] ) ? $args['std'] : '';
+    
+	$class = edd_sanitize_html_class( $args['field_class'] );
 
-	$html = '<input type="text" class="edd-color-picker" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']" value="' . esc_attr( $value ) . '" data-default-color="' . esc_attr( $default ) . '" />';
+	$html = '<input type="text" class="' . $class . ' edd-color-picker" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']" value="' . esc_attr( $value ) . '" data-default-color="' . esc_attr( $default ) . '" />';
 	$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
@@ -1834,11 +1882,19 @@ function edd_shop_states_callback($args) {
 	} else {
 		$placeholder = '';
 	}
+    
+	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$states = edd_get_shop_states();
-
-	$chosen = ( $args['chosen'] ? ' edd-chosen' : '' );
-	$class = empty( $states ) ? ' class="edd-no-states' . $chosen . '"' : 'class="' . $chosen . '"';
+    
+	if ( $args['chosen'] ) {
+		$class .= ' edd-chosen';
+	}
+    
+	if ( empty( $states ) ) {
+		$class .= ' edd-no-states';
+	}
+    
 	$html = '<select id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']"' . $class . 'data-placeholder="' . esc_html( $placeholder ) . '"/>';
 
 	foreach ( $states as $option => $name ) {
@@ -1863,9 +1919,12 @@ function edd_shop_states_callback($args) {
  */
 function edd_tax_rates_callback($args) {
 	$rates = edd_get_tax_rates();
+    
+	$class = edd_sanitize_html_class( $args['field_class'] );
+    
 	ob_start(); ?>
 	<p><?php echo $args['desc']; ?></p>
-	<table id="edd_tax_rates" class="wp-list-table widefat fixed posts">
+	<table id="edd_tax_rates" class="wp-list-table widefat fixed posts <?php echo $class; ?>">
 		<thead>
 			<tr>
 				<th scope="col" class="edd_tax_country"><?php _e( 'Country', 'easy-digital-downloads' ); ?></th>
@@ -2142,6 +2201,8 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 			$license_status = null;
 		}
+        
+		$class .= ' ' . edd_sanitize_html_class( $args['field_class'] );
 
 		$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
 		$html = '<input type="text" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="' . esc_attr( $value ) . '"/>';
