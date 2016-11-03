@@ -143,9 +143,9 @@ function edd_reports_graph() {
 
 		foreach ( $sales as $sale ) {
 			if ( $day_by_day ) {
-				$data['sales'][ $sale['y'] ][ $sale['m'] ][ $sale['d'] ] = $sale['count'];
+				$temp_data['sales'][ $sale['y'] ][ $sale['m'] ][ $sale['d'] ] = $sale['count'];
 			} else {
-				$data['sales'][ $sale['y'] ][ $sale['m'] ] = $sale['count'];
+				$temp_data['sales'][ $sale['y'] ][ $sale['m'] ] = $sale['count'];
 			}
 			$sales_totals += $sale['count'];
 		}
@@ -155,8 +155,8 @@ function edd_reports_graph() {
 			$m = date( 'm', strtotime( $date_start ) );
 			$y = date( 'Y', strtotime( $date_start ) );
 
-			if ( ! isset( $data['sales'][ $y ][ $m ][ $d ] ) ) {
-				$data['sales'][ $y ][ $m ][ $d ] = 0;
+			if ( ! isset( $temp_data['sales'][ $y ][ $m ][ $d ] ) ) {
+				$temp_data['sales'][ $y ][ $m ][ $d ] = 0;
 			}
 
 			$date_start = date( 'Y-m-d', strtotime( '+1 day', strtotime( $date_start ) ) );
@@ -166,8 +166,8 @@ function edd_reports_graph() {
 			$m = date( 'm', strtotime( $date_start ) );
 			$y = date( 'Y', strtotime( $date_start ) );
 
-			if ( ! isset( $data['sales'][ $y ][ $m ] ) ) {
-				$data['sales'][ $y ][ $m ] = 0;
+			if ( ! isset( $temp_data['sales'][ $y ][ $m ] ) ) {
+				$temp_data['sales'][ $y ][ $m ] = 0;
 			}
 
 			$date_start = date( 'Y-m', strtotime( '+1 month', strtotime( $date_start ) ) );
@@ -225,7 +225,7 @@ function edd_reports_graph() {
 
 		// When using 3 months or smaller as the custom range, show each day individually on the graph
 		if ( $day_by_day ) {
-			foreach ( $data['sales'] as $year => $months ) {
+			foreach ( $temp_data['sales'] as $year => $months ) {
 				foreach ( $months as $month => $days ) {
 					foreach ( $days as $day => $count ) {
 						$date         = mktime( 0, 0, 0, $month, $day, $year ) * 1000;
@@ -240,7 +240,7 @@ function edd_reports_graph() {
 			}
 			array_multisort( $timestamps, SORT_ASC, $sales_data );
 
-			foreach ( $temp_data[ 'earnings' ] as $year => $months ) {
+			foreach ( $temp_data['earnings'] as $year => $months ) {
 				foreach ( $months as $month => $days ) {
 					foreach ( $days as $day => $earnings ) {
 						$date            = mktime( 0, 0, 0, $month, $day, $year ) * 1000;
@@ -253,7 +253,7 @@ function edd_reports_graph() {
 		// When showing more than 3 months of results, group them by month, by the first (except for the last month, group on the last day of the month selected)
 		} else {
 
-			foreach ( $data['sales'] as $year => $months ) {
+			foreach ( $temp_data['sales'] as $year => $months ) {
 				$month_keys = array_keys( $months );
 				$last_month = end( $month_keys );
 
