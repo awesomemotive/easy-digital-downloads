@@ -198,7 +198,7 @@ function edd_register_settings() {
 				    'faux'          => false,
 				    'tooltip_title' => false,
 				    'tooltip_desc'  => false,
-				    'class'         => '',
+				    'field_class'         => '',
 				) );
 
 				add_settings_field(
@@ -1323,12 +1323,12 @@ function edd_checkbox_callback( $args ) {
 		$name = 'name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"';
 	}
     
-	if ( isset( $args['class'] ) ) {
+	if ( isset( $args['field_class'] ) ) {
         
-		if ( is_string( $args['class'] ) ) {
-			$class = $args['class'];
-		} else if ( is_array( $args['class'] ) ) {
-			$class = implode( ' ', $args['class'] );
+		if ( is_string( $args['field_class'] ) ) {
+			$class = $args['field_class'];
+		} else if ( is_array( $args['field_class'] ) ) {
+			$class = implode( ' ', $args['field_class'] );
 		}
         
 	} else {
@@ -1356,12 +1356,12 @@ function edd_checkbox_callback( $args ) {
 function edd_multicheck_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
     
-	if ( isset( $args['class'] ) ) {
+	if ( isset( $args['field_class'] ) ) {
         
-		if ( is_string( $args['class'] ) ) {
-			$class = $args['class'];
-		} else if ( is_array( $args['class'] ) ) {
-			$class = implode( ' ', $args['class'] );
+		if ( is_string( $args['field_class'] ) ) {
+			$class = $args['field_class'];
+		} else if ( is_array( $args['field_class'] ) ) {
+			$class = implode( ' ', $args['field_class'] );
 		}
         
 	} else {
@@ -1393,12 +1393,12 @@ function edd_multicheck_callback( $args ) {
 function edd_payment_icons_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
     
-	if ( isset( $args['class'] ) ) {
+	if ( isset( $args['field_class'] ) ) {
         
-		if ( is_string( $args['class'] ) ) {
-			$class = $args['class'];
-		} else if ( is_array( $args['class'] ) ) {
-			$class = implode( ' ', $args['class'] );
+		if ( is_string( $args['field_class'] ) ) {
+			$class = $args['field_class'];
+		} else if ( is_array( $args['field_class'] ) ) {
+			$class = implode( ' ', $args['field_class'] );
 		}
         
 	} else {
@@ -1476,12 +1476,12 @@ function edd_radio_callback( $args ) {
 
 	$html = '';
     
-	if ( isset( $args['class'] ) ) {
+	if ( isset( $args['field_class'] ) ) {
         
-		if ( is_string( $args['class'] ) ) {
-			$class = $args['class'];
-		} else if ( is_array( $args['class'] ) ) {
-			$class = implode( ' ', $args['class'] );
+		if ( is_string( $args['field_class'] ) ) {
+			$class = $args['field_class'];
+		} else if ( is_array( $args['field_class'] ) ) {
+			$class = implode( ' ', $args['field_class'] );
 		}
         
 	} else {
@@ -1518,12 +1518,12 @@ function edd_radio_callback( $args ) {
 function edd_gateways_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
     
-	if ( isset( $args['class'] ) ) {
+	if ( isset( $args['field_class'] ) ) {
         
-		if ( is_string( $args['class'] ) ) {
-			$class = $args['class'];
-		} else if ( is_array( $args['class'] ) ) {
-			$class = implode( ' ', $args['class'] );
+		if ( is_string( $args['field_class'] ) ) {
+			$class = $args['field_class'];
+		} else if ( is_array( $args['field_class'] ) ) {
+			$class = implode( ' ', $args['field_class'] );
 		}
         
 	} else {
@@ -1558,12 +1558,12 @@ function edd_gateways_callback( $args ) {
 function edd_gateway_select_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
     
-	if ( isset( $args['class'] ) ) {
+	if ( isset( $args['field_class'] ) ) {
         
-		if ( is_string( $args['class'] ) ) {
-			$class = $args['class'];
-		} else if ( is_array( $args['class'] ) ) {
-			$class = implode( ' ', $args['class'] );
+		if ( is_string( $args['field_class'] ) ) {
+			$class = $args['field_class'];
+		} else if ( is_array( $args['field_class'] ) ) {
+			$class = implode( ' ', $args['field_class'] );
 		}
         
 	} else {
@@ -1612,12 +1612,12 @@ function edd_text_callback( $args ) {
 		$name = 'name="edd_settings[' . esc_attr( $args['id'] ) . ']"';
 	}
     
-	if ( isset( $args['class'] ) ) {
+	if ( isset( $args['field_class'] ) ) {
         
-		if ( is_string( $args['class'] ) ) {
-			$class = $args['class'];
-		} else if ( is_array( $args['class'] ) ) {
-			$class = implode( ' ', $args['class'] );
+		if ( is_string( $args['field_class'] ) ) {
+			$class = $args['field_class'];
+		} else if ( is_array( $args['field_class'] ) ) {
+			$class = implode( ' ', $args['field_class'] );
 		}
         
 	} else {
@@ -1659,12 +1659,12 @@ function edd_number_callback( $args ) {
 		$name = 'name="edd_settings[' . esc_attr( $args['id'] ) . ']"';
 	}
     
-	if ( isset( $args['class'] ) ) {
+	if ( isset( $args['field_class'] ) ) {
         
-		if ( is_string( $args['class'] ) ) {
-			$class = $args['class'];
-		} else if ( is_array( $args['class'] ) ) {
-			$class = implode( ' ', $args['class'] );
+		if ( is_string( $args['field_class'] ) ) {
+			$class = $args['field_class'];
+		} else if ( is_array( $args['field_class'] ) ) {
+			$class = implode( ' ', $args['field_class'] );
 		}
         
 	} else {
@@ -1701,12 +1701,12 @@ function edd_textarea_callback( $args ) {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
     
-	if ( isset( $args['class'] ) ) {
+	if ( isset( $args['field_class'] ) ) {
         
-		if ( is_string( $args['class'] ) ) {
-			$class = $args['class'];
-		} else if ( is_array( $args['class'] ) ) {
-			$class = implode( ' ', $args['class'] );
+		if ( is_string( $args['field_class'] ) ) {
+			$class = $args['field_class'];
+		} else if ( is_array( $args['field_class'] ) ) {
+			$class = implode( ' ', $args['field_class'] );
 		}
         
 	} else {
@@ -1738,12 +1738,12 @@ function edd_password_callback( $args ) {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
     
-	if ( isset( $args['class'] ) ) {
+	if ( isset( $args['field_class'] ) ) {
         
-		if ( is_string( $args['class'] ) ) {
-			$class = $args['class'];
-		} else if ( is_array( $args['class'] ) ) {
-			$class = implode( ' ', $args['class'] );
+		if ( is_string( $args['field_class'] ) ) {
+			$class = $args['field_class'];
+		} else if ( is_array( $args['field_class'] ) ) {
+			$class = implode( ' ', $args['field_class'] );
 		}
         
 	} else {
@@ -1798,12 +1798,12 @@ function edd_select_callback($args) {
 		$placeholder = '';
 	}
     
-	if ( isset( $args['class'] ) ) {
+	if ( isset( $args['field_class'] ) ) {
         
-		if ( is_string( $args['class'] ) ) {
-			$class = $args['class'];
-		} else if ( is_array( $args['class'] ) ) {
-			$class = implode( ' ', $args['class'] );
+		if ( is_string( $args['field_class'] ) ) {
+			$class = $args['field_class'];
+		} else if ( is_array( $args['field_class'] ) ) {
+			$class = implode( ' ', $args['field_class'] );
 		}
         
 	} else {
@@ -1846,12 +1846,12 @@ function edd_color_select_callback( $args ) {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
     
-	if ( isset( $args['class'] ) ) {
+	if ( isset( $args['field_class'] ) ) {
         
-		if ( is_string( $args['class'] ) ) {
-			$class = $args['class'];
-		} else if ( is_array( $args['class'] ) ) {
-			$class = implode( ' ', $args['class'] );
+		if ( is_string( $args['field_class'] ) ) {
+			$class = $args['field_class'];
+		} else if ( is_array( $args['field_class'] ) ) {
+			$class = implode( ' ', $args['field_class'] );
 		}
         
 	} else {
@@ -1894,12 +1894,12 @@ function edd_rich_editor_callback( $args ) {
 
 	$rows = isset( $args['size'] ) ? $args['size'] : 20;
 
-	if ( isset( $args['class'] ) ) {
+	if ( isset( $args['field_class'] ) ) {
         
-		if ( is_string( $args['class'] ) ) {
-			$class = $args['class'];
-		} else if ( is_array( $args['class'] ) ) {
-			$class = implode( ' ', $args['class'] );
+		if ( is_string( $args['field_class'] ) ) {
+			$class = $args['field_class'];
+		} else if ( is_array( $args['field_class'] ) ) {
+			$class = implode( ' ', $args['field_class'] );
 		}
         
 	} else {
@@ -1934,12 +1934,12 @@ function edd_upload_callback( $args ) {
 		$value = isset($args['std']) ? $args['std'] : '';
 	}
     
-	if ( isset( $args['class'] ) ) {
+	if ( isset( $args['field_class'] ) ) {
         
-		if ( is_string( $args['class'] ) ) {
-			$class = $args['class'];
-		} else if ( is_array( $args['class'] ) ) {
-			$class = implode( ' ', $args['class'] );
+		if ( is_string( $args['field_class'] ) ) {
+			$class = $args['field_class'];
+		} else if ( is_array( $args['field_class'] ) ) {
+			$class = implode( ' ', $args['field_class'] );
 		}
         
 	} else {
@@ -1976,12 +1976,12 @@ function edd_color_callback( $args ) {
 
 	$default = isset( $args['std'] ) ? $args['std'] : '';
     
-	if ( isset( $args['class'] ) ) {
+	if ( isset( $args['field_class'] ) ) {
         
-		if ( is_string( $args['class'] ) ) {
-			$class = $args['class'];
-		} else if ( is_array( $args['class'] ) ) {
-			$class = implode( ' ', $args['class'] );
+		if ( is_string( $args['field_class'] ) ) {
+			$class = $args['field_class'];
+		} else if ( is_array( $args['field_class'] ) ) {
+			$class = implode( ' ', $args['field_class'] );
 		}
         
 	} else {
@@ -2013,12 +2013,12 @@ function edd_shop_states_callback($args) {
 		$placeholder = '';
 	}
     
-	if ( isset( $args['class'] ) ) {
+	if ( isset( $args['field_class'] ) ) {
         
-		if ( is_string( $args['class'] ) ) {
-			$class = $args['class'];
-		} else if ( is_array( $args['class'] ) ) {
-			$class = implode( ' ', $args['class'] );
+		if ( is_string( $args['field_class'] ) ) {
+			$class = $args['field_class'];
+		} else if ( is_array( $args['field_class'] ) ) {
+			$class = implode( ' ', $args['field_class'] );
 		}
         
 	} else {
@@ -2060,12 +2060,12 @@ function edd_shop_states_callback($args) {
 function edd_tax_rates_callback($args) {
 	$rates = edd_get_tax_rates();
     
-	if ( isset( $args['class'] ) ) {
+	if ( isset( $args['field_class'] ) ) {
         
-		if ( is_string( $args['class'] ) ) {
-			$class = $args['class'];
-		} else if ( is_array( $args['class'] ) ) {
-			$class = implode( ' ', $args['class'] );
+		if ( is_string( $args['field_class'] ) ) {
+			$class = $args['field_class'];
+		} else if ( is_array( $args['field_class'] ) ) {
+			$class = implode( ' ', $args['field_class'] );
 		}
         
 	} else {
@@ -2352,12 +2352,12 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 			$license_status = null;
 		}
         
-		if ( isset( $args['class'] ) ) {
+		if ( isset( $args['field_class'] ) ) {
         
-			if ( is_string( $args['class'] ) ) {
-				$class .= $args['class'];
-			} else if ( is_array( $args['class'] ) ) {
-				$class .= implode( ' ', $args['class'] );
+			if ( is_string( $args['field_class'] ) ) {
+				$class .= $args['field_class'];
+			} else if ( is_array( $args['field_class'] ) ) {
+				$class .= implode( ' ', $args['field_class'] );
 			}
         
 		}
