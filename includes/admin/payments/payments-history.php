@@ -60,7 +60,7 @@ function edd_payment_history_mobile_link() {
 	?>
 	<p class="edd-mobile-link">
 		<a href="https://easydigitaldownloads.com/downloads/ios-sales-earnings-tracker/?utm_source=payments&utm_medium=mobile-link&utm_campaign=admin" target="_blank">
-			<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/icons/iphone.png'; ?>"/>
+			<img src="<?php echo EDD_PLUGIN_URL . 'templates/images/icons/iphone.png'; ?>"/>
 			<?php _e( 'Get the EDD Sales / Earnings tracker for iOS', 'easy-digital-downloads' ); ?>
 		</a>
 	</p>
