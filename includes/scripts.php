@@ -270,31 +270,22 @@ add_action( 'admin_enqueue_scripts', 'edd_load_admin_scripts', 100 );
  * Echoes the CSS for the downloads post type icon.
  *
  * @since 1.0
- * @global $post_type
- * @global $wp_version
+ * @since 2.6.11 Removed globals and CSS for custom icon
  * @return void
 */
 function edd_admin_downloads_icon() {
-	global $post_type, $wp_version;
 
 	$images_url      = EDD_PLUGIN_URL . 'assets/images/';
 	$menu_icon       = '\f316';
-	$icon_url        = $images_url . 'edd-icon.png';
 	$icon_cpt_url    = $images_url . 'edd-cpt.png';
-	$icon_2x_url     = $images_url . 'edd-icon-2x.png';
 	$icon_cpt_2x_url = $images_url . 'edd-cpt-2x.png';
 	?>
 	<style type="text/css" media="screen">
-		#adminmenu #menu-posts-download .wp-menu-image:before,
 		#dashboard_right_now .download-count:before {
 			content: '<?php echo $menu_icon; ?>';
 		}
 		#icon-edit.icon32-posts-download {
 			background: url(<?php echo $icon_cpt_url; ?>) -7px -5px no-repeat;
-		}
-		#edd-media-button {
-			background: url(<?php echo $icon_url; ?>) 0 -16px no-repeat;
-			background-size: 12px 30px;
 		}
 		@media
 		only screen and (-webkit-min-device-pixel-ratio: 1.5),
@@ -305,10 +296,6 @@ function edd_admin_downloads_icon() {
 			#icon-edit.icon32-posts-download {
 				background: url(<?php echo $icon_cpt_2x_url; ?>) no-repeat -7px -5px !important;
 				background-size: 55px 45px !important;
-			}
-			#edd-media-button {
-				background-image: url(<?php echo $icon_2x_url; ?>);
-				background-position: 0 -17px;
 			}
 		}
 	</style>

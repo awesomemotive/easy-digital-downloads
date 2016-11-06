@@ -646,9 +646,20 @@ class EDD_Payment {
 											$y++;
 										}
 
+										$increase_earnings = $price;
+										if ( ! empty( $item['fees'] ) ) {
+											foreach ( $item['fees'] as $fee ) {
+												// Only let negative fees affect the earnings
+												if ( $fee['amount'] > 0 ) {
+													continue;
+												}
+												$increase_earnings += (float) $fee['amount'];
+											}
+										}
+
 										$download = new EDD_Download( $item['id'] );
 										$download->increase_sales( $item['quantity'] );
-										$download->increase_earnings( $price );
+										$download->increase_earnings( $increase_earnings );
 
 										$total_increase += $price;
 									}
@@ -681,7 +692,18 @@ class EDD_Payment {
 										if ( 'publish' === $this->status || 'complete' === $this->status || 'revoked' === $this->status ) {
 											$download = new EDD_Download( $item['id'] );
 											$download->decrease_sales( $item['quantity'] );
-											$download->decrease_earnings( $item['amount'] );
+
+											$decrease_amount = $item['amount'];
+											if ( ! empty( $item['fees'] ) ) {
+												foreach( $item['fees'] as $fee ) {
+													// Only let negative fees affect the earnings
+													if ( $fee['amount'] > 0 ) {
+														continue;
+													}
+													$decrease_amount += $fee['amount'];
+												}
+											}
+											$download->decrease_earnings( $decrease_amount );
 
 											$total_decrease += $item['amount'];
 										}
@@ -809,6 +831,10 @@ class EDD_Payment {
 						break;
 
 					default:
+						/**
+						 * Used to save non-standard data. Developers can hook here if they want to save
+						 * specific payment data when $payment->save() is run and their item is in the $pending array
+						 */
 						do_action( 'edd_payment_save', $this, $key );
 						break;
 				}
@@ -846,15 +872,18 @@ class EDD_Payment {
 				'cart_details'  => $this->cart_details,
 				'fees'          => $this->fees,
 				'currency'      => $this->currency,
-				'user_info'     => is_array( $this->user_info ) ? $this->user_info : array(),
+				'user_info'     => is_array( $this->user_info ) ? array_filter( $this->user_info ) : array(),
+				'date'          => $this->date
 			);
+
+
 
 			// Do some merging of user_info before we merge it all, to honor the edd_payment_meta filter
 			if ( ! empty( $this->payment_meta['user_info'] ) ) {
 
 				$stored_discount = ! empty( $new_meta['user_info']['discount'] ) ? $new_meta['user_info']['discount'] : '';
 
-				$new_meta[ 'user_info' ] = array_replace_recursive( $new_meta[ 'user_info' ], (array) $this->payment_meta[ 'user_info' ] );
+				$new_meta[ 'user_info' ] = array_replace_recursive( (array) $this->payment_meta[ 'user_info' ], $new_meta[ 'user_info' ] );
 
 				if ( 'none' !== $stored_discount ) {
 					$new_meta['user_info']['discount'] = $stored_discount;
@@ -879,6 +908,12 @@ class EDD_Payment {
 
 		if ( true === $saved ) {
 			$this->setup_payment( $this->ID );
+
+			/**
+			 * This action fires anytime that $payment->save() is run, allowing developers to run actions
+			 * when a payment is updated
+			 */
+			do_action( 'edd_payment_saved', $this->ID, $this );
 		}
 
 		return $saved;
@@ -1150,6 +1185,18 @@ class EDD_Payment {
 			$total_reduced = $this->cart_details[ $found_cart_key ]['item_price'];
 			$tax_reduced   = $this->cart_details[ $found_cart_key ]['tax'];
 
+			$found_fees = array();
+
+			if ( ! empty( $this->cart_details[ $found_cart_key ]['fees'] ) ) {
+
+				$found_fees = $this->cart_details[ $found_cart_key ]['fees'];
+
+				foreach ( $found_fees as $key => $fee ) {
+					$this->remove_fee( $key );
+				}
+
+			}
+
 			unset( $this->cart_details[ $found_cart_key ] );
 
 		}
@@ -1160,6 +1207,7 @@ class EDD_Payment {
 		$pending_args['price_id'] = false !== $args['price_id'] ? $args['price_id'] : false;
 		$pending_args['quantity'] = $args['quantity'];
 		$pending_args['action']   = 'remove';
+		$pending_args['fees']     = isset( $found_fees ) ? $found_fees : array();
 
 		$this->pending['downloads'][] = $pending_args;
 
@@ -1209,11 +1257,7 @@ class EDD_Payment {
 	 * @return bool     If the fee was removed successfully
 	 */
 	public function remove_fee( $key ) {
-		$removed = false;
-
-		if ( is_numeric( $key ) ) {
-			$removed = $this->remove_fee_by( 'index', $key );
-		}
+		$removed = $this->remove_fee_by( 'index', $key );
 
 		return $removed;
 	}
@@ -1796,7 +1840,7 @@ class EDD_Payment {
 		// We don't have tax as it's own meta and no meta was passed
 		if ( '' === $tax ) {
 
-			$tax = isset( $payment_meta['tax'] ) ? $payment_meta['tax'] : 0;
+			$tax = isset( $this->payment_meta['tax'] ) ? $this->payment_meta['tax'] : 0;
 
 		}
 

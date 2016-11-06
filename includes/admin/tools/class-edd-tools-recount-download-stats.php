@@ -106,8 +106,21 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 
 					$this->_log_ids_debug[] = $payment->ID;
 
+					$amount = $item['price'];
+
+					if ( ! empty( $item['fees'] ) ) {
+						foreach( $item['fees'] as $fee ) {
+							// Only let negative fees affect earnings
+							if ( $fee['amount'] > 0 ) {
+								continue;
+							}
+
+							$amount += $fee['amount'];
+						}
+					}
+
 					$totals['sales']++;
-					$totals['earnings'] += $item['price'];
+					$totals['earnings'] += $amount;
 
 				}
 

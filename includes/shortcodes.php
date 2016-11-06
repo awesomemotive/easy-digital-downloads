@@ -324,6 +324,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		'exclude_category' => '',
 		'tags'             => '',
 		'exclude_tags'     => '',
+		'author'           => false,
 		'relation'         => 'OR',
 		'number'           => 9,
 		'price'            => 'no',
@@ -335,7 +336,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		'orderby'          => 'post_date',
 		'order'            => 'DESC',
 		'ids'              => '',
-		'pagination'       => 'true'
+		'pagination'       => 'true',
 	), $atts, 'downloads' );
 
 	$query = array(
@@ -533,6 +534,30 @@ function edd_downloads_query( $atts, $content = null ) {
 
 	if ( $atts['exclude_tags'] || $atts['exclude_category'] ) {
 		$query['tax_query']['relation'] = 'AND';
+	}
+
+	if ( $atts['author'] ) {
+		$authors = explode( ',', $atts['author'] );
+		if ( ! empty( $authors ) ) {
+			$author_ids = array();
+			$author_names = array();
+
+			foreach ( $authors as $author ) {
+				if ( is_numeric( $author ) ) {
+					$author_ids[] = $author;
+				} else {
+					$user = get_user_by( 'login', $author );
+					if ( $user ) {
+						$author_ids[] = $user->ID;
+					}
+				}
+			}
+
+			if ( ! empty( $author_ids ) ) {
+				$author_ids      = array_unique( array_map( 'absint', $author_ids ) );
+				$query['author'] = implode( ',', $author_ids );
+			}
+		}
 	}
 
 	if( ! empty( $atts['ids'] ) )

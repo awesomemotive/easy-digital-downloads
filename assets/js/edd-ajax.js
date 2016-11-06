@@ -33,14 +33,19 @@ jQuery(document).ready(function ($) {
 					}
 
 					// Remove the selected cart item
-					$('.edd-cart').find("[data-cart-item='" + item + "']").parent().remove();
+					$('.edd-cart').each( function() {
+						$(this).find("[data-cart-item='" + item + "']").parent().remove();
+					});
 
 					//Reset the data-cart-item attributes to match their new values in the EDD session cart array
-					var cart_item_counter = 0;
-					$('.edd-cart').find("[data-cart-item]").each(function(){
-						$(this).attr('data-cart-item', cart_item_counter);
-						cart_item_counter = cart_item_counter + 1;
+					$('.edd-cart').each( function() {
+						var cart_item_counter = 0;
+						$(this).find("[data-cart-item]").each( function() {
+							$(this).attr('data-cart-item', cart_item_counter);
+							cart_item_counter = cart_item_counter + 1;
+						});
 					});
+
 
 					// Check to see if the purchase form(s) for this download is present on this page
 					if( $( '[id^=edd_purchase_' + id + ']' ).length ) {
@@ -62,7 +67,9 @@ jQuery(document).ready(function ($) {
 
 					if( response.cart_quantity == 0 ) {
 						$('.cart_item.edd_subtotal,.edd-cart-number-of-items,.cart_item.edd_checkout,.cart_item.edd_cart_tax,.cart_item.edd_total').hide();
-						$('.edd-cart').append('<li class="cart_item empty">' + edd_scripts.empty_cart_message + '</li>');
+						$('.edd-cart').each( function() {
+							$(this).append('<li class="cart_item empty">' + edd_scripts.empty_cart_message + '</li>');
+						});
 					}
 
 					$('body').trigger('edd_cart_item_removed', [ response ]);
@@ -190,11 +197,13 @@ jQuery(document).ready(function ($) {
 					$('.cart_item.edd_checkout').show();
 
 					if ($('.cart_item.empty').length) {
-						$(response.cart_item).insertBefore('.edd-cart-meta:first');
 						$('.cart_item.empty').hide();
-					} else {
-						$(response.cart_item).insertBefore('.edd-cart-meta:first');
 					}
+
+					$('.widget_edd_cart_widget .edd-cart').each( function( cart ) {
+						var target = $(this).find('.edd-cart-meta:first');
+						$(response.cart_item).insertBefore(target);
+					});
 
 					// Update the totals
 					if ( edd_scripts.taxes_enabled === '1' ) {

@@ -25,7 +25,7 @@ function edd_media_button() {
 	/** Only run in post/page creation and edit screens */
 	if ( in_array( $pagenow, array( 'post.php', 'page.php', 'post-new.php', 'post-edit.php' ) ) && $typenow != 'download' ) {
 
-		$img = '<span class="wp-media-buttons-icon" id="edd-media-button"></span>';
+		$img = '<span class="wp-media-buttons-icon dashicons dashicons-download" id="edd-media-button"></span>';
 		$output = '<a href="#TB_inline?width=640&inlineId=choose-download" class="thickbox button edd-thickbox" style="padding-left: .4em;">' . $img . sprintf( __( 'Insert %s', 'easy-digital-downloads' ), strtolower( edd_get_label_singular() ) ) . '</a>';
 
 	}
