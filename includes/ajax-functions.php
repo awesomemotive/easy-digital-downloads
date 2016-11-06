@@ -500,6 +500,8 @@ function edd_ajax_download_search() {
 		$excludes = array_merge( $excludes, $bundles );
 	}
 
+	$variations = isset( $_GET['variations'] ) ? filter_var( $_GET['variations'], FILTER_VALIDATE_BOOLEAN ) : false;
+
 	$excludes = array_unique( array_map( 'absint', $excludes ) );
 	$exclude  = implode( ",", $excludes );
 
@@ -538,11 +540,28 @@ function edd_ajax_download_search() {
 				'id'   => $item->ID,
 				'name' => $item->post_title
 			);
+
+			if ( $variations && edd_has_variable_prices( $item->ID ) ) {
+				$prices = edd_get_variable_prices( $item->ID );
+
+				foreach ( $prices as $key => $value ) {
+					$name   = ! empty( $value['name'] )   ? $value['name']   : '';
+					$amount = ! empty( $value['amount'] ) ? $value['amount'] : '';
+					$index  = ! empty( $value['index'] )  ? $value['index']  : $key;
+
+					if ( $name && $index ) {
+						$results[] = array(
+							'id'   => $item->ID . '_' . $key,
+							'name' => esc_html( $item->post_title . ': ' . $name ),
+						);
+					}
+				}
+			}
 		}
 
 	} else {
 
-		$items[] = array(
+		$results[] = array(
 			'id'   => 0,
 			'name' => __( 'No results found', 'easy-digital-downloads' )
 		);
@@ -606,6 +625,55 @@ function edd_ajax_customer_search() {
 	edd_die();
 }
 add_action( 'wp_ajax_edd_customer_search', 'edd_ajax_customer_search' );
+
+/**
+ * Search the users database via AJAX
+ *
+ * @since 2.6.9
+ * @return void
+ */
+function edd_ajax_user_search() {
+	global $wpdb;
+
+	$search         = esc_sql( sanitize_text_field( $_GET['s'] ) );
+	$results        = array();
+	$user_view_role = apply_filters( 'edd_view_users_role', 'view_shop_reports' );
+
+	if ( ! current_user_can( $user_view_role ) ) {
+		$results = array();
+	} else {
+		$user_args = array(
+			'search' => '*' . esc_attr( $search ) . '*',
+			'number' => 50,
+		);
+
+		$users = get_users( $user_args );
+	}
+
+	if ( $users ) {
+
+		foreach( $users as $user ) {
+
+			$results[] = array(
+				'id'   => $user->ID,
+				'name' => $user->display_name,
+			);
+		}
+
+	} else {
+
+		$results[] = array(
+			'id'   => 0,
+			'name' => __( 'No users found', 'easy-digital-downloads' )
+		);
+
+	}
+
+	echo json_encode( $results );
+
+	edd_die();
+}
+add_action( 'wp_ajax_edd_user_search', 'edd_ajax_user_search' );
 
 /**
  * Check for Download Price Variations via AJAX (this function can only be used

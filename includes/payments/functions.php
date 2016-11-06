@@ -152,7 +152,6 @@ function edd_insert_payment( $payment_data = array() ) {
 	$payment->user_info      = $payment_data['user_info'];
 	$payment->gateway        = $gateway;
 	$payment->user_id        = $payment_data['user_info']['id'];
-	$payment->email          = $payment_data['user_email'];
 	$payment->first_name     = $payment_data['user_info']['first_name'];
 	$payment->last_name      = $payment_data['user_info']['last_name'];
 	$payment->email          = $payment_data['user_info']['email'];
@@ -335,6 +334,17 @@ function edd_undo_purchase( $download_id = false, $payment_id ) {
 					$amount = edd_get_download_final_price( $item['id'], $user_info, $amount );
 				}
 
+			}
+
+			if ( ! empty( $item['fees'] ) ) {
+				foreach ( $item['fees'] as $fee ) {
+					// Only let negative fees affect the earnings
+					if ( $fee['amount'] > 0 ) {
+						continue;
+					}
+
+					$amount += $fee['amount'];
+				}
 			}
 
 			$maybe_decrease_earnings = apply_filters( 'edd_decrease_earnings_on_undo', true, $payment, $item['id'] );

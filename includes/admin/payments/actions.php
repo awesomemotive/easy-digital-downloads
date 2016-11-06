@@ -139,11 +139,6 @@ function edd_update_payment_details( $data ) {
 	do_action( 'edd_update_edited_purchase', $payment_id );
 
 	$payment->date = $date;
-	$updated       = $payment->save();
-
-	if ( 0 === $updated ) {
-		wp_die( __( 'Error Updating Payment', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 400 ) );
-	}
 
 	$customer_changed = false;
 
@@ -266,7 +261,11 @@ function edd_update_payment_details( $data ) {
 
 	}
 
-	$payment->save();
+	$updated = $payment->save();
+
+	if ( 0 === $updated ) {
+		wp_die( __( 'Error Updating Payment', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 400 ) );
+	}
 
 	do_action( 'edd_updated_edited_purchase', $payment_id );
 

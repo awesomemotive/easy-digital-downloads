@@ -30,7 +30,7 @@ class EDD_API {
 	/**
 	 * Latest API Version
 	 */
-	const VERSION = 1;
+	const VERSION = 2;
 
 	/**
 	 * Pretty Print?
@@ -937,6 +937,17 @@ class EDD_API {
 
 		if( is_numeric( $customer ) ) {
 			$field = 'id';
+		} elseif ( is_array( $customer ) ) {
+			// Checking if search is being done by id, email, user_id fields.
+			if ( array_key_exists( 'id', $customer ) ) {
+				$field = 'id';
+			} elseif ( array_key_exists( 'email', $customer ) ) {
+				$field = 'email';
+			} elseif ( array_key_exists( 'user_id', $customer ) ) {
+				$field = 'user_id';
+			}
+
+			$customer = $customer[ $field ];
 		} else {
 			$field = 'email';
 		}
@@ -1428,6 +1439,8 @@ class EDD_API {
 				$sales['sales'][ $i ]['total']          = $payment->total;
 				$sales['sales'][ $i ]['gateway']        = $payment->gateway;
 				$sales['sales'][ $i ]['email']          = $payment->email;
+				$sales['sales'][ $i ]['user_id']        = $payment->user_id;
+				$sales['sales'][ $i ]['customer_id']    = $payment->customer_id;
 				$sales['sales'][ $i ]['date']           = $payment->date;
 				$sales['sales'][ $i ]['products']       = array();
 

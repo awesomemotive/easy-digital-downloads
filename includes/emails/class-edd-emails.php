@@ -96,6 +96,15 @@ class EDD_Emails {
 	}
 
 	/**
+	 * Get a property
+	 *
+	 * @since 2.6.9
+	 */
+	public function __get( $key ) {
+		return $this->$key;
+	}
+
+	/**
 	 * Get the email from name
 	 *
 	 * @since 2.1

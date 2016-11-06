@@ -961,12 +961,12 @@ function edd_get_file_price_condition( $download_id = 0, $file_key ) {
  *
  * @param string    $key Payment key. Use edd_get_payment_key() to get key.
  * @param string    $email Customer email address. Use edd_get_payment_user_email() to get user email.
- * @param int       $filekey Index of array of files returned by edd_get_download_files() that this download link is for. 
+ * @param int       $filekey Index of array of files returned by edd_get_download_files() that this download link is for.
  * @param int       $download_id Optional. ID of download this download link is for. Default is 0.
  * @param bool|int  $price_id Optional. Price ID when using variable prices. Default is false.
  *
  * @return string A secure download URL
- */ 
+ */
 function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $price_id = false ) {
 
 	$hours = absint( edd_get_option( 'download_link_expiration', 24 ) );
@@ -1239,4 +1239,54 @@ function edd_validate_url_token( $url = '' ) {
 	}
 
 	return apply_filters( 'edd_validate_url_token', $ret, $url, $query_args );
+}
+
+/**
+ * Allows parsing of the values saved by the product drop down.
+ *
+ * @since  2.6.9
+ * @param  array $values Parse the values from the product dropdown into a readable array
+ * @return array         A parsed set of values for download_id and price_id
+ */
+function edd_parse_product_dropdown_values( $values = array() ) {
+
+	$parsed_values = array();
+
+	if ( is_array( $values ) ) {
+
+		foreach ( $values as $value ) {
+			$value = edd_parse_product_dropdown_value( $value );
+
+			$parsed_values[] = array(
+				'download_id' => $value['download_id'],
+				'price_id'    => $value['price_id'],
+			);
+		}
+
+	} else {
+
+		$value = edd_parse_product_dropdown_value( $values );
+		$parsed_values[] = array(
+			'download_id' => $value['download_id'],
+			'price_id'    => $value['price_id'],
+		);
+
+	}
+
+	return $parsed_values;
+}
+
+/**
+ * Given a value from the product dropdown array, parse it's parts
+ *
+ * @since  2.6.9
+ * @param  string $values A value saved in a product dropdown array
+ * @return array          A parsed set of values for download_id and price_id
+ */
+function edd_parse_product_dropdown_value( $value ) {
+	$parts       = explode( '_', $value );
+	$download_id = $parts[0];
+	$price_id    = isset( $parts[1] ) ? $parts[1] : false;
+
+	return array( 'download_id' => $download_id, 'price_id' => $price_id );
 }
