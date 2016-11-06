@@ -28,8 +28,8 @@ if ( is_user_logged_in() ):
 
 	<form id="edd_profile_editor_form" class="edd_form" action="<?php echo edd_get_current_page_url(); ?>" method="post">
 		<fieldset>
-			<?php do_action( 'edd_profile_editor_before_name' ); ?>
 			<span id="edd_profile_name_label"><legend><?php _e( 'Change your Name', 'easy-digital-downloads' ); ?></legend></span>
+			<?php do_action( 'edd_profile_editor_before_name' ); ?>
 			<p id="edd_profile_name_wrap">
 				<label for="edd_first_name"><?php _e( 'First Name', 'easy-digital-downloads' ); ?></label>
 				<input name="edd_first_name" id="edd_first_name" class="text edd-input" type="text" value="<?php echo esc_attr( $first_name ); ?>" />
