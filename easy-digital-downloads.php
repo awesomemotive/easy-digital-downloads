@@ -153,6 +153,7 @@ final class Easy_Digital_Downloads {
 			self::$instance->email_tags    = new EDD_Email_Template_Tags();
 			self::$instance->customers     = new EDD_DB_Customers();
 			self::$instance->customer_meta = new EDD_DB_Customer_Meta();
+			self::$instance->payment_stats = new EDD_Payment_Stats();
 		}
 		return self::$instance;
 	}
