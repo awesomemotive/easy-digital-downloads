@@ -981,9 +981,9 @@ function edd_show_user_api_key_field( $user ) {
 						<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
 						<span class="description"><?php _e( 'Generate API Key', 'easy-digital-downloads' ); ?></span>
 					<?php } else { ?>
-						<strong style="display:inline-block; width: 125px;"><?php _e( 'Public key:', 'easy-digital-downloads' ); ?>&nbsp;</strong><input type="text" disabled="disabled" class="regular-text" id="publickey" value="<?php echo esc_attr( $public_key ); ?>"/><br/>
-						<strong style="display:inline-block; width: 125px;"><?php _e( 'Secret key:', 'easy-digital-downloads' ); ?>&nbsp;</strong><input type="text" disabled="disabled" class="regular-text" id="privatekey" value="<?php echo esc_attr( $secret_key ); ?>"/><br/>
-						<strong style="display:inline-block; width: 125px;"><?php _e( 'Token:', 'easy-digital-downloads' ); ?>&nbsp;</strong><input type="text" disabled="disabled" class="regular-text" id="token" value="<?php echo esc_attr( EDD()->api->get_token( $user->ID ) ); ?>"/><br/>
+						<strong style="display:inline-block; width: 125px;"><?php _e( 'Public key:', 'easy-digital-downloads' ); ?>&nbsp;</strong><input type="text" readonly="readonly" class="regular-text" id="publickey" value="<?php echo esc_attr( $public_key ); ?>"/><br/>
+						<strong style="display:inline-block; width: 125px;"><?php _e( 'Secret key:', 'easy-digital-downloads' ); ?>&nbsp;</strong><input type="text" readonly="readonly" class="regular-text" id="privatekey" value="<?php echo esc_attr( $secret_key ); ?>"/><br/>
+						<strong style="display:inline-block; width: 125px;"><?php _e( 'Token:', 'easy-digital-downloads' ); ?>&nbsp;</strong><input type="text" readonly="readonly" class="regular-text" id="token" value="<?php echo esc_attr( EDD()->api->get_token( $user->ID ) ); ?>"/><br/>
 						<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
 						<span class="description"><label for="edd_set_api_key"><?php _e( 'Revoke API Keys', 'easy-digital-downloads' ); ?></label></span>
 					<?php } ?>
