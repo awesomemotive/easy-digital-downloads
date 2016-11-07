@@ -472,7 +472,7 @@ class EDD_License {
 	 *
 	 * @access  public
 	 * @param   array $products
-	 * @since   2.6.10
+	 * @since   2.6.11
 	 * @return  void
 	 */
 	public function register_beta_support( $products ) {
