@@ -135,7 +135,7 @@ class EDD_License {
 			'version'   => $this->version,
 			'license'   => $this->license,
 			'author'    => $this->author,
-			'beta'      => ( array_key_exists( $this->item_shortname, $betas ) ? true : false )
+			'beta'      => edd_extension_has_beta_support( $this->item_shortname ),
 		);
 
 		if( ! empty( $this->item_id ) ) {
