@@ -69,7 +69,7 @@ function edd_get_tools_tabs() {
 	$tabs['api_keys']      = __( 'API Keys', 'easy-digital-downloads' );
 
 	if( count( edd_get_beta_enabled_extensions() ) > 0 ) {
-		$tabs['betas'] = __( 'Beta Support', 'easy-digital-downloads' );
+		$tabs['betas'] = __( 'Beta Versions', 'easy-digital-downloads' );
 	}
 
 	$tabs['system_info']   = __( 'System Info', 'easy-digital-downloads' );
@@ -264,14 +264,13 @@ function edd_tools_betas_display() {
 		return;
 	}
 
-	$has_beta      = edd_get_beta_enabled_extensions();
-	$enabled_betas = edd_get_option( 'enabled_betas', array() );
+	$has_beta = edd_get_beta_enabled_extensions();
 
 	do_action( 'edd_tools_betas_before' );
 	?>
 
 	<div class="postbox edd-beta-support">
-		<h3><span><?php _e( 'Enable Beta Support', 'easy-digital-downloads' ); ?></span></h3>
+		<h3><span><?php _e( 'Enable Beta Versions', 'easy-digital-downloads' ); ?></span></h3>
 		<div class="inside">
 			<p><?php _e( 'Checking any of the below checkboxes will opt you in to receive pre-release update notifications. You can opt-out at any time. Pre-release updates do not install automatically, you will still have the opportunity to ignore update notifications.', 'easy-digital-downloads' ); ?></p>
 			<form method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=betas' ); ?>">
@@ -279,7 +278,7 @@ function edd_tools_betas_display() {
 					<tbody>
 						<?php foreach( $has_beta as $slug => $product ) : ?>
 							<tr>
-								<?php $checked = ( array_key_exists( $slug, $enabled_betas ) ? ' checked="checked"' : '' ); ?>
+								<?php $checked = edd_extension_has_beta_support( $slug ); ?>
 								<th scope="row"><?php echo esc_html( $product ); ?></th>
 								<td>
 									<input type="checkbox" name="enabled_betas[<?php echo esc_attr( $slug ); ?>]" id="enabled_betas[<?php echo esc_attr( $slug ); ?>]"<?php echo $checked; ?> value="1" />
