@@ -282,7 +282,7 @@ function edd_tools_betas_display() {
 								<?php $checked = ( array_key_exists( $slug, $enabled_betas ) ? ' checked="checked"' : '' ); ?>
 								<th scope="row"><?php echo esc_html( $product ); ?></th>
 								<td>
-									<input type="checkbox" name="enabled_betas[<?php echo esc_attr( $slug ); ?>]" id="enabled_betas[<?php echo esc_attr( $slug ); ?>]"<?php echo $checked; ?> />
+									<input type="checkbox" name="enabled_betas[<?php echo esc_attr( $slug ); ?>]" id="enabled_betas[<?php echo esc_attr( $slug ); ?>]"<?php echo $checked; ?> value="1" />
 									<label for="enabled_betas[<?php echo esc_attr( $slug ); ?>]"><?php printf( __( 'Get updates for pre-release versions of %s', 'easy-digital-downloads' ), $product ); ?></label>
 								</td>
 							</tr>
@@ -350,12 +350,25 @@ function edd_tools_enabled_betas_save() {
 	}
 
 	if( ! empty( $_POST['enabled_betas'] ) ) {
-		edd_update_option( 'enabled_betas', $_POST['enabled_betas'] );
+		$enabled_betas = array_filter( array_map( 'edd_tools_enabled_betas_sanitize_value', $_POST['enabled_betas'] ) );
+		edd_update_option( 'enabled_betas', $enabled_betas );
 	} else {
 		edd_delete_option( 'enabled_betas' );
 	}
 }
 add_action( 'edd_save_enabled_betas', 'edd_tools_enabled_betas_save' );
+
+/**
+ * Sanitize the supported beta values by making them booleans
+ *
+ * @since 2.6.11
+ * @param mixed $value The value being sent in, determining if beta support is enabled.
+ *
+ * @return bool
+ */
+function edd_tools_enabled_betas_sanitize_value( $value ) {
+	return filter_var( $value, FILTER_VALIDATE_BOOLEAN );
+}
 
 
 /**
