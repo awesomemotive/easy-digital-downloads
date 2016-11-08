@@ -188,7 +188,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 == Changelog ==
 
 = 2.6.11, November 8, 2016 =
-* New: WP CLI: Customers command allows searching by user_id.
+* New: WP CLI: Customers command now allows searching by user_id.
 * New: Add framework for the new Software Licensing beta support.
 * New: EDD Settings API now supports adding classes to registered settings.
 * New: Improve PayPal Standard IPN lookup logic.
@@ -222,7 +222,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: EDD API was always returning version 1 by default.
 * Fix: Changed uses of jQuery .toggle() to use .show() and .hide() to fix bad checkbox states.
 * Fix: Corrected translation for 'State / Province'.
-* Fix: Corrected a variable type issue in the HTML_Elements::select defaults.
+* Fix: Corrected a variable type issue in the HwTML_Elements::select defaults.
 
 = 2.6.10, October 21, 2016 =
 * Fix: JavaScript error when removing a product from a payment that does not contain a fee.
