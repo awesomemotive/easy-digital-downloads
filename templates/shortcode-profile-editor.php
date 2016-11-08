@@ -24,11 +24,14 @@ if ( is_user_logged_in() ):
 
 	<?php edd_print_errors(); ?>
 
+	<?php do_action( 'edd_profile_editor_before' ); ?>
+
 	<form id="edd_profile_editor_form" class="edd_form" action="<?php echo edd_get_current_page_url(); ?>" method="post" <?php do_action( 'edd_profile_editor_form_tag' ); ?>>
-		<?php do_action( 'edd_profile_editor_before' ); ?>
+
+		<?php do_action( 'edd_profile_editor_top' ); ?>
+
 		<fieldset>
 			<span id="edd_profile_name_label"><legend><?php _e( 'Change your Name', 'easy-digital-downloads' ); ?></legend></span>
-			<?php do_action( 'edd_profile_editor_before_name' ); ?>
 			<p id="edd_profile_name_wrap">
 				<label for="edd_first_name"><?php _e( 'First Name', 'easy-digital-downloads' ); ?></label>
 				<input name="edd_first_name" id="edd_first_name" class="text edd-input" type="text" value="<?php echo esc_attr( $first_name ); ?>" />
@@ -176,8 +179,12 @@ if ( is_user_logged_in() ):
 				<input name="edd_profile_editor_submit" id="edd_profile_editor_submit" type="submit" class="edd_submit" value="<?php _e( 'Save Changes', 'easy-digital-downloads' ); ?>"/>
 			</p>
 		</fieldset>
-		<?php do_action( 'edd_profile_editor_after' ); ?>
+
+		<?php do_action( 'edd_profile_editor_bottom' ); ?>
+		
 	</form><!-- #edd_profile_editor_form -->
+
+	<?php do_action( 'edd_profile_editor_after' ); ?>
 
 	<?php
 else:
