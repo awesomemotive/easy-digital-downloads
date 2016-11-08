@@ -44,6 +44,19 @@ function edd_options_page() {
 	if ( empty( $all_settings[ $active_tab ]['main'] ) ) {
 		$has_main_settings = false;
 	}
+	
+	// Check for old non-sectioned settings (see #4211 and #5171)
+	$nonsectioned_settings = array();
+	if ( ! $has_main_settings ) {
+		foreach( $all_settings as $sid => $stitle ) {
+			if ( is_string( $sid ) && is_array( $sections ) && in_array( $sid, $sections ) ) {
+				continue;
+			} else {
+				$has_main_settings = true;
+				break;
+			}
+		}
+	}
 
 	$override = false;
 	if ( false === $has_main_settings ) {
