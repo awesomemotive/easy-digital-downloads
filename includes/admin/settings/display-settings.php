@@ -40,10 +40,10 @@ function edd_options_page() {
 	$all_settings = edd_get_registered_settings();
 
 	// Let's verify we have a 'main' section to show
-	ob_start();
-	do_settings_sections( 'edd_settings_' . $active_tab . '_main' );
-	$has_main_settings = strlen( ob_get_contents() ) > 0;
-	ob_end_clean();
+	$has_main_settings = true;
+	if ( empty( $all_settings[ $active_tab ]['main'] ) ) {
+		$has_main_settings = false;
+	}
 
 	$override = false;
 	if ( false === $has_main_settings ) {
