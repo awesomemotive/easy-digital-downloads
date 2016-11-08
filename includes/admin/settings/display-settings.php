@@ -47,7 +47,7 @@ function edd_options_page() {
 	
 	// Check for old non-sectioned settings (see #4211 and #5171)
 	if ( ! $has_main_settings ) {
-		foreach( $all_settings as $sid => $stitle ) {
+		foreach( $all_settings[ $active_tab ] as $sid => $stitle ) {
 			if ( is_string( $sid ) && is_array( $sections ) && in_array( $sid, $sections ) ) {
 				continue;
 			} else {
