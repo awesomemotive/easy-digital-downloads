@@ -193,15 +193,15 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: API Keys not able to be copied from user profile.
 * Fix: Correct link to the iOS application.
 * Fix: Use new iPhone icon.
-* Fix: EDD_Payment::setup_tax not always contain proper data.
+* Fix: EDD_Payment::setup_tax does not always contain proper data.
 * Fix: Styles on Recount/Reset tool lost.
 * Fix: CSV import tool not importing Download Files in some circumstances.
 * Fix: Tooltip style conflict with Gravity Forms.
-* Fix: Recount earning/sales tool for all downloads failing properly count.
+* Fix: Recount earning/sales tool for all downloads failing to properly count.
 * Fix: Multiple instances of cart widget causes conflicts when adding or removing items.
 * Fix: API Key list table is unreadable on mobile.
 * Fix: Custom icons via edd_accepted_payment_icons are unwrapped.
-* Fix: Fees for specific download and price IDs do not check if that item or price ID is in the cart.
+* Fix: Fees for specific download and price IDs do not check if the item or price ID is in the cart.
 * Fix: EDD API returning version 1 by default.
 * Fix: Change uses of jQuery .toggle() to use .show() and .hide() to fix bad checkbox states.
 * Fix: Correct translation for 'State / Province'.
@@ -218,7 +218,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * New: Add action hook called "edd_payment_saved" for when EDD_Payment::save() is run.
 * New: Add "author" paramater support to [downloads] shortcode with support for username or ID.
 * Tweak: Correct branding of necessary assets.
-* Tweak: Block self-pings in tracking checkins.
+* Tweak: Block self-pings in tracking check-ins.
 * Tweak: Update author and author URI to Easy Digital Downloads.
 * Tweak: Update the Insert Download media button icon to use Dashicons.
 * Tweak: Allow download admin icon to be more easily customized.
