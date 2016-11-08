@@ -222,7 +222,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: EDD API was always returning version 1 by default.
 * Fix: Changed uses of jQuery .toggle() to use .show() and .hide() to fix bad checkbox states.
 * Fix: Corrected translation for 'State / Province'.
-* Fix: Corrected a variable type issue in the HwTML_Elements::select defaults.
+* Fix: Corrected a variable type issue in the HTML_Elements::select defaults.
 
 = 2.6.10, October 21, 2016 =
 * Fix: JavaScript error when removing a product from a payment that does not contain a fee.
