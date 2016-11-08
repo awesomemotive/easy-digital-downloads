@@ -28,7 +28,7 @@ if ( is_user_logged_in() ):
 
 	<form id="edd_profile_editor_form" class="edd_form" action="<?php echo edd_get_current_page_url(); ?>" method="post" <?php do_action( 'edd_profile_editor_form_tag' ); ?>>
 
-		<?php do_action( 'edd_profile_editor_top' ); ?>
+		<?php do_action( 'edd_profile_editor_fields_top' ); ?>
 
 		<fieldset>
 			<span id="edd_profile_name_label"><legend><?php _e( 'Change your Name', 'easy-digital-downloads' ); ?></legend></span>
@@ -180,8 +180,8 @@ if ( is_user_logged_in() ):
 			</p>
 		</fieldset>
 
-		<?php do_action( 'edd_profile_editor_bottom' ); ?>
-		
+		<?php do_action( 'edd_profile_editor_fields_bottom' ); ?>
+
 	</form><!-- #edd_profile_editor_form -->
 
 	<?php do_action( 'edd_profile_editor_after' ); ?>
