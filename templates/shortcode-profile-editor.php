@@ -26,7 +26,7 @@ if ( is_user_logged_in() ):
 
 	<?php do_action( 'edd_profile_editor_before' ); ?>
 
-	<form id="edd_profile_editor_form" class="edd_form" action="<?php echo edd_get_current_page_url(); ?>" method="post" <?php do_action( 'edd_profile_editor_form_tag' ); ?>>
+	<form id="edd_profile_editor_form" class="edd_form" action="<?php echo edd_get_current_page_url(); ?>" method="post">
 
 		<?php do_action( 'edd_profile_editor_fields_top' ); ?>
 
