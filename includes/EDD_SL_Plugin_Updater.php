@@ -321,7 +321,7 @@ class EDD_SL_Plugin_Updater {
 			'slug'       => $data['slug'],
 			'author'     => $data['author'],
 			'url'        => home_url(),
-			'beta'       => $data['beta']
+			'beta'       => isset( $data['beta'] ) ? $data['beta'] : false,
 		);
 
 		$request = wp_remote_post( $this->api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
