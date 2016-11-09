@@ -345,7 +345,7 @@ function edd_process_paypal_ipn() {
 	// Verify there is a post_data
 	if ( $post_data || strlen( $post_data ) > 0 ) {
 		// Append the data
-		$encoded_data .= $arg_separator.$post_data;
+		$encoded_data .= $arg_separator . $post_data;
 	} else {
 		// Check if POST is empty
 		if ( empty( $_POST ) ) {
@@ -355,12 +355,10 @@ function edd_process_paypal_ipn() {
 			// Loop through each POST
 			foreach ( $_POST as $key => $value ) {
 				// Encode the value and append the data
-				$encoded_data .= $arg_separator."$key=" . urlencode( $value );
+				$encoded_data .= $arg_separator . "$key=" . urlencode( $value );
 			}
 		}
 	}
-
-
 
 	// Convert collected post data to an array
 	parse_str( $encoded_data, $encoded_data_array );
@@ -369,7 +367,7 @@ function edd_process_paypal_ipn() {
 
 		if ( false !== strpos( $key, 'amp;' ) ) {
 			$new_key = str_replace( '&amp;', '&', $key );
-			$new_key = str_replace( 'amp;', '&' , $new_key );
+			$new_key = str_replace( 'amp;', '&', $new_key );
 
 			unset( $encoded_data_array[ $key ] );
 			$encoded_data_array[ $new_key ] = $value;
@@ -384,21 +382,21 @@ function edd_process_paypal_ipn() {
 
 		// Validate the IPN
 
-		$remote_post_vars      = array(
-			'method'           => 'POST',
-			'timeout'          => 45,
-			'redirection'      => 5,
-			'httpversion'      => '1.1',
-			'blocking'         => true,
-			'headers'          => array(
+		$remote_post_vars = array(
+			'method'      => 'POST',
+			'timeout'     => 45,
+			'redirection' => 5,
+			'httpversion' => '1.1',
+			'blocking'    => true,
+			'headers'     => array(
 				'host'         => 'www.paypal.com',
 				'connection'   => 'close',
 				'content-type' => 'application/x-www-form-urlencoded',
 				'post'         => '/cgi-bin/webscr HTTP/1.1',
 
 			),
-			'sslverify'        => false,
-			'body'             => $encoded_data_array
+			'sslverify'   => false,
+			'body'        => $encoded_data_array
 		);
 
 		// Get response
@@ -406,18 +404,20 @@ function edd_process_paypal_ipn() {
 
 		if ( is_wp_error( $api_response ) ) {
 			edd_record_gateway_error( __( 'IPN Error', 'easy-digital-downloads' ), sprintf( __( 'Invalid IPN verification response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $api_response ) ) );
+
 			return; // Something went wrong
 		}
 
 		if ( wp_remote_retrieve_body( $api_response ) !== 'VERIFIED' && edd_get_option( 'disable_paypal_verification', false ) ) {
 			edd_record_gateway_error( __( 'IPN Error', 'easy-digital-downloads' ), sprintf( __( 'Invalid IPN verification response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $api_response ) ) );
+
 			return; // Response not okay
 		}
 
 	}
 
 	// Check if $post_data_array has been populated
-	if ( ! is_array( $encoded_data_array ) && !empty( $encoded_data_array ) ) {
+	if ( ! is_array( $encoded_data_array ) && ! empty( $encoded_data_array ) ) {
 		return;
 	}
 
@@ -428,7 +428,17 @@ function edd_process_paypal_ipn() {
 
 	$encoded_data_array = wp_parse_args( $encoded_data_array, $defaults );
 
-	$payment_id = isset( $encoded_data_array['custom'] ) ? absint( $encoded_data_array['custom'] ) : 0;
+	$payment_id = 0;
+
+	if ( ! empty( $encoded_data_array[ 'parent_txn_id' ] ) ) {
+		$payment_id = edd_get_purchase_id_by_transaction_id( $encoded_data_array[ 'parent_txn_id' ] );
+	} elseif ( ! empty( $encoded_data_array[ 'txn_id' ] ) ) {
+		$payment_id = edd_get_purchase_id_by_transaction_id( $encoded_data_array[ 'txn_id' ] );
+	}
+
+	if ( empty( $payment_id ) ) {
+		$payment_id = ! empty( $encoded_data_array[ 'custom' ] ) ? absint( $encoded_data_array[ 'custom' ] ) : 0;
+	}
 
 	if ( has_action( 'edd_paypal_' . $encoded_data_array['txn_type'] ) ) {
 		// Allow PayPal IPN types to be processed separately

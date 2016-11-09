@@ -1840,7 +1840,7 @@ class EDD_Payment {
 		// We don't have tax as it's own meta and no meta was passed
 		if ( '' === $tax ) {
 
-			$tax = isset( $payment_meta['tax'] ) ? $payment_meta['tax'] : 0;
+			$tax = isset( $this->payment_meta['tax'] ) ? $this->payment_meta['tax'] : 0;
 
 		}
 
