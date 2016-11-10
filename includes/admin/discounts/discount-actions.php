@@ -41,7 +41,7 @@ function edd_add_discount( $data ) {
 				$value[ $product_key ] = preg_replace("/[^0-9_]/", '', $product_value );
 			}
 
-			$discount[ $key ] = $value;
+			$posted[ $key ] = $value;
 
 		} else if ( $key != 'edd-discount-nonce' && $key != 'edd-action' && $key != 'edd-redirect' ) {
 
