@@ -1345,12 +1345,13 @@ function edd_checkbox_callback( $args ) {
     
 	$class = edd_sanitize_html_class( $args['field_class'] );
     
-	if ( $edd_option )
+	if ( $edd_option ) {
 		$checked = checked( 1, $edd_option, false );
-	elseif ( isset( $args['std'] ) )
+	} elseif ( isset( $args['std'] ) ) {
 		$checked = checked( 1, $args['std'], false );
-	else
+	} else {
 		$checked = '';
+	}
     
 	$html     = '<input type="hidden"' . $name . ' value="-1" />';
 	$html    .= '<input type="checkbox" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"' . $name . ' value="1" ' . $checked . ' class="' . $class . '"/>';
