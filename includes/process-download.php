@@ -148,8 +148,8 @@ function edd_process_download() {
 
 		// If the file isn't locally hosted, process the redirect
 		if ( filter_var( $requested_file, FILTER_VALIDATE_URL ) && ! edd_is_local_file( $requested_file ) ) {
-			//edd_deliver_download( $requested_file, true );
-			//exit;
+			edd_deliver_download( $requested_file, true );
+			exit;
 		}
 
 		if( 'x_sendfile' == $method && ( ! function_exists( 'apache_get_modules' ) || ! in_array( 'mod_xsendfile', apache_get_modules() ) ) ) {
