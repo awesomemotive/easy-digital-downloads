@@ -245,8 +245,6 @@ function edd_process_download() {
 					}
 				}
 
-				var_dump($direct); exit;
-
 				if( $direct ) {
 
 					edd_deliver_download( $file_path );
