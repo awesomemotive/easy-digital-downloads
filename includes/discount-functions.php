@@ -104,9 +104,6 @@ function edd_has_active_discounts() {
 	return $has_active;
 }
 
-var_dump(edd_has_active_discounts());
-
-
 /**
  * Get Discount
  *
