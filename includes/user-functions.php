@@ -166,11 +166,9 @@ function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
 		return false;
 	}
 
-	$post_type 	 = get_post_type( $product_ids[0] );
-
 	$args = apply_filters( 'edd_get_users_purchased_products_args', array(
 		'include'        => $product_ids,
-		'post_type'      => $post_type,
+		'post_type'      => 'download',
 		'posts_per_page' => -1,
 	) );
 
