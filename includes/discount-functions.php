@@ -104,6 +104,8 @@ function edd_has_active_discounts() {
 	return $has_active;
 }
 
+var_dump(edd_has_active_discounts());
+
 
 /**
  * Get Discount
@@ -413,12 +415,12 @@ function edd_discount_exists( $code_id ) {
  * @return bool
  */
 function edd_is_discount_active( $code_id = null, $update = true ) {
-	$discount = edd_get_discount(  $code_id );
+	$discount = edd_get_discount( $code_id );
 	$return   = false;
 
 	if ( $discount ) {
 		if ( edd_is_discount_expired( $code_id, $update ) ) {
-			if( defined( 'DOING_AJAX' ) ) {
+			if ( defined( 'DOING_AJAX' ) ) {
 				edd_set_error( 'edd-discount-error', __( 'This discount is expired.', 'easy-digital-downloads' ) );
 			}
 		} elseif ( $discount->post_status == 'active' ) {
@@ -617,16 +619,16 @@ function edd_is_discount_expired( $code_id = null, $update = true ) {
 
 	if ( $discount ) {
 		$expiration = edd_get_discount_expiration( $code_id );
-		if ( $expiration && $update ) {
+		if ( $expiration ) {
 			$expiration = strtotime( $expiration );
 			if ( $expiration < current_time( 'timestamp' ) ) {
 				// Discount is expired
-				edd_update_discount_status( $code_id, 'inactive' );
-				update_post_meta( $code_id, '_edd_discount_status', 'expired' );
+				if ( $update ) {
+					edd_update_discount_status( $code_id, 'inactive' );
+					update_post_meta( $code_id, '_edd_discount_status', 'expired' );
+				}
 				$return = true;
 			}
-		} elseif ( $expiration && ! $update ) {
-			$return = true;
 		}
 	}
 
