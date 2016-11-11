@@ -116,7 +116,7 @@ function edd_download_meta_box_save( $post_id, $post ) {
 
 		// Accept blank or "0"
 		if ( '_edd_download_limit' == $field ) {
-			if ( ! empty( $_POST[ $field ] ) || strlen( $_POST[ $field ] ) === 0 || "0" === $_POST[ $field ] ) {
+			if ( ! empty( $_POST[ $field ] ) || ( isset( $_POST[ $field ] ) && strlen( $_POST[ $field ] ) === 0 ) || ( isset( $_POST[ $field ] ) && "0" === $_POST[ $field ] ) ) {
 
 				$global_limit = edd_get_option( 'file_download_limit' );
 				$new_limit    = apply_filters( 'edd_metabox_save_' . $field, $_POST[ $field ] );
