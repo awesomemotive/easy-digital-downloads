@@ -101,7 +101,6 @@ class EDD_SL_Plugin_Updater {
 		$version_info = get_transient( $this->cache_key );
 
 		if ( false === $version_info ) {
-			echo '<pre>'; echo 'calling: ' . $this->slug; echo '</pre>';
 			$version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
 
 			set_transient( $this->cache_key, $version_info, 3600 );
@@ -159,7 +158,6 @@ class EDD_SL_Plugin_Updater {
 			$version_info = get_transient( $this->cache_key );
 
 			if ( false === $version_info ) {
-				echo '<pre>'; echo 'calling: ' . $this->slug; echo '</pre>';
 				$version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
 
 				set_transient( $this->cache_key, $version_info, 3600 );
