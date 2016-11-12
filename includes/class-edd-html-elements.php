@@ -505,20 +505,19 @@ class EDD_HTML_Elements {
 		$output = '<select' . $disabled . $readonly . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( edd_sanitize_key( str_replace( '-', '_', $args['id'] ) ) ) . '" class="edd-select ' . $class . '"' . $multiple . ' data-placeholder="' . $placeholder . '"'. $data_elements . '>';
 
 		if ( $args['show_option_all'] ) {
-			if( $args['multiple'] ) {
+			if ( $args['multiple'] && is_array( $args['selected'] ) ) {
 				$selected = selected( true, in_array( 0, $args['selected'] ), false );
-			} else {
+			} elseif ( ! $args['multiple'] && ! empty( $args['selected'] ) ) {
 				$selected = selected( $args['selected'], 0, false );
 			}
 			$output .= '<option value="all"' . $selected . '>' . esc_html( $args['show_option_all'] ) . '</option>';
 		}
 
 		if ( ! empty( $args['options'] ) ) {
-
 			if ( $args['show_option_none'] ) {
-				if( $args['multiple'] ) {
+				if ( $args['multiple'] && is_array( $args['selected'] ) ) {
 					$selected = selected( true, in_array( -1, $args['selected'] ), false );
-				} else {
+				} elseif ( ! $args['multiple'] && ! empty( $args['selected'] ) ) {
 					$selected = selected( $args['selected'], -1, false );
 				}
 				$output .= '<option value="-1"' . $selected . '>' . esc_html( $args['show_option_none'] ) . '</option>';
@@ -529,7 +528,7 @@ class EDD_HTML_Elements {
 
 				if ( $args['multiple'] && is_array( $args['selected'] ) ) {
 					$selected = selected( true, in_array( (string) $key, $args['selected'] ), false );
-				} elseif ( ! empty( $args['selected'] ) ) {
+				} elseif ( ! $args['multiple'] && ! empty( $args['selected'] ) ) {
 					$selected = selected( $args['selected'], $key, false );
 				}
 
