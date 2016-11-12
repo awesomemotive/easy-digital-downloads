@@ -504,10 +504,14 @@ class EDD_HTML_Elements {
 		$class  = implode( ' ', array_map( 'sanitize_html_class', explode( ' ', $args['class'] ) ) );
 		$output = '<select' . $disabled . $readonly . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( edd_sanitize_key( str_replace( '-', '_', $args['id'] ) ) ) . '" class="edd-select ' . $class . '"' . $multiple . ' data-placeholder="' . $placeholder . '"'. $data_elements . '>';
 
+		if ( ! isset( $args['selected'] ) || empty( $args['selected'] ) || ! $args['selected'] ) {
+			$selected = "";
+		}
+
 		if ( $args['show_option_all'] ) {
-			if ( $args['multiple'] && is_array( $args['selected'] ) ) {
+			if ( $args['multiple'] && ! empty( $args['selected'] ) ) {
 				$selected = selected( true, in_array( 0, $args['selected'] ), false );
-			} elseif ( ! $args['multiple'] && ! empty( $args['selected'] ) ) {
+			} else {
 				$selected = selected( $args['selected'], 0, false );
 			}
 			$output .= '<option value="all"' . $selected . '>' . esc_html( $args['show_option_all'] ) . '</option>';
@@ -515,20 +519,18 @@ class EDD_HTML_Elements {
 
 		if ( ! empty( $args['options'] ) ) {
 			if ( $args['show_option_none'] ) {
-				if ( $args['multiple'] && is_array( $args['selected'] ) ) {
+				if ( $args['multiple'] ) {
 					$selected = selected( true, in_array( -1, $args['selected'] ), false );
-				} elseif ( ! $args['multiple'] && ! empty( $args['selected'] ) ) {
+				} elseif ( isset( $args['selected'] ) && ! empty( $args['selected'] ) && ! is_array( $args['selected'] ) ) {
 					$selected = selected( $args['selected'], -1, false );
 				}
 				$output .= '<option value="-1"' . $selected . '>' . esc_html( $args['show_option_none'] ) . '</option>';
 			}
 
 			foreach ( $args['options'] as $key => $option ) {
-				$selected = "";
-
 				if ( $args['multiple'] && is_array( $args['selected'] ) ) {
 					$selected = selected( true, in_array( (string) $key, $args['selected'] ), false );
-				} elseif ( ! $args['multiple'] && ! empty( $args['selected'] ) ) {
+				} elseif ( isset( $args['selected'] ) && ! empty( $args['selected'] ) && ! is_array( $args['selected'] ) ) {
 					$selected = selected( $args['selected'], $key, false );
 				}
 
