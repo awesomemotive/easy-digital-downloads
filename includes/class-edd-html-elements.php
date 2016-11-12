@@ -525,10 +525,11 @@ class EDD_HTML_Elements {
 			}
 
 			foreach ( $args['options'] as $key => $option ) {
+				$selected = "";
 
 				if ( $args['multiple'] && is_array( $args['selected'] ) ) {
 					$selected = selected( true, in_array( (string) $key, $args['selected'] ), false );
-				} else {
+				} elseif ( ! empty( $args['selected'] ) ) {
 					$selected = selected( $args['selected'], $key, false );
 				}
 
