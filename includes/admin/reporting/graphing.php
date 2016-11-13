@@ -812,6 +812,7 @@ function edd_get_report_dates() {
 			$dates['m_end']     = $month;
 			$dates['year']      = $year;
 			$dates['year_end']  = $year;
+			$dates['day_end']   = $day;
 		break;
 
 		case 'this_week' :
