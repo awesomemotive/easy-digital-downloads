@@ -37,7 +37,9 @@ function edd_reports_graph() {
 			$day_by_day = true;
 			break;
 		case 'other' :
-			if( $dates['m_end'] - $dates['m_start'] >= 3 || ( $dates['year_end'] > $dates['year'] && ( $dates['m_start'] - $dates['m_end'] ) != 10 ) ) {
+			if ( $dates['m_start'] == 12 && $dates['m_end'] == 1 ) {
+				$day_by_day = true;
+			} elseif ( $dates['m_end'] - $dates['m_start'] >= 3 || ( $dates['year_end'] > $dates['year'] && ( $dates['m_start'] - $dates['m_end'] ) != 10 ) ) {
 				$day_by_day = false;
 			} else {
 				$day_by_day = true;
@@ -150,7 +152,7 @@ function edd_reports_graph() {
 			$sales_totals += $sale['count'];
 		}
 
-		while ( $day_by_day && ( strtotime( $date_start ) <= strtotime( $date_end ) ) ) {
+		while ( $dates['range'] !== 'other' && $day_by_day && ( strtotime( $date_start ) <= strtotime( $date_end ) ) ) {
 			$d = date( 'd', strtotime( $date_start ) );
 			$m = date( 'm', strtotime( $date_start ) );
 			$y = date( 'Y', strtotime( $date_start ) );
@@ -212,7 +214,6 @@ function edd_reports_graph() {
 						$date            = mktime( 0, 0, 0, $month, $day, $year ) * 1000;
 						$earnings_data[] = array( $date, $earnings );
 					}
-
 				}
 			}
 
