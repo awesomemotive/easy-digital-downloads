@@ -162,7 +162,7 @@ function edd_reports_graph() {
 			$date_start = date( 'Y-m-d', strtotime( '+1 day', strtotime( $date_start ) ) );
 		}
 
-		while ( ! $day_by_day && ( strtotime( $date_start ) <= strtotime( $date_end ) ) ) {
+		while ( $dates['range'] !== 'other' && ! $day_by_day && ( strtotime( $date_start ) <= strtotime( $date_end ) ) ) {
 			$m = date( 'm', strtotime( $date_start ) );
 			$y = date( 'Y', strtotime( $date_start ) );
 
@@ -173,51 +173,17 @@ function edd_reports_graph() {
 			$date_start = date( 'Y-m', strtotime( '+1 month', strtotime( $date_start ) ) );
 		}
 
-		while ( $y <= $dates['year_end'] ) {
-			$last_year = false;
+		while ( strtotime( $date_start ) <= strtotime( $date_end ) ) {
+			$m = date( 'm', strtotime( $date_start ) );
+			$y = date( 'Y', strtotime( $date_start ) );
+			$d = date( 'd', strtotime( $date_start ) );
 
-			if ( $dates['year'] == $dates['year_end'] ) {
-				$month_start = $dates['m_start'];
-				$month_end   = $dates['m_end'];
-				$last_year   = true;
-			} elseif( $y == $dates['year'] ) {
-				$month_start = $dates['m_start'];
-				$month_end   = 12;
-			} elseif ( $y == $dates['year_end'] ) {
-				$month_start = 1;
-				$month_end   = $dates['m_end'];
-			} else {
-				$month_start = 1;
-				$month_end   = 12;
-			}
+			$earnings = edd_get_earnings_by_date( $d, $m, $y, null, $include_taxes );
+			$earnings_totals += $earnings;
 
-			$i = $month_start;
-			while ( $i <= $month_end ) {
-				$d = $dates['day'];
+			$temp_data['earnings'][ $y ][ $m ][ $d ] = $earnings;
 
-				if ( $i == $month_end ) {
-					$num_of_days = $dates['day_end'];
-
-					if ( $month_start < $month_end ) {
-						$d = 1;
-					}
-				} else {
-					$num_of_days = cal_days_in_month( CAL_GREGORIAN, $i, $y );
-				}
-
-				while ( $d <= $num_of_days ) {
-					$earnings         = edd_get_earnings_by_date( $d, $i, $y, null, $include_taxes );
-					$earnings_totals += $earnings;
-
-					$temp_data['earnings'][ $y ][ $i ][ $d ] = $earnings;
-
-					$d++;
-				}
-
-				$i++;
-			}
-
-			$y++;
+			$date_start = date( 'Y-m-d', strtotime( '+1 day', strtotime( $date_start ) ) );
 		}
 
 		$sales_data    = array();
