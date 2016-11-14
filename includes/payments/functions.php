@@ -520,6 +520,11 @@ function edd_count_payments( $args = array() ) {
 		if ( false !== $is_date ) {
 
 			$date   = new DateTime( $args['end-date'] );
+
+			if ( $args['end-date'] == $args['start-date'] ) {
+				$date->add( new DateInterval( 'P1D' ) );
+			}
+
 			$where .= $wpdb->prepare( " AND p.post_date <= '%s'", $date->format( 'Y-m-d' ) );
 
 		}
