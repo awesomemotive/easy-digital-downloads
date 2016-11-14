@@ -72,7 +72,7 @@ function edd_reports_graph() {
 			$earnings_totals += $earnings;
 			$earnings_data[] = array( $date, $earnings );
 
-			if ( $sales[ $i ]['h'] == $hour ) {
+			if ( isset( $sales[ $i ] ) && $sales[ $i ]['h'] == $hour ) {
 				$sales_data[] = array( $date, $sales[ $i ]['count'] );
 				$sales_totals += $sales[ $i ]['count'];
 				$i++;
@@ -82,7 +82,6 @@ function edd_reports_graph() {
 
 			$hour++;
 		}
-
 	} elseif ( $dates['range'] == 'this_week' || $dates['range'] == 'last_week' ) {
 		$num_of_days = cal_days_in_month( CAL_GREGORIAN, $dates['m_start'], $dates['year'] );
 
