@@ -72,7 +72,7 @@ function edd_reports_graph() {
 			$earnings_totals += $earnings;
 			$earnings_data[] = array( $date, $earnings );
 
-			if ( $sales[ $i ]['h'] == $hour ) {
+			if ( isset( $sales[ $i ] ) && $sales[ $i ]['h'] == $hour ) {
 				$sales_data[] = array( $date, $sales[ $i ]['count'] );
 				$sales_totals += $sales[ $i ]['count'];
 				$i++;
