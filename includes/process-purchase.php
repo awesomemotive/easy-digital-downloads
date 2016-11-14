@@ -390,6 +390,17 @@ function edd_purchase_form_required_fields() {
 			'error_id' => 'invalid_state',
 			'error_message' => __( 'Please enter billing state / province', 'easy-digital-downloads' )
 		);
+
+		// Check if the Customer's Country has been passed in and if it has no states.
+		if ( isset( $_POST['billing_country'] ) && isset( $required_fields['card_state'] ) ){
+			$customer_billing_country = sanitize_text_field( $_POST['billing_country'] );
+			$states = edd_get_shop_states( $customer_billing_country );
+
+			// If this country has no states, remove the requirement of a card_state.
+			if ( empty( $states ) ){
+				unset( $required_fields['card_state'] );
+			}
+		}
 	}
 
 	return apply_filters( 'edd_purchase_form_required_fields', $required_fields );
