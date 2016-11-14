@@ -650,9 +650,9 @@ function edd_get_user_verification_request_url( $user_id = 0 ) {
 		$user_id = get_current_user_id();
 	}
 
-	$url = wp_nonce_url( add_query_arg( array(
+	$url = esc_url( wp_nonce_url( add_query_arg( array(
 		'edd_action' => 'send_verification_email'
-	) ), 'edd-request-verification' );
+	) ), 'edd-request-verification' ) );
 
 	return apply_filters( 'edd_get_user_verification_request_url', $url, $user_id );
 
