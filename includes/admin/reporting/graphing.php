@@ -139,7 +139,12 @@ function edd_reports_graph() {
 		} else {
 			$date_start = $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day'];
 		}
-		$date_end = $dates['year_end'] . '-' . $dates['m_end'] . '-' . $dates['day_end'];
+
+		if ( cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] ) < $dates['day_end'] ) {
+			$date_end = $dates['year_end'] . '-' . $dates['m_end'] . '-' . cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] );
+		} else {
+			$date_end = $dates['year_end'] . '-' . $dates['m_end'] . '-' . $dates['day_end'];
+		}
 
 		$sales = EDD()->payment_stats->get_sales_by_range( $dates['range'], $day_by_day, $date_start, $date_end );
 
