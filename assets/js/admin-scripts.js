@@ -214,7 +214,7 @@ jQuery(document).ready(function ($) {
 		prices : function() {
 			$( document.body ).on( 'change', '#edd_variable_pricing', function(e) {
 				var checked = $(this).is(':checked');
-				var target  = $( '.edd_pricing_fields,.edd_repeatable_table .pricing' );
+				var target  = $( '#edd_variable_price_fields,.edd_repeatable_table .pricing' );
 				if ( checked ) {
 					target.show();
 				} else {
