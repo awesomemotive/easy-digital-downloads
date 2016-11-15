@@ -40,10 +40,22 @@ function edd_options_page() {
 	$all_settings = edd_get_registered_settings();
 
 	// Let's verify we have a 'main' section to show
-	ob_start();
-	do_settings_sections( 'edd_settings_' . $active_tab . '_main' );
-	$has_main_settings = strlen( ob_get_contents() ) > 0;
-	ob_end_clean();
+	$has_main_settings = true;
+	if ( empty( $all_settings[ $active_tab ]['main'] ) ) {
+		$has_main_settings = false;
+	}
+
+	// Check for old non-sectioned settings (see #4211 and #5171)
+	if ( ! $has_main_settings ) {
+		foreach( $all_settings[ $active_tab ] as $sid => $stitle ) {
+			if ( is_string( $sid ) && is_array( $sections ) && array_key_exists( $sid, $sections ) ) {
+				continue;
+			} else {
+				$has_main_settings = true;
+				break;
+			}
+		}
+	}
 
 	$override = false;
 	if ( false === $has_main_settings ) {
