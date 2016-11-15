@@ -407,6 +407,7 @@ function edd_discount_exists( $code_id ) {
  * Checks whether a discount code is active.
  *
  * @since 1.0
+ * @since 2.6.11 Added $update parameter
  * @param int $code_id
  * @param bool $update Update the discount to expired if an one is found but has an active status
  * @return bool
@@ -600,15 +601,13 @@ function edd_is_discount_not_global( $code_id = 0 ) {
 }
 
 /**
- * Is Discount Expired
- *
  * Checks whether a discount code is expired.
  *
- * @param int $code_id
+ * @since 1.0
+ * @since 2.6.11 Added $update parameter
+ * @param int $code_id Discount code ID
  * @param bool $update Update the discount to expired if an one is found but has an active status
- *
- * @since       1.0
- * @return      bool
+ * @return bool
  */
 function edd_is_discount_expired( $code_id = null, $update = true ) {
 	$discount = edd_get_discount(  $code_id );
