@@ -1605,10 +1605,8 @@ class EDD_Payment {
 			$meta_value = apply_filters( 'edd_edd_update_payment_meta_' . $meta_key, $meta_value, $this->ID );
 			update_post_meta( $this->ID, '_edd_payment_user_email', $meta_value );
 
-			$current_meta = $this->get_meta();
-			if ( is_array( $current_meta ) ) {
-				$current_meta['user_info']['email']  = $meta_value;
-			}
+			$current_meta = $this->get_meta( '_edd_payment_meta', false );
+			$current_meta['user_info']['email']  = $meta_value;
 
 			$meta_key     = '_edd_payment_meta';
 			$meta_value   = $current_meta;
