@@ -57,7 +57,7 @@ function edd_reports_graph() {
 
 	if ( $dates['range'] == 'today' || $dates['range'] == 'yesterday' ) {
 		// Hour by hour
-		$hour  = 1;
+		$hour  = 0;
 		$month = $dates['m_start'];
 
 		$i = 0;
@@ -74,7 +74,7 @@ function edd_reports_graph() {
 			$earnings_totals += $earnings;
 			$earnings_data[] = array( $date, $earnings );
 
-			if ( $sales[ $i ]['h'] == $hour ) {
+			if ( isset( $sales[ $i ] ) && $sales[ $i ]['h'] == $hour ) {
 				$sales_data[] = array( $date, $sales[ $i ]['count'] );
 				$sales_totals += $sales[ $i ]['count'];
 				$i++;
@@ -84,9 +84,7 @@ function edd_reports_graph() {
 
 			$hour++;
 		}
-
 	} elseif ( $dates['range'] == 'this_week' || $dates['range'] == 'last_week' ) {
-
 		$num_of_days = cal_days_in_month( CAL_GREGORIAN, $dates['m_start'], $dates['year'] );
 
 		$report_dates = array();
@@ -397,7 +395,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 	if ( $dates['range'] == 'today' || $dates['range'] == 'yesterday' ) {
 		// Hour by hour
 		$month  = $dates['m_start'];
-		$hour   = 1;
+		$hour   = 0;
 		$minute = 0;
 		$second = 0;
 		while ( $hour <= 23 ) :
@@ -780,6 +778,7 @@ function edd_get_report_dates() {
 			$dates['m_end']     = $month;
 			$dates['year']      = $year;
 			$dates['year_end']  = $year;
+			$dates['day_end']   = $day;
 		break;
 
 		case 'this_week' :
