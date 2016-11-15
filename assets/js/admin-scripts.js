@@ -213,12 +213,15 @@ jQuery(document).ready(function ($) {
 
 		prices : function() {
 			$( document.body ).on( 'change', '#edd_variable_pricing', function(e) {
-				var checked = $(this).is(':checked');
-				var target  = $( '.edd_pricing_fields,.edd_repeatable_table .pricing' );
+				var checked   = $(this).is(':checked');
+				var single    = $( '#edd_regular_price_field' );
+				var variable  = $( '#edd_variable_price_fields,.edd_repeatable_table .pricing' );
 				if ( checked ) {
-					target.show();
+					single.hide();
+					variable.show();
 				} else {
-					target.hide();
+					single.show();
+					variable.hide();
 				}
 			});
 		},
