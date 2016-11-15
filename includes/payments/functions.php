@@ -518,13 +518,9 @@ function edd_count_payments( $args = array() ) {
 
 		$is_date    = checkdate( $month, $day, $year );
 		if ( false !== $is_date ) {
-			$date   = date( 'Y-m-d', strtotime( $args['end-date'] ) );
+			$date = date( 'Y-m-d', strtotime( '+1 day', $args['end-date'] ) );
 
-			if ( $args['end-date'] == $args['start-date'] ) {
-				$date = date( 'Y-m-d', strtotime( '+1 day', $args['end-date'] ) );
-			}
-
-			$where .= $wpdb->prepare( " AND p.post_date <= '%s'", $date );
+			$where .= $wpdb->prepare( " AND p.post_date < '%s'", $date );
 		}
 
 	}
