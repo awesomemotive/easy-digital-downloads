@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @param int $user User ID or email address
  * @param int $number Number of purchases to retrieve
  * @param bool pagination
- * @param string|array $status Either an array of statuses or a single status as a string literal
+ * @param string|array $status Either an array of statuses, a single status as a string literal or a comma separated list of statues
  *
  * @return bool|object List of all user purchases
  */
@@ -37,9 +37,14 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 		return false;
 	}
 
-	if ( ! is_array( $status ) && is_string( $status ) ) {
-		$status = $status === 'complete' ? 'publish' : $status;
-		$status = array( $status );
+	if ( is_string( $status ) ) {
+		if ( strpos( $status, ',' ) ) {
+			$status = explode( ',', $status );
+		} else {
+			$status = $status === 'complete' ? 'publish' : $status;
+			$status = array( $status );
+		}
+
 	}
 
 	if ( is_array( $status ) ) {
