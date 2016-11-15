@@ -233,27 +233,23 @@ function edd_process_download() {
 
 				}
 
-				// Determine if the file we're attempting to use direct on is too large for the memory limit to use direct
-				$memory_limit = @ini_get( 'memory_limit' );
-				if ( $memory_limit ) {
-					$memory_limit_bytes = edd_determine_size_in_bytes( $memory_limit );
-					$file_size          = edd_determine_size_in_bytes( @filesize( $file_path ) );
+				if ( $direct ) {
+					// Determine if the file we're attempting to use direct on is too large for the memory limit to use direct
+					$memory_limit = @ini_get( 'memory_limit' );
+					if ( $memory_limit ) {
+						$memory_limit_bytes = edd_determine_size_in_bytes( $memory_limit );
+						$file_size          = edd_determine_size_in_bytes( @filesize( $file_path ) );
 
-					// The file we're attempting to load is over 75% of the memory limit of PHP, go to redirect instead.
-					if ( $file_size && ( $file_size / $memory_limit_bytes ) > 0.75 ) {
-						$direct = false;
+						// The file we're attempting to load is over 75% of the memory limit of PHP, go to redirect instead.
+						if ( $file_size && ( $file_size / $memory_limit_bytes ) > 0.75 ) {
+							$direct = false;
+						}
 					}
-				}
-
-				if( $direct ) {
 
 					edd_deliver_download( $file_path );
-
 				} else {
-
 					// The file supplied does not have a discoverable absolute path or exceeds the memory limit to stream as a forced download
 					edd_deliver_download( $requested_file, true );
-
 				}
 
 				break;
