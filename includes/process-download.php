@@ -852,7 +852,7 @@ function edd_set_requested_file_scheme( $requested_file, $download_files, $file_
 add_filter( 'edd_requested_file', 'edd_set_requested_file_scheme', 10, 3 );
 
 /**
- * Given a string for a file size, dtermeine the size in bytes
+ * Given a string for a file size, determine the size in bytes
  * @param string $size A file or memory limit size: 1K, 1M, 1G etc.
  *
  * @return bool|int    If no value, false, if a determined value, an integer of the size in bytes.
