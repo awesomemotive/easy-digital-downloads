@@ -209,7 +209,11 @@ function edd_reports_graph() {
 				$d = $dates['day'];
 
 				if ( $i == $month_end ) {
-					$num_of_days = $dates['day_end'];
+					if ( cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] ) < $dates['day_end'] ) {
+						$num_of_days = cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] );
+					} else {
+						$num_of_days = $dates['day_end'];
+					}
 
 					if ( $month_start < $month_end ) {
 						$d = 1;
