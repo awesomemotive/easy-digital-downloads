@@ -237,7 +237,7 @@ function edd_process_download() {
 				$memory_limit = @ini_get( 'memory_limit' );
 				if ( $memory_limit ) {
 					$memory_limit_bytes = edd_determine_size_in_bytes( $memory_limit );
-					$file_size          = edd_determine_size_in_bytes( @filesize( ABSPATH . $file_path ) );
+					$file_size          = edd_determine_size_in_bytes( @filesize( $file_path ) );
 
 					// The file we're attempting to load is over 75% of the memory limit of PHP, go to redirect instead.
 					if ( $file_size && ( $file_size / $memory_limit_bytes ) > 0.75 ) {
