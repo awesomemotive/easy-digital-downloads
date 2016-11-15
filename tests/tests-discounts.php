@@ -106,6 +106,8 @@ class Tests_Discounts extends WP_UnitTestCase {
 
 		$this->assertFalse( edd_is_discount_active( $expired_post_id, false ) );
 
+		$this->assertEquals( get_post_meta( $expired_post_id, '_edd_discount_status', true ), 'active' );
+
 		// Update DB
 		$this->assertFalse( edd_is_discount_active( $expired_post_id, true ) );
 		$this->assertEquals( get_post_meta( $expired_post_id, '_edd_discount_status', true ), 'expired' );
