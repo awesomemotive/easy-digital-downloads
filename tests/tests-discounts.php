@@ -84,6 +84,11 @@ class Tests_Discounts extends WP_UnitTestCase {
 		$this->assertTrue( edd_has_active_discounts() );
 	}
 
+	public function test_is_discount_active() {
+		$this->assertTrue( edd_is_discount_active( $this->_post_id, true ) );
+		$this->assertTrue( edd_is_discount_active( $this->_post_id, false ) );
+	}
+
 	public function test_discount_exists() {
 		$this->assertTrue( edd_discount_exists( $this->_post_id ) );
 	}
