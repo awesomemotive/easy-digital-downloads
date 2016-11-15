@@ -255,7 +255,9 @@ function edd_reports_graph() {
 			foreach ( $sales_data as $key => $value ) {
 				$timestamps[ $key ] = $value[0];
 			}
-			array_multisort( $timestamps, SORT_ASC, $sales_data );
+			if ( ! empty( $timestamps ) ) {
+				array_multisort( $timestamps, SORT_ASC, $sales_data );
+			}
 
 			foreach ( $temp_data['earnings'] as $year => $months ) {
 				foreach ( $months as $month => $days ) {
@@ -302,7 +304,9 @@ function edd_reports_graph() {
 			foreach ( $sales_data as $key => $value ) {
 				$timestamps[ $key ] = $value[0];
 			}
-			array_multisort( $timestamps, SORT_ASC, $sales_data );
+			if ( ! empty( $timestamps ) ) {
+				array_multisort( $timestamps, SORT_ASC, $sales_data );
+			}
 
 			foreach ( $temp_data[ 'earnings' ] as $year => $months ) {
 				$month_keys = array_keys( $months );
