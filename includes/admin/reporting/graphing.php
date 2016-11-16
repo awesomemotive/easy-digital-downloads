@@ -130,8 +130,21 @@ function edd_reports_graph() {
 		}
 
 	} else {
-		$date_start = $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day'];
-		$date_end = $dates['year_end'] . '-' . $dates['m_end'] . '-' . $dates['day_end'];
+		if ( cal_days_in_month( CAL_GREGORIAN, $dates['m_start'], $dates['year'] ) < $dates['day'] ) {
+			$next_day = mktime( 0, 0, 0, $dates['m_start'] + 1, 1, $dates['year'] );
+			$day = date( 'd', $next_day );
+			$month = date( 'm', $next_day );
+			$year = date( 'Y', $next_day );
+			$date_start = $year . '-' . $month . '-' . $day;
+		} else {
+			$date_start = $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day'];
+		}
+
+		if ( cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] ) < $dates['day_end'] ) {
+			$date_end = $dates['year_end'] . '-' . $dates['m_end'] . '-' . cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] );
+		} else {
+			$date_end = $dates['year_end'] . '-' . $dates['m_end'] . '-' . $dates['day_end'];
+		}
 
 		$sales = EDD()->payment_stats->get_sales_by_range( $dates['range'], $day_by_day, $date_start, $date_end );
 
@@ -204,7 +217,9 @@ function edd_reports_graph() {
 			foreach ( $sales_data as $key => $value ) {
 				$timestamps[ $key ] = $value[0];
 			}
-			array_multisort( $timestamps, SORT_ASC, $sales_data );
+			if ( ! empty( $timestamps ) ) {
+				array_multisort( $timestamps, SORT_ASC, $sales_data );
+			}
 
 			foreach ( $temp_data['earnings'] as $year => $months ) {
 				foreach ( $months as $month => $days ) {
@@ -250,7 +265,9 @@ function edd_reports_graph() {
 			foreach ( $sales_data as $key => $value ) {
 				$timestamps[ $key ] = $value[0];
 			}
-			array_multisort( $timestamps, SORT_ASC, $sales_data );
+			if ( ! empty( $timestamps ) ) {
+				array_multisort( $timestamps, SORT_ASC, $sales_data );
+			}
 
 			foreach ( $temp_data[ 'earnings' ] as $year => $months ) {
 				$month_keys = array_keys( $months );
