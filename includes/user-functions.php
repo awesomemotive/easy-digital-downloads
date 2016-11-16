@@ -21,15 +21,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @since  1.0
  *
- * @param int    $user User ID or email address
- * @param int    $number Number of purchases to retrieve
- * @param bool   $pagination
- * @param string $status
+ * @param int $user User ID or email address
+ * @param int $number Number of purchases to retrieve
+ * @param bool pagination
+ * @param string|array $status Either an array of statuses, a single status as a string literal or a comma separated list of statues
  *
  * @return bool|object List of all user purchases
  */
 function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, $status = 'complete' ) {
-
 	if ( empty( $user ) ) {
 		$user = get_current_user_id();
 	}
@@ -38,7 +37,19 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 		return false;
 	}
 
-	$status = $status === 'complete' ? 'publish' : $status;
+	if ( is_string( $status ) ) {
+		if ( strpos( $status, ',' ) ) {
+			$status = explode( ',', $status );
+		} else {
+			$status = $status === 'complete' ? 'publish' : $status;
+			$status = array( $status );
+		}
+
+	}
+
+	if ( is_array( $status ) ) {
+		$status = array_unique( $status );
+	}
 
 	if ( $pagination ) {
 		if ( get_query_var( 'paged' ) )
@@ -650,9 +661,9 @@ function edd_get_user_verification_request_url( $user_id = 0 ) {
 		$user_id = get_current_user_id();
 	}
 
-	$url = wp_nonce_url( add_query_arg( array(
+	$url = esc_url( wp_nonce_url( add_query_arg( array(
 		'edd_action' => 'send_verification_email'
-	) ), 'edd-request-verification' );
+	) ), 'edd-request-verification' ) );
 
 	return apply_filters( 'edd_get_user_verification_request_url', $url, $user_id );
 
