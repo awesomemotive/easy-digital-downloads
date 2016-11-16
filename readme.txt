@@ -188,29 +188,28 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 == Changelog ==
 
 = 2.6.12, November 17, 2016 =
-Fix: edd_has_active_discounts could return false when there were active discounts.
-Fix: Supplying an invalid date range on reports could produce an incorrect graph.
-Fix: EDD_Payment::update_meta could produce a PHP warning when being used.
-Fix: Variable Pricing options were inconsistently being shown and hidden when toggled.
-Fix: Today/Yesterday Reports miscalculated hours to include the first hour of the next day.
-Fix: When single day ranges were used on Payments list table, order status counts were not loading.
-Fix: EDD HTML Select input had many cases where mixed variable types could trigger errors and warnings.
-Fix: edd_get_users_purchases had outdated PHPDocs.
-Fix: Determining the 'main' subsection of settings could fire hooks twice and had poor performance.
-Fix: When changing report years, the report data could have been incorrect.
-Fix: Payment counts were incorrect on the Payments list table when custom dates were used.
-Fix: Certain hosting configurations caused usage tracking notice to be improperly escaped.
-Fix: Admin scripts were not requiring `jquery-form`.
-Fix: Download limit setting isn't checked for existence before accessing it when saving a Download
-Fix: Timezone wasn't respected when setting up daily cron.
-New: Added new hooks to the profile editor form.
-Fix: Upgrade routines could calculate incorrect number of total steps.
-Fix: The notice about being in test mode was not linked to the correct settings page.
-Fix: `edd_get_users_purchased_products` would fail if the first product ID supplied was not a download.
-Fix: Checkout could require a state even if the country had no states associated with it.
-Fix: Creating a discount would not save the product requirements and exclusions on first save.
-Fix: PHP Warning was being caused by the new beta setting in the extension updater.
-
+* New: Added new hooks to the profile editor form.
+* Fix: edd_has_active_discounts could return false when there were active discounts.
+* Fix: Supplying an invalid date range on reports could produce an incorrect graph.
+* Fix: EDD_Payment::update_meta could produce a PHP warning when used.
+* Fix: Variable Pricing options were inconsistently being shown and hidden when toggled.
+* Fix: Today/Yesterday Reports miscalculated hours to include the first hour of the next day.
+* Fix: When single day ranges were used on Payments list table, order status counts were not loading.
+* Fix: EDD HTML Select input had many cases where mixed variable types could trigger errors and warnings.
+* Fix: edd_get_users_purchases had outdated PHPDocs.
+* Fix: Determining the 'main' subsection of settings could fire hooks twice and had poor performance.
+* Fix: When changing report years, the report data could have been incorrect.
+* Fix: Payment counts were incorrect on the Payments list table when custom dates were used.
+* Fix: Certain hosting configurations caused the usage tracking notice to be improperly escaped.
+* Fix: Admin scripts were not requiring `jquery-form`.
+* Fix: Download limit setting isn't checked for existence before accessing it when saving a Download
+* Fix: Timezone wasn't respected when setting up daily cron.
+* Fix: Upgrade routines could calculate incorrect number of total steps.
+* Fix: The notice about being in test mode was not linked to the correct settings page.
+* Fix: `edd_get_users_purchased_products` would fail if the first product ID supplied was not a download.
+* Fix: Checkout could require a state even if the country had no states associated with it.
+* Fix: Creating a discount would not save the product requirements and exclusions on first save.
+* Fix: PHP Warning was being caused by the new beta setting in the extension updater.
 
 = 2.6.11, November 8, 2016 =
 * New: WP CLI: Customers command now allows searching by user_id.
