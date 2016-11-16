@@ -202,7 +202,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Payment counts were incorrect on the Payments list table when custom dates were used.
 * Fix: Certain hosting configurations caused the usage tracking notice to be improperly escaped.
 * Fix: Admin scripts were not requiring `jquery-form`.
-* Fix: Download limit setting isn't checked for existence before accessing it when saving a Download
+* Fix: Download limit setting isn't checked for existence before accessing it when saving a Download.
 * Fix: Timezone wasn't respected when setting up daily cron.
 * Fix: Upgrade routines could calculate incorrect number of total steps.
 * Fix: The notice about being in test mode was not linked to the correct settings page.
