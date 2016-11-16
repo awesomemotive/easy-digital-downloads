@@ -193,15 +193,9 @@ class EDD_Tracking {
 	 * @return void
 	 */
 	public function check_for_optout( $data ) {
-
-		if( edd_get_option( 'allow_tracking', false ) ) {
-			edd_delete_option( 'allow_tracking' );
-		}
-
+		edd_delete_option( 'allow_tracking' );
 		update_option( 'edd_tracking_notice', '1' );
-
 		wp_redirect( remove_query_arg( 'edd_action' ) ); exit;
-
 	}
 
 	/**
