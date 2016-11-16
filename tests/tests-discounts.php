@@ -84,6 +84,36 @@ class Tests_Discounts extends WP_UnitTestCase {
 		$this->assertTrue( edd_has_active_discounts() );
 	}
 
+	public function test_is_discount_active() {
+		$this->assertTrue( edd_is_discount_active( $this->_post_id, true ) );
+		$this->assertTrue( edd_is_discount_active( $this->_post_id, false ) );
+
+		$post = array(
+			'name'              => '20 Percent Off',
+			'type'              => 'percent',
+			'amount'            => '20',
+			'code'              => '20OFF',
+			'product_condition' => 'all',
+			'start'             => '12/12/1998 00:00:00',
+			'expiration'        => '12/31/1998 00:00:00',
+			'max'               => 10,
+			'uses'              => 54,
+			'min_price'         => 128,
+			'status'            => 'active'
+		);
+
+		$expired_post_id = edd_store_discount( $post );
+
+		$this->assertFalse( edd_is_discount_active( $expired_post_id, false ) );
+
+		$this->assertEquals( get_post_meta( $expired_post_id, '_edd_discount_status', true ), 'active' );
+
+		// Update DB
+		$this->assertFalse( edd_is_discount_active( $expired_post_id, true ) );
+		$this->assertEquals( get_post_meta( $expired_post_id, '_edd_discount_status', true ), 'expired' );
+		$this->assertEquals( get_post_status( $expired_post_id ), 'inactive' );
+	}
+
 	public function test_discount_exists() {
 		$this->assertTrue( edd_discount_exists( $this->_post_id ) );
 	}

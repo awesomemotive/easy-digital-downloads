@@ -63,21 +63,28 @@ function edd_get_discounts( $args = array() ) {
  * @return bool
  */
 function edd_has_active_discounts() {
-	$has_active = false;
+	$discounts = edd_get_discounts(
+		array(
+			'post_status'    => 'active',
+			'posts_per_page' => 100,
+			'fields'         => 'ids'
+		)
+	);
 
-	$discounts  = edd_get_discounts();
+	// When there are no discounts found anymore there are no active ones.
+	if ( ! is_array( $discounts ) || array() === $discounts ) {
+		return false;
+	}
 
-	if ( $discounts) {
-		foreach ( $discounts as $discount ) {
-			if ( edd_is_discount_active( $discount->ID ) ) {
-				$has_active = true;
-				break;
-			}
+	foreach ( $discounts as $discount ) {
+		// If we catch an active one, we can quit and return true.
+		if ( edd_is_discount_active( $discount, false ) ) {
+			return true;
 		}
 	}
-	return $has_active;
-}
 
+	return false;
+}
 
 /**
  * Get Discount
@@ -374,16 +381,18 @@ function edd_discount_exists( $code_id ) {
  * Checks whether a discount code is active.
  *
  * @since 1.0
+ * @since 2.6.11 Added $update parameter
  * @param int $code_id
+ * @param bool $update Update the discount to expired if an one is found but has an active status
  * @return bool
  */
-function edd_is_discount_active( $code_id = null ) {
-	$discount = edd_get_discount(  $code_id );
+function edd_is_discount_active( $code_id = null, $update = true ) {
+	$discount = edd_get_discount( $code_id );
 	$return   = false;
 
 	if ( $discount ) {
-		if ( edd_is_discount_expired( $code_id ) ) {
-			if( defined( 'DOING_AJAX' ) ) {
+		if ( edd_is_discount_expired( $code_id, $update ) ) {
+			if ( defined( 'DOING_AJAX' ) ) {
 				edd_set_error( 'edd-discount-error', __( 'This discount is expired.', 'easy-digital-downloads' ) );
 			}
 		} elseif ( $discount->post_status == 'active' ) {
@@ -566,16 +575,15 @@ function edd_is_discount_not_global( $code_id = 0 ) {
 }
 
 /**
- * Is Discount Expired
- *
  * Checks whether a discount code is expired.
  *
- * @param int $code_id
- *
- * @since       1.0
- * @return      bool
+ * @since 1.0
+ * @since 2.6.11 Added $update parameter
+ * @param int $code_id Discount code ID
+ * @param bool $update Update the discount to expired if an one is found but has an active status
+ * @return bool
  */
-function edd_is_discount_expired( $code_id = null ) {
+function edd_is_discount_expired( $code_id = null, $update = true ) {
 	$discount = edd_get_discount(  $code_id );
 	$return   = false;
 
@@ -585,8 +593,10 @@ function edd_is_discount_expired( $code_id = null ) {
 			$expiration = strtotime( $expiration );
 			if ( $expiration < current_time( 'timestamp' ) ) {
 				// Discount is expired
-				edd_update_discount_status( $code_id, 'inactive' );
-				update_post_meta( $code_id, '_edd_discount_status', 'expired' );
+				if ( $update ) {
+					edd_update_discount_status( $code_id, 'inactive' );
+					update_post_meta( $code_id, '_edd_discount_status', 'expired' );
+				}
 				$return = true;
 			}
 		}
