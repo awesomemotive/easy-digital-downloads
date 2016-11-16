@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.6.11\n"
+"Project-Id-Version: Easy Digital Downloads 2.6.12\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2016-11-08 13:27:35+00:00\n"
+"POT-Creation-Date: 2016-11-16 19:38:03+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -99,8 +99,8 @@ msgstr ""
 #: includes/error-tracking.php:36 includes/gateways/functions.php:221
 #: includes/gateways/manual.php:33 includes/gateways/paypal-standard.php:155
 #: includes/process-download.php:254 includes/process-download.php:787
-#: includes/query-filters.php:48 includes/user-functions.php:817
-#: includes/user-functions.php:842 includes/user-functions.php:895
+#: includes/query-filters.php:48 includes/user-functions.php:826
+#: includes/user-functions.php:851 includes/user-functions.php:904
 msgid "Error"
 msgstr ""
 
@@ -389,7 +389,7 @@ msgstr ""
 #: includes/admin/discounts/class-discount-codes-table.php:289
 #: includes/admin/payments/class-payments-table.php:323
 #: includes/admin/payments/class-payments-table.php:395
-#: includes/payments/functions.php:1613
+#: includes/payments/functions.php:1612
 msgid "Delete"
 msgstr ""
 
@@ -469,7 +469,7 @@ msgid "An error has occured. Please try again."
 msgstr ""
 
 #: includes/admin/customers/customer-actions.php:207
-#: includes/user-functions.php:842
+#: includes/user-functions.php:851
 msgid "Nonce verification failed."
 msgstr ""
 
@@ -592,14 +592,14 @@ msgstr ""
 #: includes/admin/reporting/class-export-payments.php:68
 #: includes/admin/reporting/export/class-batch-export-payments.php:48
 #: includes/admin/tools.php:686 includes/checkout/template.php:355
-#: templates/shortcode-profile-editor.php:132
+#: templates/shortcode-profile-editor.php:135
 msgid "City"
 msgstr ""
 
 #: includes/admin/customers/customers.php:246
 #: includes/admin/settings/register-settings.php:1931
 #: includes/admin/tools.php:695 includes/checkout/template.php:417
-#: templates/shortcode-profile-editor.php:145
+#: templates/shortcode-profile-editor.php:148
 msgid "State / Province"
 msgstr ""
 
@@ -640,7 +640,7 @@ msgstr ""
 #: includes/admin/customers/customers.php:305
 #: includes/admin/customers/customers.php:587
 #: includes/admin/payments/view-order-details.php:475
-#: includes/admin/thickbox.php:131 includes/class-edd-html-elements.php:731
+#: includes/admin/thickbox.php:131 includes/class-edd-html-elements.php:733
 msgid "Cancel"
 msgstr ""
 
@@ -690,7 +690,7 @@ msgstr ""
 #: includes/admin/payments/view-order-details.php:375
 #: includes/admin/settings/register-settings.php:1934 includes/scripts.php:222
 #: templates/checkout_cart.php:57 templates/checkout_cart.php:75
-#: templates/shortcode-profile-editor.php:114
+#: templates/shortcode-profile-editor.php:117
 msgid "Remove"
 msgstr ""
 
@@ -838,8 +838,8 @@ msgstr ""
 #: includes/admin/reporting/class-download-reports-table.php:112
 #: includes/admin/reporting/class-export-earnings.php:64
 #: includes/admin/reporting/export/class-batch-export-downloads.php:59
-#: includes/admin/reporting/graphing.php:309
-#: includes/admin/reporting/graphing.php:609
+#: includes/admin/reporting/graphing.php:291
+#: includes/admin/reporting/graphing.php:591
 #: includes/admin/reporting/pdf-reports.php:206
 #: includes/admin/reporting/reports.php:54
 msgid "Earnings"
@@ -853,12 +853,12 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: includes/admin/dashboard-widgets.php:80
-#: includes/admin/reporting/graphing.php:650 includes/class-edd-stats.php:89
+#: includes/admin/reporting/graphing.php:632 includes/class-edd-stats.php:89
 msgid "Last Month"
 msgstr ""
 
 #: includes/admin/dashboard-widgets.php:105
-#: includes/admin/reporting/graphing.php:645 includes/class-edd-stats.php:84
+#: includes/admin/reporting/graphing.php:627 includes/class-edd-stats.php:84
 msgid "Today"
 msgstr ""
 
@@ -867,8 +867,8 @@ msgstr ""
 #: includes/admin/reporting/class-download-reports-table.php:111
 #: includes/admin/reporting/class-export-earnings.php:63
 #: includes/admin/reporting/export/class-batch-export-downloads.php:58
-#: includes/admin/reporting/graphing.php:310
-#: includes/admin/reporting/graphing.php:610
+#: includes/admin/reporting/graphing.php:292
+#: includes/admin/reporting/graphing.php:592
 #: includes/admin/reporting/logs.php:145
 #: includes/admin/reporting/pdf-reports.php:223
 msgid "Sales"
@@ -1776,27 +1776,27 @@ msgid "Completed"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:202
-#: includes/payments/functions.php:649
+#: includes/payments/functions.php:648
 msgid "Pending"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:203
-#: includes/payments/functions.php:651
+#: includes/payments/functions.php:650
 msgid "Refunded"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:204
-#: includes/payments/functions.php:654
+#: includes/payments/functions.php:653
 msgid "Revoked"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:205
-#: includes/payments/functions.php:652
+#: includes/payments/functions.php:651
 msgid "Failed"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:206
-#: includes/payments/functions.php:653
+#: includes/payments/functions.php:652
 msgid "Abandoned"
 msgstr ""
 
@@ -2319,7 +2319,7 @@ msgstr ""
 #: includes/admin/reporting/class-export-payments.php:64
 #: includes/admin/reporting/export/class-batch-export-payments.php:44
 #: includes/admin/tools.php:506 includes/checkout/template.php:191
-#: templates/shortcode-profile-editor.php:33
+#: templates/shortcode-profile-editor.php:36
 msgid "First Name"
 msgstr ""
 
@@ -2327,7 +2327,7 @@ msgstr ""
 #: includes/admin/reporting/class-export-payments.php:65
 #: includes/admin/reporting/export/class-batch-export-payments.php:45
 #: includes/admin/tools.php:515 includes/checkout/template.php:201
-#: templates/shortcode-profile-editor.php:36
+#: templates/shortcode-profile-editor.php:39
 msgid "Last Name"
 msgstr ""
 
@@ -2391,14 +2391,14 @@ msgstr ""
 #: includes/admin/reporting/class-export-payments.php:70
 #: includes/admin/reporting/export/class-batch-export-payments.php:50
 #: includes/admin/settings/register-settings.php:1930
-#: includes/admin/tools.php:713 templates/shortcode-profile-editor.php:138
+#: includes/admin/tools.php:713 templates/shortcode-profile-editor.php:141
 msgid "Country"
 msgstr ""
 
 #: includes/admin/reporting/class-export-payments.php:71
 #: includes/admin/reporting/export/class-batch-export-payments.php:51
 #: includes/admin/tools.php:704 includes/checkout/template.php:365
-#: templates/shortcode-profile-editor.php:135
+#: templates/shortcode-profile-editor.php:138
 msgid "Zip / Postal Code"
 msgstr ""
 
@@ -2644,93 +2644,93 @@ msgstr ""
 msgid "Batch Processing Complete"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:319
+#: includes/admin/reporting/graphing.php:301
 msgid "Earnings Over Time"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:337
-#: includes/admin/reporting/graphing.php:626
+#: includes/admin/reporting/graphing.php:319
+#: includes/admin/reporting/graphing.php:608
 msgid "Total earnings for period shown: "
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:345
-#: includes/admin/reporting/graphing.php:627
+#: includes/admin/reporting/graphing.php:327
+#: includes/admin/reporting/graphing.php:609
 msgid "Total sales for period shown: "
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:351
+#: includes/admin/reporting/graphing.php:333
 msgid "Estimated monthly earnings: "
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:359
+#: includes/admin/reporting/graphing.php:341
 msgid "Estimated monthly sales: "
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:366
+#: includes/admin/reporting/graphing.php:348
 msgid "Excludes sales tax."
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:616
+#: includes/admin/reporting/graphing.php:598
 msgid "Earnings Over Time for %s"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:628
+#: includes/admin/reporting/graphing.php:610
 msgid "Average monthly earnings: %s"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:629
+#: includes/admin/reporting/graphing.php:611
 msgid "Average monthly sales: %s"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:646 includes/class-edd-stats.php:85
+#: includes/admin/reporting/graphing.php:628 includes/class-edd-stats.php:85
 msgid "Yesterday"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:647 includes/class-edd-stats.php:86
+#: includes/admin/reporting/graphing.php:629 includes/class-edd-stats.php:86
 msgid "This Week"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:648 includes/class-edd-stats.php:87
+#: includes/admin/reporting/graphing.php:630 includes/class-edd-stats.php:87
 msgid "Last Week"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:649 includes/class-edd-stats.php:88
+#: includes/admin/reporting/graphing.php:631 includes/class-edd-stats.php:88
 msgid "This Month"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:651 includes/class-edd-stats.php:90
+#: includes/admin/reporting/graphing.php:633 includes/class-edd-stats.php:90
 msgid "This Quarter"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:652 includes/class-edd-stats.php:91
+#: includes/admin/reporting/graphing.php:634 includes/class-edd-stats.php:91
 msgid "Last Quarter"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:653 includes/class-edd-stats.php:92
+#: includes/admin/reporting/graphing.php:635 includes/class-edd-stats.php:92
 msgid "This Year"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:654 includes/class-edd-stats.php:93
+#: includes/admin/reporting/graphing.php:636 includes/class-edd-stats.php:93
 msgid "Last Year"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:655
+#: includes/admin/reporting/graphing.php:637
 msgid "Custom"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:687
+#: includes/admin/reporting/graphing.php:669
 msgid "From"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:703
+#: includes/admin/reporting/graphing.php:685
 msgid "To"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:723
+#: includes/admin/reporting/graphing.php:705
 msgid "Exclude Taxes"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:728
+#: includes/admin/reporting/graphing.php:710
 msgid "Filter"
 msgstr ""
 
@@ -4565,19 +4565,19 @@ msgstr ""
 msgid "Please upload a file to import"
 msgstr ""
 
-#: includes/admin/tracking.php:270
+#: includes/admin/tracking.php:269
 msgid ""
 "Allow Easy Digital Downloads to track plugin usage? Opt-in to tracking and "
-"our newsletter and immediately be emailed a 20%% discount to the EDD shop, "
+"our newsletter and immediately be emailed a 20%s discount to the EDD shop, "
 "valid towards the <a href=\"%s\" target=\"_blank\">purchase of "
 "extensions</a>. No sensitive data is tracked."
 msgstr ""
 
-#: includes/admin/tracking.php:271
+#: includes/admin/tracking.php:270
 msgid "Allow"
 msgstr ""
 
-#: includes/admin/tracking.php:272
+#: includes/admin/tracking.php:271
 msgid "Do not allow"
 msgstr ""
 
@@ -4670,18 +4670,18 @@ msgstr ""
 msgid "Your transaction failed, please try again or contact site support."
 msgstr ""
 
-#: includes/admin/upgrades/upgrades.php:44
+#: includes/admin/upgrades/upgrades.php:47
 msgid "Easy Digital Downloads - Upgrades"
 msgstr ""
 
-#: includes/admin/upgrades/upgrades.php:49
-#: includes/admin/upgrades/upgrades.php:63
+#: includes/admin/upgrades/upgrades.php:52
+#: includes/admin/upgrades/upgrades.php:66
 msgid ""
 "The upgrade process has started, please be patient. This could take several "
 "minutes. You will be automatically redirected when the upgrade is finished."
 msgstr ""
 
-#: includes/admin/upgrades/upgrades.php:52
+#: includes/admin/upgrades/upgrades.php:55
 msgid "Step %d of approximately %d running"
 msgstr ""
 
@@ -5150,27 +5150,27 @@ msgstr ""
 msgid "No download logs found!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1887 includes/user-functions.php:977
+#: includes/api/class-edd-api.php:1887 includes/user-functions.php:986
 msgid "Easy Digital Downloads API Keys"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1896 includes/user-functions.php:982
+#: includes/api/class-edd-api.php:1896 includes/user-functions.php:991
 msgid "Generate API Key"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1898 includes/user-functions.php:984
+#: includes/api/class-edd-api.php:1898 includes/user-functions.php:993
 msgid "Public key:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1899 includes/user-functions.php:985
+#: includes/api/class-edd-api.php:1899 includes/user-functions.php:994
 msgid "Secret key:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1900 includes/user-functions.php:986
+#: includes/api/class-edd-api.php:1900 includes/user-functions.php:995
 msgid "Token:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1902 includes/user-functions.php:988
+#: includes/api/class-edd-api.php:1902 includes/user-functions.php:997
 msgid "Revoke API Keys"
 msgstr ""
 
@@ -5646,8 +5646,8 @@ msgstr ""
 msgid "Customer User ID: %s"
 msgstr ""
 
-#: includes/class-edd-cli.php:335 includes/user-functions.php:509
-#: includes/user-functions.php:518
+#: includes/class-edd-cli.php:335 includes/user-functions.php:518
+#: includes/user-functions.php:527
 msgid "Username: %s"
 msgstr ""
 
@@ -5836,7 +5836,7 @@ msgstr ""
 msgid "Select a discount"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:716
+#: includes/class-edd-html-elements.php:718
 msgid "Enter username"
 msgstr ""
 
@@ -6281,39 +6281,39 @@ msgstr ""
 msgid "No payments matching your request were found."
 msgstr ""
 
-#: includes/discount-functions.php:387
+#: includes/discount-functions.php:396
 msgid "This discount is expired."
 msgstr ""
 
-#: includes/discount-functions.php:393
+#: includes/discount-functions.php:402
 msgid "This discount is not active."
 msgstr ""
 
-#: includes/discount-functions.php:621
+#: includes/discount-functions.php:631
 msgid "This discount is not active yet."
 msgstr ""
 
-#: includes/discount-functions.php:652
+#: includes/discount-functions.php:662
 msgid "This discount has reached its maximum usage."
 msgstr ""
 
-#: includes/discount-functions.php:681
+#: includes/discount-functions.php:691
 msgid "Minimum order of %s not met."
 msgstr ""
 
-#: includes/discount-functions.php:743 includes/discount-functions.php:763
+#: includes/discount-functions.php:753 includes/discount-functions.php:773
 msgid "The product requirements for this discount are not met."
 msgstr ""
 
-#: includes/discount-functions.php:779
+#: includes/discount-functions.php:789
 msgid "This discount is not valid for the cart contents."
 msgstr ""
 
-#: includes/discount-functions.php:883
+#: includes/discount-functions.php:893
 msgid "This discount has already been redeemed."
 msgstr ""
 
-#: includes/discount-functions.php:929
+#: includes/discount-functions.php:939
 msgid "This discount is invalid."
 msgstr ""
 
@@ -6824,16 +6824,16 @@ msgstr ""
 msgid "The password you entered is incorrect"
 msgstr ""
 
-#: includes/login-register.php:95 includes/process-purchase.php:612
+#: includes/login-register.php:95 includes/process-purchase.php:623
 msgid "The username you entered does not exist"
 msgstr ""
 
 #: includes/login-register.php:149 includes/login-register.php:157
-#: includes/process-purchase.php:497
+#: includes/process-purchase.php:508
 msgid "Invalid username"
 msgstr ""
 
-#: includes/login-register.php:153 includes/process-purchase.php:490
+#: includes/login-register.php:153 includes/process-purchase.php:501
 msgid "Username already taken"
 msgstr ""
 
@@ -6841,8 +6841,8 @@ msgstr ""
 msgid "Email address already taken"
 msgstr ""
 
-#: includes/login-register.php:165 includes/process-purchase.php:437
-#: includes/process-purchase.php:512 includes/process-purchase.php:645
+#: includes/login-register.php:165 includes/process-purchase.php:448
+#: includes/process-purchase.php:523 includes/process-purchase.php:656
 msgid "Invalid email"
 msgstr ""
 
@@ -6994,11 +6994,11 @@ msgstr ""
 msgid "Status changed from %s to %s"
 msgstr ""
 
-#: includes/payments/functions.php:650
+#: includes/payments/functions.php:649
 msgid "Complete"
 msgstr ""
 
-#: includes/payments/functions.php:1598
+#: includes/payments/functions.php:1597
 msgid "EDD Bot"
 msgstr ""
 
@@ -7338,55 +7338,55 @@ msgstr ""
 msgid "Please enter billing state / province"
 msgstr ""
 
-#: includes/process-purchase.php:442
+#: includes/process-purchase.php:453
 msgid "The user information is invalid"
 msgstr ""
 
-#: includes/process-purchase.php:495
+#: includes/process-purchase.php:506
 msgid "Invalid username. Only lowercase letters (a-z) and numbers are allowed"
 msgstr ""
 
-#: includes/process-purchase.php:504
+#: includes/process-purchase.php:515
 msgid "You must register or login to complete your purchase"
 msgstr ""
 
-#: includes/process-purchase.php:517
+#: includes/process-purchase.php:528
 msgid "Email already used"
 msgstr ""
 
-#: includes/process-purchase.php:525 includes/process-purchase.php:652
+#: includes/process-purchase.php:536 includes/process-purchase.php:663
 msgid "Enter an email"
 msgstr ""
 
-#: includes/process-purchase.php:533
+#: includes/process-purchase.php:544
 msgid "Passwords don't match"
 msgstr ""
 
-#: includes/process-purchase.php:542 includes/process-purchase.php:608
+#: includes/process-purchase.php:553 includes/process-purchase.php:619
 msgid "Enter a password"
 msgstr ""
 
-#: includes/process-purchase.php:545
+#: includes/process-purchase.php:556
 msgid "Enter the password confirmation"
 msgstr ""
 
-#: includes/process-purchase.php:569
+#: includes/process-purchase.php:580
 msgid "You must login or register to complete your purchase"
 msgstr ""
 
-#: includes/process-purchase.php:589
+#: includes/process-purchase.php:600
 msgid "The password you entered is incorrect. %sReset Password%s"
 msgstr ""
 
-#: includes/process-purchase.php:634
+#: includes/process-purchase.php:645
 msgid "You must be logged into an account to purchase"
 msgstr ""
 
-#: includes/process-purchase.php:814
+#: includes/process-purchase.php:825
 msgid "The zip / postal code you entered for your billing address is invalid"
 msgstr ""
 
-#: includes/process-purchase.php:1076
+#: includes/process-purchase.php:1087
 msgid "An internal error has occurred, please try again or contact support."
 msgstr ""
 
@@ -7618,51 +7618,51 @@ msgstr ""
 msgid "Plain Text"
 msgstr ""
 
-#: includes/user-functions.php:507
+#: includes/user-functions.php:516
 msgid "[%s] New User Registration"
 msgstr ""
 
-#: includes/user-functions.php:508
+#: includes/user-functions.php:517
 msgid "New user registration"
 msgstr ""
 
-#: includes/user-functions.php:510
+#: includes/user-functions.php:519
 msgid "E-mail: %s"
 msgstr ""
 
-#: includes/user-functions.php:516
+#: includes/user-functions.php:525
 msgid "[%s] Your username and password"
 msgstr ""
 
-#: includes/user-functions.php:517
+#: includes/user-functions.php:526
 msgid "Your account info"
 msgstr ""
 
-#: includes/user-functions.php:521
+#: includes/user-functions.php:530
 msgid "Password entered at checkout"
 msgstr ""
 
-#: includes/user-functions.php:523
+#: includes/user-functions.php:532
 msgid "Password entered at registration"
 msgstr ""
 
-#: includes/user-functions.php:526
+#: includes/user-functions.php:535
 msgid "Password: %s"
 msgstr ""
 
-#: includes/user-functions.php:530
+#: includes/user-functions.php:539
 msgid "Click here to log in"
 msgstr ""
 
-#: includes/user-functions.php:534
+#: includes/user-functions.php:543
 msgid "To log in, visit: %s"
 msgstr ""
 
-#: includes/user-functions.php:690 includes/user-functions.php:691
+#: includes/user-functions.php:699 includes/user-functions.php:700
 msgid "Verify your account"
 msgstr ""
 
-#: includes/user-functions.php:693
+#: includes/user-functions.php:702
 msgid ""
 "Hello %s,\n"
 "\n"
@@ -7672,33 +7672,33 @@ msgid ""
 "Link missing? Visit the following URL: %s"
 msgstr ""
 
-#: includes/user-functions.php:817
+#: includes/user-functions.php:826
 msgid ""
 "Sorry but your account verification link has expired. <a href=\"#\">Click "
 "here</a> to request a new verification URL."
 msgstr ""
 
-#: includes/user-functions.php:846
+#: includes/user-functions.php:855
 msgid "You must be logged in to verify your account."
 msgstr ""
 
-#: includes/user-functions.php:846 includes/user-functions.php:850
+#: includes/user-functions.php:855 includes/user-functions.php:859
 msgid "Notice"
 msgstr ""
 
-#: includes/user-functions.php:850
+#: includes/user-functions.php:859
 msgid "Your account has already been verified."
 msgstr ""
 
-#: includes/user-functions.php:895
+#: includes/user-functions.php:904
 msgid "Invalid verification token provided."
 msgstr ""
 
-#: includes/user-functions.php:1000
+#: includes/user-functions.php:1009
 msgid "Easy Digital Downloads <a href=\"%s\">iOS App</a>"
 msgstr ""
 
-#: includes/user-functions.php:1007
+#: includes/user-functions.php:1016
 msgid "Add to iOS App"
 msgstr ""
 
@@ -7860,51 +7860,51 @@ msgstr ""
 msgid "Your profile has been edited successfully."
 msgstr ""
 
-#: templates/shortcode-profile-editor.php:31
+#: templates/shortcode-profile-editor.php:34
 msgid "Change your Name"
 msgstr ""
 
-#: templates/shortcode-profile-editor.php:40
+#: templates/shortcode-profile-editor.php:43
 msgid "Display Name"
 msgstr ""
 
-#: templates/shortcode-profile-editor.php:58
+#: templates/shortcode-profile-editor.php:61
 msgid "Primary Email Address"
 msgstr ""
 
-#: templates/shortcode-profile-editor.php:95
+#: templates/shortcode-profile-editor.php:98
 msgid "Additional Email Addresses"
 msgstr ""
 
-#: templates/shortcode-profile-editor.php:124
+#: templates/shortcode-profile-editor.php:127
 msgid "Change your Billing Address"
 msgstr ""
 
-#: templates/shortcode-profile-editor.php:126
+#: templates/shortcode-profile-editor.php:129
 msgid "Line 1"
 msgstr ""
 
-#: templates/shortcode-profile-editor.php:129
+#: templates/shortcode-profile-editor.php:132
 msgid "Line 2"
 msgstr ""
 
-#: templates/shortcode-profile-editor.php:162
+#: templates/shortcode-profile-editor.php:165
 msgid "Change your Password"
 msgstr ""
 
-#: templates/shortcode-profile-editor.php:164
+#: templates/shortcode-profile-editor.php:167
 msgid "New Password"
 msgstr ""
 
-#: templates/shortcode-profile-editor.php:167
+#: templates/shortcode-profile-editor.php:170
 msgid "Re-enter Password"
 msgstr ""
 
-#: templates/shortcode-profile-editor.php:176
+#: templates/shortcode-profile-editor.php:179
 msgid "Save Changes"
 msgstr ""
 
-#: templates/shortcode-profile-editor.php:185
+#: templates/shortcode-profile-editor.php:191
 msgid "You need to login to edit your profile."
 msgstr ""
 
