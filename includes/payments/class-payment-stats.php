@@ -290,7 +290,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 				$select = "DATE_FORMAT(posts.post_date, '%%m') AS m, YEAR(posts.post_date) AS y, COUNT(DISTINCT posts.ID) as count";
 				$grouping = "YEAR(posts.post_date), MONTH(posts.post_date)";
 			} else {
-				if ( $range == 'today' ) {
+				if ( $range == 'today' || $range == 'yesterday' ) {
 					$select = "DATE_FORMAT(posts.post_date, '%%d') AS d, DATE_FORMAT(posts.post_date, '%%m') AS m, YEAR(posts.post_date) AS y, HOUR(posts.post_date) AS h, COUNT(DISTINCT posts.ID) as count";
 					$grouping = "YEAR(posts.post_date), MONTH(posts.post_date), DAY(posts.post_date), HOUR(posts.post_date)";
 				} else {
@@ -299,7 +299,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 				}
 			}
 
-			if ( $range == 'today' ) {
+			if ( $range == 'today' || $range == 'yesterday' ) {
 				$grouping = "YEAR(posts.post_date), MONTH(posts.post_date), DAY(posts.post_date), HOUR(posts.post_date)";
 			}
 
