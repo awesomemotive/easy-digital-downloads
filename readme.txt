@@ -211,6 +211,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Creating a discount would not save the product requirements and exclusions on first save.
 * Fix: PHP Warning was being caused by the new beta setting in the extension updater.
 * Fix: The EDD_SL_Plugin_Updater::check_update method could possibly be called twice.
+* Fix: Sanitized unescaped URLs with esc_url
 
 = 2.6.11, November 8, 2016 =
 * New: WP CLI: Customers command now allows searching by user_id.
