@@ -186,6 +186,16 @@ function edd_reports_graph() {
 			$date_start = date( 'Y-m', strtotime( '+1 month', strtotime( $date_start ) ) );
 		}
 
+		if ( cal_days_in_month( CAL_GREGORIAN, $dates['m_start'], $dates['year'] ) < $dates['day'] ) {
+			$next_day = mktime( 0, 0, 0, $dates['m_start'] + 1, 1, $dates['year'] );
+			$day = date( 'd', $next_day );
+			$month = date( 'm', $next_day );
+			$year = date( 'Y', $next_day );
+			$date_start = $year . '-' . $month . '-' . $day;
+		} else {
+			$date_start = $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day'];
+		}
+
 		while ( strtotime( $date_start ) <= strtotime( $date_end ) ) {
 			$m = date( 'm', strtotime( $date_start ) );
 			$y = date( 'Y', strtotime( $date_start ) );
