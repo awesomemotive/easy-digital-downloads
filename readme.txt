@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
 Tested up to: 4.7
-Stable Tag: 2.6.10
+Stable Tag: 2.6.12
 
 License: GNU Version 2 or Any Later Version
 
@@ -186,6 +186,69 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.6.12, November 17, 2016 =
+* New: Added new hooks to the profile editor form.
+* Fix: edd_has_active_discounts could return false when there were active discounts.
+* Fix: Supplying an invalid date range on reports could produce an incorrect graph.
+* Fix: EDD_Payment::update_meta could produce a PHP warning when used.
+* Fix: Variable Pricing options were inconsistently being shown and hidden when toggled.
+* Fix: Today/Yesterday Reports miscalculated hours to include the first hour of the next day.
+* Fix: When single day ranges were used on Payments list table, order status counts were not loading.
+* Fix: EDD HTML Select input had many cases where mixed variable types could trigger errors and warnings.
+* Fix: edd_get_users_purchases had outdated PHPDocs.
+* Fix: Determining the 'main' subsection of settings could fire hooks twice and had poor performance.
+* Fix: When changing report years, the report data could have been incorrect.
+* Fix: Payment counts were incorrect on the Payments list table when custom dates were used.
+* Fix: Certain hosting configurations caused the usage tracking notice to be improperly escaped.
+* Fix: Admin scripts were not requiring `jquery-form`.
+* Fix: Download limit setting isn't checked for existence before accessing it when saving a Download.
+* Fix: Timezone wasn't respected when setting up daily cron.
+* Fix: Upgrade routines could calculate incorrect number of total steps.
+* Fix: The notice about being in test mode was not linked to the correct settings page.
+* Fix: `edd_get_users_purchased_products` would fail if the first product ID supplied was not a download.
+* Fix: Checkout could require a state even if the country had no states associated with it.
+* Fix: Creating a discount would not save the product requirements and exclusions on first save.
+* Fix: PHP Warning was being caused by the new beta setting in the extension updater.
+* Fix: The EDD_SL_Plugin_Updater::check_update method could possibly be called twice.
+* Fix: Sanitized unescaped URLs with esc_url
+
+= 2.6.11, November 8, 2016 =
+* New: WP CLI: Customers command now allows searching by user_id.
+* New: Add framework for the new Software Licensing beta support.
+* New: EDD Settings API now supports adding classes to registered settings.
+* New: Improve PayPal Standard IPN lookup logic.
+* New: Support iOS app one-click configuration.
+* New: Add hook after cart quantities are updated.
+* New: Add tooltip to "Display during checkout" tax option.
+* New: Allow exporting the file download history of a specific product.
+* New: Add action after discount is added to the cart.
+* New: Add action hook called "edd_payment_saved" for when EDD_Payment::save() is run.
+* New: Add "author" paramater support to [downloads] shortcode with support for username or ID.
+* Tweak: Correct branding of necessary assets.
+* Tweak: Block self-pings in tracking check-ins.
+* Tweak: Update author and author URI to Easy Digital Downloads.
+* Tweak: Update the Insert Download media button icon to use Dashicons.
+* Tweak: Allow download admin icon to be more easily customized.
+* Tweak: Exported CSVs show "Complete" status as "publish".
+* Fix: Corrected translation for login shortcode redirect description.
+* Fix: Improved the caching of stats transients for better performance.
+* Fix: API Keys were not able to be copied from user profile.
+* Fix: Corrected link to the iOS application.
+* Fix: Use new iPhone icon.
+* Fix: EDD_Payment::setup_tax did not always contain proper data.
+* Fix: Styles on Recount/Reset tool were lost.
+* Fix: CSV import tool were not importing Download Files in some circumstances.
+* Fix: Tooltip styles had a conflict with Gravity Forms.
+* Fix: Recount earning/sales tool for all downloads was failing to properly recount.
+* Fix: Multiple instances of cart widget was causing conflicts when adding or removing items.
+* Fix: API Key list table was unreadable on mobile.
+* Fix: Custom icons via edd_accepted_payment_icons were unwrapped.
+* Fix: Fees for specific download and price IDs did not check if the item or price ID is in the cart.
+* Fix: EDD API was always returning version 1 by default.
+* Fix: Changed uses of jQuery .toggle() to use .show() and .hide() to fix bad checkbox states.
+* Fix: Corrected translation for 'State / Province'.
+* Fix: Corrected a variable type issue in the HTML_Elements::select defaults.
 
 = 2.6.10, October 21, 2016 =
 * Fix: JavaScript error when removing a product from a payment that does not contain a fee.

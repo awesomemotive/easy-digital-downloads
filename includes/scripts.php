@@ -184,9 +184,9 @@ function edd_load_admin_scripts( $hook ) {
 	$admin_deps = array();
 
 	if ( ! edd_is_admin_page( $hook, 'edit' ) && ! edd_is_admin_page( $hook, 'new' ) ) {
-		$admin_deps = array( 'jquery', 'inline-edit-post' );
+		$admin_deps = array( 'jquery', 'jquery-form', 'inline-edit-post' );
 	} else {
-		$admin_deps = array( 'jquery' );
+		$admin_deps = array( 'jquery', 'jquery-form' );
 	}
 
 	wp_register_script( 'edd-admin-scripts', $js_dir . 'admin-scripts' . $suffix . '.js', $admin_deps, EDD_VERSION, false );
