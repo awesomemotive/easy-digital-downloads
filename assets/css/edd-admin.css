@@ -1318,11 +1318,8 @@ td.edd_order_price {
 	}
 }
 @media screen and ( max-width: 656px ) {
-	#edd-item-card-wrapper > div:first-child {
-		min-height: 230px;
-	}
 	#edd-item-card-wrapper .customer-info {
-		min-height: 210px;
+		min-height: 220px;
 	}
 	.edd-item-info.customer-info {
 		position: relative;
@@ -1357,9 +1354,6 @@ td.edd_order_price {
 	}
 	#edd-item-card-wrapper .customer-id {
 		font-size: 16px;
-	}
-	#edd-item-card-wrapper > div:first-child {
-		height: auto;
 	}
 }
 @media screen and ( max-width: 480px ) {
