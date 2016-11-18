@@ -35,8 +35,8 @@ function edd_register_default_customer_tabs( $tabs ) {
 
 	$default_tabs = array(
 		'overview' => array( 'dashicon' => 'dashicons-admin-users', 'title' => _x( 'Profile', 'Customer Details tab title', 'easy-digital-downloads' ) ),
-		'notes'    => array( 'dashicon' => 'dashicons-admin-comments', 'title' => _x( 'Notes', 'Customer Details tab title', 'easy-digital-downloads' ) ),
-		'tools'    => array( 'dashicon' => 'dashicons-admin-tools', 'title' => _x( 'Tools', 'Customer Details tab title', 'easy-digital-downloads' ) ),
+		'notes'    => array( 'dashicon' => 'dashicons-admin-comments', 'title' => _x( 'Notes', 'Customer Notes tab title', 'easy-digital-downloads' ) ),
+		'tools'    => array( 'dashicon' => 'dashicons-admin-tools', 'title' => _x( 'Tools', 'Customer Tools tab title', 'easy-digital-downloads' ) ),
 	);
 
 	return array_merge( $tabs, $default_tabs );
