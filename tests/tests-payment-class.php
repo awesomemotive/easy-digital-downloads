@@ -62,11 +62,21 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$this->assertEquals( 120.00, $payment->total );
 	}
 
+	public function test_get_existing_payment_txn() {
+		$payment = new EDD_Payment( 'FIR3SID3', true );
+		$this->assertEquals( $this->_payment_id, $payment->ID );
+	}
+
 	public function test_getting_no_payment() {
 		$payment = new EDD_Payment();
 		$this->assertEquals( NULL, $payment->ID );
 
 		$payment = new EDD_Payment( 99999999999 );
+		$this->assertEquals( NULL, $payment->ID );
+	}
+
+	public function test_getting_no_payment_txn() {
+		$payment = new EDD_Payment( 'false-txn', true );
 		$this->assertEquals( NULL, $payment->ID );
 	}
 
