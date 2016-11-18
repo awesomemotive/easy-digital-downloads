@@ -5,7 +5,7 @@
  * Description: The easiest way to sell digital products with WordPress.
  * Author: Easy Digital Downloads
  * Author URI: https://easydigitaldownloads.com
- * Version: 2.6.10
+ * Version: 2.6.12
  * Text Domain: easy-digital-downloads
  * Domain Path: languages
  *
@@ -25,7 +25,7 @@
  * @package EDD
  * @category Core
  * @author Pippin Williamson
- * @version 2.6.10
+ * @version 2.6.12
  */
 
 // Exit if accessed directly.
@@ -153,6 +153,7 @@ final class Easy_Digital_Downloads {
 			self::$instance->email_tags    = new EDD_Email_Template_Tags();
 			self::$instance->customers     = new EDD_DB_Customers();
 			self::$instance->customer_meta = new EDD_DB_Customer_Meta();
+			self::$instance->payment_stats = new EDD_Payment_Stats();
 		}
 		return self::$instance;
 	}
@@ -195,7 +196,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '2.6.10' );
+			define( 'EDD_VERSION', '2.6.12' );
 		}
 
 		// Plugin Folder Path.
