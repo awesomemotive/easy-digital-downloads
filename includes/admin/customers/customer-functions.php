@@ -52,7 +52,7 @@ add_filter( 'edd_customer_tabs', 'edd_register_default_customer_tabs', 1, 1 );
  */
 function edd_register_delete_customer_tab( $tabs ) {
 
-	$tabs['delete'] = array( 'dashicon' => 'dashicons-trash', 'title' => _x( 'Delete', 'Customer Details tab title', 'easy-digital-downloads' ) );
+	$tabs['delete'] = array( 'dashicon' => 'dashicons-trash', 'title' => _x( 'Delete', 'Delete Customer tab title', 'easy-digital-downloads' ) );
 
 	return $tabs;
 }
