@@ -129,9 +129,11 @@ function edd_render_customer_view( $view, $callbacks ) {
 							<?php $class  = $active ? 'active' : 'inactive'; ?>
 
 							<li class="<?php echo sanitize_html_class( $class ); ?>">
+
 								<?php if ( ! $active ) : ?>
-								<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-customers&view=' . $key . '&id=' . $customer->id . '#wpbody-content' ) ); ?>">
-									<?php endif; ?>
+									<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-customers&view=' . $key . '&id=' . $customer->id . '#wpbody-content' ) ); ?>">
+								<?php endif; ?>
+
 									<span class="dashicons <?php echo sanitize_html_class( $tab['dashicon'] ); ?>" aria-hidden="true"></span>
 									<?php
 									// prevent double "Customer" output from extensions
@@ -139,9 +141,11 @@ function edd_render_customer_view( $view, $callbacks ) {
 									?>
 
 									<span class="screen-reader-text"><?php _ex( 'Customer ', 'Customer Details page tab title enhancement for screen readers', 'easy-digital-downloads' ); ?></span><?php echo esc_attr( $tab['title'] ); ?>
-									<?php if ( ! $active ) : ?>
-								</a>
-							<?php endif; ?>
+
+								<?php if ( ! $active ) : ?>
+									</a>
+								<?php endif; ?>
+
 							</li>
 
 						<?php endforeach; ?>
