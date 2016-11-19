@@ -1072,8 +1072,7 @@ td.edd_order_price {
 	color: #444;
 	text-decoration: none;
 }
-#edd-item-tab-wrapper-list .inactive a:hover,
-#edd-item-tab-wrapper-list .inactive a:hover .dashicons {
+#edd-item-tab-wrapper-list .inactive a:hover {
 	background-color: #fff;
 }
 #edd-item-tab-wrapper-list .dashicons {
