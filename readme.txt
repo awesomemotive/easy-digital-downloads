@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
 Tested up to: 4.7
-Stable Tag: 2.6.12
+Stable Tag: 2.6.13
 
 License: GNU Version 2 or Any Later Version
 
@@ -186,6 +186,9 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.6.13, November 21, 2016 =
+* Fix: Custom payment meta items were not being saved correctly.
 
 = 2.6.12, November 17, 2016 =
 * New: Added new hooks to the profile editor form.
