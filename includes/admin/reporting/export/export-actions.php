@@ -198,7 +198,7 @@ function edd_include_file_downloads_batch_processer( $class ) {
  *
  * @since  2.7
  */
-function edd_register_file_downloads_batch_export() {
+function edd_register_api_requests_batch_export() {
 	add_action( 'edd_batch_export_class_include', 'edd_include_api_requests_batch_processer', 10, 1 );
 }
 add_action( 'edd_register_batch_exporter', 'edd_register_api_requests_batch_export', 10 );
