@@ -1559,10 +1559,13 @@ class EDD_Payment {
 		if ( $meta_key === '_edd_payment_meta' ) {
 
 			// #5228 Fix possible data issue introduced in 2.6.12
-			if ( isset( $meta[0] ) && is_array( $meta[0] ) ) {
+			if ( isset( $meta[0] ) ) {
 				$bad_meta = $meta[0];
 				unset( $meta[0] );
-				$meta = array_merge( $meta, $bad_meta );
+
+				if ( is_array( $bad_meta ) ) {
+					$meta = array_merge( $meta, $bad_meta );
+				}
 
 				update_post_meta( $this->ID, '_edd_payment_meta', $meta );
 			}
