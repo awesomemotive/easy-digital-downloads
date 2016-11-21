@@ -1558,6 +1558,15 @@ class EDD_Payment {
 
 		if ( $meta_key === '_edd_payment_meta' ) {
 
+			// #5228 Fix possible data issue introduced in 2.6.12
+			if ( isset( $meta[0] ) ) {
+				$bad_meta = $meta[0];
+				unset( $meta[0] );
+				$meta = array_merge( $meta, $bad_meta );
+
+				update_post_meta( $this->ID, '_edd_payment_meta', $meta );
+			}
+
 			// Payment meta was simplified in EDD v1.5, so these are here for backwards compatibility
 			if ( empty( $meta['key'] ) ) {
 				$meta['key'] = $this->setup_payment_key();
