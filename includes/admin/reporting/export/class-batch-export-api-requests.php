@@ -85,13 +85,13 @@ class EDD_Batch_API_Requests_Export extends EDD_Batch_Export {
 			foreach ( $logs as $log ) {
 				$data[] = array(
 					'ID'      => $log->ID,
+					'request' => get_post_field( 'post_excerpt', $log->ID ),
+					'ip'      => get_post_meta( $log->ID, '_edd_log_request_ip', true ),
+					'user'    => get_post_meta( $log->ID, '_edd_log_user', true ),
+					'key'     => get_post_meta( $log->ID, '_edd_log_key', true ),
 					'version' => get_post_meta( $log->ID, '_edd_log_version', true ),
 					'speed'   => get_post_meta( $log->ID, '_edd_log_time', true ),
-					'ip'      => get_post_meta( $log->ID, '_edd_log_request_ip', true ),
-					'date'    => $log->post_date,
-					'request' => get_post_field( 'post_excerpt', $log->ID ),
-					'user'    => get_post_meta( $log->ID, '_edd_log_user', true ),
-					'key'     => get_post_meta( $log->ID, '_edd_log_key', true )
+					'date'    => $log->post_date
 				);
 			}
 
