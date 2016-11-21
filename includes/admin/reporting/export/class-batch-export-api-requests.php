@@ -36,14 +36,13 @@ class EDD_Batch_API_Requests_Export extends EDD_Batch_Export {
 	 * @return array $cols All the columns
 	 */
 	public function csv_cols() {
-
 		$cols = array(
 			'ID'      => __( 'Log ID',   'easy-digital-downloads' ),
 			'request' => __( 'API Request', 'easy-digital-downloads' ),
 			'ip'      => __( 'IP Address', 'easy-digital-downloads' ),
 			'user'    => __( 'API User', 'easy-digital-downloads' ),
 			'key'     => __( 'API Key', 'easy-digital-downloads' ),
-			'version' => __( 'API Version', 'easy-digital-downloads' )
+			'version' => __( 'API Version', 'easy-digital-downloads' ),
 			'speed'   => __( 'Request Speed', 'easy-digital-downloads' ),
 			'date'    => __( 'Date', 'easy-digital-downloads' )
 		);

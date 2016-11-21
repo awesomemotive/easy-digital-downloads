@@ -192,3 +192,26 @@ function edd_include_file_downloads_batch_processer( $class ) {
 	}
 
 }
+
+/**
+ * Register the API requests batch exporter
+ *
+ * @since  2.7
+ */
+function edd_register_file_downloads_batch_export() {
+	add_action( 'edd_batch_export_class_include', 'edd_include_api_requests_batch_processer', 10, 1 );
+}
+add_action( 'edd_register_batch_exporter', 'edd_register_api_requests_batch_export', 10 );
+
+/**
+ * Loads the API requests batch process if needed
+ *
+ * @since  2.7
+ * @param  string $class The class being requested to run for the batch export
+ * @return void
+ */
+function edd_include_api_requests_batch_processer( $class ) {
+	if ( 'EDD_Batch_API_Requests_Export' === $class ) {
+		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-api-requests.php';
+	}
+}

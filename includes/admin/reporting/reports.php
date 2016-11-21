@@ -434,6 +434,20 @@ function edd_reports_tab_export() {
 						</div><!-- .inside -->
 					</div><!-- .postbox -->
 
+					<div class="postbox edd-export-api-requests">
+						<h3><span><?php _e('Export API Requests in CSV','easy-digital-downloads' ); ?></span></h3>
+						<div class="inside">
+							<p><?php _e( 'Download a CSV of API request logs.', 'easy-digital-downloads' ); ?></p>
+							<form id="edd-export-api-requests" class="edd-export-form edd-import-export-form" method="post">
+								<?php echo EDD()->html->date_field( array( 'id' => 'edd-api-requests-export-start', 'name' => 'start', 'placeholder' => __( 'Choose start date', 'easy-digital-downloads' ) )); ?>
+								<?php echo EDD()->html->date_field( array( 'id' => 'edd-api-requests-export-end', 'name' => 'end', 'placeholder' => __( 'Choose end date', 'easy-digital-downloads' ) )); ?>
+								<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+								<input type="hidden" name="edd-export-class" value="EDD_Batch_API_Requests_Export"/>
+								<input type="submit" value="<?php _e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+							</form>
+						</div><!-- .inside -->
+					</div><!-- .postbox -->
+
 					<?php do_action( 'edd_reports_tab_export_content_bottom' ); ?>
 
 				</div><!-- .post-body-content -->
