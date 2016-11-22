@@ -146,6 +146,7 @@ class EDD_Customer {
 			switch ( $key ) {
 
 				case 'notes':
+					$this->$key = $value;
 					$this->$key = $this->get_notes();
 					break;
 
