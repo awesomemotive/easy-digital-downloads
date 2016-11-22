@@ -769,7 +769,11 @@ class EDD_Customer {
 	 */
 	private function get_raw_notes() {
 
-		$all_notes = $this->db->get_column( 'notes', $this->id );
+		if ( isset( $this->notes ) ) {
+			$all_notes = $this->notes;
+		} else {
+			$all_notes = $this->db->get_column( 'notes', $this->id );
+		}
 
 		return (string) $all_notes;
 
