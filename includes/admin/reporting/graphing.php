@@ -85,8 +85,6 @@ function edd_reports_graph() {
 			$hour++;
 		}
 	} elseif ( $dates['range'] == 'this_week' || $dates['range'] == 'last_week' ) {
-		$num_of_days = cal_days_in_month( CAL_GREGORIAN, $dates['m_start'], $dates['year'] );
-
 		$report_dates = array();
 		$i = 0;
 		while ( $i <= 6 ) {
