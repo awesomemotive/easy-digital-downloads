@@ -695,11 +695,14 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 		'update_post_term_cache' => false,
 		'include_taxes'  => $include_taxes,
 	);
-	if ( ! empty( $day ) )
-		$args['day'] = $day;
 
-	if ( ! empty( $hour ) )
+	if ( ! empty( $day ) ) {
+		$args['day'] = $day;
+	}
+
+	if ( ! empty( $hour ) || $hour == 0 ) {
 		$args['hour'] = $hour;
+	}
 
 	$args   = apply_filters( 'edd_get_earnings_by_date_args', $args );
 	$cached = get_transient( 'edd_stats_earnings' );
