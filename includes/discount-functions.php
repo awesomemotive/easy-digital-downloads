@@ -952,7 +952,6 @@ function edd_is_discount_used( $code = null, $user = '', $code_id = 0, $set_erro
  */
 function edd_is_discount_valid( $code = '', $user = '', $set_error = true ) {
 
-
 	$return      = false;
 	$discount_id = edd_get_discount_id_by_code( $code );
 	$user        = trim( $user );
@@ -961,12 +960,12 @@ function edd_is_discount_valid( $code = '', $user = '', $set_error = true ) {
 
 		if ( $discount_id ) {
 			if (
-				edd_is_discount_active( $discount_id ) &&
-				edd_is_discount_started( $discount_id ) &&
-				!edd_is_discount_maxed_out( $discount_id ) &&
-				!edd_is_discount_used( $code, $user, $discount_id ) &&
-				edd_discount_is_min_met( $discount_id ) &&
-				edd_discount_product_reqs_met( $discount_id )
+				edd_is_discount_active( $discount_id, true, $set_error ) &&
+				edd_is_discount_started( $discount_id, $set_error ) &&
+				! edd_is_discount_maxed_out( $discount_id, $set_error ) &&
+				! edd_is_discount_used( $code, $user, $discount_id, $set_error ) &&
+				edd_discount_is_min_met( $discount_id, $set_error ) &&
+				edd_discount_product_reqs_met( $discount_id, $set_error )
 			) {
 				$return = true;
 			}
