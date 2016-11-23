@@ -1571,6 +1571,18 @@ class EDD_Payment {
 
 		if ( $meta_key === '_edd_payment_meta' ) {
 
+			// #5228 Fix possible data issue introduced in 2.6.12
+			if ( isset( $meta[0] ) ) {
+				$bad_meta = $meta[0];
+				unset( $meta[0] );
+
+				if ( is_array( $bad_meta ) ) {
+					$meta = array_merge( $meta, $bad_meta );
+				}
+
+				update_post_meta( $this->ID, '_edd_payment_meta', $meta );
+			}
+
 			// Payment meta was simplified in EDD v1.5, so these are here for backwards compatibility
 			if ( empty( $meta['key'] ) ) {
 				$meta['key'] = $this->setup_payment_key();
@@ -1618,8 +1630,11 @@ class EDD_Payment {
 			$meta_value = apply_filters( 'edd_edd_update_payment_meta_' . $meta_key, $meta_value, $this->ID );
 			update_post_meta( $this->ID, '_edd_payment_user_email', $meta_value );
 
-			$current_meta = $this->get_meta( '_edd_payment_meta', false );
-			$current_meta['user_info']['email']  = $meta_value;
+			$current_meta = $this->get_meta( '_edd_payment_meta' );
+
+			if ( is_array( $current_meta ) ){
+				$current_meta['user_info']['email']  = $meta_value;
+			}
 
 			$meta_key     = '_edd_payment_meta';
 			$meta_value   = $current_meta;

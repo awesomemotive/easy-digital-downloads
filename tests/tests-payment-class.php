@@ -808,6 +808,24 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$this->assertEquals( $payment_2->address, $payment_2->user_info['address'] );
 	}
 
+	// https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5228
+	public function test_issue_5228_data() {
+		$payment         = new EDD_Payment( $this->_payment_id );
+		$meta            = $payment->get_meta();
+		$meta[0]['test'] = 'Test Value';
+		update_post_meta( $payment->ID, '_edd_payment_meta', $meta );
+
+		$direct_meta = get_post_meta( $payment->ID, '_edd_payment_meta', $meta );
+		$this->assertTrue( isset( $direct_meta[0] ) );
+
+		$payment = new EDD_Payment( $payment->ID );
+		$meta    = $payment->get_meta();
+		$this->assertFalse( isset( $meta[0] ) );
+		$this->assertTrue( isset( $meta['test'] ) );
+		$this->assertEquals( 'Test Value', $meta['test'] );
+
+	}
+
 	/** Helpers **/
 	public function alter_payment_meta( $meta, $payment_data ) {
 		$meta['user_info']['address']['country'] = 'PL';

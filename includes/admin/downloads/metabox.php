@@ -824,7 +824,7 @@ function edd_render_dowwn_tax_options( $post_id = 0 ) {
 			'name'    => '_edd_download_tax_exclusive',
 			'current' => $exclusive
 		) ); ?>
-		<?php _e( 'Mark this product as tax-exempt', 'easy-digital-downloads' ); ?>
+		<?php _e( 'Mark this product as exclusive of tax', 'easy-digital-downloads' ); ?>
 	</label>
 <?php
 }
