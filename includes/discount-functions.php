@@ -629,7 +629,7 @@ function edd_is_discount_started( $code_id = null, $set_error = true ) {
 			if ( $start_date < current_time( 'timestamp' ) ) {
 				// Discount has pased the start date
 				$return = true;
-			} elseif( $set_error ) ) {
+			} elseif( $set_error ) {
 				edd_set_error( 'edd-discount-error', __( 'This discount is not active yet.', 'easy-digital-downloads' ) );
 			}
 		} else {
@@ -702,7 +702,7 @@ function edd_discount_is_min_met( $code_id = null, $set_error = true ) {
 		if ( (float) $cart_amount >= (float) $min ) {
 			// Minimum has been met
 			$return = true;
-		} elseif( $set_error ) ) {
+		} elseif( $set_error ) {
 			edd_set_error( 'edd-discount-error', sprintf( __( 'Minimum order of %s not met.', 'easy-digital-downloads' ), edd_currency_filter( edd_format_amount( $min ) ) ) );
 		}
 	}
