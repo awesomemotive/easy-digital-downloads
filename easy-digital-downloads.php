@@ -355,6 +355,7 @@ final class Easy_Digital_Downloads {
 	 * @return void
 	 */
 	public function load_textdomain() {
+		global $wp_version;
 
 		/*
 		 * Due to the introduction of language packs through translate.wordpress.org, loading our textdomain is complex.
