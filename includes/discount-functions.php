@@ -63,21 +63,28 @@ function edd_get_discounts( $args = array() ) {
  * @return bool
  */
 function edd_has_active_discounts() {
-	$has_active = false;
+	$discounts = edd_get_discounts(
+		array(
+			'post_status'    => 'active',
+			'posts_per_page' => 100,
+			'fields'         => 'ids'
+		)
+	);
 
-	$discounts  = edd_get_discounts();
+	// When there are no discounts found anymore there are no active ones.
+	if ( ! is_array( $discounts ) || array() === $discounts ) {
+		return false;
+	}
 
-	if ( $discounts) {
-		foreach ( $discounts as $discount ) {
-			if ( edd_is_discount_active( $discount->ID ) ) {
-				$has_active = true;
-				break;
-			}
+	foreach ( $discounts as $discount ) {
+		// If we catch an active one, we can quit and return true.
+		if ( edd_is_discount_active( $discount, false ) ) {
+			return true;
 		}
 	}
-	return $has_active;
-}
 
+	return false;
+}
 
 /**
  * Get Discount
@@ -236,14 +243,6 @@ function edd_store_discount( $details, $discount_id = null ) {
 
 	}
 
-	if( ! empty( $meta['product_reqs'] ) ) {
-		foreach( $meta['product_reqs'] as $key => $product ) {
-			if( 0 === intval( $product ) ) {
-				unset( $meta['product_reqs'][ $key ] );
-			}
-		}
-	}
-
 	if( ! empty( $meta['excluded_products'] ) ) {
 		foreach( $meta['excluded_products'] as $key => $product ) {
 			if( 0 === intval( $product ) ) {
@@ -382,22 +381,25 @@ function edd_discount_exists( $code_id ) {
  * Checks whether a discount code is active.
  *
  * @since 1.0
+ * @since 2.6.11 Added $update parameter
  * @param int $code_id
+ * @param bool $update Update the discount to expired if an one is found but has an active status
+ * @param bool $set_error Whether an error message be set in session
  * @return bool
  */
-function edd_is_discount_active( $code_id = null ) {
-	$discount = edd_get_discount(  $code_id );
+function edd_is_discount_active( $code_id = null, $update = true, $set_error = true ) {
+	$discount = edd_get_discount( $code_id );
 	$return   = false;
 
 	if ( $discount ) {
-		if ( edd_is_discount_expired( $code_id ) ) {
-			if( defined( 'DOING_AJAX' ) ) {
+		if ( edd_is_discount_expired( $code_id, $update ) ) {
+			if ( defined( 'DOING_AJAX' ) && $set_error ) {
 				edd_set_error( 'edd-discount-error', __( 'This discount is expired.', 'easy-digital-downloads' ) );
 			}
 		} elseif ( $discount->post_status == 'active' ) {
 			$return = true;
 		} else {
-			if( defined( 'DOING_AJAX' ) ) {
+			if( defined( 'DOING_AJAX' ) && $set_error ) {
 				edd_set_error( 'edd-discount-error', __( 'This discount is not active.', 'easy-digital-downloads' ) );
 			}
 		}
@@ -574,16 +576,15 @@ function edd_is_discount_not_global( $code_id = 0 ) {
 }
 
 /**
- * Is Discount Expired
- *
  * Checks whether a discount code is expired.
  *
- * @param int $code_id
- *
- * @since       1.0
- * @return      bool
+ * @since 1.0
+ * @since 2.6.11 Added $update parameter
+ * @param int $code_id Discount code ID
+ * @param bool $update Update the discount to expired if an one is found but has an active status
+ * @return bool
  */
-function edd_is_discount_expired( $code_id = null ) {
+function edd_is_discount_expired( $code_id = null, $update = true ) {
 	$discount = edd_get_discount(  $code_id );
 	$return   = false;
 
@@ -593,8 +594,10 @@ function edd_is_discount_expired( $code_id = null ) {
 			$expiration = strtotime( $expiration );
 			if ( $expiration < current_time( 'timestamp' ) ) {
 				// Discount is expired
-				edd_update_discount_status( $code_id, 'inactive' );
-				update_post_meta( $code_id, '_edd_discount_status', 'expired' );
+				if ( $update ) {
+					edd_update_discount_status( $code_id, 'inactive' );
+					update_post_meta( $code_id, '_edd_discount_status', 'expired' );
+				}
 				$return = true;
 			}
 		}
@@ -610,9 +613,10 @@ function edd_is_discount_expired( $code_id = null ) {
  *
  * @since 1.0
  * @param int $code_id Discount ID
+ * @param bool $set_error Whether an error message be set in session
  * @return bool Is discount started?
  */
-function edd_is_discount_started( $code_id = null ) {
+function edd_is_discount_started( $code_id = null, $set_error = true ) {
 	$discount = edd_get_discount(  $code_id );
 	$return   = false;
 
@@ -625,7 +629,7 @@ function edd_is_discount_started( $code_id = null ) {
 			if ( $start_date < current_time( 'timestamp' ) ) {
 				// Discount has pased the start date
 				$return = true;
-			} else {
+			} elseif( $set_error ) {
 				edd_set_error( 'edd-discount-error', __( 'This discount is not active yet.', 'easy-digital-downloads' ) );
 			}
 		} else {
@@ -644,21 +648,33 @@ function edd_is_discount_started( $code_id = null ) {
  *
  * @since 1.0
  * @param int $code_id Discount ID
+ * @param bool $set_error Whether an error message be set in session
  * @return bool Is discount maxed out?
  */
-function edd_is_discount_maxed_out( $code_id = null ) {
+function edd_is_discount_maxed_out( $code_id = null, $set_error = true ) {
 	$discount = edd_get_discount(  $code_id );
 	$return   = false;
 
 	if ( $discount ) {
+
 		$uses = edd_get_discount_uses( $code_id );
+
 		// Large number that will never be reached
 		$max_uses = edd_get_discount_max_uses( $code_id );
+	
 		// Should never be greater than, but just in case
 		if ( $uses >= $max_uses && ! empty( $max_uses ) ) {
+	
 			// Discount is maxed out
-			edd_set_error( 'edd-discount-error', __( 'This discount has reached its maximum usage.', 'easy-digital-downloads' ) );
+	
+			if( $set_error ) {
+
+				edd_set_error( 'edd-discount-error', __( 'This discount has reached its maximum usage.', 'easy-digital-downloads' ) );
+	
+			}
+	
 			$return = true;
+	
 		}
 	}
 
@@ -672,9 +688,10 @@ function edd_is_discount_maxed_out( $code_id = null ) {
  *
  * @since 1.1.7
  * @param int $code_id Discount ID
+ * @param bool $set_error Whether an error message be set in session
  * @return bool $return
  */
-function edd_discount_is_min_met( $code_id = null ) {
+function edd_discount_is_min_met( $code_id = null, $set_error = true ) {
 	$discount = edd_get_discount( $code_id );
 	$return   = false;
 
@@ -685,7 +702,7 @@ function edd_discount_is_min_met( $code_id = null ) {
 		if ( (float) $cart_amount >= (float) $min ) {
 			// Minimum has been met
 			$return = true;
-		} else {
+		} elseif( $set_error ) {
 			edd_set_error( 'edd-discount-error', sprintf( __( 'Minimum order of %s not met.', 'easy-digital-downloads' ), edd_currency_filter( edd_format_amount( $min ) ) ) );
 		}
 	}
@@ -710,9 +727,10 @@ function edd_discount_is_single_use( $code_id = 0 ) {
  *
  * @since 1.5
  * @param int $code_id Discount ID
+ * @param bool $set_error Whether an error message be set in session
  * @return bool $ret Are required products in the cart?
  */
-function edd_discount_product_reqs_met( $code_id = null ) {
+function edd_discount_product_reqs_met( $code_id = null, $set_error = true ) {
 	$product_reqs = edd_get_discount_product_reqs( $code_id );
 	$condition    = edd_get_discount_product_condition( $code_id );
 	$excluded_ps  = edd_get_discount_excluded_products( $code_id );
@@ -748,7 +766,13 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 
 				foreach ( $product_reqs as $download_id ) {
 					if ( ! edd_item_in_cart( $download_id ) ) {
-						edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
+
+						if( $set_error ) {
+
+							edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
+	
+						}
+
 						$ret = false;
 						break;
 					}
@@ -766,7 +790,7 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 
 				}
 
-				if( ! $ret ) {
+				if( ! $ret && $set_error ) {
 
 					edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
 
@@ -784,7 +808,13 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 	if( ! empty( $excluded_ps ) ) {
 		// Check that there are products other than excluded ones in the cart
 		if( $cart_ids == $excluded_ps ) {
-			edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'easy-digital-downloads' ) );
+
+			if( $set_error ) {
+
+				edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'easy-digital-downloads' ) );
+	
+			}
+	
 			$ret = false;
 		}
 	}
@@ -802,10 +832,11 @@ function edd_discount_product_reqs_met( $code_id = null ) {
  * @param string $code
  * @param string $user
  * @param int $code_id (since 1.5) ID of the discount code to check
+ * @param bool $set_error Whether an error message be set in session
  *
  * @return bool $return
  */
-function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
+function edd_is_discount_used( $code = null, $user = '', $code_id = 0, $set_error = true ) {
 
 	$return = false;
 
@@ -888,7 +919,12 @@ function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
 
 					if( in_array( strtolower( $code ), $discounts ) ) {
 
-						edd_set_error( 'edd-discount-error', __( 'This discount has already been redeemed.', 'easy-digital-downloads' ) );
+						if( $set_error ) {
+
+							edd_set_error( 'edd-discount-error', __( 'This discount has already been redeemed.', 'easy-digital-downloads' ) );
+	
+						}
+	
 						$return = true;
 						break;
 
@@ -911,10 +947,10 @@ function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
  * @since 1.0
  * @param string $code Discount Code
  * @param string $user User info
+ * @param bool $set_error Whether an error message be set in session
  * @return bool
  */
 function edd_is_discount_valid( $code = '', $user = '', $set_error = true ) {
-
 
 	$return      = false;
 	$discount_id = edd_get_discount_id_by_code( $code );
@@ -924,12 +960,12 @@ function edd_is_discount_valid( $code = '', $user = '', $set_error = true ) {
 
 		if ( $discount_id ) {
 			if (
-				edd_is_discount_active( $discount_id ) &&
-				edd_is_discount_started( $discount_id ) &&
-				!edd_is_discount_maxed_out( $discount_id ) &&
-				!edd_is_discount_used( $code, $user, $discount_id ) &&
-				edd_discount_is_min_met( $discount_id ) &&
-				edd_discount_product_reqs_met( $discount_id )
+				edd_is_discount_active( $discount_id, true, $set_error ) &&
+				edd_is_discount_started( $discount_id, $set_error ) &&
+				! edd_is_discount_maxed_out( $discount_id, $set_error ) &&
+				! edd_is_discount_used( $code, $user, $discount_id, $set_error ) &&
+				edd_discount_is_min_met( $discount_id, $set_error ) &&
+				edd_discount_product_reqs_met( $discount_id, $set_error )
 			) {
 				$return = true;
 			}
@@ -1125,6 +1161,9 @@ function edd_set_cart_discount( $code = '' ) {
 
 	EDD()->session->set( 'cart_discounts', implode( '|', $discounts ) );
 
+	do_action( 'edd_cart_discount_set', $code, $discounts );
+	do_action( 'edd_cart_discounts_updated', $discounts );
+
 	return $discounts;
 }
 
@@ -1140,11 +1179,16 @@ function edd_unset_cart_discount( $code = '' ) {
 
 	if ( $discounts ) {
 		$key = array_search( $code, $discounts );
-		unset( $discounts[ $key ] );
+		if ( false !== $key ) {
+			unset( $discounts[ $key ] );
+		}
 		$discounts = implode( '|', array_values( $discounts ) );
 		// update the active discounts
 		EDD()->session->set( 'cart_discounts', $discounts );
 	}
+
+	do_action( 'edd_cart_discount_removed', $code, $discounts );
+	do_action( 'edd_cart_discounts_updated', $discounts );
 
 	return $discounts;
 }
@@ -1157,6 +1201,7 @@ function edd_unset_cart_discount( $code = '' ) {
  */
 function edd_unset_all_cart_discounts() {
 	EDD()->session->set( 'cart_discounts', null );
+	do_action( 'edd_cart_discounts_removed' );
 }
 
 /**
@@ -1381,10 +1426,13 @@ function edd_get_cart_discounts_html( $discounts = false ) {
 			edd_get_checkout_uri()
 		);
 
-		$html .= "<span class=\"edd_discount\">\n";
-			$html .= "<span class=\"edd_discount_rate\">$discount&nbsp;&ndash;&nbsp;$rate</span>\n";
-			$html .= "<a href=\"$remove_url\" data-code=\"$discount\" class=\"edd_discount_remove\"></a>\n";
-		$html .= "</span>\n";
+		$discount_html = '';
+		$discount_html .= "<span class=\"edd_discount\">\n";
+			$discount_html .= "<span class=\"edd_discount_rate\">$discount&nbsp;&ndash;&nbsp;$rate</span>\n";
+			$discount_html .= "<a href=\"$remove_url\" data-code=\"$discount\" class=\"edd_discount_remove\"></a>\n";
+		$discount_html .= "</span>\n";
+
+		$html .= apply_filters( 'edd_get_cart_discount_html', $discount_html, $discount, $rate, $remove_url );
 	}
 
 	return apply_filters( 'edd_get_cart_discounts_html', $html, $discounts, $rate, $remove_url );
@@ -1627,7 +1675,7 @@ function edd_discount_status_cleanup() {
 	}
 
 }
-add_action( 'edd_daily_scheduled_events', 'edd_discount_status_cleanup' );
+//add_action( 'edd_daily_scheduled_events', 'edd_discount_status_cleanup' );
 
 /**
  * Used during edd_discount_status_cleanup to filter out a meta query properly

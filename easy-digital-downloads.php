@@ -3,9 +3,9 @@
  * Plugin Name: Easy Digital Downloads
  * Plugin URI: https://easydigitaldownloads.com
  * Description: The easiest way to sell digital products with WordPress.
- * Author: Pippin Williamson and Company
+ * Author: Easy Digital Downloads
  * Author URI: https://easydigitaldownloads.com
- * Version: 2.6.6
+ * Version: 2.6.13
  * Text Domain: easy-digital-downloads
  * Domain Path: languages
  *
@@ -25,7 +25,7 @@
  * @package EDD
  * @category Core
  * @author Pippin Williamson
- * @version 2.6.6
+ * @version 2.6.13
  */
 
 // Exit if accessed directly.
@@ -153,6 +153,7 @@ final class Easy_Digital_Downloads {
 			self::$instance->email_tags    = new EDD_Email_Template_Tags();
 			self::$instance->customers     = new EDD_DB_Customers();
 			self::$instance->customer_meta = new EDD_DB_Customer_Meta();
+			self::$instance->payment_stats = new EDD_Payment_Stats();
 		}
 		return self::$instance;
 	}
@@ -195,7 +196,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '2.6.6' );
+			define( 'EDD_VERSION', '2.6.13' );
 		}
 
 		// Plugin Folder Path.
@@ -324,7 +325,6 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/contextual-help.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/export-functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/reports.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/pdf-reports.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-graph.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-pie-graph.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/graphing.php';

@@ -117,6 +117,11 @@ class Tests_Payments extends WP_UnitTestCase {
 		$this->assertEquals( 'publish', $out[0]->post_status );
 	}
 
+	public function test_update_payment_status_with_invalid_id() {
+		$updated = edd_update_payment_status( 1212121212121212121212112, 'publish' );
+		$this->assertFalse( $updated );
+	}
+
 	public function test_check_for_existing_payment() {
 		edd_update_payment_status( $this->_payment_id, 'publish' );
 		$this->assertTrue( edd_check_for_existing_payment( $this->_payment_id ) );
@@ -307,6 +312,18 @@ class Tests_Payments extends WP_UnitTestCase {
 
 		$user_info = edd_get_payment_meta_user_info( $this->_payment_id );
 		$this->assertEquals( 'test@test.com', edd_get_payment_meta( $this->_payment_id, '_edd_payment_user_email' ) );
+
+	}
+
+	public function test_update_payment_data() {
+
+		$payment = new EDD_Payment( $this->_payment_id );
+		$payment->date = date( 'Y-n-d H:i:s' );
+		$payment->save();
+		$meta = $payment->get_meta();
+
+		$this->assertSame( $payment->date, $meta['date'] );
+
 
 	}
 

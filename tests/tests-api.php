@@ -201,10 +201,10 @@ class Tests_API extends WP_UnitTestCase {
 
 	public function test_get_default_version() {
 
-		$this->assertEquals( 'v1', $this->_api->get_default_version() );
-
-		define( 'EDD_API_VERSION', 'v2' );
 		$this->assertEquals( 'v2', $this->_api->get_default_version() );
+
+		define( 'EDD_API_VERSION', 'v1' );
+		$this->assertEquals( 'v1', $this->_api->get_default_version() );
 
 	}
 

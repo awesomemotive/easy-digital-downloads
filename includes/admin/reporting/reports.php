@@ -349,14 +349,6 @@ function edd_reports_tab_export() {
 
 					<?php do_action( 'edd_reports_tab_export_content_top' ); ?>
 
-					<div class="postbox edd-export-pdf-sales-earnings">
-						<h3><span><?php _e( 'Export PDF of Sales and Earnings', 'easy-digital-downloads' ); ?></span></h3>
-						<div class="inside">
-							<p><?php _e( 'Download a PDF of Sales and Earnings reports for all products for the current year.', 'easy-digital-downloads' ); ?> <?php _e( 'Date range reports will be coming soon.', 'easy-digital-downloads' ); ?></p>
-							<p><a class="button" href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'generate_pdf' ) ), 'edd_generate_pdf' ); ?>"><?php _e( 'Generate PDF', 'easy-digital-downloads' ); ?></a></p>
-						</div><!-- .inside -->
-					</div><!-- .postbox -->
-
 					<div class="postbox edd-export-sales-earnings">
 						<h3><span><?php _e( 'Export Earnings and Sales Stats', 'easy-digital-downloads' ); ?></span></h3>
 						<div class="inside">
@@ -430,8 +422,9 @@ function edd_reports_tab_export() {
 					<div class="postbox edd-export-download-history">
 						<h3><span><?php _e('Export Download History in CSV','easy-digital-downloads' ); ?></span></h3>
 						<div class="inside">
-							<p><?php _e( 'Download a CSV of file downloads.', 'easy-digital-downloads' ); ?></p>
+							<p><?php _e( 'Download a CSV of file downloads. To download a CSV for all file downloads, leave "Choose a Download" as it is.', 'easy-digital-downloads' ); ?></p>
 							<form id="edd-export-file-downloads" class="edd-export-form edd-import-export-form" method="post">
+								<?php echo EDD()->html->product_dropdown( array( 'name' => 'download_id', 'id' => 'edd_file_download_export_download', 'chosen' => true ) ); ?>
 								<?php echo EDD()->html->date_field( array( 'id' => 'edd-file-download-export-start', 'name' => 'start', 'placeholder' => __( 'Choose start date', 'easy-digital-downloads' ) )); ?>
 								<?php echo EDD()->html->date_field( array( 'id' => 'edd-file-download-export-end', 'name' => 'end', 'placeholder' => __( 'Choose end date', 'easy-digital-downloads' ) )); ?>
 								<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>

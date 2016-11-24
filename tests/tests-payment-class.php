@@ -62,11 +62,21 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$this->assertEquals( 120.00, $payment->total );
 	}
 
+	public function test_get_existing_payment_txn() {
+		$payment = new EDD_Payment( 'FIR3SID3', true );
+		$this->assertEquals( $this->_payment_id, $payment->ID );
+	}
+
 	public function test_getting_no_payment() {
 		$payment = new EDD_Payment();
 		$this->assertEquals( NULL, $payment->ID );
 
 		$payment = new EDD_Payment( 99999999999 );
+		$this->assertEquals( NULL, $payment->ID );
+	}
+
+	public function test_getting_no_payment_txn() {
+		$payment = new EDD_Payment( 'false-txn', true );
 		$this->assertEquals( NULL, $payment->ID );
 	}
 
@@ -770,5 +780,56 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$customer = new EDD_Customer( $payment->customer_id );
 
 		$this->assertEquals( $payment->user_id, $customer->user_id );
+	}
+
+	public function test_filtering_payment_meta() {
+		add_filter( 'edd_payment_meta', array( $this, 'alter_payment_meta' ), 10, 2 );
+		$payment_id         = EDD_Helper_Payment::create_simple_payment();
+		remove_filter( 'edd_payment_meta', array( $this, 'alter_payment_meta' ), 10, 2 );
+
+		$payment = new EDD_Payment( $payment_id );
+		$this->assertEquals( 'PL', $payment->payment_meta['user_info']['address']['country'] );
+	}
+
+	public function test_modifying_address() {
+		$payment_id = EDD_Helper_Payment::create_simple_payment();
+		$payment    = new EDD_Payment( $payment_id );
+		$payment->address = array(
+			'line1'   => '123 Main St',
+			'line2'   => '',
+			'city'    => 'New York City',
+			'state'   => 'New York',
+			'zip'     => '10010',
+			'country' => 'US',
+		);
+		$payment->save();
+
+		$payment_2 = new EDD_Payment( $payment_id );
+		$this->assertEquals( $payment_2->address, $payment_2->user_info['address'] );
+	}
+
+	// https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5228
+	public function test_issue_5228_data() {
+		$payment         = new EDD_Payment( $this->_payment_id );
+		$meta            = $payment->get_meta();
+		$meta[0]['test'] = 'Test Value';
+		update_post_meta( $payment->ID, '_edd_payment_meta', $meta );
+
+		$direct_meta = get_post_meta( $payment->ID, '_edd_payment_meta', $meta );
+		$this->assertTrue( isset( $direct_meta[0] ) );
+
+		$payment = new EDD_Payment( $payment->ID );
+		$meta    = $payment->get_meta();
+		$this->assertFalse( isset( $meta[0] ) );
+		$this->assertTrue( isset( $meta['test'] ) );
+		$this->assertEquals( 'Test Value', $meta['test'] );
+
+	}
+
+	/** Helpers **/
+	public function alter_payment_meta( $meta, $payment_data ) {
+		$meta['user_info']['address']['country'] = 'PL';
+
+		return $meta;
 	}
 }
