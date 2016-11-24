@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @param bool $admin_notice Whether to send the admin email notification or not (default: true)
  * @return void
  */
-function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
+function edd_email_purchase_receipt( $payment_id, $admin_notice = true, $to_email = '' ) {
 
 	$payment_data = edd_get_payment_meta( $payment_id );
 
@@ -31,11 +31,15 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	$from_email   = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
 	$from_email   = apply_filters( 'edd_purchase_from_address', $from_email, $payment_id, $payment_data );
 
-	$to_email     = edd_get_payment_user_email( $payment_id );
+	if( empty( $to_email ) ) {
+
+		$to_email = edd_get_payment_user_email( $payment_id );
+
+	}
 
 	$subject      = edd_get_option( 'purchase_subject', __( 'Purchase Receipt', 'easy-digital-downloads' ) );
 	$subject      = apply_filters( 'edd_purchase_subject', wp_strip_all_tags( $subject ), $payment_id );
-	$subject      = edd_do_email_tags( $subject, $payment_id );
+	$subject      = wp_specialchars_decode( edd_do_email_tags( $subject, $payment_id ) );
 
 	$heading      = edd_get_option( 'purchase_heading', __( 'Purchase Receipt', 'easy-digital-downloads' ) );
 	$heading      = apply_filters( 'edd_purchase_heading', $heading, $payment_id, $payment_data );

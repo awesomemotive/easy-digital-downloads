@@ -21,15 +21,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @since  1.0
  *
- * @param int    $user User ID or email address
- * @param int    $number Number of purchases to retrieve
- * @param bool   $pagination
- * @param string $status
+ * @param int $user User ID or email address
+ * @param int $number Number of purchases to retrieve
+ * @param bool pagination
+ * @param string|array $status Either an array of statuses, a single status as a string literal or a comma separated list of statues
  *
  * @return bool|object List of all user purchases
  */
 function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, $status = 'complete' ) {
-
 	if ( empty( $user ) ) {
 		$user = get_current_user_id();
 	}
@@ -38,7 +37,19 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 		return false;
 	}
 
-	$status = $status === 'complete' ? 'publish' : $status;
+	if ( is_string( $status ) ) {
+		if ( strpos( $status, ',' ) ) {
+			$status = explode( ',', $status );
+		} else {
+			$status = $status === 'complete' ? 'publish' : $status;
+			$status = array( $status );
+		}
+
+	}
+
+	if ( is_array( $status ) ) {
+		$status = array_unique( $status );
+	}
 
 	if ( $pagination ) {
 		if ( get_query_var( 'paged' ) )
@@ -166,11 +177,9 @@ function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
 		return false;
 	}
 
-	$post_type 	 = get_post_type( $product_ids[0] );
-
 	$args = apply_filters( 'edd_get_users_purchased_products_args', array(
 		'include'        => $product_ids,
-		'post_type'      => $post_type,
+		'post_type'      => 'download',
 		'posts_per_page' => -1,
 	) );
 
@@ -525,7 +534,15 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 
 	$user_message .= sprintf( __( 'Password: %s', 'easy-digital-downloads' ), '[' . $password_message . ']' ) . "\r\n";
 
-	$user_message .= '<a href="' . wp_login_url() . '"> ' . esc_attr__( 'Click Here to Log In', 'easy-digital-downloads' ) . ' &raquo;</a>' . "\r\n";
+	if( $emails->html ) {
+
+		$user_message .= '<a href="' . wp_login_url() . '"> ' . esc_attr__( 'Click here to log in', 'easy-digital-downloads' ) . ' &raquo;</a>' . "\r\n";
+
+	} else {
+
+		$user_message .= sprintf( __( 'To log in, visit: %s', 'easy-digital-downloads' ), wp_login_url() ) . "\r\n";
+
+	}
 
 	$emails->__set( 'heading', $user_heading );
 
@@ -644,9 +661,9 @@ function edd_get_user_verification_request_url( $user_id = 0 ) {
 		$user_id = get_current_user_id();
 	}
 
-	$url = wp_nonce_url( add_query_arg( array(
+	$url = esc_url( wp_nonce_url( add_query_arg( array(
 		'edd_action' => 'send_verification_email'
-	) ), 'edd-request-verification' );
+	) ), 'edd-request-verification' ) );
 
 	return apply_filters( 'edd_get_user_verification_request_url', $url, $user_id );
 
@@ -951,8 +968,16 @@ add_action( 'delete_user', 'edd_detach_deleted_user', 10, 1 );
  * @return void
  */
 function edd_show_user_api_key_field( $user ) {
+
+	if ( get_current_user_id() !== $user->ID ) {
+		return;
+	}
+
 	if ( ( edd_get_option( 'api_allow_user_keys', false ) || current_user_can( 'manage_shop_settings' ) ) && current_user_can( 'edit_user', $user->ID ) ) {
 		$user = get_userdata( $user->ID );
+		$public_key = EDD()->api->get_user_public_key( $user->ID );
+		$secret_key = EDD()->api->get_user_secret_key( $user->ID );
+		$token      = EDD()->api->get_token( $user->ID );
 		?>
 		<table class="form-table">
 			<tbody>
@@ -961,17 +986,13 @@ function edd_show_user_api_key_field( $user ) {
 					<?php _e( 'Easy Digital Downloads API Keys', 'easy-digital-downloads' ); ?>
 				</th>
 				<td>
-					<?php
-					$public_key = EDD()->api->get_user_public_key( $user->ID );
-					$secret_key = EDD()->api->get_user_secret_key( $user->ID );
-					?>
 					<?php if ( empty( $user->edd_user_public_key ) ) { ?>
 						<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
 						<span class="description"><?php _e( 'Generate API Key', 'easy-digital-downloads' ); ?></span>
 					<?php } else { ?>
-						<strong style="display:inline-block; width: 125px;"><?php _e( 'Public key:', 'easy-digital-downloads' ); ?>&nbsp;</strong><input type="text" disabled="disabled" class="regular-text" id="publickey" value="<?php echo esc_attr( $public_key ); ?>"/><br/>
-						<strong style="display:inline-block; width: 125px;"><?php _e( 'Secret key:', 'easy-digital-downloads' ); ?>&nbsp;</strong><input type="text" disabled="disabled" class="regular-text" id="privatekey" value="<?php echo esc_attr( $secret_key ); ?>"/><br/>
-						<strong style="display:inline-block; width: 125px;"><?php _e( 'Token:', 'easy-digital-downloads' ); ?>&nbsp;</strong><input type="text" disabled="disabled" class="regular-text" id="token" value="<?php echo esc_attr( EDD()->api->get_token( $user->ID ) ); ?>"/><br/>
+						<strong style="display:inline-block; width: 125px;"><?php _e( 'Public key:', 'easy-digital-downloads' ); ?>&nbsp;</strong><input type="text" readonly="readonly" class="regular-text" id="publickey" value="<?php echo esc_attr( $public_key ); ?>"/><br/>
+						<strong style="display:inline-block; width: 125px;"><?php _e( 'Secret key:', 'easy-digital-downloads' ); ?>&nbsp;</strong><input type="text" readonly="readonly" class="regular-text" id="privatekey" value="<?php echo esc_attr( $secret_key ); ?>"/><br/>
+						<strong style="display:inline-block; width: 125px;"><?php _e( 'Token:', 'easy-digital-downloads' ); ?>&nbsp;</strong><input type="text" readonly="readonly" class="regular-text" id="token" value="<?php echo esc_attr( EDD()->api->get_token( $user->ID ) ); ?>"/><br/>
 						<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
 						<span class="description"><label for="edd_set_api_key"><?php _e( 'Revoke API Keys', 'easy-digital-downloads' ); ?></label></span>
 					<?php } ?>
@@ -979,6 +1000,26 @@ function edd_show_user_api_key_field( $user ) {
 			</tr>
 			</tbody>
 		</table>
+
+		<?php if ( wp_is_mobile() ) : ?>
+		<table class="form-table">
+			<tbody>
+			<tr>
+				<th>
+					<?php printf( __( 'Easy Digital Downloads <a href="%s">iOS App</a>', 'easy-digital-downloads' ), 'https://itunes.apple.com/us/app/easy-digital-downloads-2/id1169488828?ls=1&mt=8' ); ?>
+				</th>
+				<td>
+					<?php
+					$sitename = get_bloginfo( 'name' );
+					$ios_url  = 'edd://new?sitename=' . $sitename . '&siteurl=' . home_url() . '&key=' . $public_key . '&token=' . $token;
+					?>
+					<a class="button-secondary" href="<?php echo $ios_url; ?>"><?php _e( 'Add to iOS App', 'easy-digital-downloads' ); ?></a>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+		<?php endif; ?>
+
 	<?php }
 }
 add_action( 'show_user_profile', 'edd_show_user_api_key_field' );

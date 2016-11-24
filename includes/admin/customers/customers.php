@@ -203,7 +203,6 @@ function edd_customers_view( $customer ) {
 						$address = wp_parse_args( $address, $defaults );
 					?>
 
-					<?php if ( ! empty( $address ) ) : ?>
 					<strong><?php _e( 'Customer Address', 'easy-digital-downloads' ); ?></strong>
 					<span class="customer-address info-item editable">
 						<span class="info-item" data-key="line1"><?php echo $address['line1']; ?></span>
@@ -213,7 +212,7 @@ function edd_customers_view( $customer ) {
 						<span class="info-item" data-key="country"><?php echo $address['country']; ?></span>
 						<span class="info-item" data-key="zip"><?php echo $address['zip']; ?></span>
 					</span>
-					<?php endif; ?>
+
 					<span class="customer-address info-item edit-item">
 						<input class="info-item" type="text" data-key="line1" name="customerinfo[line1]" placeholder="<?php _e( 'Address 1', 'easy-digital-downloads' ); ?>" value="<?php echo $address['line1']; ?>" />
 						<input class="info-item" type="text" data-key="line2" name="customerinfo[line2]" placeholder="<?php _e( 'Address 2', 'easy-digital-downloads' ); ?>" value="<?php echo $address['line2']; ?>" />
@@ -615,7 +614,7 @@ function edd_customer_tools_view( $customer ) {
 		<div class="edd-item-info customer-info">
 			<h4><?php _e( 'Recount Customer Stats', 'easy-digital-downloads' ); ?></h4>
 			<p class="edd-item-description"><?php _e( 'Use this tool to recalculate the purchase count and total value of the customer.', 'easy-digital-downloads' ); ?></p>
-			<form method="post" id="edd-tools-recount-form" class="edd-export-form">
+			<form method="post" id="edd-tools-recount-form" class="edd-export-form edd-import-export-form">
 				<span>
 					<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 

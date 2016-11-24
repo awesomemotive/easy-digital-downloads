@@ -53,12 +53,15 @@ a.edd-delete:hover {
 
 .edd-ui-tooltip {
 	background: #333 !important;
+	border-width: 1px !important;
 	border-radius: 3px !important;
-	box-shadow: 1px 1px 2px 1px rgba(214,214,214,0.5);
+	box-shadow: 1px 1px 2px 1px rgba(214,214,214,0.5) !important;
 	color: #dedede !important;
-	max-width: 300px;
-	padding: 7px;
+	max-width: 300px !important;
+	padding: 7px !important;
 	text-rendering: optimizeLegibility;
+	text-shadow: none !important;
+	z-index: 9999 !important;
 }
 
 /* =Add Ons Styles
@@ -244,7 +247,7 @@ tr.status-refunded td {
 	display: block;
 	padding: 2px 8px 2px;
 	position: absolute;
-	top: 3px;
+	top: 2px;
 	right: 7px;
 }
 .edd_upload_field {
@@ -340,6 +343,9 @@ textarea#edd-payment-note {
 }
 #edd-order-resend-receipt .inside {
 	margin-top: 11px;
+}
+#edd-order-resend-receipt .edd-order-resend-receipt-addresses {
+	margin-top: 10px;
 }
 .edd-admin-box-inside:last-child {
 	border-bottom: 0;
@@ -554,6 +560,11 @@ textarea#edd-payment-note {
 .edd_dashboard_widget td {
 	padding: 3px 0;
 }
+.edd_dashboard_widget .b,
+.edd_dashboard_widget .t {
+	line-height: 1.5;
+	vertical-align: middle;
+}
 .edd_dashboard_widget .b {
 	font-size: 14px;
 	font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif;
@@ -563,7 +574,6 @@ textarea#edd-payment-note {
 .edd_dashboard_widget .t {
 	font-size: 12px;
 	padding-right: 12px;
-	padding-top: 6px;
 	color: #777;
 	width: 100%;
 }

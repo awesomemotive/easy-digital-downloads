@@ -80,7 +80,7 @@ function edd_append_no_cache_param( $settings ) {
 add_filter( 'edd_settings_misc', 'edd_append_no_cache_param', -1 );
 
 /**
- * Show the correct language on the [downloads] short code if qTranslate is active
+ * Show the correct language on the [downloads] shortcode if qTranslate is active
  *
  * @since 1.7
  * @param string $content Download content

@@ -57,8 +57,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 				</th>
 				<td>
 					<input type="text" id="edd-amount" name="amount" value="" style="width: 40px;"/>
-					<p class="description edd-amount-description" style="display:none;"><?php printf( __( 'Enter the discount amount in %s', 'easy-digital-downloads' ), edd_get_currency() ); ?></p>
-					<p class="description edd-amount-description"><?php _e( 'Enter the discount percentage. 10 = 10%', 'easy-digital-downloads' ); ?></p>
+					<p class="description edd-amount-description flat-discount" style="display:none;"><?php printf( __( 'Enter the discount amount in %s', 'easy-digital-downloads' ), edd_get_currency() ); ?></p>
+					<p class="description edd-amount-description percent-discount"><?php _e( 'Enter the discount percentage. 10 = 10%', 'easy-digital-downloads' ); ?></p>
 				</td>
 			</tr>
 			<?php do_action( 'edd_add_discount_form_before_products' ); ?>
@@ -72,8 +72,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 							'name'        => 'products[]',
 							'id'          => 'products',
 							'multiple'    => true,
-                            'chosen'      => true,
-                            'placeholder' => sprintf( __( 'Select one or more %s', 'easy-digital-downloads' ), edd_get_label_plural() )
+							'chosen'      => true,
+							'placeholder' => sprintf( __( 'Select one or more %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
 						) ); ?><br/>
 					</p>
 					<div id="edd-discount-product-conditions" style="display:none;">
@@ -104,12 +104,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 				</th>
 				<td>
 					<?php echo EDD()->html->product_dropdown( array(
-						'name'     => 'excluded-products[]',
-						'id'       => 'excluded-products',
-						'selected' => array(),
-						'multiple' => true,
-                        'chosen'   => true,
-                        'placeholder' => sprintf( __( 'Select one or more %s', 'easy-digital-downloads' ), edd_get_label_plural() )
+						'name'        => 'excluded-products[]',
+						'id'          => 'excluded-products',
+						'selected'    => array(),
+						'multiple'    => true,
+						'chosen'      => true,
+						'placeholder' => sprintf( __( 'Select one or more %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
 					) ); ?><br/>
 					<p class="description"><?php printf( __( '%s that this discount code cannot be applied to.', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></p>
 				</td>

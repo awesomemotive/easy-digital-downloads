@@ -114,6 +114,12 @@ class EDD_Tracking {
 	 */
 	public function send_checkin( $override = false, $ignore_last_checkin = false ) {
 
+		$home_url = trailingslashit( home_url() );
+		// Allows us to stop our own site from checking in, and a filter for our additional sites
+		if ( $home_url === 'https://easydigitaldownloads.com/' || apply_filters( 'edd_disable_tracking_checkin', false ) ) {
+			return false;
+		}
+
 		if( ! $this->tracking_allowed() && ! $override ) {
 			return false;
 		}
@@ -233,22 +239,21 @@ class EDD_Tracking {
 	 * @return void
 	 */
 	public function admin_notice() {
-
 		$hide_notice = get_option( 'edd_tracking_notice' );
 
-		if( $hide_notice ) {
+		if ( $hide_notice ) {
 			return;
 		}
 
-		if( edd_get_option( 'allow_tracking', false ) ) {
+		if ( edd_get_option( 'allow_tracking', false ) ) {
 			return;
 		}
 
-		if( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 
-		if(
+		if (
 			stristr( network_site_url( '/' ), 'dev'       ) !== false ||
 			stristr( network_site_url( '/' ), 'localhost' ) !== false ||
 			stristr( network_site_url( '/' ), ':8888'     ) !== false // This is common with MAMP on OS X
@@ -261,7 +266,7 @@ class EDD_Tracking {
 			$source         = substr( md5( get_bloginfo( 'name' ) ), 0, 10 );
 			$extensions_url = 'https://easydigitaldownloads.com/downloads/?utm_source=' . $source . '&utm_medium=admin&utm_term=notice&utm_campaign=EDDUsageTracking';
 			echo '<div class="updated"><p>';
-				echo sprintf( __( 'Allow Easy Digital Downloads to track plugin usage? Opt-in to tracking and our newsletter and immediately be emailed a 20%% discount to the EDD shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'easy-digital-downloads' ), $extensions_url );
+				echo sprintf( __( 'Allow Easy Digital Downloads to track plugin usage? Opt-in to tracking and our newsletter and immediately be emailed a 20%s discount to the EDD shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'easy-digital-downloads' ), '%', $extensions_url );
 				echo '&nbsp;<a href="' . esc_url( $optin_url ) . '" class="button-secondary">' . __( 'Allow', 'easy-digital-downloads' ) . '</a>';
 				echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary">' . __( 'Do not allow', 'easy-digital-downloads' ) . '</a>';
 			echo '</p></div>';

@@ -60,7 +60,7 @@ class Test_Misc extends WP_UnitTestCase {
 		$expected = array(
 			'USD'  => __( 'US Dollars (&#36;)', 'easy-digital-downloads' ),
 			'EUR'  => __( 'Euros (&euro;)', 'easy-digital-downloads' ),
-			'GBP'  => __( 'Pounds Sterling (&pound;)', 'easy-digital-downloads' ),
+			'GBP'  => __( 'Pound Sterling (&pound;)', 'easy-digital-downloads' ),
 			'AUD'  => __( 'Australian Dollars (&#36;)', 'easy-digital-downloads' ),
 			'BRL'  => __( 'Brazilian Real (R&#36;)', 'easy-digital-downloads' ),
 			'CAD'  => __( 'Canadian Dollars (&#36;)', 'easy-digital-downloads' ),
@@ -271,7 +271,7 @@ class Test_Misc extends WP_UnitTestCase {
 			'PG' => 'Papua New Guinea',
 			'PY' => 'Paraguay',
 			'PE' => 'Peru',
-			'PH' => 'Phillipines',
+			'PH' => 'Philippines',
 			'PN' => 'Pitcairn Island',
 			'PL' => 'Poland',
 			'PT' => 'Portugal',

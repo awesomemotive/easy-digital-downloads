@@ -386,7 +386,21 @@ class EDD_Customer {
 		$ret = $update && $remove && $add;
 
 		if( $ret ) {
+
 			$this->email = $new_primary_email;
+
+			$payment_ids = $this->get_payment_ids();
+
+			if( $payment_ids ) {
+
+				foreach( $payment_ids as $payment_id ) {
+
+					// Update payment emails to primary email
+					edd_update_payment_meta( $payment_id, 'email', $new_primary_email );
+
+				}
+
+			}
 		}
 
 		do_action( 'edd_customer_post_set_primary_email', $new_primary_email, $this->id, $this );

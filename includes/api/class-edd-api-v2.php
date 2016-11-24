@@ -145,7 +145,7 @@ class EDD_API_V2 extends EDD_API_V1 {
 			}
 		}
 
-		return $products;
+		return apply_filters( 'edd_api_products', $products );
 	}
 
 	/**
@@ -279,7 +279,7 @@ class EDD_API_V2 extends EDD_API_V1 {
 				$customers['customers'][ $customer_count ]['info']['first_name']        = $first_name;
 				$customers['customers'][ $customer_count ]['info']['last_name']         = $last_name;
 				$customers['customers'][ $customer_count ]['info']['email']             = $customer_obj->email;
-				$customers['customers'][ $customer_count ]['info']['additional_emails'] = array();
+				$customers['customers'][ $customer_count ]['info']['additional_emails'] = null;
 				$customers['customers'][ $customer_count ]['info']['date_created']      = $customer_obj->date_created;
 
 				if ( ! empty( $customer_obj->emails ) && count( $customer_obj->emails ) > 1 ) {
@@ -326,7 +326,7 @@ class EDD_API_V2 extends EDD_API_V1 {
 
 		}
 
-		return $customers;
+		return apply_filters( 'edd_api_customers', $customers, $this );
 	}
 
 	/**
@@ -368,11 +368,11 @@ class EDD_API_V2 extends EDD_API_V1 {
 				$user_info    = $payment->user_info;
 
 				$sales['sales'][ $i ]['ID']             = $payment->number;
-				$sales['sales'][ $i ]['transaction_id'] = $payment->transaction_id;
+				$sales['sales'][ $i ]['transaction_id'] = ( ! empty( $payment->transaction_id ) ) ? $payment->transaction_id : null;
 				$sales['sales'][ $i ]['key']            = $payment->key;
 				$sales['sales'][ $i ]['subtotal']       = $payment->subtotal;
 				$sales['sales'][ $i ]['tax']            = $payment->tax;
-				$sales['sales'][ $i ]['fees']           = $payment->fees;
+				$sales['sales'][ $i ]['fees']           = ( ! empty( $payment->fees ) ? $payment->fees : null );
 				$sales['sales'][ $i ]['total']          = $payment->total;
 				$sales['sales'][ $i ]['gateway']        = $payment->gateway;
 				$sales['sales'][ $i ]['email']          = $payment->email;
@@ -431,13 +431,13 @@ class EDD_API_V2 extends EDD_API_V1 {
 					$c++;
 				}
 
-				$sales['sales'][ $i ]['discounts'] = $discount_values;
+				$sales['sales'][ $i ]['discounts'] = ( ! empty( $discount_values ) ? $discount_values : null );;
 				$sales['sales'][ $i ]['products']  = $cart_items;
 
 				$i++;
 			}
 		}
-		return $sales;
+		return apply_filters( 'edd_api_sales', $sales, $this );
 	}
 
 }

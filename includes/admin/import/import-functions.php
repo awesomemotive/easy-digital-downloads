@@ -39,7 +39,22 @@ function edd_do_ajax_import_file_upload() {
 		wp_send_json_error( array( 'error' => __( 'Missing import file. Please provide an import file.', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
 	}
 
-	if( empty( $_FILES['edd-import-file']['type'] ) || 'text/csv' !== $_FILES['edd-import-file']['type'] ) {
+	$accepted_mime_types = array(
+		'text/csv',
+		'text/comma-separated-values',
+		'text/plain',
+		'text/anytext',
+		'text/*',
+		'text/plain',
+		'text/anytext',
+		'text/*',
+		'application/csv',
+		'application/excel',
+		'application/vnd.ms-excel',
+		'application/vnd.msexcel',
+	);
+
+	if( empty( $_FILES['edd-import-file']['type'] ) || ! in_array( strtolower( $_FILES['edd-import-file']['type'] ), $accepted_mime_types ) ) {
 		wp_send_json_error( array( 'error' => __( 'The file you uploaded does not appear to be a CSV file.', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
 	}
 

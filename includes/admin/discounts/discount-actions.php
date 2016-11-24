@@ -35,7 +35,15 @@ function edd_add_discount( $data ) {
 
 	foreach ( $data as $key => $value ) {
 
-		if ( $key != 'edd-discount-nonce' && $key != 'edd-action' && $key != 'edd-redirect' ) {
+		if ( $key === 'products' || $key === 'excluded-products' ) {
+
+			foreach ( $value as $product_key => $product_value ) {
+				$value[ $product_key ] = preg_replace("/[^0-9_]/", '', $product_value );
+			}
+
+			$posted[ $key ] = $value;
+
+		} else if ( $key != 'edd-discount-nonce' && $key != 'edd-action' && $key != 'edd-redirect' ) {
 
 			if ( is_string( $value ) || is_int( $value ) ) {
 
@@ -97,7 +105,15 @@ function edd_edit_discount( $data ) {
 
 	foreach ( $data as $key => $value ) {
 
-		if ( $key != 'edd-discount-nonce' && $key != 'edd-action' && $key != 'discount-id' && $key != 'edd-redirect' ) {
+		if ( $key === 'products' || $key === 'excluded-products' ) {
+
+			foreach ( $value as $product_key => $product_value ) {
+				$value[ $product_key ] = preg_replace("/[^0-9_]/", '', $product_value );
+			}
+
+			$discount[ $key ] = $value;
+
+		} else if ( $key != 'edd-discount-nonce' && $key != 'edd-action' && $key != 'discount-id' && $key != 'edd-redirect' ) {
 
 			if ( is_string( $value ) || is_int( $value ) ) {
 

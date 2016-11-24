@@ -407,16 +407,16 @@
 	display: none;
 }
 #edd_checkout_form_wrap span.card-type.visa {
-	background: url(images/icons/visa.gif ) no-repeat;
+	background: url(images/icons/visa.png ) no-repeat;
 }
 #edd_checkout_form_wrap span.card-type.mastercard {
-	background: url(images/icons/mastercard.gif ) no-repeat;
+	background: url(images/icons/mastercard.png ) no-repeat;
 }
 #edd_checkout_form_wrap span.card-type.discover {
-	background: url(images/icons/discover.gif ) no-repeat;
+	background: url(images/icons/discover.png ) no-repeat;
 }
 #edd_checkout_form_wrap span.card-type.amex {
-	background: url(images/icons/americanexpress.gif ) no-repeat;
+	background: url(images/icons/americanexpress.png ) no-repeat;
 }
 #edd_checkout_form_wrap #edd-discount-loader,
 #edd_checkeout_form_wrap .edd-cart-ajax {
@@ -665,12 +665,14 @@ table#edd_purchase_receipt_products .edd_bundled_product_name {
 }
 #edd_profile_editor_form label {
 	display: inline-block;
-	width: 200px;
 }
 #edd_profile_editor_form .edd-profile-emails {
 	list-style-type: none;
 	display: inline-table;
 	margin-left: 0;
+}
+#edd_profile_editor_form .edd-profile-emails {
+	margin-bottom: 0;
 }
 #edd_profile_editor_form .edd-profile-email {
 	width: auto;
