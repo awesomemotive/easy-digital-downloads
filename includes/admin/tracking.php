@@ -61,7 +61,6 @@ class EDD_Tracking {
 	 * @return void
 	 */
 	private function setup_data() {
-		global $edd_options;
 
 		$data = array();
 
@@ -74,7 +73,7 @@ class EDD_Tracking {
 		$data['wp_version']  = get_bloginfo( 'version' );
 		$data['server']      = isset( $_SERVER['SERVER_SOFTWARE'] ) ? $_SERVER['SERVER_SOFTWARE'] : '';
 
-		$checkout_page        = ! empty( $edd_options['purchase_page'] ) ? $edd_options['purchase_page'] : false;
+		$checkout_page        = edd_get_option( 'purchase_page', false );
 		$data['install_date'] = false !== $checkout_page ? get_post_field( 'post_date', $checkout_page ) : 'not set';
 
 		$data['multisite']   = is_multisite();
@@ -179,11 +178,7 @@ class EDD_Tracking {
 	 */
 	public function check_for_optin( $data ) {
 
-		global $edd_options;
-
-		$edd_options['allow_tracking'] = '1';
-
-		update_option( 'edd_settings', $edd_options );
+		edd_update_option( 'allow_tracking', 1 );
 
 		$this->send_checkin( true );
 
@@ -198,17 +193,9 @@ class EDD_Tracking {
 	 * @return void
 	 */
 	public function check_for_optout( $data ) {
-
-		global $edd_options;
-		if( isset( $edd_options['allow_tracking'] ) ) {
-			unset( $edd_options['allow_tracking'] );
-			update_option( 'edd_settings', $edd_options );
-		}
-
+		edd_delete_option( 'allow_tracking' );
 		update_option( 'edd_tracking_notice', '1' );
-
 		wp_redirect( remove_query_arg( 'edd_action' ) ); exit;
-
 	}
 
 	/**
