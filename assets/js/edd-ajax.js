@@ -331,8 +331,9 @@ jQuery(document).ready(function ($) {
 
 		var payment_mode = $('#edd-gateway option:selected, input.edd-gateway:checked').val();
 
-		if( payment_mode == '0' )
+		if( payment_mode == '0' ) {
 			return false;
+		}
 
 		edd_load_gateway( payment_mode );
 
@@ -341,8 +342,9 @@ jQuery(document).ready(function ($) {
 
 	// Auto load first payment gateway
 	if( edd_scripts.is_checkout == '1' && $('select#edd-gateway, input.edd-gateway').length ) {
+		var chosen_gateway = $("meta[name='edd-chosen-gateway']").attr('content');
 		setTimeout( function() {
-			edd_load_gateway( edd_scripts.default_gateway );
+			edd_load_gateway( chosen_gateway );
 		}, 200);
 	}
 

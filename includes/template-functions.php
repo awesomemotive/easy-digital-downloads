@@ -863,6 +863,7 @@ function edd_checkout_meta_tags() {
 		return;
 	}
 
+	echo '<meta name="edd-chosen-gateway" content="' . edd_get_chosen_gateway() . '"/>' . "\n";
 	echo '<meta name="robots" content="noindex,nofollow" />' . "\n";
 }
 add_action( 'wp_head', 'edd_checkout_meta_tags' );
