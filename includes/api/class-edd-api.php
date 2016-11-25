@@ -1780,10 +1780,11 @@ class EDD_API {
 			'purchasekey' => isset( $wp_query->query_vars['purchasekey'] ) ? $wp_query->query_vars['purchasekey'] : null,
 			'email'       => isset( $wp_query->query_vars['email'] )       ? $wp_query->query_vars['email']       : null,
 		);
-
+		
+		$arg_separator    = edd_get_php_arg_separator_output();
 		$log_data = array(
 			'log_type'     => 'api_request',
-			'post_excerpt' => http_build_query( $query ),
+			'post_excerpt' => http_build_query( $query, '', $arg_separator ),
 			'post_content' => ! empty( $data['error'] ) ? $data['error'] : '',
 		);
 
