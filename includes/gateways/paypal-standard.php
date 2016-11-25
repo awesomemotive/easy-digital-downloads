@@ -284,10 +284,8 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		$paypal_args = apply_filters( 'edd_paypal_redirect_args', $paypal_args, $purchase_data );
 
 		// Build query
-		$paypal_redirect .= http_build_query( $paypal_args );
-
-		// Fix for some sites that encode the entities
-		$paypal_redirect = str_replace( '&amp;', '&', $paypal_redirect );
+		$arg_separator    = edd_get_php_arg_separator_output();
+		$paypal_redirect .= http_build_query( $paypal_args, '', $arg_seperator );
 
 		// Get rid of cart contents
 		edd_empty_cart();
