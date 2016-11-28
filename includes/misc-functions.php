@@ -423,7 +423,7 @@ function edd_month_num_to_name( $n ) {
  * @return string Arg separator output
  */
 function edd_get_php_arg_separator_output() {
-	return ini_get( 'arg_separator.output' );
+	return '&';
 }
 
 /**
