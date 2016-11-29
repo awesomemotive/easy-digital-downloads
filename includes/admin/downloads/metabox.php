@@ -501,6 +501,7 @@ function edd_render_products_field( $post_id ) {
 	$products         = edd_get_bundled_products( $post_id );
 	$variable_pricing = edd_has_variable_prices( $post_id );
 	$variable_display = $variable_pricing ? '' : 'display:none;';
+	$prices           = edd_get_variable_prices( $post_id );
 ?>
 	<div id="edd_products"<?php echo $display; ?>>
 		<div id="edd_file_fields" class="edd_meta_table_wrap">
@@ -539,12 +540,18 @@ function edd_render_products_field( $post_id ) {
 							<td>
 								<button class="edd_remove_repeatable" data-type="file" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;"><span class="screen-reader-text"><?php printf( __( 'Remove bundle option %s', 'easy-digital-downloads' ), $key ); ?></span><span aria-hidden="true">&times;</span></button>
 							</td>
-							<td class="pricing"<?php echo $variable_display; ?>>
+							<td>
 								<?php
 									$options = array();
 
+									if ( $prices ) {
+										foreach ( $prices as $price_key => $price ) {
+											$options[ $price_key ] = $prices[ $price_key ]['name'];
+										}
+									}
+
 									echo EDD()->html->select( array(
-										'name'             => '_edd_bundled_products[' . $key . '][condition]',
+										'name'             => "edd_bundled_products[$key][condition]",
 										'class'            => 'edd_repeatable_condition_field',
 										'options'          => $options,
 										'show_option_none' => false
@@ -564,11 +571,12 @@ function edd_render_products_field( $post_id ) {
 						<td>
 							<?php
 							echo EDD()->html->product_dropdown( array(
-								'name'     => '_edd_bundled_products[]',
-								'id'       => 'edd_bundled_products_1',
-								'multiple' => false,
-								'chosen'   => true,
-								'bundles'  => false
+								'name'       => '_edd_bundled_products[]',
+								'id'         => 'edd_bundled_products_1',
+								'multiple'   => false,
+								'chosen'     => true,
+								'bundles'    => false,
+								'variations' => true,
 							) );
 							?>
 						</td>
