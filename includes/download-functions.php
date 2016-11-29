@@ -1290,3 +1290,18 @@ function edd_parse_product_dropdown_value( $value ) {
 
 	return array( 'download_id' => $download_id, 'price_id' => $price_id );
 }
+
+/**
+ * Get bundle pricing variations
+ *
+ * @since  2.7
+ * @param  int $download_id
+ * @return array|void
+ */
+function edd_get_bundle_pricing_variations( $download_id = 0 ) {
+	if ( $download_id == 0 ) {
+		return;
+	}
+
+	return (new EDD_Download( $download_id ))->get_bundle_pricing_variations();
+}

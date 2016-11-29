@@ -849,4 +849,14 @@ class EDD_Download {
 		return (bool) apply_filters( 'edd_can_purchase_download', $can_purchase, $this );
 	}
 
+	/**
+	 * Get pricing variations for bundled items
+	 *
+	 * @since 2.7
+	 * @return array
+	 */
+	public function get_bundle_pricing_variations() {
+		return get_post_meta( $this->ID, '_edd_bundled_products_conditions' );
+	}
+
 }
