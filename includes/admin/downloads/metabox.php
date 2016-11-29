@@ -69,7 +69,8 @@ function edd_download_metabox_fields() {
 			'_edd_download_tax_exclusive',
 			'_edd_button_behavior',
 			'edd_product_notes',
-			'_edd_default_price_id'
+			'_edd_default_price_id',
+			'_edd_bundled_products_conditions'
 		);
 
 	if ( current_user_can( 'manage_shop_settings' ) ) {
@@ -551,10 +552,11 @@ function edd_render_products_field( $post_id ) {
 									}
 
 									echo EDD()->html->select( array(
-										'name'             => "edd_bundled_products[$key][condition]",
+										'name'             => '_edd_bundled_products_conditions[' . $key . ']',
 										'class'            => 'edd_repeatable_condition_field',
 										'options'          => $options,
-										'show_option_none' => false
+										'show_option_none' => false,
+										'selected'         => $args['condition'],
 									) );
 								?>
 							</td>
