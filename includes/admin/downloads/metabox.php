@@ -496,9 +496,11 @@ add_action( 'edd_meta_box_files_fields', 'edd_render_product_type_field', 10 );
  * @param $post_id
  */
 function edd_render_products_field( $post_id ) {
-	$type     = edd_get_download_type( $post_id );
-	$display  = $type == 'bundle' ? '' : ' style="display:none;"';
-	$products = edd_get_bundled_products( $post_id );
+	$type             = edd_get_download_type( $post_id );
+	$display          = $type == 'bundle' ? '' : ' style="display:none;"';
+	$products         = edd_get_bundled_products( $post_id );
+	$variable_pricing = edd_has_variable_prices( $post_id );
+	$variable_display = $variable_pricing ? '' : 'display:none;';
 ?>
 	<div id="edd_products"<?php echo $display; ?>>
 		<div id="edd_file_fields" class="edd_meta_table_wrap">
@@ -508,6 +510,7 @@ function edd_render_products_field( $post_id ) {
 						<th style="width: 20px"></th>
 						<th><?php printf( __( 'Bundled %s:', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></th>
 						<th></th>
+						<th class="pricing" style="width: 20%;"><?php _e( 'Price Assignment', 'easy-digital-downloads' ); ?></th>
 						<?php do_action( 'edd_download_products_table_head', $post_id ); ?>
 					</tr>
 				</thead>
@@ -523,17 +526,30 @@ function edd_render_products_field( $post_id ) {
 							<td>
 								<?php
 								echo EDD()->html->product_dropdown( array(
-									'name'     => '_edd_bundled_products[]',
-									'id'       => 'edd_bundled_products_' . $key,
-									'selected' => $product,
-									'multiple' => false,
-									'chosen'   => true,
-									'bundles'  => false,
+									'name'       => '_edd_bundled_products[]',
+									'id'         => 'edd_bundled_products_' . $key,
+									'selected'   => $product,
+									'multiple'   => false,
+									'chosen'     => true,
+									'bundles'    => false,
+									'variations' => true,
 								) );
 								?>
 							</td>
 							<td>
 								<button class="edd_remove_repeatable" data-type="file" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;"><span class="screen-reader-text"><?php printf( __( 'Remove bundle option %s', 'easy-digital-downloads' ), $key ); ?></span><span aria-hidden="true">&times;</span></button>
+							</td>
+							<td class="pricing"<?php echo $variable_display; ?>>
+								<?php
+									$options = array();
+
+									echo EDD()->html->select( array(
+										'name'             => '_edd_bundled_products[' . $key . '][condition]',
+										'class'            => 'edd_repeatable_condition_field',
+										'options'          => $options,
+										'show_option_none' => false
+									) );
+								?>
 							</td>
 							<?php do_action( 'edd_download_products_table_row', $post_id ); ?>
 						</tr>
