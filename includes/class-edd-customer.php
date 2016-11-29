@@ -770,14 +770,7 @@ class EDD_Customer {
 	 */
 	private function get_raw_notes() {
 
-		if ( isset( $this->notes ) ) {
-			$all_notes = empty( $this->notes ) ? '' : $this->notes;
-			if ( is_array( $all_notes ) ) {
-				$all_notes = implode( $all_notes, "\n\n" );
-			}
-		} else {
-			$all_notes = $this->db->get_column( 'notes', $this->id );
-		}
+		$all_notes = $this->db->get_column( 'notes', $this->id );
 
 		return (string) $all_notes;
 
