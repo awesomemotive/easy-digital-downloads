@@ -619,6 +619,8 @@ function edd_payment_mode_select() {
 	</form>
 	<?php } ?>
 	<div id="edd_purchase_form_wrap"></div><!-- the checkout fields are loaded into this-->
+
+	<div id="edd_purchase_form_wrap"></div><!-- the checkout fields are loaded into this-->
 	<?php do_action('edd_payment_mode_bottom');
 }
 add_action( 'edd_payment_mode_select', 'edd_payment_mode_select' );
@@ -724,7 +726,7 @@ function edd_discount_field() {
 			<p id="edd-discount-code-wrap" class="edd-cart-adjustment">
 				<label class="edd-label" for="edd-discount">
 					<?php _e( 'Discount', 'easy-digital-downloads' ); ?>
-					<img src="<?php echo EDD_PLUGIN_URL; ?>assets/images/loading.gif" id="edd-discount-loader" style="display:none;"/>
+					<span class="edd-discount-loader edd-loading" id="edd-discount-loader" style="display:none;"></span>
 				</label>
 				<span class="edd-description"><?php _e( 'Enter a coupon code if you have one.', 'easy-digital-downloads' ); ?></span>
 				<input class="edd-input" type="text" id="edd-discount" name="edd-discount" placeholder="<?php _e( 'Enter discount', 'easy-digital-downloads' ); ?>"/>

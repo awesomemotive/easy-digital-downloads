@@ -439,7 +439,7 @@ function edd_load_gateway( payment_mode ) {
 
 	// Show the ajax loader
 	jQuery('.edd-cart-ajax').show();
-	jQuery('#edd_purchase_form_wrap').html('<img src="' + edd_scripts.ajax_loader + '"/>');
+	jQuery('#edd_purchase_form_wrap').html('<span class="edd-loading-ajax edd-loading"></span>');
 
 	var url = edd_scripts.ajaxurl;
 
