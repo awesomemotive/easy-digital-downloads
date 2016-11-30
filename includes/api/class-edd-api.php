@@ -2197,4 +2197,14 @@ class EDD_API {
 
 	}
 
+	/**
+	 * Disable request logging
+	 *
+	 * @access public
+	 * @since  2.7
+	 */
+	public function disable_request_logs() {
+		$this->log_requests = false;
+	}
+
 }
