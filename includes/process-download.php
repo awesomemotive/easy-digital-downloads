@@ -90,6 +90,11 @@ function edd_process_download() {
 
 				$attached_file = get_attached_file( $attachment_id, false );
 
+				// Confirm the file exists
+				if( ! file_exists( $attached_file ) ) {
+					$attached_file = false;
+				}
+
 			}
 
 			if( $attached_file ) {
