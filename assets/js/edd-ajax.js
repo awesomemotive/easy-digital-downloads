@@ -129,7 +129,9 @@ jQuery(document).ready(function ($) {
 					 // hide the spinner
 					$this.removeAttr( 'data-edd-loading' );
 					alert( edd_scripts.select_option );
-					return;
+					e.stopPropagation();
+					$this.prop('disabled', false);
+					return false;
 				}
 
 				form.find('.edd_price_option_' + download + ':checked', form).each(function( index ) {
