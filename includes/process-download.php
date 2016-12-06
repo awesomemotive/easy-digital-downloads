@@ -115,6 +115,31 @@ function edd_process_download() {
 		// Allow the file to be altered before any headers are sent
 		$requested_file = apply_filters( 'edd_requested_file', $requested_file, $download_files, $args['file_key'] );
 
+		if( 'x_sendfile' == $method && ( ! function_exists( 'apache_get_modules' ) || ! in_array( 'mod_xsendfile', apache_get_modules() ) ) ) {
+			// If X-Sendfile is selected but is not supported, fallback to Direct
+			$method = 'direct';
+		}
+
+		$file_details = parse_url( $requested_file );
+		$schemes      = array( 'http', 'https' ); // Direct URL schemes
+
+		if ( ( ! isset( $file_details['scheme'] ) || ! in_array( $file_details['scheme'], $schemes ) ) && isset( $file_details['path'] ) && file_exists( $requested_file ) ) {
+
+			/**
+			 * Download method is seto to Redirect in settings but an absolute path was provided
+			 * We need to switch to a direct download in order for the file to download properly
+			 */
+			$method = 'direct';
+
+		}
+
+		/**
+		 * Allow extensions to run actions prior to recording the file download log entry
+		 *
+		 * @since 2.6.14
+		 */
+		do_action( 'edd_process_download_pre_record_log', $requested_file, $args, $method );
+
 		// Record this file download in the log
 		$user_info = array();
 		$user_info['email'] = $args['email'];
@@ -155,24 +180,6 @@ function edd_process_download() {
 		if ( filter_var( $requested_file, FILTER_VALIDATE_URL ) && ! edd_is_local_file( $requested_file ) ) {
 			edd_deliver_download( $requested_file, true );
 			exit;
-		}
-
-		if( 'x_sendfile' == $method && ( ! function_exists( 'apache_get_modules' ) || ! in_array( 'mod_xsendfile', apache_get_modules() ) ) ) {
-			// If X-Sendfile is selected but is not supported, fallback to Direct
-			$method = 'direct';
-		}
-
-		$file_details = parse_url( $requested_file );
-		$schemes      = array( 'http', 'https' ); // Direct URL schemes
-
-		if ( ( ! isset( $file_details['scheme'] ) || ! in_array( $file_details['scheme'], $schemes ) ) && isset( $file_details['path'] ) && file_exists( $requested_file ) ) {
-
-			/**
-			 * Download method is seto to Redirect in settings but an absolute path was provided
-			 * We need to switch to a direct download in order for the file to download properly
-			 */
-			$method = 'direct';
-
 		}
 
 		switch( $method ) :
@@ -843,3 +850,30 @@ function edd_set_requested_file_scheme( $requested_file, $download_files, $file_
 
 }
 add_filter( 'edd_requested_file', 'edd_set_requested_file_scheme', 10, 3 );
+
+/**
+ * Perform a head request on file URLs before attempting to download to check if they are accessible.
+ *
+ * @since  2.6.14
+ * @param  string $requested_file The Requested File
+ * @param  array  $args           Arguments
+ * @param  string $method         The download mehtod being sed
+ * @return void
+ */
+function edd_check_file_url_head( $requested_file, $args, $method ) {
+
+	// If this is a file URL (not a path), perform a head request to determine if it's valid
+	if( filter_var( $requested_file, FILTER_VALIDATE_URL ) ) {
+
+		$request = wp_remote_head( $requested_file );
+
+		if( is_wp_error( $request) ) {
+
+			wp_die( $request, __( 'Invalid file', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	
+		}
+
+	}
+
+}
+add_action( 'edd_process_download_pre_record_log', 'edd_check_file_url_head', 10, 3 );
