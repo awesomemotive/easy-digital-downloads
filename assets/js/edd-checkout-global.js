@@ -132,9 +132,14 @@ window.EDD_Checkout = (function($) {
 					if (discount_response.msg == 'valid') {
 						$('.edd_cart_discount').html(discount_response.html);
 						$('.edd_cart_discount_row').show();
-						$('.edd_cart_amount').each(function() {
-							$(this).text(discount_response.total);
-						});
+
+						$( '.edd_cart_amount' ).each( function() {
+							// Format discounted amount for display.
+							$( this ).text( discount_response.total );
+							// Set data attribute to new (unformatted) discounted amount.'
+							$( this ).data( 'total', discount_response.total_plain );
+						} );
+
 						$('#edd-discount', $checkout_form_wrap ).val('');
 
 						recalculate_taxes();
@@ -204,7 +209,11 @@ window.EDD_Checkout = (function($) {
 						// We're removing a 100% discount code so we need to force the payment gateway to reload
 						window.location.reload();
 					}
-					$(this).text(discount_response.total);
+
+					// Format discounted amount for display.
+					$( this ).text( discount_response.total );
+					// Set data attribute to new (unformatted) discounted amount.'
+					$( this ).data( 'total', discount_response.total_plain );
 				});
 
 				$('.edd_cart_discount').html(discount_response.html);
