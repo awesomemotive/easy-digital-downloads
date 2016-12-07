@@ -33,10 +33,8 @@ class Tests_Activation extends WP_UnitTestCase {
 	 * @since 2.2.4
 	 */
 	public function test_install() {
-
-		global $edd_options;
-
-		$origin_edd_options   = $edd_options;
+		$origin_edd_options   = get_option( 'edd_settings' );
+		var_dump($origin_edd_options);
 		$origin_upgraded_from = get_option( 'edd_version_upgraded_from' );
 		$origin_edd_version   = get_option( 'edd_version' );
 
@@ -57,6 +55,7 @@ class Tests_Activation extends WP_UnitTestCase {
 		// Test that new pages are created, and not the same as the already created ones.
 		// This is to make sure the test is giving the most accurate results.
 		$new_settings = get_option( 'edd_settings' );
+		var_dump($new_settings); exit;
 		$this->assertArrayHasKey( 'purchase_page', $new_settings );
 		$this->assertNotEquals( $origin_edd_options['purchase_page'], $new_settings['purchase_page'] );
 		$this->assertArrayHasKey( 'success_page', $new_settings );
