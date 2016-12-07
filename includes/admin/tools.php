@@ -1079,8 +1079,13 @@ function edd_tools_sysinfo_get() {
 	$browser = new Browser();
 
 	// Get theme info
-	$theme_data = wp_get_theme();
-	$theme      = $theme_data->Name . ' ' . $theme_data->Version;
+	$theme_data   = wp_get_theme();
+	$theme        = $theme_data->Name . ' ' . $theme_data->Version;
+	$parent_theme = $theme_data->Template;
+	if ( ! empty( $parent_theme ) ) {
+		$parent_theme_data = wp_get_theme( $parent_theme );
+		$parent_theme      = $parent_theme_data->Name . ' ' . $parent_theme_data->Version;
+	}
 
 	// Try to identify the hosting provider
 	$host = edd_get_host();
@@ -1115,6 +1120,9 @@ function edd_tools_sysinfo_get() {
 	$return .= 'Language:                 ' . ( defined( 'WPLANG' ) && WPLANG ? WPLANG : 'en_US' ) . "\n";
 	$return .= 'Permalink Structure:      ' . ( get_option( 'permalink_structure' ) ? get_option( 'permalink_structure' ) : 'Default' ) . "\n";
 	$return .= 'Active Theme:             ' . $theme . "\n";
+	if ( $parent_theme !== $theme ) {
+		$return .= 'Parent Theme:             ' . $parent_theme . "\n";
+	}
 	$return .= 'Show On Front:            ' . get_option( 'show_on_front' ) . "\n";
 
 	// Only show page specs if frontpage is set to 'page'
