@@ -309,17 +309,17 @@ add_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing', 10, 2 );
 /**
  * Output schema markup for single price products.
  *
- * @since  2.5.16
+ * @since  2.6.14
  * @param  int $download_id The download being output.
  * @return void
  */
-function edd_purchase_single_pricing( $download_id = 0, $args = array() ) {
-	// Bail if the product has variable pricing, or if we aren't
-	// showing schema data.
-	$variable_pricing = edd_has_variable_prices( $download_id );
-	if ( $variable_pricing || ! edd_add_schema_microdata() ) {
+function edd_purchase_link_single_pricing_schema( $download_id = 0, $args = array() ) {
+
+	// Bail if the product has variable pricing, or if we aren't showing schema data.
+	if ( edd_has_variable_prices( $download_id ) || ! edd_add_schema_microdata() ) {
 		return;
 	}
+
 	// Grab the information we need.
 	$download = new EDD_Download( $download_id );
 	?>
@@ -329,7 +329,7 @@ function edd_purchase_single_pricing( $download_id = 0, $args = array() ) {
 	</span>
 	<?php
 }
-add_action( 'edd_purchase_link_top', 'edd_purchase_single_pricing', 10, 2 );
+add_action( 'edd_purchase_link_top', 'edd_purchase_link_single_pricing_schema', 10, 2 );
 
 /**
  * Display the quantity field for a variable price when multi-purchase mode is enabled
