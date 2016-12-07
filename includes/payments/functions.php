@@ -52,52 +52,49 @@ function edd_get_payments( $args = array() ) {
  */
 function edd_get_payment_by( $field = '', $value = '' ) {
 
-	if( empty( $field ) || empty( $value ) ) {
-		return false;
+	$payment = false;
+
+	if( ! empty( $field ) && ! empty( $value ) ) {
+
+		switch( strtolower( $field ) ) {
+
+			case 'id':
+
+				$payment = new EDD_Payment( $value );
+
+				if( ! $payment->ID > 0 ) {
+					$payment = false;
+				}
+
+				break;
+
+			case 'key':
+			case 'payment_number':
+
+				global $wpdb;
+
+				$meta_key   = ( 'key' == $field ) ? '_edd_payment_purchase_key' : '_edd_payment_number';
+				$payment_id = $wpdb->get_var( $wpdb->prepare(
+					"SELECT post_ID FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value=%s",
+					$meta_key, $value
+				) );
+		
+				if ( $payment_id ) {
+
+					$payment = new EDD_Payment( $payment_id );
+
+					if( ! $payment->ID > 0 ) {
+						$payment = false;
+					}
+
+				}
+
+				break;
+		}
+
 	}
 
-	switch( strtolower( $field ) ) {
-
-		case 'id':
-			$payment = new EDD_Payment( $value );
-			$id      = $payment->ID;
-
-			if ( empty( $id ) ) {
-				return false;
-			}
-
-			break;
-
-		case 'key':
-		case 'payment_number':
-			global $wpdb;
-
-			$meta_key = ( 'key' == $field ) ? '_edd_payment_purchase_key' : '_edd_payment_number';
-			$post_ids = $wpdb->get_col( $wpdb->prepare(
-				"SELECT post_ID FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value=%s",
-				$meta_key, $value
-			) );
-			$payment = edd_get_payments( array(
-				'include'       => $post_ids,
-				'posts_per_page' => 1,
-				'fields'         => 'ids',
-			) );
-
-			if ( $payment ) {
-				$payment = new EDD_Payment( $payment[0] );
-			}
-
-			break;
-
-		default:
-			return false;
-	}
-
-	if( $payment ) {
-		return $payment;
-	}
-
-	return false;
+	return $payment;
 }
 
 /**
