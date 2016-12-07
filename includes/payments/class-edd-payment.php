@@ -598,6 +598,9 @@ class EDD_Payment {
 	 * @return bool  True of the save occurred, false if it failed or wasn't needed
 	 */
 	public function save() {
+
+		global $edd_logs;
+
 		$saved = false;
 
 		if ( empty( $this->ID ) ) {
@@ -666,27 +669,35 @@ class EDD_Payment {
 									break;
 
 									case 'remove':
-										$log_args = array(
-											'post_type'   => 'edd_log',
-											'post_parent' => $item['id'],
-											'numberposts' => $item['quantity'],
-											'meta_query'  => array(
-												array(
-													'key'     => '_edd_log_payment_id',
-													'value'   => $this->ID,
-													'compare' => '=',
-												),
-												array(
-													'key'     => '_edd_log_price_id',
-													'value'   => $item['price_id'],
-													'compare' => '='
-												)
-											)
+
+										$meta_query = array();
+										$meta_query[] = array(
+											'key'     => '_edd_log_payment_id',
+											'value'   => $this->ID,
+											'compare' => '=',
 										);
 
-										$found_logs = get_posts( $log_args );
-										foreach ( $found_logs as $log ) {
-											wp_delete_post( $log->ID, true );
+										if( ! empty( $item['price_id'] ) || 0 === (int) $item['price_id'] ) {
+											$meta_query[] = array(
+												'key'     => '_edd_log_price_id',
+												'value'   => (int) $item['price_id'],
+												'compare' => '='
+											);
+										}
+
+										$log_args = array(
+											'post_parent'    => $item['id'],
+											'posts_per_page' => $item['quantity'],
+											'meta_query'     => $meta_query,
+											'log_type'       => 'sale'
+										);
+
+										$found_logs = $edd_logs->get_connected_logs( $log_args );
+
+										if( $found_logs ) {
+											foreach ( $found_logs as $log ) {
+												wp_delete_post( $log->ID, true );
+											}
 										}
 
 										if ( 'publish' === $this->status || 'complete' === $this->status || 'revoked' === $this->status ) {
