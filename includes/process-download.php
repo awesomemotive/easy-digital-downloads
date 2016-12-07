@@ -865,12 +865,30 @@ function edd_check_file_url_head( $requested_file, $args, $method ) {
 	// If this is a file URL (not a path), perform a head request to determine if it's valid
 	if( filter_var( $requested_file, FILTER_VALIDATE_URL ) ) {
 
+		$valid   = true;
 		$request = wp_remote_head( $requested_file );
 
-		if( is_wp_error( $request) ) {
+		if( is_wp_error( $request ) ) {
 
-			wp_die( $request, __( 'Invalid file', 'easy-digital-downloads' ), array( 'response' => 403 ) );
-	
+			$valid   = false;
+			$message = $request;
+			$title   = __( 'Invalid file', 'easy-digital-downloads' );
+
+		}
+
+		if( 404 === wp_remote_retrieve_response_code( $request ) ) {
+
+			$valid   = false;
+			$message = __( 'The requested file could not be found. Error 404.', 'easy-digital-downloads' );
+			$title   = __( 'File not found', 'easy-digital-downloads' );
+
+		}
+
+		if( ! $valid ) {
+
+			do_action( 'edd_check_file_url_head_invalid', $requested_file, $args, $method );
+			wp_die( $message, $title, array( 'response' => 403 ) );
+		
 		}
 
 	}
