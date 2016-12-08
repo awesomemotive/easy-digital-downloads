@@ -130,17 +130,25 @@ function edd_render_customer_view( $view, $callbacks ) {
 
 							<li class="<?php echo sanitize_html_class( $class ); ?>">
 
+								<?php
+								// prevent double "Customer" output from extensions
+								$tab['title'] = preg_replace("(^Customer )","",$tab['title']);
+
+								// edd item tab full title
+								$tab_title = sprintf( _x( 'Customer %s', 'Customer Details page tab title', 'easy-digital-downloads' ), esc_attr( $tab[ 'title' ] ) );
+
+								// aria-label output
+								$aria_label = ' aria-label="' . $tab_title . '"';
+								?>
+
 								<?php if ( ! $active ) : ?>
-									<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-customers&view=' . $key . '&id=' . $customer->id . '#wpbody-content' ) ); ?>">
+									<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-customers&view=' . $key . '&id=' . $customer->id . '#wpbody-content' ) ); ?>"<?php echo $aria_label; ?>>
 								<?php endif; ?>
 
-									<span class="dashicons <?php echo sanitize_html_class( $tab['dashicon'] ); ?>" aria-hidden="true"></span>
-									<?php
-									// prevent double "Customer" output from extensions
-									$tab['title'] = preg_replace("(^Customer )","",$tab['title']);
-									?>
-
-									<span class="screen-reader-text"><?php _ex( 'Customer ', 'Customer Details page tab title enhancement for screen readers', 'easy-digital-downloads' ); ?></span><?php echo esc_attr( $tab['title'] ); ?>
+									<span class="edd-item-tab-label-wrap"<?php echo $active ? $aria_label : ''; ?>>
+										<span class="dashicons <?php echo sanitize_html_class( $tab['dashicon'] ); ?>" aria-hidden="true"></span>
+										<span class="edd-item-tab-label"><?php echo esc_attr( $tab['title'] ); ?></span>
+									</span>
 
 								<?php if ( ! $active ) : ?>
 									</a>
