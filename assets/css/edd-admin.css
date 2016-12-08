@@ -1056,6 +1056,11 @@ td.edd_order_price {
 	font-size: 12px;
 	border-bottom: 1px solid #e5e5e5;
 	margin-bottom: 0;
+	-webkit-hyphens: auto;
+	-moz-hyphens: auto;
+	-ms-hyphens: auto;
+	hyphens: auto;
+	word-wrap: break-word;
 }
 #edd-item-tab-wrapper-list li a {
 	display: block;
