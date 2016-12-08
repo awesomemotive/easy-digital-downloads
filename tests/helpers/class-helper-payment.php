@@ -118,7 +118,7 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		);
 
 		$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
-		$_SERVER['SERVER_NAME'] = 'edd_virtual';
+		$_SERVER['SERVER_NAME'] = 'edd-virtual.local';
 
 		$payment_id = edd_insert_payment( $purchase_data );
 		$key        = $purchase_data['purchase_key'];
@@ -224,7 +224,7 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		);
 
 		$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
-		$_SERVER['SERVER_NAME'] = 'edd_virtual';
+		$_SERVER['SERVER_NAME'] = 'edd-virtual.local';
 
 		$payment_id = edd_insert_payment( $purchase_data );
 		$key        = $purchase_data['purchase_key'];
@@ -329,7 +329,7 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		);
 
 		$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
-		$_SERVER['SERVER_NAME'] = 'edd_virtual';
+		$_SERVER['SERVER_NAME'] = 'edd-virtual.local';
 
 		$payment_id = edd_insert_payment( $purchase_data );
 		$key        = $purchase_data['purchase_key'];
@@ -439,7 +439,7 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		);
 
 		$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
-		$_SERVER['SERVER_NAME'] = 'edd_virtual';
+		$_SERVER['SERVER_NAME'] = 'edd-virtual.local';
 
 		$payment_id = edd_insert_payment( $purchase_data );
 		$key        = $purchase_data['purchase_key'];
@@ -528,7 +528,7 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		EDD()->fees->add_fee( $fee_args );
 
 		$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
-		$_SERVER['SERVER_NAME'] = 'edd_virtual';
+		$_SERVER['SERVER_NAME'] = 'edd-virtual.local';
 
 		$payment_id = edd_insert_payment( $purchase_data );
 		$key        = $purchase_data['purchase_key'];
