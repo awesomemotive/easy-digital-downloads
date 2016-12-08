@@ -106,6 +106,17 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 					}
 				}
 
+				if ( empty( $args['post_author'] ) ) {
+					$user = wp_get_current_user();
+					$args['post_author'] = $user->user_login;
+				} else {
+					$user = get_user_by( 'user_login', $args['post_author'] );
+					if ( false === $user ) {
+						$user = wp_get_current_user();
+						$args['post_author'] = $user->user_login;
+					}
+				}
+
 				// Format the date properly
 				if ( ! empty( $args['post_date'] ) ) {
 
