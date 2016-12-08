@@ -123,7 +123,7 @@ class Tests_Shortcode extends WP_UnitTestCase {
 		);
 
 		$_SERVER['REMOTE_ADDR'] = '10.0.0.0';
-		$_SERVER['SERVER_NAME'] = 'edd_virtual';
+		$_SERVER['SERVER_NAME'] = 'edd-virtual.local';
 
 		$this->_payment_id = edd_insert_payment( $purchase_data );
 
