@@ -352,6 +352,14 @@ class EDD_Payment_Stats extends EDD_Stats {
 		if ( is_wp_error( $this->end_date ) ) {
 			return $this->end_date;
 		}
+
+		add_filter( 'posts_where', array( $this, 'payments_where' ) );
+
+		$earnings = array();
+
+		remove_filter( 'posts_where', array( $this, 'payments_where' ) );
+
+		return $earnings;
 	}
 
 	/**
