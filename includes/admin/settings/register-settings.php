@@ -1162,22 +1162,22 @@ add_filter( 'edd_settings_sanitize_text', 'edd_sanitize_text_field' );
 
 /**
  * Sanitize HTML Class Names
- * 
+ *
  * @since 2.6.11
  * @param  string|array $class HTML Class Name(s)
  * @return string $class
  */
 function edd_sanitize_html_class( $class = '' ) {
-        
+
 	if ( is_string( $class ) ) {
 		$class = sanitize_html_class( $class );
 	} else if ( is_array( $class ) ) {
 		$class = array_values( array_map( 'sanitize_html_class', $class ) );
 		$class = implode( ' ', array_unique( $class ) );
 	}
-    
+
 	return $class;
-    
+
 }
 
 /**
@@ -1342,7 +1342,7 @@ function edd_checkbox_callback( $args ) {
 	} else {
 		$name = 'name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"';
 	}
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$checked  = ! empty( $edd_option ) ? checked( 1, $edd_option, false ) : '';
@@ -1365,7 +1365,7 @@ function edd_checkbox_callback( $args ) {
  */
 function edd_multicheck_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$html = '';
@@ -1392,7 +1392,7 @@ function edd_multicheck_callback( $args ) {
  */
 function edd_payment_icons_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$html = '<input type="hidden" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="-1" />';
@@ -1465,7 +1465,7 @@ function edd_radio_callback( $args ) {
 	$edd_options = edd_get_option( $args['id'] );
 
 	$html = '';
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	foreach ( $args['options'] as $key => $option ) :
@@ -1497,7 +1497,7 @@ function edd_radio_callback( $args ) {
  */
 function edd_gateways_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$html = '<input type="hidden" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="-1" />';
@@ -1527,7 +1527,7 @@ function edd_gateways_callback( $args ) {
  */
 function edd_gateway_select_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$html = '';
@@ -1571,7 +1571,7 @@ function edd_text_callback( $args ) {
 	} else {
 		$name = 'name="edd_settings[' . esc_attr( $args['id'] ) . ']"';
 	}
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$readonly = $args['readonly'] === true ? ' readonly="readonly"' : '';
@@ -1608,7 +1608,7 @@ function edd_number_callback( $args ) {
 	} else {
 		$name = 'name="edd_settings[' . esc_attr( $args['id'] ) . ']"';
 	}
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$max  = isset( $args['max'] ) ? $args['max'] : 999999;
@@ -1640,7 +1640,7 @@ function edd_textarea_callback( $args ) {
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$html = '<textarea class="' . $class . ' large-text" cols="50" rows="5" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
@@ -1667,7 +1667,7 @@ function edd_password_callback( $args ) {
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
@@ -1717,7 +1717,7 @@ function edd_select_callback($args) {
 	} else {
 		$placeholder = '';
 	}
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	if ( isset( $args['chosen'] ) ) {
@@ -1755,7 +1755,7 @@ function edd_color_select_callback( $args ) {
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$html = '<select id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" class="' . $class . '" name="edd_settings[' . esc_attr( $args['id'] ) . ']"/>';
@@ -1823,7 +1823,7 @@ function edd_upload_callback( $args ) {
 	} else {
 		$value = isset($args['std']) ? $args['std'] : '';
 	}
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
@@ -1855,7 +1855,7 @@ function edd_color_callback( $args ) {
 	}
 
 	$default = isset( $args['std'] ) ? $args['std'] : '';
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$html = '<input type="text" class="' . $class . ' edd-color-picker" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']" value="' . esc_attr( $value ) . '" data-default-color="' . esc_attr( $default ) . '" />';
@@ -1882,19 +1882,19 @@ function edd_shop_states_callback($args) {
 	} else {
 		$placeholder = '';
 	}
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$states = edd_get_shop_states();
-    
+
 	if ( $args['chosen'] ) {
 		$class .= ' edd-chosen';
 	}
-    
+
 	if ( empty( $states ) ) {
 		$class .= ' edd-no-states';
 	}
-    
+
 	$html = '<select id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']"' . $class . 'data-placeholder="' . esc_html( $placeholder ) . '"/>';
 
 	foreach ( $states as $option => $name ) {
@@ -1919,9 +1919,9 @@ function edd_shop_states_callback($args) {
  */
 function edd_tax_rates_callback($args) {
 	$rates = edd_get_tax_rates();
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
-    
+
 	ob_start(); ?>
 	<p><?php echo $args['desc']; ?></p>
 	<table id="edd_tax_rates" class="wp-list-table widefat fixed posts <?php echo $class; ?>">
@@ -2201,7 +2201,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 			$license_status = null;
 		}
-        
+
 		$class .= ' ' . edd_sanitize_html_class( $args['field_class'] );
 
 		$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
