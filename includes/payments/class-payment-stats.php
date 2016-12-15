@@ -324,6 +324,23 @@ class EDD_Payment_Stats extends EDD_Stats {
 	}
 
 	/**
+	 * Retrieve sales stats based on range provided (used for Reporting)
+	 *
+	 * @access public
+	 * @since  2.7
+	 *
+	 * @param int          $download_id The download product to retrieve stats for. If false, gets stats for all products
+	 * @param string|bool  $start_date The starting date for which we'd like to filter our earnings stats. If false, we'll use the default start date of `this_month`
+	 * @param string|bool  $end_date The end date for which we'd like to filter our earnings stats. If false, we'll use the default end date of `this_month`
+	 * @param bool         $include_taxes If taxes should be included in the earnings graphs
+	 *
+	 * @return array Total amount of earnings based on the passed arguments.
+	 */
+	public function get_earnings_by_range( $range = 'today', $day_by_day = false, $start_date = false, $end_date = false, $include_taxes = true ) {
+
+	}
+
+	/**
 	 * Is the date range cachable
 	 *
 	 * @access public
