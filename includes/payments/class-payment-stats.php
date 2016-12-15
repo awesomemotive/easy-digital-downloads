@@ -337,7 +337,21 @@ class EDD_Payment_Stats extends EDD_Stats {
 	 * @return array Total amount of earnings based on the passed arguments.
 	 */
 	public function get_earnings_by_range( $range = 'today', $day_by_day = false, $start_date = false, $end_date = false, $include_taxes = true ) {
+		global $wpdb;
 
+		$this->setup_dates( $start_date, $end_date );
+
+		$this->end_date = strtotime( 'midnight', $this->end_date );
+
+		// Make sure start date is valid
+		if ( is_wp_error( $this->start_date ) ) {
+			return $this->start_date;
+		}
+
+		// Make sure end date is valid
+		if ( is_wp_error( $this->end_date ) ) {
+			return $this->end_date;
+		}
 	}
 
 	/**
