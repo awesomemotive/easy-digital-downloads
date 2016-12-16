@@ -98,12 +98,13 @@ class EDD_SL_Plugin_Updater {
 			return $_transient_data;
 		}
 
-		$version_info = get_transient( $this->cache_key );
+		$version_info = $this->get_cached_version_info();
 
 		if ( false === $version_info ) {
 			$version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
 
-			set_transient( $this->cache_key, $version_info, 3600 );
+			$this->set_version_info_cache( $version_info );
+
 		}
 
 		if ( false !== $version_info && is_object( $version_info ) && isset( $version_info->new_version ) ) {
@@ -155,12 +156,12 @@ class EDD_SL_Plugin_Updater {
 
 		if ( empty( $update_cache->response ) || empty( $update_cache->response[ $this->name ] ) ) {
 
-			$version_info = get_transient( $this->cache_key );
+			$version_info = $this->get_cached_version_info();
 
 			if ( false === $version_info ) {
 				$version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
 
-				set_transient( $this->cache_key, $version_info, 3600 );
+				$this->set_version_info_cache( $version_info );
 			}
 
 			if ( ! is_object( $version_info ) ) {
@@ -236,7 +237,6 @@ class EDD_SL_Plugin_Updater {
 	 */
 	public function plugins_api_filter( $_data, $_action = '', $_args = null ) {
 
-
 		if ( $_action != 'plugin_information' ) {
 
 			return $_data;
@@ -260,7 +260,7 @@ class EDD_SL_Plugin_Updater {
 
 		$cache_key = 'edd_api_request_' . md5( serialize( $this->slug . $this->api_data['license'] ) );
 
-		//Get the transient where we store the api request for this plugin for 24 hours
+		// Get the transient where we store the api request for this plugin for 24 hours
 		$edd_api_request_transient = get_site_transient( $cache_key );
 
 		//If we have no transient-saved value, run the API, set a fresh transient with the API value, and return that value too right now.
@@ -368,7 +368,7 @@ class EDD_SL_Plugin_Updater {
 
 		$data         = $edd_plugin_data[ $_REQUEST['slug'] ];
 		$cache_key    = md5( 'edd_plugin_' . sanitize_key( $_REQUEST['plugin'] ) . '_version_info' );
-		$version_info = get_transient( $cache_key );
+		$version_info = $this->get_cached_version_info( $cache_key );
 
 		if( false === $version_info ) {
 
@@ -393,7 +393,7 @@ class EDD_SL_Plugin_Updater {
 				$version_info = false;
 			}
 
-			set_transient( $cache_key, $version_info, 3600 );
+			$this->set_version_info_cache( $version_info, $cache_key );
 
 		}
 
@@ -402,6 +402,37 @@ class EDD_SL_Plugin_Updater {
 		}
 
 		exit;
+	}
+
+	public function get_cached_version_info( $cache_key = '' ) {
+
+		if( empty( $cache_key ) ) {
+			$cache_key = $this->cache_key;
+		}
+
+		$cache = get_option( $cache_key );
+
+		if( empty( $cache['timeout'] ) || current_time( 'timestamp' ) > $cache['timeout'] ) {
+			return false; // Cache is expired
+		}
+
+		return json_decode( $cache['value'] );
+
+	}
+
+	public function set_version_info_cache( $value = '', $cache_key = '' ) {
+
+		if( empty( $cache_key ) ) {
+			$cache_key = $this->cache_key;
+		}
+
+		$data = array(
+			'timeout' => strtotime( '+3 hours', current_time( 'timestamp' ) ),
+			'value'   => json_encode( $value )
+		);
+
+		update_option( $this->cache_key, $data );
+
 	}
 
 }
