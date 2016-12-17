@@ -162,7 +162,7 @@ final class Easy_Digital_Downloads {
 			self::$instance->customers     = new EDD_DB_Customers();
 			self::$instance->customer_meta = new EDD_DB_Customer_Meta();
 			self::$instance->payment_stats = new EDD_Payment_Stats();
-			self::$instance->cart          = new EDD_Cart();
+			self::$instance->cart          = EDD_Cart:::instance();
 		}
 		return self::$instance;
 	}
