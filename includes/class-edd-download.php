@@ -147,7 +147,7 @@ class EDD_Download {
 	 * Given the download data, let's set the variables
 	 *
 	 * @since  2.3.6
-	 * @param  object $download The Download Object
+	 * @param  WP_Post $download The WP_Post object for download.
 	 * @return bool             If the setup was successful or not
 	 */
 	private function setup_download( $download ) {
