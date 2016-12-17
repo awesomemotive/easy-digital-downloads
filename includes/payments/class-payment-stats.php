@@ -357,6 +357,94 @@ class EDD_Payment_Stats extends EDD_Stats {
 
 		$earnings = array();
 
+		$cached = get_transient( 'edd_stats_earnings' );
+		$key    = md5( $range . '_' . date( 'Y-m-d', $this->start_date ) . '_' . date( 'Y-m-d', strtotime( '+1 DAY', $this->end_date ) ) );
+		$sales  = isset( $cached[ $key ] ) ? $cached[ $key ] : false;
+
+		if ( false === $earnings || ! $this->is_cacheable( $range ) ) {
+			if ( empty( $download_id ) ) {
+				$args = array(
+					'post_type'              => 'edd_payment',
+					'nopaging'               => true,
+					'post_status'            => array( 'publish', 'revoked' ),
+					'fields'                 => 'ids',
+					'update_post_term_cache' => false,
+					'suppress_filters'       => false,
+					'start_date'             => $this->start_date, // These dates are not valid query args, but they are used for cache keys
+					'end_date'               => $this->end_date,
+					'edd_transient_type'     => 'edd_earnings', // This is not a valid query arg, but is used for cache keying
+					'include_taxes'          => $include_taxes,
+				);
+
+				$args = apply_filters( 'edd_stats_earnings_args', $args );
+
+				$sales    = get_posts( $args );
+
+				if ( $sales ) {
+					$sales = implode( ',', array_map('intval', $sales ) );
+
+					$total_earnings = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN ({$sales})" );
+					$total_tax      = 0;
+
+					if ( ! $include_taxes ) {
+						$total_tax = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_tax' AND post_id IN ({$sales})" );
+					}
+
+					$total_earnings = apply_filters( 'edd_payment_stats_earnings_total', $total_earnings, $sales, $args );
+
+					$earnings += ( $total_earnings - $total_tax );
+				}
+			}
+		} else {
+			global $edd_logs, $wpdb;
+
+			$args = array(
+				'post_parent'        => $download_id,
+				'nopaging'           => true,
+				'log_type'           => 'sale',
+				'fields'             => 'ids',
+				'suppress_filters'   => false,
+				'start_date'         => $this->start_date,
+				'end_date'           => $this->end_date,
+				'edd_transient_type' => 'edd_earnings',
+				'include_taxes'      => $include_taxes,
+			);
+
+			$args     = apply_filters( 'edd_stats_earnings_args', $args );
+
+			$this->timestamp = false;
+			$log_ids  = $edd_logs->get_connected_logs( $args, 'sale' );
+
+			if ( $log_ids ) {
+				$log_ids     = implode( ',', array_map('intval', $log_ids ) );
+				$payment_ids = $wpdb->get_col( "SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_log_payment_id' AND post_id IN ($log_ids);" );
+
+				foreach( $payment_ids as $payment_id ) {
+					$items = edd_get_payment_meta_cart_details( $payment_id );
+
+					foreach ( $items as $cart_key => $item ) {
+						if ( $item['id'] != $download_id ) {
+							continue;
+						}
+
+						$earnings += $item['price'];
+
+						if ( ! empty( $item['fees'] ) ) {
+							foreach ( $item['fees'] as $key => $fee ) {
+								$earnings += $fee['amount'];
+							}
+						}
+
+						$earnings = apply_filters( 'edd_payment_stats_item_earnings', $earnings, $payment_id, $cart_key, $item );
+
+						if ( ! $include_taxes ) {
+							$earnings -= edd_get_payment_item_tax( $payment_id, $cart_key );
+						}
+					}
+				}
+			}
+		}
+
 		remove_filter( 'posts_where', array( $this, 'payments_where' ) );
 
 		return $earnings;
