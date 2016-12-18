@@ -61,23 +61,29 @@ function edd_reports_graph() {
 		$month = $dates['m_start'];
 
 		$i = 0;
+		$j = 0;
 
 		$start = $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day'];
 		$end = $dates['year_end'] . '-' . $dates['m_end'] . '-' . $dates['day_end'];
 
 		$sales = EDD()->payment_stats->get_sales_by_range( $dates['range'], true, $start, $end );
+		$earnings = EDD()->payment_stats->get_earnings_by_range( $dates['range'], true, $start, $end );
 
 		while ( $hour <= 23 ) {
 			$date = mktime( $hour, 0, 0, $month, $dates['day'], $dates['year'] ) * 1000;
 
-			$earnings = edd_get_earnings_by_date( $dates['day'], $month, $dates['year'], $hour, $include_taxes );
-			$earnings_totals += $earnings;
-			$earnings_data[] = array( $date, $earnings );
-
-			if ( isset( $sales[ $i ] ) && $sales[ $i ]['h'] == $hour ) {
-				$sales_data[] = array( $date, $sales[ $i ]['count'] );
-				$sales_totals += $sales[ $i ]['count'];
+			if ( isset( $earnings[ $i ] ) && $earnings[ $i ]['h'] == $hour ) {
+				$earnings_data[] = array( $date, $earnings[ $i ]['total'] );
+				$earnings_totals += $earnings[ $i ]['total'];
 				$i++;
+			} else {
+				$earnings_data[] = array( $date, 0 );
+			}
+
+			if ( isset( $sales[ $j ] ) && $sales[ $j ]['h'] == $hour ) {
+				$sales_data[] = array( $date, $sales[ $j ]['count'] );
+				$sales_totals += $sales[ $j ]['count'];
+				$j++;
 			} else {
 				$sales_data[] = array( $date, 0 );
 			}
