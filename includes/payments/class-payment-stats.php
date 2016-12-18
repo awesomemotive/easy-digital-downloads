@@ -377,10 +377,11 @@ class EDD_Payment_Stats extends EDD_Stats {
 			}
 
 			$earnings = $wpdb->get_results( $wpdb->prepare(
-				"SELECT meta_value AS total, $select
+				"SELECT SUM(meta_value) AS total, $select
 				 FROM {$wpdb->posts} AS posts
 				 INNER JOIN {$wpdb->postmeta} ON posts.ID = {$wpdb->postmeta}.post_ID
 				 WHERE posts.post_type IN ('edd_payment')
+				 AND {$wpdb->postmeta}.meta_key = '_edd_payment_total'
 				 AND posts.post_date >= %s
 				 AND posts.post_date < %s
 				 AND (posts.post_status = 'publish' OR posts.post_status = 'revoked')
