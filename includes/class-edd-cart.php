@@ -133,4 +133,136 @@ final class EDD_Cart {
 	 * @access private
 	 * @return void
 	 */
+	private function setup_cart() {
+
+	}
+
+	/**
+	 * Get cart contents
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return void
+	 */
+	public function contents() {
+
+	}
+
+	/**
+	 * Get cart content details
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return void
+	 */
+	public function contents_details() {
+
+	}
+
+	/**
+	 * Get quantity
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return int
+	 */
+	public function quantity() {
+
+	}
+
+	/**
+	 * Add to cart
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return array $cart Updated cart object
+	 */
+	public function add() {
+
+	}
+
+	/**
+	 * Remove from cart
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return array $cart Updated cart object
+	 */
+	public function remove() {
+
+	}
+
+	/**
+	 * Is item in the cart?
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return bool
+	 */
+	public function is_item_in_cart() {
+
+	}
+
+	/**
+	 * Get the item position from the cart
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return mixed int|false
+	 */
+	public function item_position() {
+
+	}
+
+	/**
+	 * Get Cart Item Quantity
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return int
+	 */
+	public function item_quantity() {
+
+	}
+
+	/**
+	 * Set Cart Item Quantity
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return array $cart Updated cart object
+	 */
+	public function set_item_quantity() {
+
+	}
+
+	/**
+	 * Price of Item in Cart
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return double
+	 */
+	public function item_price() {
+
+	}
+
+	/**
+	 * Final Price of Item in Cart (incl. discounts and taxes)
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return double
+	 */
+	public function final_item_price() {
+
+	}
+
+	/**
+	 * Tax for Item in Cart
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return double
+	 */
 }
