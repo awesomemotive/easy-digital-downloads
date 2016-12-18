@@ -285,7 +285,12 @@ function edd_reports_graph() {
 					$day_keys = array_keys( $days );
 					$last_day = end( $day_keys );
 
-					$consolidated_date = $month === $last_month ? $last_day : 1;
+					$consolidated_date = 1;
+					if( $day_by_day ) {
+
+						$consolidated_date = $month === end( $month_keys ) ? cal_days_in_month( CAL_GREGORIAN, $month, $year ) : 1;
+	
+					}
 
 					$earnings        = array_sum( $days );
 					$date            = mktime( 0, 0, 0, $month, $consolidated_date, $year ) * 1000;
