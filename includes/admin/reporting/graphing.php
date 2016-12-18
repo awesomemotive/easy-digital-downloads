@@ -115,8 +115,10 @@ function edd_reports_graph() {
 		$end_date = end( $report_dates );
 
 		$sales = EDD()->payment_stats->get_sales_by_range( $dates['range'], true, $start_date['year'] . '-' . $start_date['month'] . '-' . $start_date['day'], $end_date['year'] . '-' . $end_date['month'] . '-' . $end_date['day'] );
+		$earnings = EDD()->payment_stats->get_earnings_by_range( $dates['range'], true, $start_date['year'] . '-' . $start_date['month'] . '-' . $start_date['day'], $end_date['year'] . '-' . $end_date['month'] . '-' . $end_date['day'] );
 
 		$i = 0;
+		$j = 0;
 		foreach ( $report_dates as $report_date ) {
 			$date = mktime( 0, 0, 0,  $report_date['month'], $report_date['day'], $report_date['year']  ) * 1000;
 
@@ -128,9 +130,13 @@ function edd_reports_graph() {
 				$sales_data[] = array( $date, 0 );
 			}
 
-			$earnings        = edd_get_earnings_by_date( $report_date['day'], $report_date['month'], $report_date['year'] , null, $include_taxes );
-			$earnings_totals += $earnings;
-			$earnings_data[] = array( $date, $earnings );
+			if ( $report_date['day'] == $earnings[ $j ]['d'] && $report_date['month'] == $earnings[ $j ]['m'] && $report_date['year'] == $earnings[ $j ]['y'] ) {
+				$earnings_data[] = array( $date, $earnings[ $j ]['total'] );
+				$earnings_totals += $earnings[ $j ]['total'];
+				$j++;
+			} else {
+				$earnings_data[] = array( $date, 0 );
+			}
 		}
 
 	} else {
