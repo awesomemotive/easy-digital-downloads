@@ -329,7 +329,6 @@ class EDD_Payment_Stats extends EDD_Stats {
 	 * @access public
 	 * @since  2.7
 	 *
-	 * @param int          $download_id The download product to retrieve stats for. If false, gets stats for all products
 	 * @param string|bool  $start_date The starting date for which we'd like to filter our earnings stats. If false, we'll use the default start date of `this_month`
 	 * @param string|bool  $end_date The end date for which we'd like to filter our earnings stats. If false, we'll use the default end date of `this_month`
 	 * @param bool         $include_taxes If taxes should be included in the earnings graphs
@@ -353,101 +352,43 @@ class EDD_Payment_Stats extends EDD_Stats {
 			return $this->end_date;
 		}
 
-		add_filter( 'posts_where', array( $this, 'payments_where' ) );
-
 		$earnings = array();
 
 		$cached = get_transient( 'edd_stats_earnings' );
 		$key    = md5( $range . '_' . date( 'Y-m-d', $this->start_date ) . '_' . date( 'Y-m-d', strtotime( '+1 DAY', $this->end_date ) ) );
 		$sales  = isset( $cached[ $key ] ) ? $cached[ $key ] : false;
 
-		if ( false === $earnings || ! $this->is_cacheable( $range ) ) {
-			if ( empty( $download_id ) ) {
-				$args = array(
-					'post_type'              => 'edd_payment',
-					'nopaging'               => true,
-					'post_status'            => array( 'publish', 'revoked' ),
-					'fields'                 => 'ids',
-					'update_post_term_cache' => false,
-					'suppress_filters'       => false,
-					'start_date'             => $this->start_date, // These dates are not valid query args, but they are used for cache keys
-					'end_date'               => $this->end_date,
-					'edd_transient_type'     => 'edd_earnings', // This is not a valid query arg, but is used for cache keying
-					'include_taxes'          => $include_taxes,
-				);
-
-				$args = apply_filters( 'edd_stats_earnings_args', $args );
-
-				$sales    = get_posts( $args );
-
-				if ( $sales ) {
-					$sales = implode( ',', array_map('intval', $sales ) );
-
-					$total_earnings = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN ({$sales})" );
-					$total_tax      = 0;
-
-					if ( ! $include_taxes ) {
-						$total_tax = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_tax' AND post_id IN ({$sales})" );
-					}
-
-					$total_earnings = apply_filters( 'edd_payment_stats_earnings_total', $total_earnings, $sales, $args );
-
-					$earnings += ( $total_earnings - $total_tax );
+		if ( false === $sales || ! $this->is_cacheable( $range ) ) {
+			if ( ! $day_by_day ) {
+				$select = "DATE_FORMAT(posts.post_date, '%%m') AS m, YEAR(posts.post_date) AS y, COUNT(DISTINCT posts.ID) as count";
+				$grouping = "YEAR(posts.post_date), MONTH(posts.post_date)";
+			} else {
+				if ( $range == 'today' || $range == 'yesterday' ) {
+					$select = "DATE_FORMAT(posts.post_date, '%%d') AS d, DATE_FORMAT(posts.post_date, '%%m') AS m, YEAR(posts.post_date) AS y, HOUR(posts.post_date) AS h";
+					$grouping = "YEAR(posts.post_date), MONTH(posts.post_date), DAY(posts.post_date), HOUR(posts.post_date)";
+				} else {
+					$select = "DATE_FORMAT(posts.post_date, '%%d') AS d, DATE_FORMAT(posts.post_date, '%%m') AS m, YEAR(posts.post_date) AS y";
+					$grouping = "YEAR(posts.post_date), MONTH(posts.post_date), DAY(posts.post_date)";
 				}
 			}
-		} else {
-			global $edd_logs, $wpdb;
 
-			$args = array(
-				'post_parent'        => $download_id,
-				'nopaging'           => true,
-				'log_type'           => 'sale',
-				'fields'             => 'ids',
-				'suppress_filters'   => false,
-				'start_date'         => $this->start_date,
-				'end_date'           => $this->end_date,
-				'edd_transient_type' => 'edd_earnings',
-				'include_taxes'      => $include_taxes,
-			);
-
-			$args     = apply_filters( 'edd_stats_earnings_args', $args );
-
-			$this->timestamp = false;
-			$log_ids  = $edd_logs->get_connected_logs( $args, 'sale' );
-
-			if ( $log_ids ) {
-				$log_ids     = implode( ',', array_map('intval', $log_ids ) );
-				$payment_ids = $wpdb->get_col( "SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_log_payment_id' AND post_id IN ($log_ids);" );
-
-				foreach( $payment_ids as $payment_id ) {
-					$items = edd_get_payment_meta_cart_details( $payment_id );
-
-					foreach ( $items as $cart_key => $item ) {
-						if ( $item['id'] != $download_id ) {
-							continue;
-						}
-
-						$earnings += $item['price'];
-
-						if ( ! empty( $item['fees'] ) ) {
-							foreach ( $item['fees'] as $key => $fee ) {
-								$earnings += $fee['amount'];
-							}
-						}
-
-						$earnings = apply_filters( 'edd_payment_stats_item_earnings', $earnings, $payment_id, $cart_key, $item );
-
-						if ( ! $include_taxes ) {
-							$earnings -= edd_get_payment_item_tax( $payment_id, $cart_key );
-						}
-					}
-				}
+			if ( $range == 'today' || $range == 'yesterday' ) {
+				$grouping = "YEAR(posts.post_date), MONTH(posts.post_date), DAY(posts.post_date), HOUR(posts.post_date)";
 			}
+
+			$earnings = $wpdb->get_results( $wpdb->prepare(
+				"SELECT meta_value AS total, $select
+				 FROM {$wpdb->posts} AS posts
+				 INNER JOIN {$wpdb->postmeta} ON posts.ID = {$wpdb->postmeta}.post_ID
+				 WHERE posts.post_type IN ('edd_payment')
+				 AND posts.post_date >= %s
+				 AND posts.post_date < %s
+				 AND (posts.post_status = 'publish' OR posts.post_status = 'revoked')
+				 GROUP BY $grouping
+				 ORDER by posts.post_date ASC", date( 'Y-m-d', $this->start_date ), date( 'Y-m-d', strtotime( '+1 day', $this->end_date ) ) ), ARRAY_A );
+
+			return $earnings;
 		}
-
-		remove_filter( 'posts_where', array( $this, 'payments_where' ) );
-
-		return $earnings;
 	}
 
 	/**
