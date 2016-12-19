@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
 Tested up to: 4.8
-Stable Tag: 2.6.14
+Stable Tag: 2.6.15
 
 License: GNU Version 2 or Any Later Version
 
@@ -186,6 +186,9 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.6.15, December 19, 2016 =
+* Fix: Conflict with some object caching configurations and the extension update checks that resulted in poor performance.
 
 = 2.6.14, December 15, 2016 =
 * New: Added hooks before and after cart on checkout screen
