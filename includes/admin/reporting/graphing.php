@@ -427,7 +427,6 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 	$include_taxes = empty( $_GET['exclude_taxes'] ) ? true : false;
 	$earnings_data = array();
 	$sales_data    = array();
-	$stats         = new EDD_Payment_Stats;
 
 	if ( $dates['range'] == 'today' || $dates['range'] == 'yesterday' ) {
 		// Hour by hour
@@ -443,10 +442,10 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 			$date = mktime( $hour, $minute, $second, $month, $dates['day'], $dates['year'] );
 			$date_end = mktime( $hour + 1, $minute, $second, $month, $dates['day'], $dates['year'] );
 
-			$sales = $stats->get_sales( $download_id, $date, $date_end );
+			$sales = EDD()->payment_stats->get_sales( $download_id, $date, $date_end );
 			$sales_totals += $sales;
 
-			$earnings = $stats->get_earnings( $download_id, $date, $date_end, $include_taxes );
+			$earnings = EDD()->payment_stats->get_earnings( $download_id, $date, $date_end, $include_taxes );
 			$earnings_totals += $earnings;
 
 			$sales_data[] = array( $date * 1000, $sales );
@@ -480,10 +479,10 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 		foreach ( $report_dates as $report_date ) {
 			$date  = mktime( 0, 0, 0, $report_date['month'], $report_date['day'], $report_date['year'] );
 			$date_end = mktime( 23, 59, 59, $report_date['month'], $report_date['day'], $report_date['year'] );
-			$sales = $stats->get_sales( $download_id, $date, $date_end );
+			$sales = EDD()->payment_stats->get_sales( $download_id, $date, $date_end );
 			$sales_totals += $sales;
 
-			$earnings = $stats->get_earnings( $download_id, $date, $date_end, $include_taxes );
+			$earnings = EDD()->payment_stats->get_earnings( $download_id, $date, $date_end, $include_taxes );
 			$earnings_totals += $earnings;
 
 			$sales_data[] = array( $date * 1000, $sales );
@@ -530,10 +529,10 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 					$date      = mktime( 0, 0, 0, $i, $d, $y );
 					$end_date  = mktime( 23, 59, 59, $i, $d, $y );
 
-					$earnings         = $stats->get_earnings( $download_id, $date, $end_date, $include_taxes );
+					$earnings         = EDD()->payment_stats->get_earnings( $download_id, $date, $end_date, $include_taxes );
 					$earnings_totals += $earnings;
 
-					$sales         = $stats->get_sales( $download_id, $date, $end_date );
+					$sales         = EDD()->payment_stats->get_sales( $download_id, $date, $end_date );
 					$sales_totals += $sales;
 
 					$temp_data['earnings'][ $y ][ $i ][ $d ] = $earnings;
