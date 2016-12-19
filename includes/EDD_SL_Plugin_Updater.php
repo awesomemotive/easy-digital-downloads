@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Allows plugins to use their own update API.
  *
  * @author Pippin Williamson
- * @version 1.6.6
+ * @version 1.6.7
  */
 class EDD_SL_Plugin_Updater {
 
@@ -431,7 +431,7 @@ class EDD_SL_Plugin_Updater {
 			'value'   => json_encode( $value )
 		);
 
-		update_option( $this->cache_key, $data );
+		update_option( $cache_key, $data );
 
 	}
 
