@@ -3,7 +3,7 @@
  * Cart Object
  *
  * @package     EDD
- * @subpackage  Classes/Download
+ * @subpackage  Classes/Cart
  * @copyright   Copyright (c) 2016, Sunny Ratilal
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.7
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 final class EDD_Cart {
 	/**
 	 * @var EDD_Cart
-	 * @since 1.4
+	 * @since 2.7
 	 */
 	private static $instance;
 
@@ -28,6 +28,7 @@ final class EDD_Cart {
 	 * Cart contents
 	 *
 	 * @var array
+	 * @since 2.7
 	 */
 	private $cart;
 
@@ -35,6 +36,7 @@ final class EDD_Cart {
 	 * Details of the cart contents
 	 *
 	 * @var array
+	 * @since 2.7
 	 */
 	private $details;
 
@@ -42,6 +44,7 @@ final class EDD_Cart {
 	 * Cart Quantity
 	 *
 	 * @var int
+	 * @since 2.7
 	 */
 	private $quantity;
 
@@ -49,6 +52,7 @@ final class EDD_Cart {
 	 * Subtotal
 	 *
 	 * @var double
+	 * @since 2.7
 	 */
 	private $subtotal;
 
@@ -56,6 +60,7 @@ final class EDD_Cart {
 	 * Total
 	 *
 	 * @var double
+	 * @since 2.7
 	 */
 	private $total;
 
@@ -63,6 +68,7 @@ final class EDD_Cart {
 	 * Fees
 	 *
 	 * @var array
+	 * @since 2.7
 	 */
 	private $fees;
 
@@ -70,6 +76,7 @@ final class EDD_Cart {
 	 * Tax
 	 *
 	 * @var double
+	 * @since 2.7
 	 */
 	private $tax;
 
@@ -77,6 +84,7 @@ final class EDD_Cart {
 	 * Purchase Session
 	 *
 	 * @var array
+	 * @since 2.7
 	 */
 	private $session;
 
