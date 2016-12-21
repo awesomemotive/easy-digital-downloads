@@ -19,18 +19,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 final class EDD_Cart {
 	/**
-	 * @var EDD_Cart
-	 * @since 2.7
-	 */
-	private static $instance;
-
-	/**
 	 * Cart contents
 	 *
 	 * @var array
 	 * @since 2.7
 	 */
-	private $cart;
+	private $contents;
 
 	/**
 	 * Details of the cart contents
@@ -89,49 +83,38 @@ final class EDD_Cart {
 	private $session;
 
 	/**
-	 * EDD_Cart Instance.
+	 * Discount codes
 	 *
-	 * Insures that only one instance of EDD_Cart exists in memory.
-	 *
+	 * @var array
 	 * @since 2.7
-	 * @static
-	 * @staticvar array $instance
-	 * @return object|EDD_Cart Instance of EDD_Cart
 	 */
-	public static function instance() {
-		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof EDD_Cart ) ) {
-			self::$instance = new EDD_Cart;
-			self::$instance->setup_cart();
-		}
-
-		return self::$instance;
-	}
+	public $discounts;
 
 	/**
-	 * Throw error on object clone.
+	 * Cart saving
 	 *
-	 * The whole idea of the singleton design pattern is that there is a single
-	 * object therefore, we don't want the object to be cloned.
+	 * @var bool
+	 * @since 2.7
+	 */
+	public $saving;
+
+	/**
+	 * Saved cart
+	 *
+	 * @var array
+	 * @since 2.7
+	 */
+	public $saved;
+
+	/**
+	 * Constructor.
 	 *
 	 * @since 2.7
 	 * @access protected
 	 * @return void
 	 */
-	public function __clone() {
-		// Cloning instances of the class is forbidden.
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'easy-digital-downloads' ), '2.7' );
-	}
-
-	/**
-	 * Disable unserializing of the class.
-	 *
-	 * @since 2.7
-	 * @access protected
-	 * @return void
-	 */
-	public function __wakeup() {
-		// Unserializing instances of the class is forbidden.
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'easy-digital-downloads' ), '2.7' );
+	public function __construct() {
+		$this->setup_cart();
 	}
 
 	/**
@@ -142,7 +125,13 @@ final class EDD_Cart {
 	 * @return void
 	 */
 	private function setup_cart() {
-
+		$this->contents = $this->get_cart();
+		$this->details = $this->get_contents_details();
+		$this->quantity = $this->get_quantity();
+		$this->fees = $this->get_all_fees();
+		$this->discounts = EDD()->session->get( 'cart_discounts' );
+		$this->saving = edd_get_option( 'enable_cart_saving', false );
+		$this->saved = get_user_meta( get_current_user_id(), 'edd_saved_cart', true );
 	}
 
 	/**
@@ -152,19 +141,140 @@ final class EDD_Cart {
 	 * @access public
 	 * @return void
 	 */
-	public function contents() {
+	public function get_contents() {
+		$cart = ! empty( $this->contents ) ? array_values( $this->contents ) : array();
+		$cart_count = count( $cart );
 
+		foreach ( $cart as $key => $item ) {
+			$download = new EDD_Download( $item['id'] );
+
+			// If the item is not a download or it's status has changed since it was added to the cart.
+			if ( empty( $download->ID ) || ! $download->can_purchase() ) {
+				unset( $cart[ $key ] );
+			}
+		}
+
+		// We've removed items, reset the cart session
+		if ( count( $cart ) < $cart_count ) {
+			$this->update_cart( $cart );
+		}
+
+		$this->contents = apply_filters( 'edd_cart_contents', $cart );
+		return $this->contents;
 	}
 
 	/**
-	 * Get cart content details
+	 * Get cart contents details
 	 *
 	 * @since 2.7
 	 * @access public
 	 * @return void
 	 */
-	public function contents_details() {
+	public function get_contents_details() {
+		global $edd_is_last_cart_item, $edd_flat_discount_total;
 
+		$cart_items = $this->contents;
+
+		if ( empty( $cart_items ) ) {
+			return false;
+		}
+
+		$details = array();
+		$length  = count( $cart_items ) - 1;
+
+		foreach ( $cart_items as $key => $item ) {
+			if( $key >= $length ) {
+				$edd_is_last_cart_item = true;
+			}
+
+			$item['quantity'] = edd_item_quantities_enabled() ? absint( $item['quantity'] ) : 1;
+
+			$price_id = isset( $item['options']['price_id'] ) ? $item['options']['price_id'] : null;
+
+			$item_price = edd_get_cart_item_price( $item['id'], $item['options'] );
+			$discount   = edd_get_cart_item_discount_amount( $item );
+			$discount   = apply_filters( 'edd_get_cart_content_details_item_discount_amount', $discount, $item );
+			$quantity   = edd_get_cart_item_quantity( $item['id'], $item['options'] );
+			$fees       = edd_get_cart_fees( 'fee', $item['id'], $price_id );
+			$subtotal   = $item_price * $quantity;
+			$tax        = edd_get_cart_item_tax( $item['id'], $item['options'], $subtotal - $discount );
+
+			foreach ( $fees as $fee ) {
+				if ( $fee['amount'] < 0 ) {
+					$subtotal += $fee['amount'];
+				}
+			}
+
+			if ( edd_prices_include_tax() ) {
+				$subtotal -= round( $tax, edd_currency_decimal_filter() );
+			}
+
+			$total = $subtotal - $discount + $tax;
+
+			if ( $total < 0 ) {
+				$total = 0;
+			}
+
+			$details[ $key ]  = array(
+				'name'        => get_the_title( $item['id'] ),
+				'id'          => $item['id'],
+				'item_number' => $item,
+				'item_price'  => round( $item_price, edd_currency_decimal_filter() ),
+				'quantity'    => $quantity,
+				'discount'    => round( $discount, edd_currency_decimal_filter() ),
+				'subtotal'    => round( $subtotal, edd_currency_decimal_filter() ),
+				'tax'         => round( $tax, edd_currency_decimal_filter() ),
+				'fees'        => $fees,
+				'price'       => round( $total, edd_currency_decimal_filter() )
+			);
+
+			if ( $edd_is_last_cart_item ) {
+				$edd_is_last_cart_item   = false;
+				$edd_flat_discount_total = 0.00;
+			}
+		}
+
+		$this->details = $details;
+		return $this->details;
+	}
+
+	/**
+	 * Update Cart
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return void
+	 */
+	public function update_cart() {
+		EDD()->session->set( 'edd_cart', $cart );
+	}
+
+	/**
+	 * Get Discounts
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return mixed array|false
+	 */
+	public function get_discounts() {
+		return ! empty( $this->discounts ) ? explode( '|', $this->discounts ) : false;
+	}
+
+	/**
+	 * Checks if any discounts have been applied to the cart
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return bool
+	 */
+	public function has_discounts() {
+		$has_discounts = false;
+
+		if ( $this->get_discounts() ) {
+			$has_discounts = true;
+		}
+
+		return apply_filters( 'edd_cart_has_discounts', $has_discounts );
 	}
 
 	/**
@@ -175,11 +285,33 @@ final class EDD_Cart {
 	 * @return int
 	 */
 	public function quantity() {
+		$total_quantity = 0;
+		$cart = $this->contents;
 
+		if ( ! empty( $cart ) ) {
+			$quantities     = wp_list_pluck( $cart, 'quantity' );
+			$total_quantity = absint( array_sum( $quantities ) );
+		}
+
+		$this->quantity = apply_filters( 'edd_get_cart_quantity', $total_quantity, $cart );
+		return $this->quantity;
+	}
+
+	/**
+	 * Checks if the cart is empty
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return boolean
+	 */
+	public function is_empty() {
+		return 0 === sizeof( $this->contents );
 	}
 
 	/**
 	 * Add to cart
+	 *
+	 * As of EDD 2.7, items can only be added to the cart when the object passed extends EDD_Cart_Item
 	 *
 	 * @since 2.7
 	 * @access public
@@ -198,6 +330,120 @@ final class EDD_Cart {
 	 */
 	public function remove() {
 
+	}
+
+	/**
+	 * Empty the cart
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return void
+	 */
+	public function empty() {
+		// Remove cart contents
+		EDD()->session->set( 'edd_cart', null );
+
+		// Remove all cart fees
+		EDD()->session->set( 'edd_cart_fees', null );
+
+		// Remove any active discounts
+		$this->remove_all_discounts();
+
+		do_action( 'edd_empty_cart' );
+	}
+
+	/**
+	 * Remove discount from the cart
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return void
+	 */
+	public function remove_discount( $code = '' ) {
+		if ( empty( $code ) ) {
+			return;
+		}
+
+		$discounts = $this->discounts;
+
+		if ( $discounts ) {
+			$key = array_search( $code, $discounts );
+
+			if ( false !== $key ) {
+				unset( $discounts[ $key ] );
+			}
+
+			$discounts = implode( '|', array_values( $discounts ) );
+
+			// update the active discounts
+			EDD()->session->set( 'cart_discounts', $discounts );
+		}
+
+		do_action( 'edd_cart_discount_removed', $code, $discounts );
+		do_action( 'edd_cart_discounts_updated', $discounts );
+
+		return $discounts;
+	}
+
+	/**
+	 * Remove all discount codes
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return void
+	 */
+	public function remove_all_discounts() {
+		EDD()->session->set( 'cart_discounts', null );
+		do_action( 'edd_cart_discounts_removed' );
+	}
+
+	/**
+	 * Cart Discount HTML Output
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return mixed string|void
+	 */
+	public function discount_output( $discounts = false, $echo = false ) {
+		if ( ! $discounts ) {
+			$discounts = $this->discounts;
+		}
+
+		if ( ! $discounts ) {
+			return;
+		}
+
+		$html = '';
+
+		foreach ( $discounts as $discount ) {
+			$discount_id = edd_get_discount_id_by_code( $discount );
+			$rate        = edd_format_discount_rate( edd_get_discount_type( $discount_id ), edd_get_discount_amount( $discount_id ) );
+
+			$remove_url  = add_query_arg(
+				array(
+					'edd_action'    => 'remove_cart_discount',
+					'discount_id'   => $discount_id,
+					'discount_code' => $discount
+				),
+				edd_get_checkout_uri()
+			);
+
+			$discount_html = '';
+			$discount_html .= "<span class=\"edd_discount\">\n";
+				$discount_html .= "<span class=\"edd_discount_rate\">$discount&nbsp;&ndash;&nbsp;$rate</span>\n";
+				$discount_html .= "<a href=\"$remove_url\" data-code=\"$discount\" class=\"edd_discount_remove\"></a>\n";
+			$discount_html .= "</span>\n";
+
+			$html .= apply_filters( 'edd_get_cart_discount_html', $discount_html, $discount, $rate, $remove_url );
+		}
+
+		$ouput = apply_filters( 'edd_get_cart_discounts_html', $html, $discounts, $rate, $remove_url );
+
+		if ( ! $echo ) {
+			return $output;
+		} else {
+			echo $output;
+		}
 	}
 
 	/**
@@ -273,4 +519,93 @@ final class EDD_Cart {
 	 * @access public
 	 * @return double
 	 */
+
+	/**
+	 * Get Cart Fees
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return array Cart fees
+	 */
+	public function get_fees( $type = 'all', $download_id = 0, $price_id = null ) {
+		return EDD()->fees->get_fees( $type, $download_id, $price_id );
+	}
+
+	/**
+	 * Get All Cart Fees.
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return array
+	 */
+	public function get_all_fees() {
+		$this->fees = EDD()->fees->get_fees( 'all' );
+		return $this->fees;
+	}
+
+	/**
+	 * Get Cart Fee Total
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return double
+	 */
+	public function get_total_fees() {
+		$fee_total = 0.00;
+		foreach ( $this->fees as $fee ) {
+			if ( ! empty( $fee['download_id'] ) && $fee['amount'] <= 0 ) {
+				continue;
+			}
+
+			$fee_total += $fee['amount'];
+		}
+
+		return apply_filters( 'edd_get_fee_total', $fee_total, $fees );
+	}
+
+	/**
+	 * Is Cart Saving Enabled?
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return bool
+	 */
+	public function is_saving_enabled() {
+		return $this->saving;
+	}
+
+	/**
+	 * Checks if the cart has been saved
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return bool
+	 */
+	public function is_saved() {
+		if ( ! $this->saving ) {
+			return false;
+		}
+
+		if ( is_user_logged_in() ) {
+			if ( ! $this->saved ) {
+				return false;
+			}
+
+			if ( $this->saved === EDD()->session->get( 'edd_cart' ) ) {
+				return false;
+			}
+
+			return true;
+		} else {
+			if ( ! isset( $_COOKIE['edd_saved_cart'] ) ) {
+				return false;
+			}
+
+			if ( json_decode( stripslashes( $_COOKIE['edd_saved_cart'] ), true ) === EDD()->session->get( 'edd_cart' ) ) {
+				return false;
+			}
+
+			return true;
+		}
+	}
 }
