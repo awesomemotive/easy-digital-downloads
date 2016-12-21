@@ -357,32 +357,30 @@ final class EDD_Cart {
 	 *
 	 * @since 2.7
 	 * @access public
-	 * @return void
+	 * @return array Discount codes
 	 */
 	public function remove_discount( $code = '' ) {
 		if ( empty( $code ) ) {
 			return;
 		}
 
-		$discounts = $this->discounts;
-
-		if ( $discounts ) {
-			$key = array_search( $code, $discounts );
+		if ( $this->discounts ) {
+			$key = array_search( $code, $this->discounts );
 
 			if ( false !== $key ) {
-				unset( $discounts[ $key ] );
+				unset( $this->discounts[ $key ] );
 			}
 
-			$discounts = implode( '|', array_values( $discounts ) );
+			$this->discounts = implode( '|', array_values( $this->discounts ) );
 
 			// update the active discounts
-			EDD()->session->set( 'cart_discounts', $discounts );
+			EDD()->session->set( 'cart_discounts', $this->discounts );
 		}
 
-		do_action( 'edd_cart_discount_removed', $code, $discounts );
-		do_action( 'edd_cart_discounts_updated', $discounts );
+		do_action( 'edd_cart_discount_removed', $code, $this->discounts );
+		do_action( 'edd_cart_discounts_updated', $this->discounts );
 
-		return $discounts;
+		return $this->discounts;
 	}
 
 	/**
