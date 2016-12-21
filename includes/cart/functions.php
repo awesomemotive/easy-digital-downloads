@@ -974,36 +974,7 @@ function edd_is_cart_saving_disabled() {
  * @return bool
  */
 function edd_is_cart_saved() {
-	if( edd_is_cart_saving_disabled() )
-		return false;
-
-	if ( is_user_logged_in() ) {
-
-		$saved_cart = get_user_meta( get_current_user_id(), 'edd_saved_cart', true );
-
-		// Check that a cart exists
-		if( ! $saved_cart )
-			return false;
-
-		// Check that the saved cart is not the same as the current cart
-		if ( $saved_cart === EDD()->session->get( 'edd_cart' ) )
-			return false;
-
-		return true;
-
-	} else {
-
-		// Check that a saved cart exists
-		if ( ! isset( $_COOKIE['edd_saved_cart'] ) )
-			return false;
-
-		// Check that the saved cart is not the same as the current cart
-		if ( json_decode( stripslashes( $_COOKIE['edd_saved_cart'] ), true ) === EDD()->session->get( 'edd_cart' ) )
-			return false;
-
-		return true;
-
-	}
+	return EDD()->cart->is_saved();
 }
 
 /**
@@ -1013,48 +984,8 @@ function edd_is_cart_saved() {
  * @return bool
  */
 function edd_save_cart() {
-	if ( edd_is_cart_saving_disabled() )
-		return false;
-
-	$user_id  = get_current_user_id();
-	$cart     = EDD()->session->get( 'edd_cart' );
-	$token    = edd_generate_cart_token();
-	$messages = EDD()->session->get( 'edd_cart_messages' );
-
-	if ( is_user_logged_in() ) {
-
-		update_user_meta( $user_id, 'edd_saved_cart', $cart, false );
-		update_user_meta( $user_id, 'edd_cart_token', $token, false );
-
-	} else {
-
-		$cart = json_encode( $cart );
-
-		setcookie( 'edd_saved_cart', $cart, time()+3600*24*7, COOKIEPATH, COOKIE_DOMAIN );
-		setcookie( 'edd_cart_token', $token, time()+3600*24*7, COOKIEPATH, COOKIE_DOMAIN );
-
-	}
-
-	$messages = EDD()->session->get( 'edd_cart_messages' );
-
-	if ( ! $messages )
-		$messages = array();
-
-	$messages['edd_cart_save_successful'] = sprintf(
-		'<strong>%1$s</strong>: %2$s',
-		__( 'Success', 'easy-digital-downloads' ),
-		__( 'Cart saved successfully. You can restore your cart using this URL:', 'easy-digital-downloads' ) . ' ' . '<a href="' .  edd_get_checkout_uri() . '?edd_action=restore_cart&edd_cart_token=' . $token . '">' .  edd_get_checkout_uri() . '?edd_action=restore_cart&edd_cart_token=' . $token . '</a>'
-	);
-
-	EDD()->session->set( 'edd_cart_messages', $messages );
-
-	if( $cart ) {
-		return true;
-	}
-
-	return false;
+	return EDD()->cart->save_cart();
 }
-
 
 /**
  * Process the Cart Restoration
