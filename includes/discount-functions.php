@@ -661,20 +661,20 @@ function edd_is_discount_maxed_out( $code_id = null, $set_error = true ) {
 
 		// Large number that will never be reached
 		$max_uses = edd_get_discount_max_uses( $code_id );
-	
+
 		// Should never be greater than, but just in case
 		if ( $uses >= $max_uses && ! empty( $max_uses ) ) {
-	
+
 			// Discount is maxed out
-	
+
 			if( $set_error ) {
 
 				edd_set_error( 'edd-discount-error', __( 'This discount has reached its maximum usage.', 'easy-digital-downloads' ) );
-	
+
 			}
-	
+
 			$return = true;
-	
+
 		}
 	}
 
@@ -770,7 +770,7 @@ function edd_discount_product_reqs_met( $code_id = null, $set_error = true ) {
 						if( $set_error ) {
 
 							edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
-	
+
 						}
 
 						$ret = false;
@@ -812,9 +812,9 @@ function edd_discount_product_reqs_met( $code_id = null, $set_error = true ) {
 			if( $set_error ) {
 
 				edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'easy-digital-downloads' ) );
-	
+
 			}
-	
+
 			$ret = false;
 		}
 	}
@@ -922,9 +922,9 @@ function edd_is_discount_used( $code = null, $user = '', $code_id = 0, $set_erro
 						if( $set_error ) {
 
 							edd_set_error( 'edd-discount-error', __( 'This discount has already been redeemed.', 'easy-digital-downloads' ) );
-	
+
 						}
-	
+
 						$return = true;
 						break;
 
@@ -1200,8 +1200,7 @@ function edd_unset_cart_discount( $code = '' ) {
  * @return void
  */
 function edd_unset_all_cart_discounts() {
-	EDD()->session->set( 'cart_discounts', null );
-	do_action( 'edd_cart_discounts_removed' );
+	EDD()->cart->remove_all_discounts();
 }
 
 /**
@@ -1223,13 +1222,7 @@ function edd_get_cart_discounts() {
  * @return bool
  */
 function edd_cart_has_discounts() {
-	$ret = false;
-
-	if ( edd_get_cart_discounts() ) {
-		$ret = true;
-	}
-
-	return apply_filters( 'edd_cart_has_discounts', $ret );
+	return EDD()->cart->has_discounts();
 }
 
 /**
@@ -1391,7 +1384,7 @@ function edd_get_cart_item_discount_amount( $item = array(), $discount = false )
  * @return void
  */
 function edd_cart_discounts_html() {
-	echo edd_get_cart_discounts_html();
+	EDD()->cart->discount_output( $discounts, true );
 }
 
 /**
@@ -1403,39 +1396,7 @@ function edd_cart_discounts_html() {
  * @return mixed|void
  */
 function edd_get_cart_discounts_html( $discounts = false ) {
-	if ( ! $discounts ) {
-		$discounts = edd_get_cart_discounts();
-	}
-
-	if ( ! $discounts ) {
-		return;
-	}
-
-	$html = '';
-
-	foreach ( $discounts as $discount ) {
-		$discount_id  = edd_get_discount_id_by_code( $discount );
-		$rate         = edd_format_discount_rate( edd_get_discount_type( $discount_id ), edd_get_discount_amount( $discount_id ) );
-
-		$remove_url   = add_query_arg(
-			array(
-				'edd_action'    => 'remove_cart_discount',
-				'discount_id'   => $discount_id,
-				'discount_code' => $discount
-			),
-			edd_get_checkout_uri()
-		);
-
-		$discount_html = '';
-		$discount_html .= "<span class=\"edd_discount\">\n";
-			$discount_html .= "<span class=\"edd_discount_rate\">$discount&nbsp;&ndash;&nbsp;$rate</span>\n";
-			$discount_html .= "<a href=\"$remove_url\" data-code=\"$discount\" class=\"edd_discount_remove\"></a>\n";
-		$discount_html .= "</span>\n";
-
-		$html .= apply_filters( 'edd_get_cart_discount_html', $discount_html, $discount, $rate, $remove_url );
-	}
-
-	return apply_filters( 'edd_get_cart_discounts_html', $html, $discounts, $rate, $remove_url );
+	return EDD()->cart->discount_output( $discounts, false );
 }
 
 /**
