@@ -204,16 +204,16 @@ class EDD_Cart {
 	public function get_contents_details() {
 		global $edd_is_last_cart_item, $edd_flat_discount_total;
 
-		$cart_items = $this->get_contents();
+		$cart = $this->get_contents();
 
-		if ( empty( $cart_items ) ) {
+		if ( empty( $cart ) ) {
 			return false;
 		}
 
 		$details = array();
-		$length  = count( $cart_items ) - 1;
+		$length  = count( $cart ) - 1;
 
-		foreach ( $cart_items as $key => $item ) {
+		foreach ( $cart as $key => $item ) {
 			if( $key >= $length ) {
 				$edd_is_last_cart_item = true;
 			}
@@ -598,14 +598,37 @@ class EDD_Cart {
 	}
 
 	/**
-	 * Is item in the cart?
+	 * Checks to see if an item is in the cart.
 	 *
 	 * @since 2.7
 	 * @access public
+	 *
+	 * @param int   $download_id Download ID of the item to check.
+ 	 * @param array $options
 	 * @return bool
 	 */
-	public function is_item_in_cart() {
+	public function is_item_in_cart( $download_id = 0, $options = array() ) {
+		$cart = $this->get_contents();
 
+		$ret = false;
+
+		if ( is_array( $cart ) ) {
+			foreach ( $cart as $item ) {
+				if ( $item['id'] == $download_id ) {
+					if ( isset( $options['price_id'] ) && isset( $item['options']['price_id'] ) ) {
+						if ( $options['price_id'] == $item['options']['price_id'] ) {
+							$ret = true;
+							break;
+						}
+					} else {
+						$ret = true;
+						break;
+					}
+				}
+			}
+		}
+
+		return (bool) apply_filters( 'edd_item_in_cart', $ret, $download_id, $options );
 	}
 
 	/**
