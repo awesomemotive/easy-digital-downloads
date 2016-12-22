@@ -143,12 +143,13 @@ class EDD_Cart {
 			}
 		}
 
+		$this->contents = apply_filters( 'edd_cart_contents', $cart );
+
 		// We've removed items, reset the cart session
 		if ( count( $cart ) < $cart_count ) {
-			$this->update_cart( $cart );
+			$this->update_cart();
 		}
 
-		$this->contents = apply_filters( 'edd_cart_contents', $cart );
 		return $this->contents;
 	}
 
@@ -306,8 +307,110 @@ class EDD_Cart {
 	 * @access public
 	 * @return array $cart Updated cart object
 	 */
-	public function add() {
+	public function add( $download_id, $options = array() ) {
+		$download = new EDD_Download( $download_id );
 
+		if ( empty( $download->ID ) ) {
+			return; // Not a download product
+		}
+
+		if ( ! $download->can_purchase() ) {
+			return; // Do not allow draft/pending to be purchased if can't edit. Fixes #1056
+		}
+
+		do_action( 'edd_pre_add_to_cart', $download_id, $options );
+
+		$this->contents = apply_filters( 'edd_pre_add_to_cart_contents', $this->get_contents() );
+
+		if ( edd_has_variable_prices( $download_id )  && ! isset( $options['price_id'] ) ) {
+			// Forces to the first price ID if none is specified and download has variable prices
+			$options['price_id'] = '0';
+		}
+
+		if ( isset( $options['quantity'] ) ) {
+			if ( is_array( $options['quantity'] ) ) {
+				$quantity = array();
+				foreach ( $options['quantity'] as $q ) {
+					$quantity[] = absint( preg_replace( '/[^0-9\.]/', '', $q ) );
+				}
+			} else {
+				$quantity = absint( preg_replace( '/[^0-9\.]/', '', $options['quantity'] ) );
+			}
+
+			unset( $options['quantity'] );
+		} else {
+			$quantity = 1;
+		}
+
+		// If the price IDs are a string and is a coma separted list, make it an array (allows custom add to cart URLs)
+		if ( isset( $options['price_id'] ) && ! is_array( $options['price_id'] ) && false !== strpos( $options['price_id'], ',' ) ) {
+			$options['price_id'] = explode( ',', $options['price_id'] );
+		}
+
+		$items = array();
+
+		if ( isset( $options['price_id'] ) && is_array( $options['price_id'] ) ) {
+			// Process multiple price options at once
+			foreach ( $options['price_id'] as $key => $price ) {
+				$items[] = array(
+					'id'           => $download_id,
+					'options'      => array(
+						'price_id' => preg_replace( '/[^0-9\.-]/', '', $price )
+					),
+					'quantity'     => $quantity[ $key ],
+				);
+			}
+		} else {
+			// Sanitize price IDs
+			foreach( $options as $key => $option ) {
+				if ( 'price_id' == $key ) {
+					$options[ $key ] = preg_replace( '/[^0-9\.-]/', '', $option );
+				}
+			}
+
+			// Add a single item
+			$items[] = array(
+				'id'       => $download_id,
+				'options'  => $options,
+				'quantity' => $quantity
+			);
+		}
+
+		foreach ( $items as &$item ) {
+			$item = apply_filters( 'edd_add_to_cart_item', $item );
+			$to_add = $item;
+
+			if ( ! is_array( $to_add ) ) {
+				return;
+			}
+
+			if ( ! isset( $to_add['id'] ) || empty( $to_add['id'] ) ) {
+				return;
+			}
+
+			if ( edd_item_in_cart( $to_add['id'], $to_add['options'] ) && edd_item_quantities_enabled() ) {
+				$key = edd_get_item_position_in_cart( $to_add['id'], $to_add['options'] );
+
+				if ( is_array( $quantity ) ) {
+					$this->contents[ $key ]['quantity'] += $quantity[ $key ];
+				} else {
+					$this->contents[ $key ]['quantity'] += $quantity;
+				}
+			} else {
+				$this->contents[] = $to_add;
+			}
+		}
+
+		unset( $item );
+
+		EDD()->session->set( 'edd_cart', $this->contents );
+
+		do_action( 'edd_post_add_to_cart', $download_id, $options, $items );
+
+		// Clear all the checkout errors, if any
+		edd_clear_errors();
+
+		return count( $this->contents ) - 1;
 	}
 
 	/**
