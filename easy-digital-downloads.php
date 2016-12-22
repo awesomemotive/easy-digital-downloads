@@ -254,13 +254,13 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/cart/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/cart/class-edd-cart.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-customers.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-customer-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-download.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cache-helper.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cart.php';
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			require_once EDD_PLUGIN_DIR . 'includes/class-edd-cli.php';
 		}

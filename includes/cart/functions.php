@@ -718,7 +718,7 @@ function edd_get_cart_fees( $type = 'all', $download_id = 0, $price_id = NULL ) 
  * @return float Total Cart Fees
  */
 function edd_get_cart_fee_total() {
-	return EDD()->cart->get_total_fees():
+	return EDD()->cart->get_total_fees();
 }
 
 /**
@@ -974,7 +974,7 @@ function edd_is_cart_saving_disabled() {
  * @return bool
  */
 function edd_is_cart_saved() {
-	return EDD()->cart->is_saved();
+	return EDD_Cart()->is_saved();
 }
 
 /**
@@ -984,8 +984,9 @@ function edd_is_cart_saved() {
  * @return bool
  */
 function edd_save_cart() {
-	return EDD()->cart->save_cart();
+	EDD()->cart->save_cart();
 }
+
 
 /**
  * Process the Cart Restoration
@@ -994,58 +995,7 @@ function edd_save_cart() {
  * @return mixed || false Returns false if cart saving is disabled
  */
 function edd_restore_cart() {
-
-	if ( edd_is_cart_saving_disabled() )
-		return false;
-
-	$user_id    = get_current_user_id();
-	$saved_cart = get_user_meta( $user_id, 'edd_saved_cart', true );
-	$token      = edd_get_cart_token();
-
-	if ( is_user_logged_in() && $saved_cart ) {
-
-		$messages = EDD()->session->get( 'edd_cart_messages' );
-
-		if ( ! $messages )
-			$messages = array();
-
-		if ( isset( $_GET['edd_cart_token'] ) && ! hash_equals( $_GET['edd_cart_token'], $token ) ) {
-
-			$messages['edd_cart_restoration_failed'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Error', 'easy-digital-downloads' ), __( 'Cart restoration failed. Invalid token.', 'easy-digital-downloads' ) );
-			EDD()->session->set( 'edd_cart_messages', $messages );
-		}
-
-		delete_user_meta( $user_id, 'edd_saved_cart' );
-		delete_user_meta( $user_id, 'edd_cart_token' );
-
-		if ( isset( $_GET['edd_cart_token'] ) && $_GET['edd_cart_token'] != $token ) {
-			return new WP_Error( 'invalid_cart_token', __( 'The cart cannot be restored. Invalid token.', 'easy-digital-downloads' ) );
-		}
-
-	} elseif ( ! is_user_logged_in() && isset( $_COOKIE['edd_saved_cart'] ) && $token ) {
-
-		$saved_cart = $_COOKIE['edd_saved_cart'];
-
-		if ( ! hash_equals( $_GET['edd_cart_token'], $token ) ) {
-
-			$messages['edd_cart_restoration_failed'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Error', 'easy-digital-downloads' ), __( 'Cart restoration failed. Invalid token.', 'easy-digital-downloads' ) );
-			EDD()->session->set( 'edd_cart_messages', $messages );
-
-			return new WP_Error( 'invalid_cart_token', __( 'The cart cannot be restored. Invalid token.', 'easy-digital-downloads' ) );
-		}
-
-		$saved_cart = json_decode( stripslashes( $saved_cart ), true );
-
-		setcookie( 'edd_saved_cart', '', time()-3600, COOKIEPATH, COOKIE_DOMAIN );
-		setcookie( 'edd_cart_token', '', time()-3600, COOKIEPATH, COOKIE_DOMAIN );
-
-	}
-
-	$messages['edd_cart_restoration_successful'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Success', 'easy-digital-downloads' ), __( 'Cart restored successfully.', 'easy-digital-downloads' ) );
-	EDD()->session->set( 'edd_cart', $saved_cart );
-	EDD()->session->set( 'edd_cart_messages', $messages );
-
-	return true;
+	return EDD()->cart->restore();
 }
 
 /**
@@ -1055,15 +1005,7 @@ function edd_restore_cart() {
  * @return int
  */
 function edd_get_cart_token() {
-
-	$user_id = get_current_user_id();
-
-	if( is_user_logged_in() ) {
-		$token = get_user_meta( $user_id, 'edd_cart_token', true );
-	} else {
-		$token = isset( $_COOKIE['edd_cart_token'] ) ? $_COOKIE['edd_cart_token'] : false;
-	}
-	return apply_filters( 'edd_get_cart_token', $token, $user_id );
+	return EDD()->cart->get_token();
 }
 
 /**
@@ -1119,5 +1061,5 @@ add_action( 'edd_weekly_scheduled_events', 'edd_delete_saved_carts' );
  * @return string UNIX timestamp
  */
 function edd_generate_cart_token() {
-	return apply_filters( 'edd_generate_cart_token', md5( mt_rand() . time() ) );
+	return EDD()->cart->generate_token();
 }
