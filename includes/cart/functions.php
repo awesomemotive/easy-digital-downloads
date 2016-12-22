@@ -81,27 +81,7 @@ function edd_remove_from_cart( $cart_key ) {
  * @return bool Item in the cart or not?
  */
 function edd_item_in_cart( $download_id = 0, $options = array() ) {
-	$cart_items = edd_get_cart_contents();
-
-	$ret = false;
-
-	if ( is_array( $cart_items ) ) {
-		foreach ( $cart_items as $item ) {
-			if ( $item['id'] == $download_id ) {
-				if ( isset( $options['price_id'] ) && isset( $item['options']['price_id'] ) ) {
-					if ( $options['price_id'] == $item['options']['price_id'] ) {
-						$ret = true;
-						break;
-					}
-				} else {
-					$ret = true;
-					break;
-				}
-			}
-		}
-	}
-
-	return (bool) apply_filters( 'edd_item_in_cart', $ret, $download_id, $options );
+	return EDD()->cart->is_item_in_cart( $download_id, $options );
 }
 
 /**
