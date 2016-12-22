@@ -459,10 +459,30 @@ class EDD_Cart {
 	 *
 	 * @since 2.7
 	 * @access public
-	 * @return array $cart Updated cart object
+	 *
+	 * @param int $key Cart key to remove. This key is the numerical index of the item contained within the cart array.
+ 	 * @return array Updated cart contents
 	 */
-	public function remove() {
+	public function remove( $key ) {
+		$cart = $this->get_contents();
 
+		do_action( 'edd_pre_remove_from_cart', $key );
+
+		if ( ! is_array( $cart ) ) {
+			return true; // Empty cart
+		} else {
+			$item_id = isset( $cart[ $key ]['id'] ) ? $cart[ $key ]['id'] : null;
+			unset( $cart[ $key ] );
+		}
+
+		$this->contents = $cart;
+		$this->update_cart();
+
+		do_action( 'edd_post_remove_from_cart', $key, $item_id );
+
+		edd_clear_errors();
+
+		return $this->contents;
 	}
 
 	/**

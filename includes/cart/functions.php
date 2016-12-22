@@ -68,25 +68,7 @@ function edd_add_to_cart( $download_id, $options = array() ) {
  * @return array Updated cart items
  */
 function edd_remove_from_cart( $cart_key ) {
-	$cart = edd_get_cart_contents();
-
-	do_action( 'edd_pre_remove_from_cart', $cart_key );
-
-	if ( ! is_array( $cart ) ) {
-		return true; // Empty cart
-	} else {
-		$item_id = isset( $cart[ $cart_key ]['id'] ) ? $cart[ $cart_key ]['id'] : null;
-		unset( $cart[ $cart_key ] );
-	}
-
-	EDD()->session->set( 'edd_cart', $cart );
-
-	do_action( 'edd_post_remove_from_cart', $cart_key, $item_id );
-
-	// Clear all the checkout errors, if any
-	edd_clear_errors();
-
-	return $cart; // The updated cart items
+	return EDD()->cart->remove( $cart_key );
 }
 
 /**
