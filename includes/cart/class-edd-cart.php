@@ -128,8 +128,7 @@ class EDD_Cart {
 		$this->get_contents();
 		$this->get_contents_details();
 		$this->get_discounts_from_session();
-		// $this->quantity = $this->get_quantity();
-		$this->get_all_fees();
+		$this->quantity = $this->get_quantity();
 		$this->saving = edd_get_option( 'enable_cart_saving', false );
 		$this->saved = get_user_meta( get_current_user_id(), 'edd_saved_cart', true );
 	}
@@ -318,7 +317,7 @@ class EDD_Cart {
 	 */
 	public function get_quantity() {
 		$total_quantity = 0;
-		$cart = $this->contents;
+		$cart = $this->get_contents();
 
 		if ( ! empty( $cart ) ) {
 			$quantities     = wp_list_pluck( $cart, 'quantity' );
