@@ -130,8 +130,8 @@ class EDD_Cart {
 		// $this->quantity = $this->get_quantity();
 		$this->get_all_fees();
 		// $this->discounts = EDD()->session->get( 'cart_discounts' );
-		// $this->saving = edd_get_option( 'enable_cart_saving', false );
-		// $this->saved = get_user_meta( get_current_user_id(), 'edd_saved_cart', true );
+		$this->saving = edd_get_option( 'enable_cart_saving', false );
+		$this->saved = get_user_meta( get_current_user_id(), 'edd_saved_cart', true );
 	}
 
 	/**
