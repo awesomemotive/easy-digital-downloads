@@ -88,7 +88,7 @@ class EDD_Cart {
 	 * @var array
 	 * @since 2.7
 	 */
-	public $discounts;
+	public $discounts = array();
 
 	/**
 	 * Cart saving
@@ -127,9 +127,9 @@ class EDD_Cart {
 		$this->get_contents_from_session();
 		$this->get_contents();
 		$this->get_contents_details();
+		$this->get_discounts_from_session();
 		// $this->quantity = $this->get_quantity();
 		$this->get_all_fees();
-		// $this->discounts = EDD()->session->get( 'cart_discounts' );
 		$this->saving = edd_get_option( 'enable_cart_saving', false );
 		$this->saved = get_user_meta( get_current_user_id(), 'edd_saved_cart', true );
 	}
@@ -146,6 +146,20 @@ class EDD_Cart {
 		$this->contents = $cart;
 
 		do_action( 'edd_cart_contents_loaded_from_session', $this );
+	}
+
+	/**
+	 * Populate the discounts with the data stored in the session.
+	 *
+	 * @since  2.7
+	 * @access public
+	 * @return void
+	 */
+	public function get_discounts_from_session() {
+		$discounts = EDD()->session->get( 'cart_discounts' );
+		$this->discounts = $discounts;
+
+		do_action( 'edd_cart_discounts_loaded_from_session', $this );
 	}
 
 	/**
