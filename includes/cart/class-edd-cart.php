@@ -107,20 +107,44 @@ class EDD_Cart {
 	public $saved;
 
 	/**
-	 * Setup cart
+	 * Constructor.
 	 *
 	 * @since 2.7
+	 * @access public
+	 */
+	public function __construct() {
+		$this->setup_cart();
+	}
+
+	/**
+	 * Sets up cart components
+	 *
+	 * @since  2.7
 	 * @access private
 	 * @return void
 	 */
 	private function setup_cart() {
-		$this->get_contents();
-		$this->details = $this->get_contents_details();
-		$this->quantity = $this->get_quantity();
-		$this->get_all_fees();
-		$this->discounts = EDD()->session->get( 'cart_discounts' );
-		$this->saving = edd_get_option( 'enable_cart_saving', false );
-		$this->saved = get_user_meta( get_current_user_id(), 'edd_saved_cart', true );
+		$this->get_contents_from_session();
+		// $this->details = $this->get_contents_details();
+		// $this->quantity = $this->get_quantity();
+		// $this->get_all_fees();
+		// $this->discounts = EDD()->session->get( 'cart_discounts' );
+		// $this->saving = edd_get_option( 'enable_cart_saving', false );
+		// $this->saved = get_user_meta( get_current_user_id(), 'edd_saved_cart', true );
+	}
+
+	/**
+	 * Populate the cart with the data stored in the session
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return void
+	 */
+	public function get_contents_from_session() {
+		$cart = EDD()->session->get( 'edd_cart' );
+		$this->contents = $cart;
+
+		do_action( 'edd_cart_contents_loaded_from_session', $this );
 	}
 
 	/**
@@ -131,6 +155,8 @@ class EDD_Cart {
 	 * @return void
 	 */
 	public function get_contents() {
+		$this->get_contents_from_session();
+
 		$cart = ! empty( $this->contents ) ? array_values( $this->contents ) : array();
 		$cart_count = count( $cart );
 
@@ -143,12 +169,13 @@ class EDD_Cart {
 			}
 		}
 
-		$this->contents = apply_filters( 'edd_cart_contents', $cart );
-
 		// We've removed items, reset the cart session
 		if ( count( $cart ) < $cart_count ) {
+			$this->contents = $cart;
 			$this->update_cart();
 		}
+
+		$this->contents = apply_filters( 'edd_cart_contents', $cart );
 
 		return $this->contents;
 	}
