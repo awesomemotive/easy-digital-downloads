@@ -125,7 +125,8 @@ class EDD_Cart {
 	 */
 	private function setup_cart() {
 		$this->get_contents_from_session();
-		// $this->details = $this->get_contents_details();
+		$this->get_contents();
+		$this->get_contents_details();
 		// $this->quantity = $this->get_quantity();
 		// $this->get_all_fees();
 		// $this->discounts = EDD()->session->get( 'cart_discounts' );
@@ -190,7 +191,7 @@ class EDD_Cart {
 	public function get_contents_details() {
 		global $edd_is_last_cart_item, $edd_flat_discount_total;
 
-		$cart_items = $this->contents;
+		$cart_items = $this->get_contents();
 
 		if ( empty( $cart_items ) ) {
 			return false;
