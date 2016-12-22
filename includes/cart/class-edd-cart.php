@@ -45,7 +45,7 @@ class EDD_Cart {
 	/**
 	 * Subtotal
 	 *
-	 * @var double
+	 * @var float
 	 * @since 2.7
 	 */
 	public $subtotal = 0.00;
@@ -53,7 +53,7 @@ class EDD_Cart {
 	/**
 	 * Total
 	 *
-	 * @var double
+	 * @var float
 	 * @since 2.7
 	 */
 	public $total = 0.00;
@@ -69,7 +69,7 @@ class EDD_Cart {
 	/**
 	 * Tax
 	 *
-	 * @var double
+	 * @var float
 	 * @since 2.7
 	 */
 	public $tax = 0.00;
@@ -105,17 +105,6 @@ class EDD_Cart {
 	 * @since 2.7
 	 */
 	public $saved;
-
-	/**
-	 * Constructor.
-	 *
-	 * @since 2.7
-	 * @access protected
-	 * @return void
-	 */
-	public function __construct() {
-		$this->setup_cart();
-	}
 
 	/**
 	 * Setup cart
@@ -246,7 +235,7 @@ class EDD_Cart {
 	 * @return void
 	 */
 	public function update_cart() {
-		EDD()->session->set( 'edd_cart', $cart );
+		EDD()->session->set( 'edd_cart', $this->contents );
 	}
 
 	/**
@@ -558,7 +547,7 @@ class EDD_Cart {
 			$fee_total += $fee['amount'];
 		}
 
-		return apply_filters( 'edd_get_fee_total', $fee_total, $fees );
+		return apply_filters( 'edd_get_fee_total', $fee_total, $this->fees );
 	}
 
 	/**
