@@ -17,14 +17,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @since 2.7
  */
-final class EDD_Cart {
+class EDD_Cart {
 	/**
 	 * Cart contents
 	 *
 	 * @var array
 	 * @since 2.7
 	 */
-	private $contents;
+	public $contents = array();
 
 	/**
 	 * Details of the cart contents
@@ -32,7 +32,7 @@ final class EDD_Cart {
 	 * @var array
 	 * @since 2.7
 	 */
-	private $details;
+	public $details = array();
 
 	/**
 	 * Cart Quantity
@@ -40,7 +40,7 @@ final class EDD_Cart {
 	 * @var int
 	 * @since 2.7
 	 */
-	private $quantity;
+	public $quantity = 0;
 
 	/**
 	 * Subtotal
@@ -48,7 +48,7 @@ final class EDD_Cart {
 	 * @var double
 	 * @since 2.7
 	 */
-	private $subtotal;
+	public $subtotal = 0.00;
 
 	/**
 	 * Total
@@ -56,7 +56,7 @@ final class EDD_Cart {
 	 * @var double
 	 * @since 2.7
 	 */
-	private $total;
+	public $total = 0.00;
 
 	/**
 	 * Fees
@@ -64,7 +64,7 @@ final class EDD_Cart {
 	 * @var array
 	 * @since 2.7
 	 */
-	private $fees;
+	public $fees = array();
 
 	/**
 	 * Tax
@@ -72,7 +72,7 @@ final class EDD_Cart {
 	 * @var double
 	 * @since 2.7
 	 */
-	private $tax;
+	public $tax = 0.00;
 
 	/**
 	 * Purchase Session
@@ -80,7 +80,7 @@ final class EDD_Cart {
 	 * @var array
 	 * @since 2.7
 	 */
-	private $session;
+	public $session;
 
 	/**
 	 * Discount codes
@@ -125,10 +125,10 @@ final class EDD_Cart {
 	 * @return void
 	 */
 	private function setup_cart() {
-		$this->contents = $this->get_cart();
+		$this->get_contents();
 		$this->details = $this->get_contents_details();
 		$this->quantity = $this->get_quantity();
-		$this->fees = $this->get_all_fees();
+		$this->get_all_fees();
 		$this->discounts = EDD()->session->get( 'cart_discounts' );
 		$this->saving = edd_get_option( 'enable_cart_saving', false );
 		$this->saved = get_user_meta( get_current_user_id(), 'edd_saved_cart', true );
@@ -284,7 +284,7 @@ final class EDD_Cart {
 	 * @access public
 	 * @return int
 	 */
-	public function quantity() {
+	public function get_quantity() {
 		$total_quantity = 0;
 		$cart = $this->contents;
 
