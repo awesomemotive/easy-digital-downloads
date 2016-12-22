@@ -94,25 +94,8 @@ function edd_item_in_cart( $download_id = 0, $options = array() ) {
  * @return bool|int|string false if empty cart |  position of the item in the cart
  */
 function edd_get_item_position_in_cart( $download_id = 0, $options = array() ) {
-	$cart_items = edd_get_cart_contents();
-	if ( ! is_array( $cart_items ) ) {
-		return false; // Empty cart
-	} else {
-		foreach ( $cart_items as $position => $item ) {
-			if ( $item['id'] == $download_id ) {
-				if ( isset( $options['price_id'] ) && isset( $item['options']['price_id'] ) ) {
-					if ( (int) $options['price_id'] == (int) $item['options']['price_id'] ) {
-						return $position;
-					}
-				} else {
-					return $position;
-				}
-			}
-		}
-	}
-	return false; // Not found
+	return EDD()->cart->get_item_position( $download_id, $options );
 }
-
 
 /**
  * Check if quantities are enabled
@@ -136,22 +119,8 @@ function edd_item_quantities_enabled() {
  * @return mixed New Cart array
  */
 function edd_set_cart_item_quantity( $download_id = 0, $quantity = 1, $options = array() ) {
-	$cart = edd_get_cart_contents();
-	$key  = edd_get_item_position_in_cart( $download_id, $options );
-
-	if( $quantity < 1 ) {
-		$quantity = 1;
-	}
-
-	$cart[ $key ]['quantity'] = $quantity;
-	EDD()->session->set( 'edd_cart', $cart );
-
-	do_action( 'edd_after_set_cart_item_quantity', $download_id, $quantity, $options, $cart );
-
-	return $cart;
-
+	return EDD()->cart->set_item_quantity( $download_id, $quantity, $options );
 }
-
 
 /**
  * Get Cart Item Quantity
@@ -162,12 +131,7 @@ function edd_set_cart_item_quantity( $download_id = 0, $quantity = 1, $options =
  * @return int $quantity Cart item quantity
  */
 function edd_get_cart_item_quantity( $download_id = 0, $options = array() ) {
-	$cart     = edd_get_cart_contents();
-	$key      = edd_get_item_position_in_cart( $download_id, $options );
-	$quantity = isset( $cart[ $key ]['quantity'] ) && edd_item_quantities_enabled() ? $cart[ $key ]['quantity'] : 1;
-	if( $quantity < 1 )
-		$quantity = 1;
-	return apply_filters( 'edd_get_cart_item_quantity', $quantity, $download_id, $options );
+	return EDD()->cart->get_item_quantity( $download_id, $options );
 }
 
 /**

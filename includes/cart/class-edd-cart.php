@@ -632,36 +632,91 @@ class EDD_Cart {
 	}
 
 	/**
-	 * Get the item position from the cart
+	 * Get the position of an item in the cart
 	 *
 	 * @since 2.7
 	 * @access public
+	 *
+	 * @param int   $download_id Download ID of the item to check.
+ 	 * @param array $options
 	 * @return mixed int|false
 	 */
-	public function item_position() {
+	public function get_item_position( $download_id = 0, $options = array() ) {
+		$cart = $this->get_contents();
 
+		if ( ! is_array( $cart ) ) {
+			return false;
+		} else {
+			foreach ( $cart as $position => $item ) {
+				if ( $item['id'] == $download_id ) {
+					if ( isset( $options['price_id'] ) && isset( $item['options']['price_id'] ) ) {
+						if ( (int) $options['price_id'] == (int) $item['options']['price_id'] ) {
+							return $position;
+						}
+					} else {
+						return $position;
+					}
+				}
+			}
+		}
+
+		return false;
 	}
 
 	/**
-	 * Get Cart Item Quantity
+	 * Get the quantity of an item in the cart.
 	 *
 	 * @since 2.7
 	 * @access public
-	 * @return int
+	 *
+	 * @param int   $download_id Download ID of the item
+ 	 * @param array $options
+	 * @return int Numerical index of the position of the item in the cart
 	 */
-	public function item_quantity() {
+	public function get_item_quantity( $download_id = 0, $options = array() ) {
+		$cart     = $this->get_contents();
+		$key      = $this->get_item_position( $download_id, $options );
 
+		$quantity = isset( $cart[ $key ]['quantity'] ) && edd_item_quantities_enabled() ? $cart[ $key ]['quantity'] : 1;
+
+		if ( $quantity < 1 ) {
+			$quantity = 1;
+		}
+
+		return apply_filters( 'edd_get_cart_item_quantity', $quantity, $download_id, $options );
 	}
 
 	/**
-	 * Set Cart Item Quantity
+	 * Set the quantity of an item in the cart.
 	 *
 	 * @since 2.7
 	 * @access public
-	 * @return array $cart Updated cart object
+	 *
+	 * @param int   $download_id Download ID of the item
+	 * @param int   $quantity    Updated quantity of the item
+ 	 * @param array $options
+	 * @return array $contents Updated cart object.
 	 */
-	public function set_item_quantity() {
+	public function set_item_quantity( $download_id = 0, $quantity = 1, $options = array() ) {
+		$cart = $this->get_contents();
+		$key  = $this->get_item_position( $download_id, $options );
 
+		if ( false == $key ) {
+			return $this->contents;
+		}
+
+		if ( $quantity < 1 ) {
+			$quantity = 1;
+		}
+
+		$cart[ $key ]['quantity'] = $quantity;
+
+		$this->contents = $cart;
+		$this->update_cart();
+
+		do_action( 'edd_after_set_cart_item_quantity', $download_id, $quantity, $options, $cart );
+
+		return $this->contents;
 	}
 
 	/**
@@ -671,7 +726,7 @@ class EDD_Cart {
 	 * @access public
 	 * @return double
 	 */
-	public function item_price() {
+	public function get_item_price() {
 
 	}
 
