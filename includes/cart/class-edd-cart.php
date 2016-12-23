@@ -735,19 +735,42 @@ class EDD_Cart {
 	 *
 	 * @since 2.7
 	 * @access public
-	 * @return double
+	 *
+	 * @param int $item_key Cart item key
+ 	 * @return float Final price for the item
 	 */
-	public function final_item_price() {
+	public function get_item_final_price( $item_key = 0 ) {
+		$cart = $this->get_contents();
+		$final_price = $cart[ $item_key ]['price'];
 
+		return apply_filters( 'edd_cart_item_final_price', $final_price, $item_key );
 	}
 
 	/**
-	 * Tax for Item in Cart
+	 * Calculate the tax for an item in the cart.
 	 *
 	 * @since 2.7
 	 * @access public
-	 * @return double
+	 *
+	 * @param array $download_id Download ID
+	 * @param array $options     Cart item options
+	 * @param float $subtotal    Cart item subtotal
+	 * @return float Tax amount
 	 */
+	public function get_item_tax( $download_id = 0, $options = array(), $subtotal = '' ) {
+		$tax = 0;
+
+		if ( ! edd_download_is_tax_exclusive( $download_id ) ) {
+			$country = ! empty( $_POST['billing_country'] ) ? $_POST['billing_country'] : false;
+			$state   = ! empty( $_POST['card_state'] )      ? $_POST['card_state']      : false;
+
+			$tax = edd_calculate_tax( $subtotal, $country, $state );
+		}
+
+		$tax = max( $tax, 0 );
+
+		return apply_filters( 'edd_get_cart_item_tax', $tax, $download_id, $options, $subtotal );
+	}
 
 	/**
 	 * Get Cart Fees
@@ -790,6 +813,103 @@ class EDD_Cart {
 		}
 
 		return apply_filters( 'edd_get_fee_total', $fee_total, $this->fees );
+	}
+
+	/**
+	 * Get the price ID for an item in the cart.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @param array $item Item details
+	 * @return string $price_id Price ID
+	 */
+	public function get_item_price_id( $item = array() ) {
+		if ( isset( $item['item_number'] ) ) {
+			$price_id = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
+		} else {
+			$price_id = isset( $item['options']['price_id'] ) ? $item['options']['price_id'] : null;
+		}
+
+		return $price_id;
+	}
+
+	/**
+	 * Get the price name for an item in the cart.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @param array $item Item details
+	 * @return string $name Price name
+	 */
+	public function get_item_price_name( $item = array() ) {
+		$price_id = (int) $this->get_item_price_id( $item );
+		$prices   = edd_get_variable_prices( $item['id'] );
+		$name     = ! empty( $prices[ $price_id ] ) ? $prices[ $price_id ]['name'] : '';
+
+		return apply_filters( 'edd_get_cart_item_price_name', $name, $item['id'], $price_id, $item );
+	}
+
+	/**
+	 * Get the name of an item in the cart.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @param array $item Item details
+	 * @return string $name Item name
+	 */
+	public function get_item_name() {
+		$item_title = get_the_title( $item['id'] );
+
+		if ( empty( $item_title ) ) {
+			$item_title = $item['id'];
+		}
+
+		if ( edd_has_variable_prices( $item['id'] ) && false !== edd_get_cart_item_price_id( $item ) ) {
+			$item_title .= ' - ' . edd_get_cart_item_price_name( $item );
+		}
+
+		return apply_filters( 'edd_get_cart_item_name', $item_title, $item['id'], $item );
+	}
+
+	/**
+	 * Get all applicable tax for the items in the cart
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return mixed|void Total tax amount
+	 */
+	public function get_tax( $formatted = false, $echo = false ) {
+		$cart_tax     = 0;
+		$items        = $this->get_contents();
+
+		if ( $items ) {
+			$taxes = wp_list_pluck( $items, 'tax' );
+
+			if ( is_array( $taxes ) ) {
+				$cart_tax = array_sum( $taxes );
+			}
+		}
+		$cart_tax += edd_get_cart_fee_tax();
+
+		$cart_tax = apply_filters( 'edd_get_cart_tax', edd_sanitize_amount( $cart_tax ) );
+
+		if ( ! $formatted ) {
+			return $cart_tax;
+		} else {
+			$cart_tax = edd_currency_filter( edd_format_amount( $cart_tax ) );
+
+			$tax = max( $cart_tax, 0 );
+			$tax = apply_filters( 'edd_cart_tax', $cart_tax );
+
+			if ( ! $echo ) {
+				return $tax;
+			} else {
+				echo $tax;
+			}
+		}
 	}
 
 	/**
