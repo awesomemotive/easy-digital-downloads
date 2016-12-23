@@ -605,7 +605,7 @@ class EDD_Cart {
 	 */
 	public function discount_output( $discounts = false, $echo = false ) {
 		if ( ! $discounts ) {
-			$discounts = $this->discounts;
+			$discounts = $this->get_discounts();
 		}
 
 		if ( ! $discounts ) {
@@ -636,12 +636,10 @@ class EDD_Cart {
 			$html .= apply_filters( 'edd_get_cart_discount_html', $discount_html, $discount, $rate, $remove_url );
 		}
 
-		$ouput = apply_filters( 'edd_get_cart_discounts_html', $html, $discounts, $rate, $remove_url );
-
 		if ( ! $echo ) {
-			return $output;
+			return $html;
 		} else {
-			echo $output;
+			echo $html;
 		}
 	}
 
