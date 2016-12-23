@@ -973,6 +973,15 @@ class EDD_Cart {
 		return $cart_tax;
 	}
 
+	/**
+	 * Gets the total tax amount for the cart contents in a fully formatted way
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @param boolean $echo Decides if the result should be returned or not
+	 * @return string Total tax amount
+	 */
 	public function tax( $echo = false ) {
 		$cart_tax = $this->get_tax();
 		$cart_tax = edd_currency_filter( edd_format_amount( $cart_tax ) );
