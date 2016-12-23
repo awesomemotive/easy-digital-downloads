@@ -957,7 +957,7 @@ class EDD_Cart {
 	 */
 	public function get_tax() {
 		$cart_tax     = 0;
-		$items        = $this->get_contents();
+		$items        = $this->get_contents_details();
 
 		if ( $items ) {
 			$taxes = wp_list_pluck( $items, 'tax' );
