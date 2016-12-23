@@ -510,9 +510,9 @@ function edd_get_cart_tax() {
  */
 function edd_cart_tax( $echo = false ) {
 	if ( ! $echo ) {
-		return EDD()->cart->get_tax( true, false );
+		return EDD()->cart->tax( $echo );
 	} else {
-		EDD()->cart->get_tax( true, true );
+		EDD()->cart->tax( $echo );
 	}
 }
 

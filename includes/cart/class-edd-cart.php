@@ -955,7 +955,7 @@ class EDD_Cart {
 	 * @access public
 	 * @return mixed|void Total tax amount
 	 */
-	public function get_tax( $formatted = false, $echo = false ) {
+	public function get_tax() {
 		$cart_tax     = 0;
 		$items        = $this->get_contents();
 
@@ -970,19 +970,20 @@ class EDD_Cart {
 
 		$cart_tax = apply_filters( 'edd_get_cart_tax', edd_sanitize_amount( $cart_tax ) );
 
-		if ( ! $formatted ) {
-			return $cart_tax;
+		return $cart_tax;
+	}
+
+	public function tax( $echo = false ) {
+		$cart_tax = $this->get_tax();
+		$cart_tax = edd_currency_filter( edd_format_amount( $cart_tax ) );
+
+		$tax = max( $cart_tax, 0 );
+		$tax = apply_filters( 'edd_cart_tax', $cart_tax );
+
+		if ( ! $echo ) {
+			return $tax;
 		} else {
-			$cart_tax = edd_currency_filter( edd_format_amount( $cart_tax ) );
-
-			$tax = max( $cart_tax, 0 );
-			$tax = apply_filters( 'edd_cart_tax', $cart_tax );
-
-			if ( ! $echo ) {
-				return $tax;
-			} else {
-				echo $tax;
-			}
+			echo $tax;
 		}
 	}
 
