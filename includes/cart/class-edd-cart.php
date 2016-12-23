@@ -294,17 +294,6 @@ class EDD_Cart {
 	}
 
 	/**
-	 * Get Discounts
-	 *
-	 * @since 2.7
-	 * @access public
-	 * @return mixed array|false
-	 */
-	public function get_discounts() {
-		return ! empty( $this->discounts ) ? explode( '|', $this->discounts ) : false;
-	}
-
-	/**
 	 * Checks if any discounts have been applied to the cart
 	 *
 	 * @since 2.7
