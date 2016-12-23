@@ -720,14 +720,88 @@ class EDD_Cart {
 	}
 
 	/**
-	 * Price of Item in Cart
+	 * Cart Item Price.
 	 *
 	 * @since 2.7
 	 * @access public
-	 * @return double
+	 *
+	 * @param int   $item_id Download (cart item) ID number
+ 	 * @param array $options Optional parameters, used for defining variable prices
+ 	 * @return string Fully formatted price
 	 */
-	public function get_item_price() {
+	public function item_price( $item_id = 0, $options = array() ) {
+		$price = $this->get_item_price( $item_id, $options );
+		$label = '';
 
+		$price_id = isset( $options['price_id'] ) ? $options['price_id'] : false;
+
+		if ( ! edd_is_free_download( $item_id, $price_id ) && ! edd_download_is_tax_exclusive( $item_id ) ) {
+			if ( edd_prices_show_tax_on_checkout() && ! edd_prices_include_tax() ) {
+				$price += edd_get_cart_item_tax( $item_id, $options, $price );
+			}
+
+			if ( ! edd_prices_show_tax_on_checkout() && edd_prices_include_tax() ) {
+				$price -= edd_get_cart_item_tax( $item_id, $options, $price );
+			}
+
+			if ( edd_display_tax_rate() ) {
+				$label = '&nbsp;&ndash;&nbsp;';
+
+				if ( edd_prices_show_tax_on_checkout() ) {
+					$label .= sprintf( __( 'includes %s tax', 'easy-digital-downloads' ), edd_get_formatted_tax_rate() );
+				} else {
+					$label .= sprintf( __( 'excludes %s tax', 'easy-digital-downloads' ), edd_get_formatted_tax_rate() );
+				}
+
+				$label = apply_filters( 'edd_cart_item_tax_description', $label, $item_id, $options );
+			}
+		}
+
+		$price = edd_currency_filter( edd_format_amount( $price ) );
+
+		return apply_filters( 'edd_cart_item_price_label', $price . $label, $item_id, $options );
+	}
+
+	/**
+	 * Gets the price of the cart item. Always exclusive of taxes.
+ 	 *
+ 	 * Do not use this for getting the final price (with taxes and discounts) of an item.
+ 	 * Use edd_get_cart_item_final_price()
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @param  int        $download_id               Download ID for the cart item
+	 * @param  array      $options                   Optional parameters, used for defining variable prices
+ 	 * @param  bool       $remove_tax_from_inclusive Remove the tax amount from tax inclusive priced products.
+ 	 * @return float|bool Price for this item
+	 */
+	public function get_item_price( $download_id = 0, $options = array(), $remove_tax_from_inclusive = false ) {
+		$price = 0;
+		$variable_prices = edd_has_variable_prices( $download_id );
+
+		if ( $variable_prices ) {
+			$prices = edd_get_variable_prices( $download_id );
+
+			if ( $prices ) {
+				if ( ! empty( $options ) ) {
+					$price = isset( $prices[ $options['price_id'] ] ) ? $prices[ $options['price_id'] ]['amount'] : false;
+				} else {
+					$price = false;
+				}
+			}
+		}
+
+		if ( ! $variable_prices || false === $price ) {
+			// Get the standard Download price if not using variable prices
+			$price = edd_get_download_price( $download_id );
+		}
+
+		if ( $remove_tax_from_inclusive && edd_prices_include_tax() ) {
+			$price -= $this->get_item_tax( $download_id, $options, $price );
+		}
+
+		return apply_filters( 'edd_cart_item_price', $price, $download_id, $options );
 	}
 
 	/**
@@ -860,7 +934,7 @@ class EDD_Cart {
 	 * @param array $item Item details
 	 * @return string $name Item name
 	 */
-	public function get_item_name() {
+	public function get_item_name( $item = array() ) {
 		$item_title = get_the_title( $item['id'] );
 
 		if ( empty( $item_title ) ) {
