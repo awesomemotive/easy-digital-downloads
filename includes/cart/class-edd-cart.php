@@ -486,6 +486,52 @@ class EDD_Cart {
 	}
 
 	/**
+	 * Generate the URL to remove an item from the cart.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @param int $cart_key Cart item key
+ 	 * @return string $remove_url URL to remove the cart item
+	 */
+	public function remove_item_url( $cart_key ) {
+		global $wp_query;
+
+		if ( defined( 'DOING_AJAX' ) ) {
+			$current_page = edd_get_checkout_uri();
+		} else {
+			$current_page = edd_get_current_page_url();
+		}
+
+		$remove_url = edd_add_cache_busting( add_query_arg( array( 'cart_item' => $cart_key, 'edd_action' => 'remove' ), $current_page ) );
+
+		return apply_filters( 'edd_remove_item_url', $remove_url );
+	}
+
+	/**
+	 * Generate the URL to remove a fee from the cart.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @param int $fee_id Fee ID.
+	 * @return string $remove_url URL to remove the cart item
+	 */
+	public function remove_fee_url( $fee_id = '' ) {
+		global $post;
+
+		if ( defined('DOING_AJAX') ) {
+			$current_page = edd_get_checkout_uri();
+		} else {
+			$current_page = edd_get_current_page_url();
+		}
+
+		$remove_url = add_query_arg( array( 'fee' => $fee_id, 'edd_action' => 'remove_fee', 'nocache' => 'true' ), $current_page );
+
+		return apply_filters( 'edd_remove_fee_url', $remove_url );
+	}
+
+	/**
 	 * Empty the cart
 	 *
 	 * @since 2.7
@@ -867,6 +913,161 @@ class EDD_Cart {
 	public function get_all_fees() {
 		$this->fees = EDD()->fees->get_fees( 'all' );
 		return $this->fees;
+	}
+
+	/**
+	 * Get Cart Items Subtotal.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @param array $items Cart items array
+ 	 * @return float items subtotal
+	 */
+	public function get_items_subtotal( $items ) {
+		$subtotal = 0.00;
+
+		if ( is_array( $items ) && ! empty( $items ) ) {
+			$prices = wp_list_pluck( $items, 'subtotal' );
+
+			if ( is_array( $prices ) ) {
+				$subtotal = array_sum( $prices );
+			} else {
+				$subtotal = 0.00;
+			}
+
+			if ( $subtotal < 0 ) {
+				$subtotal = 0.00;
+			}
+		}
+
+		$this->subtotal = $subtotal;
+
+		return apply_filters( 'edd_get_cart_items_subtotal', $subtotal );
+	}
+
+	/**
+	 * Get Discountable Subtotal.
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return float Total discountable amount before taxes
+	 */
+	public function get_discountable_subtotal( $code_id ) {
+		$cart_items = $this->get_contents_details();
+		$items      = array();
+
+		$excluded_products = edd_get_discount_excluded_products( $code_id );
+
+		if ( $cart_items ) {
+			foreach( $cart_items as $item ) {
+				if ( ! in_array( $item['id'], $excluded_products ) ) {
+					$items[] =  $item;
+				}
+			}
+		}
+
+		$subtotal = $this->get_items_subtotal( $items );
+
+		return apply_filters( 'edd_get_cart_discountable_subtotal', $subtotal );
+	}
+
+	/**
+	 * Get Discounted Amount.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @param bool $discounts Discount codes
+	 * @return float|mixed|void Total discounted amount
+	 */
+	public function get_discounted_amount( $discounts = false ) {
+		$amount = 0.00;
+		$items  = $this->get_contents_details();
+
+		if ( $items ) {
+			$discounts = wp_list_pluck( $items, 'discount' );
+
+			if ( is_array( $discounts ) ) {
+				$discounts = array_map( 'floatval', $discounts );
+				$amount    = array_sum( $discounts );
+			}
+		}
+
+		return apply_filters( 'edd_get_cart_discounted_amount', $amount );
+	}
+
+	/**
+	 * Get Cart Subtotal.
+	 *
+	 * Gets the total price amount in the cart before taxes and before any discounts.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return float Total amount before taxes
+	 */
+	public function get_subtotal() {
+		$items    = $this->get_contents_details();
+		$subtotal = $this->get_items_subtotal( $items );
+
+		return apply_filters( 'edd_get_cart_subtotal', $subtotal );
+	}
+
+	/**
+	 * Subtotal (before taxes).
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return float Total amount before taxes fully formatted
+	 */
+	public function subtotal() {
+		return esc_html( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ) );
+	}
+
+	/**
+	 * Get Total Cart Amount.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @param bool $discounts Array of discounts to apply (needed during AJAX calls)
+	 * @return float Cart amount
+	 */
+	public function get_total( $discounts = false ) {
+		$subtotal     = (float) $this->get_subtotal();
+		$discounts    = (float) $this->get_discounted_amount();
+		$fees         = (float) $this->get_total_fees();
+		$cart_tax     = (float) $this->get_tax();
+		$total_wo_tax = $subtotal - $discounts + $fees;
+		$total        = $subtotal - $discounts + $cart_tax + $fees;
+
+		if ( $total < 0 || ! $total_wo_tax > 0 ) {
+			$total = 0.00;
+		}
+
+		$this->total = (float) apply_filters( 'edd_get_cart_total', $total );
+
+		return $this->total;
+	}
+
+	/**
+	 * Fully Formatted Total Cart Amount.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @param bool $echo
+	 * @return mixed|string|void
+	 */
+	public function total( $echo ) {
+		$total = apply_filters( 'edd_cart_total', edd_currency_filter( edd_format_amount( $this->get_total() ) ) );
+
+		if ( ! $echo ) {
+			return $total;
+		}
+
+		echo $total;
 	}
 
 	/**

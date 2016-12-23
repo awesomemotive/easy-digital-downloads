@@ -1235,22 +1235,7 @@ function edd_cart_has_discounts() {
  * @return float|mixed|void Total discounted amount
  */
 function edd_get_cart_discounted_amount( $discounts = false ) {
-
-	$amount = 0.00;
-	$items  = edd_get_cart_content_details();
-
-	if ( $items ) {
-
-		$discounts = wp_list_pluck( $items, 'discount' );
-
-		if ( is_array( $discounts ) ) {
-			$discounts = array_map( 'floatval', $discounts );
-			$amount    = array_sum( $discounts );
-		}
-
-	}
-
-	return apply_filters( 'edd_get_cart_discounted_amount', $amount );
+	return EDD()->cart->get_discounted_amount( $discounts );
 }
 
 /**

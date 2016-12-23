@@ -260,11 +260,7 @@ function edd_get_cart_item_name( $item = array() ) {
  * @return float Total amount before taxes fully formatted
  */
 function edd_cart_subtotal() {
-	$price = esc_html( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ) );
-
-	// Todo - Show tax labels here (if needed)
-
-	return $price;
+	return EDD()->cart->subtotal();
 }
 
 /**
@@ -277,11 +273,7 @@ function edd_cart_subtotal() {
  * @return float Total amount before taxes
  */
 function edd_get_cart_subtotal() {
-
-	$items    = edd_get_cart_content_details();
-	$subtotal = edd_get_cart_items_subtotal( $items );
-
-	return apply_filters( 'edd_get_cart_subtotal', $subtotal );
+	return EDD()->cart->get_subtotal();
 }
 
 /**
@@ -290,25 +282,7 @@ function edd_get_cart_subtotal() {
  * @return float Total discountable amount before taxes
  */
 function edd_get_cart_discountable_subtotal( $code_id ) {
-
-	$cart_items = edd_get_cart_content_details();
-	$items      = array();
-
-	$excluded_products = edd_get_discount_excluded_products( $code_id );
-
-	if( $cart_items ) {
-
-		foreach( $cart_items as $item ) {
-
-			if( ! in_array( $item['id'], $excluded_products ) ) {
-				$items[] =  $item;
-			}
-		}
-	}
-
-	$subtotal = edd_get_cart_items_subtotal( $items );
-
-	return apply_filters( 'edd_get_cart_discountable_subtotal', $subtotal );
+	return EDD()->cart->get_discountable_subtotal( $code_id );
 }
 
 /**
@@ -318,25 +292,7 @@ function edd_get_cart_discountable_subtotal( $code_id ) {
  * @return float items subtotal
  */
 function edd_get_cart_items_subtotal( $items ) {
-	$subtotal = 0.00;
-
-	if( is_array( $items ) && ! empty( $items ) ) {
-
-		$prices = wp_list_pluck( $items, 'subtotal' );
-
-		if( is_array( $prices ) ) {
-			$subtotal = array_sum( $prices );
-		} else {
-			$subtotal = 0.00;
-		}
-
-		if( $subtotal < 0 ) {
-			$subtotal = 0.00;
-		}
-
-	}
-
-	return apply_filters( 'edd_get_cart_items_subtotal', $subtotal );
+	return EDD()->cart->get_items_subtotal( $items );
 }
 /**
  * Get Total Cart Amount
@@ -348,18 +304,7 @@ function edd_get_cart_items_subtotal( $items ) {
  * @return float Cart amount
  */
 function edd_get_cart_total( $discounts = false ) {
-	$subtotal     = (float) edd_get_cart_subtotal();
-	$discounts    = (float) edd_get_cart_discounted_amount();
-	$fees         = (float) edd_get_cart_fee_total();
-	$cart_tax     = (float) edd_get_cart_tax();
-	$total_wo_tax = $subtotal - $discounts + $fees;
-	$total        = $subtotal - $discounts + $cart_tax + $fees;
-
-	if( $total < 0 || ! $total_wo_tax > 0 ) {
-		$total = 0.00;
-	}
-
-	return (float) apply_filters( 'edd_get_cart_total', $total );
+	return EDD()->cart->get_total( $discounts );
 }
 
 
@@ -375,15 +320,11 @@ function edd_get_cart_total( $discounts = false ) {
  * @return mixed|string|void
  */
 function edd_cart_total( $echo = true ) {
-	$total = apply_filters( 'edd_cart_total', edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ) );
-
-	// Todo - Show tax labels here (if needed)
-
 	if ( ! $echo ) {
-		return $total;
+		return EDD()->cart->total( $echo );
 	}
 
-	echo $total;
+	EDD()->cart->total( $echo );
 }
 
 /**
@@ -539,18 +480,7 @@ function edd_add_collection_to_cart( $taxonomy, $terms ) {
  * @return string $remove_url URL to remove the cart item
  */
 function edd_remove_item_url( $cart_key ) {
-
-	global $wp_query;
-
-	if ( defined( 'DOING_AJAX' ) ) {
-		$current_page = edd_get_checkout_uri();
-	} else {
-		$current_page = edd_get_current_page_url();
-	}
-
-	$remove_url = edd_add_cache_busting( add_query_arg( array( 'cart_item' => $cart_key, 'edd_action' => 'remove' ), $current_page ) );
-
-	return apply_filters( 'edd_remove_item_url', $remove_url );
+	return EDD()->cart->remove_item_url( $cart_key );
 }
 
 /**
@@ -562,17 +492,7 @@ function edd_remove_item_url( $cart_key ) {
  * @return string $remove_url URL to remove the cart item
  */
 function edd_remove_cart_fee_url( $fee_id = '') {
-	global $post;
-
-	if ( defined('DOING_AJAX') ) {
-		$current_page = edd_get_checkout_uri();
-	} else {
-		$current_page = edd_get_current_page_url();
-	}
-
-	$remove_url = add_query_arg( array( 'fee' => $fee_id, 'edd_action' => 'remove_fee', 'nocache' => 'true' ), $current_page );
-
-	return apply_filters( 'edd_remove_fee_url', $remove_url );
+	return EDD()->cart->remove_fee_url( $fee_id );
 }
 
 /**
