@@ -1255,7 +1255,7 @@ function edd_get_cart_item_discount_amount( $item = array(), $discount = false )
  * @return void
  */
 function edd_cart_discounts_html() {
-	EDD()->cart->discount_output( $discounts, true );
+	echo EDD()->cart->discount_output();
 }
 
 /**
