@@ -144,41 +144,7 @@ function edd_get_cart_item_quantity( $download_id = 0, $options = array() ) {
  * @return string Fully formatted price
  */
 function edd_cart_item_price( $item_id = 0, $options = array() ) {
-	$price = edd_get_cart_item_price( $item_id, $options );
-	$label = '';
-
-	$price_id = isset( $options['price_id'] ) ? $options['price_id'] : false;
-
-	if ( ! edd_is_free_download( $item_id, $price_id ) && ! edd_download_is_tax_exclusive( $item_id ) ) {
-
-		if( edd_prices_show_tax_on_checkout() && ! edd_prices_include_tax() ) {
-
-			$price += edd_get_cart_item_tax( $item_id, $options, $price );
-
-		} if( ! edd_prices_show_tax_on_checkout() && edd_prices_include_tax() ) {
-
-			$price -= edd_get_cart_item_tax( $item_id, $options, $price );
-
-		}
-
-		if( edd_display_tax_rate() ) {
-
-			$label = '&nbsp;&ndash;&nbsp;';
-
-			if( edd_prices_show_tax_on_checkout() ) {
-				$label .= sprintf( __( 'includes %s tax', 'easy-digital-downloads' ), edd_get_formatted_tax_rate() );
-			} else {
-				$label .= sprintf( __( 'excludes %s tax', 'easy-digital-downloads' ), edd_get_formatted_tax_rate() );
-			}
-
-			$label = apply_filters( 'edd_cart_item_tax_description', $label, $item_id, $options );
-
-		}
-	}
-
-	$price = edd_currency_filter( edd_format_amount( $price ) );
-
-	return apply_filters( 'edd_cart_item_price_label', $price . $label, $item_id, $options );
+	return EDD()->cart->item_price( $item_id, $options );
 }
 
 /**
@@ -196,41 +162,7 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
  * @return float|bool Price for this item
  */
 function edd_get_cart_item_price( $download_id = 0, $options = array(), $remove_tax_from_inclusive = false ) {
-
-	$price = 0;
-	$variable_prices = edd_has_variable_prices( $download_id );
-
-	if ( $variable_prices ) {
-
-		$prices = edd_get_variable_prices( $download_id );
-
-		if ( $prices ) {
-
-			if( ! empty( $options ) ) {
-
-				$price = isset( $prices[ $options['price_id'] ] ) ? $prices[ $options['price_id'] ]['amount'] : false;
-
-			} else {
-
-				$price = false;
-
-			}
-
-		}
-
-	}
-
-	if( ! $variable_prices || false === $price ) {
-		// Get the standard Download price if not using variable prices
-		$price = edd_get_download_price( $download_id );
-	}
-
-	if ( $remove_tax_from_inclusive && edd_prices_include_tax() ) {
-
-		$price -= edd_get_cart_item_tax( $download_id, $options, $price );
-	}
-
-	return apply_filters( 'edd_cart_item_price', $price, $download_id, $options );
+	return EDD()->cart->get_item_price( $download_id, $options, $remove_tax_from_inclusive );
 }
 
 /**
