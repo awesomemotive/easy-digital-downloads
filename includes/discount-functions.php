@@ -1210,9 +1210,7 @@ function edd_unset_all_cart_discounts() {
  * @return array $discounts The active discount codes
  */
 function edd_get_cart_discounts() {
-	$discounts = EDD()->session->get( 'cart_discounts' );
-	$discounts = ! empty( $discounts ) ? explode( '|', $discounts ) : false;
-	return $discounts;
+	return EDD()->cart->get_discounts();
 }
 
 /**
@@ -1247,119 +1245,7 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
  * @return float The discounted amount
  */
 function edd_get_cart_item_discount_amount( $item = array(), $discount = false ) {
-
-	global $edd_is_last_cart_item, $edd_flat_discount_total;
-
-	// If we're not meeting the requirements of the $item array, return or set them
-	if ( empty( $item ) || empty( $item['id'] ) ) {
-		return 0;
-	}
-
-	// Quantity is a requirement of the cart options array to determine the discounted price
-	if ( empty( $item['quantity'] ) ) {
-		return 0;
-	}
-
-	if ( ! isset( $item['options'] ) ) {
-		$item['options'] = array();
-	}
-
-	$amount           = 0;
-	$price            = edd_get_cart_item_price( $item['id'], $item['options'] );
-	$discounted_price = $price;
-
-	$discounts = false === $discount ? edd_get_cart_discounts() : array( $discount );
-
-	if( $discounts ) {
-
-		foreach ( $discounts as $discount ) {
-
-			$code_id = edd_get_discount_id_by_code( $discount );
-
-			// Check discount exists
-			if( ! $code_id ) {
-				continue;
-			}
-
-			$reqs              = edd_get_discount_product_reqs( $code_id );
-			$excluded_products = edd_get_discount_excluded_products( $code_id );
-
-			// Make sure requirements are set and that this discount shouldn't apply to the whole cart
-			if ( ! empty( $reqs ) && edd_is_discount_not_global( $code_id ) ) {
-
-				// This is a product(s) specific discount
-
-				foreach ( $reqs as $download_id ) {
-
-					if ( $download_id == $item['id'] && ! in_array( $item['id'], $excluded_products ) ) {
-
-						$discounted_price -= $price - edd_get_discounted_amount( $discount, $price );
-
-					}
-
-				}
-
-			} else {
-
-				// This is a global cart discount
-				if( ! in_array( $item['id'], $excluded_products ) ) {
-
-					if( 'flat' === edd_get_discount_type( $code_id ) ) {
-
-						/* *
-						 * In order to correctly record individual item amounts, global flat rate discounts
-						 * are distributed across all cart items. The discount amount is divided by the number
-						 * of items in the cart and then a portion is evenly applied to each cart item
-						 */
-						$items_subtotal    = 0.00;
-						$cart_items        = edd_get_cart_contents();
-						foreach( $cart_items as $cart_item ) {
-							if( ! in_array( $cart_item['id'], $excluded_products ) ) {
-								$item_price      = edd_get_cart_item_price( $cart_item['id'], $cart_item['options'] );
-								$items_subtotal += $item_price * $cart_item['quantity'];
-							}
-						}
-
-						$subtotal_percent  = ( ( $price * $item['quantity'] ) / $items_subtotal );
-						$code_amount       = edd_get_discount_amount( $code_id );
-						$discounted_amount = $code_amount * $subtotal_percent;
-						$discounted_price -= $discounted_amount;
-
-						$edd_flat_discount_total += round( $discounted_amount, edd_currency_decimal_filter() );
-
-						if( $edd_is_last_cart_item && $edd_flat_discount_total < $code_amount ) {
-							$adjustment = $code_amount - $edd_flat_discount_total;
-							$discounted_price -= $adjustment;
-						}
-
-					} else {
-
-						$discounted_price -= $price - edd_get_discounted_amount( $discount, $price );
-
-					}
-
-				}
-
-			}
-
-			if( $discounted_price < 0 ) {
-				$discounted_price = 0;
-			}
-
-		}
-
-		$amount = ( $price - apply_filters( 'edd_get_cart_item_discounted_amount', $discounted_price, $discounts, $item, $price ) );
-
-		if( 'flat' !== edd_get_discount_type( $code_id ) ) {
-
-			$amount = $amount * $item['quantity'];
-
-		}
-
-	}
-
-	return $amount;
-
+	return EDD()->cart->get_item_discount_amount( $item, $discount );
 }
 
 /**
@@ -1387,26 +1273,20 @@ function edd_get_cart_discounts_html( $discounts = false ) {
 /**
  * Show the fully formatted cart discount
  *
+ * Note the $formatted paramter was removed from the display_cart_discount() function
+ * within EDD_Cart in 2.7 as it was a redundant parameter.
+ *
  * @since 1.4.1
  * @param bool $formatted
  * @param bool $echo Echo?
  * @return string $amount Fully formatted cart discount
  */
 function edd_display_cart_discount( $formatted = false, $echo = false ) {
-	$discounts = edd_get_cart_discounts();
-
-	if ( empty( $discounts ) ) {
-		return false;
+	if ( ! $echo ) {
+		return EDD()->cart->display_cart_discount( $echo );
+	} else {
+		EDD()->cart->display_cart_discount( $echo );
 	}
-
-	$discount_id  = edd_get_discount_id_by_code( $discounts[0] );
-	$amount       = edd_format_discount_rate( edd_get_discount_type( $discount_id ), edd_get_discount_amount( $discount_id ) );
-
-	if ( $echo ) {
-		echo $amount;
-	}
-
-	return $amount;
 }
 
 /**
