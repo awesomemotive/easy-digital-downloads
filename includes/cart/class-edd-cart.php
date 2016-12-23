@@ -997,6 +997,35 @@ class EDD_Cart {
 	}
 
 	/**
+	 * Get tax applicable for fees.
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return float Total taxable amount for fees
+	 */
+	public function get_tax_on_fees() {
+		$tax  = 0;
+		$fees = edd_get_cart_fees();
+
+		if ( $fees ) {
+			foreach ( $fees as $fee_id => $fee ) {
+				if ( ! empty( $fee['no_tax'] ) || $fee['amount'] < 0 ) {
+					continue;
+				}
+
+				/**
+				 * Fees (at this time) must be exclusive of tax
+				 */
+				add_filter( 'edd_prices_include_tax', '__return_false' );
+				$tax += edd_calculate_tax( $fee['amount'] );
+				remove_filter( 'edd_prices_include_tax', '__return_false' );
+			}
+		}
+
+		return apply_filters( 'edd_get_cart_fee_tax', $tax );
+	}
+
+	/**
 	 * Is Cart Saving Enabled?
 	 *
 	 * @since 2.7
