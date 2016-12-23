@@ -941,9 +941,9 @@ class EDD_Cart {
 			}
 		}
 
-		$this->subtotal = $subtotal;
+		$this->subtotal = apply_filters( 'edd_get_cart_items_subtotal', $subtotal );
 
-		return apply_filters( 'edd_get_cart_items_subtotal', $subtotal );
+		return $this->subtotal;
 	}
 
 	/**
