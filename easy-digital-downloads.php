@@ -252,6 +252,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/template-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/checkout/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/checkout/functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/cart/class-edd-cart-item.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/class-edd-cart.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/template.php';
