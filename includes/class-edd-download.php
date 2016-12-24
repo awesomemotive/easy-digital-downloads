@@ -540,12 +540,10 @@ class EDD_Download {
 			return $this->get_bundled_downloads();
 		}
 
+		$downloads         = array();
 		$bundled_downloads = $this->get_bundled_downloads();
-		$variable_prices = $this->get_prices();
 		$price_assignments = $this->get_bundle_pricing_variations();
 		$price_assignments = $price_assignments[0];
-
-		$downloads = array();
 
 		foreach ( $price_assignments as $key => $value ) {
 			if ( $value == $price_id ) {
