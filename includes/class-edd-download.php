@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @since 2.2
  */
-class EDD_Download {
+class EDD_Download extends EDD_Cart_Item {
 
 	/**
 	 * The download ID
