@@ -27,41 +27,57 @@ abstract class EDD_Cart_Item {
 	private $name;
 
 	/**
-	 * Item price
+	 * The item price
 	 *
-	 * @var array|double
 	 * @since 2.7
+	 * @var float
 	 */
 	private $price;
 
 	/**
+	 * The item prices (only if variable pricing is enabled)
+	 *
+	 * @since 2.7
+	 * @var array
+	 */
+	private $prices;
+
+	/**
 	 * Constructor.
 	 *
+	 * @since 2.7
+	 * @access protected
+	 *
 	 * @param array $args Arguments to set up cart items
+	 * @return void
 	 */
 	public function __construct( $args = array() ) {
 		$this->setup_cart( $args );
 	}
 
 	/**
-	 * Setup cart
+	 * Setup cart item.
 	 *
 	 * @since 2.7
+	 * @access private
+	 * @return void
 	 */
 	private function setup_cart( $args = array() ) {
 		if ( empty( $args ) ) {
 			return;
 		}
 
-		$this->name = isset( $args['name'] ) ? $args['name'] : null;
-		$this->price = isset( $args['price'] ) ? $args['price'] : null;
+		$this->name   = isset( $args['name'] )   ? $args['name']   : null;
+		$this->price  = isset( $args['price'] )  ? $args['price']  : null;
+		$this->prices = isset( $args['prices'] ) ? $args['prices'] : null;
 	}
 
 	/**
-	 * Name of the item
+	 * Name of the item.
 	 *
-	 * @return string
 	 * @since 2.7
+	 * @access public
+	 * @return string
 	 */
 	public function get_name() {
 		return $this->name;
@@ -70,10 +86,22 @@ abstract class EDD_Cart_Item {
 	/**
 	 * Price of the item
 	 *
-	 * @return array|double
 	 * @since 2.7
+	 * @access public
+	 * @return float
 	 */
 	public function get_price() {
 		return $this->price;
+	}
+
+	/**
+	 * Prices of the item (only if variable pricing is enabled)
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @return array
+	 */
+	public function get_prices() {
+		return $this->prices;
 	}
 }
