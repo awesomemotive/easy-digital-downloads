@@ -177,15 +177,15 @@ $status    = edd_get_payment_status( $payment, true );
 
 							elseif( edd_is_bundled_product( $item['id'] ) ) :
 
-								$bundled_products = edd_get_bundled_products( $item['id'] );
 								$price_id         = edd_get_cart_item_price_id( $item );
+								$bundled_products = edd_get_bundled_products( $item['id'], $price_id );
 
 								foreach( $bundled_products as $bundle_item ) : ?>
 									<li class="edd_bundled_product">
 										<span class="edd_bundled_product_name"><?php echo get_the_title( $bundle_item ); ?></span>
 										<ul class="edd_bundled_product_files">
 											<?php
-											$download_files = edd_get_download_files( $bundle_item, $price_id );
+											$download_files = edd_get_download_files( $bundle_item );
 
 											if( $download_files && is_array( $download_files ) ) :
 

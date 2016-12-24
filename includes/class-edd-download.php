@@ -528,6 +528,25 @@ class EDD_Download {
 	}
 
 	/**
+	 * Retrieve the Download IDs that are bundled with this Download based on the variable pricing ID passed
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @param int $price_id Variable pricing ID
+	 * @return array List of bundled downloads
+	 */
+	public function get_variable_priced_bundled_downloads( $price_id = null ) {
+		if ( null == $price_id ) {
+			return $this->get_bundled_downloads();
+		}
+
+		$bundled_downloads = $this->get_bundled_downloads();
+		$variable_prices = $this->get_prices();
+
+		return $bundled_downloads;
+	}
+
+	/**
 	 * Retrieve the download notes
 	 *
 	 * @since 2.2
