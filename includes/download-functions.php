@@ -546,10 +546,18 @@ function edd_is_bundled_product( $download_id = 0 ) {
  * @since 1.6
  * @param int $download_id Download ID
  * @return array $products Products in the bundle
+ *
+ * @since 2.7
+ * @param int $price_id Variable price ID
  */
-function edd_get_bundled_products( $download_id = 0 ) {
+function edd_get_bundled_products( $download_id = 0, $price_id = null ) {
 	$download = new EDD_Download( $download_id );
-	return $download->bundled_downloads;
+
+	if ( null !== $price_id ) {
+		return $download->get_variable_priced_bundled_downloads( $price_id );
+	} else {
+		return $download->bundled_downloads;
+	}
 }
 
 /**
