@@ -67,7 +67,7 @@ function edd_reports_graph() {
 		$end = $dates['year_end'] . '-' . $dates['m_end'] . '-' . $dates['day_end'];
 
 		$sales = EDD()->payment_stats->get_sales_by_range( $dates['range'], true, $start, $end );
-		$earnings = EDD()->payment_stats->get_earnings_by_range( $dates['range'], true, $start, $end );
+		$earnings = EDD()->payment_stats->get_earnings_by_range( $dates['range'], true, $start, $end, $include_taxes );
 
 		while ( $hour <= 23 ) {
 			$date = mktime( $hour, 0, 0, $month, $dates['day'], $dates['year'] ) * 1000;
@@ -115,7 +115,7 @@ function edd_reports_graph() {
 		$end_date = end( $report_dates );
 
 		$sales = EDD()->payment_stats->get_sales_by_range( $dates['range'], true, $start_date['year'] . '-' . $start_date['month'] . '-' . $start_date['day'], $end_date['year'] . '-' . $end_date['month'] . '-' . $end_date['day'] );
-		$earnings = EDD()->payment_stats->get_earnings_by_range( $dates['range'], true, $start_date['year'] . '-' . $start_date['month'] . '-' . $start_date['day'], $end_date['year'] . '-' . $end_date['month'] . '-' . $end_date['day'] );
+		$earnings = EDD()->payment_stats->get_earnings_by_range( $dates['range'], true, $start_date['year'] . '-' . $start_date['month'] . '-' . $start_date['day'], $end_date['year'] . '-' . $end_date['month'] . '-' . $end_date['day'], $include_taxes );
 
 		$i = 0;
 		$j = 0;
@@ -157,7 +157,7 @@ function edd_reports_graph() {
 		}
 
 		$sales = EDD()->payment_stats->get_sales_by_range( $dates['range'], $day_by_day, $date_start, $date_end );
-		$earnings = EDD()->payment_stats->get_earnings_by_range( $dates['range'], $day_by_day, $date_start, $date_end );
+		$earnings = EDD()->payment_stats->get_earnings_by_range( $dates['range'], $day_by_day, $date_start, $date_end, $include_taxes );
 
 		$y = $dates['year'];
 		$temp_data = array(
