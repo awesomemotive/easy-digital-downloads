@@ -323,10 +323,20 @@ class EDD_Discount {
 	 * @since 2.7
 	 * @access public
 	 *
-	 * @return mixed int|float Discount amount.
+	 * @return mixed float Discount amount.
 	 */
 	public function get_amount() {
+		$amount = get_post_meta( $this->ID, '_edd_discount_amount', true );
 
+		/**
+		 * Filters the discount amount.
+		 *
+		 * @since 2.7
+		 *
+		 * @param float $amount Discount amount.
+		 * @param int    $ID    Discount ID.
+		 */
+		return (float) apply_filters( 'edd_get_discount_amount', $amount, $this->ID );
 	}
 
 	/**
@@ -337,7 +347,23 @@ class EDD_Discount {
 	 *
 	 * @return array IDs of required downloads.
 	 */
-	public function get_download_requirements() { }
+	public function get_download_requirements() {
+		$download_requirements = get_post_meta( $this->ID, '_edd_discount_product_reqs', true );
+
+		if ( empty( $download_requirements ) || ! is_array( $download_requirements ) ) {
+			$download_requirements = array();
+		}
+
+		/**
+		 * Filters the download requirements.
+		 *
+		 * @since 2.7
+		 *
+		 * @param array $download_requirements IDs of required downloads.
+		 * @param int   $ID                    Discount ID.
+		 */
+		return (array) apply_filters( 'edd_get_discount_product_reqs', $download_requirements, $this->ID );
+	}
 
 	/**
 	 * Retrieve the downloads that are excluded from having this discount code applied.
