@@ -400,7 +400,7 @@ class EDD_Discount {
 	 * @return string Start date.
 	 */
 	public function get_start_date() {
-		$start_date = get_post_meta( $code_id, '_edd_discount_start', true );
+		$start_date = get_post_meta( $this->ID, '_edd_discount_start', true );
 
 		/**
 		 * Filters the start date.
@@ -410,7 +410,7 @@ class EDD_Discount {
 		 * @param string $start_date Discount start date.
 		 * @param int    $ID         Discount ID.
 		 */
-		return apply_filters( 'edd_get_discount_start_date', $start_date, $code_id );
+		return apply_filters( 'edd_get_discount_start_date', $start_date, $this->ID );
 	}
 
 	/**
@@ -443,7 +443,19 @@ class EDD_Discount {
 	 *
 	 * @return int Maximum uses.
 	 */
-	public function get_max_uses() { }
+	public function get_max_uses() {
+		$max_uses = get_post_meta( $this->ID, '_edd_discount_max_uses', true );
+
+		/**
+		 * Filters the maximum uses.
+		 *
+		 * @since 2.7
+		 *
+		 * @param int $max_uses Maximum uses.
+		 * @param int $ID       Discount ID.
+		 */
+		return (int) apply_filters( 'edd_get_discount_max_uses', $max_uses, $this->ID );
+	}
 
 	/**
 	 * Retrieve the minimum spend required for the discount to be satisfied.
@@ -451,9 +463,21 @@ class EDD_Discount {
 	 * @since 2.7
 	 * @access public
 	 *
-	 * @return mixed int|float Minimum spend.
+	 * @return mixed float Minimum spend.
 	 */
-	public function get_min_amount() { }
+	public function get_min_amount() {
+		$min_amount = get_post_meta( $this->ID, '_edd_discount_min_price', true );
+
+		/**
+		 * Filters the minimum amount.
+		 *
+		 * @since 2.7
+		 *
+		 * @param float $min_amount Minimum amount.
+		 * @param int   $ID         Discount ID.
+		 */
+		return (float) apply_filters( 'edd_get_discount_min_price', $min_amount, $this->ID );
+	}
 
 	/**
 	 * Retrieve the usage limit per limit (if the discount can only be used once per customer).
@@ -463,7 +487,11 @@ class EDD_Discount {
 	 *
 	 * @return bool Once use per customer?
 	 */
-	public function get_is_single_use() { }
+	public function get_is_single_use() {
+		$single_use = get_post_meta( $this->ID, '_edd_discount_is_single_use', true );
+
+		return (bool) apply_filters( 'edd_is_discount_single_use', $single_use, $this->ID );
+	}
 
 	/**
 	 * Helper function to get discounts by a meta key and value provided.
