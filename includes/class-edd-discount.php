@@ -245,7 +245,7 @@ class EDD_Discount {
 	 * @since 2.7
 	 * @access public
 	 *
-	 * @return string Name of the download
+	 * @return string Name of the download.
 	 */
 	public function get_name() {
 		return get_the_title( $this->ID );
@@ -279,7 +279,7 @@ class EDD_Discount {
 	 * @since 2.7
 	 * @access public
 	 *
-	 * @return string Discount code status (active/inactive)
+	 * @return string Discount code status (active/inactive).
 	 */
 	public function get_status() {
 		$status = get_post_meta( $this->ID, '_edd_discount_status', true );
@@ -301,9 +301,21 @@ class EDD_Discount {
 	 * @since 2.7
 	 * @access public
 	 *
-	 * @return string Discount type (percentage or flat amount)
+	 * @return string Discount type (percent or flat amount).
 	 */
-	public function get_type() { }
+	public function get_type() {
+		$type = strtolower( get_post_meta( $this->ID, '_edd_discount_type', true ) );
+
+		/**
+		 * Filters the discount type.
+		 *
+		 * @since 2.7
+		 *
+		 * @param string $code Discount type (percent or flat amount).
+		 * @param int    $ID   Discount ID.
+		 */
+		return apply_filters( 'edd_get_discount_type', $type, $this->ID );
+	}
 
 	/**
 	 * Retrieve the discount amount.
@@ -311,9 +323,11 @@ class EDD_Discount {
 	 * @since 2.7
 	 * @access public
 	 *
-	 * @return mixed int|float Discount amount
+	 * @return mixed int|float Discount amount.
 	 */
-	public function get_amount() { }
+	public function get_amount() {
+
+	}
 
 	/**
 	 * Retrieve the discount requirements for the discount to be satisfied.
@@ -321,7 +335,7 @@ class EDD_Discount {
 	 * @since 2.7
 	 * @access public
 	 *
-	 * @return array IDs of required downloads
+	 * @return array IDs of required downloads.
 	 */
 	public function get_download_requirements() { }
 
@@ -331,9 +345,25 @@ class EDD_Discount {
 	 * @since 2.7
 	 * @access public
 	 *
-	 * @return array IDs of excluded downloads
+	 * @return array IDs of excluded downloads.
 	 */
-	public function get_excluded_downloads() { }
+	public function get_excluded_downloads() {
+		$excluded_downloads = get_post_meta( $this->ID, '_edd_discount_excluded_products', true );
+
+		if ( empty( $excluded_downloads ) || ! is_array( $excluded_downloads ) ) {
+			$excluded_downloads = array();
+		}
+
+		/**
+		 * Filters the excluded downloads.
+		 *
+		 * @since 2.7
+		 *
+		 * @param array $excluded_downloads IDs of excluded downloads.
+		 * @param int   $ID                 Discount ID.
+		 */
+		return (array) apply_filters( 'edd_get_discount_excluded_products', $excluded_downloads, $this->ID );
+	}
 
 	/**
 	 * Retrieve the start date.
