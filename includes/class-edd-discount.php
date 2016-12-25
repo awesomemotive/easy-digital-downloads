@@ -267,8 +267,8 @@ class EDD_Discount {
 		 *
 		 * @since 2.7
 		 *
-		 * @param bool $code Discount code.
-		 * @param int  $ID   Discount ID.
+		 * @param string $code Discount code.
+		 * @param int    $ID   Discount ID.
 		 */
 		return apply_filters( 'edd_get_discount_code', $code, $this->ID );
 	}
@@ -281,7 +281,19 @@ class EDD_Discount {
 	 *
 	 * @return string Discount code status (active/inactive)
 	 */
-	public function get_status() { }
+	public function get_status() {
+		$status = get_post_meta( $this->ID, '_edd_discount_status', true );
+
+		/**
+		 * Filters the discount status.
+		 *
+		 * @since 2.7
+		 *
+		 * @param string $code Discount status (active or inactive).
+		 * @param int    $ID   Discount ID.
+		 */
+		return apply_filters( 'edd_get_discount_status', $status, $this->ID );
+	}
 
 	/**
 	 * Retrieve the type of discount.
