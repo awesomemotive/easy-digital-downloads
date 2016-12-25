@@ -259,7 +259,19 @@ class EDD_Discount {
 	 *
 	 * @return string Discount code.
 	 */
-	public function get_code() { }
+	public function get_code() {
+		$code = get_post_meta( $this->ID, '_edd_discount_code', true );
+
+		/**
+		 * Filters the discount code.
+		 *
+		 * @since 2.7
+		 *
+		 * @param bool $code Discount code.
+		 * @param int  $ID   Discount ID.
+		 */
+		return apply_filters( 'edd_get_discount_code', $code, $this->ID );
+	}
 
 	/**
 	 * Retrieve the status of the discount
