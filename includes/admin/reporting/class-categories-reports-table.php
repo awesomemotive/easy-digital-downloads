@@ -137,6 +137,8 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 		 */
 		$dates = edd_get_report_dates();
 
+		$include_taxes = empty( $_GET['exclude_taxes'] ) ? true : false;
+
 		if ( !empty( $dates[ 'year' ] ) ) {
 			$date = new DateTime();
 			$date->setDate( $dates[ 'year' ], $dates[ 'm_start' ], $dates[ 'day' ] );
@@ -206,7 +208,7 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 
 				foreach ( $downloads as $download ) {
 					$current_average_sales    = $current_sales    = $payment_stats->get_sales( $download, $start_date, $end_date );
-					$current_average_earnings = $current_earnings = $payment_stats->get_earnings( $download, $start_date, $end_date );
+					$current_average_earnings = $current_earnings = $payment_stats->get_earnings( $download, $start_date, $end_date, $include_taxes );
 
 					$release_date = get_post_field( 'post_date', $download );
 					$diff         = abs( current_time( 'timestamp' ) - strtotime( $release_date ) );
