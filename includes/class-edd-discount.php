@@ -226,4 +226,185 @@ class EDD_Discount {
 
 		return true;
 	}
+
+	/**
+	 * Retrieve the ID of the WP_Post object.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return int Discount ID.
+	 */
+	public function get_ID() {
+		return $this->ID;
+	}
+
+	/**
+	 * Retrieve the name of the discount.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return string Name of the download
+	 */
+	public function get_name() {
+		return get_the_title( $this->ID );
+	}
+
+	/**
+	 * Retrieve the code used to apply the discount.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return string Discount code.
+	 */
+	public function get_code() { }
+
+	/**
+	 * Retrieve the status of the discount
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return string Discount code status (active/inactive)
+	 */
+	public function get_status() { }
+
+	/**
+	 * Retrieve the type of discount.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return string Discount type (percentage or flat amount)
+	 */
+	public function get_type() { }
+
+	/**
+	 * Retrieve the discount amount.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return mixed int|float Discount amount
+	 */
+	public function get_amount() { }
+
+	/**
+	 * Retrieve the discount requirements for the discount to be satisfied.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return array IDs of required downloads
+	 */
+	public function get_download_requirements() { }
+
+	/**
+	 * Retrieve the downloads that are excluded from having this discount code applied.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return array IDs of excluded downloads
+	 */
+	public function get_excluded_downloads() { }
+
+	/**
+	 * Retrieve the start date.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return string Start date
+	 */
+	public function get_start_date() { }
+
+	/**
+	 * Retrieve the end date.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return string End date
+	 */
+	public function get_end_date() { }
+
+	/**
+	 * Retrieve the maximum uses for the discount code.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return int Maximum uses
+	 */
+	public function get_max_uses() { }
+
+	/**
+	 * Retrieve the minimum spend required for the discount to be satisfied
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return mixed int|float Minimum spend.
+	 */
+	public function get_min_amount() { }
+
+	/**
+	 * Retrieve the usage limit per limit (if the discount can only be used once per customer)
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return bool Once use per customer?
+	 */
+	public function get_is_single_use() { }
+
+	/**
+	 * Helper function to get discounts by a meta key and value provided.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @param string $key   Value of the meta key to retrieve.
+	 * @param string $value Meta value for the key passed.
+	 * @return mixed array|bool
+	 */
+	public function get_by( $field = '', $value = '' ) {
+		if ( empty( $field ) || empty( $value ) ) {
+			return false;
+		}
+
+		if ( ! is_string( $field ) ) {
+			return false;
+		}
+
+		switch ( strtolower( $field ) ) {
+			case 'code':
+				break;
+
+			case 'id':
+				break;
+
+			case 'name':
+				break;
+
+			default:
+				return false;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Create a new discount.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @param array $args Discount details
+	 * @return mixed bool|int false if data isn't passed and class not instantiated for creation, or post ID for the new discount
+	 */
+	public function add() {  }
 }
