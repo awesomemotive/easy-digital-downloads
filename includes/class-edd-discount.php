@@ -257,7 +257,9 @@ class EDD_Discount {
 	 * @return string Name of the download.
 	 */
 	public function get_name() {
-		return get_the_title( $this->ID );
+		$this->name = get_the_title( $this->ID );
+
+		return $this->name;
 	}
 
 	/**
@@ -269,7 +271,7 @@ class EDD_Discount {
 	 * @return string Discount code.
 	 */
 	public function get_code() {
-		$code = get_post_meta( $this->ID, '_edd_discount_code', true );
+		$this->code = get_post_meta( $this->ID, '_edd_discount_code', true );
 
 		/**
 		 * Filters the discount code.
@@ -279,7 +281,7 @@ class EDD_Discount {
 		 * @param string $code Discount code.
 		 * @param int    $ID   Discount ID.
 		 */
-		return apply_filters( 'edd_get_discount_code', $code, $this->ID );
+		return apply_filters( 'edd_get_discount_code', $this->code, $this->ID );
 	}
 
 	/**
@@ -291,7 +293,7 @@ class EDD_Discount {
 	 * @return string Discount code status (active/inactive).
 	 */
 	public function get_status() {
-		$status = get_post_meta( $this->ID, '_edd_discount_status', true );
+		$this->status = get_post_meta( $this->ID, '_edd_discount_status', true );
 
 		/**
 		 * Filters the discount status.
@@ -301,7 +303,7 @@ class EDD_Discount {
 		 * @param string $code Discount status (active or inactive).
 		 * @param int    $ID   Discount ID.
 		 */
-		return apply_filters( 'edd_get_discount_status', $status, $this->ID );
+		return apply_filters( 'edd_get_discount_status', $this->status, $this->ID );
 	}
 
 	/**
@@ -313,7 +315,7 @@ class EDD_Discount {
 	 * @return string Discount type (percent or flat amount).
 	 */
 	public function get_type() {
-		$type = strtolower( get_post_meta( $this->ID, '_edd_discount_type', true ) );
+		$this->type = strtolower( get_post_meta( $this->ID, '_edd_discount_type', true ) );
 
 		/**
 		 * Filters the discount type.
@@ -323,7 +325,7 @@ class EDD_Discount {
 		 * @param string $code Discount type (percent or flat amount).
 		 * @param int    $ID   Discount ID.
 		 */
-		return apply_filters( 'edd_get_discount_type', $type, $this->ID );
+		return apply_filters( 'edd_get_discount_type', $this->type, $this->ID );
 	}
 
 	/**
@@ -335,7 +337,7 @@ class EDD_Discount {
 	 * @return mixed float Discount amount.
 	 */
 	public function get_amount() {
-		$amount = get_post_meta( $this->ID, '_edd_discount_amount', true );
+		$this->amount = get_post_meta( $this->ID, '_edd_discount_amount', true );
 
 		/**
 		 * Filters the discount amount.
@@ -345,7 +347,7 @@ class EDD_Discount {
 		 * @param float $amount Discount amount.
 		 * @param int    $ID    Discount ID.
 		 */
-		return (float) apply_filters( 'edd_get_discount_amount', $amount, $this->ID );
+		return (float) apply_filters( 'edd_get_discount_amount', $this->amount, $this->ID );
 	}
 
 	/**
@@ -357,10 +359,10 @@ class EDD_Discount {
 	 * @return array IDs of required downloads.
 	 */
 	public function get_download_requirements() {
-		$download_requirements = get_post_meta( $this->ID, '_edd_discount_product_reqs', true );
+		$this->download_requirements = get_post_meta( $this->ID, '_edd_discount_product_reqs', true );
 
-		if ( empty( $download_requirements ) || ! is_array( $download_requirements ) ) {
-			$download_requirements = array();
+		if ( empty( $this->download_requirements ) || ! is_array( $this->download_requirements ) ) {
+			$this->download_requirements = array();
 		}
 
 		/**
@@ -371,7 +373,7 @@ class EDD_Discount {
 		 * @param array $download_requirements IDs of required downloads.
 		 * @param int   $ID                    Discount ID.
 		 */
-		return (array) apply_filters( 'edd_get_discount_product_reqs', $download_requirements, $this->ID );
+		return (array) apply_filters( 'edd_get_discount_product_reqs', $this->download_requirements, $this->ID );
 	}
 
 	/**
@@ -383,10 +385,10 @@ class EDD_Discount {
 	 * @return array IDs of excluded downloads.
 	 */
 	public function get_excluded_downloads() {
-		$excluded_downloads = get_post_meta( $this->ID, '_edd_discount_excluded_products', true );
+		$this->excluded_downloads = get_post_meta( $this->ID, '_edd_discount_excluded_products', true );
 
-		if ( empty( $excluded_downloads ) || ! is_array( $excluded_downloads ) ) {
-			$excluded_downloads = array();
+		if ( empty( $this->excluded_downloads ) || ! is_array( $this->excluded_downloads ) ) {
+			$this->excluded_downloads = array();
 		}
 
 		/**
@@ -397,7 +399,7 @@ class EDD_Discount {
 		 * @param array $excluded_downloads IDs of excluded downloads.
 		 * @param int   $ID                 Discount ID.
 		 */
-		return (array) apply_filters( 'edd_get_discount_excluded_products', $excluded_downloads, $this->ID );
+		return (array) apply_filters( 'edd_get_discount_excluded_products', $this->excluded_downloads, $this->ID );
 	}
 
 	/**
@@ -409,7 +411,7 @@ class EDD_Discount {
 	 * @return string Start date.
 	 */
 	public function get_start_date() {
-		$start_date = get_post_meta( $this->ID, '_edd_discount_start', true );
+		$this->start_date = get_post_meta( $this->ID, '_edd_discount_start', true );
 
 		/**
 		 * Filters the start date.
@@ -419,7 +421,7 @@ class EDD_Discount {
 		 * @param string $start_date Discount start date.
 		 * @param int    $ID         Discount ID.
 		 */
-		return apply_filters( 'edd_get_discount_start_date', $start_date, $this->ID );
+		return apply_filters( 'edd_get_discount_start_date', $this->start_date, $this->ID );
 	}
 
 	/**
@@ -431,7 +433,7 @@ class EDD_Discount {
 	 * @return string End date.
 	 */
 	public function get_end_date() {
-		$end_date = get_post_meta( $this->ID, '_edd_discount_expiration', true );
+		$this->end_date = get_post_meta( $this->ID, '_edd_discount_expiration', true );
 
 		/**
 		 * Filters the end date.
@@ -441,7 +443,7 @@ class EDD_Discount {
 		 * @param array $end_date Discount end (expiration) date.
 		 * @param int   $ID       Discount ID.
 		 */
-		return apply_filters( 'edd_get_discount_expiration', $end_date, $this->ID );
+		return apply_filters( 'edd_get_discount_expiration', $this->end_date, $this->ID );
 	}
 
 	/**
@@ -453,7 +455,7 @@ class EDD_Discount {
 	 * @return int Maximum uses.
 	 */
 	public function get_max_uses() {
-		$max_uses = get_post_meta( $this->ID, '_edd_discount_max_uses', true );
+		$this->max_uses = get_post_meta( $this->ID, '_edd_discount_max_uses', true );
 
 		/**
 		 * Filters the maximum uses.
@@ -463,7 +465,7 @@ class EDD_Discount {
 		 * @param int $max_uses Maximum uses.
 		 * @param int $ID       Discount ID.
 		 */
-		return (int) apply_filters( 'edd_get_discount_max_uses', $max_uses, $this->ID );
+		return (int) apply_filters( 'edd_get_discount_max_uses', $this->max_uses, $this->ID );
 	}
 
 	/**
@@ -475,7 +477,7 @@ class EDD_Discount {
 	 * @return mixed float Minimum spend.
 	 */
 	public function get_min_amount() {
-		$min_amount = get_post_meta( $this->ID, '_edd_discount_min_price', true );
+		$this->min_amount = get_post_meta( $this->ID, '_edd_discount_min_price', true );
 
 		/**
 		 * Filters the minimum amount.
@@ -485,7 +487,7 @@ class EDD_Discount {
 		 * @param float $min_amount Minimum amount.
 		 * @param int   $ID         Discount ID.
 		 */
-		return (float) apply_filters( 'edd_get_discount_min_price', $min_amount, $this->ID );
+		return (float) apply_filters( 'edd_get_discount_min_price', $this->min_amount, $this->ID );
 	}
 
 	/**
@@ -497,7 +499,7 @@ class EDD_Discount {
 	 * @return bool Once use per customer?
 	 */
 	public function get_is_single_use() {
-		$single_use = get_post_meta( $this->ID, '_edd_discount_is_single_use', true );
+		$this->is_single_use = get_post_meta( $this->ID, '_edd_discount_is_single_use', true );
 
 		/**
 		 * Filters the single use meta value.
@@ -507,7 +509,7 @@ class EDD_Discount {
 		 * @param bool $is_single_use Is the discount only allowed to be used once per customer.
 		 * @param int  $ID            Discount ID.
 		 */
-		return (bool) apply_filters( 'edd_is_discount_single_use', $single_use, $this->ID );
+		return (bool) apply_filters( 'edd_is_discount_single_use', $this->is_single_use, $this->ID );
 	}
 
 	/**
@@ -519,7 +521,7 @@ class EDD_Discount {
 	 * @return bool Whether or not the discount code is global.
 	 */
 	public function get_is_not_global() {
-		$is_not_global = get_post_meta( $this->ID, '_edd_discount_is_not_global', true );
+		$this->is_not_global = get_post_meta( $this->ID, '_edd_discount_is_not_global', true );
 
 		/**
 		 * Filters if the discount is global or not.
@@ -529,7 +531,7 @@ class EDD_Discount {
 		 * @param bool $is_not_global Is the discount global or not.
 		 * @param int  $ID            Discount ID.
 		 */
-		return (bool) apply_filters( 'edd_discount_is_not_global', $is_not_global, $this->ID );
+		return (bool) apply_filters( 'edd_discount_is_not_global', $this->is_not_global, $this->ID );
 	}
 
 	/**
