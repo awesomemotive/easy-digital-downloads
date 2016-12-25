@@ -19,18 +19,21 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class EDD_Discount {
 	/**
-	 * Constructor
+	 * Constructor.
 	 *
-	 * @access protected
 	 * @since 2.7
+	 * @access protected
 	 */
-	public function __construct() {}
+	public function __construct( $_id = false, $_args = array() ) {
+		$discount = WP_Post::get_instance( $_id );
+		return $this->setup_discount( $discount );
+	}
 
 	/**
 	 * Magic __get method to dispatch a call to retrieve a private property
 	 *
-	 * @access public
 	 * @since 2.7
+	 * @access public
 	 *
 	 * @param mixed $key
 	 * @return mixed
@@ -43,5 +46,38 @@ class EDD_Discount {
 		} else {
 			return new WP_Error( 'edd-discount-invalid-property', sprintf( __( 'Can\'t get property %s', 'easy-digital-downloads' ), $key ) );
 		}
+	}
+
+	/**
+	 * Setup object vars with discount WP_Post object.
+	 *
+	 * @since 2.7
+	 * @access private
+	 *
+	 * @param object $discount WP_Post instance of the discount.
+	 * @return bool Object var initialisation successful or not.
+	 */
+	private function setup_discount( $discount = null ) {
+		if ( null == $discount ) {
+			return false;
+		}
+
+		if ( ! is_object( $discount ) ) {
+			return false;
+		}
+
+		if ( ! is_a( $discount, 'WP_Post' ) ) {
+			return false;
+		}
+
+		if ( 'edd_discount' !== $discount->post_type ) {
+			return false;
+		}
+
+		foreach ( $discount as $key => $value ) {
+			$this->$key = $value;
+		}
+
+		return true;
 	}
 }
