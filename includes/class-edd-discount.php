@@ -136,6 +136,15 @@ class EDD_Discount {
 	public $is_single_use;
 
 	/**
+	 * Is Not Global?
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @var bool
+	 */
+	public $is_not_global;
+
+	/**
 	 * Declare the default properties in WP_Post as we can't extend it
 	 */
 	public $post_author = 0;
@@ -490,7 +499,37 @@ class EDD_Discount {
 	public function get_is_single_use() {
 		$single_use = get_post_meta( $this->ID, '_edd_discount_is_single_use', true );
 
+		/**
+		 * Filters the single use meta value.
+		 *
+		 * @since 2.7
+		 *
+		 * @param bool $is_single_use Is the discount only allowed to be used once per customer.
+		 * @param int  $ID            Discount ID.
+		 */
 		return (bool) apply_filters( 'edd_is_discount_single_use', $single_use, $this->ID );
+	}
+
+	/**
+	 * Retrieve the property determining if a discount is not global.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return bool Whether or not the discount code is global.
+	 */
+	public function get_is_not_global() {
+		$is_not_global = get_post_meta( $this->ID, '_edd_discount_is_not_global', true );
+
+		/**
+		 * Filters if the discount is global or not.
+		 *
+		 * @since 2.7
+		 *
+		 * @param bool $is_not_global Is the discount global or not.
+		 * @param int  $ID            Discount ID.
+		 */
+		return (bool) apply_filters( 'edd_discount_is_not_global', $is_not_global, $this->ID );
 	}
 
 	/**
