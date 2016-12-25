@@ -397,9 +397,21 @@ class EDD_Discount {
 	 * @since 2.7
 	 * @access public
 	 *
-	 * @return string Start date
+	 * @return string Start date.
 	 */
-	public function get_start_date() { }
+	public function get_start_date() {
+		$start_date = get_post_meta( $code_id, '_edd_discount_start', true );
+
+		/**
+		 * Filters the start date.
+		 *
+		 * @since 2.7
+		 *
+		 * @param string $start_date Discount start date.
+		 * @param int    $ID         Discount ID.
+		 */
+		return apply_filters( 'edd_get_discount_start_date', $start_date, $code_id );
+	}
 
 	/**
 	 * Retrieve the end date.
@@ -407,9 +419,21 @@ class EDD_Discount {
 	 * @since 2.7
 	 * @access public
 	 *
-	 * @return string End date
+	 * @return string End date.
 	 */
-	public function get_end_date() { }
+	public function get_end_date() {
+		$end_date = get_post_meta( $this->ID, '_edd_discount_expiration', true );
+
+		/**
+		 * Filters the end date.
+		 *
+		 * @since 2.7
+		 *
+		 * @param array $end_date Discount end (expiration) date.
+		 * @param int   $ID       Discount ID.
+		 */
+		return apply_filters( 'edd_get_discount_expiration', $end_date, $this->ID );
+	}
 
 	/**
 	 * Retrieve the maximum uses for the discount code.
@@ -417,12 +441,12 @@ class EDD_Discount {
 	 * @since 2.7
 	 * @access public
 	 *
-	 * @return int Maximum uses
+	 * @return int Maximum uses.
 	 */
 	public function get_max_uses() { }
 
 	/**
-	 * Retrieve the minimum spend required for the discount to be satisfied
+	 * Retrieve the minimum spend required for the discount to be satisfied.
 	 *
 	 * @since 2.7
 	 * @access public
@@ -432,7 +456,7 @@ class EDD_Discount {
 	public function get_min_amount() { }
 
 	/**
-	 * Retrieve the usage limit per limit (if the discount can only be used once per customer)
+	 * Retrieve the usage limit per limit (if the discount can only be used once per customer).
 	 *
 	 * @since 2.7
 	 * @access public
@@ -483,8 +507,8 @@ class EDD_Discount {
 	 * @since 2.7
 	 * @access public
 	 *
-	 * @param array $args Discount details
-	 * @return mixed bool|int false if data isn't passed and class not instantiated for creation, or post ID for the new discount
+	 * @param array $args Discount details.
+	 * @return mixed bool|int false if data isn't passed and class not instantiated for creation, or post ID for the new discount.
 	 */
 	public function add() {  }
 }
