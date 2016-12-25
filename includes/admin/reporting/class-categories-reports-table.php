@@ -210,13 +210,18 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 					$current_average_sales    = $current_sales    = $payment_stats->get_sales( $download, $start_date, $end_date );
 					$current_average_earnings = $current_earnings = $payment_stats->get_earnings( $download, $start_date, $end_date, $include_taxes );
 
+					$current_day   = date( 'd', current_time( 'timestamp' ) );
+					$current_month = date( 'n', current_time( 'timestamp' ) );
+					$current_year  = date( 'Y', current_time( 'timestamp' ) );
+					$days_in_month = cal_days_in_month( CAL_GREGORIAN, $current_month, $current_year );
+
 					$release_date = get_post_field( 'post_date', $download );
 					$diff         = abs( current_time( 'timestamp' ) - strtotime( $release_date ) );
 					$months       = floor( $diff / ( 30 * 60 * 60 * 24 ) ); // Number of months since publication
 
 					if ( $months > 0 ) {
-						$current_average_sales    = ( $current_sales / $months );
-						$current_average_earnings = ( $current_earnings / $months );
+						$current_average_sales    = ( $current_sales / $current_day ) * $days_in_month;
+						$current_average_earnings = ( $current_earnings / $current_day ) * $days_in_month;
 					}
 
 					$sales        += $current_sales;
@@ -225,8 +230,8 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 					$avg_earnings += $current_average_earnings;
 				}
 
-				$avg_sales    = round( $avg_sales / count( $downloads ) );
-				$avg_earnings = round( $avg_earnings / count( $downloads ), edd_currency_decimal_filter() );
+				$avg_sales    = round( $avg_sales );
+				$avg_earnings = round( $avg_earnings, edd_currency_decimal_filter() );
 
 				$reports_data[] = array(
 					'ID'                 => $category->term_id,
