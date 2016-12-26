@@ -341,6 +341,9 @@ jQuery(document).ready(function ($) {
 	// Auto load first payment gateway
 	if( edd_scripts.is_checkout == '1' && $('select#edd-gateway, input.edd-gateway').length ) {
 		var chosen_gateway = $("meta[name='edd-chosen-gateway']").attr('content');
+		if( ! chosen_gateway ) {
+			chosen_gateway = edd_scripts.default_gateway;
+		}
 		setTimeout( function() {
 			edd_load_gateway( chosen_gateway );
 		}, 200);
