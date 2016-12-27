@@ -218,6 +218,18 @@ class EDD_Discount {
 	}
 
 	/**
+	 * Converts the instance of the EDD_Discount object into an array for special cases.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return array EDD_Discount object as an array.
+	 */
+	public function array_convert() {
+		return get_object_vars( $this );
+	}
+
+	/**
 	 * Setup object vars with discount WP_Post object.
 	 *
 	 * @since 2.7
