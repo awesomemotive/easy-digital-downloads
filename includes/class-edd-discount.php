@@ -635,4 +635,73 @@ class EDD_Discount {
 	 * @return mixed bool|int false if data isn't passed and class not instantiated for creation, or post ID for the new discount.
 	 */
 	public function add() {  }
+
+	/**
+	 * Check if the discount has started.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @param bool $set_error Whether an error message be set in session
+	 * @return bool Is discount started?
+	 */
+	public function is_started() {
+		$return = false;
+
+		if ( $this->start_date ) {
+			$start_date = strtotime( $this->start_date );
+
+			if ( $start_date < current_time( 'timestamp' ) ) {
+				// Discount has pased the start date
+				$return = true;
+			} elseif( $set_error ) {
+				edd_set_error( 'edd-discount-error', __( 'This discount is not active yet.', 'easy-digital-downloads' ) );
+			}
+		} else {
+			// No start date for this discount, so has to be true
+			$return = true;
+		}
+
+		/**
+		 * Filters if the discount has started or not.
+		 *
+		 * @since 2.7
+		 *
+		 * @param bool $return Has the discount started or not.
+		 * @param int  $ID     Discount ID.
+		 */
+		return apply_filters( 'edd_is_discount_started', $return, $this->ID );
+	}
+
+	/**
+	 * Check if the discount has expired.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @param bool $update Update the discount to expired if an one is found but has an active status
+	 * @return bool Has the discount expired?
+	 */
+	public function is_expired( $update = true ) {
+		$return = false;
+
+		$expiration = strtotime( $this->expiration );
+		if ( $expiration < current_time( 'timestamp' ) ) {
+			if ( $update ) {
+				edd_update_discount_status( $this->ID, 'inactive' );
+				update_post_meta( $this->ID, '_edd_discount_status', 'expired' );
+			}
+			$return = true;
+		}
+
+		/**
+		 * Filters if the discount has expired or not.
+		 *
+		 * @since 2.7
+		 *
+		 * @param bool $return Has the discount expired or not.
+		 * @param int  $ID     Discount ID.
+		 */
+		return apply_filters( 'edd_is_discount_expired', $return, $this->ID );
+	}
 }
