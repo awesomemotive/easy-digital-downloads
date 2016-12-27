@@ -735,4 +735,35 @@ class EDD_Discount {
 		 */
 		return apply_filters( 'edd_is_discount_maxed_out', $return, $this->ID );
 	}
+
+	/**
+	 * Check if the minimum cart amount is satisfied for the discount to hold.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @param bool $set_error Whether an error message be set in session
+	 * @return bool Is the minimum cart amount met?
+	 */
+	public function is_min_amount_met( $set_error = true ) {
+		$return = false;
+
+		$cart_amount = edd_get_cart_discountable_subtotal( $this->ID );
+
+		if ( (float) $cart_amount >= (float) $this->min_amount ) {
+			$return = true;
+		} elseif( $set_error ) {
+			edd_set_error( 'edd-discount-error', sprintf( __( 'Minimum order of %s not met.', 'easy-digital-downloads' ), edd_currency_filter( edd_format_amount( $min ) ) ) );
+		}
+
+		/**
+		 * Filters if the minimum cart amount has been met to satisify the discount.
+		 *
+		 * @since 2.7
+		 *
+		 * @param bool $return Is the minimum cart amount met or not.
+		 * @param int  $ID     Discount ID.
+		 */
+		return apply_filters( 'edd_is_discount_min_met', $return, $this->ID );
+	}
 }
