@@ -645,7 +645,7 @@ class EDD_Discount {
 	 * @param bool $set_error Whether an error message be set in session
 	 * @return bool Is discount started?
 	 */
-	public function is_started() {
+	public function is_started( $set_error = true ) {
 		$return = false;
 
 		if ( $this->start_date ) {
