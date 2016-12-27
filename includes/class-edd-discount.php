@@ -659,6 +659,22 @@ class EDD_Discount {
 	}
 
 	/**
+	 * Check if a discount exists.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return bool Discount exists.
+	 */
+	public function exists() {
+		if ( $this->ID > 0 ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Create a new discount. If the discount already exists in the database, update it.
 	 *
 	 * @since 2.7
