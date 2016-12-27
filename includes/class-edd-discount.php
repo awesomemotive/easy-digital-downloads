@@ -145,6 +145,15 @@ class EDD_Discount {
 	protected $is_not_global = null;
 
 	/**
+	 * Product Condition
+	 *
+	 * @since 2.7
+	 * @access protected
+	 * @var string
+	 */
+	protected $product_condition = null;
+
+	/**
 	 * Declare the default properties in WP_Post as we can't extend it
 	 */
 	protected $post_author = 0;
@@ -590,6 +599,30 @@ class EDD_Discount {
 	}
 
 	/**
+	 * Retrieve the product condition.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return string Product condition
+	 */
+	public function get_product_condition() {
+		if ( null == $this->product_condition ) {
+			$this->product_condition = get_post_meta( $code_id, '_edd_discount_product_condition', true );
+		}
+
+		/**
+		 * Filters the product condition.
+		 *
+		 * @since 2.7
+		 *
+		 * @param string $product_condition Product condition.
+		 * @param int    $ID                Discount ID.
+		 */
+		return apply_filters( 'edd_discount_product_condition', $this->product_condition, $this->ID );
+	}
+
+	/**
 	 * Helper function to get discounts by a meta key and value provided.
 	 *
 	 * @since 2.7
@@ -785,5 +818,18 @@ class EDD_Discount {
 		 * @param int  $ID         Discount ID.
 		 */
 		return (bool) apply_filters( 'edd_is_discount_single_use', $this->is_single_use, $this->ID );
+	}
+
+	/**
+	 * Are the product requirements met for the discount to hold.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @param bool $set_error Whether an error message be set in session
+	 * @return bool Are required products in the cart?
+	 */
+	public function is_download_requirements_met( $set_error = true ) {
+
 	}
 }
