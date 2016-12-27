@@ -675,7 +675,7 @@ class EDD_Discount {
 	 * @since 2.7
 	 * @access public
 	 *
-	 * @param bool $set_error Whether an error message be set in session
+	 * @param bool $set_error Whether an error message be set in session.
 	 * @return bool Is discount started?
 	 */
 	public function is_started( $set_error = true ) {
@@ -744,7 +744,7 @@ class EDD_Discount {
 	 * @since 2.7
 	 * @access public
 	 *
-	 * @param bool $set_error Whether an error message be set in session
+	 * @param bool $set_error Whether an error message be set in session.
 	 * @return bool Is discount maxed out?
 	 */
 	public function is_maxed_out( $set_error = true ) {
@@ -775,7 +775,7 @@ class EDD_Discount {
 	 * @since 2.7
 	 * @access public
 	 *
-	 * @param bool $set_error Whether an error message be set in session
+	 * @param bool $set_error Whether an error message be set in session.
 	 * @return bool Is the minimum cart amount met?
 	 */
 	public function is_min_amount_met( $set_error = true ) {
@@ -826,7 +826,7 @@ class EDD_Discount {
 	 * @since 2.7
 	 * @access public
 	 *
-	 * @param bool $set_error Whether an error message be set in session
+	 * @param bool $set_error Whether an error message be set in session.
 	 * @return bool Are required products in the cart?
 	 */
 	public function is_download_requirements_met( $set_error = true ) {
@@ -914,5 +914,99 @@ class EDD_Discount {
 		 * @param string $product_condition Product condition.
 		 */
 		return (bool) apply_filters( 'edd_is_discount_products_req_met', $return, $this->ID, $this->product_condition );
+	}
+
+	/**
+	 * Has the discount code been used.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @param string $user User email address.
+	 * @param bool $set_error Whether an error message be set in session.
+	 */
+	public function is_used() {
+		$return = false;
+
+		if ( $this->is_single_use ) {
+			$payments = array();
+
+			if ( EDD()->customers->installed() ) {
+				$by_user_id = is_email( $user ) ? false : true;
+				$customer = new EDD_Customer( $user, $by_user_id );
+
+				$payments = explode( ',', $customer->payment_ids );
+			} else {
+				$user_found = false;
+
+				if ( is_email( $user ) ) {
+					$user_found = true; // All we need is the email
+					$key        = '_edd_payment_user_email';
+					$value      = $user;
+				} else {
+					$user_data = get_user_by( 'login', $user );
+
+					if ( $user_data ) {
+						$user_found = true;
+						$key        = '_edd_payment_user_id';
+						$value      = $user_data->ID;
+					}
+				}
+
+				if ( $user_found ) {
+					$query_args = array(
+						'post_type'       => 'edd_payment',
+						'meta_query'      => array(
+							array(
+								'key'     => $key,
+								'value'   => $value,
+								'compare' => '='
+							)
+						),
+						'fields'          => 'ids'
+					);
+
+					$payments = get_posts( $query_args ); // Get all payments with matching email
+				}
+			}
+
+			if ( $payments ) {
+				foreach ( $payments as $payment ) {
+					$payment = new EDD_Payment( $payment );
+
+					if ( empty( $payment->discounts ) ) {
+						continue;
+					}
+
+					if ( in_array( $payment->status, array( 'abandoned', 'failed' ) ) ) {
+						continue;
+					}
+
+					$discounts = explode( ',', $payment->discounts );
+
+					if ( is_array( $discounts ) ) {
+						if ( in_array( strtolower( $code ), $discounts ) ) {
+							if ( $set_error ) {
+								edd_set_error( 'edd-discount-error', __( 'This discount has already been redeemed.', 'easy-digital-downloads' ) );
+							}
+
+							$return = true;
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		/**
+		 * Filters if the discount is used or not.
+		 *
+		 * @since 2.7
+		 *
+		 * @param bool   $return If the discount is used or not.
+		 * @param int    $ID     Discount ID.
+		 * @param string $user   User email address.
+		 */
+		return apply_filters( 'edd_is_discount_used', $return, $this->ID, $user );
 	}
 }
