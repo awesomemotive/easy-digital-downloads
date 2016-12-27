@@ -766,4 +766,24 @@ class EDD_Discount {
 		 */
 		return apply_filters( 'edd_is_discount_min_met', $return, $this->ID );
 	}
+
+	/**
+	 * Is the discount single use or not?
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return bool Is the discount single use or not?
+	 */
+	public function is_single_use() {
+		/**
+		 * Filters if the discount is single use or not.
+		 *
+		 * @since 2.7
+		 *
+		 * @param bool $single_use Is the discount is single use or not.
+		 * @param int  $ID         Discount ID.
+		 */
+		return (bool) apply_filters( 'edd_is_discount_single_use', $this->is_single_use, $this->ID );
+	}
 }
