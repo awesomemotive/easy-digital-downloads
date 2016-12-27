@@ -22,153 +22,153 @@ class EDD_Discount {
 	 * Discount ID.
 	 *
 	 * @since 2.7
-	 * @access public
+	 * @access protected
 	 * @var int
 	 */
-	public $ID = 0;
+	protected $ID = 0;
 
 	/**
 	 * Discount Name.
 	 *
 	 * @since 2.7
-	 * @access public
+	 * @access protected
 	 * @var string
 	 */
-	public $name;
+	protected $name;
 
 	/**
 	 * Discount Code.
 	 *
 	 * @since 2.7
-	 * @access public
+	 * @access protected
 	 * @var string
 	 */
-	public $code;
+	protected $code;
 
 	/**
 	 * Discount Status (Active or Inactive).
 	 *
 	 * @since 2.7
-	 * @access public
+	 * @access protected
 	 * @var string
 	 */
-	public $status;
+	protected $status;
 
 	/**
 	 * Discount Type (Percentage or Flat Amount).
 	 *
 	 * @since 2.7
-	 * @access public
+	 * @access protected
 	 * @var string
 	 */
-	public $type;
+	protected $type;
 
 	/**
 	 * Discount Amount.
 	 *
 	 * @since 2.7
-	 * @access public
+	 * @access protected
 	 * @var mixed float|int
 	 */
-	public $amount = 0;
+	protected $amount = 0;
 
 	/**
 	 * Download Requirements.
 	 *
 	 * @since 2.7
-	 * @access public
+	 * @access protected
 	 * @var array
 	 */
-	public $download_requirements;
+	protected $download_requirements;
 
 	/**
 	 * Excluded Downloads.
 	 *
 	 * @since 2.7
-	 * @access public
+	 * @access protected
 	 * @var array
 	 */
-	public $excluded_downloads;
+	protected $excluded_downloads;
 
 	/**
 	 * Start Date.
 	 *
 	 * @since 2.7
-	 * @access public
+	 * @access protected
 	 * @var string
 	 */
-	public $start_date;
+	protected $start_date;
 
 	/**
 	 * End Date.
 	 *
 	 * @since 2.7
-	 * @access public
+	 * @access protected
 	 * @var string
 	 */
-	public $end_date;
+	protected $end_date;
 
 	/**
 	 * Maximum Uses.
 	 *
 	 * @since 2.7
-	 * @access public
+	 * @access protected
 	 * @var int
 	 */
-	public $max_uses;
+	protected $max_uses;
 
 	/**
 	 * Minimum Amount.
 	 *
 	 * @since 2.7
-	 * @access public
+	 * @access protected
 	 * @var mixed int|float
 	 */
-	public $min_amount;
+	protected $min_amount;
 
 	/**
 	 * Is Single Use?
 	 *
 	 * @since 2.7
-	 * @access public
+	 * @access protected
 	 * @var bool
 	 */
-	public $is_single_use;
+	protected $is_single_use;
 
 	/**
 	 * Is Not Global?
 	 *
 	 * @since 2.7
-	 * @access public
+	 * @access protected
 	 * @var bool
 	 */
-	public $is_not_global;
+	protected $is_not_global;
 
 	/**
 	 * Declare the default properties in WP_Post as we can't extend it
 	 */
-	public $post_author = 0;
-	public $post_date = '0000-00-00 00:00:00';
-	public $post_date_gmt = '0000-00-00 00:00:00';
-	public $post_content = '';
-	public $post_title = '';
-	public $post_excerpt = '';
-	public $post_status = 'publish';
-	public $comment_status = 'open';
-	public $ping_status = 'open';
-	public $post_password = '';
-	public $post_name = '';
-	public $to_ping = '';
-	public $pinged = '';
-	public $post_modified = '0000-00-00 00:00:00';
-	public $post_modified_gmt = '0000-00-00 00:00:00';
-	public $post_content_filtered = '';
-	public $post_parent = 0;
-	public $guid = '';
-	public $menu_order = 0;
-	public $post_mime_type = '';
-	public $comment_count = 0;
-	public $filter;
+	protected $post_author = 0;
+	protected $post_date = '0000-00-00 00:00:00';
+	protected $post_date_gmt = '0000-00-00 00:00:00';
+	protected $post_content = '';
+	protected $post_title = '';
+	protected $post_excerpt = '';
+	protected $post_status = 'publish';
+	protected $comment_status = 'open';
+	protected $ping_status = 'open';
+	protected $post_password = '';
+	protected $post_name = '';
+	protected $to_ping = '';
+	protected $pinged = '';
+	protected $post_modified = '0000-00-00 00:00:00';
+	protected $post_modified_gmt = '0000-00-00 00:00:00';
+	protected $post_content_filtered = '';
+	protected $post_parent = 0;
+	protected $guid = '';
+	protected $menu_order = 0;
+	protected $post_mime_type = '';
+	protected $comment_count = 0;
+	protected $filter;
 
 	/**
 	 * Constructor.
