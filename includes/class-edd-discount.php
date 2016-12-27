@@ -922,10 +922,10 @@ class EDD_Discount {
 	 * @since 2.7
 	 * @access public
 	 *
-	 * @param string $user User email address.
+	 * @param string $user User info.
 	 * @param bool $set_error Whether an error message be set in session.
 	 */
-	public function is_used() {
+	public function is_used( $user = '', $set_error = true ) {
 		$return = false;
 
 		if ( $this->is_single_use ) {
@@ -985,7 +985,7 @@ class EDD_Discount {
 					$discounts = explode( ',', $payment->discounts );
 
 					if ( is_array( $discounts ) ) {
-						if ( in_array( strtolower( $code ), $discounts ) ) {
+						if ( in_array( strtolower( $this->code ), $discounts ) ) {
 							if ( $set_error ) {
 								edd_set_error( 'edd-discount-error', __( 'This discount has already been redeemed.', 'easy-digital-downloads' ) );
 							}
@@ -1005,8 +1005,50 @@ class EDD_Discount {
 		 *
 		 * @param bool   $return If the discount is used or not.
 		 * @param int    $ID     Discount ID.
-		 * @param string $user   User email address.
+		 * @param string $user   User info.
 		 */
 		return apply_filters( 'edd_is_discount_used', $return, $this->ID, $user );
+	}
+
+	/**
+	 * Checks whether a discount holds at the time of purchase.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @param string $user      User info.
+	 * @param bool   $set_error Whether an error message be set in session.
+	 * @return bool Is the discount valid or not?
+	 */
+	public function is_valid( $user = '', $set_error = true ) {
+		$return = false;
+		$user = trim( $user );
+
+		if ( edd_get_cart_contents() && $this->ID ) {
+			if (
+				$this->is_active( true, $set_error ) &&
+				$this->is_started( $set_error ) &&
+				! $this->is_maxed_out( $set_error ) &&
+				! $this->is_used( $user, $set_error ) &&
+				$this->is_min_amount_met( $set_error ) &&
+				$this->is_download_requirements_met( $set_error )
+			) {
+				$return = true;
+			}
+		} elseif( $set_error ) {
+			edd_set_error( 'edd-discount-error', __( 'This discount is invalid.', 'easy-digital-downloads' ) );
+		}
+
+		/**
+		 * Filters whether the discount is valid or not.
+		 *
+		 * @since 2.7
+		 *
+		 * @param bool   $return If the discount is used or not.
+		 * @param int    $ID     Discount ID.
+		 * @param string $code   Discount code.
+		 * @param string $user   User info.
+		 */
+		return apply_filters( 'edd_is_discount_valid', $return, $this->ID, $this->code, $user );
 	}
 }
