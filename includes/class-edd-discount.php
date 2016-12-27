@@ -34,7 +34,7 @@ class EDD_Discount {
 	 * @access protected
 	 * @var string
 	 */
-	protected $name;
+	protected $name = null;
 
 	/**
 	 * Discount Code.
@@ -43,7 +43,7 @@ class EDD_Discount {
 	 * @access protected
 	 * @var string
 	 */
-	protected $code;
+	protected $code = null;
 
 	/**
 	 * Discount Status (Active or Inactive).
@@ -52,7 +52,7 @@ class EDD_Discount {
 	 * @access protected
 	 * @var string
 	 */
-	protected $status;
+	protected $status = null;
 
 	/**
 	 * Discount Type (Percentage or Flat Amount).
@@ -61,7 +61,7 @@ class EDD_Discount {
 	 * @access protected
 	 * @var string
 	 */
-	protected $type;
+	protected $type = null;
 
 	/**
 	 * Discount Amount.
@@ -70,7 +70,7 @@ class EDD_Discount {
 	 * @access protected
 	 * @var mixed float|int
 	 */
-	protected $amount = 0;
+	protected $amount = null;
 
 	/**
 	 * Download Requirements.
@@ -79,7 +79,7 @@ class EDD_Discount {
 	 * @access protected
 	 * @var array
 	 */
-	protected $download_requirements;
+	protected $download_requirements = null;
 
 	/**
 	 * Excluded Downloads.
@@ -88,7 +88,7 @@ class EDD_Discount {
 	 * @access protected
 	 * @var array
 	 */
-	protected $excluded_downloads;
+	protected $excluded_downloads = null;
 
 	/**
 	 * Start Date.
@@ -97,7 +97,7 @@ class EDD_Discount {
 	 * @access protected
 	 * @var string
 	 */
-	protected $start_date;
+	protected $start_date = null;
 
 	/**
 	 * End Date.
@@ -106,7 +106,7 @@ class EDD_Discount {
 	 * @access protected
 	 * @var string
 	 */
-	protected $end_date;
+	protected $end_date = null;
 
 	/**
 	 * Maximum Uses.
@@ -115,7 +115,7 @@ class EDD_Discount {
 	 * @access protected
 	 * @var int
 	 */
-	protected $max_uses;
+	protected $max_uses = null;
 
 	/**
 	 * Minimum Amount.
@@ -124,7 +124,7 @@ class EDD_Discount {
 	 * @access protected
 	 * @var mixed int|float
 	 */
-	protected $min_amount;
+	protected $min_amount = null;
 
 	/**
 	 * Is Single Use?
@@ -133,7 +133,7 @@ class EDD_Discount {
 	 * @access protected
 	 * @var bool
 	 */
-	protected $is_single_use;
+	protected $is_single_use = null;
 
 	/**
 	 * Is Not Global?
@@ -142,7 +142,7 @@ class EDD_Discount {
 	 * @access protected
 	 * @var bool
 	 */
-	protected $is_not_global;
+	protected $is_not_global = null;
 
 	/**
 	 * Declare the default properties in WP_Post as we can't extend it
