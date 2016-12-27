@@ -201,6 +201,23 @@ class EDD_Discount {
 	}
 
 	/**
+	 * Magic __isset method to allow empty checks on protected elements
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @param string $key The attribute to get
+	 * @return boolean If the item is set or not
+	 */
+	public function __isset( $key ) {
+		if ( property_exists( $this, $key) ) {
+			return false === empty( $this->$key );
+		} else {
+			return null;
+		}
+	}
+
+	/**
 	 * Setup object vars with discount WP_Post object.
 	 *
 	 * @since 2.7
