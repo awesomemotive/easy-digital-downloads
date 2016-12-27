@@ -830,6 +830,89 @@ class EDD_Discount {
 	 * @return bool Are required products in the cart?
 	 */
 	public function is_download_requirements_met( $set_error = true ) {
+		$product_reqs = $this->download_requirements;
+		$excluded_ps  = $this->excluded_downloads;
+		$cart_items   = edd_get_cart_contents();
+		$cart_ids     = $cart_items ? wp_list_pluck( $cart_items, 'id' ) : null;
+		$return       = false;
 
+		if ( empty( $product_reqs ) && empty( $excluded_ps ) ) {
+			$return = true;
+		}
+
+		/**
+		 * Normalize our data for product requirements, exclusions and cart data.
+		 */
+
+		// First absint the items, then sort, and reset the array keys
+		$product_reqs = array_map( 'absint', $product_reqs );
+		asort( $product_reqs );
+		$product_reqs = array_values( $product_reqs );
+
+		$excluded_ps  = array_map( 'absint', $excluded_ps );
+		asort( $excluded_ps );
+		$excluded_ps  = array_values( $excluded_ps );
+
+		$cart_ids     = array_map( 'absint', $cart_ids );
+		asort( $cart_ids );
+		$cart_ids     = array_values( $cart_ids );
+
+		// Ensure we have requirements before proceeding
+		if ( ! $return && ! empty( $product_reqs ) ) {
+			switch( $this->product_condition ) {
+				case 'all' :
+					// Default back to true
+					$return = true;
+
+					foreach ( $product_reqs as $download_id ) {
+						if ( ! edd_item_in_cart( $download_id ) ) {
+							if ( $set_error ) {
+								edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
+							}
+
+							$return = false;
+							break;
+						}
+					}
+
+					break;
+
+				default :
+					foreach ( $product_reqs as $download_id ) {
+						if ( edd_item_in_cart( $download_id ) ) {
+							$return = true;
+							break;
+						}
+					}
+
+					if ( ! $return && $set_error ) {
+						edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
+					}
+					break;
+			}
+		} else {
+			$return = true;
+		}
+
+		if ( ! empty( $excluded_ps ) ) {
+			if ( $cart_ids == $excluded_ps ) {
+				if ( $set_error ) {
+					edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'easy-digital-downloads' ) );
+				}
+
+				$return = false;
+			}
+		}
+
+		/**
+		 * Filters whether the product requirements are met for the discount to hold.
+		 *
+		 * @since 2.7
+		 *
+		 * @param bool   $return            Are the product requirements met or not.
+		 * @param int    $ID                Discount ID.
+		 * @param string $product_condition Product condition.
+		 */
+		return (bool) apply_filters( 'edd_is_discount_products_req_met', $return, $this->ID, $this->product_condition );
 	}
 }
