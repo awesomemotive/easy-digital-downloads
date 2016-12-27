@@ -659,7 +659,7 @@ class EDD_Discount {
 	}
 
 	/**
-	 * Create a new discount.
+	 * Create a new discount. If the discount already exists in the database, update it.
 	 *
 	 * @since 2.7
 	 * @access public
@@ -667,7 +667,114 @@ class EDD_Discount {
 	 * @param array $args Discount details.
 	 * @return mixed bool|int false if data isn't passed and class not instantiated for creation, or post ID for the new discount.
 	 */
-	public function add() {  }
+	public function add( $args ) {
+		$meta = array(
+			'code'              => isset( $details['code'] )             ? $details['code']              : '',
+			'name'              => isset( $details['name'] )             ? $details['name']              : '',
+			'status'            => isset( $details['status'] )           ? $details['status']            : 'active',
+			'uses'              => isset( $details['uses'] )             ? $details['uses']              : '',
+			'max_uses'          => isset( $details['max'] )              ? $details['max']               : '',
+			'amount'            => isset( $details['amount'] )           ? $details['amount']            : '',
+			'start'             => isset( $details['start'] )            ? $details['start']             : '',
+			'expiration'        => isset( $details['expiration'] )       ? $details['expiration']        : '',
+			'type'              => isset( $details['type'] )             ? $details['type']              : '',
+			'min_price'         => isset( $details['min_price'] )        ? $details['min_price']         : '',
+			'product_reqs'      => isset( $details['products'] )         ? $details['products']          : array(),
+			'product_condition' => isset( $details['product_condition'] )? $details['product_condition'] : '',
+			'excluded_products' => isset( $details['excluded-products'] )? $details['excluded-products'] : array(),
+			'is_not_global'     => isset( $details['not_global'] )       ? $details['not_global']        : false,
+			'is_single_use'     => isset( $details['use_once'] )         ? $details['use_once']          : false,
+		);
+
+		$start_timestamp        = strtotime( $meta['start'] );
+
+		if ( ! empty( $meta['start'] ) ) {
+			$meta['start']      = date( 'm/d/Y H:i:s', $start_timestamp );
+		}
+
+		if ( ! empty( $meta['expiration'] ) ) {
+			$meta['expiration'] = date( 'm/d/Y H:i:s', strtotime( date( 'm/d/Y', strtotime( $meta['expiration'] ) ) . ' 23:59:59' ) );
+			$end_timestamp      = strtotime( $meta['expiration'] );
+
+			if ( ! empty( $meta['start'] ) && $start_timestamp > $end_timestamp ) {
+				// Set the expiration date to the start date if start is later than expiration
+				$meta['expiration'] = $meta['start'];
+			}
+		}
+
+		if ( ! empty( $meta['excluded_products'] ) ) {
+			foreach( $meta['excluded_products'] as $key => $product ) {
+				if( 0 === intval( $product ) ) {
+					unset( $meta['excluded_products'][ $key ] );
+				}
+			}
+		}
+
+		if ( ! empty( $this->ID ) && $this->exists( $this->ID ) ) {
+			// Update the discount
+
+			$meta = apply_filters( 'edd_update_discount', $meta, $this->ID );
+
+			do_action( 'edd_pre_update_discount', $meta, $this->ID );
+
+			wp_update_post( array(
+				'ID'          => $this->ID,
+				'post_title'  => $meta['name'],
+				'post_status' => $meta['status']
+			) );
+
+			foreach ( $meta as $key => $value ) {
+				update_post_meta( $this->ID, '_edd_discount_' . $key, $value );
+			}
+
+			do_action( 'edd_post_update_discount', $meta, $this->ID );
+
+			// Discount code updated
+			return $this->ID;
+		} else {
+			// Add the discount
+
+			$meta = apply_filters( 'edd_insert_discount', $meta );
+
+			do_action( 'edd_pre_insert_discount', $meta );
+
+			$this->ID = wp_insert_post( array(
+				'post_type'   => 'edd_discount',
+				'post_title'  => $meta['name'],
+				'post_status' => 'active'
+			) );
+
+			foreach ( $meta as $key => $value ) {
+				update_post_meta( $this->ID, '_edd_discount_' . $key, $value );
+			}
+
+			/**
+			 * Fires after the discount code is inserted.
+			 *
+			 * @param array $meta {
+			 *     The discount details.
+			 *
+			 *     @type string $code              The discount code.
+			 *     @type string $name              The name of the discount.
+			 *     @type string $status            The discount status. Defaults to active.
+			 *     @type int    $uses              The current number of uses.
+			 *     @type int    $max_uses          The max number of uses.
+			 *     @type string $start             The start date.
+			 *     @type int    $min_price         The minimum price required to use the discount code.
+			 *     @type array  $product_reqs      The product IDs required to use the discount code.
+			 *     @type string $product_condition The conditions in which a product(s) must meet to use the discount code.
+			 *     @type array  $excluded_products Product IDs excluded from this discount code.
+			 *     @type bool   $is_not_global     If the discount code is not globally applied to all products. Defaults to false.
+			 *     @type bool   $is_single_use     If the code cannot be used more than once per customer. Defaults to false.
+			 * }
+			 * @param int $ID The ID of the discount that was inserted.
+			 */
+			do_action( 'edd_post_insert_discount', $meta, $this->ID );
+
+			// Discount code created
+			return $this->ID;
+		}
+	}
 
 	/**
 	 * Check if the discount has started.
