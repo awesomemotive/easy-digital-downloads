@@ -704,4 +704,35 @@ class EDD_Discount {
 		 */
 		return apply_filters( 'edd_is_discount_expired', $return, $this->ID );
 	}
+
+	/**
+	 * Check if the discount has maxed out.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @param bool $set_error Whether an error message be set in session
+	 * @return bool Is discount maxed out?
+	 */
+	public function is_maxed_out( $set_error = true ) {
+		$return = false;
+
+		if ( $this->uses >= $this->max_uses && ! empty( $this->max_uses ) ) {
+			if ( $set_error ) {
+				edd_set_error( 'edd-discount-error', __( 'This discount has reached its maximum usage.', 'easy-digital-downloads' ) );
+			}
+
+			$return = true;
+		}
+
+		/**
+		 * Filters if the discount is maxed out or not.
+		 *
+		 * @since 2.7
+		 *
+		 * @param bool $return Is the discount maxed out or not.
+		 * @param int  $ID     Discount ID.
+		 */
+		return apply_filters( 'edd_is_discount_maxed_out', $return, $this->ID );
+	}
 }
