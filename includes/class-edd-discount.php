@@ -724,7 +724,7 @@ class EDD_Discount {
 	 */
 	public function get_product_condition() {
 		if ( null == $this->product_condition ) {
-			$this->product_condition = get_post_meta( $code_id, '_edd_discount_product_condition', true );
+			$this->product_condition = get_post_meta( $this->ID, '_edd_discount_product_condition', true );
 		}
 
 		/**
