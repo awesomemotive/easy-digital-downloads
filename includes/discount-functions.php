@@ -160,9 +160,11 @@ function edd_get_discount_by( $field = '', $value = '' ) {
  * it creates a new one.
  *
  * @since 1.0
- * @param string $details
- * @param int $discount_id
- * @return int The discount ID of the discount code, or WP_Error on failure.
+ * @since 2.7 Updated to use EDD_Discount object.
+ * 
+ * @param array $details     Discount args.
+ * @param int   $discount_id Discount ID.
+ * @return mixed bool|int The discount ID of the discount code, or false on failure.
  */
 function edd_store_discount( $details, $discount_id = null ) {
 	if ( null == $discount_id ) {
@@ -174,13 +176,15 @@ function edd_store_discount( $details, $discount_id = null ) {
 		$discount->update( $details );
 		return $discount->ID;
 	}
-}
 
+	return false;
+}
 
 /**
  * Deletes a discount code.
  *
  * @since 1.0
+ * 
  * @param int $discount_id Discount ID (default: 0)
  * @return void
  */
@@ -192,29 +196,19 @@ function edd_remove_discount( $discount_id = 0 ) {
 	do_action( 'edd_post_delete_discount', $discount_id );
 }
 
-
 /**
  * Updates a discount's status from one status to another.
  *
  * @since 1.0
- * @param int $code_id Discount ID (default: 0)
+ * @since 2.7 Updated to use EDD_Discount object.
+ * 
+ * @param int    $code_id    Discount ID (default: 0)
  * @param string $new_status New status (default: active)
- * @return bool
+ * @return bool Whether the status has been updated or not.
  */
 function edd_update_discount_status( $code_id = 0, $new_status = 'active' ) {
-	$discount = edd_get_discount(  $code_id );
-
-	if ( $discount ) {
-		do_action( 'edd_pre_update_discount_status', $code_id, $new_status, $discount->post_status );
-
-		wp_update_post( array( 'ID' => $code_id, 'post_status' => $new_status ) );
-
-		do_action( 'edd_post_update_discount_status', $code_id, $new_status, $discount->post_status );
-
-		return true;
-	}
-
-	return false;
+	$discount = new EDD_Discount( $code_id );
+	return $discount->update_status( $new_status );
 }
 
 /**
