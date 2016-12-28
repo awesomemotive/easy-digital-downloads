@@ -154,7 +154,11 @@ class EDD_Discount {
 	protected $product_condition = null;
 
 	/**
-	 * Declare the default properties in WP_Post as we can't extend it
+	 * Declare the default properties in WP_Post as we can't extend it.
+	 *
+	 * @since 2.7
+	 * @access protected
+	 * @var mixed
 	 */
 	protected $post_author = 0;
 	protected $post_date = '0000-00-00 00:00:00';
@@ -184,6 +188,10 @@ class EDD_Discount {
 	 *
 	 * @since 2.7
 	 * @access protected
+	 *
+	 * @param mixed int|string $_id_or_code_or_name Discount id/code/name.
+	 * @param bool             $by_code             Whether identifier passed was a discount code.
+	 * @param bool             $by_name             Whether identifier passed was a discount name.
 	 */
 	public function __construct( $_id_or_code_or_name = false, $by_code = false, $by_name = false ) {
 		if ( empty( $_id_or_code ) ) {
