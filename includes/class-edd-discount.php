@@ -252,6 +252,10 @@ class EDD_Discount {
 			return false;
 		}
 
+		if ( is_wp_error( $discount ) ) {
+			return false;
+		}
+
 		if ( ! is_object( $discount ) ) {
 			return false;
 		}
@@ -264,12 +268,18 @@ class EDD_Discount {
 			return false;
 		}
 
+		// Allow extensions to perform actions before the payment is loaded
+		do_action( 'edd_pre_setup_discount', $this, $discount );
+
 		/**
 		 * Setup discount object vars with WP_Post vars
 		 */
 		foreach ( $discount as $key => $value ) {
 			$this->{$key} = $value;
 		}
+
+		// Allow extensions to add items to this object via hook
+		do_action( 'edd_setup_discount', $this, $discount );
 
 		return true;
 	}
