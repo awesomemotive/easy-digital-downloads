@@ -365,7 +365,7 @@ function edd_get_discount_type( $code_id = null ) {
  */
 function edd_get_discount_excluded_products( $code_id = null ) {
 	$discount = new EDD_Discount( $code_id );
-	return $discount->excluded_products;
+	return $discount->excluded_downloads;
 }
 
 /**
