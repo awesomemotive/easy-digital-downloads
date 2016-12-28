@@ -1138,15 +1138,8 @@ class EDD_Discount {
 		 */
 		if ( ! empty( $this->pending ) ) {
 			foreach ( $this->pending as $key => $value ) {
-				switch ( $key ) {
-					default:
-						/**
-						 * Used to save non-standard data. Developers can hook here if they want to save
-						 * specific discount data when $discount->save() is run and their item is in the $pending array.
-						 */
-						do_action( 'edd_discount_save', $this, $key );
-						break;
-				}
+				$this->update_meta( $key, $value );
+				do_action( 'edd_discount_save', $this, $key );
 			}
 		}
 
