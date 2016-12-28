@@ -845,6 +845,52 @@ class EDD_Discount {
 	}
 
 	/**
+	 * Update the status of the discount.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @param string $new_status New status (default: active)
+	 * @return bool If the status been updated or not.
+	 */
+	public function update_status( $new_status = 'active' ) {
+		if ( $this->exists() ) {
+			/**
+			 * Fires before the status of the discount is updated.
+			 *
+			 * @since 2.7
+			 *
+			 * @param int    $ID          Discount ID.
+			 * @param string $new_status  New status.
+			 * @param string $post_status Post status.
+			 */
+			do_action( 'edd_pre_update_discount_status', $this->ID, $new_status, $this->post_status );
+
+			wp_update_post(
+				array(
+					'ID'          => $this->ID,
+					'post_status' => $new_status
+				)
+			);
+
+			/**
+			 * Fires after the status of the discount is updated.
+			 *
+			 * @since 2.7
+			 *
+			 * @param int    $ID          Discount ID.
+			 * @param string $new_status  New status.
+			 * @param string $post_status Post status.
+			 */
+			do_action( 'edd_post_update_discount_status', $this->ID, $new_status, $this->post_status );
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Check if the discount has started.
 	 *
 	 * @since 2.7
