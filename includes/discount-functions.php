@@ -93,7 +93,7 @@ function edd_has_active_discounts() {
  * @since 2.7 Updated to use EDD_Discount object
  *
  * @param int $discount_id Discount ID.
- * @return object EDD_Discount Discount object.
+ * @return mixed object|bool EDD_Discount object or false if not found.
  */
 function edd_get_discount( $discount_id = 0 ) {
 	$discount = new EDD_Discount( $discount_id );
@@ -112,7 +112,7 @@ function edd_get_discount( $discount_id = 0 ) {
  * @since 2.7 Updated to use EDD_Discount object
  *
  * @param string $code Discount code.
- * @return object EDD_Discount Discount object.
+ * @return mixed object|bool EDD_Discount object or false if not found.
  */
 function edd_get_discount_by_code( $code = '' ) {
 	$discount =  new EDD_Discount( $code, true );
