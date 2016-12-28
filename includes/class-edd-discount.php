@@ -1143,17 +1143,23 @@ class EDD_Discount {
 				if ( 'status' == $key ) {
 					$this->update_status( $value );
 				}
-
-				/**
-				 * Fires after each meta update allowing developers to hook their own items saved in $pending.
-				 *
-				 * @since 2.7
-				 *
-				 * @param object       Instance of EDD_Discount object.
-				 * @param string $key  Meta key.
-				 */
-				do_action( 'edd_discount_save', $this, $key );
 			}
+
+			$saved = true;
+		}
+
+		if ( true == $saved ) {
+			$this->setup_discount( WP_Post::get_instance( $this->ID ) );
+
+			/**
+			 * Fires after each meta update allowing developers to hook their own items saved in $pending.
+			 *
+			 * @since 2.7
+			 *
+			 * @param object       Instance of EDD_Discount object.
+			 * @param string $key  Meta key.
+			 */
+			do_action( 'edd_discount_save', $this->ID, $this );
 		}
 
 		return $saved;
