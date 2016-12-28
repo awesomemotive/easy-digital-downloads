@@ -185,9 +185,27 @@ class EDD_Discount {
 	 * @since 2.7
 	 * @access protected
 	 */
-	public function __construct( $_id = false, $_args = array() ) {
-		$discount = WP_Post::get_instance( $_id );
-		return $this->setup_discount( $discount );
+	public function __construct( $_id_or_code = false, $by_code = false ) {
+		if ( empty( $_id_or_code ) ) {
+			return false;
+		}
+
+		if ( $by_code ) {
+			$discount = $this->find_by_code( $_code );
+
+			if ( ! $discount ) {
+				return false;
+			}
+
+			return $this->setup_discount( $discount );
+		} else {
+			$_id_or_code = absint( $_id_or_code );
+
+			$discount = WP_Post::get_instance( $_id_or_code );
+			return $this->setup_discount( $discount );
+		}
+
+		return false;
 	}
 
 	/**
