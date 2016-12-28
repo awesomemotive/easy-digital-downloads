@@ -762,94 +762,10 @@ class EDD_Discount {
 	 * @return mixed bool|int false if data isn't passed and class not instantiated for creation, or post ID for the new discount.
 	 */
 	public function add( $args ) {
-		$meta = array(
-			'code'              => isset( $details['code'] )             ? $details['code']              : '',
-			'name'              => isset( $details['name'] )             ? $details['name']              : '',
-			'status'            => isset( $details['status'] )           ? $details['status']            : 'active',
-			'uses'              => isset( $details['uses'] )             ? $details['uses']              : '',
-			'max_uses'          => isset( $details['max'] )              ? $details['max']               : '',
-			'amount'            => isset( $details['amount'] )           ? $details['amount']            : '',
-			'start'             => isset( $details['start'] )            ? $details['start']             : '',
-			'expiration'        => isset( $details['expiration'] )       ? $details['expiration']        : '',
-			'type'              => isset( $details['type'] )             ? $details['type']              : '',
-			'min_price'         => isset( $details['min_price'] )        ? $details['min_price']         : '',
-			'product_reqs'      => isset( $details['products'] )         ? $details['products']          : array(),
-			'product_condition' => isset( $details['product_condition'] )? $details['product_condition'] : '',
-			'excluded_products' => isset( $details['excluded-products'] )? $details['excluded-products'] : array(),
-			'is_not_global'     => isset( $details['not_global'] )       ? $details['not_global']        : false,
-			'is_single_use'     => isset( $details['use_once'] )         ? $details['use_once']          : false,
-		);
+		$meta = $this->build_meta( $args );
 
-		$start_timestamp        = strtotime( $meta['start'] );
-
-		if ( ! empty( $meta['start'] ) ) {
-			$meta['start']      = date( 'm/d/Y H:i:s', $start_timestamp );
-		}
-
-		if ( ! empty( $meta['expiration'] ) ) {
-			$meta['expiration'] = date( 'm/d/Y H:i:s', strtotime( date( 'm/d/Y', strtotime( $meta['expiration'] ) ) . ' 23:59:59' ) );
-			$end_timestamp      = strtotime( $meta['expiration'] );
-
-			if ( ! empty( $meta['start'] ) && $start_timestamp > $end_timestamp ) {
-				// Set the expiration date to the start date if start is later than expiration
-				$meta['expiration'] = $meta['start'];
-			}
-		}
-
-		if ( ! empty( $meta['excluded_products'] ) ) {
-			foreach( $meta['excluded_products'] as $key => $product ) {
-				if( 0 === intval( $product ) ) {
-					unset( $meta['excluded_products'][ $key ] );
-				}
-			}
-		}
-
-		if ( ! empty( $this->ID ) && $this->exists( $this->ID ) ) {
-			/**
-			 * Update the discount.
-			 */
-
-			/**
-			 * Filter the data being updated
-			 *
-			 * @since 2.7
-			 *
-			 * @param array $meta Discount meta.
-			 * @param int   $ID   Discount ID.
-			 */
-			$meta = apply_filters( 'edd_update_discount', $meta, $this->ID );
-
-			/**
-			 * Fires before the discount has been updated in the database.
-			 *
-			 * @since 2.7
-			 *
-			 * @param array $meta Discount meta.
-			 * @param int   $ID   Discount ID.
-			 */
-			do_action( 'edd_pre_update_discount', $meta, $this->ID );
-
-			wp_update_post( array(
-				'ID'          => $this->ID,
-				'post_title'  => $meta['name'],
-				'post_status' => $meta['status']
-			) );
-
-			foreach ( $meta as $key => $value ) {
-				update_post_meta( $this->ID, '_edd_discount_' . $key, $value );
-			}
-
-			/**
-			 * Fires after the discount has been updated in the database.
-			 *
-			 * @since 2.7
-			 *
-			 * @param array $meta Discount meta.
-			 * @param int   $ID   Discount ID.
-			 */
-			do_action( 'edd_post_update_discount', $meta, $this->ID );
-
-			return $this->ID;
+		if ( ! empty( $this->ID ) && $this->exists() ) {
+			return $this->update( $args );
 		} else {
 			/**
 			 * Add a new discount to the database.
@@ -910,6 +826,120 @@ class EDD_Discount {
 			// Discount code created
 			return $this->ID;
 		}
+	}
+
+	/**
+	 * Update an existing discount in the database.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @param array $args Discount details.
+	 * @return mixed bool|int false if data isn't passed and class not instantiated for creation, or post ID for the new discount.
+	 */
+	public function update( $args ) {
+		$meta = $this->build_meta( $args );
+
+		/**
+		 * Filter the data being updated
+		 *
+		 * @since 2.7
+		 *
+		 * @param array $meta Discount meta.
+		 * @param int   $ID   Discount ID.
+		 */
+		$meta = apply_filters( 'edd_update_discount', $meta, $this->ID );
+
+		/**
+		 * Fires before the discount has been updated in the database.
+		 *
+		 * @since 2.7
+		 *
+		 * @param array $meta Discount meta.
+		 * @param int   $ID   Discount ID.
+		 */
+		do_action( 'edd_pre_update_discount', $meta, $this->ID );
+
+		wp_update_post( array(
+			'ID'          => $this->ID,
+			'post_title'  => $meta['name'],
+			'post_status' => $meta['status']
+		) );
+
+		foreach ( $meta as $key => $value ) {
+			update_post_meta( $this->ID, '_edd_discount_' . $key, $value );
+		}
+
+		/**
+		 * Fires after the discount has been updated in the database.
+		 *
+		 * @since 2.7
+		 *
+		 * @param array $meta Discount meta.
+		 * @param int   $ID   Discount ID.
+		 */
+		do_action( 'edd_post_update_discount', $meta, $this->ID );
+
+		return $this->ID;
+	}
+
+	/**
+	 * Build Discount Meta Array.
+	 *
+	 * @since 2.7
+	 * @access private
+	 *
+	 * @param array $args Discount meta.
+	 * @return array Filtered and sanitized discount args.
+	 */
+	private function build_meta( $args = array() ) {
+		if ( ! is_array( $args ) || array() === $args ) {
+			return false;
+		}
+
+		$meta = array(
+			'code'              => isset( $args['code'] )             ? $args['code']              : '',
+			'name'              => isset( $args['name'] )             ? $args['name']              : '',
+			'status'            => isset( $args['status'] )           ? $args['status']            : 'active',
+			'uses'              => isset( $args['uses'] )             ? $args['uses']              : '',
+			'max_uses'          => isset( $args['max'] )              ? $args['max']               : '',
+			'amount'            => isset( $args['amount'] )           ? $args['amount']            : '',
+			'start'             => isset( $args['start'] )            ? $args['start']             : '',
+			'expiration'        => isset( $args['expiration'] )       ? $args['expiration']        : '',
+			'type'              => isset( $args['type'] )             ? $args['type']              : '',
+			'min_price'         => isset( $args['min_price'] )        ? $args['min_price']         : '',
+			'product_reqs'      => isset( $args['products'] )         ? $args['products']          : array(),
+			'product_condition' => isset( $args['product_condition'] )? $args['product_condition'] : '',
+			'excluded_products' => isset( $args['excluded-products'] )? $args['excluded-products'] : array(),
+			'is_not_global'     => isset( $args['not_global'] )       ? $args['not_global']        : false,
+			'is_single_use'     => isset( $args['use_once'] )         ? $args['use_once']          : false,
+		);
+
+		$start_timestamp = strtotime( $meta['start'] );
+
+		if ( ! empty( $meta['start'] ) ) {
+			$meta['start']      = date( 'm/d/Y H:i:s', $start_timestamp );
+		}
+
+		if ( ! empty( $meta['expiration'] ) ) {
+			$meta['expiration'] = date( 'm/d/Y H:i:s', strtotime( date( 'm/d/Y', strtotime( $meta['expiration'] ) ) . ' 23:59:59' ) );
+			$end_timestamp      = strtotime( $meta['expiration'] );
+
+			if ( ! empty( $meta['start'] ) && $start_timestamp > $end_timestamp ) {
+				// Set the expiration date to the start date if start is later than expiration
+				$meta['expiration'] = $meta['start'];
+			}
+		}
+
+		if ( ! empty( $meta['excluded_products'] ) ) {
+			foreach ( $meta['excluded_products'] as $key => $product ) {
+				if ( 0 === intval( $product ) ) {
+					unset( $meta['excluded_products'][ $key ] );
+				}
+			}
+		}
+
+		return $meta;
 	}
 
 	/**
