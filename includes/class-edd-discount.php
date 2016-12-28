@@ -1259,6 +1259,10 @@ class EDD_Discount {
 	public function is_expired( $update = true ) {
 		$return = false;
 
+		if ( empty( $this->end_date ) ) {
+			return $return;
+		}
+
 		$expiration = strtotime( $this->end_date );
 
 		if ( $expiration < current_time( 'timestamp' ) ) {
