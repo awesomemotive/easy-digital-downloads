@@ -292,6 +292,41 @@ class EDD_Discount {
 	}
 
 	/**
+	 * Find a discount in the database with the name supplied.
+	 *
+	 * @since 2.7
+	 * @access private
+	 *
+	 * @param string $code Discount name.
+	 * @return object WP_Post instance of the discount.
+	 */
+	private function find_by_name( $name = '' ) {
+		if ( empty( $name ) || ! is_string( $name ) ) {
+			return false;
+		}
+
+		$discounts = edd_get_discounts(
+			array(
+				'post_type'      => 'edd_discount',
+				'name'           => $value,
+				'posts_per_page' => 1,
+				'post_status'    => 'any',
+				'fields'         => 'ids'
+			)
+		);
+
+		if ( ! is_array( $discounts ) || array() === $discounts ) {
+			return false;
+		}
+
+		if ( $discounts ) {
+			$discount = $discounts[0];
+		}
+
+		return WP_Post::get_instance( $discount->ID );
+	}
+
+	/**
 	 * Setup object vars with discount WP_Post object.
 	 *
 	 * @since 2.7
@@ -683,42 +718,6 @@ class EDD_Discount {
 		 * @param int    $ID                Discount ID.
 		 */
 		return apply_filters( 'edd_discount_product_condition', $this->product_condition, $this->ID );
-	}
-
-	/**
-	 * Helper function to get discounts by a meta key and value provided.
-	 *
-	 * @since 2.7
-	 * @access public
-	 *
-	 * @param string $key   Value of the meta key to retrieve.
-	 * @param string $value Meta value for the key passed.
-	 * @return mixed array|bool
-	 */
-	public function get_by( $field = '', $value = '' ) {
-		if ( empty( $field ) || empty( $value ) ) {
-			return false;
-		}
-
-		if ( ! is_string( $field ) ) {
-			return false;
-		}
-
-		switch ( strtolower( $field ) ) {
-			case 'code':
-				break;
-
-			case 'id':
-				break;
-
-			case 'name':
-				break;
-
-			default:
-				return false;
-		}
-
-		return false;
 	}
 
 	/**
