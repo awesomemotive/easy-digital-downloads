@@ -234,7 +234,7 @@ class EDD_Discount {
 	}
 
 	/**
-	 * Magic __get method to dispatch a call to retrieve a private property
+	 * Magic __get method to dispatch a call to retrieve a protected property.
 	 *
 	 * @since 2.7
 	 * @access public
@@ -251,6 +251,35 @@ class EDD_Discount {
 			return $this->{$key};
 		} else {
 			return new WP_Error( 'edd-discount-invalid-property', sprintf( __( 'Can\'t get property %s', 'easy-digital-downloads' ), $key ) );
+		}
+	}
+
+	/**
+	 * Magic __set method to dispatch a call to update a protected property.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @see set()
+	 *
+	 * @param string $key   Property name.
+	 * @param mixed  $value Property value.
+	 */
+	public function __set( $key, $value ) {
+		$key = sanitize_key( $key );
+
+		// Only real properties can be saved.
+		$keys = array_keys( get_class_vars( get_called_class() ) );
+
+		if ( ! in_array( $key, $keys ) ) {
+			return false;
+		}
+
+		// Dispatch to setter method if value needs to be sanitized
+		if ( method_exists( $this, 'set_' . $key ) ) {
+			return call_user_func( array( $this, 'get_' . $key ), $key, $value );
+		} else {
+			$this->{$key} = $value;
 		}
 	}
 
