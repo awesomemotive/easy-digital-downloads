@@ -271,11 +271,13 @@ class EDD_Discount {
 		}
 
 		$discounts = edd_get_discounts(
-			'meta_key'       => '_edd_discount_code',
-			'meta_value'     => $code,
-			'posts_per_page' => 1,
-			'post_status'    => 'any'
-			'fields'         => 'ids'
+			array(
+				'meta_key'       => '_edd_discount_code',
+				'meta_value'     => $code,
+				'posts_per_page' => 1,
+				'post_status'    => 'any',
+				'fields'         => 'ids'
+			)
 		);
 
 		if ( ! is_array( $discounts ) || array() === $discounts ) {
