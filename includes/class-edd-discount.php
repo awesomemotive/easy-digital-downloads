@@ -1236,6 +1236,8 @@ class EDD_Discount {
 			 */
 			do_action( 'edd_post_insert_discount', $meta, $this->ID );
 
+			$this->setup_discount( WP_Post::get_instance( $this->ID ) );
+
 			// Discount code created
 			return $this->ID;
 		}
@@ -1282,6 +1284,8 @@ class EDD_Discount {
 		foreach ( $meta as $key => $value ) {
 			update_post_meta( $this->ID, '_edd_discount_' . $key, $value );
 		}
+
+		$this->setup_discount( WP_Post::get_instance( $this->ID ) );
 
 		/**
 		 * Fires after the discount has been updated in the database.
