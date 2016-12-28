@@ -215,46 +215,31 @@ function edd_update_discount_status( $code_id = 0, $new_status = 'active' ) {
  * Checks to see if a discount code already exists.
  *
  * @since 1.0
- * @param int $code_id Discount ID
- * @return bool
+ * @since 2.7 Updated to use EDD_Discount object.
+ * 
+ * @param int $code_id Discount ID.
+ * @return bool Whether or not the discount exists.
  */
 function edd_discount_exists( $code_id ) {
-	if ( edd_get_discount(  $code_id ) ) {
-		return true;
-	}
-
-	return false;
+	$discount = new EDD_Discount( $code_id );
+	return $discount->exists();
 }
 
 /**
  * Checks whether a discount code is active.
  *
  * @since 1.0
- * @since 2.6.11 Added $update parameter
- * @param int $code_id
- * @param bool $update Update the discount to expired if an one is found but has an active status
- * @param bool $set_error Whether an error message be set in session
- * @return bool
+ * @since 2.6.11 Added $update parameter.
+ * @since 2.7    Updated to use EDD_Discount object.
+ * 
+ * @param int  $code_id   Discount ID.
+ * @param bool $update    Update the discount to expired if an one is found but has an active status/
+ * @param bool $set_error Whether an error message should be set in session.
+ * @return bool Whether or not the discount is active.
  */
 function edd_is_discount_active( $code_id = null, $update = true, $set_error = true ) {
-	$discount = edd_get_discount( $code_id );
-	$return   = false;
-
-	if ( $discount ) {
-		if ( edd_is_discount_expired( $code_id, $update ) ) {
-			if ( defined( 'DOING_AJAX' ) && $set_error ) {
-				edd_set_error( 'edd-discount-error', __( 'This discount is expired.', 'easy-digital-downloads' ) );
-			}
-		} elseif ( $discount->post_status == 'active' ) {
-			$return = true;
-		} else {
-			if( defined( 'DOING_AJAX' ) && $set_error ) {
-				edd_set_error( 'edd-discount-error', __( 'This discount is not active.', 'easy-digital-downloads' ) );
-			}
-		}
-	}
-
-	return apply_filters( 'edd_is_discount_active', $return, $code_id );
+	$discount = new EDD_Discount( $code_id );
+	return $discount->is_active( $update, $set_error );
 }
 
 /**
