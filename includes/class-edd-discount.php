@@ -109,6 +109,15 @@ class EDD_Discount {
 	protected $end_date = null;
 
 	/**
+	 * Uses.
+	 *
+	 * @since 2.7
+	 * @access protected
+	 * @var int
+	 */
+	protected $uses = null;
+
+	/**
 	 * Maximum Uses.
 	 *
 	 * @since 2.7
@@ -194,7 +203,7 @@ class EDD_Discount {
 	 * @param bool             $by_name             Whether identifier passed was a discount name.
 	 */
 	public function __construct( $_id_or_code_or_name = false, $by_code = false, $by_name = false ) {
-		if ( empty( $_id_or_code ) ) {
+		if ( empty( $_id_or_code_or_name ) ) {
 			return false;
 		}
 
@@ -215,9 +224,9 @@ class EDD_Discount {
 
 			return $this->setup_discount( $discount );
 		} else {
-			$_id_or_code = absint( $_id_or_code );
+			$_id_or_code_or_name = absint( $_id_or_code_or_name );
 
-			$discount = WP_Post::get_instance( $_id_or_code );
+			$discount = WP_Post::get_instance( $_id_or_code_or_name );
 			return $this->setup_discount( $discount );
 		}
 
@@ -374,7 +383,14 @@ class EDD_Discount {
 			return false;
 		}
 
-		// Allow extensions to perform actions before the payment is loaded
+		/**
+		 * Fires before the instance of the EDD_Discount object is set up.
+		 *
+		 * @since 2.7
+		 *
+		 * @param object EDD_Discount      EDD_Discount instance of the discount object.
+		 * @param object WP_Post $discount WP_Post instance of the discount object.
+		 */
 		do_action( 'edd_pre_setup_discount', $this, $discount );
 
 		/**
@@ -384,7 +400,14 @@ class EDD_Discount {
 			$this->{$key} = $value;
 		}
 
-		// Allow extensions to add items to this object via hook
+		/**
+		 * Fires after the instance of the EDD_Discount object is set up. Allows extensions to add items to this object via hook.
+		 *
+		 * @since 2.7
+		 *
+		 * @param object EDD_Discount      EDD_Discount instance of the discount object.
+		 * @param object WP_Post $discount WP_Post instance of the discount object.
+		 */
 		do_action( 'edd_setup_discount', $this, $discount );
 
 		return true;
@@ -616,6 +639,30 @@ class EDD_Discount {
 		 * @param int   $ID       Discount ID.
 		 */
 		return apply_filters( 'edd_get_discount_expiration', $this->end_date, $this->ID );
+	}
+
+	/**
+	 * Retrieve the uses for the discount code.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return int Uses.
+	 */
+	public function get_uses() {
+		if ( null == $this->uses ) {
+			$this->uses = get_post_meta( $this->ID, '_edd_discount_uses', true );
+		}
+
+		/**
+		 * Filters the maximum uses.
+		 *
+		 * @since 2.7
+		 *
+		 * @param int $max_uses Maximum uses.
+		 * @param int $ID       Discount ID.
+		 */
+		return (int) apply_filters( 'edd_get_discount_uses', $this->uses, $this->ID );
 	}
 
 	/**
