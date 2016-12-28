@@ -281,7 +281,7 @@ function edd_get_discount_start_date( $code_id = null ) {
  */
 function edd_get_discount_expiration( $code_id = null ) {
 	$discount = new EDD_Discount( $code_id );
-	return $discount->expiration;
+	return $discount->end_date;
 }
 
 /**
