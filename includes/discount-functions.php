@@ -504,122 +504,26 @@ function edd_discount_product_reqs_met( $code_id = null, $set_error = true ) {
 }
 
 /**
- * Is Discount Used
- *
  * Checks to see if a user has already used a discount.
  *
  * @since 1.1.5
+ * @since 1.5 Added $code_id parameter.
+ * @since 2.7 Updated to use EDD_Discount object.
  *
- * @param string $code
- * @param string $user
- * @param int $code_id (since 1.5) ID of the discount code to check
- * @param bool $set_error Whether an error message be set in session
- *
- * @return bool $return
+ * @param string $code      Discount Code.
+ * @param string $user      User info.
+ * @param int    $code_id   Discount ID.
+ * @param bool   $set_error Whether an error message be set in session
+ * @return bool $return Whether the the discount code is used.
  */
 function edd_is_discount_used( $code = null, $user = '', $code_id = 0, $set_error = true ) {
-
-	$return = false;
-
-	if ( empty( $code_id ) ) {
-		$code_id = edd_get_discount_id_by_code( $code );
-		if( empty( $code_id ) ) {
-			return false; // No discount was found
-		}
+	if ( null == $code ) {
+		$discount = new EDD_Discount( $code, true );
+	} else {
+		$discount = new EDD_Discount( $code_id );
 	}
 
-	if ( edd_discount_is_single_use( $code_id ) ) {
-
-		$payments = array();
-
-		if ( EDD()->customers->installed() ) {
-
-			$by_user_id = is_email( $user ) ? false : true;
-			$customer = new EDD_Customer( $user, $by_user_id );
-
-			$payments = explode( ',', $customer->payment_ids );
-
-		} else {
-
-			$user_found = false;
-
-			if ( is_email( $user ) ) {
-
-				$user_found = true; // All we need is the email
-				$key        = '_edd_payment_user_email';
-				$value      = $user;
-
-			} else {
-
-				$user_data = get_user_by( 'login', $user );
-
-				if ( $user_data ) {
-
-					$user_found = true;
-					$key        = '_edd_payment_user_id';
-					$value      = $user_data->ID;
-
-				}
-			}
-
-			if ( $user_found ) {
-				$query_args = array(
-					'post_type'       => 'edd_payment',
-					'meta_query'      => array(
-						array(
-							'key'     => $key,
-							'value'   => $value,
-							'compare' => '='
-						)
-					),
-					'fields'          => 'ids'
-				);
-
-				$payments = get_posts( $query_args ); // Get all payments with matching email
-
-			}
-		}
-
-		if ( $payments ) {
-
-			foreach ( $payments as $payment ) {
-
-				$payment = new EDD_Payment( $payment );
-
-				if( empty( $payment->discounts ) ) {
-					continue;
-				}
-
-				if( in_array( $payment->status, array( 'abandoned', 'failed' ) ) ) {
-					continue;
-				}
-
-				$discounts = explode( ',', $payment->discounts );
-
-				if( is_array( $discounts ) ) {
-
-					if( in_array( strtolower( $code ), $discounts ) ) {
-
-						if( $set_error ) {
-
-							edd_set_error( 'edd-discount-error', __( 'This discount has already been redeemed.', 'easy-digital-downloads' ) );
-	
-						}
-	
-						$return = true;
-						break;
-
-					}
-
-				}
-
-			}
-
-		}
-
-	}
-
-	return apply_filters( 'edd_is_discount_used', $return, $code, $user );
+	return $discount->is_used( $user, $set_error );
 }
 
 /**
