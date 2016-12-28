@@ -207,8 +207,8 @@ function edd_reports_graph() {
 				$temp_data['sales'][ $y ][ $m ] = 0;
 			}
 
-			if ( ! isset( $temp_data['earnings'][ $y ][ $m ][ $d ] ) ) {
-				$temp_data['earnings'][ $y ][ $m ][ $d ] = 0;
+			if ( ! isset( $temp_data['earnings'][ $y ][ $m ] ) ) {
+				$temp_data['earnings'][ $y ][ $m ] = 0;
 			}
 
 			$date_start = date( 'Y-m', strtotime( '+1 month', strtotime( $date_start ) ) );
@@ -291,20 +291,40 @@ function edd_reports_graph() {
 				array_multisort( $timestamps, SORT_ASC, $sales_data );
 			}
 
-			foreach ( $temp_data[ 'earnings' ] as $year => $months ) {
+			foreach ( $temp_data['earnings'] as $year => $months ) {
 				$month_keys = array_keys( $months );
 				$last_month = end( $month_keys );
 
-				foreach ( $months as $month => $days ) {
-					$day_keys = array_keys( $days );
-					$last_day = end( $day_keys );
+				if ( $day_by_day ) {
+					foreach ( $months as $month => $days ) {
+						$day_keys = array_keys( $days );
+						$last_day = end( $day_keys );
 
-					$consolidated_date = $month === $last_month ? $last_day : 1;
+						$month_keys = array_keys( $months );
 
-					$earnings        = array_sum( $days );
-					$date            = mktime( 0, 0, 0, $month, $consolidated_date, $year ) * 1000;
-					$earnings_data[] = array( $date, $earnings );
+						$consolidated_date = $month === end( $month_keys ) ? cal_days_in_month( CAL_GREGORIAN, $month, $year ) : 1;
+
+						$earnings        = array_sum( $days );
+						$date            = mktime( 0, 0, 0, $month, $consolidated_date, $year ) * 1000;
+						$earnings_data[] = array( $date, $earnings );
+					}
+				} else {
+					foreach ( $months as $month => $count ) {
+						$month_keys = array_keys( $months );
+						$consolidated_date = $month === end( $month_keys ) ? cal_days_in_month( CAL_GREGORIAN, $month, $year ) : 1;
+
+						$date = mktime( 0, 0, 0, $month, $consolidated_date, $year ) * 1000;
+						$earnings_data[] = array( $date, $count );
+					}
 				}
+			}
+
+			// Sort dates in ascending order
+			foreach ( $earnings_data as $key => $value ) {
+				$earnings_timestamps[ $key ] = $value[0];
+			}
+			if ( ! empty( $earnings_timestamps ) ) {
+				array_multisort( $earnings_timestamps, SORT_ASC, $earnings_data );
 			}
 		}
 	}
