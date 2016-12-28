@@ -243,417 +243,264 @@ function edd_is_discount_active( $code_id = null, $update = true, $set_error = t
 }
 
 /**
- * Retrieve the discount code
+ * Retrieve the discount code.
  *
  * @since 1.4
- * @param int $code_id
- * @return string $code Discount Code
+ * @since 2.7 Updated to use EDD_Discount object.
+ * 
+ * @param int $code_id Discount ID.
+ * @return string $code Discount Code.
  */
 function edd_get_discount_code( $code_id = null ) {
-	$code = get_post_meta( $code_id, '_edd_discount_code', true );
-
-	return apply_filters( 'edd_get_discount_code', $code, $code_id );
+	$discount = new EDD_Discount( $code_id );
+	return $discount->code;
 }
 
 /**
- * Retrieve the discount code start date
+ * Retrieve the discount code start date.
  *
  * @since 1.4
- * @param int $code_id Discount ID
- * @return string $start_date Discount start date
+ * @since 2.7 Updated to use EDD_Discount object.
+ * 
+ * @param int $code_id Discount ID.
+ * @return string $start_date Discount start date.
  */
 function edd_get_discount_start_date( $code_id = null ) {
-	$start_date = get_post_meta( $code_id, '_edd_discount_start', true );
-
-	return apply_filters( 'edd_get_discount_start_date', $start_date, $code_id );
+	$discount = new EDD_Discount( $code_id );
+	return $discount->start_date;
 }
 
 /**
- * Retrieve the discount code expiration date
+ * Retrieve the discount code expiration date.
  *
  * @since 1.4
- * @param int $code_id Discount ID
- * @return string $expiration Discount expiration
+ * @since 2.7 Updated to use EDD_Discount object.
+ * 
+ * @param int $code_id Discount ID.
+ * @return string $expiration Discount expiration.
  */
 function edd_get_discount_expiration( $code_id = null ) {
-	$expiration = get_post_meta( $code_id, '_edd_discount_expiration', true );
-
-	return apply_filters( 'edd_get_discount_expiration', $expiration, $code_id );
+	$discount = new EDD_Discount( $code_id );
+	return $discount->expiration;
 }
 
 /**
- * Retrieve the maximum uses that a certain discount code
+ * Retrieve the maximum uses that a certain discount code.
  *
  * @since 1.4
- * @param int $code_id Discount ID
- * @return int $max_uses Maximum number of uses for the discount code
+ * @since 2.7 Updated to use EDD_Discount object.
+ * 
+ * @param int $code_id Discount ID.
+ * @return int $max_uses Maximum number of uses for the discount code.
  */
 function edd_get_discount_max_uses( $code_id = null ) {
-	$max_uses = get_post_meta( $code_id, '_edd_discount_max_uses', true );
-
-	return (int) apply_filters( 'edd_get_discount_max_uses', $max_uses, $code_id );
+	$discount = new EDD_Discount( $code_id );
+	return $discount->max_uses;
 }
 
 /**
- * Retrieve number of times a discount has been used
+ * Retrieve number of times a discount has been used.
  *
  * @since 1.4
- * @param int $code_id Discount ID
- * @return int $uses Number of times a discount has been used
+ * @since 2.7 Updated to use EDD_Discount object.
+ * 
+ * @param int $code_id Discount ID.
+ * @return int $uses Number of times a discount has been used.
  */
 function edd_get_discount_uses( $code_id = null ) {
-	$uses = get_post_meta( $code_id, '_edd_discount_uses', true );
-
-	return (int) apply_filters( 'edd_get_discount_uses', $uses, $code_id );
+	$discount = new EDD_Discount( $code_id );
+	return $discount->uses;
 }
 
 /**
- * Retrieve the minimum purchase amount for a discount
+ * Retrieve the minimum purchase amount for a discount.
  *
  * @since 1.4
- * @param int $code_id Discount ID
- * @return float $min_price Minimum purchase amount
+ * @since 2.7 Updated to use EDD_Discount object.
+ * 
+ * @param int $code_id Discount ID.
+ * @return float $min_price Minimum purchase amount.
  */
 function edd_get_discount_min_price( $code_id = null ) {
-	$min_price = get_post_meta( $code_id, '_edd_discount_min_price', true );
-
-	return (float) apply_filters( 'edd_get_discount_min_price', $min_price, $code_id );
+	$discount = new EDD_Discount( $code_id );
+	return $discount->min_amount;
 }
 
 /**
- * Retrieve the discount amount
+ * Retrieve the discount amount.
  *
  * @since 1.4
- * @param int $code_id Discount ID
- * @return int $amount Discount code amounts
- * @return float
+ * @since 2.7 Updated to use EDD_Discount object.
+ * 
+ * @param int $code_id Discount ID.
+ * @return float $amount Discount amount.
  */
 function edd_get_discount_amount( $code_id = null ) {
-	$amount = get_post_meta( $code_id, '_edd_discount_amount', true );
-
-	return (float) apply_filters( 'edd_get_discount_amount', $amount, $code_id );
+	$discount = new EDD_Discount( $code_id );
+	return $discount->amount;
 }
 
 /**
  * Retrieve the discount type
  *
  * @since 1.4
- * @param int $code_id Discount ID
+ * @since 2.7 Updated to use EDD_Discount object.
+ * 
+ * @param int $code_id Discount ID.
  * @return string $type Discount type
- * @return float
  */
 function edd_get_discount_type( $code_id = null ) {
-	$type = strtolower( get_post_meta( $code_id, '_edd_discount_type', true ) );
-
-	return apply_filters( 'edd_get_discount_type', $type, $code_id );
+	$discount = new EDD_Discount( $code_id );
+	return $discount->type;
 }
 
 /**
- * Retrieve the products the discount canot be applied to
+ * Retrieve the products the discount canot be applied to.
  *
  * @since 1.9
- * @param int $code_id Discount ID
- * @return array $excluded_products IDs of the required products
+ * @since 2.7 Updated to use EDD_Discount object.
+ * 
+ * @param int $code_id Discount ID.
+ * @return array $excluded_products IDs of the required products.
  */
 function edd_get_discount_excluded_products( $code_id = null ) {
-	$excluded_products = get_post_meta( $code_id, '_edd_discount_excluded_products', true );
-
-	if ( empty( $excluded_products ) || ! is_array( $excluded_products ) ) {
-		$excluded_products = array();
-	}
-
-	return (array) apply_filters( 'edd_get_discount_excluded_products', $excluded_products, $code_id );
+	$discount = new EDD_Discount( $code_id );
+	return $discount->excluded_products;
 }
 
 /**
- * Retrieve the discount product requirements
+ * Retrieve the discount product requirements.
  *
  * @since 1.5
- * @param int $code_id Discount ID
- * @return array $product_reqs IDs of the required products
+ * @since 2.7 Updated to use EDD_Discount object.
+ * 
+ * @param int $code_id Discount ID.
+ * @return array $product_reqs IDs of the required products.
  */
 function edd_get_discount_product_reqs( $code_id = null ) {
-	$product_reqs = get_post_meta( $code_id, '_edd_discount_product_reqs', true );
-
-	if ( empty( $product_reqs ) || ! is_array( $product_reqs ) ) {
-		$product_reqs = array();
-	}
-
-	return (array) apply_filters( 'edd_get_discount_product_reqs', $product_reqs, $code_id );
+	$discount = new EDD_Discount( $code_id );
+	return $discount->download_requirements;
 }
 
 /**
- * Retrieve the product condition
+ * Retrieve the product condition.
  *
  * @since 1.5
- * @param int $code_id Discount ID
- * @return string Product condition
- * @return string
+ * @since 2.7 Updated to use EDD_Discount object.
+ * 
+ * @param int $code_id Discount ID.
+ * @return string Product condition.
  */
 function edd_get_discount_product_condition( $code_id = 0 ) {
-	return get_post_meta( $code_id, '_edd_discount_product_condition', true );
+	$discount = new EDD_Discount( $code_id );
+	return $discount->product_condition;
 }
 
 /**
- * Check if a discount is not global
+ * Check if a discount is not global.
  *
  * By default discounts are applied to all products in the cart. Non global discounts are
- * applied only to the products selected as requirements
+ * applied only to the products selected as requirements.
  *
  * @since 1.5
- * @param int $code_id Discount ID
- * @return array $product_reqs IDs of the required products
- * @return boolean Whether or not discount code is global
+ * @since 2.7 Updated to use EDD_Discount object.
+ * 
+ * @param int $code_id Discount ID.
+ * @return boolean Whether or not discount code is not global.
  */
 function edd_is_discount_not_global( $code_id = 0 ) {
-	return (bool) get_post_meta( $code_id, '_edd_discount_is_not_global', true );
+	$discount = new EDD_Discount( $code_id );
+	return $discount->is_not_global;
 }
 
 /**
  * Checks whether a discount code is expired.
  *
  * @since 1.0
- * @since 2.6.11 Added $update parameter
- * @param int $code_id Discount code ID
- * @param bool $update Update the discount to expired if an one is found but has an active status
- * @return bool
+ * @since 2.6.11 Added $update parameter.
+ * @since 2.7 Updated to use EDD_Discount object.
+ * 
+ * @param int  $code_id Discount ID.
+ * @param bool $update  Update the discount to expired if an one is found but has an active status.
+ * @return bool Whether on not the discount has expired.
  */
 function edd_is_discount_expired( $code_id = null, $update = true ) {
-	$discount = edd_get_discount(  $code_id );
-	$return   = false;
-
-	if ( $discount ) {
-		$expiration = edd_get_discount_expiration( $code_id );
-		if ( $expiration ) {
-			$expiration = strtotime( $expiration );
-			if ( $expiration < current_time( 'timestamp' ) ) {
-				// Discount is expired
-				if ( $update ) {
-					edd_update_discount_status( $code_id, 'inactive' );
-					update_post_meta( $code_id, '_edd_discount_status', 'expired' );
-				}
-				$return = true;
-			}
-		}
-	}
-
-	return apply_filters( 'edd_is_discount_expired', $return, $code_id );
+	$discount = new EDD_Discount( $code_id );
+	return $discount->is_expired( $update );
 }
 
 /**
- * Is Discount Started
- *
- * Checks whether a discount code is available yet (start date).
+ * Checks whether a discount code is available to use yet (start date).
  *
  * @since 1.0
- * @param int $code_id Discount ID
- * @param bool $set_error Whether an error message be set in session
+ * @since 2.7 Updated to use EDD_Discount object.
+ * 
+ * @param int  $code_id   Discount ID.
+ * @param bool $set_error Whether an error message be set in session.
  * @return bool Is discount started?
  */
 function edd_is_discount_started( $code_id = null, $set_error = true ) {
-	$discount = edd_get_discount(  $code_id );
-	$return   = false;
-
-	if ( $discount ) {
-		$start_date = edd_get_discount_start_date( $code_id );
-
-		if ( $start_date ) {
-			$start_date = strtotime( $start_date );
-
-			if ( $start_date < current_time( 'timestamp' ) ) {
-				// Discount has pased the start date
-				$return = true;
-			} elseif( $set_error ) {
-				edd_set_error( 'edd-discount-error', __( 'This discount is not active yet.', 'easy-digital-downloads' ) );
-			}
-		} else {
-			// No start date for this discount, so has to be true
-			$return = true;
-		}
-	}
-
-	return apply_filters( 'edd_is_discount_started', $return, $code_id );
+	$discount = new EDD_Discount( $code_id );
+	return $discount->is_started( $set_error );
 }
 
 /**
- * Is Discount Maxed Out
- *
- * Checks to see if a discount has uses left.
+ * Is Discount Maxed Out.
  *
  * @since 1.0
- * @param int $code_id Discount ID
- * @param bool $set_error Whether an error message be set in session
+ * @since 2.7 Updated to use EDD_Discount object.
+ * 
+ * @param int  $code_id   Discount ID.
+ * @param bool $set_error Whether an error message be set in session.
  * @return bool Is discount maxed out?
  */
 function edd_is_discount_maxed_out( $code_id = null, $set_error = true ) {
-	$discount = edd_get_discount(  $code_id );
-	$return   = false;
-
-	if ( $discount ) {
-
-		$uses = edd_get_discount_uses( $code_id );
-
-		// Large number that will never be reached
-		$max_uses = edd_get_discount_max_uses( $code_id );
-	
-		// Should never be greater than, but just in case
-		if ( $uses >= $max_uses && ! empty( $max_uses ) ) {
-	
-			// Discount is maxed out
-	
-			if( $set_error ) {
-
-				edd_set_error( 'edd-discount-error', __( 'This discount has reached its maximum usage.', 'easy-digital-downloads' ) );
-	
-			}
-	
-			$return = true;
-	
-		}
-	}
-
-	return apply_filters( 'edd_is_discount_maxed_out', $return, $code_id );
+	$discount = new EDD_Discount( $code_id );
+	return $discount->is_maxed_out( $set_error );
 }
 
 /**
- * Is Cart Minimum Met
- *
- * Checks to see if the minimum purchase amount has been met
+ * Checks to see if the minimum purchase amount has been met.
  *
  * @since 1.1.7
- * @param int $code_id Discount ID
- * @param bool $set_error Whether an error message be set in session
- * @return bool $return
+ * @since 2.7 Updated to use EDD_Discount object.
+ * 
+ * @param int  $code_id   Discount ID.
+ * @param bool $set_error Whether an error message be set in session.
+ * @return bool Whether the minimum amount has been met or not.
  */
 function edd_discount_is_min_met( $code_id = null, $set_error = true ) {
-	$discount = edd_get_discount( $code_id );
-	$return   = false;
-
-	if ( $discount ) {
-		$min         = edd_get_discount_min_price( $code_id );
-		$cart_amount = edd_get_cart_discountable_subtotal( $code_id );
-
-		if ( (float) $cart_amount >= (float) $min ) {
-			// Minimum has been met
-			$return = true;
-		} elseif( $set_error ) {
-			edd_set_error( 'edd-discount-error', sprintf( __( 'Minimum order of %s not met.', 'easy-digital-downloads' ), edd_currency_filter( edd_format_amount( $min ) ) ) );
-		}
-	}
-
-	return apply_filters( 'edd_is_discount_min_met', $return, $code_id );
+	$discount = new EDD_Discount( $code_id );
+	return $discount->is_min_amount_met( $set_error );
 }
 
 /**
  * Is the discount limited to a single use per customer?
  *
  * @since 1.5
- * @param int $code_id Discount ID
- * @return bool $single_Use
+ * @since 2.7 Updated to use EDD_Discount object.
+ * 
+ * @param int $code_id Discount ID.
+ * @return bool Whether the discount is single use or not.
  */
 function edd_discount_is_single_use( $code_id = 0 ) {
-	$single_use = get_post_meta( $code_id, '_edd_discount_is_single_use', true );
-	return (bool) apply_filters( 'edd_is_discount_single_use', $single_use, $code_id );
+	$discount = new EDD_Discount( $code_id );
+	return $discount->is_single_use;
 }
 
 /**
  * Checks to see if the required products are in the cart
  *
  * @since 1.5
- * @param int $code_id Discount ID
- * @param bool $set_error Whether an error message be set in session
- * @return bool $ret Are required products in the cart?
+ * @since 2.7 Updated to use EDD_Discount object.
+ * 
+ * @param int  $code_id   Discount ID.
+ * @param bool $set_error Whether an error message be set in session.
+ * @return bool Are required products in the cart for the discount to hold.
  */
 function edd_discount_product_reqs_met( $code_id = null, $set_error = true ) {
-	$product_reqs = edd_get_discount_product_reqs( $code_id );
-	$condition    = edd_get_discount_product_condition( $code_id );
-	$excluded_ps  = edd_get_discount_excluded_products( $code_id );
-	$cart_items   = edd_get_cart_contents();
-	$cart_ids     = $cart_items ? wp_list_pluck( $cart_items, 'id' ) : null;
-	$ret          = false;
-
-	if ( empty( $product_reqs ) && empty( $excluded_ps ) ) {
-		$ret = true;
-	}
-
-	// Normalize our data for product requiremetns, exlusions and cart data
-	// First absint the items, then sort, and reset the array keys
-	$product_reqs = array_map( 'absint', $product_reqs );
-	asort( $product_reqs );
-	$product_reqs = array_values( $product_reqs );
-
-	$excluded_ps  = array_map( 'absint', $excluded_ps );
-	asort( $excluded_ps );
-	$excluded_ps  = array_values( $excluded_ps );
-
-	$cart_ids     = array_map( 'absint', $cart_ids );
-	asort( $cart_ids );
-	$cart_ids     = array_values( $cart_ids );
-
-	// Ensure we have requirements before proceeding
-	if ( ! $ret && ! empty( $product_reqs ) ) {
-
-		switch( $condition ) {
-			case 'all' :
-				// Default back to true
-				$ret = true;
-
-				foreach ( $product_reqs as $download_id ) {
-					if ( ! edd_item_in_cart( $download_id ) ) {
-
-						if( $set_error ) {
-
-							edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
-	
-						}
-
-						$ret = false;
-						break;
-					}
-				}
-
-				break;
-
-			default : // Any
-				foreach ( $product_reqs as $download_id ) {
-
-					if ( edd_item_in_cart( $download_id ) ) {
-						$ret = true;
-						break;
-					}
-
-				}
-
-				if( ! $ret && $set_error ) {
-
-					edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
-
-				}
-
-				break;
-		}
-
-	} else {
-
-		$ret = true;
-
-	}
-
-	if( ! empty( $excluded_ps ) ) {
-		// Check that there are products other than excluded ones in the cart
-		if( $cart_ids == $excluded_ps ) {
-
-			if( $set_error ) {
-
-				edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'easy-digital-downloads' ) );
-	
-			}
-	
-			$ret = false;
-		}
-	}
-
-	return (bool) apply_filters( 'edd_is_discount_products_req_met', $ret, $code_id, $condition );
+	$discount = new EDD_Discount( $code_id );
+	return $discount->is_download_requirements_met( $set_error );
 }
 
 /**
