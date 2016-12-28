@@ -1392,4 +1392,78 @@ class EDD_Discount {
 		 */
 		return apply_filters( 'edd_discounted_amount', $amount );
 	}
+
+	/**
+	 * Increment the usage of the discount.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return int New discount usage.
+	 */
+	public function increase_usage() {
+		if ( $this->uses ) {
+			$this->uses++;
+		} else {
+			$this->uses = 1;
+		}
+
+		update_post_meta( $this->ID, '_edd_discount_uses', $this->uses );
+
+		if ( $this->max_uses == $this->uses ) {
+			$this->update_status( 'inactive' );
+			update_post_meta( $this->ID, '_edd_discount_status', 'inactive' );
+		}
+
+		/**
+		 * Fires after the usage count has been increased.
+		 *
+		 * @since 2.7
+		 *
+		 * @param int    $uses Discount usage.
+		 * @param int    $ID   Discount ID.
+		 * @param string $code Discount code.
+		 */
+		do_action( 'edd_discount_increase_use_count', $this->uses, $this->ID, $this->code );
+
+		return $this->uses;
+	}
+
+	/**
+	 * Decrement the usage of the discount.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return int New discount usage.
+	 */
+	public function decrease_usage() {
+		if ( $this->uses ) {
+			$this->uses--;
+		}
+
+		if ( $this->uses < 0 ) {
+			$uses = 0;
+		}
+
+		update_post_meta( $this->ID, '_edd_discount_uses', $this->uses );
+
+		if ( $this->max_uses > $this->uses ) {
+			$this->update_status( 'active' );
+			update_post_meta( $this->ID, '_edd_discount_status', 'active' );
+		}
+
+		/**
+		 * Fires after the usage count has been decreased.
+		 *
+		 * @since 2.7
+		 *
+		 * @param int    $uses Discount usage.
+		 * @param int    $ID   Discount ID.
+		 * @param string $code Discount code.
+		 */
+		do_action( 'edd_discount_decrease_use_count', $this->uses, $this->ID, $this->code );
+
+		return $this->uses;
+	}
 }
