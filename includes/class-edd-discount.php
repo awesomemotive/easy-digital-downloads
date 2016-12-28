@@ -238,6 +238,8 @@ class EDD_Discount {
 
 		if ( method_exists( $this, 'get_' . $key ) ) {
 			return call_user_func( array( $this, 'get_' . $key ) );
+		} else if ( property_exists( $this, $key ) ) {
+			$value = $this->{$key};
 		} else {
 			return new WP_Error( 'edd-discount-invalid-property', sprintf( __( 'Can\'t get property %s', 'easy-digital-downloads' ), $key ) );
 		}
