@@ -1357,4 +1357,39 @@ class EDD_Discount {
 		 */
 		return apply_filters( 'edd_is_discount_active', $return, $this->ID );
 	}
+
+	/**
+	 * Get Discounted Amount.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @param string|int $base_price Price before discount.
+	 * @return float $discounted_price Amount after discount.
+	 */
+	public function get_discounted_amount( $base_price ) {
+		// Start off setting the amount as the base price.
+		$amount = $base_price;
+
+		if ( 'flat' == $this->type ) {
+			$amount = $base_price - $this->amount;
+
+			if ( $amount < 0 ) {
+				$amount = 0;
+			}
+		} else {
+			// Percentage discount
+			$amount = $base_price - ( $base_price * ( $this->amount / 100 ) );
+		}
+
+		/**
+		 * Filter the discounted amount calculated.
+		 *
+		 * @since 2.7
+		 * @access public
+		 *
+		 * @param float $amount Calculated discounted amount.
+		 */
+		return apply_filters( 'edd_discounted_amount', $amount );
+	}
 }
