@@ -315,7 +315,7 @@ class EDD_Discount {
 			$discount = $discounts[0];
 		}
 
-		return WP_Post::get_instance( $discount->ID );
+		return WP_Post::get_instance( $discount );
 	}
 
 	/**
@@ -967,11 +967,11 @@ class EDD_Discount {
 	 * @return bool Discount exists.
 	 */
 	public function exists() {
-		if ( $this->ID > 0 ) {
-			return true;
-		} else {
+		if ( ! $this->ID > 0 ) {
 			return false;
 		}
+
+		return true;
 	}
 
 	/**
@@ -1174,36 +1174,36 @@ class EDD_Discount {
 	 * @return bool If the status been updated or not.
 	 */
 	public function update_status( $new_status = 'active' ) {
-		if ( $this->exists() ) {
-			/**
-			 * Fires before the status of the discount is updated.
-			 *
-			 * @since 2.7
-			 *
-			 * @param int    $ID          Discount ID.
-			 * @param string $new_status  New status.
-			 * @param string $post_status Post status.
-			 */
-			do_action( 'edd_pre_update_discount_status', $this->ID, $new_status, $this->post_status );
+		/**
+		 * Fires before the status of the discount is updated.
+		 *
+		 * @since 2.7
+		 *
+		 * @param int    $ID          Discount ID.
+		 * @param string $new_status  New status.
+		 * @param string $post_status Post status.
+		 */
+		do_action( 'edd_pre_update_discount_status', $this->ID, $new_status, $this->post_status );
 
-			wp_update_post(
-				array(
-					'ID'          => $this->ID,
-					'post_status' => $new_status
-				)
-			);
+		$id = wp_update_post(
+			array(
+				'ID'          => $this->ID,
+				'post_status' => $new_status
+			)
+		);
 
-			/**
-			 * Fires after the status of the discount is updated.
-			 *
-			 * @since 2.7
-			 *
-			 * @param int    $ID          Discount ID.
-			 * @param string $new_status  New status.
-			 * @param string $post_status Post status.
-			 */
-			do_action( 'edd_post_update_discount_status', $this->ID, $new_status, $this->post_status );
+		/**
+		 * Fires after the status of the discount is updated.
+		 *
+		 * @since 2.7
+		 *
+		 * @param int    $ID          Discount ID.
+		 * @param string $new_status  New status.
+		 * @param string $post_status Post status.
+		 */
+		do_action( 'edd_post_update_discount_status', $this->ID, $new_status, $this->post_status );
 
+		if ( $id == $this->ID ) {
 			return true;
 		}
 
