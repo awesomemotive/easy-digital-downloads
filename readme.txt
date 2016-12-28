@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
 Tested up to: 4.8
-Stable Tag: 2.6.16
+Stable Tag: 2.6.17
 
 License: GNU Version 2 or Any Later Version
 
@@ -186,6 +186,10 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.6.17, December 28, 2016 =
+* Fix: Checkboxes in Downloads > Tools > Beta Versions do not retain checked state
+* Fix: Extension update notifications do not show up
 
 = 2.6.16, December 21, 2016 =
 * Fix: 404 errors when downloading some files
