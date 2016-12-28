@@ -737,10 +737,28 @@ class EDD_Discount {
 		}
 
 		if ( ! empty( $this->ID ) && $this->exists( $this->ID ) ) {
-			// Update the discount
+			/**
+			 * Update the discount.
+			 */
 
+			/**
+			 * Filter the data being updated
+			 *
+			 * @since 2.7
+			 *
+			 * @param array $meta Discount meta.
+			 * @param int   $ID   Discount ID.
+			 */
 			$meta = apply_filters( 'edd_update_discount', $meta, $this->ID );
 
+			/**
+			 * Fires before the discount has been updated in the database.
+			 *
+			 * @since 2.7
+			 *
+			 * @param array $meta Discount meta.
+			 * @param int   $ID   Discount ID.
+			 */
 			do_action( 'edd_pre_update_discount', $meta, $this->ID );
 
 			wp_update_post( array(
@@ -753,15 +771,39 @@ class EDD_Discount {
 				update_post_meta( $this->ID, '_edd_discount_' . $key, $value );
 			}
 
+			/**
+			 * Fires after the discount has been updated in the database.
+			 *
+			 * @since 2.7
+			 *
+			 * @param array $meta Discount meta.
+			 * @param int   $ID   Discount ID.
+			 */
 			do_action( 'edd_post_update_discount', $meta, $this->ID );
 
-			// Discount code updated
 			return $this->ID;
 		} else {
-			// Add the discount
+			/**
+			 * Add a new discount to the database.
+			 */
 
+			/**
+			 * Filters the metadata before being inserted into the database.
+			 *
+			 * @since 2.7
+			 *
+			 * @param array $meta Discount meta.
+			 * @param int   $ID   Discount ID.
+			 */
 			$meta = apply_filters( 'edd_insert_discount', $meta );
 
+			/**
+			 * Fires before the discount has been added to the database.
+			 *
+			 * @since 2.7
+			 *
+			 * @param array $meta Discount meta.
+			 */
 			do_action( 'edd_pre_insert_discount', $meta );
 
 			$this->ID = wp_insert_post( array(
