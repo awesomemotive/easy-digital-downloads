@@ -394,7 +394,7 @@ class EDD_Discount {
 		do_action( 'edd_pre_setup_discount', $this, $discount );
 
 		/**
-		 * Setup all the object variables.
+		 * Setup all object variables
 		 */
 		$this->ID                    = absint( $discount->ID );
 		$this->name                  = $this->setup_name();
@@ -414,7 +414,7 @@ class EDD_Discount {
 		$this->product_condition     = $this->setup_product_condition();
 
 		/**
-		 * Setup discount object vars with WP_Post vars.
+		 * Setup discount object vars with WP_Post vars
 		 */
 		foreach ( $discount as $key => $value ) {
 			$this->{$key} = $value;
@@ -656,6 +656,318 @@ class EDD_Discount {
 		$meta = apply_filters( 'edd_get_discount_' . $key, $meta, $this->ID );
 
 		return $meta;
+	}
+
+	/**
+	 * Retrieve the ID of the WP_Post object.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return int Discount ID.
+	 */
+	public function get_ID() {
+		return $this->ID;
+	}
+
+	/**
+	 * Retrieve the name of the discount.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return string Name of the discount.
+	 */
+	public function get_name() {
+		return $this->name;
+	}
+
+	/**
+	 * Retrieve the code used to apply the discount.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return string Discount code.
+	 */
+	public function get_code() {
+		/**
+		 * Filters the discount code.
+		 *
+		 * @since 2.7
+		 *
+		 * @param string $code Discount code.
+		 * @param int    $ID   Discount ID.
+		 */
+		return apply_filters( 'edd_get_discount_code', $this->code, $this->ID );
+	}
+
+	/**
+	 * Retrieve the status of the discount
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return string Discount code status (active/inactive).
+	 */
+	public function get_status() {
+		/**
+		 * Filters the discount status.
+		 *
+		 * @since 2.7
+		 *
+		 * @param string $code Discount status (active or inactive).
+		 * @param int    $ID   Discount ID.
+		 */
+		return apply_filters( 'edd_get_discount_status', $this->status, $this->ID );
+	}
+
+	/**
+	 * Retrieve the type of discount.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return string Discount type (percent or flat amount).
+	 */
+	public function get_type() {
+		/**
+		 * Filters the discount type.
+		 *
+		 * @since 2.7
+		 *
+		 * @param string $code Discount type (percent or flat amount).
+		 * @param int    $ID   Discount ID.
+		 */
+		return apply_filters( 'edd_get_discount_type', $this->type, $this->ID );
+	}
+
+	/**
+	 * Retrieve the discount amount.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return mixed float Discount amount.
+	 */
+	public function get_amount() {
+		/**
+		 * Filters the discount amount.
+		 *
+		 * @since 2.7
+		 *
+		 * @param float $amount Discount amount.
+		 * @param int    $ID    Discount ID.
+		 */
+		return (float) apply_filters( 'edd_get_discount_amount', $this->amount, $this->ID );
+	}
+
+	/**
+	 * Retrieve the discount requirements for the discount to be satisfied.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return array IDs of required downloads.
+	 */
+	public function get_download_requirements() {
+		if ( empty( $this->download_requirements ) || ! is_array( $this->download_requirements ) ) {
+			$this->download_requirements = array();
+		}
+
+		/**
+		 * Filters the download requirements.
+		 *
+		 * @since 2.7
+		 *
+		 * @param array $download_requirements IDs of required downloads.
+		 * @param int   $ID                    Discount ID.
+		 */
+		return (array) apply_filters( 'edd_get_discount_product_reqs', $this->download_requirements, $this->ID );
+	}
+
+	/**
+	 * Retrieve the downloads that are excluded from having this discount code applied.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return array IDs of excluded downloads.
+	 */
+	public function get_excluded_downloads() {
+		if ( empty( $this->excluded_downloads ) || ! is_array( $this->excluded_downloads ) ) {
+			$this->excluded_downloads = array();
+		}
+
+		/**
+		 * Filters the excluded downloads.
+		 *
+		 * @since 2.7
+		 *
+		 * @param array $excluded_downloads IDs of excluded downloads.
+		 * @param int   $ID                 Discount ID.
+		 */
+		return (array) apply_filters( 'edd_get_discount_excluded_products', $this->excluded_downloads, $this->ID );
+	}
+
+	/**
+	 * Retrieve the start date.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return string Start date.
+	 */
+	public function get_start_date() {
+		/**
+		 * Filters the start date.
+		 *
+		 * @since 2.7
+		 *
+		 * @param string $start_date Discount start date.
+		 * @param int    $ID         Discount ID.
+		 */
+		return apply_filters( 'edd_get_discount_start_date', $this->start_date, $this->ID );
+	}
+
+	/**
+	 * Retrieve the end date.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return string End date.
+	 */
+	public function get_end_date() {
+		/**
+		 * Filters the end date.
+		 *
+		 * @since 2.7
+		 *
+		 * @param array $end_date Discount end (expiration) date.
+		 * @param int   $ID       Discount ID.
+		 */
+		return apply_filters( 'edd_get_discount_expiration', $this->end_date, $this->ID );
+	}
+
+	/**
+	 * Retrieve the uses for the discount code.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return int Uses.
+	 */
+	public function get_uses() {
+		/**
+		 * Filters the maximum uses.
+		 *
+		 * @since 2.7
+		 *
+		 * @param int $max_uses Maximum uses.
+		 * @param int $ID       Discount ID.
+		 */
+		return (int) apply_filters( 'edd_get_discount_uses', $this->uses, $this->ID );
+	}
+
+	/**
+	 * Retrieve the maximum uses for the discount code.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return int Maximum uses.
+	 */
+	public function get_max_uses() {
+		/**
+		 * Filters the maximum uses.
+		 *
+		 * @since 2.7
+		 *
+		 * @param int $max_uses Maximum uses.
+		 * @param int $ID       Discount ID.
+		 */
+		return (int) apply_filters( 'edd_get_discount_max_uses', $this->max_uses, $this->ID );
+	}
+
+	/**
+	 * Retrieve the minimum spend required for the discount to be satisfied.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return mixed float Minimum spend.
+	 */
+	public function get_min_amount() {
+		/**
+		 * Filters the minimum amount.
+		 *
+		 * @since 2.7
+		 *
+		 * @param float $min_amount Minimum amount.
+		 * @param int   $ID         Discount ID.
+		 */
+		return (float) apply_filters( 'edd_get_discount_min_price', $this->min_amount, $this->ID );
+	}
+
+	/**
+	 * Retrieve the usage limit per limit (if the discount can only be used once per customer).
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return bool Once use per customer?
+	 */
+	public function get_is_single_use() {
+		/**
+		 * Filters the single use meta value.
+		 *
+		 * @since 2.7
+		 *
+		 * @param bool $is_single_use Is the discount only allowed to be used once per customer.
+		 * @param int  $ID            Discount ID.
+		 */
+		return (bool) apply_filters( 'edd_is_discount_single_use', $this->is_single_use, $this->ID );
+	}
+
+	/**
+	 * Retrieve the property determining if a discount is not global.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return bool Whether or not the discount code is global.
+	 */
+	public function get_is_not_global() {
+		/**
+		 * Filters if the discount is global or not.
+		 *
+		 * @since 2.7
+		 *
+		 * @param bool $is_not_global Is the discount global or not.
+		 * @param int  $ID            Discount ID.
+		 */
+		return (bool) apply_filters( 'edd_discount_is_not_global', $this->is_not_global, $this->ID );
+	}
+
+	/**
+	 * Retrieve the product condition.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return string Product condition
+	 */
+	public function get_product_condition() {
+		/**
+		 * Filters the product condition.
+		 *
+		 * @since 2.7
+		 *
+		 * @param string $product_condition Product condition.
+		 * @param int    $ID                Discount ID.
+		 */
+		return apply_filters( 'edd_discount_product_condition', $this->product_condition, $this->ID );
 	}
 
 	/**
