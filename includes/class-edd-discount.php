@@ -289,7 +289,7 @@ class EDD_Discount {
 
 		// Dispatch to setter method if value needs to be sanitized
 		if ( method_exists( $this, 'set_' . $key ) ) {
-			return call_user_func( array( $this, 'set_' . $key ), $key, $value );
+			return call_user_func( array( $this, 's et_' . $key ), $key, $value );
 		} else {
 			$this->{$key} = $value;
 		}
@@ -690,6 +690,28 @@ class EDD_Discount {
 	}
 
 	/**
+	 * Helper method to update post meta associated with the discount.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @param string $key        Meta key.
+	 * @param string $value      Meta value.
+	 * @param string $prev_value Previous meta value.
+	 * @return int|bool Meta ID if the key didn't exist, true on successful update, false on failure.
+	 */
+	public function update_meta( $key = '', $value = '', $prev_value = '' ) {
+		if ( empty( $key ) || '' == $key ) {
+			return false;
+		}
+
+		$key = '_edd_discount_' . $key;
+
+		$value = apply_filters( 'edd_update_discount_meta_' . $key, $value, $this->ID );
+		return update_post_meta( $this->ID, $key, $value, $prev_value );
+	}
+
+	/**
 	 * Retrieve the ID of the WP_Post object.
 	 *
 	 * @since 2.7
@@ -1081,6 +1103,10 @@ class EDD_Discount {
 
 		if ( ! empty( $discount_id ) ) {
 			$this->ID  = $discount_id;
+
+			foreach ( $meta as $key => $value ) {
+
+			}
 		}
 
 		return $this->ID;
@@ -1104,6 +1130,23 @@ class EDD_Discount {
 				$saved = false;
 			} else {
 				$this->ID = $discount_id;
+			}
+		}
+
+		/**
+		 * Save all the object variables that have been updated to the databse.
+		 */
+		if ( ! empty( $this->pending ) ) {
+			foreach ( $this->pending as $key => $value ) {
+				switch ( $key ) {
+					default:
+						/**
+						 * Used to save non-standard data. Developers can hook here if they want to save
+						 * specific discount data when $discount->save() is run and their item is in the $pending array.
+						 */
+						do_action( 'edd_discount_save', $this, $key );
+						break;
+				}
 			}
 		}
 
