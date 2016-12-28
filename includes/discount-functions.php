@@ -96,7 +96,13 @@ function edd_has_active_discounts() {
  * @return object EDD_Discount Discount object.
  */
 function edd_get_discount( $discount_id = 0 ) {
-	return new EDD_Discount( $discount_id );
+	$discount = new EDD_Discount( $discount_id );
+
+	if ( ! $discount->ID > 0 ) {
+		return false;
+	}
+
+	return $discount;
 }
 
 /**
@@ -109,7 +115,13 @@ function edd_get_discount( $discount_id = 0 ) {
  * @return object EDD_Discount Discount object.
  */
 function edd_get_discount_by_code( $code = '' ) {
-	return new EDD_Discount( $code, true );
+	$discount =  new EDD_Discount( $code, true );
+
+	if ( ! $discount->ID > 0 ) {
+		return false;
+	}
+
+	return $discount;
 }
 
 /**
