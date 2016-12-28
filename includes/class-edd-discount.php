@@ -255,8 +255,8 @@ class EDD_Discount {
 	 * @return boolean If the item is set or not
 	 */
 	public function __isset( $key ) {
-		if ( property_exists( $this, $key) ) {
-			return false === empty( $this->$key );
+		if ( property_exists( $this, $key ) ) {
+			return false === empty( $this->{$key} );
 		} else {
 			return null;
 		}
