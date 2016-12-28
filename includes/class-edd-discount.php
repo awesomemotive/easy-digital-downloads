@@ -185,13 +185,21 @@ class EDD_Discount {
 	 * @since 2.7
 	 * @access protected
 	 */
-	public function __construct( $_id_or_code = false, $by_code = false ) {
+	public function __construct( $_id_or_code_or_name = false, $by_code = false, $by_name = false ) {
 		if ( empty( $_id_or_code ) ) {
 			return false;
 		}
 
 		if ( $by_code ) {
-			$discount = $this->find_by_code( $_code );
+			$discount = $this->find_by_code( $_id_or_code_or_name );
+
+			if ( ! $discount ) {
+				return false;
+			}
+
+			return $this->setup_discount( $discount );
+		} elseif ( $by_name ) {
+			$discount = $this->find_by_name( $_id_or_code_or_name );
 
 			if ( ! $discount ) {
 				return false;
