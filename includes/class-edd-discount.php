@@ -163,6 +163,16 @@ class EDD_Discount {
 	protected $product_condition = null;
 
 	/**
+	 * Array of items that have changed since the last save() was run
+	 * This is for internal use, to allow fewer update_payment_meta calls to be run
+	 *
+	 * @since 2.7
+	 * @access private
+	 * @var array
+	 */
+	private $pending;
+
+	/**
 	 * Declare the default properties in WP_Post as we can't extend it.
 	 *
 	 * @since 2.7
@@ -392,6 +402,8 @@ class EDD_Discount {
 	 * @return bool Object var initialisation successful or not.
 	 */
 	private function setup_discount( $discount = null ) {
+		$this->pending = array();
+
 		if ( null == $discount ) {
 			return false;
 		}
@@ -1001,6 +1013,99 @@ class EDD_Discount {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Build the base of the discount.
+	 *
+	 * @since 2.7
+	 * @access private
+	 *
+	 * @return int|bool Discount ID or false on error.
+	 */
+	private function insert_discount() {
+		$discount_data = array(
+			'code'              => $this->code;
+			'name'              => $this->name;
+			'status'            => $this->status;
+			'uses'              => $this->uses;
+			'max_uses'          => $this->max_uses;
+			'amount'            => $this->amount;
+			'start'             => $this->start_date;
+			'expiration'        => $this->end_date;
+			'type'              => $this->type;
+			'min_price'         => $this->min_amount;
+			'product_reqs'      => $this->download_requirements;
+			'product_condition' => $this->product_condition;
+			'excluded_products' => $this->excluded_products;
+			'is_not_global'     => $this->is_not_global;
+			'is_single_use'     => $this->is_single_use;
+		);
+
+		$start_timestamp = strtotime( $discount_data['start'] );
+
+		if ( ! empty( $discount_data['start'] ) ) {
+			$discount_data['start'] = date( 'm/d/Y H:i:s', $start_timestamp );
+		}
+
+		if ( ! empty( $discount_data['expiration'] ) ) {
+			$discount_data['expiration'] = date( 'm/d/Y H:i:s', strtotime( date( 'm/d/Y', strtotime( $discount_data['expiration'] ) ) . ' 23:59:59' ) );
+			$end_timestamp = strtotime( $discount_data['expiration'] );
+
+			if ( ! empty( $discount_data['start'] ) && $start_timestamp > $end_timestamp ) {
+				// Set the expiration date to the start date if start is later than expiration
+				$discount_data['expiration'] = $discount_data['start'];
+			}
+		}
+
+		if ( ! empty( $discount_data['excluded_products'] ) ) {
+			foreach ( $discount_data['excluded_products'] as $key => $product ) {
+				if ( 0 === intval( $product ) ) {
+					unset( $discount_data['excluded_products'][ $key ] );
+				}
+			}
+		}
+
+		$args = apply_filters( 'edd_insert_discount_args', array(
+			'post_title'    => $this->name,
+			'post_status'   => $this->status,
+			'post_type'     => 'edd_discount',
+			'post_date'     => ! empty( $this->date ) ? $this->date : null,
+			'post_date_gmt' => ! empty( $this->date ) ? get_gmt_from_date( $this->date ) : null
+		), $discount_data );
+
+		// Create a blank edd_discount post
+		$discount_id = wp_insert_post( $args );
+
+		if ( ! empty( $discount_id ) ) {
+			$this->ID  = $discount_id;
+		}
+
+		return $this->ID;
+	}
+
+	/**
+	 * Once object variables has been set, an update is needed to persist them to the database.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return bool True if the save was successful, false if it failed or wasn't needed.
+	 */
+	public function save() {
+		$saved = false;
+
+		if ( empty( $this->ID ) ) {
+			$discount_id = $this->insert_discount();
+
+			if ( false === $discount_id ) {
+				$saved = false;
+			} else {
+				$this->ID = $discount_id;
+			}
+		}
+
+		return $saved;
 	}
 
 	/**
