@@ -1089,7 +1089,7 @@ class EDD_Discount {
 		$expiration = strtotime( $this->end_date );
 		if ( $expiration < current_time( 'timestamp' ) ) {
 			if ( $update ) {
-				$this->update_status( $this->ID, 'inactive' );
+				$this->update_status( 'inactive' );
 				update_post_meta( $this->ID, '_edd_discount_status', 'expired' );
 			}
 			$return = true;
