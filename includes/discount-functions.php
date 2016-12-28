@@ -1171,3 +1171,5 @@ function edd_filter_discount_code_cleanup( $sql ) {
 	return str_replace( "'mt1.meta_value'", "mt1.meta_value", $sql );
 }
 
+
+$discount = new EDD_Discount( 718 );

@@ -394,6 +394,26 @@ class EDD_Discount {
 		do_action( 'edd_pre_setup_discount', $this, $discount );
 
 		/**
+		 * Setup all object variables
+		 */
+		$this->ID                    = absint( $discount->ID );
+		$this->name                  = $this->setup_name();
+		$this->code                  = $this->setup_code();
+		$this->status                = $this->setup_status();
+		$this->type                  = $this->setup_type();
+		$this->amount                = $this->setup_amount();
+		$this->download_requirements = $this->setup_download_requirements();
+		$this->excluded_downloads    = $this->setup_excluded_downloads();
+		$this->start_date            = $this->setup_start_date();
+		$this->end_date              = $this->setup_end_date();
+		$this->uses                  = $this->setup_uses();
+		$this->max_uses              = $this->setup_max_uses();
+		$this->min_amount            = $this->setup_min_amount();
+		$this->is_single_use         = $this->setup_is_single_use();
+		$this->is_not_global         = $this->setup_is_not_global();
+		$this->product_condition     = $this->setup_product_condition();
+
+		/**
 		 * Setup discount object vars with WP_Post vars
 		 */
 		foreach ( $discount as $key => $value ) {
@@ -414,6 +434,231 @@ class EDD_Discount {
 	}
 
 	/**
+	 * Setup Functions
+	 */
+
+	/**
+	 * Setup the name of the discount.
+	 *
+	 * @since 2.7
+	 * @access private
+	 *
+	 * @return string Name of the discount.
+	 */
+	private function setup_name() {
+		$title = get_the_title( $this->ID );
+		return $title;
+	}
+
+	/**
+	 * Setup the discount code.
+	 *
+	 * @since 2.7
+	 * @access private
+	 *
+	 * @return string Discount code.
+	 */
+	private function setup_code() {
+		$code = $this->get_meta( 'code', true );
+		return $code;
+	}
+
+	/**
+	 * Setup the discount status.
+	 *
+	 * @since 2.7
+	 * @access private
+	 *
+	 * @return string Discount status.
+	 */
+	private function setup_status() {
+		$status = $this->get_meta( 'status', true );
+		return $status;
+	}
+
+	/**
+	 * Setup the discount type.
+	 *
+	 * @since 2.7
+	 * @access private
+	 *
+	 * @return string Discount type.
+	 */
+	private function setup_type() {
+		$type = $this->get_meta( 'type', true );
+		return $type;
+	}
+
+	/**
+	 * Setup the discount amount.
+	 *
+	 * @since 2.7
+	 * @access private
+	 *
+	 * @return string Discount amount.
+	 */
+	private function setup_amount() {
+		$amount = $this->get_meta( 'amount', true );
+		return $amount;
+	}
+
+	/**
+	 * Setup the download requirements.
+	 *
+	 * @since 2.7
+	 * @access private
+	 *
+	 * @return array Download requirements.
+	 */
+	private function setup_download_requirements() {
+		$requirements = $this->get_meta( 'product_reqs', false );
+		return (array) $requirements;
+	}
+
+	/**
+	 * Setup the excluded downloads.
+	 *
+	 * @since 2.7
+	 * @access private
+	 *
+	 * @return array Excluded downloads.
+	 */
+	private function setup_excluded_downloads() {
+		$excluded = $this->get_meta( 'excluded_products', false );
+		return (array) $excluded;
+	}
+
+	/**
+	 * Setup the start date.
+	 *
+	 * @since 2.7
+	 * @access private
+	 *
+	 * @return string Discount start date.
+	 */
+	private function setup_start_date() {
+		$excluded = $this->get_meta( 'start', true );
+		return $excluded;
+	}
+
+	/**
+	 * Setup the end date.
+	 *
+	 * @since 2.7
+	 * @access private
+	 *
+	 * @return array Discount end date.
+	 */
+	private function setup_end_date() {
+		$end_date = $this->get_meta( 'expiration', true );
+		return $end_date;
+	}
+
+	/**
+	 * Setup the uses.
+	 *
+	 * @since 2.7
+	 * @access private
+	 *
+	 * @return int Discount uses.
+	 */
+	private function setup_uses() {
+		$uses = $this->get_meta( 'uses', true );
+		return $uses;
+	}
+
+	/**
+	 * Setup the max uses.
+	 *
+	 * @since 2.7
+	 * @access private
+	 *
+	 * @return int Maximum uses.
+	 */
+	private function setup_max_uses() {
+		$max_uses = $this->get_meta( 'max_uses', true );
+		return $max_uses;
+	}
+
+	/**
+	 * Setup the max uses.
+	 *
+	 * @since 2.7
+	 * @access private
+	 *
+	 * @return int Maximum uses.
+	 */
+	private function setup_min_amount() {
+		$max_uses = $this->get_meta( 'min_price', true );
+		return $max_uses;
+	}
+
+	/**
+	 * Setup if the discount is single use or not.
+	 *
+	 * @since 2.7
+	 * @access private
+	 *
+	 * @return bool Is single use.
+	 */
+	private function setup_is_single_use() {
+		$is_single_use = $this->get_meta( 'is_single_use', true );
+		return (bool) $is_single_use;
+	}
+
+	/**
+	 * Setup if the discount is not global.
+	 *
+	 * @since 2.7
+	 * @access private
+	 *
+	 * @return bool Is not global.
+	 */
+	private function setup_is_not_global() {
+		$is_not_global = $this->get_meta( 'is_not_global', true );
+		return (bool) $is_not_global;
+	}
+
+	/**
+	 * Setup if the discount is not global.
+	 *
+	 * @since 2.7
+	 * @access private
+	 *
+	 * @return bool Is not global.
+	 */
+	private function setup_product_condition() {
+		$condition = $this->get_meta( 'product_condition', true );
+		return $condition;
+	}
+
+	/**
+	 * Helper method to retrieve meta data associated with the discount.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @param string $key    Meta key.
+	 * @param bool   $single Return single item or array.
+	 */
+	public function get_meta( $key = '', $single = true ) {
+		$meta = get_post_meta( $this->ID, '_edd_discount_' . $key, $single );
+
+		/**
+		 * Filter the meta retrieved from the database.
+		 *
+		 * @since 2.7
+		 *
+		 * @param string             $key  Meta key.
+		 * @param mixed string|array $meta Meta value.
+		 * @param int                $ID   Discount ID.
+		 */
+		$meta = apply_filters( 'edd_get_discount_' . $key, $meta, $this->ID );
+
+		return $meta;
+	}
+
+	/**
 	 * Retrieve the ID of the WP_Post object.
 	 *
 	 * @since 2.7
@@ -431,7 +676,7 @@ class EDD_Discount {
 	 * @since 2.7
 	 * @access public
 	 *
-	 * @return string Name of the download.
+	 * @return string Name of the discount.
 	 */
 	public function get_name() {
 		if ( null == $this->name ) {
@@ -1087,6 +1332,7 @@ class EDD_Discount {
 		$return = false;
 
 		$expiration = strtotime( $this->end_date );
+
 		if ( $expiration < current_time( 'timestamp' ) ) {
 			if ( $update ) {
 				$this->update_status( 'inactive' );
