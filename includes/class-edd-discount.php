@@ -643,18 +643,6 @@ class EDD_Discount {
 	 */
 	public function get_meta( $key = '', $single = true ) {
 		$meta = get_post_meta( $this->ID, '_edd_discount_' . $key, $single );
-
-		/**
-		 * Filter the meta retrieved from the database.
-		 *
-		 * @since 2.7
-		 *
-		 * @param string             $key  Meta key.
-		 * @param mixed string|array $meta Meta value.
-		 * @param int                $ID   Discount ID.
-		 */
-		$meta = apply_filters( 'edd_get_discount_' . $key, $meta, $this->ID );
-
 		return $meta;
 	}
 
