@@ -87,60 +87,43 @@ function edd_has_active_discounts() {
 }
 
 /**
- * Get Discount
- *
- * Retrieves a complete discount code by discount ID.
+ * Get Discount.
  *
  * @since 1.0
- * @param integer $discount_id Discount ID
- * @return array
+ * @since 2.7 Updated to use EDD_Discount object
+ * 
+ * @param int $discount_id Discount ID.
+ * @return object EDD_Discount Discount object.
  */
 function edd_get_discount( $discount_id = 0 ) {
-
-	if( empty( $discount_id ) ) {
-		return false;
-	}
-
-	$discount = get_post( $discount_id );
-
-	if ( get_post_type( $discount_id ) != 'edd_discount' ) {
-		return false;
-	}
-
-	return $discount;
+	return new EDD_Discount( $discount_id );
 }
 
 /**
- * Get Discount By Code
+ * Get Discount By Code.
  *
- * Retrieves all details for a discount by its code.
- *
- * @param string $code
- *
- * @since       1.0
- * @return      int
+ * @since 1.0
+ * @since 2.7 Updated to use EDD_Discount object
+ * 
+ * @param string $code Discount code.
+ * @return object EDD_Discount Discount object.
  */
 function edd_get_discount_by_code( $code = '' ) {
-
-	if( empty( $code ) || ! is_string( $code ) ) {
-		return false;
-	}
-
-	return edd_get_discount_by( 'code', $code );
-
+	return new EDD_Discount( $code, true );
 }
 
 /**
  * Retrieve discount by a given field
  *
- * @since       2.0
- * @param       string $field The field to retrieve the discount with
- * @param       mixed $value The value for $field
- * @return      mixed
+ * @since 2.0
+ * @since 2.7 Updated to use EDD_Discount object
+ * 
+ * @param string $field The field to retrieve the discount with.
+ * @param mixed  $value The value for $field.
+ * @return mixed object|bool EDD_Discount object or false if not found.
  */
 function edd_get_discount_by( $field = '', $value = '' ) {
-
-	if( empty( $field ) || empty( $value ) ) {
+	if ( empty( $field ) || empty( $value ) ) {
 		return false;
 	}
 
@@ -149,45 +132,23 @@ function edd_get_discount_by( $field = '', $value = '' ) {
 	}
 
 	switch( strtolower( $field ) ) {
-
 		case 'code':
-			$discount = edd_get_discounts( array(
-				'meta_key'       => '_edd_discount_code',
-				'meta_value'     => $value,
-				'posts_per_page' => 1,
-				'post_status'    => 'any'
-			) );
-
-			if( $discount ) {
-				$discount = $discount[0];
-			}
-
+			$discount = edd_get_discount_by_code( $value );
 			break;
 
 		case 'id':
 			$discount = edd_get_discount( $value );
-
 			break;
 
 		case 'name':
-			$discount = get_posts( array(
-				'post_type'      => 'edd_discount',
-				'name'           => $value,
-				'posts_per_page' => 1,
-				'post_status'    => 'any'
-			) );
-
-			if( $discount ) {
-				$discount = $discount[0];
-			}
-
+			$discount = new EDD_Discount( $value, false, true );
 			break;
 
 		default:
 			return false;
 	}
 
-	if( ! empty( $discount ) ) {
+	if ( ! empty( $discount ) ) {
 		return $discount;
 	}
 
