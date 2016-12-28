@@ -1272,4 +1272,38 @@ class EDD_Discount {
 		 */
 		return apply_filters( 'edd_is_discount_valid', $return, $this->ID, $this->code, $user );
 	}
+
+	/**
+	 * Checks if a discount code is active.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @param bool $update    Update the discount to expired if an one is found but has an active status.
+	 * @param bool $set_error Whether an error message be set in session.
+	 * @return bool If the discount is active or not.
+	 */
+	public function is_active( $update = true, $set_error = true ) {
+		$return = false;
+
+		if ( $this->exists() ) {
+			if ( $this->is_expired( $update ) && defined( 'DOING_AJAX' ) && $set_error ) {
+				edd_set_error( 'edd-discount-error', __( 'This discount is expired.', 'easy-digital-downloads' ) );
+			} elseif ( $this->post_status == 'active' ) {
+				$return = true;
+			} elseif( defined( 'DOING_AJAX' ) && $set_error ) {
+				edd_set_error( 'edd-discount-error', __( 'This discount is not active.', 'easy-digital-downloads' ) );
+			}
+		}
+
+		/**
+		 * Filters if the discount is active or not.
+		 *
+		 * @since 2.7
+		 *
+		 * @param bool $return Is the discount active or not.
+		 * @param int  $ID     Discount ID.
+		 */
+		return apply_filters( 'edd_is_discount_active', $return, $this->ID );
+	}
 }
