@@ -568,87 +568,35 @@ function edd_get_discount_id_by_code( $code ) {
  */
 function edd_get_discounted_amount( $code, $base_price ) {
 	$discount = new EDD_Discount( $code, true );
-	$discount->get_discounted_amount( $base_price );
+	return $discount->get_discounted_amount( $base_price );
 }
 
 /**
- * Increase Discount Usage
- *
  * Increases the use count of a discount code.
  *
  * @since 1.0
- * @param string $code Discount code to be incremented
- * @return int
+ * @since 2.7 Updated to use EDD_Discount object.
+ * 
+ * @param string $code Discount code to be incremented.
+ * @return int New usage.
  */
 function edd_increase_discount_usage( $code ) {
-
-	$id   = edd_get_discount_id_by_code( $code );
-
-	if ( false === $id ) {
-		return false;
-	}
-
-	$uses = edd_get_discount_uses( $id );
-
-	if ( $uses ) {
-		$uses++;
-	} else {
-		$uses = 1;
-	}
-
-	update_post_meta( $id, '_edd_discount_uses', $uses );
-
-	$max_uses = edd_get_discount_max_uses( $id );
-	if ( $max_uses == $uses ) {
-		edd_update_discount_status( $id, 'inactive' );
-		update_post_meta( $id, '_edd_discount_status', 'inactive' );
-	}
-
-	do_action( 'edd_discount_increase_use_count', $uses, $id, $code );
-
-	return $uses;
-
+	$discount = new EDD_Discount( $code, true );
+	return $discount->increase_usage();
 }
 
 /**
- * Decrease Discount Usage
- *
  * Decreases the use count of a discount code.
  *
  * @since 2.5.7
- * @param string $code Discount code to be decremented
- * @return int
+ * @since 2.7 Updated to use EDD_Discount object.
+ * 
+ * @param string $code Discount code to be decremented.
+ * @return int New usage.
  */
 function edd_decrease_discount_usage( $code ) {
-
-	$id   = edd_get_discount_id_by_code( $code );
-
-	if ( false === $id ) {
-		return false;
-	}
-
-	$uses = edd_get_discount_uses( $id );
-
-	if ( $uses ) {
-		$uses--;
-	}
-
-	if ( $uses < 0 ) {
-		$uses = 0;
-	}
-
-	update_post_meta( $id, '_edd_discount_uses', $uses );
-
-	$max_uses = edd_get_discount_max_uses( $id );
-	if ( $max_uses > $uses ) {
-		edd_update_discount_status( $id, 'active' );
-		update_post_meta( $id, '_edd_discount_status', 'active' );
-	}
-
-	do_action( 'edd_discount_decrease_use_count', $uses, $id, $code );
-
-	return $uses;
-
+	$discount = new EDD_Discount( $code, true );
+	return $discount->decrease_usage();
 }
 
 /**
