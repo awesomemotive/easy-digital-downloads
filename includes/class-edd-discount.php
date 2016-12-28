@@ -79,7 +79,7 @@ class EDD_Discount {
 	 * @access protected
 	 * @var array
 	 */
-	protected $download_requirements = null;
+	protected $product_reqs = null;
 
 	/**
 	 * Excluded Downloads.
@@ -88,7 +88,7 @@ class EDD_Discount {
 	 * @access protected
 	 * @var array
 	 */
-	protected $excluded_downloads = null;
+	protected $excluded_products = null;
 
 	/**
 	 * Start Date.
@@ -97,7 +97,7 @@ class EDD_Discount {
 	 * @access protected
 	 * @var string
 	 */
-	protected $start_date = null;
+	protected $start = null;
 
 	/**
 	 * End Date.
@@ -106,7 +106,7 @@ class EDD_Discount {
 	 * @access protected
 	 * @var string
 	 */
-	protected $end_date = null;
+	protected $expiration = null;
 
 	/**
 	 * Uses.
@@ -133,7 +133,7 @@ class EDD_Discount {
 	 * @access protected
 	 * @var mixed int|float
 	 */
-	protected $min_amount = null;
+	protected $min_price = null;
 
 	/**
 	 * Is Single Use?
@@ -439,22 +439,22 @@ class EDD_Discount {
 		/**
 		 * Setup all object variables
 		 */
-		$this->ID                    = absint( $discount->ID );
-		$this->name                  = $this->setup_name();
-		$this->code                  = $this->setup_code();
-		$this->status                = $this->setup_status();
-		$this->type                  = $this->setup_type();
-		$this->amount                = $this->setup_amount();
-		$this->download_requirements = $this->setup_download_requirements();
-		$this->excluded_downloads    = $this->setup_excluded_downloads();
-		$this->start_date            = $this->setup_start_date();
-		$this->end_date              = $this->setup_end_date();
-		$this->uses                  = $this->setup_uses();
-		$this->max_uses              = $this->setup_max_uses();
-		$this->min_amount            = $this->setup_min_amount();
-		$this->is_single_use         = $this->setup_is_single_use();
-		$this->is_not_global         = $this->setup_is_not_global();
-		$this->product_condition     = $this->setup_product_condition();
+		$this->ID                = absint( $discount->ID );
+		$this->name              = $this->setup_name();
+		$this->code              = $this->setup_code();
+		$this->status            = $this->setup_status();
+		$this->type              = $this->setup_type();
+		$this->amount            = $this->setup_amount();
+		$this->product_reqs      = $this->setup_download_requirements();
+		$this->excluded_products = $this->setup_excluded_downloads();
+		$this->start             = $this->setup_start_date();
+		$this->expiration        = $this->setup_end_date();
+		$this->uses              = $this->setup_uses();
+		$this->max_uses          = $this->setup_max_uses();
+		$this->min_price         = $this->setup_min_amount();
+		$this->is_single_use     = $this->setup_is_single_use();
+		$this->is_not_global     = $this->setup_is_not_global();
+		$this->product_condition = $this->setup_product_condition();
 
 		/**
 		 * Setup discount object vars with WP_Post vars
@@ -823,9 +823,9 @@ class EDD_Discount {
 	 *
 	 * @return array IDs of required downloads.
 	 */
-	public function get_download_requirements() {
-		if ( empty( $this->download_requirements ) || ! is_array( $this->download_requirements ) ) {
-			$this->download_requirements = array();
+	public function get_product_reqs() {
+		if ( empty( $this->product_reqs ) || ! is_array( $this->product_reqs ) ) {
+			$this->product_reqs = array();
 		}
 
 		/**
@@ -833,10 +833,10 @@ class EDD_Discount {
 		 *
 		 * @since 2.7
 		 *
-		 * @param array $download_requirements IDs of required downloads.
-		 * @param int   $ID                    Discount ID.
+		 * @param array $product_reqs IDs of required products.
+		 * @param int   $ID           Discount ID.
 		 */
-		return (array) apply_filters( 'edd_get_discount_product_reqs', $this->download_requirements, $this->ID );
+		return (array) apply_filters( 'edd_get_discount_product_reqs', $this->product_reqs, $this->ID );
 	}
 
 	/**
@@ -847,9 +847,9 @@ class EDD_Discount {
 	 *
 	 * @return array IDs of excluded downloads.
 	 */
-	public function get_excluded_downloads() {
-		if ( empty( $this->excluded_downloads ) || ! is_array( $this->excluded_downloads ) ) {
-			$this->excluded_downloads = array();
+	public function get_excluded_products() {
+		if ( empty( $this->excluded_products ) || ! is_array( $this->excluded_products ) ) {
+			$this->excluded_products = array();
 		}
 
 		/**
@@ -857,10 +857,10 @@ class EDD_Discount {
 		 *
 		 * @since 2.7
 		 *
-		 * @param array $excluded_downloads IDs of excluded downloads.
-		 * @param int   $ID                 Discount ID.
+		 * @param array $excluded_products IDs of excluded products.
+		 * @param int   $ID                Discount ID.
 		 */
-		return (array) apply_filters( 'edd_get_discount_excluded_products', $this->excluded_downloads, $this->ID );
+		return (array) apply_filters( 'edd_get_discount_excluded_products', $this->excluded_products, $this->ID );
 	}
 
 	/**
@@ -871,7 +871,7 @@ class EDD_Discount {
 	 *
 	 * @return string Start date.
 	 */
-	public function get_start_date() {
+	public function get_start() {
 		/**
 		 * Filters the start date.
 		 *
@@ -891,7 +891,7 @@ class EDD_Discount {
 	 *
 	 * @return string End date.
 	 */
-	public function get_end_date() {
+	public function get_expiration() {
 		/**
 		 * Filters the end date.
 		 *
@@ -951,7 +951,7 @@ class EDD_Discount {
 	 *
 	 * @return mixed float Minimum spend.
 	 */
-	public function get_min_amount() {
+	public function get_min_price() {
 		/**
 		 * Filters the minimum amount.
 		 *
@@ -1059,7 +1059,7 @@ class EDD_Discount {
 			'expiration'        => $this->end_date;
 			'type'              => $this->type;
 			'min_price'         => $this->min_amount;
-			'product_reqs'      => $this->download_requirements;
+			'product_reqs'      => $this->product_reqs;
 			'product_condition' => $this->product_condition;
 			'excluded_products' => $this->excluded_products;
 			'is_not_global'     => $this->is_not_global;
@@ -1105,7 +1105,7 @@ class EDD_Discount {
 			$this->ID  = $discount_id;
 
 			foreach ( $meta as $key => $value ) {
-
+				$this->update_meta( $key, $value );
 			}
 		}
 
@@ -1139,6 +1139,19 @@ class EDD_Discount {
 		if ( ! empty( $this->pending ) ) {
 			foreach ( $this->pending as $key => $value ) {
 				$this->update_meta( $key, $value );
+
+				if ( 'status' == $key ) {
+					$this->update_status( $value );
+				}
+
+				/**
+				 * Fires after each meta update allowing developers to hook their own items saved in $pending.
+				 *
+				 * @since 2.7
+				 *
+				 * @param object       Instance of EDD_Discount object.
+				 * @param string $key  Meta key.
+				 */
 				do_action( 'edd_discount_save', $this, $key );
 			}
 		}
@@ -1548,8 +1561,8 @@ class EDD_Discount {
 	 * @return bool Are required products in the cart?
 	 */
 	public function is_download_requirements_met( $set_error = true ) {
-		$product_reqs = $this->download_requirements;
-		$excluded_ps  = $this->excluded_downloads;
+		$product_reqs = $this->product_reqs;
+		$excluded_ps  = $this->excluded_products;
 		$cart_items   = edd_get_cart_contents();
 		$cart_ids     = $cart_items ? wp_list_pluck( $cart_items, 'id' ) : null;
 		$return       = false;
