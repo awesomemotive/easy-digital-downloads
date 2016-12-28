@@ -530,95 +530,45 @@ function edd_is_discount_used( $code = null, $user = '', $code_id = 0, $set_erro
  * Check whether a discount code is valid (when purchasing).
  *
  * @since 1.0
- * @param string $code Discount Code
- * @param string $user User info
- * @param bool $set_error Whether an error message be set in session
- * @return bool
+ * @since 2.7 Updated to use EDD_Discount object.
+ * 
+ * @param string $code      Discount Code.
+ * @param string $user      User info.
+ * @param bool   $set_error Whether an error message be set in session.
+ * @return bool Whether the discount code is valid.
  */
 function edd_is_discount_valid( $code = '', $user = '', $set_error = true ) {
-
-	$return      = false;
-	$discount_id = edd_get_discount_id_by_code( $code );
-	$user        = trim( $user );
-
-	if( edd_get_cart_contents() ) {
-
-		if ( $discount_id ) {
-			if (
-				edd_is_discount_active( $discount_id, true, $set_error ) &&
-				edd_is_discount_started( $discount_id, $set_error ) &&
-				! edd_is_discount_maxed_out( $discount_id, $set_error ) &&
-				! edd_is_discount_used( $code, $user, $discount_id, $set_error ) &&
-				edd_discount_is_min_met( $discount_id, $set_error ) &&
-				edd_discount_product_reqs_met( $discount_id, $set_error )
-			) {
-				$return = true;
-			}
-		} elseif( $set_error ) {
-			edd_set_error( 'edd-discount-error', __( 'This discount is invalid.', 'easy-digital-downloads' ) );
-		}
-
-	}
-
-	return apply_filters( 'edd_is_discount_valid', $return, $discount_id, $code, $user );
+	$discount = new EDD_Discount( $code, true );
+	return $discount->is_valid( $user, $set_error );
 }
 
-
 /**
- * Get Discount By Code
- *
- * Retrieves a discount code ID from the code.
- *
- * @since       1.0
- * @param       $code string The discount code to retrieve an ID for
- * @return      int
- */
-function edd_get_discount_id_by_code( $code ) {
-	$discount = edd_get_discount_by_code( $code );
-	if( $discount ) {
-		return $discount->ID;
-	}
-	return false;
-}
-
-
-/**
- * Get Discounted Amount
- *
- * Gets the discounted price.
+ * Retrieves a discount ID from the code.
  *
  * @since 1.0
- * @param string $code Code to calculate a discount for
- * @param string|int $base_price Price before discount
- * @return string $discounted_price Amount after discount
+ * @since 2.7 Updated to use EDD_Discount object.
+ * 
+ * @param string $code Discount code.
+ * @return int Discount ID.
+ */
+function edd_get_discount_id_by_code( $code ) {
+	$discount = new EDD_Discount( $code, true );
+	return $discount->ID;
+}
+
+/**
+ * Get Discounted Amount.
+ *
+ * @since 1.0
+ * @since 2.7 Updated to use EDD_Discount object.
+ * 
+ * @param string           $code       Code to calculate a discount for.
+ * @param mixed string|int $base_price Price before discount.
+ * @return string Amount after discount.
  */
 function edd_get_discounted_amount( $code, $base_price ) {
-	$amount      = $base_price;
-	$discount_id = edd_get_discount_id_by_code( $code );
-
-	if( $discount_id ) {
-		$type        = edd_get_discount_type( $discount_id );
-		$rate        = edd_get_discount_amount( $discount_id );
-
-		if ( $type == 'flat' ) {
-			// Set amount
-			$amount = $base_price - $rate;
-			if ( $amount < 0 ) {
-				$amount = 0;
-			}
-
-		} else {
-			// Percentage discount
-			$amount = $base_price - ( $base_price * ( $rate / 100 ) );
-		}
-
-	} else {
-
-		$amount = $base_price;
-
-	}
-
-	return apply_filters( 'edd_discounted_amount', $amount );
+	$discount = new EDD_Discount( $code, true );
+	$discount->get_discounted_amount( $base_price );
 }
 
 /**
