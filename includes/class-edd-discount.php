@@ -358,11 +358,11 @@ class EDD_Discount {
 			return false;
 		}
 
-		if ( is_wp_error( $discount ) ) {
+		if ( ! is_object( $discount ) ) {
 			return false;
 		}
 
-		if ( ! is_object( $discount ) ) {
+		if ( is_wp_error( $discount ) ) {
 			return false;
 		}
 
