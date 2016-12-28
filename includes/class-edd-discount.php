@@ -257,6 +257,39 @@ class EDD_Discount {
 	}
 
 	/**
+	 * Find a discount in the database with the code supplied.
+	 *
+	 * @since 2.7
+	 * @access private
+	 *
+	 * @param string $code Discount code.
+	 * @return object WP_Post instance of the discount.
+	 */
+	private function find_by_code( $code = '' ) {
+		if ( empty( $code ) || ! is_string( $code ) ) {
+			return false;
+		}
+
+		$discounts = edd_get_discounts(
+			'meta_key'       => '_edd_discount_code',
+			'meta_value'     => $code,
+			'posts_per_page' => 1,
+			'post_status'    => 'any'
+			'fields'         => 'ids'
+		);
+
+		if ( ! is_array( $discounts ) || array() === $discounts ) {
+			return false;
+		}
+
+		if ( $discounts ) {
+			$discount = $discounts[0];
+		}
+
+		return WP_Post::get_instance( $discount->ID );
+	}
+
+	/**
 	 * Setup object vars with discount WP_Post object.
 	 *
 	 * @since 2.7
