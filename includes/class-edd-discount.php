@@ -285,9 +285,11 @@ class EDD_Discount {
 			return false;
 		}
 
+		$this->pending[ $key ] = $value;
+
 		// Dispatch to setter method if value needs to be sanitized
 		if ( method_exists( $this, 'set_' . $key ) ) {
-			return call_user_func( array( $this, 'get_' . $key ), $key, $value );
+			return call_user_func( array( $this, 'set_' . $key ), $key, $value );
 		} else {
 			$this->{$key} = $value;
 		}
