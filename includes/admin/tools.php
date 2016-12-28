@@ -281,7 +281,7 @@ function edd_tools_betas_display() {
 								<?php $checked = edd_extension_has_beta_support( $slug ); ?>
 								<th scope="row"><?php echo esc_html( $product ); ?></th>
 								<td>
-									<input type="checkbox" name="enabled_betas[<?php echo esc_attr( $slug ); ?>]" id="enabled_betas[<?php echo esc_attr( $slug ); ?>]"<?php echo $checked; ?> value="1" />
+									<input type="checkbox" name="enabled_betas[<?php echo esc_attr( $slug ); ?>]" id="enabled_betas[<?php echo esc_attr( $slug ); ?>]"<?php echo checked( $checked, true, false ); ?> value="1" />
 									<label for="enabled_betas[<?php echo esc_attr( $slug ); ?>]"><?php printf( __( 'Get updates for pre-release versions of %s', 'easy-digital-downloads' ), $product ); ?></label>
 								</td>
 							</tr>
