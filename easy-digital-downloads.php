@@ -467,9 +467,3 @@ function EDD() {
 
 // Get EDD Running.
 EDD();
-
-add_action( 'init', function() {
-	$d = new EDD_Discount( 761 );
-	$d->name = 'Boo Code';
-	$d->save();
-} );
