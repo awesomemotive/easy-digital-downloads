@@ -1143,6 +1143,13 @@ class EDD_Discount {
 				if ( 'status' == $key ) {
 					$this->update_status( $value );
 				}
+
+				if ( 'name' == $key ) {
+					wp_update_post( array(
+						'ID'         => $this->ID,
+						'post_title' => $value
+					) );
+				}
 			}
 
 			$saved = true;
