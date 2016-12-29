@@ -38,6 +38,11 @@ function edd_add_discount( $data ) {
 		edd_die();
 	}
 
+	if ( ! ctype_alnum( $data['code'] ) ) {
+		wp_redirect( add_query_arg( 'edd-message', 'discount_invalid_code' ) );
+		edd_die();
+	}
+
 	foreach ( $data as $key => $value ) {
 
 		if ( $key === 'products' || $key === 'excluded-products' ) {
