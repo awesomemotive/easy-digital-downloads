@@ -129,6 +129,9 @@ class EDD_Notices {
 					case 'discount_update_failed' :
 						$notices['error']['edd-discount-updated-fail'] = __( 'There was a problem updating your discount code, please try again.', 'easy-digital-downloads' );
 						break;
+					case 'discount_validation_failed' :
+						$notices['error']['edd-discount-validation-fail'] = __( 'The discount code could not be added because one or more of the required fields was empty, please try again.', 'easy-digital-downloads' );
+						break;
 				}
 			}
 
