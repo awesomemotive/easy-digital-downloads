@@ -34,7 +34,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 				</th>
 				<td>
 					<input type="text" required="required" id="edd-code" name="code" value="" pattern="[a-zA-Z0-9]+" style="width: 300px;"/>
-					<p class="description"><?php _e( 'Enter a code for this discount, such as 10PERCENT', 'easy-digital-downloads' ); ?></p>
+					<p class="description"><?php _e( 'Enter a code for this discount, such as 10PERCENT. Only alphanumeric characters are allowed.', 'easy-digital-downloads' ); ?></p>
 				</td>
 			</tr>
 			<?php do_action( 'edd_add_discount_form_before_type' ); ?>
