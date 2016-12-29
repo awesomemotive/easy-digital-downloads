@@ -1524,7 +1524,7 @@ class EDD_Discount {
 
 		$cart_amount = edd_get_cart_discountable_subtotal( $this->ID );
 
-		if ( (float) $cart_amount >= (float) $this->min_amount ) {
+		if ( (float) $cart_amount >= (float) $this->min_price ) {
 			$return = true;
 		} elseif( $set_error ) {
 			edd_set_error( 'edd-discount-error', sprintf( __( 'Minimum order of %s not met.', 'easy-digital-downloads' ), edd_currency_filter( edd_format_amount( $min ) ) ) );
