@@ -1049,21 +1049,21 @@ class EDD_Discount {
 	 */
 	private function insert_discount() {
 		$discount_data = array(
-			'code'              => $this->code,
-			'name'              => $this->name,
-			'status'            => $this->status,
-			'uses'              => $this->uses,
-			'max_uses'          => $this->max_uses,
-			'amount'            => $this->amount,
-			'start'             => $this->start_date,
-			'expiration'        => $this->end_date,
-			'type'              => $this->type,
-			'min_price'         => $this->min_amount,
-			'product_reqs'      => $this->product_reqs,
-			'product_condition' => $this->product_condition,
-			'excluded_products' => $this->excluded_products,
-			'is_not_global'     => $this->is_not_global,
-			'is_single_use'     => $this->is_single_use,
+			'code'              => isset( $this->code ) ? $this->code : '',
+			'name'              => isset( $this->name ) ? $this->name : '',
+			'status'            => isset( $this->status ) ? $this->status : 'active',
+			'uses'              => isset( $this->uses ) ? $this->uses : '',
+			'max_uses'          => isset( $this->max_uses ) ? $this->max_uses : '',
+			'amount'            => isset( $this->amount ) ? $this->amount : '',
+			'start'             => isset( $this->start_date ) ? $this->start_date : '',
+			'expiration'        => isset( $this->end_date ) ? $this->end_date : '',
+			'type'              => isset( $this->type ) ? $this->type : '',
+			'min_price'         => isset( $this->min_amount ) ? $this->min_amount : '',
+			'product_reqs'      => isset( $this->product_reqs ) ? $this->product_reqs : array(),
+			'product_condition' => isset( $this->product_condition ) ? $this->product_condition : '',
+			'excluded_products' => isset( $this->excluded_products ) ? $this->excluded_products : array(),
+			'is_not_global'     => isset( $this->is_not_global ) ? $this->is_not_global : false,
+			'is_single_use'     => isset( $this->is_single_use ) ? $this->is_single_use : false,
 		);
 
 		$start_timestamp = strtotime( $discount_data['start'] );
@@ -1092,7 +1092,7 @@ class EDD_Discount {
 
 		$args = apply_filters( 'edd_insert_discount_args', array(
 			'post_title'    => $this->name,
-			'post_status'   => $this->status,
+			'post_status'   => $discount_data['status'],
 			'post_type'     => 'edd_discount',
 			'post_date'     => ! empty( $this->date ) ? $this->date : null,
 			'post_date_gmt' => ! empty( $this->date ) ? get_gmt_from_date( $this->date ) : null
@@ -1104,7 +1104,7 @@ class EDD_Discount {
 		if ( ! empty( $discount_id ) ) {
 			$this->ID  = $discount_id;
 
-			foreach ( $meta as $key => $value ) {
+			foreach ( $discount_data as $key => $value ) {
 				$this->update_meta( $key, $value );
 			}
 		}

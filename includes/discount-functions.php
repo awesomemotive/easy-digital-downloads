@@ -1170,7 +1170,7 @@ function edd_discount_status_cleanup() {
 	}
 
 }
-//add_action( 'edd_daily_scheduled_events', 'edd_discount_status_cleanup' );
+add_action( 'edd_daily_scheduled_events', 'edd_discount_status_cleanup' );
 
 /**
  * Used during edd_discount_status_cleanup to filter out a meta query properly
@@ -1182,6 +1182,3 @@ function edd_discount_status_cleanup() {
 function edd_filter_discount_code_cleanup( $sql ) {
 	return str_replace( "'mt1.meta_value'", "mt1.meta_value", $sql );
 }
-
-
-$discount = new EDD_Discount( 718 );
