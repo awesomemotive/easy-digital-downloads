@@ -1055,10 +1055,10 @@ class EDD_Discount {
 			'uses'              => isset( $this->uses )              ? $this->uses              : '',
 			'max_uses'          => isset( $this->max_uses )          ? $this->max_uses          : '',
 			'amount'            => isset( $this->amount )            ? $this->amount            : '',
-			'start'             => isset( $this->start_date )        ? $this->start_date        : '',
-			'expiration'        => isset( $this->end_date )          ? $this->end_date          : '',
+			'start'             => isset( $this->start )             ? $this->start             : '',
+			'expiration'        => isset( $this->expiration )        ? $this->expiration        : '',
 			'type'              => isset( $this->type )              ? $this->type              : '',
-			'min_price'         => isset( $this->min_amount )        ? $this->min_amount        : '',
+			'min_price'         => isset( $this->min_price )         ? $this->min_price        : '',
 			'product_reqs'      => isset( $this->product_reqs )      ? $this->product_reqs      : array(),
 			'product_condition' => isset( $this->product_condition ) ? $this->product_condition : '',
 			'excluded_products' => isset( $this->excluded_products ) ? $this->excluded_products : array(),
@@ -1210,7 +1210,7 @@ class EDD_Discount {
 			) );
 
 			foreach ( $meta as $key => $value ) {
-				update_post_meta( $this->ID, '_edd_discount_' . $key, $value );
+				$this->update_meta( $key, $value );
 			}
 
 			/**
@@ -1282,7 +1282,7 @@ class EDD_Discount {
 		) );
 
 		foreach ( $meta as $key => $value ) {
-			update_post_meta( $this->ID, '_edd_discount_' . $key, $value );
+			$this->update_meta( $key, $value );
 		}
 
 		$this->setup_discount( WP_Post::get_instance( $this->ID ) );
@@ -1454,16 +1454,16 @@ class EDD_Discount {
 	public function is_expired( $update = true ) {
 		$return = false;
 
-		if ( empty( $this->end_date ) ) {
+		if ( empty( $this->expiration ) ) {
 			return $return;
 		}
 
-		$expiration = strtotime( $this->end_date );
+		$expiration = strtotime( $this->expiration );
 
 		if ( $expiration < current_time( 'timestamp' ) ) {
 			if ( $update ) {
 				$this->update_status( 'inactive' );
-				update_post_meta( $this->ID, '_edd_discount_status', 'expired' );
+				$this->update_meta( 'status', 'expired' );
 			}
 			$return = true;
 		}
@@ -1877,11 +1877,11 @@ class EDD_Discount {
 			$this->uses = 1;
 		}
 
-		update_post_meta( $this->ID, '_edd_discount_uses', $this->uses );
+		$this->update_meta( 'uses', $this->uses );
 
 		if ( $this->max_uses == $this->uses ) {
 			$this->update_status( 'inactive' );
-			update_post_meta( $this->ID, '_edd_discount_status', 'inactive' );
+			$this->update_meta( 'status', 'inactive' );
 		}
 
 		/**
@@ -1915,11 +1915,11 @@ class EDD_Discount {
 			$uses = 0;
 		}
 
-		update_post_meta( $this->ID, '_edd_discount_uses', $this->uses );
+		$this->update_meta( 'uses', $this->uses );
 
 		if ( $this->max_uses > $this->uses ) {
 			$this->update_status( 'active' );
-			update_post_meta( $this->ID, '_edd_discount_status', 'active' );
+			$this->update_meta( 'status', 'active' );
 		}
 
 		/**
