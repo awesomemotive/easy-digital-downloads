@@ -558,7 +558,7 @@ function edd_render_products_field( $post_id ) {
 										'class'            => 'edd_repeatable_condition_field',
 										'options'          => $options,
 										'show_option_none' => false,
-										'selected'         => $price_assignments[0][ $key ],
+										'selected'         => isset( $price_assignments[0][ $key ] ) ? $price_assignments[0][ $key ] : null,
 									) );
 								?>
 							</td>
