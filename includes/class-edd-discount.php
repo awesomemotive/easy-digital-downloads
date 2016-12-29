@@ -1049,21 +1049,21 @@ class EDD_Discount {
 	 */
 	private function insert_discount() {
 		$discount_data = array(
-			'code'              => $this->code;
-			'name'              => $this->name;
-			'status'            => $this->status;
-			'uses'              => $this->uses;
-			'max_uses'          => $this->max_uses;
-			'amount'            => $this->amount;
-			'start'             => $this->start_date;
-			'expiration'        => $this->end_date;
-			'type'              => $this->type;
-			'min_price'         => $this->min_amount;
-			'product_reqs'      => $this->product_reqs;
-			'product_condition' => $this->product_condition;
-			'excluded_products' => $this->excluded_products;
-			'is_not_global'     => $this->is_not_global;
-			'is_single_use'     => $this->is_single_use;
+			'code'              => $this->code,
+			'name'              => $this->name,
+			'status'            => $this->status,
+			'uses'              => $this->uses,
+			'max_uses'          => $this->max_uses,
+			'amount'            => $this->amount,
+			'start'             => $this->start_date,
+			'expiration'        => $this->end_date,
+			'type'              => $this->type,
+			'min_price'         => $this->min_amount,
+			'product_reqs'      => $this->product_reqs,
+			'product_condition' => $this->product_condition,
+			'excluded_products' => $this->excluded_products,
+			'is_not_global'     => $this->is_not_global,
+			'is_single_use'     => $this->is_single_use,
 		);
 
 		$start_timestamp = strtotime( $discount_data['start'] );
