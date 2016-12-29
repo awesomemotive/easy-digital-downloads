@@ -275,11 +275,11 @@ function edd_get_discount_code( $code_id = null ) {
  * @since 2.7 Updated to use EDD_Discount object.
  *
  * @param int $code_id Discount ID.
- * @return string $start_date Discount start date.
+ * @return string $start Discount start date.
  */
 function edd_get_discount_start_date( $code_id = null ) {
 	$discount = new EDD_Discount( $code_id );
-	return $discount->start_date;
+	return $discount->start;
 }
 
 /**
@@ -293,7 +293,7 @@ function edd_get_discount_start_date( $code_id = null ) {
  */
 function edd_get_discount_expiration( $code_id = null ) {
 	$discount = new EDD_Discount( $code_id );
-	return $discount->end_date;
+	return $discount->expiration;
 }
 
 /**
@@ -335,7 +335,7 @@ function edd_get_discount_uses( $code_id = null ) {
  */
 function edd_get_discount_min_price( $code_id = null ) {
 	$discount = new EDD_Discount( $code_id );
-	return $discount->min_amount;
+	return $discount->min_price;
 }
 
 /**
@@ -377,7 +377,7 @@ function edd_get_discount_type( $code_id = null ) {
  */
 function edd_get_discount_excluded_products( $code_id = null ) {
 	$discount = new EDD_Discount( $code_id );
-	return $discount->excluded_downloads;
+	return $discount->excluded_products;
 }
 
 /**
@@ -391,7 +391,7 @@ function edd_get_discount_excluded_products( $code_id = null ) {
  */
 function edd_get_discount_product_reqs( $code_id = null ) {
 	$discount = new EDD_Discount( $code_id );
-	return $discount->download_requirements;
+	return $discount->product_reqs;
 }
 
 /**
@@ -483,7 +483,7 @@ function edd_is_discount_maxed_out( $code_id = null, $set_error = true ) {
  */
 function edd_discount_is_min_met( $code_id = null, $set_error = true ) {
 	$discount = new EDD_Discount( $code_id );
-	return $discount->is_min_amount_met( $set_error );
+	return $discount->is_min_price_met( $set_error );
 }
 
 /**
@@ -512,7 +512,7 @@ function edd_discount_is_single_use( $code_id = 0 ) {
  */
 function edd_discount_product_reqs_met( $code_id = null, $set_error = true ) {
 	$discount = new EDD_Discount( $code_id );
-	return $discount->is_download_requirements_met( $set_error );
+	return $discount->is_product_requirements_met( $set_error );
 }
 
 /**

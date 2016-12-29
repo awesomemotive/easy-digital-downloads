@@ -445,13 +445,13 @@ class EDD_Discount {
 		$this->status            = $this->setup_status();
 		$this->type              = $this->setup_type();
 		$this->amount            = $this->setup_amount();
-		$this->product_reqs      = $this->setup_download_requirements();
-		$this->excluded_products = $this->setup_excluded_downloads();
-		$this->start             = $this->setup_start_date();
-		$this->expiration        = $this->setup_end_date();
+		$this->product_reqs      = $this->setup_product_requirements();
+		$this->excluded_products = $this->setup_excluded_products();
+		$this->start             = $this->setup_start();
+		$this->expiration        = $this->setup_expiration();
 		$this->uses              = $this->setup_uses();
 		$this->max_uses          = $this->setup_max_uses();
-		$this->min_price         = $this->setup_min_amount();
+		$this->min_price         = $this->setup_min_price();
 		$this->is_single_use     = $this->setup_is_single_use();
 		$this->is_not_global     = $this->setup_is_not_global();
 		$this->product_condition = $this->setup_product_condition();
@@ -546,27 +546,27 @@ class EDD_Discount {
 	}
 
 	/**
-	 * Setup the download requirements.
+	 * Setup the product requirements.
 	 *
 	 * @since 2.7
 	 * @access private
 	 *
 	 * @return array Download requirements.
 	 */
-	private function setup_download_requirements() {
+	private function setup_product_requirements() {
 		$requirements = $this->get_meta( 'product_reqs', false );
 		return (array) $requirements;
 	}
 
 	/**
-	 * Setup the excluded downloads.
+	 * Setup the excluded products.
 	 *
 	 * @since 2.7
 	 * @access private
 	 *
-	 * @return array Excluded downloads.
+	 * @return array Excluded products.
 	 */
-	private function setup_excluded_downloads() {
+	private function setup_excluded_products() {
 		$excluded = $this->get_meta( 'excluded_products', false );
 		return (array) $excluded;
 	}
@@ -579,22 +579,22 @@ class EDD_Discount {
 	 *
 	 * @return string Discount start date.
 	 */
-	private function setup_start_date() {
-		$excluded = $this->get_meta( 'start', true );
-		return $excluded;
+	private function setup_start() {
+		$start = $this->get_meta( 'start', true );
+		return $start;
 	}
 
 	/**
-	 * Setup the end date.
+	 * Setup the expiration date.
 	 *
 	 * @since 2.7
 	 * @access private
 	 *
-	 * @return array Discount end date.
+	 * @return array Discount expiration date.
 	 */
-	private function setup_end_date() {
-		$end_date = $this->get_meta( 'expiration', true );
-		return $end_date;
+	private function setup_expiration() {
+		$expration = $this->get_meta( 'expiration', true );
+		return $expration;
 	}
 
 	/**
@@ -624,14 +624,14 @@ class EDD_Discount {
 	}
 
 	/**
-	 * Setup the max uses.
+	 * Setup the min price.
 	 *
 	 * @since 2.7
 	 * @access private
 	 *
-	 * @return int Maximum uses.
+	 * @return int Minimum price.
 	 */
-	private function setup_min_amount() {
+	private function setup_min_price() {
 		$max_uses = $this->get_meta( 'min_price', true );
 		return $max_uses;
 	}
@@ -877,10 +877,10 @@ class EDD_Discount {
 		 *
 		 * @since 2.7
 		 *
-		 * @param string $start_date Discount start date.
-		 * @param int    $ID         Discount ID.
+		 * @param string $start Discount start date.
+		 * @param int    $ID    Discount ID.
 		 */
-		return apply_filters( 'edd_get_discount_start_date', $this->start_date, $this->ID );
+		return apply_filters( 'edd_get_discount_start_date', $this->start, $this->ID );
 	}
 
 	/**
@@ -897,10 +897,10 @@ class EDD_Discount {
 		 *
 		 * @since 2.7
 		 *
-		 * @param array $end_date Discount end (expiration) date.
-		 * @param int   $ID       Discount ID.
+		 * @param string $expiration Discount expiration date.
+		 * @param int   $ID          Discount ID.
 		 */
-		return apply_filters( 'edd_get_discount_expiration', $this->end_date, $this->ID );
+		return apply_filters( 'edd_get_discount_expiration', $this->expiration, $this->ID );
 	}
 
 	/**
@@ -953,14 +953,14 @@ class EDD_Discount {
 	 */
 	public function get_min_price() {
 		/**
-		 * Filters the minimum amount.
+		 * Filters the minimum price.
 		 *
 		 * @since 2.7
 		 *
-		 * @param float $min_amount Minimum amount.
-		 * @param int   $ID         Discount ID.
+		 * @param float $min_price Minimum price.
+		 * @param int   $ID        Discount ID.
 		 */
-		return (float) apply_filters( 'edd_get_discount_min_price', $this->min_amount, $this->ID );
+		return (float) apply_filters( 'edd_get_discount_min_price', $this->min_price, $this->ID );
 	}
 
 	/**
@@ -1519,7 +1519,7 @@ class EDD_Discount {
 	 * @param bool $set_error Whether an error message be set in session.
 	 * @return bool Is the minimum cart amount met?
 	 */
-	public function is_min_amount_met( $set_error = true ) {
+	public function is_min_price_met( $set_error = true ) {
 		$return = false;
 
 		$cart_amount = edd_get_cart_discountable_subtotal( $this->ID );
@@ -1570,7 +1570,7 @@ class EDD_Discount {
 	 * @param bool $set_error Whether an error message be set in session.
 	 * @return bool Are required products in the cart?
 	 */
-	public function is_download_requirements_met( $set_error = true ) {
+	public function is_product_requirements_met( $set_error = true ) {
 		$product_reqs = $this->product_reqs;
 		$excluded_ps  = $this->excluded_products;
 		$cart_items   = edd_get_cart_contents();
@@ -1771,8 +1771,8 @@ class EDD_Discount {
 				$this->is_started( $set_error ) &&
 				! $this->is_maxed_out( $set_error ) &&
 				! $this->is_used( $user, $set_error ) &&
-				$this->is_min_amount_met( $set_error ) &&
-				$this->is_download_requirements_met( $set_error )
+				$this->is_min_price_met( $set_error ) &&
+				$this->is_product_requirements_met( $set_error )
 			) {
 				$return = true;
 			}
