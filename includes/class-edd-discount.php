@@ -880,7 +880,7 @@ class EDD_Discount {
 		 * @param string $start Discount start date.
 		 * @param int    $ID    Discount ID.
 		 */
-		return apply_filters( 'edd_get_discount_start_date', $this->start, $this->ID );
+		return apply_filters( 'edd_get_discount_start', $this->start, $this->ID );
 	}
 
 	/**
@@ -1417,8 +1417,8 @@ class EDD_Discount {
 	public function is_started( $set_error = true ) {
 		$return = false;
 
-		if ( $this->start_date ) {
-			$start_date = strtotime( $this->start_date );
+		if ( $this->start ) {
+			$start_date = strtotime( $this->start );
 
 			if ( $start_date < current_time( 'timestamp' ) ) {
 				// Discount has pased the start date
