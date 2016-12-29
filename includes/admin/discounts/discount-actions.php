@@ -33,6 +33,11 @@ function edd_add_discount( $data ) {
 	// Setup the discount code details
 	$posted = array();
 
+	if ( empty( $posted['name'] ) || empty( $posted['code'] ) || empty( $posted['type'] ) || empty( $posted['amount'] ) ) {
+		wp_redirect( add_query_arg( 'edd-message', 'discount_validation_failed' ) );
+		edd_die();
+	}
+
 	foreach ( $data as $key => $value ) {
 
 		if ( $key === 'products' || $key === 'excluded-products' ) {
