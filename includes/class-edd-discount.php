@@ -554,7 +554,7 @@ class EDD_Discount {
 	 * @return array Download requirements.
 	 */
 	private function setup_product_requirements() {
-		$requirements = $this->get_meta( 'product_reqs', true );
+		$requirements = $this->get_meta( 'product_reqs', false );
 		return (array) $requirements;
 	}
 
@@ -567,7 +567,7 @@ class EDD_Discount {
 	 * @return array Excluded products.
 	 */
 	private function setup_excluded_products() {
-		$excluded = $this->get_meta( 'excluded_products', true );
+		$excluded = $this->get_meta( 'excluded_products', false );
 		return (array) $excluded;
 	}
 
