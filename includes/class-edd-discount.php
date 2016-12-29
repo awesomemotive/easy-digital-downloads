@@ -1049,21 +1049,21 @@ class EDD_Discount {
 	 */
 	private function insert_discount() {
 		$discount_data = array(
-			'code'              => isset( $this->code ) ? $this->code : '',
-			'name'              => isset( $this->name ) ? $this->name : '',
-			'status'            => isset( $this->status ) ? $this->status : 'active',
-			'uses'              => isset( $this->uses ) ? $this->uses : '',
-			'max_uses'          => isset( $this->max_uses ) ? $this->max_uses : '',
-			'amount'            => isset( $this->amount ) ? $this->amount : '',
-			'start'             => isset( $this->start_date ) ? $this->start_date : '',
-			'expiration'        => isset( $this->end_date ) ? $this->end_date : '',
-			'type'              => isset( $this->type ) ? $this->type : '',
-			'min_price'         => isset( $this->min_amount ) ? $this->min_amount : '',
-			'product_reqs'      => isset( $this->product_reqs ) ? $this->product_reqs : array(),
+			'code'              => isset( $this->code )              ? $this->code              : '',
+			'name'              => isset( $this->name )              ? $this->name              : '',
+			'status'            => isset( $this->status )            ? $this->status            : 'active',
+			'uses'              => isset( $this->uses )              ? $this->uses              : '',
+			'max_uses'          => isset( $this->max_uses )          ? $this->max_uses          : '',
+			'amount'            => isset( $this->amount )            ? $this->amount            : '',
+			'start'             => isset( $this->start_date )        ? $this->start_date        : '',
+			'expiration'        => isset( $this->end_date )          ? $this->end_date          : '',
+			'type'              => isset( $this->type )              ? $this->type              : '',
+			'min_price'         => isset( $this->min_amount )        ? $this->min_amount        : '',
+			'product_reqs'      => isset( $this->product_reqs )      ? $this->product_reqs      : array(),
 			'product_condition' => isset( $this->product_condition ) ? $this->product_condition : '',
 			'excluded_products' => isset( $this->excluded_products ) ? $this->excluded_products : array(),
-			'is_not_global'     => isset( $this->is_not_global ) ? $this->is_not_global : false,
-			'is_single_use'     => isset( $this->is_single_use ) ? $this->is_single_use : false,
+			'is_not_global'     => isset( $this->is_not_global )     ? $this->is_not_global     : false,
+			'is_single_use'     => isset( $this->is_single_use )     ? $this->is_single_use     : false,
 		);
 
 		$start_timestamp = strtotime( $discount_data['start'] );
