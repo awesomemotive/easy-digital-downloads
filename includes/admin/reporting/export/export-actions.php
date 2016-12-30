@@ -49,6 +49,20 @@ function edd_export_earnings() {
 }
 add_action( 'edd_earnings_export', 'edd_export_earnings' );
 
+/**
+ * Exports earnings export for a specified time period. Use the EDD_Earnings_Repprt_Export class.
+ *
+ * @since 2.7
+ * @return void
+ */
+function edd_export_earnings_report() {
+	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export-earnings-report.php';
+
+	$earnings_export_report = new EDD_Earnings_Report_Export();
+	$earnings_export_report->export();
+}
+add_action( 'edd_earnings_report_export', 'edd_export_earnings_report' );
+
 
 /**
  * Export all the customers to a CSV file.
