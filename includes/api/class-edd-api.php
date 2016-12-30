@@ -1204,19 +1204,31 @@ class EDD_API {
 					$sales['totals'] = array_sum( $sales['sales'] );
 				} else {
 					if( $args['date'] == 'this_quarter' || $args['date'] == 'last_quarter'  ) {
-						$sales_count = 0;
+						$start_date = $dates['year'] . '-' . $dates['m_start'] . '-01';
+						$end_date = $dates['year'] . '-' . $dates['m_end'] . '-' . cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] );
 
-						// Loop through the months
-						$month = $dates['m_start'];
+						$start_date = date( 'Y-m-d', strtotime( $start_date ) );
+						$end_date = date( 'Y-m-d', strtotime( $end_date ) );
 
-						while( $month <= $dates['m_end'] ) :
-							$sales_count += edd_get_sales_by_date( null, $month, $dates['year'] );
-							$month++;
-						endwhile;
+						$stats = EDD()->payment_stats->get_sales_by_range( $args['date'], false, $start_date, $end_date );
 
-						$sales['sales'][ $args['date'] ] = $sales_count;
+						if ( empty( $stats ) ) {
+							$sales['sales'][ $args['date'] ] = 0;
+						} else {
+							$sales['sales'][ $args['date'] ] = $stats[0]['count'];
+						}
 					} else {
-						$sales['sales'][ $args['date'] ] = edd_get_sales_by_date( $dates['day'], $dates['m_start'], $dates['year'] );
+						$start_date = $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day'];
+						$start_date = date( 'Y-m-d', strtotime( $start_date ) );
+						$end_date = date( 'Y-m-d', strtotime( '+1 day', strtotime( $start_date ) ) );
+
+						$stats = EDD()->payment_stats->get_sales_by_range( 'yesterday', true, $start_date, $end_date );
+
+						if ( empty( $stats ) ) {
+							$sales['sales'][ $args['date'] ] = 0;
+						} else {
+							$sales['sales'][ $args['date'] ] = (int) $stats[0]['count'];
+						}
 					}
 				}
 			} elseif ( $args['product'] == 'all' ) {
