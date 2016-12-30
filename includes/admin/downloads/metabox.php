@@ -834,7 +834,7 @@ add_action( 'edd_meta_box_settings_fields', 'edd_render_dowwn_tax_options', 30 )
 /**
  * Product quantity settings
  *
- * Outputs the option to disable quantify field on product
+ * Outputs the option to disable quantity field on product.
  *
  * @since 2.7
  * @param int $post_id Download (Post) ID
