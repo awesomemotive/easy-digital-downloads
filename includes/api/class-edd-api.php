@@ -1172,58 +1172,36 @@ class EDD_API {
 						$error['error'] = __( 'Invalid or no date range specified!', 'easy-digital-downloads' );
 					}
 
-					$total = 0;
+					$start_date = $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day_start'];
+					$end_date = $dates['year_end'] . '-' . $dates['m_end'] . '-' . $dates['day_end'];
 
-					// Loop through the years
-					$y = $dates['year'];
-					while( $y <= $dates['year_end'] ) :
+					$stats = EDD()->payment_stats->get_sales_by_range( 'other', true, $start_date, $end_date );
 
-						if( $dates['year'] == $dates['year_end'] ) {
-							$month_start = $dates['m_start'];
-							$month_end   = $dates['m_end'];
-						} elseif( $y == $dates['year'] && $dates['year_end'] > $dates['year'] ) {
-							$month_start = $dates['m_start'];
-							$month_end   = 12;
-						} elseif( $y == $dates['year_end'] ) {
-							$month_start = 1;
-							$month_end   = $dates['m_end'];
-						} else {
-							$month_start = 1;
-							$month_end   = 12;
+					foreach ( $stats as $sale ) {
+						$key = $sale['y'] . $sale['m'] . $sale['d'];
+						$sales['sales'][ $key ] = (int) $sale['count'];
+					}
+
+					$start_date = date( 'Y-m-d', strtotime( $start_date ) );
+					$end_date = date( 'Y-m-d', strtotime( $end_date ) );
+
+					while ( strtotime( $start_date ) <= strtotime( $end_date ) ) {
+						$d = date( 'd', strtotime( $start_date ) );
+						$m = date( 'm', strtotime( $start_date ) );
+						$y = date( 'Y', strtotime( $start_date ) );
+
+						$key = $y . $m . $d;
+
+						if ( ! isset( $sales['sales'][ $key ] ) ) {
+							$sales['sales'][ $key ] = 0;
 						}
 
-						$i = $month_start;
-						while ( $i <= $month_end ) :
+						$start_date = date( 'Y-m-d', strtotime( '+1 day', strtotime( $start_date ) ) );
+					}
 
-							if( $i == $dates['m_start'] ) {
-								$d = $dates['day_start'];
-							} else {
-								$d = 1;
-							}
+					ksort( $sales['sales'] );
 
-							if( $i == $dates['m_end'] ) {
-								$num_of_days = $dates['day_end'];
-							} else {
-								$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $y );
-							}
-
-							while ( $d <= $num_of_days ) :
-								$sale_count = edd_get_sales_by_date( $d, $i, $y );
-								$date_key   = date( 'Ymd', strtotime( $y . '/' . $i . '/' . $d ) );
-								if ( ! isset( $sales['sales'][ $date_key ] ) ) {
-									$sales['sales'][ $date_key ] = 0;
-								}
-								$sales['sales'][ $date_key ] += $sale_count;
-								$total += $sale_count;
-								$d++;
-							endwhile;
-							$i++;
-						endwhile;
-
-						$y++;
-					endwhile;
-
-					$sales['totals'] = $total;
+					$sales['totals'] = array_sum( $sales['sales'] );
 				} else {
 					if( $args['date'] == 'this_quarter' || $args['date'] == 'last_quarter'  ) {
 						$sales_count = 0;
