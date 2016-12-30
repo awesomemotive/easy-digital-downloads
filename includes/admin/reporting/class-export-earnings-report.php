@@ -66,13 +66,30 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 		$start_date = date( 'Y-m-d', strtotime( $start_year . '-' . $start_month . '-01' ) );
 		$end_date = date( 'Y-m-d', strtotime( $end_year . '-' . $end_month . '-01' ) );
 
-		// Create two initial blank columns.
-		echo ", ,";
-
-		echo __( 'Month', 'easy-digital-downloads' ) . ',';
-
+		/**
+		 * Month Row.
+		 */
+		echo ', ,' . __( 'Month', 'easy-digital-downloads' ) . ',';
 		while ( strtotime( $start_date ) <= strtotime( $end_date ) ) {
 			echo date( 'Y-m-d', strtotime( $start_date ) );
+
+			if ( $start_date == $end_date ) {
+				echo "\r\n";
+			} else {
+				echo ',';
+			}
+
+			$start_date = date( 'Y-m-d', strtotime( '+1 month', strtotime( $start_date ) ) );
+		}
+
+		/**
+		 * Currency Row.
+		 */
+		$start_date = date( 'Y-m-d', strtotime( $start_year . '-' . $start_month . '-01' ) );
+		$end_date = date( 'Y-m-d', strtotime( $end_year . '-' . $end_month . '-01' ) );
+		echo ', ,' .  __( 'Currency', 'easy-digital-downloads' ) . ',';
+		while ( strtotime( $start_date ) <= strtotime( $end_date ) ) {
+			echo edd_get_currency();
 
 			if ( $start_date == $end_date ) {
 				echo "\r\n";
