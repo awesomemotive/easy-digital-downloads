@@ -75,7 +75,7 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 			echo date( 'Y-m-d', strtotime( $start_date ) );
 
 			if ( $start_date == $end_date ) {
-				echo '\r\n';
+				echo "\r\n";
 			} else {
 				echo ',';
 			}
