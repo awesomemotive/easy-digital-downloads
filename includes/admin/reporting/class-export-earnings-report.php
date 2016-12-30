@@ -72,7 +72,7 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 		echo __( 'Month', 'easy-digital-downloads' ) . ',';
 
 		while ( strtotime( $start_date ) <= strtotime( $end_date ) ) {
-			echo date( 'Y-m-d', $start_date );
+			echo date( 'Y-m-d', strtotime( $start_date ) );
 
 			if ( $start_date == $end_date ) {
 				echo '\r\n';
@@ -80,10 +80,11 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 				echo ',';
 			}
 
-			$start_date = strtotime( '+1 month', $start_date );
+			$start_date = date( 'Y-m-d', strtotime( '+1 month', strtotime( $start_date ) ) );
 		}
+	}
 
-		/**
+	/**
 	 * Perform the export.
 	 *
 	 * @since 2.7
