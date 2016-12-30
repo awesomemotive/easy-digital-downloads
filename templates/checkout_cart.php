@@ -48,7 +48,7 @@ global $post; ?>
 						?>
 					</td>
 					<td class="edd_cart_actions">
-						<?php if( edd_item_quantities_enabled() ) : ?>
+						<?php if( edd_item_quantities_enabled() && ! edd_download_quantities_disabled( $item['id'] ) ) : ?>
 							<input type="number" min="1" step="1" name="edd-cart-download-<?php echo $key; ?>-quantity" data-key="<?php echo $key; ?>" class="edd-input edd-item-quantity" value="<?php echo edd_get_cart_item_quantity( $item['id'], $item['options'] ); ?>"/>
 							<input type="hidden" name="edd-cart-downloads[]" value="<?php echo $item['id']; ?>"/>
 							<input type="hidden" name="edd-cart-download-<?php echo $key; ?>-options" value="<?php echo esc_attr( json_encode( $item['options'] ) ); ?>"/>
