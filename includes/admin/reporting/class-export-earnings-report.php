@@ -6,7 +6,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2016, Sunny Ratilal
+ * @copyright   Copyright (c) 2017, Sunny Ratilal
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.7
  */
@@ -23,8 +23,9 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 	/**
 	 * Our export type. Used for export-type specific filters/actions.
 	 *
-	 * @var string
 	 * @since 2.7
+	 * @access public
+	 * @var string
 	 */
 	public $export_type = 'earnings_report';
 
