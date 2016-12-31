@@ -32,8 +32,8 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 	/**
 	 * Set the export headers.
 	 *
-	 * @access public
 	 * @since 2.7
+	 * @access public
 	 *
 	 * @return void
 	 */
@@ -66,6 +66,8 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 
 		$start_date = date( 'Y-m-d', strtotime( $start_year . '-' . $start_month . '-01' ) );
 		$end_date = date( 'Y-m-d', strtotime( $end_year . '-' . $end_month . '-01' ) );
+
+		$data = $this->get_data();
 
 		/**
 		 * Month Row.
@@ -219,7 +221,7 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 			wp_die( __( 'You do not have permission to export data.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 
 		// Set headers
-		$this->headers();
+		// $this->headers();
 
 		$this->report_headers();
 
@@ -235,7 +237,60 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 	 * @return array $data The data for the CSV file
 	 */
 	public function get_data() {
+		global $wpdb;
+
 		$data = array();
+
+		$start_year  = isset( $_POST['start_year'] )   ? absint( $_POST['start_year'] )   : date( 'Y' );
+		$end_year    = isset( $_POST['end_year'] )     ? absint( $_POST['end_year'] )     : date( 'Y' );
+		$start_month = isset( $_POST['start_month'] )  ? absint( $_POST['start_month'] )  : date( 'm' );
+		$end_month   = isset( $_POST['end_month'] )    ? absint( $_POST['end_month'] )    : date( 'm' );
+
+		$start_date = date( 'Y-m-d', strtotime( $start_year . '-' . $start_month . '-01' ) );
+		$end_date = date( 'Y-m-d', strtotime( $end_year . '-' . $end_month . '-01' ) );
+
+		$totals = $wpdb->get_results( $wpdb->prepare(
+			"SELECT SUM(meta_value) AS total, DATE_FORMAT(posts.post_date, '%%m') AS m, YEAR(posts.post_date) AS y, COUNT(DISTINCT posts.ID) AS count, posts.post_status AS status
+			 FROM {$wpdb->posts} AS posts
+			 INNER JOIN {$wpdb->postmeta} ON posts.ID = {$wpdb->postmeta}.post_ID
+			 WHERE posts.post_type IN ('edd_payment')
+			 AND {$wpdb->postmeta}.meta_key = '_edd_payment_total'
+			 AND posts.post_date >= %s
+			 AND posts.post_date < %s
+			 GROUP BY YEAR(posts.post_date), MONTH(posts.post_date), posts.post_status
+			 ORDER by posts.post_date ASC", $start_date, date( 'Y-m-d', strtotime( '+1 month', strtotime( $end_date ) ) ) ), ARRAY_A );
+
+		while ( strtotime( $start_date ) <= strtotime( $end_date ) ) {
+			$year = date( 'Y', strtotime( $start_date ) );
+			$month = date( 'm', strtotime( $start_date ) );
+
+			$key = $year . $month;
+
+			$data[ $key ] = array(
+				'sales' => array(
+					'count' => $sales_count,
+					'amount' => '',
+				),
+				'refunds' => array(
+					'count' => '',
+					'amount' => '',
+				),
+				'revoked' => array(
+					'count' => '',
+					'amount' => '',
+				),
+				'abandoned' => array(
+					'count' => '',
+					'amount' => '',
+				),
+				'failed' => array(
+					'count' => '',
+					'amount' => '',
+				),
+			);
+
+			$start_date = date( 'Y-m-d', strtotime( '+1 month', strtotime( $start_date ) ) );
+		}
 
 		$data = apply_filters( 'edd_export_get_data', $data );
 		$data = apply_filters( 'edd_export_get_data_' . $this->export_type, $data );
