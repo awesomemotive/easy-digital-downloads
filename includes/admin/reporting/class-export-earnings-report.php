@@ -127,14 +127,14 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 		$this->col( 2 );
 		echo __( 'Gross Amount', 'easy-digital-downloads' );
 		$this->col();
-		$total = 0;
 		foreach ( $data as $item ) {
+			$total = 0;
 			foreach ( $item as $status => $value ) {
 				$total += $value['amount'];
 			}
+			echo $total;
+			$this->col();
 		}
-		echo $total;
-		$this->col();
 
 		/**
 		 * Refunds.
