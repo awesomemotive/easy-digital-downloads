@@ -235,6 +235,11 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 	 * @return array $data The data for the CSV file
 	 */
 	public function get_data() {
+		$data = array();
 
+		$data = apply_filters( 'edd_export_get_data', $data );
+		$data = apply_filters( 'edd_export_get_data_' . $this->export_type, $data );
+
+		return $data;
 	}
 }
