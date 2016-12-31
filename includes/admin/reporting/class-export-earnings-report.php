@@ -51,14 +51,14 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 	}
 
 	/**
-	 * Report heading.
+	 * Output the CSV rows.
 	 *
 	 * @since 2.7
 	 * @access public
 	 *
 	 * @return void
 	 */
-	private function report_headers() {
+	public function csv_rows_out() {
 		$start_year  = isset( $_POST['start_year'] )   ? absint( $_POST['start_year'] )   : date( 'Y' );
 		$end_year    = isset( $_POST['end_year'] )     ? absint( $_POST['end_year'] )     : date( 'Y' );
 		$start_month = isset( $_POST['start_month'] )  ? absint( $_POST['start_month'] )  : date( 'm' );
@@ -105,8 +105,7 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 			$start_date = date( 'Y-m-d', strtotime( '+1 month', strtotime( $start_date ) ) );
 		}
 
-		$this->row( 2 );
-
+		$this->row();
 		echo __( 'Monthly Sales Activity', 'easy-digital-downloads' );
 		$this->row();
 
@@ -116,10 +115,22 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 		 * Displays Sales Count and Amount.
 		 */
 		$this->col();
-		echo __( 'Sales' , 'easy-digital-downloads' ) . ',' . __( 'Count', 'easy-digital-downloads' );
+		echo __( 'Sales' , 'easy-digital-downloads' );
+		$this->col();
+		echo __( 'Count', 'easy-digital-downloads' );
+		$this->col();
+		foreach ( $data as $item ) {
+			echo isset( $item['publish']['count'] ) ? $item['publish']['count'] : 0;
+			$this->col();
+		}
 		$this->row();
 		$this->col( 2 );
 		echo __( 'Amount', 'easy-digital-downloads' );
+		$this->col();
+		foreach ( $data as $item ) {
+			echo isset( $item['publish']['amount'] ) ? $item['publish']['amount'] : 0;
+			$this->col();
+		}
 
 		/**
 		 * Refunds.
@@ -128,10 +139,22 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 		 */
 		$this->row();
 		$this->col();
-		echo __( 'Refunds' , 'easy-digital-downloads' ) . ',' . __( 'Count', 'easy-digital-downloads' );
+		echo __( 'Refunds' , 'easy-digital-downloads' );
+		$this->col();
+		echo __( 'Count', 'easy-digital-downloads' );
+		$this->col();
+		foreach ( $data as $item ) {
+			echo isset( $item['refunded']['count'] ) ? $item['refunded']['count'] : 0;
+			$this->col();
+		}
 		$this->row();
 		$this->col( 2 );
 		echo __( 'Amount', 'easy-digital-downloads' );
+		$this->col();
+		foreach ( $data as $item ) {
+			echo isset( $item['refunded']['amount'] ) ? $item['refunded']['amount'] : 0;
+			$this->col();
+		}
 
 		/**
 		 * Revoked.
@@ -140,10 +163,22 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 		 */
 		$this->row();
 		$this->col();
-		echo __( 'Revoked' , 'easy-digital-downloads' ) . ',' . __( 'Count', 'easy-digital-downloads' );
+		echo __( 'Revoked' , 'easy-digital-downloads' );
+		$this->col();
+		echo __( 'Count', 'easy-digital-downloads' );
+		$this->col();
+		foreach ( $data as $item ) {
+			echo isset( $item['revoked']['count'] ) ? $item['revoked']['count'] : 0;
+			$this->col();
+		}
 		$this->row();
 		$this->col( 2 );
 		echo __( 'Amount', 'easy-digital-downloads' );
+		$this->col();
+		foreach ( $data as $item ) {
+			echo isset( $item['revoked']['amount'] ) ? $item['revoked']['amount'] : 0;
+			$this->col();
+		}
 
 		/**
 		 * Abandoned.
@@ -152,10 +187,22 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 		 */
 		$this->row();
 		$this->col();
-		echo __( 'Abandoned' , 'easy-digital-downloads' ) . ',' . __( 'Count', 'easy-digital-downloads' );
+		echo __( 'Abandoned' , 'easy-digital-downloads' );
+		$this->col();
+		echo __( 'Count', 'easy-digital-downloads' );
+		$this->col();
+		foreach ( $data as $item ) {
+			echo isset( $item['abandoned']['count'] ) ? $item['abandoned']['count'] : 0;
+			$this->col();
+		}
 		$this->row();
 		$this->col( 2 );
 		echo __( 'Amount', 'easy-digital-downloads' );
+		$this->col();
+		foreach ( $data as $item ) {
+			echo isset( $item['abandoned']['amount'] ) ? $item['abandoned']['amount'] : 0;
+			$this->col();
+		}
 
 		/**
 		 * Failed.
@@ -164,10 +211,23 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 		 */
 		$this->row();
 		$this->col();
-		echo __( 'Failed' , 'easy-digital-downloads' ) . ',' . __( 'Count', 'easy-digital-downloads' );
+		echo __( 'Failed' , 'easy-digital-downloads' );
+		$this->col();
+		echo __( 'Count', 'easy-digital-downloads' );
+		$this->col();
+		foreach ( $data as $item ) {
+			echo isset( $item['failed']['count'] ) ? $item['failed']['count'] : 0;
+			$this->col();
+		}
 		$this->row();
 		$this->col( 2 );
 		echo __( 'Amount', 'easy-digital-downloads' );
+		$this->col();
+		foreach ( $data as $item ) {
+			echo isset( $item['failed']['amount'] ) ? $item['failed']['amount'] : 0;
+			$this->col();
+		}
+
 		$this->row();
 
 		/**
@@ -175,6 +235,11 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 		 */
 		$this->row();
 		echo __( 'Net Activity', 'easy-digital-downloads' );
+		$this->col( 3 );
+		foreach ( $data as $item ) {
+			echo isset( $item['publish']['amount'] ) ? $item['publish']['amount'] : 0;
+			$this->col();
+		}
 	}
 
 	/**
@@ -223,7 +288,7 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 		// Set headers
 		$this->headers();
 
-		$this->report_headers();
+		$this->csv_rows_out();
 
 		edd_die();
 	}
