@@ -125,12 +125,16 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 		}
 		$this->row();
 		$this->col( 2 );
-		echo __( 'Amount', 'easy-digital-downloads' );
+		echo __( 'Gross Amount', 'easy-digital-downloads' );
 		$this->col();
+		$total = 0;
 		foreach ( $data as $item ) {
-			echo isset( $item['publish']['amount'] ) ? $item['publish']['amount'] : 0;
-			$this->col();
+			foreach ( $item as $status => $value ) {
+				$total += $value['amount'];
+			}
 		}
+		echo $total;
+		$this->col();
 
 		/**
 		 * Refunds.
@@ -152,7 +156,7 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 		echo __( 'Amount', 'easy-digital-downloads' );
 		$this->col();
 		foreach ( $data as $item ) {
-			echo isset( $item['refunded']['amount'] ) ? $item['refunded']['amount'] : 0;
+			echo isset( $item['refunded']['amount'] ) ? '-' . $item['refunded']['amount'] : 0;
 			$this->col();
 		}
 
@@ -176,7 +180,7 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 		echo __( 'Amount', 'easy-digital-downloads' );
 		$this->col();
 		foreach ( $data as $item ) {
-			echo isset( $item['revoked']['amount'] ) ? $item['revoked']['amount'] : 0;
+			echo isset( $item['revoked']['amount'] ) ? '-' . $item['revoked']['amount'] : 0;
 			$this->col();
 		}
 
@@ -200,7 +204,7 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 		echo __( 'Amount', 'easy-digital-downloads' );
 		$this->col();
 		foreach ( $data as $item ) {
-			echo isset( $item['abandoned']['amount'] ) ? $item['abandoned']['amount'] : 0;
+			echo isset( $item['abandoned']['amount'] ) ? '-' . $item['abandoned']['amount'] : 0;
 			$this->col();
 		}
 
@@ -224,7 +228,31 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 		echo __( 'Amount', 'easy-digital-downloads' );
 		$this->col();
 		foreach ( $data as $item ) {
-			echo isset( $item['failed']['amount'] ) ? $item['failed']['amount'] : 0;
+			echo isset( $item['failed']['amount'] ) ? '-' . $item['failed']['amount'] : 0;
+			$this->col();
+		}
+
+		/**
+		 * Cancelled.
+		 *
+		 * Displays Cancelled Count and Amount.
+		 */
+		$this->row();
+		$this->col();
+		echo __( 'Cancelled' , 'easy-digital-downloads' );
+		$this->col();
+		echo __( 'Count', 'easy-digital-downloads' );
+		$this->col();
+		foreach ( $data as $item ) {
+			echo isset( $item['cancelled']['count'] ) ? $item['cancelled']['count'] : 0;
+			$this->col();
+		}
+		$this->row();
+		$this->col( 2 );
+		echo __( 'Amount', 'easy-digital-downloads' );
+		$this->col();
+		foreach ( $data as $item ) {
+			echo isset( $item['cancelled']['amount'] ) ? '-' . $item['cancelled']['amount'] : 0;
 			$this->col();
 		}
 
