@@ -221,7 +221,7 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 			wp_die( __( 'You do not have permission to export data.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 
 		// Set headers
-		// $this->headers();
+		$this->headers();
 
 		$this->report_headers();
 
@@ -260,37 +260,46 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 			 GROUP BY YEAR(posts.post_date), MONTH(posts.post_date), posts.post_status
 			 ORDER by posts.post_date ASC", $start_date, date( 'Y-m-d', strtotime( '+1 month', strtotime( $end_date ) ) ) ), ARRAY_A );
 
+		foreach ( $totals as $total ) {
+			$key = (int) $total['y'] . $total['m'];
+
+			$data[ $key ][ $total['status'] ] = array(
+				'count' => $total['count'],
+				'amount' => $total['total']
+			);
+		}
+
 		while ( strtotime( $start_date ) <= strtotime( $end_date ) ) {
 			$year = date( 'Y', strtotime( $start_date ) );
 			$month = date( 'm', strtotime( $start_date ) );
 
 			$key = $year . $month;
 
-			$data[ $key ] = array(
-				'sales' => array(
-					'count' => $sales_count,
-					'amount' => '',
-				),
-				'refunds' => array(
-					'count' => '',
-					'amount' => '',
-				),
-				'revoked' => array(
-					'count' => '',
-					'amount' => '',
-				),
-				'abandoned' => array(
-					'count' => '',
-					'amount' => '',
-				),
-				'failed' => array(
-					'count' => '',
-					'amount' => '',
-				),
-			);
+			if ( ! isset( $data[ $key ] ) ) {
+				$data[ $key ] = array(
+					'publish' => array(
+						'count' => 0,
+						'amount' => 0
+					),
+					'refunded' => array(
+						'count' => 0,
+						'amount' => 0
+					),
+					'cancelled' => array(
+						'count' => 0,
+						'amount' => 0
+					),
+					'revoked' => array(
+						'count' => 0,
+						'amount' => 0
+					),
+				);
+			}
 
 			$start_date = date( 'Y-m-d', strtotime( '+1 month', strtotime( $start_date ) ) );
 		}
+
+		ksort( $data );
 
 		$data = apply_filters( 'edd_export_get_data', $data );
 		$data = apply_filters( 'edd_export_get_data_' . $this->export_type, $data );
