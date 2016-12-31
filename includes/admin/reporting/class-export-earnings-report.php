@@ -45,7 +45,7 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 
 		nocache_headers();
 		header( 'Content-Type: text/csv; charset=utf-8' );
-		header( 'Content-Disposition: attachment; filename=' . apply_filters( 'edd_earnings_export_filename', 'edd-export-' . $this->export_type . '-' . date( 'n' ) . '-' . date( 'Y' ) ) . '.csv' );
+		header( 'Content-Disposition: attachment; filename=' . apply_filters( 'edd_earnings_report_export_filename', 'edd-export-' . $this->export_type . '-' . date( 'm' ) . '-' . date( 'Y' ) ) . '.csv' );
 		header( "Expires: 0" );
 	}
 
@@ -69,14 +69,15 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 		/**
 		 * Month Row.
 		 */
-		echo ', ,' . __( 'Month', 'easy-digital-downloads' ) . ',';
+		$this->col( 2 );
+		echo __( 'Month', 'easy-digital-downloads' ) . ',';
 		while ( strtotime( $start_date ) <= strtotime( $end_date ) ) {
 			echo date( 'Y-m-d', strtotime( $start_date ) );
 
 			if ( $start_date == $end_date ) {
-				echo "\r\n";
+				$this->row();
 			} else {
-				echo ',';
+				$this->col();
 			}
 
 			$start_date = date( 'Y-m-d', strtotime( '+1 month', strtotime( $start_date ) ) );
@@ -87,18 +88,116 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 		 */
 		$start_date = date( 'Y-m-d', strtotime( $start_year . '-' . $start_month . '-01' ) );
 		$end_date = date( 'Y-m-d', strtotime( $end_year . '-' . $end_month . '-01' ) );
-		echo ', ,' .  __( 'Currency', 'easy-digital-downloads' ) . ',';
+		$this->col( 2 );
+		echo __( 'Currency', 'easy-digital-downloads' ) . ',';
 		while ( strtotime( $start_date ) <= strtotime( $end_date ) ) {
 			echo edd_get_currency();
 
 			if ( $start_date == $end_date ) {
-				echo "\r\n";
+				$this->row();
 			} else {
 				echo ',';
 			}
 
 			$start_date = date( 'Y-m-d', strtotime( '+1 month', strtotime( $start_date ) ) );
 		}
+
+		$this->row( 2 );
+
+		echo __( 'Monthly Sales Activity', 'easy-digital-downloads' );
+		$this->row();
+
+		/**
+		 * Sales.
+		 *
+		 * Displays Sales Count and Amount.
+		 */
+		$this->col();
+		echo __( 'Sales' , 'easy-digital-downloads' ) . ',' . __( 'Count', 'easy-digital-downloads' );
+		$this->row();
+		$this->col( 2 );
+		echo __( 'Amount', 'easy-digital-downloads' );
+
+		/**
+		 * Refunds.
+		 *
+		 * Displays Refunds Count and Amount.
+		 */
+		$this->row();
+		$this->col();
+		echo __( 'Refunds' , 'easy-digital-downloads' ) . ',' . __( 'Count', 'easy-digital-downloads' );
+		$this->row();
+		$this->col( 2 );
+		echo __( 'Amount', 'easy-digital-downloads' );
+
+		/**
+		 * Revoked.
+		 *
+		 * Displays Revoked Count and Amount.
+		 */
+		$this->row();
+		$this->col();
+		echo __( 'Revoked' , 'easy-digital-downloads' ) . ',' . __( 'Count', 'easy-digital-downloads' );
+		$this->row();
+		$this->col( 2 );
+		echo __( 'Amount', 'easy-digital-downloads' );
+
+		/**
+		 * Abandoned.
+		 *
+		 * Displays Abandoned Count and Amount.
+		 */
+		$this->row();
+		$this->col();
+		echo __( 'Abandoned' , 'easy-digital-downloads' ) . ',' . __( 'Count', 'easy-digital-downloads' );
+		$this->row();
+		$this->col( 2 );
+		echo __( 'Amount', 'easy-digital-downloads' );
+
+		/**
+		 * Failed.
+		 *
+		 * Displays Failed Count and Amount.
+		 */
+		$this->row();
+		$this->col();
+		echo __( 'Failed' , 'easy-digital-downloads' ) . ',' . __( 'Count', 'easy-digital-downloads' );
+		$this->row();
+		$this->col( 2 );
+		echo __( 'Amount', 'easy-digital-downloads' );
+		$this->row();
+
+		/**
+		 * Net Activity.
+		 */
+		$this->row();
+		echo __( 'Net Activity', 'easy-digital-downloads' );
+	}
+
+	/**
+	 * Helper method to move to the next column.
+	 *
+	 * @since 2.7
+	 * @access private
+	 *
+	 * @param int $number Number of columns to move by.
+	 * @return void
+	 */
+	private function col( $number = 1 ) {
+		echo str_repeat( ',', $number );
+	}
+
+	/**
+	 * Helper method to move to the next row.
+	 *
+	 * @since 2.7
+	 * @access private
+	 *
+	 * @param int $number Number of rows to move by.
+	 * @return void
+	 */
+	private function row( $number = 1 ) {
+		echo str_repeat( "\r\n", $number );
 	}
 
 	/**
@@ -124,5 +223,17 @@ class EDD_Earnings_Report_Export extends EDD_Export {
 		$this->report_headers();
 
 		edd_die();
+	}
+
+	/**
+	 * Get the Export Data.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return array $data The data for the CSV file
+	 */
+	public function get_data() {
+
 	}
 }
