@@ -671,8 +671,6 @@ class EDD_CLI extends WP_CLI_Command {
 				edd_update_payment_status( $payment_id, $status );
 			}
 
-			var_dump($date);
-
 			if ( 'random' === $date ) {
 				// Randomly grab a date from the current past 30 days
 				$oldest_time = strtotime( '-30 days', current_time( 'timestamp') );
