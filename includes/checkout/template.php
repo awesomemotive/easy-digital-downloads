@@ -227,7 +227,7 @@ function edd_get_cc_form() {
 
 	<fieldset id="edd_cc_fields" class="edd-do-validate">
 		<legend><?php _e( 'Credit Card Info', 'easy-digital-downloads' ); ?></legend>
-		<?php if( is_ssl() ) : ?>
+		<?php if( is_ssl()  ) : ?>
 			<div id="edd_secure_site_wrapper">
 				<span class="padlock"></span>
 				<span><?php _e( 'This is a secure SSL encrypted payment.', 'easy-digital-downloads' ); ?></span>
@@ -276,6 +276,7 @@ function edd_get_cc_form() {
 		<?php do_action( 'edd_after_cc_expiration' ); ?>
 
 	</fieldset>
+
 	<?php
 	do_action( 'edd_after_cc_fields' );
 
