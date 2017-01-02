@@ -528,6 +528,7 @@ class EDD_CLI extends WP_CLI_Command {
 			$email      = ( array_key_exists( 'email', $assoc_args ) )    ? sanitize_email( $assoc_args['email'] )      : 'guest@local.dev';
 			$fname      = ( array_key_exists( 'fname', $assoc_args ) )    ? sanitize_text_field( $assoc_args['fname'] ) : 'Pippin';
 			$lname      = ( array_key_exists( 'lname', $assoc_args ) )    ? sanitize_text_field( $assoc_args['lname'] ) : 'Williamson';
+			$date       = ( array_key_exists( 'date', $assoc_args ) )     ? sanitize_text_field( $assoc_args['date'] )  : false;
 
 			// Status requires a bit more validation
 			if( array_key_exists( 'status', $assoc_args ) ) {
@@ -663,6 +664,31 @@ class EDD_CLI extends WP_CLI_Command {
 
 			if( $status != 'pending' ) {
 				edd_update_payment_status( $payment_id, $status );
+			}
+
+			if ( 'random' === $date ) {
+				// Randomly grab a date from the current past 30 days
+				$oldest_time = strtotime( '-30 days', current_time( 'timestamp') );
+				$newest_time = current_time( 'timestamp' );
+
+				$timestamp   = rand( $oldest_time, $newest_time );
+				$timestring  = date( "Y-m-d H:i:s", $timestamp );
+			} elseif ( false === $date ) {
+				$timestring = false;
+			} else {
+				if ( is_numeric( $date ) ) {
+					$timestring = date( "Y-m-d H:i:s", $date );
+				} else {
+					$parsed_time = strtotime( $date );
+					$timestring = date( "Y-m-d H:i:s", $parsed_time );
+				}
+			}
+
+			if ( false !== $timestring ) {
+				$payment = new EDD_Payment( $payment_id );
+				$payment->date = $timestring;
+				$payment->completed_date = $timestring;
+				$payment->save();
 			}
 		}
 
