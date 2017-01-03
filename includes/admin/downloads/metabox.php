@@ -512,7 +512,7 @@ function edd_render_products_field( $post_id ) {
 						<th style="width: 20px"></th>
 						<th><?php printf( __( 'Bundled %s:', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></th>
 						<th></th>
-						<th class="pricing" style="width: 20%;"><?php _e( 'Price Assignment', 'easy-digital-downloads' ); ?></th>
+						<th class="pricing" style="width: 20%;  <?php echo $variable_display; ?>"><?php _e( 'Price Assignment', 'easy-digital-downloads' ); ?></th>
 						<?php do_action( 'edd_download_products_table_head', $post_id ); ?>
 					</tr>
 				</thead>
@@ -541,7 +541,7 @@ function edd_render_products_field( $post_id ) {
 							<td>
 								<button class="edd_remove_repeatable" data-type="file" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;"><span class="screen-reader-text"><?php printf( __( 'Remove bundle option %s', 'easy-digital-downloads' ), $key ); ?></span><span aria-hidden="true">&times;</span></button>
 							</td>
-							<td class="pricing">
+							<td class="pricing" style="<?php echo $variable_display; ?>"">
 								<?php
 									$options = array();
 
