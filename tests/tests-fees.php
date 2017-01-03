@@ -464,6 +464,8 @@ class Tests_Fee extends WP_UnitTestCase {
 	}
 
 	public function test_fee_number_format() {
+		EDD()->session->set( 'edd_cart_fees', null );
+
 		EDD()->fees->add_fee( array(
 			'amount' => '20',
 			'label' => 'Arbitrary Item',
