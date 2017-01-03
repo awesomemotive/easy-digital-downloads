@@ -462,4 +462,25 @@ class Tests_Fee extends WP_UnitTestCase {
 
 		$this->assertEquals( $expected, $actual );
 	}
+
+	public function test_fee_number_format() {
+		EDD()->fees->add_fee( array(
+			'amount' => '20',
+			'label' => 'Arbitrary Item',
+			'download_id' => $this->_post->ID,
+			'id' => 'arbitrary_fee',
+			'type' => 'item'
+		) );
+
+		$expected = array(
+			'arbitrary_fee' => array(
+				'amount' => '20.00',
+				'label' => 'Arbitrary Item',
+				'type' => 'item',
+				'no_tax' => false
+			)
+		);
+
+		$this->assertEquals( $expected, EDD()->fees->get_fees( 'all' ) );
+	}
 }
