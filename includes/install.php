@@ -84,7 +84,8 @@ function edd_run_install() {
 	$current_options = get_option( 'edd_settings', array() );
 
 	// Checks if the purchase page option exists
-	if ( ! array_key_exists( 'purchase_page', $current_options ) || empty( get_post( $current_options['purchase_page'] ) ) ) {
+	$purchase_page = array_key_exists( 'purchase_page', $current_options ) ? get_post( $current_options['purchase_page'] ) : false;
+	if ( empty( $purchase_page ) ) {
 		// Checkout Page
 		$checkout = wp_insert_post(
 			array(
@@ -102,7 +103,8 @@ function edd_run_install() {
 
 	$checkout = isset( $checkout ) ? $checkout : $current_options['purchase_page'];
 
-	if ( ! array_key_exists( 'success_page', $current_options ) || empty( get_post( $current_options['success_page'] ) ) ) {
+	$success_page = array_key_exists( 'success_page', $current_options ) ? get_post( $current_options['success_page'] ) : false;
+	if ( empty( $success_page ) ) {
 		// Purchase Confirmation (Success) Page
 		$success = wp_insert_post(
 			array(
@@ -119,7 +121,8 @@ function edd_run_install() {
 		$options['success_page'] = $success;
 	}
 
-	if ( ! array_key_exists( 'failure_page', $current_options ) || empty( get_post( $current_options['failure_page'] ) ) ) {
+	$failure_page = array_key_exists( 'failure_page', $current_options ) ? get_post( $current_options['failure_page'] ) : false;
+	if ( empty( $failure_page ) ) {
 		// Failed Purchase Page
 		$failed = wp_insert_post(
 			array(
@@ -136,7 +139,8 @@ function edd_run_install() {
 		$options['failure_page'] = $failed;
 	}
 
-	if ( ! array_key_exists( 'purchase_history_page', $current_options ) || empty( get_post( $current_options['purchase_history_page'] ) ) ) {
+	$history_page = array_key_exists( 'purchase_history_page', $current_options ) ? get_post( $current_options['purchase_history_page'] ) : false;
+	if ( empty( $history_page ) ) {
 		// Purchase History (History) Page
 		$history = wp_insert_post(
 			array(
