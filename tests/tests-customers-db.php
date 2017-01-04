@@ -3,7 +3,7 @@
 /**
  * @group edd_customers
  */
-class Tests_Customers_DB extends WP_UnitTestCase {
+class Tests_Customers_DB extends EDD_UnitTestCase {
 
 	protected $_post_id = null;
 
