@@ -9,6 +9,11 @@ class Tests_Stats extends WP_UnitTestCase {
 	protected $_stats;
 	protected $_payment_stats;
 
+	public static function setUpBeforeClass() {
+		parent::setUpBeforeClass();
+		edd_install();
+	}
+
 	public function setUp() {
 		parent::setUp();
 		$this->_payment_id = EDD_Helper_Payment::create_simple_payment_with_tax();

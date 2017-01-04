@@ -5,6 +5,12 @@
  * @group edd_session
  */
 class Tests_Session extends WP_UnitTestCase {
+
+	public static function setUpBeforeClass() {
+		parent::setUpBeforeClass();
+		edd_install();
+	}
+
 	public function setUp() {
 		parent::setUp();
 		new \EDD_Session;

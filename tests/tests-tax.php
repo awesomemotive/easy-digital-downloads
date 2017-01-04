@@ -10,6 +10,11 @@ class Tests_Taxes extends WP_UnitTestCase {
 
 	protected $_post = null;
 
+	public static function setUpBeforeClass() {
+		parent::setUpBeforeClass();
+		edd_install();
+	}
+
 	public function setUp() {
 		parent::setUp();
 

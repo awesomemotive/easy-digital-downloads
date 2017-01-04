@@ -10,6 +10,11 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 	protected $_post = null;
 	protected $_payment_key = null;
 
+	public static function setUpBeforeClass() {
+		parent::setUpBeforeClass();
+		edd_install();
+	}
+
 	public function setUp() {
 
 		global $edd_options;

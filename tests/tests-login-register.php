@@ -5,6 +5,12 @@
  * @group edd_login_register
  */
 class Tests_Login_Register extends WP_UnitTestCase {
+
+	public static function setUpBeforeClass() {
+		parent::setUpBeforeClass();
+		edd_install();
+	}
+
 	public function setUp() {
 		parent::setUp();
 		wp_set_current_user(0);

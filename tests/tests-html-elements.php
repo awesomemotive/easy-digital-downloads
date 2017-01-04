@@ -7,6 +7,12 @@
 class Test_HTML_Elements extends WP_UnitTestCase {
 	protected $_post_id = null;
 
+
+	public static function setUpBeforeClass() {
+		parent::setUpBeforeClass();
+		edd_install();
+	}
+
 	public function setUp() {
 		parent::setUp();
 

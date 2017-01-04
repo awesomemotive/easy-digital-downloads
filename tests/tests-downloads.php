@@ -11,6 +11,11 @@ class Tests_Downloads extends WP_UnitTestCase {
 
 	protected $_download_files = null;
 
+	public static function setUpBeforeClass() {
+		parent::setUpBeforeClass();
+		edd_install();
+	}
+
 	public function setUp() {
 		parent::setUp();
 
@@ -347,5 +352,5 @@ class Tests_Downloads extends WP_UnitTestCase {
 
 		$this->assertTrue( edd_download_quantities_disabled( $this->_post->ID ) );
 	}
-	
+
 }

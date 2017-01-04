@@ -5,6 +5,12 @@
  * @group edd_cpt
  */
 class Tests_Post_Type_Labels extends WP_UnitTestCase {
+
+	public static function setUpBeforeClass() {
+		parent::setUpBeforeClass();
+		edd_install();
+	}
+
 	public function setUp() {
 		parent::setUp();
 	}

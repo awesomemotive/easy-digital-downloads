@@ -5,6 +5,12 @@
  * @group edd_meta
  */
 class Tests_Register_Meta extends WP_UnitTestCase {
+
+	public static function setUpBeforeClass() {
+		parent::setUpBeforeClass();
+		edd_install();
+	}
+
 	public function setUp() {
 		parent::setUp();
 		$this->payment_id  = EDD_Helper_Payment::create_simple_payment();

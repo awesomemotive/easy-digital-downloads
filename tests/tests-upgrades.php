@@ -6,6 +6,11 @@
  */
 class Tests_Upgrades extends WP_UnitTestCase {
 
+	public static function setUpBeforeClass() {
+		parent::setUpBeforeClass();
+		edd_install();
+	}
+
 	public function setUp() {
 		parent::setUp();
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';

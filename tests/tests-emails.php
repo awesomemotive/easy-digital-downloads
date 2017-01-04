@@ -9,6 +9,11 @@ class Tests_Emails extends WP_UnitTestCase {
 
 	protected $payment_id;
 
+	public static function setUpBeforeClass() {
+		parent::setUpBeforeClass();
+		edd_install();
+	}
+
 	public function setUp() {
 		parent::setUp();
 		$this->_tags = new EDD_Email_Template_Tags;
