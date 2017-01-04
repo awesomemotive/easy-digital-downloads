@@ -3,7 +3,7 @@
 /**
  * @group edd_api
  */
-class Tests_API extends WP_UnitTestCase {
+class Tests_API extends EDD_UnitTestCase {
 	protected $_rewrite = null;
 
 	protected $query = null;

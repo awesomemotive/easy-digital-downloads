@@ -4,7 +4,7 @@
 /**
  * @group edd_widgets
  */
-class Tests_Widgets extends WP_UnitTestCase {
+class Tests_Widgets extends EDD_UnitTestCase {
 
 	/**
 	 * Test that the hooks in the file are good.

@@ -4,7 +4,7 @@
 /**
  * @group edd_shortcode
  */
-class Tests_Shortcode extends WP_UnitTestCase {
+class Tests_Shortcode extends EDD_UnitTestCase {
 
 	protected $_payment_id = null;
 
@@ -183,6 +183,8 @@ class Tests_Shortcode extends WP_UnitTestCase {
 	}
 
 	public function test_login_form() {
+		$purchase_history_page = edd_get_option( 'purchase_history_page' );
+
 		$this->assertInternalType( 'string', edd_login_form_shortcode( array() ) );
 		$this->assertContains( '<p class="edd-logged-in">You are already logged in</p>', edd_login_form_shortcode( array() ) );
 
@@ -197,12 +199,11 @@ class Tests_Shortcode extends WP_UnitTestCase {
 		$this->assertInternalType( 'string', $login_form );
 		$this->assertContains( '"' . get_option( 'site_url' ) . '"', $login_form );
 
-		$page = get_page_by_title( 'Purchase History' );
-		edd_update_option( 'login_redirect_page', $page->ID );
+		edd_update_option( 'login_redirect_page', $purchase_history_page );
 
 		$login_form = edd_login_form_shortcode( array() );
 		$this->assertInternalType( 'string', $login_form );
-		$this->assertContains( '"' . get_permalink( $page->ID ) . '"', $login_form );
+		$this->assertContains( '"' . get_permalink( $purchase_history_page ) . '"', $login_form );
 	}
 
 	public function test_discounts_shortcode() {
