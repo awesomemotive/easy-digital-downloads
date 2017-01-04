@@ -4,12 +4,7 @@
 /**
  * @group edd_url
  */
-class Tests_URL extends WP_UnitTestCase {
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-		edd_install();
-	}
-
+class Tests_URL extends EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 	}

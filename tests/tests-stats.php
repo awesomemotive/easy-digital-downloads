@@ -3,16 +3,11 @@
 /**
  * @group edd_stats
  */
-class Tests_Stats extends WP_UnitTestCase {
+class Tests_Stats extends EDD_UnitTestCase {
 
 	protected $_post;
 	protected $_stats;
 	protected $_payment_stats;
-
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-		edd_install();
-	}
 
 	public function setUp() {
 		parent::setUp();

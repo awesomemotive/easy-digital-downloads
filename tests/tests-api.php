@@ -3,7 +3,7 @@
 /**
  * @group edd_api
  */
-class Tests_API extends WP_UnitTestCase {
+class Tests_API extends EDD_UnitTestCase {
 	protected $_rewrite = null;
 
 	protected $query = null;
@@ -17,10 +17,6 @@ class Tests_API extends WP_UnitTestCase {
 	protected $_api_output_sales = null;
 
 	protected $_user_id = null;
-
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-	}
 
 	public function setUp() {
 		parent::setUp();

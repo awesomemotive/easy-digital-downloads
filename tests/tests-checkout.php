@@ -4,12 +4,7 @@
 /**
  * @group edd_checkout
  */
-class Tests_Checkout extends WP_UnitTestCase {
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-		edd_install();
-	}
-
+class Tests_Checkout extends EDD_UnitTestCase {
 	public function setUp() {
 
 		parent::setUp();

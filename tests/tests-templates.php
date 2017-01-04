@@ -4,14 +4,9 @@
 /**
  * @group edd_mime
  */
-class Tests_Templates extends WP_UnitTestCase {
+class Tests_Templates extends EDD_UnitTestCase {
 
 	protected $_post;
-
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-		edd_install();
-	}
 
 	public function setUp() {
 		parent::setUp();

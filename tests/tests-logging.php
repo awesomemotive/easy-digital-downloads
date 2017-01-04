@@ -4,13 +4,8 @@
 /**
  * @group edd_logging
  */
-class Tests_Logging extends WP_UnitTestCase {
+class Tests_Logging extends EDD_UnitTestCase {
 	protected $_object = null;
-
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-		edd_install();
-	}
 
 	public function setUp() {
 		parent::setUp();

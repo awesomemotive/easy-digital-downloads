@@ -4,12 +4,7 @@
 /**
  * @group edd_meta
  */
-class Tests_Register_Meta extends WP_UnitTestCase {
-
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-		edd_install();
-	}
+class Tests_Register_Meta extends EDD_UnitTestCase {
 
 	public function setUp() {
 		parent::setUp();
