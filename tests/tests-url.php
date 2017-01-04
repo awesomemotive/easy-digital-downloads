@@ -5,8 +5,8 @@
  * @group edd_url
  */
 class Tests_URL extends WP_UnitTestCase {
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
+	public static function wpSetUpBeforeClass() {
+
 		edd_install();
 	}
 

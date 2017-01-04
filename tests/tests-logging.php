@@ -7,8 +7,8 @@
 class Tests_Logging extends WP_UnitTestCase {
 	protected $_object = null;
 
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
+	public static function wpSetUpBeforeClass() {
+
 		edd_install();
 	}
 

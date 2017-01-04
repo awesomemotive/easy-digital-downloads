@@ -4,8 +4,8 @@
 class Tests_EDD extends WP_UnitTestCase {
 	protected $object;
 
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
+	public static function wpSetUpBeforeClass() {
+
 		edd_install();
 	}
 

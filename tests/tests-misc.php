@@ -6,8 +6,7 @@
  */
 class Test_Misc extends WP_UnitTestCase {
 
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
+	public static function wpSetUpBeforeClass() {
 		edd_install();
 	}
 
@@ -544,7 +543,7 @@ class Test_Misc extends WP_UnitTestCase {
 		EDD_Helper_Download::delete_download( $post->ID );
 		remove_filter( 'edd_is_caching_plugin_active', '__return_true' );
 
-		$this->go_to( get_permalink( edd_get_option( 'purchase_page', false ) ) );
+		$this->go_to( get_permalink( $edd_options['purchase_page'] ) );
 		$this->assertEquals( edd_get_checkout_uri(), edd_get_current_page_url() );
 
 		add_filter( 'edd_is_caching_plugin_active', '__return_true' );
@@ -571,7 +570,7 @@ class Test_Misc extends WP_UnitTestCase {
 
 		$remove_url = edd_remove_item_url( $item_position );
 
-		$this->assertContains( 'page_id=3', $remove_url );
+		$this->assertContains( 'page_id=' . $edd_options['purchase_page'], $remove_url );
 		$this->assertContains( 'edd_action=remove', $remove_url );
 		$this->assertContains( 'nocache=true', $remove_url );
 		$this->assertContains( 'cart_item=' . $item_position, $remove_url );
@@ -580,7 +579,7 @@ class Test_Misc extends WP_UnitTestCase {
 		unset( $edd_options['no_cache_checkout'] );
 		$remove_url = edd_remove_item_url( $item_position );
 
-		$this->assertContains( 'page_id=3', $remove_url );
+		$this->assertContains( 'page_id=' . $edd_options['purchase_page'], $remove_url );
 		$this->assertContains( 'edd_action=remove', $remove_url );
 		$this->assertContains( 'cart_item=' . $item_position, $remove_url );
 		$this->assertNotContains( 'nocache=true', $remove_url );

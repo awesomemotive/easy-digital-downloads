@@ -18,8 +18,8 @@ class Tests_API extends WP_UnitTestCase {
 
 	protected $_user_id = null;
 
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
+	public static function wpSetUpBeforeClass() {
+
 	}
 
 	public function setUp() {

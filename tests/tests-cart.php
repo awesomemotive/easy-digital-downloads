@@ -9,8 +9,8 @@ class Test_Cart extends WP_UnitTestCase {
 	protected $_post = null;
 	protected $_discount = null;
 
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
+	public static function wpSetUpBeforeClass() {
+
 		edd_install();
 	}
 
