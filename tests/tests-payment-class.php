@@ -3,7 +3,7 @@
 /**
  * @group edd_payments
  */
-class Tests_Payment_Class extends WP_UnitTestCase {
+class Tests_Payment_Class extends EDD_UnitTestCase {
 
 	protected $_payment_id = null;
 	protected $_key = null;

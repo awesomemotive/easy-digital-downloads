@@ -4,7 +4,8 @@
 /**
  * @group edd_gateways
  */
-class Test_Gateways extends WP_UnitTestCase {
+class Test_Gateways extends EDD_UnitTestCase {
+
 	public function setUp() {
 		parent::setUp();
 	}
