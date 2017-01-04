@@ -8,8 +8,8 @@ class Test_HTML_Elements extends WP_UnitTestCase {
 	protected $_post_id = null;
 
 
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
+	public static function wpSetUpBeforeClass() {
+
 		edd_install();
 	}
 

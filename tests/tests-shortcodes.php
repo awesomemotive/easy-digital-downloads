@@ -12,8 +12,8 @@ class Tests_Shortcode extends WP_UnitTestCase {
 
 	protected $_payment_key = null;
 
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
+	public static function wpSetUpBeforeClass() {
+
 		edd_install();
 	}
 

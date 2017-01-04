@@ -9,8 +9,8 @@ class Tests_Stats extends WP_UnitTestCase {
 	protected $_stats;
 	protected $_payment_stats;
 
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
+	public static function wpSetUpBeforeClass() {
+
 		edd_install();
 	}
 

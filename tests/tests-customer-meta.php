@@ -4,8 +4,8 @@ class Tests_Customer_Meta extends WP_UnitTestCase {
 	protected $_customer;
 	protected $_customer_id = 0;
 
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
+	public static function wpSetUpBeforeClass() {
+
 		edd_install();
 	}
 

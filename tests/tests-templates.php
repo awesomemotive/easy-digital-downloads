@@ -8,8 +8,8 @@ class Tests_Templates extends WP_UnitTestCase {
 
 	protected $_post;
 
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
+	public static function wpSetUpBeforeClass() {
+
 		edd_install();
 	}
 

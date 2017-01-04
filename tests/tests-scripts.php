@@ -5,6 +5,10 @@
  */
 class Tests_Scripts extends WP_UnitTestCase {
 
+	public static function wpSetUpBeforeClass() {
+		edd_install();
+	}
+
 	/**
 	 * Test if all the file hooks are working.
 	 *
@@ -25,9 +29,10 @@ class Tests_Scripts extends WP_UnitTestCase {
 	 * @since 2.3.6
 	 */
 	public function test_load_scripts_checkout() {
+		global $edd_options;
 
 		// Prepare test
-		$this->go_to( get_permalink( edd_get_option( 'purchase_page' ) ) );
+		$this->go_to( get_permalink( $edd_options['purchase_page'] ) );
 		edd_load_scripts();
 
 		$this->assertTrue( wp_script_is( 'creditCardValidator', 'enqueued' ) );

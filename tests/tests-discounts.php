@@ -11,8 +11,8 @@ class Tests_Discounts extends WP_UnitTestCase {
 	protected $_flat_post_id = null;
 	protected $_negative_post_id = null;
 
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
+	public static function wpSetUpBeforeClass() {
+
 		edd_install();
 	}
 

@@ -9,8 +9,8 @@ class Tests_Emails extends WP_UnitTestCase {
 
 	protected $payment_id;
 
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
+	public static function wpSetUpBeforeClass() {
+
 		edd_install();
 	}
 
