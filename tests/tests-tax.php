@@ -4,16 +4,11 @@
 /**
  * @group edd_tax
  */
-class Tests_Taxes extends WP_UnitTestCase {
+class Tests_Taxes extends EDD_UnitTestCase {
 
 	protected $_payment_id = null;
 
 	protected $_post = null;
-
-	public static function wpSetUpBeforeClass() {
-
-		edd_install();
-	}
 
 	public function setUp() {
 		parent::setUp();

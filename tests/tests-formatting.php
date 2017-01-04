@@ -4,12 +4,7 @@
 /**
  * @group edd_formatting
  */
-class Tests_Formatting extends WP_UnitTestCase {
-
-	public static function wpSetUpBeforeClass() {
-
-		edd_install();
-	}
+class Tests_Formatting extends EDD_UnitTestCase {
 
 	public function setUp() {
 		parent::setUp();

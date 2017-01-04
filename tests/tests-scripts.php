@@ -3,11 +3,7 @@
 /**
  * @group scripts
  */
-class Tests_Scripts extends WP_UnitTestCase {
-
-	public static function wpSetUpBeforeClass() {
-		edd_install();
-	}
+class Tests_Scripts extends EDD_UnitTestCase {
 
 	/**
 	 * Test if all the file hooks are working.
