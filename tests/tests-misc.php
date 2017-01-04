@@ -4,11 +4,7 @@
 /**
  * @group edd_misc
  */
-class Test_Misc extends WP_UnitTestCase {
-
-	public static function wpSetUpBeforeClass() {
-		edd_install();
-	}
+class Test_Misc extends EDD_UnitTestCase {
 
 	public function setUp() {
 		parent::setUp();

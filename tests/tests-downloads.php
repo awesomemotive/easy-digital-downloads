@@ -4,17 +4,12 @@
 /**
  * @group edd_downloads
  */
-class Tests_Downloads extends WP_UnitTestCase {
+class Tests_Downloads extends EDD_UnitTestCase {
 	protected $_post = null;
 
 	protected $_variable_pricing = null;
 
 	protected $_download_files = null;
-
-	public static function wpSetUpBeforeClass() {
-
-		edd_install();
-	}
 
 	public function setUp() {
 		parent::setUp();

@@ -3,16 +3,11 @@
 /**
  * @group edd_emails
  */
-class Tests_Emails extends WP_UnitTestCase {
+class Tests_Emails extends EDD_UnitTestCase {
 
 	protected $_tags;
 
 	protected $payment_id;
-
-	public static function wpSetUpBeforeClass() {
-
-		edd_install();
-	}
 
 	public function setUp() {
 		parent::setUp();

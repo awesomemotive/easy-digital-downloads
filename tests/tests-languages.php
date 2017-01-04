@@ -4,12 +4,7 @@
 /**
  * @group edd_languages
  */
-class Tests_Languages extends WP_UnitTestCase {
-
-	public static function wpSetUpBeforeClass() {
-
-		edd_install();
-	}
+class Tests_Languages extends EDD_UnitTestCase {
 
 	public function setUp() {
 		parent::setUp();

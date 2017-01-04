@@ -1,13 +1,8 @@
 <?php
 
 
-class Tests_EDD extends WP_UnitTestCase {
+class Tests_EDD extends EDD_UnitTestCase {
 	protected $object;
-
-	public static function wpSetUpBeforeClass() {
-
-		edd_install();
-	}
 
 	public function setUp() {
 		parent::setUp();

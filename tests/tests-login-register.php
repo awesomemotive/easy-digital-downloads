@@ -4,12 +4,7 @@
 /**
  * @group edd_login_register
  */
-class Tests_Login_Register extends WP_UnitTestCase {
-
-	public static function wpSetUpBeforeClass() {
-
-		edd_install();
-	}
+class Tests_Login_Register extends EDD_UnitTestCase {
 
 	public function setUp() {
 		parent::setUp();

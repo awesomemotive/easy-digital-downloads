@@ -4,17 +4,12 @@
 /**
  * @group edd_discounts
  */
-class Tests_Discounts extends WP_UnitTestCase {
+class Tests_Discounts extends EDD_UnitTestCase {
 	protected $_post = null;
 	protected $_post_id = null;
 	protected $_download = null;
 	protected $_flat_post_id = null;
 	protected $_negative_post_id = null;
-
-	public static function wpSetUpBeforeClass() {
-
-		edd_install();
-	}
 
 	public function setUp() {
 

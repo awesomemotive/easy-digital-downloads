@@ -4,12 +4,7 @@
 /**
  * @group edd_filters
  */
-class Tests_Filters extends WP_UnitTestCase {
-
-	public static function wpSetUpBeforeClass() {
-
-		edd_install();
-	}
+class Tests_Filters extends EDD_UnitTestCase {
 
 	public function setUp() {
 		parent::setUp();
