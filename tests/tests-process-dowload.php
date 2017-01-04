@@ -4,7 +4,7 @@
 /**
  * @group edd_downloads
  */
-class Tests_Process_Download extends WP_UnitTestCase {
+class Tests_Process_Download extends EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 	}
