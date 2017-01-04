@@ -4,7 +4,7 @@
 /**
  * @group edd_downloads
  */
-class Tests_Downloads extends WP_UnitTestCase {
+class Tests_Downloads extends EDD_UnitTestCase {
 	protected $_post = null;
 
 	protected $_variable_pricing = null;
@@ -347,5 +347,5 @@ class Tests_Downloads extends WP_UnitTestCase {
 
 		$this->assertTrue( edd_download_quantities_disabled( $this->_post->ID ) );
 	}
-	
+
 }
