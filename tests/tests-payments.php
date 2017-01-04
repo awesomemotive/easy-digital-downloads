@@ -3,7 +3,7 @@
 /**
  * @group edd_payments
  */
-class Tests_Payments extends WP_UnitTestCase {
+class Tests_Payments extends EDD_UnitTestCase {
 
 	protected $_payment_id = null;
 	protected $_key = null;
@@ -318,7 +318,7 @@ class Tests_Payments extends WP_UnitTestCase {
 	public function test_update_payment_data() {
 
 		$payment = new EDD_Payment( $this->_payment_id );
-		$payment->date = date( 'Y-n-d H:i:s' );
+		$payment->date = date( 'Y-m-d H:i:s' );
 		$payment->save();
 		$meta = $payment->get_meta();
 

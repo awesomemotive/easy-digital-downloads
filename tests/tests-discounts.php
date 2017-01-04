@@ -4,7 +4,7 @@
 /**
  * @group edd_discounts
  */
-class Tests_Discounts extends WP_UnitTestCase {
+class Tests_Discounts extends EDD_UnitTestCase {
 	protected $_post = null;
 	protected $_post_id = null;
 	protected $_download = null;
