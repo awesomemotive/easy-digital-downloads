@@ -3,16 +3,11 @@
 /**
  * @group edd_cart
  */
-class Test_Cart extends WP_UnitTestCase {
+class Test_Cart extends EDD_UnitTestCase {
 	protected $_rewrite = null;
 
 	protected $_post = null;
 	protected $_discount = null;
-
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-		edd_install();
-	}
 
 	public function setUp() {
 		parent::setUp();

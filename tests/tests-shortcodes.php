@@ -4,18 +4,13 @@
 /**
  * @group edd_shortcode
  */
-class Tests_Shortcode extends WP_UnitTestCase {
+class Tests_Shortcode extends EDD_UnitTestCase {
 
 	protected $_payment_id = null;
 
 	protected $_post = null;
 
 	protected $_payment_key = null;
-
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-		edd_install();
-	}
 
 	public function setUp() {
 		parent::setUp();

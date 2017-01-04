@@ -4,13 +4,7 @@
 /**
  * @group edd_activation
  */
-class Tests_Activation extends WP_UnitTestCase {
-
-
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-		edd_install();
-	}
+class Tests_Activation extends EDD_UnitTestCase {
 
 	/**
 	 * SetUp test class.

@@ -4,13 +4,7 @@
 /**
  * @group edd_downloads
  */
-class Tests_Process_Download extends WP_UnitTestCase {
-
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-		edd_install();
-	}
-
+class Tests_Process_Download extends EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 	}

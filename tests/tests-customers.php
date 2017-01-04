@@ -3,18 +3,13 @@
 /**
  * @group edd_customers
  */
-class Tests_Customers extends WP_UnitTestCase {
+class Tests_Customers extends EDD_UnitTestCase {
 
 	protected $_post_id = null;
 
 	protected $_user_id = null;
 
 	protected $_customer_id = null;
-
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-		edd_install();
-	}
 
 	public function setUp() {
 		parent::setUp();
