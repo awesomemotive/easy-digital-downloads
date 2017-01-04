@@ -1,7 +1,7 @@
 <?php
 
 
-class Tests_EDD extends WP_UnitTestCase {
+class Tests_EDD extends EDD_UnitTestCase {
 	protected $object;
 
 	public function setUp() {
