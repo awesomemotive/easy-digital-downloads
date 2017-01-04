@@ -5,6 +5,12 @@
  * @group edd_formatting
  */
 class Tests_Formatting extends WP_UnitTestCase {
+
+	public static function setUpBeforeClass() {
+		parent::setUpBeforeClass();
+		edd_install();
+	}
+
 	public function setUp() {
 		parent::setUp();
 	}

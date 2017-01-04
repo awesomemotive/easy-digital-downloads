@@ -97,6 +97,10 @@ function edd_run_install() {
 			)
 		);
 
+		$options['purchase_page'] = $checkout;
+	}
+
+	if ( ! array_key_exists( 'success_page', $current_options ) ) {
 		// Purchase Confirmation (Success) Page
 		$success = wp_insert_post(
 			array(
@@ -110,6 +114,10 @@ function edd_run_install() {
 			)
 		);
 
+		$options['success_page'] = $success;
+	}
+
+	if ( ! array_key_exists( 'failure_page', $current_options ) ) {
 		// Failed Purchase Page
 		$failed = wp_insert_post(
 			array(
@@ -123,6 +131,10 @@ function edd_run_install() {
 			)
 		);
 
+		$options['failure_page'] = $failed;
+	}
+
+	if ( ! array_key_exists( 'purchase_history_page', $current_options ) ) {
 		// Purchase History (History) Page
 		$history = wp_insert_post(
 			array(
@@ -136,16 +148,11 @@ function edd_run_install() {
 			)
 		);
 
-		// Store our page IDs
-		$options['purchase_page']         = $checkout;
-		$options['success_page']          = $success;
-		$options['failure_page']          = $failed;
 		$options['purchase_history_page'] = $history;
-
 	}
 
 	// Populate some default values
-	foreach( edd_get_registered_settings() as $tab => $sections ) {	
+	foreach( edd_get_registered_settings() as $tab => $sections ) {
 		foreach( $sections as $section => $settings) {
 
 			// Check for backwards compatibility
@@ -157,7 +164,7 @@ function edd_run_install() {
 
 			foreach ( $settings as $option ) {
 
-				if( 'checkbox' == $option['type'] && ! empty( $option['std'] ) ) {
+				if( ! empty( $option['type'] ) && 'checkbox' == $option['type'] && ! empty( $option['std'] ) ) {
 					$options[ $option['id'] ] = '1';
 				}
 
@@ -331,7 +338,7 @@ function edd_install_roles_on_network() {
 	if( ! is_object( $wp_roles ) ) {
 		return;
 	}
-	
+
 
 	if( empty( $wp_roles->roles ) || ! array_key_exists( 'shop_manager', $wp_roles->roles ) ) {
 

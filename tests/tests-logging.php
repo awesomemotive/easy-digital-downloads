@@ -7,6 +7,11 @@
 class Tests_Logging extends WP_UnitTestCase {
 	protected $_object = null;
 
+	public static function setUpBeforeClass() {
+		parent::setUpBeforeClass();
+		edd_install();
+	}
+
 	public function setUp() {
 		parent::setUp();
 
@@ -60,7 +65,7 @@ class Tests_Logging extends WP_UnitTestCase {
 	}
 
 	public function test_valid_log() {
-		$this->assertTrue( $this->_object->valid_type( 'file_download' ) );		
+		$this->assertTrue( $this->_object->valid_type( 'file_download' ) );
 	}
 
 	public function test_fake_log() {

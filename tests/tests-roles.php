@@ -7,6 +7,11 @@ class Tests_Roles extends WP_UnitTestCase {
 
 	protected $_roles;
 
+	public static function setUpBeforeClass() {
+		parent::setUpBeforeClass();
+		edd_install();
+	}
+
 	public function setUp() {
 		parent::setUp();
 

@@ -9,6 +9,11 @@ class Test_Cart extends WP_UnitTestCase {
 	protected $_post = null;
 	protected $_discount = null;
 
+	public static function setUpBeforeClass() {
+		parent::setUpBeforeClass();
+		edd_install();
+	}
+
 	public function setUp() {
 		parent::setUp();
 
@@ -134,8 +139,8 @@ class Test_Cart extends WP_UnitTestCase {
 
 		edd_add_to_cart( $this->_post->ID, $options );
 		$this->assertEquals( 2, count( edd_get_cart_contents() ) );
-		$this->assertEquals( 2, edd_get_cart_item_quantity( $this->_post->ID, array( 'price_id' => 0 ) ) );
-		$this->assertEquals( 3, edd_get_cart_item_quantity( $this->_post->ID, array( 'price_id' => 1 ) ) );
+		$this->assertEquals( array( 2, 3 ), edd_get_cart_item_quantity( $this->_post->ID, array( 'price_id' => 0 ) ) );
+		$this->assertEquals( array( 2, 3 ), edd_get_cart_item_quantity( $this->_post->ID, array( 'price_id' => 1 ) ) );
 		remove_filter( 'edd_item_quantities_enabled', '__return_true' );
 	}
 

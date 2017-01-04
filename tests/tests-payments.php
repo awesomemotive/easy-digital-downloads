@@ -10,6 +10,11 @@ class Tests_Payments extends WP_UnitTestCase {
 	protected $_post = null;
 	protected $_payment_key = null;
 
+	public static function setUpBeforeClass() {
+		parent::setUpBeforeClass();
+		edd_install();
+	}
+
 	public function setUp() {
 
 		global $edd_options;
@@ -318,7 +323,7 @@ class Tests_Payments extends WP_UnitTestCase {
 	public function test_update_payment_data() {
 
 		$payment = new EDD_Payment( $this->_payment_id );
-		$payment->date = date( 'Y-n-d H:i:s' );
+		$payment->date = date( 'Y-m-d H:i:s' );
 		$payment->save();
 		$meta = $payment->get_meta();
 
