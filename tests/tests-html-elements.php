@@ -4,7 +4,7 @@
 /**
  * @group edd_html
  */
-class Test_HTML_Elements extends WP_UnitTestCase {
+class Test_HTML_Elements extends EDD_UnitTestCase {
 	protected $_post_id = null;
 
 	public function setUp() {
