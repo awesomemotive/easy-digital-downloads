@@ -557,6 +557,11 @@ function edd_get_login_fields() {
 			<p id="edd-user-login-submit">
 				<input type="submit" class="edd-submit button <?php echo $color; ?>" name="edd_login_submit" value="<?php _e( 'Login', 'easy-digital-downloads' ); ?>"/>
 			</p>
+			<p class="edd-lost-password">
+				<a href="<?php echo wp_lostpassword_url(); ?>">
+					<?php _e( 'Lost Password?', 'easy-digital-downloads' ); ?>
+				</a>
+			</p>
 			<?php do_action('edd_checkout_login_fields_after'); ?>
 		</fieldset><!--end #edd_login_fields-->
 	<?php
