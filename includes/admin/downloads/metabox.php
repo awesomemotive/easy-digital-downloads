@@ -966,7 +966,7 @@ function edd_render_disable_button( $post_id ) {
 			<?php if ( $supports_buy_now ) : ?>
 				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Button Behavior</strong>: Add to Cart buttons follow a traditional eCommerce flow. A Buy Now button bypasses most of the process, taking the customer directly from button click to payment, greatly speeding up the process of buying the product.', 'easy-digital-downloads' ); ?>"></span>
 			<?php else: ?>
-				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Button Behavior</strong>: Add to Cart buttons follow a traditional eCommerce flow. Buy Now buttons are only available for supported gateways and stores that do not use taxes.', 'easy-digital-downloads' ); ?>"></span>
+				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Button Behavior</strong>: Add to Cart buttons follow a traditional eCommerce flow. Buy Now buttons are only available for stores that have a single supported gateway active and that do not use taxes.', 'easy-digital-downloads' ); ?>"></span>
 			<?php endif; ?>
 
 		</label>
