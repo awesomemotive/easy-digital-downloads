@@ -604,26 +604,43 @@ $customer       = new EDD_Customer( $payment->customer_id );
 
 									<div class="column-container customer-info">
 										<div class="column">
+											<?php if( ! empty( $customer->id ) ) : ?>
+												<?php $customer_url = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ); ?>
+												<a href="<?php echo $customer_url; ?>"><?php echo $customer->name; ?> - <?php echo $customer->email; ?></a>
+											<?php endif; ?>
+										</div>
+										<div class="column">
+											<input type="hidden" name="edd-current-customer" value="<?php echo $customer->id; ?>" />
+										</div>
+										<div class="column">
+											<a href="#change" class="edd-payment-change-customer"><?php _e( 'Assign to another customer', 'easy-digital-downloads' ); ?></a>
+											&nbsp;|&nbsp;
+											<a href="#new" class="edd-payment-new-customer"><?php _e( 'New Customer', 'easy-digital-downloads' ); ?></a>
+										</div>
+									</div>
+
+									<div class="column-container change-customer" style="display: none">
+										<div class="column">
+											<strong><?php _e( 'Select a customer:', 'easy-digital-downloads' ); ?></strong>
+											<br />
 											<?php
 												$args = array(
-													'selected' => $customer->id,
-													'name' => 'customer-id',
+													'class'       => 'edd-payment-change-customer-input',
+													'selected'    => $customer->id,
+													'name'        => 'customer-id',
 													'placeholder' => __( 'Type to search all Customers', 'easy-digital-downloads' ),
 												);
 
 												echo EDD()->html->customer_dropdown( $args );
 											?>
 										</div>
+										<div class="column"></div>
 										<div class="column">
-											<input type="hidden" name="edd-current-customer" value="<?php echo $customer->id; ?>" />
+											<input type="hidden" id="edd-change-customer" name="edd-change-customer" value="0" />
+											<a href="#cancel" class="edd-payment-change-customer-cancel edd-delete"><?php _e( 'Cancel', 'easy-digital-downloads' ); ?></a>
 										</div>
 										<div class="column">
-											<?php if( ! empty( $customer->id ) ) : ?>
-												<?php $customer_url = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ); ?>
-												<a href="<?php echo $customer_url; ?>"><?php _e( 'View Customer Details', 'easy-digital-downloads' ); ?></a>
-												&nbsp;|&nbsp;
-											<?php endif; ?>
-											<a href="#new" class="edd-payment-new-customer"><?php _e( 'New Customer', 'easy-digital-downloads' ); ?></a>
+											<small><em>*<?php _e( 'Click "Save Payment" to change the customer', 'easy-digital-downloads' ); ?></em></small>
 										</div>
 									</div>
 
