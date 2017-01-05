@@ -387,6 +387,7 @@ jQuery(document).ready(function ($) {
 			this.edit_address();
 			this.remove_download();
 			this.add_download();
+			this.change_customer();
 			this.new_customer();
 			this.recalculate_total();
 			this.variable_prices_check();
@@ -470,6 +471,27 @@ jQuery(document).ready(function ($) {
 					$('.edd-order-payment-recalc-totals').show();
 				}
 				return false;
+			});
+
+		},
+
+		change_customer : function() {
+
+			$('#edd-customer-details').on('click', '.edd-payment-change-customer, .edd-payment-change-customer-cancel', function(e) {
+				e.preventDefault();
+
+				var change_customer = $(this).hasClass('edd-payment-change-customer');
+				var cancel          = $(this).hasClass('edd-payment-change-customer-cancel');
+
+				if ( change_customer ) {
+					$('.customer-info').hide();
+					$('.change-customer').show();
+					$('.edd-payment-change-customer-input').css('width', 'auto');
+				} else if( cancel) {
+					$('.customer-info').show();
+					$('.change-customer').hide();
+				}
+
 			});
 
 		},
