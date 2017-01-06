@@ -562,3 +562,22 @@ function edd_get_success_page_url( $query_string = null ) {
 
 	return apply_filters( 'edd_success_page_url', edd_get_success_page_uri( $query_string ) );
 }
+
+/**
+ * Reduces earnings and sales stats when a purchase is refunded
+ *
+ * @since 1.8.2
+ * @param int $payment_id the ID number of the payment
+ * @param string $new_status the status of the payment, probably "publish"
+ * @param string $old_status the status of the payment prior to being marked as "complete", probably "pending"
+ * @deprecated  2.5.7 Please avoid usage of this function in favor of refund() in EDD_Payment
+ * @internal param Arguments $data passed
+ */
+function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
+
+	$backtrace = debug_backtrace();
+	_edd_deprecated_function( 'edd_undo_purchase_on_refund', '2.5.7', 'EDD_Payment->refund()', $backtrace );
+
+	$payment = new EDD_Payment( $payment_id );
+	$payment->refund();
+}
