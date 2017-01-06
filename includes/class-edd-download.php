@@ -794,6 +794,19 @@ class EDD_Download {
 	}
 
 	/**
+	 * Is quantity input disabled on this product?
+	 *
+	 * @since 2.7
+	 * @return bool
+	 */
+	public function quantities_disabled() {
+
+		$ret = (bool) get_post_meta( $this->ID, '_edd_quantities_disabled', true );
+		return apply_filters( 'edd_download_quantity_disabled', $ret, $this->ID );
+
+	}
+
+	/**
 	 * Updates a single meta entry for the download
 	 *
 	 * @since  2.3
