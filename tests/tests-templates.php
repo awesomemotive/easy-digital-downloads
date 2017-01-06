@@ -4,7 +4,7 @@
 /**
  * @group edd_mime
  */
-class Tests_Templates extends WP_UnitTestCase {
+class Tests_Templates extends EDD_UnitTestCase {
 
 	protected $_post;
 

@@ -258,7 +258,7 @@ class EDD_SL_Plugin_Updater {
 			)
 		);
 
-		$cache_key = 'edd_api_request_' . md5( serialize( $this->slug . $this->api_data->license ) );
+		$cache_key = 'edd_api_request_' . md5( serialize( $this->slug . $this->api_data['license'] ) );
 
 		//Get the transient where we store the api request for this plugin for 24 hours
 		$edd_api_request_transient = get_site_transient( $cache_key );

@@ -5,6 +5,7 @@ $_SERVER['SERVER_NAME'] = '';
 $PHP_SELF = $GLOBALS['PHP_SELF'] = $_SERVER['PHP_SELF'] = '/index.php';
 
 define( 'EDD_USE_PHP_SESSIONS', false );
+define( 'WP_USE_THEMES', false );
 
 $_tests_dir = getenv('WP_TESTS_DIR');
 if ( !$_tests_dir ) $_tests_dir = '/tmp/wordpress-tests-lib';
@@ -44,3 +45,4 @@ require_once 'helpers/shims.php';
 require_once 'helpers/class-helper-download.php';
 require_once 'helpers/class-helper-payment.php';
 require_once 'helpers/class-helper-discount.php';
+require_once 'helpers/class-edd-unittestcase.php';
