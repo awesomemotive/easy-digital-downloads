@@ -47,7 +47,7 @@ if ( is_user_logged_in() ):
 							<a href="<?php echo esc_url( add_query_arg( 'payment_key', $payment->key, edd_get_success_page_uri() ) ); ?>"><?php _e( 'View Details and Downloads', 'easy-digital-downloads' ); ?></a>
 						<?php endif; ?>
 					</td>
-					<?php do_action( 'edd_purchase_history_row_end', $payment->ID, $payment->meta ); ?>
+					<?php do_action( 'edd_purchase_history_row_end', $payment->ID, $payment->payment_meta ); ?>
 				</tr>
 			<?php endforeach; ?>
 		</table>
