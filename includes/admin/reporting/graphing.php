@@ -85,12 +85,10 @@ function edd_reports_graph() {
 			$hour++;
 		}
 	} elseif ( $dates['range'] == 'this_week' || $dates['range'] == 'last_week' ) {
-		$num_of_days = cal_days_in_month( CAL_GREGORIAN, $dates['m_start'], $dates['year'] );
-
 		$report_dates = array();
 		$i = 0;
 		while ( $i <= 6 ) {
-			if ( ( $dates['day'] + $i ) <= $num_of_days ) {
+			if ( ( $dates['day'] + $i ) <= $dates['day_end'] ) {
 				$report_dates[ $i ] = array(
 					'day'   => (string) $dates['day'] + $i,
 					'month' => $dates['m_start'],
@@ -110,7 +108,7 @@ function edd_reports_graph() {
 		$start_date = $report_dates[0];
 		$end_date = end( $report_dates );
 
-		$sales = EDD()->payment_stats->get_sales_by_range( $dates['range'], true, $start_date['year'] . '-' . date( 'm', strtotime( $start_date['month'] ) ) . '-' . date( 'd', strtotime( $start_date['day'] ) ), $end_date['year'] . '-' . date( 'm', strtotime( $end_date['month'] ) ) . '-' . date( 'd', strtotime( $end_date['day'] ) ) );
+		$sales = EDD()->payment_stats->get_sales_by_range( $dates['range'], true, $start_date['year'] . '-' . $start_date['month'] . '-' . $start_date['day'], $end_date['year'] . '-' . $end_date['month'] . '-' . $end_date['day'] );
 
 		$i = 0;
 		foreach ( $report_dates as $report_date ) {
@@ -287,7 +285,12 @@ function edd_reports_graph() {
 					$day_keys = array_keys( $days );
 					$last_day = end( $day_keys );
 
-					$consolidated_date = $month === $last_month ? $last_day : 1;
+					$consolidated_date = 1;
+					if( $day_by_day ) {
+
+						$consolidated_date = $month === end( $month_keys ) ? cal_days_in_month( CAL_GREGORIAN, $month, $year ) : 1;
+	
+					}
 
 					$earnings        = array_sum( $days );
 					$date            = mktime( 0, 0, 0, $month, $consolidated_date, $year ) * 1000;

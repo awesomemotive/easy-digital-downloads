@@ -4,7 +4,7 @@
 /**
  * @group edd_tax
  */
-class Tests_Taxes extends WP_UnitTestCase {
+class Tests_Taxes extends EDD_UnitTestCase {
 
 	protected $_payment_id = null;
 
@@ -75,7 +75,7 @@ class Tests_Taxes extends WP_UnitTestCase {
 		);
 
 		$_SERVER['REMOTE_ADDR'] = '10.0.0.0';
-		$_SERVER['SERVER_NAME'] = 'edd_virtual';
+		$_SERVER['SERVER_NAME'] = 'edd-virtual.local';
 
 		$payment_id = edd_insert_payment( $purchase_data );
 		edd_update_payment_status( $payment_id, 'publish' );

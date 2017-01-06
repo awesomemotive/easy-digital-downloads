@@ -306,11 +306,24 @@ class EDD_Payment {
 	 * @param int $payment_id A given payment
 	 * @return mixed void|false
 	 */
-	public function __construct( $payment_id = false ) {
+	public function __construct( $payment_or_txn_id = false, $by_txn = false ) {
+		global $wpdb;
 
-		if( empty( $payment_id ) ) {
+		if( empty( $payment_or_txn_id ) ) {
 			return false;
 		}
+
+		if ( $by_txn ) {
+			$query      = $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_transaction_id' AND meta_value = '%s'", $payment_or_txn_id );
+			$payment_id = $wpdb->get_var( $query );
+
+			if ( empty( $payment_id ) ) {
+				return false;
+			}
+		} else {
+			$payment_id = absint( $payment_or_txn_id );
+		}
+
 
 		$this->setup_payment( $payment_id );
 	}
@@ -598,6 +611,9 @@ class EDD_Payment {
 	 * @return bool  True of the save occurred, false if it failed or wasn't needed
 	 */
 	public function save() {
+
+		global $edd_logs;
+
 		$saved = false;
 
 		if ( empty( $this->ID ) ) {
@@ -666,27 +682,35 @@ class EDD_Payment {
 									break;
 
 									case 'remove':
-										$log_args = array(
-											'post_type'   => 'edd_log',
-											'post_parent' => $item['id'],
-											'numberposts' => $item['quantity'],
-											'meta_query'  => array(
-												array(
-													'key'     => '_edd_log_payment_id',
-													'value'   => $this->ID,
-													'compare' => '=',
-												),
-												array(
-													'key'     => '_edd_log_price_id',
-													'value'   => $item['price_id'],
-													'compare' => '='
-												)
-											)
+
+										$meta_query = array();
+										$meta_query[] = array(
+											'key'     => '_edd_log_payment_id',
+											'value'   => $this->ID,
+											'compare' => '=',
 										);
 
-										$found_logs = get_posts( $log_args );
-										foreach ( $found_logs as $log ) {
-											wp_delete_post( $log->ID, true );
+										if( ! empty( $item['price_id'] ) || 0 === (int) $item['price_id'] ) {
+											$meta_query[] = array(
+												'key'     => '_edd_log_price_id',
+												'value'   => (int) $item['price_id'],
+												'compare' => '='
+											);
+										}
+
+										$log_args = array(
+											'post_parent'    => $item['id'],
+											'posts_per_page' => $item['quantity'],
+											'meta_query'     => $meta_query,
+											'log_type'       => 'sale'
+										);
+
+										$found_logs = $edd_logs->get_connected_logs( $log_args );
+
+										if( $found_logs ) {
+											foreach ( $found_logs as $log ) {
+												wp_delete_post( $log->ID, true );
+											}
 										}
 
 										if ( 'publish' === $this->status || 'complete' === $this->status || 'revoked' === $this->status ) {
@@ -1558,6 +1582,18 @@ class EDD_Payment {
 
 		if ( $meta_key === '_edd_payment_meta' ) {
 
+			// #5228 Fix possible data issue introduced in 2.6.12
+			if ( isset( $meta[0] ) ) {
+				$bad_meta = $meta[0];
+				unset( $meta[0] );
+
+				if ( is_array( $bad_meta ) ) {
+					$meta = array_merge( $meta, $bad_meta );
+				}
+
+				update_post_meta( $this->ID, '_edd_payment_meta', $meta );
+			}
+
 			// Payment meta was simplified in EDD v1.5, so these are here for backwards compatibility
 			if ( empty( $meta['key'] ) ) {
 				$meta['key'] = $this->setup_payment_key();
@@ -1605,8 +1641,11 @@ class EDD_Payment {
 			$meta_value = apply_filters( 'edd_edd_update_payment_meta_' . $meta_key, $meta_value, $this->ID );
 			update_post_meta( $this->ID, '_edd_payment_user_email', $meta_value );
 
-			$current_meta = $this->get_meta( '_edd_payment_meta', false );
-			$current_meta['user_info']['email']  = $meta_value;
+			$current_meta = $this->get_meta( '_edd_payment_meta' );
+
+			if ( is_array( $current_meta ) ){
+				$current_meta['user_info']['email']  = $meta_value;
+			}
 
 			$meta_key     = '_edd_payment_meta';
 			$meta_value   = $current_meta;
