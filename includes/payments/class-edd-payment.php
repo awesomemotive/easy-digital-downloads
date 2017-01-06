@@ -1657,6 +1657,17 @@ class EDD_Payment {
 		return update_post_meta( $this->ID, $meta_key, $meta_value, $prev_value );
 	}
 
+	public function is_recoverable() {
+		$recoverable = false;
+
+		$recoverable_statuses = apply_filters( 'edd_recoverable_payment_statuses', array( 'pending', 'abandoned' ) );
+		if ( in_array( $this->status, $recoverable_statuses ) && empty( $this->transaction_id ) ) {
+			$recoverable = true;
+		}
+
+		return $recoverable;
+	}
+
 	/**
 	 * When a payment is set to a status of 'refunded' process the necessary actions to reduce stats
 	 *

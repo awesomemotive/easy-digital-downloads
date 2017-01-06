@@ -348,3 +348,56 @@ function edd_cleanup_stats_transients() {
 
 }
 add_action( 'edd_daily_scheduled_events', 'edd_cleanup_stats_transients' );
+
+function edd_recover_payment() {
+	if ( empty( $_GET['_wpnonce'] ) ) {
+		return;
+	}
+
+	if ( ! wp_verify_nonce( $_GET['_wpnonce'],'edd-recover-payment' ) ) {
+		return;
+	}
+
+	$payment = new EDD_Payment( $_GET['payment_id'] );
+	if ( $payment->ID !== (int) $_GET['payment_id'] ) {
+		return;
+	}
+
+	if ( ! $payment->is_recoverable() ) {
+		return;
+	}
+
+	// Empty out the cart.
+	edd_empty_cart();
+
+	// Recover any downloads.
+	foreach ( $payment->cart_details as $download ) {
+		edd_add_to_cart( $download['id'], $download['item_number']['options'] );
+
+		// Recover any item specific fees.
+		if ( ! empty( $download['fees'] ) ) {
+			foreach ( $download['fees'] as $fee ) {
+				EDD()->fees->add_fee( $fee );
+			}
+		}
+	}
+
+	// Recover any global fees.
+	foreach ( $payment->fees as $fee ) {
+		EDD()->fees->add_fee( $fee );
+	}
+
+	// Recover any discounts.
+	if ( 'none' !== $payment->discounts && ! empty( $payment->discounts ) ){
+		$discounts = ! is_array( $payment->discounts ) ? explode( ',', $payment->discounts ) : $payment->discounts;
+
+		foreach ( $discounts as $discount ) {
+			edd_set_cart_discount( $discount );
+		}
+	}
+
+	$redirect = add_query_arg( array( 'payment-mode' => $payment->gateway ), edd_get_checkout_uri() );
+	wp_redirect( $redirect );
+	exit;
+}
+add_action( 'edd_recover_payment', 'edd_recover_payment' );
