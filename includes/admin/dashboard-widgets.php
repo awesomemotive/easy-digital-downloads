@@ -175,7 +175,7 @@ function edd_load_dashboard_sales_widget( ) {
 									<?php echo get_the_title( $payment->ID ) ?>
 									&mdash; <?php echo $payment->user_info['email'] ?>
 								</a>
-								<?php if ( $payment->user_info['id'] > 0 ) {
+								<?php if ( ! empty( $payment->user_info['id'] ) && ( $payment->user_info['id'] > 0 ) ) {
 									$user = get_user_by( 'id', $payment->user_info['id'] );
 									if ( $user ) {
 										echo "(" . $user->data->user_login . ")";
