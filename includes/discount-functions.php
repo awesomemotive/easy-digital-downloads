@@ -1252,10 +1252,11 @@ function edd_get_cart_item_discount_amount( $item = array(), $discount = false )
  * Outputs the HTML for all discounts applied to the cart
  *
  * @since 1.4.1
+ *
  * @return void
  */
 function edd_cart_discounts_html() {
-	echo EDD()->cart->discount_output();
+	echo edd_get_cart_discounts_html();
 }
 
 /**
@@ -1263,11 +1264,43 @@ function edd_cart_discounts_html() {
  *
  * @since 1.4.1
  *
- * @param bool $discounts
+ * @param mixed $discounts Array of cart discounts.
  * @return mixed|void
  */
 function edd_get_cart_discounts_html( $discounts = false ) {
-	return EDD()->cart->discount_output( $discounts, false );
+	if ( ! $discounts ) {
+		$discounts = EDD()->cart->get_discounts();
+	}
+
+	if ( ! $discounts ) {
+		return;
+	}
+
+	$html = '';
+
+	foreach ( $discounts as $discount ) {
+		$discount_id = edd_get_discount_id_by_code( $discount );
+		$rate        = edd_format_discount_rate( edd_get_discount_type( $discount_id ), edd_get_discount_amount( $discount_id ) );
+
+		$remove_url  = add_query_arg(
+			array(
+				'edd_action'    => 'remove_cart_discount',
+				'discount_id'   => $discount_id,
+				'discount_code' => $discount
+			),
+			edd_get_checkout_uri()
+		);
+
+		$discount_html = '';
+		$discount_html .= "<span class=\"edd_discount\">\n";
+			$discount_html .= "<span class=\"edd_discount_rate\">$discount&nbsp;&ndash;&nbsp;$rate</span>\n";
+			$discount_html .= "<a href=\"$remove_url\" data-code=\"$discount\" class=\"edd_discount_remove\"></a>\n";
+		$discount_html .= "</span>\n";
+
+		$html .= apply_filters( 'edd_get_cart_discount_html', $discount_html, $discount, $rate, $remove_url );
+	}
+
+	return apply_filters( 'edd_get_cart_discounts_html', $html, $discounts, $rate, $remove_url );
 }
 
 /**
