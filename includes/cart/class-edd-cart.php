@@ -597,53 +597,6 @@ class EDD_Cart {
 	}
 
 	/**
-	 * Cart Discount HTML Output
-	 *
-	 * @since 2.7
-	 * @access public
-	 * @return mixed string|void
-	 */
-	public function discount_output( $discounts = false, $echo = false ) {
-		if ( ! $discounts ) {
-			$discounts = $this->get_discounts();
-		}
-
-		if ( ! $discounts ) {
-			return;
-		}
-
-		$html = '';
-
-		foreach ( $discounts as $discount ) {
-			$discount_id = edd_get_discount_id_by_code( $discount );
-			$rate        = edd_format_discount_rate( edd_get_discount_type( $discount_id ), edd_get_discount_amount( $discount_id ) );
-
-			$remove_url  = add_query_arg(
-				array(
-					'edd_action'    => 'remove_cart_discount',
-					'discount_id'   => $discount_id,
-					'discount_code' => $discount
-				),
-				edd_get_checkout_uri()
-			);
-
-			$discount_html = '';
-			$discount_html .= "<span class=\"edd_discount\">\n";
-				$discount_html .= "<span class=\"edd_discount_rate\">$discount&nbsp;&ndash;&nbsp;$rate</span>\n";
-				$discount_html .= "<a href=\"$remove_url\" data-code=\"$discount\" class=\"edd_discount_remove\"></a>\n";
-			$discount_html .= "</span>\n";
-
-			$html .= apply_filters( 'edd_get_cart_discount_html', $discount_html, $discount, $rate, $remove_url );
-		}
-
-		if ( ! $echo ) {
-			return $html;
-		} else {
-			echo $html;
-		}
-	}
-
-	/**
 	 * Get the discounted amount on a price
 	 *
 	 * @since 2.7
