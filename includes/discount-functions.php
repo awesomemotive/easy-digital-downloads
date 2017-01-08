@@ -96,6 +96,10 @@ function edd_has_active_discounts() {
  * @return mixed object|bool EDD_Discount object or false if not found.
  */
 function edd_get_discount( $discount_id = 0 ) {
+	if ( empty( $discount_id ) ) {
+		return false;
+	}
+
 	$discount = new EDD_Discount( $discount_id );
 
 	if ( ! $discount->ID > 0 ) {
@@ -219,8 +223,14 @@ function edd_remove_discount( $discount_id = 0 ) {
  * @return bool Whether the status has been updated or not.
  */
 function edd_update_discount_status( $code_id = 0, $new_status = 'active' ) {
+	$updated = false;
 	$discount = new EDD_Discount( $code_id );
-	return $discount->update_status( $new_status );
+
+	if ( $discount && $discount->ID > 0 ) {
+		$updated = $discount->update_status( $new_status );
+	}
+
+	return $updated;
 }
 
 /**
@@ -594,7 +604,12 @@ function edd_get_discounted_amount( $code, $base_price ) {
  */
 function edd_increase_discount_usage( $code ) {
 	$discount = new EDD_Discount( $code, true );
-	return $discount->increase_usage();
+
+	if ( $discount && $discount->ID > 0 ) {
+		return $discount->increase_usage();
+	} else {
+		return false;
+	}
 }
 
 /**
@@ -608,7 +623,12 @@ function edd_increase_discount_usage( $code ) {
  */
 function edd_decrease_discount_usage( $code ) {
 	$discount = new EDD_Discount( $code, true );
-	return $discount->decrease_usage();
+
+	if ( $discount && $discount->ID > 0 ) {
+		return $discount->decrease_usage();
+	} else {
+		return false;
+	}
 }
 
 /**

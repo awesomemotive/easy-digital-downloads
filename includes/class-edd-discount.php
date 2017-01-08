@@ -201,6 +201,7 @@ class EDD_Discount {
 	protected $post_mime_type = '';
 	protected $comment_count = 0;
 	protected $filter;
+	protected $post_type;
 
 	/**
 	 * Constructor.
@@ -376,7 +377,7 @@ class EDD_Discount {
 		$discounts = edd_get_discounts(
 			array(
 				'post_type'      => 'edd_discount',
-				'name'           => $value,
+				'name'           => $name,
 				'posts_per_page' => 1,
 				'post_status'    => 'any',
 				'fields'         => 'ids'
@@ -1534,7 +1535,7 @@ class EDD_Discount {
 		if ( (float) $cart_amount >= (float) $this->min_price ) {
 			$return = true;
 		} elseif( $set_error ) {
-			edd_set_error( 'edd-discount-error', sprintf( __( 'Minimum order of %s not met.', 'easy-digital-downloads' ), edd_currency_filter( edd_format_amount( $min ) ) ) );
+			edd_set_error( 'edd-discount-error', sprintf( __( 'Minimum order of %s not met.', 'easy-digital-downloads' ), edd_currency_filter( edd_format_amount( $this->min_price ) ) ) );
 		}
 
 		/**
