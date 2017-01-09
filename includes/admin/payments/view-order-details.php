@@ -456,7 +456,6 @@ $customer       = new EDD_Customer( $payment->customer_id );
 									<div class="column-container change-customer" style="display: none">
 										<div class="column">
 											<strong><?php _e( 'Select a customer:', 'easy-digital-downloads' ); ?></strong>
-											<br />
 											<?php
 												$args = array(
 													'class'       => 'edd-payment-change-customer-input',
