@@ -576,6 +576,7 @@ add_action( 'edd_purchase_form_login_fields', 'edd_get_login_fields' );
 function edd_payment_mode_select() {
 	$gateways = edd_get_enabled_payment_gateways( true );
 	$page_URL = edd_get_current_page_url();
+	$chosen_gateway = edd_get_chosen_gateway();
 	do_action('edd_payment_mode_top'); ?>
 	<?php if( edd_is_ajax_disabled() ) { ?>
 	<form id="edd_payment_mode" action="<?php echo $page_URL; ?>" method="GET">
@@ -591,7 +592,7 @@ function edd_payment_mode_select() {
 				foreach ( $gateways as $gateway_id => $gateway ) :
 
 					$label         = apply_filters( 'edd_gateway_checkout_label_' . $gateway_id, $gateway['checkout_label'] );
-					$checked       = checked( $gateway_id, edd_get_default_gateway(), false );
+					$checked       = checked( $gateway_id, $chosen_gateway, false );
 					$checked_class = $checked ? ' edd-gateway-option-selected' : '';
 
 					echo '<label for="edd-gateway-' . esc_attr( $gateway_id ) . '" class="edd-gateway-option' . $checked_class . '" id="edd-gateway-option-' . esc_attr( $gateway_id ) . '">';
