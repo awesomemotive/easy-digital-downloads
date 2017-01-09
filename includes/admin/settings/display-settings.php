@@ -76,7 +76,7 @@ function edd_options_page() {
 	?>
 	<div class="wrap <?php echo 'wrap-' . $active_tab; ?>">
 		<h2><?php _e( 'Easy Digital Downloads Settings', 'easy-digital-downloads' ); ?></h2>
-		<h1 class="nav-tab-wrapper">
+		<h2 class="nav-tab-wrapper">
 			<?php
 			foreach ( edd_get_settings_tabs() as $tab_id => $tab_name ) {
 				$tab_url = add_query_arg( array(
@@ -94,7 +94,7 @@ function edd_options_page() {
 				echo '</a>';
 			}
 			?>
-		</h1>
+		</h2>
 		<?php
 
 		$number_of_sections = count( $sections );
