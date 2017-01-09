@@ -4,7 +4,7 @@
 /**
  * @group edd_checkout
  */
-class Tests_Checkout extends WP_UnitTestCase {
+class Tests_Checkout extends EDD_UnitTestCase {
 	public function setUp() {
 
 		parent::setUp();

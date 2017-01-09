@@ -42,6 +42,7 @@ function edd_setup_edd_post_types() {
 		'set_featured_image'    => __( 'Set %1$s Image', 'easy-digital-downloads' ),
 		'remove_featured_image' => __( 'Remove %1$s Image', 'easy-digital-downloads' ),
 		'use_featured_image'    => __( 'Use as %1$s Image', 'easy-digital-downloads' ),
+		'attributes'            => __( '%1$s Attributes', 'easy-digital-downloads' ),
 		'filter_items_list'     => __( 'Filter %2$s list', 'easy-digital-downloads' ),
 		'items_list_navigation' => __( '%2$s list navigation', 'easy-digital-downloads' ),
 		'items_list'            => __( '%2$s list', 'easy-digital-downloads' ),

@@ -4,7 +4,7 @@
 /**
  * @group edd_tools
  */
-class Tests_Tools extends WP_UnitTestCase {
+class Tests_Tools extends EDD_UnitTestCase {
 
 	public function setUp() {
 		parent::setUp();
