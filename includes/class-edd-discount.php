@@ -460,7 +460,7 @@ class EDD_Discount {
 		/**
 		 * Setup discount object vars with WP_Post vars
 		 */
-		foreach ( $discount as $key => $value ) {
+		foreach ( get_object_vars( $discount ) as $key => $value ) {
 			$this->{$key} = $value;
 		}
 

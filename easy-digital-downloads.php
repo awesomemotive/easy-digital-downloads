@@ -467,3 +467,6 @@ function EDD() {
 
 // Get EDD Running.
 EDD();
+
+$d = new EDD_Discount( '2525hrs', false, true );
+print_r($d);
