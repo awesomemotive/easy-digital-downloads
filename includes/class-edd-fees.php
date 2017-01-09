@@ -107,7 +107,7 @@ class EDD_Fees {
 		// Sanitize the amount
 		$args['amount'] = edd_sanitize_amount( $args['amount'] );
 
-		// Force the amount to have 2 decimal places
+		// Force the amount to have the proper number of decimal places.
 		$args['amount'] = number_format( (float) $args['amount'], edd_currency_decimal_filter(), '.', '' );
 
 		// Force no_tax to true if the amount is negative
