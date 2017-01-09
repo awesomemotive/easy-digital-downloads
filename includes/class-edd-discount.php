@@ -392,7 +392,7 @@ class EDD_Discount {
 			$discount = $discounts[0];
 		}
 
-		return WP_Post::get_instance( $discount->ID );
+		return WP_Post::get_instance( $discount );
 	}
 
 	/**
