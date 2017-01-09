@@ -75,10 +75,10 @@ function edd_options_page() {
 	ob_start();
 	?>
 	<div class="wrap <?php echo 'wrap-' . $active_tab; ?>">
-		<h1 class="nav-tab-wrapper">
+		<h2><?php _e( 'Easy Digital Downloads Settings', 'easy-digital-downloads' ); ?></h2>
+		<h2 class="nav-tab-wrapper">
 			<?php
-			foreach( edd_get_settings_tabs() as $tab_id => $tab_name ) {
-
+			foreach ( edd_get_settings_tabs() as $tab_id => $tab_name ) {
 				$tab_url = add_query_arg( array(
 					'settings-updated' => false,
 					'tab'              => $tab_id,
@@ -94,7 +94,7 @@ function edd_options_page() {
 				echo '</a>';
 			}
 			?>
-		</h1>
+		</h2>
 		<?php
 
 		$number_of_sections = count( $sections );

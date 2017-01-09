@@ -998,7 +998,7 @@ td.edd_order_price {
 @media screen and ( max-width: 782px ) {
 
 	.post-type-download .nav-tab-wrapper a {
-		font-size: 50%;
+		font-size: 70%;
 		padding: 2px 4px;
 	}
 	.download_page_edd-tools .apikeys .column-user {
