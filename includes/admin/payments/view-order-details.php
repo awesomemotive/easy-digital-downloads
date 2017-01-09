@@ -621,7 +621,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 
 									<div class="column-container change-customer" style="display: none">
 										<div class="column">
-											<strong><?php _e( 'Select a customer:', 'easy-digital-downloads' ); ?></strong>
+											<strong><?php _e( 'Select a customer', 'easy-digital-downloads' ); ?>:</strong>
 											<?php
 												$args = array(
 													'class'       => 'edd-payment-change-customer-input',
@@ -635,6 +635,8 @@ $customer       = new EDD_Customer( $payment->customer_id );
 										</div>
 										<div class="column"></div>
 										<div class="column">
+											<strong><?php _e( 'Actions', 'easy-digital-downloads' ); ?>:</strong>
+											<br />
 											<input type="hidden" id="edd-change-customer" name="edd-change-customer" value="0" />
 											<a href="#cancel" class="edd-payment-change-customer-cancel edd-delete"><?php _e( 'Cancel', 'easy-digital-downloads' ); ?></a>
 										</div>
@@ -645,14 +647,16 @@ $customer       = new EDD_Customer( $payment->customer_id );
 
 									<div class="column-container new-customer" style="display: none">
 										<div class="column">
-											<strong><?php _e( 'Name:', 'easy-digital-downloads' ); ?></strong>&nbsp;
+											<strong><?php _e( 'Name', 'easy-digital-downloads' ); ?>:</strong>&nbsp;
 											<input type="text" name="edd-new-customer-name" value="" class="medium-text"/>
 										</div>
 										<div class="column">
-											<strong><?php _e( 'Email:', 'easy-digital-downloads' ); ?></strong>&nbsp;
+											<strong><?php _e( 'Email', 'easy-digital-downloads' ); ?>:</strong>&nbsp;
 											<input type="email" name="edd-new-customer-email" value="" class="medium-text"/>
 										</div>
 										<div class="column">
+											<strong><?php _e( 'Actions', 'easy-digital-downloads' ); ?>:</strong>
+											<br />
 											<input type="hidden" id="edd-new-customer" name="edd-new-customer" value="0" />
 											<a href="#cancel" class="edd-payment-new-customer-cancel edd-delete"><?php _e( 'Cancel', 'easy-digital-downloads' ); ?></a>
 										</div>
