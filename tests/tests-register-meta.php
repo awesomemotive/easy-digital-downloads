@@ -4,7 +4,8 @@
 /**
  * @group edd_meta
  */
-class Tests_Register_Meta extends WP_UnitTestCase {
+class Tests_Register_Meta extends EDD_UnitTestCase {
+
 	public function setUp() {
 		parent::setUp();
 		$this->payment_id  = EDD_Helper_Payment::create_simple_payment();
