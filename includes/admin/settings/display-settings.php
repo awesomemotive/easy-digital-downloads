@@ -75,7 +75,7 @@ function edd_options_page() {
 	ob_start();
 	?>
 	<div class="wrap <?php echo 'wrap-' . $active_tab; ?>">
-		<h2><?php _e( 'Easy Digital Downloads Settings', 'edd-reviews' ); ?></h2>
+		<h2><?php _e( 'Easy Digital Downloads Settings', 'easy-digital-downloads' ); ?></h2>
 		<h1 class="nav-tab-wrapper">
 			<?php
 			foreach ( edd_get_settings_tabs() as $tab_id => $tab_name ) {
