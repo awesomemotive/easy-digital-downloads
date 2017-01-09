@@ -541,7 +541,7 @@ function edd_render_products_field( $post_id ) {
 							<td>
 								<button class="edd_remove_repeatable" data-type="file" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;"><span class="screen-reader-text"><?php printf( __( 'Remove bundle option %s', 'easy-digital-downloads' ), $key ); ?></span><span aria-hidden="true">&times;</span></button>
 							</td>
-							<td class="pricing" style="<?php echo $variable_display; ?>"">
+							<td class="pricing" style="<?php echo $variable_display; ?>">
 								<?php
 									$options = array();
 
