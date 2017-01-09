@@ -1815,8 +1815,10 @@ class EDD_Discount {
 		$return = false;
 
 		if ( $this->exists() ) {
-			if ( $this->is_expired( $update ) && defined( 'DOING_AJAX' ) && $set_error ) {
-				edd_set_error( 'edd-discount-error', __( 'This discount is expired.', 'easy-digital-downloads' ) );
+			if ( $this->is_expired( $update ) ) {
+				if ( defined( 'DOING_AJAX' ) && $set_error ) {
+					edd_set_error( 'edd-discount-error', __( 'This discount is expired.', 'easy-digital-downloads' ) );
+				}
 			} elseif ( $this->post_status == 'active' ) {
 				$return = true;
 			} elseif( defined( 'DOING_AJAX' ) && $set_error ) {
