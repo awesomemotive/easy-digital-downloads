@@ -477,4 +477,3 @@ function EDD() {
 
 // Get EDD Running.
 EDD();
-
