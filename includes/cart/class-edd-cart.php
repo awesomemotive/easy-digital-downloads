@@ -317,14 +317,13 @@ class EDD_Cart {
 	 */
 	public function get_quantity() {
 		$total_quantity = 0;
-		$cart = $this->get_contents();
 
-		if ( ! empty( $cart ) ) {
-			$quantities     = wp_list_pluck( $cart, 'quantity' );
+		if ( ! empty( $this->contents ) ) {
+			$quantities     = wp_list_pluck( $this->contents, 'quantity' );
 			$total_quantity = absint( array_sum( $quantities ) );
 		}
 
-		$this->quantity = apply_filters( 'edd_get_cart_quantity', $total_quantity, $cart );
+		$this->quantity = apply_filters( 'edd_get_cart_quantity', $total_quantity, $this->contents );
 		return $this->quantity;
 	}
 
@@ -361,7 +360,7 @@ class EDD_Cart {
 
 		do_action( 'edd_pre_add_to_cart', $download_id, $options );
 
-		$this->contents = apply_filters( 'edd_pre_add_to_cart_contents', $this->get_contents() );
+		$this->contents = apply_filters( 'edd_pre_add_to_cart_contents', $this->contents );
 
 		if ( edd_has_variable_prices( $download_id )  && ! isset( $options['price_id'] ) ) {
 			// Forces to the first price ID if none is specified and download has variable prices
@@ -940,8 +939,7 @@ class EDD_Cart {
  	 * @return float Final price for the item
 	 */
 	public function get_item_final_price( $item_key = 0 ) {
-		$cart = $this->get_contents();
-		$final_price = $cart[ $item_key ]['price'];
+		$final_price = $this->contents[ $item_key ]['price'];
 
 		return apply_filters( 'edd_cart_item_final_price', $final_price, $item_key );
 	}
