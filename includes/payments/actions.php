@@ -349,6 +349,12 @@ function edd_cleanup_stats_transients() {
 }
 add_action( 'edd_daily_scheduled_events', 'edd_cleanup_stats_transients' );
 
+/**
+ * Process an attempt to complete a recoverable payment.
+ *
+ * @since  2.7
+ * @return void
+ */
 function edd_recover_payment() {
 	if ( empty( $_GET['_wpnonce'] ) ) {
 		return;
@@ -395,6 +401,8 @@ function edd_recover_payment() {
 			edd_set_cart_discount( $discount );
 		}
 	}
+
+	EDD()->session->set( 'edd_resume_payment', $payment->ID );
 
 	$redirect = add_query_arg( array( 'payment-mode' => $payment->gateway ), edd_get_checkout_uri() );
 	wp_redirect( $redirect );
