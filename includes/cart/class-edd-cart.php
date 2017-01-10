@@ -446,7 +446,7 @@ class EDD_Cart {
 
 		unset( $item );
 
-		EDD()->session->set( 'edd_cart', $this->contents );
+		$this->update_cart();
 
 		do_action( 'edd_post_add_to_cart', $download_id, $options, $items );
 
