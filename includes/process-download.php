@@ -863,7 +863,7 @@ add_filter( 'edd_requested_file', 'edd_set_requested_file_scheme', 10, 3 );
 function edd_check_file_url_head( $requested_file, $args, $method ) {
 
 	// If this is a file URL (not a path), perform a head request to determine if it's valid
-	if( filter_var( $requested_file, FILTER_VALIDATE_URL ) ) {
+	if( filter_var( $requested_file, FILTER_VALIDATE_URL ) && ! edd_is_local_file( $requested_file ) ) {
 
 		$valid   = true;
 		$request = wp_remote_head( $requested_file );
