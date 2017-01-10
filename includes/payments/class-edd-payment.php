@@ -740,7 +740,7 @@ class EDD_Payment {
 
 					case 'fees':
 
-						if ( 'publish' !== $this->status && 'complete' !== $this->status && 'revoked' !== $this->status ) {
+						if ( 'publish' !== $this->status && 'complete' !== $this->status && 'revoked' !== $this->status && ! $this->is_recoverable() ) {
 							break;
 						}
 
@@ -917,6 +917,27 @@ class EDD_Payment {
 
 			$meta        = $this->get_meta();
 			$merged_meta = array_merge( $meta, $new_meta );
+
+			$payment_data = array(
+				'price'        => $this->total,
+				'date'         => $this->date,
+				'user_email'   => $this->email,
+				'purchase_key' => $this->key,
+				'currency'     => $this->currency,
+				'downloads'    => $this->downloads,
+				'user_info' => array(
+					'id'         => $this->user_id,
+					'email'      => $this->email,
+					'first_name' => $this->first_name,
+					'last_name'  => $this->last_name,
+					'discount'   => $this->discounts,
+					'address'    => $this->address,
+				),
+				'cart_details' => $this->cart_details,
+				'status'       => $this->status,
+				'fees'         => $this->fees,
+			);
+			$merged_meta = apply_filters( 'edd_payment_meta', $merged_meta, $payment_data );
 
 			// Only save the payment meta if it's changed
 			if ( md5( serialize( $meta ) ) !== md5( serialize( $merged_meta) ) ) {
