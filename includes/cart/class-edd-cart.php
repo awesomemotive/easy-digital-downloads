@@ -204,16 +204,14 @@ class EDD_Cart {
 	public function get_contents_details() {
 		global $edd_is_last_cart_item, $edd_flat_discount_total;
 
-		$cart = $this->get_contents();
-
-		if ( empty( $cart ) ) {
+		if ( empty( $this->contents ) ) {
 			return false;
 		}
 
 		$details = array();
-		$length  = count( $cart ) - 1;
+		$length  = count( $this->contents ) - 1;
 
-		foreach ( $cart as $key => $item ) {
+		foreach ( $this->contents as $key => $item ) {
 			if( $key >= $length ) {
 				$edd_is_last_cart_item = true;
 			}
