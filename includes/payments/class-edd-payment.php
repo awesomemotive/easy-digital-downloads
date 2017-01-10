@@ -584,7 +584,7 @@ class EDD_Payment {
 
 			$this->payment_meta = apply_filters( 'edd_payment_meta', $this->payment_meta, $payment_data );
 			if ( ! empty( $this->payment_meta['fees'] ) ) {
-				$this->fees = array_merge( $this->fees, $this->payment_meta['fees'] );
+				$this->fees = array_merge( $this->payment_meta['fees'], $this->fees );
 				foreach( $this->fees as $fee ) {
 					$this->increase_fees( $fee['amount'] );
 				}
@@ -864,7 +864,7 @@ class EDD_Payment {
 				}
 			}
 
-			if ( 'pending' !== $this->status ) {
+			if ( ! $this->in_process() ) {
 
 				$customer = new EDD_Customer( $this->customer_id );
 
@@ -1313,7 +1313,7 @@ class EDD_Payment {
 	 * @since  2.5
 	 * @param  string      $key    The key to remove by
 	 * @param  int|string  $value  The value to search for
-	 * @param  boolean $global     False - removes the first value it fines, True - removes all matches
+	 * @param  boolean $global     False - removes the first value it finds, True - removes all matches
 	 * @return boolean             If the item is removed
 	 */
 	public function remove_fee_by( $key, $value, $global = false ) {
@@ -1562,7 +1562,7 @@ class EDD_Payment {
 				case 'failed':
 					$this->process_failure();
 					break;
-				case 'pending':
+				case 'pending' || 'processing':
 					$this->process_pending();
 					break;
 			}
@@ -1759,7 +1759,7 @@ class EDD_Payment {
 		$process_pending = true;
 
 		// If the payment was not in publish or revoked status, don't decrement stats as they were never incremented
-		if ( ( 'publish' != $this->old_status && 'revoked' != $this->old_status ) || 'pending' != $this->status ) {
+		if ( ( 'publish' != $this->old_status && 'revoked' != $this->old_status ) || ! $this->in_process() ) {
 			$process_pending = false;
 		}
 
@@ -1859,7 +1859,7 @@ class EDD_Payment {
 	private function setup_completed_date() {
 		$payment = get_post( $this->ID );
 
-		if( 'pending' == $payment->post_status || 'preapproved' == $payment->post_status ) {
+		if( 'pending' == $payment->post_status || 'preapproved' == $payment->post_status || 'processing' == $payment->post_status ) {
 			return false; // This payment was never completed
 		}
 
@@ -2434,6 +2434,17 @@ class EDD_Payment {
 	 */
 	private function get_unlimited() {
 		return apply_filters( 'edd_payment_unlimited_downloads', $this->unlimited, $this->ID, $this );
+	}
+
+	/**
+	 * Easily determine if the payment is in a status of pending some action. Processing is specifically used for eChecks.
+	 *
+	 * @since 2.7
+	 * @return bool
+	 */
+	private function in_process() {
+		$in_process_statuses = array( 'pending', 'processing' );
+		return in_array( $this->status, $in_process_statuses );
 	}
 
 }
