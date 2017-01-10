@@ -905,6 +905,12 @@ class EDD_Cart {
 		$price = 0;
 		$variable_prices = edd_has_variable_prices( $download_id );
 
+		if ( false !== $pos = $this->get_item_position( $download_id ) ) {
+			if ( ! empty( $this->details[ $pos ]['item_price'] ) ) {
+				return $this->details[ $pos ]['item_price'];
+			}
+		}
+
 		if ( $variable_prices ) {
 			$prices = edd_get_variable_prices( $download_id );
 
