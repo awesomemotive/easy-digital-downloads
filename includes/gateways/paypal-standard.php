@@ -581,7 +581,8 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 				case 'echeck' :
 
 					$note = __( 'Payment made via eCheck and will clear automatically in 5-8 days', 'easy-digital-downloads' );
-
+					$payment->status = 'processing';
+					$payment->save();
 					break;
 
 				case 'address' :
