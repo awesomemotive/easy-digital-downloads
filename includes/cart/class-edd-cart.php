@@ -220,13 +220,13 @@ class EDD_Cart {
 
 			$price_id = isset( $item['options']['price_id'] ) ? $item['options']['price_id'] : null;
 
-			$item_price = edd_get_cart_item_price( $item['id'], $item['options'] );
-			$discount   = edd_get_cart_item_discount_amount( $item );
+			$item_price = $this->get_item_price( $item['id'], $item['options'] );
+			$discount   = $this->get_item_discount_amount( $item );
 			$discount   = apply_filters( 'edd_get_cart_content_details_item_discount_amount', $discount, $item );
-			$quantity   = edd_get_cart_item_quantity( $item['id'], $item['options'] );
-			$fees       = edd_get_cart_fees( 'fee', $item['id'], $price_id );
+			$quantity   = $this->get_item_quantity( $item['id'], $item['options'] );
+			$fees       = $this->get_fees( 'fee', $item['id'], $price_id );
 			$subtotal   = $item_price * $quantity;
-			$tax        = edd_get_cart_item_tax( $item['id'], $item['options'], $subtotal - $discount );
+			$tax        = $this->get_item_tax( $item['id'], $item['options'], $subtotal - $discount );
 
 			foreach ( $fees as $fee ) {
 				if ( $fee['amount'] < 0 ) {
