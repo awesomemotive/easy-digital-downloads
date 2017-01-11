@@ -90,6 +90,16 @@ $customer       = new EDD_Customer( $payment->customer_id );
 												?>
 												<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo $status_help; ?>"></span>
 											</p>
+
+											<?php if ( $payment->is_recoverable() ) : ?>
+											<p>
+												<span class="label"><?php _e( 'Recovery URL', 'easy-digital-downloads' ); ?>:</span>
+												<?php $recover_help = __( 'Pending and abandoned payments can be resumed by the customer, using this custom URL. Payments can be resumed only when they do not have a transaction ID from the gateway.', 'easy-digital-downloads' ); ?>
+												<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo $recover_help; ?>"></span>
+
+												<input type="text" class="large-text" readonly="readonly" disabled="disabled" value="<?php echo $payment->get_recovery_url(); ?>" />
+											</p>
+											<?php endif; ?>
 										</div>
 
 										<div class="edd-admin-box-inside">
