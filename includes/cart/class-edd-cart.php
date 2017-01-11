@@ -945,7 +945,7 @@ class EDD_Cart {
  	 * @return float Final price for the item
 	 */
 	public function get_item_final_price( $item_key = 0 ) {
-		$final_price = $this->contents[ $item_key ]['price'];
+		$final_price = $this->details[ $item_key ]['price'];
 
 		return apply_filters( 'edd_cart_item_final_price', $final_price, $item_key );
 	}
@@ -963,6 +963,12 @@ class EDD_Cart {
 	 */
 	public function get_item_tax( $download_id = 0, $options = array(), $subtotal = '' ) {
 		$tax = 0;
+
+		if ( false !== $pos = $this->get_item_position( $download_id ) ) {
+			if ( isset( $this->details[ $pos ]['tax'] ) ) {
+				return $this->details[ $pos ]['tax'];
+			}
+		}
 
 		if ( ! edd_download_is_tax_exclusive( $download_id ) ) {
 			$country = ! empty( $_POST['billing_country'] ) ? $_POST['billing_country'] : false;
