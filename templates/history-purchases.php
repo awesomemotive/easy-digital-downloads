@@ -17,7 +17,7 @@ if ( is_user_logged_in() ):
 					<?php do_action('edd_purchase_history_header_before'); ?>
 					<th class="edd_purchase_id"><?php _e('ID','easy-digital-downloads' ); ?></th>
 					<th class="edd_purchase_date"><?php _e('Date','easy-digital-downloads' ); ?></th>
-					<th class="edd_purchase_amount"><?php _e('Amount','easy-digital-dxownloads' ); ?></th>
+					<th class="edd_purchase_amount"><?php _e('Amount','easy-digital-downloads' ); ?></th>
 					<th class="edd_purchase_details"><?php _e('Details','easy-digital-downloads' ); ?></th>
 					<?php do_action('edd_purchase_history_header_after'); ?>
 				</tr>
@@ -35,13 +35,7 @@ if ( is_user_logged_in() ):
 						<?php if( $payment->status != 'publish' ) : ?>
 							<span class="edd_purchase_status <?php echo $payment->status; ?>"><?php echo $payment->status_nicename; ?></span>
 							<?php if ( $payment->is_recoverable() ) : ?>
-								<?php
-								$query_args = array(
-									'payment_id' => $payment->ID
-								);
-								$recovery_url = wp_nonce_url( add_query_arg( array( 'edd_action' => 'recover_payment', 'payment_id' => $payment->ID ), edd_get_checkout_uri() ), 'edd-recover-payment' );
-								?>
-								&mdash; <a href="<?php echo $recovery_url; ?>"><?php _e( 'Complete Purchase', 'easy-digital-downloads' ); ?></a>
+								&mdash; <a href="<?php echo $payment->get_recovery_url(); ?>"><?php _e( 'Complete Purchase', 'easy-digital-downloads' ); ?></a>
 							<?php endif; ?>
 						<?php else: ?>
 							<a href="<?php echo esc_url( add_query_arg( 'payment_key', $payment->key, edd_get_success_page_uri() ) ); ?>"><?php _e( 'View Details and Downloads', 'easy-digital-downloads' ); ?></a>

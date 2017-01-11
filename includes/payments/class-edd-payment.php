@@ -1689,6 +1689,16 @@ class EDD_Payment {
 		return $recoverable;
 	}
 
+	public function get_recovery_url() {
+		if ( ! $this->is_recoverable() ) {
+			return false;
+		}
+
+		$recovery_url = add_query_arg( array( 'edd_action' => 'recover_payment', 'payment_id' => $this->ID ), edd_get_checkout_uri() );
+
+		return apply_filters( 'edd_payment_recovery_url', $recovery_url, $this );
+	}
+
 	/**
 	 * When a payment is set to a status of 'refunded' process the necessary actions to reduce stats
 	 *
