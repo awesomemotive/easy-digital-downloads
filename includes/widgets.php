@@ -50,6 +50,19 @@ class edd_cart_widget extends WP_Widget {
 
 		$title = apply_filters( 'widget_title', $instance['title'], $instance, $args['id'] );
 
+		$instance['hide_on_empty'] = ( isset( $instance['hide_on_empty'] ) ) ? $instance['hide_on_empty'] : false;
+
+		$classes = array( 'edd-cart-widget-wrapper' );
+		if ( $instance['hide_on_empty'] ) {
+			$classes[] = 'edd-hide-on-empty';
+		}
+
+		$cart_quantity = edd_get_cart_quantity();
+		$classes[]     = empty( $cart_quantity ) ? 'cart-empty' : 'cart-not-empty';
+
+		$args['before_widget'] .= '<div class="' . implode( ' ', $classes ) . '">';
+		$args['after_widget'] = '</div>' . $args['after_widget'];
+
 		echo $args['before_widget'];
 
 		if ( $title ) {
@@ -71,6 +84,7 @@ class edd_cart_widget extends WP_Widget {
 
 		$instance['title']            = strip_tags( $new_instance['title'] );
 		$instance['hide_on_checkout'] = isset( $new_instance['hide_on_checkout'] );
+		$instance['hide_on_empty']    = isset( $new_instance['hide_on_empty'] );
 
 		return $instance;
 	}
@@ -81,6 +95,7 @@ class edd_cart_widget extends WP_Widget {
 		$defaults = array(
 			'title'            => '',
 			'hide_on_checkout' => false,
+			'hide_on_empty'    => false,
 		);
 
 		$instance = wp_parse_args( (array) $instance, $defaults ); ?>
@@ -93,6 +108,12 @@ class edd_cart_widget extends WP_Widget {
 		<p>
 			<input <?php checked( $instance['hide_on_checkout'], true ); ?> id="<?php echo esc_attr( $this->get_field_id( 'hide_on_checkout' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'hide_on_checkout' ) ); ?>" type="checkbox" />
 			<label for="<?php echo esc_attr( $this->get_field_id( 'hide_on_checkout' ) ); ?>"><?php _e( 'Hide on Checkout Page', 'easy-digital-downloads' ); ?></label>
+		</p>
+
+		<!-- Hide when cart is empty -->
+		<p>
+			<input <?php checked( $instance['hide_on_empty'], true ); ?> id="<?php echo esc_attr( $this->get_field_id( 'hide_on_empty' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'hide_on_empty' ) ); ?>" type="checkbox" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'hide_on_empty' ) ); ?>"><?php _e( 'Hide if cart is empty', 'easy-digital-downloads' ); ?></label>
 		</p>
 
 		<?php
