@@ -1945,4 +1945,16 @@ class EDD_Discount {
 
 		return $this->uses;
 	}
+
+	/**
+	 * Edit Discount Link.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return string Link to the `Edit Discount` page.
+	 */
+	public function edit_url() {
+		return esc_url( add_query_arg( array( 'edd-action' => 'edit_discount', 'discount' => $this->ID ), admin_url( 'edit.php?post_type=download&page=edd-discounts' ) ) );
+	}
 }
