@@ -99,8 +99,16 @@ jQuery(document).ready(function ($) {
 		var $spinner = $this.find('.edd-loading');
 		var container = $this.closest('div');
 
+		var spinnerWidth  = $spinner.width(),
+			spinnerHeight = $spinner.height();
+
 		// Show the spinner
 		$this.attr('data-edd-loading', '');
+
+		$spinner.css({
+			'margin-left': spinnerWidth / -2,
+			'margin-top' : spinnerHeight / -2
+		});
 
 		var form           = $this.parents('form').last();
 		var download       = $this.data('download-id');
@@ -453,7 +461,7 @@ function edd_load_gateway( payment_mode ) {
 
 	// Show the ajax loader
 	jQuery('.edd-cart-ajax').show();
-	jQuery('#edd_purchase_form_wrap').html('<span class="edd-loading-ajax edd-loading"></span>');
+	jQuery('#edd_purchase_form_wrap').html('<img src="' + edd_scripts.ajax_loader + '"/>');
 
 	var url = edd_scripts.ajaxurl;
 
@@ -474,3 +482,4 @@ function edd_load_gateway( payment_mode ) {
 	);
 
 }
+
