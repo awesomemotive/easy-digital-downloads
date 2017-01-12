@@ -68,6 +68,7 @@ class Tests_Widgets extends EDD_UnitTestCase {
 			), array(
 				'title'            => 'Cart',
 				'hide_on_checkout' => true,
+				'hide_on_empty'    => false,
 			) );
 		$output = ob_get_clean();
 
@@ -94,6 +95,7 @@ class Tests_Widgets extends EDD_UnitTestCase {
 			), array(
 				'title'            => 'Cart',
 				'hide_on_checkout' => true,
+				'hide_on_empty'    => false,
 			) );
 		$output = ob_get_clean();
 
@@ -101,6 +103,33 @@ class Tests_Widgets extends EDD_UnitTestCase {
 		$this->assertContains( '<li class="cart_item empty">', $output );
 		$this->assertContains( '<li class="cart_item edd-cart-meta edd_total"', $output );
 		$this->assertContains( '<li class="cart_item edd_checkout"', $output );
+		$this->assertNotContains( 'edd-hide-on-empty', $output );
+
+	}
+
+	public function test_cart_widget_function_hide_on_empty() {
+
+		$widgets = $GLOBALS['wp_widget_factory']->widgets;
+		$cart_widget = $widgets['edd_cart_widget'];
+
+		ob_start();
+			$cart_widget->widget( array(
+				'before_title'  => '',
+				'after_title'   => '',
+				'before_widget' => '',
+				'after_widget'  => '',
+			), array(
+				'title'            => 'Cart',
+				'hide_on_checkout' => true,
+				'hide_on_empty'    => true,
+			) );
+		$output = ob_get_clean();
+
+		$this->assertContains( 'Number of items in cart:', $output );
+		$this->assertContains( '<li class="cart_item empty">', $output );
+		$this->assertContains( '<li class="cart_item edd-cart-meta edd_total"', $output );
+		$this->assertContains( '<li class="cart_item edd_checkout"', $output );
+		$this->assertContains( 'edd-hide-on-empty', $output );
 
 	}
 
@@ -114,9 +143,11 @@ class Tests_Widgets extends EDD_UnitTestCase {
 		$widgets = $GLOBALS['wp_widget_factory']->widgets;
 		$cart_widget = $widgets['edd_cart_widget'];
 
-		$updated = $cart_widget->update( array( 'title' => 'Your Cart', 'hide_on_checkout' => true ), array( 'title' => 'Cart', 'hide_on_checkout' => false ) );
+		$new_instance = array( 'title' => 'Your Cart', 'hide_on_checkout' => true, 'hide_on_empty' => true );
+		$old_instance = array( 'title' => 'Cart', 'hide_on_checkout' => false, 'hide_on_empty' => false );
+		$updated      = $cart_widget->update( $new_instance, $old_instance );
 
-		$this->assertEquals( $updated, array( 'title' => 'Your Cart', 'hide_on_checkout' => true ) );
+		$this->assertEquals( $updated, array( 'title' => 'Your Cart', 'hide_on_checkout' => true, 'hide_on_empty' => true ) );
 
 	}
 
