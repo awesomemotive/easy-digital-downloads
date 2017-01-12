@@ -5,8 +5,8 @@ Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
-Tested up to: 4.7
-Stable Tag: 2.6.13
+Tested up to: 4.8
+Stable Tag: 2.6.17
 
 License: GNU Version 2 or Any Later Version
 
@@ -193,6 +193,33 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.6.17, December 28, 2016 =
+* Fix: Checkboxes in Downloads > Tools > Beta Versions do not retain checked state
+* Fix: Extension update notifications do not show up
+
+= 2.6.16, December 21, 2016 =
+* Fix: 404 errors when downloading some files
+
+= 2.6.15, December 19, 2016 =
+* Fix: Conflict with some object caching configurations and the extension update checks that resulted in poor performance.
+
+= 2.6.14, December 15, 2016 =
+* New: Added hooks before and after cart on checkout screen
+* New: Added support for user-specific locales
+* Tweak: Improved performance of edd_get_payment_by(), making account pages faster
+* Fix: Quantity not set on cart items when adding multiple price options to the cart at once
+* Fix: Download links in email receipts over escaped, resulting in failed downloads
+* Fix: December point plotted improperly on earnings / sales graphs
+* Fix: Files still downloaded even if the file doesn't exist, resulting in a corrupted download file
+* Fix: Non-formatted amount not set in data attribute of cart when discount codes applied
+* Fix: Deleting an item from payment record does not delete the associated sale log
+* Fix: This Week and Last Week reports not showing sale stats
+* Fix: Calling edd_is_discount_valid() results in cart errors being set
+* Fix: Earnings value doubled for Today report
+* Fix: Price and currency not properly separated in schema microdata
+* Fix: Tax exempt products still show tax rate on purchase buttons
+* Fix: check_update() method is called twice in EDD_SL_Plugin_Updater class
 
 = 2.6.13, November 21, 2016 =
 * Fix: Custom payment meta items were not being saved correctly.

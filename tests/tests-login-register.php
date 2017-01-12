@@ -4,7 +4,8 @@
 /**
  * @group edd_login_register
  */
-class Tests_Login_Register extends WP_UnitTestCase {
+class Tests_Login_Register extends EDD_UnitTestCase {
+
 	public function setUp() {
 		parent::setUp();
 		wp_set_current_user(0);
