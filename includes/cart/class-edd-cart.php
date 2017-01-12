@@ -318,7 +318,7 @@ class EDD_Cart {
 	public function get_quantity() {
 		$total_quantity = 0;
 
-		if ( ! empty( $this->contents ) ) {
+		if ( ! empty( $this->get_contents() ) ) {
 			$quantities     = wp_list_pluck( $this->contents, 'quantity' );
 			$total_quantity = absint( array_sum( $quantities ) );
 		}
@@ -1049,7 +1049,7 @@ class EDD_Cart {
 
 		$excluded_products = edd_get_discount_excluded_products( $code_id );
 
-		if ( $cart_items ) {
+		if ( $this->details ) {
 			foreach( $cart_items as $item ) {
 				if ( ! in_array( $item['id'], $excluded_products ) ) {
 					$items[] =  $item;
