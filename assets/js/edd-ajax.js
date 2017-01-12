@@ -129,7 +129,9 @@ jQuery(document).ready(function ($) {
 					 // hide the spinner
 					$this.removeAttr( 'data-edd-loading' );
 					alert( edd_scripts.select_option );
-					return;
+					e.stopPropagation();
+					$this.prop('disabled', false);
+					return false;
 				}
 
 				form.find('.edd_price_option_' + download + ':checked', form).each(function( index ) {
@@ -329,8 +331,9 @@ jQuery(document).ready(function ($) {
 
 		var payment_mode = $('#edd-gateway option:selected, input.edd-gateway:checked').val();
 
-		if( payment_mode == '0' )
+		if( payment_mode == '0' ) {
 			return false;
+		}
 
 		edd_load_gateway( payment_mode );
 
@@ -339,8 +342,12 @@ jQuery(document).ready(function ($) {
 
 	// Auto load first payment gateway
 	if( edd_scripts.is_checkout == '1' && $('select#edd-gateway, input.edd-gateway').length ) {
+		var chosen_gateway = $("meta[name='edd-chosen-gateway']").attr('content');
+		if( ! chosen_gateway ) {
+			chosen_gateway = edd_scripts.default_gateway;
+		}
 		setTimeout( function() {
-			edd_load_gateway( edd_scripts.default_gateway );
+			edd_load_gateway( chosen_gateway );
 		}, 200);
 	}
 

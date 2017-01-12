@@ -28,7 +28,8 @@ function edd_tools_page() {
 ?>
 	<div class="wrap">
 		<?php screen_icon(); ?>
-		<h1 class="nav-tab-wrapper">
+		<h2><?php _e( 'Easy Digital Downloads Tools', 'easy-digital-downloads' ); ?></h2>
+		<h2 class="nav-tab-wrapper">
 			<?php
 			foreach( edd_get_tools_tabs() as $tab_id => $tab_name ) {
 
@@ -45,7 +46,7 @@ function edd_tools_page() {
 
 			}
 			?>
-		</h1>
+		</h2>
 		<div class="metabox-holder">
 			<?php
 			do_action( 'edd_tools_tab_' . $active_tab );
@@ -281,7 +282,7 @@ function edd_tools_betas_display() {
 								<?php $checked = edd_extension_has_beta_support( $slug ); ?>
 								<th scope="row"><?php echo esc_html( $product ); ?></th>
 								<td>
-									<input type="checkbox" name="enabled_betas[<?php echo esc_attr( $slug ); ?>]" id="enabled_betas[<?php echo esc_attr( $slug ); ?>]"<?php echo $checked; ?> value="1" />
+									<input type="checkbox" name="enabled_betas[<?php echo esc_attr( $slug ); ?>]" id="enabled_betas[<?php echo esc_attr( $slug ); ?>]"<?php echo checked( $checked, true, false ); ?> value="1" />
 									<label for="enabled_betas[<?php echo esc_attr( $slug ); ?>]"><?php printf( __( 'Get updates for pre-release versions of %s', 'easy-digital-downloads' ), $product ); ?></label>
 								</td>
 							</tr>
@@ -378,8 +379,6 @@ function edd_tools_enabled_betas_sanitize_value( $value ) {
  */
 function edd_tools_banned_emails_save() {
 
-	global $edd_options;
-
 	if( ! wp_verify_nonce( $_POST['edd_banned_emails_nonce'], 'edd_banned_emails_nonce' ) ) {
 		return;
 	}
@@ -406,8 +405,7 @@ function edd_tools_banned_emails_save() {
 		$emails = '';
 	}
 
-	$edd_options['banned_emails'] = $emails;
-	update_option( 'edd_settings', $edd_options );
+	edd_update_option( 'banned_emails', $emails );
 }
 add_action( 'edd_save_banned_emails', 'edd_tools_banned_emails_save' );
 
@@ -1082,8 +1080,13 @@ function edd_tools_sysinfo_get() {
 	$browser = new Browser();
 
 	// Get theme info
-	$theme_data = wp_get_theme();
-	$theme      = $theme_data->Name . ' ' . $theme_data->Version;
+	$theme_data   = wp_get_theme();
+	$theme        = $theme_data->Name . ' ' . $theme_data->Version;
+	$parent_theme = $theme_data->Template;
+	if ( ! empty( $parent_theme ) ) {
+		$parent_theme_data = wp_get_theme( $parent_theme );
+		$parent_theme      = $parent_theme_data->Name . ' ' . $parent_theme_data->Version;
+	}
 
 	// Try to identify the hosting provider
 	$host = edd_get_host();
@@ -1118,6 +1121,9 @@ function edd_tools_sysinfo_get() {
 	$return .= 'Language:                 ' . ( defined( 'WPLANG' ) && WPLANG ? WPLANG : 'en_US' ) . "\n";
 	$return .= 'Permalink Structure:      ' . ( get_option( 'permalink_structure' ) ? get_option( 'permalink_structure' ) : 'Default' ) . "\n";
 	$return .= 'Active Theme:             ' . $theme . "\n";
+	if ( $parent_theme !== $theme ) {
+		$return .= 'Parent Theme:             ' . $parent_theme . "\n";
+	}
 	$return .= 'Show On Front:            ' . get_option( 'show_on_front' ) . "\n";
 
 	// Only show page specs if frontpage is set to 'page'

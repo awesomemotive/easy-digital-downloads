@@ -666,6 +666,7 @@ function edd_downloads_query( $atts, $content = null ) {
 	return apply_filters( 'downloads_shortcode', $display, $atts, $atts['buy_button'], $atts['columns'], '', $downloads, $atts['excerpt'], $atts['full_content'], $atts['price'], $atts['thumbnails'], $query );
 }
 add_shortcode( 'downloads', 'edd_downloads_query' );
+add_shortcode( 'edd_downloads', 'edd_downloads_query' );
 
 /**
  * Price Shortcode
