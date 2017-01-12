@@ -220,19 +220,10 @@ class EDD_Discount {
 
 		if ( $by_code ) {
 			$discount = $this->find_by_code( $_id_or_code_or_name );
-
-			if ( ! $discount ) {
-				return false;
-			}
 		} elseif ( $by_name ) {
 			$discount = $this->find_by_name( $_id_or_code_or_name );
-
-			if ( ! $discount ) {
-				return false;
-			}
 		} else {
 			$_id_or_code_or_name = absint( $_id_or_code_or_name );
-
 			$discount = WP_Post::get_instance( $_id_or_code_or_name );
 		}
 
