@@ -236,7 +236,11 @@ class EDD_Discount {
 			$discount = WP_Post::get_instance( $_id_or_code_or_name );
 		}
 
-		return $this->setup_discount( $discount );
+		if ( $discount ) {
+			$this->setup_discount( $discount );
+		} else {
+			return false;
+		}
 	}
 
 	/**
