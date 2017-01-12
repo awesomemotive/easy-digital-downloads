@@ -256,8 +256,8 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 						$child_avg_earnings = 0.00;
 
 						foreach ( $child_downloads as $child_download ) {
-							$current_average_sales    = $current_sales    = $payment_stats->get_sales( $child_download, $start_date, $end_date );
-							$current_average_earnings = $current_earnings = $payment_stats->get_earnings( $child_download, $start_date, $end_date );
+							$current_average_sales    = $current_sales    = EDD()->payment_stats->get_sales( $child_download, $start_date, $end_date );
+							$current_average_earnings = $current_earnings = EDD()->payment_stats->get_earnings( $child_download, $start_date, $end_date );
 
 							$release_date = get_post_field( 'post_date', $child_download );
 							$diff         = abs( current_time( 'timestamp' ) - strtotime( $release_date ) );
