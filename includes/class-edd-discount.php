@@ -224,24 +224,19 @@ class EDD_Discount {
 			if ( ! $discount ) {
 				return false;
 			}
-
-			return $this->setup_discount( $discount );
 		} elseif ( $by_name ) {
 			$discount = $this->find_by_name( $_id_or_code_or_name );
 
 			if ( ! $discount ) {
 				return false;
 			}
-
-			return $this->setup_discount( $discount );
 		} else {
 			$_id_or_code_or_name = absint( $_id_or_code_or_name );
 
 			$discount = WP_Post::get_instance( $_id_or_code_or_name );
-			return $this->setup_discount( $discount );
 		}
 
-		return false;
+		return $this->setup_discount( $discount );
 	}
 
 	/**
