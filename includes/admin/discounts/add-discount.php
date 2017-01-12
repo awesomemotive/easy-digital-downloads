@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 					<label for="edd-name"><?php _e( 'Name', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input name="name" id="edd-name" type="text" value="" style="width: 300px;"/>
+					<input name="name" required="required" id="edd-name" type="text" value="" style="width: 300px;"/>
 					<p class="description"><?php _e( 'The name of this discount', 'easy-digital-downloads' ); ?></p>
 				</td>
 			</tr>
@@ -33,8 +33,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 					<label for="edd-code"><?php _e( 'Code', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input type="text" id="edd-code" name="code" value="" style="width: 300px;"/>
-					<p class="description"><?php _e( 'Enter a code for this discount, such as 10PERCENT', 'easy-digital-downloads' ); ?></p>
+					<input type="text" required="required" id="edd-code" name="code" value="" pattern="[a-zA-Z0-9]+" style="width: 300px;"/>
+					<p class="description"><?php _e( 'Enter a code for this discount, such as 10PERCENT. Only alphanumeric characters are allowed.', 'easy-digital-downloads' ); ?></p>
 				</td>
 			</tr>
 			<?php do_action( 'edd_add_discount_form_before_type' ); ?>
@@ -56,7 +56,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 					<label for="edd-amount"><?php _e( 'Amount', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input type="text" id="edd-amount" name="amount" value="" style="width: 40px;"/>
+					<input type="text" required="required" id="edd-amount" name="amount" value="" style="width: 40px;"/>
 					<p class="description edd-amount-description flat-discount" style="display:none;"><?php printf( __( 'Enter the discount amount in %s', 'easy-digital-downloads' ), edd_get_currency() ); ?></p>
 					<p class="description edd-amount-description percent-discount"><?php _e( 'Enter the discount percentage. 10 = 10%', 'easy-digital-downloads' ); ?></p>
 				</td>

@@ -28,6 +28,17 @@ function edd_is_ajax_enabled() {
 }
 
 /**
+ * Checks whether AJAX is disabled.
+ *
+ * @since 2.0
+ * @since 2.7 Setting to disable AJAX was removed. See https://github.com/easydigitaldownloads/easy-digital-downloads/issues/4758
+ * @return bool True when EDD AJAX is disabled (for the cart), false otherwise.
+ */
+function edd_is_ajax_disabled() {
+	return apply_filters( 'edd_is_ajax_disabled', false );
+}
+
+/**
  * Check if AJAX works as expected
  *
  * @since 2.2
@@ -101,18 +112,6 @@ function edd_test_ajax_works() {
 
 	return $works;
 }
-
-/**
- * Checks whether AJAX is disabled.
- *
- * @since 2.0
- * @return bool True when EDD AJAX is disabled (for the cart), false otherwise.
- */
-function edd_is_ajax_disabled() {
-	$retval = ! edd_get_option( 'enable_ajax_cart' );
-	return apply_filters( 'edd_is_ajax_disabled', $retval );
-}
-
 
 /**
  * Get AJAX URL

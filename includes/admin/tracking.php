@@ -61,7 +61,6 @@ class EDD_Tracking {
 	 * @return void
 	 */
 	private function setup_data() {
-		global $edd_options;
 
 		$data = array();
 
@@ -74,7 +73,7 @@ class EDD_Tracking {
 		$data['wp_version']  = get_bloginfo( 'version' );
 		$data['server']      = isset( $_SERVER['SERVER_SOFTWARE'] ) ? $_SERVER['SERVER_SOFTWARE'] : '';
 
-		$checkout_page        = ! empty( $edd_options['purchase_page'] ) ? $edd_options['purchase_page'] : false;
+		$checkout_page        = edd_get_option( 'purchase_page', false );
 		$data['install_date'] = false !== $checkout_page ? get_post_field( 'post_date', $checkout_page ) : 'not set';
 
 		$data['multisite']   = is_multisite();
@@ -101,7 +100,7 @@ class EDD_Tracking {
 		$data['inactive_plugins'] = $plugins;
 		$data['products']         = wp_count_posts( 'download' )->publish;
 		$data['download_label']   = edd_get_label_singular( true );
-		$data['locale']           = get_locale();
+		$data['locale']           = ( $data['wp_version'] >= 4.7 ) ? get_user_locale() : get_locale();
 
 		$this->data = $data;
 	}
@@ -179,11 +178,7 @@ class EDD_Tracking {
 	 */
 	public function check_for_optin( $data ) {
 
-		global $edd_options;
-
-		$edd_options['allow_tracking'] = '1';
-
-		update_option( 'edd_settings', $edd_options );
+		edd_update_option( 'allow_tracking', 1 );
 
 		$this->send_checkin( true );
 
@@ -198,17 +193,9 @@ class EDD_Tracking {
 	 * @return void
 	 */
 	public function check_for_optout( $data ) {
-
-		global $edd_options;
-		if( isset( $edd_options['allow_tracking'] ) ) {
-			unset( $edd_options['allow_tracking'] );
-			update_option( 'edd_settings', $edd_options );
-		}
-
+		edd_delete_option( 'allow_tracking' );
 		update_option( 'edd_tracking_notice', '1' );
-
 		wp_redirect( remove_query_arg( 'edd_action' ) ); exit;
-
 	}
 
 	/**
@@ -239,22 +226,21 @@ class EDD_Tracking {
 	 * @return void
 	 */
 	public function admin_notice() {
-
 		$hide_notice = get_option( 'edd_tracking_notice' );
 
-		if( $hide_notice ) {
+		if ( $hide_notice ) {
 			return;
 		}
 
-		if( edd_get_option( 'allow_tracking', false ) ) {
+		if ( edd_get_option( 'allow_tracking', false ) ) {
 			return;
 		}
 
-		if( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 
-		if(
+		if (
 			stristr( network_site_url( '/' ), 'dev'       ) !== false ||
 			stristr( network_site_url( '/' ), 'localhost' ) !== false ||
 			stristr( network_site_url( '/' ), ':8888'     ) !== false // This is common with MAMP on OS X
@@ -267,7 +253,7 @@ class EDD_Tracking {
 			$source         = substr( md5( get_bloginfo( 'name' ) ), 0, 10 );
 			$extensions_url = 'https://easydigitaldownloads.com/downloads/?utm_source=' . $source . '&utm_medium=admin&utm_term=notice&utm_campaign=EDDUsageTracking';
 			echo '<div class="updated"><p>';
-				echo sprintf( __( 'Allow Easy Digital Downloads to track plugin usage? Opt-in to tracking and our newsletter and immediately be emailed a 20%% discount to the EDD shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'easy-digital-downloads' ), $extensions_url );
+				echo sprintf( __( 'Allow Easy Digital Downloads to track plugin usage? Opt-in to tracking and our newsletter and immediately be emailed a 20%s discount to the EDD shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'easy-digital-downloads' ), '%', $extensions_url );
 				echo '&nbsp;<a href="' . esc_url( $optin_url ) . '" class="button-secondary">' . __( 'Allow', 'easy-digital-downloads' ) . '</a>';
 				echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary">' . __( 'Do not allow', 'easy-digital-downloads' ) . '</a>';
 			echo '</p></div>';

@@ -137,6 +137,9 @@ function edd_get_cart_quantity() {
 	if ( ! empty( $cart ) ) {
 		$quantities     = wp_list_pluck( $cart, 'quantity' );
 		$total_quantity = absint( array_sum( $quantities ) );
+		if( empty( $total_quantity ) ) {
+			$total_quantity = count( $cart );
+		}
 	}
 
 
@@ -175,7 +178,7 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		$options['price_id'] = '0';
 	}
 
-	if( isset( $options['quantity'] ) ) {
+	if( isset( $options['quantity'] ) && ! $download->quantities_disabled() ) {
 		if ( is_array( $options['quantity'] ) ) {
 
 			$quantity = array();
@@ -211,7 +214,7 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 				'options'      => array(
 					'price_id' => preg_replace( '/[^0-9\.-]/', '', $price )
 				),
-				'quantity'     => $quantity[ $key ],
+				'quantity'     => is_array( $quantity[ $key ] ) && isset( $quantity[ $key ] ) ? $quantity[ $key ] : $quantity,
 			);
 
 		}

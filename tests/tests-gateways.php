@@ -4,7 +4,8 @@
 /**
  * @group edd_gateways
  */
-class Test_Gateways extends WP_UnitTestCase {
+class Test_Gateways extends EDD_UnitTestCase {
+
 	public function setUp() {
 		parent::setUp();
 	}
@@ -106,6 +107,27 @@ class Test_Gateways extends WP_UnitTestCase {
 		$this->assertEquals( 'Free Purchase', edd_get_gateway_checkout_label( 'manual' ) );
 	}
 
+	public function test_buy_now_supported_single_gateway() {
+		global $edd_options;
+
+		$edd_options['default_gateway'] = 'paypal';
+		$edd_options['gateways'] = array();
+		$edd_options['gateways']['paypal'] = '1';
+
+		$this->assertTrue( edd_shop_supports_buy_now() );
+	}
+
+	public function test_buy_now_supported_multiple_gateways() {
+		global $edd_options;
+
+		$edd_options['default_gateway'] = 'paypal';
+		$edd_options['gateways'] = array();
+		$edd_options['gateways']['paypal'] = '1';
+		$edd_options['gateways']['manual'] = '1';
+
+		$this->assertFalse( edd_shop_supports_buy_now() );
+	}
+
 	public function test_show_gateways() {
 		edd_empty_cart();
 		$this->assertFalse( edd_show_gateways() );
@@ -131,4 +153,5 @@ class Test_Gateways extends WP_UnitTestCase {
 		$this->assertArrayHasKey( 'no_gateways', $errors );
 		$this->assertEquals( 'You must enable a payment gateway to use Easy Digital Downloads', $errors['no_gateways'] );
 	}
+
 }

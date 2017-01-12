@@ -33,7 +33,9 @@ function edd_checkout_cart() {
 	do_action( 'edd_before_checkout_cart' );
 	echo '<form id="edd_checkout_cart_form" method="post">';
 		echo '<div id="edd_checkout_cart_wrap">';
+			do_action( 'edd_checkout_cart_top' );
 			edd_get_template_part( 'checkout_cart' );
+			do_action( 'edd_checkout_cart_bottom' );
 		echo '</div>';
 	echo '</form>';
 	do_action( 'edd_after_checkout_cart' );

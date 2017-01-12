@@ -21,15 +21,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @since  1.0
  *
- * @param int    $user User ID or email address
- * @param int    $number Number of purchases to retrieve
- * @param bool   $pagination
- * @param string $status
+ * @param int $user User ID or email address
+ * @param int $number Number of purchases to retrieve
+ * @param bool pagination
+ * @param string|array $status Either an array of statuses, a single status as a string literal or a comma separated list of statues
  *
  * @return bool|object List of all user purchases
  */
 function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, $status = 'complete' ) {
-
 	if ( empty( $user ) ) {
 		$user = get_current_user_id();
 	}
@@ -38,7 +37,19 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 		return false;
 	}
 
-	$status = $status === 'complete' ? 'publish' : $status;
+	if ( is_string( $status ) ) {
+		if ( strpos( $status, ',' ) ) {
+			$status = explode( ',', $status );
+		} else {
+			$status = $status === 'complete' ? 'publish' : $status;
+			$status = array( $status );
+		}
+
+	}
+
+	if ( is_array( $status ) ) {
+		$status = array_unique( $status );
+	}
 
 	if ( $pagination ) {
 		if ( get_query_var( 'paged' ) )
@@ -166,11 +177,9 @@ function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
 		return false;
 	}
 
-	$post_type 	 = get_post_type( $product_ids[0] );
-
 	$args = apply_filters( 'edd_get_users_purchased_products_args', array(
 		'include'        => $product_ids,
-		'post_type'      => $post_type,
+		'post_type'      => 'download',
 		'posts_per_page' => -1,
 	) );
 
@@ -652,9 +661,9 @@ function edd_get_user_verification_request_url( $user_id = 0 ) {
 		$user_id = get_current_user_id();
 	}
 
-	$url = wp_nonce_url( add_query_arg( array(
+	$url = esc_url( wp_nonce_url( add_query_arg( array(
 		'edd_action' => 'send_verification_email'
-	) ), 'edd-request-verification' );
+	) ), 'edd-request-verification' ) );
 
 	return apply_filters( 'edd_get_user_verification_request_url', $url, $user_id );
 
@@ -981,9 +990,9 @@ function edd_show_user_api_key_field( $user ) {
 						<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
 						<span class="description"><?php _e( 'Generate API Key', 'easy-digital-downloads' ); ?></span>
 					<?php } else { ?>
-						<strong style="display:inline-block; width: 125px;"><?php _e( 'Public key:', 'easy-digital-downloads' ); ?>&nbsp;</strong><input type="text" disabled="disabled" class="regular-text" id="publickey" value="<?php echo esc_attr( $public_key ); ?>"/><br/>
-						<strong style="display:inline-block; width: 125px;"><?php _e( 'Secret key:', 'easy-digital-downloads' ); ?>&nbsp;</strong><input type="text" disabled="disabled" class="regular-text" id="privatekey" value="<?php echo esc_attr( $secret_key ); ?>"/><br/>
-						<strong style="display:inline-block; width: 125px;"><?php _e( 'Token:', 'easy-digital-downloads' ); ?>&nbsp;</strong><input type="text" disabled="disabled" class="regular-text" id="token" value="<?php echo esc_attr( EDD()->api->get_token( $user->ID ) ); ?>"/><br/>
+						<strong style="display:inline-block; width: 125px;"><?php _e( 'Public key:', 'easy-digital-downloads' ); ?>&nbsp;</strong><input type="text" readonly="readonly" class="regular-text" id="publickey" value="<?php echo esc_attr( $public_key ); ?>"/><br/>
+						<strong style="display:inline-block; width: 125px;"><?php _e( 'Secret key:', 'easy-digital-downloads' ); ?>&nbsp;</strong><input type="text" readonly="readonly" class="regular-text" id="privatekey" value="<?php echo esc_attr( $secret_key ); ?>"/><br/>
+						<strong style="display:inline-block; width: 125px;"><?php _e( 'Token:', 'easy-digital-downloads' ); ?>&nbsp;</strong><input type="text" readonly="readonly" class="regular-text" id="token" value="<?php echo esc_attr( EDD()->api->get_token( $user->ID ) ); ?>"/><br/>
 						<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
 						<span class="description"><label for="edd_set_api_key"><?php _e( 'Revoke API Keys', 'easy-digital-downloads' ); ?></label></span>
 					<?php } ?>
