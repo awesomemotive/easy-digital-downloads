@@ -3,7 +3,7 @@
 /**
  * @group edd_payments
  */
-class Tests_Payment_Class extends WP_UnitTestCase {
+class Tests_Payment_Class extends EDD_UnitTestCase {
 
 	protected $_payment_id = null;
 	protected $_key = null;
@@ -224,7 +224,7 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$this->assertEquals( 125, $payment->total );
 
 		// Test that it saves to the DB
-		$payment_meta = get_post_meta( $this->_payment_id, '_edd_payment_meta', true );
+		$payment_meta = edd_get_payment_meta( $this->_payment_id, '_edd_payment_meta', true );
 		$this->assertArrayHasKey( 'fees', $payment_meta );
 		$fees = $payment_meta['fees'];
 		$this->assertEquals( 1, count( $fees ) );
@@ -249,7 +249,7 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$this->assertEquals( 'Test Fee 3', $payment->fees[1]['label'] );
 
 		// Test that it saves to the DB
-		$payment_meta = get_post_meta( $this->_payment_id, '_edd_payment_meta', true );
+		$payment_meta = edd_get_payment_meta( $this->_payment_id, '_edd_payment_meta', true );
 		$this->assertArrayHasKey( 'fees', $payment_meta );
 		$fees = $payment_meta['fees'];
 		$this->assertEquals( 2, count( $fees ) );
@@ -271,7 +271,7 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$payment->save();
 
 		// Test that it saves to the DB
-		$payment_meta = get_post_meta( $this->_payment_id, '_edd_payment_meta', true );
+		$payment_meta = edd_get_payment_meta( $this->_payment_id, '_edd_payment_meta', true );
 		$this->assertArrayHasKey( 'fees', $payment_meta );
 		$fees = $payment_meta['fees'];
 		$this->assertEmpty( $fees );
@@ -293,7 +293,7 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$payment->save();
 
 		// Test that it saves to the DB
-		$payment_meta = get_post_meta( $this->_payment_id, '_edd_payment_meta', true );
+		$payment_meta = edd_get_payment_meta( $this->_payment_id, '_edd_payment_meta', true );
 		$this->assertArrayHasKey( 'fees', $payment_meta );
 		$fees = $payment_meta['fees'];
 		$this->assertEquals( 1, count( $fees ) );
@@ -315,7 +315,7 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$payment->save();
 
 		// Test that it saves to the DB
-		$payment_meta = get_post_meta( $this->_payment_id, '_edd_payment_meta', true );
+		$payment_meta = edd_get_payment_meta( $this->_payment_id, '_edd_payment_meta', true );
 		$this->assertArrayHasKey( 'fees', $payment_meta );
 		$fees = $payment_meta['fees'];
 		$this->assertEmpty( $fees );
@@ -339,7 +339,7 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$payment->save();
 
 		// Test that it saves to the DB
-		$payment_meta = get_post_meta( $this->_payment_id, '_edd_payment_meta', true );
+		$payment_meta = edd_get_payment_meta( $this->_payment_id, '_edd_payment_meta', true );
 		$this->assertArrayHasKey( 'fees', $payment_meta );
 		$fees = $payment_meta['fees'];
 		$this->assertEquals( 2, count( $fees ) );
