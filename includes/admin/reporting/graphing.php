@@ -307,7 +307,7 @@ function edd_reports_graph() {
 
 	// start our own output buffer
 	ob_start();
-	?>
+	do_action( 'edd_reports_graph_before' ); ?>
 	<div id="edd-dashboard-widgets-wrap">
 		<div class="metabox-holder" style="padding-top: 0;">
 			<div class="postbox">
@@ -366,7 +366,8 @@ function edd_reports_graph() {
 			</div>
 		</div>
 	</div>
-	<?php
+	<?php do_action( 'edd_reports_graph_after' );
+
 	// get output buffer contents and end our own buffer
 	$output = ob_get_contents();
 	ob_end_clean();
@@ -931,7 +932,7 @@ add_action( 'edd_reports_graph_after', 'edd_reports_refresh_button' );
  * EDD trigger the refresh of reports transients
  *
  * @since 2.7
- * 
+ *
  * @param array $data Parameters sent from Settings page
  * @return void
  */
@@ -942,6 +943,8 @@ function edd_run_refresh_reports_transients( $data ) {
 	}
 
 	//Delete transients
+	delete_transient( 'edd_stats_earnings' );
+	delete_transient( 'edd_stats_sales' );
 	delete_transient( 'edd_estimated_monthly_stats' );
 	delete_transient( 'edd_earnings_total' );
 	delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
