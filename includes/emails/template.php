@@ -62,7 +62,7 @@ function edd_email_preview_template_tags( $message ) {
 
 	$price = edd_currency_filter( edd_format_amount( 10.50 ) );
 
-	$gateway = 'PayPal';
+	$gateway = edd_get_gateway_admin_label( edd_get_default_gateway() );
 
 	$receipt_id = strtolower( md5( uniqid() ) );
 
@@ -90,7 +90,7 @@ function edd_email_preview_template_tags( $message ) {
 	$message = str_replace( '{sitename}', get_bloginfo( 'name' ), $message );
 	$message = str_replace( '{product_notes}', $notes, $message );
 	$message = str_replace( '{payment_id}', $payment_id, $message );
-	$message = str_replace( '{receipt_link}', sprintf( __( '%1$sView it in your browser.%2$s', 'easy-digital-downloads' ), '<a href="' . esc_url( add_query_arg( array ( 'payment_key' => $receipt_id, 'edd_action' => 'view_receipt' ), home_url() ) ) . '">', '</a>' ), $message );
+	$message = str_replace( '{receipt_link}', edd_email_tag_receipt_link( $payment_id ), $message );
 
 	$message = apply_filters( 'edd_email_preview_template_tags', $message );
 
@@ -110,7 +110,7 @@ function edd_email_template_preview() {
 
 	ob_start();
 	?>
-	<a href="<?php echo esc_url( add_query_arg( array( 'edd_action' => 'preview_email' ), home_url() ) ); ?>" class="button-secondary" target="_blank" title="<?php _e( 'Purchase Receipt Preview', 'easy-digital-downloads' ); ?> "><?php _e( 'Preview Purchase Receipt', 'easy-digital-downloads' ); ?></a>
+	<a href="<?php echo esc_url( add_query_arg( array( 'edd_action' => 'preview_email' ), home_url() ) ); ?>" class="button-secondary" target="_blank"><?php _e( 'Preview Purchase Receipt', 'easy-digital-downloads' ); ?></a>
 	<a href="<?php echo wp_nonce_url( add_query_arg( array( 'edd_action' => 'send_test_email' ) ), 'edd-test-email' ); ?>" class="button-secondary"><?php _e( 'Send Test Email', 'easy-digital-downloads' ); ?></a>
 	<?php
 	echo ob_get_clean();

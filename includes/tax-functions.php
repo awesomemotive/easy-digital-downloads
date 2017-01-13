@@ -64,6 +64,8 @@ function edd_get_tax_rate( $country = false, $state = false ) {
 	if( empty( $state ) ) {
 		if( ! empty( $_POST['state'] ) ) {
 			$state = $_POST['state'];
+		} elseif( ! empty( $_POST['card_state'] ) ) {
+			$state = $_POST['card_state'];
 		} elseif( is_user_logged_in() && ! empty( $user_address ) ) {
 			$state = $user_address['state'];
 		}
@@ -134,7 +136,7 @@ function edd_calculate_tax( $amount = 0, $country = false, $state = false ) {
 	$rate = edd_get_tax_rate( $country, $state );
 	$tax  = 0.00;
 
-	if ( edd_use_taxes() ) {
+	if ( edd_use_taxes() && $amount > 0 ) {
 
 		if ( edd_prices_include_tax() ) {
 			$pre_tax = ( $amount / ( 1 + $rate ) );

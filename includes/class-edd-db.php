@@ -236,4 +236,14 @@ abstract class EDD_DB {
 		return $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE '%s'", $table ) ) === $table;
 	}
 
+	/**
+	 * Check if the table was ever installed
+	 *
+	 * @since  2.4
+	 * @return bool Returns if the customers table was installed and upgrade routine run
+	 */
+	public function installed() {
+		return $this->table_exists( $this->table_name );
+	}
+
 }
