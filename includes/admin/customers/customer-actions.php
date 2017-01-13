@@ -210,6 +210,11 @@ add_action( 'edd_edit-customer', 'edd_edit_customer', 10, 1 );
  */
 function edd_add_customer_email( $args ) {
 
+	/**
+	 * Filters the user role required to edit customers.
+	 *
+	 * @param string edit_shop_payments The role. Defaults to edit_shop_payments.
+	 */
 	$customer_edit_role = apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
 
 	if ( ! is_admin() || ! current_user_can( $customer_edit_role ) ) {
