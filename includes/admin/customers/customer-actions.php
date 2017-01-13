@@ -11,6 +11,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return array $output Response messages
  */
 function edd_edit_customer( $args ) {
+	/**
+	 * Filters the user role required to edit customers.
+	 *
+	 * @param string edit_shop_payments The role. Defaults to edit_shop_payments.
+	 */
 	$customer_edit_role = apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
 
 	if ( ! is_admin() || ! current_user_can( $customer_edit_role ) ) {
