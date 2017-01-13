@@ -4,7 +4,8 @@
 /**
  * @group edd_cpt
  */
-class Tests_Post_Types extends WP_UnitTestCase {
+class Tests_Post_Types extends EDD_UnitTestCase {
+
 	public function setUp() {
 		parent::setUp();
 	}

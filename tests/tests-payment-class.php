@@ -3,7 +3,7 @@
 /**
  * @group edd_payments
  */
-class Tests_Payment_Class extends WP_UnitTestCase {
+class Tests_Payment_Class extends EDD_UnitTestCase {
 
 	protected $_payment_id = null;
 	protected $_key = null;
@@ -62,11 +62,21 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 		$this->assertEquals( 120.00, $payment->total );
 	}
 
+	public function test_get_existing_payment_txn() {
+		$payment = new EDD_Payment( 'FIR3SID3', true );
+		$this->assertEquals( $this->_payment_id, $payment->ID );
+	}
+
 	public function test_getting_no_payment() {
 		$payment = new EDD_Payment();
 		$this->assertEquals( NULL, $payment->ID );
 
 		$payment = new EDD_Payment( 99999999999 );
+		$this->assertEquals( NULL, $payment->ID );
+	}
+
+	public function test_getting_no_payment_txn() {
+		$payment = new EDD_Payment( 'false-txn', true );
 		$this->assertEquals( NULL, $payment->ID );
 	}
 
@@ -796,6 +806,24 @@ class Tests_Payment_Class extends WP_UnitTestCase {
 
 		$payment_2 = new EDD_Payment( $payment_id );
 		$this->assertEquals( $payment_2->address, $payment_2->user_info['address'] );
+	}
+
+	// https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5228
+	public function test_issue_5228_data() {
+		$payment         = new EDD_Payment( $this->_payment_id );
+		$meta            = $payment->get_meta();
+		$meta[0]['test'] = 'Test Value';
+		update_post_meta( $payment->ID, '_edd_payment_meta', $meta );
+
+		$direct_meta = get_post_meta( $payment->ID, '_edd_payment_meta', $meta );
+		$this->assertTrue( isset( $direct_meta[0] ) );
+
+		$payment = new EDD_Payment( $payment->ID );
+		$meta    = $payment->get_meta();
+		$this->assertFalse( isset( $meta[0] ) );
+		$this->assertTrue( isset( $meta['test'] ) );
+		$this->assertEquals( 'Test Value', $meta['test'] );
+
 	}
 
 	/** Helpers **/
