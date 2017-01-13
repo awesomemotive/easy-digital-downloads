@@ -614,6 +614,12 @@ function edd_disconnect_customer_user_id( $args ) {
 		return false;
 	}
 
+	/**
+	 * Fires before a user ID is disconnected from a customer.
+	 *
+	 * @param int $customer_id       The customer ID.
+	 * @param int $customer->user_id The user ID associated with the customer.
+	 */
 	do_action( 'edd_pre_customer_disconnect_user_id', $customer_id, $customer->user_id );
 
 	$customer_args = array( 'user_id' => 0 );
