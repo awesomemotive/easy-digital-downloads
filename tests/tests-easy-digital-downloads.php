@@ -126,7 +126,6 @@ class Tests_EDD extends WP_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/edd-admin.css' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/jquery-ui-classic.css' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/jquery-ui-fresh.css' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/fonts/padlock.eot' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/fonts/padlock.svg' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/fonts/padlock.ttf' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/fonts/padlock.woff' );
