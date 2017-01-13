@@ -331,8 +331,9 @@ jQuery(document).ready(function ($) {
 
 		var payment_mode = $('#edd-gateway option:selected, input.edd-gateway:checked').val();
 
-		if( payment_mode == '0' )
+		if( payment_mode == '0' ) {
 			return false;
+		}
 
 		edd_load_gateway( payment_mode );
 
@@ -341,8 +342,12 @@ jQuery(document).ready(function ($) {
 
 	// Auto load first payment gateway
 	if( edd_scripts.is_checkout == '1' && $('select#edd-gateway, input.edd-gateway').length ) {
+		var chosen_gateway = $("meta[name='edd-chosen-gateway']").attr('content');
+		if( ! chosen_gateway ) {
+			chosen_gateway = edd_scripts.default_gateway;
+		}
 		setTimeout( function() {
-			edd_load_gateway( edd_scripts.default_gateway );
+			edd_load_gateway( chosen_gateway );
 		}, 200);
 	}
 
@@ -443,6 +448,13 @@ jQuery(document).ready(function ($) {
 
 		return false;
 	}
+
+	// If is_checkout, recalculate sales tax on postalCode change.
+	$('body').on('change', '#edd_cc_address input[name=card_zip]', function () {
+		if (typeof edd_global_vars !== 'undefined') {
+			recalculate_taxes();
+		}
+	});
 });
 
 function edd_load_gateway( payment_mode ) {

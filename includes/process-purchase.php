@@ -946,7 +946,7 @@ function edd_purchase_form_validate_cc_zip( $zip = 0, $country_code = '' ) {
 		"KE" => "\d{5}",
 		"KG" => "\d{6}",
 		"KH" => "\d{5}",
-		"KR" => "\d{3}[\-]\d{3}",
+		"KR" => "\d{5}",
 		"KW" => "\d{5}",
 		"KZ" => "\d{6}",
 		"LA" => "\d{5}",
