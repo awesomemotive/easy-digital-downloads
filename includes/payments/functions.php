@@ -110,10 +110,15 @@ function edd_insert_payment( $payment_data = array() ) {
 		return false;
 	}
 
+	$resume_payment   = false;
 	$existing_payment = EDD()->session->get( 'edd_resume_payment' );
-	if ( ! empty( $existing_payment ) ) {
 
+	if ( ! empty( $existing_payment ) ) {
 		$payment = new EDD_Payment( $existing_payment );
+		$resume_payment = $payment->is_recoverable();
+	}
+
+	if ( $resume_payment ) {
 
 		// Since things could have been added/removed since we first crated this...rebuild the cart details.
 		foreach ( $payment->fees as $fee_index => $fee ) {

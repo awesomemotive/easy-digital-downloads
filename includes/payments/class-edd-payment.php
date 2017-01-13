@@ -1678,6 +1678,12 @@ class EDD_Payment {
 		return update_post_meta( $this->ID, $meta_key, $meta_value, $prev_value );
 	}
 
+	/**
+	 * Determines if this payment is able to be resumed by the user.
+	 *
+	 * @since 2.7
+	 * @return bool
+	 */
 	public function is_recoverable() {
 		$recoverable = false;
 
@@ -1689,6 +1695,12 @@ class EDD_Payment {
 		return $recoverable;
 	}
 
+	/**
+	 * Returns the URL that a customer can use to resume a payment, or false if it's not recoverable.
+	 *
+	 * @since 2.7
+	 * @return bool|string
+	 */
 	public function get_recovery_url() {
 		if ( ! $this->is_recoverable() ) {
 			return false;
