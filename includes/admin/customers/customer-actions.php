@@ -448,6 +448,12 @@ function edd_customer_save_note( $args ) {
 	$customer = new EDD_Customer( $customer_id );
 	$new_note = $customer->add_note( $customer_note );
 
+	/**
+	 * Fires before a customer note is inserted.
+	 *
+	 * @param int    $customer_id The customer ID.
+	 * @param string $new_note    The note.
+	 */
 	do_action( 'edd_pre_insert_customer_note', $customer_id, $new_note );
 
 	if ( ! empty( $new_note ) && ! empty( $customer->id ) ) {
