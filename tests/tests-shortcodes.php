@@ -4,7 +4,7 @@
 /**
  * @group edd_shortcode
  */
-class Tests_Shortcode extends WP_UnitTestCase {
+class Tests_Shortcode extends EDD_UnitTestCase {
 
 	protected $_payment_id = null;
 
@@ -123,7 +123,7 @@ class Tests_Shortcode extends WP_UnitTestCase {
 		);
 
 		$_SERVER['REMOTE_ADDR'] = '10.0.0.0';
-		$_SERVER['SERVER_NAME'] = 'edd_virtual';
+		$_SERVER['SERVER_NAME'] = 'edd-virtual.local';
 
 		$this->_payment_id = edd_insert_payment( $purchase_data );
 
@@ -183,6 +183,8 @@ class Tests_Shortcode extends WP_UnitTestCase {
 	}
 
 	public function test_login_form() {
+		$purchase_history_page = edd_get_option( 'purchase_history_page' );
+
 		$this->assertInternalType( 'string', edd_login_form_shortcode( array() ) );
 		$this->assertContains( '<p class="edd-logged-in">You are already logged in</p>', edd_login_form_shortcode( array() ) );
 
@@ -197,12 +199,11 @@ class Tests_Shortcode extends WP_UnitTestCase {
 		$this->assertInternalType( 'string', $login_form );
 		$this->assertContains( '"' . get_option( 'site_url' ) . '"', $login_form );
 
-		$page = get_page_by_title( 'Purchase History' );
-		edd_update_option( 'login_redirect_page', $page->ID );
+		edd_update_option( 'login_redirect_page', $purchase_history_page );
 
 		$login_form = edd_login_form_shortcode( array() );
 		$this->assertInternalType( 'string', $login_form );
-		$this->assertContains( '"' . get_permalink( $page->ID ) . '"', $login_form );
+		$this->assertContains( '"' . get_permalink( $purchase_history_page ) . '"', $login_form );
 	}
 
 	public function test_discounts_shortcode() {
@@ -233,7 +234,7 @@ class Tests_Shortcode extends WP_UnitTestCase {
 	public function test_purchase_collection_shortcode() {
 		$this->go_to( '/' );
 		$this->assertInternalType( 'string', edd_purchase_collection_shortcode( array() ) );
-		$this->assertEquals( '<a href="/?edd_action=purchase_collection&taxonomy&terms" class="button blue edd-submit">Purchase All Items</a>', edd_purchase_collection_shortcode( array() ) );
+		$this->assertEquals( '<a href="/?edd_action=purchase_collection&#038;taxonomy&#038;terms" class="button blue edd-submit">Purchase All Items</a>', edd_purchase_collection_shortcode( array() ) );
 	}
 
 	public function test_downloads_query_with_schema() {

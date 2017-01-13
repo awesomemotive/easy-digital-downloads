@@ -192,7 +192,7 @@ function edd_get_purchase_link( $args = array() ) {
 					</span>
 				</span>
 			<?php endif; ?>
-			<?php if( ! $download->is_free( $args['price_id'] ) ): ?>
+			<?php if( ! $download->is_free( $args['price_id'] ) && ! edd_download_is_tax_exclusive( $download->ID ) ): ?>
 				<?php if ( edd_display_tax_rate() && edd_prices_include_tax() ) {
 					echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Includes %1$s&#37; tax', 'easy-digital-downloads' ), edd_get_tax_rate() * 100 ) . '</span>';
 				} elseif ( edd_display_tax_rate() && ! edd_prices_include_tax() ) {
@@ -310,6 +310,31 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 add_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing', 10, 2 );
 
 /**
+ * Output schema markup for single price products.
+ *
+ * @since  2.6.14
+ * @param  int $download_id The download being output.
+ * @return void
+ */
+function edd_purchase_link_single_pricing_schema( $download_id = 0, $args = array() ) {
+
+	// Bail if the product has variable pricing, or if we aren't showing schema data.
+	if ( edd_has_variable_prices( $download_id ) || ! edd_add_schema_microdata() ) {
+		return;
+	}
+
+	// Grab the information we need.
+	$download = new EDD_Download( $download_id );
+	?>
+	<span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+		<meta itemprop="price" content="<?php esc_attr_e( $download->price ); ?>" />
+		<meta itemprop="priceCurrency" content="<?php esc_attr_e( edd_get_currency() ); ?>" />
+	</span>
+	<?php
+}
+add_action( 'edd_purchase_link_top', 'edd_purchase_link_single_pricing_schema', 10, 2 );
+
+/**
  * Display the quantity field for a variable price when multi-purchase mode is enabled
  *
  * @since 2.2
@@ -324,7 +349,7 @@ function edd_download_purchase_form_quantity_field( $download_id = 0, $args = ar
 		$options['price_id'] = $args['price_id'];
 	}
 
-	if ( ! edd_item_quantities_enabled() ) {
+	if ( ! edd_item_quantities_enabled() || edd_download_quantities_disabled( $download_id ) ) {
 		return;
 	}
 
@@ -367,7 +392,7 @@ add_action( 'edd_purchase_link_top', 'edd_download_purchase_form_quantity_field'
  */
 function edd_variable_price_quantity_field( $key, $price, $download_id ) {
 
-	if( ! edd_item_quantities_enabled() ) {
+	if( ! edd_item_quantities_enabled() || edd_download_quantities_disabled( $download_id ) ) {
 		return;
 	}
 
@@ -841,6 +866,7 @@ function edd_checkout_meta_tags() {
 		return;
 	}
 
+	echo '<meta name="edd-chosen-gateway" content="' . edd_get_chosen_gateway() . '"/>' . "\n";
 	echo '<meta name="robots" content="noindex,nofollow" />' . "\n";
 }
 add_action( 'wp_head', 'edd_checkout_meta_tags' );

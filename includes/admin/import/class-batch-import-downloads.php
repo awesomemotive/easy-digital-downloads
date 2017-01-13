@@ -100,10 +100,32 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 					'post_excerpt' => ''
 				);
 
-				foreach( $args as $key => $field ) {
-					if( ! empty( $this->field_mapping[ $key ] ) && ! empty( $row[ $this->field_mapping[ $key ] ] ) ) {
+				foreach ( $args as $key => $field ) {
+					if ( ! empty( $this->field_mapping[ $key ] ) && ! empty( $row[ $this->field_mapping[ $key ] ] ) ) {
 						$args[ $key ] = $row[ $this->field_mapping[ $key ] ];
 					}
+				}
+
+				if ( empty( $args['post_author'] ) ) {
+					$user = wp_get_current_user();
+					$args['post_author'] = $user->ID;
+				} else {
+
+					// Check all forms of possible user inputs, email, ID, login.
+					if ( is_email( $args['post_author'] ) ) {
+						$user = get_user_by( 'user_email', $args['post_author'] );
+					} elseif ( is_numeric( $args['post_author'] ) ) {
+						$user = get_user_by( 'ID', $args['post_author'] );
+					} else {
+						$user = get_user_by( 'user_login', $args['post_author'] );
+					}
+
+					// If we don't find one, resort to the logged in user.
+					if ( false === $user ) {
+						$user = wp_get_current_user();
+					}
+
+					$args['post_author'] = $user->ID;
 				}
 
 				// Format the date properly

@@ -52,59 +52,49 @@ function edd_get_payments( $args = array() ) {
  */
 function edd_get_payment_by( $field = '', $value = '' ) {
 
-	if( empty( $field ) || empty( $value ) ) {
-		return false;
+	$payment = false;
+
+	if( ! empty( $field ) && ! empty( $value ) ) {
+
+		switch( strtolower( $field ) ) {
+
+			case 'id':
+
+				$payment = new EDD_Payment( $value );
+
+				if( ! $payment->ID > 0 ) {
+					$payment = false;
+				}
+
+				break;
+
+			case 'key':
+			case 'payment_number':
+
+				global $wpdb;
+
+				$meta_key   = ( 'key' == $field ) ? '_edd_payment_purchase_key' : '_edd_payment_number';
+				$payment_id = $wpdb->get_var( $wpdb->prepare(
+					"SELECT post_ID FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value=%s",
+					$meta_key, $value
+				) );
+		
+				if ( $payment_id ) {
+
+					$payment = new EDD_Payment( $payment_id );
+
+					if( ! $payment->ID > 0 ) {
+						$payment = false;
+					}
+
+				}
+
+				break;
+		}
+
 	}
 
-	switch( strtolower( $field ) ) {
-
-		case 'id':
-			$payment = new EDD_Payment( $value );
-			$id      = $payment->ID;
-
-			if ( empty( $id ) ) {
-				return false;
-			}
-
-			break;
-
-		case 'key':
-			$payment = edd_get_payments( array(
-				'meta_key'       => '_edd_payment_purchase_key',
-				'meta_value'     => $value,
-				'posts_per_page' => 1,
-				'fields'         => 'ids',
-			) );
-
-			if ( $payment ) {
-				$payment = new EDD_Payment( $payment[0] );
-			}
-
-			break;
-
-		case 'payment_number':
-			$payment = edd_get_payments( array(
-				'meta_key'       => '_edd_payment_number',
-				'meta_value'     => $value,
-				'posts_per_page' => 1,
-				'fields'         => 'ids',
-			) );
-
-			if( $payment ) {
-				$payment = new EDD_Payment( $payment[0] );
-			}
-
-			break;
-
-		default:
-			return false;
-	}
-
-	if( $payment ) {
-		return $payment;
-	}
-
-	return false;
+	return $payment;
 }
 
 /**
@@ -518,10 +508,9 @@ function edd_count_payments( $args = array() ) {
 
 		$is_date    = checkdate( $month, $day, $year );
 		if ( false !== $is_date ) {
+			$date = date( 'Y-m-d', strtotime( '+1 day', mktime( 0, 0, 0, $month, $day, $year ) ) );
 
-			$date   = new DateTime( $args['end-date'] );
-			$where .= $wpdb->prepare( " AND p.post_date <= '%s'", $date->format( 'Y-m-d' ) );
-
+			$where .= $wpdb->prepare( " AND p.post_date < '%s'", $date );
 		}
 
 	}
@@ -696,17 +685,20 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 		'update_post_term_cache' => false,
 		'include_taxes'  => $include_taxes,
 	);
-	if ( ! empty( $day ) )
+
+	if ( ! empty( $day ) ) {
 		$args['day'] = $day;
+	}
 
-	if ( ! empty( $hour ) )
+	if ( ! empty( $hour ) || $hour == 0 ) {
 		$args['hour'] = $hour;
+	}
 
-	$args     = apply_filters( 'edd_get_earnings_by_date_args', $args );
-	$key      = 'edd_stats_' . substr( md5( serialize( $args ) ), 0, 15 );
-	$earnings = get_transient( $key );
+	$args   = apply_filters( 'edd_get_earnings_by_date_args', $args );
+	$cached = get_transient( 'edd_stats_earnings' );
+	$key    = md5( json_encode( $args ) );
 
-	if( false === $earnings ) {
+	if ( ! isset( $cached[ $key ] ) ) {
 		$sales = get_posts( $args );
 		$earnings = 0;
 		if ( $sales ) {
@@ -722,10 +714,13 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 			$earnings += ( $total_earnings - $total_tax );
 		}
 		// Cache the results for one hour
-		set_transient( $key, $earnings, HOUR_IN_SECONDS );
+		$cached[ $key ] = $earnings;
+		set_transient( 'edd_stats_earnings', $cached, HOUR_IN_SECONDS );
 	}
 
-	return round( $earnings, 2 );
+	$result = $cached[ $key ];
+
+	return round( $result, 2 );
 }
 
 /**
@@ -777,17 +772,21 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 
 	$args = apply_filters( 'edd_get_sales_by_date_args', $args  );
 
-	$key   = 'edd_stats_' . substr( md5( serialize( $args ) ), 0, 15 );
-	$count = get_transient( $key );
+	$cached = get_transient( 'edd_stats_sales' );
+	$key    = md5( json_encode( $args ) );
 
-	if( false === $count ) {
+	if ( ! isset( $cached[ $key ] ) ) {
 		$sales = new WP_Query( $args );
 		$count = (int) $sales->post_count;
+
 		// Cache the results for one hour
-		set_transient( $key, $count, HOUR_IN_SECONDS );
+		$cached[ $key ] = $count;
+		set_transient( 'edd_stats_sales', $cached, HOUR_IN_SECONDS );
 	}
 
-	return $count;
+	$result = $cached[ $key ];
+
+	return $result;
 }
 
 /**
