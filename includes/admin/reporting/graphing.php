@@ -931,9 +931,8 @@ add_action( 'edd_reports_graph_after', 'edd_reports_refresh_button' );
  * EDD trigger the refresh of reports transients
  *
  * @since 2.7
- *
+ * 
  * @param array $data Parameters sent from Settings page
- *
  * @return void
  */
 function edd_run_refresh_reports_transients( $data ) {
