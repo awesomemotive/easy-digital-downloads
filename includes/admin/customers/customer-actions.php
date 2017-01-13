@@ -527,6 +527,13 @@ function edd_customer_delete( $args ) {
 
 	$customer = new EDD_Customer( $customer_id );
 
+	/**
+	 * Fires before a customer is deleted.
+	 *
+	 * @param int  $customer_id The ID of the customer that will be deleted.
+	 * @param bool $confirm     If the deletion has been confirmed.
+	 * @param bool $remove_data If the customer data will be removed.
+	 */
 	do_action( 'edd_pre_delete_customer', $customer_id, $confirm, $remove_data );
 
 	$success = false;
