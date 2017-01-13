@@ -405,7 +405,7 @@ function edd_recover_payment() {
 add_action( 'edd_recover_payment', 'edd_recover_payment' );
 
 /**
- * If the payment trying to be recovered has a User ID associated with it, we need them to login.
+ * If the payment trying to be recovered has a User ID associated with it, we need them to log in.
  *
  * @since  2.7
  * @return void
