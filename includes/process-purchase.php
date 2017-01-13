@@ -761,12 +761,12 @@ function edd_get_purchase_form_user( $valid_data = array() ) {
 
 			// Set user
 			$user = $valid_data['login_user_data'];
+
 			// Login user
 			if ( empty( $user ) || $user['user_id'] == -1 ) {
 				edd_set_error( 'invalid_user', __( 'The user information is invalid', 'easy-digital-downloads' ) );
 				return false;
-			}
-			else {
+			} else {
 				edd_log_user_in( $user['user_id'], $user['user_login'], $user['user_pass'] );
 			}
 		}
