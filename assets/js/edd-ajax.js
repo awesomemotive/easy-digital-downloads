@@ -175,7 +175,10 @@ jQuery(document).ready(function ($) {
 				withCredentials: true
 			},
 			success: function (response) {
-				if( edd_scripts.redirect_to_checkout == '1' && form.find( '#edd_redirect_to_checkout' ).val() == '1' ) {
+				var store_redirect = edd_scripts.redirect_to_checkout == '1';
+				var item_redirect  = form.find( '#edd_redirect_to_checkout' ).val() == '1';
+
+				if( ( store_redirect && item_redirect ) || ( ! store_redirect && item_redirect ) ) {
 
 					window.location = edd_scripts.checkout_page;
 
