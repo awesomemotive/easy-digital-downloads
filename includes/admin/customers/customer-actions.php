@@ -476,13 +476,16 @@ add_action( 'edd_add-customer-note', 'edd_customer_save_note', 10, 1 );
  * Delete a customer
  *
  * @since  2.3
- * @param  array $args The $_POST array being passeed
- * @return int         Wether it was a successful deletion
  * @param  array $args The $_POST array being passeed.
  * @return int         Wether it was a successful deletion.
  */
 function edd_customer_delete( $args ) {
 
+	/**
+	 * Filters the role required to edit customers.
+	 *
+	 * @param string edit_shop_payments The role. Defaults to edit_shop_payments.
+	 */
 	$customer_edit_role = apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
 
 	if ( ! is_admin() || ! current_user_can( $customer_edit_role ) ) {
