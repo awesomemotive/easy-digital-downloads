@@ -120,6 +120,12 @@ function edd_edit_customer( $args ) {
 	$customer_data['email']   = $customer_info['email'];
 	$customer_data['user_id'] = $user_id;
 
+	/**
+	 * Modifies the customer data before customer details are edited.
+	 *
+	 * @param array $customer_data The data for the customer being edited.
+	 * @param int   $customer_id   The ID of the customer being edited.
+	 */
 	$customer_data = apply_filters( 'edd_edit_customer_info', $customer_data, $customer_id );
 	$address       = apply_filters( 'edd_edit_customer_address', $address, $customer_id );
 
