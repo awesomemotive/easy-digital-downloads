@@ -1,6 +1,6 @@
 <?php
 /**
- * Earnings Report Export Class
+ * Batch Earnings Report Export Class.
  *
  * This class handles earnings report export.
  *
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @since 2.7
  */
-class EDD_Earnings_Report_Export extends EDD_Export {
+class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	/**
 	 * Our export type. Used for export-type specific filters/actions.
 	 *
