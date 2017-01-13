@@ -127,6 +127,12 @@ function edd_edit_customer( $args ) {
 	 * @param int   $customer_id   The ID of the customer being edited.
 	 */
 	$customer_data = apply_filters( 'edd_edit_customer_info', $customer_data, $customer_id );
+	/**
+	 * Modifies the customer address before customer details are edited.
+	 *
+	 * @param array $address     The customer address details.
+	 * @param int   $customer_id The ID of the customer being edited.
+	 */
 	$address       = apply_filters( 'edd_edit_customer_address', $address, $customer_id );
 
 	$customer_data = array_map( 'sanitize_text_field', $customer_data );
