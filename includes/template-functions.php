@@ -174,7 +174,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 			if ( ! edd_is_ajax_disabled() ) {
 
-				echo '<a href="#" class="edd-add-to-cart ' . esc_attr( $class ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $download->ID ) . '" ' . $data_variable . ' ' . $type . ' ' . $data_price . ' ' . $button_display . '><span class="edd-add-to-cart-label">' . $args['text'] . '</span> <span class="edd-loading"><i class="edd-icon-spinner edd-icon-spin"></i></span></a>';
+				echo '<a href="#" class="edd-add-to-cart ' . esc_attr( $class ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $download->ID ) . '" ' . $data_variable . ' ' . $type . ' ' . $data_price . ' ' . $button_display . '><span class="edd-add-to-cart-label">' . $args['text'] . '</span> <span class="edd-loading"><span class="screen-reader-text">' . __( 'Loading', 'easy-digital-downloads' ) . '</span></span></a>';
 
 			}
 
@@ -185,7 +185,10 @@ function edd_get_purchase_link( $args = array() ) {
 			<?php if ( ! edd_is_ajax_disabled() ) : ?>
 				<span class="edd-cart-ajax-alert" aria-live="assertive">
 					<span class="edd-cart-added-alert" style="display: none;">
-						<?php echo '<i class="edd-icon-ok" aria-hidden="true"></i> ' . __( 'Added to cart', 'easy-digital-downloads' ); ?>
+						<svg class="edd-icon edd-icon-check" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
+							<path d="M26.11 8.844c0 .39-.157.78-.44 1.062L12.234 23.344c-.28.28-.672.438-1.062.438s-.78-.156-1.06-.438l-7.782-7.78c-.28-.282-.438-.673-.438-1.063s.156-.78.438-1.06l2.125-2.126c.28-.28.672-.438 1.062-.438s.78.156 1.062.438l4.594 4.61L21.42 5.656c.282-.28.673-.438 1.063-.438s.78.155 1.062.437l2.125 2.125c.28.28.438.672.438 1.062z"/>
+						</svg>
+						<?php echo __( 'Added to cart', 'easy-digital-downloads' ); ?>
 					</span>
 				</span>
 			<?php endif; ?>
@@ -346,7 +349,7 @@ function edd_download_purchase_form_quantity_field( $download_id = 0, $args = ar
 		$options['price_id'] = $args['price_id'];
 	}
 
-	if ( ! edd_item_quantities_enabled() ) {
+	if ( ! edd_item_quantities_enabled() || edd_download_quantities_disabled( $download_id ) ) {
 		return;
 	}
 
@@ -389,7 +392,7 @@ add_action( 'edd_purchase_link_top', 'edd_download_purchase_form_quantity_field'
  */
 function edd_variable_price_quantity_field( $key, $price, $download_id ) {
 
-	if( ! edd_item_quantities_enabled() ) {
+	if( ! edd_item_quantities_enabled() || edd_download_quantities_disabled( $download_id ) ) {
 		return;
 	}
 
@@ -863,6 +866,7 @@ function edd_checkout_meta_tags() {
 		return;
 	}
 
+	echo '<meta name="edd-chosen-gateway" content="' . edd_get_chosen_gateway() . '"/>' . "\n";
 	echo '<meta name="robots" content="noindex,nofollow" />' . "\n";
 }
 add_action( 'wp_head', 'edd_checkout_meta_tags' );
