@@ -138,6 +138,13 @@ function edd_edit_customer( $args ) {
 	$customer_data = array_map( 'sanitize_text_field', $customer_data );
 	$address       = array_map( 'sanitize_text_field', $address );
 
+	/**
+	 * Runs actions before a customer is edited.
+	 *
+	 * @param int   $customer_id   The customer ID.
+	 * @param array $customer_data The customer data.
+	 * @param array $address       The customer's address.
+	 */
 	do_action( 'edd_pre_edit_customer', $customer_id, $customer_data, $address );
 
 	$output         = array();
