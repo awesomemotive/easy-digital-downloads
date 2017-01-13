@@ -4,7 +4,8 @@
 /**
  * @group edd_login_register
  */
-class Tests_Login_Register extends WP_UnitTestCase {
+class Tests_Login_Register extends EDD_UnitTestCase {
+
 	public function setUp() {
 		parent::setUp();
 		wp_set_current_user(0);
@@ -14,7 +15,7 @@ class Tests_Login_Register extends WP_UnitTestCase {
 	 * Test that the login form returns the expected string.
 	 */
 	public function test_login_form() {
-		$this->assertContains( '<span><legend>Log into Your Account</legend></span>', edd_login_form() );
+		$this->assertContains( '<legend>Log into Your Account</legend>', edd_login_form() );
 	}
 
 	/**

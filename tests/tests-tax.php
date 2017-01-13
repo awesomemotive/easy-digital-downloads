@@ -4,7 +4,7 @@
 /**
  * @group edd_tax
  */
-class Tests_Taxes extends WP_UnitTestCase {
+class Tests_Taxes extends EDD_UnitTestCase {
 
 	protected $_payment_id = null;
 
@@ -75,7 +75,7 @@ class Tests_Taxes extends WP_UnitTestCase {
 		);
 
 		$_SERVER['REMOTE_ADDR'] = '10.0.0.0';
-		$_SERVER['SERVER_NAME'] = 'edd_virtual';
+		$_SERVER['SERVER_NAME'] = 'edd-virtual.local';
 
 		$payment_id = edd_insert_payment( $purchase_data );
 		edd_update_payment_status( $payment_id, 'publish' );
@@ -190,6 +190,7 @@ class Tests_Taxes extends WP_UnitTestCase {
 		$this->assertEquals( '9.29916', edd_calculate_tax( 258.31 ) );
 		$this->assertEquals( '37.41552', edd_calculate_tax( 1039.32 ) );
 		$this->assertEquals( '361.58724', edd_calculate_tax( 10044.09 ) );
+		$this->assertEquals( '0', edd_calculate_tax( -1.50 ) );
 	}
 
 	public function test_calculate_tax_price_includes_tax() {

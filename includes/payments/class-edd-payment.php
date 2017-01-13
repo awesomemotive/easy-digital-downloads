@@ -19,11 +19,9 @@ if( ! defined( 'ABSPATH' ) ) exit;
 /**
  * EDD_Payment Class
  *
- * Note: Will remain in Final status for a few point releases
- *
  * @since 2.5
  */
-final class EDD_Payment {
+class EDD_Payment {
 
 	/**
 	 * The Payment we are working with
@@ -308,11 +306,24 @@ final class EDD_Payment {
 	 * @param int $payment_id A given payment
 	 * @return mixed void|false
 	 */
-	public function __construct( $payment_id = false ) {
+	public function __construct( $payment_or_txn_id = false, $by_txn = false ) {
+		global $wpdb;
 
-		if( empty( $payment_id ) ) {
+		if( empty( $payment_or_txn_id ) ) {
 			return false;
 		}
+
+		if ( $by_txn ) {
+			$query      = $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_transaction_id' AND meta_value = '%s'", $payment_or_txn_id );
+			$payment_id = $wpdb->get_var( $query );
+
+			if ( empty( $payment_id ) ) {
+				return false;
+			}
+		} else {
+			$payment_id = absint( $payment_or_txn_id );
+		}
+
 
 		$this->setup_payment( $payment_id );
 	}
@@ -540,7 +551,14 @@ final class EDD_Payment {
 			$customer = new stdClass;
 
 			if ( did_action( 'edd_pre_process_purchase' ) && is_user_logged_in() ) {
-				$customer  = new EDD_customer( get_current_user_id(), true );
+
+				$customer = new EDD_customer( get_current_user_id(), true );
+
+				// Customer is logged in but used a different email to purchase with so assign to their customer record
+				if( ! empty( $customer->id ) && $this->email != $customer->email ) {
+					$customer->add_email( $this->email );
+				}
+
 			}
 
 			if ( empty( $customer->id ) ) {
@@ -559,6 +577,7 @@ final class EDD_Payment {
 
 			}
 
+
 			$this->customer_id            = $customer->id;
 			$this->pending['customer_id'] = $this->customer_id;
 			$customer->attach_payment( $this->ID, false );
@@ -569,6 +588,13 @@ final class EDD_Payment {
 				foreach( $this->fees as $fee ) {
 					$this->increase_fees( $fee['amount'] );
 				}
+			}
+
+			if ( edd_get_option( 'enable_sequential' ) ) {
+				$number       = edd_get_next_payment_number();
+				$this->number = edd_format_payment_number( $number );
+				$this->update_meta( '_edd_payment_number', $this->number );
+				update_option( 'edd_last_payment_number', $number );
 			}
 
 			$this->update_meta( '_edd_payment_meta', $this->payment_meta );
@@ -585,6 +611,9 @@ final class EDD_Payment {
 	 * @return bool  True of the save occurred, false if it failed or wasn't needed
 	 */
 	public function save() {
+
+		global $edd_logs;
+
 		$saved = false;
 
 		if ( empty( $this->ID ) ) {
@@ -633,42 +662,72 @@ final class EDD_Payment {
 											$y++;
 										}
 
+										$increase_earnings = $price;
+										if ( ! empty( $item['fees'] ) ) {
+											foreach ( $item['fees'] as $fee ) {
+												// Only let negative fees affect the earnings
+												if ( $fee['amount'] > 0 ) {
+													continue;
+												}
+												$increase_earnings += (float) $fee['amount'];
+											}
+										}
+
 										$download = new EDD_Download( $item['id'] );
 										$download->increase_sales( $item['quantity'] );
-										$download->increase_earnings( $price );
+										$download->increase_earnings( $increase_earnings );
 
 										$total_increase += $price;
 									}
 									break;
 
 									case 'remove':
-										$log_args = array(
-											'post_type'   => 'edd_log',
-											'post_parent' => $item['id'],
-											'numberposts' => $item['quantity'],
-											'meta_query'  => array(
-												array(
-													'key'     => '_edd_log_payment_id',
-													'value'   => $this->ID,
-													'compare' => '=',
-												),
-												array(
-													'key'     => '_edd_log_price_id',
-													'value'   => $item['price_id'],
-													'compare' => '='
-												)
-											)
+
+										$meta_query = array();
+										$meta_query[] = array(
+											'key'     => '_edd_log_payment_id',
+											'value'   => $this->ID,
+											'compare' => '=',
 										);
 
-										$found_logs = get_posts( $log_args );
-										foreach ( $found_logs as $log ) {
-											wp_delete_post( $log->ID, true );
+										if( ! empty( $item['price_id'] ) || 0 === (int) $item['price_id'] ) {
+											$meta_query[] = array(
+												'key'     => '_edd_log_price_id',
+												'value'   => (int) $item['price_id'],
+												'compare' => '='
+											);
+										}
+
+										$log_args = array(
+											'post_parent'    => $item['id'],
+											'posts_per_page' => $item['quantity'],
+											'meta_query'     => $meta_query,
+											'log_type'       => 'sale'
+										);
+
+										$found_logs = $edd_logs->get_connected_logs( $log_args );
+
+										if( $found_logs ) {
+											foreach ( $found_logs as $log ) {
+												wp_delete_post( $log->ID, true );
+											}
 										}
 
 										if ( 'publish' === $this->status || 'complete' === $this->status || 'revoked' === $this->status ) {
 											$download = new EDD_Download( $item['id'] );
 											$download->decrease_sales( $item['quantity'] );
-											$download->decrease_earnings( $item['amount'] );
+
+											$decrease_amount = $item['amount'];
+											if ( ! empty( $item['fees'] ) ) {
+												foreach( $item['fees'] as $fee ) {
+													// Only let negative fees affect the earnings
+													if ( $fee['amount'] > 0 ) {
+														continue;
+													}
+													$decrease_amount += $fee['amount'];
+												}
+											}
+											$download->decrease_earnings( $decrease_amount );
 
 											$total_decrease += $item['amount'];
 										}
@@ -796,6 +855,10 @@ final class EDD_Payment {
 						break;
 
 					default:
+						/**
+						 * Used to save non-standard data. Developers can hook here if they want to save
+						 * specific payment data when $payment->save() is run and their item is in the $pending array
+						 */
 						do_action( 'edd_payment_save', $this, $key );
 						break;
 				}
@@ -833,8 +896,24 @@ final class EDD_Payment {
 				'cart_details'  => $this->cart_details,
 				'fees'          => $this->fees,
 				'currency'      => $this->currency,
-				'user_info'     => $this->user_info,
+				'user_info'     => is_array( $this->user_info ) ? array_filter( $this->user_info ) : array(),
+				'date'          => $this->date
 			);
+
+
+
+			// Do some merging of user_info before we merge it all, to honor the edd_payment_meta filter
+			if ( ! empty( $this->payment_meta['user_info'] ) ) {
+
+				$stored_discount = ! empty( $new_meta['user_info']['discount'] ) ? $new_meta['user_info']['discount'] : '';
+
+				$new_meta[ 'user_info' ] = array_replace_recursive( (array) $this->payment_meta[ 'user_info' ], $new_meta[ 'user_info' ] );
+
+				if ( 'none' !== $stored_discount ) {
+					$new_meta['user_info']['discount'] = $stored_discount;
+				}
+
+			}
 
 			$meta        = $this->get_meta();
 			$merged_meta = array_merge( $meta, $new_meta );
@@ -853,6 +932,12 @@ final class EDD_Payment {
 
 		if ( true === $saved ) {
 			$this->setup_payment( $this->ID );
+
+			/**
+			 * This action fires anytime that $payment->save() is run, allowing developers to run actions
+			 * when a payment is updated
+			 */
+			do_action( 'edd_payment_saved', $this->ID, $this );
 		}
 
 		return $saved;
@@ -1124,6 +1209,18 @@ final class EDD_Payment {
 			$total_reduced = $this->cart_details[ $found_cart_key ]['item_price'];
 			$tax_reduced   = $this->cart_details[ $found_cart_key ]['tax'];
 
+			$found_fees = array();
+
+			if ( ! empty( $this->cart_details[ $found_cart_key ]['fees'] ) ) {
+
+				$found_fees = $this->cart_details[ $found_cart_key ]['fees'];
+
+				foreach ( $found_fees as $key => $fee ) {
+					$this->remove_fee( $key );
+				}
+
+			}
+
 			unset( $this->cart_details[ $found_cart_key ] );
 
 		}
@@ -1134,6 +1231,7 @@ final class EDD_Payment {
 		$pending_args['price_id'] = false !== $args['price_id'] ? $args['price_id'] : false;
 		$pending_args['quantity'] = $args['quantity'];
 		$pending_args['action']   = 'remove';
+		$pending_args['fees']     = isset( $found_fees ) ? $found_fees : array();
 
 		$this->pending['downloads'][] = $pending_args;
 
@@ -1183,11 +1281,7 @@ final class EDD_Payment {
 	 * @return bool     If the fee was removed successfully
 	 */
 	public function remove_fee( $key ) {
-		$removed = false;
-
-		if ( is_numeric( $key ) ) {
-			$removed = $this->remove_fee_by( 'index', $key );
-		}
+		$removed = $this->remove_fee_by( 'index', $key );
 
 		return $removed;
 	}
@@ -1488,6 +1582,18 @@ final class EDD_Payment {
 
 		if ( $meta_key === '_edd_payment_meta' ) {
 
+			// #5228 Fix possible data issue introduced in 2.6.12
+			if ( isset( $meta[0] ) ) {
+				$bad_meta = $meta[0];
+				unset( $meta[0] );
+
+				if ( is_array( $bad_meta ) ) {
+					$meta = array_merge( $meta, $bad_meta );
+				}
+
+				update_post_meta( $this->ID, '_edd_payment_meta', $meta );
+			}
+
 			// Payment meta was simplified in EDD v1.5, so these are here for backwards compatibility
 			if ( empty( $meta['key'] ) ) {
 				$meta['key'] = $this->setup_payment_key();
@@ -1500,6 +1606,7 @@ final class EDD_Payment {
 			if ( empty( $meta['date'] ) ) {
 				$meta['date'] = get_post_field( 'post_date', $this->ID );
 			}
+
 		}
 
 		$meta = apply_filters( 'edd_get_payment_meta_' . $meta_key, $meta, $this->ID );
@@ -1534,8 +1641,11 @@ final class EDD_Payment {
 			$meta_value = apply_filters( 'edd_edd_update_payment_meta_' . $meta_key, $meta_value, $this->ID );
 			update_post_meta( $this->ID, '_edd_payment_user_email', $meta_value );
 
-			$current_meta = $this->get_meta();
-			$current_meta['user_info']['email']  = $meta_value;
+			$current_meta = $this->get_meta( '_edd_payment_meta' );
+
+			if ( is_array( $current_meta ) ){
+				$current_meta['user_info']['email']  = $meta_value;
+			}
 
 			$meta_key     = '_edd_payment_meta';
 			$meta_value   = $current_meta;
@@ -1769,7 +1879,7 @@ final class EDD_Payment {
 		// We don't have tax as it's own meta and no meta was passed
 		if ( '' === $tax ) {
 
-			$tax = isset( $payment_meta['tax'] ) ? $payment_meta['tax'] : 0;
+			$tax = isset( $this->payment_meta['tax'] ) ? $this->payment_meta['tax'] : 0;
 
 		}
 
@@ -1922,7 +2032,19 @@ final class EDD_Payment {
 	 * @return int The User ID
 	 */
 	private function setup_user_id() {
-		$user_id = $this->get_meta( '_edd_payment_user_id', true );
+		$user_id  = $this->get_meta( '_edd_payment_user_id', true );
+		$customer = new EDD_Customer( $this->customer_id );
+
+		// Make sure it exists, and that it matches that of the associted customer record
+		if( empty( $user_id ) || ( ! empty( $customer->user_id ) && (int) $user_id !== (int) $customer->user_id ) ) {
+
+			$user_id = $customer->user_id;
+
+			// Backfill the user ID, or reset it to be correct in the event of data corruption
+			$this->update_meta( '_edd_payment_user_id', $user_id );
+
+		}
+
 		return $user_id;
 	}
 
@@ -1958,6 +2080,10 @@ final class EDD_Payment {
 		$user_info    = isset( $this->payment_meta['user_info'] ) ? maybe_unserialize( $this->payment_meta['user_info'] ) : array();
 		$user_info    = wp_parse_args( $user_info, $defaults );
 
+		// Ensure email index is in the old user info array
+		if( empty( $user_info['email'] ) ) {
+			$user_info['email'] = $this->email;
+		}
 
 		if ( empty( $user_info ) ) {
 			// Get the customer, but only if it's been created
@@ -2014,7 +2140,10 @@ final class EDD_Payment {
 	 * @return array               The Address information for the payment
 	 */
 	private function setup_address() {
-		$address = ! empty( $this->payment_meta['user_info']['address'] ) ? $this->payment_meta['user_info']['address'] : array( 'line1' => '', 'line2' => '', 'city' => '', 'country' => '', 'state' => '', 'zip' => '' );
+		$address  = ! empty( $this->payment_meta['user_info']['address'] ) ? $this->payment_meta['user_info']['address'] : array();
+		$defaults = array( 'line1' => '', 'line2' => '', 'city' => '', 'country' => '', 'state' => '', 'zip' => '' );
+
+		$address = wp_parse_args( $address, $defaults );
 		return $address;
 	}
 
