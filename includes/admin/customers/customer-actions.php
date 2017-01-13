@@ -181,6 +181,12 @@ function edd_edit_customer( $args ) {
 
 	}
 
+	/**
+	 * Runs actions after a customer is edited.
+	 *
+	 * @param int   $customer_id   The ID of the customer thast was edited.
+	 * @param array $customer_data Details for the customer that was edited.
+	 */
 	do_action( 'edd_post_edit_customer', $customer_id, $customer_data );
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
