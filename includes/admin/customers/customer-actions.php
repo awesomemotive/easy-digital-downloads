@@ -414,6 +414,11 @@ add_action( 'edd_customer-primary-email', 'edd_set_customer_primary_email', 10 )
  */
 function edd_customer_save_note( $args ) {
 
+	/**
+	 * Filters the user role required to view customers.
+	 *
+	 * @param string view_shop_reports The role. Defaults to view_shop_reports.
+	 */
 	$customer_view_role = apply_filters( 'edd_view_customers_role', 'view_shop_reports' );
 
 	if ( ! is_admin() || ! current_user_can( $customer_view_role ) ) {
