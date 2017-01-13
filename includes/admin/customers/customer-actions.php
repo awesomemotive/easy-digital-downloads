@@ -639,6 +639,11 @@ function edd_disconnect_customer_user_id( $args ) {
 		edd_set_error( 'edd-disconnect-user-fail', __( 'Failed to disconnect user from customer', 'easy-digital-downloads' ) );
 	}
 
+	/**
+	 * Fires after a customer is disconnected from a user ID.
+	 *
+	 * @param int $customer_id The ID of the customer that was disconnected.
+	 */
 	do_action( 'edd_post_customer_disconnect_user_id', $customer_id );
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
