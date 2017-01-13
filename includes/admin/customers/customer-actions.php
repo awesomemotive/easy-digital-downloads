@@ -53,12 +53,12 @@ function edd_edit_customer( $args ) {
 
 	if ( (int) $customer_info['user_id'] != (int) $customer->user_id ) {
 
-		// Make sure we don't already have this user attached to a customer
+		// Make sure we don't already have this user attached to a customer.
 		if ( ! empty( $customer_info['user_id'] ) && false !== EDD()->customers->get_customer_by( 'user_id', $customer_info['user_id'] ) ) {
 			edd_set_error( 'edd-invalid-customer-user_id', sprintf( __( 'The User ID %d is already associated with a different customer.', 'easy-digital-downloads' ), $customer_info['user_id'] ) );
 		}
 
-		// Make sure it's actually a user
+		// Make sure it's actually a user.
 		$user = get_user_by( 'id', $customer_info['user_id'] );
 		if ( ! empty( $customer_info['user_id'] ) && false === $user ) {
 			edd_set_error( 'edd-invalid-user_id', sprintf( __( 'The User ID %d does not exist. Please assign an existing user.', 'easy-digital-downloads' ), $customer_info['user_id'] ) );
@@ -66,7 +66,7 @@ function edd_edit_customer( $args ) {
 
 	}
 
-	// Record this for later
+	// Record this for later.
 	$previous_user_id  = $customer->user_id;
 
 	if ( edd_get_errors() ) {
@@ -75,7 +75,7 @@ function edd_edit_customer( $args ) {
 
 	$user_id = intval( $customer_info['user_id'] );
 	if ( empty( $user_id ) && ! empty( $customer_info['user_login'] ) ) {
-		// See if they gave an email, otherwise we'll assume login
+		// See if they gave an email, otherwise we'll assume login.
 		$user_by_field = 'login';
 		if ( is_email( $customer_info['user_login'] ) ) {
 			$user_by_field = 'email';
@@ -89,7 +89,7 @@ function edd_edit_customer( $args ) {
 		}
 	}
 
-	// Setup the customer address, if present
+	// Setup the customer address, if present.
 	$address = array();
 	if ( ! empty( $user_id ) ) {
 
@@ -114,7 +114,7 @@ function edd_edit_customer( $args ) {
 
 	}
 
-	// Sanitize the inputs
+	// Sanitize the inputs.
 	$customer_data            = array();
 	$customer_data['name']    = strip_tags( stripslashes( $customer_info['name'] ) );
 	$customer_data['email']   = $customer_info['email'];
@@ -137,7 +137,7 @@ function edd_edit_customer( $args ) {
 			update_user_meta( $customer->user_id, '_edd_user_address', $address );
 		}
 
-		// Update some payment meta if we need to
+		// Update some payment meta if we need to.
 		$payments_array = explode( ',', $customer->payment_ids );
 
 		if ( $customer->email != $previous_email ) {
@@ -180,7 +180,7 @@ add_action( 'edd_edit-customer', 'edd_edit_customer', 10, 1 );
  * Add an email address to the customer from within the admin and log a customer note
  *
  * @since  2.6
- * @param  array $args  Array of arguments: nonce, customer id, and email address
+ * @param  array $args  Array of arguments: nonce, customer id, and email address.
  * @return mixed        If DOING_AJAX echos out JSON, otherwise returns array of success (bool) and message (string)
  */
 function edd_add_customer_email( $args ) {
@@ -373,7 +373,7 @@ add_action( 'edd_customer-primary-email', 'edd_set_customer_primary_email', 10 )
  * Save a customer note being added
  *
  * @since  2.3
- * @param  array $args The $_POST array being passeed
+ * @param  array $args The $_POST array being passeed.
  * @return int         The Note ID that was saved, or 0 if nothing was saved
  */
 function edd_customer_save_note( $args ) {
@@ -442,6 +442,8 @@ add_action( 'edd_add-customer-note', 'edd_customer_save_note', 10, 1 );
  * @since  2.3
  * @param  array $args The $_POST array being passeed
  * @return int         Wether it was a successful deletion
+ * @param  array $args The $_POST array being passeed.
+ * @return int         Wether it was a successful deletion.
  */
 function edd_customer_delete( $args ) {
 
@@ -488,14 +490,14 @@ function edd_customer_delete( $args ) {
 
 			if ( $remove_data ) {
 
-				// Remove all payments, logs, etc
+				// Remove all payments, logs, etc.
 				foreach ( $payments_array as $payment_id ) {
 					edd_delete_purchase( $payment_id, false, true );
 				}
 
 			} else {
 
-				// Just set the payments to customer_id of 0
+				// Just set the payments to customer_id of 0.
 				foreach ( $payments_array as $payment_id ) {
 					edd_update_payment_meta( $payment_id, '_edd_payment_customer_id', 0 );
 				}
@@ -528,8 +530,8 @@ add_action( 'edd_delete-customer', 'edd_customer_delete', 10, 1 );
  * Disconnect a user ID from a customer
  *
  * @since  2.3
- * @param  array $args Array of arguments
- * @return bool        If the disconnect was sucessful
+ * @param  array $args Array of arguments.
+ * @return bool        If the disconnect was sucessful.
  */
 function edd_disconnect_customer_user_id( $args ) {
 
@@ -621,6 +623,7 @@ add_action( 'edd_verify_user_admin', 'edd_process_admin_user_verification' );
 
 /**
  * Register the reset single customer stats batch processor
+ *
  * @since  2.5
  */
 function edd_register_batch_single_customer_recount_tool() {
@@ -632,7 +635,7 @@ add_action( 'edd_register_batch_exporter', 'edd_register_batch_single_customer_r
  * Loads the tools batch processing class for recounding stats for a single customer
  *
  * @since  2.5
- * @param  string $class The class being requested to run for the batch export
+ * @param  string $class The class being requested to run for the batch export.
  * @return void
  */
 function edd_include_single_customer_recount_tool_batch_processer( $class ) {
