@@ -244,7 +244,7 @@ class Tests_Payments extends EDD_UnitTestCase {
 
 		// Test by getting the payment key with three different methods
 		$this->assertEquals( $this->_payment_key, $payment->get_meta( '_edd_payment_purchase_key' ) );
-		$this->assertEquals( $this->_payment_key, get_post_meta( $this->_payment_id, '_edd_payment_purchase_key', true ) );
+		$this->assertEquals( $this->_payment_key, edd_get_payment_meta( $this->_payment_id, '_edd_payment_purchase_key', true ) );
 		$this->assertEquals( $this->_payment_key, $payment->key );
 
 		// Try and retrieve the transaction ID
@@ -258,7 +258,7 @@ class Tests_Payments extends EDD_UnitTestCase {
 
 		// Test by getting the payment key with three different methods
 		$this->assertEquals( $this->_payment_key, edd_get_payment_meta( $this->_payment_id, '_edd_payment_purchase_key' ) );
-		$this->assertEquals( $this->_payment_key, get_post_meta( $this->_payment_id, '_edd_payment_purchase_key', true ) );
+		$this->assertEquals( $this->_payment_key, edd_get_payment_meta( $this->_payment_id, '_edd_payment_purchase_key', true ) );
 		$this->assertEquals( $this->_payment_key, edd_get_payment_key( $this->_payment_id ) );
 
 		// Try and retrieve the transaction ID
