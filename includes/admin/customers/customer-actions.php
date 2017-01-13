@@ -298,6 +298,12 @@ function edd_add_customer_email( $args ) {
 
 	}
 
+	/**
+	 * Fires after a customer's email is added.
+	 *
+	 * @param int   $customer_id The ID of the customer that was updated.
+	 * @param array $args        The customer details.
+	 */
 	do_action( 'edd_post_add_customer_email', $customer_id, $args );
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
