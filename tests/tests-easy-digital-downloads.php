@@ -125,9 +125,6 @@ class Tests_EDD extends EDD_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/edd-admin.css' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/jquery-ui-classic.css' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/jquery-ui-fresh.css' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/fonts/padlock.svg' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/fonts/padlock.ttf' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/fonts/padlock.woff' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/ie6/borderBottomCenter.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/ie6/borderBottomLeft.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/ie6/borderBottomRight.png' );
