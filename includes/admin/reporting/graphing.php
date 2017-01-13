@@ -937,19 +937,16 @@ add_action( 'edd_reports_graph_after', 'edd_reports_refresh_button' );
  * @return void
  */
 function edd_run_refresh_reports_transients( $data ) {
-
 	if ( ! wp_verify_nonce( $data['_wpnonce'], 'edd-refresh-reports' ) ) {
 		return;
 	}
 
-	//Delete transients
+	// Delete transients
 	delete_transient( 'edd_stats_earnings' );
 	delete_transient( 'edd_stats_sales' );
 	delete_transient( 'edd_estimated_monthly_stats' );
 	delete_transient( 'edd_earnings_total' );
 	delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
 	delete_transient( md5( 'edd_earnings_todaytoday' ) );
-
 }
-
 add_action( 'edd_refresh_reports_transients', 'edd_run_refresh_reports_transients' );
