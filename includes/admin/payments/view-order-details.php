@@ -112,7 +112,34 @@ $customer       = new EDD_Customer( $payment->customer_id );
 										<div class="edd-order-discount edd-admin-box-inside">
 											<p>
 												<span class="label"><?php _e( 'Discount Code', 'easy-digital-downloads' ); ?>:</span>&nbsp;
-												<span><?php if ( $payment->discounts !== 'none' ) { echo '<code>' . $payment->discounts . '</code>'; } else { _e( 'None', 'easy-digital-downloads' ); } ?></span>
+												<span>
+													<?php
+													if ( $payment->discounts !== 'none' ) {
+
+														$discounts = $payment->discounts;
+														if ( ! is_array( $discounts ) ) {
+															$discounts = explode( ',', $discounts );
+														}
+
+														foreach ( $discounts as $discount ) {
+															$discount_obj = edd_get_discount_by_code( $discount );
+
+															if ( false === $discount_obj ) {
+																echo '<code>' . $discount . '</code>';
+															} else {
+																echo '<code><a href="' . $discount_obj->edit_url() . '">' . $discount_obj->code . '</a></code>';
+															}
+
+														}
+
+
+													} else {
+
+														_e( 'None', 'easy-digital-downloads' );
+
+													}
+													?>
+												</span>
 											</p>
 										</div>
 
