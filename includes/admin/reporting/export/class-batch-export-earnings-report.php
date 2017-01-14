@@ -51,6 +51,56 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	}
 
 	/**
+	 * Output the CSV columns.
+	 *
+	 * We make use of this function to set up the header of the earnings report.
+	 *
+	 * @access public
+	 * @since 2.7
+	 *
+	 * @return array $cols CSV header.
+	 */
+	public function print_csv_cols() {
+		$col_data = '';
+
+		$col_data .= ',,';
+		$col_data .= __( 'Month', 'easy-digital-downloads' );
+
+		$start_date = date( 'Y-m-d', strtotime( $this->start ) );
+		$end_date = date( 'Y-m-d', strtotime( $this->end ) );
+
+		while ( strtotime( $start_date ) <= strtotime( $end_date ) ) {
+			$col_data .= date( 'Y-m-d', strtotime( $start_date ) );
+
+			if ( $start_date == $end_date ) {
+				$col_data .= "\r\n";
+			} else {
+				$col_data .= ',';
+			}
+
+			$start_date = date( 'Y-m-d', strtotime( '+1 month', strtotime( $start_date ) ) );
+		}
+
+		$col_data .= ',,';
+		$col_data .= __( 'Currency' );
+
+		$start_date = date( 'Y-m-d', strtotime( $this->start ) );
+		$end_date = date( 'Y-m-d', strtotime( $this->end ) );
+
+		while ( strtotime( $start_date ) <= strtotime( $end_date ) ) {
+			$col_data .= edd_get_currency();
+		}
+
+		$col_data .= "\r\n\r\n";
+
+		$col_data .= __( 'Monthly Sales Activity', 'easy-digital-downloads' );
+
+		$this->stash_step_data( $col_data );
+
+		return $col_data;
+	}
+
+	/**
 	 * Output the CSV rows.
 	 *
 	 * @since 2.7
@@ -268,32 +318,6 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 			echo isset( $item['publish']['amount'] ) ? $item['publish']['amount'] : 0;
 			$this->col();
 		}
-	}
-
-	/**
-	 * Helper method to move to the next column.
-	 *
-	 * @since 2.7
-	 * @access private
-	 *
-	 * @param int $number Number of columns to move by.
-	 * @return void
-	 */
-	private function col( $number = 1 ) {
-		echo str_repeat( ',', $number );
-	}
-
-	/**
-	 * Helper method to move to the next row.
-	 *
-	 * @since 2.7
-	 * @access private
-	 *
-	 * @param int $number Number of rows to move by.
-	 * @return void
-	 */
-	private function row( $number = 1 ) {
-		echo str_repeat( "\r\n", $number );
 	}
 
 	/**
