@@ -107,13 +107,21 @@ class EDD_Cart {
 	public $saved;
 
 	/**
+	 * Has discount?
+	 *
+	 * @var bool
+	 * @since 2.7
+	 */
+	public $has_discounts = null;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 2.7
 	 * @access public
 	 */
 	public function __construct() {
-		$this->setup_cart();
+		add_action( 'wp_loaded', array( $this, 'setup_cart' ) );
 	}
 
 	/**
@@ -123,7 +131,7 @@ class EDD_Cart {
 	 * @access private
 	 * @return void
 	 */
-	private function setup_cart() {
+	public function setup_cart() {
 		$this->get_contents_from_session();
 		$this->get_contents();
 		$this->get_contents_details();
@@ -169,7 +177,9 @@ class EDD_Cart {
 	 * @return void
 	 */
 	public function get_contents() {
-		$this->get_contents_from_session();
+		if ( ! did_action( 'edd_cart_contents_loaded_from_session' ) ) {
+			$this->get_contents_from_session();
+		}
 
 		$cart = ! empty( $this->contents ) ? array_values( $this->contents ) : array();
 		$cart_count = count( $cart );
@@ -189,7 +199,11 @@ class EDD_Cart {
 			$this->update_cart();
 		}
 
-		$this->contents = apply_filters( 'edd_cart_contents', $cart );
+		if ( ! did_action( 'edd_cart_contents_loaded' ) ) {
+			$this->contents = apply_filters( 'edd_cart_contents', $cart );
+		}
+
+		do_action( 'edd_cart_contents_loaded' );
 
 		return $this->contents;
 	}
@@ -299,13 +313,19 @@ class EDD_Cart {
 	 * @return bool
 	 */
 	public function has_discounts() {
+		if ( null !== $this->has_discounts ) {
+			return $this->has_discounts;
+		}
+
 		$has_discounts = false;
 
 		if ( $this->get_discounts() ) {
 			$has_discounts = true;
 		}
 
-		return apply_filters( 'edd_cart_has_discounts', $has_discounts );
+		$this->has_discounts = apply_filters( 'edd_cart_has_discounts', $has_discounts );
+
+		return $this->has_discounts;
 	}
 
 	/**
