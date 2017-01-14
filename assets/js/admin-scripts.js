@@ -1310,10 +1310,8 @@ jQuery(document).ready(function ($) {
 						variations: variations,
 					},
 					dataType: "json",
-					beforeSend: function(){
-						$('ul.chosen-results').empty();
-					},
 					success: function( data ) {
+						$(this).find('ul.chosen-results').empty();
 						// Remove all options but those that are selected
 						$('#' + menu_id + ' option:not(:selected)').remove();
 						$.each( data, function( key, item ) {
