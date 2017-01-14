@@ -399,4 +399,65 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 
 		return $data;
 	}
+
+	/**
+	 * Count the number of months we are dealing with.
+	 *
+	 * @since 2.7
+	 * @access private
+	 *
+	 * @return void
+	 */
+	private function count() {
+		$start_month = date( 'm', strtotime( $this->start ) );
+		$start_year = date( 'Y', strtotime( $this->start ) );
+		$end_month = date( 'm', strtotime( $this->end ) );
+		$end_year = date( 'Y', strtotime( $this->end ) );
+
+		if ( $start_year == $end_year ) {
+			$number_of_months = ( $end_month - $start_month ) + 1;
+		} else {
+			$number_of_months = ( ( ( $end_year - $start_year ) * 12 ) - $start_month ) + $end_month + 1;
+		}
+
+		return $number_of_months;
+	}
+
+	/**
+	 * Return the calculated completion percentage
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return int Percentage of batch processing complete.
+	 */
+	public function get_percentage_complete() {
+		$percentage = 100;
+
+		$total = $this->count();
+
+		if ( $total > 0 ) {
+			$percentage =  ( $this->step / $total ) * 100;
+		}
+
+		if ( $percentage > 100 ) {
+			$percentage = 100;
+		}
+
+		return $percentage;
+	}
+
+	/**
+	 * Set the properties specific to the earnings report.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @param array $request The Form Data passed into the batch processing
+	 * @return void
+	 */
+	public function set_properties( $request ) {
+		$this->start = isset( $request['start'] ) ? sanitize_text_field( $request['start'] ) : '';
+		$this->end   = isset( $request['end']   ) ? sanitize_text_field( $request['end']   ) : '';
+	}
 }
