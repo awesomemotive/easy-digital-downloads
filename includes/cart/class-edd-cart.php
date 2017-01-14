@@ -819,10 +819,9 @@ class EDD_Cart {
 	 * @return int Numerical index of the position of the item in the cart
 	 */
 	public function get_item_quantity( $download_id = 0, $options = array() ) {
-		$cart     = $this->get_contents();
-		$key      = $this->get_item_position( $download_id, $options );
+		$key = $this->get_item_position( $download_id, $options );
 
-		$quantity = isset( $cart[ $key ]['quantity'] ) && edd_item_quantities_enabled() ? $cart[ $key ]['quantity'] : 1;
+		$quantity = isset( $this->contents[ $key ]['quantity'] ) && edd_item_quantities_enabled() ? $this->contents[ $key ]['quantity'] : 1;
 
 		if ( $quantity < 1 ) {
 			$quantity = 1;
@@ -843,7 +842,6 @@ class EDD_Cart {
 	 * @return array $contents Updated cart object.
 	 */
 	public function set_item_quantity( $download_id = 0, $quantity = 1, $options = array() ) {
-		$cart = $this->get_contents();
 		$key  = $this->get_item_position( $download_id, $options );
 
 		if ( false == $key ) {
@@ -854,9 +852,7 @@ class EDD_Cart {
 			$quantity = 1;
 		}
 
-		$cart[ $key ]['quantity'] = $quantity;
-
-		$this->contents = $cart;
+		$this->contents[ $key ]['quantity'] = $quantity;
 		$this->update_cart();
 
 		do_action( 'edd_after_set_cart_item_quantity', $download_id, $quantity, $options, $cart );
