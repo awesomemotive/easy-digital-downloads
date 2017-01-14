@@ -300,7 +300,7 @@ function edd_purchase_collection_shortcode( $atts, $content = null ) {
 
 	$button_display = implode( ' ', array( $style, $color, $class ) );
 
-	return '<a href="' . add_query_arg( array( 'edd_action' => 'purchase_collection', 'taxonomy' => $taxonomy, 'terms' => $terms ) ) . '" class="' . $button_display . '">' . $text . '</a>';
+	return '<a href="' . esc_url( add_query_arg( array( 'edd_action' => 'purchase_collection', 'taxonomy' => $taxonomy, 'terms' => $terms ) ) ) . '" class="' . $button_display . '">' . $text . '</a>';
 }
 add_shortcode( 'purchase_collection', 'edd_purchase_collection_shortcode' );
 
@@ -324,6 +324,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		'exclude_category' => '',
 		'tags'             => '',
 		'exclude_tags'     => '',
+		'author'           => false,
 		'relation'         => 'OR',
 		'number'           => 9,
 		'price'            => 'no',
@@ -335,7 +336,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		'orderby'          => 'post_date',
 		'order'            => 'DESC',
 		'ids'              => '',
-		'pagination'       => 'true'
+		'pagination'       => 'true',
 	), $atts, 'downloads' );
 
 	$query = array(
@@ -535,6 +536,30 @@ function edd_downloads_query( $atts, $content = null ) {
 		$query['tax_query']['relation'] = 'AND';
 	}
 
+	if ( $atts['author'] ) {
+		$authors = explode( ',', $atts['author'] );
+		if ( ! empty( $authors ) ) {
+			$author_ids = array();
+			$author_names = array();
+
+			foreach ( $authors as $author ) {
+				if ( is_numeric( $author ) ) {
+					$author_ids[] = $author;
+				} else {
+					$user = get_user_by( 'login', $author );
+					if ( $user ) {
+						$author_ids[] = $user->ID;
+					}
+				}
+			}
+
+			if ( ! empty( $author_ids ) ) {
+				$author_ids      = array_unique( array_map( 'absint', $author_ids ) );
+				$query['author'] = implode( ',', $author_ids );
+			}
+		}
+	}
+
 	if( ! empty( $atts['ids'] ) )
 		$query['post__in'] = explode( ',', $atts['ids'] );
 
@@ -641,6 +666,7 @@ function edd_downloads_query( $atts, $content = null ) {
 	return apply_filters( 'downloads_shortcode', $display, $atts, $atts['buy_button'], $atts['columns'], '', $downloads, $atts['excerpt'], $atts['full_content'], $atts['price'], $atts['thumbnails'], $query );
 }
 add_shortcode( 'downloads', 'edd_downloads_query' );
+add_shortcode( 'edd_downloads', 'edd_downloads_query' );
 
 /**
  * Price Shortcode

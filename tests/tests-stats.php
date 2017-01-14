@@ -3,7 +3,7 @@
 /**
  * @group edd_stats
  */
-class Tests_Stats extends WP_UnitTestCase {
+class Tests_Stats extends EDD_UnitTestCase {
 
 	protected $_post;
 	protected $_stats;

@@ -1,12 +1,12 @@
 === Easy Digital Downloads ===
-Author URI: https://pippinsplugins.com
+Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
 Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
-Tested up to: 4.7
-Stable Tag: 2.6.6
+Tested up to: 4.8
+Stable Tag: 2.6.17
 
 License: GNU Version 2 or Any Later Version
 
@@ -20,7 +20,7 @@ Features of the plugin include:
 
 * Cart system for purchasing multiple downloads at once
 * Complete promotional code system
-* Many payment gateways. PayPal, Amazon, Test Payments are included by default with Stripe, PayPal Pro, PayPal Express, and others available as [extensions](https://easydigitaldownloads.com/blog/extensions/categories/gateways/?utm_source=gateways&utm_medium=description_tab&utm_content=gateways&utm_campaign=readme)
+* Many payment gateways. PayPal, Amazon, Test Payments are included by default with Stripe, PayPal Pro, PayPal Express, and others available as [extensions](https://easydigitaldownloads.com/downloads/category/extensions/gateways/?utm_source=gateways&utm_medium=description_tab&utm_content=gateways&utm_campaign=readme)
 * Complete payment history
 * User purchase history and ability to redownload files
 * Multiple files per downloadable product
@@ -31,13 +31,13 @@ Features of the plugin include:
 * Detailed purchase and file download logs
 * Data export options for CSV and PDF
 * Add functionality with many [extensions](https://easydigitaldownloads.com/downloads/?utm_source=extensions&utm_medium=description_tab&utm_content=extensions&utm_campaign=readme)
-* Developer friendly with dozens of actions and filters. [View developer documentation](http://docs.easydigitaldownloads.com/collection/174-developer-docs)
+* Developer friendly with dozens of actions and filters. [View developer documentation](http://docs.easydigitaldownloads.com/collection/174-developer-docs?utm_source=docs&utm_medium=description_tab&utm_content=developer_docs&utm_campaign=readme)
 
 More information at [Easy Digital Downloads.com](https://easydigitaldownloads.com/?utm_source=home&utm_medium=description_tab&utm_content=home&utm_campaign=readme).
 
 [youtube https://www.youtube.com/watch?v=japHPcIFs4I]
 
-**Follow this plugin on [GitHub](https://github.com/easydigitaldownloads/Easy-Digital-Downloads)**
+**Follow this plugin on [GitHub](https://github.com/easydigitaldownloads/easy-digital-downloads)**
 
 **Sell and Track Software License Keys**
 
@@ -47,13 +47,13 @@ Includes a complete integration pack for delivering automatic upgrades for premi
 
 **Build Up Your Email Subscribers**
 
-With extensions for [MailChimp](https://easydigitaldownloads.com/downloads/mail-chimp/?utm_source=extension&utm_medium=description_tab&utm_content=mail-chimp&utm_campaign=readme), [Campaign Monitor](https://easydigitaldownloads.com/downloads/campaign-monitor/?utm_source=extension&utm_medium=description_tab&utm_content=campaign-monitor&utm_campaign=readme), and [AWeber](https://easydigitaldownloads.com/downloads/aweber/?utm_source=extension&utm_medium=description_tab&utm_content=aweber&utm_campaign=readme), [Wysija](https://easydigitaldownloads.com/downloads/wysija/?utm_source=extension&utm_medium=description_tab&utm_content=wysija&utm_campaign=readme), [ActiveCampaign](https://easydigitaldownloads.com/downloads/active-campaign/?utm_source=extension&utm_medium=description_tab&utm_content=active-campaign&utm_campaign=readme), [iContact](https://easydigitaldownloads.com/downloads/icontact/?utm_source=extension&utm_medium=description_tab&utm_content=icontact&utm_campaign=readme), [Constant Contact](https://easydigitaldownloads.com/downloads/constant-contact/?utm_source=extension&utm_medium=description_tab&utm_content=constant-contact&utm_campaign=readme), and more, Easy Digital Downloads can easily grow your email subscription lists while making you money at the same time.
+With extensions for [MailChimp](https://easydigitaldownloads.com/downloads/mail-chimp/?utm_source=extension&utm_medium=description_tab&utm_content=mail-chimp&utm_campaign=readme), [Campaign Monitor](https://easydigitaldownloads.com/downloads/campaign-monitor/?utm_source=extension&utm_medium=description_tab&utm_content=campaign-monitor&utm_campaign=readme), and [AWeber](https://easydigitaldownloads.com/downloads/aweber/?utm_source=extension&utm_medium=description_tab&utm_content=aweber&utm_campaign=readme), [Wysija](https://easydigitaldownloads.com/downloads/wysija/?utm_source=extension&utm_medium=description_tab&utm_content=wysija&utm_campaign=readme), [ActiveCampaign](https://easydigitaldownloads.com/downloads/active-campaign/?utm_source=extension&utm_medium=description_tab&utm_content=active-campaign&utm_campaign=readme), [GetResponse](https://easydigitaldownloads.com/downloads/getresponse/?utm_source=extension&utm_medium=description_tab&utm_content=getresponse&utm_campaign=readme), [ConvertKit](https://easydigitaldownloads.com/downloads/convertkit/?utm_source=extension&utm_medium=description_tab&utm_content=convertkit&utm_campaign=readme), [Constant Contact](https://easydigitaldownloads.com/downloads/constant-contact/?utm_source=extension&utm_medium=description_tab&utm_content=constant-contact&utm_campaign=readme), and more, Easy Digital Downloads can easily grow your email subscription lists while making you money at the same time.
 
 **Languages**
 
-Easy Digital Downloads has been translated into more than two dozen languages. The complete list of languages can be found in our [FAQ](http://docs.easydigitaldownloads.com/article/1082-what-spoken-languages-does-easy-digital-downloads-support).
+Easy Digital Downloads has been translated into more than two dozen languages. The complete list of languages can be found in our [FAQ](http://docs.easydigitaldownloads.com/article/1082-what-spoken-languages-does-easy-digital-downloads-support?utm_source=docs&utm_medium=description_tab&utm_content=languages&utm_campaign=readme).
 
-Would you like to help translate the plugin into more languages? [Join our WP-Translations Community](http://docs.easydigitaldownloads.com/article/1023-translating-easy-digital-downloads).
+Would you like to help translate the plugin into more languages? [Join our WP-Translations Community](http://docs.easydigitaldownloads.com/article/1023-translating-easy-digital-downloads?utm_source=docs&utm_medium=description_tab&utm_content=translating&utm_campaign=readme).
 
 == Installation ==
 
@@ -61,7 +61,7 @@ Would you like to help translate the plugin into more languages? [Join our WP-Tr
 2. Go to Downloads > Settings and configure the options
 3. Create Downloadable products from the Downloads page
 4. Insert purchase buttons for any download via the "Insert Download" button next the Upload Media buttons
-5. For detailed setup instructions, vist the official [Documentation](https://easydigitaldownloads.com/documentation/?utm_source=docs&utm_medium=installation_tab&utm_content=documentation&utm_campaign=readme) page.
+5. For detailed setup instructions, vist the official [Documentation](http://docs.easydigitaldownloads.com/?utm_source=docs&utm_medium=installation_tab&utm_content=documentation&utm_campaign=readme) page.
 
 == Frequently Asked Questions ==
 
@@ -95,7 +95,7 @@ Yes! Simply go to Tools > Import and install the WordPress Importer, then naviga
 
 = Can I import all the products from my existing store into EDD? =
 
-We do have a [basic import solution](http://docs.easydigitaldownloads.com/article/216-can-i-import-and-export-products?utm_source=docs&utm_medium=faq_tab&utm_term=import_addon&utm_content=faqs&utm_campaign=readme) that imports a CSV file, so if you can get your data into the appropriate format then we can import it.
+Yes! We do have a [basic import solution](http://docs.easydigitaldownloads.com/article/216-can-i-import-and-export-products?utm_source=docs&utm_medium=faq_tab&utm_term=import_addon&utm_content=faqs&utm_campaign=readme) that imports a CSV file, so if you can get your data into the appropriate format then we can import it.
 
 = My Payments Marked as Pending =
 
@@ -128,50 +128,57 @@ Yes, EDD has an extension that allows for downloadable invoices to be generated 
 
 = Are recurring payments supported? =
 
-Yes, through the use of our commercial addon called [Recurring Payments](https://easydigitaldownloads.com/downloads/recurring-payments/?utm_source=docs&utm_medium=faq_tab&utm_term=recurring_addon&utm_content=faqs&utm_campaign=readme).  [Full documentation here](http://docs.easydigitaldownloads.com/article/346-recurring-payments-setup-documentation?utm_source=docs&utm_medium=faq_tab&utm_term=recurring_addon&utm_content=faqs&utm_campaign=readme)
+Yes, through the use of our commercial addon called [Recurring Payments](https://easydigitaldownloads.com/downloads/recurring-payments/?utm_source=docs&utm_medium=faq_tab&utm_term=recurring_addon&utm_content=faqs&utm_campaign=readme).  [Full documentation here](http://docs.easydigitaldownloads.com/article/1142-recurring-payments---overview?utm_source=docs&utm_medium=faq_tab&utm_term=recurring_addon&utm_content=faqs&utm_campaign=readme)
 
 = Can Users Purchase Products without Using PayPal? =
 
 Yes, through the addition of one or more of the add-on payment gateways, you can accept payments in many different ways. Here are some of the gateways currently found on our [complete list](https://easydigitaldownloads.com/downloads/category/extensions/gateways/?utm_source=docs&utm_medium=faq_tab&utm_term=gateways&utm_content=faqs&utm_campaign=readme):
 
 * [Stripe](https://easydigitaldownloads.com/downloads/stripe-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=stripe-payment-gateway&utm_campaign=readme)
-* [Recurly](https://easydigitaldownloads.com/downloads/recurly-com-checkout/?utm_source=gateway&utm_medium=faq_tab&utm_content=recurly-com-checkout&utm_campaign=readme)
-* [Authorize.net](https://easydigitaldownloads.com/downloads/authorize-net-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=authorize-net-gateway&utm_campaign=readme)
-* [Google Wallet](https://easydigitaldownloads.com/downloads/google-checkout/?utm_source=gateway&utm_medium=faq_tab&utm_content=google-checkout&utm_campaign=readme)
-* [Moneybookers / Skrill](https://easydigitaldownloads.com/downloads/moneybookers-skrill-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=moneybookers-skrill-payment-gateway&utm_campaign=readme)
-* [2Checkout](https://easydigitaldownloads.com/downloads/2checkout-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=2checkout-gateway&utm_campaign=readme)
 * [PayPal Pro/Express](https://easydigitaldownloads.com/downloads/paypal-pro-express/?utm_source=gateway&utm_medium=faq_tab&utm_content=paypal-pro-express&utm_campaign=readme)
 * [PayPal Adaptive Payments](https://easydigitaldownloads.com/downloads/paypal-adaptive-payments/?utm_source=gateway&utm_medium=faq_tab&utm_content=paypal-adaptive-payments&utm_campaign=readme)
-* [GoCardless](https://easydigitaldownloads.com/downloads/gocardless-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=gocardless-payment-gateway&utm_campaign=readme)
-* [Amazon FPS](https://easydigitaldownloads.com/downloads/amazon-fps-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=amazon-fps-payment-gateway&utm_campaign=readme)
-* [Payza](https://easydigitaldownloads.com/downloads/payza-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=payza-payment-gateway&utm_campaign=readme)
-* [Paymill](https://easydigitaldownloads.com/downloads/paymill-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=paymill-payment-gateway&utm_campaign=readme)
-* [MOLPay](https://easydigitaldownloads.com/downloads/molpay-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=molpay-payment-gateway&utm_campaign=readme)
-* [MercadoPago](https://easydigitaldownloads.com/downloads/mercadopago/?utm_source=gateway&utm_medium=faq_tab&utm_content=mercadopago&utm_campaign=readme)
-* [NoChex](https://easydigitaldownloads.com/downloads/nochex-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=nochex-gateway&utm_campaign=readme)
-* [Recurly.com](https://easydigitaldownloads.com/downloads/recurly-com-checkout/?utm_source=gateway&utm_medium=faq_tab&utm_content=recurly-com-checkout&utm_campaign=readme)
-* [Network Merchants](https://easydigitaldownloads.com/downloads/network-merchants-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=network-merchants-gateway&utm_campaign=readme)
-* [Direct One](https://easydigitaldownloads.com/downloads/direct-one/?utm_source=gateway&utm_medium=faq_tab&utm_content=direct-one&utm_campaign=readme)
-* [Moneris Solutions](https://easydigitaldownloads.com/downloads/moneris-solutions-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=moneris-solutions-gateway&utm_campaign=readme)
-* [My Virtual Merchant](https://easydigitaldownloads.com/downloads/my-virtual-merchant/?utm_source=gateway&utm_medium=faq_tab&utm_content=my-virtual-merchant&utm_campaign=readme)
-* [NAB](https://easydigitaldownloads.com/downloads/6038/?utm_source=gateway&utm_medium=faq_tab&utm_content=nab&utm_campaign=readme)
-* [Mijireh](https://easydigitaldownloads.com/downloads/mijireh-checkout/?utm_source=gateway&utm_medium=faq_tab&utm_content=mijireh-checkout&utm_campaign=readme)
-* [eWay](https://easydigitaldownloads.com/downloads/eway-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=eway-gateway&utm_campaign=readme)
+* [Authorize.net](https://easydigitaldownloads.com/downloads/authorize-net-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=authorize-net-gateway&utm_campaign=readme)
+* [2Checkout](https://easydigitaldownloads.com/downloads/2checkout-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=2checkout-gateway&utm_campaign=readme)
 * [Check](https://easydigitaldownloads.com/downloads/check-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=check-payment-gateway&utm_campaign=readme)
-* [PagSeguro](https://easydigitaldownloads.com/downloads/pagseguro-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=pagseguro-payment-gateway&utm_campaign=readme)
-* [Beanstream](https://easydigitaldownloads.com/downloads/beanstream-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=beanstream-payment-gateway&utm_campaign=readme)
-* [Quickbooks](https://easydigitaldownloads.com/downloads/quickbooks/?utm_source=gateway&utm_medium=faq_tab&utm_content=quickbooks&utm_campaign=readme)
-* [PayFast](https://easydigitaldownloads.com/downloads/payfast-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=payfast-payment-gateway&utm_campaign=readme)
-* [WorldPay](https://easydigitaldownloads.com/downloads/worldpay-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=worldpay-gateway&utm_campaign=readme)
-* [Payment Express](https://easydigitaldownloads.com/downloads/payment-express-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=payment-express-gateway&utm_campaign=readme)
-* [BitPay](https://easydigitaldownloads.com/downloads/bitpay-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=bitpay-payment-gateway&utm_campaign=readme)
-* [ClickBank](https://easydigitaldownloads.com/downloads/clickbank-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=clickbank-gateway&utm_campaign=readme)
 * [Braintree](https://easydigitaldownloads.com/downloads/braintree-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=braintree-gateway&utm_campaign=readme)
+* [PayPal Payments Advanced](https://easydigitaldownloads.com/downloads/paypal-payments-advanced/?utm_source=gateway&utm_medium=faq_tab&utm_content=paypal-payments-advanced&utm_campaign=readme)
+* [PagSeguro](https://easydigitaldownloads.com/downloads/pagseguro-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=pagseguro-payment-gateway&utm_campaign=readme)
+* [ClickBank](https://easydigitaldownloads.com/downloads/edd-clickbank-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=clickbank&utm_campaign=readme)
+* [Wallet](https://easydigitaldownloads.com/downloads/wallet/?utm_source=gateway&utm_medium=faq_tab&utm_content=wallet&utm_campaign=readme)
+* [BitPay](https://easydigitaldownloads.com/downloads/bitpay-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=bitpay-payment-gateway&utm_campaign=readme)	
+* [Coinbase](https://easydigitaldownloads.com/downloads/coinbase-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=coinbase-payment-gateway&utm_campaign=readme)	
+* [SOFORT Banking](https://easydigitaldownloads.com/downloads/sofort-banking-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=sofort-banking-gateway&utm_campaign=readme)	
+* [PayU India](https://easydigitaldownloads.com/downloads/payu-india-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=payu-india-payment-gateway&utm_campaign=readme)	
+* [Payza](https://easydigitaldownloads.com/downloads/payza-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=payza-payment-gateway&utm_campaign=readme)
+* [MercadoPago](https://easydigitaldownloads.com/downloads/mercadopago/?utm_source=gateway&utm_medium=faq_tab&utm_content=mercadopago&utm_campaign=readme)
+* [First Data](https://easydigitaldownloads.com/downloads/first-data-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=first-data-payment-gateway&utm_campaign=readme)
+* [PayPlug](https://easydigitaldownloads.com/downloads/payplug-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=payplug-gateway&utm_campaign=readme)
+* [GoCardless](https://easydigitaldownloads.com/downloads/gocardless-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=gocardless-payment-gateway&utm_campaign=readme)
 * [Dwolla](https://easydigitaldownloads.com/downloads/dwolla/?utm_source=gateway&utm_medium=faq_tab&utm_content=dwolla&utm_campaign=readme)
+* [Zombaio](https://easydigitaldownloads.com/downloads/zombaio-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=zombaio-payment-gateway&utm_campaign=readme)
+* [Recurly](https://easydigitaldownloads.com/downloads/recurly-com-checkout/?utm_source=gateway&utm_medium=faq_tab&utm_content=recurly-com-checkout&utm_campaign=readme)
+* [Realex](https://easydigitaldownloads.com/downloads/realex-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=realex-gateway&utm_campaign=readme)
+* [CyberSource](https://easydigitaldownloads.com/downloads/cybersource-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=cybersource-gateway&utm_campaign=readme)
+* [NETbilling](https://easydigitaldownloads.com/downloads/netbilling-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=netbilling-gateway&utm_campaign=readme)
+* [Paylane](https://easydigitaldownloads.com/downloads/paylane-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=paylane-payment-gateway&utm_campaign=readme)
+* [ePay](https://easydigitaldownloads.com/downloads/epay-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=epay-payment-gateway&utm_campaign=readme)
+* [Netbanx](https://easydigitaldownloads.com/downloads/netbanx-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=netbanx-payment-gateway&utm_campaign=readme)
+* [NoChex](https://easydigitaldownloads.com/3rd-party-extensions/?utm_source=gateway&utm_medium=faq_tab&utm_content=nochex-gateway&utm_campaign=readme#gateways)
+* [Network Merchants](https://easydigitaldownloads.com/3rd-party-extensions/?utm_source=gateway&utm_medium=faq_tab&utm_content=nochex-gateway&utm_campaign=readme#gateways)
+* [Direct One](https://easydigitaldownloads.com/3rd-party-extensions/?utm_source=gateway&utm_medium=faq_tab&utm_content=nochex-gateway&utm_campaign=readme#gateways)
+* [Moneris Solutions](https://easydigitaldownloads.com/3rd-party-extensions/?utm_source=gateway&utm_medium=faq_tab&utm_content=nochex-gateway&utm_campaign=readme#gateways)
+* [My Virtual Merchant](https://easydigitaldownloads.com/3rd-party-extensions/?utm_source=gateway&utm_medium=faq_tab&utm_content=nochex-gateway&utm_campaign=readme#gateways)
+* [NAB](https://easydigitaldownloads.com/3rd-party-extensions/?utm_source=gateway&utm_medium=faq_tab&utm_content=nochex-gateway&utm_campaign=readme#gateways)
+* [eWay](https://easydigitaldownloads.com/3rd-party-extensions/?utm_source=gateway&utm_medium=faq_tab&utm_content=nochex-gateway&utm_campaign=readme#gateways)
+* [Beanstream](https://easydigitaldownloads.com/3rd-party-extensions/?utm_source=gateway&utm_medium=faq_tab&utm_content=nochex-gateway&utm_campaign=readme#gateways)
+* [Quickbooks](https://easydigitaldownloads.com/3rd-party-extensions/?utm_source=gateway&utm_medium=faq_tab&utm_content=nochex-gateway&utm_campaign=readme#gateways)
+* [PayFast](https://easydigitaldownloads.com/3rd-party-extensions/?utm_source=gateway&utm_medium=faq_tab&utm_content=nochex-gateway&utm_campaign=readme#gateways)
+* [WorldPay](https://easydigitaldownloads.com/3rd-party-extensions/?utm_source=gateway&utm_medium=faq_tab&utm_content=nochex-gateway&utm_campaign=readme#gateways)
+* [Payment Express](https://easydigitaldownloads.com/3rd-party-extensions/?utm_source=gateway&utm_medium=faq_tab&utm_content=nochex-gateway&utm_campaign=readme#gateways)
 * [Realex](https://easydigitaldownloads.com/downloads/realex-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=realex-gateway&utm_campaign=readme)
 * [PayTrace](https://easydigitaldownloads.com/downloads/paytrace/?utm_source=gateway&utm_medium=faq_tab&utm_content=paytrace&utm_campaign=readme)
 * [iPay88](https://easydigitaldownloads.com/downloads/ipay88-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=ipay88-gateway&utm_campaign=readme)
-* [First Data](https://easydigitaldownloads.com/downloads/first-data-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=first-data-payment-gateway&utm_campaign=readme)
+
 
 == Screenshots ==
 
@@ -186,6 +193,175 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.6.17, December 28, 2016 =
+* Fix: Checkboxes in Downloads > Tools > Beta Versions do not retain checked state
+* Fix: Extension update notifications do not show up
+
+= 2.6.16, December 21, 2016 =
+* Fix: 404 errors when downloading some files
+
+= 2.6.15, December 19, 2016 =
+* Fix: Conflict with some object caching configurations and the extension update checks that resulted in poor performance.
+
+= 2.6.14, December 15, 2016 =
+* New: Added hooks before and after cart on checkout screen
+* New: Added support for user-specific locales
+* Tweak: Improved performance of edd_get_payment_by(), making account pages faster
+* Fix: Quantity not set on cart items when adding multiple price options to the cart at once
+* Fix: Download links in email receipts over escaped, resulting in failed downloads
+* Fix: December point plotted improperly on earnings / sales graphs
+* Fix: Files still downloaded even if the file doesn't exist, resulting in a corrupted download file
+* Fix: Non-formatted amount not set in data attribute of cart when discount codes applied
+* Fix: Deleting an item from payment record does not delete the associated sale log
+* Fix: This Week and Last Week reports not showing sale stats
+* Fix: Calling edd_is_discount_valid() results in cart errors being set
+* Fix: Earnings value doubled for Today report
+* Fix: Price and currency not properly separated in schema microdata
+* Fix: Tax exempt products still show tax rate on purchase buttons
+* Fix: check_update() method is called twice in EDD_SL_Plugin_Updater class
+
+= 2.6.13, November 21, 2016 =
+* Fix: Custom payment meta items were not being saved correctly.
+
+= 2.6.12, November 17, 2016 =
+* New: Added new hooks to the profile editor form.
+* Fix: edd_has_active_discounts could return false when there were active discounts.
+* Fix: Supplying an invalid date range on reports could produce an incorrect graph.
+* Fix: EDD_Payment::update_meta could produce a PHP warning when used.
+* Fix: Variable Pricing options were inconsistently being shown and hidden when toggled.
+* Fix: Today/Yesterday Reports miscalculated hours to include the first hour of the next day.
+* Fix: When single day ranges were used on Payments list table, order status counts were not loading.
+* Fix: EDD HTML Select input had many cases where mixed variable types could trigger errors and warnings.
+* Fix: edd_get_users_purchases had outdated PHPDocs.
+* Fix: Determining the 'main' subsection of settings could fire hooks twice and had poor performance.
+* Fix: When changing report years, the report data could have been incorrect.
+* Fix: Payment counts were incorrect on the Payments list table when custom dates were used.
+* Fix: Certain hosting configurations caused the usage tracking notice to be improperly escaped.
+* Fix: Admin scripts were not requiring `jquery-form`.
+* Fix: Download limit setting isn't checked for existence before accessing it when saving a Download.
+* Fix: Timezone wasn't respected when setting up daily cron.
+* Fix: Upgrade routines could calculate incorrect number of total steps.
+* Fix: The notice about being in test mode was not linked to the correct settings page.
+* Fix: `edd_get_users_purchased_products` would fail if the first product ID supplied was not a download.
+* Fix: Checkout could require a state even if the country had no states associated with it.
+* Fix: Creating a discount would not save the product requirements and exclusions on first save.
+* Fix: PHP Warning was being caused by the new beta setting in the extension updater.
+* Fix: The EDD_SL_Plugin_Updater::check_update method could possibly be called twice.
+* Fix: Sanitized unescaped URLs with esc_url
+
+= 2.6.11, November 8, 2016 =
+* New: WP CLI: Customers command now allows searching by user_id.
+* New: Add framework for the new Software Licensing beta support.
+* New: EDD Settings API now supports adding classes to registered settings.
+* New: Improve PayPal Standard IPN lookup logic.
+* New: Support iOS app one-click configuration.
+* New: Add hook after cart quantities are updated.
+* New: Add tooltip to "Display during checkout" tax option.
+* New: Allow exporting the file download history of a specific product.
+* New: Add action after discount is added to the cart.
+* New: Add action hook called "edd_payment_saved" for when EDD_Payment::save() is run.
+* New: Add "author" paramater support to [downloads] shortcode with support for username or ID.
+* Tweak: Correct branding of necessary assets.
+* Tweak: Block self-pings in tracking check-ins.
+* Tweak: Update author and author URI to Easy Digital Downloads.
+* Tweak: Update the Insert Download media button icon to use Dashicons.
+* Tweak: Allow download admin icon to be more easily customized.
+* Tweak: Exported CSVs show "Complete" status as "publish".
+* Fix: Corrected translation for login shortcode redirect description.
+* Fix: Improved the caching of stats transients for better performance.
+* Fix: API Keys were not able to be copied from user profile.
+* Fix: Corrected link to the iOS application.
+* Fix: Use new iPhone icon.
+* Fix: EDD_Payment::setup_tax did not always contain proper data.
+* Fix: Styles on Recount/Reset tool were lost.
+* Fix: CSV import tool were not importing Download Files in some circumstances.
+* Fix: Tooltip styles had a conflict with Gravity Forms.
+* Fix: Recount earning/sales tool for all downloads was failing to properly recount.
+* Fix: Multiple instances of cart widget was causing conflicts when adding or removing items.
+* Fix: API Key list table was unreadable on mobile.
+* Fix: Custom icons via edd_accepted_payment_icons were unwrapped.
+* Fix: Fees for specific download and price IDs did not check if the item or price ID is in the cart.
+* Fix: EDD API was always returning version 1 by default.
+* Fix: Changed uses of jQuery .toggle() to use .show() and .hide() to fix bad checkbox states.
+* Fix: Corrected translation for 'State / Province'.
+* Fix: Corrected a variable type issue in the HTML_Elements::select defaults.
+
+= 2.6.10, October 21, 2016 =
+* Fix: JavaScript error when removing a product from a payment that does not contain a fee.
+
+= 2.6.9, October 20, 2016 =
+* Fix: Negative fees associated with cart item do not affect cart item earnings.
+* Fix: Z-index of tooltips needs to be increased.
+* Fix: Products endpoint returns empty response on v2 of the API.
+* Fix: Email property set twice in edd_insert_payment().
+* Fix: "Email already in use" error if capitalization does not match.
+* Fix: Chosen dropdowns cause a horizontal scroll bug in RTL.
+* Fix: record_fees() clears fees in the session before purchases are completed.
+* Fix: New user email strips login link on plain text email.
+* Fix: Country and state chosen fields on view order details broken.
+* Fix: Billing address fields are not saving in the payment details page when edited.
+* Fix: Not all settings and data removed when uninstall is run.
+* Fix: Don't output a label if one isn't set for text and select HTML elements.
+* Fix: Date in payment_meta should match the payment date when modified.
+* Fix: The edd_get_random_download() should return an item.
+* Fix: Potential PHP warning when using EDD_Payment->save().
+* Fix: Payment date is not included in the payment history export.
+* New: API sales endpoints now include both user_id and customer_id.
+* New: Add user_dropdown to HTML elements that support chosen.
+* New: Add support for product variations in the HTML elements product_dropdown.
+* Tweak: Change "Disable Guest Checkout" to "Require Login".
+* Tweak: Typo "assocaited" in error messages when adding emails to a customer.
+* Tweak: Resend Receipt button allows selecting which associated customer email address to send receipt to.
+
+= 2.6.8, September 26, 2016 =
+* Fix: Category earnings report does not recover when the site has no download categories.
+* Fix: PHP notice caused by localized script loader.
+* Fix: CSV Product exporter/importer does not honor file conditions for variable pricing.
+* Fix: CSV importer improperly started variable pricing IDs as 0 instead of 1.
+* Fix: Repeatable rows not properly adding data-key attribute for variable price select boxes.
+* Fix: Undefined index warning when adding download details widget within the customizer.
+* Fix: edd_update_payment_status() creates new blank payment record if given an invalid payment ID.
+* Fix: REST API Products endpoint doesn't take into account search parameter API.
+* Tweak: Correct typo in country list for Philippines.
+* Tweak: Upload file text is misaligned within the input field.
+
+= 2.6.7, September 14, 2016 =
+* Fix: Improved CSV file type detection to avoid 'invalid CSV' error.
+* Fix: The edd_payment_meta filter was not respecting values modified during the filter when saving a payment.
+* Fix: Redirect to Checkout setting was not keeping custom query string variables when direct cart URLs.
+* Fix: Cart Widget did not properly refresh the page when purchase links were present on the page.
+* Fix: Categories/Tags not created and assigned during product import.
+* Fix: Remove discount cron which could cause discount codes incorrectly changing to inactive without warning.
+* Fix: Can't Uncheck All Checkboxes in Multi-Check.
+* Fix: Verify discount is in array before unsetting the discount.
+* Fix: edd_stats_{key} transients causing performance issues.
+* Fix: Undefined Indexes when assigning new user ID to customer details.
+* Fix: Purchase Email Subject ampersands getting improperly HTML encoded.
+* Fix: Local files not being properly found when on a Windows server.
+* Fix: Properly catch default case for license activation callback.
+* Fix: Sequential payment number not assigned when creating payments with EDD_Payment.
+* Fix: Tax calculation should only run on values greater than 0.
+* Fix: Fix variable name in customer recount tool for post status array.
+* Fix: Discount functions not always having user_info array key.
+* Tweak: Rename Download List Table Taxonomy Headers.
+* Tweak: Fix horizontal alignment of items in the dashboard widget.
+* Tweak: Update codex link in readme.txt.
+* Tweak: Update EDD_SL_Plugin_Updater.php to latest version.
+* Tweak: Correct references of 'short code' to 'shortcode'.
+* Tweak: Filter "edd_get_cart_discounts_html" does not pass relevant arguments for developers.
+* Tweak: Update payments export to use EDD_Payment.
+* Tweak: Return null for all empty data returned from the API instead of an empty array.
+* Tweak: Update readme.txt with new donate link.
+* Tweak: Allow custom Arguments for Settings API Callbacks.
+* New: Accepted payment method icons have been updated to PNGs with transparent backgrounds.
+* New: Update MasterCard Logo.
+* New: Add filters to API endpoints.
+* New: Added actions to the adding and removing of fees.
+* New: Buy Now button option on Add/Edit Download now always shows, but is disabled when requirements are not.
+* New: Customer address can now be edited for customers who do not previously have an address on file.
+* New: Add edd_get_php_arg_separator_output on System Info.
+* New: Linking a Customer to a WordPress user now allows login or email address as a valid input.
 
 = 2.6.6, August 1, 2016 =
 * Fix: Discount codes being marked as inactive

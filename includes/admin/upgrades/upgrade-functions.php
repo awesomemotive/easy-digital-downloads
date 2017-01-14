@@ -402,12 +402,12 @@ function edd_v14_upgrades() {
 	global $edd_options;
 
 	/** Add [edd_receipt] to success page **/
-	$success_page = get_post( $edd_options['success_page'] );
+	$success_page = get_post( edd_get_option( 'success_page' ) );
 
 	// Check for the [edd_receipt] shortcode and add it if not present
 	if( strpos( $success_page->post_content, '[edd_receipt' ) === false ) {
 		$page_content = $success_page->post_content .= "\n[edd_receipt]";
-		wp_update_post( array( 'ID' => $edd_options['success_page'], 'post_content' => $page_content ) );
+		wp_update_post( array( 'ID' => edd_get_option( 'success_page' ), 'post_content' => $page_content ) );
 	}
 
 	/** Convert Discounts to new Custom Post Type **/

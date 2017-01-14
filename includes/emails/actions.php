@@ -49,7 +49,14 @@ function edd_resend_purchase_receipt( $data ) {
 		wp_die( __( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
-	edd_email_purchase_receipt( $purchase_id, false );
+	$email = ! empty( $_GET['email'] ) ? sanitize_text_field( $_GET['email'] ) : '';
+
+	if( empty( $email ) ) {
+		$customer = new EDD_Customer( edd_get_payment_customer_id( $purchase_id ) );
+		$email    = $customer->email;
+	}
+
+	edd_email_purchase_receipt( $purchase_id, false, $email );
 
 	// Grab all downloads of the purchase and update their file download limits, if needed
 	// This allows admins to resend purchase receipts to grant additional file downloads

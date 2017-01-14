@@ -408,6 +408,7 @@ class EDD_Stats {
 					$year -= 1;
 					if( ! $end_date ) {
 						$month = 1;
+						$day   = 1;
 					} else {
 						$month  = 12;
 						$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
