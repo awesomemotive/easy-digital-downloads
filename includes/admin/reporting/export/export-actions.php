@@ -197,10 +197,10 @@ function edd_include_file_downloads_batch_processer( $class ) {
  *
  * @since  2.7
  */
-function edd_register_file_downloads_batch_export() {
+function edd_register_earnings_report_batch_export() {
 	add_action( 'edd_batch_export_class_include', 'edd_include_earnings_report_batch_processer', 10, 1 );
 }
-add_action( 'edd_register_batch_exporter', 'edd_register_file_downloads_batch_export', 10 );
+add_action( 'edd_register_batch_exporter', 'edd_register_earnings_report_batch_export', 10 );
 
 /**
  * Loads the earnings report batch process if needed
