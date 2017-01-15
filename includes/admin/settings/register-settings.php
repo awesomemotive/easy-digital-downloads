@@ -1105,6 +1105,36 @@ function edd_settings_sanitize_taxes( $input ) {
 add_filter( 'edd_settings_taxes_sanitize', 'edd_settings_sanitize_taxes' );
 
 /**
+ * Payment Gateways Settings Sanitization
+ *
+ * Adds a settings error (for the updated message)
+ *
+ * @since 2.7
+ * @param array $input The value inputted in the field
+ * @return string $input Sanitizied value
+ */
+function edd_settings_sanitize_gateways( $input ) {
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		return $input;
+	}
+
+	if ( ! in_array( $input['default_gateway'], $input['gateways'] ) ) {
+		$gateways = edd_get_payment_gateways();
+
+		$key = array_key_exists( $input['default_gateway'], $gateways );
+
+		if ( $key ) {
+			$input['gateways'][ $input['default_gateway'] ] = "1";
+
+			add_settings_error( 'edd-notices', '', sprintf( __( '%s has been enabled as it was disabled but selected as a default gateway.', 'easy-digital-downloads' ), $gateways[ $input['default_gateway']]['admin_label'] ), 'updated' );
+		}
+	}
+
+	return $input;
+}
+add_filter( 'edd_settings_gateways_sanitize', 'edd_settings_sanitize_gateways' );
+
+/**
  * Sanitize text fields
  *
  * @since 1.8
