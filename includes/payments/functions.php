@@ -579,6 +579,28 @@ function edd_check_for_existing_payment( $payment_id ) {
 }
 
 /**
+ * Retrieves an instance of EDD_Payment for a specified ID.
+ *
+ * @since 2.7
+ *
+ * @param int $id Payment ID.
+ * @return mixed false|object EDD_Payment if a valid payment ID, false otherwise.
+ */
+function edd_get_payment( $payment_id = 0 ) {
+	if ( empty( $payment_id ) ) {
+		return false;
+	}
+
+	$payment = new EDD_Payment( $payment_id );
+
+	if ( empty( $payment->ID ) ) {
+		return false;
+	}
+
+	return $payment;
+}
+
+/**
  * Get Payment Status
  *
  * @since 1.0
