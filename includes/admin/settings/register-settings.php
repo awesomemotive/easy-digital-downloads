@@ -1126,7 +1126,7 @@ function edd_settings_sanitize_gateways( $input ) {
 		if ( $key ) {
 			$input['gateways'][ $input['default_gateway'] ] = "1";
 
-			add_settings_error( 'edd-notices', '', sprintf( __( '%s has been enabled as it was disabled but selected as a default gateway.', 'easy-digital-downloads' ), $gateways[ $input['default_gateway']]['admin_label'] ), 'updated' );
+			add_settings_error( 'edd-notices', '', sprintf( __( '%s has been enabled as it was disabled but selected as the default gateway.', 'easy-digital-downloads' ), $gateways[ $input['default_gateway']]['admin_label'] ), 'updated' );
 		}
 	}
 
