@@ -364,7 +364,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 												<?php if ( edd_item_quantities_enabled() ) : ?>
 												<?php echo __( 'Total:', 'easy-digital-downloads' ) . '&nbsp;'; ?>
 												<?php endif; ?>
-												<span class="price-text"><?php echo edd_currency_symbol( $payment->currency ); ?>&nbsp;<input name="edd-payment-total" type="text" class="med-text" value="<?php echo esc_attr( edd_format_amount( $price ) ); ?>"/></span>
+												<span class="price-text"><?php echo edd_currency_symbol( $payment->currency ); ?>&nbsp;<input type="text" class="med-text edd-payment-item-total" value="<?php echo esc_attr( edd_format_amount( $price ) ); ?>"/></span>
 											</li>
 
 											<li class="actions">
