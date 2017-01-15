@@ -66,6 +66,8 @@ jQuery(document).ready(function ($) {
 
 				}
 
+				$( this ).attr( 'data-key', key );
+
 				if( typeof id != 'undefined' ) {
 
 					id = id.replace( /(\d+)/, parseInt( key ) );
@@ -211,7 +213,16 @@ jQuery(document).ready(function ($) {
 
 		prices : function() {
 			$( document.body ).on( 'change', '#edd_variable_pricing', function(e) {
-				$( '.edd_pricing_fields,.edd_repeatable_table .pricing' ).toggle();
+				var checked   = $(this).is(':checked');
+				var single    = $( '#edd_regular_price_field' );
+				var variable  = $( '#edd_variable_price_fields,.edd_repeatable_table .pricing' );
+				if ( checked ) {
+					single.hide();
+					variable.show();
+				} else {
+					single.show();
+					variable.hide();
+				}
 			});
 		},
 
@@ -376,6 +387,7 @@ jQuery(document).ready(function ($) {
 			this.edit_address();
 			this.remove_download();
 			this.add_download();
+			this.change_customer();
 			this.new_customer();
 			this.recalculate_total();
 			this.variable_prices_check();
@@ -398,6 +410,8 @@ jQuery(document).ready(function ($) {
 				};
 				$.post(ajaxurl, data, function (response) {
 					var state_wrapper = $( '#edd-order-address-state-wrap select, #edd-order-address-state-wrap input' );
+					// Remove any chosen containers here too
+					$( '#edd-order-address-state-wrap .chosen-container' ).remove();
 					if( 'nostates' == response ) {
 						state_wrapper.replaceWith( '<input type="text" name="edd-payment-address[0][state]" value="" class="edd-edit-toggles medium-text"/>' );
 					} else {
@@ -430,6 +444,9 @@ jQuery(document).ready(function ($) {
 					var price_id    = $('input[name="edd-payment-details-downloads['+key+'][price_id]"]').val();
 					var quantity    = $('input[name="edd-payment-details-downloads['+key+'][quantity]"]').val();
 					var amount      = $('input[name="edd-payment-details-downloads['+key+'][amount]"]').val();
+					if ( $('input[name="edd-payment-details-downloads['+key+'][fees]"]') ) {
+						var fees = $.parseJSON( $('input[name="edd-payment-details-downloads['+key+'][fees]"]').val() );
+					}
 
 					var currently_removed  = $('input[name="edd-payment-removed"]').val();
 					currently_removed      = $.parseJSON(currently_removed);
@@ -443,6 +460,11 @@ jQuery(document).ready(function ($) {
 					$('input[name="edd-payment-removed"]').val(JSON.stringify(currently_removed));
 
 					$(this).parent().parent().parent().remove();
+					if ( fees && fees.length) {
+						$.each( fees, function( key, value ) {
+							$('*li[data-fee-id="' + value + '"]').remove();
+						});
+					}
 
 					// Flag the Downloads section as changed
 					$('#edd-payment-downloads-changed').val(1);
@@ -453,12 +475,43 @@ jQuery(document).ready(function ($) {
 
 		},
 
+		change_customer : function() {
+
+			$('#edd-customer-details').on('click', '.edd-payment-change-customer, .edd-payment-change-customer-cancel', function(e) {
+				e.preventDefault();
+
+				var change_customer = $(this).hasClass('edd-payment-change-customer');
+				var cancel          = $(this).hasClass('edd-payment-change-customer-cancel');
+
+				if ( change_customer ) {
+					$('.customer-info').hide();
+					$('.change-customer').show();
+					$('.edd-payment-change-customer-input').css('width', 'auto');
+				} else if( cancel) {
+					$('.customer-info').show();
+					$('.change-customer').hide();
+				}
+
+			});
+
+		},
+
 		new_customer : function() {
 
 			$('#edd-customer-details').on('click', '.edd-payment-new-customer, .edd-payment-new-customer-cancel', function(e) {
 				e.preventDefault();
-				$('.customer-info').toggle();
-				$('.new-customer').toggle();
+
+				var new_customer = $(this).hasClass('edd-payment-new-customer');
+				var cancel       = $(this).hasClass('edd-payment-new-customer-cancel');
+
+				if ( new_customer ) {
+					$('.customer-info').hide();
+					$('.new-customer').show();
+				} else if( cancel) {
+					$('.customer-info').show();
+					$('.new-customer').hide();
+				}
+
 
 				var new_customer = $( '#edd-new-customer' );
 				if ($('.new-customer').is(":visible")) {
@@ -692,9 +745,33 @@ jQuery(document).ready(function ($) {
 		},
 
 		resend_receipt : function() {
-			$( document.body ).on( 'click', '#edd-resend-receipt', function( e ) {
-				return confirm( edd_vars.resend_receipt );
+
+			var emails_wrap = $('.edd-order-resend-receipt-addresses');
+
+			$( document.body ).on( 'click', '#edd-select-receipt-email', function( e ) {
+
+				e.preventDefault();
+				emails_wrap.slideDown();
+
 			} );
+
+			$( document.body ).on( 'change', '.edd-order-resend-receipt-email', function() {
+
+				var href = $('#edd-select-receipt-email').prop( 'href' ) + '&email=' + $(this).val();
+
+				if( confirm( edd_vars.resend_receipt ) ) {
+					window.location = href;
+				}
+
+			} );
+
+
+			$( document.body ).on( 'click', '#edd-resend-receipt', function( e ) {
+
+				return confirm( edd_vars.resend_receipt );
+
+			} );
+
 		},
 
 		copy_download_link : function() {
@@ -745,8 +822,9 @@ jQuery(document).ready(function ($) {
 		type_select : function() {
 
 			$('#edd-edit-discount #edd-type, #edd-add-discount #edd-type').change(function() {
-
-				$('.edd-amount-description').toggle();
+				var val = $(this).val();
+				$('.edd-amount-description').hide();
+				$('.edd-amount-description.' + val + '-discount').show();
 
 			});
 
@@ -1184,14 +1262,22 @@ jQuery(document).ready(function ($) {
 	// Replace options with search results
 	$( document.body ).on( 'keyup', '.edd-select.chosen-container .chosen-search input, .edd-select.chosen-container .search-field input', function(e) {
 
-		var val         = $(this).val(), container = $(this).closest( '.edd-select-chosen' );
+		var val         = $(this).val()
+		var container   = $(this).closest( '.edd-select-chosen' );
 		var menu_id     = container.attr('id').replace( '_chosen', '' );
 		var no_bundles  = container.hasClass( 'no-bundles' );
+		var variations  = container.hasClass( 'variations' );
 		var lastKey     = e.which;
 		var search_type = 'edd_download_search';
 
 		// Detect if we have a defined search type, otherwise default to downloads
 		if ( container.prev().data('search-type') ) {
+
+			// Don't trigger AJAX if this select has all options loaded
+			if ( 'no_ajax' == container.prev().data('search-type') ) {
+				return;
+			}
+
 			search_type = 'edd_' + container.prev().data('search-type') + '_search';
 		}
 
@@ -1220,14 +1306,14 @@ jQuery(document).ready(function ($) {
 					data: {
 						action: search_type,
 						s: val,
-						no_bundles: no_bundles
+						no_bundles: no_bundles,
+						variations: variations,
 					},
 					dataType: "json",
 					beforeSend: function(){
 						$('ul.chosen-results').empty();
 					},
 					success: function( data ) {
-
 						// Remove all options but those that are selected
 						$('#' + menu_id + ' option:not(:selected)').remove();
 						$.each( data, function( key, item ) {

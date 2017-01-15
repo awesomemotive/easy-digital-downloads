@@ -1,16 +1,13 @@
 <?php
 
-// uncomment this line for testing
-//set_site_transient( 'update_plugins', null );
-
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * Allows plugins to use their own update API.
  *
- * @author Pippin Williamson
- * @version 1.6.5
+ * @author Easy Digital Downloads
+ * @version 1.6.8
  */
 class EDD_SL_Plugin_Updater {
 
@@ -20,6 +17,7 @@ class EDD_SL_Plugin_Updater {
 	private $slug        = '';
 	private $version     = '';
 	private $wp_override = false;
+	private $cache_key   = '';
 
 	/**
 	 * Class constructor.
@@ -42,6 +40,8 @@ class EDD_SL_Plugin_Updater {
 		$this->version     = $_api_data['version'];
 		$this->wp_override = isset( $_api_data['wp_override'] ) ? (bool) $_api_data['wp_override'] : false;
 
+		$this->cache_key   = md5( serialize( $this->slug . $this->api_data['license'] ) );
+
 		$edd_plugin_data[ $this->slug ] = $this->api_data;
 
 		// Set up hooks.
@@ -60,7 +60,7 @@ class EDD_SL_Plugin_Updater {
 
 		add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_update' ) );
 		add_filter( 'plugins_api', array( $this, 'plugins_api_filter' ), 10, 3 );
-		remove_action( 'after_plugin_row_' . $this->name, 'wp_plugin_update_row', 10, 2 );
+		remove_action( 'after_plugin_row_' . $this->name, 'wp_plugin_update_row', 10 );
 		add_action( 'after_plugin_row_' . $this->name, array( $this, 'show_update_notification' ), 10, 2 );
 		add_action( 'admin_init', array( $this, 'show_changelog' ) );
 
@@ -95,7 +95,14 @@ class EDD_SL_Plugin_Updater {
 			return $_transient_data;
 		}
 
-		$version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
+		$version_info = $this->get_cached_version_info();
+
+		if ( false === $version_info ) {
+			$version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug, 'beta' => ! empty( $this->api_data['beta'] ) ) );
+
+			$this->set_version_info_cache( $version_info );
+
+		}
 
 		if ( false !== $version_info && is_object( $version_info ) && isset( $version_info->new_version ) ) {
 
@@ -105,7 +112,7 @@ class EDD_SL_Plugin_Updater {
 
 			}
 
-			$_transient_data->last_checked           = time();
+			$_transient_data->last_checked           = current_time( 'timestamp' );
 			$_transient_data->checked[ $this->name ] = $this->version;
 
 		}
@@ -146,27 +153,25 @@ class EDD_SL_Plugin_Updater {
 
 		if ( empty( $update_cache->response ) || empty( $update_cache->response[ $this->name ] ) ) {
 
-			$cache_key    = md5( 'edd_plugin_' . sanitize_key( $this->name ) . '_version_info' );
-			$version_info = get_transient( $cache_key );
+			$version_info = $this->get_cached_version_info();
 
-			if( false === $version_info ) {
+			if ( false === $version_info ) {
+				$version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug, 'beta' => ! empty( $this->api_data['beta'] ) ) );
 
-				$version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
-
-				set_transient( $cache_key, $version_info, 3600 );
+				$this->set_version_info_cache( $version_info );
 			}
 
-			if( ! is_object( $version_info ) ) {
+			if ( ! is_object( $version_info ) ) {
 				return;
 			}
 
-			if( version_compare( $this->version, $version_info->new_version, '<' ) ) {
+			if ( version_compare( $this->version, $version_info->new_version, '<' ) ) {
 
 				$update_cache->response[ $this->name ] = $version_info;
 
 			}
 
-			$update_cache->last_checked = time();
+			$update_cache->last_checked = current_time( 'timestamp' );
 			$update_cache->checked[ $this->name ] = $this->version;
 
 			set_site_transient( 'update_plugins', $update_cache );
@@ -229,7 +234,6 @@ class EDD_SL_Plugin_Updater {
 	 */
 	public function plugins_api_filter( $_data, $_action = '', $_args = null ) {
 
-
 		if ( $_action != 'plugin_information' ) {
 
 			return $_data;
@@ -246,28 +250,30 @@ class EDD_SL_Plugin_Updater {
 			'slug'   => $this->slug,
 			'is_ssl' => is_ssl(),
 			'fields' => array(
-				'banners' => false, // These will be supported soon hopefully
+				'banners' => array(),
 				'reviews' => false
 			)
 		);
 
-		$cache_key = 'edd_api_request_' . substr( md5( serialize( $this->slug ) ), 0, 15 );
+		$cache_key = 'edd_api_request_' . md5( serialize( $this->slug . $this->api_data['license'] ) );
 
-		//Get the transient where we store the api request for this plugin for 24 hours
-		$edd_api_request_transient = get_site_transient( $cache_key );
+		// Get the transient where we store the api request for this plugin for 24 hours
+		$edd_api_request_transient = $this->get_cached_version_info( $cache_key );
 
 		//If we have no transient-saved value, run the API, set a fresh transient with the API value, and return that value too right now.
 		if ( empty( $edd_api_request_transient ) ){
 
 			$api_response = $this->api_request( 'plugin_information', $to_send );
 
-			//Expires in 1 day
-			set_site_transient( $cache_key, $api_response, DAY_IN_SECONDS );
+			// Expires in 3 hours
+			$this->set_version_info_cache( $api_response, $cache_key );
 
 			if ( false !== $api_response ) {
 				$_data = $api_response;
 			}
 
+		} else {
+			$_data = $edd_api_request_transient;
 		}
 
 		return $_data;
@@ -320,7 +326,8 @@ class EDD_SL_Plugin_Updater {
 			'item_id'    => isset( $data['item_id'] ) ? $data['item_id'] : false,
 			'slug'       => $data['slug'],
 			'author'     => $data['author'],
-			'url'        => home_url()
+			'url'        => home_url(),
+			'beta'       => ! empty( $data['beta'] ),
 		);
 
 		$request = wp_remote_post( $this->api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
@@ -333,6 +340,10 @@ class EDD_SL_Plugin_Updater {
 			$request->sections = maybe_unserialize( $request->sections );
 		} else {
 			$request = false;
+		}
+
+		if ( $request && isset( $request->banners ) ) {
+			$request->banners = maybe_unserialize( $request->banners );
 		}
 
 		return $request;
@@ -360,7 +371,7 @@ class EDD_SL_Plugin_Updater {
 
 		$data         = $edd_plugin_data[ $_REQUEST['slug'] ];
 		$cache_key    = md5( 'edd_plugin_' . sanitize_key( $_REQUEST['plugin'] ) . '_version_info' );
-		$version_info = get_transient( $cache_key );
+		$version_info = $this->get_cached_version_info( $cache_key );
 
 		if( false === $version_info ) {
 
@@ -370,7 +381,8 @@ class EDD_SL_Plugin_Updater {
 				'item_id'    => isset( $data['item_id'] ) ? $data['item_id'] : false,
 				'slug'       => $_REQUEST['slug'],
 				'author'     => $data['author'],
-				'url'        => home_url()
+				'url'        => home_url(),
+				'beta'       => ! empty( $data['beta'] )
 			);
 
 			$request = wp_remote_post( $this->api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
@@ -385,7 +397,7 @@ class EDD_SL_Plugin_Updater {
 				$version_info = false;
 			}
 
-			set_transient( $cache_key, $version_info, 3600 );
+			$this->set_version_info_cache( $version_info, $cache_key );
 
 		}
 
@@ -394,6 +406,37 @@ class EDD_SL_Plugin_Updater {
 		}
 
 		exit;
+	}
+
+	public function get_cached_version_info( $cache_key = '' ) {
+
+		if( empty( $cache_key ) ) {
+			$cache_key = $this->cache_key;
+		}
+
+		$cache = get_option( $cache_key );
+
+		if( empty( $cache['timeout'] ) || current_time( 'timestamp' ) > $cache['timeout'] ) {
+			return false; // Cache is expired
+		}
+
+		return json_decode( $cache['value'] );
+
+	}
+
+	public function set_version_info_cache( $value = '', $cache_key = '' ) {
+
+		if( empty( $cache_key ) ) {
+			$cache_key = $this->cache_key;
+		}
+
+		$data = array(
+			'timeout' => strtotime( '+3 hours', current_time( 'timestamp' ) ),
+			'value'   => json_encode( $value )
+		);
+
+		update_option( $cache_key, $data );
+
 	}
 
 }

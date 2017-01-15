@@ -66,8 +66,18 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 			}
 
+			$increase_earnings = $download['price'];
+			if ( ! empty( $download['fees'] ) ) {
+				foreach ( $download['fees'] as $fee ) {
+					if ( $fee['amount'] > 0 ) {
+						continue;
+					}
+					$increase_earnings += $fee['amount'];
+				}
+			}
+
 			// Increase the earnings for this download ID
-			edd_increase_earnings( $download['id'], $download['price'] );
+			edd_increase_earnings( $download['id'], $increase_earnings );
 			edd_increase_purchase_count( $download['id'], $download['quantity'] );
 
 		}
@@ -142,24 +152,6 @@ function edd_record_status_change( $payment_id, $new_status, $old_status ) {
 	edd_insert_payment_note( $payment_id, $status_change );
 }
 add_action( 'edd_update_payment_status', 'edd_record_status_change', 100, 3 );
-
-/**
- * Reduces earnings and sales stats when a purchase is refunded
- *
- * @since 1.8.2
- * @param int $payment_id the ID number of the payment
- * @param string $new_status the status of the payment, probably "publish"
- * @param string $old_status the status of the payment prior to being marked as "complete", probably "pending"
- * @internal param Arguments $data passed
- */
-function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
-
-	$backtrace = debug_backtrace();
-	_edd_deprecated_function( 'edd_undo_purchase_on_refund', '2.5.7', 'EDD_Payment->refund()', $backtrace );
-
-	$payment = new EDD_Payment( $payment_id );
-	$payment->refund();
-}
 
 /**
  * Flushes the current user's purchase history transient when a payment status

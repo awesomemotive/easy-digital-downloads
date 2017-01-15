@@ -28,7 +28,8 @@ function edd_tools_page() {
 ?>
 	<div class="wrap">
 		<?php screen_icon(); ?>
-		<h1 class="nav-tab-wrapper">
+		<h2><?php _e( 'Easy Digital Downloads Tools', 'easy-digital-downloads' ); ?></h2>
+		<h2 class="nav-tab-wrapper">
 			<?php
 			foreach( edd_get_tools_tabs() as $tab_id => $tab_name ) {
 
@@ -45,7 +46,7 @@ function edd_tools_page() {
 
 			}
 			?>
-		</h1>
+		</h2>
 		<div class="metabox-holder">
 			<?php
 			do_action( 'edd_tools_tab_' . $active_tab );
@@ -67,6 +68,11 @@ function edd_get_tools_tabs() {
 	$tabs                  = array();
 	$tabs['general']       = __( 'General', 'easy-digital-downloads' );
 	$tabs['api_keys']      = __( 'API Keys', 'easy-digital-downloads' );
+
+	if( count( edd_get_beta_enabled_extensions() ) > 0 ) {
+		$tabs['betas'] = __( 'Beta Versions', 'easy-digital-downloads' );
+	}
+
 	$tabs['system_info']   = __( 'System Info', 'easy-digital-downloads' );
 	$tabs['import_export'] = __( 'Import/Export', 'easy-digital-downloads' );
 
@@ -130,7 +136,7 @@ function edd_tools_recount_stats_display() {
 		<h3><span><?php _e( 'Recount Stats', 'easy-digital-downloads' ); ?></span></h3>
 		<div class="inside recount-stats-controls">
 			<p><?php _e( 'Use these tools to recount / reset store stats.', 'easy-digital-downloads' ); ?></p>
-			<form method="post" id="edd-tools-recount-form" class="edd-export-form">
+			<form method="post" id="edd-tools-recount-form" class="edd-export-form edd-import-export-form">
 				<span>
 
 					<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
@@ -249,14 +255,129 @@ add_action( 'edd_tools_tab_api_keys', 'edd_tools_api_keys_display' );
 
 
 /**
+ * Display beta opt-ins
+ *
+ * @since       2.6.11
+ * @return      void
+ */
+function edd_tools_betas_display() {
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
+	$has_beta = edd_get_beta_enabled_extensions();
+
+	do_action( 'edd_tools_betas_before' );
+	?>
+
+	<div class="postbox edd-beta-support">
+		<h3><span><?php _e( 'Enable Beta Versions', 'easy-digital-downloads' ); ?></span></h3>
+		<div class="inside">
+			<p><?php _e( 'Checking any of the below checkboxes will opt you in to receive pre-release update notifications. You can opt-out at any time. Pre-release updates do not install automatically, you will still have the opportunity to ignore update notifications.', 'easy-digital-downloads' ); ?></p>
+			<form method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=betas' ); ?>">
+				<table class="form-table edd-beta-support">
+					<tbody>
+						<?php foreach( $has_beta as $slug => $product ) : ?>
+							<tr>
+								<?php $checked = edd_extension_has_beta_support( $slug ); ?>
+								<th scope="row"><?php echo esc_html( $product ); ?></th>
+								<td>
+									<input type="checkbox" name="enabled_betas[<?php echo esc_attr( $slug ); ?>]" id="enabled_betas[<?php echo esc_attr( $slug ); ?>]"<?php echo checked( $checked, true, false ); ?> value="1" />
+									<label for="enabled_betas[<?php echo esc_attr( $slug ); ?>]"><?php printf( __( 'Get updates for pre-release versions of %s', 'easy-digital-downloads' ), $product ); ?></label>
+								</td>
+							</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+				<input type="hidden" name="edd_action" value="save_enabled_betas" />
+				<?php wp_nonce_field( 'edd_save_betas_nonce', 'edd_save_betas_nonce' ); ?>
+				<?php submit_button( __( 'Save', 'easy-digital-downloads' ), 'secondary', 'submit', false ); ?>
+			</form>
+		</div>
+	</div>
+
+	<?php
+	do_action( 'edd_tools_betas_after' );
+}
+add_action( 'edd_tools_tab_betas', 'edd_tools_betas_display' );
+
+
+/**
+ * Return an array of all extensions with beta support
+ *
+ * Extensions should be added as 'extension-slug' => 'Extension Name'
+ *
+ * @since       2.6.11
+ * @return      array $extensions The array of extensions
+ */
+function edd_get_beta_enabled_extensions() {
+	return apply_filters( 'edd_beta_enabled_extensions', array() );
+}
+
+
+/**
+ * Check if a given extensions has beta support enabled
+ *
+ * @since       2.6.11
+ * @param       string $slug The slug of the extension to check
+ * @return      bool True if enabled, false otherwise
+ */
+function edd_extension_has_beta_support( $slug ) {
+	$enabled_betas = edd_get_option( 'enabled_betas', array() );
+	$return        = false;
+
+	if( array_key_exists( $slug, $enabled_betas ) ) {
+		$return = true;
+	}
+
+	return $return;
+}
+
+
+/**
+ * Save enabled betas
+ *
+ * @since       2.6.11
+ * @return      void
+ */
+function edd_tools_enabled_betas_save() {
+	if( ! wp_verify_nonce( $_POST['edd_save_betas_nonce'], 'edd_save_betas_nonce' ) ) {
+		return;
+	}
+
+	if( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
+	if( ! empty( $_POST['enabled_betas'] ) ) {
+		$enabled_betas = array_filter( array_map( 'edd_tools_enabled_betas_sanitize_value', $_POST['enabled_betas'] ) );
+		edd_update_option( 'enabled_betas', $enabled_betas );
+	} else {
+		edd_delete_option( 'enabled_betas' );
+	}
+}
+add_action( 'edd_save_enabled_betas', 'edd_tools_enabled_betas_save' );
+
+/**
+ * Sanitize the supported beta values by making them booleans
+ *
+ * @since 2.6.11
+ * @param mixed $value The value being sent in, determining if beta support is enabled.
+ *
+ * @return bool
+ */
+function edd_tools_enabled_betas_sanitize_value( $value ) {
+	return filter_var( $value, FILTER_VALIDATE_BOOLEAN );
+}
+
+
+/**
  * Save banned emails
  *
  * @since       2.0
  * @return      void
  */
 function edd_tools_banned_emails_save() {
-
-	global $edd_options;
 
 	if( ! wp_verify_nonce( $_POST['edd_banned_emails_nonce'], 'edd_banned_emails_nonce' ) ) {
 		return;
@@ -284,8 +405,7 @@ function edd_tools_banned_emails_save() {
 		$emails = '';
 	}
 
-	$edd_options['banned_emails'] = $emails;
-	update_option( 'edd_settings', $edd_options );
+	edd_update_option( 'banned_emails', $emails );
 }
 add_action( 'edd_save_banned_emails', 'edd_tools_banned_emails_save' );
 
@@ -960,8 +1080,13 @@ function edd_tools_sysinfo_get() {
 	$browser = new Browser();
 
 	// Get theme info
-	$theme_data = wp_get_theme();
-	$theme      = $theme_data->Name . ' ' . $theme_data->Version;
+	$theme_data   = wp_get_theme();
+	$theme        = $theme_data->Name . ' ' . $theme_data->Version;
+	$parent_theme = $theme_data->Template;
+	if ( ! empty( $parent_theme ) ) {
+		$parent_theme_data = wp_get_theme( $parent_theme );
+		$parent_theme      = $parent_theme_data->Name . ' ' . $parent_theme_data->Version;
+	}
 
 	// Try to identify the hosting provider
 	$host = edd_get_host();
@@ -996,6 +1121,9 @@ function edd_tools_sysinfo_get() {
 	$return .= 'Language:                 ' . ( defined( 'WPLANG' ) && WPLANG ? WPLANG : 'en_US' ) . "\n";
 	$return .= 'Permalink Structure:      ' . ( get_option( 'permalink_structure' ) ? get_option( 'permalink_structure' ) : 'Default' ) . "\n";
 	$return .= 'Active Theme:             ' . $theme . "\n";
+	if ( $parent_theme !== $theme ) {
+		$return .= 'Parent Theme:             ' . $parent_theme . "\n";
+	}
 	$return .= 'Show On Front:            ' . get_option( 'show_on_front' ) . "\n";
 
 	// Only show page specs if frontpage is set to 'page'
