@@ -68,13 +68,29 @@ function edd_edit_customer( $args ) {
 		return;
 	}
 
+	$user_id = intval( $customer_info['user_id'] );
+	if ( empty( $user_id ) && ! empty( $customer_info['user_login'] ) ) {
+		// See if they gave an email, otherwise we'll assume login
+		$user_by_field = 'login';
+		if ( is_email( $customer_info['user_login'] ) ) {
+			$user_by_field = 'email';
+		}
+
+		$user = get_user_by( $user_by_field, $customer_info['user_login'] );
+		if ( $user ) {
+			$user_id = $user->ID;
+		} else {
+			edd_set_error( 'edd-invalid-user-string', sprintf( __( 'Failed to attach user. The login or email address %s was not found.', 'easy-digital-downloads' ), $customer_info['user_login'] ) );
+		}
+	}
+
 	// Setup the customer address, if present
 	$address = array();
-	if ( intval( $customer_info['user_id'] ) > 0 ) {
+	if ( ! empty( $user_id ) ) {
 
 		$current_address = get_user_meta( $customer_info['user_id'], '_edd_user_address', true );
 
-		if ( false === $current_address ) {
+		if ( empty( $current_address ) ) {
 			$address['line1']   = isset( $customer_info['line1'] )   ? $customer_info['line1']   : '';
 			$address['line2']   = isset( $customer_info['line2'] )   ? $customer_info['line2']   : '';
 			$address['city']    = isset( $customer_info['city'] )    ? $customer_info['city']    : '';
@@ -97,7 +113,7 @@ function edd_edit_customer( $args ) {
 	$customer_data            = array();
 	$customer_data['name']    = strip_tags( stripslashes( $customer_info['name'] ) );
 	$customer_data['email']   = $customer_info['email'];
-	$customer_data['user_id'] = $customer_info['user_id'];
+	$customer_data['user_id'] = $user_id;
 
 	$customer_data = apply_filters( 'edd_edit_customer_info', $customer_data, $customer_id );
 	$address       = apply_filters( 'edd_edit_customer_address', $address, $customer_id );
@@ -163,6 +179,7 @@ add_action( 'edd_edit-customer', 'edd_edit_customer', 10, 1 );
  * @return mixed        If DOING_AJAX echos out JSON, otherwise returns array of success (bool) and message (string)
  */
 function edd_add_customer_email( $args ) {
+
 	$customer_edit_role = apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
 
 	if ( ! is_admin() || ! current_user_can( $customer_edit_role ) ) {
@@ -199,7 +216,7 @@ function edd_add_customer_email( $args ) {
 
 	} else {
 
-		$email       = sanitize_email($args['email'] );
+		$email       = sanitize_email( $args['email'] );
 		$customer_id = (int) $args['customer_id'];
 		$primary     = 'true' === $args['primary'] ? true : false;
 		$customer    = new EDD_Customer( $customer_id );
@@ -210,7 +227,7 @@ function edd_add_customer_email( $args ) {
 
 				$output = array(
 					'success'  => false,
-					'message'  => __( 'Email already assocaited with this customer.', 'easy-digital-downloads' ),
+					'message'  => __( 'Email already associated with this customer.', 'easy-digital-downloads' ),
 				);
 
 			} else {

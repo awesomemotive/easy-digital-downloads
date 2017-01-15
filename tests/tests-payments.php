@@ -3,7 +3,7 @@
 /**
  * @group edd_payments
  */
-class Tests_Payments extends WP_UnitTestCase {
+class Tests_Payments extends EDD_UnitTestCase {
 
 	protected $_payment_id = null;
 	protected $_key = null;
@@ -115,6 +115,11 @@ class Tests_Payments extends WP_UnitTestCase {
 
 		$out = edd_get_payments();
 		$this->assertEquals( 'publish', $out[0]->post_status );
+	}
+
+	public function test_update_payment_status_with_invalid_id() {
+		$updated = edd_update_payment_status( 1212121212121212121212112, 'publish' );
+		$this->assertFalse( $updated );
 	}
 
 	public function test_check_for_existing_payment() {
@@ -239,7 +244,7 @@ class Tests_Payments extends WP_UnitTestCase {
 
 		// Test by getting the payment key with three different methods
 		$this->assertEquals( $this->_payment_key, $payment->get_meta( '_edd_payment_purchase_key' ) );
-		$this->assertEquals( $this->_payment_key, get_post_meta( $this->_payment_id, '_edd_payment_purchase_key', true ) );
+		$this->assertEquals( $this->_payment_key, edd_get_payment_meta( $this->_payment_id, '_edd_payment_purchase_key', true ) );
 		$this->assertEquals( $this->_payment_key, $payment->key );
 
 		// Try and retrieve the transaction ID
@@ -253,7 +258,7 @@ class Tests_Payments extends WP_UnitTestCase {
 
 		// Test by getting the payment key with three different methods
 		$this->assertEquals( $this->_payment_key, edd_get_payment_meta( $this->_payment_id, '_edd_payment_purchase_key' ) );
-		$this->assertEquals( $this->_payment_key, get_post_meta( $this->_payment_id, '_edd_payment_purchase_key', true ) );
+		$this->assertEquals( $this->_payment_key, edd_get_payment_meta( $this->_payment_id, '_edd_payment_purchase_key', true ) );
 		$this->assertEquals( $this->_payment_key, edd_get_payment_key( $this->_payment_id ) );
 
 		// Try and retrieve the transaction ID
@@ -307,6 +312,18 @@ class Tests_Payments extends WP_UnitTestCase {
 
 		$user_info = edd_get_payment_meta_user_info( $this->_payment_id );
 		$this->assertEquals( 'test@test.com', edd_get_payment_meta( $this->_payment_id, '_edd_payment_user_email' ) );
+
+	}
+
+	public function test_update_payment_data() {
+
+		$payment = new EDD_Payment( $this->_payment_id );
+		$payment->date = date( 'Y-m-d H:i:s' );
+		$payment->save();
+		$meta = $payment->get_meta();
+
+		$this->assertSame( $payment->date, $meta['date'] );
+
 
 	}
 

@@ -75,12 +75,13 @@ function edd_process_download() {
 		// Payment has been verified, setup the download
 		$download_files = edd_get_download_files( $args['download'] );
 		$attachment_id  = ! empty( $download_files[ $args['file_key'] ]['attachment_id'] ) ? absint( $download_files[ $args['file_key'] ]['attachment_id'] ) : false;
+		$requested_file = isset( $download_files[ $args['file_key'] ]['file'] ) ? $download_files[ $args['file_key'] ]['file'] : '';
 
 		/*
 		 * If we have an attachment ID stored, use get_attached_file() to retrieve absolute URL
 		 * If this fails or returns a relative path, we fail back to our own absolute URL detection
 		 */
-		if( $attachment_id && 'attachment' == get_post_type( $attachment_id ) ) {
+		if( edd_is_local_file( $requested_file ) && $attachment_id && 'attachment' == get_post_type( $attachment_id ) ) {
 
 			if( 'redirect' == $method ) {
 
@@ -89,6 +90,11 @@ function edd_process_download() {
 			} else {
 
 				$attached_file = get_attached_file( $attachment_id, false );
+
+				// Confirm the file exists
+				if( ! file_exists( $attached_file ) ) {
+					$attached_file = false;
+				}
 
 			}
 
@@ -100,15 +106,33 @@ function edd_process_download() {
 
 		}
 
-		// If we didn't find a file from the attachment, grab the given URL
-		if( ! isset( $requested_file ) ) {
+		// Allow the file to be altered before any headers are sent
+		$requested_file = apply_filters( 'edd_requested_file', $requested_file, $download_files, $args['file_key'] );
 
-			$requested_file = isset( $download_files[ $args['file_key'] ]['file'] ) ? $download_files[ $args['file_key'] ]['file'] : '';
+		if( 'x_sendfile' == $method && ( ! function_exists( 'apache_get_modules' ) || ! in_array( 'mod_xsendfile', apache_get_modules() ) ) ) {
+			// If X-Sendfile is selected but is not supported, fallback to Direct
+			$method = 'direct';
+		}
+
+		$file_details = parse_url( $requested_file );
+		$schemes      = array( 'http', 'https' ); // Direct URL schemes
+
+		if ( ( ! isset( $file_details['scheme'] ) || ! in_array( $file_details['scheme'], $schemes ) ) && isset( $file_details['path'] ) && file_exists( $requested_file ) ) {
+
+			/**
+			 * Download method is seto to Redirect in settings but an absolute path was provided
+			 * We need to switch to a direct download in order for the file to download properly
+			 */
+			$method = 'direct';
 
 		}
 
-		// Allow the file to be altered before any headers are sent
-		$requested_file = apply_filters( 'edd_requested_file', $requested_file, $download_files, $args['file_key'] );
+		/**
+		 * Allow extensions to run actions prior to recording the file download log entry
+		 *
+		 * @since 2.6.14
+		 */
+		do_action( 'edd_process_download_pre_record_log', $requested_file, $args, $method );
 
 		// Record this file download in the log
 		$user_info = array();
@@ -150,24 +174,6 @@ function edd_process_download() {
 		if ( filter_var( $requested_file, FILTER_VALIDATE_URL ) && ! edd_is_local_file( $requested_file ) ) {
 			edd_deliver_download( $requested_file, true );
 			exit;
-		}
-
-		if( 'x_sendfile' == $method && ( ! function_exists( 'apache_get_modules' ) || ! in_array( 'mod_xsendfile', apache_get_modules() ) ) ) {
-			// If X-Sendfile is selected but is not supported, fallback to Direct
-			$method = 'direct';
-		}
-
-		$file_details = parse_url( $requested_file );
-		$schemes      = array( 'http', 'https' ); // Direct URL schemes
-
-		if ( ( ! isset( $file_details['scheme'] ) || ! in_array( $file_details['scheme'], $schemes ) ) && isset( $file_details['path'] ) && file_exists( $requested_file ) ) {
-
-			/**
-			 * Download method is seto to Redirect in settings but an absolute path was provided
-			 * We need to switch to a direct download in order for the file to download properly
-			 */
-			$method = 'direct';
-
 		}
 
 		switch( $method ) :
@@ -332,7 +338,7 @@ function edd_deliver_download( $file = '', $redirect = false ) {
  */
 function edd_is_local_file( $requested_file ) {
 	$home_url       = preg_replace('#^https?://#', '', home_url() );
-	$requested_file = preg_replace('#^https?://#', '', $requested_file );
+	$requested_file = preg_replace('#^(https?|file)://#', '', $requested_file );
 
 	$is_local_url  = strpos( $requested_file, $home_url ) === 0;
 	$is_local_path = strpos( $requested_file, '/' ) === 0;
@@ -792,8 +798,8 @@ function edd_process_signed_download_url( $args ) {
 	$args['payment']     = $order_parts[0];
 	$args['file_key']    = $order_parts[2];
 	$args['price_id']    = $order_parts[3];
-	$args['email']       = get_post_meta( $order_parts[0], '_edd_payment_user_email', true );
-	$args['key']         = get_post_meta( $order_parts[0], '_edd_payment_purchase_key', true );
+	$args['email']       = edd_get_payment_meta( $order_parts[0], '_edd_payment_user_email', true );
+	$args['key']         = edd_get_payment_meta( $order_parts[0], '_edd_payment_purchase_key', true );
 
 	$payment = new EDD_Payment( $args['payment'] );
 	$args['has_access']  = 'publish' === $payment->status ? true : false;
@@ -838,3 +844,48 @@ function edd_set_requested_file_scheme( $requested_file, $download_files, $file_
 
 }
 add_filter( 'edd_requested_file', 'edd_set_requested_file_scheme', 10, 3 );
+
+/**
+ * Perform a head request on file URLs before attempting to download to check if they are accessible.
+ *
+ * @since  2.6.14
+ * @param  string $requested_file The Requested File
+ * @param  array  $args           Arguments
+ * @param  string $method         The download mehtod being sed
+ * @return void
+ */
+function edd_check_file_url_head( $requested_file, $args, $method ) {
+
+	// If this is a file URL (not a path), perform a head request to determine if it's valid
+	if( filter_var( $requested_file, FILTER_VALIDATE_URL ) && ! edd_is_local_file( $requested_file ) ) {
+
+		$valid   = true;
+		$request = wp_remote_head( $requested_file );
+
+		if( is_wp_error( $request ) ) {
+
+			$valid   = false;
+			$message = $request;
+			$title   = __( 'Invalid file', 'easy-digital-downloads' );
+
+		}
+
+		if( 404 === wp_remote_retrieve_response_code( $request ) ) {
+
+			$valid   = false;
+			$message = __( 'The requested file could not be found. Error 404.', 'easy-digital-downloads' );
+			$title   = __( 'File not found', 'easy-digital-downloads' );
+
+		}
+
+		if( ! $valid ) {
+
+			do_action( 'edd_check_file_url_head_invalid', $requested_file, $args, $method );
+			wp_die( $message, $title, array( 'response' => 403 ) );
+
+		}
+
+	}
+
+}
+add_action( 'edd_process_download_pre_record_log', 'edd_check_file_url_head', 10, 3 );

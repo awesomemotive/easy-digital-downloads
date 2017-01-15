@@ -308,7 +308,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 		$hidden = array(); // No hidden columns
 		$sortable = array(); // Not sortable... for now
 
-		$this->_column_headers = array( $columns, $hidden, $sortable, 'id' );
+		$this->_column_headers = array( $columns, $hidden, $sortable, 'user' );
 
 		$data = $this->query();
 

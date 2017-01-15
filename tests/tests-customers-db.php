@@ -3,7 +3,7 @@
 /**
  * @group edd_customers
  */
-class Tests_Customers_DB extends WP_UnitTestCase {
+class Tests_Customers_DB extends EDD_UnitTestCase {
 
 	protected $_post_id = null;
 
@@ -116,7 +116,7 @@ class Tests_Customers_DB extends WP_UnitTestCase {
 		);
 
 		$_SERVER['REMOTE_ADDR'] = '10.0.0.0';
-		$_SERVER['SERVER_NAME'] = 'edd_virtual';
+		$_SERVER['SERVER_NAME'] = 'edd-virtual.local';
 
 		$payment_id = edd_insert_payment( $purchase_data );
 

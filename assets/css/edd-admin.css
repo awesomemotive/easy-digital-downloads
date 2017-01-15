@@ -53,12 +53,15 @@ a.edd-delete:hover {
 
 .edd-ui-tooltip {
 	background: #333 !important;
+	border-width: 1px !important;
 	border-radius: 3px !important;
-	box-shadow: 1px 1px 2px 1px rgba(214,214,214,0.5);
+	box-shadow: 1px 1px 2px 1px rgba(214,214,214,0.5) !important;
 	color: #dedede !important;
-	max-width: 300px;
-	padding: 7px;
+	max-width: 300px !important;
+	padding: 7px !important;
 	text-rendering: optimizeLegibility;
+	text-shadow: none !important;
+	z-index: 9999 !important;
 }
 
 /* =Add Ons Styles
@@ -244,7 +247,7 @@ tr.status-refunded td {
 	display: block;
 	padding: 2px 8px 2px;
 	position: absolute;
-	top: 3px;
+	top: 2px;
 	right: 7px;
 }
 .edd_upload_field {
@@ -340,6 +343,9 @@ textarea#edd-payment-note {
 }
 #edd-order-resend-receipt .inside {
 	margin-top: 11px;
+}
+#edd-order-resend-receipt .edd-order-resend-receipt-addresses {
+	margin-top: 10px;
 }
 .edd-admin-box-inside:last-child {
 	border-bottom: 0;
@@ -554,6 +560,11 @@ textarea#edd-payment-note {
 .edd_dashboard_widget td {
 	padding: 3px 0;
 }
+.edd_dashboard_widget .b,
+.edd_dashboard_widget .t {
+	line-height: 1.5;
+	vertical-align: middle;
+}
 .edd_dashboard_widget .b {
 	font-size: 14px;
 	font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif;
@@ -563,7 +574,6 @@ textarea#edd-payment-note {
 .edd_dashboard_widget .t {
 	font-size: 12px;
 	padding-right: 12px;
-	padding-top: 6px;
 	color: #777;
 	width: 100%;
 }
@@ -988,7 +998,7 @@ td.edd_order_price {
 @media screen and ( max-width: 782px ) {
 
 	.post-type-download .nav-tab-wrapper a {
-		font-size: 50%;
+		font-size: 70%;
 		padding: 2px 4px;
 	}
 	.download_page_edd-tools .apikeys .column-user {
@@ -1015,44 +1025,66 @@ td.edd_order_price {
 /* Customer Styles
 -------------------------------------------------------------- */
 
+#edd-item-wrapper {
+	background: #f5f5f5;
+	border: 1px solid #e5e5e5;
+	webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+	box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+	max-width: 830px;
+}
+#edd-item-wrapper:after {
+	content: "";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	font-size: 0;
+	height: 0;
+}
 #edd-item-tab-wrapper {
-	display: inline-block;
-	margin-left: -1px;
-	text-align: center;
+	float:left;
+	width: 18%;
 	z-index: 1;
 }
-#edd-item-tab-wrapper-list li {
-	background-color: #fff;
-	width: 32px;
-	height: 32px;
+#edd-item-tab-wrapper-list {
+	background: #fff;
+	margin: 0;
 }
-#edd-item-tab-wrapper-list .inactive {
+#edd-item-tab-wrapper-list li {
+	display: block;
+	background-color: #eaeaea;
+	color: #444;
+	font-size: 12px;
+	border-bottom: 1px solid #e5e5e5;
+	margin-bottom: 0;
+	-webkit-hyphens: auto;
+	-moz-hyphens: auto;
+	-ms-hyphens: auto;
+	hyphens: auto;
+	word-wrap: break-word;
+}
+#edd-item-tab-wrapper-list li a {
+	display: block;
+	padding: 8px 10px 8px 6px;
+}
+#edd-item-tab-wrapper-list li.active {
+	display: block;
 	background-color: #fff;
-	border-left: 1px solid #e5e5e5;
-	color: #eee;
+	padding: 8px 10px 8px 6px;
 }
 #edd-item-tab-wrapper-list .inactive a,
 #edd-item-tab-wrapper-list .inactive a:visited {
-	color: #eee;
-	display: block;
-	line-height: 32px;
+	background-color: #f5f5f5;
+	color: #444;
 	text-decoration: none;
 }
-#edd-item-tab-wrapper-list .inactive a:hover,
-#edd-item-tab-wrapper-list .inactive a:focus,
-#edd-item-tab-wrapper-list .inactive a:active {
-	color: #444;
-}
-#edd-item-tab-wrapper-list .active {
-	border-color: #e5e5e5;
-	border-style: solid;
-	border-width: 1px 1px 1px 0;
-}
-#edd-item-tab-wrapper-list :not(:last-child) {
-	margin-bottom: 3px;
+#edd-item-tab-wrapper-list .inactive a:hover {
+	background-color: #fff;
 }
 #edd-item-tab-wrapper-list .dashicons {
-	font-size: 24px; line-height: 32px;
+	color: #444;
+	font-size: 16px;
+	min-width: 24px;
+	height: auto;
 }
 #edd-item-card-wrapper .left {
 	float: left;
@@ -1066,13 +1098,15 @@ td.edd_order_price {
 #edd-item-card-wrapper {
 	background-color: #fff;
 	border: 1px solid #e5e5e5;
-	webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
-	box-shadow: 0 1px 1px rgba(0,0,0,0.04);
 	display: inline-block;
 	margin-left: -1px;
 	min-height: 200px;
 	width: 700px;
 	z-index: 2;
+}
+.edd-item-has-tabs #edd-item-card-wrapper {
+	border-width: 0 0 0 1px;
+	width: 82%;
 }
 #edd-item-card-wrapper .customer-section {
 	border-bottom: 1px solid #eee;
@@ -1245,9 +1279,6 @@ td.edd_order_price {
 }
 
 @media screen and ( max-width: 810px ) and ( min-width: 656px ) {
-	#edd-item-card-wrapper {
-		width: 600px;
-	}
 	.customer-info .customer-name {
 		font-size: 16px;
 	}
@@ -1257,41 +1288,42 @@ td.edd_order_price {
 		display: table-cell;
 	}
 }
-@media screen and ( max-width: 656px ) {
+@media screen and ( max-width: 781px ) {
+	#edd-item-tab-wrapper,
 	#edd-item-card-wrapper {
 		margin: 0;
 		width: 100%;
 	}
-	#edd-item-card-wrapper > div:first-child {
-		height: 230px;
-	}
-	#edd-item-tab-wrapper {
-		margin: 0 0 -5px;
-	}
 	#edd-item-tab-wrapper-list {
-		height: 32px;
+		background: #fff;
 		margin: 0;
-	}
-	#edd-item-tab-wrapper-list .inactive {
-		border-bottom: 1px solid #e5e5e5;
-		border-left: none;
-	}
-	#edd-item-tab-wrapper-list .active {
-		border-width: 1px 1px 0 1px;
 	}
 	#edd-item-tab-wrapper-list li {
 		float: left;
-		margin: 0 0 0 5px !important;
-		width: 32px;
-		height: 32px;
+		display: inline;
+		font-size: 14px;
+		box-sizing: border-box;
+		border-width: 0 1px 1px 0;
+		border-style: solid;
+		border-color: #e5e5e5;
+		width: 33.33333%;
 	}
-	#edd-item-tab-wrapper-list li span {
-		width: 32px;
-		height: 32px;
-		margin: 0 !important;
+	#edd-item-tab-wrapper-list li:nth-child(3n+3) {
+		border-width: 0 0 1px 0;
 	}
+	#edd-item-tab-wrapper-list .dashicons {
+		font-size: 18px;
+	}
+	.edd-item-has-tabs  #edd-item-card-wrapper {
+		border-top: 1px solid #e5e5e5;
+		border-left: 0;
+		margin-top: -1px;
+		width: 100%;
+	}
+}
+@media screen and ( max-width: 656px ) {
 	#edd-item-card-wrapper .customer-info {
-		min-height: 210px;
+		min-height: 220px;
 	}
 	.edd-item-info.customer-info {
 		position: relative;
@@ -1327,8 +1359,16 @@ td.edd_order_price {
 	#edd-item-card-wrapper .customer-id {
 		font-size: 16px;
 	}
-	#edd-item-card-wrapper > div:first-child {
-		height: auto;
+}
+@media screen and ( max-width: 480px ) {
+	#edd-item-tab-wrapper-list li {
+		width: 50%;
+	}
+	#edd-item-tab-wrapper-list li:nth-child(3n+3) {
+		border-width: 0 1px 1px 0;
+	}
+	#edd-item-tab-wrapper-list li:nth-child(even) {
+		border-width: 0 0 1px 0;
 	}
 }
 
