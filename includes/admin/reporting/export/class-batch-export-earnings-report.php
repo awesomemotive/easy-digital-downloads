@@ -102,8 +102,6 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 			}
 		}
 
-		$col_data .= "\r\n";
-
 		$this->stash_step_data( $col_data );
 
 		return $col_data;
@@ -123,36 +121,53 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 		$data = $this->get_data();
 
 		if ( $data ) {
-			foreach ( $data as $item ) {
-				$row_data .= ','; // Leave first column empty
+			$start_date = date( 'Y-m-d', strtotime( $this->start ) );
 
-				$row_data .= isset( $item['publish']['count'] ) ? $item['publish']['count'] : 0 . ',';
-
-				$total = 0;
-				foreach ( $item as $status => $value ) {
-					$total += $value['amount'];
-				}
-				$row_data .= $total . ',';
-
-				$row_data .= isset( $item['refunded']['count'] ) ? $item['refunded']['count'] : 0 . ',';
-				$row_data .= isset( $item['refunded']['amount'] ) ? '-' . $item['refunded']['amount'] : 0 . ',';
-
-				$row_data .= isset( $item['revoked']['count'] ) ? $item['revoked']['count'] : 0 . ',';
-				$row_data .= isset( $item['revoked']['amount'] ) ? '-' . $item['revoked']['amount'] : 0 . ',';
-
-				$row_data .= isset( $item['abandoned']['count'] ) ? $item['abandoned']['count'] : 0 . ',';
-				$row_data .= isset( $item['abandoned']['amount'] ) ? '-' . $item['abandoned']['amount'] : 0 . ',';
-
-				$row_data .= isset( $item['failed']['count'] ) ? $item['failed']['count'] : 0 . ',';
-				$row_data .= isset( $item['failed']['amount'] ) ? '-' . $item['failed']['amount'] : 0 . ',';
-
-				$row_data .= isset( $item['cancelled']['count'] ) ? $item['cancelled']['count'] : 0 . ',';
-				$row_data .= isset( $item['cancelled']['amount'] ) ? '-' . $item['cancelled']['amount'] : 0 . ',';
-
-				$row_data .= isset( $item['publish']['amount'] ) ? $item['publish']['amount'] : 0;
-
-				$row_data .= "\r\n";
+			if ( $this->count() == 0 ) {
+				$end_date = date( 'Y-m-d', strtotime( $this->end ) );
+			} else {
+				$end_date = date( 'Y-m-d', strtotime( 'first day of +1 month', strtotime( $start_date ) ) );
 			}
+
+			if ( $this->step == 1 ) {
+				$row_data .= $start_date . ',';
+			} elseif ( $this->step > 1 ) {
+				$start_date = date( 'Y-m-d', strtotime( 'first day of +' . ( $this->step - 1 ) . ' month', strtotime( $start_date ) ) );
+
+				if ( date( 'Y-m', strtotime( $start_date ) ) == date( 'Y-m', strtotime( $this->end ) ) ) {
+					$end_date = date( 'Y-m-d', strtotime( $this->end ) );
+					$row_data .= $end_date . ',';
+				} else {
+					$row_data .= $start_date . ',';
+				}
+			}
+
+			$row_data .= isset( $data['publish']['count'] ) ? $data['publish']['count'] . ',' : 0 . ',';
+
+			$total = 0;
+			foreach ( $data as $status => $value ) {
+				$total += $value['amount'];
+			}
+			$row_data .= $total . ',';
+
+			$row_data .= isset( $data['refunded']['count'] ) ? $data['refunded']['count'] . ',' : 0 . ',';
+			$row_data .= isset( $data['refunded']['amount'] ) ? '-' . $data['refunded']['amount'] . ',' : 0 . ',';
+
+			$row_data .= isset( $data['revoked']['count'] ) ? $data['revoked']['count'] . ',' : 0 . ',';
+			$row_data .= isset( $data['revoked']['amount'] ) ? '-' . $data['revoked']['amount'] . ',' : 0 . ',';
+
+			$row_data .= isset( $data['abandoned']['count'] ) ? $data['abandoned']['count'] . ',' : 0 . ',';
+			$row_data .= isset( $data['abandoned']['amount'] ) ? '-' . $data['abandoned']['amount'] . ',' : 0 . ',';
+
+			$row_data .= isset( $data['failed']['count'] ) ? $data['failed']['count'] . ',' : 0 . ',';
+			$row_data .= isset( $data['failed']['amount'] ) ? '-' . $data['failed']['amount'] . ',' : 0 . ',';
+
+			$row_data .= isset( $data['cancelled']['count'] ) ? $data['cancelled']['count'] . ',' : 0 . ',';
+			$row_data .= isset( $data['cancelled']['amount'] ) ? '-' . $data['cancelled']['amount'] . ',' : 0 . ',';
+
+			$row_data .= isset( $data['publish']['amount'] ) ? $data['publish']['amount'] . ',' : 0;
+
+			$row_data .= "\r\n";
 
 			$this->stash_step_data( $row_data );
 
@@ -175,13 +190,28 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 
 		$data = array();
 
-		$start_year  = isset( $_POST['start_year'] )   ? absint( $_POST['start_year'] )   : date( 'Y' );
-		$end_year    = isset( $_POST['end_year'] )     ? absint( $_POST['end_year'] )     : date( 'Y' );
-		$start_month = isset( $_POST['start_month'] )  ? absint( $_POST['start_month'] )  : date( 'm' );
-		$end_month   = isset( $_POST['end_month'] )    ? absint( $_POST['end_month'] )    : date( 'm' );
+		$start_date = date( 'Y-m-d', strtotime( $this->start ) );
+		$maybe_end_date = date( 'Y-m-d', strtotime( 'first day of +1 month', strtotime( $start_date ) ) );
 
-		$start_date = date( 'Y-m-d', strtotime( $start_year . '-' . $start_month . '-01' ) );
-		$end_date = date( 'Y-m-d', strtotime( $end_year . '-' . $end_month . '-01' ) );
+		if ( $this->count() == 0 ) {
+			$end_date = date( 'Y-m-d', strtotime( $this->end ) );
+		} else {
+			$end_date = date( 'Y-m-d', strtotime( 'first day of +1 month', strtotime( $start_date ) ) );
+		}
+
+		if ( $this->step > 1 ) {
+			$start_date = date( 'Y-m-d', strtotime( 'first day of +' . ( $this->step - 1 ) . ' month', strtotime( $start_date ) ) );
+
+			if ( date( 'Y-m', strtotime( $start_date ) ) == date( 'Y-m', strtotime( $this->end ) ) ) {
+				$end_date = date( 'Y-m-d', strtotime( $this->end ) );
+			} else {
+				$end_date = date( 'Y-m-d', strtotime( 'first day of +1 month', strtotime( $start_date ) ) );
+			}
+		}
+
+		if ( strtotime( $start_date ) > strtotime( $this->end ) ) {
+			return false;
+		}
 
 		$totals = $wpdb->get_results( $wpdb->prepare(
 			"SELECT SUM(meta_value) AS total, DATE_FORMAT(posts.post_date, '%%m') AS m, YEAR(posts.post_date) AS y, COUNT(DISTINCT posts.ID) AS count, posts.post_status AS status
@@ -192,48 +222,35 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 			 AND posts.post_date >= %s
 			 AND posts.post_date < %s
 			 GROUP BY YEAR(posts.post_date), MONTH(posts.post_date), posts.post_status
-			 ORDER by posts.post_date ASC", $start_date, date( 'Y-m-d', strtotime( '+1 month', strtotime( $end_date ) ) ) ), ARRAY_A );
+			 ORDER by posts.post_date ASC", $start_date, $end_date ), ARRAY_A );
 
 		foreach ( $totals as $total ) {
-			$key = (int) $total['y'] . $total['m'];
-
-			$data[ $key ][ $total['status'] ] = array(
+			$data[ $total['status'] ] = array(
 				'count' => $total['count'],
 				'amount' => $total['total']
 			);
 		}
 
-		while ( strtotime( $start_date ) <= strtotime( $end_date ) ) {
-			$year = date( 'Y', strtotime( $start_date ) );
-			$month = date( 'm', strtotime( $start_date ) );
-
-			$key = $year . $month;
-
-			if ( ! isset( $data[ $key ] ) ) {
-				$data[ $key ] = array(
-					'publish' => array(
-						'count' => 0,
-						'amount' => 0
-					),
-					'refunded' => array(
-						'count' => 0,
-						'amount' => 0
-					),
-					'cancelled' => array(
-						'count' => 0,
-						'amount' => 0
-					),
-					'revoked' => array(
-						'count' => 0,
-						'amount' => 0
-					),
-				);
-			}
-
-			$start_date = date( 'Y-m-d', strtotime( '+1 month', strtotime( $start_date ) ) );
+		if ( empty( $data ) ) {
+			$data = array(
+				'publish' => array(
+					'count' => 0,
+					'amount' => 0
+				),
+				'refunded' => array(
+					'count' => 0,
+					'amount' => 0
+				),
+				'cancelled' => array(
+					'count' => 0,
+					'amount' => 0
+				),
+				'revoked' => array(
+					'count' => 0,
+					'amount' => 0
+				),
+			);
 		}
-
-		ksort( $data );
 
 		$data = apply_filters( 'edd_export_get_data', $data );
 		$data = apply_filters( 'edd_export_get_data_' . $this->export_type, $data );
@@ -250,18 +267,7 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	 * @return void
 	 */
 	private function count() {
-		$start_month = date( 'm', strtotime( $this->start ) );
-		$start_year = date( 'Y', strtotime( $this->start ) );
-		$end_month = date( 'm', strtotime( $this->end ) );
-		$end_year = date( 'Y', strtotime( $this->end ) );
-
-		if ( $start_year == $end_year ) {
-			$number_of_months = ( $end_month - $start_month ) + 1;
-		} else {
-			$number_of_months = ( ( ( $end_year - $start_year ) * 12 ) - $start_month ) + $end_month + 1;
-		}
-
-		return $number_of_months;
+		return abs( ( date( 'Y', strtotime( $this->end ) ) - date( 'Y', strtotime( $this->start ) ) ) * 12 + ( date( 'm', strtotime( $this->end ) ) - date( 'm', strtotime( $this->start ) ) ) );
 	}
 
 	/**
