@@ -61,39 +61,48 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	 * @return array $cols CSV header.
 	 */
 	public function print_csv_cols() {
-		$col_data = '';
+		$cols = array(
+			__( 'Monthly Sales Activity', 'easy-digital-downloads' ),
+			__( 'Sales', 'easy-digital-downloads' ),
+			__( 'Refunds', 'easy-digital-downloads' ),
+			__( 'Revoked', 'easy-digital-downloads' ),
+			__( 'Abandoned', 'easy-digital-downloads' ),
+			__( 'Failed', 'easy-digital-downloads' ),
+			__( 'Cancelled', 'easy-digital-downloads' ),
+			__( 'Net Activity', 'easy-digital-downloads' )
+		);
 
-		$col_data .= ',,';
-		$col_data .= __( 'Month', 'easy-digital-downloads' );
+		for ( $i = 0; $i < count( $cols ); $i++ ) {
+			$col_data .= $cols[ $i ];
 
-		$start_date = date( 'Y-m-d', strtotime( $this->start ) );
-		$end_date = date( 'Y-m-d', strtotime( $this->end ) );
-
-		while ( strtotime( $start_date ) <= strtotime( $end_date ) ) {
-			$col_data .= date( 'Y-m-d', strtotime( $start_date ) );
-
-			if ( $start_date == $end_date ) {
-				$col_data .= "\r\n";
-			} else {
+			// We don't need an extra space after the first column
+			if ( $i == 0 ) {
 				$col_data .= ',';
+				continue;
 			}
 
-			$start_date = date( 'Y-m-d', strtotime( '+1 month', strtotime( $start_date ) ) );
+			if ( $i == ( count( $cols ) - 1 ) ) {
+				$col_data .= "\r\n";
+			} else {
+				$col_data .= ",,";
+			}
 		}
 
-		$col_data .= ',,';
-		$col_data .= __( 'Currency' );
+		// Subtract 2 for `Net Activity` and `Monthly Sales Activity` column
+		$statuses = count( $cols ) - 2;
 
-		$start_date = date( 'Y-m-d', strtotime( $this->start ) );
-		$end_date = date( 'Y-m-d', strtotime( $this->end ) );
+		$col_data .= ',';
+		for ( $i = 0; $i < $statuses; $i++ ) {
+			$col_data .= __( 'Count', 'easy-digital-downloads' ) . ',' . __( 'Gross Amount', 'easy-digital-downloads' );
 
-		while ( strtotime( $start_date ) <= strtotime( $end_date ) ) {
-			$col_data .= edd_get_currency();
+			if ( $i == ( $statuses - 1 ) ) {
+				$col_data .= "\r\n";
+			} else {
+				$col_data .= ",";
+			}
 		}
 
-		$col_data .= "\r\n\r\n";
-
-		$col_data .= __( 'Monthly Sales Activity', 'easy-digital-downloads' );
+		$col_data .= "\r\n";
 
 		$this->stash_step_data( $col_data );
 
@@ -101,248 +110,15 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	}
 
 	/**
-	 * Output the CSV rows.
+	 * Print the CSV rows for the current step.
 	 *
 	 * @since 2.7
 	 * @access public
 	 *
-	 * @return void
+	 * @return mixed string|false
 	 */
-	public function csv_rows_out() {
-		$start_year  = isset( $_POST['start_year'] )   ? absint( $_POST['start_year'] )   : date( 'Y' );
-		$end_year    = isset( $_POST['end_year'] )     ? absint( $_POST['end_year'] )     : date( 'Y' );
-		$start_month = isset( $_POST['start_month'] )  ? absint( $_POST['start_month'] )  : date( 'm' );
-		$end_month   = isset( $_POST['end_month'] )    ? absint( $_POST['end_month'] )    : date( 'm' );
+	public function print_csv_rows() {
 
-		$start_date = date( 'Y-m-d', strtotime( $start_year . '-' . $start_month . '-01' ) );
-		$end_date = date( 'Y-m-d', strtotime( $end_year . '-' . $end_month . '-01' ) );
-
-		$data = $this->get_data();
-
-		/**
-		 * Month Row.
-		 */
-		$this->col( 2 );
-		echo __( 'Month', 'easy-digital-downloads' ) . ',';
-		while ( strtotime( $start_date ) <= strtotime( $end_date ) ) {
-			echo date( 'Y-m-d', strtotime( $start_date ) );
-
-			if ( $start_date == $end_date ) {
-				$this->row();
-			} else {
-				$this->col();
-			}
-
-			$start_date = date( 'Y-m-d', strtotime( '+1 month', strtotime( $start_date ) ) );
-		}
-
-		/**
-		 * Currency Row.
-		 */
-		$start_date = date( 'Y-m-d', strtotime( $start_year . '-' . $start_month . '-01' ) );
-		$end_date = date( 'Y-m-d', strtotime( $end_year . '-' . $end_month . '-01' ) );
-		$this->col( 2 );
-		echo __( 'Currency', 'easy-digital-downloads' ) . ',';
-		while ( strtotime( $start_date ) <= strtotime( $end_date ) ) {
-			echo edd_get_currency();
-
-			if ( $start_date == $end_date ) {
-				$this->row();
-			} else {
-				echo ',';
-			}
-
-			$start_date = date( 'Y-m-d', strtotime( '+1 month', strtotime( $start_date ) ) );
-		}
-
-		$this->row();
-		echo __( 'Monthly Sales Activity', 'easy-digital-downloads' );
-		$this->row();
-
-		/**
-		 * Sales.
-		 *
-		 * Displays Sales Count and Amount.
-		 */
-		$this->col();
-		echo __( 'Sales' , 'easy-digital-downloads' );
-		$this->col();
-		echo __( 'Count', 'easy-digital-downloads' );
-		$this->col();
-		foreach ( $data as $item ) {
-			echo isset( $item['publish']['count'] ) ? $item['publish']['count'] : 0;
-			$this->col();
-		}
-		$this->row();
-		$this->col( 2 );
-		echo __( 'Gross Amount', 'easy-digital-downloads' );
-		$this->col();
-		foreach ( $data as $item ) {
-			$total = 0;
-			foreach ( $item as $status => $value ) {
-				$total += $value['amount'];
-			}
-			echo $total;
-			$this->col();
-		}
-
-		/**
-		 * Refunds.
-		 *
-		 * Displays Refunds Count and Amount.
-		 */
-		$this->row();
-		$this->col();
-		echo __( 'Refunds' , 'easy-digital-downloads' );
-		$this->col();
-		echo __( 'Count', 'easy-digital-downloads' );
-		$this->col();
-		foreach ( $data as $item ) {
-			echo isset( $item['refunded']['count'] ) ? $item['refunded']['count'] : 0;
-			$this->col();
-		}
-		$this->row();
-		$this->col( 2 );
-		echo __( 'Amount', 'easy-digital-downloads' );
-		$this->col();
-		foreach ( $data as $item ) {
-			echo isset( $item['refunded']['amount'] ) ? '-' . $item['refunded']['amount'] : 0;
-			$this->col();
-		}
-
-		/**
-		 * Revoked.
-		 *
-		 * Displays Revoked Count and Amount.
-		 */
-		$this->row();
-		$this->col();
-		echo __( 'Revoked' , 'easy-digital-downloads' );
-		$this->col();
-		echo __( 'Count', 'easy-digital-downloads' );
-		$this->col();
-		foreach ( $data as $item ) {
-			echo isset( $item['revoked']['count'] ) ? $item['revoked']['count'] : 0;
-			$this->col();
-		}
-		$this->row();
-		$this->col( 2 );
-		echo __( 'Amount', 'easy-digital-downloads' );
-		$this->col();
-		foreach ( $data as $item ) {
-			echo isset( $item['revoked']['amount'] ) ? '-' . $item['revoked']['amount'] : 0;
-			$this->col();
-		}
-
-		/**
-		 * Abandoned.
-		 *
-		 * Displays Abandoned Count and Amount.
-		 */
-		$this->row();
-		$this->col();
-		echo __( 'Abandoned' , 'easy-digital-downloads' );
-		$this->col();
-		echo __( 'Count', 'easy-digital-downloads' );
-		$this->col();
-		foreach ( $data as $item ) {
-			echo isset( $item['abandoned']['count'] ) ? $item['abandoned']['count'] : 0;
-			$this->col();
-		}
-		$this->row();
-		$this->col( 2 );
-		echo __( 'Amount', 'easy-digital-downloads' );
-		$this->col();
-		foreach ( $data as $item ) {
-			echo isset( $item['abandoned']['amount'] ) ? '-' . $item['abandoned']['amount'] : 0;
-			$this->col();
-		}
-
-		/**
-		 * Failed.
-		 *
-		 * Displays Failed Count and Amount.
-		 */
-		$this->row();
-		$this->col();
-		echo __( 'Failed' , 'easy-digital-downloads' );
-		$this->col();
-		echo __( 'Count', 'easy-digital-downloads' );
-		$this->col();
-		foreach ( $data as $item ) {
-			echo isset( $item['failed']['count'] ) ? $item['failed']['count'] : 0;
-			$this->col();
-		}
-		$this->row();
-		$this->col( 2 );
-		echo __( 'Amount', 'easy-digital-downloads' );
-		$this->col();
-		foreach ( $data as $item ) {
-			echo isset( $item['failed']['amount'] ) ? '-' . $item['failed']['amount'] : 0;
-			$this->col();
-		}
-
-		/**
-		 * Cancelled.
-		 *
-		 * Displays Cancelled Count and Amount.
-		 */
-		$this->row();
-		$this->col();
-		echo __( 'Cancelled' , 'easy-digital-downloads' );
-		$this->col();
-		echo __( 'Count', 'easy-digital-downloads' );
-		$this->col();
-		foreach ( $data as $item ) {
-			echo isset( $item['cancelled']['count'] ) ? $item['cancelled']['count'] : 0;
-			$this->col();
-		}
-		$this->row();
-		$this->col( 2 );
-		echo __( 'Amount', 'easy-digital-downloads' );
-		$this->col();
-		foreach ( $data as $item ) {
-			echo isset( $item['cancelled']['amount'] ) ? '-' . $item['cancelled']['amount'] : 0;
-			$this->col();
-		}
-
-		$this->row();
-
-		/**
-		 * Net Activity.
-		 */
-		$this->row();
-		echo __( 'Net Activity', 'easy-digital-downloads' );
-		$this->col( 3 );
-		foreach ( $data as $item ) {
-			echo isset( $item['publish']['amount'] ) ? $item['publish']['amount'] : 0;
-			$this->col();
-		}
-	}
-
-	/**
-	 * Perform the export.
-	 *
-	 * @since 2.7
-	 * @access public
-	 *
-	 * @uses EDD_Export::can_export()
-	 * @uses EDD_Export::headers()
-	 * @uses EDD_Export::csv_cols_out()
-	 * @uses EDD_Export::csv_rows_out()
-	 *
-	 * @return void
-	 */
-	public function export() {
-		if ( ! $this->can_export() )
-			wp_die( __( 'You do not have permission to export data.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
-
-		// Set headers
-		$this->headers();
-
-		$this->csv_rows_out();
-
-		edd_die();
 	}
 
 	/**
