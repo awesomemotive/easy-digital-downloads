@@ -300,18 +300,6 @@ class EDD_Payment {
 	protected $parent_payment = 0;
 
 	/**
-	 * Token to use for generating cache keys.
-	 *
-	 * @since 2.7
-	 * @access public
-	 * @static
-	 * @var string
-	 *
-	 * @see EDD_Payment::get_cache_key()
-	 */
-	public static $cache_token = 'edd_payments';
-
-	/**
 	 * Setup the EDD Payments class
 	 *
 	 * @since 2.5
@@ -2414,19 +2402,5 @@ class EDD_Payment {
 	 */
 	private function get_unlimited() {
 		return apply_filters( 'edd_payment_unlimited_downloads', $this->unlimited, $this->ID, $this );
-	}
-
-	/**
-	 * Retrieves the cache key for the payment object.
-	 *
-	 * @since 2.7
-	 * @access public
-	 * @static
-	 *
-	 * @param int $payment_id Payment ID.
-	 * @return string Cache key for the payment.
-	 */
-	public static function get_cache_key( $payment_id ) {
-		return md5( self::$cache_token . ':' . $payment_id );
 	}
 }
