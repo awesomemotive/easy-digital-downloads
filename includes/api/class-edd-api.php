@@ -30,7 +30,7 @@ class EDD_API {
 	/**
 	 * Latest API Version
 	 */
-	const VERSION = 1;
+	const VERSION = 2;
 
 	/**
 	 * Pretty Print?
@@ -152,14 +152,11 @@ class EDD_API {
 		add_filter( 'query_vars',               array( $this, 'query_vars'       ) );
 		add_action( 'edd_process_api_key',      array( $this, 'process_api_key'  ) );
 
-		// Setup a backwards compatibilty check for user API Keys
+		// Setup a backwards compatibility check for user API Keys
 		add_filter( 'get_user_metadata',        array( $this, 'api_key_backwards_copmat' ), 10, 4 );
 
 		// Determine if JSON_PRETTY_PRINT is available
 		$this->pretty_print = defined( 'JSON_PRETTY_PRINT' ) ? JSON_PRETTY_PRINT : null;
-
-		// Allow API request logging to be turned off
-		$this->log_requests = apply_filters( 'edd_api_log_requests', $this->log_requests );
 
 		// Setup EDD_Stats instance
 		$this->stats = new EDD_Payment_Stats;
@@ -937,6 +934,17 @@ class EDD_API {
 
 		if( is_numeric( $customer ) ) {
 			$field = 'id';
+		} elseif ( is_array( $customer ) ) {
+			// Checking if search is being done by id, email, user_id fields.
+			if ( array_key_exists( 'id', $customer ) ) {
+				$field = 'id';
+			} elseif ( array_key_exists( 'email', $customer ) ) {
+				$field = 'email';
+			} elseif ( array_key_exists( 'user_id', $customer ) ) {
+				$field = 'user_id';
+			}
+
+			$customer = $customer[ $field ];
 		} else {
 			$field = 'email';
 		}
@@ -1020,12 +1028,18 @@ class EDD_API {
 
 			$products['products'] = array();
 
-			$product_list = get_posts( array(
+			$parameters = array(
 				'post_type'        => 'download',
 				'posts_per_page'   => $this->per_page(),
 				'suppress_filters' => true,
-				'paged'            => $this->get_paged()
-			) );
+				'paged'            => $this->get_paged(),
+			);
+
+			if ( isset( $args['s'] ) && !empty( $args['s'] ) ) {
+				$parameters['s'] = $args['s'];
+			}
+
+			$product_list = get_posts( $parameters );
 
 			if ( $product_list ) {
 				$i = 0;
@@ -1422,6 +1436,8 @@ class EDD_API {
 				$sales['sales'][ $i ]['total']          = $payment->total;
 				$sales['sales'][ $i ]['gateway']        = $payment->gateway;
 				$sales['sales'][ $i ]['email']          = $payment->email;
+				$sales['sales'][ $i ]['user_id']        = $payment->user_id;
+				$sales['sales'][ $i ]['customer_id']    = $payment->customer_id;
 				$sales['sales'][ $i ]['date']           = $payment->date;
 				$sales['sales'][ $i ]['products']       = array();
 
@@ -1741,8 +1757,9 @@ class EDD_API {
 	 * @return void
 	 */
 	private function log_request( $data = array() ) {
-		if ( ! $this->log_requests )
+		if ( ! $this->log_requests() ) {
 			return;
+		}
 
 		global $edd_logs, $wp_query;
 
@@ -2176,6 +2193,16 @@ class EDD_API {
 
 		return $term;
 
+	}
+
+	/**
+	 * Disable request logging
+	 *
+	 * @access public
+	 * @since  2.7
+	 */
+	public function log_requests() {
+		return apply_filters( 'edd_api_log_requests', true );
 	}
 
 }

@@ -44,7 +44,7 @@ $status    = edd_get_payment_status( $payment, true );
 		<?php if ( filter_var( $edd_receipt_args['payment_key'], FILTER_VALIDATE_BOOLEAN ) ) : ?>
 			<tr>
 				<td><strong><?php _e( 'Payment Key', 'easy-digital-downloads' ); ?>:</strong></td>
-				<td><?php echo get_post_meta( $payment->ID, '_edd_payment_purchase_key', true ); ?></td>
+				<td><?php echo edd_get_payment_meta( $payment->ID, '_edd_payment_purchase_key', true ); ?></td>
 			</tr>
 		<?php endif; ?>
 
@@ -213,6 +213,10 @@ $status    = edd_get_payment_status( $payment, true );
 						</ul>
 						<?php endif; ?>
 
+						<?php
+						// Allow extensions to extend the product cell
+						do_action( 'edd_purchase_receipt_after_files', $item['id'], $payment->ID, $meta );
+						?>
 					</td>
 					<?php if ( edd_use_skus() ) : ?>
 						<td><?php echo edd_get_download_sku( $item['id'] ); ?></td>

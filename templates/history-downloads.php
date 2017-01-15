@@ -35,12 +35,12 @@ if ( $purchases ) :
 
 					<tr class="edd_download_history_row">
 						<?php
-						$price_id 		= edd_get_cart_item_price_id( $download );
+						$price_id       = edd_get_cart_item_price_id( $download );
 						$download_files = edd_get_download_files( $download['id'], $price_id );
 						$name           = get_the_title( $download['id'] );
 
 						// Retrieve and append the price option name
-						if ( ! empty( $price_id ) ) {
+						if ( is_numeric( $price_id ) ) {
 							$name .= ' - ' . edd_get_price_option_name( $download['id'], $price_id, $payment->ID );
 						}
 
@@ -52,7 +52,7 @@ if ( $purchases ) :
 							<td class="edd_download_download_files">
 								<?php
 
-								if ( edd_is_payment_complete( $payment->ID ) ) :
+								if ( 'publish' == $payment->post_status ) :
 
 									if ( $download_files ) :
 

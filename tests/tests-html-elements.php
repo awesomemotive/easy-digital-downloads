@@ -4,7 +4,7 @@
 /**
  * @group edd_html
  */
-class Test_HTML_Elements extends WP_UnitTestCase {
+class Test_HTML_Elements extends EDD_UnitTestCase {
 	protected $_post_id = null;
 
 	public function setUp() {
@@ -17,6 +17,63 @@ class Test_HTML_Elements extends WP_UnitTestCase {
 	public function test_product_dropdown() {
 		$expected = '<select name="products" id="products" class="edd-select " data-placeholder="Choose a Download" data-search-type="download">';
 		$this->assertContains( $expected, EDD()->html->product_dropdown() );
+	}
+
+	public function test_product_dropdown_value_parse() {
+		$expected = array( 'download_id' => '123', 'price_id' => '1' );
+		$this->assertEquals( $expected, edd_parse_product_dropdown_value( '123_1' ) );
+
+		$expected = array( 'download_id' => '123', 'price_id' => false );
+		$this->assertEquals( $expected, edd_parse_product_dropdown_value( '123' ) );
+
+		$expected = array( 'download_id' => '123', 'price_id' => false );
+		$this->assertEquals( $expected, edd_parse_product_dropdown_value( 123 ) );
+	}
+
+	public function test_product_dropdown_array_parse() {
+		$saved_values = array( 123, '155_1', '155_2', 99 );
+		$expected     = array(
+			array(
+				'download_id' => '123',
+				'price_id'    => false,
+			),
+			array(
+				'download_id' => '155',
+				'price_id'    => '1',
+			),
+			array(
+				'download_id' => '155',
+				'price_id'    => '2',
+			),
+			array(
+				'download_id' => '99',
+				'price_id'    => false,
+			),
+		);
+
+		$this->assertEquals( $expected, edd_parse_product_dropdown_values( $saved_values ) );
+	}
+
+	public function test_product_dropdown_string_parse() {
+		$saved_values = '155';
+		$expected     = array(
+			array(
+				'download_id' => '155',
+				'price_id'    => false,
+			),
+		);
+
+		$this->assertEquals( $expected, edd_parse_product_dropdown_values( $saved_values ) );
+
+		$saved_values = '155_1';
+		$expected     = array(
+			array(
+				'download_id' => '155',
+				'price_id'    => '1',
+			),
+		);
+
+		$this->assertEquals( $expected, edd_parse_product_dropdown_values( $saved_values ) );
 	}
 
 	public function test_customer_dropdown() {
