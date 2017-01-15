@@ -1560,6 +1560,8 @@ function edd_text_callback( $args ) {
 
 	if ( $edd_option ) {
 		$value = $edd_option;
+	} elseif( ! empty( $args['allow_blank'] ) && empty( $edd_option ) ) {
+		$value = '';
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
