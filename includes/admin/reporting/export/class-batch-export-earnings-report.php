@@ -118,7 +118,48 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	 * @return mixed string|false
 	 */
 	public function print_csv_rows() {
+		$row_data = '';
 
+		$data = $this->get_data();
+
+		if ( $data ) {
+			foreach ( $data as $item ) {
+				$row_data .= ','; // Leave first column empty
+
+				$row_data .= isset( $item['publish']['count'] ) ? $item['publish']['count'] : 0 . ',';
+
+				$total = 0;
+				foreach ( $item as $status => $value ) {
+					$total += $value['amount'];
+				}
+				$row_data .= $total . ',';
+
+				$row_data .= isset( $item['refunded']['count'] ) ? $item['refunded']['count'] : 0 . ',';
+				$row_data .= isset( $item['refunded']['amount'] ) ? '-' . $item['refunded']['amount'] : 0 . ',';
+
+				$row_data .= isset( $item['revoked']['count'] ) ? $item['revoked']['count'] : 0 . ',';
+				$row_data .= isset( $item['revoked']['amount'] ) ? '-' . $item['revoked']['amount'] : 0 . ',';
+
+				$row_data .= isset( $item['abandoned']['count'] ) ? $item['abandoned']['count'] : 0 . ',';
+				$row_data .= isset( $item['abandoned']['amount'] ) ? '-' . $item['abandoned']['amount'] : 0 . ',';
+
+				$row_data .= isset( $item['failed']['count'] ) ? $item['failed']['count'] : 0 . ',';
+				$row_data .= isset( $item['failed']['amount'] ) ? '-' . $item['failed']['amount'] : 0 . ',';
+
+				$row_data .= isset( $item['cancelled']['count'] ) ? $item['cancelled']['count'] : 0 . ',';
+				$row_data .= isset( $item['cancelled']['amount'] ) ? '-' . $item['cancelled']['amount'] : 0 . ',';
+
+				$row_data .= isset( $item['publish']['amount'] ) ? $item['publish']['amount'] : 0;
+
+				$row_data .= "\r\n";
+			}
+
+			$this->stash_step_data( $row_data );
+
+			return $row_data;
+		}
+
+		return false;
 	}
 
 	/**
