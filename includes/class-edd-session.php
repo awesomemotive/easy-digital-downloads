@@ -310,23 +310,32 @@ class EDD_Session {
 	 * @return bool
 	 */
 	public function should_start_session() {
-
 		$start_session = true;
 
-		if( ! empty( $_SERVER[ 'REQUEST_URI' ] ) ) {
-
+		if ( ! empty( $_SERVER[ 'REQUEST_URI' ] ) ) {
 			$blacklist = $this->get_blacklist();
 			$uri       = ltrim( $_SERVER[ 'REQUEST_URI' ], '/' );
 			$uri       = untrailingslashit( $uri );
 
-			if( in_array( $uri, $blacklist ) ) {
+			if ( in_array( $uri, $blacklist ) ) {
 				$start_session = false;
 			}
 
-			if( false !== strpos( $uri, 'feed=' ) ) {
+			if ( false !== strpos( $uri, 'feed=' ) ) {
 				$start_session = false;
 			}
+		}
 
+		/**
+		 * Sessions should only be allowed if:
+		 * 	1. A user has an item in their cart
+		 *  2. An EDD AJAX request is currently running
+		 *  3. If we are on the checkout page, or any child pages
+		 */
+		if ( isset( $_COOKIE['edd_items_in_cart'] ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX && false !== strpos( $_REQUEST['action'], 'edd_' ) ) || ( false !== strpos( $_SERVER['REQUEST_URI'], '/checkout' ) ) {
+			$start_session = true;
+		} else {
+			$start_session = false;
 		}
 
 		return apply_filters( 'edd_start_session', $start_session );
