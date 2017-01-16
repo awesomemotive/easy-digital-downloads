@@ -357,6 +357,10 @@ add_action( 'edd_daily_scheduled_events', 'edd_cleanup_stats_transients' );
  */
 function edd_recover_payment() {
 
+	if ( empty( $_GET['payment_id'] ) ) {
+		return;
+	}
+
 	$payment = new EDD_Payment( $_GET['payment_id'] );
 	if ( $payment->ID !== (int) $_GET['payment_id'] ) {
 		return;
@@ -364,6 +368,12 @@ function edd_recover_payment() {
 
 	if ( ! $payment->is_recoverable() ) {
 		return;
+	}
+
+	if ( is_user_logged_in() && $payment->user_id != get_current_user_id() ) {
+		$redirect = get_permalink( edd_get_option( 'purchase_history_page' ) );
+		edd_set_error( 'edd-payment-recovery-user-mismatch', __( 'Error resuming payment.', 'easy-digital-downloads' ) );
+		wp_redirect( $redirect );
 	}
 
 	// Empty out the cart.
@@ -405,6 +415,30 @@ function edd_recover_payment() {
 add_action( 'edd_recover_payment', 'edd_recover_payment' );
 
 /**
+ * If the payment trying to be recovered has a User ID associated with it, be sure it's the same user.
+ *
+ * @since  2.7
+ * @return void
+ */
+function edd_recovery_user_mismatch() {
+	if ( ! edd_is_checkout() ) {
+		return;
+	}
+
+	$resuming_payment = EDD()->session->get( 'edd_resume_payment' );
+	if ( $resuming_payment ) {
+		$payment = new EDD_Payment( $resuming_payment );
+		if ( is_user_logged_in() && $payment->user_id != get_current_user_id() ) {
+			edd_empty_cart();
+			edd_set_error( 'edd-payment-recovery-user-mismatch', __( 'Error resuming payment.', 'easy-digital-downloads' ) );
+			wp_redirect( get_permalink( edd_get_option( 'purchase_page' ) ) );
+			exit;
+		}
+	}
+}
+add_action( 'template_redirect', 'edd_recovery_user_mismatch' );
+
+/**
  * If the payment trying to be recovered has a User ID associated with it, we need them to log in.
  *
  * @since  2.7
@@ -414,7 +448,7 @@ function edd_recovery_force_login_fields() {
 	$resuming_payment = EDD()->session->get( 'edd_resume_payment' );
 	if ( $resuming_payment ) {
 		$payment = new EDD_Payment( $resuming_payment );
-		if ( ! empty( $payment->user_id ) && ( ! is_user_logged_in() || $payment->user_id != get_current_user_id() ) ) {
+		if ( ! empty( $payment->user_id ) && ( ! is_user_logged_in() ) ) {
 			?>
 			<div class="edd-alert edd-alert-info">
 				<p><?php _e( 'To complete this payment, please login to your account.', 'easy-digital-downloads' ); ?></p>
@@ -425,7 +459,7 @@ function edd_recovery_force_login_fields() {
 				</p>
 			</div>
 			<?php
-			$show_register_form = edd_get_option( 'show_register_form', 'none' ) ;
+			$show_register_form = edd_get_option( 'show_register_form', 'none' );
 
 			if ( 'both' === $show_register_form || 'login' === $show_register_form ) {
 				return;
