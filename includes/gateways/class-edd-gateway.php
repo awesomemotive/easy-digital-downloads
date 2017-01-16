@@ -9,6 +9,9 @@
  * @since       2.7
  */
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 abstract class EDD_Gateway {
 	/**
 	 * Checkout ID.
