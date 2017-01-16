@@ -375,9 +375,6 @@ function edd_process_paypal_ipn() {
 
 	}
 
-	// Get the PayPal redirect uri
-	$paypal_redirect = edd_get_paypal_redirect( true );
-
 	if ( ! edd_get_option( 'disable_paypal_verification' ) ) {
 
 		// Validate the IPN
@@ -393,6 +390,7 @@ function edd_process_paypal_ipn() {
 				'connection'   => 'close',
 				'content-type' => 'application/x-www-form-urlencoded',
 				'post'         => '/cgi-bin/webscr HTTP/1.1',
+				'user-agent'   => 'EDD IPN Verification/' . EDD_VERSION . '; ' . get_bloginfo( 'url' )
 
 			),
 			'sslverify'   => false,
@@ -400,7 +398,7 @@ function edd_process_paypal_ipn() {
 		);
 
 		// Get response
-		$api_response = wp_remote_post( edd_get_paypal_redirect( true ), $remote_post_vars );
+		$api_response = wp_remote_post( edd_get_paypal_redirect( true, true ), $remote_post_vars );
 
 		if ( is_wp_error( $api_response ) ) {
 			edd_record_gateway_error( __( 'IPN Error', 'easy-digital-downloads' ), sprintf( __( 'Invalid IPN verification response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $api_response ) ) );
@@ -685,9 +683,11 @@ function edd_process_paypal_refund( $data, $payment_id = 0 ) {
  *
  * @since 1.0.8.2
  * @param bool    $ssl_check Is SSL?
+ * @param bool    $ipn       Is this an IPN verification check?
  * @return string
  */
-function edd_get_paypal_redirect( $ssl_check = false ) {
+function edd_get_paypal_redirect( $ssl_check = false, $ipn = false ) {
+
 	$protocol = 'http://';
 	if ( is_ssl() || ! $ssl_check ) {
 		$protocol = 'https://';
@@ -695,14 +695,36 @@ function edd_get_paypal_redirect( $ssl_check = false ) {
 
 	// Check the current payment mode
 	if ( edd_is_test_mode() ) {
+
 		// Test mode
-		$paypal_uri = $protocol . 'www.sandbox.paypal.com/cgi-bin/webscr';
+
+		if( $ipn ) {
+
+			$paypal_uri = 'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr';
+
+		} else {
+
+			$paypal_uri = $protocol . 'www.sandbox.paypal.com/cgi-bin/webscr';
+
+		}
+
 	} else {
+
 		// Live mode
-		$paypal_uri = $protocol . 'www.paypal.com/cgi-bin/webscr';
+
+		if( $ipn ) {
+
+			$paypal_uri = 'https://ipnpb.paypal.com/cgi-bin/webscr';
+
+		} else {
+
+			$paypal_uri = $protocol . 'www.paypal.com/cgi-bin/webscr';
+
+		}
+
 	}
 
-	return apply_filters( 'edd_paypal_uri', $paypal_uri );
+	return apply_filters( 'edd_paypal_uri', $paypal_uri, $ssl_check, $ipn );
 }
 
 /**
