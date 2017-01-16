@@ -77,6 +77,15 @@ abstract class EDD_Gateway {
 	public $supports;
 
 	/**
+	 * Is test mode?
+	 *
+	 * @access public
+	 * @since  2.7
+	 * @var    bool
+	 */
+	public $test_mode;
+
+	/**
 	 * Empty constructor.
 	 *
 	 * @access public
@@ -98,6 +107,8 @@ abstract class EDD_Gateway {
 	 */
 	private function fill_vars() {
 		$gateways = edd_get_payment_gateways();
+
+		$this->test_mode = edd_is_test_mode();
 
 		if ( array_key_exists( $this->ID, $gateways ) ) {
 			$this->checkout_label = $gateways[ $this->ID ]['checkout_label'];
