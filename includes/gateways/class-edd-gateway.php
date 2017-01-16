@@ -14,13 +14,13 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 abstract class EDD_Gateway {
 	/**
-	 * Checkout ID.
+	 * Gateway ID.
 	 *
 	 * @access public
 	 * @since  2.7
 	 * @var    string
 	 */
-	public $id;
+	public $ID;
 
 	/**
 	 * Checkout Label.
@@ -84,7 +84,27 @@ abstract class EDD_Gateway {
 	 *
 	 * @return void
 	 */
-	public function __construct() {}
+	public function __construct() {
+		$this->fill_vars();
+	}
+
+	/**
+	 * Fill the object vars based on the ID set.
+	 *
+	 * @access private
+	 * @since  2.7
+	 *
+	 * @return void
+	 */
+	private function fill_vars() {
+		$gateways = edd_get_payment_gateways();
+
+		if ( array_key_exists( $this->ID, $gateways ) ) {
+			$this->checkout_label = $gateways[ $this->ID ]['checkout_label'];
+			$this->admin_label = $gateways[ $this->ID ]['admin_label'];
+			$this->supports = $gateways[ $this->ID ]['supports'];
+		}
+	}
 
 	/**
 	 * Used to initialise the gateway.
