@@ -147,7 +147,7 @@ class EDD_Download {
 	 * Given the download data, let's set the variables
 	 *
 	 * @since  2.3.6
-	 * @param  object $download The Download Object
+	 * @param  WP_Post $download The WP_Post object for download.
 	 * @return bool             If the setup was successful or not
 	 */
 	private function setup_download( $download ) {
@@ -790,6 +790,19 @@ class EDD_Download {
 		}
 
 		return (bool) apply_filters( 'edd_is_free_download', $is_free, $this->ID, $price_id );
+
+	}
+
+	/**
+	 * Is quantity input disabled on this product?
+	 *
+	 * @since 2.7
+	 * @return bool
+	 */
+	public function quantities_disabled() {
+
+		$ret = (bool) get_post_meta( $this->ID, '_edd_quantities_disabled', true );
+		return apply_filters( 'edd_download_quantity_disabled', $ret, $this->ID );
 
 	}
 

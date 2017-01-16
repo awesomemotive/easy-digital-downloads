@@ -81,7 +81,6 @@ function edd_load_scripts() {
 			'empty_cart_message'      => __('Your cart is empty','easy-digital-downloads' ), // Item already in the cart message
 			'loading'                 => __('Loading','easy-digital-downloads' ) , // General loading message
 			'select_option'           => __('Please select an option','easy-digital-downloads' ) , // Variable pricing error with multi-purchase option enabled
-			'ajax_loader'             => set_url_scheme( EDD_PLUGIN_URL . 'assets/images/loading.gif', 'relative' ), // AJAX loading image
 			'is_checkout'             => edd_is_checkout() ? '1' : '0',
 			'default_gateway'         => edd_get_default_gateway(),
 			'redirect_to_checkout'    => ( edd_straight_to_checkout() || edd_is_checkout() ) ? '1' : '0',
@@ -140,11 +139,6 @@ function edd_register_styles() {
 
 	wp_register_style( 'edd-styles', $url, array(), EDD_VERSION, 'all' );
 	wp_enqueue_style( 'edd-styles' );
-
-	if( edd_is_checkout() && is_ssl() ) {
-		// Dashicons are used to show the padlock icon on the credit card form
-		wp_enqueue_style( 'dashicons' );
-	}
 }
 add_action( 'wp_enqueue_scripts', 'edd_register_styles' );
 
@@ -184,9 +178,9 @@ function edd_load_admin_scripts( $hook ) {
 	$admin_deps = array();
 
 	if ( ! edd_is_admin_page( $hook, 'edit' ) && ! edd_is_admin_page( $hook, 'new' ) ) {
-		$admin_deps = array( 'jquery', 'inline-edit-post' );
+		$admin_deps = array( 'jquery', 'jquery-form', 'inline-edit-post' );
 	} else {
-		$admin_deps = array( 'jquery' );
+		$admin_deps = array( 'jquery', 'jquery-form' );
 	}
 
 	wp_register_script( 'edd-admin-scripts', $js_dir . 'admin-scripts' . $suffix . '.js', $admin_deps, EDD_VERSION, false );

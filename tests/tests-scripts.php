@@ -3,7 +3,7 @@
 /**
  * @group scripts
  */
-class Tests_Scripts extends WP_UnitTestCase {
+class Tests_Scripts extends EDD_UnitTestCase {
 
 	/**
 	 * Test if all the file hooks are working.
@@ -25,9 +25,10 @@ class Tests_Scripts extends WP_UnitTestCase {
 	 * @since 2.3.6
 	 */
 	public function test_load_scripts_checkout() {
+		global $edd_options;
 
 		// Prepare test
-		$this->go_to( get_permalink( edd_get_option( 'purchase_page' ) ) );
+		$this->go_to( get_permalink( $edd_options['purchase_page'] ) );
 		edd_load_scripts();
 
 		$this->assertTrue( wp_script_is( 'creditCardValidator', 'enqueued' ) );
@@ -85,8 +86,6 @@ class Tests_Scripts extends WP_UnitTestCase {
 		$this->go_to( get_permalink( edd_get_option( 'purchase_page' ) ) );
 		edd_update_option( 'disable_styles', false );
 		edd_register_styles();
-
-		$this->assertTrue( wp_style_is( 'dashicons', 'enqueued' ) );
 
 		$this->go_to( '/' );
 		unset( $_SERVER['HTTPS'] );

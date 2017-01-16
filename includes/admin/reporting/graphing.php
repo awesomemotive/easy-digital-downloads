@@ -37,7 +37,9 @@ function edd_reports_graph() {
 			$day_by_day = true;
 			break;
 		case 'other' :
-			if( $dates['m_end'] - $dates['m_start'] >= 3 || ( $dates['year_end'] > $dates['year'] && ( $dates['m_start'] - $dates['m_end'] ) != 10 ) ) {
+			if ( $dates['m_start'] == 12 && $dates['m_end'] == 1 ) {
+				$day_by_day = true;
+			} elseif ( $dates['m_end'] - $dates['m_start'] >= 3 || ( $dates['year_end'] > $dates['year'] && ( $dates['m_start'] - $dates['m_end'] ) != 10 ) ) {
 				$day_by_day = false;
 			} else {
 				$day_by_day = true;
@@ -55,7 +57,7 @@ function edd_reports_graph() {
 
 	if ( $dates['range'] == 'today' || $dates['range'] == 'yesterday' ) {
 		// Hour by hour
-		$hour  = 1;
+		$hour  = 0;
 		$month = $dates['m_start'];
 
 		$i = 0;
@@ -72,7 +74,7 @@ function edd_reports_graph() {
 			$earnings_totals += $earnings;
 			$earnings_data[] = array( $date, $earnings );
 
-			if ( $sales[ $i ]['h'] == $hour ) {
+			if ( isset( $sales[ $i ] ) && $sales[ $i ]['h'] == $hour ) {
 				$sales_data[] = array( $date, $sales[ $i ]['count'] );
 				$sales_totals += $sales[ $i ]['count'];
 				$i++;
@@ -82,15 +84,11 @@ function edd_reports_graph() {
 
 			$hour++;
 		}
-
 	} elseif ( $dates['range'] == 'this_week' || $dates['range'] == 'last_week' ) {
-
-		$num_of_days = cal_days_in_month( CAL_GREGORIAN, $dates['m_start'], $dates['year'] );
-
 		$report_dates = array();
 		$i = 0;
 		while ( $i <= 6 ) {
-			if ( ( $dates['day'] + $i ) <= $num_of_days ) {
+			if ( ( $dates['day'] + $i ) <= $dates['day_end'] ) {
 				$report_dates[ $i ] = array(
 					'day'   => (string) $dates['day'] + $i,
 					'month' => $dates['m_start'],
@@ -110,7 +108,7 @@ function edd_reports_graph() {
 		$start_date = $report_dates[0];
 		$end_date = end( $report_dates );
 
-		$sales = EDD()->payment_stats->get_sales_by_range( $dates['range'], true, $start_date['year'] . '-' . date( 'm', strtotime( $start_date['month'] ) ) . '-' . date( 'd', strtotime( $start_date['day'] ) ), $end_date['year'] . '-' . date( 'm', strtotime( $end_date['month'] ) ) . '-' . date( 'd', strtotime( $end_date['day'] ) ) );
+		$sales = EDD()->payment_stats->get_sales_by_range( $dates['range'], true, $start_date['year'] . '-' . $start_date['month'] . '-' . $start_date['day'], $end_date['year'] . '-' . $end_date['month'] . '-' . $end_date['day'] );
 
 		$i = 0;
 		foreach ( $report_dates as $report_date ) {
@@ -130,8 +128,21 @@ function edd_reports_graph() {
 		}
 
 	} else {
-		$date_start = $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day'];
-		$date_end = $dates['year_end'] . '-' . $dates['m_end'] . '-' . $dates['day_end'];
+		if ( cal_days_in_month( CAL_GREGORIAN, $dates['m_start'], $dates['year'] ) < $dates['day'] ) {
+			$next_day = mktime( 0, 0, 0, $dates['m_start'] + 1, 1, $dates['year'] );
+			$day = date( 'd', $next_day );
+			$month = date( 'm', $next_day );
+			$year = date( 'Y', $next_day );
+			$date_start = $year . '-' . $month . '-' . $day;
+		} else {
+			$date_start = $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day'];
+		}
+
+		if ( cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] ) < $dates['day_end'] ) {
+			$date_end = $dates['year_end'] . '-' . $dates['m_end'] . '-' . cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] );
+		} else {
+			$date_end = $dates['year_end'] . '-' . $dates['m_end'] . '-' . $dates['day_end'];
+		}
 
 		$sales = EDD()->payment_stats->get_sales_by_range( $dates['range'], $day_by_day, $date_start, $date_end );
 
@@ -150,7 +161,7 @@ function edd_reports_graph() {
 			$sales_totals += $sale['count'];
 		}
 
-		while ( $day_by_day && ( strtotime( $date_start ) <= strtotime( $date_end ) ) ) {
+		while ( $dates['range'] !== 'other' && $day_by_day && ( strtotime( $date_start ) <= strtotime( $date_end ) ) ) {
 			$d = date( 'd', strtotime( $date_start ) );
 			$m = date( 'm', strtotime( $date_start ) );
 			$y = date( 'Y', strtotime( $date_start ) );
@@ -162,7 +173,7 @@ function edd_reports_graph() {
 			$date_start = date( 'Y-m-d', strtotime( '+1 day', strtotime( $date_start ) ) );
 		}
 
-		while ( ! $day_by_day && ( strtotime( $date_start ) <= strtotime( $date_end ) ) ) {
+		while ( $dates['range'] !== 'other' && ! $day_by_day && ( strtotime( $date_start ) <= strtotime( $date_end ) ) ) {
 			$m = date( 'm', strtotime( $date_start ) );
 			$y = date( 'Y', strtotime( $date_start ) );
 
@@ -173,51 +184,27 @@ function edd_reports_graph() {
 			$date_start = date( 'Y-m', strtotime( '+1 month', strtotime( $date_start ) ) );
 		}
 
-		while ( $y <= $dates['year_end'] ) {
-			$last_year = false;
+		if ( cal_days_in_month( CAL_GREGORIAN, $dates['m_start'], $dates['year'] ) < $dates['day'] ) {
+			$next_day = mktime( 0, 0, 0, $dates['m_start'] + 1, 1, $dates['year'] );
+			$day = date( 'd', $next_day );
+			$month = date( 'm', $next_day );
+			$year = date( 'Y', $next_day );
+			$date_start = $year . '-' . $month . '-' . $day;
+		} else {
+			$date_start = $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day'];
+		}
 
-			if ( $dates['year'] == $dates['year_end'] ) {
-				$month_start = $dates['m_start'];
-				$month_end   = $dates['m_end'];
-				$last_year   = true;
-			} elseif( $y == $dates['year'] ) {
-				$month_start = $dates['m_start'];
-				$month_end   = 12;
-			} elseif ( $y == $dates['year_end'] ) {
-				$month_start = 1;
-				$month_end   = $dates['m_end'];
-			} else {
-				$month_start = 1;
-				$month_end   = 12;
-			}
+		while ( strtotime( $date_start ) <= strtotime( $date_end ) ) {
+			$m = date( 'm', strtotime( $date_start ) );
+			$y = date( 'Y', strtotime( $date_start ) );
+			$d = date( 'd', strtotime( $date_start ) );
 
-			$i = $month_start;
-			while ( $i <= $month_end ) {
-				$d = $dates['day'];
+			$earnings = edd_get_earnings_by_date( $d, $m, $y, null, $include_taxes );
+			$earnings_totals += $earnings;
 
-				if ( $i == $month_end ) {
-					$num_of_days = $dates['day_end'];
+			$temp_data['earnings'][ $y ][ $m ][ $d ] = $earnings;
 
-					if ( $month_start < $month_end ) {
-						$d = 1;
-					}
-				} else {
-					$num_of_days = cal_days_in_month( CAL_GREGORIAN, $i, $y );
-				}
-
-				while ( $d <= $num_of_days ) {
-					$earnings         = edd_get_earnings_by_date( $d, $i, $y, null, $include_taxes );
-					$earnings_totals += $earnings;
-
-					$temp_data['earnings'][ $y ][ $i ][ $d ] = $earnings;
-
-					$d++;
-				}
-
-				$i++;
-			}
-
-			$y++;
+			$date_start = date( 'Y-m-d', strtotime( '+1 day', strtotime( $date_start ) ) );
 		}
 
 		$sales_data    = array();
@@ -238,7 +225,9 @@ function edd_reports_graph() {
 			foreach ( $sales_data as $key => $value ) {
 				$timestamps[ $key ] = $value[0];
 			}
-			array_multisort( $timestamps, SORT_ASC, $sales_data );
+			if ( ! empty( $timestamps ) ) {
+				array_multisort( $timestamps, SORT_ASC, $sales_data );
+			}
 
 			foreach ( $temp_data['earnings'] as $year => $months ) {
 				foreach ( $months as $month => $days ) {
@@ -246,7 +235,6 @@ function edd_reports_graph() {
 						$date            = mktime( 0, 0, 0, $month, $day, $year ) * 1000;
 						$earnings_data[] = array( $date, $earnings );
 					}
-
 				}
 			}
 
@@ -285,7 +273,9 @@ function edd_reports_graph() {
 			foreach ( $sales_data as $key => $value ) {
 				$timestamps[ $key ] = $value[0];
 			}
-			array_multisort( $timestamps, SORT_ASC, $sales_data );
+			if ( ! empty( $timestamps ) ) {
+				array_multisort( $timestamps, SORT_ASC, $sales_data );
+			}
 
 			foreach ( $temp_data[ 'earnings' ] as $year => $months ) {
 				$month_keys = array_keys( $months );
@@ -295,7 +285,12 @@ function edd_reports_graph() {
 					$day_keys = array_keys( $days );
 					$last_day = end( $day_keys );
 
-					$consolidated_date = $month === $last_month ? $last_day : 1;
+					$consolidated_date = 1;
+					if( $day_by_day ) {
+
+						$consolidated_date = $month === end( $month_keys ) ? cal_days_in_month( CAL_GREGORIAN, $month, $year ) : 1;
+
+					}
 
 					$earnings        = array_sum( $days );
 					$date            = mktime( 0, 0, 0, $month, $consolidated_date, $year ) * 1000;
@@ -312,7 +307,7 @@ function edd_reports_graph() {
 
 	// start our own output buffer
 	ob_start();
-	?>
+	do_action( 'edd_reports_graph_before' ); ?>
 	<div id="edd-dashboard-widgets-wrap">
 		<div class="metabox-holder" style="padding-top: 0;">
 			<div class="postbox">
@@ -371,7 +366,8 @@ function edd_reports_graph() {
 			</div>
 		</div>
 	</div>
-	<?php
+	<?php do_action( 'edd_reports_graph_after' );
+
 	// get output buffer contents and end our own buffer
 	$output = ob_get_contents();
 	ob_end_clean();
@@ -430,7 +426,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 	if ( $dates['range'] == 'today' || $dates['range'] == 'yesterday' ) {
 		// Hour by hour
 		$month  = $dates['m_start'];
-		$hour   = 1;
+		$hour   = 0;
 		$minute = 0;
 		$second = 0;
 		while ( $hour <= 23 ) :
@@ -813,6 +809,7 @@ function edd_get_report_dates() {
 			$dates['m_end']     = $month;
 			$dates['year']      = $year;
 			$dates['year_end']  = $year;
+			$dates['day_end']   = $day;
 		break;
 
 		case 'this_week' :
@@ -912,3 +909,44 @@ function edd_parse_report_dates( $data ) {
 	wp_redirect( add_query_arg( $dates, admin_url( 'edit.php?post_type=download&page=edd-reports&view=' . esc_attr( $view ) . '&download-id=' . absint( $id ) . '&exclude_taxes=' . absint( $exclude_taxes ) ) ) ); edd_die();
 }
 add_action( 'edd_filter_reports', 'edd_parse_report_dates' );
+
+/**
+ * EDD Reports Refresh Button
+ * @since 2.7
+ * @description: Outputs a "Refresh Reports" button for graphs
+ */
+function edd_reports_refresh_button() {
+
+	$url = wp_nonce_url( add_query_arg( array(
+		'edd_action'  => 'refresh_reports_transients',
+		'edd-message' => 'refreshed-reports'
+	) ), 'edd-refresh-reports' );
+
+	echo '<a href="' . $url . '" title="' . __( 'Clicking this will clear the reports cache', 'easy-digital-downloads' ) . '"  class="button edd-refresh-reports-button">' . __( 'Refresh Reports', 'easy-digital-downloads' ) . '</a>';
+
+}
+
+add_action( 'edd_reports_graph_after', 'edd_reports_refresh_button' );
+
+/**
+ * EDD trigger the refresh of reports transients
+ *
+ * @since 2.7
+ *
+ * @param array $data Parameters sent from Settings page
+ * @return void
+ */
+function edd_run_refresh_reports_transients( $data ) {
+	if ( ! wp_verify_nonce( $data['_wpnonce'], 'edd-refresh-reports' ) ) {
+		return;
+	}
+
+	// Delete transients
+	delete_transient( 'edd_stats_earnings' );
+	delete_transient( 'edd_stats_sales' );
+	delete_transient( 'edd_estimated_monthly_stats' );
+	delete_transient( 'edd_earnings_total' );
+	delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
+	delete_transient( md5( 'edd_earnings_todaytoday' ) );
+}
+add_action( 'edd_refresh_reports_transients', 'edd_run_refresh_reports_transients' );
