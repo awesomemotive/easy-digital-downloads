@@ -94,8 +94,8 @@ function edd_process_download() {
 			} else {
 				if ( $thumbnail_size ) {
 					$attachment_data = wp_get_attachment_image_src( $attachment_id, $thumbnail_size, false );
-					if ( false !== $attachment_data ) {
-						$attached_file = $attachment_data['url'];
+					if ( false !== $attachment_data && ! empty( $attachment_data[0] ) && filter_var( $attachment_data[0], FILTER_VALIDATE_URL) === false ) {
+						$attached_file = $attachment_data['0'];
 					}
 				} else {
 					$attached_file = get_attached_file( $attachment_id, false );
