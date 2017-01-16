@@ -761,8 +761,14 @@ function edd_get_purchase_form_user( $valid_data = array() ) {
 
 			// Set user
 			$user = $valid_data['login_user_data'];
+
 			// Login user
-			edd_log_user_in( $user['user_id'], $user['user_login'], $user['user_pass'] );
+			if ( empty( $user ) || $user['user_id'] == -1 ) {
+				edd_set_error( 'invalid_user', __( 'The user information is invalid', 'easy-digital-downloads' ) );
+				return false;
+			} else {
+				edd_log_user_in( $user['user_id'], $user['user_login'], $user['user_pass'] );
+			}
 		}
 	}
 
@@ -946,7 +952,7 @@ function edd_purchase_form_validate_cc_zip( $zip = 0, $country_code = '' ) {
 		"KE" => "\d{5}",
 		"KG" => "\d{6}",
 		"KH" => "\d{5}",
-		"KR" => "\d{3}[\-]\d{3}",
+		"KR" => "\d{5}",
 		"KW" => "\d{5}",
 		"KZ" => "\d{6}",
 		"LA" => "\d{5}",
