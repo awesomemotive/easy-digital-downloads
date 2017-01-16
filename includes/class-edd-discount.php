@@ -1422,7 +1422,7 @@ class EDD_Discount {
 				// Discount has pased the start date
 				$return = true;
 			} elseif( $set_error ) {
-				edd_set_error( 'edd-discount-error', __( 'This discount is not active yet.', 'easy-digital-downloads' ) );
+				edd_set_error( 'edd-discount-error', _x( 'This discount is invalid.', 'error shown when attempting to use a discount before its start date', 'easy-digital-downloads' ) );
 			}
 		} else {
 			// No start date for this discount, so has to be true
@@ -1775,7 +1775,7 @@ class EDD_Discount {
 				$return = true;
 			}
 		} elseif( $set_error ) {
-			edd_set_error( 'edd-discount-error', __( 'This discount is invalid.', 'easy-digital-downloads' ) );
+			edd_set_error( 'edd-discount-error', _x( 'This discount is invalid.', 'error for when a discount is invalid based on its configuration' , 'easy-digital-downloads' ) );
 		}
 
 		/**
