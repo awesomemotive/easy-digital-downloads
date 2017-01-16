@@ -36,6 +36,7 @@ class edd_cart_widget extends WP_Widget {
 	/** Constructor */
 	function __construct() {
 		parent::__construct( 'edd_cart_widget', __( 'Downloads Cart', 'easy-digital-downloads' ), array( 'description' => __( 'Display the downloads shopping cart', 'easy-digital-downloads' ) ) );
+		add_filter( 'dynamic_sidebar_params', array( $this, 'cart_widget_class' ), 10, 1 );
 	}
 
 	/** @see WP_Widget::widget */
@@ -49,19 +50,6 @@ class edd_cart_widget extends WP_Widget {
 		$instance['title'] = ( isset( $instance['title'] ) ) ? $instance['title'] : '';
 
 		$title = apply_filters( 'widget_title', $instance['title'], $instance, $args['id'] );
-
-		$instance['hide_on_empty'] = ( isset( $instance['hide_on_empty'] ) ) ? $instance['hide_on_empty'] : false;
-
-		$classes = array( 'edd-cart-widget-wrapper' );
-		if ( $instance['hide_on_empty'] ) {
-			$classes[] = 'edd-hide-on-empty';
-		}
-
-		$cart_quantity = edd_get_cart_quantity();
-		$classes[]     = empty( $cart_quantity ) ? 'cart-empty' : 'cart-not-empty';
-
-		$args['before_widget'] .= '<div class="' . implode( ' ', $classes ) . '">';
-		$args['after_widget'] = '</div>' . $args['after_widget'];
 
 		echo $args['before_widget'];
 
@@ -118,6 +106,32 @@ class edd_cart_widget extends WP_Widget {
 
 		<?php
 	}
+
+	/**
+	 * Check if the widget needs to be hidden when empty.
+	 *
+	 * @since 2.7
+	 * @param $params
+	 *
+	 * @return array
+	 */
+	public function cart_widget_class( $params ) {
+		if ( strpos( $params[0]['widget_id'], 'edd_cart_widget' ) !== false ) {
+			$instance_id       = $params[1]['number'];
+			$all_settings      = $this->get_settings();
+			$instance_settings = $all_settings[ $instance_id ];
+
+			if ( ! empty( $instance_settings['hide_on_empty'] ) ) {
+				$cart_quantity = edd_get_cart_quantity();
+				$class         = empty( $cart_quantity ) ? 'cart-empty' : 'cart-not-empty';
+
+				$params[0]['before_widget'] = preg_replace( '/class="(.*?)"/', 'class="$1 edd-hide-on-empty ' . $class . '"', $params[0]['before_widget'] );
+			}
+		}
+
+		return $params;
+	}
+
 }
 
 /**
