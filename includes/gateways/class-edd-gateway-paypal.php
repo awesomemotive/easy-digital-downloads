@@ -81,6 +81,16 @@ class EDD_Gateway_PayPal extends EDD_Gateway {
 	 * @return void
 	 */
 	public function init() {
-
+		if ( $this->test_mode ) {
+			$this->api_endpoint = 'https://api-3t.sandbox.paypal.com/nvp';
+			$this->username     = edd_get_option( 'paypal_test_api_username' );
+			$this->password     = edd_get_option( 'paypal_test_api_password' );
+			$this->signature    = edd_get_option( 'paypal_test_api_signature' );
+		} else {
+			$this->api_endpoint = 'https://api-3t.paypal.com/nvp';
+			$this->username     = edd_get_option( 'paypal_live_api_username' );
+			$this->password     = edd_get_option( 'paypal_live_api_password' );
+			$this->signature    = edd_get_option( 'paypal_live_api_signature' );
+		}
 	}
 }
