@@ -103,7 +103,6 @@ class Tests_Widgets extends EDD_UnitTestCase {
 		$this->assertContains( '<li class="cart_item empty">', $output );
 		$this->assertContains( '<li class="cart_item edd-cart-meta edd_total"', $output );
 		$this->assertContains( '<li class="cart_item edd_checkout"', $output );
-		$this->assertNotContains( 'edd-hide-on-empty', $output );
 
 	}
 
@@ -129,7 +128,6 @@ class Tests_Widgets extends EDD_UnitTestCase {
 		$this->assertContains( '<li class="cart_item empty">', $output );
 		$this->assertContains( '<li class="cart_item edd-cart-meta edd_total"', $output );
 		$this->assertContains( '<li class="cart_item edd_checkout"', $output );
-		$this->assertContains( 'edd-hide-on-empty', $output );
 
 	}
 
