@@ -227,120 +227,99 @@ jQuery(document).ready(function ($) {
 		},
 
 		files : function() {
-			if( typeof wp === "undefined" || '1' !== edd_vars.new_media_ui ){
-				//Old Thickbox uploader
-				if ( $( '.edd_upload_file_button' ).length > 0 ) {
-					window.formfield = '';
+			var file_frame;
+			window.formfield = '';
 
-					$( document.body ).on('click', '.edd_upload_file_button', function(e) {
-						e.preventDefault();
-						window.formfield = $(this).parent().prev();
-						window.tbframe_interval = setInterval(function() {
-							jQuery('#TB_iframeContent').contents().find('.savesend .button').val(edd_vars.use_this_file).end().find('#insert-gallery, .wp-post-thumbnail').hide();
-						}, 2000);
-						if (edd_vars.post_id != null ) {
-							var post_id = 'post_id=' + edd_vars.post_id + '&';
-						}
-						tb_show(edd_vars.add_new_download, 'media-upload.php?' + post_id +'TB_iframe=true');
-					});
+			$( document.body ).on('click', '.edd_upload_file_button', function(e) {
 
-					window.edd_send_to_editor = window.send_to_editor;
-					window.send_to_editor = function (html) {
-						if (window.formfield) {
-							imgurl = $('a', '<div>' + html + '</div>').attr('href');
-							window.formfield.val(imgurl);
-							window.clearInterval(window.tbframe_interval);
-							tb_remove();
-						} else {
-							window.edd_send_to_editor(html);
-						}
-						window.send_to_editor = window.edd_send_to_editor;
-						window.formfield = '';
-						window.imagefield = false;
-					};
-				}
-			} else {
-				// WP 3.5+ uploader
-				var file_frame;
-				window.formfield = '';
+				e.preventDefault();
 
-				$( document.body ).on('click', '.edd_upload_file_button', function(e) {
+				var button = $(this);
 
-					e.preventDefault();
+				window.formfield = $(this).closest('.edd_repeatable_upload_wrapper');
 
-					var button = $(this);
-
-					window.formfield = $(this).closest('.edd_repeatable_upload_wrapper');
-
-					// If the media frame already exists, reopen it.
-					if ( file_frame ) {
-						//file_frame.uploader.uploader.param( 'post_id', set_to_post_id );
-						file_frame.open();
-						return;
-					}
-
-					// Create the media frame.
-					file_frame = wp.media.frames.file_frame = wp.media( {
-						frame: 'post',
-						state: 'insert',
-						title: button.data( 'uploader-title' ),
-						button: {
-							text: button.data( 'uploader-button-text' )
-						},
-						multiple: $( this ).data( 'multiple' ) == '0' ? false : true  // Set to true to allow multiple files to be selected
-					} );
-
-					file_frame.on( 'menu:render:default', function( view ) {
-						// Store our views in an object.
-						var views = {};
-
-						// Unset default menu items
-						view.unset( 'library-separator' );
-						view.unset( 'gallery' );
-						view.unset( 'featured-image' );
-						view.unset( 'embed' );
-
-						// Initialize the views in our view object.
-						view.set( views );
-					} );
-
-					// When an image is selected, run a callback.
-					file_frame.on( 'insert', function() {
-
-						var selection = file_frame.state().get('selection');
-						selection.each( function( attachment, index ) {
-							attachment = attachment.toJSON();
-							if ( 0 === index ) {
-								// place first attachment in field
-								window.formfield.find( '.edd_repeatable_attachment_id_field' ).val( attachment.id );
-								window.formfield.find( '.edd_repeatable_upload_field' ).val( attachment.url );
-								window.formfield.find( '.edd_repeatable_name_field' ).val( attachment.title );
-							} else {
-								// Create a new row for all additional attachments
-								var row = window.formfield,
-									clone = EDD_Download_Configuration.clone_repeatable( row );
-
-								clone.find( '.edd_repeatable_attachment_id_field' ).val( attachment.id );
-								clone.find( '.edd_repeatable_upload_field' ).val( attachment.url );
-								if ( attachment.title.length > 0 ) {
-									clone.find( '.edd_repeatable_name_field' ).val( attachment.title );
-								} else {
-									clone.find( '.edd_repeatable_name_field' ).val( attachment.filename );
-								}
-								clone.insertAfter( row );
-							}
-						});
-					});
-
-					// Finally, open the modal
+				// If the media frame already exists, reopen it.
+				if ( file_frame ) {
+					//file_frame.uploader.uploader.param( 'post_id', set_to_post_id );
 					file_frame.open();
+					return;
+				}
+
+				// Create the media frame.
+				file_frame = wp.media.frames.file_frame = wp.media( {
+					frame: 'post',
+					state: 'insert',
+					title: button.data( 'uploader-title' ),
+					button: {
+						text: button.data( 'uploader-button-text' )
+					},
+					multiple: $( this ).data( 'multiple' ) == '0' ? false : true  // Set to true to allow multiple files to be selected
+				} );
+
+				file_frame.on( 'menu:render:default', function( view ) {
+					// Store our views in an object.
+					var views = {};
+
+					// Unset default menu items
+					view.unset( 'library-separator' );
+					view.unset( 'gallery' );
+					view.unset( 'featured-image' );
+					view.unset( 'embed' );
+
+					// Initialize the views in our view object.
+					view.set( views );
+				} );
+
+				// When an image is selected, run a callback.
+				file_frame.on( 'insert', function() {
+
+					var selection = file_frame.state().get('selection');
+					selection.each( function( attachment, index ) {
+						attachment = attachment.toJSON();
+
+						var selectedSize = 'image' === attachment.type ? $('.attachment-display-settings .size option:selected').val() : false;
+						var selectedURL  = attachment.url;
+						var selectedName = attachment.title.length > 0 ? attachment.title : attachment.filename;
+
+						if ( selectedSize && typeof attachment.sizes[selectedSize] != "undefined" ) {
+							selectedURL = attachment.sizes[selectedSize].url;
+						}
+
+						if ( 'image' === attachment.type ) {
+							if ( selectedSize && typeof attachment.sizes[selectedSize] != "undefined" ) {
+								selectedName = selectedName + '-' + attachment.sizes[selectedSize].width + 'x' + attachment.sizes[selectedSize].height;
+							} else {
+								selectedName = selectedName + '-' + attachment.width + 'x' + attachment.height;
+							}
+						}
+
+						if ( 0 === index ) {
+							// place first attachment in field
+							window.formfield.find( '.edd_repeatable_attachment_id_field' ).val( attachment.id );
+							window.formfield.find( '.edd_repeatable_thumbnail_size_field').val( selectedSize );
+							window.formfield.find( '.edd_repeatable_upload_field' ).val( selectedURL );
+							window.formfield.find( '.edd_repeatable_name_field' ).val( selectedName );
+						} else {
+							// Create a new row for all additional attachments
+							var row = window.formfield,
+								clone = EDD_Download_Configuration.clone_repeatable( row );
+
+							clone.find( '.edd_repeatable_attachment_id_field' ).val( attachment.id );
+							clone.find( 'edd_repeatable_thumbnail_size_field' ).val( selectedSize );
+							clone.find( '.edd_repeatable_upload_field' ).val( selectedURL );
+							clone.find( '.edd_repeatable_name_field' ).val( selectedName );
+							clone.insertAfter( row );
+						}
+					});
 				});
 
+				// Finally, open the modal
+				file_frame.open();
+			});
 
-				// WP 3.5+ uploader
-				var file_frame;
-				window.formfield = '';
-			}
+
+			var file_frame;
+			window.formfield = '';
 
 		},
 
