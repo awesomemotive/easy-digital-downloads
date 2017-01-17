@@ -111,25 +111,37 @@ $customer       = new EDD_Customer( $payment->customer_id );
 
 										<div class="edd-order-discount edd-admin-box-inside">
 											<p>
-												<span class="label"><?php _e( 'Discount Code', 'easy-digital-downloads' ); ?>:</span>&nbsp;
+												<?php
+													$discounts = $payment->discounts !== 'none' ? $payment->discounts : false;
+
+													if ( $discounts && ! is_array( $discounts ) ) {
+														$discounts = explode( ',', $discounts );
+													}
+
+													$used_discounts = count( $discounts );
+												?>
+												<span class="label"><?php echo _n( 'Discount Code', 'Discount Codes', $used_discounts, 'easy-digital-downloads' ); ?>:</span>&nbsp;
 												<span>
 													<?php
-													if ( $payment->discounts !== 'none' ) {
-
-														$discounts = $payment->discounts;
-														if ( ! is_array( $discounts ) ) {
-															$discounts = explode( ',', $discounts );
-														}
+													if ( $discounts ) {
+														$count = 1;
 
 														foreach ( $discounts as $discount ) {
 															$discount_obj = edd_get_discount_by_code( $discount );
+															$classes      = 'edd-order-discount-item';
+															$classes     .= $count == $used_discounts ? ' edd-order-discount-last-item' : '';
 
+															echo '<div class="' . $classes . '">';
 															if ( false === $discount_obj ) {
-																echo '<code>' . $discount . '</code>';
+																echo '<pre>' . $discount . '</pre>';
 															} else {
-																echo '<code><a href="' . $discount_obj->edit_url() . '">' . $discount_obj->code . '</a></code>';
+																echo '<pre>' . $discount_obj->code . '</pre>';
+																echo '<span class="edd-order-discount-item-amount">&nbsp;&ndash;&nbsp;' . edd_format_discount_rate( edd_get_discount_type( $discount_obj->ID ), edd_get_discount_amount( $discount_obj->ID ) ) . '&nbsp;' . __( 'discount', 'easy-digital-downloads' ) . '</span>';
+																echo '<a class="edd-order-discount-item-link" title="' . __( 'Edit Discount', 'easy-digital-downloads' ) . '" href="' . $discount_obj->edit_url() . '"><span class="dashicons dashicons-admin-links"></span></a>';
 															}
+															echo '</div>';
 
+															$count++;
 														}
 
 
