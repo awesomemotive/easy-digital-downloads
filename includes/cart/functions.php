@@ -275,6 +275,9 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 	// Clear all the checkout errors, if any
 	edd_clear_errors();
 
+	// Make sure PHP knows we have items in the cart
+	EDD()->session->set_cart_cookie( true );
+
 	return count( $cart ) - 1;
 }
 
@@ -303,6 +306,10 @@ function edd_remove_from_cart( $cart_key ) {
 
 	// Clear all the checkout errors, if any
 	edd_clear_errors();
+
+	if ( empty( $cart ) ) {
+		EDD()->session->set_cart_cookie( false );
+	}
 
 	return $cart; // The updated cart items
 }

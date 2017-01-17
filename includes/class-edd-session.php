@@ -328,11 +328,12 @@ class EDD_Session {
 
 		/**
 		 * Sessions should only be allowed if:
-		 * 	1. A user has an item in their cart
+		 *  1. A user has an item in their cart
 		 *  2. An EDD AJAX request is currently running
 		 *  3. If we are on the checkout page, or any child pages
 		 */
-		if ( isset( $_COOKIE['edd_items_in_cart'] ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX && false !== strpos( $_REQUEST['action'], 'edd_' ) ) || ( is_page( edd_get_option( 'purchase_page' ) ) ) ) {
+		$current_page = get_queried_object();
+		if ( isset( $_COOKIE['edd_items_in_cart'] ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX && false !== strpos( $_REQUEST['action'], 'edd_' ) ) || ( is_a( $current_page, 'WP_Page' ) && $current_page->ID == edd_get_option( 'purchase_page' ) ) ) {
 			$start_session = true;
 		} else {
 			$start_session = false;

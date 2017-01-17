@@ -73,6 +73,7 @@ jQuery(document).ready(function ($) {
 					}
 
 					$('body').trigger('edd_cart_item_removed', [ response ]);
+
 				}
 			}
 		}).fail(function (response) {
