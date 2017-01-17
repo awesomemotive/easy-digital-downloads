@@ -146,17 +146,6 @@ $customer       = new EDD_Customer( $payment->customer_id );
 
 													}
 													?>
-												<span class="label">
-													<?php echo _n( 'Discount Code', 'Discount Codes', count( $found_discounts ), 'easy-digital-downloads' ); ?>:
-												</span>&nbsp;
-												<span>
-													<?php
-													if ( ! empty( $found_discounts ) ) {
-														echo implode( ', ', $found_discounts );
-													} else {
-														_e( 'None', 'easy-digital-downloads' );
-													}
-													?>
 												</span>
 											</p>
 										</div>
