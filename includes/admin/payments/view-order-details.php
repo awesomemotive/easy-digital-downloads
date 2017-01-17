@@ -145,8 +145,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 														}
 
 													}
-												}
-												?>
+													?>
 												<span class="label">
 													<?php echo _n( 'Discount Code', 'Discount Codes', count( $found_discounts ), 'easy-digital-downloads' ); ?>:
 												</span>&nbsp;
