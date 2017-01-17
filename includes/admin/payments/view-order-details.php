@@ -111,32 +111,35 @@ $customer       = new EDD_Customer( $payment->customer_id );
 
 										<div class="edd-order-discount edd-admin-box-inside">
 											<p>
-												<span class="label"><?php _e( 'Discount Code', 'easy-digital-downloads' ); ?>:</span>&nbsp;
+												<?php
+												$found_discounts = array();
+												if ( 'none' !== $payment->discounts ) {
+													$discounts = $payment->discounts;
+													if ( ! is_array( $discounts ) ) {
+														$discounts = explode( ',', $discounts );
+													}
+
+													foreach ( $discounts as $discount ) {
+														$discount_obj = edd_get_discount_by_code( $discount );
+
+														if ( false === $discount_obj ) {
+															$found_discounts[] = $discount;
+														} else {
+															$found_discounts[] = '<a href="' . $discount_obj->edit_url() . '">' . $discount_obj->code . '</a>';
+														}
+
+													}
+												}
+												?>
+												<span class="label">
+													<?php echo _n( 'Discount Code', 'Discount Codes', count( $found_discounts ), 'easy-digital-downloads' ); ?>:
+												</span>&nbsp;
 												<span>
 													<?php
-													if ( $payment->discounts !== 'none' ) {
-
-														$discounts = $payment->discounts;
-														if ( ! is_array( $discounts ) ) {
-															$discounts = explode( ',', $discounts );
-														}
-
-														foreach ( $discounts as $discount ) {
-															$discount_obj = edd_get_discount_by_code( $discount );
-
-															if ( false === $discount_obj ) {
-																echo '<code>' . $discount . '</code>';
-															} else {
-																echo '<code><a href="' . $discount_obj->edit_url() . '">' . $discount_obj->code . '</a></code>';
-															}
-
-														}
-
-
+													if ( ! empty( $found_discounts ) ) {
+														echo implode( ', ', $found_discounts );
 													} else {
-
 														_e( 'None', 'easy-digital-downloads' );
-
 													}
 													?>
 												</span>
