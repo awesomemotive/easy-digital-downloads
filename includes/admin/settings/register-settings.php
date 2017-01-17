@@ -1118,15 +1118,17 @@ function edd_settings_sanitize_gateways( $input ) {
 		return $input;
 	}
 
-	if ( ! in_array( $input['default_gateway'], $input['gateways'] ) ) {
-		$gateways = edd_get_payment_gateways();
+	if ( ! array_key_exists( $input['default_gateway'], $input['gateways'] ) ) {
+		$enabled_gateways = edd_get_enabled_payment_gateways();
+		$all_gateways     = edd_get_payment_gateways();
+		$selected_default = $all_gateways[ $input['default_gateway'] ];
 
-		$key = array_key_exists( $input['default_gateway'], $gateways );
+		reset( $enabled_gateways );
+		$first_gateway = key( $enabled_gateways );
 
-		if ( $key ) {
-			$input['gateways'][ $input['default_gateway'] ] = "1";
-
-			add_settings_error( 'edd-notices', '', sprintf( __( '%s has been enabled as it was disabled but selected as the default gateway.', 'easy-digital-downloads' ), $gateways[ $input['default_gateway']]['admin_label'] ), 'updated' );
+		if ( $first_gateway ) {
+			add_settings_error( 'edd-notices', '', sprintf( __( '%s could not be set as the default gateway. It must first be enabled.', 'easy-digital-downloads' ), $selected_default['admin_label'] ), 'error' );
+			$input['default_gateway'] = $first_gateway;
 		}
 	}
 
