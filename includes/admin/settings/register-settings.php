@@ -1557,6 +1557,8 @@ function edd_text_callback( $args ) {
 
 	if ( $edd_option ) {
 		$value = $edd_option;
+	} elseif( ! empty( $args['allow_blank'] ) && empty( $edd_option ) ) {
+		$value = '';
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
@@ -1782,12 +1784,12 @@ function edd_rich_editor_callback( $args ) {
 
 	if ( $edd_option ) {
 		$value = $edd_option;
-
-		if( empty( $args['allow_blank'] ) && empty( $value ) ) {
+	} else {
+		if( ! empty( $args['allow_blank'] ) && empty( $edd_option ) ) {
+			$value = '';
+		} else {
 			$value = isset( $args['std'] ) ? $args['std'] : '';
 		}
-	} else {
-		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
 
 	$rows = isset( $args['size'] ) ? $args['size'] : 20;

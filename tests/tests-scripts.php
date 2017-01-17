@@ -87,8 +87,6 @@ class Tests_Scripts extends EDD_UnitTestCase {
 		edd_update_option( 'disable_styles', false );
 		edd_register_styles();
 
-		$this->assertTrue( wp_style_is( 'dashicons', 'enqueued' ) );
-
 		$this->go_to( '/' );
 		unset( $_SERVER['HTTPS'] );
 
