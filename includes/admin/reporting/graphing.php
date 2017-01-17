@@ -183,7 +183,7 @@ function edd_reports_graph() {
 			$earnings_totals += $earning['total'];
 		}
 
-		while ( $dates['range'] !== 'other' && $day_by_day && ( strtotime( $date_start ) <= strtotime( $date_end ) ) ) {
+		while ( $day_by_day && ( strtotime( $date_start ) <= strtotime( $date_end ) ) ) {
 			$d = date( 'd', strtotime( $date_start ) );
 			$m = date( 'm', strtotime( $date_start ) );
 			$y = date( 'Y', strtotime( $date_start ) );
@@ -199,7 +199,7 @@ function edd_reports_graph() {
 			$date_start = date( 'Y-m-d', strtotime( '+1 day', strtotime( $date_start ) ) );
 		}
 
-		while ( $dates['range'] !== 'other' && ! $day_by_day && ( strtotime( $date_start ) <= strtotime( $date_end ) ) ) {
+		while ( ! $day_by_day && ( strtotime( $date_start ) <= strtotime( $date_end ) ) ) {
 			$m = date( 'm', strtotime( $date_start ) );
 			$y = date( 'Y', strtotime( $date_start ) );
 
