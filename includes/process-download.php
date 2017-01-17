@@ -75,6 +75,7 @@ function edd_process_download() {
 		// Payment has been verified, setup the download
 		$download_files = edd_get_download_files( $args['download'] );
 		$attachment_id  = ! empty( $download_files[ $args['file_key'] ]['attachment_id'] ) ? absint( $download_files[ $args['file_key'] ]['attachment_id'] ) : false;
+		$thumbnail_size = ! empty( $download_files[ $args['file_key'] ]['thumbnail_size']) ? sanitize_text_field( $download_files[ $args['file_key'] ]['thumbnail_size'] ) : false;
 		$requested_file = isset( $download_files[ $args['file_key'] ]['file'] ) ? $download_files[ $args['file_key'] ]['file'] : '';
 
 		/*
@@ -85,11 +86,25 @@ function edd_process_download() {
 
 			if( 'redirect' == $method ) {
 
-				$attached_file = wp_get_attachment_url( $attachment_id );
+				if ( $thumbnail_size ) {
+					$attached_file = wp_get_attachment_image_url( $attachment_id, $thumbnail_size, false );
+				} else {
+					$attached_file = wp_get_attachment_url( $attachment_id );
+				}
 
 			} else {
+				if ( $thumbnail_size ) {
+					$attachment_data = wp_get_attachment_image_src( $attachment_id, $thumbnail_size, false );
+					if ( false !== $attachment_data && ! empty( $attachment_data[0] ) && filter_var( $attachment_data[0], FILTER_VALIDATE_URL) !== false ) {
+						$attached_file  = $attachment_data['0'];
+						$attached_file  = str_replace( site_url(), '', $attached_file );
+						$attached_file  = realpath( ABSPATH . $attached_file );
+					}
+				}
 
-				$attached_file = get_attached_file( $attachment_id, false );
+				if ( empty( $attached_file ) ) {
+					$attached_file = get_attached_file( $attachment_id, false );
+				}
 
 				// Confirm the file exists
 				if( ! file_exists( $attached_file ) ) {
