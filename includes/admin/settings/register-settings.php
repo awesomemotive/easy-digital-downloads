@@ -1118,8 +1118,14 @@ function edd_settings_sanitize_gateways( $input ) {
 		return $input;
 	}
 
-	if ( ! array_key_exists( $input['default_gateway'], $input['gateways'] ) ) {
-		$enabled_gateways = edd_get_enabled_payment_gateways();
+	if ( empty( $input['gateways'] ) || '-1' == $input['gateways'] ) {
+
+		add_settings_error( 'edd-notices', '', __( 'Error setting default gateway. No gateways are enabled.', 'easy-digital-downloads' ) );
+		unset( $input['default_gateway'] );
+
+	} else if ( ! array_key_exists( $input['default_gateway'], $input['gateways'] ) ) {
+
+		$enabled_gateways = $input['gateways'];
 		$all_gateways     = edd_get_payment_gateways();
 		$selected_default = $all_gateways[ $input['default_gateway'] ];
 
@@ -1130,6 +1136,7 @@ function edd_settings_sanitize_gateways( $input ) {
 			add_settings_error( 'edd-notices', '', sprintf( __( '%s could not be set as the default gateway. It must first be enabled.', 'easy-digital-downloads' ), $selected_default['admin_label'] ), 'error' );
 			$input['default_gateway'] = $first_gateway;
 		}
+
 	}
 
 	return $input;
