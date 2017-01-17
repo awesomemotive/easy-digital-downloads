@@ -332,14 +332,13 @@ class EDD_Session {
 		 *  2. An EDD AJAX request is currently running
 		 *  3. If we are on the checkout page, or any child pages
 		 */
-		if ( isset( $_COOKIE['edd_items_in_cart'] ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX && false !== strpos( $_REQUEST['action'], 'edd_' ) ) || ( false !== strpos( $_SERVER['REQUEST_URI'], '/checkout' ) ) {
+		if ( isset( $_COOKIE['edd_items_in_cart'] ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX && false !== strpos( $_REQUEST['action'], 'edd_' ) ) || ( is_page( edd_get_option( 'purchase_page' ) ) ) ) {
 			$start_session = true;
 		} else {
 			$start_session = false;
 		}
 
 		return apply_filters( 'edd_start_session', $start_session );
-
 	}
 
 	/**
