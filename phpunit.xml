@@ -22,7 +22,6 @@
 				<file>./includes/admin/discounts/add-discount.php</file>
 				<file>./includes/admin/reporting/class-export-customers.php</file>
 				<file>./includes/admin/reporting/class-export-download-history.php</file>
-				<file>./includes/admin/reporting/class-export-earnings.php</file>
 				<file>./includes/admin/reporting/class-export-payments.php</file>
 				<file>./includes/admin/tools/class-edd-tools-recount-all-stats.php</file>
 				<file>./includes/admin/tools/class-edd-tools-recount-customer-stats.php</file>

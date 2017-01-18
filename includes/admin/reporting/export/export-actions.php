@@ -34,22 +34,6 @@ function edd_process_batch_export_download() {
 add_action( 'edd_download_batch_export', 'edd_process_batch_export_download' );
 
 /**
- * Exports earnings for a specified time period
- * EDD_Earnings_Export class.
- *
- * @since 2.0
- * @return void
- */
-function edd_export_earnings() {
-	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export-earnings.php';
-
-	$earnings_export = new EDD_Earnings_Export();
-
-	$earnings_export->export();
-}
-add_action( 'edd_earnings_export', 'edd_export_earnings' );
-
-/**
  * Export all the customers to a CSV file.
  *
  * Note: The WordPress Database API is being used directly for performance
