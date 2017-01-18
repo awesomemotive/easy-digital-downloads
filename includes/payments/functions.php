@@ -150,6 +150,7 @@ function edd_insert_payment( $payment_data = array() ) {
 	$payment->mode           = edd_is_test_mode() ? 'test' : 'live';
 	$payment->parent_payment = ! empty( $payment_data['parent'] ) ? absint( $payment_data['parent'] ) : '';
 	$payment->discounts      = ! empty( $payment_data['user_info']['discount'] ) ? $payment_data['user_info']['discount'] : array();
+	$payment->tax_rate       = edd_get_cart_tax_rate();
 
 	if ( isset( $payment_data['post_date'] ) ) {
 		$payment->date = $payment_data['post_date'];
