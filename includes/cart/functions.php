@@ -926,14 +926,12 @@ function edd_get_cart_tax() {
 }
 
 /**
- * Gets the tax rate charged on the cart
+ * Gets the tax rate charged on the cart.
  *
- * @since 2.6
- *
- * @return float
+ * @since 2.7
+ * @return float Tax rate.
  */
 function edd_get_cart_tax_rate() {
-
 	$country = ! empty( $_POST['billing_country'] ) ? $_POST['billing_country'] : false;
 	$state   = ! empty( $_POST['card_state'] )      ? $_POST['card_state']      : false;
 	$rate    = edd_get_tax_rate( $country, $state );

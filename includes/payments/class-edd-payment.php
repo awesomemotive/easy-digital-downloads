@@ -100,7 +100,7 @@ class EDD_Payment {
 	/**
 	 * The tax rate charged on this payment
 	 *
-	 * @since  2.6
+	 * @since 2.7
 	 * @var float
 	 */
 	protected $tax_rate = '';
