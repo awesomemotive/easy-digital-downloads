@@ -12,6 +12,12 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+/**
+ * EDD_Gateway_Manual Class.
+ *
+ * @since   2.7
+ * @version 1.0
+ */
 class EDD_Gateway_Manual extends EDD_Gateway {
 	/**
 	 * Constructor.

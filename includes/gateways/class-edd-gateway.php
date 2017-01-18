@@ -12,6 +12,12 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+/**
+ * EDD_Gateway Class.
+ *
+ * @since   2.7
+ * @version 1.0
+ */
 abstract class EDD_Gateway {
 	/**
 	 * Gateway ID.
