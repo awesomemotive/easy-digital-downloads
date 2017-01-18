@@ -622,13 +622,14 @@ function edd_render_files_field( $post_id = 0 ) {
 				<?php
 					if ( ! empty( $files ) && is_array( $files ) ) :
 						foreach ( $files as $key => $value ) :
-							$index         = isset( $value['index'] )         ? $value['index']         : $key;
-							$name          = isset( $value['name'] )          ? $value['name']          : '';
-							$file          = isset( $value['file'] )          ? $value['file']          : '';
-							$condition     = isset( $value['condition'] )     ? $value['condition']     : false;
-							$attachment_id = isset( $value['attachment_id'] ) ? absint( $value['attachment_id'] ) : false;
+							$index          = isset( $value['index'] )         ? $value['index']         : $key;
+							$name           = isset( $value['name'] )          ? $value['name']          : '';
+							$file           = isset( $value['file'] )          ? $value['file']          : '';
+							$condition      = isset( $value['condition'] )     ? $value['condition']     : false;
+							$attachment_id  = isset( $value['attachment_id'] ) ? absint( $value['attachment_id'] ) : false;
+							$thumbnail_size = isset( $value['thumbnail_size'] ) ? $value['thumbnail_size'] : '';
 
-							$args = apply_filters( 'edd_file_row_args', compact( 'name', 'file', 'condition', 'attachment_id' ), $value );
+							$args = apply_filters( 'edd_file_row_args', compact( 'name', 'file', 'condition', 'attachment_id', 'thumbnail_size' ), $value );
 				?>
 						<tr class="edd_repeatable_upload_wrapper edd_repeatable_row" data-key="<?php echo esc_attr( $key ); ?>">
 							<?php do_action( 'edd_render_file_row', $key, $args, $post_id, $index ); ?>
@@ -669,10 +670,11 @@ add_action( 'edd_meta_box_files_fields', 'edd_render_files_field', 20 );
  */
 function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 	$defaults = array(
-		'name'          => null,
-		'file'          => null,
-		'condition'     => null,
-		'attachment_id' => null
+		'name'           => null,
+		'file'           => null,
+		'condition'      => null,
+		'attachment_id'  => null,
+		'thumbnail_size' => null,
 	);
 
 	$args = wp_parse_args( $args, $defaults );
@@ -689,6 +691,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 	</td>
 	<td>
 		<input type="hidden" name="edd_download_files[<?php echo absint( $key ); ?>][attachment_id]" class="edd_repeatable_attachment_id_field" value="<?php echo esc_attr( absint( $args['attachment_id'] ) ); ?>"/>
+		<input type="hidden" name="edd_download_files[<?php echo absint( $key ); ?>][thumbnail_size]" class="edd_repeatable_thumbnail_size_field" value="<?php echo esc_attr( $args['thumbnail_size'] ); ?>"/>
 		<?php echo EDD()->html->text( array(
 			'name'        => 'edd_download_files[' . $key . '][name]',
 			'value'       => $args['name'],
@@ -966,7 +969,7 @@ function edd_render_disable_button( $post_id ) {
 			<?php if ( $supports_buy_now ) : ?>
 				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Button Behavior</strong>: Add to Cart buttons follow a traditional eCommerce flow. A Buy Now button bypasses most of the process, taking the customer directly from button click to payment, greatly speeding up the process of buying the product.', 'easy-digital-downloads' ); ?>"></span>
 			<?php else: ?>
-				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Button Behavior</strong>: Add to Cart buttons follow a traditional eCommerce flow. Buy Now buttons are only available for supported gateways and stores that do not use taxes.', 'easy-digital-downloads' ); ?>"></span>
+				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Button Behavior</strong>: Add to Cart buttons follow a traditional eCommerce flow. Buy Now buttons are only available for stores that have a single supported gateway active and that do not use taxes.', 'easy-digital-downloads' ); ?>"></span>
 			<?php endif; ?>
 
 		</label>

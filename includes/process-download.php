@@ -75,20 +75,36 @@ function edd_process_download() {
 		// Payment has been verified, setup the download
 		$download_files = edd_get_download_files( $args['download'] );
 		$attachment_id  = ! empty( $download_files[ $args['file_key'] ]['attachment_id'] ) ? absint( $download_files[ $args['file_key'] ]['attachment_id'] ) : false;
+		$thumbnail_size = ! empty( $download_files[ $args['file_key'] ]['thumbnail_size']) ? sanitize_text_field( $download_files[ $args['file_key'] ]['thumbnail_size'] ) : false;
+		$requested_file = isset( $download_files[ $args['file_key'] ]['file'] ) ? $download_files[ $args['file_key'] ]['file'] : '';
 
 		/*
 		 * If we have an attachment ID stored, use get_attached_file() to retrieve absolute URL
 		 * If this fails or returns a relative path, we fail back to our own absolute URL detection
 		 */
-		if( $attachment_id && 'attachment' == get_post_type( $attachment_id ) ) {
+		if( edd_is_local_file( $requested_file ) && $attachment_id && 'attachment' == get_post_type( $attachment_id ) ) {
 
 			if( 'redirect' == $method ) {
 
-				$attached_file = wp_get_attachment_url( $attachment_id );
+				if ( $thumbnail_size ) {
+					$attached_file = wp_get_attachment_image_url( $attachment_id, $thumbnail_size, false );
+				} else {
+					$attached_file = wp_get_attachment_url( $attachment_id );
+				}
 
 			} else {
+				if ( $thumbnail_size ) {
+					$attachment_data = wp_get_attachment_image_src( $attachment_id, $thumbnail_size, false );
+					if ( false !== $attachment_data && ! empty( $attachment_data[0] ) && filter_var( $attachment_data[0], FILTER_VALIDATE_URL) !== false ) {
+						$attached_file  = $attachment_data['0'];
+						$attached_file  = str_replace( site_url(), '', $attached_file );
+						$attached_file  = realpath( ABSPATH . $attached_file );
+					}
+				}
 
-				$attached_file = get_attached_file( $attachment_id, false );
+				if ( empty( $attached_file ) ) {
+					$attached_file = get_attached_file( $attachment_id, false );
+				}
 
 				// Confirm the file exists
 				if( ! file_exists( $attached_file ) ) {
@@ -102,13 +118,6 @@ function edd_process_download() {
 				$requested_file = $attached_file;
 
 			}
-
-		}
-
-		// If we didn't find a file from the attachment, grab the given URL
-		if( ! isset( $requested_file ) ) {
-
-			$requested_file = isset( $download_files[ $args['file_key'] ]['file'] ) ? $download_files[ $args['file_key'] ]['file'] : '';
 
 		}
 
@@ -804,8 +813,8 @@ function edd_process_signed_download_url( $args ) {
 	$args['payment']     = $order_parts[0];
 	$args['file_key']    = $order_parts[2];
 	$args['price_id']    = $order_parts[3];
-	$args['email']       = get_post_meta( $order_parts[0], '_edd_payment_user_email', true );
-	$args['key']         = get_post_meta( $order_parts[0], '_edd_payment_purchase_key', true );
+	$args['email']       = edd_get_payment_meta( $order_parts[0], '_edd_payment_user_email', true );
+	$args['key']         = edd_get_payment_meta( $order_parts[0], '_edd_payment_purchase_key', true );
 
 	$payment = new EDD_Payment( $args['payment'] );
 	$args['has_access']  = 'publish' === $payment->status ? true : false;
@@ -863,7 +872,7 @@ add_filter( 'edd_requested_file', 'edd_set_requested_file_scheme', 10, 3 );
 function edd_check_file_url_head( $requested_file, $args, $method ) {
 
 	// If this is a file URL (not a path), perform a head request to determine if it's valid
-	if( filter_var( $requested_file, FILTER_VALIDATE_URL ) ) {
+	if( filter_var( $requested_file, FILTER_VALIDATE_URL ) && ! edd_is_local_file( $requested_file ) ) {
 
 		$valid   = true;
 		$request = wp_remote_head( $requested_file );
@@ -888,7 +897,7 @@ function edd_check_file_url_head( $requested_file, $args, $method ) {
 
 			do_action( 'edd_check_file_url_head_invalid', $requested_file, $args, $method );
 			wp_die( $message, $title, array( 'response' => 403 ) );
-		
+
 		}
 
 	}
