@@ -542,7 +542,7 @@ function _edd_deprecated_function( $function, $version, $replacement = null, $ba
  *
  * @param string  $argument    The arguemnt that is being deprecated
  * @param string  $function    The function that was called
- * @param string  $version     The version of WordPress that deprecated the function
+ * @param string  $version     The version of Easy Digital Downloads that deprecated the argument
  * @param string  $replacement Optional. The function that should have been called
  * @param array   $backtrace   Optional. Contains stack backtrace of deprecated function
  */
@@ -559,6 +559,44 @@ function _edd_deprected_argument( $argument, $function, $version, $replacement =
 			// Alternatively we could dump this to a file.
 		} else {
 			trigger_error( sprintf( __( 'The %1$s argument of %2$s is <strong>deprecated</strong> since Easy Digital Downloads version %3$s with no alternative available.', 'easy-digital-downloads' ), $argument, $function, $version ) );
+			trigger_error( print_r( $backtrace, 1 ) );// Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+			// Alternatively we could dump this to a file.
+		}
+	}
+}
+
+/**
+ * Marks a constant deprecated and informs when it's been used
+ *
+ * There is a hook edd_deprecated_constant_run that will be called that can be used
+ * to get the backtrace up to what file and function called the deprecated
+ * function.
+ *
+ * The current behavior is to trigger a user error if WP_DEBUG is true.
+ *
+ * @uses do_action() Calls 'edd_deprecated_constant_run' and passes the constant and what to use instead,
+ *   and the version the constant was deprecated in.
+ * @uses apply_filters() Calls 'edd_deprecated_constant_trigger_error' and expects boolean value of true to do
+ *   trigger or false to not trigger error.
+ *
+ * @param string  $constant    The constant that is being deprecated
+ * @param string  $version     The version of Easy Digital Downloads that deprecated the constant
+ * @param string  $replacement Optional. The function, method, or constant that should be used instead
+ * @param array   $backtrace   Optional. Contains stack backtrace of deprecated constant
+ */
+function _edd_deprected_constant( $constant, $version, $replacement = null, $backtrace = null ) {
+	do_action( 'edd_deprecated_constant_run', $constant, $replacement, $version );
+
+	$show_errors = current_user_can( 'manage_options' );
+
+	// Allow plugin to filter the output error trigger
+	if ( WP_DEBUG && apply_filters( 'edd_deprecated_constant_trigger_error', $show_errors ) ) {
+		if ( ! is_null( $replacement ) ) {
+			trigger_error( sprintf( __( 'The %1$s constant is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Please use %3$s.', 'easy-digital-downloads' ), $constant, $version, $replacement ) );
+			trigger_error(  print_r( $backtrace, 1 ) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+			// Alternatively we could dump this to a file.
+		} else {
+			trigger_error( sprintf( __( 'The %1$s constant is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'easy-digital-downloads' ), $constant, $version ) );
 			trigger_error( print_r( $backtrace, 1 ) );// Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
 			// Alternatively we could dump this to a file.
 		}

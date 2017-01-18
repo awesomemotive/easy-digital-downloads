@@ -122,21 +122,20 @@ class EDD_Session {
 			$this->session = WP_Session::get_instance();
 		}
 
-		$use_cookie = $this->use_cart_cookie();
-		$cart       = $this->get( 'edd_cart' );
-		$purchase   = $this->get( 'edd_purchase' );
+		// This check is deprecated but left here in order to trigger deprecated notices
+		$this->use_cart_cookie();
 
-		if ( $use_cookie ) {
-			if( ! empty( $cart ) || ! empty( $purchase ) ) {
-				$this->set_cart_cookie();
-			} else {
-				$this->set_cart_cookie( false );
-			}
+		$cart     = $this->get( 'edd_cart' );
+		$purchase = $this->get( 'edd_purchase' );
+
+		if( ! empty( $cart ) || ! empty( $purchase ) ) {
+			$this->set_cart_cookie();
+		} else {
+			$this->set_cart_cookie( false );
 		}
 
 		return $this->session;
 	}
-
 
 	/**
 	 * Retrieve session ID
@@ -148,7 +147,6 @@ class EDD_Session {
 	public function get_id() {
 		return $this->session->session_id;
 	}
-
 
 	/**
 	 * Retrieve a session variable
@@ -290,17 +288,32 @@ class EDD_Session {
 	/**
 	 * Determines if a user has set the EDD_USE_CART_COOKIE
 	 *
+	 * This is now deprecated and should not be used. See https://easydigitaldownloads.com/development/?p=170
+	 *
 	 * @since  2.5
+	 * @deprecated 2.7
 	 * @return bool If the store should use the edd_items_in_cart cookie to help avoid caching
 	 */
 	public function use_cart_cookie() {
+
 		$ret = true;
 
+		$notice = sprintf( __( 'See blog post for more information: %s', 'easy-digital-downloads' ), 'https://easydigitaldownloads.com/development/?p=170' );
+
 		if ( defined( 'EDD_USE_CART_COOKIE' ) && ! EDD_USE_CART_COOKIE ) {
+
+			_edd_deprected_constant( 'EDD_USE_CART_COOKIE', '2.7', $notice );
+
 			$ret = false;
+
 		}
 
-		return (bool) apply_filters( 'edd_use_cart_cookie', $ret );
+		if( function_exists( 'apply_filters_deprecated' ) ) {
+			return (bool) apply_filters_deprecated( 'edd_use_cart_cookie', $ret, '2.7', false, $notice );
+		} else {
+			return (bool) apply_filters( 'edd_use_cart_cookie', $ret );
+		}
+
 	}
 
 	/**
