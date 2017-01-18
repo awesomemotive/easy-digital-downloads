@@ -3,7 +3,7 @@
 /**
  * @group edd_api
  */
-class Tests_API extends WP_UnitTestCase {
+class Tests_API extends EDD_UnitTestCase {
 	protected $_rewrite = null;
 
 	protected $query = null;
@@ -105,13 +105,9 @@ class Tests_API extends WP_UnitTestCase {
 			)
 		);
 
-		$price = '100.00';
-
 		$total = 0;
-
 		$prices = get_post_meta( $download_details[0]['id'], 'edd_variable_prices', true );
 		$item_price = $prices[1]['amount'];
-
 		$total += $item_price;
 
 		$cart_details = array(
@@ -127,7 +123,6 @@ class Tests_API extends WP_UnitTestCase {
 				'item_price' =>  100,
 				'subtotal' =>  100,
 				'price' =>  100,
-				'item_price' => 100,
 				'tax' => 0,
 				'quantity' => 1
 			)
@@ -185,13 +180,16 @@ class Tests_API extends WP_UnitTestCase {
 		$this->assertEquals( 'query', $out[2] );
 		$this->assertEquals( 'type', $out[3] );
 		$this->assertEquals( 'product', $out[4] );
-		$this->assertEquals( 'number', $out[5] );
-		$this->assertEquals( 'date', $out[6] );
-		$this->assertEquals( 'startdate', $out[7] );
-		$this->assertEquals( 'enddate', $out[8] );
-		$this->assertEquals( 'customer', $out[9] );
-		$this->assertEquals( 'discount', $out[10] );
-		$this->assertEquals( 'format', $out[11] );
+		$this->assertEquals( 'category', $out[5] );
+		$this->assertEquals( 'tag', $out[6] );
+		$this->assertEquals( 'term_relation', $out[7] );
+		$this->assertEquals( 'number', $out[8] );
+		$this->assertEquals( 'date', $out[9] );
+		$this->assertEquals( 'startdate', $out[10] );
+		$this->assertEquals( 'enddate', $out[11] );
+		$this->assertEquals( 'customer', $out[12] );
+		$this->assertEquals( 'discount', $out[13] );
+		$this->assertEquals( 'format', $out[14] );
 	}
 
 	public function test_get_versions() {
@@ -201,10 +199,10 @@ class Tests_API extends WP_UnitTestCase {
 
 	public function test_get_default_version() {
 
-		$this->assertEquals( 'v1', $this->_api->get_default_version() );
-
-		define( 'EDD_API_VERSION', 'v2' );
 		$this->assertEquals( 'v2', $this->_api->get_default_version() );
+
+		define( 'EDD_API_VERSION', 'v1' );
+		$this->assertEquals( 'v1', $this->_api->get_default_version() );
 
 	}
 
@@ -400,6 +398,20 @@ class Tests_API extends WP_UnitTestCase {
 		//$out = $this->_api->get_output();
 		//$this->assertArrayHasKey( 'error', $out );
 		//$this->assertEquals( 'Invalid API key!', $out['error'] );
+	}
+
+	public function test_info() {
+		$out = EDD()->api->get_info();
+
+		$this->assertArrayHasKey( 'info', $out );
+		$this->assertArrayHasKey( 'site', $out['info'] );
+		$this->assertArrayHasKey( 'currency', $out['info']['site'] );
+		$this->assertArrayHasKey( 'currency_position', $out['info']['site'] );
+		$this->assertArrayHasKey( 'decimal_separator', $out['info']['site'] );
+		$this->assertArrayHasKey( 'thousands_separator', $out['info']['site'] );
+		$this->assertArrayNotHasKey( 'integrations', $out['info'] ); // By default we shouldn't have any integrations
+
+		$this->markTestIncomplete( 'This test needs to be fixed. The permissions key doesn\'t exist due to not being able to correctly check the user\'s permissions' );
 	}
 
 	public function test_process_query() {

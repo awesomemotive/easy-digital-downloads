@@ -90,7 +90,7 @@ function edd_email_preview_template_tags( $message ) {
 	$message = str_replace( '{sitename}', get_bloginfo( 'name' ), $message );
 	$message = str_replace( '{product_notes}', $notes, $message );
 	$message = str_replace( '{payment_id}', $payment_id, $message );
-	$message = str_replace( '{receipt_link}', sprintf( __( '%1$sView it in your browser.%2$s', 'easy-digital-downloads' ), '<a href="' . esc_url( add_query_arg( array ( 'payment_key' => $receipt_id, 'edd_action' => 'view_receipt' ), home_url() ) ) . '">', '</a>' ), $message );
+	$message = str_replace( '{receipt_link}', edd_email_tag_receipt_link( $payment_id ), $message );
 
 	$message = apply_filters( 'edd_email_preview_template_tags', $message );
 
@@ -209,7 +209,7 @@ function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data 
 		}
 	}
 
-	$gateway = edd_get_gateway_admin_label( get_post_meta( $payment_id, '_edd_payment_gateway', true ) );
+	$gateway = edd_get_gateway_admin_label( edd_get_payment_meta( $payment_id, '_edd_payment_gateway', true ) );
 
 	$default_email_body = __( 'Hello', 'easy-digital-downloads' ) . "\n\n" . sprintf( __( 'A %s purchase has been made', 'easy-digital-downloads' ), edd_get_label_plural() ) . ".\n\n";
 	$default_email_body .= sprintf( __( '%s sold:', 'easy-digital-downloads' ), edd_get_label_plural() ) . "\n\n";

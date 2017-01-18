@@ -26,20 +26,26 @@ jQuery(document).ready(function ($) {
 			},
 			success: function (response) {
 				if (response.removed) {
-					if ( parseInt( edd_scripts.position_in_cart, 10 ) === parseInt( item, 10 ) ) {
+
+					if ( ( parseInt( edd_scripts.position_in_cart, 10 ) === parseInt( item, 10 ) ) || edd_scripts.has_purchase_links ) {
 						window.location = window.location;
 						return false;
 					}
 
 					// Remove the selected cart item
-					$('.edd-cart').find("[data-cart-item='" + item + "']").parent().remove();
+					$('.edd-cart').each( function() {
+						$(this).find("[data-cart-item='" + item + "']").parent().remove();
+					});
 
 					//Reset the data-cart-item attributes to match their new values in the EDD session cart array
-					var cart_item_counter = 0;
-					$('.edd-cart').find("[data-cart-item]").each(function(){
-						$(this).attr('data-cart-item', cart_item_counter);
-						cart_item_counter = cart_item_counter + 1;
+					$('.edd-cart').each( function() {
+						var cart_item_counter = 0;
+						$(this).find("[data-cart-item]").each( function() {
+							$(this).attr('data-cart-item', cart_item_counter);
+							cart_item_counter = cart_item_counter + 1;
+						});
 					});
+
 
 					// Check to see if the purchase form(s) for this download is present on this page
 					if( $( '[id^=edd_purchase_' + id + ']' ).length ) {
@@ -61,7 +67,9 @@ jQuery(document).ready(function ($) {
 
 					if( response.cart_quantity == 0 ) {
 						$('.cart_item.edd_subtotal,.edd-cart-number-of-items,.cart_item.edd_checkout,.cart_item.edd_cart_tax,.cart_item.edd_total').hide();
-						$('.edd-cart').append('<li class="cart_item empty">' + edd_scripts.empty_cart_message + '</li>');
+						$('.edd-cart').each( function() {
+							$(this).append('<li class="cart_item empty">' + edd_scripts.empty_cart_message + '</li>');
+						});
 					}
 
 					$('body').trigger('edd_cart_item_removed', [ response ]);
@@ -91,16 +99,8 @@ jQuery(document).ready(function ($) {
 		var $spinner = $this.find('.edd-loading');
 		var container = $this.closest('div');
 
-		var spinnerWidth  = $spinner.width(),
-			spinnerHeight = $spinner.height();
-
 		// Show the spinner
 		$this.attr('data-edd-loading', '');
-
-		$spinner.css({
-			'margin-left': spinnerWidth / -2,
-			'margin-top' : spinnerHeight / -2
-		});
 
 		var form           = $this.parents('form').last();
 		var download       = $this.data('download-id');
@@ -111,7 +111,7 @@ jQuery(document).ready(function ($) {
 
 		if( variable_price == 'yes' ) {
 
-			if ( form.find('.edd_price_option_' + download).is('input:hidden') ) {
+			if ( form.find('.edd_price_option_' + download + '[type="hidden"]').length > 0 ) {
 				item_price_ids[0] = $('.edd_price_option_' + download, form).val();
 				if ( form.find('.edd-submit').data('price') && form.find('.edd-submit').data('price') > 0 ) {
 					free_items = false;
@@ -121,7 +121,9 @@ jQuery(document).ready(function ($) {
 					 // hide the spinner
 					$this.removeAttr( 'data-edd-loading' );
 					alert( edd_scripts.select_option );
-					return;
+					e.stopPropagation();
+					$this.prop('disabled', false);
+					return false;
 				}
 
 				form.find('.edd_price_option_' + download + ':checked', form).each(function( index ) {
@@ -173,7 +175,10 @@ jQuery(document).ready(function ($) {
 				withCredentials: true
 			},
 			success: function (response) {
-				if( edd_scripts.redirect_to_checkout == '1' && form.find( '#edd_redirect_to_checkout' ).val() == '1' ) {
+				var store_redirect = edd_scripts.redirect_to_checkout == '1';
+				var item_redirect  = form.find( '#edd_redirect_to_checkout' ).val() == '1';
+
+				if( ( store_redirect && item_redirect ) || ( ! store_redirect && item_redirect ) ) {
 
 					window.location = edd_scripts.checkout_page;
 
@@ -189,11 +194,13 @@ jQuery(document).ready(function ($) {
 					$('.cart_item.edd_checkout').show();
 
 					if ($('.cart_item.empty').length) {
-						$(response.cart_item).insertBefore('.edd-cart-meta:first');
 						$('.cart_item.empty').hide();
-					} else {
-						$(response.cart_item).insertBefore('.edd-cart-meta:first');
 					}
+
+					$('.widget_edd_cart_widget .edd-cart').each( function( cart ) {
+						var target = $(this).find('.edd-cart-meta:first');
+						$(response.cart_item).insertBefore(target);
+					});
 
 					// Update the totals
 					if ( edd_scripts.taxes_enabled === '1' ) {
@@ -319,8 +326,9 @@ jQuery(document).ready(function ($) {
 
 		var payment_mode = $('#edd-gateway option:selected, input.edd-gateway:checked').val();
 
-		if( payment_mode == '0' )
+		if( payment_mode == '0' ) {
 			return false;
+		}
 
 		edd_load_gateway( payment_mode );
 
@@ -329,8 +337,12 @@ jQuery(document).ready(function ($) {
 
 	// Auto load first payment gateway
 	if( edd_scripts.is_checkout == '1' && $('select#edd-gateway, input.edd-gateway').length ) {
+		var chosen_gateway = $("meta[name='edd-chosen-gateway']").attr('content');
+		if( ! chosen_gateway ) {
+			chosen_gateway = edd_scripts.default_gateway;
+		}
 		setTimeout( function() {
-			edd_load_gateway( edd_scripts.default_gateway );
+			edd_load_gateway( chosen_gateway );
 		}, 200);
 	}
 
@@ -348,6 +360,8 @@ jQuery(document).ready(function ($) {
 
 		$(this).val(edd_global_vars.purchase_loading);
 
+		$(this).prop( 'disabled', true );
+
 		$(this).after('<span class="edd-cart-ajax"><i class="edd-icon-spinner edd-icon-spin"></i></span>');
 
 		$.post(edd_global_vars.ajaxurl, $('#edd_purchase_form').serialize() + '&action=edd_process_checkout&edd_ajax=true', function(data) {
@@ -361,18 +375,88 @@ jQuery(document).ready(function ($) {
 				$('.edd_errors').remove();
 				$('.edd-error').hide();
 				$('#edd_purchase_submit').before(data);
+				$('#edd-purchase-button').prop( 'disabled', false );
 			}
 		});
 
 	});
 
+	$('body').on('change', '#edd_cc_address input.card_state, #edd_cc_address select, #edd_address_country', update_state_field);
+
+	function update_state_field() {
+
+		var $this = $(this);
+		var $form;
+		var is_checkout = typeof edd_global_vars !== 'undefined';
+
+		if( 'card_state' != $this.attr('id') ) {
+
+			// If the country field has changed, we need to update the state/province field
+			var postData = {
+				action: 'edd_get_shop_states',
+				country: $this.val(),
+				field_name: 'card_state'
+			};
+
+			$.ajax({
+				type: "POST",
+				data: postData,
+				url: edd_scripts.ajaxurl,
+				xhrFields: {
+					withCredentials: true
+				},
+				success: function (response) {
+					if ( is_checkout ) {
+						$form = $("#edd_purchase_form");
+					} else {
+						$form = $this.closest("form");
+					}
+
+					var state_inputs = 'input[name="card_state"], select[name="card_state"], input[name="edd_address_state"], select[name="edd_address_state"]';
+
+					if( 'nostates' == $.trim(response) ) {
+						var text_field = '<input type="text" name="card_state" class="cart-state edd-input required" value=""/>';
+						$form.find(state_inputs).replaceWith( text_field );
+					} else {
+						$form.find(state_inputs).replaceWith( response );
+					}
+
+					if ( is_checkout ) {
+						$('body').trigger('edd_cart_billing_address_updated', [ response ]);
+					}
+
+				}
+			}).fail(function (data) {
+				if ( window.console && window.console.log ) {
+					console.log( data );
+				}
+			}).done(function (data) {
+				if ( is_checkout ) {
+					recalculate_taxes();
+				}
+			});
+		} else {
+			if ( is_checkout ) {
+				recalculate_taxes();
+			}
+		}
+
+		return false;
+	}
+
+	// If is_checkout, recalculate sales tax on postalCode change.
+	$('body').on('change', '#edd_cc_address input[name=card_zip]', function () {
+		if (typeof edd_global_vars !== 'undefined') {
+			recalculate_taxes();
+		}
+	});
 });
 
 function edd_load_gateway( payment_mode ) {
 
 	// Show the ajax loader
 	jQuery('.edd-cart-ajax').show();
-	jQuery('#edd_purchase_form_wrap').html('<img src="' + edd_scripts.ajax_loader + '"/>');
+	jQuery('#edd_purchase_form_wrap').html('<span class="edd-loading-ajax edd-loading"></span>');
 
 	var url = edd_scripts.ajaxurl;
 
@@ -388,6 +472,7 @@ function edd_load_gateway( payment_mode ) {
 		function(response){
 			jQuery('#edd_purchase_form_wrap').html(response);
 			jQuery('.edd-no-js').hide();
+			jQuery('body').trigger('edd_gateway_loaded', [ payment_mode ]);
 		}
 	);
 

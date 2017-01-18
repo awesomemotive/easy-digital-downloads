@@ -427,7 +427,7 @@ function edd_email_tag_download_list( $payment_id ) {
 					if ( $show_links ) {
 						$download_list .= '<div>';
 							$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $item['id'], $price_id );
-							$download_list .= '<a href="' . esc_url( $file_url ) . '">' . edd_get_file_name( $file ) . '</a>';
+							$download_list .= '<a href="' . esc_url_raw( $file_url ) . '">' . edd_get_file_name( $file ) . '</a>';
 							$download_list .= '</div>';
 					} else {
 						$download_list .= '<div>';
@@ -451,11 +451,11 @@ function edd_email_tag_download_list( $payment_id ) {
 						if ( $show_links ) {
 							$download_list .= '<div>';
 							$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $bundle_item, $price_id );
-							$download_list .= '<a href="' . esc_url( $file_url ) . '">' . $file['name'] . '</a>';
+							$download_list .= '<a href="' . esc_url( $file_url ) . '">' . edd_get_file_name( $file ) . '</a>';
 							$download_list .= '</div>';
 						} else {
 							$download_list .= '<div>';
-							$download_list .= $file['name'];
+							$download_list .= edd_get_file_name( $file );
 							$download_list .= '</div>';
 						}
 					}
@@ -559,9 +559,9 @@ function edd_email_tag_download_list_plain( $payment_id ) {
 					foreach ( $files as $filekey => $file ) {
 						if( $show_links ) {
 							$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $bundle_item, $price_id );
-							$download_list .= $file['name'] . ': ' . $file_url . "\n";
+							$download_list .= edd_get_file_name( $file ) . ': ' . $file_url . "\n";
 						} else {
-							$download_list .= $file['name'] . "\n";
+							$download_list .= edd_get_file_name( $file ) . "\n";
 						}
 					}
 				}
@@ -843,7 +843,7 @@ function edd_email_tag_receipt_link( $payment_id ) {
 		'payment_key' => edd_get_payment_key( $payment_id ),
 		'edd_action'  => 'view_receipt'
 	), home_url() ) );
-	$formatted   = sprintf( __( '%1$sView it in your browser %2$s', 'edd' ), '<a href="' . $receipt_url . '">', '&raquo;</a>' );
+	$formatted   = sprintf( __( '%1$sView it in your browser %2$s', 'easy-digital-downloads' ), '<a href="' . $receipt_url . '">', '&raquo;</a>' );
 
 	if ( edd_get_option( 'email_template' ) !== 'none' ) {
 		return $formatted;
@@ -857,7 +857,7 @@ function edd_email_tag_receipt_link( $payment_id ) {
  * Adds a list of any discount codes applied to this purchase
  *
  * @since  2.0
- * @param $int payment_id
+ * @param int $payment_id
  * @return string $discount_codes
  */
 function edd_email_tag_discount_codes( $payment_id ) {

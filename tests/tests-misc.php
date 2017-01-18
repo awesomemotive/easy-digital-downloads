@@ -4,7 +4,8 @@
 /**
  * @group edd_misc
  */
-class Test_Misc extends WP_UnitTestCase {
+class Test_Misc extends EDD_UnitTestCase {
+
 	public function setUp() {
 		parent::setUp();
 	}
@@ -49,13 +50,18 @@ class Test_Misc extends WP_UnitTestCase {
 
 	public function test_get_ip() {
 		$this->assertEquals( '127.0.0.1', edd_get_ip() );
+
+		$_SERVER['REMOTE_ADDR'] = ' 192.168.0.1 , 192.168.1.1 ';
+		$this->assertEquals( '192.168.0.1', edd_get_ip() );
+
+		$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 	}
 
 	public function test_get_currencies() {
 		$expected = array(
 			'USD'  => __( 'US Dollars (&#36;)', 'easy-digital-downloads' ),
 			'EUR'  => __( 'Euros (&euro;)', 'easy-digital-downloads' ),
-			'GBP'  => __( 'Pounds Sterling (&pound;)', 'easy-digital-downloads' ),
+			'GBP'  => __( 'Pound Sterling (&pound;)', 'easy-digital-downloads' ),
 			'AUD'  => __( 'Australian Dollars (&#36;)', 'easy-digital-downloads' ),
 			'BRL'  => __( 'Brazilian Real (R&#36;)', 'easy-digital-downloads' ),
 			'CAD'  => __( 'Canadian Dollars (&#36;)', 'easy-digital-downloads' ),
@@ -266,7 +272,7 @@ class Test_Misc extends WP_UnitTestCase {
 			'PG' => 'Papua New Guinea',
 			'PY' => 'Paraguay',
 			'PE' => 'Peru',
-			'PH' => 'Phillipines',
+			'PH' => 'Philippines',
 			'PN' => 'Pitcairn Island',
 			'PL' => 'Poland',
 			'PT' => 'Portugal',
@@ -533,9 +539,7 @@ class Test_Misc extends WP_UnitTestCase {
 		EDD_Helper_Download::delete_download( $post->ID );
 		remove_filter( 'edd_is_caching_plugin_active', '__return_true' );
 
-
-		$checkout = edd_get_option( 'purchase_page', false );
-		$this->go_to( get_permalink( $checkout ) );
+		$this->go_to( get_permalink( $edd_options['purchase_page'] ) );
 		$this->assertEquals( edd_get_checkout_uri(), edd_get_current_page_url() );
 
 		add_filter( 'edd_is_caching_plugin_active', '__return_true' );
@@ -562,7 +566,7 @@ class Test_Misc extends WP_UnitTestCase {
 
 		$remove_url = edd_remove_item_url( $item_position );
 
-		$this->assertContains( 'page_id=3', $remove_url );
+		$this->assertContains( 'page_id=' . $edd_options['purchase_page'], $remove_url );
 		$this->assertContains( 'edd_action=remove', $remove_url );
 		$this->assertContains( 'nocache=true', $remove_url );
 		$this->assertContains( 'cart_item=' . $item_position, $remove_url );
@@ -571,7 +575,7 @@ class Test_Misc extends WP_UnitTestCase {
 		unset( $edd_options['no_cache_checkout'] );
 		$remove_url = edd_remove_item_url( $item_position );
 
-		$this->assertContains( 'page_id=3', $remove_url );
+		$this->assertContains( 'page_id=' . $edd_options['purchase_page'], $remove_url );
 		$this->assertContains( 'edd_action=remove', $remove_url );
 		$this->assertContains( 'cart_item=' . $item_position, $remove_url );
 		$this->assertNotContains( 'nocache=true', $remove_url );
@@ -613,5 +617,48 @@ class Test_Misc extends WP_UnitTestCase {
 		$expected_url  = 'http://example.org/?cart_item=' . $item_position . '&edd_action=remove';
 
 		EDD_Helper_Download::delete_download( $post->ID );
+	}
+
+	public function test_array_convert() {
+		$customer1_id = EDD()->customers->add( array( 'email' => 'test10@example.com' ) );
+		$customer2_id = EDD()->customers->add( array( 'email' => 'test11@example.com' ) );
+
+		// Test sending a single object in
+		$customer_object = new EDD_Customer( $customer1_id );
+		$customer_array  = edd_object_to_array( $customer_object );
+		$this->assertInternalType( 'array', $customer_array );
+		$this->assertEquals( $customer_object->id, $customer_array['id'] );
+		$this->assertEquals( $customer_object->email, $customer_array['email'] );
+		$this->assertEquals( $customer_object->purchase_count, $customer_array['purchase_count'] );
+
+		// Negative tests (no alterations should occur)
+		$this->assertEquals( 'string', edd_object_to_array( 'string' ) );
+		$this->assertEquals( array( 'foo', 'bar', 'baz' ), edd_object_to_array( array( 'foo', 'bar', 'baz' ) ) );
+
+		// Test sending in an array of objects
+		$customers = EDD()->customers->get_customers();
+		$converted = edd_object_to_array( $customers );
+		$this->assertInternalType( 'array', $converted[0] );
+
+		// Test payments
+		$payment_1 = EDD_Helper_Payment::create_simple_payment();
+		$payment_2 = EDD_Helper_Payment::create_simple_payment();
+
+		$payment_1_obj = new EDD_Payment( $payment_1 );
+		$payment_2_obj = new EDD_Payment( $payment_2 );
+
+		// Test a single convert
+		$payment_1_array = edd_object_to_array( $payment_1_obj );
+		$this->assertInternalType( 'array',  $payment_1_array );
+		$this->assertEquals( $payment_1_obj->ID, $payment_1_array['ID'] );
+
+		$payments = array(
+			$payment_1_obj,
+			$payment_2_obj,
+		);
+
+		$payments_array = edd_object_to_array( $payments );
+		$this->assertInternalType( 'array', $payments_array[0] );
+		$this->assertEquals( 2, count( $payments_array ) );
 	}
 }

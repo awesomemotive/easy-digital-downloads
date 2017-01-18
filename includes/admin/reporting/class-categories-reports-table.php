@@ -91,6 +91,28 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Outputs the reporting views
+	 *
+	 * @access public
+	 * @since 1.5
+	 * @return void
+	 */
+	public function display_tablenav( $which = '' ) {
+		?>
+		<div class="tablenav <?php echo esc_attr( $which ); ?>">
+			<div class="alignleft actions bulkactions">
+				<?php
+				if ( 'top' === $which ) {
+					edd_report_views();
+					edd_reports_graph_controls();
+				}
+				?>
+			</div>
+		</div>
+	<?php
+	}
+
+	/**
 	 * Retrieve the current page number
 	 *
 	 * @access public
@@ -99,23 +121,6 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 	 */
 	public function get_paged() {
 		return isset( $_GET[ 'paged' ] ) ? absint( $_GET[ 'paged' ] ) : 1;
-	}
-
-	/**
-	 * Outputs the reporting views
-	 *
-	 * @access public
-	 * @since  2.4
-	 * @return void
-	 */
-	public function bulk_actions( $which = '' ) {
-		if ( 'bottom' === $which ) {
-			return;
-		}
-
-		// These aren't really bulk actions but this outputs the markup in the right place
-		edd_report_views();
-		edd_reports_graph_controls();
 	}
 
 	/**

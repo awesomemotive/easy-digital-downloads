@@ -14,9 +14,6 @@ window.EDD_Checkout = (function($) {
 		before_discount = $edd_cart_amount.text();
 		$checkout_form_wrap = $('#edd_checkout_form_wrap');
 
-		// Update state/province field on checkout page
-		$body.on('change', '#edd_cc_address input.card_state, #edd_cc_address select', update_state_field);
-
 		$body.on('keyup change', '.edd-do-validate .card-number', function() {
 			edd_validate_card( $(this) );
 		});
@@ -78,91 +75,6 @@ window.EDD_Checkout = (function($) {
 
 	}
 
-	function update_state_field() {
-
-		var $this = $(this);
-		if( 'card_state' != $this.attr('id') ) {
-
-			// If the country field has changed, we need to update the state/province field
-			var postData = {
-				action: 'edd_get_shop_states',
-				country: $this.val(),
-				field_name: 'card_state'
-			};
-
-			$.ajax({
-				type: "POST",
-				data: postData,
-				url: edd_global_vars.ajaxurl,
-				xhrFields: {
-					withCredentials: true
-				},
-				success: function (response) {
-					if( 'nostates' == response ) {
-						var text_field = '<input type="text" name="card_state" class="cart-state edd-input required" value=""/>';
-						$form.find('input[name="card_state"], select[name="card_state"]').replaceWith( text_field );
-					} else {
-						$form.find('input[name="card_state"], select[name="card_state"]').replaceWith( response );
-					}
-
-					$body.trigger('edd_cart_billing_address_updated', [ response ]);
-
-				}
-			}).fail(function (data) {
-				if ( window.console && window.console.log ) {
-					console.log( data );
-				}
-			}).done(function (data) {
-				recalculate_taxes();
-			});
-		} else {
-			recalculate_taxes();
-		}
-
-		return false;
-	}
-
-	function recalculate_taxes(state) {
-
-		if( '1' != edd_global_vars.taxes_enabled )
-			return; // Taxes not enabled
-
-		var $edd_cc_address = $('#edd_cc_address');
-
-		if( ! state ) {
-			state = $edd_cc_address.find('#card_state').val();
-		}
-
-		var postData = {
-			action: 'edd_recalculate_taxes',
-			billing_country: $edd_cc_address.find('#billing_country').val(),
-			state: state
-		};
-
-		$.ajax({
-			type: "POST",
-			data: postData,
-			dataType: "json",
-			url: edd_global_vars.ajaxurl,
-			xhrFields: {
-				withCredentials: true
-			},
-			success: function (tax_response) {
-				$('#edd_checkout_cart_form').replaceWith(tax_response.html);
-				$('.edd_cart_amount').html(tax_response.total);
-				var tax_data = new Object();
-				tax_data.postdata = postData;
-				tax_data.response = tax_response;
-				$body.trigger('edd_taxes_recalculated', [ tax_data ]);
-			}
-		}).fail(function (data) {
-			if ( window.console && window.console.log ) {
-				console.log( data );
-				$body.trigger('edd_taxes_recalculated', [ tax_data ]);
-			}
-		});
-	}
-
 	function edd_validate_card(field) {
 		var card_field = field;
 		card_field.validateCreditCard(function(result) {
@@ -220,9 +132,14 @@ window.EDD_Checkout = (function($) {
 					if (discount_response.msg == 'valid') {
 						$('.edd_cart_discount').html(discount_response.html);
 						$('.edd_cart_discount_row').show();
-						$('.edd_cart_amount').each(function() {
-							$(this).text(discount_response.total);
-						});
+
+						$( '.edd_cart_amount' ).each( function() {
+							// Format discounted amount for display.
+							$( this ).text( discount_response.total );
+							// Set data attribute to new (unformatted) discounted amount.'
+							$( this ).data( 'total', discount_response.total_plain );
+						} );
+
 						$('#edd-discount', $checkout_form_wrap ).val('');
 
 						recalculate_taxes();
@@ -237,7 +154,9 @@ window.EDD_Checkout = (function($) {
 
 						} else {
 
-							inputs.attr('required','required');
+							if (!inputs.is('.card-address-2')) {
+								inputs.attr('required','required');
+							}
 							$('#edd_cc_fields,#edd_cc_address').slideDown();
 
 						}
@@ -290,7 +209,11 @@ window.EDD_Checkout = (function($) {
 						// We're removing a 100% discount code so we need to force the payment gateway to reload
 						window.location.reload();
 					}
-					$(this).text(discount_response.total);
+
+					// Format discounted amount for display.
+					$( this ).text( discount_response.total );
+					// Set data attribute to new (unformatted) discounted amount.'
+					$( this ).data( 'total', discount_response.total_plain );
 				});
 
 				$('.edd_cart_discount').html(discount_response.html);
@@ -376,3 +299,54 @@ window.EDD_Checkout = (function($) {
 
 // init on document.ready
 window.jQuery(document).ready(EDD_Checkout.init);
+
+var ajax_tax_count = 0;
+function recalculate_taxes(state) {
+
+	if( '1' != edd_global_vars.taxes_enabled )
+		return; // Taxes not enabled
+
+	var $edd_cc_address = jQuery('#edd_cc_address');
+
+	if( ! state ) {
+		state = $edd_cc_address.find('#card_state').val();
+	}
+
+	var postData = {
+		action: 'edd_recalculate_taxes',
+		billing_country: $edd_cc_address.find('#billing_country').val(),
+		state: state,
+		card_zip: $edd_cc_address.find('input[name=card_zip]').val()
+	};
+
+	var current_ajax_count = ++ajax_tax_count;
+	jQuery.ajax({
+		type: "POST",
+		data: postData,
+		dataType: "json",
+		url: edd_global_vars.ajaxurl,
+		xhrFields: {
+			withCredentials: true
+		},
+		success: function (tax_response) {
+			// Only update tax info if this response is the most recent ajax call.
+			// Avoids bug with form autocomplete firing multiple ajax calls at the same time and not
+			// being able to predict the call response order.
+			if (current_ajax_count === ajax_tax_count) {
+				jQuery('#edd_checkout_cart_form').replaceWith(tax_response.html);
+				jQuery('.edd_cart_amount').html(tax_response.total);
+				var tax_data = new Object();
+				tax_data.postdata = postData;
+				tax_data.response = tax_response;
+				jQuery('body').trigger('edd_taxes_recalculated', [ tax_data ]);
+			}
+		}
+	}).fail(function (data) {
+		if ( window.console && window.console.log ) {
+			console.log( data );
+			if (current_ajax_count === ajax_tax_count) {
+				jQuery('body').trigger('edd_taxes_recalculated', [ tax_data ]);
+			}
+		}
+	});
+}
