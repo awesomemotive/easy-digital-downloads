@@ -898,6 +898,12 @@ function edd_get_registered_settings() {
 		)
 	);
 
+	if ( ! edd_shop_supports_buy_now() ) {
+		$edd_settings['misc']['button_text']['buy_now_text']['disabled']      = true;
+		$edd_settings['misc']['button_text']['buy_now_text']['tooltip_title'] = __( 'Buy Now Disabled', 'easy-digital-downloads' );
+		$edd_settings['misc']['button_text']['buy_now_text']['tooltip_desc']  = __( 'Buy Now buttons are only available for stores that have a single supported gateway active and that do not use taxes.', 'easy-digital-downloads' );
+	}
+
 	return apply_filters( 'edd_registered_settings', $edd_settings );
 }
 
@@ -1097,6 +1103,45 @@ function edd_settings_sanitize_taxes( $input ) {
 	return $input;
 }
 add_filter( 'edd_settings_taxes_sanitize', 'edd_settings_sanitize_taxes' );
+
+/**
+ * Payment Gateways Settings Sanitization
+ *
+ * Adds a settings error (for the updated message)
+ *
+ * @since 2.7
+ * @param array $input The value inputted in the field
+ * @return string $input Sanitizied value
+ */
+function edd_settings_sanitize_gateways( $input ) {
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		return $input;
+	}
+
+	if ( empty( $input['gateways'] ) || '-1' == $input['gateways'] ) {
+
+		add_settings_error( 'edd-notices', '', __( 'Error setting default gateway. No gateways are enabled.', 'easy-digital-downloads' ) );
+		unset( $input['default_gateway'] );
+
+	} else if ( ! array_key_exists( $input['default_gateway'], $input['gateways'] ) ) {
+
+		$enabled_gateways = $input['gateways'];
+		$all_gateways     = edd_get_payment_gateways();
+		$selected_default = $all_gateways[ $input['default_gateway'] ];
+
+		reset( $enabled_gateways );
+		$first_gateway = key( $enabled_gateways );
+
+		if ( $first_gateway ) {
+			add_settings_error( 'edd-notices', '', sprintf( __( '%s could not be set as the default gateway. It must first be enabled.', 'easy-digital-downloads' ), $selected_default['admin_label'] ), 'error' );
+			$input['default_gateway'] = $first_gateway;
+		}
+
+	}
+
+	return $input;
+}
+add_filter( 'edd_settings_gateways_sanitize', 'edd_settings_sanitize_gateways' );
 
 /**
  * Sanitize text fields
@@ -1551,6 +1596,8 @@ function edd_text_callback( $args ) {
 
 	if ( $edd_option ) {
 		$value = $edd_option;
+	} elseif( ! empty( $args['allow_blank'] ) && empty( $edd_option ) ) {
+		$value = '';
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
@@ -1565,9 +1612,10 @@ function edd_text_callback( $args ) {
 
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
+	$disabled = ! empty( $args['disabled'] ) ? ' disabled="disabled"' : '';
 	$readonly = $args['readonly'] === true ? ' readonly="readonly"' : '';
 	$size     = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$html     = '<input type="text" class="' . $class . ' ' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" ' . $name . ' value="' . esc_attr( stripslashes( $value ) ) . '"' . $readonly . ' placeholder="' . esc_attr( $args['placeholder'] ) . '"/>';
+	$html     = '<input type="text" class="' . $class . ' ' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" ' . $name . ' value="' . esc_attr( stripslashes( $value ) ) . '"' . $readonly . $disabled . ' placeholder="' . esc_attr( $args['placeholder'] ) . '"/>';
 	$html    .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
@@ -1775,12 +1823,12 @@ function edd_rich_editor_callback( $args ) {
 
 	if ( $edd_option ) {
 		$value = $edd_option;
-
-		if( empty( $args['allow_blank'] ) && empty( $value ) ) {
+	} else {
+		if( ! empty( $args['allow_blank'] ) && empty( $edd_option ) ) {
+			$value = '';
+		} else {
 			$value = isset( $args['std'] ) ? $args['std'] : '';
 		}
-	} else {
-		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
 
 	$rows = isset( $args['size'] ) ? $args['size'] : 20;

@@ -28,7 +28,8 @@ function edd_tools_page() {
 ?>
 	<div class="wrap">
 		<?php screen_icon(); ?>
-		<h1 class="nav-tab-wrapper">
+		<h2><?php _e( 'Easy Digital Downloads Tools', 'easy-digital-downloads' ); ?></h2>
+		<h2 class="nav-tab-wrapper">
 			<?php
 			foreach( edd_get_tools_tabs() as $tab_id => $tab_name ) {
 
@@ -45,7 +46,7 @@ function edd_tools_page() {
 
 			}
 			?>
-		</h1>
+		</h2>
 		<div class="metabox-holder">
 			<?php
 			do_action( 'edd_tools_tab_' . $active_tab );
@@ -281,7 +282,7 @@ function edd_tools_betas_display() {
 								<?php $checked = edd_extension_has_beta_support( $slug ); ?>
 								<th scope="row"><?php echo esc_html( $product ); ?></th>
 								<td>
-									<input type="checkbox" name="enabled_betas[<?php echo esc_attr( $slug ); ?>]" id="enabled_betas[<?php echo esc_attr( $slug ); ?>]"<?php echo $checked; ?> value="1" />
+									<input type="checkbox" name="enabled_betas[<?php echo esc_attr( $slug ); ?>]" id="enabled_betas[<?php echo esc_attr( $slug ); ?>]"<?php echo checked( $checked, true, false ); ?> value="1" />
 									<label for="enabled_betas[<?php echo esc_attr( $slug ); ?>]"><?php printf( __( 'Get updates for pre-release versions of %s', 'easy-digital-downloads' ), $product ); ?></label>
 								</td>
 							</tr>
