@@ -231,4 +231,124 @@ class EDD_Gateway_PayPal extends EDD_Gateway {
 			exit;
 		}
 	}
+
+	/**
+	 * Process PayPal IPN.
+	 *
+	 * @access public
+	 * @since  2.7
+	 *
+	 * @return void
+	 */
+	public function process_webhooks() {
+		if ( isset( $_SERVER['REQUEST_METHOD'] ) && $_SERVER['REQUEST_METHOD'] != 'POST' ) {
+			return;
+		}
+
+		$post_data = '';
+
+		// Fallback just in case post_max_size is lower than needed
+		if ( ini_get( 'allow_url_fopen' ) ) {
+			$post_data = file_get_contents( 'php://input' );
+		} else {
+			// If allow_url_fopen is not enabled, then make sure that post_max_size is large enough
+			ini_set( 'post_max_size', '12M' );
+		}
+		// Start the encoded data collection with notification command
+		$encoded_data = 'cmd=_notify-validate';
+
+		$arg_separator = edd_get_php_arg_separator_output();
+
+		if ( $post_data || strlen( $post_data ) > 0 ) {
+			$encoded_data .= $arg_separator . $post_data;
+		} else {
+			if ( empty( $_POST ) ) {
+				return;
+			} else {
+				foreach ( $_POST as $key => $value ) {
+					$encoded_data .= $arg_separator . "$key=" . urlencode( $value );
+				}
+			}
+		}
+
+		parse_str( $encoded_data, $encoded_data_array );
+
+		foreach ( $encoded_data_array as $key => $value ) {
+			if ( false !== strpos( $key, 'amp;' ) ) {
+				$new_key = str_replace( '&amp;', '&', $key );
+				$new_key = str_replace( 'amp;', '&', $new_key );
+
+				unset( $encoded_data_array[ $key ] );
+				$encoded_data_array[ $new_key ] = $value;
+			}
+		}
+
+		$paypal_redirect = edd_get_paypal_redirect( true );
+
+		if ( ! edd_get_option( 'disable_paypal_verification' ) ) {
+			// Validate the IPN
+			$remote_post_vars = array(
+				'method'      => 'POST',
+				'timeout'     => 45,
+				'redirection' => 5,
+				'httpversion' => '1.1',
+				'blocking'    => true,
+				'headers'     => array(
+					'host'         => 'www.paypal.com',
+					'connection'   => 'close',
+					'content-type' => 'application/x-www-form-urlencoded',
+					'post'         => '/cgi-bin/webscr HTTP/1.1',
+
+				),
+				'sslverify'   => false,
+				'body'        => $encoded_data_array
+			);
+
+			$api_response = wp_remote_post( edd_get_paypal_redirect( true ), $remote_post_vars );
+
+			if ( is_wp_error( $api_response ) ) {
+				edd_record_gateway_error( __( 'IPN Error', 'easy-digital-downloads' ), sprintf( __( 'Invalid IPN verification response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $api_response ) ) );
+				return;
+			}
+
+			if ( wp_remote_retrieve_body( $api_response ) !== 'VERIFIED' && edd_get_option( 'disable_paypal_verification', false ) ) {
+				edd_record_gateway_error( __( 'IPN Error', 'easy-digital-downloads' ), sprintf( __( 'Invalid IPN verification response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $api_response ) ) );
+				return;
+			}
+		}
+
+		// Check if $post_data_array has been populated
+		if ( ! is_array( $encoded_data_array ) && ! empty( $encoded_data_array ) ) {
+			return;
+		}
+
+		$defaults = array(
+			'txn_type'       => '',
+			'payment_status' => ''
+		);
+
+		$encoded_data_array = wp_parse_args( $encoded_data_array, $defaults );
+
+		$payment_id = 0;
+
+		if ( ! empty( $encoded_data_array[ 'parent_txn_id' ] ) ) {
+			$payment_id = edd_get_purchase_id_by_transaction_id( $encoded_data_array[ 'parent_txn_id' ] );
+		} elseif ( ! empty( $encoded_data_array[ 'txn_id' ] ) ) {
+			$payment_id = edd_get_purchase_id_by_transaction_id( $encoded_data_array[ 'txn_id' ] );
+		}
+
+		if ( empty( $payment_id ) ) {
+			$payment_id = ! empty( $encoded_data_array[ 'custom' ] ) ? absint( $encoded_data_array[ 'custom' ] ) : 0;
+		}
+
+		if ( has_action( 'edd_paypal_' . $encoded_data_array['txn_type'] ) ) {
+			// Allow PayPal IPN types to be processed separately
+			do_action( 'edd_paypal_' . $encoded_data_array['txn_type'], $encoded_data_array, $payment_id );
+		} else {
+			// Fallback to web accept just in case the txn_type isn't present
+			do_action( 'edd_paypal_web_accept', $encoded_data_array, $payment_id );
+		}
+
+		exit;
+	}
 }
