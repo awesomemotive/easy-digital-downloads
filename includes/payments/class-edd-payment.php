@@ -1903,13 +1903,11 @@ class EDD_Payment {
 	/**
 	 * Setup the payment tax rate
 	 *
-	 * @since  2.6
+	 * @since  2.7
 	 * @return float The tax rate for the payment
 	 */
 	private function setup_tax_rate() {
-
 		return $this->get_meta( '_edd_payment_tax_rate', true );
-
 	}
 
 	/**
