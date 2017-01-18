@@ -95,6 +95,7 @@ abstract class EDD_Gateway {
 	 */
 	public function __construct() {
 		$this->fill_vars();
+		$this->init();
 	}
 
 	/**
@@ -200,12 +201,13 @@ abstract class EDD_Gateway {
 	}
 
 	/**
-	 * Process the checkout flow.
+	 * Process the purchase.
 	 *
 	 * @access public
 	 * @since  2.7
 	 *
+	 * @param array $purchase_data Purchase data from session.
 	 * @return void
 	 */
-	private function process_checkout() {}
+	public function process_purchase( $purchase_data = array() ) {}
 }
