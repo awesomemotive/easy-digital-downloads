@@ -349,23 +349,6 @@ function edd_reports_tab_export() {
 
 					<?php do_action( 'edd_reports_tab_export_content_top' ); ?>
 
-					<div class="postbox edd-export-sales-earnings">
-						<h3><span><?php _e( 'Export Earnings and Sales Stats', 'easy-digital-downloads' ); ?></span></h3>
-						<div class="inside">
-							<p><?php _e( 'Download a CSV of earnings and sales over time.', 'easy-digital-downloads' ); ?></p>
-							<form method="post">
-								<?php echo EDD()->html->year_dropdown( 'start_year' ); ?>
-								<?php echo EDD()->html->month_dropdown( 'start_month' ); ?>
-								<?php echo _x( 'to', 'Date one to date two', 'easy-digital-downloads' ); ?>
-								<?php echo EDD()->html->year_dropdown( 'end_year' ); ?>
-								<?php echo EDD()->html->month_dropdown( 'end_month' ); ?>
-								<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
-								<input type="hidden" name="edd-action" value="earnings_export"/>
-								<input type="submit" value="<?php _e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
-							</form>
-						</div><!-- .inside -->
-					</div><!-- .postbox -->
-
 					<div class="postbox edd-export-earnings-report">
 						<h3><span><?php _e( 'Export Earnings Report', 'easy-digital-downloads' ); ?></span></h3>
 						<div class="inside">
