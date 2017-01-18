@@ -49,7 +49,7 @@ class EDD_Payments_Query extends EDD_Stats {
 	 *
 	 * @access public
 	 * @since 1.8
-	 * @param $args array The array of arguments that can be passed in and used for setting up this payment query.
+	 * @param array $args The array of arguments that can be passed in and used for setting up this payment query.
 	 */
 	public function __construct( $args = array() ) {
 		$defaults = array(
@@ -62,6 +62,7 @@ class EDD_Payments_Query extends EDD_Stats {
 			'orderby'         => 'ID',
 			'order'           => 'DESC',
 			'user'            => null,
+			'customer'        => null,
 			'status'          => edd_get_payment_status_keys(),
 			'meta_key'        => null,
 			'year'            => null,
@@ -120,6 +121,7 @@ class EDD_Payments_Query extends EDD_Stats {
 		add_action( 'edd_pre_get_payments', array( $this, 'per_page' ) );
 		add_action( 'edd_pre_get_payments', array( $this, 'page' ) );
 		add_action( 'edd_pre_get_payments', array( $this, 'user' ) );
+		add_action( 'edd_pre_get_payments', array( $this, 'customer' ) );
 		add_action( 'edd_pre_get_payments', array( $this, 'search' ) );
 		add_action( 'edd_pre_get_payments', array( $this, 'mode' ) );
 		add_action( 'edd_pre_get_payments', array( $this, 'children' ) );
@@ -319,6 +321,24 @@ class EDD_Payments_Query extends EDD_Stats {
 		$this->__set( 'meta_query', array(
 			'key'   => $user_key,
 			'value' => $this->args['user']
+		) );
+	}
+
+	/**
+	 * Specific customer id
+	 *
+	 * @access  public
+	 * @since   2.6
+	 * @return  void
+	 */
+	public function customer() {
+		if ( is_null( $this->args['customer'] ) || ! is_numeric( $this->args['customer'] ) ) {
+			return;
+		}
+
+		$this->__set( 'meta_query', array(
+			'key'   => '_edd_payment_customer_id',
+			'value' => (int) $this->args['customer'],
 		) );
 	}
 

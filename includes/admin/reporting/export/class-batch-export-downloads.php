@@ -85,7 +85,7 @@ class EDD_Batch_Downloads_Export extends EDD_Batch_Export {
 		);
 
 		$args = array(
-			'post_type'      => 'download', 
+			'post_type'      => 'download',
 			'posts_per_page' => 30,
 			'paged'          => $this->step
 		);
@@ -122,7 +122,7 @@ class EDD_Batch_Downloads_Export extends EDD_Batch_Export {
 										$prices[] = $price['name'] . ': ' . $price['amount'];
 									}
 
-									$row[ $key ] = implode( ' | ', $prices );	
+									$row[ $key ] = implode( ' | ', $prices );
 
 								} else {
 
@@ -137,17 +137,26 @@ class EDD_Batch_Downloads_Export extends EDD_Batch_Export {
 
 								$files = array();
 								foreach( edd_get_download_files( $download->ID ) as $file ) {
-									$files[] = $file['file'];
+									$f = $file['file'];
+
+									if ( edd_has_variable_prices( $download->ID ) ) {
+										$condition = isset( $file['condition'] ) ? $file['condition'] : 'all';
+										$f .= ';' . $condition;
+									}
+
+									$files[] = $f;
+
+									unset( $file );
 								}
 
 								$row[ $key ] = implode( ' | ', $files );
-							
+
 								break;
 
 							default :
 
 								$row[ $key ] = get_post_meta( $download->ID, $key, true );
-								
+
 								break;
 
 						}

@@ -3,7 +3,7 @@
 /**
  * @group edd_customers
  */
-class Tests_Customers_DB extends WP_UnitTestCase {
+class Tests_Customers_DB extends EDD_UnitTestCase {
 
 	protected $_post_id = null;
 
@@ -79,8 +79,6 @@ class Tests_Customers_DB extends WP_UnitTestCase {
 			)
 		);
 
-		$price = '100.00';
-
 		$total = 0;
 
 		$prices = get_post_meta($download_details[0]['id'], 'edd_variable_prices', true);
@@ -118,7 +116,7 @@ class Tests_Customers_DB extends WP_UnitTestCase {
 		);
 
 		$_SERVER['REMOTE_ADDR'] = '10.0.0.0';
-		$_SERVER['SERVER_NAME'] = 'edd_virtual';
+		$_SERVER['SERVER_NAME'] = 'edd-virtual.local';
 
 		$payment_id = edd_insert_payment( $purchase_data );
 
@@ -130,7 +128,7 @@ class Tests_Customers_DB extends WP_UnitTestCase {
 		parent::tearDown();
 	}
 
-	public function test_intalled() {
+	public function test_installed() {
 		$this->assertTrue( EDD()->customers->installed() );
 	}
 

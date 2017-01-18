@@ -22,7 +22,7 @@ $user      = edd_get_payment_meta_user_info( $payment->ID );
 $email     = edd_get_payment_user_email( $payment->ID );
 $status    = edd_get_payment_status( $payment, true );
 ?>
-<table id="edd_purchase_receipt">
+<table id="edd_purchase_receipt" class="edd-table">
 	<thead>
 		<?php do_action( 'edd_payment_receipt_before', $payment, $edd_receipt_args ); ?>
 
@@ -44,7 +44,7 @@ $status    = edd_get_payment_status( $payment, true );
 		<?php if ( filter_var( $edd_receipt_args['payment_key'], FILTER_VALIDATE_BOOLEAN ) ) : ?>
 			<tr>
 				<td><strong><?php _e( 'Payment Key', 'easy-digital-downloads' ); ?>:</strong></td>
-				<td><?php echo get_post_meta( $payment->ID, '_edd_payment_purchase_key', true ); ?></td>
+				<td><?php echo edd_get_payment_meta( $payment->ID, '_edd_payment_purchase_key', true ); ?></td>
 			</tr>
 		<?php endif; ?>
 
@@ -118,7 +118,7 @@ $status    = edd_get_payment_status( $payment, true );
 
 	<h3><?php echo apply_filters( 'edd_payment_receipt_products_title', __( 'Products', 'easy-digital-downloads' ) ); ?></h3>
 
-	<table id="edd_purchase_receipt_products">
+	<table id="edd_purchase_receipt_products" class="edd-table">
 		<thead>
 			<th><?php _e( 'Name', 'easy-digital-downloads' ); ?></th>
 			<?php if ( edd_use_skus() ) { ?>
@@ -192,7 +192,7 @@ $status    = edd_get_payment_status( $payment, true );
 
 													$download_url = edd_get_download_file_url( $meta['key'], $email, $filekey, $bundle_item, $price_id ); ?>
 													<li class="edd_download_file">
-														<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link"><?php echo esc_html( $file['name'] ); ?></a>
+														<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link"><?php echo edd_get_file_name( $file ); ?></a>
 													</li>
 													<?php
 													do_action( 'edd_receipt_bundle_files', $filekey, $file, $item['id'], $bundle_item, $payment->ID, $meta );
@@ -213,6 +213,10 @@ $status    = edd_get_payment_status( $payment, true );
 						</ul>
 						<?php endif; ?>
 
+						<?php
+						// Allow extensions to extend the product cell
+						do_action( 'edd_purchase_receipt_after_files', $item['id'], $payment->ID, $meta );
+						?>
 					</td>
 					<?php if ( edd_use_skus() ) : ?>
 						<td><?php echo edd_get_download_sku( $item['id'] ); ?></td>
