@@ -72,6 +72,8 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 			__( 'Net Activity', 'easy-digital-downloads' )
 		);
 
+		$col_data = '';
+
 		for ( $i = 0; $i < count( $cols ); $i++ ) {
 			$col_data .= $cols[ $i ];
 
