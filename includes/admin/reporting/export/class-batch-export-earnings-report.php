@@ -146,7 +146,11 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 
 			$row_data .= isset( $data['publish']['count'] ) ? $data['publish']['count'] . ',' : 0 . ',';
 
-			$row_data .= $data['publish']['amount'] + $data['refunded']['amount'] + $data['revoked']['amount'] + $data['cancelled']['amount'] . ',';
+			$publish_total = isset( $data['publish']['amount'] ) ? $data['publish']['amount'] : 0;
+			$refunded_total = isset( $data['refunded']['amount'] ) ? $data['refunded']['amount'] : 0;
+			$cancelled_total = isset( $data['cancelled']['amount'] ) ? $data['cancelled']['amount'] : 0;
+
+			$row_data .= $publish_total + $refunded_total + $cancelled_total . ',';
 
 			$row_data .= isset( $data['refunded']['count'] ) ? $data['refunded']['count'] . ',' : 0 . ',';
 			$row_data .= isset( $data['refunded']['amount'] ) ? '-' . $data['refunded']['amount'] . ',' : 0 . ',';
