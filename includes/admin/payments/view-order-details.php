@@ -112,34 +112,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 										<div class="edd-order-discount edd-admin-box-inside">
 											<p>
 												<span class="label"><?php _e( 'Discount Code', 'easy-digital-downloads' ); ?>:</span>&nbsp;
-												<span>
-													<?php
-													if ( $payment->discounts !== 'none' ) {
-
-														$discounts = $payment->discounts;
-														if ( ! is_array( $discounts ) ) {
-															$discounts = explode( ',', $discounts );
-														}
-
-														foreach ( $discounts as $discount ) {
-															$discount_obj = edd_get_discount_by_code( $discount );
-
-															if ( false === $discount_obj ) {
-																echo '<code>' . $discount . '</code>';
-															} else {
-																echo '<code><a href="' . $discount_obj->edit_url() . '">' . $discount_obj->code . '</a></code>';
-															}
-
-														}
-
-
-													} else {
-
-														_e( 'None', 'easy-digital-downloads' );
-
-													}
-													?>
-												</span>
+												<span><?php if ( $payment->discounts !== 'none' ) { echo '<code>' . $payment->discounts . '</code>'; } else { _e( 'None', 'easy-digital-downloads' ); } ?></span>
 											</p>
 										</div>
 
@@ -391,7 +364,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 												<?php if ( edd_item_quantities_enabled() ) : ?>
 												<?php echo __( 'Total:', 'easy-digital-downloads' ) . '&nbsp;'; ?>
 												<?php endif; ?>
-												<span class="price-text"><?php echo edd_currency_filter( edd_format_amount( $price ), $currency_code ); ?></span>
+												<span class="price-text"><?php echo edd_currency_symbol( $payment->currency ); ?>&nbsp;<input type="text" class="med-text edd-payment-item-total" value="<?php echo esc_attr( edd_format_amount( $price ) ); ?>"/></span>
 											</li>
 
 											<li class="actions">
@@ -465,59 +438,39 @@ $customer       = new EDD_Customer( $payment->customer_id );
 
 									<div class="column-container customer-info">
 										<div class="column">
-											<?php if( ! empty( $customer->id ) ) : ?>
-												<?php $customer_url = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ); ?>
-												<a href="<?php echo $customer_url; ?>"><?php echo $customer->name; ?> - <?php echo $customer->email; ?></a>
-											<?php endif; ?>
-										</div>
-										<div class="column">
-											<input type="hidden" name="edd-current-customer" value="<?php echo $customer->id; ?>" />
-										</div>
-										<div class="column">
-											<a href="#change" class="edd-payment-change-customer"><?php _e( 'Assign to another customer', 'easy-digital-downloads' ); ?></a>
-											&nbsp;|&nbsp;
-											<a href="#new" class="edd-payment-new-customer"><?php _e( 'New Customer', 'easy-digital-downloads' ); ?></a>
-										</div>
-									</div>
-
-									<div class="column-container change-customer" style="display: none">
-										<div class="column">
-											<strong><?php _e( 'Select a customer', 'easy-digital-downloads' ); ?>:</strong>
 											<?php
 												$args = array(
-													'class'       => 'edd-payment-change-customer-input',
-													'selected'    => $customer->id,
-													'name'        => 'customer-id',
+													'selected' => $customer->id,
+													'name' => 'customer-id',
 													'placeholder' => __( 'Type to search all Customers', 'easy-digital-downloads' ),
 												);
 
 												echo EDD()->html->customer_dropdown( $args );
 											?>
 										</div>
-										<div class="column"></div>
 										<div class="column">
-											<strong><?php _e( 'Actions', 'easy-digital-downloads' ); ?>:</strong>
-											<br />
-											<input type="hidden" id="edd-change-customer" name="edd-change-customer" value="0" />
-											<a href="#cancel" class="edd-payment-change-customer-cancel edd-delete"><?php _e( 'Cancel', 'easy-digital-downloads' ); ?></a>
+											<input type="hidden" name="edd-current-customer" value="<?php echo $customer->id; ?>" />
 										</div>
 										<div class="column">
-											<small><em>*<?php _e( 'Click "Save Payment" to change the customer', 'easy-digital-downloads' ); ?></em></small>
+											<?php if( ! empty( $customer->id ) ) : ?>
+												<?php $customer_url = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ); ?>
+												<a href="<?php echo $customer_url; ?>"><?php _e( 'View Customer Details', 'easy-digital-downloads' ); ?></a>
+												&nbsp;|&nbsp;
+											<?php endif; ?>
+											<a href="#new" class="edd-payment-new-customer"><?php _e( 'New Customer', 'easy-digital-downloads' ); ?></a>
 										</div>
 									</div>
 
 									<div class="column-container new-customer" style="display: none">
 										<div class="column">
-											<strong><?php _e( 'Name', 'easy-digital-downloads' ); ?>:</strong>&nbsp;
+											<strong><?php _e( 'Name:', 'easy-digital-downloads' ); ?></strong>&nbsp;
 											<input type="text" name="edd-new-customer-name" value="" class="medium-text"/>
 										</div>
 										<div class="column">
-											<strong><?php _e( 'Email', 'easy-digital-downloads' ); ?>:</strong>&nbsp;
+											<strong><?php _e( 'Email:', 'easy-digital-downloads' ); ?></strong>&nbsp;
 											<input type="email" name="edd-new-customer-email" value="" class="medium-text"/>
 										</div>
 										<div class="column">
-											<strong><?php _e( 'Actions', 'easy-digital-downloads' ); ?>:</strong>
-											<br />
 											<input type="hidden" id="edd-new-customer" name="edd-new-customer" value="0" />
 											<a href="#cancel" class="edd-payment-new-customer-cancel edd-delete"><?php _e( 'Cancel', 'easy-digital-downloads' ); ?></a>
 										</div>

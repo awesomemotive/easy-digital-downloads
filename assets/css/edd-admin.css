@@ -492,7 +492,7 @@ textarea#edd-payment-note {
 	#edd-purchased-files.columns-4 li.price,
 	#edd-purchased-files.columns-3 .row > ul > li.price,
 	#edd-purchased-files.columns-3 .inside > ul > li.price {
-		width:14%;
+		width:15%;
 	}
 	#edd-purchased-files.columns-4 li.actions {
 		width: 25%; margin-top: 0; margin-right: 0;

@@ -389,6 +389,7 @@ jQuery(document).ready(function ($) {
 			this.add_download();
 			this.change_customer();
 			this.new_customer();
+			this.edit_price();
 			this.recalculate_total();
 			this.variable_prices_check();
 			this.add_note();
@@ -611,6 +612,20 @@ jQuery(document).ready(function ($) {
 				$( '.edd-order-payment-recalc-totals' ).show();
 
 			});
+		},
+
+		edit_price : function() {
+
+			$('.edd-payment-item-total').on('keyup', function () {
+				var row = $(this).parents('div.row');
+				$( '.edd-order-payment-recalc-totals' ).show();
+
+				var quantity = row.find( 'input.edd-payment-details-download-quantity' ).val();
+
+				row.find( 'input.edd-payment-details-download-item-price' ).val( $(this).val() );
+				row.find( 'input.edd-payment-details-download-amount' ).val( $(this).val() );
+			});
+
 		},
 
 		recalculate_total : function() {
