@@ -109,9 +109,10 @@ class EDD_Gateways {
 	 * @access private
 	 * @since  2.7
 	 *
+	 * @param bool $sort If true, the default gateway will be first.
 	 * @return array Enabled gateways.
 	 */
-	private function get_enabled_gateways() {
+	private function get_enabled_gateways( $sort = false ) {
 		$gateways = $this->get_gateways();
 		$enabled  = (array) edd_get_option( 'gateways', false );
 
@@ -146,7 +147,7 @@ class EDD_Gateways {
 	}
 
 	/**
-	 * Determine if a gateway is enabled
+	 * Determine if a gateway is active.
 	 *
 	 * @access public
 	 * @since  2.7
@@ -154,7 +155,26 @@ class EDD_Gateways {
 	 * @param string $id Gateway ID.
 	 * @return bool Is the gateway enabled?
 	 */
-	public function is_gateway_enabled( $id = '' ) {
-		return isset( $this->enabled_gateways[ $id ] );
+	public function is_gateway_active( $id = '' ) {
+		return apply_filters( 'edd_is_gateway_active', isset( $this->enabled_gateways[ $id ] ), $id, $this->enabled_gateways );
+	}
+
+	/**
+	 * Get the default gateway.
+	 *
+	 * @access public
+	 * @since  2.7
+	 *
+	 * @return string $default Default Gateway.
+	 */
+	public function get_default_gateway() {
+		$default = edd_get_option( 'default_gateway', 'paypal' );
+
+		if ( ! $this->is_gateway_active( $default ) ) {
+			$gateways = array_keys( $this->enabled_gateways );
+			$default  = reset( $gateways );
+		}
+
+		return apply_filters( 'edd_default_gateway', $default );
 	}
 }

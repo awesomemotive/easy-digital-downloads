@@ -16,91 +16,50 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Returns a list of all available gateways.
  *
  * @since 1.0
+ * @since 2.7 Updated to use EDD_Gateways.
+ *
  * @return array $gateways All the available gateways
  */
 function edd_get_payment_gateways() {
-	// Default, built-in gateways
-	$gateways = array(
-		'paypal' => array(
-			'admin_label'    => __( 'PayPal Standard', 'easy-digital-downloads' ),
-			'checkout_label' => __( 'PayPal', 'easy-digital-downloads' ),
-			'supports'       => array( 'buy_now' )
-		),
-		'manual' => array(
-			'admin_label'    => __( 'Test Payment', 'easy-digital-downloads' ),
-			'checkout_label' => __( 'Test Payment', 'easy-digital-downloads' )
-		),
-	);
-
-	return apply_filters( 'edd_payment_gateways', $gateways );
+	return EDD()->gateways->get_gateways();
 }
 
 /**
  * Returns a list of all enabled gateways.
  *
  * @since 1.0
+ * @since 2.7 Updated to use EDD_Gateways.
+ *
  * @param  bool $sort If true, the default gateway will be first
  * @return array $gateway_list All the available gateways
 */
 function edd_get_enabled_payment_gateways( $sort = false ) {
-	$gateways = edd_get_payment_gateways();
-	$enabled  = (array) edd_get_option( 'gateways', false );
-
-	$gateway_list = array();
-
-	foreach ( $gateways as $key => $gateway ) {
-		if ( isset( $enabled[ $key ] ) && $enabled[ $key ] == 1 ) {
-			$gateway_list[ $key ] = $gateway;
-		}
-	}
-
-	if ( true === $sort ) {
-		// Reorder our gateways so the default is first
-		$default_gateway_id = edd_get_default_gateway();
-
-		if( edd_is_gateway_active( $default_gateway_id ) ) {
-
-			$default_gateway    = array( $default_gateway_id => $gateway_list[ $default_gateway_id ] );
-			unset( $gateway_list[ $default_gateway_id ] );
-
-			$gateway_list = array_merge( $default_gateway, $gateway_list );
-
-		}
-
-	}
-
-	return apply_filters( 'edd_enabled_payment_gateways', $gateway_list );
+	return EDD()->gateways->get_enabled_gateways( $sort );
 }
 
 /**
  * Checks whether a specified gateway is activated.
  *
  * @since 1.0
+ * @since 2.7 Updated to use EDD_Gateways.
+ *
  * @param string $gateway Name of the gateway to check for
  * @return boolean true if enabled, false otherwise
 */
 function edd_is_gateway_active( $gateway ) {
-	$gateways = edd_get_enabled_payment_gateways();
-	$ret = array_key_exists( $gateway, $gateways );
-	return apply_filters( 'edd_is_gateway_active', $ret, $gateway, $gateways );
+	return EDD()->gateways->is_gateway_active( $gateway );
 }
 
 /**
  * Gets the default payment gateway selected from the EDD Settings
  *
  * @since 1.5
+ * @since 2.7 Updated to use EDD_Gateways.
+ *
  * @return string Gateway ID
  */
 function edd_get_default_gateway() {
-	$default = edd_get_option( 'default_gateway', 'paypal' );
-
-	if( ! edd_is_gateway_active( $default ) ) {
-		$gateways = edd_get_enabled_payment_gateways();
-		$gateways = array_keys( $gateways );
-		$default  = reset( $gateways );
-	}
-
-	return apply_filters( 'edd_default_gateway', $default );
+	return EDD()->gateways->get_default_gateway();
 }
 
 /**
