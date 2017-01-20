@@ -733,6 +733,87 @@ class EDD_Payment {
 										}
 										break;
 
+									case 'modify':
+
+										if ( 'publish' === $this->status || 'complete' === $this->status || 'revoked' === $this->status ) {
+
+											if ( $item['previous_data']['quantity'] != $item['quantity'] ) {
+												$log_count_change = $item['previous_data']['quantity'] - $item['quantity'];
+
+												// Find existing logs.
+												$meta_query   = array();
+												$meta_query[] = array(
+													'key'     => '_edd_log_payment_id',
+													'value'   => $this->ID,
+													'compare' => '=',
+												);
+
+												if ( ! empty( $item[ 'price_id' ] ) || 0 === (int) $item[ 'price_id' ] ) {
+													$meta_query[] = array(
+														'key'     => '_edd_log_price_id',
+														'value'   => (int) $item[ 'price_id' ],
+														'compare' => '='
+													);
+												}
+
+												$log_args = array(
+													'post_parent'    => $item[ 'id' ],
+													'meta_query'     => $meta_query,
+													'log_type'       => 'sale'
+												);
+
+												$existing_logs = $edd_logs->get_connected_logs( $log_args );
+
+												if ( count( $existing_logs ) > $item['quantity'] ) {
+
+													// We have to remove some logs, since quantity has been reduced.
+													$number_of_logs = count( $existing_logs ) - $item['quantity'];
+													$logs_to_remove = array_slice( $existing_logs, 0, $number_of_logs );
+													foreach ( $logs_to_remove as $log ) {
+														wp_delete_post( $log->ID );
+													}
+
+												} elseif ( count( $existing_logs ) < $item['quantity'] ) {
+
+													// We have to add some logs, since quantity has been increased.
+													$log_date = date_i18n( 'Y-m-d G:i:s', strtotime( $this->completed_date ) );
+													$price_id = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : 0;
+
+													$number_of_logs = $item['quantity'] - count( $existing_logs );
+													$y = 0;
+													while ( $y < $number_of_logs ) {
+														edd_record_sale_in_log( $item['id'], $this->ID, $price_id, $log_date );
+														$y ++;
+													}
+
+												}
+
+											}
+
+											$download = new EDD_Download( $item['id'] );
+
+											// Change the number of sales for the download.
+											if ( $log_count_change > 0 ) {
+												$download->increase_sales( $log_count_change );
+											} elseif ( $log_count_change < 0 ) {
+												$log_count_change = absint( $log_count_change );
+												$download->decrease_sales( $log_count_change );
+											}
+
+											// Change the earnings for the product.
+											$price_change = $item['previous_data']['price'] - $item['price'];
+											if ( $price_change > 0 ) {
+												$download->increase_earnings( $price_change );
+												$total_increase += $price_change;
+											} elseif ( $price_change < 0 ) {
+												$price_change = -( $price_change );
+												$download->decrease_earnings( $price_change );
+												$total_decrease -= $price_change;
+											}
+
+										}
+										break;
+
 							}
 
 						}
@@ -1237,6 +1318,52 @@ class EDD_Payment {
 
 		$this->decrease_subtotal( $total_reduced );
 		$this->decrease_tax( $tax_reduced );
+
+		return true;
+	}
+
+	/**
+	 * Alter a limited set of properties of a cart item
+	 *
+	 * @since 2.7
+	 * @param bool  $cart_index
+	 * @param array $args
+	 *
+	 * @return bool
+	 */
+	public function modify_cart_item( $cart_index = false, $args = array() ) {
+		if ( false === $cart_index ) {
+			return false;
+		}
+
+		if ( ! array_key_exists( $cart_index, $this->cart_details ) ) {
+			return false;
+		}
+
+		$current_args  = $this->cart_details[ $cart_index ];
+		$allowed_items = apply_filters( 'edd_allowed_cart_item_modifications', array(
+			'item_price', 'tax', 'discount', 'quantity'
+		) );
+
+		// Remove any items we don't want to modify.
+		foreach ( $args as $key => $arg ) {
+			if ( ! in_array( $key, $allowed_items ) ) {
+				unset( $args[ $key ] );
+			}
+		}
+
+		$merged_item = array_merge( $current_args, $args );
+
+		$this->cart_details[ $cart_index ]    = $merged_item;
+		$modified_download                    = $merged_item;
+		$modified_download['action']          = 'modify';
+		$modified_download['previous_data']   = $current_args;
+
+		$this->pending['downloads'][] = $modified_download;
+
+		$new_subtotal = $modified_download['item_price'] * $modified_download['quantity'];
+		$this->increase_subtotal( $new_subtotal - $modified_download['discount'] );
+		$this->increase_tax( $modified_download['tax'] );
 
 		return true;
 	}
