@@ -54,7 +54,7 @@ function edd_is_gateway_active( $gateway ) {
  * Gets the default payment gateway selected from the EDD Settings
  *
  * @since 1.5
- * @since 2.7 Updated to use EDD_Gateways.
+ * @since 2.7 Updated to use EDD_Gateways.gi
  *
  * @return string Gateway ID
  */

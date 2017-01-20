@@ -287,7 +287,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/class-edd-gateway-manual.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/class-edd-gateway-paypal.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal-standard.php';
-		require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal-standard.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/manual.php';
 		require_once EDD_PLUGIN_DIR . 'includes/discount-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/payments/functions.php';

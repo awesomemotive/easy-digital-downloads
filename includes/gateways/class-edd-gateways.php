@@ -22,20 +22,20 @@ class EDD_Gateways {
 	/**
 	 * Registered Gateways.
 	 *
-	 * @access public
+	 * @access protected
 	 * @since  2.7
 	 * @var    array
 	 */
-	public $available_gateways = array();
+	protected $available_gateways = array();
 
 	/**
 	 * Enabled Gateways.
 	 *
-	 * @access public
+	 * @access protected
 	 * @since  2.7
 	 * @var    array
 	 */
-	public $enabled_gateways = array();
+	protected $enabled_gateways = array();
 
 	/**
 	 * Constructor.
@@ -100,7 +100,9 @@ class EDD_Gateways {
 		 *
 		 * @param array $gateways Registered payment gateways.
 		 */
-		return apply_filters( 'edd_payment_gateways', $gateways );
+		$this->available_gateways = apply_filters( 'edd_payment_gateways', $gateways );
+
+		return $this->available_gateways;
 	}
 
 	/**

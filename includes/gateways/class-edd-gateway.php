@@ -80,7 +80,7 @@ abstract class EDD_Gateway {
 	 * @since  2.7
 	 * @var    array
 	 */
-	public $supports;
+	public $supports = array();
 
 	/**
 	 * Is test mode?
@@ -113,7 +113,7 @@ abstract class EDD_Gateway {
 	 * @return void
 	 */
 	private function fill_vars() {
-		$gateways = edd_get_payment_gateways();
+		$gateways = EDD()->gateways->get_gateways();
 
 		$this->test_mode = edd_is_test_mode();
 
