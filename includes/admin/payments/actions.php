@@ -84,10 +84,15 @@ function edd_update_payment_details( $data ) {
 				$download['item_price'] = 0.00;
 			}
 
+			if ( empty( $download['item_tax'] ) ) {
+				$download[ 'item_tax' ] = 0.00;
+			}
+
 			$item_price  = $download['item_price'];
 			$download_id = absint( $download['id'] );
 			$quantity    = absint( $download['quantity'] ) > 0 ? absint( $download['quantity'] ) : 1;
 			$price_id    = false;
+			$tax         = $download['item_tax'];
 
 			if ( edd_has_variable_prices( $download_id ) && isset( $download['price_id'] ) ) {
 				$price_id = absint( $download['price_id'] );
@@ -98,6 +103,7 @@ function edd_update_payment_details( $data ) {
 				'quantity'    => $quantity,
 				'item_price'  => $item_price,
 				'price_id'    => $price_id,
+				'tax'         => $tax,
 			);
 
 			$payment->add_download( $download_id, $args );

@@ -826,6 +826,39 @@ class Tests_Payment_Class extends EDD_UnitTestCase {
 
 	}
 
+	public function modify_cart_item_price() {
+		$payment = new EDD_Payment( $this->_payment_id );
+		$payment->status = 'publish';
+		$payment->save();
+
+		$payment = new EDD_Payment( $payment->ID );
+		$payment->modify_cart_item( 0, array( 'item_price' => 1 ) );
+		$payment->save();
+
+		$payment = new EDD_Payment( $payment->ID );
+		$this->assertEquals( 1, $payment->cart_details[0]['item_price'] );
+
+		$download = new EDD_Download( $payment->cart_details[0]['id'] );
+		$this->assertEquals( 1, $download->get_earnings() );
+	}
+
+	public function modify_cart_item_quantity() {
+		$payment = new EDD_Payment( $this->_payment_id );
+		$payment->status = 'publish';
+		$payment->save();
+
+		$payment = new EDD_Payment( $payment->ID );
+		$payment->modify_cart_item( 0, array( 'quantity' => 3, 'item_price' => 1 ) );
+		$payment->save();
+
+		$payment = new EDD_Payment( $payment->ID );
+		$this->assertEquals( 3, $payment->cart_details[0]['quantity'] );
+		$this->assertEquals( 3, $payment->cart_details[0]['price'] );
+
+		$download = new EDD_Download( $payment->cart_details[0]['id'] );
+		$this->assertEquals( 3, $download->get_earnings() );
+	}
+
 	/** Helpers **/
 	public function alter_payment_meta( $meta, $payment_data ) {
 		$meta['user_info']['address']['country'] = 'PL';

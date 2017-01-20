@@ -407,6 +407,13 @@ textarea#edd-payment-note {
 	border-bottom: 1px solid #eee;
 	padding: 12px;
 }
+#edd-purchased-files .row:nth-child(odd):not(.header) {
+	background-color: #f9f9f9;
+}
+#edd-purchased-files .row.header {
+	padding: 0px 12px;
+	font-weight: 600;
+}
 #edd-purchased-files ul {
 	font-size: 0;
 }
@@ -473,29 +480,41 @@ textarea#edd-payment-note {
 
 @media screen and ( min-width: 1280px ) {
 
-	#edd-edit-order-form .column, #edd-purchased-files.columns-3 .row > ul > li,
-	#edd-purchased-files.columns-3 .inside > ul > li {
-		width: 32%; margin-right: 3%;
-	}
-	#edd-edit-order-form .columns-4 .column, #edd-purchased-files.columns-4 .row > ul > li,
+	#edd-edit-order-form .column,
+	#edd-purchased-files.columns-4 .row > ul > li,
 	#edd-purchased-files.columns-4 .inside > ul > li {
-		width: 22%; margin-right: 2%;
+		width: 27%; margin-right: 1%;
 	}
-	#edd-edit-order-form .columns-3 .column:nth-child(2n+1),
-	#edd-edit-order-form .columns-4 .column:nth-child(3n+1),
+	#edd-edit-order-form .columns-5 .column, #edd-purchased-files.columns-5 .row > ul > li,
+	#edd-purchased-files.columns-5 .inside > ul > li {
+		width: 19%; margin-right: 1%;
+	}
+	#edd-edit-order-form .columns-4 .column:nth-child(2n+1),
+	#edd-edit-order-form .columns-5 .column:nth-child(3n+1),
 	#edd-edit-order-form .column:nth-child(2n+1) {
 		margin-right: 0;
 	}
-	#edd-purchased-files.columns-4 li.download {
-		width:33%;
+	#edd-purchased-files .row > ul > li.download,
+	#edd-purchased-files .inside > ul > li.download {
+		width:25%;
 	}
-	#edd-purchased-files.columns-4 li.price,
-	#edd-purchased-files.columns-3 .row > ul > li.price,
-	#edd-purchased-files.columns-3 .inside > ul > li.price {
-		width:15%;
+	#edd-purchased-files .row > ul > li.item_price,
+	#edd-purchased-files .inside > ul > li.item_price {
+		width:25%;
 	}
-	#edd-purchased-files.columns-4 li.actions {
+	#edd-purchased-files .row > ul > li.price,
+	#edd-purchased-files .inside > ul > li.price,
+	#edd-purchased-files .row > ul > li.item_tax,
+	#edd-purchased-files .inside > ul > li.item_tax {
+		width:10%;
+	}
+	#edd-purchased-files .row > ul > li.actions,
+	#edd-purchased-files .inside > ul > li.actions {
 		width: 25%; margin-top: 0; margin-right: 0;
+	}
+	#edd-purchased-files.columns-4 .row > ul > li.actions,
+	#edd-purchased-files.columns-4 .inside > ul > li.actions {
+		width: 37%;
 	}
 
 }
