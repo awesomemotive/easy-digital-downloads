@@ -350,19 +350,22 @@ function edd_reports_tab_export() {
 
 					<?php do_action( 'edd_reports_tab_export_content_top' ); ?>
 
-					<div class="postbox edd-export-sales-earnings">
-						<h3><span><?php _e( 'Export Earnings and Sales Stats', 'easy-digital-downloads' ); ?></span></h3>
+					<div class="postbox edd-export-earnings-report">
+						<h3><span><?php _e( 'Export Earnings Report', 'easy-digital-downloads' ); ?></span></h3>
 						<div class="inside">
-							<p><?php _e( 'Download a CSV of earnings and sales over time.', 'easy-digital-downloads' ); ?></p>
-							<form method="post">
-								<?php echo EDD()->html->year_dropdown( 'start_year' ); ?>
+							<p><?php _e( 'Download a CSV giving a detailed look into earnings over time.', 'easy-digital-downloads' ); ?></p>
+							<form id="edd-export-earnings" class="edd-export-form edd-import-export-form" method="post">
 								<?php echo EDD()->html->month_dropdown( 'start_month' ); ?>
+								<?php echo EDD()->html->year_dropdown( 'start_year' ); ?>
 								<?php echo _x( 'to', 'Date one to date two', 'easy-digital-downloads' ); ?>
-								<?php echo EDD()->html->year_dropdown( 'end_year' ); ?>
 								<?php echo EDD()->html->month_dropdown( 'end_month' ); ?>
+								<?php echo EDD()->html->year_dropdown( 'end_year' ); ?>
 								<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
-								<input type="hidden" name="edd-action" value="earnings_export"/>
-								<input type="submit" value="<?php _e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								<input type="hidden" name="edd-export-class" value="EDD_Batch_Earnings_Report_Export"/>
+								<span>
+									<input type="submit" value="<?php _e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+									<span class="spinner"></span>
+								</span>
 							</form>
 						</div><!-- .inside -->
 					</div><!-- .postbox -->
