@@ -68,6 +68,7 @@ function edd_download_metabox_fields() {
 			'_edd_hide_purchase_link',
 			'_edd_download_tax_exclusive',
 			'_edd_button_behavior',
+			'_edd_quantities_disabled',
 			'edd_product_notes',
 			'_edd_default_price_id'
 		);
@@ -116,7 +117,7 @@ function edd_download_meta_box_save( $post_id, $post ) {
 
 		// Accept blank or "0"
 		if ( '_edd_download_limit' == $field ) {
-			if ( ! empty( $_POST[ $field ] ) || strlen( $_POST[ $field ] ) === 0 || "0" === $_POST[ $field ] ) {
+			if ( ! empty( $_POST[ $field ] ) || ( isset( $_POST[ $field ] ) && strlen( $_POST[ $field ] ) === 0 ) || ( isset( $_POST[ $field ] ) && "0" === $_POST[ $field ] ) ) {
 
 				$global_limit = edd_get_option( 'file_download_limit' );
 				$new_limit    = apply_filters( 'edd_metabox_save_' . $field, $_POST[ $field ] );
@@ -621,13 +622,14 @@ function edd_render_files_field( $post_id = 0 ) {
 				<?php
 					if ( ! empty( $files ) && is_array( $files ) ) :
 						foreach ( $files as $key => $value ) :
-							$index         = isset( $value['index'] )         ? $value['index']         : $key;
-							$name          = isset( $value['name'] )          ? $value['name']          : '';
-							$file          = isset( $value['file'] )          ? $value['file']          : '';
-							$condition     = isset( $value['condition'] )     ? $value['condition']     : false;
-							$attachment_id = isset( $value['attachment_id'] ) ? absint( $value['attachment_id'] ) : false;
+							$index          = isset( $value['index'] )         ? $value['index']         : $key;
+							$name           = isset( $value['name'] )          ? $value['name']          : '';
+							$file           = isset( $value['file'] )          ? $value['file']          : '';
+							$condition      = isset( $value['condition'] )     ? $value['condition']     : false;
+							$attachment_id  = isset( $value['attachment_id'] ) ? absint( $value['attachment_id'] ) : false;
+							$thumbnail_size = isset( $value['thumbnail_size'] ) ? $value['thumbnail_size'] : '';
 
-							$args = apply_filters( 'edd_file_row_args', compact( 'name', 'file', 'condition', 'attachment_id' ), $value );
+							$args = apply_filters( 'edd_file_row_args', compact( 'name', 'file', 'condition', 'attachment_id', 'thumbnail_size' ), $value );
 				?>
 						<tr class="edd_repeatable_upload_wrapper edd_repeatable_row" data-key="<?php echo esc_attr( $key ); ?>">
 							<?php do_action( 'edd_render_file_row', $key, $args, $post_id, $index ); ?>
@@ -668,10 +670,11 @@ add_action( 'edd_meta_box_files_fields', 'edd_render_files_field', 20 );
  */
 function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 	$defaults = array(
-		'name'          => null,
-		'file'          => null,
-		'condition'     => null,
-		'attachment_id' => null
+		'name'           => null,
+		'file'           => null,
+		'condition'      => null,
+		'attachment_id'  => null,
+		'thumbnail_size' => null,
 	);
 
 	$args = wp_parse_args( $args, $defaults );
@@ -688,6 +691,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 	</td>
 	<td>
 		<input type="hidden" name="edd_download_files[<?php echo absint( $key ); ?>][attachment_id]" class="edd_repeatable_attachment_id_field" value="<?php echo esc_attr( absint( $args['attachment_id'] ) ); ?>"/>
+		<input type="hidden" name="edd_download_files[<?php echo absint( $key ); ?>][thumbnail_size]" class="edd_repeatable_thumbnail_size_field" value="<?php echo esc_attr( $args['thumbnail_size'] ); ?>"/>
 		<?php echo EDD()->html->text( array(
 			'name'        => 'edd_download_files[' . $key . '][name]',
 			'value'       => $args['name'],
@@ -831,6 +835,35 @@ function edd_render_dowwn_tax_options( $post_id = 0 ) {
 add_action( 'edd_meta_box_settings_fields', 'edd_render_dowwn_tax_options', 30 );
 
 /**
+ * Product quantity settings
+ *
+ * Outputs the option to disable quantity field on product.
+ *
+ * @since 2.7
+ * @param int $post_id Download (Post) ID
+ * @return void
+ */
+function edd_render_download_quantity_option( $post_id = 0 ) {
+	if( ! current_user_can( 'manage_shop_settings' ) || ! edd_item_quantities_enabled() ) {
+		return;
+	}
+
+	$disabled = edd_download_quantities_disabled( $post_id );
+?>
+	<p><strong><?php _e( 'Item Quantities:', 'easy-digital-downloads' ); ?></strong></p>
+	<label for="_edd_quantities_disabled">
+		<?php echo EDD()->html->checkbox( array(
+			'name'    => '_edd_quantities_disabled',
+			'current' => $disabled
+		) ); ?>
+		<?php _e( 'Disable quantity input for this product', 'easy-digital-downloads' ); ?>
+	</label>
+	<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Item Quantities</strong>: if disabled, customers will not be provided an option to change the number they wish to purchase.', 'easy-digital-downloads' ); ?>"></span>
+<?php
+}
+add_action( 'edd_meta_box_settings_fields', 'edd_render_download_quantity_option', 30 );
+
+/**
  * Add shortcode to settings meta box
  *
  * @since 2.5
@@ -911,25 +944,37 @@ function edd_render_disable_button( $post_id ) {
 			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Automatic Output</strong>: By default, the purchase buttons will be displayed at the bottom of the download, when disabled you will need to use the Purchase link shortcode below to output the ability to buy the product where you prefer.', 'easy-digital-downloads' ); ?>"></span>
 		</label>
 	</p>
-	<?php if( edd_shop_supports_buy_now() ) : ?>
+	<?php $supports_buy_now = edd_shop_supports_buy_now(); ?>
 	<p>
 		<label for="_edd_button_behavior">
-			<?php echo EDD()->html->select( array(
+			<?php
+			$args = array(
 				'name'    => '_edd_button_behavior',
 				'options' => array(
 					'add_to_cart' => __( 'Add to Cart', 'easy-digital-downloads' ),
-					'direct'      => __( 'Buy Now', 'easy-digital-downloads' )
+					'direct'      => __( 'Buy Now', 'easy-digital-downloads' ),
 				),
 				'show_option_all'  => null,
 				'show_option_none' => null,
 				'selected' => $behavior
-			) ); ?>
+			);
+
+			if ( ! $supports_buy_now ) {
+				$args['disabled'] = true;
+				$args['readonly'] = true;
+			}
+			?>
+			<?php echo EDD()->html->select( $args ); ?>
 			<?php _e( 'Purchase button behavior', 'easy-digital-downloads' ); ?>
-			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Button Behavior</strong>: Add to Cart buttons follow a traditional eCommerce flow. A Buy Now button bypasses most of the process, taking the customer directly from button click to payment, greatly speeding up the process of getting the product.', 'easy-digital-downloads' ); ?>"></span>
+			<?php if ( $supports_buy_now ) : ?>
+				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Button Behavior</strong>: Add to Cart buttons follow a traditional eCommerce flow. A Buy Now button bypasses most of the process, taking the customer directly from button click to payment, greatly speeding up the process of buying the product.', 'easy-digital-downloads' ); ?>"></span>
+			<?php else: ?>
+				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Button Behavior</strong>: Add to Cart buttons follow a traditional eCommerce flow. Buy Now buttons are only available for stores that have a single supported gateway active and that do not use taxes.', 'easy-digital-downloads' ); ?>"></span>
+			<?php endif; ?>
+
 		</label>
 	</p>
 <?php
-	endif;
 }
 add_action( 'edd_meta_box_settings_fields', 'edd_render_disable_button', 30 );
 

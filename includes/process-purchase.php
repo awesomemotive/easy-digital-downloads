@@ -144,11 +144,11 @@ function edd_checkout_check_existing_email( $valid_data, $post ) {
 	// Verify that the email address belongs to this customer
 	if ( is_user_logged_in() ) {
 
-		$email    = $valid_data['logged_in_user']['user_email'];
+		$email    = strtolower( $valid_data['logged_in_user']['user_email'] );
 		$customer = new EDD_Customer( get_current_user_id(), true );
 
 		// If this email address is not registered with this customer, see if it belongs to any other customer
-		if ( $email != $customer->email && ( is_array( $customer->emails ) && ! in_array( $email, $customer->emails ) ) ) {
+		if ( $email != strtolower( $customer->email ) && ( is_array( $customer->emails ) && ! in_array( $email, array_map( 'strtolower', $customer->emails ) ) ) ) {
 			$found_customer = new EDD_Customer( $email );
 			if ( $found_customer->id > 0 ) {
 				edd_set_error( 'edd-customer-email-exists', __( sprintf( 'The email address %s is already in use.', $email ), 'easy-digital-downloads' ) );
@@ -390,6 +390,17 @@ function edd_purchase_form_required_fields() {
 			'error_id' => 'invalid_state',
 			'error_message' => __( 'Please enter billing state / province', 'easy-digital-downloads' )
 		);
+
+		// Check if the Customer's Country has been passed in and if it has no states.
+		if ( isset( $_POST['billing_country'] ) && isset( $required_fields['card_state'] ) ){
+			$customer_billing_country = sanitize_text_field( $_POST['billing_country'] );
+			$states = edd_get_shop_states( $customer_billing_country );
+
+			// If this country has no states, remove the requirement of a card_state.
+			if ( empty( $states ) ){
+				unset( $required_fields['card_state'] );
+			}
+		}
 	}
 
 	return apply_filters( 'edd_purchase_form_required_fields', $required_fields );
@@ -750,8 +761,14 @@ function edd_get_purchase_form_user( $valid_data = array() ) {
 
 			// Set user
 			$user = $valid_data['login_user_data'];
+
 			// Login user
-			edd_log_user_in( $user['user_id'], $user['user_login'], $user['user_pass'] );
+			if ( empty( $user ) || $user['user_id'] == -1 ) {
+				edd_set_error( 'invalid_user', __( 'The user information is invalid', 'easy-digital-downloads' ) );
+				return false;
+			} else {
+				edd_log_user_in( $user['user_id'], $user['user_login'], $user['user_pass'] );
+			}
 		}
 	}
 
@@ -935,7 +952,7 @@ function edd_purchase_form_validate_cc_zip( $zip = 0, $country_code = '' ) {
 		"KE" => "\d{5}",
 		"KG" => "\d{6}",
 		"KH" => "\d{5}",
-		"KR" => "\d{3}[\-]\d{3}",
+		"KR" => "\d{5}",
 		"KW" => "\d{5}",
 		"KZ" => "\d{6}",
 		"LA" => "\d{5}",
@@ -1095,7 +1112,22 @@ function edd_process_straight_to_gateway( $data ) {
 		return;
 	}
 
-	$purchase_data = edd_build_straight_to_gateway_data( $download_id, $options, $quantity );
+	$purchase_data    = edd_build_straight_to_gateway_data( $download_id, $options, $quantity );
+	$enabled_gateways = edd_get_enabled_payment_gateways();
+
+	if ( ! array_key_exists( $purchase_data['gateway'], $enabled_gateways ) ) {
+		foreach ( $purchase_data['downloads'] as $download ) {
+			$options = isset( $download['options'] ) ? $download['options'] : array();
+
+			$options['quantity'] = isset( $download['quantity'] ) ? $download['quantity'] : 1;
+			edd_add_to_cart( $download['id'], $options );
+		}
+
+		edd_set_error( 'edd-straight-to-gateway-error', __( 'There was an error completing your purchase. Please try again.', 'easy-digital-downloads' ) );
+		wp_redirect( edd_get_checkout_uri() );
+		exit;
+	}
+
 	edd_set_purchase_session( $purchase_data );
 	edd_send_to_gateway( $purchase_data['gateway'], $purchase_data );
 }

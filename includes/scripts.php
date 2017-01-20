@@ -34,6 +34,11 @@ function edd_load_scripts() {
 		$position = edd_get_item_position_in_cart( $post->ID );
 	}
 
+	$has_purchase_links = false;
+	if ( ( ! empty( $post->post_content ) && ( has_shortcode( $post->post_content, 'purchase_link' ) || has_shortcode( $post->post_content, 'downloads' ) ) ) || is_post_type_archive( 'download' ) ) {
+		$has_purchase_links = true;
+	}
+
 	if ( edd_is_checkout() ) {
 		if ( edd_is_cc_verify_enabled() ) {
 			wp_register_script( 'creditCardValidator', $js_dir . 'jquery.creditCardValidator' . $suffix . '.js', array( 'jquery' ), EDD_VERSION, true );
@@ -71,11 +76,11 @@ function edd_load_scripts() {
 		wp_localize_script( 'edd-ajax', 'edd_scripts', apply_filters( 'edd_ajax_script_vars', array(
 			'ajaxurl'                 => edd_get_ajax_url(),
 			'position_in_cart'        => isset( $position ) ? $position : -1,
+			'has_purchase_links'      => $has_purchase_links,
 			'already_in_cart_message' => __('You have already added this item to your cart','easy-digital-downloads' ), // Item already in the cart message
 			'empty_cart_message'      => __('Your cart is empty','easy-digital-downloads' ), // Item already in the cart message
 			'loading'                 => __('Loading','easy-digital-downloads' ) , // General loading message
 			'select_option'           => __('Please select an option','easy-digital-downloads' ) , // Variable pricing error with multi-purchase option enabled
-			'ajax_loader'             => set_url_scheme( EDD_PLUGIN_URL . 'assets/images/loading.gif', 'relative' ), // AJAX loading image
 			'is_checkout'             => edd_is_checkout() ? '1' : '0',
 			'default_gateway'         => edd_get_default_gateway(),
 			'redirect_to_checkout'    => ( edd_straight_to_checkout() || edd_is_checkout() ) ? '1' : '0',
@@ -134,11 +139,6 @@ function edd_register_styles() {
 
 	wp_register_style( 'edd-styles', $url, array(), EDD_VERSION, 'all' );
 	wp_enqueue_style( 'edd-styles' );
-
-	if( edd_is_checkout() && is_ssl() ) {
-		// Dashicons are used to show the padlock icon on the credit card form
-		wp_enqueue_style( 'dashicons' );
-	}
 }
 add_action( 'wp_enqueue_scripts', 'edd_register_styles' );
 
@@ -178,9 +178,9 @@ function edd_load_admin_scripts( $hook ) {
 	$admin_deps = array();
 
 	if ( ! edd_is_admin_page( $hook, 'edit' ) && ! edd_is_admin_page( $hook, 'new' ) ) {
-		$admin_deps = array( 'jquery', 'inline-edit-post' );
+		$admin_deps = array( 'jquery', 'jquery-form', 'inline-edit-post' );
 	} else {
-		$admin_deps = array( 'jquery' );
+		$admin_deps = array( 'jquery', 'jquery-form' );
 	}
 
 	wp_register_script( 'edd-admin-scripts', $js_dir . 'admin-scripts' . $suffix . '.js', $admin_deps, EDD_VERSION, false );
@@ -264,31 +264,22 @@ add_action( 'admin_enqueue_scripts', 'edd_load_admin_scripts', 100 );
  * Echoes the CSS for the downloads post type icon.
  *
  * @since 1.0
- * @global $post_type
- * @global $wp_version
+ * @since 2.6.11 Removed globals and CSS for custom icon
  * @return void
 */
 function edd_admin_downloads_icon() {
-	global $post_type, $wp_version;
 
 	$images_url      = EDD_PLUGIN_URL . 'assets/images/';
 	$menu_icon       = '\f316';
-	$icon_url        = $images_url . 'edd-icon.png';
 	$icon_cpt_url    = $images_url . 'edd-cpt.png';
-	$icon_2x_url     = $images_url . 'edd-icon-2x.png';
 	$icon_cpt_2x_url = $images_url . 'edd-cpt-2x.png';
 	?>
 	<style type="text/css" media="screen">
-		#adminmenu #menu-posts-download .wp-menu-image:before,
 		#dashboard_right_now .download-count:before {
 			content: '<?php echo $menu_icon; ?>';
 		}
 		#icon-edit.icon32-posts-download {
 			background: url(<?php echo $icon_cpt_url; ?>) -7px -5px no-repeat;
-		}
-		#edd-media-button {
-			background: url(<?php echo $icon_url; ?>) 0 -16px no-repeat;
-			background-size: 12px 30px;
 		}
 		@media
 		only screen and (-webkit-min-device-pixel-ratio: 1.5),
@@ -299,10 +290,6 @@ function edd_admin_downloads_icon() {
 			#icon-edit.icon32-posts-download {
 				background: url(<?php echo $icon_cpt_2x_url; ?>) no-repeat -7px -5px !important;
 				background-size: 55px 45px !important;
-			}
-			#edd-media-button {
-				background-image: url(<?php echo $icon_2x_url; ?>);
-				background-position: 0 -17px;
 			}
 		}
 	</style>

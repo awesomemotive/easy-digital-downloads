@@ -42,6 +42,7 @@ function edd_setup_edd_post_types() {
 		'set_featured_image'    => __( 'Set %1$s Image', 'easy-digital-downloads' ),
 		'remove_featured_image' => __( 'Remove %1$s Image', 'easy-digital-downloads' ),
 		'use_featured_image'    => __( 'Use as %1$s Image', 'easy-digital-downloads' ),
+		'attributes'            => __( '%1$s Attributes', 'easy-digital-downloads' ),
 		'filter_items_list'     => __( 'Filter %2$s list', 'easy-digital-downloads' ),
 		'items_list_navigation' => __( '%2$s list navigation', 'easy-digital-downloads' ),
 		'items_list'            => __( '%2$s list', 'easy-digital-downloads' ),
@@ -58,6 +59,7 @@ function edd_setup_edd_post_types() {
 		'show_ui'            => true,
 		'show_in_menu'       => true,
 		'query_var'          => true,
+		'menu_icon'          => 'dashicons-download',
 		'rewrite'            => $rewrite,
 		'capability_type'    => 'product',
 		'map_meta_cap'       => true,
@@ -269,7 +271,6 @@ add_action( 'init', 'edd_setup_download_taxonomies', 0 );
  * @return array            Associative array of labels (name = plural)
  */
 function edd_get_taxonomy_labels( $taxonomy = 'download_category' ) {
-
 	$allowed_taxonomies = apply_filters( 'edd_allowed_download_taxonomies', array( 'download_category', 'download_tag' ) );
 
 	if ( ! in_array( $taxonomy, $allowed_taxonomies ) ) {
@@ -280,17 +281,18 @@ function edd_get_taxonomy_labels( $taxonomy = 'download_category' ) {
 	$taxonomy = get_taxonomy( $taxonomy );
 
 	if ( false !== $taxonomy ) {
-		$singular = $taxonomy->labels->singular_name;
-		$name     = $taxonomy->labels->name;
+		$singular  = $taxonomy->labels->singular_name;
+		$name      = $taxonomy->labels->name;
+		$menu_name = $taxonomy->labels->menu_name;
 
 		$labels = array(
 			'name'          => $name,
 			'singular_name' => $singular,
+			'menu_name'     => $menu_name,
 		);
 	}
 
 	return apply_filters( 'edd_get_taxonomy_labels', $labels, $taxonomy );
-
 }
 
 /**

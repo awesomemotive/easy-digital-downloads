@@ -66,6 +66,8 @@ jQuery(document).ready(function ($) {
 
 				}
 
+				$( this ).attr( 'data-key', key );
+
 				if( typeof id != 'undefined' ) {
 
 					id = id.replace( /(\d+)/, parseInt( key ) );
@@ -211,125 +213,113 @@ jQuery(document).ready(function ($) {
 
 		prices : function() {
 			$( document.body ).on( 'change', '#edd_variable_pricing', function(e) {
-				$( '.edd_pricing_fields,.edd_repeatable_table .pricing' ).toggle();
+				var checked   = $(this).is(':checked');
+				var single    = $( '#edd_regular_price_field' );
+				var variable  = $( '#edd_variable_price_fields,.edd_repeatable_table .pricing' );
+				if ( checked ) {
+					single.hide();
+					variable.show();
+				} else {
+					single.show();
+					variable.hide();
+				}
 			});
 		},
 
 		files : function() {
-			if( typeof wp === "undefined" || '1' !== edd_vars.new_media_ui ){
-				//Old Thickbox uploader
-				if ( $( '.edd_upload_file_button' ).length > 0 ) {
-					window.formfield = '';
+			var file_frame;
+			window.formfield = '';
 
-					$( document.body ).on('click', '.edd_upload_file_button', function(e) {
-						e.preventDefault();
-						window.formfield = $(this).parent().prev();
-						window.tbframe_interval = setInterval(function() {
-							jQuery('#TB_iframeContent').contents().find('.savesend .button').val(edd_vars.use_this_file).end().find('#insert-gallery, .wp-post-thumbnail').hide();
-						}, 2000);
-						if (edd_vars.post_id != null ) {
-							var post_id = 'post_id=' + edd_vars.post_id + '&';
-						}
-						tb_show(edd_vars.add_new_download, 'media-upload.php?' + post_id +'TB_iframe=true');
-					});
+			$( document.body ).on('click', '.edd_upload_file_button', function(e) {
 
-					window.edd_send_to_editor = window.send_to_editor;
-					window.send_to_editor = function (html) {
-						if (window.formfield) {
-							imgurl = $('a', '<div>' + html + '</div>').attr('href');
-							window.formfield.val(imgurl);
-							window.clearInterval(window.tbframe_interval);
-							tb_remove();
-						} else {
-							window.edd_send_to_editor(html);
-						}
-						window.send_to_editor = window.edd_send_to_editor;
-						window.formfield = '';
-						window.imagefield = false;
-					};
-				}
-			} else {
-				// WP 3.5+ uploader
-				var file_frame;
-				window.formfield = '';
+				e.preventDefault();
 
-				$( document.body ).on('click', '.edd_upload_file_button', function(e) {
+				var button = $(this);
 
-					e.preventDefault();
+				window.formfield = $(this).closest('.edd_repeatable_upload_wrapper');
 
-					var button = $(this);
-
-					window.formfield = $(this).closest('.edd_repeatable_upload_wrapper');
-
-					// If the media frame already exists, reopen it.
-					if ( file_frame ) {
-						//file_frame.uploader.uploader.param( 'post_id', set_to_post_id );
-						file_frame.open();
-						return;
-					}
-
-					// Create the media frame.
-					file_frame = wp.media.frames.file_frame = wp.media( {
-						frame: 'post',
-						state: 'insert',
-						title: button.data( 'uploader-title' ),
-						button: {
-							text: button.data( 'uploader-button-text' )
-						},
-						multiple: $( this ).data( 'multiple' ) == '0' ? false : true  // Set to true to allow multiple files to be selected
-					} );
-
-					file_frame.on( 'menu:render:default', function( view ) {
-						// Store our views in an object.
-						var views = {};
-
-						// Unset default menu items
-						view.unset( 'library-separator' );
-						view.unset( 'gallery' );
-						view.unset( 'featured-image' );
-						view.unset( 'embed' );
-
-						// Initialize the views in our view object.
-						view.set( views );
-					} );
-
-					// When an image is selected, run a callback.
-					file_frame.on( 'insert', function() {
-
-						var selection = file_frame.state().get('selection');
-						selection.each( function( attachment, index ) {
-							attachment = attachment.toJSON();
-							if ( 0 === index ) {
-								// place first attachment in field
-								window.formfield.find( '.edd_repeatable_attachment_id_field' ).val( attachment.id );
-								window.formfield.find( '.edd_repeatable_upload_field' ).val( attachment.url );
-								window.formfield.find( '.edd_repeatable_name_field' ).val( attachment.title );
-							} else {
-								// Create a new row for all additional attachments
-								var row = window.formfield,
-									clone = EDD_Download_Configuration.clone_repeatable( row );
-
-								clone.find( '.edd_repeatable_attachment_id_field' ).val( attachment.id );
-								clone.find( '.edd_repeatable_upload_field' ).val( attachment.url );
-								if ( attachment.title.length > 0 ) {
-									clone.find( '.edd_repeatable_name_field' ).val( attachment.title );
-								} else {
-									clone.find( '.edd_repeatable_name_field' ).val( attachment.filename );
-								}
-								clone.insertAfter( row );
-							}
-						});
-					});
-
-					// Finally, open the modal
+				// If the media frame already exists, reopen it.
+				if ( file_frame ) {
+					//file_frame.uploader.uploader.param( 'post_id', set_to_post_id );
 					file_frame.open();
+					return;
+				}
+
+				// Create the media frame.
+				file_frame = wp.media.frames.file_frame = wp.media( {
+					frame: 'post',
+					state: 'insert',
+					title: button.data( 'uploader-title' ),
+					button: {
+						text: button.data( 'uploader-button-text' )
+					},
+					multiple: $( this ).data( 'multiple' ) == '0' ? false : true  // Set to true to allow multiple files to be selected
+				} );
+
+				file_frame.on( 'menu:render:default', function( view ) {
+					// Store our views in an object.
+					var views = {};
+
+					// Unset default menu items
+					view.unset( 'library-separator' );
+					view.unset( 'gallery' );
+					view.unset( 'featured-image' );
+					view.unset( 'embed' );
+
+					// Initialize the views in our view object.
+					view.set( views );
+				} );
+
+				// When an image is selected, run a callback.
+				file_frame.on( 'insert', function() {
+
+					var selection = file_frame.state().get('selection');
+					selection.each( function( attachment, index ) {
+						attachment = attachment.toJSON();
+
+						var selectedSize = 'image' === attachment.type ? $('.attachment-display-settings .size option:selected').val() : false;
+						var selectedURL  = attachment.url;
+						var selectedName = attachment.title.length > 0 ? attachment.title : attachment.filename;
+
+						if ( selectedSize && typeof attachment.sizes[selectedSize] != "undefined" ) {
+							selectedURL = attachment.sizes[selectedSize].url;
+						}
+
+						if ( 'image' === attachment.type ) {
+							if ( selectedSize && typeof attachment.sizes[selectedSize] != "undefined" ) {
+								selectedName = selectedName + '-' + attachment.sizes[selectedSize].width + 'x' + attachment.sizes[selectedSize].height;
+							} else {
+								selectedName = selectedName + '-' + attachment.width + 'x' + attachment.height;
+							}
+						}
+
+						if ( 0 === index ) {
+							// place first attachment in field
+							window.formfield.find( '.edd_repeatable_attachment_id_field' ).val( attachment.id );
+							window.formfield.find( '.edd_repeatable_thumbnail_size_field').val( selectedSize );
+							window.formfield.find( '.edd_repeatable_upload_field' ).val( selectedURL );
+							window.formfield.find( '.edd_repeatable_name_field' ).val( selectedName );
+						} else {
+							// Create a new row for all additional attachments
+							var row = window.formfield,
+								clone = EDD_Download_Configuration.clone_repeatable( row );
+
+							clone.find( '.edd_repeatable_attachment_id_field' ).val( attachment.id );
+							clone.find( 'edd_repeatable_thumbnail_size_field' ).val( selectedSize );
+							clone.find( '.edd_repeatable_upload_field' ).val( selectedURL );
+							clone.find( '.edd_repeatable_name_field' ).val( selectedName );
+							clone.insertAfter( row );
+						}
+					});
 				});
 
+				// Finally, open the modal
+				file_frame.open();
+			});
 
-				// WP 3.5+ uploader
-				var file_frame;
-				window.formfield = '';
-			}
+
+			var file_frame;
+			window.formfield = '';
 
 		},
 
@@ -376,6 +366,7 @@ jQuery(document).ready(function ($) {
 			this.edit_address();
 			this.remove_download();
 			this.add_download();
+			this.change_customer();
 			this.new_customer();
 			this.recalculate_total();
 			this.variable_prices_check();
@@ -398,6 +389,8 @@ jQuery(document).ready(function ($) {
 				};
 				$.post(ajaxurl, data, function (response) {
 					var state_wrapper = $( '#edd-order-address-state-wrap select, #edd-order-address-state-wrap input' );
+					// Remove any chosen containers here too
+					$( '#edd-order-address-state-wrap .chosen-container' ).remove();
 					if( 'nostates' == response ) {
 						state_wrapper.replaceWith( '<input type="text" name="edd-payment-address[0][state]" value="" class="edd-edit-toggles medium-text"/>' );
 					} else {
@@ -430,6 +423,9 @@ jQuery(document).ready(function ($) {
 					var price_id    = $('input[name="edd-payment-details-downloads['+key+'][price_id]"]').val();
 					var quantity    = $('input[name="edd-payment-details-downloads['+key+'][quantity]"]').val();
 					var amount      = $('input[name="edd-payment-details-downloads['+key+'][amount]"]').val();
+					if ( $('input[name="edd-payment-details-downloads['+key+'][fees]"]') ) {
+						var fees = $.parseJSON( $('input[name="edd-payment-details-downloads['+key+'][fees]"]').val() );
+					}
 
 					var currently_removed  = $('input[name="edd-payment-removed"]').val();
 					currently_removed      = $.parseJSON(currently_removed);
@@ -443,6 +439,11 @@ jQuery(document).ready(function ($) {
 					$('input[name="edd-payment-removed"]').val(JSON.stringify(currently_removed));
 
 					$(this).parent().parent().parent().remove();
+					if ( fees && fees.length) {
+						$.each( fees, function( key, value ) {
+							$('*li[data-fee-id="' + value + '"]').remove();
+						});
+					}
 
 					// Flag the Downloads section as changed
 					$('#edd-payment-downloads-changed').val(1);
@@ -453,12 +454,43 @@ jQuery(document).ready(function ($) {
 
 		},
 
+		change_customer : function() {
+
+			$('#edd-customer-details').on('click', '.edd-payment-change-customer, .edd-payment-change-customer-cancel', function(e) {
+				e.preventDefault();
+
+				var change_customer = $(this).hasClass('edd-payment-change-customer');
+				var cancel          = $(this).hasClass('edd-payment-change-customer-cancel');
+
+				if ( change_customer ) {
+					$('.customer-info').hide();
+					$('.change-customer').show();
+					$('.edd-payment-change-customer-input').css('width', 'auto');
+				} else if( cancel) {
+					$('.customer-info').show();
+					$('.change-customer').hide();
+				}
+
+			});
+
+		},
+
 		new_customer : function() {
 
 			$('#edd-customer-details').on('click', '.edd-payment-new-customer, .edd-payment-new-customer-cancel', function(e) {
 				e.preventDefault();
-				$('.customer-info').toggle();
-				$('.new-customer').toggle();
+
+				var new_customer = $(this).hasClass('edd-payment-new-customer');
+				var cancel       = $(this).hasClass('edd-payment-new-customer-cancel');
+
+				if ( new_customer ) {
+					$('.customer-info').hide();
+					$('.new-customer').show();
+				} else if( cancel) {
+					$('.customer-info').show();
+					$('.new-customer').hide();
+				}
+
 
 				var new_customer = $( '#edd-new-customer' );
 				if ($('.new-customer').is(":visible")) {
@@ -692,9 +724,33 @@ jQuery(document).ready(function ($) {
 		},
 
 		resend_receipt : function() {
-			$( document.body ).on( 'click', '#edd-resend-receipt', function( e ) {
-				return confirm( edd_vars.resend_receipt );
+
+			var emails_wrap = $('.edd-order-resend-receipt-addresses');
+
+			$( document.body ).on( 'click', '#edd-select-receipt-email', function( e ) {
+
+				e.preventDefault();
+				emails_wrap.slideDown();
+
 			} );
+
+			$( document.body ).on( 'change', '.edd-order-resend-receipt-email', function() {
+
+				var href = $('#edd-select-receipt-email').prop( 'href' ) + '&email=' + $(this).val();
+
+				if( confirm( edd_vars.resend_receipt ) ) {
+					window.location = href;
+				}
+
+			} );
+
+
+			$( document.body ).on( 'click', '#edd-resend-receipt', function( e ) {
+
+				return confirm( edd_vars.resend_receipt );
+
+			} );
+
 		},
 
 		copy_download_link : function() {
@@ -745,8 +801,9 @@ jQuery(document).ready(function ($) {
 		type_select : function() {
 
 			$('#edd-edit-discount #edd-type, #edd-add-discount #edd-type').change(function() {
-
-				$('.edd-amount-description').toggle();
+				var val = $(this).val();
+				$('.edd-amount-description').hide();
+				$('.edd-amount-description.' + val + '-discount').show();
 
 			});
 
@@ -1184,14 +1241,22 @@ jQuery(document).ready(function ($) {
 	// Replace options with search results
 	$( document.body ).on( 'keyup', '.edd-select.chosen-container .chosen-search input, .edd-select.chosen-container .search-field input', function(e) {
 
-		var val         = $(this).val(), container = $(this).closest( '.edd-select-chosen' );
+		var val         = $(this).val()
+		var container   = $(this).closest( '.edd-select-chosen' );
 		var menu_id     = container.attr('id').replace( '_chosen', '' );
 		var no_bundles  = container.hasClass( 'no-bundles' );
+		var variations  = container.hasClass( 'variations' );
 		var lastKey     = e.which;
 		var search_type = 'edd_download_search';
 
 		// Detect if we have a defined search type, otherwise default to downloads
 		if ( container.prev().data('search-type') ) {
+
+			// Don't trigger AJAX if this select has all options loaded
+			if ( 'no_ajax' == container.prev().data('search-type') ) {
+				return;
+			}
+
 			search_type = 'edd_' + container.prev().data('search-type') + '_search';
 		}
 
@@ -1220,14 +1285,14 @@ jQuery(document).ready(function ($) {
 					data: {
 						action: search_type,
 						s: val,
-						no_bundles: no_bundles
+						no_bundles: no_bundles,
+						variations: variations,
 					},
 					dataType: "json",
 					beforeSend: function(){
 						$('ul.chosen-results').empty();
 					},
 					success: function( data ) {
-
 						// Remove all options but those that are selected
 						$('#' + menu_id + ' option:not(:selected)').remove();
 						$.each( data, function( key, item ) {
