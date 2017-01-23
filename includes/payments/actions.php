@@ -376,6 +376,8 @@ function edd_recover_payment() {
 		wp_redirect( $redirect );
 	}
 
+	$payment->add_note( __( 'Payment recovery triggered URL', 'easy-digital-downloads' ) );
+
 	// Empty out the cart.
 	edd_empty_cart();
 

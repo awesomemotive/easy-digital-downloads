@@ -120,6 +120,8 @@ function edd_insert_payment( $payment_data = array() ) {
 
 	if ( $resume_payment ) {
 
+		$payment->add_note( __( 'Payment recovery processed', 'easy-digital-downloads' ) );
+
 		// Since things could have been added/removed since we first crated this...rebuild the cart details.
 		foreach ( $payment->fees as $fee_index => $fee ) {
 			$payment->remove_fee_by( 'index', $fee_index, true );

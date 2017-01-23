@@ -182,6 +182,9 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		// Only send to PayPal if the pending payment is created successfully
 		$listener_url = add_query_arg( 'edd-listener', 'IPN', home_url( 'index.php' ) );
 
+		// Set the session data to recover this payment in the event of abandonment or error.
+		EDD()->session->set( 'edd_resume_payment', $payment );
+
 		// Get the success url
 		$return_url = add_query_arg( array(
 				'payment-confirmation' => 'paypal',
