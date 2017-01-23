@@ -596,7 +596,7 @@ jQuery(document).ready(function ($) {
 
 		edit_price : function() {
 
-			$(document.body).on('change, keyup', '.edd-payment-item-input', function () {
+			$(document.body).on('change keyup', '.edd-payment-item-input', function () {
 				var row = $(this).parents('ul.edd-purchased-files-list-wrapper');
 				$( '.edd-order-payment-recalc-totals' ).show();
 
