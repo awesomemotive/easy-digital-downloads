@@ -591,10 +591,16 @@ function edd_get_payment( $payment_id = 0 ) {
 		return false;
 	}
 
-	$payment = new EDD_Payment( $payment_id );
+	$cache_key = md5( 'edd_payment' . $payment_id );
+	$payment = wp_cache_get( $cache_key, 'payments' );
 
-	if ( empty( $payment->ID ) ) {
-		return false;
+	if ( false === $payment ) {
+		$payment = new EDD_Payment( $payment_id );
+		if ( empty( $payment->ID ) || $payment->ID !== $payment_id ) {
+			return false;
+		} else {
+			wp_cache_set( $cache_key, $payment, 'payments' );
+		}
 	}
 
 	return $payment;
