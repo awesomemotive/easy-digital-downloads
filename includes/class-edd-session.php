@@ -332,8 +332,10 @@ class EDD_Session {
 		 *  2. An EDD AJAX request is currently running
 		 *  3. If we are on the checkout page, or any child pages
 		 */
-		$current_page = get_queried_object();
-		if ( isset( $_COOKIE['edd_items_in_cart'] ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX && false !== strpos( $_REQUEST['action'], 'edd_' ) ) || ( is_a( $current_page, 'WP_Page' ) && $current_page->ID == edd_get_option( 'purchase_page' ) ) ) {
+
+		$path = ! empty( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
+		$current_page = get_page_by_path( $path );
+		if ( isset( $_COOKIE['edd_items_in_cart'] ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX && false !== strpos( $_REQUEST['action'], 'edd_' ) ) || ( is_a( $current_page, 'WP_Post' ) && $current_page->ID == edd_get_option( 'purchase_page' ) ) ) {
 			$start_session = true;
 		} else {
 			$start_session = false;
