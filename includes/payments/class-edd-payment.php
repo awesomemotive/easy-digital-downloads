@@ -737,6 +737,8 @@ class EDD_Payment {
 
 										if ( 'publish' === $this->status || 'complete' === $this->status || 'revoked' === $this->status ) {
 
+											$log_count_change = 0;
+
 											if ( $item['previous_data']['quantity'] != $item['quantity'] ) {
 												$log_count_change = $item['previous_data']['quantity'] - $item['quantity'];
 
@@ -748,12 +750,14 @@ class EDD_Payment {
 													'compare' => '=',
 												);
 
-												if ( ! empty( $item[ 'price_id' ] ) || 0 === (int) $item[ 'price_id' ] ) {
-													$meta_query[] = array(
-														'key'     => '_edd_log_price_id',
-														'value'   => (int) $item[ 'price_id' ],
-														'compare' => '='
-													);
+												if ( isset( $item['price_id'] ) ) {
+													if ( ! empty( $item[ 'price_id' ] ) || 0 === (int) $item[ 'price_id' ] ) {
+														$meta_query[] = array(
+															'key'     => '_edd_log_price_id',
+															'value'   => (int) $item[ 'price_id' ],
+															'compare' => '='
+														);
+													}
 												}
 
 												$log_args = array(
@@ -980,8 +984,6 @@ class EDD_Payment {
 				'user_info'     => is_array( $this->user_info ) ? array_filter( $this->user_info ) : array(),
 				'date'          => $this->date
 			);
-
-
 
 			// Do some merging of user_info before we merge it all, to honor the edd_payment_meta filter
 			if ( ! empty( $this->payment_meta['user_info'] ) ) {
@@ -1354,6 +1356,18 @@ class EDD_Payment {
 
 		$merged_item = array_merge( $current_args, $args );
 
+		// Sort the current and new args, and checksum them. If no changes. No need to fire a modification.
+		ksort( $current_args );
+		ksort( $merged_item );
+
+		if ( md5( json_encode( $current_args ) ) == md5( json_encode( $merged_item ) ) ) {
+			return false;
+		}
+
+		$new_subtotal = $merged_item['item_price'] * $merged_item['quantity'];
+		$merged_item['subtotal'] = $new_subtotal;
+		$merged_item['price']    = $new_subtotal + $merged_item['tax'];
+
 		$this->cart_details[ $cart_index ]    = $merged_item;
 		$modified_download                    = $merged_item;
 		$modified_download['action']          = 'modify';
@@ -1361,9 +1375,17 @@ class EDD_Payment {
 
 		$this->pending['downloads'][] = $modified_download;
 
-		$new_subtotal = $modified_download['item_price'] * $modified_download['quantity'];
-		$this->increase_subtotal( $new_subtotal - $modified_download['discount'] );
-		$this->increase_tax( $modified_download['tax'] );
+		if ( $new_subtotal > $current_args['subtotal'] ) {
+			$this->increase_subtotal( ( $new_subtotal - $modified_download['discount'] ) - $current_args['subtotal'] );
+		} else {
+			$this->decrease_subtotal( $current_args['subtotal'] - ( $new_subtotal - $modified_download['discount'] ) );
+		}
+
+		if ( $modified_download['tax'] > $current_args['tax'] ) {
+			$this->increase_tax( $modified_download['tax'] - $current_args['tax'] );
+		} else {
+			$this->increase_tax( $current_args['tax'] - $modified_download['tax'] );
+		}
 
 		return true;
 	}

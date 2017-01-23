@@ -402,7 +402,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 												<?php endif; ?>
 
 												<?php if ( ! edd_use_taxes() ): ?>
-													<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][tax]" value="<?php echo $item_tax; ?>" />
+													<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][item_tax]" value="<?php echo $item_tax; ?>" />
 												<?php endif; ?>
 
 												<?php if ( ! empty( $cart_items[ $key ]['fees'] ) ) : ?>
@@ -414,17 +414,17 @@ $customer       = new EDD_Customer( $payment->customer_id );
 
 											<li class="item_price">
 												<?php echo edd_currency_symbol( $currency_code ); ?>
-												<input type"text" class="medium-text edd-price-field edd-payment-details-download-item-price" name="edd-payment-details-downloads[<?php echo $key; ?>][item_price]" value="<?php echo edd_format_amount( $item_price ); ?>" />
+												<input type"text" class="medium-text edd-price-field edd-payment-details-download-item-price edd-payment-item-input" name="edd-payment-details-downloads[<?php echo $key; ?>][item_price]" value="<?php echo edd_format_amount( $item_price ); ?>" />
 												<?php if( edd_item_quantities_enabled() ) : ?>
 													&nbsp;&times;&nbsp;
-													<input type="number" name="edd-payment-details-downloads[<?php echo $key; ?>][quantity]" class="small-text edd-payment-details-download-quantity" min="1" step="1" value="<?php echo $quantity; ?>" />
+													<input type="number" name="edd-payment-details-downloads[<?php echo $key; ?>][quantity]" class="small-text edd-payment-details-download-quantity edd-payment-item-input" min="1" step="1" value="<?php echo $quantity; ?>" />
 												<?php endif; ?>
 											</li>
 
 											<?php if ( edd_use_taxes() ) : ?>
 											<li class="item_tax">
 												<?php echo edd_currency_symbol( $currency_code ); ?>
-												<input type"text" class="small-text edd-payment-details-download-item-tax" name="edd-payment-details-downloads[<?php echo $key; ?>][item_tax]" value="<?php echo edd_format_amount( $item_tax ); ?>" />
+												<input type"text" class="small-text edd-payment-details-download-item-tax edd-payment-item-input" name="edd-payment-details-downloads[<?php echo $key; ?>][item_tax]" value="<?php echo edd_format_amount( $item_tax ); ?>" />
 											</li>
 											<?php endif; ?>
 

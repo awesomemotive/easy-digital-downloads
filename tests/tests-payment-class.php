@@ -859,6 +859,16 @@ class Tests_Payment_Class extends EDD_UnitTestCase {
 		$this->assertEquals( 3, $download->get_earnings() );
 	}
 
+	public function modify_cart_item_no_changes() {
+		$payment = new EDD_Payment( $this->_payment_id );
+		$payment->status = 'publish';
+		$payment->save();
+
+		$payment = new EDD_Payment( $payment->ID );
+		$change_permitted = $payment->modify_cart_item( 0, array( 'quantity' => $payment->cart_details[0]['quantity'], 'item_price' => $payment->cart_details[0]['price'] ) );
+		$this->assertFalse( $change_permitted );
+	}
+
 	/** Helpers **/
 	public function alter_payment_meta( $meta, $payment_data ) {
 		$meta['user_info']['address']['country'] = 'PL';
