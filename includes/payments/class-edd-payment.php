@@ -798,21 +798,21 @@ class EDD_Payment {
 
 											// Change the number of sales for the download.
 											if ( $log_count_change > 0 ) {
-												$download->increase_sales( $log_count_change );
+												$download->decrease_sales( $log_count_change );
 											} elseif ( $log_count_change < 0 ) {
 												$log_count_change = absint( $log_count_change );
-												$download->decrease_sales( $log_count_change );
+												$download->increase_sales( $log_count_change );
 											}
 
 											// Change the earnings for the product.
 											$price_change = $item['previous_data']['price'] - $item['price'];
 											if ( $price_change > 0 ) {
-												$download->increase_earnings( $price_change );
-												$total_increase += $price_change;
+												$download->decrease_earnings( $price_change );
+												$total_increase -= $price_change;
 											} elseif ( $price_change < 0 ) {
 												$price_change = -( $price_change );
-												$download->decrease_earnings( $price_change );
-												$total_decrease -= $price_change;
+												$download->increase_earnings( $price_change );
+												$total_decrease += $price_change;
 											}
 
 										}
