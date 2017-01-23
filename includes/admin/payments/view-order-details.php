@@ -402,7 +402,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 												<?php endif; ?>
 
 												<?php if ( ! edd_use_taxes() ): ?>
-													<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][item_tax]" value="<?php echo $item_tax; ?>" />
+													<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][item_tax]" class="edd-payment-details-download-item-tax" value="<?php echo $item_tax; ?>" />
 												<?php endif; ?>
 
 												<?php if ( ! empty( $cart_items[ $key ]['fees'] ) ) : ?>
