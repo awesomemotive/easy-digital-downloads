@@ -596,21 +596,41 @@ jQuery(document).ready(function ($) {
 
 		edit_price : function() {
 
-			$('.edd-payment-item-total').on('keyup', function () {
-				var row = $(this).parents('div.row');
+			$(document.body).on('change, keyup', '.edd-payment-item-input', function () {
+				var row = $(this).parents('ul.edd-purchased-files-list-wrapper');
 				$( '.edd-order-payment-recalc-totals' ).show();
 
-				var quantity = row.find( 'input.edd-payment-details-download-quantity' ).val();
+				var quantity   = row.find('input.edd-payment-details-download-quantity').val();
+				var item_price = row.find('input.edd-payment-details-download-item-price').val();
+				var item_tax   = row.find('input.edd-payment-details-download-item-tax').val();
 
-				row.find( 'input.edd-payment-details-download-item-price' ).val( $(this).val() );
-				row.find( 'input.edd-payment-details-download-amount' ).val( $(this).val() );
+				item_price = parseFloat( item_price );
+				if ( isNaN( item_price ) ) {
+					alert( edd_vars.numeric_item_price );
+					return false;
+				}
+
+				item_tax = parseFloat( item_tax );
+				if ( isNaN( item_tax ) ) {
+					alert( edd_vars.numeric_item_tax );
+					return false;
+				}
+
+				if ( isNaN( parseInt( quantity ) ) ) {
+					quantity = 1;
+				}
+
+				var item_total = ( item_price * quantity ) + item_tax;
+				item_total     = item_total.toFixed( edd_vars.currency_decimals );
+				row.find('input.edd-payment-details-download-amount').val( item_total );
+				row.find('span.edd-payment-details-download-amount').text( item_total );
 			});
 
 		},
 
 		recalculate_total : function() {
 
-			// Remove a download from a purchase
+			// Update taxes and totals for any changes made.
 			$('#edd-order-recalc-total').on('click', function(e) {
 				e.preventDefault();
 				var total  = 0,
