@@ -1040,11 +1040,14 @@ function edd_remove_cart_fee_url( $fee_id = '') {
  * @return void
  */
 function edd_empty_cart() {
-	// Remove cart contents
+	// Remove cart contents.
 	EDD()->session->set( 'edd_cart', NULL );
 
-	// Remove all cart fees
+	// Remove all cart fees.
 	EDD()->session->set( 'edd_cart_fees', NULL );
+
+	// Remove any resuming payments.
+	EDD()->session->set( 'edd_resume_payment', NULL );
 
 	// Remove any active discounts
 	edd_unset_all_cart_discounts();

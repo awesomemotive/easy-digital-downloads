@@ -336,6 +336,14 @@ function edd_register_post_type_statuses() {
 		'show_in_admin_status_list' => true,
 		'label_count'               => _n_noop( 'Abandoned <span class="count">(%s)</span>', 'Abandoned <span class="count">(%s)</span>', 'easy-digital-downloads' )
 	)  );
+	register_post_status( 'processing', array(
+		'label'                     => _x( 'Processing', 'Processing payment status', 'easy-digital-downloads' ),
+		'public'                    => true,
+		'exclude_from_search'       => false,
+		'show_in_admin_all_list'    => true,
+		'show_in_admin_status_list' => true,
+		'label_count'               => _n_noop( 'Processing <span class="count">(%s)</span>', 'Processing <span class="count">(%s)</span>', 'easy-digital-downloads' )
+	)  );
 
 	// Discount Code Statuses
 	register_post_status( 'active', array(
