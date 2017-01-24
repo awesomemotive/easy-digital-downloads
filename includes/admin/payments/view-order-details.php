@@ -337,24 +337,30 @@ $customer       = new EDD_Customer( $payment->customer_id );
 									<h3 class="hndle">
 										<span><?php printf( __( 'Purchased %s', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></span>
 									</h3>
-									<div class="row header">
+									<div class="edd-purchased-files-header row header">
 										<ul class="edd-purchased-files-list-wrapper">
-											<li class="download"><?php _e( 'Item Purchased', 'easy-digital-downloads' ); ?></li>
+											<li class="download">
+												<?php _ex( 'Item Purchased', 'payment details purchased item title - full screen', 'easy-digital-downloads' ); ?>
+											</li>
 
 											<li class="item_price<?php echo $is_qty_enabled; ?>">
-												<?php _e( 'Price', 'easy-digital-downloads' ); ?>
-												<?php if( edd_item_quantities_enabled() ) : ?>
-													<?php _e( ' & Quantity', 'easy-digital-downloads' ); ?>
-												<?php endif; ?>
+												<?php
+													 _ex( 'Price', 'payment details purchased item price - full screen', 'easy-digital-downloads' );
+													if( edd_item_quantities_enabled() ) :
+														_ex( ' & Quantity', 'payment details purchased item quantity - full screen', 'easy-digital-downloads' );
+													endif;
+												?>
 											</li>
 
 											<?php if ( edd_use_taxes() ) : ?>
-											<li class="item_tax">
-												<?php _e( 'Tax', 'easy-digital-downloads' ); ?>
-											</li>
+												<li class="item_tax">
+													<?php _ex( 'Tax', 'payment details purchased item tax - full screen', 'easy-digital-downloads' ); ?>
+												</li>
 											<?php endif; ?>
 
-											<li class="price"><?php _e( 'Item Total', 'easy-digital-downloads' ); ?></li>
+											<li class="price">
+												<?php _ex( 'Item Total', 'payment details purchased item total - full screen', 'easy-digital-downloads' ); ?>
+											</li>
 										</ul>
 									</div>
 									<?php
@@ -412,6 +418,14 @@ $customer       = new EDD_Customer( $payment->customer_id );
 												</li>
 
 												<li class="item_price<?php echo $is_qty_enabled; ?>">
+													<span class="edd-payment-details-label-mobile">
+														<?php
+															_ex( 'Price', 'payment details purchased item price - mobile', 'easy-digital-downloads' );
+															if( edd_item_quantities_enabled() ) :
+																_ex( ' & Quantity', 'payment details purchased item quantity - mobile', 'easy-digital-downloads' );
+															endif;
+														?>
+													</span>
 													<?php echo edd_currency_symbol( $currency_code ); ?>
 													<input type="text" class="medium-text edd-price-field edd-payment-details-download-item-price edd-payment-item-input" name="edd-payment-details-downloads[<?php echo $key; ?>][item_price]" value="<?php echo edd_format_amount( $item_price ); ?>" />
 													<?php if( edd_item_quantities_enabled() ) : ?>
@@ -422,13 +436,19 @@ $customer       = new EDD_Customer( $payment->customer_id );
 
 												<?php if ( edd_use_taxes() ) : ?>
 												<li class="item_tax">
+													<span class="edd-payment-details-label-mobile">
+														<?php _ex( 'Tax', 'payment details purchased item tax - mobile', 'easy-digital-downloads' ); ?>
+													</span>
 													<?php echo edd_currency_symbol( $currency_code ); ?>
 													<input type="number" class="small-text edd-payment-details-download-item-tax edd-payment-item-input" name="edd-payment-details-downloads[<?php echo $key; ?>][item_tax]" value="<?php echo edd_format_amount( $item_tax ); ?>" />
 												</li>
 												<?php endif; ?>
 
 												<li class="price">
-													<span><?php echo edd_currency_symbol( $currency_code ); ?></span><span class="price-text edd-payment-details-download-amount"><?php echo edd_format_amount( $price ); ?></span>
+													<span class="edd-payment-details-label-mobile">
+														<?php _ex( 'Item Total', 'payment details purchased item total - mobile', 'easy-digital-downloads' ); ?>
+													</span>
+													<span class="edd-price-currency"><?php echo edd_currency_symbol( $currency_code ); ?></span><span class="price-text edd-payment-details-download-amount"><?php echo edd_format_amount( $price ); ?></span>
 													<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][amount]" class="edd-payment-details-download-amount" value="<?php echo esc_attr( $price ); ?>"/>
 												</li>
 											</ul>
@@ -477,6 +497,9 @@ $customer       = new EDD_Customer( $payment->customer_id );
 
 									<ul>
 										<li class="download">
+											<span class="edd-payment-details-label-mobile">
+												<?php _ex( 'Select New Item To Add', 'payment details select item to add - mobile', 'easy-digital-downloads' ); ?>
+											</span>
 											<?php echo EDD()->html->product_dropdown( array(
 												'name'   => 'edd-order-download-select',
 												'id'     => 'edd-order-download-select',
@@ -485,6 +508,14 @@ $customer       = new EDD_Customer( $payment->customer_id );
 										</li>
 
 										<li class="item_price<?php echo $is_qty_enabled; ?>">
+											<span class="edd-payment-details-label-mobile">
+												<?php
+												_ex( 'Price', 'payment details add item price - mobile', 'easy-digital-downloads' );
+												if( edd_item_quantities_enabled() ) :
+													_ex( ' & Quantity', 'payment details add item quantity - mobile', 'easy-digital-downloads' );
+												endif;
+												?>
+											</span>
 											<?php
 											echo edd_currency_symbol( $currency_code ) . '&nbsp;';
 											echo EDD()->html->text(
@@ -504,6 +535,9 @@ $customer       = new EDD_Customer( $payment->customer_id );
 
 										<?php if ( edd_use_taxes() ) : ?>
 											<li class="item_tax">
+												<span class="edd-payment-details-label-mobile">
+													<?php _ex( 'Tax', 'payment details add item tax - mobile', 'easy-digital-downloads' ); ?>
+												</span>
 												<?php
 												echo edd_currency_symbol( $currency_code ) . '&nbsp;';
 												echo EDD()->html->text(
@@ -518,6 +552,9 @@ $customer       = new EDD_Customer( $payment->customer_id );
 										<?php endif; ?>
 
 										<li class="edd-add-download-to-purchase-actions actions">
+											<span class="edd-payment-details-label-mobile">
+												<?php _ex( 'Add Item', 'payment details add item submit button - mobile', 'easy-digital-downloads' ); ?>
+											</span>
 											<a href="" id="edd-order-add-download" class="button button-secondary"><?php printf( __( 'Add %s to Payment', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></a>
 										</li>
 
