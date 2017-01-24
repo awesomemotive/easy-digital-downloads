@@ -306,8 +306,7 @@ abstract class EDD_Gateway {
 	 * @access public
 	 * @since  2.7
 	 *
-	 * @param array $purchase_data Purchase data from session.
 	 * @return void
 	 */
-	public function process_purchase( $purchase_data = array() ) {}
+	public function process_purchase() {}
 }
