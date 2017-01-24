@@ -187,7 +187,15 @@ abstract class EDD_Gateway {
 	 * @return void
 	 */
 	private function setup_purchase_data( $purchase_data = array() ) {
-
+		$this->price        = $purchase_data['price'];
+		$this->date         = $purchase_data['date'];
+		$this->email        = $purchase_data['user_email'];
+		$this->purchase_key = $purchase_data['purchase_key'];
+		$this->currency     = edd_get_currency();
+		$this->downloads    = $purchase_data['downloads'];
+		$this->user_info    = $purchase_data['user_info'];
+		$this->cart_details = $purchase_data['cart_details'];
+		$this->status       = ! empty( $purchase_data['buy_now'] ) ? 'private' : 'pending';
 	}
 
 	/**
