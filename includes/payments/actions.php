@@ -348,3 +348,144 @@ function edd_cleanup_stats_transients() {
 
 }
 add_action( 'edd_daily_scheduled_events', 'edd_cleanup_stats_transients' );
+
+/**
+ * Process an attempt to complete a recoverable payment.
+ *
+ * @since  2.7
+ * @return void
+ */
+function edd_recover_payment() {
+
+	if ( empty( $_GET['payment_id'] ) ) {
+		return;
+	}
+
+	$payment = new EDD_Payment( $_GET['payment_id'] );
+	if ( $payment->ID !== (int) $_GET['payment_id'] ) {
+		return;
+	}
+
+	if ( ! $payment->is_recoverable() ) {
+		return;
+	}
+
+	if ( is_user_logged_in() && $payment->user_id != get_current_user_id() ) {
+		$redirect = get_permalink( edd_get_option( 'purchase_history_page' ) );
+		edd_set_error( 'edd-payment-recovery-user-mismatch', __( 'Error resuming payment.', 'easy-digital-downloads' ) );
+		wp_redirect( $redirect );
+	}
+
+	$payment->add_note( __( 'Payment recovery triggered URL', 'easy-digital-downloads' ) );
+
+	// Empty out the cart.
+	edd_empty_cart();
+
+	// Recover any downloads.
+	foreach ( $payment->cart_details as $download ) {
+		edd_add_to_cart( $download['id'], $download['item_number']['options'] );
+
+		// Recover any item specific fees.
+		if ( ! empty( $download['fees'] ) ) {
+			foreach ( $download['fees'] as $fee ) {
+				EDD()->fees->add_fee( $fee );
+			}
+		}
+	}
+
+	// Recover any global fees.
+	foreach ( $payment->fees as $fee ) {
+		EDD()->fees->add_fee( $fee );
+	}
+
+	// Recover any discounts.
+	if ( 'none' !== $payment->discounts && ! empty( $payment->discounts ) ){
+		$discounts = ! is_array( $payment->discounts ) ? explode( ',', $payment->discounts ) : $payment->discounts;
+
+		foreach ( $discounts as $discount ) {
+			edd_set_cart_discount( $discount );
+		}
+	}
+
+	EDD()->session->set( 'edd_resume_payment', $payment->ID );
+
+	$redirect_args = array( 'payment-mode' => $payment->gateway );
+	$redirect      = add_query_arg( $redirect_args, edd_get_checkout_uri() );
+	wp_redirect( $redirect );
+	exit;
+}
+add_action( 'edd_recover_payment', 'edd_recover_payment' );
+
+/**
+ * If the payment trying to be recovered has a User ID associated with it, be sure it's the same user.
+ *
+ * @since  2.7
+ * @return void
+ */
+function edd_recovery_user_mismatch() {
+	if ( ! edd_is_checkout() ) {
+		return;
+	}
+
+	$resuming_payment = EDD()->session->get( 'edd_resume_payment' );
+	if ( $resuming_payment ) {
+		$payment = new EDD_Payment( $resuming_payment );
+		if ( is_user_logged_in() && $payment->user_id != get_current_user_id() ) {
+			edd_empty_cart();
+			edd_set_error( 'edd-payment-recovery-user-mismatch', __( 'Error resuming payment.', 'easy-digital-downloads' ) );
+			wp_redirect( get_permalink( edd_get_option( 'purchase_page' ) ) );
+			exit;
+		}
+	}
+}
+add_action( 'template_redirect', 'edd_recovery_user_mismatch' );
+
+/**
+ * If the payment trying to be recovered has a User ID associated with it, we need them to log in.
+ *
+ * @since  2.7
+ * @return void
+ */
+function edd_recovery_force_login_fields() {
+	$resuming_payment = EDD()->session->get( 'edd_resume_payment' );
+	if ( $resuming_payment ) {
+		$payment = new EDD_Payment( $resuming_payment );
+		if ( ! empty( $payment->user_id ) && ( ! is_user_logged_in() ) ) {
+			?>
+			<div class="edd-alert edd-alert-info">
+				<p><?php _e( 'To complete this payment, please login to your account.', 'easy-digital-downloads' ); ?></p>
+				<p>
+					<a href="<?php echo wp_lostpassword_url(); ?>" title="<?php _e( 'Lost Password', 'easy-digital-downloads' ); ?>">
+						<?php _e( 'Lost Password?', 'easy-digital-downloads' ); ?>
+					</a>
+				</p>
+			</div>
+			<?php
+			$show_register_form = edd_get_option( 'show_register_form', 'none' );
+
+			if ( 'both' === $show_register_form || 'login' === $show_register_form ) {
+				return;
+			}
+			do_action( 'edd_purchase_form_login_fields' );
+		}
+	}
+}
+add_action( 'edd_purchase_form_before_register_login', 'edd_recovery_force_login_fields' );
+
+/**
+ * When processing the payment, check if the resuming payment has a user id and that it matches the logged in user.
+ *
+ * @since 2.7
+ * @param $verified_data
+ * @param $post_data
+ */
+function edd_recovery_verify_logged_in( $verified_data, $post_data ) {
+	$resuming_payment = EDD()->session->get( 'edd_resume_payment' );
+	if ( $resuming_payment ) {
+		$payment = new EDD_Payment( $resuming_payment );
+		if ( ! empty( $payment->user_id ) && ( ! is_user_logged_in() || $payment->user_id != get_current_user_id() ) ) {
+			edd_set_error( 'recovery_requires_login', __( 'To complete this payment, please login to your account.', 'easy-digital-downloads' ) );
+		}
+	}
+}
+add_action( 'edd_checkout_error_checks', 'edd_recovery_verify_logged_in', 10, 2 );

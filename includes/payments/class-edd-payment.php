@@ -584,7 +584,7 @@ class EDD_Payment {
 
 			$this->payment_meta = apply_filters( 'edd_payment_meta', $this->payment_meta, $payment_data );
 			if ( ! empty( $this->payment_meta['fees'] ) ) {
-				$this->fees = array_merge( $this->fees, $this->payment_meta['fees'] );
+				$this->fees = array_merge( $this->payment_meta['fees'], $this->fees );
 				foreach( $this->fees as $fee ) {
 					$this->increase_fees( $fee['amount'] );
 				}
@@ -740,7 +740,7 @@ class EDD_Payment {
 
 					case 'fees':
 
-						if ( 'publish' !== $this->status && 'complete' !== $this->status && 'revoked' !== $this->status ) {
+						if ( 'publish' !== $this->status && 'complete' !== $this->status && 'revoked' !== $this->status && ! $this->is_recoverable() ) {
 							break;
 						}
 
@@ -864,7 +864,7 @@ class EDD_Payment {
 				}
 			}
 
-			if ( 'pending' !== $this->status ) {
+			if ( ! $this->in_process() ) {
 
 				$customer = new EDD_Customer( $this->customer_id );
 
@@ -917,6 +917,27 @@ class EDD_Payment {
 
 			$meta        = $this->get_meta();
 			$merged_meta = array_merge( $meta, $new_meta );
+
+			$payment_data = array(
+				'price'        => $this->total,
+				'date'         => $this->date,
+				'user_email'   => $this->email,
+				'purchase_key' => $this->key,
+				'currency'     => $this->currency,
+				'downloads'    => $this->downloads,
+				'user_info' => array(
+					'id'         => $this->user_id,
+					'email'      => $this->email,
+					'first_name' => $this->first_name,
+					'last_name'  => $this->last_name,
+					'discount'   => $this->discounts,
+					'address'    => $this->address,
+				),
+				'cart_details' => $this->cart_details,
+				'status'       => $this->status,
+				'fees'         => $this->fees,
+			);
+			$merged_meta = apply_filters( 'edd_payment_meta', $merged_meta, $payment_data );
 
 			// Only save the payment meta if it's changed
 			if ( md5( serialize( $meta ) ) !== md5( serialize( $merged_meta) ) ) {
@@ -1292,7 +1313,7 @@ class EDD_Payment {
 	 * @since  2.5
 	 * @param  string      $key    The key to remove by
 	 * @param  int|string  $value  The value to search for
-	 * @param  boolean $global     False - removes the first value it fines, True - removes all matches
+	 * @param  boolean $global     False - removes the first value it finds, True - removes all matches
 	 * @return boolean             If the item is removed
 	 */
 	public function remove_fee_by( $key, $value, $global = false ) {
@@ -1541,7 +1562,7 @@ class EDD_Payment {
 				case 'failed':
 					$this->process_failure();
 					break;
-				case 'pending':
+				case 'pending' || 'processing':
 					$this->process_pending();
 					break;
 			}
@@ -1658,6 +1679,39 @@ class EDD_Payment {
 	}
 
 	/**
+	 * Determines if this payment is able to be resumed by the user.
+	 *
+	 * @since 2.7
+	 * @return bool
+	 */
+	public function is_recoverable() {
+		$recoverable = false;
+
+		$recoverable_statuses = apply_filters( 'edd_recoverable_payment_statuses', array( 'pending', 'abandoned', 'failed' ) );
+		if ( in_array( $this->status, $recoverable_statuses ) && empty( $this->transaction_id ) ) {
+			$recoverable = true;
+		}
+
+		return $recoverable;
+	}
+
+	/**
+	 * Returns the URL that a customer can use to resume a payment, or false if it's not recoverable.
+	 *
+	 * @since 2.7
+	 * @return bool|string
+	 */
+	public function get_recovery_url() {
+		if ( ! $this->is_recoverable() ) {
+			return false;
+		}
+
+		$recovery_url = add_query_arg( array( 'edd_action' => 'recover_payment', 'payment_id' => $this->ID ), edd_get_checkout_uri() );
+
+		return apply_filters( 'edd_payment_recovery_url', $recovery_url, $this );
+	}
+
+	/**
 	 * When a payment is set to a status of 'refunded' process the necessary actions to reduce stats
 	 *
 	 * @since  2.5.7
@@ -1727,7 +1781,7 @@ class EDD_Payment {
 		$process_pending = true;
 
 		// If the payment was not in publish or revoked status, don't decrement stats as they were never incremented
-		if ( ( 'publish' != $this->old_status && 'revoked' != $this->old_status ) || 'pending' != $this->status ) {
+		if ( ( 'publish' != $this->old_status && 'revoked' != $this->old_status ) || ! $this->in_process() ) {
 			$process_pending = false;
 		}
 
@@ -1827,7 +1881,7 @@ class EDD_Payment {
 	private function setup_completed_date() {
 		$payment = get_post( $this->ID );
 
-		if( 'pending' == $payment->post_status || 'preapproved' == $payment->post_status ) {
+		if( 'pending' == $payment->post_status || 'preapproved' == $payment->post_status || 'processing' == $payment->post_status ) {
 			return false; // This payment was never completed
 		}
 
@@ -2403,4 +2457,16 @@ class EDD_Payment {
 	private function get_unlimited() {
 		return apply_filters( 'edd_payment_unlimited_downloads', $this->unlimited, $this->ID, $this );
 	}
+
+	/**
+	 * Easily determine if the payment is in a status of pending some action. Processing is specifically used for eChecks.
+	 *
+	 * @since 2.7
+	 * @return bool
+	 */
+	private function in_process() {
+		$in_process_statuses = array( 'pending', 'processing' );
+		return in_array( $this->status, $in_process_statuses );
+	}
+
 }

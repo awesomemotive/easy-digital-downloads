@@ -996,6 +996,13 @@ input[type="submit"].edd-submit:focus,
 
 /* =Misc styles
 -------------------------------------------------------------- */
+.edd-hide-on-empty.cart-empty {
+	display: none;
+}
+edd-hide-on-empty.cart-not.empty {
+	display: block;
+}
+
 .edd-cart-ajax {
 	margin: 0 8px 0 4px;
 	position: relative;
