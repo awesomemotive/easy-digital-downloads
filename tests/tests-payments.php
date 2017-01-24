@@ -364,4 +364,18 @@ class Tests_Payments extends EDD_UnitTestCase {
 		$this->assertTrue( edd_is_guest_payment( $guest_payment_id ) );
 	}
 
+	public function test_get_payment() {
+		$payment = edd_get_payment( $this->_payment_id );
+		$this->assertTrue( property_exists( $payment, 'ID' ) );
+		$this->assertTrue( property_exists( $payment, 'cart_details' ) );
+		$this->assertTrue( property_exists( $payment, 'user_info' ) );
+		$this->assertEquals( $payment->ID, $this->_payment_id );
+
+		$payment_2 = edd_get_payment( $this->_transaction_id, true );
+		$this->assertTrue( property_exists( $payment_2, 'ID' ) );
+		$this->assertTrue( property_exists( $payment_2, 'cart_details' ) );
+		$this->assertTrue( property_exists( $payment_2, 'user_info' ) );
+		$this->assertEquals( $payment_2->ID, $this->_payment_id );
+	}
+
 }
