@@ -27,6 +27,10 @@ function edd_get_payment( $payment_or_txn_id = null, $by_txn = false ) {
 	if ( is_a( $payment_or_txn_id, 'WP_Post' ) || is_a( $payment_or_txn_id, 'EDD_Payment' ) ) {
 		$payment_id = $payment_or_txn_id->ID;
 	} elseif ( $by_txn ) {
+		if ( empty( $payment_or_txn_id ) ) {
+			return false;
+		}
+
 		$query      = $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_transaction_id' AND meta_value = '%s'", $payment_or_txn_id );
 		$payment_id = $wpdb->get_var( $query );
 
