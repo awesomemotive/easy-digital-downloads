@@ -524,6 +524,7 @@ class EDD_CLI extends WP_CLI_Command {
 		$fname      = 'Pippin';
 		$lname      = 'Williamson';
 		$date       = false;
+		$range      = 30;
 
 		if( count( $assoc_args ) > 0 ) {
 			$number     = ( array_key_exists( 'number', $assoc_args ) )   ? absint( $assoc_args['number'] )             : $number;
@@ -534,6 +535,7 @@ class EDD_CLI extends WP_CLI_Command {
 			$fname      = ( array_key_exists( 'fname', $assoc_args ) )    ? sanitize_text_field( $assoc_args['fname'] ) : $fname;
 			$lname      = ( array_key_exists( 'lname', $assoc_args ) )    ? sanitize_text_field( $assoc_args['lname'] ) : $lname;
 			$date       = ( array_key_exists( 'date', $assoc_args ) )     ? sanitize_text_field( $assoc_args['date'] )  : $date;
+			$range      = ( array_key_exists( 'range', $assoc_args ) )    ? absint( $assoc_args['range'] )              : $range;
 
 			// Status requires a bit more validation
 			if( array_key_exists( 'status', $assoc_args ) ) {
@@ -673,7 +675,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 			if ( 'random' === $date ) {
 				// Randomly grab a date from the current past 30 days
-				$oldest_time = strtotime( '-30 days', current_time( 'timestamp') );
+				$oldest_time = strtotime( '-' . $range . ' days', current_time( 'timestamp') );
 				$newest_time = current_time( 'timestamp' );
 
 				$timestamp   = rand( $oldest_time, $newest_time );
