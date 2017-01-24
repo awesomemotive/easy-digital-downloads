@@ -92,16 +92,102 @@ abstract class EDD_Gateway {
 	public $test_mode;
 
 	/**
-	 * Empty constructor.
+	 * Price.
+	 *
+	 * @access public
+	 * @since  2.7
+	 * @var    float
+	 */
+	public $price;
+
+	/**
+	 * Email address.
+	 *
+	 * @access public
+	 * @since  2.7
+	 * @var    string
+	 */
+	public $email;
+
+	/**
+	 * User info.
+	 *
+	 * @access public
+	 * @since  2.7
+	 * @var    array
+	 */
+	public $user_info;
+
+	/**
+	 * Purchase Key.
+	 *
+	 * @access public
+	 * @since  2.7
+	 * @var    string
+	 */
+	public $purchase_key;
+
+	/**
+	 * Currency Code.
+	 *
+	 * @access public
+	 * @since  2.7
+	 * @var    string
+	 */
+	public $currency;
+
+	/**
+	 * Downloads associated with the purchase.
+	 *
+	 * @access public
+	 * @since  2.7
+	 * @var    array
+	 */
+	public $downloads;
+
+	/**
+	 * Status.
+	 *
+	 * @access public
+	 * @since  2.7
+	 * @var    string
+	 */
+	public $status;
+
+	/**
+	 * Cart details.
+	 *
+	 * @access public
+	 * @since  2.7
+	 * @var    array
+	 */
+	public $cart_details;
+
+	/**
+	 * Constructor to initialise gateway.
 	 *
 	 * @access public
 	 * @since  2.7
 	 *
+	 * @param array $purchase_data Purchase data.
 	 * @return void
 	 */
-	public function __construct() {
+	public function __construct( $purchase_data = array() ) {
+		$this->setup_purchase_data( $purchase_data );
 		$this->fill_vars();
 		$this->init();
+	}
+
+	/**
+	 * Setup the purchase data with the object vars.
+	 *
+	 * @access private
+	 * @since  2.7
+	 *
+	 * @return void
+	 */
+	private function setup_purchase_data( $purchase_data = array() ) {
+
 	}
 
 	/**
