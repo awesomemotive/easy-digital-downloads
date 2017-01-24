@@ -583,23 +583,34 @@ function edd_check_for_existing_payment( $payment_id ) {
  *
  * @since 2.7
  *
- * @param int $id Payment ID.
+ * @param mixed int|EDD_Payment|WP_Post $payment Payment ID, EDD_Payment object or WP_Post object.
+ * @param bool                          $by_txn  Is the ID supplied as the first parameter
  * @return mixed false|object EDD_Payment if a valid payment ID, false otherwise.
  */
-function edd_get_payment( $payment_id = 0 ) {
+function edd_get_payment( $payment = null, $by_txn = false ) {
+	if ( is_a( $payment, 'WP_Post' ) || is_a( $payment, 'EDD_Payment' ) ) {
+		$payment_id = $payment->ID;
+	}
+
+	if ( is_numeric( $payment ) ) {
+		$payment_id = absint( $payment );
+	} else {
+		$payment_id = $payment;
+	}
+
 	if ( empty( $payment_id ) ) {
 		return false;
 	}
 
 	$cache_key = md5( 'edd_payment' . $payment_id );
-	$payment = wp_cache_get( $cache_key, 'payments' );
+	$_payment = wp_cache_get( $cache_key, 'payments' );
 
-	if ( false === $payment ) {
-		$payment = new EDD_Payment( $payment_id );
-		if ( empty( $payment->ID ) || $payment->ID !== $payment_id ) {
+	if ( false === $_payment ) {
+		$payment = new EDD_Payment( $payment_id, $by_txn );
+		if ( empty( $payment->ID ) || ( ! $by_txn && $payment->ID !== $payment_id ) ) {
 			return false;
 		} else {
-			wp_cache_set( $cache_key, $payment, 'payments' );
+			wp_cache_set( md5( 'edd_payment' . $payment->ID ), $payment, 'payments' );
 		}
 	}
 
