@@ -227,7 +227,7 @@ abstract class EDD_Gateway {
 	 *
 	 * @return void
 	 */
-	public function init() {}
+	abstract public function init();
 
 	/**
 	 * Process the webhooks (e.g. PayPal IPN).
@@ -238,7 +238,7 @@ abstract class EDD_Gateway {
 	 *
 	 * @return void
 	 */
-	public function process_webhooks() {}
+	abstract public function process_webhooks();
 
 	/**
 	 * Load any scripts required by the gateway.
@@ -249,7 +249,7 @@ abstract class EDD_Gateway {
 	 *
 	 * @return void
 	 */
-	public function scripts() {}
+	abstract public function scripts();
 
 	/**
 	 * Print the fields for the gateway.
@@ -260,7 +260,7 @@ abstract class EDD_Gateway {
 	 *
 	 * @return void
 	 */
-	public function fields() {}
+	abstract public function fields();
 
 	/**
 	 * Validate fields
@@ -271,7 +271,7 @@ abstract class EDD_Gateway {
 	 *
 	 * @return void
 	 */
-	public function validate_fields() {}
+	abstract public function validate_fields();
 
 	/**
 	 * Check if a gateway supports a feature.
@@ -305,8 +305,9 @@ abstract class EDD_Gateway {
 	 *
 	 * @access public
 	 * @since  2.7
+	 * @abstract
 	 *
 	 * @return void
 	 */
-	public function process_purchase() {}
+	abstract public function process_purchase();
 }
