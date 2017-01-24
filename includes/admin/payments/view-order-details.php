@@ -340,7 +340,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 									<div class="edd-purchased-files-header row header">
 										<ul class="edd-purchased-files-list-wrapper">
 											<li class="download">
-												<?php _ex( 'Item Purchased', 'payment details purchased item title - full screen', 'easy-digital-downloads' ); ?>
+												<?php printf( _x( '%s Purchased', 'payment details purchased item title - full screen', 'easy-digital-downloads' ), edd_get_label_singular() ); ?>
 											</li>
 
 											<li class="item_price<?php echo $is_qty_enabled; ?>">
@@ -359,7 +359,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 											<?php endif; ?>
 
 											<li class="price">
-												<?php _ex( 'Item Total', 'payment details purchased item total - full screen', 'easy-digital-downloads' ); ?>
+												<?php printf( _x( '%s Total', 'payment details purchased item total - full screen', 'easy-digital-downloads' ), edd_get_label_singular() ); ?>
 											</li>
 										</ul>
 									</div>
@@ -446,7 +446,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 
 												<li class="price">
 													<span class="edd-payment-details-label-mobile">
-														<?php _ex( 'Item Total', 'payment details purchased item total - mobile', 'easy-digital-downloads' ); ?>
+														<?php printf( _x( '%s Total', 'payment details purchased item total - mobile', 'easy-digital-downloads' ), edd_get_label_singular() ); ?>
 													</span>
 													<span class="edd-price-currency"><?php echo edd_currency_symbol( $currency_code ); ?></span><span class="price-text edd-payment-details-download-amount"><?php echo edd_format_amount( $price ); ?></span>
 													<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][amount]" class="edd-payment-details-download-amount" value="<?php echo esc_attr( $price ); ?>"/>
@@ -475,7 +475,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 
 								<div class="edd-add-download-to-purchase-header row header">
 									<ul class="edd-purchased-files-list-wrapper">
-										<li class="download"><?php _e( 'Add New Item To Purchase', 'easy-digital-downloads' ); ?></li>
+										<li class="download"><?php printf( __( 'Add New %s', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></li>
 
 										<li class="item_price<?php echo $is_qty_enabled; ?>">
 											<?php _e( 'Price', 'easy-digital-downloads' ); ?>
@@ -490,7 +490,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 											</li>
 										<?php endif; ?>
 
-										<li class="price"><?php _e( 'Add Item', 'easy-digital-downloads' ); ?></li>
+										<li class="price"><?php _e( 'Actions', 'easy-digital-downloads' ); ?></li>
 									</ul>
 								</div>
 								<div class="edd-add-download-to-purchase inside">
@@ -498,7 +498,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 									<ul>
 										<li class="download">
 											<span class="edd-payment-details-label-mobile">
-												<?php _ex( 'Select New Item To Add', 'payment details select item to add - mobile', 'easy-digital-downloads' ); ?>
+												<?php printf( _x( 'Select New %s To Add', 'payment details select item to add - mobile', 'easy-digital-downloads' ), edd_get_label_singular() ); ?>
 											</span>
 											<?php echo EDD()->html->product_dropdown( array(
 												'name'   => 'edd-order-download-select',
@@ -553,9 +553,9 @@ $customer       = new EDD_Customer( $payment->customer_id );
 
 										<li class="edd-add-download-to-purchase-actions actions">
 											<span class="edd-payment-details-label-mobile">
-												<?php _ex( 'Add Item', 'payment details add item submit button - mobile', 'easy-digital-downloads' ); ?>
+												<?php _e( 'Actions', 'easy-digital-downloads' ); ?>
 											</span>
-											<a href="" id="edd-order-add-download" class="button button-secondary"><?php printf( __( 'Add %s to Payment', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></a>
+											<a href="" id="edd-order-add-download" class="button button-secondary"><?php printf( __( 'Add New %s', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></a>
 										</li>
 
 									</ul>
