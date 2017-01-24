@@ -181,6 +181,9 @@ class EDD_Session {
 			$_SESSION['edd' . $this->prefix ] = $this->session;
 		}
 
+		// We need to be able to support sessions being able to be created before adding to the cart.
+		EDD()->session->set_cart_cookie( true );
+
 		return $this->session[ $key ];
 	}
 
