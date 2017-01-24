@@ -929,14 +929,14 @@ function edd_get_cart_tax() {
  * Gets the tax rate charged on the cart.
  *
  * @since 2.7
+ * @param string $country     Country code for tax rate.
+ * @param string $state       State for tax rate.
+ * @param string $postal_code Postal code for tax rate. Not used by core, but for developers.
  * @return float Tax rate.
  */
-function edd_get_cart_tax_rate() {
-	$country = ! empty( $_POST['billing_country'] ) ? $_POST['billing_country'] : false;
-	$state   = ! empty( $_POST['card_state'] )      ? $_POST['card_state']      : false;
-	$rate    = edd_get_tax_rate( $country, $state );
-
-	return apply_filters( 'edd_get_cart_tax_rate', floatval( $rate ) );
+function edd_get_cart_tax_rate( $country = '', $state = '', $postal_code = '' ) {
+	$rate = edd_get_tax_rate( $country, $state );
+	return apply_filters( 'edd_get_cart_tax_rate', floatval( $rate ), $country, $state, $postal_code );
 }
 
 /**
