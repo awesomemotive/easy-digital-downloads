@@ -497,12 +497,13 @@ add_action( 'edd_meta_box_files_fields', 'edd_render_product_type_field', 10 );
  * @param $post_id
  */
 function edd_render_products_field( $post_id ) {
-	$type             = edd_get_download_type( $post_id );
+	$download         = new EDD_Download( $post_id );
+	$type             = $download->get_type();
 	$display          = $type == 'bundle' ? '' : ' style="display:none;"';
-	$products         = edd_get_bundled_products( $post_id );
-	$variable_pricing = edd_has_variable_prices( $post_id );
+	$products         = $download->get_bundled_downloads();
+	$variable_pricing = $download->has_variable_prices();
 	$variable_display = $variable_pricing ? '' : 'display:none;';
-	$prices           = edd_get_variable_prices( $post_id );
+	$prices           = $download->get_prices();
 ?>
 	<div id="edd_products"<?php echo $display; ?>>
 		<div id="edd_file_fields" class="edd_meta_table_wrap">
