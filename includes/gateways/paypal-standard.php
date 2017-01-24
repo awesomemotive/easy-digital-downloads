@@ -182,6 +182,9 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		// Only send to PayPal if the pending payment is created successfully
 		$listener_url = add_query_arg( 'edd-listener', 'IPN', home_url( 'index.php' ) );
 
+		// Set the session data to recover this payment in the event of abandonment or error.
+		EDD()->session->set( 'edd_resume_payment', $payment );
+
 		// Get the success url
 		$return_url = add_query_arg( array(
 				'payment-confirmation' => 'paypal',
@@ -288,9 +291,6 @@ function edd_process_paypal_purchase( $purchase_data ) {
 
 		// Fix for some sites that encode the entities
 		$paypal_redirect = str_replace( '&amp;', '&', $paypal_redirect );
-
-		// Get rid of cart contents
-		edd_empty_cart();
 
 		// Redirect to PayPal
 		wp_redirect( $paypal_redirect );
@@ -581,7 +581,8 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 				case 'echeck' :
 
 					$note = __( 'Payment made via eCheck and will clear automatically in 5-8 days', 'easy-digital-downloads' );
-
+					$payment->status = 'processing';
+					$payment->save();
 					break;
 
 				case 'address' :
@@ -729,6 +730,8 @@ function edd_paypal_success_page_content( $content ) {
 	if ( ! isset( $_GET['payment-id'] ) && ! edd_get_purchase_session() ) {
 		return $content;
 	}
+
+	edd_empty_cart();
 
 	$payment_id = isset( $_GET['payment-id'] ) ? absint( $_GET['payment-id'] ) : false;
 
