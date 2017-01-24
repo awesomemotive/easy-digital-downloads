@@ -42,7 +42,7 @@ class EDD_License {
 		$this->item_name = $_item_name;
 
 		if ( is_numeric( $_item_id ) ) {
-			$this->item_id = absint( $_item );
+			$this->item_id = absint( $_item_id );
 		}
 
 		$this->item_shortname = 'edd_' . preg_replace( '/[^a-zA-Z0-9_\s]/', '', str_replace( ' ', '_', strtolower( $this->item_name ) ) );
