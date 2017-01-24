@@ -588,6 +588,27 @@ function edd_render_products_field( $post_id ) {
 						<td>
 							<button class="edd_remove_repeatable" data-type="file" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;"><span class="screen-reader-text"><?php echo __( 'Remove bundle option', 'easy-digital-downloads' ); ?></span><span aria-hidden="true">&times;</span></button>
 						</td>
+						<td class="pricing" style="<?php echo $variable_display; ?>">
+								<?php
+									$options = array();
+
+									if ( $prices ) {
+										foreach ( $prices as $price_key => $price ) {
+											$options[ $price_key ] = $prices[ $price_key ]['name'];
+										}
+									}
+
+									$price_assignments = edd_get_bundle_pricing_variations( $post_id );
+
+									echo EDD()->html->select( array(
+										'name'             => '_edd_bundled_products_conditions['. $key .']',
+										'class'            => 'edd_repeatable_condition_field',
+										'options'          => $options,
+										'show_option_none' => false,
+										'selected'         => isset( $price_assignments[0][ $key ] ) ? $price_assignments[0][ $key ] : null,
+									) );
+								?>
+							</td>
 						<?php do_action( 'edd_download_products_table_row', $post_id ); ?>
 					</tr>
 				<?php endif; ?>
