@@ -325,8 +325,7 @@ input[class*="edd-price-field"] {
 #edd-edit-order-form .column {
 	width: 32%;
 }
-.edd-edit-purchase-element[class*="columns-"] .row > ul > li,
-.edd-edit-purchase-element[class*="columns-"] .inside > ul > li {
+.edd-edit-purchase-element[class*="columns-"] ul li {
 	padding-right: 1%;
 }
 #edd-edit-order-form .columns-4 .column:nth-child(2n+1),
@@ -334,20 +333,19 @@ input[class*="edd-price-field"] {
 #edd-edit-order-form .column:nth-child(2n+1) {
 	margin-right: 0;
 }
-.edd-edit-purchase-element .row > ul > li.download,
-.edd-edit-purchase-element .inside > ul > li.download {
+.edd-edit-purchase-element ul li.download {
 	width: 35%;
 }
-.edd-edit-purchase-element .row > ul > li.item_price.item_quantity,
-.edd-edit-purchase-element .inside > ul > li.item_price.item_quantity {
-	width: 25%;
-}
-.edd-edit-purchase-element .row > ul > li.item_tax,
-.edd-edit-purchase-element .inside > ul > li.item_tax {
+.edd-edit-purchase-element ul li.item_price {
 	width: 15%;
 }
-.edd-edit-purchase-element .row > ul > li.price,
-.edd-edit-purchase-element .inside > ul > li.price {
+.edd-edit-purchase-element ul li.item_price.item_quantity {
+	width: 25%;
+}
+.edd-edit-purchase-element ul li.item_tax {
+	width: 15%;
+}
+.edd-edit-purchase-element ul li.price {
 	width: 20%;
 }
 .edd-admin-box .label {
@@ -436,8 +434,7 @@ input[class*="edd-price-field"] {
 	padding-right: 10px;
 }
 #edd-edit-order-form .column,
-.edd-edit-purchase-element .row > ul > li,
-.edd-edit-purchase-element .inside > ul > li {
+.edd-edit-purchase-element ul li {
 	display: inline-block;
 	line-height: 1.4;
 	position: relative;
@@ -513,24 +510,23 @@ input[class*="edd-price-field"] {
 
 @media screen and ( max-width: 1284px ) {
 
-	.edd-edit-purchase-element .row > ul > li.download,
-	.edd-edit-purchase-element .inside > ul > li.download {
+	.edd-edit-purchase-element ul li.download {
 		padding-bottom: 15px;
 		width: 100%;
 	}
 	.edd-edit-purchase-element .edd-purchased-download-title {
-		font-size: 18px;
+		font-size: 16px;
 	}
-	.edd-edit-purchase-element .row > ul > li.item_price.item_quantity,
-	.edd-edit-purchase-element .inside > ul > li.item_price.item_quantity {
+	.edd-edit-purchase-element ul li.item_price {
+		width: 22%;
+	}
+	.edd-edit-purchase-element ul li.item_price.item_quantity {
 		width: 35%;
 	}
-	.edd-edit-purchase-element .row > ul > li.item_tax,
-	.edd-edit-purchase-element .inside > ul > li.item_tax {
+	.edd-edit-purchase-element ul li.item_tax {
 		width: 25%;
 	}
-	.edd-edit-purchase-element .row > ul > li.price,
-	.edd-edit-purchase-element .inside > ul > li.price {
+	.edd-edit-purchase-element ul li.price {
 		width: 20%;
 	}
 	.edd-edit-purchase-element .edd-purchased-download-actions {
@@ -550,9 +546,11 @@ input[class*="edd-price-field"] {
 
 @media screen and ( max-width: 1024px ) {
 
-	.edd-edit-purchase-element .row > ul > li.item_price.item_quantity,
-	.edd-edit-purchase-element .inside > ul > li.item_price.item_quantity {
+	.edd-edit-purchase-element ul li.item_price.item_quantity {
 		width: 40%;
+	}
+	.edd-edit-purchase-element ul li.price {
+		width: 24%;
 	}
 	.edd-edit-purchase-element .edd-purchased-download-actions {
 		padding-top: 15px;
@@ -569,15 +567,15 @@ input[class*="edd-price-field"] {
 	#edd-edit-order-form .column {
 		width: 49%;
 	}
-	.edd-edit-purchase-element .row > ul > li.item_price.item_quantity,
-	.edd-edit-purchase-element .inside > ul > li.item_price.item_quantity {
-		width: 35%;
+	.edd-edit-purchase-element ul li.item_price,
+	.edd-edit-purchase-element ul li.item_price.item_quantity {
 		padding-bottom: 10px;
 	}
-	.edd-edit-purchase-element .row > ul > li.item_tax,
-	.edd-edit-purchase-element .inside > ul > li.item_tax,
-	.edd-edit-purchase-element .row > ul > li.price,
-	.edd-edit-purchase-element .inside > ul > li.price {
+	.edd-edit-purchase-element ul li.item_price.item_quantity {
+		width: 35%;
+	}
+	.edd-edit-purchase-element ul li.item_tax,
+	.edd-edit-purchase-element ul li.price {
 		width: 20%;
 		padding-bottom: 10px;
 	}
@@ -597,17 +595,19 @@ input[class*="edd-price-field"] {
 
 @media screen and ( max-width: 600px ) {
 
-	.edd-edit-purchase-element .row > ul > li.item_price.item_quantity,
-	.edd-edit-purchase-element .inside > ul > li.item_price.item_quantity,
-	.edd-edit-purchase-element .row > ul > li.item_tax,
-	.edd-edit-purchase-element .inside > ul > li.item_tax {
+	.edd-edit-purchase-element ul li.item_price,
+	.edd-edit-purchase-element ul li.item_price.item_quantity,
+	.edd-edit-purchase-element ul li.item_tax {
 		width: 100%;
 		padding-bottom: 20px;
 	}
-	.edd-edit-purchase-element .row > ul > li.price,
-	.edd-edit-purchase-element .inside > ul > li.price {
+	.edd-edit-purchase-element ul li.price,
+	.edd-edit-purchase-element .edd-add-download-to-purchase ul li.item_tax {
 		width: 100%;
 		padding-bottom: 0;
+	}
+	.edd-edit-purchase-element .edd-add-download-to-purchase-actions {
+		padding-top: 15px;
 	}
 	#edd-edit-order-form .column {
 		width: 100%;
