@@ -76,6 +76,10 @@ function edd_process_purchase_form() {
 
 	$auth_key = defined( 'AUTH_KEY' ) ? AUTH_KEY : '';
 
+	$card_country = isset( $valid_data['cc_info']['card_country'] ) ? $valid_data['cc_info']['card_country'] : false;
+	$card_state   = isset( $valid_data['cc_info']['card_state'] )   ? $valid_data['cc_info']['card_state']   : false;
+	$card_zip     = isset( $valid_data['cc_info']['card_zip'] )     ? $valid_data['cc_info']['card_zip']     : false;
+
 	// Setup purchase information
 	$purchase_data = array(
 		'downloads'    => edd_get_cart_contents(),
@@ -83,7 +87,7 @@ function edd_process_purchase_form() {
 		'subtotal'     => edd_get_cart_subtotal(),    // Amount before taxes and discounts
 		'discount'     => edd_get_cart_discounted_amount(), // Discounted amount
 		'tax'          => edd_get_cart_tax(),               // Taxed amount
-		'tax_rate'     => edd_get_cart_tax_rate(),          // Tax rate
+		'tax_rate'     => edd_get_cart_tax_rate( $card_country, $card_state, $card_zip ), // Tax rate
 		'price'        => edd_get_cart_total(),    // Amount after taxes
 		'purchase_key' => strtolower( md5( $user['user_email'] . date( 'Y-m-d H:i:s' ) . $auth_key . uniqid( 'edd', true ) ) ),  // Unique key
 		'user_email'   => $user['user_email'],
