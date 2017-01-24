@@ -167,6 +167,11 @@ function edd_insert_payment( $payment_data = array() ) {
 	$gateway = ! empty( $payment_data['gateway'] ) ? $payment_data['gateway'] : '';
 	$gateway = empty( $gateway ) && isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : $gateway;
 
+	$country = ! empty( $payment_data['user_info']['address']['country'] ) ? $payment_data['user_info']['address']['country'] : false;
+	$state   = ! empty( $payment_data['user_info']['address']['state'] )   ? $payment_data['user_info']['address']['state']   : false;
+	$zip     = ! empty( $payment_data['user_info']['address']['zip'] )     ? $payment_data['user_info']['address']['zip']     : false;
+
+
 	$payment->status         = ! empty( $payment_data['status'] ) ? $payment_data['status'] : 'pending';
 	$payment->currency       = ! empty( $payment_data['currency'] ) ? $payment_data['currency'] : edd_get_currency();
 	$payment->user_info      = $payment_data['user_info'];
@@ -180,6 +185,7 @@ function edd_insert_payment( $payment_data = array() ) {
 	$payment->mode           = edd_is_test_mode() ? 'test' : 'live';
 	$payment->parent_payment = ! empty( $payment_data['parent'] ) ? absint( $payment_data['parent'] ) : '';
 	$payment->discounts      = ! empty( $payment_data['user_info']['discount'] ) ? $payment_data['user_info']['discount'] : array();
+	$payment->tax_rate       = edd_get_cart_tax_rate( $country, $state, $zip );
 
 	if ( isset( $payment_data['post_date'] ) ) {
 		$payment->date = $payment_data['post_date'];
