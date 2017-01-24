@@ -163,8 +163,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 												<input name="edd-payment-tax" class="med-text" type="text" value="<?php echo esc_attr( edd_format_amount( $payment->tax ) ); ?>"/>
 												<?php if ( ! empty( $payment->tax_rate ) ) : ?>
 													<span class="edd-tax-rate">
-														&ndash;&nbsp;<?php _e( 'Rate', 'easy-digital-downloads' ); ?>:&nbsp;
-														<?php echo $payment->tax_rate * 100; ?>%
+														&nbsp;<?php echo $payment->tax_rate * 100; ?>%
 													</span>
 												<?php endif; ?>
 											</p>
