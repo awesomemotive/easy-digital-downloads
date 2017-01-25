@@ -1288,6 +1288,9 @@ td.edd_order_price {
 #customer-edit-actions .button-secondary {
 	margin-right: 10px;
 }
+#edd-item-card-wrapper .row-title {
+	width: 30%;
+}
 #edd-item-card-wrapper .info-item {
 	display: block;
 	line-height: 16px;
