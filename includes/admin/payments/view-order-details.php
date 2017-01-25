@@ -334,7 +334,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 								$is_qty_enabled = edd_item_quantities_enabled() ? ' item_quantity' : '' ;
 								?>
 								<div id="edd-purchased-files" class="postbox edd-edit-purchase-element <?php echo $column_count; ?>">
-									<h3 class="hndle">
+									<h3 class="hndle edd-payment-details-label-mobile">
 										<span><?php printf( __( 'Purchased %s', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></span>
 									</h3>
 									<div class="edd-purchased-files-header row header">
