@@ -562,7 +562,7 @@ function edd_is_cart_saved() {
  * @return bool
  */
 function edd_save_cart() {
-	EDD()->cart->save();
+	return EDD()->cart->save();
 }
 
 

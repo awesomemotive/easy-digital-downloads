@@ -121,7 +121,7 @@ class EDD_Cart {
 	 * @access public
 	 */
 	public function __construct() {
-		add_action( 'wp_loaded', array( $this, 'setup_cart' ) );
+		add_action( 'init', array( $this, 'setup_cart' ), 1 );
 	}
 
 	/**
