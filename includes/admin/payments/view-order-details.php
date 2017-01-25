@@ -440,7 +440,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 														<?php _ex( 'Tax', 'payment details purchased item tax - mobile', 'easy-digital-downloads' ); ?>
 													</span>
 													<?php echo edd_currency_symbol( $currency_code ); ?>
-													<input type="number" class="small-text edd-payment-details-download-item-tax edd-payment-item-input" name="edd-payment-details-downloads[<?php echo $key; ?>][item_tax]" value="<?php echo edd_format_amount( $item_tax ); ?>" />
+													<input type="number" step="0.01" min="0" class="small-text edd-payment-details-download-item-tax edd-payment-item-input" name="edd-payment-details-downloads[<?php echo $key; ?>][item_tax]" value="<?php echo edd_format_amount( $item_tax ); ?>" />
 												</li>
 												<?php endif; ?>
 
@@ -456,7 +456,9 @@ $customer       = new EDD_Customer( $payment->customer_id );
 											<div class="edd-purchased-download-actions actions">
 												<input type="hidden" class="edd-payment-details-download-has-log" name="edd-payment-details-downloads[<?php echo $key; ?>][has_log]" value="1" />
 												<?php if( edd_get_download_files( $item_id, $price_id ) && edd_is_payment_complete( $payment_id ) ) : ?>
-													<a href="" class="edd-copy-download-link" data-download-id="<?php echo esc_attr( $item_id ); ?>" data-price-id="<?php echo esc_attr( $price_id ); ?>"><?php _e( 'Copy Download Link(s)', 'easy-digital-downloads' ); ?></a> |
+													<span class="edd-copy-download-link-wrapper">
+														<a href="" class="edd-copy-download-link" data-download-id="<?php echo esc_attr( $item_id ); ?>" data-price-id="<?php echo esc_attr( $price_id ); ?>"><?php _e( 'Copy Download Link(s)', 'easy-digital-downloads' ); ?></a> |
+													</span>
 												<?php endif; ?>
 												<a href="" class="edd-order-remove-download edd-delete" data-key="<?php echo esc_attr( $key ); ?>"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></a>
 											</div>
@@ -471,7 +473,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 								</div>
 							<?php endif; ?>
 
-							<div id="edd-purchased-files" class="postbox edd-edit-purchase-element <?php echo $column_count; ?>">
+							<div class="postbox edd-edit-purchase-element <?php echo $column_count; ?>">
 
 								<div class="edd-add-download-to-purchase-header row header">
 									<ul class="edd-purchased-files-list-wrapper">

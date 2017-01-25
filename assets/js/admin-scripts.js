@@ -444,7 +444,7 @@ jQuery(document).ready(function ($) {
 
 					$('input[name="edd-payment-removed"]').val(JSON.stringify(currently_removed));
 
-					$(this).parent().parent().parent().remove();
+					$(this).parent().parent().remove();
 					if ( fees && fees.length) {
 						$.each( fees, function( key, value ) {
 							$('*li[data-fee-id="' + value + '"]').remove();
@@ -512,7 +512,7 @@ jQuery(document).ready(function ($) {
 		add_download : function() {
 
 			// Add a New Download from the Add Downloads to Purchase Box
-			$('#edd-purchased-files').on('click', '#edd-order-add-download', function(e) {
+			$('.edd-edit-purchase-element').on('click', '#edd-order-add-download', function(e) {
 
 				e.preventDefault();
 
@@ -576,6 +576,8 @@ jQuery(document).ready(function ($) {
 				clone.find( 'input.edd-payment-details-download-quantity' ).val( quantity );
 				clone.find( 'input.edd-payment-details-download-has-log').val(0);
 
+				clone.find( '.edd-copy-download-link-wrapper' ).remove();
+
 				// Replace the name / id attributes
 				clone.find( 'input' ).each(function() {
 					var name = $( this ).attr( 'name' );
@@ -612,8 +614,7 @@ jQuery(document).ready(function ($) {
 
 				item_tax = parseFloat( item_tax );
 				if ( isNaN( item_tax ) ) {
-					alert( edd_vars.numeric_item_tax );
-					return false;
+					item_tax = 0.00;
 				}
 
 				if ( isNaN( parseInt( quantity ) ) ) {
