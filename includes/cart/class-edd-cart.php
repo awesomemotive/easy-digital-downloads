@@ -240,13 +240,14 @@ class EDD_Cart {
 			$quantity   = $this->get_item_quantity( $item['id'], $options );
 			$fees       = $this->get_fees( 'fee', $item['id'], $price_id );
 			$subtotal   = $item_price * $quantity;
-			$tax        = $this->get_item_tax( $item['id'], $options, $subtotal - $discount );
 
 			foreach ( $fees as $fee ) {
 				if ( $fee['amount'] < 0 ) {
 					$subtotal += $fee['amount'];
 				}
 			}
+
+			$tax        = $this->get_item_tax( $item['id'], $options, $subtotal - $discount );
 
 			if ( edd_prices_include_tax() ) {
 				$subtotal -= round( $tax, edd_currency_decimal_filter() );
