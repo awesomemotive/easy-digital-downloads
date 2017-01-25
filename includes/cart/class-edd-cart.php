@@ -561,14 +561,18 @@ class EDD_Cart {
 	 * @return void
 	 */
 	public function empty() {
-		// Remove cart contents
-		EDD()->session->set( 'edd_cart', null );
+		// Remove cart contents.
+		EDD()->session->set( 'edd_cart', NULL );
 
-		// Remove all cart fees
-		EDD()->session->set( 'edd_cart_fees', null );
+		// Remove all cart fees.
+		EDD()->session->set( 'edd_cart_fees', NULL );
+
+		// Remove any resuming payments.
+		EDD()->session->set( 'edd_resume_payment', NULL );
 
 		// Remove any active discounts
 		$this->remove_all_discounts();
+		$this->contents = array();
 
 		do_action( 'edd_empty_cart' );
 	}

@@ -356,7 +356,6 @@ add_action( 'edd_daily_scheduled_events', 'edd_cleanup_stats_transients' );
  * @return void
  */
 function edd_recover_payment() {
-
 	if ( empty( $_GET['payment_id'] ) ) {
 		return;
 	}
@@ -379,7 +378,7 @@ function edd_recover_payment() {
 	$payment->add_note( __( 'Payment recovery triggered URL', 'easy-digital-downloads' ) );
 
 	// Empty out the cart.
-	edd_empty_cart();
+	EDD()->cart->empty();
 
 	// Recover any downloads.
 	foreach ( $payment->cart_details as $download ) {
