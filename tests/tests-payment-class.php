@@ -369,17 +369,11 @@ class Tests_Payment_Class extends EDD_UnitTestCase {
 	public function test_payment_with_initial_fee() {
 		EDD_Helper_Payment::delete_payment( $this->_payment_id );
 
-		add_filter( 'edd_cart_contents', '__return_true' );
-		add_filter( 'edd_item_quantities_enabled', '__return_true' );
 		$payment_id = EDD_Helper_Payment::create_simple_payment_with_fee();
 
 		$payment = new EDD_Payment( $payment_id );
-		var_dump($payment);
 		$this->assertFalse( empty( $payment->fees ) );
 		$this->assertEquals( 47, $payment->total );
-
-		remove_filter( 'edd_cart_contents', '__return_true' );
-		remove_filter( 'edd_item_quantities_enabled', '__return_true' );
 	}
 
 	public function test_update_date_future() {
