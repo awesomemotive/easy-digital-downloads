@@ -552,7 +552,7 @@ function edd_is_cart_saving_disabled() {
  * @return bool
  */
 function edd_is_cart_saved() {
-	return EDD_Cart()->is_saved();
+	return EDD()->cart->is_saved();
 }
 
 /**
