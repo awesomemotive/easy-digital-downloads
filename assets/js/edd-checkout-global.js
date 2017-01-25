@@ -248,11 +248,17 @@ window.EDD_Checkout = (function($) {
 			download_id = $this.closest('.edd_cart_item').data('download-id'),
 			options = $this.parent().find('input[name="edd-cart-download-' + key + '-options"]').val();
 
+		var edd_cc_address = $('#edd_cc_address');
+		var billing_country = edd_cc_address.find('#billing_country').val(),
+			card_state      = edd_cc_address.find('#card_state').val();
+
 		var postData = {
 			action: 'edd_update_quantity',
 			quantity: quantity,
 			download_id: download_id,
-			options: options
+			options: options,
+			billing_country: billing_country,
+			card_state: card_state,
 		};
 
 		//edd_discount_loader.show();

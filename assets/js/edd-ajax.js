@@ -68,6 +68,13 @@ jQuery(document).ready(function ($) {
 					if( response.cart_quantity == 0 ) {
 						$('.cart_item.edd_subtotal,.edd-cart-number-of-items,.cart_item.edd_checkout,.cart_item.edd_cart_tax,.cart_item.edd_total').hide();
 						$('.edd-cart').each( function() {
+
+							var cart_wrapper = $(this).parent();
+							if ( cart_wrapper ) {
+								cart_wrapper.addClass('cart-empty')
+								cart_wrapper.removeClass('cart-not-empty');
+							}
+
 							$(this).append('<li class="cart_item empty">' + edd_scripts.empty_cart_message + '</li>');
 						});
 					}
@@ -175,7 +182,10 @@ jQuery(document).ready(function ($) {
 				withCredentials: true
 			},
 			success: function (response) {
-				if( edd_scripts.redirect_to_checkout == '1' && form.find( '#edd_redirect_to_checkout' ).val() == '1' ) {
+				var store_redirect = edd_scripts.redirect_to_checkout == '1';
+				var item_redirect  = form.find( '#edd_redirect_to_checkout' ).val() == '1';
+
+				if( ( store_redirect && item_redirect ) || ( ! store_redirect && item_redirect ) ) {
 
 					window.location = edd_scripts.checkout_page;
 
@@ -195,8 +205,16 @@ jQuery(document).ready(function ($) {
 					}
 
 					$('.widget_edd_cart_widget .edd-cart').each( function( cart ) {
+
 						var target = $(this).find('.edd-cart-meta:first');
 						$(response.cart_item).insertBefore(target);
+
+						var cart_wrapper = $(this).parent();
+						if ( cart_wrapper ) {
+							cart_wrapper.addClass('cart-not-empty')
+							cart_wrapper.removeClass('cart-empty');
+						}
+
 					});
 
 					// Update the totals
@@ -412,7 +430,7 @@ jQuery(document).ready(function ($) {
 					var state_inputs = 'input[name="card_state"], select[name="card_state"], input[name="edd_address_state"], select[name="edd_address_state"]';
 
 					if( 'nostates' == $.trim(response) ) {
-						var text_field = '<input type="text" name="card_state" class="cart-state edd-input required" value=""/>';
+						var text_field = '<input type="text" name="card_state" class="card-state edd-input required" value=""/>';
 						$form.find(state_inputs).replaceWith( text_field );
 					} else {
 						$form.find(state_inputs).replaceWith( response );
