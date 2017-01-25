@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return array Returns an array of cart contents, or an empty array if no items in the cart
  */
 function edd_get_cart_contents() {
-	return (array) EDD()->cart->get_contents();
+	return EDD()->cart->get_contents();
 }
 
 /**

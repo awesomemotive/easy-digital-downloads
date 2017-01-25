@@ -506,6 +506,8 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 			),
 		);
 
+		EDD()->cart->contents = $cart_details;
+
 		$purchase_data = array(
 			'price'         => number_format( (float) $total, 2 ),
 			'date'          => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
@@ -521,7 +523,7 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 
 		$fee_args = array(
 			'label'  => 'Test Fee',
-			'type'   => 'test',
+			'type'   => 'fee',
 			'amount' => 5,
 		);
 
