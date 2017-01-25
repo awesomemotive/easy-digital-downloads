@@ -67,7 +67,7 @@ class Tests_Fee extends EDD_UnitTestCase {
 
 		EDD()->session->set( 'edd_cart_fees', null );
 
-		edd_remove_from_cart( 0 );
+		edd_empty_cart();
 
 		//Arbitrary fee test.
 		$this->assertFalse( EDD()->fees->add_fee( array(
@@ -111,7 +111,7 @@ class Tests_Fee extends EDD_UnitTestCase {
 
 		EDD()->session->set( 'edd_cart_fees', null );
 
-		edd_remove_from_cart( 0 );
+		edd_empty_cart();
 
 		//Test with variable price id attached to a fee.
 		$this->assertFalse( EDD()->fees->add_fee( array(

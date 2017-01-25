@@ -137,8 +137,6 @@ class EDD_Cart {
 		$this->get_contents_details();
 		$this->get_discounts_from_session();
 		$this->quantity = $this->get_quantity();
-		$this->saving = edd_get_option( 'enable_cart_saving', false );
-		$this->saved = get_user_meta( get_current_user_id(), 'edd_saved_cart', true );
 	}
 
 	/**
@@ -385,6 +383,8 @@ class EDD_Cart {
 
 		$this->contents = apply_filters( 'edd_pre_add_to_cart_contents', $this->contents );
 
+		$quantities_enabled = edd_item_quantities_enabled() && ! edd_download_quantities_disabled( $download_id );
+
 		if ( edd_has_variable_prices( $download_id )  && ! isset( $options['price_id'] ) ) {
 			// Forces to the first price ID if none is specified and download has variable prices
 			$options['price_id'] = '0';
@@ -394,10 +394,10 @@ class EDD_Cart {
 			if ( is_array( $options['quantity'] ) ) {
 				$quantity = array();
 				foreach ( $options['quantity'] as $q ) {
-					$quantity[] = absint( preg_replace( '/[^0-9\.]/', '', $q ) );
+					$quantity[] = $quantities_enabled ? absint( preg_replace( '/[^0-9\.]/', '', $q ) ) : 1;
 				}
 			} else {
-				$quantity = absint( preg_replace( '/[^0-9\.]/', '', $options['quantity'] ) );
+				$quantity = $quantities_enabled ? absint( preg_replace( '/[^0-9\.]/', '', $options['quantity'] ) ) : 1;
 			}
 
 			unset( $options['quantity'] );
@@ -405,7 +405,7 @@ class EDD_Cart {
 			$quantity = 1;
 		}
 
-		// If the price IDs are a string and is a coma separted list, make it an array (allows custom add to cart URLs)
+		// If the price IDs are a string and is a coma separated list, make it an array (allows custom add to cart URLs)
 		if ( isset( $options['price_id'] ) && ! is_array( $options['price_id'] ) && false !== strpos( $options['price_id'], ',' ) ) {
 			$options['price_id'] = explode( ',', $options['price_id'] );
 		}
@@ -560,7 +560,7 @@ class EDD_Cart {
 	 * @access public
 	 * @return void
 	 */
-	public function empty() {
+	public function empty_cart() {
 		// Remove cart contents.
 		EDD()->session->set( 'edd_cart', NULL );
 
@@ -928,12 +928,6 @@ class EDD_Cart {
 		$price = 0;
 		$variable_prices = edd_has_variable_prices( $download_id );
 
-		if ( false !== $pos = $this->get_item_position( $download_id ) ) {
-			if ( ! empty( $this->details[ $pos ]['item_price'] ) ) {
-				return $this->details[ $pos ]['item_price'];
-			}
-		}
-
 		if ( $variable_prices ) {
 			$prices = edd_get_variable_prices( $download_id );
 
@@ -1066,7 +1060,7 @@ class EDD_Cart {
 
 		$excluded_products = edd_get_discount_excluded_products( $code_id );
 
-		if ( $this->details ) {
+		if ( $cart_items ) {
 			foreach( $cart_items as $item ) {
 				if ( ! in_array( $item['id'], $excluded_products ) ) {
 					$items[] =  $item;
@@ -1341,7 +1335,7 @@ class EDD_Cart {
 	 * @return bool
 	 */
 	public function is_saving_enabled() {
-		return $this->saving;
+		return edd_get_option( 'enable_cart_saving', false );
 	}
 
 	/**
@@ -1352,16 +1346,18 @@ class EDD_Cart {
 	 * @return bool
 	 */
 	public function is_saved() {
-		if ( ! $this->saving ) {
+		if ( ! $this->is_saving_enabled() ) {
 			return false;
 		}
 
+		$saved_cart = get_user_meta( get_current_user_id(), 'edd_saved_cart', true );
+
 		if ( is_user_logged_in() ) {
-			if ( ! $this->saved ) {
+			if ( ! $saved_cart ) {
 				return false;
 			}
 
-			if ( $this->saved === EDD()->session->get( 'edd_cart' ) ) {
+			if ( $saved_cart === EDD()->session->get( 'edd_cart' ) ) {
 				return false;
 			}
 
@@ -1479,6 +1475,9 @@ class EDD_Cart {
 		$messages['edd_cart_restoration_successful'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Success', 'easy-digital-downloads' ), __( 'Cart restored successfully.', 'easy-digital-downloads' ) );
 		EDD()->session->set( 'edd_cart', $saved_cart );
 		EDD()->session->set( 'edd_cart_messages', $messages );
+
+		// @e also have to set this instance to what the session is.
+		$this->contents = $saved_cart;
 
 		return true;
 	}

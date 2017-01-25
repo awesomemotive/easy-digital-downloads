@@ -374,6 +374,7 @@ class Tests_Payment_Class extends EDD_UnitTestCase {
 		$payment_id = EDD_Helper_Payment::create_simple_payment_with_fee();
 
 		$payment = new EDD_Payment( $payment_id );
+		var_dump($payment);
 		$this->assertFalse( empty( $payment->fees ) );
 		$this->assertEquals( 47, $payment->total );
 
