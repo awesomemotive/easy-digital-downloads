@@ -133,9 +133,10 @@ class Test_Cart extends EDD_UnitTestCase {
 		);
 
 		edd_add_to_cart( $this->_post->ID, $options );
+
 		$this->assertEquals( 2, count( edd_get_cart_contents() ) );
-		$this->assertEquals( array( 2, 3 ), edd_get_cart_item_quantity( $this->_post->ID, array( 'price_id' => 0 ) ) );
-		$this->assertEquals( array( 2, 3 ), edd_get_cart_item_quantity( $this->_post->ID, array( 'price_id' => 1 ) ) );
+		$this->assertEquals( 2, edd_get_cart_item_quantity( $this->_post->ID, array( 'price_id' => 0 ) ) );
+		$this->assertEquals( 3, edd_get_cart_item_quantity( $this->_post->ID, array( 'price_id' => 1 ) ) );
 		remove_filter( 'edd_item_quantities_enabled', '__return_true' );
 	}
 
@@ -282,7 +283,7 @@ class Test_Cart extends EDD_UnitTestCase {
 
 	public function test_get_cart_item_discounted_amount() {
 
-		// Call without any arguements
+		// Call without any arguments
 		$expected = edd_get_cart_item_discount_amount();
 		$this->assertEquals( 0.00, $expected );
 
@@ -432,7 +433,7 @@ class Test_Cart extends EDD_UnitTestCase {
 		$this->assertTrue( edd_is_cart_saving_disabled() );
 	}
 
-	public function test_is_cart_saved() {
+	public function test_is_cart_saved_false() {
 
 
 		// Test for no saved cart
@@ -480,9 +481,10 @@ class Test_Cart extends EDD_UnitTestCase {
 			)
 		);
 		EDD()->session->set( 'edd_cart', $cart );
+		EDD()->cart->contents = $cart;
 
-		edd_restore_cart();
-
+		edd_update_option( 'enable_cart_saving', '1' );
+		$this->assertTrue( edd_restore_cart() );
 		$this->assertEquals( edd_get_cart_contents(), $saved_cart );
 	}
 
