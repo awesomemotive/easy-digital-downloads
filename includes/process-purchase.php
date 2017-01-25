@@ -76,6 +76,10 @@ function edd_process_purchase_form() {
 
 	$auth_key = defined( 'AUTH_KEY' ) ? AUTH_KEY : '';
 
+	$card_country = isset( $valid_data['cc_info']['card_country'] ) ? $valid_data['cc_info']['card_country'] : false;
+	$card_state   = isset( $valid_data['cc_info']['card_state'] )   ? $valid_data['cc_info']['card_state']   : false;
+	$card_zip     = isset( $valid_data['cc_info']['card_zip'] )     ? $valid_data['cc_info']['card_zip']     : false;
+
 	// Setup purchase information
 	$purchase_data = array(
 		'downloads'    => edd_get_cart_contents(),
@@ -83,6 +87,7 @@ function edd_process_purchase_form() {
 		'subtotal'     => edd_get_cart_subtotal(),    // Amount before taxes and discounts
 		'discount'     => edd_get_cart_discounted_amount(), // Discounted amount
 		'tax'          => edd_get_cart_tax(),               // Taxed amount
+		'tax_rate'     => edd_get_cart_tax_rate( $card_country, $card_state, $card_zip ), // Tax rate
 		'price'        => edd_get_cart_total(),    // Amount after taxes
 		'purchase_key' => strtolower( md5( $user['user_email'] . date( 'Y-m-d H:i:s' ) . $auth_key . uniqid( 'edd', true ) ) ),  // Unique key
 		'user_email'   => $user['user_email'],
@@ -1112,7 +1117,22 @@ function edd_process_straight_to_gateway( $data ) {
 		return;
 	}
 
-	$purchase_data = edd_build_straight_to_gateway_data( $download_id, $options, $quantity );
+	$purchase_data    = edd_build_straight_to_gateway_data( $download_id, $options, $quantity );
+	$enabled_gateways = edd_get_enabled_payment_gateways();
+
+	if ( ! array_key_exists( $purchase_data['gateway'], $enabled_gateways ) ) {
+		foreach ( $purchase_data['downloads'] as $download ) {
+			$options = isset( $download['options'] ) ? $download['options'] : array();
+
+			$options['quantity'] = isset( $download['quantity'] ) ? $download['quantity'] : 1;
+			edd_add_to_cart( $download['id'], $options );
+		}
+
+		edd_set_error( 'edd-straight-to-gateway-error', __( 'There was an error completing your purchase. Please try again.', 'easy-digital-downloads' ) );
+		wp_redirect( edd_get_checkout_uri() );
+		exit;
+	}
+
 	edd_set_purchase_session( $purchase_data );
 	edd_send_to_gateway( $purchase_data['gateway'], $purchase_data );
 }

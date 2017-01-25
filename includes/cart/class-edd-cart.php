@@ -213,7 +213,7 @@ class EDD_Cart {
 	 *
 	 * @since 2.7
 	 * @access public
-	 * @return void
+	 * @return array
 	 */
 	public function get_contents_details() {
 		global $edd_is_last_cart_item, $edd_flat_discount_total;
@@ -232,15 +232,17 @@ class EDD_Cart {
 
 			$item['quantity'] = edd_item_quantities_enabled() ? absint( $item['quantity'] ) : 1;
 
-			$price_id = isset( $item['options']['price_id'] ) ? $item['options']['price_id'] : null;
+			$options = isset( $item['options'] ) ? $item['options'] : array();
 
-			$item_price = $this->get_item_price( $item['id'], $item['options'] );
+			$price_id = isset( $options['price_id'] ) ? $options['price_id'] : null;
+
+			$item_price = $this->get_item_price( $item['id'], $options );
 			$discount   = $this->get_item_discount_amount( $item );
 			$discount   = apply_filters( 'edd_get_cart_content_details_item_discount_amount', $discount, $item );
-			$quantity   = $this->get_item_quantity( $item['id'], $item['options'] );
+			$quantity   = $this->get_item_quantity( $item['id'], $options );
 			$fees       = $this->get_fees( 'fee', $item['id'], $price_id );
 			$subtotal   = $item_price * $quantity;
-			$tax        = $this->get_item_tax( $item['id'], $item['options'], $subtotal - $discount );
+			$tax        = $this->get_item_tax( $item['id'], $options, $subtotal - $discount );
 
 			foreach ( $fees as $fee ) {
 				if ( $fee['amount'] < 0 ) {
@@ -278,6 +280,7 @@ class EDD_Cart {
 		}
 
 		$this->details = $details;
+
 		return $this->details;
 	}
 
@@ -844,7 +847,7 @@ class EDD_Cart {
 	public function set_item_quantity( $download_id = 0, $quantity = 1, $options = array() ) {
 		$key  = $this->get_item_position( $download_id, $options );
 
-		if ( false == $key ) {
+		if ( false === $key ) {
 			return $this->contents;
 		}
 
@@ -855,7 +858,7 @@ class EDD_Cart {
 		$this->contents[ $key ]['quantity'] = $quantity;
 		$this->update_cart();
 
-		do_action( 'edd_after_set_cart_item_quantity', $download_id, $quantity, $options, $cart );
+		do_action( 'edd_after_set_cart_item_quantity', $download_id, $quantity, $options, $this->contents );
 
 		return $this->contents;
 	}
@@ -979,12 +982,6 @@ class EDD_Cart {
 	 */
 	public function get_item_tax( $download_id = 0, $options = array(), $subtotal = '' ) {
 		$tax = 0;
-
-		if ( false !== $pos = $this->get_item_position( $download_id ) ) {
-			if ( isset( $this->details[ $pos ]['tax'] ) ) {
-				return $this->details[ $pos ]['tax'];
-			}
-		}
 
 		if ( ! edd_download_is_tax_exclusive( $download_id ) ) {
 			$country = ! empty( $_POST['billing_country'] ) ? $_POST['billing_country'] : false;
@@ -1260,7 +1257,7 @@ class EDD_Cart {
 	 *
 	 * @since 2.7
 	 * @access public
-	 * @return mixed|void Total tax amount
+	 * @return float Total tax amount
 	 */
 	public function get_tax() {
 		$cart_tax     = 0;
@@ -1273,7 +1270,7 @@ class EDD_Cart {
 				$cart_tax = array_sum( $taxes );
 			}
 		}
-		$cart_tax += edd_get_cart_fee_tax();
+		$cart_tax += $this->get_tax_on_fees();
 
 		$cart_tax = apply_filters( 'edd_get_cart_tax', edd_sanitize_amount( $cart_tax ) );
 
