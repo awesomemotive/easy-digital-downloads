@@ -800,6 +800,7 @@ class Tests_Payment_Class extends EDD_UnitTestCase {
 	public function test_modifying_address() {
 		$payment_id = EDD_Helper_Payment::create_simple_payment();
 		$payment    = edd_get_payment( $payment_id );
+
 		$payment->address = array(
 			'line1'   => '123 Main St',
 			'line2'   => '',
