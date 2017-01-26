@@ -338,7 +338,8 @@ class EDD_Cart {
 	public function get_quantity() {
 		$total_quantity = 0;
 
-		if ( ! empty( $this->get_contents() ) ) {
+		$contents = $this->get_contents();
+		if ( ! empty( $contents ) ) {
 			$quantities     = wp_list_pluck( $this->contents, 'quantity' );
 			$total_quantity = absint( array_sum( $quantities ) );
 		}
