@@ -179,7 +179,7 @@ class EDD_Cart {
 			$this->get_contents_from_session();
 		}
 
-		$cart = ! empty( $this->contents ) ? array_values( $this->contents ) : array();
+		$cart = is_array( $this->contents ) && ! empty( $this->contents ) ? array_values( $this->contents ) : array();
 		$cart_count = count( $cart );
 
 		foreach ( $cart as $key => $item ) {
@@ -197,9 +197,7 @@ class EDD_Cart {
 			$this->update_cart();
 		}
 
-		if ( ! did_action( 'edd_cart_contents_loaded' ) ) {
-			$this->contents = apply_filters( 'edd_cart_contents', $cart );
-		}
+		$this->contents = apply_filters( 'edd_cart_contents', $cart );
 
 		do_action( 'edd_cart_contents_loaded' );
 
