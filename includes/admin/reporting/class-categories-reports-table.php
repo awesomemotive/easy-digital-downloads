@@ -217,7 +217,7 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 					$avg_earnings += $current_average_earnings;
 				}
 
-				$avg_sales    = round( $avg_sales );
+				$avg_sales    = round( $avg_sales, 2 );
 				$avg_earnings = round( $avg_earnings, edd_currency_decimal_filter() );
 
 				$reports_data[] = array(
