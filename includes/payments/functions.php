@@ -13,6 +13,54 @@
 if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
+ * Retrieves an instance of EDD_Payment for a specified ID.
+ *
+ * @since 2.7
+ *
+ * @param mixed int|EDD_Payment|WP_Post $payment Payment ID, EDD_Payment object or WP_Post object.
+ * @param bool                          $by_txn  Is the ID supplied as the first parameter
+ * @return mixed false|object EDD_Payment if a valid payment ID, false otherwise.
+ */
+function edd_get_payment( $payment_or_txn_id = null, $by_txn = false ) {
+	global $wpdb;
+
+	if ( is_a( $payment_or_txn_id, 'WP_Post' ) || is_a( $payment_or_txn_id, 'EDD_Payment' ) ) {
+		$payment_id = $payment_or_txn_id->ID;
+	} elseif ( $by_txn ) {
+		if ( empty( $payment_or_txn_id ) ) {
+			return false;
+		}
+
+		$query      = $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_transaction_id' AND meta_value = '%s'", $payment_or_txn_id );
+		$payment_id = $wpdb->get_var( $query );
+
+		if ( empty( $payment_id ) ) {
+			return false;
+		}
+	} else {
+		$payment_id = $payment_or_txn_id;
+	}
+
+	if ( empty( $payment_id ) ) {
+		return false;
+	}
+
+	$cache_key = md5( 'edd_payment' . $payment_id );
+	$payment   = wp_cache_get( $cache_key, 'payments' );
+
+	if ( false === $payment ) {
+		$payment = new EDD_Payment( $payment_id );
+		if ( empty( $payment->ID ) || ( ! $by_txn && (int) $payment->ID !== (int) $payment_id ) ) {
+			return false;
+		} else {
+			wp_cache_set( $cache_key, $payment, 'payments' );
+		}
+	}
+
+	return $payment;
+}
+
+/**
  * Get Payments
  *
  * Retrieve payments from the database.
@@ -60,7 +108,7 @@ function edd_get_payment_by( $field = '', $value = '' ) {
 
 			case 'id':
 
-				$payment = new EDD_Payment( $value );
+				$payment = edd_get_payment( $value );
 
 				if( ! $payment->ID > 0 ) {
 					$payment = false;
@@ -81,7 +129,7 @@ function edd_get_payment_by( $field = '', $value = '' ) {
 
 				if ( $payment_id ) {
 
-					$payment = new EDD_Payment( $payment_id );
+					$payment = edd_get_payment( $payment_id );
 
 					if( ! $payment->ID > 0 ) {
 						$payment = false;
@@ -167,6 +215,11 @@ function edd_insert_payment( $payment_data = array() ) {
 	$gateway = ! empty( $payment_data['gateway'] ) ? $payment_data['gateway'] : '';
 	$gateway = empty( $gateway ) && isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : $gateway;
 
+	$country = ! empty( $payment_data['user_info']['address']['country'] ) ? $payment_data['user_info']['address']['country'] : false;
+	$state   = ! empty( $payment_data['user_info']['address']['state'] )   ? $payment_data['user_info']['address']['state']   : false;
+	$zip     = ! empty( $payment_data['user_info']['address']['zip'] )     ? $payment_data['user_info']['address']['zip']     : false;
+
+
 	$payment->status         = ! empty( $payment_data['status'] ) ? $payment_data['status'] : 'pending';
 	$payment->currency       = ! empty( $payment_data['currency'] ) ? $payment_data['currency'] : edd_get_currency();
 	$payment->user_info      = $payment_data['user_info'];
@@ -180,6 +233,7 @@ function edd_insert_payment( $payment_data = array() ) {
 	$payment->mode           = edd_is_test_mode() ? 'test' : 'live';
 	$payment->parent_payment = ! empty( $payment_data['parent'] ) ? absint( $payment_data['parent'] ) : '';
 	$payment->discounts      = ! empty( $payment_data['user_info']['discount'] ) ? $payment_data['user_info']['discount'] : array();
+	$payment->tax_rate       = edd_get_cart_tax_rate( $country, $state, $zip );
 
 	if ( isset( $payment_data['post_date'] ) ) {
 		$payment->date = $payment_data['post_date'];
