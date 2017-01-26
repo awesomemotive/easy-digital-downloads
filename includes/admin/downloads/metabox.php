@@ -70,7 +70,8 @@ function edd_download_metabox_fields() {
 			'_edd_button_behavior',
 			'_edd_quantities_disabled',
 			'edd_product_notes',
-			'_edd_default_price_id'
+			'_edd_default_price_id',
+			'_edd_bundled_products_conditions'
 		);
 
 	if ( current_user_can( 'manage_shop_settings' ) ) {
@@ -497,9 +498,13 @@ add_action( 'edd_meta_box_files_fields', 'edd_render_product_type_field', 10 );
  * @param $post_id
  */
 function edd_render_products_field( $post_id ) {
-	$type     = edd_get_download_type( $post_id );
-	$display  = $type == 'bundle' ? '' : ' style="display:none;"';
-	$products = edd_get_bundled_products( $post_id );
+	$download         = new EDD_Download( $post_id );
+	$type             = $download->get_type();
+	$display          = $type == 'bundle' ? '' : ' style="display:none;"';
+	$products         = $download->get_bundled_downloads();
+	$variable_pricing = $download->has_variable_prices();
+	$variable_display = $variable_pricing ? '' : 'display:none;';
+	$prices           = $download->get_prices();
 ?>
 	<div id="edd_products"<?php echo $display; ?>>
 		<div id="edd_file_fields" class="edd_meta_table_wrap">
@@ -509,6 +514,7 @@ function edd_render_products_field( $post_id ) {
 						<th style="width: 20px"></th>
 						<th><?php printf( __( 'Bundled %s:', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></th>
 						<th></th>
+						<th class="pricing" style="width: 20%;  <?php echo $variable_display; ?>"><?php _e( 'Price Assignment', 'easy-digital-downloads' ); ?></th>
 						<?php do_action( 'edd_download_products_table_head', $post_id ); ?>
 					</tr>
 				</thead>
@@ -516,25 +522,50 @@ function edd_render_products_field( $post_id ) {
 				<?php if ( $products ) : ?>
 					<?php $index = 1; ?>
 					<?php foreach ( $products as $key => $product ) : ?>
-						<tr class="edd_repeatable_product_wrapper edd_repeatable_row" data-key="<?php echo esc_attr( $key ); ?>">
+						<tr class="edd_repeatable_product_wrapper edd_repeatable_row" data-key="<?php echo esc_attr( $index ); ?>">
 							<td>
 								<span class="edd_draghandle"></span>
-								<input type="hidden" name="edd_bundled_products[<?php echo $key; ?>][index]" class="edd_repeatable_index" value="<?php echo $index; ?>"/>
+								<input type="hidden" name="edd_bundled_products[<?php echo $index; ?>][index]" class="edd_repeatable_index" value="<?php echo $index; ?>"/>
 							</td>
 							<td>
 								<?php
 								echo EDD()->html->product_dropdown( array(
-									'name'     => '_edd_bundled_products[]',
-									'id'       => 'edd_bundled_products_' . $key,
-									'selected' => $product,
-									'multiple' => false,
-									'chosen'   => true,
-									'bundles'  => false,
+									'name'       => '_edd_bundled_products[]',
+									'id'         => 'edd_bundled_products_' . $index,
+									'selected'   => $product,
+									'multiple'   => false,
+									'chosen'     => true,
+									'bundles'    => false,
+									'variations' => true,
 								) );
 								?>
 							</td>
 							<td>
-								<button class="edd_remove_repeatable" data-type="file" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;"><span class="screen-reader-text"><?php printf( __( 'Remove bundle option %s', 'easy-digital-downloads' ), $key ); ?></span><span aria-hidden="true">&times;</span></button>
+								<button class="edd_remove_repeatable" data-type="file" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;"><span class="screen-reader-text"><?php printf( __( 'Remove bundle option %s', 'easy-digital-downloads' ), $index ); ?></span><span aria-hidden="true">&times;</span></button>
+							</td>
+							<td class="pricing" style="<?php echo $variable_display; ?>">
+								<?php
+									$options = array();
+
+									if ( $prices ) {
+										foreach ( $prices as $price_key => $price ) {
+											$options[ $price_key ] = $prices[ $price_key ]['name'];
+										}
+									}
+
+									$price_assignments = edd_get_bundle_pricing_variations( $post_id );
+									$price_assignments = $price_assignments[0];
+
+									$selected = isset( $price_assignments[ $index ] ) ? $price_assignments[ $index ] : null;
+
+									echo EDD()->html->select( array(
+										'name'             => '_edd_bundled_products_conditions['. $index .']',
+										'class'            => 'edd_repeatable_condition_field',
+										'options'          => $options,
+										'show_option_none' => false,
+										'selected'         => $selected
+									) );
+								?>
 							</td>
 							<?php do_action( 'edd_download_products_table_row', $post_id ); ?>
 						</tr>
@@ -549,17 +580,39 @@ function edd_render_products_field( $post_id ) {
 						<td>
 							<?php
 							echo EDD()->html->product_dropdown( array(
-								'name'     => '_edd_bundled_products[]',
-								'id'       => 'edd_bundled_products_1',
-								'multiple' => false,
-								'chosen'   => true,
-								'bundles'  => false
+								'name'       => '_edd_bundled_products[]',
+								'id'         => 'edd_bundled_products_1',
+								'multiple'   => false,
+								'chosen'     => true,
+								'bundles'    => false,
+								'variations' => true,
 							) );
 							?>
 						</td>
 						<td>
 							<button class="edd_remove_repeatable" data-type="file" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;"><span class="screen-reader-text"><?php echo __( 'Remove bundle option', 'easy-digital-downloads' ); ?></span><span aria-hidden="true">&times;</span></button>
 						</td>
+						<td class="pricing" style="<?php echo $variable_display; ?>">
+								<?php
+									$options = array();
+
+									if ( $prices ) {
+										foreach ( $prices as $price_key => $price ) {
+											$options[ $price_key ] = $prices[ $price_key ]['name'];
+										}
+									}
+
+									$price_assignments = edd_get_bundle_pricing_variations( $post_id );
+
+									echo EDD()->html->select( array(
+										'name'             => '_edd_bundled_products_conditions[1]',
+										'class'            => 'edd_repeatable_condition_field',
+										'options'          => $options,
+										'show_option_none' => false,
+										'selected'         => null,
+									) );
+								?>
+							</td>
 						<?php do_action( 'edd_download_products_table_row', $post_id ); ?>
 					</tr>
 				<?php endif; ?>

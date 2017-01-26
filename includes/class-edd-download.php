@@ -528,6 +528,35 @@ class EDD_Download {
 	}
 
 	/**
+	 * Retrieve the Download IDs that are bundled with this Download based on the variable pricing ID passed
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @param int $price_id Variable pricing ID
+	 * @return array List of bundled downloads
+	 */
+	public function get_variable_priced_bundled_downloads( $price_id = null ) {
+		if ( null == $price_id ) {
+			return $this->get_bundled_downloads();
+		}
+
+		$downloads         = array();
+		$bundled_downloads = $this->get_bundled_downloads();
+		$price_assignments = $this->get_bundle_pricing_variations();
+		$price_assignments = $price_assignments[0];
+
+		$price_assignments = array_values( $price_assignments );
+
+		foreach ( $price_assignments as $key => $value ) {
+			if ( $value == $price_id || $value == 'all' ) {
+				$downloads[] = $bundled_downloads[ $key ];
+			}
+		}
+
+		return $downloads;
+	}
+
+	/**
 	 * Retrieve the download notes
 	 *
 	 * @since 2.2
@@ -860,6 +889,16 @@ class EDD_Download {
 		}
 
 		return (bool) apply_filters( 'edd_can_purchase_download', $can_purchase, $this );
+	}
+
+	/**
+	 * Get pricing variations for bundled items
+	 *
+	 * @since 2.7
+	 * @return array
+	 */
+	public function get_bundle_pricing_variations() {
+		return get_post_meta( $this->ID, '_edd_bundled_products_conditions' );
 	}
 
 }
