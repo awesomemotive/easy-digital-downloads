@@ -521,7 +521,7 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 
 		$fee_args = array(
 			'label'  => 'Test Fee',
-			'type'   => 'test',
+			'type'   => 'fee',
 			'amount' => 5,
 		);
 

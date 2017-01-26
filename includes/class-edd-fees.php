@@ -345,7 +345,6 @@ class EDD_Fees {
 	 * @return array Return the payment meta with the fees added
 	*/
 	public function record_fees( $payment_meta, $payment_data ) {
-
 		if ( $this->has_fees( 'all' ) ) {
 
 			$payment_meta['fees'] = $this->get_fees( 'all' );
