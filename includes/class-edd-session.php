@@ -99,11 +99,7 @@ class EDD_Session {
 
 		}
 
-		if ( empty( $this->session ) && ! $this->use_php_sessions ) {
-			add_action( 'plugins_loaded', array( $this, 'init' ), -1 );
-		} else {
-			add_action( 'init', array( $this, 'init' ), -1 );
-		}
+		add_action( 'init', array( $this, 'init' ), -1 );
 
 	}
 
@@ -122,21 +118,20 @@ class EDD_Session {
 			$this->session = WP_Session::get_instance();
 		}
 
-		$use_cookie = $this->use_cart_cookie();
-		$cart       = $this->get( 'edd_cart' );
-		$purchase   = $this->get( 'edd_purchase' );
+		// This check is deprecated but left here in order to trigger deprecated notices
+		$this->use_cart_cookie();
 
-		if ( $use_cookie ) {
-			if( ! empty( $cart ) || ! empty( $purchase ) ) {
-				$this->set_cart_cookie();
-			} else {
-				$this->set_cart_cookie( false );
-			}
+		$cart     = $this->get( 'edd_cart' );
+		$purchase = $this->get( 'edd_purchase' );
+
+		if( ! empty( $cart ) || ! empty( $purchase ) ) {
+			$this->set_cart_cookie();
+		} else {
+			$this->set_cart_cookie( false );
 		}
 
 		return $this->session;
 	}
-
 
 	/**
 	 * Retrieve session ID
@@ -148,7 +143,6 @@ class EDD_Session {
 	public function get_id() {
 		return $this->session->session_id;
 	}
-
 
 	/**
 	 * Retrieve a session variable
@@ -186,6 +180,9 @@ class EDD_Session {
 
 			$_SESSION['edd' . $this->prefix ] = $this->session;
 		}
+
+		// We need to be able to support sessions being able to be created before adding to the cart.
+		EDD()->session->set_cart_cookie( true );
 
 		return $this->session[ $key ];
 	}
@@ -290,17 +287,32 @@ class EDD_Session {
 	/**
 	 * Determines if a user has set the EDD_USE_CART_COOKIE
 	 *
+	 * This is now deprecated and should not be used. See https://easydigitaldownloads.com/development/?p=170
+	 *
 	 * @since  2.5
+	 * @deprecated 2.7
 	 * @return bool If the store should use the edd_items_in_cart cookie to help avoid caching
 	 */
 	public function use_cart_cookie() {
+
 		$ret = true;
 
+		$notice = sprintf( __( 'See blog post for more information: %s', 'easy-digital-downloads' ), 'https://easydigitaldownloads.com/development/?p=170' );
+
 		if ( defined( 'EDD_USE_CART_COOKIE' ) && ! EDD_USE_CART_COOKIE ) {
+
+			_edd_deprected_constant( 'EDD_USE_CART_COOKIE', '2.7', $notice );
+
 			$ret = false;
+
 		}
 
-		return (bool) apply_filters( 'edd_use_cart_cookie', $ret );
+		if( function_exists( 'apply_filters_deprecated' ) ) {
+			return (bool) apply_filters_deprecated( 'edd_use_cart_cookie', $ret, '2.7', false, $notice );
+		} else {
+			return (bool) apply_filters( 'edd_use_cart_cookie', $ret );
+		}
+
 	}
 
 	/**
@@ -310,27 +322,43 @@ class EDD_Session {
 	 * @return bool
 	 */
 	public function should_start_session() {
-
 		$start_session = true;
 
-		if( ! empty( $_SERVER[ 'REQUEST_URI' ] ) ) {
-
+		if ( ! empty( $_SERVER[ 'REQUEST_URI' ] ) ) {
 			$blacklist = $this->get_blacklist();
 			$uri       = ltrim( $_SERVER[ 'REQUEST_URI' ], '/' );
 			$uri       = untrailingslashit( $uri );
 
-			if( in_array( $uri, $blacklist ) ) {
+			if ( in_array( $uri, $blacklist ) ) {
 				$start_session = false;
 			}
 
-			if( false !== strpos( $uri, 'feed=' ) ) {
+			if ( false !== strpos( $uri, 'feed=' ) ) {
 				$start_session = false;
 			}
+		}
 
+		/**
+		 * Sessions should only be allowed if:
+		 *  1. A user has an item in their cart
+		 *  2. An EDD AJAX request is currently running
+		 *  3. An EDD action query argument is present
+		 *  4. If we are on the checkout page, or any child pages
+		 */
+		$path = ! empty( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
+		$current_page = get_page_by_path( $path );
+		if (
+			isset( $_COOKIE['edd_items_in_cart'] )
+			||( defined( 'DOING_AJAX' ) && DOING_AJAX && false !== strpos( $_REQUEST['action'], 'edd_' ) )
+			|| ! empty( $_GET['edd_action'] )
+			|| ( is_a( $current_page, 'WP_Page' ) && $current_page->ID == edd_get_option( 'purchase_page' ) )
+		) {
+			$start_session = true;
+		} else {
+			$start_session = false;
 		}
 
 		return apply_filters( 'edd_start_session', $start_session );
-
 	}
 
 	/**
