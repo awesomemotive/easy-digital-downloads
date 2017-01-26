@@ -145,6 +145,7 @@ $status    = edd_get_payment_status( $payment, true );
 						<?php
 						$price_id       = edd_get_cart_item_price_id( $item );
 						$download_files = edd_get_download_files( $item['id'], $price_id );
+
 						?>
 
 						<div class="edd_purchase_receipt_product_name">
@@ -177,14 +178,34 @@ $status    = edd_get_payment_status( $payment, true );
 
 							elseif( edd_is_bundled_product( $item['id'] ) ) :
 
-								$bundled_products = edd_get_bundled_products( $item['id'] );
+								$price_id         = edd_get_cart_item_price_id( $item );
+								$bundled_products = edd_get_bundled_products( $item['id'], $price_id );
 
 								foreach( $bundled_products as $bundle_item ) : ?>
+
+									<?php
+									$is_bundle_variant = false;
+									$bundle_item_pieces = explode( '_', $bundle_item );
+									if ( count( $bundled_products ) == 1 ) {
+										$is_bundle_variant = true;
+									}
+
+									$bundle_item_id = $bundle_item_pieces[0];
+									$bundle_price_id = isset( $bundle_item_pieces[1] ) ? $bundle_item_pieces[1] : null;
+
+									$prices = edd_get_variable_prices( $bundle_item_id );
+									$bundle_title = get_the_title( $bundle_item_id );
+
+									if ( null !== $bundle_price_id ) {
+										$bundle_title .= ' - ' . $prices[ $bundle_price_id ]['name'];
+									}
+									?>
+
 									<li class="edd_bundled_product">
-										<span class="edd_bundled_product_name"><?php echo get_the_title( $bundle_item ); ?></span>
+										<span class="edd_bundled_product_name"><?php echo $bundle_title; ?></span>
 										<ul class="edd_bundled_product_files">
 											<?php
-											$download_files = edd_get_download_files( $bundle_item );
+											$download_files = edd_get_download_files( $bundle_item_id, $bundle_price_id );
 
 											if( $download_files && is_array( $download_files ) ) :
 

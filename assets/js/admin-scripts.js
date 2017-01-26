@@ -87,7 +87,11 @@ jQuery(document).ready(function ($) {
 
 			clone.find( '.edd_repeatable_default_input' ).each( function() {
 				$( this ).val( parseInt( key ) ).removeAttr('checked');
-			})
+			});
+
+			clone.find( '.edd_repeatable_condition_field' ).each ( function() {
+				$( this ).find( 'option:eq(0)' ).prop( 'selected', 'selected' );
+			} )
 
 			// Remove Chosen elements
 			clone.find( '.search-choice' ).remove();
