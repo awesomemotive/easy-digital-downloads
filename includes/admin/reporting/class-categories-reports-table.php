@@ -217,8 +217,12 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 					$avg_earnings += $current_average_earnings;
 				}
 
-				$avg_sales    = round( $avg_sales, 2 );
 				$avg_earnings = round( $avg_earnings, edd_currency_decimal_filter() );
+				if ( ! empty( $avg_earnings ) && empty( $avg_sales ) ) {
+					$avg_sales = '< 1';
+				} else {
+					$avg_sales = round( edd_format_amount( $avg_sales, false ) );
+				}
 
 				$reports_data[] = array(
 					'ID'                 => $category->term_id,
@@ -227,7 +231,7 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 					'total_sales_raw'    => $sales,
 					'total_earnings'     => edd_currency_filter( edd_format_amount( $earnings ) ),
 					'total_earnings_raw' => $earnings,
-					'avg_sales'          => edd_format_amount( $avg_sales, false ),
+					'avg_sales'          => $avg_sales,
 					'avg_earnings'       => edd_currency_filter( edd_format_amount( $avg_earnings ) ),
 					'is_child'           => false,
 				);
