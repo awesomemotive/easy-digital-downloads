@@ -218,8 +218,8 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 				}
 
 				$avg_earnings = round( $avg_earnings, edd_currency_decimal_filter() );
-				if ( ! empty( $avg_earnings ) && empty( $avg_sales ) ) {
-					$avg_sales = '< 1';
+				if ( ! empty( $avg_earnings ) && $avg_sales < 1 ) {
+					$avg_sales = __( 'Less than 1', 'easy-digital-downloads' );
 				} else {
 					$avg_sales = round( edd_format_amount( $avg_sales, false ) );
 				}
