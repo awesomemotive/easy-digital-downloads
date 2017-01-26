@@ -961,6 +961,12 @@ class EDD_Payment {
 			do_action( 'edd_payment_saved', $this->ID, $this );
 		}
 
+		/**
+		 * Update the payment in the object cache
+		 */
+		$cache_key = md5( 'edd_payment' . $this->ID );
+		wp_cache_set( $cache_key, $this, 'payments' );
+
 		return $saved;
 	}
 
