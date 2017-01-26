@@ -122,6 +122,14 @@ final class Easy_Digital_Downloads {
 	public $customer_meta;
 
 	/**
+	 * EDD Cart Object
+	 *
+	 * @var object|EDD_Cart
+	 * @since 2.7
+	 */
+	public $cart;
+
+	/**
 	 * Main Easy_Digital_Downloads Instance.
 	 *
 	 * Insures that only one instance of Easy_Digital_Downloads exists in memory at any one
@@ -154,7 +162,9 @@ final class Easy_Digital_Downloads {
 			self::$instance->customers     = new EDD_DB_Customers();
 			self::$instance->customer_meta = new EDD_DB_Customer_Meta();
 			self::$instance->payment_stats = new EDD_Payment_Stats();
+			self::$instance->cart          = new EDD_Cart();
 		}
+
 		return self::$instance;
 	}
 
@@ -242,6 +252,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/template-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/checkout/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/checkout/functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/cart/class-edd-cart.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
