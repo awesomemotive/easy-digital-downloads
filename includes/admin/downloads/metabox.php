@@ -521,16 +521,16 @@ function edd_render_products_field( $post_id ) {
 				<?php if ( $products ) : ?>
 					<?php $index = 1; ?>
 					<?php foreach ( $products as $key => $product ) : ?>
-						<tr class="edd_repeatable_product_wrapper edd_repeatable_row" data-key="<?php echo esc_attr( $key ); ?>">
+						<tr class="edd_repeatable_product_wrapper edd_repeatable_row" data-key="<?php echo esc_attr( $index ); ?>">
 							<td>
 								<span class="edd_draghandle"></span>
-								<input type="hidden" name="edd_bundled_products[<?php echo $key; ?>][index]" class="edd_repeatable_index" value="<?php echo $index; ?>"/>
+								<input type="hidden" name="edd_bundled_products[<?php echo $index; ?>][index]" class="edd_repeatable_index" value="<?php echo $index; ?>"/>
 							</td>
 							<td>
 								<?php
 								echo EDD()->html->product_dropdown( array(
 									'name'       => '_edd_bundled_products[]',
-									'id'         => 'edd_bundled_products_' . $key,
+									'id'         => 'edd_bundled_products_' . $index,
 									'selected'   => $product,
 									'multiple'   => false,
 									'chosen'     => true,
@@ -540,7 +540,7 @@ function edd_render_products_field( $post_id ) {
 								?>
 							</td>
 							<td>
-								<button class="edd_remove_repeatable" data-type="file" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;"><span class="screen-reader-text"><?php printf( __( 'Remove bundle option %s', 'easy-digital-downloads' ), $key ); ?></span><span aria-hidden="true">&times;</span></button>
+								<button class="edd_remove_repeatable" data-type="file" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;"><span class="screen-reader-text"><?php printf( __( 'Remove bundle option %s', 'easy-digital-downloads' ), $index ); ?></span><span aria-hidden="true">&times;</span></button>
 							</td>
 							<td class="pricing" style="<?php echo $variable_display; ?>">
 								<?php
@@ -553,11 +553,12 @@ function edd_render_products_field( $post_id ) {
 									}
 
 									$price_assignments = edd_get_bundle_pricing_variations( $post_id );
+									$price_assignments = $price_assignments[0];
 
-									$selected = isset( $price_assignments[ $key ] ) ? $price_assignments[ $key ] : null;
+									$selected = isset( $price_assignments[ $index ] ) ? $price_assignments[ $index ] : null;
 
 									echo EDD()->html->select( array(
-										'name'             => '_edd_bundled_products_conditions['. $key .']',
+										'name'             => '_edd_bundled_products_conditions['. $index .']',
 										'class'            => 'edd_repeatable_condition_field',
 										'options'          => $options,
 										'show_option_none' => false,
