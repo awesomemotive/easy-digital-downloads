@@ -1311,5 +1311,6 @@ function edd_get_bundle_pricing_variations( $download_id = 0 ) {
 		return;
 	}
 
-	return (new EDD_Download( $download_id ))->get_bundle_pricing_variations();
+	$variations = (new EDD_Download( $download_id ))->get_bundle_pricing_variations();
+	return $variations[0];
 }

@@ -553,13 +553,8 @@ function edd_render_products_field( $post_id ) {
 									}
 
 									$price_assignments = edd_get_bundle_pricing_variations( $post_id );
-									$price_assignments = $price_assignments[0];
 
-									if ( in_array( 'all', $price_assignments ) ) {
-										$selected = isset( $price_assignments[ $key + 1 ] ) ? $price_assignments[ $key + 1 ] : null;
-									} else {
-										$selected = isset( $price_assignments[ $key ] ) ? $price_assignments[ $key ] : null;
-									}
+									$selected = isset( $price_assignments[ $key ] ) ? $price_assignments[ $key ] : null;
 
 									echo EDD()->html->select( array(
 										'name'             => '_edd_bundled_products_conditions['. $key .']',
