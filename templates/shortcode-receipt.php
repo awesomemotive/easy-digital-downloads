@@ -181,7 +181,7 @@ $status    = edd_get_payment_status( $payment, true );
 										<span class="edd_bundled_product_name"><?php echo edd_get_bundle_item_title( $bundle_item ); ?></span>
 										<ul class="edd_bundled_product_files">
 											<?php
-											$download_files = edd_get_download_files( $bundle_item_id, $bundle_price_id );
+											$download_files = edd_get_download_files( edd_get_bundle_item_id( $bundle_item ), edd_get_bundle_item_price_id( $bundle_item ) );
 
 											if ( $download_files && is_array( $download_files ) ) :
 												foreach ( $download_files as $filekey => $file ) :
