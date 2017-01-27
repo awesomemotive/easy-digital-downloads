@@ -196,20 +196,20 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 = 2.7, Date To Be Determined =
 * New: Introduced the EDD_Cart class, for managing the shopping cart contents.
-* New: Modifying price, quantity, and tax of individual items when viewing a payment is now possible.
+* New: Redesigned and improved functionality of the purchased downloads when viewing a payment.
 * New: The applied tax rate is now saved in the payment meta.
 * New: Created a tool that generates CSV earnings report.
 * New: Added the ability for users to complete abandoned/pending purchases.
-* New: Combined earnings reports to use a single query.
+* New: Reduced number queries run during reports, improving performance.
 * New: Selected image size is now inserted into File URL field in Download Files box.
 * New: Added a link to the discount edit screen when viewing a payment.
 * New: Added an option to the cart widget that allows it to be hidden when empty.
 * New: Added support for all_blank on text inputs.
-* New: Messages registered with edd_set_error are not output via a hook.
+* New: Messages registered with edd_set_error are now output via a hook.
 * New: Introduced the EDD_Discount class.
 * New: Created tool to export all Logs.
 * New: Improved WP CLI payment creation to support a date range.
-* New: Downloads can now be configured to not support quantities when the store supports quantities.
+* New: Quantity fields can now be disabled on individual download products.
 * New: Added parent theme name to System Info when a child theme is detected.
 * New: Added lost password URL to log in form on checkout.
 * New: Introduce edd_get_payment which uses WordPress object cache to improve performance of getting payments.
@@ -219,11 +219,11 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * New: Added a 'Refresh Reports' button to the graph view.
 * New: Variable priced bundles can now fully support a variable priced item being bundled.
 * New: Switched to using new IPN endpoints for PayPal Standard.
-* New: We now include zip code when recalculating tax on the front-end.
+* New: Zip / postal code now included in tax calculation function.
 * Tweak: Replaced all instances of get_post_meta() for payments with edd_get_payment_meta().
 * Tweak: Deprecated edd_get_earnings_by_date & edd_get_sales_by_date.
-* Tweak: You can no longer set the default gateway to one that is not enabled.
-* Tweak: Adjusted error message returned when a discount code is not active yet.
+* Tweak: Default gateway can no longer be set to a disabled gateway.
+* Tweak: Adjusted error message returned when a discount code is not yet active.
 * Tweak: Updated Profile Editor markup to match current EDD markup format.
 * Tweak: Removed loading of the icon-font in the front end.
 * Tweak: Improved the metabox for managing the customer when editing a payment.
