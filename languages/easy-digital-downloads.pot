@@ -2,16 +2,16 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.6.17\n"
+"Project-Id-Version: Easy Digital Downloads 2.7-beta1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2017-01-27 15:04:25+00:00\n"
+"POT-Creation-Date: 2017-01-27 16:56:10+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
 "Last-Translator: WP-Translations (http://wp-translations.org/)\n"
 "Language-Team: WP-Translations <wpt@wp-translations.org>\n"
-"X-Generator: grunt-wp-i18n 0.5.4\n"
+"X-Generator: grunt-wp-i18n 0.5.2\n"
 "X-Poedit-KeywordsList: "
 "__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
 "attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
@@ -238,8 +238,8 @@ msgstr ""
 
 #: includes/admin/class-edd-notices.php:56
 msgid ""
-"Note: Test Mode is enabled, only test payments are shown below. <a "
-"href=\"%s\">Settings</a>."
+"Note: Test Mode is enabled. While in test mode no live transactions are "
+"processed. <a href=\"%s\">Settings</a>."
 msgstr ""
 
 #: includes/admin/class-edd-notices.php:64
