@@ -1045,3 +1045,33 @@ function edd_get_bundle_item_title( $bundle_item ) {
 
 	return $bundle_title;
 }
+
+/**
+ * Retrieve the ID of an item in a bundle.
+ *
+ * @since 2.7
+ *
+ * @param array $bundle_item Bundle item.
+ * @return string Bundle item ID.
+ */
+function edd_get_bundle_item_id( $bundle_item ) {
+	$bundle_item_pieces = explode( '_', $bundle_item );
+	$bundle_item_id = $bundle_item_pieces[0];
+	return $bundle_item_id;
+}
+
+/**
+ * Retrieve the price ID of a bundle item.
+ *
+ * @since 2.7
+ *
+ * @param array $bundle_item Bundle item.
+ * @return string Bundle item ID.
+ */
+function edd_get_bundle_item_price_id( $bundle_item ) {
+	$bundle_item_pieces = explode( '_', $bundle_item );
+	$bundle_item_id = $bundle_item_pieces[0];
+	$bundle_price_id = isset( $bundle_item_pieces[1] ) ? $bundle_item_pieces[1] : null;
+
+	return $bundle_price_id;
+}
