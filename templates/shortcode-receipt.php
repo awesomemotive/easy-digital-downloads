@@ -163,10 +163,9 @@ $status    = edd_get_payment_status( $payment, true );
 							<?php
 							if ( ! empty( $download_files ) && is_array( $download_files ) ) :
 								foreach ( $download_files as $filekey => $file ) :
-									$download_url = edd_get_download_file_url( $meta['key'], $email, $filekey, $item['id'], $price_id );
 									?>
 									<li class="edd_download_file">
-										<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link"><?php echo edd_get_file_name( $file ); ?></a>
+										<a href="<?php echo esc_url( edd_get_download_file_url( $meta['key'], $email, $filekey, $item['id'], $price_id ) ); ?>" class="edd_download_file_link"><?php echo edd_get_file_name( $file ); ?></a>
 									</li>
 									<?php
 									do_action( 'edd_receipt_files', $filekey, $file, $item['id'], $payment->ID, $meta );
@@ -176,30 +175,19 @@ $status    = edd_get_payment_status( $payment, true );
 								$bundled_products = edd_get_bundled_products( $item['id'], $price_id );
 
 								foreach ( $bundled_products as $bundle_item ) :
-									$bundle_item_pieces = explode( '_', $bundle_item );
-
-									$bundle_item_id = $bundle_item_pieces[0];
-									$bundle_price_id = isset( $bundle_item_pieces[1] ) ? $bundle_item_pieces[1] : null;
-
-									$prices = edd_get_variable_prices( $bundle_item_id );
-									$bundle_title = get_the_title( $bundle_item_id );
-
-									if ( null !== $bundle_price_id ) {
-										$bundle_title .= ' - ' . $prices[ $bundle_price_id ]['name'];
-									}
 									?>
 
 									<li class="edd_bundled_product">
-										<span class="edd_bundled_product_name"><?php echo $bundle_title; ?></span>
+										<span class="edd_bundled_product_name"><?php echo edd_get_bundle_item_title( $bundle_item ); ?></span>
 										<ul class="edd_bundled_product_files">
 											<?php
 											$download_files = edd_get_download_files( $bundle_item_id, $bundle_price_id );
 
 											if ( $download_files && is_array( $download_files ) ) :
 												foreach ( $download_files as $filekey => $file ) :
-													$download_url = edd_get_download_file_url( $meta['key'], $email, $filekey, $bundle_item, $price_id ); ?>
+													?>
 													<li class="edd_download_file">
-														<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link"><?php echo edd_get_file_name( $file ); ?></a>
+														<a href="<?php echo esc_url( edd_get_download_file_url( $meta['key'], $email, $filekey, $bundle_item, $price_id ) ); ?>" class="edd_download_file_link"><?php echo edd_get_file_name( $file ); ?></a>
 													</li>
 													<?php
 													do_action( 'edd_receipt_bundle_files', $filekey, $file, $item['id'], $bundle_item, $payment->ID, $meta );
