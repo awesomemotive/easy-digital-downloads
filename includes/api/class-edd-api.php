@@ -1300,8 +1300,6 @@ class EDD_API {
 					$date_start = date( 'Y-m-d', strtotime( $date_start ) );
 					$date_end = date( 'Y-m-d', strtotime( $date_end ) );
 
-					$temp_data = array();
-
 					while ( strtotime( $date_start ) <= strtotime( $date_end ) ) {
 						$d = date( 'd', strtotime( $date_start ) );
 						$m = date( 'm', strtotime( $date_start ) );
@@ -1315,6 +1313,8 @@ class EDD_API {
 
 						$date_start = date( 'Y-m-d', strtotime( '+1 day', strtotime( $date_start ) ) );
 					}
+
+					ksort($temp_data['earnings']);
 
 					$earnings = $temp_data;
 
