@@ -1022,3 +1022,26 @@ function edd_remove_embed_comments_button() {
 	}
 }
 add_action( 'embed_content_meta', 'edd_remove_embed_comments_button', 5 );
+
+/**
+ * Get a fully formatted title of a bundle item
+ *
+ * @since 2.7
+ *
+ * @param array $bundle_item Bundle item.
+ * @return string Bundle item title.
+ */
+function edd_get_bundle_item_title( $bundle_item ) {
+	$bundle_item_pieces = explode( '_', $bundle_item );
+	$bundle_item_id = $bundle_item_pieces[0];
+	$bundle_price_id = isset( $bundle_item_pieces[1] ) ? $bundle_item_pieces[1] : null;
+
+	$prices = edd_get_variable_prices( $bundle_item_id );
+	$bundle_title = get_the_title( $bundle_item_id );
+
+	if ( null !== $bundle_price_id ) {
+		$bundle_title .= ' - ' . $prices[ $bundle_price_id ]['name'];
+	}
+
+	return $bundle_title;
+}
