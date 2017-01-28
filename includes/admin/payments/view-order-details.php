@@ -608,8 +608,6 @@ $customer       = new EDD_Customer( $payment->customer_id );
 												<?php $customer_url = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ); ?>
 												<a href="<?php echo $customer_url; ?>"><?php echo $customer->name; ?> - <?php echo $customer->email; ?></a>
 											<?php endif; ?>
-										</div>
-										<div class="column">
 											<input type="hidden" name="edd-current-customer" value="<?php echo $customer->id; ?>" />
 										</div>
 										<div class="column">
