@@ -113,7 +113,6 @@ class Tests_EDD extends EDD_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrades.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/class-edd-heartbeat.php' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/welcome.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/process-download.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/shortcodes.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/theme-compatibility.php' );
