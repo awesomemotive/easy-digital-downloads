@@ -195,7 +195,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 == Changelog ==
 
 = 2.7, Date To Be Determined =
-* New: Introduced the EDD_Cart class, for managing the shopping cart contents.
+* New: Introduced EDD_Cart class for managing the shopping cart contents.
 * New: Redesigned and improved functionality of the purchased downloads when viewing a payment.
 * New: The applied tax rate is now saved in the payment meta.
 * New: Created a tool that generates CSV earnings report.
