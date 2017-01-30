@@ -4,14 +4,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 2.7-beta1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2017-01-27 16:56:10+00:00\n"
+"POT-Creation-Date: 2017-01-30 16:54:20+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
 "Last-Translator: WP-Translations (http://wp-translations.org/)\n"
 "Language-Team: WP-Translations <wpt@wp-translations.org>\n"
-"X-Generator: grunt-wp-i18n 0.5.2\n"
+"X-Generator: grunt-wp-i18n 0.5.4\n"
 "X-Poedit-KeywordsList: "
 "__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
 "attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
@@ -418,6 +418,7 @@ msgstr ""
 #: includes/admin/discounts/class-discount-codes-table.php:145
 #: includes/admin/discounts/edit-discount.php:37
 #: includes/admin/downloads/dashboard-columns.php:31
+#: includes/admin/payments/view-order-details.php:648
 #: includes/admin/reporting/class-export-customers.php:76
 #: includes/admin/reporting/export/class-batch-export-customers.php:43
 #: includes/admin/reporting/export/class-batch-export-downloads.php:44
@@ -637,7 +638,8 @@ msgstr ""
 
 #: includes/admin/customers/customers.php:324
 #: includes/admin/customers/customers.php:606
-#: includes/admin/payments/view-order-details.php:641
+#: includes/admin/payments/view-order-details.php:639
+#: includes/admin/payments/view-order-details.php:659
 #: includes/admin/thickbox.php:131 includes/class-edd-html-elements.php:733
 msgid "Cancel"
 msgstr ""
@@ -664,6 +666,7 @@ msgstr ""
 
 #: includes/admin/customers/customers.php:374
 #: includes/admin/payments/class-payments-table.php:223
+#: includes/admin/payments/view-order-details.php:652
 #: includes/admin/reporting/class-export-customers.php:68
 #: includes/admin/reporting/class-export-customers.php:79
 #: includes/admin/reporting/class-export-payments.php:63
@@ -678,6 +681,8 @@ msgstr ""
 #: includes/admin/customers/customers.php:467
 #: includes/admin/payments/view-order-details.php:510
 #: includes/admin/payments/view-order-details.php:573
+#: includes/admin/payments/view-order-details.php:636
+#: includes/admin/payments/view-order-details.php:656
 #: templates/checkout_cart.php:13
 msgid "Actions"
 msgstr ""
@@ -2194,62 +2199,62 @@ msgstr ""
 msgid " & Quantity"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:611 includes/scripts.php:224
-msgid "Type to search all Customers"
+#: includes/admin/payments/view-order-details.php:614
+msgid "Assign to another customer"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:623
-msgid "View Customer Details"
-msgstr ""
-
-#: includes/admin/payments/view-order-details.php:626
+#: includes/admin/payments/view-order-details.php:616
 msgid "New Customer"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:632
-msgid "Name:"
+#: includes/admin/payments/view-order-details.php:622
+msgid "Select a customer"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:636
-msgid "Email:"
+#: includes/admin/payments/view-order-details.php:628 includes/scripts.php:224
+msgid "Type to search all Customers"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:644
+#: includes/admin/payments/view-order-details.php:642
+msgid "Click \"Save Payment\" to change the customer"
+msgstr ""
+
+#: includes/admin/payments/view-order-details.php:662
 msgid "Click \"Save Payment\" to create new customer"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:659
+#: includes/admin/payments/view-order-details.php:677
 #: includes/checkout/template.php:333
 msgid "Billing Address"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:669
+#: includes/admin/payments/view-order-details.php:687
 msgid "Street Address Line 1:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:673
+#: includes/admin/payments/view-order-details.php:691
 msgid "Street Address Line 2:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:702
+#: includes/admin/payments/view-order-details.php:720
 #: includes/admin/settings/register-settings.php:310
 msgid "Select a country"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:720
+#: includes/admin/payments/view-order-details.php:738
 #: includes/admin/settings/register-settings.php:318
 msgid "Select a state"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:741
+#: includes/admin/payments/view-order-details.php:759
 msgid "Payment Notes"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:756
+#: includes/admin/payments/view-order-details.php:774
 msgid "No payment notes"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:762
+#: includes/admin/payments/view-order-details.php:780
 msgid "Add Note"
 msgstr ""
 
@@ -8115,22 +8120,22 @@ msgctxt "payment details add item tax - mobile"
 msgid "Tax"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:680
+#: includes/admin/payments/view-order-details.php:698
 msgctxt "Address City"
 msgid "City:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:685
+#: includes/admin/payments/view-order-details.php:703
 msgctxt "Zip / Postal code of address"
 msgid "Zip / Postal Code:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:692
+#: includes/admin/payments/view-order-details.php:710
 msgctxt "Address country"
 msgid "Country:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:708
+#: includes/admin/payments/view-order-details.php:726
 msgctxt "State / province of address"
 msgid "State / Province:"
 msgstr ""
