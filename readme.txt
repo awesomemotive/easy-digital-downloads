@@ -238,7 +238,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Placeholders can now be defined for text fields when using the EDD Settings API.
 * Tweak: Removed PDF earnings report in favor of the CSV Report.
 * Tweak: Made the 'ignore tax' setting on reports less confusing.
-* Tweak: Fixed some links in teh readme.txt file.
+* Tweak: Fixed some links in the readme.txt file.
 * Tweak: Removed option to disable AJAX.
 * Tweak: Adjusted "post type attribute" metabox label for downloads.
 * Tweak: Fixed unit tests to work with the new WordPress core 4.7 unit tests.
