@@ -145,10 +145,10 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * [PagSeguro](https://easydigitaldownloads.com/downloads/pagseguro-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=pagseguro-payment-gateway&utm_campaign=readme)
 * [ClickBank](https://easydigitaldownloads.com/downloads/edd-clickbank-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=clickbank&utm_campaign=readme)
 * [Wallet](https://easydigitaldownloads.com/downloads/wallet/?utm_source=gateway&utm_medium=faq_tab&utm_content=wallet&utm_campaign=readme)
-* [BitPay](https://easydigitaldownloads.com/downloads/bitpay-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=bitpay-payment-gateway&utm_campaign=readme)	
-* [Coinbase](https://easydigitaldownloads.com/downloads/coinbase-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=coinbase-payment-gateway&utm_campaign=readme)	
-* [SOFORT Banking](https://easydigitaldownloads.com/downloads/sofort-banking-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=sofort-banking-gateway&utm_campaign=readme)	
-* [PayU India](https://easydigitaldownloads.com/downloads/payu-india-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=payu-india-payment-gateway&utm_campaign=readme)	
+* [BitPay](https://easydigitaldownloads.com/downloads/bitpay-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=bitpay-payment-gateway&utm_campaign=readme)
+* [Coinbase](https://easydigitaldownloads.com/downloads/coinbase-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=coinbase-payment-gateway&utm_campaign=readme)
+* [SOFORT Banking](https://easydigitaldownloads.com/downloads/sofort-banking-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=sofort-banking-gateway&utm_campaign=readme)
+* [PayU India](https://easydigitaldownloads.com/downloads/payu-india-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=payu-india-payment-gateway&utm_campaign=readme)
 * [Payza](https://easydigitaldownloads.com/downloads/payza-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=payza-payment-gateway&utm_campaign=readme)
 * [MercadoPago](https://easydigitaldownloads.com/downloads/mercadopago/?utm_source=gateway&utm_medium=faq_tab&utm_content=mercadopago&utm_campaign=readme)
 * [First Data](https://easydigitaldownloads.com/downloads/first-data-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=first-data-payment-gateway&utm_campaign=readme)
@@ -193,6 +193,78 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.7, Date To Be Determined =
+* New: Introduced EDD_Cart class for managing the shopping cart contents.
+* New: Redesigned and improved functionality of the purchased downloads when viewing a payment.
+* New: The applied tax rate is now saved in the payment meta.
+* New: Created a tool that generates CSV earnings report.
+* New: Added the ability for users to complete abandoned/pending purchases.
+* New: Reduced number queries run during reports, improving performance.
+* New: Selected image size is now inserted into File URL field in Download Files box.
+* New: Added a link to the discount edit screen when viewing a payment.
+* New: Added an option to the cart widget that allows it to be hidden when empty.
+* New: Added support for all_blank on text inputs.
+* New: Messages registered with edd_set_error are now output via a hook.
+* New: Introduced the EDD_Discount class.
+* New: Created tool to export all Logs.
+* New: Improved WP CLI payment creation to support a date range.
+* New: Quantity fields can now be disabled on individual download products.
+* New: Added parent theme name to System Info when a child theme is detected.
+* New: Added lost password URL to log in form on checkout.
+* New: Introduce edd_get_payment which uses WordPress object cache to improve performance of getting payments.
+* New: EDD_Payment and edd_get_payment now accept a payment transaction ID.
+* New: Introduced a more EDD-specific downloads shortcode [edd_downloads].
+* New: Moved edd-ajax.min script to footer to allow async loading of jQuery.
+* New: Added a 'Refresh Reports' button to the graph view.
+* New: Variable priced bundles can now fully support a variable priced item being bundled.
+* New: Switched to using new IPN endpoints for PayPal Standard.
+* New: Zip / postal code now included in tax calculation function.
+* Tweak: Replaced all instances of get_post_meta() for payments with edd_get_payment_meta().
+* Tweak: Deprecated edd_get_earnings_by_date & edd_get_sales_by_date.
+* Tweak: Default gateway can no longer be set to a disabled gateway.
+* Tweak: Adjusted error message returned when a discount code is not yet active.
+* Tweak: Updated Profile Editor markup to match current EDD markup format.
+* Tweak: Removed loading of the icon-font in the front end.
+* Tweak: Improved the metabox for managing the customer when editing a payment.
+* Tweak: Settings, Reports, Tools admin page now have headings.
+* Tweak: The gateway selector is now shown when a user has an error during checkout.
+* Tweak: Improved the layout and responsiveness of the customer details screen.
+* Tweak: Buy Now options and buttons are now disabled if multiple gateways are enabled.
+* Tweak: Improved the markup for the shortcode-login.php template file.
+* Tweak: Added a per-download hook to the edd_receipt shortcode.
+* Tweak: Unit tests no longer hit the network. They are so much faster now.
+* Tweak: Removed use of global variable $edd_options.
+* Tweak: Placeholders can now be defined for text fields when using the EDD Settings API.
+* Tweak: Removed PDF earnings report in favor of the CSV Report.
+* Tweak: Made the 'ignore tax' setting on reports less confusing.
+* Tweak: Fixed some links in the readme.txt file.
+* Tweak: Removed option to disable AJAX.
+* Tweak: Adjusted "post type attribute" metabox label for downloads.
+* Tweak: Fixed unit tests to work with the new WordPress core 4.7 unit tests.
+* Fix: EDD_License did not properly support `item_id`.
+* Fix: Earnings by Category estimates were not correct.
+* Fix: Item card views (customers, licenses, subscriptions, etc) size improperly.
+* Fix: Stopped redirect to PayPal on Buy Now buttons if PayPal gateway is disabled.
+* Fix: The wrong class name was on the Checkout state input.
+* Fix: Amazon Gateway settings are now checked before loading the scripts for Amazon Payments.
+* Fix: The edd_download_redirect_to_checkout filter wasn't respecting the desired outcome in some configurations.
+* Fix: The payment notes were included in normal comment count.
+* Fix: Disabling API request logging was not working.
+* Fix: Undefined index notices could be triggered during the login process on checkout.
+* Fix: South Korea Zip/Postal Codes changed, so we updated our validation RegEx.
+* Fix: Undefined index notice was shown on the dashboard widget.
+* Fix: Attachment ID was not overwritten by external URL on download files.
+* Fix: The history-downloads.php template was not properly showing variable price names.
+* Fix: When adding fee to cart, we now preserve the decimal precision.
+* Fix: Recounting store stats now resets the report transients.
+* Fix: Improved the fault tolerance and error handling of creating discount codes.
+* Fix: EDD_Download::setup_download() now identify $download as a WP_Post object type.
+* Fix: Product import now defaults to the main admin user if the author does not exist.
+* Fix: Multi-option purchase mode and variable prices work better with buy now buttons.
+* Fix: Added "required" attribute to the email input field.
+* Fix: Moved edd_undo_purchase_on_refund to deprecated-functions.php.
+* Fix: Fixed the spelling of "Pound Sterling".
 
 = 2.6.17, December 28, 2016 =
 * Fix: Checkboxes in Downloads > Tools > Beta Versions do not retain checked state
