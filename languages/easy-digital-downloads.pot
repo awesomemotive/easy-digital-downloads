@@ -4,14 +4,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 2.7-beta1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2017-01-30 16:54:20+00:00\n"
+"POT-Creation-Date: 2017-01-30 18:57:00+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
 "Last-Translator: WP-Translations (http://wp-translations.org/)\n"
 "Language-Team: WP-Translations <wpt@wp-translations.org>\n"
-"X-Generator: grunt-wp-i18n 0.5.4\n"
+"X-Generator: grunt-wp-i18n 0.5.0\n"
 "X-Poedit-KeywordsList: "
 "__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
 "attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
@@ -79,14 +79,14 @@ msgstr ""
 #: includes/admin/tools/class-edd-tools-recount-store-earnings.php:154
 #: includes/admin/tools/class-edd-tools-reset-stats.php:180
 #: includes/admin/tools.php:1021 includes/admin/tools.php:1027
-#: includes/admin/upgrades/upgrade-functions.php:210
-#: includes/admin/upgrades/upgrade-functions.php:526
-#: includes/admin/upgrades/upgrade-functions.php:608
-#: includes/admin/upgrades/upgrade-functions.php:719
-#: includes/admin/upgrades/upgrade-functions.php:816
-#: includes/admin/upgrades/upgrade-functions.php:890
-#: includes/admin/upgrades/upgrade-functions.php:1018
-#: includes/admin/upgrades/upgrade-functions.php:1103
+#: includes/admin/upgrades/upgrade-functions.php:205
+#: includes/admin/upgrades/upgrade-functions.php:521
+#: includes/admin/upgrades/upgrade-functions.php:603
+#: includes/admin/upgrades/upgrade-functions.php:714
+#: includes/admin/upgrades/upgrade-functions.php:811
+#: includes/admin/upgrades/upgrade-functions.php:885
+#: includes/admin/upgrades/upgrade-functions.php:1013
+#: includes/admin/upgrades/upgrade-functions.php:1098
 #: includes/api/class-edd-api.php:1977 includes/api/class-edd-api.php:1982
 #: includes/api/class-edd-api.php:1994 includes/api/class-edd-api.php:1996
 #: includes/cart/class-edd-cart.php:1449 includes/cart/class-edd-cart.php:1463
@@ -783,7 +783,7 @@ msgstr ""
 msgid "Purchased %s"
 msgstr ""
 
-#: includes/admin/customers/customers.php:477 includes/admin/welcome.php:492
+#: includes/admin/customers/customers.php:477
 msgid "View %s"
 msgstr ""
 
@@ -2263,7 +2263,7 @@ msgstr ""
 msgid "General Settings"
 msgstr ""
 
-#: includes/admin/plugins.php:57 includes/admin/welcome.php:161
+#: includes/admin/plugins.php:57
 msgid "Getting Started"
 msgstr ""
 
@@ -4520,7 +4520,7 @@ msgstr ""
 msgid "Product Title"
 msgstr ""
 
-#: includes/admin/tools.php:885 includes/admin/welcome.php:335
+#: includes/admin/tools.php:885
 msgid "Download Files"
 msgstr ""
 
@@ -4582,92 +4582,92 @@ msgstr ""
 msgid "Do not allow"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:83
+#: includes/admin/upgrades/upgrade-functions.php:78
 msgid "The Payment History needs to be updated. %s"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:83
+#: includes/admin/upgrades/upgrade-functions.php:78
 msgid "Click to Upgrade"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:89
+#: includes/admin/upgrades/upgrade-functions.php:84
 msgid ""
 "The Purchase and File Download History in Easy Digital Downloads needs to "
 "be upgraded, click %shere%s to start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:97
+#: includes/admin/upgrades/upgrade-functions.php:92
 msgid ""
 "Easy Digital Downloads needs to upgrade the plugin pages, click %shere%s to "
 "start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:105
-#: includes/admin/upgrades/upgrade-functions.php:113
+#: includes/admin/upgrades/upgrade-functions.php:100
+#: includes/admin/upgrades/upgrade-functions.php:108
 msgid ""
 "Easy Digital Downloads needs to upgrade the database, click %shere%s to "
 "start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:125
+#: includes/admin/upgrades/upgrade-functions.php:120
 msgid ""
 "Easy Digital Downloads needs to complete a database upgrade that was "
 "previously started, click <a href=\"%s\">here</a> to resume the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:136
+#: includes/admin/upgrades/upgrade-functions.php:131
 msgid ""
 "Easy Digital Downloads needs to upgrade past order numbers to make them "
 "sequential, click <a href=\"%s\">here</a> to start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:143
+#: includes/admin/upgrades/upgrade-functions.php:138
 msgid ""
 "Easy Digital Downloads needs to upgrade the customer database, click "
 "%shere%s to start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:151
-#: includes/admin/upgrades/upgrade-functions.php:165
+#: includes/admin/upgrades/upgrade-functions.php:146
+#: includes/admin/upgrades/upgrade-functions.php:160
 msgid ""
 "Easy Digital Downloads needs to upgrade the payment database, click <a "
 "href=\"%s\">here</a> to start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:158
+#: includes/admin/upgrades/upgrade-functions.php:153
 msgid ""
 "Easy Digital Downloads needs to upgrade the customer database, click <a "
 "href=\"%s\">here</a> to start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:172
+#: includes/admin/upgrades/upgrade-functions.php:167
 msgid ""
 "Easy Digital Downloads needs to upgrade the API Key database, click <a "
 "href=\"%s\">here</a> to start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:179
+#: includes/admin/upgrades/upgrade-functions.php:174
 msgid ""
 "Easy Digital Downloads needs to upgrade the payments database, click <a "
 "href=\"%s\">here</a> to start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:210
-#: includes/admin/upgrades/upgrade-functions.php:526
-#: includes/admin/upgrades/upgrade-functions.php:608
-#: includes/admin/upgrades/upgrade-functions.php:719
-#: includes/admin/upgrades/upgrade-functions.php:816
-#: includes/admin/upgrades/upgrade-functions.php:890
-#: includes/admin/upgrades/upgrade-functions.php:1018
-#: includes/admin/upgrades/upgrade-functions.php:1103
+#: includes/admin/upgrades/upgrade-functions.php:205
+#: includes/admin/upgrades/upgrade-functions.php:521
+#: includes/admin/upgrades/upgrade-functions.php:603
+#: includes/admin/upgrades/upgrade-functions.php:714
+#: includes/admin/upgrades/upgrade-functions.php:811
+#: includes/admin/upgrades/upgrade-functions.php:885
+#: includes/admin/upgrades/upgrade-functions.php:1013
+#: includes/admin/upgrades/upgrade-functions.php:1098
 msgid "You do not have permission to do shop upgrades"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:379 includes/install.php:129
+#: includes/admin/upgrades/upgrade-functions.php:374 includes/install.php:129
 msgid "Transaction Failed"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:380 includes/install.php:130
+#: includes/admin/upgrades/upgrade-functions.php:375 includes/install.php:130
 msgid "Your transaction failed, please try again or contact site support."
 msgstr ""
 
@@ -4684,404 +4684,6 @@ msgstr ""
 
 #: includes/admin/upgrades/upgrades.php:55
 msgid "Step %d of approximately %d running"
-msgstr ""
-
-#: includes/admin/welcome.php:51 includes/admin/welcome.php:52
-msgid "Welcome to Easy Digital Downloads"
-msgstr ""
-
-#: includes/admin/welcome.php:60 includes/admin/welcome.php:61
-msgid "Easy Digital Downloads Changelog"
-msgstr ""
-
-#: includes/admin/welcome.php:69 includes/admin/welcome.php:70
-msgid "Getting started with Easy Digital Downloads"
-msgstr ""
-
-#: includes/admin/welcome.php:78 includes/admin/welcome.php:79
-msgid "The people that build Easy Digital Downloads"
-msgstr ""
-
-#: includes/admin/welcome.php:138
-msgid "Welcome to Easy Digital Downloads %s"
-msgstr ""
-
-#: includes/admin/welcome.php:140
-msgid ""
-"Thank you for updating to the latest version! Easy Digital Downloads %s is "
-"ready to make your online store faster, safer, and better!"
-msgstr ""
-
-#: includes/admin/welcome.php:158
-msgid "What's New"
-msgstr ""
-
-#: includes/admin/welcome.php:164
-msgid "Credits"
-msgstr ""
-
-#: includes/admin/welcome.php:186
-msgid "Additional Customer Emails"
-msgstr ""
-
-#: includes/admin/welcome.php:192
-msgid ""
-"To help keep track of customers that have multiple email addresses, Easy "
-"Digital Downloads now supports storing additional emails on customers. "
-"During checkout, customers can use any email address assigned to their "
-"account to complete their purchase."
-msgstr ""
-
-#: includes/admin/welcome.php:194
-msgid ""
-"Email addresses can be easily added by site administrators at anytime and "
-"will also be automatically registered when a customer makes a purchase with "
-"an additional email address."
-msgstr ""
-
-#: includes/admin/welcome.php:196
-msgid "Improved Help Text"
-msgstr ""
-
-#: includes/admin/welcome.php:197
-msgid ""
-"While we strive to make Easy Digital Downloads live up to its name, there "
-"are always times when certain things are not quite clear. To help alleviate "
-"any uncertainty, we have introduced improved descriptions and help texts "
-"throughout the plugin. Along with the improved descriptions, we have also "
-"added tooltips in many places that offer verbose definitions of options."
-msgstr ""
-
-#: includes/admin/welcome.php:199
-msgid "Better Mobile Checkout"
-msgstr ""
-
-#: includes/admin/welcome.php:200
-msgid ""
-"When purchasing with a debit or credit card from a mobile phone, the card "
-"number input field will now properly set the phone’s keyboard to a "
-"numerical keyboard."
-msgstr ""
-
-#: includes/admin/welcome.php:206
-msgid "Native Import Options"
-msgstr ""
-
-#: includes/admin/welcome.php:212
-msgid ""
-"We believe you should own your data. We also believe that it should be easy "
-"to get data out of <em>and</em> into Easy Digital Downloads. 2.6 introduces "
-"native import options for payments and download products."
-msgstr ""
-
-#: includes/admin/welcome.php:214
-msgid "Product Import"
-msgstr ""
-
-#: includes/admin/welcome.php:215
-msgid ""
-"With the new import options, Easy Digital Downloads now makes it easy to "
-"import products from a CSV file into your store. Whether you wish to import "
-"five products or 50,000, Easy Digital Downloads can now effortlessly handle "
-"the import for you."
-msgstr ""
-
-#: includes/admin/welcome.php:217
-msgid "Payment Import"
-msgstr ""
-
-#: includes/admin/welcome.php:218
-msgid ""
-"Sometimes it is necessary to move purchase records from one location to "
-"another. Perhaps you are transitioning from another eCommerce system, or "
-"from a separate Easy Digital Downloads store; whatever the reason, Easy "
-"Digital Downloads now allows you to easily import purchase records from a "
-"CSV file."
-msgstr ""
-
-#: includes/admin/welcome.php:224
-msgid "Better Refunds"
-msgstr ""
-
-#: includes/admin/welcome.php:230
-msgid "Refund Processing for PayPal Standard"
-msgstr ""
-
-#: includes/admin/welcome.php:231
-msgid ""
-"While not usually something store administrators take great pleasure in "
-"handling, refunds are a very real part of running an eCommerce store. As "
-"much as we would love to, we can’t make the actual refund more enjoyable, "
-"but we can make refunds easier to process."
-msgstr ""
-
-#: includes/admin/welcome.php:232
-msgid ""
-"In Easy Digital Downloads 2.6, we have added support for processing refunds "
-"directly from the View Order Details screen for purchases made through "
-"PayPal Standard."
-msgstr ""
-
-#: includes/admin/welcome.php:238
-msgid "Additional Updates"
-msgstr ""
-
-#: includes/admin/welcome.php:241
-msgid "REST API Version 2"
-msgstr ""
-
-#: includes/admin/welcome.php:242
-msgid ""
-"Version 2 of the REST API offers several improved endpoint options and "
-"better data standardization."
-msgstr ""
-
-#: includes/admin/welcome.php:245
-msgid "Prices on oEmbed"
-msgstr ""
-
-#: includes/admin/welcome.php:246
-msgid ""
-"When embedding a download product on another site, using WordPress core’s "
-"oEmbed feature, the product prices are now shown."
-msgstr ""
-
-#: includes/admin/welcome.php:249
-msgid "Customer Meta"
-msgstr ""
-
-#: includes/admin/welcome.php:250
-msgid ""
-"The customer database now includes a complete metadata API for storing "
-"additional information on customer records."
-msgstr ""
-
-#: includes/admin/welcome.php:254
-msgid "Improved Accessibility"
-msgstr ""
-
-#: includes/admin/welcome.php:255
-msgid ""
-"Easy Digital Downloads is now more accessible to more users thanks to a "
-"member of the WordPress accessibility team who helped resolve accessibility "
-"issues throughout the administrative interfaces."
-msgstr ""
-
-#: includes/admin/welcome.php:258
-msgid "Resolved Schema Problems"
-msgstr ""
-
-#: includes/admin/welcome.php:259
-msgid "Invalid and missing schema microdata has been resolved."
-msgstr ""
-
-#: includes/admin/welcome.php:262
-msgid "More Actions and Filters"
-msgstr ""
-
-#: includes/admin/welcome.php:263
-msgid ""
-"Numerous new actions and filters have been added to help make Easy Digital "
-"Downloads more extensible for developers."
-msgstr ""
-
-#: includes/admin/welcome.php:270 includes/admin/welcome.php:301
-msgid "Go to Easy Digital Downloads Settings"
-msgstr ""
-
-#: includes/admin/welcome.php:271
-msgid "View the Full Changelog"
-msgstr ""
-
-#: includes/admin/welcome.php:293
-msgid "Full Changelog"
-msgstr ""
-
-#: includes/admin/welcome.php:322
-msgid ""
-"Use the tips below to get started using Easy Digital Downloads. You will be "
-"up and running in no time!"
-msgstr ""
-
-#: includes/admin/welcome.php:325
-msgid "Creating Your First Download Product"
-msgstr ""
-
-#: includes/admin/welcome.php:331
-msgid "%s &rarr; Add New"
-msgstr ""
-
-#: includes/admin/welcome.php:332
-msgid ""
-"The %s menu is your access point for all aspects of your Easy Digital "
-"Downloads product creation and setup. To create your first product, simply "
-"click Add New and then fill out the product details."
-msgstr ""
-
-#: includes/admin/welcome.php:336
-msgid ""
-"Uploading the downloadable files is simple. Click <em>Upload File</em> in "
-"the Download Files section and choose your download file. To add more than "
-"one file, simply click the <em>Add New</em> button."
-msgstr ""
-
-#: includes/admin/welcome.php:342
-msgid "Display a Product Grid"
-msgstr ""
-
-#: includes/admin/welcome.php:348
-msgid "Flexible Product Grids"
-msgstr ""
-
-#: includes/admin/welcome.php:349
-msgid ""
-"The [downloads] shortcode will display a product grid that works with any "
-"theme, no matter the size. It is even responsive!"
-msgstr ""
-
-#: includes/admin/welcome.php:351
-msgid "Change the Number of Columns"
-msgstr ""
-
-#: includes/admin/welcome.php:352
-msgid ""
-"You can easily change the number of columns by adding the columns=\"x\" "
-"parameter:"
-msgstr ""
-
-#: includes/admin/welcome.php:355
-msgid "Additional Display Options"
-msgstr ""
-
-#: includes/admin/welcome.php:356
-msgid ""
-"The product grids can be customized in any way you wish and there is <a "
-"href=\"%s\">extensive documentation</a> to assist you."
-msgstr ""
-
-#: includes/admin/welcome.php:362
-msgid "Purchase Buttons Anywhere"
-msgstr ""
-
-#: includes/admin/welcome.php:368
-msgid "The <em>[purchase_link]</em> Shortcode"
-msgstr ""
-
-#: includes/admin/welcome.php:369
-msgid ""
-"With easily accessible shortcodes to display purchase buttons, you can add "
-"a Buy Now or Add to Cart button for any product anywhere on your site in "
-"seconds."
-msgstr ""
-
-#: includes/admin/welcome.php:371
-msgid "Buy Now Buttons"
-msgstr ""
-
-#: includes/admin/welcome.php:372
-msgid ""
-"Purchase buttons can behave as either Add to Cart or Buy Now buttons. With "
-"Buy Now buttons customers are taken straight to PayPal, giving them the "
-"most frictionless purchasing experience possible."
-msgstr ""
-
-#: includes/admin/welcome.php:378
-msgid "Need Help?"
-msgstr ""
-
-#: includes/admin/welcome.php:381
-msgid "Phenomenal Support"
-msgstr ""
-
-#: includes/admin/welcome.php:382
-msgid ""
-"We do our best to provide the best support we can. If you encounter a "
-"problem or have a question, simply open a ticket using our <a "
-"href=\"https://easydigitaldownloads.com/support/?utm_source=plugin-welcome-"
-"page&utm_medium=support-link&utm_term=support&utm_campaign="
-"EDDWelcomeSupport\">support form</a>."
-msgstr ""
-
-#: includes/admin/welcome.php:385
-msgid "Need Even Faster Support?"
-msgstr ""
-
-#: includes/admin/welcome.php:386
-msgid ""
-"Our <a "
-"href=\"https://easydigitaldownloads.com/support/pricing/?utm_source=plugin-"
-"welcome-page&utm_medium=support-link&utm_term=priority-support&utm_campaign="
-"EDDWelcomeSupport\">Priority Support</a> system is there for customers that "
-"need faster and/or more in-depth assistance."
-msgstr ""
-
-#: includes/admin/welcome.php:392
-msgid "Stay Up to Date"
-msgstr ""
-
-#: includes/admin/welcome.php:395
-msgid "Get Notified of Extension Releases"
-msgstr ""
-
-#: includes/admin/welcome.php:396
-msgid ""
-"New extensions that make Easy Digital Downloads even more powerful are "
-"released nearly every single week. Subscribe to the newsletter to stay up "
-"to date with our latest releases. <a "
-"href=\"https://easydigitaldownloads.com/subscribe\" target=\"_blank\">Sign "
-"up now</a> to ensure you do not miss a release!"
-msgstr ""
-
-#: includes/admin/welcome.php:399
-msgid "Get Alerted About New Tutorials"
-msgstr ""
-
-#: includes/admin/welcome.php:400
-msgid ""
-"<a href=\"https://easydigitaldownloads.com/subscribe\" "
-"target=\"_blank\">Sign up now</a> to hear about the latest tutorial "
-"releases that explain how to take Easy Digital Downloads further."
-msgstr ""
-
-#: includes/admin/welcome.php:406
-msgid "Extensions for Everything"
-msgstr ""
-
-#: includes/admin/welcome.php:409
-msgid "Over 250 Extensions"
-msgstr ""
-
-#: includes/admin/welcome.php:410
-msgid ""
-"Add-on plugins are available that greatly extend the default functionality "
-"of Easy Digital Downloads. There are extensions for payment processors, "
-"such as Stripe and PayPal, extensions for newsletter integrations, and "
-"many, many more."
-msgstr ""
-
-#: includes/admin/welcome.php:413
-msgid "Visit the Extension Store"
-msgstr ""
-
-#: includes/admin/welcome.php:414
-msgid ""
-"<a "
-"href=\"https://easydigitaldownloads.com/downloads/?utm_source=plugin-"
-"welcome-page&utm_medium=extensions-link&utm_term=extensions&utm_campaign="
-"EDDWelcomeExtensions\" target=\"_blank\">The Extensions store</a> has a "
-"list of all available extensions, including convenient category filters so "
-"you can find exactly what you are looking for."
-msgstr ""
-
-#: includes/admin/welcome.php:437
-msgid ""
-"Easy Digital Downloads is created by a worldwide team of developers who aim "
-"to provide the #1 eCommerce platform for selling digital goods through "
-"WordPress."
-msgstr ""
-
-#: includes/admin/welcome.php:455
-msgid "No valid changelog was found."
 msgstr ""
 
 #: includes/ajax-functions.php:564 includes/ajax-functions.php:616
