@@ -417,6 +417,9 @@ input[class*="edd-price-field"] {
 	clear: both;
 	display: block;
 }
+#edd-customer-details .customer-info .column {
+	width: 49%;
+}
 #edd-customer-details .actions {
 	float: right;
 }
