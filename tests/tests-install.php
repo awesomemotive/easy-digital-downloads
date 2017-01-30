@@ -73,8 +73,6 @@ class Tests_Activation extends EDD_UnitTestCase {
 		$this->assertInstanceOf( 'WP_Role', get_role( 'shop_worker' ) );
 		$this->assertInstanceOf( 'WP_Role', get_role( 'shop_vendor' ) );
 
-		$this->assertNotFalse( get_transient( '_edd_activation_redirect' ) );
-
 		// Reset to original data.
 		wp_delete_post( $new_settings['purchase_page'], true );
 		wp_delete_post( $new_settings['success_page'], true );
