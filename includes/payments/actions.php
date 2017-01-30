@@ -378,7 +378,7 @@ function edd_recover_payment() {
 	$payment->add_note( __( 'Payment recovery triggered URL', 'easy-digital-downloads' ) );
 
 	// Empty out the cart.
-	EDD()->cart->empty();
+	EDD()->cart->empty_cart();
 
 	// Recover any downloads.
 	foreach ( $payment->cart_details as $download ) {
