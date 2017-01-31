@@ -240,9 +240,8 @@ class EDD_Cart {
 			$subtotal   = $item_price * $quantity;
 
 			foreach ( $fees as $fee ) {
-				if ( $fee['amount'] < 0 ) {
-					$subtotal += $fee['amount'];
-				}
+				$fee_amount = (float) $fee['amount'];
+				$subtotal  += $fee_amount;
 			}
 
 			$tax        = $this->get_item_tax( $item['id'], $options, $subtotal - $discount );
