@@ -205,11 +205,7 @@ class EDD_Fees {
 		if ( ! empty( $fees ) && ! empty( $download_id ) ) {
 			// Remove fees that don't belong to the specified Download
 			foreach ( $fees as $key => $fee ) {
-				if ( empty( $fee['download_id'] ) ) {
-					continue;
-				}
-
-				if ( (int) $download_id !== (int) $fee['download_id'] ) {
+				if ( (int) $download_id !== (int) $fee['download_id'] || empty( $fee['download_id'] ) ) {
 					unset( $fees[ $key ] );
 				}
 			}
