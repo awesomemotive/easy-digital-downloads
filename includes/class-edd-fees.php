@@ -187,7 +187,6 @@ class EDD_Fees {
 	 * @return array|bool List of fees when available, false when there are no fees
 	 */
 	public function get_fees( $type = 'fee', $download_id = 0, $price_id = NULL ) {
-
 		$fees = EDD()->session->get( 'edd_cart_fees' );
 
 		if ( EDD()->cart->is_empty() ) {
@@ -206,6 +205,10 @@ class EDD_Fees {
 		if ( ! empty( $fees ) && ! empty( $download_id ) ) {
 			// Remove fees that don't belong to the specified Download
 			foreach ( $fees as $key => $fee ) {
+				if ( empty( $fee['download_id'] ) ) {
+					continue;
+				}
+
 				if ( (int) $download_id !== (int) $fee['download_id'] ) {
 					unset( $fees[ $key ] );
 				}
