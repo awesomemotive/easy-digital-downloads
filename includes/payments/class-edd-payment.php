@@ -1769,8 +1769,11 @@ class EDD_Payment {
 	public function get_meta( $meta_key = '_edd_payment_meta', $single = true ) {
 
 		$meta = get_post_meta( $this->ID, $meta_key, $single );
-
 		if ( $meta_key === '_edd_payment_meta' ) {
+
+			if ( empty( $meta ) ) {
+				$meta = array();
+			}
 
 			// #5228 Fix possible data issue introduced in 2.6.12
 			if ( isset( $meta[0] ) ) {
