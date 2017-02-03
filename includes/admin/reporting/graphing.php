@@ -122,7 +122,7 @@ function edd_reports_graph() {
 		foreach ( $report_dates as $report_date ) {
 			$date = mktime( 0, 0, 0,  $report_date['month'], $report_date['day'], $report_date['year']  ) * 1000;
 
-			if ( $report_date['day'] == $sales[ $i ]['d'] && $report_date['month'] == $sales[ $i ]['m'] && $report_date['year'] == $sales[ $i ]['y'] ) {
+			if ( array_key_exists( $i, $sales ) && $report_date['day'] == $sales[ $i ]['d'] && $report_date['month'] == $sales[ $i ]['m'] && $report_date['year'] == $sales[ $i ]['y'] ) {
 				$sales_data[] = array( $date, $sales[ $i ]['count'] );
 				$sales_totals += $sales[ $i ]['count'];
 				$i++;
@@ -130,7 +130,7 @@ function edd_reports_graph() {
 				$sales_data[] = array( $date, 0 );
 			}
 
-			if ( $report_date['day'] == $earnings[ $j ]['d'] && $report_date['month'] == $earnings[ $j ]['m'] && $report_date['year'] == $earnings[ $j ]['y'] ) {
+			if ( array_key_exists( $j, $earnings ) && $report_date['day'] == $earnings[ $j ]['d'] && $report_date['month'] == $earnings[ $j ]['m'] && $report_date['year'] == $earnings[ $j ]['y'] ) {
 				$earnings_data[] = array( $date, $earnings[ $j ]['total'] );
 				$earnings_totals += $earnings[ $j ]['total'];
 				$j++;
