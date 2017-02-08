@@ -293,6 +293,9 @@ class EDD_Payment_Stats extends EDD_Stats {
 				$grouping = "YEAR(posts.post_date), MONTH(posts.post_date), DAY(posts.post_date), HOUR(posts.post_date)";
 			}
 
+			$statuses = apply_filters( 'edd_payment_stats_post_statuses', array( 'publish', 'revoked' ) );
+			$statuses = "'" . implode( "', '", $statuses ) . "'";
+
 			$sales = $wpdb->get_results( $wpdb->prepare(
 				"SELECT $select
 				 FROM {$wpdb->posts} AS posts
@@ -300,7 +303,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 				 AND posts.post_status IN (%s)
 				 AND posts.post_date >= %s
 				 AND posts.post_date < %s
-				 AND ((posts.post_status = 'publish' OR posts.post_status = 'revoked' OR posts.post_status = 'cancelled' OR posts.post_status = 'edd_subscription'))
+				 AND posts.post_status IN ($statuses)
 				 GROUP BY $grouping
 				 ORDER by posts.post_date ASC", $status, date( 'Y-m-d', $this->start_date ), date( 'Y-m-d', strtotime( '+1 day', $this->end_date ) ) ), ARRAY_A );
 
@@ -366,6 +369,9 @@ class EDD_Payment_Stats extends EDD_Stats {
 				$grouping = "YEAR(posts.post_date), MONTH(posts.post_date), DAY(posts.post_date), HOUR(posts.post_date)";
 			}
 
+			$statuses = apply_filters( 'edd_payment_stats_post_statuses', array( 'publish', 'revoked' ) );
+			$statuses = "'" . implode( "', '", $statuses ) . "'";
+
 			$earnings = $wpdb->get_results( $wpdb->prepare(
 				"SELECT SUM(meta_value) AS total, $select
 				 FROM {$wpdb->posts} AS posts
@@ -374,7 +380,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 				 AND {$wpdb->postmeta}.meta_key = '_edd_payment_total'
 				 AND posts.post_date >= %s
 				 AND posts.post_date < %s
-				 AND (posts.post_status = 'publish' OR posts.post_status = 'revoked')
+				 AND posts.post_status IN ($statuses)
 				 GROUP BY $grouping
 				 ORDER by posts.post_date ASC", date( 'Y-m-d', $this->start_date ), date( 'Y-m-d', strtotime( '+1 day', $this->end_date ) ) ), ARRAY_A );
 
@@ -387,7 +393,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 					 AND {$wpdb->postmeta}.meta_key = '_edd_payment_tax'
 					 AND posts.post_date >= %s
 					 AND posts.post_date < %s
-					 AND (posts.post_status = 'publish' OR posts.post_status = 'revoked')
+					 AND posts.post_status IN ($statuses)
 					 GROUP BY $grouping
 					 ORDER by posts.post_date ASC", date( 'Y-m-d', $this->start_date ), date( 'Y-m-d', strtotime( '+1 day', $this->end_date ) ) ), ARRAY_A );
 
