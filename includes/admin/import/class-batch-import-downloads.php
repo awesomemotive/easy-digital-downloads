@@ -367,7 +367,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 	private function set_image( $download_id = 0, $image = '', $post_author = 0 ) {
 
 		$is_url   = false !== filter_var( $image, FILTER_VALIDATE_URL );
-		$is_local = $is_url && false !== strpos( $image, site_url() );
+		$is_local = $is_url && edd_is_local_file( $image );
 		$ext      = edd_get_file_extension( $image );
 
 		if( $is_url && $is_local ) {
