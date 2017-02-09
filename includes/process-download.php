@@ -903,4 +903,9 @@ function edd_check_file_url_head( $requested_file, $args, $method ) {
 	}
 
 }
-add_action( 'edd_process_download_pre_record_log', 'edd_check_file_url_head', 10, 3 );
+/**
+ * Filter removed in EDD 2.7
+ *
+ * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5450
+ */
+// add_action( 'edd_process_download_pre_record_log', 'edd_check_file_url_head', 10, 3 );
