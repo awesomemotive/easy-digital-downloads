@@ -2,16 +2,16 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.7-beta1\n"
+"Project-Id-Version: Easy Digital Downloads 2.7-beta2\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2017-01-30 18:57:00+00:00\n"
+"POT-Creation-Date: 2017-02-09 19:45:11+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
 "Last-Translator: WP-Translations (http://wp-translations.org/)\n"
 "Language-Team: WP-Translations <wpt@wp-translations.org>\n"
-"X-Generator: grunt-wp-i18n 0.5.0\n"
+"X-Generator: grunt-wp-i18n 0.5.4\n"
 "X-Poedit-KeywordsList: "
 "__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
 "attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
@@ -38,11 +38,11 @@ msgid ""
 "or %5$supdate now%6$s."
 msgstr ""
 
-#: includes/EDD_SL_Plugin_Updater.php:369
+#: includes/EDD_SL_Plugin_Updater.php:396
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
-#: includes/EDD_SL_Plugin_Updater.php:369
+#: includes/EDD_SL_Plugin_Updater.php:396
 #: includes/admin/customers/customer-actions.php:301
 #: includes/admin/customers/customer-actions.php:345
 #: includes/admin/customers/customer-actions.php:603
@@ -89,7 +89,7 @@ msgstr ""
 #: includes/admin/upgrades/upgrade-functions.php:1098
 #: includes/api/class-edd-api.php:1977 includes/api/class-edd-api.php:1982
 #: includes/api/class-edd-api.php:1994 includes/api/class-edd-api.php:1996
-#: includes/cart/class-edd-cart.php:1449 includes/cart/class-edd-cart.php:1463
+#: includes/cart/class-edd-cart.php:1448 includes/cart/class-edd-cart.php:1462
 #: includes/class-edd-license-handler.php:307
 #: includes/deprecated-functions.php:517 includes/deprecated-functions.php:532
 #: includes/deprecated-functions.php:542 includes/download-functions.php:1249
@@ -97,8 +97,8 @@ msgstr ""
 #: includes/error-tracking.php:36 includes/gateways/functions.php:221
 #: includes/gateways/manual.php:33 includes/gateways/paypal-standard.php:155
 #: includes/process-download.php:275 includes/process-download.php:808
-#: includes/query-filters.php:48 includes/user-functions.php:826
-#: includes/user-functions.php:851 includes/user-functions.php:904
+#: includes/query-filters.php:48 includes/user-functions.php:830
+#: includes/user-functions.php:855 includes/user-functions.php:908
 msgid "Error"
 msgstr ""
 
@@ -486,7 +486,7 @@ msgid "An error has occured. Please try again."
 msgstr ""
 
 #: includes/admin/customers/customer-actions.php:207
-#: includes/user-functions.php:851
+#: includes/user-functions.php:855
 msgid "Nonce verification failed."
 msgstr ""
 
@@ -4753,27 +4753,27 @@ msgstr ""
 msgid "No download logs found!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1941 includes/user-functions.php:986
+#: includes/api/class-edd-api.php:1941 includes/user-functions.php:990
 msgid "Easy Digital Downloads API Keys"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1950 includes/user-functions.php:991
+#: includes/api/class-edd-api.php:1950 includes/user-functions.php:995
 msgid "Generate API Key"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1952 includes/user-functions.php:993
+#: includes/api/class-edd-api.php:1952 includes/user-functions.php:997
 msgid "Public key:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1953 includes/user-functions.php:994
+#: includes/api/class-edd-api.php:1953 includes/user-functions.php:998
 msgid "Secret key:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1954 includes/user-functions.php:995
+#: includes/api/class-edd-api.php:1954 includes/user-functions.php:999
 msgid "Token:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1956 includes/user-functions.php:997
+#: includes/api/class-edd-api.php:1956 includes/user-functions.php:1001
 msgid "Revoke API Keys"
 msgstr ""
 
@@ -4785,32 +4785,32 @@ msgstr ""
 msgid "You do not have permission to %s API keys for this user"
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:899
+#: includes/cart/class-edd-cart.php:898
 msgid "includes %s tax"
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:901
+#: includes/cart/class-edd-cart.php:900
 msgid "excludes %s tax"
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1412 includes/cart/class-edd-cart.php:1475
+#: includes/cart/class-edd-cart.php:1411 includes/cart/class-edd-cart.php:1474
 #: templates/shortcode-profile-editor.php:22
 msgid "Success"
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1413
+#: includes/cart/class-edd-cart.php:1412
 msgid "Cart saved successfully. You can restore your cart using this URL:"
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1449 includes/cart/class-edd-cart.php:1463
+#: includes/cart/class-edd-cart.php:1448 includes/cart/class-edd-cart.php:1462
 msgid "Cart restoration failed. Invalid token."
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1457 includes/cart/class-edd-cart.php:1466
+#: includes/cart/class-edd-cart.php:1456 includes/cart/class-edd-cart.php:1465
 msgid "The cart cannot be restored. Invalid token."
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1475
+#: includes/cart/class-edd-cart.php:1474
 msgid "Cart restored successfully."
 msgstr ""
 
@@ -5249,8 +5249,8 @@ msgstr ""
 msgid "Customer User ID: %s"
 msgstr ""
 
-#: includes/class-edd-cli.php:335 includes/user-functions.php:518
-#: includes/user-functions.php:527
+#: includes/class-edd-cli.php:335 includes/user-functions.php:522
+#: includes/user-functions.php:531
 msgid "Username: %s"
 msgstr ""
 
@@ -7278,51 +7278,51 @@ msgstr ""
 msgid "Plain Text"
 msgstr ""
 
-#: includes/user-functions.php:516
+#: includes/user-functions.php:520
 msgid "[%s] New User Registration"
 msgstr ""
 
-#: includes/user-functions.php:517
+#: includes/user-functions.php:521
 msgid "New user registration"
 msgstr ""
 
-#: includes/user-functions.php:519
+#: includes/user-functions.php:523
 msgid "E-mail: %s"
 msgstr ""
 
-#: includes/user-functions.php:525
+#: includes/user-functions.php:529
 msgid "[%s] Your username and password"
 msgstr ""
 
-#: includes/user-functions.php:526
+#: includes/user-functions.php:530
 msgid "Your account info"
 msgstr ""
 
-#: includes/user-functions.php:530
+#: includes/user-functions.php:534
 msgid "Password entered at checkout"
 msgstr ""
 
-#: includes/user-functions.php:532
+#: includes/user-functions.php:536
 msgid "Password entered at registration"
 msgstr ""
 
-#: includes/user-functions.php:535
+#: includes/user-functions.php:539
 msgid "Password: %s"
 msgstr ""
 
-#: includes/user-functions.php:539
+#: includes/user-functions.php:543
 msgid "Click here to log in"
 msgstr ""
 
-#: includes/user-functions.php:543
+#: includes/user-functions.php:547
 msgid "To log in, visit: %s"
 msgstr ""
 
-#: includes/user-functions.php:699 includes/user-functions.php:700
+#: includes/user-functions.php:703 includes/user-functions.php:704
 msgid "Verify your account"
 msgstr ""
 
-#: includes/user-functions.php:702
+#: includes/user-functions.php:706
 msgid ""
 "Hello %s,\n"
 "\n"
@@ -7332,33 +7332,33 @@ msgid ""
 "Link missing? Visit the following URL: %s"
 msgstr ""
 
-#: includes/user-functions.php:826
+#: includes/user-functions.php:830
 msgid ""
 "Sorry but your account verification link has expired. <a href=\"#\">Click "
 "here</a> to request a new verification URL."
 msgstr ""
 
-#: includes/user-functions.php:855
+#: includes/user-functions.php:859
 msgid "You must be logged in to verify your account."
 msgstr ""
 
-#: includes/user-functions.php:855 includes/user-functions.php:859
+#: includes/user-functions.php:859 includes/user-functions.php:863
 msgid "Notice"
 msgstr ""
 
-#: includes/user-functions.php:859
+#: includes/user-functions.php:863
 msgid "Your account has already been verified."
 msgstr ""
 
-#: includes/user-functions.php:904
+#: includes/user-functions.php:908
 msgid "Invalid verification token provided."
 msgstr ""
 
-#: includes/user-functions.php:1009
+#: includes/user-functions.php:1013
 msgid "Easy Digital Downloads <a href=\"%s\">iOS App</a>"
 msgstr ""
 
-#: includes/user-functions.php:1016
+#: includes/user-functions.php:1020
 msgid "Add to iOS App"
 msgstr ""
 
