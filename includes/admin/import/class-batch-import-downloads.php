@@ -107,26 +107,26 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 				}
 
 				if ( empty( $args['post_author'] ) ) {
-					$user = wp_get_current_user();
-					$args['post_author'] = $user->ID;
-				} else {
+	 				$user = wp_get_current_user();
+	 				$args['post_author'] = $user->ID;
+	 			} else {
 
-					// Check all forms of possible user inputs, email, ID, login.
-					if ( is_email( $args['post_author'] ) ) {
-						$user = get_user_by( 'user_email', $args['post_author'] );
-					} elseif ( is_numeric( $args['post_author'] ) ) {
-						$user = get_user_by( 'ID', $args['post_author'] );
-					} else {
-						$user = get_user_by( 'user_login', $args['post_author'] );
-					}
+	 				// Check all forms of possible user inputs, email, ID, login.
+	 				if ( is_email( $args['post_author'] ) ) {
+	 					$user = get_user_by( 'user_email', $args['post_author'] );
+	 				} elseif ( is_numeric( $args['post_author'] ) ) {
+	 					$user = get_user_by( 'ID', $args['post_author'] );
+	 				} else {
+	 					$user = get_user_by( 'user_login', $args['post_author'] );
+	 				}
 
-					// If we don't find one, resort to the logged in user.
-					if ( false === $user ) {
-						$user = wp_get_current_user();
-					}
+	 				// If we don't find one, resort to the logged in user.
+	 				if ( false === $user ) {
+	 					$user = wp_get_current_user();
+	 				}
 
-					$args['post_author'] = $user->ID;
-				}
+	 				$args['post_author'] = $user->ID;
+	 			}
 
 				// Format the date properly
 				if ( ! empty( $args['post_date'] ) ) {
@@ -367,7 +367,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 	private function set_image( $download_id = 0, $image = '', $post_author = 0 ) {
 
 		$is_url   = false !== filter_var( $image, FILTER_VALIDATE_URL );
-		$is_local = $is_url && false !== strpos( $image, site_url() );
+		$is_local = $is_url && false !== strpos( site_url(), $image );
 		$ext      = edd_get_file_extension( $image );
 
 		if( $is_url && $is_local ) {
