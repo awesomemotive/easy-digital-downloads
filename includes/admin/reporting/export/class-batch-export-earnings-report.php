@@ -146,28 +146,28 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 
 			$row_data .= isset( $data['publish']['count'] ) ? $data['publish']['count'] . ',' : 0 . ',';
 
-			$publish_total   = isset( $data['publish']['amount']   ) ? edd_format_amount( $data['publish']['amount']   ) : 0;
-			$refunded_total  = isset( $data['refunded']['amount']  ) ? edd_format_amount( $data['refunded']['amount']  ) : 0;
-			$cancelled_total = isset( $data['cancelled']['amount'] ) ? edd_format_amount( $data['cancelled']['amount'] ) : 0;
+			$publish_total   = isset( $data['publish']['amount']   ) ? '"' . edd_format_amount( $data['publish']['amount']   ) . '"' : 0;
+			$refunded_total  = isset( $data['refunded']['amount']  ) ? '"' . edd_format_amount( $data['refunded']['amount']  ) . '"' : 0;
+			$cancelled_total = isset( $data['cancelled']['amount'] ) ? '"' . edd_format_amount( $data['cancelled']['amount'] ) . '"' : 0;
 
 			$row_data .= $publish_total + $refunded_total + $cancelled_total . ',';
 
 			$row_data .= isset( $data['refunded']['count'] ) ? $data['refunded']['count'] . ',' : 0 . ',';
-			$row_data .= isset( $data['refunded']['amount'] ) ? '-' . edd_format_amount( $data['refunded']['amount'] ) . ',' : 0 . ',';
+			$row_data .= isset( $data['refunded']['amount'] ) ? '-' . '"' . edd_format_amount( $data['refunded']['amount'] ) . '"' . ',' : 0 . ',';
 
 			$row_data .= isset( $data['revoked']['count'] ) ? $data['revoked']['count'] . ',' : 0 . ',';
-			$row_data .= isset( $data['revoked']['amount'] ) ? edd_format_amount( $data['revoked']['amount'] ) . ',' : 0 . ',';
+			$row_data .= isset( $data['revoked']['amount'] ) ? '"' . edd_format_amount( $data['revoked']['amount'] ) . '"' . ',' : 0 . ',';
 
 			$row_data .= isset( $data['abandoned']['count'] ) ? $data['abandoned']['count'] . ',' : 0 . ',';
-			$row_data .= isset( $data['abandoned']['amount'] ) ? edd_format_amount( $data['abandoned']['amount'] ) . ',' : 0 . ',';
+			$row_data .= isset( $data['abandoned']['amount'] ) ? '"' . edd_format_amount( $data['abandoned']['amount'] ) . '"' . ',' : 0 . ',';
 
 			$row_data .= isset( $data['failed']['count'] ) ? $data['failed']['count'] . ',' : 0 . ',';
-			$row_data .= isset( $data['failed']['amount'] ) ? edd_format_amount( $data['failed']['amount'] ) . ',' : 0 . ',';
+			$row_data .= isset( $data['failed']['amount'] ) ? '"' . edd_format_amount( $data['failed']['amount'] ) . '"' . ',' : 0 . ',';
 
 			$row_data .= isset( $data['cancelled']['count'] ) ? $data['cancelled']['count'] . ',' : 0 . ',';
-			$row_data .= isset( $data['cancelled']['amount'] ) ? edd_format_amount( $data['cancelled']['amount'] ) . ',' : 0 . ',';
+			$row_data .= isset( $data['cancelled']['amount'] ) ? '"' . edd_format_amount( $data['cancelled']['amount'] ) . '"' . ',' : 0 . ',';
 
-			$row_data .= isset( $data['publish']['amount'] ) ? edd_format_amount( $data['publish']['amount'] ) . ',' : 0;
+			$row_data .= isset( $data['publish']['amount'] ) ? '"' . edd_format_amount( $data['publish']['amount'] ) . '"' . ',' : 0;
 
 			$row_data .= "\r\n";
 
