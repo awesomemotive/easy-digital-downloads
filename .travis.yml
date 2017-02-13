@@ -49,6 +49,7 @@ branches:
   only:
     - master
     - /^release\/.*$/
+    - /^issue\/5457$/
 
 notifications:
   slack:
