@@ -1,29 +1,33 @@
 <?php
 
+use \EDD\Tests\UnitTestCase;
 
 /**
  * @group edd_downloads
  */
-class Tests_Downloads extends WP_UnitTestCase {
-	protected $_post = null;
-
+class Tests_Downloads extends UnitTestCase {
 	protected $_variable_pricing = null;
 
 	protected $_download_files = null;
 
-	public function setUp() {
-		parent::setUp();
+	/**
+	 * Downloads fixture.
+	 *
+	 * @access protected
+	 * @var    array
+	 * @static
+	 */
+	public static $downloads = array();
 
-		$this->_post = EDD_Helper_Download::create_variable_download();
+	/**
+	 * Set up fixtures once.
+	 */
+	public static function wpSetUpBeforeClass() {
+		self::$downloads[0] = parent::edd()->simple_download->create();
+
+		self::$downloads[1] = parent::edd()->variable_download->create();
 	}
 
-	public function tearDown() {
-
-		parent::tearDown();
-
-		EDD_Helper_Download::delete_download( $this->_post->ID );
-
-	}
 
 	public function test_get_download() {
 		$out = edd_get_download( $this->_post->ID );
