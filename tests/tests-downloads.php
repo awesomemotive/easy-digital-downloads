@@ -17,7 +17,7 @@ class Tests_Downloads extends UnitTestCase {
 	 * @var    array
 	 * @static
 	 */
-	public static $downloads = array();
+	protected static $downloads = array();
 
 	/**
 	 * Set up fixtures once.
@@ -85,93 +85,221 @@ class Tests_Downloads extends UnitTestCase {
 		$this->assertSame( self::$downloads[1], $download->ID );
 	}
 
-	public function test_edd_download() {
-
-		// Verify passing nothing gives us an empty download
+	/**
+	 * @covers \EDD_Download
+	 */
+	public function test_EDD_Downlod_with_no_arguments_should_create_an_empty_download() {
 		$download = new EDD_Download;
+
 		$this->assertEquals( 0, $download->ID );
 
-		// Create a Download
-		$args = array(
-			'post_title'  => 'Test Create Download'
-		);
-		$download2 = new EDD_Download;
-		$this->assertEquals( 0, $download2->ID );
-
-		$download2->create( $args );
-
-		$this->assertNotEmpty( $download2->ID );
-		$this->assertEquals( 'download', $download2->post_type );
-		$this->assertEquals( 'draft', $download2->post_status );
-		$this->assertEquals( 0, $download2->sales );
-		$this->assertEquals( 0.00, $download2->earnings );
-		$this->assertFalse( $download2->has_variable_prices() );
-		$this->assertEmpty( $download2->prices );
-
-		// Retrieve a previously created download
-		$prices = array(
-			array(
-				'name' => 'Simple',
-				'amount' => 20
-			),
-			array(
-				'name' => 'Advanced',
-				'amount' => 100
-			)
-		);
-		$files = array(
-			array(
-				'name' => 'File 1',
-				'file' => 'http://localhost/file1.jpg',
-				'condition' => 0
-			),
-			array(
-				'name' => 'File 2',
-				'file' => 'http://localhost/file2.jpg',
-				'condition' => 'all'
-			)
-		);
-		$download3 = new EDD_Download( $this->_post->ID );
-		$download3->increase_earnings( '0.50' );
-		$this->assertNotEmpty( $download3->ID );
-		$this->assertEquals( $this->_post->ID, $download3->ID );
-		$this->assertEquals( 'download', $download3->post_type );
-		$this->assertEquals( 'publish', $download3->post_status );
-		$this->assertEquals( 0.00, $download3->price );
-		$this->assertEquals( 0.00, $download3->get_price() );
-		$this->assertTrue( $download3->has_variable_prices() );
-		$this->assertNotEmpty( $download3->prices );
-		$this->assertEquals( $prices, $download3->prices );
-		$this->assertEquals( $prices, $download3->get_prices() );
-		$this->assertEquals( 6, $download3->sales );
-		$this->assertEquals( 120.50, $download3->earnings );
-		$this->assertNotEmpty( $download3->files );
-		$this->assertEquals( $files, $download3->files );
-		$this->assertEquals( $files, $download3->get_files() );
-		$this->assertEquals( 20, $download3->file_download_limit );
-		$this->assertEquals( 20, $download3->get_file_download_limit() );
-		$this->assertEquals( 0, $download3->get_file_price_condition( 0 ) );
-		$this->assertEquals( 'all', $download3->get_file_price_condition( 1 ) );
-		$this->assertEquals( 'default', $download3->get_type() );
-		$this->assertFalse( $download3->is_bundled_download() );
-		$this->assertInternalType( 'array', $download3->get_bundled_downloads() );
-		$this->assertInternalType( 'string', $download3->get_notes() );
-		$this->assertInternalType( 'string', $download3->notes );
-		$this->assertEquals( 'Purchase Notes', $download3->get_notes() );
-		$this->assertEquals( 'add_to_cart', $download3->get_button_behavior() );
-		$this->assertFalse( $download3->is_free() );
-		$this->assertFalse( $download3->is_free( 0 ) );
-		$this->assertFalse( $download3->is_free( 1 ) );
-
-		update_post_meta( $download3->ID, '_variable_pricing', false );
-		$download4 = new EDD_Download( $download3->ID );
-		$this->assertEmpty( $download4->prices );
-
-		// Test the magic __get function
-		$this->assertEquals( 20, $download3->file_download_limit );
-		$this->assertTrue( is_wp_error( $download3->__get( 'asdf') ) );
-
+		// Clean up.
+		EDD_Helper_Download::delete_download( $download->ID );
 	}
+
+	/**
+	 * @covers \EDD_Download::create()
+	 */
+	public function test_EDD_Download_create_should_create_a_download_with_a_valid_ID() {
+		// Create a download.
+		$download = new EDD_Download;
+		$download->create( array(
+			'post_title' => 'Test Create Download'
+		) );
+
+		$this->assertNotEquals( 0, $download->ID );
+
+		// Clean up.
+		EDD_Helper_Download::delete_download( $download->ID );
+	}
+
+	/**
+	 * @covers \EDD_Download::create()
+	 */
+	public function test_EDD_Download_create_should_have_post_type_download() {
+		$download = new EDD_Download;
+		$download->create( array(
+			'post_title' => 'Test Create Download'
+		) );
+
+		$this->assertSame( 'download', $download->post_type );
+
+		// Clean up.
+		EDD_Helper_Download::delete_download( $download->ID );
+	}
+
+	/**
+	 * @covers \EDD_Download::create()
+	 */
+	public function test_EDD_Download_create_should_have_post_status_draft() {
+		$download = new EDD_Download;
+		$download->create( array(
+			'post_title' => 'Test Create Download'
+		) );
+
+		$this->assertSame( 'draft', $download->post_status );
+
+		// Clean up.
+		EDD_Helper_Download::delete_download( $download->ID );
+	}
+
+	/**
+	 * @covers \EDD_Download::create()
+	 */
+	public function test_EDD_Download_create_should_have_no_sales() {
+		$download = new EDD_Download;
+		$download->create( array(
+			'post_title' => 'Test Create Download'
+		) );
+
+		$this->assertEquals( 0, $download->sales );
+
+		// Clean up.
+		EDD_Helper_Download::delete_download( $download->ID );
+	}
+
+	/**
+	 * @covers \EDD_Download::create()
+	 */
+	public function test_EDD_Download_create_should_have_no_earnings() {
+		$download = new EDD_Download;
+		$download->create( array(
+			'post_title' => 'Test Create Download'
+		) );
+
+		$this->assertEquals( 0.00, $download->earnings );
+
+		// Clean up.
+		EDD_Helper_Download::delete_download( $download->ID );
+	}
+
+	/**
+	 * @covers \EDD_Download::create()
+	 */
+	public function test_EDD_Download_create_should_not_have_variable_prices_by_default() {
+		$download = new EDD_Download;
+		$download->create( array(
+			'post_title' => 'Test Create Download'
+		) );
+
+		$this->assertFalse( $download->has_variable_prices() );
+
+		// Clean up.
+		EDD_Helper_Download::delete_download( $download->ID );
+	}
+
+	/**
+	 * @covers \EDD_Download::create()
+	 */
+	public function test_EDD_Download_create_should_have_no_prices_by_default() {
+		$download = new EDD_Download;
+		$download->create( array(
+			'post_title' => 'Test Create Download'
+		) );
+
+		$this->assertEmpty( $download->prices );
+
+		// Clean up.
+		EDD_Helper_Download::delete_download( $download->ID );
+	}
+
+	/**
+	 * @covers \EDD_Download::increase_earnings()
+	 */
+	public function test_EDD_Download_increase_earnings_should_increase_earnings() {
+		$download = new EDD_Download( self::$downloads[1] );
+
+		// Earnings should initially be 120.00.
+		$this->assertEquals( 120.00, $download->earnings );
+
+		// Increase by 0.50.
+		$download->increase_earnings( '0.50' );
+
+		$this->assertEquals( 120.50, $download->earnings );
+
+		// Reset.
+		$download->decrease_earnings( '0.50' );
+	}
+
+	/**
+	 * @covers \EDD_Download::decrease_earnings()
+	 */
+	public function test_EDD_Download_decrease_earnings_should_decrease_earnings() {
+		$download = new EDD_Download( self::$downloads[1] );
+
+		// Earnings should initially be 120.00.
+		$this->assertEquals( 120.00, $download->earnings );
+
+		// Decrease by 0.50.
+		$download->decrease_earnings( '0.50' );
+
+		$this->assertEquals( 119.50, $download->earnings );
+
+		// Reset.
+		$download->increase_earnings( '0.50' );
+	}
+
+	/**
+	 * @todo Convert assertions testing expected core WP and PHP behavior
+	 */
+//	public function test_edd_download() {
+//
+//		// Retrieve a previously created download
+//		$prices = array(
+//			array(
+//				'name' => 'Simple',
+//				'amount' => 20
+//			),
+//			array(
+//				'name' => 'Advanced',
+//				'amount' => 100
+//			)
+//		);
+//		$files = array(
+//			array(
+//				'name' => 'File 1',
+//				'file' => 'http://localhost/file1.jpg',
+//				'condition' => 0
+//			),
+//			array(
+//				'name' => 'File 2',
+//				'file' => 'http://localhost/file2.jpg',
+//				'condition' => 'all'
+//			)
+//		);
+//		$this->assertTrue( $download3->has_variable_prices() );
+//		$this->assertNotEmpty( $download3->prices );
+//		$this->assertEquals( $prices, $download3->prices );
+//		$this->assertEquals( $prices, $download3->get_prices() );
+//		$this->assertEquals( 6, $download3->sales );
+//		$this->assertEquals( 120.50, $download3->earnings );
+//		$this->assertNotEmpty( $download3->files );
+//		$this->assertEquals( $files, $download3->files );
+//		$this->assertEquals( $files, $download3->get_files() );
+//		$this->assertEquals( 20, $download3->file_download_limit );
+//		$this->assertEquals( 20, $download3->get_file_download_limit() );
+//		$this->assertEquals( 0, $download3->get_file_price_condition( 0 ) );
+//		$this->assertEquals( 'all', $download3->get_file_price_condition( 1 ) );
+//		$this->assertEquals( 'default', $download3->get_type() );
+//		$this->assertFalse( $download3->is_bundled_download() );
+//		$this->assertInternalType( 'array', $download3->get_bundled_downloads() );
+//		$this->assertInternalType( 'string', $download3->get_notes() );
+//		$this->assertInternalType( 'string', $download3->notes );
+//		$this->assertEquals( 'Purchase Notes', $download3->get_notes() );
+//		$this->assertEquals( 'add_to_cart', $download3->get_button_behavior() );
+//		$this->assertFalse( $download3->is_free() );
+//		$this->assertFalse( $download3->is_free( 0 ) );
+//		$this->assertFalse( $download3->is_free( 1 ) );
+//
+//		update_post_meta( $download3->ID, '_variable_pricing', false );
+//		$download4 = new EDD_Download( $download3->ID );
+//		$this->assertEmpty( $download4->prices );
+//
+//		// Test the magic __get function
+//		$this->assertEquals( 20, $download3->file_download_limit );
+//		$this->assertTrue( is_wp_error( $download3->__get( 'asdf') ) );
+//
+//	}
 
 	public function test_can_purchase() {
 		$download = new EDD_Download( $this->_post->ID );
