@@ -122,34 +122,38 @@ $customer       = new EDD_Customer( $payment->customer_id );
 										<div class="edd-order-discount edd-admin-box-inside">
 											<p>
 												<?php
-												$found_discounts = array();
-												if ( 'none' !== $payment->discounts ) {
-													$discounts = $payment->discounts;
-													if ( ! is_array( $discounts ) ) {
+													$discounts = $payment->discounts !== 'none' ? $payment->discounts : false;
+
+													if ( $discounts && ! is_array( $discounts ) ) {
 														$discounts = explode( ',', $discounts );
 													}
 
-													foreach ( $discounts as $discount ) {
-														$discount_obj = edd_get_discount_by_code( $discount );
-
-														if ( false === $discount_obj ) {
-															$found_discounts[] = $discount;
-														} else {
-															$found_discounts[] = '<a href="' . $discount_obj->edit_url() . '">' . $discount_obj->code . '</a>';
-														}
-
-													}
-												}
+													$used_discounts = count( $discounts );
 												?>
-												<span class="label">
-													<?php echo _n( 'Discount Code', 'Discount Codes', count( $found_discounts ), 'easy-digital-downloads' ); ?>:
-												</span>&nbsp;
+												<span class="label"><?php echo _n( 'Discount Code', 'Discount Codes', $used_discounts, 'easy-digital-downloads' ); ?>:</span>&nbsp;
 												<span>
 													<?php
-													if ( ! empty( $found_discounts ) ) {
-														echo implode( ', ', $found_discounts );
-													} else {
-														_e( 'None', 'easy-digital-downloads' );
+													if ( $discounts ) {
+														$count = 1;
+
+														foreach ( $discounts as $discount ) {
+															$discount_obj = edd_get_discount_by_code( $discount );
+															$classes      = 'edd-order-discount-item';
+															$classes     .= $count == $used_discounts ? ' edd-order-discount-last-item' : '';
+
+															echo '<div class="' . $classes . '">';
+															if ( false === $discount_obj ) {
+																echo '<pre>' . $discount . '</pre>';
+															} else {
+																echo '<pre>' . $discount_obj->code . '</pre>';
+																echo '<span class="edd-order-discount-item-amount">&nbsp;&ndash;&nbsp;' . edd_format_discount_rate( edd_get_discount_type( $discount_obj->ID ), edd_get_discount_amount( $discount_obj->ID ) ) . '&nbsp;' . __( 'discount', 'easy-digital-downloads' ) . '</span>';
+																echo '<a class="edd-order-discount-item-link" title="' . __( 'Edit Discount', 'easy-digital-downloads' ) . '" href="' . $discount_obj->edit_url() . '"><span class="dashicons dashicons-admin-links"></span></a>';
+															}
+															echo '</div>';
+
+															$count++;
+														}
+
 													}
 													?>
 												</span>

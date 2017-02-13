@@ -136,6 +136,23 @@ a.edd-delete:hover {
 	width: 15px;
 }
 
+.edd-order-discount-item pre {
+	display: inline-block;
+	margin: 0 0 10px 0;
+}
+
+.edd-order-discount-last-item pre {
+	margin-bottom: 0;
+}
+
+.edd-order-discount-item-link {
+	float: right;
+}
+
+.edd-order-discount-item-link > .dashicons {
+	font-size: 1.25em;
+}
+
 /* Payment History Styles
 -------------------------------------------------------------- */
 
