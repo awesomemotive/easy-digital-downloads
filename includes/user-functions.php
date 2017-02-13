@@ -470,6 +470,10 @@ function edd_get_customer_address( $user_id = 0 ) {
 
 	$address = get_user_meta( $user_id, '_edd_user_address', true );
 
+	if ( ! $address || ! is_array( $address ) || empty( $address ) ) {
+		$address = array();
+	}
+
 	if( ! isset( $address['line1'] ) )
 		$address['line1'] = '';
 
