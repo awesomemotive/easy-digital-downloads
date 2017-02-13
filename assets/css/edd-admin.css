@@ -781,6 +781,7 @@ td.edd_order_price {
 }
 .edd-import-export-form .notice-wrap .spinner {
 	margin: 4px 10px 8px;
+	float: right;
 }
 .admin-color-fresh .edd-import-export-form .edd-progress div {
 	background: #0073aa;
