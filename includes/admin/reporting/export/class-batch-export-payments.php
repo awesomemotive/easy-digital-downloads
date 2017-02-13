@@ -216,7 +216,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 					'amount'       => html_entity_decode( edd_format_amount( $total ) ), // The non-discounted item price
 					'tax'          => html_entity_decode( edd_format_amount( edd_get_payment_tax( $payment->ID, $payment_meta ) ) ),
 					'discount'     => isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ? $user_info['discount'] : __( 'none', 'easy-digital-downloads' ),
-					'gateway'      => edd_get_gateway_admin_label( get_post_meta( $payment->ID, '_edd_payment_gateway', true ) ),
+					'gateway'      => edd_get_gateway_admin_label( edd_get_payment_meta( $payment->ID, '_edd_payment_gateway', true ) ),
 					'trans_id'     => $payment->transaction_id,
 					'key'          => $payment_meta['key'],
 					'date'         => $payment->date,

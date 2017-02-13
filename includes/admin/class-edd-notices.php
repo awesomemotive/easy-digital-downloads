@@ -53,7 +53,7 @@ class EDD_Notices {
 		}
 
 		if ( isset( $_GET['page'] ) && 'edd-payment-history' == $_GET['page'] && current_user_can( 'view_shop_reports' ) && edd_is_test_mode() ) {
-			$notices['updated']['edd-payment-history-test-mode'] = sprintf( __( 'Note: Test Mode is enabled, only test payments are shown below. <a href="%s">Settings</a>.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings&tab=gateways' ) );
+			$notices['updated']['edd-payment-history-test-mode'] = sprintf( __( 'Note: Test Mode is enabled. While in test mode no live transactions are processed. <a href="%s">Settings</a>.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings&tab=gateways' ) );
 		}
 
 		if( stristr( $_SERVER['SERVER_SOFTWARE'], 'nginx' ) && ! get_user_meta( get_current_user_id(), '_edd_nginx_redirect_dismissed', true ) && current_user_can( 'manage_shop_settings' ) ) {
@@ -129,6 +129,11 @@ class EDD_Notices {
 					case 'discount_update_failed' :
 						$notices['error']['edd-discount-updated-fail'] = __( 'There was a problem updating your discount code, please try again.', 'easy-digital-downloads' );
 						break;
+					case 'discount_validation_failed' :
+						$notices['error']['edd-discount-validation-fail'] = __( 'The discount code could not be added because one or more of the required fields was empty, please try again.', 'easy-digital-downloads' );
+						break;
+					case 'discount_invalid_code':
+						$notices['error']['edd-discount-invalid-code'] = __( 'The discount code entered is invalid; only alphanumeric characters are allowed, please try again.', 'easy-digital-downloads' );
 				}
 			}
 
@@ -140,6 +145,9 @@ class EDD_Notices {
 						break;
 					case 'email_sent' :
 						$notices['updated']['edd-payment-sent'] = __( 'The purchase receipt has been resent.', 'easy-digital-downloads' );
+						break;
+					case 'refreshed-reports' :
+						$notices['updated']['edd-refreshed-reports'] = __( 'The reports have been refreshed.', 'edd' );
 						break;
 					case 'payment-note-deleted' :
 						$notices['updated']['edd-payment-note-deleted'] = __( 'The payment note has been deleted.', 'easy-digital-downloads' );

@@ -159,7 +159,7 @@ class EDD_Payments_Query extends EDD_Stats {
 				$query->the_post();
 
 				$payment_id = get_post()->ID;
-				$payment    = new EDD_Payment( $payment_id );
+				$payment    = edd_get_payment( $payment_id );
 
 				if ( edd_get_option( 'enable_sequential' ) ) {
 					// Backwards Compatibility, needs to set `payment_number` attribute

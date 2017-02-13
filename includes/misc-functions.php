@@ -303,7 +303,7 @@ function edd_get_currencies() {
 	$currencies = array(
 		'USD'  => __( 'US Dollars (&#36;)', 'easy-digital-downloads' ),
 		'EUR'  => __( 'Euros (&euro;)', 'easy-digital-downloads' ),
-		'GBP'  => __( 'Pounds Sterling (&pound;)', 'easy-digital-downloads' ),
+		'GBP'  => __( 'Pound Sterling (&pound;)', 'easy-digital-downloads' ),
 		'AUD'  => __( 'Australian Dollars (&#36;)', 'easy-digital-downloads' ),
 		'BRL'  => __( 'Brazilian Real (R&#36;)', 'easy-digital-downloads' ),
 		'CAD'  => __( 'Canadian Dollars (&#36;)', 'easy-digital-downloads' ),
