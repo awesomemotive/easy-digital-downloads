@@ -29,30 +29,60 @@ class Tests_Downloads extends UnitTestCase {
 	}
 
 
+	/**
+	 * @covers edd_get_download()
+	 */
 	public function test_get_download() {
-		$out = edd_get_download( $this->_post->ID );
+		$out = edd_get_download( self::$downloads[1] );
 
 		$this->assertObjectHasAttribute( 'ID', $out );
 		$this->assertObjectHasAttribute( 'post_title', $out );
 		$this->assertObjectHasAttribute( 'post_type', $out );
-
-		$this->assertEquals( $out->post_type, $this->_post->post_type );
 	}
 
-	public function test_edd_get_download_by() {
+	/**
+	 * @covers edd_get_download()
+	 */
+	public function test_get_download_post_type_should_be_download() {
+		$result = edd_get_download( self::$downloads[0] );
 
-		$download = edd_get_download_by( 'id', $this->_post->ID );
-		$this->assertSame( $this->_post->ID, $download->ID );
+		$this->assertSame( 'download', $result->post_type );
+	}
 
+	/**
+	 * @covers edd_get_download_by()
+	 */
+	public function test_get_download_by_id_should_retrieve_by_id() {
+		$download = edd_get_download_by( 'id', self::$downloads[1] );
+
+		$this->assertSame( self::$downloads[1], $download->ID );
+	}
+
+	/**
+	 * @covers edd_get_download_by()
+	 */
+	public function test_get_download_by_sku_should_retrieve_by_sku() {
 		$download = edd_get_download_by( 'sku', 'sku_0012' );
-		$this->assertSame( $this->_post->ID, $download->ID );
 
+		$this->assertSame( self::$downloads[1], $download->ID );
+	}
+
+	/**
+	 * @covers edd_get_download_by()
+	 */
+	public function test_get_download_by_slug_should_retrieve_by_slug() {
 		$download = edd_get_download_by( 'slug', 'variable-test-download-product' );
-		$this->assertSame( $this->_post->ID, $download->ID );
 
-		$downoad = edd_get_download_by( 'name', 'Variable Test Download Product' );
-		$this->assertSame( $this->_post->ID, $download->ID );
+		$this->assertSame( self::$downloads[1], $download->ID );
+	}
 
+	/**
+	 * @covers edd_get_download_by()
+	 */
+	public function test_get_download_by_name_should_retrieve_by_name() {
+		$download = edd_get_download_by( 'name', 'Variable Test Download Product' );
+
+		$this->assertSame( self::$downloads[1], $download->ID );
 	}
 
 	public function test_edd_download() {

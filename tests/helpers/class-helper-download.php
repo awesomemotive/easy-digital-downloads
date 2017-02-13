@@ -55,7 +55,7 @@ class EDD_Helper_Download extends WP_UnitTestCase {
 			'_edd_download_earnings'            => 40,
 			'_edd_download_sales'               => 2,
 			'_edd_download_limit_override_1'    => 1,
-			'edd_sku'                           => 'sku_0012'
+			'edd_sku'                           => 'sku_0011'
 		);
 
 		foreach( $meta as $key => $value ) {
