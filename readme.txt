@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
 Tested up to: 4.8
-Stable Tag: 2.6.17
+Stable Tag: 2.7
 
 License: GNU Version 2 or Any Later Version
 
@@ -194,7 +194,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
-= 2.7, Date To Be Determined =
+= 2.7, February 13, 2017 =
 * New: Introduced EDD_Cart class for managing the shopping cart contents.
 * New: Redesigned and improved functionality of the purchased downloads when viewing a payment.
 * New: The applied tax rate is now saved in the payment meta.
