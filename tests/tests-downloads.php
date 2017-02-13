@@ -499,4 +499,18 @@ class Tests_Downloads extends UnitTestCase {
 		$this->assertFalse( edd_is_bundled_product( self::$downloads[1] ) );
 	}
 
+	public function test_item_quantities_not_disabled() {
+		$this->assertFalse( edd_download_quantities_disabled( self::$downloads[1] ) );
+	}
+
+	/**
+	 * @todo avoid pollution by reverting to the previous value.
+	 */
+	public function test_item_quantities_disabled() {
+
+		update_post_meta( self::$downloads[1], '_edd_quantities_disabled', 1 );
+
+		$this->assertTrue( edd_download_quantities_disabled( self::$downloads[1] ) );
+	}
+
 }

@@ -4,7 +4,7 @@
 /**
  * @group edd_activation
  */
-class Tests_Activation extends WP_UnitTestCase {
+class Tests_Activation extends EDD_UnitTestCase {
 
 	/**
 	 * SetUp test class.
@@ -47,7 +47,6 @@ class Tests_Activation extends WP_UnitTestCase {
 
 		edd_install();
 
-
 		// Test that function exists
 		$this->assertTrue( function_exists( 'edd_create_protection_files' ) );
 
@@ -57,6 +56,7 @@ class Tests_Activation extends WP_UnitTestCase {
 		// Test that new pages are created, and not the same as the already created ones.
 		// This is to make sure the test is giving the most accurate results.
 		$new_settings = get_option( 'edd_settings' );
+
 		$this->assertArrayHasKey( 'purchase_page', $new_settings );
 		$this->assertNotEquals( $origin_edd_options['purchase_page'], $new_settings['purchase_page'] );
 		$this->assertArrayHasKey( 'success_page', $new_settings );
@@ -73,16 +73,14 @@ class Tests_Activation extends WP_UnitTestCase {
 		$this->assertInstanceOf( 'WP_Role', get_role( 'shop_worker' ) );
 		$this->assertInstanceOf( 'WP_Role', get_role( 'shop_vendor' ) );
 
-		$this->assertNotFalse( get_transient( '_edd_activation_redirect' ) );
-
-
-		// Reset to origin
+		// Reset to original data.
 		wp_delete_post( $new_settings['purchase_page'], true );
 		wp_delete_post( $new_settings['success_page'], true );
 		wp_delete_post( $new_settings['purchase_history_page'], true );
 		wp_delete_post( $new_settings['failure_page'], true );
 		update_option( 'edd_version_upgraded_from', $origin_upgraded_from );
 		$edd_options = $origin_edd_options;
+		update_option( 'edd_settings', $edd_options );
 		update_option( 'edd_version', $origin_edd_version );
 
 	}

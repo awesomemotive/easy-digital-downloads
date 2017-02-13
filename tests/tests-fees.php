@@ -4,7 +4,7 @@
 /**
  * @group edd_fees
  */
-class Tests_Fee extends WP_UnitTestCase {
+class Tests_Fee extends EDD_UnitTestCase {
 	protected $_post = null;
 
 	public function setUp() {
@@ -67,7 +67,7 @@ class Tests_Fee extends WP_UnitTestCase {
 
 		EDD()->session->set( 'edd_cart_fees', null );
 
-		edd_remove_from_cart( 0 );
+		edd_empty_cart();
 
 		//Arbitrary fee test.
 		$this->assertFalse( EDD()->fees->add_fee( array(
@@ -111,7 +111,7 @@ class Tests_Fee extends WP_UnitTestCase {
 
 		EDD()->session->set( 'edd_cart_fees', null );
 
-		edd_remove_from_cart( 0 );
+		edd_empty_cart();
 
 		//Test with variable price id attached to a fee.
 		$this->assertFalse( EDD()->fees->add_fee( array(
@@ -461,5 +461,59 @@ class Tests_Fee extends WP_UnitTestCase {
 		$actual = EDD()->fees->record_fees( $payment_meta = array(), $payment_data = array() );
 
 		$this->assertEquals( $expected, $actual );
+	}
+
+	public function test_fee_number_format_default() {
+		EDD()->session->set( 'edd_cart_fees', null );
+
+		EDD()->fees->add_fee( array(
+			'amount' => '20',
+			'label' => 'Arbitrary Item',
+			'download_id' => $this->_post->ID,
+			'id' => 'arbitrary_fee',
+			'type' => 'item'
+		) );
+
+		$expected = array(
+			'arbitrary_fee' => array(
+				'amount' => '20.00',
+				'label' => 'Arbitrary Item',
+				'type' => 'item',
+				'no_tax' => false
+			)
+		);
+
+		$this->assertEquals( $expected, EDD()->fees->get_fees( 'all' ) );
+	}
+
+	public function test_fee_number_format_decimal_filter() {
+		add_filter( 'edd_currency_decimal_count', array( $this, 'alter_decimal_filter' ), 10, 2 );
+
+		EDD()->session->set( 'edd_cart_fees', null );
+
+		EDD()->fees->add_fee( array(
+			'amount' => '20',
+			'label' => 'Arbitrary Item',
+			'download_id' => $this->_post->ID,
+			'id' => 'arbitrary_fee',
+			'type' => 'item'
+		) );
+
+		$expected = array(
+			'arbitrary_fee' => array(
+				'amount' => '20.000000',
+				'label' => 'Arbitrary Item',
+				'type' => 'item',
+				'no_tax' => false
+			)
+		);
+
+		$this->assertEquals( $expected, EDD()->fees->get_fees( 'all' ) );
+
+		remove_filter( 'edd_currency_decimal_count', array( $this, 'alter_decimal_filter' ), 10, 2 );
+	}
+
+	public function alter_decimal_filter() {
+		return 6;
 	}
 }

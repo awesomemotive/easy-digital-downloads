@@ -182,6 +182,9 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		// Only send to PayPal if the pending payment is created successfully
 		$listener_url = add_query_arg( 'edd-listener', 'IPN', home_url( 'index.php' ) );
 
+		// Set the session data to recover this payment in the event of abandonment or error.
+		EDD()->session->set( 'edd_resume_payment', $payment );
+
 		// Get the success url
 		$return_url = add_query_arg( array(
 				'payment-confirmation' => 'paypal',
@@ -289,9 +292,6 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		// Fix for some sites that encode the entities
 		$paypal_redirect = str_replace( '&amp;', '&', $paypal_redirect );
 
-		// Get rid of cart contents
-		edd_empty_cart();
-
 		// Redirect to PayPal
 		wp_redirect( $paypal_redirect );
 		exit;
@@ -375,9 +375,6 @@ function edd_process_paypal_ipn() {
 
 	}
 
-	// Get the PayPal redirect uri
-	$paypal_redirect = edd_get_paypal_redirect( true );
-
 	if ( ! edd_get_option( 'disable_paypal_verification' ) ) {
 
 		// Validate the IPN
@@ -393,6 +390,7 @@ function edd_process_paypal_ipn() {
 				'connection'   => 'close',
 				'content-type' => 'application/x-www-form-urlencoded',
 				'post'         => '/cgi-bin/webscr HTTP/1.1',
+				'user-agent'   => 'EDD IPN Verification/' . EDD_VERSION . '; ' . get_bloginfo( 'url' )
 
 			),
 			'sslverify'   => false,
@@ -400,7 +398,7 @@ function edd_process_paypal_ipn() {
 		);
 
 		// Get response
-		$api_response = wp_remote_post( edd_get_paypal_redirect( true ), $remote_post_vars );
+		$api_response = wp_remote_post( edd_get_paypal_redirect( true, true ), $remote_post_vars );
 
 		if ( is_wp_error( $api_response ) ) {
 			edd_record_gateway_error( __( 'IPN Error', 'easy-digital-downloads' ), sprintf( __( 'Invalid IPN verification response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $api_response ) ) );
@@ -581,7 +579,8 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 				case 'echeck' :
 
 					$note = __( 'Payment made via eCheck and will clear automatically in 5-8 days', 'easy-digital-downloads' );
-
+					$payment->status = 'processing';
+					$payment->save();
 					break;
 
 				case 'address' :
@@ -685,9 +684,11 @@ function edd_process_paypal_refund( $data, $payment_id = 0 ) {
  *
  * @since 1.0.8.2
  * @param bool    $ssl_check Is SSL?
+ * @param bool    $ipn       Is this an IPN verification check?
  * @return string
  */
-function edd_get_paypal_redirect( $ssl_check = false ) {
+function edd_get_paypal_redirect( $ssl_check = false, $ipn = false ) {
+
 	$protocol = 'http://';
 	if ( is_ssl() || ! $ssl_check ) {
 		$protocol = 'https://';
@@ -695,14 +696,36 @@ function edd_get_paypal_redirect( $ssl_check = false ) {
 
 	// Check the current payment mode
 	if ( edd_is_test_mode() ) {
+
 		// Test mode
-		$paypal_uri = $protocol . 'www.sandbox.paypal.com/cgi-bin/webscr';
+
+		if( $ipn ) {
+
+			$paypal_uri = 'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr';
+
+		} else {
+
+			$paypal_uri = $protocol . 'www.sandbox.paypal.com/cgi-bin/webscr';
+
+		}
+
 	} else {
+
 		// Live mode
-		$paypal_uri = $protocol . 'www.paypal.com/cgi-bin/webscr';
+
+		if( $ipn ) {
+
+			$paypal_uri = 'https://ipnpb.paypal.com/cgi-bin/webscr';
+
+		} else {
+
+			$paypal_uri = $protocol . 'www.paypal.com/cgi-bin/webscr';
+
+		}
+
 	}
 
-	return apply_filters( 'edd_paypal_uri', $paypal_uri );
+	return apply_filters( 'edd_paypal_uri', $paypal_uri, $ssl_check, $ipn );
 }
 
 /**
@@ -729,6 +752,8 @@ function edd_paypal_success_page_content( $content ) {
 	if ( ! isset( $_GET['payment-id'] ) && ! edd_get_purchase_session() ) {
 		return $content;
 	}
+
+	edd_empty_cart();
 
 	$payment_id = isset( $_GET['payment-id'] ) ? absint( $_GET['payment-id'] ) : false;
 

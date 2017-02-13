@@ -4,7 +4,7 @@
  */
 global $edd_register_redirect;
 
-edd_print_errors(); ?>
+do_action( 'edd_print_errors' ); ?>
 
 <form id="edd_register_form" class="edd_form" action="" method="post">
 	<?php do_action( 'edd_register_form_fields_top' ); ?>

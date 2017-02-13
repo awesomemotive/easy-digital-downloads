@@ -3,7 +3,7 @@
 /**
  * @group edd_api
  */
-class Tests_API extends WP_UnitTestCase {
+class Tests_API extends EDD_UnitTestCase {
 	protected $_rewrite = null;
 
 	protected $query = null;
@@ -106,10 +106,8 @@ class Tests_API extends WP_UnitTestCase {
 		);
 
 		$total = 0;
-
 		$prices = get_post_meta( $download_details[0]['id'], 'edd_variable_prices', true );
 		$item_price = $prices[1]['amount'];
-
 		$total += $item_price;
 
 		$cart_details = array(
