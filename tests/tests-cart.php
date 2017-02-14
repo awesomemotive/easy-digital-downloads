@@ -140,12 +140,6 @@ class Test_Cart extends UnitTestCase {
 		wp_set_current_user( self::$user_id );
 	}
 
-	public function tearDown() {
-		edd_empty_cart();
-
-		parent::tearDown();
-	}
-
 	public function test_endpoints() {
 		$this->assertEquals('edd-add', self::$wp_rewrite->endpoints[0][1]);
 		$this->assertEquals('edd-remove', self::$wp_rewrite->endpoints[1][1]);

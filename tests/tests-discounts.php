@@ -32,8 +32,6 @@ class Tests_Discounts extends UnitTestCase {
 	}
 
 	public function tearDown() {
-		edd_empty_cart();
-
 		EDD_Helper_Discount::delete_discount( self::$post_id );
 		EDD_Helper_Discount::delete_discount( self::$negative_post_id );
 		EDD_Helper_Discount::delete_discount( self::$flat_post_id );

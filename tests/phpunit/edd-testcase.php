@@ -28,6 +28,12 @@ class UnitTestCase extends \WP_UnitTestCase {
 		return $factory;
 	}
 
+	public function tearDown() {
+		edd_empty_cart();
+
+		parent::tearDown();
+	}
+
 	public static function tearDownAfterClass() {
 		self::_delete_all_data();
 
