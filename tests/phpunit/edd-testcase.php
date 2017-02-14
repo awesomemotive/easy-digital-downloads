@@ -35,7 +35,7 @@ class EDD_UnitTestCase extends \WP_UnitTestCase {
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
 
-		edd_run_install();
+		edd_install();
 	}
 
 	public static function tearDownAfterClass() {
