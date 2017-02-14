@@ -41,7 +41,7 @@ class Tests_API extends EDD_UnitTestCase {
 	 * API instance fixture.
 	 *
 	 * @access protected
-	 * @var    EDD_API
+	 * @var    \EDD_API
 	 */
 	protected static $edd_api;
 
@@ -101,10 +101,10 @@ class Tests_API extends EDD_UnitTestCase {
 		self::$wp_rewrite->init();
 		flush_rewrite_rules( false );
 
-		self::$edd_api = new EDD_API;
+		self::$edd_api = new \EDD_API;
 		self::$edd_api->add_endpoint( self::$wp_rewrite );
 
-		self::$roles = new EDD_Roles;
+		self::$roles = new \EDD_Roles;
 		self::$roles->add_roles();
 		self::$roles->add_caps();
 
