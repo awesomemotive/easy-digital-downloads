@@ -106,7 +106,9 @@ class Tests_Payment_Class extends EDD_UnitTestCase {
 		$this->assertEquals( 2, count( $payment->downloads ) );
 		$this->assertEquals( 120.00, $payment->total );
 
-		$new_download   = EDD_Helper_Download::create_simple_download();
+		$new_download   = EDD_Helper_Download::create_simple_download( array(
+			'post_name' => 'add-download'
+		) );
 
 		$payment->add_download( $new_download->ID );
 		$payment->save();
@@ -124,7 +126,9 @@ class Tests_Payment_Class extends EDD_UnitTestCase {
 		$this->assertEquals( 2, count( $payment->downloads ) );
 		$this->assertEquals( 120.00, $payment->total );
 
-		$new_download = EDD_Helper_Download::create_simple_download();
+		$new_download = EDD_Helper_Download::create_simple_download( array(
+			'post_name' => 'add-download-zero-item-price'
+		) );
 
 		$args = array(
 			'item_price' => 0,
@@ -151,7 +155,9 @@ class Tests_Payment_Class extends EDD_UnitTestCase {
 			),
 		);
 
-		$new_download   = EDD_Helper_Download::create_simple_download();
+		$new_download   = EDD_Helper_Download::create_simple_download( array(
+			'post_name' => 'add-download-with-fee'
+		) );
 
 		$payment->add_download( $new_download->ID, $args );
 		$payment->save();
