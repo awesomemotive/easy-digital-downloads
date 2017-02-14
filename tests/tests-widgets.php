@@ -197,7 +197,11 @@ class Tests_Widgets extends EDD_UnitTestCase {
 
 		$widgets = $GLOBALS['wp_widget_factory']->widgets;
 		$categories_widget = $widgets['edd_categories_tags_widget'];
-		$download = EDD_Helper_Download::create_simple_download();
+
+		$download = EDD_Helper_Download::create_simple_download( array(
+			'post_name' => 'categories-tags-widget'
+		) );
+
 		$terms = wp_set_object_terms( $download->ID, array( 'test1', 'test2' ), 'download_category', false );
 
 		$this->go_to( $download->ID );
@@ -308,7 +312,10 @@ class Tests_Widgets extends EDD_UnitTestCase {
 	 */
 	public function test_edd_product_details_widget_function_bail_download() {
 
-		$download = EDD_Helper_Download::create_simple_download();
+		$download = EDD_Helper_Download::create_simple_download( array(
+			'post_name' => 'product-details-widget-bail'
+		) );
+
 		$this->go_to( get_permalink( $download->ID ) );
 		$widgets = $GLOBALS['wp_widget_factory']->widgets;
 		$details_widget = $widgets['edd_product_details_widget'];
@@ -344,7 +351,9 @@ class Tests_Widgets extends EDD_UnitTestCase {
 
 		$widgets = $GLOBALS['wp_widget_factory']->widgets;
 		$details_widget = $widgets['edd_product_details_widget'];
-		$download = EDD_Helper_Download::create_simple_download();
+		$download = EDD_Helper_Download::create_simple_download( array(
+			'post_name' => 'product-details-widget'
+		) );
 		$terms = wp_set_object_terms( $download->ID, array( 'test1' ), 'download_category', false );
 
 		$this->go_to( $download->ID );

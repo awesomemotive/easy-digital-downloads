@@ -214,7 +214,10 @@ class EDD_Helper_Download extends WP_UnitTestCase {
 			'post_status'   => 'publish'
 		) );
 
-		$simple_download 	= EDD_Helper_Download::create_simple_download();
+		$simple_download 	= EDD_Helper_Download::create_simple_download( array(
+			'post_name' => 'bundled-download'
+		) );
+
 		$variable_download 	= EDD_Helper_Download::create_variable_download();
 
 		$meta = array(
