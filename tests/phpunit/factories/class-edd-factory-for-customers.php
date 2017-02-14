@@ -23,7 +23,14 @@ class Customer extends \WP_UnitTest_Factory_For_Thing {
 
 	function update_object( $customer_id, $fields ) {
 		$customer = new \EDD_Customer( $customer_id );
-		return $customer->update( $fields );
+
+		$updated = $customer->update( $fields );
+
+		if ( $updated ) {
+			$updated = $customer_id;
+		}
+
+		return $updated;
 	}
 
 	function get_object_by_id( $customer_id ) {
