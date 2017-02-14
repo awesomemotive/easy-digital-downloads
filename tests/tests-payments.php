@@ -1,10 +1,9 @@
 <?php
-use \EDD\Tests\UnitTestCase;
 
 /**
  * @group edd_payments
  */
-class Tests_Payments extends UnitTestCase {
+class Tests_Payments extends EDD_UnitTestCase {
 
 	protected $_payment_id = null;
 	protected $_key = null;

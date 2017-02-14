@@ -1,10 +1,9 @@
 <?php
-use \EDD\Tests\UnitTestCase;
 
 /**
  * @group edd_cart
  */
-class Test_Cart extends UnitTestCase {
+class Test_Cart extends EDD_UnitTestCase {
 
 	/**
 	 * User ID fixture.

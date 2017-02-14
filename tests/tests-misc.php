@@ -1,10 +1,9 @@
 <?php
-use \EDD\Tests\UnitTestCase;
 
 /**
  * @group edd_misc
  */
-class Test_Misc extends UnitTestCase {
+class Test_Misc extends EDD_UnitTestCase {
 
 	public function test_test_mode() {
 		$this->assertFalse( edd_is_test_mode() );

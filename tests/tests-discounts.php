@@ -1,10 +1,9 @@
 <?php
-use \EDD\Tests\UnitTestCase;
 
 /**
  * @group edd_discounts
  */
-class Tests_Discounts extends UnitTestCase {
+class Tests_Discounts extends EDD_UnitTestCase {
 	protected static $post_id;
 
 	protected static $negative_post_id;

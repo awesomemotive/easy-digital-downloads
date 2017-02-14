@@ -1,6 +1,4 @@
 <?php
-namespace EDD\Tests;
-
 require_once dirname( __FILE__ ) . '/factory.php';
 
 /**
@@ -12,7 +10,7 @@ require_once dirname( __FILE__ ) . '/factory.php';
  *
  * All WordPress unit tests should inherit from this class.
  */
-class UnitTestCase extends \WP_UnitTestCase {
+class EDD_UnitTestCase extends \WP_UnitTestCase {
 
 	function __get( $name ) {
 		if ( 'factory' === $name ) {
@@ -23,7 +21,7 @@ class UnitTestCase extends \WP_UnitTestCase {
 	protected static function edd() {
 		static $factory = null;
 		if ( ! $factory ) {
-			$factory = new Factory();
+			$factory = new \EDD\Tests\Factory();
 		}
 		return $factory;
 	}

@@ -1,11 +1,9 @@
 <?php
 
-use \EDD\Tests\UnitTestCase;
-
 /**
  * @group edd_downloads
  */
-class Tests_Downloads extends UnitTestCase {
+class Tests_Downloads extends EDD_UnitTestCase {
 	protected $_variable_pricing = null;
 
 	protected $_download_files = null;
