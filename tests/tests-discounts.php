@@ -25,6 +25,12 @@ class Tests_Discounts extends UnitTestCase {
 		self::$download_id = self::edd()->simple_download->create();
 	}
 
+	public static function wpTearDownAfterClass() {
+		EDD_Helper_Discount::delete_discount( self::$post_id );
+		EDD_Helper_Discount::delete_discount( self::$negative_post_id );
+		EDD_Helper_Discount::delete_discount( self::$flat_post_id );
+	}
+
 	public function test_discount_created() {
 
 		$this->assertInternalType( 'int', self::$post_id );
