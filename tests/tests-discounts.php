@@ -345,8 +345,14 @@ class Tests_Discounts extends EDD_UnitTestCase {
 
 	public function test_discountable_subtotal() {
 		edd_empty_cart();
-		$download_1 = EDD_Helper_Download::create_simple_download();
-		$download_2 = EDD_Helper_Download::create_simple_download();
+		$download_1 = EDD_Helper_Download::create_simple_download( array(
+			'post_name' => 'discountable-subtotal-a'
+		) );
+
+		$download_2 = EDD_Helper_Download::create_simple_download( array(
+			'post_name' => 'discountable-subtotal-b'
+		) );
+
 		$discount   = EDD_Helper_Discount::create_simple_flat_discount();
 
 		$post = array(
@@ -367,7 +373,10 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		edd_add_to_cart( $download_2->ID );
 		$this->assertEquals( '20', edd_get_cart_discountable_subtotal( $discount ) );
 
-		$download_3 = EDD_Helper_Download::create_simple_download();
+		$download_3 = EDD_Helper_Download::create_simple_download( array(
+			'post_name' => 'discountable-subtotal-c'
+		) );
+
 		edd_add_to_cart( $download_3->ID );
 		$this->assertEquals( '40', edd_get_cart_discountable_subtotal( $discount ) );
 
@@ -379,8 +388,13 @@ class Tests_Discounts extends EDD_UnitTestCase {
 
 	public function test_discount_min_excluded_products() {
 		edd_empty_cart();
-		$download_1 = EDD_Helper_Download::create_simple_download();
-		$download_2 = EDD_Helper_Download::create_simple_download();
+		$download_1 = EDD_Helper_Download::create_simple_download( array(
+			'post_name' => 'discount-min-excluded-a'
+		) );
+		$download_2 = EDD_Helper_Download::create_simple_download( array(
+			'post_name' => 'discount-min-excluded-b'
+		) );
+
 		$discount   = EDD_Helper_Discount::create_simple_flat_discount();
 
 		$post = array(
@@ -401,7 +415,10 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		edd_add_to_cart( $download_2->ID );
 		$this->assertFalse( edd_discount_is_min_met( $discount ) );
 
-		$download_3 = EDD_Helper_Download::create_simple_download();
+		$download_3 = EDD_Helper_Download::create_simple_download( array(
+			'post_name' => 'discount-min-excluded-c'
+		) );
+
 		edd_add_to_cart( $download_3->ID );
 		$this->assertTrue( edd_discount_is_min_met( $discount ) );
 
