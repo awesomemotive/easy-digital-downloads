@@ -5,12 +5,6 @@ use \EDD\Tests\UnitTestCase;
  * @group edd_discounts
  */
 class Tests_Discounts extends UnitTestCase {
-	protected $_post = null;
-	protected $_post_id = null;
-	protected $_download = null;
-	protected $_flat_post_id = null;
-	protected $_negative_post_id = null;
-
 	protected static $post_id;
 
 	protected static $negative_post_id;
@@ -29,14 +23,6 @@ class Tests_Discounts extends UnitTestCase {
 		update_post_meta( self::$negative_post_id, '_edd_discount_code', 'DOUBLE' );
 
 		self::$download_id = self::edd()->simple_download->create();
-	}
-
-	public function tearDown() {
-		EDD_Helper_Discount::delete_discount( self::$post_id );
-		EDD_Helper_Discount::delete_discount( self::$negative_post_id );
-		EDD_Helper_Discount::delete_discount( self::$flat_post_id );
-
-		parent::tearDown();
 	}
 
 	public function test_discount_created() {
