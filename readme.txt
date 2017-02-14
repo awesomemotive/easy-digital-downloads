@@ -198,6 +198,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Checkout was showing wrong total price when certain fees were applied to the cart.
 * Fix: Plugin row meta linked to non-existent "Getting Started" page.
 * Fix: There was a typo in the link to our site when showing an error message for a license key.
+* Fix: Incorrect function name in new EDD_Discount class was being checked.
 
 = 2.7, February 13, 2017 =
 * New: Introduced EDD_Cart class for managing the shopping cart contents.
