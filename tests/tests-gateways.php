@@ -152,6 +152,9 @@ class Test_Gateways extends EDD_UnitTestCase {
 
 		$this->assertArrayHasKey( 'no_gateways', $errors );
 		$this->assertEquals( 'You must enable a payment gateway to use Easy Digital Downloads', $errors['no_gateways'] );
+
+		// Clean up.
+		EDD_Helper_Download::delete_download( $download->ID );
 	}
 
 }
