@@ -28,7 +28,6 @@ class Tests_Downloads extends UnitTestCase {
 		self::$downloads[1] = parent::edd()->variable_download->create();
 	}
 
-
 	/**
 	 * @covers edd_get_download()
 	 */
