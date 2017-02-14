@@ -28,6 +28,10 @@ class Factory extends \WP_UnitTest_Factory {
 	 */
 	public $variable_download;
 
+	/**
+	 * @var \EDD\Tests\Factory\Simple_Payment
+	 */
+	public $simple_payment;
 
 	function __construct() {
 		parent::__construct();
@@ -37,5 +41,7 @@ class Factory extends \WP_UnitTest_Factory {
 
 		$this->simple_download   = new Factory\Simple_Download( $this );
 		$this->variable_download = new Factory\Variable_Download( $this );
+
+		$this->simple_payment = new Factory\Simple_Payment( $this );
 	}
 }
