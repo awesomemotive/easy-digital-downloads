@@ -1180,8 +1180,11 @@ class EDD_Cart {
 	 */
 	public function get_total_fees() {
 		$fee_total = 0.00;
-		foreach ( $this->fees as $fee ) {
-			if ( ! empty( $fee['download_id'] ) && $fee['amount'] <= 0 ) {
+
+		foreach ( $this->get_fees() as $fee ) {
+
+			// Since fees affect cart item totals, we need to not count them towards the cart total if there is an association.
+			if ( ! empty( $fee['download_id'] ) ) {
 				continue;
 			}
 
