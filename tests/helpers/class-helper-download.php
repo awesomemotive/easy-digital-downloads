@@ -26,14 +26,18 @@ class EDD_Helper_Download extends WP_UnitTestCase {
 	 *
 	 * @since 2.3
 	 */
-	public static function create_simple_download() {
+	public static function create_simple_download( $args = array() ) {
 
-		$post_id = wp_insert_post( array(
+		$defaults = array(
 			'post_title'    => 'Test Download Product',
 			'post_name'     => 'test-download-product',
 			'post_type'     => 'download',
 			'post_status'   => 'publish'
-		) );
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$post_id = wp_insert_post(  );
 
 		$_download_files = array(
 			array(
