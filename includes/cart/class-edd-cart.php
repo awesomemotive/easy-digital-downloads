@@ -135,6 +135,7 @@ class EDD_Cart {
 		$this->get_contents_from_session();
 		$this->get_contents();
 		$this->get_contents_details();
+		$this->get_all_fees();
 		$this->get_discounts_from_session();
 		$this->quantity = $this->get_quantity();
 	}
