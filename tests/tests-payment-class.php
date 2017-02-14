@@ -113,6 +113,9 @@ class Tests_Payment_Class extends EDD_UnitTestCase {
 
 		$this->assertEquals( 3, count( $payment->downloads ) );
 		$this->assertEquals( 140.00, $payment->total );
+
+		// Clean up.
+		EDD_Helper_Download::delete_download( $new_download->ID );
 	}
 
 	public function test_add_download_zero_item_price() {
@@ -133,6 +136,8 @@ class Tests_Payment_Class extends EDD_UnitTestCase {
 		$this->assertEquals( 3, count( $payment->downloads ) );
 		$this->assertEquals( 120.00, $payment->total );
 
+		// Clean up.
+		EDD_Helper_Download::delete_download( $new_download->ID );
 	}
 
 	public function test_add_download_with_fee() {
@@ -152,6 +157,9 @@ class Tests_Payment_Class extends EDD_UnitTestCase {
 		$payment->save();
 
 		$this->assertFalse( empty( $payment->cart_details[2]['fees'] ) );
+
+		// Clean up.
+		EDD_Helper_Download::delete_download( $new_download->ID );
 	}
 
 	public function test_remove_download() {
