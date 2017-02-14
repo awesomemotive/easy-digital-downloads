@@ -58,7 +58,8 @@ class Test_Cart extends UnitTestCase {
 		edd_add_rewrite_endpoints(self::$wp_rewrite);
 
 		self::_setup_download();
-		self::_setup_discount();
+
+		self::$discount_id = self::edd()->simple_discount->create();
 
 	}
 
@@ -110,28 +111,6 @@ class Test_Cart extends UnitTestCase {
 		foreach( $meta as $key => $value ) {
 			update_post_meta( self::$download_id, $key, $value );
 		}
-	}
-
-	/**
-	 * Helper to set up the discount object.
-	 *
-	 * @access private
-	 * @static
-	 */
-	private static function _setup_discount() {
-		self::$discount_id = edd_store_discount( array(
-			'code' => '20OFF',
-			'uses' => 54,
-			'max' => 10,
-			'name' => '20 Percent Off',
-			'type' => 'percent',
-			'amount' => '20',
-			'start' => '12/12/2010 00:00:00',
-			'expiration' => '12/31/2050 00:00:00',
-			'min_price' => 128,
-			'status' => 'active',
-			'product_condition' => 'all'
-		) );
 	}
 
 	public function setUp() {

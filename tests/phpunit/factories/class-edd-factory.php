@@ -9,6 +9,16 @@ namespace EDD\Tests;
 class Factory extends \WP_UnitTest_Factory {
 
 	/**
+	 * @var \EDD\Tests\Factory\Simple_Discount
+	 */
+	public $simple_discount;
+
+	/**
+	 * @var \EDD\Tests\Factory\Simple_Flat_Discount
+	 */
+	public $simple_flat_discount;
+
+	/**
 	 * @var \EDD\Tests\Factory\Simple_Download
 	 */
 	public $simple_download;
@@ -21,6 +31,9 @@ class Factory extends \WP_UnitTest_Factory {
 
 	function __construct() {
 		parent::__construct();
+
+		$this->simple_discount      = new Factory\Simple_Discount( $this );
+		$this->simple_flat_discount = new Factory\Simple_Flat_Discount( $this );
 
 		$this->simple_download   = new Factory\Simple_Download( $this );
 		$this->variable_download = new Factory\Variable_Download( $this );

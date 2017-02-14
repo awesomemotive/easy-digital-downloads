@@ -14,9 +14,9 @@ class Tests_Discounts extends UnitTestCase {
 	protected static $download_id;
 
 	public static function wpSetUpBeforeClass() {
-		self::$post_id          = EDD_Helper_Discount::create_simple_percent_discount();
-		self::$negative_post_id = EDD_Helper_Discount::create_simple_percent_discount();
-		self::$flat_post_id     = EDD_Helper_Discount::create_simple_flat_discount();
+		self::$post_id          = self::edd()->simple_discount->create();
+		self::$negative_post_id = self::edd()->simple_discount->create();
+		self::$flat_post_id     = self::edd()->simple_flat_discount->create();
 
 		update_post_meta( self::$negative_post_id, '_edd_discount_name', 'Double Double' );
 		update_post_meta( self::$negative_post_id, '_edd_discount_amount', '-100' );
