@@ -199,7 +199,7 @@ class Tests_Payments extends UnitTestCase {
 		edd_delete_purchase( self::$payment_id );
 		// This returns an empty array(), so empty makes it false
 		$cart = edd_get_payments();
-		$this->assertTrue( empty( $cart ) );
+		$this->assertEmpty( $cart );
 	}
 
 	public function test_get_payment_completed_date() {
