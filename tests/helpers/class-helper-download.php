@@ -37,7 +37,7 @@ class EDD_Helper_Download extends WP_UnitTestCase {
 
 		$args = wp_parse_args( $args, $defaults );
 
-		$post_id = wp_insert_post(  );
+		$post_id = wp_insert_post( $args );
 
 		$_download_files = array(
 			array(
