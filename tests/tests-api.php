@@ -1,10 +1,9 @@
 <?php
-use \EDD\Tests\UnitTestCase;
 
 /**
  * @group edd_api
  */
-class Tests_API extends UnitTestCase {
+class Tests_API extends EDD_UnitTestCase {
 
 	/**
 	 * User ID fixture.
