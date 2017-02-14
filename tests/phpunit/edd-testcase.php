@@ -34,6 +34,12 @@ class UnitTestCase extends \WP_UnitTestCase {
 		parent::tearDown();
 	}
 
+	public static function setUpBeforeClass() {
+		parent::setUpBeforeClass();
+
+		edd_run_install();
+	}
+
 	public static function tearDownAfterClass() {
 		self::_delete_all_data();
 
