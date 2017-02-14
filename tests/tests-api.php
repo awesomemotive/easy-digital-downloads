@@ -38,14 +38,6 @@ class Tests_API extends EDD_UnitTestCase {
 	protected static $payment_id;
 
 	/**
-	 * API instance fixture.
-	 *
-	 * @access protected
-	 * @var    \EDD_API
-	 */
-	protected static $edd_api;
-
-	/**
 	 * Roles instance fixture.
 	 *
 	 * @access protected
@@ -101,8 +93,7 @@ class Tests_API extends EDD_UnitTestCase {
 		self::$wp_rewrite->init();
 		flush_rewrite_rules( false );
 
-		self::$edd_api = new \EDD_API;
-		self::$edd_api->add_endpoint( self::$wp_rewrite );
+		EDD()->api->add_endpoint( self::$wp_rewrite );
 
 		self::$roles = new \EDD_Roles;
 		self::$roles->add_roles();
@@ -243,7 +234,7 @@ class Tests_API extends EDD_UnitTestCase {
 
 		$_POST['edd_set_api_key'] = 1;
 
-		self::$edd_api->update_key( $user_id );
+		EDD()->api->update_key( $user_id );
 
 		unset( $_POST['edd_set_api_key'] );
 	}
@@ -255,8 +246,8 @@ class Tests_API extends EDD_UnitTestCase {
 
 		edd_update_payment_status( self::$payment_id, 'complete' );
 
-		$this->_api_output = self::$edd_api->get_products();
-		$this->_api_output_sales = self::$edd_api->get_recent_sales();
+		$this->_api_output = EDD()->api->get_products();
+		$this->_api_output_sales = EDD()->api->get_recent_sales();
 
 		$GLOBALS['wp_query']->query_vars['format'] = 'override';
 	}
@@ -282,7 +273,7 @@ class Tests_API extends EDD_UnitTestCase {
 
 		endforeach;
 
-		$out = self::$edd_api->query_vars( array() );
+		$out = EDD()->api->query_vars( array() );
 		$this->assertEquals( 'token', $out[0] );
 		$this->assertEquals( 'key', $out[1] );
 		$this->assertEquals( 'query', $out[2] );
@@ -301,16 +292,16 @@ class Tests_API extends EDD_UnitTestCase {
 	}
 
 	public function test_get_versions() {
-		$this->assertInternalType( 'array', self::$edd_api->get_versions() );
-		$this->assertArrayHasKey( 'v1', self::$edd_api->get_versions() );
+		$this->assertInternalType( 'array', EDD()->api->get_versions() );
+		$this->assertArrayHasKey( 'v1', EDD()->api->get_versions() );
 	}
 
 	public function test_get_default_version() {
 
-		$this->assertEquals( 'v2', self::$edd_api->get_default_version() );
+		$this->assertEquals( 'v2', EDD()->api->get_default_version() );
 
 		define( 'EDD_API_VERSION', 'v1' );
-		$this->assertEquals( 'v1', self::$edd_api->get_default_version() );
+		$this->assertEquals( 'v1', EDD()->api->get_default_version() );
 
 	}
 
@@ -322,15 +313,15 @@ class Tests_API extends EDD_UnitTestCase {
 
 		$wp_query->query_vars['edd-api'] = 'sales';
 
-		self::$edd_api->process_query();
+		EDD()->api->process_query();
 
-		$this->assertEquals( 'v1', self::$edd_api->get_queried_version() );
+		$this->assertEquals( 'v1', EDD()->api->get_queried_version() );
 
 		define( 'EDD_API_VERSION', 'v2' );
 
-		self::$edd_api->process_query();
+		EDD()->api->process_query();
 
-		$this->assertEquals( 'v2', self::$edd_api->get_queried_version() );
+		$this->assertEquals( 'v2', EDD()->api->get_queried_version() );
 
 	}
 
@@ -437,10 +428,10 @@ class Tests_API extends EDD_UnitTestCase {
 	public function test_update_key() {
 		$_POST['edd_set_api_key'] = 1;
 
-		self::$edd_api->update_key( self::$user_id );
+		EDD()->api->update_key( self::$user_id );
 
-		$user_public = self::$edd_api->get_user_public_key( self::$user_id );
-		$user_secret = self::$edd_api->get_user_secret_key( self::$user_id );
+		$user_public = EDD()->api->get_user_public_key( self::$user_id );
+		$user_secret = EDD()->api->get_user_secret_key( self::$user_id );
 
 		$this->assertNotEmpty( $user_public );
 		$this->assertNotEmpty( $user_secret );
@@ -452,13 +443,13 @@ class Tests_API extends EDD_UnitTestCase {
 	}
 
 	public function test_get_user() {
-		$result = self::$edd_api->get_user( self::$edd_api->get_user_public_key( self::$user_id ) );
+		$result = EDD()->api->get_user( EDD()->api->get_user_public_key( self::$user_id ) );
 
 		$this->assertEquals( self::$user_id, $result );
 	}
 
 	public function test_get_customers() {
-		$out = self::$edd_api->get_customers();
+		$out = EDD()->api->get_customers();
 
 		$this->assertArrayHasKey( 'customers', $out );
 		$this->assertArrayHasKey( 'info', $out['customers'][0] );
@@ -509,7 +500,7 @@ class Tests_API extends EDD_UnitTestCase {
 	}
 
 	public function test_info() {
-		$out = self::$edd_api->get_info();
+		$out = EDD()->api->get_info();
 
 		$this->assertArrayHasKey( 'info', $out );
 		$this->assertArrayHasKey( 'site', $out['info'] );
@@ -528,15 +519,15 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->markTestSkipped('Needs to be rewritten since this outputs xml that kills travis with a 255 error (fatal PHP error)');
 		$_POST['edd_set_api_key'] = 1;
 
-		self::$edd_api->update_key( self::$user_id );
+		EDD()->api->update_key( self::$user_id );
 
 		$wp_query->query_vars['edd-api'] = 'products';
 		$wp_query->query_vars['key'] = get_user_meta( self::$user_id, 'edd_user_public_key', true );
 		$wp_query->query_vars['token'] = hash( 'md5', get_user_meta( self::$user_id, 'edd_user_secret_key', true ) . get_user_meta( self::$user_id, 'edd_user_public_key', true ) );
 
-		self::$edd_api->process_query();
+		EDD()->api->process_query();
 
-		$out = self::$edd_api->get_output();
+		$out = EDD()->api->get_output();
 
 		$this->assertArrayHasKey( 'info', $out['products'][0] );
 		$this->assertArrayHasKey( 'id', $out['products'][0]['info'] );
