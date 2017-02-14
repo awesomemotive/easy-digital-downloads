@@ -502,4 +502,54 @@ class Test_Cart extends EDD_UnitTestCase {
 		$this->assertEquals( 'Test Download - Simple', edd_get_cart_item_name( $items[0] ) );
 
 	}
+
+	public function test_cart_total_with_global_fee() {
+
+		edd_empty_cart();
+
+		edd_add_to_cart( $this->_post->ID );
+
+		EDD()->fees->add_fee( 10, 'test', 'Test' );
+
+		$this->assertEquals( 30, edd_get_cart_total() );
+		$this->assertEquals( 10, edd_get_cart_fee_total() );
+
+	}
+
+	public function test_cart_total_with_download_fee() {
+
+		edd_empty_cart();
+
+		edd_add_to_cart( $this->_post->ID );
+
+		EDD()->fees->add_fee( array(
+			'amount' => 10, 
+			'id'     => 'test', 
+			'label'  => 'Test',
+			'download_id' => $this->_post->ID
+		) );
+
+		$this->assertEquals( 30, edd_get_cart_total() );
+		$this->assertEquals( 10, edd_get_cart_fee_total() );
+
+	}
+
+	public function test_cart_total_with_global_item_fee() {
+
+		edd_empty_cart();
+
+		edd_add_to_cart( $this->_post->ID );
+
+		EDD()->fees->add_fee( array(
+			'amount' => 10, 
+			'id'     => 'test', 
+			'label'  => 'Test',
+			'type'   => 'item'
+		) );
+
+		$this->assertEquals( 10, edd_get_cart_total() );
+		$this->assertEquals( 10, edd_get_cart_fee_total() );
+
+	}
+
 }
