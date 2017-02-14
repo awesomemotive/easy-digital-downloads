@@ -141,7 +141,10 @@ class Test_Gateways extends EDD_UnitTestCase {
 
 		global $edd_options;
 
-		$download = EDD_Helper_Download::create_simple_download();
+		$download = EDD_Helper_Download::create_simple_download( array(
+			'post_name' => 'no-gateway-error'
+		) );
+
 		edd_add_to_cart( $download->ID );
 
 		$edd_options['gateways'] = array();
