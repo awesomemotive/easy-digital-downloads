@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
 Tested up to: 4.8
-Stable Tag: 2.7
+Stable Tag: 2.7.1
 
 License: GNU Version 2 or Any Later Version
 
@@ -193,6 +193,11 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.7.1, February 14, 2017 =
+* Fix: Checkout was showing wrong total price when certain fees were applied to the cart.
+* Fix: Plugin row meta linked to non-existent "Getting Started" page.
+* Fix: There was a typo in the link to our site when showing an error message for a license key.
 
 = 2.7, February 13, 2017 =
 * New: Introduced EDD_Cart class for managing the shopping cart contents.
