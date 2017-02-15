@@ -176,7 +176,7 @@ if ( is_user_logged_in() ):
 				<input type="hidden" name="edd_profile_editor_nonce" value="<?php echo wp_create_nonce( 'edd-profile-editor-nonce' ); ?>"/>
 				<input type="hidden" name="edd_action" value="edit_user_profile" />
 				<input type="hidden" name="edd_redirect" value="<?php echo esc_url( edd_get_current_page_url() ); ?>" />
-				<input name="edd_profile_editor_submit" id="edd_profile_editor_submit" type="submit" class="edd_submit" value="<?php _e( 'Save Changes', 'easy-digital-downloads' ); ?>"/>
+				<input name="edd_profile_editor_submit" id="edd_profile_editor_submit" type="submit" class="edd-submit" value="<?php _e( 'Save Changes', 'easy-digital-downloads' ); ?>"/>
 			</p>
 		</fieldset>
 

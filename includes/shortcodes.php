@@ -582,7 +582,7 @@ function edd_downloads_query( $atts, $content = null ) {
 			<?php while ( $downloads->have_posts() ) : $downloads->the_post(); ?>
 				<?php $schema = edd_add_schema_microdata() ? 'itemscope itemtype="http://schema.org/Product" ' : ''; ?>
 				<div <?php echo $schema; ?>class="<?php echo apply_filters( 'edd_download_class', 'edd_download', get_the_ID(), $atts, $i ); ?>" id="edd_download_<?php echo get_the_ID(); ?>">
-					<div class="edd_download_inner">
+					<div class="<?php echo apply_filters( 'edd_download_inner_class', 'edd_download_inner', get_the_ID(), $atts, $i ); ?>">
 						<?php
 
 						do_action( 'edd_download_before' );
