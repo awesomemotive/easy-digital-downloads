@@ -383,7 +383,6 @@ class EDD_Download {
 	 * @return array List of download files
 	 */
 	public function get_files( $variable_price_id = null ) {
-
 		if( ! isset( $this->files ) ) {
 
 			$this->files = array();
@@ -536,6 +535,7 @@ class EDD_Download {
 	 * @return array List of bundled downloads
 	 */
 	public function get_variable_priced_bundled_downloads( $price_id = null ) {
+
 		if ( null == $price_id ) {
 			return $this->get_bundled_downloads();
 		}
@@ -544,6 +544,7 @@ class EDD_Download {
 		$bundled_downloads = $this->get_bundled_downloads();
 		$price_assignments = $this->get_bundle_pricing_variations();
 		$price_assignments = $price_assignments[0];
+
 
 		$price_assignments = array_values( $price_assignments );
 

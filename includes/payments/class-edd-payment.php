@@ -1817,11 +1817,18 @@ class EDD_Payment {
 	 * @return int|bool           Meta ID if the key didn't exist, true on successful update, false on failure
 	 */
 	public function update_meta( $meta_key = '', $meta_value = '', $prev_value = '' ) {
+
 		if ( empty( $meta_key ) ) {
 			return false;
 		}
 
-		if ( $meta_key == 'key' || $meta_key == 'date' ) {
+		if( '_edd_payment_purchase_key' == $meta_key ) {
+
+			$current_meta = $this->get_meta();
+			$current_meta[ 'key' ] = $meta_value;
+			update_post_meta( $this->ID, '_edd_payment_meta', $current_meta );
+
+		} else if ( $meta_key == 'key' || $meta_key == 'date' ) {
 
 			$current_meta = $this->get_meta();
 			$current_meta[ $meta_key ] = $meta_value;
