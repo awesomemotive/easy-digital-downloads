@@ -80,6 +80,17 @@ function edd_process_purchase_form() {
 	$card_state   = isset( $valid_data['cc_info']['card_state'] )   ? $valid_data['cc_info']['card_state']   : false;
 	$card_zip     = isset( $valid_data['cc_info']['card_zip'] )     ? $valid_data['cc_info']['card_zip']     : false;
 
+	// Set up the unique purchase key. If we are resuming a payment, we'll overwrite this with the existing key.
+	$purchase_key     = strtolower( md5( $user['user_email'] . date( 'Y-m-d H:i:s' ) . $auth_key . uniqid( 'edd', true ) ) );
+	$existing_payment = EDD()->session->get( 'edd_resume_payment' );
+
+	if ( ! empty( $existing_payment ) ) {
+		$payment = new EDD_Payment( $existing_payment );
+		if( $payment->is_recoverable() && ! empty( $payment->key ) ) {
+			$purchase_key = $payment->key;
+		}
+	}
+
 	// Setup purchase information
 	$purchase_data = array(
 		'downloads'    => edd_get_cart_contents(),
@@ -89,7 +100,7 @@ function edd_process_purchase_form() {
 		'tax'          => edd_get_cart_tax(),               // Taxed amount
 		'tax_rate'     => edd_get_cart_tax_rate( $card_country, $card_state, $card_zip ), // Tax rate
 		'price'        => edd_get_cart_total(),    // Amount after taxes
-		'purchase_key' => strtolower( md5( $user['user_email'] . date( 'Y-m-d H:i:s' ) . $auth_key . uniqid( 'edd', true ) ) ),  // Unique key
+		'purchase_key' => $purchase_key,
 		'user_email'   => $user['user_email'],
 		'date'         => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
 		'user_info'    => stripslashes_deep( $user_info ),
