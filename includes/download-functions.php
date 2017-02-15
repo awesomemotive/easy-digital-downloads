@@ -552,7 +552,6 @@ function edd_is_bundled_product( $download_id = 0 ) {
  */
 function edd_get_bundled_products( $download_id = 0, $price_id = null ) {
 	$download = new EDD_Download( $download_id );
-
 	if ( null !== $price_id ) {
 		return $download->get_variable_priced_bundled_downloads( $price_id );
 	} else {
