@@ -31,6 +31,9 @@ if ( is_user_logged_in() ):
 		<?php do_action( 'edd_profile_editor_fields_top' ); ?>
 
 		<fieldset>
+			
+			<?php do_action( 'edd_profile_editor_before_name' ); ?>
+			
 			<span id="edd_profile_name_label"><legend><?php _e( 'Change your Name', 'easy-digital-downloads' ); ?></legend></span>
 			<p id="edd_profile_name_wrap">
 				<label for="edd_first_name"><?php _e( 'First Name', 'easy-digital-downloads' ); ?></label>
