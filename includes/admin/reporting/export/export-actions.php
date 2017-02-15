@@ -77,7 +77,7 @@ function edd_register_batch_exporters() {
 		do_action( 'edd_register_batch_exporter' );
 	}
 }
-add_action( 'plugins_loaded', 'edd_register_batch_exporters' );
+add_action( 'plugins_loaded', 'edd_register_batch_exporters', 99 );
 
 /**
  * Register the payments batch exporter
