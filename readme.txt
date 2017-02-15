@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
 Tested up to: 4.8
-Stable Tag: 2.7.1
+Stable Tag: 2.7.2
 
 License: GNU Version 2 or Any Later Version
 
@@ -193,6 +193,11 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.7.2, February 15, 2017 =
+* Fix: It was possible for the batch exporter base class to not be loaded before it was trying to be used.
+* Fix: Payments completed with the 'resume payment' feature prevented file download links from working.
+* New: EDD_Payments_Query now keeps a record of the initial arguments used, to allow better extensibility.
 
 = 2.7.1, February 14, 2017 =
 * Fix: Checkout was showing wrong total price when certain fees were applied to the cart.
