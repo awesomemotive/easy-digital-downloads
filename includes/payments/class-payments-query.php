@@ -33,6 +33,14 @@ class EDD_Payments_Query extends EDD_Stats {
 	public $args = array();
 
 	/**
+	 * The args as they came into the class.
+	 *
+	 * @var array
+	 * @since 2.7.2
+	 */
+	public $initial_args = array();
+
+	/**
 	 * The payments found based on the criteria set
 	 *
 	 * @var array
@@ -75,7 +83,8 @@ class EDD_Payments_Query extends EDD_Stats {
 			'download'        => null
 		);
 
-		$this->args = wp_parse_args( $args, $defaults );
+		// We need to store an array of the args used to instantiate the class, so that we can use it in later hooks.
+		$this->args = $this->initial_args = wp_parse_args( $args, $defaults );
 
 		$this->init();
 	}
