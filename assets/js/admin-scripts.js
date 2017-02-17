@@ -669,7 +669,7 @@ jQuery(document).ready(function ($) {
 		variable_prices_check : function() {
 
 			// On Download Select, Check if Variable Prices Exist
-			$('#edd-purchased-files').on('change', 'select#edd_order_download_select', function() {
+			$('.edd-edit-purchase-element').on('change', 'select#edd_order_download_select', function() {
 
 				var $this = $(this), download_id = $this.val();
 
