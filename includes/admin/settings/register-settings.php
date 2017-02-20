@@ -1114,11 +1114,12 @@ add_filter( 'edd_settings_taxes_sanitize', 'edd_settings_sanitize_taxes' );
  * @return string $input Sanitizied value
  */
 function edd_settings_sanitize_gateways( $input ) {
-	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+
+	if ( ! current_user_can( 'manage_shop_settings' ) || empty( $input['default_gateway'] ) ) {
 		return $input;
 	}
 
-	if ( ( empty( $input['gateways'] ) || '-1' == $input['gateways'] ) && ! empty( $input['default_gateway'] ) )  {
+	if ( empty( $input['gateways'] ) || '-1' == $input['gateways'] )  {
 
 		add_settings_error( 'edd-notices', '', __( 'Error setting default gateway. No gateways are enabled.', 'easy-digital-downloads' ) );
 		unset( $input['default_gateway'] );
