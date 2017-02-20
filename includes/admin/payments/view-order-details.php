@@ -230,7 +230,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 												<select class="edd-order-resend-receipt-email">
 													<option value=""><?php _e( ' -- select email --', 'easy-digital-downloads' ); ?></option>
 													<?php foreach( $customer->emails as $email ) : ?>
-														<option value="<?php echo esc_attr( $email ); ?>"><?php echo $email; ?></option>
+														<option value="<?php echo urlencode( sanitize_email( $email ) ); ?>"><?php echo $email; ?></option>
 													<?php endforeach; ?>
 												</select>
 											</div>
