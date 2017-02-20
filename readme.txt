@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
 Tested up to: 4.8
-Stable Tag: 2.7.2
+Stable Tag: 2.7.3
 
 License: GNU Version 2 or Any Later Version
 
@@ -193,6 +193,14 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.7.3, February 20, 2017 =
+
+* Fix: Email addresses with a + sign cannot have their receipt resent
+* Fix: Some PDF files downloaded as JPGs
+* Fix: Incorrect default payment gateway error message when saving sub-sections of Payment Gateway settings
+* Fix: edd-submit class accidentally removed from some buttons on the front end
+* Fix: Variable price selection not possible when adding new product to existing payment record
 
 = 2.7.2, February 15, 2017 =
 * Fix: It was possible for the batch exporter base class to not be loaded before it was trying to be used.
