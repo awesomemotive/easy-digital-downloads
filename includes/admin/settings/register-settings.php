@@ -1118,7 +1118,7 @@ function edd_settings_sanitize_gateways( $input ) {
 		return $input;
 	}
 
-	if ( empty( $input['gateways'] ) || '-1' == $input['gateways'] ) {
+	if ( ( empty( $input['gateways'] ) || '-1' == $input['gateways'] ) && ! empty( $input['default_gateway'] ) )  {
 
 		add_settings_error( 'edd-notices', '', __( 'Error setting default gateway. No gateways are enabled.', 'easy-digital-downloads' ) );
 		unset( $input['default_gateway'] );
