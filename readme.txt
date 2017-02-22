@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
 Tested up to: 4.8
-Stable Tag: 2.7.3
+Stable Tag: 2.7.4
 
 License: GNU Version 2 or Any Later Version
 
@@ -193,6 +193,10 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.7.4, February 22, 2017 =
+
+* Fix: "Loading" text shown on add to cart buttons for sites without screen ready text CSS.
 
 = 2.7.3, February 20, 2017 =
 
