@@ -460,6 +460,10 @@ function edd_email_tag_download_list( $payment_id ) {
 						}
 					}
 				}
+			}else{
+				$download_list .= '<div>';
+					$download_list .= apply_filters( 'edd_email_receipt_no_downloads_message', __( 'No downloads available.', 'easy-digital-downloads' ), $item['id'], $price_id, $payment_id );
+				$download_list .= '</div>';
 			}
 
 
