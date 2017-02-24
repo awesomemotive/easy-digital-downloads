@@ -144,6 +144,8 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				<input type="text" id="start-date" name="start-date" class="edd_datepicker" value="<?php echo $start_date; ?>" placeholder="mm/dd/yyyy"/>
 				<label for="end-date"><?php _e( 'End Date:', 'easy-digital-downloads' ); ?></label>
 				<input type="text" id="end-date" name="end-date" class="edd_datepicker" value="<?php echo $end_date; ?>" placeholder="mm/dd/yyyy"/>
+			</span>
+			<span id="edd-payment-gateway-filter">
 				<?php
 				if ( ! empty( $gateways ) ) {
 					echo EDD()->html->select( array(
@@ -156,6 +158,8 @@ class EDD_Payment_History_Table extends WP_List_Table {
 					) );
 				}
 				?>
+			</span>
+			<span id="edd-payment-after-core-filters">
 				<?php do_action( 'edd_payment_advanced_filters_after_fields' ); ?>
 				<input type="submit" class="button-secondary" value="<?php _e( 'Apply', 'easy-digital-downloads' ); ?>"/>
 			</span>
