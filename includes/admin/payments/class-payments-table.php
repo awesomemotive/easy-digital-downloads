@@ -535,7 +535,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			$args['end-date'] = urldecode( $_GET['end-date'] );
 		}
 
-		if ( ! empty( $GET['gateway'] ) ) {
+		if ( ! empty( $_GET['gateway'] ) && $_GET['gateway'] !== 'all' ) {
 			$args['gateway'] = $_GET['gateway'];
 		}
 

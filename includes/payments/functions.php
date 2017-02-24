@@ -460,6 +460,7 @@ function edd_count_payments( $args = array() ) {
 		'start-date' => null,
 		'end-date'   => null,
 		'download'   => null,
+		'gateway'    => null
 	);
 
 	$args = wp_parse_args( $args, $defaults );
@@ -556,6 +557,18 @@ function edd_count_payments( $args = array() ) {
 	if ( ! empty( $args['download'] ) && is_numeric( $args['download'] ) ) {
 
 		$where .= $wpdb->prepare( " AND p.post_parent = %d", $args['download'] );
+
+	}
+
+	// Limit payments count by gateway
+	if ( ! empty( $args['gateway'] ) ) {
+
+		$join .= "LEFT JOIN $wpdb->postmeta m ON (p.ID = m.post_id)";
+		$where .= $wpdb->prepare( "
+			AND m.meta_key = '_edd_payment_gateway'
+			AND m.meta_value = %s",
+			$args['gateway']
+		);
 
 	}
 
