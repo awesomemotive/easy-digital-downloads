@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Allows plugins to use their own update API.
  *
  * @author Easy Digital Downloads
- * @version 1.6.10
+ * @version 1.6.11
  */
 class EDD_SL_Plugin_Updater {
 
@@ -367,7 +367,7 @@ class EDD_SL_Plugin_Updater {
 			$request->banners = maybe_unserialize( $request->banners );
 		}
 
-		if( ! empty( $request ) ) {
+		if( ! empty( $request->sections ) ) {
 			foreach( $request->sections as $key => $section ) {
 				$request->$key = (array) $section;
 			}
