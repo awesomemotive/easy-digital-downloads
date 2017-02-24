@@ -80,7 +80,8 @@ class EDD_Payments_Query extends EDD_Stats {
 			'search_in_notes' => false,
 			'children'        => false,
 			'fields'          => null,
-			'download'        => null
+			'download'        => null,
+			'gateway'         => null
 		);
 
 		// We need to store an array of the args used to instantiate the class, so that we can use it in later hooks.
@@ -131,6 +132,7 @@ class EDD_Payments_Query extends EDD_Stats {
 		add_action( 'edd_pre_get_payments', array( $this, 'page' ) );
 		add_action( 'edd_pre_get_payments', array( $this, 'user' ) );
 		add_action( 'edd_pre_get_payments', array( $this, 'customer' ) );
+		add_action( 'edd_pre_get_payments', array( $this, 'gateway' ) );
 		add_action( 'edd_pre_get_payments', array( $this, 'search' ) );
 		add_action( 'edd_pre_get_payments', array( $this, 'mode' ) );
 		add_action( 'edd_pre_get_payments', array( $this, 'children' ) );
@@ -348,6 +350,24 @@ class EDD_Payments_Query extends EDD_Stats {
 		$this->__set( 'meta_query', array(
 			'key'   => '_edd_payment_customer_id',
 			'value' => (int) $this->args['customer'],
+		) );
+	}
+
+	/**
+	 * Specific gateway
+	 *
+	 * @access  public
+	 * @since   2.8
+	 * @return  void
+	 */
+	public function gateway() {
+		if ( is_null( $this->args['gateway'] ) ) {
+			return;
+		}
+
+		$this->__set( 'meta_query', array(
+			'key'   => '_edd_payment_gateway',
+			'value' => $this->args['gateway']
 		) );
 	}
 
