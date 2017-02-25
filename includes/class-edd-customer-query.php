@@ -477,7 +477,7 @@ class EDD_Customer_Query {
 
 			$join_type = false !== strpos( $join, 'LEFT JOIN' ) ? 'LEFT JOIN' : 'INNER JOIN';
 
-			$join .= " $join_type $meta_table AS email_mt ON $this->table_name.$this->primary_key = $meta_table.{$this->meta_type}_id";
+			$join .= " $join_type $meta_table AS email_mt ON $this->table_name.$this->primary_key = email_mt.{$this->meta_type}_id";
 		}
 
 		return $join;
