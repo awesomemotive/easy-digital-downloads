@@ -285,7 +285,7 @@ class EDD_Customer_Query {
 		$this->query_vars['offset'] = absint( $this->query_vars['offset'] );
 
 		if ( ! empty( $this->query_vars['date_query'] ) && is_array( $this->query_vars['date_query'] ) ) {
-			$this->date_query = new WP_Date_Query( $this->query_vars['date_query'], $this->date_key );
+			$this->date_query = new WP_Date_Query( $this->query_vars['date_query'], $this->table_name . '.' . $this->date_key );
 		}
 
 		$this->meta_query = new WP_Meta_Query();
