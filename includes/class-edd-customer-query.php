@@ -451,10 +451,10 @@ class EDD_Customer_Query {
 	 */
 	protected function construct_request_fields() {
 		if ( $this->query_vars['count'] ) {
-			return 'COUNT(*)';
+			return "COUNT(*)";
 		}
 
-		return '*';
+		return "$this->table_name.*";
 	}
 
 	/**
