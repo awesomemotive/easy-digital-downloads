@@ -389,8 +389,10 @@ jQuery(document).ready(function ($) {
 				$('.edd-cart-ajax').remove();
 				$('.edd_errors').remove();
 				$('.edd-error').hide();
-				$('#edd_purchase_submit').before(data);
+				$( edd_global_vars.checkout_error_anchor ).before(data);
 				$('#edd-purchase-button').prop( 'disabled', false );
+
+				$( 'body' ).trigger( 'edd_checkout_error', [ data ] );
 			}
 		});
 
