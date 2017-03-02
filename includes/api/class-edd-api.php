@@ -1632,8 +1632,9 @@ class EDD_API {
 	public function get_download_logs( $customer_id = 0 ) {
 		global $edd_logs;
 
-		$downloads  = array();
-		$errors     = array();
+		$downloads        = array();
+		$errors           = array();
+		$invalid_customer = false;
 
 		$paged      = $this->get_paged();
 		$per_page   = $this->per_page();
@@ -1642,8 +1643,7 @@ class EDD_API {
 		$meta_query = array();
 		if ( ! empty( $customer_id ) ) {
 
-			$customer         = new EDD_Customer( $customer_id );
-			$invalid_customer = false;
+			$customer = new EDD_Customer( $customer_id );
 
 			if ( $customer->id > 0 ) {
 				$meta_query['relation'] = 'OR';
