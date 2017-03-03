@@ -1612,6 +1612,11 @@ class EDD_Discount {
 					$return = true;
 
 					foreach ( $product_reqs as $download_id ) {
+
+						if( empty( $download_id ) ) {
+							continue;
+						}
+
 						if ( ! edd_item_in_cart( $download_id ) ) {
 							if ( $set_error ) {
 								edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
@@ -1626,6 +1631,11 @@ class EDD_Discount {
 
 				default :
 					foreach ( $product_reqs as $download_id ) {
+
+						if( empty( $download_id ) ) {
+							continue;
+						}
+
 						if ( edd_item_in_cart( $download_id ) ) {
 							$return = true;
 							break;
