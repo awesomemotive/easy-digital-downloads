@@ -1093,11 +1093,19 @@ class EDD_Discount {
 		$discount_id = wp_insert_post( $args );
 
 		if ( ! empty( $discount_id ) ) {
+
 			$this->ID  = $discount_id;
 
 			foreach ( $discount_data as $key => $value ) {
-				$this->update_meta( $key, $value );
+
+				if( ! empty( $value ) ) {
+
+					$this->update_meta( $key, $value );
+
+				}
+
 			}
+
 		}
 
 		return $this->ID;
