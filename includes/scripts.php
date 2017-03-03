@@ -254,7 +254,7 @@ function edd_load_admin_scripts( $hook ) {
 	wp_enqueue_script( 'thickbox' );
 	wp_enqueue_style( 'thickbox' );
 
-	wp_register_style( 'edd-admin', $css_dir . 'edd-admin' . $suffix . '.css', EDD_VERSION );
+	wp_register_style( 'edd-admin', $css_dir . 'edd-admin' . $suffix . '.css', array(), EDD_VERSION );
 	wp_enqueue_style( 'edd-admin' );
 }
 add_action( 'admin_enqueue_scripts', 'edd_load_admin_scripts', 100 );
