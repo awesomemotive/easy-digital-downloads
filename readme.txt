@@ -213,6 +213,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Credit Card and billing address fields shown on checkout even when no payment gateways are enabled
 * Fix: Personal Info section of checkout missing the ara-describedby attribute
 * Fix: Payment mode fieldset does not have a legend tag
+* Fix: Duplicate DIV tag on checkout
 
 = 2.7.4, February 22, 2017 =
 
