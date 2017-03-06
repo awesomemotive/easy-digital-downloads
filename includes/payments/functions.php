@@ -168,6 +168,8 @@ function edd_insert_payment( $payment_data = array() ) {
 
 	if ( $resume_payment ) {
 
+		$payment->date = date( 'Y-m-d G:i:s', current_time( 'timestamp' ) );
+
 		$payment->add_note( __( 'Payment recovery processed', 'easy-digital-downloads' ) );
 
 		// Since things could have been added/removed since we first crated this...rebuild the cart details.
