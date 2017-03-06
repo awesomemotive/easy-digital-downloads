@@ -624,7 +624,6 @@ function edd_payment_mode_select() {
 	</div>
 	<div id="edd_purchase_form_wrap"></div><!-- the checkout fields are loaded into this-->
 
-	<div id="edd_purchase_form_wrap"></div><!-- the checkout fields are loaded into this-->
 	<?php do_action('edd_payment_mode_bottom');
 }
 add_action( 'edd_payment_mode_select', 'edd_payment_mode_select' );
