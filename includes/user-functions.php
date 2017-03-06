@@ -827,7 +827,12 @@ function edd_validate_user_verification_token( $url = '' ) {
 
 			do_action( 'edd_user_verification_token_expired' );
 
-			wp_die( apply_filters( 'edd_verification_link_expired_text', __( 'Sorry but your account verification link has expired. <a href="#">Click here</a> to request a new verification URL.', 'easy-digital-downloads' ) ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+			$link_text = sprintf(
+				__( 'Sorry but your account verification link has expired. <a href="%s">Click here</a> to request a new verification URL.', 'easy-digital-downloads' ),
+				edd_get_user_verification_request_url()
+			);
+
+			wp_die( apply_filters( 'edd_verification_link_expired_text', $link_text ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 
 		}
 
