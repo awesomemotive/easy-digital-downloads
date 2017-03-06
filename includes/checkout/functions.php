@@ -591,12 +591,14 @@ function edd_purchase_form_validate_cc_exp_date( $exp_month, $exp_year ) {
  * @param string $country_code The country code to check
  * @return bool true if required, false otherwise
  */
-function edd_maybe_require_zip( $country ) {
+function edd_maybe_require_zip( $country = '' ) {
 	$required = true;
 
 	switch( sanitize_text_field( $country ) ) {
 		case 'IE':
+		case '':
 			$required = false;
+			break;
 	}
 
 	return apply_filters( 'edd_maybe_require_zip', $required, $country );
