@@ -1594,11 +1594,11 @@ class EDD_Discount {
 		// First absint the items, then sort, and reset the array keys
 		$product_reqs = array_map( 'absint', $product_reqs );
 		asort( $product_reqs );
-		$product_reqs = array_values( $product_reqs );
+		$product_reqs = array_filter( array_values( $product_reqs ) );
 
 		$excluded_ps  = array_map( 'absint', $excluded_ps );
 		asort( $excluded_ps );
-		$excluded_ps  = array_values( $excluded_ps );
+		$excluded_ps  = array_filter( array_values( $excluded_ps ) );
 
 		$cart_ids     = array_map( 'absint', $cart_ids );
 		asort( $cart_ids );
@@ -1606,8 +1606,11 @@ class EDD_Discount {
 
 		// Ensure we have requirements before proceeding
 		if ( ! $return && ! empty( $product_reqs ) ) {
+
 			switch( $this->product_condition ) {
+
 				case 'all' :
+
 					// Default back to true
 					$return = true;
 
@@ -1618,18 +1621,23 @@ class EDD_Discount {
 						}
 
 						if ( ! edd_item_in_cart( $download_id ) ) {
+
 							if ( $set_error ) {
 								edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
 							}
 
 							$return = false;
+
 							break;
+
 						}
+
 					}
 
 					break;
 
 				default :
+
 					foreach ( $product_reqs as $download_id ) {
 
 						if( empty( $download_id ) ) {
@@ -1640,15 +1648,21 @@ class EDD_Discount {
 							$return = true;
 							break;
 						}
+
 					}
 
 					if ( ! $return && $set_error ) {
 						edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
 					}
+
 					break;
+
 			}
+
 		} else {
+
 			$return = true;
+
 		}
 
 		if ( ! empty( $excluded_ps ) ) {
