@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
 Tested up to: 4.8
-Stable Tag: 2.7.4
+Stable Tag: 2.7.5
 
 License: GNU Version 2 or Any Later Version
 
@@ -193,6 +193,27 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.7.5, March 6, 2017 =
+
+* Tweak: Added a new filter that allows for the message shown in the email receipt when there are no download files to be controlled
+* Tweak: Renamed "User" to "Customer" on sales and file downloads logs view and updated the columns to always show the customer name
+* Fix: No error messages shown on [edd_register] shortcode
+* Fix: Product Requirements check for discount codes fail if database value contains an empty string
+* Fix: Empty metadata values get stored when creating discount codes
+* Fix: Recovered payments do not store the correct purchase date
+* Fix: "Click here to request a new verification URL" link does not contain a real URL
+* Fix: Browser cache not flushed when EDD CSS is updated
+* Fix: Spaces in URLs for files and featured images can result in import problems
+* Fix: Positive fees should not be added to PayPal Standard when assigned a Download ID
+* Fix: Extra dash output in email receipt and purchase history when no price option is present
+* Fix: It is possible for the ID returned from EDD_DB::insert() to be returned incorrectly
+* Fix: Invalid customer error shown in file downloads log endpoint of the REST API
+* Fix: Removing items from an order can result in the wrong item being removed after save
+* Fix: Credit Card and billing address fields shown on checkout even when no payment gateways are enabled
+* Fix: Zip / Postal code validation can fail for Ireland
+* Fix: Personal Info section of checkout missing the ara-describedby attribute
+* Fix: Payment mode fieldset does not have a legend tag
 
 = 2.7.4, February 22, 2017 =
 
