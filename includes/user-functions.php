@@ -828,7 +828,7 @@ function edd_validate_user_verification_token( $url = '' ) {
 			do_action( 'edd_user_verification_token_expired' );
 
 			$link_text = sprintf(
-				__( 'Sorry but your account verification link has expired. <a href="#">Click here</a> to request a new verification URL.', 'easy-digital-downloads' ),
+				__( 'Sorry but your account verification link has expired. <a href="%s">Click here</a> to request a new verification URL.', 'easy-digital-downloads' ),
 				edd_get_user_verification_request_url()
 			);
 
