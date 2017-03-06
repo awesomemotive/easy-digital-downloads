@@ -94,9 +94,8 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 				$return = '<a href="' . add_query_arg( 'download', $item[ $column_name ] ) . '" >' . $title . '</a>';
 				break;
 
-			case 'user_id' :
-				$user = ! empty( $item['user_id'] ) ? $item['user_id'] : edd_get_payment_user_email( $item['payment_id'] );
-				$return = '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $user ) ) . '">' . $item['user_name'] . '</a>';
+			case 'customer' :
+				$return = '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . absint( $item['customer']->id ) ) . '">' . $item['customer']->name . '</a>';
 				break;
 
 			case 'item_price' :
@@ -129,7 +128,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	public function get_columns() {
 		$columns = array(
 			'ID'         => __( 'Log ID', 'easy-digital-downloads' ),
-			'user_id'    => __( 'User', 'easy-digital-downloads' ),
+			'customer'   => __( 'Customer', 'easy-digital-downloads' ),
 			'download'   => edd_get_label_singular(),
 			'amount'     => __( 'Item Amount', 'easy-digital-downloads' ),
 			'payment_id' => __( 'Payment ID', 'easy-digital-downloads' ),
@@ -360,12 +359,11 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 						$logs_data[] = array(
 							'ID'         => $log->ID,
 							'payment_id' => $payment->ID,
+							'customer'   => $customer,
 							'download'   => $log->post_parent,
 							'price_id'   => isset( $log_price_id ) ? $log_price_id : null,
 							'item_price' => isset( $item['item_price'] ) ? $item['item_price'] : $item['price'],
 							'amount'     => $amount,
-							'user_id'    => $customer->user_id,
-							'user_name'  => $customer->name,
 							'date'       => get_post_field( 'post_date', $payment_id ),
 							'quantity'   => $item['quantity'],
 							// Keep track of the currency. Vital to produce the correct report
