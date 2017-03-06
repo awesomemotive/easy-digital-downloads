@@ -581,44 +581,47 @@ function edd_payment_mode_select() {
 	$gateways = edd_get_enabled_payment_gateways( true );
 	$page_URL = edd_get_current_page_url();
 	$chosen_gateway = edd_get_chosen_gateway();
-	do_action('edd_payment_mode_top'); ?>
-	<?php if( edd_is_ajax_disabled() ) { ?>
-	<form id="edd_payment_mode" action="<?php echo $page_URL; ?>" method="GET">
-	<?php } ?>
-		<fieldset id="edd_payment_mode_select">
-			<?php do_action( 'edd_payment_mode_before_gateways_wrap' ); ?>
-			<div id="edd-payment-mode-wrap">
-				<span class="edd-payment-mode-label"><?php _e( 'Select Payment Method', 'easy-digital-downloads' ); ?></span><br/>
-				<?php
+	?>
+	<div id="edd_payment_mode_select_wrap">
+		<?php do_action('edd_payment_mode_top'); ?>
+		<?php if( edd_is_ajax_disabled() ) { ?>
+		<form id="edd_payment_mode" action="<?php echo $page_URL; ?>" method="GET">
+		<?php } ?>
+			<fieldset id="edd_payment_mode_select">
+				<legend><?php _e( 'Select Payment Method', 'easy-digital-downloads' ); ?></legend>
+				<?php do_action( 'edd_payment_mode_before_gateways_wrap' ); ?>
+				<div id="edd-payment-mode-wrap">
+					<?php
 
-				do_action( 'edd_payment_mode_before_gateways' );
+					do_action( 'edd_payment_mode_before_gateways' );
 
-				foreach ( $gateways as $gateway_id => $gateway ) :
+					foreach ( $gateways as $gateway_id => $gateway ) :
 
-					$label         = apply_filters( 'edd_gateway_checkout_label_' . $gateway_id, $gateway['checkout_label'] );
-					$checked       = checked( $gateway_id, $chosen_gateway, false );
-					$checked_class = $checked ? ' edd-gateway-option-selected' : '';
+						$label         = apply_filters( 'edd_gateway_checkout_label_' . $gateway_id, $gateway['checkout_label'] );
+						$checked       = checked( $gateway_id, $chosen_gateway, false );
+						$checked_class = $checked ? ' edd-gateway-option-selected' : '';
 
-					echo '<label for="edd-gateway-' . esc_attr( $gateway_id ) . '" class="edd-gateway-option' . $checked_class . '" id="edd-gateway-option-' . esc_attr( $gateway_id ) . '">';
-						echo '<input type="radio" name="payment-mode" class="edd-gateway" id="edd-gateway-' . esc_attr( $gateway_id ) . '" value="' . esc_attr( $gateway_id ) . '"' . $checked . '>' . esc_html( $label );
-					echo '</label>';
+						echo '<label for="edd-gateway-' . esc_attr( $gateway_id ) . '" class="edd-gateway-option' . $checked_class . '" id="edd-gateway-option-' . esc_attr( $gateway_id ) . '">';
+							echo '<input type="radio" name="payment-mode" class="edd-gateway" id="edd-gateway-' . esc_attr( $gateway_id ) . '" value="' . esc_attr( $gateway_id ) . '"' . $checked . '>' . esc_html( $label );
+						echo '</label>';
 
-				endforeach;
+					endforeach;
 
-				do_action( 'edd_payment_mode_after_gateways' );
+					do_action( 'edd_payment_mode_after_gateways' );
 
-				?>
-			</div>
-			<?php do_action( 'edd_payment_mode_after_gateways_wrap' ); ?>
-		</fieldset>
-		<fieldset id="edd_payment_mode_submit" class="edd-no-js">
-			<p id="edd-next-submit-wrap">
-				<?php echo edd_checkout_button_next(); ?>
-			</p>
-		</fieldset>
-	<?php if( edd_is_ajax_disabled() ) { ?>
-	</form>
-	<?php } ?>
+					?>
+				</div>
+				<?php do_action( 'edd_payment_mode_after_gateways_wrap' ); ?>
+			</fieldset>
+			<fieldset id="edd_payment_mode_submit" class="edd-no-js">
+				<p id="edd-next-submit-wrap">
+					<?php echo edd_checkout_button_next(); ?>
+				</p>
+			</fieldset>
+		<?php if( edd_is_ajax_disabled() ) { ?>
+		</form>
+		<?php } ?>
+	</div>
 	<div id="edd_purchase_form_wrap"></div><!-- the checkout fields are loaded into this-->
 
 	<div id="edd_purchase_form_wrap"></div><!-- the checkout fields are loaded into this-->
