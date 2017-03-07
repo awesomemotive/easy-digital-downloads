@@ -174,8 +174,11 @@ class EDD_Payments_Query extends EDD_Stats {
 					// Backwards Compatibility, needs to set `payment_number` attribute
 					$payment->payment_number = $payment->number;
 				}
-
-				$this->payments[] = apply_filters( 'edd_payment', $payment, $payment_id, $this );
+				$payment = apply_filters( 'edd_payment', $payment, $payment_id, $this );
+				
+				if ( is_object( $payment ) ) {
+					$this->payments[] = $payment;	
+				}
 			}
 
 			wp_reset_postdata();
