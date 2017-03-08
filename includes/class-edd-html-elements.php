@@ -294,7 +294,7 @@ class EDD_HTML_Elements {
 
 			if( ! array_key_exists( $args['selected'], $options ) ) {
 
-				$user = get_user( $args['selected'] );
+				$user = get_userdata( $args['selected'] );
 
 				if( $user ) {
 
