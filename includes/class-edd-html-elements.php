@@ -289,6 +289,23 @@ class EDD_HTML_Elements {
 			$options[0] = __( 'No users found', 'easy-digital-downloads' );
 		}
 
+		// If a selected user has been specified, we need to ensure it's in the initial list of user displayed
+		if( ! empty( $args['selected'] ) ) {
+
+			if( ! array_key_exists( $args['selected'], $options ) ) {
+
+				$user = get_user( $args['selected'] );
+
+				if( $user ) {
+
+					$options[ absint( $args['selected'] ) ] = esc_html( $user->display_name );
+
+				}
+
+			}
+
+		}
+
 		$output = $this->select( array(
 			'name'             => $args['name'],
 			'selected'         => $args['selected'],
