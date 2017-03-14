@@ -926,7 +926,6 @@ function edd_add_body_classes( $class ) {
 
 	if( edd_is_test_mode() ) {
 		$classes[] = 'edd-test-mode';
-		$classes[] = 'edd-page';
 	}
 
 	return array_unique( $classes );
