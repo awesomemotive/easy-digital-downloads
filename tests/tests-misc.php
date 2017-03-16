@@ -156,7 +156,7 @@ class Test_Misc extends EDD_UnitTestCase {
 			'CU' => 'Cuba',
 			'CW' => 'Cura&Ccedil;ao',
 			'CY' => 'Cyprus',
-			'CZ' => 'Czech Republic',
+			'CZ' => 'Czechia',
 			'DK' => 'Denmark',
 			'DJ' => 'Djibouti',
 			'DM' => 'Dominica',
