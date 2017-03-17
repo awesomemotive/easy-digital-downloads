@@ -39,7 +39,9 @@ function edd_checkout_form() {
 					 */
 					do_action( 'edd_checkout_form_top' );
 
-					if ( edd_show_gateways() ) {
+					if ( edd_is_ajax_disabled() && ! empty( $_REQUEST['payment-mode'] ) ) {
+						do_action( 'edd_purchase_form' );
+					} elseif ( edd_show_gateways() ) {
 						do_action( 'edd_payment_mode_select'  );
 					} else {
 						do_action( 'edd_purchase_form' );
