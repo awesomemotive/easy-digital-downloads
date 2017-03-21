@@ -385,9 +385,9 @@ class EDD_Cart {
 
 		$quantities_enabled = edd_item_quantities_enabled() && ! edd_download_quantities_disabled( $download_id );
 
-		if ( edd_has_variable_prices( $download_id )  && ! isset( $options['price_id'] ) ) {
-			// Forces to the first price ID if none is specified and download has variable prices
-			$options['price_id'] = '0';
+		if ( $download->has_variable_prices()  && ! isset( $options['price_id'] ) ) {
+			// Forces to the default price ID if none is specified and download has variable prices
+			$options['price_id'] = get_post_meta( $download->ID, '_edd_default_price_id', true );
 		}
 
 		if ( isset( $options['quantity'] ) ) {
