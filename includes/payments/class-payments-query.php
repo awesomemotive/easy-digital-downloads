@@ -528,7 +528,7 @@ class EDD_Payments_Query extends EDD_Stats {
 		global $edd_logs;
 
 		$args = array(
-			'post_parent'            => $this->args['download'],
+			'post__in'               => is_array( $this->args['download'] ) ? $this->args['download'] : array( $this->args['download'] ) ,
 			'log_type'               => 'sale',
 			'post_status'            => array( 'publish' ),
 			'nopaging'               => true,
@@ -538,11 +538,6 @@ class EDD_Payments_Query extends EDD_Stats {
 			'cache_results'          => false,
 			'fields'                 => 'ids'
 		);
-
-		if ( is_array( $this->args['download'] ) ) {
-			unset( $args['post_parent'] );
-			$args['post_parent__in'] = $this->args['download'];
-		}
 
 		$sales = $edd_logs->get_connected_logs( $args );
 
