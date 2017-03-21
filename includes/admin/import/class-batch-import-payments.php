@@ -196,7 +196,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 			} else {
 
-				$user = get_user_by( 'user_login', $user_id );
+				$user = get_user_by( 'login', $user_id );
 
 			}
 
