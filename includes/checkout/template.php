@@ -852,6 +852,22 @@ function edd_checkout_button_purchase() {
 	$color = edd_get_option( 'checkout_color', 'blue' );
 	$color = ( $color == 'inherit' ) ? '' : $color;
 	$style = edd_get_option( 'button_style', 'button' );
+	$label = edd_get_checkout_button_purchase_label();
+
+	ob_start();
+?>
+	<input type="submit" class="edd-submit <?php echo $color; ?> <?php echo $style; ?>" id="edd-purchase-button" name="edd-purchase" value="<?php echo $label; ?>"/>
+<?php
+	return apply_filters( 'edd_checkout_button_purchase', ob_get_clean() );
+}
+
+/**
+ * Retrieves the label for the purchase button
+ *
+ * @since 2.7.6
+ * @return string
+ */
+function edd_get_checkout_button_purchase_label() {
 	$label = edd_get_option( 'checkout_label', '' );
 
 	if ( edd_get_cart_total() ) {
@@ -860,11 +876,7 @@ function edd_checkout_button_purchase() {
 		$complete_purchase = ! empty( $label ) ? $label : __( 'Free Download', 'easy-digital-downloads' );
 	}
 
-	ob_start();
-?>
-	<input type="submit" class="edd-submit <?php echo $color; ?> <?php echo $style; ?>" id="edd-purchase-button" name="edd-purchase" value="<?php echo $complete_purchase; ?>"/>
-<?php
-	return apply_filters( 'edd_checkout_button_purchase', ob_get_clean() );
+	return apply_filters( 'edd_get_checkout_button_purchase_label', $complete_purchase, $label );
 }
 
 /**
