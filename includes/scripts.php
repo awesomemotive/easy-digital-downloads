@@ -62,7 +62,7 @@ function edd_load_scripts() {
 			'no_email'           => __( 'Please enter an email address before applying a discount code', 'easy-digital-downloads' ),
 			'no_username'        => __( 'Please enter a username before applying a discount code', 'easy-digital-downloads' ),
 			'purchase_loading'   => __( 'Please Wait...', 'easy-digital-downloads' ),
-			'complete_purchase'  => __( 'Purchase', 'easy-digital-downloads' ),
+			'complete_purchase'  => edd_get_checkout_button_purchase_label(),
 			'taxes_enabled'      => edd_use_taxes() ? '1' : '0',
 			'edd_version'        => EDD_VERSION
 		) ) );
