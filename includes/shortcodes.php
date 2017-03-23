@@ -750,6 +750,11 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 		return $login_form;
 	}
 
+	// If this was a guest checkout and the purchase session is empty, output a relevant error message
+	if ( empty( $session ) && ! is_user_logged_in() ) {
+		return '<p class="edd-alert edd-alert-error">' . apply_filters( 'edd_receipt_guest_error_message', __( 'Sorry, trouble retrieving payment receipt because the Guest Checkout purchase session is expired.', 'easy-digital-downloads' ) ) . '</p>';
+	}
+
 	/*
 	 * Check if the user has permission to view the receipt
 	 *
