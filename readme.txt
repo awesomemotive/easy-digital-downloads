@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
 Tested up to: 4.8
-Stable Tag: 2.7.5
+Stable Tag: 2.7.6
 
 License: GNU Version 2 or Any Later Version
 
@@ -193,6 +193,25 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.7.6, March 24, 2017 =
+
+* New: Added new hooks to customer details page
+* New: Email tags are now processewd in the Purchase Email heading
+* Fix: User dropdown field does not always show selected user
+* Fix: Payment field for Amazon Payments gateway not properly shown after authenticating with Amazon
+* Fix: edd-page class improperly added to all site pages when Test Mode is enabled
+* Fix: Incorrectly named CSS selector
+* Fix: Checkout does not work when AJAX is disabled
+* Fix: Profile editor HTML markup is inconsistent with other forms
+* Fix: Query parameters not properly setup when calling multiple instances of EDD_Payments_Query
+* Fix: Invalid argument supplied foreach() notice on some bundle products
+* Fix: Incorrect capitalization on First Name field of checkout
+* Fix: Incorrect field name passed to get_user_by() in payment import
+* Fix: Custom "Complete Purchase Text" not used if payment submission results in error
+* Fix: Incorrect date set for "end_date" in EDD_Stats class
+* Fix: Price option not properly added when using custom add to cart links for variable priced product and not price ID is supplied
+* Fix: Fees that are taxede get counted twice in tax total
 
 = 2.7.5, March 6, 2017 =
 
