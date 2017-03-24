@@ -507,11 +507,11 @@ class Test_Cart extends EDD_UnitTestCase {
 
 		edd_empty_cart();
 
-		edd_add_to_cart( $this->_post->ID );
+		edd_add_to_cart( $this->_post->ID, array( 'price_id' => 0 ) );
 
 		EDD()->fees->add_fee( 10, 'test', 'Test' );
 
-		$this->assertEquals( 30, edd_get_cart_total() );
+		$this->assertEquals( 30, EDD()->cart->get_total() );
 
 	}
 
@@ -531,7 +531,7 @@ class Test_Cart extends EDD_UnitTestCase {
 
 		edd_empty_cart();
 
-		edd_add_to_cart( $this->_post->ID );
+		edd_add_to_cart( $this->_post->ID, array( 'price_id' => 0 ) );
 
 		EDD()->fees->add_fee( array(
 			'amount' => 10,
@@ -548,7 +548,7 @@ class Test_Cart extends EDD_UnitTestCase {
 
 		edd_empty_cart();
 
-		edd_add_to_cart( $this->_post->ID );
+		edd_add_to_cart( $this->_post->ID, array( 'price_id' => 0 ) );
 
 		EDD()->fees->add_fee( array(
 			'amount' => 10,
@@ -566,7 +566,7 @@ class Test_Cart extends EDD_UnitTestCase {
 
 		edd_empty_cart();
 
-		edd_add_to_cart( $this->_post->ID );
+		edd_add_to_cart( $this->_post->ID, array( 'price_id' => 0 ) );
 
 		EDD()->fees->add_fee( array(
 			'amount' => 10,
