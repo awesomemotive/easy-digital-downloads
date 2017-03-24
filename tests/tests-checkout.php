@@ -92,14 +92,17 @@ class Tests_Checkout extends EDD_UnitTestCase {
 	public function test_edd_is_email_banned() {
 
 		$emails = array();
-		$emails[] = 'john@test.com';
-		$emails[] = 'test2.com';
+		$emails[] = 'john@test.com'; // Banned email
+		$emails[] = 'test2.com'; // Banned domain
+		$emails[] = '.zip'; // Banned TLD
 
 		edd_update_option( 'banned_emails', $emails );
 
 		$this->assertTrue( edd_is_email_banned( 'john@test.com' ) );
 		$this->assertTrue( edd_is_email_banned( 'john@test2.com' ) );
 		$this->assertFalse( edd_is_email_banned( 'john2@test.com' ) );
+		$this->assertTrue( edd_is_email_banned( 'john2@test.zip' ) );
+		$this->assertFalse( edd_is_email_banned( 'john.zip@test.com' ) );
 	}
 
 	/**
