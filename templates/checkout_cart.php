@@ -30,20 +30,28 @@ global $post; ?>
 							}
 							$item_title = edd_get_cart_item_name( $item );
 							echo '<span class="edd_checkout_cart_item_title">' . esc_html( $item_title ) . '</span>';
-							do_action( 'edd_checkout_cart_item_title_after', $item );
+
+							/**
+							 * Runs after the item in cart's title is echoed
+							 * @since 2.6
+							 *
+							 * @param array $item Cart Item
+							 * @param int $key Cart key
+							 */
+							do_action( 'edd_checkout_cart_item_title_after', $item, $key );
 						?>
 					</td>
 					<td class="edd_cart_item_price">
-						<?php 
+						<?php
 						echo edd_cart_item_price( $item['id'], $item['options'] );
 						do_action( 'edd_checkout_cart_item_price_after', $item );
 						?>
 					</td>
 					<td class="edd_cart_actions">
-						<?php if( edd_item_quantities_enabled() ) : ?>
+						<?php if( edd_item_quantities_enabled() && ! edd_download_quantities_disabled( $item['id'] ) ) : ?>
 							<input type="number" min="1" step="1" name="edd-cart-download-<?php echo $key; ?>-quantity" data-key="<?php echo $key; ?>" class="edd-input edd-item-quantity" value="<?php echo edd_get_cart_item_quantity( $item['id'], $item['options'] ); ?>"/>
 							<input type="hidden" name="edd-cart-downloads[]" value="<?php echo $item['id']; ?>"/>
-							<input type="hidden" name="edd-cart-download-<?php echo $key; ?>-options" value="<?php echo esc_attr( serialize( $item['options'] ) ); ?>"/>
+							<input type="hidden" name="edd-cart-download-<?php echo $key; ?>-options" value="<?php echo esc_attr( json_encode( $item['options'] ) ); ?>"/>
 						<?php endif; ?>
 						<?php do_action( 'edd_cart_actions', $item, $key ); ?>
 						<a class="edd_cart_remove_item_btn" href="<?php echo esc_url( edd_remove_item_url( $key ) ); ?>"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></a>
@@ -118,7 +126,7 @@ global $post; ?>
 
 		<tr class="edd_cart_footer_row">
 			<?php do_action( 'edd_checkout_table_footer_first' ); ?>
-			<th colspan="<?php echo edd_checkout_cart_columns(); ?>" class="edd_cart_total"><?php _e( 'Total', 'easy-digital-downloads' ); ?>: <span class="edd_cart_amount" data-subtotal="<?php echo edd_get_cart_total(); ?>" data-total="<?php echo edd_get_cart_total(); ?>"><?php edd_cart_total(); ?></span></th>
+			<th colspan="<?php echo edd_checkout_cart_columns(); ?>" class="edd_cart_total"><?php _e( 'Total', 'easy-digital-downloads' ); ?>: <span class="edd_cart_amount" data-subtotal="<?php echo edd_get_cart_subtotal(); ?>" data-total="<?php echo edd_get_cart_total(); ?>"><?php edd_cart_total(); ?></span></th>
 			<?php do_action( 'edd_checkout_table_footer_last' ); ?>
 		</tr>
 	</tfoot>

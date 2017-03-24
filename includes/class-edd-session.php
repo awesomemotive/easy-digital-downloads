@@ -75,6 +75,10 @@ class EDD_Session {
 
 		} else {
 
+			if( ! $this->should_start_session() ) {
+				return;
+			}
+
 			// Use WP_Session (default)
 
 			if ( ! defined( 'WP_SESSION_COOKIE' ) ) {
@@ -193,7 +197,7 @@ class EDD_Session {
 	 *
 	 * @access public
 	 * @since 1.8
-	 * @param string $set Whether to set or destroy
+	 * @param bool $set Whether to set or destroy
 	 * @return void
 	 */
 	public function set_cart_cookie( $set = true ) {
@@ -226,7 +230,7 @@ class EDD_Session {
 	 * @access public
 	 * @since 1.9
 	 * @param int $exp Default expiration (1 hour)
-	 * @return int
+	 * @return int Cookie expiration time
 	 */
 	public function set_expiration_time( $exp ) {
 		return ( 30 * 60 * 24 );
@@ -300,13 +304,78 @@ class EDD_Session {
 	}
 
 	/**
+	 * Determines if we should start sessions
+	 *
+	 * @since  2.5.11
+	 * @return bool
+	 */
+	public function should_start_session() {
+
+		$start_session = true;
+
+		if( ! empty( $_SERVER[ 'REQUEST_URI' ] ) ) {
+
+			$blacklist = $this->get_blacklist();
+			$uri       = ltrim( $_SERVER[ 'REQUEST_URI' ], '/' );
+			$uri       = untrailingslashit( $uri );
+
+			if( in_array( $uri, $blacklist ) ) {
+				$start_session = false;
+			}
+
+			if( false !== strpos( $uri, 'feed=' ) ) {
+				$start_session = false;
+			}
+
+		}
+
+		return apply_filters( 'edd_start_session', $start_session );
+
+	}
+
+	/**
+	 * Retrieve the URI blacklist
+	 *
+	 * These are the URIs where we never start sessions
+	 *
+	 * @since  2.5.11
+	 * @return array
+	 */
+	public function get_blacklist() {
+
+		$blacklist = apply_filters( 'edd_session_start_uri_blacklist', array(
+			'feed',
+			'feed/rss',
+			'feed/rss2',
+			'feed/rdf',
+			'feed/atom',
+			'comments/feed'
+		) );
+
+		// Look to see if WordPress is in a sub folder or this is a network site that uses sub folders
+		$folder = str_replace( network_home_url(), '', get_site_url() );
+
+		if( ! empty( $folder ) ) {
+			foreach( $blacklist as $path ) {
+				$blacklist[] = $folder . '/' . $path;
+			}
+		}
+
+		return $blacklist;
+	}
+
+	/**
 	 * Starts a new session if one hasn't started yet.
 	 */
 	public function maybe_start_session() {
+
+		if( ! $this->should_start_session() ) {
+			return;
+		}
+
 		if( ! session_id() && ! headers_sent() ) {
 			session_start();
 		}
 	}
 
 }
-

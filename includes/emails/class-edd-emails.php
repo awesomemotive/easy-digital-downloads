@@ -96,6 +96,15 @@ class EDD_Emails {
 	}
 
 	/**
+	 * Get a property
+	 *
+	 * @since 2.6.9
+	 */
+	public function __get( $key ) {
+		return $this->$key;
+	}
+
+	/**
 	 * Get the email from name
 	 *
 	 * @since 2.1
@@ -355,7 +364,7 @@ class EDD_Emails {
 	public function text_to_html( $message ) {
 
 		if ( 'text/html' == $this->content_type || true === $this->html ) {
-			$message = wpautop( $message );
+			$message = apply_filters( 'edd_email_template_wpautop', true ) ? wpautop( $message ) : $message;
 		}
 
 		return $message;

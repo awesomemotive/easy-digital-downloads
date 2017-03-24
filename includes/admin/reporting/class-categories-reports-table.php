@@ -91,6 +91,28 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Outputs the reporting views
+	 *
+	 * @access public
+	 * @since 1.5
+	 * @return void
+	 */
+	public function display_tablenav( $which = '' ) {
+		?>
+		<div class="tablenav <?php echo esc_attr( $which ); ?>">
+			<div class="alignleft actions bulkactions">
+				<?php
+				if ( 'top' === $which ) {
+					edd_report_views();
+					edd_reports_graph_controls();
+				}
+				?>
+			</div>
+		</div>
+	<?php
+	}
+
+	/**
 	 * Retrieve the current page number
 	 *
 	 * @access public
@@ -99,23 +121,6 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 	 */
 	public function get_paged() {
 		return isset( $_GET[ 'paged' ] ) ? absint( $_GET[ 'paged' ] ) : 1;
-	}
-
-	/**
-	 * Outputs the reporting views
-	 *
-	 * @access public
-	 * @since  2.4
-	 * @return void
-	 */
-	public function bulk_actions( $which = '' ) {
-		if ( 'bottom' === $which ) {
-			return;
-		}
-
-		// These aren't really bulk actions but this outputs the markup in the right place
-		edd_report_views();
-		edd_reports_graph_controls();
 	}
 
 	/**
@@ -131,6 +136,8 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 		 * Date filtering
 		 */
 		$dates = edd_get_report_dates();
+
+		$include_taxes = empty( $_GET['exclude_taxes'] ) ? true : false;
 
 		if ( !empty( $dates[ 'year' ] ) ) {
 			$date = new DateTime();
@@ -197,20 +204,12 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 				$avg_sales    = 0;
 				$avg_earnings = 0.00;
 
-				$payment_stats = new EDD_Payment_Stats();
-
 				foreach ( $downloads as $download ) {
-					$current_average_sales    = $current_sales    = $payment_stats->get_sales( $download, $start_date, $end_date );
-					$current_average_earnings = $current_earnings = $payment_stats->get_earnings( $download, $start_date, $end_date );
+					$current_sales    = EDD()->payment_stats->get_sales( $download, $start_date, $end_date );
+					$current_earnings = EDD()->payment_stats->get_earnings( $download, $start_date, $end_date, $include_taxes );
 
-					$release_date = get_post_field( 'post_date', $download );
-					$diff         = abs( current_time( 'timestamp' ) - strtotime( $release_date ) );
-					$months       = floor( $diff / ( 30 * 60 * 60 * 24 ) ); // Number of months since publication
-
-					if ( $months > 0 ) {
-						$current_average_sales    = ( $current_sales / $months );
-						$current_average_earnings = ( $current_earnings / $months );
-					}
+					$current_average_sales = edd_get_average_monthly_download_sales( $download );
+					$current_average_earnings = edd_get_average_monthly_download_earnings( $download );
 
 					$sales        += $current_sales;
 					$earnings     += $current_earnings;
@@ -218,8 +217,12 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 					$avg_earnings += $current_average_earnings;
 				}
 
-				$avg_sales    = round( $avg_sales / count( $downloads ) );
-				$avg_earnings = round( $avg_earnings / count( $downloads ), edd_currency_decimal_filter() );
+				$avg_earnings = round( $avg_earnings, edd_currency_decimal_filter() );
+				if ( ! empty( $avg_earnings ) && $avg_sales < 1 ) {
+					$avg_sales = __( 'Less than 1', 'easy-digital-downloads' );
+				} else {
+					$avg_sales = round( edd_format_amount( $avg_sales, false ) );
+				}
 
 				$reports_data[] = array(
 					'ID'                 => $category->term_id,
@@ -228,7 +231,7 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 					'total_sales_raw'    => $sales,
 					'total_earnings'     => edd_currency_filter( edd_format_amount( $earnings ) ),
 					'total_earnings_raw' => $earnings,
-					'avg_sales'          => edd_format_amount( $avg_sales, false ),
+					'avg_sales'          => $avg_sales,
 					'avg_earnings'       => edd_currency_filter( edd_format_amount( $avg_earnings ) ),
 					'is_child'           => false,
 				);
@@ -257,8 +260,8 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 						$child_avg_earnings = 0.00;
 
 						foreach ( $child_downloads as $child_download ) {
-							$current_average_sales    = $current_sales    = $payment_stats->get_sales( $child_download, $start_date, $end_date );
-							$current_average_earnings = $current_earnings = $payment_stats->get_earnings( $child_download, $start_date, $end_date );
+							$current_average_sales    = $current_sales    = EDD()->payment_stats->get_sales( $child_download, $start_date, $end_date );
+							$current_average_earnings = $current_earnings = EDD()->payment_stats->get_earnings( $child_download, $start_date, $end_date );
 
 							$release_date = get_post_field( 'post_date', $child_download );
 							$diff         = abs( current_time( 'timestamp' ) - strtotime( $release_date ) );

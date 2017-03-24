@@ -33,6 +33,14 @@ class EDD_Payments_Query extends EDD_Stats {
 	public $args = array();
 
 	/**
+	 * The args as they came into the class.
+	 *
+	 * @var array
+	 * @since 2.7.2
+	 */
+	public $initial_args = array();
+
+	/**
 	 * The payments found based on the criteria set
 	 *
 	 * @var array
@@ -49,7 +57,7 @@ class EDD_Payments_Query extends EDD_Stats {
 	 *
 	 * @access public
 	 * @since 1.8
-	 * @param $args array The array of arguments that can be passed in and used for setting up this payment query.
+	 * @param array $args The array of arguments that can be passed in and used for setting up this payment query.
 	 */
 	public function __construct( $args = array() ) {
 		$defaults = array(
@@ -62,6 +70,7 @@ class EDD_Payments_Query extends EDD_Stats {
 			'orderby'         => 'ID',
 			'order'           => 'DESC',
 			'user'            => null,
+			'customer'        => null,
 			'status'          => edd_get_payment_status_keys(),
 			'meta_key'        => null,
 			'year'            => null,
@@ -74,7 +83,8 @@ class EDD_Payments_Query extends EDD_Stats {
 			'download'        => null
 		);
 
-		$this->args = wp_parse_args( $args, $defaults );
+		// We need to store an array of the args used to instantiate the class, so that we can use it in later hooks.
+		$this->args = $this->initial_args = wp_parse_args( $args, $defaults );
 
 		$this->init();
 	}
@@ -103,7 +113,7 @@ class EDD_Payments_Query extends EDD_Stats {
 	}
 
 	/**
-	 * Modify the query/query arguments before we retrieve payments.
+	 * Nothing here at the moment.
 	 *
 	 * @access public
 	 * @since 1.8
@@ -111,19 +121,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	 */
 	public function init() {
 
-		add_action( 'edd_pre_get_payments', array( $this, 'date_filter_pre' ) );
-		add_action( 'edd_post_get_payments', array( $this, 'date_filter_post' ) );
-
-		add_action( 'edd_pre_get_payments', array( $this, 'orderby' ) );
-		add_action( 'edd_pre_get_payments', array( $this, 'status' ) );
-		add_action( 'edd_pre_get_payments', array( $this, 'month' ) );
-		add_action( 'edd_pre_get_payments', array( $this, 'per_page' ) );
-		add_action( 'edd_pre_get_payments', array( $this, 'page' ) );
-		add_action( 'edd_pre_get_payments', array( $this, 'user' ) );
-		add_action( 'edd_pre_get_payments', array( $this, 'search' ) );
-		add_action( 'edd_pre_get_payments', array( $this, 'mode' ) );
-		add_action( 'edd_pre_get_payments', array( $this, 'children' ) );
-		add_action( 'edd_pre_get_payments', array( $this, 'download' ) );
 	}
 
 	/**
@@ -138,6 +135,21 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * @return object
 	 */
 	public function get_payments() {
+
+		// Modify the query/query arguments before we retrieve payments.
+		$this->date_filter_pre();
+		$this->date_filter_post();
+		$this->orderby();
+		$this->status();
+		$this->month();
+		$this->per_page();
+		$this->page();
+		$this->user();
+		$this->customer();
+		$this->search();
+		$this->mode();
+		$this->children();
+		$this->download();
 
 		do_action( 'edd_pre_get_payments', $this );
 
@@ -157,7 +169,7 @@ class EDD_Payments_Query extends EDD_Stats {
 				$query->the_post();
 
 				$payment_id = get_post()->ID;
-				$payment    = new EDD_Payment( $payment_id );
+				$payment    = edd_get_payment( $payment_id );
 
 				if ( edd_get_option( 'enable_sequential' ) ) {
 					// Backwards Compatibility, needs to set `payment_number` attribute
@@ -280,7 +292,7 @@ class EDD_Payments_Query extends EDD_Stats {
 	}
 
 	/**
-	 * Order
+	 * Order by
 	 *
 	 * @access public
 	 * @since 1.8
@@ -319,6 +331,24 @@ class EDD_Payments_Query extends EDD_Stats {
 		$this->__set( 'meta_query', array(
 			'key'   => $user_key,
 			'value' => $this->args['user']
+		) );
+	}
+
+	/**
+	 * Specific customer id
+	 *
+	 * @access  public
+	 * @since   2.6
+	 * @return  void
+	 */
+	public function customer() {
+		if ( is_null( $this->args['customer'] ) || ! is_numeric( $this->args['customer'] ) ) {
+			return;
+		}
+
+		$this->__set( 'meta_query', array(
+			'key'   => '_edd_payment_customer_id',
+			'value' => (int) $this->args['customer'],
 		) );
 	}
 

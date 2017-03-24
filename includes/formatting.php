@@ -210,3 +210,26 @@ function edd_currency_decimal_filter( $decimals = 2 ) {
 }
 add_filter( 'edd_sanitize_amount_decimals', 'edd_currency_decimal_filter' );
 add_filter( 'edd_format_amount_decimals', 'edd_currency_decimal_filter' );
+
+/**
+ * Sanitizes a string key for EDD Settings
+ *
+ * Keys are used as internal identifiers. Alphanumeric characters, dashes, underscores, stops, colons and slashes are allowed
+ *
+ * @since  2.5.8
+ * @param  string $key String key
+ * @return string Sanitized key
+ */
+function edd_sanitize_key( $key ) {
+	$raw_key = $key;
+	$key = preg_replace( '/[^a-zA-Z0-9_\-\.\:\/]/', '', $key );
+
+	/**
+	 * Filter a sanitized key string.
+	 *
+	 * @since 2.5.8
+	 * @param string $key     Sanitized key.
+	 * @param string $raw_key The key prior to sanitization.
+	 */
+	return apply_filters( 'edd_sanitize_key', $key, $raw_key );
+}

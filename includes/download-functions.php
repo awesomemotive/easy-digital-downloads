@@ -132,7 +132,7 @@ function edd_is_free_download( $download_id = 0, $price_id = false ) {
  *
  * @since 1.0
  * @param int $download_id ID number of the download to retrieve a price for
- * @return mixed string|int Price of the download
+ * @return mixed|string|int Price of the download
  */
 function edd_get_download_price( $download_id = 0 ) {
 
@@ -164,9 +164,17 @@ function edd_price( $download_id = 0, $echo = true, $price_id = false ) {
 		$prices = edd_get_variable_prices( $download_id );
 
 		if ( false !== $price_id && isset( $prices[$price_id] ) ) {
-			$price = (float) $prices[$price_id]['amount'];
+
+			$price = edd_get_price_option_amount( $download_id, $price_id );
+
+		} elseif( $default = edd_get_default_variable_price( $download_id ) ) {
+
+			$price = edd_get_price_option_amount( $download_id, $default );
+
 		} else {
+
 			$price = edd_get_lowest_price_option( $download_id );
+
 		}
 
 		$price = edd_sanitize_amount( $price );
@@ -304,7 +312,7 @@ function edd_get_price_option_name( $download_id = 0, $price_id = 0, $payment_id
  * @since 1.8.2
  * @param int $download_id ID of the download
  * @param int $price_id ID of the price option
- * @param int @payment_id ID of the payment
+ * @param int $payment_id ID of the payment
  * @return float $amount Amount of the price option
  */
 function edd_get_price_option_amount( $download_id = 0, $price_id = 0 ) {
@@ -538,10 +546,17 @@ function edd_is_bundled_product( $download_id = 0 ) {
  * @since 1.6
  * @param int $download_id Download ID
  * @return array $products Products in the bundle
+ *
+ * @since 2.7
+ * @param int $price_id Variable price ID
  */
-function edd_get_bundled_products( $download_id = 0 ) {
+function edd_get_bundled_products( $download_id = 0, $price_id = null ) {
 	$download = new EDD_Download( $download_id );
-	return $download->bundled_downloads;
+	if ( null !== $price_id ) {
+		return $download->get_variable_priced_bundled_downloads( $price_id );
+	} else {
+		return $download->bundled_downloads;
+	}
 }
 
 /**
@@ -779,8 +794,10 @@ function edd_get_download_files( $download_id = 0, $variable_price_id = null ) {
  * @return string The file name
  */
 function edd_get_file_name( $file = array() ) {
-	if( empty( $file ) || ! is_array( $file ) )
+	if( empty( $file ) || ! is_array( $file ) ) {
 		return false;
+	}
+
 	$name = ! empty( $file['name'] ) ? esc_html( $file['name'] ) : basename( $file['file'] );
 
 	return $name;
@@ -945,17 +962,17 @@ function edd_get_file_price_condition( $download_id = 0, $file_key ) {
 
 /**
  * Get Download File Url
- * Constructs the file download url for a specific file.
+ * Constructs a secure file download url for a specific file.
  *
  * @since 1.0
  *
- * @param string $key
- * @param string $email Customer email address
- * @param int    $filekey
- * @param int    $download_id
- * @param bool   $price_id
+ * @param string    $key Payment key. Use edd_get_payment_key() to get key.
+ * @param string    $email Customer email address. Use edd_get_payment_user_email() to get user email.
+ * @param int       $filekey Index of array of files returned by edd_get_download_files() that this download link is for.
+ * @param int       $download_id Optional. ID of download this download link is for. Default is 0.
+ * @param bool|int  $price_id Optional. Price ID when using variable prices. Default is false.
  *
- * @return string Constructed download URL
+ * @return string A secure download URL
  */
 function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $price_id = false ) {
 
@@ -1050,6 +1067,18 @@ function edd_get_download_button_behavior( $download_id = 0 ) {
 }
 
 /**
+ * Is quantity input disabled on this product?
+ *
+ * @since 2.7
+ * @return bool
+ */
+function edd_download_quantities_disabled( $download_id = 0 ) {
+
+	$download = new EDD_Download( $download_id );
+	return $download->quantities_disabled();
+}
+
+/**
  * Get the file Download method
  *
  * @since 1.6
@@ -1066,9 +1095,10 @@ function edd_get_file_download_method() {
  * @since 1.7
  * @author Chris Christoff
  * @param bool $post_ids True for array of post ids, false if array of posts
+ * @return array Returns an array of post ids or post objects
  */
 function edd_get_random_download( $post_ids = true ) {
-	 edd_get_random_downloads( 1, $post_ids );
+	 return edd_get_random_downloads( 1, $post_ids );
 }
 
 /**
@@ -1082,9 +1112,9 @@ function edd_get_random_download( $post_ids = true ) {
  */
 function edd_get_random_downloads( $num = 3, $post_ids = true ) {
 	if ( $post_ids ) {
-		$args = array( 'post_type' => 'download', 'orderby' => 'rand', 'post_count' => $num, 'fields' => 'ids' );
+		$args = array( 'post_type' => 'download', 'orderby' => 'rand', 'numberposts' => $num, 'fields' => 'ids' );
 	} else {
-		$args = array( 'post_type' => 'download', 'orderby' => 'rand', 'post_count' => $num );
+		$args = array( 'post_type' => 'download', 'orderby' => 'rand', 'numberposts' => $num );
 	}
 	$args  = apply_filters( 'edd_get_random_downloads', $args );
 	return get_posts( $args );
@@ -1228,4 +1258,70 @@ function edd_validate_url_token( $url = '' ) {
 	}
 
 	return apply_filters( 'edd_validate_url_token', $ret, $url, $query_args );
+}
+
+/**
+ * Allows parsing of the values saved by the product drop down.
+ *
+ * @since  2.6.9
+ * @param  array $values Parse the values from the product dropdown into a readable array
+ * @return array         A parsed set of values for download_id and price_id
+ */
+function edd_parse_product_dropdown_values( $values = array() ) {
+
+	$parsed_values = array();
+
+	if ( is_array( $values ) ) {
+
+		foreach ( $values as $value ) {
+			$value = edd_parse_product_dropdown_value( $value );
+
+			$parsed_values[] = array(
+				'download_id' => $value['download_id'],
+				'price_id'    => $value['price_id'],
+			);
+		}
+
+	} else {
+
+		$value = edd_parse_product_dropdown_value( $values );
+		$parsed_values[] = array(
+			'download_id' => $value['download_id'],
+			'price_id'    => $value['price_id'],
+		);
+
+	}
+
+	return $parsed_values;
+}
+
+/**
+ * Given a value from the product dropdown array, parse it's parts
+ *
+ * @since  2.6.9
+ * @param  string $values A value saved in a product dropdown array
+ * @return array          A parsed set of values for download_id and price_id
+ */
+function edd_parse_product_dropdown_value( $value ) {
+	$parts       = explode( '_', $value );
+	$download_id = $parts[0];
+	$price_id    = isset( $parts[1] ) ? $parts[1] : false;
+
+	return array( 'download_id' => $download_id, 'price_id' => $price_id );
+}
+
+/**
+ * Get bundle pricing variations
+ *
+ * @since  2.7
+ * @param  int $download_id
+ * @return array|void
+ */
+function edd_get_bundle_pricing_variations( $download_id = 0 ) {
+	if ( $download_id == 0 ) {
+		return;
+	}
+
+	$download = new EDD_Download( $download_id );
+	return $download->get_bundle_pricing_variations();
 }

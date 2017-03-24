@@ -34,23 +34,6 @@ function edd_process_batch_export_download() {
 add_action( 'edd_download_batch_export', 'edd_process_batch_export_download' );
 
 /**
- * Exports earnings for a specified time period
- * EDD_Earnings_Export class.
- *
- * @since 2.0
- * @return void
- */
-function edd_export_earnings() {
-	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export-earnings.php';
-
-	$earnings_export = new EDD_Earnings_Export();
-
-	$earnings_export->export();
-}
-add_action( 'edd_earnings_export', 'edd_export_earnings' );
-
-
-/**
  * Export all the customers to a CSV file.
  *
  * Note: The WordPress Database API is being used directly for performance
@@ -94,7 +77,7 @@ function edd_register_batch_exporters() {
 		do_action( 'edd_register_batch_exporter' );
 	}
 }
-add_action( 'plugins_loaded', 'edd_register_batch_exporters' );
+add_action( 'plugins_loaded', 'edd_register_batch_exporters', 99 );
 
 /**
  * Register the payments batch exporter
@@ -191,4 +174,73 @@ function edd_include_file_downloads_batch_processer( $class ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-file-downloads.php';
 	}
 
+}
+
+/**
+ * Register the sales batch exporter
+ *
+ * @since  2.7
+ */
+function edd_register_sales_export_batch_export() {
+	add_action( 'edd_batch_export_class_include', 'edd_include_sales_export_batch_processer', 10, 1 );
+}
+add_action( 'edd_register_batch_exporter', 'edd_register_sales_export_batch_export', 10 );
+
+/**
+ * Loads the sales export batch process if needed
+ *
+ * @since  2.7
+ * @param  string $class The class being requested to run for the batch export
+ * @return void
+ */
+function edd_include_sales_export_batch_processer( $class ) {
+	if ( 'EDD_Batch_Sales_Export' === $class ) {
+		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-sales.php';
+	}
+}
+
+/**
+ * Register the earnings report batch exporter
+ *
+ * @since  2.7
+ */
+function edd_register_earnings_report_batch_export() {
+	add_action( 'edd_batch_export_class_include', 'edd_include_earnings_report_batch_processer', 10, 1 );
+}
+add_action( 'edd_register_batch_exporter', 'edd_register_earnings_report_batch_export', 10 );
+
+/**
+ * Loads the earnings report batch process if needed
+ *
+ * @since  2.7
+ * @param  string $class The class being requested to run for the batch export
+ * @return void
+ */
+function edd_include_earnings_report_batch_processer( $class ) {
+	if ( 'EDD_Batch_Earnings_Report_Export' === $class ) {
+		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-earnings-report.php';
+	}
+}
+
+/**
+ * Register the API requests batch exporter
+ *
+ * @since  2.7
+ */
+function edd_register_api_requests_batch_export() {
+	add_action( 'edd_batch_export_class_include', 'edd_include_api_requests_batch_processer', 10, 1 );
+}
+add_action( 'edd_register_batch_exporter', 'edd_register_api_requests_batch_export', 10 );
+
+/**
+ * Loads the API requests batch process if needed
+ *
+ * @since  2.7
+ * @param  string $class The class being requested to run for the batch export
+ * @return void
+ */
+function edd_include_api_requests_batch_processer( $class ) {
+	if ( 'EDD_Batch_API_Requests_Export' === $class ) {
+		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-api-requests.php';
+	}
 }

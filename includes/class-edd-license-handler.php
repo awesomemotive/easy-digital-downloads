@@ -35,15 +35,14 @@ class EDD_License {
 	 * @param string  $_author
 	 * @param string  $_optname
 	 * @param string  $_api_url
+	 * @param int     $_item_id
 	 */
-	function __construct( $_file, $_item, $_version, $_author, $_optname = null, $_api_url = null ) {
+	function __construct( $_file, $_item_name, $_version, $_author, $_optname = null, $_api_url = null, $_item_id = null ) {
+		$this->file = $_file;
+		$this->item_name = $_item_name;
 
-		$this->file           = $_file;
-
-		if( is_numeric( $_item ) ) {
-			$this->item_id    = absint( $_item );
-		} else {
-			$this->item_name  = $_item;
+		if ( is_numeric( $_item_id ) ) {
+			$this->item_id = absint( $_item_id );
 		}
 
 		$this->item_shortname = 'edd_' . preg_replace( '/[^a-zA-Z0-9_\s]/', '', str_replace( ' ', '_', strtolower( $this->item_name ) ) );
@@ -118,6 +117,8 @@ class EDD_License {
 
 		add_action( 'in_plugin_update_message-' . plugin_basename( $this->file ), array( $this, 'plugin_row_license_missing' ), 10, 2 );
 
+		// Register plugins for beta support
+		add_filter( 'edd_beta_enabled_extensions', array( $this, 'register_beta_support' ) );
 	}
 
 	/**
@@ -127,11 +128,13 @@ class EDD_License {
 	 * @return  void
 	 */
 	public function auto_updater() {
+		$betas = edd_get_option( 'enabled_betas', array() );
 
 		$args = array(
 			'version'   => $this->version,
 			'license'   => $this->license,
-			'author'    => $this->author
+			'author'    => $this->author,
+			'beta'      => edd_extension_has_beta_support( $this->item_shortname ),
 		);
 
 		if( ! empty( $this->item_id ) ) {
@@ -160,7 +163,7 @@ class EDD_License {
 		$edd_license_settings = array(
 			array(
 				'id'      => $this->item_shortname . '_license_key',
-				'name'    => sprintf( __( '%1$s License Key', 'easy-digital-downloads' ), $this->item_name ),
+				'name'    => sprintf( __( '%1$s', 'easy-digital-downloads' ), $this->item_name ),
 				'desc'    => '',
 				'type'    => 'license_key',
 				'options' => array( 'is_valid_license_option' => $this->item_shortname . '_license_active' ),
@@ -193,7 +196,7 @@ class EDD_License {
 		}
 
 		echo '<p>' . sprintf(
-			__( 'Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please <a href="%s" target="_blank" title="License renewal FAQ">renew your license</a>.', 'easy-digital-downloads' ),
+			__( 'Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please <a href="%s" target="_blank">renew your license</a>.', 'easy-digital-downloads' ),
 			'http://docs.easydigitaldownloads.com/article/1000-license-renewal'
 		) . '</p>';
 
@@ -418,7 +421,7 @@ class EDD_License {
 			if( empty( $_GET['tab'] ) || 'licenses' !== $_GET['tab'] ) {
 
 				$messages[] = sprintf(
-					__( 'You have invalid or expired license keys for Easy Digital Downloads. Please go to the <a href="%s" title="Go to Licenses page">Licenses page</a> to correct this issue.', 'easy-digital-downloads' ),
+					__( 'You have invalid or expired license keys for Easy Digital Downloads. Please go to the <a href="%s">Licenses page</a> to correct this issue.', 'easy-digital-downloads' ),
 					admin_url( 'edit.php?post_type=download&page=edd-settings&tab=licenses' )
 				);
 
@@ -461,6 +464,20 @@ class EDD_License {
 			$showed_imissing_key_message[ $this->item_shortname ] = true;
 		}
 
+	}
+
+	/**
+	 * Adds this plugin to the beta page
+	 *
+	 * @access  public
+	 * @param   array $products
+	 * @since   2.6.11
+	 * @return  void
+	 */
+	public function register_beta_support( $products ) {
+		$products[ $this->item_shortname ] = $this->item_name;
+
+		return $products;
 	}
 }
 

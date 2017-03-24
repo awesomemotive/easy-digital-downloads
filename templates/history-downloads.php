@@ -10,7 +10,7 @@ endif;
 $purchases = edd_get_users_purchases( get_current_user_id(), 20, true, 'any' );
 if ( $purchases ) :
 	do_action( 'edd_before_download_history' ); ?>
-	<table id="edd_user_history">
+	<table id="edd_user_history" class="edd-table">
 		<thead>
 			<tr class="edd_download_history_row">
 				<?php do_action( 'edd_download_history_header_start' ); ?>
@@ -35,12 +35,12 @@ if ( $purchases ) :
 
 					<tr class="edd_download_history_row">
 						<?php
-						$price_id 		= edd_get_cart_item_price_id( $download );
+						$price_id       = edd_get_cart_item_price_id( $download );
 						$download_files = edd_get_download_files( $download['id'], $price_id );
 						$name           = get_the_title( $download['id'] );
 
 						// Retrieve and append the price option name
-						if ( ! empty( $price_id ) ) {
+						if ( ! empty( $price_id ) && 0 !== $price_id ) {
 							$name .= ' - ' . edd_get_price_option_name( $download['id'], $price_id, $payment->ID );
 						}
 
@@ -52,7 +52,7 @@ if ( $purchases ) :
 							<td class="edd_download_download_files">
 								<?php
 
-								if ( edd_is_payment_complete( $payment->ID ) ) :
+								if ( 'publish' == $payment->post_status ) :
 
 									if ( $download_files ) :
 
@@ -63,7 +63,7 @@ if ( $purchases ) :
 
 											<div class="edd_download_file">
 												<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link">
-													<?php echo isset( $file['name'] ) ? esc_html( $file['name'] ) : esc_html( $name ); ?>
+													<?php echo edd_get_file_name( $file ); ?>
 												</a>
 											</div>
 

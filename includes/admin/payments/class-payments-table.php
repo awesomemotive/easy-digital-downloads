@@ -140,6 +140,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			<?php if( ! empty( $start_date ) || ! empty( $end_date ) ) : ?>
 				<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>" class="button-secondary"><?php _e( 'Clear Filter', 'easy-digital-downloads' ); ?></a>
 			<?php endif; ?>
+			<?php do_action( 'edd_payment_advanced_filters_row' ); ?>
 			<?php $this->search_box( __( 'Search', 'easy-digital-downloads' ), 'edd-payments' ); ?>
 		</div>
 
@@ -309,6 +310,12 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 		$email = edd_get_payment_user_email( $payment->ID );
 
+		// Add search term string back to base URL
+		$search_terms = ( isset( $_GET['s'] ) ? trim( $_GET['s'] ) : '' );
+		if ( ! empty( $search_terms ) ) {
+			$this->base_url = add_query_arg( 's', $search_terms, $this->base_url );
+		}
+
 		if ( edd_is_payment_complete( $payment->ID ) && ! empty( $email ) ) {
 			$row_actions['email_links'] = '<a href="' . add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $payment->ID ), $this->base_url ) . '">' . __( 'Resend Purchase Receipt', 'easy-digital-downloads' ) . '</a>';
 		}
@@ -457,6 +464,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			}
 
 			if( 'resend-receipt' === $this->current_action() ) {
+
 				edd_email_purchase_receipt( $id, false );
 			}
 
@@ -480,8 +488,18 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 		if( isset( $_GET['user'] ) ) {
 			$args['user'] = urldecode( $_GET['user'] );
+		} elseif( isset( $_GET['customer'] ) ) {
+			$args['customer'] = absint( $_GET['customer'] );
 		} elseif( isset( $_GET['s'] ) ) {
-			$args['s'] = urldecode( $_GET['s'] );
+
+			$is_user  = strpos( $_GET['s'], strtolower( 'user:' ) ) !== false;
+
+			if ( $is_user ) {
+				$args['user'] = absint( trim( str_replace( 'user:', '', strtolower( $_GET['s'] ) ) ) );
+				unset( $args['s'] );
+			} else {
+				$args['s'] = sanitize_text_field( $_GET['s'] );
+			}
 		}
 
 		if ( ! empty( $_GET['start-date'] ) ) {
@@ -518,6 +536,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$orderby    = isset( $_GET['orderby'] )     ? urldecode( $_GET['orderby'] )              : 'ID';
 		$order      = isset( $_GET['order'] )       ? $_GET['order']                             : 'DESC';
 		$user       = isset( $_GET['user'] )        ? $_GET['user']                              : null;
+		$customer   = isset( $_GET['customer'] )    ? $_GET['customer']                          : null;
 		$status     = isset( $_GET['status'] )      ? $_GET['status']                            : edd_get_payment_status_keys();
 		$meta_key   = isset( $_GET['meta_key'] )    ? $_GET['meta_key']                          : null;
 		$year       = isset( $_GET['year'] )        ? $_GET['year']                              : null;
@@ -538,6 +557,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			'orderby'    => $orderby,
 			'order'      => $order,
 			'user'       => $user,
+			'customer'   => $customer,
 			'status'     => $status,
 			'meta_key'   => $meta_key,
 			'year'       => $year,

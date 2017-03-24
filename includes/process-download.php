@@ -75,25 +75,88 @@ function edd_process_download() {
 		// Payment has been verified, setup the download
 		$download_files = edd_get_download_files( $args['download'] );
 		$attachment_id  = ! empty( $download_files[ $args['file_key'] ]['attachment_id'] ) ? absint( $download_files[ $args['file_key'] ]['attachment_id'] ) : false;
+		$thumbnail_size = ! empty( $download_files[ $args['file_key'] ]['thumbnail_size'] ) ? sanitize_text_field( $download_files[ $args['file_key'] ]['thumbnail_size'] ) : false;
+		$requested_file = isset( $download_files[ $args['file_key'] ]['file'] ) ? $download_files[ $args['file_key'] ]['file'] : '';
 
 		/*
 		 * If we have an attachment ID stored, use get_attached_file() to retrieve absolute URL
 		 * If this fails or returns a relative path, we fail back to our own absolute URL detection
 		 */
-		if( $attachment_id && 'attachment' == get_post_type( $attachment_id ) && 'redirect' != $method ) {
-			$attached_file = get_attached_file( $attachment_id, false );
-			if( $attached_file ) {
-				$requested_file = $attached_file;
-			}
-		}
+		if( edd_is_local_file( $requested_file ) && $attachment_id && 'attachment' == get_post_type( $attachment_id ) ) {
 
-		// If we didn't find a file from the attachment, grab the given URL
-		if( ! isset( $requested_file ) ) {
-			$requested_file = isset( $download_files[ $args['file_key'] ]['file'] ) ? $download_files[ $args['file_key'] ]['file'] : '';
+			if( 'pdf' === strtolower( edd_get_file_extension( $requested_file ) ) ) {
+				// Do not ever grab the thumbnail for PDFs. See https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5491
+				$thumbnail_size = false;
+			}
+
+			if( 'redirect' == $method ) {
+
+				if ( $thumbnail_size ) {
+					$attached_file = wp_get_attachment_image_url( $attachment_id, $thumbnail_size, false );
+				} else {
+					$attached_file = wp_get_attachment_url( $attachment_id );
+				}
+
+			} else {
+
+				if ( $thumbnail_size ) {
+
+					$attachment_data = wp_get_attachment_image_src( $attachment_id, $thumbnail_size, false );
+
+					if ( false !== $attachment_data && ! empty( $attachment_data[0] ) && filter_var( $attachment_data[0], FILTER_VALIDATE_URL) !== false ) {
+						$attached_file  = $attachment_data['0'];
+						$attached_file  = str_replace( site_url(), '', $attached_file );
+						$attached_file  = realpath( ABSPATH . $attached_file );
+					}
+
+				}
+
+				if ( empty( $attached_file ) ) {
+					$attached_file = get_attached_file( $attachment_id, false );
+				}
+
+				// Confirm the file exists
+				if( ! file_exists( $attached_file ) ) {
+					$attached_file = false;
+				}
+
+			}
+
+			if( $attached_file ) {
+
+				$requested_file = $attached_file;
+
+			}
+
 		}
 
 		// Allow the file to be altered before any headers are sent
 		$requested_file = apply_filters( 'edd_requested_file', $requested_file, $download_files, $args['file_key'] );
+
+		if( 'x_sendfile' == $method && ( ! function_exists( 'apache_get_modules' ) || ! in_array( 'mod_xsendfile', apache_get_modules() ) ) ) {
+			// If X-Sendfile is selected but is not supported, fallback to Direct
+			$method = 'direct';
+		}
+
+		$file_details = parse_url( $requested_file );
+		$schemes      = array( 'http', 'https' ); // Direct URL schemes
+
+		if ( ( ! isset( $file_details['scheme'] ) || ! in_array( $file_details['scheme'], $schemes ) ) && isset( $file_details['path'] ) && file_exists( $requested_file ) ) {
+
+			/**
+			 * Download method is seto to Redirect in settings but an absolute path was provided
+			 * We need to switch to a direct download in order for the file to download properly
+			 */
+			$method = 'direct';
+
+		}
+
+		/**
+		 * Allow extensions to run actions prior to recording the file download log entry
+		 *
+		 * @since 2.6.14
+		 */
+		do_action( 'edd_process_download_pre_record_log', $requested_file, $args, $method );
 
 		// Record this file download in the log
 		$user_info = array();
@@ -103,6 +166,7 @@ function edd_process_download() {
 			$user_info['id']   = get_current_user_id();
 			$user_info['name'] = $user_data->display_name;
 		}
+
 		edd_record_download_in_log( $args['download'], $args['file_key'], $user_info, edd_get_ip(), $args['payment'], $args['price_id'] );
 
 		$file_extension = edd_get_file_extension( $requested_file );
@@ -130,22 +194,10 @@ function edd_process_download() {
 		header("Content-Disposition: attachment; filename=\"" . apply_filters( 'edd_requested_file_name', basename( $requested_file ) ) . "\"");
 		header("Content-Transfer-Encoding: binary");
 
-		if( 'x_sendfile' == $method && ( ! function_exists( 'apache_get_modules' ) || ! in_array( 'mod_xsendfile', apache_get_modules() ) ) ) {
-			// If X-Sendfile is selected but is not supported, fallback to Direct
-			$method = 'direct';
-		}
-
-		$file_details = parse_url( $requested_file );
-		$schemes      = array( 'http', 'https' ); // Direct URL schemes
-
-		if ( ( ! isset( $file_details['scheme'] ) || ! in_array( $file_details['scheme'], $schemes ) ) && isset( $file_details['path'] ) && file_exists( $requested_file ) ) {
-
-			/**
-			 * Download method is seto to Redirect in settings but an absolute path was provided
-			 * We need to switch to a direct download in order for the file to download properly
-			 */
-			$method = 'direct';
-
+		// If the file isn't locally hosted, process the redirect
+		if ( filter_var( $requested_file, FILTER_VALIDATE_URL ) && ! edd_is_local_file( $requested_file ) ) {
+			edd_deliver_download( $requested_file, true );
+			exit;
 		}
 
 		switch( $method ) :
@@ -159,7 +211,8 @@ function edd_process_download() {
 			case 'direct' :
 			default:
 
-				$direct = false;
+				$direct    = false;
+				$file_path = $requested_file;
 
 				if ( ( ! isset( $file_details['scheme'] ) || ! in_array( $file_details['scheme'], $schemes ) ) && isset( $file_details['path'] ) && file_exists( $requested_file ) ) {
 
@@ -195,21 +248,17 @@ function edd_process_download() {
 				}
 
 				// Set the file size header
-				header( "Content-Length: " . filesize( $file_path ) );
+				header( "Content-Length: " . @filesize( $file_path ) );
 
 				// Now deliver the file based on the kind of software the server is running / has enabled
-				if ( function_exists( 'apache_get_modules' ) && in_array( 'mod_xsendfile', apache_get_modules() ) ) {
-
-					header("X-Sendfile: $file_path");
-
-				} elseif ( stristr( getenv( 'SERVER_SOFTWARE' ), 'lighttpd' ) ) {
+				if ( stristr( getenv( 'SERVER_SOFTWARE' ), 'lighttpd' ) ) {
 
 					header( "X-LIGHTTPD-send-file: $file_path" );
 
 				} elseif ( $direct && ( stristr( getenv( 'SERVER_SOFTWARE' ), 'nginx' ) || stristr( getenv( 'SERVER_SOFTWARE' ), 'cherokee' ) ) ) {
 
 					// We need a path relative to the domain
-					$file_path = str_ireplace( $_SERVER['DOCUMENT_ROOT'], '', $file_path );
+					$file_path = str_ireplace( realpath( $_SERVER['DOCUMENT_ROOT'] ), '', $file_path );
 					header( "X-Accel-Redirect: /$file_path" );
 
 				}
@@ -256,8 +305,9 @@ function edd_deliver_download( $file = '', $redirect = false ) {
 	 * This symlink is used to hide the true location of the file, even when the file URL is revealed
 	 * The symlink is deleted after it is used
 	 */
+	if( edd_symlink_file_downloads() && edd_is_local_file( $file ) ) {
 
-	if( edd_symlink_file_downloads() ) {
+		$file = edd_get_local_path_from_url( $file );
 
 		// Generate a symbolic link
 		$ext       = edd_get_file_extension( $file );
@@ -278,7 +328,7 @@ function edd_deliver_download( $file = '', $redirect = false ) {
 
 		// Make sure the symlink doesn't already exist before we create it
 		if( ! file_exists( $path ) ) {
-			$link = symlink( $file, $path );
+			$link = @symlink( realpath( $file ), $path );
 		} else {
 			$link = true;
 		}
@@ -303,6 +353,66 @@ function edd_deliver_download( $file = '', $redirect = false ) {
 
 }
 
+/**
+ * Determine if the file being requested is hosted locally or not
+ *
+ * @since  2.5.10
+ * @param  string $requested_file The file being requested
+ * @return bool                   If the file is hosted locally or not
+ */
+function edd_is_local_file( $requested_file ) {
+	$home_url       = preg_replace('#^https?://#', '', home_url() );
+	$requested_file = preg_replace('#^(https?|file)://#', '', $requested_file );
+
+	$is_local_url  = strpos( $requested_file, $home_url ) === 0;
+	$is_local_path = strpos( $requested_file, '/' ) === 0;
+
+	return ( $is_local_url || $is_local_path );
+}
+
+/**
+ * Given the URL to a file, determine it's local path
+ *
+ * Used during the symlink process to determine where to make the symlink point to
+ *
+ * @since  2.5.10
+ * @param  string $url The URL of the file requested
+ * @return string      If found to be locally hosted, the path to the file
+ */
+function edd_get_local_path_from_url( $url ) {
+
+	$file       = $url;
+	$upload_dir = wp_upload_dir();
+	$upload_url = $upload_dir['baseurl'] . '/edd';
+
+	if( defined( 'UPLOADS' ) && strpos( $file, UPLOADS ) !== false ) {
+
+		/**
+		 * This is a local file given by URL so we need to figure out the path
+		 * UPLOADS is always relative to ABSPATH
+		 * site_url() is the URL to where WordPress is installed
+		 */
+		$file = str_replace( site_url(), '', $file );
+
+	} else if( strpos( $file, $upload_url ) !== false ) {
+
+		/** This is a local file given by URL so we need to figure out the path */
+		$file = str_replace( $upload_url, edd_get_upload_dir(), $file );
+
+	} else if( strpos( $file, set_url_scheme( $upload_url, 'https' ) ) !== false ) {
+
+		/** This is a local file given by an HTTPS URL so we need to figure out the path */
+		$file = str_replace( set_url_scheme( $upload_url, 'https' ), edd_get_upload_dir(), $file );
+
+	} elseif( strpos( $file, content_url() ) !== false ) {
+
+		$file = str_replace( content_url(), WP_CONTENT_DIR, $file );
+
+	}
+
+	return $file;
+
+}
 
 /**
  * Get the file content type
@@ -659,8 +769,8 @@ function edd_readfile_chunked( $file, $retbytes = true ) {
  * Used to process an old URL format for downloads
  *
  * @since  2.3
- * @param  array $args Arguements provided to download a file
- * @return array       Same arguements, with the status of verification added
+ * @param  array $args Arguments provided to download a file
+ * @return array       Same arguments, with the status of verification added
  */
 function edd_process_legacy_download_url( $args ) {
 
@@ -680,8 +790,8 @@ function edd_process_legacy_download_url( $args ) {
  * Used to process a signed URL for processing downloads
  *
  * @since  2.3
- * @param  array $args Arguements provided to download a file
- * @return array       Same arguements, with the status of verification added
+ * @param  array $args Arguments provided to download a file
+ * @return array       Same arguments, with the status of verification added
  */
 function edd_process_signed_download_url( $args ) {
 
@@ -694,7 +804,7 @@ function edd_process_signed_download_url( $args ) {
 	// Bail if the token isn't valid.
 	// The request should pass through EDD, or custom handling can be enabled with the action.
 	if ( ! $valid_token ) {
-		$args['payment'] = false;
+		$args['payment']    = false;
 		$args['has_access'] = false;
 
 		return $args;
@@ -712,9 +822,11 @@ function edd_process_signed_download_url( $args ) {
 	$args['payment']     = $order_parts[0];
 	$args['file_key']    = $order_parts[2];
 	$args['price_id']    = $order_parts[3];
-	$args['email']       = get_post_meta( $order_parts[0], '_edd_payment_user_email', true );
-	$args['key']         = get_post_meta( $order_parts[0], '_edd_payment_purchase_key', true );
-	$args['has_access']  = true;
+	$args['email']       = edd_get_payment_meta( $order_parts[0], '_edd_payment_user_email', true );
+	$args['key']         = edd_get_payment_meta( $order_parts[0], '_edd_payment_purchase_key', true );
+
+	$payment = new EDD_Payment( $args['payment'] );
+	$args['has_access']  = 'publish' === $payment->status ? true : false;
 
 	return $args;
 }
@@ -729,3 +841,80 @@ function edd_symlink_file_downloads() {
 	$symlink = edd_get_option( 'symlink_file_downloads', false ) && function_exists( 'symlink' );
 	return (bool) apply_filters( 'edd_symlink_file_downloads', $symlink );
 }
+
+/**
+ * Given a local URL, make sure the requests matches the request scheme
+ *
+ * @since  2.5.10
+ * @param  string $requested_file The Requested File
+ * @param  array  $download_files The download files
+ * @param  string $file_key       The file key
+ * @return string                 The file (if local) with the matched scheme
+ */
+function edd_set_requested_file_scheme( $requested_file, $download_files, $file_key ) {
+
+	// If it's a URL and it's local, let's make sure the scheme matches the requested scheme
+	if ( filter_var( $requested_file, FILTER_VALIDATE_URL ) && edd_is_local_file( $requested_file ) ) {
+
+		if ( false === strpos( $requested_file, 'https://' ) && is_ssl() ) {
+			$requested_file = str_replace( 'http://', 'https://', $requested_file );
+		} elseif ( ! is_ssl() && 0 === strpos( $requested_file, 'https://' ) ) {
+			$requested_file = str_replace( 'https://', 'http://', $requested_file );
+		}
+
+	}
+
+	return $requested_file;
+
+}
+add_filter( 'edd_requested_file', 'edd_set_requested_file_scheme', 10, 3 );
+
+/**
+ * Perform a head request on file URLs before attempting to download to check if they are accessible.
+ *
+ * @since  2.6.14
+ * @param  string $requested_file The Requested File
+ * @param  array  $args           Arguments
+ * @param  string $method         The download mehtod being sed
+ * @return void
+ */
+function edd_check_file_url_head( $requested_file, $args, $method ) {
+
+	// If this is a file URL (not a path), perform a head request to determine if it's valid
+	if( filter_var( $requested_file, FILTER_VALIDATE_URL ) && ! edd_is_local_file( $requested_file ) ) {
+
+		$valid   = true;
+		$request = wp_remote_head( $requested_file );
+
+		if( is_wp_error( $request ) ) {
+
+			$valid   = false;
+			$message = $request;
+			$title   = __( 'Invalid file', 'easy-digital-downloads' );
+
+		}
+
+		if( 404 === wp_remote_retrieve_response_code( $request ) ) {
+
+			$valid   = false;
+			$message = __( 'The requested file could not be found. Error 404.', 'easy-digital-downloads' );
+			$title   = __( 'File not found', 'easy-digital-downloads' );
+
+		}
+
+		if( ! $valid ) {
+
+			do_action( 'edd_check_file_url_head_invalid', $requested_file, $args, $method );
+			wp_die( $message, $title, array( 'response' => 403 ) );
+
+		}
+
+	}
+
+}
+/**
+ * Filter removed in EDD 2.7
+ *
+ * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5450
+ */
+// add_action( 'edd_process_download_pre_record_log', 'edd_check_file_url_head', 10, 3 );

@@ -24,7 +24,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since 1.0
  * @global $wpdb
  * @global $edd_options
- * @global $wp_version
  * @param  bool $network_side If the plugin is being network-activated
  * @return void
  */
@@ -51,13 +50,13 @@ function edd_install( $network_wide = false ) {
 register_activation_hook( EDD_PLUGIN_FILE, 'edd_install' );
 
 /**
- * Run the EDD Instsall process
+ * Run the EDD Install process
  *
  * @since  2.5
  * @return void
  */
 function edd_run_install() {
-	global $wpdb, $edd_options, $wp_version;
+	global $wpdb, $edd_options;
 
 	if( ! function_exists( 'edd_create_protection_files' ) ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upload-functions.php';
@@ -85,7 +84,8 @@ function edd_run_install() {
 	$current_options = get_option( 'edd_settings', array() );
 
 	// Checks if the purchase page option exists
-	if ( ! array_key_exists( 'purchase_page', $current_options ) ) {
+	$purchase_page = array_key_exists( 'purchase_page', $current_options ) ? get_post( $current_options['purchase_page'] ) : false;
+	if ( empty( $purchase_page ) ) {
 		// Checkout Page
 		$checkout = wp_insert_post(
 			array(
@@ -98,6 +98,13 @@ function edd_run_install() {
 			)
 		);
 
+		$options['purchase_page'] = $checkout;
+	}
+
+	$checkout = isset( $checkout ) ? $checkout : $current_options['purchase_page'];
+
+	$success_page = array_key_exists( 'success_page', $current_options ) ? get_post( $current_options['success_page'] ) : false;
+	if ( empty( $success_page ) ) {
 		// Purchase Confirmation (Success) Page
 		$success = wp_insert_post(
 			array(
@@ -111,6 +118,11 @@ function edd_run_install() {
 			)
 		);
 
+		$options['success_page'] = $success;
+	}
+
+	$failure_page = array_key_exists( 'failure_page', $current_options ) ? get_post( $current_options['failure_page'] ) : false;
+	if ( empty( $failure_page ) ) {
 		// Failed Purchase Page
 		$failed = wp_insert_post(
 			array(
@@ -124,6 +136,11 @@ function edd_run_install() {
 			)
 		);
 
+		$options['failure_page'] = $failed;
+	}
+
+	$history_page = array_key_exists( 'purchase_history_page', $current_options ) ? get_post( $current_options['purchase_history_page'] ) : false;
+	if ( empty( $history_page ) ) {
 		// Purchase History (History) Page
 		$history = wp_insert_post(
 			array(
@@ -137,16 +154,11 @@ function edd_run_install() {
 			)
 		);
 
-		// Store our page IDs
-		$options['purchase_page']         = $checkout;
-		$options['success_page']          = $success;
-		$options['failure_page']          = $failed;
 		$options['purchase_history_page'] = $history;
-
 	}
 
 	// Populate some default values
-	foreach( edd_get_registered_settings() as $tab => $sections ) {	
+	foreach( edd_get_registered_settings() as $tab => $sections ) {
 		foreach( $sections as $section => $settings) {
 
 			// Check for backwards compatibility
@@ -158,7 +170,7 @@ function edd_run_install() {
 
 			foreach ( $settings as $option ) {
 
-				if( 'checkbox' == $option['type'] && ! empty( $option['std'] ) ) {
+				if( ! empty( $option['type'] ) && 'checkbox' == $option['type'] && ! empty( $option['std'] ) ) {
 					$options[ $option['id'] ] = '1';
 				}
 
@@ -184,8 +196,9 @@ function edd_run_install() {
 	$api = new EDD_API;
 	update_option( 'edd_default_api_version', 'v' . $api->get_version() );
 
-	// Create the customers database
+	// Create the customer databases
 	@EDD()->customers->create_table();
+	@EDD()->customer_meta->create_table();
 
 	// Check for PHP Session support, and enable if available
 	EDD()->session->use_php_sessions();
@@ -209,13 +222,6 @@ function edd_run_install() {
 		}
 	}
 
-	// Bail if activating from network, or bulk
-	if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
-		return;
-	}
-
-	// Add the transient to redirect
-	set_transient( '_edd_activation_redirect', true, 30 );
 }
 
 /**
@@ -255,9 +261,11 @@ add_action( 'wpmu_new_blog', 'edd_new_blog_created', 10, 6 );
 function edd_wpmu_drop_tables( $tables, $blog_id ) {
 
 	switch_to_blog( $blog_id );
-	$customers_db = new EDD_DB_Customers();
+	$customers_db     = new EDD_DB_Customers();
+	$customer_meta_db = new EDD_DB_Customer_Meta();
 	if ( $customers_db->installed() ) {
 		$tables[] = $customers_db->table_name;
+		$tables[] = $customer_meta_db->table_name;
 	}
 	restore_current_blog();
 
@@ -286,9 +294,17 @@ function edd_after_install() {
 
 	if ( false === $edd_table_check || current_time( 'timestamp' ) > $edd_table_check ) {
 
+		if ( ! @EDD()->customer_meta->installed() ) {
+
+			// Create the customer meta database (this ensures it creates it on multisite instances where it is network activated)
+			@EDD()->customer_meta->create_table();
+
+		}
+
 		if ( ! @EDD()->customers->installed() ) {
 			// Create the customers database (this ensures it creates it on multisite instances where it is network activated)
 			@EDD()->customers->create_table();
+			@EDD()->customer_meta->create_table();
 
 			do_action( 'edd_after_install', $edd_options );
 		}
@@ -322,7 +338,8 @@ function edd_install_roles_on_network() {
 		return;
 	}
 
-	if( ! in_array( 'shop_manager', $wp_roles->roles ) ) {
+
+	if( empty( $wp_roles->roles ) || ! array_key_exists( 'shop_manager', $wp_roles->roles ) ) {
 
 		// Create EDD shop roles
 		$roles = new EDD_Roles;

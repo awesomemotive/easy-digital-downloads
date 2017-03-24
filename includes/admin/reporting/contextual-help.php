@@ -27,13 +27,13 @@ function edd_reporting_contextual_help() {
 
 	$screen->set_help_sidebar(
 		'<p><strong>' . sprintf( __( 'For more information:', 'easy-digital-downloads' ) . '</strong></p>' .
-		'<p>' . sprintf( __( 'Visit the <a href="%s">documentation</a> on the Easy Digital Downloads website.', 'easy-digital-downloads' ), esc_url( 'https://easydigitaldownloads.com/documentation/' ) ) ) . '</p>' .
+		'<p>' . sprintf( __( 'Visit the <a href="%s">documentation</a> on the Easy Digital Downloads website.', 'easy-digital-downloads' ), esc_url( 'http://docs.easydigitaldownloads.com/' ) ) ) . '</p>' .
 		'<p>' . sprintf(
 					__( '<a href="%s">Post an issue</a> on <a href="%s">GitHub</a>. View <a href="%s">extensions</a> or <a href="%s">themes</a>.', 'easy-digital-downloads' ),
 					esc_url( 'https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues' ),
 					esc_url( 'https://github.com/easydigitaldownloads/Easy-Digital-Downloads' ),
-					esc_url( 'https://easydigitaldownloads.com/downloads/' ),
-					esc_url( 'https://easydigitaldownloads.com/themes/' )
+					esc_url( 'https://easydigitaldownloads.com/downloads/?utm_source=plugin-reports-page&utm_medium=contextual-help-sidebar&utm_term=extensions&utm_campaign=ContextualHelp' ),
+					esc_url( 'https://easydigitaldownloads.com/themes/?utm_source=plugin-reports-page&utm_medium=contextual-help-sidebar&utm_term=themes&utm_campaign=ContextualHelp' )
 				) . '</p>'
 	);
 
@@ -47,7 +47,7 @@ function edd_reporting_contextual_help() {
 		'id'	    => 'edd-reports-export',
 		'title'	    => __( 'Export', 'easy-digital-downloads' ),
 		'content'	=>
-			'<p>' . __( 'This screen allows you to export your reports into a PDF or CSV format.', 'easy-digital-downloads' ) . '</p>' .
+			'<p>' . __( 'This screen allows you to export your reports into a CSV format.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( '<strong>Sales and Earnings</strong> - This report exports all of the sales and earnings that you have made in the current year. It includes your sales and earnings for each product as well a graphs of sales and earnings so you can compare them for each month.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( '<strong>Payment History</strong> - This report exports all of the payments you have received on your EDD store in a CSV format.  It includes the contact details of the customer, the products they have purchased as well as any discount codes they have used and the final price they have paid.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( "<strong>Customers</strong> - This report exports all of your customers in a CSV format. It exports the customer's name and email address and the amount of products they have purchased as well as the final price of their total purchases.", 'easy-digital-downloads' ) . '</p>' .

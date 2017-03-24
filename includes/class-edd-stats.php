@@ -111,7 +111,7 @@ class EDD_Stats {
 		}
 
 		if( empty( $_end_date ) ) {
-			$_end_date = $_start_date;
+			$_end_date = time();
 		}
 
 		$this->start_date = $this->convert_date( $_start_date );
@@ -408,6 +408,7 @@ class EDD_Stats {
 					$year -= 1;
 					if( ! $end_date ) {
 						$month = 1;
+						$day   = 1;
 					} else {
 						$month  = 12;
 						$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
@@ -428,8 +429,10 @@ class EDD_Stats {
 
 		} else if( false !== strtotime( $date ) ) {
 
-			$this->timestamp = true;
-			$date = strtotime( $date, current_time( 'timestamp' ) );
+			$date  = strtotime( $date, current_time( 'timestamp' ) );
+			$year  = date( 'Y', $date );
+			$month = date( 'm', $date );
+			$day   = date( 'd', $date );
 
 		} else {
 
@@ -437,8 +440,7 @@ class EDD_Stats {
 
 		}
 
-		if( ! is_wp_error( $end_date ) && false === $this->timestamp ) {
-
+		if( false === $this->timestamp ) {
 			// Create an exact timestamp
 			$date = mktime( $hour, $minute, $second, $month, $day, $year );
 

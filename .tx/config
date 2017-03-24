@@ -1,8 +1,0 @@
-[main]
-host = https://www.transifex.com
-
-[easy-digital-downloads.easy-digital-downloads]
-file_filter = languages/easy-digital-downloads-<lang>.po
-source_file = languages/easy-digital-downloads.pot
-source_lang = en_US
-type = PO

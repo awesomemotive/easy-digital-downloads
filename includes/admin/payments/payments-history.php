@@ -32,7 +32,7 @@ function edd_payment_history_page() {
 		$payments_table->prepare_items();
 	?>
 	<div class="wrap">
-		<h2><?php echo $edd_payment->labels->menu_name ?></h2>
+		<h1><?php echo $edd_payment->labels->menu_name ?></h1>
 		<?php do_action( 'edd_payments_page_top' ); ?>
 		<form id="edd-payments-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>">
 			<input type="hidden" name="post_type" value="download" />
@@ -59,8 +59,8 @@ function edd_payment_history_page() {
 function edd_payment_history_mobile_link() {
 	?>
 	<p class="edd-mobile-link">
-		<a href="https://easydigitaldownloads.com/downloads/ios-sales-earnings-tracker/?utm_source=payments&utm_medium=mobile-link&utm_campaign=admin" target="_blank">
-			<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/icons/iphone.png'; ?>"/>
+		<a href="https://easydigitaldownloads.com/downloads/ios-app/?utm_source=payments&utm_medium=mobile-link&utm_campaign=admin" target="_blank">
+			<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/icons/iphone.png'; ?>" alt="<?php _e( 'Easy Digital Downloads iOS App', 'easy-digital-downloads' ); ?>"/>
 			<?php _e( 'Get the EDD Sales / Earnings tracker for iOS', 'easy-digital-downloads' ); ?>
 		</a>
 	</p>

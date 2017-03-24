@@ -3,7 +3,7 @@
 /**
  * @group edd_emails
  */
-class Tests_Emails extends WP_UnitTestCase {
+class Tests_Emails extends EDD_UnitTestCase {
 
 	protected $_tags;
 
@@ -124,7 +124,7 @@ class Tests_Emails extends WP_UnitTestCase {
 		);
 
 		$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
-		$_SERVER['SERVER_NAME'] = 'edd_virtual';
+		$_SERVER['SERVER_NAME'] = 'edd-virtual.local';
 
 		$this->_payment_id = edd_insert_payment( $purchase_data );
 
@@ -267,7 +267,7 @@ class Tests_Emails extends WP_UnitTestCase {
 	}
 
 	public function test_email_tags_receipt_link() {
-		$this->assertContains( 'View it in your browser.', edd_email_tag_receipt_link( $this->_payment_id ) );
+		$this->assertContains( 'View it in your browser &raquo;', edd_email_tag_receipt_link( $this->_payment_id ) );
 	}
 
 	public function test_get_from_name() {
