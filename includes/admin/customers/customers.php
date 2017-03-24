@@ -126,7 +126,7 @@ function edd_render_customer_view( $view, $callbacks ) {
 
 			<div id="edd-item-wrapper" class="edd-item-has-tabs edd-clearfix">
 				<div id="edd-item-tab-wrapper" class="customer-tab-wrapper">
-					<ul id="edd-item-tab-wrapper-list" class="ustomer-tab-wrapper-list">
+					<ul id="edd-item-tab-wrapper-list" class="customer-tab-wrapper-list">
 						<?php foreach ( $customer_tabs as $key => $tab ) : ?>
 							<?php $active = $key === $view ? true : false; ?>
 							<?php $class  = $active ? 'active' : 'inactive'; ?>
