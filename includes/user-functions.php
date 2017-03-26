@@ -230,12 +230,14 @@ function edd_has_user_purchased( $user_id, $downloads, $variable_price_id = null
 						$variable_prices = edd_has_variable_prices( $download['id'] );
 						if ( $variable_prices && ! is_null( $variable_price_id ) && $variable_price_id !== false ) {
 							if ( isset( $download['item_number']['options']['price_id'] ) && $variable_price_id == $download['item_number']['options']['price_id'] ) {
-								return true;
+								$return = true;
+								break 2; // Get out to prevent this value being overwritten if the customer has purchased item twice
 							} else {
 								$return = false;
 							}
 						} else {
 							$return = true;
+							break 2;  // Get out to prevent this value being overwritten if the customer has purchased item twice
 						}
 					}
 				}
