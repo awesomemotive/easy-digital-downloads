@@ -204,9 +204,11 @@ function edd_has_user_purchased( $user_id, $downloads, $variable_price_id = null
 		return false;
 	}
 
-	// Allow 3rd parties to take actions before the history is queried. This is a
-	// good moment to unhook actions and filters that may interfere with the
-	// operation
+	/**
+	 * @since 2.7.7
+	 *
+	 * Allow 3rd parties to take actions before the history is queried.
+	 */
 	do_action( 'edd_has_user_purchased_before', $user_id, $downloads, $variable_price_id );
 
 	$users_purchases = edd_get_users_purchases( $user_id );
@@ -241,9 +243,12 @@ function edd_has_user_purchased( $user_id, $downloads, $variable_price_id = null
 		}
 	}
 
-	// Allow 3rd parties to take actions after the purchase history is queried, and
-	// eventually change the result
-	$return = apply_filters( 'edd_has_user_purchased_result', $return, $user_id, $downloads, $variable_price_id );
+	/**
+	 * @since 2.7.7
+	 *
+	 * Filter has purchased result
+	 */
+	$return = apply_filters( 'edd_has_user_purchased', $return, $user_id, $downloads, $variable_price_id );
 
 	return $return;
 }
