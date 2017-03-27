@@ -197,7 +197,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 = 2.7.6, March 24, 2017 =
 
 * New: Added new hooks to customer details page
-* New: Email tags are now processewd in the Purchase Email heading
+* New: Email tags are now processed in the Purchase Email heading
 * Fix: User dropdown field does not always show selected user
 * Fix: Payment field for Amazon Payments gateway not properly shown after authenticating with Amazon
 * Fix: edd-page class improperly added to all site pages when Test Mode is enabled
@@ -211,7 +211,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Custom "Complete Purchase Text" not used if payment submission results in error
 * Fix: Incorrect date set for "end_date" in EDD_Stats class
 * Fix: Price option not properly added when using custom add to cart links for variable priced product and not price ID is supplied
-* Fix: Fees that are taxede get counted twice in tax total
+* Fix: Fees that are taxed get counted twice in tax total
 
 = 2.7.5, March 6, 2017 =
 
