@@ -204,6 +204,13 @@ function edd_has_user_purchased( $user_id, $downloads, $variable_price_id = null
 		return false;
 	}
 
+	/**
+	 * @since 2.7.7
+	 *
+	 * Allow 3rd parties to take actions before the history is queried.
+	 */
+	do_action( 'edd_has_user_purchased_before', $user_id, $downloads, $variable_price_id );
+
 	$users_purchases = edd_get_users_purchases( $user_id );
 
 	$return = false;
@@ -223,18 +230,27 @@ function edd_has_user_purchased( $user_id, $downloads, $variable_price_id = null
 						$variable_prices = edd_has_variable_prices( $download['id'] );
 						if ( $variable_prices && ! is_null( $variable_price_id ) && $variable_price_id !== false ) {
 							if ( isset( $download['item_number']['options']['price_id'] ) && $variable_price_id == $download['item_number']['options']['price_id'] ) {
-								return true;
+								$return = true;
+								break 2; // Get out to prevent this value being overwritten if the customer has purchased item twice
 							} else {
 								$return = false;
 							}
 						} else {
 							$return = true;
+							break 2;  // Get out to prevent this value being overwritten if the customer has purchased item twice
 						}
 					}
 				}
 			}
 		}
 	}
+
+	/**
+	 * @since 2.7.7
+	 *
+	 * Filter has purchased result
+	 */
+	$return = apply_filters( 'edd_has_user_purchased', $return, $user_id, $downloads, $variable_price_id );
 
 	return $return;
 }
