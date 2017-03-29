@@ -750,6 +750,13 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 		return $login_form;
 	}
 
+	$user_can_view = apply_filters( 'edd_user_can_view_receipt', $user_can_view, $edd_receipt_args );
+
+	// If this was a guest checkout and the purchase session is empty, output a relevant error message
+	if ( empty( $session ) && ! is_user_logged_in() && ! $user_can_view ) {
+		return '<p class="edd-alert edd-alert-error">' . apply_filters( 'edd_receipt_guest_error_message', __( 'Receipt could not be retrieved, your purchase session has expired.', 'easy-digital-downloads' ) ) . '</p>';
+	}
+
 	/*
 	 * Check if the user has permission to view the receipt
 	 *
@@ -762,7 +769,7 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	 */
 
 
-	if ( ! apply_filters( 'edd_user_can_view_receipt', $user_can_view, $edd_receipt_args ) ) {
+	if ( ! $user_can_view ) {
 		return '<p class="edd-alert edd-alert-error">' . $edd_receipt_args['error'] . '</p>';
 	}
 
