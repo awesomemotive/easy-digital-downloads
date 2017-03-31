@@ -18,13 +18,13 @@ class Tests_API extends EDD_UnitTestCase {
 		$GLOBALS['wp_rewrite']->init();
 		flush_rewrite_rules( false );
 
-		self::$_api = EDD()->api;
+		EDD()->api = EDD()->api;
 
 		$roles = new EDD_Roles;
 		$roles->add_roles();
 		$roles->add_caps();
 
-		self::$_api->add_endpoint( $wp_rewrite );
+		EDD()->api->add_endpoint( $wp_rewrite );
 
 		self::$_rewrite = $wp_rewrite;
 		self::$_query = $wp_query;
@@ -37,8 +37,8 @@ class Tests_API extends EDD_UnitTestCase {
 		self::$_payment->status = 'publish';
 		self::$_payment->save();
 
-		self::$_api_output       = self::$_api->get_products();
-		self::$_api_output_sales = self::$_api->get_recent_sales();
+		EDD()->api_output       = EDD()->api->get_products();
+		EDD()->api_output_sales = EDD()->api->get_recent_sales();
 
 		global $wp_query;
 		$wp_query->query_vars['format'] = 'override';
@@ -59,7 +59,7 @@ class Tests_API extends EDD_UnitTestCase {
 
 		endforeach;
 
-		$out = self::$_api->query_vars( array() );
+		$out = EDD()->api->query_vars( array() );
 		$this->assertEquals( 'token', $out[0] );
 		$this->assertEquals( 'key', $out[1] );
 		$this->assertEquals( 'query', $out[2] );
@@ -78,16 +78,16 @@ class Tests_API extends EDD_UnitTestCase {
 	}
 
 	public function test_get_versions() {
-		$this->assertInternalType( 'array', self::$_api->get_versions() );
-		$this->assertArrayHasKey( 'v1', self::$_api->get_versions() );
+		$this->assertInternalType( 'array', EDD()->api->get_versions() );
+		$this->assertArrayHasKey( 'v1', EDD()->api->get_versions() );
 	}
 
 	public function test_get_default_version() {
 
-		$this->assertEquals( 'v2', self::$_api->get_default_version() );
+		$this->assertEquals( 'v2', EDD()->api->get_default_version() );
 
 		define( 'EDD_API_VERSION', 'v1' );
-		$this->assertEquals( 'v1', self::$_api->get_default_version() );
+		$this->assertEquals( 'v1', EDD()->api->get_default_version() );
 
 	}
 
@@ -97,20 +97,20 @@ class Tests_API extends EDD_UnitTestCase {
 
 		$wp_query->query_vars['edd-api'] = 'sales';
 
-		self::$_api->process_query();
+		EDD()->api->process_query();
 
-		$this->assertEquals( 'v1', self::$_api->get_queried_version() );
+		$this->assertEquals( 'v1', EDD()->api->get_queried_version() );
 
 		define( 'EDD_API_VERSION', 'v2' );
 
-		self::$_api->process_query();
+		EDD()->api->process_query();
 
-		$this->assertEquals( 'v2', self::$_api->get_queried_version() );
+		$this->assertEquals( 'v2', EDD()->api->get_queried_version() );
 
 	}
 
 	public function test_get_products() {
-		$out = self::$_api_output;
+		$out = EDD()->api_output;
 		$this->assertArrayHasKey( 'id', $out['products'][0]['info'] );
 		$this->assertArrayHasKey( 'slug', $out['products'][0]['info'] );
 		$this->assertArrayHasKey( 'title', $out['products'][0]['info'] );
@@ -131,7 +131,7 @@ class Tests_API extends EDD_UnitTestCase {
 	}
 
 	public function test_get_product_stats() {
-		$out = self::$_api_output;
+		$out = EDD()->api_output;
 		$this->assertArrayHasKey( 'stats', $out['products'][0] );
 		$this->assertArrayHasKey( 'total', $out['products'][0]['stats'] );
 		$this->assertArrayHasKey( 'sales', $out['products'][0]['stats']['total'] );
@@ -147,7 +147,7 @@ class Tests_API extends EDD_UnitTestCase {
 	}
 
 	public function test_get_products_pricing() {
-		$out = self::$_api_output;
+		$out = EDD()->api_output;
 		$this->assertArrayHasKey( 'pricing', $out['products'][0] );
 		$this->assertArrayHasKey( 'simple', $out['products'][0]['pricing'] );
 		$this->assertArrayHasKey( 'advanced', $out['products'][0]['pricing'] );
@@ -157,7 +157,7 @@ class Tests_API extends EDD_UnitTestCase {
 	}
 
 	public function test_get_products_files() {
-		$out = self::$_api_output;
+		$out = EDD()->api_output;
 		$this->assertArrayHasKey( 'files', $out['products'][0]) ;
 
 		foreach ( $out['products'][0]['files'] as $file ) {
@@ -176,13 +176,13 @@ class Tests_API extends EDD_UnitTestCase {
 
 
 	public function test_get_products_notes() {
-		$out = self::$_api_output;
+		$out = EDD()->api_output;
 		$this->assertArrayHasKey( 'notes', $out['products'][0] );
 		$this->assertEquals( 'Purchase Notes', $out['products'][0]['notes'] );
 	}
 
 	public function test_get_recent_sales() {
-		$out = self::$_api_output_sales;
+		$out = EDD()->api_output_sales;
 		$this->assertArrayHasKey( 'sales', $out );
 		$this->assertArrayHasKey( 'ID', $out['sales'][0] );
 		$this->assertArrayHasKey( 'key', $out['sales'][0] );
@@ -312,9 +312,9 @@ class Tests_API extends EDD_UnitTestCase {
 		$wp_query->query_vars['key'] = get_user_meta( self::$_user_id, 'edd_user_public_key', true );
 		$wp_query->query_vars['token'] = hash( 'md5', get_user_meta( self::$_user_id, 'edd_user_secret_key', true ) . get_user_meta( self::$_user_id, 'edd_user_public_key', true ) );
 
-		self::$_api->process_query();
+		EDD()->api->process_query();
 
-		$out = self::$_api->get_output();
+		$out = EDD()->api->get_output();
 
 		$this->assertArrayHasKey( 'info', $out['products'][0] );
 		$this->assertArrayHasKey( 'id', $out['products'][0]['info'] );
