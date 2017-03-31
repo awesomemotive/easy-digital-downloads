@@ -8,6 +8,7 @@ php:
 - 5.5
 - 5.6
 - 7.0
+- 7.1
 - hhvm
 
 env:
@@ -27,6 +28,20 @@ matrix:
       env: WP_VERSION=latest WP_MULTISITE=1
   exclude:
     - php: hhvm
+      env: WP_VERSION=4.0 WP_MULTISITE=0
+    - php: 7.1
+      env: WP_VERSION=4.6 WP_MULTISITE=0
+    - php: 7.1
+      env: WP_VERSION=4.5 WP_MULTISITE=0
+    - php: 7.1
+      env: WP_VERSION=4.4 WP_MULTISITE=0
+    - php: 7.1
+      env: WP_VERSION=4.3 WP_MULTISITE=0      
+    - php: 7.1
+      env: WP_VERSION=4.2 WP_MULTISITE=0
+    - php: 7.1
+      env: WP_VERSION=4.1 WP_MULTISITE=0
+    - php: 7.1
       env: WP_VERSION=4.0 WP_MULTISITE=0
 
 before_script:
