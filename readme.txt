@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce
 Requires at least: 4.0
 Tested up to: 4.8
-Stable Tag: 2.7.6
+Stable Tag: 2.7.7
 
 License: GNU Version 2 or Any Later Version
 
@@ -193,6 +193,21 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.7.7, April 3, 2017 =
+
+* Fix: User ID not properly assigned during some payment imports
+* Fix: Discount codes sometimes changed to inactive improperly
+* Fix: Incorrect variable name in add-on updater
+* Fix: edd_has_user_purchased() can return false incorrectly
+* Fix: File price assignment fails when set to the first price on old products
+* Fix: Last Month report showing incorrect numbers
+* Fix: Incorrect class name on customer details page
+* Tweak: Improved error message shown when viewing a receipt after purchase session has expired
+* Tweak: Added new filter and action to edd_has_user_purchased()
+* Tweak: Renamed Czech Republic to Czechia
+* Tweak: Log in form on checkout now accepts log-in by email
+* Tweak: Addewd new edd_download_inner_class filter
 
 = 2.7.6, March 24, 2017 =
 
