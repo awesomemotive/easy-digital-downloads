@@ -1049,7 +1049,12 @@ function edd_discount_status_cleanup() {
 	}
 
 }
+/**
+ * Disabled until https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5619 is completed
+ * See https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5631
+ *
 add_action( 'edd_daily_scheduled_events', 'edd_discount_status_cleanup' );
+ */
 
 /**
  * Used during edd_discount_status_cleanup to filter out a meta query properly
