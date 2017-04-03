@@ -209,8 +209,8 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 				if( empty( $customer->user_id ) ) {
 					$customer->update( array( 'user_id' => $user->ID ) );
 				}
-			}
 
+			}
 
 		}
 
