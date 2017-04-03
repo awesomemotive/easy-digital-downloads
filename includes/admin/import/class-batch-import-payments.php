@@ -204,6 +204,12 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 				$payment->user_id = $user->ID;
 
+				$customer = new EDD_Customer( $payment->customer_id );
+
+				if( empty( $customer->user_id ) ) {
+					$customer->update( array( 'user_id' => $user->ID ) );
+				}
+
 			}
 
 		}
