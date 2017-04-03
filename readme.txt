@@ -202,7 +202,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: edd_has_user_purchased() can return false incorrectly
 * Fix: File price assignment fails when set to the first price on old products
 * Fix: Last Month report showing incorrect numbers
-* Fix: Incorrect class name on custome details page
+* Fix: Incorrect class name on customer details page
 * Tweak: Improved error message shown when viewing a receipt after purchase session has expired
 * Tweak: Added new filter and action to edd_has_user_purchased()
 * Tweak: Renamed Czech Republic to Czechia
