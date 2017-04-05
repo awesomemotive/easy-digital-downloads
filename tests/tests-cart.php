@@ -596,4 +596,9 @@ class Test_Cart extends EDD_UnitTestCase {
 
 	}
 
+	public function test_unset_cart_discount_case_insensitive() {
+		edd_set_cart_discount( '20off' );
+		$this->assertEmpty( edd_unset_cart_discount( '20OFF' ) );
+	}
+
 }
