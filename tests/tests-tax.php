@@ -90,6 +90,7 @@ class Tests_Taxes extends EDD_UnitTestCase {
 		// Setup country / state tax rates
 		$tax_rates   = array();
 		$tax_rates[] = array( 'country' => 'US', 'state' => 'AL', 'rate' => 15 );
+		$tax_rates[] = array( 'country' => 'US', 'state' => 'AZ', 'rate' => .15 );
 
 		update_option( 'edd_tax_rates', $tax_rates );
 	}
@@ -122,6 +123,10 @@ class Tests_Taxes extends EDD_UnitTestCase {
 		$this->assertEquals( '0.036', edd_get_tax_rate( 'BR' ) );
 		$this->assertEquals( '0.036', edd_get_tax_rate( 'CN' ) );
 		$this->assertEquals( '0.036', edd_get_tax_rate( 'HK' ) );
+	}
+
+	public function test_get_tax_rate_less_than_one() {
+		$this->assertEquals( '0.0015', edd_get_tax_rate( 'US', 'AZ' ) );
 	}
 
 	public function test_get_global_tax_rate() {
