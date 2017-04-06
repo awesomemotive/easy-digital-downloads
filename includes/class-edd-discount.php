@@ -1756,7 +1756,9 @@ class EDD_Discount {
 					$discounts = explode( ',', $payment->discounts );
 
 					if ( is_array( $discounts ) ) {
-						if ( in_array( strtolower( $this->code ), $discounts ) ) {
+						$discounts = array_map( 'strtoupper', $discounts );
+						$key       = array_search( strtoupper( $this->code ), $discounts );
+						if ( false !== $key ) {
 							if ( $set_error ) {
 								edd_set_error( 'edd-discount-error', __( 'This discount has already been redeemed.', 'easy-digital-downloads' ) );
 							}
