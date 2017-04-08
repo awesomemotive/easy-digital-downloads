@@ -205,6 +205,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		$discount->is_single_use = true;
 		$this->assertTrue( $discount->is_used( 'admin@example.org', false ) );
 		$discount->is_single_use = false;
+		EDD_Helper_Payment::delete_payment( $payment_id );
 	}
 
 	public function test_discount_is_valid_when_purchasing() {
