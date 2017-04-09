@@ -181,9 +181,9 @@ class EDD_Payments_Query extends EDD_Stats {
 			wp_reset_postdata();
 		}
 
-		do_action( 'edd_post_get_payments', $this );
+		add_action( 'edd_post_get_payments', $this, 'date_filter_post' );
 
-		$this->date_filter_post();
+		do_action( 'edd_post_get_payments', $this );
 
 		return $this->payments;
 	}
