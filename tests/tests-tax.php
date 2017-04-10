@@ -206,6 +206,14 @@ class Tests_Taxes extends EDD_UnitTestCase {
 		$this->assertEquals( '0', edd_calculate_tax( -1.50 ) );
 	}
 
+	public function test_calculate_tax_less_than_one() {
+		$this->assertEquals( '0.08', edd_format_amount( edd_calculate_tax( 54, 'US', 'AZ' ) ) );
+		$this->assertEquals( '0.07', edd_format_amount( edd_calculate_tax( 54.7, 'US', 'TX' ) ) );
+		$this->assertEquals( '0.14', edd_format_amount( edd_calculate_tax( 153.85, 'US', 'AR' ) ) );
+		$this->assertEquals( '1.63', edd_format_amount( edd_calculate_tax( 258.31, 'US', 'HI' ) ) );
+		$this->assertEquals( '9.98', edd_format_amount( edd_calculate_tax( 1039.32, 'US', 'LA' ) ) );
+	}
+
 	public function test_calculate_tax_price_includes_tax() {
 
 		// Prepare test
