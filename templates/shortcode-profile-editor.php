@@ -132,6 +132,8 @@ if ( is_user_logged_in() ):
 
 		</fieldset>
 
+		<?php do_action( 'edd_profile_editor_after_personal_fields' ); ?>
+
 		<fieldset id="edd_profile_address_fieldset">
 
 			<legend id="edd_profile_billing_address_label"><?php _e( 'Change your Billing Address', 'easy-digital-downloads' ); ?></legend>
@@ -186,6 +188,8 @@ if ( is_user_logged_in() ):
 
 		</fieldset>
 
+		<?php do_action( 'edd_profile_editor_after_address_fields' ); ?>
+
 		<fieldset id="edd_profile_password_fieldset">
 
 			<legend id="edd_profile_password_label"><?php _e( 'Change your Password', 'easy-digital-downloads' ); ?></legend>
@@ -204,6 +208,8 @@ if ( is_user_logged_in() ):
 			<?php do_action( 'edd_profile_editor_after_password' ); ?>
 
 		</fieldset>
+
+		<?php do_action( 'edd_profile_editor_after_password_fields' ); ?>
 
 		<fieldset id="edd_profile_submit_fieldset">
 
