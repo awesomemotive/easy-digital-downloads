@@ -1400,7 +1400,13 @@ class EDD_API {
 						$date_end = date( 'Y-m-d', strtotime( '+1 day', strtotime( $date_start ) ) );
 
 						$results = EDD()->payment_stats->get_earnings_by_range( $args['date'], false, $date_start, $date_end );
-						$earnings['earnings'][ $args['date'] ] = $results[0]['total'];
+						if ($args['date'] == 'yesterday' || $args['date'] == 'today') {
+							foreach ($results as $result) {
+								$earnings['earnings'][ $args['date'] ] += $result['total'];
+							}
+						} else {
+							$earnings['earnings'][ $args['date'] ] = $results[0]['total'];
+						}
 					}
 				}
 			} elseif ( $args['product'] == 'all' ) {
