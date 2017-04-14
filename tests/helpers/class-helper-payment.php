@@ -107,7 +107,7 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 
 		$purchase_data = array(
 			'price'         => number_format( (float) $total, 2 ),
-			'date'          => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
+			'date'          => isset( $args['date'] ) ? $args['date'] : date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
 			'purchase_key'  => strtolower( md5( uniqid() ) ),
 			'user_email'    => $user_info['email'],
 			'user_info'     => $user_info,
