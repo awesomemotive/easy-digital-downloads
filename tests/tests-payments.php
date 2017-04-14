@@ -380,4 +380,8 @@ class Tests_Payments extends EDD_UnitTestCase {
 		$this->assertEquals( $payment_2->ID, $this->_payment_id );
 	}
 
+	public function test_get_payments_from_last_two_days() {
+		$payment_id = EDD_Helper_Payment::create_simple_payment();
+	}
+
 }
