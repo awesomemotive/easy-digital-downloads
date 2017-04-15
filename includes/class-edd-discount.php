@@ -1790,10 +1790,19 @@ class EDD_Discount {
 	 * @return bool Is the discount valid or not?
 	 */
 	public function is_valid( $user = '', $set_error = true ) {
+		$args = func_get_args();
 		$return = false;
 		$user = trim( $user );
 
-		if ( edd_get_cart_contents() && $this->ID ) {
+		$items = null;
+
+		if ( func_num_args() > 0 && is_array( $args[0] ) ) {
+			$items     = $args[0];
+			$user      = isset( $args[1] ) ? $args[1] : '';
+			$set_error = isset( $args[2] ) ? $args[2] : true;
+		}
+
+		if ( is_null( $items ) && edd_get_cart_contents() && $this->ID ) {
 			if (
 				$this->is_active( true, $set_error ) &&
 				$this->is_started( $set_error ) &&
@@ -1804,7 +1813,18 @@ class EDD_Discount {
 			) {
 				$return = true;
 			}
-		} elseif( $set_error ) {
+		} elseif ( ! is_null( $items ) ) {
+			if (
+				$this->is_active( true, $set_error ) &&
+				$this->is_started( $set_error ) &&
+				! $this->is_maxed_out( $set_error ) &&
+				! $this->is_used( $user, $set_error ) &&
+				$this->is_min_price_met( $set_error ) &&
+				$this->is_product_requirements_met( $items, $set_error )
+			) {
+				$return = true;
+			}
+		} elseif ( $set_error ) {
 			edd_set_error( 'edd-discount-error', _x( 'This discount is invalid.', 'error for when a discount is invalid based on its configuration' , 'easy-digital-downloads' ) );
 		}
 
