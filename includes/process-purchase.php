@@ -75,28 +75,27 @@ function edd_process_purchase_form() {
 	);
 
 	// Update a customer record if they have added/updated information
-	if ( is_user_logged_in() ) {
-		$customer = new EDD_Customer( get_current_user_id(), true );
+	$customer = new EDD_Customer( $user_info['user_id'], true );
 
-		$name = $user_info['first_name'] . ' ' . $user_info['last_name'];
-		if ( empty( $customer->name ) || $name != $customer->name ) {
-			$update_data = array(
-				'name' => $name
-			);
+	$name = $user_info['first_name'] . ' ' . $user_info['last_name'];
+	if ( empty( $customer->name ) || $name != $customer->name ) {
+		$update_data = array(
+			'name' => $name
+		);
 
-			$customer->update( $update_data );
+		// Update the customer's name and update the user record too
+		$customer->update( $update_data );
+		wp_update_user( array(
+			'ID'         => get_current_user_id(),
+			'first_name' => $user_info['first_name'],
+			'last_name'  => $user_info['last_name']
+		) );
+	}
 
-			wp_update_user( array(
-				'ID'         => get_current_user_id(),
-				'first_name' => $user_info['first_name'],
-				'last_name'  => $user_info['last_name']
-			) );
-		}
-
-		$address = get_user_meta( $customer->user_id, '_edd_user_address', true );
-		if ( 0 == strlen( implode( $address ) ) || count( array_diff( $address, $user_info['address'] ) ) > 0 ) {
-			update_user_meta( $user['user_id'], '_edd_user_address', $user_info['address'] );
-		}
+	// Update the customer's address if different to what's in the database
+	$address = get_user_meta( $customer->user_id, '_edd_user_address', true );
+	if ( 0 == strlen( implode( $address ) ) || count( array_diff( $address, $user_info['address'] ) ) > 0 ) {
+		update_user_meta( $user['user_id'], '_edd_user_address', $user_info['address'] );
 	}
 
 	$auth_key = defined( 'AUTH_KEY' ) ? AUTH_KEY : '';
