@@ -380,4 +380,18 @@ class Tests_Payments extends EDD_UnitTestCase {
 		$this->assertEquals( $payment_2->ID, $this->_payment_id );
 	}
 
+	public function test_payments_date_query() {
+		$payment_id_1 = EDD_Helper_Payment::create_simple_payment_with_date( date( 'Y-m-d H:i:s', strtotime('-1 day' ) ) );
+		$payment_id_2 = EDD_Helper_Payment::create_simple_payment_with_date( date( 'Y-m-d H:i:s', strtotime('-4 days' ) ) );
+		$payment_id_3 = EDD_Helper_Payment::create_simple_payment_with_date( date( 'Y-m-d H:i:s', strtotime('-5 days' ) ) );
+		$payment_id_4 = EDD_Helper_Payment::create_simple_payment_with_date( date( 'Y-m-d H:i:s', strtotime('-1 month' ) ) );
+
+		$payments_query = new EDD_Payments_Query( array( 'start_date' => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ), 'end_date' => date( 'Y-m-d H:i:s' ) ) );
+		$payments = $payments_query->get_payments();
+
+		$this->assertEquals( 2, count( $payments ) );
+		$this->assertEquals( $payment_id_1, $payments[0]->ID );
+		$this->assertEquals( $this->_payment_id, $payments[1]->ID );
+	}
+
 }
