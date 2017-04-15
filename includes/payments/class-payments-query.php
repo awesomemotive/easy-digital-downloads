@@ -138,7 +138,6 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		// Modify the query/query arguments before we retrieve payments.
 		$this->date_filter_pre();
-		$this->date_filter_post();
 		$this->orderby();
 		$this->status();
 		$this->month();
@@ -181,6 +180,8 @@ class EDD_Payments_Query extends EDD_Stats {
 
 			wp_reset_postdata();
 		}
+
+		add_action( 'edd_post_get_payments', array( $this, 'date_filter_post' ) );
 
 		do_action( 'edd_post_get_payments', $this );
 
