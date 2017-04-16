@@ -60,7 +60,7 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * @param array $args The array of arguments that can be passed in and used for setting up this payment query.
 	 */
 	public function __construct( $args = array() ) {
-		$defaults = array(
+		$defaults = apply_filters( 'edd_payments_query_default_args', array(
 			'output'          => 'payments', // Use 'posts' to get standard post objects
 			'post_type'       => array( 'edd_payment' ),
 			'start_date'      => false,
@@ -81,7 +81,7 @@ class EDD_Payments_Query extends EDD_Stats {
 			'children'        => false,
 			'fields'          => null,
 			'download'        => null
-		);
+		), $this );
 
 		// We need to store an array of the args used to instantiate the class, so that we can use it in later hooks.
 		$this->args = $this->initial_args = wp_parse_args( $args, $defaults );
