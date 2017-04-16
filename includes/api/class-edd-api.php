@@ -2033,7 +2033,7 @@ class EDD_API {
 	 * @since 2.0.0
 	 * @param int $user_id User ID the key is being generated for
 	 * @param boolean $regenerate Regenerate the key for the user
-	 * @return boolean True if (re)generated succesfully, false otherwise.
+	 * @return boolean True if (re)generated successfully, false otherwise.
 	 */
 	public function generate_api_key( $user_id = 0, $regenerate = false ) {
 
