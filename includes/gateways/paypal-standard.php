@@ -438,7 +438,7 @@ function edd_process_paypal_ipn() {
 		$payment_id = ! empty( $encoded_data_array[ 'custom' ] ) ? absint( $encoded_data_array[ 'custom' ] ) : 0;
 	}
 
-	if ( has_action( 'edd_paypal_' . $encoded_data_array['txn_type'] ) ) {
+	if ( isset( $encoded_data_array['txn_type'] ) && has_action( 'edd_paypal_' . $encoded_data_array['txn_type'] ) ) {
 		// Allow PayPal IPN types to be processed separately
 		do_action( 'edd_paypal_' . $encoded_data_array['txn_type'], $encoded_data_array, $payment_id );
 	} else {
