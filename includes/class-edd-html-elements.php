@@ -38,7 +38,7 @@ class EDD_HTML_Elements {
 			'multiple'    => false,
 			'selected'    => 0,
 			'chosen'      => false,
-			'number'      => 30,
+			'number'      => -1,
 			'bundles'     => true,
 			'variations'  => false,
 			'placeholder' => sprintf( __( 'Choose a %s', 'easy-digital-downloads' ), edd_get_label_singular() ),
