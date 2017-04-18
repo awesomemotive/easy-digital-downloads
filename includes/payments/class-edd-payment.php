@@ -311,7 +311,7 @@ class EDD_Payment {
 	 * Setup the EDD Payments class
 	 *
 	 * @since 2.5
-	 * @param int $payment_id A given payment
+	 * @param int $payment_id A given payment ID
 	 * @return mixed void|false
 	 */
 	public function __construct( $payment_or_txn_id = false, $by_txn = false ) {
@@ -1038,9 +1038,6 @@ class EDD_Payment {
 			// Only save the payment meta if it's changed
 			if ( md5( serialize( $meta ) ) !== md5( serialize( $merged_meta) ) ) {
 				$updated     = $this->update_meta( '_edd_payment_meta', $merged_meta );
-				if ( false !== $updated ) {
-					$saved = true;
-				}
 			}
 
 			$this->pending = array();
@@ -1452,7 +1449,6 @@ class EDD_Payment {
 
 		$fee = wp_parse_args( $args, $default_args );
 		$this->fees[] = $fee;
-
 
 		$added_fee               = $fee;
 		$added_fee['action']     = 'add';
@@ -2168,9 +2164,7 @@ class EDD_Payment {
 			foreach ( $cart_details as $item ) {
 
 				if ( isset( $item['subtotal'] ) ) {
-
 					$subtotal += $item['subtotal'];
-
 				}
 
 			}
@@ -2462,7 +2456,7 @@ class EDD_Payment {
 	}
 
 	/**
-	 * Converts this ojbect into an array for special cases
+	 * Converts this object into an array for special cases
 	 *
 	 * @return array The payment object as an array
 	 */
