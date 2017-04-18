@@ -541,7 +541,7 @@ function edd_purchase_form_validate_new_user() {
 		} else {
 			$customer = new EDD_Customer( $user_email );
 			if ( $registering_new_user && email_exists( $user_email ) ) {
-				edd_set_error( 'email_used', __( 'Email already used', 'easy-digital-downloads' ) );
+				edd_set_error( 'email_used', __( 'Email already used. Login or use a different email to complete your purchase.', 'easy-digital-downloads' ) );
 			} else {
 				// All the checks have run and it's good to go
 				$valid_user_data['user_email'] = $user_email;
