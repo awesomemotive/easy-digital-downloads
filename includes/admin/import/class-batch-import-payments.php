@@ -503,7 +503,8 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 			$args = array(
 				'post_type'   => 'download',
 				'post_title'  => $title,
-				'post_author' => get_current_user_id()
+				'post_author' => get_current_user_id(),
+				'post_status' => 'any'
 			);
 
 			$download_id = wp_insert_post( $args );
