@@ -52,7 +52,14 @@ function edd_logged_in_only() {
  * @return bool $ret True is redirect is enabled, false otherwise
  */
 function edd_straight_to_checkout() {
-	$ret = edd_get_option( 'redirect_on_add', false );
+    // Check if URL has any $_GET parameter , and if so load it into $get_count variable
+    $get_count = count($_GET);
+    // Check if $get_count is greater than 1, if yes then disable redirect to checkout
+    if( $get_count > 1 ) {
+        $ret = false;
+    } else {
+    	$ret = edd_get_option( 'redirect_on_add', false );
+    }
 	return (bool) apply_filters( 'edd_straight_to_checkout', $ret );
 }
 
