@@ -56,7 +56,7 @@ See our [gateways category](https://easydigitaldownloads.com/downloads/category/
 
 = Go further with extensions =
 
-With add-on plugins from our[extensions catalogue](https://easydigitaldownloads.com/downloads/?utm_source=extensions&utm_medium=description_tab&utm_content=extensions&utm_campaign=readme) you can super-charge your digital store. Some of our extension highlights include:
+With add-on plugins from our [extensions catalogue](https://easydigitaldownloads.com/downloads/?utm_source=extensions&utm_medium=description_tab&utm_content=extensions&utm_campaign=readme) you can super-charge your digital store. Some of our extension highlights include:
 
 * [Software Licensing](https://easydigitaldownloads.com/downloads/software-licensing/?utm_source=extension&utm_medium=description_tab&utm_content=software-licensing&utm_campaign=readme) provides a complete solution for selling software license keys
 * [Recurring Payments](https://easydigitaldownloads.com/downloads/recurring-payments/?utm_source=extension&utm_medium=description_tab&utm_content=recurring-payments&utm_campaign=readme) allows store owners to sell recurring subscriptions for digital products
