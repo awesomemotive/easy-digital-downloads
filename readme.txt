@@ -3,7 +3,7 @@ Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
 Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel
 Donate link: https://easydigitaldownloads.com/donate/
-Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce
+Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.0
 Tested up to: 4.8
 Stable Tag: 2.7.7
@@ -17,7 +17,7 @@ Easy Digital Downloads is a complete eCommerce solution for selling digital prod
 
 = Sell effortlessly =
 
-Whether it is software, documents, media files, or any other kind of digital product, Easy Digtal Downloads provides a complete system for effortlessly selling your digital products.
+Whether it is software, documents, ebooks, media files, or any other kind of digital product, Easy Digtal Downloads provides a complete system for effortlessly selling your digital products.
 
 = Localized for your language =
 
