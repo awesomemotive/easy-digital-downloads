@@ -35,15 +35,15 @@ Features of the plugin include:
 
 More information at [Easy Digital Downloads.com](https://easydigitaldownloads.com/?utm_source=home&utm_medium=description_tab&utm_content=home&utm_campaign=readme).
 
-[youtube https://www.youtube.com/watch?v=japHPcIFs4I]
-
-**Follow this plugin on [GitHub](https://github.com/easydigitaldownloads/easy-digital-downloads)**
-
 **Sell and Track Software License Keys**
 
 [Software Licensing](https://easydigitaldownloads.com/downloads/software-licensing/?utm_source=extension&utm_medium=description_tab&utm_content=software-licensing&utm_campaign=readme) for Easy Digital Downloads provides a complete license key generation, activation, and checking system. It allows you to provide license keys along with your digital products that can then be used to properly license and activate the buyer's copy of the software.
 
 Includes a complete integration pack for delivering automatic upgrades for premium WordPress plugins and themes.
+
+**Sell Recurring Subscriptions**
+
+Using our [Recurring Payments](https://easydigitaldownloads.com/downloads/recurring-payments/?utm_source=extension&utm_medium=description_tab&utm_content=recurring-payments&utm_campaign=readme) add-on, you can easily sell recurring subscriptions for your products and/or services.
 
 **Build Up Your Email Subscribers**
 
@@ -54,6 +54,8 @@ With extensions for [MailChimp](https://easydigitaldownloads.com/downloads/mail-
 Easy Digital Downloads has been translated into more than two dozen languages. The complete list of languages can be found in our [FAQ](http://docs.easydigitaldownloads.com/article/1082-what-spoken-languages-does-easy-digital-downloads-support?utm_source=docs&utm_medium=description_tab&utm_content=languages&utm_campaign=readme).
 
 Would you like to help translate the plugin into more languages? [Join our WP-Translations Community](http://docs.easydigitaldownloads.com/article/1023-translating-easy-digital-downloads?utm_source=docs&utm_medium=description_tab&utm_content=translating&utm_campaign=readme).
+
+**Follow this plugin on [GitHub](https://github.com/easydigitaldownloads/easy-digital-downloads)**
 
 == Installation ==
 
