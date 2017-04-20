@@ -595,6 +595,10 @@ class EDD_Payment {
 			if ( ! empty( $this->payment_meta['fees'] ) ) {
 				$this->fees = array_merge( $this->payment_meta['fees'], $this->fees );
 				foreach( $this->fees as $fee ) {
+					if ( ! empty( $fee['download_id'] ) && $fee['amount'] < 0 ) {
+						continue;
+					}
+
 					$this->increase_fees( $fee['amount'] );
 				}
 			}
@@ -1138,9 +1142,16 @@ class EDD_Payment {
 
 		$this->downloads[] = $new_download;
 
+		$fees       = 0;
+		if ( ! empty( $args['fees'] ) ) {
+			foreach ( $args['fees'] as $fee ) {
+				$fees += $fee['amount'] < 0 ? $fee['amount'] : 0;
+			}
+		}
 		$discount   = $args['discount'];
-		$subtotal   = $amount;
+		$subtotal   = $amount + $fees;
 		$tax        = $args['tax'];
+
 
 		if ( edd_prices_include_tax() ) {
 			$subtotal -= round( $tax, edd_currency_decimal_filter() );
@@ -1448,6 +1459,7 @@ class EDD_Payment {
 			'id'          => '',
 			'no_tax'      => false,
 			'download_id' => 0,
+			'price_id'    => NULL,
 		);
 
 		$fee = wp_parse_args( $args, $default_args );
@@ -2145,6 +2157,11 @@ class EDD_Payment {
 		$payment_fees = isset( $this->payment_meta['fees'] ) ? $this->payment_meta['fees'] : array();
 		if ( ! empty( $payment_fees ) ) {
 			foreach ( $payment_fees as $fee ) {
+
+				if ( ! empty( $fee['download_id'] ) && $fee['amount'] < 0 ) {
+					continue;
+				}
+
 				$fees_total += (float) $fee['amount'];
 			}
 		}

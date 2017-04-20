@@ -54,11 +54,11 @@ class EDD_Fees {
 			$type     = 'fee';
 
 			$args = array(
-				'amount' => $amount,
-				'label'  => $label,
-				'id'     => $id,
-				'type'   => $type,
-				'no_tax' => false,
+				'amount'      => $amount,
+				'label'       => $label,
+				'id'          => $id,
+				'type'        => $type,
+				'no_tax'      => false,
 				'download_id' => 0,
 				'price_id'    => NULL
 			);
