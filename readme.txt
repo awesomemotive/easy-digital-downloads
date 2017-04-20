@@ -17,7 +17,7 @@ Easy Digital Downloads is a complete eCommerce solution for selling digital prod
 
 = Sell effortlessly =
 
-Whether it is software, documents, ebooks, media files, or any other kind of digital product, Easy Digtal Downloads provides a complete system for effortlessly selling your digital products.
+Whether it is software, documents, photos, ebooks, songs, graphics, or any other type of media file, Easy Digtal Downloads provides a complete system for effortlessly selling your digital products.
 
 = Localized for your language =
 
@@ -52,7 +52,7 @@ Payment gateways supported through free or premium extension:
 * MercadoPago
 * PagSeguro
 
-See our [gateways category](https://easydigitaldownloads.com/downloads/category/gateways/?utm_source=extensions&utm_medium=description_tab&utm_content=extensions&utm_campaign=readme) in the extensions catalogue for a complete list of supported gateways. There are also a large number of additional gateways developed and supported by [3rd party developers](https://easydigitaldownloads.com/3rd-party-extensions/#gateways).
+See our [gateways category](https://easydigitaldownloads.com/downloads/category/gateways/?utm_source=extensions&utm_medium=description_tab&utm_content=gateways&utm_campaign=readme) in the extensions catalogue for a complete list of supported gateways. There are also a large number of additional gateways developed and supported by [3rd party developers](https://easydigitaldownloads.com/3rd-party-extensions/#gateways).
 
 = Go further with extensions =
 
