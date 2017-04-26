@@ -1773,7 +1773,7 @@ function edd_select_callback($args) {
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	if ( isset( $args['chosen'] ) ) {
-		$class .= ' edd-chosen';
+		$class .= ' edd-select-chosen';
 	}
 	
 	// If the Select Field allows Multiple values, save as an Array
