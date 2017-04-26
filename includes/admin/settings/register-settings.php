@@ -192,6 +192,7 @@ function edd_register_settings() {
 				    'max'           => null,
 				    'step'          => null,
 				    'chosen'        => null,
+				    'multiple'      => null,
 				    'placeholder'   => null,
 				    'allow_blank'   => true,
 				    'readonly'      => false,
@@ -978,6 +979,10 @@ function edd_settings_sanitize( $input = array() ) {
 						unset( $output[ $key ] );
 					}
 					break;
+				case 'select':
+					// Ensures that Multiple Selects that have been cleared out save as Empty
+					if ( empty( $_POST['edd_settings'][ $key ] ) ) $output[ $key ] = '';
+					break;
 				default:
 					if ( array_key_exists( $key, $input ) && empty( $input[ $key ] ) ) {
 						unset( $output[ $key ] );
@@ -1749,7 +1754,14 @@ function edd_select_callback($args) {
 	if ( $edd_option ) {
 		$value = $edd_option;
 	} else {
-		$value = isset( $args['std'] ) ? $args['std'] : '';
+		
+		// Properly set default fallback if the Select Field allows Multiple values
+		if ( ! $args['multiple'] ) {
+			$value = isset( $args['std'] ) ? $args['std'] : '';
+		} else {
+			$value = isset( $args['std'] ) ? $args['std'] : array();
+		}
+		
 	}
 
 	if ( isset( $args['placeholder'] ) ) {
@@ -1763,12 +1775,23 @@ function edd_select_callback($args) {
 	if ( isset( $args['chosen'] ) ) {
 		$class .= ' edd-chosen';
 	}
+	
+	// If the Select Field allows Multiple values, save as an Array
+	$name_attr = 'edd_settings[' . esc_attr( $args['id'] ) . ']';
+	$name_attr = ( $args['multiple'] ) ? $name_attr . '[]' : $name_attr;
 
-	$html = '<select id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']" class="' . $class . '" data-placeholder="' . esc_html( $placeholder ) . '" />';
+	$html = '<select id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="' . $name_attr . '" class="' . $class . '" data-placeholder="' . esc_html( $placeholder ) . '" ' . ( ( $args['multiple'] ) ? 'multiple="true"' : '' ) . '>';
 
 	foreach ( $args['options'] as $option => $name ) {
-		$selected = selected( $option, $value, false );
-		$html .= '<option value="' . esc_attr( $option ) . '" ' . $selected . '>' . esc_html( $name ) . '</option>';
+		
+		if ( ! $args['multiple'] ) {
+			$selected = selected( $option, $value, false );
+			$html .= '<option value="' . esc_attr( $option ) . '" ' . $selected . '>' . esc_html( $name ) . '</option>';
+		} else {
+			// Do an in_array() check to output selected attribute for Multiple
+			$html .= '<option value="' . esc_attr( $option ) . '" ' . ( ( in_array( $option, $value ) ) ? 'selected="true"' : '' ) . '>' . esc_html( $name ) . '</option>';
+		}
+		
 	}
 
 	$html .= '</select>';
