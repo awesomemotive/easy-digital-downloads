@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_customers_page() {
 	$default_views = edd_customer_views();
 	$requested_view = isset( $_GET['view'] ) ? sanitize_text_field( $_GET['view'] ) : 'customers';
-	if ( array_key_exists( $requested_view, $default_views ) && function_exists( $default_views[$requested_view] ) ) {
+	if ( array_key_exists( $requested_view, $default_views ) && is_callable( $default_views[$requested_view] ) ) {
 		edd_render_customer_view( $requested_view, $default_views );
 	} else {
 		edd_customers_list();
