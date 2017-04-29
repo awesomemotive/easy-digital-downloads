@@ -164,7 +164,7 @@ function edd_render_customer_view( $view, $callbacks ) {
 				</div>
 
 				<div id="edd-item-card-wrapper" class="edd-customer-card-wrapper" style="float: left">
-					<?php $callbacks[$view]( $customer ) ?>
+					<?php call_user_func( $callbacks[ $view ], $customer ); ?>
 				</div>
 			</div>
 
