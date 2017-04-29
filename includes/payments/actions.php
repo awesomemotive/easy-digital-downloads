@@ -136,6 +136,14 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 }
 add_action( 'edd_update_payment_status', 'edd_complete_purchase', 100, 3 );
 
+/**
+ * Schedules the one time event via WP_Cron to fire after purchase actions.
+ *
+ * Is run on the edd_complete_purchase action.
+ *
+ * @since 2.8
+ * @param $payment_id
+ */
 function edd_schedule_after_payment_action( $payment_id ) {
 	$use_cron = apply_filters( 'edd_use_after_payment_actions', true, $payment_id );
 	if ( $use_cron ) {
@@ -143,14 +151,31 @@ function edd_schedule_after_payment_action( $payment_id ) {
 
 		// Use time() instead of current_time( 'timestamp' ) to avoid scheduling the event in the past when server time
 		// and WordPress timezone are different.
-		wp_schedule_single_event( time() + $after_payment_delay, 'edd_after_payment_scheduled_actions', array( $payment_id) );
+		wp_schedule_single_event( time() + $after_payment_delay, 'edd_after_payment_scheduled_actions', array( $payment_id, false ) );
 	}
 }
 add_action( 'edd_complete_purchase', 'edd_schedule_after_payment_action', 10, 1 );
 
-function edd_process_after_payment_actions( $payment_id ) {
-	$payment = new EDD_Payment( $payment_id );
-	$payment->add_note( __( 'After payment actions processed', 'easy-digital-downloads' ) );
+/**
+ * Executes the one time event used for after purchase actions.
+ *
+ * @since 2.8
+ * @param $payment_id
+ * @param $force
+ */
+function edd_process_after_payment_actions( $payment_id = 0, $force = false ) {
+	if ( empty( $payment_id ) ) {
+		return;
+	}
+
+	$payment   = new EDD_Payment( $payment_id );
+	$has_fired = $payment->get_meta( '_edd_complete_actions_run' );
+	if ( ! empty( $has_fired ) && false === $force ) {
+		return;
+	}
+
+	$payment->add_note( __( 'After payment actions processed.', 'easy-digital-downloads' ) );
+	$payment->update_meta( '_edd_complete_actions_run', time() ); // This is in GMT
 	do_action( 'edd_after_payment_actions', $payment_id );
 }
 add_action( 'edd_after_payment_scheduled_actions', 'edd_process_after_payment_actions', 10, 1 );
