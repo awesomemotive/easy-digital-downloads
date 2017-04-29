@@ -159,6 +159,7 @@ final class EDD_Amazon_Payments {
 	private function filters() {
 
 		add_filter( 'edd_accepted_payment_icons', array( $this, 'register_payment_icon' ), 10, 1 );
+		add_filter( 'edd_show_gateways', array( $this, 'maybe_hide_gateway_select' ) );
 
 		if ( is_admin() ) {
 			add_filter( 'edd_settings_sections_gateways', array( $this, 'register_gateway_section' ), 1, 1 );
@@ -304,6 +305,24 @@ final class EDD_Amazon_Payments {
 		$payment_icons['amazon'] = 'Amazon';
 
 		return $payment_icons;
+	}
+
+	/**
+	 * Hides payment gateway select options after return from Amazon
+	 *
+	 * @access public
+	 * @since  2.7.6
+	 * @param  bool $show Should gateway select be shown
+	 * @return bool
+	 */
+	public function maybe_hide_gateway_select( $show ) {
+
+		if( ! empty( $_REQUEST['payment-mode'] ) && 'amazon' == $_REQUEST['payment-mode'] && ! empty( $_REQUEST['amazon_reference_id'] ) && ! empty( $_REQUEST['state'] ) && 'authorized' == $_REQUEST['state'] ) {
+
+			$show = false;
+		}
+
+		return $show;
 	}
 
 	/**

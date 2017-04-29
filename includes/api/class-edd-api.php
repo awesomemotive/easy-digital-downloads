@@ -1400,7 +1400,13 @@ class EDD_API {
 						$date_end = date( 'Y-m-d', strtotime( '+1 day', strtotime( $date_start ) ) );
 
 						$results = EDD()->payment_stats->get_earnings_by_range( $args['date'], false, $date_start, $date_end );
-						$earnings['earnings'][ $args['date'] ] = $results[0]['total'];
+						if ($args['date'] == 'yesterday' || $args['date'] == 'today') {
+							foreach ($results as $result) {
+								$earnings['earnings'][ $args['date'] ] += $result['total'];
+							}
+						} else {
+							$earnings['earnings'][ $args['date'] ] = $results[0]['total'];
+						}
 					}
 				}
 			} elseif ( $args['product'] == 'all' ) {
@@ -1632,8 +1638,9 @@ class EDD_API {
 	public function get_download_logs( $customer_id = 0 ) {
 		global $edd_logs;
 
-		$downloads  = array();
-		$errors     = array();
+		$downloads        = array();
+		$errors           = array();
+		$invalid_customer = false;
 
 		$paged      = $this->get_paged();
 		$per_page   = $this->per_page();
@@ -1642,8 +1649,7 @@ class EDD_API {
 		$meta_query = array();
 		if ( ! empty( $customer_id ) ) {
 
-			$customer         = new EDD_Customer( $customer_id );
-			$invalid_customer = false;
+			$customer = new EDD_Customer( $customer_id );
 
 			if ( $customer->id > 0 ) {
 				$meta_query['relation'] = 'OR';
@@ -2027,7 +2033,7 @@ class EDD_API {
 	 * @since 2.0.0
 	 * @param int $user_id User ID the key is being generated for
 	 * @param boolean $regenerate Regenerate the key for the user
-	 * @return boolean True if (re)generated succesfully, false otherwise.
+	 * @return boolean True if (re)generated successfully, false otherwise.
 	 */
 	public function generate_api_key( $user_id = 0, $regenerate = false ) {
 

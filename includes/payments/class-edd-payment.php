@@ -1720,6 +1720,9 @@ class EDD_Payment {
 
 			$updated = wp_update_post( apply_filters( 'edd_update_payment_status_fields', $update_fields ) );
 
+			$this->status = $status;
+			$this->post_status = $status;
+
 			$all_payment_statuses  = edd_get_payment_statuses();
 			$this->status_nicename = array_key_exists( $status, $all_payment_statuses ) ? $all_payment_statuses[ $status ] : ucfirst( $status );
 
