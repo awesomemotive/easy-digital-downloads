@@ -421,8 +421,7 @@ jQuery(document).ready(function ($) {
 				}
 
 				if( confirm( edd_vars.delete_payment_download ) ) {
-					var key = $(this).data('key');
-
+					var key         = $(this).data('key');
 					var purchase_id = $('.edd-payment-id').val();
 					var download_id = $('input[name="edd-payment-details-downloads['+key+'][id]"]').val();
 					var price_id    = $('input[name="edd-payment-details-downloads['+key+'][price_id]"]').val();
@@ -590,6 +589,8 @@ jQuery(document).ready(function ($) {
 
 					$( this ).attr( 'name', name ).attr( 'id', name );
 				});
+
+				clone.find('a.edd-order-remove-download').attr( 'data-key', parseInt( count ) );
 
 				// Flag the Downloads section as changed
 				$('#edd-payment-downloads-changed').val(1);

@@ -40,7 +40,7 @@ if ( $purchases ) :
 						$name           = get_the_title( $download['id'] );
 
 						// Retrieve and append the price option name
-						if ( is_numeric( $price_id ) ) {
+						if ( ! empty( $price_id ) && 0 !== $price_id ) {
 							$name .= ' - ' . edd_get_price_option_name( $download['id'], $price_id, $payment->ID );
 						}
 

@@ -312,7 +312,7 @@ jQuery(document).ready(function ($) {
 
 		$(this).val(edd_global_vars.purchase_loading);
 
-		$(this).after('<span class="edd-cart-ajax"><i class="edd-icon-spinner edd-icon-spin"></i></span>');
+		$(this).after('<span class="edd-loading-ajax edd-loading"></span>');
 
 		var data = {
 			action : 'edd_process_checkout_login',
@@ -328,7 +328,7 @@ jQuery(document).ready(function ($) {
 				window.location = edd_scripts.checkout_page;
 			} else {
 				$('#edd_login_fields input[type=submit]').val(complete_purchase_val);
-				$('.edd-cart-ajax').remove();
+				$('.edd-loading-ajax').remove();
 				$('.edd_errors').remove();
 				$('#edd-user-login-submit').before(data);
 			}
@@ -377,7 +377,7 @@ jQuery(document).ready(function ($) {
 
 		$(this).prop( 'disabled', true );
 
-		$(this).after('<span class="edd-cart-ajax"><i class="edd-icon-spinner edd-icon-spin"></i></span>');
+		$(this).after('<span class="edd-loading-ajax edd-loading"></span>');
 
 		$.post(edd_global_vars.ajaxurl, $('#edd_purchase_form').serialize() + '&action=edd_process_checkout&edd_ajax=true', function(data) {
 			if ( $.trim(data) == 'success' ) {
@@ -386,7 +386,7 @@ jQuery(document).ready(function ($) {
 				$(eddPurchaseform).submit();
 			} else {
 				$('#edd-purchase-button').val(complete_purchase_val);
-				$('.edd-cart-ajax').remove();
+				$('.edd-loading-ajax').remove();
 				$('.edd_errors').remove();
 				$('.edd-error').hide();
 				$('#edd_purchase_submit').before(data);
