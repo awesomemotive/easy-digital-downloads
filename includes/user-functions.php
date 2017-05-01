@@ -398,7 +398,7 @@ function edd_validate_username( $username ) {
 }
 
 /**
- * Attach the customer to to user account when completing guest purchase
+ * Attach the customer to an existing user account when completing guest purchase
  *
  * This only runs when a user account already exists and a guest purchase is made
  * with the account's email address
