@@ -950,5 +950,34 @@ add_filter( 'the_content', 'edd_filter_success_page_content', 99999 );
  * @return boolean
  */
 function edd_receipt_show_download_files( $item_id, $receipt_args, $item = array() ) {
-	return apply_filters( 'edd_receipt_show_download_files', true, $item_id, $receipt_args, $item );
+
+	$ret = true;
+
+	/*
+	 * If re-download is disabled, set return to false
+	 * 
+	 * When the purchase session is still present AND the receipt being shown is for that purchase,
+	 * file download links are still shown. Once session expires, links are disabled
+	 */
+	if ( edd_no_redownload() ) {
+
+		$key     = isset( $_GET['payment_key'] ) ? sanitize_text_field( $_GET['payment_key'] ) : '';
+		$session = edd_get_purchase_session();
+
+		if ( ! empty( $key ) && ! empty( $session ) && $key != $session['purchase_key'] ) {
+
+			// We have session data but the payment key provided is not for this session
+			$ret = false;
+			
+		} elseif ( empty( $session ) ) {
+
+			// No session data is present but a key has been provided
+			$ret = false;
+
+		}
+
+
+	}
+
+	return apply_filters( 'edd_receipt_show_download_files', $ret, $item_id, $receipt_args, $item );
 }
