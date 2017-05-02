@@ -336,7 +336,7 @@ function edd_default_cc_address_fields() {
 	 * @param array $address The customer address.
 	 * @param array $customer The customer data from the session
 	 */
-	$customer['address'] = apply_filters( 'edd_billing_details_address', $customer['address'], $customer );
+	$customer['address'] = apply_filters( 'edd_checkout_billing_details_address', $customer['address'], $customer );
 
 	ob_start(); ?>
 	<fieldset id="edd_cc_address" class="cc-address">
