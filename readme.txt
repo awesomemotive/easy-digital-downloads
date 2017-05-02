@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.0
 Tested up to: 4.8
-Stable Tag: 2.7.7
+Stable Tag: 2.7.8
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -116,7 +116,7 @@ Yes! Simply go to Tools > Import and install the WordPress Importer, then naviga
 
 Yes! We do have a [basic import solution](http://docs.easydigitaldownloads.com/article/216-can-i-import-and-export-products?utm_source=docs&utm_medium=faq_tab&utm_term=import_addon&utm_content=faqs&utm_campaign=readme) that imports a CSV file, so if you can get your data into the appropriate format then we can import it.
 
-= My Payments Marked as Pending =
+= My payments are being marked as "pending" =
 
 There are several reasons this happens. Please follow the suggestions [here](http://docs.easydigitaldownloads.com/article/190-payments-not-marked-as-complete?utm_source=docs&utm_medium=faq_tab&utm_content=faqs&utm_campaign=readme).
 
@@ -124,7 +124,7 @@ There are several reasons this happens. Please follow the suggestions [here](htt
 
 To get rid of the 404 error when viewing a download, you need to resave your permalink structure. Go to Settings > Permalinks and click "Save Changes".
 
-= How do I Show the User's Purchase History? =
+= How do I show the user’s purchase history? =
 
 Place the [purchase_history] shortcode on any page.
 
@@ -134,7 +134,7 @@ If you want to just show a list of the files the user has purchased, use the [do
 
 There are several different ways, each well [documented](http://docs.easydigitaldownloads.com/category/870-product-display?utm_source=edd_readme&utm_medium=faq_tab&utm_content=faqs&utm_campaign=readme).
 
-= Can I Setup an Affiliate System? =
+= Can I set up an affiliate program? =
 
 Yes! EDD integrates directly with several affiliate platforms that provide complete affiliate systems you can use to award commissions to your affiliate marketers.
 
@@ -212,6 +212,23 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+
+= 2.7.8, May 2, 2017 =
+
+* Fix: Products sometimes duplicated in CSV product export
+* Fix: Fatal error with PHP 7+ when get_meta() returns a string instead of array
+* Fix: Incorrect earnings stats for "Today"
+* Fix: Use once per customer option on discount codes does not respect case sensitivity
+* Fix: Date filters on payment history not working properly
+* Fix: Tax rates of less than 1 calculates an incorrect total
+* Fix: edd_unset_cart_discount() is case senstive when it should not be
+* Fix: PHP 7 compatibility flags due to safe_mode checks
+* Fix: Download files not imported properly when file URL/path begins with a forward slash
+* Fix: Pending verification message shown multiple times if the page contains multiple shortcodes
+* Tweak: Improved error message for "Email already used" error
+* Tweak: Default reports view is now "Last 30 days"
+* Tweak: EDD_Graph class now supports an "addition_options" parameter
+* Tweak: Added new hooks to the profile editor template
 
 = 2.7.7, April 3, 2017 =
 
