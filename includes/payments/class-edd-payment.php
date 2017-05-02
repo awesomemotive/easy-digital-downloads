@@ -1779,7 +1779,7 @@ class EDD_Payment {
 			}
 
 			// #5228 Fix possible data issue introduced in 2.6.12
-			if ( isset( $meta[0] ) ) {
+			if ( is_array( $meta ) && isset( $meta[0] ) ) {
 				$bad_meta = $meta[0];
 				unset( $meta[0] );
 
