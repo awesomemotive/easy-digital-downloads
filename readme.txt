@@ -243,7 +243,7 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 * Tweak: Added new filter and action to edd_has_user_purchased()
 * Tweak: Renamed Czech Republic to Czechia
 * Tweak: Log in form on checkout now accepts log-in by email
-* Tweak: Addewd new edd_download_inner_class filter
+* Tweak: Added new edd_download_inner_class filter
 
 = 2.7.6, March 24, 2017 =
 
