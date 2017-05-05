@@ -1277,6 +1277,11 @@ class EDD_Cart {
 		}
 		$cart_tax += $this->get_tax_on_fees();
 
+		$subtotal = $this->get_subtotal();
+		if ( empty( $subtotal ) ) {
+			$cart_tax = 0;
+		}
+
 		$cart_tax = apply_filters( 'edd_get_cart_tax', edd_sanitize_amount( $cart_tax ) );
 
 		return $cart_tax;
