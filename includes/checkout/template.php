@@ -880,11 +880,12 @@ function edd_checkout_button_purchase() {
  * @return string
  */
 function edd_get_checkout_button_purchase_label() {
-	$label = edd_get_option( 'checkout_label', '' );
 
 	if ( edd_get_cart_total() ) {
+		$label             = edd_get_option( 'checkout_label', '' );
 		$complete_purchase = ! empty( $label ) ? $label : __( 'Purchase', 'easy-digital-downloads' );
 	} else {
+		$label             = edd_get_option( 'free_checkout_label', '' );
 		$complete_purchase = ! empty( $label ) ? $label : __( 'Free Download', 'easy-digital-downloads' );
 	}
 
@@ -967,7 +968,7 @@ function edd_receipt_show_download_files( $item_id, $receipt_args, $item = array
 
 	/*
 	 * If re-download is disabled, set return to false
-	 * 
+	 *
 	 * When the purchase session is still present AND the receipt being shown is for that purchase,
 	 * file download links are still shown. Once session expires, links are disabled
 	 */
@@ -980,7 +981,7 @@ function edd_receipt_show_download_files( $item_id, $receipt_args, $item = array
 
 			// We have session data but the payment key provided is not for this session
 			$ret = false;
-			
+
 		} elseif ( empty( $session ) ) {
 
 			// No session data is present but a key has been provided
