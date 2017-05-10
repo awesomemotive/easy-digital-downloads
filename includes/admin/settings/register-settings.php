@@ -467,6 +467,20 @@ function edd_get_registered_settings() {
 						'desc' => __( 'Upload or choose a logo to be displayed at the top of the purchase receipt emails. Displayed on HTML emails only.', 'easy-digital-downloads' ),
 						'type' => 'upload',
 					),
+					'from_name' => array(
+						'id'   => 'from_name',
+						'name' => __( 'From Name', 'easy-digital-downloads' ),
+						'desc' => __( 'The name purchase receipts are said to come from. This should probably be your site or shop name.', 'easy-digital-downloads' ),
+						'type' => 'text',
+						'std'  => get_bloginfo( 'name' ),
+					),
+					'from_email' => array(
+						'id'   => 'from_email',
+						'name' => __( 'From Email', 'easy-digital-downloads' ),
+						'desc' => __( 'Email to send purchase receipts from. This will act as the "from" and "reply-to" address.', 'easy-digital-downloads' ),
+						'type' => 'email',
+						'std'  => get_bloginfo( 'admin_email' ),
+					),
 					'email_settings' => array(
 						'id'   => 'email_settings',
 						'name' => '',
@@ -480,19 +494,11 @@ function edd_get_registered_settings() {
 						'name' => '<h3>' . __( 'Purchase Receipts', 'easy-digital-downloads' ) . '</h3>',
 						'type' => 'header',
 					),
-					'from_name' => array(
-						'id'   => 'from_name',
-						'name' => __( 'From Name', 'easy-digital-downloads' ),
-						'desc' => __( 'The name purchase receipts are said to come from. This should probably be your site or shop name.', 'easy-digital-downloads' ),
-						'type' => 'text',
-						'std'  => get_bloginfo( 'name' ),
-					),
-					'from_email' => array(
-						'id'   => 'from_email',
-						'name' => __( 'From Email', 'easy-digital-downloads' ),
-						'desc' => __( 'Email to send purchase receipts from. This will act as the "from" and "reply-to" address.', 'easy-digital-downloads' ),
-						'type' => 'text',
-						'std'  => get_bloginfo( 'admin_email' ),
+					'purchase_receipt_email_settings' => array(
+						'id'   => 'purchase_receipt_email_settings',
+						'name' => '',
+						'desc' => '',
+						'type' => 'hook',
 					),
 					'purchase_subject' => array(
 						'id'   => 'purchase_subject',

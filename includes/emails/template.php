@@ -115,7 +115,7 @@ function edd_email_template_preview() {
 	<?php
 	echo ob_get_clean();
 }
-add_action( 'edd_email_settings', 'edd_email_template_preview' );
+add_action( 'edd_purchase_receipt_email_settings', 'edd_email_template_preview' );
 
 /**
  * Displays the email preview
