@@ -729,7 +729,7 @@ function edd_get_paypal_redirect( $ssl_check = false, $ipn = false ) {
 }
 
 /**
- * Get the image for the PayPal purcahse page.
+ * Get the image for the PayPal purchase page.
  *
  * @since 2.8
  * @return string
