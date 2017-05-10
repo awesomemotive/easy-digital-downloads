@@ -763,6 +763,13 @@ function edd_get_registered_settings() {
 						'type' => 'text',
 						'std'  => __( 'Purchase', 'easy-digital-downloads' ),
 					),
+					'free_checkout_label' => array(
+						'id'   => 'free_checkout_label',
+						'name' => __( 'Register Text', 'easy-digital-downloads' ),
+						'desc' => __( 'The button label for completing a free purchase.', 'easy-digital-downloads' ),
+						'type' => 'text',
+						'std'  => __( 'Free Download', 'easy-digital-downloads' ),
+					),
 					'add_to_cart_text' => array(
 						'id'   => 'add_to_cart_text',
 						'name' => __( 'Add to Cart Text', 'easy-digital-downloads' ),
