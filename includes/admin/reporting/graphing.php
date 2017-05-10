@@ -772,7 +772,7 @@ function edd_get_report_dates() {
 
 	$current_time = current_time( 'timestamp' );
 
-	$dates['range'] = isset( $_GET['range'] ) ? $_GET['range'] : 'last_30_days';
+	$dates['range'] = isset( $_GET['range'] ) ? $_GET['range'] : apply_filters( 'edd_get_report_dates_default_range', 'last_30_days' );
 
 	if ( 'custom' !== $dates['range'] ) {
 		$dates['year']       = isset( $_GET['year'] )    ? $_GET['year']    : date( 'Y' );
