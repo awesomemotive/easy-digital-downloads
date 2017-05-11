@@ -2067,7 +2067,7 @@ class EDD_Payment {
 			return false; // This payment was never completed
 		}
 
-		$date = ( $date = $this->get_meta( '_edd_completed_date', true ) ) ? $date : $payment->modified_date;
+		$date = ( $date = $this->get_meta( '_edd_completed_date', true ) ) ? $date : $payment->date;
 
 		return $date;
 	}
