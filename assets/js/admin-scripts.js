@@ -1296,6 +1296,7 @@ jQuery(document).ready(function ($) {
 		var val         = $(this).val()
 		var container   = $(this).closest( '.edd-select-chosen' );
 		var menu_id     = container.attr('id').replace( '_chosen', '' );
+		var select      = container.prev();
 		var no_bundles  = container.hasClass( 'no-bundles' );
 		var variations  = container.hasClass( 'variations' );
 		var lastKey     = e.which;
@@ -1305,11 +1306,11 @@ jQuery(document).ready(function ($) {
 		if ( container.prev().data('search-type') ) {
 
 			// Don't trigger AJAX if this select has all options loaded
-			if ( 'no_ajax' == container.prev().data('search-type') ) {
+			if ( 'no_ajax' == select.data('search-type') ) {
 				return;
 			}
 
-			search_type = 'edd_' + container.prev().data('search-type') + '_search';
+			search_type = 'edd_' + select.data('search-type') + '_search';
 		}
 
 		// Don't fire if short or is a modifier key (shift, ctrl, apple command key, or arrow keys)
@@ -1342,20 +1343,20 @@ jQuery(document).ready(function ($) {
 					},
 					dataType: "json",
 					beforeSend: function(){
-						$('ul.chosen-results').empty();
+						select.closest('ul.chosen-results').empty();
 					},
 					success: function( data ) {
 						// Remove all options but those that are selected
-						$('#' + menu_id + ' option:not(:selected)').remove();
+						$('option:not(:selected)', select).remove();
 						$.each( data, function( key, item ) {
 							// Add any option that doesn't already exist
-							if( ! $('#' + menu_id + ' option[value="' + item.id + '"]').length ) {
-								$('#' + menu_id).prepend( '<option value="' + item.id + '">' + item.name + '</option>' );
+							if( ! $('option[value="' + item.id + '"]', select).length ) {
+								select.prepend( '<option value="' + item.id + '">' + item.name + '</option>' );
 							}
 						});
 						// Update the options
 						$('.edd-select-chosen').trigger('chosen:updated');
-						$('#' + menu_id).next().find('input').val(val);
+						select.next().find('input').val(val);
 					}
 				}).fail(function (response) {
 					if ( window.console && window.console.log ) {
