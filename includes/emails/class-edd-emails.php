@@ -124,7 +124,11 @@ class EDD_Emails {
 	 */
 	public function get_from_address() {
 		if ( ! $this->from_address ) {
-			$this->from_address = edd_get_option( 'from_email', get_option( 'admin_email' ) );
+			$this->from_address = edd_get_option( 'from_email' );
+		}
+
+		if( empty( $this->from_address ) || ! is_email( $this->from_address ) ) {
+			$this->from_address = get_option( 'admin_email' );
 		}
 
 		return apply_filters( 'edd_email_from_address', $this->from_address, $this );
