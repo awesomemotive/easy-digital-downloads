@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.0
 Tested up to: 4.8
-Stable Tag: 2.7.8
+Stable Tag: 2.7.9
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -212,6 +212,13 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+
+= 2.7.9, May 11, 2017 =
+
+* Fix: Chosen search had incorrect select element targeting.
+* Fix: EDD_Payment was using invalid modified_date instead of date.
+* Fix: Recovering a guest payment prompted user to login to complete the purchase.
+* New: Add edd_get_report_dates_default_range filter to report date range.
 
 = 2.7.8, May 2, 2017 =
 
