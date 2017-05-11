@@ -387,7 +387,7 @@ jQuery(document).ready(function ($) {
 			// Update base state field based on selected base country
 			$('select[name="edd-payment-address[0][country]"]').change(function() {
 				var $this = $(this);
-				data = {
+				var data = {
 					action: 'edd_get_shop_states',
 					country: $this.val(),
 					field_name: 'edd-payment-address[0][state]'
@@ -1075,7 +1075,7 @@ jQuery(document).ready(function ($) {
 			// Update base state field based on selected base country
 			$('select[name="edd_settings[base_country]"]').change(function() {
 				var $this = $(this), $tr = $this.closest('tr');
-				data = {
+				var data = {
 					action: 'edd_get_shop_states',
 					country: $(this).val(),
 					field_name: 'edd_settings[base_state]'
@@ -1095,7 +1095,7 @@ jQuery(document).ready(function ($) {
 			// Update tax rate state field based on selected rate country
 			$( document.body ).on('change', '#edd_tax_rates select.edd-tax-country', function() {
 				var $this = $(this);
-				data = {
+				var data = {
 					action: 'edd_get_shop_states',
 					country: $(this).val(),
 					field_name: $this.attr('name').replace('country', 'state')
@@ -1909,7 +1909,7 @@ jQuery(document).ready(function ($) {
 		change_country: function() {
 			$('select[name="customerinfo[country]"]').change(function() {
 				var $this = $(this);
-				data = {
+				var data = {
 					action: 'edd_get_shop_states',
 					country: $this.val(),
 					field_name: 'customerinfo[state]'
@@ -1990,7 +1990,7 @@ jQuery(document).ready(function ($) {
 		}
 
 		$('.edd-ajax').show();
-		data = {
+		var data = {
 			action: 'edd_search_users',
 			user_name: user_search,
 			exclude: exclude
