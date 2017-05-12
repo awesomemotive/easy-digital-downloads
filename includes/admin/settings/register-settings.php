@@ -1561,6 +1561,13 @@ function edd_gateways_callback( $args ) {
 		$html .= '<input name="edd_settings[' . esc_attr( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" class="' . $class . '" type="checkbox" value="1" ' . checked('1', $enabled, false) . '/>&nbsp;';
 		$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']">' . esc_html( $option['admin_label'] ) . '</label><br/>';
 	endforeach;
+	$url_args  = array(
+			'utm_source'   => 'settings',
+			'utm_medium'   => 'gateways',
+			'utm_campaign' => 'admin',
+	);
+	$url   = esc_url( add_query_arg( $url_args, 'https://easydigitaldownloads.com/downloads/category/extensions/gateways/' ) );
+	$html .= '<p>' . sprintf( __( 'Don\'t see what you need? More Payment Gateway options are available <a href="%s">here</a>', 'easy-digital-downloads' ), $url ) . '</p>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
