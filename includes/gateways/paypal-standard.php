@@ -58,11 +58,11 @@ function edd_register_paypal_gateway_settings( $gateway_settings ) {
 				'type' => 'text',
 				'size' => 'regular',
 			),
-			'paypal_page_style' => array(
-				'id'   => 'paypal_page_style',
-				'name' => __( 'PayPal Page Style', 'easy-digital-downloads' ),
-				'desc' => __( 'Enter the name of the page style to use, or leave blank for default', 'easy-digital-downloads' ),
-				'type' => 'text',
+			'paypal_image_url' => array(
+				'id'   => 'paypal_image_url',
+				'name' => __( 'PayPal Image URL', 'easy-digital-downloads' ),
+				'desc' => __( 'Upload an image to display on the PayPal checkout page.', 'easy-digital-downloads' ),
+				'type' => 'upload',
 				'size' => 'regular',
 			),
 		);
@@ -211,7 +211,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
 			'return'        => $return_url,
 			'cancel_return' => edd_get_failed_transaction_uri( '?payment-id=' . $payment ),
 			'notify_url'    => $listener_url,
-			'page_style'    => edd_get_paypal_page_style(),
+			'image_url'     => edd_get_paypal_image_url(),
 			'cbt'           => get_bloginfo( 'name' ),
 			'bn'            => 'EasyDigitalDownloads_SP'
 		);
@@ -729,14 +729,14 @@ function edd_get_paypal_redirect( $ssl_check = false, $ipn = false ) {
 }
 
 /**
- * Set the Page Style for PayPal Purchase page
+ * Get the image for the PayPal purchase page.
  *
- * @since 1.4.1
+ * @since 2.8
  * @return string
  */
-function edd_get_paypal_page_style() {
-	$page_style = trim( edd_get_option( 'paypal_page_style', 'PayPal' ) );
-	return apply_filters( 'edd_paypal_page_style', $page_style );
+function edd_get_paypal_image_url() {
+	$image_url = trim( edd_get_option( 'paypal_image_url', '' ) );
+	return apply_filters( 'edd_paypal_image_url', $image_url );
 }
 
 /**
