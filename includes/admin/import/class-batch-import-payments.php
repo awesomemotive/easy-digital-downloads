@@ -85,6 +85,11 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 		if( $offset > $this->total ) {
 			$this->done = true;
+
+			// Clean up the temporary records in the payment import process
+			global $wpdb;
+			$sql = "DELETE FROM {$wpdb->prefix}edd_customermeta WHERE meta_key = '_canonical_import_id'";
+			$wpdb->query( $sql );
 		}
 
 		if( ! $this->done && $this->csv->data ) {
