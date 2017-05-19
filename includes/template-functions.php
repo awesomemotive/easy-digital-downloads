@@ -133,7 +133,19 @@ function edd_get_purchase_link( $args = array() ) {
 		if ( 0 == $price ) {
 			$args['text'] = __( 'Free', 'easy-digital-downloads' ) . $button_text;
 		} else {
-			$args['text'] = edd_currency_filter( edd_format_amount( $price ) ) . $button_text;
+			$symbol = edd_currency_symbol( edd_get_currency() );
+
+			$args['text']  = '<span class="edd-purchase-button-price-text">' . edd_format_amount( $price ) . '</span>';
+
+			$currency_pos    = edd_get_option( 'currency_position' );
+			$currency_markup = '<span class="edd-purchase-button-currency-symbol">' . $symbol . '</span>';
+			if ( 'before' === $currency_pos ) {
+				$args['text'] = $currency_markup . $args['text'];
+			} else {
+				$args['text'] .= $currency_markup;
+			}
+
+			$args['text'] .=$button_text;
 		}
 
 	}
