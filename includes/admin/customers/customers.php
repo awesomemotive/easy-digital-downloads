@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_customers_page() {
 	$default_views = edd_customer_views();
 	$requested_view = isset( $_GET['view'] ) ? sanitize_text_field( $_GET['view'] ) : 'customers';
-	if ( array_key_exists( $requested_view, $default_views ) && function_exists( $default_views[$requested_view] ) ) {
+	if ( array_key_exists( $requested_view, $default_views ) && is_callable( $default_views[$requested_view] ) ) {
 		edd_render_customer_view( $requested_view, $default_views );
 	} else {
 		edd_customers_list();
@@ -112,7 +112,10 @@ function edd_render_customer_view( $view, $callbacks ) {
 	?>
 
 	<div class='wrap'>
-		<h2><?php _e( 'Customer Details', 'easy-digital-downloads' );?></h2>
+		<h2>
+			<?php _e( 'Customer Details', 'easy-digital-downloads' ); ?>
+			<?php do_action( 'edd_after_customer_details_header', $customer ); ?>
+		</h2>
 		<?php if ( edd_get_errors() ) :?>
 			<div class="error settings-error">
 				<?php edd_print_errors(); ?>
@@ -123,7 +126,7 @@ function edd_render_customer_view( $view, $callbacks ) {
 
 			<div id="edd-item-wrapper" class="edd-item-has-tabs edd-clearfix">
 				<div id="edd-item-tab-wrapper" class="customer-tab-wrapper">
-					<ul id="edd-item-tab-wrapper-list" class="ustomer-tab-wrapper-list">
+					<ul id="edd-item-tab-wrapper-list" class="customer-tab-wrapper-list">
 						<?php foreach ( $customer_tabs as $key => $tab ) : ?>
 							<?php $active = $key === $view ? true : false; ?>
 							<?php $class  = $active ? 'active' : 'inactive'; ?>
@@ -161,7 +164,7 @@ function edd_render_customer_view( $view, $callbacks ) {
 				</div>
 
 				<div id="edd-item-card-wrapper" class="edd-customer-card-wrapper" style="float: left">
-					<?php $callbacks[$view]( $customer ) ?>
+					<?php call_user_func( $callbacks[ $view ], $customer ); ?>
 				</div>
 			</div>
 
@@ -198,6 +201,7 @@ function edd_customers_view( $customer ) {
 					<?php echo get_avatar( $customer->email ); ?><br />
 					<?php if ( current_user_can( $customer_edit_role ) ): ?>
 						<span class="info-item editable customer-edit-link"><a href="#" id="edit-customer"><?php _e( 'Edit Customer', 'easy-digital-downloads' ); ?></a></span>
+						<?php do_action( 'edd_after_customer_edit_link', $customer ); ?>
 					<?php endif; ?>
 				</div>
 

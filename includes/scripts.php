@@ -41,11 +41,11 @@ function edd_load_scripts() {
 
 	if ( edd_is_checkout() ) {
 		if ( edd_is_cc_verify_enabled() ) {
-			wp_register_script( 'creditCardValidator', $js_dir . 'jquery.creditCardValidator' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
+			wp_register_script( 'creditCardValidator', $js_dir . 'jquery.creditCardValidator' . $suffix . '.js', array( 'jquery' ), EDD_VERSION, true );
 			wp_enqueue_script( 'creditCardValidator' );
 		}
 
-		wp_register_script( 'edd-checkout-global', $js_dir . 'edd-checkout-global' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
+		wp_register_script( 'edd-checkout-global', $js_dir . 'edd-checkout-global' . $suffix . '.js', array( 'jquery' ), EDD_VERSION, true );
 		wp_enqueue_script( 'edd-checkout-global' );
 
 		wp_localize_script( 'edd-checkout-global', 'edd_global_vars', apply_filters( 'edd_global_checkout_script_vars', array(
@@ -62,7 +62,7 @@ function edd_load_scripts() {
 			'no_email'           => __( 'Please enter an email address before applying a discount code', 'easy-digital-downloads' ),
 			'no_username'        => __( 'Please enter a username before applying a discount code', 'easy-digital-downloads' ),
 			'purchase_loading'   => __( 'Please Wait...', 'easy-digital-downloads' ),
-			'complete_purchase'  => __( 'Purchase', 'easy-digital-downloads' ),
+			'complete_purchase'  => edd_get_checkout_button_purchase_label(),
 			'taxes_enabled'      => edd_use_taxes() ? '1' : '0',
 			'edd_version'        => EDD_VERSION
 		) ) );
@@ -70,7 +70,7 @@ function edd_load_scripts() {
 
 	// Load AJAX scripts, if enabled
 	if ( ! edd_is_ajax_disabled() ) {
-		wp_register_script( 'edd-ajax', $js_dir . 'edd-ajax' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
+		wp_register_script( 'edd-ajax', $js_dir . 'edd-ajax' . $suffix . '.js', array( 'jquery' ), EDD_VERSION, true );
 		wp_enqueue_script( 'edd-ajax' );
 
 		wp_localize_script( 'edd-ajax', 'edd_scripts', apply_filters( 'edd_ajax_script_vars', array(
@@ -254,7 +254,7 @@ function edd_load_admin_scripts( $hook ) {
 	wp_enqueue_script( 'thickbox' );
 	wp_enqueue_style( 'thickbox' );
 
-	wp_register_style( 'edd-admin', $css_dir . 'edd-admin' . $suffix . '.css', EDD_VERSION );
+	wp_register_style( 'edd-admin', $css_dir . 'edd-admin' . $suffix . '.css', array(), EDD_VERSION );
 	wp_enqueue_style( 'edd-admin' );
 }
 add_action( 'admin_enqueue_scripts', 'edd_load_admin_scripts', 100 );

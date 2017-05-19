@@ -85,6 +85,11 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 		if( $offset > $this->total ) {
 			$this->done = true;
+
+			// Clean up the temporary records in the payment import process
+			global $wpdb;
+			$sql = "DELETE FROM {$wpdb->prefix}edd_customermeta WHERE meta_key = '_canonical_import_id'";
+			$wpdb->query( $sql );
 		}
 
 		if( ! $this->done && $this->csv->data ) {
@@ -196,13 +201,19 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 			} else {
 
-				$user = get_user_by( 'user_login', $user_id );
+				$user = get_user_by( 'login', $user_id );
 
 			}
 
 			if( $user ) {
 
 				$payment->user_id = $user->ID;
+
+				$customer = new EDD_Customer( $payment->customer_id );
+
+				if( empty( $customer->user_id ) ) {
+					$customer->update( array( 'user_id' => $user->ID ) );
+				}
 
 			}
 

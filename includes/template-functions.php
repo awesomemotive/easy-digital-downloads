@@ -637,6 +637,11 @@ function edd_get_template_part( $slug, $name = null, $load = true ) {
 	// Execute code for this part
 	do_action( 'get_template_part_' . $slug, $slug, $name );
 
+	$load_template = apply_filters( 'edd_allow_template_part_' . $slug . '_' . $name, true );
+	if ( false === $load_template ) {
+		return '';
+	}
+
 	// Setup possible parts
 	$templates = array();
 	if ( isset( $name ) )
@@ -649,6 +654,24 @@ function edd_get_template_part( $slug, $name = null, $load = true ) {
 	// Return the part that is found
 	return edd_locate_template( $templates, $load, false );
 }
+
+/**
+ * Only allow the pending verification message to display once
+ * @since 2.7.8
+ * @param $load_template
+ *
+ * @return bool
+ */
+function edd_load_verification_template_once( $load_template ) {
+	static $account_pending_loaded;
+	if ( ! is_null( $account_pending_loaded ) ) {
+		return false;
+	}
+
+	$account_pending_loaded = true;
+	return $load_template;
+}
+add_filter( 'edd_allow_template_part_account_pending', 'edd_load_verification_template_once', 10, 1 );
 
 /**
  * Retrieve the name of the highest priority template file that exists.
@@ -926,7 +949,6 @@ function edd_add_body_classes( $class ) {
 
 	if( edd_is_test_mode() ) {
 		$classes[] = 'edd-test-mode';
-		$classes[] = 'edd-page';
 	}
 
 	return array_unique( $classes );

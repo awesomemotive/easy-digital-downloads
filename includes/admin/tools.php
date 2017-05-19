@@ -27,7 +27,6 @@ function edd_tools_page() {
 	$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'general';
 ?>
 	<div class="wrap">
-		<?php screen_icon(); ?>
 		<h2><?php _e( 'Easy Digital Downloads Tools', 'easy-digital-downloads' ); ?></h2>
 		<h2 class="nav-tab-wrapper">
 			<?php
@@ -473,7 +472,7 @@ function edd_tools_import_export_display() {
 						?>
 					</p>
 
-					<table class="widefat edd_repeatable_table" width="100%" cellpadding="0" cellspacing="0">
+					<table class="widefat edd_repeatable_table striped" width="100%" cellpadding="0" cellspacing="0">
 						<thead>
 							<tr>
 								<th><strong><?php _e( 'Payment Field', 'easy-digital-downloads' ); ?></strong></th>
@@ -491,7 +490,7 @@ function edd_tools_import_export_display() {
 								</td>
 								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
-							<tr class="alternate">
+							<tr>
 								<td><?php _e( 'Email', 'easy-digital-downloads' ); ?></td>
 								<td>
 									<select name="edd-import-field[email]" class="edd-import-csv-column">
@@ -509,7 +508,7 @@ function edd_tools_import_export_display() {
 								</td>
 								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
-							<tr class="alternate">
+							<tr>
 								<td><?php _e( 'Last Name', 'easy-digital-downloads' ); ?></td>
 								<td>
 									<select name="edd-import-field[last_name]" class="edd-import-csv-column">
@@ -527,7 +526,7 @@ function edd_tools_import_export_display() {
 								</td>
 								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
-							<tr class="alternate">
+							<tr>
 								<td><?php _e( 'Discount Code(s)', 'easy-digital-downloads' ); ?></td>
 								<td>
 									<select name="edd-import-field[discounts]" class="edd-import-csv-column">
@@ -545,7 +544,7 @@ function edd_tools_import_export_display() {
 								</td>
 								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
-							<tr class="alternate">
+							<tr>
 								<td><?php _e( 'Mode (Live|Test)', 'easy-digital-downloads' ); ?></td>
 								<td>
 									<select name="edd-import-field[mode]" class="edd-import-csv-column">
@@ -563,7 +562,7 @@ function edd_tools_import_export_display() {
 								</td>
 								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
-							<tr class="alternate">
+							<tr>
 								<td><?php _e( 'Payment Method', 'easy-digital-downloads' ); ?></td>
 								<td>
 									<select name="edd-import-field[gateway]" class="edd-import-csv-column">
@@ -581,7 +580,7 @@ function edd_tools_import_export_display() {
 								</td>
 								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
-							<tr class="alternate">
+							<tr>
 								<td><?php _e( 'Date', 'easy-digital-downloads' ); ?></td>
 								<td>
 									<select name="edd-import-field[date]" class="edd-import-csv-column">
@@ -599,7 +598,7 @@ function edd_tools_import_export_display() {
 								</td>
 								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
-							<tr class="alternate">
+							<tr>
 								<td><?php _e( 'Purchased Product(s)', 'easy-digital-downloads' ); ?></td>
 								<td>
 									<select name="edd-import-field[downloads]" class="edd-import-csv-column">
@@ -617,7 +616,7 @@ function edd_tools_import_export_display() {
 								</td>
 								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
-							<tr class="alternate">
+							<tr>
 								<td><?php _e( 'Subtotal', 'easy-digital-downloads' ); ?></td>
 								<td>
 									<select name="edd-import-field[subtotal]" class="edd-import-csv-column">
@@ -635,7 +634,7 @@ function edd_tools_import_export_display() {
 								</td>
 								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
-							<tr class="alternate">
+							<tr>
 								<td><?php _e( 'Total', 'easy-digital-downloads' ); ?></td>
 								<td>
 									<select name="edd-import-field[total]" class="edd-import-csv-column">
@@ -653,7 +652,7 @@ function edd_tools_import_export_display() {
 								</td>
 								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
-							<tr class="alternate">
+							<tr>
 								<td><?php _e( 'User', 'easy-digital-downloads' ); ?></td>
 								<td>
 									<select name="edd-import-field[user_id]" class="edd-import-csv-column">
@@ -671,7 +670,7 @@ function edd_tools_import_export_display() {
 								</td>
 								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
-							<tr class="alternate">
+							<tr>
 								<td><?php _e( 'Address Line 2', 'easy-digital-downloads' ); ?></td>
 								<td>
 									<select name="edd-import-field[line2]" class="edd-import-csv-column">
@@ -680,7 +679,7 @@ function edd_tools_import_export_display() {
 								</td>
 								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
-							<tr class="alternate">
+							<tr>
 								<td><?php _e( 'City', 'easy-digital-downloads' ); ?></td>
 								<td>
 									<select name="edd-import-field[city]" class="edd-import-csv-column">
@@ -698,7 +697,7 @@ function edd_tools_import_export_display() {
 								</td>
 								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
-							<tr class="alternate">
+							<tr>
 								<td><?php _e( 'Zip / Postal Code', 'easy-digital-downloads' ); ?></td>
 								<td>
 									<select name="edd-import-field[zip]" class="edd-import-csv-column">
@@ -755,7 +754,7 @@ function edd_tools_import_export_display() {
 						?>
 					</p>
 
-					<table class="widefat edd_repeatable_table" width="100%" cellpadding="0" cellspacing="0">
+					<table class="widefat edd_repeatable_table striped" width="100%" cellpadding="0" cellspacing="0">
 						<thead>
 							<tr>
 								<th><strong><?php _e( 'Product Field', 'easy-digital-downloads' ); ?></strong></th>
@@ -773,7 +772,7 @@ function edd_tools_import_export_display() {
 								</td>
 								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
-							<tr class="alternate">
+							<tr>
 								<td><?php _e( 'Product Categories', 'easy-digital-downloads' ); ?></td>
 								<td>
 									<select name="edd-import-field[categories]" class="edd-import-csv-column">
@@ -791,7 +790,7 @@ function edd_tools_import_export_display() {
 								</td>
 								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
-							<tr class="alternate">
+							<tr>
 								<td><?php _e( 'Product Description', 'easy-digital-downloads' ); ?></td>
 								<td>
 									<select name="edd-import-field[post_content]" class="edd-import-csv-column">
@@ -809,7 +808,7 @@ function edd_tools_import_export_display() {
 								</td>
 								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
-							<tr class="alternate">
+							<tr>
 								<td><?php _e( 'Product Image', 'easy-digital-downloads' ); ?></td>
 								<td>
 									<select name="edd-import-field[featured_image]" class="edd-import-csv-column">
@@ -827,7 +826,7 @@ function edd_tools_import_export_display() {
 								</td>
 								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
-							<tr class="alternate">
+							<tr>
 								<td><?php _e( 'Product Price(s)', 'easy-digital-downloads' ); ?></td>
 								<td>
 									<select name="edd-import-field[price]" class="edd-import-csv-column">
@@ -845,7 +844,7 @@ function edd_tools_import_export_display() {
 								</td>
 								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
-							<tr class="alternate">
+							<tr>
 								<td><?php _e( 'Product Slug', 'easy-digital-downloads' ); ?></td>
 								<td>
 									<select name="edd-import-field[post_name]" class="edd-import-csv-column">
@@ -863,7 +862,7 @@ function edd_tools_import_export_display() {
 								</td>
 								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
-							<tr class="alternate">
+							<tr>
 								<td><?php _e( 'Product Tags', 'easy-digital-downloads' ); ?></td>
 								<td>
 									<select name="edd-import-field[tags]" class="edd-import-csv-column">
@@ -881,7 +880,7 @@ function edd_tools_import_export_display() {
 								</td>
 								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
-							<tr class="alternate">
+							<tr>
 								<td><?php _e( 'Download Files', 'easy-digital-downloads' ); ?></td>
 								<td>
 									<select name="edd-import-field[files]" class="edd-import-csv-column">
@@ -899,7 +898,7 @@ function edd_tools_import_export_display() {
 								</td>
 								<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 							</tr>
-							<tr class="alternate">
+							<tr>
 								<td><?php _e( 'Sale Count', 'easy-digital-downloads' ); ?></td>
 								<td>
 									<select name="edd-import-field[sales]" class="edd-import-csv-column">
@@ -981,12 +980,16 @@ function edd_tools_import_export_process_export() {
 	if( ! current_user_can( 'manage_shop_settings' ) )
 		return;
 
-	$settings = array();
-	$settings = get_option( 'edd_settings' );
+	$edd_settings  = get_option( 'edd_settings' );
+	$edd_tax_rates = get_option( 'edd_tax_rates' );
+	$settings = array(
+		'edd_settings'  => $edd_settings,
+		'edd_tax_rates' => $edd_tax_rates,
+	);
 
 	ignore_user_abort( true );
 
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) )
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) )
 		set_time_limit( 0 );
 
 	nocache_headers();
@@ -1030,7 +1033,23 @@ function edd_tools_import_export_process_import() {
 	// Retrieve the settings from the file and convert the json object to an array
 	$settings = edd_object_to_array( json_decode( file_get_contents( $import_file ) ) );
 
-	update_option( 'edd_settings', $settings );
+	if ( ! isset( $settings['edd_settings'] ) ) {
+
+		// Process a settings export from a pre 2.8 version of EDD
+		update_option( 'edd_settings', $settings );
+
+	} else {
+
+		// Update the settings from a 2.8+ export file
+		$edd_settings  = $settings['edd_settings'];
+		update_option( 'edd_settings', $edd_settings );
+
+		$edd_tax_rates = $settings['edd_tax_rates'];
+		update_option( 'edd_tax_rates', $edd_tax_rates );
+
+	}
+
+
 
 	wp_safe_redirect( admin_url( 'edit.php?post_type=download&page=edd-tools&edd-message=settings-imported' ) ); exit;
 
@@ -1179,6 +1198,7 @@ function edd_tools_sysinfo_get() {
 	$return .= 'Decimal Separator:        ' . edd_get_option( 'decimal_separator', '.' ) . "\n";
 	$return .= 'Thousands Separator:      ' . edd_get_option( 'thousands_separator', ',' ) . "\n";
 	$return .= 'Upgrades Completed:       ' . implode( ',', edd_get_completed_upgrades() ) . "\n";
+	$return .= 'Download Link Expiration: ' . edd_get_option( 'download_link_expiration' ) . " hour(s)\n";
 
 	$return  = apply_filters( 'edd_sysinfo_after_edd_config', $return );
 
@@ -1328,7 +1348,6 @@ function edd_tools_sysinfo_get() {
 
 	// PHP configs... now we're getting to the important stuff
 	$return .= "\n" . '-- PHP Configuration' . "\n\n";
-	$return .= 'Safe Mode:                ' . ( ini_get( 'safe_mode' ) ? 'Enabled' : 'Disabled' . "\n" );
 	$return .= 'Memory Limit:             ' . ini_get( 'memory_limit' ) . "\n";
 	$return .= 'Upload Max Size:          ' . ini_get( 'upload_max_filesize' ) . "\n";
 	$return .= 'Post Max Size:            ' . ini_get( 'post_max_size' ) . "\n";

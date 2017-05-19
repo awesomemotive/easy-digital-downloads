@@ -289,6 +289,23 @@ class EDD_HTML_Elements {
 			$options[0] = __( 'No users found', 'easy-digital-downloads' );
 		}
 
+		// If a selected user has been specified, we need to ensure it's in the initial list of user displayed
+		if( ! empty( $args['selected'] ) ) {
+
+			if( ! array_key_exists( $args['selected'], $options ) ) {
+
+				$user = get_userdata( $args['selected'] );
+
+				if( $user ) {
+
+					$options[ absint( $args['selected'] ) ] = esc_html( $user->display_name );
+
+				}
+
+			}
+
+		}
+
 		$output = $this->select( array(
 			'name'             => $args['name'],
 			'selected'         => $args['selected'],
@@ -530,7 +547,7 @@ class EDD_HTML_Elements {
 			foreach ( $args['options'] as $key => $option ) {
 				if ( $args['multiple'] && is_array( $args['selected'] ) ) {
 					$selected = selected( true, in_array( (string) $key, $args['selected'] ), false );
-				} elseif ( isset( $args['selected'] ) && ! empty( $args['selected'] ) && ! is_array( $args['selected'] ) ) {
+				} elseif ( isset( $args['selected'] ) && ! is_array( $args['selected'] ) ) {
 					$selected = selected( $args['selected'], $key, false );
 				}
 
@@ -735,4 +752,5 @@ class EDD_HTML_Elements {
 
 		return $output;
 	}
+
 }
