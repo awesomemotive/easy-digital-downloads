@@ -126,6 +126,10 @@ class Tests_Customers_DB extends EDD_UnitTestCase {
 
 	public function tearDown() {
 		parent::tearDown();
+
+		global $wpdb;
+		$wpdb->query( "DELETE FROM {$wpdb->prefix}edd_customers" );
+		$wpdb->query( "DELETE FROM {$wpdb->prefix}edd_customermeta" );
 	}
 
 	public function test_installed() {

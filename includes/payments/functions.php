@@ -168,6 +168,8 @@ function edd_insert_payment( $payment_data = array() ) {
 
 	if ( $resume_payment ) {
 
+		$payment->date = date( 'Y-m-d G:i:s', current_time( 'timestamp' ) );
+
 		$payment->add_note( __( 'Payment recovery processed', 'easy-digital-downloads' ) );
 
 		// Since things could have been added/removed since we first crated this...rebuild the cart details.
@@ -563,10 +565,10 @@ function edd_count_payments( $args = array() ) {
 	// Limit payments count by gateway
 	if ( ! empty( $args['gateway'] ) ) {
 
-		$join .= "LEFT JOIN $wpdb->postmeta m ON (p.ID = m.post_id)";
+		$join .= "LEFT JOIN $wpdb->postmeta g ON (p.ID = g.post_id)";
 		$where .= $wpdb->prepare( "
-			AND m.meta_key = '_edd_payment_gateway'
-			AND m.meta_value = %s",
+			AND g.meta_key = '_edd_payment_gateway'
+			AND g.meta_value = %s",
 			$args['gateway']
 		);
 

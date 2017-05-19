@@ -435,7 +435,7 @@ function edd_purchase_form_validate_logged_in_user() {
 	// Start empty array to collect valid user data
 	$valid_user_data = array(
 		// Assume there will be errors
-		'user_id' => -1
+		'user_id' => 0
 	);
 
 	// Verify there is a user_ID
@@ -487,7 +487,7 @@ function edd_purchase_form_validate_new_user() {
 	// Start an empty array to collect valid user data
 	$valid_user_data = array(
 		// Assume there will be errors
-		'user_id' => -1,
+		'user_id' => 0,
 		// Get first name
 		'user_first' => isset( $_POST["edd_first"] ) ? sanitize_text_field( $_POST["edd_first"] ) : '',
 		// Get last name
@@ -541,7 +541,7 @@ function edd_purchase_form_validate_new_user() {
 		} else {
 			$customer = new EDD_Customer( $user_email );
 			if ( $registering_new_user && email_exists( $user_email ) ) {
-				edd_set_error( 'email_used', __( 'Email already used', 'easy-digital-downloads' ) );
+				edd_set_error( 'email_used', __( 'Email already used. Login or use a different email to complete your purchase.', 'easy-digital-downloads' ) );
 			} else {
 				// All the checks have run and it's good to go
 				$valid_user_data['user_email'] = $user_email;
@@ -588,7 +588,7 @@ function edd_purchase_form_validate_user_login() {
 	// Start an array to collect valid user data
 	$valid_user_data = array(
 		// Assume there will be errors
-		'user_id' => -1
+		'user_id' => 0,
 	);
 
 	// Username
@@ -597,8 +597,15 @@ function edd_purchase_form_validate_user_login() {
 		return $valid_user_data;
 	}
 
-	// Get the user by login
-	$user_data = get_user_by( 'login', strip_tags( $_POST['edd_user_login'] ) );
+	$login_or_email = strip_tags( $_POST['edd_user_login'] );
+
+	if ( is_email( $login_or_email ) ) {
+		// Get the user by email
+		$user_data = get_user_by( 'email', $login_or_email );
+	} else {
+		// Get the user by login
+		$user_data = get_user_by( 'login', $login_or_email );
+	}
 
 	// Check if user exists
 	if ( $user_data ) {
