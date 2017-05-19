@@ -888,6 +888,7 @@ function edd_get_report_dates() {
 				$dates['m_end']    = 12;
 			}
 
+			$dates['day']     = 1;
 			$dates['day_end'] = cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] );
 		break;
 
@@ -912,11 +913,13 @@ function edd_get_report_dates() {
 				$dates['year']    = date( 'Y', $current_time );
 			}
 
+			$dates['day']      = 1;
 			$dates['day_end']  = cal_days_in_month( CAL_GREGORIAN, $dates['m_end'],  $dates['year'] );
 			$dates['year_end'] = $dates['year'];
 		break;
 
 		case 'this_year' :
+			$dates['day']      = 1;
 			$dates['m_start']  = 1;
 			$dates['m_end']    = 12;
 			$dates['year']     = date( 'Y', $current_time );
@@ -924,6 +927,7 @@ function edd_get_report_dates() {
 		break;
 
 		case 'last_year' :
+			$dates['day']      = 1;
 			$dates['m_start']  = 1;
 			$dates['m_end']    = 12;
 			$dates['year']     = date( 'Y', $current_time ) - 1;
