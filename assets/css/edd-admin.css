@@ -163,6 +163,9 @@ a.edd-delete:hover {
 #edd-payment-filters p {
 	color: #777;
 }
+#edd-payment-date-filters input {
+	vertical-align: middle;
+}
 tr.status-refunded td {
 	background: #cecece;
 	border-top-color: #ccc;
