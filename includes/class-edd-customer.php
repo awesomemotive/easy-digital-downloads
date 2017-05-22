@@ -90,6 +90,13 @@ class EDD_Customer {
 	public $notes;
 
 	/**
+	 * The raw notes values, for internal use only
+	 *
+	 * @since 2.8
+	 */
+	private $raw_notes = null;
+
+	/**
 	 * The Database Abstraction
 	 *
 	 * @since  2.3
@@ -751,7 +758,8 @@ class EDD_Customer {
 		$updated = $this->update( array( 'notes' => $notes ) );
 
 		if ( $updated ) {
-			$this->notes = $this->get_notes();
+			$this->raw_notes = $notes;
+			$this->notes     = $this->get_notes();
 		}
 
 		do_action( 'edd_customer_post_add_note', $this->notes, $new_note, $this->id, $this );
@@ -769,9 +777,13 @@ class EDD_Customer {
 	 */
 	private function get_raw_notes() {
 
-		$all_notes = $this->db->get_column( 'notes', $this->id );
+		if ( ! is_null( $this->raw_notes ) ) {
+			return $this->raw_notes;
+		}
 
-		return (string) $all_notes;
+		$this->raw_notes = $this->db->get_column( 'notes', $this->id );
+
+		return (string) $this->raw_notes;
 
 	}
 
