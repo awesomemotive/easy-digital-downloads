@@ -1874,15 +1874,26 @@ class EDD_Discount {
 		// Start off setting the amount as the base price.
 		$amount = $base_price;
 
+		/**
+		 * Filter the discount amount.
+		 *
+		 * @since 2.7
+		 * @access public
+		 *
+		 * @param float $amount Calculated discounted amount.
+		 * @param int $discount_id The discount ID.
+		 */
+		$discount_amount = apply_filters( 'edd_get_discount_amount', $this->amount, $this->ID );
+
 		if ( 'flat' == $this->type ) {
-			$amount = $base_price - $this->amount;
+			$amount = $base_price - $discount_amount;
 
 			if ( $amount < 0 ) {
 				$amount = 0;
 			}
 		} else {
 			// Percentage discount
-			$amount = $base_price - ( $base_price * ( $this->amount / 100 ) );
+			$amount = $base_price - ( $base_price * ( $discount_amount / 100 ) );
 		}
 
 		/**
@@ -1892,8 +1903,9 @@ class EDD_Discount {
 		 * @access public
 		 *
 		 * @param float $amount Calculated discounted amount.
+		 * @param int $discount_id The discount ID.
 		 */
-		return apply_filters( 'edd_discounted_amount', $amount );
+		return apply_filters( 'edd_discounted_amount', $amount, $this->ID );
 	}
 
 	/**
