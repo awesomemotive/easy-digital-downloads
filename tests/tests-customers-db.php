@@ -63,11 +63,11 @@ class Tests_Customers_DB extends EDD_UnitTestCase {
 		$user = get_userdata( $this->_user_id );
 
 		$user_info = array(
-			'id' => $user->ID,
-			'email' => 'testadmin@domain.com',
+			'id'         => $user->ID,
+			'email'      => 'testadmin@domain.com',
 			'first_name' => $user->first_name,
-			'last_name' => $user->last_name,
-			'discount' => 'none'
+			'last_name'  => $user->last_name,
+			'discount'   => 'none',
 		);
 
 		$download_details = array(
