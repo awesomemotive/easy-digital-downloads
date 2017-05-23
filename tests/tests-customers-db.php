@@ -248,10 +248,14 @@ class Tests_Customers_DB extends EDD_UnitTestCase {
 
 		$this->assertEquals( 1, EDD()->customers->count() );
 
+	}
+
+	public function test_count_customers_future() {
+
 		$args = array(
 			'date' => array(
-				'start' => 'January 1 ' . date( 'Y' ) + 1,
-				'end'   => 'January 1 ' . date( 'Y' ) + 2,
+				'start' => 'January 1, ' . ( date( 'Y', strtotime( '+1 year' ) ) ),
+				'end'   => 'January 1, ' . ( date( 'Y', strtotime( '+2 years' ) ) ),
 			)
 		);
 
