@@ -242,7 +242,7 @@ class EDD_Customer_Query {
 			'meta_key'      => '',
 			'meta_value'    => '',
 			'meta_query'    => '',
-			'date_query'    => null,
+			'date'          => null,
 			'count'         => false,
 			'no_found_rows' => true,
 		);
@@ -265,8 +265,9 @@ class EDD_Customer_Query {
 	 */
 	public function query( $query ) {
 		$this->query_vars = wp_parse_args( $query );
+		$items = $this->get_items();
 
-		return $this->get_items();
+		return $items;
 	}
 
 	/**
@@ -284,8 +285,8 @@ class EDD_Customer_Query {
 
 		$this->query_vars['offset'] = absint( $this->query_vars['offset'] );
 
-		if ( ! empty( $this->query_vars['date_query'] ) && is_array( $this->query_vars['date_query'] ) ) {
-			$this->date_query = new WP_Date_Query( $this->query_vars['date_query'], $this->table_name . '.' . $this->date_key );
+		if ( ! empty( $this->query_vars['date'] ) && is_array( $this->query_vars['date'] ) ) {
+			$this->date_query = new WP_Date_Query( $this->query_vars['date'], $this->table_name . '.' . $this->date_key );
 		}
 
 		$this->meta_query = new WP_Meta_Query();
@@ -337,6 +338,7 @@ class EDD_Customer_Query {
 
 		if ( false === $cache_value ) {
 			$items = $this->query_items();
+
 			if ( $items ) {
 				$this->set_found_items();
 			}
@@ -380,12 +382,12 @@ class EDD_Customer_Query {
 		global $wpdb;
 
 		$fields = $this->construct_request_fields();
-		$join = $this->construct_request_join();
+		$join   = $this->construct_request_join();
 
 		$this->sql_clauses['where'] = $this->construct_request_where();
 
 		$orderby = $this->construct_request_orderby();
-		$limits = $this->construct_request_limits();
+		$limits  = $this->construct_request_limits();
 		$groupby = $this->construct_request_groupby();
 
 		$found_rows = ! $this->query_vars['no_found_rows'] ? 'SQL_CALC_FOUND_ROWS' : '';
@@ -475,7 +477,7 @@ class EDD_Customer_Query {
 		if ( ! empty( $this->query_vars['email'] ) && ! is_array( $this->query_vars['email'] ) ) {
 			$meta_table = _get_meta_table( $this->meta_type );
 
-			$join_type = false !== strpos( $join, 'LEFT JOIN' ) ? 'LEFT JOIN' : 'INNER JOIN';
+			$join_type = false !== strpos( $join, 'INNER JOIN' ) ? 'INNER JOIN' : 'LEFT JOIN';
 
 			$join .= " $join_type $meta_table AS email_mt ON $this->table_name.$this->primary_key = email_mt.{$this->meta_type}_id";
 		}
