@@ -471,9 +471,10 @@ class EDD_DB_Customers extends EDD_DB  {
 		$args = $this->prepare_customer_query_args( $args );
 		$args['count'] = true;
 
-		$query = new EDD_Customer_Query( '', $this );
+		$query   = new EDD_Customer_Query( '', $this );
+		$results = $query->query( $args );
 
-		return $query->query( $args );
+		return $results;
 	}
 
 	/**

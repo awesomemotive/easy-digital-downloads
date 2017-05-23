@@ -242,7 +242,7 @@ class EDD_Customer_Query {
 			'meta_key'      => '',
 			'meta_value'    => '',
 			'meta_query'    => '',
-			'date'          => null,
+			'date_query'    => null,
 			'count'         => false,
 			'no_found_rows' => true,
 		);
@@ -285,8 +285,8 @@ class EDD_Customer_Query {
 
 		$this->query_vars['offset'] = absint( $this->query_vars['offset'] );
 
-		if ( ! empty( $this->query_vars['date'] ) && is_array( $this->query_vars['date'] ) ) {
-			$this->date_query = new WP_Date_Query( $this->query_vars['date'], $this->table_name . '.' . $this->date_key );
+		if ( ! empty( $this->query_vars['date_query'] ) && is_array( $this->query_vars['date_query'] ) ) {
+			$this->date_query = new WP_Date_Query( $this->query_vars['date_query'], $this->table_name . '.' . $this->date_key );
 		}
 
 		$this->meta_query = new WP_Meta_Query();
@@ -360,7 +360,7 @@ class EDD_Customer_Query {
 		// If querying for a count only, there's nothing more to do.
 		if ( $this->query_vars['count'] ) {
 			// $items is actually a count in this case.
-			return intval( $items );
+			return intval( $items[0]->count );
 		}
 
 		$this->items = $items;
@@ -413,8 +413,9 @@ class EDD_Customer_Query {
 		$this->sql_clauses['limits']  = $limits;
 
 		$this->request = "{$this->sql_clauses['select']} {$this->sql_clauses['from']} {$where} {$this->sql_clauses['groupby']} {$this->sql_clauses['orderby']} {$this->sql_clauses['limits']}";
+		$results       = $wpdb->get_results( $this->request );
 
-		return $wpdb->get_results( $this->request );
+		return $results;
 	}
 
 	/**
@@ -453,7 +454,7 @@ class EDD_Customer_Query {
 	 */
 	protected function construct_request_fields() {
 		if ( $this->query_vars['count'] ) {
-			return "COUNT(*)";
+			return "COUNT($this->primary_key) AS count";
 		}
 
 		return "$this->table_name.*";
