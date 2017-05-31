@@ -1720,6 +1720,9 @@ class EDD_Payment {
 
 			$updated = wp_update_post( apply_filters( 'edd_update_payment_status_fields', $update_fields ) );
 
+			$this->status = $status;
+			$this->post_status = $status;
+
 			$all_payment_statuses  = edd_get_payment_statuses();
 			$this->status_nicename = array_key_exists( $status, $all_payment_statuses ) ? $all_payment_statuses[ $status ] : ucfirst( $status );
 
@@ -1776,7 +1779,7 @@ class EDD_Payment {
 			}
 
 			// #5228 Fix possible data issue introduced in 2.6.12
-			if ( isset( $meta[0] ) ) {
+			if ( is_array( $meta ) && isset( $meta[0] ) ) {
 				$bad_meta = $meta[0];
 				unset( $meta[0] );
 
@@ -2064,7 +2067,7 @@ class EDD_Payment {
 			return false; // This payment was never completed
 		}
 
-		$date = ( $date = $this->get_meta( '_edd_completed_date', true ) ) ? $date : $payment->modified_date;
+		$date = ( $date = $this->get_meta( '_edd_completed_date', true ) ) ? $date : $payment->date;
 
 		return $date;
 	}

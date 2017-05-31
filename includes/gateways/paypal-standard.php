@@ -259,7 +259,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		if ( ! empty( $purchase_data['fees'] ) ) {
 			$i = empty( $i ) ? 1 : $i;
 			foreach ( $purchase_data['fees'] as $fee ) {
-				if ( floatval( $fee['amount'] ) > '0' ) {
+				if ( empty( $fee['download_id'] ) && floatval( $fee['amount'] ) > '0' ) {
 					// this is a positive fee
 					$paypal_args['item_name_' . $i ] = stripslashes_deep( html_entity_decode( wp_strip_all_tags( $fee['label'] ), ENT_COMPAT, 'UTF-8' ) );
 					$paypal_args['quantity_' . $i ]  = '1';

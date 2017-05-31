@@ -727,7 +727,7 @@ class EDD_Customer {
 	 *
 	 * @since  2.3
 	 * @param string $note The note to add
-	 * @return string|boolean The new note if added succesfully, false otherwise
+	 * @return string|boolean The new note if added successfully, false otherwise
 	 */
 	public function add_note( $note = '' ) {
 

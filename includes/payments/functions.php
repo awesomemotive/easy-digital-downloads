@@ -149,7 +149,7 @@ function edd_get_payment_by( $field = '', $value = '' ) {
  * Insert Payment
  *
  * @since 1.0
- * @param array $payment_data Payment date to process
+ * @param array $payment_data Payment data to process
  * @return int|bool Payment ID if payment is inserted, false otherwise
  */
 function edd_insert_payment( $payment_data = array() ) {
@@ -167,6 +167,8 @@ function edd_insert_payment( $payment_data = array() ) {
 	}
 
 	if ( $resume_payment ) {
+
+		$payment->date = date( 'Y-m-d G:i:s', current_time( 'timestamp' ) );
 
 		$payment->add_note( __( 'Payment recovery processed', 'easy-digital-downloads' ) );
 

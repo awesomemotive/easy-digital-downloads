@@ -156,7 +156,7 @@ class Test_Misc extends EDD_UnitTestCase {
 			'CU' => 'Cuba',
 			'CW' => 'Cura&Ccedil;ao',
 			'CY' => 'Cyprus',
-			'CZ' => 'Czech Republic',
+			'CZ' => 'Czechia',
 			'DK' => 'Denmark',
 			'DJ' => 'Djibouti',
 			'DM' => 'Dominica',
@@ -494,7 +494,7 @@ class Test_Misc extends EDD_UnitTestCase {
 
 		$updated = edd_update_option( $key, $value );
 
-		// The option should have succesfully updated
+		// The option should have successfully updated
 		$this->assertTrue( $updated );
 
 		// The option retrieve should be equal to the one we set

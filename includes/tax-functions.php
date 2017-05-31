@@ -89,8 +89,9 @@ function edd_get_tax_rate( $country = false, $state = false ) {
 					}
 				} else {
 
-					if( empty( $tax_rate['state'] ) || strtolower( $state ) != strtolower( $tax_rate['state'] ) )
+					if( empty( $tax_rate['state'] ) || strtolower( $state ) != strtolower( $tax_rate['state'] ) ) {
 						continue;
+					}
 
 					$state_rate = $tax_rate['rate'];
 					if( 0 !== $state_rate || ! empty( $state_rate ) ) {
@@ -101,10 +102,9 @@ function edd_get_tax_rate( $country = false, $state = false ) {
 		}
 	}
 
-	if( $rate > 1 ) {
-		// Convert to a number we can use
-		$rate = $rate / 100;
-	}
+	// Convert to a number we can use
+	$rate = $rate / 100;
+
 	return apply_filters( 'edd_tax_rate', $rate, $country, $state );
 }
 
