@@ -372,7 +372,11 @@ class EDD_CLI extends WP_CLI_Command {
 	 */
 	public function sales( $args, $assoc_args ) {
 		
-		$email = isset( $assoc_args ) && array_key_exists( 'email', $assoc_args ) ? $assoc_args['email'] : false;
+		$email = isset( $assoc_args ) && array_key_exists( 'email', $assoc_args )  ? $assoc_args['email'] : '';
+		
+		global $wp_query;	
+	
+		$wp_query->query_vars['email'] = $email;
 
 		$sales = $this->api->get_recent_sales();
 
@@ -381,22 +385,6 @@ class EDD_CLI extends WP_CLI_Command {
 			return;
 		}
 		
-		if( !empty($email)) {
-
-			$new_sales = $sales['sales'];
-	
-			$get_email = array_column( $new_sales, 'email' );
-	
-			$search_array = array_search( $email, $get_email );
-	
-			$email_array = $sales['sales'][$search_array];
-	
-			$sales = array();
-	
-			$sales['sales'][] = $email_array; 
-
-	}
-
 		foreach( $sales['sales'] as $sale ) {
 			WP_CLI::line( WP_CLI::colorize( '%G' . $sale['ID'] . '%N' ) );
 			WP_CLI::line( sprintf( __( 'Purchase Key: %s', 'easy-digital-downloads' ), $sale['key'] ) );
