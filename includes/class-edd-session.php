@@ -258,7 +258,7 @@ class EDD_Session {
 		if ( ! $edd_use_php_sessions ) {
 
 			// Attempt to detect if the server supports PHP sessions
-			if( function_exists( 'session_start' ) && ! ini_get( 'safe_mode' ) ) {
+			if( function_exists( 'session_start' ) ) {
 
 				$this->set( 'edd_use_php_sessions', 1 );
 

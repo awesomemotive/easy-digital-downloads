@@ -196,13 +196,19 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 			} else {
 
-				$user = get_user_by( 'user_login', $user_id );
+				$user = get_user_by( 'login', $user_id );
 
 			}
 
 			if( $user ) {
 
 				$payment->user_id = $user->ID;
+
+				$customer = new EDD_Customer( $payment->customer_id );
+
+				if( empty( $customer->user_id ) ) {
+					$customer->update( array( 'user_id' => $user->ID ) );
+				}
 
 			}
 

@@ -670,6 +670,7 @@ function edd_reports_graph_controls() {
 		'yesterday'    => __( 'Yesterday', 'easy-digital-downloads' ),
 		'this_week'    => __( 'This Week', 'easy-digital-downloads' ),
 		'last_week'    => __( 'Last Week', 'easy-digital-downloads' ),
+		'last_30_days' => __( 'Last 30 Days', 'easy-digital-downloads' ),
 		'this_month'   => __( 'This Month', 'easy-digital-downloads' ),
 		'last_month'   => __( 'Last Month', 'easy-digital-downloads' ),
 		'this_quarter' => __( 'This Quarter', 'easy-digital-downloads' ),
@@ -771,7 +772,7 @@ function edd_get_report_dates() {
 
 	$current_time = current_time( 'timestamp' );
 
-	$dates['range'] = isset( $_GET['range'] ) ? $_GET['range'] : 'this_month';
+	$dates['range'] = isset( $_GET['range'] ) ? $_GET['range'] : apply_filters( 'edd_get_report_dates_default_range', 'last_30_days' );
 
 	if ( 'custom' !== $dates['range'] ) {
 		$dates['year']       = isset( $_GET['year'] )    ? $_GET['year']    : date( 'Y' );
@@ -852,6 +853,20 @@ function edd_get_report_dates() {
 			$dates['day_end']  = date( 'd', $start_end['end'] );
 			$dates['m_end']    = date( 'n', $start_end['end'] );
 			$dates['year_end'] = date( 'Y', $start_end['end'] );
+		break;
+
+		case 'last_30_days' :
+
+			$date_start = strtotime( '-30 days' );
+
+			$dates['day']      = date( 'd', $date_start );
+			$dates['m_start']  = date( 'n', $date_start );
+			$dates['year']     = date( 'Y', $date_start );
+
+			$dates['day_end']  = date( 'd', $current_time );
+			$dates['m_end']    = date( 'n', $current_time );
+			$dates['year_end'] = date( 'Y', $current_time );
+
 		break;
 
 		case 'this_quarter' :

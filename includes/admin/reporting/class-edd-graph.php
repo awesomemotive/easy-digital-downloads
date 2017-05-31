@@ -85,22 +85,23 @@ class EDD_Graph {
 
 		// Setup default options;
 		$this->options = array(
-			'y_mode'          => null,
-			'x_mode'          => null,
-			'y_decimals'      => 0,
-			'x_decimals'      => 0,
-			'y_position'      => 'right',
-			'time_format'     => '%d/%b',
-			'ticksize_unit'   => 'day',
-			'ticksize_num'    => 1,
-			'multiple_y_axes' => false,
-			'bgcolor'         => '#f9f9f9',
-			'bordercolor'     => '#ccc',
-			'color'           => '#bbb',
-			'borderwidth'     => 2,
-			'bars'            => false,
-			'lines'           => true,
-			'points'          => true
+			'y_mode'             => null,
+			'x_mode'             => null,
+			'y_decimals'         => 0,
+			'x_decimals'         => 0,
+			'y_position'         => 'right',
+			'time_format'        => '%d/%b',
+			'ticksize_unit'      => 'day',
+			'ticksize_num'       => 1,
+			'multiple_y_axes'    => false,
+			'bgcolor'            => '#f9f9f9',
+			'bordercolor'        => '#ccc',
+			'color'              => '#bbb',
+			'borderwidth'        => 2,
+			'bars'               => false,
+			'lines'              => true,
+			'points'             => true,
+			'additional_options' => '',
 		);
 
 	}
@@ -218,7 +219,8 @@ class EDD_Graph {
 							<?php if( $this->options['y_mode'] != 'time' ) : ?>
 							tickDecimals: <?php echo $this->options['y_decimals']; ?>
 							<?php endif; ?>
-						}
+						},
+						<?php echo $this->options['additional_options']; ?>
 					}
 
 				);
@@ -246,7 +248,7 @@ class EDD_Graph {
 							$("#edd-flot-tooltip").remove();
 							var x = item.datapoint[0].toFixed(2),
 							y = item.datapoint[1].toFixed(2);
-							if( item.series.id == 'earnings' ) {
+							if( item.series.id.includes('earnings') ) {
 								if( edd_vars.currency_pos == 'before' ) {
 									edd_flot_tooltip( item.pageX, item.pageY, item.series.label + ' ' + edd_vars.currency_sign + y );
 								} else {
