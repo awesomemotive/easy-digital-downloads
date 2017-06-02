@@ -11,6 +11,9 @@ class Tests_API extends EDD_UnitTestCase {
 
 	protected $_post = null;
 
+	/**
+	 * @var EDD_API
+	 */
 	protected $_api = null;
 
 	protected $_api_output = null;
@@ -152,7 +155,7 @@ class Tests_API extends EDD_UnitTestCase {
 
 		global $wp_query;
 		$wp_query->query_vars['format'] = 'override';
-		// Prevents give_die() from running.
+		// Prevents edd_die() from running.
 		add_action( 'edd_api_output_override', array( $this, 'edd_test_api_return_helper' ), 10, 2 );
 	}
 
@@ -401,28 +404,52 @@ class Tests_API extends EDD_UnitTestCase {
 	}
 
 	public function test_missing_auth() {
-		$this->markTestIncomplete( 'Needs to be rewritten since this outputs xml that kills travis with a 255 error (fatal PHP error)' );
-		//$this->_api->missing_auth();
-		//$out = $this->_api->get_output();
-		//$this->assertArrayHasKey( 'error', $out );
-		//$this->assertEquals( 'You must specify both a token and API key!', $out['error'] );
+
+		global $wp_query;
+
+		$wp_query->query_vars['key']      = '';
+		$wp_query->query_vars['token']    = '';
+		$wp_query->query_vars['edd-api'] = 'sales';
+		$this->_api->process_query();
+		$out = $this->_api->get_output();
+		
+		$this->assertArrayHasKey( 'error', $out );
+		$this->assertEquals( 'You must specify both a token and API key!', $out['error'] );
 
 	}
 
 	public function test_invalid_auth() {
-		$this->markTestIncomplete( 'Needs to be rewritten since this outputs xml that kills travis with a 255 error (fatal PHP error)' );
-		//$this->_api->invalid_auth();
-		//$out = $this->_api->get_output();
-		//$this->assertArrayHasKey( 'error', $out );
-		//$this->assertEquals( 'Your request could not be authenticated!', $out['error'] );
+
+		global $wp_query;
+
+		$_POST['edd_set_api_key'] = 1;
+		EDD()->api->update_key( $this->_user_id );
+		$wp_query->query_vars['key']   = get_user_meta( $this->_user_id, 'edd_user_public_key', true );
+		$wp_query->query_vars['token'] = 'bad-token-val';
+
+		$wp_query->query_vars['edd-api'] = 'sales';
+		$this->_api->process_query();
+		$out = $this->_api->get_output();
+
+		$this->assertArrayHasKey( 'error', $out );
+		$this->assertEquals( 'Your request could not be authenticated!', $out['error'] );
+		
 	}
 
 	public function test_invalid_key() {
-		$this->markTestIncomplete( 'Needs to be rewritten since this outputs xml that kills travis with a 255 error (fatal PHP error)' );
-		//$out = $this->_api->invalid_key();
-		//$out = $this->_api->get_output();
-		//$this->assertArrayHasKey( 'error', $out );
-		//$this->assertEquals( 'Invalid API key!', $out['error'] );
+		global $wp_query;
+
+		$_POST['edd_set_api_key'] = 1;
+		EDD()->api->update_key( $this->_user_id );
+		$wp_query->query_vars['key']   = 'bad-key-val';
+		$wp_query->query_vars['token'] = hash( 'md5', get_user_meta( $this->_user_id, 'edd_user_secret_key', true ) . get_user_meta( $this->_user_id, 'edd_user_public_key', true ) );
+
+		$wp_query->query_vars['edd-api'] = 'sales';
+		$this->_api->process_query();
+		$out = $this->_api->get_output();
+
+		$this->assertArrayHasKey( 'error', $out );
+		$this->assertEquals( 'Invalid API key!', $out['error'] );
 	}
 
 	public function test_info() {
