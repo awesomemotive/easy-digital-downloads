@@ -454,6 +454,7 @@ class Tests_API extends EDD_UnitTestCase {
 
 	public function test_info() {
 		$out = EDD()->api->get_info();
+		EDD()->api->user_id = $this->_user_id;
 
 		$this->assertArrayHasKey( 'info', $out );
 		$this->assertArrayHasKey( 'site', $out['info'] );
@@ -463,15 +464,22 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->assertArrayHasKey( 'thousands_separator', $out['info']['site'] );
 		$this->assertArrayNotHasKey( 'integrations', $out['info'] ); // By default we shouldn't have any integrations
 
-		$this->markTestIncomplete( 'This test needs to be fixed. The permissions key doesn\'t exist due to not being able to correctly check the user\'s permissions' );
+		// Add permissions and test integrations
+		$user = new WP_User( $this->_user_id );
+		$user->add_cap( 'view_shop_reports');
+		$out2 = EDD()->api->get_info();
+
+		$this->assertArrayHasKey( 'permissions', $out2['info'] );
+		$this->assertTrue( $out2['info']['permissions']['view_shop_reports'] );
+		$this->assertTrue( $out2['info']['permissions']['view_shop_sensitive_data'] );
+		$this->assertTrue( $out2['info']['permissions']['manage_shop_discounts'] );
+
 	}
 
 	public function test_process_query() {
 		global $wp_query;
 
-		$this->markTestIncomplete( 'Needs to be rewritten since this outputs xml that kills travis with a 255 error (fatal PHP error)' );
 		$_POST['edd_set_api_key'] = 1;
-
 		$this->_api->update_key( $this->_user_id );
 
 		$wp_query->query_vars['edd-api'] = 'products';
@@ -494,21 +502,20 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->assertEquals( 'publish', $out['products'][0]['info']['status'] );
 		$this->assertArrayHasKey( 'link', $out['products'][0]['info'] );
 		$this->assertArrayHasKey( 'content', $out['products'][0]['info'] );
-		$this->assertEquals( 'Post content 1', $out['products'][0]['info']['content'] );
+		$this->assertEquals( $this->_post->post_content, $out['products'][0]['info']['content'] );
 		$this->assertArrayHasKey( 'thumbnail', $out['products'][0]['info'] );
 
-		$this->markTestIncomplete( 'This test needs to be fixed. The stats key doesn\'t exist due to not being able to correctly check the user\'s permissions' );
 		$this->assertArrayHasKey( 'stats', $out['products'][0] );
 		$this->assertArrayHasKey( 'total', $out['products'][0]['stats'] );
 		$this->assertArrayHasKey( 'sales', $out['products'][0]['stats']['total'] );
-		$this->assertEquals( 59, $out['products'][0]['stats']['total']['sales'] );
+		$this->assertEquals( 60, $out['products'][0]['stats']['total']['sales'] );
 		$this->assertArrayHasKey( 'earnings', $out['products'][0]['stats']['total'] );
-		$this->assertEquals( 129.43, $out['products'][0]['stats']['total']['earnings'] );
+		$this->assertEquals( 229.43, $out['products'][0]['stats']['total']['earnings'] );
 		$this->assertArrayHasKey( 'monthly_average', $out['products'][0]['stats'] );
 		$this->assertArrayHasKey( 'sales', $out['products'][0]['stats']['monthly_average'] );
-		$this->assertEquals( 59, $out['products'][0]['stats']['monthly_average']['sales'] );
+		$this->assertEquals( 60, $out['products'][0]['stats']['monthly_average']['sales'] );
 		$this->assertArrayHasKey( 'earnings', $out['products'][0]['stats']['monthly_average'] );
-		$this->assertEquals( 129.43, $out['products'][0]['stats']['monthly_average']['earnings'] );
+		$this->assertEquals( 229.43, $out['products'][0]['stats']['monthly_average']['earnings'] );
 
 		$this->assertArrayHasKey( 'pricing', $out['products'][0] );
 		$this->assertArrayHasKey( 'simple', $out['products'][0]['pricing'] );
