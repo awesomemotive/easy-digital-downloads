@@ -4,6 +4,7 @@
  * @group edd_api
  */
 class Tests_API extends EDD_UnitTestCase {
+
 	protected $_rewrite = null;
 
 	protected $query = null;
@@ -34,7 +35,7 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->_api->add_endpoint( $wp_rewrite );
 
 		$this->_rewrite = $wp_rewrite;
-		$this->_query = $wp_query;
+		$this->_query   = $wp_query;
 
 		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
 
@@ -43,41 +44,41 @@ class Tests_API extends EDD_UnitTestCase {
 
 		$_variable_pricing = array(
 			array(
-				'name' => 'Simple',
-				'amount' => 20
+				'name'   => 'Simple',
+				'amount' => 20,
 			),
 			array(
-				'name' => 'Advanced',
-				'amount' => 100
-			)
+				'name'   => 'Advanced',
+				'amount' => 100,
+			),
 		);
 
 		$_download_files = array(
 			array(
-				'name' => 'File 1',
-				'file' => 'http://localhost/file1.jpg',
-				'condition' => 0
+				'name'      => 'File 1',
+				'file'      => 'http://localhost/file1.jpg',
+				'condition' => 0,
 			),
 			array(
-				'name' => 'File 2',
-				'file' => 'http://localhost/file2.jpg',
-				'condition' => 'all'
-			)
+				'name'      => 'File 2',
+				'file'      => 'http://localhost/file2.jpg',
+				'condition' => 'all',
+			),
 		);
 
 		$meta = array(
-			'edd_price' => '0.00',
-			'_variable_pricing' => 1,
-			'_edd_price_options_mode' => 'on',
-			'edd_variable_prices' => array_values( $_variable_pricing ),
-			'edd_download_files' => array_values( $_download_files ),
-			'_edd_download_limit' => 20,
-			'_edd_hide_purchase_link' => 1,
-			'edd_product_notes' => 'Purchase Notes',
-			'_edd_product_type' => 'default',
-			'_edd_download_earnings' => 129.43,
-			'_edd_download_sales' => 59,
-			'_edd_download_limit_override_1' => 1
+			'edd_price'                      => '0.00',
+			'_variable_pricing'              => 1,
+			'_edd_price_options_mode'        => 'on',
+			'edd_variable_prices'            => array_values( $_variable_pricing ),
+			'edd_download_files'             => array_values( $_download_files ),
+			'_edd_download_limit'            => 20,
+			'_edd_hide_purchase_link'        => 1,
+			'edd_product_notes'              => 'Purchase Notes',
+			'_edd_product_type'              => 'default',
+			'_edd_download_earnings'         => 129.43,
+			'_edd_download_sales'            => 59,
+			'_edd_download_limit_override_1' => 1,
 		);
 		foreach ( $meta as $key => $value ) {
 			update_post_meta( $post_id, $key, $value );
@@ -86,46 +87,46 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->_post = get_post( $post_id );
 
 
-		$user = get_userdata(1);
+		$user = get_userdata( 1 );
 
 		$user_info = array(
-			'id' => $user->ID,
-			'email' => $user->user_email,
+			'id'         => $user->ID,
+			'email'      => $user->user_email,
 			'first_name' => $user->first_name,
-			'last_name' => $user->last_name,
-			'discount' => 'none'
+			'last_name'  => $user->last_name,
+			'discount'   => 'none',
 		);
 
 		$download_details = array(
 			array(
-				'id' => $this->_post->ID,
+				'id'      => $this->_post->ID,
 				'options' => array(
-					'price_id' => 1
-				)
-			)
+					'price_id' => 1,
+				),
+			),
 		);
 
-		$total = 0;
-		$prices = get_post_meta( $download_details[0]['id'], 'edd_variable_prices', true );
+		$total      = 0;
+		$prices     = get_post_meta( $download_details[0]['id'], 'edd_variable_prices', true );
 		$item_price = $prices[1]['amount'];
-		$total += $item_price;
+		$total      += $item_price;
 
 		$cart_details = array(
 			array(
-				'name' => 'Test Download',
-				'id' => $this->_post->ID,
+				'name'        => 'Test Download',
+				'id'          => $this->_post->ID,
 				'item_number' => array(
-					'id' => $this->_post->ID,
+					'id'      => $this->_post->ID,
 					'options' => array(
-						'price_id' => 1
-					)
+						'price_id' => 1,
+					),
 				),
-				'item_price' =>  100,
-				'subtotal' =>  100,
-				'price' =>  100,
-				'tax' => 0,
-				'quantity' => 1
-			)
+				'item_price'  => 100,
+				'subtotal'    => 100,
+				'price'       => 100,
+				'tax'         => 0,
+				'quantity'    => 1,
+			),
 		);
 
 		$purchase_data = array(
@@ -137,7 +138,7 @@ class Tests_API extends EDD_UnitTestCase {
 			'currency'     => 'USD',
 			'downloads'    => $download_details,
 			'cart_details' => $cart_details,
-			'status'       => 'pending'
+			'status'       => 'pending',
 		);
 
 		$_SERVER['REMOTE_ADDR'] = '10.0.0.0';
@@ -146,11 +147,32 @@ class Tests_API extends EDD_UnitTestCase {
 
 		edd_update_payment_status( $this->_payment_id, 'complete' );
 
-		$this->_api_output = $this->_api->get_products();
+		$this->_api_output       = $this->_api->get_products();
 		$this->_api_output_sales = $this->_api->get_recent_sales();
 
 		global $wp_query;
 		$wp_query->query_vars['format'] = 'override';
+		// Prevents give_die() from running.
+		add_action( 'edd_api_output_override', array( $this, 'edd_test_api_return_helper' ), 10, 2 );
+	}
+
+	/**
+	 * Helper function to return API data from EDD_API()->output().
+	 *
+	 * Prevents edd_die() from killing unit tests.
+	 *
+	 * @param $data array The data returned.
+	 * @param $api  EDD_API
+	 *
+	 * @return void
+	 */
+	public function edd_test_api_return_helper( $data, $api ) {
+
+		// Prevent edd_die() from stopping tests.
+		if ( ! defined( 'EDD_UNIT_TESTS' ) ) {
+			define( 'EDD_UNIT_TESTS', true );
+		}
+
 	}
 
 	public function tearDown() {
@@ -160,7 +182,7 @@ class Tests_API extends EDD_UnitTestCase {
 	}
 
 	public function test_endpoints() {
-		$this->assertEquals('edd-api', $this->_rewrite->endpoints[0][1]);
+		$this->assertEquals( 'edd-api', $this->_rewrite->endpoints[0][1] );
 	}
 
 	public function test_query_vars() {
@@ -207,19 +229,22 @@ class Tests_API extends EDD_UnitTestCase {
 	}
 
 	public function test_get_queried_version() {
-		$this->markTestIncomplete( 'This test is causing the suite to die for some reason' );
+
 		global $wp_query;
 
-		$wp_query->query_vars['edd-api'] = 'sales';
+		$_POST['edd_set_api_key'] = 1;
+		EDD()->api->update_key( $this->_user_id );
 
+		$wp_query->query_vars['key']   = get_user_meta( $this->_user_id, 'edd_user_public_key', true );
+		$wp_query->query_vars['token'] = hash( 'md5', get_user_meta( $this->_user_id, 'edd_user_secret_key', true ) . get_user_meta( $this->_user_id, 'edd_user_public_key', true ) );
+
+
+		$wp_query->query_vars['edd-api'] = 'v1/sales';
 		$this->_api->process_query();
-
 		$this->assertEquals( 'v1', $this->_api->get_queried_version() );
 
-		define( 'EDD_API_VERSION', 'v2' );
-
+		$wp_query->query_vars['edd-api'] = 'v2/sales';
 		$this->_api->process_query();
-
 		$this->assertEquals( 'v2', $this->_api->get_queried_version() );
 
 	}
@@ -272,7 +297,7 @@ class Tests_API extends EDD_UnitTestCase {
 
 	public function test_get_products_files() {
 		$out = $this->_api_output;
-		$this->assertArrayHasKey( 'files', $out['products'][0]) ;
+		$this->assertArrayHasKey( 'files', $out['products'][0] );
 
 		foreach ( $out['products'][0]['files'] as $file ) {
 			$this->assertArrayHasKey( 'name', $file );
@@ -376,7 +401,7 @@ class Tests_API extends EDD_UnitTestCase {
 	}
 
 	public function test_missing_auth() {
-		$this->markTestIncomplete('Needs to be rewritten since this outputs xml that kills travis with a 255 error (fatal PHP error)');
+		$this->markTestIncomplete( 'Needs to be rewritten since this outputs xml that kills travis with a 255 error (fatal PHP error)' );
 		//$this->_api->missing_auth();
 		//$out = $this->_api->get_output();
 		//$this->assertArrayHasKey( 'error', $out );
@@ -385,7 +410,7 @@ class Tests_API extends EDD_UnitTestCase {
 	}
 
 	public function test_invalid_auth() {
-		$this->markTestIncomplete('Needs to be rewritten since this outputs xml that kills travis with a 255 error (fatal PHP error)');
+		$this->markTestIncomplete( 'Needs to be rewritten since this outputs xml that kills travis with a 255 error (fatal PHP error)' );
 		//$this->_api->invalid_auth();
 		//$out = $this->_api->get_output();
 		//$this->assertArrayHasKey( 'error', $out );
@@ -393,7 +418,7 @@ class Tests_API extends EDD_UnitTestCase {
 	}
 
 	public function test_invalid_key() {
-		$this->markTestIncomplete('Needs to be rewritten since this outputs xml that kills travis with a 255 error (fatal PHP error)');
+		$this->markTestIncomplete( 'Needs to be rewritten since this outputs xml that kills travis with a 255 error (fatal PHP error)' );
 		//$out = $this->_api->invalid_key();
 		//$out = $this->_api->get_output();
 		//$this->assertArrayHasKey( 'error', $out );
@@ -417,14 +442,14 @@ class Tests_API extends EDD_UnitTestCase {
 	public function test_process_query() {
 		global $wp_query;
 
-		$this->markTestIncomplete('Needs to be rewritten since this outputs xml that kills travis with a 255 error (fatal PHP error)');
+		$this->markTestIncomplete( 'Needs to be rewritten since this outputs xml that kills travis with a 255 error (fatal PHP error)' );
 		$_POST['edd_set_api_key'] = 1;
 
 		$this->_api->update_key( $this->_user_id );
 
 		$wp_query->query_vars['edd-api'] = 'products';
-		$wp_query->query_vars['key'] = get_user_meta( $this->_user_id, 'edd_user_public_key', true );
-		$wp_query->query_vars['token'] = hash( 'md5', get_user_meta( $this->_user_id, 'edd_user_secret_key', true ) . get_user_meta( $this->_user_id, 'edd_user_public_key', true ) );
+		$wp_query->query_vars['key']     = get_user_meta( $this->_user_id, 'edd_user_public_key', true );
+		$wp_query->query_vars['token']   = hash( 'md5', get_user_meta( $this->_user_id, 'edd_user_secret_key', true ) . get_user_meta( $this->_user_id, 'edd_user_public_key', true ) );
 
 		$this->_api->process_query();
 
