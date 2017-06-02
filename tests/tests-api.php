@@ -40,9 +40,15 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->_rewrite = $wp_rewrite;
 		$this->_query   = $wp_query;
 
-		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
+		$post_id = $this->factory->post->create( array(
+			'post_title' => 'Test Download',
+			'post_type' => 'download',
+			'post_status' => 'publish',
+		) );
 
-		$this->_user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
+		$this->_user_id = $this->factory->user->create( array(
+			'role' => 'administrator',
+		) );
 		wp_set_current_user( $this->_user_id );
 
 		$_variable_pricing = array(
@@ -88,7 +94,6 @@ class Tests_API extends EDD_UnitTestCase {
 		}
 
 		$this->_post = get_post( $post_id );
-
 
 		$user = get_userdata( 1 );
 
@@ -240,7 +245,6 @@ class Tests_API extends EDD_UnitTestCase {
 
 		$wp_query->query_vars['key']   = get_user_meta( $this->_user_id, 'edd_user_public_key', true );
 		$wp_query->query_vars['token'] = hash( 'md5', get_user_meta( $this->_user_id, 'edd_user_secret_key', true ) . get_user_meta( $this->_user_id, 'edd_user_public_key', true ) );
-
 
 		$wp_query->query_vars['edd-api'] = 'v1/sales';
 		$this->_api->process_query();
@@ -412,7 +416,7 @@ class Tests_API extends EDD_UnitTestCase {
 		$wp_query->query_vars['edd-api'] = 'sales';
 		$this->_api->process_query();
 		$out = $this->_api->get_output();
-		
+
 		$this->assertArrayHasKey( 'error', $out );
 		$this->assertEquals( 'You must specify both a token and API key!', $out['error'] );
 
@@ -433,7 +437,7 @@ class Tests_API extends EDD_UnitTestCase {
 
 		$this->assertArrayHasKey( 'error', $out );
 		$this->assertEquals( 'Your request could not be authenticated!', $out['error'] );
-		
+
 	}
 
 	public function test_invalid_key() {
@@ -466,7 +470,7 @@ class Tests_API extends EDD_UnitTestCase {
 
 		// Add permissions and test integrations
 		$user = new WP_User( $this->_user_id );
-		$user->add_cap( 'view_shop_reports');
+		$user->add_cap( 'view_shop_reports' );
 		$out2 = EDD()->api->get_info();
 
 		$this->assertArrayHasKey( 'permissions', $out2['info'] );
