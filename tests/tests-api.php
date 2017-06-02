@@ -488,6 +488,10 @@ class Tests_API extends EDD_UnitTestCase {
 		$_POST['edd_set_api_key'] = 1;
 		$this->_api->update_key( $this->_user_id );
 
+		// Add permissions so user can view stats.
+		$user = new WP_User( $this->_user_id );
+		$user->add_cap( 'view_shop_reports' );
+
 		$wp_query->query_vars['edd-api'] = 'products';
 		$wp_query->query_vars['key']     = get_user_meta( $this->_user_id, 'edd_user_public_key', true );
 		$wp_query->query_vars['token']   = hash( 'md5', get_user_meta( $this->_user_id, 'edd_user_secret_key', true ) . get_user_meta( $this->_user_id, 'edd_user_public_key', true ) );
@@ -495,9 +499,7 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->_api->process_query();
 
 		$out = $this->_api->get_output();
-		echo '<pre>';
-		var_dump($out);
-		echo '</pre>';
+
 		$this->assertArrayHasKey( 'info', $out['products'][0] );
 		$this->assertArrayHasKey( 'id', $out['products'][0]['info'] );
 		$this->assertArrayHasKey( 'slug', $out['products'][0]['info'] );
