@@ -36,6 +36,12 @@ class Tests_API extends EDD_UnitTestCase {
 		) );
 		EDD()->api->user_id = $this->_user_id;
 
+		$user = new WP_User($this->_user_id);
+		echo '<pre>';
+		var_dump($user);
+		echo '</pre>';
+		wp_set_current_user( $this->_user_id );
+
 		$roles = new EDD_Roles;
 		$roles->add_roles();
 		$roles->add_caps();
@@ -52,7 +58,6 @@ class Tests_API extends EDD_UnitTestCase {
 		) );
 
 
-		wp_set_current_user( $this->_user_id );
 
 		$_variable_pricing = array(
 			array(
