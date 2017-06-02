@@ -473,6 +473,9 @@ class Tests_API extends EDD_UnitTestCase {
 		$user->add_cap( 'view_shop_reports' );
 		$out2 = EDD()->api->get_info();
 
+		echo '<pre>';
+		var_dump($out2);
+		echo '</pre>';
 		$this->assertArrayHasKey( 'permissions', $out2['info'] );
 		$this->assertTrue( $out2['info']['permissions']['view_shop_reports'] );
 		$this->assertTrue( $out2['info']['permissions']['view_shop_sensitive_data'] );
@@ -493,7 +496,9 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->_api->process_query();
 
 		$out = $this->_api->get_output();
-
+		echo '<pre>';
+		var_dump($out);
+		echo '</pre>';
 		$this->assertArrayHasKey( 'info', $out['products'][0] );
 		$this->assertArrayHasKey( 'id', $out['products'][0]['info'] );
 		$this->assertArrayHasKey( 'slug', $out['products'][0]['info'] );
