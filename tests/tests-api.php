@@ -31,6 +31,11 @@ class Tests_API extends EDD_UnitTestCase {
 
 		$this->_api = new EDD_API;
 
+		$this->_user_id = $this->factory->user->create( array(
+			'role' => 'administrator',
+		) );
+		EDD()->api->user_id = $this->_user_id;
+
 		$roles = new EDD_Roles;
 		$roles->add_roles();
 		$roles->add_caps();
@@ -46,9 +51,7 @@ class Tests_API extends EDD_UnitTestCase {
 			'post_status' => 'publish',
 		) );
 
-		$this->_user_id = $this->factory->user->create( array(
-			'role' => 'administrator',
-		) );
+
 		wp_set_current_user( $this->_user_id );
 
 		$_variable_pricing = array(
@@ -458,7 +461,6 @@ class Tests_API extends EDD_UnitTestCase {
 
 	public function test_info() {
 		$out = EDD()->api->get_info();
-		EDD()->api->user_id = $this->_user_id;
 
 		$this->assertArrayHasKey( 'info', $out );
 		$this->assertArrayHasKey( 'site', $out['info'] );
@@ -468,17 +470,10 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->assertArrayHasKey( 'thousands_separator', $out['info']['site'] );
 		$this->assertArrayNotHasKey( 'integrations', $out['info'] ); // By default we shouldn't have any integrations
 
-		// Add permissions and test integrations
-		$user = new WP_User( $this->_user_id );
-		$user->add_cap( 'view_shop_reports' );
-		$user->add_cap( 'view_shop_sensitive_data' );
-		$user->add_cap( 'manage_shop_discounts' );
-		$out2 = EDD()->api->get_info();
-
-		$this->assertArrayHasKey( 'permissions', $out2['info'] );
-		$this->assertTrue( $out2['info']['permissions']['view_shop_reports'] );
-		$this->assertTrue( $out2['info']['permissions']['view_shop_sensitive_data'] );
-		$this->assertTrue( $out2['info']['permissions']['manage_shop_discounts'] );
+		$this->assertArrayHasKey( 'permissions', $out['info'] );
+		$this->assertTrue( $out['info']['permissions']['view_shop_reports'] );
+		$this->assertTrue( $out['info']['permissions']['view_shop_sensitive_data'] );
+		$this->assertTrue( $out['info']['permissions']['manage_shop_discounts'] );
 
 	}
 
@@ -487,10 +482,6 @@ class Tests_API extends EDD_UnitTestCase {
 
 		$_POST['edd_set_api_key'] = 1;
 		$this->_api->update_key( $this->_user_id );
-
-		// Add permissions so user can view stats.
-		$user = new WP_User( $this->_user_id );
-		$user->add_cap( 'view_shop_reports' );
 
 		$wp_query->query_vars['edd-api'] = 'products';
 		$wp_query->query_vars['key']     = get_user_meta( $this->_user_id, 'edd_user_public_key', true );
