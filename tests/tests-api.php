@@ -471,11 +471,10 @@ class Tests_API extends EDD_UnitTestCase {
 		// Add permissions and test integrations
 		$user = new WP_User( $this->_user_id );
 		$user->add_cap( 'view_shop_reports' );
+		$user->add_cap( 'view_shop_sensitive_data' );
+		$user->add_cap( 'manage_shop_discounts' );
 		$out2 = EDD()->api->get_info();
 
-		echo '<pre>';
-		var_dump($out2);
-		echo '</pre>';
 		$this->assertArrayHasKey( 'permissions', $out2['info'] );
 		$this->assertTrue( $out2['info']['permissions']['view_shop_reports'] );
 		$this->assertTrue( $out2['info']['permissions']['view_shop_sensitive_data'] );
