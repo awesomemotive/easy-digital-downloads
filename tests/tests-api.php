@@ -36,7 +36,9 @@ class Tests_API extends EDD_UnitTestCase {
 		) );
 		EDD()->api->user_id = $this->_user_id;
 		$user = new WP_User($this->_user_id);
-		$user->add_cap( 'view_edd_reports' );
+		$user->add_cap( 'view_shop_reports' );
+		$user->add_cap( 'view_shop_sensitive_data' );
+		$user->add_cap( 'manage_shop_discounts' );
 
 		$roles = new EDD_Roles;
 		$roles->add_roles();
