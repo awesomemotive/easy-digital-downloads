@@ -19,9 +19,6 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 			define( 'EDD_UNIT_TESTS', true );
 		}
 
-		// Prevent wp_redirect from sending headers.
-		add_filter( 'edd_login_redirect', '__return_false' );
-
 		wp_set_current_user( 0 );
 	}
 
@@ -87,6 +84,9 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 	 */
 	public function test_process_login_form_correct_login() {
 
+		// Prevent wp_redirect from sending headers.
+		add_filter( 'edd_login_redirect', '__return_false' );
+
 		ob_start();
 		edd_process_login_form( array(
 			'edd_login_nonce' => wp_create_nonce( 'edd-login-nonce' ),
@@ -115,6 +115,10 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 	 * @since 2.2.3
 	 */
 	public function test_log_user_in() {
+
+		// Prevent wp_redirect from sending headers.
+		add_filter( 'edd_login_redirect', '__return_false' );
+
 		wp_logout();
 		$user = new WP_User( 1 );
 		edd_log_user_in( $user->ID, $user->user_email, $user->user_pass );
@@ -256,6 +260,9 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 	 * @since 2.2.3
 	 */
 	public function test_process_register_form_success() {
+
+		// Prevent wp_redirect from sending headers.
+		add_filter( 'edd_login_redirect', '__return_false' );
 
 		// First check that this user does not exist.
 		$user = new WP_User( 0, 'random_username' );
