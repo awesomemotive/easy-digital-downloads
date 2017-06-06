@@ -20,18 +20,21 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 		}
 		// Prevent wp_redirect from sending headers.
 		add_filter( 'edd_login_redirect', '__return_false' );
-		add_filter( 'wp_redirect', array($this, 'prevent_wp_redirect') );
 
 		wp_set_current_user( 0 );
 	}
 
 	/**
 	 * Prevent WP Redirect
+	 *
+	 * This prevents the "Headers already sent" failing in Travis.
+	 *
 	 * @return string
 	 */
-	function prevent_wp_redirect(){
+	function prevent_wp_redirect() {
 		return '';
 	}
+
 	/**
 	 * Test that the login form returns the expected string.
 	 */
@@ -94,6 +97,8 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 	 */
 	public function test_process_login_form_correct_login() {
 
+		add_filter( 'wp_redirect', array( $this, 'prevent_wp_redirect' ) );
+
 		ob_start();
 		edd_process_login_form( array(
 			'edd_login_nonce' => wp_create_nonce( 'edd-login-nonce' ),
@@ -123,6 +128,7 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 	 */
 	public function test_log_user_in() {
 
+		add_filter( 'wp_redirect', array( $this, 'prevent_wp_redirect' ) );
 		wp_logout();
 		$user = new WP_User( 1 );
 		edd_log_user_in( $user->ID, $user->user_email, $user->user_pass );
@@ -265,6 +271,7 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 	 */
 	public function test_process_register_form_success() {
 
+		add_filter( 'wp_redirect', array( $this, 'prevent_wp_redirect' ) );
 		// First check that this user does not exist.
 		$user = new WP_User( 0, 'random_username' );
 		$this->assertEmpty( $user->roles );
@@ -289,8 +296,8 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 		$user = new WP_User( 0, 'random_username' );
 
 		$this->assertEquals( $args['edd_payment_email'], $user->user_email );
-		$this->assertEquals( $args['edd_user_login'],  $user->display_name );
-		$this->assertEquals( $args['edd_user_login'],  $user->user_login );
+		$this->assertEquals( $args['edd_user_login'], $user->display_name );
+		$this->assertEquals( $args['edd_user_login'], $user->user_login );
 		$this->assertTrue( is_user_logged_in() );
 
 		// Clear errors for other tests.
