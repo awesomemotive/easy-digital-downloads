@@ -263,6 +263,7 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 
 		// Prevent wp_redirect from sending headers.
 		add_filter( 'edd_login_redirect', '__return_false' );
+		add_filter( 'wp_redirect', '' );
 
 		// First check that this user does not exist.
 		$user = new WP_User( 0, 'random_username' );
