@@ -4,7 +4,7 @@ Plugin URI: https://easydigitaldownloads.com
 Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
-Requires at least: 4.0
+Requires at least: 4.4
 Tested up to: 4.8
 Stable Tag: 2.7.9
 License: GNU Version 2 or Any Later Version
@@ -76,7 +76,7 @@ These are just a few of the extensions we offer to help super-charge your digita
 
 = Built with developers in mind =
 
-Extendable, adaptable, and open source -- Easy Digital Downloads is created with developers in mind. Contribute on [GitHub](https://github.com/easydigitaldownloads/easy-digital-downloads).
+Extensible, adaptable, and open source -- Easy Digital Downloads is created with developers in mind. Contribute on [GitHub](https://github.com/easydigitaldownloads/easy-digital-downloads).
 
 == Installation ==
 

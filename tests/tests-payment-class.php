@@ -912,4 +912,34 @@ class Tests_Payment_Class extends EDD_UnitTestCase {
 
 		return $meta;
 	}
+
+	public function add_meta() {
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertTrue( $payment->add_meta( '_test_add_payment_meta', 'test' ) );
+	}
+
+	public function add_meta_false_empty_key() {
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertFalse( $payment->add_meta( '', 'test' ) );
+	}
+
+	public function add_meta_unique_false() {
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertFalse( $payment->add_meta( '_edd_payment_key', 'test', true ) );
+	}
+
+	public function delete_meta() {
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertTrue( $payment->delete_meta( '_edd_payment_key' ) );
+	}
+
+	public function delete_meta_no_key() {
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertFalse( $payment->delete_meta( '' ) );
+	}
+
+	public function delete_meta_missing_key() {
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertFalse( $payment->delete_meta( '_edd_nonexistant_key' ) );
+	}
 }
