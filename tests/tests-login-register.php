@@ -19,6 +19,9 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 			define( 'EDD_UNIT_TESTS', true );
 		}
 
+		// Prevent wp_redirect from sending headers.
+		add_filter( 'edd_login_redirect', '__return_false' );
+
 		wp_set_current_user( 0 );
 	}
 
@@ -83,9 +86,6 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 	 * @since 2.2.3
 	 */
 	public function test_process_login_form_correct_login() {
-
-		// Prevent wp_redirect from sending headers.
-		add_filter( 'edd_login_redirect', '__return_false' );
 
 		ob_start();
 		edd_process_login_form( array(
