@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.4
 Tested up to: 4.8
-Stable Tag: 2.7.8
+Stable Tag: 2.7.9
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -213,6 +213,13 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 
 == Changelog ==
 
+= 2.7.9, May 11, 2017 =
+
+* Fix: Chosen search had incorrect select element targeting.
+* Fix: EDD_Payment was using invalid modified_date instead of date.
+* Fix: Recovering a guest payment prompted user to login to complete the purchase.
+* New: Add edd_get_report_dates_default_range filter to report date range.
+
 = 2.7.8, May 2, 2017 =
 
 * Fix: Products sometimes duplicated in CSV product export
@@ -243,7 +250,7 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 * Tweak: Added new filter and action to edd_has_user_purchased()
 * Tweak: Renamed Czech Republic to Czechia
 * Tweak: Log in form on checkout now accepts log-in by email
-* Tweak: Addewd new edd_download_inner_class filter
+* Tweak: Added new edd_download_inner_class filter
 
 = 2.7.6, March 24, 2017 =
 

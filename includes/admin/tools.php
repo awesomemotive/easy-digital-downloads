@@ -27,7 +27,6 @@ function edd_tools_page() {
 	$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'general';
 ?>
 	<div class="wrap">
-		<?php screen_icon(); ?>
 		<h2><?php _e( 'Easy Digital Downloads Tools', 'easy-digital-downloads' ); ?></h2>
 		<h2 class="nav-tab-wrapper">
 			<?php
@@ -97,11 +96,11 @@ function edd_tools_banned_emails_display() {
 	<div class="postbox">
 		<h3><span><?php _e( 'Banned Emails', 'easy-digital-downloads' ); ?></span></h3>
 		<div class="inside">
-			<p><?php _e( 'Emails placed in the box below will not be allowed to make purchases. To ban an entire domain, enter the domain starting with "@".', 'easy-digital-downloads' ); ?></p>
+			<p><?php _e( 'Emails placed in the box below will not be allowed to make purchases.', 'easy-digital-downloads' ); ?></p>
 			<form method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ); ?>">
 				<p>
 					<textarea name="banned_emails" rows="10" class="large-text"><?php echo implode( "\n", edd_get_banned_emails() ); ?></textarea>
-					<span class="description"><?php _e( 'Enter emails and/or domains (starting with @) to disallow, one per line.', 'easy-digital-downloads' ); ?></span>
+					<span class="description"><?php _e( 'Enter emails and/or domains (starting with "@") and/or TLDs (starting with ".") to disallow, one per line.', 'easy-digital-downloads' ); ?></span>
 				</p>
 				<p>
 					<input type="hidden" name="edd_action" value="save_banned_emails" />
@@ -395,10 +394,8 @@ function edd_tools_banned_emails_save() {
 		$emails = array_map( 'sanitize_text_field', $emails );
 
 		foreach( $emails as $id => $email ) {
-			if( ! is_email( $email ) ) {
-				if( $email[0] != '@' ) {
-					unset( $emails[$id] );
-				}
+			if( ! is_email( $email ) && $email[0] != '@' && $email[0] != '.' ) {
+				unset( $emails[$id] );
 			}
 		}
 	} else {
@@ -981,8 +978,12 @@ function edd_tools_import_export_process_export() {
 	if( ! current_user_can( 'manage_shop_settings' ) )
 		return;
 
-	$settings = array();
-	$settings = get_option( 'edd_settings' );
+	$edd_settings  = get_option( 'edd_settings' );
+	$edd_tax_rates = get_option( 'edd_tax_rates' );
+	$settings = array(
+		'edd_settings'  => $edd_settings,
+		'edd_tax_rates' => $edd_tax_rates,
+	);
 
 	ignore_user_abort( true );
 
@@ -1030,7 +1031,23 @@ function edd_tools_import_export_process_import() {
 	// Retrieve the settings from the file and convert the json object to an array
 	$settings = edd_object_to_array( json_decode( file_get_contents( $import_file ) ) );
 
-	update_option( 'edd_settings', $settings );
+	if ( ! isset( $settings['edd_settings'] ) ) {
+
+		// Process a settings export from a pre 2.8 version of EDD
+		update_option( 'edd_settings', $settings );
+
+	} else {
+
+		// Update the settings from a 2.8+ export file
+		$edd_settings  = $settings['edd_settings'];
+		update_option( 'edd_settings', $edd_settings );
+
+		$edd_tax_rates = $settings['edd_tax_rates'];
+		update_option( 'edd_tax_rates', $edd_tax_rates );
+
+	}
+
+
 
 	wp_safe_redirect( admin_url( 'edit.php?post_type=download&page=edd-tools&edd-message=settings-imported' ) ); exit;
 
