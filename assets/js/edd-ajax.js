@@ -110,7 +110,6 @@ jQuery(document).ready(function ($) {
 		var new_price = $(this).val() * price;
 		new_price = new_price.toFixed(decimals);
 		new_price = String(new_price).split("").reverse().join("").replace(/(\d{3}\B)/g, "$1" + edd_scripts.thousands_separator).split("").reverse().join("");
-		console.log(new_price);
 		target.find('.edd-add-to-cart-label .edd-purchase-button-price-text').text(new_price);
 	});
 
