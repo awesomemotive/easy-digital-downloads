@@ -653,26 +653,6 @@ class EDD_CLI extends WP_CLI_Command {
 
 			}
 
-			$purchase_data = array(
-				'price'	        => edd_sanitize_amount( $total ),
-				'tax'           => 0,
-				'purchase_key'  => strtolower( md5( uniqid() ) ),
-				'user_email'    => $email,
-				'user_info'     => $user_info,
-				'currency'      => edd_get_currency(),
-				'downloads'     => $final_downloads,
-				'cart_details'  => $cart_details,
-				'status'        => 'pending'
-			);
-
-			$payment_id = edd_insert_payment( $purchase_data );
-
-			remove_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999 );
-
-			if( $status != 'pending' ) {
-				edd_update_payment_status( $payment_id, $status );
-			}
-
 			if ( 'random' === $date ) {
 				// Randomly grab a date from the current past 30 days
 				$oldest_time = strtotime( '-' . $range . ' days', current_time( 'timestamp') );
@@ -691,9 +671,32 @@ class EDD_CLI extends WP_CLI_Command {
 				}
 			}
 
+			$purchase_data = array(
+				'price'	        => edd_sanitize_amount( $total ),
+				'tax'           => 0,
+				'purchase_key'  => strtolower( md5( uniqid() ) ),
+				'user_email'    => $email,
+				'user_info'     => $user_info,
+				'currency'      => edd_get_currency(),
+				'downloads'     => $final_downloads,
+				'cart_details'  => $cart_details,
+				'status'        => 'pending',
+			);
+
+			if ( ! empty( $timestring ) ) {
+				$purchase_data['post_date'] = $timestring;
+			}
+
+			$payment_id = edd_insert_payment( $purchase_data );
+
+			remove_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999 );
+
+			if( $status != 'pending' ) {
+				edd_update_payment_status( $payment_id, $status );
+			}
+
 			if ( ! empty( $timestring ) ) {
 				$payment = new EDD_Payment( $payment_id );
-				$payment->date = $timestring;
 				$payment->completed_date = $timestring;
 				$payment->save();
 			}
