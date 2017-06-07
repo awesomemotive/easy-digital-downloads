@@ -1074,7 +1074,8 @@ function edd_purchase_form_validate_cc_zip( $zip = 0, $country_code = '' ) {
  * @return      void
  */
 function edd_check_purchase_email( $valid_data, $posted ) {
-	$banned    = edd_get_banned_emails();
+
+	$banned = edd_get_banned_emails();
 
 	if( empty( $banned ) ) {
 		return;
@@ -1084,7 +1085,7 @@ function edd_check_purchase_email( $valid_data, $posted ) {
 	if( is_user_logged_in() ) {
 
 		// The user is logged in, check that their account email is not banned
-		$user_data = get_userdata( get_current_user_id() );
+		$user_data     = get_userdata( get_current_user_id() );
 		$user_emails[] = $user_data->user_email;
 
 	} elseif( isset( $posted['edd-purchase-var'] ) && $posted['edd-purchase-var'] == 'needs-to-login' ) {
