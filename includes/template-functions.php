@@ -126,12 +126,12 @@ function edd_get_purchase_link( $args = array() ) {
 
 	$data_price  = 'data-price="' . $data_price_value . '"';
 
-	$button_text = ! empty( $args['text'] ) ? '<span class="edd-purchase-button-separator">&nbsp;&ndash;&nbsp;</span>' . $args['text'] : '';
+	$button_text = ! empty( $args['text'] ) ? '<span class="edd-purchase-button-separator">&nbsp;&ndash;&nbsp;</span>' . '<span class="edd-purchase-button-text">' . $args['text'] . '</span>' : '';
 
 	if ( false !== $price ) {
 
 		if ( 0 == $price ) {
-			$args['text'] = __( 'Free', 'easy-digital-downloads' ) . $button_text;
+			$args['text'] = '<span class="edd-purchase-button-free">' . __( 'Free', 'easy-digital-downloads' ) . '</span>' . $button_text;
 		} else {
 			$symbol = edd_currency_symbol( edd_get_currency() );
 
