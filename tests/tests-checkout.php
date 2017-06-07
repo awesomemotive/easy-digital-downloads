@@ -105,6 +105,28 @@ class Tests_Checkout extends EDD_UnitTestCase {
 		$this->assertFalse( edd_is_email_banned( 'john.zip@test.com' ) );
 	}
 
+	public function test_edd_is_lowercase_email_banned_with_uppcase_tld_banned() {
+
+		$emails = array();
+		$emails[] = '.ZIP'; // Banned TLD
+
+		edd_update_option( 'banned_emails', $emails );
+
+		$this->assertTrue( edd_is_email_banned( 'john2@test.zip' ) );
+		$this->assertFalse( edd_is_email_banned( 'john.zip@test.com' ) );
+	}
+
+	public function test_edd_is_uppercase_email_banned_with_lowercase_tld_banned() {
+
+		$emails = array();
+		$emails[] = '.zip'; // Banned TLD
+
+		edd_update_option( 'banned_emails', $emails );
+
+		$this->assertTrue( edd_is_email_banned( 'JOHN2@test.ZIP' ) );
+		$this->assertFalse( edd_is_email_banned( 'john.ZIP@test.com' ) );
+	}
+
 	/**
 	 * Test SSL enforced checkout
 	 */
