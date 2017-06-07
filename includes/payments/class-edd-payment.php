@@ -1653,7 +1653,7 @@ class EDD_Payment {
 	 * @return void
 	 */
 	private function recalculate_total() {
-		$this->total = $this->subtotal + $this->tax + $this->fees_total;
+		$this->total = apply_filters( 'edd_recalculate_total', $this->subtotal + $this->tax + $this->fees_total, $this->ID, $this );
 	}
 
 	/**
