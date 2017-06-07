@@ -145,7 +145,7 @@ function edd_get_purchase_link( $args = array() ) {
 				$args['text'] .= $currency_markup;
 			}
 
-			$args['text'] .=$button_text;
+			$args['text'] .= $button_text;
 		}
 
 	}
