@@ -2,13 +2,37 @@
 
 
 /**
+ * Class Tests_Login_Register
+ *
  * @group edd_login_register
  */
 class Tests_Login_Register extends EDD_UnitTestCase {
 
+	/**
+	 * Set up tests.
+	 */
 	public function setUp() {
 		parent::setUp();
-		wp_set_current_user(0);
+
+		// Prevent edd_die() from stopping tests.
+		if ( ! defined( 'EDD_UNIT_TESTS' ) ) {
+			define( 'EDD_UNIT_TESTS', true );
+		}
+		// Prevent wp_redirect from sending headers.
+		add_filter( 'edd_login_redirect', '__return_false' );
+
+		wp_set_current_user( 0 );
+	}
+
+	/**
+	 * Prevent WP Redirect
+	 *
+	 * This prevents the "Headers already sent" failing in Travis.
+	 *
+	 * @return string
+	 */
+	function prevent_wp_redirect() {
+		return '';
 	}
 
 	/**
@@ -72,19 +96,20 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 	 * @since 2.2.3
 	 */
 	public function test_process_login_form_correct_login() {
-		$this->markTestIncomplete( 'Causes headers already sent errors');
-		/*
+
+		add_filter( 'wp_redirect', array( $this, 'prevent_wp_redirect' ) );
+
 		ob_start();
-			edd_process_login_form( array(
-				'edd_login_nonce' 	=> wp_create_nonce( 'edd-login-nonce' ),
-				'edd_user_login' 	=> 'admin@example.org',
-				'edd_user_pass' 	=> 'password',
-			) );
-			$return = ob_get_contents();
+		edd_process_login_form( array(
+			'edd_login_nonce' => wp_create_nonce( 'edd-login-nonce' ),
+			'edd_user_login'  => 'admin@example.org',
+			'edd_user_pass'   => 'password',
+			'edd_redirect'    => '',
+		) );
+		ob_get_contents();
 		ob_end_clean();
 
 		$this->assertEmpty( edd_get_errors() );
-		*/
 	}
 
 	/**
@@ -102,12 +127,12 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 	 * @since 2.2.3
 	 */
 	public function test_log_user_in() {
-		$this->markTestIncomplete( 'Causes headers already sent errors');
-		/*
+
+		add_filter( 'wp_redirect', array( $this, 'prevent_wp_redirect' ) );
 		wp_logout();
-		edd_log_user_in( 1 );
+		$user = new WP_User( 1 );
+		edd_log_user_in( $user->ID, $user->user_email, $user->user_pass );
 		$this->assertTrue( is_user_logged_in() );
-		*/
 	}
 
 	/**
@@ -201,13 +226,13 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 	 */
 	public function test_process_register_form_username_invalid() {
 
-		$_POST['edd_register_submit'] 	= 1;
-		$_POST['edd_user_pass'] 		= 'password';
-		$_POST['edd_user_pass2'] 		= 'other-password';
+		$_POST['edd_register_submit'] = 1;
+		$_POST['edd_user_pass']       = 'password';
+		$_POST['edd_user_pass2']      = 'other-password';
 		edd_process_register_form( array(
-			'edd_register_submit' 	=> 1,
-			'edd_user_login' 		=> 'admin#!@*&',
-			'edd_user_email' 		=> null,
+			'edd_register_submit' => 1,
+			'edd_user_login'      => 'admin#!@*&',
+			'edd_user_email'      => null,
 		) );
 		$this->assertArrayHasKey( 'username_invalid', edd_get_errors() );
 
@@ -223,14 +248,14 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 	 */
 	public function test_process_register_form_payment_email_incorrect() {
 
-		$_POST['edd_register_submit'] 	= 1;
-		$_POST['edd_user_pass'] 		= '';
-		$_POST['edd_user_pass2'] 		= '';
+		$_POST['edd_register_submit'] = 1;
+		$_POST['edd_user_pass']       = '';
+		$_POST['edd_user_pass2']      = '';
 		edd_process_register_form( array(
-			'edd_register_submit' 	=> 1,
-			'edd_user_login' 		=> 'random_username',
-			'edd_user_email' 		=> 'admin@example.org',
-			'edd_payment_email' 	=> 'someotheradminexample.org',
+			'edd_register_submit' => 1,
+			'edd_user_login'      => 'random_username',
+			'edd_user_email'      => 'admin@example.org',
+			'edd_payment_email'   => 'someotheradminexample.org',
 		) );
 		$this->assertArrayHasKey( 'email_unavailable', edd_get_errors() );
 		$this->assertArrayHasKey( 'payment_email_invalid', edd_get_errors() );
@@ -245,23 +270,38 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 	 * @since 2.2.3
 	 */
 	public function test_process_register_form_success() {
-		$this->markTestIncomplete( 'Causes headers already sent errors');
-		/*
-		$_POST['edd_register_submit'] 	= 1;
-		$_POST['edd_user_pass'] 		= 'password';
-		$_POST['edd_user_pass2'] 		= 'password';
-		edd_process_register_form( array(
-			'edd_register_submit' 	=> 1,
-			'edd_user_login' 		=> 'random_username',
-			'edd_user_email' 		=> 'random_username@example.org',
-			'edd_payment_email' 	=> 'random_username@example.org',
-			'edd_user_pass' 		=> 'password',
-			'edd_redirect' 			=> '/',
-		) );
 
-		// Clear errors for other test
+		add_filter( 'wp_redirect', array( $this, 'prevent_wp_redirect' ) );
+		// First check that this user does not exist.
+		$user = new WP_User( 0, 'random_username' );
+		$this->assertEmpty( $user->roles );
+		$this->assertEmpty( $user->allcaps );
+		$this->assertEmpty( (array) $user->data );
+
+		// Next register this user.
+		$_POST['edd_register_submit'] = 1;
+		$_POST['edd_user_pass']       = 'password';
+		$_POST['edd_user_pass2']      = 'password';
+		$args                         = array(
+			'edd_register_submit' => 1,
+			'edd_user_login'      => 'random_username',
+			'edd_user_email'      => 'random_username@example.org',
+			'edd_payment_email'   => 'random_username@example.org',
+			'edd_user_pass'       => 'password',
+			'edd_redirect'        => '',
+		);
+		edd_process_register_form( $args );
+
+		// Now check to see if the user exists.
+		$user = new WP_User( 0, 'random_username' );
+
+		$this->assertEquals( $args['edd_payment_email'], $user->user_email );
+		$this->assertEquals( $args['edd_user_login'], $user->display_name );
+		$this->assertEquals( $args['edd_user_login'], $user->user_login );
+		$this->assertTrue( is_user_logged_in() );
+
+		// Clear errors for other tests.
 		edd_clear_errors();
-		*/
 	}
 
 }
