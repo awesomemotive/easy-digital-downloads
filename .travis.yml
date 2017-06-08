@@ -8,7 +8,6 @@ php:
 - 5.5
 - 5.6
 - 7.0
-- hhvm
 
 env:
 - WP_VERSION=latest WP_MULTISITE=0
@@ -25,9 +24,6 @@ matrix:
   include:
     - php: 5.3
       env: WP_VERSION=latest WP_MULTISITE=1
-  exclude:
-    - php: hhvm
-      env: WP_VERSION=4.0 WP_MULTISITE=0
 
 before_script:
   - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
@@ -40,7 +36,7 @@ before_script:
     fi
 
 script:
-- if [[ $TRAVIS_PHP_VERSION != 'hhvm' && ( $TRAVIS_PHP_VERSION != '5.5'|| $WP_VERSION != 'latest'
+- if [[ ( $TRAVIS_PHP_VERSION != '5.5'|| $WP_VERSION != 'latest'
   || $WP_MULTISITE != '0' ) ]]; then phpenv config-rm xdebug.ini; fi
 - if [[ $TRAVIS_PHP_VERSION = '5.5' && $WP_VERSION = 'latest' && $WP_MULTISITE = '0'
   ]]; then phpunit --coverage-clover=coverage.clover; else phpunit; fi
