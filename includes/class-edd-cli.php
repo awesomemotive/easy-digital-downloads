@@ -591,7 +591,7 @@ class EDD_CLI extends WP_CLI_Command {
 					'post_type'     => 'download',
 					'orderby'       => 'rand',
 					'order'         => 'ASC',
-					'posts_per_page'=> 1
+					'posts_per_page'=> rand( 1, 3 ),
 				) );
 
 			} else {
@@ -625,11 +625,13 @@ class EDD_CLI extends WP_CLI_Command {
 					$prices = edd_get_variable_prices( $download->ID );
 
 					if( false === $price_id || ! array_key_exists( $price_id, (array) $prices ) ) {
-						$price_id = rand( 0, count( $prices ) - 1 );
+						$item_price_id = array_rand( $prices );
+					} else {
+						$item_price_id = $price_id;
 					}
 
-					$item_price = $prices[ $price_id ]['amount'];
-					$options['price_id'] = $price_id;
+					$item_price = $prices[ $item_price_id ]['amount'];
+					$options['price_id'] = $item_price_id;
 
 				} else {
 
