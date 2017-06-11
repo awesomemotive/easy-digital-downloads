@@ -466,6 +466,11 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 			<div class="edd-custom-price-option-settings">
 				<?php
 
+				// Output buffer so that the headers run, so we can log them and use them later
+				ob_start();
+				do_action( 'edd_download_price_table_head', $post_id );
+				ob_end_clean();
+
 				ob_start();
 				do_action( 'edd_download_price_table_row', $post_id, $key, $args );
 				$elements = ob_get_clean();
@@ -474,6 +479,9 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 						'<td>',
 						'<td ',
 						'</td>',
+						'<th>',
+						'<th ',
+						'</th>',
 						'class="times"',
 						'class="signup_fee"',
 					),
@@ -481,6 +489,9 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 						'<span class="edd-custom-price-option-setting">',
 						'<span ',
 						'</span>',
+						'<label>',
+						'<label ',
+						'</label>',
 						'class="edd-recurring-times times"', // keep old class for back compat
 						'class="edd-recurring-signup-fee signup_fee"' // keep old class for back compat
 					),
