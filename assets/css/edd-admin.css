@@ -233,12 +233,8 @@ tr.status-refunded td {
 .edd_repeatable_row td {
 	vertical-align: middle;
 }
-.toggle-custom-price-option-fields {
-	display: inline-block;
-	color: #777;
-	font-size: 13px;
-	text-decoration: none;
-	margin-bottom: 6px;
+.toggle-custom-price-option-fields.button-secondary {
+	margin-bottom: 11px;
 }
 .toggle-custom-price-option-fields:hover {
 	color: #444;
@@ -331,7 +327,6 @@ tr.status-refunded td {
 }
 .edd-custom-price-option-settings {
 	display: none;
-	padding: 8px;
 	border-width: 0 1px 1px;
 	border-style: solid;
 	border-color: #e5e5e5;
@@ -340,25 +335,35 @@ tr.status-refunded td {
 }
 .edd-custom-price-option-elements > [class="edd-custom-price-option-setting"] {
 	display: block;
-	padding: 10px 0 12px;
+	padding: 10px 8px 12px;
 	border-bottom: 1px solid rgba( 222, 222, 222, 0.3 );
 }
 .edd-price-option-extension-section {
-	padding: 10px 0 12px;
+	padding: 10px 8px;
 	border-bottom: 1px solid rgba( 222, 222, 222, 0.3 );
 }
-.edd-price-option-extension-section:last-of-type {
-	padding-bottom: 0;
+.edd-custom-price-option-setting:last-child,
+.edd-price-option-extension-section:last-child {
 	border-bottom: none;
+}
+label.edd_prices_shipping { /* remove once Simple Shipping markup is improved */
+	display: none !important;
 }
 .edd-custom-price-option-section-title {
 	display: block;
-	padding: 0 0 10px;
+	font-size: 14px;
 	font-weight: 600;
+	padding: 0 0 10px;
 }
 .edd-price-option-extension-section > *:not(.edd-custom-price-option-section-title) {
 	display: inline-block;
 	padding-right: 20px;
+	vertical-align: top;
+	margin-bottom: 4px;
+}
+.edd-price-option-extension-section > *:not(.edd-custom-price-option-section-title) label {
+	display: block;
+	margin-bottom: 2px;
 }
 #downloadinformation .edd_meta_table_wrap table input,
 #downloadinformation .edd_meta_table_wrap table select,
