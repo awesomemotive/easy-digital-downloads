@@ -36,7 +36,7 @@ jQuery(document).ready(function ($) {
 
 			// Retrieve the highest current key
 			var key = highest = 1;
-			row.parent().find( 'tr.edd_repeatable_row' ).each(function() {
+			row.parent().find( '.edd_repeatable_row' ).each(function() {
 				var current = $(this).data( 'key' );
 				if( parseInt( current ) > highest ) {
 					highest = current;
@@ -54,8 +54,7 @@ jQuery(document).ready(function ($) {
 			clone.removeClass( 'edd_add_blank' );
 
 			clone.attr( 'data-key', key );
-			clone.find( 'td input, td select, textarea' ).val( '' );
-			clone.find( 'input, select, textarea' ).each(function() {
+			clone.find( 'input, select, textarea' ).val( '' ).each(function() {
 				var name = $( this ).attr( 'name' );
 				var id   = $( this ).attr( 'id' );
 
@@ -104,7 +103,7 @@ jQuery(document).ready(function ($) {
 			$( document.body ).on( 'click', '.submit .edd_add_repeatable', function(e) {
 				e.preventDefault();
 				var button = $( this ),
-				row = button.parent().parent().prev( 'tr' ),
+				row = button.parents().prev( '.edd_repeatable_row' ),
 				clone = EDD_Download_Configuration.clone_repeatable(row);
 
 				clone.insertAfter( row ).find('input, textarea, select').filter(':visible').eq(0).focus();
@@ -122,8 +121,8 @@ jQuery(document).ready(function ($) {
 
 		move : function() {
 
-			$(".edd_repeatable_table tbody").sortable({
-				handle: '.edd_draghandle', items: '.edd_repeatable_row', opacity: 0.6, cursor: 'move', axis: 'y', update: function() {
+			$(".edd_repeatable_table .edd-price-option-fields").sortable({
+				handle: '.edd-price-option-title', items: '.edd_repeatable_row', opacity: 0.6, cursor: 'move', axis: 'y', update: function() {
 					var count  = 0;
 					$(this).find( 'tr' ).each(function() {
 						$(this).find( 'input.edd_repeatable_index' ).each(function() {
@@ -137,22 +136,22 @@ jQuery(document).ready(function ($) {
 		},
 
 		remove : function() {
-			$( document.body ).on( 'click', '.edd_remove_repeatable', function(e) {
+			$( document.body ).on( 'click', '.edd-remove-option', function(e) {
 				e.preventDefault();
 
-				var row   = $(this).parent().parent( 'tr' ),
-					count = row.parent().find( 'tr' ).length - 1,
+				var row   = $(this).parents( '.edd_repeatable_row' ),
+					count = row.parent().find( '.edd_repeatable_row' ).length - 1,
 					type  = $(this).data('type'),
-					repeatable = 'tr.edd_repeatable_' + type + 's',
+					repeatable = 'div.edd_repeatable_' + type + 's',
 					focusElement,
 					focusable,
 					firstFocusable;
 
 					// Set focus on next element if removing the first row. Otherwise set focus on previous element.
-					if ( $(this).is( '.ui-sortable tr:first-child .edd_remove_repeatable:first-child' ) ) {
-						focusElement  = row.next( 'tr' );
+					if ( $(this).is( '.ui-sortable .edd_repeatable_row:first-child .edd-remove-option' ) ) {
+						focusElement  = row.next( '.edd_repeatable_row' );
 					} else {
-						focusElement  = row.prev( 'tr' );
+						focusElement  = row.prev( '.edd_repeatable_row' );
 					}
 
 					focusable  = focusElement.find( 'select, input, textarea, button' ).filter( ':visible' );
@@ -330,7 +329,7 @@ jQuery(document).ready(function ($) {
 		updatePrices: function() {
 			$( '#edd_price_fields' ).on( 'keyup', '.edd_variable_prices_name', function() {
 
-				var key = $( this ).parents( 'tr' ).data( 'key' ),
+				var key = $( this ).parents( '.edd_repeatable_row' ).data( 'key' ),
 					name = $( this ).val(),
 					field_option = $( '.edd_repeatable_condition_field option[value=' + key + ']' );
 
@@ -347,6 +346,39 @@ jQuery(document).ready(function ($) {
 		}
 
 	};
+
+	// Wrap loose extension settings in unique HTML elements
+	$( document.body ).find( '.edd-custom-price-option-elements' ).each(function() {
+		$(this).find('[class*="shipping"]').wrapAll( '<div class="edd-simple-shipping-price-option-settings edd-price-option-extension-section"></div>' );
+		$(this).find('[class*="sl-"]').wrapAll( '<div class="edd-sl-price-option-settings edd-price-option-extension-section"></div>' );
+		$(this).find('[class*="edd-recurring-"]').wrapAll( '<div class="edd-recurring-price-option-settings edd-price-option-extension-section"></div>' );
+	});
+
+	// Add extension-specific titles to settings sections
+	$( document.body ).find( '.edd-simple-shipping-price-option-settings' ).each(function() {
+		$(this).prepend( '<span class="edd-custom-price-option-section-title">' + edd_vars.simple_shipping_settings + '</span>' );
+	});
+
+	$( document.body ).find( '.edd-sl-price-option-settings' ).each(function() {
+		$(this).prepend( '<span class="edd-custom-price-option-section-title">' + edd_vars.software_licensing_settings + '</span>' );
+	});
+
+	$( document.body ).find( '.edd-recurring-price-option-settings' ).each(function() {
+		$(this).prepend( '<span class="edd-custom-price-option-section-title">' + edd_vars.recurring_payments_settings + '</span>' );
+	});{
+
+	}
+	$( document.body ).on( 'click', '.toggle-custom-price-option-fields', function(e) {
+		e.preventDefault();
+
+		if ($(this).html() == edd_vars.expand_extension_settings ) {
+			$(this).html( edd_vars.collapse_extension_settings )
+		} else {
+			$(this).html( edd_vars.expand_extension_settings )
+		}
+
+		$(this).parents('.toggle-custom-price-option-fields-wrap').siblings('.edd-price-option-fields').find('.edd-custom-price-option-settings').slideToggle();
+	});
 
 	EDD_Download_Configuration.init();
 

@@ -338,19 +338,11 @@ function edd_render_price_field( $post_id ) {
 			<label for="_edd_price_options_mode"><?php echo apply_filters( 'edd_multi_option_purchase_text', __( 'Enable multi-option purchase mode. Allows multiple price options to be added to your cart at once', 'easy-digital-downloads' ) ); ?></label>
 		</p>
 		<div id="edd_price_fields" class="edd_meta_table_wrap">
-			<table class="widefat edd_repeatable_table" width="100%" cellpadding="0" cellspacing="0">
-				<thead>
-					<tr>
-						<th style="width: 20px"></th>
-						<th><?php _e( 'Option Name', 'easy-digital-downloads' ); ?></th>
-						<th style="width: 100px"><?php _e( 'Price', 'easy-digital-downloads' ); ?></th>
-						<th class="edd_repeatable_default"><?php _e( 'Default', 'easy-digital-downloads' ); ?></th>
-						<th style="width: 15px"><?php _e( 'ID', 'easy-digital-downloads' ); ?></th>
-						<?php do_action( 'edd_download_price_table_head', $post_id ); ?>
-						<th style="width: 2%"></th>
-					</tr>
-				</thead>
-				<tbody>
+			<div class="widefat edd_repeatable_table" width="100%" cellpadding="0" cellspacing="0">
+				<div class="toggle-custom-price-option-fields-wrap">
+					<a href="#" class="toggle-custom-price-option-fields"><?php _e( 'Expand extension settings', 'easy-digital-downloads' ); ?></a>
+				</div>
+				<div class="edd-price-option-fields">
 					<?php
 						if ( ! empty( $prices ) ) :
 
@@ -360,25 +352,25 @@ function edd_render_price_field( $post_id ) {
 								$index  = isset( $value['index'] )  ? $value['index']  : $key;
 								$args = apply_filters( 'edd_price_row_args', compact( 'name', 'amount' ), $value );
 								?>
-								<tr class="edd_variable_prices_wrapper edd_repeatable_row" data-key="<?php echo esc_attr( $key ); ?>">
+								<div class="edd_variable_prices_wrapper edd_repeatable_row" data-key="<?php echo esc_attr( $key ); ?>">
 									<?php do_action( 'edd_render_price_row', $key, $args, $post_id, $index ); ?>
-								</tr>
+								</div>
 							<?php
 							endforeach;
 						else :
 					?>
-						<tr class="edd_variable_prices_wrapper edd_repeatable_row" data-key="1">
+						<div class="edd_variable_prices_wrapper edd_repeatable_row" data-key="1">
 							<?php do_action( 'edd_render_price_row', 1, array(), $post_id, 1 ); ?>
-						</tr>
+						</div>
 					<?php endif; ?>
 
-					<tr>
-						<td class="submit" colspan="4" style="float: none; clear:both; background:#fff;">
+					<div class="edd-add-price-option">
+						<div class="submit" colspan="4" style="float: none; clear:both; background:#fff; padding: 4px 4px 0 0;">
 							<button class="button-secondary edd_add_repeatable" style="margin: 6px 0;"><?php _e( 'Add New Price', 'easy-digital-downloads' ); ?></button>
-						</td>
-					</tr>
-				</tbody>
-			</table>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div><!--end #edd_variable_price_fields-->
 <?php
@@ -398,6 +390,7 @@ add_action( 'edd_meta_box_price_fields', 'edd_render_price_field', 10 );
  * @param       $post_id
  */
 function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
+
 	$defaults = array(
 		'name'   => null,
 		'amount' => null
@@ -409,54 +402,97 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 	$currency_position = edd_get_option( 'currency_position', 'before' );
 
 ?>
-	<td>
-		<span class="edd_draghandle"></span>
-		<input type="hidden" name="edd_variable_prices[<?php echo $key; ?>][index]" class="edd_repeatable_index" value="<?php echo $index; ?>"/>
-	</td>
-	<td>
-		<?php echo EDD()->html->text( array(
-			'name'  => 'edd_variable_prices[' . $key . '][name]',
-			'value' => esc_attr( $args['name'] ),
-			'placeholder' => __( 'Option Name', 'easy-digital-downloads' ),
-			'class' => 'edd_variable_prices_name large-text'
-		) ); ?>
-	</td>
+	<div class="edd-price-option-header">
+		<span class="edd-price-option-title" title="<?php _e( 'Click and drag to re-order price options', 'easy-digital-downloads' ); ?>">
+			<?php printf( __( 'Price option: %s', 'easy-digital-downloads' ), '<span class="edd_price_id">' . $key . '</span>' ); ?>
+		</span>
+		<span class="edd-price-option-actions">
+			<a class="edd-remove-option edd-delete"><?php printf( __( 'Remove', 'easy-digital-downloads' ), $key ); ?><span class="screen-reader-text"><?php printf( __( 'Remove price option %s', 'easy-digital-downloads' ), $key ); ?></span>
+			</a>
+		</span>
+	</div>
 
-	<td>
-		<?php
+	<div class="edd-standard-price-option-fields">
+
+		<div class="edd-option-name">
+			<span class="edd-price-option-label"><?php _e( 'Option Name', 'easy-digital-downloads' ); ?></span>
+			<?php echo EDD()->html->text( array(
+				'name'  => 'edd_variable_prices[' . $key . '][name]',
+				'value' => esc_attr( $args['name'] ),
+				'placeholder' => __( 'Option Name', 'easy-digital-downloads' ),
+				'class' => 'edd_variable_prices_name large-text'
+			) ); ?>
+		</div>
+
+		<div class="edd-option-price">
+			<span class="edd-price-option-label"><?php _e( 'Price', 'easy-digital-downloads' ); ?></span>
+			<?php
 			$price_args = array(
 				'name'  => 'edd_variable_prices[' . $key . '][amount]',
 				'value' => $args['amount'],
 				'placeholder' => edd_format_amount( 9.99 ),
 				'class' => 'edd-price-field'
 			);
-		?>
+			?>
 
-		<?php if( $currency_position == 'before' ) : ?>
-			<span><?php echo edd_currency_filter( '' ); ?></span>
-			<?php echo EDD()->html->text( $price_args ); ?>
-		<?php else : ?>
-			<?php echo EDD()->html->text( $price_args ); ?>
-			<?php echo edd_currency_filter( '' ); ?>
-		<?php endif; ?>
-	</td>
-	<td class="edd_repeatable_default_wrapper">
-		<label class="edd-default-price">
-			<input type="radio" <?php checked( $default_price_id, $key, true ); ?> class="edd_repeatable_default_input" name="_edd_default_price_id" value="<?php echo $key; ?>" />
-			<span class="screen-reader-text"><?php printf( __( 'Set ID %s as default price', 'easy-digital-downloads' ), $key ); ?></span>
-		</label>
-	</td>
+			<span class="edd-price-input-group">
+				<?php if( $currency_position == 'before' ) : ?>
+					<span><?php echo edd_currency_filter( '' ); ?></span>
+					<?php echo EDD()->html->text( $price_args ); ?>
+				<?php else : ?>
+					<?php echo EDD()->html->text( $price_args ); ?>
+					<?php echo edd_currency_filter( '' ); ?>
+				<?php endif; ?>
+			</span>
+		</div>
 
-	<td>
-		<span class="edd_price_id"><?php echo $key; ?></span>
-	</td>
+		<div class="edd_repeatable_default edd_repeatable_default_wrapper">
+			<span class="edd-price-option-label"><?php _e( 'Default', 'easy-digital-downloads' ); ?></span>
+			<label class="edd-default-price">
+				<input type="radio" <?php checked( $default_price_id, $key, true ); ?> class="edd_repeatable_default_input" name="_edd_default_price_id" value="<?php echo $key; ?>" />
+				<span class="screen-reader-text"><?php printf( __( 'Set ID %s as default price', 'easy-digital-downloads' ), $key ); ?></span>
+			</label>
+		</div>
 
-	<?php do_action( 'edd_download_price_table_row', $post_id, $key, $args ); ?>
+	</div>
 
-	<td>
-		<button class="edd_remove_repeatable" data-type="price" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;"><span class="screen-reader-text"><?php printf( __( 'Remove price option %s', 'easy-digital-downloads' ), $key ); ?></span><span aria-hidden="true">&times;</span></button>
-	</td>
-<?php
+	<?php
+		/**
+		 * Intercept extension-specific price option output and rebuild the markup
+		 */
+		if ( has_action( 'edd_download_price_table_head' ) || has_action( 'edd_download_price_table_row' ) ) {
+			?>
+
+			<div class="edd-custom-price-option-settings">
+				<?php
+
+				ob_start();
+				do_action( 'edd_download_price_table_row', $post_id, $key, $args );
+				$elements = ob_get_clean();
+				$elements = str_replace(
+					array(
+						'<td>',
+						'<td ',
+						'</td>',
+						'class="times"',
+						'class="signup_fee"',
+					),
+					array(
+						'<span class="edd-custom-price-option-setting">',
+						'<span ',
+						'</span>',
+						'class="edd-recurring-times times"', // keep old class for back compat
+						'class="edd-recurring-signup-fee signup_fee"' // keep old class for back compat
+					),
+					$elements
+				);
+
+				echo '<div class="edd-custom-price-option-elements">' . $elements . '</div>';
+				?>
+			</div>
+
+			<?php
+		}
 }
 add_action( 'edd_render_price_row', 'edd_render_price_row', 10, 4 );
 
