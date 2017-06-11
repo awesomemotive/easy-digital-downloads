@@ -348,7 +348,7 @@ jQuery(document).ready(function ($) {
 	};
 
 	$( document.body ).find( '.edd-custom-price-option-elements label' ).each(function() {
-		$(this).prependTo($(this).next());
+		$(this).prependTo($(this).nextAll('span:not(:has(>label))').first());
 	});
 
 	// Wrap loose extension settings in unique HTML elements
