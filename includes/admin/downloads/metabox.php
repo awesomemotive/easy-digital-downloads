@@ -1151,3 +1151,56 @@ function edd_render_stats_meta_box() {
 <?php
 	do_action('edd_stats_meta_box');
 }
+
+/**
+ * Internal use only: This is to help with https://github.com/easydigitaldownloads/easy-digital-downloads/issues/2704
+ *
+ * This function takes any hooked functions for edd_download_price_table_head and re-registers them into the edd_download_price_table_row
+ * action. It will also de-register any original table_row data, so that labels appear before their setting, then re-registers the table_row.
+ *
+ * @since 2.8
+ *
+ * @param $arg1
+ * @param $arg2
+ * @param $arg3
+ *
+ * @return void
+ */
+function edd_hijack_edd_download_price_table_head( $arg1, $arg2, $arg3 ) {
+	global $wp_filter;
+	$found_fields  = $wp_filter['edd_download_price_table_row'];
+	$found_headers = $wp_filter['edd_download_price_table_head'];
+
+	$re_register = array();
+
+	foreach ( $found_fields->callbacks as $priority => $callbacks ) {
+		if ( -1 === $priority ) {
+			continue; // Skip our -1 priority so we don't break the interwebs
+		}
+
+		if ( array_key_exists( $priority, $found_headers->callbacks ) ) {
+
+			// De-register any row data.
+			foreach ( $callbacks as $callback ) {
+				$re_register[ $priority ][] = $callback;
+				remove_action( 'edd_download_price_table_row', $callback['function'], $priority, $callback['accepted_args'] );
+			}
+
+			// Register any header data.
+			foreach( $found_headers->callbacks[ $priority ] as $callback ) {
+				if ( is_callable( $callback['function'] ) ) {
+					add_action( 'edd_download_price_table_row', $callback['function'], $priority, 1 );
+				}
+			}
+		}
+
+	}
+
+	// Now that we've re-registered our headers first...re-register the inputs
+	foreach ( $re_register as $priority => $callbacks ) {
+		foreach ( $callbacks as $callback ) {
+			add_action( 'edd_download_price_table_row', $callback['function'], $priority, $callback['accepted_args'] );
+		}
+	}
+}
+add_action( 'edd_download_price_table_row', 'edd_hijack_edd_download_price_table_head', -1, 3 );
