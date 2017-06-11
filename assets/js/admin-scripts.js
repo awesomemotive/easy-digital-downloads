@@ -347,6 +347,10 @@ jQuery(document).ready(function ($) {
 
 	};
 
+	$( document.body ).find( '.edd-custom-price-option-elements label' ).each(function() {
+		$(this).prependTo($(this).next());
+	});
+
 	// Wrap loose extension settings in unique HTML elements
 	$( document.body ).find( '.edd-custom-price-option-elements' ).each(function() {
 		$(this).find('[class*="shipping"]').wrapAll( '<div class="edd-simple-shipping-price-option-settings edd-price-option-extension-section"></div>' );
