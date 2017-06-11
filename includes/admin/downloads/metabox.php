@@ -297,7 +297,7 @@ function edd_render_price_field( $post_id ) {
 	$price_display      = $variable_pricing ? ' style="display:none;"' : '';
 	$variable_display   = $variable_pricing ? '' : ' style="display:none;"';
 	$currency_position  = edd_get_option( 'currency_position', 'before' );
-?>
+	?>
 	<p>
 		<strong><?php echo apply_filters( 'edd_price_options_heading', __( 'Pricing Options:', 'easy-digital-downloads' ) ); ?></strong>
 	</p>
@@ -338,10 +338,12 @@ function edd_render_price_field( $post_id ) {
 			<label for="_edd_price_options_mode"><?php echo apply_filters( 'edd_multi_option_purchase_text', __( 'Enable multi-option purchase mode. Allows multiple price options to be added to your cart at once', 'easy-digital-downloads' ) ); ?></label>
 		</p>
 		<div id="edd_price_fields" class="edd_meta_table_wrap">
-			<div class="widefat edd_repeatable_table" width="100%" cellpadding="0" cellspacing="0">
+			<div class="widefat edd_repeatable_table">
+
 				<div class="toggle-custom-price-option-fields-wrap">
-					<a href="#" class="toggle-custom-price-option-fields"><?php _e( 'Expand extension settings', 'easy-digital-downloads' ); ?></a>
+					<button href="#" class="toggle-custom-price-option-fields button-secondary"><?php _e( 'Show extension settings', 'easy-digital-downloads' ); ?></button>
 				</div>
+
 				<div class="edd-price-option-fields">
 					<?php
 						if ( ! empty( $prices ) ) :
@@ -458,7 +460,7 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 
 	<?php
 		/**
-		 * Intercept extension-specific price option output and rebuild the markup
+		 * Intercept extension-specific settings and rebuild the markup
 		 */
 		if ( has_action( 'edd_download_price_table_head' ) || has_action( 'edd_download_price_table_row' ) ) {
 			?>
@@ -1168,10 +1170,15 @@ function edd_render_stats_meta_box() {
  */
 function edd_hijack_edd_download_price_table_head( $arg1, $arg2, $arg3 ) {
 	global $wp_filter;
-	$found_fields  = $wp_filter['edd_download_price_table_row'];
-	$found_headers = $wp_filter['edd_download_price_table_head'];
+
+	$found_fields  = isset( $wp_filter['edd_download_price_table_row'] )  ? $wp_filter['edd_download_price_table_row']  : false;
+	$found_headers = isset( $wp_filter['edd_download_price_table_head'] ) ? $wp_filter['edd_download_price_table_head'] : false;
 
 	$re_register = array();
+
+	if ( ! $found_fields && ! $found_headers ) {
+		return;
+	}
 
 	foreach ( $found_fields->callbacks as $priority => $callbacks ) {
 		if ( -1 === $priority ) {

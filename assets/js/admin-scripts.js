@@ -347,6 +347,7 @@ jQuery(document).ready(function ($) {
 
 	};
 
+	//
 	$( document.body ).find( '.edd-custom-price-option-elements label' ).each(function() {
 		$(this).prependTo($(this).nextAll('span:not(:has(>label))').first());
 	});
@@ -362,23 +363,21 @@ jQuery(document).ready(function ($) {
 	$( document.body ).find( '.edd-simple-shipping-price-option-settings' ).each(function() {
 		$(this).prepend( '<span class="edd-custom-price-option-section-title">' + edd_vars.simple_shipping_settings + '</span>' );
 	});
-
 	$( document.body ).find( '.edd-sl-price-option-settings' ).each(function() {
 		$(this).prepend( '<span class="edd-custom-price-option-section-title">' + edd_vars.software_licensing_settings + '</span>' );
 	});
-
 	$( document.body ).find( '.edd-recurring-price-option-settings' ).each(function() {
 		$(this).prepend( '<span class="edd-custom-price-option-section-title">' + edd_vars.recurring_payments_settings + '</span>' );
-	});{
+	});
 
-	}
+	// Toggle the display of extension-specific settings
 	$( document.body ).on( 'click', '.toggle-custom-price-option-fields', function(e) {
 		e.preventDefault();
 
-		if ($(this).html() == edd_vars.expand_extension_settings ) {
-			$(this).html( edd_vars.collapse_extension_settings )
+		if ($(this).html() == edd_vars.show_extension_settings ) {
+			$(this).html( edd_vars.hide_extension_settings )
 		} else {
-			$(this).html( edd_vars.expand_extension_settings )
+			$(this).html( edd_vars.show_extension_settings )
 		}
 
 		$(this).parents('.toggle-custom-price-option-fields-wrap').siblings('.edd-price-option-fields').find('.edd-custom-price-option-settings').slideToggle();
