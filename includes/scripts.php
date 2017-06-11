@@ -225,6 +225,11 @@ function edd_load_admin_scripts( $hook ) {
 		'search_placeholder_country'  => __( 'Type to search all Countries', 'easy-digital-downloads' ),
 		'search_placeholder_state'    => __( 'Type to search all States/Provinces', 'easy-digital-downloads' ),
 		'unsupported_browser'         => __( 'We are sorry but your browser is not compatible with this kind of file upload. Please upgrade your browser.', 'easy-digital-downloads' ),
+		'expand_extension_settings'   => __( 'Expand extension settings', 'easy-digital-downloads' ),
+		'collapse_extension_settings' => __( 'Collapse extension settings', 'easy-digital-downloads' ),
+		'simple_shipping_settings'    => __( 'Simple Shipping', 'easy-digital-downloads' ),
+		'software_licensing_settings' => __( 'Software Licensing Settings', 'easy-digital-downloads' ),
+		'recurring_payments_settings' => __( 'Recurring Payments Settings', 'easy-digital-downloads' ),
 	));
 
 	wp_enqueue_style( 'wp-color-picker' );
