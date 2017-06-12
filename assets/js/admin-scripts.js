@@ -377,10 +377,10 @@ jQuery(document).ready(function ($) {
 	$( document.body ).on( 'click', '.toggle-custom-price-option-fields', function(e) {
 		e.preventDefault();
 
-		if ($(this).html() == edd_vars.show_advanced_options ) {
-			$(this).html( edd_vars.hide_advanced_options )
+		if ($(this).html() == edd_vars.show_advanced_settings ) {
+			$(this).html( edd_vars.hide_advanced_settings )
 		} else {
-			$(this).html( edd_vars.show_advanced_options )
+			$(this).html( edd_vars.show_advanced_settings )
 		}
 
 		$(this).parents('.edd-price-option-header').siblings('.edd-custom-price-option-settings').slideToggle();
