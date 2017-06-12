@@ -340,10 +340,6 @@ function edd_render_price_field( $post_id ) {
 		<div id="edd_price_fields" class="edd_meta_table_wrap">
 			<div class="widefat edd_repeatable_table">
 
-				<div class="toggle-custom-price-option-fields-wrap">
-					<button href="#" class="toggle-custom-price-option-fields button-secondary"><?php _e( 'Show extension settings', 'easy-digital-downloads' ); ?></button>
-				</div>
-
 				<div class="edd-price-option-fields edd-repeatables-wrap">
 					<?php
 						if ( ! empty( $prices ) ) :
@@ -410,7 +406,7 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 			<input type="hidden" name="edd_variable_prices[<?php echo $key; ?>][index]" class="edd_repeatable_index" value="<?php echo $index; ?>"/>
 		</span>
 		<span class="edd-price-option-actions">
-			<a class="edd-remove-row edd-delete" data-type="price"><?php printf( __( 'Remove', 'easy-digital-downloads' ), $key ); ?><span class="screen-reader-text"><?php printf( __( 'Remove price option %s', 'easy-digital-downloads' ), $key ); ?></span>
+			<a href="#" class="toggle-custom-price-option-fields"><?php _e( 'Show advanced options', 'easy-digital-downloads' ); ?></a>&nbsp;&#124;&nbsp;<a class="edd-remove-row edd-delete" data-type="price"><?php printf( __( 'Remove', 'easy-digital-downloads' ), $key ); ?><span class="screen-reader-text"><?php printf( __( 'Remove price option %s', 'easy-digital-downloads' ), $key ); ?></span>
 			</a>
 		</span>
 	</div>

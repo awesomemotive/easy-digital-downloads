@@ -377,13 +377,13 @@ jQuery(document).ready(function ($) {
 	$( document.body ).on( 'click', '.toggle-custom-price-option-fields', function(e) {
 		e.preventDefault();
 
-		if ($(this).html() == edd_vars.show_extension_settings ) {
-			$(this).html( edd_vars.hide_extension_settings )
+		if ($(this).html() == edd_vars.show_advanced_options ) {
+			$(this).html( edd_vars.hide_advanced_options )
 		} else {
-			$(this).html( edd_vars.show_extension_settings )
+			$(this).html( edd_vars.show_advanced_options )
 		}
 
-		$(this).parents('.toggle-custom-price-option-fields-wrap').siblings('.edd-price-option-fields').find('.edd-custom-price-option-settings').slideToggle();
+		$(this).parents('.edd-price-option-header').siblings('.edd-custom-price-option-settings').slideToggle();
 	});
 
 	EDD_Download_Configuration.init();
