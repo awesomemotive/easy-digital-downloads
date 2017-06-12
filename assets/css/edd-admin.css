@@ -234,12 +234,21 @@ tr.status-refunded td {
 .edd_repeatable_row td {
 	vertical-align: middle;
 }
-.toggle-custom-price-option-fields.button-secondary {
-	margin-bottom: 11px;
+.edd-price-option-actions {
+	color: #777;
 }
-.toggle-custom-price-option-fields:hover {
-	color: #444;
+.edd-price-option-actions a {
+	font-size: 12px;
 	text-decoration: none;
+	width: auto;
+	cursor: pointer;
+	vertical-align: middle;
+}
+.edd-price-option-actions .toggle-custom-price-option-fields {
+	color: #777;
+}
+.edd-price-option-actions .toggle-custom-price-option-fields:hover {
+	color: #444;
 }
 .edd-price-option-header,
 .edd-files-header {
