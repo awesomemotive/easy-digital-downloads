@@ -103,7 +103,7 @@ jQuery(document).ready(function ($) {
 			$( document.body ).on( 'click', '.submit .edd_add_repeatable', function(e) {
 				e.preventDefault();
 				var button = $( this ),
-				row = button.parents().prev( '.edd_repeatable_row' ),
+				row = button.parent().parent().prev( '.edd_repeatable_row' ),
 				clone = EDD_Download_Configuration.clone_repeatable(row);
 
 				clone.insertAfter( row ).find('input, textarea, select').filter(':visible').eq(0).focus();
@@ -121,10 +121,10 @@ jQuery(document).ready(function ($) {
 
 		move : function() {
 
-			$(".edd_repeatable_table .edd-price-option-fields").sortable({
-				handle: '.edd-price-option-title', items: '.edd_repeatable_row', opacity: 0.6, cursor: 'move', axis: 'y', update: function() {
+			$(".edd_repeatable_table .edd-repeatables-wrap").sortable({
+				handle: '.edd-draghandle-anchor', items: '.edd_repeatable_row', opacity: 0.6, cursor: 'move', axis: 'y', update: function() {
 					var count  = 0;
-					$(this).find( 'tr' ).each(function() {
+					$(this).find( '.edd_repeatable_row' ).each(function() {
 						$(this).find( 'input.edd_repeatable_index' ).each(function() {
 							$( this ).val( count );
 						});
@@ -136,7 +136,7 @@ jQuery(document).ready(function ($) {
 		},
 
 		remove : function() {
-			$( document.body ).on( 'click', '.edd-remove-option', function(e) {
+			$( document.body ).on( 'click', '.edd-remove-row', function(e) {
 				e.preventDefault();
 
 				var row   = $(this).parents( '.edd_repeatable_row' ),
@@ -148,7 +148,7 @@ jQuery(document).ready(function ($) {
 					firstFocusable;
 
 					// Set focus on next element if removing the first row. Otherwise set focus on previous element.
-					if ( $(this).is( '.ui-sortable .edd_repeatable_row:first-child .edd-remove-option' ) ) {
+					if ( $(this).is( '.ui-sortable .edd_repeatable_row:first-child .edd-remove-row' ) ) {
 						focusElement  = row.next( '.edd_repeatable_row' );
 					} else {
 						focusElement  = row.prev( '.edd_repeatable_row' );
@@ -163,7 +163,7 @@ jQuery(document).ready(function ($) {
 					$( '.edd_repeatable_condition_field option[value="' + price_row_id + '"]' ).remove();
 				}
 
-				if( count > 1 ) {
+				if ( count > 1 ) {
 					$( 'input, select', row ).val( '' );
 					row.fadeOut( 'fast' ).remove();
 					firstFocusable.focus();
@@ -218,13 +218,16 @@ jQuery(document).ready(function ($) {
 			$( document.body ).on( 'change', '#edd_variable_pricing', function(e) {
 				var checked   = $(this).is(':checked');
 				var single    = $( '#edd_regular_price_field' );
-				var variable  = $( '#edd_variable_price_fields,.edd_repeatable_table .pricing' );
+				var variable  = $( '#edd_variable_price_fields, .edd_repeatable_table .pricing' );
+				var bundleRow = $( '.edd-bundled-product-row, .edd-standard-file-fields' );
 				if ( checked ) {
 					single.hide();
 					variable.show();
+					bundleRow.addClass( 'has-variable-pricing' );
 				} else {
 					single.show();
 					variable.hide();
+					bundleRow.removeClass( 'has-variable-pricing' );
 				}
 			});
 		},
@@ -347,7 +350,7 @@ jQuery(document).ready(function ($) {
 
 	};
 
-	//
+	// Place extension-specific settings labels in correct spot
 	$( document.body ).find( '.edd-custom-price-option-elements label' ).each(function() {
 		$(this).prependTo($(this).nextAll('span:not(:has(>label))').first());
 	});
