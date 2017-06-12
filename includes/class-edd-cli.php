@@ -579,6 +579,8 @@ class EDD_CLI extends WP_CLI_Command {
 			'discount'      => 'none'
 		);
 
+		$progress = \WP_CLI\Utils\make_progress_bar( 'Creating Payments', $number );
+
 		for( $i = 0; $i < $number; $i++ ) {
 
 			$products = array();
@@ -711,7 +713,11 @@ class EDD_CLI extends WP_CLI_Command {
 				$payment->save();
 			}
 
+			$progress->tick();
+
 		}
+
+		$progress->finish();
 
 		WP_CLI::success( sprintf( __( 'Created %s payments', 'easy-digital-downloads' ), $number ) );
 		return;
