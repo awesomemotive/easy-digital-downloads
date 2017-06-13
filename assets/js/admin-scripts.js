@@ -90,7 +90,7 @@ jQuery(document).ready(function ($) {
 
 			clone.find( '.edd_repeatable_condition_field' ).each ( function() {
 				$( this ).find( 'option:eq(0)' ).prop( 'selected', 'selected' );
-			} )
+			});
 
 			// Remove Chosen elements
 			clone.find( '.search-choice' ).remove();
@@ -219,7 +219,7 @@ jQuery(document).ready(function ($) {
 				var checked   = $(this).is(':checked');
 				var single    = $( '#edd_regular_price_field' );
 				var variable  = $( '#edd_variable_price_fields, .edd_repeatable_table .pricing' );
-				var bundleRow = $( '.edd-bundled-product-row, .edd-standard-file-fields' );
+				var bundleRow = $( '.edd-bundled-product-row, .edd-repeatable-row-standard-fields' );
 				if ( checked ) {
 					single.hide();
 					variable.show();
@@ -350,19 +350,19 @@ jQuery(document).ready(function ($) {
 
 	};
 
-	// Place extension-specific settings labels in correct spot
-	$( document.body ).find( '.edd-custom-price-option-elements label' ).each(function() {
-		$(this).prependTo($(this).nextAll('span:not(:has(>label))').first());
+	// Adjust location of setting labels for settings in the new containers created below (back compat)
+	$( document.body ).find( '.edd-custom-price-option-sections .edd-legacy-setting-label' ).each(function() {
+		$(this).prependTo($(this).nextAll('span:not(:has(>.edd-legacy-setting-label))').first());
 	});
 
-	// Wrap loose extension settings in unique HTML elements
-	$( document.body ).find( '.edd-custom-price-option-elements' ).each(function() {
-		$(this).find('[class*="shipping"]').wrapAll( '<div class="edd-simple-shipping-price-option-settings edd-price-option-extension-section"></div>' );
-		$(this).find('[class*="sl-"]').wrapAll( '<div class="edd-sl-price-option-settings edd-price-option-extension-section"></div>' );
-		$(this).find('[class*="edd-recurring-"]').wrapAll( '<div class="edd-recurring-price-option-settings edd-price-option-extension-section"></div>' );
+	// Build HTML containers for existing price option settings (back compat)
+	$( document.body ).find( '.edd-custom-price-option-sections' ).each(function() {
+		$(this).find('[class*="shipping"]').wrapAll( '<div class="edd-simple-shipping-price-option-settings edd-custom-price-option-section"></div>' );
+		$(this).find('[class*="sl-"]').wrapAll( '<div class="edd-sl-price-option-settings edd-custom-price-option-section"></div>' );
+		$(this).find('[class*="edd-recurring-"]').wrapAll( '<div class="edd-recurring-price-option-settings edd-custom-price-option-section"></div>' );
 	});
 
-	// Add extension-specific titles to settings sections
+	// Create section titles for newly created HTML containers (back compat)
 	$( document.body ).find( '.edd-simple-shipping-price-option-settings' ).each(function() {
 		$(this).prepend( '<span class="edd-custom-price-option-section-title">' + edd_vars.simple_shipping_settings + '</span>' );
 	});
@@ -373,8 +373,8 @@ jQuery(document).ready(function ($) {
 		$(this).prepend( '<span class="edd-custom-price-option-section-title">' + edd_vars.recurring_payments_settings + '</span>' );
 	});
 
-	// Toggle the display of extension-specific settings
-	$( document.body ).on( 'click', '.toggle-custom-price-option-fields', function(e) {
+	// Toggle display of entire custom settings section for a price option
+	$( document.body ).on( 'click', '.toggle-custom-price-option-section', function(e) {
 		e.preventDefault();
 
 		if ($(this).html() == edd_vars.show_advanced_settings ) {
@@ -383,7 +383,7 @@ jQuery(document).ready(function ($) {
 			$(this).html( edd_vars.show_advanced_settings )
 		}
 
-		$(this).parents('.edd-price-option-header').siblings('.edd-custom-price-option-settings').slideToggle();
+		$(this).parents('.edd-repeatable-row-header').siblings('.edd-custom-price-option-sections-wrap').slideToggle();
 	});
 
 	EDD_Download_Configuration.init();

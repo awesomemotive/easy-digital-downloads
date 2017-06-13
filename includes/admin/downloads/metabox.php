@@ -362,9 +362,9 @@ function edd_render_price_field( $post_id ) {
 						</div>
 					<?php endif; ?>
 
-					<div class="edd-add-price-option">
+					<div class="edd-add-repeatable-row">
 						<div class="submit" style="float: none; clear:both; background:#fff; padding: 4px 4px 0 0;">
-							<button class="button-secondary edd_add_repeatable" style="margin: 6px 0;"><?php _e( 'Add New Price', 'easy-digital-downloads' ); ?></button>
+							<button class="button-secondary edd_add_repeatable"><?php _e( 'Add New Price', 'easy-digital-downloads' ); ?></button>
 						</div>
 					</div>
 				</div>
@@ -400,21 +400,21 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 	$currency_position = edd_get_option( 'currency_position', 'before' );
 
 ?>
-	<div class="edd-price-option-header">
-		<span class="edd-price-option-title edd-draghandle-anchor" title="<?php _e( 'Click and drag to re-order price options', 'easy-digital-downloads' ); ?>">
+	<div class="edd-repeatable-row-header">
+		<span class="edd-repeatable-row-title edd-draghandle-anchor" title="<?php _e( 'Click and drag to re-order price options', 'easy-digital-downloads' ); ?>">
 			<?php printf( __( 'Price option: %s', 'easy-digital-downloads' ), '<span class="edd_price_id">' . $key . '</span>' ); ?>
 			<input type="hidden" name="edd_variable_prices[<?php echo $key; ?>][index]" class="edd_repeatable_index" value="<?php echo $index; ?>"/>
 		</span>
-		<span class="edd-price-option-actions">
-			<a href="#" class="toggle-custom-price-option-fields"><?php _e( 'Show advanced settings', 'easy-digital-downloads' ); ?></a>&nbsp;&#124;&nbsp;<a class="edd-remove-row edd-delete" data-type="price"><?php printf( __( 'Remove', 'easy-digital-downloads' ), $key ); ?><span class="screen-reader-text"><?php printf( __( 'Remove price option %s', 'easy-digital-downloads' ), $key ); ?></span>
+		<span class="edd-repeatable-row-actions">
+			<a href="#" class="toggle-custom-price-option-section"><?php _e( 'Show advanced settings', 'easy-digital-downloads' ); ?></a>&nbsp;&#124;&nbsp;<a class="edd-remove-row edd-delete" data-type="price"><?php printf( __( 'Remove', 'easy-digital-downloads' ), $key ); ?><span class="screen-reader-text"><?php printf( __( 'Remove price option %s', 'easy-digital-downloads' ), $key ); ?></span>
 			</a>
 		</span>
 	</div>
 
-	<div class="edd-standard-price-option-fields">
+	<div class="edd-repeatable-row-standard-fields">
 
 		<div class="edd-option-name">
-			<span class="edd-price-option-label"><?php _e( 'Option Name', 'easy-digital-downloads' ); ?></span>
+			<span class="edd-repeatable-row-setting-label"><?php _e( 'Option Name', 'easy-digital-downloads' ); ?></span>
 			<?php echo EDD()->html->text( array(
 				'name'  => 'edd_variable_prices[' . $key . '][name]',
 				'value' => esc_attr( $args['name'] ),
@@ -424,7 +424,7 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 		</div>
 
 		<div class="edd-option-price">
-			<span class="edd-price-option-label"><?php _e( 'Price', 'easy-digital-downloads' ); ?></span>
+			<span class="edd-repeatable-row-setting-label"><?php _e( 'Price', 'easy-digital-downloads' ); ?></span>
 			<?php
 			$price_args = array(
 				'name'  => 'edd_variable_prices[' . $key . '][amount]',
@@ -446,7 +446,7 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 		</div>
 
 		<div class="edd_repeatable_default edd_repeatable_default_wrapper">
-			<span class="edd-price-option-label"><?php _e( 'Default', 'easy-digital-downloads' ); ?></span>
+			<span class="edd-repeatable-row-setting-label"><?php _e( 'Default', 'easy-digital-downloads' ); ?></span>
 			<label class="edd-default-price">
 				<input type="radio" <?php checked( $default_price_id, $key, true ); ?> class="edd_repeatable_default_input" name="_edd_default_price_id" value="<?php echo $key; ?>" />
 				<span class="screen-reader-text"><?php printf( __( 'Set ID %s as default price', 'easy-digital-downloads' ), $key ); ?></span>
@@ -462,7 +462,7 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 		if ( has_action( 'edd_download_price_table_head' ) || has_action( 'edd_download_price_table_row' ) ) {
 			?>
 
-			<div class="edd-custom-price-option-settings">
+			<div class="edd-custom-price-option-sections-wrap">
 				<?php
 
 				// Output buffer so that the headers run, so we can log them and use them later
@@ -485,10 +485,10 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 						'class="signup_fee"',
 					),
 					array(
-						'<span class="edd-custom-price-option-setting">',
+						'<span class="edd-custom-price-option-section">',
 						'<span ',
 						'</span>',
-						'<label>',
+						'<label class="edd-legacy-setting-label">',
 						'<label ',
 						'</label>',
 						'class="edd-recurring-times times"', // keep old class for back compat
@@ -497,7 +497,7 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 					$elements
 				);
 
-				echo '<div class="edd-custom-price-option-elements">' . $elements . '</div>';
+				echo '<div class="edd-custom-price-option-sections">' . $elements . '</div>';
 				?>
 			</div>
 
@@ -572,11 +572,11 @@ function edd_render_products_field( $post_id ) {
 							<div class="edd_repeatable_product_wrapper edd_repeatable_row" data-key="<?php echo esc_attr( $index ); ?>">
 								<div class="edd-bundled-product-row<?php echo $variable_class; ?>">
 									<div class="edd-bundled-product-item-reorder">
-										<span class="edd-product-file-reorder edd-draghandle-anchor dashicons dashicons-move"></span>
+										<span class="edd-product-file-reorder edd-draghandle-anchor dashicons dashicons-move"  title="<?php printf( __( 'Click and drag to re-order bundled %s', 'easy-digital-downloads' ), edd_get_label_plural() ); ?>"></span>
 										<input type="hidden" name="edd_bundled_products[<?php echo $index; ?>][index]" class="edd_repeatable_index" value="<?php echo $index; ?>"/>
 									</div>
 									<div class="edd-bundled-product-item">
-										<span class="edd-product-file-label"><?php printf( __( 'Select %s:', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></span>
+										<span class="edd-repeatable-row-setting-label"><?php printf( __( 'Select %s:', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></span>
 										<?php
 										echo EDD()->html->product_dropdown( array(
 											'name'       => '_edd_bundled_products[]',
@@ -590,7 +590,7 @@ function edd_render_products_field( $post_id ) {
 										?>
 									</div>
 									<div class="edd-bundled-product-price-assignment pricing" style="<?php echo $variable_display; ?>">
-										<span class="edd-product-file-label"><?php _e( 'Price assignment:', 'easy-digital-downloads' ); ?></span>
+										<span class="edd-repeatable-row-setting-label"><?php _e( 'Price assignment:', 'easy-digital-downloads' ); ?></span>
 										<?php
 											$options = array();
 
@@ -632,11 +632,11 @@ function edd_render_products_field( $post_id ) {
 							<div class="edd-bundled-product-row<?php echo $variable_class; ?>">
 
 								<div class="edd-bundled-product-item-reorder">
-									<span class="edd-product-file-reorder edd-draghandle-anchor dashicons dashicons-move"></span>
+									<span class="edd-product-file-reorder edd-draghandle-anchor dashicons dashicons-move" title="<?php printf( __( 'Click and drag to re-order bundled %s', 'easy-digital-downloads' ), edd_get_label_plural() ); ?>"></span>
 									<input type="hidden" name="edd_bundled_products[1][index]" class="edd_repeatable_index" value="1"/>
 								</div>
 								<div class="edd-bundled-product-item">
-									<span class="edd-product-file-label"><?php printf( __( 'Select %s:', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></span>
+									<span class="edd-repeatable-row-setting-label"><?php printf( __( 'Select %s:', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></span>
 									<?php
 									echo EDD()->html->product_dropdown( array(
 										'name'       => '_edd_bundled_products[]',
@@ -649,7 +649,7 @@ function edd_render_products_field( $post_id ) {
 									?>
 								</div>
 								<div class="edd-bundled-product-price-assignment pricing" style="<?php echo $variable_display; ?>">
-									<span class="edd-product-file-label"><?php _e( 'Price assignment:', 'easy-digital-downloads' ); ?></span>
+									<span class="edd-repeatable-row-setting-label"><?php _e( 'Price assignment:', 'easy-digital-downloads' ); ?></span>
 									<?php
 										$options = array();
 
@@ -679,7 +679,7 @@ function edd_render_products_field( $post_id ) {
 
 					<?php endif; ?>
 
-					<div class="edd-add-new-file">
+					<div class="edd-add-repeatable-row">
 						<div class="submit" style="float: none; clear:both; background: #fff;">
 							<button class="button-secondary edd_add_repeatable"><?php _e( 'Add New File', 'easy-digital-downloads' ); ?></button>
 						</div>
@@ -747,7 +747,7 @@ function edd_render_files_field( $post_id = 0 ) {
 						endif;
 					?>
 
-					<div class="edd-add-new-file">
+					<div class="edd-add-repeatable-row">
 						<div class="submit" style="float: none; clear:both; background: #fff;">
 							<button class="button-secondary edd_add_repeatable"><?php _e( 'Add New File', 'easy-digital-downloads' ); ?></button>
 						</div>
@@ -790,21 +790,21 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 	$variable_display = $variable_pricing ? '' : ' style="display:none;"';
 	$variable_class   = $variable_pricing ? ' has-variable-pricing' : '';
 ?>
-	<div class="edd-files-header">
-		<span class="edd-file-title edd-draghandle-anchor" title="<?php _e( 'Click and drag to re-order files', 'easy-digital-downloads' ); ?>">
+	<div class="edd-repeatable-row-header">
+		<span class="edd-repeatable-row-title edd-draghandle-anchor" title="<?php _e( 'Click and drag to re-order files', 'easy-digital-downloads' ); ?>">
 			<?php printf( __( '%1$s file: %2$s', 'easy-digital-downloads' ), edd_get_label_singular(), '<span class="edd_file_id">' . $key . '</span>' ); ?>
 			<input type="hidden" name="edd_download_files[<?php echo $key; ?>][index]" class="edd_repeatable_index" value="<?php echo $index; ?>"/>
 		</span>
-		<span class="edd-file-actions">
+		<span class="edd-repeatable-row-actions">
 			<a class="edd-remove-row edd-delete" data-type="file"><?php printf( __( 'Remove', 'easy-digital-downloads' ), $key ); ?><span class="screen-reader-text"><?php printf( __( 'Remove file %s', 'easy-digital-downloads' ), $key ); ?></span>
 			</a>
 		</span>
 	</div>
 
-	<div class="edd-standard-file-fields<?php echo $variable_class; ?>">
+	<div class="edd-repeatable-row-standard-fields<?php echo $variable_class; ?>">
 
 		<div class="edd-file-name">
-			<span class="edd-product-files-label"><?php _e( 'File Name', 'easy-digital-downloads' ); ?></span>
+			<span class="edd-repeatable-row-setting-label"><?php _e( 'File Name', 'easy-digital-downloads' ); ?></span>
 			<input type="hidden" name="edd_download_files[<?php echo absint( $key ); ?>][attachment_id]" class="edd_repeatable_attachment_id_field" value="<?php echo esc_attr( absint( $args['attachment_id'] ) ); ?>"/>
 			<input type="hidden" name="edd_download_files[<?php echo absint( $key ); ?>][thumbnail_size]" class="edd_repeatable_thumbnail_size_field" value="<?php echo esc_attr( $args['thumbnail_size'] ); ?>"/>
 			<?php echo EDD()->html->text( array(
@@ -816,7 +816,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 		</div>
 
 		<div class="edd-file-url">
-			<span class="edd-product-files-label"><?php _e( 'File URL', 'easy-digital-downloads' ); ?></span>
+			<span class="edd-repeatable-row-setting-label"><?php _e( 'File URL', 'easy-digital-downloads' ); ?></span>
 			<div class="edd_repeatable_upload_field_container">
 				<?php echo EDD()->html->text( array(
 					'name'        => 'edd_download_files[' . $key . '][file]',
@@ -833,8 +833,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 
 		<div class="edd-file-assignment pricing"<?php echo $variable_display; ?>>
 
-			<span class="edd-product-files-label"><?php _e( 'Price Assignment', 'easy-digital-downloads' ); ?></span>
-			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Price Assignment</strong>: With variable pricing enabled, you can choose to allow certain price variations access to specific files, or allow all price variations to access a file.', 'easy-digital-downloads' ); ?>"></span>
+			<span class="edd-repeatable-row-setting-label"><?php _e( 'Price Assignment', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Price Assignment</strong>: With variable pricing enabled, you can choose to allow certain price variations access to specific files, or allow all price variations to access a file.', 'easy-digital-downloads' ); ?>"></span></span>
 
 			<?php
 				$options = array();
