@@ -227,9 +227,9 @@ function edd_load_admin_scripts( $hook ) {
 		'unsupported_browser'         => __( 'We are sorry but your browser is not compatible with this kind of file upload. Please upgrade your browser.', 'easy-digital-downloads' ),
 		'show_advanced_settings'       => __( 'Show advanced settings', 'easy-digital-downloads' ),
 		'hide_advanced_settings'       => __( 'Hide advanced settings', 'easy-digital-downloads' ),
-		'simple_shipping_settings'    => __( 'Simple Shipping settings', 'easy-digital-downloads' ),
-		'software_licensing_settings' => __( 'Software Licensing settings', 'easy-digital-downloads' ),
-		'recurring_payments_settings' => __( 'Recurring Payments settings', 'easy-digital-downloads' ),
+		'simple_shipping_settings'    => __( 'Simple Shipping Settings', 'easy-digital-downloads' ),
+		'software_licensing_settings' => __( 'Software Licensing Settings', 'easy-digital-downloads' ),
+		'recurring_payments_settings' => __( 'Recurring Payments Settings', 'easy-digital-downloads' ),
 	));
 
 	wp_enqueue_style( 'wp-color-picker' );
