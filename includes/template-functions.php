@@ -137,7 +137,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 			$args['text']  = '<span class="edd-purchase-button-price-text">' . edd_format_amount( $price ) . '</span>';
 
-			$currency_pos    = edd_get_option( 'currency_position' );
+			$currency_pos    = edd_get_option( 'currency_position', 'before' );
 			$currency_markup = '<span class="edd-purchase-button-currency-symbol">' . $symbol . '</span>';
 			if ( 'before' === $currency_pos ) {
 				$args['text'] = $currency_markup . $args['text'];
