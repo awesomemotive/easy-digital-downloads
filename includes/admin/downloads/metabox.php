@@ -417,7 +417,7 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 		<?php
 		$actions = array();
 		if ( ! empty( $show_advanced ) ) {
-			$actions['show_advanced'] = '<a href="#" class="toggle-custom-price-option-section">' . __( 'Show advanced Settings', 'easy-digital-downloads' ) . '</a>';
+			$actions['show_advanced'] = '<a href="#" class="toggle-custom-price-option-section">' . __( 'Show advanced settings', 'easy-digital-downloads' ) . '</a>';
 		}
 
 		$actions['remove'] = '<a class="edd-remove-row edd-delete" data-type="price">' . sprintf( __( 'Remove', 'easy-digital-downloads' ), $key ) . '<span class="screen-reader-text">' . sprintf( __( 'Remove price option %s', 'easy-digital-downloads' ), $key ) . '</span></a>';
