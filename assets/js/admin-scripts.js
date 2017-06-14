@@ -376,17 +376,23 @@ jQuery(document).ready(function ($) {
 	// Toggle display of entire custom settings section for a price option
 	$( document.body ).on( 'click', '.toggle-custom-price-option-section', function(e) {
 		e.preventDefault();
+		var show = $(this).html() == edd_vars.show_advanced_settings ? true : false;
 
-		if ($(this).html() == edd_vars.show_advanced_settings ) {
+		if ( show ) {
 			$(this).html( edd_vars.hide_advanced_settings );
 		} else {
 			$(this).html( edd_vars.show_advanced_settings );
 		}
 
-		var settings_wrapper = $(this).parents('.edd-repeatable-row-header').siblings('.edd-custom-price-option-sections-wrap');
-		settings_wrapper.slideToggle();
+		var header = $(this).parents('.edd-repeatable-row-header');
+		header.siblings('.edd-custom-price-option-sections-wrap').slideToggle();
 
-		var first_input = $(":input:not(input[type=button],input[type=submit],button):visible:first", settings_wrapper);
+		var first_input;
+		if ( show ) {
+			first_input = $(":input:not(input[type=button],input[type=submit],button):visible:first", header.siblings('.edd-custom-price-option-sections-wrap'));
+		} else {
+			first_input = $(":input:not(input[type=button],input[type=submit],button):visible:first", header.siblings('.edd-repeatable-row-standard-fields'));
+		}
 		first_input.focus();
 	});
 
