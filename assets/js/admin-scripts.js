@@ -140,7 +140,7 @@ jQuery(document).ready(function ($) {
 				e.preventDefault();
 
 				var row   = $(this).parents( '.edd_repeatable_row' ),
-					count = row.parent().find( '.edd_repeatable_row' ).length - 1,
+					count = row.parent().find( '.edd_repeatable_row' ).length,
 					type  = $(this).data('type'),
 					repeatable = 'div.edd_repeatable_' + type + 's',
 					focusElement,
