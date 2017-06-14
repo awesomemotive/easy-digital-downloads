@@ -671,7 +671,7 @@ function edd_render_products_field( $post_id ) {
 									?>
 								</div>
 								<span class="edd-bundled-product-actions">
-									<a class="edd-remove-row edd-delete" data-type="file" ><?php printf( __( 'Remove', 'easy-digital-downloads' ) ); ?><span class="screen-reader-text"><?php printf( __( 'Remove bundle option %s', 'easy-digital-downloads' ), $index ); ?></span></a>
+									<a class="edd-remove-row edd-delete" data-type="file" ><?php printf( __( 'Remove', 'easy-digital-downloads' ) ); ?><span class="screen-reader-text"><?php __( 'Remove bundle option 1', 'easy-digital-downloads' ); ?></span></a>
 								</span>
 								<?php do_action( 'edd_download_products_table_row', $post_id ); ?>
 							</div>
