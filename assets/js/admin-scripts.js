@@ -378,12 +378,16 @@ jQuery(document).ready(function ($) {
 		e.preventDefault();
 
 		if ($(this).html() == edd_vars.show_advanced_settings ) {
-			$(this).html( edd_vars.hide_advanced_settings )
+			$(this).html( edd_vars.hide_advanced_settings );
 		} else {
-			$(this).html( edd_vars.show_advanced_settings )
+			$(this).html( edd_vars.show_advanced_settings );
 		}
 
-		$(this).parents('.edd-repeatable-row-header').siblings('.edd-custom-price-option-sections-wrap').slideToggle();
+		var settings_wrapper = $(this).parents('.edd-repeatable-row-header').siblings('.edd-custom-price-option-sections-wrap');
+		settings_wrapper.slideToggle();
+
+		var first_input = $(":input:not(input[type=button],input[type=submit],button):visible:first", settings_wrapper);
+		first_input.focus();
 	});
 
 	EDD_Download_Configuration.init();

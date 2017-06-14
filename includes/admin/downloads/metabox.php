@@ -396,18 +396,34 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 
 	$args = wp_parse_args( $args, $defaults );
 
-	$default_price_id = edd_get_default_variable_price( $post_id );
+	$default_price_id  = edd_get_default_variable_price( $post_id );
 	$currency_position = edd_get_option( 'currency_position', 'before' );
 
+	// Run our advanced settings now, so we know if we need to display the settings.
+	// Output buffer so that the headers run, so we can log them and use them later
+	ob_start();
+	do_action( 'edd_download_price_table_head', $post_id );
+	ob_end_clean();
+
+	ob_start();
+	do_action( 'edd_download_price_table_row', $post_id, $key, $args );
+	$show_advanced = ob_get_clean();
 ?>
 	<div class="edd-repeatable-row-header">
 		<span class="edd-repeatable-row-title edd-draghandle-anchor" title="<?php _e( 'Click and drag to re-order price options', 'easy-digital-downloads' ); ?>">
 			<?php printf( __( 'Price option: %s', 'easy-digital-downloads' ), '<span class="edd_price_id">' . $key . '</span>' ); ?>
 			<input type="hidden" name="edd_variable_prices[<?php echo $key; ?>][index]" class="edd_repeatable_index" value="<?php echo $index; ?>"/>
 		</span>
+		<?php
+		$actions = array();
+		if ( ! empty( $show_advanced ) ) {
+			$actions['show_advanced'] = '<a href="#" class="toggle-custom-price-option-section">' . __( 'Show advanced Settings', 'easy-digital-downloads' ) . '</a>';
+		}
+
+		$actions['remove'] = '<a class="edd-remove-row edd-delete" data-type="price">' . sprintf( __( 'Remove', 'easy-digital-downloads' ), $key ) . '<span class="screen-reader-text">' . sprintf( __( 'Remove price option %s', 'easy-digital-downloads' ), $key ) . '</span></a>';
+		?>
 		<span class="edd-repeatable-row-actions">
-			<a href="#" class="toggle-custom-price-option-section"><?php _e( 'Show advanced settings', 'easy-digital-downloads' ); ?></a>&nbsp;&#124;&nbsp;<a class="edd-remove-row edd-delete" data-type="price"><?php printf( __( 'Remove', 'easy-digital-downloads' ), $key ); ?><span class="screen-reader-text"><?php printf( __( 'Remove price option %s', 'easy-digital-downloads' ), $key ); ?></span>
-			</a>
+			<?php echo implode( '&nbsp;&#124;&nbsp;', $actions ); ?>
 		</span>
 	</div>
 
@@ -459,20 +475,11 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 		/**
 		 * Intercept extension-specific settings and rebuild the markup
 		 */
-		if ( has_action( 'edd_download_price_table_head' ) || has_action( 'edd_download_price_table_row' ) ) {
+		if ( ! empty( $show_advanced ) ) {
 			?>
 
 			<div class="edd-custom-price-option-sections-wrap">
 				<?php
-
-				// Output buffer so that the headers run, so we can log them and use them later
-				ob_start();
-				do_action( 'edd_download_price_table_head', $post_id );
-				ob_end_clean();
-
-				ob_start();
-				do_action( 'edd_download_price_table_row', $post_id, $key, $args );
-				$elements = ob_get_clean();
 				$elements = str_replace(
 					array(
 						'<td>',
@@ -494,7 +501,7 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 						'class="edd-recurring-times times"', // keep old class for back compat
 						'class="edd-recurring-signup-fee signup_fee"' // keep old class for back compat
 					),
-					$elements
+					$show_advanced
 				);
 
 				echo '<div class="edd-custom-price-option-sections">' . $elements . '</div>';
