@@ -1,23 +1,8 @@
 jQuery(document).ready(function ($) {
 
 	// Tooltips
-	$('.edd-help-tip').tooltip({
-		content: function() {
-			return $(this).prop('title');
-		},
-		tooltipClass: 'edd-ui-tooltip',
-		position: {
-			my: 'center top',
-			at: 'center bottom+10',
-			collision: 'flipfit',
-		},
-		hide: {
-			duration: 200,
-		},
-		show: {
-			duration: 200,
-		},
-	});
+	var tooltips = $('.edd-help-tip');
+	edd_attach_tooltips( tooltips );
 
 	/**
 	 * Download Configuration Metabox
@@ -95,6 +80,7 @@ jQuery(document).ready(function ($) {
 			// Remove Chosen elements
 			clone.find( '.search-choice' ).remove();
 			clone.find( '.chosen-container' ).remove();
+			edd_attach_tooltips(clone.find('.edd-help-tip'));
 
 			return clone;
 		},
@@ -2140,4 +2126,25 @@ var eddLegendFormatterEarnings = function (label, series) {
 
 	jQuery('#edd-pie-legend-' + series.edd_vars.id).append( item );
 	return item;
+}
+
+function edd_attach_tooltips( selector ) {
+	// Tooltips
+	selector.tooltip({
+		content: function() {
+			return jQuery(this).prop('title');
+		},
+		tooltipClass: 'edd-ui-tooltip',
+		position: {
+			my: 'center top',
+			at: 'center bottom+10',
+			collision: 'flipfit'
+		},
+		hide: {
+			duration: 200
+		},
+		show: {
+			duration: 200
+		}
+	});
 }
