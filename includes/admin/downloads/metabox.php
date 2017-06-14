@@ -1203,7 +1203,7 @@ function edd_hijack_edd_download_price_table_head( $arg1, $arg2, $arg3 ) {
 			continue; // Skip our -1 priority so we don't break the interwebs
 		}
 
-		if ( array_key_exists( $priority, $found_headers->callbacks ) ) {
+		if ( is_object( $found_headers ) && property_exists( $found_headers, 'callbacks' ) && array_key_exists( $priority, $found_headers->callbacks ) ) {
 
 			// De-register any row data.
 			foreach ( $callbacks as $callback ) {
