@@ -1030,7 +1030,8 @@ td.edd_order_price {
 -------------------------------------------------------------- */
 
 .edd-select-chosen {
-	width: 300px;
+	width: 100%;
+	max-width: 300px;
 }
 .chosen-container-multi .chosen-choices {
 	background-image: none;
