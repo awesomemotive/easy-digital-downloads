@@ -1030,7 +1030,8 @@ td.edd_order_price {
 -------------------------------------------------------------- */
 
 .edd-select-chosen {
-	width: 300px;
+	width: 100%;
+	max-width: 300px;
 }
 .chosen-container-multi .chosen-choices {
 	background-image: none;
@@ -1471,7 +1472,8 @@ td.edd_order_price {
 	#edd-item-card-wrapper .customer-section {
 		margin-bottom: 0;
 	}
-	#edd-item-card-wrapper .widefat td, .widefat th {
+	#edd-item-card-wrapper .widefat td,
+	#edd-item-card-wrapper .widefat th {
 		padding: 4px 6px;
 		max-width: 100px!important;
 		display: table-cell;
