@@ -418,7 +418,7 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 		</span>
 		<?php
 		$actions = array();
-		if ( ! empty( $show_advanced || $custom_price_options ) ) {
+		if ( ! empty( $show_advanced ) || $custom_price_options ) {
 			$actions['show_advanced'] = '<a href="#" class="toggle-custom-price-option-section">' . __( 'Show advanced settings', 'easy-digital-downloads' ) . '</a>';
 		}
 
