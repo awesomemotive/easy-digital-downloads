@@ -400,7 +400,7 @@ function edd_downloads_query( $atts, $content = null ) {
 
 			foreach( $tag_list as $tag ) {
 
-				if( is_numeric( $tag ) ) {
+				if( is_numeric( $tag ) && ! empty( $tag ) ) {
 
 					$term_id = $tag;
 
@@ -430,7 +430,7 @@ function edd_downloads_query( $atts, $content = null ) {
 
 			foreach( $categories as $category ) {
 
-				if( is_numeric( $category ) ) {
+				if( is_numeric( $category ) && ! empty( $category ) ) {
 
 					$term_id = $category;
 
@@ -462,7 +462,7 @@ function edd_downloads_query( $atts, $content = null ) {
 
 			foreach( $categories as $category ) {
 
-				if( is_numeric( $category ) ) {
+				if( is_numeric( $category ) && ! empty( $category ) ) {
 
 					$term_id = $category;
 
