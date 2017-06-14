@@ -400,10 +400,7 @@ function edd_downloads_query( $atts, $content = null ) {
 
 			foreach( $tag_list as $tag ) {
 
-				$t_id  = (int) $tag;
-				$is_id = is_int( $t_id ) && ! empty( $t_id );
-
-				if( $is_id ) {
+				if( is_numeric( $tag ) ) {
 
 					$term_id = $tag;
 
@@ -433,10 +430,7 @@ function edd_downloads_query( $atts, $content = null ) {
 
 			foreach( $categories as $category ) {
 
-				$t_id  = (int) $category;
-				$is_id = is_int( $t_id ) && ! empty( $t_id );
-
-				if( $is_id ) {
+				if( is_numeric( $category ) ) {
 
 					$term_id = $category;
 
@@ -468,10 +462,7 @@ function edd_downloads_query( $atts, $content = null ) {
 
 			foreach( $categories as $category ) {
 
-				$t_id  = (int) $category;
-				$is_id = is_int( $t_id ) && ! empty( $t_id );
-
-				if( $is_id ) {
+				if( is_numeric( $category ) ) {
 
 					$term_id = $category;
 
@@ -502,10 +493,7 @@ function edd_downloads_query( $atts, $content = null ) {
 
 			foreach( $tag_list as $tag ) {
 
-				$t_id  = (int) $tag;
-				$is_id = is_int( $t_id ) && ! empty( $t_id );
-
-				if( $is_id ) {
+				if( is_numeric( $tag ) && ! empty( $tag ) ) {
 
 					$term_id = $tag;
 
