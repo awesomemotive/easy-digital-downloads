@@ -388,6 +388,7 @@ add_action( 'edd_meta_box_price_fields', 'edd_render_price_field', 10 );
  * @param       $post_id
  */
 function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
+	global $wp_filter;
 
 	$defaults = array(
 		'name'   => null,
@@ -396,8 +397,9 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 
 	$args = wp_parse_args( $args, $defaults );
 
-	$default_price_id  = edd_get_default_variable_price( $post_id );
-	$currency_position = edd_get_option( 'currency_position', 'before' );
+	$default_price_id     = edd_get_default_variable_price( $post_id );
+	$currency_position    = edd_get_option( 'currency_position', 'before' );
+	$custom_price_options = isset( $wp_filter['edd_download_price_option_row'] ) ? true : false;
 
 	// Run our advanced settings now, so we know if we need to display the settings.
 	// Output buffer so that the headers run, so we can log them and use them later
@@ -416,7 +418,7 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 		</span>
 		<?php
 		$actions = array();
-		if ( ! empty( $show_advanced ) ) {
+		if ( ! empty( $show_advanced || $custom_price_options ) ) {
 			$actions['show_advanced'] = '<a href="#" class="toggle-custom-price-option-section">' . __( 'Show advanced settings', 'easy-digital-downloads' ) . '</a>';
 		}
 
@@ -475,7 +477,7 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 		/**
 		 * Intercept extension-specific settings and rebuild the markup
 		 */
-		if ( ! empty( $show_advanced ) ) {
+		if ( ! empty( $show_advanced ) || $custom_price_options ) {
 			?>
 
 			<div class="edd-custom-price-option-sections-wrap">
@@ -503,9 +505,13 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 					),
 					$show_advanced
 				);
-
-				echo '<div class="edd-custom-price-option-sections">' . $elements . '</div>';
 				?>
+				<div class="edd-custom-price-option-sections">
+					<?php
+						echo $elements;
+						do_action( 'edd_download_price_option_row', $post_id, $key, $args );
+					?>
+				</div>
 			</div>
 
 			<?php
