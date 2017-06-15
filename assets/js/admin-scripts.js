@@ -447,7 +447,7 @@ jQuery(document).ready(function ($) {
 			// Remove a download from a purchase
 			$('#edd-purchased-files').on('click', '.edd-order-remove-download', function() {
 
-				var count = $( document.body ).find( '#edd-purchased-files > .row' ).length;
+				var count = $( document.body ).find( '#edd-purchased-files > .row:not(.header)' ).length;
 
 				if ( count === 1 ) {
 					alert( edd_vars.one_download_min );
