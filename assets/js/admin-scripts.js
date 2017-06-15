@@ -343,9 +343,30 @@ jQuery(document).ready(function ($) {
 
 	// Build HTML containers for existing price option settings (back compat)
 	$( document.body ).find( '.edd-custom-price-option-sections' ).each(function() {
-		$(this).find('[class*="shipping"]').wrapAll( '<div class="edd-simple-shipping-price-option-settings edd-custom-price-option-section"></div>' );
+		$(this).find('[class*="shipping"]').wrapAll( '<div class="edd-simple-shipping-price-option-settings edd-custom-price-option-section" style="display: none;"></div>' );
 		$(this).find('[class*="sl-"]').wrapAll( '<div class="edd-sl-price-option-settings edd-custom-price-option-section"></div>' );
 		$(this).find('[class*="edd-recurring-"]').wrapAll( '<div class="edd-recurring-price-option-settings edd-custom-price-option-section"></div>' );
+	});
+
+	// only display new Simple Shipping section if shipping is enabled (back compat)
+	$( document.body ).find( '#edd_enable_shipping' ).each(function() {
+		var variable_pricing = $('#edd_variable_pricing').is(':checked');
+		var checked          = $(this).is(':checked');
+		var section          = $( '.edd-simple-shipping-price-option-settings' );
+		if ( variable_pricing && checked ) {
+			section.show();
+		} else {
+			section.hide();
+		}
+	});
+	$( '#edd_enable_shipping' ).on( 'click', function() {
+		var enabled  = $(this).is(':checked');
+		var section  = $( '.edd-simple-shipping-price-option-settings' );
+		if ( enabled ) {
+			section.show();
+		} else {
+			section.hide();
+		}
 	});
 
 	// Create section titles for newly created HTML containers (back compat)
