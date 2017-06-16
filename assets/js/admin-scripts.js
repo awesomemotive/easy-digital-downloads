@@ -368,7 +368,7 @@ jQuery(document).ready(function ($) {
 			}
 		}
 	});
-	$( '#edd_enable_shipping' ).on( 'click', function() {
+	$( '#edd_enable_shipping' ).on( 'change', function() {
 		var enabled  = $(this).is( ':checked' );
 		var section  = $( '.edd-simple-shipping-price-option-settings-legacy' );
 		if ( enabled ) {
@@ -377,7 +377,7 @@ jQuery(document).ready(function ($) {
 			section.hide();
 		}
 	});
-	$( '#edd_license_enabled' ).on( 'click', function() {
+	$( '#edd_license_enabled' ).on( 'change', function() {
 		var enabled  = $(this).is( ':checked' );
 		var section  = $( '.edd-sl-price-option-settings-legacy' );
 		if ( enabled ) {
