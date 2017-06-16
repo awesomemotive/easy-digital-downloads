@@ -478,6 +478,19 @@ input[class*="edd-price-field"] {
 	height: 4em;
 }
 
+/* still used by extensions - Software Licensing upgrade paths, Custom Prices */
+.edd_remove_repeatable {
+	border: none;
+	cursor: pointer;
+	display: inline-block;
+	padding: 0;
+	overflow: hidden;
+	margin: 8px 0 0 0;
+	text-indent: -9999px;
+	width: 10px;
+	height: 10px;
+}
+
 /* Payment Details
 -------------------------------------------------------------- */
 
