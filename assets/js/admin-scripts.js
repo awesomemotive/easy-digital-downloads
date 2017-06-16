@@ -343,6 +343,7 @@ jQuery(document).ready(function ($) {
 
 	// Build HTML containers for existing price option settings (back compat)
 	$( document.body ).find( '.edd-custom-price-option-sections' ).each(function() {
+		$(this).find('[class*="purchase_limit"]').wrapAll( '<div class="edd-purchase-limit-price-option-settings-legacy edd-custom-price-option-section"></div>' );
 		$(this).find('[class*="shipping"]').wrapAll( '<div class="edd-simple-shipping-price-option-settings-legacy edd-custom-price-option-section" style="display: none;"></div>' );
 		$(this).find('[class*="sl-"]').wrapAll( '<div class="edd-sl-price-option-settings-legacy edd-custom-price-option-section"></div>' );
 		$(this).find('[class*="edd-recurring-"]').wrapAll( '<div class="edd-recurring-price-option-settings-legacy edd-custom-price-option-section"></div>' );
@@ -388,6 +389,9 @@ jQuery(document).ready(function ($) {
 	});
 
 	// Create section titles for newly created HTML containers (back compat)
+	$( document.body ).find( '.edd-purchase-limit-price-option-settings-legacy' ).each(function() {
+		$(this).prepend( '<span class="edd-custom-price-option-section-title">' + edd_vars.purchase_limit_settings + '</span>' );
+	});
 	$( document.body ).find( '.edd-simple-shipping-price-option-settings-legacy' ).each(function() {
 		$(this).prepend( '<span class="edd-custom-price-option-section-title">' + edd_vars.simple_shipping_settings + '</span>' );
 	});
