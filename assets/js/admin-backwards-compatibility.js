@@ -13,7 +13,7 @@ jQuery(document).ready(function ($) {
 		$(this).find('[class*="edd-recurring-"]').wrapAll( '<div class="edd-recurring-price-option-settings-legacy edd-custom-price-option-section"></div>' );
 	});
 
-	// only display new Simple Shipping section if shipping is enabled (back compat)
+	// only display Simple Shipping/Software Licensing sections if enabled (back compat)
 	$( document.body ).find( '#edd_enable_shipping', '#edd_license_enabled' ).each(function() {
 		var variable_pricing = $('#edd_variable_pricing').is( ':checked' );
 		var ss_checked       = $( '#edd_enable_shipping' ).is( ':checked' );
