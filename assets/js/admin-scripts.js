@@ -1411,7 +1411,7 @@ jQuery(document).ready(function ($) {
 			} );
 		},
 		recount_stats : function() {
-			$( 'body').on( 'change', '#recount-stats-type', function() {
+			$( document.body).on( 'change', '#recount-stats-type', function() {
 
 				var export_form   = $('#edd-tools-recount-form');
 				var selected_type = $('option:selected', this).data('type');
@@ -1447,7 +1447,7 @@ jQuery(document).ready(function ($) {
 				$('#' + selected_type ).show();
 			} );
 
-			$('body').on('change', '#confirm-reset', function() {
+			$(document.body).on('change', '#confirm-reset', function() {
 				var checked = $(this).is(':checked');
 				if ( checked ) {
 					$('#recount-stats-submit').removeClass('button-disabled').removeAttr('disabled');
@@ -1594,7 +1594,7 @@ jQuery(document).ready(function ($) {
 		},
 
 		dismiss_message : function() {
-			$('body').on( 'click', '#edd-batch-success .notice-dismiss', function() {
+			$(document.body).on( 'click', '#edd-batch-success .notice-dismiss', function() {
 				$('#edd-batch-success').parent().slideUp('fast');
 			});
 		}
@@ -1700,7 +1700,7 @@ jQuery(document).ready(function ($) {
 
 				});
 
-				$('body').on('click', '.edd-import-proceed', function(e) {
+				$(document.body).on('click', '.edd-import-proceed', function(e) {
 
 					e.preventDefault();
 
@@ -2042,7 +2042,7 @@ jQuery(document).ready(function ($) {
 		});
 	}
 
-	$(document).on('keydown', '.customer-note-input', function(e) {
+	$(document.body).on('keydown', '.customer-note-input', function(e) {
 		if(e.keyCode == 13 && (e.metaKey || e.ctrlKey)) {
 			$('#add-customer-note').click();
 		}
