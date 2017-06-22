@@ -3,7 +3,7 @@
 /**
  * @group edd_customers
  */
-class Tests_Customers extends WP_UnitTestCase {
+class Tests_Customers extends EDD_UnitTestCase {
 
 	protected $_post_id = null;
 
@@ -118,11 +118,11 @@ class Tests_Customers extends WP_UnitTestCase {
 		);
 
 		$_SERVER['REMOTE_ADDR'] = '10.0.0.0';
-		$_SERVER['SERVER_NAME'] = 'edd_virtual';
+		$_SERVER['SERVER_NAME'] = 'edd-virtual.local';
 
-		$payment_id = edd_insert_payment( $purchase_data );
+		$this->_payment_id = edd_insert_payment( $purchase_data );
 
-		edd_update_payment_status( $payment_id, 'complete' );
+		edd_update_payment_status( $this->_payment_id, 'complete' );
 
 	}
 
@@ -174,15 +174,19 @@ class Tests_Customers extends WP_UnitTestCase {
 
 	public function test_attach_payment() {
 
+		$payment_id = EDD_Helper_Payment::create_simple_payment();
+
 		$customer = new EDD_Customer( 'testadmin@domain.com' );
-		$customer->attach_payment( 5222222 );
+		$customer->attach_payment( $payment_id );
 
 		$payment_ids = array_map( 'absint', explode( ',', $customer->payment_ids ) );
 
-		$this->assertTrue( in_array( 5222222, $payment_ids ) );
+		$this->assertTrue( in_array( $payment_id, $payment_ids ) );
 
 		// Verify if we don't send a payment, we get false
 		$this->assertFalse( $customer->attach_payment() );
+
+		EDD_Helper_Payment::delete_payment( $payment_id );
 
 	}
 
@@ -202,17 +206,21 @@ class Tests_Customers extends WP_UnitTestCase {
 	}
 
 	public function test_remove_payment() {
+		$payment_id = EDD_Helper_Payment::create_simple_payment();
 
 		$customer = new EDD_Customer( 'testadmin@domain.com' );
-		$customer->attach_payment( 5222223, false );
+		$customer->attach_payment( $payment_id, false );
 
 		$payment_ids = array_map( 'absint', explode( ',', $customer->payment_ids ) );
-		$this->assertTrue( in_array( 5222223, $payment_ids ) );
+		$this->assertTrue( in_array( $payment_id, $payment_ids ) );
 
-		$customer->remove_payment( 5222223, false );
+		$customer->remove_payment( $payment_id, false );
 
 		$payment_ids = array_map( 'absint', explode( ',', $customer->payment_ids ) );
-		$this->assertFalse( in_array( 5222223, $payment_ids ) );
+		$this->assertFalse( in_array( $payment_id, $payment_ids ) );
+
+		EDD_Helper_Payment::delete_payment( $payment_id );
+
 	}
 
 	public function test_increment_stats() {
@@ -351,4 +359,133 @@ class Tests_Customers extends WP_UnitTestCase {
 		$this->assertTrue( edd_validate_username( 'easydigitaldownloads' ) );
 		$this->assertFalse( edd_validate_username( 'edd12345$%&+-!@£%^&()(*&^%$£@!' ) );
 	}
+
+	public function test_user_verification_base_url() {
+		$original_purchase_history_page = edd_get_option( 'purchase_history_page', 0 );
+		$purchase_history_page = get_permalink( $original_purchase_history_page );
+		$this->assertEquals( $purchase_history_page, edd_get_user_verification_page() );
+
+		edd_update_option( 'purchase_history_page', 0 );
+		$home_url = home_url();
+		$this->assertEquals( $home_url, edd_get_user_verification_page() );
+
+		edd_update_option( 'purchase_history_page', $original_purchase_history_page );
+	}
+
+	public function test_user_activation_updates() {
+		// No user, no status updates
+		$this->assertFalse( edd_set_user_to_verified() );
+		$this->assertFalse( edd_set_user_to_pending() );
+
+		// Cant' set active if the user is not pending
+		$this->assertFalse( edd_set_user_to_verified( 1 ) );
+
+		$this->assertFalse( edd_user_pending_verification( 1 ) );
+
+		$this->assertTrue( edd_set_user_to_pending( 1 ) );
+		$this->assertEquals( '1', get_user_meta( 1, '_edd_pending_verification', true ) );
+		$this->assertTrue( edd_user_pending_verification( 1 ) );
+
+
+		$this->assertTrue( edd_set_user_to_verified( 1 ) );
+		$this->assertEmpty( get_user_meta( 1, '_edd_pending_verification', true ) );
+		$this->assertFalse( edd_user_pending_verification( 1 ) );
+	}
+
+	public function test_get_user_verification_url() {
+
+		// Returns false with no user ID
+		$this->assertFalse( edd_get_user_verification_url() );
+
+		$url = edd_get_user_verification_url( 1 );
+
+		$this->assertContains( 'edd_action=verify_user', $url );
+		$this->assertContains( 'user_id=1', $url );
+		$this->assertContains( 'ttl', $url );
+		$this->assertContains( 'token', $url );
+
+	}
+
+	public function test_get_user_verification_request_url() {
+
+		$url = edd_get_user_verification_request_url( 1 );
+
+		$this->assertContains( 'edd_action=send_verification_email', $url );
+
+	}
+
+	public function test_validate_user_verification_token() {
+
+		$url = edd_get_user_verification_url( 1 );
+
+		$this->assertTrue( edd_validate_user_verification_token( $url ) );
+
+		$this->assertFalse( edd_validate_user_verification_token( substr( $url, -1 ) ) );
+
+		$this->assertFalse( edd_validate_user_verification_token( remove_query_arg( 'token', $url ) ) );
+
+	}
+
+	public function test_user_deletion_detachment() {
+		$customer      = new EDD_Customer( $this->_user_id, true );
+		$email_address = $customer->email;
+		$this->assertEquals( $this->_user_id, $customer->user_id );
+
+		wp_delete_user( $this->_user_id );
+		$customer2 = new EDD_Customer( $email_address );
+		// Make sure it's the same customer above (sanity check)
+		$this->assertEquals( $customer->id, $customer2->id );
+		$this->assertEquals( 0 ,$customer2->user_id );
+	}
+
+	public function test_get_payment_ids() {
+		$customer = new EDD_Customer( $this->_user_id, true );
+		$this->assertInternalType( 'array', $customer->get_payment_ids());
+
+		// Create a new customer to test no payments
+		$customer_id  = EDD()->customers->add( array( 'email' => 'test_user@example.com' ) );
+		$new_customer = new EDD_Customer( $customer_id );
+		$this->assertEmpty( $new_customer->get_payment_ids() );
+	}
+
+	public function test_get_payments() {
+		$customer = new EDD_Customer( $this->_user_id, true );
+		$payments = $customer->get_payments();
+		$this->assertEquals( 1, count( $payments ) );
+		$this->assertEquals( $this->_payment_id, $payments[0]->ID );
+		$this->assertEmpty( $customer->get_payments( 'pending' ) );
+		$this->assertEmpty( $customer->get_payments( array( 'pending' ) ) );
+		$this->assertEquals( 1, count( $customer->get_payments( array( 'pending', 'publish' ) ) ) );
+
+
+		// Create a new customer to test no payments
+		$new_customer = new EDD_Customer( 'test_user@example.com' );
+		$this->assertEmpty( $new_customer->get_payments() );
+	}
+
+	public function test_add_email() {
+		$customer = new EDD_Customer( $this->_user_id, true );
+
+		$this->assertTrue( $customer->add_email( 'test2@example.org' ) );
+
+		$customer2 = new EDD_Customer( $customer->id );
+		$this->assertTrue( in_array( 'test2@example.org', $customer2->emails ) );
+
+		// Test with the primary parameter
+		$this->assertTrue( $customer->add_email( 'test3@example.org', true ) );
+
+		$customer3 = new EDD_Customer( $customer2->id );
+		$this->assertEquals( $customer3->email, 'test3@example.org' );
+		$this->assertTrue( in_array( $customer2->email, $customer3->emails ) );
+	}
+
+	public function test_remove_email() {
+		$customer = new EDD_Customer( $this->_user_id, true );
+		$customer->add_email( 'test1@example.org' );
+
+		$customer = new EDD_Customer( $customer->id );
+		$this->assertTrue( $customer->remove_email( 'test1@example.org' ) );
+		$this->assertFalse( $customer->remove_email( 'test9999@example.org' ) );
+	}
+
 }

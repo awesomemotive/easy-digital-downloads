@@ -51,7 +51,7 @@ add_action( 'template_redirect', 'edd_disable_jetpack_og_on_checkout' );
  * @return bool $caching True if caching plugin is enabled, false otherwise
  */
 function edd_is_caching_plugin_active() {
-	$caching = ( function_exists( 'wpsupercache_site_admin' ) || defined( 'W3TC' ) );
+	$caching = ( function_exists( 'wpsupercache_site_admin' ) || defined( 'W3TC' ) || function_exists( 'rocket_init' ) );
 	return apply_filters( 'edd_is_caching_plugin_active', $caching );
 }
 
@@ -70,8 +70,8 @@ function edd_append_no_cache_param( $settings ) {
 
 	$settings[] = array(
 		'id' => 'no_cache_checkout',
-		'name' => __('No Caching on Checkout?', 'edd'),
-		'desc' => __('Check this box in order to append a ?nocache parameter to the checkout URL to prevent caching plugins from caching the page.', 'edd'),
+		'name' => __('No Caching on Checkout?','easy-digital-downloads' ),
+		'desc' => __('Check this box in order to append a ?nocache parameter to the checkout URL to prevent caching plugins from caching the page.','easy-digital-downloads' ),
 		'type' => 'checkbox'
 	);
 
@@ -80,8 +80,8 @@ function edd_append_no_cache_param( $settings ) {
 add_filter( 'edd_settings_misc', 'edd_append_no_cache_param', -1 );
 
 /**
- * Show the correct language on the [downloads] short code if qTranslate is active
-  *
+ * Show the correct language on the [downloads] shortcode if qTranslate is active
+ *
  * @since 1.7
  * @param string $content Download content
  * @return string $content Download content
@@ -93,6 +93,25 @@ function edd_qtranslate_content( $content ) {
 }
 add_filter( 'edd_downloads_content', 'edd_qtranslate_content' );
 add_filter( 'edd_downloads_excerpt', 'edd_qtranslate_content' );
+
+/**
+ * Prevents qTranslate from redirecting to language-specific URL when downloading purchased files
+ *
+ * @since 2.5
+ * @param string       $target Target URL
+ * @return string|bool $target Target URL. False if redirect is disabled
+ */
+function edd_qtranslate_prevent_redirect( $target ) {
+
+	if( strpos( $target, 'eddfile' ) ) {
+		$target = false;
+		global $q_config;
+		$q_config['url_mode'] = '';
+	}
+
+	return $target;
+}
+add_filter( 'qtranslate_language_detect_redirect', 'edd_qtranslate_prevent_redirect' );
 
 /**
  * Disable the WooCommerce 'Un-force SSL when leaving checkout' option on EDD checkout
@@ -136,3 +155,35 @@ function edd_disable_404_redirected_redirect() {
 	}
 }
 add_action( 'template_redirect', 'edd_disable_404_redirected_redirect', 9 );
+
+/**
+ * Adds 'edd' to the list of Say What aliases after moving to WordPress.org language packs
+ *
+ * @since  2.4.6
+ * @param  array $aliases Say What domain aliases
+ * @return array          Say What domain alises with 'edd' added
+ */
+function edd_say_what_domain_aliases( $aliases ) {
+	$aliases['easy-digital-downloads'][] = 'edd';
+
+	return $aliases;
+}
+add_filter( 'say_what_domain_aliases', 'edd_say_what_domain_aliases', 10, 1 );
+
+/**
+ * Removes the Really Simple SSL mixed content filter during file downloads to avoid
+ * errors with chunked file delivery
+ *
+ * @see https://github.com/rlankhorst/really-simple-ssl/issues/30
+ * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5802
+ *
+ * @since 2.7.10
+ * @return void
+ */
+function edd_rsssl_remove_mixed_content_filter() {
+	if ( class_exists( 'REALLY_SIMPLE_SSL' ) && did_action( 'edd_process_verified_download' ) ) {
+		remove_action( 'init', array( RSSSL()->rsssl_mixed_content_fixer, 'start_buffer' ) );
+		remove_action( 'shutdown', array( RSSSL()->rsssl_mixed_content_fixer, 'end_buffer' ) );
+	}
+}
+add_action( 'plugins_loaded', 'edd_rsssl_remove_mixed_content_filter', 999 );

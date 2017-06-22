@@ -33,7 +33,9 @@ function edd_checkout_cart() {
 	do_action( 'edd_before_checkout_cart' );
 	echo '<form id="edd_checkout_cart_form" method="post">';
 		echo '<div id="edd_checkout_cart_wrap">';
+			do_action( 'edd_checkout_cart_top' );
 			edd_get_template_part( 'checkout_cart' );
+			do_action( 'edd_checkout_cart_bottom' );
 		echo '</div>';
 	echo '</form>';
 	do_action( 'edd_after_checkout_cart' );
@@ -56,10 +58,11 @@ function edd_shopping_cart( $echo = false ) {
 
 	do_action( 'edd_after_cart' );
 
-	if ( $echo )
+	if ( $echo ) {
 		echo ob_get_clean();
-	else
+	} else {
 		return ob_get_clean();
+	}
 }
 
 /**
@@ -114,7 +117,7 @@ function edd_get_cart_item_template( $cart_key, $item, $ajax = false ) {
  * @return string Cart is empty message
  */
 function edd_empty_cart_message() {
-	return apply_filters( 'edd_empty_cart_message', '<span class="edd_empty_cart">' . __( 'Your cart is empty.', 'edd' ) . '</span>' );
+	return apply_filters( 'edd_empty_cart_message', '<span class="edd_empty_cart">' . __( 'Your cart is empty.', 'easy-digital-downloads' ) . '</span>' );
 }
 
 /**
@@ -156,9 +159,9 @@ function edd_save_cart_button() {
 	$color = ( $color == 'inherit' ) ? '' : $color;
 
 	if ( edd_is_cart_saved() ) : ?>
-		<a class="edd-cart-saving-button edd-submit button<?php echo ' ' . $color; ?>" id="edd-restore-cart-button" href="<?php echo esc_url( add_query_arg( array( 'edd_action' => 'restore_cart', 'edd_cart_token' => edd_get_cart_token() ) ) ); ?>"><?php _e( 'Restore Previous Cart', 'edd' ); ?></a>
+		<a class="edd-cart-saving-button edd-submit button<?php echo ' ' . $color; ?>" id="edd-restore-cart-button" href="<?php echo esc_url( add_query_arg( array( 'edd_action' => 'restore_cart', 'edd_cart_token' => edd_get_cart_token() ) ) ); ?>"><?php _e( 'Restore Previous Cart', 'easy-digital-downloads' ); ?></a>
 	<?php endif; ?>
-	<a class="edd-cart-saving-button edd-submit button<?php echo ' ' . $color; ?>" id="edd-save-cart-button" href="<?php echo esc_url( add_query_arg( 'edd_action', 'save_cart' ) ); ?>"><?php _e( 'Save Cart', 'edd' ); ?></a>
+	<a class="edd-cart-saving-button edd-submit button<?php echo ' ' . $color; ?>" id="edd-save-cart-button" href="<?php echo esc_url( add_query_arg( 'edd_action', 'save_cart' ) ); ?>"><?php _e( 'Save Cart', 'easy-digital-downloads' ); ?></a>
 	<?php
 }
 
@@ -174,7 +177,7 @@ function edd_empty_cart_restore_cart_link() {
 		return;
 
 	if( edd_is_cart_saved() ) {
-		echo ' <a class="edd-cart-saving-link" id="edd-restore-cart-link" href="' . esc_url( add_query_arg( array( 'edd_action' => 'restore_cart', 'edd_cart_token' => edd_get_cart_token() ) ) ) . '">' . __( 'Restore Previous Cart.', 'edd' ) . '</a>';
+		echo ' <a class="edd-cart-saving-link" id="edd-restore-cart-link" href="' . esc_url( add_query_arg( array( 'edd_action' => 'restore_cart', 'edd_cart_token' => edd_get_cart_token() ) ) ) . '">' . __( 'Restore Previous Cart.', 'easy-digital-downloads' ) . '</a>';
 	}
 }
 add_action( 'edd_cart_empty', 'edd_empty_cart_restore_cart_link' );
@@ -192,7 +195,7 @@ function edd_update_cart_button() {
 	$color = edd_get_option( 'checkout_color', 'blue' );
 	$color = ( $color == 'inherit' ) ? '' : $color;
 ?>
-	<input type="submit" name="edd_update_cart_submit" class="edd-submit edd-no-js button<?php echo ' ' . $color; ?>" value="<?php _e( 'Update Cart', 'edd' ); ?>"/>
+	<input type="submit" name="edd_update_cart_submit" class="edd-submit edd-no-js button<?php echo ' ' . $color; ?>" value="<?php _e( 'Update Cart', 'easy-digital-downloads' ); ?>"/>
 	<input type="hidden" name="edd_action" value="update_cart"/>
 <?php
 
@@ -249,8 +252,8 @@ function edd_show_added_to_cart_messages( $download_id ) {
 			$download_id = absint( $_POST['download_id'] );
 
 		$alert = '<div class="edd_added_to_cart_alert">'
-		. sprintf( __('You have successfully added %s to your shopping cart.', 'edd'), get_the_title( $download_id ) )
-		. ' <a href="' . edd_get_checkout_uri() . '" class="edd_alert_checkout_link">' . __('Checkout.', 'edd') . '</a>'
+		. sprintf( __('You have successfully added %s to your shopping cart.','easy-digital-downloads' ), get_the_title( $download_id ) )
+		. ' <a href="' . edd_get_checkout_uri() . '" class="edd_alert_checkout_link">' . __('Checkout.','easy-digital-downloads' ) . '</a>'
 		. '</div>';
 
 		echo apply_filters( 'edd_show_added_to_cart_messages', $alert );

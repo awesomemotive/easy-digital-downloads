@@ -42,7 +42,7 @@ class EDD_Roles {
 	 * @return void
 	 */
 	public function add_roles() {
-		add_role( 'shop_manager', __( 'Shop Manager', 'edd' ), array(
+		add_role( 'shop_manager', __( 'Shop Manager', 'easy-digital-downloads' ), array(
 			'read'                   => true,
 			'edit_posts'             => true,
 			'delete_posts'           => true,
@@ -73,20 +73,20 @@ class EDD_Roles {
 			'read_private_posts'     => true
 		) );
 
-		add_role( 'shop_accountant', __( 'Shop Accountant', 'edd' ), array(
+		add_role( 'shop_accountant', __( 'Shop Accountant', 'easy-digital-downloads' ), array(
 		    'read'                   => true,
 		    'edit_posts'             => false,
 		    'delete_posts'           => false
 		) );
 
-		add_role( 'shop_worker', __( 'Shop Worker', 'edd' ), array(
+		add_role( 'shop_worker', __( 'Shop Worker', 'easy-digital-downloads' ), array(
 			'read'                   => true,
 			'edit_posts'             => false,
 			'upload_files'           => true,
 			'delete_posts'           => false
 		) );
 
-		add_role( 'shop_vendor', __( 'Shop Vendor', 'edd' ), array(
+		add_role( 'shop_vendor', __( 'Shop Vendor', 'easy-digital-downloads' ), array(
 			'read'                   => true,
 			'edit_posts'             => false,
 			'upload_files'           => true,
@@ -187,7 +187,8 @@ class EDD_Roles {
 				"assign_{$capability_type}_terms",
 
 				// Custom
-				"view_{$capability_type}_stats"
+				"view_{$capability_type}_stats",
+				"import_{$capability_type}s",
 			);
 		}
 

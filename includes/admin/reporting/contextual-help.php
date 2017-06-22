@@ -26,44 +26,44 @@ function edd_reporting_contextual_help() {
 		return;
 
 	$screen->set_help_sidebar(
-		'<p><strong>' . sprintf( __( 'For more information:', 'edd' ) . '</strong></p>' .
-		'<p>' . sprintf( __( 'Visit the <a href="%s">documentation</a> on the Easy Digital Downloads website.', 'edd' ), esc_url( 'https://easydigitaldownloads.com/documentation/' ) ) ) . '</p>' .
+		'<p><strong>' . sprintf( __( 'For more information:', 'easy-digital-downloads' ) . '</strong></p>' .
+		'<p>' . sprintf( __( 'Visit the <a href="%s">documentation</a> on the Easy Digital Downloads website.', 'easy-digital-downloads' ), esc_url( 'http://docs.easydigitaldownloads.com/' ) ) ) . '</p>' .
 		'<p>' . sprintf(
-					__( '<a href="%s">Post an issue</a> on <a href="%s">GitHub</a>. View <a href="%s">extensions</a> or <a href="%s">themes</a>.', 'edd' ),
+					__( '<a href="%s">Post an issue</a> on <a href="%s">GitHub</a>. View <a href="%s">extensions</a> or <a href="%s">themes</a>.', 'easy-digital-downloads' ),
 					esc_url( 'https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues' ),
 					esc_url( 'https://github.com/easydigitaldownloads/Easy-Digital-Downloads' ),
-					esc_url( 'https://easydigitaldownloads.com/downloads/' ),
-					esc_url( 'https://easydigitaldownloads.com/themes/' )
+					esc_url( 'https://easydigitaldownloads.com/downloads/?utm_source=plugin-reports-page&utm_medium=contextual-help-sidebar&utm_term=extensions&utm_campaign=ContextualHelp' ),
+					esc_url( 'https://easydigitaldownloads.com/themes/?utm_source=plugin-reports-page&utm_medium=contextual-help-sidebar&utm_term=themes&utm_campaign=ContextualHelp' )
 				) . '</p>'
 	);
 
 	$screen->add_help_tab( array(
 		'id'	    => 'edd-reports',
-		'title'	    => __( 'Reports', 'edd' ),
-		'content'	=> '<p>' . __( 'This screen provides you with reports for your earnings, downloads, customers and taxes.', 'edd' ) . '</p>'
+		'title'	    => __( 'Reports', 'easy-digital-downloads' ),
+		'content'	=> '<p>' . __( 'This screen provides you with reports for your earnings, downloads, customers and taxes.', 'easy-digital-downloads' ) . '</p>'
 	) );
 
 	$screen->add_help_tab( array(
 		'id'	    => 'edd-reports-export',
-		'title'	    => __( 'Export', 'edd' ),
+		'title'	    => __( 'Export', 'easy-digital-downloads' ),
 		'content'	=>
-			'<p>' . __( 'This screen allows you to export your reports into a PDF or CSV format.', 'edd' ) . '</p>' .
-			'<p>' . __( '<strong>Sales and Earnings</strong> - This report exports all of the sales and earnings that you have made in the current year. This report includes your sales and earnings for each product as well a graphs of sales and earnings so you can compare them for each month.', 'edd' ) . '</p>' .
-			'<p>' . __( '<strong>Payment History</strong> - This report exports all of payments you have received on your EDD store in a CSV format.  The report includes the contact details of the customer, the products they have purchased as well as any discount codes they have used and the final price they have paid.', 'edd' ) . '</p>' .
-			'<p>' . __( "<strong>Customers</strong> - This report exports all of your customers in a CSV format. It exports the customer's name and email address and the amount of products they have purchased as well as the final price of their total purchases.", 'edd' ) . '</p>' .
-			'<p>' . __( '<strong>Download History</strong> - This report exports all of the downloads you have received in the current month into a CSV. It exports the date the file was downloaded, the customer it was downloaded by, their IP address, the name of the product and the file they downloaded.', 'edd' ) . '</p>'
+			'<p>' . __( 'This screen allows you to export your reports into a CSV format.', 'easy-digital-downloads' ) . '</p>' .
+			'<p>' . __( '<strong>Sales and Earnings</strong> - This report exports all of the sales and earnings that you have made in the current year. It includes your sales and earnings for each product as well a graphs of sales and earnings so you can compare them for each month.', 'easy-digital-downloads' ) . '</p>' .
+			'<p>' . __( '<strong>Payment History</strong> - This report exports all of the payments you have received on your EDD store in a CSV format.  It includes the contact details of the customer, the products they have purchased as well as any discount codes they have used and the final price they have paid.', 'easy-digital-downloads' ) . '</p>' .
+			'<p>' . __( "<strong>Customers</strong> - This report exports all of your customers in a CSV format. It exports the customer's name and email address and the amount of products they have purchased as well as the final price of their total purchases.", 'easy-digital-downloads' ) . '</p>' .
+			'<p>' . __( '<strong>Download History</strong> - This report exports all of the downloads you have received in the current month into a CSV. It exports the date the file was downloaded, the customer it was downloaded by, their IP address, the name of the product and the file they downloaded.', 'easy-digital-downloads' ) . '</p>'
 	) );
 
 	if( ! empty( $_GET['tab'] ) && 'logs' == $_GET['tab'] ) {
 		$screen->add_help_tab( array(
 			'id'	    => 'edd-reports-log-search',
-			'title'	    => __( 'Search File Downloads', 'edd' ),
+			'title'	    => __( 'Search File Downloads', 'easy-digital-downloads' ),
 			'content'	=>
-				'<p>' . __( 'The file download log can be searched in several different ways:', 'edd' ) . '</p>' .
+				'<p>' . __( 'The file download log can be searched in several different ways:', 'easy-digital-downloads' ) . '</p>' .
 				'<ul>
-					<li>' . __( 'You can enter the customer\'s email address', 'edd' ) . '</li>
-					<li>' . __( 'You can enter the customer\'s IP address', 'edd' ) . '</li>
-					<li>' . __( 'You can enter the download file\'s name', 'edd' ) . '</li>
+					<li>' . __( 'You can enter the customer\'s email address', 'easy-digital-downloads' ) . '</li>
+					<li>' . __( 'You can enter the customer\'s IP address', 'easy-digital-downloads' ) . '</li>
+					<li>' . __( 'You can enter the download file\'s name', 'easy-digital-downloads' ) . '</li>
 				</ul>'
 		) );
 	}

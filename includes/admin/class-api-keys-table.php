@@ -49,12 +49,24 @@ class EDD_API_Keys_Table extends WP_List_Table {
 
 		// Set parent defaults
 		parent::__construct( array(
-			'singular'  => __( 'API Key', 'edd' ),     // Singular name of the listed records
-			'plural'    => __( 'API Keys', 'edd' ),    // Plural name of the listed records
-			'ajax'      => false                       // Does this table support ajax?
+			'singular'  => __( 'API Key', 'easy-digital-downloads' ),
+			'plural'    => __( 'API Keys', 'easy-digital-downloads' ),
+			'ajax'      => false,
 		) );
 
 		$this->query();
+	}
+
+	/**
+	 * Gets the name of the primary column.
+	 *
+	 * @since 2.5
+	 * @access protected
+	 *
+	 * @return string Name of the primary column.
+	 */
+	protected function get_primary_column_name() {
+		return 'user';
 	}
 
 	/**
@@ -132,19 +144,19 @@ class EDD_API_Keys_Table extends WP_List_Table {
 			$actions['view'] = sprintf(
 				'<a href="%s">%s</a>',
 				esc_url( add_query_arg( array( 'view' => 'api_requests', 'post_type' => 'download', 'page' => 'edd-reports', 'tab' => 'logs', 's' => $item['email'] ), 'edit.php' ) ),
-				__( 'View API Log', 'edd' )
+				__( 'View API Log', 'easy-digital-downloads' )
 			);
 		}
 
 		$actions['reissue'] = sprintf(
 			'<a href="%s" class="edd-regenerate-api-key">%s</a>',
 			esc_url( wp_nonce_url( add_query_arg( array( 'user_id' => $item['id'], 'edd_action' => 'process_api_key', 'edd_api_process' => 'regenerate' ) ), 'edd-api-nonce' ) ),
-			__( 'Reissue', 'edd' )
+			__( 'Reissue', 'easy-digital-downloads' )
 		);
 		$actions['revoke'] = sprintf(
 			'<a href="%s" class="edd-revoke-api-key edd-delete">%s</a>',
 			esc_url( wp_nonce_url( add_query_arg( array( 'user_id' => $item['id'], 'edd_action' => 'process_api_key', 'edd_api_process' => 'revoke' ) ), 'edd-api-nonce' ) ),
-			__( 'Revoke', 'edd' )
+			__( 'Revoke', 'easy-digital-downloads' )
 		);
 
 		$actions = apply_filters( 'edd_api_row_actions', array_filter( $actions ) );
@@ -161,10 +173,10 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'user'         => __( 'Username', 'edd' ),
-			'key'          => __( 'Public Key', 'edd' ),
-			'token'        => __( 'Token', 'edd' ),
-			'secret'       => __( 'Secret Key', 'edd' )
+			'user'   => __( 'Username', 'easy-digital-downloads' ),
+			'key'    => __( 'Public Key', 'easy-digital-downloads' ),
+			'token'  => __( 'Token', 'easy-digital-downloads' ),
+			'secret' => __( 'Secret Key', 'easy-digital-downloads' ),
 		);
 
 		return $columns;
@@ -177,7 +189,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	 * @since 1.5
 	 * @return void
 	 */
-	function bulk_actions( $which = '' ) {
+	public function bulk_actions( $which = '' ) {
 		// These aren't really bulk actions but this outputs the markup in the right place
 		static $edd_api_is_bottom;
 
@@ -185,15 +197,42 @@ class EDD_API_Keys_Table extends WP_List_Table {
 			return;
 		}
 		?>
-		<form method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ); ?>">
+		<form id="api-key-generate-form" method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ); ?>">
 			<input type="hidden" name="edd_action" value="process_api_key" />
 			<input type="hidden" name="edd_api_process" value="generate" />
 			<?php wp_nonce_field( 'edd-api-nonce' ); ?>
 			<?php echo EDD()->html->ajax_user_search(); ?>
-			<?php submit_button( __( 'Generate New API Keys', 'edd' ), 'secondary', 'submit', false ); ?>
+			<?php submit_button( __( 'Generate New API Keys', 'easy-digital-downloads' ), 'secondary', 'submit', false ); ?>
 		</form>
 		<?php
 		$edd_api_is_bottom = true;
+	}
+
+	/**
+	 * Generate the table navigation above or below the table
+	 *
+	 * @since 3.1.0
+	 * @access protected
+	 * @param string $which
+	 */
+	protected function display_tablenav( $which ) {
+		if ( 'top' === $which ) {
+			wp_nonce_field( 'bulk-' . $this->_args['plural'] );
+		}
+?>
+	<div class="tablenav <?php echo esc_attr( $which ); ?>">
+
+		<div class="alignleft actions bulkactions">
+			<?php $this->bulk_actions( $which ); ?>
+		</div>
+<?php
+		$this->extra_tablenav( $which );
+		$this->pagination( $which );
+?>
+
+		<br class="clear" />
+	</div>
+<?php
 	}
 
 	/**
@@ -218,7 +257,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 		$users    = get_users( array(
 			'meta_value' => 'edd_user_secret_key',
 			'number'     => $this->per_page,
-			'offset'     => $this->per_page * ( $this->get_paged() - 1 )
+			'offset'     => $this->per_page * ( $this->get_paged() - 1 ),
 		) );
 		$keys     = array();
 
@@ -269,7 +308,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 		$hidden = array(); // No hidden columns
 		$sortable = array(); // Not sortable... for now
 
-		$this->_column_headers = array( $columns, $hidden, $sortable, 'id' );
+		$this->_column_headers = array( $columns, $hidden, $sortable, 'user' );
 
 		$data = $this->query();
 
@@ -280,7 +319,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 		$this->set_pagination_args( array(
 				'total_items' => $total_items,
 				'per_page'    => $this->per_page,
-				'total_pages' => ceil( $total_items / $this->per_page )
+				'total_pages' => ceil( $total_items / $this->per_page ),
 			)
 		);
 	}
