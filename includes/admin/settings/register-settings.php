@@ -1229,7 +1229,7 @@ function edd_get_registered_settings_sections() {
 
 	$sections = array(
 		'general'    => apply_filters( 'edd_settings_sections_general', array(
-			'main'               => _x( 'General', 'easy-digital-downloads' ),
+			'main'               => __( 'General', 'easy-digital-downloads' ),
 			'currency'           => __( 'Currency', 'easy-digital-downloads' ),
 			'api'                => __( 'API', 'easy-digital-downloads' ),
 		) ),
