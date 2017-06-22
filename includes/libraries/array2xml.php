@@ -45,6 +45,19 @@ class Array2XML {
         //print_arr($node_name);
         $xml = self::getXMLRoot();
         $node = $xml->createElement($node_name);
+        
+        //convert nodes to attributes if their name starts with @
+        if (is_array($arr)){
+            foreach($arr as $key => $value) {
+
+                if(substr($key,0,1) == '@'){
+                    $clean_key = ltrim($key, '@'); //strip prefix
+                    $arr['@attributes'][$clean_key] = $value;
+                    unset($arr[$key]);
+                }
+
+            }
+        }
 
         if(is_array($arr)){
             // get the attributes first.;
