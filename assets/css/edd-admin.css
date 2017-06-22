@@ -257,6 +257,9 @@ tr.status-refunded td {
 	background: #f1f1f1;
 	border: 1px solid #e5e5e5;
 }
+.edd-repeatable-row-header {
+	cursor: move;
+}
 .edd-repeatable-row-header:before,
 .edd-repeatable-row-header:after,
 .edd-bundled-product-row:before,
@@ -271,10 +274,7 @@ tr.status-refunded td {
 .edd-repeatable-row-title {
 	float: left;
 	font-weight: 600;
-	width: 27%;
-	cursor: move;
 }
-.edd-repeatable-row-title:after,
 .edd-bundled-product-item-reorder .edd-product-file-reorder {
 	color: #e5e5e5;
 	font-family: "dashicons";
@@ -285,7 +285,6 @@ tr.status-refunded td {
 	vertical-align: top;
 	transition: .2s color;
 }
-.edd-repeatable-row-title:hover:after,
 .edd-bundled-product-item-reorder .edd-product-file-reorder:hover {
 	color: #bbb;
 }

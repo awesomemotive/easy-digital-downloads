@@ -417,9 +417,9 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 		wp_enqueue_script( 'edd-admin-scripts-compatibility' );
 	}
 	?>
-	<div class="edd-repeatable-row-header">
-		<span class="edd-repeatable-row-title edd-draghandle-anchor" title="<?php _e( 'Click and drag to re-order price options', 'easy-digital-downloads' ); ?>">
-			<?php printf( __( 'Price option: %s', 'easy-digital-downloads' ), '<span class="edd_price_id">' . $key . '</span>' ); ?>
+	<div class="edd-repeatable-row-header edd-draghandle-anchor">
+		<span class="edd-repeatable-row-title" title="<?php _e( 'Click and drag to re-order price options', 'easy-digital-downloads' ); ?>">
+			<?php printf( __( 'Price ID: %s', 'easy-digital-downloads' ), '<span class="edd_price_id">' . $key . '</span>' ); ?>
 			<input type="hidden" name="edd_variable_prices[<?php echo $key; ?>][index]" class="edd_repeatable_index" value="<?php echo $index; ?>"/>
 		</span>
 		<?php
@@ -809,9 +809,9 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 	$variable_display = $variable_pricing ? '' : ' style="display:none;"';
 	$variable_class   = $variable_pricing ? ' has-variable-pricing' : '';
 ?>
-	<div class="edd-repeatable-row-header">
-		<span class="edd-repeatable-row-title edd-draghandle-anchor" title="<?php _e( 'Click and drag to re-order files', 'easy-digital-downloads' ); ?>">
-			<?php printf( __( '%1$s file: %2$s', 'easy-digital-downloads' ), edd_get_label_singular(), '<span class="edd_file_id">' . $key . '</span>' ); ?>
+	<div class="edd-repeatable-row-header edd-draghandle-anchor">
+		<span class="edd-repeatable-row-title" title="<?php _e( 'Click and drag to re-order files', 'easy-digital-downloads' ); ?>">
+			<?php printf( __( '%1$s file ID: %2$s', 'easy-digital-downloads' ), edd_get_label_singular(), '<span class="edd_file_id">' . $key . '</span>' ); ?>
 			<input type="hidden" name="edd_download_files[<?php echo $key; ?>][index]" class="edd_repeatable_index" value="<?php echo $index; ?>"/>
 		</span>
 		<span class="edd-repeatable-row-actions">
