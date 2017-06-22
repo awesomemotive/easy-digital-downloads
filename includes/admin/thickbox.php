@@ -29,6 +29,14 @@ function edd_media_button() {
 		$output = '<a href="#TB_inline?width=640&inlineId=choose-download" class="thickbox button edd-thickbox" style="padding-left: .4em;">' . $img . sprintf( __( 'Insert %s', 'easy-digital-downloads' ), strtolower( edd_get_label_singular() ) ) . '</a>';
 
 	}
+
+	if ( in_array( $pagenow, array( 'post.php', 'page.php', 'post-new.php', 'post-edit.php' ) ) && $typenow == 'download' ) {
+		if ( ! class_exists( 'EDD_Reviews' ) ) {
+			$icon = '<span class="wp-media-buttons-icon dashicons dashicons-star-filled"></span>';
+			$output .= '<a href="https://easydigitaldownloads.com/downloads/product-reviews/" class="button" title="' . __( 'Enable Product Reviews', 'edd-reviews' ) . '">' . $icon . __( 'Enable Product Reviews', 'easy-digital-downloads' ) . '</a>';
+		}
+	}
+
 	echo $output;
 }
 add_action( 'media_buttons', 'edd_media_button', 11 );
