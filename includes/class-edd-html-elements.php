@@ -195,7 +195,7 @@ class EDD_HTML_Elements {
 			'chosen'      => true,
 			'placeholder' => __( 'Select a Customer', 'easy-digital-downloads' ),
 			'number'      => 30,
-			'data'        => array( 'search-type' => 'customer' ),
+			'data'        => array( 'search-type' => 'customdfser' ),
 		);
 
 		$args = wp_parse_args( $args, $defaults );
