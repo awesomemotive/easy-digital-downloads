@@ -10,19 +10,19 @@
  * @version 1.0.0
  */
 
-global $atts, $i;
+global $edd_download_shortcode_item_atts, $edd_download_shortcode_item_i;
 ?>
 
 <?php $schema = edd_add_schema_microdata() ? 'itemscope itemtype="http://schema.org/Product" ' : ''; ?>
 
-<div <?php echo $schema; ?>class="<?php echo esc_attr( apply_filters( 'edd_download_class', 'edd_download', get_the_ID(), $atts, $i ) ); ?>" id="edd_download_<?php the_ID(); ?>">
+<div <?php echo $schema; ?>class="<?php echo esc_attr( apply_filters( 'edd_download_class', 'edd_download', get_the_ID(), $edd_download_shortcode_item_atts, $edd_download_shortcode_item_i ) ); ?>" id="edd_download_<?php the_ID(); ?>">
 
-	<div class="<?php echo esc_attr( apply_filters( 'edd_download_inner_class', 'edd_download_inner', get_the_ID(), $atts, $i ) ); ?>">
+	<div class="<?php echo esc_attr( apply_filters( 'edd_download_inner_class', 'edd_download_inner', get_the_ID(), $edd_download_shortcode_item_atts, $edd_download_shortcode_item_i ) ); ?>">
 
 		<?php
 			do_action( 'edd_download_before' );
 
-			if ( 'false' !== $atts['thumbnails'] ) :
+			if ( 'false' !== $edd_download_shortcode_item_atts['thumbnails'] ) :
 				edd_get_template_part( 'shortcode', 'content-image' );
 				do_action( 'edd_download_after_thumbnail' );
 			endif;
@@ -31,20 +31,20 @@ global $atts, $i;
 
 			do_action( 'edd_download_after_title' );
 
-			if ( 'yes' === $atts['excerpt'] && 'yes' !== $atts['full_content'] ) :
+			if ( 'yes' === $edd_download_shortcode_item_atts['excerpt'] && 'yes' !== $edd_download_shortcode_item_atts['full_content'] ) :
 				edd_get_template_part( 'shortcode', 'content-excerpt' );
 				do_action( 'edd_download_after_content' );
-			elseif ( 'yes' === $atts['full_content'] ) :
+			elseif ( 'yes' === $edd_download_shortcode_item_atts['full_content'] ) :
 				edd_get_template_part( 'shortcode', 'content-full' );
 				do_action( 'edd_download_after_content' );
 			endif;
 
-			if ( 'yes' === $atts['price'] ) :
+			if ( 'yes' === $edd_download_shortcode_item_atts['price'] ) :
 				edd_get_template_part( 'shortcode', 'content-price' );
 				do_action( 'edd_download_after_price' );
 			endif;
 
-			if ( 'yes' === $atts['buy_button'] ) :
+			if ( 'yes' === $edd_download_shortcode_item_atts['buy_button'] ) :
 				edd_get_template_part( 'shortcode', 'content-cart-button' );
 			endif;
 
