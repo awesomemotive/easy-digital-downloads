@@ -2,21 +2,21 @@
 /**
  * Manage actions and callbacks related to templates.
  *
- * @since 2.9.0
- *
- * @package EDD
- * @category Template
- * @author Easy Digital Downloads
+ * @package     EDD
+ * @subpackage  Templates
+ * @copyright   Copyright (c) 2017, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       2.8
  */
 
 /**
  * Output a message and login form on the profile editor when the
  * current visitor is not logged in.
  *
- * @since 2.9.0
+ * @since 2.8
  */
 function edd_profile_editor_logged_out() {
-	echo '<p>' . esc_html_e( 'You need to login to edit your profile.', 'easy-digital-downloads' ) . '</p>';
+	echo '<p class="edd-logged-out">' . esc_html_e( 'You need to login to edit your profile.', 'easy-digital-downloads' ) . '</p>';
 	echo edd_login_form(); // WPCS: XSS ok.
 }
 add_action( 'edd_profile_editor_logged_out', 'edd_profile_editor_logged_out' );
@@ -26,7 +26,7 @@ add_action( 'edd_profile_editor_logged_out', 'edd_profile_editor_logged_out' );
  *
  * This remains mainly for backwards compatibility.
  *
- * @since 2.9.0
+ * @since 2.8
  */
 function edd_login_form_logged_in() {
 	echo '<p class="edd-logged-in">' . esc_html_e( 'You are already logged in', 'easy-digital-downloads' ) . '</p>';
