@@ -718,7 +718,10 @@ $customer       = new EDD_Customer( $payment->customer_id );
 															'show_option_none' => false,
 															'chosen'           => true,
 															'placeholder'      => __( 'Select a country', 'easy-digital-downloads' ),
-															'data'             => array( 'search-type' => 'no_ajax' ),
+															'data'             => array(
+																'search-type'        => 'no_ajax',
+																'search-placeholder' => __( 'Type to search all Countries', 'easy-digital-downloads' ),
+															),
 														) );
 														?>
 													</p>
@@ -736,7 +739,10 @@ $customer       = new EDD_Customer( $payment->customer_id );
 																'show_option_none' => false,
 																'chosen'           => true,
 																'placeholder'      => __( 'Select a state', 'easy-digital-downloads' ),
-																'data'             => array( 'search-type' => 'no_ajax' ),
+																'data'             => array(
+																	'search-type'        => 'no_ajax',
+																	'search-placeholder' => __( 'Type to search all States/Provinces', 'easy-digital-downloads' ),
+																),
 															) );
 														} else { ?>
 															<input type="text" name="edd-payment-address[0][state]" value="<?php echo esc_attr( $address['state'] ); ?>" class="medium-text"/>
