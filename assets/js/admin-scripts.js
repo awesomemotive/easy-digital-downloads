@@ -1266,8 +1266,9 @@ jQuery(document).ready(function ($) {
 	});
 
 	$('.edd-select-chosen .chosen-search input').each( function() {
-		var type = $(this).parent().parent().parent().prev('select.edd-select-chosen').data('search-type');
-		var placeholder = $(this).parent().parent().parent().prev('select.edd-select-chosen').data('search-placeholder');
+		var selectElem = $(this).parent().parent().parent().prev('select.edd-select-chosen'),
+			type = selectElem.data('search-type'),
+			placeholder = selectElem.data('search-placeholder');
 
 		$(this).attr( 'placeholder', placeholder );
 	});
