@@ -1267,16 +1267,7 @@ jQuery(document).ready(function ($) {
 
 	$('.edd-select-chosen .chosen-search input').each( function() {
 		var type = $(this).parent().parent().parent().prev('select.edd-select-chosen').data('search-type');
-		var placeholder = '';
-
-		if ( type === 'download' ) {
-			placeholder = edd_vars.search_placeholder;
-		} else {
-			var type = 'search_placeholder_' + type;
-			if ( edd_vars[type] ) {
-				placeholder = edd_vars[type];
-			}
-		}
+		var placeholder = $(this).parent().parent().parent().prev('select.edd-select-chosen').data('search-placeholder');
 
 		$(this).attr( 'placeholder', placeholder );
 	});
