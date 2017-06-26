@@ -752,4 +752,5 @@ class EDD_HTML_Elements {
 
 		return $output;
 	}
+
 }

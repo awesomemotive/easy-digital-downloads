@@ -239,7 +239,7 @@ function edd_get_registered_settings() {
 				'main' => array(
 					'page_settings' => array(
 						'id'   => 'page_settings',
-						'name' => '<h3>' . __( 'Page Settings', 'easy-digital-downloads' ) . '</h3>',
+						'name' => '<h3>' . __( 'Pages', 'easy-digital-downloads' ) . '</h3>',
 						'desc' => '',
 						'type' => 'header',
 						'tooltip_title' => __( 'Page Settings', 'easy-digital-downloads' ),
@@ -319,7 +319,7 @@ function edd_get_registered_settings() {
 					),
 					'tracking_settings' => array(
 						'id'   => 'tracking_settings',
-						'name' => '<h3>' . __( 'Tracking Settings', 'easy-digital-downloads' ) . '</h3>',
+						'name' => '<h3>' . __( 'Tracking', 'easy-digital-downloads' ) . '</h3>',
 						'desc' => '',
 						'type' => 'header',
 					),
@@ -334,12 +334,6 @@ function edd_get_registered_settings() {
 					),
 				),
 				'currency' => array(
-					'currency_settings' => array(
-						'id'   => 'currency_settings',
-						'name' => '<h3>' . __( 'Currency Settings', 'easy-digital-downloads' ) . '</h3>',
-						'desc' => '',
-						'type' => 'header',
-					),
 					'currency' => array(
 						'id'      => 'currency',
 						'name'    => __( 'Currency', 'easy-digital-downloads' ),
@@ -378,7 +372,7 @@ function edd_get_registered_settings() {
 				'api' => array(
 					'api_settings' => array(
 						'id'   => 'api_settings',
-						'name' => '<h3>' . __( 'API Settings', 'easy-digital-downloads' ) . '</h3>',
+						'name' => '<h3>' . __( 'API', 'easy-digital-downloads' ) . '</h3>',
 						'desc' => '',
 						'type' => 'header',
 						'tooltip_title' => __( 'API Settings', 'easy-digital-downloads' ),
@@ -402,12 +396,6 @@ function edd_get_registered_settings() {
 		'gateways' => apply_filters('edd_settings_gateways',
 			array(
 				'main' => array(
-					'gateway_settings' => array(
-						'id'   => 'api_header',
-						'name' => '<h3>' . __( 'Gateway Settings', 'easy-digital-downloads' ) . '</h3>',
-						'desc' => '',
-						'type' => 'header',
-					),
 					'test_mode' => array(
 						'id'   => 'test_mode',
 						'name' => __( 'Test Mode', 'easy-digital-downloads' ),
@@ -449,11 +437,6 @@ function edd_get_registered_settings() {
 		'emails' => apply_filters('edd_settings_emails',
 			array(
 				'main' => array(
-					'email_settings_header' => array(
-						'id'   => 'email_settings_header',
-						'name' => '<h3>' . __( 'Email Settings', 'easy-digital-downloads' ) . '</h3>',
-						'type' => 'header',
-					),
 					'email_template' => array(
 						'id'      => 'email_template',
 						'name'    => __( 'Email Template', 'easy-digital-downloads' ),
@@ -467,19 +450,6 @@ function edd_get_registered_settings() {
 						'desc' => __( 'Upload or choose a logo to be displayed at the top of the purchase receipt emails. Displayed on HTML emails only.', 'easy-digital-downloads' ),
 						'type' => 'upload',
 					),
-					'email_settings' => array(
-						'id'   => 'email_settings',
-						'name' => '',
-						'desc' => '',
-						'type' => 'hook',
-					),
-				),
-				'purchase_receipts' => array(
-					'purchase_receipt_settings' => array(
-						'id'   => 'purchase_receipt_settings',
-						'name' => '<h3>' . __( 'Purchase Receipts', 'easy-digital-downloads' ) . '</h3>',
-						'type' => 'header',
-					),
 					'from_name' => array(
 						'id'   => 'from_name',
 						'name' => __( 'From Name', 'easy-digital-downloads' ),
@@ -491,8 +461,22 @@ function edd_get_registered_settings() {
 						'id'   => 'from_email',
 						'name' => __( 'From Email', 'easy-digital-downloads' ),
 						'desc' => __( 'Email to send purchase receipts from. This will act as the "from" and "reply-to" address.', 'easy-digital-downloads' ),
-						'type' => 'text',
+						'type' => 'email',
 						'std'  => get_bloginfo( 'admin_email' ),
+					),
+					'email_settings' => array(
+						'id'   => 'email_settings',
+						'name' => '',
+						'desc' => '',
+						'type' => 'hook',
+					),
+				),
+				'purchase_receipts' => array(
+					'purchase_receipt_email_settings' => array(
+						'id'   => 'purchase_receipt_email_settings',
+						'name' => '',
+						'desc' => '',
+						'type' => 'hook',
 					),
 					'purchase_subject' => array(
 						'id'   => 'purchase_subject',
@@ -517,11 +501,6 @@ function edd_get_registered_settings() {
 					),
 				),
 				'sale_notifications' => array(
-					'sale_notification_settings' => array(
-						'id'   => 'sale_notification_settings',
-						'name' => '<h3>' . __( 'Sale Notifications', 'easy-digital-downloads' ) . '</h3>',
-						'type' => 'header',
-					),
 					'sale_notification_subject' => array(
 						'id'   => 'sale_notification_subject',
 						'name' => __( 'Sale Notification Subject', 'easy-digital-downloads' ),
@@ -556,11 +535,6 @@ function edd_get_registered_settings() {
 		'styles' => apply_filters('edd_settings_styles',
 			array(
 				'main' => array(
-					'style_settings' => array(
-						'id'   => 'style_settings',
-						'name' => '<h3>' . __( 'Style Settings', 'easy-digital-downloads' ) . '</h3>',
-						'type' => 'header',
-					),
 					'disable_styles' => array(
 						'id'            => 'disable_styles',
 						'name'          => __( 'Disable Styles', 'easy-digital-downloads' ),
@@ -596,11 +570,6 @@ function edd_get_registered_settings() {
 		'taxes' => apply_filters('edd_settings_taxes',
 			array(
 				'main' => array(
-					'tax_settings' => array(
-						'id'   => 'tax_settings',
-						'name' => '<h3>' . __( 'Tax Settings', 'easy-digital-downloads' ) . '</h3>',
-						'type' => 'header',
-					),
 					'tax_help' => array(
 						'id'   => 'tax_help',
 						'name' => __( 'Need help?', 'easy-digital-downloads' ),
@@ -676,11 +645,6 @@ function edd_get_registered_settings() {
 		'misc' => apply_filters('edd_settings_misc',
 			array(
 				'main' => array(
-					'misc_settings' => array(
-						'id'   => 'misc_settings',
-						'name' => '<h3>' . __( 'Misc Settings', 'easy-digital-downloads' ) . '</h3>',
-						'type' => 'header',
-					),
 					'redirect_on_add' => array(
 						'id'   => 'redirect_on_add',
 						'name' => __( 'Redirect to Checkout', 'easy-digital-downloads' ),
@@ -703,11 +667,6 @@ function edd_get_registered_settings() {
 					),
 				),
 				'checkout' => array(
-					'checkout_settings' => array(
-						'id'   => 'checkout_settings',
-						'name' => '<h3>' . __( 'Checkout Settings', 'easy-digital-downloads' ) . '</h3>',
-						'type' => 'header',
-					),
 					'enforce_ssl' => array(
 						'id'   => 'enforce_ssl',
 						'name' => __( 'Enforce SSL on Checkout', 'easy-digital-downloads' ),
@@ -751,17 +710,19 @@ function edd_get_registered_settings() {
 					),
 				),
 				'button_text' => array(
-					'button_settings' => array(
-						'id'   => 'button_settings',
-						'name' => '<h3>' . __( 'Button Text', 'easy-digital-downloads' ) . '</h3>',
-						'type' => 'header',
-					),
 					'checkout_label' => array(
 						'id'   => 'checkout_label',
 						'name' => __( 'Complete Purchase Text', 'easy-digital-downloads' ),
 						'desc' => __( 'The button label for completing a purchase.', 'easy-digital-downloads' ),
 						'type' => 'text',
 						'std'  => __( 'Purchase', 'easy-digital-downloads' ),
+					),
+					'free_checkout_label' => array(
+						'id'   => 'free_checkout_label',
+						'name' => __( 'Register Text', 'easy-digital-downloads' ),
+						'desc' => __( 'The button label for completing a free purchase.', 'easy-digital-downloads' ),
+						'type' => 'text',
+						'std'  => __( 'Free Download', 'easy-digital-downloads' ),
 					),
 					'add_to_cart_text' => array(
 						'id'   => 'add_to_cart_text',
@@ -779,11 +740,6 @@ function edd_get_registered_settings() {
 					),
 				),
 				'file_downloads' => array(
-					'file_settings' => array(
-						'id'   => 'file_settings',
-						'name' => '<h3>' . __( 'File Download Settings', 'easy-digital-downloads' ) . '</h3>',
-						'type' => 'header',
-					),
 					'download_method' => array(
 						'id'      => 'download_method',
 						'name'    => __( 'Download Method', 'easy-digital-downloads' ),
@@ -830,11 +786,6 @@ function edd_get_registered_settings() {
 					),
 				),
 				'accounting'     => array(
-					'accounting_settings' => array(
-						'id'   => 'accounting_settings',
-						'name' => '<h3>' . __( 'Accounting Settings', 'easy-digital-downloads' ) . '</h3>',
-						'type' => 'header',
-					),
 					'enable_skus' => array(
 						'id'   => 'enable_skus',
 						'name' => __( 'Enable SKU Entry', 'easy-digital-downloads' ),
@@ -869,11 +820,6 @@ function edd_get_registered_settings() {
 					),
 				),
 				'site_terms'     => array(
-					'terms_settings' => array(
-						'id'   => 'terms_settings',
-						'name' => '<h3>' . __( 'Agreement Settings', 'easy-digital-downloads' ) . '</h3>',
-						'type' => 'header',
-					),
 					'show_agree_to_terms' => array(
 						'id'   => 'show_agree_to_terms',
 						'name' => __( 'Agree to Terms', 'easy-digital-downloads' ),
@@ -1283,35 +1229,35 @@ function edd_get_registered_settings_sections() {
 
 	$sections = array(
 		'general'    => apply_filters( 'edd_settings_sections_general', array(
-			'main'               => __( 'General Settings', 'easy-digital-downloads' ),
-			'currency'           => __( 'Currency Settings', 'easy-digital-downloads' ),
-			'api'                => __( 'API Settings', 'easy-digital-downloads' ),
+			'main'               => __( 'General', 'easy-digital-downloads' ),
+			'currency'           => __( 'Currency', 'easy-digital-downloads' ),
+			'api'                => __( 'API', 'easy-digital-downloads' ),
 		) ),
 		'gateways'   => apply_filters( 'edd_settings_sections_gateways', array(
-			'main'               => __( 'Gateway Settings', 'easy-digital-downloads' ),
+			'main'               => __( 'General', 'easy-digital-downloads' ),
 			'paypal'             => __( 'PayPal Standard', 'easy-digital-downloads' ),
 		) ),
 		'emails'     => apply_filters( 'edd_settings_sections_emails', array(
-			'main'               => __( 'Email Settings', 'easy-digital-downloads' ),
+			'main'               => __( 'General', 'easy-digital-downloads' ),
 			'purchase_receipts'  => __( 'Purchase Receipts', 'easy-digital-downloads' ),
 			'sale_notifications' => __( 'New Sale Notifications', 'easy-digital-downloads' ),
 		) ),
 		'styles'     => apply_filters( 'edd_settings_sections_styles', array(
-			'main'               => __( 'Style Settings', 'easy-digital-downloads' ),
+			'main'               => __( 'General', 'easy-digital-downloads' ),
 		) ),
 		'taxes'      => apply_filters( 'edd_settings_sections_taxes', array(
-			'main'               => __( 'Tax Settings', 'easy-digital-downloads' ),
+			'main'               => __( 'General', 'easy-digital-downloads' ),
 		) ),
 		'extensions' => apply_filters( 'edd_settings_sections_extensions', array(
 			'main'               => __( 'Main', 'easy-digital-downloads' )
 		) ),
 		'licenses'   => apply_filters( 'edd_settings_sections_licenses', array() ),
 		'misc'       => apply_filters( 'edd_settings_sections_misc', array(
-			'main'               => __( 'Misc Settings', 'easy-digital-downloads' ),
-			'checkout'           => __( 'Checkout Settings', 'easy-digital-downloads' ),
+			'main'               => __( 'Miscellaneous', 'easy-digital-downloads' ),
+			'checkout'           => __( 'Checkout', 'easy-digital-downloads' ),
 			'button_text'        => __( 'Button Text', 'easy-digital-downloads' ),
 			'file_downloads'     => __( 'File Downloads', 'easy-digital-downloads' ),
-			'accounting'         => __( 'Accounting Settings', 'easy-digital-downloads' ),
+			'accounting'         => __( 'Accounting', 'easy-digital-downloads' ),
 			'site_terms'         => __( 'Terms of Agreement', 'easy-digital-downloads' ),
 		) ),
 	);
@@ -1548,6 +1494,13 @@ function edd_gateways_callback( $args ) {
 		$html .= '<input name="edd_settings[' . esc_attr( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" class="' . $class . '" type="checkbox" value="1" ' . checked('1', $enabled, false) . '/>&nbsp;';
 		$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']">' . esc_html( $option['admin_label'] ) . '</label><br/>';
 	endforeach;
+	$url_args  = array(
+			'utm_source'   => 'settings',
+			'utm_medium'   => 'gateways',
+			'utm_campaign' => 'admin',
+	);
+	$url   = esc_url( add_query_arg( $url_args, 'https://easydigitaldownloads.com/downloads/category/extensions/gateways/' ) );
+	$html .= '<p>' . sprintf( __( 'Don\'t see what you need? More Payment Gateway options are available <a href="%s">here</a>', 'easy-digital-downloads' ), $url ) . '</p>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
@@ -1617,6 +1570,46 @@ function edd_text_callback( $args ) {
 	$readonly = $args['readonly'] === true ? ' readonly="readonly"' : '';
 	$size     = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
 	$html     = '<input type="text" class="' . $class . ' ' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" ' . $name . ' value="' . esc_attr( stripslashes( $value ) ) . '"' . $readonly . $disabled . ' placeholder="' . esc_attr( $args['placeholder'] ) . '"/>';
+	$html    .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
+
+	echo apply_filters( 'edd_after_setting_output', $html, $args );
+}
+
+/**
+ * Email Callback
+ *
+ * Renders email fields.
+ *
+ * @since 2.8
+ * @param array $args Arguments passed by the setting
+ *
+ * @return void
+ */
+function edd_email_callback( $args ) {
+	$edd_option = edd_get_option( $args['id'] );
+
+	if ( $edd_option ) {
+		$value = $edd_option;
+	} elseif( ! empty( $args['allow_blank'] ) && empty( $edd_option ) ) {
+		$value = '';
+	} else {
+		$value = isset( $args['std'] ) ? $args['std'] : '';
+	}
+
+	if ( isset( $args['faux'] ) && true === $args['faux'] ) {
+		$args['readonly'] = true;
+		$value = isset( $args['std'] ) ? $args['std'] : '';
+		$name  = '';
+	} else {
+		$name = 'name="edd_settings[' . esc_attr( $args['id'] ) . ']"';
+	}
+
+	$class = edd_sanitize_html_class( $args['field_class'] );
+
+	$disabled = ! empty( $args['disabled'] ) ? ' disabled="disabled"' : '';
+	$readonly = $args['readonly'] === true ? ' readonly="readonly"' : '';
+	$size     = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
+	$html     = '<input type="email" class="' . $class . ' ' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" ' . $name . ' value="' . esc_attr( stripslashes( $value ) ) . '"' . $readonly . $disabled . ' placeholder="' . esc_attr( $args['placeholder'] ) . '"/>';
 	$html    .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
