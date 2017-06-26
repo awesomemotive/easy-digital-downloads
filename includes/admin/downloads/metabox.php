@@ -1143,7 +1143,7 @@ function edd_render_review_status_metabox() {
 	} else {
 
 		$base_url = 'https://easydigitaldownloads.com/downloads/product-reviews';
-		$args = array(
+		$args     = array(
 			'utm_source'   => 'edit-download',
 			'utm_medium'   => 'enable-reviews',
 			'utm_campaign' => 'admin',
