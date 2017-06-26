@@ -55,9 +55,7 @@ function edd_register_form( $redirect = '' ) {
 
 	ob_start();
 
-	if( ! is_user_logged_in() ) {
-		edd_get_template_part( 'shortcode', 'register' );
-	}
+	edd_get_template_part( 'shortcode', 'register' );
 
 	return apply_filters( 'edd_register_form', ob_get_clean() );
 }
