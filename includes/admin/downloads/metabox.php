@@ -44,7 +44,7 @@ function edd_add_download_meta_box() {
 		}
 
 		if ( ! class_exists( 'EDD_Reviews' ) ) {
-			add_meta_box( 'edd-reviews-status', __( 'Reviews Status', 'easy-digital-downloads' ), 'edd_render_review_status_metabox', 'download', 'side', 'low' );
+			add_meta_box( 'edd-reviews-status', __( 'Product Reviews', 'easy-digital-downloads' ), 'edd_render_review_status_metabox', 'download', 'side', 'low' );
 		}
 
 	}
