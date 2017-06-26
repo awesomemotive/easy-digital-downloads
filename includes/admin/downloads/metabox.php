@@ -42,6 +42,11 @@ function edd_add_download_meta_box() {
 			/** Product Stats */
 			add_meta_box( 'edd_product_stats', sprintf( __( '%1$s Stats', 'easy-digital-downloads' ), edd_get_label_singular(), edd_get_label_plural() ), 'edd_render_stats_meta_box', $post_type, 'side', 'high' );
 		}
+
+		if ( ! class_exists( 'EDD_Reviews' ) ) {
+			add_meta_box( 'edd-reviews-status', __( 'Product Reviews', 'easy-digital-downloads' ), 'edd_render_review_status_metabox', 'download', 'side', 'low' );
+		}
+
 	}
 }
 add_action( 'add_meta_boxes', 'edd_add_download_meta_box' );
@@ -1103,4 +1108,58 @@ function edd_render_stats_meta_box() {
 	</p>
 <?php
 	do_action('edd_stats_meta_box');
+}
+
+/**
+ * Outputs a metabox for the Product Reviews extension to show or activate it.
+ *
+ * @since 2.8
+ * @return void
+ */
+function edd_render_review_status_metabox() {
+	ob_start();
+
+	$possible_locations = array( 'edd-reviews/edd-reviews.php', 'EDD-Reviews/edd-reviews.php' );
+	$plugin_found       = false;
+	foreach ( $possible_locations as $location ) {
+		if ( 0 !== validate_plugin( $location ) ) {
+			continue;
+		}
+
+		$plugin_found = $location;
+		break;
+	}
+	if ( false !== $plugin_found ) {
+
+		$base_url = wp_nonce_url( admin_url( 'plugins.php' ), 'activate-plugin_' . $plugin_found );
+		$args     = array(
+			'action'        => 'activate',
+			'plugin'        => sanitize_text_field( $plugin_found ),
+			'plugin_status' => 'all',
+		);
+		$activate_url = add_query_arg( $args, $base_url );
+		?><p style="text-align: center;"><a href="<?php echo esc_url( $activate_url ); ?>" class="button-secondary"><?php _e( 'Activate Reviews', 'easy-digital-downloads' ); ?></a></p><?php
+
+	} else {
+
+		$base_url = 'https://easydigitaldownloads.com/downloads/product-reviews';
+		$args     = array(
+			'utm_source'   => 'edit-download',
+			'utm_medium'   => 'enable-reviews',
+			'utm_campaign' => 'admin',
+		);
+		$url = add_query_arg( $args, $base_url );
+		?>
+		<p>
+			<?php printf( __( 'Would you like to enable reviews for this product? Check out our <a target="_blank" href="%s">Product Reviews</a> extension.', 'easy-digital-downloads' ), $url ); ?>
+		</p>
+		<?php
+
+	}
+
+
+	$rendered = ob_get_contents();
+	ob_end_clean();
+
+	echo $rendered;
 }
