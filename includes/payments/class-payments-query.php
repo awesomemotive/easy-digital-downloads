@@ -203,11 +203,11 @@ class EDD_Payments_Query extends EDD_Stats {
 				$this->payments[] = apply_filters( 'edd_payment', $payment, $payment_id, $this );
 			}
 
-			$this->maybe_reset_globals();
-
 		}
 
 		add_action( 'edd_post_get_payments', array( $this, 'date_filter_post' ) );
+
+		$this->maybe_reset_globals();
 
 		do_action( 'edd_post_get_payments', $this );
 
