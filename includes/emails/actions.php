@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @param EDD_Customer $customer   Customer object for associated payment.
  * @return void
  */
-function edd_trigger_purchase_receipt( $payment_id, $payment, $customer ) {
+function edd_trigger_purchase_receipt( $payment_id = 0, $payment = null, $customer = null ) {
 	// Make sure we don't send a purchase receipt while editing a payment
 	if ( isset( $_POST['edd-action'] ) && 'edit_payment' == $_POST['edd-action'] ) {
 		return;
