@@ -399,8 +399,15 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 					$files   = $this->queried_files[ $log->post_parent ];
 				}
 
+				// Filter the download files
+				$files = apply_filters( 'edd_log_file_download_download_files', $files, $log, $meta );
+
 				$file_id   = (int) $meta['_edd_log_file_id'][0];
 				$file_id   = $file_id !== false ? $file_id : 0;
+
+				// Filter the $file_id
+				$file_id = apply_filters( 'edd_log_file_download_file_id', $file_id, $log );
+
 				$file_name = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
 
 				if ( ( $this->file_search && strpos( strtolower( $file_name ), strtolower( $this->get_search() ) ) !== false ) || ! $this->file_search ) {

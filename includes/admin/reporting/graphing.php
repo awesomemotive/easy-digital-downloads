@@ -806,6 +806,7 @@ function edd_get_report_dates() {
 				$dates['m_end']    = date( 'n' ) - 1;
 				$dates['year_end'] = $dates['year'];
 			}
+			$dates['day']     = 1;
 			$dates['day_end'] = cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] );
 		break;
 
