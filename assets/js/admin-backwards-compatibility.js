@@ -1,3 +1,7 @@
+/**
+ * Developer Notice: The contents of this JavaScript file are not to be relied on in any future versions of EDD
+ * These exist as a backwards compatibility measure for https://github.com/easydigitaldownloads/easy-digital-downloads/issues/2704
+ */
 jQuery(document).ready(function ($) {
 
 	// Adjust location of setting labels for settings in the new containers created below (back compat)
