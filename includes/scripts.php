@@ -229,7 +229,23 @@ function edd_load_admin_scripts( $hook ) {
 		'search_placeholder_country'  => __( 'Type to search all Countries', 'easy-digital-downloads' ),
 		'search_placeholder_state'    => __( 'Type to search all States/Provinces', 'easy-digital-downloads' ),
 		'unsupported_browser'         => __( 'We are sorry but your browser is not compatible with this kind of file upload. Please upgrade your browser.', 'easy-digital-downloads' ),
+		'show_advanced_settings'      => __( 'Show advanced settings', 'easy-digital-downloads' ),
+		'hide_advanced_settings'      => __( 'Hide advanced settings', 'easy-digital-downloads' ),
 	));
+
+	/*
+	 * This bit of JavaScript is to facilitate #2704, in order to not break backwards compatibility with the old Variable Price Rows
+	 * while we transition to an entire new markup. They should not be relied on for long-term usage.
+	 *
+	 * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/2704
+	 */
+	wp_register_script( 'edd-admin-scripts-compatibility', $js_dir . 'admin-backwards-compatibility' . $suffix . '.js', array( 'jquery', 'edd-admin-scripts' ), EDD_VERSION );
+	wp_localize_script( 'edd-admin-scripts-compatibility', 'edd_backcompat_vars', array(
+		'purchase_limit_settings'     => __( 'Purchase Limit Settings', 'easy-digital-downloads' ),
+		'simple_shipping_settings'    => __( 'Simple Shipping Settings', 'easy-digital-downloads' ),
+		'software_licensing_settings' => __( 'Software Licensing Settings', 'easy-digital-downloads' ),
+		'recurring_payments_settings' => __( 'Recurring Payments Settings', 'easy-digital-downloads' ),
+	) );
 
 	wp_enqueue_style( 'wp-color-picker' );
 	wp_enqueue_script( 'wp-color-picker' );
