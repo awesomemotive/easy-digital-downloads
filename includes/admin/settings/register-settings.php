@@ -979,10 +979,6 @@ function edd_settings_sanitize( $input = array() ) {
 						unset( $output[ $key ] );
 					}
 					break;
-				case 'select':
-					// Ensures that Multiple Selects that have been cleared out save as Empty
-					if ( empty( $_POST['edd_settings'][ $key ] ) ) $output[ $key ] = '';
-					break;
 				default:
 					if ( array_key_exists( $key, $input ) && empty( $input[ $key ] ) ) {
 						unset( $output[ $key ] );
@@ -1756,10 +1752,10 @@ function edd_select_callback($args) {
 	} else {
 		
 		// Properly set default fallback if the Select Field allows Multiple values
-		if ( ! $args['multiple'] ) {
+		if ( empty( $args['multiple'] ) ) {
 			$value = isset( $args['std'] ) ? $args['std'] : '';
 		} else {
-			$value = isset( $args['std'] ) ? $args['std'] : array();
+			$value = ! empty( $args['std'] ) ? $args['std'] : array();
 		}
 		
 	}
