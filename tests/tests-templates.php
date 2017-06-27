@@ -95,9 +95,10 @@ class Tests_Templates extends EDD_UnitTestCase {
 		foreach( $meta as $key => $value ) {
 			update_post_meta( $single_id, $key, $value );
 		}
+
 		$single_link_default = edd_get_purchase_link( array( 'download_id' => $single_id ) );
 		$this->assertContains( 'data-price="10.00"', $single_link_default );
-		$this->assertContains( '<span class="edd-add-to-cart-label">&#36;10.00&nbsp;&ndash;&nbsp;Purchase</span>', $single_link_default );
+		$this->assertContains( '<span class="edd-add-to-cart-label"><span class="edd-purchase-button-currency-symbol">&#36;</span><span class="edd-purchase-button-price-text">10.00</span><span class="edd-purchase-button-separator">&nbsp;&ndash;&nbsp;</span><span class="edd-purchase-button-text">Purchase</span></span>', $single_link_default );
 
 		// Verify the purchase link works with price = 0
 		$single_link_no_price = edd_get_purchase_link( array( 'download_id' => $single_id, 'price' => 0 ) );

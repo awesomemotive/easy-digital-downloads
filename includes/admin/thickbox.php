@@ -29,6 +29,7 @@ function edd_media_button() {
 		$output = '<a href="#TB_inline?width=640&inlineId=choose-download" class="thickbox button edd-thickbox" style="padding-left: .4em;">' . $img . sprintf( __( 'Insert %s', 'easy-digital-downloads' ), strtolower( edd_get_label_singular() ) ) . '</a>';
 
 	}
+
 	echo $output;
 }
 add_action( 'media_buttons', 'edd_media_button', 11 );

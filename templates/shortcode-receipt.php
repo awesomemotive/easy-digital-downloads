@@ -149,12 +149,12 @@ $status    = edd_get_payment_status( $payment, true );
 						<div class="edd_purchase_receipt_product_name">
 							<?php echo esc_html( $item['name'] ); ?>
 							<?php if ( edd_has_variable_prices( $item['id'] ) && ! is_null( $price_id ) ) : ?>
-							<span class="edd_purchase_receipt_price_name">&nbsp;&ndash;&nbsp;<?php echo edd_get_price_option_name( $item['id'], $price_id, $payment->ID ); ?></span>
+							<span class="edd_purchase_receipt_price_name">&nbsp;&ndash;&nbsp;<?php echo esc_html( edd_get_price_option_name( $item['id'], $price_id, $payment->ID ) ); ?></span>
 							<?php endif; ?>
 						</div>
 
 						<?php if ( $edd_receipt_args['notes'] ) : ?>
-							<div class="edd_purchase_receipt_product_notes"><?php echo wpautop( edd_get_product_notes( $item['id'] ) ); ?></div>
+							<div class="edd_purchase_receipt_product_notes"><?php echo wp_kses_post( wpautop( edd_get_product_notes( $item['id'] ) ) ); ?></div>
 						<?php endif; ?>
 
 						<?php
