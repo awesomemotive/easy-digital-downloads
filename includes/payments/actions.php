@@ -121,12 +121,32 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 		$payment->completed_date = current_time( 'mysql' );
 		$payment->save();
 
-		do_action( 'edd_complete_purchase', $payment_id );
+		/**
+		 * Runs **when** a purchase is marked as "complete".
+		 *
+		 * @since 2.8 - Added EDD_Payment and EDD_Customer object to action.
+		 *
+		 * @param int          $payment_id Payment ID.
+		 * @param EDD_Payment  $payment    EDD_Payment object containing all payment data.
+		 * @param EDD_Customer $customer   EDD_Customer object containing all customer data.
+		 */
+		do_action( 'edd_complete_purchase', $payment_id, $payment, $customer );
 
 		// If cron doesn't work on a site, allow the filter to use __return_false and run the events immediately.
 		$use_cron = apply_filters( 'edd_use_after_payment_actions', true, $payment_id );
 		if ( false === $use_cron || ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) ) {
-			do_action( 'edd_after_payment_actions', $payment_id );
+			/**
+			 * Runs **after** a purchase is marked as "complete".
+			 *
+			 * @see edd_process_after_payment_actions()
+			 *
+			 * @since 2.8 - Added EDD_Payment and EDD_Customer object to action.
+			 *
+			 * @param int          $payment_id Payment ID.
+			 * @param EDD_Payment  $payment    EDD_Payment object containing all payment data.
+			 * @param EDD_Customer $customer   EDD_Customer object containing all customer data.
+			 */
+			do_action( 'edd_after_payment_actions', $payment_id, $payment, $customer );
 		}
 
 	}
