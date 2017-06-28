@@ -1277,24 +1277,19 @@ jQuery(document).ready(function ($) {
 	});
 
 	$('.edd-select-chosen .chosen-search input').each( function() {
-		var type = $(this).parent().parent().parent().prev('select.edd-select-chosen').data('search-type');
-		var placeholder = '';
-
-		if ( type === 'download' ) {
-			placeholder = edd_vars.search_placeholder;
-		} else {
-			var type = 'search_placeholder_' + type;
-			if ( edd_vars[type] ) {
-				placeholder = edd_vars[type];
-			}
-		}
-
+		var selectElem = $(this).parent().parent().parent().prev('select.edd-select-chosen'),
+			type = selectElem.data('search-type'),
+			placeholder = selectElem.data('search-placeholder');
 		$(this).attr( 'placeholder', placeholder );
 	});
 
 	// Add placeholders for Chosen input fields
 	$( '.chosen-choices' ).on( 'click', function () {
-		$(this).children('li').children('input').attr( 'placeholder', edd_vars.type_to_search );
+		var placeholder = $(this).parent().prev().data('search-placeholder');
+		if ( ! placeholder.length ) {
+			placeholder = edd_vars.type_to_search;
+		}
+		$(this).children('li').children('input').attr( 'placeholder', placeholder );
 	});
 
 	// Variables for setting up the typing timer
