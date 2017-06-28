@@ -315,7 +315,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 					$item_price = ! isset( $price ) ? edd_get_download_price( $download_id ) : $price;
 					$item_tax   = ! isset( $tax ) ? ( $download_count > 1 ? 0.00 : $payment->tax ) : $tax;
-					$price_id   = ! isseT( $price_id ) ? false : $price_id;
+					$price_id   = ! isset( $price_id ) ? false : $price_id;
 
 					$args = array(
 						'item_price' => $item_price,
