@@ -1269,13 +1269,16 @@ jQuery(document).ready(function ($) {
 		var selectElem = $(this).parent().parent().parent().prev('select.edd-select-chosen'),
 			type = selectElem.data('search-type'),
 			placeholder = selectElem.data('search-placeholder');
-
 		$(this).attr( 'placeholder', placeholder );
 	});
 
 	// Add placeholders for Chosen input fields
 	$( '.chosen-choices' ).on( 'click', function () {
-		$(this).children('li').children('input').attr( 'placeholder', edd_vars.type_to_search );
+		var placeholder = $(this).parent().prev().data('search-placeholder');
+		if ( ! placeholder.length ) {
+			placeholder = edd_vars.type_to_search;
+		}
+		$(this).children('li').children('input').attr( 'placeholder', placeholder );
 	});
 
 	// Variables for setting up the typing timer
