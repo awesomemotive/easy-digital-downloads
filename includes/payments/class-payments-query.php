@@ -50,6 +50,24 @@ class EDD_Payments_Query extends EDD_Stats {
 	public $payments = array();
 
 	/**
+	 * Holds a boolean to determine if there is an existing $wp_query global.
+	 *
+	 * @var bool
+	 * @access private
+	 * @since 2.8
+	 */
+	private $existing_query;
+
+	/**
+	 * If an existing global $post item exists before we start our query, maintain it for later 'reset'.
+	 *
+	 * @var WP_Post|null
+	 * @access private
+	 * @since 2.8
+	 */
+	private $existing_post;
+
+	/**
 	 * Default query arguments.
 	 *
 	 * Not all of these are valid arguments that can be passed to WP_Query. The ones that are not, are modified before
@@ -122,6 +140,10 @@ class EDD_Payments_Query extends EDD_Stats {
 	 */
 	public function init() {
 
+		// Before we start setting up queries, let's store any existing queries that might be in globals.
+		$this->existing_query = isset( $GLOBALS['wp_query'] ) && isset( $GLOBALS['wp_query']->post );
+		$this->existing_post  = isset( $GLOBALS['post'] ) ? $GLOBALS['post'] : null;
+
 	}
 
 	/**
@@ -133,7 +155,7 @@ class EDD_Payments_Query extends EDD_Stats {
 	 *
 	 * @access public
 	 * @since 1.8
-	 * @return object
+	 * @return array
 	 */
 	public function get_payments() {
 
@@ -166,6 +188,7 @@ class EDD_Payments_Query extends EDD_Stats {
 		}
 
 		if ( $query->have_posts() ) {
+
 			while ( $query->have_posts() ) {
 				$query->the_post();
 
@@ -180,12 +203,13 @@ class EDD_Payments_Query extends EDD_Stats {
 				$this->payments[] = apply_filters( 'edd_payment', $payment, $payment_id, $this );
 			}
 
-			wp_reset_postdata();
 		}
 
 		add_action( 'edd_post_get_payments', array( $this, 'date_filter_post' ) );
 
 		do_action( 'edd_post_get_payments', $this );
+
+		$this->maybe_reset_globals();
 
 		return $this->payments;
 	}
@@ -586,5 +610,23 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		$this->__unset( 'download' );
 
+	}
+
+	/**
+	 * Based off the current global variables for $wp_query and $post, we may need to reset some data or just restore it.
+	 *
+	 * @since 2.8
+	 * @access private
+	 * @return void
+	 */
+	private function maybe_reset_globals() {
+		// Based off our pre-iteration, let's reset the globals.
+		if ( $this->existing_query ) {
+			wp_reset_postdata();
+		} elseif ( $this->existing_post ) {
+			$GLOBALS['post'] = $this->existing_post;
+		} else {
+			unset( $GLOBALS['post'] );
+		}
 	}
 }
