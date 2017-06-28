@@ -938,6 +938,12 @@ function edd_settings_sanitize( $input = array() ) {
 		$tab      = isset( $referrer['tab'] ) ? $referrer['tab'] : 'general';
 		$section  = isset( $referrer['section'] ) ? $referrer['section'] : 'main';
 
+		if ( ! empty( $_POST['edd_section_override'] ) ) {
+			$section = sanitize_text_field( $_POST['edd_section_override'] );
+		}
+
+		$setting_types = edd_get_registered_settings_types( $tab, $section );
+
 		// Run a general sanitization for the tab for special fields (like taxes)
 		$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
 
@@ -980,7 +986,7 @@ function edd_settings_sanitize( $input = array() ) {
 					}
 					break;
 				default:
-					if ( array_key_exists( $key, $input ) && empty( $input[ $key ] ) ) {
+					if ( array_key_exists( $key, $input ) && empty( $input[ $key ] ) || ( array_key_exists( $key, $output ) && ! array_key_exists( $key, $input ) ) ) {
 						unset( $output[ $key ] );
 					}
 					break;
@@ -1005,19 +1011,31 @@ function edd_settings_sanitize( $input = array() ) {
  * in a much cleaner set of logic in edd_settings_sanitize
  *
  * @since  2.6.5
+ * @since 2.8 - Added the ability to filter setting types by tab and section
+ *
+ * @param $filtered_tab bool|string     A tab to filter setting types by.
+ * @param $filtered_section bool|string A section to filter setting types by.
  * @return array Key is the setting ID, value is the type of setting it is registered as
  */
-function edd_get_registered_settings_types() {
+function edd_get_registered_settings_types( $filtered_tab = false, $filtered_section = false ) {
 	$settings      = edd_get_registered_settings();
 	$setting_types = array();
 
-	foreach ( $settings as $tab ) {
+	foreach ( $settings as $tab_id => $tab ) {
 
-		foreach ( $tab as $section_or_setting ) {
+		if ( false !== $filtered_tab && $filtered_tab !== $tab_id ) {
+			continue;
+		}
+
+		foreach ( $tab as $section_id => $section_or_setting ) {
 
 			// See if we have a setting registered at the tab level for backwards compatibility
 			if ( is_array( $section_or_setting ) && array_key_exists( 'type', $section_or_setting ) ) {
 				$setting_types[ $section_or_setting['id'] ] = $section_or_setting['type'];
+				continue;
+			}
+
+			if ( false !== $filtered_section && $filtered_section !== $section_id ) {
 				continue;
 			}
 
