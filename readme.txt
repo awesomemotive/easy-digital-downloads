@@ -17,7 +17,7 @@ Easy Digital Downloads is a complete eCommerce solution for selling digital prod
 
 = Sell effortlessly =
 
-Whether it is software, documents, photos, ebooks, songs, graphics, or any other type of media file, Easy Digtal Downloads provides a complete system for effortlessly selling your digital products.
+Whether it is software, documents, photos, ebooks, songs, graphics, or any other type of media file, Easy Digital Downloads provides a complete system for effortlessly selling your digital products.
 
 = Localized for your language =
 
@@ -238,7 +238,7 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 * Fix: Use once per customer option on discount codes does not respect case sensitivity
 * Fix: Date filters on payment history not working properly
 * Fix: Tax rates of less than 1 calculates an incorrect total
-* Fix: edd_unset_cart_discount() is case senstive when it should not be
+* Fix: edd_unset_cart_discount() is case sensitive when it should not be
 * Fix: PHP 7 compatibility flags due to safe_mode checks
 * Fix: Download files not imported properly when file URL/path begins with a forward slash
 * Fix: Pending verification message shown multiple times if the page contains multiple shortcodes
