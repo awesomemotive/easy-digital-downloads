@@ -37,7 +37,7 @@ class EDD_Payments_Export extends EDD_Export {
 	public function headers() {
 		ignore_user_abort( true );
 
-		if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) )
+		if ( ! edd_is_func_disabled( 'set_time_limit' ) )
 			set_time_limit( 0 );
 
 		$month = isset( $_POST['month'] ) ? absint( $_POST['month'] ) : date( 'n' );
@@ -185,7 +185,7 @@ class EDD_Payments_Export extends EDD_Export {
 				'amount'   => html_entity_decode( edd_format_amount( $total ) ),
 				'tax'      => html_entity_decode( edd_format_amount( edd_get_payment_tax( $payment->ID, $payment_meta ) ) ),
 				'discount' => isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ? $user_info['discount'] : __( 'none', 'easy-digital-downloads' ),
-				'gateway'  => edd_get_gateway_admin_label( get_post_meta( $payment->ID, '_edd_payment_gateway', true ) ),
+				'gateway'  => edd_get_gateway_admin_label( edd_get_payment_meta( $payment->ID, '_edd_payment_gateway', true ) ),
 				'trans_id' => edd_get_payment_transaction_id( $payment->ID ),
 				'key'      => $payment_meta['key'],
 				'date'     => $payment->post_date,

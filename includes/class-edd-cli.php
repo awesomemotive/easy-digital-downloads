@@ -519,15 +519,23 @@ class EDD_CLI extends WP_CLI_Command {
 		$status     = 'complete';
 		$id         = false;
 		$price_id   = false;
+		$tax        = 0;
+		$email      = 'guest@local.dev';
+		$fname      = 'Pippin';
+		$lname      = 'Williamson';
+		$date       = false;
+		$range      = 30;
 
 		if( count( $assoc_args ) > 0 ) {
 			$number     = ( array_key_exists( 'number', $assoc_args ) )   ? absint( $assoc_args['number'] )             : $number;
 			$id         = ( array_key_exists( 'id', $assoc_args ) )       ? absint( $assoc_args['id'] )                 : $id;
-			$price_id   = ( array_key_exists( 'price_id', $assoc_args ) ) ? absint( $assoc_args['id'] )                 : false;
-			$tax        = ( array_key_exists( 'tax', $assoc_args ) )      ? floatval( $assoc_args['tax'] )              : 0;
-			$email      = ( array_key_exists( 'email', $assoc_args ) )    ? sanitize_email( $assoc_args['email'] )      : 'guest@local.dev';
-			$fname      = ( array_key_exists( 'fname', $assoc_args ) )    ? sanitize_text_field( $assoc_args['fname'] ) : 'Pippin';
-			$lname      = ( array_key_exists( 'lname', $assoc_args ) )    ? sanitize_text_field( $assoc_args['lname'] ) : 'Williamson';
+			$price_id   = ( array_key_exists( 'price_id', $assoc_args ) ) ? absint( $assoc_args['id'] )                 : $price_id;
+			$tax        = ( array_key_exists( 'tax', $assoc_args ) )      ? floatval( $assoc_args['tax'] )              : $tax;
+			$email      = ( array_key_exists( 'email', $assoc_args ) )    ? sanitize_email( $assoc_args['email'] )      : $email;
+			$fname      = ( array_key_exists( 'fname', $assoc_args ) )    ? sanitize_text_field( $assoc_args['fname'] ) : $fname;
+			$lname      = ( array_key_exists( 'lname', $assoc_args ) )    ? sanitize_text_field( $assoc_args['lname'] ) : $lname;
+			$date       = ( array_key_exists( 'date', $assoc_args ) )     ? sanitize_text_field( $assoc_args['date'] )  : $date;
+			$range      = ( array_key_exists( 'range', $assoc_args ) )    ? absint( $assoc_args['range'] )              : $range;
 
 			// Status requires a bit more validation
 			if( array_key_exists( 'status', $assoc_args ) ) {
@@ -645,6 +653,24 @@ class EDD_CLI extends WP_CLI_Command {
 
 			}
 
+			if ( 'random' === $date ) {
+				// Randomly grab a date from the current past 30 days
+				$oldest_time = strtotime( '-' . $range . ' days', current_time( 'timestamp') );
+				$newest_time = current_time( 'timestamp' );
+
+				$timestamp   = rand( $oldest_time, $newest_time );
+				$timestring  = date( "Y-m-d H:i:s", $timestamp );
+			} elseif ( empty( $date ) ) {
+				$timestring = false;
+			} else {
+				if ( is_numeric( $date ) ) {
+					$timestring = date( "Y-m-d H:i:s", $date );
+				} else {
+					$parsed_time = strtotime( $date );
+					$timestring = date( "Y-m-d H:i:s", $parsed_time );
+				}
+			}
+
 			$purchase_data = array(
 				'price'	        => edd_sanitize_amount( $total ),
 				'tax'           => 0,
@@ -654,8 +680,12 @@ class EDD_CLI extends WP_CLI_Command {
 				'currency'      => edd_get_currency(),
 				'downloads'     => $final_downloads,
 				'cart_details'  => $cart_details,
-				'status'        => 'pending'
+				'status'        => 'pending',
 			);
+
+			if ( ! empty( $timestring ) ) {
+				$purchase_data['post_date'] = $timestring;
+			}
 
 			$payment_id = edd_insert_payment( $purchase_data );
 
@@ -664,6 +694,13 @@ class EDD_CLI extends WP_CLI_Command {
 			if( $status != 'pending' ) {
 				edd_update_payment_status( $payment_id, $status );
 			}
+
+			if ( ! empty( $timestring ) ) {
+				$payment = new EDD_Payment( $payment_id );
+				$payment->completed_date = $timestring;
+				$payment->save();
+			}
+
 		}
 
 		WP_CLI::success( sprintf( __( 'Created %s payments', 'easy-digital-downloads' ), $number ) );

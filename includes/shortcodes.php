@@ -300,7 +300,7 @@ function edd_purchase_collection_shortcode( $atts, $content = null ) {
 
 	$button_display = implode( ' ', array( $style, $color, $class ) );
 
-	return '<a href="' . add_query_arg( array( 'edd_action' => 'purchase_collection', 'taxonomy' => $taxonomy, 'terms' => $terms ) ) . '" class="' . $button_display . '">' . $text . '</a>';
+	return '<a href="' . esc_url( add_query_arg( array( 'edd_action' => 'purchase_collection', 'taxonomy' => $taxonomy, 'terms' => $terms ) ) ) . '" class="' . $button_display . '">' . $text . '</a>';
 }
 add_shortcode( 'purchase_collection', 'edd_purchase_collection_shortcode' );
 
@@ -582,7 +582,7 @@ function edd_downloads_query( $atts, $content = null ) {
 			<?php while ( $downloads->have_posts() ) : $downloads->the_post(); ?>
 				<?php $schema = edd_add_schema_microdata() ? 'itemscope itemtype="http://schema.org/Product" ' : ''; ?>
 				<div <?php echo $schema; ?>class="<?php echo apply_filters( 'edd_download_class', 'edd_download', get_the_ID(), $atts, $i ); ?>" id="edd_download_<?php echo get_the_ID(); ?>">
-					<div class="edd_download_inner">
+					<div class="<?php echo apply_filters( 'edd_download_inner_class', 'edd_download_inner', get_the_ID(), $atts, $i ); ?>">
 						<?php
 
 						do_action( 'edd_download_before' );
@@ -666,6 +666,7 @@ function edd_downloads_query( $atts, $content = null ) {
 	return apply_filters( 'downloads_shortcode', $display, $atts, $atts['buy_button'], $atts['columns'], '', $downloads, $atts['excerpt'], $atts['full_content'], $atts['price'], $atts['thumbnails'], $query );
 }
 add_shortcode( 'downloads', 'edd_downloads_query' );
+add_shortcode( 'edd_downloads', 'edd_downloads_query' );
 
 /**
  * Price Shortcode
@@ -749,6 +750,13 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 		return $login_form;
 	}
 
+	$user_can_view = apply_filters( 'edd_user_can_view_receipt', $user_can_view, $edd_receipt_args );
+
+	// If this was a guest checkout and the purchase session is empty, output a relevant error message
+	if ( empty( $session ) && ! is_user_logged_in() && ! $user_can_view ) {
+		return '<p class="edd-alert edd-alert-error">' . apply_filters( 'edd_receipt_guest_error_message', __( 'Receipt could not be retrieved, your purchase session has expired.', 'easy-digital-downloads' ) ) . '</p>';
+	}
+
 	/*
 	 * Check if the user has permission to view the receipt
 	 *
@@ -761,7 +769,7 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	 */
 
 
-	if ( ! apply_filters( 'edd_user_can_view_receipt', $user_can_view, $edd_receipt_args ) ) {
+	if ( ! $user_can_view ) {
 		return '<p class="edd-alert edd-alert-error">' . $edd_receipt_args['error'] . '</p>';
 	}
 

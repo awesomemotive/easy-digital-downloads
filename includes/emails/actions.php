@@ -49,7 +49,7 @@ function edd_resend_purchase_receipt( $data ) {
 		wp_die( __( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
-	$email = ! empty( $_GET['email'] ) ? sanitize_text_field( $_GET['email'] ) : '';
+	$email = ! empty( $_GET['email'] ) ? sanitize_email( $_GET['email'] ) : '';
 
 	if( empty( $email ) ) {
 		$customer = new EDD_Customer( edd_get_payment_customer_id( $purchase_id ) );

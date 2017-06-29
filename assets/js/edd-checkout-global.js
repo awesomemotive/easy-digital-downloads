@@ -132,9 +132,14 @@ window.EDD_Checkout = (function($) {
 					if (discount_response.msg == 'valid') {
 						$('.edd_cart_discount').html(discount_response.html);
 						$('.edd_cart_discount_row').show();
-						$('.edd_cart_amount').each(function() {
-							$(this).text(discount_response.total);
-						});
+
+						$( '.edd_cart_amount' ).each( function() {
+							// Format discounted amount for display.
+							$( this ).text( discount_response.total );
+							// Set data attribute to new (unformatted) discounted amount.'
+							$( this ).data( 'total', discount_response.total_plain );
+						} );
+
 						$('#edd-discount', $checkout_form_wrap ).val('');
 
 						recalculate_taxes();
@@ -204,7 +209,11 @@ window.EDD_Checkout = (function($) {
 						// We're removing a 100% discount code so we need to force the payment gateway to reload
 						window.location.reload();
 					}
-					$(this).text(discount_response.total);
+
+					// Format discounted amount for display.
+					$( this ).text( discount_response.total );
+					// Set data attribute to new (unformatted) discounted amount.'
+					$( this ).data( 'total', discount_response.total_plain );
 				});
 
 				$('.edd_cart_discount').html(discount_response.html);
@@ -239,11 +248,17 @@ window.EDD_Checkout = (function($) {
 			download_id = $this.closest('.edd_cart_item').data('download-id'),
 			options = $this.parent().find('input[name="edd-cart-download-' + key + '-options"]').val();
 
+		var edd_cc_address = $('#edd_cc_address');
+		var billing_country = edd_cc_address.find('#billing_country').val(),
+			card_state      = edd_cc_address.find('#card_state').val();
+
 		var postData = {
 			action: 'edd_update_quantity',
 			quantity: quantity,
 			download_id: download_id,
-			options: options
+			options: options,
+			billing_country: billing_country,
+			card_state: card_state,
 		};
 
 		//edd_discount_loader.show();
@@ -291,6 +306,7 @@ window.EDD_Checkout = (function($) {
 // init on document.ready
 window.jQuery(document).ready(EDD_Checkout.init);
 
+var ajax_tax_count = 0;
 function recalculate_taxes(state) {
 
 	if( '1' != edd_global_vars.taxes_enabled )
@@ -305,9 +321,11 @@ function recalculate_taxes(state) {
 	var postData = {
 		action: 'edd_recalculate_taxes',
 		billing_country: $edd_cc_address.find('#billing_country').val(),
-		state: state
+		state: state,
+		card_zip: $edd_cc_address.find('input[name=card_zip]').val()
 	};
 
+	var current_ajax_count = ++ajax_tax_count;
 	jQuery.ajax({
 		type: "POST",
 		data: postData,
@@ -317,17 +335,24 @@ function recalculate_taxes(state) {
 			withCredentials: true
 		},
 		success: function (tax_response) {
-			jQuery('#edd_checkout_cart_form').replaceWith(tax_response.html);
-			jQuery('.edd_cart_amount').html(tax_response.total);
-			var tax_data = new Object();
-			tax_data.postdata = postData;
-			tax_data.response = tax_response;
-			jQuery('body').trigger('edd_taxes_recalculated', [ tax_data ]);
+			// Only update tax info if this response is the most recent ajax call.
+			// Avoids bug with form autocomplete firing multiple ajax calls at the same time and not
+			// being able to predict the call response order.
+			if (current_ajax_count === ajax_tax_count) {
+				jQuery('#edd_checkout_cart_form').replaceWith(tax_response.html);
+				jQuery('.edd_cart_amount').html(tax_response.total);
+				var tax_data = new Object();
+				tax_data.postdata = postData;
+				tax_data.response = tax_response;
+				jQuery('body').trigger('edd_taxes_recalculated', [ tax_data ]);
+			}
 		}
 	}).fail(function (data) {
 		if ( window.console && window.console.log ) {
 			console.log( data );
-			jQuery('body').trigger('edd_taxes_recalculated', [ tax_data ]);
+			if (current_ajax_count === ajax_tax_count) {
+				jQuery('body').trigger('edd_taxes_recalculated', [ tax_data ]);
+			}
 		}
 	});
 }

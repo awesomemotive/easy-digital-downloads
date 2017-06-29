@@ -411,7 +411,7 @@ function edd_email_tag_download_list( $payment_id ) {
 					$title .= "&nbsp;&ndash;&nbsp;" . __( 'SKU', 'easy-digital-downloads' ) . ': ' . $sku;
 				}
 
-				if ( $price_id !== null ) {
+				if( ! empty( $price_id ) && 0 !== $price_id ){
 					$title .= "&nbsp;&ndash;&nbsp;" . edd_get_price_option_name( $item['id'], $price_id, $payment_id );
 				}
 
@@ -427,7 +427,7 @@ function edd_email_tag_download_list( $payment_id ) {
 					if ( $show_links ) {
 						$download_list .= '<div>';
 							$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $item['id'], $price_id );
-							$download_list .= '<a href="' . esc_url( $file_url ) . '">' . edd_get_file_name( $file ) . '</a>';
+							$download_list .= '<a href="' . esc_url_raw( $file_url ) . '">' . edd_get_file_name( $file ) . '</a>';
 							$download_list .= '</div>';
 					} else {
 						$download_list .= '<div>';
@@ -459,6 +459,16 @@ function edd_email_tag_download_list( $payment_id ) {
 							$download_list .= '</div>';
 						}
 					}
+				}
+			}else{
+
+				$no_downloads_message = apply_filters( 'edd_receipt_no_files_found_text', __( 'No downloadable files found.', 'easy-digital-downloads' ), $item['id'] );
+				$no_downloads_message = apply_filters( 'edd_email_receipt_no_downloads_message', $no_downloads_message, $item['id'], $price_id, $payment_id );
+
+				if ( ! empty( $no_downloads_message ) ){
+					$download_list .= '<div>';
+						$download_list .= $no_downloads_message;
+					$download_list .= '</div>';
 				}
 			}
 

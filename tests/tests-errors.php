@@ -4,7 +4,8 @@
 /**
  * @group edd_errors
  */
-class Tests_Errors extends WP_UnitTestCase {
+class Tests_Errors extends EDD_UnitTestCase {
+
 	public function setUp() {
 		parent::setUp();
 

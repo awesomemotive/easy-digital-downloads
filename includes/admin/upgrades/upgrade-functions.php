@@ -39,11 +39,6 @@ function edd_do_automatic_upgrades() {
 
 	if( $did_upgrade ) {
 
-		// If it is a major version, send to what's new page
-		if( substr_count( EDD_VERSION, '.' ) < 2 ) {
-			set_transient( '_edd_activation_redirect', true, 30 );
-		}
-
 		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
 
 		// Send a check in. Note: this only sends if data tracking has been enabled
@@ -301,7 +296,7 @@ function edd_v131_upgrades() {
 
 	ignore_user_abort( true );
 
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) )
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) )
 		set_time_limit( 0 );
 
 	$args = array(
@@ -402,12 +397,12 @@ function edd_v14_upgrades() {
 	global $edd_options;
 
 	/** Add [edd_receipt] to success page **/
-	$success_page = get_post( $edd_options['success_page'] );
+	$success_page = get_post( edd_get_option( 'success_page' ) );
 
 	// Check for the [edd_receipt] shortcode and add it if not present
 	if( strpos( $success_page->post_content, '[edd_receipt' ) === false ) {
 		$page_content = $success_page->post_content .= "\n[edd_receipt]";
-		wp_update_post( array( 'ID' => $edd_options['success_page'], 'post_content' => $page_content ) );
+		wp_update_post( array( 'ID' => edd_get_option( 'success_page' ), 'post_content' => $page_content ) );
 	}
 
 	/** Convert Discounts to new Custom Post Type **/
@@ -482,7 +477,7 @@ function edd_v20_upgrades() {
 
 	ignore_user_abort( true );
 
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
 		set_time_limit( 0 );
 	}
 
@@ -528,7 +523,7 @@ function edd_v20_upgrade_sequential_payment_numbers() {
 
 	ignore_user_abort( true );
 
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
 		set_time_limit( 0 );
 	}
 
@@ -610,7 +605,7 @@ function edd_v21_upgrade_customers_db() {
 
 	ignore_user_abort( true );
 
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
 		@set_time_limit(0);
 	}
 
@@ -719,7 +714,7 @@ function edd_v226_upgrade_payments_price_logs_db() {
 		wp_die( __( 'You do not have permission to do shop upgrades', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 	ignore_user_abort( true );
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
 		@set_time_limit(0);
 	}
 	$step   = isset( $_GET['step'] ) ? absint( $_GET['step'] ) : 1;
@@ -816,7 +811,7 @@ function edd_v23_upgrade_payment_taxes() {
 		wp_die( __( 'You do not have permission to do shop upgrades', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 	ignore_user_abort( true );
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
 		@set_time_limit(0);
 	}
 
@@ -892,7 +887,7 @@ function edd_v23_upgrade_customer_purchases() {
 
 	ignore_user_abort( true );
 
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
 		@set_time_limit(0);
 	}
 
@@ -1020,7 +1015,7 @@ function edd_upgrade_user_api_keys() {
 
 	ignore_user_abort( true );
 
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
 		@set_time_limit(0);
 	}
 
@@ -1105,7 +1100,7 @@ function edd_remove_refunded_sale_logs() {
 
 	ignore_user_abort( true );
 
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
 		@set_time_limit(0);
 	}
 

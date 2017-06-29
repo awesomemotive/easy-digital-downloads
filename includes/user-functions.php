@@ -21,15 +21,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @since  1.0
  *
- * @param int    $user User ID or email address
- * @param int    $number Number of purchases to retrieve
- * @param bool   $pagination
- * @param string $status
+ * @param int $user User ID or email address
+ * @param int $number Number of purchases to retrieve
+ * @param bool pagination
+ * @param string|array $status Either an array of statuses, a single status as a string literal or a comma separated list of statues
  *
  * @return bool|object List of all user purchases
  */
 function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, $status = 'complete' ) {
-
 	if ( empty( $user ) ) {
 		$user = get_current_user_id();
 	}
@@ -38,7 +37,19 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 		return false;
 	}
 
-	$status = $status === 'complete' ? 'publish' : $status;
+	if ( is_string( $status ) ) {
+		if ( strpos( $status, ',' ) ) {
+			$status = explode( ',', $status );
+		} else {
+			$status = $status === 'complete' ? 'publish' : $status;
+			$status = array( $status );
+		}
+
+	}
+
+	if ( is_array( $status ) ) {
+		$status = array_unique( $status );
+	}
 
 	if ( $pagination ) {
 		if ( get_query_var( 'paged' ) )
@@ -166,11 +177,9 @@ function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
 		return false;
 	}
 
-	$post_type 	 = get_post_type( $product_ids[0] );
-
 	$args = apply_filters( 'edd_get_users_purchased_products_args', array(
 		'include'        => $product_ids,
-		'post_type'      => $post_type,
+		'post_type'      => 'download',
 		'posts_per_page' => -1,
 	) );
 
@@ -195,6 +204,13 @@ function edd_has_user_purchased( $user_id, $downloads, $variable_price_id = null
 		return false;
 	}
 
+	/**
+	 * @since 2.7.7
+	 *
+	 * Allow 3rd parties to take actions before the history is queried.
+	 */
+	do_action( 'edd_has_user_purchased_before', $user_id, $downloads, $variable_price_id );
+
 	$users_purchases = edd_get_users_purchases( $user_id );
 
 	$return = false;
@@ -214,18 +230,27 @@ function edd_has_user_purchased( $user_id, $downloads, $variable_price_id = null
 						$variable_prices = edd_has_variable_prices( $download['id'] );
 						if ( $variable_prices && ! is_null( $variable_price_id ) && $variable_price_id !== false ) {
 							if ( isset( $download['item_number']['options']['price_id'] ) && $variable_price_id == $download['item_number']['options']['price_id'] ) {
-								return true;
+								$return = true;
+								break 2; // Get out to prevent this value being overwritten if the customer has purchased item twice
 							} else {
 								$return = false;
 							}
 						} else {
 							$return = true;
+							break 2;  // Get out to prevent this value being overwritten if the customer has purchased item twice
 						}
 					}
 				}
 			}
 		}
 	}
+
+	/**
+	 * @since 2.7.7
+	 *
+	 * Filter has purchased result
+	 */
+	$return = apply_filters( 'edd_has_user_purchased', $return, $user_id, $downloads, $variable_price_id );
 
 	return $return;
 }
@@ -461,6 +486,10 @@ function edd_get_customer_address( $user_id = 0 ) {
 
 	$address = get_user_meta( $user_id, '_edd_user_address', true );
 
+	if ( ! $address || ! is_array( $address ) || empty( $address ) ) {
+		$address = array();
+	}
+
 	if( ! isset( $address['line1'] ) )
 		$address['line1'] = '';
 
@@ -652,9 +681,9 @@ function edd_get_user_verification_request_url( $user_id = 0 ) {
 		$user_id = get_current_user_id();
 	}
 
-	$url = wp_nonce_url( add_query_arg( array(
+	$url = esc_url( wp_nonce_url( add_query_arg( array(
 		'edd_action' => 'send_verification_email'
-	) ), 'edd-request-verification' );
+	) ), 'edd-request-verification' ) );
 
 	return apply_filters( 'edd_get_user_verification_request_url', $url, $user_id );
 
@@ -814,7 +843,12 @@ function edd_validate_user_verification_token( $url = '' ) {
 
 			do_action( 'edd_user_verification_token_expired' );
 
-			wp_die( apply_filters( 'edd_verification_link_expired_text', __( 'Sorry but your account verification link has expired. <a href="#">Click here</a> to request a new verification URL.', 'easy-digital-downloads' ) ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+			$link_text = sprintf(
+				__( 'Sorry but your account verification link has expired. <a href="%s">Click here</a> to request a new verification URL.', 'easy-digital-downloads' ),
+				edd_get_user_verification_request_url()
+			);
+
+			wp_die( apply_filters( 'edd_verification_link_expired_text', $link_text ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 
 		}
 
