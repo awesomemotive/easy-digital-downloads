@@ -49,22 +49,23 @@ function edd_load_scripts() {
 		wp_enqueue_script( 'edd-checkout-global' );
 
 		wp_localize_script( 'edd-checkout-global', 'edd_global_vars', apply_filters( 'edd_global_checkout_script_vars', array(
-			'ajaxurl'            => edd_get_ajax_url(),
-			'checkout_nonce'     => wp_create_nonce( 'edd_checkout_nonce' ),
-			'currency_sign'      => edd_currency_filter(''),
-			'currency_pos'       => edd_get_option( 'currency_position', 'before' ),
-			'decimal_separator'  => edd_get_option( 'decimal_separator', '.' ),
-			'thousands_separator'=> edd_get_option( 'thousands_separator', ',' ),
-			'no_gateway'         => __( 'Please select a payment method', 'easy-digital-downloads' ),
-			'no_discount'        => __( 'Please enter a discount code', 'easy-digital-downloads' ), // Blank discount code message
-			'enter_discount'     => __( 'Enter discount', 'easy-digital-downloads' ),
-			'discount_applied'   => __( 'Discount Applied', 'easy-digital-downloads' ), // Discount verified message
-			'no_email'           => __( 'Please enter an email address before applying a discount code', 'easy-digital-downloads' ),
-			'no_username'        => __( 'Please enter a username before applying a discount code', 'easy-digital-downloads' ),
-			'purchase_loading'   => __( 'Please Wait...', 'easy-digital-downloads' ),
-			'complete_purchase'  => edd_get_checkout_button_purchase_label(),
-			'taxes_enabled'      => edd_use_taxes() ? '1' : '0',
-			'edd_version'        => EDD_VERSION
+			'ajaxurl'               => edd_get_ajax_url(),
+			'checkout_nonce'        => wp_create_nonce( 'edd_checkout_nonce' ),
+			'checkout_error_anchor' => '#edd_purchase_submit',
+			'currency_sign'         => edd_currency_filter(''),
+			'currency_pos'          => edd_get_option( 'currency_position', 'before' ),
+			'decimal_separator'     => edd_get_option( 'decimal_separator', '.' ),
+			'thousands_separator'   => edd_get_option( 'thousands_separator', ',' ),
+			'no_gateway'            => __( 'Please select a payment method', 'easy-digital-downloads' ),
+			'no_discount'           => __( 'Please enter a discount code', 'easy-digital-downloads' ), // Blank discount code message
+			'enter_discount'        => __( 'Enter discount', 'easy-digital-downloads' ),
+			'discount_applied'      => __( 'Discount Applied', 'easy-digital-downloads' ), // Discount verified message
+			'no_email'              => __( 'Please enter an email address before applying a discount code', 'easy-digital-downloads' ),
+			'no_username'           => __( 'Please enter a username before applying a discount code', 'easy-digital-downloads' ),
+			'purchase_loading'      => __( 'Please Wait...', 'easy-digital-downloads' ),
+			'complete_purchase'     => edd_get_checkout_button_purchase_label(),
+			'taxes_enabled'         => edd_use_taxes() ? '1' : '0',
+			'edd_version'           => EDD_VERSION
 		) ) );
 	}
 
