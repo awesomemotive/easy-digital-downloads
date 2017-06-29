@@ -30,20 +30,19 @@ class EDD_License {
 	 * Class constructor
 	 *
 	 * @param string  $_file
-	 * @param string  $_item
+	 * @param string  $_item_name
 	 * @param string  $_version
 	 * @param string  $_author
 	 * @param string  $_optname
 	 * @param string  $_api_url
+	 * @param int     $_item_id
 	 */
-	function __construct( $_file, $_item, $_version, $_author, $_optname = null, $_api_url = null ) {
+	function __construct( $_file, $_item_name, $_version, $_author, $_optname = null, $_api_url = null, $_item_id = null ) {
+		$this->file = $_file;
+		$this->item_name = $_item_name;
 
-		$this->file           = $_file;
-
-		if( is_numeric( $_item ) ) {
-			$this->item_id    = absint( $_item );
-		} else {
-			$this->item_name  = $_item;
+		if ( is_numeric( $_item_id ) ) {
+			$this->item_id = absint( $_item_id );
 		}
 
 		$this->item_shortname = 'edd_' . preg_replace( '/[^a-zA-Z0-9_\s]/', '', str_replace( ' ', '_', strtolower( $this->item_name ) ) );
@@ -118,6 +117,8 @@ class EDD_License {
 
 		add_action( 'in_plugin_update_message-' . plugin_basename( $this->file ), array( $this, 'plugin_row_license_missing' ), 10, 2 );
 
+		// Register plugins for beta support
+		add_filter( 'edd_beta_enabled_extensions', array( $this, 'register_beta_support' ) );
 	}
 
 	/**
@@ -127,11 +128,13 @@ class EDD_License {
 	 * @return  void
 	 */
 	public function auto_updater() {
+		$betas = edd_get_option( 'enabled_betas', array() );
 
 		$args = array(
 			'version'   => $this->version,
 			'license'   => $this->license,
-			'author'    => $this->author
+			'author'    => $this->author,
+			'beta'      => edd_extension_has_beta_support( $this->item_shortname ),
 		);
 
 		if( ! empty( $this->item_id ) ) {
@@ -461,6 +464,20 @@ class EDD_License {
 			$showed_imissing_key_message[ $this->item_shortname ] = true;
 		}
 
+	}
+
+	/**
+	 * Adds this plugin to the beta page
+	 *
+	 * @access  public
+	 * @param   array $products
+	 * @since   2.6.11
+	 * @return  void
+	 */
+	public function register_beta_support( $products ) {
+		$products[ $this->item_shortname ] = $this->item_name;
+
+		return $products;
 	}
 }
 

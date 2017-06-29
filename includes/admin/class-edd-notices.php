@@ -46,14 +46,14 @@ class EDD_Notices {
 			?>
 			<div class="error">
 				<p><?php printf( __( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings' ) ); ?></p>
-				<p><a href="<?php echo add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'set_checkout' ) ); ?>"><?php _e( 'Dismiss Notice', 'easy-digital-downloads' ); ?></a></p>
+				<p><a href="<?php echo esc_url( add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'set_checkout' ) ) ); ?>"><?php _e( 'Dismiss Notice', 'easy-digital-downloads' ); ?></a></p>
 			</div>
 			<?php
 			echo ob_get_clean();
 		}
 
 		if ( isset( $_GET['page'] ) && 'edd-payment-history' == $_GET['page'] && current_user_can( 'view_shop_reports' ) && edd_is_test_mode() ) {
-			$notices['updated']['edd-payment-history-test-mode'] = sprintf( __( 'Note: Test Mode is enabled, only test payments are shown below. <a href="%s">Settings</a>.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings' ) );
+			$notices['updated']['edd-payment-history-test-mode'] = sprintf( __( 'Note: Test Mode is enabled. While in test mode no live transactions are processed. <a href="%s">Settings</a>.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings&tab=gateways' ) );
 		}
 
 		if( stristr( $_SERVER['SERVER_SOFTWARE'], 'nginx' ) && ! get_user_meta( get_current_user_id(), '_edd_nginx_redirect_dismissed', true ) && current_user_can( 'manage_shop_settings' ) ) {
@@ -64,7 +64,7 @@ class EDD_Notices {
 				<p><?php printf( __( 'The download files in %s are not currently protected due to your site running on NGINX.', 'easy-digital-downloads' ), '<strong>' . edd_get_upload_dir() . '</strong>' ); ?></p>
 				<p><?php _e( 'To protect them, you must add a redirect rule as explained in <a href="http://docs.easydigitaldownloads.com/article/682-protected-download-files-on-nginx">this guide</a>.', 'easy-digital-downloads' ); ?></p>
 				<p><?php _e( 'If you have already added the redirect rule, you may safely dismiss this notice', 'easy-digital-downloads' ); ?></p>
-				<p><a href="<?php echo add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'nginx_redirect' ) ); ?>"><?php _e( 'Dismiss Notice', 'easy-digital-downloads' ); ?></a></p>
+				<p><a href="<?php echo esc_url( add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'nginx_redirect' ) ) ); ?>"><?php _e( 'Dismiss Notice', 'easy-digital-downloads' ); ?></a></p>
 			</div>
 			<?php
 			echo ob_get_clean();
@@ -81,7 +81,7 @@ class EDD_Notices {
 				<p><?php printf( __( 'The Easy Digital Downloads .htaccess file is missing from %s!', 'easy-digital-downloads' ), '<strong>' . edd_get_upload_dir() . '</strong>' ); ?></p>
 				<p><?php printf( __( 'First, please resave the Misc settings tab a few times. If this warning continues to appear, create a file called ".htaccess" in the %s directory, and copy the following into it:', 'easy-digital-downloads' ), '<strong>' . edd_get_upload_dir() . '</strong>' ); ?></p>
 				<p><pre><?php echo edd_get_htaccess_rules(); ?></pre></p>
-				<p><a href="<?php echo add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'htaccess_missing' ) ); ?>"><?php _e( 'Dismiss Notice', 'easy-digital-downloads' ); ?></a></p>
+				<p><a href="<?php echo esc_url( add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'htaccess_missing' ) ) ); ?>"><?php _e( 'Dismiss Notice', 'easy-digital-downloads' ); ?></a></p>
 			</div>
 			<?php
 			echo ob_get_clean();
@@ -129,6 +129,11 @@ class EDD_Notices {
 					case 'discount_update_failed' :
 						$notices['error']['edd-discount-updated-fail'] = __( 'There was a problem updating your discount code, please try again.', 'easy-digital-downloads' );
 						break;
+					case 'discount_validation_failed' :
+						$notices['error']['edd-discount-validation-fail'] = __( 'The discount code could not be added because one or more of the required fields was empty, please try again.', 'easy-digital-downloads' );
+						break;
+					case 'discount_invalid_code':
+						$notices['error']['edd-discount-invalid-code'] = __( 'The discount code entered is invalid; only alphanumeric characters are allowed, please try again.', 'easy-digital-downloads' );
 				}
 			}
 
@@ -140,6 +145,9 @@ class EDD_Notices {
 						break;
 					case 'email_sent' :
 						$notices['updated']['edd-payment-sent'] = __( 'The purchase receipt has been resent.', 'easy-digital-downloads' );
+						break;
+					case 'refreshed-reports' :
+						$notices['updated']['edd-refreshed-reports'] = __( 'The reports have been refreshed.', 'edd' );
 						break;
 					case 'payment-note-deleted' :
 						$notices['updated']['edd-payment-note-deleted'] = __( 'The payment note has been deleted.', 'easy-digital-downloads' );

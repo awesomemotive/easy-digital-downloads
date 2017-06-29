@@ -24,6 +24,7 @@ final class EDD_Amazon_Payments {
 	public $signin_redirect = null;
 	public $reference_id    = null;
 	public $doing_ipn       = false;
+	public $is_setup        = null;
 
 	/**
 	 * Get things going
@@ -53,7 +54,6 @@ final class EDD_Amazon_Payments {
 		$this->setup_client();
 		$this->filters();
 		$this->actions();
-
 
 	}
 
@@ -104,6 +104,38 @@ final class EDD_Amazon_Payments {
 	}
 
 	/**
+	 * Method to check if all the required settings have been filled out, allowing us to not output information without it.
+	 *
+	 * @since 2.7
+	 * @return bool
+	 */
+	public function is_setup() {
+		if ( null !== $this->is_setup ) {
+			return $this->is_setup;
+		}
+
+		$required_items = array( 'merchant_id', 'client_id', 'access_key', 'secret_key' );
+
+		$current_values = array(
+			'merchant_id' => edd_get_option( 'amazon_seller_id', '' ),
+			'client_id'   => edd_get_option( 'amazon_client_id', '' ),
+			'access_key'  => edd_get_option( 'amazon_mws_access_key', '' ),
+			'secret_key'  => edd_get_option( 'amazon_mws_secret_key', '' ),
+		);
+
+		$this->is_setup = true;
+
+		foreach ( $required_items as $key ) {
+			if ( empty( $current_values[ $key ] ) ) {
+				$this->is_setup = false;
+				break;
+			}
+		}
+
+		return $this->is_setup;
+	}
+
+	/**
 	 * Load additional files
 	 *
 	 * @access private
@@ -127,6 +159,7 @@ final class EDD_Amazon_Payments {
 	private function filters() {
 
 		add_filter( 'edd_accepted_payment_icons', array( $this, 'register_payment_icon' ), 10, 1 );
+		add_filter( 'edd_show_gateways', array( $this, 'maybe_hide_gateway_select' ) );
 
 		if ( is_admin() ) {
 			add_filter( 'edd_settings_sections_gateways', array( $this, 'register_gateway_section' ), 1, 1 );
@@ -147,6 +180,7 @@ final class EDD_Amazon_Payments {
 
 		add_action( 'wp_enqueue_scripts',                      array( $this, 'print_client' ), 10 );
 		add_action( 'wp_enqueue_scripts',                      array( $this, 'load_scripts' ), 11 );
+		add_action( 'edd_pre_process_purchase',                array( $this, 'check_config' ), 1  );
 		add_action( 'init',                                    array( $this, 'capture_oauth' ), 9 );
 		add_action( 'init',                                    array( $this, 'signin_redirect' ) );
 		add_action( 'edd_purchase_form_before_register_login', array( $this, 'login_form' ) );
@@ -167,6 +201,18 @@ final class EDD_Amazon_Payments {
 	}
 
 	/**
+	 * Show an error message on checkout if Amazon is enabled but not setup.
+	 *
+	 * @since 2.7
+	 */
+	public function check_config() {
+		$is_enabled = edd_is_gateway_active( $this->gateway_id );
+		if ( ( ! $is_enabled || false === $this->is_setup() ) && 'amazon' == edd_get_chosen_gateway() ) {
+			edd_set_error( 'amazon_gateway_not_configured', __( 'There is an error with the Amazon Payments configuration.', 'easy-digital-downloads' ) );
+		}
+	}
+
+	/**
 	 * Retrieve the client object
 	 *
 	 * @access private
@@ -174,6 +220,10 @@ final class EDD_Amazon_Payments {
 	 * @return PayWithAmazon\Client
 	 */
 	private function get_client() {
+
+		if ( ! $this->is_setup() ) {
+			return false;
+		}
 
 		if ( ! is_null( $this->client ) ) {
 			return $this->client;
@@ -192,6 +242,10 @@ final class EDD_Amazon_Payments {
 	 * @return void
 	 */
 	private function setup_client() {
+
+		if ( ! $this->is_setup() ) {
+			return;
+		}
 
 		$region = edd_get_shop_country();
 
@@ -251,6 +305,24 @@ final class EDD_Amazon_Payments {
 		$payment_icons['amazon'] = 'Amazon';
 
 		return $payment_icons;
+	}
+
+	/**
+	 * Hides payment gateway select options after return from Amazon
+	 *
+	 * @access public
+	 * @since  2.7.6
+	 * @param  bool $show Should gateway select be shown
+	 * @return bool
+	 */
+	public function maybe_hide_gateway_select( $show ) {
+
+		if( ! empty( $_REQUEST['payment-mode'] ) && 'amazon' == $_REQUEST['payment-mode'] && ! empty( $_REQUEST['amazon_reference_id'] ) && ! empty( $_REQUEST['state'] ) && 'authorized' == $_REQUEST['state'] ) {
+
+			$show = false;
+		}
+
+		return $show;
 	}
 
 	/**
@@ -357,6 +429,10 @@ final class EDD_Amazon_Payments {
 	 */
 	public function load_scripts() {
 
+		if ( ! $this->is_setup() ) {
+			return;
+		}
+
 		if ( ! edd_is_checkout() ) {
 			return;
 		}
@@ -430,6 +506,10 @@ final class EDD_Amazon_Payments {
 	 * @return void
 	 */
 	public function print_client() {
+
+		if ( ! $this->is_setup() ) {
+			return false;
+		}
 
 		if ( ! edd_is_checkout() ) {
 			return;
@@ -564,6 +644,10 @@ final class EDD_Amazon_Payments {
 	 */
 	public function login_form() {
 
+		if ( ! $this->is_setup() ) {
+			return false;
+		}
+
 		if ( empty( $this->reference_id ) && 'amazon' == edd_get_chosen_gateway() ) :
 
 			remove_all_actions( 'edd_purchase_form_after_cc_form' );
@@ -621,6 +705,11 @@ final class EDD_Amazon_Payments {
 	 * @return void
 	 */
 	public function wallet_form() {
+
+		if ( ! $this->is_setup() ) {
+			return false;
+		}
+
 		$profile   = EDD()->session->get( 'amazon_profile' );
 		remove_action( 'edd_purchase_form_after_cc_form', 'edd_checkout_tax_fields', 999 );
 		ob_start(); ?>
@@ -740,6 +829,10 @@ final class EDD_Amazon_Payments {
 	 * @return void
 	 */
 	public function ajax_get_address() {
+
+		if ( ! $this->is_setup() ) {
+			return false;
+		}
 
 		if( empty( $_POST['reference_id'] ) ) {
 			die( '-2' );

@@ -147,7 +147,7 @@ class EDD_Download {
 	 * Given the download data, let's set the variables
 	 *
 	 * @since  2.3.6
-	 * @param  object $download The Download Object
+	 * @param  WP_Post $download The WP_Post object for download.
 	 * @return bool             If the setup was successful or not
 	 */
 	private function setup_download( $download ) {
@@ -383,7 +383,6 @@ class EDD_Download {
 	 * @return array List of download files
 	 */
 	public function get_files( $variable_price_id = null ) {
-
 		if( ! isset( $this->files ) ) {
 
 			$this->files = array();
@@ -525,6 +524,39 @@ class EDD_Download {
 
 		return (array) apply_filters( 'edd_get_bundled_products', array_filter( $this->bundled_downloads ), $this->ID );
 
+	}
+
+	/**
+	 * Retrieve the Download IDs that are bundled with this Download based on the variable pricing ID passed
+	 *
+	 * @since 2.7
+	 * @access public
+	 * @param int $price_id Variable pricing ID
+	 * @return array List of bundled downloads
+	 */
+	public function get_variable_priced_bundled_downloads( $price_id = null ) {
+		if ( null == $price_id ) {
+			return $this->get_bundled_downloads();
+		}
+
+		$downloads         = array();
+		$bundled_downloads = $this->get_bundled_downloads();
+		$price_assignments = $this->get_bundle_pricing_variations();
+
+		if ( ! $price_assignments ) {
+			return $bundled_downloads;
+		}
+
+		$price_assignments = $price_assignments[0];
+		$price_assignments = array_values( $price_assignments );
+
+		foreach ( $price_assignments as $key => $value ) {
+			if ( $value == $price_id || $value == 'all' ) {
+				$downloads[] = $bundled_downloads[ $key ];
+			}
+		}
+
+		return $downloads;
 	}
 
 	/**
@@ -794,6 +826,19 @@ class EDD_Download {
 	}
 
 	/**
+	 * Is quantity input disabled on this product?
+	 *
+	 * @since 2.7
+	 * @return bool
+	 */
+	public function quantities_disabled() {
+
+		$ret = (bool) get_post_meta( $this->ID, '_edd_quantities_disabled', true );
+		return apply_filters( 'edd_download_quantity_disabled', $ret, $this->ID );
+
+	}
+
+	/**
 	 * Updates a single meta entry for the download
 	 *
 	 * @since  2.3
@@ -847,6 +892,16 @@ class EDD_Download {
 		}
 
 		return (bool) apply_filters( 'edd_can_purchase_download', $can_purchase, $this );
+	}
+
+	/**
+	 * Get pricing variations for bundled items
+	 *
+	 * @since 2.7
+	 * @return array
+	 */
+	public function get_bundle_pricing_variations() {
+		return get_post_meta( $this->ID, '_edd_bundled_products_conditions' );
 	}
 
 }

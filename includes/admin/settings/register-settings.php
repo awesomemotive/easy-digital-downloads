@@ -285,7 +285,7 @@ function edd_get_registered_settings() {
 						'id'          => 'login_redirect_page',
 						'name'        => __( 'Login Redirect Page', 'easy-digital-downloads' ),
 						'desc'        => sprintf(
-								__( 'This is the page where buyers will be redirected by default once they log in. The [edd_login redirect="%s"] shortcode with the redirect attribute can override this setting.', 'easy-digital-downloads' ), trailingslashit( home_url() )
+								__( 'If a customer logs in using the [edd_login] shortcode, this is the page they will be redirected to. Note, this can be overridden using the redirect attribute in the shortcode like this: [edd_login redirect="%s"].', 'easy-digital-downloads' ), trailingslashit( home_url() )
 						),
 						'type'        => 'select',
 						'options'     => edd_get_pages(),
@@ -618,17 +618,17 @@ function edd_get_registered_settings() {
 					'tax_rates' => array(
 						'id'   => 'tax_rates',
 						'name' => '<strong>' . __( 'Tax Rates', 'easy-digital-downloads' ) . '</strong>',
-						'desc' => __( 'Enter tax rates for specific regions.', 'easy-digital-downloads' ),
+						'desc' => __( 'Add tax rates for specific regions. Enter a percentage, such as 6.5 for 6.5%.', 'easy-digital-downloads' ),
 						'type' => 'tax_rates',
 					),
 					'tax_rate' => array(
 						'id'   => 'tax_rate',
 						'name' => __( 'Fallback Tax Rate', 'easy-digital-downloads' ),
-						'desc' => __( 'Enter a percentage, such as 6.5. Customers not in a specific rate will be charged this rate.', 'easy-digital-downloads' ),
+						'desc' => __( 'Customers not in a specific rate will be charged this tax rate. Enter a percentage, such as 6.5 for 6.5%. ', 'easy-digital-downloads' ),
 						'type' => 'text',
 						'size' => 'small',
 						'tooltip_title' => __( 'Fallback Tax Rate', 'easy-digital-downloads' ),
-						'tooltip_desc'  => __( 'If the customer\'s address fails to meet the above tax rules, you can define a `default` tax rate to be applied to all other customers.', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'If the customer\'s address fails to meet the above tax rules, you can define a `default` tax rate to be applied to all other customers. Enter a percentage, such as 6.5 for 6.5%.', 'easy-digital-downloads' ),
 					),
 					'prices_include_tax' => array(
 						'id'   => 'prices_include_tax',
@@ -680,15 +680,6 @@ function edd_get_registered_settings() {
 						'id'   => 'misc_settings',
 						'name' => '<h3>' . __( 'Misc Settings', 'easy-digital-downloads' ) . '</h3>',
 						'type' => 'header',
-					),
-					'enable_ajax_cart' => array(
-						'id'   => 'enable_ajax_cart',
-						'name' => __( 'Enable AJAX', 'easy-digital-downloads' ),
-						'desc' => __( 'Check this to enable AJAX for the shopping cart.', 'easy-digital-downloads' ),
-						'type' => 'checkbox',
-						'std'  => '1',
-						'tooltip_title' => __( 'Enabling AJAX', 'easy-digital-downloads' ),
-						'tooltip_desc'  => __( 'With AJAX enabled, customers can perform cart actions like adding and removing items from their shopping cart without pages having to be reloaded. This also creates fewer steps during the checkout process.', 'easy-digital-downloads' ),
 					),
 					'redirect_on_add' => array(
 						'id'   => 'redirect_on_add',
@@ -907,6 +898,12 @@ function edd_get_registered_settings() {
 		)
 	);
 
+	if ( ! edd_shop_supports_buy_now() ) {
+		$edd_settings['misc']['button_text']['buy_now_text']['disabled']      = true;
+		$edd_settings['misc']['button_text']['buy_now_text']['tooltip_title'] = __( 'Buy Now Disabled', 'easy-digital-downloads' );
+		$edd_settings['misc']['button_text']['buy_now_text']['tooltip_desc']  = __( 'Buy Now buttons are only available for stores that have a single supported gateway active and that do not use taxes.', 'easy-digital-downloads' );
+	}
+
 	return apply_filters( 'edd_registered_settings', $edd_settings );
 }
 
@@ -1108,6 +1105,46 @@ function edd_settings_sanitize_taxes( $input ) {
 add_filter( 'edd_settings_taxes_sanitize', 'edd_settings_sanitize_taxes' );
 
 /**
+ * Payment Gateways Settings Sanitization
+ *
+ * Adds a settings error (for the updated message)
+ *
+ * @since 2.7
+ * @param array $input The value inputted in the field
+ * @return string $input Sanitizied value
+ */
+function edd_settings_sanitize_gateways( $input ) {
+
+	if ( ! current_user_can( 'manage_shop_settings' ) || empty( $input['default_gateway'] ) ) {
+		return $input;
+	}
+
+	if ( empty( $input['gateways'] ) || '-1' == $input['gateways'] )  {
+
+		add_settings_error( 'edd-notices', '', __( 'Error setting default gateway. No gateways are enabled.', 'easy-digital-downloads' ) );
+		unset( $input['default_gateway'] );
+
+	} else if ( ! array_key_exists( $input['default_gateway'], $input['gateways'] ) ) {
+
+		$enabled_gateways = $input['gateways'];
+		$all_gateways     = edd_get_payment_gateways();
+		$selected_default = $all_gateways[ $input['default_gateway'] ];
+
+		reset( $enabled_gateways );
+		$first_gateway = key( $enabled_gateways );
+
+		if ( $first_gateway ) {
+			add_settings_error( 'edd-notices', '', sprintf( __( '%s could not be set as the default gateway. It must first be enabled.', 'easy-digital-downloads' ), $selected_default['admin_label'] ), 'error' );
+			$input['default_gateway'] = $first_gateway;
+		}
+
+	}
+
+	return $input;
+}
+add_filter( 'edd_settings_gateways_sanitize', 'edd_settings_sanitize_gateways' );
+
+/**
  * Sanitize text fields
  *
  * @since 1.8
@@ -1162,22 +1199,22 @@ add_filter( 'edd_settings_sanitize_text', 'edd_sanitize_text_field' );
 
 /**
  * Sanitize HTML Class Names
- * 
+ *
  * @since 2.6.11
  * @param  string|array $class HTML Class Name(s)
  * @return string $class
  */
 function edd_sanitize_html_class( $class = '' ) {
-        
+
 	if ( is_string( $class ) ) {
 		$class = sanitize_html_class( $class );
 	} else if ( is_array( $class ) ) {
 		$class = array_values( array_map( 'sanitize_html_class', $class ) );
 		$class = implode( ' ', array_unique( $class ) );
 	}
-    
+
 	return $class;
-    
+
 }
 
 /**
@@ -1342,7 +1379,7 @@ function edd_checkbox_callback( $args ) {
 	} else {
 		$name = 'name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"';
 	}
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$checked  = ! empty( $edd_option ) ? checked( 1, $edd_option, false ) : '';
@@ -1365,7 +1402,7 @@ function edd_checkbox_callback( $args ) {
  */
 function edd_multicheck_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$html = '';
@@ -1392,7 +1429,7 @@ function edd_multicheck_callback( $args ) {
  */
 function edd_payment_icons_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$html = '<input type="hidden" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="-1" />';
@@ -1465,7 +1502,7 @@ function edd_radio_callback( $args ) {
 	$edd_options = edd_get_option( $args['id'] );
 
 	$html = '';
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	foreach ( $args['options'] as $key => $option ) :
@@ -1497,7 +1534,7 @@ function edd_radio_callback( $args ) {
  */
 function edd_gateways_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$html = '<input type="hidden" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="-1" />';
@@ -1527,7 +1564,7 @@ function edd_gateways_callback( $args ) {
  */
 function edd_gateway_select_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$html = '';
@@ -1560,6 +1597,8 @@ function edd_text_callback( $args ) {
 
 	if ( $edd_option ) {
 		$value = $edd_option;
+	} elseif( ! empty( $args['allow_blank'] ) && empty( $edd_option ) ) {
+		$value = '';
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
@@ -1571,12 +1610,13 @@ function edd_text_callback( $args ) {
 	} else {
 		$name = 'name="edd_settings[' . esc_attr( $args['id'] ) . ']"';
 	}
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
+	$disabled = ! empty( $args['disabled'] ) ? ' disabled="disabled"' : '';
 	$readonly = $args['readonly'] === true ? ' readonly="readonly"' : '';
 	$size     = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$html     = '<input type="text" class="' . $class . ' ' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" ' . $name . ' value="' . esc_attr( stripslashes( $value ) ) . '"' . $readonly . '/>';
+	$html     = '<input type="text" class="' . $class . ' ' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" ' . $name . ' value="' . esc_attr( stripslashes( $value ) ) . '"' . $readonly . $disabled . ' placeholder="' . esc_attr( $args['placeholder'] ) . '"/>';
 	$html    .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
@@ -1608,7 +1648,7 @@ function edd_number_callback( $args ) {
 	} else {
 		$name = 'name="edd_settings[' . esc_attr( $args['id'] ) . ']"';
 	}
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$max  = isset( $args['max'] ) ? $args['max'] : 999999;
@@ -1640,7 +1680,7 @@ function edd_textarea_callback( $args ) {
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$html = '<textarea class="' . $class . ' large-text" cols="50" rows="5" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
@@ -1667,7 +1707,7 @@ function edd_password_callback( $args ) {
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
@@ -1717,7 +1757,7 @@ function edd_select_callback($args) {
 	} else {
 		$placeholder = '';
 	}
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	if ( isset( $args['chosen'] ) ) {
@@ -1755,7 +1795,7 @@ function edd_color_select_callback( $args ) {
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$html = '<select id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" class="' . $class . '" name="edd_settings[' . esc_attr( $args['id'] ) . ']"/>';
@@ -1784,12 +1824,12 @@ function edd_rich_editor_callback( $args ) {
 
 	if ( $edd_option ) {
 		$value = $edd_option;
-
-		if( empty( $args['allow_blank'] ) && empty( $value ) ) {
+	} else {
+		if( ! empty( $args['allow_blank'] ) && empty( $edd_option ) ) {
+			$value = '';
+		} else {
 			$value = isset( $args['std'] ) ? $args['std'] : '';
 		}
-	} else {
-		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
 
 	$rows = isset( $args['size'] ) ? $args['size'] : 20;
@@ -1823,7 +1863,7 @@ function edd_upload_callback( $args ) {
 	} else {
 		$value = isset($args['std']) ? $args['std'] : '';
 	}
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
@@ -1855,7 +1895,7 @@ function edd_color_callback( $args ) {
 	}
 
 	$default = isset( $args['std'] ) ? $args['std'] : '';
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$html = '<input type="text" class="' . $class . ' edd-color-picker" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']" value="' . esc_attr( $value ) . '" data-default-color="' . esc_attr( $default ) . '" />';
@@ -1882,19 +1922,19 @@ function edd_shop_states_callback($args) {
 	} else {
 		$placeholder = '';
 	}
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$states = edd_get_shop_states();
-    
+
 	if ( $args['chosen'] ) {
 		$class .= ' edd-chosen';
 	}
-    
+
 	if ( empty( $states ) ) {
 		$class .= ' edd-no-states';
 	}
-    
+
 	$html = '<select id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']"' . $class . 'data-placeholder="' . esc_html( $placeholder ) . '"/>';
 
 	foreach ( $states as $option => $name ) {
@@ -1919,9 +1959,9 @@ function edd_shop_states_callback($args) {
  */
 function edd_tax_rates_callback($args) {
 	$rates = edd_get_tax_rates();
-    
+
 	$class = edd_sanitize_html_class( $args['field_class'] );
-    
+
 	ob_start(); ?>
 	<p><?php echo $args['desc']; ?></p>
 	<table id="edd_tax_rates" class="wp-list-table widefat fixed posts <?php echo $class; ?>">
@@ -1930,7 +1970,7 @@ function edd_tax_rates_callback($args) {
 				<th scope="col" class="edd_tax_country"><?php _e( 'Country', 'easy-digital-downloads' ); ?></th>
 				<th scope="col" class="edd_tax_state"><?php _e( 'State / Province', 'easy-digital-downloads' ); ?></th>
 				<th scope="col" class="edd_tax_global"><?php _e( 'Country Wide', 'easy-digital-downloads' ); ?></th>
-				<th scope="col" class="edd_tax_rate"><?php _e( 'Rate', 'easy-digital-downloads' ); ?></th>
+				<th scope="col" class="edd_tax_rate"><?php _e( 'Rate', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Regional tax rates: </strong>When a customer enters an address on checkout that matches the specified region for this tax rate, the cart tax will adjust automatically. Enter a percentage, such as 6.5 for 6.5%.' ); ?>"></span></th>
 				<th scope="col"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></th>
 			</tr>
 		</thead>
@@ -2140,7 +2180,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 						$class = 'error';
 						$error = ! empty(  $license->error ) ?  $license->error : __( 'unknown_error', 'easy-digital-downloads' );
-						$messages[] = sprintf( __( 'There was an error with this license key: %s. Please <a href="%s">contact our support team</a>.', 'easy-digital-downloads' ), $error, 'https://easydigitaldownlaods.com/support' );
+						$messages[] = sprintf( __( 'There was an error with this license key: %s. Please <a href="%s">contact our support team</a>.', 'easy-digital-downloads' ), $error, 'https://easydigitaldownloads.com/support' );
 
 						$license_status = 'license-' . $class . '-notice';
 						break;
@@ -2201,7 +2241,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 			$license_status = null;
 		}
-        
+
 		$class .= ' ' . edd_sanitize_html_class( $args['field_class'] );
 
 		$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';

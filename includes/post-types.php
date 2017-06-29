@@ -42,6 +42,7 @@ function edd_setup_edd_post_types() {
 		'set_featured_image'    => __( 'Set %1$s Image', 'easy-digital-downloads' ),
 		'remove_featured_image' => __( 'Remove %1$s Image', 'easy-digital-downloads' ),
 		'use_featured_image'    => __( 'Use as %1$s Image', 'easy-digital-downloads' ),
+		'attributes'            => __( '%1$s Attributes', 'easy-digital-downloads' ),
 		'filter_items_list'     => __( 'Filter %2$s list', 'easy-digital-downloads' ),
 		'items_list_navigation' => __( '%2$s list navigation', 'easy-digital-downloads' ),
 		'items_list'            => __( '%2$s list', 'easy-digital-downloads' ),
@@ -334,6 +335,14 @@ function edd_register_post_type_statuses() {
 		'show_in_admin_all_list'    => true,
 		'show_in_admin_status_list' => true,
 		'label_count'               => _n_noop( 'Abandoned <span class="count">(%s)</span>', 'Abandoned <span class="count">(%s)</span>', 'easy-digital-downloads' )
+	)  );
+	register_post_status( 'processing', array(
+		'label'                     => _x( 'Processing', 'Processing payment status', 'easy-digital-downloads' ),
+		'public'                    => true,
+		'exclude_from_search'       => false,
+		'show_in_admin_all_list'    => true,
+		'show_in_admin_status_list' => true,
+		'label_count'               => _n_noop( 'Processing <span class="count">(%s)</span>', 'Processing <span class="count">(%s)</span>', 'easy-digital-downloads' )
 	)  );
 
 	// Discount Code Statuses

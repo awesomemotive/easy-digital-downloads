@@ -25,6 +25,9 @@ function edd_upgrades_screen() {
 	$custom = isset( $_GET['custom'] )      ? absint( $_GET['custom'] )                   : 0;
 	$number = isset( $_GET['number'] )      ? absint( $_GET['number'] )                   : 100;
 	$steps  = round( ( $total / $number ), 0 );
+	if ( ( $steps * $number ) < $total ) {
+		$steps++;
+	}
 
 	$doing_upgrade_args = array(
 		'page'        => 'edd-upgrades',
@@ -71,7 +74,7 @@ function edd_upgrades_screen() {
 					jQuery.post( ajaxurl, data, function (response) {
 						if( response == 'complete' ) {
 							jQuery('#edd-upgrade-loader').hide();
-							document.location.href = 'index.php?page=edd-about'; // Redirect to the welcome page
+							document.location.href = 'index.php'; // Redirect to the dashboard
 						}
 					});
 				});
