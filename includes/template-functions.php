@@ -1116,3 +1116,28 @@ function edd_get_bundle_item_price_id( $bundle_item ) {
 
 	return $bundle_price_id;
 }
+
+/**
+ * Load a template file for a single download item.
+ *
+ * This is a wrapper function for backwards compatibility so the
+ * shortcode's attributes can be passed to the template file via
+ * a global variable.
+ *
+ * @since 2.9.0
+ *
+ * @param array $atts The [downloads] shortcode attributes.
+ * @param int   $i The current item count.
+ */
+function edd_download_shortcode_item( $atts, $i ) {
+	global $edd_download_shortcode_item_atts, $edd_download_shortcode_item_i;
+
+	/**
+	 * The variables are registered as part of the global scope so the template can access them.
+	 */
+	$edd_download_shortcode_item_atts = $atts;
+	$edd_download_shortcode_item_i = $i;
+
+	edd_get_template_part( 'shortcode', 'download' );
+}
+add_action( 'edd_download_shortcode_item', 'edd_download_shortcode_item', 10, 2 );
