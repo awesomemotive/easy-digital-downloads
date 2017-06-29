@@ -1111,13 +1111,13 @@ function edd_get_bundle_item_price_id( $bundle_item ) {
  * @param int   $i The current item count.
  */
 function edd_download_shortcode_item( $atts, $i ) {
-	global $edd_download_shortcode_item_atts, $edd_download_shortcode_item_$i;
+	global $edd_download_shortcode_item_atts, $edd_download_shortcode_item_i;
 
 	/**
 	 * The variables are registered as part of the global scope so the template can access them.
 	 */
 	$edd_download_shortcode_item_atts = $atts;
-	$edd_download_shortcode_item_$i = $i;
+	$edd_download_shortcode_item_i = $i;
 
 	edd_get_template_part( 'shortcode', 'download' );
 }
