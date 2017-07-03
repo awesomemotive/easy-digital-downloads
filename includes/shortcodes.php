@@ -616,10 +616,7 @@ function edd_downloads_query( $atts, $content = null ) {
 						?>
 					</div>
 				</div>
-				<?php if ( $atts['columns'] != 0 && $i % $atts['columns'] == 0 ) { ?><div style="clear:both;"></div><?php } ?>
 			<?php $i++; endwhile; ?>
-
-			<div style="clear:both;"></div>
 
 			<?php wp_reset_postdata(); ?>
 

@@ -990,7 +990,13 @@ input[type="submit"].edd-submit:focus,
 .edd_download .edd_price {
 	margin-bottom: 10px;
 }
-
+.edd_download_columns_2 .edd_download:nth-child(2n+1),
+.edd_download_columns_3 .edd_download:nth-child(3n+1),
+.edd_download_columns_4 .edd_download:nth-child(4n+1),
+.edd_download_columns_5 .edd_download:nth-child(5n+1),
+.edd_download_columns_6 .edd_download:nth-child(6n+1) {
+	clear:left;
+}
 
 /* =Misc styles
 -------------------------------------------------------------- */
