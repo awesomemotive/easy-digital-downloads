@@ -997,6 +997,11 @@ input[type="submit"].edd-submit:focus,
 .edd_download_columns_6 .edd_download:nth-child(6n+1) {
 	clear:left;
 }
+.edd_downloads_list:after {
+	content: "";
+	display: table;
+	clear: both;
+}
 
 /* =Misc styles
 -------------------------------------------------------------- */
