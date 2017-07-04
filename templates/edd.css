@@ -995,7 +995,7 @@ input[type="submit"].edd-submit:focus,
 .edd_download_columns_4 .edd_download:nth-child(4n+1),
 .edd_download_columns_5 .edd_download:nth-child(5n+1),
 .edd_download_columns_6 .edd_download:nth-child(6n+1) {
-	clear:left;
+	clear: left;
 }
 .edd_downloads_list:after {
 	content: "";
