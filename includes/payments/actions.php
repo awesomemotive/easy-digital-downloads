@@ -134,7 +134,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 		// If cron doesn't work on a site, allow the filter to use __return_false and run the events immediately.
 		$use_cron = apply_filters( 'edd_use_after_payment_actions', true, $payment_id );
-		if ( false === $use_cron || ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) ) {
+		if ( false === $use_cron ) {
 			/**
 			 * Runs **after** a purchase is marked as "complete".
 			 *
@@ -166,7 +166,7 @@ add_action( 'edd_update_payment_status', 'edd_complete_purchase', 100, 3 );
  */
 function edd_schedule_after_payment_action( $payment_id ) {
 	$use_cron = apply_filters( 'edd_use_after_payment_actions', true, $payment_id );
-	if ( $use_cron && ( ! defined( 'DISABLE_WP_CRON' ) || ( defined( 'DISABLE_WP_CRON' ) && false === DISABLE_WP_CRON ) ) ) {
+	if ( $use_cron ) {
 		$after_payment_delay = apply_filters( 'edd_after_payment_actions_delay', 30, $payment_id );
 
 		// Use time() instead of current_time( 'timestamp' ) to avoid scheduling the event in the past when server time
