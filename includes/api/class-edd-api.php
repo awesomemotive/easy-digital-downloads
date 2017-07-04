@@ -329,11 +329,7 @@ class EDD_API {
 				$secret = $this->get_user_secret_key( $user );
 				$public = urldecode( $wp_query->query_vars['key'] );
 
-				if ( hash_equals( md5( $secret . $public ), $token ) ) {
-					$this->is_valid_request = true;
-				} else {
-					$this->invalid_auth();
-				}
+				$this->check_keys( $secret, $public, $token );
 			}
 		} elseif ( ! empty( $wp_query->query_vars['edd-api'] ) && $this->is_public_query() ) {
 			$this->is_valid_request = true;
@@ -2265,6 +2261,25 @@ class EDD_API {
 	 */
 	public function log_requests() {
 		return apply_filters( 'edd_api_log_requests', true );
+	}
+
+	/**
+	 * Check API keys vs token
+	 *
+	 * @access public
+	 * @since  2.7.12
+	 *
+	 * @param string $secret Secret key
+	 * @param string $public Public key
+	 * @param string $token Token used in API request
+	 */
+	public function check_keys( $secret, $public, $token ){
+		if ( hash_equals( md5( $secret . $public ), $token ) ) {
+			$this->is_valid_request = true;
+		} else {
+			$this->invalid_auth();
+		}
+		
 	}
 
 }
