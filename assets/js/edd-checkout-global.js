@@ -8,7 +8,7 @@ window.EDD_Checkout = (function($) {
 		$checkout_form_wrap;
 
 	function init() {
-		$body = $(document.body);
+		$body = $('body')
 		$form = $("#edd_purchase_form");
 		$edd_cart_amount = $('.edd_cart_amount');
 		before_discount = $edd_cart_amount.text();
