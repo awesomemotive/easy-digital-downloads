@@ -41,17 +41,16 @@ function edd_load_scripts() {
 
 	if ( edd_is_checkout() ) {
 		if ( edd_is_cc_verify_enabled() ) {
-			wp_register_script( 'creditCardValidator', $js_dir . 'jquery.creditCardValidator' . $suffix . '.js', array( 'jquery' ), EDD_VERSION, true );
+			wp_register_script( 'creditCardValidator', $js_dir . 'jquery.creditCardValidator' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
 			wp_enqueue_script( 'creditCardValidator' );
 		}
 
-		wp_register_script( 'edd-checkout-global', $js_dir . 'edd-checkout-global' . $suffix . '.js', array( 'jquery' ), EDD_VERSION, true );
+		wp_register_script( 'edd-checkout-global', $js_dir . 'edd-checkout-global' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
 		wp_enqueue_script( 'edd-checkout-global' );
 
 		wp_localize_script( 'edd-checkout-global', 'edd_global_vars', apply_filters( 'edd_global_checkout_script_vars', array(
 			'ajaxurl'               => edd_get_ajax_url(),
 			'checkout_nonce'        => wp_create_nonce( 'edd_checkout_nonce' ),
-			'checkout_error_anchor' => '#edd_purchase_submit',
 			'currency_sign'         => edd_currency_filter(''),
 			'currency_pos'          => edd_get_option( 'currency_position', 'before' ),
 			'decimal_separator'     => edd_get_option( 'decimal_separator', '.' ),
@@ -71,7 +70,7 @@ function edd_load_scripts() {
 
 	// Load AJAX scripts, if enabled
 	if ( ! edd_is_ajax_disabled() ) {
-		wp_register_script( 'edd-ajax', $js_dir . 'edd-ajax' . $suffix . '.js', array( 'jquery' ), EDD_VERSION, true );
+		wp_register_script( 'edd-ajax', $js_dir . 'edd-ajax' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
 		wp_enqueue_script( 'edd-ajax' );
 
 		wp_localize_script( 'edd-ajax', 'edd_scripts', apply_filters( 'edd_ajax_script_vars', array(
