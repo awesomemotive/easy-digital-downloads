@@ -199,7 +199,7 @@ if ( is_user_logged_in() ):
 				<input name="edd_new_user_pass1" id="edd_new_user_pass1" class="password edd-input" type="password"/>
 			</p>
 
-			<p id="edd_profile_billing_address_wrap">
+			<p id="edd_profile_confirm_password_wrap">
 				<label for="edd_user_pass"><?php _e( 'Re-enter Password', 'easy-digital-downloads' ); ?></label>
 				<input name="edd_new_user_pass2" id="edd_new_user_pass2" class="password edd-input" type="password"/>
 				<?php do_action( 'edd_profile_editor_password' ); ?>
