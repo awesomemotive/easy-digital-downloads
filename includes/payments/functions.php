@@ -524,7 +524,7 @@ function edd_count_payments( $args = array() ) {
 			$join   = "LEFT JOIN $wpdb->postmeta m ON m.meta_key = '_edd_log_payment_id' AND m.post_id = p.ID ";
 			$join  .= "INNER JOIN $wpdb->posts p2 ON m.meta_value = p2.ID ";
 			$where  = "WHERE p.post_type = 'edd_log' ";
-			$where .= $wpdb->prepare( "AND p.post_parent = %d} ", $search );
+			$where .= $wpdb->prepare( "AND p.post_parent = %d ", $search );
 
 		} elseif ( is_numeric( $args['s'] ) ) {
 
