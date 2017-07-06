@@ -425,6 +425,10 @@ jQuery(document).ready(function ($) {
 		var $this = $(this);
 		var $form;
 		var is_checkout = typeof edd_global_vars !== 'undefined';
+		var field_name  = 'card_state';
+		if ( $(this).attr('id') == 'edd_address_country' ) {
+			field_name = 'edd_address_state';
+		}
 
 		if( 'card_state' != $this.attr('id') ) {
 
@@ -432,7 +436,7 @@ jQuery(document).ready(function ($) {
 			var postData = {
 				action: 'edd_get_shop_states',
 				country: $this.val(),
-				field_name: 'card_state'
+				field_name: field_name,
 			};
 
 			$.ajax({
