@@ -15,7 +15,7 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 	}
 
 	public function test_product_dropdown() {
-		$expected = '<select name="products" id="products" class="edd-select " data-placeholder="Choose a Download" data-search-type="download">';
+		$expected = '<select name="products" id="products" class="edd-select " data-placeholder="Choose a Download" data-search-type="download" data-search-placeholder="Type to search all Downloads">';
 		$this->assertContains( $expected, EDD()->html->product_dropdown() );
 	}
 
@@ -77,7 +77,7 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 	}
 
 	public function test_customer_dropdown() {
-		$expected = '<select name="customers" id="customers" class="edd-select  edd-customer-select edd-select-chosen" data-placeholder="Select a Customer" data-search-type="customer">';
+		$expected = '<select name="customers" id="customers" class="edd-select  edd-customer-select edd-select-chosen" data-placeholder="Select a Customer" data-search-type="customer" data-search-placeholder="Type to search all Customers">';
 		$this->assertContains( $expected, EDD()->html->customer_dropdown() );
 	}
 

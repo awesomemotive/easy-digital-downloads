@@ -388,19 +388,25 @@ function edd_load_checkout_register_fields() {
 add_action('wp_ajax_nopriv_checkout_register', 'edd_load_checkout_register_fields');
 
 /**
- * Get Download Title via AJAX (used only in WordPress Admin)
+ * Get Download Title via AJAX
  *
  * @since 1.0
+ * @since 2.8 Restrict to just the download post type
  * @return void
  */
 function edd_ajax_get_download_title() {
 	if ( isset( $_POST['download_id'] ) ) {
-		$title = get_the_title( $_POST['download_id'] );
-		if ( $title ) {
-			echo $title;
-		} else {
-			echo 'fail';
+		$post_id   = absint( $_POST['download_id'] );
+		$post_type = get_post_type( $post_id );
+		$title     = 'fail';
+		if ( 'download' === $post_type ) {
+			$post_title = get_the_title( $_POST['download_id'] );
+			if ( $post_title ) {
+				echo $title = $post_title;
+			}
 		}
+
+		echo $title;
 	}
 	edd_die();
 }

@@ -90,6 +90,13 @@ class EDD_Customer {
 	public $notes;
 
 	/**
+	 * The raw notes values, for internal use only
+	 *
+	 * @since 2.8
+	 */
+	private $raw_notes = null;
+
+	/**
 	 * The Database Abstraction
 	 *
 	 * @since  2.3
@@ -488,7 +495,7 @@ class EDD_Customer {
 
 		}
 
-		do_action( 'edd_customer_pre_attach_payment', $payment->ID, $this->id );
+		do_action( 'edd_customer_pre_attach_payment', $payment->ID, $this->id, $this );
 
 		$payment_added = $this->update( array( 'payment_ids' => $new_payment_ids ) );
 
@@ -508,7 +515,7 @@ class EDD_Customer {
 
 		}
 
-		do_action( 'edd_customer_post_attach_payment', $payment_added, $payment->ID, $this->id );
+		do_action( 'edd_customer_post_attach_payment', $payment_added, $payment->ID, $this->id, $this );
 
 		return $payment_added;
 	}
@@ -571,7 +578,7 @@ class EDD_Customer {
 
 		}
 
-		do_action( 'edd_customer_post_remove_payment', $payment_removed, $payment->ID, $this->id );
+		do_action( 'edd_customer_post_remove_payment', $payment_removed, $payment->ID, $this->id, $this );
 
 		return $payment_removed;
 
@@ -593,13 +600,13 @@ class EDD_Customer {
 
 		$new_total = (int) $this->purchase_count + (int) $count;
 
-		do_action( 'edd_customer_pre_increase_purchase_count', $count, $this->id );
+		do_action( 'edd_customer_pre_increase_purchase_count', $count, $this->id, $this );
 
 		if ( $this->update( array( 'purchase_count' => $new_total ) ) ) {
 			$this->purchase_count = $new_total;
 		}
 
-		do_action( 'edd_customer_post_increase_purchase_count', $this->purchase_count, $count, $this->id );
+		do_action( 'edd_customer_post_increase_purchase_count', $this->purchase_count, $count, $this->id, $this );
 
 		return $this->purchase_count;
 	}
@@ -624,13 +631,13 @@ class EDD_Customer {
 			$new_total = 0;
 		}
 
-		do_action( 'edd_customer_pre_decrease_purchase_count', $count, $this->id );
+		do_action( 'edd_customer_pre_decrease_purchase_count', $count, $this->id, $this );
 
 		if ( $this->update( array( 'purchase_count' => $new_total ) ) ) {
 			$this->purchase_count = $new_total;
 		}
 
-		do_action( 'edd_customer_post_decrease_purchase_count', $this->purchase_count, $count, $this->id );
+		do_action( 'edd_customer_post_decrease_purchase_count', $this->purchase_count, $count, $this->id, $this );
 
 		return $this->purchase_count;
 	}
@@ -727,7 +734,7 @@ class EDD_Customer {
 	 *
 	 * @since  2.3
 	 * @param string $note The note to add
-	 * @return string|boolean The new note if added succesfully, false otherwise
+	 * @return string|boolean The new note if added successfully, false otherwise
 	 */
 	public function add_note( $note = '' ) {
 
@@ -746,15 +753,16 @@ class EDD_Customer {
 		$new_note    = apply_filters( 'edd_customer_add_note_string', $note_string );
 		$notes      .= "\n\n" . $new_note;
 
-		do_action( 'edd_customer_pre_add_note', $new_note, $this->id );
+		do_action( 'edd_customer_pre_add_note', $new_note, $this->id, $this );
 
 		$updated = $this->update( array( 'notes' => $notes ) );
 
 		if ( $updated ) {
-			$this->notes = $this->get_notes();
+			$this->raw_notes = $notes;
+			$this->notes     = $this->get_notes();
 		}
 
-		do_action( 'edd_customer_post_add_note', $this->notes, $new_note, $this->id );
+		do_action( 'edd_customer_post_add_note', $this->notes, $new_note, $this->id, $this );
 
 		// Return the formatted note, so we can test, as well as update any displays
 		return $new_note;
@@ -769,9 +777,13 @@ class EDD_Customer {
 	 */
 	private function get_raw_notes() {
 
-		$all_notes = $this->db->get_column( 'notes', $this->id );
+		if ( ! is_null( $this->raw_notes ) ) {
+			return $this->raw_notes;
+		}
 
-		return (string) $all_notes;
+		$this->raw_notes = $this->db->get_column( 'notes', $this->id );
+
+		return (string) $this->raw_notes;
 
 	}
 

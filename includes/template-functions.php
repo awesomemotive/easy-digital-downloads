@@ -126,14 +126,26 @@ function edd_get_purchase_link( $args = array() ) {
 
 	$data_price  = 'data-price="' . $data_price_value . '"';
 
-	$button_text = ! empty( $args['text'] ) ? '&nbsp;&ndash;&nbsp;' . $args['text'] : '';
+	$button_text = ! empty( $args['text'] ) ? '<span class="edd-purchase-button-separator">&nbsp;&ndash;&nbsp;</span>' . '<span class="edd-purchase-button-text">' . $args['text'] . '</span>' : '';
 
 	if ( false !== $price ) {
 
 		if ( 0 == $price ) {
-			$args['text'] = __( 'Free', 'easy-digital-downloads' ) . $button_text;
+			$args['text'] = '<span class="edd-purchase-button-free">' . __( 'Free', 'easy-digital-downloads' ) . '</span>' . $button_text;
 		} else {
-			$args['text'] = edd_currency_filter( edd_format_amount( $price ) ) . $button_text;
+			$symbol = edd_currency_symbol( edd_get_currency() );
+
+			$args['text']  = '<span class="edd-purchase-button-price-text">' . edd_format_amount( $price ) . '</span>';
+
+			$currency_pos    = edd_get_option( 'currency_position', 'before' );
+			$currency_markup = '<span class="edd-purchase-button-currency-symbol">' . $symbol . '</span>';
+			if ( 'before' === $currency_pos ) {
+				$args['text'] = $currency_markup . $args['text'];
+			} else {
+				$args['text'] .= $currency_markup;
+			}
+
+			$args['text'] .= $button_text;
 		}
 
 	}
@@ -178,7 +190,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 			}
 
-			echo '<input type="submit" class="edd-add-to-cart edd-no-js ' . esc_attr( $class ) . '" name="edd_purchase_download" value="' . esc_attr( $args['text'] ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $download->ID ) . '" ' . $data_variable . ' ' . $type . ' ' . $button_display . '/>';
+			echo '<input type="submit" class="edd-add-to-cart edd-no-js ' . esc_attr( $class ) . '" name="edd_purchase_download" value="' . esc_attr( strip_tags( $args['text'] ) ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $download->ID ) . '" ' . $data_variable . ' ' . $type . ' ' . $button_display . '/>';
 			echo '<a href="' . esc_url( edd_get_checkout_uri() ) . '" class="edd_go_to_checkout ' . esc_attr( $class ) . '" ' . $checkout_display . '>' . __( 'Checkout', 'easy-digital-downloads' ) . '</a>';
 			?>
 
@@ -288,7 +300,14 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 
 							$item_prop = edd_add_schema_microdata() ? ' itemprop="description"' : '';
 
-							echo '<span class="edd_price_option_name"' . $item_prop . '>' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price">' . edd_currency_filter( edd_format_amount( $price['amount'] ) ) . '</span>';
+							// Construct the default price output.
+							$price_output = '<span class="edd_price_option_name"' . $item_prop . '>' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price">' . edd_currency_filter( edd_format_amount( $price['amount'] ) ) . '</span>';
+
+							// Filter the default price output
+							$price_output = apply_filters( 'edd_price_option_output', $price_output, $download_id, $key, $price, $form_id, $item_prop );
+
+							// Output the filtered price output
+							echo $price_output;
 
 							if( edd_add_schema_microdata() ) {
 								echo '<meta itemprop="price" content="' . esc_attr( $price['amount'] ) .'" />';
@@ -1097,3 +1116,28 @@ function edd_get_bundle_item_price_id( $bundle_item ) {
 
 	return $bundle_price_id;
 }
+
+/**
+ * Load a template file for a single download item.
+ *
+ * This is a wrapper function for backwards compatibility so the
+ * shortcode's attributes can be passed to the template file via
+ * a global variable.
+ *
+ * @since 2.9.0
+ *
+ * @param array $atts The [downloads] shortcode attributes.
+ * @param int   $i The current item count.
+ */
+function edd_download_shortcode_item( $atts, $i ) {
+	global $edd_download_shortcode_item_atts, $edd_download_shortcode_item_i;
+
+	/**
+	 * The variables are registered as part of the global scope so the template can access them.
+	 */
+	$edd_download_shortcode_item_atts = $atts;
+	$edd_download_shortcode_item_i = $i;
+
+	edd_get_template_part( 'shortcode', 'download' );
+}
+add_action( 'edd_download_shortcode_item', 'edd_download_shortcode_item', 10, 2 );
