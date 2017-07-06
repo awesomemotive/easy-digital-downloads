@@ -459,7 +459,7 @@ function edd_purchase_form_validate_logged_in_user() {
 	// Start empty array to collect valid user data
 	$valid_user_data = array(
 		// Assume there will be errors
-		'user_id' => -1
+		'user_id' => 0
 	);
 
 	// Verify there is a user_ID
@@ -511,7 +511,7 @@ function edd_purchase_form_validate_new_user() {
 	// Start an empty array to collect valid user data
 	$valid_user_data = array(
 		// Assume there will be errors
-		'user_id' => -1,
+		'user_id' => 0,
 		// Get first name
 		'user_first' => isset( $_POST["edd_first"] ) ? sanitize_text_field( $_POST["edd_first"] ) : '',
 		// Get last name
@@ -565,7 +565,7 @@ function edd_purchase_form_validate_new_user() {
 		} else {
 			$customer = new EDD_Customer( $user_email );
 			if ( $registering_new_user && email_exists( $user_email ) ) {
-				edd_set_error( 'email_used', __( 'Email already used', 'easy-digital-downloads' ) );
+				edd_set_error( 'email_used', __( 'Email already used. Login or use a different email to complete your purchase.', 'easy-digital-downloads' ) );
 			} else {
 				// All the checks have run and it's good to go
 				$valid_user_data['user_email'] = $user_email;
@@ -612,7 +612,7 @@ function edd_purchase_form_validate_user_login() {
 	// Start an array to collect valid user data
 	$valid_user_data = array(
 		// Assume there will be errors
-		'user_id' => -1
+		'user_id' => 0,
 	);
 
 	// Username
@@ -1098,47 +1098,37 @@ function edd_purchase_form_validate_cc_zip( $zip = 0, $country_code = '' ) {
  * @return      void
  */
 function edd_check_purchase_email( $valid_data, $posted ) {
-	$is_banned = false;
-	$banned    = edd_get_banned_emails();
+
+	$banned = edd_get_banned_emails();
 
 	if( empty( $banned ) ) {
 		return;
 	}
 
+	$user_emails = array( $posted['edd_email'] );
 	if( is_user_logged_in() ) {
 
 		// The user is logged in, check that their account email is not banned
-		$user_data = get_userdata( get_current_user_id() );
-		if( edd_is_email_banned( $user_data->user_email ) ) {
-
-			$is_banned = true;
-		}
-
-		if( edd_is_email_banned( $posted['edd_email'] ) ) {
-			$is_banned = true;
-		}
+		$user_data     = get_userdata( get_current_user_id() );
+		$user_emails[] = $user_data->user_email;
 
 	} elseif( isset( $posted['edd-purchase-var'] ) && $posted['edd-purchase-var'] == 'needs-to-login' ) {
 
 		// The user is logging in, check that their email is not banned
-		$user_data = get_user_by( 'login', $posted['edd_user_login'] );
-		if( $user_data && edd_is_email_banned( $user_data->user_email ) ) {
-			$is_banned = true;
-		}
-
-	} else {
-
-		// Guest purchase, check that the email is not banned
-		if( edd_is_email_banned( $posted['edd_email'] ) ) {
-			$is_banned = true;
+		if( $user_data = get_user_by( 'login', $posted['edd_user_login'] ) ) {
+			$user_emails[] = $user_data->user_email;
 		}
 
 	}
 
-	if( $is_banned ) {
-		// Set an error and give the customer a general error (don't alert them that they were banned)
-		edd_set_error( 'email_banned', __( 'An internal error has occurred, please try again or contact support.', 'easy-digital-downloads' ) );
+	foreach ( $user_emails as $email ) {
+		if ( edd_is_email_banned( $email ) ) {
+			// Set an error and give the customer a general error (don't alert them that they were banned)
+			edd_set_error( 'email_banned', __( 'An internal error has occurred, please try again or contact support.', 'easy-digital-downloads' ) );
+			break;
+		}
 	}
+
 }
 add_action( 'edd_checkout_error_checks', 'edd_check_purchase_email', 10, 2 );
 

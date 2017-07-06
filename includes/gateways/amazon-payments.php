@@ -180,7 +180,7 @@ final class EDD_Amazon_Payments {
 
 		add_action( 'wp_enqueue_scripts',                      array( $this, 'print_client' ), 10 );
 		add_action( 'wp_enqueue_scripts',                      array( $this, 'load_scripts' ), 11 );
-		add_action( 'init',                                    array( $this, 'check_config' ), 1  );
+		add_action( 'edd_pre_process_purchase',                array( $this, 'check_config' ), 1  );
 		add_action( 'init',                                    array( $this, 'capture_oauth' ), 9 );
 		add_action( 'init',                                    array( $this, 'signin_redirect' ) );
 		add_action( 'edd_purchase_form_before_register_login', array( $this, 'login_form' ) );
@@ -207,7 +207,7 @@ final class EDD_Amazon_Payments {
 	 */
 	public function check_config() {
 		$is_enabled = edd_is_gateway_active( $this->gateway_id );
-		if ( ! $is_enabled || false === $this->is_setup() ) {
+		if ( ( ! $is_enabled || false === $this->is_setup() ) && 'amazon' == edd_get_chosen_gateway() ) {
 			edd_set_error( 'amazon_gateway_not_configured', __( 'There is an error with the Amazon Payments configuration.', 'easy-digital-downloads' ) );
 		}
 	}

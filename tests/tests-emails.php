@@ -278,6 +278,13 @@ class Tests_Emails extends EDD_UnitTestCase {
 		$this->assertEquals( get_bloginfo( 'admin_email' ), EDD()->emails->get_from_address() );
 	}
 
+	public function test_fallback_for_invalid_from_address() {
+
+		edd_update_option( 'from_email', 'not-an-email' );
+
+		$this->assertEquals( get_bloginfo( 'admin_email' ), EDD()->emails->get_from_address() );
+	}
+
 	public function test_get_content_type() {
 		$this->assertEquals( 'text/html', EDD()->emails->get_content_type() );
 

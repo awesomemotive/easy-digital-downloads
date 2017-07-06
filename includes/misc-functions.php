@@ -169,7 +169,9 @@ function edd_get_ip() {
 		$ip = $_SERVER['HTTP_CLIENT_IP'];
 	} elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
 		//to check ip is pass from proxy
-		$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		// can include more than 1 ip, first is the public one
+		$ip = explode(',',$_SERVER['HTTP_X_FORWARDED_FOR']);
+		$ip = trim($ip[0]);
 	} elseif( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
 		$ip = $_SERVER['REMOTE_ADDR'];
 	}
