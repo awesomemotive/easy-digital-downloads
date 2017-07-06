@@ -71,11 +71,13 @@ function edd_process_purchase_form() {
 		'first_name' => $user['user_first'],
 		'last_name'  => $user['user_last'],
 		'discount'   => $valid_data['discount'],
-		'address'    => $user['address']
+		'address'    => ! empty( $user['address'] ) ? $user['address'] : array(),
 	);
 
+	var_dump($user_info);
+
 	// Update a customer record if they have added/updated information
-	$customer = new EDD_Customer( $user_info['user_id'], true );
+	$customer = new EDD_Customer( $user_info['email'] );
 
 	$name = $user_info['first_name'] . ' ' . $user_info['last_name'];
 	if ( empty( $customer->name ) || $name != $customer->name ) {
@@ -94,6 +96,10 @@ function edd_process_purchase_form() {
 
 	// Update the customer's address if different to what's in the database
 	$address = get_user_meta( $customer->user_id, '_edd_user_address', true );
+	if ( ! is_array( $address ) ) {
+		$address = array();
+	}
+
 	if ( 0 == strlen( implode( $address ) ) || count( array_diff( $address, $user_info['address'] ) ) > 0 ) {
 		update_user_meta( $user['user_id'], '_edd_user_address', $user_info['address'] );
 	}
