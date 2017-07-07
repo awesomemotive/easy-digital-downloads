@@ -74,8 +74,6 @@ function edd_process_purchase_form() {
 		'address'    => ! empty( $user['address'] ) ? $user['address'] : array(),
 	);
 
-	var_dump($user_info);
-
 	// Update a customer record if they have added/updated information
 	$customer = new EDD_Customer( $user_info['email'] );
 
