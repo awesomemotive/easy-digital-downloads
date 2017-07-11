@@ -643,7 +643,7 @@ class EDD_Customer {
 	 * @return mixed         If successful, the new value, otherwise false
 	 */
 	public function increase_value( $value = 0.00 ) {
-		$value = apply_filters( 'edd_customer_increase_value', $value, $this );
+		$value = floatval( apply_filters( 'edd_customer_increase_value', $value, $this ) );
 
 		$new_value = floatval( $this->purchase_value ) + $value;
 

@@ -456,7 +456,7 @@ class Test_Misc extends EDD_UnitTestCase {
 	}
 
 	public function test_let_to_num() {
-		$this->assertEquals( 0, edd_let_to_num( WP_MEMORY_LIMIT ) / ( 1024*1024 ) );
+		$this->assertEquals( 0.048828125, edd_let_to_num( '50M' ) / ( 1024*1024 ) );
 	}
 
 	/**
