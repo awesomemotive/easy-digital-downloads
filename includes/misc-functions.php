@@ -297,6 +297,7 @@ function edd_is_host( $host = false ) {
 function edd_get_currencies() {
 	$currencies = array(
 		'USD'  => __( 'US Dollars (&#36;)', 'edd' ),
+		'AOA'  => __( 'Kwanz Angola (Kz)', 'edd' ),
 		'EUR'  => __( 'Euros (&euro;)', 'edd' ),
 		'GBP'  => __( 'Pounds Sterling (&pound;)', 'edd' ),
 		'AUD'  => __( 'Australian Dollars (&#36;)', 'edd' ),
@@ -358,6 +359,9 @@ function edd_currency_symbol( $currency = '' ) {
 			break;
 		case "BRL" :
 			$symbol = 'R&#36;';
+			break;
+		case "AOA" :
+			$symbol = 'Kz';
 			break;
 		case "EUR" :
 			$symbol = '&euro;';
