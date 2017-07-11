@@ -39,7 +39,10 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		// Enable a few options
 		$edd_options['sequential_prefix'] = 'EDD-';
 
-		$simple_download   = EDD_Helper_Download::create_simple_download();
+		$simple_download   = EDD_Helper_Download::create_simple_download( array(
+			'post_name' => 'simple-payment'
+		) );
+
 		$variable_download = EDD_Helper_Download::create_variable_download();
 
 		/** Generate some sales */
@@ -146,7 +149,10 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		// Enable a few options
 		$edd_options['sequential_prefix'] = 'EDD-';
 
-		$simple_download   = EDD_Helper_Download::create_simple_download();
+		$simple_download   = EDD_Helper_Download::create_simple_download( array(
+			'post_name' => 'simple-guest-payment'
+		) );
+
 		$variable_download = EDD_Helper_Download::create_variable_download();
 
 		/** Generate some sales */
@@ -249,7 +255,10 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		// Enable a few options
 		$edd_options['sequential_prefix'] = 'EDD-';
 
-		$simple_download   = EDD_Helper_Download::create_simple_download();
+		$simple_download   = EDD_Helper_Download::create_simple_download( array(
+			'post_name' => 'simple-payment-with-tax'
+		) );
+
 		$variable_download = EDD_Helper_Download::create_variable_download();
 
 		/** Generate some sales */
@@ -357,7 +366,10 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		// Enable a few options
 		$edd_options['sequential_prefix'] = 'EDD-';
 
-		$simple_download   = EDD_Helper_Download::create_simple_download();
+		$simple_download   = EDD_Helper_Download::create_simple_download( array(
+			'post_name' => 'simple-payment-with-quantity'
+		) );
+
 		$variable_download = EDD_Helper_Download::create_variable_download();
 
 		/** Generate some sales */
@@ -462,7 +474,9 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		// Enable a few options
 		$edd_options['sequential_prefix'] = 'EDD-';
 
-		$simple_download   = EDD_Helper_Download::create_simple_download();
+		$simple_download   = EDD_Helper_Download::create_simple_download( array(
+			'post_name' => 'simple-payment-with-fee'
+		) );
 
 		/** Generate some sales */
 		$user      = get_userdata(1);

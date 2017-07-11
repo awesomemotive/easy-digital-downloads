@@ -1,14 +1,9 @@
 <?php
 
-
 /**
  * @group edd_misc
  */
 class Test_Misc extends EDD_UnitTestCase {
-
-	public function setUp() {
-		parent::setUp();
-	}
 
 	public function test_test_mode() {
 		$this->assertFalse( edd_is_test_mode() );
@@ -529,7 +524,7 @@ class Test_Misc extends EDD_UnitTestCase {
 		$this->go_to( home_url( '/' ) );
 		$this->assertEquals( 'http://example.org/', edd_get_current_page_url() );
 
-		$post = EDD_Helper_Download::create_simple_download();
+		$post = $this->factory->simple_download->create_and_get();
 		$this->go_to( get_permalink( $post->ID ) );
 		$this->assertEquals( 'http://example.org/?download=test-download-product', edd_get_current_page_url() );
 
@@ -551,7 +546,7 @@ class Test_Misc extends EDD_UnitTestCase {
 
 	public function test_cart_url_formats() {
 		global $edd_options;
-		$post = EDD_Helper_Download::create_simple_download();
+		$post = $this->factory->simple_download->create_and_get();
 
 		edd_add_to_cart( $post->ID );
 
@@ -641,11 +636,8 @@ class Test_Misc extends EDD_UnitTestCase {
 		$this->assertInternalType( 'array', $converted[0] );
 
 		// Test payments
-		$payment_1 = EDD_Helper_Payment::create_simple_payment();
-		$payment_2 = EDD_Helper_Payment::create_simple_payment();
-
-		$payment_1_obj = new EDD_Payment( $payment_1 );
-		$payment_2_obj = new EDD_Payment( $payment_2 );
+		$payment_1_obj = $this->factory->simple_payment->create_and_get();
+		$payment_2_obj = $this->factory->simple_payment->create_and_get();
 
 		// Test a single convert
 		$payment_1_array = edd_object_to_array( $payment_1_obj );
@@ -660,5 +652,9 @@ class Test_Misc extends EDD_UnitTestCase {
 		$payments_array = edd_object_to_array( $payments );
 		$this->assertInternalType( 'array', $payments_array[0] );
 		$this->assertEquals( 2, count( $payments_array ) );
+
+		// Clean up.
+		EDD_Helper_Payment::delete_payment( $payment_1_obj->ID );
+		EDD_Helper_Payment::delete_payment( $payment_2_obj->ID );
 	}
 }

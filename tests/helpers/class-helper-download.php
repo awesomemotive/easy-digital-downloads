@@ -26,14 +26,18 @@ class EDD_Helper_Download extends WP_UnitTestCase {
 	 *
 	 * @since 2.3
 	 */
-	public static function create_simple_download() {
+	public static function create_simple_download( $args = array() ) {
 
-		$post_id = wp_insert_post( array(
+		$defaults = array(
 			'post_title'    => 'Test Download Product',
 			'post_name'     => 'test-download-product',
 			'post_type'     => 'download',
 			'post_status'   => 'publish'
-		) );
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$post_id = wp_insert_post( $args );
 
 		$_download_files = array(
 			array(
@@ -55,7 +59,7 @@ class EDD_Helper_Download extends WP_UnitTestCase {
 			'_edd_download_earnings'            => 40,
 			'_edd_download_sales'               => 2,
 			'_edd_download_limit_override_1'    => 1,
-			'edd_sku'                           => 'sku_0012'
+			'edd_sku'                           => 'sku_0011'
 		);
 
 		foreach( $meta as $key => $value ) {
@@ -210,7 +214,10 @@ class EDD_Helper_Download extends WP_UnitTestCase {
 			'post_status'   => 'publish'
 		) );
 
-		$simple_download 	= EDD_Helper_Download::create_simple_download();
+		$simple_download 	= EDD_Helper_Download::create_simple_download( array(
+			'post_name' => 'bundled-download'
+		) );
+
 		$variable_download 	= EDD_Helper_Download::create_variable_download();
 
 		$meta = array(
