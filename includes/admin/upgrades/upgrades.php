@@ -25,6 +25,9 @@ function edd_upgrades_screen() {
 	$custom = isset( $_GET['custom'] )      ? absint( $_GET['custom'] )                   : 0;
 	$number = isset( $_GET['number'] )      ? absint( $_GET['number'] )                   : 100;
 	$steps  = round( ( $total / $number ), 0 );
+	if ( ( $steps * $number ) < $total ) {
+		$steps++;
+	}
 
 	$doing_upgrade_args = array(
 		'page'        => 'edd-upgrades',
@@ -41,15 +44,15 @@ function edd_upgrades_screen() {
 	}
 	?>
 	<div class="wrap">
-		<h2><?php _e( 'Easy Digital Downloads - Upgrades', 'edd' ); ?></h2>
+		<h2><?php _e( 'Easy Digital Downloads - Upgrades', 'easy-digital-downloads' ); ?></h2>
 
 		<?php if( ! empty( $action ) ) : ?>
 
 			<div id="edd-upgrade-status">
-				<p><?php _e( 'The upgrade process has started, please be patient. This could take several minutes. You will be automatically redirected when the upgrade is finished.', 'edd' ); ?></p>
+				<p><?php _e( 'The upgrade process has started, please be patient. This could take several minutes. You will be automatically redirected when the upgrade is finished.', 'easy-digital-downloads' ); ?></p>
 
 				<?php if( ! empty( $total ) ) : ?>
-					<p><strong><?php printf( __( 'Step %d of approximately %d running', 'edd' ), $step, $steps ); ?></strong></p>
+					<p><strong><?php printf( __( 'Step %d of approximately %d running', 'easy-digital-downloads' ), $step, $steps ); ?></strong></p>
 				<?php endif; ?>
 			</div>
 			<script type="text/javascript">
@@ -60,7 +63,7 @@ function edd_upgrades_screen() {
 
 			<div id="edd-upgrade-status">
 				<p>
-					<?php _e( 'The upgrade process has started, please be patient. This could take several minutes. You will be automatically redirected when the upgrade is finished.', 'edd' ); ?>
+					<?php _e( 'The upgrade process has started, please be patient. This could take several minutes. You will be automatically redirected when the upgrade is finished.', 'easy-digital-downloads' ); ?>
 					<img src="<?php echo EDD_PLUGIN_URL . '/assets/images/loading.gif'; ?>" id="edd-upgrade-loader"/>
 				</p>
 			</div>
@@ -71,7 +74,7 @@ function edd_upgrades_screen() {
 					jQuery.post( ajaxurl, data, function (response) {
 						if( response == 'complete' ) {
 							jQuery('#edd-upgrade-loader').hide();
-							document.location.href = 'index.php?page=edd-about'; // Redirect to the welcome page
+							document.location.href = 'index.php'; // Redirect to the dashboard
 						}
 					});
 				});

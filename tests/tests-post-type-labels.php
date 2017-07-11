@@ -4,7 +4,8 @@
 /**
  * @group edd_cpt
  */
-class Tests_Post_Type_Labels extends WP_UnitTestCase {
+class Tests_Post_Type_Labels extends EDD_UnitTestCase {
+
 	public function setUp() {
 		parent::setUp();
 	}
@@ -38,27 +39,27 @@ class Tests_Post_Type_Labels extends WP_UnitTestCase {
 		$this->assertInternalType( 'array', $category_labels );
 		$this->assertArrayHasKey( 'name', $category_labels );
 		$this->assertArrayHasKey( 'singular_name', $category_labels );
-		$this->assertTrue( in_array( 'Category', $category_labels ) );
-		$this->assertTrue( in_array( 'Categories', $category_labels ) );
+		$this->assertTrue( in_array( 'Download Category', $category_labels ) );
+		$this->assertTrue( in_array( 'Download Categories', $category_labels ) );
 		// Negative test for our change to exclude singular post type label in #3212
-		$this->assertFalse( in_array( 'Download Categories', $category_labels ) );
+		$this->assertTrue( in_array( 'Categories', $category_labels ) );
 
 		$this->assertInternalType( 'array', $category_labels );
 		$this->assertArrayHasKey( 'name', $category_labels );
 		$this->assertArrayHasKey( 'singular_name', $category_labels );
-		$this->assertTrue( in_array( 'Category', $category_labels ) );
-		$this->assertTrue( in_array( 'Categories', $category_labels ) );
+		$this->assertTrue( in_array( 'Download Category', $category_labels ) );
+		$this->assertTrue( in_array( 'Download Categories', $category_labels ) );
 		// Negative test for our change to exclude singular post type label in #3212
-		$this->assertFalse( in_array( 'Download Categories', $category_labels ) );
+		$this->assertTrue( in_array( 'Categories', $category_labels ) );
 
 		$tag_labels = edd_get_taxonomy_labels( 'download_tag' );
 		$this->assertInternalType( 'array', $tag_labels );
 		$this->assertArrayHasKey( 'name', $tag_labels );
 		$this->assertArrayHasKey( 'singular_name', $tag_labels );
-		$this->assertTrue( in_array( 'Tag', $tag_labels ) );
-		$this->assertTrue( in_array( 'Tags', $tag_labels ) );
+		$this->assertTrue( in_array( 'Download Tag', $tag_labels ) );
+		$this->assertTrue( in_array( 'Download Tags', $tag_labels ) );
 		// Negative test for our change to exclude singular post type label in #3212
-		$this->assertFalse( in_array( 'Download Tags', $tag_labels ) );
+		$this->assertTrue( in_array( 'Tags', $tag_labels ) );
 
 	}
 }

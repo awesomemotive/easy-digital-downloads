@@ -4,7 +4,7 @@
 /**
  * @group edd_checkout
  */
-class Tests_Checkout extends WP_UnitTestCase {
+class Tests_Checkout extends EDD_UnitTestCase {
 	public function setUp() {
 
 		parent::setUp();
@@ -37,6 +37,10 @@ class Tests_Checkout extends WP_UnitTestCase {
 			'quantity' => 1
 		);
 		edd_add_to_cart( $this->_post->ID, $options );
+	}
+
+	public function tearDown() {
+		parent::tearDown();
 	}
 
 	/**

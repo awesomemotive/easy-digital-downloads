@@ -39,7 +39,7 @@ class EDD_Download_History_Export extends EDD_Export {
 	public function headers() {
 		ignore_user_abort( true );
 
-		if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) )
+		if ( ! edd_is_func_disabled( 'set_time_limit' ) )
 			set_time_limit( 0 );
 
 		$month = isset( $_POST['month'] ) ? absint( $_POST['month'] ) : date( 'n' );
@@ -61,11 +61,11 @@ class EDD_Download_History_Export extends EDD_Export {
 	 */
 	public function csv_cols() {
 		$cols = array(
-			'date'     => __( 'Date',   'edd' ),
-			'user'     => __( 'Downloaded by', 'edd' ),
-			'ip'       => __( 'IP Address', 'edd' ),
-			'download' => __( 'Product', 'edd' ),
-			'file'     => __( 'File', 'edd' )
+			'date'     => __( 'Date',   'easy-digital-downloads' ),
+			'user'     => __( 'Downloaded by', 'easy-digital-downloads' ),
+			'ip'       => __( 'IP Address', 'easy-digital-downloads' ),
+			'download' => __( 'Product', 'easy-digital-downloads' ),
+			'file'     => __( 'File', 'easy-digital-downloads' )
 		);
 		return $cols;
 	}

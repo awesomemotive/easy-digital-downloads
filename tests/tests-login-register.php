@@ -4,16 +4,18 @@
 /**
  * @group edd_login_register
  */
-class Tests_Login_Register extends WP_UnitTestCase {
+class Tests_Login_Register extends EDD_UnitTestCase {
+
 	public function setUp() {
 		parent::setUp();
+		wp_set_current_user(0);
 	}
 
 	/**
 	 * Test that the login form returns the expected string.
 	 */
 	public function test_login_form() {
-		$this->assertContains( '<span><legend>Log into Your Account</legend></span>', edd_login_form() );
+		$this->assertContains( '<legend>Log into Your Account</legend>', edd_login_form() );
 	}
 
 	/**
@@ -31,9 +33,10 @@ class Tests_Login_Register extends WP_UnitTestCase {
 	public function test_process_login_form_incorrect_username() {
 
 		edd_process_login_form( array(
-			'edd_login_nonce' 	=> wp_create_nonce( 'edd-login-nonce' ),
-			'edd_user_login' 	=> 'wrong_username',
+			'edd_login_nonce' => wp_create_nonce( 'edd-login-nonce' ),
+			'edd_user_login'  => 'wrong_username',
 		) );
+
 		$this->assertArrayHasKey( 'username_incorrect', edd_get_errors() );
 		$this->assertContains( 'The username you entered does not exist', edd_get_errors() );
 
@@ -50,10 +53,11 @@ class Tests_Login_Register extends WP_UnitTestCase {
 	public function test_process_login_form_correct_username_invalid_pass() {
 
 		edd_process_login_form( array(
-			'edd_login_nonce' 	=> wp_create_nonce( 'edd-login-nonce' ),
-			'edd_user_login' 	=> 'admin@example.org',
-			'edd_user_pass' 	=> 'falsepass',
+			'edd_login_nonce' => wp_create_nonce( 'edd-login-nonce' ),
+			'edd_user_login'  => 'admin@example.org',
+			'edd_user_pass'   => 'falsepass',
 		) );
+
 		$this->assertArrayHasKey( 'password_incorrect', edd_get_errors() );
 		$this->assertContains( 'The password you entered is incorrect', edd_get_errors() );
 
@@ -114,8 +118,8 @@ class Tests_Login_Register extends WP_UnitTestCase {
 	public function test_process_register_form_logged_in() {
 
 		global $current_user;
-		$origin_user 	= $current_user;
-		$current_user 	= wp_set_current_user( 1 );
+		$origin_user  = $current_user;
+		$current_user = wp_set_current_user( 1 );
 
 		$_POST['edd_register_submit'] = '';
 		$this->assertNull( edd_process_register_form( array() ) );
@@ -134,7 +138,7 @@ class Tests_Login_Register extends WP_UnitTestCase {
 
 		$_POST['edd_register_submit'] = '';
 		$this->assertNull( edd_process_register_form( array(
-			'edd_register_submit' 	=> '',
+			'edd_register_submit' => '',
 		) ) );
 
 	}
@@ -146,17 +150,20 @@ class Tests_Login_Register extends WP_UnitTestCase {
 	 */
 	public function test_process_register_form_empty_fields() {
 
-		$_POST['edd_register_submit'] 	= 1;
-		$_POST['edd_user_pass'] 		= '';
-		$_POST['edd_user_pass2'] 		= '';
+		$_POST['edd_register_submit'] = 1;
+		$_POST['edd_user_pass']       = '';
+		$_POST['edd_user_pass2']      = '';
+
 		edd_process_register_form( array(
-			'edd_register_submit' 	=> 1,
-			'edd_user_login' 		=> null,
-			'edd_user_email' 		=> null,
+			'edd_register_submit' => 1,
+			'edd_user_login'      => '',
+			'edd_user_email'      => '',
 		) );
-		$this->assertArrayHasKey( 'empty_username', edd_get_errors() );
-		$this->assertArrayHasKey( 'email_invalid', edd_get_errors() );
-		$this->assertArrayHasKey( 'empty_password', edd_get_errors() );
+
+		$errors = edd_get_errors();
+		$this->assertArrayHasKey( 'empty_username', $errors );
+		$this->assertArrayHasKey( 'email_invalid', $errors );
+		$this->assertArrayHasKey( 'empty_password', $errors );
 
 		// Clear errors for other test
 		edd_clear_errors();
@@ -171,13 +178,14 @@ class Tests_Login_Register extends WP_UnitTestCase {
 	 */
 	public function test_process_register_form_username_exists() {
 
-		$_POST['edd_register_submit'] 	= 1;
-		$_POST['edd_user_pass'] 		= 'password';
-		$_POST['edd_user_pass2'] 		= 'other-password';
+		$_POST['edd_register_submit'] = 1;
+		$_POST['edd_user_pass']       = 'password';
+		$_POST['edd_user_pass2']      = 'other-password';
+
 		edd_process_register_form( array(
-			'edd_register_submit' 	=> 1,
-			'edd_user_login' 		=> 'admin',
-			'edd_user_email' 		=> null,
+			'edd_register_submit' => 1,
+			'edd_user_login'      => 'admin',
+			'edd_user_email'      => null,
 		) );
 		$this->assertArrayHasKey( 'username_unavailable', edd_get_errors() );
 		$this->assertArrayHasKey( 'password_mismatch', edd_get_errors() );

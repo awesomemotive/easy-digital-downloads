@@ -4,7 +4,7 @@
 /**
  * @group edd_downloads
  */
-class Tests_Downloads extends WP_UnitTestCase {
+class Tests_Downloads extends EDD_UnitTestCase {
 	protected $_post = null;
 
 	protected $_variable_pricing = null;
@@ -129,10 +129,31 @@ class Tests_Downloads extends WP_UnitTestCase {
 		$this->assertFalse( $download3->is_free( 0 ) );
 		$this->assertFalse( $download3->is_free( 1 ) );
 
+		update_post_meta( $download3->ID, '_variable_pricing', false );
+		$download4 = new EDD_Download( $download3->ID );
+		$this->assertEmpty( $download4->prices );
+
 		// Test the magic __get function
 		$this->assertEquals( 20, $download3->file_download_limit );
 		$this->assertTrue( is_wp_error( $download3->__get( 'asdf') ) );
 
+	}
+
+	public function test_can_purchase() {
+		$download = new EDD_Download( $this->_post->ID );
+		$this->assertTrue( $download->can_purchase() );
+
+		add_filter( 'edd_can_purchase_download', '__return_false' );
+		$this->assertFalse( $download->can_purchase() );
+		remove_filter( 'edd_can_purchase_download', '__return_false' );
+
+		$download->post_status = 'draft';
+		wp_set_current_user( 0 );
+		$this->assertFalse( $download->can_purchase() );
+
+		add_filter( 'edd_can_purchase_download', '__return_true' );
+		$this->assertTrue( $download->can_purchase() );
+		remove_filter( 'edd_can_purchase_download', '__return_true' );
 	}
 
 	public function test_download_price() {
@@ -189,7 +210,7 @@ class Tests_Downloads extends WP_UnitTestCase {
 
 	public function test_price_range() {
 		$range = edd_price_range( $this->_post->ID );
-		$expected = '<span class="edd_price_range_low">&#36;20.00</span><span class="edd_price_range_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_range_high">&#36;100.00</span>';
+		$expected = '<span class="edd_price edd_price_range_low" id="edd_price_low_' . $this->_post->ID . '">&#36;20.00</span><span class="edd_price_range_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price edd_price_range_high" id="edd_price_high_' . $this->_post->ID . '">&#36;100.00</span>';
 		$this->assertInternalType( 'string', $range );
 		$this->assertEquals( $expected, $range );
 	}
@@ -315,4 +336,16 @@ class Tests_Downloads extends WP_UnitTestCase {
 	public function test_get_download_is_bundle() {
 		$this->assertFalse( edd_is_bundled_product( $this->_post->ID ) );
 	}
+
+	public function test_item_quantities_not_disabled() {
+		$this->assertFalse( edd_download_quantities_disabled( $this->_post->ID ) );
+	}
+
+	public function test_item_quantities_disabled() {
+
+		update_post_meta( $this->_post->ID, '_edd_quantities_disabled', 1 );
+
+		$this->assertTrue( edd_download_quantities_disabled( $this->_post->ID ) );
+	}
+
 }

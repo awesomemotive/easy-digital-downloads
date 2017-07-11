@@ -149,10 +149,11 @@ abstract class EDD_DB {
 		$column_formats = array_merge( array_flip( $data_keys ), $column_formats );
 
 		$wpdb->insert( $this->table_name, $data, $column_formats );
+		$wpdb_insert_id = $wpdb->insert_id;
 
-		do_action( 'edd_post_insert_' . $type, $wpdb->insert_id, $data );
+		do_action( 'edd_post_insert_' . $type, $wpdb_insert_id, $data );
 
-		return $wpdb->insert_id;
+		return $wpdb_insert_id;
 	}
 
 	/**
@@ -234,6 +235,16 @@ abstract class EDD_DB {
 		$table = sanitize_text_field( $table );
 
 		return $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE '%s'", $table ) ) === $table;
+	}
+
+	/**
+	 * Check if the table was ever installed
+	 *
+	 * @since  2.4
+	 * @return bool Returns if the customers table was installed and upgrade routine run
+	 */
+	public function installed() {
+		return $this->table_exists( $this->table_name );
 	}
 
 }

@@ -4,7 +4,7 @@
 /**
  * @group edd_tax
  */
-class Tests_Taxes extends WP_UnitTestCase {
+class Tests_Taxes extends EDD_UnitTestCase {
 
 	protected $_payment_id = null;
 
@@ -50,7 +50,9 @@ class Tests_Taxes extends WP_UnitTestCase {
 			'id' => $this->_post->ID,
 			'item_number' => array(
 				'id' => $this->_post->ID,
-				'options' => array()
+				'options' => array(
+					'price_id' => 1
+				)
 			),
 			'subtotal' => '10',
 			'discount' => '0',
@@ -73,9 +75,10 @@ class Tests_Taxes extends WP_UnitTestCase {
 		);
 
 		$_SERVER['REMOTE_ADDR'] = '10.0.0.0';
-		$_SERVER['SERVER_NAME'] = 'edd_virtual';
+		$_SERVER['SERVER_NAME'] = 'edd-virtual.local';
 
 		$payment_id = edd_insert_payment( $purchase_data );
+		edd_update_payment_status( $payment_id, 'publish' );
 
 		$this->_payment_id = $payment_id;
 
@@ -87,12 +90,18 @@ class Tests_Taxes extends WP_UnitTestCase {
 		// Setup country / state tax rates
 		$tax_rates   = array();
 		$tax_rates[] = array( 'country' => 'US', 'state' => 'AL', 'rate' => 15 );
+		$tax_rates[] = array( 'country' => 'US', 'state' => 'AZ', 'rate' => .15 );
+		$tax_rates[] = array( 'country' => 'US', 'state' => 'TX', 'rate' => .13 );
+		$tax_rates[] = array( 'country' => 'US', 'state' => 'AR', 'rate' => .09 );
+		$tax_rates[] = array( 'country' => 'US', 'state' => 'HI', 'rate' => .63 );
+		$tax_rates[] = array( 'country' => 'US', 'state' => 'LA', 'rate' => .96 );
 
 		update_option( 'edd_tax_rates', $tax_rates );
 	}
 
 	public function tearDown() {
 		parent::tearDown();
+		EDD_Helper_Payment::delete_payment( $this->_payment_id );
 	}
 
 	public function test_use_taxes() {
@@ -118,6 +127,14 @@ class Tests_Taxes extends WP_UnitTestCase {
 		$this->assertEquals( '0.036', edd_get_tax_rate( 'BR' ) );
 		$this->assertEquals( '0.036', edd_get_tax_rate( 'CN' ) );
 		$this->assertEquals( '0.036', edd_get_tax_rate( 'HK' ) );
+	}
+
+	public function test_get_tax_rate_less_than_one() {
+		$this->assertEquals( '0.0015', edd_get_tax_rate( 'US', 'AZ' ) );
+		$this->assertEquals( '0.0013', edd_get_tax_rate( 'US', 'TX' ) );
+		$this->assertEquals( '0.0009', edd_get_tax_rate( 'US', 'AR' ) );
+		$this->assertEquals( '0.0063', edd_get_tax_rate( 'US', 'HI' ) );
+		$this->assertEquals( '0.0096', edd_get_tax_rate( 'US', 'LA' ) );
 	}
 
 	public function test_get_global_tax_rate() {
@@ -186,6 +203,15 @@ class Tests_Taxes extends WP_UnitTestCase {
 		$this->assertEquals( '9.29916', edd_calculate_tax( 258.31 ) );
 		$this->assertEquals( '37.41552', edd_calculate_tax( 1039.32 ) );
 		$this->assertEquals( '361.58724', edd_calculate_tax( 10044.09 ) );
+		$this->assertEquals( '0', edd_calculate_tax( -1.50 ) );
+	}
+
+	public function test_calculate_tax_less_than_one() {
+		$this->assertEquals( '0.08', edd_format_amount( edd_calculate_tax( 54, 'US', 'AZ' ) ) );
+		$this->assertEquals( '0.07', edd_format_amount( edd_calculate_tax( 54.7, 'US', 'TX' ) ) );
+		$this->assertEquals( '0.14', edd_format_amount( edd_calculate_tax( 153.85, 'US', 'AR' ) ) );
+		$this->assertEquals( '1.63', edd_format_amount( edd_calculate_tax( 258.31, 'US', 'HI' ) ) );
+		$this->assertEquals( '9.98', edd_format_amount( edd_calculate_tax( 1039.32, 'US', 'LA' ) ) );
 	}
 
 	public function test_calculate_tax_price_includes_tax() {

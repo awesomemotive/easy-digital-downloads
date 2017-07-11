@@ -4,7 +4,7 @@
 /**
  * @group edd_url
  */
-class Tests_URL extends WP_UnitTestCase {
+class Tests_URL extends EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 	}
@@ -23,6 +23,6 @@ class Tests_URL extends WP_UnitTestCase {
 	public function test_current_page_url() {
 		$_SERVER['SERVER_PORT'] = 80;
 		$_SERVER["SERVER_NAME"] = 'example.org';
-		$this->assertEquals( 'http://example.org', edd_get_current_page_url() );
+		$this->assertEquals( 'http://example.org/', edd_get_current_page_url() );
 	}
 }
