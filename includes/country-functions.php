@@ -54,6 +54,9 @@ function edd_get_shop_states( $country = null ) {
 		case 'US' :
 			$states = edd_get_states_list();
 			break;
+		case 'AO' :
+			$states = edd_get_angola_list();
+			break;
 		case 'CA' :
 			$states = edd_get_provinces_list();
 			break;
@@ -475,6 +478,38 @@ function edd_get_states_list() {
 	);
 
 	return apply_filters( 'edd_us_states', $states );
+}
+/**
+ * Get Angola States
+ *
+ * @since 1.0
+ * @return array $states A list of states
+ */
+function edd_get_angola_list() {
+	$states = array(
+		''   => '',
+	    'BG' => __( 'Bengo', 'edd' ),
+	    'BL' => __( 'Benguela', 'edd' ),
+	    'BI'  => __( 'Bié', 'edd' ),
+	    'CA'  => __( 'Cabinda', 'edd' ),
+	    'KU'  => __( 'Kuando Kubango', 'edd' ),
+	    'CU'  => __( 'Cunene', 'edd' ),
+	    'HU'  => __( 'Huambo', 'edd' ),
+	    'HL'  => __( 'Huíla', 'edd' ),
+	    'KN'  => __( 'Kwanza-Norte', 'edd' ),
+	    'KS'  => __( 'Kwanza-Sul', 'edd' ),
+	    'LU'  => __( 'Luanda', 'edd' ),
+	    'LN'  => __( 'Lunda-Norte', 'edd' ),
+	    'LS'  => __( 'Lunda-Sul', 'edd' ),
+	    'ML'  => __( 'Malanje', 'edd' ),
+	    'MO'  => __( 'Moxico', 'edd' ),
+	    'NA'  => __( 'Namibe', 'edd' ),
+	    'UI'  => __( 'Uíge', 'edd' ),
+	    'ZA'  => __( 'Zaire', 'edd' )
+
+	);
+
+	return apply_filters( 'edd_angola_states', $states );
 }
 
 /**
@@ -1621,3 +1656,4 @@ function edd_get_spain_states_list() {
 
 	return apply_filters( 'edd_spain_states', $states );
 }
+
