@@ -482,30 +482,30 @@ function edd_get_states_list() {
 /**
  * Get Angola States
  *
- * @since 1.0
+ * @since 1.1
  * @return array $states A list of states
  */
 function edd_get_angola_list() {
 	$states = array(
 		''   => '',
-	    'BG' => __( 'Bengo', 'edd' ),
-	    'BL' => __( 'Benguela', 'edd' ),
-	    'BI'  => __( 'Bié', 'edd' ),
-	    'CA'  => __( 'Cabinda', 'edd' ),
-	    'KU'  => __( 'Kuando Kubango', 'edd' ),
-	    'CU'  => __( 'Cunene', 'edd' ),
-	    'HU'  => __( 'Huambo', 'edd' ),
-	    'HL'  => __( 'Huíla', 'edd' ),
-	    'KN'  => __( 'Kwanza-Norte', 'edd' ),
-	    'KS'  => __( 'Kwanza-Sul', 'edd' ),
-	    'LU'  => __( 'Luanda', 'edd' ),
-	    'LN'  => __( 'Lunda-Norte', 'edd' ),
-	    'LS'  => __( 'Lunda-Sul', 'edd' ),
-	    'ML'  => __( 'Malanje', 'edd' ),
-	    'MO'  => __( 'Moxico', 'edd' ),
-	    'NA'  => __( 'Namibe', 'edd' ),
-	    'UI'  => __( 'Uíge', 'edd' ),
-	    'ZA'  => __( 'Zaire', 'edd' )
+	   	'BGO' => __( 'Bengo', 'edd' ),
+	    'BLU' => __( 'Benguela', 'edd' ),
+	    'BIE'  => __( 'Bié', 'edd' ),
+	    'CAB'  => __( 'Cabinda', 'edd' ),
+	   	'CNN'  => __( 'Cunene', 'edd' ),
+	    'HUA'  => __( 'Huambo', 'edd' ),
+	    'HUI'  => __( 'Huíla', 'edd' ),
+	    'CCU'  => __( 'Kuando Kubango', 'edd' ),
+	    'CNO'  => __( 'Kwanza-Norte', 'edd' ),
+	    'CUS'  => __( 'Kwanza-Sul', 'edd' ),
+	    'LUA'  => __( 'Luanda', 'edd' ),
+	    'LNO'  => __( 'Lunda-Norte', 'edd' ),
+	    'LSU'  => __( 'Lunda-Sul', 'edd' ),
+	    'MAL'  => __( 'Malanje', 'edd' ),
+	    'MOX'  => __( 'Moxico', 'edd' ),
+	    'NAM'  => __( 'Namibe', 'edd' ),
+	    'UIG'  => __( 'Uíge', 'edd' ),
+	    'ZAI'  => __( 'Zaire', 'edd' )
 
 	);
 
