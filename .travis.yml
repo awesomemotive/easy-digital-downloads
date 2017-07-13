@@ -12,6 +12,7 @@ php:
 
 env:
 - WP_VERSION=latest WP_MULTISITE=0
+- WP_VERSION=4.7 WP_MULTISITE=0
 - WP_VERSION=4.6 WP_MULTISITE=0
 - WP_VERSION=4.5 WP_MULTISITE=0
 - WP_VERSION=4.4 WP_MULTISITE=0
@@ -30,7 +31,14 @@ matrix:
       env: WP_VERSION=4.0 WP_MULTISITE=0
 
 before_script:
-- bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
+  - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
+  - export PATH="$HOME/.composer/vendor/bin:$PATH"
+  - |
+    if [[ ${TRAVIS_PHP_VERSION:0:2} == "7." ]]; then
+      composer global require "phpunit/phpunit=5.7.*"
+    else
+      composer global require "phpunit/phpunit=4.8.*"
+    fi
 
 script:
 - if [[ $TRAVIS_PHP_VERSION != 'hhvm' && ( $TRAVIS_PHP_VERSION != '5.5'|| $WP_VERSION != 'latest'

@@ -159,6 +159,7 @@ final class EDD_Amazon_Payments {
 	private function filters() {
 
 		add_filter( 'edd_accepted_payment_icons', array( $this, 'register_payment_icon' ), 10, 1 );
+		add_filter( 'edd_show_gateways', array( $this, 'maybe_hide_gateway_select' ) );
 
 		if ( is_admin() ) {
 			add_filter( 'edd_settings_sections_gateways', array( $this, 'register_gateway_section' ), 1, 1 );
@@ -179,7 +180,7 @@ final class EDD_Amazon_Payments {
 
 		add_action( 'wp_enqueue_scripts',                      array( $this, 'print_client' ), 10 );
 		add_action( 'wp_enqueue_scripts',                      array( $this, 'load_scripts' ), 11 );
-		add_action( 'init',                                    array( $this, 'check_config' ), 1  );
+		add_action( 'edd_pre_process_purchase',                array( $this, 'check_config' ), 1  );
 		add_action( 'init',                                    array( $this, 'capture_oauth' ), 9 );
 		add_action( 'init',                                    array( $this, 'signin_redirect' ) );
 		add_action( 'edd_purchase_form_before_register_login', array( $this, 'login_form' ) );
@@ -206,7 +207,7 @@ final class EDD_Amazon_Payments {
 	 */
 	public function check_config() {
 		$is_enabled = edd_is_gateway_active( $this->gateway_id );
-		if ( ! $is_enabled || false === $this->is_setup() ) {
+		if ( ( ! $is_enabled || false === $this->is_setup() ) && 'amazon' == edd_get_chosen_gateway() ) {
 			edd_set_error( 'amazon_gateway_not_configured', __( 'There is an error with the Amazon Payments configuration.', 'easy-digital-downloads' ) );
 		}
 	}
@@ -304,6 +305,24 @@ final class EDD_Amazon_Payments {
 		$payment_icons['amazon'] = 'Amazon';
 
 		return $payment_icons;
+	}
+
+	/**
+	 * Hides payment gateway select options after return from Amazon
+	 *
+	 * @access public
+	 * @since  2.7.6
+	 * @param  bool $show Should gateway select be shown
+	 * @return bool
+	 */
+	public function maybe_hide_gateway_select( $show ) {
+
+		if( ! empty( $_REQUEST['payment-mode'] ) && 'amazon' == $_REQUEST['payment-mode'] && ! empty( $_REQUEST['amazon_reference_id'] ) && ! empty( $_REQUEST['state'] ) && 'authorized' == $_REQUEST['state'] ) {
+
+			$show = false;
+		}
+
+		return $show;
 	}
 
 	/**

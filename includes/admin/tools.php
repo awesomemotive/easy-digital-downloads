@@ -986,7 +986,7 @@ function edd_tools_import_export_process_export() {
 
 	ignore_user_abort( true );
 
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) )
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) )
 		set_time_limit( 0 );
 
 	nocache_headers();
@@ -1328,7 +1328,6 @@ function edd_tools_sysinfo_get() {
 
 	// PHP configs... now we're getting to the important stuff
 	$return .= "\n" . '-- PHP Configuration' . "\n\n";
-	$return .= 'Safe Mode:                ' . ( ini_get( 'safe_mode' ) ? 'Enabled' : 'Disabled' . "\n" );
 	$return .= 'Memory Limit:             ' . ini_get( 'memory_limit' ) . "\n";
 	$return .= 'Upload Max Size:          ' . ini_get( 'upload_max_filesize' ) . "\n";
 	$return .= 'Post Max Size:            ' . ini_get( 'post_max_size' ) . "\n";

@@ -75,7 +75,7 @@ function edd_process_download() {
 		// Payment has been verified, setup the download
 		$download_files = edd_get_download_files( $args['download'] );
 		$attachment_id  = ! empty( $download_files[ $args['file_key'] ]['attachment_id'] ) ? absint( $download_files[ $args['file_key'] ]['attachment_id'] ) : false;
-		$thumbnail_size = ! empty( $download_files[ $args['file_key'] ]['thumbnail_size']) ? sanitize_text_field( $download_files[ $args['file_key'] ]['thumbnail_size'] ) : false;
+		$thumbnail_size = ! empty( $download_files[ $args['file_key'] ]['thumbnail_size'] ) ? sanitize_text_field( $download_files[ $args['file_key'] ]['thumbnail_size'] ) : false;
 		$requested_file = isset( $download_files[ $args['file_key'] ]['file'] ) ? $download_files[ $args['file_key'] ]['file'] : '';
 
 		/*
@@ -83,6 +83,11 @@ function edd_process_download() {
 		 * If this fails or returns a relative path, we fail back to our own absolute URL detection
 		 */
 		if( edd_is_local_file( $requested_file ) && $attachment_id && 'attachment' == get_post_type( $attachment_id ) ) {
+
+			if( 'pdf' === strtolower( edd_get_file_extension( $requested_file ) ) ) {
+				// Do not ever grab the thumbnail for PDFs. See https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5491
+				$thumbnail_size = false;
+			}
 
 			if( 'redirect' == $method ) {
 
@@ -93,13 +98,17 @@ function edd_process_download() {
 				}
 
 			} else {
+
 				if ( $thumbnail_size ) {
+
 					$attachment_data = wp_get_attachment_image_src( $attachment_id, $thumbnail_size, false );
+
 					if ( false !== $attachment_data && ! empty( $attachment_data[0] ) && filter_var( $attachment_data[0], FILTER_VALIDATE_URL) !== false ) {
 						$attached_file  = $attachment_data['0'];
 						$attached_file  = str_replace( site_url(), '', $attached_file );
 						$attached_file  = realpath( ABSPATH . $attached_file );
 					}
+
 				}
 
 				if ( empty( $attached_file ) ) {
@@ -163,7 +172,7 @@ function edd_process_download() {
 		$file_extension = edd_get_file_extension( $requested_file );
 		$ctype          = edd_get_file_ctype( $file_extension );
 
-		if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+		if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
 			@set_time_limit(0);
 		}
 		if ( function_exists( 'get_magic_quotes_runtime' ) && get_magic_quotes_runtime() && version_compare( phpversion(), '5.4', '<' ) ) {
