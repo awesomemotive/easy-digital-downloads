@@ -64,7 +64,9 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 		$args = array(
 			'log_type'       => 'sale',
 			'posts_per_page' => 30,
-			'paged'          => $this->step
+			'paged'          => $this->step,
+			'orderby'        => 'ID',
+			'order'          => 'ASC',
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
