@@ -102,7 +102,9 @@ class EDD_Stats {
 	 *
 	 * @access public
 	 * @since 1.8
-	 * @return void
+	 *
+	 * @param string $_start_date Range it should get the date for.
+	 * @param bool $_end_date True when it should return the end date from the period.
 	 */
 	public function setup_dates( $_start_date = 'this_month', $_end_date = false ) {
 
@@ -124,7 +126,10 @@ class EDD_Stats {
 	 *
 	 * @access public
 	 * @since 1.8
-	 * @return array|WP_Error If the date is invalid, a WP_Error object will be returned
+	 *
+	 * @param string $date Date to convert.
+	 * @param bool $end_date True when it should return the end date from the $date period.
+	 * @return string|WP_Error Unix formatted date based on the parameters. WP_Error when $date param is invalid.
 	 */
 	public function convert_date( $date, $end_date = false ) {
 
@@ -135,6 +140,7 @@ class EDD_Stats {
 		$day             = 1;
 		$month           = date( 'n', current_time( 'timestamp' ) );
 		$year            = date( 'Y', current_time( 'timestamp' ) );
+		$time            = $end_date ? '23:59:59' : '00:00:00';
 
 		if ( array_key_exists( $date, $this->get_predefined_dates() ) ) {
 
@@ -142,285 +148,94 @@ class EDD_Stats {
 			switch( $date ) {
 
 				case 'this_month' :
-
 					if( $end_date ) {
-
-						$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
-						$hour   = 23;
-						$minute = 59;
-						$second = 59;
-
+						$date = date( 'U', strtotime( "last day of this month $time" ) );
+					} else {
+						$date = date( 'U', strtotime( "first day of this month $time" ) );
 					}
-
 					break;
 
 				case 'last_month' :
-
-					if( $month == 1 ) {
-
-						$month = 12;
-						$year--;
-
+					if ( $end_date ) {
+						$date = date( 'U', strtotime( "last day of previous month $time" ) );
 					} else {
-
-						$month--;
-
+						$date = date( 'U', strtotime( "first day of previous month $time" ) );
 					}
-
-					if( $end_date ) {
-						$day = cal_days_in_month( CAL_GREGORIAN, $month, $year );
-					}
-
 					break;
 
 				case 'today' :
-
-					$day = date( 'd', current_time( 'timestamp' ) );
-
-					if( $end_date ) {
-						$hour   = 23;
-						$minute = 59;
-						$second = 59;
-					}
-
+					$date = date( 'U', strtotime( "today $time" ) );
 					break;
 
 				case 'yesterday' :
-
-					$day = date( 'd', current_time( 'timestamp' ) ) - 1;
-
-					// Check if Today is the first day of the month (meaning subtracting one will get us 0)
-					if( $day < 1 ) {
-
-						// If current month is 1
-						if( 1 == $month ) {
-
-							$year -= 1; // Today is January 1, so skip back to last day of December
-							$month = 12;
-							$day   = cal_days_in_month( CAL_GREGORIAN, $month, $year );
-
-						} else {
-
-							// Go back one month and get the last day of the month
-							$month -= 1;
-							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
-
-						}
-					}
-
+					$date = date( 'U', strtotime( "yesterday $time" ) );
 					break;
 
 				case 'this_week' :
+					$start_week = date( 'U', strtotime( sprintf( "sunday last week, +%d days", get_option( 'start_of_week' ) ) ) );
 
-					$days_to_week_start = ( date( 'w', current_time( 'timestamp' ) ) - 1 ) *60*60*24;
-				 	$today = date( 'd', current_time( 'timestamp' ) ) *60*60*24;
-
-				 	if( $today < $days_to_week_start ) {
-
-				 		if( $month > 1 ) {
-					 		$month -= 1;
-					 	} else {
-					 		$month = 12;
-					 	}
-
-				 	}
-
-					if( ! $end_date ) {
-
-					 	// Getting the start day
-
-						$day = date( 'd', current_time( 'timestamp' ) - $days_to_week_start ) - 1;
-						$day += get_option( 'start_of_week' );
-
+					if ( $end_date ) {
+						$date = date( 'U', strtotime( "+6 days $time", $start_week ) );
 					} else {
-
-						// Getting the end day
-
-						$day = date( 'd', current_time( 'timestamp' ) - $days_to_week_start ) - 1;
-						$day += get_option( 'start_of_week' ) + 6;
-
+						$date = date( 'U', strtotime( "$time", $start_week ) );
 					}
 
 					break;
 
 				case 'last_week' :
+					$start_week = date( 'U', strtotime( sprintf( "sunday -2 weeks, +%d days", get_option( 'start_of_week' ) ) ) );
 
-					$days_to_week_start = ( date( 'w', current_time( 'timestamp' ) ) - 1 ) *60*60*24;
-				 	$today = date( 'd', current_time( 'timestamp' ) ) *60*60*24;
-
-				 	if( $today < $days_to_week_start ) {
-
-				 		if( $month > 1 ) {
-					 		$month -= 1;
-					 	} else {
-					 		$month = 12;
-					 	}
-
-				 	}
-
-					if( ! $end_date ) {
-
-					 	// Getting the start day
-
-						$day = date( 'd', current_time( 'timestamp' ) - $days_to_week_start ) - 8;
-						$day += get_option( 'start_of_week' );
-
+					if ( $end_date ) {
+						$date = date( 'U', strtotime( "+6 days $time", $start_week ) );
 					} else {
-
-						// Getting the end day
-
-						$day = date( 'd', current_time( 'timestamp' ) - $days_to_week_start ) - 8;
-						$day += get_option( 'start_of_week' ) + 6;
-
+						$date = date( 'U', strtotime( "$time", $start_week ) );
 					}
-
 					break;
 
 				case 'this_quarter' :
+					$current_month = date( 'n', current_time( 'timestamp' ) );
+					$start_quarter = floor( $current_month / 3 ) * 3;
+					$end_quarter   = ceil( $current_month / 3 ) * 3;
 
-					$month_now = date( 'n', current_time( 'timestamp' ) );
-
-					if ( $month_now <= 3 ) {
-
-						if( ! $end_date ) {
-							$month = 1;
-						} else {
-							$month = 3;
-							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
-							$hour   = 23;
-							$minute = 59;
-							$second = 59;
-						}
-
-					} else if ( $month_now <= 6 ) {
-
-						if( ! $end_date ) {
-							$month = 4;
-						} else {
-							$month = 6;
-							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
-							$hour   = 23;
-							$minute = 59;
-							$second = 59;
-						}
-
-					} else if ( $month_now <= 9 ) {
-
-						if( ! $end_date ) {
-							$month = 7;
-						} else {
-							$month = 9;
-							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
-							$hour   = 23;
-							$minute = 59;
-							$second = 59;
-						}
-
+					if ( $end_date ) {
+						$date = date( 'U', strtotime( "01/01 +$end_quarter months $time -1 day" ) );
 					} else {
-
-						if( ! $end_date ) {
-							$month = 10;
-						} else {
-							$month = 12;
-							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
-							$hour   = 23;
-							$minute = 59;
-							$second = 59;
-						}
-
+						$date = date( 'U', strtotime( "01/01 +$start_quarter months $time" ) );
 					}
-
 					break;
 
 				case 'last_quarter' :
+					$start_date    = strtotime( '-3 months' );
+					$start_month   = date( 'n', $start_date );
+					$start_year    = date( 'Y', $start_date );
+					$start_quarter = floor( $start_month / 3 ) * 3;
+					$end_quarter   = ceil( $start_month / 3 ) * 3;
 
-					$month_now = date( 'n', current_time( 'timestamp' ) );
-
-					if ( $month_now <= 3 ) {
-
-						if( ! $end_date ) {
-							$month = 10;
-						} else {
-							$year -= 1;
-							$month = 12;
-							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
-							$hour   = 23;
-							$minute = 59;
-							$second = 59;
-						}
-
-					} else if ( $month_now <= 6 ) {
-
-						if( ! $end_date ) {
-							$month = 1;
-						} else {
-							$month = 3;
-							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
-							$hour   = 23;
-							$minute = 59;
-							$second = 59;
-						}
-
-					} else if ( $month_now <= 9 ) {
-
-						if( ! $end_date ) {
-							$month = 4;
-						} else {
-							$month = 6;
-							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
-							$hour   = 23;
-							$minute = 59;
-							$second = 59;
-						}
-
+					if ( $end_date ) {
+						$date = date( 'U', strtotime( "01/01/$start_year +$end_quarter months -1 day $time" ) );
 					} else {
-
-						if( ! $end_date ) {
-							$month = 7;
-						} else {
-							$month = 9;
-							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
-							$hour   = 23;
-							$minute = 59;
-							$second = 59;
-						}
-
+						$date = date( 'U', strtotime( "01/01/$start_year +$start_quarter months $time" ) );
 					}
-
 					break;
 
 				case 'this_year' :
-
-					if( ! $end_date ) {
-						$month  = 1;
+					if ( $end_date ) {
+						$date = date( 'U', strtotime( "12/12 $time" ) );
 					} else {
-						$month  = 12;
-						$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
-						$hour   = 23;
-						$minute = 59;
-						$second = 59;
+						$date = date( 'U', strtotime( "01/01 $time" ) );
 					}
-
 					break;
 
 				case 'last_year' :
-
-					$year -= 1;
-					if( ! $end_date ) {
-						$month = 1;
-						$day   = 1;
+					if ( $end_date ) {
+						$date = date( 'U', strtotime( "12/12 $time -1 year" ) );
 					} else {
-						$month  = 12;
-						$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
-						$hour   = 23;
-						$minute = 59;
-						$second = 59;
+						$date = date( 'U', strtotime( "01/01 $time -1 year" ) );
 					}
-
 				break;
 
 			}
-
+			$this->timestamp = true;
 
 		} else if( is_numeric( $date ) ) {
 
