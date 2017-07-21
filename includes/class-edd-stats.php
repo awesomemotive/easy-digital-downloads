@@ -220,7 +220,7 @@ class EDD_Stats {
 
 				case 'this_year' :
 					if ( $end_date ) {
-						$date = date( 'U', strtotime( "12/12 $time" ) );
+						$date = date( 'U', strtotime( "12/31 $time" ) );
 					} else {
 						$date = date( 'U', strtotime( "01/01 $time" ) );
 					}
@@ -228,7 +228,7 @@ class EDD_Stats {
 
 				case 'last_year' :
 					if ( $end_date ) {
-						$date = date( 'U', strtotime( "12/12 $time -1 year" ) );
+						$date = date( 'U', strtotime( "12/31 $time -1 year" ) );
 					} else {
 						$date = date( 'U', strtotime( "01/01 $time -1 year" ) );
 					}
