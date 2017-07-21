@@ -189,12 +189,16 @@ class EDD_Fees {
 	public function get_fees( $type = 'fee', $download_id = 0, $price_id = NULL ) {
 		$fees = EDD()->session->get( 'edd_cart_fees' );
 
+		if ( ! is_array( $fees ) ) {
+			$fees = array();
+		}
+
 		if ( EDD()->cart->is_empty() ) {
 			// We can only get item type fees when the cart is empty
 			$type = 'item';
 		}
 
-		if ( ! empty( $fees ) && ! empty( $type ) && 'all' !== $type ) {
+		if ( ! empty( $type ) && 'all' !== $type ) {
 			foreach ( $fees as $key => $fee ) {
 				if ( ! empty( $fee['type'] ) && $type != $fee['type'] ) {
 					unset( $fees[ $key ] );
@@ -202,7 +206,7 @@ class EDD_Fees {
 			}
 		}
 
-		if ( ! empty( $fees ) && ! empty( $download_id ) ) {
+		if ( ! empty( $download_id ) ) {
 			// Remove fees that don't belong to the specified Download
 			foreach ( $fees as $key => $fee ) {
 				if ( empty( $fee['download_id'] ) || (int) $download_id !== (int) $fee['download_id'] ) {
@@ -212,7 +216,7 @@ class EDD_Fees {
 		}
 
 		// Now that we've removed any fees that are for other Downloads, lets also remove any fees that don't match this price id
-		if ( ! empty( $fees ) && ! empty( $download_id ) && ! is_null( $price_id ) ) {
+		if ( ! empty( $download_id ) && ! is_null( $price_id ) ) {
 			// Remove fees that don't belong to the specified Download AND Price ID
 			foreach ( $fees as $key => $fee ) {
 				if ( is_null( $fee['price_id'] ) ) {
@@ -225,16 +229,14 @@ class EDD_Fees {
 			}
 		}
 
-		if ( ! empty( $fees ) ) {
-			// Remove fees that belong to a specific download but are not in the cart
-			foreach ( $fees as $key => $fee ) {
-				if ( empty( $fee['download_id'] ) ) {
-					continue;
-				}
+		// Remove fees that belong to a specific download but are not in the cart
+		foreach ( $fees as $key => $fee ) {
+			if ( empty( $fee['download_id'] ) ) {
+				continue;
+			}
 
-				if ( ! edd_item_in_cart( $fee['download_id'] ) ) {
-					unset( $fees[ $key ] );
-				}
+			if ( ! edd_item_in_cart( $fee['download_id'] ) ) {
+				unset( $fees[ $key ] );
 			}
 		}
 
