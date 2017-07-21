@@ -137,7 +137,7 @@ class EDD_Cart {
 		$this->get_contents_details();
 		$this->get_all_fees();
 		$this->get_discounts_from_session();
-		$this->quantity = $this->get_quantity();
+		$this->get_quantity();
 	}
 
 	/**
@@ -173,7 +173,7 @@ class EDD_Cart {
 	 *
 	 * @since 2.7
 	 * @access public
-	 * @return void
+	 * @return array List of cart contents.
 	 */
 	public function get_contents() {
 		if ( ! did_action( 'edd_cart_contents_loaded_from_session' ) ) {
@@ -293,7 +293,7 @@ class EDD_Cart {
 	 */
 	public function get_discounts() {
 		$this->get_discounts_from_session();
-		$this->discounts = ! empty( $this->discounts ) ? explode( '|', $this->discounts ) : false;
+		$this->discounts = ! empty( $this->discounts ) ? explode( '|', $this->discounts ) : array();
 		return $this->discounts;
 	}
 
@@ -322,7 +322,7 @@ class EDD_Cart {
 
 		$has_discounts = false;
 
-		if ( $this->get_discounts() ) {
+		if ( ! empty( $this->get_discounts() ) ) {
 			$has_discounts = true;
 		}
 
@@ -656,7 +656,7 @@ class EDD_Cart {
 
 		$discounts = false === $discount ? $this->get_discounts() : array( $discount );
 
-		if ( $discounts ) {
+		if ( ! empty( $discounts ) ) {
 			foreach ( $discounts as $discount ) {
 				$code_id = edd_get_discount_id_by_code( $discount );
 
