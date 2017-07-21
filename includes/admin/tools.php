@@ -1120,7 +1120,7 @@ function edd_tools_sysinfo_get() {
 	// WordPress configuration
 	$return .= "\n" . '-- WordPress Configuration' . "\n\n";
 	$return .= 'Version:                  ' . get_bloginfo( 'version' ) . "\n";
-	$return .= 'Language:                 ' . ( !empty( $locale ) && $locale ? $locale : 'en_US' ) . "\n";
+	$return .= 'Language:                 ' . ( !empty( $locale ) ? $locale : 'en_US' ) . "\n";
 	$return .= 'Permalink Structure:      ' . ( get_option( 'permalink_structure' ) ? get_option( 'permalink_structure' ) : 'Default' ) . "\n";
 	$return .= 'Active Theme:             ' . $theme . "\n";
 	if ( $parent_theme !== $theme ) {
