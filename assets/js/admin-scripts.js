@@ -122,7 +122,7 @@ jQuery(document).ready(function ($) {
 		},
 
 		remove : function() {
-			$( document.body ).on( 'click', '.edd-remove-row', function(e) {
+			$( document.body ).on( 'click', '.edd-remove-row, .edd_remove_repeatable', function(e) {
 				e.preventDefault();
 
 				var row   = $(this).parents( '.edd_repeatable_row' ),
@@ -134,7 +134,7 @@ jQuery(document).ready(function ($) {
 					firstFocusable;
 
 					// Set focus on next element if removing the first row. Otherwise set focus on previous element.
-					if ( $(this).is( '.ui-sortable .edd_repeatable_row:first-child .edd-remove-row' ) ) {
+					if ( $(this).is( '.ui-sortable .edd_repeatable_row:first-child .edd-remove-row, .ui-sortable .edd_repeatable_row:first-child .edd_remove_repeatable' ) ) {
 						focusElement  = row.next( '.edd_repeatable_row' );
 					} else {
 						focusElement  = row.prev( '.edd_repeatable_row' );
