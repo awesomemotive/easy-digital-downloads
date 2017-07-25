@@ -488,6 +488,11 @@ input[class*="edd-price-field"] {
 	width: 10px;
 	height: 10px;
 }
+.edd_remove_repeatable:active,
+.edd_remove_repeatable:hover,
+.edd_remove_repeatable:focus  {
+	background-position: -10px 0 !important;
+}
 
 /* Payment Details
 -------------------------------------------------------------- */
