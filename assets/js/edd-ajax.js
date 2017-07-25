@@ -6,7 +6,7 @@ jQuery(document).ready(function ($) {
 	$('a.edd-add-to-cart').addClass('edd-has-js');
 
 	// Send Remove from Cart requests
-	$('body').on('click.eddRemoveFromCart', '.edd-remove-from-cart', function (event) {
+	$(document.body).on('click.eddRemoveFromCart', '.edd-remove-from-cart', function (event) {
 		var $this  = $(this),
 			item   = $this.data('cart-item'),
 			action = $this.data('action'),
@@ -57,7 +57,7 @@ jQuery(document).ready(function ($) {
 					}
 
 					$('span.edd-cart-quantity').text( response.cart_quantity );
-					$('body').trigger('edd_quantity_updated', [ response.cart_quantity ]);
+					$(document.body).trigger('edd_quantity_updated', [ response.cart_quantity ]);
 					if ( edd_scripts.taxes_enabled ) {
 						$('.cart_item.edd_subtotal span').html( response.subtotal );
 						$('.cart_item.edd_cart_tax span').html( response.tax );
@@ -79,7 +79,7 @@ jQuery(document).ready(function ($) {
 						});
 					}
 
-					$('body').trigger('edd_cart_item_removed', [ response ]);
+					$(document.body).trigger('edd_cart_item_removed', [ response ]);
 				}
 			}
 		}).fail(function (response) {
@@ -93,8 +93,28 @@ jQuery(document).ready(function ($) {
 		return false;
 	});
 
+	// Update button price with quantity
+	$(document.body).on('change', '.edd-item-quantity', function() {
+		var target = $(this).parent().next('.edd_purchase_submit_wrapper').find('.edd-add-to-cart');
+		var price  = target.data('price');
+
+		// Determine the number of decimal places currently being displayed
+		var decimals  = 0;
+		if ( price.toString().indexOf(edd_scripts.decimal_separator)) {
+			var parts     = price.toString().split(edd_scripts.decimal_separator);
+			if ('undefined' !== typeof parts[1]) {
+				decimals  = parts[1].length;
+			}
+		}
+
+		var new_price = $(this).val() * price;
+		new_price = new_price.toFixed(decimals);
+		new_price = String(new_price).split("").reverse().join("").replace(/(\d{3}\B)/g, "$1" + edd_scripts.thousands_separator).split("").reverse().join("");
+		target.find('.edd-add-to-cart-label .edd-purchase-button-price-text').text(new_price);
+	});
+
 	// Send Add to Cart request
-	$('body').on('click.eddAddToCart', '.edd-add-to-cart', function (e) {
+	$(document.body).on('click.eddAddToCart', '.edd-add-to-cart', function (e) {
 
 		e.preventDefault();
 
@@ -230,7 +250,7 @@ jQuery(document).ready(function ($) {
 
 					$('span.edd-cart-quantity').each(function() {
 						$(this).text(response.cart_quantity);
-						$('body').trigger('edd_quantity_updated', [ response.cart_quantity ]);
+						$(document.body).trigger('edd_quantity_updated', [ response.cart_quantity ]);
 					});
 
 					// Show the "number of items in cart" message
@@ -270,7 +290,7 @@ jQuery(document).ready(function ($) {
 					// Re-enable the add to cart button
 					$this.prop('disabled', false);
 
-					$('body').trigger('edd_cart_item_added', [ response ]);
+					$(document.body).trigger('edd_cart_item_added', [ response ]);
 
 				}
 			}
@@ -389,20 +409,26 @@ jQuery(document).ready(function ($) {
 				$('.edd-loading-ajax').remove();
 				$('.edd_errors').remove();
 				$('.edd-error').hide();
-				$('#edd_purchase_submit').before(data);
+				$( edd_global_vars.checkout_error_anchor ).before(data);
 				$('#edd-purchase-button').prop( 'disabled', false );
+
+				$(document.body).trigger( 'edd_checkout_error', [ data ] );
 			}
 		});
 
 	});
 
-	$('body').on('change', '#edd_cc_address input.card_state, #edd_cc_address select, #edd_address_country', update_state_field);
+	$(document.body).on('change', '#edd_cc_address input.card_state, #edd_cc_address select, #edd_address_country', update_state_field);
 
 	function update_state_field() {
 
 		var $this = $(this);
 		var $form;
 		var is_checkout = typeof edd_global_vars !== 'undefined';
+		var field_name  = 'card_state';
+		if ( $(this).attr('id') == 'edd_address_country' ) {
+			field_name = 'edd_address_state';
+		}
 
 		if( 'card_state' != $this.attr('id') ) {
 
@@ -410,7 +436,7 @@ jQuery(document).ready(function ($) {
 			var postData = {
 				action: 'edd_get_shop_states',
 				country: $this.val(),
-				field_name: 'card_state'
+				field_name: field_name,
 			};
 
 			$.ajax({
@@ -437,7 +463,7 @@ jQuery(document).ready(function ($) {
 					}
 
 					if ( is_checkout ) {
-						$('body').trigger('edd_cart_billing_address_updated', [ response ]);
+						$(document.body).trigger('edd_cart_billing_address_updated', [ response ]);
 					}
 
 				}
@@ -460,7 +486,7 @@ jQuery(document).ready(function ($) {
 	}
 
 	// If is_checkout, recalculate sales tax on postalCode change.
-	$('body').on('change', '#edd_cc_address input[name=card_zip]', function () {
+	$(document.body).on('change', '#edd_cc_address input[name=card_zip]', function () {
 		if (typeof edd_global_vars !== 'undefined') {
 			recalculate_taxes();
 		}

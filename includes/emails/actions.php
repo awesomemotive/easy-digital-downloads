@@ -16,19 +16,23 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Triggers Purchase Receipt to be sent after the payment status is updated
  *
  * @since 1.0.8.4
- * @param int $payment_id Payment ID
+ * @since 2.8 - Add parameters for EDD_Payment and EDD_Customer object.
+ *
+ * @param int          $payment_id Payment ID.
+ * @param EDD_Payment  $payment    Payment object for payment ID.
+ * @param EDD_Customer $customer   Customer object for associated payment.
  * @return void
  */
-function edd_trigger_purchase_receipt( $payment_id ) {
+function edd_trigger_purchase_receipt( $payment_id = 0, $payment = null, $customer = null ) {
 	// Make sure we don't send a purchase receipt while editing a payment
 	if ( isset( $_POST['edd-action'] ) && 'edit_payment' == $_POST['edd-action'] ) {
 		return;
 	}
 
 	// Send email with secure download link
-	edd_email_purchase_receipt( $payment_id );
+	edd_email_purchase_receipt( $payment_id, true, '', $payment, $customer );
 }
-add_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999, 1 );
+add_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999, 3 );
 
 /**
  * Resend the Email Purchase Receipt. (This can be done from the Payment History page)

@@ -18,6 +18,20 @@ window.EDD_Checkout = (function($) {
 			edd_validate_card( $(this) );
 		});
 
+		$body.on('blur change', '.card-name', function() {
+			var name_field = $(this);
+
+			name_field.validateCreditCard(function(result) {
+				if(result.card_type != null) {
+					name_field.removeClass('valid').addClass('error');
+					$('#edd-purchase-button').attr('disabled', 'disabled');
+				} else {
+					name_field.removeClass('error').addClass('valid');
+					$('#edd-purchase-button').removeAttr('disabled');
+				}
+			});
+		});
+
 		// Make sure a gateway is selected
 		$body.on('submit', '#edd_payment_mode', function() {
 			var gateway = $('#edd-gateway option:selected').val();
