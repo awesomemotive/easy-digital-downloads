@@ -69,7 +69,16 @@ class EDD_HTML_Elements {
 			);
 		}
 
-		$products   = get_posts( $product_args );
+		$products     = get_posts( $product_args );
+		$existing_ids = wp_list_pluck( $products, 'ID' );
+		if ( ! empty( $args['selected'] ) ) {
+			$selected_item = absint( $args['selected'] );
+			if ( ! in_array( $selected_item, $existing_ids ) ) {
+				$post       = get_post( $selected_item );
+				$products[] = $post;
+			}
+		}
+
 		$options    = array();
 		$options[0] = '';
 		if ( $products ) {
