@@ -5,8 +5,8 @@ Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.4
-Tested up to: 4.8
-Stable Tag: 2.7.11
+Tested up to: 4.9
+Stable Tag: 2.8
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -212,6 +212,59 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+
+* 2.8, July 25, 2017
+
+* New: Design of repeatable rows, including variable prices and download files, has been redesigned to better accommodate more options and smaller screen sizes 
+* New: Variable price IDs now supported in payment import and export
+* New: add_meta() and delete_meta() methods added to EDD_Payment
+* New: Position of errors on checkout can now be changed through edd_global_checkout_script_vars filter
+* New: edd_after_payment_actions action now fired through WP Cron after payment is completed
+* New: EDD_Customer_Query class introduceed
+* New: Added support for PayPal Image URL setting
+* New: Added support for filtering Payment History by used payment gateway
+* New: Added shortcode-download.php template file
+* Tweak: Minimum WordPress version now set to 4.4
+* Tweak: edd-ajax.js and edd-ajax.min.js now loaded in wp_footer
+* Tweak: Improved performance of EDD_Customer by avoding duplicate query to get notes
+* Tweak: Banned Emails option now supports blocking addresses with just a TLD
+* Tweak: Added new actions to template files to allow content to be more easily added to log in and registration forms
+* Tweak: Chosen dropdown field of EDD_HTML_Elements now supports "multiple" parameter
+* Tweak: Added a link to gateways extension category on gateway settings page to make gateways more easily discoverable
+* Tweak: Updated the EDD add-on updater class to version 1.6.13
+* Tweak: Added new edd_log_file_download_download_files filter and edd_log_file_download_file_id filter to get_logs() method of the file download list table
+* Tweak: Empty categories now shown on Earnings by Category report
+* Tweak: EDD_Customer object added to completed payment actions
+* Tweak: Current customer instance added to all hooks and filters in EDD_Customer
+* Tweak: Download link expiration time now shown on System Info
+* Tweak: Added edd_checkout_billing_details_address filter to customer billing details on checkout
+* Tweak: Purchase button amounts now automatically update as quantity input is changed
+* Tweak: Customer records now updated with information entered on checkout
+* Tweak: Improved translation flexibility of Complete Purchase button text
+* Tweak: Added new edd_price_option_output filter to function that displays variable prices
+* Tweak: Notes and price IDs now escaped on purchase receipt display
+* Tweak: Improved description of login redirect page setting
+* Tweak: Avoid hard-coding "striped" class on list tables
+* Tweak: A link to Product Reviews extension has been added to product edit screen when Reviews plugin is not installed
+* Fix: Price ID not properly set when generating payment records with WP CLI
+* Fix: Credit card name field validated as true when card number was entered
+* Fix: Detect and correct invalid email addresses in From Address settings for purchase receipts and email notifications
+* Fix: Sales export includes incorrect items
+* Fix: Invalid SQL query due to extraneous curly brace
+* Fix: Fatal error due to undefined function edd_extension_has_beta_support()
+* Fix: Some admin screens not properly responsive for small screens
+* Fix: misc-functions.php file loaded twice
+* Fix: Corrupt file downloads due to non-binary setting passed to fopen()
+* Fix: _canonical_import_id not deleted after payment import
+* Fix: All products could be deleted on a payment
+* Fix: 100% discount codes do not remove tax from tax-inclusive items
+* Fix: Item tax not shown on payment screen when price contains commas
+* Fix: Tax rates not included in settings import/export
+* Fix: get_payments() method of EDD_Payments_Query affects global $post
+* Fix: Customer record not properly linked to existing user record
+* Fix: State / province field of customer address not saved properly
+* Fix: Download links still shown on purchase confirmation when Disable Redownload is enabled
+* Fix: select() method of EDD_HTML_Elements always uses "Downloads" as search placeholder
 
 = 2.7.11, June 21, 2017 =
 
