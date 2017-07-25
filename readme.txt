@@ -268,6 +268,7 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 * Fix: State / province field of customer address not saved properly
 * Fix: Download links still shown on purchase confirmation when Disable Redownload is enabled
 * Fix: select() method of EDD_HTML_Elements always uses "Downloads" as search placeholder
+* Fix: Product Dropdown not always showing the selected item when large number of downloads exist
 
 = 2.7.11, June 21, 2017 =
 
