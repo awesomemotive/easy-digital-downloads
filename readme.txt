@@ -215,7 +215,7 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 
 * 2.8, July 25, 2017
 
-* New: Design of repeatable rows, including variable prices and download files, has been redesigned to better more options and smaller screen sizes
+* New: Design of repeatable rows, including variable prices and download files, has been redesigned to better accommodate more options and smaller screen sizes
 * New: Variable price IDs now supported in payment import and export
 * New: add_meta() and delete_meta() methods added to EDD_Payment
 * New: Position of errors on checkout can now be changed through edd_global_checkout_script_vars filter
