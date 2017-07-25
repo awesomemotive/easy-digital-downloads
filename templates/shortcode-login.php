@@ -37,5 +37,7 @@ if ( ! is_user_logged_in() ) :
 		</fieldset>
 	</form>
 <?php else : ?>
-	<p class="edd-logged-in"><?php _e( 'You are already logged in', 'easy-digital-downloads' ); ?></p>
+
+	<?php do_action( 'edd_login_form_logged_in' ); ?>
+
 <?php endif; ?>

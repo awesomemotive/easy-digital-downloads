@@ -455,7 +455,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 														<?php _ex( 'Tax', 'payment details purchased item tax - mobile', 'easy-digital-downloads' ); ?>
 													</span>
 													<?php echo edd_currency_symbol( $currency_code ); ?>
-													<input type="number" step="0.01" min="0" class="small-text edd-payment-details-download-item-tax edd-payment-item-input" name="edd-payment-details-downloads[<?php echo $key; ?>][item_tax]" value="<?php echo edd_format_amount( $item_tax ); ?>" />
+													<input type="text" class="small-text edd-price-field edd-payment-details-download-item-tax edd-payment-item-input" name="edd-payment-details-downloads[<?php echo $key; ?>][item_tax]" value="<?php echo edd_format_amount( $item_tax ); ?>" />
 												</li>
 												<?php endif; ?>
 
@@ -718,7 +718,10 @@ $customer       = new EDD_Customer( $payment->customer_id );
 															'show_option_none' => false,
 															'chosen'           => true,
 															'placeholder'      => __( 'Select a country', 'easy-digital-downloads' ),
-															'data'             => array( 'search-type' => 'no_ajax' ),
+															'data'             => array(
+																'search-type'        => 'no_ajax',
+																'search-placeholder' => __( 'Type to search all Countries', 'easy-digital-downloads' ),
+															),
 														) );
 														?>
 													</p>
@@ -736,7 +739,10 @@ $customer       = new EDD_Customer( $payment->customer_id );
 																'show_option_none' => false,
 																'chosen'           => true,
 																'placeholder'      => __( 'Select a state', 'easy-digital-downloads' ),
-																'data'             => array( 'search-type' => 'no_ajax' ),
+																'data'             => array(
+																	'search-type'        => 'no_ajax',
+																	'search-placeholder' => __( 'Type to search all States/Provinces', 'easy-digital-downloads' ),
+																),
 															) );
 														} else { ?>
 															<input type="text" name="edd-payment-address[0][state]" value="<?php echo esc_attr( $address['state'] ); ?>" class="medium-text"/>

@@ -17,13 +17,20 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * customizable Purchase Receipt
  *
  * @since 1.0
- * @param int $payment_id Payment ID
- * @param bool $admin_notice Whether to send the admin email notification or not (default: true)
+ * @since 2.8 - Add parameters for EDD_Payment and EDD_Customer object.
+ *
+ * @param int          $payment_id   Payment ID
+ * @param bool         $admin_notice Whether to send the admin email notification or not (default: true)
+ * @param EDD_Payment  $payment      Payment object for payment ID.
+ * @param EDD_Customer $customer     Customer object for associated payment.
  * @return void
  */
-function edd_email_purchase_receipt( $payment_id, $admin_notice = true, $to_email = '' ) {
+function edd_email_purchase_receipt( $payment_id, $admin_notice = true, $to_email = '', $payment = null, $customer = null ) {
+	if ( is_null( $payment ) ) {
+		$payment = edd_get_payment( $payment_id );
+	}
 
-	$payment_data = edd_get_payment_meta( $payment_id );
+	$payment_data = $payment->get_meta( '_edd_payment_meta', true );
 
 	$from_name    = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
 	$from_name    = apply_filters( 'edd_purchase_from_name', $from_name, $payment_id, $payment_data );
@@ -31,10 +38,8 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true, $to_emai
 	$from_email   = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
 	$from_email   = apply_filters( 'edd_purchase_from_address', $from_email, $payment_id, $payment_data );
 
-	if( empty( $to_email ) ) {
-
-		$to_email = edd_get_payment_user_email( $payment_id );
-
+	if ( empty( $to_email ) ) {
+		$to_email = $payment->email;
 	}
 
 	$subject      = edd_get_option( 'purchase_subject', __( 'Purchase Receipt', 'easy-digital-downloads' ) );

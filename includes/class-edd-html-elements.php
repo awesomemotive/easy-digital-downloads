@@ -42,7 +42,10 @@ class EDD_HTML_Elements {
 			'bundles'     => true,
 			'variations'  => false,
 			'placeholder' => sprintf( __( 'Choose a %s', 'easy-digital-downloads' ), edd_get_label_singular() ),
-			'data'        => array( 'search-type' => 'download' ),
+			'data'        => array(
+				'search-type'        => 'download',
+				'search-placeholder' => sprintf( __( 'Type to search all %s', 'easy-digital-downloads' ), edd_get_label_plural() )
+			),
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -195,7 +198,10 @@ class EDD_HTML_Elements {
 			'chosen'      => true,
 			'placeholder' => __( 'Select a Customer', 'easy-digital-downloads' ),
 			'number'      => 30,
-			'data'        => array( 'search-type' => 'customer' ),
+			'data'        => array(
+				'search-type'        => 'customer',
+				'search-placeholder' => __( 'Type to search all Customers', 'easy-digital-downloads' )
+			),
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -269,7 +275,10 @@ class EDD_HTML_Elements {
 			'chosen'      => true,
 			'placeholder' => __( 'Select a User', 'easy-digital-downloads' ),
 			'number'      => 30,
-			'data'        => array( 'search-type' => 'user' ),
+			'data'        => array(
+				'search-type'        => 'user',
+				'search-placeholder' => __( 'Type to search all Users', 'easy-digital-downloads' ),
+			),
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -752,4 +761,5 @@ class EDD_HTML_Elements {
 
 		return $output;
 	}
+
 }
