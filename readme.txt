@@ -215,18 +215,19 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 
 * 2.8, July 25, 2017
 
-* New: Design of repeatable rows, including variable prices and download files, has been redesigned to better accommodate more options and smaller screen sizes 
+* New: Design of repeatable rows, including variable prices and download files, has been redesigned to better more options and smaller screen sizes
 * New: Variable price IDs now supported in payment import and export
 * New: add_meta() and delete_meta() methods added to EDD_Payment
 * New: Position of errors on checkout can now be changed through edd_global_checkout_script_vars filter
 * New: edd_after_payment_actions action now fired through WP Cron after payment is completed
-* New: EDD_Customer_Query class introduceed
+* New: EDD_Customer_Query class introduced
 * New: Added support for PayPal Image URL setting
 * New: Added support for filtering Payment History by used payment gateway
 * New: Added shortcode-download.php template file
+* Tweak: Use document.body in scripts where possible, for performance
 * Tweak: Minimum WordPress version now set to 4.4
 * Tweak: edd-ajax.js and edd-ajax.min.js now loaded in wp_footer
-* Tweak: Improved performance of EDD_Customer by avoding duplicate query to get notes
+* Tweak: Improved performance of EDD_Customer by avoiding duplicate query to get notes
 * Tweak: Banned Emails option now supports blocking addresses with just a TLD
 * Tweak: Added new actions to template files to allow content to be more easily added to log in and registration forms
 * Tweak: Chosen dropdown field of EDD_HTML_Elements now supports "multiple" parameter
@@ -246,6 +247,8 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 * Tweak: Improved description of login redirect page setting
 * Tweak: Avoid hard-coding "striped" class on list tables
 * Tweak: A link to Product Reviews extension has been added to product edit screen when Reviews plugin is not installed
+* Tweak: Account for multiple reverse proxy IPs in $_SERVER['HTTP_X_FORWARDED_FOR']
+* Tweak: Update phpunit dependency to latest of 3.7 branch
 * Fix: Price ID not properly set when generating payment records with WP CLI
 * Fix: Credit card name field validated as true when card number was entered
 * Fix: Detect and correct invalid email addresses in From Address settings for purchase receipts and email notifications
