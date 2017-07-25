@@ -213,7 +213,7 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 
 == Changelog ==
 
-* 2.8, July 25, 2017
+= 2.8, July 25, 2017 =
 
 * New: Design of repeatable rows, including variable prices and download files, has been redesigned to better accommodate more options and smaller screen sizes
 * New: Variable price IDs now supported in payment import and export
