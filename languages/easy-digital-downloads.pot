@@ -2,16 +2,16 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.8-beta1\n"
+"Project-Id-Version: Easy Digital Downloads 2.8\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2017-06-29 20:39:49+00:00\n"
+"POT-Creation-Date: 2017-07-25 17:28:38+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
 "Last-Translator: WP-Translations (http://wp-translations.org/)\n"
 "Language-Team: WP-Translations <wpt@wp-translations.org>\n"
-"X-Generator: grunt-wp-i18n 0.5.2\n"
+"X-Generator: grunt-wp-i18n 0.5.0\n"
 "X-Poedit-KeywordsList: "
 "__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
 "attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
@@ -28,21 +28,21 @@ msgstr ""
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
-#: includes/EDD_SL_Plugin_Updater.php:201
+#: includes/EDD_SL_Plugin_Updater.php:205
 msgid "There is a new version of %1$s available. %2$sView version %3$s details%4$s."
 msgstr ""
 
-#: includes/EDD_SL_Plugin_Updater.php:209
+#: includes/EDD_SL_Plugin_Updater.php:213
 msgid ""
 "There is a new version of %1$s available. %2$sView version %3$s details%4$s "
 "or %5$supdate now%6$s."
 msgstr ""
 
-#: includes/EDD_SL_Plugin_Updater.php:396
+#: includes/EDD_SL_Plugin_Updater.php:403
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
-#: includes/EDD_SL_Plugin_Updater.php:396
+#: includes/EDD_SL_Plugin_Updater.php:403
 #: includes/admin/customers/customer-actions.php:301
 #: includes/admin/customers/customer-actions.php:345
 #: includes/admin/customers/customer-actions.php:603
@@ -5111,7 +5111,7 @@ msgstr ""
 msgid "Enter a coupon code if you have one."
 msgstr ""
 
-#: includes/checkout/template.php:748 includes/process-purchase.php:322
+#: includes/checkout/template.php:748 includes/process-purchase.php:350
 #: includes/scripts.php:61
 msgid "Enter discount"
 msgstr ""
@@ -6490,16 +6490,16 @@ msgstr ""
 msgid "The password you entered is incorrect"
 msgstr ""
 
-#: includes/login-register.php:93 includes/process-purchase.php:646
+#: includes/login-register.php:93 includes/process-purchase.php:674
 msgid "The username you entered does not exist"
 msgstr ""
 
 #: includes/login-register.php:147 includes/login-register.php:155
-#: includes/process-purchase.php:524
+#: includes/process-purchase.php:552
 msgid "Invalid username"
 msgstr ""
 
-#: includes/login-register.php:151 includes/process-purchase.php:517
+#: includes/login-register.php:151 includes/process-purchase.php:545
 msgid "Username already taken"
 msgstr ""
 
@@ -6507,8 +6507,8 @@ msgstr ""
 msgid "Email address already taken"
 msgstr ""
 
-#: includes/login-register.php:163 includes/process-purchase.php:464
-#: includes/process-purchase.php:539 includes/process-purchase.php:679
+#: includes/login-register.php:163 includes/process-purchase.php:492
+#: includes/process-purchase.php:567 includes/process-purchase.php:707
 msgid "Invalid email"
 msgstr ""
 
@@ -7018,97 +7018,97 @@ msgstr ""
 msgid "Your cart is empty"
 msgstr ""
 
-#: includes/process-purchase.php:289
+#: includes/process-purchase.php:317
 msgid "The selected payment gateway is not enabled"
 msgstr ""
 
-#: includes/process-purchase.php:349
+#: includes/process-purchase.php:377
 msgid "One or more of the discounts you entered is invalid"
 msgstr ""
 
-#: includes/process-purchase.php:366
+#: includes/process-purchase.php:394
 msgid "You must agree to the terms of use"
 msgstr ""
 
-#: includes/process-purchase.php:381
+#: includes/process-purchase.php:409
 msgid "Please enter a valid email address"
 msgstr ""
 
-#: includes/process-purchase.php:385
+#: includes/process-purchase.php:413
 msgid "Please enter your first name"
 msgstr ""
 
-#: includes/process-purchase.php:395
+#: includes/process-purchase.php:423
 msgid "Please enter your zip / postal code"
 msgstr ""
 
-#: includes/process-purchase.php:399
+#: includes/process-purchase.php:427
 msgid "Please enter your billing city"
 msgstr ""
 
-#: includes/process-purchase.php:403
+#: includes/process-purchase.php:431
 msgid "Please select your billing country"
 msgstr ""
 
-#: includes/process-purchase.php:407
+#: includes/process-purchase.php:435
 msgid "Please enter billing state / province"
 msgstr ""
 
-#: includes/process-purchase.php:469 includes/process-purchase.php:790
+#: includes/process-purchase.php:497 includes/process-purchase.php:818
 msgid "The user information is invalid"
 msgstr ""
 
-#: includes/process-purchase.php:522
+#: includes/process-purchase.php:550
 msgid "Invalid username. Only lowercase letters (a-z) and numbers are allowed"
 msgstr ""
 
-#: includes/process-purchase.php:531
+#: includes/process-purchase.php:559
 msgid "You must register or login to complete your purchase"
 msgstr ""
 
-#: includes/process-purchase.php:544
+#: includes/process-purchase.php:572
 msgid ""
 "Email already used. Login or use a different email to complete your "
 "purchase."
 msgstr ""
 
-#: includes/process-purchase.php:552 includes/process-purchase.php:686
+#: includes/process-purchase.php:580 includes/process-purchase.php:714
 msgid "Enter an email"
 msgstr ""
 
-#: includes/process-purchase.php:560
+#: includes/process-purchase.php:588
 msgid "Passwords don't match"
 msgstr ""
 
-#: includes/process-purchase.php:569 includes/process-purchase.php:642
+#: includes/process-purchase.php:597 includes/process-purchase.php:670
 msgid "Enter a password"
 msgstr ""
 
-#: includes/process-purchase.php:572
+#: includes/process-purchase.php:600
 msgid "Enter the password confirmation"
 msgstr ""
 
-#: includes/process-purchase.php:596
+#: includes/process-purchase.php:624
 msgid "You must login or register to complete your purchase"
 msgstr ""
 
-#: includes/process-purchase.php:623
+#: includes/process-purchase.php:651
 msgid "The password you entered is incorrect. %sReset Password%s"
 msgstr ""
 
-#: includes/process-purchase.php:668
+#: includes/process-purchase.php:696
 msgid "You must be logged into an account to purchase"
 msgstr ""
 
-#: includes/process-purchase.php:854
+#: includes/process-purchase.php:882
 msgid "The zip / postal code you entered for your billing address is invalid"
 msgstr ""
 
-#: includes/process-purchase.php:1103
+#: includes/process-purchase.php:1131
 msgid "An internal error has occurred, please try again or contact support."
 msgstr ""
 
-#: includes/process-purchase.php:1139
+#: includes/process-purchase.php:1167
 msgid "There was an error completing your purchase. Please try again."
 msgstr ""
 
