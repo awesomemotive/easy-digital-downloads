@@ -4,45 +4,45 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 2.8\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2017-07-25 17:28:38+00:00\n"
+"POT-Creation-Date: 2017-07-25 19:43:55+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
 "Last-Translator: WP-Translations (http://wp-translations.org/)\n"
 "Language-Team: WP-Translations <wpt@wp-translations.org>\n"
-"X-Generator: grunt-wp-i18n 0.5.0\n"
-"X-Poedit-KeywordsList: "
-"__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
-"attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
 "Language: en_US\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-Country: United States\n"
 "X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: "
+"__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
+"attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
 "X-Poedit-Basepath: ../\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-Bookmarks: \n"
 "X-Textdomain-Support: yes\n"
+"X-Generator: grunt-wp-i18n1.0.0\n"
 
 #: easy-digital-downloads.php:183 easy-digital-downloads.php:195
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
-#: includes/EDD_SL_Plugin_Updater.php:205
+#: includes/EDD_SL_Plugin_Updater.php:201
 msgid "There is a new version of %1$s available. %2$sView version %3$s details%4$s."
 msgstr ""
 
-#: includes/EDD_SL_Plugin_Updater.php:213
+#: includes/EDD_SL_Plugin_Updater.php:209
 msgid ""
 "There is a new version of %1$s available. %2$sView version %3$s details%4$s "
 "or %5$supdate now%6$s."
 msgstr ""
 
-#: includes/EDD_SL_Plugin_Updater.php:403
+#: includes/EDD_SL_Plugin_Updater.php:399
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
-#: includes/EDD_SL_Plugin_Updater.php:403
+#: includes/EDD_SL_Plugin_Updater.php:399
 #: includes/admin/customers/customer-actions.php:301
 #: includes/admin/customers/customer-actions.php:345
 #: includes/admin/customers/customer-actions.php:603
@@ -642,7 +642,7 @@ msgstr ""
 #: includes/admin/customers/customers.php:610
 #: includes/admin/payments/view-order-details.php:639
 #: includes/admin/payments/view-order-details.php:659
-#: includes/admin/thickbox.php:132 includes/class-edd-html-elements.php:759
+#: includes/admin/thickbox.php:132 includes/class-edd-html-elements.php:768
 msgid "Cancel"
 msgstr ""
 
@@ -2272,7 +2272,7 @@ msgid "Select a customer"
 msgstr ""
 
 #: includes/admin/payments/view-order-details.php:628
-#: includes/class-edd-html-elements.php:203
+#: includes/class-edd-html-elements.php:212
 msgid "Type to search all Customers"
 msgstr ""
 
@@ -4750,7 +4750,7 @@ msgid "No results found"
 msgstr ""
 
 #: includes/ajax-functions.php:671 includes/ajax-functions.php:763
-#: includes/class-edd-html-elements.php:298
+#: includes/class-edd-html-elements.php:307
 msgid "No users found"
 msgstr ""
 
@@ -5292,7 +5292,7 @@ msgstr ""
 msgid "%d customers created in %d seconds"
 msgstr ""
 
-#: includes/class-edd-cli.php:328 includes/class-edd-html-elements.php:221
+#: includes/class-edd-cli.php:328 includes/class-edd-html-elements.php:230
 msgid "No customers found"
 msgstr ""
 
@@ -5377,7 +5377,7 @@ msgstr ""
 msgid "  Product: %s - %s"
 msgstr ""
 
-#: includes/class-edd-cli.php:444 includes/class-edd-html-elements.php:359
+#: includes/class-edd-cli.php:444 includes/class-edd-html-elements.php:368
 #: includes/shortcodes.php:270
 msgid "No discounts found"
 msgstr ""
@@ -5507,27 +5507,27 @@ msgstr ""
 msgid "Type to search all %s"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:199
+#: includes/class-edd-html-elements.php:208
 msgid "Select a Customer"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:216
+#: includes/class-edd-html-elements.php:225
 msgid "No customer attached"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:276
+#: includes/class-edd-html-elements.php:285
 msgid "Select a User"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:280
+#: includes/class-edd-html-elements.php:289
 msgid "Type to search all Users"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:367
+#: includes/class-edd-html-elements.php:376
 msgid "Select a discount"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:744
+#: includes/class-edd-html-elements.php:753
 msgid "Enter username"
 msgstr ""
 
@@ -7829,17 +7829,17 @@ msgctxt "error for when a discount is invalid based on its configuration"
 msgid "This discount is invalid."
 msgstr ""
 
-#: includes/class-edd-html-elements.php:395
+#: includes/class-edd-html-elements.php:404
 msgctxt "plural: Example: \"All Categories\""
 msgid "All %s"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:485
+#: includes/class-edd-html-elements.php:494
 msgctxt "all dropdown items"
 msgid "All"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:486
+#: includes/class-edd-html-elements.php:495
 msgctxt "no dropdown items"
 msgid "None"
 msgstr ""
