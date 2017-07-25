@@ -110,10 +110,6 @@ class EDD_SL_Plugin_Updater {
 
 				$_transient_data->response[ $this->name ] = $version_info;
 
-			} else {
-
-				$_transient_data->response[ $this->name ][ 'slug' ] = $this->slug;
-
 			}
 
 			$_transient_data->last_checked           = current_time( 'timestamp' );
