@@ -363,12 +363,20 @@ class EDD_CLI extends WP_CLI_Command {
 	 *
 	 * ## OPTIONS
 	 *
-	 *
+	 * 	 --email=<customer_email>: The email address of the customer to retrieve
+	 * 
 	 * ## EXAMPLES
-	 *
+	 * 
 	 * wp edd sales
+	 * wp edd sales --email=john@test.com
 	 */
 	public function sales( $args, $assoc_args ) {
+		
+		$email = isset( $assoc_args ) && array_key_exists( 'email', $assoc_args )  ? $assoc_args['email'] : '';
+		
+		global $wp_query;	
+	
+		$wp_query->query_vars['email'] = $email;
 
 		$sales = $this->api->get_recent_sales();
 
@@ -571,6 +579,8 @@ class EDD_CLI extends WP_CLI_Command {
 			'discount'      => 'none'
 		);
 
+		$progress = \WP_CLI\Utils\make_progress_bar( 'Creating Payments', $number );
+
 		for( $i = 0; $i < $number; $i++ ) {
 
 			$products = array();
@@ -583,7 +593,7 @@ class EDD_CLI extends WP_CLI_Command {
 					'post_type'     => 'download',
 					'orderby'       => 'rand',
 					'order'         => 'ASC',
-					'posts_per_page'=> 1
+					'posts_per_page'=> rand( 1, 3 ),
 				) );
 
 			} else {
@@ -617,11 +627,13 @@ class EDD_CLI extends WP_CLI_Command {
 					$prices = edd_get_variable_prices( $download->ID );
 
 					if( false === $price_id || ! array_key_exists( $price_id, (array) $prices ) ) {
-						$price_id = rand( 0, count( $prices ) - 1 );
+						$item_price_id = array_rand( $prices );
+					} else {
+						$item_price_id = $price_id;
 					}
 
-					$item_price = $prices[ $price_id ]['amount'];
-					$options['price_id'] = $price_id;
+					$item_price = $prices[ $item_price_id ]['amount'];
+					$options['price_id'] = $item_price_id;
 
 				} else {
 
@@ -701,7 +713,11 @@ class EDD_CLI extends WP_CLI_Command {
 				$payment->save();
 			}
 
+			$progress->tick();
+
 		}
+
+		$progress->finish();
 
 		WP_CLI::success( sprintf( __( 'Created %s payments', 'easy-digital-downloads' ), $number ) );
 		return;

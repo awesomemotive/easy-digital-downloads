@@ -133,6 +133,18 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$start_date = isset( $_GET['start-date'] )  ? sanitize_text_field( $_GET['start-date'] ) : null;
 		$end_date   = isset( $_GET['end-date'] )    ? sanitize_text_field( $_GET['end-date'] )   : null;
 		$status     = isset( $_GET['status'] )      ? $_GET['status'] : '';
+
+		$all_gateways     = edd_get_payment_gateways();
+		$gateways         = array();
+		$selected_gateway = isset( $_GET['gateway'] ) ? sanitize_text_field( $_GET['gateway'] ) : 'all';
+
+		if ( ! empty( $all_gateways ) ) {
+			$gateways['all'] = __( 'All Gateways', 'edd' );
+
+			foreach( $all_gateways as $slug => $admin_label ) {
+				$gateways[ $slug ] = $admin_label['admin_label'];
+			}
+		}
 ?>
 		<div id="edd-payment-filters">
 			<span id="edd-payment-date-filters">
@@ -140,6 +152,23 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				<input type="text" id="start-date" name="start-date" class="edd_datepicker" value="<?php echo $start_date; ?>" placeholder="mm/dd/yyyy"/>
 				<label for="end-date"><?php _e( 'End Date:', 'easy-digital-downloads' ); ?></label>
 				<input type="text" id="end-date" name="end-date" class="edd_datepicker" value="<?php echo $end_date; ?>" placeholder="mm/dd/yyyy"/>
+			</span>
+			<span id="edd-payment-gateway-filter">
+				<?php
+				if ( ! empty( $gateways ) ) {
+					echo EDD()->html->select( array(
+						'options'          => $gateways,
+						'name'             => 'gateway',
+						'id'               => 'gateway',
+						'selected'         => $selected_gateway,
+						'show_option_all'  => false,
+						'show_option_none' => false
+					) );
+				}
+				?>
+			</span>
+			<span id="edd-payment-after-core-filters">
+				<?php do_action( 'edd_payment_advanced_filters_after_fields' ); ?>
 				<input type="submit" class="button-secondary" value="<?php _e( 'Apply', 'easy-digital-downloads' ); ?>"/>
 			</span>
 			<?php if( ! empty( $status ) ) : ?>
@@ -520,14 +549,17 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			$args['end-date'] = urldecode( $_GET['end-date'] );
 		}
 
-		$payment_count          = edd_count_payments( $args );
-		$this->complete_count   = $payment_count->publish;
-		$this->pending_count    = $payment_count->pending;
-		$this->processing_count = $payment_count->processing;
-		$this->refunded_count   = $payment_count->refunded;
-		$this->failed_count     = $payment_count->failed;
-		$this->revoked_count    = $payment_count->revoked;
-		$this->abandoned_count  = $payment_count->abandoned;
+		if ( ! empty( $_GET['gateway'] ) && $_GET['gateway'] !== 'all' ) {
+			$args['gateway'] = $_GET['gateway'];
+		}
+
+		$payment_count         = edd_count_payments( $args );
+		$this->complete_count  = $payment_count->publish;
+		$this->pending_count   = $payment_count->pending;
+		$this->refunded_count  = $payment_count->refunded;
+		$this->failed_count    = $payment_count->failed;
+		$this->revoked_count   = $payment_count->revoked;
+		$this->abandoned_count = $payment_count->abandoned;
 
 		foreach( $payment_count as $count ) {
 			$this->total_count += $count;
@@ -556,9 +588,14 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$search     = isset( $_GET['s'] )           ? sanitize_text_field( $_GET['s'] )          : null;
 		$start_date = isset( $_GET['start-date'] )  ? sanitize_text_field( $_GET['start-date'] ) : null;
 		$end_date   = isset( $_GET['end-date'] )    ? sanitize_text_field( $_GET['end-date'] )   : $start_date;
+		$gateway    = isset( $_GET['gateway'] )     ? sanitize_text_field( $_GET['gateway'] )    : null;
 
 		if( ! empty( $search ) ) {
 			$status = 'any'; // Force all payment statuses when searching
+		}
+
+		if ( $gateway === 'all' ) {
+			$gateway = null;
 		}
 
 		$args = array(
@@ -577,6 +614,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			's'          => $search,
 			'start_date' => $start_date,
 			'end_date'   => $end_date,
+			'gateway'    => $gateway
 		);
 
 		if( is_string( $search ) && false !== strpos( $search, 'txn:' ) ) {

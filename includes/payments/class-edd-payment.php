@@ -1861,6 +1861,41 @@ class EDD_Payment {
 	}
 
 	/**
+	 * Add an item to the payment meta
+	 *
+	 * @since 2.8
+	 * @param string $meta_key
+	 * @param string $meta_value
+	 * @param bool   $unique
+	 *
+	 * @return bool|false|int
+	 */
+	public function add_meta( $meta_key = '', $meta_value = '', $unique = false ) {
+		if ( empty( $meta_key ) ) {
+			return false;
+		}
+
+		return add_post_meta( $this->ID, $meta_key, $meta_value, $unique );
+	}
+
+	/**
+	 * Delete an item from payment meta
+	 *
+	 * @since 2.8
+	 * @param string $meta_key
+	 * @param string $meta_value
+	 *
+	 * @return bool
+	 */
+	public function delete_meta( $meta_key = '', $meta_value = '' ) {
+		if ( empty( $meta_key ) ) {
+			return false;
+		}
+
+		return delete_post_meta( $this->ID, $meta_key, $meta_value );
+	}
+
+	/**
 	 * Determines if this payment is able to be resumed by the user.
 	 *
 	 * @since 2.7

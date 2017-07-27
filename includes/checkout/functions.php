@@ -259,33 +259,51 @@ function edd_get_banned_emails() {
  * Determines if an email is banned
  *
  * @since       2.0
- * @return      bool
+ * @param string $email Email to check if is banned.
+ * @return bool
  */
 function edd_is_email_banned( $email = '' ) {
 
+	$email = trim( $email );
 	if( empty( $email ) ) {
 		return false;
 	}
 
+	$email         = strtolower( $email );
 	$banned_emails = edd_get_banned_emails();
 
 	if( ! is_array( $banned_emails ) || empty( $banned_emails ) ) {
 		return false;
 	}
 
+	$return = false;
 	foreach( $banned_emails as $banned_email ) {
+
+		$banned_email = strtolower( $banned_email );
+
 		if( is_email( $banned_email ) ) {
-			$ret = ( $banned_email == trim( $email ) ? true : false );
+
+			// Complete email address
+			$return = ( $banned_email == $email ? true : false );
+
+		} elseif ( strpos( $banned_email, '.' ) === 0 ) {
+
+			// TLD block
+			$return = ( substr( $email, ( strlen( $banned_email ) * -1 ) ) == $banned_email ) ? true : false;
+
 		} else {
-			$ret = ( stristr( trim( $email ), $banned_email ) ? true : false );
+
+			// Domain block
+			$return = ( stristr( $email, $banned_email ) ? true : false );
+
 		}
 
-		if( true === $ret ) {
+		if( true === $return ) {
 			break;
 		}
 	}
 
-	return apply_filters( 'edd_is_email_banned', $ret, $email );
+	return apply_filters( 'edd_is_email_banned', $return, $email );
 }
 
 /**
