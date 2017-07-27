@@ -126,26 +126,14 @@ function edd_get_purchase_link( $args = array() ) {
 
 	$data_price  = 'data-price="' . $data_price_value . '"';
 
-	$button_text = ! empty( $args['text'] ) ? '<span class="edd-purchase-button-separator">&nbsp;&ndash;&nbsp;</span>' . '<span class="edd-purchase-button-text">' . $args['text'] . '</span>' : '';
+	$button_text = ! empty( $args['text'] ) ? '&nbsp;&ndash;&nbsp;' . $args['text'] : '';
 
 	if ( false !== $price ) {
 
 		if ( 0 == $price ) {
-			$args['text'] = '<span class="edd-purchase-button-free">' . __( 'Free', 'easy-digital-downloads' ) . '</span>' . $button_text;
+			$args['text'] = __( 'Free', 'easy-digital-downloads' ) . $button_text;
 		} else {
-			$symbol = edd_currency_symbol( edd_get_currency() );
-
-			$args['text']  = '<span class="edd-purchase-button-price-text">' . edd_format_amount( $price ) . '</span>';
-
-			$currency_pos    = edd_get_option( 'currency_position', 'before' );
-			$currency_markup = '<span class="edd-purchase-button-currency-symbol">' . $symbol . '</span>';
-			if ( 'before' === $currency_pos ) {
-				$args['text'] = $currency_markup . $args['text'];
-			} else {
-				$args['text'] .= $currency_markup;
-			}
-
-			$args['text'] .= $button_text;
+			$args['text'] = edd_currency_filter( edd_format_amount( $price ) ) . $button_text;
 		}
 
 	}
@@ -190,7 +178,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 			}
 
-			echo '<input type="submit" class="edd-add-to-cart edd-no-js ' . esc_attr( $class ) . '" name="edd_purchase_download" value="' . esc_attr( strip_tags( $args['text'] ) ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $download->ID ) . '" ' . $data_variable . ' ' . $type . ' ' . $button_display . '/>';
+			echo '<input type="submit" class="edd-add-to-cart edd-no-js ' . esc_attr( $class ) . '" name="edd_purchase_download" value="' . esc_attr( $args['text'] ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $download->ID ) . '" ' . $data_variable . ' ' . $type . ' ' . $button_display . '/>';
 			echo '<a href="' . esc_url( edd_get_checkout_uri() ) . '" class="edd_go_to_checkout ' . esc_attr( $class ) . '" ' . $checkout_display . '>' . __( 'Checkout', 'easy-digital-downloads' ) . '</a>';
 			?>
 
