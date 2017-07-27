@@ -57,6 +57,19 @@ class Test_Misc extends EDD_UnitTestCase {
 		$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 	}
 
+	public function test_get_ip_reverse_proxies() {
+		$_SERVER['HTTP_X_FORWARDED_FOR'] = '123.123.123.123, 10.0.0.2';
+		$this->assertEquals( '123.123.123.123', edd_get_ip() );
+		unset($_SERVER['HTTP_X_FORWARDED_FOR']);
+	}
+
+	public function test_get_ip_reverse_proxy() {
+		$_SERVER['HTTP_X_FORWARDED_FOR'] = '123.123.123.123';
+		$this->assertEquals( '123.123.123.123', edd_get_ip() );
+		unset($_SERVER['HTTP_X_FORWARDED_FOR']);
+	}
+
+
 	public function test_get_currencies() {
 		$expected = array(
 			'USD'  => __( 'US Dollars (&#36;)', 'easy-digital-downloads' ),

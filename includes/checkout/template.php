@@ -326,6 +326,18 @@ function edd_default_cc_address_fields() {
 
 	}
 
+	/**
+	 * Billing Address Details.
+	 *
+	 * Allows filtering the customer address details that will be pre-populated on the checkout form.
+	 *
+	 * @since 2.8
+	 *
+	 * @param array $address The customer address.
+	 * @param array $customer The customer data from the session
+	 */
+	$customer['address'] = apply_filters( 'edd_checkout_billing_details_address', $customer['address'], $customer );
+
 	ob_start(); ?>
 	<fieldset id="edd_cc_address" class="cc-address">
 		<legend><?php _e( 'Billing Details', 'easy-digital-downloads' ); ?></legend>
@@ -868,11 +880,12 @@ function edd_checkout_button_purchase() {
  * @return string
  */
 function edd_get_checkout_button_purchase_label() {
-	$label = edd_get_option( 'checkout_label', '' );
 
 	if ( edd_get_cart_total() ) {
+		$label             = edd_get_option( 'checkout_label', '' );
 		$complete_purchase = ! empty( $label ) ? $label : __( 'Purchase', 'easy-digital-downloads' );
 	} else {
+		$label             = edd_get_option( 'free_checkout_label', '' );
 		$complete_purchase = ! empty( $label ) ? $label : __( 'Free Download', 'easy-digital-downloads' );
 	}
 
@@ -950,5 +963,34 @@ add_filter( 'the_content', 'edd_filter_success_page_content', 99999 );
  * @return boolean
  */
 function edd_receipt_show_download_files( $item_id, $receipt_args, $item = array() ) {
-	return apply_filters( 'edd_receipt_show_download_files', true, $item_id, $receipt_args, $item );
+
+	$ret = true;
+
+	/*
+	 * If re-download is disabled, set return to false
+	 *
+	 * When the purchase session is still present AND the receipt being shown is for that purchase,
+	 * file download links are still shown. Once session expires, links are disabled
+	 */
+	if ( edd_no_redownload() ) {
+
+		$key     = isset( $_GET['payment_key'] ) ? sanitize_text_field( $_GET['payment_key'] ) : '';
+		$session = edd_get_purchase_session();
+
+		if ( ! empty( $key ) && ! empty( $session ) && $key != $session['purchase_key'] ) {
+
+			// We have session data but the payment key provided is not for this session
+			$ret = false;
+
+		} elseif ( empty( $session ) ) {
+
+			// No session data is present but a key has been provided
+			$ret = false;
+
+		}
+
+
+	}
+
+	return apply_filters( 'edd_receipt_show_download_files', $ret, $item_id, $receipt_args, $item );
 }

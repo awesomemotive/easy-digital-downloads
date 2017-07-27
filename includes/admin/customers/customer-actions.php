@@ -637,3 +637,7 @@ function edd_include_single_customer_recount_tool_batch_processer( $class ) {
 	}
 
 }
+
+add_action( 'added_customer_meta', array( EDD()->customers, 'set_last_changed' ) );
+add_action( 'updated_customer_meta', array( EDD()->customers, 'set_last_changed' ) );
+add_action( 'deleted_customer_meta', array( EDD()->customers, 'set_last_changed' ) );
