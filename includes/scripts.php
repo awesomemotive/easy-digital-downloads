@@ -89,10 +89,6 @@ function edd_load_scripts() {
 			'permalinks'              => get_option( 'permalink_structure' ) ? '1' : '0',
 			'quantities_enabled'      => edd_item_quantities_enabled(),
 			'taxes_enabled'           => edd_use_taxes() ? '1' : '0', // Adding here for widget, but leaving in checkout vars for backcompat
-			'currency_sign'           => edd_currency_filter(''),
-			'currency_pos'            => edd_get_option( 'currency_position', 'before' ),
-			'decimal_separator'       => edd_get_option( 'decimal_separator', '.' ),
-			'thousands_separator'     => edd_get_option( 'thousands_separator', ',' ),
 		) ) );
 	}
 }

@@ -93,26 +93,6 @@ jQuery(document).ready(function ($) {
 		return false;
 	});
 
-	// Update button price with quantity
-	$(document.body).on('change', '.edd-item-quantity', function() {
-		var target = $(this).parent().next('.edd_purchase_submit_wrapper').find('.edd-add-to-cart');
-		var price  = target.data('price');
-
-		// Determine the number of decimal places currently being displayed
-		var decimals  = 0;
-		if ( price.toString().indexOf(edd_scripts.decimal_separator)) {
-			var parts     = price.toString().split(edd_scripts.decimal_separator);
-			if ('undefined' !== typeof parts[1]) {
-				decimals  = parts[1].length;
-			}
-		}
-
-		var new_price = $(this).val() * price;
-		new_price = new_price.toFixed(decimals);
-		new_price = String(new_price).split("").reverse().join("").replace(/(\d{3}\B)/g, "$1" + edd_scripts.thousands_separator).split("").reverse().join("");
-		target.find('.edd-add-to-cart-label .edd-purchase-button-price-text').text(new_price);
-	});
-
 	// Send Add to Cart request
 	$(document.body).on('click.eddAddToCart', '.edd-add-to-cart', function (e) {
 
