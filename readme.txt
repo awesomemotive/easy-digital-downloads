@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.4
 Tested up to: 4.9
-Stable Tag: 2.8
+Stable Tag: 2.8.1
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -212,6 +212,13 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+
+= 2.8.1, July 27, 2017 =
+
+* New: Include "processing" as payment status in the list table.
+* Fix: Revert adjusting purchase amount when quantity changes.
+* Fix: Variable pricing bundle purchases gave access to incorrect product files.
+* Tweak: Update to 1.6.14 of the Plugin Updater.
 
 = 2.8, July 25, 2017 =
 
