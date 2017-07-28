@@ -146,12 +146,13 @@ class Tests_Payments extends EDD_UnitTestCase {
 		$out = edd_get_payment_statuses();
 
 		$expected = array(
-			'pending'   => 'Pending',
-			'publish'   => 'Complete',
-			'refunded'  => 'Refunded',
-			'failed'    => 'Failed',
-			'revoked'   => 'Revoked',
-			'abandoned' => 'Abandoned'
+			'pending'    => 'Pending',
+			'publish'    => 'Complete',
+			'refunded'   => 'Refunded',
+			'failed'     => 'Failed',
+			'revoked'    => 'Revoked',
+			'abandoned'  => 'Abandoned',
+			'processing' => 'Processing',
 		);
 
 		$this->assertEquals( $expected, $out );
@@ -164,6 +165,7 @@ class Tests_Payments extends EDD_UnitTestCase {
 			'abandoned',
 			'failed',
 			'pending',
+			'processing',
 			'publish',
 			'refunded',
 			'revoked'
