@@ -1606,41 +1606,31 @@ class EDD_Discount {
 
 		// Ensure we have requirements before proceeding
 		if ( ! $return && ! empty( $product_reqs ) ) {
-
-			switch( $this->product_condition ) {
-
+			switch ( $this->product_condition ) {
 				case 'all' :
-
 					// Default back to true
 					$return = true;
 
 					foreach ( $product_reqs as $download_id ) {
-
-						if( empty( $download_id ) ) {
+						if ( empty( $download_id ) ) {
 							continue;
 						}
 
 						if ( ! edd_item_in_cart( $download_id ) ) {
-
 							if ( $set_error ) {
 								edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
 							}
 
 							$return = false;
-
 							break;
-
 						}
-
 					}
 
 					break;
 
 				default :
-
 					foreach ( $product_reqs as $download_id ) {
-
-						if( empty( $download_id ) ) {
+						if ( empty( $download_id ) ) {
 							continue;
 						}
 
@@ -1648,7 +1638,6 @@ class EDD_Discount {
 							$return = true;
 							break;
 						}
-
 					}
 
 					if ( ! $return && $set_error ) {
@@ -1656,22 +1645,25 @@ class EDD_Discount {
 					}
 
 					break;
-
 			}
-
 		} else {
-
 			$return = true;
-
 		}
 
 		if ( ! empty( $excluded_ps ) ) {
-			if ( $cart_ids == $excluded_ps ) {
-				if ( $set_error ) {
-					edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'easy-digital-downloads' ) );
+			foreach ( $excluded_ps as $download_id ) {
+				if ( empty( $download_id ) ) {
+					continue;
 				}
 
-				$return = false;
+				if ( edd_item_in_cart( $download_id ) ) {
+					if ( $set_error ) {
+						edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'easy-digital-downloads' ) );
+					}
+
+					$return = false;
+					break;
+				}
 			}
 		}
 
