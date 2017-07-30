@@ -1651,18 +1651,11 @@ class EDD_Discount {
 		}
 
 		if ( ! empty( $excluded_ps ) ) {
-			foreach ( $excluded_ps as $download_id ) {
-				if ( empty( $download_id ) ) {
-					continue;
-				}
+			if ( count( array_intersect( $cart_ids, $excluded_ps ) ) == count( $cart_ids ) ) {
+				$return = false;
 
-				if ( edd_item_in_cart( $download_id ) ) {
-					if ( $set_error ) {
-						edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'easy-digital-downloads' ) );
-					}
-
-					$return = false;
-					break;
+				if ( $set_error ) {
+					edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'easy-digital-downloads' ) );
 				}
 			}
 		}
