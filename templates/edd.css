@@ -822,10 +822,10 @@ input[type="submit"].edd-submit:focus,
 }
 .edd-submit.plain {
 	padding: 0;
-    border: none;
-    -webkit-border-radius: 0;
-    -moz-border-radius: 0;
-    border-radius: 0;
+	border: none;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
 }
 
 /** Gray (Default) */
