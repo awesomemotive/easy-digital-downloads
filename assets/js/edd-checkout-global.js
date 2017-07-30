@@ -14,6 +14,10 @@ window.EDD_Checkout = (function($) {
 		before_discount = $edd_cart_amount.text();
 		$checkout_form_wrap = $('#edd_checkout_form_wrap');
 
+		$body.on('edd_gateway_loaded', function( e ) {
+		    edd_format_card_number( $form );
+        });
+
 		$body.on('keyup change', '.edd-do-validate .card-number', function() {
 			edd_validate_card( $(this) );
 		});
@@ -111,6 +115,18 @@ window.EDD_Checkout = (function($) {
 			}
 		});
 	}
+
+	function edd_format_card_number( form ) {
+	    var card_number = form.find('.card-number'),
+            card_cvc = form.find('.card-cvc'),
+            card_expiry = form.find('.card-expiry');
+
+	    if ( card_number.length && 'function' === typeof card_number.payment ) {
+            card_number.payment('formatCardNumber');
+            card_cvc.payment('formatCardCVC');
+            card_expiry.payment('formatCardExpiry');
+        }
+    }
 
 	function apply_discount(event) {
 
