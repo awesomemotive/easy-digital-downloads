@@ -877,7 +877,7 @@ function edd_purchase_form_validate_cc() {
 	$card_data = edd_get_purchase_cc_info();
 
 	// Validate the card zip
-	if ( ! empty( $card_data['card_zip'] ) && ! edd_get_cart_total() > 0.00 ) {
+	if ( ! empty( $card_data['card_zip'] ) && edd_get_cart_total() > 0.00 ) {
 		if ( ! edd_purchase_form_validate_cc_zip( $card_data['card_zip'], $card_data['card_country'] ) ) {
 			edd_set_error( 'invalid_cc_zip', __( 'The zip / postal code you entered for your billing address is invalid', 'easy-digital-downloads' ) );
 		}
