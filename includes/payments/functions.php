@@ -1430,11 +1430,19 @@ function edd_set_payment_transaction_id( $payment_id = 0, $transaction_id = '' )
  */
 function edd_get_purchase_id_by_key( $key ) {
 	global $wpdb;
+	$global_key_string = 'edd_purchase_id_by_key' . $key;
+	global $$global_key_string;
+
+	if ( null !== $$global_key_string ) {
+		return $$global_key_string;
+	}
 
 	$purchase = $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_purchase_key' AND meta_value = %s LIMIT 1", $key ) );
 
-	if ( $purchase != NULL )
-		return $purchase;
+	if ( $purchase != NULL ) {
+		$$global_key_string = $purchase;
+		return $$global_key_string;
+	}
 
 	return 0;
 }
