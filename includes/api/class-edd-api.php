@@ -330,12 +330,12 @@ class EDD_API {
 				$public = urldecode( $wp_query->query_vars['key'] );
 
 				$valid = $this->check_keys( $secret, $public, $token );
-				if(  $valid ){
+				if ( $valid ) {
 					$this->is_valid_request = true;
-				}else{
+				} else{
 					$this->invalid_auth();
 				}
-				
+
 			}
 		} elseif ( ! empty( $wp_query->query_vars['edd-api'] ) && $this->is_public_query() ) {
 			$this->is_valid_request = true;
@@ -2273,12 +2273,12 @@ class EDD_API {
 	 * Check API keys vs token
 	 *
 	 * @access public
-	 * @since  2.7.12
+	 * @since  2.8.2
 	 *
 	 * @param string $secret Secret key
 	 * @param string $public Public key
 	 * @param string $token Token used in API request
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function check_keys( $secret, $public, $token ){
