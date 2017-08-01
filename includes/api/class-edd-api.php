@@ -332,7 +332,7 @@ class EDD_API {
 				$valid = $this->check_keys( $secret, $public, $token );
 				if ( $valid ) {
 					$this->is_valid_request = true;
-				} else{
+				} else {
 					$this->invalid_auth();
 				}
 
@@ -2282,7 +2282,8 @@ class EDD_API {
 	 * @return bool
 	 */
 	public function check_keys( $secret, $public, $token ){
-		if ( hash_equals( md5( $secret . $public ), $token ) ) {
+		$hash_matches = hash_equals( md5( $secret . $public ), $token );
+		if ( $hash_matches ) {
 			return true;
 		} else {
 			return false;
