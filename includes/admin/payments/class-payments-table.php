@@ -434,6 +434,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			'delete'                 => __( 'Delete',                'easy-digital-downloads' ),
 			'set-status-publish'     => __( 'Set To Completed',      'easy-digital-downloads' ),
 			'set-status-pending'     => __( 'Set To Pending',        'easy-digital-downloads' ),
+			'set-status-processing'  => __( 'Set To Processing',     'easy-digital-downloads' ),
 			'set-status-refunded'    => __( 'Set To Refunded',       'easy-digital-downloads' ),
 			'set-status-revoked'     => __( 'Set To Revoked',        'easy-digital-downloads' ),
 			'set-status-failed'      => __( 'Set To Failed',         'easy-digital-downloads' ),
@@ -476,6 +477,10 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 			if ( 'set-status-pending' === $this->current_action() ) {
 				edd_update_payment_status( $id, 'pending' );
+			}
+
+			if ( 'set-status-processing' === $this->current_action() ) {
+				edd_update_payment_status( $id, 'processing' );
 			}
 
 			if ( 'set-status-refunded' === $this->current_action() ) {
