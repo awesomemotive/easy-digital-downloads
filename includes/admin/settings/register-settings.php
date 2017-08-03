@@ -249,7 +249,7 @@ function edd_get_registered_settings() {
 					'purchase_page' => array(
 						'id'          => 'purchase_page',
 						'name'        => __( 'Checkout Pages', 'easy-digital-downloads' ),
-						'desc'        => __( 'This is the checkout pages where buyers will complete their purchases. The [download_checkout] shortcode must be on these pages.', 'easy-digital-downloads' ),
+						'desc'        => __( 'These are the checkout pages where buyers will complete their purchases. The [download_checkout] shortcode must be on these pages.', 'easy-digital-downloads' ),
 						'type'        => 'select',
 						'options'     => edd_get_pages(),
 						'multiple'    => true,
