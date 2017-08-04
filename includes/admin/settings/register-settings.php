@@ -656,8 +656,8 @@ function edd_get_registered_settings() {
 					),
 					'item_quantities' => array(
 						'id'   => 'item_quantities',
-						'name' => __('Item Quantities','easy-digital-downloads' ),
-						'desc' => __('Allow item quantities to be changed.','easy-digital-downloads' ),
+						'name' => __('Cart Item Quantities','easy-digital-downloads' ),
+						'desc' => sprintf(__('Allow quantities to be adjusted when adding %s to the cart, and while viewing the checkout cart.','easy-digital-downloads' ), edd_get_label_plural( true ) ),
 						'type' => 'checkbox',
 					),
 					'uninstall_on_delete' => array(
@@ -1761,14 +1761,14 @@ function edd_select_callback($args) {
 	if ( $edd_option ) {
 		$value = $edd_option;
 	} else {
-		
+
 		// Properly set default fallback if the Select Field allows Multiple values
 		if ( empty( $args['multiple'] ) ) {
 			$value = isset( $args['std'] ) ? $args['std'] : '';
 		} else {
 			$value = ! empty( $args['std'] ) ? $args['std'] : array();
 		}
-		
+
 	}
 
 	if ( isset( $args['placeholder'] ) ) {
@@ -1782,7 +1782,7 @@ function edd_select_callback($args) {
 	if ( isset( $args['chosen'] ) ) {
 		$class .= ' edd-select-chosen';
 	}
-	
+
 	// If the Select Field allows Multiple values, save as an Array
 	$name_attr = 'edd_settings[' . esc_attr( $args['id'] ) . ']';
 	$name_attr = ( $args['multiple'] ) ? $name_attr . '[]' : $name_attr;
@@ -1790,7 +1790,7 @@ function edd_select_callback($args) {
 	$html = '<select id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="' . $name_attr . '" class="' . $class . '" data-placeholder="' . esc_html( $placeholder ) . '" ' . ( ( $args['multiple'] ) ? 'multiple="true"' : '' ) . '>';
 
 	foreach ( $args['options'] as $option => $name ) {
-		
+
 		if ( ! $args['multiple'] ) {
 			$selected = selected( $option, $value, false );
 			$html .= '<option value="' . esc_attr( $option ) . '" ' . $selected . '>' . esc_html( $name ) . '</option>';
@@ -1798,7 +1798,7 @@ function edd_select_callback($args) {
 			// Do an in_array() check to output selected attribute for Multiple
 			$html .= '<option value="' . esc_attr( $option ) . '" ' . ( ( in_array( $option, $value ) ) ? 'selected="true"' : '' ) . '>' . esc_html( $name ) . '</option>';
 		}
-		
+
 	}
 
 	$html .= '</select>';
