@@ -1796,7 +1796,7 @@ function edd_select_callback($args) {
 			$html .= '<option value="' . esc_attr( $option ) . '" ' . $selected . '>' . esc_html( $name ) . '</option>';
 		} else {
 			// Do an in_array() check to output selected attribute for Multiple
-			$html .= '<option value="' . esc_attr( $option ) . '" ' . ( ( in_array( $option, $value, true ) ) ? 'selected="true"' : '' ) . '>' . esc_html( $name ) . '</option>';
+			$html .= '<option value="' . esc_attr( $option ) . '" ' . ( ( in_array( (string) $option, $value ) ) ? 'selected="true"' : '' ) . '>' . esc_html( $name ) . '</option>';
 		}
 		
 	}
