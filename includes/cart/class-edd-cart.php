@@ -322,7 +322,8 @@ class EDD_Cart {
 
 		$has_discounts = false;
 
-		if ( ! empty( $this->get_discounts() ) ) {
+		$discounts = $this->get_discounts();
+		if ( ! empty( $discounts ) ) {
 			$has_discounts = true;
 		}
 
