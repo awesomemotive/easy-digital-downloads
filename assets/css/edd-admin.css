@@ -1142,23 +1142,6 @@ td.edd_order_price {
 	clear: both;
 }
 
-/* Taxonomy styles
--------------------------------------------------------------- */
-
-.post-type-download .fixed .column-name {
-	width: 27%;
-}
-.post-type-download .fixed .column-description {
-	width: 30%;
-}
-.post-type-download .fixed .column-slug {
-	width: 23%;
-}
-.post-type-download .fixed .column-posts {
-	text-align: left;
-	width: 17%;
-}
-
 /* System Info page styles
 -------------------------------------------------------------- */
 
