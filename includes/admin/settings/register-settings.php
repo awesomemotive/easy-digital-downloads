@@ -656,8 +656,8 @@ function edd_get_registered_settings() {
 					),
 					'item_quantities' => array(
 						'id'   => 'item_quantities',
-						'name' => __('Item Quantities','easy-digital-downloads' ),
-						'desc' => __('Allow item quantities to be changed.','easy-digital-downloads' ),
+						'name' => __('Cart Item Quantities','easy-digital-downloads' ),
+						'desc' => sprintf(__('Allow quantities to be adjusted when adding %s to the cart, and while viewing the checkout cart.','easy-digital-downloads' ), edd_get_label_plural( true ) ),
 						'type' => 'checkbox',
 					),
 					'uninstall_on_delete' => array(
