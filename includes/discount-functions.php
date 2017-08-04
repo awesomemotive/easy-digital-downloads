@@ -35,7 +35,7 @@ function edd_get_discounts( $args = array() ) {
 	$discounts_hash = md5( json_encode( $args ) );
 	if ( ! $discounts = wp_cache_get( $discounts_hash, 'edd-discounts' ) ) {
 		$discounts = get_posts( $args );
-		wp_cache_set( $discounts_hash, $discounts, 'edd-discounts' );
+		wp_cache_set( $discounts_hash, $discounts, 'edd-discounts', HOUR_IN_SECONDS );
 	}
 
 
@@ -53,7 +53,7 @@ function edd_get_discounts( $args = array() ) {
 		$discounts_hash = md5( json_encode( $args ) );
 		if ( ! $discounts = wp_cache_get( $discounts_hash, 'edd-discounts' ) ) {
 			$discounts = get_posts( $args );
-			wp_cache_set( $discounts_hash, $discounts, 'edd-discounts' );
+			wp_cache_set( $discounts_hash, $discounts, 'edd-discounts', HOUR_IN_SECONDS );
 		}
 	}
 
