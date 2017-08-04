@@ -248,12 +248,13 @@ function edd_get_registered_settings() {
 					),
 					'purchase_page' => array(
 						'id'          => 'purchase_page',
-						'name'        => __( 'Checkout Page', 'easy-digital-downloads' ),
-						'desc'        => __( 'This is the checkout page where buyers will complete their purchases. The [download_checkout] shortcode must be on this page.', 'easy-digital-downloads' ),
+						'name'        => __( 'Checkout Pages', 'easy-digital-downloads' ),
+						'desc'        => __( 'These are the checkout pages where buyers will complete their purchases. The [download_checkout] shortcode must be on these pages.', 'easy-digital-downloads' ),
 						'type'        => 'select',
 						'options'     => edd_get_pages(),
+						'multiple'    => true,
 						'chosen'      => true,
-						'placeholder' => __( 'Select a page', 'easy-digital-downloads' ),
+						'placeholder' => __( 'Select one or more pages', 'easy-digital-downloads' ),
 					),
 					'success_page' => array(
 						'id'          => 'success_page',
@@ -1761,14 +1762,14 @@ function edd_select_callback($args) {
 	if ( $edd_option ) {
 		$value = $edd_option;
 	} else {
-		
+
 		// Properly set default fallback if the Select Field allows Multiple values
 		if ( empty( $args['multiple'] ) ) {
 			$value = isset( $args['std'] ) ? $args['std'] : '';
 		} else {
 			$value = ! empty( $args['std'] ) ? $args['std'] : array();
 		}
-		
+
 	}
 
 	if ( isset( $args['placeholder'] ) ) {
@@ -1782,15 +1783,27 @@ function edd_select_callback($args) {
 	if ( isset( $args['chosen'] ) ) {
 		$class .= ' edd-select-chosen';
 	}
-	
+
+	if ( isset( $args['multiple'] ) ) {
+		$class .= ' multiple';
+	}
+
 	// If the Select Field allows Multiple values, save as an Array
 	$name_attr = 'edd_settings[' . esc_attr( $args['id'] ) . ']';
 	$name_attr = ( $args['multiple'] ) ? $name_attr . '[]' : $name_attr;
 
+	// Set the purchase_page value to either an Array or single Variable depending on if the field allows Multiple values
+	if( ( 'purchase_page' == $args['id'] ) && $args['multiple'] ) {
+		$value = (array) $value;
+	} else {
+		$value = (array) $value;
+		$value = reset( $value );
+	}
+
 	$html = '<select id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="' . $name_attr . '" class="' . $class . '" data-placeholder="' . esc_html( $placeholder ) . '" ' . ( ( $args['multiple'] ) ? 'multiple="true"' : '' ) . '>';
 
 	foreach ( $args['options'] as $option => $name ) {
-		
+
 		if ( ! $args['multiple'] ) {
 			$selected = selected( $option, $value, false );
 			$html .= '<option value="' . esc_attr( $option ) . '" ' . $selected . '>' . esc_html( $name ) . '</option>';
@@ -1798,7 +1811,7 @@ function edd_select_callback($args) {
 			// Do an in_array() check to output selected attribute for Multiple
 			$html .= '<option value="' . esc_attr( $option ) . '" ' . ( ( in_array( $option, $value ) ) ? 'selected="true"' : '' ) . '>' . esc_html( $name ) . '</option>';
 		}
-		
+
 	}
 
 	$html .= '</select>';
