@@ -2282,7 +2282,7 @@ class EDD_API {
 	 * @return bool
 	 */
 	public function check_keys( $secret, $public, $token ) {
-		return hash_equals( md5( $secret . $public ), $token )
+		return hash_equals( md5( $secret . $public ), $token );
 	}
 
 }
