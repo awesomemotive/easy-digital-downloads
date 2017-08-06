@@ -2281,14 +2281,8 @@ class EDD_API {
 	 *
 	 * @return bool
 	 */
-	public function check_keys( $secret, $public, $token ){
-		$hash_matches = hash_equals( md5( $secret . $public ), $token );
-		if ( $hash_matches ) {
-			return true;
-		} else {
-			return false;
-		}
-
+	public function check_keys( $secret, $public, $token ) {
+		return hash_equals( md5( $secret . $public ), $token )
 	}
 
 }
