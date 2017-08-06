@@ -356,7 +356,7 @@ function edd_get_registered_settings() {
 					'thousands_separator' => array(
 						'id'   => 'thousands_separator',
 						'name' => __( 'Thousands Separator', 'easy-digital-downloads' ),
-						'desc' => __( 'The symbol (usually , or .) to separate thousands', 'easy-digital-downloads' ),
+						'desc' => __( 'The symbol (usually , or .) to separate thousands.', 'easy-digital-downloads' ),
 						'type' => 'text',
 						'size' => 'small',
 						'std'  => ',',
@@ -364,7 +364,7 @@ function edd_get_registered_settings() {
 					'decimal_separator' => array(
 						'id'   => 'decimal_separator',
 						'name' => __( 'Decimal Separator', 'easy-digital-downloads' ),
-						'desc' => __( 'The symbol (usually , or .) to separate decimal points', 'easy-digital-downloads' ),
+						'desc' => __( 'The symbol (usually , or .) to separate decimal points.', 'easy-digital-downloads' ),
 						'type' => 'text',
 						'size' => 'small',
 						'std'  => '.',
@@ -420,7 +420,7 @@ function edd_get_registered_settings() {
 					'accepted_cards' => array(
 						'id'      => 'accepted_cards',
 						'name'    => __( 'Accepted Payment Method Icons', 'easy-digital-downloads' ),
-						'desc'    => __( 'Display icons for the selected payment methods', 'easy-digital-downloads' ) . '<br/>' . __( 'You will also need to configure your gateway settings if you are accepting credit cards', 'easy-digital-downloads' ),
+						'desc'    => __( 'Display icons for the selected payment methods.', 'easy-digital-downloads' ) . '<br/>' . __( 'You will also need to configure your gateway settings if you are accepting credit cards.', 'easy-digital-downloads' ),
 						'type'    => 'payment_icons',
 						'options' => apply_filters('edd_accepted_payment_icons', array(
 								'mastercard'      => 'Mastercard',
@@ -482,14 +482,14 @@ function edd_get_registered_settings() {
 					'purchase_subject' => array(
 						'id'   => 'purchase_subject',
 						'name' => __( 'Purchase Email Subject', 'easy-digital-downloads' ),
-						'desc' => __( 'Enter the subject line for the purchase receipt email', 'easy-digital-downloads' ),
+						'desc' => __( 'Enter the subject line for the purchase receipt email.', 'easy-digital-downloads' ),
 						'type' => 'text',
 						'std'  => __( 'Purchase Receipt', 'easy-digital-downloads' ),
 					),
 					'purchase_heading' => array(
 						'id'   => 'purchase_heading',
 						'name' => __( 'Purchase Email Heading', 'easy-digital-downloads' ),
-						'desc' => __( 'Enter the heading for the purchase receipt email', 'easy-digital-downloads' ),
+						'desc' => __( 'Enter the heading for the purchase receipt email.', 'easy-digital-downloads' ),
 						'type' => 'text',
 						'std'  => __( 'Purchase Receipt', 'easy-digital-downloads' ),
 					),
@@ -505,7 +505,7 @@ function edd_get_registered_settings() {
 					'sale_notification_subject' => array(
 						'id'   => 'sale_notification_subject',
 						'name' => __( 'Sale Notification Subject', 'easy-digital-downloads' ),
-						'desc' => __( 'Enter the subject line for the sale notification email', 'easy-digital-downloads' ),
+						'desc' => __( 'Enter the subject line for the sale notification email.', 'easy-digital-downloads' ),
 						'type' => 'text',
 						'std'  => 'New download purchase - Order #{payment_id}',
 					),
@@ -519,7 +519,7 @@ function edd_get_registered_settings() {
 					'admin_notice_emails' => array(
 						'id'   => 'admin_notice_emails',
 						'name' => __( 'Sale Notification Emails', 'easy-digital-downloads' ),
-						'desc' => __( 'Enter the email address(es) that should receive a notification anytime a sale is made, one per line', 'easy-digital-downloads' ),
+						'desc' => __( 'Enter the email address(es) that should receive a notification anytime a sale is made, one per line.', 'easy-digital-downloads' ),
 						'type' => 'textarea',
 						'std'  => get_bloginfo( 'admin_email' ),
 					),
@@ -656,8 +656,8 @@ function edd_get_registered_settings() {
 					),
 					'item_quantities' => array(
 						'id'   => 'item_quantities',
-						'name' => __('Item Quantities','easy-digital-downloads' ),
-						'desc' => __('Allow item quantities to be changed.','easy-digital-downloads' ),
+						'name' => __('Cart Item Quantities','easy-digital-downloads' ),
+						'desc' => sprintf(__('Allow quantities to be adjusted when adding %s to the cart, and while viewing the checkout cart.','easy-digital-downloads' ), edd_get_label_plural( true ) ),
 						'type' => 'checkbox',
 					),
 					'uninstall_on_delete' => array(
@@ -1519,7 +1519,7 @@ function edd_gateways_callback( $args ) {
 			'utm_campaign' => 'admin',
 	);
 	$url   = esc_url( add_query_arg( $url_args, 'https://easydigitaldownloads.com/downloads/category/extensions/gateways/' ) );
-	$html .= '<p>' . sprintf( __( 'Don\'t see what you need? More Payment Gateway options are available <a href="%s">here</a>', 'easy-digital-downloads' ), $url ) . '</p>';
+	$html .= '<p class="description">' . sprintf( __( 'Don\'t see what you need? More Payment Gateway options are available <a href="%s">here</a>.', 'easy-digital-downloads' ), $url ) . '</p>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
@@ -1761,14 +1761,14 @@ function edd_select_callback($args) {
 	if ( $edd_option ) {
 		$value = $edd_option;
 	} else {
-		
+
 		// Properly set default fallback if the Select Field allows Multiple values
 		if ( empty( $args['multiple'] ) ) {
 			$value = isset( $args['std'] ) ? $args['std'] : '';
 		} else {
 			$value = ! empty( $args['std'] ) ? $args['std'] : array();
 		}
-		
+
 	}
 
 	if ( isset( $args['placeholder'] ) ) {
@@ -1782,7 +1782,7 @@ function edd_select_callback($args) {
 	if ( isset( $args['chosen'] ) ) {
 		$class .= ' edd-select-chosen';
 	}
-	
+
 	// If the Select Field allows Multiple values, save as an Array
 	$name_attr = 'edd_settings[' . esc_attr( $args['id'] ) . ']';
 	$name_attr = ( $args['multiple'] ) ? $name_attr . '[]' : $name_attr;
@@ -1790,7 +1790,7 @@ function edd_select_callback($args) {
 	$html = '<select id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="' . $name_attr . '" class="' . $class . '" data-placeholder="' . esc_html( $placeholder ) . '" ' . ( ( $args['multiple'] ) ? 'multiple="true"' : '' ) . '>';
 
 	foreach ( $args['options'] as $option => $name ) {
-		
+
 		if ( ! $args['multiple'] ) {
 			$selected = selected( $option, $value, false );
 			$html .= '<option value="' . esc_attr( $option ) . '" ' . $selected . '>' . esc_html( $name ) . '</option>';
@@ -1798,7 +1798,7 @@ function edd_select_callback($args) {
 			// Do an in_array() check to output selected attribute for Multiple
 			$html .= '<option value="' . esc_attr( $option ) . '" ' . ( ( in_array( $option, $value ) ) ? 'selected="true"' : '' ) . '>' . esc_html( $name ) . '</option>';
 		}
-		
+
 	}
 
 	$html .= '</select>';
