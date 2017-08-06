@@ -470,6 +470,7 @@ class EDD_DB_Customers extends EDD_DB  {
 	public function count( $args = array() ) {
 		$args = $this->prepare_customer_query_args( $args );
 		$args['count'] = true;
+		$args['offset'] = 0;
 
 		$query   = new EDD_Customer_Query( '', $this );
 		$results = $query->query( $args );
