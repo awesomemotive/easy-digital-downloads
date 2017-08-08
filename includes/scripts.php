@@ -42,7 +42,10 @@ function edd_load_scripts() {
 	if ( edd_is_checkout() ) {
 		if ( edd_is_cc_verify_enabled() ) {
 			wp_register_script( 'creditCardValidator', $js_dir . 'jquery.creditCardValidator' . $suffix . '.js', array( 'jquery' ), EDD_VERSION, true );
+			wp_register_script( 'jQuery.payment', $js_dir . 'jquery.payment.min.js', array( 'jquery' ), EDD_VERSION, true );
+
 			wp_enqueue_script( 'creditCardValidator' );
+			wp_enqueue_script( 'jQuery.payment' );
 		}
 
 		wp_register_script( 'edd-checkout-global', $js_dir . 'edd-checkout-global' . $suffix . '.js', array( 'jquery' ), EDD_VERSION, true );
