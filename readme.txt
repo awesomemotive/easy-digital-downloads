@@ -218,10 +218,10 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 * New: Spaces are now auto-formatted into credit card number fields.
 * Tweak: Decoupled API Authentication with $wp_query.
 * Tweak: Quantities no longer show on the cart widget when they are disabled.
-* Tweak: Renamed 'Item Quantities' setting to 'Cart Item Quantities' to rmeove confusion of its purpose.
+* Tweak: Renamed 'Item Quantities' setting to 'Cart Item Quantities' to remove confusion of its purpose.
 * Tweak: Improvements to the consistency of settings descriptions.
 * Tweak: Added search_columns argument to the EDD_Customer_Query class.
-* Fix: Discounts with mlutiple exlusions could be applied to excluded products.
+* Fix: Discounts with multiple exclusions could be applied to excluded products.
 * Fix: Customer query pagination did not work correctly.
 * Fix: Removed custom widths on the primary column of list table.
 * Fix: 'Processing' status in Payments list table shows empty brackets when no processign payments.
