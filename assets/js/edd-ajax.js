@@ -351,14 +351,33 @@ jQuery(document).ready(function ($) {
 	});
 
 	// Auto load first payment gateway
-	if( edd_scripts.is_checkout == '1' && $('select#edd-gateway, input.edd-gateway').length ) {
-		var chosen_gateway = $("meta[name='edd-chosen-gateway']").attr('content');
+	if( edd_scripts.is_checkout == '1' ) {
+
+		var chosen_gateway = false;
+		var ajax_needed    = false;
+
+		if ( $('select#edd-gateway, input.edd-gateway').length ) {
+			chosen_gateway = $("meta[name='edd-chosen-gateway']").attr('content');
+			ajax_needed    = true;
+		}
+
 		if( ! chosen_gateway ) {
 			chosen_gateway = edd_scripts.default_gateway;
 		}
-		setTimeout( function() {
-			edd_load_gateway( chosen_gateway );
-		}, 200);
+
+		if ( ajax_needed ) {
+
+			// If we need to ajax in a gateway form, send the requests for the POST.
+			setTimeout( function() {
+				edd_load_gateway( chosen_gateway );
+			}, 200);
+
+		} else {
+
+			// The form is already on page, just trigger that the gateway is loaded so further action can be taken.
+			$('body').trigger('edd_gateway_loaded', [ chosen_gateway ]);
+
+		}
 	}
 
 	$(document).on('click', '#edd_purchase_form #edd_purchase_submit input[type=submit]', function(e) {
