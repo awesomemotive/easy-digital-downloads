@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.4
 Tested up to: 4.9
-Stable Tag: 2.8.1
+Stable Tag: 2.8.2
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -212,6 +212,23 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+
+= 2.8.2, August 8, 2017 =
+
+* New: Spaces are now auto-formatted into credit card number fields.
+* Tweak: Decoupled API Authentication with $wp_query.
+* Tweak: Quantities no longer show on the cart widget when they are disabled.
+* Tweak: Renamed 'Item Quantities' setting to 'Cart Item Quantities' to rmeove confusion of its purpose.
+* Tweak: Improvements to the consistency of settings descriptions.
+* Tweak: Added search_columns argument to the EDD_Customer_Query class.
+* Fix: Discounts with mlutiple exlusions could be applied to excluded products.
+* Fix: Customer query pagination did not work correctly.
+* Fix: Removed custom widths on the primary column of list table.
+* Fix: 'Processing' status in Payments list table shows empty brackets when no processign payments.
+* Fix: Billing fields were unnecessarily validated when cart total was $0.
+* Fix: WPLANG is deprecated, use get_locale() instead.
+* Fix: Prevent duplicate queries when edd_get_purchase_id_by_key() is called more than once for the same payment key.
+* Fix: Prevent plain text purchase links from looking like buttons still.
 
 = 2.8.1, July 27, 2017 =
 
