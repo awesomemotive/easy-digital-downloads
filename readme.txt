@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.4
 Tested up to: 4.9
-Stable Tag: 2.8.2
+Stable Tag: 2.8.3
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -212,6 +212,10 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+
+= 2.8.3, August 9, 2017 =
+* Fix: Update HTML5 pattern on card field to account for whitespace.
+* Fix: Don't enqueue jQuery.payment by default, allow gateways to enqueue when supported.
 
 = 2.8.2, August 8, 2017 =
 
