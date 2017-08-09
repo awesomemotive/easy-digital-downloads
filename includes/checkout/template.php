@@ -246,7 +246,7 @@ function edd_get_cc_form() {
 				<span class="card-type"></span>
 			</label>
 			<span class="edd-description"><?php _e( 'The (typically) 16 digits on the front of your credit card.', 'easy-digital-downloads' ); ?></span>
-			<input type="tel" pattern="[0-9]{13,16}" autocomplete="off" name="card_number" id="card_number" class="card-number edd-input required" placeholder="<?php _e( 'Card number', 'easy-digital-downloads' ); ?>" />
+			<input type="tel" pattern="^[0-9\s*\w]{13,16}$" autocomplete="off" name="card_number" id="card_number" class="card-number edd-input required" placeholder="<?php _e( 'Card number', 'easy-digital-downloads' ); ?>" />
 		</p>
 		<p id="edd-card-cvc-wrap">
 			<label for="card_cvc" class="edd-label">
