@@ -228,7 +228,7 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 * Fix: Discounts with multiple exclusions could be applied to excluded products.
 * Fix: Customer query pagination did not work correctly.
 * Fix: Removed custom widths on the primary column of list table.
-* Fix: 'Processing' status in Payments list table shows empty brackets when no processign payments.
+* Fix: 'Processing' status in Payments list table shows empty brackets when no processing payments.
 * Fix: Billing fields were unnecessarily validated when cart total was $0.
 * Fix: WPLANG is deprecated, use get_locale() instead.
 * Fix: Prevent duplicate queries when edd_get_purchase_id_by_key() is called more than once for the same payment key.
