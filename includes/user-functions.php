@@ -526,23 +526,14 @@ function edd_get_customer_address( $user_id = 0 ) {
 		$address = array();
 	}
 
-	if( ! isset( $address['line1'] ) )
-		$address['line1'] = '';
-
-	if( ! isset( $address['line2'] ) )
-		$address['line2'] = '';
-
-	if( ! isset( $address['city'] ) )
-		$address['city'] = '';
-
-	if( ! isset( $address['zip'] ) )
-		$address['zip'] = '';
-
-	if( ! isset( $address['country'] ) )
-		$address['country'] = '';
-
-	if( ! isset( $address['state'] ) )
-		$address['state'] = '';
+	$address = wp_parse_args( $address, array(
+		'line1'   => '',
+		'line2'   => '',
+		'city'    => '',
+		'zip'     => '',
+		'country' => '',
+		'state'   => '',
+	) );
 
 	return $address;
 }
