@@ -863,9 +863,9 @@ function edd_get_registered_settings() {
  * @since 1.0.8.2
  *
  * @param array $input The value inputted in the field
- * @global $edd_options Array of all the EDD Options
+ * @global array $edd_options Array of all the EDD Options
  *
- * @return string $input Sanitizied value
+ * @return string $input Sanitized value
  */
 function edd_settings_sanitize( $input = array() ) {
 	global $edd_options;
@@ -1000,7 +1000,7 @@ function edd_get_registered_settings_types( $filtered_tab = false, $filtered_sec
  *
  * @since 2.5
  * @param array $input The value inputted in the field
- * @return string $input Sanitizied value
+ * @return string $input Sanitized value
  */
 function edd_settings_sanitize_misc_file_downloads( $input ) {
 
@@ -1022,7 +1022,7 @@ add_filter( 'edd_settings_misc-file_downloads_sanitize', 'edd_settings_sanitize_
  *
  * @since 2.5
  * @param array $input The value inputted in the field
- * @return string $input Sanitizied value
+ * @return string $input Sanitized value
  */
 function edd_settings_sanitize_misc_accounting( $input ) {
 
@@ -1049,7 +1049,7 @@ add_filter( 'edd_settings_misc-accounting_sanitize', 'edd_settings_sanitize_misc
  *
  * @since 1.6
  * @param array $input The value inputted in the field
- * @return string $input Sanitizied value
+ * @return string $input Sanitized value
  */
 function edd_settings_sanitize_taxes( $input ) {
 
@@ -1076,7 +1076,7 @@ add_filter( 'edd_settings_taxes_sanitize', 'edd_settings_sanitize_taxes' );
  *
  * @since 2.7
  * @param array $input The value inputted in the field
- * @return string $input Sanitizied value
+ * @return string $input Sanitized value
  */
 function edd_settings_sanitize_gateways( $input ) {
 
@@ -1114,7 +1114,7 @@ add_filter( 'edd_settings_gateways_sanitize', 'edd_settings_sanitize_gateways' )
  *
  * @since 1.8
  * @param array $input The field value
- * @return string $input Sanitizied value
+ * @return string $input Sanitized value
  */
 function edd_sanitize_text_field( $input ) {
 	$tags = array(
@@ -1130,7 +1130,6 @@ function edd_sanitize_text_field( $input ) {
 			'href' => array(),
 			'title' => array(),
 			'class' => array(),
-			'title' => array(),
 			'id'    => array(),
 		),
 		'strong' => array(),
