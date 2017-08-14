@@ -218,6 +218,8 @@ function edd_load_admin_scripts( $hook ) {
 		'currency_sign'               => edd_currency_filter( '' ),
 		'currency_pos'                => edd_get_option( 'currency_position', 'before' ),
 		'currency_decimals'           => edd_currency_decimal_filter(),
+		'decimal_separator'           => edd_get_option( 'decimal_separator', '.' ),
+		'thousands_separator'         => edd_get_option( 'thousands_separator', ',' ),
 		'new_media_ui'                => apply_filters( 'edd_use_35_media_ui', 1 ),
 		'remove_text'                 => __( 'Remove', 'easy-digital-downloads' ),
 		'type_to_search'              => sprintf( __( 'Type to search %s', 'easy-digital-downloads' ), edd_get_label_plural() ),

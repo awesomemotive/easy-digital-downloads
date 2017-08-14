@@ -1405,14 +1405,17 @@ class EDD_Payment {
 			return false;
 		}
 
-		$new_subtotal = $merged_item['item_price'] * $merged_item['quantity'];
-		$merged_item['subtotal'] = $new_subtotal;
-		$merged_item['price']    = $new_subtotal + $merged_item['tax'];
+		// Format the item_price correctly now
+		$thousands_sep = edd_get_option( 'thousands_separator', ',' );
 
-		$this->cart_details[ $cart_index ]    = $merged_item;
-		$modified_download                    = $merged_item;
-		$modified_download['action']          = 'modify';
-		$modified_download['previous_data']   = $current_args;
+		$merged_item['item_price'] = str_replace( $thousands_sep, '', $merged_item['item_price'] );
+
+		$new_subtotal                       = floatval( $merged_item['item_price'] ) * $merged_item['quantity'];
+		$merged_item['price']               = $new_subtotal + $merged_item['tax'];
+		$this->cart_details[ $cart_index ]  = $merged_item;
+		$modified_download                  = $merged_item;
+		$modified_download['action']        = 'modify';
+		$modified_download['previous_data'] = $current_args;
 
 		$this->pending['downloads'][] = $modified_download;
 
