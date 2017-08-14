@@ -471,9 +471,10 @@ input[class*="edd-price-field"] {
 	min-width: 100%;
 }
 #edd_product_notes_field {
-	margin: 0;
-	width: 98%;
+	display: block;
+	margin: 12px 0 0;
 	height: 4em;
+	width: 100%;
 }
 
 /* still used by extensions - Software Licensing upgrade paths, Custom Prices */
