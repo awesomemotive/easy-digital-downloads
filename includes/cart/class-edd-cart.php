@@ -240,15 +240,21 @@ class EDD_Cart {
 			$fees       = $this->get_fees( 'fee', $item['id'], $price_id );
 			$subtotal   = $item_price * $quantity;
 
-			// Subtotal for tax calculation must bwe exclusive of fees. See $this->get_tax_on_fees()
+			// Subtotal for tax calculation must exclude fees that are greater than 0. See $this->get_tax_on_fees()
 			$subtotal_for_tax = $subtotal;
 
 			foreach ( $fees as $fee ) {
 				$fee_amount = (float) $fee['amount'];
 				$subtotal  += $fee_amount;
+
+				if( $fee_amount > 0 ) {
+					continue;
+				}
+
+				$subtotal_for_tax += $fee_amount;
 			}
 
-			$tax        = $this->get_item_tax( $item['id'], $options, $subtotal_for_tax - $discount );
+			$tax = $this->get_item_tax( $item['id'], $options, $subtotal_for_tax - $discount );
 
 			if ( edd_prices_include_tax() ) {
 				$subtotal -= round( $tax, edd_currency_decimal_filter() );
