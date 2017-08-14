@@ -517,8 +517,9 @@ add_action( 'template_redirect', 'edd_recovery_user_mismatch' );
 function edd_recovery_force_login_fields() {
 	$resuming_payment = EDD()->session->get( 'edd_resume_payment' );
 	if ( $resuming_payment ) {
-		$payment = new EDD_Payment( $resuming_payment );
-		if ( $payment->user_id > 0 && ( ! is_user_logged_in() ) ) {
+		$payment        = new EDD_Payment( $resuming_payment );
+		$requires_login = edd_no_guest_checkout();
+		if ( ( $requires_login && ! is_user_logged_in() ) && ( $payment->user_id > 0 && ( ! is_user_logged_in() ) ) ) {
 			?>
 			<div class="edd-alert edd-alert-info">
 				<p><?php _e( 'To complete this payment, please login to your account.', 'easy-digital-downloads' ); ?></p>
@@ -550,8 +551,11 @@ add_action( 'edd_purchase_form_before_register_login', 'edd_recovery_force_login
 function edd_recovery_verify_logged_in( $verified_data, $post_data ) {
 	$resuming_payment = EDD()->session->get( 'edd_resume_payment' );
 	if ( $resuming_payment ) {
-		$payment = new EDD_Payment( $resuming_payment );
-		if ( ! empty( $payment->user_id ) && ( ! is_user_logged_in() || $payment->user_id != get_current_user_id() ) ) {
+		$payment    = new EDD_Payment( $resuming_payment );
+		$same_user  = ! empty( $payment->user_id ) && ( is_user_logged_in() && $payment->user_id == get_current_user_id() );
+		$same_email = strtolower( $payment->email ) === strtolower( $post_data['edd_email'] );
+
+		if ( ( is_user_logged_in() && ! $same_user ) || ( ! is_user_logged_in() && ! $same_email ) ) {
 			edd_set_error( 'recovery_requires_login', __( 'To complete this payment, please login to your account.', 'easy-digital-downloads' ) );
 		}
 	}
