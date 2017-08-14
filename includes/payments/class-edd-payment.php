@@ -1408,7 +1408,7 @@ class EDD_Payment {
 		// Format the item_price correctly now
 		$thousands_sep = edd_get_option( 'thousands_separator', ',' );
 
-		$merged_item['item_price'] = str_replace( $thousands_sep, '', $merged_item['item_price'] );
+		$merged_item['item_price'] = edd_sanitize_amount( $merged_item['item_price'] );
 
 		$new_subtotal                       = floatval( $merged_item['item_price'] ) * $merged_item['quantity'];
 		$merged_item['price']               = $new_subtotal + $merged_item['tax'];
