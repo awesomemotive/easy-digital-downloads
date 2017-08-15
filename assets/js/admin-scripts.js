@@ -618,9 +618,9 @@ jQuery(document).ready(function ($) {
 				var row = $(this).parents('ul.edd-purchased-files-list-wrapper');
 				$( '.edd-order-payment-recalc-totals' ).show();
 
-				var quantity   = row.find('input.edd-payment-details-download-quantity').val();
-				var item_price = row.find('input.edd-payment-details-download-item-price').val();
-				var item_tax   = row.find('input.edd-payment-details-download-item-tax').val();
+				var quantity   = row.find('input.edd-payment-details-download-quantity').val().replace(edd_vars.thousands_separator,'');
+				var item_price = row.find('input.edd-payment-details-download-item-price').val().replace(edd_vars.thousands_separator,'');
+				var item_tax   = row.find('input.edd-payment-details-download-item-tax').val().replace(edd_vars.thousands_separator,'');
 
 				item_price = parseFloat( item_price );
 				if ( isNaN( item_price ) ) {
