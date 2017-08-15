@@ -404,7 +404,7 @@ class EDD_Product_Details_Widget extends WP_Widget {
 		<!-- Download title -->
 		<p>
 			<input <?php checked( $instance['download_title'], 'on' ); ?> id="<?php echo esc_attr( $this->get_field_id( 'download_title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'download_title' ) ); ?>" type="checkbox" />
-			<label for="<?php echo esc_attr( $this->get_field_id( 'download_title' ) ); ?>"><?php _e( 'Show Title', 'easy-digital-downloads' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'download_title' ) ); ?>"><?php printf( __( 'Show %s Title', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></label>
 		</p>
 
 		<!-- Show purchase button -->
