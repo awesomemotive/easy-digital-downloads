@@ -167,7 +167,6 @@ function edd_insert_payment( $payment_data = array() ) {
 	}
 
 	if ( $resume_payment ) {
-
 		$payment->date = date( 'Y-m-d G:i:s', current_time( 'timestamp' ) );
 
 		$payment->add_note( __( 'Payment recovery processed', 'easy-digital-downloads' ) );
@@ -183,6 +182,19 @@ function edd_insert_payment( $payment_data = array() ) {
 				'cart_index' => $cart_index,
 			);
 			$payment->remove_download( $download['id'], $item_args );
+		}
+
+		if ( strtolower( $payment->email ) !== strtolower( $payment_data['user_info']['email'] ) ) {
+
+			// Remove the payment from the previous customer.
+			$previous_customer = new EDD_Customer( $payment->customer_id );
+			$previous_customer->remove_payment( $payment->ID, false );
+
+			// Redefine the email frst and last names.
+			$payment->email                 = $payment_data['user_info']['email'];
+			$payment->first_name            = $payment_data['user_info']['first_name'];
+			$payment->last_name             = $payment_data['user_info']['last_name'];
+
 		}
 
 		// Remove any remainders of possible fees from items.
