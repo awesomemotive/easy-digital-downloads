@@ -555,7 +555,7 @@ function edd_recovery_verify_logged_in( $verified_data, $post_data ) {
 		$same_user  = ! empty( $payment->user_id ) && ( is_user_logged_in() && $payment->user_id == get_current_user_id() );
 		$same_email = strtolower( $payment->email ) === strtolower( $post_data['edd_email'] );
 
-		if ( ( is_user_logged_in() && ! $same_user ) || ( ! is_user_logged_in() && ! $same_email ) ) {
+		if ( ( is_user_logged_in() && ! $same_user ) || ( ! is_user_logged_in() && (int) $payment->user_id > 0 && ! $same_email ) ) {
 			edd_set_error( 'recovery_requires_login', __( 'To complete this payment, please login to your account.', 'easy-digital-downloads' ) );
 		}
 	}

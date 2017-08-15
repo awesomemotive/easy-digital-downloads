@@ -557,35 +557,7 @@ class EDD_Payment {
 			$this->ID  = $payment_id;
 			$this->_ID = $payment_id;
 
-			$customer = new stdClass;
-
-			if ( did_action( 'edd_pre_process_purchase' ) && is_user_logged_in() ) {
-
-				$customer = new EDD_customer( get_current_user_id(), true );
-
-				// Customer is logged in but used a different email to purchase with so assign to their customer record
-				if( ! empty( $customer->id ) && $this->email != $customer->email ) {
-					$customer->add_email( $this->email );
-				}
-
-			}
-
-			if ( empty( $customer->id ) ) {
-				$customer = new EDD_Customer( $this->email );
-			}
-
-			if ( empty( $customer->id ) ) {
-
-				$customer_data = array(
-					'name'        => ! is_email( $payment_title ) ? $this->first_name . ' ' . $this->last_name : '',
-					'email'       => $this->email,
-					'user_id'     => $this->user_id,
-				);
-
-				$customer->create( $customer_data );
-
-			}
-
+			$customer = $this->maybe_create_customer();
 
 			$this->customer_id            = $customer->id;
 			$this->pending['customer_id'] = $this->customer_id;
@@ -639,6 +611,14 @@ class EDD_Payment {
 
 		if( $this->ID !== $this->_ID ) {
 			$this->ID = $this->_ID;
+		}
+
+		$customer = $this->maybe_create_customer();
+		if ( $this->customer_id != $customer->id ) {
+
+			$this->customer_id            = $customer->id;
+			$this->pending['customer_id'] = $this->customer_id;
+
 		}
 
 		// If we have something pending, let's save it
@@ -883,6 +863,8 @@ class EDD_Payment {
 
 					case 'customer_id':
 						$this->update_meta( '_edd_payment_customer_id', $this->customer_id );
+						$customer = new EDD_Customer( $this->customer_id );
+						$customer->attach_payment( $this->ID, false );
 						break;
 
 					case 'user_id':
@@ -2694,6 +2676,48 @@ class EDD_Payment {
 	private function in_process() {
 		$in_process_statuses = array( 'pending', 'processing' );
 		return in_array( $this->status, $in_process_statuses );
+	}
+
+	/**
+	 * Determines if a customer needs to be created given the current payment details.
+	 *
+	 * @since 2.8.4
+	 *
+	 * @return EDD_Customer The customer object of the existing customer or new customer.
+	 */
+	private function maybe_create_customer() {
+		$customer = new stdClass;
+
+		if ( did_action( 'edd_pre_process_purchase' ) && is_user_logged_in() ) {
+
+			$customer = new EDD_customer( get_current_user_id(), true );
+
+			// Customer is logged in but used a different email to purchase with so assign to their customer record
+			if( ! empty( $customer->id ) && $this->email != $customer->email ) {
+				$customer->add_email( $this->email );
+			}
+
+		}
+
+		if ( empty( $customer->id ) ) {
+			$customer = new EDD_Customer( $this->email );
+		}
+
+		if ( empty( $customer->id ) ) {
+
+			$name = ( ! empty( $this->first_name ) && ! empty( $this->last_name ) ) ? $this->first_name . ' ' . $this->last_name : $this->email;
+
+			$customer_data = array(
+				'name'        => $name,
+				'email'       => $this->email,
+				'user_id'     => $this->user_id,
+			);
+
+			$customer->create( $customer_data );
+
+		}
+
+		return $customer;
 	}
 
 }
