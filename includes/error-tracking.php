@@ -27,16 +27,25 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_print_errors() {
 	$errors = edd_get_errors();
 	if ( $errors ) {
+
 		$classes = apply_filters( 'edd_error_class', array(
 			'edd_errors', 'edd-alert', 'edd-alert-error'
 		) );
-		echo '<div class="' . implode( ' ', $classes ) . '">';
-		    // Loop error codes and display errors
-		   foreach ( $errors as $error_id => $error ) {
-		        echo '<p class="edd_error" id="edd_error_' . $error_id . '"><strong>' . __( 'Error', 'easy-digital-downloads' ) . '</strong>: ' . $error . '</p>';
-		   }
-		echo '</div>';
+
+		if ( ! empty( $errors ) ) {
+			echo '<div class="' . implode( ' ', $classes ) . '">';
+				// Loop error codes and display errors
+				foreach ( $errors as $error_id => $error ) {
+
+					echo '<p class="edd_error" id="edd_error_' . $error_id . '"><strong>' . __( 'Error', 'easy-digital-downloads' ) . '</strong>: ' . $error . '</p>';
+
+				}
+
+			echo '</div>';
+		}
+
 		edd_clear_errors();
+
 	}
 }
 add_action( 'edd_purchase_form_before_submit', 'edd_print_errors' );
