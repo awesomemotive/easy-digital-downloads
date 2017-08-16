@@ -11,7 +11,7 @@ if ( is_user_logged_in() ):
 	$display_name = $current_user->display_name;
 	$address      = edd_get_customer_address( $user_id );
 	$states       = edd_get_shop_states( $address['country'] );
-	$state 		  = ( ! empty( $address['state'] ) ) ? $address['state'] : '';
+	$state 		  = $address['state'];
 
 	if ( edd_is_cart_saved() ): ?>
 		<?php $restore_url = add_query_arg( array( 'edd_action' => 'restore_cart', 'edd_cart_token' => edd_get_cart_token() ), edd_get_checkout_uri() ); ?>
