@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.4
 Tested up to: 4.9
-Stable Tag: 2.8.3
+Stable Tag: 2.8.4
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -213,7 +213,18 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 
 == Changelog ==
 
+= 2.8.4, August 16, 2017 =
+
+* Fix: Minor improvements to edd_get_customer_address() function.
+* Fix: Negative product fees were not properly affecting subtotal used for tax calculations.
+* Fix: Editing item price on a payment caused incorrect calculations when item price contained thousands separators.
+* Fix: Download History shortcode was incorrectly using get_the_title instead of the supplied name.
+* Fix: Resuming payment for guest payments while logged out could incorrectly prompt the user to login.
+* Tweak: Download Details widget edit form used generic 'Show Title' instead of 'Show Download Title'.
+* Tweak: Product Notes metabox field wasn't full width.
+
 = 2.8.3, August 9, 2017 =
+
 * Fix: Update HTML5 pattern on card field to account for whitespace.
 * Fix: Don't enqueue jQuery.payment by default, allow gateways to enqueue when supported.
 
