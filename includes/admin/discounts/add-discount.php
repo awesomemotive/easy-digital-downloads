@@ -56,7 +56,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 					<label for="edd-amount"><?php _e( 'Amount', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input type="text" required="required" id="edd-amount" name="amount" value="" style="width: 40px;"/>
+					<input type="text" required="required" id="edd-amount" name="amount" value="" style="width: 80px;"/>
 					<p class="description edd-amount-description flat-discount" style="display:none;"><?php printf( __( 'Enter the discount amount in %s', 'easy-digital-downloads' ), edd_get_currency() ); ?></p>
 					<p class="description edd-amount-description percent-discount"><?php _e( 'Enter the discount percentage. 10 = 10%', 'easy-digital-downloads' ); ?></p>
 				</td>
