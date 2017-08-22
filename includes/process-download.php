@@ -75,20 +75,45 @@ function edd_process_download() {
 		// Payment has been verified, setup the download
 		$download_files = edd_get_download_files( $args['download'] );
 		$attachment_id  = ! empty( $download_files[ $args['file_key'] ]['attachment_id'] ) ? absint( $download_files[ $args['file_key'] ]['attachment_id'] ) : false;
+		$thumbnail_size = ! empty( $download_files[ $args['file_key'] ]['thumbnail_size'] ) ? sanitize_text_field( $download_files[ $args['file_key'] ]['thumbnail_size'] ) : false;
+		$requested_file = isset( $download_files[ $args['file_key'] ]['file'] ) ? $download_files[ $args['file_key'] ]['file'] : '';
 
 		/*
 		 * If we have an attachment ID stored, use get_attached_file() to retrieve absolute URL
 		 * If this fails or returns a relative path, we fail back to our own absolute URL detection
 		 */
-		if( $attachment_id && 'attachment' == get_post_type( $attachment_id ) ) {
+		if( edd_is_local_file( $requested_file ) && $attachment_id && 'attachment' == get_post_type( $attachment_id ) ) {
+
+			if( 'pdf' === strtolower( edd_get_file_extension( $requested_file ) ) ) {
+				// Do not ever grab the thumbnail for PDFs. See https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5491
+				$thumbnail_size = false;
+			}
 
 			if( 'redirect' == $method ) {
 
-				$attached_file = wp_get_attachment_url( $attachment_id );
+				if ( $thumbnail_size ) {
+					$attached_file = wp_get_attachment_image_url( $attachment_id, $thumbnail_size, false );
+				} else {
+					$attached_file = wp_get_attachment_url( $attachment_id );
+				}
 
 			} else {
 
-				$attached_file = get_attached_file( $attachment_id, false );
+				if ( $thumbnail_size ) {
+
+					$attachment_data = wp_get_attachment_image_src( $attachment_id, $thumbnail_size, false );
+
+					if ( false !== $attachment_data && ! empty( $attachment_data[0] ) && filter_var( $attachment_data[0], FILTER_VALIDATE_URL) !== false ) {
+						$attached_file  = $attachment_data['0'];
+						$attached_file  = str_replace( site_url(), '', $attached_file );
+						$attached_file  = realpath( ABSPATH . $attached_file );
+					}
+
+				}
+
+				if ( empty( $attached_file ) ) {
+					$attached_file = get_attached_file( $attachment_id, false );
+				}
 
 				// Confirm the file exists
 				if( ! file_exists( $attached_file ) ) {
@@ -102,13 +127,6 @@ function edd_process_download() {
 				$requested_file = $attached_file;
 
 			}
-
-		}
-
-		// If we didn't find a file from the attachment, grab the given URL
-		if( ! isset( $requested_file ) ) {
-
-			$requested_file = isset( $download_files[ $args['file_key'] ]['file'] ) ? $download_files[ $args['file_key'] ]['file'] : '';
 
 		}
 
@@ -154,7 +172,7 @@ function edd_process_download() {
 		$file_extension = edd_get_file_extension( $requested_file );
 		$ctype          = edd_get_file_ctype( $file_extension );
 
-		if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+		if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
 			@set_time_limit(0);
 		}
 		if ( function_exists( 'get_magic_quotes_runtime' ) && get_magic_quotes_runtime() && version_compare( phpversion(), '5.4', '<' ) ) {
@@ -719,7 +737,7 @@ function edd_readfile_chunked( $file, $retbytes = true ) {
 	$chunksize = 1024 * 1024;
 	$buffer    = '';
 	$cnt       = 0;
-	$handle    = @fopen( $file, 'r' );
+	$handle    = @fopen( $file, 'rb' );
 
 	if ( $size = @filesize( $file ) ) {
 		header("Content-Length: " . $size );
@@ -804,8 +822,8 @@ function edd_process_signed_download_url( $args ) {
 	$args['payment']     = $order_parts[0];
 	$args['file_key']    = $order_parts[2];
 	$args['price_id']    = $order_parts[3];
-	$args['email']       = get_post_meta( $order_parts[0], '_edd_payment_user_email', true );
-	$args['key']         = get_post_meta( $order_parts[0], '_edd_payment_purchase_key', true );
+	$args['email']       = edd_get_payment_meta( $order_parts[0], '_edd_payment_user_email', true );
+	$args['key']         = edd_get_payment_meta( $order_parts[0], '_edd_payment_purchase_key', true );
 
 	$payment = new EDD_Payment( $args['payment'] );
 	$args['has_access']  = 'publish' === $payment->status ? true : false;
@@ -888,10 +906,15 @@ function edd_check_file_url_head( $requested_file, $args, $method ) {
 
 			do_action( 'edd_check_file_url_head_invalid', $requested_file, $args, $method );
 			wp_die( $message, $title, array( 'response' => 403 ) );
-		
+
 		}
 
 	}
 
 }
-add_action( 'edd_process_download_pre_record_log', 'edd_check_file_url_head', 10, 3 );
+/**
+ * Filter removed in EDD 2.7
+ *
+ * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5450
+ */
+// add_action( 'edd_process_download_pre_record_log', 'edd_check_file_url_head', 10, 3 );

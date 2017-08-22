@@ -4,7 +4,7 @@
 /**
  * @group edd_url
  */
-class Tests_URL extends WP_UnitTestCase {
+class Tests_URL extends EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 	}

@@ -4,7 +4,9 @@
  */
 global $edd_register_redirect;
 
-edd_print_errors(); ?>
+do_action( 'edd_print_errors' ); ?>
+
+<?php if ( ! is_user_logged_in() ) : ?>
 
 <form id="edd_register_form" class="edd_form" action="" method="post">
 	<?php do_action( 'edd_register_form_fields_top' ); ?>
@@ -49,3 +51,9 @@ edd_print_errors(); ?>
 
 	<?php do_action( 'edd_register_form_fields_bottom' ); ?>
 </form>
+
+<?php else : ?>
+
+	<?php do_action( 'edd_register_form_logged_in' ); ?>
+
+<?php endif; ?>

@@ -4,7 +4,7 @@
 /**
  * @group edd_widgets
  */
-class Tests_Widgets extends WP_UnitTestCase {
+class Tests_Widgets extends EDD_UnitTestCase {
 
 	/**
 	 * Test that the hooks in the file are good.
@@ -68,6 +68,7 @@ class Tests_Widgets extends WP_UnitTestCase {
 			), array(
 				'title'            => 'Cart',
 				'hide_on_checkout' => true,
+				'hide_on_empty'    => false,
 			) );
 		$output = ob_get_clean();
 
@@ -94,6 +95,32 @@ class Tests_Widgets extends WP_UnitTestCase {
 			), array(
 				'title'            => 'Cart',
 				'hide_on_checkout' => true,
+				'hide_on_empty'    => false,
+			) );
+		$output = ob_get_clean();
+
+		$this->assertContains( 'Number of items in cart:', $output );
+		$this->assertContains( '<li class="cart_item empty">', $output );
+		$this->assertContains( '<li class="cart_item edd-cart-meta edd_total"', $output );
+		$this->assertContains( '<li class="cart_item edd_checkout"', $output );
+
+	}
+
+	public function test_cart_widget_function_hide_on_empty() {
+
+		$widgets = $GLOBALS['wp_widget_factory']->widgets;
+		$cart_widget = $widgets['edd_cart_widget'];
+
+		ob_start();
+			$cart_widget->widget( array(
+				'before_title'  => '',
+				'after_title'   => '',
+				'before_widget' => '',
+				'after_widget'  => '',
+			), array(
+				'title'            => 'Cart',
+				'hide_on_checkout' => true,
+				'hide_on_empty'    => true,
 			) );
 		$output = ob_get_clean();
 
@@ -114,9 +141,11 @@ class Tests_Widgets extends WP_UnitTestCase {
 		$widgets = $GLOBALS['wp_widget_factory']->widgets;
 		$cart_widget = $widgets['edd_cart_widget'];
 
-		$updated = $cart_widget->update( array( 'title' => 'Your Cart', 'hide_on_checkout' => true ), array( 'title' => 'Cart', 'hide_on_checkout' => false ) );
+		$new_instance = array( 'title' => 'Your Cart', 'hide_on_checkout' => true, 'hide_on_empty' => true );
+		$old_instance = array( 'title' => 'Cart', 'hide_on_checkout' => false, 'hide_on_empty' => false );
+		$updated      = $cart_widget->update( $new_instance, $old_instance );
 
-		$this->assertEquals( $updated, array( 'title' => 'Your Cart', 'hide_on_checkout' => true ) );
+		$this->assertEquals( $updated, array( 'title' => 'Your Cart', 'hide_on_checkout' => true, 'hide_on_empty' => true ) );
 
 	}
 
@@ -367,7 +396,7 @@ class Tests_Widgets extends WP_UnitTestCase {
 		$this->assertRegExp( '/<label for="widget-edd_product_details--download_id">Download:<\/label>/', $output );
 		$this->assertRegExp( '/<select class="widefat" name="widget-edd_product_details\[\]\[download_id\]" id="widget-edd_product_details--download_id">/', $output );
 		$this->assertRegExp( '/<input  checked=\'checked\' id="widget-edd_product_details--download_title" name="widget-edd_product_details\[\]\[download_title\]" type="checkbox" \/>/', $output );
-		$this->assertRegExp( '/<label for="widget-edd_product_details--download_title">Show Title<\/label>/', $output );
+		$this->assertRegExp( '/<label for="widget-edd_product_details--download_title">Show Download Title<\/label>/', $output );
 		$this->assertRegExp( '/<input  checked=\'checked\' id="widget-edd_product_details--purchase_button" name="widget-edd_product_details\[\]\[purchase_button\]" type="checkbox" \/>/', $output );
 		$this->assertRegExp( '/<label for="widget-edd_product_details--purchase_button">Show Purchase Button<\/label>/', $output );
 		$this->assertRegExp( '/<input  checked=\'checked\' id="widget-edd_product_details--categories" name="widget-edd_product_details\[\]\[categories\]" type="checkbox" \/>/', $output );

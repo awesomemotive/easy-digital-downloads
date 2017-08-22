@@ -115,7 +115,7 @@ function edd_email_template_preview() {
 	<?php
 	echo ob_get_clean();
 }
-add_action( 'edd_email_settings', 'edd_email_template_preview' );
+add_action( 'edd_purchase_receipt_email_settings', 'edd_email_template_preview' );
 
 /**
  * Displays the email preview
@@ -138,7 +138,7 @@ function edd_display_email_template_preview() {
 	}
 
 
-	EDD()->emails->heading = __( 'Purchase Receipt', 'easy-digital-downloads' );
+	EDD()->emails->heading = edd_email_preview_template_tags( edd_get_option( 'purchase_heading', __( 'Purchase Receipt', 'easy-digital-downloads' ) ) );
 
 	echo EDD()->emails->build_email( edd_email_preview_template_tags( edd_get_email_body_content( 0, array() ) ) );
 
@@ -209,7 +209,7 @@ function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data 
 		}
 	}
 
-	$gateway = edd_get_gateway_admin_label( get_post_meta( $payment_id, '_edd_payment_gateway', true ) );
+	$gateway = edd_get_gateway_admin_label( edd_get_payment_meta( $payment_id, '_edd_payment_gateway', true ) );
 
 	$default_email_body = __( 'Hello', 'easy-digital-downloads' ) . "\n\n" . sprintf( __( 'A %s purchase has been made', 'easy-digital-downloads' ), edd_get_label_plural() ) . ".\n\n";
 	$default_email_body .= sprintf( __( '%s sold:', 'easy-digital-downloads' ), edd_get_label_plural() ) . "\n\n";

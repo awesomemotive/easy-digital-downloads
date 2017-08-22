@@ -68,39 +68,65 @@ function edd_update_payment_details( $data ) {
 
 	// Setup purchased Downloads and price options
 	$updated_downloads = isset( $_POST['edd-payment-details-downloads'] ) ? $_POST['edd-payment-details-downloads'] : false;
-	if ( $updated_downloads && ! empty( $_POST['edd-payment-downloads-changed'] ) ) {
 
-		foreach ( $updated_downloads as $download ) {
+	if ( $updated_downloads ) {
+
+		foreach ( $updated_downloads as $cart_position => $download ) {
 
 			// If this item doesn't have a log yet, add one for each quantity count
 			$has_log = absint( $download['has_log'] );
 			$has_log = empty( $has_log ) ? false : true;
 
 			if ( $has_log ) {
-				continue;
+
+				$quantity   = isset( $download['quantity'] ) ? absint( $download['quantity']) : 1;
+				$item_price = isset( $download['item_price'] ) ? $download['item_price'] : 0;
+				$item_tax   = isset( $download['item_tax'] ) ? $download['item_tax'] : 0;
+
+				// Format any items that are currency.
+				$item_price = edd_format_amount( $item_price );
+				$item_tax    = edd_format_amount( $item_tax );
+
+				$args = array(
+					'item_price' => $item_price,
+					'quantity'   => $quantity,
+					'tax'        => $item_tax,
+				);
+
+				$payment->modify_cart_item( $cart_position, $args );
+
+			} else {
+
+				// This
+				if ( empty( $download['item_price'] ) ) {
+					$download['item_price'] = 0.00;
+				}
+
+				if ( empty( $download['item_tax'] ) ) {
+					$download['item_tax'] = 0.00;
+				}
+
+				$item_price  = $download['item_price'];
+				$download_id = absint( $download['id'] );
+				$quantity    = absint( $download['quantity'] ) > 0 ? absint( $download['quantity'] ) : 1;
+				$price_id    = false;
+				$tax         = $download['item_tax'];
+
+				if ( edd_has_variable_prices( $download_id ) && isset( $download['price_id'] ) ) {
+					$price_id = absint( $download['price_id'] );
+				}
+
+				// Set some defaults
+				$args = array(
+					'quantity'    => $quantity,
+					'item_price'  => $item_price,
+					'price_id'    => $price_id,
+					'tax'         => $tax,
+				);
+
+				$payment->add_download( $download_id, $args );
+
 			}
-
-			if ( empty( $download['item_price'] ) ) {
-				$download['item_price'] = 0.00;
-			}
-
-			$item_price  = $download['item_price'];
-			$download_id = absint( $download['id'] );
-			$quantity    = absint( $download['quantity'] ) > 0 ? absint( $download['quantity'] ) : 1;
-			$price_id    = false;
-
-			if ( edd_has_variable_prices( $download_id ) && isset( $download['price_id'] ) ) {
-				$price_id = absint( $download['price_id'] );
-			}
-
-			// Set some defaults
-			$args = array(
-				'quantity'    => $quantity,
-				'item_price'  => $item_price,
-				'price_id'    => $price_id,
-			);
-
-			$payment->add_download( $download_id, $args );
 
 		}
 

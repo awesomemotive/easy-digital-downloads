@@ -26,7 +26,7 @@ class EDD_Batch_Export extends EDD_Export {
 	 *
 	 * @since 2.4
 	 */
-	private $file;
+	protected $file;
 
 	/**
 	 * The name of the file the data is stored in

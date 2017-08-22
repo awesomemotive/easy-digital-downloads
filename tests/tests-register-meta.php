@@ -4,7 +4,8 @@
 /**
  * @group edd_meta
  */
-class Tests_Register_Meta extends WP_UnitTestCase {
+class Tests_Register_Meta extends EDD_UnitTestCase {
+
 	public function setUp() {
 		parent::setUp();
 		$this->payment_id  = EDD_Helper_Payment::create_simple_payment();
@@ -58,10 +59,10 @@ class Tests_Register_Meta extends WP_UnitTestCase {
 
 	public function test_intval_wrapper() {
 		update_post_meta( $this->payment_id, '_edd_payment_customer_id', '90.4' );
-		$this->assertEquals( '90', get_post_meta( $this->payment_id, '_edd_payment_customer_id', true ) );
+		$this->assertEquals( '90', edd_get_payment_meta( $this->payment_id, '_edd_payment_customer_id', true ) );
 
 		update_post_meta( $this->payment_id, '_edd_payment_customer_id', '-1.43' );
-		$this->assertEquals( '-1', get_post_meta( $this->payment_id, '_edd_payment_customer_id', true ) );
+		$this->assertEquals( '-1', edd_get_payment_meta( $this->payment_id, '_edd_payment_customer_id', true ) );
 	}
 
 	public function test_sanitize_array() {
@@ -70,15 +71,15 @@ class Tests_Register_Meta extends WP_UnitTestCase {
 		$object->two = 2;
 
 		update_post_meta( $this->payment_id, '_edd_payment_meta', $object );
-		$this->assertInternalType( 'array', get_post_meta( $this->payment_id, '_edd_payment_meta', true ) );
+		$this->assertInternalType( 'array', edd_get_payment_meta( $this->payment_id, '_edd_payment_meta', true ) );
 
 		$serialized = serialize( array(
 			1, 2, 3,
 		) );
 
 		update_post_meta( $this->payment_id, '_edd_payment_meta', $serialized );
-		$this->assertInternalType( 'array', get_post_meta( $this->payment_id, '_edd_payment_meta', true ) );
-		$this->assertFalse( is_serialized( get_post_meta( $this->payment_id, '_edd_payment_meta', true ) ) );
+		$this->assertInternalType( 'array', edd_get_payment_meta( $this->payment_id, '_edd_payment_meta', true ) );
+		$this->assertFalse( is_serialized( edd_get_payment_meta( $this->payment_id, '_edd_payment_meta', true ) ) );
 	}
 
 	public function test_sanitize_price() {

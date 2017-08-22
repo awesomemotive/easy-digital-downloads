@@ -3,7 +3,7 @@
 /**
  * @group plugin_compatibility
  */
-class Tests_Plugin_Compatibility extends WP_UnitTestCase {
+class Tests_Plugin_Compatibility extends EDD_UnitTestCase {
 
 	/**
 	 * Test that the filter exists of the function.

@@ -36,6 +36,7 @@ class edd_cart_widget extends WP_Widget {
 	/** Constructor */
 	function __construct() {
 		parent::__construct( 'edd_cart_widget', __( 'Downloads Cart', 'easy-digital-downloads' ), array( 'description' => __( 'Display the downloads shopping cart', 'easy-digital-downloads' ) ) );
+		add_filter( 'dynamic_sidebar_params', array( $this, 'cart_widget_class' ), 10, 1 );
 	}
 
 	/** @see WP_Widget::widget */
@@ -71,6 +72,7 @@ class edd_cart_widget extends WP_Widget {
 
 		$instance['title']            = strip_tags( $new_instance['title'] );
 		$instance['hide_on_checkout'] = isset( $new_instance['hide_on_checkout'] );
+		$instance['hide_on_empty']    = isset( $new_instance['hide_on_empty'] );
 
 		return $instance;
 	}
@@ -81,6 +83,7 @@ class edd_cart_widget extends WP_Widget {
 		$defaults = array(
 			'title'            => '',
 			'hide_on_checkout' => false,
+			'hide_on_empty'    => false,
 		);
 
 		$instance = wp_parse_args( (array) $instance, $defaults ); ?>
@@ -95,8 +98,40 @@ class edd_cart_widget extends WP_Widget {
 			<label for="<?php echo esc_attr( $this->get_field_id( 'hide_on_checkout' ) ); ?>"><?php _e( 'Hide on Checkout Page', 'easy-digital-downloads' ); ?></label>
 		</p>
 
+		<!-- Hide when cart is empty -->
+		<p>
+			<input <?php checked( $instance['hide_on_empty'], true ); ?> id="<?php echo esc_attr( $this->get_field_id( 'hide_on_empty' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'hide_on_empty' ) ); ?>" type="checkbox" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'hide_on_empty' ) ); ?>"><?php _e( 'Hide if cart is empty', 'easy-digital-downloads' ); ?></label>
+		</p>
+
 		<?php
 	}
+
+	/**
+	 * Check if the widget needs to be hidden when empty.
+	 *
+	 * @since 2.7
+	 * @param $params
+	 *
+	 * @return array
+	 */
+	public function cart_widget_class( $params ) {
+		if ( strpos( $params[0]['widget_id'], 'edd_cart_widget' ) !== false ) {
+			$instance_id       = $params[1]['number'];
+			$all_settings      = $this->get_settings();
+			$instance_settings = $all_settings[ $instance_id ];
+
+			if ( ! empty( $instance_settings['hide_on_empty'] ) ) {
+				$cart_quantity = edd_get_cart_quantity();
+				$class         = empty( $cart_quantity ) ? 'cart-empty' : 'cart-not-empty';
+
+				$params[0]['before_widget'] = preg_replace( '/class="(.*?)"/', 'class="$1 edd-hide-on-empty ' . $class . '"', $params[0]['before_widget'] );
+			}
+		}
+
+		return $params;
+	}
+
 }
 
 /**
@@ -369,7 +404,7 @@ class EDD_Product_Details_Widget extends WP_Widget {
 		<!-- Download title -->
 		<p>
 			<input <?php checked( $instance['download_title'], 'on' ); ?> id="<?php echo esc_attr( $this->get_field_id( 'download_title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'download_title' ) ); ?>" type="checkbox" />
-			<label for="<?php echo esc_attr( $this->get_field_id( 'download_title' ) ); ?>"><?php _e( 'Show Title', 'easy-digital-downloads' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'download_title' ) ); ?>"><?php printf( __( 'Show %s Title', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></label>
 		</p>
 
 		<!-- Show purchase button -->

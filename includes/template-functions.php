@@ -174,7 +174,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 			if ( ! edd_is_ajax_disabled() ) {
 
-				echo '<a href="#" class="edd-add-to-cart ' . esc_attr( $class ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $download->ID ) . '" ' . $data_variable . ' ' . $type . ' ' . $data_price . ' ' . $button_display . '><span class="edd-add-to-cart-label">' . $args['text'] . '</span> <span class="edd-loading"><i class="edd-icon-spinner edd-icon-spin"></i></span></a>';
+				echo '<a href="#" class="edd-add-to-cart ' . esc_attr( $class ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $download->ID ) . '" ' . $data_variable . ' ' . $type . ' ' . $data_price . ' ' . $button_display . '><span class="edd-add-to-cart-label">' . $args['text'] . '</span> <span class="edd-loading" aria-label="' . esc_attr__( 'Loading', 'easy-digital-downloads' ) . '"></span></a>';
 
 			}
 
@@ -185,7 +185,10 @@ function edd_get_purchase_link( $args = array() ) {
 			<?php if ( ! edd_is_ajax_disabled() ) : ?>
 				<span class="edd-cart-ajax-alert" aria-live="assertive">
 					<span class="edd-cart-added-alert" style="display: none;">
-						<?php echo '<i class="edd-icon-ok" aria-hidden="true"></i> ' . __( 'Added to cart', 'easy-digital-downloads' ); ?>
+						<svg class="edd-icon edd-icon-check" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
+							<path d="M26.11 8.844c0 .39-.157.78-.44 1.062L12.234 23.344c-.28.28-.672.438-1.062.438s-.78-.156-1.06-.438l-7.782-7.78c-.28-.282-.438-.673-.438-1.063s.156-.78.438-1.06l2.125-2.126c.28-.28.672-.438 1.062-.438s.78.156 1.062.438l4.594 4.61L21.42 5.656c.282-.28.673-.438 1.063-.438s.78.155 1.062.437l2.125 2.125c.28.28.438.672.438 1.062z"/>
+						</svg>
+						<?php echo __( 'Added to cart', 'easy-digital-downloads' ); ?>
 					</span>
 				</span>
 			<?php endif; ?>
@@ -285,7 +288,14 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 
 							$item_prop = edd_add_schema_microdata() ? ' itemprop="description"' : '';
 
-							echo '<span class="edd_price_option_name"' . $item_prop . '>' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price">' . edd_currency_filter( edd_format_amount( $price['amount'] ) ) . '</span>';
+							// Construct the default price output.
+							$price_output = '<span class="edd_price_option_name"' . $item_prop . '>' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price">' . edd_currency_filter( edd_format_amount( $price['amount'] ) ) . '</span>';
+
+							// Filter the default price output
+							$price_output = apply_filters( 'edd_price_option_output', $price_output, $download_id, $key, $price, $form_id, $item_prop );
+
+							// Output the filtered price output
+							echo $price_output;
 
 							if( edd_add_schema_microdata() ) {
 								echo '<meta itemprop="price" content="' . esc_attr( $price['amount'] ) .'" />';
@@ -346,7 +356,7 @@ function edd_download_purchase_form_quantity_field( $download_id = 0, $args = ar
 		$options['price_id'] = $args['price_id'];
 	}
 
-	if ( ! edd_item_quantities_enabled() ) {
+	if ( ! edd_item_quantities_enabled() || edd_download_quantities_disabled( $download_id ) ) {
 		return;
 	}
 
@@ -389,7 +399,7 @@ add_action( 'edd_purchase_link_top', 'edd_download_purchase_form_quantity_field'
  */
 function edd_variable_price_quantity_field( $key, $price, $download_id ) {
 
-	if( ! edd_item_quantities_enabled() ) {
+	if( ! edd_item_quantities_enabled() || edd_download_quantities_disabled( $download_id ) ) {
 		return;
 	}
 
@@ -634,6 +644,11 @@ function edd_get_template_part( $slug, $name = null, $load = true ) {
 	// Execute code for this part
 	do_action( 'get_template_part_' . $slug, $slug, $name );
 
+	$load_template = apply_filters( 'edd_allow_template_part_' . $slug . '_' . $name, true );
+	if ( false === $load_template ) {
+		return '';
+	}
+
 	// Setup possible parts
 	$templates = array();
 	if ( isset( $name ) )
@@ -646,6 +661,24 @@ function edd_get_template_part( $slug, $name = null, $load = true ) {
 	// Return the part that is found
 	return edd_locate_template( $templates, $load, false );
 }
+
+/**
+ * Only allow the pending verification message to display once
+ * @since 2.7.8
+ * @param $load_template
+ *
+ * @return bool
+ */
+function edd_load_verification_template_once( $load_template ) {
+	static $account_pending_loaded;
+	if ( ! is_null( $account_pending_loaded ) ) {
+		return false;
+	}
+
+	$account_pending_loaded = true;
+	return $load_template;
+}
+add_filter( 'edd_allow_template_part_account_pending', 'edd_load_verification_template_once', 10, 1 );
 
 /**
  * Retrieve the name of the highest priority template file that exists.
@@ -863,6 +896,7 @@ function edd_checkout_meta_tags() {
 		return;
 	}
 
+	echo '<meta name="edd-chosen-gateway" content="' . edd_get_chosen_gateway() . '"/>' . "\n";
 	echo '<meta name="robots" content="noindex,nofollow" />' . "\n";
 }
 add_action( 'wp_head', 'edd_checkout_meta_tags' );
@@ -922,7 +956,6 @@ function edd_add_body_classes( $class ) {
 
 	if( edd_is_test_mode() ) {
 		$classes[] = 'edd-test-mode';
-		$classes[] = 'edd-page';
 	}
 
 	return array_unique( $classes );
@@ -1018,3 +1051,81 @@ function edd_remove_embed_comments_button() {
 	}
 }
 add_action( 'embed_content_meta', 'edd_remove_embed_comments_button', 5 );
+
+/**
+ * Get a fully formatted title of a bundle item
+ *
+ * @since 2.7
+ *
+ * @param array $bundle_item Bundle item.
+ * @return string Bundle item title.
+ */
+function edd_get_bundle_item_title( $bundle_item ) {
+	$bundle_item_pieces = explode( '_', $bundle_item );
+	$bundle_item_id = $bundle_item_pieces[0];
+	$bundle_price_id = isset( $bundle_item_pieces[1] ) ? $bundle_item_pieces[1] : null;
+
+	$prices = edd_get_variable_prices( $bundle_item_id );
+	$bundle_title = get_the_title( $bundle_item_id );
+
+	if ( null !== $bundle_price_id ) {
+		$bundle_title .= ' - ' . $prices[ $bundle_price_id ]['name'];
+	}
+
+	return $bundle_title;
+}
+
+/**
+ * Retrieve the ID of an item in a bundle.
+ *
+ * @since 2.7
+ *
+ * @param array $bundle_item Bundle item.
+ * @return string Bundle item ID.
+ */
+function edd_get_bundle_item_id( $bundle_item ) {
+	$bundle_item_pieces = explode( '_', $bundle_item );
+	$bundle_item_id = $bundle_item_pieces[0];
+	return $bundle_item_id;
+}
+
+/**
+ * Retrieve the price ID of a bundle item.
+ *
+ * @since 2.7
+ *
+ * @param array $bundle_item Bundle item.
+ * @return string Bundle item ID.
+ */
+function edd_get_bundle_item_price_id( $bundle_item ) {
+	$bundle_item_pieces = explode( '_', $bundle_item );
+	$bundle_item_id = $bundle_item_pieces[0];
+	$bundle_price_id = isset( $bundle_item_pieces[1] ) ? $bundle_item_pieces[1] : null;
+
+	return $bundle_price_id;
+}
+
+/**
+ * Load a template file for a single download item.
+ *
+ * This is a wrapper function for backwards compatibility so the
+ * shortcode's attributes can be passed to the template file via
+ * a global variable.
+ *
+ * @since 2.9.0
+ *
+ * @param array $atts The [downloads] shortcode attributes.
+ * @param int   $i The current item count.
+ */
+function edd_download_shortcode_item( $atts, $i ) {
+	global $edd_download_shortcode_item_atts, $edd_download_shortcode_item_i;
+
+	/**
+	 * The variables are registered as part of the global scope so the template can access them.
+	 */
+	$edd_download_shortcode_item_atts = $atts;
+	$edd_download_shortcode_item_i = $i;
+
+	edd_get_template_part( 'shortcode', 'download' );
+}
+add_action( 'edd_download_shortcode_item', 'edd_download_shortcode_item', 10, 2 );

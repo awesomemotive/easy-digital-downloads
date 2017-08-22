@@ -411,7 +411,7 @@ function edd_email_tag_download_list( $payment_id ) {
 					$title .= "&nbsp;&ndash;&nbsp;" . __( 'SKU', 'easy-digital-downloads' ) . ': ' . $sku;
 				}
 
-				if ( $price_id !== null ) {
+				if( ! empty( $price_id ) && 0 !== $price_id ){
 					$title .= "&nbsp;&ndash;&nbsp;" . edd_get_price_option_name( $item['id'], $price_id, $payment_id );
 				}
 
@@ -439,15 +439,15 @@ function edd_email_tag_download_list( $payment_id ) {
 
 			} elseif ( edd_is_bundled_product( $item['id'] ) ) {
 
-				$bundled_products = apply_filters( 'edd_email_tag_bundled_products', edd_get_bundled_products( $item['id'] ), $item, $payment_id, 'download_list' );
+				$bundled_products = apply_filters( 'edd_email_tag_bundled_products', edd_get_bundled_products( $item['id'], $price_id ), $item, $payment_id, 'download_list' );
 
 				foreach ( $bundled_products as $bundle_item ) {
 
 					$download_list .= '<div class="edd_bundled_product"><strong>' . get_the_title( $bundle_item ) . '</strong></div>';
 
-					$files = edd_get_download_files( $bundle_item );
+					$download_files = edd_get_download_files( edd_get_bundle_item_id( $bundle_item ), edd_get_bundle_item_price_id( $bundle_item ) );
 
-					foreach ( $files as $filekey => $file ) {
+					foreach ( $download_files as $filekey => $file ) {
 						if ( $show_links ) {
 							$download_list .= '<div>';
 							$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $bundle_item, $price_id );
@@ -459,6 +459,17 @@ function edd_email_tag_download_list( $payment_id ) {
 							$download_list .= '</div>';
 						}
 					}
+				}
+
+			} else {
+
+				$no_downloads_message = apply_filters( 'edd_receipt_no_files_found_text', __( 'No downloadable files found.', 'easy-digital-downloads' ), $item['id'] );
+				$no_downloads_message = apply_filters( 'edd_email_receipt_no_downloads_message', $no_downloads_message, $item['id'], $price_id, $payment_id );
+
+				if ( ! empty( $no_downloads_message ) ){
+					$download_list .= '<div>';
+						$download_list .= $no_downloads_message;
+					$download_list .= '</div>';
 				}
 			}
 

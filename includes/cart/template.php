@@ -58,10 +58,11 @@ function edd_shopping_cart( $echo = false ) {
 
 	do_action( 'edd_after_cart' );
 
-	if ( $echo )
+	if ( $echo ) {
 		echo ob_get_clean();
-	else
+	} else {
 		return ob_get_clean();
+	}
 }
 
 /**

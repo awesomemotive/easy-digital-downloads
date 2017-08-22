@@ -3,7 +3,7 @@
 /**
  * @group edd_cart
  */
-class Test_Cart extends WP_UnitTestCase {
+class Test_Cart extends EDD_UnitTestCase {
 	protected $_rewrite = null;
 
 	protected $_post = null;
@@ -133,6 +133,7 @@ class Test_Cart extends WP_UnitTestCase {
 		);
 
 		edd_add_to_cart( $this->_post->ID, $options );
+
 		$this->assertEquals( 2, count( edd_get_cart_contents() ) );
 		$this->assertEquals( 2, edd_get_cart_item_quantity( $this->_post->ID, array( 'price_id' => 0 ) ) );
 		$this->assertEquals( 3, edd_get_cart_item_quantity( $this->_post->ID, array( 'price_id' => 1 ) ) );
@@ -282,7 +283,7 @@ class Test_Cart extends WP_UnitTestCase {
 
 	public function test_get_cart_item_discounted_amount() {
 
-		// Call without any arguements
+		// Call without any arguments
 		$expected = edd_get_cart_item_discount_amount();
 		$this->assertEquals( 0.00, $expected );
 
@@ -352,6 +353,35 @@ class Test_Cart extends WP_UnitTestCase {
 
 	}
 
+	public function test_add_to_cart_with_quantities_enabled_on_product() {
+
+		add_filter( 'edd_item_quantities_enabled', '__return_true' );
+
+		$options = array(
+			'price_id' => 0,
+			'quantity' => 2
+		);
+		edd_add_to_cart( $this->_post->ID, $options );
+
+		$this->assertEquals( 2, edd_get_cart_item_quantity( $this->_post->ID, $options ) );
+	}
+
+	public function test_add_to_cart_with_quantities_disabled_on_product() {
+
+		add_filter( 'edd_item_quantities_enabled', '__return_true' );
+
+		update_post_meta( $this->_post->ID, '_edd_quantities_disabled', 1 );
+
+		$options = array(
+			'price_id' => 0,
+			'quantity' => 2
+		);
+		edd_add_to_cart( $this->_post->ID, $options );
+
+		$this->assertEquals( 1, edd_get_cart_item_quantity( $this->_post->ID, $options ) );
+
+	}
+
 	public function test_set_cart_item_quantity() {
 
 		edd_update_option( 'item_quantities', true );
@@ -403,7 +433,7 @@ class Test_Cart extends WP_UnitTestCase {
 		$this->assertTrue( edd_is_cart_saving_disabled() );
 	}
 
-	public function test_is_cart_saved() {
+	public function test_is_cart_saved_false() {
 
 
 		// Test for no saved cart
@@ -451,9 +481,10 @@ class Test_Cart extends WP_UnitTestCase {
 			)
 		);
 		EDD()->session->set( 'edd_cart', $cart );
+		EDD()->cart->contents = $cart;
 
-		edd_restore_cart();
-
+		edd_update_option( 'enable_cart_saving', '1' );
+		$this->assertTrue( edd_restore_cart() );
 		$this->assertEquals( edd_get_cart_contents(), $saved_cart );
 	}
 
@@ -471,4 +502,127 @@ class Test_Cart extends WP_UnitTestCase {
 		$this->assertEquals( 'Test Download - Simple', edd_get_cart_item_name( $items[0] ) );
 
 	}
+
+	public function test_cart_total_with_global_fee() {
+
+		edd_empty_cart();
+
+		edd_add_to_cart( $this->_post->ID, array( 'price_id' => 0 ) );
+
+		EDD()->fees->add_fee( 10, 'test', 'Test' );
+
+		$this->assertEquals( 30, EDD()->cart->get_total() );
+
+	}
+
+	public function test_cart_fess_total_with_global_fee() {
+
+		edd_empty_cart();
+
+		edd_add_to_cart( $this->_post->ID );
+
+		EDD()->fees->add_fee( 10, 'test', 'Test' );
+
+		$this->assertEquals( 10, edd_get_cart_fee_total() );
+
+	}
+
+	public function test_cart_total_with_download_fee() {
+
+		edd_empty_cart();
+
+		edd_add_to_cart( $this->_post->ID, array( 'price_id' => 0 ) );
+
+		EDD()->fees->add_fee( array(
+			'amount' => 10,
+			'id'     => 'test',
+			'label'  => 'Test',
+			'download_id' => $this->_post->ID
+		) );
+
+		$this->assertEquals( 30, edd_get_cart_total() );
+
+	}
+
+	public function test_cart_fee_total_with_download_fee() {
+
+		edd_empty_cart();
+
+		edd_add_to_cart( $this->_post->ID, array( 'price_id' => 0 ) );
+
+		EDD()->fees->add_fee( array(
+			'amount' => 10,
+			'id'     => 'test',
+			'label'  => 'Test',
+			'download_id' => $this->_post->ID
+		) );
+
+		// Since it's a fee associated with an item in the cart, it affects it's pricing, not the total cart fees.
+		$this->assertEquals( 0, edd_get_cart_fee_total() );
+
+	}
+
+	public function test_cart_total_with_global_item_fee() {
+
+		edd_empty_cart();
+
+		edd_add_to_cart( $this->_post->ID, array( 'price_id' => 0 ) );
+
+		EDD()->fees->add_fee( array(
+			'amount' => 10,
+			'id'     => 'test',
+			'label'  => 'Test',
+			'type'   => 'item'
+		) );
+
+		$this->assertEquals( 30, edd_get_cart_total() );
+
+	}
+
+	public function test_cart_fee_total_with_global_item_fee() {
+
+		edd_empty_cart();
+
+		edd_add_to_cart( $this->_post->ID );
+
+		EDD()->fees->add_fee( array(
+			'amount' => 10,
+			'id'     => 'test',
+			'label'  => 'Test',
+			'type'   => 'item'
+		) );
+
+		$this->assertEquals( 10, edd_get_cart_fee_total() );
+
+	}
+
+	public function test_unset_cart_discount_case_insensitive() {
+		edd_set_cart_discount( '20off' );
+		$this->assertEmpty( edd_unset_cart_discount( '20OFF' ) );
+	}
+
+	public function test_negative_fees_cart_tax() {
+		edd_update_option( 'enable_taxes', true );
+		edd_update_option( 'tax_rate', '10' );
+
+
+		$options = array(
+			'price_id' => 0,
+		);
+		edd_add_to_cart( $this->_post->ID, $options );
+
+		$fee = array(
+			'amount'      => -10,
+			'label'       => 'Sale - ' . get_the_title( $this->_post->ID ),
+			'id'          => 'dp_0',
+			'download_id' => $this->_post->ID,
+			'price_id'    => 0,
+		);
+		EDD()->fees->add_fee( $fee );
+
+		$this->assertEquals( "1", EDD()->cart->get_tax() );
+
+		edd_update_option( 'enable_taxes', false );
+	}
+
 }

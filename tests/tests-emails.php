@@ -3,7 +3,7 @@
 /**
  * @group edd_emails
  */
-class Tests_Emails extends WP_UnitTestCase {
+class Tests_Emails extends EDD_UnitTestCase {
 
 	protected $_tags;
 
@@ -275,6 +275,13 @@ class Tests_Emails extends WP_UnitTestCase {
 	}
 
 	public function test_get_from_address() {
+		$this->assertEquals( get_bloginfo( 'admin_email' ), EDD()->emails->get_from_address() );
+	}
+
+	public function test_fallback_for_invalid_from_address() {
+
+		edd_update_option( 'from_email', 'not-an-email' );
+
 		$this->assertEquals( get_bloginfo( 'admin_email' ), EDD()->emails->get_from_address() );
 	}
 

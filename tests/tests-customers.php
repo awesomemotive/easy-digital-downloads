@@ -3,7 +3,7 @@
 /**
  * @group edd_customers
  */
-class Tests_Customers extends WP_UnitTestCase {
+class Tests_Customers extends EDD_UnitTestCase {
 
 	protected $_post_id = null;
 
@@ -361,14 +361,15 @@ class Tests_Customers extends WP_UnitTestCase {
 	}
 
 	public function test_user_verification_base_url() {
-		$purchase_history_page = get_permalink( edd_get_option( 'purchase_history_page', 0 ) );
+		$original_purchase_history_page = edd_get_option( 'purchase_history_page', 0 );
+		$purchase_history_page = get_permalink( $original_purchase_history_page );
 		$this->assertEquals( $purchase_history_page, edd_get_user_verification_page() );
 
 		edd_update_option( 'purchase_history_page', 0 );
 		$home_url = home_url();
 		$this->assertEquals( $home_url, edd_get_user_verification_page() );
 
-		edd_update_option( 'purchase_history_page', $purchase_history_page );
+		edd_update_option( 'purchase_history_page', $original_purchase_history_page );
 	}
 
 	public function test_user_activation_updates() {

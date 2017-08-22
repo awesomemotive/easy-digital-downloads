@@ -42,7 +42,10 @@ class EDD_HTML_Elements {
 			'bundles'     => true,
 			'variations'  => false,
 			'placeholder' => sprintf( __( 'Choose a %s', 'easy-digital-downloads' ), edd_get_label_singular() ),
-			'data'        => array( 'search-type' => 'download' ),
+			'data'        => array(
+				'search-type'        => 'download',
+				'search-placeholder' => sprintf( __( 'Type to search all %s', 'easy-digital-downloads' ), edd_get_label_plural() )
+			),
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -66,7 +69,16 @@ class EDD_HTML_Elements {
 			);
 		}
 
-		$products   = get_posts( $product_args );
+		$products     = get_posts( $product_args );
+		$existing_ids = wp_list_pluck( $products, 'ID' );
+		if ( ! empty( $args['selected'] ) ) {
+			$selected_item = absint( $args['selected'] );
+			if ( ! in_array( $selected_item, $existing_ids ) ) {
+				$post       = get_post( $selected_item );
+				$products[] = $post;
+			}
+		}
+
 		$options    = array();
 		$options[0] = '';
 		if ( $products ) {
@@ -195,7 +207,10 @@ class EDD_HTML_Elements {
 			'chosen'      => true,
 			'placeholder' => __( 'Select a Customer', 'easy-digital-downloads' ),
 			'number'      => 30,
-			'data'        => array( 'search-type' => 'customer' ),
+			'data'        => array(
+				'search-type'        => 'customer',
+				'search-placeholder' => __( 'Type to search all Customers', 'easy-digital-downloads' )
+			),
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -269,7 +284,10 @@ class EDD_HTML_Elements {
 			'chosen'      => true,
 			'placeholder' => __( 'Select a User', 'easy-digital-downloads' ),
 			'number'      => 30,
-			'data'        => array( 'search-type' => 'user' ),
+			'data'        => array(
+				'search-type'        => 'user',
+				'search-placeholder' => __( 'Type to search all Users', 'easy-digital-downloads' ),
+			),
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -287,6 +305,23 @@ class EDD_HTML_Elements {
 			}
 		} else {
 			$options[0] = __( 'No users found', 'easy-digital-downloads' );
+		}
+
+		// If a selected user has been specified, we need to ensure it's in the initial list of user displayed
+		if( ! empty( $args['selected'] ) ) {
+
+			if( ! array_key_exists( $args['selected'], $options ) ) {
+
+				$user = get_userdata( $args['selected'] );
+
+				if( $user ) {
+
+					$options[ absint( $args['selected'] ) ] = esc_html( $user->display_name );
+
+				}
+
+			}
+
 		}
 
 		$output = $this->select( array(
@@ -504,7 +539,7 @@ class EDD_HTML_Elements {
 		$class  = implode( ' ', array_map( 'sanitize_html_class', explode( ' ', $args['class'] ) ) );
 		$output = '<select' . $disabled . $readonly . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( edd_sanitize_key( str_replace( '-', '_', $args['id'] ) ) ) . '" class="edd-select ' . $class . '"' . $multiple . ' data-placeholder="' . $placeholder . '"'. $data_elements . '>';
 
-		if ( ! isset( $args['selected'] ) || empty( $args['selected'] ) || ! $args['selected'] ) {
+		if ( ! isset( $args['selected'] ) || ( is_array( $args['selected'] ) && empty( $args['selected'] ) ) || ! $args['selected'] ) {
 			$selected = "";
 		}
 
@@ -521,7 +556,7 @@ class EDD_HTML_Elements {
 			if ( $args['show_option_none'] ) {
 				if ( $args['multiple'] ) {
 					$selected = selected( true, in_array( -1, $args['selected'] ), false );
-				} elseif ( isset( $args['selected'] ) && ! empty( $args['selected'] ) && ! is_array( $args['selected'] ) ) {
+				} elseif ( isset( $args['selected'] ) && ! is_array( $args['selected'] ) && ! empty( $args['selected'] ) ) {
 					$selected = selected( $args['selected'], -1, false );
 				}
 				$output .= '<option value="-1"' . $selected . '>' . esc_html( $args['show_option_none'] ) . '</option>';
@@ -530,7 +565,7 @@ class EDD_HTML_Elements {
 			foreach ( $args['options'] as $key => $option ) {
 				if ( $args['multiple'] && is_array( $args['selected'] ) ) {
 					$selected = selected( true, in_array( (string) $key, $args['selected'] ), false );
-				} elseif ( isset( $args['selected'] ) && ! empty( $args['selected'] ) && ! is_array( $args['selected'] ) ) {
+				} elseif ( isset( $args['selected'] ) && ! is_array( $args['selected'] ) ) {
 					$selected = selected( $args['selected'], $key, false );
 				}
 
@@ -735,4 +770,5 @@ class EDD_HTML_Elements {
 
 		return $output;
 	}
+
 }

@@ -546,10 +546,17 @@ function edd_is_bundled_product( $download_id = 0 ) {
  * @since 1.6
  * @param int $download_id Download ID
  * @return array $products Products in the bundle
+ *
+ * @since 2.7
+ * @param int $price_id Variable price ID
  */
-function edd_get_bundled_products( $download_id = 0 ) {
+function edd_get_bundled_products( $download_id = 0, $price_id = null ) {
 	$download = new EDD_Download( $download_id );
-	return $download->bundled_downloads;
+	if ( null !== $price_id ) {
+		return $download->get_variable_priced_bundled_downloads( $price_id );
+	} else {
+		return $download->bundled_downloads;
+	}
 }
 
 /**
@@ -1060,6 +1067,18 @@ function edd_get_download_button_behavior( $download_id = 0 ) {
 }
 
 /**
+ * Is quantity input disabled on this product?
+ *
+ * @since 2.7
+ * @return bool
+ */
+function edd_download_quantities_disabled( $download_id = 0 ) {
+
+	$download = new EDD_Download( $download_id );
+	return $download->quantities_disabled();
+}
+
+/**
  * Get the file Download method
  *
  * @since 1.6
@@ -1289,4 +1308,20 @@ function edd_parse_product_dropdown_value( $value ) {
 	$price_id    = isset( $parts[1] ) ? $parts[1] : false;
 
 	return array( 'download_id' => $download_id, 'price_id' => $price_id );
+}
+
+/**
+ * Get bundle pricing variations
+ *
+ * @since  2.7
+ * @param  int $download_id
+ * @return array|void
+ */
+function edd_get_bundle_pricing_variations( $download_id = 0 ) {
+	if ( $download_id == 0 ) {
+		return;
+	}
+
+	$download = new EDD_Download( $download_id );
+	return $download->get_bundle_pricing_variations();
 }

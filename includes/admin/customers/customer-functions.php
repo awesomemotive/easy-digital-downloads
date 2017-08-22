@@ -34,9 +34,9 @@ add_filter( 'edd_customer_views', 'edd_register_default_customer_views', 1, 1 );
 function edd_register_default_customer_tabs( $tabs ) {
 
 	$default_tabs = array(
-		'overview' => array( 'dashicon' => 'dashicons-admin-users', 'title' => __( 'Customer Profile', 'easy-digital-downloads' ) ),
-		'notes'    => array( 'dashicon' => 'dashicons-admin-comments', 'title' => __( 'Customer Notes', 'easy-digital-downloads' ) ),
-		'tools'    => array( 'dashicon' => 'dashicons-admin-tools', 'title' => __( 'Customer Tools', 'easy-digital-downloads' ) ),
+		'overview' => array( 'dashicon' => 'dashicons-admin-users', 'title' => _x( 'Profile', 'Customer Details tab title', 'easy-digital-downloads' ) ),
+		'notes'    => array( 'dashicon' => 'dashicons-admin-comments', 'title' => _x( 'Notes', 'Customer Notes tab title', 'easy-digital-downloads' ) ),
+		'tools'    => array( 'dashicon' => 'dashicons-admin-tools', 'title' => _x( 'Tools', 'Customer Tools tab title', 'easy-digital-downloads' ) ),
 	);
 
 	return array_merge( $tabs, $default_tabs );
@@ -52,7 +52,7 @@ add_filter( 'edd_customer_tabs', 'edd_register_default_customer_tabs', 1, 1 );
  */
 function edd_register_delete_customer_tab( $tabs ) {
 
-	$tabs['delete'] = array( 'dashicon' => 'dashicons-trash', 'title' => __( 'Delete Customer', 'easy-digital-downloads' ) );
+	$tabs['delete'] = array( 'dashicon' => 'dashicons-trash', 'title' => _x( 'Delete', 'Delete Customer tab title', 'easy-digital-downloads' ) );
 
 	return $tabs;
 }

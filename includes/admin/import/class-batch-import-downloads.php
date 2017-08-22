@@ -100,11 +100,33 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 					'post_excerpt' => ''
 				);
 
-				foreach( $args as $key => $field ) {
-					if( ! empty( $this->field_mapping[ $key ] ) && ! empty( $row[ $this->field_mapping[ $key ] ] ) ) {
+				foreach ( $args as $key => $field ) {
+					if ( ! empty( $this->field_mapping[ $key ] ) && ! empty( $row[ $this->field_mapping[ $key ] ] ) ) {
 						$args[ $key ] = $row[ $this->field_mapping[ $key ] ];
 					}
 				}
+
+				if ( empty( $args['post_author'] ) ) {
+	 				$user = wp_get_current_user();
+	 				$args['post_author'] = $user->ID;
+	 			} else {
+
+	 				// Check all forms of possible user inputs, email, ID, login.
+	 				if ( is_email( $args['post_author'] ) ) {
+	 					$user = get_user_by( 'email', $args['post_author'] );
+	 				} elseif ( is_numeric( $args['post_author'] ) ) {
+	 					$user = get_user_by( 'ID', $args['post_author'] );
+	 				} else {
+	 					$user = get_user_by( 'login', $args['post_author'] );
+	 				}
+
+	 				// If we don't find one, resort to the logged in user.
+	 				if ( false === $user ) {
+	 					$user = wp_get_current_user();
+	 				}
+
+	 				$args['post_author'] = $user->ID;
+	 			}
 
 				// Format the date properly
 				if ( ! empty( $args['post_date'] ) ) {
@@ -235,7 +257,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 	public function get_percentage_complete() {
 
 		if( $this->total > 0 ) {
-			$percentage = ( $this->step / $this->total ) * 100;
+			$percentage = ( $this->step * $this->per_step / $this->total ) * 100;
 		}
 
 		if( $percentage > 100 ) {
@@ -345,7 +367,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 	private function set_image( $download_id = 0, $image = '', $post_author = 0 ) {
 
 		$is_url   = false !== filter_var( $image, FILTER_VALIDATE_URL );
-		$is_local = $is_url && false !== strpos( $image, site_url() );
+		$is_local = $is_url && false !== strpos( site_url(), $image );
 		$ext      = edd_get_file_extension( $image );
 
 		if( $is_url && $is_local ) {

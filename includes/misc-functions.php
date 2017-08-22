@@ -169,7 +169,9 @@ function edd_get_ip() {
 		$ip = $_SERVER['HTTP_CLIENT_IP'];
 	} elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
 		//to check ip is pass from proxy
-		$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		// can include more than 1 ip, first is the public one
+		$ip = explode(',',$_SERVER['HTTP_X_FORWARDED_FOR']);
+		$ip = trim($ip[0]);
 	} elseif( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
 		$ip = $_SERVER['REMOTE_ADDR'];
 	}
@@ -303,7 +305,7 @@ function edd_get_currencies() {
 	$currencies = array(
 		'USD'  => __( 'US Dollars (&#36;)', 'easy-digital-downloads' ),
 		'EUR'  => __( 'Euros (&euro;)', 'easy-digital-downloads' ),
-		'GBP'  => __( 'Pounds Sterling (&pound;)', 'easy-digital-downloads' ),
+		'GBP'  => __( 'Pound Sterling (&pound;)', 'easy-digital-downloads' ),
 		'AUD'  => __( 'Australian Dollars (&#36;)', 'easy-digital-downloads' ),
 		'BRL'  => __( 'Brazilian Real (R&#36;)', 'easy-digital-downloads' ),
 		'CAD'  => __( 'Canadian Dollars (&#36;)', 'easy-digital-downloads' ),

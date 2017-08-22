@@ -142,7 +142,8 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 							$price = edd_get_download_final_price( $id, $user_info, $price_override );
 						}
 
-						$download_tax = isset( $download['tax'] ) ? $download['tax'] : 0;
+						$download_tax      = isset( $download['tax'] ) ? $download['tax'] : 0;
+						$download_price_id = isset( $download['item_number']['options']['price_id'] ) ? absint( $download['item_number']['options']['price_id'] ) : false;
 
 						/* Set up verbose product column */
 
@@ -183,6 +184,12 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 
 						/* Set up raw products column - Nothing but product names */
 						$products_raw .= html_entity_decode( get_the_title( $id ) ) . '|' . $price . '{' . $download_tax . '}';
+
+						// if we have a Price ID, include it.
+						if ( false !== $download_price_id ) {
+							$products_raw .= '{' . $download_price_id . '}';
+						}
+
 						if ( $key != ( count( $downloads ) -1 ) ) {
 
 							$products_raw .= ' / ';
@@ -216,7 +223,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 					'amount'       => html_entity_decode( edd_format_amount( $total ) ), // The non-discounted item price
 					'tax'          => html_entity_decode( edd_format_amount( edd_get_payment_tax( $payment->ID, $payment_meta ) ) ),
 					'discount'     => isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ? $user_info['discount'] : __( 'none', 'easy-digital-downloads' ),
-					'gateway'      => edd_get_gateway_admin_label( get_post_meta( $payment->ID, '_edd_payment_gateway', true ) ),
+					'gateway'      => edd_get_gateway_admin_label( edd_get_payment_meta( $payment->ID, '_edd_payment_gateway', true ) ),
 					'trans_id'     => $payment->transaction_id,
 					'key'          => $payment_meta['key'],
 					'date'         => $payment->date,

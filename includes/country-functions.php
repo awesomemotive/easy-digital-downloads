@@ -200,7 +200,7 @@ function edd_get_country_list() {
 		'CU' => 'Cuba',
 		'CW' => 'Cura&Ccedil;ao',
 		'CY' => 'Cyprus',
-		'CZ' => 'Czech Republic',
+		'CZ' => 'Czechia',
 		'DK' => 'Denmark',
 		'DJ' => 'Djibouti',
 		'DM' => 'Dominica',

@@ -4,7 +4,8 @@
 /**
  * @group edd_filters
  */
-class Tests_Filters extends WP_UnitTestCase {
+class Tests_Filters extends EDD_UnitTestCase {
+
 	public function setUp() {
 		parent::setUp();
 	}
@@ -327,7 +328,7 @@ class Tests_Filters extends WP_UnitTestCase {
 
 	public function test_edd_email_settings() {
 		global $wp_filter;
-		$this->assertarrayHasKey( 'edd_email_template_preview', $wp_filter['edd_email_settings'][10] );
+		$this->assertarrayHasKey( 'edd_email_template_preview', $wp_filter['edd_purchase_receipt_email_settings'][10] );
 	}
 
 	public function test_edd_view_receipt() {

@@ -28,6 +28,17 @@ function edd_is_ajax_enabled() {
 }
 
 /**
+ * Checks whether AJAX is disabled.
+ *
+ * @since 2.0
+ * @since 2.7 Setting to disable AJAX was removed. See https://github.com/easydigitaldownloads/easy-digital-downloads/issues/4758
+ * @return bool True when EDD AJAX is disabled (for the cart), false otherwise.
+ */
+function edd_is_ajax_disabled() {
+	return apply_filters( 'edd_is_ajax_disabled', false );
+}
+
+/**
  * Check if AJAX works as expected
  *
  * @since 2.2
@@ -101,18 +112,6 @@ function edd_test_ajax_works() {
 
 	return $works;
 }
-
-/**
- * Checks whether AJAX is disabled.
- *
- * @since 2.0
- * @return bool True when EDD AJAX is disabled (for the cart), false otherwise.
- */
-function edd_is_ajax_disabled() {
-	$retval = ! edd_get_option( 'enable_ajax_cart' );
-	return apply_filters( 'edd_is_ajax_disabled', $retval );
-}
-
 
 /**
  * Get AJAX URL
@@ -317,15 +316,14 @@ function edd_ajax_update_cart_item_quantity() {
 		$quantity    = absint( $_POST['quantity'] );
 		$options     = json_decode( stripslashes( $_POST['options'] ), true );
 
-		edd_set_cart_item_quantity( $download_id, absint( $_POST['quantity'] ), $options );
-		$total = edd_get_cart_total();
+		EDD()->cart->set_item_quantity( $download_id, $quantity, $options );
 
 		$return = array(
 			'download_id' => $download_id,
-			'quantity'    => $quantity,
-			'taxes'       => html_entity_decode( edd_cart_tax(), ENT_COMPAT, 'UTF-8' ),
-			'subtotal'    => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
-			'total'       => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' )
+			'quantity'    => EDD()->cart->get_item_quantity( $download_id, $options ),
+			'subtotal'    => html_entity_decode( edd_currency_filter( edd_format_amount( EDD()->cart->get_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
+			'taxes'       => html_entity_decode( edd_currency_filter( edd_format_amount( EDD()->cart->get_tax() ) ), ENT_COMPAT, 'UTF-8' ),
+			'total'       => html_entity_decode( edd_currency_filter( edd_format_amount( EDD()->cart->get_total() ) ), ENT_COMPAT, 'UTF-8' )
 		);
 
 		// Allow for custom cart item quantity handling
@@ -390,19 +388,25 @@ function edd_load_checkout_register_fields() {
 add_action('wp_ajax_nopriv_checkout_register', 'edd_load_checkout_register_fields');
 
 /**
- * Get Download Title via AJAX (used only in WordPress Admin)
+ * Get Download Title via AJAX
  *
  * @since 1.0
+ * @since 2.8 Restrict to just the download post type
  * @return void
  */
 function edd_ajax_get_download_title() {
 	if ( isset( $_POST['download_id'] ) ) {
-		$title = get_the_title( $_POST['download_id'] );
-		if ( $title ) {
-			echo $title;
-		} else {
-			echo 'fail';
+		$post_id   = absint( $_POST['download_id'] );
+		$post_type = get_post_type( $post_id );
+		$title     = 'fail';
+		if ( 'download' === $post_type ) {
+			$post_title = get_the_title( $_POST['download_id'] );
+			if ( $post_title ) {
+				echo $title = $post_title;
+			}
 		}
+
+		echo $title;
 	}
 	edd_die();
 }

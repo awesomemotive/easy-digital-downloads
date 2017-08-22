@@ -30,20 +30,19 @@ class EDD_License {
 	 * Class constructor
 	 *
 	 * @param string  $_file
-	 * @param string  $_item
+	 * @param string  $_item_name
 	 * @param string  $_version
 	 * @param string  $_author
 	 * @param string  $_optname
 	 * @param string  $_api_url
+	 * @param int     $_item_id
 	 */
-	function __construct( $_file, $_item, $_version, $_author, $_optname = null, $_api_url = null ) {
+	function __construct( $_file, $_item_name, $_version, $_author, $_optname = null, $_api_url = null, $_item_id = null ) {
+		$this->file = $_file;
+		$this->item_name = $_item_name;
 
-		$this->file           = $_file;
-
-		if( is_numeric( $_item ) ) {
-			$this->item_id    = absint( $_item );
-		} else {
-			$this->item_name  = $_item;
+		if ( is_numeric( $_item_id ) ) {
+			$this->item_id = absint( $_item_id );
 		}
 
 		$this->item_shortname = 'edd_' . preg_replace( '/[^a-zA-Z0-9_\s]/', '', str_replace( ' ', '_', strtolower( $this->item_name ) ) );
@@ -135,7 +134,7 @@ class EDD_License {
 			'version'   => $this->version,
 			'license'   => $this->license,
 			'author'    => $this->author,
-			'beta'      => edd_extension_has_beta_support( $this->item_shortname ),
+			'beta'      => function_exists( 'edd_extension_has_beta_support' ) && edd_extension_has_beta_support( $this->item_shortname ),
 		);
 
 		if( ! empty( $this->item_id ) ) {

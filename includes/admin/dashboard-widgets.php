@@ -173,10 +173,10 @@ function edd_load_dashboard_sales_widget( ) {
 							<td class="edd_order_label">
 								<a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>">
 									<?php echo get_the_title( $payment->ID ) ?>
-									&mdash; <?php echo $payment->user_info['email'] ?>
+									&mdash; <?php echo $payment->email ?>
 								</a>
-								<?php if ( $payment->user_info['id'] > 0 ) {
-									$user = get_user_by( 'id', $payment->user_info['id'] );
+								<?php if ( ! empty( $payment->user_id ) && ( $payment->user_id > 0 ) ) {
+									$user = get_user_by( 'id', $payment->user_id );
 									if ( $user ) {
 										echo "(" . $user->data->user_login . ")";
 									}

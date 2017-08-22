@@ -4,7 +4,7 @@
 /**
  * @group edd_downloads
  */
-class Tests_Downloads extends WP_UnitTestCase {
+class Tests_Downloads extends EDD_UnitTestCase {
 	protected $_post = null;
 
 	protected $_variable_pricing = null;
@@ -335,6 +335,17 @@ class Tests_Downloads extends WP_UnitTestCase {
 
 	public function test_get_download_is_bundle() {
 		$this->assertFalse( edd_is_bundled_product( $this->_post->ID ) );
+	}
+
+	public function test_item_quantities_not_disabled() {
+		$this->assertFalse( edd_download_quantities_disabled( $this->_post->ID ) );
+	}
+
+	public function test_item_quantities_disabled() {
+
+		update_post_meta( $this->_post->ID, '_edd_quantities_disabled', 1 );
+
+		$this->assertTrue( edd_download_quantities_disabled( $this->_post->ID ) );
 	}
 
 }

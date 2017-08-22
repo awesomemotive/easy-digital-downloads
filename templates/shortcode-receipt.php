@@ -44,7 +44,7 @@ $status    = edd_get_payment_status( $payment, true );
 		<?php if ( filter_var( $edd_receipt_args['payment_key'], FILTER_VALIDATE_BOOLEAN ) ) : ?>
 			<tr>
 				<td><strong><?php _e( 'Payment Key', 'easy-digital-downloads' ); ?>:</strong></td>
-				<td><?php echo get_post_meta( $payment->ID, '_edd_payment_purchase_key', true ); ?></td>
+				<td><?php echo edd_get_payment_meta( $payment->ID, '_edd_payment_purchase_key', true ); ?></td>
 			</tr>
 		<?php endif; ?>
 
@@ -141,7 +141,6 @@ $status    = edd_get_payment_status( $payment, true );
 				<?php if( empty( $item['in_bundle'] ) ) : ?>
 				<tr>
 					<td>
-
 						<?php
 						$price_id       = edd_get_cart_item_price_id( $item );
 						$download_files = edd_get_download_files( $item['id'], $price_id );
@@ -149,13 +148,13 @@ $status    = edd_get_payment_status( $payment, true );
 
 						<div class="edd_purchase_receipt_product_name">
 							<?php echo esc_html( $item['name'] ); ?>
-							<?php if( edd_has_variable_prices( $item['id'] ) && ! is_null( $price_id ) ) : ?>
-							<span class="edd_purchase_receipt_price_name">&nbsp;&ndash;&nbsp;<?php echo edd_get_price_option_name( $item['id'], $price_id, $payment->ID ); ?></span>
+							<?php if ( edd_has_variable_prices( $item['id'] ) && ! is_null( $price_id ) ) : ?>
+							<span class="edd_purchase_receipt_price_name">&nbsp;&ndash;&nbsp;<?php echo esc_html( edd_get_price_option_name( $item['id'], $price_id, $payment->ID ) ); ?></span>
 							<?php endif; ?>
 						</div>
 
 						<?php if ( $edd_receipt_args['notes'] ) : ?>
-							<div class="edd_purchase_receipt_product_notes"><?php echo wpautop( edd_get_product_notes( $item['id'] ) ); ?></div>
+							<div class="edd_purchase_receipt_product_notes"><?php echo wp_kses_post( wpautop( edd_get_product_notes( $item['id'] ) ) ); ?></div>
 						<?php endif; ?>
 
 						<?php
@@ -163,40 +162,35 @@ $status    = edd_get_payment_status( $payment, true );
 						<ul class="edd_purchase_receipt_files">
 							<?php
 							if ( ! empty( $download_files ) && is_array( $download_files ) ) :
-
 								foreach ( $download_files as $filekey => $file ) :
-
-									$download_url = edd_get_download_file_url( $meta['key'], $email, $filekey, $item['id'], $price_id );
 									?>
 									<li class="edd_download_file">
-										<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link"><?php echo edd_get_file_name( $file ); ?></a>
+										<a href="<?php echo esc_url( edd_get_download_file_url( $meta['key'], $email, $filekey, $item['id'], $price_id ) ); ?>" class="edd_download_file_link"><?php echo edd_get_file_name( $file ); ?></a>
 									</li>
 									<?php
 									do_action( 'edd_receipt_files', $filekey, $file, $item['id'], $payment->ID, $meta );
 								endforeach;
+							elseif ( edd_is_bundled_product( $item['id'] ) ) :
+								$price_id         = edd_get_cart_item_price_id( $item );
+								$bundled_products = edd_get_bundled_products( $item['id'], $price_id );
 
-							elseif( edd_is_bundled_product( $item['id'] ) ) :
+								foreach ( $bundled_products as $bundle_item ) :
+									?>
 
-								$bundled_products = edd_get_bundled_products( $item['id'] );
-
-								foreach( $bundled_products as $bundle_item ) : ?>
 									<li class="edd_bundled_product">
-										<span class="edd_bundled_product_name"><?php echo get_the_title( $bundle_item ); ?></span>
+										<span class="edd_bundled_product_name"><?php echo edd_get_bundle_item_title( $bundle_item ); ?></span>
 										<ul class="edd_bundled_product_files">
 											<?php
-											$download_files = edd_get_download_files( $bundle_item );
+											$download_files = edd_get_download_files( edd_get_bundle_item_id( $bundle_item ), edd_get_bundle_item_price_id( $bundle_item ) );
 
-											if( $download_files && is_array( $download_files ) ) :
-
+											if ( $download_files && is_array( $download_files ) ) :
 												foreach ( $download_files as $filekey => $file ) :
-
-													$download_url = edd_get_download_file_url( $meta['key'], $email, $filekey, $bundle_item, $price_id ); ?>
+													?>
 													<li class="edd_download_file">
-														<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link"><?php echo edd_get_file_name( $file ); ?></a>
+														<a href="<?php echo esc_url( edd_get_download_file_url( $meta['key'], $email, $filekey, $bundle_item, $price_id ) ); ?>" class="edd_download_file_link"><?php echo edd_get_file_name( $file ); ?></a>
 													</li>
 													<?php
 													do_action( 'edd_receipt_bundle_files', $filekey, $file, $item['id'], $bundle_item, $payment->ID, $meta );
-
 												endforeach;
 											else :
 												echo '<li>' . __( 'No downloadable files found for this bundled item.', 'easy-digital-downloads' ) . '</li>';
@@ -213,6 +207,10 @@ $status    = edd_get_payment_status( $payment, true );
 						</ul>
 						<?php endif; ?>
 
+						<?php
+						// Allow extensions to extend the product cell
+						do_action( 'edd_purchase_receipt_after_files', $item['id'], $payment->ID, $meta );
+						?>
 					</td>
 					<?php if ( edd_use_skus() ) : ?>
 						<td><?php echo edd_get_download_sku( $item['id'] ); ?></td>

@@ -33,6 +33,16 @@ function edd_add_discount( $data ) {
 	// Setup the discount code details
 	$posted = array();
 
+	if ( empty( $data['name'] ) || empty( $data['code'] ) || empty( $data['type'] ) || empty( $data['amount'] ) ) {
+		wp_redirect( add_query_arg( 'edd-message', 'discount_validation_failed' ) );
+		edd_die();
+	}
+
+	if ( ! ctype_alnum( $data['code'] ) ) {
+		wp_redirect( add_query_arg( 'edd-message', 'discount_invalid_code' ) );
+		edd_die();
+	}
+
 	foreach ( $data as $key => $value ) {
 
 		if ( $key === 'products' || $key === 'excluded-products' ) {

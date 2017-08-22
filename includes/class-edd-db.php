@@ -149,10 +149,11 @@ abstract class EDD_DB {
 		$column_formats = array_merge( array_flip( $data_keys ), $column_formats );
 
 		$wpdb->insert( $this->table_name, $data, $column_formats );
+		$wpdb_insert_id = $wpdb->insert_id;
 
-		do_action( 'edd_post_insert_' . $type, $wpdb->insert_id, $data );
+		do_action( 'edd_post_insert_' . $type, $wpdb_insert_id, $data );
 
-		return $wpdb->insert_id;
+		return $wpdb_insert_id;
 	}
 
 	/**

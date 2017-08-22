@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_customers_page() {
 	$default_views = edd_customer_views();
 	$requested_view = isset( $_GET['view'] ) ? sanitize_text_field( $_GET['view'] ) : 'customers';
-	if ( array_key_exists( $requested_view, $default_views ) && function_exists( $default_views[$requested_view] ) ) {
+	if ( array_key_exists( $requested_view, $default_views ) && is_callable( $default_views[$requested_view] ) ) {
 		edd_render_customer_view( $requested_view, $default_views );
 	} else {
 		edd_customers_list();
@@ -112,7 +112,10 @@ function edd_render_customer_view( $view, $callbacks ) {
 	?>
 
 	<div class='wrap'>
-		<h2><?php _e( 'Customer Details', 'easy-digital-downloads' );?></h2>
+		<h2>
+			<?php _e( 'Customer Details', 'easy-digital-downloads' ); ?>
+			<?php do_action( 'edd_after_customer_details_header', $customer ); ?>
+		</h2>
 		<?php if ( edd_get_errors() ) :?>
 			<div class="error settings-error">
 				<?php edd_print_errors(); ?>
@@ -121,29 +124,48 @@ function edd_render_customer_view( $view, $callbacks ) {
 
 		<?php if ( $customer && $render ) : ?>
 
-			<div id="edd-item-tab-wrapper" class="customer-tab-wrapper">
-				<ul id="edd-item-tab-wrapper-list" class="ustomer-tab-wrapper-list">
-				<?php foreach ( $customer_tabs as $key => $tab ) : ?>
-					<?php $active = $key === $view ? true : false; ?>
-					<?php $class  = $active ? 'active' : 'inactive'; ?>
+			<div id="edd-item-wrapper" class="edd-item-has-tabs edd-clearfix">
+				<div id="edd-item-tab-wrapper" class="customer-tab-wrapper">
+					<ul id="edd-item-tab-wrapper-list" class="customer-tab-wrapper-list">
+						<?php foreach ( $customer_tabs as $key => $tab ) : ?>
+							<?php $active = $key === $view ? true : false; ?>
+							<?php $class  = $active ? 'active' : 'inactive'; ?>
 
-					<li class="<?php echo sanitize_html_class( $class ); ?>">
-					<?php if ( ! $active ) : ?>
-						<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-customers&view=' . $key . '&id=' . $customer->id . '#wpbody-content' ) ); ?>">
-					<?php endif; ?>
-						<span class="dashicons <?php echo sanitize_html_class( $tab['dashicon'] ); ?>" aria-hidden="true"></span>
-						<span class="screen-reader-text"><?php echo esc_attr( $tab['title'] ); ?></span>
-					<?php if ( ! $active ) : ?>
-						</a>
-					<?php endif; ?>
-					</li>
+							<li class="<?php echo sanitize_html_class( $class ); ?>">
 
-				<?php endforeach; ?>
-				</ul>
-			</div>
+								<?php
+								// prevent double "Customer" output from extensions
+								$tab['title'] = preg_replace("(^Customer )","",$tab['title']);
 
-			<div id="edd-item-card-wrapper" class="edd-customer-card-wrapper" style="float: left">
-				<?php $callbacks[$view]( $customer ) ?>
+								// edd item tab full title
+								$tab_title = sprintf( _x( 'Customer %s', 'Customer Details page tab title', 'easy-digital-downloads' ), esc_attr( $tab[ 'title' ] ) );
+
+								// aria-label output
+								$aria_label = ' aria-label="' . $tab_title . '"';
+								?>
+
+								<?php if ( ! $active ) : ?>
+									<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-customers&view=' . $key . '&id=' . $customer->id . '#wpbody-content' ) ); ?>"<?php echo $aria_label; ?>>
+								<?php endif; ?>
+
+									<span class="edd-item-tab-label-wrap"<?php echo $active ? $aria_label : ''; ?>>
+										<span class="dashicons <?php echo sanitize_html_class( $tab['dashicon'] ); ?>" aria-hidden="true"></span>
+										<span class="edd-item-tab-label"><?php echo esc_attr( $tab['title'] ); ?></span>
+									</span>
+
+								<?php if ( ! $active ) : ?>
+									</a>
+								<?php endif; ?>
+
+							</li>
+
+						<?php endforeach; ?>
+					</ul>
+				</div>
+
+				<div id="edd-item-card-wrapper" class="edd-customer-card-wrapper" style="float: left">
+					<?php call_user_func( $callbacks[ $view ], $customer ); ?>
+				</div>
 			</div>
 
 		<?php endif; ?>
@@ -179,6 +201,7 @@ function edd_customers_view( $customer ) {
 					<?php echo get_avatar( $customer->email ); ?><br />
 					<?php if ( current_user_can( $customer_edit_role ) ): ?>
 						<span class="info-item editable customer-edit-link"><a href="#" id="edit-customer"><?php _e( 'Edit Customer', 'easy-digital-downloads' ); ?></a></span>
+						<?php do_action( 'edd_after_customer_edit_link', $customer ); ?>
 					<?php endif; ?>
 				</div>
 

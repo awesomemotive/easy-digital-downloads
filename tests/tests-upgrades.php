@@ -4,7 +4,7 @@
 /**
  * @group edd_upgrades
  */
-class Tests_Upgrades extends WP_UnitTestCase {
+class Tests_Upgrades extends EDD_UnitTestCase {
 
 	public function setUp() {
 		parent::setUp();

@@ -87,7 +87,9 @@ class EDD_Batch_Downloads_Export extends EDD_Batch_Export {
 		$args = array(
 			'post_type'      => 'download',
 			'posts_per_page' => 30,
-			'paged'          => $this->step
+			'paged'          => $this->step,
+			'orderby'        => 'ID',
+			'order'          => 'ASC'
 		);
 
 		$downloads = new WP_Query( $args );

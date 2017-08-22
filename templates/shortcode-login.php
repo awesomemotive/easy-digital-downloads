@@ -13,11 +13,11 @@ if ( ! is_user_logged_in() ) :
 			<?php do_action( 'edd_login_fields_before' ); ?>
 			<p class="edd-login-username">
 				<label for="edd_user_login"><?php _e( 'Username or Email', 'easy-digital-downloads' ); ?></label>
-				<input name="edd_user_login" id="edd_user_login" class="required edd-input" type="text"/>
+				<input name="edd_user_login" id="edd_user_login" class="edd-required edd-input" type="text"/>
 			</p>
 			<p class="edd-login-password">
 				<label for="edd_user_pass"><?php _e( 'Password', 'easy-digital-downloads' ); ?></label>
-				<input name="edd_user_pass" id="edd_user_pass" class="password required edd-input" type="password"/>
+				<input name="edd_user_pass" id="edd_user_pass" class="edd-password edd-required edd-input" type="password"/>
 			</p>
 			<p class="edd-login-remember">
 				<label><input name="rememberme" type="checkbox" id="rememberme" value="forever" /> <?php _e( 'Remember Me', 'easy-digital-downloads' ); ?></label>
@@ -26,7 +26,7 @@ if ( ! is_user_logged_in() ) :
 				<input type="hidden" name="edd_redirect" value="<?php echo esc_url( $edd_login_redirect ); ?>"/>
 				<input type="hidden" name="edd_login_nonce" value="<?php echo wp_create_nonce( 'edd-login-nonce' ); ?>"/>
 				<input type="hidden" name="edd_action" value="user_login"/>
-				<input id="edd_login_submit" type="submit" class="edd_submit" value="<?php _e( 'Log In', 'easy-digital-downloads' ); ?>"/>
+				<input id="edd_login_submit" type="submit" class="edd_submit edd-submit" value="<?php _e( 'Log In', 'easy-digital-downloads' ); ?>"/>
 			</p>
 			<p class="edd-lost-password">
 				<a href="<?php echo wp_lostpassword_url(); ?>">
@@ -37,5 +37,7 @@ if ( ! is_user_logged_in() ) :
 		</fieldset>
 	</form>
 <?php else : ?>
-	<p class="edd-logged-in"><?php _e( 'You are already logged in', 'easy-digital-downloads' ); ?></p>
+
+	<?php do_action( 'edd_login_form_logged_in' ); ?>
+
 <?php endif; ?>

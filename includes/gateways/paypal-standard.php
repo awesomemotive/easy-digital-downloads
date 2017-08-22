@@ -58,11 +58,11 @@ function edd_register_paypal_gateway_settings( $gateway_settings ) {
 				'type' => 'text',
 				'size' => 'regular',
 			),
-			'paypal_page_style' => array(
-				'id'   => 'paypal_page_style',
-				'name' => __( 'PayPal Page Style', 'easy-digital-downloads' ),
-				'desc' => __( 'Enter the name of the page style to use, or leave blank for default', 'easy-digital-downloads' ),
-				'type' => 'text',
+			'paypal_image_url' => array(
+				'id'   => 'paypal_image_url',
+				'name' => __( 'PayPal Image URL', 'easy-digital-downloads' ),
+				'desc' => __( 'Upload an image to display on the PayPal checkout page.', 'easy-digital-downloads' ),
+				'type' => 'upload',
 				'size' => 'regular',
 			),
 		);
@@ -182,6 +182,9 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		// Only send to PayPal if the pending payment is created successfully
 		$listener_url = add_query_arg( 'edd-listener', 'IPN', home_url( 'index.php' ) );
 
+		// Set the session data to recover this payment in the event of abandonment or error.
+		EDD()->session->set( 'edd_resume_payment', $payment );
+
 		// Get the success url
 		$return_url = add_query_arg( array(
 				'payment-confirmation' => 'paypal',
@@ -208,7 +211,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
 			'return'        => $return_url,
 			'cancel_return' => edd_get_failed_transaction_uri( '?payment-id=' . $payment ),
 			'notify_url'    => $listener_url,
-			'page_style'    => edd_get_paypal_page_style(),
+			'image_url'     => edd_get_paypal_image_url(),
 			'cbt'           => get_bloginfo( 'name' ),
 			'bn'            => 'EasyDigitalDownloads_SP'
 		);
@@ -256,7 +259,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		if ( ! empty( $purchase_data['fees'] ) ) {
 			$i = empty( $i ) ? 1 : $i;
 			foreach ( $purchase_data['fees'] as $fee ) {
-				if ( floatval( $fee['amount'] ) > '0' ) {
+				if ( empty( $fee['download_id'] ) && floatval( $fee['amount'] ) > '0' ) {
 					// this is a positive fee
 					$paypal_args['item_name_' . $i ] = stripslashes_deep( html_entity_decode( wp_strip_all_tags( $fee['label'] ), ENT_COMPAT, 'UTF-8' ) );
 					$paypal_args['quantity_' . $i ]  = '1';
@@ -288,9 +291,6 @@ function edd_process_paypal_purchase( $purchase_data ) {
 
 		// Fix for some sites that encode the entities
 		$paypal_redirect = str_replace( '&amp;', '&', $paypal_redirect );
-
-		// Get rid of cart contents
-		edd_empty_cart();
 
 		// Redirect to PayPal
 		wp_redirect( $paypal_redirect );
@@ -375,9 +375,6 @@ function edd_process_paypal_ipn() {
 
 	}
 
-	// Get the PayPal redirect uri
-	$paypal_redirect = edd_get_paypal_redirect( true );
-
 	if ( ! edd_get_option( 'disable_paypal_verification' ) ) {
 
 		// Validate the IPN
@@ -393,6 +390,7 @@ function edd_process_paypal_ipn() {
 				'connection'   => 'close',
 				'content-type' => 'application/x-www-form-urlencoded',
 				'post'         => '/cgi-bin/webscr HTTP/1.1',
+				'user-agent'   => 'EDD IPN Verification/' . EDD_VERSION . '; ' . get_bloginfo( 'url' )
 
 			),
 			'sslverify'   => false,
@@ -400,7 +398,7 @@ function edd_process_paypal_ipn() {
 		);
 
 		// Get response
-		$api_response = wp_remote_post( edd_get_paypal_redirect( true ), $remote_post_vars );
+		$api_response = wp_remote_post( edd_get_paypal_redirect( true, true ), $remote_post_vars );
 
 		if ( is_wp_error( $api_response ) ) {
 			edd_record_gateway_error( __( 'IPN Error', 'easy-digital-downloads' ), sprintf( __( 'Invalid IPN verification response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $api_response ) ) );
@@ -581,7 +579,8 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 				case 'echeck' :
 
 					$note = __( 'Payment made via eCheck and will clear automatically in 5-8 days', 'easy-digital-downloads' );
-
+					$payment->status = 'processing';
+					$payment->save();
 					break;
 
 				case 'address' :
@@ -685,9 +684,11 @@ function edd_process_paypal_refund( $data, $payment_id = 0 ) {
  *
  * @since 1.0.8.2
  * @param bool    $ssl_check Is SSL?
+ * @param bool    $ipn       Is this an IPN verification check?
  * @return string
  */
-function edd_get_paypal_redirect( $ssl_check = false ) {
+function edd_get_paypal_redirect( $ssl_check = false, $ipn = false ) {
+
 	$protocol = 'http://';
 	if ( is_ssl() || ! $ssl_check ) {
 		$protocol = 'https://';
@@ -695,25 +696,47 @@ function edd_get_paypal_redirect( $ssl_check = false ) {
 
 	// Check the current payment mode
 	if ( edd_is_test_mode() ) {
+
 		// Test mode
-		$paypal_uri = $protocol . 'www.sandbox.paypal.com/cgi-bin/webscr';
+
+		if( $ipn ) {
+
+			$paypal_uri = 'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr';
+
+		} else {
+
+			$paypal_uri = $protocol . 'www.sandbox.paypal.com/cgi-bin/webscr';
+
+		}
+
 	} else {
+
 		// Live mode
-		$paypal_uri = $protocol . 'www.paypal.com/cgi-bin/webscr';
+
+		if( $ipn ) {
+
+			$paypal_uri = 'https://ipnpb.paypal.com/cgi-bin/webscr';
+
+		} else {
+
+			$paypal_uri = $protocol . 'www.paypal.com/cgi-bin/webscr';
+
+		}
+
 	}
 
-	return apply_filters( 'edd_paypal_uri', $paypal_uri );
+	return apply_filters( 'edd_paypal_uri', $paypal_uri, $ssl_check, $ipn );
 }
 
 /**
- * Set the Page Style for PayPal Purchase page
+ * Get the image for the PayPal purchase page.
  *
- * @since 1.4.1
+ * @since 2.8
  * @return string
  */
-function edd_get_paypal_page_style() {
-	$page_style = trim( edd_get_option( 'paypal_page_style', 'PayPal' ) );
-	return apply_filters( 'edd_paypal_page_style', $page_style );
+function edd_get_paypal_image_url() {
+	$image_url = trim( edd_get_option( 'paypal_image_url', '' ) );
+	return apply_filters( 'edd_paypal_image_url', $image_url );
 }
 
 /**
@@ -729,6 +752,8 @@ function edd_paypal_success_page_content( $content ) {
 	if ( ! isset( $_GET['payment-id'] ) && ! edd_get_purchase_session() ) {
 		return $content;
 	}
+
+	edd_empty_cart();
 
 	$payment_id = isset( $_GET['payment-id'] ) ? absint( $_GET['payment-id'] ) : false;
 

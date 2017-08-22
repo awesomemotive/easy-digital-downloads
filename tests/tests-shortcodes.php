@@ -4,7 +4,7 @@
 /**
  * @group edd_shortcode
  */
-class Tests_Shortcode extends WP_UnitTestCase {
+class Tests_Shortcode extends EDD_UnitTestCase {
 
 	protected $_payment_id = null;
 
@@ -130,6 +130,9 @@ class Tests_Shortcode extends WP_UnitTestCase {
 		update_post_meta( $this->_payment_id, '_edd_payment_user_id', $user->ID );
 
 		$this->_payment_key = $purchase_data['purchase_key'];
+
+		// Remove the account pending filter to only show once in a thread
+		remove_filter( 'edd_allow_template_part_account_pending', 'edd_load_verification_template_once', 10, 1 );
 	}
 
 	public function tearDown() {
@@ -183,6 +186,8 @@ class Tests_Shortcode extends WP_UnitTestCase {
 	}
 
 	public function test_login_form() {
+		$purchase_history_page = edd_get_option( 'purchase_history_page' );
+
 		$this->assertInternalType( 'string', edd_login_form_shortcode( array() ) );
 		$this->assertContains( '<p class="edd-logged-in">You are already logged in</p>', edd_login_form_shortcode( array() ) );
 
@@ -197,12 +202,11 @@ class Tests_Shortcode extends WP_UnitTestCase {
 		$this->assertInternalType( 'string', $login_form );
 		$this->assertContains( '"' . get_option( 'site_url' ) . '"', $login_form );
 
-		$page = get_page_by_title( 'Purchase History' );
-		edd_update_option( 'login_redirect_page', $page->ID );
+		edd_update_option( 'login_redirect_page', $purchase_history_page );
 
 		$login_form = edd_login_form_shortcode( array() );
 		$this->assertInternalType( 'string', $login_form );
-		$this->assertContains( '"' . get_permalink( $page->ID ) . '"', $login_form );
+		$this->assertContains( '"' . get_permalink( $purchase_history_page ) . '"', $login_form );
 	}
 
 	public function test_discounts_shortcode() {
@@ -286,6 +290,14 @@ class Tests_Shortcode extends WP_UnitTestCase {
 		edd_set_user_to_pending( $this->_user_id );
 
 		$this->assertContains( '<p class="edd-account-pending">', edd_profile_editor_shortcode( array() ) );
+	}
+
+	public function test_profile_pending_single_load() {
+		add_filter( 'edd_allow_template_part_account_pending', 'edd_load_verification_template_once', 10, 1 );
+		edd_set_user_to_pending( $this->_user_id );
+		$this->assertContains( '<p class="edd-account-pending">', edd_profile_editor_shortcode( array() ) );
+		$this->assertEmpty( edd_profile_editor_shortcode( array() ) );
+		remove_filter( 'edd_allow_template_part_account_pending', 'edd_load_verification_template_once', 10, 1 );
 	}
 
 	public function test_downloads_shortcode_pagination() {

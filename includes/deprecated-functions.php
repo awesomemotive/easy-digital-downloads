@@ -562,3 +562,173 @@ function edd_get_success_page_url( $query_string = null ) {
 
 	return apply_filters( 'edd_success_page_url', edd_get_success_page_uri( $query_string ) );
 }
+
+/**
+ * Reduces earnings and sales stats when a purchase is refunded
+ *
+ * @since 1.8.2
+ * @param int $payment_id the ID number of the payment
+ * @param string $new_status the status of the payment, probably "publish"
+ * @param string $old_status the status of the payment prior to being marked as "complete", probably "pending"
+ * @deprecated  2.5.7 Please avoid usage of this function in favor of refund() in EDD_Payment
+ * @internal param Arguments $data passed
+ */
+function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
+
+	$backtrace = debug_backtrace();
+	_edd_deprecated_function( 'edd_undo_purchase_on_refund', '2.5.7', 'EDD_Payment->refund()', $backtrace );
+
+	$payment = new EDD_Payment( $payment_id );
+	$payment->refund();
+}
+
+/**
+ * Get Earnings By Date
+ *
+ * @since 1.0
+ * @deprecated 2.7
+ * @param int $day Day number
+ * @param int $month_num Month number
+ * @param int $year Year
+ * @param int $hour Hour
+ * @return int $earnings Earnings
+ */
+function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour = null, $include_taxes = true ) {
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '2.7', 'EDD_Payment_Stats()->get_earnings()', $backtrace );
+
+	global $wpdb;
+
+	$args = array(
+		'post_type'      => 'edd_payment',
+		'nopaging'       => true,
+		'year'           => $year,
+		'monthnum'       => $month_num,
+		'post_status'    => array( 'publish', 'revoked' ),
+		'fields'         => 'ids',
+		'update_post_term_cache' => false,
+		'include_taxes'  => $include_taxes,
+	);
+
+	if ( ! empty( $day ) ) {
+		$args['day'] = $day;
+	}
+
+	if ( ! empty( $hour ) || $hour == 0 ) {
+		$args['hour'] = $hour;
+	}
+
+	$args   = apply_filters( 'edd_get_earnings_by_date_args', $args );
+	$cached = get_transient( 'edd_stats_earnings' );
+	$key    = md5( json_encode( $args ) );
+
+	if ( ! isset( $cached[ $key ] ) ) {
+		$sales = get_posts( $args );
+		$earnings = 0;
+		if ( $sales ) {
+			$sales = implode( ',', $sales );
+
+			$total_earnings = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN ({$sales})" );
+			$total_tax      = 0;
+
+			if ( ! $include_taxes ) {
+				$total_tax = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_tax' AND post_id IN ({$sales})" );
+			}
+
+			$earnings += ( $total_earnings - $total_tax );
+		}
+		// Cache the results for one hour
+		$cached[ $key ] = $earnings;
+		set_transient( 'edd_stats_earnings', $cached, HOUR_IN_SECONDS );
+	}
+
+	$result = $cached[ $key ];
+
+	return round( $result, 2 );
+}
+
+/**
+ * Get Sales By Date
+ *
+ * @since 1.1.4.0
+ * @deprecated 2.7
+ * @author Sunny Ratilal
+ * @param int $day Day number
+ * @param int $month_num Month number
+ * @param int $year Year
+ * @param int $hour Hour
+ * @return int $count Sales
+ */
+function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $hour = null ) {
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '2.7', 'EDD_Payment_Stats()->get_sales()', $backtrace );
+
+	$args = array(
+		'post_type'      => 'edd_payment',
+		'nopaging'       => true,
+		'year'           => $year,
+		'fields'         => 'ids',
+		'post_status'    => array( 'publish', 'revoked' ),
+		'update_post_meta_cache' => false,
+		'update_post_term_cache' => false
+	);
+
+	$show_free = apply_filters( 'edd_sales_by_date_show_free', true, $args );
+
+	if ( false === $show_free ) {
+		$args['meta_query'] = array(
+			array(
+				'key' => '_edd_payment_total',
+				'value' => 0,
+				'compare' => '>',
+				'type' => 'NUMERIC',
+			),
+		);
+	}
+
+	if ( ! empty( $month_num ) )
+		$args['monthnum'] = $month_num;
+
+	if ( ! empty( $day ) )
+		$args['day'] = $day;
+
+	if ( ! empty( $hour ) )
+		$args['hour'] = $hour;
+
+	$args = apply_filters( 'edd_get_sales_by_date_args', $args  );
+
+	$cached = get_transient( 'edd_stats_sales' );
+	$key    = md5( json_encode( $args ) );
+
+	if ( ! isset( $cached[ $key ] ) ) {
+		$sales = new WP_Query( $args );
+		$count = (int) $sales->post_count;
+
+		// Cache the results for one hour
+		$cached[ $key ] = $count;
+		set_transient( 'edd_stats_sales', $cached, HOUR_IN_SECONDS );
+	}
+
+	$result = $cached[ $key ];
+
+	return $result;
+}
+
+/**
+ * Set the Page Style for PayPal Purchase page
+ *
+ * @since 1.4.1
+ * @deprecated 2.8
+ * @return string
+ */
+function edd_get_paypal_page_style() {
+
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '2.8', 'edd_get_paypal_image_url', $backtrace );
+
+	$page_style = trim( edd_get_option( 'paypal_page_style', 'PayPal' ) );
+	return apply_filters( 'edd_paypal_page_style', $page_style );
+}

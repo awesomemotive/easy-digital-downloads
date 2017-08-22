@@ -1,23 +1,8 @@
 jQuery(document).ready(function ($) {
 
 	// Tooltips
-	$('.edd-help-tip').tooltip({
-		content: function() {
-			return $(this).prop('title');
-		},
-		tooltipClass: 'edd-ui-tooltip',
-		position: {
-			my: 'center top',
-			at: 'center bottom+10',
-			collision: 'flipfit',
-		},
-		hide: {
-			duration: 200,
-		},
-		show: {
-			duration: 200,
-		},
-	});
+	var tooltips = $('.edd-help-tip');
+	edd_attach_tooltips( tooltips );
 
 	/**
 	 * Download Configuration Metabox
@@ -36,7 +21,7 @@ jQuery(document).ready(function ($) {
 
 			// Retrieve the highest current key
 			var key = highest = 1;
-			row.parent().find( 'tr.edd_repeatable_row' ).each(function() {
+			row.parent().find( '.edd_repeatable_row' ).each(function() {
 				var current = $(this).data( 'key' );
 				if( parseInt( current ) > highest ) {
 					highest = current;
@@ -54,8 +39,7 @@ jQuery(document).ready(function ($) {
 			clone.removeClass( 'edd_add_blank' );
 
 			clone.attr( 'data-key', key );
-			clone.find( 'td input, td select, textarea' ).val( '' );
-			clone.find( 'input, select, textarea' ).each(function() {
+			clone.find( 'input, select, textarea' ).val( '' ).each(function() {
 				var name = $( this ).attr( 'name' );
 				var id   = $( this ).attr( 'id' );
 
@@ -87,11 +71,16 @@ jQuery(document).ready(function ($) {
 
 			clone.find( '.edd_repeatable_default_input' ).each( function() {
 				$( this ).val( parseInt( key ) ).removeAttr('checked');
-			})
+			});
+
+			clone.find( '.edd_repeatable_condition_field' ).each ( function() {
+				$( this ).find( 'option:eq(0)' ).prop( 'selected', 'selected' );
+			});
 
 			// Remove Chosen elements
 			clone.find( '.search-choice' ).remove();
 			clone.find( '.chosen-container' ).remove();
+			edd_attach_tooltips(clone.find('.edd-help-tip'));
 
 			return clone;
 		},
@@ -100,7 +89,7 @@ jQuery(document).ready(function ($) {
 			$( document.body ).on( 'click', '.submit .edd_add_repeatable', function(e) {
 				e.preventDefault();
 				var button = $( this ),
-				row = button.parent().parent().prev( 'tr' ),
+				row = button.parent().parent().prev( '.edd_repeatable_row' ),
 				clone = EDD_Download_Configuration.clone_repeatable(row);
 
 				clone.insertAfter( row ).find('input, textarea, select').filter(':visible').eq(0).focus();
@@ -118,10 +107,10 @@ jQuery(document).ready(function ($) {
 
 		move : function() {
 
-			$(".edd_repeatable_table tbody").sortable({
-				handle: '.edd_draghandle', items: '.edd_repeatable_row', opacity: 0.6, cursor: 'move', axis: 'y', update: function() {
+			$(".edd_repeatable_table .edd-repeatables-wrap").sortable({
+				handle: '.edd-draghandle-anchor', items: '.edd_repeatable_row', opacity: 0.6, cursor: 'move', axis: 'y', update: function() {
 					var count  = 0;
-					$(this).find( 'tr' ).each(function() {
+					$(this).find( '.edd_repeatable_row' ).each(function() {
 						$(this).find( 'input.edd_repeatable_index' ).each(function() {
 							$( this ).val( count );
 						});
@@ -133,22 +122,22 @@ jQuery(document).ready(function ($) {
 		},
 
 		remove : function() {
-			$( document.body ).on( 'click', '.edd_remove_repeatable', function(e) {
+			$( document.body ).on( 'click', '.edd-remove-row, .edd_remove_repeatable', function(e) {
 				e.preventDefault();
 
-				var row   = $(this).parent().parent( 'tr' ),
-					count = row.parent().find( 'tr' ).length - 1,
+				var row   = $(this).parents( '.edd_repeatable_row' ),
+					count = row.parent().find( '.edd_repeatable_row' ).length,
 					type  = $(this).data('type'),
-					repeatable = 'tr.edd_repeatable_' + type + 's',
+					repeatable = 'div.edd_repeatable_' + type + 's',
 					focusElement,
 					focusable,
 					firstFocusable;
 
 					// Set focus on next element if removing the first row. Otherwise set focus on previous element.
-					if ( $(this).is( '.ui-sortable tr:first-child .edd_remove_repeatable:first-child' ) ) {
-						focusElement  = row.next( 'tr' );
+					if ( $(this).is( '.ui-sortable .edd_repeatable_row:first-child .edd-remove-row, .ui-sortable .edd_repeatable_row:first-child .edd_remove_repeatable' ) ) {
+						focusElement  = row.next( '.edd_repeatable_row' );
 					} else {
-						focusElement  = row.prev( 'tr' );
+						focusElement  = row.prev( '.edd_repeatable_row' );
 					}
 
 					focusable  = focusElement.find( 'select, input, textarea, button' ).filter( ':visible' );
@@ -160,7 +149,7 @@ jQuery(document).ready(function ($) {
 					$( '.edd_repeatable_condition_field option[value="' + price_row_id + '"]' ).remove();
 				}
 
-				if( count > 1 ) {
+				if ( count > 1 ) {
 					$( 'input, select', row ).val( '' );
 					row.fadeOut( 'fast' ).remove();
 					firstFocusable.focus();
@@ -215,139 +204,121 @@ jQuery(document).ready(function ($) {
 			$( document.body ).on( 'change', '#edd_variable_pricing', function(e) {
 				var checked   = $(this).is(':checked');
 				var single    = $( '#edd_regular_price_field' );
-				var variable  = $( '#edd_variable_price_fields,.edd_repeatable_table .pricing' );
+				var variable  = $( '#edd_variable_price_fields, .edd_repeatable_table .pricing' );
+				var bundleRow = $( '.edd-bundled-product-row, .edd-repeatable-row-standard-fields' );
 				if ( checked ) {
 					single.hide();
 					variable.show();
+					bundleRow.addClass( 'has-variable-pricing' );
 				} else {
 					single.show();
 					variable.hide();
+					bundleRow.removeClass( 'has-variable-pricing' );
 				}
 			});
 		},
 
 		files : function() {
-			if( typeof wp === "undefined" || '1' !== edd_vars.new_media_ui ){
-				//Old Thickbox uploader
-				if ( $( '.edd_upload_file_button' ).length > 0 ) {
-					window.formfield = '';
+			var file_frame;
+			window.formfield = '';
 
-					$( document.body ).on('click', '.edd_upload_file_button', function(e) {
-						e.preventDefault();
-						window.formfield = $(this).parent().prev();
-						window.tbframe_interval = setInterval(function() {
-							jQuery('#TB_iframeContent').contents().find('.savesend .button').val(edd_vars.use_this_file).end().find('#insert-gallery, .wp-post-thumbnail').hide();
-						}, 2000);
-						if (edd_vars.post_id != null ) {
-							var post_id = 'post_id=' + edd_vars.post_id + '&';
-						}
-						tb_show(edd_vars.add_new_download, 'media-upload.php?' + post_id +'TB_iframe=true');
-					});
+			$( document.body ).on('click', '.edd_upload_file_button', function(e) {
 
-					window.edd_send_to_editor = window.send_to_editor;
-					window.send_to_editor = function (html) {
-						if (window.formfield) {
-							imgurl = $('a', '<div>' + html + '</div>').attr('href');
-							window.formfield.val(imgurl);
-							window.clearInterval(window.tbframe_interval);
-							tb_remove();
-						} else {
-							window.edd_send_to_editor(html);
-						}
-						window.send_to_editor = window.edd_send_to_editor;
-						window.formfield = '';
-						window.imagefield = false;
-					};
-				}
-			} else {
-				// WP 3.5+ uploader
-				var file_frame;
-				window.formfield = '';
+				e.preventDefault();
 
-				$( document.body ).on('click', '.edd_upload_file_button', function(e) {
+				var button = $(this);
 
-					e.preventDefault();
+				window.formfield = $(this).closest('.edd_repeatable_upload_wrapper');
 
-					var button = $(this);
-
-					window.formfield = $(this).closest('.edd_repeatable_upload_wrapper');
-
-					// If the media frame already exists, reopen it.
-					if ( file_frame ) {
-						//file_frame.uploader.uploader.param( 'post_id', set_to_post_id );
-						file_frame.open();
-						return;
-					}
-
-					// Create the media frame.
-					file_frame = wp.media.frames.file_frame = wp.media( {
-						frame: 'post',
-						state: 'insert',
-						title: button.data( 'uploader-title' ),
-						button: {
-							text: button.data( 'uploader-button-text' )
-						},
-						multiple: $( this ).data( 'multiple' ) == '0' ? false : true  // Set to true to allow multiple files to be selected
-					} );
-
-					file_frame.on( 'menu:render:default', function( view ) {
-						// Store our views in an object.
-						var views = {};
-
-						// Unset default menu items
-						view.unset( 'library-separator' );
-						view.unset( 'gallery' );
-						view.unset( 'featured-image' );
-						view.unset( 'embed' );
-
-						// Initialize the views in our view object.
-						view.set( views );
-					} );
-
-					// When an image is selected, run a callback.
-					file_frame.on( 'insert', function() {
-
-						var selection = file_frame.state().get('selection');
-						selection.each( function( attachment, index ) {
-							attachment = attachment.toJSON();
-							if ( 0 === index ) {
-								// place first attachment in field
-								window.formfield.find( '.edd_repeatable_attachment_id_field' ).val( attachment.id );
-								window.formfield.find( '.edd_repeatable_upload_field' ).val( attachment.url );
-								window.formfield.find( '.edd_repeatable_name_field' ).val( attachment.title );
-							} else {
-								// Create a new row for all additional attachments
-								var row = window.formfield,
-									clone = EDD_Download_Configuration.clone_repeatable( row );
-
-								clone.find( '.edd_repeatable_attachment_id_field' ).val( attachment.id );
-								clone.find( '.edd_repeatable_upload_field' ).val( attachment.url );
-								if ( attachment.title.length > 0 ) {
-									clone.find( '.edd_repeatable_name_field' ).val( attachment.title );
-								} else {
-									clone.find( '.edd_repeatable_name_field' ).val( attachment.filename );
-								}
-								clone.insertAfter( row );
-							}
-						});
-					});
-
-					// Finally, open the modal
+				// If the media frame already exists, reopen it.
+				if ( file_frame ) {
+					//file_frame.uploader.uploader.param( 'post_id', set_to_post_id );
 					file_frame.open();
+					return;
+				}
+
+				// Create the media frame.
+				file_frame = wp.media.frames.file_frame = wp.media( {
+					frame: 'post',
+					state: 'insert',
+					title: button.data( 'uploader-title' ),
+					button: {
+						text: button.data( 'uploader-button-text' )
+					},
+					multiple: $( this ).data( 'multiple' ) == '0' ? false : true  // Set to true to allow multiple files to be selected
+				} );
+
+				file_frame.on( 'menu:render:default', function( view ) {
+					// Store our views in an object.
+					var views = {};
+
+					// Unset default menu items
+					view.unset( 'library-separator' );
+					view.unset( 'gallery' );
+					view.unset( 'featured-image' );
+					view.unset( 'embed' );
+
+					// Initialize the views in our view object.
+					view.set( views );
+				} );
+
+				// When an image is selected, run a callback.
+				file_frame.on( 'insert', function() {
+
+					var selection = file_frame.state().get('selection');
+					selection.each( function( attachment, index ) {
+						attachment = attachment.toJSON();
+
+						var selectedSize = 'image' === attachment.type ? $('.attachment-display-settings .size option:selected').val() : false;
+						var selectedURL  = attachment.url;
+						var selectedName = attachment.title.length > 0 ? attachment.title : attachment.filename;
+
+						if ( selectedSize && typeof attachment.sizes[selectedSize] != "undefined" ) {
+							selectedURL = attachment.sizes[selectedSize].url;
+						}
+
+						if ( 'image' === attachment.type ) {
+							if ( selectedSize && typeof attachment.sizes[selectedSize] != "undefined" ) {
+								selectedName = selectedName + '-' + attachment.sizes[selectedSize].width + 'x' + attachment.sizes[selectedSize].height;
+							} else {
+								selectedName = selectedName + '-' + attachment.width + 'x' + attachment.height;
+							}
+						}
+
+						if ( 0 === index ) {
+							// place first attachment in field
+							window.formfield.find( '.edd_repeatable_attachment_id_field' ).val( attachment.id );
+							window.formfield.find( '.edd_repeatable_thumbnail_size_field').val( selectedSize );
+							window.formfield.find( '.edd_repeatable_upload_field' ).val( selectedURL );
+							window.formfield.find( '.edd_repeatable_name_field' ).val( selectedName );
+						} else {
+							// Create a new row for all additional attachments
+							var row = window.formfield,
+								clone = EDD_Download_Configuration.clone_repeatable( row );
+
+							clone.find( '.edd_repeatable_attachment_id_field' ).val( attachment.id );
+							clone.find( 'edd_repeatable_thumbnail_size_field' ).val( selectedSize );
+							clone.find( '.edd_repeatable_upload_field' ).val( selectedURL );
+							clone.find( '.edd_repeatable_name_field' ).val( selectedName );
+							clone.insertAfter( row );
+						}
+					});
 				});
 
+				// Finally, open the modal
+				file_frame.open();
+			});
 
-				// WP 3.5+ uploader
-				var file_frame;
-				window.formfield = '';
-			}
+
+			var file_frame;
+			window.formfield = '';
 
 		},
 
 		updatePrices: function() {
 			$( '#edd_price_fields' ).on( 'keyup', '.edd_variable_prices_name', function() {
 
-				var key = $( this ).parents( 'tr' ).data( 'key' ),
+				var key = $( this ).parents( '.edd_repeatable_row' ).data( 'key' ),
 					name = $( this ).val(),
 					field_option = $( '.edd_repeatable_condition_field option[value=' + key + ']' );
 
@@ -364,6 +335,29 @@ jQuery(document).ready(function ($) {
 		}
 
 	};
+
+	// Toggle display of entire custom settings section for a price option
+	$( document.body ).on( 'click', '.toggle-custom-price-option-section', function(e) {
+		e.preventDefault();
+		var show = $(this).html() == edd_vars.show_advanced_settings ? true : false;
+
+		if ( show ) {
+			$(this).html( edd_vars.hide_advanced_settings );
+		} else {
+			$(this).html( edd_vars.show_advanced_settings );
+		}
+
+		var header = $(this).parents('.edd-repeatable-row-header');
+		header.siblings('.edd-custom-price-option-sections-wrap').slideToggle();
+
+		var first_input;
+		if ( show ) {
+			first_input = $(":input:not(input[type=button],input[type=submit],button):visible:first", header.siblings('.edd-custom-price-option-sections-wrap'));
+		} else {
+			first_input = $(":input:not(input[type=button],input[type=submit],button):visible:first", header.siblings('.edd-repeatable-row-standard-fields'));
+		}
+		first_input.focus();
+	});
 
 	EDD_Download_Configuration.init();
 
@@ -387,7 +381,9 @@ jQuery(document).ready(function ($) {
 			this.edit_address();
 			this.remove_download();
 			this.add_download();
+			this.change_customer();
 			this.new_customer();
+			this.edit_price();
 			this.recalculate_total();
 			this.variable_prices_check();
 			this.add_note();
@@ -402,7 +398,7 @@ jQuery(document).ready(function ($) {
 			// Update base state field based on selected base country
 			$('select[name="edd-payment-address[0][country]"]').change(function() {
 				var $this = $(this);
-				data = {
+				var data = {
 					action: 'edd_get_shop_states',
 					country: $this.val(),
 					field_name: 'edd-payment-address[0][state]'
@@ -428,7 +424,7 @@ jQuery(document).ready(function ($) {
 			// Remove a download from a purchase
 			$('#edd-purchased-files').on('click', '.edd-order-remove-download', function() {
 
-				var count = $( document.body ).find( '#edd-purchased-files > .row' ).length;
+				var count = $( document.body ).find( '#edd-purchased-files > .row:not(.header)' ).length;
 
 				if ( count === 1 ) {
 					alert( edd_vars.one_download_min );
@@ -436,13 +432,17 @@ jQuery(document).ready(function ($) {
 				}
 
 				if( confirm( edd_vars.delete_payment_download ) ) {
-					var key = $(this).data('key');
-
+					var key         = $(this).data('key');
 					var purchase_id = $('.edd-payment-id').val();
 					var download_id = $('input[name="edd-payment-details-downloads['+key+'][id]"]').val();
 					var price_id    = $('input[name="edd-payment-details-downloads['+key+'][price_id]"]').val();
 					var quantity    = $('input[name="edd-payment-details-downloads['+key+'][quantity]"]').val();
 					var amount      = $('input[name="edd-payment-details-downloads['+key+'][amount]"]').val();
+
+					if ( $('input[name="edd-payment-details-downloads['+key+'][tax]"]') ) {
+						var fees = $('input[name="edd-payment-details-downloads['+key+'][tax]"]').val();
+					}
+
 					if ( $('input[name="edd-payment-details-downloads['+key+'][fees]"]') ) {
 						var fees = $.parseJSON( $('input[name="edd-payment-details-downloads['+key+'][fees]"]').val() );
 					}
@@ -458,7 +458,7 @@ jQuery(document).ready(function ($) {
 
 					$('input[name="edd-payment-removed"]').val(JSON.stringify(currently_removed));
 
-					$(this).parent().parent().parent().remove();
+					$(this).parent().parent().remove();
 					if ( fees && fees.length) {
 						$.each( fees, function( key, value ) {
 							$('*li[data-fee-id="' + value + '"]').remove();
@@ -470,6 +470,27 @@ jQuery(document).ready(function ($) {
 					$('.edd-order-payment-recalc-totals').show();
 				}
 				return false;
+			});
+
+		},
+
+		change_customer : function() {
+
+			$('#edd-customer-details').on('click', '.edd-payment-change-customer, .edd-payment-change-customer-cancel', function(e) {
+				e.preventDefault();
+
+				var change_customer = $(this).hasClass('edd-payment-change-customer');
+				var cancel          = $(this).hasClass('edd-payment-change-customer-cancel');
+
+				if ( change_customer ) {
+					$('.customer-info').hide();
+					$('.change-customer').show();
+					$('.edd-payment-change-customer-input').css('width', 'auto');
+				} else if( cancel) {
+					$('.customer-info').show();
+					$('.change-customer').hide();
+				}
+
 			});
 
 		},
@@ -505,19 +526,21 @@ jQuery(document).ready(function ($) {
 		add_download : function() {
 
 			// Add a New Download from the Add Downloads to Purchase Box
-			$('#edd-purchased-files').on('click', '#edd-order-add-download', function(e) {
+			$('.edd-edit-purchase-element').on('click', '#edd-order-add-download', function(e) {
 
 				e.preventDefault();
 
 				var order_download_select     = $( '#edd_order_download_select' ),
 					order_download_quantity   = $( '#edd-order-download-quantity' ),
-					order_download_amount     = $( '#edd-order-download-amount' ),
+					order_download_price      = $( '#edd-order-download-price' ),
+					order_download_tax        = $( '#edd-order-download-tax' ),
 					selected_price_option     = $( '.edd_price_options_select option:selected' );
 
 				var download_id    = order_download_select.val();
 				var download_title = order_download_select.find(':selected').text();
 				var quantity       = order_download_quantity.val();
-				var amount         = order_download_amount.val();
+				var item_price     = order_download_price.val();
+				var item_tax       = order_download_tax.val();
 				var price_id       = selected_price_option.val();
 				var price_name     = selected_price_option.text();
 
@@ -525,33 +548,25 @@ jQuery(document).ready(function ($) {
 					return false;
 				}
 
-				if( ! amount ) {
-					amount = 0;
+				if( ! item_price ) {
+					item_price = 0;
 				}
 
-				amount = parseFloat( amount );
-				if ( isNaN( amount ) ) {
+				item_price = parseFloat( item_price );
+				if ( isNaN( item_price ) ) {
 					alert( edd_vars.numeric_item_price );
 					return false;
 				}
 
-				var item_price     = amount;
-
-				if ( edd_vars.quantities_enabled === '1' ) {
-					if ( !isNaN( parseInt( quantity ) ) ) {
-						amount = amount * quantity;
-					} else {
-						alert( edd_vars.numeric_quantity );
-						return false;
-					}
+				item_tax = parseFloat( item_tax );
+				if ( isNaN( item_tax ) ) {
+					alert( edd_vars.numeric_item_tax );
+					return false;
 				}
 
-
-				amount = amount.toFixed( edd_vars.currency_decimals );
-
-				var formatted_amount = amount + edd_vars.currency_sign;
-				if ( 'before' === edd_vars.currency_pos ) {
-					formatted_amount = edd_vars.currency_sign + amount;
+				if ( isNaN( parseInt( quantity ) ) ) {
+					alert( edd_vars.numeric_quantity );
+					return false;
 				}
 
 				if( price_name ) {
@@ -563,15 +578,19 @@ jQuery(document).ready(function ($) {
 
 				clone.find( '.download span' ).html( '<a href="post.php?post=' + download_id + '&action=edit"></a>' );
 				clone.find( '.download span a' ).text( download_title );
-				clone.find( '.price-text' ).text( formatted_amount );
-				clone.find( '.item-quantity' ).text( quantity );
-				clone.find( '.item-price' ).text( edd_vars.currency_sign + ( amount / quantity ).toFixed( edd_vars.currency_decimals ) );
+				clone.find( '.edd-payment-details-download-item-price' ).val( item_price.toFixed( edd_vars.currency_decimals ) );
+				clone.find( '.edd-payment-details-download-item-tax').val( item_tax.toFixed( edd_vars.currency_decimals ) );
 				clone.find( 'input.edd-payment-details-download-id' ).val( download_id );
 				clone.find( 'input.edd-payment-details-download-price-id' ).val( price_id );
-				clone.find( 'input.edd-payment-details-download-item-price' ).val( item_price );
-				clone.find( 'input.edd-payment-details-download-amount' ).val( amount );
+
+				var item_total = ( item_price * quantity ) + item_tax;
+				item_total     = item_total.toFixed( edd_vars.currency_decimals );
+				clone.find( 'span.edd-payment-details-download-amount' ).text( item_total );
+				clone.find( 'input.edd-payment-details-download-amount' ).val( item_total );
 				clone.find( 'input.edd-payment-details-download-quantity' ).val( quantity );
 				clone.find( 'input.edd-payment-details-download-has-log').val(0);
+
+				clone.find( '.edd-copy-download-link-wrapper' ).remove();
 
 				// Replace the name / id attributes
 				clone.find( 'input' ).each(function() {
@@ -582,34 +601,79 @@ jQuery(document).ready(function ($) {
 					$( this ).attr( 'name', name ).attr( 'id', name );
 				});
 
+				clone.find('a.edd-order-remove-download').attr( 'data-key', parseInt( count ) );
+
 				// Flag the Downloads section as changed
 				$('#edd-payment-downloads-changed').val(1);
 
 				$(clone).insertAfter( '#edd-purchased-files div.row:last' );
 				$( '.edd-order-payment-recalc-totals' ).show();
-
+				$( '.edd-add-download-field' ).val('');
 			});
+		},
+
+		edit_price : function() {
+
+			$(document.body).on('change keyup', '.edd-payment-item-input', function () {
+				var row = $(this).parents('ul.edd-purchased-files-list-wrapper');
+				$( '.edd-order-payment-recalc-totals' ).show();
+
+				var quantity   = row.find('input.edd-payment-details-download-quantity').val().replace(edd_vars.thousands_separator,'');
+				var item_price = row.find('input.edd-payment-details-download-item-price').val().replace(edd_vars.thousands_separator,'');
+				var item_tax   = row.find('input.edd-payment-details-download-item-tax').val().replace(edd_vars.thousands_separator,'');
+
+				item_price = parseFloat( item_price );
+				if ( isNaN( item_price ) ) {
+					alert( edd_vars.numeric_item_price );
+					return false;
+				}
+
+				item_tax = parseFloat( item_tax );
+				if ( isNaN( item_tax ) ) {
+					item_tax = 0.00;
+				}
+
+				if ( isNaN( parseInt( quantity ) ) ) {
+					quantity = 1;
+				}
+
+				var item_total = ( item_price * quantity ) + item_tax;
+				item_total     = item_total.toFixed( edd_vars.currency_decimals );
+				row.find('input.edd-payment-details-download-amount').val( item_total );
+				row.find('span.edd-payment-details-download-amount').text( item_total );
+			});
+
 		},
 
 		recalculate_total : function() {
 
-			// Remove a download from a purchase
+			// Update taxes and totals for any changes made.
 			$('#edd-order-recalc-total').on('click', function(e) {
 				e.preventDefault();
-				var total           = 0,
-					purchased_files = $( '#edd-purchased-files .row .edd-payment-details-download-amount' );
+				var total  = 0,
+					tax    = 0,
+					totals = $('#edd-purchased-files .row input.edd-payment-details-download-amount'),
+					taxes  = $('#edd-purchased-files .row input.edd-payment-details-download-item-tax');
 
-				if( purchased_files.length ) {
-					purchased_files.each(function() {
+				if( totals.length ) {
+					totals.each(function() {
 						total += parseFloat( $(this).val() );
 					});
 				}
+
+				if( taxes.length ) {
+					taxes.each(function() {
+						tax += parseFloat( $(this).val() );
+					});
+				}
+
 				if( $('.edd-payment-fees').length ) {
 					$('.edd-payment-fees span.fee-amount').each(function() {
 						total += parseFloat( $(this).data('fee') );
 					});
 				}
-				$('input[name=edd-payment-total]').val( total.toFixed(edd_vars.currency_decimals));
+				$('input[name=edd-payment-total]').val(total.toFixed(edd_vars.currency_decimals));
+				$('input[name=edd-payment-tax]').val(tax.toFixed(edd_vars.currency_decimals))
 			});
 
 		},
@@ -617,7 +681,7 @@ jQuery(document).ready(function ($) {
 		variable_prices_check : function() {
 
 			// On Download Select, Check if Variable Prices Exist
-			$('#edd-purchased-files').on('change', 'select#edd_order_download_select', function() {
+			$('.edd-edit-purchase-element').on('change', 'select#edd_order_download_select', function() {
 
 				var $this = $(this), download_id = $this.val();
 
@@ -1022,7 +1086,7 @@ jQuery(document).ready(function ($) {
 			// Update base state field based on selected base country
 			$('select[name="edd_settings[base_country]"]').change(function() {
 				var $this = $(this), $tr = $this.closest('tr');
-				data = {
+				var data = {
 					action: 'edd_get_shop_states',
 					country: $(this).val(),
 					field_name: 'edd_settings[base_state]'
@@ -1042,7 +1106,7 @@ jQuery(document).ready(function ($) {
 			// Update tax rate state field based on selected rate country
 			$( document.body ).on('change', '#edd_tax_rates select.edd-tax-country', function() {
 				var $this = $(this);
-				data = {
+				var data = {
 					action: 'edd_get_shop_states',
 					country: $(this).val(),
 					field_name: $this.attr('name').replace('country', 'state')
@@ -1213,24 +1277,19 @@ jQuery(document).ready(function ($) {
 	});
 
 	$('.edd-select-chosen .chosen-search input').each( function() {
-		var type = $(this).parent().parent().parent().prev('select.edd-select-chosen').data('search-type');
-		var placeholder = '';
-
-		if ( type === 'download' ) {
-			placeholder = edd_vars.search_placeholder;
-		} else {
-			var type = 'search_placeholder_' + type;
-			if ( edd_vars[type] ) {
-				placeholder = edd_vars[type];
-			}
-		}
-
+		var selectElem = $(this).parent().parent().parent().prev('select.edd-select-chosen'),
+			type = selectElem.data('search-type'),
+			placeholder = selectElem.data('search-placeholder');
 		$(this).attr( 'placeholder', placeholder );
 	});
 
 	// Add placeholders for Chosen input fields
 	$( '.chosen-choices' ).on( 'click', function () {
-		$(this).children('li').children('input').attr( 'placeholder', edd_vars.type_to_search );
+		var placeholder = $(this).parent().prev().data('search-placeholder');
+		if ( ! placeholder.length ) {
+			placeholder = edd_vars.type_to_search;
+		}
+		$(this).children('li').children('input').attr( 'placeholder', placeholder );
 	});
 
 	// Variables for setting up the typing timer
@@ -1243,6 +1302,7 @@ jQuery(document).ready(function ($) {
 		var val         = $(this).val()
 		var container   = $(this).closest( '.edd-select-chosen' );
 		var menu_id     = container.attr('id').replace( '_chosen', '' );
+		var select      = container.prev();
 		var no_bundles  = container.hasClass( 'no-bundles' );
 		var variations  = container.hasClass( 'variations' );
 		var lastKey     = e.which;
@@ -1252,11 +1312,11 @@ jQuery(document).ready(function ($) {
 		if ( container.prev().data('search-type') ) {
 
 			// Don't trigger AJAX if this select has all options loaded
-			if ( 'no_ajax' == container.prev().data('search-type') ) {
+			if ( 'no_ajax' == select.data('search-type') ) {
 				return;
 			}
 
-			search_type = 'edd_' + container.prev().data('search-type') + '_search';
+			search_type = 'edd_' + select.data('search-type') + '_search';
 		}
 
 		// Don't fire if short or is a modifier key (shift, ctrl, apple command key, or arrow keys)
@@ -1289,20 +1349,20 @@ jQuery(document).ready(function ($) {
 					},
 					dataType: "json",
 					beforeSend: function(){
-						$('ul.chosen-results').empty();
+						select.closest('ul.chosen-results').empty();
 					},
 					success: function( data ) {
 						// Remove all options but those that are selected
-						$('#' + menu_id + ' option:not(:selected)').remove();
+						$('option:not(:selected)', select).remove();
 						$.each( data, function( key, item ) {
 							// Add any option that doesn't already exist
-							if( ! $('#' + menu_id + ' option[value="' + item.id + '"]').length ) {
-								$('#' + menu_id).prepend( '<option value="' + item.id + '">' + item.name + '</option>' );
+							if( ! $('option[value="' + item.id + '"]', select).length ) {
+								select.prepend( '<option value="' + item.id + '">' + item.name + '</option>' );
 							}
 						});
 						// Update the options
 						$('.edd-select-chosen').trigger('chosen:updated');
-						$('#' + menu_id).next().find('input').val(val);
+						select.next().find('input').val(val);
 					}
 				}).fail(function (response) {
 					if ( window.console && window.console.log ) {
@@ -1357,7 +1417,7 @@ jQuery(document).ready(function ($) {
 			} );
 		},
 		recount_stats : function() {
-			$( 'body').on( 'change', '#recount-stats-type', function() {
+			$( document.body).on( 'change', '#recount-stats-type', function() {
 
 				var export_form   = $('#edd-tools-recount-form');
 				var selected_type = $('option:selected', this).data('type');
@@ -1393,7 +1453,7 @@ jQuery(document).ready(function ($) {
 				$('#' + selected_type ).show();
 			} );
 
-			$('body').on('change', '#confirm-reset', function() {
+			$(document.body).on('change', '#confirm-reset', function() {
 				var checked = $(this).is(':checked');
 				if ( checked ) {
 					$('#recount-stats-submit').removeClass('button-disabled').removeAttr('disabled');
@@ -1540,7 +1600,7 @@ jQuery(document).ready(function ($) {
 		},
 
 		dismiss_message : function() {
-			$('body').on( 'click', '#edd-batch-success .notice-dismiss', function() {
+			$(document.body).on( 'click', '#edd-batch-success .notice-dismiss', function() {
 				$('#edd-batch-success').parent().slideUp('fast');
 			});
 		}
@@ -1646,7 +1706,7 @@ jQuery(document).ready(function ($) {
 
 				});
 
-				$('body').on('click', '.edd-import-proceed', function(e) {
+				$(document.body).on('click', '.edd-import-proceed', function(e) {
 
 					e.preventDefault();
 
@@ -1855,7 +1915,7 @@ jQuery(document).ready(function ($) {
 		change_country: function() {
 			$('select[name="customerinfo[country]"]').change(function() {
 				var $this = $(this);
-				data = {
+				var data = {
 					action: 'edd_get_shop_states',
 					country: $this.val(),
 					field_name: 'customerinfo[state]'
@@ -1936,7 +1996,7 @@ jQuery(document).ready(function ($) {
 		}
 
 		$('.edd-ajax').show();
-		data = {
+		var data = {
 			action: 'edd_search_users',
 			user_name: user_search,
 			exclude: exclude
@@ -1988,7 +2048,7 @@ jQuery(document).ready(function ($) {
 		});
 	}
 
-	$(document).on('keydown', '.customer-note-input', function(e) {
+	$(document.body).on('keydown', '.customer-note-input', function(e) {
 		if(e.keyCode == 13 && (e.metaKey || e.ctrlKey)) {
 			$('#add-customer-note').click();
 		}
@@ -2038,4 +2098,25 @@ var eddLegendFormatterEarnings = function (label, series) {
 
 	jQuery('#edd-pie-legend-' + series.edd_vars.id).append( item );
 	return item;
+}
+
+function edd_attach_tooltips( selector ) {
+	// Tooltips
+	selector.tooltip({
+		content: function() {
+			return jQuery(this).prop('title');
+		},
+		tooltipClass: 'edd-ui-tooltip',
+		position: {
+			my: 'center top',
+			at: 'center bottom+10',
+			collision: 'flipfit'
+		},
+		hide: {
+			duration: 200
+		},
+		show: {
+			duration: 200
+		}
+	});
 }

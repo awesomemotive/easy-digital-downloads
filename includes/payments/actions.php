@@ -121,7 +121,33 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 		$payment->completed_date = current_time( 'mysql' );
 		$payment->save();
 
-		do_action( 'edd_complete_purchase', $payment_id );
+		/**
+		 * Runs **when** a purchase is marked as "complete".
+		 *
+		 * @since 2.8 - Added EDD_Payment and EDD_Customer object to action.
+		 *
+		 * @param int          $payment_id Payment ID.
+		 * @param EDD_Payment  $payment    EDD_Payment object containing all payment data.
+		 * @param EDD_Customer $customer   EDD_Customer object containing all customer data.
+		 */
+		do_action( 'edd_complete_purchase', $payment_id, $payment, $customer );
+
+		// If cron doesn't work on a site, allow the filter to use __return_false and run the events immediately.
+		$use_cron = apply_filters( 'edd_use_after_payment_actions', true, $payment_id );
+		if ( false === $use_cron ) {
+			/**
+			 * Runs **after** a purchase is marked as "complete".
+			 *
+			 * @see edd_process_after_payment_actions()
+			 *
+			 * @since 2.8 - Added EDD_Payment and EDD_Customer object to action.
+			 *
+			 * @param int          $payment_id Payment ID.
+			 * @param EDD_Payment  $payment    EDD_Payment object containing all payment data.
+			 * @param EDD_Customer $customer   EDD_Customer object containing all customer data.
+			 */
+			do_action( 'edd_after_payment_actions', $payment_id, $payment, $customer );
+		}
 
 	}
 
@@ -130,6 +156,49 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 }
 add_action( 'edd_update_payment_status', 'edd_complete_purchase', 100, 3 );
 
+/**
+ * Schedules the one time event via WP_Cron to fire after purchase actions.
+ *
+ * Is run on the edd_complete_purchase action.
+ *
+ * @since 2.8
+ * @param $payment_id
+ */
+function edd_schedule_after_payment_action( $payment_id ) {
+	$use_cron = apply_filters( 'edd_use_after_payment_actions', true, $payment_id );
+	if ( $use_cron ) {
+		$after_payment_delay = apply_filters( 'edd_after_payment_actions_delay', 30, $payment_id );
+
+		// Use time() instead of current_time( 'timestamp' ) to avoid scheduling the event in the past when server time
+		// and WordPress timezone are different.
+		wp_schedule_single_event( time() + $after_payment_delay, 'edd_after_payment_scheduled_actions', array( $payment_id, false ) );
+	}
+}
+add_action( 'edd_complete_purchase', 'edd_schedule_after_payment_action', 10, 1 );
+
+/**
+ * Executes the one time event used for after purchase actions.
+ *
+ * @since 2.8
+ * @param $payment_id
+ * @param $force
+ */
+function edd_process_after_payment_actions( $payment_id = 0, $force = false ) {
+	if ( empty( $payment_id ) ) {
+		return;
+	}
+
+	$payment   = new EDD_Payment( $payment_id );
+	$has_fired = $payment->get_meta( '_edd_complete_actions_run' );
+	if ( ! empty( $has_fired ) && false === $force ) {
+		return;
+	}
+
+	$payment->add_note( __( 'After payment actions processed.', 'easy-digital-downloads' ) );
+	$payment->update_meta( '_edd_complete_actions_run', time() ); // This is in GMT
+	do_action( 'edd_after_payment_actions', $payment_id );
+}
+add_action( 'edd_after_payment_scheduled_actions', 'edd_process_after_payment_actions', 10, 1 );
 
 /**
  * Record payment status change
@@ -152,24 +221,6 @@ function edd_record_status_change( $payment_id, $new_status, $old_status ) {
 	edd_insert_payment_note( $payment_id, $status_change );
 }
 add_action( 'edd_update_payment_status', 'edd_record_status_change', 100, 3 );
-
-/**
- * Reduces earnings and sales stats when a purchase is refunded
- *
- * @since 1.8.2
- * @param int $payment_id the ID number of the payment
- * @param string $new_status the status of the payment, probably "publish"
- * @param string $old_status the status of the payment prior to being marked as "complete", probably "pending"
- * @internal param Arguments $data passed
- */
-function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
-
-	$backtrace = debug_backtrace();
-	_edd_deprecated_function( 'edd_undo_purchase_on_refund', '2.5.7', 'EDD_Payment->refund()', $backtrace );
-
-	$payment = new EDD_Payment( $payment_id );
-	$payment->refund();
-}
 
 /**
  * Flushes the current user's purchase history transient when a payment status
@@ -366,3 +417,147 @@ function edd_cleanup_stats_transients() {
 
 }
 add_action( 'edd_daily_scheduled_events', 'edd_cleanup_stats_transients' );
+
+/**
+ * Process an attempt to complete a recoverable payment.
+ *
+ * @since  2.7
+ * @return void
+ */
+function edd_recover_payment() {
+	if ( empty( $_GET['payment_id'] ) ) {
+		return;
+	}
+
+	$payment = new EDD_Payment( $_GET['payment_id'] );
+	if ( $payment->ID !== (int) $_GET['payment_id'] ) {
+		return;
+	}
+
+	if ( ! $payment->is_recoverable() ) {
+		return;
+	}
+
+	if ( is_user_logged_in() && $payment->user_id != get_current_user_id() ) {
+		$redirect = get_permalink( edd_get_option( 'purchase_history_page' ) );
+		edd_set_error( 'edd-payment-recovery-user-mismatch', __( 'Error resuming payment.', 'easy-digital-downloads' ) );
+		wp_redirect( $redirect );
+	}
+
+	$payment->add_note( __( 'Payment recovery triggered URL', 'easy-digital-downloads' ) );
+
+	// Empty out the cart.
+	EDD()->cart->empty_cart();
+
+	// Recover any downloads.
+	foreach ( $payment->cart_details as $download ) {
+		edd_add_to_cart( $download['id'], $download['item_number']['options'] );
+
+		// Recover any item specific fees.
+		if ( ! empty( $download['fees'] ) ) {
+			foreach ( $download['fees'] as $fee ) {
+				EDD()->fees->add_fee( $fee );
+			}
+		}
+	}
+
+	// Recover any global fees.
+	foreach ( $payment->fees as $fee ) {
+		EDD()->fees->add_fee( $fee );
+	}
+
+	// Recover any discounts.
+	if ( 'none' !== $payment->discounts && ! empty( $payment->discounts ) ){
+		$discounts = ! is_array( $payment->discounts ) ? explode( ',', $payment->discounts ) : $payment->discounts;
+
+		foreach ( $discounts as $discount ) {
+			edd_set_cart_discount( $discount );
+		}
+	}
+
+	EDD()->session->set( 'edd_resume_payment', $payment->ID );
+
+	$redirect_args = array( 'payment-mode' => $payment->gateway );
+	$redirect      = add_query_arg( $redirect_args, edd_get_checkout_uri() );
+	wp_redirect( $redirect );
+	exit;
+}
+add_action( 'edd_recover_payment', 'edd_recover_payment' );
+
+/**
+ * If the payment trying to be recovered has a User ID associated with it, be sure it's the same user.
+ *
+ * @since  2.7
+ * @return void
+ */
+function edd_recovery_user_mismatch() {
+	if ( ! edd_is_checkout() ) {
+		return;
+	}
+
+	$resuming_payment = EDD()->session->get( 'edd_resume_payment' );
+	if ( $resuming_payment ) {
+		$payment = new EDD_Payment( $resuming_payment );
+		if ( is_user_logged_in() && $payment->user_id != get_current_user_id() ) {
+			edd_empty_cart();
+			edd_set_error( 'edd-payment-recovery-user-mismatch', __( 'Error resuming payment.', 'easy-digital-downloads' ) );
+			wp_redirect( get_permalink( edd_get_option( 'purchase_page' ) ) );
+			exit;
+		}
+	}
+}
+add_action( 'template_redirect', 'edd_recovery_user_mismatch' );
+
+/**
+ * If the payment trying to be recovered has a User ID associated with it, we need them to log in.
+ *
+ * @since  2.7
+ * @return void
+ */
+function edd_recovery_force_login_fields() {
+	$resuming_payment = EDD()->session->get( 'edd_resume_payment' );
+	if ( $resuming_payment ) {
+		$payment        = new EDD_Payment( $resuming_payment );
+		$requires_login = edd_no_guest_checkout();
+		if ( ( $requires_login && ! is_user_logged_in() ) && ( $payment->user_id > 0 && ( ! is_user_logged_in() ) ) ) {
+			?>
+			<div class="edd-alert edd-alert-info">
+				<p><?php _e( 'To complete this payment, please login to your account.', 'easy-digital-downloads' ); ?></p>
+				<p>
+					<a href="<?php echo wp_lostpassword_url(); ?>" title="<?php _e( 'Lost Password', 'easy-digital-downloads' ); ?>">
+						<?php _e( 'Lost Password?', 'easy-digital-downloads' ); ?>
+					</a>
+				</p>
+			</div>
+			<?php
+			$show_register_form = edd_get_option( 'show_register_form', 'none' );
+
+			if ( 'both' === $show_register_form || 'login' === $show_register_form ) {
+				return;
+			}
+			do_action( 'edd_purchase_form_login_fields' );
+		}
+	}
+}
+add_action( 'edd_purchase_form_before_register_login', 'edd_recovery_force_login_fields' );
+
+/**
+ * When processing the payment, check if the resuming payment has a user id and that it matches the logged in user.
+ *
+ * @since 2.7
+ * @param $verified_data
+ * @param $post_data
+ */
+function edd_recovery_verify_logged_in( $verified_data, $post_data ) {
+	$resuming_payment = EDD()->session->get( 'edd_resume_payment' );
+	if ( $resuming_payment ) {
+		$payment    = new EDD_Payment( $resuming_payment );
+		$same_user  = ! empty( $payment->user_id ) && ( is_user_logged_in() && $payment->user_id == get_current_user_id() );
+		$same_email = strtolower( $payment->email ) === strtolower( $post_data['edd_email'] );
+
+		if ( ( is_user_logged_in() && ! $same_user ) || ( ! is_user_logged_in() && (int) $payment->user_id > 0 && ! $same_email ) ) {
+			edd_set_error( 'recovery_requires_login', __( 'To complete this payment, please login to your account.', 'easy-digital-downloads' ) );
+		}
+	}
+}
+add_action( 'edd_checkout_error_checks', 'edd_recovery_verify_logged_in', 10, 2 );

@@ -4,7 +4,8 @@
 /**
  * @group edd_languages
  */
-class Tests_Languages extends WP_UnitTestCase {
+class Tests_Languages extends EDD_UnitTestCase {
+
 	public function setUp() {
 		parent::setUp();
 	}

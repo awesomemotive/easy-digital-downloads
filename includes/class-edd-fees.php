@@ -83,7 +83,7 @@ class EDD_Fees {
 
 		}
 
-		//If the fee is for an "item" but we passed in a download id
+		// If the fee is for an "item" but we passed in a download id
 		if( 'item' === $args['type'] && ! empty( $args['download_id'] ) ) {
 			unset( $args['download_id'] );
 			unset( $args['price_id'] );
@@ -106,6 +106,9 @@ class EDD_Fees {
 
 		// Sanitize the amount
 		$args['amount'] = edd_sanitize_amount( $args['amount'] );
+
+		// Force the amount to have the proper number of decimal places.
+		$args['amount'] = number_format( (float) $args['amount'], edd_currency_decimal_filter(), '.', '' );
 
 		// Force no_tax to true if the amount is negative
 		if( $args['amount'] < 0 ) {
@@ -184,80 +187,55 @@ class EDD_Fees {
 	 * @return array|bool List of fees when available, false when there are no fees
 	 */
 	public function get_fees( $type = 'fee', $download_id = 0, $price_id = NULL ) {
-
 		$fees = EDD()->session->get( 'edd_cart_fees' );
 
-		if( ! edd_get_cart_contents() ) {
+		if ( EDD()->cart->is_empty() ) {
 			// We can only get item type fees when the cart is empty
 			$type = 'item';
 		}
 
-		if( ! empty( $fees ) && ! empty( $type ) && 'all' !== $type ) {
-
-			foreach( $fees as $key => $fee ) {
-
-				if( ! empty( $fee['type'] ) && $type != $fee['type'] ) {
-
+		if ( ! empty( $fees ) && ! empty( $type ) && 'all' !== $type ) {
+			foreach ( $fees as $key => $fee ) {
+				if ( ! empty( $fee['type'] ) && $type != $fee['type'] ) {
 					unset( $fees[ $key ] );
-
 				}
-
 			}
-
 		}
 
-		if( ! empty( $fees ) && ! empty( $download_id ) ) {
-
+		if ( ! empty( $fees ) && ! empty( $download_id ) ) {
 			// Remove fees that don't belong to the specified Download
-			foreach( $fees as $key => $fee ) {
-
-				if( (int) $download_id !== (int) $fee['download_id'] ) {
-
+			foreach ( $fees as $key => $fee ) {
+				if ( empty( $fee['download_id'] ) || (int) $download_id !== (int) $fee['download_id'] ) {
 					unset( $fees[ $key ] );
-
 				}
-
 			}
-
 		}
 
 		// Now that we've removed any fees that are for other Downloads, lets also remove any fees that don't match this price id
-		if( ! empty( $fees ) && ! empty( $download_id ) && ! is_null( $price_id ) ) {
-
+		if ( ! empty( $fees ) && ! empty( $download_id ) && ! is_null( $price_id ) ) {
 			// Remove fees that don't belong to the specified Download AND Price ID
-			foreach( $fees as $key => $fee ) {
-
-				if( is_null( $fee['price_id'] ) ) {
+			foreach ( $fees as $key => $fee ) {
+				if ( is_null( $fee['price_id'] ) ) {
 					continue;
 				}
 
 				if ( (int) $price_id !== (int) $fee['price_id'] ){
-
 					unset( $fees[ $key ] );
-
 				}
-
 			}
-
 		}
 
-		if( ! empty( $fees ) ) {
-
+		if ( ! empty( $fees ) ) {
 			// Remove fees that belong to a specific download but are not in the cart
-			foreach( $fees as $key => $fee ) {
-
-				if( empty( $fee['download_id'] ) ) {
+			foreach ( $fees as $key => $fee ) {
+				if ( empty( $fee['download_id'] ) ) {
 					continue;
 				}
 
-				if( ! edd_item_in_cart( $fee['download_id'] ) ) {
-
+				if ( ! edd_item_in_cart( $fee['download_id'] ) ) {
 					unset( $fees[ $key ] );
-
 				}
-
 			}
-
 		}
 
 		// Allow 3rd parties to process the fees before returning them
@@ -342,7 +320,6 @@ class EDD_Fees {
 	 * @return array Return the payment meta with the fees added
 	*/
 	public function record_fees( $payment_meta, $payment_data ) {
-
 		if ( $this->has_fees( 'all' ) ) {
 
 			$payment_meta['fees'] = $this->get_fees( 'all' );
