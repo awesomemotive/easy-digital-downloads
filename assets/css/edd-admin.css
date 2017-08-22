@@ -245,10 +245,12 @@ tr.status-refunded td {
 	cursor: pointer;
 	vertical-align: middle;
 }
-.edd-repeatable-row-actions .toggle-custom-price-option-section {
+.edd-repeatable-row-actions .toggle-custom-price-option-section,
+.edd-repeatable-row-actions .toggle-file-info-section {
 	color: #777;
 }
-.edd-repeatable-row-actions .toggle-custom-price-option-section:hover {
+.edd-repeatable-row-actions .toggle-custom-price-option-section:hover,
+.edd-repeatable-row-actions .toggle-file-info-section:hover {
 	color: #444;
 }
 .edd-repeatable-row-header,
@@ -361,7 +363,8 @@ tr.status-refunded td {
 .edd-file-assignment .edd-repeatable-row-setting-label {
 	margin-bottom: 0;
 }
-.edd-custom-price-option-sections-wrap {
+.edd-custom-price-option-sections-wrap,
+.edd-file-info-sections-wrap {
 	display: none;
 	border-width: 0 1px 1px;
 	border-style: solid;

@@ -16,6 +16,8 @@ jQuery(document).ready(function ($) {
 			this.prices();
 			this.files();
 			this.updatePrices();
+			this.showAdvanced();
+			this.showFileInfo();
 		},
 		clone_repeatable : function(row) {
 
@@ -332,33 +334,46 @@ jQuery(document).ready(function ($) {
 					);
 				}
 			} );
-		}
+		},
+
+		showAdvanced: function() {
+			// Toggle display of entire custom settings section for a price option
+			$( document.body ).on( 'click', '.toggle-custom-price-option-section', function(e) {
+				e.preventDefault();
+				var show = $(this).html() == edd_vars.show_advanced_settings ? true : false;
+
+				if ( show ) {
+					$(this).html( edd_vars.hide_advanced_settings );
+				} else {
+					$(this).html( edd_vars.show_advanced_settings );
+				}
+
+				var header = $(this).parents('.edd-repeatable-row-header');
+				header.siblings('.edd-custom-price-option-sections-wrap').slideToggle();
+
+				var first_input;
+				if ( show ) {
+					first_input = $(":input:not(input[type=button],input[type=submit],button):visible:first", header.siblings('.edd-custom-price-option-sections-wrap'));
+				} else {
+					first_input = $(":input:not(input[type=button],input[type=submit],button):visible:first", header.siblings('.edd-repeatable-row-standard-fields'));
+				}
+				first_input.focus();
+			});
+		},
+
+		showFileInfo: function() {
+			// Toggle display of entire custom settings section for a price option
+			$( document.body ).on( 'click', '.toggle-file-info-section', function(e) {
+
+				e.preventDefault();
+
+				var header = $(this).parents('.edd-repeatable-row-header');
+				header.siblings('.edd-file-info-sections-wrap').slideToggle();
+
+			});
+		},
 
 	};
-
-	// Toggle display of entire custom settings section for a price option
-	$( document.body ).on( 'click', '.toggle-custom-price-option-section', function(e) {
-		e.preventDefault();
-		var show = $(this).html() == edd_vars.show_advanced_settings ? true : false;
-
-		if ( show ) {
-			$(this).html( edd_vars.hide_advanced_settings );
-		} else {
-			$(this).html( edd_vars.show_advanced_settings );
-		}
-
-		var header = $(this).parents('.edd-repeatable-row-header');
-		header.siblings('.edd-custom-price-option-sections-wrap').slideToggle();
-
-		var first_input;
-		if ( show ) {
-			first_input = $(":input:not(input[type=button],input[type=submit],button):visible:first", header.siblings('.edd-custom-price-option-sections-wrap'));
-		} else {
-			first_input = $(":input:not(input[type=button],input[type=submit],button):visible:first", header.siblings('.edd-repeatable-row-standard-fields'));
-		}
-		first_input.focus();
-	});
-
 	EDD_Download_Configuration.init();
 
 	//$('#edit-slug-box').remove();

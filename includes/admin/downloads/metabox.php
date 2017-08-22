@@ -798,6 +798,8 @@ add_action( 'edd_meta_box_files_fields', 'edd_render_files_field', 20 );
  * @return void
  */
 function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
+	global $post;
+
 	$defaults = array(
 		'name'           => null,
 		'file'           => null,
@@ -813,16 +815,29 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 	$variable_pricing = edd_has_variable_prices( $post_id );
 	$variable_display = $variable_pricing ? '' : ' style="display:none;"';
 	$variable_class   = $variable_pricing ? ' has-variable-pricing' : '';
+
+	if ( ! function_exists( 'edd_is_local_file' ) ) {
+		require_once EDD_PLUGIN_DIR . 'includes/process-download.php';
+	}
 ?>
 	<div class="edd-repeatable-row-header edd-draghandle-anchor">
 		<span class="edd-repeatable-row-title" title="<?php _e( 'Click and drag to re-order files', 'easy-digital-downloads' ); ?>">
 			<?php printf( __( '%1$s file ID: %2$s', 'easy-digital-downloads' ), edd_get_label_singular(), '<span class="edd_file_id">' . $key . '</span>' ); ?>
 			<input type="hidden" name="edd_download_files[<?php echo $key; ?>][index]" class="edd_repeatable_index" value="<?php echo $index; ?>"/>
 		</span>
+
+		<?php
+		$actions = array();
+		if ( ! empty( $args['file'] ) ) {
+			$actions['show_file_info'] = '<a href="#" class="toggle-file-info-section">' . __( 'View file information', 'easy-digital-downloads' ) . '</a>';
+		}
+
+		$actions['remove'] = '<a class="edd-remove-row edd-delete" data-type="file">' . sprintf( __( 'Remove', 'easy-digital-downloads' ), $key ) . '<span class="screen-reader-text">' . sprintf( __( 'Remove file %s', 'easy-digital-downloads' ), $key ) . '</span></a>';
+		?>
 		<span class="edd-repeatable-row-actions">
-			<a class="edd-remove-row edd-delete" data-type="file"><?php printf( __( 'Remove', 'easy-digital-downloads' ), $key ); ?><span class="screen-reader-text"><?php printf( __( 'Remove file %s', 'easy-digital-downloads' ), $key ); ?></span>
-			</a>
+			<?php echo implode( '&nbsp;&#124;&nbsp;', $actions ); ?>
 		</span>
+
 	</div>
 
 	<div class="edd-repeatable-row-standard-fields<?php echo $variable_class; ?>">
@@ -879,6 +894,81 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 		</div>
 
 		<?php do_action( 'edd_download_file_table_row', $post_id, $key, $args ); ?>
+
+	</div>
+
+	<div class="edd-file-info-sections-wrap">
+
+		<div class="edd-file-info-sections">
+			<div class="edd-sl-price-option-settings-legacy edd-custom-price-option-section">
+				<span class="edd-file-info-section-title"><?php _e( 'File Information', 'easy-digital-downloads' ); ?></span>
+				<span class="edd-file-location">
+						<label class="edd-legacy-setting-label"><?php _e( 'File Location', 'easy-digital-downloads' ); ?></label>
+						<span>
+							<?php
+							$attachment_id = ! empty( $args['attachment_id'] ) ? $args['attachment_id'] : false;
+							$is_local      = edd_is_local_file( $args['file'] );
+
+							echo ( $attachment_id || $is_local ) ? __( 'Local', 'easy-digital-downloads' ) : __( 'Remote', 'easy-digital-downloads' );
+							?>
+						</span>
+				</span>
+
+				<span class="">
+					<label class="edd-legacy-setting-label"><?php _e( 'File Type', 'easy-digital-downloads' ); ?></label>
+					<span>
+						<?php
+						if ( ! empty( $attachment_id ) ) :
+							$mime_type = get_post_mime_type( $args['attachment_id'] );
+							$mime_img  = wp_mime_type_icon( $mime_type );
+						?>
+						<img height="20px" src="<?php echo $mime_img; ?>" /> <?php echo $mime_type; ?>
+						<?php endif; ?>
+					</span>
+				</span>
+
+				<span class="">
+					<label class="edd-legacy-setting-label"><?php _e( 'File size', 'easy-digital-downloads' ); ?></label>
+					<span>
+						<?php
+						if ( ! empty( $args['attachment_id'] ) ) {
+							$bytes = filesize( get_attached_file( $args[ 'attachment_id' ] ) );
+							echo size_format( $bytes, 2 );
+						}
+						?>
+					</span>
+				</span>
+
+				<span class="">
+					<label class="edd-legacy-setting-label"><?php _e( 'File actions', 'easy-digital-downloads' ); ?></label>
+					<span>
+						<?php
+							$actions = array();
+
+							if ( empty( $args['attachment_id'] ) ) {
+								$url = $args['file'];
+							} else {
+								$query_args = array(
+									'edd_action'          => 'process_admin_download',
+									'admin_download_id'   => $post->ID,
+									'admin_attachment_id' => $args['attachment_id'],
+									'_wpnonce'           => wp_create_nonce( 'edd_admin_file_download' ),
+								);
+								$url = esc_url( add_query_arg( $query_args, home_url() ) );
+							}
+
+							$actions['download'] = '<a href="' . $url . '">' . __( 'Download File', 'easy-digital-downloads' ) . '</a>';
+							$actions = apply_filters( 'edd_file_info_file_actions', $actions, $post_id, $key, $args );
+
+							echo implode( '&nbsp;&#124;&nbsp;', $actions );
+						?>
+
+					</span>
+				</span>
+
+			</div>
+			<?php do_action( 'edd_download_file_row', $post_id, $key, $args ); ?>
+		</div>
 
 	</div>
 <?php
