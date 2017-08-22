@@ -266,19 +266,21 @@ function edd_get_cc_form() {
 		</p>
 		<?php do_action( 'edd_before_ccesc_html_expiration' ); ?>
 		<p class="card-expiration">
-			<label for="cardesc_html_exp_month" class="edd-label">
+			<label for="card_exp_month" class="edd-label">
 				<?php esc_html_e( 'Expiration (MM/YY)', 'easy-digital-downloads' ); ?>
-				<span class="edd-required-indicator">*</span>
+				<span class="edd-required-indicator" id="card_exp_month_desc">*</span>
 			</label>
 			<span class="edd-description"><?php esc_html_e( 'The date your credit card expires, typically on the front of the card.', 'easy-digital-downloads' ); ?></span>
-			<select id="cardesc_html_exp_month" name="cardesc_html_exp_month" class="card-expiry-month edd-select edd-select-small required">
+			<select id="card_exp_month" name="card_exp_month" class="card-expiry-month edd-select edd-select-small required" aria-describedby="card_exp_month_desc">
 				<?php for( $i = 1; $i <= 12; $i++ ) {
 					echo '<option value="' . $i . '">' . sprintf ('%02d', $i ) . '</option>';
 				} ?>
 			</select>
 			<span class="exp-divider"> / </span>
-			<select id="cardesc_html_exp_year" name="cardesc_html_exp_year" class="card-expiry-year edd-select edd-select-small required">
-				<?php for( $i = date('Y'); $i <= date('Y') + 30; $i++ ) { echo '<option value="' . $i . '">' . substr( $i, 2 ) . '</option>'; } ?>
+			<select id="card_exp_year" name="card_exp_year" class="card-expiry-year edd-select edd-select-small required">
+				<?php for( $i = date('Y'); $i <= date('Y') + 30; $i++ ) {
+					echo '<option value="' . $i . '">' . substr( $i, 2 ) . '</option>';
+				} ?>
 			</select>
 		</p>
 	</fieldset>
