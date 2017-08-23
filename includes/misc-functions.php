@@ -303,33 +303,35 @@ function edd_is_host( $host = false ) {
  */
 function edd_get_currencies() {
 	$currencies = array(
-		'USD'  => __( 'US Dollars (&#36;)', 'easy-digital-downloads' ),
-		'EUR'  => __( 'Euros (&euro;)', 'easy-digital-downloads' ),
-		'GBP'  => __( 'Pound Sterling (&pound;)', 'easy-digital-downloads' ),
-		'AUD'  => __( 'Australian Dollars (&#36;)', 'easy-digital-downloads' ),
-		'BRL'  => __( 'Brazilian Real (R&#36;)', 'easy-digital-downloads' ),
-		'CAD'  => __( 'Canadian Dollars (&#36;)', 'easy-digital-downloads' ),
-		'CZK'  => __( 'Czech Koruna', 'easy-digital-downloads' ),
-		'DKK'  => __( 'Danish Krone', 'easy-digital-downloads' ),
-		'HKD'  => __( 'Hong Kong Dollar (&#36;)', 'easy-digital-downloads' ),
-		'HUF'  => __( 'Hungarian Forint', 'easy-digital-downloads' ),
-		'ILS'  => __( 'Israeli Shekel (&#8362;)', 'easy-digital-downloads' ),
-		'JPY'  => __( 'Japanese Yen (&yen;)', 'easy-digital-downloads' ),
-		'MYR'  => __( 'Malaysian Ringgits', 'easy-digital-downloads' ),
-		'MXN'  => __( 'Mexican Peso (&#36;)', 'easy-digital-downloads' ),
-		'NZD'  => __( 'New Zealand Dollar (&#36;)', 'easy-digital-downloads' ),
-		'NOK'  => __( 'Norwegian Krone', 'easy-digital-downloads' ),
-		'PHP'  => __( 'Philippine Pesos', 'easy-digital-downloads' ),
-		'PLN'  => __( 'Polish Zloty', 'easy-digital-downloads' ),
-		'SGD'  => __( 'Singapore Dollar (&#36;)', 'easy-digital-downloads' ),
-		'SEK'  => __( 'Swedish Krona', 'easy-digital-downloads' ),
-		'CHF'  => __( 'Swiss Franc', 'easy-digital-downloads' ),
-		'TWD'  => __( 'Taiwan New Dollars', 'easy-digital-downloads' ),
-		'THB'  => __( 'Thai Baht (&#3647;)', 'easy-digital-downloads' ),
-		'INR'  => __( 'Indian Rupee (&#8377;)', 'easy-digital-downloads' ),
-		'TRY'  => __( 'Turkish Lira (&#8378;)', 'easy-digital-downloads' ),
-		'RIAL' => __( 'Iranian Rial (&#65020;)', 'easy-digital-downloads' ),
-		'RUB'  => __( 'Russian Rubles', 'easy-digital-downloads' )
+
+		'USD'  => __( 'US Dollars (&#36;)', 'edd' ),
+		'AOA'  => __( 'Kwanz Angola (Kz)', 'edd' ),
+		'EUR'  => __( 'Euros (&euro;)', 'edd' ),
+		'GBP'  => __( 'Pounds Sterling (&pound;)', 'edd' ),
+		'AUD'  => __( 'Australian Dollars (&#36;)', 'edd' ),
+		'BRL'  => __( 'Brazilian Real (R&#36;)', 'edd' ),
+		'CAD'  => __( 'Canadian Dollars (&#36;)', 'edd' ),
+		'CZK'  => __( 'Czech Koruna', 'edd' ),
+		'DKK'  => __( 'Danish Krone', 'edd' ),
+		'HKD'  => __( 'Hong Kong Dollar (&#36;)', 'edd' ),
+		'HUF'  => __( 'Hungarian Forint', 'edd' ),
+		'ILS'  => __( 'Israeli Shekel (&#8362;)', 'edd' ),
+		'JPY'  => __( 'Japanese Yen (&yen;)', 'edd' ),
+		'MYR'  => __( 'Malaysian Ringgits', 'edd' ),
+		'MXN'  => __( 'Mexican Peso (&#36;)', 'edd' ),
+		'NZD'  => __( 'New Zealand Dollar (&#36;)', 'edd' ),
+		'NOK'  => __( 'Norwegian Krone', 'edd' ),
+		'PHP'  => __( 'Philippine Pesos', 'edd' ),
+		'PLN'  => __( 'Polish Zloty', 'edd' ),
+		'SGD'  => __( 'Singapore Dollar (&#36;)', 'edd' ),
+		'SEK'  => __( 'Swedish Krona', 'edd' ),
+		'CHF'  => __( 'Swiss Franc', 'edd' ),
+		'TWD'  => __( 'Taiwan New Dollars', 'edd' ),
+		'THB'  => __( 'Thai Baht (&#3647;)', 'edd' ),
+		'INR'  => __( 'Indian Rupee (&#8377;)', 'edd' ),
+		'TRY'  => __( 'Turkish Lira (&#8378;)', 'edd' ),
+		'RIAL' => __( 'Iranian Rial (&#65020;)', 'edd' ),
+		'RUB'  => __( 'Russian Rubles', 'edd' )
 	);
 
 	return apply_filters( 'edd_currencies', $currencies );
@@ -365,6 +367,9 @@ function edd_currency_symbol( $currency = '' ) {
 			break;
 		case "BRL" :
 			$symbol = 'R&#36;';
+			break;
+		case "AOA" :
+			$symbol = 'Kz';
 			break;
 		case "EUR" :
 			$symbol = '&euro;';
