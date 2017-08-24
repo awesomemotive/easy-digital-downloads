@@ -218,7 +218,7 @@ function edd_show_has_purchased_item_message() {
 		return;
 
 	if ( edd_has_user_purchased( $user_ID, $post->ID ) ) {
-		$alert = '<p class="edd_has_purchased">' . __( 'You have already purchased this item, but you may purchase it again.', 'edd' ) . '</p>';
+		$alert = '<p class="edd_has_purchased">' . __( 'You have already purchased this item, but you may purchase it again.', 'easy-digital-downloads' ) . '</p>';
 		echo apply_filters( 'edd_show_has_purchased_item_message', $alert );
 	}
 }
@@ -298,23 +298,23 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
  * @return string $tags
  */
 function edd_get_purchase_receipt_template_tags() {
-	$tags = __('Enter the email that is sent to users after completing a successful purchase. HTML is accepted. Available template tags:', 'edd') . '<br/>' .
-			'{download_list} - ' . __('A list of download links for each download purchased', 'edd') . '<br/>' .
-			'{file_urls} - ' . __('A plain-text list of download URLs for each download purchased', 'edd') . '<br/>' .
-			'{name} - ' . __('The buyer\'s first name', 'edd') . '<br/>' .
-			'{fullname} - ' . __('The buyer\'s full name, first and last', 'edd') . '<br/>' .
-			'{username} - ' . __('The buyer\'s user name on the site, if they registered an account', 'edd') . '<br/>' .
-			'{user_email} - ' . __('The buyer\'s email address', 'edd') . '<br/>' .
-			'{billing_address} - ' . __('The buyer\'s billing address', 'edd') . '<br/>' .
-			'{date} - ' . __('The date of the purchase', 'edd') . '<br/>' .
-			'{subtotal} - ' . __('The price of the purchase before taxes', 'edd') . '<br/>' .
-			'{tax} - ' . __('The taxed amount of the purchase', 'edd') . '<br/>' .
-			'{price} - ' . __('The total price of the purchase', 'edd') . '<br/>' .
-			'{payment_id} - ' . __('The unique ID number for this purchase', 'edd') . '<br/>' .
-			'{receipt_id} - ' . __('The unique ID number for this purchase receipt', 'edd') . '<br/>' .
-			'{payment_method} - ' . __('The method of payment used for this purchase', 'edd') . '<br/>' .
-			'{sitename} - ' . __('Your site name', 'edd') . '<br/>' .
-			'{receipt_link} - ' . __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the browser correctly.', 'edd' );
+	$tags = __('Enter the email that is sent to users after completing a successful purchase. HTML is accepted. Available template tags:','easy-digital-downloads' ) . '<br/>' .
+			'{download_list} - ' . __('A list of download links for each download purchased','easy-digital-downloads' ) . '<br/>' .
+			'{file_urls} - ' . __('A plain-text list of download URLs for each download purchased','easy-digital-downloads' ) . '<br/>' .
+			'{name} - ' . __('The buyer\'s first name','easy-digital-downloads' ) . '<br/>' .
+			'{fullname} - ' . __('The buyer\'s full name, first and last','easy-digital-downloads' ) . '<br/>' .
+			'{username} - ' . __('The buyer\'s user name on the site, if they registered an account','easy-digital-downloads' ) . '<br/>' .
+			'{user_email} - ' . __('The buyer\'s email address','easy-digital-downloads' ) . '<br/>' .
+			'{billing_address} - ' . __('The buyer\'s billing address','easy-digital-downloads' ) . '<br/>' .
+			'{date} - ' . __('The date of the purchase','easy-digital-downloads' ) . '<br/>' .
+			'{subtotal} - ' . __('The price of the purchase before taxes','easy-digital-downloads' ) . '<br/>' .
+			'{tax} - ' . __('The taxed amount of the purchase','easy-digital-downloads' ) . '<br/>' .
+			'{price} - ' . __('The total price of the purchase','easy-digital-downloads' ) . '<br/>' .
+			'{payment_id} - ' . __('The unique ID number for this purchase','easy-digital-downloads' ) . '<br/>' .
+			'{receipt_id} - ' . __('The unique ID number for this purchase receipt','easy-digital-downloads' ) . '<br/>' .
+			'{payment_method} - ' . __('The method of payment used for this purchase','easy-digital-downloads' ) . '<br/>' .
+			'{sitename} - ' . __('Your site name','easy-digital-downloads' ) . '<br/>' .
+			'{receipt_link} - ' . __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the browser correctly.', 'easy-digital-downloads' );
 
 	return apply_filters( 'edd_purchase_receipt_template_tags_description', $tags );
 }
@@ -331,22 +331,22 @@ function edd_get_purchase_receipt_template_tags() {
  * @return string $tags
  */
 function edd_get_sale_notification_template_tags() {
-	$tags = __( 'Enter the email that is sent to sale notification emails after completion of a purchase. HTML is accepted. Available template tags:', 'edd' ) . '<br/>' .
-			'{download_list} - ' . __('A list of download links for each download purchased', 'edd') . '<br/>' .
-			'{file_urls} - ' . __('A plain-text list of download URLs for each download purchased', 'edd') . '<br/>' .
-			'{name} - ' . __('The buyer\'s first name', 'edd') . '<br/>' .
-			'{fullname} - ' . __('The buyer\'s full name, first and last', 'edd') . '<br/>' .
-			'{username} - ' . __('The buyer\'s user name on the site, if they registered an account', 'edd') . '<br/>' .
-			'{user_email} - ' . __('The buyer\'s email address', 'edd') . '<br/>' .
-			'{billing_address} - ' . __('The buyer\'s billing address', 'edd') . '<br/>' .
-			'{date} - ' . __('The date of the purchase', 'edd') . '<br/>' .
-			'{subtotal} - ' . __('The price of the purchase before taxes', 'edd') . '<br/>' .
-			'{tax} - ' . __('The taxed amount of the purchase', 'edd') . '<br/>' .
-			'{price} - ' . __('The total price of the purchase', 'edd') . '<br/>' .
-			'{payment_id} - ' . __('The unique ID number for this purchase', 'edd') . '<br/>' .
-			'{receipt_id} - ' . __('The unique ID number for this purchase receipt', 'edd') . '<br/>' .
-			'{payment_method} - ' . __('The method of payment used for this purchase', 'edd') . '<br/>' .
-			'{sitename} - ' . __('Your site name', 'edd');
+	$tags = __( 'Enter the email that is sent to sale notification emails after completion of a purchase. HTML is accepted. Available template tags:', 'easy-digital-downloads' ) . '<br/>' .
+			'{download_list} - ' . __('A list of download links for each download purchased','easy-digital-downloads' ) . '<br/>' .
+			'{file_urls} - ' . __('A plain-text list of download URLs for each download purchased','easy-digital-downloads' ) . '<br/>' .
+			'{name} - ' . __('The buyer\'s first name','easy-digital-downloads' ) . '<br/>' .
+			'{fullname} - ' . __('The buyer\'s full name, first and last','easy-digital-downloads' ) . '<br/>' .
+			'{username} - ' . __('The buyer\'s user name on the site, if they registered an account','easy-digital-downloads' ) . '<br/>' .
+			'{user_email} - ' . __('The buyer\'s email address','easy-digital-downloads' ) . '<br/>' .
+			'{billing_address} - ' . __('The buyer\'s billing address','easy-digital-downloads' ) . '<br/>' .
+			'{date} - ' . __('The date of the purchase','easy-digital-downloads' ) . '<br/>' .
+			'{subtotal} - ' . __('The price of the purchase before taxes','easy-digital-downloads' ) . '<br/>' .
+			'{tax} - ' . __('The taxed amount of the purchase','easy-digital-downloads' ) . '<br/>' .
+			'{price} - ' . __('The total price of the purchase','easy-digital-downloads' ) . '<br/>' .
+			'{payment_id} - ' . __('The unique ID number for this purchase','easy-digital-downloads' ) . '<br/>' .
+			'{receipt_id} - ' . __('The unique ID number for this purchase receipt','easy-digital-downloads' ) . '<br/>' .
+			'{payment_method} - ' . __('The method of payment used for this purchase','easy-digital-downloads' ) . '<br/>' .
+			'{sitename} - ' . __('Your site name','easy-digital-downloads' );
 
 	return apply_filters( 'edd_sale_notification_template_tags_description', $tags );
 }
@@ -514,7 +514,7 @@ function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $ex
 
 					// Check to see if the file download limit has been reached
 					if ( edd_is_file_at_download_limit( $cart_item['id'], $payment->ID, $file_key, $price_id ) )
-						wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+						wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'easy-digital-downloads' ) ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 
 					// If this download has variable prices, we have to confirm that this file was included in their purchase
 					if ( ! empty( $price_options ) && $file_condition != 'all' && edd_has_variable_prices( $cart_item['id'] ) ) {
@@ -529,7 +529,7 @@ function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $ex
 					}
 
 					if ( current_time( 'timestamp' ) > $expire ) {
-						wp_die( apply_filters( 'edd_download_link_expired_text', __( 'Sorry but your download link has expired.', 'edd' ) ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+						wp_die( apply_filters( 'edd_download_link_expired_text', __( 'Sorry but your download link has expired.', 'easy-digital-downloads' ) ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 					}
 					return $payment->ID; // Payment has been verified and link is still valid
 				}
@@ -539,8 +539,196 @@ function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $ex
 		}
 
 	} else {
-		wp_die( __( 'No payments matching your request were found.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+		wp_die( __( 'No payments matching your request were found.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 	// Payment not verified
 	return false;
+}
+
+/**
+ * Get Success Page URL
+ *
+ * @param string $query_string
+ * @access      public
+ * @since       1.0
+ * @deprecated  2.6 Please avoid usage of this function in favor of edd_get_success_page_uri()
+ * @return      string
+*/
+function edd_get_success_page_url( $query_string = null ) {
+
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '2.6', 'edd_get_success_page_uri()', $backtrace );
+
+	return apply_filters( 'edd_success_page_url', edd_get_success_page_uri( $query_string ) );
+}
+
+/**
+ * Reduces earnings and sales stats when a purchase is refunded
+ *
+ * @since 1.8.2
+ * @param int $payment_id the ID number of the payment
+ * @param string $new_status the status of the payment, probably "publish"
+ * @param string $old_status the status of the payment prior to being marked as "complete", probably "pending"
+ * @deprecated  2.5.7 Please avoid usage of this function in favor of refund() in EDD_Payment
+ * @internal param Arguments $data passed
+ */
+function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
+
+	$backtrace = debug_backtrace();
+	_edd_deprecated_function( 'edd_undo_purchase_on_refund', '2.5.7', 'EDD_Payment->refund()', $backtrace );
+
+	$payment = new EDD_Payment( $payment_id );
+	$payment->refund();
+}
+
+/**
+ * Get Earnings By Date
+ *
+ * @since 1.0
+ * @deprecated 2.7
+ * @param int $day Day number
+ * @param int $month_num Month number
+ * @param int $year Year
+ * @param int $hour Hour
+ * @return int $earnings Earnings
+ */
+function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour = null, $include_taxes = true ) {
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '2.7', 'EDD_Payment_Stats()->get_earnings()', $backtrace );
+
+	global $wpdb;
+
+	$args = array(
+		'post_type'      => 'edd_payment',
+		'nopaging'       => true,
+		'year'           => $year,
+		'monthnum'       => $month_num,
+		'post_status'    => array( 'publish', 'revoked' ),
+		'fields'         => 'ids',
+		'update_post_term_cache' => false,
+		'include_taxes'  => $include_taxes,
+	);
+
+	if ( ! empty( $day ) ) {
+		$args['day'] = $day;
+	}
+
+	if ( ! empty( $hour ) || $hour == 0 ) {
+		$args['hour'] = $hour;
+	}
+
+	$args   = apply_filters( 'edd_get_earnings_by_date_args', $args );
+	$cached = get_transient( 'edd_stats_earnings' );
+	$key    = md5( json_encode( $args ) );
+
+	if ( ! isset( $cached[ $key ] ) ) {
+		$sales = get_posts( $args );
+		$earnings = 0;
+		if ( $sales ) {
+			$sales = implode( ',', $sales );
+
+			$total_earnings = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN ({$sales})" );
+			$total_tax      = 0;
+
+			if ( ! $include_taxes ) {
+				$total_tax = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_tax' AND post_id IN ({$sales})" );
+			}
+
+			$earnings += ( $total_earnings - $total_tax );
+		}
+		// Cache the results for one hour
+		$cached[ $key ] = $earnings;
+		set_transient( 'edd_stats_earnings', $cached, HOUR_IN_SECONDS );
+	}
+
+	$result = $cached[ $key ];
+
+	return round( $result, 2 );
+}
+
+/**
+ * Get Sales By Date
+ *
+ * @since 1.1.4.0
+ * @deprecated 2.7
+ * @author Sunny Ratilal
+ * @param int $day Day number
+ * @param int $month_num Month number
+ * @param int $year Year
+ * @param int $hour Hour
+ * @return int $count Sales
+ */
+function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $hour = null ) {
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '2.7', 'EDD_Payment_Stats()->get_sales()', $backtrace );
+
+	$args = array(
+		'post_type'      => 'edd_payment',
+		'nopaging'       => true,
+		'year'           => $year,
+		'fields'         => 'ids',
+		'post_status'    => array( 'publish', 'revoked' ),
+		'update_post_meta_cache' => false,
+		'update_post_term_cache' => false
+	);
+
+	$show_free = apply_filters( 'edd_sales_by_date_show_free', true, $args );
+
+	if ( false === $show_free ) {
+		$args['meta_query'] = array(
+			array(
+				'key' => '_edd_payment_total',
+				'value' => 0,
+				'compare' => '>',
+				'type' => 'NUMERIC',
+			),
+		);
+	}
+
+	if ( ! empty( $month_num ) )
+		$args['monthnum'] = $month_num;
+
+	if ( ! empty( $day ) )
+		$args['day'] = $day;
+
+	if ( ! empty( $hour ) )
+		$args['hour'] = $hour;
+
+	$args = apply_filters( 'edd_get_sales_by_date_args', $args  );
+
+	$cached = get_transient( 'edd_stats_sales' );
+	$key    = md5( json_encode( $args ) );
+
+	if ( ! isset( $cached[ $key ] ) ) {
+		$sales = new WP_Query( $args );
+		$count = (int) $sales->post_count;
+
+		// Cache the results for one hour
+		$cached[ $key ] = $count;
+		set_transient( 'edd_stats_sales', $cached, HOUR_IN_SECONDS );
+	}
+
+	$result = $cached[ $key ];
+
+	return $result;
+}
+
+/**
+ * Set the Page Style for PayPal Purchase page
+ *
+ * @since 1.4.1
+ * @deprecated 2.8
+ * @return string
+ */
+function edd_get_paypal_page_style() {
+
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '2.8', 'edd_get_paypal_image_url', $backtrace );
+
+	$page_style = trim( edd_get_option( 'paypal_page_style', 'PayPal' ) );
+	return apply_filters( 'edd_paypal_page_style', $page_style );
 }

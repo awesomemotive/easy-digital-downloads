@@ -119,82 +119,83 @@ class EDD_Pie_Graph extends EDD_Graph {
 	 */
 	public function build_graph() {
 
-		$this->load_scripts();
+		if ( count( $this->data ) ) {
+			$this->load_scripts();
 
-		ob_start();
-		?>
-		<script type="text/javascript">
-			var <?php echo $this->id; ?>_data = [
-			<?php foreach ( $this->data as $label => $value ) : ?>
-				<?php echo '{ label: "' . esc_attr( $label ) . '", data: "' . $value . '" },' . "\n"; ?>
-			<?php endforeach; ?>
-			];
+			ob_start();
+			?>
+			<script type="text/javascript">
+				var <?php echo $this->id; ?>_data = [
+				<?php foreach ( $this->data as $label => $value ) : ?>
+					<?php echo '{ label: "' . esc_attr( $label ) . '", data: "' . $value . '" },' . "\n"; ?>
+				<?php endforeach; ?>
+				];
 
-			var <?php echo $this->id; ?>_options = {
-				series: {
-					pie: {
-						show: true,
-						radius: <?php echo $this->options['radius']; ?>,
-						label: [],
+				var <?php echo $this->id; ?>_options = {
+					series: {
+						pie: {
+							show: true,
+							radius: <?php echo $this->options['radius']; ?>,
+							label: [],
+						},
+						edd_vars: {
+							id: '<?php echo $this->id; ?>',
+						}
 					},
-					edd_vars: {
-						id: '<?php echo $this->id; ?>',
-					}
-				},
-				legend: {
-					show: <?php echo $this->options['legend']; ?>,
-				},
-				grid: {},
-			};
+					legend: {
+						show: <?php echo $this->options['legend']; ?>,
+					},
+					grid: {},
+				};
 
-			<?php if ( true === $this->options['show_labels'] ) : ?>
-				<?php echo $this->id; ?>_options.series.pie.label.show = true;
-				<?php echo $this->id; ?>_options.series.pie.label.formatter = <?php echo $this->options['label_formatter']; ?>;
-				<?php echo $this->id; ?>_options.series.pie.label.threshold = <?php echo $this->options['label_threshold']; ?>;
-				<?php echo $this->id; ?>_options.series.pie.label.radius = <?php echo $this->options['label_radius']; ?>;
-				<?php echo $this->id; ?>_options.series.pie.label.background = { opacity: <?php echo $this->options['label_bg_opacity']; ?> };
-			<?php endif; ?>
-
-			<?php if ( true === $this->options['legend'] && ! empty( $this->options['legend_formatter'] ) ) : ?>
-				<?php echo $this->id; ?>_options.legend.labelFormatter = <?php echo $this->options['legend_formatter']; ?>;
-				<?php echo $this->id; ?>_options.legend.noColumns = <?php echo $this->options['legend_columns']; ?>;
-				<?php echo $this->id; ?>_options.legend.position = "<?php echo $this->options['legend_position']; ?>";
-			<?php endif; ?>
-
-			<?php if ( true === $this->options['hoverable'] ) : ?>
-				<?php echo $this->id; ?>_options.grid.hoverable = true;
-			<?php endif; ?>
-
-			<?php if ( true === $this->options['clickable'] ) : ?>
-				<?php echo $this->id; ?>_options.grid.clickable = true;
-			<?php endif; ?>
-
-			jQuery( document ).ready( function($) {
-				var <?php echo $this->id; ?>Chart = $('#edd-pie-graph-<?php echo $this->id; ?>');
-				$.plot( <?php echo $this->id; ?>Chart, <?php echo $this->id; ?>_data, <?php echo $this->id; ?>_options );
-				<?php if ( ! wp_is_mobile() ) : ?>
-				$(<?php echo $this->id; ?>Chart).on('plothover', function (event, pos, item) {
-					$('.edd-legend-item-wrapper').css('background-color', 'inherit');
-					if ( item ) {
-						var label = item.series.label;
-						var id    = item.series.edd_vars.id;
-
-						var slug = label.toLowerCase().replace(/\s/g, '-');
-						var legendTarget = '#' + id + slug;
-
-						$('.edd-legend-item-wrapper' + legendTarget).css('background-color', '#f0f0f0');
-					}
-				});
+				<?php if ( true === $this->options['show_labels'] ) : ?>
+					<?php echo $this->id; ?>_options.series.pie.label.show = true;
+					<?php echo $this->id; ?>_options.series.pie.label.formatter = <?php echo $this->options['label_formatter']; ?>;
+					<?php echo $this->id; ?>_options.series.pie.label.threshold = <?php echo $this->options['label_threshold']; ?>;
+					<?php echo $this->id; ?>_options.series.pie.label.radius = <?php echo $this->options['label_radius']; ?>;
+					<?php echo $this->id; ?>_options.series.pie.label.background = { opacity: <?php echo $this->options['label_bg_opacity']; ?> };
 				<?php endif; ?>
-			});
 
-		</script>
-		<div class="edd-pie-graph-wrap">
-			<div id="edd-pie-graph-<?php echo $this->id; ?>" class="edd-pie-graph" style="height: <?php echo $this->options['height']; ?>px;"></div>
-			<div id="edd-pie-legend-<?php echo $this->id; ?>" class="edd-pie-legend"></div>
-		</div>
-		<?php
+				<?php if ( true === $this->options['legend'] && ! empty( $this->options['legend_formatter'] ) ) : ?>
+					<?php echo $this->id; ?>_options.legend.labelFormatter = <?php echo $this->options['legend_formatter']; ?>;
+					<?php echo $this->id; ?>_options.legend.noColumns = <?php echo $this->options['legend_columns']; ?>;
+					<?php echo $this->id; ?>_options.legend.position = "<?php echo $this->options['legend_position']; ?>";
+				<?php endif; ?>
 
+				<?php if ( true === $this->options['hoverable'] ) : ?>
+					<?php echo $this->id; ?>_options.grid.hoverable = true;
+				<?php endif; ?>
+
+				<?php if ( true === $this->options['clickable'] ) : ?>
+					<?php echo $this->id; ?>_options.grid.clickable = true;
+				<?php endif; ?>
+
+				jQuery( document ).ready( function($) {
+					var <?php echo $this->id; ?>Chart = $('#edd-pie-graph-<?php echo $this->id; ?>');
+					$.plot( <?php echo $this->id; ?>Chart, <?php echo $this->id; ?>_data, <?php echo $this->id; ?>_options );
+					<?php if ( ! wp_is_mobile() ) : ?>
+					$(<?php echo $this->id; ?>Chart).on('plothover', function (event, pos, item) {
+						$('.edd-legend-item-wrapper').css('background-color', 'inherit');
+						if ( item ) {
+							var label = item.series.label;
+							var id    = item.series.edd_vars.id;
+
+							var slug = label.toLowerCase().replace(/\s/g, '-');
+							var legendTarget = '#' + id + slug;
+
+							$('.edd-legend-item-wrapper' + legendTarget).css('background-color', '#f0f0f0');
+						}
+					});
+					<?php endif; ?>
+				});
+
+			</script>
+			<div class="edd-pie-graph-wrap">
+				<div id="edd-pie-graph-<?php echo $this->id; ?>" class="edd-pie-graph" style="height: <?php echo $this->options['height']; ?>px;"></div>
+				<div id="edd-pie-legend-<?php echo $this->id; ?>" class="edd-pie-legend"></div>
+			</div>
+			<?php
+		}
 		return apply_filters( 'edd_pie_graph_output', ob_get_clean(), $this->id, $this->data, $this->options );
 
 	}

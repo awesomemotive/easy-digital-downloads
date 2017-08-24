@@ -3,7 +3,7 @@
 /**
  * @group edd_customers
  */
-class Tests_Customers_DB extends WP_UnitTestCase {
+class Tests_Customers_DB extends EDD_UnitTestCase {
 
 	protected $_post_id = null;
 
@@ -63,11 +63,11 @@ class Tests_Customers_DB extends WP_UnitTestCase {
 		$user = get_userdata( $this->_user_id );
 
 		$user_info = array(
-			'id' => $user->ID,
-			'email' => 'testadmin@domain.com',
+			'id'         => $user->ID,
+			'email'      => 'testadmin@domain.com',
 			'first_name' => $user->first_name,
-			'last_name' => $user->last_name,
-			'discount' => 'none'
+			'last_name'  => $user->last_name,
+			'discount'   => 'none',
 		);
 
 		$download_details = array(
@@ -78,8 +78,6 @@ class Tests_Customers_DB extends WP_UnitTestCase {
 				)
 			)
 		);
-
-		$price = '100.00';
 
 		$total = 0;
 
@@ -118,7 +116,7 @@ class Tests_Customers_DB extends WP_UnitTestCase {
 		);
 
 		$_SERVER['REMOTE_ADDR'] = '10.0.0.0';
-		$_SERVER['SERVER_NAME'] = 'edd_virtual';
+		$_SERVER['SERVER_NAME'] = 'edd-virtual.local';
 
 		$payment_id = edd_insert_payment( $purchase_data );
 
@@ -128,9 +126,13 @@ class Tests_Customers_DB extends WP_UnitTestCase {
 
 	public function tearDown() {
 		parent::tearDown();
+
+		global $wpdb;
+		$wpdb->query( "DELETE FROM {$wpdb->prefix}edd_customers" );
+		$wpdb->query( "DELETE FROM {$wpdb->prefix}edd_customermeta" );
 	}
 
-	public function test_intalled() {
+	public function test_installed() {
 		$this->assertTrue( EDD()->customers->installed() );
 	}
 
@@ -174,31 +176,37 @@ class Tests_Customers_DB extends WP_UnitTestCase {
 	}
 
 	public function test_legacy_attach_payment() {
+		$payment_id = EDD_Helper_Payment::create_simple_payment();
 
-		$customer = new EDD_Customer( 'testadmin@domain.com' );
-		EDD()->customers->attach_payment( $customer->id, 999999 );
+		$customer   = new EDD_Customer( 'testadmin@domain.com' );
+		EDD()->customers->attach_payment( $customer->id, $payment_id );
 
 		$updated_customer = new EDD_Customer( 'testadmin@domain.com' );
 		$payment_ids = array_map( 'absint', explode( ',', $updated_customer->payment_ids ) );
 
-		$this->assertTrue( in_array( 999999, $payment_ids ) );
+		$this->assertTrue( in_array( $payment_id, $payment_ids ) );
+
+		EDD_Helper_Payment::delete_payment( $payment_id );
 
 	}
 
 	public function test_legacy_remove_payment() {
+		$payment_id = EDD_Helper_Payment::create_simple_payment();
 
 		$customer = new EDD_Customer( 'testadmin@domain.com' );
-		EDD()->customers->attach_payment( $customer->id, 91919191 );
+		EDD()->customers->attach_payment( $customer->id, $payment_id );
 
 		$updated_customer = new EDD_Customer( 'testadmin@domain.com' );
 		$payment_ids = array_map( 'absint', explode( ',', $updated_customer->payment_ids ) );
-		$this->assertTrue( in_array( 91919191, $payment_ids ) );
+		$this->assertTrue( in_array( $payment_id, $payment_ids ) );
 
-		EDD()->customers->remove_payment( $updated_customer->id, 91919191 );
+		EDD()->customers->remove_payment( $updated_customer->id, $payment_id );
 		$updated_customer = new EDD_Customer( 'testadmin@domain.com' );
 		$payment_ids = array_map( 'absint', explode( ',', $updated_customer->payment_ids ) );
 
-		$this->assertFalse( in_array( 91919191, $payment_ids ) );
+		$this->assertFalse( in_array( $payment_id, $payment_ids ) );
+
+		EDD_Helper_Payment::delete_payment( $payment_id );
 
 	}
 
@@ -244,10 +252,14 @@ class Tests_Customers_DB extends WP_UnitTestCase {
 
 		$this->assertEquals( 1, EDD()->customers->count() );
 
+	}
+
+	public function test_count_customers_future() {
+
 		$args = array(
 			'date' => array(
-				'start' => 'January 1 ' . date( 'Y' ) + 1,
-				'end'   => 'January 1 ' . date( 'Y' ) + 2,
+				'start' => 'January 1, ' . ( date( 'Y', strtotime( '+1 year' ) ) ),
+				'end'   => 'January 1, ' . ( date( 'Y', strtotime( '+2 years' ) ) ),
 			)
 		);
 

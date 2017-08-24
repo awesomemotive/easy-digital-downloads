@@ -27,15 +27,33 @@ function edd_add_discount( $data ) {
 	}
 
 	if( ! current_user_can( 'manage_shop_discounts' ) ) {
-		wp_die( __( 'You do not have permission to create discount codes', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+		wp_die( __( 'You do not have permission to create discount codes', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	// Setup the discount code details
 	$posted = array();
 
+	if ( empty( $data['name'] ) || empty( $data['code'] ) || empty( $data['type'] ) || empty( $data['amount'] ) ) {
+		wp_redirect( add_query_arg( 'edd-message', 'discount_validation_failed' ) );
+		edd_die();
+	}
+
+	if ( ! ctype_alnum( $data['code'] ) ) {
+		wp_redirect( add_query_arg( 'edd-message', 'discount_invalid_code' ) );
+		edd_die();
+	}
+
 	foreach ( $data as $key => $value ) {
 
-		if ( $key != 'edd-discount-nonce' && $key != 'edd-action' && $key != 'edd-redirect' ) {
+		if ( $key === 'products' || $key === 'excluded-products' ) {
+
+			foreach ( $value as $product_key => $product_value ) {
+				$value[ $product_key ] = preg_replace("/[^0-9_]/", '', $product_value );
+			}
+
+			$posted[ $key ] = $value;
+
+		} else if ( $key != 'edd-discount-nonce' && $key != 'edd-action' && $key != 'edd-redirect' ) {
 
 			if ( is_string( $value ) || is_int( $value ) ) {
 
@@ -89,7 +107,7 @@ function edd_edit_discount( $data ) {
 	}
 
 	if( ! current_user_can( 'manage_shop_discounts' ) ) {
-		wp_die( __( 'You do not have permission to edit discount codes', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+		wp_die( __( 'You do not have permission to edit discount codes', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	// Setup the discount code details
@@ -97,7 +115,15 @@ function edd_edit_discount( $data ) {
 
 	foreach ( $data as $key => $value ) {
 
-		if ( $key != 'edd-discount-nonce' && $key != 'edd-action' && $key != 'discount-id' && $key != 'edd-redirect' ) {
+		if ( $key === 'products' || $key === 'excluded-products' ) {
+
+			foreach ( $value as $product_key => $product_value ) {
+				$value[ $product_key ] = preg_replace("/[^0-9_]/", '', $product_value );
+			}
+
+			$discount[ $key ] = $value;
+
+		} else if ( $key != 'edd-discount-nonce' && $key != 'edd-action' && $key != 'discount-id' && $key != 'edd-redirect' ) {
 
 			if ( is_string( $value ) || is_int( $value ) ) {
 
@@ -141,11 +167,11 @@ add_action( 'edd_edit_discount', 'edd_edit_discount' );
 function edd_delete_discount( $data ) {
 
 	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'edd_discount_nonce' ) ) {
-		wp_die( __( 'Trying to cheat or something?', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+		wp_die( __( 'Trying to cheat or something?', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	if( ! current_user_can( 'manage_shop_discounts' ) ) {
-		wp_die( __( 'You do not have permission to delete discount codes', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+		wp_die( __( 'You do not have permission to delete discount codes', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	$discount_id = $data['discount'];
@@ -166,11 +192,11 @@ add_action( 'edd_delete_discount', 'edd_delete_discount' );
 function edd_activate_discount( $data ) {
 
 	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'edd_discount_nonce' ) ) {
-		wp_die( __( 'Trying to cheat or something?', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+		wp_die( __( 'Trying to cheat or something?', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	if( ! current_user_can( 'manage_shop_discounts' ) ) {
-		wp_die( __( 'You do not have permission to edit discount codes', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+		wp_die( __( 'You do not have permission to edit discount codes', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	$id = absint( $data['discount'] );
@@ -191,11 +217,11 @@ add_action( 'edd_activate_discount', 'edd_activate_discount' );
 function edd_deactivate_discount( $data ) {
 
 	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'edd_discount_nonce' ) ) {
-		wp_die( __( 'Trying to cheat or something?', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+		wp_die( __( 'Trying to cheat or something?', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	if( ! current_user_can( 'manage_shop_discounts' ) ) {
-		wp_die( __( 'You do not have permission to create discount codes', 'edd' ), array( 'response' => 403 ) );
+		wp_die( __( 'You do not have permission to create discount codes', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	$id = absint( $data['discount'] );

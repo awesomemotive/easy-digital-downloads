@@ -55,9 +55,7 @@ function edd_register_form( $redirect = '' ) {
 
 	ob_start();
 
-	if( ! is_user_logged_in() ) {
-		edd_get_template_part( 'shortcode', 'register' );
-	}
+	edd_get_template_part( 'shortcode', 'register' );
 
 	return apply_filters( 'edd_register_form', ob_get_clean() );
 }
@@ -78,13 +76,21 @@ function edd_process_login_form( $data ) {
 		if ( $user_data ) {
 			$user_ID = $user_data->ID;
 			$user_email = $user_data->user_email;
+
 			if ( wp_check_password( $data['edd_user_pass'], $user_data->user_pass, $user_data->ID ) ) {
-				edd_log_user_in( $user_data->ID, $data['edd_user_login'], $data['edd_user_pass'] );
+
+				if ( isset( $data['remember'] ) ) {
+					$data['remember'] = true;
+				} else {
+					$data['remember'] = false;
+				}
+
+				edd_log_user_in( $user_data->ID, $data['edd_user_login'], $data['edd_user_pass'], $data['remember'] );
 			} else {
-				edd_set_error( 'password_incorrect', __( 'The password you entered is incorrect', 'edd' ) );
+				edd_set_error( 'password_incorrect', __( 'The password you entered is incorrect', 'easy-digital-downloads' ) );
 			}
 		} else {
-			edd_set_error( 'username_incorrect', __( 'The username you entered does not exist', 'edd' ) );
+			edd_set_error( 'username_incorrect', __( 'The username you entered does not exist', 'easy-digital-downloads' ) );
 		}
 		// Check for errors and redirect if none present
 		$errors = edd_get_errors();
@@ -104,13 +110,14 @@ add_action( 'edd_user_login', 'edd_process_login_form' );
  * @param int $user_id User ID
  * @param string $user_login Username
  * @param string $user_pass Password
+ * @param boolean $remember Remember me
  * @return void
 */
-function edd_log_user_in( $user_id, $user_login, $user_pass ) {
+function edd_log_user_in( $user_id, $user_login, $user_pass, $remember = false ) {
 	if ( $user_id < 1 )
 		return;
 
-	wp_set_auth_cookie( $user_id );
+	wp_set_auth_cookie( $user_id, $remember );
 	wp_set_current_user( $user_id, $user_login );
 	do_action( 'wp_login', $user_login, get_userdata( $user_id ) );
 	do_action( 'edd_log_user_in', $user_id, $user_login, $user_pass );
@@ -137,35 +144,35 @@ function edd_process_register_form( $data ) {
 	do_action( 'edd_pre_process_register_form' );
 
 	if( empty( $data['edd_user_login'] ) ) {
-		edd_set_error( 'empty_username', __( 'Invalid username', 'edd' ) );
+		edd_set_error( 'empty_username', __( 'Invalid username', 'easy-digital-downloads' ) );
 	}
 
 	if( username_exists( $data['edd_user_login'] ) ) {
-		edd_set_error( 'username_unavailable', __( 'Username already taken', 'edd' ) );
+		edd_set_error( 'username_unavailable', __( 'Username already taken', 'easy-digital-downloads' ) );
 	}
 
 	if( ! validate_username( $data['edd_user_login'] ) ) {
-		edd_set_error( 'username_invalid', __( 'Invalid username', 'edd' ) );
+		edd_set_error( 'username_invalid', __( 'Invalid username', 'easy-digital-downloads' ) );
 	}
 
 	if( email_exists( $data['edd_user_email'] ) ) {
-		edd_set_error( 'email_unavailable', __( 'Email address already taken', 'edd' ) );
+		edd_set_error( 'email_unavailable', __( 'Email address already taken', 'easy-digital-downloads' ) );
 	}
 
 	if( empty( $data['edd_user_email'] ) || ! is_email( $data['edd_user_email'] ) ) {
-		edd_set_error( 'email_invalid', __( 'Invalid email', 'edd' ) );
+		edd_set_error( 'email_invalid', __( 'Invalid email', 'easy-digital-downloads' ) );
 	}
 
 	if( ! empty( $data['edd_payment_email'] ) && $data['edd_payment_email'] != $data['edd_user_email'] && ! is_email( $data['edd_payment_email'] ) ) {
-		edd_set_error( 'payment_email_invalid', __( 'Invalid payment email', 'edd' ) );
+		edd_set_error( 'payment_email_invalid', __( 'Invalid payment email', 'easy-digital-downloads' ) );
 	}
 
 	if( empty( $_POST['edd_user_pass'] ) ) {
-		edd_set_error( 'empty_password', __( 'Please enter a password', 'edd' ) );
+		edd_set_error( 'empty_password', __( 'Please enter a password', 'easy-digital-downloads' ) );
 	}
 
 	if( ( ! empty( $_POST['edd_user_pass'] ) && empty( $_POST['edd_user_pass2'] ) ) || ( $_POST['edd_user_pass'] !== $_POST['edd_user_pass2'] ) ) {
-		edd_set_error( 'password_mismatch', __( 'Passwords do not match', 'edd' ) );
+		edd_set_error( 'password_mismatch', __( 'Passwords do not match', 'easy-digital-downloads' ) );
 	}
 
 	do_action( 'edd_process_register_form' );

@@ -22,13 +22,13 @@ function edd_get_payment_gateways() {
 	// Default, built-in gateways
 	$gateways = array(
 		'paypal' => array(
-			'admin_label'    => __( 'PayPal Standard', 'edd' ),
-			'checkout_label' => __( 'PayPal', 'edd' ),
+			'admin_label'    => __( 'PayPal Standard', 'easy-digital-downloads' ),
+			'checkout_label' => __( 'PayPal', 'easy-digital-downloads' ),
 			'supports'       => array( 'buy_now' )
 		),
 		'manual' => array(
-			'admin_label'    => __( 'Test Payment', 'edd' ),
-			'checkout_label' => __( 'Test Payment', 'edd' )
+			'admin_label'    => __( 'Test Payment', 'easy-digital-downloads' ),
+			'checkout_label' => __( 'Test Payment', 'easy-digital-downloads' )
 		),
 	);
 
@@ -44,7 +44,7 @@ function edd_get_payment_gateways() {
 */
 function edd_get_enabled_payment_gateways( $sort = false ) {
 	$gateways = edd_get_payment_gateways();
-	$enabled  = edd_get_option( 'gateways', false );
+	$enabled  = (array) edd_get_option( 'gateways', false );
 
 	$gateway_list = array();
 
@@ -117,7 +117,7 @@ function edd_get_gateway_admin_label( $gateway ) {
 
 	if( $gateway == 'manual' && $payment ) {
 		if( edd_get_payment_amount( $payment ) == 0 ) {
-			$label = __( 'Free Purchase', 'edd' );
+			$label = __( 'Free Purchase', 'easy-digital-downloads' );
 		}
 	}
 
@@ -136,7 +136,7 @@ function edd_get_gateway_checkout_label( $gateway ) {
 	$label    = isset( $gateways[ $gateway ] ) ? $gateways[ $gateway ]['checkout_label'] : $gateway;
 
 	if( $gateway == 'manual' ) {
-		$label = __( 'Free Purchase', 'edd' );
+		$label = __( 'Free Purchase', 'easy-digital-downloads' );
 	}
 
 	return apply_filters( 'edd_gateway_checkout_label', $label, $gateway );
@@ -178,7 +178,7 @@ function edd_shop_supports_buy_now() {
 	$gateways = edd_get_enabled_payment_gateways();
 	$ret      = false;
 
-	if( ! edd_use_taxes()  && $gateways ) {
+	if( ! edd_use_taxes()  && $gateways && 1 === count( $gateways ) ) {
 		foreach( $gateways as $gateway_id => $gateway ) {
 			if( edd_gateway_supports_buy_now( $gateway_id ) ) {
 				$ret = true;
@@ -218,7 +218,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 
 		// Make sure a valid price ID was supplied
 		if( ! isset( $prices[ $price_id ] ) ) {
-			wp_die( __( 'The requested price ID does not exist.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 404 ) );
+			wp_die( __( 'The requested price ID does not exist.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 404 ) );
 		}
 
 		$price_options = array(
@@ -255,8 +255,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 	);
 
 	if( is_user_logged_in() ) {
-		global $current_user;
-		get_currentuserinfo();
+		$current_user = wp_get_current_user();
 	}
 
 
@@ -280,7 +279,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 		'price'        => $price * $quantity,
 		'purchase_key' => strtolower( md5( uniqid() ) ),
 		'user_email'   => $user_info['email'],
-		'date'         => date( 'Y-m-d H:i:s' ),
+		'date'         => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
 		'user_info'    => $user_info,
 		'post_data'    => array(),
 		'cart_details' => $cart_details,
@@ -322,9 +321,7 @@ function edd_show_gateways() {
 	$gateways = edd_get_enabled_payment_gateways();
 	$show_gateways = false;
 
-	$chosen_gateway = isset( $_GET['payment-mode'] ) ? preg_replace('/[^a-zA-Z0-9-_]+/', '', $_GET['payment-mode'] ) : false;
-
-	if ( count( $gateways ) > 1 && empty( $chosen_gateway ) ) {
+	if ( count( $gateways ) > 1 ) {
 		$show_gateways = true;
 		if ( edd_get_cart_total() <= 0 ) {
 			$show_gateways = false;
@@ -342,7 +339,7 @@ function edd_show_gateways() {
  *
  * @access public
  * @since 1.3.2
- * @return string $enabled_gateway The slug of the gateway
+ * @return string $chosen_gateway The slug of the gateway
  */
 function edd_get_chosen_gateway() {
 	$gateways = edd_get_enabled_payment_gateways();
@@ -353,21 +350,22 @@ function edd_get_chosen_gateway() {
 	}
 
 	if ( ! empty ( $chosen ) ) {
-		$enabled_gateway = urldecode( $chosen );
-	} else if( count( $gateways ) >= 1 && ! $chosen ) {
-		foreach ( $gateways as $gateway_id => $gateway ):
-			$enabled_gateway = $gateway_id;
-			if ( edd_get_cart_subtotal() <= 0 ) {
-				$enabled_gateway = 'manual'; // This allows a free download by filling in the info
-			}
-		endforeach;
-	} else if ( edd_get_cart_subtotal() <= 0 ) {
-		$enabled_gateway = 'manual';
+
+		$chosen_gateway = urldecode( $chosen );
+
+		if( ! edd_is_gateway_active( $chosen_gateway ) ) {
+			$chosen_gateway = edd_get_default_gateway();
+		}
+
 	} else {
-		$enabled_gateway = edd_get_default_gateway();
+		$chosen_gateway = edd_get_default_gateway();
 	}
 
-	return apply_filters( 'edd_chosen_gateway', $enabled_gateway );
+	if ( edd_get_cart_subtotal() <= 0 ) {
+		$chosen_gateway = 'manual';
+	}
+
+	return apply_filters( 'edd_chosen_gateway', $chosen_gateway );
 }
 
 /**

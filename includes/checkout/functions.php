@@ -60,11 +60,17 @@ function edd_can_checkout() {
  * @since       1.6
  * @return      string
 */
-function edd_get_success_page_uri() {
+function edd_get_success_page_uri( $query_string = null ) {
 	$page_id = edd_get_option( 'success_page', 0 );
 	$page_id = absint( $page_id );
 
-	return apply_filters( 'edd_get_success_page_uri', get_permalink( $page_id ) );
+	$success_page = get_permalink( $page_id );
+
+	if ( $query_string ) {
+		$success_page .= $query_string;
+	}
+
+	return apply_filters( 'edd_get_success_page_uri', $success_page );
 }
 
 /**
@@ -131,8 +137,9 @@ function edd_get_checkout_uri( $args = array() ) {
 		$uri = preg_replace( '/^http:/', 'https:', $uri );
 	}
 
-	if ( edd_get_option( 'no_cache_checkout', false ) && edd_is_caching_plugin_active() )
-		$uri = add_query_arg( 'nocache', 'true', $uri );
+	if ( edd_get_option( 'no_cache_checkout', false ) ) {
+		$uri = edd_add_cache_busting( $uri );
+	}
 
 	return apply_filters( 'edd_get_checkout_uri', $uri );
 }
@@ -163,26 +170,6 @@ function edd_send_back_to_checkout( $args = array() ) {
 
 	wp_redirect( apply_filters( 'edd_send_back_to_checkout', $redirect, $args ) );
 	edd_die();
-}
-
-/**
- * Get Success Page URL
- *
- * Gets the success page URL.
- *
- * @param string $query_string
- * @access      public
- * @since       1.0
- * @return      string
-*/
-function edd_get_success_page_url( $query_string = null ) {
-	$success_page = edd_get_option( 'success_page', 0 );
-	$success_page = get_permalink( $success_page );
-
-	if ( $query_string )
-		$success_page .= $query_string;
-
-	return apply_filters( 'edd_success_page_url', $success_page );
 }
 
 /**
@@ -272,33 +259,51 @@ function edd_get_banned_emails() {
  * Determines if an email is banned
  *
  * @since       2.0
- * @return      bool
+ * @param string $email Email to check if is banned.
+ * @return bool
  */
 function edd_is_email_banned( $email = '' ) {
 
+	$email = trim( $email );
 	if( empty( $email ) ) {
 		return false;
 	}
 
+	$email         = strtolower( $email );
 	$banned_emails = edd_get_banned_emails();
 
 	if( ! is_array( $banned_emails ) || empty( $banned_emails ) ) {
 		return false;
 	}
 
+	$return = false;
 	foreach( $banned_emails as $banned_email ) {
+
+		$banned_email = strtolower( $banned_email );
+
 		if( is_email( $banned_email ) ) {
-			$ret = ( $banned_email == trim( $email ) ? true : false );
+
+			// Complete email address
+			$return = ( $banned_email == $email ? true : false );
+
+		} elseif ( strpos( $banned_email, '.' ) === 0 ) {
+
+			// TLD block
+			$return = ( substr( $email, ( strlen( $banned_email ) * -1 ) ) == $banned_email ) ? true : false;
+
 		} else {
-			$ret = ( stristr( trim( $email ), $banned_email ) ? true : false );
+
+			// Domain block
+			$return = ( stristr( $email, $banned_email ) ? true : false );
+
 		}
 
-		if( true === $ret ) {
+		if( true === $return ) {
 			break;
 		}
 	}
 
-	return apply_filters( 'edd_is_email_banned', $ret, $email );
+	return apply_filters( 'edd_is_email_banned', $return, $email );
 }
 
 /**
@@ -319,11 +324,12 @@ function edd_is_ssl_enforced() {
  * @return void
  */
 function edd_enforced_ssl_redirect_handler() {
+
 	if ( ! edd_is_ssl_enforced() || ! edd_is_checkout() || is_admin() || is_ssl() ) {
 		return;
 	}
 
-	if ( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" ) {
+	if( edd_is_checkout() && false !== strpos( edd_get_current_page_url(), 'https://' ) ) {
 		return;
 	}
 

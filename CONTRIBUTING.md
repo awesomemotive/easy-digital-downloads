@@ -1,13 +1,15 @@
-#Contribute To Easy Digital Downloads
+## Contribute To Easy Digital Downloads
 
 Community made patches, localisations, bug reports and contributions are always welcome and are crucial to ensure Easy Digital Downloads remains the #1 eCommerce platform for digital goods on WordPress.
 
 When contributing please ensure you follow the guidelines below so that we can keep on top of things.
 
-__Please Note:__ GitHub is for bug reports and contributions only - if you have a support question or a request for a customisation don't post here, go to our [Support Forum](https://easydigitaldownloads.com/support/) instead.
+__Please Note:__ GitHub is for bug reports and contributions only - if you have a support question or a request for a customization don't post here, go to our [Support page](https://easydigitaldownloads.com/support/) instead.
 
 ## Getting Started
 
+* __Do not report potential security vulnerabilities here. Email them privately to our security team at [security@easydigitaldownloads.com](mailto:security@easydigitaldownloads.com)__
+* Before submitting a ticket, please be sure to replicate the behavior with no other plugins active and on a base theme like Twenty Seventeen.
 * Submit a ticket for your issue, assuming one does not already exist.
   * Raise it on our [Issue Tracker](https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues)
   * Clearly describe the issue including steps to reproduce the bug.

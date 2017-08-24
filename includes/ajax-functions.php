@@ -20,11 +20,22 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * This will be deprecated soon in favor of edd_is_ajax_disabled()
  *
  * @since 1.0
- * @return bool
+ * @return bool True when EDD AJAX is enabled (for the cart), false otherwise.
  */
 function edd_is_ajax_enabled() {
 	$retval = ! edd_is_ajax_disabled();
 	return apply_filters( 'edd_is_ajax_enabled', $retval );
+}
+
+/**
+ * Checks whether AJAX is disabled.
+ *
+ * @since 2.0
+ * @since 2.7 Setting to disable AJAX was removed. See https://github.com/easydigitaldownloads/easy-digital-downloads/issues/4758
+ * @return bool True when EDD AJAX is disabled (for the cart), false otherwise.
+ */
+function edd_is_ajax_disabled() {
+	return apply_filters( 'edd_is_ajax_disabled', false );
 }
 
 /**
@@ -103,22 +114,10 @@ function edd_test_ajax_works() {
 }
 
 /**
- * Checks whether AJAX is disabled.
- *
- * @since 2.0
- * @return bool
- */
-function edd_is_ajax_disabled() {
-	$retval = ! edd_get_option( 'enable_ajax_cart' );
-	return apply_filters( 'edd_is_ajax_disabled', $retval );
-}
-
-
-/**
  * Get AJAX URL
  *
  * @since 1.3
- * @return string
+ * @return string URL to the AJAX file to call during AJAX requests.
 */
 function edd_get_ajax_url() {
 	$scheme = defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN ? 'https' : 'admin';
@@ -268,7 +267,7 @@ function edd_ajax_apply_discount() {
 		if ( is_user_logged_in() ) {
 			$user = get_current_user_id();
 		} else {
-			$form = maybe_unserialize( $_POST['form'] );
+			parse_str( $_POST['form'], $form );
 			if ( ! empty( $form['edd_email'] ) ) {
 				$user = urldecode( $form['edd_email'] );
 			}
@@ -315,17 +314,16 @@ function edd_ajax_update_cart_item_quantity() {
 
 		$download_id = absint( $_POST['download_id'] );
 		$quantity    = absint( $_POST['quantity'] );
-		$options     = maybe_unserialize( stripslashes( $_POST['options'] ) );
+		$options     = json_decode( stripslashes( $_POST['options'] ), true );
 
-		edd_set_cart_item_quantity( $download_id, absint( $_POST['quantity'] ), $options );
-		$total = edd_get_cart_total();
+		EDD()->cart->set_item_quantity( $download_id, $quantity, $options );
 
 		$return = array(
 			'download_id' => $download_id,
-			'quantity'    => $quantity,
-			'taxes'       => html_entity_decode( edd_cart_tax(), ENT_COMPAT, 'UTF-8' ),
-			'subtotal'    => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
-			'total'       => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' )
+			'quantity'    => EDD()->cart->get_item_quantity( $download_id, $options ),
+			'subtotal'    => html_entity_decode( edd_currency_filter( edd_format_amount( EDD()->cart->get_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
+			'taxes'       => html_entity_decode( edd_currency_filter( edd_format_amount( EDD()->cart->get_tax() ) ), ENT_COMPAT, 'UTF-8' ),
+			'total'       => html_entity_decode( edd_currency_filter( edd_format_amount( EDD()->cart->get_total() ) ), ENT_COMPAT, 'UTF-8' )
 		);
 
 		// Allow for custom cart item quantity handling
@@ -390,19 +388,25 @@ function edd_load_checkout_register_fields() {
 add_action('wp_ajax_nopriv_checkout_register', 'edd_load_checkout_register_fields');
 
 /**
- * Get Download Title via AJAX (used only in WordPress Admin)
+ * Get Download Title via AJAX
  *
  * @since 1.0
+ * @since 2.8 Restrict to just the download post type
  * @return void
  */
 function edd_ajax_get_download_title() {
 	if ( isset( $_POST['download_id'] ) ) {
-		$title = get_the_title( $_POST['download_id'] );
-		if ( $title ) {
-			echo $title;
-		} else {
-			echo 'fail';
+		$post_id   = absint( $_POST['download_id'] );
+		$post_type = get_post_type( $post_id );
+		$title     = 'fail';
+		if ( 'download' === $post_type ) {
+			$post_title = get_the_title( $_POST['download_id'] );
+			if ( $post_title ) {
+				echo $title = $post_title;
+			}
 		}
+
+		echo $title;
 	}
 	edd_die();
 }
@@ -462,7 +466,7 @@ function edd_ajax_get_states_field() {
 			'name'    => $_POST['field_name'],
 			'id'      => $_POST['field_name'],
 			'class'   => $_POST['field_name'] . '  edd-select',
-			'options' => edd_get_shop_states( $_POST['country'] ),
+			'options' => $states,
 			'show_option_all'  => false,
 			'show_option_none' => false
 		);
@@ -492,8 +496,18 @@ function edd_ajax_download_search() {
 
 	$search   = esc_sql( sanitize_text_field( $_GET['s'] ) );
 	$excludes = ( isset( $_GET['current_id'] ) ? (array) $_GET['current_id'] : array() );
-	$excludes = array_map( 'absint', $excludes );
-	$exclude  = implode( ',', $excludes );
+
+	$no_bundles = isset( $_GET['no_bundles'] ) ? filter_var( $_GET['no_bundles'], FILTER_VALIDATE_BOOLEAN ) : false;
+	if( true === $no_bundles ) {
+		$bundles  = $wpdb->get_results( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_edd_product_type' AND meta_value = 'bundle';", ARRAY_A );
+		$bundles  = wp_list_pluck( $bundles, 'post_id' );
+		$excludes = array_merge( $excludes, $bundles );
+	}
+
+	$variations = isset( $_GET['variations'] ) ? filter_var( $_GET['variations'], FILTER_VALIDATE_BOOLEAN ) : false;
+
+	$excludes = array_unique( array_map( 'absint', $excludes ) );
+	$exclude  = implode( ",", $excludes );
 
 	$results = array();
 
@@ -505,7 +519,7 @@ function edd_ajax_download_search() {
 
 	// If we have items to exclude, exclude them
 	if( ! empty( $exclude ) ) {
-		$where .= "AND `ID` NOT IN (%s) ";
+		$where .= "AND `ID` NOT IN (" . $exclude . ") ";
 	}
 
 	// If the user can't edit products, limit to just published items
@@ -518,12 +532,7 @@ function edd_ajax_download_search() {
 
 	$sql = $select . $where . $limit;
 
-	if( ! empty( $exclude ) ) {
-		$prepared_statement = $wpdb->prepare( $sql, '%' . $search . '%', $exclude );
-	} else {
-		$prepared_statement = $wpdb->prepare( $sql, '%' . $search . '%' );
-	}
-
+	$prepared_statement = $wpdb->prepare( $sql, '%' . $search . '%' );
 
 	$items = $wpdb->get_results( $prepared_statement );
 
@@ -535,13 +544,30 @@ function edd_ajax_download_search() {
 				'id'   => $item->ID,
 				'name' => $item->post_title
 			);
+
+			if ( $variations && edd_has_variable_prices( $item->ID ) ) {
+				$prices = edd_get_variable_prices( $item->ID );
+
+				foreach ( $prices as $key => $value ) {
+					$name   = ! empty( $value['name'] )   ? $value['name']   : '';
+					$amount = ! empty( $value['amount'] ) ? $value['amount'] : '';
+					$index  = ! empty( $value['index'] )  ? $value['index']  : $key;
+
+					if ( $name && $index ) {
+						$results[] = array(
+							'id'   => $item->ID . '_' . $key,
+							'name' => esc_html( $item->post_title . ': ' . $name ),
+						);
+					}
+				}
+			}
 		}
 
 	} else {
 
-		$items[] = array(
+		$results[] = array(
 			'id'   => 0,
-			'name' => __( 'No results found', 'edd' )
+			'name' => __( 'No results found', 'easy-digital-downloads' )
 		);
 
 	}
@@ -554,7 +580,7 @@ add_action( 'wp_ajax_edd_download_search', 'edd_ajax_download_search' );
 add_action( 'wp_ajax_nopriv_edd_download_search', 'edd_ajax_download_search' );
 
 /**
- * Search the customers database via Ajax
+ * Search the customers database via AJAX
  *
  * @since 2.2
  * @return void
@@ -564,7 +590,8 @@ function edd_ajax_customer_search() {
 
 	$search  = esc_sql( sanitize_text_field( $_GET['s'] ) );
 	$results = array();
-	if ( ! current_user_can( 'view_shop_reports' ) ) {
+	$customer_view_role = apply_filters( 'edd_view_customers_role', 'view_shop_reports' );
+	if ( ! current_user_can( $customer_view_role ) ) {
 		$customers = array();
 	} else {
 		$select = "SELECT id, name, email FROM {$wpdb->prefix}edd_customers ";
@@ -592,7 +619,7 @@ function edd_ajax_customer_search() {
 
 		$customers[] = array(
 			'id'   => 0,
-			'name' => __( 'No results found', 'edd' )
+			'name' => __( 'No results found', 'easy-digital-downloads' )
 		);
 
 	}
@@ -602,6 +629,55 @@ function edd_ajax_customer_search() {
 	edd_die();
 }
 add_action( 'wp_ajax_edd_customer_search', 'edd_ajax_customer_search' );
+
+/**
+ * Search the users database via AJAX
+ *
+ * @since 2.6.9
+ * @return void
+ */
+function edd_ajax_user_search() {
+	global $wpdb;
+
+	$search         = esc_sql( sanitize_text_field( $_GET['s'] ) );
+	$results        = array();
+	$user_view_role = apply_filters( 'edd_view_users_role', 'view_shop_reports' );
+
+	if ( ! current_user_can( $user_view_role ) ) {
+		$results = array();
+	} else {
+		$user_args = array(
+			'search' => '*' . esc_attr( $search ) . '*',
+			'number' => 50,
+		);
+
+		$users = get_users( $user_args );
+	}
+
+	if ( $users ) {
+
+		foreach( $users as $user ) {
+
+			$results[] = array(
+				'id'   => $user->ID,
+				'name' => $user->display_name,
+			);
+		}
+
+	} else {
+
+		$results[] = array(
+			'id'   => 0,
+			'name' => __( 'No users found', 'easy-digital-downloads' )
+		);
+
+	}
+
+	echo json_encode( $results );
+
+	edd_die();
+}
+add_action( 'wp_ajax_edd_user_search', 'edd_ajax_user_search' );
 
 /**
  * Check for Download Price Variations via AJAX (this function can only be used
@@ -632,6 +708,11 @@ function edd_check_for_download_price_variations() {
 
 		if ( $variable_prices ) {
 			$ajax_response = '<select class="edd_price_options_select edd-select edd-select" name="edd_price_option">';
+
+				if( isset( $_POST['all_prices'] ) ) {
+					$ajax_response .= '<option value="">' . __( 'All Prices', 'easy-digital-downloads' ) . '</option>';
+				}
+
 				foreach ( $variable_prices as $key => $price ) {
 					$ajax_response .= '<option value="' . esc_attr( $key ) . '">' . esc_html( $price['name'] )  . '</option>';
 				}
@@ -679,7 +760,7 @@ function edd_ajax_search_users() {
 				$user_list .= '<li><a href="#" data-userid="' . esc_attr( $user->ID ) . '" data-login="' . esc_attr( $user->user_login ) . '">' . esc_html( $user->user_login ) . '</a></li>';
 			}
 		} else {
-			$user_list .= '<li>' . __( 'No users found', 'edd' ) . '</li>';
+			$user_list .= '<li>' . __( 'No users found', 'easy-digital-downloads' ) . '</li>';
 		}
 		$user_list .= '</ul>';
 

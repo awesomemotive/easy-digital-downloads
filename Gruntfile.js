@@ -9,7 +9,7 @@ grunt.initConfig({
 
 		checktextdomain: {
 			options:{
-				text_domain: 'edd',
+				text_domain: 'easy-digital-downloads',
 				create_report_file: true,
 				keywords: [
 					'__:1,2d',
@@ -48,7 +48,7 @@ grunt.initConfig({
 					domainPath: '/languages/',    // Where to save the POT file.
 					exclude: ['build/.*'],
 					mainFile: 'easy-digital-downloads.php',    // Main project file.
-					potFilename: 'edd.pot',    // Name of the POT file.
+					potFilename: 'easy-digital-downloads.pot',    // Name of the POT file.
 					potHeaders: {
 						poedit: true,                 // Includes common Poedit headers.
 						'x-poedit-keywordslist': true // Include a list of all possible gettext functions.
@@ -100,57 +100,71 @@ grunt.initConfig({
 					poDel: true
 				},
 				files: [{
-				 expand: true,
-				 cwd: '<%= dirs.lang %>',
-				src: ['*.po'],
-				dest: '<%= dirs.lang %>',
-				 ext: '.mo',
-				nonull: true
+					expand: true,
+					cwd: '<%= dirs.lang %>',
+					src: ['*.po'],
+					dest: '<%= dirs.lang %>',
+					ext: '.mo',
+					nonull: true
 			}]
 		}
 	},
 
-		// Clean up build directory
-		clean: {
-			main: ['build/<%= pkg.name %>']
-		},
+	// Clean up build directory
+	clean: {
+		main: ['build/<%= pkg.name %>']
+	},
 
-		// Copy the theme into the build directory
-		copy: {
-			main: {
-				src:  [
-					'**',
-					'!node_modules/**',
-					'!build/**',
-					'!.git/**',
-					'!Gruntfile.js',
-					'!package.json',
-					'!.gitignore',
-					'!.gitmodules',
-					'!.tx/**',
-					'!tests/**',
-					'!**/Gruntfile.js',
-					'!**/package.json',
-					'!**/README.md',
-					'!**/*~'
-				],
-				dest: 'build/<%= pkg.name %>/'
+	// Copy the theme into the build directory
+	copy: {
+		main: {
+			src:  [
+				'**',
+				'!node_modules/**',
+				'!build/**',
+				'!.git/**',
+				'!Gruntfile.js',
+				'!package.json',
+				'!.gitignore',
+				'!.gitmodules',
+				'!.tx/**',
+				'!tests/**',
+				'!**/Gruntfile.js',
+				'!**/package.json',
+				'!**/README.md',
+				'!**/*~'
+			],
+			dest: 'build/<%= pkg.name %>/'
+		}
+	},
+
+	//Compress build directory into <name>.zip and <name>-<version>.zip
+	compress: {
+		main: {
+			options: {
+				mode: 'zip',
+				archive: './build/<%= pkg.name %>.zip'
+			},
+			expand: true,
+			cwd: 'build/<%= pkg.name %>/',
+			src: ['**/*'],
+			dest: '<%= pkg.name %>/'
+		}
+	},
+
+	glotpress_download: {
+		core: {
+			options: {
+				domainPath: 'languages',
+				url: 'https://translate.wordpress.org',
+				slug: 'wp-plugins/easy-digital-downloads/stable',
+				textdomain: 'easy-digital-downloads',
+				filter: {
+					minimum_percentage: 1,
+				}
 			}
 		},
-
-		//Compress build directory into <name>.zip and <name>-<version>.zip
-		compress: {
-			main: {
-				options: {
-					mode: 'zip',
-					archive: './build/<%= pkg.name %>.zip'
-				},
-				expand: true,
-				cwd: 'build/<%= pkg.name %>/',
-				src: ['**/*'],
-				dest: '<%= pkg.name %>/'
-			}
-		},
+	},
 
 });
 

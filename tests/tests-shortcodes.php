@@ -4,7 +4,7 @@
 /**
  * @group edd_shortcode
  */
-class Tests_Shortcode extends WP_UnitTestCase {
+class Tests_Shortcode extends EDD_UnitTestCase {
 
 	protected $_payment_id = null;
 
@@ -123,17 +123,21 @@ class Tests_Shortcode extends WP_UnitTestCase {
 		);
 
 		$_SERVER['REMOTE_ADDR'] = '10.0.0.0';
-		$_SERVER['SERVER_NAME'] = 'edd_virtual';
+		$_SERVER['SERVER_NAME'] = 'edd-virtual.local';
 
 		$this->_payment_id = edd_insert_payment( $purchase_data );
 
 		update_post_meta( $this->_payment_id, '_edd_payment_user_id', $user->ID );
 
 		$this->_payment_key = $purchase_data['purchase_key'];
+
+		// Remove the account pending filter to only show once in a thread
+		remove_filter( 'edd_allow_template_part_account_pending', 'edd_load_verification_template_once', 10, 1 );
 	}
 
 	public function tearDown() {
 		parent::tearDown();
+		EDD_Helper_Payment::delete_payment( $this->_payment_id );
 	}
 
 	public function test_shortcodes_are_registered() {
@@ -156,11 +160,19 @@ class Tests_Shortcode extends WP_UnitTestCase {
 	public function test_download_history() {
 		$this->assertInternalType( 'string', edd_download_history( array() ) );
 		$this->assertContains( '<p class="edd-no-downloads">', edd_download_history( array() ) );
+
+		edd_set_user_to_pending( $this->_user_id );
+
+		$this->assertContains( '<p class="edd-account-pending">', edd_download_history( array() ) );
 	}
 
 	public function test_purchase_history() {
 		$this->assertInternalType( 'string', edd_purchase_history( array() ) );
 		$this->assertContains( '<p class="edd-no-purchases">', edd_purchase_history( array() ) );
+
+		edd_set_user_to_pending( $this->_user_id );
+
+		$this->assertContains( '<p class="edd-account-pending">', edd_purchase_history( array() ) );
 	}
 
 	public function test_checkout_form_shortcode() {
@@ -174,8 +186,27 @@ class Tests_Shortcode extends WP_UnitTestCase {
 	}
 
 	public function test_login_form() {
+		$purchase_history_page = edd_get_option( 'purchase_history_page' );
+
 		$this->assertInternalType( 'string', edd_login_form_shortcode( array() ) );
 		$this->assertContains( '<p class="edd-logged-in">You are already logged in</p>', edd_login_form_shortcode( array() ) );
+
+		// Log out the user so we can see the login form
+		wp_set_current_user( 0 );
+
+		$args = array(
+			'redirect' => get_option( 'site_url' ),
+		);
+
+		$login_form = edd_login_form_shortcode( $args );
+		$this->assertInternalType( 'string', $login_form );
+		$this->assertContains( '"' . get_option( 'site_url' ) . '"', $login_form );
+
+		edd_update_option( 'login_redirect_page', $purchase_history_page );
+
+		$login_form = edd_login_form_shortcode( array() );
+		$this->assertInternalType( 'string', $login_form );
+		$this->assertContains( '"' . get_permalink( $purchase_history_page ) . '"', $login_form );
 	}
 
 	public function test_discounts_shortcode() {
@@ -206,7 +237,7 @@ class Tests_Shortcode extends WP_UnitTestCase {
 	public function test_purchase_collection_shortcode() {
 		$this->go_to( '/' );
 		$this->assertInternalType( 'string', edd_purchase_collection_shortcode( array() ) );
-		$this->assertEquals( '<a href="/?edd_action=purchase_collection&taxonomy&terms" class="button blue edd-submit">Purchase All Items</a>', edd_purchase_collection_shortcode( array() ) );
+		$this->assertEquals( '<a href="/?edd_action=purchase_collection&#038;taxonomy&#038;terms" class="button blue edd-submit">Purchase All Items</a>', edd_purchase_collection_shortcode( array() ) );
 	}
 
 	public function test_downloads_query_with_schema() {
@@ -249,12 +280,24 @@ class Tests_Shortcode extends WP_UnitTestCase {
 	public function test_receipt_shortcode() {
 		$this->markTestIncomplete( 'This one needs to be fixed per #600. The purchase receipt is not retrieved for some reason.' );
 		$this->assertInternalType( 'string', edd_receipt_shortcode( array( 'payment_key' => $this->_payment_key ) ) );
-		$this->assertContains( '<table id="edd_purchase_receipt">', edd_receipt_shortcode( array( 'payment_key' => $this->_payment_key ) ) );
+		$this->assertContains( '<table id="edd_purchase_receipt" class="edd-table">', edd_receipt_shortcode( array( 'payment_key' => $this->_payment_key ) ) );
 	}
 
 	public function test_profile_shortcode() {
 		$this->assertInternalType( 'string', edd_profile_editor_shortcode( array() ) );
 		$this->assertContains( '<form id="edd_profile_editor_form" class="edd_form" action="', edd_profile_editor_shortcode( array() ) );
+
+		edd_set_user_to_pending( $this->_user_id );
+
+		$this->assertContains( '<p class="edd-account-pending">', edd_profile_editor_shortcode( array() ) );
+	}
+
+	public function test_profile_pending_single_load() {
+		add_filter( 'edd_allow_template_part_account_pending', 'edd_load_verification_template_once', 10, 1 );
+		edd_set_user_to_pending( $this->_user_id );
+		$this->assertContains( '<p class="edd-account-pending">', edd_profile_editor_shortcode( array() ) );
+		$this->assertEmpty( edd_profile_editor_shortcode( array() ) );
+		remove_filter( 'edd_allow_template_part_account_pending', 'edd_load_verification_template_once', 10, 1 );
 	}
 
 	public function test_downloads_shortcode_pagination() {
@@ -266,5 +309,20 @@ class Tests_Shortcode extends WP_UnitTestCase {
 
 		$output2 = edd_downloads_query( array( 'number' => 1 ) );
 		$this->assertContains( 'id="edd_download_pagination"', $output2 );
+
+		edd_set_user_to_pending( $this->_user_id );
+
+		$this->assertContains( '<p class="edd-account-pending">', edd_download_history( array() ) );
+	}
+
+	public function test_downloads_shortcode_nopaging() {
+
+		// Create a posts so we can see pagination
+		$this->factory->post->create( array( 'post_title' => 'Test Download #2', 'post_type' => 'download', 'post_status' => 'publish' ) );
+		$this->factory->post->create( array( 'post_title' => 'Test Download #3', 'post_type' => 'download', 'post_status' => 'publish' ) );
+		$this->factory->post->create( array( 'post_title' => 'Test Download #4', 'post_type' => 'download', 'post_status' => 'publish' ) );
+
+		$output2 = edd_downloads_query( array( 'number' => 1, 'pagination' => 'false' ) );
+		$this->assertNotContains( 'id="edd_download_pagination"', $output2 );
 	}
 }

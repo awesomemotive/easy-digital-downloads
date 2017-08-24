@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_get_shop_country() {
 	$country = edd_get_option( 'base_country', 'US' );
-	
+
 	return apply_filters( 'edd_shop_country', $country );
 }
 
@@ -42,8 +42,8 @@ function edd_get_shop_state() {
  *
  * @since 1.6
  *
- * @param null $country
- * @return mixed|void  A list of states for the shop's base country
+ * @param string $country
+ * @return array A list of states for the selected country
  */
 function edd_get_shop_states( $country = null ) {
 	if( empty( $country ) )
@@ -129,7 +129,7 @@ function edd_get_shop_states( $country = null ) {
 
 	endswitch;
 
-	return apply_filters( 'edd_shop_states', $states );
+	return apply_filters( 'edd_shop_states', $states, $country );
 }
 
 
@@ -203,7 +203,7 @@ function edd_get_country_list() {
 		'CU' => 'Cuba',
 		'CW' => 'Cura&Ccedil;ao',
 		'CY' => 'Cyprus',
-		'CZ' => 'Czech Republic',
+		'CZ' => 'Czechia',
 		'DK' => 'Denmark',
 		'DJ' => 'Djibouti',
 		'DM' => 'Dominica',
@@ -308,7 +308,7 @@ function edd_get_country_list() {
 		'NG' => 'Nigeria',
 		'NU' => 'Niue',
 		'NF' => 'Norfolk Island',
-		'KR' => 'North Korea',
+		'KP' => 'North Korea',
 		'MP' => 'Northern Mariana Islands',
 		'NO' => 'Norway',
 		'OM' => 'Oman',
@@ -319,7 +319,7 @@ function edd_get_country_list() {
 		'PG' => 'Papua New Guinea',
 		'PY' => 'Paraguay',
 		'PE' => 'Peru',
-		'PH' => 'Phillipines',
+		'PH' => 'Philippines',
 		'PN' => 'Pitcairn Island',
 		'PL' => 'Poland',
 		'PT' => 'Portugal',
@@ -352,7 +352,7 @@ function edd_get_country_list() {
 		'SO' => 'Somalia',
 		'ZA' => 'South Africa',
 		'GS' => 'South Georgia',
-		'KP' => 'South Korea',
+		'KR' => 'South Korea',
 		'SS' => 'South Sudan',
 		'ES' => 'Spain',
 		'LK' => 'Sri Lanka',
@@ -903,6 +903,7 @@ function edd_get_new_zealand_states_list() {
 		'TK' => 'Taranaki',
 		'TM' => 'Tasman',
 		'WA' => 'Waikato',
+		'WR' => 'Wairarapa',
 		'WE' => 'Wellington',
 		'WC' => 'West Coast'
 	);
@@ -1600,58 +1601,58 @@ function edd_get_turkey_states_list() {
 function edd_get_spain_states_list() {
 	$states = array(
 		''   => '',
-	    'C'  => __( 'A Coru&ntilde;a', 'edd' ),
-	    'VI' => __( 'Araba', 'edd' ),
-	    'AB' => __( 'Albacete', 'edd' ),
-	    'A'  => __( 'Alicante', 'edd' ),
-	    'AL' => __( 'Almer&iacute;a', 'edd' ),
-	    'O'  => __( 'Asturias', 'edd' ),
-	    'AV' => __( '&Aacute;vila', 'edd' ),
-	    'BA' => __( 'Badajoz', 'edd' ),
-	    'PM' => __( 'Baleares', 'edd' ),
-	    'B'  => __( 'Barcelona', 'edd' ),
-	    'BU' => __( 'Burgos', 'edd' ),
-	    'CC' => __( 'C&aacute;ceres', 'edd' ),
-	    'CA' => __( 'C&aacute;diz', 'edd' ),
-	    'S'  => __( 'Cantabria', 'edd' ),
-	    'CS' => __( 'Castell&oacute;n', 'edd' ),
-	    'CE' => __( 'Ceuta', 'edd' ),
-	    'CR' => __( 'Ciudad Real', 'edd' ),
-	    'CO' => __( 'C&oacute;rdoba', 'edd' ),
-	    'CU' => __( 'Cuenca', 'edd' ),
-	    'GI' => __( 'Girona', 'edd' ),
-	    'GR' => __( 'Granada', 'edd' ),
-	    'GU' => __( 'Guadalajara', 'edd' ),
-	    'SS' => __( 'Gipuzkoa', 'edd' ),
-	    'H'  => __( 'Huelva', 'edd' ),
-	    'HU' => __( 'Huesca', 'edd' ),
-	    'J'  => __( 'Ja&eacute;n', 'edd' ),
-	    'LO' => __( 'La Rioja', 'edd' ),
-	    'GC' => __( 'Las Palmas', 'edd' ),
-	    'LE' => __( 'Le&oacute;n', 'edd' ),
-	    'L'  => __( 'Lleida', 'edd' ),
-	    'LU' => __( 'Lugo', 'edd' ),
-	    'M'  => __( 'Madrid', 'edd' ),
-	    'MA' => __( 'M&aacute;laga', 'edd' ),
-	    'ML' => __( 'Melilla', 'edd' ),
-	    'MU' => __( 'Murcia', 'edd' ),
-	    'NA' => __( 'Navarra', 'edd' ),
-	    'OR' => __( 'Ourense', 'edd' ),
-	    'P'  => __( 'Palencia', 'edd' ),
-	    'PO' => __( 'Pontevedra', 'edd' ),
-	    'SA' => __( 'Salamanca', 'edd' ),
-	    'TF' => __( 'Santa Cruz de Tenerife', 'edd' ),
-	    'SG' => __( 'Segovia', 'edd' ),
-	    'SE' => __( 'Sevilla', 'edd' ),
-	    'SO' => __( 'Soria', 'edd' ),
-	    'T'  => __( 'Tarragona', 'edd' ),
-	    'TE' => __( 'Teruel', 'edd' ),
-	    'TO' => __( 'Toledo', 'edd' ),
-	    'V'  => __( 'Valencia', 'edd' ),
-	    'VA' => __( 'Valladolid', 'edd' ),
-	    'BI' => __( 'Bizkaia', 'edd' ),
-	    'ZA' => __( 'Zamora', 'edd' ),
-	    'Z'  => __( 'Zaragoza', 'edd' )
+	    'C'  => __( 'A Coru&ntilde;a', 'easy-digital-downloads' ),
+	    'VI' => __( 'Araba', 'easy-digital-downloads' ),
+	    'AB' => __( 'Albacete', 'easy-digital-downloads' ),
+	    'A'  => __( 'Alicante', 'easy-digital-downloads' ),
+	    'AL' => __( 'Almer&iacute;a', 'easy-digital-downloads' ),
+	    'O'  => __( 'Asturias', 'easy-digital-downloads' ),
+	    'AV' => __( '&Aacute;vila', 'easy-digital-downloads' ),
+	    'BA' => __( 'Badajoz', 'easy-digital-downloads' ),
+	    'PM' => __( 'Baleares', 'easy-digital-downloads' ),
+	    'B'  => __( 'Barcelona', 'easy-digital-downloads' ),
+	    'BU' => __( 'Burgos', 'easy-digital-downloads' ),
+	    'CC' => __( 'C&aacute;ceres', 'easy-digital-downloads' ),
+	    'CA' => __( 'C&aacute;diz', 'easy-digital-downloads' ),
+	    'S'  => __( 'Cantabria', 'easy-digital-downloads' ),
+	    'CS' => __( 'Castell&oacute;n', 'easy-digital-downloads' ),
+	    'CE' => __( 'Ceuta', 'easy-digital-downloads' ),
+	    'CR' => __( 'Ciudad Real', 'easy-digital-downloads' ),
+	    'CO' => __( 'C&oacute;rdoba', 'easy-digital-downloads' ),
+	    'CU' => __( 'Cuenca', 'easy-digital-downloads' ),
+	    'GI' => __( 'Girona', 'easy-digital-downloads' ),
+	    'GR' => __( 'Granada', 'easy-digital-downloads' ),
+	    'GU' => __( 'Guadalajara', 'easy-digital-downloads' ),
+	    'SS' => __( 'Gipuzkoa', 'easy-digital-downloads' ),
+	    'H'  => __( 'Huelva', 'easy-digital-downloads' ),
+	    'HU' => __( 'Huesca', 'easy-digital-downloads' ),
+	    'J'  => __( 'Ja&eacute;n', 'easy-digital-downloads' ),
+	    'LO' => __( 'La Rioja', 'easy-digital-downloads' ),
+	    'GC' => __( 'Las Palmas', 'easy-digital-downloads' ),
+	    'LE' => __( 'Le&oacute;n', 'easy-digital-downloads' ),
+	    'L'  => __( 'Lleida', 'easy-digital-downloads' ),
+	    'LU' => __( 'Lugo', 'easy-digital-downloads' ),
+	    'M'  => __( 'Madrid', 'easy-digital-downloads' ),
+	    'MA' => __( 'M&aacute;laga', 'easy-digital-downloads' ),
+	    'ML' => __( 'Melilla', 'easy-digital-downloads' ),
+	    'MU' => __( 'Murcia', 'easy-digital-downloads' ),
+	    'NA' => __( 'Navarra', 'easy-digital-downloads' ),
+	    'OR' => __( 'Ourense', 'easy-digital-downloads' ),
+	    'P'  => __( 'Palencia', 'easy-digital-downloads' ),
+	    'PO' => __( 'Pontevedra', 'easy-digital-downloads' ),
+	    'SA' => __( 'Salamanca', 'easy-digital-downloads' ),
+	    'TF' => __( 'Santa Cruz de Tenerife', 'easy-digital-downloads' ),
+	    'SG' => __( 'Segovia', 'easy-digital-downloads' ),
+	    'SE' => __( 'Sevilla', 'easy-digital-downloads' ),
+	    'SO' => __( 'Soria', 'easy-digital-downloads' ),
+	    'T'  => __( 'Tarragona', 'easy-digital-downloads' ),
+	    'TE' => __( 'Teruel', 'easy-digital-downloads' ),
+	    'TO' => __( 'Toledo', 'easy-digital-downloads' ),
+	    'V'  => __( 'Valencia', 'easy-digital-downloads' ),
+	    'VA' => __( 'Valladolid', 'easy-digital-downloads' ),
+	    'BI' => __( 'Bizkaia', 'easy-digital-downloads' ),
+	    'ZA' => __( 'Zamora', 'easy-digital-downloads' ),
+	    'Z'  => __( 'Zaragoza', 'easy-digital-downloads' )
 	);
 
 	return apply_filters( 'edd_spain_states', $states );

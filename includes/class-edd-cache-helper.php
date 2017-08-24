@@ -45,16 +45,16 @@ class EDD_Cache_Helper {
 			$page_uris[] = 'p=' . $purchase_page;
 			$page_uris[] = 'p=' . $success_page;
 
-	    	// Exclude permalinks
+			// Exclude permalinks
 			$checkout_page  = get_post( $purchase_page );
 			$success_page   = get_post( $success_page );
 
-	    	if ( ! is_null( $checkout_page ) )
-	    		$page_uris[] = '/' . $checkout_page->post_name;
-	    	if ( ! is_null( $success_page ) )
-	    		$page_uris[] = '/' . $success_page->post_name;
+			if ( ! is_null( $checkout_page ) )
+				$page_uris[] = '/' . $checkout_page->post_name;
+			if ( ! is_null( $success_page ) )
+				$page_uris[] = '/' . $success_page->post_name;
 
-	    	set_transient( 'edd_cache_excluded_uris', $page_uris );
+			set_transient( 'edd_cache_excluded_uris', $page_uris );
 		}
 
 		if ( is_array( $page_uris ) ) {
@@ -114,7 +114,7 @@ class EDD_Cache_Helper {
 			if ( $enabled && ! in_array( '_wp_session_', $settings ) ) {
 				?>
 				<div class="error">
-					<p><?php printf( __( 'In order for <strong>database caching</strong> to work with Easy Digital Downloads you must add <code>_wp_session_</code> to the "Ignored query stems" option in W3 Total Cache settings <a href="%s">here</a>.', 'edd' ), admin_url( 'admin.php?page=w3tc_dbcache' ) ); ?></p>
+					<p><?php printf( __( 'In order for <strong>database caching</strong> to work with Easy Digital Downloads you must add <code>_wp_session_</code> to the "Ignored query stems" option in W3 Total Cache settings <a href="%s">here</a>.', 'easy-digital-downloads' ), admin_url( 'admin.php?page=w3tc_dbcache' ) ); ?></p>
 				</div>
 				<?php
 			}

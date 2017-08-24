@@ -4,7 +4,7 @@
 /**
  * @group edd_checkout
  */
-class Tests_Checkout extends WP_UnitTestCase {
+class Tests_Checkout extends EDD_UnitTestCase {
 	public function setUp() {
 
 		parent::setUp();
@@ -37,6 +37,10 @@ class Tests_Checkout extends WP_UnitTestCase {
 			'quantity' => 1
 		);
 		edd_add_to_cart( $this->_post->ID, $options );
+	}
+
+	public function tearDown() {
+		parent::tearDown();
 	}
 
 	/**
@@ -88,14 +92,39 @@ class Tests_Checkout extends WP_UnitTestCase {
 	public function test_edd_is_email_banned() {
 
 		$emails = array();
-		$emails[] = 'john@test.com';
-		$emails[] = 'test2.com';
+		$emails[] = 'john@test.com'; // Banned email
+		$emails[] = 'test2.com'; // Banned domain
+		$emails[] = '.zip'; // Banned TLD
 
 		edd_update_option( 'banned_emails', $emails );
 
 		$this->assertTrue( edd_is_email_banned( 'john@test.com' ) );
 		$this->assertTrue( edd_is_email_banned( 'john@test2.com' ) );
 		$this->assertFalse( edd_is_email_banned( 'john2@test.com' ) );
+		$this->assertTrue( edd_is_email_banned( 'john2@test.zip' ) );
+		$this->assertFalse( edd_is_email_banned( 'john.zip@test.com' ) );
+	}
+
+	public function test_edd_is_lowercase_email_banned_with_uppcase_tld_banned() {
+
+		$emails = array();
+		$emails[] = '.ZIP'; // Banned TLD
+
+		edd_update_option( 'banned_emails', $emails );
+
+		$this->assertTrue( edd_is_email_banned( 'john2@test.zip' ) );
+		$this->assertFalse( edd_is_email_banned( 'john.zip@test.com' ) );
+	}
+
+	public function test_edd_is_uppercase_email_banned_with_lowercase_tld_banned() {
+
+		$emails = array();
+		$emails[] = '.zip'; // Banned TLD
+
+		edd_update_option( 'banned_emails', $emails );
+
+		$this->assertTrue( edd_is_email_banned( 'JOHN2@test.ZIP' ) );
+		$this->assertFalse( edd_is_email_banned( 'john.ZIP@test.com' ) );
 	}
 
 	/**

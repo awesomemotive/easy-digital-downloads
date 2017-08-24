@@ -31,6 +31,7 @@ function edd_allowed_mime_types( $existing_mimes = array() ) {
 	$existing_mimes['exe']  = 'application/octet-stream';
 	$existing_mimes['apk']  = 'application/vnd.android.package-archive';
 	$existing_mimes['msi']  = 'application/x-ole-storage';
+	$existing_mimes['csv']  = 'text/csv';
 
 	return $existing_mimes;
 }

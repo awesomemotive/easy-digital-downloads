@@ -3,7 +3,7 @@
 /**
  * @group plugin_compatibility
  */
-class Tests_Plugin_Compatibility extends WP_UnitTestCase {
+class Tests_Plugin_Compatibility extends EDD_UnitTestCase {
 
 	/**
 	 * Test that the filter exists of the function.
@@ -82,8 +82,8 @@ class Tests_Plugin_Compatibility extends WP_UnitTestCase {
 
 		$this->assertEquals( $settings, array( array(
 			'id'   => 'no_cache_checkout',
-			'name' => __('No Caching on Checkout?', 'edd'),
-			'desc' => __('Check this box in order to append a ?nocache parameter to the checkout URL to prevent caching plugins from caching the page.', 'edd'),
+			'name' => __('No Caching on Checkout?','easy-digital-downloads' ),
+			'desc' => __('Check this box in order to append a ?nocache parameter to the checkout URL to prevent caching plugins from caching the page.','easy-digital-downloads' ),
 			'type' => 'checkbox'
 		) ) );
 
@@ -152,6 +152,17 @@ class Tests_Plugin_Compatibility extends WP_UnitTestCase {
 		edd_disable_404_redirected_redirect();
 
 		$this->assertFalse( has_action( 'template_redirect', 'wbz404_process404' ) );
+
+	}
+
+	public function test_say_what_aliases() {
+
+		global $wp_filter;
+		$this->assertarrayHasKey( 'edd_say_what_domain_aliases', $wp_filter['say_what_domain_aliases'][10] );
+
+		$say_what_aliases = apply_filters( 'say_what_domain_aliases', array() );
+		$this->assertarrayHasKey( 'easy-digital-downloads', $say_what_aliases );
+		$this->assertTrue( in_array( 'edd', $say_what_aliases['easy-digital-downloads'] ) );
 
 	}
 

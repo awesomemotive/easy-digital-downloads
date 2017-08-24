@@ -2,6 +2,16 @@
 /**
  * Uninstall Easy Digital Downloads
  *
+ * Deletes all the plugin data i.e.
+ * 		1. Custom Post types.
+ * 		2. Terms & Taxonomies.
+ * 		3. Plugin pages.
+ * 		4. Plugin options.
+ * 		5. Capabilities.
+ * 		6. Roles.
+ * 		7. Database tables.
+ * 		8. Cron events.
+ *
  * @package     EDD
  * @subpackage  Uninstall
  * @copyright   Copyright (c) 2015, Pippin Williamson
@@ -9,10 +19,10 @@
  * @since       1.4.3
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit;
 
-// Load EDD file
+// Load EDD file.
 include_once( 'easy-digital-downloads.php' );
 
 global $wpdb, $wp_roles;
@@ -39,15 +49,16 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 
 		$terms = $wpdb->get_results( $wpdb->prepare( "SELECT t.*, tt.* FROM $wpdb->terms AS t INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id WHERE tt.taxonomy IN ('%s') ORDER BY t.name ASC", $taxonomy ) );
 
-		// Delete Terms
+		// Delete Terms.
 		if ( $terms ) {
 			foreach ( $terms as $term ) {
+				$wpdb->delete( $wpdb->term_relationships, array( 'term_taxonomy_id' => $term->term_taxonomy_id ) );
 				$wpdb->delete( $wpdb->term_taxonomy, array( 'term_taxonomy_id' => $term->term_taxonomy_id ) );
 				$wpdb->delete( $wpdb->terms, array( 'term_id' => $term->term_id ) );
 			}
 		}
 
-		// Delete Taxonomies
+		// Delete Taxonomies.
 		$wpdb->delete( $wpdb->term_taxonomy, array( 'taxonomy' => $taxonomy ), array( '%s' ) );
 	}
 
@@ -63,6 +74,19 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 	/** Delete all the Plugin Options */
 	delete_option( 'edd_settings' );
 	delete_option( 'edd_version' );
+	delete_option( 'edd_use_php_sessions' );
+	delete_option( 'edd_default_api_version' );
+	delete_option( 'wp_edd_customers_db_version' );
+	delete_option( 'wp_edd_customermeta_db_version' );
+	delete_option( 'edd_completed_upgrades' );
+	delete_option( 'widget_edd_cart_widget' );
+	delete_option( 'widget_edd_categories_tags_widget' );
+	delete_option( 'widget_edd_product_details' );
+	delete_option( '_edd_table_check' );
+	delete_option( 'edd_tracking_notice' );
+	delete_option( 'edd_earnings_total' );
+	delete_option( 'edd_tax_rates' );
+	delete_option( 'edd_version_upgraded_from' );
 
 	/** Delete Capabilities */
 	EDD()->roles->remove_caps();
@@ -75,9 +99,16 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 
 	// Remove all database tables
 	$wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "edd_customers" );
+	$wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "edd_customermeta" );
 
 	/** Cleanup Cron Events */
 	wp_clear_scheduled_hook( 'edd_daily_scheduled_events' );
 	wp_clear_scheduled_hook( 'edd_daily_cron' );
 	wp_clear_scheduled_hook( 'edd_weekly_cron' );
+
+	// Remove any transients we've left behind
+	$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE '\_transient\_edd\_%'" );
+	$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE '\_site\_transient\_edd\_%'" );
+	$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE '\_transient\_timeout\_edd\_%'" );
+	$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE '\_site\_transient\_timeout\_edd\_%'" );
 }

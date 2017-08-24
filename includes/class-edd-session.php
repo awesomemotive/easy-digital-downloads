@@ -67,13 +67,17 @@ class EDD_Session {
 			if( is_multisite() ) {
 
 				$this->prefix = '_' . get_current_blog_id();
-	
+
 			}
 
 			// Use PHP SESSION (must be enabled via the EDD_USE_PHP_SESSIONS constant)
 			add_action( 'init', array( $this, 'maybe_start_session' ), -2 );
 
 		} else {
+
+			if( ! $this->should_start_session() ) {
+				return;
+			}
 
 			// Use WP_Session (default)
 
@@ -118,13 +122,16 @@ class EDD_Session {
 			$this->session = WP_Session::get_instance();
 		}
 
-		$cart     = $this->get( 'edd_cart' );
-		$purchase = $this->get( 'edd_purchase' );
+		$use_cookie = $this->use_cart_cookie();
+		$cart       = $this->get( 'edd_cart' );
+		$purchase   = $this->get( 'edd_purchase' );
 
-		if( ! empty( $cart ) || ! empty( $purchase ) ) {
-			$this->set_cart_cookie();
-		} else {
-			$this->set_cart_cookie( false );
+		if ( $use_cookie ) {
+			if( ! empty( $cart ) || ! empty( $purchase ) ) {
+				$this->set_cart_cookie();
+			} else {
+				$this->set_cart_cookie( false );
+			}
 		}
 
 		return $this->session;
@@ -149,7 +156,7 @@ class EDD_Session {
 	 * @access public
 	 * @since 1.5
 	 * @param string $key Session key
-	 * @return string Session variable
+	 * @return mixed Session variable
 	 */
 	public function get( $key ) {
 		$key = sanitize_key( $key );
@@ -162,8 +169,8 @@ class EDD_Session {
 	 * @since 1.5
 	 *
 	 * @param string $key Session key
-	 * @param integer $value Session variable
-	 * @return string Session variable
+	 * @param int|string|array $value Session variable
+	 * @return mixed Session variable
 	 */
 	public function set( $key, $value ) {
 
@@ -190,7 +197,7 @@ class EDD_Session {
 	 *
 	 * @access public
 	 * @since 1.8
-	 * @param string $set Whether to set or destroy
+	 * @param bool $set Whether to set or destroy
 	 * @return void
 	 */
 	public function set_cart_cookie( $set = true ) {
@@ -199,8 +206,8 @@ class EDD_Session {
 				@setcookie( 'edd_items_in_cart', '1', time() + 30 * 60, COOKIEPATH, COOKIE_DOMAIN, false );
 			} else {
 				if ( isset($_COOKIE['edd_items_in_cart']) ) {
-					@setcookie( 'edd_items_in_cart', '', time() - 3600, COOKIEPATH, COOKIE_DOMAIN, false );	
-				}				
+					@setcookie( 'edd_items_in_cart', '', time() - 3600, COOKIEPATH, COOKIE_DOMAIN, false );
+				}
 			}
 		}
 	}
@@ -223,7 +230,7 @@ class EDD_Session {
 	 * @access public
 	 * @since 1.9
 	 * @param int $exp Default expiration (1 hour)
-	 * @return int
+	 * @return int Cookie expiration time
 	 */
 	public function set_expiration_time( $exp ) {
 		return ( 30 * 60 * 24 );
@@ -251,7 +258,7 @@ class EDD_Session {
 		if ( ! $edd_use_php_sessions ) {
 
 			// Attempt to detect if the server supports PHP sessions
-			if( function_exists( 'session_start' ) && ! ini_get( 'safe_mode' ) ) {
+			if( function_exists( 'session_start' ) ) {
 
 				$this->set( 'edd_use_php_sessions', 1 );
 
@@ -281,13 +288,94 @@ class EDD_Session {
 	}
 
 	/**
+	 * Determines if a user has set the EDD_USE_CART_COOKIE
+	 *
+	 * @since  2.5
+	 * @return bool If the store should use the edd_items_in_cart cookie to help avoid caching
+	 */
+	public function use_cart_cookie() {
+		$ret = true;
+
+		if ( defined( 'EDD_USE_CART_COOKIE' ) && ! EDD_USE_CART_COOKIE ) {
+			$ret = false;
+		}
+
+		return (bool) apply_filters( 'edd_use_cart_cookie', $ret );
+	}
+
+	/**
+	 * Determines if we should start sessions
+	 *
+	 * @since  2.5.11
+	 * @return bool
+	 */
+	public function should_start_session() {
+
+		$start_session = true;
+
+		if( ! empty( $_SERVER[ 'REQUEST_URI' ] ) ) {
+
+			$blacklist = $this->get_blacklist();
+			$uri       = ltrim( $_SERVER[ 'REQUEST_URI' ], '/' );
+			$uri       = untrailingslashit( $uri );
+
+			if( in_array( $uri, $blacklist ) ) {
+				$start_session = false;
+			}
+
+			if( false !== strpos( $uri, 'feed=' ) ) {
+				$start_session = false;
+			}
+
+		}
+
+		return apply_filters( 'edd_start_session', $start_session );
+
+	}
+
+	/**
+	 * Retrieve the URI blacklist
+	 *
+	 * These are the URIs where we never start sessions
+	 *
+	 * @since  2.5.11
+	 * @return array
+	 */
+	public function get_blacklist() {
+
+		$blacklist = apply_filters( 'edd_session_start_uri_blacklist', array(
+			'feed',
+			'feed/rss',
+			'feed/rss2',
+			'feed/rdf',
+			'feed/atom',
+			'comments/feed'
+		) );
+
+		// Look to see if WordPress is in a sub folder or this is a network site that uses sub folders
+		$folder = str_replace( network_home_url(), '', get_site_url() );
+
+		if( ! empty( $folder ) ) {
+			foreach( $blacklist as $path ) {
+				$blacklist[] = $folder . '/' . $path;
+			}
+		}
+
+		return $blacklist;
+	}
+
+	/**
 	 * Starts a new session if one hasn't started yet.
 	 */
 	public function maybe_start_session() {
+
+		if( ! $this->should_start_session() ) {
+			return;
+		}
+
 		if( ! session_id() && ! headers_sent() ) {
 			session_start();
 		}
 	}
 
 }
-

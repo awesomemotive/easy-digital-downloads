@@ -23,18 +23,18 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *  Post Type List Table
  */
 function edd_download_columns( $download_columns ) {
-	$category_labels   = edd_get_taxonomy_labels( 'download_category' );
-	$tag_labels        = edd_get_taxonomy_labels( 'download_tag' );
+	$category_labels = edd_get_taxonomy_labels( 'download_category' );
+	$tag_labels      = edd_get_taxonomy_labels( 'download_tag' );
 
 	$download_columns = array(
 		'cb'                => '<input type="checkbox"/>',
-		'title'             => __( 'Name', 'edd' ),
-		'download_category' => $category_labels['name'],
-		'download_tag'      => $tag_labels['name'],
-		'price'             => __( 'Price', 'edd' ),
-		'sales'             => __( 'Sales', 'edd' ),
-		'earnings'          => __( 'Earnings', 'edd' ),
-		'date'              => __( 'Date', 'edd' )
+		'title'             => __( 'Name', 'easy-digital-downloads' ),
+		'download_category' => $category_labels['menu_name'],
+		'download_tag'      => $tag_labels['menu_name'],
+		'price'             => __( 'Price', 'easy-digital-downloads' ),
+		'sales'             => __( 'Sales', 'easy-digital-downloads' ),
+		'earnings'          => __( 'Earnings', 'easy-digital-downloads' ),
+		'date'              => __( 'Date', 'easy-digital-downloads' )
 	);
 
 	return apply_filters( 'edd_download_columns', $download_columns );
@@ -168,7 +168,7 @@ function edd_filter_downloads( $vars ) {
 			$author_id = $_REQUEST['author'];
 			if ( (int) $author_id !== get_current_user_id() ) {
 				// Tried to view the products of another person, sorry
-				wp_die( __( 'You do not have permission to view this data.', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
+				wp_die( __( 'You do not have permission to view this data.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 			}
 			$vars = array_merge(
 				$vars,
@@ -215,7 +215,7 @@ function edd_add_download_filters() {
 		if ( count( $terms ) > 0 ) {
 			echo "<select name='download_category' id='download_category' class='postform'>";
 				$category_labels = edd_get_taxonomy_labels( 'download_category' );
-				echo "<option value=''>" . sprintf( __( 'Show all %s', 'edd' ), strtolower( $category_labels['name'] ) ) . "</option>";
+				echo "<option value=''>" . sprintf( __( 'Show all %s', 'easy-digital-downloads' ), strtolower( $category_labels['name'] ) ) . "</option>";
 				foreach ( $terms as $term ) {
 					$selected = isset( $_GET['download_category'] ) && $_GET['download_category'] == $term->slug ? ' selected="selected"' : '';
 					echo '<option value="' . esc_attr( $term->slug ) . '"' . $selected . '>' . esc_html( $term->name ) .' (' . $term->count .')</option>';
@@ -227,7 +227,7 @@ function edd_add_download_filters() {
 		if ( count( $terms ) > 0) {
 			echo "<select name='download_tag' id='download_tag' class='postform'>";
 				$tag_labels = edd_get_taxonomy_labels( 'download_tag' );
-				echo "<option value=''>" . sprintf( __( 'Show all %s', 'edd' ), strtolower( $tag_labels['name'] ) ) . "</option>";
+				echo "<option value=''>" . sprintf( __( 'Show all %s', 'easy-digital-downloads' ), strtolower( $tag_labels['name'] ) ) . "</option>";
 				foreach ( $terms as $term ) {
 					$selected = isset( $_GET['download_tag']) && $_GET['download_tag'] == $term->slug ? ' selected="selected"' : '';
 					echo '<option value="' . esc_attr( $term->slug ) . '"' . $selected . '>' . esc_html( $term->name ) .' (' . $term->count .')</option>';
@@ -281,9 +281,9 @@ function edd_price_field_quick_edit( $column_name, $post_type ) {
 	?>
 	<fieldset class="inline-edit-col-left">
 		<div id="edd-download-data" class="inline-edit-col">
-			<h4><?php echo sprintf( __( '%s Configuration', 'edd' ), edd_get_label_singular() ); ?></h4>
+			<h4><?php echo sprintf( __( '%s Configuration', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></h4>
 			<label>
-				<span class="title"><?php _e( 'Price', 'edd' ); ?></span>
+				<span class="title"><?php _e( 'Price', 'easy-digital-downloads' ); ?></span>
 				<span class="input-text-wrap">
 					<input type="text" name="_edd_regprice" class="text regprice" />
 				</span>
