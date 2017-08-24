@@ -55,7 +55,7 @@ function edd_get_shop_states( $country = null ) {
 			$states = edd_get_states_list();
 			break;
 		case 'AO' :
-			$states = edd_get_angola_list();
+			$states = edd_get_angola_provinces_list();
 			break;
 		case 'CA' :
 			$states = edd_get_provinces_list();
@@ -479,37 +479,37 @@ function edd_get_states_list() {
 
 	return apply_filters( 'edd_us_states', $states );
 }
+
 /**
  * Get Angola States
  *
- * @since 1.1
+ * @since 2.8.5
  * @return array $states A list of states
  */
-function edd_get_angola_list() {
-	$states = array(
-		''   => '',
-	   	'BGO' => __( 'Bengo', 'edd' ),
-	    'BLU' => __( 'Benguela', 'edd' ),
-	    'BIE'  => __( 'Bié', 'edd' ),
-	    'CAB'  => __( 'Cabinda', 'edd' ),
-	   	'CNN'  => __( 'Cunene', 'edd' ),
-	    'HUA'  => __( 'Huambo', 'edd' ),
-	    'HUI'  => __( 'Huíla', 'edd' ),
-	    'CCU'  => __( 'Kuando Kubango', 'edd' ),
-	    'CNO'  => __( 'Kwanza-Norte', 'edd' ),
-	    'CUS'  => __( 'Kwanza-Sul', 'edd' ),
-	    'LUA'  => __( 'Luanda', 'edd' ),
-	    'LNO'  => __( 'Lunda-Norte', 'edd' ),
-	    'LSU'  => __( 'Lunda-Sul', 'edd' ),
-	    'MAL'  => __( 'Malanje', 'edd' ),
-	    'MOX'  => __( 'Moxico', 'edd' ),
-	    'NAM'  => __( 'Namibe', 'edd' ),
-	    'UIG'  => __( 'Uíge', 'edd' ),
-	    'ZAI'  => __( 'Zaire', 'edd' )
-
+function edd_get_angola_provinces_list() {
+	$provinces = array(
+		''    => '',
+		'BGO' => 'Bengo',
+		'BGU' => 'Benguela',
+		'BIE' => 'Bié',
+		'CAB' => 'Cabinda',
+		'CNN' => 'Cunene',
+		'HUA' => 'Huambo',
+		'HUI' => 'Huíla',
+		'CCU' => 'Kuando Kubango',
+		'CNO' => 'Kwanza-Norte',
+		'CUS' => 'Kwanza-Sul',
+		'LUA' => 'Luanda',
+		'LNO' => 'Lunda-Norte',
+		'LSU' => 'Lunda-Sul',
+		'MAL' => 'Malanje',
+		'MOX' => 'Moxico',
+		'NAM' => 'Namibe',
+		'UIG' => 'Uíge',
+		'ZAI' => 'Zaire'
 	);
 
-	return apply_filters( 'edd_angola_states', $states );
+	return apply_filters( 'edd_angola_provinces', $provinces );
 }
 
 /**

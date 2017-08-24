@@ -298,7 +298,7 @@ function edd_is_host( $host = false ) {
 /**
  * Get Currencies
  *
- * @since 1.1
+ * @since 1.0
  * @return array $currencies A list of the available currencies
  */
 function edd_get_currencies() {
