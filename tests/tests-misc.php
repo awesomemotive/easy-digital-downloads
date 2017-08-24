@@ -98,7 +98,8 @@ class Test_Misc extends EDD_UnitTestCase {
 			'INR'  => __( 'Indian Rupee (&#8377;)', 'easy-digital-downloads' ),
 			'TRY'  => __( 'Turkish Lira (&#8378;)', 'easy-digital-downloads' ),
 			'RIAL' => __( 'Iranian Rial (&#65020;)', 'easy-digital-downloads' ),
-			'RUB'  => __( 'Russian Rubles', 'easy-digital-downloads' )
+			'RUB'  => __( 'Russian Rubles', 'easy-digital-downloads' ),
+			'AOA'  => __( 'Angolan Kwanza', 'easy-digital-downloads' ),
 		);
 
 		$this->assertEquals( $expected, edd_get_currencies() );
@@ -458,6 +459,32 @@ class Test_Misc extends EDD_UnitTestCase {
 		);
 
 		$this->assertEquals( $expected, edd_get_provinces_list() );
+	}
+
+	public function test_angola_provinces_list() {
+		$expected = array(
+			''    => '',
+			'BGO' => 'Bengo',
+			'BGU' => 'Benguela',
+			'BIE' => 'Bié',
+			'CAB' => 'Cabinda',
+			'CNN' => 'Cunene',
+			'HUA' => 'Huambo',
+			'HUI' => 'Huíla',
+			'CCU' => 'Kuando Kubango', // Cuando Cubango
+			'CNO' => 'Kwanza-Norte', // Cuanza Norte
+			'CUS' => 'Kwanza-Sul', // Cuanza Sul
+			'LUA' => 'Luanda',
+			'LNO' => 'Lunda-Norte', // Lunda Norte
+			'LSU' => 'Lunda-Sul', // Lunda Sul
+			'MAL' => 'Malanje', // Malanje
+			'MOX' => 'Moxico',
+			'NAM' => 'Namibe',
+			'UIG' => 'Uíge',
+			'ZAI' => 'Zaire'
+		);
+
+		$this->assertSame( $expected, edd_get_angola_provinces_list() );
 	}
 
 	public function test_month_num_to_name() {
