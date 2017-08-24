@@ -96,6 +96,15 @@ class EDD_Emails {
 	}
 
 	/**
+	 * Get a property
+	 *
+	 * @since 2.6.9
+	 */
+	public function __get( $key ) {
+		return $this->$key;
+	}
+
+	/**
 	 * Get the email from name
 	 *
 	 * @since 2.1
@@ -115,7 +124,11 @@ class EDD_Emails {
 	 */
 	public function get_from_address() {
 		if ( ! $this->from_address ) {
-			$this->from_address = edd_get_option( 'from_email', get_option( 'admin_email' ) );
+			$this->from_address = edd_get_option( 'from_email' );
+		}
+
+		if( empty( $this->from_address ) || ! is_email( $this->from_address ) ) {
+			$this->from_address = get_option( 'admin_email' );
 		}
 
 		return apply_filters( 'edd_email_from_address', $this->from_address, $this );
@@ -158,8 +171,8 @@ class EDD_Emails {
 	 */
 	public function get_templates() {
 		$templates = array(
-			'default' => __( 'Default Template', 'edd' ),
-			'none'    => __( 'No template, plain text only', 'edd' )
+			'default' => __( 'Default Template', 'easy-digital-downloads' ),
+			'none'    => __( 'No template, plain text only', 'easy-digital-downloads' )
 		);
 
 		return apply_filters( 'edd_email_templates', $templates );
@@ -275,7 +288,7 @@ class EDD_Emails {
 	public function send( $to, $subject, $message, $attachments = '' ) {
 
 		if ( ! did_action( 'init' ) && ! did_action( 'admin_init' ) ) {
-			_doing_it_wrong( __FUNCTION__, __( 'You cannot send email with EDD_Emails until init/admin_init has been reached', 'edd' ), null );
+			_doing_it_wrong( __FUNCTION__, __( 'You cannot send email with EDD_Emails until init/admin_init has been reached', 'easy-digital-downloads' ), null );
 			return false;
 		}
 
@@ -293,7 +306,23 @@ class EDD_Emails {
 
 		$attachments = apply_filters( 'edd_email_attachments', $attachments, $this );
 
-		$sent = wp_mail( $to, $subject, $message, $this->get_headers(), $attachments );
+		$sent       = wp_mail( $to, $subject, $message, $this->get_headers(), $attachments );
+		$log_errors = apply_filters( 'edd_log_email_errors', true, $to, $subject, $message );
+
+		if( ! $sent && true === $log_errors ) {
+			if ( is_array( $to ) ) {
+				$to = implode( ',', $to );
+			}
+
+			$log_message = sprintf(
+				__( "Email from Easy Digital Downloads failed to send.\nSend time: %s\nTo: %s\nSubject: %s\n\n", 'easy-digital-downloads' ),
+				date_i18n( 'F j Y H:i:s', current_time( 'timestamp' ) ),
+				$to,
+				$subject
+			);
+
+			error_log( $log_message );
+		}
 
 		/**
 		 * Hooks after the email is sent
@@ -339,7 +368,7 @@ class EDD_Emails {
 	public function text_to_html( $message ) {
 
 		if ( 'text/html' == $this->content_type || true === $this->html ) {
-			$message = wpautop( $message );
+			$message = apply_filters( 'edd_email_template_wpautop', true ) ? wpautop( $message ) : $message;
 		}
 
 		return $message;

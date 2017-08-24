@@ -59,7 +59,7 @@ function edd_logs_view_file_downloads() {
 		<?php do_action( 'edd_logs_file_downloads_top' ); ?>
 		<form id="edd-logs-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-reports&tab=logs' ); ?>">
 			<?php
-			$logs_table->search_box( __( 'Search', 'edd' ), 'edd-payments' );
+			$logs_table->search_box( __( 'Search', 'easy-digital-downloads' ), 'edd-payments' );
 			$logs_table->display();
 			?>
 			<input type="hidden" name="post_type" value="download" />
@@ -119,7 +119,7 @@ function edd_logs_view_api_requests() {
 		<?php do_action( 'edd_logs_api_requests_top' ); ?>
 		<form id="edd-logs-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-reports&tab=logs' ); ?>">
 			<?php
-			$logs_table->search_box( __( 'Search', 'edd' ), 'edd-api-requests' );
+			$logs_table->search_box( __( 'Search', 'easy-digital-downloads' ), 'edd-api-requests' );
 			$logs_table->display();
 			?>
 			<input type="hidden" name="post_type" value="download" />
@@ -141,10 +141,10 @@ add_action( 'edd_logs_view_api_requests', 'edd_logs_view_api_requests' );
  */
 function edd_log_default_views() {
 	$views = array(
-		'file_downloads'  => __( 'File Downloads', 'edd' ),
-		'sales' 		  => __( 'Sales', 'edd' ),
-		'gateway_errors'  => __( 'Payment Errors', 'edd' ),
-		'api_requests'    => __( 'API Requests', 'edd' )
+		'file_downloads'  => __( 'File Downloads', 'easy-digital-downloads' ),
+		'sales' 		  => __( 'Sales', 'easy-digital-downloads' ),
+		'gateway_errors'  => __( 'Payment Errors', 'easy-digital-downloads' ),
+		'api_requests'    => __( 'API Requests', 'easy-digital-downloads' )
 	);
 
 	$views = apply_filters( 'edd_log_views', $views );
@@ -164,7 +164,7 @@ function edd_log_views() {
 	?>
 	<form id="edd-logs-filter" method="get" action="edit.php">
 		<select id="edd-logs-view" name="view">
-			<option value="-1"><?php _e( 'Log Type', 'edd' ); ?></option>
+			<option value="-1"><?php _e( 'Log Type', 'easy-digital-downloads' ); ?></option>
 			<?php foreach ( $views as $view_id => $label ): ?>
 				<option value="<?php echo esc_attr( $view_id ); ?>" <?php selected( $view_id, $current_view ); ?>><?php echo $label; ?></option>
 			<?php endforeach; ?>
@@ -176,7 +176,7 @@ function edd_log_views() {
 		<input type="hidden" name="page" value="edd-reports"/>
 		<input type="hidden" name="tab" value="logs"/>
 
-		<?php submit_button( __( 'Apply', 'edd' ), 'secondary', 'submit', false ); ?>
+		<?php submit_button( __( 'Apply', 'easy-digital-downloads' ), 'secondary', 'submit', false ); ?>
 	</form>
 	<?php
 }

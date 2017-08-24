@@ -4,7 +4,7 @@
 /**
  * @group edd_mime
  */
-class Tests_Templates extends WP_UnitTestCase {
+class Tests_Templates extends EDD_UnitTestCase {
 
 	protected $_post;
 
@@ -65,6 +65,7 @@ class Tests_Templates extends WP_UnitTestCase {
 	}
 
 	public function test_get_purchase_link() {
+		add_filter( 'edd_add_schema_microdata', '__return_true' );
 		$link = edd_get_purchase_link( array( 'download_id' => $this->_post->ID ) );
 		$this->assertInternalType( 'string', $link );
 		$this->assertContains( '<form id="edd_purchase_', $link );
@@ -94,6 +95,7 @@ class Tests_Templates extends WP_UnitTestCase {
 		foreach( $meta as $key => $value ) {
 			update_post_meta( $single_id, $key, $value );
 		}
+
 		$single_link_default = edd_get_purchase_link( array( 'download_id' => $single_id ) );
 		$this->assertContains( 'data-price="10.00"', $single_link_default );
 		$this->assertContains( '<span class="edd-add-to-cart-label">&#36;10.00&nbsp;&ndash;&nbsp;Purchase</span>', $single_link_default );
@@ -104,6 +106,12 @@ class Tests_Templates extends WP_UnitTestCase {
 		$this->assertContains( '<span class="edd-add-to-cart-label">Purchase</span>', $single_link_no_price );
 		// data-price should still contain the price
 		$this->assertContains( 'data-price="10.00"', $single_link_no_price );
+	}
+
+	// For issue #4755
+	public function test_get_purchase_link_invalid_sku() {
+		$link = edd_get_purchase_link( array( 'sku' => 'SKU' ) );
+		$this->assertTrue( empty( $link ) );
 	}
 
 	public function test_button_colors() {

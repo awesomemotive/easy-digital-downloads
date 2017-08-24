@@ -28,7 +28,7 @@ class EDD_Cron {
 	 */
 	public function __construct() {
 		add_filter( 'cron_schedules', array( $this, 'add_schedules'   ) );
-		add_action( 'wp',             array( $this, 'schedule_Events' ) );
+		add_action( 'wp',             array( $this, 'schedule_events' ) );
 	}
 
 	/**
@@ -43,7 +43,7 @@ class EDD_Cron {
 		// Adds once weekly to the existing schedules.
 		$schedules['weekly'] = array(
 			'interval' => 604800,
-			'display'  => __( 'Once Weekly', 'edd' )
+			'display'  => __( 'Once Weekly', 'easy-digital-downloads' )
 		);
 
 		return $schedules;
@@ -56,7 +56,7 @@ class EDD_Cron {
 	 * @since 1.6
 	 * @return void
 	 */
-	public function schedule_Events() {
+	public function schedule_events() {
 		$this->weekly_events();
 		$this->daily_events();
 	}
@@ -70,7 +70,7 @@ class EDD_Cron {
 	 */
 	private function weekly_events() {
 		if ( ! wp_next_scheduled( 'edd_weekly_scheduled_events' ) ) {
-			wp_schedule_event( current_time( 'timestamp' ), 'weekly', 'edd_weekly_scheduled_events' );
+			wp_schedule_event( current_time( 'timestamp', true ), 'weekly', 'edd_weekly_scheduled_events' );
 		}
 	}
 
@@ -83,7 +83,7 @@ class EDD_Cron {
 	 */
 	private function daily_events() {
 		if ( ! wp_next_scheduled( 'edd_daily_scheduled_events' ) ) {
-			wp_schedule_event( current_time( 'timestamp' ), 'daily', 'edd_daily_scheduled_events' );
+			wp_schedule_event( current_time( 'timestamp', true ), 'daily', 'edd_daily_scheduled_events' );
 		}
 	}
 

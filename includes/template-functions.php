@@ -51,7 +51,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 	$purchase_page = edd_get_option( 'purchase_page', false );
 	if ( ! $purchase_page || $purchase_page == 0 ) {
-		edd_set_error( 'set_checkout', sprintf( __( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-settings' ) ) );
+		edd_set_error( 'set_checkout', sprintf( __( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings' ) ) );
 		edd_print_errors();
 		return false;
 	}
@@ -64,7 +64,7 @@ function edd_get_purchase_link( $args = array() ) {
 		'price'       => (bool) true,
 		'price_id'    => isset( $args['price_id'] ) ? $args['price_id'] : false,
 		'direct'      => $button_behavior == 'direct' ? true : false,
-		'text'        => $button_behavior == 'direct' ? edd_get_option( 'buy_now_text', __( 'Buy Now', 'edd' ) ) : edd_get_option( 'add_to_cart_text', __( 'Purchase', 'edd' ) ),
+		'text'        => $button_behavior == 'direct' ? edd_get_option( 'buy_now_text', __( 'Buy Now', 'easy-digital-downloads' ) ) : edd_get_option( 'add_to_cart_text', __( 'Purchase', 'easy-digital-downloads' ) ),
 		'style'       => edd_get_option( 'button_style', 'button' ),
 		'color'       => edd_get_option( 'checkout_color', 'blue' ),
 		'class'       => 'edd-submit'
@@ -72,7 +72,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 	$args = wp_parse_args( $args, $defaults );
 
-	// Override the stright_to_gateway if the shop doesn't support it
+	// Override the straight_to_gateway if the shop doesn't support it
 	if ( ! edd_shop_supports_buy_now() ) {
 		$args['direct'] = false;
 	}
@@ -97,6 +97,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 	$show_price       = $args['price'] && $args['price'] !== 'no';
 	$data_price_value = 0;
+	$price            = false;
 
 	if ( $variable_pricing && false !== $args['price_id'] ) {
 
@@ -121,14 +122,16 @@ function edd_get_purchase_link( $args = array() ) {
 
 	}
 
+	$args['display_price'] = $data_price_value;
+
 	$data_price  = 'data-price="' . $data_price_value . '"';
 
 	$button_text = ! empty( $args['text'] ) ? '&nbsp;&ndash;&nbsp;' . $args['text'] : '';
 
-	if ( isset( $price ) && false !== $price ) {
+	if ( false !== $price ) {
 
 		if ( 0 == $price ) {
-			$args['text'] = __( 'Free', 'edd' ) . $button_text;
+			$args['text'] = __( 'Free', 'easy-digital-downloads' ) . $button_text;
 		} else {
 			$args['text'] = edd_currency_filter( edd_format_amount( $price ) ) . $button_text;
 		}
@@ -152,7 +155,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 	$form_id = ! empty( $args['form_id'] ) ? $args['form_id'] : 'edd_purchase_' . $download->ID;
 
-	// If we've already generated a form ID for this download ID, apped -#
+	// If we've already generated a form ID for this download ID, append -#
 	if ( $edd_displayed_form_ids[ $download->ID ] > 1 ) {
 		$form_id .= '-' . $edd_displayed_form_ids[ $download->ID ];
 	}
@@ -171,31 +174,29 @@ function edd_get_purchase_link( $args = array() ) {
 
 			if ( ! edd_is_ajax_disabled() ) {
 
-				echo '<a href="#" class="edd-add-to-cart ' . esc_attr( $class ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $download->ID ) . '" ' . $data_variable . ' ' . $type . ' ' . $data_price . ' ' . $button_display . '><span class="edd-add-to-cart-label">' . $args['text'] . '</span> <span class="edd-loading"><i class="edd-icon-spinner edd-icon-spin"></i></span></a>';
+				echo '<a href="#" class="edd-add-to-cart ' . esc_attr( $class ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $download->ID ) . '" ' . $data_variable . ' ' . $type . ' ' . $data_price . ' ' . $button_display . '><span class="edd-add-to-cart-label">' . $args['text'] . '</span> <span class="edd-loading" aria-label="' . esc_attr__( 'Loading', 'easy-digital-downloads' ) . '"></span></a>';
 
 			}
 
 			echo '<input type="submit" class="edd-add-to-cart edd-no-js ' . esc_attr( $class ) . '" name="edd_purchase_download" value="' . esc_attr( $args['text'] ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $download->ID ) . '" ' . $data_variable . ' ' . $type . ' ' . $button_display . '/>';
-			echo '<a href="' . esc_url( edd_get_checkout_uri() ) . '" class="edd_go_to_checkout ' . esc_attr( $class ) . '" ' . $checkout_display . '>' . __( 'Checkout', 'edd' ) . '</a>';
+			echo '<a href="' . esc_url( edd_get_checkout_uri() ) . '" class="edd_go_to_checkout ' . esc_attr( $class ) . '" ' . $checkout_display . '>' . __( 'Checkout', 'easy-digital-downloads' ) . '</a>';
 			?>
 
 			<?php if ( ! edd_is_ajax_disabled() ) : ?>
-				<span class="edd-cart-ajax-alert">
+				<span class="edd-cart-ajax-alert" aria-live="assertive">
 					<span class="edd-cart-added-alert" style="display: none;">
-						<?php printf(
-								'<i class="edd-icon-ok"></i> ' . __( 'Added to cart', 'edd' ),
-								'<a href="' . esc_url( edd_get_checkout_uri() ) . '" title="' . __( 'Go to Checkout', 'edd' ) . '">',
-								'</a>'
-							);
-						?>
+						<svg class="edd-icon edd-icon-check" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
+							<path d="M26.11 8.844c0 .39-.157.78-.44 1.062L12.234 23.344c-.28.28-.672.438-1.062.438s-.78-.156-1.06-.438l-7.782-7.78c-.28-.282-.438-.673-.438-1.063s.156-.78.438-1.06l2.125-2.126c.28-.28.672-.438 1.062-.438s.78.156 1.062.438l4.594 4.61L21.42 5.656c.282-.28.673-.438 1.063-.438s.78.155 1.062.437l2.125 2.125c.28.28.438.672.438 1.062z"/>
+						</svg>
+						<?php echo __( 'Added to cart', 'easy-digital-downloads' ); ?>
 					</span>
 				</span>
 			<?php endif; ?>
-			<?php if( ! $download->is_free( $args['price_id'] ) ): ?>
+			<?php if( ! $download->is_free( $args['price_id'] ) && ! edd_download_is_tax_exclusive( $download->ID ) ): ?>
 				<?php if ( edd_display_tax_rate() && edd_prices_include_tax() ) {
-					echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Includes %1$s&#37; tax', 'edd' ), edd_get_tax_rate() * 100 ) . '</span>';
+					echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Includes %1$s&#37; tax', 'easy-digital-downloads' ), edd_get_tax_rate() * 100 ) . '</span>';
 				} elseif ( edd_display_tax_rate() && ! edd_prices_include_tax() ) {
-					echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Excluding %1$s&#37; tax', 'edd' ), edd_get_tax_rate() * 100 ) . '</span>';
+					echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Excluding %1$s&#37; tax', 'easy-digital-downloads' ), edd_get_tax_rate() * 100 ) . '</span>';
 				} ?>
 			<?php endif; ?>
 		</div><!--end .edd_purchase_submit_wrapper-->
@@ -236,6 +237,14 @@ function edd_get_purchase_link( $args = array() ) {
  * @return void
  */
 function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
+	global $edd_displayed_form_ids;
+
+	// If we've already generated a form ID for this download ID, append -#
+	$form_id = '';
+	if ( $edd_displayed_form_ids[ $download_id ] > 1 ) {
+		$form_id .= '-' . $edd_displayed_form_ids[ $download_id ];
+	}
+
 	$variable_pricing = edd_has_variable_prices( $download_id );
 
 	if ( ! $variable_pricing ) {
@@ -253,21 +262,46 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 	$mode   = edd_single_price_option_mode( $download_id ) ? 'multi' : 'single';
 	$schema = edd_add_schema_microdata() ? ' itemprop="offers" itemscope itemtype="http://schema.org/Offer"' : '';
 
+	// Filter the class names for the edd_price_options div
+	$css_classes_array = apply_filters( 'edd_price_options_classes', array(
+		'edd_price_options',
+		'edd_' . esc_attr( $mode ) . '_mode'
+	), $download_id );
+
+	// Sanitize those class names and form them into a string
+	$css_classes_string = implode( array_map( 'sanitize_html_class', $css_classes_array ), ' ' );
+
 	if ( edd_item_in_cart( $download_id ) && ! edd_single_price_option_mode( $download_id ) ) {
 		return;
 	}
 
 	do_action( 'edd_before_price_options', $download_id ); ?>
-	<div class="edd_price_options edd_<?php echo esc_attr( $mode ); ?>_mode">
+	<div class="<?php echo esc_attr( rtrim( $css_classes_string ) ); ?>">
 		<ul>
 			<?php
 			if ( $prices ) :
 				$checked_key = isset( $_GET['price_option'] ) ? absint( $_GET['price_option'] ) : edd_get_default_variable_price( $download_id );
 				foreach ( $prices as $key => $price ) :
-					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . '"' . $schema . '>';
-						echo '<label for="'	. esc_attr( 'edd_price_option_' . $download_id . '_' . $key ) . '">';
-							echo '<input type="' . $type . '" ' . checked( apply_filters( 'edd_price_option_checked', $checked_key, $download_id, $key ), $key, false ) . ' name="edd_options[price_id][]" id="' . esc_attr( 'edd_price_option_' . $download_id . '_' . $key ) . '" class="' . esc_attr( 'edd_price_option_' . $download_id ) . '" value="' . esc_attr( $key ) . '" data-price="' . edd_get_price_option_amount( $download_id, $key ) .'"/>&nbsp;';
-							echo '<span class="edd_price_option_name" itemprop="description">' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price" itemprop="price">' . edd_currency_filter( edd_format_amount( $price['amount'] ) ) . '</span>';
+					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . $form_id . '"' . $schema . '>';
+						echo '<label for="' . esc_attr( 'edd_price_option_' . $download_id . '_' . $key . $form_id ) . '">';
+							echo '<input type="' . $type . '" ' . checked( apply_filters( 'edd_price_option_checked', $checked_key, $download_id, $key ), $key, false ) . ' name="edd_options[price_id][]" id="' . esc_attr( 'edd_price_option_' . $download_id . '_' . $key . $form_id ) . '" class="' . esc_attr( 'edd_price_option_' . $download_id ) . '" value="' . esc_attr( $key ) . '" data-price="' . edd_get_price_option_amount( $download_id, $key ) .'"/>&nbsp;';
+
+							$item_prop = edd_add_schema_microdata() ? ' itemprop="description"' : '';
+
+							// Construct the default price output.
+							$price_output = '<span class="edd_price_option_name"' . $item_prop . '>' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price">' . edd_currency_filter( edd_format_amount( $price['amount'] ) ) . '</span>';
+
+							// Filter the default price output
+							$price_output = apply_filters( 'edd_price_option_output', $price_output, $download_id, $key, $price, $form_id, $item_prop );
+
+							// Output the filtered price output
+							echo $price_output;
+
+							if( edd_add_schema_microdata() ) {
+								echo '<meta itemprop="price" content="' . esc_attr( $price['amount'] ) .'" />';
+								echo '<meta itemprop="priceCurrency" content="' . esc_attr( edd_get_currency() ) .'" />';
+							}
+
 						echo '</label>';
 						do_action( 'edd_after_price_option', $key, $price, $download_id );
 					echo '</li>';
@@ -281,6 +315,31 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 	do_action( 'edd_after_price_options', $download_id );
 }
 add_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing', 10, 2 );
+
+/**
+ * Output schema markup for single price products.
+ *
+ * @since  2.6.14
+ * @param  int $download_id The download being output.
+ * @return void
+ */
+function edd_purchase_link_single_pricing_schema( $download_id = 0, $args = array() ) {
+
+	// Bail if the product has variable pricing, or if we aren't showing schema data.
+	if ( edd_has_variable_prices( $download_id ) || ! edd_add_schema_microdata() ) {
+		return;
+	}
+
+	// Grab the information we need.
+	$download = new EDD_Download( $download_id );
+	?>
+	<span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+		<meta itemprop="price" content="<?php esc_attr_e( $download->price ); ?>" />
+		<meta itemprop="priceCurrency" content="<?php esc_attr_e( edd_get_currency() ); ?>" />
+	</span>
+	<?php
+}
+add_action( 'edd_purchase_link_top', 'edd_purchase_link_single_pricing_schema', 10, 2 );
 
 /**
  * Display the quantity field for a variable price when multi-purchase mode is enabled
@@ -297,7 +356,7 @@ function edd_download_purchase_form_quantity_field( $download_id = 0, $args = ar
 		$options['price_id'] = $args['price_id'];
 	}
 
-	if ( ! edd_item_quantities_enabled() ) {
+	if ( ! edd_item_quantities_enabled() || edd_download_quantities_disabled( $download_id ) ) {
 		return;
 	}
 
@@ -340,7 +399,7 @@ add_action( 'edd_purchase_link_top', 'edd_download_purchase_form_quantity_field'
  */
 function edd_variable_price_quantity_field( $key, $price, $download_id ) {
 
-	if( ! edd_item_quantities_enabled() ) {
+	if( ! edd_item_quantities_enabled() || edd_download_quantities_disabled( $download_id ) ) {
 		return;
 	}
 
@@ -422,39 +481,39 @@ add_filter( 'the_content', 'edd_after_download_content' );
 function edd_get_button_colors() {
 	$colors = array(
 		'white'     => array(
-			'label' => __( 'White', 'edd' ),
+			'label' => __( 'White', 'easy-digital-downloads' ),
 			'hex'   => '#ffffff'
 		),
 		'gray'      => array(
-			'label' => __( 'Gray', 'edd' ),
+			'label' => __( 'Gray', 'easy-digital-downloads' ),
 			'hex'   => '#f0f0f0'
 		),
 		'blue'      => array(
-			'label' => __( 'Blue', 'edd' ),
+			'label' => __( 'Blue', 'easy-digital-downloads' ),
 			'hex'   => '#428bca'
 		),
 		'red'       => array(
-			'label' => __( 'Red', 'edd' ),
+			'label' => __( 'Red', 'easy-digital-downloads' ),
 			'hex'   => '#d9534f'
 		),
 		'green'     => array(
-			'label' => __( 'Green', 'edd' ),
+			'label' => __( 'Green', 'easy-digital-downloads' ),
 			'hex'   => '#5cb85c'
 		),
 		'yellow'    => array(
-			'label' => __( 'Yellow', 'edd' ),
+			'label' => __( 'Yellow', 'easy-digital-downloads' ),
 			'hex'   => '#f0ad4e'
 		),
 		'orange'    => array(
-			'label' => __( 'Orange', 'edd' ),
+			'label' => __( 'Orange', 'easy-digital-downloads' ),
 			'hex'   => '#ed9c28'
 		),
 		'dark-gray' => array(
-			'label' => __( 'Dark Gray', 'edd' ),
+			'label' => __( 'Dark Gray', 'easy-digital-downloads' ),
 			'hex'   => '#363636'
 		),
 		'inherit'	=> array(
-			'label' => __( 'Inherit', 'edd' ),
+			'label' => __( 'Inherit', 'easy-digital-downloads' ),
 			'hex'   => ''
 		)
 	);
@@ -472,8 +531,8 @@ function edd_get_button_colors() {
  */
 function edd_get_button_styles() {
 	$styles = array(
-		'button'	=> __( 'Button', 'edd' ),
-		'plain'     => __( 'Plain Text', 'edd' )
+		'button'	=> __( 'Button', 'easy-digital-downloads' ),
+		'plain'     => __( 'Plain Text', 'easy-digital-downloads' )
 	);
 
 	return apply_filters( 'edd_button_styles', $styles );
@@ -482,7 +541,7 @@ function edd_get_button_styles() {
 /**
  * Default formatting for download excerpts
  *
- * This excerpt is primarily used in the [downloads] short code
+ * This excerpt is primarily used in the [downloads] shortcode
  *
  * @since 1.0.8.4
  * @param string $excerpt Content before filtering
@@ -497,7 +556,7 @@ add_filter( 'edd_downloads_excerpt', 'edd_downloads_default_excerpt' );
 /**
  * Default formatting for full download content
  *
- * This is primarily used in the [downloads] short code
+ * This is primarily used in the [downloads] shortcode
  *
  * @since 1.0.8.4
  * @param string $content Content before filtering
@@ -531,10 +590,7 @@ function edd_get_purchase_download_links( $payment_id = 0 ) {
 				foreach ( $files as $filekey => $file ) {
 					$links .= '<div class="edd_download_link_file">';
 						$links .= '<a href="' . esc_url( edd_get_download_file_url( $payment_key, $email, $filekey, $download['id'], $price_id ) ) . '">';
-							if ( isset( $file['name'] ) )
-								$links .= esc_html( $file['name'] );
-							else
-								$links .= esc_html( $file['file'] );
+						$links .= edd_get_file_name( $file );
 						$links .= '</a>';
 					$links .= '</div>';
 				}
@@ -588,6 +644,11 @@ function edd_get_template_part( $slug, $name = null, $load = true ) {
 	// Execute code for this part
 	do_action( 'get_template_part_' . $slug, $slug, $name );
 
+	$load_template = apply_filters( 'edd_allow_template_part_' . $slug . '_' . $name, true );
+	if ( false === $load_template ) {
+		return '';
+	}
+
 	// Setup possible parts
 	$templates = array();
 	if ( isset( $name ) )
@@ -600,6 +661,24 @@ function edd_get_template_part( $slug, $name = null, $load = true ) {
 	// Return the part that is found
 	return edd_locate_template( $templates, $load, false );
 }
+
+/**
+ * Only allow the pending verification message to display once
+ * @since 2.7.8
+ * @param $load_template
+ *
+ * @return bool
+ */
+function edd_load_verification_template_once( $load_template ) {
+	static $account_pending_loaded;
+	if ( ! is_null( $account_pending_loaded ) ) {
+		return false;
+	}
+
+	$account_pending_loaded = true;
+	return $load_template;
+}
+add_filter( 'edd_allow_template_part_account_pending', 'edd_load_verification_template_once', 10, 1 );
 
 /**
  * Retrieve the name of the highest priority template file that exists.
@@ -817,6 +896,7 @@ function edd_checkout_meta_tags() {
 		return;
 	}
 
+	echo '<meta name="edd-chosen-gateway" content="' . edd_get_chosen_gateway() . '"/>' . "\n";
 	echo '<meta name="robots" content="noindex,nofollow" />' . "\n";
 }
 add_action( 'wp_head', 'edd_checkout_meta_tags' );
@@ -876,7 +956,6 @@ function edd_add_body_classes( $class ) {
 
 	if( edd_is_test_mode() ) {
 		$classes[] = 'edd-test-mode';
-		$classes[] = 'edd-page';
 	}
 
 	return array_unique( $classes );
@@ -927,3 +1006,126 @@ function edd_add_download_post_classes( $classes, $class = '', $post_id = false 
 	return $classes;
 }
 add_filter( 'post_class', 'edd_add_download_post_classes', 20, 3 );
+
+/**
+ * Adds Download product price to oembed display
+ *
+ * @since 2.6
+ * @return void
+ */
+function edd_add_oembed_price() {
+
+	if( 'download' !== get_post_type( get_the_ID() ) ) {
+		return;
+	}
+
+	$show = ! get_post_meta( get_the_ID(), '_edd_hide_purchase_link', true );
+
+	if ( apply_filters( 'edd_show_oembed_purchase_links', $show ) ) {
+		echo '<style>.wp-embed-edd-price { margin: 20px 0 0 0; }</style>';
+		echo '<div class="wp-embed-edd-price">';
+			if ( edd_has_variable_prices( get_the_ID() ) ) {
+				echo edd_price_range( get_the_ID() );
+			} else {
+				edd_price( get_the_ID(), true );
+			}
+
+		echo '</div>';
+	}
+}
+add_action( 'embed_content', 'edd_add_oembed_price' );
+
+/**
+ * Remove comments button for download embeds
+ *
+ * @since 2.6
+ * @return  void
+ */
+function edd_remove_embed_comments_button() {
+	global $post;
+
+	$hide_comments = apply_filters( 'edd_embed_hide_comments', true, $post );
+
+	if ( ! empty( $post ) && $post->post_type == 'download' && true === $hide_comments ) {
+		remove_action( 'embed_content_meta', 'print_embed_comments_button' );
+	}
+}
+add_action( 'embed_content_meta', 'edd_remove_embed_comments_button', 5 );
+
+/**
+ * Get a fully formatted title of a bundle item
+ *
+ * @since 2.7
+ *
+ * @param array $bundle_item Bundle item.
+ * @return string Bundle item title.
+ */
+function edd_get_bundle_item_title( $bundle_item ) {
+	$bundle_item_pieces = explode( '_', $bundle_item );
+	$bundle_item_id = $bundle_item_pieces[0];
+	$bundle_price_id = isset( $bundle_item_pieces[1] ) ? $bundle_item_pieces[1] : null;
+
+	$prices = edd_get_variable_prices( $bundle_item_id );
+	$bundle_title = get_the_title( $bundle_item_id );
+
+	if ( null !== $bundle_price_id ) {
+		$bundle_title .= ' - ' . $prices[ $bundle_price_id ]['name'];
+	}
+
+	return $bundle_title;
+}
+
+/**
+ * Retrieve the ID of an item in a bundle.
+ *
+ * @since 2.7
+ *
+ * @param array $bundle_item Bundle item.
+ * @return string Bundle item ID.
+ */
+function edd_get_bundle_item_id( $bundle_item ) {
+	$bundle_item_pieces = explode( '_', $bundle_item );
+	$bundle_item_id = $bundle_item_pieces[0];
+	return $bundle_item_id;
+}
+
+/**
+ * Retrieve the price ID of a bundle item.
+ *
+ * @since 2.7
+ *
+ * @param array $bundle_item Bundle item.
+ * @return string Bundle item ID.
+ */
+function edd_get_bundle_item_price_id( $bundle_item ) {
+	$bundle_item_pieces = explode( '_', $bundle_item );
+	$bundle_item_id = $bundle_item_pieces[0];
+	$bundle_price_id = isset( $bundle_item_pieces[1] ) ? $bundle_item_pieces[1] : null;
+
+	return $bundle_price_id;
+}
+
+/**
+ * Load a template file for a single download item.
+ *
+ * This is a wrapper function for backwards compatibility so the
+ * shortcode's attributes can be passed to the template file via
+ * a global variable.
+ *
+ * @since 2.9.0
+ *
+ * @param array $atts The [downloads] shortcode attributes.
+ * @param int   $i The current item count.
+ */
+function edd_download_shortcode_item( $atts, $i ) {
+	global $edd_download_shortcode_item_atts, $edd_download_shortcode_item_i;
+
+	/**
+	 * The variables are registered as part of the global scope so the template can access them.
+	 */
+	$edd_download_shortcode_item_atts = $atts;
+	$edd_download_shortcode_item_i = $i;
+
+	edd_get_template_part( 'shortcode', 'download' );
+}
+add_action( 'edd_download_shortcode_item', 'edd_download_shortcode_item', 10, 2 );

@@ -17,6 +17,7 @@ $RECYCLE.BIN/
 
 # PhpStorm
 .idea
+Easy-Digital-Downloads.iml
 
 # Eclipse
 *.pydevproject

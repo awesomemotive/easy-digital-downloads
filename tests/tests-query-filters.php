@@ -3,7 +3,7 @@
 /**
  * @group query_filters
  */
-class Tests_Query_Filters extends WP_UnitTestCase {
+class Tests_Query_Filters extends EDD_UnitTestCase {
 
 	/**
 	 * Test that the actions exists for the edd_block_attachments() function.

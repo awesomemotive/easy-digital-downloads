@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Is Test Mode
  *
  * @since 1.0
- * @return bool $ret True if return mode is enabled, false otherwise
+ * @return bool $ret True if test mode is enabled, false otherwise
  */
 function edd_is_test_mode() {
 	$ret = edd_get_option( 'test_mode', false );
@@ -169,11 +169,18 @@ function edd_get_ip() {
 		$ip = $_SERVER['HTTP_CLIENT_IP'];
 	} elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
 		//to check ip is pass from proxy
-		$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		// can include more than 1 ip, first is the public one
+		$ip = explode(',',$_SERVER['HTTP_X_FORWARDED_FOR']);
+		$ip = trim($ip[0]);
 	} elseif( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
 		$ip = $_SERVER['REMOTE_ADDR'];
 	}
-	return apply_filters( 'edd_get_ip', $ip );
+
+	// Fix potential CSV returned from $_SERVER variables
+	$ip_array = explode( ',', $ip );
+	$ip_array = array_map( 'trim', $ip_array );
+
+	return apply_filters( 'edd_get_ip', $ip_array[0] );
 }
 
 
@@ -296,34 +303,34 @@ function edd_is_host( $host = false ) {
  */
 function edd_get_currencies() {
 	$currencies = array(
-		'USD'  => __( 'US Dollars (&#36;)', 'edd' ),
-		'EUR'  => __( 'Euros (&euro;)', 'edd' ),
-		'GBP'  => __( 'Pounds Sterling (&pound;)', 'edd' ),
-		'AUD'  => __( 'Australian Dollars (&#36;)', 'edd' ),
-		'BRL'  => __( 'Brazilian Real (R&#36;)', 'edd' ),
-		'CAD'  => __( 'Canadian Dollars (&#36;)', 'edd' ),
-		'CZK'  => __( 'Czech Koruna', 'edd' ),
-		'DKK'  => __( 'Danish Krone', 'edd' ),
-		'HKD'  => __( 'Hong Kong Dollar (&#36;)', 'edd' ),
-		'HUF'  => __( 'Hungarian Forint', 'edd' ),
-		'ILS'  => __( 'Israeli Shekel (&#8362;)', 'edd' ),
-		'JPY'  => __( 'Japanese Yen (&yen;)', 'edd' ),
-		'MYR'  => __( 'Malaysian Ringgits', 'edd' ),
-		'MXN'  => __( 'Mexican Peso (&#36;)', 'edd' ),
-		'NZD'  => __( 'New Zealand Dollar (&#36;)', 'edd' ),
-		'NOK'  => __( 'Norwegian Krone', 'edd' ),
-		'PHP'  => __( 'Philippine Pesos', 'edd' ),
-		'PLN'  => __( 'Polish Zloty', 'edd' ),
-		'SGD'  => __( 'Singapore Dollar (&#36;)', 'edd' ),
-		'SEK'  => __( 'Swedish Krona', 'edd' ),
-		'CHF'  => __( 'Swiss Franc', 'edd' ),
-		'TWD'  => __( 'Taiwan New Dollars', 'edd' ),
-		'THB'  => __( 'Thai Baht (&#3647;)', 'edd' ),
-		'INR'  => __( 'Indian Rupee (&#8377;)', 'edd' ),
-		'TRY'  => __( 'Turkish Lira (&#8378;)', 'edd' ),
-		'RIAL' => __( 'Iranian Rial (&#65020;)', 'edd' ),
-		'RUB'  => __( 'Russian Rubles', 'edd' ),
-		'Akz'  => __( 'Kwanza', 'edd' )
+		'USD'  => __( 'US Dollars (&#36;)', 'easy-digital-downloads' ),
+		'EUR'  => __( 'Euros (&euro;)', 'easy-digital-downloads' ),
+		'GBP'  => __( 'Pound Sterling (&pound;)', 'easy-digital-downloads' ),
+		'AUD'  => __( 'Australian Dollars (&#36;)', 'easy-digital-downloads' ),
+		'BRL'  => __( 'Brazilian Real (R&#36;)', 'easy-digital-downloads' ),
+		'CAD'  => __( 'Canadian Dollars (&#36;)', 'easy-digital-downloads' ),
+		'CZK'  => __( 'Czech Koruna', 'easy-digital-downloads' ),
+		'DKK'  => __( 'Danish Krone', 'easy-digital-downloads' ),
+		'HKD'  => __( 'Hong Kong Dollar (&#36;)', 'easy-digital-downloads' ),
+		'HUF'  => __( 'Hungarian Forint', 'easy-digital-downloads' ),
+		'ILS'  => __( 'Israeli Shekel (&#8362;)', 'easy-digital-downloads' ),
+		'JPY'  => __( 'Japanese Yen (&yen;)', 'easy-digital-downloads' ),
+		'MYR'  => __( 'Malaysian Ringgits', 'easy-digital-downloads' ),
+		'MXN'  => __( 'Mexican Peso (&#36;)', 'easy-digital-downloads' ),
+		'NZD'  => __( 'New Zealand Dollar (&#36;)', 'easy-digital-downloads' ),
+		'NOK'  => __( 'Norwegian Krone', 'easy-digital-downloads' ),
+		'PHP'  => __( 'Philippine Pesos', 'easy-digital-downloads' ),
+		'PLN'  => __( 'Polish Zloty', 'easy-digital-downloads' ),
+		'SGD'  => __( 'Singapore Dollar (&#36;)', 'easy-digital-downloads' ),
+		'SEK'  => __( 'Swedish Krona', 'easy-digital-downloads' ),
+		'CHF'  => __( 'Swiss Franc', 'easy-digital-downloads' ),
+		'TWD'  => __( 'Taiwan New Dollars', 'easy-digital-downloads' ),
+		'THB'  => __( 'Thai Baht (&#3647;)', 'easy-digital-downloads' ),
+		'INR'  => __( 'Indian Rupee (&#8377;)', 'easy-digital-downloads' ),
+		'TRY'  => __( 'Turkish Lira (&#8378;)', 'easy-digital-downloads' ),
+		'RIAL' => __( 'Iranian Rial (&#65020;)', 'easy-digital-downloads' ),
+		'RUB'  => __( 'Russian Rubles', 'easy-digital-downloads' ),
+		'AOA'  => __( 'Angola Kwanza', 'easy-digital-downloads' ),
 	);
 
 	return apply_filters( 'edd_currencies', $currencies );
@@ -426,29 +433,58 @@ function edd_get_php_arg_separator_output() {
  * Get the current page URL
  *
  * @since 1.3
- * @global $post
+ * @param  bool   $nocache  If we should bust cache on the returned URL
  * @return string $page_url Current page URL
  */
-function edd_get_current_page_url() {
-	global $post;
+function edd_get_current_page_url( $nocache = false ) {
 
-	if ( is_front_page() ) :
-		$page_url = home_url();
-	else :
-		$page_url = 'http';
+	global $wp;
 
-	if ( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" )
-		$page_url .= "s";
+	if( get_option( 'permalink_structure' ) ) {
 
-	$page_url .= "://";
+		$base = trailingslashit( home_url( $wp->request ) );
 
-	if ( isset( $_SERVER["SERVER_PORT"] ) && $_SERVER["SERVER_PORT"] != "80" )
-		$page_url .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
-	else
-		$page_url .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
-	endif;
+	} else {
 
-	return apply_filters( 'edd_get_current_page_url', esc_url( $page_url ) );
+		$base = add_query_arg( $wp->query_string, '', trailingslashit( home_url( $wp->request ) ) );
+		$base = remove_query_arg( array( 'post_type', 'name' ), $base );
+
+	}
+
+	$scheme = is_ssl() ? 'https' : 'http';
+	$uri    = set_url_scheme( $base, $scheme );
+
+	if ( is_front_page() ) {
+		$uri = home_url( '/' );
+	} elseif ( edd_is_checkout() ) {
+		$uri = edd_get_checkout_uri();
+	}
+
+	$uri = apply_filters( 'edd_get_current_page_url', $uri );
+
+	if ( $nocache ) {
+		$uri = edd_add_cache_busting( $uri );
+	}
+
+	return $uri;
+}
+
+/**
+ * Adds the 'nocache' parameter to the provided URL
+ *
+ * @since  2.4.4
+ * @param  string $url The URL being requested
+ * @return string      The URL with cache busting added or not
+ */
+function edd_add_cache_busting( $url = '' ) {
+
+	$no_cache_checkout = edd_get_option( 'no_cache_checkout', false );
+
+	if ( edd_is_caching_plugin_active() || ( edd_is_checkout() && $no_cache_checkout ) ) {
+		$url = add_query_arg( 'nocache', 'true', $url );
+	}
+
+	return $url;
 }
 
 /**
@@ -468,7 +504,7 @@ function edd_get_current_page_url() {
  *   trigger or false to not trigger error.
  *
  * @param string  $function    The function that was called
- * @param string  $version     The version of WordPress that deprecated the function
+ * @param string  $version     The version of Easy Digital Downloads that deprecated the function
  * @param string  $replacement Optional. The function that should have been called
  * @param array   $backtrace   Optional. Contains stack backtrace of deprecated function
  */
@@ -480,12 +516,52 @@ function _edd_deprecated_function( $function, $version, $replacement = null, $ba
 	// Allow plugin to filter the output error trigger
 	if ( WP_DEBUG && apply_filters( 'edd_deprecated_function_trigger_error', $show_errors ) ) {
 		if ( ! is_null( $replacement ) ) {
-			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead.', 'edd' ), $function, $version, $replacement ) );
+			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead.', 'easy-digital-downloads' ), $function, $version, $replacement ) );
 			trigger_error(  print_r( $backtrace, 1 ) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
 			// Alternatively we could dump this to a file.
+		} else {
+			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'easy-digital-downloads' ), $function, $version ) );
+			trigger_error( print_r( $backtrace, 1 ) );// Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+			// Alternatively we could dump this to a file.
 		}
-		else {
-			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'edd' ), $function, $version ) );
+	}
+}
+
+/**
+ * Marks an argument in a function deprecated and informs when it's been used
+ *
+ * There is a hook edd_deprecated_argument_run that will be called that can be used
+ * to get the backtrace up to what file and function called the deprecated
+ * function.
+ *
+ * The current behavior is to trigger a user error if WP_DEBUG is true.
+ *
+ * This function is to be used in every function that has an argument being deprecated.
+ *
+ * @uses do_action() Calls 'edd_deprecated_argument_run' and passes the argument, function name, what to use instead,
+ *   and the version the function was deprecated in.
+ * @uses apply_filters() Calls 'edd_deprecated_argument_trigger_error' and expects boolean value of true to do
+ *   trigger or false to not trigger error.
+ *
+ * @param string  $argument    The arguemnt that is being deprecated
+ * @param string  $function    The function that was called
+ * @param string  $version     The version of WordPress that deprecated the function
+ * @param string  $replacement Optional. The function that should have been called
+ * @param array   $backtrace   Optional. Contains stack backtrace of deprecated function
+ */
+function _edd_deprected_argument( $argument, $function, $version, $replacement = null, $backtrace = null ) {
+	do_action( 'edd_deprecated_argument_run', $argument, $function, $replacement, $version );
+
+	$show_errors = current_user_can( 'manage_options' );
+
+	// Allow plugin to filter the output error trigger
+	if ( WP_DEBUG && apply_filters( 'edd_deprecated_argument_trigger_error', $show_errors ) ) {
+		if ( ! is_null( $replacement ) ) {
+			trigger_error( sprintf( __( 'The %1$s argument of %2$s is <strong>deprecated</strong> since Easy Digital Downloads version %3$s! Please use %4$s instead.', 'easy-digital-downloads' ), $argument, $function, $version, $replacement ) );
+			trigger_error(  print_r( $backtrace, 1 ) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+			// Alternatively we could dump this to a file.
+		} else {
+			trigger_error( sprintf( __( 'The %1$s argument of %2$s is <strong>deprecated</strong> since Easy Digital Downloads version %3$s with no alternative available.', 'easy-digital-downloads' ), $argument, $function, $version ) );
 			trigger_error( print_r( $backtrace, 1 ) );// Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
 			// Alternatively we could dump this to a file.
 		}
@@ -651,24 +727,45 @@ function edd_get_timezone_id() {
 }
 
 /**
- * Convert an object to an associative array.
+ * Given an object or array of objects, convert them to arrays
  *
- * Can handle multidimensional arrays
- *
- * @since 1.7
- *
- * @param unknown $data
- * @return array
+ * @since    1.7
+ * @internal Updated in 2.6
+ * @param    object|array $object An object or an array of objects
+ * @return   array                An array or array of arrays, converted from the provided object(s)
  */
-function edd_object_to_array( $data ) {
-	if ( is_array( $data ) || is_object( $data ) ) {
-		$result = array();
-		foreach ( $data as $key => $value ) {
-			$result[ $key ] = edd_object_to_array( $value );
-		}
-		return $result;
+function edd_object_to_array( $object = array() ) {
+
+	if ( empty( $object ) || ( ! is_object( $object ) && ! is_array( $object ) ) ) {
+		return $object;
 	}
-	return $data;
+
+	if ( is_array( $object ) ) {
+		$return = array();
+		foreach ( $object as $item ) {
+			if ( is_a( $object, 'EDD_Payment' ) ) {
+				$return[] = $object->array_convert();
+			} else {
+				$return[] = edd_object_to_array( $item );
+			}
+
+		}
+	} else {
+		if ( is_a( $object, 'EDD_Payment' ) ) {
+			$return = $object->array_convert();
+		} else {
+			$return = get_object_vars( $object );
+
+			// Now look at the items that came back and convert any nested objects to arrays
+			foreach ( $return as $key => $value ) {
+				$value = ( is_array( $value ) || is_object( $value ) ) ? edd_object_to_array( $value ) : $value;
+				$return[ $key ] = $value;
+			}
+		}
+	}
+
+	return $return;
+
 }
 
 /**
@@ -795,3 +892,44 @@ if ( ! function_exists( 'getallheaders' ) ) :
 	}
 
 endif;
+
+/**
+ * Determines the receipt visibility status
+ *
+ * @return bool Whether the receipt is visible or not.
+ */
+function edd_can_view_receipt( $payment_key = '' ) {
+
+	$return = false;
+
+	if ( empty( $payment_key ) ) {
+		return $return;
+	}
+
+	global $edd_receipt_args;
+
+	$edd_receipt_args['id'] = edd_get_purchase_id_by_key( $payment_key );
+
+	$user_id = (int) edd_get_payment_user_id( $edd_receipt_args['id'] );
+
+	$payment_meta = edd_get_payment_meta( $edd_receipt_args['id'] );
+
+	if ( is_user_logged_in() ) {
+		if ( $user_id === (int) get_current_user_id() ) {
+			$return = true;
+		} elseif ( wp_get_current_user()->user_email === edd_get_payment_user_email( $edd_receipt_args['id'] ) ) {
+			$return = true;
+		} elseif ( current_user_can( 'view_shop_sensitive_data' ) ) {
+			$return = true;
+		}
+	}
+
+	$session = edd_get_purchase_session();
+	if ( ! empty( $session ) && ! is_user_logged_in() ) {
+		if ( $session['purchase_key'] === $payment_meta['key'] ) {
+			$return = true;
+		}
+	}
+
+	return (bool) apply_filters( 'edd_can_view_receipt', $return, $payment_key );
+}

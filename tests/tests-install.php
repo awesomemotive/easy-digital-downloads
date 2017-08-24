@@ -4,7 +4,7 @@
 /**
  * @group edd_activation
  */
-class Tests_Activation extends WP_UnitTestCase {
+class Tests_Activation extends EDD_UnitTestCase {
 
 	/**
 	 * SetUp test class.
@@ -36,17 +36,16 @@ class Tests_Activation extends WP_UnitTestCase {
 
 		global $edd_options;
 
-		$origin_edd_options		= $edd_options;
-		$origin_upgraded_from 	= get_option( 'edd_version_upgraded_from' );
-		$origin_edd_version		= get_option( 'edd_version' );
+		$origin_edd_options   = $edd_options;
+		$origin_upgraded_from = get_option( 'edd_version_upgraded_from' );
+		$origin_edd_version   = get_option( 'edd_version' );
 
 		// Prepare values for testing
+		delete_option( 'edd_settings' ); // Needed for the install test to succeed
 		update_option( 'edd_version', '2.1' );
 		$edd_options = array();
 
-
 		edd_install();
-
 
 		// Test that function exists
 		$this->assertTrue( function_exists( 'edd_create_protection_files' ) );
@@ -57,6 +56,7 @@ class Tests_Activation extends WP_UnitTestCase {
 		// Test that new pages are created, and not the same as the already created ones.
 		// This is to make sure the test is giving the most accurate results.
 		$new_settings = get_option( 'edd_settings' );
+
 		$this->assertArrayHasKey( 'purchase_page', $new_settings );
 		$this->assertNotEquals( $origin_edd_options['purchase_page'], $new_settings['purchase_page'] );
 		$this->assertArrayHasKey( 'success_page', $new_settings );
@@ -73,16 +73,14 @@ class Tests_Activation extends WP_UnitTestCase {
 		$this->assertInstanceOf( 'WP_Role', get_role( 'shop_worker' ) );
 		$this->assertInstanceOf( 'WP_Role', get_role( 'shop_vendor' ) );
 
-		$this->assertNotFalse( get_transient( '_edd_activation_redirect' ) );
-
-
-		// Reset to origin
+		// Reset to original data.
 		wp_delete_post( $new_settings['purchase_page'], true );
 		wp_delete_post( $new_settings['success_page'], true );
 		wp_delete_post( $new_settings['purchase_history_page'], true );
 		wp_delete_post( $new_settings['failure_page'], true );
 		update_option( 'edd_version_upgraded_from', $origin_upgraded_from );
 		$edd_options = $origin_edd_options;
+		update_option( 'edd_settings', $edd_options );
 		update_option( 'edd_version', $origin_edd_version );
 
 	}
@@ -182,7 +180,7 @@ class Tests_Activation extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test that edd_install_roles_on_network() bails when $wp_roles is no object.
+	 * Test that edd_install_roles_on_network() creates the roles when 'shop_manager' is not defined.
 	 *
 	 * @since 2.2.4
 	 */
@@ -206,6 +204,34 @@ class Tests_Activation extends WP_UnitTestCase {
 
 		// Reset to origin
 		$wp_roles = $origin_roles;
+
+	}
+
+	/**
+	 * Test that edd_install_roles_on_network() creates the roles when $wp_roles->roles is initially false.
+	 *
+	 * @since 2.6.3
+	 */
+	public function test_edd_install_roles_on_network_when_roles_false() {
+
+		global $wp_roles;
+
+		$origin_roles = $wp_roles->roles;
+
+		// Prepare variables for test
+		$wp_roles->roles = false;
+
+		edd_install_roles_on_network();
+
+		// Test that the roles are created
+		$this->assertInstanceOf( 'WP_Role', get_role( 'shop_manager' ) );
+		$this->assertInstanceOf( 'WP_Role', get_role( 'shop_accountant' ) );
+		$this->assertInstanceOf( 'WP_Role', get_role( 'shop_worker' ) );
+		$this->assertInstanceOf( 'WP_Role', get_role( 'shop_vendor' ) );
+
+
+		// Reset to origin
+		$wp_roles->roles = $origin_roles;
 
 	}
 

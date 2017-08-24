@@ -1,17 +1,22 @@
+<?php if( ! empty( $_GET['edd-verify-success'] ) ) : ?>
+<p class="edd-account-verified edd_success">
+	<?php _e( 'Your account has been successfully verified!', 'easy-digital-downloads' ); ?>
+</p>
 <?php
+endif;
 /**
  * This template is used to display the download history of the current user.
  */
 $purchases = edd_get_users_purchases( get_current_user_id(), 20, true, 'any' );
 if ( $purchases ) :
 	do_action( 'edd_before_download_history' ); ?>
-	<table id="edd_user_history">
+	<table id="edd_user_history" class="edd-table">
 		<thead>
 			<tr class="edd_download_history_row">
 				<?php do_action( 'edd_download_history_header_start' ); ?>
-				<th class="edd_download_download_name"><?php _e( 'Download Name', 'edd' ); ?></th>
+				<th class="edd_download_download_name"><?php _e( 'Download Name', 'easy-digital-downloads' ); ?></th>
 				<?php if ( ! edd_no_redownload() ) : ?>
-					<th class="edd_download_download_files"><?php _e( 'Files', 'edd' ); ?></th>
+					<th class="edd_download_download_files"><?php _e( 'Files', 'easy-digital-downloads' ); ?></th>
 				<?php endif; //End if no redownload?>
 				<?php do_action( 'edd_download_history_header_end' ); ?>
 			</tr>
@@ -30,12 +35,12 @@ if ( $purchases ) :
 
 					<tr class="edd_download_history_row">
 						<?php
-						$price_id 		= edd_get_cart_item_price_id( $download );
+						$price_id       = edd_get_cart_item_price_id( $download );
 						$download_files = edd_get_download_files( $download['id'], $price_id );
-						$name           = get_the_title( $download['id'] );
+						$name           = $download['name'];
 
 						// Retrieve and append the price option name
-						if ( ! empty( $price_id ) ) {
+						if ( ! empty( $price_id ) && 0 !== $price_id ) {
 							$name .= ' - ' . edd_get_price_option_name( $download['id'], $price_id, $payment->ID );
 						}
 
@@ -47,7 +52,7 @@ if ( $purchases ) :
 							<td class="edd_download_download_files">
 								<?php
 
-								if ( edd_is_payment_complete( $payment->ID ) ) :
+								if ( 'publish' == $payment->post_status ) :
 
 									if ( $download_files ) :
 
@@ -58,7 +63,7 @@ if ( $purchases ) :
 
 											<div class="edd_download_file">
 												<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link">
-													<?php echo isset( $file['name'] ) ? esc_html( $file['name'] ) : esc_html( $name ); ?>
+													<?php echo edd_get_file_name( $file ); ?>
 												</a>
 											</div>
 
@@ -66,12 +71,12 @@ if ( $purchases ) :
 										endforeach;
 
 									else :
-										_e( 'No downloadable files found.', 'edd' );
+										_e( 'No downloadable files found.', 'easy-digital-downloads' );
 									endif; // End if payment complete
 
 								else : ?>
 									<span class="edd_download_payment_status">
-										<?php printf( __( 'Payment status is %s', 'edd' ), edd_get_payment_status( $payment, true) ); ?>
+										<?php printf( __( 'Payment status is %s', 'easy-digital-downloads' ), edd_get_payment_status( $payment, true) ); ?>
 									</span>
 									<?php
 								endif; // End if $download_files
@@ -99,9 +104,7 @@ if ( $purchases ) :
 		) );
 		?>
 	</div>
-	<?php
-	do_action( 'edd_after_download_history' );
-else : ?>
-	<p class="edd-no-downloads"><?php _e( 'You have not purchased any downloads', 'edd' ); ?></p>
-	<?php
-endif;
+	<?php do_action( 'edd_after_download_history' ); ?>
+<?php else : ?>
+	<p class="edd-no-downloads"><?php _e( 'You have not purchased any downloads', 'easy-digital-downloads' ); ?></p>
+<?php endif; ?>
