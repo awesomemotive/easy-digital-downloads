@@ -382,6 +382,9 @@ function edd_currency_symbol( $currency = '' ) {
 		case "JPY" :
 			$symbol = '&yen;';
 			break;
+		case "AOA" :
+			$symbol = 'Kz';
+			break;
 		default :
 			$symbol = $currency;
 			break;

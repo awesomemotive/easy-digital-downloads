@@ -701,4 +701,53 @@ class Test_Misc extends EDD_UnitTestCase {
 		$this->assertInternalType( 'array', $payments_array[0] );
 		$this->assertEquals( 2, count( $payments_array ) );
 	}
+
+	// Test getting currency symols:
+	function test_gbp_symbol() {
+		$this->assertEquals( '&pound;', edd_currency_symbol( 'GBP' ) );
+	}
+
+	function test_brl_symbol() {
+		$this->assertEquals( 'R&#36;', edd_currency_symbol( 'BRL' ) );
+	}
+
+	function test_us_dollar_symbol() {
+		$this->assertEquals( '&#36;', edd_currency_symbol( 'USD' ) );
+	}
+
+	function test_au_dollar_symbol() {
+		$this->assertEquals( '&#36;', edd_currency_symbol( 'AUD' ) );
+	}
+
+	function test_nz_dollar_symbol() {
+		$this->assertEquals( '&#36;', edd_currency_symbol( 'NZD' ) );
+	}
+
+	function test_ca_dollar_symbol() {
+		$this->assertEquals( '&#36;', edd_currency_symbol( 'CAD' ) );
+	}
+
+	function test_hk_dollar_symbol() {
+		$this->assertEquals( '&#36;', edd_currency_symbol( 'HKD' ) );
+	}
+
+	function test_mx_dollar_symbol() {
+		$this->assertEquals( '&#36;', edd_currency_symbol( 'MXN' ) );
+	}
+
+	function test_sg_dollar_symbol() {
+		$this->assertEquals( '&#36;', edd_currency_symbol( 'SGD' ) );
+	}
+
+	function test_yen_symbol() {
+		$this->assertEquals( '&yen;', edd_currency_symbol( 'JPY' ) );
+	}
+
+	function test_aoa_symbol() {
+		$this->assertEquals( 'Kz', edd_currency_symbol( 'AOA' ) );
+	}
+
+	function test_default_symbol() {
+		$this->assertEquals( 'CZK', edd_currency_symbol( 'CZK' ) );
+	}
 }
