@@ -330,7 +330,7 @@ function edd_get_currencies() {
 		'TRY'  => __( 'Turkish Lira (&#8378;)', 'easy-digital-downloads' ),
 		'RIAL' => __( 'Iranian Rial (&#65020;)', 'easy-digital-downloads' ),
 		'RUB'  => __( 'Russian Rubles', 'easy-digital-downloads' ),
-		'AOA'  => __( 'Angola Kwanza', 'easy-digital-downloads' ),
+		'AOA'  => __( 'Angolan Kwanza', 'easy-digital-downloads' ),
 	);
 
 	return apply_filters( 'edd_currencies', $currencies );
