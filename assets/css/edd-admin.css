@@ -655,6 +655,9 @@ input[class*="edd-price-field"] {
 	font-size: 14px;
 	font-weight: 500;
 }
+.edd-edit-purchase-element .edd-purchased-download-title .deleted {
+	color: #777;
+}
 .edd-edit-purchase-element .edd-purchased-download-actions {
 	color: #777;
 	line-height: 1.4;
