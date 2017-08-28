@@ -368,7 +368,7 @@ jQuery(document).ready(function ($) {
 				e.preventDefault();
 
 				var header = $(this).parents('.edd-repeatable-row-header');
-				header.siblings('.edd-file-info-sections-wrap').slideToggle();
+				header.siblings('.edd-repeatable-info-sections-wrap.file-info').slideToggle();
 
 			});
 		},

@@ -364,7 +364,7 @@ tr.status-refunded td {
 	margin-bottom: 0;
 }
 .edd-custom-price-option-sections-wrap,
-.edd-file-info-sections-wrap {
+.edd-repeatable-info-sections-wrap {
 	display: none;
 	border-width: 0 1px 1px;
 	border-style: solid;
@@ -372,7 +372,8 @@ tr.status-refunded td {
 	box-sizing: border-box;
 	width: 100%;
 }
-.edd-custom-price-option-section {
+.edd-custom-price-option-section,
+.edd-repeatable-info-section {
 	display: block;
 	padding: 10px 8px;
 	border-bottom: 1px solid rgba( 222, 222, 222, 0.3 );
@@ -383,21 +384,28 @@ tr.status-refunded td {
 label.edd_prices_shipping { /* remove once Simple Shipping markup is improved */
 	display: none !important;
 }
-.edd-custom-price-option-section-title {
+.edd-custom-price-option-section-title,
+.edd-repeatable-info-section-title {
 	display: block;
 	font-size: 14px;
 	font-weight: 600;
 	padding: 0 0 10px;
 }
-.edd-custom-price-option-section > *:not(.edd-custom-price-option-section-title) {
+.edd-custom-price-option-section > *:not(.edd-custom-price-option-section-title),
+.edd-repeatable-info-section > *:not(.edd-repeatable-info-section-title) {
 	display: inline-block;
 	padding-right: 20px;
 	vertical-align: top;
 	margin-bottom: 4px;
 }
-.edd-custom-price-option-section > *:not(.edd-custom-price-option-section-title) label {
+.edd-custom-price-option-section > *:not(.edd-custom-price-option-section-title) label,
+.edd-repeatable-info-section > *:not(.edd-repeatable-info-section-title) label {
 	display: block;
 	margin-bottom: 2px;
+}
+.edd-file-info-mime-type-img {
+	height: 20px;
+	vertical-align: text-top;
 }
 .edd-bundle-products-header {
 	font-weight: 600;

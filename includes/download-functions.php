@@ -629,7 +629,7 @@ function edd_record_sale_in_log( $download_id = 0, $payment_id, $price_id = fals
  * @param int $price_id Price ID, if any
  * @return void
  */
-function edd_record_download_in_log( $download_id = 0, $file_id, $user_info, $ip, $payment_id, $price_id = false ) {
+function edd_record_download_in_log( $download_id = 0, $file_id, $user_info, $ip, $payment_id, $price_id = false, $is_admin = false ) {
 	global $edd_logs;
 
 	$log_data = array(
@@ -647,6 +647,10 @@ function edd_record_download_in_log( $download_id = 0, $file_id, $user_info, $ip
 		'payment_id'=> $payment_id,
 		'price_id'  => (int) $price_id
 	);
+
+	if ( $is_admin ) {
+		$log_meta['admin_download'] = 1;
+	}
 
 	$edd_logs->insert_log( $log_data, $log_meta );
 }
