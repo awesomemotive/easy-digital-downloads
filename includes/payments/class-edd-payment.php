@@ -563,6 +563,13 @@ class EDD_Payment {
 			$this->pending['customer_id'] = $this->customer_id;
 			$customer->attach_payment( $this->ID, false );
 
+			/**
+			 * This run of the edd_payment_meta filter is for backwards compatibility purposes. The filter will also run in the EDD_Payment::save
+			 * method. By keeping this here, it retains compatbility of adding payment meta prior to the payment being inserted, as was previously supported
+			 * by edd_insert_payment().
+			 *
+			 * @reference: https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5838
+			 */
 			$this->payment_meta = apply_filters( 'edd_payment_meta', $this->payment_meta, $payment_data );
 			if ( ! empty( $this->payment_meta['fees'] ) ) {
 				$this->fees = array_merge( $this->payment_meta['fees'], $this->fees );
