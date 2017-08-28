@@ -829,7 +829,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 		<?php
 		$actions = array();
 		if ( ! empty( $args['file'] ) ) {
-			$actions['show_file_info'] = '<a href="#" class="toggle-file-info-section">' . __( 'View file information', 'easy-digital-downloads' ) . '</a>';
+			$actions['show_file_info'] = '<a href="#" class="toggle-file-info-section">' . __( 'Show file information', 'easy-digital-downloads' ) . '</a>';
 		}
 
 		$actions['remove'] = '<a class="edd-remove-row edd-delete" data-type="file">' . sprintf( __( 'Remove', 'easy-digital-downloads' ), $key ) . '<span class="screen-reader-text">' . sprintf( __( 'Remove file %s', 'easy-digital-downloads' ), $key ) . '</span></a>';

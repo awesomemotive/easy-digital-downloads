@@ -84,6 +84,24 @@ jQuery(document).ready(function ($) {
 			clone.find( '.chosen-container' ).remove();
 			edd_attach_tooltips(clone.find('.edd-help-tip'));
 
+			// Remove file info links and section
+			clone.find( '.toggle-file-info-section' ).remove();
+			clone.find( '.edd-repeatable-info-sections-wrap.file-info' ).remove();
+
+			// Find any repeatable row actions.
+			var actions_objects = clone.find( '.edd-repeatable-row-actions' ).children();
+
+			// Store the markup of each of the actions.
+			var actions = [];
+			actions_objects.each( function() {
+				actions.push( $(this).context.outerHTML );
+			});
+
+			// Replace the repeatable row actions with the found actions and recalculated number of separators.
+			clone.find( 'span.edd-repeatable-row-actions' ).each( function() {
+				$(this).html( actions.join( ' | ' ) );
+			});
+
 			return clone;
 		},
 
@@ -162,6 +180,23 @@ jQuery(document).ready(function ($) {
 							break;
 						case 'file' :
 							$( 'input, select', row ).val( '' );
+							// Remove file info links and section
+							$( '.toggle-file-info-section', row ).remove();
+							$( '.edd-repeatable-info-sections-wrap.file-info', row ).remove();
+
+							// Find any repeatable row actions.
+							var actions_objects = $( '.edd-repeatable-row-actions', row ).children();
+
+							// Store the markup of each of the actions.
+							var actions = [];
+							actions_objects.each( function() {
+								actions.push( $(this).context.outerHTML );
+							});
+
+							// Replace the repeatable row actions with the found actions and recalculated number of separators.
+							$( 'span.edd-repeatable-row-actions', row ).each( function() {
+								$(this).html( actions.join( ' | ' ) );
+							});
 							break;
 						default:
 							alert( edd_vars.one_field_min );
@@ -366,6 +401,14 @@ jQuery(document).ready(function ($) {
 			$( document.body ).on( 'click', '.toggle-file-info-section', function(e) {
 
 				e.preventDefault();
+
+				var show = $(this).html() == edd_vars.show_file_info ? true : false;
+
+				if ( show ) {
+					$(this).html( edd_vars.hide_file_info );
+				} else {
+					$(this).html( edd_vars.show_file_info );
+				}
 
 				var header = $(this).parents('.edd-repeatable-row-header');
 				header.siblings('.edd-repeatable-info-sections-wrap.file-info').slideToggle();
