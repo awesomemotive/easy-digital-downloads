@@ -1112,7 +1112,7 @@ function edd_get_bundle_item_price_id( $bundle_item ) {
  * shortcode's attributes can be passed to the template file via
  * a global variable.
  *
- * @since 2.9.0
+ * @since 2.8.0
  *
  * @param array $atts The [downloads] shortcode attributes.
  * @param int   $i The current item count.

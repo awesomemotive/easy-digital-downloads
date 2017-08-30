@@ -2,7 +2,7 @@
 /**
  * A single download inside of the [downloads] shortcode.
  *
- * @since 2.9.0
+ * @since 2.8.0
  *
  * @package EDD
  * @category Template
