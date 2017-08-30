@@ -58,20 +58,20 @@ class EDD_HTML_Elements {
 		);
 
 		if ( ! current_user_can( 'edit_products' ) ) {
-			$product_args['status'] = apply_filters( 'edd_product_dropdown_status_nopriv', array( 'publish' ) );
+			$product_args['post_status'] = apply_filters( 'edd_product_dropdown_status_nopriv', array( 'publish' ) );
 		} else {
-			$product_args['status'] = apply_filters( 'edd_product_dropdown_status', array( 'publish', 'draft', 'private', 'future' ) );
+			$product_args['post_status'] = apply_filters( 'edd_product_dropdown_status', array( 'publish', 'draft', 'private', 'future' ) );
 		}
 
-		if ( is_array( $product_args['status'] ) ) {
+		if ( is_array( $product_args['post_status'] ) ) {
 
 			// Given the array, sanitize them.
-			$product_args['status'] = array_map( 'sanitize_text_field', $product_args['status'] );
+			$product_args['post_status'] = array_map( 'sanitize_text_field', $product_args['post_status'] );
 
 		} else {
 
 			// If we didn't get an array, fallback to 'publish'.
-			$product_args['status'] = array( 'publish' );
+			$product_args['post_status'] = array( 'publish' );
 
 		}
 
