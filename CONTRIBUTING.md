@@ -1,4 +1,4 @@
-#Contribute To Easy Digital Downloads
+## Contribute To Easy Digital Downloads
 
 Community made patches, localisations, bug reports and contributions are always welcome and are crucial to ensure Easy Digital Downloads remains the #1 eCommerce platform for digital goods on WordPress.
 

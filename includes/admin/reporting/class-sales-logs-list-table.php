@@ -315,10 +315,11 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 		$download  = empty( $_GET['s'] ) ? $this->get_filtered_download() : null;
 
 		$log_query = array(
-			'post_parent' => $download,
-			'log_type'    => 'sale',
-			'paged'       => $paged,
-			'meta_query'  => $this->get_meta_query(),
+			'post_parent'    => $download,
+			'log_type'       => 'sale',
+			'paged'          => $paged,
+			'meta_query'     => $this->get_meta_query(),
+			'posts_per_page' => $this->per_page,
 		);
 
 		$logs = $edd_logs->get_connected_logs( $log_query );
