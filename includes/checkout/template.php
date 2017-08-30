@@ -789,9 +789,8 @@ function edd_terms_agreement() {
 			</div>
 		</fieldset>
 <?php
-		$html_output = ob_get_contents();
-		ob_end_clean();
-		
+		$html_output = ob_get_clean();
+
 		echo apply_filters( 'edd_checkout_terms_agreement_html', $html_output );
 	}
 }
