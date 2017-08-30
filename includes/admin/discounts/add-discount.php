@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 				</th>
 				<td>
 					<input name="name" required="required" id="edd-name" type="text" value="" style="width: 300px;"/>
-					<p class="description"><?php _e( 'The name of this discount', 'easy-digital-downloads' ); ?></p>
+					<p class="description"><?php _e( 'The name of this discount.', 'easy-digital-downloads' ); ?></p>
 				</td>
 			</tr>
 			<?php do_action( 'edd_add_discount_form_before_code' ); ?>
@@ -56,7 +56,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 					<label for="edd-amount"><?php _e( 'Amount', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input type="text" required="required" id="edd-amount" name="amount" value="" style="width: 40px;"/>
+					<input type="text" required="required" id="edd-amount" name="amount" value="" style="width: 80px;"/>
 					<p class="description edd-amount-description flat-discount" style="display:none;"><?php printf( __( 'Enter the discount amount in %s', 'easy-digital-downloads' ), edd_get_currency() ); ?></p>
 					<p class="description edd-amount-description percent-discount"><?php _e( 'Enter the discount percentage. 10 = 10%', 'easy-digital-downloads' ); ?></p>
 				</td>
@@ -131,7 +131,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 				</th>
 				<td>
 					<input name="expiration" id="edd-expiration" type="text" style="width: 300px;" class="edd_datepicker"/>
-					<p class="description"><?php _e( 'Enter the expiration date for this discount code in the format of mm/dd/yyyy. For no expiration, leave blank', 'easy-digital-downloads' ); ?></p>
+					<p class="description"><?php _e( 'Enter the expiration date for this discount code in the format of mm/dd/yyyy. For no expiration, leave blank.', 'easy-digital-downloads' ); ?></p>
 				</td>
 			</tr>
 			<?php do_action( 'edd_add_discount_form_before_min_cart_amount' ); ?>
