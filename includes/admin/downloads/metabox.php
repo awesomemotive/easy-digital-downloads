@@ -917,7 +917,10 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 				<span class="edd-file-location">
 						<label class="edd-legacy-setting-label"><?php _e( 'File Location', 'easy-digital-downloads' ); ?>:</label>
 						<span>
-							<?php echo ( $attachment_id || $is_local ) ? __( 'Local', 'easy-digital-downloads' ) : __( 'Remote', 'easy-digital-downloads' ); ?>
+							<?php
+							$file_location = ( $attachment_id || $is_local ) ? get_site_url() : __( 'External Site', 'easy-digital-downloads' );
+							echo apply_filters( 'edd_file_info_location', $file_location, $args );
+							?>
 						</span>
 				</span>
 

@@ -148,7 +148,7 @@ function edd_process_download() {
 
 		edd_record_download_in_log( $args['download'], $args['file_key'], $user_info, edd_get_ip(), $args['payment'], $args['price_id'] );
 
-		edd_process_requested_file( $requested_file );
+		edd_process_requested_file( $requested_file, $args );
 	} else {
 		$error_message = __( 'You do not have permission to download this file', 'easy-digital-downloads' );
 		wp_die( apply_filters( 'edd_deny_download_message', $error_message, __( 'Purchase Verification Failed', 'easy-digital-downloads' ) ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
@@ -834,8 +834,20 @@ function edd_process_admin_download() {
  	$user_info['email'] = $user_data->user_email;
  
  	edd_record_download_in_log( $download_id, $file_id, $user_info, edd_get_ip(), __( 'Admin' ), true );
- 
- 	edd_process_requested_file( $requested_file );
+
+	$args = apply_filters( 'edd_process_download_args', array(
+		'download' => $download_id,
+		'email'    => $user_info['email'],
+		'expire'   => edd_get_option( 'download_link_expiration' ),
+		'file_key' => $file_key,
+		'price_id' => false,
+		'key'      => '',
+		'eddfile'  => '',
+		'ttl'      => '',
+		'token'    => '',
+	) );
+
+ 	edd_process_requested_file( $requested_file, $args );
 
  	// Just in case we hit a file download method that doesn't die.
  	edd_die();
@@ -850,7 +862,7 @@ function edd_process_admin_download() {
   * @param  string $requested_file The file URL to retrieve
   * @return void
   */
- function edd_process_requested_file( $requested_file = '' ) {
+ function edd_process_requested_file( $requested_file = '', $args ) {
 	 // Determine the download method set in settings
 	 $method  = edd_get_file_download_method();
 
