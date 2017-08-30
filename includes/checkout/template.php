@@ -768,6 +768,8 @@ function edd_terms_agreement() {
 	if ( edd_get_option( 'show_agree_to_terms', false ) ) {
 		$agree_text  = edd_get_option( 'agree_text', '' );
 		$agree_label = edd_get_option( 'agree_label', __( 'Agree to Terms?', 'easy-digital-downloads' ) );
+		
+		ob_start();
 ?>
 		<fieldset id="edd_terms_agreement">
 			<div id="edd_terms" style="display:none;">
@@ -787,6 +789,10 @@ function edd_terms_agreement() {
 			</div>
 		</fieldset>
 <?php
+		$html_output = ob_get_contents();
+		ob_end_clean();
+		
+		echo apply_filters( 'edd_checkout_terms_agreement_html', $html_output );
 	}
 }
 add_action( 'edd_purchase_form_before_submit', 'edd_terms_agreement' );
