@@ -525,7 +525,7 @@ function edd_ajax_download_search() {
 	if ( ! current_user_can( 'edit_products' ) ) {
 		$status = apply_filters( 'edd_product_dropdown_status_nopriv', array( 'publish' ) );
 	} else {
-		$status = apply_filters( 'edd_product_dropdown_status', array( 'publish' ) );
+		$status = apply_filters( 'edd_product_dropdown_status', array( 'publish', 'draft', 'private', 'future' ) );
 	}
 
 	if ( is_array( $status ) && ! empty( $status ) ) {

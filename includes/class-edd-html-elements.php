@@ -60,7 +60,7 @@ class EDD_HTML_Elements {
 		if ( ! current_user_can( 'edit_products' ) ) {
 			$product_args['status'] = apply_filters( 'edd_product_dropdown_status_nopriv', array( 'publish' ) );
 		} else {
-			$product_args['status'] = apply_filters( 'edd_product_dropdown_status', array( 'publish' ) );
+			$product_args['status'] = apply_filters( 'edd_product_dropdown_status', array( 'publish', 'draft', 'private', 'future' ) );
 		}
 
 		if ( is_array( $product_args['status'] ) ) {
