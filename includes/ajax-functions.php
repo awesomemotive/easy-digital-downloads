@@ -531,7 +531,7 @@ function edd_ajax_download_search() {
 	if ( is_array( $status ) && ! empty( $status ) ) {
 
 		$status     = array_map( 'sanitize_text_field', $status );
-		$status_in  = join( "', '", $status );
+		$status_in  = "'" . join( "', '", $status ) . "'";
 		$where     .= "AND `post_status` IN ({$status_in}) ";
 
 	} else {
