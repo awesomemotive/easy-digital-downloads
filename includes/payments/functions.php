@@ -167,7 +167,6 @@ function edd_insert_payment( $payment_data = array() ) {
 	}
 
 	if ( $resume_payment ) {
-
 		$payment->date = date( 'Y-m-d G:i:s', current_time( 'timestamp' ) );
 
 		$payment->add_note( __( 'Payment recovery processed', 'easy-digital-downloads' ) );
@@ -183,6 +182,19 @@ function edd_insert_payment( $payment_data = array() ) {
 				'cart_index' => $cart_index,
 			);
 			$payment->remove_download( $download['id'], $item_args );
+		}
+
+		if ( strtolower( $payment->email ) !== strtolower( $payment_data['user_info']['email'] ) ) {
+
+			// Remove the payment from the previous customer.
+			$previous_customer = new EDD_Customer( $payment->customer_id );
+			$previous_customer->remove_payment( $payment->ID, false );
+
+			// Redefine the email frst and last names.
+			$payment->email                 = $payment_data['user_info']['email'];
+			$payment->first_name            = $payment_data['user_info']['first_name'];
+			$payment->last_name             = $payment_data['user_info']['last_name'];
+
 		}
 
 		// Remove any remainders of possible fees from items.
@@ -462,6 +474,7 @@ function edd_count_payments( $args = array() ) {
 		'start-date' => null,
 		'end-date'   => null,
 		'download'   => null,
+		'gateway'    => null
 	);
 
 	$args = wp_parse_args( $args, $defaults );
@@ -523,7 +536,7 @@ function edd_count_payments( $args = array() ) {
 			$join   = "LEFT JOIN $wpdb->postmeta m ON m.meta_key = '_edd_log_payment_id' AND m.post_id = p.ID ";
 			$join  .= "INNER JOIN $wpdb->posts p2 ON m.meta_value = p2.ID ";
 			$where  = "WHERE p.post_type = 'edd_log' ";
-			$where .= $wpdb->prepare( "AND p.post_parent = %d} ", $search );
+			$where .= $wpdb->prepare( "AND p.post_parent = %d ", $search );
 
 		} elseif ( is_numeric( $args['s'] ) ) {
 
@@ -558,6 +571,18 @@ function edd_count_payments( $args = array() ) {
 	if ( ! empty( $args['download'] ) && is_numeric( $args['download'] ) ) {
 
 		$where .= $wpdb->prepare( " AND p.post_parent = %d", $args['download'] );
+
+	}
+
+	// Limit payments count by gateway
+	if ( ! empty( $args['gateway'] ) ) {
+
+		$join .= "LEFT JOIN $wpdb->postmeta g ON (p.ID = g.post_id)";
+		$where .= $wpdb->prepare( "
+			AND g.meta_key = '_edd_payment_gateway'
+			AND g.meta_value = %s",
+			$args['gateway']
+		);
 
 	}
 
@@ -726,7 +751,8 @@ function edd_get_payment_statuses() {
 		'refunded'  => __( 'Refunded', 'easy-digital-downloads' ),
 		'failed'    => __( 'Failed', 'easy-digital-downloads' ),
 		'abandoned' => __( 'Abandoned', 'easy-digital-downloads' ),
-		'revoked'   => __( 'Revoked', 'easy-digital-downloads' )
+		'revoked'   => __( 'Revoked', 'easy-digital-downloads' ),
+		'processing' => __( 'Processing', 'easy-digital-downloads' )
 	);
 
 	return apply_filters( 'edd_payment_statuses', $payment_statuses );
@@ -1416,11 +1442,19 @@ function edd_set_payment_transaction_id( $payment_id = 0, $transaction_id = '' )
  */
 function edd_get_purchase_id_by_key( $key ) {
 	global $wpdb;
+	$global_key_string = 'edd_purchase_id_by_key' . $key;
+	global $$global_key_string;
+
+	if ( null !== $$global_key_string ) {
+		return $$global_key_string;
+	}
 
 	$purchase = $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_purchase_key' AND meta_value = %s LIMIT 1", $key ) );
 
-	if ( $purchase != NULL )
-		return $purchase;
+	if ( $purchase != NULL ) {
+		$$global_key_string = $purchase;
+		return $$global_key_string;
+	}
 
 	return 0;
 }

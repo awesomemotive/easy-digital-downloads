@@ -156,7 +156,7 @@ class EDD_Session {
 	 * @access public
 	 * @since 1.5
 	 * @param string $key Session key
-	 * @return string Session variable
+	 * @return mixed Session variable
 	 */
 	public function get( $key ) {
 		$key = sanitize_key( $key );
@@ -169,8 +169,8 @@ class EDD_Session {
 	 * @since 1.5
 	 *
 	 * @param string $key Session key
-	 * @param integer $value Session variable
-	 * @return string Session variable
+	 * @param int|string|array $value Session variable
+	 * @return mixed Session variable
 	 */
 	public function set( $key, $value ) {
 

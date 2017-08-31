@@ -121,7 +121,33 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 		$payment->completed_date = current_time( 'mysql' );
 		$payment->save();
 
-		do_action( 'edd_complete_purchase', $payment_id );
+		/**
+		 * Runs **when** a purchase is marked as "complete".
+		 *
+		 * @since 2.8 - Added EDD_Payment and EDD_Customer object to action.
+		 *
+		 * @param int          $payment_id Payment ID.
+		 * @param EDD_Payment  $payment    EDD_Payment object containing all payment data.
+		 * @param EDD_Customer $customer   EDD_Customer object containing all customer data.
+		 */
+		do_action( 'edd_complete_purchase', $payment_id, $payment, $customer );
+
+		// If cron doesn't work on a site, allow the filter to use __return_false and run the events immediately.
+		$use_cron = apply_filters( 'edd_use_after_payment_actions', true, $payment_id );
+		if ( false === $use_cron ) {
+			/**
+			 * Runs **after** a purchase is marked as "complete".
+			 *
+			 * @see edd_process_after_payment_actions()
+			 *
+			 * @since 2.8 - Added EDD_Payment and EDD_Customer object to action.
+			 *
+			 * @param int          $payment_id Payment ID.
+			 * @param EDD_Payment  $payment    EDD_Payment object containing all payment data.
+			 * @param EDD_Customer $customer   EDD_Customer object containing all customer data.
+			 */
+			do_action( 'edd_after_payment_actions', $payment_id, $payment, $customer );
+		}
 
 	}
 
@@ -130,6 +156,49 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 }
 add_action( 'edd_update_payment_status', 'edd_complete_purchase', 100, 3 );
 
+/**
+ * Schedules the one time event via WP_Cron to fire after purchase actions.
+ *
+ * Is run on the edd_complete_purchase action.
+ *
+ * @since 2.8
+ * @param $payment_id
+ */
+function edd_schedule_after_payment_action( $payment_id ) {
+	$use_cron = apply_filters( 'edd_use_after_payment_actions', true, $payment_id );
+	if ( $use_cron ) {
+		$after_payment_delay = apply_filters( 'edd_after_payment_actions_delay', 30, $payment_id );
+
+		// Use time() instead of current_time( 'timestamp' ) to avoid scheduling the event in the past when server time
+		// and WordPress timezone are different.
+		wp_schedule_single_event( time() + $after_payment_delay, 'edd_after_payment_scheduled_actions', array( $payment_id, false ) );
+	}
+}
+add_action( 'edd_complete_purchase', 'edd_schedule_after_payment_action', 10, 1 );
+
+/**
+ * Executes the one time event used for after purchase actions.
+ *
+ * @since 2.8
+ * @param $payment_id
+ * @param $force
+ */
+function edd_process_after_payment_actions( $payment_id = 0, $force = false ) {
+	if ( empty( $payment_id ) ) {
+		return;
+	}
+
+	$payment   = new EDD_Payment( $payment_id );
+	$has_fired = $payment->get_meta( '_edd_complete_actions_run' );
+	if ( ! empty( $has_fired ) && false === $force ) {
+		return;
+	}
+
+	$payment->add_note( __( 'After payment actions processed.', 'easy-digital-downloads' ) );
+	$payment->update_meta( '_edd_complete_actions_run', time() ); // This is in GMT
+	do_action( 'edd_after_payment_actions', $payment_id );
+}
+add_action( 'edd_after_payment_scheduled_actions', 'edd_process_after_payment_actions', 10, 1 );
 
 /**
  * Record payment status change
@@ -448,8 +517,9 @@ add_action( 'template_redirect', 'edd_recovery_user_mismatch' );
 function edd_recovery_force_login_fields() {
 	$resuming_payment = EDD()->session->get( 'edd_resume_payment' );
 	if ( $resuming_payment ) {
-		$payment = new EDD_Payment( $resuming_payment );
-		if ( $payment->user_id > 0 && ( ! is_user_logged_in() ) ) {
+		$payment        = new EDD_Payment( $resuming_payment );
+		$requires_login = edd_no_guest_checkout();
+		if ( ( $requires_login && ! is_user_logged_in() ) && ( $payment->user_id > 0 && ( ! is_user_logged_in() ) ) ) {
 			?>
 			<div class="edd-alert edd-alert-info">
 				<p><?php _e( 'To complete this payment, please login to your account.', 'easy-digital-downloads' ); ?></p>
@@ -481,8 +551,11 @@ add_action( 'edd_purchase_form_before_register_login', 'edd_recovery_force_login
 function edd_recovery_verify_logged_in( $verified_data, $post_data ) {
 	$resuming_payment = EDD()->session->get( 'edd_resume_payment' );
 	if ( $resuming_payment ) {
-		$payment = new EDD_Payment( $resuming_payment );
-		if ( ! empty( $payment->user_id ) && ( ! is_user_logged_in() || $payment->user_id != get_current_user_id() ) ) {
+		$payment    = new EDD_Payment( $resuming_payment );
+		$same_user  = ! empty( $payment->user_id ) && ( is_user_logged_in() && $payment->user_id == get_current_user_id() );
+		$same_email = strtolower( $payment->email ) === strtolower( $post_data['edd_email'] );
+
+		if ( ( is_user_logged_in() && ! $same_user ) || ( ! is_user_logged_in() && (int) $payment->user_id > 0 && ! $same_email ) ) {
 			edd_set_error( 'recovery_requires_login', __( 'To complete this payment, please login to your account.', 'easy-digital-downloads' ) );
 		}
 	}

@@ -301,7 +301,7 @@ class EDD_API {
 	 * @uses EDD_API::invalid_key()
 	 * @uses EDD_API::invalid_auth()
 	 * @since 1.5
-	 * @return void
+	 * @return bool
 	 */
 	private function validate_request() {
 		global $wp_query;
@@ -313,6 +313,7 @@ class EDD_API {
 
 			if ( empty( $wp_query->query_vars['token'] ) || empty( $wp_query->query_vars['key'] ) ) {
 				$this->missing_auth();
+				return  false;
 			}
 
 			// Auth was provided, include the upgrade routine so we can use the fallback api checks
@@ -322,6 +323,7 @@ class EDD_API {
 			if ( ! ( $user = $this->get_user( $wp_query->query_vars['key'] ) ) ) {
 
 				$this->invalid_key();
+				return  false;
 
 			} else {
 
@@ -329,11 +331,14 @@ class EDD_API {
 				$secret = $this->get_user_secret_key( $user );
 				$public = urldecode( $wp_query->query_vars['key'] );
 
-				if ( hash_equals( md5( $secret . $public ), $token ) ) {
+				$valid = $this->check_keys( $secret, $public, $token );
+				if ( $valid ) {
 					$this->is_valid_request = true;
 				} else {
 					$this->invalid_auth();
+					return  false;
 				}
+
 			}
 		} elseif ( ! empty( $wp_query->query_vars['edd-api'] ) && $this->is_public_query() ) {
 			$this->is_valid_request = true;
@@ -2265,6 +2270,22 @@ class EDD_API {
 	 */
 	public function log_requests() {
 		return apply_filters( 'edd_api_log_requests', true );
+	}
+
+	/**
+	 * Check API keys vs token
+	 *
+	 * @access public
+	 * @since  2.8.2
+	 *
+	 * @param string $secret Secret key
+	 * @param string $public Public key
+	 * @param string $token Token used in API request
+	 *
+	 * @return bool
+	 */
+	public function check_keys( $secret, $public, $token ) {
+		return hash_equals( md5( $secret . $public ), $token );
 	}
 
 }

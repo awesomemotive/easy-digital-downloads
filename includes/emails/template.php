@@ -115,7 +115,7 @@ function edd_email_template_preview() {
 	<?php
 	echo ob_get_clean();
 }
-add_action( 'edd_email_settings', 'edd_email_template_preview' );
+add_action( 'edd_purchase_receipt_email_settings', 'edd_email_template_preview' );
 
 /**
  * Displays the email preview
@@ -138,7 +138,7 @@ function edd_display_email_template_preview() {
 	}
 
 
-	EDD()->emails->heading = __( 'Purchase Receipt', 'easy-digital-downloads' );
+	EDD()->emails->heading = edd_email_preview_template_tags( edd_get_option( 'purchase_heading', __( 'Purchase Receipt', 'easy-digital-downloads' ) ) );
 
 	echo EDD()->emails->build_email( edd_email_preview_template_tags( edd_get_email_body_content( 0, array() ) ) );
 
