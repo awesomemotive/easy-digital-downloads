@@ -974,6 +974,11 @@ input[type="submit"].edd-submit:focus,
 
 /* =Downloads Shortcode
 -------------------------------------------------------------- */
+.edd_downloads_list:after {
+	content: "";
+	display: table;
+	clear: both;
+}
 .edd_download {
 	float: left;
 }
@@ -988,13 +993,22 @@ input[type="submit"].edd-submit:focus,
 	padding: 0 8px 8px;
 	margin: 0 0 10px;
 }
+.edd_download_columns_2 .edd_download:nth-child(2n+1),
+.edd_download_columns_3 .edd_download:nth-child(3n+1),
+.edd_download_columns_4 .edd_download:nth-child(4n+1),
+.edd_download_columns_5 .edd_download:nth-child(5n+1),
+.edd_download_columns_6 .edd_download:nth-child(6n+1) {
+	clear: left;
+}
 .edd_download_image {
 	max-width: 100%;
 }
 .edd_download .edd_price {
 	margin-bottom: 10px;
 }
-
+#edd_download_pagination {
+	clear: both;
+}
 
 /* =Misc styles
 -------------------------------------------------------------- */
