@@ -43,7 +43,7 @@ do_action( 'edd_print_errors' ); ?>
 			<input type="hidden" name="edd_honeypot" value="" />
 			<input type="hidden" name="edd_action" value="user_register" />
 			<input type="hidden" name="edd_redirect" value="<?php echo esc_url( $edd_register_redirect ); ?>"/>
-			<input class="button" name="edd_register_submit" type="submit" value="<?php esc_attr_e( 'Register', 'easy-digital-downloads' ); ?>" />
+			<input class="edd_submit edd-submit" name="edd_register_submit" type="submit" value="<?php esc_attr_e( 'Register', 'easy-digital-downloads' ); ?>" />
 		</p>
 
 		<?php do_action( 'edd_register_form_fields_after' ); ?>
