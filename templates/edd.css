@@ -821,13 +821,6 @@ input[type="submit"].edd-submit:focus {
 	outline: 5px auto -webkit-focus-ring-color;
 	outline-offset: -2px;
 }
-input[type="submit"].edd-submit:hover,
-input[type="submit"].edd-submit:focus,
-.edd-submit.button:hover,
-.edd-submit.button:focus {
-	color: #333333;
-	text-decoration: none;
-}
 .edd-submit.button:active {
 	background-image: none;
 	outline: 0;
