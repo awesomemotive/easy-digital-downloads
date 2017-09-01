@@ -297,7 +297,7 @@ jQuery(document).ready(function ($) {
 								clone = EDD_Download_Configuration.clone_repeatable( row );
 
 							clone.find( '.edd_repeatable_attachment_id_field' ).val( attachment.id );
-							clone.find( 'edd_repeatable_thumbnail_size_field' ).val( selectedSize );
+							clone.find( '.edd_repeatable_thumbnail_size_field' ).val( selectedSize );
 							clone.find( '.edd_repeatable_upload_field' ).val( selectedURL );
 							clone.find( '.edd_repeatable_name_field' ).val( selectedName );
 							clone.insertAfter( row );
