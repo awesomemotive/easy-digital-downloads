@@ -39,7 +39,9 @@ function edd_checkout_form() {
 					 */
 					do_action( 'edd_checkout_form_top' );
 
-					if ( edd_show_gateways() ) {
+					if ( edd_is_ajax_disabled() && ! empty( $_REQUEST['payment-mode'] ) ) {
+						do_action( 'edd_purchase_form' );
+					} elseif ( edd_show_gateways() ) {
 						do_action( 'edd_payment_mode_select'  );
 					} else {
 						do_action( 'edd_purchase_form' );
@@ -194,7 +196,7 @@ function edd_user_info_fields() {
 				<?php } ?>
 			</label>
 			<span class="edd-description" id="edd-first-description"><?php esc_html_e( 'We will use this to personalize your account experience.', 'easy-digital-downloads' ); ?></span>
-			<input class="edd-input required" type="text" name="edd_first" placeholder="<?php esc_html_e( 'First name', 'easy-digital-downloads' ); ?>" id="edd-first" value="<?php echo esc_attr( $customer['first_name'] ); ?>"<?php if( edd_field_is_required( 'edd_first' ) ) {  echo ' required '; } ?> aria-describedby="edd-first-description" />
+			<input class="edd-input required" type="text" name="edd_first" placeholder="<?php esc_html_e( 'First Name', 'easy-digital-downloads' ); ?>" id="edd-first" value="<?php echo esc_attr( $customer['first_name'] ); ?>"<?php if( edd_field_is_required( 'edd_first' ) ) {  echo ' required '; } ?> aria-describedby="edd-first-description" />
 		</p>
 		<p id="edd-last-name-wrap">
 			<label class="edd-label" for="edd-last">
@@ -204,7 +206,7 @@ function edd_user_info_fields() {
 				<?php } ?>
 			</label>
 			<span class="edd-description" id="edd-last-description"><?php esc_html_e( 'We will use this as well to personalize your account experience.', 'easy-digital-downloads' ); ?></span>
-			<input class="edd-input<?php if( edd_field_is_required( 'edd_last' ) ) { echo ' required'; } ?>" type="text" name="edd_last" id="edd-last" placeholder="<?php esc_html_e( 'Last name', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $customer['last_name'] ); ?>"<?php if( edd_field_is_required( 'edd_last' ) ) {  echo ' required '; } ?> aria-describedby="edd-last-description"/>
+			<input class="edd-input<?php if( edd_field_is_required( 'edd_last' ) ) { echo ' required'; } ?>" type="text" name="edd_last" id="edd-last" placeholder="<?php esc_html_e( 'Last Name', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $customer['last_name'] ); ?>"<?php if( edd_field_is_required( 'edd_last' ) ) {  echo ' required '; } ?> aria-describedby="edd-last-description"/>
 		</p>
 		<?php do_action( 'edd_purchase_form_user_info' ); ?>
 		<?php do_action( 'edd_purchase_form_user_info_fields' ); ?>
@@ -244,7 +246,7 @@ function edd_get_cc_form() {
 				<span class="card-type"></span>
 			</label>
 			<span class="edd-description"><?php _e( 'The (typically) 16 digits on the front of your credit card.', 'easy-digital-downloads' ); ?></span>
-			<input type="tel" pattern="[0-9]{13,16}" autocomplete="off" name="card_number" id="card_number" class="card-number edd-input required" placeholder="<?php _e( 'Card number', 'easy-digital-downloads' ); ?>" />
+			<input type="tel" pattern="^[0-9!@#$%^&* ]*$" autocomplete="off" name="card_number" id="card_number" class="card-number edd-input required" placeholder="<?php _e( 'Card number', 'easy-digital-downloads' ); ?>" />
 		</p>
 		<p id="edd-card-cvc-wrap">
 			<label for="card_cvc" class="edd-label">
@@ -323,6 +325,18 @@ function edd_default_cc_address_fields() {
 		}
 
 	}
+
+	/**
+	 * Billing Address Details.
+	 *
+	 * Allows filtering the customer address details that will be pre-populated on the checkout form.
+	 *
+	 * @since 2.8
+	 *
+	 * @param array $address The customer address.
+	 * @param array $customer The customer data from the session
+	 */
+	$customer['address'] = apply_filters( 'edd_checkout_billing_details_address', $customer['address'], $customer );
 
 	ob_start(); ?>
 	<fieldset id="edd_cc_address" class="cc-address">
@@ -539,12 +553,12 @@ function edd_get_login_fields() {
 			<?php do_action('edd_checkout_login_fields_before'); ?>
 			<p id="edd-user-login-wrap">
 				<label class="edd-label" for="edd-username">
-					<?php _e( 'Username', 'easy-digital-downloads' ); ?>
+					<?php _e( 'Username or Email', 'easy-digital-downloads' ); ?>
 					<?php if( edd_no_guest_checkout() ) { ?>
 					<span class="edd-required-indicator">*</span>
 					<?php } ?>
 				</label>
-				<input class="<?php if(edd_no_guest_checkout()) { echo 'required '; } ?>edd-input" type="text" name="edd_user_login" id="edd_user_login" value="" placeholder="<?php _e( 'Your username', 'easy-digital-downloads' ); ?>"/>
+				<input class="<?php if(edd_no_guest_checkout()) { echo 'required '; } ?>edd-input" type="text" name="edd_user_login" id="edd_user_login" value="" placeholder="<?php _e( 'Your username or email address', 'easy-digital-downloads' ); ?>"/>
 			</p>
 			<p id="edd-user-pass-wrap" class="edd_login_password">
 				<label class="edd-label" for="edd-password">
@@ -754,6 +768,8 @@ function edd_terms_agreement() {
 	if ( edd_get_option( 'show_agree_to_terms', false ) ) {
 		$agree_text  = edd_get_option( 'agree_text', '' );
 		$agree_label = edd_get_option( 'agree_label', __( 'Agree to Terms?', 'easy-digital-downloads' ) );
+		
+		ob_start();
 ?>
 		<fieldset id="edd_terms_agreement">
 			<div id="edd_terms" style="display:none;">
@@ -773,6 +789,9 @@ function edd_terms_agreement() {
 			</div>
 		</fieldset>
 <?php
+		$html_output = ob_get_clean();
+
+		echo apply_filters( 'edd_checkout_terms_agreement_html', $html_output );
 	}
 }
 add_action( 'edd_purchase_form_before_submit', 'edd_terms_agreement' );
@@ -850,19 +869,32 @@ function edd_checkout_button_purchase() {
 	$color = edd_get_option( 'checkout_color', 'blue' );
 	$color = ( $color == 'inherit' ) ? '' : $color;
 	$style = edd_get_option( 'button_style', 'button' );
-	$label = edd_get_option( 'checkout_label', '' );
-
-	if ( edd_get_cart_total() ) {
-		$complete_purchase = ! empty( $label ) ? $label : __( 'Purchase', 'easy-digital-downloads' );
-	} else {
-		$complete_purchase = ! empty( $label ) ? $label : __( 'Free Download', 'easy-digital-downloads' );
-	}
+	$label = edd_get_checkout_button_purchase_label();
 
 	ob_start();
 ?>
-	<input type="submit" class="edd-submit <?php echo $color; ?> <?php echo $style; ?>" id="edd-purchase-button" name="edd-purchase" value="<?php echo $complete_purchase; ?>"/>
+	<input type="submit" class="edd-submit <?php echo $color; ?> <?php echo $style; ?>" id="edd-purchase-button" name="edd-purchase" value="<?php echo $label; ?>"/>
 <?php
 	return apply_filters( 'edd_checkout_button_purchase', ob_get_clean() );
+}
+
+/**
+ * Retrieves the label for the purchase button
+ *
+ * @since 2.7.6
+ * @return string
+ */
+function edd_get_checkout_button_purchase_label() {
+
+	if ( edd_get_cart_total() ) {
+		$label             = edd_get_option( 'checkout_label', '' );
+		$complete_purchase = ! empty( $label ) ? $label : __( 'Purchase', 'easy-digital-downloads' );
+	} else {
+		$label             = edd_get_option( 'free_checkout_label', '' );
+		$complete_purchase = ! empty( $label ) ? $label : __( 'Free Download', 'easy-digital-downloads' );
+	}
+
+	return apply_filters( 'edd_get_checkout_button_purchase_label', $complete_purchase, $label );
 }
 
 /**
@@ -936,5 +968,34 @@ add_filter( 'the_content', 'edd_filter_success_page_content', 99999 );
  * @return boolean
  */
 function edd_receipt_show_download_files( $item_id, $receipt_args, $item = array() ) {
-	return apply_filters( 'edd_receipt_show_download_files', true, $item_id, $receipt_args, $item );
+
+	$ret = true;
+
+	/*
+	 * If re-download is disabled, set return to false
+	 *
+	 * When the purchase session is still present AND the receipt being shown is for that purchase,
+	 * file download links are still shown. Once session expires, links are disabled
+	 */
+	if ( edd_no_redownload() ) {
+
+		$key     = isset( $_GET['payment_key'] ) ? sanitize_text_field( $_GET['payment_key'] ) : '';
+		$session = edd_get_purchase_session();
+
+		if ( ! empty( $key ) && ! empty( $session ) && $key != $session['purchase_key'] ) {
+
+			// We have session data but the payment key provided is not for this session
+			$ret = false;
+
+		} elseif ( empty( $session ) ) {
+
+			// No session data is present but a key has been provided
+			$ret = false;
+
+		}
+
+
+	}
+
+	return apply_filters( 'edd_receipt_show_download_files', $ret, $item_id, $receipt_args, $item );
 }

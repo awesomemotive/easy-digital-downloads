@@ -1606,9 +1606,7 @@ class EDD_Discount {
 
 		// Ensure we have requirements before proceeding
 		if ( ! $return && ! empty( $product_reqs ) ) {
-
-			switch( $this->product_condition ) {
-
+			switch ( $this->product_condition ) {
 				case 'all' :
 
 					// Default back to true
@@ -1616,7 +1614,7 @@ class EDD_Discount {
 
 					foreach ( $product_reqs as $download_id ) {
 
-						if( empty( $download_id ) ) {
+						if ( empty( $download_id ) ) {
 							continue;
 						}
 
@@ -1640,7 +1638,7 @@ class EDD_Discount {
 
 					foreach ( $product_reqs as $download_id ) {
 
-						if( empty( $download_id ) ) {
+						if ( empty( $download_id ) ) {
 							continue;
 						}
 
@@ -1666,12 +1664,12 @@ class EDD_Discount {
 		}
 
 		if ( ! empty( $excluded_ps ) ) {
-			if ( $cart_ids == $excluded_ps ) {
+			if ( count( array_intersect( $cart_ids, $excluded_ps ) ) == count( $cart_ids ) ) {
+				$return = false;
+
 				if ( $set_error ) {
 					edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'easy-digital-downloads' ) );
 				}
-
-				$return = false;
 			}
 		}
 
@@ -1756,7 +1754,9 @@ class EDD_Discount {
 					$discounts = explode( ',', $payment->discounts );
 
 					if ( is_array( $discounts ) ) {
-						if ( in_array( strtolower( $this->code ), $discounts ) ) {
+						$discounts = array_map( 'strtoupper', $discounts );
+						$key       = array_search( strtoupper( $this->code ), $discounts );
+						if ( false !== $key ) {
 							if ( $set_error ) {
 								edd_set_error( 'edd-discount-error', __( 'This discount has already been redeemed.', 'easy-digital-downloads' ) );
 							}

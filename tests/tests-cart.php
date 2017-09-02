@@ -507,11 +507,11 @@ class Test_Cart extends EDD_UnitTestCase {
 
 		edd_empty_cart();
 
-		edd_add_to_cart( $this->_post->ID );
+		edd_add_to_cart( $this->_post->ID, array( 'price_id' => 0 ) );
 
 		EDD()->fees->add_fee( 10, 'test', 'Test' );
 
-		$this->assertEquals( 30, edd_get_cart_total() );
+		$this->assertEquals( 30, EDD()->cart->get_total() );
 
 	}
 
@@ -531,7 +531,7 @@ class Test_Cart extends EDD_UnitTestCase {
 
 		edd_empty_cart();
 
-		edd_add_to_cart( $this->_post->ID );
+		edd_add_to_cart( $this->_post->ID, array( 'price_id' => 0 ) );
 
 		EDD()->fees->add_fee( array(
 			'amount' => 10,
@@ -548,7 +548,7 @@ class Test_Cart extends EDD_UnitTestCase {
 
 		edd_empty_cart();
 
-		edd_add_to_cart( $this->_post->ID );
+		edd_add_to_cart( $this->_post->ID, array( 'price_id' => 0 ) );
 
 		EDD()->fees->add_fee( array(
 			'amount' => 10,
@@ -566,7 +566,7 @@ class Test_Cart extends EDD_UnitTestCase {
 
 		edd_empty_cart();
 
-		edd_add_to_cart( $this->_post->ID );
+		edd_add_to_cart( $this->_post->ID, array( 'price_id' => 0 ) );
 
 		EDD()->fees->add_fee( array(
 			'amount' => 10,
@@ -594,6 +594,35 @@ class Test_Cart extends EDD_UnitTestCase {
 
 		$this->assertEquals( 10, edd_get_cart_fee_total() );
 
+	}
+
+	public function test_unset_cart_discount_case_insensitive() {
+		edd_set_cart_discount( '20off' );
+		$this->assertEmpty( edd_unset_cart_discount( '20OFF' ) );
+	}
+
+	public function test_negative_fees_cart_tax() {
+		edd_update_option( 'enable_taxes', true );
+		edd_update_option( 'tax_rate', '10' );
+
+
+		$options = array(
+			'price_id' => 0,
+		);
+		edd_add_to_cart( $this->_post->ID, $options );
+
+		$fee = array(
+			'amount'      => -10,
+			'label'       => 'Sale - ' . get_the_title( $this->_post->ID ),
+			'id'          => 'dp_0',
+			'download_id' => $this->_post->ID,
+			'price_id'    => 0,
+		);
+		EDD()->fees->add_fee( $fee );
+
+		$this->assertEquals( "1", EDD()->cart->get_tax() );
+
+		edd_update_option( 'enable_taxes', false );
 	}
 
 }

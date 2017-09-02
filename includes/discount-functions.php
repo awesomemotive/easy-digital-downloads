@@ -693,10 +693,13 @@ function edd_unset_cart_discount( $code = '' ) {
 	$discounts = edd_get_cart_discounts();
 
 	if ( $discounts ) {
-		$key = array_search( $code, $discounts );
+		$discounts = array_map( 'strtoupper', $discounts );
+		$key       = array_search( strtoupper( $code ), $discounts );
+
 		if ( false !== $key ) {
 			unset( $discounts[ $key ] );
 		}
+
 		$discounts = implode( '|', array_values( $discounts ) );
 		// update the active discounts
 		EDD()->session->set( 'cart_discounts', $discounts );
@@ -787,7 +790,7 @@ function edd_get_cart_discounts_html( $discounts = false ) {
 		$discounts = EDD()->cart->get_discounts();
 	}
 
-	if ( ! $discounts ) {
+	if ( empty( $discounts ) ) {
 		return;
 	}
 
@@ -1049,7 +1052,12 @@ function edd_discount_status_cleanup() {
 	}
 
 }
+/**
+ * Disabled until https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5619 is completed
+ * See https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5631
+ *
 add_action( 'edd_daily_scheduled_events', 'edd_discount_status_cleanup' );
+ */
 
 /**
  * Used during edd_discount_status_cleanup to filter out a meta query properly

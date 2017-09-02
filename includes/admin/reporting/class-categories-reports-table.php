@@ -163,6 +163,7 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 			$term_args    = array(
 				'parent'       => 0,
 				'hierarchical' => 0,
+				'hide_empty'   => false
 			);
 
 			$categories = get_terms( 'download_category', $term_args );

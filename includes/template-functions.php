@@ -288,7 +288,14 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 
 							$item_prop = edd_add_schema_microdata() ? ' itemprop="description"' : '';
 
-							echo '<span class="edd_price_option_name"' . $item_prop . '>' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price">' . edd_currency_filter( edd_format_amount( $price['amount'] ) ) . '</span>';
+							// Construct the default price output.
+							$price_output = '<span class="edd_price_option_name"' . $item_prop . '>' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price">' . edd_currency_filter( edd_format_amount( $price['amount'] ) ) . '</span>';
+
+							// Filter the default price output
+							$price_output = apply_filters( 'edd_price_option_output', $price_output, $download_id, $key, $price, $form_id, $item_prop );
+
+							// Output the filtered price output
+							echo $price_output;
 
 							if( edd_add_schema_microdata() ) {
 								echo '<meta itemprop="price" content="' . esc_attr( $price['amount'] ) .'" />';
@@ -637,6 +644,11 @@ function edd_get_template_part( $slug, $name = null, $load = true ) {
 	// Execute code for this part
 	do_action( 'get_template_part_' . $slug, $slug, $name );
 
+	$load_template = apply_filters( 'edd_allow_template_part_' . $slug . '_' . $name, true );
+	if ( false === $load_template ) {
+		return '';
+	}
+
 	// Setup possible parts
 	$templates = array();
 	if ( isset( $name ) )
@@ -649,6 +661,24 @@ function edd_get_template_part( $slug, $name = null, $load = true ) {
 	// Return the part that is found
 	return edd_locate_template( $templates, $load, false );
 }
+
+/**
+ * Only allow the pending verification message to display once
+ * @since 2.7.8
+ * @param $load_template
+ *
+ * @return bool
+ */
+function edd_load_verification_template_once( $load_template ) {
+	static $account_pending_loaded;
+	if ( ! is_null( $account_pending_loaded ) ) {
+		return false;
+	}
+
+	$account_pending_loaded = true;
+	return $load_template;
+}
+add_filter( 'edd_allow_template_part_account_pending', 'edd_load_verification_template_once', 10, 1 );
 
 /**
  * Retrieve the name of the highest priority template file that exists.
@@ -1074,3 +1104,28 @@ function edd_get_bundle_item_price_id( $bundle_item ) {
 
 	return $bundle_price_id;
 }
+
+/**
+ * Load a template file for a single download item.
+ *
+ * This is a wrapper function for backwards compatibility so the
+ * shortcode's attributes can be passed to the template file via
+ * a global variable.
+ *
+ * @since 2.8.0
+ *
+ * @param array $atts The [downloads] shortcode attributes.
+ * @param int   $i The current item count.
+ */
+function edd_download_shortcode_item( $atts, $i ) {
+	global $edd_download_shortcode_item_atts, $edd_download_shortcode_item_i;
+
+	/**
+	 * The variables are registered as part of the global scope so the template can access them.
+	 */
+	$edd_download_shortcode_item_atts = $atts;
+	$edd_download_shortcode_item_i = $i;
+
+	edd_get_template_part( 'shortcode', 'download' );
+}
+add_action( 'edd_download_shortcode_item', 'edd_download_shortcode_item', 10, 2 );

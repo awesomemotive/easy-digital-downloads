@@ -40,7 +40,7 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	public function headers() {
 		ignore_user_abort( true );
 
-		if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+		if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
 			set_time_limit( 0 );
 		}
 

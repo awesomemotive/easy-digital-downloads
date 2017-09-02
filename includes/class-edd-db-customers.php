@@ -22,6 +22,33 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class EDD_DB_Customers extends EDD_DB  {
 
 	/**
+	 * The metadata type.
+	 *
+	 * @access public
+	 * @since  2.8
+	 * @var string
+	 */
+	public $meta_type = 'customer';
+
+	/**
+	 * The name of the date column.
+	 *
+	 * @access public
+	 * @since  2.8
+	 * @var string
+	 */
+	public $date_key = 'date_created';
+
+	/**
+	 * The name of the cache group.
+	 *
+	 * @access public
+	 * @since  2.8
+	 * @var string
+	 */
+	public $cache_group = 'customers';
+
+	/**
 	 * Get things started
 	 *
 	 * @access  public
@@ -138,6 +165,40 @@ class EDD_DB_Customers extends EDD_DB  {
 	}
 
 	/**
+	 * Insert a new customer
+	 *
+	 * @access  public
+	 * @since   2.1
+	 * @return  int
+	 */
+	public function insert( $data, $type = '' ) {
+		$result = parent::insert( $data, $type );
+
+		if ( $result ) {
+			$this->set_last_changed();
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Update a customer
+	 *
+	 * @access  public
+	 * @since   2.1
+	 * @return  bool
+	 */
+	public function update( $row_id, $data = array(), $where = '' ) {
+		$result = parent::update( $row_id, $data, $where );
+
+		if ( $result ) {
+			$this->set_last_changed();
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Delete a customer
 	 *
 	 * NOTE: This should not be called directly as it does not make necessary changes to
@@ -158,7 +219,14 @@ class EDD_DB_Customers extends EDD_DB  {
 		if ( $customer->id > 0 ) {
 
 			global $wpdb;
-			return $wpdb->delete( $this->table_name, array( 'id' => $customer->id ), array( '%d' ) );
+
+			$result = $wpdb->delete( $this->table_name, array( 'id' => $customer->id ), array( '%d' ) );
+
+			if ( $result ) {
+				$this->set_last_changed();
+			}
+
+			return $result;
 
 		} else {
 			return false;
@@ -319,8 +387,6 @@ class EDD_DB_Customers extends EDD_DB  {
 	 * @return mixed          Upon success, an object of the customer. Upon failure, NULL
 	 */
 	public function get_customer_by( $field = 'id', $value = 0 ) {
-		global $wpdb;
-
 		if ( empty( $field ) || empty( $value ) ) {
 			return NULL;
 		}
@@ -351,40 +417,32 @@ class EDD_DB_Customers extends EDD_DB  {
 			return false;
 		}
 
+		$args = array( 'number' => 1 );
+
 		switch ( $field ) {
 			case 'id':
 				$db_field = 'id';
+				$args['include'] = array( $value );
 				break;
 			case 'email':
-				$value    = sanitize_text_field( $value );
-				$db_field = 'email';
+				$args['email'] = sanitize_text_field( $value );
 				break;
 			case 'user_id':
-				$db_field = 'user_id';
+				$args['users_include'] = array( $value );
 				break;
 			default:
 				return false;
 		}
 
-		if ( ! $customer = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $this->table_name WHERE $db_field = %s LIMIT 1", $value ) ) ) {
+		$query = new EDD_Customer_Query( '', $this );
 
-			// Look for customer from an additional email
-			if( 'email' === $field ) {
+		$results = $query->query( $args );
 
-				$meta_table  = EDD()->customer_meta->table_name;
-				$customer_id = $wpdb->get_var( $wpdb->prepare( "SELECT customer_id FROM $meta_table WHERE meta_key = 'additional_email' AND meta_value = '%s' LIMIT 1", $value ) );
-
-				if( ! empty( $customer_id ) ) {
-					return $this->get( $customer_id );
-				}
-
-			}
-
-
+		if ( empty( $results ) ) {
 			return false;
 		}
 
-		return $customer;
+		return array_shift( $results );
 	}
 
 	/**
@@ -394,129 +452,12 @@ class EDD_DB_Customers extends EDD_DB  {
 	 * @since   2.1
 	*/
 	public function get_customers( $args = array() ) {
+		$args = $this->prepare_customer_query_args( $args );
+		$args['count'] = false;
 
-		global $wpdb;
+		$query = new EDD_Customer_Query( '', $this );
 
-		$defaults = array(
-			'number'       => 20,
-			'offset'       => 0,
-			'user_id'      => 0,
-			'orderby'      => 'id',
-			'order'        => 'DESC',
-		);
-
-		$args  = wp_parse_args( $args, $defaults );
-
-		if( $args['number'] < 1 ) {
-			$args['number'] = 999999999999;
-		}
-
-		$join  = '';
-		$where = ' WHERE 1=1 ';
-
-		// specific customers
-		if( ! empty( $args['id'] ) ) {
-
-			if( is_array( $args['id'] ) ) {
-				$ids = implode( ',', array_map('intval', $args['id'] ) );
-			} else {
-				$ids = intval( $args['id'] );
-			}
-
-			$where .= " AND `id` IN( {$ids} ) ";
-
-		}
-
-		// customers for specific user accounts
-		if( ! empty( $args['user_id'] ) ) {
-
-			if( is_array( $args['user_id'] ) ) {
-				$user_ids = implode( ',', array_map('intval', $args['user_id'] ) );
-			} else {
-				$user_ids = intval( $args['user_id'] );
-			}
-
-			$where .= " AND `user_id` IN( {$user_ids} ) ";
-
-		}
-
-		//specific customers by email
-		if( ! empty( $args['email'] ) ) {
-
-			if( is_array( $args['email'] ) ) {
-
-				$emails_count       = count( $args['email'] );
-				$emails_placeholder = array_fill( 0, $emails_count, '%s' );
-				$emails             = implode( ', ', $emails_placeholder );
-
-				$where .= $wpdb->prepare( " AND `email` IN( $emails ) ", $args['email'] );
-			} else {
-				$meta_table      = $wpdb->prefix . 'edd_customermeta';
-				$customers_table = $this->table_name;
-
-				$join  .= " LEFT JOIN $meta_table ON $customers_table.id = $meta_table.customer_id";
-				$where .= $wpdb->prepare( " AND ( ( `meta_key` = 'additional_email' AND `meta_value` = %s ) OR `email` = %s )", $args['email'], $args['email'] );
-			}
-		}
-
-		// specific customers by name
-		if( ! empty( $args['name'] ) ) {
-			$where .= $wpdb->prepare( " AND `name` LIKE '%%%%" . '%s' . "%%%%' ", $args['name'] );
-		}
-
-		// Customers created for a specific date or in a date range
-		if( ! empty( $args['date'] ) ) {
-
-			if( is_array( $args['date'] ) ) {
-
-				if( ! empty( $args['date']['start'] ) ) {
-
-					$start = date( 'Y-m-d 00:00:00', strtotime( $args['date']['start'] ) );
-					$where .= " AND `date_created` >= '{$start}'";
-
-				}
-
-				if( ! empty( $args['date']['end'] ) ) {
-
-					$end = date( 'Y-m-d 23:59:59', strtotime( $args['date']['end'] ) );
-					$where .= " AND `date_created` <= '{$end}'";
-
-				}
-
-			} else {
-
-				$year  = date( 'Y', strtotime( $args['date'] ) );
-				$month = date( 'm', strtotime( $args['date'] ) );
-				$day   = date( 'd', strtotime( $args['date'] ) );
-
-				$where .= " AND $year = YEAR ( date_created ) AND $month = MONTH ( date_created ) AND $day = DAY ( date_created )";
-			}
-
-		}
-
-		$args['orderby'] = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'id' : $args['orderby'];
-
-		if( 'purchase_value' == $args['orderby'] ) {
-			$args['orderby'] = 'purchase_value+0';
-		}
-
-		$cache_key = md5( 'edd_customers_' . serialize( $args ) );
-
-		$customers = wp_cache_get( $cache_key, 'customers' );
-
-		$args['orderby'] = esc_sql( $args['orderby'] );
-		$args['order']   = esc_sql( $args['order'] );
-
-		$customers = false;
-
-		if( $customers === false ) {
-			$query     = $wpdb->prepare( "SELECT * FROM  $this->table_name $join $where GROUP BY $this->primary_key ORDER BY {$args['orderby']} {$args['order']} LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) );
-			$customers = $wpdb->get_results( $query );
-			wp_cache_set( $cache_key, $customers, 'customers', 3600 );
-		}
-
-		return $customers;
-
+		return $query->query( $args );
 	}
 
 
@@ -527,104 +468,107 @@ class EDD_DB_Customers extends EDD_DB  {
 	 * @since   2.1
 	*/
 	public function count( $args = array() ) {
+		$args = $this->prepare_customer_query_args( $args );
+		$args['count'] = true;
+		$args['offset'] = 0;
 
-		global $wpdb;
+		$query   = new EDD_Customer_Query( '', $this );
+		$results = $query->query( $args );
 
-		$join  = '';
-		$where = ' WHERE 1=1 ';
+		return $results;
+	}
 
-		// specific customers
-		if( ! empty( $args['id'] ) ) {
+	/**
+	 * Prepare query arguments for `EDD_Customer_Query`.
+	 *
+	 * This method ensures that old arguments transition seamlessly to the new system.
+	 *
+	 * @access protected
+	 * @since  2.8
+	 *
+	 * @param array $args Arguments for `EDD_Customer_Query`.
+	 * @return array Prepared arguments.
+	 */
+	protected function prepare_customer_query_args( $args ) {
+		if ( ! empty( $args['id'] ) ) {
+			$args['include'] = $args['id'];
+			unset( $args['id'] );
+		}
 
-			if( is_array( $args['id'] ) ) {
-				$ids = implode( ',', array_map('intval', $args['id'] ) );
+		if ( ! empty( $args['user_id'] ) ) {
+			$args['users_include'] = $args['user_id'];
+			unset( $args['user_id'] );
+		}
+
+		if ( ! empty( $args['name'] ) ) {
+			$args['search'] = '***' . $args['name'] . '***';
+			unset( $args['name'] );
+		}
+
+		if ( ! empty( $args['date'] ) ) {
+			$date_query = array( 'relation' => 'AND' );
+
+			if ( is_array( $args['date'] ) ) {
+				$date_query[] = array(
+					'after'     => date( 'Y-m-d 00:00:00', strtotime( $args['date']['start'] ) ),
+					'inclusive' => true,
+				);
+				$date_query[] = array(
+					'before'    => date( 'Y-m-d 23:59:59', strtotime( $args['date']['end'] ) ),
+					'inclusive' => true,
+				);
 			} else {
-				$ids = intval( $args['id'] );
+				$date_query[] = array(
+					'year'  => date( 'Y', strtotime( $args['date'] ) ),
+					'month' => date( 'm', strtotime( $args['date'] ) ),
+					'day'   => date( 'd', strtotime( $args['date'] ) ),
+				);
 			}
 
-			$where .= " AND `id` IN( {$ids} ) ";
-
-		}
-
-		// customers for specific user accounts
-		if( ! empty( $args['user_id'] ) ) {
-
-			if( is_array( $args['user_id'] ) ) {
-				$user_ids = implode( ',', array_map('intval', $args['user_id'] ) );
+			if ( empty( $args['date_query'] ) ) {
+				$args['date_query'] = $date_query;
 			} else {
-				$user_ids = intval( $args['user_id'] );
+				$args['date_query'] = array(
+					'relation' => 'AND',
+					$date_query,
+					$args['date_query'],
+				);
 			}
 
-			$where .= " AND `user_id` IN( {$user_ids} ) ";
-
+			unset( $args['date'] );
 		}
 
-		//specific customers by email
-		if( ! empty( $args['email'] ) ) {
+		return $args;
+	}
 
-			if( is_array( $args['email'] ) ) {
+	/**
+	 * Sets the last_changed cache key for customers.
+	 *
+	 * @access public
+	 * @since  2.8
+	 */
+	public function set_last_changed() {
+		wp_cache_set( 'last_changed', microtime(), $this->cache_group );
+	}
 
-				$emails_count       = count( $args['email'] );
-				$emails_placeholder = array_fill( 0, $emails_count, '%s' );
-				$emails             = implode( ', ', $emails_placeholder );
-
-				$where .= $wpdb->prepare( " AND `email` IN( $emails ) ", $args['email'] );
-			} else {
-				$meta_table      = $wpdb->prefix . 'edd_customermeta';
-				$customers_table = $this->table_name;
-
-				$join  .= " LEFT JOIN $meta_table ON $customers_table.id = $meta_table.customer_id";
-				$where .= $wpdb->prepare( " AND ( ( `meta_key` = 'additional_email' AND `meta_value` = %s ) OR `email` = %s )", $args['email'], $args['email'] );
-			}
+	/**
+	 * Retrieves the value of the last_changed cache key for customers.
+	 *
+	 * @access public
+	 * @since  2.8
+	 */
+	public function get_last_changed() {
+		if ( function_exists( 'wp_cache_get_last_changed' ) ) {
+			return wp_cache_get_last_changed( $this->cache_group );
 		}
 
-		// specific customers by name
-		if( ! empty( $args['name'] ) ) {
-			$where .= $wpdb->prepare( " AND `name` LIKE '%%%%" . '%s' . "%%%%' ", $args['name'] );
+		$last_changed = wp_cache_get( 'last_changed', $this->cache_group );
+		if ( ! $last_changed ) {
+			$last_changed = microtime();
+			wp_cache_set( 'last_changed', $last_changed, $this->cache_group );
 		}
 
-		// Customers created for a specific date or in a date range
-		if( ! empty( $args['date'] ) ) {
-
-			if( is_array( $args['date'] ) ) {
-
-				if( ! empty( $args['date']['start'] ) ) {
-
-					$start = date( 'Y-m-d 00:00:00', strtotime( $args['date']['start'] ) );
-					$where .= " AND `date_created` >= '{$start}'";
-
-				}
-
-				if( ! empty( $args['date']['end'] ) ) {
-
-					$end = date( 'Y-m-d 23:59:59', strtotime( $args['date']['end'] ) );
-					$where .= " AND `date_created` <= '{$end}'";
-
-				}
-
-			} else {
-
-				$year  = date( 'Y', strtotime( $args['date'] ) );
-				$month = date( 'm', strtotime( $args['date'] ) );
-				$day   = date( 'd', strtotime( $args['date'] ) );
-
-				$where .= " AND $year = YEAR ( date_created ) AND $month = MONTH ( date_created ) AND $day = DAY ( date_created )";
-			}
-
-		}
-
-		$cache_key = md5( 'edd_customers_count' . serialize( $args ) );
-
-		$count = wp_cache_get( $cache_key, 'customers' );
-
-		if( $count === false ) {
-			$query = "SELECT COUNT($this->primary_key) FROM " . $this->table_name . "{$join} {$where};";
-			$count = $wpdb->get_var( $query);
-			wp_cache_set( $cache_key, $count, 'customers', 3600 );
-		}
-
-		return absint( $count );
-
+		return $last_changed;
 	}
 
 	/**

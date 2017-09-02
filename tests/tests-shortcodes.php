@@ -130,6 +130,9 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 		update_post_meta( $this->_payment_id, '_edd_payment_user_id', $user->ID );
 
 		$this->_payment_key = $purchase_data['purchase_key'];
+
+		// Remove the account pending filter to only show once in a thread
+		remove_filter( 'edd_allow_template_part_account_pending', 'edd_load_verification_template_once', 10, 1 );
 	}
 
 	public function tearDown() {
@@ -287,6 +290,14 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 		edd_set_user_to_pending( $this->_user_id );
 
 		$this->assertContains( '<p class="edd-account-pending">', edd_profile_editor_shortcode( array() ) );
+	}
+
+	public function test_profile_pending_single_load() {
+		add_filter( 'edd_allow_template_part_account_pending', 'edd_load_verification_template_once', 10, 1 );
+		edd_set_user_to_pending( $this->_user_id );
+		$this->assertContains( '<p class="edd-account-pending">', edd_profile_editor_shortcode( array() ) );
+		$this->assertEmpty( edd_profile_editor_shortcode( array() ) );
+		remove_filter( 'edd_allow_template_part_account_pending', 'edd_load_verification_template_once', 10, 1 );
 	}
 
 	public function test_downloads_shortcode_pagination() {

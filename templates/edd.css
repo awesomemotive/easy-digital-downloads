@@ -381,7 +381,7 @@
 #edd_checkout_form_wrap span.card-type.amex {
 	background: url(images/icons/americanexpress.png ) no-repeat;
 }
-#edd_checkeout_form_wrap .edd-cart-ajax {
+#edd_checkout_form_wrap .edd-cart-ajax {
 	-webkit-box-shadow: none;
 	-moz-box-shadow: none;
 	box-shadow: none;
@@ -701,8 +701,6 @@ table#edd_purchase_receipt_products .edd_bundled_product_name {
 	list-style-type: none;
 	display: inline-table;
 	margin-left: 0;
-}
-#edd_profile_editor_form .edd-profile-emails {
 	margin-bottom: 0;
 }
 #edd_profile_editor_form .edd-profile-email {
@@ -824,6 +822,10 @@ input[type="submit"].edd-submit:focus,
 }
 .edd-submit.plain {
 	padding: 0;
+	border: none;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
 }
 
 /** Gray (Default) */
@@ -972,6 +974,11 @@ input[type="submit"].edd-submit:focus,
 
 /* =Downloads Shortcode
 -------------------------------------------------------------- */
+.edd_downloads_list:after {
+	content: "";
+	display: table;
+	clear: both;
+}
 .edd_download {
 	float: left;
 }
@@ -986,13 +993,22 @@ input[type="submit"].edd-submit:focus,
 	padding: 0 8px 8px;
 	margin: 0 0 10px;
 }
+.edd_download_columns_2 .edd_download:nth-child(2n+1),
+.edd_download_columns_3 .edd_download:nth-child(3n+1),
+.edd_download_columns_4 .edd_download:nth-child(4n+1),
+.edd_download_columns_5 .edd_download:nth-child(5n+1),
+.edd_download_columns_6 .edd_download:nth-child(6n+1) {
+	clear: left;
+}
 .edd_download_image {
 	max-width: 100%;
 }
 .edd_download .edd_price {
 	margin-bottom: 10px;
 }
-
+#edd_download_pagination {
+	clear: both;
+}
 
 /* =Misc styles
 -------------------------------------------------------------- */

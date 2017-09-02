@@ -580,46 +580,8 @@ function edd_downloads_query( $atts, $content = null ) {
 		ob_start(); ?>
 		<div class="edd_downloads_list <?php echo apply_filters( 'edd_downloads_list_wrapper_class', $wrapper_class, $atts ); ?>">
 			<?php while ( $downloads->have_posts() ) : $downloads->the_post(); ?>
-				<?php $schema = edd_add_schema_microdata() ? 'itemscope itemtype="http://schema.org/Product" ' : ''; ?>
-				<div <?php echo $schema; ?>class="<?php echo apply_filters( 'edd_download_class', 'edd_download', get_the_ID(), $atts, $i ); ?>" id="edd_download_<?php echo get_the_ID(); ?>">
-					<div class="edd_download_inner">
-						<?php
-
-						do_action( 'edd_download_before' );
-
-						if ( 'false' != $atts['thumbnails'] ) :
-							edd_get_template_part( 'shortcode', 'content-image' );
-							do_action( 'edd_download_after_thumbnail' );
-						endif;
-
-						edd_get_template_part( 'shortcode', 'content-title' );
-						do_action( 'edd_download_after_title' );
-
-						if ( $atts['excerpt'] == 'yes' && $atts['full_content'] != 'yes' ) {
-							edd_get_template_part( 'shortcode', 'content-excerpt' );
-							do_action( 'edd_download_after_content' );
-						} else if ( $atts['full_content'] == 'yes' ) {
-							edd_get_template_part( 'shortcode', 'content-full' );
-							do_action( 'edd_download_after_content' );
-						}
-
-						if ( $atts['price'] == 'yes' ) {
-							edd_get_template_part( 'shortcode', 'content-price' );
-							do_action( 'edd_download_after_price' );
-						}
-
-						if ( $atts['buy_button'] == 'yes' )
-							edd_get_template_part( 'shortcode', 'content-cart-button' );
-
-						do_action( 'edd_download_after' );
-
-						?>
-					</div>
-				</div>
-				<?php if ( $atts['columns'] != 0 && $i % $atts['columns'] == 0 ) { ?><div style="clear:both;"></div><?php } ?>
+				<?php do_action( 'edd_download_shortcode_item', $atts, $i ); ?>
 			<?php $i++; endwhile; ?>
-
-			<div style="clear:both;"></div>
 
 			<?php wp_reset_postdata(); ?>
 
@@ -750,6 +712,13 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 		return $login_form;
 	}
 
+	$user_can_view = apply_filters( 'edd_user_can_view_receipt', $user_can_view, $edd_receipt_args );
+
+	// If this was a guest checkout and the purchase session is empty, output a relevant error message
+	if ( empty( $session ) && ! is_user_logged_in() && ! $user_can_view ) {
+		return '<p class="edd-alert edd-alert-error">' . apply_filters( 'edd_receipt_guest_error_message', __( 'Receipt could not be retrieved, your purchase session has expired.', 'easy-digital-downloads' ) ) . '</p>';
+	}
+
 	/*
 	 * Check if the user has permission to view the receipt
 	 *
@@ -762,7 +731,7 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	 */
 
 
-	if ( ! apply_filters( 'edd_user_can_view_receipt', $user_can_view, $edd_receipt_args ) ) {
+	if ( ! $user_can_view ) {
 		return '<p class="edd-alert edd-alert-error">' . $edd_receipt_args['error'] . '</p>';
 	}
 

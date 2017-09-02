@@ -56,7 +56,6 @@ class Tests_Tools extends EDD_UnitTestCase {
 		$this->assertContains( 'PHP Version', $system_info );
 		$this->assertContains( 'MySQL Version', $system_info );
 		$this->assertContains( 'Webserver Info', $system_info );
-		$this->assertContains( 'Safe Mode', $system_info );
 		$this->assertContains( 'Memory Limit', $system_info );
 		$this->assertContains( 'Upload Max Size', $system_info );
 		$this->assertContains( 'Post Max Size', $system_info );

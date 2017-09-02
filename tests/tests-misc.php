@@ -57,6 +57,19 @@ class Test_Misc extends EDD_UnitTestCase {
 		$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 	}
 
+	public function test_get_ip_reverse_proxies() {
+		$_SERVER['HTTP_X_FORWARDED_FOR'] = '123.123.123.123, 10.0.0.2';
+		$this->assertEquals( '123.123.123.123', edd_get_ip() );
+		unset($_SERVER['HTTP_X_FORWARDED_FOR']);
+	}
+
+	public function test_get_ip_reverse_proxy() {
+		$_SERVER['HTTP_X_FORWARDED_FOR'] = '123.123.123.123';
+		$this->assertEquals( '123.123.123.123', edd_get_ip() );
+		unset($_SERVER['HTTP_X_FORWARDED_FOR']);
+	}
+
+
 	public function test_get_currencies() {
 		$expected = array(
 			'USD'  => __( 'US Dollars (&#36;)', 'easy-digital-downloads' ),
@@ -85,7 +98,8 @@ class Test_Misc extends EDD_UnitTestCase {
 			'INR'  => __( 'Indian Rupee (&#8377;)', 'easy-digital-downloads' ),
 			'TRY'  => __( 'Turkish Lira (&#8378;)', 'easy-digital-downloads' ),
 			'RIAL' => __( 'Iranian Rial (&#65020;)', 'easy-digital-downloads' ),
-			'RUB'  => __( 'Russian Rubles', 'easy-digital-downloads' )
+			'RUB'  => __( 'Russian Rubles', 'easy-digital-downloads' ),
+			'AOA'  => __( 'Angolan Kwanza', 'easy-digital-downloads' ),
 		);
 
 		$this->assertEquals( $expected, edd_get_currencies() );
@@ -156,7 +170,7 @@ class Test_Misc extends EDD_UnitTestCase {
 			'CU' => 'Cuba',
 			'CW' => 'Cura&Ccedil;ao',
 			'CY' => 'Cyprus',
-			'CZ' => 'Czech Republic',
+			'CZ' => 'Czechia',
 			'DK' => 'Denmark',
 			'DJ' => 'Djibouti',
 			'DM' => 'Dominica',
@@ -447,6 +461,32 @@ class Test_Misc extends EDD_UnitTestCase {
 		$this->assertEquals( $expected, edd_get_provinces_list() );
 	}
 
+	public function test_angola_provinces_list() {
+		$expected = array(
+			''    => '',
+			'BGO' => 'Bengo',
+			'BGU' => 'Benguela',
+			'BIE' => 'Bié',
+			'CAB' => 'Cabinda',
+			'CNN' => 'Cunene',
+			'HUA' => 'Huambo',
+			'HUI' => 'Huíla',
+			'CCU' => 'Kuando Kubango', // Cuando Cubango
+			'CNO' => 'Kwanza-Norte', // Cuanza Norte
+			'CUS' => 'Kwanza-Sul', // Cuanza Sul
+			'LUA' => 'Luanda',
+			'LNO' => 'Lunda-Norte', // Lunda Norte
+			'LSU' => 'Lunda-Sul', // Lunda Sul
+			'MAL' => 'Malanje', // Malanje
+			'MOX' => 'Moxico',
+			'NAM' => 'Namibe',
+			'UIG' => 'Uíge',
+			'ZAI' => 'Zaire'
+		);
+
+		$this->assertSame( $expected, edd_get_angola_provinces_list() );
+	}
+
 	public function test_month_num_to_name() {
 		$this->assertEquals( 'Jan', edd_month_num_to_name( 1 ) );
 	}
@@ -494,7 +534,7 @@ class Test_Misc extends EDD_UnitTestCase {
 
 		$updated = edd_update_option( $key, $value );
 
-		// The option should have succesfully updated
+		// The option should have successfully updated
 		$this->assertTrue( $updated );
 
 		// The option retrieve should be equal to the one we set
@@ -660,5 +700,54 @@ class Test_Misc extends EDD_UnitTestCase {
 		$payments_array = edd_object_to_array( $payments );
 		$this->assertInternalType( 'array', $payments_array[0] );
 		$this->assertEquals( 2, count( $payments_array ) );
+	}
+
+	// Test getting currency symols:
+	function test_gbp_symbol() {
+		$this->assertEquals( '&pound;', edd_currency_symbol( 'GBP' ) );
+	}
+
+	function test_brl_symbol() {
+		$this->assertEquals( 'R&#36;', edd_currency_symbol( 'BRL' ) );
+	}
+
+	function test_us_dollar_symbol() {
+		$this->assertEquals( '&#36;', edd_currency_symbol( 'USD' ) );
+	}
+
+	function test_au_dollar_symbol() {
+		$this->assertEquals( '&#36;', edd_currency_symbol( 'AUD' ) );
+	}
+
+	function test_nz_dollar_symbol() {
+		$this->assertEquals( '&#36;', edd_currency_symbol( 'NZD' ) );
+	}
+
+	function test_ca_dollar_symbol() {
+		$this->assertEquals( '&#36;', edd_currency_symbol( 'CAD' ) );
+	}
+
+	function test_hk_dollar_symbol() {
+		$this->assertEquals( '&#36;', edd_currency_symbol( 'HKD' ) );
+	}
+
+	function test_mx_dollar_symbol() {
+		$this->assertEquals( '&#36;', edd_currency_symbol( 'MXN' ) );
+	}
+
+	function test_sg_dollar_symbol() {
+		$this->assertEquals( '&#36;', edd_currency_symbol( 'SGD' ) );
+	}
+
+	function test_yen_symbol() {
+		$this->assertEquals( '&yen;', edd_currency_symbol( 'JPY' ) );
+	}
+
+	function test_aoa_symbol() {
+		$this->assertEquals( 'Kz', edd_currency_symbol( 'AOA' ) );
+	}
+
+	function test_default_symbol() {
+		$this->assertEquals( 'CZK', edd_currency_symbol( 'CZK' ) );
 	}
 }
