@@ -54,8 +54,26 @@ class EDD_HTML_Elements {
 			'post_type'      => 'download',
 			'orderby'        => 'title',
 			'order'          => 'ASC',
-			'posts_per_page' => $args['number']
+			'posts_per_page' => $args['number'],
 		);
+
+		if ( ! current_user_can( 'edit_products' ) ) {
+			$product_args['post_status'] = apply_filters( 'edd_product_dropdown_status_nopriv', array( 'publish' ) );
+		} else {
+			$product_args['post_status'] = apply_filters( 'edd_product_dropdown_status', array( 'publish', 'draft', 'private', 'future' ) );
+		}
+
+		if ( is_array( $product_args['post_status'] ) ) {
+
+			// Given the array, sanitize them.
+			$product_args['post_status'] = array_map( 'sanitize_text_field', $product_args['post_status'] );
+
+		} else {
+
+			// If we didn't get an array, fallback to 'publish'.
+			$product_args['post_status'] = array( 'publish' );
+
+		}
 
 		// Maybe disable bundles
 		if( ! $args['bundles'] ) {
@@ -68,6 +86,8 @@ class EDD_HTML_Elements {
 				)
 			);
 		}
+
+		$product_args = apply_filters( 'edd_product_dropdown_args', $product_args );
 
 		$products     = get_posts( $product_args );
 		$existing_ids = wp_list_pluck( $products, 'ID' );
