@@ -653,7 +653,7 @@ function edd_email_tag_first_name( $payment_id ) {
 		return '';
 	}
 
-	$email_name   = edd_get_email_names( $user_info );
+	$email_name   = edd_get_email_names( $user_info, $payment );
 
 	return $email_name['name'];
 }
@@ -674,7 +674,7 @@ function edd_email_tag_fullname( $payment_id ) {
 		return '';
 	}
 
-	$email_name   = edd_get_email_names( $user_info );
+	$email_name   = edd_get_email_names( $user_info, $payment );
 	return $email_name['fullname'];
 }
 
@@ -694,7 +694,7 @@ function edd_email_tag_username( $payment_id ) {
 		return '';
 	}
 
-	$email_name   = edd_get_email_names( $user_info );
+	$email_name   = edd_get_email_names( $user_info, $payment );
 	return $email_name['username'];
 }
 
