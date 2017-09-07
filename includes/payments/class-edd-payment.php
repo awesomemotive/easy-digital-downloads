@@ -1197,8 +1197,12 @@ class EDD_Payment {
 
 		$download = new EDD_Download( $download_id );
 
-		// Bail if this post isn't a download
-		if( ! $download || $download->post_type !== 'download' ) {
+		/**
+		 * Bail if this post isn't a download post type.
+		 *
+		 * We need to allow this to process though for a missing post ID, in case it's a download that was deleted.
+		 */
+		if( ! empty( $download->ID ) && $download->post_type !== 'download' ) {
 			return false;
 		}
 
