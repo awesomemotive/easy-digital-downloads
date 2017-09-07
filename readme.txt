@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.4
 Tested up to: 4.9
-Stable Tag: 2.8.4
+Stable Tag: 2.8.5
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -212,6 +212,23 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+
+= 2.8.5, September 7, 2017 =
+
+* Fix: The Product Dropdown helper function included products in the trash.
+* Fix: Deleted products could not be removed from payments.
+* Fix: Incorrect cookie name was being used for the 'rememberme' option.
+* Fix: Incorrect pagination was being used when viewing sales logs.
+* Fix: Possible issue parsing headers when accessing via WP Rest API.
+* Fix: Improved security of EDD_Session.
+* New: Added a filter to the "Agree to Terms" markup.
+* New: Added support for Angola (country, municipalities, and currency).
+* New: Increased the width of the discount amount field when adding or editing discounts.
+* New: Added ability to filter sales by email address in WP-CLI.
+* Tweak: Updated form styling for login and register forms.
+* Tweak: Removed clearing divs from the [downloads] shortcode.
+* Tweak: Added inline docs for edd_payment_meta filter.
+* Tweak: Ensure EDD_Cart:get_discounts() return type is consistent.
 
 = 2.8.4, August 16, 2017 =
 
@@ -560,7 +577,7 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 * New: Allow exporting the file download history of a specific product.
 * New: Add action after discount is added to the cart.
 * New: Add action hook called "edd_payment_saved" for when EDD_Payment::save() is run.
-* New: Add "author" paramater support to [downloads] shortcode with support for username or ID.
+* New: Add "author" parameter support to [downloads] shortcode with support for username or ID.
 * Tweak: Correct branding of necessary assets.
 * Tweak: Block self-pings in tracking check-ins.
 * Tweak: Update author and author URI to Easy Digital Downloads.
@@ -917,7 +934,7 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 
 * New: Added refund() method to EDD_Payment class
 * New: Added filters to enable/disable product and customer stat adjustments during refunds
-* New: Addded new hooks to EDD_Payment class that run before payment is setup
+* New: Added new hooks to EDD_Payment class that run before payment is setup
 * Tweak: Improved taxonomy labels for categories and tags
 * Tweak: Automatically flush permalinks when a 404 is detected on EDD archive pages
 * Tweak: Add proper 403 headers to REST API

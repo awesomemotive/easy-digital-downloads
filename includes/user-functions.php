@@ -481,14 +481,8 @@ function edd_add_past_purchases_to_new_user( $user_id ) {
 				continue; // This payment already associated with an account
 			}
 
-			$meta                    = edd_get_payment_meta( $payment->ID );
-			$meta['user_info']       = maybe_unserialize( $meta['user_info'] );
-			$meta['user_info']['id'] = $user_id;
-			$meta['user_info']       = $meta['user_info'];
-
-			// Store the updated user ID in the payment meta
-			edd_update_payment_meta( $payment->ID, '_edd_payment_meta', $meta );
-			edd_update_payment_meta( $payment->ID, '_edd_payment_user_id', $user_id );
+			$payment->user_id = $user_id;
+			$payment->save();
 		}
 	}
 
