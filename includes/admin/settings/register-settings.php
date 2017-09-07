@@ -749,14 +749,6 @@ function edd_get_registered_settings() {
 						'tooltip_title' => __( 'Cart Saving', 'easy-digital-downloads' ),
 						'tooltip_desc'  => __( 'Cart saving allows shoppers to create a temporary link to their current shopping cart so they can come back to it later, or share it with someone.', 'easy-digital-downloads' ),
 					),
-					'require_credit_card' => array(
-						'id'   => 'require_credit_card',
-						'name' => __( 'Require Credit Card', 'easy-digital-downloads' ),
-						'desc' => __( 'Check this to require credit card info, even for carts with no cost.', 'easy-digital-downloads' ),
-						'type' => 'checkbox',
-						'tooltip_title' => __( 'Require Credit Card', 'easy-digital-downloads' ),
-						'tooltip_desc'  => __( 'Requiring credit card info is useful when a recurring subscription is purchased, with a discount code for 100% off the first payment.', 'easy-digital-downloads' ),
-					),
 				),
 				'button_text' => array(
 					'button_settings' => array(

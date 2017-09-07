@@ -592,6 +592,6 @@ function edd_purchase_form_validate_cc_exp_date( $exp_month, $exp_year ) {
  * @access public
  * @return bool
  */
-function edd_is_credit_card_required() {
-	return edd_get_option( 'require_credit_card', false );
+function edd_is_payment_info_required() {
+	return apply_filters( 'edd_require_payment_info', false );
 }
