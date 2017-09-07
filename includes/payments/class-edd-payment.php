@@ -876,6 +876,7 @@ class EDD_Payment {
 
 					case 'user_id':
 						$this->update_meta( '_edd_payment_user_id', $this->user_id );
+						$this->user_info['id'] = $this->user_id;
 						break;
 
 					case 'first_name':
@@ -1801,6 +1802,13 @@ class EDD_Payment {
 
 		$meta = apply_filters( 'edd_get_payment_meta_' . $meta_key, $meta, $this->ID );
 
+		if ( is_serialized( $meta ) ) {
+			preg_match( '/[oO]\s*:\s*\d+\s*:\s*"\s*(?!(?i)(stdClass))/', $meta, $matches );
+			if ( ! empty( $matches ) ) {
+				$meta = array();
+			}
+		}
+
 		return apply_filters( 'edd_get_payment_meta', $meta, $this->ID, $meta_key );
 	}
 
@@ -2352,8 +2360,17 @@ class EDD_Payment {
 			'discount'   => $this->discounts,
 		);
 
-		$user_info    = isset( $this->payment_meta['user_info'] ) ? maybe_unserialize( $this->payment_meta['user_info'] ) : array();
-		$user_info    = wp_parse_args( $user_info, $defaults );
+		$user_info    = isset( $this->payment_meta['user_info'] ) ? $this->payment_meta['user_info'] : array();
+
+		if ( is_serialized( $user_info ) ) {
+			preg_match( '/[oO]\s*:\s*\d+\s*:\s*"\s*(?!(?i)(stdClass))/', $user_info, $matches );
+			if ( ! empty( $matches ) ) {
+				$user_info = array();
+			}
+		}
+
+		// As per Github issue #4248, we need to run maybe_unserialize here still.
+		$user_info    = wp_parse_args( maybe_unserialize( $user_info ), $defaults );
 
 		// Ensure email index is in the old user info array
 		if( empty( $user_info['email'] ) ) {

@@ -215,26 +215,67 @@ function edd_get_default_sale_notification_email() {
  *
  * @since 1.9
  * @param $user_info
+ * @param $payment   EDD_Payment for getting the names
  *
  * @return array $email_names
  */
-function edd_get_email_names( $user_info ) {
+function edd_get_email_names( $user_info, $payment = false ) {
 	$email_names = array();
-	$user_info 	= maybe_unserialize( $user_info );
-
 	$email_names['fullname'] = '';
-	if ( isset( $user_info['id'] ) && $user_info['id'] > 0 && isset( $user_info['first_name'] ) ) {
-		$user_data = get_userdata( $user_info['id'] );
-		$email_names['name']      = $user_info['first_name'];
-		$email_names['fullname']  = $user_info['first_name'] . ' ' . $user_info['last_name'];
-		$email_names['username']  = $user_data->user_login;
-	} elseif ( isset( $user_info['first_name'] ) ) {
-		$email_names['name']     = $user_info['first_name'];
-		$email_names['fullname'] = $user_info['first_name'] . ' ' . $user_info['last_name'];
-		$email_names['username'] = $user_info['first_name'];
+
+	if ( $payment instanceof EDD_Payment ) {
+
+		if ( $payment->user_id > 0 ) {
+
+			$user_data = get_userdata( $payment->user_id );
+			$email_names['name']      = $payment->first_name;
+			$email_names['fullname']  = trim( $payment->first_name . ' ' . $payment->last_name );
+			$email_names['username']  = $user_data->user_login;
+
+		} elseif ( ! empty( $payment->first_name ) ) {
+
+			$email_names['name']     = $payment->first_name;
+			$email_names['fullname'] = trim( $payment->first_name . ' ' . $payment->last_name );
+			$email_names['username'] = $payment->first_name;
+
+		} else {
+
+			$email_names['name']     = $payment->email;
+			$email_names['username'] = $payment->email;
+
+		}
+
 	} else {
-		$email_names['name']     = $user_info['email'];
-		$email_names['username'] = $user_info['email'];
+
+		if ( is_serialized( $user_info ) ) {
+
+			preg_match( '/[oO]\s*:\s*\d+\s*:\s*"\s*(?!(?i)(stdClass))/', $user_info, $matches );
+			if ( ! empty( $matches ) ) {
+				return array(
+					'name'     => '',
+					'fullname' => '',
+					'username' => '',
+				);
+			} else {
+				$user_info = maybe_unserialize( $user_info );
+			}
+
+		}
+
+		if ( isset( $user_info['id'] ) && $user_info['id'] > 0 && isset( $user_info['first_name'] ) ) {
+			$user_data = get_userdata( $user_info['id'] );
+			$email_names['name']      = $user_info['first_name'];
+			$email_names['fullname']  = $user_info['first_name'] . ' ' . $user_info['last_name'];
+			$email_names['username']  = $user_data->user_login;
+		} elseif ( isset( $user_info['first_name'] ) ) {
+			$email_names['name']     = $user_info['first_name'];
+			$email_names['fullname'] = $user_info['first_name'] . ' ' . $user_info['last_name'];
+			$email_names['username'] = $user_info['first_name'];
+		} else {
+			$email_names['name']     = $user_info['email'];
+			$email_names['username'] = $user_info['email'];
+		}
+
 	}
 
 	return $email_names;

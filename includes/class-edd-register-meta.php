@@ -379,7 +379,14 @@ class EDD_Register_Meta {
 			}
 
 			if ( is_serialized( $value ) ) {
+
+				preg_match( '/[oO]\s*:\s*\d+\s*:\s*"\s*(?!(?i)(stdClass))/', $value, $matches );
+				if ( ! empty( $matches ) ) {
+					return false;
+				}
+
 				$value = (array) maybe_unserialize( $value );
+
 			}
 
 		}
