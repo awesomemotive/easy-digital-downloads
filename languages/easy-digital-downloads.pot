@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.8.4\n"
+"Project-Id-Version: Easy Digital Downloads 2.8.5\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2017-08-16 18:16:38+00:00\n"
+"POT-Creation-Date: 2017-09-07 22:01:41+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -89,16 +89,16 @@ msgstr ""
 #: includes/admin/upgrades/upgrade-functions.php:1098
 #: includes/api/class-edd-api.php:1988 includes/api/class-edd-api.php:1993
 #: includes/api/class-edd-api.php:2005 includes/api/class-edd-api.php:2007
-#: includes/cart/class-edd-cart.php:1467 includes/cart/class-edd-cart.php:1481
+#: includes/cart/class-edd-cart.php:1468 includes/cart/class-edd-cart.php:1482
 #: includes/class-edd-license-handler.php:307
 #: includes/deprecated-functions.php:517 includes/deprecated-functions.php:532
 #: includes/deprecated-functions.php:542 includes/download-functions.php:1248
-#: includes/emails/actions.php:53 includes/emails/template.php:245
+#: includes/emails/actions.php:53 includes/emails/template.php:243
 #: includes/error-tracking.php:40 includes/gateways/functions.php:221
 #: includes/gateways/manual.php:33 includes/gateways/paypal-standard.php:155
 #: includes/process-download.php:284 includes/process-download.php:817
-#: includes/query-filters.php:48 includes/user-functions.php:878
-#: includes/user-functions.php:903 includes/user-functions.php:956
+#: includes/query-filters.php:48 includes/user-functions.php:872
+#: includes/user-functions.php:897 includes/user-functions.php:950
 msgid "Error"
 msgstr ""
 
@@ -420,7 +420,7 @@ msgstr ""
 #: includes/admin/discounts/class-discount-codes-table.php:145
 #: includes/admin/discounts/edit-discount.php:37
 #: includes/admin/downloads/dashboard-columns.php:31
-#: includes/admin/payments/view-order-details.php:648
+#: includes/admin/payments/view-order-details.php:660
 #: includes/admin/reporting/class-export-customers.php:76
 #: includes/admin/reporting/export/class-batch-export-customers.php:43
 #: includes/admin/reporting/export/class-batch-export-downloads.php:44
@@ -488,7 +488,7 @@ msgid "An error has occured. Please try again."
 msgstr ""
 
 #: includes/admin/customers/customer-actions.php:207
-#: includes/user-functions.php:903
+#: includes/user-functions.php:897
 msgid "Nonce verification failed."
 msgstr ""
 
@@ -569,7 +569,7 @@ msgid "Invalid Customer ID Provided."
 msgstr ""
 
 #: includes/admin/customers/customers.php:116
-#: includes/admin/payments/view-order-details.php:601
+#: includes/admin/payments/view-order-details.php:613
 msgid "Customer Details"
 msgstr ""
 
@@ -640,9 +640,9 @@ msgstr ""
 
 #: includes/admin/customers/customers.php:328
 #: includes/admin/customers/customers.php:610
-#: includes/admin/payments/view-order-details.php:639
-#: includes/admin/payments/view-order-details.php:659
-#: includes/admin/thickbox.php:132 includes/class-edd-html-elements.php:768
+#: includes/admin/payments/view-order-details.php:651
+#: includes/admin/payments/view-order-details.php:671
+#: includes/admin/thickbox.php:132 includes/class-edd-html-elements.php:788
 msgid "Cancel"
 msgstr ""
 
@@ -668,7 +668,7 @@ msgstr ""
 
 #: includes/admin/customers/customers.php:378
 #: includes/admin/payments/class-payments-table.php:262
-#: includes/admin/payments/view-order-details.php:652
+#: includes/admin/payments/view-order-details.php:664
 #: includes/admin/reporting/class-export-customers.php:68
 #: includes/admin/reporting/class-export-customers.php:79
 #: includes/admin/reporting/class-export-payments.php:63
@@ -681,10 +681,10 @@ msgstr ""
 #: includes/admin/customers/customers.php:379
 #: includes/admin/customers/customers.php:438
 #: includes/admin/customers/customers.php:471
-#: includes/admin/payments/view-order-details.php:510
-#: includes/admin/payments/view-order-details.php:573
-#: includes/admin/payments/view-order-details.php:636
-#: includes/admin/payments/view-order-details.php:656
+#: includes/admin/payments/view-order-details.php:522
+#: includes/admin/payments/view-order-details.php:585
+#: includes/admin/payments/view-order-details.php:648
+#: includes/admin/payments/view-order-details.php:668
 #: templates/checkout_cart.php:13
 msgid "Actions"
 msgstr ""
@@ -699,7 +699,7 @@ msgstr ""
 #: includes/admin/downloads/metabox.php:642
 #: includes/admin/downloads/metabox.php:698
 #: includes/admin/downloads/metabox.php:823
-#: includes/admin/payments/view-order-details.php:478
+#: includes/admin/payments/view-order-details.php:490
 #: includes/admin/settings/register-settings.php:2003 includes/scripts.php:224
 #: templates/checkout_cart.php:57 templates/checkout_cart.php:75
 #: templates/shortcode-profile-editor.php:123
@@ -1449,7 +1449,7 @@ msgstr ""
 #: includes/admin/downloads/dashboard-columns.php:34
 #: includes/admin/downloads/dashboard-columns.php:286
 #: includes/admin/downloads/metabox.php:456
-#: includes/admin/payments/view-order-details.php:498
+#: includes/admin/payments/view-order-details.php:510
 #: includes/admin/reporting/export/class-batch-export-downloads.php:52
 #: templates/shortcode-receipt.php:130
 msgid "Price"
@@ -1679,7 +1679,7 @@ msgstr ""
 
 #: includes/admin/downloads/metabox.php:1017
 #: includes/admin/settings/register-settings.php:719
-#: includes/admin/thickbox.php:59 includes/checkout/template.php:886
+#: includes/admin/thickbox.php:59 includes/checkout/template.php:891
 #: includes/shortcodes.php:49 includes/template-functions.php:67
 msgid "Purchase"
 msgstr ""
@@ -2166,7 +2166,7 @@ msgid "Fees"
 msgstr ""
 
 #: includes/admin/payments/view-order-details.php:175
-#: includes/admin/payments/view-order-details.php:506
+#: includes/admin/payments/view-order-details.php:518
 #: includes/admin/reporting/class-export-payments.php:75
 #: includes/admin/reporting/export/class-batch-export-payments.php:56
 #: includes/admin/tools.php:627 templates/checkout_cart.php:120
@@ -2259,88 +2259,96 @@ msgstr ""
 msgid "View all purchases of customer"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:475
-msgid "Copy Download Link(s)"
+#: includes/admin/payments/view-order-details.php:422
+msgid "Deleted"
+msgstr ""
+
+#: includes/admin/payments/view-order-details.php:424
+msgid "%s deleted"
 msgstr ""
 
 #: includes/admin/payments/view-order-details.php:487
+msgid "Copy Download Link(s)"
+msgstr ""
+
+#: includes/admin/payments/view-order-details.php:499
 msgid "No %s included with this purchase"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:495
-#: includes/admin/payments/view-order-details.php:575
+#: includes/admin/payments/view-order-details.php:507
+#: includes/admin/payments/view-order-details.php:587
 msgid "Add New %s"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:500
+#: includes/admin/payments/view-order-details.php:512
 msgid " & Quantity"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:614
+#: includes/admin/payments/view-order-details.php:626
 msgid "Assign to another customer"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:616
+#: includes/admin/payments/view-order-details.php:628
 msgid "New Customer"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:622
+#: includes/admin/payments/view-order-details.php:634
 msgid "Select a customer"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:628
-#: includes/class-edd-html-elements.php:212
+#: includes/admin/payments/view-order-details.php:640
+#: includes/class-edd-html-elements.php:232
 msgid "Type to search all Customers"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:642
+#: includes/admin/payments/view-order-details.php:654
 msgid "Click \"Save Payment\" to change the customer"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:662
+#: includes/admin/payments/view-order-details.php:674
 msgid "Click \"Save Payment\" to create new customer"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:677
+#: includes/admin/payments/view-order-details.php:689
 #: includes/checkout/template.php:347
 msgid "Billing Address"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:687
+#: includes/admin/payments/view-order-details.php:699
 msgid "Street Address Line 1:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:691
+#: includes/admin/payments/view-order-details.php:703
 msgid "Street Address Line 2:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:720
+#: includes/admin/payments/view-order-details.php:732
 #: includes/admin/settings/register-settings.php:311
 msgid "Select a country"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:723
+#: includes/admin/payments/view-order-details.php:735
 msgid "Type to search all Countries"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:741
+#: includes/admin/payments/view-order-details.php:753
 #: includes/admin/settings/register-settings.php:319
 msgid "Select a state"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:744
+#: includes/admin/payments/view-order-details.php:756
 msgid "Type to search all States/Provinces"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:765
+#: includes/admin/payments/view-order-details.php:777
 msgid "Payment Notes"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:780
+#: includes/admin/payments/view-order-details.php:792
 msgid "No payment notes"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:786
+#: includes/admin/payments/view-order-details.php:798
 msgid "Add Note"
 msgstr ""
 
@@ -3864,7 +3872,7 @@ msgid "The button label for completing a free purchase."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:726
-#: includes/checkout/template.php:889
+#: includes/checkout/template.php:894
 msgid "Free Download"
 msgstr ""
 
@@ -4764,16 +4772,16 @@ msgstr ""
 msgid "Step %d of approximately %d running"
 msgstr ""
 
-#: includes/ajax-functions.php:570 includes/ajax-functions.php:622
+#: includes/ajax-functions.php:583 includes/ajax-functions.php:635
 msgid "No results found"
 msgstr ""
 
-#: includes/ajax-functions.php:671 includes/ajax-functions.php:763
-#: includes/class-edd-html-elements.php:307
+#: includes/ajax-functions.php:684 includes/ajax-functions.php:776
+#: includes/class-edd-html-elements.php:327
 msgid "No users found"
 msgstr ""
 
-#: includes/ajax-functions.php:713
+#: includes/ajax-functions.php:726
 msgid "All Prices"
 msgstr ""
 
@@ -4831,27 +4839,27 @@ msgstr ""
 msgid "No download logs found!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1952 includes/user-functions.php:1038
+#: includes/api/class-edd-api.php:1952 includes/user-functions.php:1032
 msgid "Easy Digital Downloads API Keys"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1961 includes/user-functions.php:1043
+#: includes/api/class-edd-api.php:1961 includes/user-functions.php:1037
 msgid "Generate API Key"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1963 includes/user-functions.php:1045
+#: includes/api/class-edd-api.php:1963 includes/user-functions.php:1039
 msgid "Public key:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1964 includes/user-functions.php:1046
+#: includes/api/class-edd-api.php:1964 includes/user-functions.php:1040
 msgid "Secret key:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1965 includes/user-functions.php:1047
+#: includes/api/class-edd-api.php:1965 includes/user-functions.php:1041
 msgid "Token:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1967 includes/user-functions.php:1049
+#: includes/api/class-edd-api.php:1967 includes/user-functions.php:1043
 msgid "Revoke API Keys"
 msgstr ""
 
@@ -4863,32 +4871,32 @@ msgstr ""
 msgid "You do not have permission to %s API keys for this user"
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:908
+#: includes/cart/class-edd-cart.php:909
 msgid "includes %s tax"
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:910
+#: includes/cart/class-edd-cart.php:911
 msgid "excludes %s tax"
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1430 includes/cart/class-edd-cart.php:1493
+#: includes/cart/class-edd-cart.php:1431 includes/cart/class-edd-cart.php:1494
 #: templates/shortcode-profile-editor.php:22
 msgid "Success"
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1431
+#: includes/cart/class-edd-cart.php:1432
 msgid "Cart saved successfully. You can restore your cart using this URL:"
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1467 includes/cart/class-edd-cart.php:1481
+#: includes/cart/class-edd-cart.php:1468 includes/cart/class-edd-cart.php:1482
 msgid "Cart restoration failed. Invalid token."
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1475 includes/cart/class-edd-cart.php:1484
+#: includes/cart/class-edd-cart.php:1476 includes/cart/class-edd-cart.php:1485
 msgid "The cart cannot be restored. Invalid token."
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1493
+#: includes/cart/class-edd-cart.php:1494
 msgid "Cart restored successfully."
 msgstr ""
 
@@ -5139,23 +5147,23 @@ msgstr ""
 msgid "Agree to Terms?"
 msgstr ""
 
-#: includes/checkout/template.php:781
+#: includes/checkout/template.php:783
 msgid "Show Terms"
 msgstr ""
 
-#: includes/checkout/template.php:782
+#: includes/checkout/template.php:784
 msgid "Hide Terms"
 msgstr ""
 
-#: includes/checkout/template.php:803
+#: includes/checkout/template.php:808
 msgid "Purchase Total:"
 msgstr ""
 
-#: includes/checkout/template.php:829
+#: includes/checkout/template.php:834
 msgid "Go back"
 msgstr ""
 
-#: includes/checkout/template.php:852
+#: includes/checkout/template.php:857
 msgid "Next"
 msgstr ""
 
@@ -5311,7 +5319,7 @@ msgstr ""
 msgid "%d customers created in %d seconds"
 msgstr ""
 
-#: includes/class-edd-cli.php:328 includes/class-edd-html-elements.php:230
+#: includes/class-edd-cli.php:328 includes/class-edd-html-elements.php:250
 msgid "No customers found"
 msgstr ""
 
@@ -5319,8 +5327,8 @@ msgstr ""
 msgid "Customer User ID: %s"
 msgstr ""
 
-#: includes/class-edd-cli.php:335 includes/user-functions.php:565
-#: includes/user-functions.php:574
+#: includes/class-edd-cli.php:335 includes/user-functions.php:559
+#: includes/user-functions.php:568
 msgid "Username: %s"
 msgstr ""
 
@@ -5396,7 +5404,7 @@ msgstr ""
 msgid "  Product: %s - %s"
 msgstr ""
 
-#: includes/class-edd-cli.php:444 includes/class-edd-html-elements.php:368
+#: includes/class-edd-cli.php:444 includes/class-edd-html-elements.php:388
 #: includes/shortcodes.php:270
 msgid "No discounts found"
 msgstr ""
@@ -5526,27 +5534,27 @@ msgstr ""
 msgid "Type to search all %s"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:208
+#: includes/class-edd-html-elements.php:228
 msgid "Select a Customer"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:225
+#: includes/class-edd-html-elements.php:245
 msgid "No customer attached"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:285
+#: includes/class-edd-html-elements.php:305
 msgid "Select a User"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:289
+#: includes/class-edd-html-elements.php:309
 msgid "Type to search all Users"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:376
+#: includes/class-edd-html-elements.php:396
 msgid "Select a discount"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:753
+#: includes/class-edd-html-elements.php:773
 msgid "Enter username"
 msgstr ""
 
@@ -5673,211 +5681,211 @@ msgstr ""
 msgid "Improper date provided."
 msgstr ""
 
-#: includes/country-functions.php:1569
+#: includes/country-functions.php:1604
 msgid "A Coru&ntilde;a"
 msgstr ""
 
-#: includes/country-functions.php:1570
+#: includes/country-functions.php:1605
 msgid "Araba"
 msgstr ""
 
-#: includes/country-functions.php:1571
+#: includes/country-functions.php:1606
 msgid "Albacete"
 msgstr ""
 
-#: includes/country-functions.php:1572
+#: includes/country-functions.php:1607
 msgid "Alicante"
 msgstr ""
 
-#: includes/country-functions.php:1573
+#: includes/country-functions.php:1608
 msgid "Almer&iacute;a"
 msgstr ""
 
-#: includes/country-functions.php:1574
+#: includes/country-functions.php:1609
 msgid "Asturias"
 msgstr ""
 
-#: includes/country-functions.php:1575
+#: includes/country-functions.php:1610
 msgid "&Aacute;vila"
 msgstr ""
 
-#: includes/country-functions.php:1576
+#: includes/country-functions.php:1611
 msgid "Badajoz"
 msgstr ""
 
-#: includes/country-functions.php:1577
+#: includes/country-functions.php:1612
 msgid "Baleares"
 msgstr ""
 
-#: includes/country-functions.php:1578
+#: includes/country-functions.php:1613
 msgid "Barcelona"
 msgstr ""
 
-#: includes/country-functions.php:1579
+#: includes/country-functions.php:1614
 msgid "Burgos"
 msgstr ""
 
-#: includes/country-functions.php:1580
+#: includes/country-functions.php:1615
 msgid "C&aacute;ceres"
 msgstr ""
 
-#: includes/country-functions.php:1581
+#: includes/country-functions.php:1616
 msgid "C&aacute;diz"
 msgstr ""
 
-#: includes/country-functions.php:1582
+#: includes/country-functions.php:1617
 msgid "Cantabria"
 msgstr ""
 
-#: includes/country-functions.php:1583
+#: includes/country-functions.php:1618
 msgid "Castell&oacute;n"
 msgstr ""
 
-#: includes/country-functions.php:1584
+#: includes/country-functions.php:1619
 msgid "Ceuta"
 msgstr ""
 
-#: includes/country-functions.php:1585
+#: includes/country-functions.php:1620
 msgid "Ciudad Real"
 msgstr ""
 
-#: includes/country-functions.php:1586
+#: includes/country-functions.php:1621
 msgid "C&oacute;rdoba"
 msgstr ""
 
-#: includes/country-functions.php:1587
+#: includes/country-functions.php:1622
 msgid "Cuenca"
 msgstr ""
 
-#: includes/country-functions.php:1588
+#: includes/country-functions.php:1623
 msgid "Girona"
 msgstr ""
 
-#: includes/country-functions.php:1589
+#: includes/country-functions.php:1624
 msgid "Granada"
 msgstr ""
 
-#: includes/country-functions.php:1590
+#: includes/country-functions.php:1625
 msgid "Guadalajara"
 msgstr ""
 
-#: includes/country-functions.php:1591
+#: includes/country-functions.php:1626
 msgid "Gipuzkoa"
 msgstr ""
 
-#: includes/country-functions.php:1592
+#: includes/country-functions.php:1627
 msgid "Huelva"
 msgstr ""
 
-#: includes/country-functions.php:1593
+#: includes/country-functions.php:1628
 msgid "Huesca"
 msgstr ""
 
-#: includes/country-functions.php:1594
+#: includes/country-functions.php:1629
 msgid "Ja&eacute;n"
 msgstr ""
 
-#: includes/country-functions.php:1595
+#: includes/country-functions.php:1630
 msgid "La Rioja"
 msgstr ""
 
-#: includes/country-functions.php:1596
+#: includes/country-functions.php:1631
 msgid "Las Palmas"
 msgstr ""
 
-#: includes/country-functions.php:1597
+#: includes/country-functions.php:1632
 msgid "Le&oacute;n"
 msgstr ""
 
-#: includes/country-functions.php:1598
+#: includes/country-functions.php:1633
 msgid "Lleida"
 msgstr ""
 
-#: includes/country-functions.php:1599
+#: includes/country-functions.php:1634
 msgid "Lugo"
 msgstr ""
 
-#: includes/country-functions.php:1600
+#: includes/country-functions.php:1635
 msgid "Madrid"
 msgstr ""
 
-#: includes/country-functions.php:1601
+#: includes/country-functions.php:1636
 msgid "M&aacute;laga"
 msgstr ""
 
-#: includes/country-functions.php:1602
+#: includes/country-functions.php:1637
 msgid "Melilla"
 msgstr ""
 
-#: includes/country-functions.php:1603
+#: includes/country-functions.php:1638
 msgid "Murcia"
 msgstr ""
 
-#: includes/country-functions.php:1604
+#: includes/country-functions.php:1639
 msgid "Navarra"
 msgstr ""
 
-#: includes/country-functions.php:1605
+#: includes/country-functions.php:1640
 msgid "Ourense"
 msgstr ""
 
-#: includes/country-functions.php:1606
+#: includes/country-functions.php:1641
 msgid "Palencia"
 msgstr ""
 
-#: includes/country-functions.php:1607
+#: includes/country-functions.php:1642
 msgid "Pontevedra"
 msgstr ""
 
-#: includes/country-functions.php:1608
+#: includes/country-functions.php:1643
 msgid "Salamanca"
 msgstr ""
 
-#: includes/country-functions.php:1609
+#: includes/country-functions.php:1644
 msgid "Santa Cruz de Tenerife"
 msgstr ""
 
-#: includes/country-functions.php:1610
+#: includes/country-functions.php:1645
 msgid "Segovia"
 msgstr ""
 
-#: includes/country-functions.php:1611
+#: includes/country-functions.php:1646
 msgid "Sevilla"
 msgstr ""
 
-#: includes/country-functions.php:1612
+#: includes/country-functions.php:1647
 msgid "Soria"
 msgstr ""
 
-#: includes/country-functions.php:1613
+#: includes/country-functions.php:1648
 msgid "Tarragona"
 msgstr ""
 
-#: includes/country-functions.php:1614
+#: includes/country-functions.php:1649
 msgid "Teruel"
 msgstr ""
 
-#: includes/country-functions.php:1615
+#: includes/country-functions.php:1650
 msgid "Toledo"
 msgstr ""
 
-#: includes/country-functions.php:1616
+#: includes/country-functions.php:1651
 msgid "Valencia"
 msgstr ""
 
-#: includes/country-functions.php:1617
+#: includes/country-functions.php:1652
 msgid "Valladolid"
 msgstr ""
 
-#: includes/country-functions.php:1618
+#: includes/country-functions.php:1653
 msgid "Bizkaia"
 msgstr ""
 
-#: includes/country-functions.php:1619
+#: includes/country-functions.php:1654
 msgid "Zamora"
 msgstr ""
 
-#: includes/country-functions.php:1620
+#: includes/country-functions.php:1655
 msgid "Zaragoza"
 msgstr ""
 
@@ -6047,31 +6055,31 @@ msgstr ""
 msgid "New Sale!"
 msgstr ""
 
-#: includes/emails/functions.php:199 includes/emails/template.php:214
+#: includes/emails/functions.php:199 includes/emails/template.php:212
 msgid "Hello"
 msgstr ""
 
-#: includes/emails/functions.php:199 includes/emails/template.php:214
+#: includes/emails/functions.php:199 includes/emails/template.php:212
 msgid "A %s purchase has been made"
 msgstr ""
 
-#: includes/emails/functions.php:200 includes/emails/template.php:215
+#: includes/emails/functions.php:200 includes/emails/template.php:213
 msgid "%s sold:"
 msgstr ""
 
-#: includes/emails/functions.php:202 includes/emails/template.php:217
+#: includes/emails/functions.php:202 includes/emails/template.php:215
 msgid "Purchased by: "
 msgstr ""
 
-#: includes/emails/functions.php:203 includes/emails/template.php:218
+#: includes/emails/functions.php:203 includes/emails/template.php:216
 msgid "Amount: "
 msgstr ""
 
-#: includes/emails/functions.php:204 includes/emails/template.php:219
+#: includes/emails/functions.php:204 includes/emails/template.php:217
 msgid "Payment Method: "
 msgstr ""
 
-#: includes/emails/functions.php:205 includes/emails/template.php:220
+#: includes/emails/functions.php:205 includes/emails/template.php:218
 msgid "Thank you"
 msgstr ""
 
@@ -6099,11 +6107,11 @@ msgstr ""
 msgid "Send Test Email"
 msgstr ""
 
-#: includes/emails/template.php:245
+#: includes/emails/template.php:243
 msgid "Missing purchase key."
 msgstr ""
 
-#: includes/emails/template.php:260
+#: includes/emails/template.php:258
 msgid "Receipt"
 msgstr ""
 
@@ -6651,25 +6659,29 @@ msgstr ""
 msgid "Russian Rubles"
 msgstr ""
 
-#: includes/misc-functions.php:518
-msgid ""
-"%1$s is <strong>deprecated</strong> since Easy Digital Downloads version "
-"%2$s! Use %3$s instead."
+#: includes/misc-functions.php:333 tests/tests-misc.php:102
+msgid "Angolan Kwanza"
 msgstr ""
 
 #: includes/misc-functions.php:522
 msgid ""
 "%1$s is <strong>deprecated</strong> since Easy Digital Downloads version "
+"%2$s! Use %3$s instead."
+msgstr ""
+
+#: includes/misc-functions.php:526
+msgid ""
+"%1$s is <strong>deprecated</strong> since Easy Digital Downloads version "
 "%2$s with no alternative available."
 msgstr ""
 
-#: includes/misc-functions.php:559
+#: includes/misc-functions.php:563
 msgid ""
 "The %1$s argument of %2$s is <strong>deprecated</strong> since Easy Digital "
 "Downloads version %3$s! Please use %4$s instead."
 msgstr ""
 
-#: includes/misc-functions.php:563
+#: includes/misc-functions.php:567
 msgid ""
 "The %1$s argument of %2$s is <strong>deprecated</strong> since Easy Digital "
 "Downloads version %3$s with no alternative available."
@@ -7287,31 +7299,31 @@ msgstr ""
 msgid "Purchase All Items"
 msgstr ""
 
-#: includes/shortcodes.php:675
+#: includes/shortcodes.php:672
 msgid "Sorry, trouble retrieving payment receipt."
 msgstr ""
 
-#: includes/shortcodes.php:710
+#: includes/shortcodes.php:707
 msgid "You must be logged in to view this payment receipt."
 msgstr ""
 
-#: includes/shortcodes.php:722
+#: includes/shortcodes.php:719
 msgid "Receipt could not be retrieved, your purchase session has expired."
 msgstr ""
 
-#: includes/shortcodes.php:852
+#: includes/shortcodes.php:849
 msgid "The passwords you entered do not match. Please try again."
 msgstr ""
 
-#: includes/shortcodes.php:862
+#: includes/shortcodes.php:859
 msgid "The email you entered is invalid. Please enter a valid email."
 msgstr ""
 
-#: includes/shortcodes.php:867
+#: includes/shortcodes.php:864
 msgid "The email you entered belongs to another user. Please use another."
 msgstr ""
 
-#: includes/shortcodes.php:942
+#: includes/shortcodes.php:939
 msgid "Error removing email address from profile. Please try again later."
 msgstr ""
 
@@ -7375,51 +7387,51 @@ msgstr ""
 msgid "Plain Text"
 msgstr ""
 
-#: includes/user-functions.php:563
+#: includes/user-functions.php:557
 msgid "[%s] New User Registration"
 msgstr ""
 
-#: includes/user-functions.php:564
+#: includes/user-functions.php:558
 msgid "New user registration"
 msgstr ""
 
-#: includes/user-functions.php:566
+#: includes/user-functions.php:560
 msgid "E-mail: %s"
 msgstr ""
 
-#: includes/user-functions.php:572
+#: includes/user-functions.php:566
 msgid "[%s] Your username and password"
 msgstr ""
 
-#: includes/user-functions.php:573
+#: includes/user-functions.php:567
 msgid "Your account info"
 msgstr ""
 
-#: includes/user-functions.php:577
+#: includes/user-functions.php:571
 msgid "Password entered at checkout"
 msgstr ""
 
-#: includes/user-functions.php:579
+#: includes/user-functions.php:573
 msgid "Password entered at registration"
 msgstr ""
 
-#: includes/user-functions.php:582
+#: includes/user-functions.php:576
 msgid "Password: %s"
 msgstr ""
 
-#: includes/user-functions.php:586
+#: includes/user-functions.php:580
 msgid "Click here to log in"
 msgstr ""
 
-#: includes/user-functions.php:590
+#: includes/user-functions.php:584
 msgid "To log in, visit: %s"
 msgstr ""
 
-#: includes/user-functions.php:746 includes/user-functions.php:747
+#: includes/user-functions.php:740 includes/user-functions.php:741
 msgid "Verify your account"
 msgstr ""
 
-#: includes/user-functions.php:749
+#: includes/user-functions.php:743
 msgid ""
 "Hello %s,\n"
 "\n"
@@ -7429,33 +7441,33 @@ msgid ""
 "Link missing? Visit the following URL: %s"
 msgstr ""
 
-#: includes/user-functions.php:874
+#: includes/user-functions.php:868
 msgid ""
 "Sorry but your account verification link has expired. <a href=\"%s\">Click "
 "here</a> to request a new verification URL."
 msgstr ""
 
-#: includes/user-functions.php:907
+#: includes/user-functions.php:901
 msgid "You must be logged in to verify your account."
 msgstr ""
 
-#: includes/user-functions.php:907 includes/user-functions.php:911
+#: includes/user-functions.php:901 includes/user-functions.php:905
 msgid "Notice"
 msgstr ""
 
-#: includes/user-functions.php:911
+#: includes/user-functions.php:905
 msgid "Your account has already been verified."
 msgstr ""
 
-#: includes/user-functions.php:956
+#: includes/user-functions.php:950
 msgid "Invalid verification token provided."
 msgstr ""
 
-#: includes/user-functions.php:1061
+#: includes/user-functions.php:1055
 msgid "Easy Digital Downloads <a href=\"%s\">iOS App</a>"
 msgstr ""
 
-#: includes/user-functions.php:1068
+#: includes/user-functions.php:1062
 msgid "Add to iOS App"
 msgstr ""
 
@@ -7763,62 +7775,62 @@ msgctxt "payment details purchased item total - full screen"
 msgid "%s Total"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:438
+#: includes/admin/payments/view-order-details.php:450
 msgctxt "payment details purchased item price - mobile"
 msgid "Price"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:440
+#: includes/admin/payments/view-order-details.php:452
 msgctxt "payment details purchased item quantity - mobile"
 msgid " & Quantity"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:455
+#: includes/admin/payments/view-order-details.php:467
 msgctxt "payment details purchased item tax - mobile"
 msgid "Tax"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:464
+#: includes/admin/payments/view-order-details.php:476
 msgctxt "payment details purchased item total - mobile"
 msgid "%s Total"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:518
+#: includes/admin/payments/view-order-details.php:530
 msgctxt "payment details select item to add - mobile"
 msgid "Select New %s To Add"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:530
+#: includes/admin/payments/view-order-details.php:542
 msgctxt "payment details add item price - mobile"
 msgid "Price"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:532
+#: includes/admin/payments/view-order-details.php:544
 msgctxt "payment details add item quantity - mobile"
 msgid " & Quantity"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:556
+#: includes/admin/payments/view-order-details.php:568
 msgctxt "payment details add item tax - mobile"
 msgid "Tax"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:698
+#: includes/admin/payments/view-order-details.php:710
 msgctxt "Address City"
 msgid "City:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:703
+#: includes/admin/payments/view-order-details.php:715
 msgctxt "Zip / Postal code of address"
 msgid "Zip / Postal Code:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:710
+#: includes/admin/payments/view-order-details.php:722
 msgctxt "Address country"
 msgid "Country:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:729
+#: includes/admin/payments/view-order-details.php:741
 msgctxt "State / province of address"
 msgid "State / Province:"
 msgstr ""
@@ -7848,17 +7860,17 @@ msgctxt "error for when a discount is invalid based on its configuration"
 msgid "This discount is invalid."
 msgstr ""
 
-#: includes/class-edd-html-elements.php:404
+#: includes/class-edd-html-elements.php:424
 msgctxt "plural: Example: \"All Categories\""
 msgid "All %s"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:494
+#: includes/class-edd-html-elements.php:514
 msgctxt "all dropdown items"
 msgid "All"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:495
+#: includes/class-edd-html-elements.php:515
 msgctxt "no dropdown items"
 msgid "None"
 msgstr ""
@@ -7868,7 +7880,7 @@ msgctxt "download post type name"
 msgid "%2$s"
 msgstr ""
 
-#: includes/shortcodes.php:628
+#: includes/shortcodes.php:625
 msgctxt "download post type name"
 msgid "No %s found"
 msgstr ""
