@@ -85,6 +85,7 @@ function edd_update_option( $key = '', $value = false ) {
  * @return boolean True if removed, false if not.
  */
 function edd_delete_option( $key = '' ) {
+	global $edd_options;
 
 	// If no key, exit
 	if ( empty( $key ) ){
@@ -98,6 +99,13 @@ function edd_delete_option( $key = '' ) {
 	if( isset( $options[ $key ] ) ) {
 
 		unset( $options[ $key ] );
+
+	}
+
+	// Remove this option from the global EDD settings to the array_merge in edd_settings_sanitize() doesn't re-add it.
+	if( isset( $edd_options[ $key ] ) ) {
+
+		unset( $edd_options[ $key ] );
 
 	}
 
