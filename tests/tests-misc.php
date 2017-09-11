@@ -750,4 +750,11 @@ class Test_Misc extends EDD_UnitTestCase {
 	function test_default_symbol() {
 		$this->assertEquals( 'CZK', edd_currency_symbol( 'CZK' ) );
 	}
+
+	function test_edd_delete_option() {
+		edd_update_option( 'test_setting', 'testing' );
+		edd_delete_option( 'test_setting' );
+
+		$this->assertFalse( edd_get_option( 'test_setting' ) );
+	}
 }
