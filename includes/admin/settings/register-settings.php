@@ -101,14 +101,14 @@ function edd_delete_option( $key = '' ) {
 		unset( $options[ $key ] );
 
 	}
-/*
+
 	// Remove this option from the global EDD settings to the array_merge in edd_settings_sanitize() doesn't re-add it.
 	if( isset( $edd_options[ $key ] ) ) {
 
 		unset( $edd_options[ $key ] );
 
 	}
-*/
+
 	$did_update = update_option( 'edd_settings', $options );
 
 	// If it updated, let's update the global variable
