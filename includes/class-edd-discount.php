@@ -1181,6 +1181,12 @@ class EDD_Discount {
 	 * @return mixed bool|int false if data isn't passed and class not instantiated for creation, or post ID for the new discount.
 	 */
 	public function add( $args ) {
+
+		// If no code is provided, return early with false
+		if ( empty( $args['code'] ) ) {
+			return false;
+		}
+
 		$meta = $this->build_meta( $args );
 
 		if ( ! empty( $this->ID ) && $this->exists() ) {

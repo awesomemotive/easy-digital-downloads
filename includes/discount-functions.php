@@ -186,7 +186,10 @@ function edd_store_discount( $details, $discount_id = null ) {
 	if ( null == $discount_id ) {
 		$discount = new EDD_Discount;
 		$discount->add( $details );
-		return $discount->ID;
+
+		if ( ! empty( $discount->ID ) ) {
+			return $discount->ID;
+		}
 	} else {
 		$discount = new EDD_Discount( $discount_id );
 		$discount->update( $details );
