@@ -98,6 +98,14 @@ class EDD_Payment {
 	protected $tax = 0;
 
 	/**
+	 * The amount the payment has been discounted through discount codes
+	 *
+	 * @since 2.8.7
+	 * @var int
+	 */
+	protected $discounted_amount = 0;
+
+	/**
 	 * The tax rate charged on this payment
 	 *
 	 * @since 2.7
@@ -2564,6 +2572,20 @@ class EDD_Payment {
 	 */
 	private function get_discounts() {
 		return apply_filters( 'edd_payment_discounts', $this->discounts, $this->ID, $this );
+	}
+
+	/**
+	 * Return the discounted amount of the payment.
+	 *
+	 * @since 2.8.7
+	 * @return float
+	 */
+	private function get_discounted_amount() {
+		$total = $this->total;
+		$fees  = $this->fees_total;
+		$tax   = $this->tax;
+
+		return floatval( apply_filter( 'edd_payment_discounted_amount', $total - ( $fees + $tax ), $this ) );
 	}
 
 	/**
