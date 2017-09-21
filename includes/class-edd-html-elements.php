@@ -89,14 +89,27 @@ class EDD_HTML_Elements {
 
 		$product_args = apply_filters( 'edd_product_dropdown_args', $product_args );
 
+		// Since it's possible to have selected items not within the queried limit, we need to include the selected items.
 		$products     = get_posts( $product_args );
 		$existing_ids = wp_list_pluck( $products, 'ID' );
 		if ( ! empty( $args['selected'] ) ) {
-			$selected_item = absint( $args['selected'] );
-			if ( ! in_array( $selected_item, $existing_ids ) ) {
-				$post       = get_post( $selected_item );
-				$products[] = $post;
+
+			$selected_items = $args['selected'];
+			if ( ! is_array( $selected_items ) ) {
+				$selected_items = array( absint( $selected_items ) );
+			} else {
+				$selected_items = array_map( 'absint', $selected_items );
 			}
+
+			foreach ( $selected_items as $selected_item ) {
+				if ( ! in_array( $selected_item, $existing_ids ) ) {
+					$post       = get_post( $selected_item );
+					if ( ! is_null( $post ) ) {
+						$products[] = $post;
+					}
+				}
+			}
+
 		}
 
 		$options    = array();
