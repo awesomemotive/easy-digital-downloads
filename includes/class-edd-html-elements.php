@@ -96,13 +96,18 @@ class EDD_HTML_Elements {
 
 			$selected_items = $args['selected'];
 			if ( ! is_array( $selected_items ) ) {
-				$selected_items = array( absint( $selected_items ) );
-			} else {
-				$selected_items = array_map( 'absint', $selected_items );
+				$selected_items = array( $selected_items );
 			}
 
 			foreach ( $selected_items as $selected_item ) {
 				if ( ! in_array( $selected_item, $existing_ids ) ) {
+
+					// If the selected item has a variation, we just need the product ID.
+					$has_variation = strpos( $selected_item, '_' );
+					if ( false !== $has_variation ) {
+						$selected_item = substr( $selected_item, 0, $has_variation );
+					}
+
 					$post       = get_post( $selected_item );
 					if ( ! is_null( $post ) ) {
 						$products[] = $post;
