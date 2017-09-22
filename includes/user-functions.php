@@ -126,15 +126,21 @@ function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
 	}
 
 	// Get all the items purchased
+	$limit_payments = apply_filters( 'edd_users_purchased_products_payments', 9999 );
 	$payment_ids    = array_reverse( explode( ',', $customer->payment_ids ) );
-	$limit_payments = apply_filters( 'edd_users_purchased_products_payments', 50 );
-	if ( ! empty( $limit_payments ) ) {
-		$payment_ids = array_slice( $payment_ids, 0, $limit_payments );
-	}
+	$payment_args   = array(
+		'output'   => 'payments',
+		'post__in' => $payment_ids,
+		'status'   => $status,
+		'number'   => $limit_payments,
+	);
+	$payments_query = new EDD_Payments_Query( $payment_args );
+	$payments       = $payments_query->get_payments();
+
 	$purchase_data  = array();
 
-	foreach ( $payment_ids as $payment_id ) {
-		$purchase_data[] = edd_get_payment_meta_downloads( $payment_id );
+	foreach ( $payments as $payment ) {
+		$purchase_data[] = $payment->downloads;
 	}
 
 	if ( empty( $purchase_data ) ) {

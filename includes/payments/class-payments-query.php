@@ -99,7 +99,8 @@ class EDD_Payments_Query extends EDD_Stats {
 			'children'        => false,
 			'fields'          => null,
 			'download'        => null,
-			'gateway'         => null
+			'gateway'         => null,
+			'post__in'        => null,
 		);
 
 		// We need to store an array of the args used to instantiate the class, so that we can use it in later hooks.
@@ -173,6 +174,7 @@ class EDD_Payments_Query extends EDD_Stats {
 		$this->mode();
 		$this->children();
 		$this->download();
+		$this->post__in();
 
 		do_action( 'edd_pre_get_payments', $this );
 
@@ -395,6 +397,21 @@ class EDD_Payments_Query extends EDD_Stats {
 			'key'   => '_edd_payment_gateway',
 			'value' => $this->args['gateway']
 		) );
+	}
+
+	/**
+	 * Specific payments
+	 *
+	 * @access  public
+	 * @since   2.8.7
+	 * @return  void
+	 */
+	public function post__in() {
+		if ( is_null( $this->args['post__in'] ) ) {
+			return;
+		}
+
+		$this->__set( 'post__in', $this->args['post__in'] );
 	}
 
 	/**
