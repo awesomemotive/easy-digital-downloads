@@ -141,10 +141,15 @@ function edd_process_download() {
 		$file_details = parse_url( $requested_file );
 		$schemes      = array( 'http', 'https' ); // Direct URL schemes
 
+		$supported_streams = stream_get_wrappers();
+		if ( isset( $file_details['scheme'] ) && ! in_array( $file_details['scheme'], $supported_streams ) ) {
+			wp_die( __( 'Error downloading file. Please contact support.', 'easy-digital-downloads' ), __( 'File download error', 'easy-digital-downloads' ), 501 );
+		}
+
 		if ( ( ! isset( $file_details['scheme'] ) || ! in_array( $file_details['scheme'], $schemes ) ) && isset( $file_details['path'] ) && file_exists( $requested_file ) ) {
 
 			/**
-			 * Download method is seto to Redirect in settings but an absolute path was provided
+			 * Download method is set to Redirect in settings but an absolute path was provided
 			 * We need to switch to a direct download in order for the file to download properly
 			 */
 			$method = 'direct';
