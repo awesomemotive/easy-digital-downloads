@@ -751,6 +751,14 @@ class Test_Misc extends EDD_UnitTestCase {
 		$this->assertEquals( 'CZK', edd_currency_symbol( 'CZK' ) );
 	}
 
+	function test_country_name_blank() {
+		$this->assertSame( '', edd_get_country_name( '' ) );
+	}
+
+	function test_country_name_us() {
+		$this->assertSame( 'United States', edd_get_country_name( 'US' ) );
+	}
+
 	function test_edd_delete_option() {
 		edd_update_option( 'test_setting', 'testing' );
 		edd_delete_option( 'test_setting' );
