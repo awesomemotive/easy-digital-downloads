@@ -73,6 +73,11 @@ function edd_get_tools_tabs() {
 	}
 
 	$tabs['system_info']   = __( 'System Info', 'easy-digital-downloads' );
+	
+	if( edd_is_debug_mode() ) {
+		$tabs['debug_log'] = __( 'Debug Log', 'easy-digital-downloads' );
+	}
+
 	$tabs['import_export'] = __( 'Import/Export', 'easy-digital-downloads' );
 
 	return apply_filters( 'edd_tools_tabs', $tabs );
@@ -1054,6 +1059,78 @@ function edd_tools_import_export_process_import() {
 }
 add_action( 'edd_import_settings', 'edd_tools_import_export_process_import' );
 
+
+/**
+ * Display the debug log tab
+ *
+ * @since       2.8.7
+ * @return      void
+ */
+function edd_tools_debug_log_display() {
+
+	global $edd_logs;
+
+	if( ! current_user_can( 'manage_shop_settings' ) || ! edd_is_debug_mode() ) {
+		return;
+	}
+
+?>
+	<div class="postbox">
+		<h3><span><?php esc_html_e( 'Debug Log', 'easy-digital-downloads' ); ?></span></h3>
+		<div class="inside">
+			<form id="edd-debug-log" method="post">
+				<p><?php _e( 'Use this tool to help debug Easy Digital Downloads functionality. Developers may use the <a href="#">EDD_Logging class</a> to record debug data.', 'easy-digital-downloads' ); ?></p>
+				<textarea readonly="readonly" onclick="this.focus(); this.select()" class="large-text" rows="15" name="edd-debug-log-contents"><?php echo esc_textarea( $edd_logs->get_file_contents() ); ?></textarea>
+				<p class="submit">
+					<input type="hidden" name="edd_action" value="submit_debug_log" />
+					<?php
+					submit_button( __( 'Download Debug Log File', 'easy-digital-downloads' ), 'primary', 'edd-download-debug-log', false );
+					submit_button( __( 'Clear Log', 'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-clear-debug-log', false  );
+					?>
+				</p>
+				<?php wp_nonce_field( 'edd-debug-log-action' ); ?>
+			</form>
+		</div><!-- .inside -->
+	</div><!-- .postbox -->
+<?php
+}
+add_action( 'edd_tools_tab_debug_log', 'edd_tools_debug_log_display' );
+
+/**
+ * Handles submit actions for the debug log.
+ *
+ * @since 2.8.7
+ */
+function edd_handle_submit_debug_log() {
+
+	global $edd_logs;
+
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
+	check_admin_referer( 'edd-debug-log-action' );
+
+	if ( isset( $_REQUEST['edd-download-debug-log'] ) ) {
+		nocache_headers();
+
+		header( 'Content-Type: text/plain' );
+		header( 'Content-Disposition: attachment; filename="edd-debug-log.txt"' );
+
+		echo wp_strip_all_tags( $_REQUEST['edd-debug-log-contents'] );
+		exit;
+
+	} elseif ( isset( $_REQUEST['edd-clear-debug-log'] ) ) {
+
+		// Clear the debug log.
+		$edd_logs->clear_log_file();
+
+		wp_safe_redirect( admin_url( 'edit.php?post_type=download&page=edd-tools&tab=debug_log' ) );
+		exit;
+
+	}
+}
+add_action( 'edd_submit_debug_log', 'edd_handle_submit_debug_log' );
 
 /**
  * Display the system info tab
