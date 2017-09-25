@@ -31,13 +31,15 @@ class EDD_Logging {
 	 * @since 1.3.1
 	 */
 	public function __construct() {
+
+		$this->setup_log_file();
+
 		// Create the log post type
 		add_action( 'init', array( $this, 'register_post_type' ), 1 );
 
 		// Create types taxonomy and default types
 		add_action( 'init', array( $this, 'register_taxonomy' ), 1 );
 		
-		add_action( 'init', array( $this, 'setup_log_file' ));
 
 	}
 
