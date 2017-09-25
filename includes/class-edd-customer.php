@@ -156,6 +156,14 @@ class EDD_Customer {
 					$this->$key = $this->get_notes();
 					break;
 
+				case 'purchase_value':
+					$this->$key = floatval( $value );
+					break;
+
+				case 'purchase_count':
+					$this->$key = absint( $value );
+					break;
+
 				default:
 					$this->$key = $value;
 					break;
@@ -650,8 +658,7 @@ class EDD_Customer {
 	 * @return mixed         If successful, the new value, otherwise false
 	 */
 	public function increase_value( $value = 0.00 ) {
-		$value = apply_filters( 'edd_customer_increase_value', $value, $this );
-
+		$value     = floatval( apply_filters( 'edd_customer_increase_value', $value, $this ) );
 		$new_value = floatval( $this->purchase_value ) + $value;
 
 		do_action( 'edd_customer_pre_increase_value', $value, $this->id, $this );
