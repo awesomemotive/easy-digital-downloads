@@ -38,7 +38,9 @@ function edd_add_discount( $data ) {
 		edd_die();
 	}
 
-	if ( ! ctype_alnum( $data['code'] ) ) {
+	// Verify only accepted characters
+	$sanitized = preg_replace('/[^a-zA-Z0-9-_]+/', '', $data['code'] );
+	if ( strtoupper( $data['code'] ) !== strtoupper( $sanitized ) ) {
 		wp_redirect( add_query_arg( 'edd-message', 'discount_invalid_code' ) );
 		edd_die();
 	}

@@ -33,7 +33,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 					<label for="edd-code"><?php _e( 'Code', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input type="text" required="required" id="edd-code" name="code" value="" pattern="[a-zA-Z0-9]+" style="width: 300px;"/>
+					<input type="text" required="required" id="edd-code" name="code" value="" pattern="[a-zA-Z0-9-_]+" style="width: 300px;"/>
 					<p class="description"><?php _e( 'Enter a code for this discount, such as 10PERCENT. Only alphanumeric characters are allowed.', 'easy-digital-downloads' ); ?></p>
 				</td>
 			</tr>
