@@ -596,7 +596,7 @@ function edd_is_func_disabled( $function ) {
  * @author Chris Christoff
  *
  * @param unknown $v
- * @return int|string
+ * @return int
  */
 function edd_let_to_num( $v ) {
 	$l   = substr( $v, -1 );
@@ -614,7 +614,7 @@ function edd_let_to_num( $v ) {
 			break;
 	}
 
-	return $ret;
+	return (int) $ret;
 }
 
 /**
