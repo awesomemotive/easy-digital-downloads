@@ -790,7 +790,7 @@ function edd_get_cart_discounts_html( $discounts = false ) {
 		$discounts = EDD()->cart->get_discounts();
 	}
 
-	if ( ! $discounts ) {
+	if ( empty( $discounts ) ) {
 		return;
 	}
 

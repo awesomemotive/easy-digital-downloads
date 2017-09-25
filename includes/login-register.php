@@ -55,9 +55,7 @@ function edd_register_form( $redirect = '' ) {
 
 	ob_start();
 
-	if( ! is_user_logged_in() ) {
-		edd_get_template_part( 'shortcode', 'register' );
-	}
+	edd_get_template_part( 'shortcode', 'register' );
 
 	return apply_filters( 'edd_register_form', ob_get_clean() );
 }
@@ -81,13 +79,13 @@ function edd_process_login_form( $data ) {
 
 			if ( wp_check_password( $data['edd_user_pass'], $user_data->user_pass, $user_data->ID ) ) {
 
-				if ( isset( $data['remember'] ) ) {
-					$data['remember'] = true;
+				if ( isset( $data['rememberme'] ) ) {
+					$data['rememberme'] = true;
 				} else {
-					$data['remember'] = false;
+					$data['rememberme'] = false;
 				}
 
-				edd_log_user_in( $user_data->ID, $data['edd_user_login'], $data['edd_user_pass'], $data['remember'] );
+				edd_log_user_in( $user_data->ID, $data['edd_user_login'], $data['edd_user_pass'], $data['rememberme'] );
 			} else {
 				edd_set_error( 'password_incorrect', __( 'The password you entered is incorrect', 'easy-digital-downloads' ) );
 			}
