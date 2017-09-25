@@ -877,8 +877,8 @@ function edd_get_total_earnings() {
  * @return float $total Total earnings
  */
 function edd_increase_total_earnings( $amount = 0 ) {
-	$total = edd_get_total_earnings();
-	$total += $amount;
+	$total = floatval( edd_get_total_earnings() );
+	$total += floatval( $amount );
 	update_option( 'edd_earnings_total', $total );
 	return $total;
 }
