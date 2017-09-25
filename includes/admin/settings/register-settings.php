@@ -325,6 +325,7 @@ function edd_get_registered_settings() {
 						'type'        => 'shop_states',
 						'chosen'      => true,
 						'placeholder' => __( 'Select a state', 'easy-digital-downloads' ),
+						'class'       => ( empty( edd_get_shop_states( edd_get_shop_country() ) ) ? 'hidden' : '' ),
 					),
 					'tracking_settings' => array(
 						'id'   => 'tracking_settings',
