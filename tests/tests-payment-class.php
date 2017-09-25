@@ -880,6 +880,7 @@ class Tests_Payment_Class extends EDD_UnitTestCase {
 		$payment = new EDD_Payment( $payment->ID );
 		$this->assertEquals( 1, $payment->cart_details[0]['discount'] );
 		$this->assertEquals( $original_total-1, $payment->cart_details[0]['price'] );
+		$this->assertSame( 1, $payment->discounted_amount );
 	}
 
 	public function modify_cart_item_tax() {
