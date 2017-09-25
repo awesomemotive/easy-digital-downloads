@@ -1670,6 +1670,6 @@ function edd_get_country_name( $country_code = '' ) {
 	$country_list = edd_get_country_list();
 	$country_name = isset( $country_list[ $country_code ] ) ? $country_list[ $country_code ] : $country_code;
 
-	return apply_filters( 'edd_country_label', $country_name, $country_code );
+	return apply_filters( 'edd_get_country_name', $country_name, $country_code );
 }
 
