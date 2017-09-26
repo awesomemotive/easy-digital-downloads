@@ -1680,6 +1680,28 @@ td.edd_order_price {
 	.edd-bundled-product-row .edd-bundled-product-item-reorder .edd-product-file-reorder {
 		padding: 0;
 	}
+
+	#edd-payment-filters span {
+		display: block;
+		margin: 2px 0;
+	}
+
+	#edd-payment-filters input,
+	#edd-payment-filters select,
+	#edd-payment-filters a {
+		width: 100%;
+	}
+
+	#edd-payment-filters a {
+		text-align: center;
+	}
+
+	#edd-payment-date-filters span {
+		display: block;
+	}
+	#edd-payment-date-filters span > input {
+		float: right;
+	}
 }
 
 /* Tools Styles
