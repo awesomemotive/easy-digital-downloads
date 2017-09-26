@@ -437,7 +437,7 @@ class EDD_Logging {
 		$file .= $message;
 		@file_put_contents( $this->file, $file );
 	}
-
+	
 	/**
 	 * Removes all contents in the log file
 	 *
@@ -445,9 +445,33 @@ class EDD_Logging {
 	 * @return void
 	 */
 	public function clear_log_file() {
-		@unlink( $this->file );
-	}
+		@unlink( $this->file);
+		if ( file_exists( $this->file ) ){
+  			 // it's still there, so maybe server doesn't have delete rights
+   			chmod( $this->file, 0664 ); // Try to give the server delete rights
+   			@unlink( $this->file );
 
+  			// See if it's still there
+   			if ( @file_exists( $this->file ) ) {
+       				// if it's still there, then the server has a wierd config
+       				// We will not be able to delete the file, but we can at least do 2 more things
+				if ( is_writeable( $this->file ) {
+          				 file_put_contents( $this->file, '' ); // if it's writeable, blank it out
+        		 	}
+
+         			// Also we should alert the user
+         			return false; // since unlink returns true on success and false on failure, we should detect a false return in the edd settings panel and show a 1 time notice.
+  			 } else {
+                		 // file removed. Set $this->file to null and return success.
+                		 $this->file = '';
+                		 return true;
+ 			}
+		} else {
+                	 // file removed. Set $this->file to null and return success.
+                	 $this->file = '';
+                	 return true;
+ 		}
+	}
 }
 
 // Initiate the logging system
