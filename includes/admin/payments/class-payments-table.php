@@ -148,10 +148,14 @@ class EDD_Payment_History_Table extends WP_List_Table {
 ?>
 		<div id="edd-payment-filters">
 			<span id="edd-payment-date-filters">
-				<label for="start-date"><?php _e( 'Start Date:', 'easy-digital-downloads' ); ?></label>
-				<input type="text" id="start-date" name="start-date" class="edd_datepicker" value="<?php echo $start_date; ?>" placeholder="mm/dd/yyyy"/>
-				<label for="end-date"><?php _e( 'End Date:', 'easy-digital-downloads' ); ?></label>
-				<input type="text" id="end-date" name="end-date" class="edd_datepicker" value="<?php echo $end_date; ?>" placeholder="mm/dd/yyyy"/>
+				<span>
+					<label for="start-date"><?php _e( 'Start Date:', 'easy-digital-downloads' ); ?></label>
+					<input type="text" id="start-date" name="start-date" class="edd_datepicker" value="<?php echo $start_date; ?>" placeholder="mm/dd/yyyy"/>
+				</span>
+				<span>
+					<label for="end-date"><?php _e( 'End Date:', 'easy-digital-downloads' ); ?></label>
+					<input type="text" id="end-date" name="end-date" class="edd_datepicker" value="<?php echo $end_date; ?>" placeholder="mm/dd/yyyy"/>
+				</span>
 			</span>
 			<span id="edd-payment-gateway-filter">
 				<?php
@@ -174,7 +178,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			<?php if( ! empty( $status ) ) : ?>
 				<input type="hidden" name="status" value="<?php echo esc_attr( $status ); ?>"/>
 			<?php endif; ?>
-			<?php if( ! empty( $start_date ) || ! empty( $end_date ) ) : ?>
+			<?php if( ! empty( $start_date ) || ! empty( $end_date ) || 'all' !== $selected_gateway ) : ?>
 				<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>" class="button-secondary"><?php _e( 'Clear Filter', 'easy-digital-downloads' ); ?></a>
 			<?php endif; ?>
 			<?php do_action( 'edd_payment_advanced_filters_row' ); ?>
