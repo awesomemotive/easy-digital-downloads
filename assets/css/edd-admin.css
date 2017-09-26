@@ -347,14 +347,14 @@ tr.status-refunded td {
 	min-width: 80px;
 }
 .edd-file-name {
-	width: 18%;
+	width: 33%;
 	margin-right: 3%;
 }
 .edd-file-url {
-	width: 65%;
+	width: 100%;
 }
 .edd-repeatable-row-standard-fields.has-variable-pricing .edd-file-url {
-	width: 38%;
+	width: 66%;
 	margin-right: 5%;
 }
 .edd-file-assignment {
@@ -444,7 +444,7 @@ label.edd_prices_shipping { /* remove once Simple Shipping markup is improved */
 	padding: 2px 8px 2px;
 	position: absolute;
 	top: 3px;
-	right: 7px;
+	right: 11px;
 }
 .edd_upload_field {
 	padding-right: 8em;

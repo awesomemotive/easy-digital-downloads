@@ -79,13 +79,13 @@ function edd_process_login_form( $data ) {
 
 			if ( wp_check_password( $data['edd_user_pass'], $user_data->user_pass, $user_data->ID ) ) {
 
-				if ( isset( $data['remember'] ) ) {
-					$data['remember'] = true;
+				if ( isset( $data['rememberme'] ) ) {
+					$data['rememberme'] = true;
 				} else {
-					$data['remember'] = false;
+					$data['rememberme'] = false;
 				}
 
-				edd_log_user_in( $user_data->ID, $data['edd_user_login'], $data['edd_user_pass'], $data['remember'] );
+				edd_log_user_in( $user_data->ID, $data['edd_user_login'], $data['edd_user_pass'], $data['rememberme'] );
 			} else {
 				edd_set_error( 'password_incorrect', __( 'The password you entered is incorrect', 'easy-digital-downloads' ) );
 			}

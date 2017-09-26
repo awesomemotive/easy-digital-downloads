@@ -563,6 +563,13 @@ class EDD_Payment {
 			$this->pending['customer_id'] = $this->customer_id;
 			$customer->attach_payment( $this->ID, false );
 
+			/**
+			 * This run of the edd_payment_meta filter is for backwards compatibility purposes. The filter will also run in the EDD_Payment::save
+			 * method. By keeping this here, it retains compatbility of adding payment meta prior to the payment being inserted, as was previously supported
+			 * by edd_insert_payment().
+			 *
+			 * @reference: https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5838
+			 */
 			$this->payment_meta = apply_filters( 'edd_payment_meta', $this->payment_meta, $payment_data );
 			if ( ! empty( $this->payment_meta['fees'] ) ) {
 				$this->fees = array_merge( $this->payment_meta['fees'], $this->fees );
@@ -869,6 +876,7 @@ class EDD_Payment {
 
 					case 'user_id':
 						$this->update_meta( '_edd_payment_user_id', $this->user_id );
+						$this->user_info['id'] = $this->user_id;
 						break;
 
 					case 'first_name':
@@ -1189,8 +1197,12 @@ class EDD_Payment {
 
 		$download = new EDD_Download( $download_id );
 
-		// Bail if this post isn't a download
-		if( ! $download || $download->post_type !== 'download' ) {
+		/**
+		 * Bail if this post isn't a download post type.
+		 *
+		 * We need to allow this to process though for a missing post ID, in case it's a download that was deleted.
+		 */
+		if( ! empty( $download->ID ) && $download->post_type !== 'download' ) {
 			return false;
 		}
 
@@ -1790,6 +1802,13 @@ class EDD_Payment {
 
 		$meta = apply_filters( 'edd_get_payment_meta_' . $meta_key, $meta, $this->ID );
 
+		if ( is_serialized( $meta ) ) {
+			preg_match( '/[oO]\s*:\s*\d+\s*:\s*"\s*(?!(?i)(stdClass))/', $meta, $matches );
+			if ( ! empty( $matches ) ) {
+				$meta = array();
+			}
+		}
+
 		return apply_filters( 'edd_get_payment_meta', $meta, $this->ID, $meta_key );
 	}
 
@@ -2341,8 +2360,17 @@ class EDD_Payment {
 			'discount'   => $this->discounts,
 		);
 
-		$user_info    = isset( $this->payment_meta['user_info'] ) ? maybe_unserialize( $this->payment_meta['user_info'] ) : array();
-		$user_info    = wp_parse_args( $user_info, $defaults );
+		$user_info    = isset( $this->payment_meta['user_info'] ) ? $this->payment_meta['user_info'] : array();
+
+		if ( is_serialized( $user_info ) ) {
+			preg_match( '/[oO]\s*:\s*\d+\s*:\s*"\s*(?!(?i)(stdClass))/', $user_info, $matches );
+			if ( ! empty( $matches ) ) {
+				$user_info = array();
+			}
+		}
+
+		// As per Github issue #4248, we need to run maybe_unserialize here still.
+		$user_info    = wp_parse_args( maybe_unserialize( $user_info ), $defaults );
 
 		// Ensure email index is in the old user info array
 		if( empty( $user_info['email'] ) ) {

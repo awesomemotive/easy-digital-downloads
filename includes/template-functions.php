@@ -51,9 +51,20 @@ function edd_get_purchase_link( $args = array() ) {
 
 	$purchase_page = edd_get_option( 'purchase_page', false );
 	if ( ! $purchase_page || $purchase_page == 0 ) {
+
+		global $no_checkout_error_displayed;
+		if ( ! is_null( $no_checkout_error_displayed ) ) {
+			return false;
+		}
+
+
 		edd_set_error( 'set_checkout', sprintf( __( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings' ) ) );
 		edd_print_errors();
+
+		$no_checkout_error_displayed = true;
+
 		return false;
+
 	}
 
 	$post_id = is_object( $post ) ? $post->ID : 0;
@@ -1112,7 +1123,7 @@ function edd_get_bundle_item_price_id( $bundle_item ) {
  * shortcode's attributes can be passed to the template file via
  * a global variable.
  *
- * @since 2.9.0
+ * @since 2.8.0
  *
  * @param array $atts The [downloads] shortcode attributes.
  * @param int   $i The current item count.

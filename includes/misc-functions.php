@@ -329,7 +329,8 @@ function edd_get_currencies() {
 		'INR'  => __( 'Indian Rupee (&#8377;)', 'easy-digital-downloads' ),
 		'TRY'  => __( 'Turkish Lira (&#8378;)', 'easy-digital-downloads' ),
 		'RIAL' => __( 'Iranian Rial (&#65020;)', 'easy-digital-downloads' ),
-		'RUB'  => __( 'Russian Rubles', 'easy-digital-downloads' )
+		'RUB'  => __( 'Russian Rubles', 'easy-digital-downloads' ),
+		'AOA'  => __( 'Angolan Kwanza', 'easy-digital-downloads' ),
 	);
 
 	return apply_filters( 'edd_currencies', $currencies );
@@ -380,6 +381,9 @@ function edd_currency_symbol( $currency = '' ) {
 			break;
 		case "JPY" :
 			$symbol = '&yen;';
+			break;
+		case "AOA" :
+			$symbol = 'Kz';
 			break;
 		default :
 			$symbol = $currency;
@@ -881,7 +885,7 @@ if ( ! function_exists( 'getallheaders' ) ) :
 	 * @return array
 	 */
 	function getallheaders() {
-		$headers = '';
+		$headers = array();
 		foreach ( $_SERVER as $name => $value ) {
 			if ( substr( $name, 0, 5 ) == 'HTTP_' ) {
 				$headers[ str_replace( ' ', '-', ucwords( strtolower( str_replace( '_', ' ', substr( $name, 5 ) ) ) ) ) ] = $value;

@@ -84,10 +84,6 @@ jQuery(document).ready(function ($) {
 			clone.find( '.chosen-container' ).remove();
 			edd_attach_tooltips(clone.find('.edd-help-tip'));
 
-			// Remove file info links and section
-			clone.find( '.toggle-file-info-section' ).remove();
-			clone.find( '.edd-repeatable-info-sections-wrap.file-info' ).remove();
-
 			// Find any repeatable row actions.
 			var actions_objects = clone.find( '.edd-repeatable-row-actions' ).children();
 
@@ -111,6 +107,14 @@ jQuery(document).ready(function ($) {
 				var button = $( this ),
 				row = button.parent().parent().prev( '.edd_repeatable_row' ),
 				clone = EDD_Download_Configuration.clone_repeatable(row);
+
+				// Remove file info links and section
+				if ( clone.find( '.edd-repeatable-info-sections-wrap.file-info' ).length ) {
+					clone.find( '.edd-file-location' ).remove();
+					clone.find( '.edd-file-type' ).remove();
+					clone.find( '.edd-file-size' ).remove();
+					clone.find( '.edd-download-file-wrapper' ).remove();
+				}
 
 				clone.insertAfter( row ).find('input, textarea, select').filter(':visible').eq(0).focus();
 
@@ -334,7 +338,7 @@ jQuery(document).ready(function ($) {
 								clone = EDD_Download_Configuration.clone_repeatable( row );
 
 							clone.find( '.edd_repeatable_attachment_id_field' ).val( attachment.id );
-							clone.find( 'edd_repeatable_thumbnail_size_field' ).val( selectedSize );
+							clone.find( '.edd_repeatable_thumbnail_size_field' ).val( selectedSize );
 							clone.find( '.edd_repeatable_upload_field' ).val( selectedURL );
 							clone.find( '.edd_repeatable_name_field' ).val( selectedName );
 							clone.insertAfter( row );
