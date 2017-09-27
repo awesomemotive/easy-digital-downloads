@@ -123,6 +123,10 @@ class EDD_Discount_Validator {
 	 *
 	 * @access public
 	 * @since 2.8.7
+	 *
+	 * @param bool $set_error Whether an error message be set in session.
+	 *
+	 * @return bool $validity If the discount can be used or not.
 	 */
 	public function can_be_used( $set_error = true ) {
 		$validity = false;
@@ -142,9 +146,13 @@ class EDD_Discount_Validator {
 	 * Validate discount against download IDs supplied.
 	 *
 	 * @access public
-	 * @since 2.8.7
+	 * @since  2.8.7
+	 *
+	 * @param bool $set_error Whether an error message be set in session.
+	 *
+	 * @return bool $validity If the discount is valid against the download IDs passed.
 	 */
-	public function validate_against_downloads() {
+	public function validate_against_downloads( $set_error = true ) {
 		$product_requirements = $this->discount->get_product_reqs();
 		$excluded_products    = $this->discount->get_excluded_products();
 
@@ -174,6 +182,10 @@ class EDD_Discount_Validator {
 						}
 
 						if ( ! in_array( $download_id, $this->downloads ) ) {
+							if ( $set_error ) {
+								edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
+							}
+
 							$validity = false;
 							break;
 						}
@@ -190,6 +202,11 @@ class EDD_Discount_Validator {
 							break;
 						}
 					}
+
+					if ( ! $validity && $set_error ) {
+						edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
+					}
+
 					break;
 			}
 		} else {
@@ -212,6 +229,10 @@ class EDD_Discount_Validator {
 	 *
 	 * @access public
 	 * @since 2.8.7
+	 *
+	 * @param bool $set_error Whether an error message be set in session.
+	 *
+	 * @return bool $validity If the discount is valid against the cart contents.
 	 */
 	public function validate_against_cart( $set_error = true ) {
 		if (
