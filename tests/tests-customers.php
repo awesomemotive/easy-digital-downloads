@@ -328,6 +328,14 @@ class Tests_Customers extends EDD_UnitTestCase {
 
 	}
 
+	public function test_users_purchased_product_pending() {
+
+		$out2 = edd_get_users_purchased_products( $this->_user_id, 'pending' );
+
+		$this->assertFalse( $out2 );
+
+	}
+
 	public function test_has_user_purchased() {
 
 		$this->assertTrue( edd_has_user_purchased( $this->_user_id, array( $this->_post_id ), 1 ) );
