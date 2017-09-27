@@ -1699,13 +1699,8 @@ td.edd_order_price {
 		margin: 2px 0;
 	}
 
-	#edd-payment-filters input,
-	#edd-payment-filters select,
-	#edd-payment-filters a {
-		width: 100%;
-	}
-
-	#edd-payment-filters a {
+	#edd-payment-filters a,
+	.download_page_edd-reports .button {
 		text-align: center;
 	}
 
@@ -1716,19 +1711,25 @@ td.edd_order_price {
 		float: right;
 	}
 
-	#edd-add-discount input[type="text"],
-	#edd-edit-discount input[type="text"] {
-		width: 100%;
-	}
-
 	#edd-add-discount select[multiple] option,
 	#edd-edit-discount select[multiple] option {
 		height: 20px;
 	}
 
-	.download_page_edd-tools input[type="text"],
-	.download_page_edd-tools select,
-	.download_page_edd-tools input[type="submit"] {
+	.download_page_edd-tools .inside input[type="text"],
+	.download_page_edd-tools .inside select,
+	.download_page_edd-tools .inside input[type="submit"],
+	.download_page_edd-settings .inside input[type="button"],
+	.download_page_edd-reports .inside input[type="text"],
+	.download_page_edd-reports .inside select,
+	.download_page_edd-reports .inside input[type="submit"],
+	.download_page_edd-reports .inside .button,
+	#system-info-textarea,
+	#edd-add-discount input[type="text"],
+	#edd-edit-discount input[type="text"],
+	#edd-payment-filters input,
+	#edd-payment-filters select,
+	#edd-payment-filters a {
 		width: 100%;
 	}
 
@@ -1740,10 +1741,6 @@ td.edd_order_price {
 
 	.download_page_edd-settings input[type="checkbox"] {
 		margin: 2px 0;
-	}
-
-	.download_page_edd-settings input[type="button"] {
-		width: 100%;
 	}
 
 }
