@@ -131,9 +131,15 @@ a.edd-delete:hover {
 	height: 100px;
 	min-width: 200px;
 }
-#edd-add-discount input[type="checkbox"],
-#edd-edit-discount input[type="checkbox"] {
-	width: 15px;
+#edd-add-discount input[type="text"],
+#edd-edit-discount input[type="text"] {
+	width: 300px;
+}
+
+#edd-add-discount input.edd-price-field,
+#edd-edit-discount input.edd-price-field {
+	padding: 3px 5px;
+	width: 75px;
 }
 
 /* Payment History Styles
@@ -1702,6 +1708,23 @@ td.edd_order_price {
 	#edd-payment-date-filters span > input {
 		float: right;
 	}
+
+	#edd-add-discount input[type="text"],
+	#edd-edit-discount input[type="text"] {
+		width: 100%;
+	}
+
+	#edd-add-discount select[multiple],
+	#edd-edit-discount select[multiple] {
+		height: 200px !important;
+	}
+
+	#edd-add-discount select[multiple] option,
+	#edd-edit-discount select[multiple] option {
+		height: 20px;
+	}
+
+
 }
 
 /* Tools Styles
