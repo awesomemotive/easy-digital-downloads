@@ -64,6 +64,13 @@ a.edd-delete:hover {
 	z-index: 9999 !important;
 }
 
+.download_page_edd-settings .edd-settings-payment-icon-wrapper {
+	margin-right:10px;
+	line-height:16px;
+	height:16px;
+	display: table;
+}
+
 /* =Add Ons Styles
 -------------------------------------------------------------- */
 
@@ -1714,16 +1721,30 @@ td.edd_order_price {
 		width: 100%;
 	}
 
-	#edd-add-discount select[multiple],
-	#edd-edit-discount select[multiple] {
-		height: 200px !important;
-	}
-
 	#edd-add-discount select[multiple] option,
 	#edd-edit-discount select[multiple] option {
 		height: 20px;
 	}
 
+	.download_page_edd-tools input[type="text"],
+	.download_page_edd-tools select,
+	.download_page_edd-tools input[type="submit"] {
+		width: 100%;
+	}
+
+	#edd-add-discount select[multiple],
+	#edd-edit-discount select[multiple],
+	.download_page_edd-tools select[multiple] {
+		height: 200px !important;
+	}
+
+	.download_page_edd-settings input[type="checkbox"] {
+		margin: 2px 0;
+	}
+
+	.download_page_edd-settings input[type="button"] {
+		width: 100%;
+	}
 
 }
 
