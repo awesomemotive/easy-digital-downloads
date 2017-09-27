@@ -32,19 +32,31 @@ function edd_get_discounts( $args = array() ) {
 
 	$args = wp_parse_args( $args, $defaults );
 
-	$discounts = get_posts( $args );
+	$discounts_hash = md5( json_encode( $args ) );
+	$discounts = wp_cache_get( $discounts_hash, 'edd-discounts' );
+	if ( false === $discounts ) {
+		$discounts = get_posts( $args );
+		wp_cache_set( $discounts_hash, $discounts, 'edd-discounts', HOUR_IN_SECONDS );
+	}
+
 
 	if ( $discounts ) {
 		return $discounts;
 	}
 
+	// If no discounts are found and we are searching, re-query with a meta key to find discounts by code
 	if( ! $discounts && ! empty( $args['s'] ) ) {
-		// If no discounts are found and we are searching, re-query with a meta key to find discounts by code
 		$args['meta_key']     = '_edd_discount_code';
 		$args['meta_value']   = $args['s'];
 		$args['meta_compare'] = 'LIKE';
 		unset( $args['s'] );
-		$discounts = get_posts( $args );
+
+		$discounts_hash = md5( json_encode( $args ) );
+		$discounts = wp_cache_get( $discounts_hash, 'edd-discounts' );
+		if ( false === $discounts ) {
+			$discounts = get_posts( $args );
+			wp_cache_set( $discounts_hash, $discounts, 'edd-discounts', HOUR_IN_SECONDS );
+		}
 	}
 
 	if( $discounts ) {
@@ -116,10 +128,10 @@ function edd_get_discount( $discount_id = 0 ) {
  * @since 2.7 Updated to use EDD_Discount object
  *
  * @param string $code Discount code.
- * @return mixed object|bool EDD_Discount object or false if not found.
+ * @return EDD_Discount|bool EDD_Discount object or false if not found.
  */
 function edd_get_discount_by_code( $code = '' ) {
-	$discount =  new EDD_Discount( $code, true );
+	$discount = new EDD_Discount( $code, true );
 
 	if ( ! $discount->ID > 0 ) {
 		return false;
