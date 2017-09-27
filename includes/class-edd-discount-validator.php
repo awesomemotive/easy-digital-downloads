@@ -216,7 +216,7 @@ class EDD_Discount_Validator {
 	public function validate_against_cart( $set_error = true ) {
 		if (
 			$this->can_be_used() &&
-		    $this->validate_against_downloads() &&
+			$this->validate_against_downloads() &&
 			! $this->discount->is_used( $this->user, $set_error ) &&
 			$this->discount->is_min_price_met( $set_error )
 		) {
