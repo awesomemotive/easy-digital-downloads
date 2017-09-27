@@ -520,6 +520,9 @@ input[class*="edd-price-field"] {
 #edd-edit-order-form .column:nth-child(2n+1) {
 	margin-right: 0;
 }
+#edd-edit-order-form input.large-text {
+	width: 90%;
+}
 .edd-edit-purchase-element ul li.download {
 	width: 35%;
 }
@@ -665,6 +668,9 @@ input[class*="edd-price-field"] {
 .edd-edit-purchase-element .edd-purchased-download-title {
 	font-size: 14px;
 	font-weight: 500;
+}
+.edd-edit-purchase-element .edd-purchased-download-title .deleted {
+	color: #777;
 }
 .edd-edit-purchase-element .edd-purchased-download-actions {
 	color: #777;
@@ -1305,6 +1311,10 @@ td.edd_order_price {
 	.wrap-licenses .form-table tr {
 		width: 100%;
 		min-height: 230px;
+	}
+
+	#edd-edit-order-form input.large-text {
+		width: 100%;
 	}
 }
 

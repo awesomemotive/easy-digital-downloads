@@ -1348,7 +1348,7 @@ jQuery(document).ready(function ($) {
 	// Add placeholders for Chosen input fields
 	$( '.chosen-choices' ).on( 'click', function () {
 		var placeholder = $(this).parent().prev().data('search-placeholder');
-		if ( ! placeholder.length ) {
+		if ( typeof placeholder === "undefined" ) {
 			placeholder = edd_vars.type_to_search;
 		}
 		$(this).children('li').children('input').attr( 'placeholder', placeholder );
