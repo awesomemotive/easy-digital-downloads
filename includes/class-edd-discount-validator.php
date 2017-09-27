@@ -36,14 +36,32 @@ class EDD_Discount_Validator {
 	private $downloads;
 
 	/**
+	 * User info.
+	 *
+	 * @var mixed string|int
+	 */
+	private $user;
+
+	/**
+	 * Price.
+	 *
+	 * @var float
+	 */
+	private $price;
+
+	/**
 	 * EDD_Discount_Validator constructor.
 	 *
 	 * @param int|EDD_Discount $discount  Discount object or discount ID.
 	 * @param array            $downloads Download IDs.
+	 * @param string           $user      User info.
+	 * @param float            $price     Price for minimum amount validation.
 	 */
-	public function __construct( $discount = 0, $downloads = array() ) {
+	public function __construct( $discount = 0, $downloads = array(), $user = null, $price = null ) {
 		$this->discount  = $discount;
 		$this->downloads = $downloads;
+		$this->user      = $user;
+		$this->price     = (float) $price;
 
 		$this->setup_object();
 	}
@@ -56,6 +74,17 @@ class EDD_Discount_Validator {
 	private function setup_object() {
 		if ( ! $this->discount instanceof EDD_Discount ) {
 			$this->discount = new EDD_Discount( $this->discount );
+		}
+
+		if ( null === $this->user ){
+			$user = get_user_by( 'ID', get_current_user_id() );
+			if ( $user ){
+				$this->user = $user->user_email;
+			}
+		}
+
+		if ( ! is_email( $this->user ) ){
+			$this->user = null;
 		}
 	}
 
