@@ -36,9 +36,16 @@ class EDD_Discount_Validator {
 	private $downloads;
 
 	/**
+	 * Context of validation.
+	 *
+	 * @var string
+	 */
+	private $context;
+
+	/**
 	 * User info.
 	 *
-	 * @var mixed string|int
+	 * @var mixed int|string
 	 */
 	private $user;
 
@@ -54,12 +61,14 @@ class EDD_Discount_Validator {
 	 *
 	 * @param int|EDD_Discount $discount  Discount object or discount ID.
 	 * @param array            $downloads Download IDs.
-	 * @param string           $user      User info.
+	 * @param string           $context   Context (e.g. cart).
+	 * @param str8ng           $user      User info.
 	 * @param float            $price     Price for minimum amount validation.
 	 */
-	public function __construct( $discount = 0, $downloads = array(), $user = null, $price = null ) {
+	public function __construct( $discount = 0, $downloads = array(), $context = null, $user = null, $price = null ) {
 		$this->discount  = $discount;
 		$this->downloads = $downloads;
+		$this->context   = $context;
 		$this->user      = $user;
 		$this->price     = (float) $price;
 
@@ -76,9 +85,9 @@ class EDD_Discount_Validator {
 			$this->discount = new EDD_Discount( $this->discount );
 		}
 
-		if ( null === $this->user ){
+		if ( null === $this->user ) {
 			$user = get_user_by( 'ID', get_current_user_id() );
-			if ( $user ){
+			if ( $user ) {
 				$this->user = $user->user_email;
 			}
 		}
@@ -101,6 +110,41 @@ class EDD_Discount_Validator {
 			return new WP_Error( 'invalid-arg', __( 'Download IDs not supplied.', 'easy-digital-downloads' ) );
 		}
 
+		if ( 'cart' === $this->context ) {
+			return $this->validate_against_cart();
+		}
+
+		return $this->validate_against_downloads();
+	}
+
+	/**
+	 * Initial discount validation: checks that it is active, started and is not
+	 * maxed out.
+	 *
+	 * @access public
+	 * @since 2.8.7
+	 */
+	public function can_be_used( $set_error = true ) {
+		$validity = false;
+
+		if (
+			$this->discount->is_active( true, $set_error ) &&
+			$this->discount->is_started( $set_error ) &&
+			! $this->discount->is_maxed_out( $set_error )
+		) {
+			$validity = true;
+		}
+
+		return $validity;
+	}
+
+	/**
+	 * Validate discount against download IDs supplied.
+	 *
+	 * @access public
+	 * @since 2.8.7
+	 */
+	public function validate_against_downloads() {
 		$product_requirements = $this->discount->get_product_reqs();
 		$excluded_products    = $this->discount->get_excluded_products();
 
@@ -114,17 +158,21 @@ class EDD_Discount_Validator {
 
 		$product_requirements = array_map( 'absint', $product_requirements );
 		asort( $product_requirements );
-		$product_requirements = array_values( $product_requirements );
+		$product_requirements = array_filter( array_values( $product_requirements ) );
 
 		$excluded_products = array_map( 'absint', $excluded_products );
 		asort( $excluded_products );
-		$excluded_products = array_values( $excluded_products );
+		$excluded_products = array_filter( array_values( $excluded_products ) );
 
 		if ( ! $validity && ! empty( $product_requirements ) ) {
 			switch ( $this->discount->get_product_condition() ) {
 				case 'all' :
 					$validity = true;
 					foreach ( $product_requirements as $download_id ) {
+						if ( empty( $download_id ) ) {
+							continue;
+						}
+
 						if ( ! in_array( $download_id, $this->downloads ) ) {
 							$validity = false;
 							break;
@@ -133,6 +181,10 @@ class EDD_Discount_Validator {
 					break;
 				default:
 					foreach ( $product_requirements as $download_id ) {
+						if ( empty( $download_id ) ) {
+							continue;
+						}
+
 						if ( in_array( $download_id, $this->downloads ) ) {
 							$validity = true;
 							break;
@@ -153,5 +205,24 @@ class EDD_Discount_Validator {
 		}
 
 		return $validity;
+	}
+
+	/**
+	 * Validate discount against cart contents.
+	 *
+	 * @access public
+	 * @since 2.8.7
+	 */
+	public function validate_against_cart( $set_error = true ) {
+		if (
+			$this->can_be_used() &&
+		    $this->validate_against_downloads() &&
+			! $this->discount->is_used( $this->user, $set_error ) &&
+			$this->discount->is_min_price_met( $set_error )
+		) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
