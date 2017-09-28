@@ -92,7 +92,7 @@ class EDD_Discount_Validator {
 			}
 		}
 
-		if ( ! is_email( $this->user ) ){
+		if ( ! is_email( $this->user ) ) {
 			$this->user = null;
 		}
 	}
@@ -101,7 +101,7 @@ class EDD_Discount_Validator {
 	 * Parent method that calls other validation methods.
 	 *
 	 * @access public
-	 * @since 2.8.7
+	 * @since  2.8.7
 	 *
 	 * @return bool $validity If the discount is valid or not.
 	 */
@@ -122,7 +122,7 @@ class EDD_Discount_Validator {
 	 * maxed out.
 	 *
 	 * @access public
-	 * @since 2.8.7
+	 * @since  2.8.7
 	 *
 	 * @param bool $set_error Whether an error message be set in session.
 	 *
@@ -131,11 +131,7 @@ class EDD_Discount_Validator {
 	public function can_be_used( $set_error = true ) {
 		$validity = false;
 
-		if (
-			$this->discount->is_active( true, $set_error ) &&
-			$this->discount->is_started( $set_error ) &&
-			! $this->discount->is_maxed_out( $set_error )
-		) {
+		if ( $this->discount->is_active( true, $set_error ) && $this->discount->is_started( $set_error ) && ! $this->discount->is_maxed_out( $set_error ) ) {
 			$validity = true;
 		}
 
@@ -228,19 +224,14 @@ class EDD_Discount_Validator {
 	 * Validate discount against cart contents.
 	 *
 	 * @access public
-	 * @since 2.8.7
+	 * @since  2.8.7
 	 *
 	 * @param bool $set_error Whether an error message be set in session.
 	 *
 	 * @return bool $validity If the discount is valid against the cart contents.
 	 */
 	public function validate_against_cart( $set_error = true ) {
-		if (
-			$this->can_be_used() &&
-			$this->validate_against_downloads() &&
-			! $this->discount->is_used( $this->user, $set_error ) &&
-			$this->discount->is_min_price_met( $set_error )
-		) {
+		if ( $this->can_be_used() && $this->validate_against_downloads() && ! $this->discount->is_used( $this->user, $set_error ) && $this->discount->is_min_price_met( $set_error ) ) {
 			return true;
 		} else {
 			return false;
