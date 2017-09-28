@@ -103,7 +103,7 @@ class EDD_Discount_Validator {
 	 * @access public
 	 * @since  2.8.7
 	 *
-	 * @return bool $validity If the discount is valid or not.
+	 * @return mixed WP_Error|bool If the discount is valid or not.
 	 */
 	public function is_valid() {
 		if ( empty( $this->downloads ) ) {
