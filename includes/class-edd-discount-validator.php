@@ -106,7 +106,12 @@ class EDD_Discount_Validator {
 	 * @return mixed WP_Error|bool If the discount is valid or not.
 	 */
 	public function is_valid() {
-		if ( empty( $this->downloads ) ) {
+		// Return false if this is cart validation and the cart is empty
+		if ( 'cart' === $this->context && empty( $this->downloads ) ) {
+			return false;
+		}
+
+		if ( 'cart' !== $this->context && empty( $this->downloads ) ) {
 			return new WP_Error( 'invalid-arg', __( 'Download IDs not supplied.', 'easy-digital-downloads' ) );
 		}
 

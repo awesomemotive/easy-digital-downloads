@@ -1798,21 +1798,12 @@ class EDD_Discount {
 	 * @return bool Is the discount valid or not?
 	 */
 	public function is_valid( $user = '', $set_error = true ) {
-		$return = false;
 		$user = trim( $user );
 
-		if ( edd_get_cart_contents() && $this->ID ) {
-			if (
-				$this->is_active( true, $set_error ) &&
-				$this->is_started( $set_error ) &&
-				! $this->is_maxed_out( $set_error ) &&
-				! $this->is_used( $user, $set_error ) &&
-				$this->is_min_price_met( $set_error ) &&
-				$this->is_product_requirements_met( $set_error )
-			) {
-				$return = true;
-			}
-		} elseif( $set_error ) {
+		$validator = new EDD_Discount_Validator( $this, wp_list_pluck( edd_get_cart_contents(), 'id' ), 'cart', $user );
+		$validity = $validator->is_valid();
+
+		if ( ! $validity && $set_error ) {
 			edd_set_error( 'edd-discount-error', _x( 'This discount is invalid.', 'error for when a discount is invalid based on its configuration' , 'easy-digital-downloads' ) );
 		}
 
@@ -1826,7 +1817,7 @@ class EDD_Discount {
 		 * @param string $code   Discount code.
 		 * @param string $user   User info.
 		 */
-		return apply_filters( 'edd_is_discount_valid', $return, $this->ID, $this->code, $user );
+		return apply_filters( 'edd_is_discount_valid', $validity, $this->ID, $this->code, $user );
 	}
 
 	/**
