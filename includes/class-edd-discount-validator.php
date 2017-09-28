@@ -106,6 +106,10 @@ class EDD_Discount_Validator {
 	 * @return mixed WP_Error|bool If the discount is valid or not.
 	 */
 	public function is_valid() {
+		if ( 'cart' === $this->context ) {
+			$this->downloads = wp_list_pluck( edd_get_cart_contents(), 'id' );
+		}
+
 		// Return false if this is cart validation and the cart is empty
 		if ( 'cart' === $this->context && empty( $this->downloads ) ) {
 			return false;

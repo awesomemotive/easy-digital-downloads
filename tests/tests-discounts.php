@@ -434,4 +434,33 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		EDD_Helper_Discount::delete_discount( $discount );
 	}
 
+	public function test_discount_validator() {
+		edd_empty_cart();
+		$download_1 = EDD_Helper_Download::create_simple_download();
+		$download_2 = EDD_Helper_Download::create_simple_download();
+		$discount   = EDD_Helper_Discount::create_simple_flat_discount();
+
+		$post = array(
+			'name'              => 'Excludes',
+			'amount'            => '1',
+			'code'              => 'EXCLUDES',
+			'product_condition' => 'all',
+			'status'            => 'active',
+			'products'          => array( $download_1->ID ),
+			'excluded-products' => array( $download_2->ID ),
+		);
+
+		edd_store_discount( $post, $discount );
+
+		$validator = new EDD_Discount_Validator( $discount, null, 'cart' );
+		edd_add_to_cart( $download_2->ID );
+		$this->assertFalse( $validator->is_valid() );
+
+		edd_empty_cart();
+		$this->assertFalse( $validator->is_valid() );
+
+		edd_add_to_cart( $download_1->ID );
+		$this->assertTrue( $validator->is_valid() );
+	}
+
 }
