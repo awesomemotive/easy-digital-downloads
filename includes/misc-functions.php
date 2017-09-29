@@ -31,6 +31,9 @@ function edd_is_test_mode() {
  */
 function edd_is_debug_mode() {
 	$ret = edd_get_option( 'debug_mode', false );
+	if( defined( 'EDD_DEBUG_MODE' ) && EDD_DEBUG_MODE ) {
+		$ret = true;
+	}
 	return (bool) apply_filters( 'edd_is_debug_mode', $ret );
 }
 
