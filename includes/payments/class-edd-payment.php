@@ -2756,7 +2756,15 @@ class EDD_Payment {
 
 		if ( empty( $customer->id ) ) {
 
-			$name = ( ! empty( $this->first_name ) && ! empty( $this->last_name ) ) ? $this->first_name . ' ' . $this->last_name : $this->email;
+			if( empty( $this->first_name ) && empty( $this->last_name ) ) {
+
+				$name = $this->email;
+
+			} else {
+
+				$name = $this->first_name . ' ' . $this->last_name;
+
+			}
 
 			$customer_data = array(
 				'name'        => $name,
