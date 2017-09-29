@@ -131,8 +131,8 @@ class EDD_HTML_Elements {
 						$prices = edd_get_variable_prices( (int) $parsed_item['download_id'] );
 						foreach ( $prices as $key => $value ) {
 
-							$name   = isset( $value['name'] )   ? $value['name']   : '';
-							$index  = isset( $value['index'] )  ? $value['index']  : $key;
+							$name   = ( isset( $value['name'] ) && ! empty( $value['name'] ) ) ? $value['name']   : '';
+							$index  = ( isset( $value['index'] ) && $value['index'] !== '' )   ? $value['index']  : $key;
 
 							if ( $name && $index && (int) $parsed_item['price_id'] === (int) $index  ) {
 
@@ -162,8 +162,8 @@ class EDD_HTML_Elements {
 
 					foreach ( $prices as $key => $value ) {
 
-						$name   = isset( $value['name'] )   ? $value['name']   : '';
-						$index  = isset( $value['index'] )  ? $value['index']  : $key;
+						$name   = ( isset( $value['name'] ) && ! empty( $value['name'] ) ) ? $value['name']   : '';
+						$index  = ( isset( $value['index'] ) && $value['index'] !== '' )   ? $value['index']  : $key;
 
 						if ( $name && $index && (int) $parsed_item['price_id'] === (int) $index  ) {
 
