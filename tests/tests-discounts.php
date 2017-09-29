@@ -443,6 +443,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		$found_discounts = edd_get_discounts();
 
 		$this->assertSame( 3, count( $found_discounts ) );
-		$this->assertSame( $found_discounts, wp_cache_get( $hash, 'edd-discounts' ) );
+		global $edd_get_discounts_cache;
+		$this->assertSame( $found_discounts, $edd_get_discounts_cache[ $hash ] );
 	}
 }

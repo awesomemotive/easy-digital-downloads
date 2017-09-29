@@ -33,13 +33,12 @@ function edd_get_discounts( $args = array() ) {
 	$args = wp_parse_args( $args, $defaults );
 
 	$discounts_hash = md5( json_encode( $args ) );
-	$discounts      = wp_cache_get( $discounts_hash, 'edd-discounts' );
+	$discounts      = edd_get_discounts_cache( $discounts_hash );
 
 	if ( false === $discounts ) {
 		$discounts = get_posts( $args );
-		wp_cache_set( $discounts_hash, $discounts, 'edd-discounts', HOUR_IN_SECONDS );
+		edd_set_discounts_cache( $discounts_hash, $discounts );
 	}
-
 
 	if ( $discounts ) {
 		return $discounts;
@@ -53,11 +52,11 @@ function edd_get_discounts( $args = array() ) {
 		unset( $args['s'] );
 
 		$discounts_hash = md5( json_encode( $args ) );
-		$discounts      = wp_cache_get( $discounts_hash, 'edd-discounts' );
+		$discounts      = edd_get_discounts_cache( $discounts_hash );
 
 		if ( false === $discounts ) {
 			$discounts = get_posts( $args );
-			wp_cache_set( $discounts_hash, $discounts, 'edd-discounts', HOUR_IN_SECONDS );
+			edd_set_discounts_cache( $discounts_hash, $discounts );
 		}
 	}
 
@@ -197,17 +196,25 @@ function edd_get_discount_by( $field = '', $value = '' ) {
  * @return mixed bool|int The discount ID of the discount code, or false on failure.
  */
 function edd_store_discount( $details, $discount_id = null ) {
+	$return = false;
+
 	if ( null == $discount_id ) {
 		$discount = new EDD_Discount;
 		$discount->add( $details );
-		return $discount->ID;
+		$return = $discount->ID;
 	} else {
 		$discount = new EDD_Discount( $discount_id );
 		$discount->update( $details );
-		return $discount->ID;
+		$return = $discount->ID;
 	}
 
-	return false;
+	// If we stored a discount, we need to clear the edd_get_discounts_cache global.
+	if ( false !== $return ) {
+		global $edd_get_discounts_cache;
+		$edd_get_discounts_cache = array();
+	}
+
+	return $return;
 }
 
 /**
@@ -1066,6 +1073,47 @@ function edd_discount_status_cleanup() {
 	}
 
 }
+
+/**
+ * Check to see if this set of discounts has been queried for already.
+ *
+ * @since 2.8.7
+ * @param $hash string The hash of the edd_get_discount args.
+ *
+ * @return bool|mixed  Found discounts if already queried, or false if it has not been queried yet.
+ */
+function edd_get_discounts_cache( $hash ) {
+	global $edd_get_discounts_cache;
+
+	if ( ! is_array( $edd_get_discounts_cache ) ) {
+		$edd_get_discounts_cache = array();
+	}
+
+	if ( ! isset( $edd_get_discounts_cache[ $hash ] ) ) {
+		return false;
+	}
+
+	return $edd_get_discounts_cache[ $hash ];
+}
+
+/**
+ * Store found discounts with the hash.
+ * This is a non-persistent cache and uses a PHP global.
+ *
+ * @since 2.8.7
+ * @param $hash string The hash of the arguments from edd_get_discounts.
+ * @param $data array  The data to store for this hash.
+ */
+function edd_set_discounts_cache( $hash, $data ) {
+	global $edd_get_discounts_cache;
+
+	if ( ! is_array( $edd_get_discounts_cache ) ) {
+		$edd_get_discounts_cache = array();
+	}
+
+	$edd_get_discounts_cache[ $hash ] = $data;
+}
+
 /**
  * Disabled until https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5619 is completed
  * See https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5631
