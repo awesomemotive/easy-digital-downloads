@@ -495,7 +495,7 @@ class EDD_CLI extends WP_CLI_Command {
 	 *
 	 * ## EXAMPLES
 	 *
-	 * wp edd payments create --number=10 --status=completed
+	 * wp edd payments create --number=10 --status=complete
 	 * wp edd payments create --number=10 --id=103
 	 */
 	public function payments( $args, $assoc_args ) {
