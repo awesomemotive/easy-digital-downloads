@@ -1743,6 +1743,10 @@ td.edd_order_price {
 		margin: 2px 0;
 	}
 
+	.post-type-download input[type="checkbox"] {
+		margin-left: 2px;
+	}
+
 }
 
 /* Tools Styles
