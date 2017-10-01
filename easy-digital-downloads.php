@@ -263,6 +263,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-discount.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-discount-validator.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-download.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cache-helper.php';
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
