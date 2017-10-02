@@ -671,7 +671,7 @@ function edd_get_registered_settings() {
 					'debug_mode' => array(
 						'id'   => 'debug_mode',
 						'name' => __( 'Debug Mode', 'easy-digital-downloads' ),
-						'desc' => __( 'Check this box to enable debug mode. When enabled, debug messages will be logged and shown in Downloads &rarr; Tools &rarr; Debug Mode.', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this box to enable debug mode. When enabled, debug messages will be logged and shown in Downloads &rarr; Tools &rarr; Debug Log.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
 					),
 					'uninstall_on_delete' => array(
