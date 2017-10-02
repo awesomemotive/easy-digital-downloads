@@ -1079,7 +1079,7 @@ function edd_tools_debug_log_display() {
 		<h3><span><?php esc_html_e( 'Debug Log', 'easy-digital-downloads' ); ?></span></h3>
 		<div class="inside">
 			<form id="edd-debug-log" method="post">
-				<p><?php _e( 'Use this tool to help debug Easy Digital Downloads functionality. Developers may use the <a href="#">EDD_Logging class</a> to record debug data.', 'easy-digital-downloads' ); ?></p>
+				<p><?php _e( 'Use this tool to help debug Easy Digital Downloads functionality. Developers may use the <a href="https://github.com/easydigitaldownloads/easy-digital-downloads/blob/master/includes/class-edd-logging.php">EDD_Logging class</a> to record debug data.', 'easy-digital-downloads' ); ?></p>
 				<textarea readonly="readonly" onclick="this.focus(); this.select()" class="large-text" rows="15" name="edd-debug-log-contents"><?php echo esc_textarea( $edd_logs->get_file_contents() ); ?></textarea>
 				<p class="submit">
 					<input type="hidden" name="edd_action" value="submit_debug_log" />
