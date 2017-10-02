@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.4
 Tested up to: 4.9
-Stable Tag: 2.8.6
+Stable Tag: 2.8.7
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -212,6 +212,30 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+
+
+= 2.8.7, October 2, 2017 =
+
+* IMPORTANT: Product dropdown was losing selections when using variable pricing. Please verify any variable priced bundles you may have configured.
+* Fix: File download errors could occur if the stream type was no longer registered.
+* Fix: The 'No checkout page configured' error is now limited to once display per page.
+* Fix: Calls to EDD_Customer->update_meta could throw a notice if called to early in the WordPress load process.
+* Fix: The edd_get_users_purchased_products function did not respect the status argument passed in.
+* Fix: The base state/province displayed empty when no pre-populated state or province data was available.
+* Fix: Performance improvements to edd_get_discounts.
+* Fix: Newly register user's ID was not set on pre-existing payments.
+* Fix: During purchase, the customer name was set to email if last name was empty.
+* Fix: Corrected many non-numeric value and data handling issues in PHP 7.1
+* Fix: Corrected an issue with Chosen placeholders.
+* New: Added the EDD_Logging class, to allow for easier debugging by developers.
+* New: The country name was added to the payment export.
+* New: Added a discounts_total property to the EDD_Payment class.
+* New: Hyphens are now allowed in discount codes.
+* New: The Customer ID is now included in the sale report.
+* Tweak: Added better responsiveness in WordPress admin.
+* Tweak: Fixed a typo in the docs for the payments create CLI command.
+* Tweak: Wrapped discount fields in <span> tags.
+* Tweak: Fixed CSS targeting on edd_repeatable_thumbnail_size_field selector.
 
 = 2.8.6, September 11, 2017 =
 
