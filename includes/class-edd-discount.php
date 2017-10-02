@@ -1155,6 +1155,9 @@ class EDD_Discount {
 		}
 
 		if ( true == $saved ) {
+			global $edd_get_discounts_cache;
+			$edd_get_discounts_cache = array();
+
 			$this->setup_discount( WP_Post::get_instance( $this->ID ) );
 
 			/**
