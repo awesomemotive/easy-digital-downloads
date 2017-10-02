@@ -125,10 +125,9 @@ class EDD_HTML_Elements {
 				if ( $args['variations'] && edd_has_variable_prices( $product->ID ) ) {
  					$prices = edd_get_variable_prices( $product->ID );
  					foreach ( $prices as $key => $value ) {
- 						$name   = ! empty( $value['name'] )   ? $value['name']   : '';
- 						$index  = ! empty( $value['index'] )  ? $value['index']  : $key;
- 						if ( $name && $index ) {
- 							$options[ absint( $product->ID ) . '_' . $index ] = esc_html( $product->post_title . ': ' . $name );
+ 						$name = ! empty( $value['name'] )   ? $value['name']   : '';
+ 						if ( $name ) {
+ 							$options[ absint( $product->ID ) . '_' . $key ] = esc_html( $product->post_title . ': ' . $name );
  						}
  					}
  				}
@@ -149,12 +148,11 @@ class EDD_HTML_Elements {
 						$prices = edd_get_variable_prices( (int) $parsed_item['download_id'] );
 						foreach ( $prices as $key => $value ) {
 
-							$name   = ( isset( $value['name'] ) && ! empty( $value['name'] ) ) ? $value['name']   : '';
-							$index  = ( isset( $value['index'] ) && $value['index'] !== '' )   ? $value['index']  : $key;
+							$name = ( isset( $value['name'] ) && ! empty( $value['name'] ) ) ? $value['name']   : '';
 
-							if ( $name && $index && (int) $parsed_item['price_id'] === (int) $index  ) {
+							if ( $name && (int) $parsed_item['price_id'] === (int) $key  ) {
 
-								$options[ absint( $product->ID ) . '_' . $index ] = esc_html( get_the_title( (int) $parsed_item['download_id'] ) . ': ' . $name );
+								$options[ absint( $product->ID ) . '_' . $key ] = esc_html( get_the_title( (int) $parsed_item['download_id'] ) . ': ' . $name );
 
 						    }
 
@@ -180,12 +178,11 @@ class EDD_HTML_Elements {
 
 					foreach ( $prices as $key => $value ) {
 
-						$name   = ( isset( $value['name'] ) && ! empty( $value['name'] ) ) ? $value['name']   : '';
-						$index  = ( isset( $value['index'] ) && $value['index'] !== '' )   ? $value['index']  : $key;
+						$name = ( isset( $value['name'] ) && ! empty( $value['name'] ) ) ? $value['name']   : '';
 
-						if ( $name && $index && (int) $parsed_item['price_id'] === (int) $index  ) {
+						if ( $name && (int) $parsed_item['price_id'] === (int) $key  ) {
 
-							$options[ absint( $product->ID ) . '_' . $index ] = esc_html( get_the_title( (int) $parsed_item['download_id'] ) . ': ' . $name );
+							$options[ absint( $product->ID ) . '_' . $key ] = esc_html( get_the_title( (int) $parsed_item['download_id'] ) . ': ' . $name );
 
 						}
 
