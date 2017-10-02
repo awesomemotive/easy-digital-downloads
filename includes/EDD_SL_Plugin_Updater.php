@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Allows plugins to use their own update API.
  *
  * @author Easy Digital Downloads
- * @version 1.6.12
+ * @version 1.6.14
  */
 class EDD_SL_Plugin_Updater {
 
@@ -307,11 +307,13 @@ class EDD_SL_Plugin_Updater {
 	 * @return object $array
 	 */
 	public function http_request_args( $args, $url ) {
-		// If it is an https request and we are performing a package download, disable ssl verification
+
+		$verify_ssl = $this->verify_ssl();
 		if ( strpos( $url, 'https://' ) !== false && strpos( $url, 'edd_action=package_download' ) ) {
-			$args['sslverify'] = false;
+			$args['sslverify'] = $verify_ssl;
 		}
 		return $args;
+
 	}
 
 	/**
@@ -351,7 +353,8 @@ class EDD_SL_Plugin_Updater {
 			'beta'       => ! empty( $data['beta'] ),
 		);
 
-		$request = wp_remote_post( $this->api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
+		$verify_ssl = $this->verify_ssl();
+		$request    = wp_remote_post( $this->api_url, array( 'timeout' => 15, 'sslverify' => $verify_ssl, 'body' => $api_params ) );
 
 		if ( ! is_wp_error( $request ) ) {
 			$request = json_decode( wp_remote_retrieve_body( $request ) );
@@ -413,7 +416,8 @@ class EDD_SL_Plugin_Updater {
 				'beta'       => ! empty( $data['beta'] )
 			);
 
-			$request = wp_remote_post( $this->api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
+			$verify_ssl = $this->verify_ssl();
+			$request    = wp_remote_post( $this->api_url, array( 'timeout' => 15, 'sslverify' => $verify_ssl, 'body' => $api_params ) );
 
 			if ( ! is_wp_error( $request ) ) {
 				$version_info = json_decode( wp_remote_retrieve_body( $request ) );
@@ -470,8 +474,18 @@ class EDD_SL_Plugin_Updater {
 			'value'   => json_encode( $value )
 		);
 
-		update_option( $cache_key, $data );
+		update_option( $cache_key, $data, 'no' );
 
+	}
+
+	/**
+	 * Returns if the SSL of the store should be verified.
+	 *
+	 * @since  1.6.13
+	 * @return bool
+	 */
+	private function verify_ssl() {
+		return (bool) apply_filters( 'edd_sl_api_request_verify_ssl', true, $this );
 	}
 
 }

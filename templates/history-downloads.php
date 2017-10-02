@@ -37,7 +37,7 @@ if ( $purchases ) :
 						<?php
 						$price_id       = edd_get_cart_item_price_id( $download );
 						$download_files = edd_get_download_files( $download['id'], $price_id );
-						$name           = get_the_title( $download['id'] );
+						$name           = $download['name'];
 
 						// Retrieve and append the price option name
 						if ( ! empty( $price_id ) && 0 !== $price_id ) {

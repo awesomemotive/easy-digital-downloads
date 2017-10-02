@@ -26,7 +26,7 @@ if ( ! is_user_logged_in() ) :
 				<input type="hidden" name="edd_redirect" value="<?php echo esc_url( $edd_login_redirect ); ?>"/>
 				<input type="hidden" name="edd_login_nonce" value="<?php echo wp_create_nonce( 'edd-login-nonce' ); ?>"/>
 				<input type="hidden" name="edd_action" value="user_login"/>
-				<input id="edd_login_submit" type="submit" class="edd_submit edd-submit" value="<?php _e( 'Log In', 'easy-digital-downloads' ); ?>"/>
+				<input id="edd_login_submit" type="submit" class="edd-submit" value="<?php _e( 'Log In', 'easy-digital-downloads' ); ?>"/>
 			</p>
 			<p class="edd-lost-password">
 				<a href="<?php echo wp_lostpassword_url(); ?>">
@@ -37,5 +37,7 @@ if ( ! is_user_logged_in() ) :
 		</fieldset>
 	</form>
 <?php else : ?>
-	<p class="edd-logged-in"><?php _e( 'You are already logged in', 'easy-digital-downloads' ); ?></p>
+
+	<?php do_action( 'edd_login_form_logged_in' ); ?>
+
 <?php endif; ?>

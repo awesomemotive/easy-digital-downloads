@@ -37,12 +37,13 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 	 */
 	public function csv_cols() {
 		$cols = array(
-			'ID'         => __( 'Log ID', 'easy-digital-downloads' ),
-			'user_id'    => __( 'User', 'easy-digital-downloads' ),
-			'download'   => edd_get_label_singular(),
-			'amount'     => __( 'Item Amount', 'easy-digital-downloads' ),
-			'payment_id' => __( 'Payment ID', 'easy-digital-downloads' ),
-			'date'       => __( 'Date', 'easy-digital-downloads' ),
+			'ID'          => __( 'Log ID', 'easy-digital-downloads' ),
+			'user_id'     => __( 'User', 'easy-digital-downloads' ),
+			'customer_id' => __( 'Customer ID', 'easy-digital-downloads' ),
+			'download'    => edd_get_label_singular(),
+			'amount'      => __( 'Item Amount', 'easy-digital-downloads' ),
+			'payment_id'  => __( 'Payment ID', 'easy-digital-downloads' ),
+			'date'        => __( 'Date', 'easy-digital-downloads' ),
 		);
 
 		return $cols;
@@ -64,7 +65,9 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 		$args = array(
 			'log_type'       => 'sale',
 			'posts_per_page' => 30,
-			'paged'          => $this->step
+			'paged'          => $this->step,
+			'orderby'        => 'ID',
+			'order'          => 'ASC',
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
@@ -112,12 +115,13 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 					}
 				}
 				$data[] = array(
-					'ID'         => $log->ID,
-					'user_id'    => $customer->user_id,
-					'download'   => $download->post_title,
-					'amount'     => $amount,
-					'payment_id' => $payment->ID,
-					'date'       => get_post_field( 'post_date', $payment_id ),
+					'ID'          => $log->ID,
+					'user_id'     => $customer->user_id,
+					'customer_id' => $customer->id,
+					'download'    => $download->post_title,
+					'amount'      => $amount,
+					'payment_id'  => $payment->ID,
+					'date'        => get_post_field( 'post_date', $payment_id ),
 				);
 			}
 

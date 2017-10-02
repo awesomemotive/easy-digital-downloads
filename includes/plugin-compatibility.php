@@ -157,7 +157,7 @@ function edd_disable_404_redirected_redirect() {
 add_action( 'template_redirect', 'edd_disable_404_redirected_redirect', 9 );
 
 /**
- * Addes 'edd' to the list of Say What aliases after moving to WordPress.org language packs
+ * Adds 'edd' to the list of Say What aliases after moving to WordPress.org language packs
  *
  * @since  2.4.6
  * @param  array $aliases Say What domain aliases
@@ -169,3 +169,21 @@ function edd_say_what_domain_aliases( $aliases ) {
 	return $aliases;
 }
 add_filter( 'say_what_domain_aliases', 'edd_say_what_domain_aliases', 10, 1 );
+
+/**
+ * Removes the Really Simple SSL mixed content filter during file downloads to avoid
+ * errors with chunked file delivery
+ *
+ * @see https://github.com/rlankhorst/really-simple-ssl/issues/30
+ * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5802
+ *
+ * @since 2.7.10
+ * @return void
+ */
+function edd_rsssl_remove_mixed_content_filter() {
+	if ( class_exists( 'REALLY_SIMPLE_SSL' ) && did_action( 'edd_process_verified_download' ) ) {
+		remove_action( 'init', array( RSSSL()->rsssl_mixed_content_fixer, 'start_buffer' ) );
+		remove_action( 'shutdown', array( RSSSL()->rsssl_mixed_content_fixer, 'end_buffer' ) );
+	}
+}
+add_action( 'plugins_loaded', 'edd_rsssl_remove_mixed_content_filter', 999 );

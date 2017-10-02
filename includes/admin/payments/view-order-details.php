@@ -393,6 +393,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 												$item_tax   = isset( $cart_item['tax'] )                                    ? $cart_item['tax']                                : 0;
 												$price_id   = isset( $cart_item['item_number']['options']['price_id'] )     ? $cart_item['item_number']['options']['price_id'] : null;
 												$quantity   = isset( $cart_item['quantity'] ) && $cart_item['quantity'] > 0 ? $cart_item['quantity']                           : 1;
+												$download   = new EDD_Download( $item_id );
 
 												if( false === $price ) {
 
@@ -403,16 +404,27 @@ $customer       = new EDD_Customer( $payment->customer_id );
 
 												<li class="download">
 													<span class="edd-purchased-download-title">
-														<a href="<?php echo admin_url( 'post.php?post=' . $item_id . '&action=edit' ); ?>">
-															<?php echo get_the_title( $item_id );
-															if ( isset( $cart_items[ $key ]['item_number'] ) && isset( $cart_items[ $key ]['item_number']['options'] ) ) {
-																$price_options = $cart_items[ $key ]['item_number']['options'];
-																if ( edd_has_variable_prices( $item_id ) && isset( $price_id ) ) {
-																	echo ' - ' . edd_get_price_option_name( $item_id, $price_id, $payment_id );
+														<?php if ( ! empty( $download->ID ) ) : ?>
+															<a href="<?php echo admin_url( 'post.php?post=' . $item_id . '&action=edit' ); ?>">
+																<?php echo $download->get_name();
+																if ( isset( $cart_items[ $key ]['item_number'] ) && isset( $cart_items[ $key ]['item_number']['options'] ) ) {
+																	$price_options = $cart_items[ $key ]['item_number']['options'];
+																	if ( edd_has_variable_prices( $item_id ) && isset( $price_id ) ) {
+																		echo ' - ' . edd_get_price_option_name( $item_id, $price_id, $payment_id );
+																	}
 																}
-															}
-															?>
-														</a>
+																?>
+															</a>
+														<?php else: ?>
+															<span class="deleted">
+																<?php if ( ! empty( $cart_item['name'] ) ) : ?>
+																	<?php echo $cart_item['name']; ?>&nbsp;-&nbsp;
+																	<em>(<?php _e( 'Deleted', 'easy-digital-downloads' ); ?>)</em>
+																<?php else: ?>
+																	<em><?php printf( __( '%s deleted', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></em>
+																<?php endif; ?>
+															</span>
+														<?php endif; ?>
 													</span>
 													<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][id]" class="edd-payment-details-download-id" value="<?php echo esc_attr( $item_id ); ?>"/>
 													<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][price_id]" class="edd-payment-details-download-price-id" value="<?php echo esc_attr( $price_id ); ?>"/>
@@ -455,7 +467,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 														<?php _ex( 'Tax', 'payment details purchased item tax - mobile', 'easy-digital-downloads' ); ?>
 													</span>
 													<?php echo edd_currency_symbol( $currency_code ); ?>
-													<input type="number" step="0.01" min="0" class="small-text edd-payment-details-download-item-tax edd-payment-item-input" name="edd-payment-details-downloads[<?php echo $key; ?>][item_tax]" value="<?php echo edd_format_amount( $item_tax ); ?>" />
+													<input type="text" class="small-text edd-price-field edd-payment-details-download-item-tax edd-payment-item-input" name="edd-payment-details-downloads[<?php echo $key; ?>][item_tax]" value="<?php echo edd_format_amount( $item_tax ); ?>" />
 												</li>
 												<?php endif; ?>
 
@@ -685,23 +697,23 @@ $customer       = new EDD_Customer( $payment->customer_id );
 												<div class="column">
 													<p>
 														<strong class="order-data-address-line"><?php _e( 'Street Address Line 1:', 'easy-digital-downloads' ); ?></strong><br/>
-														<input type="text" name="edd-payment-address[0][line1]" value="<?php echo esc_attr( $address['line1'] ); ?>" class="medium-text" />
+														<input type="text" name="edd-payment-address[0][line1]" value="<?php echo esc_attr( $address['line1'] ); ?>" class="large-text" />
 													</p>
 													<p>
 														<strong class="order-data-address-line"><?php _e( 'Street Address Line 2:', 'easy-digital-downloads' ); ?></strong><br/>
-														<input type="text" name="edd-payment-address[0][line2]" value="<?php echo esc_attr( $address['line2'] ); ?>" class="medium-text" />
+														<input type="text" name="edd-payment-address[0][line2]" value="<?php echo esc_attr( $address['line2'] ); ?>" class="large-text" />
 													</p>
 
 												</div>
 												<div class="column">
 													<p>
 														<strong class="order-data-address-line"><?php echo _x( 'City:', 'Address City', 'easy-digital-downloads' ); ?></strong><br/>
-														<input type="text" name="edd-payment-address[0][city]" value="<?php echo esc_attr( $address['city'] ); ?>" class="medium-text"/>
+														<input type="text" name="edd-payment-address[0][city]" value="<?php echo esc_attr( $address['city'] ); ?>" class="large-text"/>
 
 													</p>
 													<p>
 														<strong class="order-data-address-line"><?php echo _x( 'Zip / Postal Code:', 'Zip / Postal code of address', 'easy-digital-downloads' ); ?></strong><br/>
-														<input type="text" name="edd-payment-address[0][zip]" value="<?php echo esc_attr( $address['zip'] ); ?>" class="medium-text"/>
+														<input type="text" name="edd-payment-address[0][zip]" value="<?php echo esc_attr( $address['zip'] ); ?>" class="large-text"/>
 
 													</p>
 												</div>
@@ -718,7 +730,10 @@ $customer       = new EDD_Customer( $payment->customer_id );
 															'show_option_none' => false,
 															'chosen'           => true,
 															'placeholder'      => __( 'Select a country', 'easy-digital-downloads' ),
-															'data'             => array( 'search-type' => 'no_ajax' ),
+															'data'             => array(
+																'search-type'        => 'no_ajax',
+																'search-placeholder' => __( 'Type to search all Countries', 'easy-digital-downloads' ),
+															),
 														) );
 														?>
 													</p>
@@ -736,10 +751,13 @@ $customer       = new EDD_Customer( $payment->customer_id );
 																'show_option_none' => false,
 																'chosen'           => true,
 																'placeholder'      => __( 'Select a state', 'easy-digital-downloads' ),
-																'data'             => array( 'search-type' => 'no_ajax' ),
+																'data'             => array(
+																	'search-type'        => 'no_ajax',
+																	'search-placeholder' => __( 'Type to search all States/Provinces', 'easy-digital-downloads' ),
+																),
 															) );
 														} else { ?>
-															<input type="text" name="edd-payment-address[0][state]" value="<?php echo esc_attr( $address['state'] ); ?>" class="medium-text"/>
+															<input type="text" name="edd-payment-address[0][state]" value="<?php echo esc_attr( $address['state'] ); ?>" class="large-text"/>
 															<?php
 														} ?>
 													</p>

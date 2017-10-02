@@ -137,7 +137,7 @@ class EDD_Cart {
 		$this->get_contents_details();
 		$this->get_all_fees();
 		$this->get_discounts_from_session();
-		$this->quantity = $this->get_quantity();
+		$this->get_quantity();
 	}
 
 	/**
@@ -173,7 +173,7 @@ class EDD_Cart {
 	 *
 	 * @since 2.7
 	 * @access public
-	 * @return void
+	 * @return array List of cart contents.
 	 */
 	public function get_contents() {
 		if ( ! did_action( 'edd_cart_contents_loaded_from_session' ) ) {
@@ -238,17 +238,23 @@ class EDD_Cart {
 			$discount   = apply_filters( 'edd_get_cart_content_details_item_discount_amount', $discount, $item );
 			$quantity   = $this->get_item_quantity( $item['id'], $options );
 			$fees       = $this->get_fees( 'fee', $item['id'], $price_id );
-			$subtotal   = $item_price * $quantity;
+			$subtotal   = floatval( $item_price ) * $quantity;
 
-			// Subtotal for tax calculation must bwe exclusive of fees. See $this->get_tax_on_fees()
+			// Subtotal for tax calculation must exclude fees that are greater than 0. See $this->get_tax_on_fees()
 			$subtotal_for_tax = $subtotal;
 
 			foreach ( $fees as $fee ) {
 				$fee_amount = (float) $fee['amount'];
 				$subtotal  += $fee_amount;
+
+				if( $fee_amount > 0 ) {
+					continue;
+				}
+
+				$subtotal_for_tax += $fee_amount;
 			}
 
-			$tax        = $this->get_item_tax( $item['id'], $options, $subtotal_for_tax - $discount );
+			$tax = $this->get_item_tax( $item['id'], $options, $subtotal_for_tax - $discount );
 
 			if ( edd_prices_include_tax() ) {
 				$subtotal -= round( $tax, edd_currency_decimal_filter() );
@@ -293,7 +299,7 @@ class EDD_Cart {
 	 */
 	public function get_discounts() {
 		$this->get_discounts_from_session();
-		$this->discounts = ! empty( $this->discounts ) ? explode( '|', $this->discounts ) : false;
+		$this->discounts = ! empty( $this->discounts ) ? explode( '|', $this->discounts ) : array();
 		return $this->discounts;
 	}
 
@@ -322,7 +328,8 @@ class EDD_Cart {
 
 		$has_discounts = false;
 
-		if ( $this->get_discounts() ) {
+		$discounts = $this->get_discounts();
+		if ( ! empty( $discounts ) ) {
 			$has_discounts = true;
 		}
 
@@ -656,7 +663,7 @@ class EDD_Cart {
 
 		$discounts = false === $discount ? $this->get_discounts() : array( $discount );
 
-		if ( $discounts ) {
+		if ( ! empty( $discounts ) ) {
 			foreach ( $discounts as $discount ) {
 				$code_id = edd_get_discount_id_by_code( $discount );
 
@@ -837,7 +844,7 @@ class EDD_Cart {
 			$quantity = 1;
 		}
 
-		return apply_filters( 'edd_get_cart_item_quantity', $quantity, $download_id, $options );
+		return absint( apply_filters( 'edd_get_cart_item_quantity', $quantity, $download_id, $options ) );
 	}
 
 	/**
@@ -1276,6 +1283,11 @@ class EDD_Cart {
 			}
 		}
 		$cart_tax += $this->get_tax_on_fees();
+
+		$subtotal = $this->get_subtotal();
+		if ( empty( $subtotal ) ) {
+			$cart_tax = 0;
+		}
 
 		$cart_tax = apply_filters( 'edd_get_cart_tax', edd_sanitize_amount( $cart_tax ) );
 

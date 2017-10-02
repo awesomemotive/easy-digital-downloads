@@ -637,3 +637,17 @@ function edd_include_single_customer_recount_tool_batch_processer( $class ) {
 	}
 
 }
+
+/**
+ * Sets up additional action calls for the set_last_changed method in the EDD_DB_Customers class.
+ *
+ * @since  2.8.7
+ * @param  void
+ * @return void
+ */
+function edd_customer_action_calls() {
+	add_action( 'added_customer_meta', array( EDD()->customers, 'set_last_changed' ) );
+	add_action( 'updated_customer_meta', array( EDD()->customers, 'set_last_changed' ) );
+	add_action( 'deleted_customer_meta', array( EDD()->customers, 'set_last_changed' ) );
+}
+add_action( 'init', 'edd_customer_action_calls' );
