@@ -672,6 +672,12 @@ function edd_get_registered_settings() {
 						'desc' => sprintf(__('Allow quantities to be adjusted when adding %s to the cart, and while viewing the checkout cart.','easy-digital-downloads' ), edd_get_label_plural( true ) ),
 						'type' => 'checkbox',
 					),
+					'debug_mode' => array(
+						'id'   => 'debug_mode',
+						'name' => __( 'Debug Mode', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this box to enable debug mode. When enabled, debug messages will be logged and shown in Downloads &rarr; Tools &rarr; Debug Log.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
 					'uninstall_on_delete' => array(
 						'id'   => 'uninstall_on_delete',
 						'name' => __( 'Remove Data on Uninstall?', 'easy-digital-downloads' ),
