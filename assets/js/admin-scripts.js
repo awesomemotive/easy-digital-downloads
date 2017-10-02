@@ -1080,7 +1080,7 @@ jQuery(document).ready(function ($) {
 		taxes : function() {
 			var no_states = $('select.edd-no-states');
 			if( no_states.length ) {
-				no_states.closest('tr').hide();
+				no_states.closest('tr').addClass('hidden');
 			}
 
 			// Update base state field based on selected base country
@@ -1093,9 +1093,9 @@ jQuery(document).ready(function ($) {
 				};
 				$.post(ajaxurl, data, function (response) {
 					if( 'nostates' == response ) {
-						$tr.next().hide();
+						$tr.next().addClass('hidden');
 					} else {
-						$tr.next().show();
+						$tr.next().removeClass('hidden');
 						$tr.next().find('select').replaceWith( response );
 					}
 				});
