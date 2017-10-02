@@ -241,6 +241,9 @@ function edd_get_registered_settings() {
 	 * 'Whitelisted' EDD settings, filters are provided for each settings
 	 * section to allow extensions and other plugins to add their own settings
 	 */
+
+	$shop_states = edd_get_shop_states( edd_get_shop_country() );
+
 	$edd_settings = array(
 		/** General Settings */
 		'general' => apply_filters( 'edd_settings_general',
@@ -325,6 +328,7 @@ function edd_get_registered_settings() {
 						'type'        => 'shop_states',
 						'chosen'      => true,
 						'placeholder' => __( 'Select a state', 'easy-digital-downloads' ),
+						'class'       => ( empty( $shop_states ) ) ? 'hidden' : '',
 					),
 					'tracking_settings' => array(
 						'id'   => 'tracking_settings',
