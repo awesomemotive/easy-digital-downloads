@@ -473,7 +473,7 @@ function edd_add_past_purchases_to_new_user( $user_id ) {
 
 	$email    = get_the_author_meta( 'user_email', $user_id );
 
-	$payments = edd_get_payments( array( 's' => $email ) );
+	$payments = edd_get_payments( array( 's' => $email, 'output' => 'payments' ) );
 
 	if( $payments ) {
 
