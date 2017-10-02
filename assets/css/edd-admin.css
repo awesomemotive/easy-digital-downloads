@@ -1727,7 +1727,7 @@ td.edd_order_price {
 	#system-info-textarea,
 	#edd-add-discount input[type="text"],
 	#edd-edit-discount input[type="text"],
-	#edd-payment-filters input,
+	#edd-payment-filters input:not([type='radio']),
 	#edd-payment-filters select,
 	#edd-payment-filters a {
 		width: 100%;
