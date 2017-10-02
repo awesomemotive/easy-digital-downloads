@@ -350,10 +350,10 @@ function edd_render_price_field( $post_id ) {
 						if ( ! empty( $prices ) ) :
 
 							foreach ( $prices as $key => $value ) :
-								$name   = isset( $value['name'] )   ? $value['name']   : '';
+								$name   = ( isset( $value['name'] ) && ! empty( $value['name'] ) ) ? $value['name']   : '';
+								$index  = ( isset( $value['index'] ) && $value['index'] !== '' )   ? $value['index']  : $key;
 								$amount = isset( $value['amount'] ) ? $value['amount'] : '';
-								$index  = isset( $value['index'] )  ? $value['index']  : $key;
-								$args = apply_filters( 'edd_price_row_args', compact( 'name', 'amount' ), $value );
+								$args   = apply_filters( 'edd_price_row_args', compact( 'name', 'amount' ), $value );
 								?>
 								<div class="edd_variable_prices_wrapper edd_repeatable_row" data-key="<?php echo esc_attr( $key ); ?>">
 									<?php do_action( 'edd_render_price_row', $key, $args, $post_id, $index ); ?>
