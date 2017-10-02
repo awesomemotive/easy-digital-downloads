@@ -223,15 +223,15 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 * Fix: The edd_get_users_purchased_products function did not respect the status argument passed in.
 * Fix: The base state/province displayed empty when no pre-populated state or province data was available.
 * Fix: Performance improvements to edd_get_discounts.
-* Fix: Newly register user's ID was not set on pre-existing payments.
+* Fix: Newly registered user's ID was not set on pre-existing payments.
 * Fix: During purchase, the customer name was set to email if last name was empty.
-* Fix: Corrected many non-numeric value and data handling issues in PHP 7.1
+* Fix: Corrected many non-numeric value and data handling issues in PHP 7.1.
 * Fix: Corrected an issue with Chosen placeholders.
 * New: Added the EDD_Logging class, to allow for easier debugging by developers.
-* New: The country name was added to the payment export.
+* New: The country name has been added to the payment export.
 * New: Added a discounts_total property to the EDD_Payment class.
 * New: Hyphens are now allowed in discount codes.
-* New: The Customer ID is now included in the sale report.
+* New: The Customer ID is now included in the sales report.
 * Tweak: Added better responsiveness in WordPress admin.
 * Tweak: Fixed a typo in the docs for the payments create CLI command.
 * Tweak: Wrapped discount fields in <span> tags.
