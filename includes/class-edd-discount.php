@@ -1184,6 +1184,12 @@ class EDD_Discount {
 	 * @return mixed bool|int false if data isn't passed and class not instantiated for creation, or post ID for the new discount.
 	 */
 	public function add( $args ) {
+
+		// If no code is provided, return early with false
+		if ( empty( $args['code'] ) ) {
+			return false;
+		}
+
 		$meta = $this->build_meta( $args );
 
 		if ( ! empty( $this->ID ) && $this->exists() ) {
@@ -1609,9 +1615,7 @@ class EDD_Discount {
 
 		// Ensure we have requirements before proceeding
 		if ( ! $return && ! empty( $product_reqs ) ) {
-
-			switch( $this->product_condition ) {
-
+			switch ( $this->product_condition ) {
 				case 'all' :
 
 					// Default back to true
@@ -1619,7 +1623,7 @@ class EDD_Discount {
 
 					foreach ( $product_reqs as $download_id ) {
 
-						if( empty( $download_id ) ) {
+						if ( empty( $download_id ) ) {
 							continue;
 						}
 
@@ -1643,7 +1647,7 @@ class EDD_Discount {
 
 					foreach ( $product_reqs as $download_id ) {
 
-						if( empty( $download_id ) ) {
+						if ( empty( $download_id ) ) {
 							continue;
 						}
 
@@ -1669,12 +1673,12 @@ class EDD_Discount {
 		}
 
 		if ( ! empty( $excluded_ps ) ) {
-			if ( $cart_ids == $excluded_ps ) {
+			if ( count( array_intersect( $cart_ids, $excluded_ps ) ) == count( $cart_ids ) ) {
+				$return = false;
+
 				if ( $set_error ) {
 					edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'easy-digital-downloads' ) );
 				}
-
-				$return = false;
 			}
 		}
 

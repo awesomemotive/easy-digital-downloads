@@ -425,6 +425,9 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		edd_add_to_cart( $download_3->ID );
 		$this->assertTrue( edd_discount_is_min_met( $discount ) );
 
+		$discount_obj = edd_get_discount( $discount );
+		$this->assertFalse( edd_is_discount_valid( $discount_obj->code ) );
+
 		EDD_Helper_Download::delete_download( $download_1->ID );
 		EDD_Helper_Download::delete_download( $download_2->ID );
 		EDD_Helper_Download::delete_download( $download_3->ID );

@@ -156,11 +156,45 @@ class EDD_Session {
 	 * @access public
 	 * @since 1.5
 	 * @param string $key Session key
-	 * @return string Session variable
+	 * @return mixed Session variable
 	 */
 	public function get( $key ) {
-		$key = sanitize_key( $key );
-		return isset( $this->session[ $key ] ) ? maybe_unserialize( $this->session[ $key ] ) : false;
+
+		$key    = sanitize_key( $key );
+		$return = false;
+
+		if ( isset( $this->session[ $key ] ) && ! empty( $this->session[ $key ] ) ) {
+
+			preg_match( '/[oO]\s*:\s*\d+\s*:\s*"\s*(?!(?i)(stdClass))/', $this->session[ $key ], $matches );
+			if ( ! empty( $matches ) ) {
+				$this->set( $key, null );
+				return false;
+			}
+			
+			if ( is_numeric( $this->session[ $key ] ) ) {
+				$return = $this->session[ $key ];
+			} else {
+
+				$maybe_json = json_decode( $this->session[ $key ] );
+
+				// Since json_last_error is PHP 5.3+, we have to rely on a `null` value for failing to parse JSON.
+				if ( is_null( $maybe_json ) ) {
+					$is_serialized = is_serialized( $this->session[ $key ] );
+					if ( $is_serialized ) {
+						$value = @unserialize( $this->session[ $key ] );
+						$this->set( $key, (array) $value );
+						$return = $value;
+					} else {
+						$return = $this->session[ $key ];
+					}
+				} else {
+					$return = json_decode( $this->session[ $key ], true );
+				}
+
+			}
+		}
+
+		return $return;
 	}
 
 	/**
@@ -169,17 +203,17 @@ class EDD_Session {
 	 * @since 1.5
 	 *
 	 * @param string $key Session key
-	 * @param integer $value Session variable
-	 * @return string Session variable
+	 * @param int|string|array $value Session variable
+	 * @return mixed Session variable
 	 */
 	public function set( $key, $value ) {
 
 		$key = sanitize_key( $key );
 
 		if ( is_array( $value ) ) {
-			$this->session[ $key ] = serialize( $value );
+			$this->session[ $key ] = wp_json_encode( $value );
 		} else {
-			$this->session[ $key ] = $value;
+			$this->session[ $key ] = esc_attr( $value );
 		}
 
 		if( $this->use_php_sessions ) {

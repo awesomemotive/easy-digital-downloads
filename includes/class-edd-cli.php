@@ -363,12 +363,20 @@ class EDD_CLI extends WP_CLI_Command {
 	 *
 	 * ## OPTIONS
 	 *
-	 *
+	 * 	 --email=<customer_email>: The email address of the customer to retrieve
+	 * 
 	 * ## EXAMPLES
-	 *
+	 * 
 	 * wp edd sales
+	 * wp edd sales --email=john@test.com
 	 */
 	public function sales( $args, $assoc_args ) {
+		
+		$email = isset( $assoc_args ) && array_key_exists( 'email', $assoc_args )  ? $assoc_args['email'] : '';
+		
+		global $wp_query;	
+	
+		$wp_query->query_vars['email'] = $email;
 
 		$sales = $this->api->get_recent_sales();
 
@@ -487,7 +495,7 @@ class EDD_CLI extends WP_CLI_Command {
 	 *
 	 * ## EXAMPLES
 	 *
-	 * wp edd payments create --number=10 --status=completed
+	 * wp edd payments create --number=10 --status=complete
 	 * wp edd payments create --number=10 --id=103
 	 */
 	public function payments( $args, $assoc_args ) {
@@ -571,6 +579,8 @@ class EDD_CLI extends WP_CLI_Command {
 			'discount'      => 'none'
 		);
 
+		$progress = \WP_CLI\Utils\make_progress_bar( 'Creating Payments', $number );
+
 		for( $i = 0; $i < $number; $i++ ) {
 
 			$products = array();
@@ -583,7 +593,7 @@ class EDD_CLI extends WP_CLI_Command {
 					'post_type'     => 'download',
 					'orderby'       => 'rand',
 					'order'         => 'ASC',
-					'posts_per_page'=> 1
+					'posts_per_page'=> rand( 1, 3 ),
 				) );
 
 			} else {
@@ -617,11 +627,13 @@ class EDD_CLI extends WP_CLI_Command {
 					$prices = edd_get_variable_prices( $download->ID );
 
 					if( false === $price_id || ! array_key_exists( $price_id, (array) $prices ) ) {
-						$price_id = rand( 0, count( $prices ) - 1 );
+						$item_price_id = array_rand( $prices );
+					} else {
+						$item_price_id = $price_id;
 					}
 
-					$item_price = $prices[ $price_id ]['amount'];
-					$options['price_id'] = $price_id;
+					$item_price = $prices[ $item_price_id ]['amount'];
+					$options['price_id'] = $item_price_id;
 
 				} else {
 
@@ -653,26 +665,6 @@ class EDD_CLI extends WP_CLI_Command {
 
 			}
 
-			$purchase_data = array(
-				'price'	        => edd_sanitize_amount( $total ),
-				'tax'           => 0,
-				'purchase_key'  => strtolower( md5( uniqid() ) ),
-				'user_email'    => $email,
-				'user_info'     => $user_info,
-				'currency'      => edd_get_currency(),
-				'downloads'     => $final_downloads,
-				'cart_details'  => $cart_details,
-				'status'        => 'pending'
-			);
-
-			$payment_id = edd_insert_payment( $purchase_data );
-
-			remove_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999 );
-
-			if( $status != 'pending' ) {
-				edd_update_payment_status( $payment_id, $status );
-			}
-
 			if ( 'random' === $date ) {
 				// Randomly grab a date from the current past 30 days
 				$oldest_time = strtotime( '-' . $range . ' days', current_time( 'timestamp') );
@@ -691,14 +683,41 @@ class EDD_CLI extends WP_CLI_Command {
 				}
 			}
 
+			$purchase_data = array(
+				'price'	        => edd_sanitize_amount( $total ),
+				'tax'           => 0,
+				'purchase_key'  => strtolower( md5( uniqid() ) ),
+				'user_email'    => $email,
+				'user_info'     => $user_info,
+				'currency'      => edd_get_currency(),
+				'downloads'     => $final_downloads,
+				'cart_details'  => $cart_details,
+				'status'        => 'pending',
+			);
+
+			if ( ! empty( $timestring ) ) {
+				$purchase_data['post_date'] = $timestring;
+			}
+
+			$payment_id = edd_insert_payment( $purchase_data );
+
+			remove_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999 );
+
+			if( $status != 'pending' ) {
+				edd_update_payment_status( $payment_id, $status );
+			}
+
 			if ( ! empty( $timestring ) ) {
 				$payment = new EDD_Payment( $payment_id );
-				$payment->date = $timestring;
 				$payment->completed_date = $timestring;
 				$payment->save();
 			}
 
+			$progress->tick();
+
 		}
+
+		$progress->finish();
 
 		WP_CLI::success( sprintf( __( 'Created %s payments', 'easy-digital-downloads' ), $number ) );
 		return;

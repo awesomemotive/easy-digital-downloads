@@ -55,7 +55,7 @@ function edd_get_tax_rate( $country = false, $state = false ) {
 	if( empty( $country ) ) {
 		if( ! empty( $_POST['billing_country'] ) ) {
 			$country = $_POST['billing_country'];
-		} elseif( is_user_logged_in() && ! empty( $user_address ) ) {
+		} elseif( is_user_logged_in() && ! empty( $user_address['country'] ) ) {
 			$country = $user_address['country'];
 		}
 		$country = ! empty( $country ) ? $country : edd_get_shop_country();
@@ -66,7 +66,7 @@ function edd_get_tax_rate( $country = false, $state = false ) {
 			$state = $_POST['state'];
 		} elseif( ! empty( $_POST['card_state'] ) ) {
 			$state = $_POST['card_state'];
-		} elseif( is_user_logged_in() && ! empty( $user_address ) ) {
+		} elseif( is_user_logged_in() && ! empty( $user_address['state'] ) ) {
 			$state = $user_address['state'];
 		}
 		$state = ! empty( $state ) ? $state : edd_get_shop_state();

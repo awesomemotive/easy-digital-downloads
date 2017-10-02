@@ -880,6 +880,7 @@ class Tests_Payment_Class extends EDD_UnitTestCase {
 		$payment = new EDD_Payment( $payment->ID );
 		$this->assertEquals( 1, $payment->cart_details[0]['discount'] );
 		$this->assertEquals( $original_total-1, $payment->cart_details[0]['price'] );
+		$this->assertSame( 1, $payment->discounted_amount );
 	}
 
 	public function modify_cart_item_tax() {
@@ -911,5 +912,51 @@ class Tests_Payment_Class extends EDD_UnitTestCase {
 		$meta['user_info']['address']['country'] = 'PL';
 
 		return $meta;
+	}
+
+	public function add_meta() {
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertTrue( $payment->add_meta( '_test_add_payment_meta', 'test' ) );
+	}
+
+	public function add_meta_false_empty_key() {
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertFalse( $payment->add_meta( '', 'test' ) );
+	}
+
+	public function add_meta_unique_false() {
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertFalse( $payment->add_meta( '_edd_payment_key', 'test', true ) );
+	}
+
+	public function delete_meta() {
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertTrue( $payment->delete_meta( '_edd_payment_key' ) );
+	}
+
+	public function delete_meta_no_key() {
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertFalse( $payment->delete_meta( '' ) );
+	}
+
+	public function delete_meta_missing_key() {
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertFalse( $payment->delete_meta( '_edd_nonexistant_key' ) );
+	}
+
+	public function test_modify_amount() {
+		$payment = new EDD_Payment( $this->_payment_id );
+		$item_price = isset( $download['item_price'] ) ? $download['item_price'] : 0;
+
+
+		$args = array(
+			'item_price' => '1,001.95'
+		);
+
+		$payment->modify_cart_item( 0, $args );
+		$payment->save();
+
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertEquals( 1001.95, $payment->cart_details[0]['price'] );
 	}
 }

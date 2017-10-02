@@ -54,6 +54,9 @@ function edd_get_shop_states( $country = null ) {
 		case 'US' :
 			$states = edd_get_states_list();
 			break;
+		case 'AO' :
+			$states = edd_get_angola_provinces_list();
+			break;
 		case 'CA' :
 			$states = edd_get_provinces_list();
 			break;
@@ -475,6 +478,38 @@ function edd_get_states_list() {
 	);
 
 	return apply_filters( 'edd_us_states', $states );
+}
+
+/**
+ * Get Angola States
+ *
+ * @since 2.8.5
+ * @return array $states A list of states
+ */
+function edd_get_angola_provinces_list() {
+	$provinces = array(
+		''    => '',
+		'BGO' => 'Bengo',
+		'BGU' => 'Benguela',
+		'BIE' => 'Bié',
+		'CAB' => 'Cabinda',
+		'CNN' => 'Cunene',
+		'HUA' => 'Huambo',
+		'HUI' => 'Huíla',
+		'CCU' => 'Kuando Kubango', // Cuando Cubango
+		'CNO' => 'Kwanza-Norte', // Cuanza Norte
+		'CUS' => 'Kwanza-Sul', // Cuanza Sul
+		'LUA' => 'Luanda',
+		'LNO' => 'Lunda-Norte', // Lunda Norte
+		'LSU' => 'Lunda-Sul', // Lunda Sul
+		'MAL' => 'Malanje', // Malanje
+		'MOX' => 'Moxico',
+		'NAM' => 'Namibe',
+		'UIG' => 'Uíge',
+		'ZAI' => 'Zaire'
+	);
+
+	return apply_filters( 'edd_angola_provinces', $provinces );
 }
 
 /**
@@ -1622,3 +1657,19 @@ function edd_get_spain_states_list() {
 
 	return apply_filters( 'edd_spain_states', $states );
 }
+
+/**
+ * Given a country code, return the country name
+ *
+ * @since 2.8.7
+ * @param string $country_code The ISO Code for the country
+ *
+ * @return string
+ */
+function edd_get_country_name( $country_code = '' ) {
+	$country_list = edd_get_country_list();
+	$country_name = isset( $country_list[ $country_code ] ) ? $country_list[ $country_code ] : $country_code;
+
+	return apply_filters( 'edd_get_country_name', $country_name, $country_code );
+}
+

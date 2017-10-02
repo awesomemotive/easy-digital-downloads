@@ -98,6 +98,14 @@ class EDD_Payment {
 	protected $tax = 0;
 
 	/**
+	 * The amount the payment has been discounted through discount codes
+	 *
+	 * @since 2.8.7
+	 * @var int
+	 */
+	protected $discounted_amount = 0;
+
+	/**
 	 * The tax rate charged on this payment
 	 *
 	 * @since 2.7
@@ -557,40 +565,19 @@ class EDD_Payment {
 			$this->ID  = $payment_id;
 			$this->_ID = $payment_id;
 
-			$customer = new stdClass;
-
-			if ( did_action( 'edd_pre_process_purchase' ) && is_user_logged_in() ) {
-
-				$customer = new EDD_customer( get_current_user_id(), true );
-
-				// Customer is logged in but used a different email to purchase with so assign to their customer record
-				if( ! empty( $customer->id ) && $this->email != $customer->email ) {
-					$customer->add_email( $this->email );
-				}
-
-			}
-
-			if ( empty( $customer->id ) ) {
-				$customer = new EDD_Customer( $this->email );
-			}
-
-			if ( empty( $customer->id ) ) {
-
-				$customer_data = array(
-					'name'        => ! is_email( $payment_title ) ? $this->first_name . ' ' . $this->last_name : '',
-					'email'       => $this->email,
-					'user_id'     => $this->user_id,
-				);
-
-				$customer->create( $customer_data );
-
-			}
-
+			$customer = $this->maybe_create_customer();
 
 			$this->customer_id            = $customer->id;
 			$this->pending['customer_id'] = $this->customer_id;
 			$customer->attach_payment( $this->ID, false );
 
+			/**
+			 * This run of the edd_payment_meta filter is for backwards compatibility purposes. The filter will also run in the EDD_Payment::save
+			 * method. By keeping this here, it retains compatbility of adding payment meta prior to the payment being inserted, as was previously supported
+			 * by edd_insert_payment().
+			 *
+			 * @reference: https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5838
+			 */
 			$this->payment_meta = apply_filters( 'edd_payment_meta', $this->payment_meta, $payment_data );
 			if ( ! empty( $this->payment_meta['fees'] ) ) {
 				$this->fees = array_merge( $this->payment_meta['fees'], $this->fees );
@@ -639,6 +626,14 @@ class EDD_Payment {
 
 		if( $this->ID !== $this->_ID ) {
 			$this->ID = $this->_ID;
+		}
+
+		$customer = $this->maybe_create_customer();
+		if ( $this->customer_id != $customer->id ) {
+
+			$this->customer_id            = $customer->id;
+			$this->pending['customer_id'] = $this->customer_id;
+
 		}
 
 		// If we have something pending, let's save it
@@ -883,10 +878,13 @@ class EDD_Payment {
 
 					case 'customer_id':
 						$this->update_meta( '_edd_payment_customer_id', $this->customer_id );
+						$customer = new EDD_Customer( $this->customer_id );
+						$customer->attach_payment( $this->ID, false );
 						break;
 
 					case 'user_id':
 						$this->update_meta( '_edd_payment_user_id', $this->user_id );
+						$this->user_info['id'] = $this->user_id;
 						break;
 
 					case 'first_name':
@@ -1207,8 +1205,12 @@ class EDD_Payment {
 
 		$download = new EDD_Download( $download_id );
 
-		// Bail if this post isn't a download
-		if( ! $download || $download->post_type !== 'download' ) {
+		/**
+		 * Bail if this post isn't a download post type.
+		 *
+		 * We need to allow this to process though for a missing post ID, in case it's a download that was deleted.
+		 */
+		if( ! empty( $download->ID ) && $download->post_type !== 'download' ) {
 			return false;
 		}
 
@@ -1405,14 +1407,15 @@ class EDD_Payment {
 			return false;
 		}
 
-		$new_subtotal = $merged_item['item_price'] * $merged_item['quantity'];
-		$merged_item['subtotal'] = $new_subtotal;
-		$merged_item['price']    = $new_subtotal + $merged_item['tax'];
+		// Format the item_price correctly now
+		$merged_item['item_price'] = edd_sanitize_amount( $merged_item['item_price'] );
 
-		$this->cart_details[ $cart_index ]    = $merged_item;
-		$modified_download                    = $merged_item;
-		$modified_download['action']          = 'modify';
-		$modified_download['previous_data']   = $current_args;
+		$new_subtotal                       = floatval( $merged_item['item_price'] ) * $merged_item['quantity'];
+		$merged_item['price']               = $new_subtotal + $merged_item['tax'];
+		$this->cart_details[ $cart_index ]  = $merged_item;
+		$modified_download                  = $merged_item;
+		$modified_download['action']        = 'modify';
+		$modified_download['previous_data'] = $current_args;
 
 		$this->pending['downloads'][] = $modified_download;
 
@@ -1807,6 +1810,13 @@ class EDD_Payment {
 
 		$meta = apply_filters( 'edd_get_payment_meta_' . $meta_key, $meta, $this->ID );
 
+		if ( is_serialized( $meta ) ) {
+			preg_match( '/[oO]\s*:\s*\d+\s*:\s*"\s*(?!(?i)(stdClass))/', $meta, $matches );
+			if ( ! empty( $matches ) ) {
+				$meta = array();
+			}
+		}
+
 		return apply_filters( 'edd_get_payment_meta', $meta, $this->ID, $meta_key );
 	}
 
@@ -1858,6 +1868,41 @@ class EDD_Payment {
 		$meta_value = apply_filters( 'edd_update_payment_meta_' . $meta_key, $meta_value, $this->ID );
 
 		return update_post_meta( $this->ID, $meta_key, $meta_value, $prev_value );
+	}
+
+	/**
+	 * Add an item to the payment meta
+	 *
+	 * @since 2.8
+	 * @param string $meta_key
+	 * @param string $meta_value
+	 * @param bool   $unique
+	 *
+	 * @return bool|false|int
+	 */
+	public function add_meta( $meta_key = '', $meta_value = '', $unique = false ) {
+		if ( empty( $meta_key ) ) {
+			return false;
+		}
+
+		return add_post_meta( $this->ID, $meta_key, $meta_value, $unique );
+	}
+
+	/**
+	 * Delete an item from payment meta
+	 *
+	 * @since 2.8
+	 * @param string $meta_key
+	 * @param string $meta_value
+	 *
+	 * @return bool
+	 */
+	public function delete_meta( $meta_key = '', $meta_value = '' ) {
+		if ( empty( $meta_key ) ) {
+			return false;
+		}
+
+		return delete_post_meta( $this->ID, $meta_key, $meta_value );
 	}
 
 	/**
@@ -2323,8 +2368,17 @@ class EDD_Payment {
 			'discount'   => $this->discounts,
 		);
 
-		$user_info    = isset( $this->payment_meta['user_info'] ) ? maybe_unserialize( $this->payment_meta['user_info'] ) : array();
-		$user_info    = wp_parse_args( $user_info, $defaults );
+		$user_info    = isset( $this->payment_meta['user_info'] ) ? $this->payment_meta['user_info'] : array();
+
+		if ( is_serialized( $user_info ) ) {
+			preg_match( '/[oO]\s*:\s*\d+\s*:\s*"\s*(?!(?i)(stdClass))/', $user_info, $matches );
+			if ( ! empty( $matches ) ) {
+				$user_info = array();
+			}
+		}
+
+		// As per Github issue #4248, we need to run maybe_unserialize here still.
+		$user_info    = wp_parse_args( maybe_unserialize( $user_info ), $defaults );
 
 		// Ensure email index is in the old user info array
 		if( empty( $user_info['email'] ) ) {
@@ -2521,6 +2575,20 @@ class EDD_Payment {
 	}
 
 	/**
+	 * Return the discounted amount of the payment.
+	 *
+	 * @since 2.8.7
+	 * @return float
+	 */
+	private function get_discounted_amount() {
+		$total = $this->total;
+		$fees  = $this->fees_total;
+		$tax   = $this->tax;
+
+		return floatval( apply_filter( 'edd_payment_discounted_amount', $total - ( $fees + $tax ), $this ) );
+	}
+
+	/**
 	 * Retrieve payment currency
 	 *
 	 * @since  2.5.1
@@ -2659,6 +2727,56 @@ class EDD_Payment {
 	private function in_process() {
 		$in_process_statuses = array( 'pending', 'processing' );
 		return in_array( $this->status, $in_process_statuses );
+	}
+
+	/**
+	 * Determines if a customer needs to be created given the current payment details.
+	 *
+	 * @since 2.8.4
+	 *
+	 * @return EDD_Customer The customer object of the existing customer or new customer.
+	 */
+	private function maybe_create_customer() {
+		$customer = new stdClass;
+
+		if ( did_action( 'edd_pre_process_purchase' ) && is_user_logged_in() ) {
+
+			$customer = new EDD_customer( get_current_user_id(), true );
+
+			// Customer is logged in but used a different email to purchase with so assign to their customer record
+			if( ! empty( $customer->id ) && $this->email != $customer->email ) {
+				$customer->add_email( $this->email );
+			}
+
+		}
+
+		if ( empty( $customer->id ) ) {
+			$customer = new EDD_Customer( $this->email );
+		}
+
+		if ( empty( $customer->id ) ) {
+
+			if( empty( $this->first_name ) && empty( $this->last_name ) ) {
+
+				$name = $this->email;
+
+			} else {
+
+				$name = $this->first_name . ' ' . $this->last_name;
+
+			}
+
+			$customer_data = array(
+				'name'        => $name,
+				'email'       => $this->email,
+				'user_id'     => $this->user_id,
+			);
+
+			$customer->create( $customer_data );
+
+		}
+
+		return $customer;
 	}
 
 }

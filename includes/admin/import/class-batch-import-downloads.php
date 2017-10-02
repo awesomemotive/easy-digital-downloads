@@ -257,7 +257,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 	public function get_percentage_complete() {
 
 		if( $this->total > 0 ) {
-			$percentage = ( $this->step / $this->total ) * 100;
+			$percentage = ( $this->step * $this->per_step / $this->total ) * 100;
 		}
 
 		if( $percentage > 100 ) {
