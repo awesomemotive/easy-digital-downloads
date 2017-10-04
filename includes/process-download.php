@@ -196,7 +196,7 @@ function edd_process_download() {
 		header("Robots: none");
 		header("Content-Type: " . $ctype . "");
 		header("Content-Description: File Transfer");
-		header("Content-Disposition: attachment; filename=\"" . apply_filters( 'edd_requested_file_name', basename( $requested_file ) ) . "\"");
+		header("Content-Disposition: attachment; filename=\"" . apply_filters( 'edd_requested_file_name', basename( $requested_file ), $args ) . "\"");
 		header("Content-Transfer-Encoding: binary");
 
 		// If the file isn't locally hosted, process the redirect
