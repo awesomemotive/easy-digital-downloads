@@ -111,8 +111,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 
 		}
 
-		$payments  = edd_get_payments( $args );
-		$countries = edd_get_country();
+		$payments = edd_get_payments( $args );
 
 		if( $payments ) {
 
