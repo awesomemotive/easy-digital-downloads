@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.8.7\n"
+"Project-Id-Version: Easy Digital Downloads 2.8.8\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2017-10-02 19:38:39+00:00\n"
+"POT-Creation-Date: 2017-10-05 14:12:55+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -626,7 +626,7 @@ msgstr ""
 
 #: includes/admin/customers/customers.php:312
 #: includes/admin/reporting/class-export-payments.php:187
-#: includes/admin/reporting/export/class-batch-export-payments.php:225
+#: includes/admin/reporting/export/class-batch-export-payments.php:224
 msgid "none"
 msgstr ""
 
@@ -2567,7 +2567,7 @@ msgid "User"
 msgstr ""
 
 #: includes/admin/reporting/class-export-payments.php:192
-#: includes/admin/reporting/export/class-batch-export-payments.php:230
+#: includes/admin/reporting/export/class-batch-export-payments.php:229
 msgid "guest"
 msgstr ""
 
