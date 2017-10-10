@@ -973,6 +973,8 @@ td.edd_order_price {
 	padding: 12px 12px 4px;
 	overflow: auto;
 	margin: 20px -12px -23px;
+	position: relative;
+	width: 100%;
 }
 .edd-import-export-form .notice-wrap .spinner {
 	margin: 4px 10px 8px;
