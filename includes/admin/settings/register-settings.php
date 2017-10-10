@@ -554,7 +554,7 @@ function edd_get_registered_settings() {
 						'desc'          => __( 'Check this to disable all included styling of buttons, checkout fields, and all other elements.', 'easy-digital-downloads' ),
 						'type'          => 'checkbox',
 						'tooltip_title' => __( 'Disabling Styles', 'easy-digital-downloads' ),
-						'tooltip_desc'  => __( 'If your theme has a complete custom CSS file for Easy Digital Downloads, you may wish to disable our default styles. This is not recommended unless your sure your theme has a complete custom CSS.', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( "If your theme has a complete custom CSS file for Easy Digital Downloads, you may wish to disable our default styles. This is not recommended unless you're sure your theme has a complete custom CSS.", 'easy-digital-downloads' ),
 					),
 					'button_header' => array(
 						'id'   => 'button_header',
