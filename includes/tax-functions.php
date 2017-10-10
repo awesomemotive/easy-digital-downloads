@@ -52,6 +52,11 @@ function edd_get_tax_rate( $country = false, $state = false ) {
 
 	$user_address = edd_get_customer_address();
 
+    $address_line_1 = !empty( $_POST['card_address'] ) ? sanitize_text_field( $_POST['card_address'] ) : '';
+    $address_line_2 = !empty( $_POST['card_address_2'] ) ? sanitize_text_field( $_POST['card_address_2'] ) : '';
+    $city           = !empty( $_POST['card_city'] ) ? sanitize_text_field( $_POST['card_city'] ) : '';
+    $zip            = !empty( $_POST['card_zip'] ) ? sanitize_text_field( $_POST['card_zip'] ) : '';
+
 	if( empty( $country ) ) {
 		if( ! empty( $_POST['billing_country'] ) ) {
 			$country = $_POST['billing_country'];
@@ -105,7 +110,7 @@ function edd_get_tax_rate( $country = false, $state = false ) {
 	// Convert to a number we can use
 	$rate = $rate / 100;
 
-	return apply_filters( 'edd_tax_rate', $rate, $country, $state );
+	return apply_filters( 'edd_tax_rate', $rate, $country, $state, $address_line_1, $address_line_2, $city, $zip );
 }
 
 /**
