@@ -159,7 +159,7 @@ class EDD_Register_Meta {
 			array(
 				'sanitize_callback' => 'sanitize_text_field',
 				'type'              => 'string',
-				'description'       => __( 'Defines how this products `Purchase` button should behave, either add to cart or buy now.', 'easy-digital-downloads' ),
+				'description'       => __( "Defines how this product's 'Purchase' button should behave, either add to cart or buy now", 'easy-digital-downloads' ),
 				'show_in_rest'      => true,
 			)
 		);
