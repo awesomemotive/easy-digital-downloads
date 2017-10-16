@@ -27,14 +27,28 @@ function edd_is_checkout() {
 	$is_checkout      = is_page( edd_get_option( 'purchase_page' ) );
 
 	if( ! $is_object_set ) {
-
 		unset( $wp_query->queried_object );
-
+	} else if ( is_singular( apply_filters( 'edd_page_metabox_post_types' , array( 'page' ) ) ) ) {
+		$content = $wp_query->queried_object->post_content;
 	}
 
 	if( ! $is_object_id_set ) {
-
 		unset( $wp_query->queried_object_id );
+	} else if ( is_singular( apply_filters( 'edd_page_metabox_post_types' , array( 'page' ) ) ) ) {
+		$page_id = $wp_query->queried_object_id;
+	}
+
+	// If we know this isn't the primary checkout page, check other methods.
+	if ( ! $is_checkout ) {
+
+		if ( isset( $content ) && has_shortcode( $content, 'download_checkout' ) ) {
+			$is_checkout = true;
+		}
+
+		if ( isset( $page_id ) && ! $is_checkout ) {
+			$is_checkout = get_post_meta( $page_id, '_edd_has_checkout', true );
+			$is_checkout = ! empty( $is_checkout );
+		}
 
 	}
 
