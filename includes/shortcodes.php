@@ -419,7 +419,7 @@ function edd_downloads_query( $atts, $content = null ) {
 
     // manually detect if a default taxonomy is being used in the shortcode
     // note: download_tags will be detected automatically, only set it from tags when download_tags is empty
-   r if ( $atts['tags'] && !$taxonomy_filters['download_tags'] ) {
+    if ( $atts['tags'] && !$taxonomy_filters['download_tags'] ) {
 
         $taxonomy_filters['download_tags']  	= $atts['tags'];
       }
