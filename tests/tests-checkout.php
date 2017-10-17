@@ -245,14 +245,6 @@ class Tests_Checkout extends EDD_UnitTestCase {
 		$this->assertTrue( edd_is_checkout() );
 	}
 
-	public function test_edd_is_checkout_postmeta() {
-		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Page', 'post_type' => 'page', 'post_status' => 'publish', 'post_content' => 'Test Page' ) );
-		update_post_meta( $post_id, '_edd_has_checkout', '1' );
-		$this->go_to( get_permalink( $post_id ) );
-		do_action( 'template_redirect' ); // Necessary to trigger correct actions
-		$this->assertTrue( edd_is_checkout() );
-	}
-
 	public function test_edd_is_checkout_fail() {
 		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Page 2', 'post_type' => 'page', 'post_status' => 'publish', 'post_content' => 'Test Page' ) );
 		$this->go_to( get_permalink( $post_id ) );
