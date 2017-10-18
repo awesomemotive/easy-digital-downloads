@@ -209,7 +209,7 @@ $status    = edd_get_payment_status( $payment, true );
 
 						<?php
 						// Allow extensions to extend the product cell
-						do_action( 'edd_purchase_receipt_after_files', $item['id'], $payment->ID, $meta );
+						do_action( 'edd_purchase_receipt_after_files', $item['id'], $payment->ID, $meta, $price_id );
 						?>
 					</td>
 					<?php if ( edd_use_skus() ) : ?>

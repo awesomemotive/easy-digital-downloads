@@ -63,7 +63,8 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			'currency'     => __( 'Currency', 'easy-digital-downloads' ),
 			'ip'           => __( 'IP Address', 'easy-digital-downloads' ),
 			'mode'         => __( 'Mode (Live|Test)', 'easy-digital-downloads' ),
-			'status'       => __( 'Status', 'easy-digital-downloads' )
+			'status'       => __( 'Status', 'easy-digital-downloads' ),
+			'country_name' => __( 'Country Name', 'easy-digital-downloads' ),
 		);
 
 		if( ! edd_use_skus() ){
@@ -109,8 +110,6 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			);
 
 		}
-
-		//echo json_encode($args ); exit;
 
 		$payments = edd_get_payments( $args );
 
@@ -231,7 +230,8 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 					'currency'     => $payment->currency,
 					'ip'           => $payment->ip,
 					'mode'         => $payment->get_meta( '_edd_payment_mode', true ),
-					'status'       => ( 'publish' === $payment->status ) ? 'complete' : $payment->status
+					'status'       => ( 'publish' === $payment->status ) ? 'complete' : $payment->status,
+					'country_name' => isset( $user_info['address']['country'] ) ? edd_get_country_name( $user_info['address']['country'] ) : '',
 				);
 
 			}

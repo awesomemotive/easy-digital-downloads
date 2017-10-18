@@ -54,8 +54,26 @@ class EDD_HTML_Elements {
 			'post_type'      => 'download',
 			'orderby'        => 'title',
 			'order'          => 'ASC',
-			'posts_per_page' => $args['number']
+			'posts_per_page' => $args['number'],
 		);
+
+		if ( ! current_user_can( 'edit_products' ) ) {
+			$product_args['post_status'] = apply_filters( 'edd_product_dropdown_status_nopriv', array( 'publish' ) );
+		} else {
+			$product_args['post_status'] = apply_filters( 'edd_product_dropdown_status', array( 'publish', 'draft', 'private', 'future' ) );
+		}
+
+		if ( is_array( $product_args['post_status'] ) ) {
+
+			// Given the array, sanitize them.
+			$product_args['post_status'] = array_map( 'sanitize_text_field', $product_args['post_status'] );
+
+		} else {
+
+			// If we didn't get an array, fallback to 'publish'.
+			$product_args['post_status'] = array( 'publish' );
+
+		}
 
 		// Maybe disable bundles
 		if( ! $args['bundles'] ) {
@@ -69,14 +87,34 @@ class EDD_HTML_Elements {
 			);
 		}
 
+		$product_args = apply_filters( 'edd_product_dropdown_args', $product_args );
+
+		// Since it's possible to have selected items not within the queried limit, we need to include the selected items.
 		$products     = get_posts( $product_args );
 		$existing_ids = wp_list_pluck( $products, 'ID' );
 		if ( ! empty( $args['selected'] ) ) {
-			$selected_item = absint( $args['selected'] );
-			if ( ! in_array( $selected_item, $existing_ids ) ) {
-				$post       = get_post( $selected_item );
-				$products[] = $post;
+
+			$selected_items = $args['selected'];
+			if ( ! is_array( $selected_items ) ) {
+				$selected_items = array( $selected_items );
 			}
+
+			foreach ( $selected_items as $selected_item ) {
+				if ( ! in_array( $selected_item, $existing_ids ) ) {
+
+					// If the selected item has a variation, we just need the product ID.
+					$has_variation = strpos( $selected_item, '_' );
+					if ( false !== $has_variation ) {
+						$selected_item = substr( $selected_item, 0, $has_variation );
+					}
+
+					$post       = get_post( $selected_item );
+					if ( ! is_null( $post ) ) {
+						$products[] = $post;
+					}
+				}
+			}
+
 		}
 
 		$options    = array();
@@ -87,10 +125,9 @@ class EDD_HTML_Elements {
 				if ( $args['variations'] && edd_has_variable_prices( $product->ID ) ) {
  					$prices = edd_get_variable_prices( $product->ID );
  					foreach ( $prices as $key => $value ) {
- 						$name   = ! empty( $value['name'] )   ? $value['name']   : '';
- 						$index  = ! empty( $value['index'] )  ? $value['index']  : $key;
- 						if ( $name && $index ) {
- 							$options[ absint( $product->ID ) . '_' . $index ] = esc_html( $product->post_title . ': ' . $name );
+ 						$name = ! empty( $value['name'] )   ? $value['name']   : '';
+ 						if ( $name ) {
+ 							$options[ absint( $product->ID ) . '_' . $key ] = esc_html( $product->post_title . ': ' . $name );
  						}
  					}
  				}
@@ -111,12 +148,11 @@ class EDD_HTML_Elements {
 						$prices = edd_get_variable_prices( (int) $parsed_item['download_id'] );
 						foreach ( $prices as $key => $value ) {
 
-							$name   = isset( $value['name'] )   ? $value['name']   : '';
-							$index  = isset( $value['index'] )  ? $value['index']  : $key;
+							$name = ( isset( $value['name'] ) && ! empty( $value['name'] ) ) ? $value['name']   : '';
 
-							if ( $name && $index && (int) $parsed_item['price_id'] === (int) $index  ) {
+							if ( $name && (int) $parsed_item['price_id'] === (int) $key  ) {
 
-								$options[ absint( $product->ID ) . '_' . $index ] = esc_html( get_the_title( (int) $parsed_item['download_id'] ) . ': ' . $name );
+								$options[ absint( $product->ID ) . '_' . $key ] = esc_html( get_the_title( (int) $parsed_item['download_id'] ) . ': ' . $name );
 
 						    }
 
@@ -142,12 +178,11 @@ class EDD_HTML_Elements {
 
 					foreach ( $prices as $key => $value ) {
 
-						$name   = isset( $value['name'] )   ? $value['name']   : '';
-						$index  = isset( $value['index'] )  ? $value['index']  : $key;
+						$name = ( isset( $value['name'] ) && ! empty( $value['name'] ) ) ? $value['name']   : '';
 
-						if ( $name && $index && (int) $parsed_item['price_id'] === (int) $index  ) {
+						if ( $name && (int) $parsed_item['price_id'] === (int) $key  ) {
 
-							$options[ absint( $product->ID ) . '_' . $index ] = esc_html( get_the_title( (int) $parsed_item['download_id'] ) . ': ' . $name );
+							$options[ absint( $product->ID ) . '_' . $key ] = esc_html( get_the_title( (int) $parsed_item['download_id'] ) . ': ' . $name );
 
 						}
 

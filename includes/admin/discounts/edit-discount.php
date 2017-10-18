@@ -37,7 +37,7 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 					<label for="edd-name"><?php _e( 'Name', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input name="name" required="required" id="edd-name" type="text" value="<?php echo esc_attr( stripslashes( $discount->post_title ) ); ?>" style="width: 300px;"/>
+					<input name="name" required="required" id="edd-name" type="text" value="<?php echo esc_attr( stripslashes( $discount->post_title ) ); ?>" />
 					<p class="description"><?php _e( 'The name of this discount', 'easy-digital-downloads' ); ?></p>
 				</td>
 			</tr>
@@ -47,7 +47,7 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 					<label for="edd-code"><?php _e( 'Code', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input type="text" required="required" id="edd-code" name="code" value="<?php echo esc_attr( edd_get_discount_code( $discount_id ) ); ?>" pattern="[a-zA-Z0-9]+" style="width: 300px;"/>
+					<input type="text" required="required" id="edd-code" name="code" value="<?php echo esc_attr( edd_get_discount_code( $discount_id ) ); ?>" pattern="[a-zA-Z0-9-_]+" />
 					<p class="description"><?php _e( 'Enter a code for this discount, such as 10PERCENT. Only alphanumeric characters are allowed.', 'easy-digital-downloads' ); ?></p>
 				</td>
 			</tr>
@@ -70,7 +70,7 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 					<label for="edd-amount"><?php _e( 'Amount', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input type="text" required="required" id="edd-amount" name="amount" value="<?php echo esc_attr( edd_get_discount_amount( $discount_id ) ); ?>" style="width: 80px;"/>
+					<input type="text" class="edd-price-field" required="required" id="edd-amount" name="amount" value="<?php echo esc_attr( edd_get_discount_amount( $discount_id ) ); ?>" />
 					<p class="description edd-amount-description flat"<?php echo $flat_display; ?>><?php printf( __( 'Enter the discount amount in %s', 'easy-digital-downloads' ), edd_get_currency() ); ?></p>
 					<p class="description edd-amount-description percent"<?php echo $percent_display; ?>><?php _e( 'Enter the discount percentage. 10 = 10%', 'easy-digital-downloads' ); ?></p>
 				</td>
@@ -135,7 +135,7 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 					<label for="edd-start"><?php _e( 'Start date', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input name="start" id="edd-start" type="text" value="<?php echo esc_attr( edd_get_discount_start_date( $discount_id ) ); ?>" style="width: 300px;" class="edd_datepicker"/>
+					<input name="start" id="edd-start" type="text" value="<?php echo esc_attr( edd_get_discount_start_date( $discount_id ) ); ?>"  class="edd_datepicker"/>
 					<p class="description"><?php _e( 'Enter the start date for this discount code in the format of mm/dd/yyyy. For no start date, leave blank. If entered, the discount can only be used after or on this date.', 'easy-digital-downloads' ); ?></p>
 				</td>
 			</tr>
@@ -145,7 +145,7 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 					<label for="edd-expiration"><?php _e( 'Expiration date', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input name="expiration" id="edd-expiration" type="text" value="<?php echo esc_attr( edd_get_discount_expiration( $discount_id ) ); ?>" style="width: 300px;" class="edd_datepicker"/>
+					<input name="expiration" id="edd-expiration" type="text" value="<?php echo esc_attr( edd_get_discount_expiration( $discount_id ) ); ?>"  class="edd_datepicker"/>
 					<p class="description"><?php _e( 'Enter the expiration date for this discount code in the format of mm/dd/yyyy. For no expiration, leave blank', 'easy-digital-downloads' ); ?></p>
 				</td>
 			</tr>

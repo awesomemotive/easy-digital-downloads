@@ -434,4 +434,19 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		EDD_Helper_Discount::delete_discount( $discount );
 	}
 
+	public function test_edd_get_discounts() {
+		$defaults = array(
+			'post_type'      => 'edd_discount',
+			'posts_per_page' => 30,
+			'paged'          => null,
+			'post_status'    => array( 'active', 'inactive', 'expired' )
+		);
+
+		$hash            = md5( json_encode( $defaults ) );
+		$found_discounts = edd_get_discounts();
+
+		$this->assertSame( 3, count( $found_discounts ) );
+		global $edd_get_discounts_cache;
+		$this->assertSame( $found_discounts, $edd_get_discounts_cache[ $hash ] );
+	}
 }

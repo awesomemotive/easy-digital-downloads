@@ -64,6 +64,13 @@ a.edd-delete:hover {
 	z-index: 9999 !important;
 }
 
+.download_page_edd-settings .edd-settings-payment-icon-wrapper {
+	margin-right:10px;
+	line-height:16px;
+	height:16px;
+	display: table;
+}
+
 /* =Add Ons Styles
 -------------------------------------------------------------- */
 
@@ -131,9 +138,15 @@ a.edd-delete:hover {
 	height: 100px;
 	min-width: 200px;
 }
-#edd-add-discount input[type="checkbox"],
-#edd-edit-discount input[type="checkbox"] {
-	width: 15px;
+#edd-add-discount input[type="text"],
+#edd-edit-discount input[type="text"] {
+	width: 300px;
+}
+
+#edd-add-discount input.edd-price-field,
+#edd-edit-discount input.edd-price-field {
+	padding: 3px 5px;
+	width: 75px;
 }
 
 /* Payment History Styles
@@ -509,6 +522,9 @@ input[class*="edd-price-field"] {
 #edd-edit-order-form .column:nth-child(2n+1) {
 	margin-right: 0;
 }
+#edd-edit-order-form input.large-text {
+	width: 90%;
+}
 .edd-edit-purchase-element ul li.download {
 	width: 35%;
 }
@@ -654,6 +670,9 @@ input[class*="edd-price-field"] {
 .edd-edit-purchase-element .edd-purchased-download-title {
 	font-size: 14px;
 	font-weight: 500;
+}
+.edd-edit-purchase-element .edd-purchased-download-title .deleted {
+	color: #777;
 }
 .edd-edit-purchase-element .edd-purchased-download-actions {
 	color: #777;
@@ -954,6 +973,8 @@ td.edd_order_price {
 	padding: 12px 12px 4px;
 	overflow: auto;
 	margin: 20px -12px -23px;
+	position: relative;
+	width: 100%;
 }
 .edd-import-export-form .notice-wrap .spinner {
 	margin: 4px 10px 8px;
@@ -1294,6 +1315,10 @@ td.edd_order_price {
 	.wrap-licenses .form-table tr {
 		width: 100%;
 		min-height: 230px;
+	}
+
+	#edd-edit-order-form input.large-text {
+		width: 100%;
 	}
 }
 
@@ -1677,6 +1702,60 @@ td.edd_order_price {
 	.edd-bundled-product-row .edd-bundled-product-item-reorder .edd-product-file-reorder {
 		padding: 0;
 	}
+
+	#edd-payment-filters span {
+		display: block;
+		margin: 2px 0;
+	}
+
+	#edd-payment-filters a,
+	.download_page_edd-reports .button {
+		text-align: center;
+	}
+
+	#edd-payment-date-filters span {
+		display: block;
+	}
+	#edd-payment-date-filters span > input {
+		float: right;
+	}
+
+	#edd-add-discount select[multiple] option,
+	#edd-edit-discount select[multiple] option {
+		height: 20px;
+	}
+
+	.download_page_edd-tools .inside input[type="text"],
+	.download_page_edd-tools .inside select,
+	.download_page_edd-tools .inside input[type="submit"],
+	.download_page_edd-settings .inside input[type="button"],
+	.download_page_edd-reports .inside input[type="text"],
+	.download_page_edd-reports .inside select,
+	.download_page_edd-reports .inside input[type="submit"],
+	.download_page_edd-reports .inside .button,
+	#system-info-textarea,
+	#edd-add-discount input[type="text"],
+	#edd-edit-discount input[type="text"],
+	#edd-payment-filters input:not([type='radio']),
+	#edd-payment-filters select,
+	#edd-payment-filters a {
+		width: 100%;
+	}
+
+	#edd-add-discount select[multiple],
+	#edd-edit-discount select[multiple],
+	.download_page_edd-tools select[multiple] {
+		height: 200px !important;
+	}
+
+	.download_page_edd-settings input[type="checkbox"] {
+		margin: 2px 0;
+	}
+
+	.post-type-download input[type="checkbox"] {
+		margin-left: 2px;
+	}
+
 }
 
 /* Tools Styles
