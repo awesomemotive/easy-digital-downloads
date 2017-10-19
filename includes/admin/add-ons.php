@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return void
  */
 function edd_add_ons_page() {
-	$add_ons_tabs = apply_filters( 'edd_add_ons_tabs', array( 'popular' => 'Popular', 'new' => 'New', 'all' => 'View all Integrations' ) );
+	$add_ons_tabs = apply_filters( 'edd_add_ons_tabs', array( 'popular' => __( 'Popular', 'easy-digital-downloads' ), 'new' => __( 'New', 'easy-digital-downloads' ), 'all' => __( 'View all Integrations', 'easy-digital-downloads' ) ) );
 	$active_tab   = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $add_ons_tabs ) ? $_GET['tab'] : 'popular';
 
 	ob_start(); ?>
@@ -120,8 +120,10 @@ function edd_add_ons_get_feed( $tab = 'popular' ) {
 		}
 	}
 
-	// Set a new campaign for tracking purposes
-	$cache = str_replace( 'EDDAddonsPage', 'EDDIntegrationsPage', $cache );
+	if ( isset( $_GET['tab'] ) && 'integrations' === $_GET['tab'] ) {
+		// Set a new campaign for tracking purposes
+		$cache = str_replace( 'EDDAddonsPage', 'EDDIntegrationsPage', $cache );
+	}
 
 	return $cache;
 }
