@@ -29,3 +29,54 @@ function edd_process_actions() {
 	}
 }
 add_action( 'admin_init', 'edd_process_actions' );
+
+/**
+ * When the Download list table loads, call the function to view our tabs.
+ *
+ * @since 2.8.9
+ * @param $views
+ *
+ * @return mixed
+ */
+function edd_products_tabs( $views ) {
+	edd_display_product_tabs();
+
+	return $views;
+}
+add_filter( 'views_edit-download', 'edd_products_tabs', 10, 1 );
+
+/**
+ * Displays the product tabs for 'Products' and 'Apps and Integrations'
+ *
+ * @since 2.8.9
+ */
+function edd_display_product_tabs() {
+	?>
+	<h2 class="nav-tab-wrapper">
+		<?php
+		$tabs = array(
+			'products' => array(
+				'name' => 'Products',
+				'url'  => admin_url( 'edit.php?post_type=download' ),
+			),
+			'integrations' => array(
+				'name' => 'Apps and Integrations',
+				'url'  => admin_url( 'edit.php?post_type=download&page=edd-addons' ),
+			),
+		);
+
+		$tabs       = apply_filters( 'edd_add_ons_tabs', $tabs );
+		$active_tab = isset( $_GET['page'] ) && $_GET['page'] === 'edd-addons' ? 'integrations' : 'products';
+		foreach( $tabs as $tab_id => $tab ) {
+
+			$active = $active_tab == $tab_id ? ' nav-tab-active' : '';
+
+			echo '<a href="' . esc_url( $tab['url'] ) . '" class="nav-tab' . $active . '">';
+			echo esc_html( $tab['name'] );
+			echo '</a>';
+		}
+		?>
+	</h2>
+	<br />
+	<?php
+}
