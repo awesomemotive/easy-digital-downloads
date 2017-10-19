@@ -120,7 +120,7 @@ function edd_add_ons_get_feed( $tab = 'popular' ) {
 		}
 	}
 
-	if ( isset( $_GET['tab'] ) && 'integrations' === $_GET['tab'] ) {
+	if ( isset( $_GET['view'] ) && 'integrations' === $_GET['view'] ) {
 		// Set a new campaign for tracking purposes
 		$cache = str_replace( 'EDDAddonsPage', 'EDDIntegrationsPage', $cache );
 	}

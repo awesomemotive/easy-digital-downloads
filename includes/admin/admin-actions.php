@@ -61,7 +61,7 @@ function edd_display_product_tabs() {
 			),
 			'integrations' => array(
 				'name' => __( 'Apps and Integrations', 'easy-digital-downloads' ),
-				'url'  => admin_url( 'edit.php?post_type=download&page=edd-addons&tab=integrations' ),
+				'url'  => admin_url( 'edit.php?post_type=download&page=edd-addons&view=integrations' ),
 			),
 		);
 
