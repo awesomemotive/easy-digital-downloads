@@ -89,6 +89,9 @@ a.edd-delete:hover {
 #edd-add-ons h2 {
 	margin: 0 0 15px;
 }
+.edd-add-ons-view-wrapper {
+	height: 50px;
+}
 #edd-add-ons h2 .button-primary {
 	position: absolute;
 }
@@ -151,6 +154,21 @@ a.edd-delete:hover {
 
 /* Payment History Styles
 -------------------------------------------------------------- */
+.edit-php.post-type-download .wrap .wp-heading-inline,
+.download_page_edd-addons .wrap .wp-heading-inline {
+	display: none;
+}
+
+.edit-php.post-type-download .wrap > .page-title-action,
+.download_page_edd-addons .wrap > .page-title-action {
+	display: none;
+}
+
+.edit-php.post-type-download .wrap .nav-tab-wrapper .page-title-action,
+.download_page_edd-addons .wrap .nav-tab-wrapper .page-title-action {
+	top: 7px;
+	mergin-left: 5px;
+}
 
 #edd-payment-filters {
 	background: #f5f5f5;
