@@ -154,6 +154,20 @@ a.edd-delete:hover {
 
 /* Payment History Styles
 -------------------------------------------------------------- */
+.edit-php.post-type-download .wrap .wp-heading-inline,
+.download_page_edd-addons .wrap .wp-heading-inline {
+	display: none;
+}
+
+.edit-php.post-type-download .wrap > .page-title-action,
+.download_page_edd-addons .wrap > .page-title-action {
+	display: none;
+}
+
+.edit-php.post-type-download .wrap .nav-tab-wrapper .page-title-action,
+.download_page_edd-addons .wrap .nav-tab-wrapper .page-title-action {
+	top: 7px;
+}
 
 #edd-payment-filters {
 	background: #f5f5f5;

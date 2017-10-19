@@ -56,12 +56,12 @@ function edd_display_product_tabs() {
 		<?php
 		$tabs = array(
 			'products' => array(
-				'name' => 'Products',
+				'name' => edd_get_label_plural(),
 				'url'  => admin_url( 'edit.php?post_type=download' ),
 			),
 			'integrations' => array(
-				'name' => 'Apps and Integrations',
-				'url'  => admin_url( 'edit.php?post_type=download&page=edd-addons' ),
+				'name' => __( 'Apps and Integrations', 'easy-digital-downloads' ),
+				'url'  => admin_url( 'edit.php?post_type=download&page=edd-addons&tab=integrations' ),
 			),
 		);
 
@@ -76,6 +76,10 @@ function edd_display_product_tabs() {
 			echo '</a>';
 		}
 		?>
+
+		<a href="http://edd.dev/wp-admin/post-new.php?post_type=download" class="page-title-action">
+			<?php _e( 'Add New' ); // No text domain so it just follows what WP Core does ?>
+		</a>
 	</h2>
 	<br />
 	<?php
