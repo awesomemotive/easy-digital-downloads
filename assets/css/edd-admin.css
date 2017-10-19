@@ -167,6 +167,7 @@ a.edd-delete:hover {
 .edit-php.post-type-download .wrap .nav-tab-wrapper .page-title-action,
 .download_page_edd-addons .wrap .nav-tab-wrapper .page-title-action {
 	top: 7px;
+	mergin-left: 5px;
 }
 
 #edd-payment-filters {
