@@ -142,7 +142,7 @@ function edd_process_download() {
 		$schemes      = array( 'http', 'https' ); // Direct URL schemes
 
 		$supported_streams = stream_get_wrappers();
-		if ( isset( $file_details['scheme'] ) && ! in_array( $file_details['scheme'], $supported_streams ) ) {
+		if ( strtoupper( substr( PHP_OS, 0, 3 ) ) !== 'WIN' && isset( $file_details['scheme'] ) && ! in_array( $file_details['scheme'], $supported_streams ) ) {
 			wp_die( __( 'Error downloading file. Please contact support.', 'easy-digital-downloads' ), __( 'File download error', 'easy-digital-downloads' ), 501 );
 		}
 
