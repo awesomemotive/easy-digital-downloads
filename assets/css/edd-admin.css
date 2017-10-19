@@ -89,6 +89,9 @@ a.edd-delete:hover {
 #edd-add-ons h2 {
 	margin: 0 0 15px;
 }
+.edd-add-ons-view-wrapper {
+	height: 50px;
+}
 #edd-add-ons h2 .button-primary {
 	position: absolute;
 }
