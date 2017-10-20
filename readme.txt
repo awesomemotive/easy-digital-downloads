@@ -216,6 +216,7 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 = 2.8.10, October 20, 2017 =
 
 * Fix: Incorrect URL for `Add New` button.
+* Fix: Incorrectly called function on EDD_Payment::get_discounted_amount.
 
 = 2.8.9, October 19, 2017 =
 
