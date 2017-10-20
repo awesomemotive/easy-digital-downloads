@@ -2585,7 +2585,7 @@ class EDD_Payment {
 		$fees  = $this->fees_total;
 		$tax   = $this->tax;
 
-		return floatval( apply_filter( 'edd_payment_discounted_amount', $total - ( $fees + $tax ), $this ) );
+		return floatval( apply_filters( 'edd_payment_discounted_amount', $total - ( $fees + $tax ), $this ) );
 	}
 
 	/**
