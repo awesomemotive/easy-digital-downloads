@@ -161,6 +161,9 @@ final class EDD_Amazon_Payments {
 		add_filter( 'edd_accepted_payment_icons', array( $this, 'register_payment_icon' ), 10, 1 );
 		add_filter( 'edd_show_gateways', array( $this, 'maybe_hide_gateway_select' ) );
 
+		// Since the Amazon Gateway loads scripts on page, it needs the scripts to load in the header.
+		add_filter( 'edd_load_scripts_in_footer', '__return_false' );
+
 		if ( is_admin() ) {
 			add_filter( 'edd_settings_sections_gateways', array( $this, 'register_gateway_section' ), 1, 1 );
 			add_filter( 'edd_settings_gateways', array( $this, 'register_gateway_settings' ), 1, 1 );

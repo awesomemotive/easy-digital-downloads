@@ -1155,6 +1155,9 @@ class EDD_Discount {
 		}
 
 		if ( true == $saved ) {
+			global $edd_get_discounts_cache;
+			$edd_get_discounts_cache = array();
+
 			$this->setup_discount( WP_Post::get_instance( $this->ID ) );
 
 			/**
@@ -1181,6 +1184,12 @@ class EDD_Discount {
 	 * @return mixed bool|int false if data isn't passed and class not instantiated for creation, or post ID for the new discount.
 	 */
 	public function add( $args ) {
+
+		// If no code is provided, return early with false
+		if ( empty( $args['code'] ) ) {
+			return false;
+		}
+
 		$meta = $this->build_meta( $args );
 
 		if ( ! empty( $this->ID ) && $this->exists() ) {

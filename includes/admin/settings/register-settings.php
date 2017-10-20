@@ -85,6 +85,7 @@ function edd_update_option( $key = '', $value = false ) {
  * @return boolean True if removed, false if not.
  */
 function edd_delete_option( $key = '' ) {
+	global $edd_options;
 
 	// If no key, exit
 	if ( empty( $key ) ){
@@ -98,6 +99,13 @@ function edd_delete_option( $key = '' ) {
 	if( isset( $options[ $key ] ) ) {
 
 		unset( $options[ $key ] );
+
+	}
+
+	// Remove this option from the global EDD settings to the array_merge in edd_settings_sanitize() doesn't re-add it.
+	if( isset( $edd_options[ $key ] ) ) {
+
+		unset( $edd_options[ $key ] );
 
 	}
 
@@ -233,6 +241,9 @@ function edd_get_registered_settings() {
 	 * 'Whitelisted' EDD settings, filters are provided for each settings
 	 * section to allow extensions and other plugins to add their own settings
 	 */
+
+	$shop_states = edd_get_shop_states( edd_get_shop_country() );
+
 	$edd_settings = array(
 		/** General Settings */
 		'general' => apply_filters( 'edd_settings_general',
@@ -317,6 +328,7 @@ function edd_get_registered_settings() {
 						'type'        => 'shop_states',
 						'chosen'      => true,
 						'placeholder' => __( 'Select a state', 'easy-digital-downloads' ),
+						'class'       => ( empty( $shop_states ) ) ? 'hidden' : '',
 					),
 					'tracking_settings' => array(
 						'id'   => 'tracking_settings',
@@ -658,6 +670,12 @@ function edd_get_registered_settings() {
 						'id'   => 'item_quantities',
 						'name' => __('Cart Item Quantities','easy-digital-downloads' ),
 						'desc' => sprintf(__('Allow quantities to be adjusted when adding %s to the cart, and while viewing the checkout cart.','easy-digital-downloads' ), edd_get_label_plural( true ) ),
+						'type' => 'checkbox',
+					),
+					'debug_mode' => array(
+						'id'   => 'debug_mode',
+						'name' => __( 'Debug Mode', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this box to enable debug mode. When enabled, debug messages will be logged and shown in Downloads &rarr; Tools &rarr; Debug Log.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
 					),
 					'uninstall_on_delete' => array(
@@ -1406,7 +1424,7 @@ function edd_payment_icons_callback( $args ) {
 				$enabled = NULL;
 			}
 
-			$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" style="margin-right:10px;line-height:16px;height:16px;display:inline-block;">';
+			$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" class="edd-settings-payment-icon-wrapper">';
 
 				$html .= '<input name="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" class="' . $class . '" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked( $option, $enabled, false ) . '/>&nbsp;';
 

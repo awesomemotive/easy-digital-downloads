@@ -522,9 +522,22 @@ function edd_ajax_download_search() {
 		$where .= "AND `ID` NOT IN (" . $exclude . ") ";
 	}
 
-	// If the user can't edit products, limit to just published items
-	if( ! current_user_can( 'edit_products' ) ) {
-		$where .= "AND `post_status` = 'publish' ";
+	if ( ! current_user_can( 'edit_products' ) ) {
+		$status = apply_filters( 'edd_product_dropdown_status_nopriv', array( 'publish' ) );
+	} else {
+		$status = apply_filters( 'edd_product_dropdown_status', array( 'publish', 'draft', 'private', 'future' ) );
+	}
+
+	if ( is_array( $status ) && ! empty( $status ) ) {
+
+		$status     = array_map( 'sanitize_text_field', $status );
+		$status_in  = "'" . join( "', '", $status ) . "'";
+		$where     .= "AND `post_status` IN ({$status_in}) ";
+
+	} else {
+
+		$where .= "AND `post_status` = `publish` ";
+
 	}
 
 	// Limit the result sets

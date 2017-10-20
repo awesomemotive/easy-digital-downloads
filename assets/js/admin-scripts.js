@@ -297,7 +297,7 @@ jQuery(document).ready(function ($) {
 								clone = EDD_Download_Configuration.clone_repeatable( row );
 
 							clone.find( '.edd_repeatable_attachment_id_field' ).val( attachment.id );
-							clone.find( 'edd_repeatable_thumbnail_size_field' ).val( selectedSize );
+							clone.find( '.edd_repeatable_thumbnail_size_field' ).val( selectedSize );
 							clone.find( '.edd_repeatable_upload_field' ).val( selectedURL );
 							clone.find( '.edd_repeatable_name_field' ).val( selectedName );
 							clone.insertAfter( row );
@@ -1080,7 +1080,7 @@ jQuery(document).ready(function ($) {
 		taxes : function() {
 			var no_states = $('select.edd-no-states');
 			if( no_states.length ) {
-				no_states.closest('tr').hide();
+				no_states.closest('tr').addClass('hidden');
 			}
 
 			// Update base state field based on selected base country
@@ -1093,9 +1093,9 @@ jQuery(document).ready(function ($) {
 				};
 				$.post(ajaxurl, data, function (response) {
 					if( 'nostates' == response ) {
-						$tr.next().hide();
+						$tr.next().addClass('hidden');
 					} else {
-						$tr.next().show();
+						$tr.next().removeClass('hidden');
 						$tr.next().find('select').replaceWith( response );
 					}
 				});
@@ -1286,7 +1286,7 @@ jQuery(document).ready(function ($) {
 	// Add placeholders for Chosen input fields
 	$( '.chosen-choices' ).on( 'click', function () {
 		var placeholder = $(this).parent().prev().data('search-placeholder');
-		if ( ! placeholder.length ) {
+		if ( typeof placeholder === "undefined" ) {
 			placeholder = edd_vars.type_to_search;
 		}
 		$(this).children('li').children('input').attr( 'placeholder', placeholder );
