@@ -1080,12 +1080,13 @@ function edd_tools_debug_log_display() {
 		<div class="inside">
 			<form id="edd-debug-log" method="post">
 				<p><?php _e( 'Use this tool to help debug Easy Digital Downloads functionality. Developers may use the <a href="https://github.com/easydigitaldownloads/easy-digital-downloads/blob/master/includes/class-edd-logging.php">EDD_Logging class</a> to record debug data.', 'easy-digital-downloads' ); ?></p>
-				<textarea readonly="readonly" onclick="this.focus(); this.select()" class="large-text" rows="15" name="edd-debug-log-contents"><?php echo esc_textarea( $edd_logs->get_file_contents() ); ?></textarea>
+				<textarea readonly="readonly" class="large-text" rows="15" name="edd-debug-log-contents"><?php echo esc_textarea( $edd_logs->get_file_contents() ); ?></textarea>
 				<p class="submit">
 					<input type="hidden" name="edd_action" value="submit_debug_log" />
 					<?php
 					submit_button( __( 'Download Debug Log File', 'easy-digital-downloads' ), 'primary', 'edd-download-debug-log', false );
-					submit_button( __( 'Clear Log', 'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-clear-debug-log', false  );
+					submit_button( __( 'Clear Log', 'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-clear-debug-log', false );
+					submit_button( __( 'Copy Entire Log', 'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-copy-debug-log', false, array( 'onclick' => "this.form['edd-debug-log-contents'].focus();this.form['edd-debug-log-contents'].select();document.execCommand('copy');return false;" ) );
 					?>
 				</p>
 				<?php wp_nonce_field( 'edd-debug-log-action' ); ?>

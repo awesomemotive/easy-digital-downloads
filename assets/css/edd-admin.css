@@ -1792,6 +1792,6 @@ td.edd_order_price {
 	padding: 0;
 }
 
-#edd-download-debug-log {
-	margin-right: 5px;
+#edd-debug-log .edd-inline-button {
+	margin-left: 5px;
 }
