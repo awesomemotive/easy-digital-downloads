@@ -1786,3 +1786,12 @@ td.edd_order_price {
 	display: none;
 	line-height: 24px;
 }
+
+#edd-debug-log p.submit {
+	margin:  20px 0 0;
+	padding: 0;
+}
+
+#edd-download-debug-log {
+	margin-right: 5px;
+}
