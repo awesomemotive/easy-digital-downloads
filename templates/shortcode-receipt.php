@@ -153,8 +153,10 @@ $status    = edd_get_payment_status( $payment, true );
 							<?php endif; ?>
 						</div>
 
-						<?php if ( $edd_receipt_args['notes'] && ! empty( edd_get_product_notes( $item['id'] ) ) ) : ?>
-							<div class="edd_purchase_receipt_product_notes"><?php echo wp_kses_post( wpautop( edd_get_product_notes( $item['id'] ) ) ); ?></div>
+						<?php
+						$notes = edd_get_product_notes( $item['id'] );
+						if ( $edd_receipt_args['notes'] && ! empty( $notes ) ) : ?>
+							<div class="edd_purchase_receipt_product_notes"><?php echo wp_kses_post( wpautop( $notes ) ); ?></div>
 						<?php endif; ?>
 
 						<?php
