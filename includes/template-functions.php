@@ -133,8 +133,6 @@ function edd_get_purchase_link( $args = array() ) {
 
 	}
 
-	$args['display_price'] = $data_price_value;
-
 	$data_price  = 'data-price="' . $data_price_value . '"';
 
 	$button_text = ! empty( $args['text'] ) ? '&nbsp;&ndash;&nbsp;' . $args['text'] : '';
