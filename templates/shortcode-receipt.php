@@ -146,7 +146,7 @@ $status    = edd_get_payment_status( $payment, true );
 						$download_files = edd_get_download_files( $item['id'], $price_id );
 						?>
 
-						<div class="edd_purchase_receipt_product_name">§
+						<div class="edd_purchase_receipt_product_name">
 							<?php echo esc_html( $item['name'] ); ?>
 							<?php if ( edd_has_variable_prices( $item['id'] ) && ! is_null( $price_id ) ) : ?>
 							<span class="edd_purchase_receipt_price_name">&nbsp;&ndash;&nbsp;<?php echo esc_html( edd_get_price_option_name( $item['id'], $price_id, $payment->ID ) ); ?></span>
