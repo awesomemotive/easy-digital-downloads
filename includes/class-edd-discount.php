@@ -1756,7 +1756,7 @@ class EDD_Discount {
 						continue;
 					}
 
-					if ( in_array( $payment->status, array( 'abandoned', 'failed' ) ) ) {
+					if ( in_array( $payment->status, array( 'abandoned', 'failed', 'pending' ) ) ) {
 						continue;
 					}
 
