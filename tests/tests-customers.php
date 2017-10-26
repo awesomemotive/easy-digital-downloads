@@ -328,6 +328,14 @@ class Tests_Customers extends EDD_UnitTestCase {
 
 	}
 
+	public function test_users_purchased_product_pending() {
+
+		$out2 = edd_get_users_purchased_products( $this->_user_id, 'pending' );
+
+		$this->assertFalse( $out2 );
+
+	}
+
 	public function test_has_user_purchased() {
 
 		$this->assertTrue( edd_has_user_purchased( $this->_user_id, array( $this->_post_id ), 1 ) );
@@ -486,6 +494,24 @@ class Tests_Customers extends EDD_UnitTestCase {
 		$customer = new EDD_Customer( $customer->id );
 		$this->assertTrue( $customer->remove_email( 'test1@example.org' ) );
 		$this->assertFalse( $customer->remove_email( 'test9999@example.org' ) );
+	}
+
+	public function test_edd_add_past_purchases_to_new_user() {
+		$payment_id = EDD_Helper_Payment::create_simple_guest_payment();
+
+		$userdata = array(
+			'user_login' => 'guest',
+			'user_email' => 'guest@example.org',
+			'user_pass'  => 'guest_pass'
+		);
+
+		$user_id = wp_insert_user( $userdata );
+
+		$payments = edd_get_payments( array( 's' => $userdata['user_email'], 'output' => 'payments' ) );
+
+		$payment = $payments[0];
+
+		$this->assertSame( $payment->ID, $payment_id );
 	}
 
 }

@@ -241,6 +241,9 @@ function edd_get_registered_settings() {
 	 * 'Whitelisted' EDD settings, filters are provided for each settings
 	 * section to allow extensions and other plugins to add their own settings
 	 */
+
+	$shop_states = edd_get_shop_states( edd_get_shop_country() );
+
 	$edd_settings = array(
 		/** General Settings */
 		'general' => apply_filters( 'edd_settings_general',
@@ -325,6 +328,7 @@ function edd_get_registered_settings() {
 						'type'        => 'shop_states',
 						'chosen'      => true,
 						'placeholder' => __( 'Select a state', 'easy-digital-downloads' ),
+						'class'       => ( empty( $shop_states ) ) ? 'hidden' : '',
 					),
 					'tracking_settings' => array(
 						'id'   => 'tracking_settings',
@@ -550,7 +554,7 @@ function edd_get_registered_settings() {
 						'desc'          => __( 'Check this to disable all included styling of buttons, checkout fields, and all other elements.', 'easy-digital-downloads' ),
 						'type'          => 'checkbox',
 						'tooltip_title' => __( 'Disabling Styles', 'easy-digital-downloads' ),
-						'tooltip_desc'  => __( 'If your theme has a complete custom CSS file for Easy Digital Downloads, you may wish to disable our default styles. This is not recommended unless your sure your theme has a complete custom CSS.', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( "If your theme has a complete custom CSS file for Easy Digital Downloads, you may wish to disable our default styles. This is not recommended unless you're sure your theme has a complete custom CSS.", 'easy-digital-downloads' ),
 					),
 					'button_header' => array(
 						'id'   => 'button_header',
@@ -666,6 +670,12 @@ function edd_get_registered_settings() {
 						'id'   => 'item_quantities',
 						'name' => __('Cart Item Quantities','easy-digital-downloads' ),
 						'desc' => sprintf(__('Allow quantities to be adjusted when adding %s to the cart, and while viewing the checkout cart.','easy-digital-downloads' ), edd_get_label_plural( true ) ),
+						'type' => 'checkbox',
+					),
+					'debug_mode' => array(
+						'id'   => 'debug_mode',
+						'name' => __( 'Debug Mode', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this box to enable debug mode. When enabled, debug messages will be logged and shown in Downloads &rarr; Tools &rarr; Debug Log.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
 					),
 					'uninstall_on_delete' => array(
@@ -1414,7 +1424,7 @@ function edd_payment_icons_callback( $args ) {
 				$enabled = NULL;
 			}
 
-			$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" style="margin-right:10px;line-height:16px;height:16px;display:inline-block;">';
+			$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" class="edd-settings-payment-icon-wrapper">';
 
 				$html .= '<input name="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" class="' . $class . '" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked( $option, $enabled, false ) . '/>&nbsp;';
 

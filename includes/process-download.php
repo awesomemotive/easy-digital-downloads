@@ -142,7 +142,7 @@ function edd_process_download() {
 		$schemes      = array( 'http', 'https' ); // Direct URL schemes
 
 		$supported_streams = stream_get_wrappers();
-		if ( isset( $file_details['scheme'] ) && ! in_array( $file_details['scheme'], $supported_streams ) ) {
+		if ( strtoupper( substr( PHP_OS, 0, 3 ) ) !== 'WIN' && isset( $file_details['scheme'] ) && ! in_array( $file_details['scheme'], $supported_streams ) ) {
 			wp_die( __( 'Error downloading file. Please contact support.', 'easy-digital-downloads' ), __( 'File download error', 'easy-digital-downloads' ), 501 );
 		}
 
@@ -196,7 +196,7 @@ function edd_process_download() {
 		header("Robots: none");
 		header("Content-Type: " . $ctype . "");
 		header("Content-Description: File Transfer");
-		header("Content-Disposition: attachment; filename=\"" . apply_filters( 'edd_requested_file_name', basename( $requested_file ) ) . "\"");
+		header("Content-Disposition: attachment; filename=\"" . apply_filters( 'edd_requested_file_name', basename( $requested_file ), $args ) . "\"");
 		header("Content-Transfer-Encoding: binary");
 
 		// If the file isn't locally hosted, process the redirect
