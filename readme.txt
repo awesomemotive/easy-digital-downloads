@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.4
 Tested up to: 4.9
-Stable Tag: 2.8.8
+Stable Tag: 2.8.10
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -212,6 +212,19 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+
+= 2.8.10, October 20, 2017 =
+
+* Fix: Incorrect URL for `Add New` button.
+* Fix: Incorrectly called function on EDD_Payment::get_discounted_amount.
+
+= 2.8.9, October 19, 2017 =
+
+* Fix: Errors when trying to download some local files on Windows servers.
+* Fix: "Recount" Progress Bar was invisible.
+* Tweak: Added $price_id to the edd_purchase_receipt_after_files action.
+* Tweak: Improve visibility of Apps & Integrations.
+* Tweak: Corrected some spelling errors.
 
 = 2.8.8, October 5, 2017 =
 

@@ -2,27 +2,27 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.8.8\n"
+"Project-Id-Version: Easy Digital Downloads 2.8.10\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2017-10-05 14:12:55+00:00\n"
+"POT-Creation-Date: 2017-10-20 09:19:20+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
 "Last-Translator: WP-Translations (http://wp-translations.org/)\n"
 "Language-Team: WP-Translations <wpt@wp-translations.org>\n"
+"X-Generator: grunt-wp-i18n 0.5.4\n"
+"X-Poedit-KeywordsList: "
+"__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
+"attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
 "Language: en_US\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-Country: United States\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: "
-"__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
-"attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
 "X-Poedit-Basepath: ../\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-Bookmarks: \n"
 "X-Textdomain-Support: yes\n"
-"X-Generator: grunt-wp-i18n1.0.0\n"
 
 #: easy-digital-downloads.php:183 easy-digital-downloads.php:195
 msgid "Cheatin&#8217; huh?"
@@ -102,24 +102,46 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: includes/admin/add-ons.php:30
-msgid "Extensions for Easy Digital Downloads"
+#: includes/admin/add-ons.php:24
+msgid "Popular"
 msgstr ""
 
-#: includes/admin/add-ons.php:32 includes/admin/add-ons.php:58
-msgid "Browse All Extensions"
+#: includes/admin/add-ons.php:24
+msgid "New"
 msgstr ""
 
-#: includes/admin/add-ons.php:35
+#: includes/admin/add-ons.php:24
+msgid "View all Integrations"
+msgstr ""
+
+#: includes/admin/add-ons.php:34
+msgid "Apps and Integrations for Easy Digital Downloads"
+msgstr ""
+
+#: includes/admin/add-ons.php:36 includes/admin/add-ons.php:85
+msgid "Browse All Integrations"
+msgstr ""
+
+#: includes/admin/add-ons.php:39
 msgid ""
-"These extensions <em><strong>add functionality</strong></em> to your Easy "
-"Digital Downloads powered store."
+"These <em><strong>add functionality</strong></em> to your Easy Digital "
+"Downloads powered store."
 msgstr ""
 
-#: includes/admin/add-ons.php:92
+#: includes/admin/add-ons.php:119
 msgid ""
 "There was an error retrieving the extensions list from the server. Please "
 "try again later."
+msgstr ""
+
+#: includes/admin/admin-actions.php:63
+msgid "Apps and Integrations"
+msgstr ""
+
+#: includes/admin/admin-actions.php:81
+#: includes/admin/discounts/discount-codes.php:33 includes/post-types.php:30
+#: includes/post-types.php:77 includes/post-types.php:107
+msgid "Add New"
 msgstr ""
 
 #: includes/admin/admin-footer.php:27
@@ -1296,11 +1318,6 @@ msgstr ""
 
 #: includes/admin/discounts/discount-actions.php:176
 msgid "You do not have permission to delete discount codes"
-msgstr ""
-
-#: includes/admin/discounts/discount-codes.php:33 includes/post-types.php:30
-#: includes/post-types.php:77 includes/post-types.php:107
-msgid "Add New"
 msgstr ""
 
 #: includes/admin/discounts/discount-codes.php:36
@@ -3603,7 +3620,7 @@ msgstr ""
 msgid ""
 "If your theme has a complete custom CSS file for Easy Digital Downloads, "
 "you may wish to disable our default styles. This is not recommended unless "
-"your sure your theme has a complete custom CSS."
+"you're sure your theme has a complete custom CSS."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:561
@@ -5641,8 +5658,8 @@ msgstr ""
 
 #: includes/class-edd-register-meta.php:162
 msgid ""
-"Defines how this products `Purchase` button should behave, either add to "
-"cart or buy now."
+"Defines how this product's 'Purchase' button should behave, either add to "
+"cart or buy now"
 msgstr ""
 
 #: includes/class-edd-register-meta.php:177

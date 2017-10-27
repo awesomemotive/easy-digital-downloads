@@ -63,7 +63,9 @@ add_action( 'edd_print_errors', 'edd_print_errors' );
  * @return mixed array if errors are present, false if none found
  */
 function edd_get_errors() {
-	return EDD()->session->get( 'edd_errors' );
+	$errors = EDD()->session->get( 'edd_errors' );
+	$errors = apply_filters( 'edd_errors', $errors );
+	return $errors;
 }
 
 /**
