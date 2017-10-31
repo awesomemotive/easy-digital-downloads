@@ -27,6 +27,10 @@ class Array2XML {
      * @return DomDocument
      */
     public static function &createXML($node_name, $arr=array()) {
+        if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+            _edd_deprecated_function( 'array2xml::createXML', '2.8.11', 'ArrayToXML::buildXML' );
+        }
+
         $xml = self::getXMLRoot();
         $xml->appendChild(self::convert($node_name, $arr));
 
