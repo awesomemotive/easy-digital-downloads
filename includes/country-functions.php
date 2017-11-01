@@ -1907,3 +1907,18 @@ function edd_get_country_name( $country_code = '' ) {
 	return apply_filters( 'edd_get_country_name', $country_name, $country_code );
 }
 
+/**
+ * Given a country and state code, return the state name
+ *
+ * @since 2.8.11
+ * @param string $country_code The ISO Code for the country
+ * @param string $state_code The ISO Code for the state
+ *
+ * @return string
+ */
+function edd_get_state_name( $country_code = '', $state_code = '' ) {
+	$states_list = edd_get_shop_states( $country_code );
+	$state_name  = isset( $states_list[ $state_code ] ) ? $states_list[ $state_code ] : $state_code;
+
+	return apply_filters( 'edd_get_state_name', $state_name, $state_code );
+}
