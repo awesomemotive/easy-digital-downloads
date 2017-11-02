@@ -65,6 +65,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			'mode'         => __( 'Mode (Live|Test)', 'easy-digital-downloads' ),
 			'status'       => __( 'Status', 'easy-digital-downloads' ),
 			'country_name' => __( 'Country Name', 'easy-digital-downloads' ),
+			'state_name'   => __( 'State Name', 'easy-digital-downloads' ),
 		);
 
 		if( ! edd_use_skus() ){
@@ -232,6 +233,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 					'mode'         => $payment->get_meta( '_edd_payment_mode', true ),
 					'status'       => ( 'publish' === $payment->status ) ? 'complete' : $payment->status,
 					'country_name' => isset( $user_info['address']['country'] ) ? edd_get_country_name( $user_info['address']['country'] ) : '',
+					'state_name'   => isset( $user_info['address']['state'] )   ? edd_get_state_name( $user_info['address']['country'], $user_info['address']['state'] ) : '',
 				);
 
 			}
