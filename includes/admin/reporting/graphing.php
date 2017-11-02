@@ -542,6 +542,9 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 					if ( $month_start < $month_end ) {
 						$d = 1;
 					}
+				} elseif ( $i > $month_start && $i < $month_end ) {
+					$num_of_days = cal_days_in_month( CAL_GREGORIAN, $i, $y );
+					$d = 1;
 				} else {
 					$num_of_days = cal_days_in_month( CAL_GREGORIAN, $i, $y );
 				}
