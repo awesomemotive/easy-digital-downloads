@@ -231,7 +231,7 @@ function edd_customers_view( $customer ) {
 						<span class="info-item" data-key="line1"><?php echo $address['line1']; ?></span>
 						<span class="info-item" data-key="line2"><?php echo $address['line2']; ?></span>
 						<span class="info-item" data-key="city"><?php echo $address['city']; ?></span>
-						<span class="info-item" data-key="state"><?php echo edd_get_state_name( $address['state'] ); ?></span>
+						<span class="info-item" data-key="state"><?php echo edd_get_state_name( $address['country'], $address['state'] ); ?></span>
 						<span class="info-item" data-key="country"><?php echo edd_get_country_name( $address['country'] ); ?></span>
 						<span class="info-item" data-key="zip"><?php echo $address['zip']; ?></span>
 					</span>
