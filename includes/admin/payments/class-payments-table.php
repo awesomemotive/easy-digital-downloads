@@ -145,7 +145,14 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				$gateways[ $slug ] = $admin_label['admin_label'];
 			}
 		}
-?>
+
+		/**
+		 * Allow gateways that aren't registered the standard way to be displayed in the dropdown.
+		 *
+		 * @since 2.8.11
+		 */
+		$gateways = apply_filters( 'edd_payments_table_gateways', $gateways );
+		?>
 		<div id="edd-payment-filters">
 			<span id="edd-payment-date-filters">
 				<span>
