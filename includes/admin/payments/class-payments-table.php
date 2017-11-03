@@ -606,6 +606,16 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$end_date   = isset( $_GET['end-date'] )    ? sanitize_text_field( $_GET['end-date'] )   : $start_date;
 		$gateway    = isset( $_GET['gateway'] )     ? sanitize_text_field( $_GET['gateway'] )    : null;
 
+		/**
+		 * Introduced as part of #6063. Allow a gateway to specified based on the context.
+		 *
+		 * @see   https://github.com/easydigitaldownloads/easy-digital-downloads/issues/6063
+		 * @since 2.8.11
+		 *
+		 * @param string $gateway
+		 */
+		$gateway = apply_filters( 'edd_payments_table_search_gateway', $gateway );
+
 		if( ! empty( $search ) ) {
 			$status = 'any'; // Force all payment statuses when searching
 		}
