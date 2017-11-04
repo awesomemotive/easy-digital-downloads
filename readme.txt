@@ -8,19 +8,12 @@ Requires at least: 4.4
 Tested up to: 4.9
 Stable Tag: 2.8.10
 License: GNU Version 2 or Any Later Version
-
 The easiest way to sell digital products with WordPress.
-
 == Description ==
-
 Easy Digital Downloads is a complete eCommerce solution for selling digital products on WordPress. Learn more at [Easy Digital Downloads.com](https://easydigitaldownloads.com/?utm_source=home&utm_medium=description_tab&utm_content=home&utm_campaign=readme).
-
 = Sell effortlessly =
-
 Whether it is software, documents, photos, ebooks, songs, graphics, or any other type of media file, Easy Digital Downloads provides a complete system for effortlessly selling your digital products.
-
 = Localized for your language =
-
 Easy Digital Downloads has been translated into more than two dozen languages and new translation are being added all the time, letting you have a natural, native experience, regardless of where you live. If your language is not available, we welcome translation contributions! See our [FAQ](http://docs.easydigitaldownloads.com/article/1082-what-spoken-languages-does-easy-digital-downloads-support?utm_source=docs&utm_medium=description_tab&utm_content=languages&utm_campaign=readme).
 
 = Payment gateways for everyone =
