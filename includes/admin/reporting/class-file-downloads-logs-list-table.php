@@ -128,7 +128,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 			case 'payment_id' :
 				return $item['payment_id'] !== false ? '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item['payment_id'] ) . '">' . edd_get_payment_number( $item['payment_id'] ) . '</a>' : '';
 			case 'ip' :
-				return '<a href="http://whois.arin.net/rest/ip/' . $item['ip']  . '" target="_blank" rel="noopener noreferrer">' . $item['ip']  . '</a>';		
+				return '<a href="https://ipinfo.io/' . $item['ip']  . '" target="_blank" rel="noopener noreferrer">' . $item['ip']  . '</a>';		
 			default:
 				return $item[ $column_name ];
 		}
