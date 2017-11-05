@@ -153,7 +153,11 @@ class EDD_Customer {
 			switch ( $key ) {
 
 				case 'notes':
-					$this->$key = $this->get_notes();
+					if ( empty( $value ) ) {
+						$this->$key = $this->get_notes();
+					} else {
+						$this->$key = $value;
+					}
 					break;
 
 				case 'purchase_value':
