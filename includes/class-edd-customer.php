@@ -131,12 +131,13 @@ class EDD_Customer {
 			$field = 'email';
 		}
 
+		add_action( 'edd_db_customers_update_signal', array( $this, 'clear_instance_cache' ) );
+
 		$keyname = md5( $field . $_id_or_email );
 		
 		// Try to load the customer out of our saved instances if possible 
 		if ( isset( self::$_instances[ $keyname ] ) ) { 
 			$customer = self::$_instances[ $keyname ];
-			var_dump( $keyname, $field, $_id_or_email );
 		} else {
 			$customer = $this->db->get_customer_by( $field, $_id_or_email );
 			if ( ! empty( $customer ) && is_object( $customer ) ) {
@@ -217,6 +218,10 @@ class EDD_Customer {
 
 		}
 
+	}
+	
+	public function clear_instance_cache() {
+		$this->$_instances = array();
 	}
 	
 	public function __set( $name, $value ) {
