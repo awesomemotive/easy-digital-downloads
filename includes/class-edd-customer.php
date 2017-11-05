@@ -219,11 +219,12 @@ class EDD_Customer {
 		}
 
 	}
-	
-	public function clear_instance_cache() {
-		self::$_instances = array();
-	}
-	
+
+	/**
+	 * Magic __set function to allow for instance cache clearing when customers are updated.
+	 *
+	 * @since x.y.z
+	 */
 	public function __set( $name, $value ) {
 		if ( ! property_exists( 'EDD_Customer', $name ) ) {
 			return;
@@ -243,6 +244,15 @@ class EDD_Customer {
 		
 		$this->$name = $value;
 	  }
+	
+	/**
+	 * Clears the instance cache.
+	 *
+	 * @since  x.y.z
+	 */
+	public function clear_instance_cache() {
+		self::$_instances = array();
+	}
 
 	/**
 	 * Creates a customer
