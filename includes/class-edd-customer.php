@@ -136,7 +136,7 @@ class EDD_Customer {
 		// Try to load the customer out of our saved instances if possible 
 		if ( isset( self::$_instances[ $keyname ] ) ) { 
 			$customer = self::$_instances[ $keyname ];
-			var_dump( $customer );
+			var_dump( $keyname, $field, $_id_or_email );
 		} else {
 			$customer = $this->db->get_customer_by( $field, $_id_or_email );
 			if ( ! empty( $customer ) && is_object( $customer ) ) {
