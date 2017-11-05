@@ -97,6 +97,13 @@ class EDD_Customer {
 	private $raw_notes = null;
 
 	/**
+	 * Allow for instance caching
+	 *
+	 * @since x.y.z
+	 */
+	protected static $_instances = array();
+
+	/**
 	 * The Database Abstraction
 	 *
 	 * @since  2.3
@@ -109,9 +116,6 @@ class EDD_Customer {
 	 * @since 2.3
 	 */
 	public function __construct( $_id_or_email = false, $by_user_id = false ) {
-		// Allow for static saving of instances
-		static $_instances = array();
-		
 		$this->db = new EDD_DB_Customers;
 
 		if ( false === $_id_or_email || ( is_numeric( $_id_or_email ) && (int) $_id_or_email !== absint( $_id_or_email ) ) ) {
@@ -125,16 +129,14 @@ class EDD_Customer {
 		} else {
 			$field = 'email';
 		}
-
-		$customer = false;
 		
 		// Try to load the customer out of our saved instances if possible 
-		if ( ! empty( $_instances[ $field . $_id_or_email ] ) ) { 
-			$customer = $_instances[ $field . $_id_or_email ];
+		if ( isset( self::$_instances[ $field . $_id_or_email ] ) ) { 
+			$customer = self::$_instances[ $field . $_id_or_email ];
 		} else {
 			$customer = $this->db->get_customer_by( $field, $_id_or_email );
 			if ( ! empty( $customer ) && is_object( $customer ) ) {
-				$_instances[ $field . $_id_or_email ] = $customer;
+				self::$_instances[ $field . $_id_or_email ] = $customer;
 			}
 		}
 
