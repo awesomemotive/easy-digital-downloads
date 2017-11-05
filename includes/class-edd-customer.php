@@ -134,14 +134,14 @@ class EDD_Customer {
 		$keyname = md5( $field . $_id_or_email );
 		
 		// Try to load the customer out of our saved instances if possible 
-		if ( isset( self::$_instances[ $keyname ] ) ) { 
-			$customer = self::$_instances[ $keyname ];
-		} else {
+		//if ( isset( self::$_instances[ $keyname ] ) ) { 
+		//	$customer = self::$_instances[ $keyname ];
+		//} else {
 			$customer = $this->db->get_customer_by( $field, $_id_or_email );
 			if ( ! empty( $customer ) && is_object( $customer ) ) {
 				self::$_instances[ $keyname ] = $customer;
 			}
-		}
+		//}
 
 		if ( empty( $customer ) || ! is_object( $customer ) ) {
 			return false;
