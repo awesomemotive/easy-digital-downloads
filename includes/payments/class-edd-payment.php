@@ -2323,16 +2323,19 @@ class EDD_Payment {
 	 * @return int The User ID
 	 */
 	private function setup_user_id() {
-		$user_id  = $this->get_meta( '_edd_payment_user_id', true );
-		$customer = new EDD_Customer( $this->customer_id );
+		$user_id     = $this->get_meta( '_edd_payment_user_id', true );
+		$old_user_id = $user_id;
+		$customer    = new EDD_Customer( $this->customer_id );
 
-		// Make sure it exists, and that it matches that of the associted customer record
+		// Make sure it exists, and that it matches that of the associated customer record
 		if( empty( $user_id ) || ( ! empty( $customer->user_id ) && (int) $user_id !== (int) $customer->user_id ) ) {
 
 			$user_id = $customer->user_id;
 
 			// Backfill the user ID, or reset it to be correct in the event of data corruption
-			$this->update_meta( '_edd_payment_user_id', $user_id );
+			if ( (int) $old_user_id !== (int) $user_id ){
+				$this->update_meta( '_edd_payment_user_id', $user_id );
+			}
 
 		}
 
