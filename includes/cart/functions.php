@@ -205,14 +205,11 @@ function edd_get_cart_item_tax( $download_id = 0, $options = array(), $subtotal 
  */
 function edd_get_price_name( $download_id = 0, $options = array() ) {
 	$return = false;
-	if( edd_has_variable_prices( $download_id ) && ! empty( $options ) ) {
+	if ( edd_has_variable_prices( $download_id ) && ! empty( $options ) && ! empty( $options['price_id'] ) ) {
 		$prices = edd_get_variable_prices( $download_id );
-		$name   = false;
-		if( $prices ) {
-			if( isset( $prices[ $options['price_id'] ] ) )
-				$name = $prices[ $options['price_id'] ]['name'];
+		if ( ! empty( $prices[ $options['price_id'] ] ) ) {
+			$return = $prices[ $options['price_id'] ]['name'];
 		}
-		$return = $name;
 	}
 	return apply_filters( 'edd_get_price_name', $return, $download_id, $options );
 }
