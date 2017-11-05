@@ -422,7 +422,7 @@ class Tests_Widgets extends EDD_UnitTestCase {
 		);
 
 		$this->assertEquals( $updated, array( 'title' => 'Details', 'display_type' => 'specific', 'download_id' => 123, 'download_title' => true, 'purchase_button' => true, 'categories' => true, 'tags' => true ) );
-
+		var_dump('Queries:');var_dump(get_num_queries());
 	}
 
 }
