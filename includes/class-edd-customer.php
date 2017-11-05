@@ -220,15 +220,15 @@ class EDD_Customer {
 	
 	public function __set( $name, $value ) {
 		if ( ! empty( $this->user_id ) ) {
-			unset( $this->$_instances[ md5( 'user_id' . $this->user_id ) ) );
+			unset( $this->$_instances[ md5( 'user_id' . $this->user_id ) ] );
 		}
 						  
 		if ( ! empty( $this->id ) ) {
-			unset( $this->$_instances[ md5( 'id'      . $this->id ) ) );
+			unset( $this->$_instances[ md5( 'id'      . $this->id ) ] );
 		}
 						  
 		if ( ! empty( $this->email ) ) {
-			unset( $this->$_instances[ md5( 'email'   . $this->email ) ) );
+			unset( $this->$_instances[ md5( 'email'   . $this->email ) ] );
 		}
 		$this->$name = $value;
 	  }
