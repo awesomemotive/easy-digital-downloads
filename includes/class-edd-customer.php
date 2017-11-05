@@ -140,7 +140,9 @@ class EDD_Customer {
 			$customer = $_instances[ $field . $_id_or_email ];
 		} else {
 			$customer = $this->db->get_customer_by( $field, $_id_or_email );
-			$_instances[ $field . $_id_or_email ] = $customer;
+			if ( ! empty( $customer ) && is_object( $customer ) ) {
+				$_instances[ $field . $_id_or_email ] = $customer;
+			}
 		}
 
 		if ( empty( $customer ) || ! is_object( $customer ) ) {
