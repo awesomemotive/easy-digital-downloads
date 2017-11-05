@@ -221,10 +221,14 @@ class EDD_Customer {
 	}
 	
 	public function clear_instance_cache() {
-		$this->$_instances = array();
+		self::$_instances = array();
 	}
 	
 	public function __set( $name, $value ) {
+		if ( ! property_exists( 'EDD_Customer', $name ) ) {
+			return;
+		}  
+		
 		if ( ! empty( $this->user_id ) ) {
 			unset( $this->$_instances[ md5( 'user_id' . $this->user_id ) ] );
 		}
@@ -236,6 +240,7 @@ class EDD_Customer {
 		if ( ! empty( $this->email ) ) {
 			unset( $this->$_instances[ md5( 'email'   . $this->email ) ] );
 		}
+		
 		$this->$name = $value;
 	  }
 
