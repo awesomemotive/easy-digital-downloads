@@ -652,9 +652,9 @@ function edd_set_user_to_verified( $user_id = 0 ) {
  * @since   2.4.4
  * @return  bool
  */
-function edd_user_pending_verification( $user_id = 0 ) {
+function edd_user_pending_verification( $user_id = null ) {
 
-	if( empty( $user_id ) ) {
+	if( is_null( $user_id ) ) {
 		$user_id = get_current_user_id();
 	}
 
