@@ -714,7 +714,7 @@ class EDD_Customer {
             		return $this->data['emails'];
         	} else {
 			$this->data['emails']   = (array) $this->get_meta( 'additional_email', false );
-			$this->data['emails'][] = $this->email;
+			array_unshift( $this->data['emails'], $this->email );
 			return $this->data['emails'];
 		}
 	}
