@@ -87,7 +87,7 @@ class EDD_Customer {
 	 *
 	 * @since  2.3
 	 */
-	public $notes;
+	protected $notes;
 
 	/**
 	 * The raw notes values, for internal use only
@@ -160,7 +160,9 @@ class EDD_Customer {
 			switch ( $key ) {
 
 				case 'notes':
-					$this->$key = $this->get_notes();
+					if ( ! empty( $value ) ) {
+						$this->$key = $value;
+					}
 					break;
 
 				case 'purchase_value':
