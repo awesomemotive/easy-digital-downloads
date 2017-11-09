@@ -195,6 +195,9 @@ class EDD_DB_Customers extends EDD_DB  {
 			$this->set_last_changed();
 		}
 
+		// Used by the Customers class to clear the instance cache
+		do_action( 'edd_db_customers_update_signal' );
+
 		return $result;
 	}
 

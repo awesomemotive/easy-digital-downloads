@@ -97,6 +97,13 @@ class EDD_Customer {
 	private $raw_notes = null;
 
 	/**
+	 * Instance caching
+	 *
+	 * @since 2.8.11
+	 */
+	private static $_instances = array();
+
+	/**
 	 * The Database Abstraction
 	 *
 	 * @since  2.3
@@ -131,15 +138,25 @@ class EDD_Customer {
 			$field = 'email';
 		}
 
-		$customer = $this->db->get_customer_by( $field, $_id_or_email );
+		add_action( 'edd_db_customers_update_signal', array( $this, 'clear_instance_cache' ) );
+
+		$keyname = md5( $field . $_id_or_email );
+
+		// Try to load the customer out of our saved instances if possible
+		if ( isset( self::$_instances[ $keyname ] ) ) {
+			$customer = self::$_instances[ $keyname ];
+		} else {
+			$customer = $this->db->get_customer_by( $field, $_id_or_email );
+			if ( ! empty( $customer ) && is_object( $customer ) ) {
+				self::$_instances[ $keyname ] = $customer;
+			}
+		}
 
 		if ( empty( $customer ) || ! is_object( $customer ) ) {
-
 			return false;
 		}
 
 		$this->setup_customer( $customer );
-
 	}
 
 	/**
@@ -207,6 +224,40 @@ class EDD_Customer {
 
 		}
 
+	}
+
+	/**
+	 * Magic __set function to allow for instance cache clearing when customers are updated.
+	 *
+	 * @since 2.8.11
+	 */
+	public function __set( $name, $value ) {
+		if ( ! property_exists( 'EDD_Customer', $name ) ) {
+			return;
+		}
+
+		if ( ! empty( $this->user_id ) ) {
+			unset( $this->$_instances[ md5( 'user_id' . $this->user_id ) ] );
+		}
+
+		if ( ! empty( $this->id ) ) {
+			unset( $this->$_instances[ md5( 'id'      . $this->id ) ] );
+		}
+
+		if ( ! empty( $this->email ) ) {
+			unset( $this->$_instances[ md5( 'email'   . $this->email ) ] );
+		}
+
+		$this->$name = $value;
+	  }
+
+	/**
+	 * Clears the instance cache.
+	 *
+	 * @since  2.8.11
+	 */
+	public function clear_instance_cache() {
+		self::$_instances = array();
 	}
 
 	/**
