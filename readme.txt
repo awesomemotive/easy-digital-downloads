@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.4
 Tested up to: 4.9
-Stable Tag: 2.8.10
+Stable Tag: 2.8.11
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -212,6 +212,20 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+
+= 2.8.11, November 9, 2017 =
+* Fix: Incorrect discount errors could be shown at checkout.
+* Fix: Improved the performance of the EDD_Customer class.
+* Fix: Improved the new Debug Log View usability.
+* Fix: Corrected an issue with edd_user_pending_verification() when logged in as an admin.
+* Fix: Custom date ranges for detailed product earnings break on multi-month views.
+* Fix: Discount validation errors could occur when recovering pending payment.
+* Fix: The product notes div was being rendered when no product notes added to download.
+* New: Added a filter for edd_get_errors().
+* New: Added link to ipinfo.io for the IP address on a file download log.
+* Tweak: Removed an unused display_price argument in edd_get_purchase_link().
+* Tweak: Update library for array2xml.php.
+* Tweak: Added filters to allow modfiying the payment list table gateway filter selector.
 
 = 2.8.10, October 20, 2017 =
 
