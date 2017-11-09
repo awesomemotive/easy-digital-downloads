@@ -1810,8 +1810,8 @@ class EDD_Discount {
 				$this->is_started( $set_error ) &&
 				! $this->is_maxed_out( $set_error ) &&
 				! $this->is_used( $user, $set_error ) &&
-				$this->is_min_price_met( $set_error ) &&
-				$this->is_product_requirements_met( $set_error )
+				$this->is_product_requirements_met( $set_error ) &&
+				$this->is_min_price_met( $set_error )
 			) {
 				$return = true;
 			}
