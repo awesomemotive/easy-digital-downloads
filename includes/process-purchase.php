@@ -195,7 +195,7 @@ function edd_checkout_check_existing_email( $valid_data, $post ) {
 		if ( $email != strtolower( $customer->email ) && ( is_array( $customer->emails ) && ! in_array( $email, array_map( 'strtolower', $customer->emails ) ) ) ) {
 			$found_customer = new EDD_Customer( $email );
 			if ( $found_customer->id > 0 ) {
-				edd_set_error( 'edd-customer-email-exists', __( sprintf( 'The email address %s is already in use.', $email ), 'easy-digital-downloads' ) );
+				edd_set_error( 'edd-customer-email-exists', sprintf( __( 'The email address %s is already in use.', 'easy-digital-downloads' ), $email ) );
 			}
 		}
 
