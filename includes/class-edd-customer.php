@@ -52,7 +52,7 @@ class EDD_Customer {
 	 *
 	 * @since 2.6
 	 */
-	protected $emails;
+	public $emails;
 
 	/**
 	 * The customer's name
@@ -109,13 +109,6 @@ class EDD_Customer {
 	 * @since  2.3
 	 */
 	protected $db;
-
-	/**
-	 * Overloaded data storage.
-	 *
-	 * @since  x.y.z
-	 */
-    	private $data = array();
 
 	/**
 	 * Get things going
@@ -197,6 +190,9 @@ class EDD_Customer {
 			}
 
 		}
+
+		$this->emails   = (array) $this->get_meta( 'additional_email', false );
+		$this->emails[] = $this->email;
 
 		// Customer ID and email are the only things that are necessary, make sure they exist
 		if ( ! empty( $this->id ) && ! empty( $this->email ) ) {
@@ -754,22 +750,6 @@ class EDD_Customer {
 		do_action( 'edd_customer_post_decrease_value', $this->purchase_value, $value, $this->id, $this );
 
 		return $this->purchase_value;
-	}
-
-	/**
-	 * Gets the additional emails of a user
-	 *
-	 * @since  x.y.z
-	 * @return array           The emails of the customer.
-	 */
-	public function get_emails() {
-		if ( array_key_exists( 'emails', $this->data  ) ) {
-            		return $this->data['emails'];
-        	} else {
-			$this->data['emails']   = (array) $this->get_meta( 'additional_email', false );
-			array_unshift( $this->data['emails'], $this->email );
-			return $this->data['emails'];
-		}
 	}
 
 	/**
