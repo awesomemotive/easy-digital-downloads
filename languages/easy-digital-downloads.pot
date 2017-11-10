@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.8.10\n"
+"Project-Id-Version: Easy Digital Downloads 2.8.11\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2017-11-09 15:16:20+00:00\n"
+"POT-Creation-Date: 2017-11-10 18:06:43+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1068,10 +1068,9 @@ msgid "Minimum Amount"
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:144
-#: includes/admin/discounts/edit-discount.php:169
 msgid ""
-"The minimum amount that must be purchased before this discount can be used. "
-"Leave blank for no minimum."
+"The minimum dollar amount that must be in the cart before this discount can "
+"be used. Leave blank for no minimum."
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:150
@@ -1342,6 +1341,12 @@ msgstr ""
 msgid ""
 "Enter the expiration date for this discount code in the format of "
 "mm/dd/yyyy. For no expiration, leave blank"
+msgstr ""
+
+#: includes/admin/discounts/edit-discount.php:169
+msgid ""
+"The minimum amount that must be purchased before this discount can be used. "
+"Leave blank for no minimum."
 msgstr ""
 
 #: includes/admin/discounts/edit-discount.php:182
@@ -1672,62 +1677,62 @@ msgid ""
 "who purchased this product can access their download links."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:962
+#: includes/admin/downloads/metabox.php:976
 msgid "Ignore Tax:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:968
+#: includes/admin/downloads/metabox.php:982
 msgid "Mark this product as exclusive of tax"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:990
+#: includes/admin/downloads/metabox.php:1004
 msgid "Item Quantities:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:996
+#: includes/admin/downloads/metabox.php:1010
 msgid "Disable quantity input for this product"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:998
+#: includes/admin/downloads/metabox.php:1012
 msgid ""
 "<strong>Item Quantities</strong>: if disabled, customers will not be "
 "provided an option to change the number they wish to purchase."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1017
+#: includes/admin/downloads/metabox.php:1031
 #: includes/admin/settings/register-settings.php:737
 #: includes/admin/thickbox.php:59 includes/checkout/template.php:893
 #: includes/shortcodes.php:49 includes/template-functions.php:78
 msgid "Purchase"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1024
+#: includes/admin/downloads/metabox.php:1038
 msgid "Purchase Shortcode:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1025
+#: includes/admin/downloads/metabox.php:1039
 msgid ""
 "<strong>Purchse Shortcode</strong>: Use this shortcode to output a purchase "
 "link for this product in the location of your choosing."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1046
+#: includes/admin/downloads/metabox.php:1060
 msgid "Accounting Options:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1054
+#: includes/admin/downloads/metabox.php:1068
 msgid "Enter an SKU for this %s."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1073
+#: includes/admin/downloads/metabox.php:1087
 msgid "Button Options:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1080
+#: includes/admin/downloads/metabox.php:1094
 msgid "Disable the automatic output of the purchase button"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1081
+#: includes/admin/downloads/metabox.php:1095
 msgid ""
 "<strong>Automatic Output</strong>: By default, the purchase buttons will be "
 "displayed at the bottom of the download, when disabled you will need to use "
@@ -1735,23 +1740,23 @@ msgid ""
 "where you prefer."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1091
+#: includes/admin/downloads/metabox.php:1105
 #: includes/admin/settings/register-settings.php:751
 #: includes/admin/thickbox.php:97
 msgid "Add to Cart"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1092
+#: includes/admin/downloads/metabox.php:1106
 #: includes/admin/settings/register-settings.php:758 includes/shortcodes.php:47
 #: includes/template-functions.php:78
 msgid "Buy Now"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1105
+#: includes/admin/downloads/metabox.php:1119
 msgid "Purchase button behavior"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1107
+#: includes/admin/downloads/metabox.php:1121
 msgid ""
 "<strong>Button Behavior</strong>: Add to Cart buttons follow a traditional "
 "eCommerce flow. A Buy Now button bypasses most of the process, taking the "
@@ -1759,36 +1764,36 @@ msgid ""
 "process of buying the product."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1109
+#: includes/admin/downloads/metabox.php:1123
 msgid ""
 "<strong>Button Behavior</strong>: Add to Cart buttons follow a traditional "
 "eCommerce flow. Buy Now buttons are only available for stores that have a "
 "single supported gateway active and that do not use taxes."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1147
+#: includes/admin/downloads/metabox.php:1161
 msgid ""
 "Special notes or instructions for this product. These notes will be added "
 "to the purchase receipt."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1174
+#: includes/admin/downloads/metabox.php:1188
 msgid "Sales:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1179
+#: includes/admin/downloads/metabox.php:1193
 msgid "Earnings:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1186
+#: includes/admin/downloads/metabox.php:1200
 msgid "View File Download Log"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1220
+#: includes/admin/downloads/metabox.php:1234
 msgid "Activate Reviews"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1233
+#: includes/admin/downloads/metabox.php:1247
 msgid ""
 "Would you like to enable reviews for this product? Check out our <a "
 "target=\"_blank\" href=\"%s\">Product Reviews</a> extension."
@@ -5546,7 +5551,7 @@ msgstr ""
 msgid "Once Weekly"
 msgstr ""
 
-#: includes/class-edd-customer.php:223 includes/class-edd-discount.php:254
+#: includes/class-edd-customer.php:201 includes/class-edd-discount.php:254
 #: includes/class-edd-download.php:196
 msgid "Can't get property %s"
 msgstr ""
@@ -7112,6 +7117,10 @@ msgstr ""
 
 #: includes/process-purchase.php:31 includes/scripts.php:88
 msgid "Your cart is empty"
+msgstr ""
+
+#: includes/process-purchase.php:198
+msgid "The email address %s is already in use."
 msgstr ""
 
 #: includes/process-purchase.php:317
