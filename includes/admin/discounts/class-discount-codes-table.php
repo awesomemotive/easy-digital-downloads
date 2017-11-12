@@ -293,6 +293,21 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Generates content for a single row of the table.
+	 *
+	 * @since 2.9
+	 *
+	 * @param object $item The current item
+	 */
+	public function single_row( $item ) {
+		$class = 'active' === $item['status'] ? 'active' : 'inactive';
+
+		echo '<tr class="' . $class . '">';
+		$this->single_row_columns( $item );
+		echo '</tr>';
+	}
+
+	/**
 	 * Process the bulk actions
 	 *
 	 * @access public

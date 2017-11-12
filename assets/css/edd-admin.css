@@ -137,6 +137,16 @@ a.edd-delete:hover {
 /* Discount Code Styles
 -------------------------------------------------------------- */
 
+table.discounts .active th.check-column {
+	border-left: 4px solid #00a0d2;
+}
+
+table.discounts .active th,
+table.discounts .active td {
+	background-color: #f7fcfe;
+	box-shadow: inset 0 -1px 0 rgba(0,0,0,0.1);
+}
+
 #edd-products {
 	height: 100px;
 	min-width: 200px;
