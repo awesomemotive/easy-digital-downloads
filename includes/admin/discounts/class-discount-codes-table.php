@@ -148,7 +148,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 			'uses'       => __( 'Uses', 'easy-digital-downloads' ),
 			'start_date' => __( 'Start Date', 'easy-digital-downloads' ),
 			'expiration' => __( 'Expiration', 'easy-digital-downloads' ),
-			'status'     => __( 'Status', 'easy-digital-downloads' ),
 		);
 
 		return $columns;
@@ -239,30 +238,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 			/*$1%s*/ 'discount',
 			/*$2%s*/ $item['ID']
 		);
-	}
-
-	/**
-	 * Render the status column
-	 *
-	 * @access public
-	 * @since 1.9.9
-	 * @param array $item Contains all the data for the checkbox column
-	 * @return string Displays the discount status
-	 */
-	function column_status( $item ) {
-		switch( $item['status'] ){
-			case 'expired' :
-				$status = __( 'Expired', 'easy-digital-downloads' );
-				break;
-			case 'inactive' :
-				$status = __( 'Inactive', 'easy-digital-downloads' );
-				break;
-			case 'active' :
-			default :
-				$status = __( 'Active', 'easy-digital-downloads' );
-				break;
-		}
-		return $status;
 	}
 
 	/**
