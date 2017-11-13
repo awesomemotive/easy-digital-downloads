@@ -308,7 +308,7 @@ function edd_remove_customer_email() {
 
 		$user          = wp_get_current_user();
 		$user_login    = ! empty( $user->user_login ) ? $user->user_login : 'EDDBot';
-		$customer_note = sprintf( __( 'Email address %s removed by %s', 'easy-digital-downloads' ), $_GET['email'], $user_login );
+		$customer_note = sprintf( __( 'Email address %s removed by %s', 'easy-digital-downloads' ), sanitize_email( $_GET['email'] ), $user_login );
 		$customer->add_note( $customer_note );
 
 	} else {
@@ -352,7 +352,7 @@ function edd_set_customer_primary_email() {
 
 		$user          = wp_get_current_user();
 		$user_login    = ! empty( $user->user_login ) ? $user->user_login : 'EDDBot';
-		$customer_note = sprintf( __( 'Email address %s set as primary by %s', 'easy-digital-downloads' ), $_GET['email'], $user_login );
+		$customer_note = sprintf( __( 'Email address %s set as primary by %s', 'easy-digital-downloads' ), sanitize_email( $_GET['email'] ), $user_login );
 		$customer->add_note( $customer_note );
 
 	} else {
