@@ -320,7 +320,7 @@ add_shortcode( 'purchase_collection', 'edd_purchase_collection_shortcode' );
  */
 function edd_downloads_query( $atts, $content = null ) {
 
-    $custom_taxonomy_names = [];
+    $custom_taxonomy_names = array();
 
     $taxonomies = get_taxonomies( array(
          'public'   => true,
@@ -406,7 +406,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		break;
 	}
 
-    $taxonomy_filters = [];
+    $taxonomy_filters = array();
 
     // auto-detect if a custom taxonomy is actually being used in the shortcode (atts)
     foreach ($custom_taxonomy_names as $taxonomy_name => $default) {
