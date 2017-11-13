@@ -460,11 +460,11 @@ function edd_downloads_query( $atts, $content = null ) {
               $term_id = $the_term->term_id;
             }
 
-            $query['tax_query'][] = [
+            $query['tax_query'][] = array(
               'taxonomy' => $taxonomy_name,
               'field' => 'term_id',
               'terms' => $term_id
-            ];
+            );
           }
         }
 
