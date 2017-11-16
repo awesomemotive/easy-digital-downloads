@@ -483,12 +483,14 @@ function edd_add_past_purchases_to_new_user( $user_id ) {
 		edd_send_user_verification_email( $user_id );
 
 		foreach( $payments as $payment ) {
-			if( intval( edd_get_payment_user_id( $payment->ID ) ) > 0 ) {
-				continue; // This payment already associated with an account
-			}
+			if ( $payment instanceof EDD_Payment ) {
+				if ( intval( edd_get_payment_user_id( $payment->ID ) ) > 0 ) {
+					continue; // This payment already associated with an account
+				}
 
-			$payment->user_id = $user_id;
-			$payment->save();
+				$payment->user_id = $user_id;
+				$payment->save();
+			}
 		}
 	}
 
