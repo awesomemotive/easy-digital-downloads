@@ -484,7 +484,7 @@ function edd_add_past_purchases_to_new_user( $user_id ) {
 
 		foreach( $payments as $payment ) {
 			if ( is_object( $payment ) && $payment instanceof EDD_Payment ) {
-				if ( intval( edd_get_payment_user_id( $payment->ID ) ) > 0 ) {
+				if ( intval( $payment->user_id ) > 0 ) {
 					continue; // This payment already associated with an account
 				}
 
