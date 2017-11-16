@@ -78,7 +78,7 @@ function edd_add_discount( $data ) {
 
 		if ( edd_store_discount( $posted ) ) {
 
-			wp_redirect( add_query_arg( 'edd-message', 'discount_added', $data['edd-redirect'] ) ); edd_die();
+			wp_redirect( add_query_arg( 'edd_discount_added', '1', $data['edd-redirect'] ) ); edd_die();
 
 		} else {
 
@@ -146,7 +146,7 @@ function edd_edit_discount( $data ) {
 
 	if ( edd_store_discount( $discount, $data['discount-id'] ) ) {
 
-		wp_redirect( add_query_arg( 'edd-message', 'discount_updated', $data['edd-redirect'] ) ); edd_die();
+		wp_redirect( add_query_arg( 'edd_discount_updated', '1', $data['edd-redirect'] ) ); edd_die();
 
 	} else {
 
