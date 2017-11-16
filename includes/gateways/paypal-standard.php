@@ -457,6 +457,19 @@ add_action( 'edd_verify_paypal_ipn', 'edd_process_paypal_ipn' );
  * @return void
  */
 function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
+
+	/**
+	 * PayPal Web Accept Data
+	 *
+	 * Allows filtering the Web Accept data that PayPal passes back in via IPN with PayPal Standard
+	 *
+	 * @since 3.8.13
+	 *
+	 * @param array $data      The PayPal Web Accept Data
+	 * @param int  $payment_id The Payment ID associated with this IPN request
+	 */
+	$data = apply_filters( 'edd_paypal_web_accept_and_cart_data', $data, $payment_id );
+
 	if ( $data['txn_type'] != 'web_accept' && $data['txn_type'] != 'cart' && $data['payment_status'] != 'Refunded' ) {
 		return;
 	}
