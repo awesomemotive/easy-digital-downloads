@@ -809,7 +809,7 @@ function edd_paypal_process_pdt_on_return() {
 
 	$token = edd_get_option( 'paypal_identity_token' );
 
-	if( ! edd_is_success_page() || ! $token ) {
+	if( ! edd_is_success_page() || ! $token || ! edd_is_gateway_active( 'paypal' ) ) {
 		return;
 	}
 
