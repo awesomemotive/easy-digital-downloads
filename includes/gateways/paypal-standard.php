@@ -286,6 +286,8 @@ function edd_process_paypal_purchase( $purchase_data ) {
 
 		$paypal_args = apply_filters( 'edd_paypal_redirect_args', $paypal_args, $purchase_data );
 
+		edd_debug_log( 'PayPal arguments: ' . print_r( $paypal_args, true ) );
+
 		// Build query
 		$paypal_redirect .= http_build_query( $paypal_args );
 
@@ -309,6 +311,9 @@ add_action( 'edd_gateway_paypal', 'edd_process_paypal_purchase' );
 function edd_listen_for_paypal_ipn() {
 	// Regular PayPal IPN
 	if ( isset( $_GET['edd-listener'] ) && $_GET['edd-listener'] == 'IPN' ) {
+
+		edd_debug_log( 'PayPal IPN endpoint loaded' );
+
 		do_action( 'edd_verify_paypal_ipn' );
 	}
 }
@@ -325,6 +330,8 @@ function edd_process_paypal_ipn() {
 	if ( isset( $_SERVER['REQUEST_METHOD'] ) && $_SERVER['REQUEST_METHOD'] != 'POST' ) {
 		return;
 	}
+
+	edd_debug_log( 'edd_process_paypal_ipn() running during PayPal IPN processing' );
 
 	// Set initial post data to empty string
 	$post_data = '';
@@ -375,6 +382,8 @@ function edd_process_paypal_ipn() {
 
 	}
 
+	edd_debug_log( 'encoded_data_array data array: ' . print_r( $encoded_data_array, true ) );
+
 	if ( ! edd_get_option( 'disable_paypal_verification' ) ) {
 
 		// Validate the IPN
@@ -397,21 +406,26 @@ function edd_process_paypal_ipn() {
 			'body'        => $encoded_data_array
 		);
 
+		edd_debug_log( 'Attempting to verify PayPal IPN. Data sent for verification: ' . print_r( $remote_post_vars, true ) );
+
 		// Get response
 		$api_response = wp_remote_post( edd_get_paypal_redirect( true, true ), $remote_post_vars );
 
 		if ( is_wp_error( $api_response ) ) {
 			edd_record_gateway_error( __( 'IPN Error', 'easy-digital-downloads' ), sprintf( __( 'Invalid IPN verification response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $api_response ) ) );
+			edd_debug_log( 'Invalid IPN verification response. IPN data: ' . print_r( $api_response, true ) );
 
 			return; // Something went wrong
 		}
 
 		if ( wp_remote_retrieve_body( $api_response ) !== 'VERIFIED' && edd_get_option( 'disable_paypal_verification', false ) ) {
 			edd_record_gateway_error( __( 'IPN Error', 'easy-digital-downloads' ), sprintf( __( 'Invalid IPN verification response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $api_response ) ) );
+			edd_debug_log( 'Invalid IPN verification response. IPN data: ' . print_r( $api_response, true ) );
 
 			return; // Response not okay
 		}
 
+		edd_debug_log( 'IPN verified successfully' );
 	}
 
 	// Check if $post_data_array has been populated
@@ -482,6 +496,7 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 	// Verify payment recipient
 	if ( strcasecmp( $business_email, trim( edd_get_option( 'paypal_email', false ) ) ) != 0 ) {
 		edd_record_gateway_error( __( 'IPN Error', 'easy-digital-downloads' ), sprintf( __( 'Invalid business email in IPN response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $data ) ), $payment_id );
+		edd_debug_log( 'Invalid business email in IPN response. IPN data: ' . print_r( $data, true ) );
 		edd_update_payment_status( $payment_id, 'failed' );
 		edd_insert_payment_note( $payment_id, __( 'Payment failed due to invalid PayPal business email.', 'easy-digital-downloads' ) );
 		return;
@@ -491,6 +506,7 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 	if ( $currency_code != strtolower( $payment->currency ) ) {
 
 		edd_record_gateway_error( __( 'IPN Error', 'easy-digital-downloads' ), sprintf( __( 'Invalid currency in IPN response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $data ) ), $payment_id );
+		edd_debug_log( 'Invalid currency in IPN response. IPN data: ' . print_r( $data, true ) );
 		edd_update_payment_status( $payment_id, 'failed' );
 		edd_insert_payment_note( $payment_id, __( 'Payment failed due to invalid currency in PayPal IPN.', 'easy-digital-downloads' ) );
 		return;
@@ -550,12 +566,14 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 		if ( number_format( (float) $paypal_amount, 2 ) < number_format( (float) $payment_amount, 2 ) ) {
 			// The prices don't match
 			edd_record_gateway_error( __( 'IPN Error', 'easy-digital-downloads' ), sprintf( __( 'Invalid payment amount in IPN response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $data ) ), $payment_id );
+			edd_debug_log( 'Invalid payment amount in IPN response. IPN data: ' . printf( $data, true ) );
 			edd_update_payment_status( $payment_id, 'failed' );
 			edd_insert_payment_note( $payment_id, __( 'Payment failed due to invalid amount in PayPal IPN.', 'easy-digital-downloads' ) );
 			return;
 		}
 		if ( $purchase_key != edd_get_payment_key( $payment_id ) ) {
 			// Purchase keys don't match
+			edd_debug_log( 'Invalid purchase key in IPN response. IPN data: ' . printf( $data, true ) );
 			edd_record_gateway_error( __( 'IPN Error', 'easy-digital-downloads' ), sprintf( __( 'Invalid purchase key in IPN response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $data ) ), $payment_id );
 			edd_update_payment_status( $payment_id, 'failed' );
 			edd_insert_payment_note( $payment_id, __( 'Payment failed due to invalid purchase key in PayPal IPN.', 'easy-digital-downloads' ) );
@@ -636,6 +654,7 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 
 			if( ! empty( $note ) ) {
 
+				edd_debug_log( 'Payment not marked as completed because: ' . $note );
 				edd_insert_payment_note( $payment_id, $note );
 
 			}
