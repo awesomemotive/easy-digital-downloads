@@ -375,6 +375,17 @@ function edd_process_paypal_ipn() {
 
 	}
 
+	/**
+	 * PayPal Web IPN Verification
+	 *
+	 * Allows filtering the IPN Verification data that PayPal passes back in via IPN with PayPal Standard
+	 *
+	 * @since 2.8.13
+	 *
+	 * @param array $data      The PayPal Web Accept Data
+	 */
+	$encoded_data_array = apply_filters( 'edd_process_paypal_ipn_data', $encoded_data_array );
+
 	if ( ! edd_get_option( 'disable_paypal_verification' ) ) {
 
 		// Validate the IPN
@@ -457,6 +468,19 @@ add_action( 'edd_verify_paypal_ipn', 'edd_process_paypal_ipn' );
  * @return void
  */
 function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
+
+	/**
+	 * PayPal Web Accept Data
+	 *
+	 * Allows filtering the Web Accept data that PayPal passes back in via IPN with PayPal Standard
+	 *
+	 * @since 2.8.13
+	 *
+	 * @param array $data      The PayPal Web Accept Data
+	 * @param int  $payment_id The Payment ID associated with this IPN request
+	 */
+	$data = apply_filters( 'edd_paypal_web_accept_and_cart_data', $data, $payment_id );
+
 	if ( $data['txn_type'] != 'web_accept' && $data['txn_type'] != 'cart' && $data['payment_status'] != 'Refunded' ) {
 		return;
 	}
@@ -654,8 +678,19 @@ add_action( 'edd_paypal_web_accept', 'edd_process_paypal_web_accept_and_cart', 1
  */
 function edd_process_paypal_refund( $data, $payment_id = 0 ) {
 
-	// Collect payment details
+	/**
+	 * PayPal Process Refund Data
+	 *
+	 * Allows filtering the Refund data that PayPal passes back in via IPN with PayPal Standard
+	 *
+	 * @since 2.8.13
+	 *
+	 * @param array $data      The PayPal Refund data
+	 * @param int  $payment_id The Payment ID associated with this IPN request
+	 */
+	$data = apply_filters( 'edd_process_paypal_refund_data', $data, $payment_id );
 
+	// Collect payment details
 	if( empty( $payment_id ) ) {
 		return;
 	}
