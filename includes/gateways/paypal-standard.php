@@ -67,8 +67,21 @@ function edd_register_paypal_gateway_settings( $gateway_settings ) {
 			),
 		);
 
+		$pdt_desc = sprintf(
+			__( 'Enter your PayPal Identity Token in order to enable Payment Data Transfer (PDT). This allows payments to be verified without relying on the PayPal IPN. See our <a href="%s" target="_blank">documentation</a> for further information.', 'easy-digital-downloads' ),
+			'http://docs.easydigitaldownloads.com/article/918-paypal-standard'
+		);
+
+		$paypal_settings['paypal_identify_token'] = array(
+			'id'   => 'paypal_identity_token',
+			'name' => __( 'PayPal Identity Token', 'easy-digital-downloads' ),
+			'type' => 'text',
+			'desc' => $pdt_desc,
+			'size' => 'regular',
+		);
+
 		$disable_ipn_desc = sprintf(
-			__( 'If payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases. See our <a href="%s" target="_blank">FAQ</a> for further information.', 'easy-digital-downloads' ),
+			__( 'If you are unable to use Payment Data Transfer and payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases. See our <a href="%s" target="_blank">FAQ</a> for further information.', 'easy-digital-downloads' ),
 			'http://docs.easydigitaldownloads.com/article/190-payments-not-marked-as-complete'
 		);
 
@@ -794,7 +807,7 @@ function edd_get_paypal_image_url() {
 }
 
 /**
- * Shows "Purchase Processing" message for PayPal payments are still pending on site return
+ * Shows "Purchase Processing" message for PayPal payments are still pending on site return.
  *
  * This helps address the Race Condition, as detailed in issue #1839
  *
@@ -816,9 +829,9 @@ function edd_paypal_success_page_content( $content ) {
 		$payment_id = edd_get_purchase_id_by_key( $session['purchase_key'] );
 	}
 
-	$payment = get_post( $payment_id );
+	$payment = new EDD_Payment( $payment_id );
 
-	if ( $payment && 'pending' == $payment->post_status ) {
+	if ( $payment->ID > 0 && 'pending' == $payment->status  ) {
 
 		// Payment is still pending so show processing indicator to fix the Race Condition, issue #
 		ob_start();
@@ -833,6 +846,90 @@ function edd_paypal_success_page_content( $content ) {
 
 }
 add_filter( 'edd_payment_confirm_paypal', 'edd_paypal_success_page_content' );
+
+/**
+ * Mark payment as complete on return from PayPal if a PayPal Identity Token is present.
+ *
+ * See https://github.com/easydigitaldownloads/easy-digital-downloads/issues/6197
+ *
+ * @since 2.8.13
+ * @return void
+ */
+function edd_paypal_process_pdt_on_return() {
+
+	if ( ! isset( $_GET['payment-id'] ) || ! isset( $_GET['tx'] ) ) {
+		return;
+	}
+
+	$token = edd_get_option( 'paypal_identity_token' );
+
+	if( ! edd_is_success_page() || ! $token || ! edd_is_gateway_active( 'paypal' ) ) {
+		return;
+	}
+
+	$payment_id = isset( $_GET['payment-id'] ) ? absint( $_GET['payment-id'] ) : false;
+
+	if( empty( $payment_id ) ) {
+		return;
+	}
+
+	$payment = new EDD_Payment( $payment_id );
+
+	if( $token && ! empty( $_GET['tx'] ) && $payment->ID > 0 ) {
+
+		// An identity token has been provided in settings so let's immediately verify the purchase
+
+		$remote_post_vars = array(
+			'method'      => 'POST',
+			'timeout'     => 45,
+			'redirection' => 5,
+			'httpversion' => '1.1',
+			'blocking'    => true,
+			'headers'     => array(
+				'host'         => 'www.paypal.com',
+				'connection'   => 'close',
+				'content-type' => 'application/x-www-form-urlencoded',
+				'post'         => '/cgi-bin/webscr HTTP/1.1',
+				'user-agent'   => 'EDD PDT Verification/' . EDD_VERSION . '; ' . get_bloginfo( 'url' )
+
+			),
+			'sslverify'   => false,
+			'body'        => array(
+				'tx'  => sanitize_text_field( $_GET['tx'] ),
+				'at'  => $token,
+				'cmd' => '_notify-synch',
+			)
+		);
+
+		// Sanitize the data for debug logging.
+		$debug_args               = $remote_post_vars;
+		$debug_args['body']['at'] = str_pad( substr( $debug_args['body']['at'], -6 ), strlen( $debug_args['body']['at'] ), '*', STR_PAD_LEFT );
+		edd_debug_log( 'Attempting to verify PayPal payment with PDT. Args: ' . print_r( $debug_args, true ) );
+
+		$request = wp_remote_post( edd_get_paypal_redirect( true, true ), $remote_post_vars );
+
+		if ( ! is_wp_error( $request ) ) {
+
+			$body = wp_remote_retrieve_body( $request );
+
+			if( false !== strpos( $body, 'SUCCESS' ) ) {
+
+				// Purchase verified, set to completed
+				$payment->status = 'publish';
+				$payment->transaction_id = sanitize_text_field( $_GET['tx'] );
+				$payment->save();
+
+			}
+
+		} else {
+
+			edd_debug_log( 'Attempt to verify PayPal payment with PDT failed. Request return: ' . print_r( $request, true ) );
+
+		}
+	}
+
+}
+add_action( 'template_redirect', 'edd_paypal_process_pdt_on_return' );
 
 /**
  * Given a Payment ID, extract the transaction ID
