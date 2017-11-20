@@ -847,7 +847,10 @@ function edd_paypal_process_pdt_on_return() {
 			)
 		);
 
-		edd_debug_log( 'Attempting to verify PayPal payment with PDT. Args: ' . print_r( $remote_post_vars, true ) );
+		// Sanitize the data for debug logging.
+		$debug_args               = $remote_post_vars;
+		$debug_args['body']['at'] = str_pad( substr( $debug_args['body']['at'], -6 ), strlen( $debug_args['body']['at'] ), '*', STR_PAD_LEFT );
+		edd_debug_log( 'Attempting to verify PayPal payment with PDT. Args: ' . print_r( $debug_args, true ) );
 
 		$request = wp_remote_post( edd_get_paypal_redirect( true, true ), $remote_post_vars );
 
@@ -867,7 +870,7 @@ function edd_paypal_process_pdt_on_return() {
 		} else {
 
 			edd_debug_log( 'Attempt to verify PayPal payment with PDT failed. Request return: ' . print_r( $request, true ) );
-	
+
 		}
 	}
 
