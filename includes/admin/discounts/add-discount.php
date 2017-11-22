@@ -131,7 +131,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 				</th>
 				<td>
 					<input name="expiration" id="edd-expiration" type="text" class="edd_datepicker"/>
-					<p class="description"><?php _e( 'Enter the expiration date for this discount code in the format of mm/dd/yyyy. For no expiration, leave blank.', 'easy-digital-downloads' ); ?></p>
+					<p class="description"><?php _e( 'Enter the expiration date for this discount code in the format of mm/dd/yyyy. The discount code will expire at the end of the day selected. For no expiration, leave blank.', 'easy-digital-downloads' ); ?></p>
 				</td>
 			</tr>
 			<?php do_action( 'edd_add_discount_form_before_min_cart_amount' ); ?>
