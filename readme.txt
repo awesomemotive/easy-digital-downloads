@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.4
 Tested up to: 4.9
-Stable Tag: 2.8.12
+Stable Tag: 2.8.13
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -49,7 +49,6 @@ Payment gateways supported through free or premium extension:
 * Coinbase
 * Moneybookers / Skrill
 * Payza
-* MercadoPago
 * PagSeguro
 
 See our [gateways category](https://easydigitaldownloads.com/downloads/category/gateways/?utm_source=extensions&utm_medium=description_tab&utm_content=gateways&utm_campaign=readme) in the extensions catalogue for a complete list of supported gateways. There are also a large number of additional gateways developed and supported by [3rd party developers](https://easydigitaldownloads.com/3rd-party-extensions/#gateways).
@@ -169,7 +168,6 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 * [SOFORT Banking](https://easydigitaldownloads.com/downloads/sofort-banking-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=sofort-banking-gateway&utm_campaign=readme)
 * [PayU India](https://easydigitaldownloads.com/downloads/payu-india-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=payu-india-payment-gateway&utm_campaign=readme)
 * [Payza](https://easydigitaldownloads.com/downloads/payza-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=payza-payment-gateway&utm_campaign=readme)
-* [MercadoPago](https://easydigitaldownloads.com/downloads/mercadopago/?utm_source=gateway&utm_medium=faq_tab&utm_content=mercadopago&utm_campaign=readme)
 * [First Data](https://easydigitaldownloads.com/downloads/first-data-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=first-data-payment-gateway&utm_campaign=readme)
 * [PayPlug](https://easydigitaldownloads.com/downloads/payplug-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=payplug-gateway&utm_campaign=readme)
 * [GoCardless](https://easydigitaldownloads.com/downloads/gocardless-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=gocardless-payment-gateway&utm_campaign=readme)
@@ -212,6 +210,18 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+
+= 2.8.13, November 20, 2017 =
+* Fix: Cart details incorrectly reported item quantity as 0 in some cases.
+* Fix: Prevent an edge case around adding past purchases to new users.
+* Fix: Searching by custom order number only worked if a suffix or prefix is included.
+* Fix: Corrected some translation issues.
+* New: Allow filtering of the PayPal IPN data.
+* New: Add support for Payment Data Transport (PDT) in PayPal Standard.
+* Tweak: Removed MercadoPago from list of extensions in readme.
+* Tweak: Added a colon that was missing on taxes & subtotal of the purchase confirmation.
+* Tweak: Add debug logging to PayPal IPN capturing.
+
 
 = 2.8.12, November 10, 2017 =
 * Fix: Reverted some of the performance improvements due to edge case errors.
