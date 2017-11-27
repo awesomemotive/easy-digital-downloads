@@ -245,6 +245,7 @@ class EDD_Cart {
 			$subtotal_for_tax = $subtotal;
 
 			foreach ( $fees as $fee ) {
+
 				$fee_amount = (float) $fee['amount'];
 				$subtotal  += $fee_amount;
 
