@@ -244,13 +244,7 @@ class EDD_Cart {
 			// Subtotal for tax calculation must exclude fees that are greater than 0. See $this->get_tax_on_fees()
 			$subtotal_for_tax = $subtotal;
 
-			$applied_fees = array();
 			foreach ( $fees as $fee ) {
-				$fee_hash   = md5( $fee['amount'] . $fee['label'] );
-
-				if ( in_array( $fee_hash, $applied_fees ) ) {
-					continue;
-				}
 
 				$fee_amount = (float) $fee['amount'];
 				$subtotal  += $fee_amount;
@@ -259,7 +253,6 @@ class EDD_Cart {
 					continue;
 				}
 
-				$applied_fees[]    = $fee_hash;
 				$subtotal_for_tax += $fee_amount;
 			}
 
