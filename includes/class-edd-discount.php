@@ -769,7 +769,7 @@ class EDD_Discount {
 	/**
 	 * Retrieves the status label of the discount.
 	 *
-	 * @since x.x
+	 * @since 2.9
 	 *
 	 * @return string Status label for the current discount.
 	 */
@@ -791,7 +791,7 @@ class EDD_Discount {
 		/**
 		 * Filters the discount status.
 		 *
-		 * @since 2.7
+		 * @since 2.9
 		 *
 		 * @param string $label  Discount status label.
 		 * @param string $status Discount status (active or inactive).

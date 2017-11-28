@@ -445,7 +445,7 @@ function edd_get_discount_product_condition( $code_id = 0 ) {
 /**
  * Retrieves the discount status label.
  *
- * @since x.x
+ * @since 2.9
  *
  * @param int $code_id Discount ID.
  * @return string Product condition.
