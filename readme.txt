@@ -194,6 +194,7 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 * Fix: Sales exports did not always include all payments from the last day of the range selected.
 * Fix: Negative item fees can apply to same item multiple times if it's the same product.
 * Fix: Campaign strings on Integrations were not consistent.
+* Fix: Warning when converting dates to timestamps in EDD_Stats::convert_date()
 
 = 2.8.13, November 20, 2017 =
 * Fix: Cart details incorrectly reported item quantity as 0 in some cases.
