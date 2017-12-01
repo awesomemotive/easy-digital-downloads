@@ -956,8 +956,8 @@ function edd_can_view_receipt( $payment_key = '' ) {
  * Given a IP address, generate a link to IP address provider (ipinfo.io)
  *
  * @since  2.8.15
- * @param  string		$ip_address The Payment IP Address
- * @return string   A link to the IP details provider
+ * @param  string	$ip_address The Payment IP Address
+ * @return string	A link to the IP details provider
  */
 function edd_payment_get_ip_address_url( $ip_address ) {
 
