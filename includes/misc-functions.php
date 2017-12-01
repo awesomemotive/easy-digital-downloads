@@ -950,3 +950,21 @@ function edd_can_view_receipt( $payment_key = '' ) {
 
 	return (bool) apply_filters( 'edd_can_view_receipt', $return, $payment_key );
 }
+
+
+/**
+ * Given a IP address, generate a link to IP address provider (ipinfo.io)
+ *
+ * @since  2.8.15
+ * @param  string		$ip_address The Payment IP Address
+ * @return string   A link to the IP details provider
+ */
+function edd_payment_get_ip_address_url( $ip_address ) {
+
+	$base_url = 'https://ipinfo.io/';
+	$provider_url = '<a href="' . esc_url( $base_url ) . esc_attr( $ip_address ) . '" target="_blank">' . esc_attr ( $ip_address ) . '</a>';
+
+	return apply_filters( 'edd_payment_get_ip_address_url', $provider_url );
+
+}
+add_filter( 'edd_payment_details_ip_address', 'edd_payment_get_ip_address_url', 10, 1 );
