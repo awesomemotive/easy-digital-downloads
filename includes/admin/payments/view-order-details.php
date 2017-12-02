@@ -272,7 +272,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 										<div class="edd-order-ip edd-admin-box-inside">
 											<p>
 												<span class="label"><?php _e( 'IP:', 'easy-digital-downloads' ); ?></span>&nbsp;
-												<span><?php echo apply_filters( 'edd_payment_details_ip_address', $payment->ip ); ?></span>
+												<span><?php echo apply_filters( 'edd_payment_details_ip_address', $payment->ip, $payment_id ); ?></span>
 											</p>
 										</div>
 
