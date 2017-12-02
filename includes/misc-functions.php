@@ -957,7 +957,7 @@ function edd_can_view_receipt( $payment_key = '' ) {
  *
  * @since  2.8.15
  * @param  string	$ip_address The Payment IP Address
- * @param  string	$payment_id The Payment ID
+ * @param  int		$payment_id The Payment ID
  * @return string	A link to the IP details provider
  */
 function edd_payment_get_ip_address_url( $ip_address, $payment_id ) {
