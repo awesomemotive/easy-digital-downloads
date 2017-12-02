@@ -303,9 +303,10 @@ class EDD_Customer {
 	 * @since  2.6
 	 * @param  string $email The email address to remove from the customer
 	 * @param  bool   $primary Allows setting the email added as the primary
+	 * @param  bool		$force_link Allows the admin to force an email to be linked to a customer even if it is attached to another user or customer
 	 * @return bool   If the email was added successfully
 	 */
-	public function add_email( $email = '', $primary = false ) {
+	public function add_email( $email = '', $primary = false, $force_link = false ) {
 
 		if( ! is_email( $email ) ) {
 			return false;
@@ -313,12 +314,12 @@ class EDD_Customer {
 
 		$existing = new EDD_Customer( $email );
 
-		if( $existing->id > 0 ) {
+		if( $existing->id > 0 && ! $force_link) {
 			// Email address already belongs to a customer
 			return false;
 		}
 
-		if ( email_exists( $email ) ) {
+		if ( email_exists( $email ) && ! $force_link) {
 			$user = get_user_by( 'email', $email );
 			if ( $user->ID != $this->user_id ) {
 				return false;

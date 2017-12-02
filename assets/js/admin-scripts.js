@@ -1840,9 +1840,9 @@ jQuery(document).ready(function ($) {
 			});
 		},
 		add_email: function() {
-			$( document.body ).on( 'click', '#add-customer-email', function(e) {
+			$( document.body ).on( 'click', '#add-customer-email, #add-customer-email-force', function(e) {
 				e.preventDefault();
-				var button  = $(this);
+				var button  = $('#add-customer-email');
 				var wrapper = button.parent();
 
 				wrapper.parent().find('.notice-wrap').remove();
@@ -1853,12 +1853,18 @@ jQuery(document).ready(function ($) {
 				var email       = wrapper.find('input[name="additional-email"]').val();
 				var primary     = wrapper.find('input[name="make-additional-primary"]').is(':checked');
 				var nonce       = wrapper.find('input[name="add_email_nonce"]').val();
+				var forceLink 	= false;
+
+				if ( e.target.id === 'add-customer-email-force' ){
+					forceLink = true;
+				}
 
 				var postData = {
 					edd_action:  'customer-add-email',
 					customer_id: customer_id,
 					email:       email,
 					primary:     primary,
+					forceLink:	 forceLink,
 					_wpnonce:    nonce,
 				};
 
@@ -1866,6 +1872,10 @@ jQuery(document).ready(function ($) {
 
 					if ( true === response.success ) {
 						window.location.href=response.redirect;
+					} else if ( typeof(response.link) !== "undefined" ) {
+						button.attr('disabled', false);
+						wrapper.after('<div class="notice-wrap"><div class="notice notice-error inline"><p>' + response.message + '<a href="' + response.link + '"> ' + response.userType + '</a>.' + '<a href="" id="add-customer-email-force"> Link anyways?</a> </p></div></div>');
+						wrapper.find('.spinner').css('visibility', 'hidden');
 					} else {
 						button.attr('disabled', false);
 						wrapper.after('<div class="notice-wrap"><div class="notice notice-error inline"><p>' + response.message + '</p></div></div>');
