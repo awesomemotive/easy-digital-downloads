@@ -1864,7 +1864,7 @@ jQuery(document).ready(function ($) {
 					customer_id: customer_id,
 					email:       email,
 					primary:     primary,
-					forceLink:	 forceLink,
+					forceLink:   forceLink,
 					_wpnonce:    nonce,
 				};
 

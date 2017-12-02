@@ -250,7 +250,7 @@ function edd_add_customer_email( $args ) {
 				$output = array(
 					'success' => false,
 					'message' => __( 'Email address is already associated with another', 'easy-digital-downloads' ),
-					'link'		=> $link,
+					'link'    => $link,
 					'userType'=> $user_type,
 				);
 
