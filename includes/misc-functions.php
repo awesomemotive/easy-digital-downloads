@@ -957,14 +957,15 @@ function edd_can_view_receipt( $payment_key = '' ) {
  *
  * @since  2.8.15
  * @param  string	$ip_address The Payment IP Address
+ * @param  string	$payment_id The Payment ID
  * @return string	A link to the IP details provider
  */
-function edd_payment_get_ip_address_url( $ip_address ) {
+function edd_payment_get_ip_address_url( $ip_address, $payment_id ) {
 
 	$base_url = 'https://ipinfo.io/';
 	$provider_url = '<a href="' . esc_url( $base_url ) . esc_attr( $ip_address ) . '" target="_blank">' . esc_attr ( $ip_address ) . '</a>';
 
-	return apply_filters( 'edd_payment_get_ip_address_url', $provider_url );
+	return apply_filters( 'edd_payment_get_ip_address_url', $provider_url, $ip_address, $payment_id );
 
 }
 add_filter( 'edd_payment_details_ip_address', 'edd_payment_get_ip_address_url', 10, 1 );
