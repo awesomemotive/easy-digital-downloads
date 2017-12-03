@@ -222,7 +222,6 @@ function edd_add_customer_email( $args ) {
 		$force_link  = 'true' === $args['forceLink'] ? true : false;
 		$customer    = new EDD_Customer( $customer_id );
 
-
 		if ( false === $customer->add_email( $email, $primary, $force_link ) ) {
 
 			if ( in_array( $email, $customer->emails ) ) {
