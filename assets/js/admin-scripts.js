@@ -1853,10 +1853,10 @@ jQuery(document).ready(function ($) {
 				var email       = wrapper.find('input[name="additional-email"]').val();
 				var primary     = wrapper.find('input[name="make-additional-primary"]').is(':checked');
 				var nonce       = wrapper.find('input[name="add_email_nonce"]').val();
-				var forceLink 	= false;
+				var force_link 	= false;
 
 				if ( e.target.id === 'add-customer-email-force' ){
-					forceLink = true;
+					force_link = true;
 				}
 
 				var postData = {
@@ -1864,7 +1864,7 @@ jQuery(document).ready(function ($) {
 					customer_id: customer_id,
 					email:       email,
 					primary:     primary,
-					forceLink:   forceLink,
+					force_link:   force_link,
 					_wpnonce:    nonce,
 				};
 

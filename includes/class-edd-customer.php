@@ -303,7 +303,7 @@ class EDD_Customer {
 	 * @since  2.6
 	 * @param  string $email The email address to remove from the customer
 	 * @param  bool   $primary Allows setting the email added as the primary
-	 * @param  bool		$force_link Allows the admin to force an email to be linked to a customer even if it is attached to another user or customer
+	 * @param  bool   $force_link Allows the admin to force an email to be linked to a customer even if it is attached to another user or customer
 	 * @return bool   If the email was added successfully
 	 */
 	public function add_email( $email = '', $primary = false, $force_link = false ) {
@@ -398,7 +398,9 @@ class EDD_Customer {
 		$remove = $this->remove_email( $new_primary_email );
 
 		// Add old email to additional emails list and if the email was forcibly put there, make sure it is re-added
-		$add = $this->add_email( $old_email, false, ( email_exists( $old_email ) ) );
+		$was_forced = email_exists( $old_email );
+
+		$add = $this->add_email( $old_email, false, $was_forced );
 
 		$ret = $update && $remove && $add;
 

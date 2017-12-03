@@ -219,7 +219,7 @@ function edd_add_customer_email( $args ) {
 		$email       = sanitize_email( $args['email'] );
 		$customer_id = (int) $args['customer_id'];
 		$primary     = 'true' === $args['primary'] ? true : false;
-		$force_link  = 'true' === $args['forceLink'] ? true : false;
+		$force_link  = 'true' === $args['force_link'] ? true : false;
 		$customer    = new EDD_Customer( $customer_id );
 
 		if ( false === $customer->add_email( $email, $primary, $force_link ) ) {
