@@ -266,7 +266,9 @@ function edd_add_customer_email( $args ) {
 
 			$user          = wp_get_current_user();
 			$user_login    = ! empty( $user->user_login ) ? $user->user_login : 'EDDBot';
-			$customer_note = sprintf( __( 'Email address %s added by %s', 'easy-digital-downloads' ), $email, $user_login );
+			$customer_note = $force_link ?
+			sprintf( __( 'Email address %s forcibly added by %s', 'easy-digital-downloads' ), $email, $user_login ) :
+			sprintf( __( 'Email address %s added by %s', 'easy-digital-downloads' ), $email, $user_login );
 			$customer->add_note( $customer_note );
 
 			if ( $primary ) {
