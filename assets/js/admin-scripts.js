@@ -1874,10 +1874,10 @@ jQuery(document).ready(function ($) {
 						window.location.href=response.redirect;
 					} else if ( typeof(response.link) !== "undefined" ) {
 						button.attr('disabled', false);
-						if( 'user' === response.userType ){
-							wrapper.after('<div class="notice-wrap"><div class="notice notice-error inline"><p>' + response.message + '<a href="' + response.link + '"> ' + response.userType + '</a>.' + '<a href="" id="add-customer-email-force"> Link anyways?</a> </p></div></div>');
+						if( 'user' === response.user_type ){
+							wrapper.after('<div class="notice-wrap"><div class="notice notice-warning inline"><p> <a href="' + response.link + '">' + response.message + '.</a></p></div></div>');
 						} else{
-							wrapper.after('<div class="notice-wrap"><div class="notice notice-error inline"><p>' + response.message + '<a href="' + response.link + '"> ' + response.userType + '</a>.');
+							wrapper.after('<div class="notice-wrap"><div class="notice notice-error inline"><p> <a href="' + response.link + '">' + response.message + '.</a></p></div></div>');
 						}
 						wrapper.find('.spinner').css('visibility', 'hidden');
 					} else {

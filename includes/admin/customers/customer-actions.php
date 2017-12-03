@@ -242,15 +242,15 @@ function edd_add_customer_email( $args ) {
 					$user_type = 'user';
 				}
 
-				$link = (($user_type === 'customer') ?
+				$link = $user_type === 'customer' ?
 				admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $user->id ) :
-				admin_url( 'user-edit.php?user_id=' . $user->id ));
+				admin_url( 'user-edit.php?user_id=' . $user->id );
 
 				$output = array(
 					'success' => false,
-					'message' => __( 'Email address is already associated with another', 'easy-digital-downloads' ),
+					'message' => sprintf( __( 'Email address is already associated with another %s', 'easy-digital-downloads' ), $user_type ),
 					'link'    => $link,
-					'userType'=> $user_type,
+					'user_type'=> $user_type,
 				);
 
 			}
