@@ -314,12 +314,12 @@ class EDD_Customer {
 
 		$existing = new EDD_Customer( $email );
 
-		if( $existing->id > 0 && ! $force_link) {
+		if( $existing->id > 0 ) {
 			// Email address already belongs to a customer
 			return false;
 		}
 
-		if ( email_exists( $email ) && ! $force_link) {
+		if ( email_exists( $email ) && ! $force_link ) {
 			$user = get_user_by( 'email', $email );
 			if ( $user->ID != $this->user_id ) {
 				return false;
@@ -397,8 +397,8 @@ class EDD_Customer {
 		// Remove new primary from list of additional emails
 		$remove = $this->remove_email( $new_primary_email );
 
-		// Add old email to additional emails list
-		$add = $this->add_email( $old_email );
+		// Add old email to additional emails list and if the email was forcibly put there, make sure it is re-added
+		$add = $this->add_email( $old_email, false, ( email_exists( $old_email ) ) );
 
 		$ret = $update && $remove && $add;
 
