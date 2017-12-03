@@ -1885,7 +1885,7 @@ jQuery(document).ready(function ($) {
 						wrapper.find('.spinner').css('visibility', 'hidden');
 					} else {
 						button.attr('disabled', false);
-						wrapper.after('<div class="notice-wrap"><div class="notice notice-error inline"><p style="margin:0;">' + response.message + '</p></div></div>');
+						wrapper.after('<div class="notice-wrap"><div class="notice notice-error inline"><p style="margin:0.5em 0;">' + response.message + '</p></div></div>');
 						wrapper.find('.spinner').css('visibility', 'hidden');
 					}
 
