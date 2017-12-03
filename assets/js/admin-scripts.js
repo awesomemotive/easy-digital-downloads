@@ -1875,14 +1875,16 @@ jQuery(document).ready(function ($) {
 					} else if ( typeof(response.link) !== "undefined" ) {
 						button.attr('disabled', false);
 						if( 'user' === response.user_type ){
-							wrapper.after('<div class="notice-wrap"><div class="notice notice-warning inline"><p> <a href="' + response.link + '">' + response.message + '.</a></p></div></div>');
+							wrapper.after('<div class="notice-wrap"><div class="notice notice-warning inline"><p style="margin:0.5em 0;"><a href="' + response.link + '" target="_blank">' + response.message + '.</a></p>' +
+							'<button class="button-secondary edd-add-customer-email" id="add-customer-email-force" style="margin: 6px 0;margin-right: 2%;">Add Email</button>' +
+							'<button class="button-secondary edd-add-customer-email" id="add-customer-email-cancel" style="margin: 6px 0;">Cancel</button></div></div>');
 						} else{
-							wrapper.after('<div class="notice-wrap"><div class="notice notice-error inline"><p> <a href="' + response.link + '">' + response.message + '.</a></p></div></div>');
+							wrapper.after('<div class="notice-wrap"><div class="notice notice-error inline"><p style="margin:0.5em 0;"><a href="' + response.link + '" target="_blank">' + response.message + '.</a></p></div></div>');
 						}
 						wrapper.find('.spinner').css('visibility', 'hidden');
 					} else {
 						button.attr('disabled', false);
-						wrapper.after('<div class="notice-wrap"><div class="notice notice-error inline"><p>' + response.message + '</p></div></div>');
+						wrapper.after('<div class="notice-wrap"><div class="notice notice-error inline"><p style="margin:0;">' + response.message + '</p></div></div>');
 						wrapper.find('.spinner').css('visibility', 'hidden');
 					}
 
