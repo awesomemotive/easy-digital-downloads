@@ -181,37 +181,6 @@ class EDD_Discount {
 	protected $db;
 
 	/**
-	 * Declare the default properties in WP_Post as we can't extend it.
-	 *
-	 * @since 2.7
-	 * @access protected
-	 * @var mixed
-	 */
-	protected $post_author = 0;
-	protected $post_date = '0000-00-00 00:00:00';
-	protected $post_date_gmt = '0000-00-00 00:00:00';
-	protected $post_content = '';
-	protected $post_title = '';
-	protected $post_excerpt = '';
-	protected $post_status = 'publish';
-	protected $comment_status = 'open';
-	protected $ping_status = 'open';
-	protected $post_password = '';
-	protected $post_name = '';
-	protected $to_ping = '';
-	protected $pinged = '';
-	protected $post_modified = '0000-00-00 00:00:00';
-	protected $post_modified_gmt = '0000-00-00 00:00:00';
-	protected $post_content_filtered = '';
-	protected $post_parent = 0;
-	protected $guid = '';
-	protected $menu_order = 0;
-	protected $post_mime_type = '';
-	protected $comment_count = 0;
-	protected $filter;
-	protected $post_type;
-
-	/**
 	 * Constructor.
 	 *
 	 * @since 2.7
@@ -257,11 +226,47 @@ class EDD_Discount {
 	public function __get( $key ) {
 		$key = sanitize_key( $key );
 
-		if ( method_exists( $this, 'get_' . $key ) ) {
+		if( 'discount_id' === $key || 'ID' == $key ) {
+			return $this->id;
+		} else if ( method_exists( $this, 'get_' . $key ) ) {
 			return call_user_func( array( $this, 'get_' . $key ) );
 		} else if ( property_exists( $this, $key ) ) {
 			return $this->{$key};
 		} else {
+
+			switch( $key ) {
+
+				// Account for old property keys from pre 3.0
+				case 'post_author' :
+				case 'post_date' :
+				case 'post_date_gmt' :
+				case 'post_content' :
+				case 'post_title' :
+				case 'post_excerpt' :
+				case 'post_status' :
+				case 'comment_status' :
+				case 'ping_status' :
+				case 'post_password' :
+				case 'post_name' :
+				case 'to_ping' :
+				case 'pinged' :
+				case 'post_modified' :
+				case 'post_modified_gmt' :
+				case 'post_content_filtered' :
+				case 'post_parent' :
+				case 'guid' :
+				case 'menu_order' :
+				case 'post_mime_type' :
+				case 'comment_count' :
+				case 'filter' :
+				case 'post_type' :
+
+					return '';
+					break;
+					
+
+			}
+
 			return new WP_Error( 'edd-discount-invalid-property', sprintf( __( 'Can\'t get property %s', 'easy-digital-downloads' ), $key ) );
 		}
 	}
@@ -903,42 +908,46 @@ class EDD_Discount {
 			return false;
 		}
 
-		$meta = $this->build_meta( $args );
-
 		if ( ! empty( $this->ID ) && $this->exists() ) {
 			return $this->update( $args );
 		} else {
+
 			/**
 			 * Add a new discount to the database.
 			 */
 
 			/**
-			 * Filters the metadata before being inserted into the database.
+			 * Filters the args before being inserted into the database.
 			 *
 			 * @since 2.7
 			 *
-			 * @param array $meta Discount meta.
-			 * @param int   $ID   Discount ID.
+			 * @param array $args Discount args.
 			 */
-			$meta = apply_filters( 'edd_insert_discount', $meta );
+			$args = apply_filters( 'edd_insert_discount', $args );
 
 			/**
 			 * Fires before the discount has been added to the database.
 			 *
 			 * @since 2.7
 			 *
-			 * @param array $meta Discount meta.
+			 * @param array $args Discount args.
 			 */
-			do_action( 'edd_pre_insert_discount', $meta );
+			do_action( 'edd_pre_insert_discount', $args );
 
-			$this->ID = wp_insert_post( array(
-				'post_type'   => 'edd_discount',
-				'post_title'  => $meta['name'],
-				'post_status' => 'active'
-			) );
+			foreach( $args as $key => $value ) {
+				$this->$key = $value;
+			}
 
-			foreach ( $meta as $key => $value ) {
-				$this->update_meta( $key, $value );
+
+			// The DB class 'add' implies an update if the discount being asked to be created already exists
+			if ( $this->db->add( $args ) ) {
+
+				// We've successfully added/updated the discount, reset the class vars with the new data
+				$discount = $this->find_by_code( $args['code'] );
+
+				// Setup the discount data with the values from DB
+				$this->setup_discount( $discount );
+
 			}
 
 			/**
@@ -962,9 +971,9 @@ class EDD_Discount {
 			 * }
 			 * @param int $ID The ID of the discount that was inserted.
 			 */
-			do_action( 'edd_post_insert_discount', $meta, $this->ID );
+			do_action( 'edd_post_insert_discount', $args, $this->ID );
 
-			$this->setup_discount( WP_Post::get_instance( $this->ID ) );
+			$this->setup_discount( $discount );
 
 			// Discount code created
 			return $this->ID;
@@ -981,49 +990,45 @@ class EDD_Discount {
 	 * @return mixed bool|int false if data isn't passed and class not instantiated for creation, or post ID for the new discount.
 	 */
 	public function update( $args ) {
-		$meta = $this->build_meta( $args );
 
 		/**
 		 * Filter the data being updated
 		 *
 		 * @since 2.7
 		 *
-		 * @param array $meta Discount meta.
+		 * @param array $args Discount args.
 		 * @param int   $ID   Discount ID.
 		 */
-		$meta = apply_filters( 'edd_update_discount', $meta, $this->ID );
+		$args = apply_filters( 'edd_update_discount', $args, $this->ID );
+
+		$args = $this->sanitize_columns( $args );
 
 		/**
 		 * Fires before the discount has been updated in the database.
 		 *
 		 * @since 2.7
 		 *
-		 * @param array $meta Discount meta.
+		 * @param array $args Discount args.
 		 * @param int   $ID   Discount ID.
 		 */
-		do_action( 'edd_pre_update_discount', $meta, $this->ID );
+		do_action( 'edd_pre_update_discount', $args, $this->ID );
 
-		wp_update_post( array(
-			'ID'          => $this->ID,
-			'post_title'  => $meta['name'],
-			'post_status' => $meta['status']
-		) );
+		if ( $this->db->update( $this->ID, $args ) ) {
 
-		foreach ( $meta as $key => $value ) {
-			$this->update_meta( $key, $value );
+			$discoubt = $this->db->get(  $this->ID );
+			$this->setup_discount( $discount );
+
 		}
-
-		$this->setup_discount( WP_Post::get_instance( $this->ID ) );
 
 		/**
 		 * Fires after the discount has been updated in the database.
 		 *
 		 * @since 2.7
 		 *
-		 * @param array $meta Discount meta.
+		 * @param array $args Discount args.
 		 * @param int   $ID   Discount ID.
 		 */
-		do_action( 'edd_post_update_discount', $meta, $this->ID );
+		do_action( 'edd_post_update_discount', $args, $this->ID );
 
 		return $this->ID;
 	}
@@ -1563,7 +1568,7 @@ class EDD_Discount {
 				if ( defined( 'DOING_AJAX' ) && $set_error ) {
 					edd_set_error( 'edd-discount-error', __( 'This discount is expired.', 'easy-digital-downloads' ) );
 				}
-			} elseif ( $this->post_status == 'active' ) {
+			} elseif ( $this->status == 'active' ) {
 				$return = true;
 			} elseif( defined( 'DOING_AJAX' ) && $set_error ) {
 				edd_set_error( 'edd-discount-error', __( 'This discount is not active.', 'easy-digital-downloads' ) );
@@ -1631,12 +1636,13 @@ class EDD_Discount {
 			$this->uses = 1;
 		}
 
-		$this->update_meta( 'uses', $this->uses );
+		$args = array( 'uses' => $this->uses );
 
 		if ( $this->max_uses == $this->uses ) {
-			$this->update_status( 'inactive' );
-			$this->update_meta( 'status', 'inactive' );
+			$args['status'] = 'inactive';
 		}
+
+		$this->update( $args );
 
 		/**
 		 * Fires after the usage count has been increased.
@@ -1666,15 +1672,16 @@ class EDD_Discount {
 		}
 
 		if ( $this->uses < 0 ) {
-			$uses = 0;
+			$this->uses = 0;
 		}
 
-		$this->update_meta( 'uses', $this->uses );
+		$args = array( 'uses' => $this->uses );
 
 		if ( $this->max_uses > $this->uses ) {
-			$this->update_status( 'active' );
-			$this->update_meta( 'status', 'active' );
+			$args['status'] = 'active';
 		}
+
+		$this->update( $args );
 
 		/**
 		 * Fires after the usage count has been decreased.
@@ -1758,5 +1765,66 @@ class EDD_Discount {
 	 */
 	public function delete_meta( $meta_key = '', $meta_value = '' ) {
 		return EDD()->discount_meta->delete_meta( $this->id, $meta_key, $meta_value );
+	}
+
+	/**
+	 * Sanitize the data for update/create
+	 *
+	 * @since  3.0
+	 * @param  array $data The data to sanitize
+	 * @return array       The sanitized data, based off column defaults
+	 */
+	private function sanitize_columns( $data ) {
+
+		$columns        = $this->db->get_columns();
+		$default_values = $this->db->get_column_defaults();
+
+		foreach ( $columns as $key => $type ) {
+
+			// Only sanitize data that we were provided
+			if ( ! array_key_exists( $key, $data ) ) {
+				continue;
+			}
+
+			switch( $type ) {
+
+				case '%s':
+					if ( 'email' == $key ) {
+						$data[$key] = sanitize_email( $data[$key] );
+					} elseif ( 'notes' == $key ) {
+						$data[$key] = strip_tags( $data[$key] );
+					} else {
+						$data[$key] = sanitize_text_field( $data[$key] );
+					}
+					break;
+
+				case '%d':
+					if ( ! is_numeric( $data[$key] ) || (int) $data[$key] !== absint( $data[$key] ) ) {
+						$data[$key] = $default_values[$key];
+					} else {
+						$data[$key] = absint( $data[$key] );
+					}
+					break;
+
+				case '%f':
+					// Convert what was given to a float
+					$value = floatval( $data[$key] );
+
+					if ( ! is_float( $value ) ) {
+						$data[$key] = $default_values[$key];
+					} else {
+						$data[$key] = $value;
+					}
+					break;
+
+				default:
+					$data[$key] = sanitize_text_field( $data[$key] );
+					break;
+
+			}
+
+		}
+
+		return $data;
 	}
 }
