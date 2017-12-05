@@ -171,19 +171,219 @@ class EDD_DB_Discounts extends EDD_DB  {
 	*/
 	public function get_discounts( $args = array() ) {
 
+		global $wpdb;
+
+		$defaults = array(
+			'number'  => 20,
+			'offset'  => 0,
+			'search'  => '',
+			'orderby' => 'id',
+			'order'   => 'DESC',
+		);
+
+		// Account for 'paged' in legacy $args
+		if ( isset( $args['paged'] ) && $args['paged'] > 1 ) {
+			$number         = isset( $args['number'] ) ? $args['number'] : $defaults['number'];
+			$args['offset'] = ( ( $args['paged'] - 1 ) * $number );
+			unset( $args['paged'] );
+		}
+
+		$args  = wp_parse_args( $args, $defaults );
+
+		if( $args['number'] < 1 ) {
+			$args['number'] = 999999999999;
+		}
+
+		$where = $this->parse_where( $args );
+
+		$args['orderby'] = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'id' : $args['orderby'];
+
+		if( 'amount' == $args['orderby'] ) {
+			$args['orderby'] = 'amount+0';
+		}
+
+		$cache_key = md5( 'edd_discounts_' . serialize( $args ) );
+
+		$discounts = wp_cache_get( $cache_key, 'discounts' );
+
+		$args['orderby'] = esc_sql( $args['orderby'] );
+		$args['order']   = esc_sql( $args['order'] );
+
+		if( $discounts === false ) {
+			$discounts = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM $this->table_name $where ORDER BY {$args['orderby']} {$args['order']} LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) ), 0 );
+
+			if( ! empty( $discounts ) ) {
+
+				foreach( $discounts as $key => $discount ) {
+					$discounts[ $key ] = new EDD_Discount( $discount );
+				}
+
+				wp_cache_set( $cache_key, $discounts, 'discounts', 3600 );
+
+			}
+
+		}
+
+		return $discounts;
+	}
+
+	private function parse_where( $args ) {
+		$where = '';
+
+		// Specific types
+		if( ! empty( $args['type'] ) ) {
+
+			if( is_array( $args['type'] ) ) {
+				$types = implode( "','", array_map( 'sanitize_text_field', $args['type'] ) );
+			} else {
+				$types = sanitize_text_field( $args['type'] );
+			}
+
+			$where .= " AND `type` IN( '{$types}' ) ";
+
+		}
+
+		// Specific statuses
+		if( ! empty( $args['status'] ) ) {
+
+			if( is_array( $args['status'] ) ) {
+				$statuses = implode( "','", array_map( 'sanitize_text_field', $args['status'] ) );
+			} else {
+				$statuses = sanitize_text_field( $args['status'] );
+			}
+
+			$where .= " AND `status` IN( '{$statuses}' ) ";
+
+		}
+
+		// Created for a specific date or in a date range
+		if( ! empty( $args['date'] ) ) {
+
+			if( is_array( $args['date'] ) ) {
+
+				if( ! empty( $args['date']['start'] ) ) {
+
+					$start = date( 'Y-m-d H:i:s', strtotime( $args['date']['start'] ) );
+
+					$where .= " AND `date_created` >= '{$start}'";
+
+				}
+
+				if( ! empty( $args['date']['end'] ) ) {
+
+					$end = date( 'Y-m-d H:i:s', strtotime( $args['date']['end'] ) );
+
+					$where .= " AND `date_created` <= '{$end}'";
+
+				}
+
+			} else {
+
+				$year  = date( 'Y', strtotime( $args['date'] ) );
+				$month = date( 'm', strtotime( $args['date'] ) );
+				$day   = date( 'd', strtotime( $args['date'] ) );
+
+				$where .= " AND $year = YEAR ( date_created ) AND $month = MONTH ( date_created ) AND $day = DAY ( date_created )";
+			}
+
+		}
+
+		// Specific pexpiration date
+		if( ! empty( $args['expiration_date'] ) ) {
+
+			if( is_array( $args['expiration_date'] ) ) {
+
+				if( ! empty( $args['expiration_date']['start'] ) ) {
+
+					$start = date( 'Y-m-d H:i:s', strtotime( $args['expiration_date']['start'] ) );
+
+					$where .= " AND `expiration_date` >= '{$start}'";
+
+				}
+
+				if( ! empty( $args['expiration_date']['end'] ) ) {
+
+					$end = date( 'Y-m-d H:i:s', strtotime( $args['expiration_date']['end'] ) );
+
+					$where .= " AND `expiration_date` <= '{$end}'";
+
+				}
+
+			} else {
+
+				$year  = date( 'Y', strtotime( $args['expiration_date'] ) );
+				$month = date( 'm', strtotime( $args['expiration_date'] ) );
+				$day   = date( 'd', strtotime( $args['expiration_date'] ) );
+
+				$where .= " AND $year = YEAR ( expiration_date ) AND $month = MONTH ( expiration_date ) AND $day = DAY ( expiration_date )";
+			}
+
+		}
+
+		// Specific paid date or in a paid date range
+		if( ! empty( $args['start_date'] ) ) {
+
+			if( is_array( $args['start_date'] ) ) {
+
+				if( ! empty( $args['start_date']['start'] ) ) {
+
+					$start = date( 'Y-m-d H:i:s', strtotime( $args['start_date']['start'] ) );
+
+					$where .= " AND `start_date` >= '{$start}'";
+
+				}
+
+				if( ! empty( $args['start_date']['end'] ) ) {
+
+					$end = date( 'Y-m-d H:i:s', strtotime( $args['start_date']['end'] ) );
+
+					$where .= " AND `start_date` <= '{$end}'";
+
+				}
+
+			} else {
+
+				$year  = date( 'Y', strtotime( $args['start_date'] ) );
+				$month = date( 'm', strtotime( $args['start_date'] ) );
+				$day   = date( 'd', strtotime( $args['start_date'] ) );
+
+				$where .= " AND $year = YEAR ( start_date ) AND $month = MONTH ( start_date ) AND $day = DAY ( start_date )";
+			}
+
+		}
+
+		if ( ! empty( $where ) ) {
+			$where = ' WHERE 1=1 ' . $where;
+		}
+
+		return $where;
 	}
 
 
 	/**
-	 * Count the total number of customers in the database
+	 * Count the total number of discounts in the database
 	 *
 	 * @access  public
 	 * @since   3.0
 	*/
 	public function count( $args = array() ) {
+		global $wpdb;
 
+		$where     = $this->parse_where( $args );
+		$cache_key = md5( 'edd_discounts_count' . serialize( $args ) );
 
-		return $results;
+		$count = wp_cache_get( $cache_key, 'discounts' );
+
+		if( $count === false ) {
+
+			$sql   = "SELECT COUNT($this->primary_key) FROM " . $this->table_name . "{$where};";
+			$count = $wpdb->get_var( $sql );
+
+			wp_cache_set( $cache_key, $count, 'discounts', 3600 );
+
+		}
+
+		return absint( $count );
 	}
 
 	/**
