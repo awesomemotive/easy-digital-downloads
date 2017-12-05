@@ -172,6 +172,14 @@ class EDD_Discount {
 	 */
 	private $pending;
 
+
+	/**
+	 * The Database Abstraction
+	 *
+	 * @since  3.0
+	 */
+	protected $db;
+
 	/**
 	 * Declare the default properties in WP_Post as we can't extend it.
 	 *
@@ -214,6 +222,9 @@ class EDD_Discount {
 	 * @param bool             $by_name             Whether identifier passed was a discount name.
 	 */
 	public function __construct( $_id_or_code_or_name = false, $by_code = false, $by_name = false ) {
+
+		$this->db = new EDD_DB_Discounts;
+
 		if ( empty( $_id_or_code_or_name ) ) {
 			return false;
 		}
@@ -224,7 +235,7 @@ class EDD_Discount {
 			$discount = $this->find_by_name( $_id_or_code_or_name );
 		} else {
 			$_id_or_code_or_name = absint( $_id_or_code_or_name );
-			$discount = WP_Post::get_instance( $_id_or_code_or_name );
+			$discount = $this->db->get( $_id_or_code_or_name );
 		}
 
 		if ( $discount ) {
@@ -303,6 +314,13 @@ class EDD_Discount {
 		}
 	}
 
+	public function __call( $method, $args ) {
+		$property = str_replace( 'setup_', '', $method );
+		if( ! method_exists( $this, $method ) && property_exists( $this, $property ) ) {
+			return $this->$property;
+		}
+	}
+
 	/**
 	 * Converts the instance of the EDD_Discount object into an array for special cases.
 	 *
@@ -329,25 +347,8 @@ class EDD_Discount {
 			return false;
 		}
 
-		$discounts = edd_get_discounts(
-			array(
-				'meta_key'       => '_edd_discount_code',
-				'meta_value'     => $code,
-				'posts_per_page' => 1,
-				'post_status'    => 'any',
-				'fields'         => 'ids'
-			)
-		);
+		return $this->db->get_by( 'code', $code );
 
-		if ( ! is_array( $discounts ) || array() === $discounts ) {
-			return false;
-		}
-
-		if ( $discounts ) {
-			$discount = $discounts[0];
-		}
-
-		return WP_Post::get_instance( $discount );
 	}
 
 	/**
@@ -364,25 +365,8 @@ class EDD_Discount {
 			return false;
 		}
 
-		$discounts = edd_get_discounts(
-			array(
-				'post_type'      => 'edd_discount',
-				'name'           => $name,
-				'posts_per_page' => 1,
-				'post_status'    => 'any',
-				'fields'         => 'ids'
-			)
-		);
+		return $this->db->get_by( 'name', $name );
 
-		if ( ! is_array( $discounts ) || array() === $discounts ) {
-			return false;
-		}
-
-		if ( $discounts ) {
-			$discount = $discounts[0];
-		}
-
-		return WP_Post::get_instance( $discount );
 	}
 
 	/**
@@ -409,14 +393,6 @@ class EDD_Discount {
 			return false;
 		}
 
-		if ( ! is_a( $discount, 'WP_Post' ) ) {
-			return false;
-		}
-
-		if ( 'edd_discount' !== $discount->post_type ) {
-			return false;
-		}
-
 		/**
 		 * Fires before the instance of the EDD_Discount object is set up.
 		 *
@@ -427,31 +403,21 @@ class EDD_Discount {
 		 */
 		do_action( 'edd_pre_setup_discount', $this, $discount );
 
-		/**
-		 * Setup all object variables
-		 */
-		$this->ID                = absint( $discount->ID );
-		$this->name              = $this->setup_name();
-		$this->code              = $this->setup_code();
-		$this->status            = $this->setup_status();
-		$this->type              = $this->setup_type();
-		$this->amount            = $this->setup_amount();
-		$this->product_reqs      = $this->setup_product_requirements();
-		$this->excluded_products = $this->setup_excluded_products();
-		$this->start             = $this->setup_start();
-		$this->expiration        = $this->setup_expiration();
-		$this->uses              = $this->setup_uses();
-		$this->max_uses          = $this->setup_max_uses();
-		$this->min_price         = $this->setup_min_price();
-		$this->is_single_use     = $this->setup_is_single_use();
-		$this->is_not_global     = $this->setup_is_not_global();
-		$this->product_condition = $this->setup_product_condition();
+		foreach ( $discount as $key => $value ) {
 
-		/**
-		 * Setup discount object vars with WP_Post vars
-		 */
-		foreach ( get_object_vars( $discount ) as $key => $value ) {
-			$this->{$key} = $value;
+			switch ( $key ) {
+
+				case 'notes':
+					if ( ! empty( $value ) ) {
+						$this->$key = $value;
+					}
+					break;
+				default:
+					$this->$key = $value;
+					break;
+
+			}
+
 		}
 
 		/**
@@ -464,266 +430,13 @@ class EDD_Discount {
 		 */
 		do_action( 'edd_setup_discount', $this, $discount );
 
-		return true;
-	}
+		if( ! empty( $this->ID ) ) {
 
-	/**
-	 * Setup Functions
-	 */
-
-	/**
-	 * Setup the name of the discount.
-	 *
-	 * @since 2.7
-	 * @access private
-	 *
-	 * @return string Name of the discount.
-	 */
-	private function setup_name() {
-		$title = get_the_title( $this->ID );
-		return $title;
-	}
-
-	/**
-	 * Setup the discount code.
-	 *
-	 * @since 2.7
-	 * @access private
-	 *
-	 * @return string Discount code.
-	 */
-	private function setup_code() {
-		$code = $this->get_meta( 'code', true );
-		return $code;
-	}
-
-	/**
-	 * Setup the discount status.
-	 *
-	 * @since 2.7
-	 * @access private
-	 *
-	 * @return string Discount status.
-	 */
-	private function setup_status() {
-		$status = $this->get_meta( 'status', true );
-		return $status;
-	}
-
-	/**
-	 * Setup the discount type.
-	 *
-	 * @since 2.7
-	 * @access private
-	 *
-	 * @return string Discount type.
-	 */
-	private function setup_type() {
-		$type = $this->get_meta( 'type', true );
-		return $type;
-	}
-
-	/**
-	 * Setup the discount amount.
-	 *
-	 * @since 2.7
-	 * @access private
-	 *
-	 * @return string Discount amount.
-	 */
-	private function setup_amount() {
-		$amount = $this->get_meta( 'amount', true );
-		return $amount;
-	}
-
-	/**
-	 * Setup the product requirements.
-	 *
-	 * @since 2.7
-	 * @access private
-	 *
-	 * @return array Download requirements.
-	 */
-	private function setup_product_requirements() {
-		$requirements = $this->get_meta( 'product_reqs', true );
-		return (array) $requirements;
-	}
-
-	/**
-	 * Setup the excluded products.
-	 *
-	 * @since 2.7
-	 * @access private
-	 *
-	 * @return array Excluded products.
-	 */
-	private function setup_excluded_products() {
-		$excluded = $this->get_meta( 'excluded_products', true );
-		return (array) $excluded;
-	}
-
-	/**
-	 * Setup the start date.
-	 *
-	 * @since 2.7
-	 * @access private
-	 *
-	 * @return string Discount start date.
-	 */
-	private function setup_start() {
-		$start = $this->get_meta( 'start', true );
-		return $start;
-	}
-
-	/**
-	 * Setup the expiration date.
-	 *
-	 * @since 2.7
-	 * @access private
-	 *
-	 * @return array Discount expiration date.
-	 */
-	private function setup_expiration() {
-		$expration = $this->get_meta( 'expiration', true );
-		return $expration;
-	}
-
-	/**
-	 * Setup the uses.
-	 *
-	 * @since 2.7
-	 * @access private
-	 *
-	 * @return int Discount uses.
-	 */
-	private function setup_uses() {
-		$uses = $this->get_meta( 'uses', true );
-		return $uses;
-	}
-
-	/**
-	 * Setup the max uses.
-	 *
-	 * @since 2.7
-	 * @access private
-	 *
-	 * @return int Maximum uses.
-	 */
-	private function setup_max_uses() {
-		$max_uses = $this->get_meta( 'max_uses', true );
-		return $max_uses;
-	}
-
-	/**
-	 * Setup the min price.
-	 *
-	 * @since 2.7
-	 * @access private
-	 *
-	 * @return int Minimum price.
-	 */
-	private function setup_min_price() {
-		$max_uses = $this->get_meta( 'min_price', true );
-		return $max_uses;
-	}
-
-	/**
-	 * Setup if the discount is single use or not.
-	 *
-	 * @since 2.7
-	 * @access private
-	 *
-	 * @return bool Is single use.
-	 */
-	private function setup_is_single_use() {
-		$is_single_use = $this->get_meta( 'is_single_use', true );
-		return (bool) $is_single_use;
-	}
-
-	/**
-	 * Setup if the discount is not global.
-	 *
-	 * @since 2.7
-	 * @access private
-	 *
-	 * @return bool Is not global.
-	 */
-	private function setup_is_not_global() {
-		$is_not_global = $this->get_meta( 'is_not_global', true );
-		return (bool) $is_not_global;
-	}
-
-	/**
-	 * Setup if the discount is not global.
-	 *
-	 * @since 2.7
-	 * @access private
-	 *
-	 * @return bool Is not global.
-	 */
-	private function setup_product_condition() {
-		$condition = $this->get_meta( 'product_condition', true );
-		return $condition;
-	}
-
-	/**
-	 * Helper method to retrieve meta data associated with the discount.
-	 *
-	 * @since 2.7
-	 * @access public
-	 *
-	 * @param string $key    Meta key.
-	 * @param bool   $single Return single item or array.
-	 */
-	public function get_meta( $key = '', $single = true ) {
-		$meta = get_post_meta( $this->ID, '_edd_discount_' . $key, $single );
-		return $meta;
-	}
-
-	/**
-	 * Helper method to update post meta associated with the discount.
-	 *
-	 * @since 2.7
-	 * @access public
-	 *
-	 * @param string $key        Meta key.
-	 * @param string $value      Meta value.
-	 * @param string $prev_value Previous meta value.
-	 * @return int|bool Meta ID if the key didn't exist, true on successful update, false on failure.
-	 */
-	public function update_meta( $key = '', $value = '', $prev_value = '' ) {
-		if ( empty( $key ) || '' == $key ) {
-			return false;
+			return true;
+	
 		}
 
-		$key = '_edd_discount_' . $key;
-
-		$value = apply_filters( 'edd_update_discount_meta_' . $key, $value, $this->ID );
-		return update_post_meta( $this->ID, $key, $value, $prev_value );
-	}
-
-	/**
-	 * Retrieve the ID of the WP_Post object.
-	 *
-	 * @since 2.7
-	 * @access public
-	 *
-	 * @return int Discount ID.
-	 */
-	public function get_ID() {
-		return $this->ID;
-	}
-
-	/**
-	 * Retrieve the name of the discount.
-	 *
-	 * @since 2.7
-	 * @access public
-	 *
-	 * @return string Name of the discount.
-	 */
-	public function get_name() {
-		return $this->name;
+		return false;
 	}
 
 	/**
@@ -1158,7 +871,7 @@ class EDD_Discount {
 			global $edd_get_discounts_cache;
 			$edd_get_discounts_cache = array();
 
-			$this->setup_discount( WP_Post::get_instance( $this->ID ) );
+			$this->setup_discount( $this );
 
 			/**
 			 * Fires after each meta update allowing developers to hook their own items saved in $pending.
@@ -1987,5 +1700,63 @@ class EDD_Discount {
 	 */
 	public function edit_url() {
 		return esc_url( add_query_arg( array( 'edd-action' => 'edit_discount', 'discount' => $this->ID ), admin_url( 'edit.php?post_type=download&page=edd-discounts' ) ) );
+	}
+
+	/**
+	 * Retrieve discount meta field for a discount.
+	 *
+	 * @param   string $meta_key      The meta key to retrieve.
+	 * @param   bool   $single        Whether to return a single value.
+	 * @return  mixed                 Will be an array if $single is false. Will be value of meta data field if $single is true.
+	 *
+	 * @access  public
+	 * @since   3.0
+	 */
+	public function get_meta( $meta_key = '', $single = true ) {
+		return EDD()->discount_meta->get_meta( $this->id, $meta_key, $single );
+	}
+
+	/**
+	 * Add meta data field to a discount.
+	 *
+	 * @param   string $meta_key      Metadata name.
+	 * @param   mixed  $meta_value    Metadata value.
+	 * @param   bool   $unique        Optional, default is false. Whether the same key should not be added.
+	 * @return  bool                  False for failure. True for success.
+	 *
+	 * @access  public
+	 * @since   3.0
+	 */
+	public function add_meta( $meta_key = '', $meta_value, $unique = false ) {
+		return EDD()->discount_meta->add_meta( $this->id, $meta_key, $meta_value, $unique );
+	}
+
+	/**
+	 * Update discount meta field based on discount ID.
+	 *
+	 * @param   string $meta_key      Metadata key.
+	 * @param   mixed  $meta_value    Metadata value.
+	 * @param   mixed  $prev_value    Optional. Previous value to check before removing.
+	 * @return  bool                  False on failure, true if success.
+	 *
+	 * @access  public
+	 * @since   3.0
+	 */
+	public function update_meta( $meta_key = '', $meta_value, $prev_value = '' ) {
+		return EDD()->discount_meta->update_meta( $this->id, $meta_key, $meta_value, $prev_value );
+	}
+
+	/**
+	 * Remove metadata matching criteria from a discount.
+	 *
+	 * @param   string $meta_key      Metadata name.
+	 * @param   mixed  $meta_value    Optional. Metadata value.
+	 * @return  bool                  False for failure. True for success.
+	 *
+	 * @access  public
+	 * @since   3.0
+	 */
+	public function delete_meta( $meta_key = '', $meta_value = '' ) {
+		return EDD()->discount_meta->delete_meta( $this->id, $meta_key, $meta_value );
 	}
 }
