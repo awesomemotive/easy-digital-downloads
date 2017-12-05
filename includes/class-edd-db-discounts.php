@@ -22,24 +22,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class EDD_DB_Discounts extends EDD_DB  {
 
 	/**
-	 * The metadata type.
-	 *
-	 * @access public
-	 * @since  3.0
-	 * @var string
-	 */
-	public $meta_type = 'discount';
-
-	/**
-	 * The name of the date column.
-	 *
-	 * @access public
-	 * @since  3.0
-	 * @var string
-	 */
-	public $date_key = 'date_created';
-
-	/**
 	 * The name of the cache group.
 	 *
 	 * @access public
