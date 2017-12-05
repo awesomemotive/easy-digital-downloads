@@ -195,7 +195,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return string Column Name
 	 */
 	function column_default( $item, $column_name ) {
-		return $item[ $column_name ];
+		return property_exists( $item, $column_name ) ? $item->$column_name : '';
 	}
 
 	/**
@@ -207,22 +207,21 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return string Data shown in the Name column
 	 */
 	function column_name( $item ) {
-		$discount     = get_post( $item['ID'] );
 		$row_actions  = array();
 
-		$row_actions['edit'] = '<a href="' . add_query_arg( array( 'edd-action' => 'edit_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>';
+		$row_actions['edit'] = '<a href="' . add_query_arg( array( 'edd-action' => 'edit_discount', 'discount' => $item->ID ) ) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>';
 
-		if( strtolower( $item['status'] ) == 'active' ) {
-			$row_actions['deactivate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array( 'edd-action' => 'deactivate_discount', 'discount' => $discount->ID ) ), 'edd_discount_nonce' ) ) . '">' . __( 'Deactivate', 'easy-digital-downloads' ) . '</a>';
-		} elseif( strtolower( $item['status'] ) == 'inactive' ) {
-			$row_actions['activate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array( 'edd-action' => 'activate_discount', 'discount' => $discount->ID ) ), 'edd_discount_nonce' ) ) . '">' . __( 'Activate', 'easy-digital-downloads' ) . '</a>';
+		if( strtolower( $item->status ) == 'active' ) {
+			$row_actions['deactivate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array( 'edd-action' => 'deactivate_discount', 'discount' => $item->ID ) ), 'edd_discount_nonce' ) ) . '">' . __( 'Deactivate', 'easy-digital-downloads' ) . '</a>';
+		} elseif( strtolower( $item->status ) == 'inactive' ) {
+			$row_actions['activate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array( 'edd-action' => 'activate_discount', 'discount' => $item->ID ) ), 'edd_discount_nonce' ) ) . '">' . __( 'Activate', 'easy-digital-downloads' ) . '</a>';
 		}
 
-		$row_actions['delete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array( 'edd-action' => 'delete_discount', 'discount' => $discount->ID ) ), 'edd_discount_nonce' ) ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
+		$row_actions['delete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array( 'edd-action' => 'delete_discount', 'discount' => $item->ID ) ), 'edd_discount_nonce' ) ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 
-		$row_actions = apply_filters( 'edd_discount_row_actions', $row_actions, $discount );
+		$row_actions = apply_filters( 'edd_discount_row_actions', $row_actions, $item );
 
-		return stripslashes( $item['name'] ) . $this->row_actions( $row_actions );
+		return stripslashes( $item->name ) . $this->row_actions( $row_actions );
 	}
 
 	/**
@@ -234,10 +233,11 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return string Displays a checkbox
 	 */
 	function column_cb( $item ) {
+	//	var_dump( $item );
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
 			/*$1%s*/ 'discount',
-			/*$2%s*/ $item['ID']
+			/*$2%s*/ $item->ID
 		);
 	}
 
@@ -250,7 +250,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return string Displays the discount status
 	 */
 	function column_status( $item ) {
-		switch( $item['status'] ){
+		switch( $item->status ){
 			case 'expired' :
 				$status = __( 'Expired', 'easy-digital-downloads' );
 				break;
@@ -358,7 +358,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$orderby  = isset( $_GET['orderby'] )  ? $_GET['orderby']                  : 'ID';
 		$order    = isset( $_GET['order'] )    ? $_GET['order']                    : 'DESC';
 		$status   = isset( $_GET['status'] )   ? $_GET['status']                   : array( 'active', 'inactive' );
-		$meta_key = isset( $_GET['meta_key'] ) ? $_GET['meta_key']                 : null;
 		$search   = isset( $_GET['s'] )        ? sanitize_text_field( $_GET['s'] ) : null;
 
 		$args = array(
@@ -367,54 +366,10 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 			'orderby'        => $orderby,
 			'order'          => $order,
 			'post_status'    => $status,
-			'meta_key'       => $meta_key,
-			's'              => $search
+			'search'         => $search
 		);
 
-		if( array_key_exists( $orderby, $this->get_sortable_columns() ) && 'name' != $orderby ) {
-
-			$args['orderby']  = 'meta_value';
-			$args['meta_key'] = '_edd_discount_' . $orderby;
-		}
-
-		$discounts = edd_get_discounts( $args );
-
-		if ( $discounts ) {
-			foreach ( $discounts as $discount ) {
-				if ( edd_get_discount_max_uses( $discount->ID ) ) {
-					$uses =  edd_get_discount_uses( $discount->ID ) . '/' . edd_get_discount_max_uses( $discount->ID );
-				} else {
-					$uses = edd_get_discount_uses( $discount->ID );
-				}
-
-				$start_date = edd_get_discount_start_date( $discount->ID );
-
-				if ( ! empty( $start_date ) ) {
-					$discount_start_date =  date_i18n( get_option( 'date_format' ), strtotime( $start_date ) );
-				} else {
-					$discount_start_date = __( 'No start date', 'easy-digital-downloads' );
-				}
-
-				if ( edd_get_discount_expiration( $discount->ID ) ) {
-					$expiration = date_i18n( get_option( 'date_format' ), strtotime( edd_get_discount_expiration( $discount->ID ) ) );
-				} else {
-					$expiration = __( 'No expiration', 'easy-digital-downloads' );
-				}
-
-				$discount_codes_data[] = array(
-					'ID'         => $discount->ID,
-					'name'       => get_the_title( $discount->ID ),
-					'code'       => edd_get_discount_code( $discount->ID ),
-					'amount'     => edd_format_discount_rate( edd_get_discount_type( $discount->ID ), edd_get_discount_amount( $discount->ID ) ),
-					'uses'       => $uses,
-					'start_date' => $discount_start_date,
-					'expiration' => $expiration,
-					'status'     => edd_is_discount_expired( $discount->ID ) ? 'expired' : $discount->post_status,
-				);
-			}
-		}
-
-		return $discount_codes_data;
+		return edd_get_discounts( $args );
 	}
 
 	/**
