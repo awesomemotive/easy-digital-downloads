@@ -940,7 +940,7 @@ class EDD_Discount {
 
 
 			// The DB class 'add' implies an update if the discount being asked to be created already exists
-			if ( $this->db->add( $args ) ) {
+			if ( $this->db->insert( $args ) ) {
 
 				// We've successfully added/updated the discount, reset the class vars with the new data
 				$discount = $this->find_by_code( $args['code'] );
