@@ -24,41 +24,13 @@ if ( !defined( 'ABSPATH' ) ) exit;
  */
 function edd_get_discounts( $args = array() ) {
 	$defaults = array(
-		'post_type'      => 'edd_discount',
-		'posts_per_page' => 30,
-		'paged'          => null,
-		'post_status'    => array( 'active', 'inactive', 'expired' )
+		'number' => 30,
+		'status' => array( 'active', 'inactive', 'expired' )
 	);
 
 	$args = wp_parse_args( $args, $defaults );
 
-	$discounts_hash = md5( json_encode( $args ) );
-	$discounts      = edd_get_discounts_cache( $discounts_hash );
-
-	if ( false === $discounts ) {
-		$discounts = get_posts( $args );
-		edd_set_discounts_cache( $discounts_hash, $discounts );
-	}
-
-	if ( $discounts ) {
-		return $discounts;
-	}
-
-	// If no discounts are found and we are searching, re-query with a meta key to find discounts by code
-	if( ! $discounts && ! empty( $args['s'] ) ) {
-		$args['meta_key']     = '_edd_discount_code';
-		$args['meta_value']   = $args['s'];
-		$args['meta_compare'] = 'LIKE';
-		unset( $args['s'] );
-
-		$discounts_hash = md5( json_encode( $args ) );
-		$discounts      = edd_get_discounts_cache( $discounts_hash );
-
-		if ( false === $discounts ) {
-			$discounts = get_posts( $args );
-			edd_set_discounts_cache( $discounts_hash, $discounts );
-		}
-	}
+	$discounts = EDD()->discounts->get_discounts( $args );
 
 	if( $discounts ) {
 		return $discounts;

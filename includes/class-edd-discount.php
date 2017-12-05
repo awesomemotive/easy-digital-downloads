@@ -25,7 +25,7 @@ class EDD_Discount {
 	 * @access protected
 	 * @var int
 	 */
-	protected $ID = 0;
+	protected $id = 0;
 
 	/**
 	 * Discount Name.
