@@ -973,8 +973,6 @@ class EDD_Discount {
 			 */
 			do_action( 'edd_post_insert_discount', $args, $this->ID );
 
-			$this->setup_discount( $discount );
-
 			// Discount code created
 			return $this->ID;
 		}
