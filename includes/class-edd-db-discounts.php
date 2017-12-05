@@ -266,9 +266,9 @@ class EDD_DB_Discounts extends EDD_DB  {
 		product_condition varchar(3) NOT NULL,
 		excluded_products mediumtext NOT NULL,
 		applies_globally tinyint NOT NULL,
-		PRIMARY KEY  (id),
+		PRIMARY KEY (id),
 		UNIQUE KEY code (code),
-		KEY name (name)
+		UNIQUE KEY discount_name (name)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
 
 		dbDelta( $sql );

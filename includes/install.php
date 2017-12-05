@@ -202,6 +202,7 @@ function edd_run_install() {
 
 	// Create the discounts databases
 	@EDD()->discounts->create_table();
+	@EDD()->discount_meta->create_table();
 
 	// Check for PHP Session support, and enable if available
 	EDD()->session->use_php_sessions();
