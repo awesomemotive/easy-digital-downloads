@@ -243,14 +243,13 @@ class EDD_DB_Discounts extends EDD_DB  {
 		date_created datetime NOT NULL,
 		start_date datetime NOT NULL,
 		expiration datetime NOT NULL,
-		once_per_customer tinyint NOT NULL,
+		once_per_customer int(1) NOT NULL,
 		product_reqs mediumtext NOT NULL,
 		product_condition varchar(3) NOT NULL,
 		excluded_products mediumtext NOT NULL,
-		applies_globally tinyint NOT NULL,
+		applies_globally int(1) NOT NULL,
 		PRIMARY KEY (id),
-		UNIQUE KEY code (code),
-		UNIQUE KEY discount_name (name)
+		KEY code (code)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
 
 		dbDelta( $sql );
