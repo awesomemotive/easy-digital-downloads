@@ -968,4 +968,3 @@ function edd_payment_get_ip_address_url( $ip_address, $payment_id ) {
 	return apply_filters( 'edd_payment_get_ip_address_url', $provider_url, $ip_address, $payment_id );
 
 }
-add_filter( 'edd_payment_details_ip_address', 'edd_payment_get_ip_address_url', 10, 2 );
