@@ -134,11 +134,10 @@ function edd_get_discount( $discount_id = 0 ) {
 function edd_get_discount_by_code( $code = '' ) {
 	$discount = new EDD_Discount( $code, true );
 
-	if ( ! $discount->ID > 0 ) {
-		return false;
+	if ( $discount->exists() ) {
+		return $discount;
 	}
-
-	return $discount;
+	return false;
 }
 
 /**
