@@ -964,7 +964,7 @@ function edd_payment_get_ip_address_url( $payment_id ) {
 	$payment = new EDD_Payment( $payment_id );
   
 	$base_url = 'https://ipinfo.io/';
-	$provider_url = '<a href="' . esc_url( $base_url ) . esc_attr( $$payment->get_ip() ) . '" target="_blank">' . esc_attr( $ip_address ) . '</a>';
+	$provider_url = '<a href="' . esc_url( $base_url ) . esc_attr( $payment->get_ip() ) . '" target="_blank">' . esc_attr( $ip_address ) . '</a>';
 
-	return apply_filters( 'edd_payment_get_ip_address_url', $provider_url, $ip_address, $payment_id );
+	return apply_filters( 'edd_payment_get_ip_address_url', $provider_url, $payment->get_ip(), $payment_id );
 }
