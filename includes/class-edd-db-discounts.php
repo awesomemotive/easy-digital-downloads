@@ -441,7 +441,7 @@ class EDD_DB_Discounts extends EDD_DB  {
 		once_per_customer int(1) NOT NULL,
 		min_cart_price mediumtext NOT NULL,
 		product_reqs mediumtext NOT NULL,
-		product_condition varchar(3) NOT NULL,
+		product_condition varchar(3) NOT NULL DEFAULT 'all',
 		excluded_products mediumtext NOT NULL,
 		applies_globally int(1) NOT NULL DEFAULT 1,
 		created_date datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
