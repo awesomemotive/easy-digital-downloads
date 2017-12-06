@@ -91,13 +91,22 @@ class EDD_Discount {
 	protected $excluded_products = null;
 
 	/**
+	 * Created Date.
+	 *
+	 * @since 3.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $created_date = null;
+
+	/**
 	 * Start Date.
 	 *
 	 * @since 2.7
 	 * @access protected
 	 * @var string
 	 */
-	protected $start = null;
+	protected $start_date = null;
 
 	/**
 	 * End Date.
@@ -106,7 +115,7 @@ class EDD_Discount {
 	 * @access protected
 	 * @var string
 	 */
-	protected $expiration = null;
+	protected $end_date = null;
 
 	/**
 	 * Uses.
@@ -627,7 +636,7 @@ class EDD_Discount {
 		 * @param string $expiration Discount expiration date.
 		 * @param int   $ID          Discount ID.
 		 */
-		return apply_filters( 'edd_get_discount_expiration', $this->expiration, $this->ID );
+		return apply_filters( 'edd_get_discount_expiration', $this->end_date, $this->ID );
 	}
 
 	/**
@@ -1160,8 +1169,8 @@ class EDD_Discount {
 	public function is_started( $set_error = true ) {
 		$return = false;
 
-		if ( $this->start ) {
-			$start_date = strtotime( $this->start );
+		if ( $this->start_date ) {
+			$start_date = strtotime( $this->start_date );
 
 			if ( $start_date < current_time( 'timestamp' ) ) {
 				// Discount has pased the start date
@@ -1197,13 +1206,13 @@ class EDD_Discount {
 	public function is_expired( $update = true ) {
 		$return = false;
 
-		if ( empty( $this->expiration ) || '0000-00-00 00:00:00' === $this->expiration ) {
+		if ( empty( $this->end_date ) || '0000-00-00 00:00:00' === $this->end_date ) {
 			return $return;
 		}
 
-		$expiration = strtotime( $this->expiration );
+		$end_date = strtotime( $this->end_date );
 
-		if ( $expiration < current_time( 'timestamp' ) ) {
+		if ( $end_date < current_time( 'timestamp' ) ) {
 			if ( $update ) {
 				$this->update_status( 'inactive' );
 			}
