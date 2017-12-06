@@ -61,18 +61,18 @@ class EDD_DB_Discounts extends EDD_DB  {
 			'type'                => '%s',
 			'amount'              => '%s',
 			'description'         => '%s',
-			'use_count'           => '%d',
 			'max_uses'            => '%d',
-			'min_price'           => '%f',
-			'notes'               => '%s',
-			'date_created'        => '%s',
-			'start'               => '%s',
-			'expiration'          => '%s',
+			'use_count'           => '%d',
+			'min_cart_price'      => '%f',
 			'once_per_customer'   => '%d',
 			'product_reqs'        => '%s',
 			'product_condition'   => '%s',
 			'excluded_products'   => '%s',
 			'applies_globally'    => '%d',
+			'created_date'        => '%s',
+			'start_state'         => '%s',
+			'end_date'            => '%s',
+			'notes'               => '%s',
 		);
 	}
 
@@ -91,18 +91,18 @@ class EDD_DB_Discounts extends EDD_DB  {
 			'type'                => '',
 			'amount'              => '',
 			'description'         => '',
-			'use_count'           => 0,
 			'max_uses'            => 0,
-			'min_price'           => 0.00,
-			'notes'               => '',
-			'date_created'        => date( 'Y-m-d H:i:s' ),
-			'start'               => '',
-			'expiration'          => '',
+			'use_count'           => 0,
+			'min_cart_price'      => 0.00,
 			'once_per_customer'   => 0,
 			'product_reqs'        => '',
 			'product_condition'   => '',
 			'excluded_products'   => '',
-			'applies_globally'    => 0,
+			'applies_globally'    => 1,
+			'created_date'        => date( 'Y-m-d H:i:s' ),
+			'start_date'          => '0000-00-00 00:00:00',
+			'end_date'            => '0000-00-00 00:00:00',
+			'notes'               => '',
 		);
 	}
 
@@ -257,97 +257,97 @@ class EDD_DB_Discounts extends EDD_DB  {
 		}
 
 		// Created for a specific date or in a date range
-		if( ! empty( $args['date'] ) ) {
+		if( ! empty( $args['created_date'] ) ) {
 
-			if( is_array( $args['date'] ) ) {
+			if( is_array( $args['created_date'] ) ) {
 
-				if( ! empty( $args['date']['start'] ) ) {
+				if( ! empty( $args['created_date']['start'] ) ) {
 
-					$start = date( 'Y-m-d H:i:s', strtotime( $args['date']['start'] ) );
+					$start = date( 'Y-m-d H:i:s', strtotime( $args['created_date']['start'] ) );
 
-					$where .= " AND `date_created` >= '{$start}'";
+					$where .= " AND `created_date` >= '{$start}'";
 
 				}
 
-				if( ! empty( $args['date']['end'] ) ) {
+				if( ! empty( $args['created_date']['end'] ) ) {
 
-					$end = date( 'Y-m-d H:i:s', strtotime( $args['date']['end'] ) );
+					$end = date( 'Y-m-d H:i:s', strtotime( $args['created_date']['end'] ) );
 
-					$where .= " AND `date_created` <= '{$end}'";
+					$where .= " AND `created_date` <= '{$end}'";
 
 				}
 
 			} else {
 
-				$year  = date( 'Y', strtotime( $args['date'] ) );
-				$month = date( 'm', strtotime( $args['date'] ) );
-				$day   = date( 'd', strtotime( $args['date'] ) );
+				$year  = date( 'Y', strtotime( $args['created_date'] ) );
+				$month = date( 'm', strtotime( $args['created_date'] ) );
+				$day   = date( 'd', strtotime( $args['created_date'] ) );
 
-				$where .= " AND $year = YEAR ( date_created ) AND $month = MONTH ( date_created ) AND $day = DAY ( date_created )";
+				$where .= " AND $year = YEAR ( created_date ) AND $month = MONTH ( created_date ) AND $day = DAY ( created_date )";
 			}
 
 		}
 
-		// Specific pexpiration date
-		if( ! empty( $args['expiration'] ) ) {
+		// Specific pend_date date
+		if( ! empty( $args['end_date'] ) ) {
 
-			if( is_array( $args['expiration'] ) ) {
+			if( is_array( $args['end_date'] ) ) {
 
-				if( ! empty( $args['expiration']['start'] ) ) {
+				if( ! empty( $args['end_date']['start'] ) ) {
 
-					$start = date( 'Y-m-d H:i:s', strtotime( $args['expiration']['start'] ) );
+					$start = date( 'Y-m-d H:i:s', strtotime( $args['end_date']['start'] ) );
 
-					$where .= " AND `expiration` >= '{$start}'";
+					$where .= " AND `end_date` >= '{$start}'";
 
 				}
 
-				if( ! empty( $args['expiration']['end'] ) ) {
+				if( ! empty( $args['end_date']['end'] ) ) {
 
-					$end = date( 'Y-m-d H:i:s', strtotime( $args['expiration']['end'] ) );
+					$end = date( 'Y-m-d H:i:s', strtotime( $args['end_date']['end'] ) );
 
-					$where .= " AND `expiration` <= '{$end}'";
+					$where .= " AND `end_date` <= '{$end}'";
 
 				}
 
 			} else {
 
-				$year  = date( 'Y', strtotime( $args['expiration'] ) );
-				$month = date( 'm', strtotime( $args['expiration'] ) );
-				$day   = date( 'd', strtotime( $args['expiration'] ) );
+				$year  = date( 'Y', strtotime( $args['end_date'] ) );
+				$month = date( 'm', strtotime( $args['end_date'] ) );
+				$day   = date( 'd', strtotime( $args['end_date'] ) );
 
-				$where .= " AND $year = YEAR ( expiration ) AND $month = MONTH ( expiration ) AND $day = DAY ( expiration )";
+				$where .= " AND $year = YEAR ( end_date ) AND $month = MONTH ( end_date ) AND $day = DAY ( end_date )";
 			}
 
 		}
 
 		// Specific paid date or in a paid date range
-		if( ! empty( $args['start'] ) ) {
+		if( ! empty( $args['start_date'] ) ) {
 
-			if( is_array( $args['start'] ) ) {
+			if( is_array( $args['start_date'] ) ) {
 
-				if( ! empty( $args['start']['start'] ) ) {
+				if( ! empty( $args['start_date']['start_date'] ) ) {
 
-					$start = date( 'Y-m-d H:i:s', strtotime( $args['start']['start'] ) );
+					$start_date = date( 'Y-m-d H:i:s', strtotime( $args['start_date']['start_date'] ) );
 
-					$where .= " AND `start` >= '{$start}'";
+					$where .= " AND `start_date` >= '{$start_date}'";
 
 				}
 
-				if( ! empty( $args['start']['end'] ) ) {
+				if( ! empty( $args['start_date']['end'] ) ) {
 
-					$end = date( 'Y-m-d H:i:s', strtotime( $args['start']['end'] ) );
+					$end = date( 'Y-m-d H:i:s', strtotime( $args['start_date']['end'] ) );
 
-					$where .= " AND `start` <= '{$end}'";
+					$where .= " AND `start_date` <= '{$end}'";
 
 				}
 
 			} else {
 
-				$year  = date( 'Y', strtotime( $args['start'] ) );
-				$month = date( 'm', strtotime( $args['start'] ) );
-				$day   = date( 'd', strtotime( $args['start'] ) );
+				$year  = date( 'Y', strtotime( $args['start_date'] ) );
+				$month = date( 'm', strtotime( $args['start_date'] ) );
+				$day   = date( 'd', strtotime( $args['start_date'] ) );
 
-				$where .= " AND $year = YEAR ( start ) AND $month = MONTH ( start ) AND $day = DAY ( start )";
+				$where .= " AND $year = YEAR ( start_date ) AND $month = MONTH ( start_date ) AND $day = DAY ( start_date )";
 			}
 
 		}
@@ -429,25 +429,25 @@ class EDD_DB_Discounts extends EDD_DB  {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
 		$sql = "CREATE TABLE " . $this->table_name . " (
-		id bigint(20) NOT NULL AUTO_INCREMENT,
-		name mediumtext NOT NULL,
+		id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+		name varchar(200) NOT NULL,
 		code varchar(50) NOT NULL,
 		status varchar(20) NOT NULL,
 		type varchar(20) NOT NULL,
 		amount mediumtext NOT NULL,
 		description longtext NOT NULL,
-		use_count bigint(20) NOT NULL,
 		max_uses bigint(20) NOT NULL,
-		min_price mediumtext NOT NULL,
-		notes longtext NOT NULL,
-		date_created datetime NOT NULL,
-		start datetime NOT NULL,
-		expiration datetime NOT NULL,
+		use_count bigint(20) NOT NULL,
 		once_per_customer int(1) NOT NULL,
+		min_cart_price mediumtext NOT NULL,
 		product_reqs mediumtext NOT NULL,
 		product_condition varchar(3) NOT NULL,
 		excluded_products mediumtext NOT NULL,
-		applies_globally int(1) NOT NULL,
+		applies_globally int(1) NOT NULL DEFAULT 1,
+		created_date datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+		start_date datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+		end_date datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+		notes longtext NOT NULL,
 		PRIMARY KEY (id),
 		KEY code (code)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";

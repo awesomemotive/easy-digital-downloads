@@ -146,8 +146,8 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 			'code'       => __( 'Code', 'easy-digital-downloads' ),
 			'amount'     => __( 'Amount', 'easy-digital-downloads' ),
 			'uses'       => __( 'Uses', 'easy-digital-downloads' ),
-			'start'      => __( 'Start Date', 'easy-digital-downloads' ),
-			'expiration' => __( 'Expiration', 'easy-digital-downloads' ),
+			'start_date' => __( 'Start Date', 'easy-digital-downloads' ),
+			'end_date'   => __( 'End Date', 'easy-digital-downloads' ),
 			'status'     => __( 'Status', 'easy-digital-downloads' ),
 		);
 
@@ -166,8 +166,8 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 			'name'       => array( 'name', false ),
 			'code'       => array( 'code', false ),
 			'uses'       => array( 'uses', false ),
-			'start'      => array( 'start', false ),
-			'expiration' => array( 'expiration', false ),
+			'start_date' => array( 'start_date', false ),
+			'end_date'   => array( 'end_date', false ),
 		);
 	}
 
@@ -209,8 +209,8 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 *
 	 * @return string Start  date
 	 */
-	function column_start( $item ) {
-		return $item->get_start();
+	function column_start_date( $item ) {
+		return $item->get_start_date();
 	}
 
 	/**
@@ -224,7 +224,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 *
 	 * @return string Expiration  date
 	 */
-	function column_expiration( $item ) {
+	function column_end_date( $item ) {
 		return $item->get_expiration();
 	}
 
