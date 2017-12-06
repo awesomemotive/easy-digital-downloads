@@ -199,6 +199,21 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	}
 
 	/**
+	 * This function renders the expiration column..
+	 *
+	 * @access public
+	 * @since 3.0
+	 *
+	 * @param array $item Contains all the data of the discount code
+	 * @param string $column_name The name of the column
+	 *
+	 * @return string Expiration  date
+	 */
+	function column_expiration( $item ) {
+		return $item->get_expiration();
+	}
+
+	/**
 	 * Render the Name Column
 	 *
 	 * @access public
@@ -233,7 +248,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return string Displays a checkbox
 	 */
 	function column_cb( $item ) {
-	//	var_dump( $item );
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
 			/*$1%s*/ 'discount',

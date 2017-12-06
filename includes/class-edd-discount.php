@@ -413,7 +413,9 @@ class EDD_Discount {
 		 */
 		do_action( 'edd_pre_setup_discount', $this, $discount );
 
-		foreach ( $discount as $key => $value ) {
+		$vars = get_object_vars( $discount );
+
+		foreach ( $vars as $key => $value ) {
 
 			switch ( $key ) {
 
@@ -423,13 +425,6 @@ class EDD_Discount {
 						$this->$key = $value;
 					}
 					break;
-
-				case 'expiration' :
-
-					if( '0000-00-00 00:00:00' === $value ) {
-						$this->$key = '';
-					}
-						break;
 
 				default:
 					$this->$key = $value;
@@ -1080,11 +1075,11 @@ class EDD_Discount {
 		$start_timestamp = strtotime( $meta['start'] );
 
 		if ( ! empty( $meta['start'] ) ) {
-			$meta['start']      = date( 'm/d/Y H:i:s', $start_timestamp );
+			$meta['start']      = date( 'Y-n-d H:i:s', $start_timestamp );
 		}
 
 		if ( ! empty( $meta['expiration'] ) ) {
-			$meta['expiration'] = date( 'm/d/Y H:i:s', strtotime( date( 'm/d/Y', strtotime( $meta['expiration'] ) ) . ' 23:59:59' ) );
+			$meta['expiration'] = date( 'Y-n-d H:i:s', strtotime( date( 'm/d/Y', strtotime( $meta['expiration'] ) ) . ' 23:59:59' ) );
 			$end_timestamp      = strtotime( $meta['expiration'] );
 
 			if ( ! empty( $meta['start'] ) && $start_timestamp > $end_timestamp ) {

@@ -145,7 +145,7 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 					<label for="edd-expiration"><?php _e( 'Expiration date', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input name="expiration" id="edd-expiration" type="text" value="<?php echo esc_attr( $discount->expiration ); ?>"  class="edd_datepicker"/>
+					<input name="expiration" id="edd-expiration" type="text" value="<?php echo esc_attr( $discount->get_expiration() ); ?>"  class="edd_datepicker"/>
 					<p class="description"><?php _e( 'Enter the expiration date for this discount code in the format of mm/dd/yyyy. For no expiration, leave blank', 'easy-digital-downloads' ); ?></p>
 				</td>
 			</tr>
