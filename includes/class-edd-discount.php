@@ -1190,7 +1190,7 @@ class EDD_Discount {
 	public function is_expired( $update = true ) {
 		$return = false;
 
-		if ( empty( $this->expiration ) ) {
+		if ( empty( $this->expiration ) || '0000-00-00 00:00:00' === $this->expiration ) {
 			return $return;
 		}
 
@@ -1567,6 +1567,7 @@ class EDD_Discount {
 		$return = false;
 
 		if ( $this->exists() ) {
+
 			if ( $this->is_expired( $update ) ) {
 				if ( defined( 'DOING_AJAX' ) && $set_error ) {
 					edd_set_error( 'edd-discount-error', __( 'This discount is expired.', 'easy-digital-downloads' ) );
