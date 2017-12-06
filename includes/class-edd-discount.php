@@ -1123,14 +1123,9 @@ class EDD_Discount {
 		 * @param string $new_status  New status.
 		 * @param string $post_status Post status.
 		 */
-		do_action( 'edd_pre_update_discount_status', $this->ID, $new_status, $this->post_status );
+		do_action( 'edd_pre_update_discount_status', $this->ID, $new_status, $this->status );
 
-		$id = wp_update_post(
-			array(
-				'ID'          => $this->ID,
-				'post_status' => $new_status
-			)
-		);
+		$ret = $this->update( array( 'status' => $new_status ) );
 
 		/**
 		 * Fires after the status of the discount is updated.
@@ -1139,15 +1134,11 @@ class EDD_Discount {
 		 *
 		 * @param int    $ID          Discount ID.
 		 * @param string $new_status  New status.
-		 * @param string $post_status Post status.
+		 * @param string $status Post status.
 		 */
-		do_action( 'edd_post_update_discount_status', $this->ID, $new_status, $this->post_status );
+		do_action( 'edd_post_update_discount_status', $this->ID, $new_status, $this->status );
 
-		if ( $id == $this->ID ) {
-			return true;
-		}
-
-		return false;
+		return $ret;
 	}
 
 	/**
@@ -1208,7 +1199,6 @@ class EDD_Discount {
 		if ( $expiration < current_time( 'timestamp' ) ) {
 			if ( $update ) {
 				$this->update_status( 'inactive' );
-				$this->update_meta( 'status', 'expired' );
 			}
 			$return = true;
 		}
