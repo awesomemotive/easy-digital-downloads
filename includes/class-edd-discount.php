@@ -1012,7 +1012,6 @@ class EDD_Discount {
 		 */
 		$args = apply_filters( 'edd_update_discount', $args, $this->ID );
 
-		$args = $this->build_meta( $args );
 		$args = $this->sanitize_columns( $args );
 
 		/**
