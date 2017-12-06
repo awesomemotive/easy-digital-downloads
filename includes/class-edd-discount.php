@@ -244,7 +244,7 @@ class EDD_Discount {
 				case 'post_date_gmt' :
 				case 'post_content' :
 				case 'post_title' :
-					
+
 					return $this->name;
 
 				case 'post_excerpt' :
@@ -268,11 +268,16 @@ class EDD_Discount {
 
 					return '';
 
+				case 'expiration' :
+
+					return $this->end_date;
+					break;
+
 				case 'start' :
 
 					return $this->start_date;
 					break;
-					
+
 
 			}
 
@@ -451,7 +456,7 @@ class EDD_Discount {
 		if( ! empty( $this->ID ) ) {
 
 			return true;
-	
+
 		}
 
 		return false;
@@ -593,7 +598,7 @@ class EDD_Discount {
 	 *
 	 * @return string Start date.
 	 */
-	public function get_start() {
+	public function get_start_date() {
 		/**
 		 * Filters the start date.
 		 *
@@ -1048,7 +1053,7 @@ class EDD_Discount {
 	 * Build Discount Meta Array.
 	 *
 	 * This method's primary purpose is to convert create and edit screen POST fields into an array that
-	 * can be processed dby update() and add() methods. 
+	 * can be processed dby update() and add() methods.
 	 *
 	 * @since 2.7
 	 * @access private
