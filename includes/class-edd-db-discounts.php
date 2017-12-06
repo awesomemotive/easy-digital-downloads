@@ -66,7 +66,7 @@ class EDD_DB_Discounts extends EDD_DB  {
 			'min_price'           => '%f',
 			'notes'               => '%s',
 			'date_created'        => '%s',
-			'start_date'          => '%s',
+			'start'               => '%s',
 			'expiration'          => '%s',
 			'once_per_customer'   => '%d',
 			'product_reqs'        => '%s',
@@ -96,7 +96,7 @@ class EDD_DB_Discounts extends EDD_DB  {
 			'min_price'           => 0.00,
 			'notes'               => '',
 			'date_created'        => date( 'Y-m-d H:i:s' ),
-			'start_date'          => '',
+			'start'               => '',
 			'expiration'          => '',
 			'once_per_customer'   => 0,
 			'product_reqs'        => '',
@@ -289,65 +289,65 @@ class EDD_DB_Discounts extends EDD_DB  {
 		}
 
 		// Specific pexpiration date
-		if( ! empty( $args['expiration_date'] ) ) {
+		if( ! empty( $args['expiration'] ) ) {
 
-			if( is_array( $args['expiration_date'] ) ) {
+			if( is_array( $args['expiration'] ) ) {
 
-				if( ! empty( $args['expiration_date']['start'] ) ) {
+				if( ! empty( $args['expiration']['start'] ) ) {
 
-					$start = date( 'Y-m-d H:i:s', strtotime( $args['expiration_date']['start'] ) );
+					$start = date( 'Y-m-d H:i:s', strtotime( $args['expiration']['start'] ) );
 
-					$where .= " AND `expiration_date` >= '{$start}'";
+					$where .= " AND `expiration` >= '{$start}'";
 
 				}
 
-				if( ! empty( $args['expiration_date']['end'] ) ) {
+				if( ! empty( $args['expiration']['end'] ) ) {
 
-					$end = date( 'Y-m-d H:i:s', strtotime( $args['expiration_date']['end'] ) );
+					$end = date( 'Y-m-d H:i:s', strtotime( $args['expiration']['end'] ) );
 
-					$where .= " AND `expiration_date` <= '{$end}'";
+					$where .= " AND `expiration` <= '{$end}'";
 
 				}
 
 			} else {
 
-				$year  = date( 'Y', strtotime( $args['expiration_date'] ) );
-				$month = date( 'm', strtotime( $args['expiration_date'] ) );
-				$day   = date( 'd', strtotime( $args['expiration_date'] ) );
+				$year  = date( 'Y', strtotime( $args['expiration'] ) );
+				$month = date( 'm', strtotime( $args['expiration'] ) );
+				$day   = date( 'd', strtotime( $args['expiration'] ) );
 
-				$where .= " AND $year = YEAR ( expiration_date ) AND $month = MONTH ( expiration_date ) AND $day = DAY ( expiration_date )";
+				$where .= " AND $year = YEAR ( expiration ) AND $month = MONTH ( expiration ) AND $day = DAY ( expiration )";
 			}
 
 		}
 
 		// Specific paid date or in a paid date range
-		if( ! empty( $args['start_date'] ) ) {
+		if( ! empty( $args['start'] ) ) {
 
-			if( is_array( $args['start_date'] ) ) {
+			if( is_array( $args['start'] ) ) {
 
-				if( ! empty( $args['start_date']['start'] ) ) {
+				if( ! empty( $args['start']['start'] ) ) {
 
-					$start = date( 'Y-m-d H:i:s', strtotime( $args['start_date']['start'] ) );
+					$start = date( 'Y-m-d H:i:s', strtotime( $args['start']['start'] ) );
 
-					$where .= " AND `start_date` >= '{$start}'";
+					$where .= " AND `start` >= '{$start}'";
 
 				}
 
-				if( ! empty( $args['start_date']['end'] ) ) {
+				if( ! empty( $args['start']['end'] ) ) {
 
-					$end = date( 'Y-m-d H:i:s', strtotime( $args['start_date']['end'] ) );
+					$end = date( 'Y-m-d H:i:s', strtotime( $args['start']['end'] ) );
 
-					$where .= " AND `start_date` <= '{$end}'";
+					$where .= " AND `start` <= '{$end}'";
 
 				}
 
 			} else {
 
-				$year  = date( 'Y', strtotime( $args['start_date'] ) );
-				$month = date( 'm', strtotime( $args['start_date'] ) );
-				$day   = date( 'd', strtotime( $args['start_date'] ) );
+				$year  = date( 'Y', strtotime( $args['start'] ) );
+				$month = date( 'm', strtotime( $args['start'] ) );
+				$day   = date( 'd', strtotime( $args['start'] ) );
 
-				$where .= " AND $year = YEAR ( start_date ) AND $month = MONTH ( start_date ) AND $day = DAY ( start_date )";
+				$where .= " AND $year = YEAR ( start ) AND $month = MONTH ( start ) AND $day = DAY ( start )";
 			}
 
 		}
@@ -441,7 +441,7 @@ class EDD_DB_Discounts extends EDD_DB  {
 		min_price mediumtext NOT NULL,
 		notes longtext NOT NULL,
 		date_created datetime NOT NULL,
-		start_date datetime NOT NULL,
+		start datetime NOT NULL,
 		expiration datetime NOT NULL,
 		once_per_customer int(1) NOT NULL,
 		product_reqs mediumtext NOT NULL,
