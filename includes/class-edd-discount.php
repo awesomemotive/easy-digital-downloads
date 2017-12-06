@@ -244,6 +244,9 @@ class EDD_Discount {
 				case 'post_date_gmt' :
 				case 'post_content' :
 				case 'post_title' :
+					
+					return $this->name;
+
 				case 'post_excerpt' :
 				case 'post_status' :
 				case 'comment_status' :
