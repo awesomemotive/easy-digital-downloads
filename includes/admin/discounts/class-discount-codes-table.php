@@ -146,7 +146,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 			'code'       => __( 'Code', 'easy-digital-downloads' ),
 			'amount'     => __( 'Amount', 'easy-digital-downloads' ),
 			'uses'       => __( 'Uses', 'easy-digital-downloads' ),
-			'start_date' => __( 'Start Date', 'easy-digital-downloads' ),
+			'start'      => __( 'Start Date', 'easy-digital-downloads' ),
 			'expiration' => __( 'Expiration', 'easy-digital-downloads' ),
 			'status'     => __( 'Status', 'easy-digital-downloads' ),
 		);
@@ -166,7 +166,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 			'name'       => array( 'name', false ),
 			'code'       => array( 'code', false ),
 			'uses'       => array( 'uses', false ),
-			'start_date' => array( 'start', false ),
+			'start'      => array( 'start', false ),
 			'expiration' => array( 'expiration', false ),
 		);
 	}
@@ -196,6 +196,21 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 */
 	function column_default( $item, $column_name ) {
 		return property_exists( $item, $column_name ) ? $item->$column_name : '';
+	}
+
+	/**
+	 * This function renders the start column..
+	 *
+	 * @access public
+	 * @since 3.0
+	 *
+	 * @param array $item Contains all the data of the discount code
+	 * @param string $column_name The name of the column
+	 *
+	 * @return string Start  date
+	 */
+	function column_start( $item ) {
+		return $item->get_start();
 	}
 
 	/**

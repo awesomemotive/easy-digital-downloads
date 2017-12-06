@@ -135,7 +135,7 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 					<label for="edd-start"><?php _e( 'Start date', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input name="start" id="edd-start" type="text" value="<?php echo esc_attr( $discount->start ); ?>"  class="edd_datepicker"/>
+					<input name="start" id="edd-start" type="text" value="<?php echo esc_attr( $discount->get_start() ); ?>"  class="edd_datepicker"/>
 					<p class="description"><?php _e( 'Enter the start date for this discount code in the format of mm/dd/yyyy. For no start date, leave blank. If entered, the discount can only be used after or on this date.', 'easy-digital-downloads' ); ?></p>
 				</td>
 			</tr>
