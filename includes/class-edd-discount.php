@@ -417,11 +417,20 @@ class EDD_Discount {
 
 			switch ( $key ) {
 
-				case 'notes':
+				case 'notes' :
+
 					if ( ! empty( $value ) ) {
 						$this->$key = $value;
 					}
 					break;
+
+				case 'expiration' :
+
+					if( '0000-00-00 00:00:00' === $value ) {
+						$this->$key = '';
+					}
+						break;
+
 				default:
 					$this->$key = $value;
 					break;
