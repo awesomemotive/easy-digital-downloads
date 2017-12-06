@@ -1059,68 +1059,6 @@ class EDD_Discount {
 	}
 
 	/**
-	 * Build Discount Meta Array.
-	 *
-	 * This method's primary purpose is to convert create and edit screen POST fields into an array that
-	 * can be processed dby update() and add() methods.
-	 *
-	 * @since 2.7
-	 * @access private
-	 *
-	 * @param array $args Discount meta.
-	 * @return array Filtered and sanitized discount args.
-	 */
-	private function build_meta( $args = array() ) {
-		if ( ! is_array( $args ) || array() === $args ) {
-			return false;
-		}
-
-		$meta = array(
-			'code'              => isset( $args['code'] )             ? $args['code']              : '',
-			'name'              => isset( $args['name'] )             ? $args['name']              : '',
-			'status'            => isset( $args['status'] )           ? $args['status']            : 'active',
-			'uses'              => isset( $args['uses'] )             ? $args['uses']              : '',
-			'max_uses'          => isset( $args['max'] )              ? $args['max']               : '',
-			'amount'            => isset( $args['amount'] )           ? $args['amount']            : '',
-			'start'             => isset( $args['start'] )            ? $args['start']             : '',
-			'expiration'        => isset( $args['expiration'] )       ? $args['expiration']        : '',
-			'type'              => isset( $args['type'] )             ? $args['type']              : '',
-			'min_price'         => isset( $args['min_price'] )        ? $args['min_price']         : '',
-			'product_reqs'      => isset( $args['products'] )         ? $args['products']          : array(),
-			'product_condition' => isset( $args['product_condition'] )? $args['product_condition'] : '',
-			'excluded_products' => isset( $args['excluded-products'] )? $args['excluded-products'] : array(),
-			'is_not_global'     => isset( $args['not_global'] )       ? $args['not_global']        : false,
-			'is_single_use'     => isset( $args['use_once'] )         ? $args['use_once']          : false,
-		);
-
-		$start_timestamp = strtotime( $meta['start'] );
-
-		if ( ! empty( $meta['start'] ) ) {
-			$meta['start']      = date( 'Y-n-d H:i:s', $start_timestamp );
-		}
-
-		if ( ! empty( $meta['expiration'] ) ) {
-			$meta['expiration'] = date( 'Y-n-d H:i:s', strtotime( date( 'm/d/Y', strtotime( $meta['expiration'] ) ) . ' 23:59:59' ) );
-			$end_timestamp      = strtotime( $meta['expiration'] );
-
-			if ( ! empty( $meta['start'] ) && $start_timestamp > $end_timestamp ) {
-				// Set the expiration date to the start date if start is later than expiration
-				$meta['expiration'] = $meta['start'];
-			}
-		}
-
-		if ( ! empty( $meta['excluded_products'] ) ) {
-			foreach ( $meta['excluded_products'] as $key => $product ) {
-				if ( 0 === intval( $product ) ) {
-					unset( $meta['excluded_products'][ $key ] );
-				}
-			}
-		}
-
-		return $meta;
-	}
-
-	/**
 	 * Update the status of the discount.
 	 *
 	 * @since 2.7
