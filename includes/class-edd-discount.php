@@ -1018,7 +1018,7 @@ class EDD_Discount {
 
 		if ( $this->db->update( $this->ID, $args ) ) {
 
-			$discoubt = $this->db->get(  $this->ID );
+			$discount = $this->db->get(  $this->ID );
 			$this->setup_discount( $discount );
 
 		}
