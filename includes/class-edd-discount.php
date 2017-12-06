@@ -198,9 +198,11 @@ class EDD_Discount {
 			return false;
 		}
 
-		if ( $by_code ) {
+		if( is_a( $_id_or_code_or_name, 'EDD_Discount' ) ) {
+			$discount = $_id_or_code_or_name;
+		} else if ( $by_code ) {
 			$discount = $this->find_by_code( $_id_or_code_or_name );
-		} elseif ( $by_name ) {
+		} else if ( $by_name ) {
 			$discount = $this->find_by_name( $_id_or_code_or_name );
 		} else {
 			$_id_or_code_or_name = absint( $_id_or_code_or_name );
