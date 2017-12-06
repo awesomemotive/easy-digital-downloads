@@ -267,6 +267,10 @@ class EDD_Discount {
 				case 'post_type' :
 
 					return '';
+
+				case 'start' :
+
+					return $this->start_date;
 					break;
 					
 
@@ -1008,6 +1012,7 @@ class EDD_Discount {
 		 */
 		$args = apply_filters( 'edd_update_discount', $args, $this->ID );
 
+		$args = $this->build_meta( $args );
 		$args = $this->sanitize_columns( $args );
 
 		/**
