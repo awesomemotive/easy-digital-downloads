@@ -1048,6 +1048,9 @@ class EDD_Discount {
 	/**
 	 * Build Discount Meta Array.
 	 *
+	 * This method's primary purpose is to convert create and edit screen POST fields into an array that
+	 * can be processed dby update() and add() methods. 
+	 *
 	 * @since 2.7
 	 * @access private
 	 *
