@@ -50,7 +50,7 @@ function edd_get_discounts( $args = array() ) {
 function edd_has_active_discounts() {
 	$discounts = edd_get_discounts(
 		array(
-			'post_status'    => 'active',
+			'status'         => 'active',
 			'posts_per_page' => 100,
 			'fields'         => 'ids'
 		)
