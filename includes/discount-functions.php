@@ -171,21 +171,11 @@ function edd_store_discount( $details, $discount_id = null ) {
 
 	if ( null == $discount_id ) {
 		$discount = new EDD_Discount;
-		$discount->add( $details );
-
-		if ( ! empty( $discount->ID ) ) {
-			$return = $discount->ID;
-		}
+		$return = $discount->add( $details );
 	} else {
 		$discount = new EDD_Discount( $discount_id );
 		$discount->update( $details );
 		$return = $discount->ID;
-	}
-
-	// If we stored a discount, we need to clear the edd_get_discounts_cache global.
-	if ( false !== $return ) {
-		global $edd_get_discounts_cache;
-		$edd_get_discounts_cache = array();
 	}
 
 	return $return;
