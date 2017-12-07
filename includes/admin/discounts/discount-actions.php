@@ -112,39 +112,24 @@ function edd_edit_discount( $data ) {
 		wp_die( __( 'You do not have permission to edit discount codes', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
-	// Setup the discount code details
-	$discount = array();
-
-	foreach ( $data as $key => $value ) {
-
-		if ( $key === 'products' || $key === 'excluded-products' ) {
-
-			foreach ( $value as $product_key => $product_value ) {
-				$value[ $product_key ] = preg_replace("/[^0-9_]/", '', $product_value );
-			}
-
-			$discount[ $key ] = $value;
-
-		} else if ( $key != 'edd-discount-nonce' && $key != 'edd-action' && $key != 'discount-id' && $key != 'edd-redirect' ) {
-
-			if ( is_string( $value ) || is_int( $value ) ) {
-
-				$discount[ $key ] = strip_tags( addslashes( $value ) );
-
-			} elseif ( is_array( $value ) ) {
-
-				$discount[ $key ] = array_map( 'absint', $value );
-
-			}
-
-		}
-
+	if( empty( $data['discount-id'] ) ) {
+		wp_die( __( 'No discount ID supplied', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
-	$old_discount     = edd_get_discount_by( 'code', $data['code'] );
-	$discount['uses'] = edd_get_discount_uses( $old_discount->ID );
+	$discount = new EDD_Discount( absint( $data['discount-id'] ) );
 
-	if ( edd_store_discount( $discount, $data['discount-id'] ) ) {
+	if( ! $discount || ! $discocunt->ID > 0 ) {
+		wp_die( __( 'Invalid discount', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
+
+	$to_update = array(
+		'start_date' => ! empty( $data['start_date'] ) ? date( 'YYYY-nn-dd 23:59:59', strtotime( sanitize_text_field( $data['start_date'] ), current_time( 'timestamp' ) ) ) : '',
+		'end_date'   => ! empty( $data['end_date'] )   ? date( 'YYYY-nn-dd 23:59:59', strtotime( sanitize_text_field( $data['end_date'] ), current_time( 'timestamp' ) ) )   : '',
+	);
+
+	$updated = $discount->update( $to_update );
+
+	if ( $updated ) {
 
 		wp_redirect( add_query_arg( 'edd-message', 'discount_updated', $data['edd-redirect'] ) ); edd_die();
 
