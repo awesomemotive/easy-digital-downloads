@@ -980,7 +980,9 @@ function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files =
 				if( 'bundle' != edd_get_download_type( $cart_item['id'] ) )
 					continue;
 
-				$products = edd_get_bundled_products( $cart_item['id'] );
+				$price_id = isset( $cart_item['item_number']['options']['price_id'] ) ? $cart_item['item_number']['options']['price_id'] : false;
+				$products = edd_get_bundled_products( $cart_item['id'], $price_id );
+
 				if ( empty( $products ) )
 					continue;
 
