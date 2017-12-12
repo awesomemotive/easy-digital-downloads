@@ -233,24 +233,26 @@ function edd_add_customer_email( $args ) {
 
 			} else {
 				// Find out if this email is taken by a user or a customer and then include a link to the correct admin view.
-				$user_type = 'customer';
-				$user = new EDD_Customer( $email );
+				$customer    = new EDD_Customer( $email );
+				$is_customer = true;
 
-				if( empty($user->email) ){
-
-					$user = get_user_by( 'email', $email );
-					$user_type = 'user';
+				if( empty( $customer->email ) ){
+					$user        = get_user_by( 'email', $email );
+					$is_customer = false;
 				}
 
-				$link = $user_type === 'customer' ?
-				admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $user->id ) :
-				admin_url( 'user-edit.php?user_id=' . $user->id );
+				if ( $is_customer ) {
+					$link    = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id );
+					$message = sprintf( __( 'Email address is already associated with another <a href="%s">customer</a>.', 'easy-digital-downloads' ), $link );
+				} else {
+					$link    = admin_url( 'user-edit.php?user_id=' . $user->id );
+					$message = sprintf( __( 'Email address is already associated with another <a href="%s">user</a>.', 'easy-digital-downloads' ), $link );
+				}
 
 				$output = array(
 					'success' => false,
-					'message' => sprintf( __( 'Email address is already associated with another %s', 'easy-digital-downloads' ), $user_type ),
-					'link'    => $link,
-					'user_type'=> $user_type,
+					'message' => $message,
+					'is_customer' => $is_customer,
 				);
 
 			}

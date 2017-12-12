@@ -1873,14 +1873,14 @@ jQuery(document).ready(function ($) {
 
 					if ( true === response.success ) {
 						window.location.href=response.redirect;
-					} else if ( typeof(response.link) !== "undefined" ) {
+					} else if ( typeof(response.is_customer) !== "undefined" ) {
 						button.attr('disabled', false);
-						if( 'user' === response.user_type ){
-							wrapper.after('<div class="notice-wrap"><div class="notice notice-warning inline"><p style="margin:0.5em 0;"><a href="' + response.link + '" target="_blank">' + response.message + '.</a></p>' +
+						if( false === response.is_customer ){
+							wrapper.after('<div class="notice-wrap"><div class="notice notice-warning inline"><p style="margin:0.5em 0;">' + response.message + '</p>' +
 							'<button class="button-secondary edd-add-customer-email" id="add-customer-email-force" style="margin: 6px 0;margin-right: 2%;">Add Email</button>' +
 							'<button class="button-secondary edd-add-customer-email" id="cancel_force_email" style="margin: 6px 0;">Cancel</button></div></div>');
-						} else{
-							wrapper.after('<div class="notice-wrap"><div class="notice notice-error inline"><p style="margin:0.5em 0;"><a href="' + response.link + '" target="_blank">' + response.message + '.</a></p></div></div>');
+						} else {
+							wrapper.after('<div class="notice-wrap"><div class="notice notice-error inline"><p style="margin:0.5em 0;">' + response.message + '</p></div></div>');
 						}
 						wrapper.find('.spinner').css('visibility', 'hidden');
 					} else {
