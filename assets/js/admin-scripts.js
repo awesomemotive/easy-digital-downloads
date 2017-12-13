@@ -1824,6 +1824,7 @@ jQuery(document).ready(function ($) {
 		init : function() {
 			this.edit_customer();
 			this.add_email();
+			this.cancel_force_email();
 			this.user_search();
 			this.remove_user();
 			this.cancel_edit();
@@ -1840,9 +1841,9 @@ jQuery(document).ready(function ($) {
 			});
 		},
 		add_email: function() {
-			$( document.body ).on( 'click', '#add-customer-email', function(e) {
+			$( document.body ).on( 'click', '#add-customer-email, #add-customer-email-force', function(e) {
 				e.preventDefault();
-				var button  = $(this);
+				var button  = $('#add-customer-email');
 				var wrapper = button.parent();
 
 				wrapper.parent().find('.notice-wrap').remove();
@@ -1853,12 +1854,18 @@ jQuery(document).ready(function ($) {
 				var email       = wrapper.find('input[name="additional-email"]').val();
 				var primary     = wrapper.find('input[name="make-additional-primary"]').is(':checked');
 				var nonce       = wrapper.find('input[name="add_email_nonce"]').val();
+				var force_link 	= false;
+
+				if ( e.target.id === 'add-customer-email-force' ){
+					force_link = true;
+				}
 
 				var postData = {
 					edd_action:  'customer-add-email',
 					customer_id: customer_id,
 					email:       email,
 					primary:     primary,
+					force_link:   force_link,
 					_wpnonce:    nonce,
 				};
 
@@ -1866,14 +1873,32 @@ jQuery(document).ready(function ($) {
 
 					if ( true === response.success ) {
 						window.location.href=response.redirect;
+					} else if ( typeof(response.is_customer) !== "undefined" ) {
+						button.attr('disabled', false);
+						if( false === response.is_customer ){
+							wrapper.after('<div class="notice-wrap"><div class="notice notice-warning inline"><p style="margin:0.5em 0;">' + response.message + '</p>' +
+							'<button class="button-secondary edd-add-customer-email" id="add-customer-email-force" style="margin: 6px 0;margin-right: 2%;">Add Email</button>' +
+							'<button class="button-secondary edd-add-customer-email" id="cancel_force_email" style="margin: 6px 0;">Cancel</button></div></div>');
+						} else {
+							wrapper.after('<div class="notice-wrap"><div class="notice notice-error inline"><p style="margin:0.5em 0;">' + response.message + '</p></div></div>');
+						}
+						wrapper.find('.spinner').css('visibility', 'hidden');
 					} else {
 						button.attr('disabled', false);
-						wrapper.after('<div class="notice-wrap"><div class="notice notice-error inline"><p>' + response.message + '</p></div></div>');
+						wrapper.after('<div class="notice-wrap"><div class="notice notice-error inline"><p style="margin:0.5em 0;">' + response.message + '</p></div></div>');
 						wrapper.find('.spinner').css('visibility', 'hidden');
 					}
 
 				}, 'json');
 
+			});
+		},
+		cancel_force_email: function() {
+			$( document.body ).on( 'click', '#cancel_force_email', function(e) {
+				e.preventDefault();
+				var wrapper = $('#add-customer-email').parent();
+				wrapper.parent().find('.notice-wrap').remove();
+				wrapper.find('input[name="additional-email"]').val('');
 			});
 		},
 		user_search: function() {

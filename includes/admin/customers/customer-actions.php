@@ -219,9 +219,10 @@ function edd_add_customer_email( $args ) {
 		$email       = sanitize_email( $args['email'] );
 		$customer_id = (int) $args['customer_id'];
 		$primary     = 'true' === $args['primary'] ? true : false;
+		$force_link  = 'true' === $args['force_link'] ? true : false;
 		$customer    = new EDD_Customer( $customer_id );
 
-		if ( false === $customer->add_email( $email, $primary ) ) {
+		if ( false === $customer->add_email( $email, $primary, $force_link ) ) {
 
 			if ( in_array( $email, $customer->emails ) ) {
 
@@ -231,10 +232,27 @@ function edd_add_customer_email( $args ) {
 				);
 
 			} else {
+				// Find out if this email is taken by a user or a customer and then include a link to the correct admin view.
+				$customer    = new EDD_Customer( $email );
+				$is_customer = true;
+
+				if( empty( $customer->email ) ){
+					$user        = get_user_by( 'email', $email );
+					$is_customer = false;
+				}
+
+				if ( $is_customer ) {
+					$link    = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id );
+					$message = sprintf( __( 'Email address is already associated with another <a href="%s">customer</a>.', 'easy-digital-downloads' ), $link );
+				} else {
+					$link    = admin_url( 'user-edit.php?user_id=' . $user->id );
+					$message = sprintf( __( 'Email address is already associated with another <a href="%s">user</a>.', 'easy-digital-downloads' ), $link );
+				}
 
 				$output = array(
 					'success' => false,
-					'message' => __( 'Email address is already associated with another customer.', 'easy-digital-downloads' ),
+					'message' => $message,
+					'is_customer' => $is_customer,
 				);
 
 			}
@@ -250,7 +268,9 @@ function edd_add_customer_email( $args ) {
 
 			$user          = wp_get_current_user();
 			$user_login    = ! empty( $user->user_login ) ? $user->user_login : 'EDDBot';
-			$customer_note = sprintf( __( 'Email address %s added by %s', 'easy-digital-downloads' ), $email, $user_login );
+			$customer_note = $force_link ?
+			sprintf( __( 'Email address %s forcibly added by %s', 'easy-digital-downloads' ), $email, $user_login ) :
+			sprintf( __( 'Email address %s added by %s', 'easy-digital-downloads' ), $email, $user_login );
 			$customer->add_note( $customer_note );
 
 			if ( $primary ) {
