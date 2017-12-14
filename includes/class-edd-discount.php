@@ -1043,7 +1043,7 @@ class EDD_Discount {
 		 */
 		do_action( 'edd_post_update_discount_status', $this->id, $new_status, $this->status );
 
-		return $ret;
+		return (bool) $ret;
 	}
 
 	/**
