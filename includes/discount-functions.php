@@ -168,11 +168,11 @@ function edd_store_discount( $details, $discount_id = null ) {
 
 	if ( null == $discount_id ) {
 		$discount = new EDD_Discount;
-		$return = $discount->add( $details );
+		$return = (int) $discount->add( $details );
 	} else {
 		$discount = new EDD_Discount( $discount_id );
 		$discount->update( $details );
-		$return = $discount->ID;
+		$return = (int) $discount->ID;
 	}
 
 	return $return;
