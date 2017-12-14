@@ -444,9 +444,9 @@ class EDD_DB_Discounts extends EDD_DB  {
 		product_condition varchar(3) NOT NULL DEFAULT 'all',
 		excluded_products mediumtext NOT NULL,
 		applies_globally int(1) NOT NULL DEFAULT 1,
-		created_date datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-		start_date datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-		end_date datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+		created_date datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		start_date datetime NOT NULL,
+		end_date datetime NOT NULL,
 		notes longtext NOT NULL,
 		PRIMARY KEY (id),
 		KEY code (code)
