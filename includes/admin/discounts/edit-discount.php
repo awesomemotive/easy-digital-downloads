@@ -83,8 +83,8 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 				<td>
 					<p>
 						<?php echo EDD()->html->product_dropdown( array(
-							'name'        => 'products[]',
-							'id'          => 'products',
+							'name'        => 'product_reqs[]',
+							'id'          => 'edd-products',
 							'selected'    => $product_reqs,
 							'multiple'    => true,
 							'chosen'      => true,
@@ -119,7 +119,7 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 				</th>
 				<td>
 					<?php echo EDD()->html->product_dropdown( array(
-						'name'        => 'excluded-products[]',
+						'name'        => 'excluded_products[]',
 						'id'          => 'excluded-products',
 						'selected'    => $excluded_products,
 						'multiple'    => true,
