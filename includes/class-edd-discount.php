@@ -838,6 +838,9 @@ class EDD_Discount {
 			 */
 			$args = apply_filters( 'edd_insert_discount', $args );
 
+			// This filter is here to maintain backwards compatibility
+			$args = apply_filters( 'edd_insert_discount_args', $args, $args );
+
 			/**
 			 * Fires before the discount has been added to the database.
 			 *
