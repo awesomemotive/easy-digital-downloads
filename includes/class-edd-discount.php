@@ -616,7 +616,7 @@ class EDD_Discount {
 		 * @param string $start Discount start date.
 		 * @param int    $ID    Discount ID.
 		 */
-		return apply_filters( 'edd_get_discount_start', $this->start, $this->ID );
+		return apply_filters( 'edd_get_discount_start', $this->start_date, $this->ID );
 	}
 
 	/**
