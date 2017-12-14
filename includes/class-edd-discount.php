@@ -768,7 +768,7 @@ class EDD_Discount {
 	 * @return bool Discount exists.
 	 */
 	public function exists() {
-		if ( ! $this->ID > 0 ) {
+		if ( ! $this->id > 0 ) {
 			return false;
 		}
 
@@ -776,88 +776,9 @@ class EDD_Discount {
 	}
 
 	/**
-	 * Build the base of the discount.
-	 *
-	 * @since 2.7
-	 * @access private
-	 *
-	 * @return int|bool Discount ID or false on error.
-	 */
-	private function insert_discount() {
-		$discount_data = array(
-			'code'              => isset( $this->code )              ? $this->code              : '',
-			'name'              => isset( $this->name )              ? $this->name              : '',
-			'status'            => isset( $this->status )            ? $this->status            : 'active',
-			'uses'              => isset( $this->uses )              ? $this->uses              : '',
-			'max_uses'          => isset( $this->max_uses )          ? $this->max_uses          : '',
-			'amount'            => isset( $this->amount )            ? $this->amount            : '',
-			'start'             => isset( $this->start )             ? $this->start             : '',
-			'expiration'        => isset( $this->expiration )        ? $this->expiration        : '',
-			'type'              => isset( $this->type )              ? $this->type              : '',
-			'min_price'         => isset( $this->min_price )         ? $this->min_price        : '',
-			'product_reqs'      => isset( $this->product_reqs )      ? $this->product_reqs      : array(),
-			'product_condition' => isset( $this->product_condition ) ? $this->product_condition : '',
-			'excluded_products' => isset( $this->excluded_products ) ? $this->excluded_products : array(),
-			'is_not_global'     => isset( $this->is_not_global )     ? $this->is_not_global     : false,
-			'is_single_use'     => isset( $this->is_single_use )     ? $this->is_single_use     : false,
-		);
-
-		$start_timestamp = strtotime( $discount_data['start'] );
-
-		if ( ! empty( $discount_data['start'] ) ) {
-			$discount_data['start'] = date( 'm/d/Y H:i:s', $start_timestamp );
-		}
-
-		if ( ! empty( $discount_data['expiration'] ) ) {
-			$discount_data['expiration'] = date( 'm/d/Y H:i:s', strtotime( date( 'm/d/Y', strtotime( $discount_data['expiration'] ) ) . ' 23:59:59' ) );
-			$end_timestamp = strtotime( $discount_data['expiration'] );
-
-			if ( ! empty( $discount_data['start'] ) && $start_timestamp > $end_timestamp ) {
-				// Set the expiration date to the start date if start is later than expiration
-				$discount_data['expiration'] = $discount_data['start'];
-			}
-		}
-
-		if ( ! empty( $discount_data['excluded_products'] ) ) {
-			foreach ( $discount_data['excluded_products'] as $key => $product ) {
-				if ( 0 === intval( $product ) ) {
-					unset( $discount_data['excluded_products'][ $key ] );
-				}
-			}
-		}
-
-		$args = apply_filters( 'edd_insert_discount_args', array(
-			'post_title'    => $this->name,
-			'post_status'   => $discount_data['status'],
-			'post_type'     => 'edd_discount',
-			'post_date'     => ! empty( $this->date ) ? $this->date : null,
-			'post_date_gmt' => ! empty( $this->date ) ? get_gmt_from_date( $this->date ) : null
-		), $discount_data );
-
-		// Create a blank edd_discount post
-		$discount_id = wp_insert_post( $args );
-
-		if ( ! empty( $discount_id ) ) {
-
-			$this->ID  = $discount_id;
-
-			foreach ( $discount_data as $key => $value ) {
-
-				if( ! empty( $value ) ) {
-
-					$this->update_meta( $key, $value );
-
-				}
-
-			}
-
-		}
-
-		return $this->ID;
-	}
-
-	/**
 	 * Once object variables has been set, an update is needed to persist them to the database.
+	 *
+	 * This is now simply a wrapper to the add() method which handles creating new discounts and updating existing ones.
 	 *
 	 * @since 2.7
 	 * @access public
@@ -865,56 +786,8 @@ class EDD_Discount {
 	 * @return bool True if the save was successful, false if it failed or wasn't needed.
 	 */
 	public function save() {
-		$saved = false;
-
-		if ( empty( $this->ID ) ) {
-			$discount_id = $this->insert_discount();
-
-			if ( false === $discount_id ) {
-				$saved = false;
-			} else {
-				$this->ID = $discount_id;
-			}
-		}
-
-		/**
-		 * Save all the object variables that have been updated to the databse.
-		 */
-		if ( ! empty( $this->pending ) ) {
-			foreach ( $this->pending as $key => $value ) {
-				$this->update_meta( $key, $value );
-
-				if ( 'status' == $key ) {
-					$this->update_status( $value );
-				}
-
-				if ( 'name' == $key ) {
-					wp_update_post( array(
-						'ID'         => $this->ID,
-						'post_title' => $value
-					) );
-				}
-			}
-
-			$saved = true;
-		}
-
-		if ( true == $saved ) {
-			global $edd_get_discounts_cache;
-			$edd_get_discounts_cache = array();
-
-			$this->setup_discount( $this );
-
-			/**
-			 * Fires after each meta update allowing developers to hook their own items saved in $pending.
-			 *
-			 * @since 2.7
-			 *
-			 * @param object       Instance of EDD_Discount object.
-			 * @param string $key  Meta key.
-			 */
-			do_action( 'edd_discount_save', $this->ID, $this );
-		}
+		$args  = get_object_vars( $this );
+		$saved = $this->add( $args );
 
 		return $saved;
 	}
