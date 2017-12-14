@@ -30,8 +30,9 @@ function edd_add_discount( $data ) {
 		wp_die( __( 'You do not have permission to create discount codes', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
-	// Setup the discount code details
-	$posted = array();
+	if( edd_get_discount_by_code( $data['code'] ) ) {
+		wp_redirect( add_query_arg( 'edd-message', 'discount_exists', $data['edd-redirect'] ) ); edd_die();
+	}
 
 	if ( empty( $data['name'] ) || empty( $data['code'] ) || empty( $data['type'] ) || empty( $data['amount'] ) ) {
 		wp_redirect( add_query_arg( 'edd-message', 'discount_validation_failed' ) );
@@ -45,52 +46,44 @@ function edd_add_discount( $data ) {
 		edd_die();
 	}
 
-	foreach ( $data as $key => $value ) {
+	$discount = new EDD_Discount;
+	$to_add   = array();
+	$to_add['status'] = 'active'; // Default status of active
 
-		if ( $key === 'products' || $key === 'excluded-products' ) {
+	foreach( $discount->db->get_columns() as $column => $value ) {
 
-			foreach ( $value as $product_key => $product_value ) {
-				$value[ $product_key ] = preg_replace("/[^0-9_]/", '', $product_value );
+		// Each column gets passed through a generic sanitization method during the update() call
+
+		if( isset( $data[ $column ] ) ) {
+
+			switch( $column ) {
+
+				case 'start_date':
+				case 'end_date'  :
+					$to_add[ $column ] = date( 'Y-n-d 23:59:59', strtotime( sanitize_text_field( $data[ $column ] ), current_time( 'timestamp' ) ) );
+					break;
+
+				default :
+					$to_add[ $column ] = sanitize_text_field( $data[ $column ] );
+					break;
+
 			}
 
-			$posted[ $key ] = $value;
-
-		} else if ( $key != 'edd-discount-nonce' && $key != 'edd-action' && $key != 'edd-redirect' ) {
-
-			if ( is_string( $value ) || is_int( $value ) ) {
-
-				$posted[ $key ] = strip_tags( addslashes( $value ) );
-
-			} elseif ( is_array( $value ) ) {
-
-				$posted[ $key ] = array_map( 'absint', $value );
-
-			}
 		}
-
 	}
 
-	// Ensure this discount doesn't already exist
-	if ( ! edd_get_discount_by_code( $posted['code'] ) ) {
+	$created = $discount->add( $to_add );
 
-		// Set the discount code's default status to active
-		$posted['status'] = 'active';
+	if ( $created ) {
 
-		if ( edd_store_discount( $posted ) ) {
-
-			wp_redirect( add_query_arg( 'edd-message', 'discount_added', $data['edd-redirect'] ) ); edd_die();
-
-		} else {
-
-			wp_redirect( add_query_arg( 'edd-message', 'discount_add_failed', $data['edd-redirect'] ) ); edd_die();
-
-		}
+		wp_redirect( add_query_arg( 'edd-message', 'discount_added', $data['edd-redirect'] ) ); edd_die();
 
 	} else {
 
-		wp_redirect( add_query_arg( 'edd-message', 'discount_exists', $data['edd-redirect'] ) ); edd_die();
+		wp_redirect( add_query_arg( 'edd-message', 'discount_add_failed', $data['edd-redirect'] ) ); edd_die();
 
 	}
+
 
 }
 add_action( 'edd_add_discount', 'edd_add_discount' );
