@@ -118,7 +118,7 @@ function edd_edit_discount( $data ) {
 
 	$discount = new EDD_Discount( absint( $data['discount-id'] ) );
 
-	if( ! $discount || ! $discocunt->ID > 0 ) {
+	if( ! $discount || ! $discount->ID > 0 ) {
 		wp_die( __( 'Invalid discount', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
