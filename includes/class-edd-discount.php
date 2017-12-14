@@ -462,7 +462,7 @@ class EDD_Discount {
 		 */
 		do_action( 'edd_setup_discount', $this, $discount );
 
-		if( ! empty( $this->ID ) ) {
+		if( ! empty( $this->id ) ) {
 
 			return true;
 
@@ -488,7 +488,7 @@ class EDD_Discount {
 		 * @param string $code Discount code.
 		 * @param int    $ID   Discount ID.
 		 */
-		return apply_filters( 'edd_get_discount_code', $this->code, $this->ID );
+		return apply_filters( 'edd_get_discount_code', $this->code, $this->id );
 	}
 
 	/**
@@ -508,7 +508,7 @@ class EDD_Discount {
 		 * @param string $code Discount status (active or inactive).
 		 * @param int    $ID   Discount ID.
 		 */
-		return apply_filters( 'edd_get_discount_status', $this->status, $this->ID );
+		return apply_filters( 'edd_get_discount_status', $this->status, $this->id );
 	}
 
 	/**
@@ -528,7 +528,7 @@ class EDD_Discount {
 		 * @param string $code Discount type (percent or flat amount).
 		 * @param int    $ID   Discount ID.
 		 */
-		return apply_filters( 'edd_get_discount_type', $this->type, $this->ID );
+		return apply_filters( 'edd_get_discount_type', $this->type, $this->id );
 	}
 
 	/**
@@ -548,7 +548,7 @@ class EDD_Discount {
 		 * @param float $amount Discount amount.
 		 * @param int    $ID    Discount ID.
 		 */
-		return (float) apply_filters( 'edd_get_discount_amount', $this->amount, $this->ID );
+		return (float) apply_filters( 'edd_get_discount_amount', $this->amount, $this->id );
 	}
 
 	/**
@@ -572,7 +572,7 @@ class EDD_Discount {
 		 * @param array $product_reqs IDs of required products.
 		 * @param int   $ID           Discount ID.
 		 */
-		return (array) apply_filters( 'edd_get_discount_product_reqs', $this->product_reqs, $this->ID );
+		return (array) apply_filters( 'edd_get_discount_product_reqs', $this->product_reqs, $this->id );
 	}
 
 	/**
@@ -596,7 +596,7 @@ class EDD_Discount {
 		 * @param array $excluded_products IDs of excluded products.
 		 * @param int   $ID                Discount ID.
 		 */
-		return (array) apply_filters( 'edd_get_discount_excluded_products', $this->excluded_products, $this->ID );
+		return (array) apply_filters( 'edd_get_discount_excluded_products', $this->excluded_products, $this->id );
 	}
 
 	/**
@@ -616,7 +616,7 @@ class EDD_Discount {
 		 * @param string $start Discount start date.
 		 * @param int    $ID    Discount ID.
 		 */
-		return apply_filters( 'edd_get_discount_start', $this->start_date, $this->ID );
+		return apply_filters( 'edd_get_discount_start', $this->start_date, $this->id );
 	}
 
 	/**
@@ -636,7 +636,7 @@ class EDD_Discount {
 		 * @param string $expiration Discount expiration date.
 		 * @param int   $ID          Discount ID.
 		 */
-		return apply_filters( 'edd_get_discount_expiration', $this->end_date, $this->ID );
+		return apply_filters( 'edd_get_discount_expiration', $this->end_date, $this->id );
 	}
 
 	/**
@@ -656,7 +656,7 @@ class EDD_Discount {
 		 * @param int $max_uses Maximum uses.
 		 * @param int $ID       Discount ID.
 		 */
-		return (int) apply_filters( 'edd_get_discount_uses', $this->uses, $this->ID );
+		return (int) apply_filters( 'edd_get_discount_uses', $this->uses, $this->id );
 	}
 
 	/**
@@ -676,7 +676,7 @@ class EDD_Discount {
 		 * @param int $max_uses Maximum uses.
 		 * @param int $ID       Discount ID.
 		 */
-		return (int) apply_filters( 'edd_get_discount_max_uses', $this->max_uses, $this->ID );
+		return (int) apply_filters( 'edd_get_discount_max_uses', $this->max_uses, $this->id );
 	}
 
 	/**
@@ -696,7 +696,7 @@ class EDD_Discount {
 		 * @param float $min_price Minimum price.
 		 * @param int   $ID        Discount ID.
 		 */
-		return (float) apply_filters( 'edd_get_discount_min_price', $this->min_cart_price, $this->ID );
+		return (float) apply_filters( 'edd_get_discount_min_price', $this->min_cart_price, $this->id );
 	}
 
 	/**
@@ -716,7 +716,7 @@ class EDD_Discount {
 		 * @param bool $is_single_use Is the discount only allowed to be used once per customer.
 		 * @param int  $ID            Discount ID.
 		 */
-		return (bool) apply_filters( 'edd_is_discount_single_use', $this->once_per_customer, $this->ID );
+		return (bool) apply_filters( 'edd_is_discount_single_use', $this->once_per_customer, $this->id );
 	}
 
 	/**
@@ -736,7 +736,7 @@ class EDD_Discount {
 		 * @param bool $is_not_global Is the discount global or not.
 		 * @param int  $ID            Discount ID.
 		 */
-		return (bool) apply_filters( 'edd_discount_is_not_global', $this->is_not_global, $this->ID );
+		return (bool) apply_filters( 'edd_discount_is_not_global', $this->is_not_global, $this->id );
 	}
 
 	/**
@@ -756,7 +756,7 @@ class EDD_Discount {
 		 * @param string $product_condition Product condition.
 		 * @param int    $ID                Discount ID.
 		 */
-		return apply_filters( 'edd_discount_product_condition', $this->product_condition, $this->ID );
+		return apply_filters( 'edd_discount_product_condition', $this->product_condition, $this->id );
 	}
 
 	/**
@@ -871,10 +871,10 @@ class EDD_Discount {
 			 * }
 			 * @param int $ID The ID of the discount that was inserted.
 			 */
-			do_action( 'edd_post_insert_discount', $args, $this->ID );
+			do_action( 'edd_post_insert_discount', $args, $this->id );
 
 			// Discount code created
-			return $this->ID;
+			return $this->id;
 		}
 	}
 
@@ -909,11 +909,11 @@ class EDD_Discount {
 		 * @param array $args Discount args.
 		 * @param int   $ID   Discount ID.
 		 */
-		do_action( 'edd_pre_update_discount', $args, $this->ID );
+		do_action( 'edd_pre_update_discount', $args, $this->id );
 
-		if ( $this->db->update( $this->ID, $args ) ) {
+		if ( $this->db->update( $this->id, $args ) ) {
 
-			$discount = $this->db->get(  $this->ID );
+			$discount = $this->db->get( $this->id );
 			$this->setup_discount( $discount );
 
 		}
@@ -926,9 +926,9 @@ class EDD_Discount {
 		 * @param array $args Discount args.
 		 * @param int   $ID   Discount ID.
 		 */
-		do_action( 'edd_post_update_discount', $args, $this->ID );
+		do_action( 'edd_post_update_discount', $args, $this->id );
 
-		return $this->ID;
+		return $this->id;
 	}
 
 	/**
@@ -950,7 +950,7 @@ class EDD_Discount {
 		 * @param string $new_status  New status.
 		 * @param string $post_status Post status.
 		 */
-		do_action( 'edd_pre_update_discount_status', $this->ID, $new_status, $this->status );
+		do_action( 'edd_pre_update_discount_status', $this->id, $new_status, $this->status );
 
 		$ret = $this->update( array( 'status' => $new_status ) );
 
@@ -963,7 +963,7 @@ class EDD_Discount {
 		 * @param string $new_status  New status.
 		 * @param string $status Post status.
 		 */
-		do_action( 'edd_post_update_discount_status', $this->ID, $new_status, $this->status );
+		do_action( 'edd_post_update_discount_status', $this->id, $new_status, $this->status );
 
 		return $ret;
 	}
@@ -1002,7 +1002,7 @@ class EDD_Discount {
 		 * @param bool $return Has the discount started or not.
 		 * @param int  $ID     Discount ID.
 		 */
-		return apply_filters( 'edd_is_discount_started', $return, $this->ID );
+		return apply_filters( 'edd_is_discount_started', $return, $this->id );
 	}
 
 	/**
@@ -1038,7 +1038,7 @@ class EDD_Discount {
 		 * @param bool $return Has the discount expired or not.
 		 * @param int  $ID     Discount ID.
 		 */
-		return apply_filters( 'edd_is_discount_expired', $return, $this->ID );
+		return apply_filters( 'edd_is_discount_expired', $return, $this->id );
 	}
 
 	/**
@@ -1069,7 +1069,7 @@ class EDD_Discount {
 		 * @param bool $return Is the discount maxed out or not.
 		 * @param int  $ID     Discount ID.
 		 */
-		return apply_filters( 'edd_is_discount_maxed_out', $return, $this->ID );
+		return apply_filters( 'edd_is_discount_maxed_out', $return, $this->id );
 	}
 
 	/**
@@ -1084,7 +1084,7 @@ class EDD_Discount {
 	public function is_min_price_met( $set_error = true ) {
 		$return = false;
 
-		$cart_amount = edd_get_cart_discountable_subtotal( $this->ID );
+		$cart_amount = edd_get_cart_discountable_subtotal( $this->id );
 
 		if ( (float) $cart_amount >= (float) $this->min_price ) {
 			$return = true;
@@ -1100,7 +1100,7 @@ class EDD_Discount {
 		 * @param bool $return Is the minimum cart amount met or not.
 		 * @param int  $ID     Discount ID.
 		 */
-		return apply_filters( 'edd_is_discount_min_met', $return, $this->ID );
+		return apply_filters( 'edd_is_discount_min_met', $return, $this->id );
 	}
 
 	/**
@@ -1120,7 +1120,7 @@ class EDD_Discount {
 		 * @param bool $single_use Is the discount is single use or not.
 		 * @param int  $ID         Discount ID.
 		 */
-		return (bool) apply_filters( 'edd_is_discount_single_use', $this->once_per_customer, $this->ID );
+		return (bool) apply_filters( 'edd_is_discount_single_use', $this->once_per_customer, $this->id );
 	}
 
 	/**
@@ -1238,7 +1238,7 @@ class EDD_Discount {
 		 * @param int    $ID                Discount ID.
 		 * @param string $product_condition Product condition.
 		 */
-		return (bool) apply_filters( 'edd_is_discount_products_req_met', $return, $this->ID, $this->product_condition );
+		return (bool) apply_filters( 'edd_is_discount_products_req_met', $return, $this->id, $this->product_condition );
 	}
 
 	/**
@@ -1334,7 +1334,7 @@ class EDD_Discount {
 		 * @param int    $ID     Discount ID.
 		 * @param string $user   User info.
 		 */
-		return apply_filters( 'edd_is_discount_used', $return, $this->ID, $user );
+		return apply_filters( 'edd_is_discount_used', $return, $this->id, $user );
 	}
 
 	/**
@@ -1351,7 +1351,7 @@ class EDD_Discount {
 		$return = false;
 		$user = trim( $user );
 
-		if ( edd_get_cart_contents() && $this->ID ) {
+		if ( edd_get_cart_contents() && $this->id ) {
 			if (
 				$this->is_active( true, $set_error ) &&
 				$this->is_started( $set_error ) &&
@@ -1376,7 +1376,7 @@ class EDD_Discount {
 		 * @param string $code   Discount code.
 		 * @param string $user   User info.
 		 */
-		return apply_filters( 'edd_is_discount_valid', $return, $this->ID, $this->code, $user );
+		return apply_filters( 'edd_is_discount_valid', $return, $this->id, $this->code, $user );
 	}
 
 	/**
@@ -1413,7 +1413,7 @@ class EDD_Discount {
 		 * @param bool $return Is the discount active or not.
 		 * @param int  $ID     Discount ID.
 		 */
-		return apply_filters( 'edd_is_discount_active', $return, $this->ID );
+		return apply_filters( 'edd_is_discount_active', $return, $this->id );
 	}
 
 	/**
@@ -1483,7 +1483,7 @@ class EDD_Discount {
 		 * @param int    $ID   Discount ID.
 		 * @param string $code Discount code.
 		 */
-		do_action( 'edd_discount_increase_use_count', $this->uses, $this->ID, $this->code );
+		do_action( 'edd_discount_increase_use_count', $this->uses, $this->id, $this->code );
 
 		return $this->uses;
 	}
@@ -1522,7 +1522,7 @@ class EDD_Discount {
 		 * @param int    $ID   Discount ID.
 		 * @param string $code Discount code.
 		 */
-		do_action( 'edd_discount_decrease_use_count', $this->uses, $this->ID, $this->code );
+		do_action( 'edd_discount_decrease_use_count', $this->uses, $this->id, $this->code );
 
 		return $this->uses;
 	}
@@ -1536,7 +1536,7 @@ class EDD_Discount {
 	 * @return string Link to the `Edit Discount` page.
 	 */
 	public function edit_url() {
-		return esc_url( add_query_arg( array( 'edd-action' => 'edit_discount', 'discount' => $this->ID ), admin_url( 'edit.php?post_type=download&page=edd-discounts' ) ) );
+		return esc_url( add_query_arg( array( 'edd-action' => 'edit_discount', 'discount' => $this->id ), admin_url( 'edit.php?post_type=download&page=edd-discounts' ) ) );
 	}
 
 	/**
