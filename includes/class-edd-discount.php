@@ -124,7 +124,7 @@ class EDD_Discount {
 	 * @access protected
 	 * @var int
 	 */
-	protected $uses = null;
+	protected $use_count = null;
 
 	/**
 	 * Maximum Uses.
@@ -288,6 +288,11 @@ class EDD_Discount {
 				case 'is_single_use' :
 
 					return $this->once_per_customer;
+					break;
+
+				case 'uses' :
+
+					return $this->use_count;
 					break;
 
 				case 'is_not_global' :
@@ -660,7 +665,7 @@ class EDD_Discount {
 		 * @param int $max_uses Maximum uses.
 		 * @param int $ID       Discount ID.
 		 */
-		return (int) apply_filters( 'edd_get_discount_uses', $this->uses, $this->id );
+		return (int) apply_filters( 'edd_get_discount_uses', $this->use_count, $this->id );
 	}
 
 	/**
@@ -1499,15 +1504,15 @@ class EDD_Discount {
 	 * @return int New discount usage.
 	 */
 	public function increase_usage() {
-		if ( $this->uses ) {
-			$this->uses++;
+		if ( $this->get_uses() ) {
+			$this->use_count++;
 		} else {
-			$this->uses = 1;
+			$this->use_count = 1;
 		}
 
-		$args = array( 'uses' => $this->uses );
+		$args = array( 'use_count' => $this->use_count );
 
-		if ( $this->max_uses == $this->uses ) {
+		if ( $this->max_uses == $this->use_count ) {
 			$args['status'] = 'inactive';
 		}
 
@@ -1518,13 +1523,13 @@ class EDD_Discount {
 		 *
 		 * @since 2.7
 		 *
-		 * @param int    $uses Discount usage.
-		 * @param int    $ID   Discount ID.
-		 * @param string $code Discount code.
+		 * @param int    $use_count Discount usage.
+		 * @param int    $ID        Discount ID.
+		 * @param string $code      Discount code.
 		 */
-		do_action( 'edd_discount_increase_use_count', $this->uses, $this->id, $this->code );
+		do_action( 'edd_discount_increase_use_count', $this->use_count, $this->id, $this->code );
 
-		return $this->uses;
+		return $this->use_count;
 	}
 
 	/**
@@ -1536,17 +1541,17 @@ class EDD_Discount {
 	 * @return int New discount usage.
 	 */
 	public function decrease_usage() {
-		if ( $this->uses ) {
-			$this->uses--;
+		if ( $this->get_uses() ) {
+			$this->use_count--;
 		}
 
-		if ( $this->uses < 0 ) {
-			$this->uses = 0;
+		if ( $this->use_count < 0 ) {
+			$this->use_count = 0;
 		}
 
-		$args = array( 'uses' => $this->uses );
+		$args = array( 'use_count' => $this->use_count );
 
-		if ( $this->max_uses > $this->uses ) {
+		if ( $this->max_uses > $this->use_count ) {
 			$args['status'] = 'active';
 		}
 
@@ -1557,13 +1562,13 @@ class EDD_Discount {
 		 *
 		 * @since 2.7
 		 *
-		 * @param int    $uses Discount usage.
-		 * @param int    $ID   Discount ID.
-		 * @param string $code Discount code.
+		 * @param int    $use_count Discount usage.
+		 * @param int    $ID        Discount ID.
+		 * @param string $code      Discount code.
 		 */
-		do_action( 'edd_discount_decrease_use_count', $this->uses, $this->id, $this->code );
+		do_action( 'edd_discount_decrease_use_count', $this->use_count, $this->id, $this->code );
 
-		return $this->uses;
+		return $this->use_count;
 	}
 
 	/**
