@@ -189,7 +189,7 @@ function edd_store_discount( $details, $discount_id = null ) {
 function edd_remove_discount( $discount_id = 0 ) {
 	do_action( 'edd_pre_delete_discount', $discount_id );
 
-	wp_delete_post( $discount_id, true );
+	EDD()->discounts->delete( $discount_id );
 
 	do_action( 'edd_post_delete_discount', $discount_id );
 }
