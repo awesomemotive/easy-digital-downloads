@@ -122,10 +122,29 @@ function edd_edit_discount( $data ) {
 		wp_die( __( 'Invalid discount', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
-	$to_update = array(
-		'start_date' => ! empty( $data['start_date'] ) ? date( 'Y-n-d 23:59:59', strtotime( sanitize_text_field( $data['start_date'] ), current_time( 'timestamp' ) ) ) : '',
-		'end_date'   => ! empty( $data['end_date'] )   ? date( 'Y-n-d 23:59:59', strtotime( sanitize_text_field( $data['end_date'] ), current_time( 'timestamp' ) ) )   : '',
-	);
+	$to_update  = array();
+
+	foreach( $discount->db->get_columns() as $column => $value ) {
+
+		// Each column gets passed through a generic sanitization method during the update() call
+
+		if( isset( $data[ $column ] ) ) {
+
+			switch( $column ) {
+
+				case 'start_date':
+				case 'end_date'  :
+					$to_update[ $column ] = date( 'Y-n-d 23:59:59', strtotime( sanitize_text_field( $data[ $column ] ), current_time( 'timestamp' ) ) );
+					break;
+
+				default :
+					$to_update[ $column ] = sanitize_text_field( $data[ $column ] );
+					break;
+
+			}
+
+		}
+	}
 
 	$updated = $discount->update( $to_update );
 
