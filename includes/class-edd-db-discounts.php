@@ -70,7 +70,7 @@ class EDD_DB_Discounts extends EDD_DB  {
 			'excluded_products'   => '%s',
 			'applies_globally'    => '%d',
 			'created_date'        => '%s',
-			'start_state'         => '%s',
+			'start_date'          => '%s',
 			'end_date'            => '%s',
 			'notes'               => '%s',
 		);
