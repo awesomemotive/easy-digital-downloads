@@ -140,7 +140,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 					<label for="edd-min-cart-amount"><?php _e( 'Minimum Amount', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input type="text" id="edd-min-cart-amount" name="min_price" value="" />
+					<input type="text" id="edd-min-cart-amount" name="min_cart_price" value="" />
 					<p class="description"><?php _e( 'The minimum dollar amount that must be in the cart before this discount can be used. Leave blank for no minimum.', 'easy-digital-downloads' ); ?></p>
 				</td>
 			</tr>
@@ -150,7 +150,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 					<label for="edd-max-uses"><?php _e( 'Max Uses', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input type="text" id="edd-max-uses" name="max" value="" />
+					<input type="text" id="edd-max-uses" name="max_uses" value="" />
 					<p class="description"><?php _e( 'The maximum number of times this discount can be used. Leave blank for unlimited.', 'easy-digital-downloads' ); ?></p>
 				</td>
 			</tr>
@@ -160,7 +160,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 					<label for="edd-use-once"><?php _e( 'Use Once Per Customer', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input type="checkbox" id="edd-use-once" name="use_once" value="1"/>
+					<input type="checkbox" id="edd-use-once" name="once_per_customer" value="1"/>
 					<span class="description"><?php _e( 'Limit this discount to a single-use per customer?', 'easy-digital-downloads' ); ?></span>
 				</td>
 			</tr>
