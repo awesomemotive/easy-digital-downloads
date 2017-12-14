@@ -48,13 +48,10 @@ function edd_get_discounts( $args = array() ) {
  * @return bool
  */
 function edd_has_active_discounts() {
-	$discounts = edd_get_discounts(
-		array(
-			'status'         => 'active',
-			'posts_per_page' => 100,
-			'fields'         => 'ids'
-		)
-	);
+	$discounts = edd_get_discounts( array(
+		'number' => 1,
+		'status' => 'active',
+	) );
 
 	// When there are no discounts found anymore there are no active ones.
 	if ( ! is_array( $discounts ) || array() === $discounts ) {
