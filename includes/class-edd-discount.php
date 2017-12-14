@@ -456,8 +456,11 @@ class EDD_Discount {
 
 				default:
 
-					if( null !== json_decode( $value ) ) {
-						$this->$key = json_decode( $value );
+					if( is_string( $value ) ) {
+						@json_decode( $value );
+						if( json_last_error() != JSON_ERROR_NONE ) {
+							$this->$key = json_decode( $value );
+						}
 					}
 
 					$this->$key = $value;
