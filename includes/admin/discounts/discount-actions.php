@@ -148,7 +148,7 @@ function edd_edit_discount( $data ) {
 
 		}
 	}
-
+//echo '</pre>'; print_r( $)
 	$updated = $discount->update( $to_update );
 
 	if ( $updated ) {

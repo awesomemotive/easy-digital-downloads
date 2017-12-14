@@ -85,11 +85,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 						</p>
 						<p>
 							<label>
-								<input type="radio" class="tog" name="not_global" value="0" checked="checked"/>
+								<input type="radio" class="tog" name="applies_globally" value="1" checked="checked"/>
 								<?php _e( 'Apply discount to entire purchase.', 'easy-digital-downloads' ); ?>
 							</label><br/>
 							<label>
-								<input type="radio" class="tog" name="not_global" value="1"/>
+								<input type="radio" class="tog" name="applies_globally" value="0"/>
 								<?php printf( __( 'Apply discount only to selected %s.', 'easy-digital-downloads' ), edd_get_label_plural() ); ?>
 							</label>
 						</p>
