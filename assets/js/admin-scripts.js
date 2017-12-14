@@ -366,7 +366,7 @@ jQuery(document).ready(function ($) {
 	// Date picker
 	var edd_datepicker = $( '.edd_datepicker' );
 	if ( edd_datepicker.length > 0 ) {
-		var dateFormat = 'mm/dd/yy';
+		var dateFormat = 'yy-mm-dd';
 		edd_datepicker.datepicker( {
 			dateFormat: dateFormat
 		} );
