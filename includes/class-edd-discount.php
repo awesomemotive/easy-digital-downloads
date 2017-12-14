@@ -172,17 +172,6 @@ class EDD_Discount {
 	protected $product_condition = null;
 
 	/**
-	 * Array of items that have changed since the last save() was run
-	 * This is for internal use, to allow fewer update_payment_meta calls to be run
-	 *
-	 * @since 2.7
-	 * @access private
-	 * @var array
-	 */
-	private $pending;
-
-
-	/**
 	 * The Database Abstraction
 	 *
 	 * @since  3.0
@@ -329,8 +318,6 @@ class EDD_Discount {
 			return false;
 		}
 
-		$this->pending[ $key ] = $value;
-
 		// Dispatch to setter method if value needs to be sanitized
 		if ( method_exists( $this, 'set_' . $key ) ) {
 			return call_user_func( array( $this, 'set_' . $key ), $key, $value );
@@ -421,7 +408,6 @@ class EDD_Discount {
 	 * @return bool Object var initialisation successful or not.
 	 */
 	private function setup_discount( $discount = null ) {
-		$this->pending = array();
 
 		if ( null == $discount ) {
 			return false;
