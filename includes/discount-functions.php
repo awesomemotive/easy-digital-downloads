@@ -924,3 +924,73 @@ function edd_apply_preset_discount() {
 	EDD()->session->set( 'preset_discount', null );
 }
 add_action( 'init', 'edd_apply_preset_discount', 999 );
+
+
+/**
+ * Backwards compatibility filters for get_post_meta() calls on discount codes.
+ *
+ * @since  3.4
+ * @param  mixed  $value       The value get_post_meta would return if we don't filter.
+ * @param  int    $object_id   The object ID post meta was requested for.
+ * @param  string $meta_key    The meta key requested.
+ * @param  bool   $single      If the person wants the single value or an array of the value
+ * @return mixed               The value to return
+ */
+function _edd_discount_post_meta_bc_filter( $value, $object_id, $meta_key, $single ) {
+	global $wpdb;
+
+	$meta_keys = apply_filters( 'edd_post_meta_discount_backwards_compat_keys', array(
+		'_edd_discount_status',
+	) );
+
+	if ( ! in_array( $meta_key, $meta_keys ) ) {
+		return $value;
+	}
+
+	$edd_is_checkout = function_exists( 'edd_is_checkout' ) ? edd_is_checkout() : false;
+	$show_notice     = apply_filters( 'edd_show_deprecated_notices', ( defined( 'WP_DEBUG' ) && WP_DEBUG && ! $edd_is_checkout ) );
+	$discount        = new EDD_Discount( $object_id );
+
+	if ( empty( $discount->id ) ) {
+		// We didn't find a discount record with this ID...so let's check and see if it was a migrated one
+		$object_id = $wpdb->get_var( "SELECT id FROM {$wpdb->prefix}edd_discountmeta WHERE meta_key = '_edd_discount_legacy_id' AND meta_value = $object_id" );
+		if ( ! empty( $object_id ) ) {
+			$discount = new EDD_Discount( $object_id );
+		} else {
+			return $value;
+		}
+	}
+
+	if( ! $discount || ! $discount->id > 0 ) {
+		return $value;
+	}
+
+	switch( $meta_key ) {
+
+		case '_edd_discount_status':
+
+			$value = $discount->status;
+
+			if ( $show_notice ) {
+				// Throw deprecated notice if WP_DEBUG is defined and on
+				trigger_error( __( 'The _edd_discount_status postmeta is <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use the EDD_Discount object to get the relevant data, instead.', 'easy-digital-downloadsd' ) );
+
+				$backtrace = debug_backtrace();
+				trigger_error( print_r( $backtrace, 1 ) );
+			}
+
+			break;
+
+		default:
+			/*
+			 * Developers can hook in here with add_filter( 'edd_get_post_meta_discount_backwards_compat-meta_key... in order to
+			 * Filter their own meta values for backwards compatibility calls to get_post_meta instead of EDD_Discount::get_meta
+			 */
+			$value = apply_filters( 'edd_get_post_meta_discount_backwards_compat-' . $meta_key, $value, $object_id );
+			break;
+	}
+
+	return $value;
+
+}
+add_filter( 'get_post_metadata', '_edd_discount_post_meta_bc_filter', 99, 4 );
