@@ -256,6 +256,7 @@ class EDD_Discount {
 				case 'post_title' :
 
 					return $this->name;
+					break;
 
 				case 'post_excerpt' :
 				case 'post_status' :
@@ -277,6 +278,7 @@ class EDD_Discount {
 				case 'post_type' :
 
 					return '';
+					break;
 
 				case 'expiration' :
 
@@ -286,6 +288,17 @@ class EDD_Discount {
 				case 'start' :
 
 					return $this->start_date;
+					break;
+
+				case 'min_price' :
+
+					return $this->min_cart_price;
+					break;
+
+				case 'use_once' :
+				case 'is_single_use' :
+
+					return $this->once_per_customer;
 					break;
 
 
