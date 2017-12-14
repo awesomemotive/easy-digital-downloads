@@ -948,7 +948,7 @@ function _edd_discount_post_meta_bc_filter( $value, $object_id, $meta_key, $sing
 	}
 
 	$edd_is_checkout = function_exists( 'edd_is_checkout' ) ? edd_is_checkout() : false;
-	$show_notice     = apply_filters( 'edd_show_deprecated_notices', ( defined( 'WP_DEBUG' ) && WP_DEBUG && ! $edd_is_checkout ) );
+	$show_notice     = apply_filters( 'edd_show_deprecated_notices', ( defined( 'WP_DEBUG' ) && WP_DEBUG && ! $edd_is_checkout ) && ! defined( 'EDD_DOING_TESTS' ) );
 	$discount        = new EDD_Discount( $object_id );
 
 	if( ! $discount || ! $discount->id > 0 ) {
