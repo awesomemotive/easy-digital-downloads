@@ -146,9 +146,27 @@ function edd_edit_discount( $data ) {
 
 			}
 
+		} else {
+
+			// Certain fields need to be nulled out if not set
+
+			switch( $column ) {
+
+				case 'once_per_customer' :
+
+					$to_update[ $column ] = 0;
+					break;
+
+				case 'product_reqs' :
+				case 'excluded_products' :
+					$to_update[ $column ] = json_encode( array() );
+					break;
+
+			}
+
 		}
 	}
-//echo '</pre>'; print_r( $)
+
 	$updated = $discount->update( $to_update );
 
 	if ( $updated ) {
