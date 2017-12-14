@@ -849,6 +849,14 @@ class EDD_Discount {
 
 		} else {
 
+			if( ! empty( $args['start_date'] ) ) {
+				$args['start_date'] = date( 'Y-m-d H:i:s', strtotime( $args['start_date'], current_time( 'timestamp' ) ) );
+			}
+
+			if( ! empty( $args['end_date'] ) ) {
+				$args['end_date'] = date( 'Y-m-d H:i:s', strtotime( $args['end_date'], current_time( 'timestamp' ) ) );
+			}
+
 			if ( ! empty( $args['start_date'] ) && ! empty( $args['end_date'] ) ) {
 
 				$start_timestamp = strtotime( $args['start_date'], current_time( 'timestamp' ) );
@@ -951,6 +959,14 @@ class EDD_Discount {
 		$args = apply_filters( 'edd_update_discount', $args, $this->id );
 
 		$args = $this->sanitize_columns( $args );
+
+		if( ! empty( $args['start_date'] ) ) {
+			$args['start_date'] = date( 'Y-m-d H:i:s', strtotime( $args['start_date'], current_time( 'timestamp' ) ) );
+		}
+
+		if( ! empty( $args['end_date'] ) ) {
+			$args['end_date'] = date( 'Y-m-d H:i:s', strtotime( $args['end_date'], current_time( 'timestamp' ) ) );
+		}
 
 		if ( ! empty( $args['start_date'] ) && ! empty( $args['end_date'] ) ) {
 
