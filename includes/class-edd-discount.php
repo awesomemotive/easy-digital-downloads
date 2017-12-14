@@ -154,13 +154,13 @@ class EDD_Discount {
 	protected $once_per_customer = null;
 
 	/**
-	 * Is Not Global?
+	 * Applies globally to all products?
 	 *
 	 * @since 2.7
 	 * @access protected
 	 * @var bool
 	 */
-	protected $is_not_global = null;
+	protected $applies_globally = null;
 
 	/**
 	 * Product Condition
@@ -288,6 +288,11 @@ class EDD_Discount {
 				case 'is_single_use' :
 
 					return $this->once_per_customer;
+					break;
+
+				case 'is_not_global' :
+
+					return $this->applies_globally ? 0 : 1;
 					break;
 
 
@@ -722,6 +727,13 @@ class EDD_Discount {
 	 * @return bool Whether or not the discount code is global.
 	 */
 	public function get_is_not_global() {
+
+		$ret = true;
+
+		if( $this->applies_globally ) {
+			$ret = false;
+		}
+
 		/**
 		 * Filters if the discount is global or not.
 		 *
@@ -730,7 +742,7 @@ class EDD_Discount {
 		 * @param bool $is_not_global Is the discount global or not.
 		 * @param int  $ID            Discount ID.
 		 */
-		return (bool) apply_filters( 'edd_discount_is_not_global', $this->is_not_global, $this->id );
+		return (bool) apply_filters( 'edd_discount_is_not_global', $ret, $this->id );
 	}
 
 	/**

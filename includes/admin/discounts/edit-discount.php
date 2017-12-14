@@ -100,11 +100,11 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 						</p>
 						<p>
 							<label>
-								<input type="radio" class="tog" name="not_global" value="0"<?php checked( false, edd_is_discount_not_global( $discount_id ) ); ?>/>
+								<input type="radio" class="tog" name="applies_globally" value="1"<?php checked( 1, $discount->applies_globally ); ?>/>
 								<?php _e( 'Apply discount to entire purchase.', 'easy-digital-downloads' ); ?>
 							</label><br/>
 							<label>
-								<input type="radio" class="tog" name="not_global" value="1"<?php checked( true, edd_is_discount_not_global( $discount_id ) ); ?>/>
+								<input type="radio" class="tog" name="applies_globally" value="0"<?php checked( 0, $discount->applies_globally ); ?>/>
 								<?php printf( __( 'Apply discount only to selected %s.', 'easy-digital-downloads' ), edd_get_label_plural() ); ?>
 							</label>
 						</p>
