@@ -808,9 +808,22 @@ class EDD_Discount {
 			return false;
 		}
 
-		if ( ! empty( $this->ID ) && $this->exists() ) {
+		if ( ! empty( $this->id ) && $this->exists() ) {
+
 			return $this->update( $args );
+
 		} else {
+
+			if ( ! empty( $args['start_date'] ) && ! empty( $args['end_date'] ) ) {
+
+				$start_timestamp = strtotime( $args['start_date'], current_time( 'timestamp' ) );
+				$end_timestamp   = strtotime( $args['end_date'], current_time( 'timestamp' ) );
+
+				if( $start_timestamp > $end_timestamp ) {
+					// Set the expiration date to the start date if start is later than expiration
+					$args['end_date'] = $args['start_date'];
+				}
+			}
 
 			/**
 			 * Add a new discount to the database.
@@ -897,9 +910,20 @@ class EDD_Discount {
 		 * @param array $args Discount args.
 		 * @param int   $ID   Discount ID.
 		 */
-		$args = apply_filters( 'edd_update_discount', $args, $this->ID );
+		$args = apply_filters( 'edd_update_discount', $args, $this->id );
 
 		$args = $this->sanitize_columns( $args );
+
+		if ( ! empty( $args['start_date'] ) && ! empty( $args['end_date'] ) ) {
+
+			$start_timestamp = strtotime( $args['start_date'], current_time( 'timestamp' ) );
+			$end_timestamp   = strtotime( $args['end_date'], current_time( 'timestamp' ) );
+
+			if( $start_timestamp > $end_timestamp ) {
+				// Set the expiration date to the start date if start is later than expiration
+				$args['end_date'] = $args['start_date'];
+			}
+		}
 
 		/**
 		 * Fires before the discount has been updated in the database.
