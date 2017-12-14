@@ -450,6 +450,11 @@ class EDD_Discount {
 					break;
 
 				default:
+
+					if( null !== json_decode( $value ) ) {
+						$this->$key = json_decode( $value );
+					}
+
 					$this->$key = $value;
 					break;
 
@@ -1166,8 +1171,8 @@ class EDD_Discount {
 	 * @return bool Are required products in the cart?
 	 */
 	public function is_product_requirements_met( $set_error = true ) {
-		$product_reqs = $this->product_reqs;
-		$excluded_ps  = $this->excluded_products;
+		$product_reqs = $this->get_product_reqs();
+		$excluded_ps  = $this->get_excluded_products();
 		$cart_items   = edd_get_cart_contents();
 		$cart_ids     = $cart_items ? wp_list_pluck( $cart_items, 'id' ) : null;
 		$return       = false;
@@ -1184,6 +1189,7 @@ class EDD_Discount {
 		$product_reqs = array_map( 'absint', $product_reqs );
 		asort( $product_reqs );
 		$product_reqs = array_filter( array_values( $product_reqs ) );
+
 
 		$excluded_ps  = array_map( 'absint', $excluded_ps );
 		asort( $excluded_ps );
