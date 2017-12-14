@@ -560,9 +560,6 @@ class EDD_Discount {
 	 * @return array IDs of required downloads.
 	 */
 	public function get_product_reqs() {
-		if ( empty( $this->product_reqs ) || ! is_array( $this->product_reqs ) ) {
-			$this->product_reqs = array();
-		}
 
 		/**
 		 * Filters the download requirements.
@@ -572,7 +569,7 @@ class EDD_Discount {
 		 * @param array $product_reqs IDs of required products.
 		 * @param int   $ID           Discount ID.
 		 */
-		return (array) apply_filters( 'edd_get_discount_product_reqs', $this->product_reqs, $this->id );
+		return (array) apply_filters( 'edd_get_discount_product_reqs', json_decode( $this->product_reqs ), $this->id );
 	}
 
 	/**
@@ -584,9 +581,6 @@ class EDD_Discount {
 	 * @return array IDs of excluded downloads.
 	 */
 	public function get_excluded_products() {
-		if ( empty( $this->excluded_products ) || ! is_array( $this->excluded_products ) ) {
-			$this->excluded_products = array();
-		}
 
 		/**
 		 * Filters the excluded downloads.
@@ -596,7 +590,7 @@ class EDD_Discount {
 		 * @param array $excluded_products IDs of excluded products.
 		 * @param int   $ID                Discount ID.
 		 */
-		return (array) apply_filters( 'edd_get_discount_excluded_products', $this->excluded_products, $this->id );
+		return (array) apply_filters( 'edd_get_discount_excluded_products', json_decode( $this->excluded_products ), $this->id );
 	}
 
 	/**

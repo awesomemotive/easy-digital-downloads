@@ -63,6 +63,11 @@ function edd_add_discount( $data ) {
 					$to_add[ $column ] = date( 'Y-n-d 23:59:59', strtotime( sanitize_text_field( $data[ $column ] ), current_time( 'timestamp' ) ) );
 					break;
 
+				case 'product_reqs' :
+				case 'excluded_products' :
+					$to_add[ $column ] = json_encode( $data[ $column ] );
+					break;
+
 				default :
 					$to_add[ $column ] = sanitize_text_field( $data[ $column ] );
 					break;
@@ -128,6 +133,11 @@ function edd_edit_discount( $data ) {
 				case 'start_date':
 				case 'end_date'  :
 					$to_update[ $column ] = date( 'Y-n-d 23:59:59', strtotime( sanitize_text_field( $data[ $column ] ), current_time( 'timestamp' ) ) );
+					break;
+
+				case 'product_reqs' :
+				case 'excluded_products' :
+					$to_update[ $column ] = json_encode( $data[ $column ] );
 					break;
 
 				default :
