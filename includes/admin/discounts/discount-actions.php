@@ -123,8 +123,8 @@ function edd_edit_discount( $data ) {
 	}
 
 	$to_update = array(
-		'start_date' => ! empty( $data['start_date'] ) ? date( 'YYYY-nn-dd 23:59:59', strtotime( sanitize_text_field( $data['start_date'] ), current_time( 'timestamp' ) ) ) : '',
-		'end_date'   => ! empty( $data['end_date'] )   ? date( 'YYYY-nn-dd 23:59:59', strtotime( sanitize_text_field( $data['end_date'] ), current_time( 'timestamp' ) ) )   : '',
+		'start_date' => ! empty( $data['start_date'] ) ? date( 'Y-n-d 23:59:59', strtotime( sanitize_text_field( $data['start_date'] ), current_time( 'timestamp' ) ) ) : '',
+		'end_date'   => ! empty( $data['end_date'] )   ? date( 'Y-n-d 23:59:59', strtotime( sanitize_text_field( $data['end_date'] ), current_time( 'timestamp' ) ) )   : '',
 	);
 
 	$updated = $discount->update( $to_update );
