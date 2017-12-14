@@ -135,7 +135,7 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 					<label for="edd-start"><?php _e( 'Start date', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input name="start_date" id="edd-start" type="text" value="<?php echo esc_attr( $discount->get_start() ); ?>"  class="edd_datepicker"/>
+					<input name="start_date" id="edd-start" type="text" value="<?php echo esc_attr( $discount->get_start_date() ); ?>"  class="edd_datepicker"/>
 					<p class="description"><?php _e( 'Enter the start date for this discount code in the format of mm/dd/yyyy. For no start date, leave blank. If entered, the discount can only be used after or on this date.', 'easy-digital-downloads' ); ?></p>
 				</td>
 			</tr>
@@ -155,7 +155,7 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 					<label for="edd-max-uses"><?php _e( 'Max Uses', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input type="text" id="edd-max-uses" name="max" value="<?php echo esc_attr( $discount->max_uses ); ?>" style="width: 40px;"/>
+					<input type="text" id="edd-max-uses" name="max_uses" value="<?php echo esc_attr( $discount->max_uses ); ?>" style="width: 40px;"/>
 					<p class="description"><?php _e( 'The maximum number of times this discount can be used. Leave blank for unlimited.', 'easy-digital-downloads' ); ?></p>
 				</td>
 			</tr>
@@ -165,7 +165,7 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 					<label for="edd-min-cart-amount"><?php _e( 'Minimum Amount', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input type="text" id="edd-min-cart-amount" name="min_price" value="<?php echo esc_attr( $discount->min_price ); ?>" style="width: 40px;"/>
+					<input type="text" id="edd-min-cart-amount" name="min_cart_price" value="<?php echo esc_attr( $discount->min_price ); ?>" style="width: 40px;"/>
 					<p class="description"><?php _e( 'The minimum amount that must be purchased before this discount can be used. Leave blank for no minimum.', 'easy-digital-downloads' ); ?></p>
 				</td>
 			</tr>
@@ -188,7 +188,7 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 					<label for="edd-use-once"><?php _e( 'Use Once Per Customer', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input type="checkbox" id="edd-use-once" name="use_once" value="1"<?php checked( true, $single_use ); ?>/>
+					<input type="checkbox" id="edd-use-once" name="once_per_customer" value="1"<?php checked( true, $single_use ); ?>/>
 					<span class="description"><?php _e( 'Limit this discount to a single-use per customer?', 'easy-digital-downloads' ); ?></span>
 				</td>
 			</tr>

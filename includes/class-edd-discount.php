@@ -142,16 +142,16 @@ class EDD_Discount {
 	 * @access protected
 	 * @var mixed int|float
 	 */
-	protected $min_price = null;
+	protected $min_cart_price = null;
 
 	/**
-	 * Is Single Use?
+	 * Is Single Use per customer?
 	 *
 	 * @since 2.7
 	 * @access protected
 	 * @var bool
 	 */
-	protected $is_single_use = null;
+	protected $once_per_customer = null;
 
 	/**
 	 * Is Not Global?
@@ -235,6 +235,7 @@ class EDD_Discount {
 	 * @return mixed
 	 */
 	public function __get( $key ) {
+
 		$key = sanitize_key( $key );
 
 		if( 'discount_id' === $key || 'ID' == $key ) {
@@ -696,7 +697,7 @@ class EDD_Discount {
 		 * @param float $min_price Minimum price.
 		 * @param int   $ID        Discount ID.
 		 */
-		return (float) apply_filters( 'edd_get_discount_min_price', $this->min_price, $this->ID );
+		return (float) apply_filters( 'edd_get_discount_min_price', $this->min_cart_price, $this->ID );
 	}
 
 	/**
@@ -716,7 +717,7 @@ class EDD_Discount {
 		 * @param bool $is_single_use Is the discount only allowed to be used once per customer.
 		 * @param int  $ID            Discount ID.
 		 */
-		return (bool) apply_filters( 'edd_is_discount_single_use', $this->is_single_use, $this->ID );
+		return (bool) apply_filters( 'edd_is_discount_single_use', $this->once_per_customer, $this->ID );
 	}
 
 	/**
@@ -1247,7 +1248,7 @@ class EDD_Discount {
 		 * @param bool $single_use Is the discount is single use or not.
 		 * @param int  $ID         Discount ID.
 		 */
-		return (bool) apply_filters( 'edd_is_discount_single_use', $this->is_single_use, $this->ID );
+		return (bool) apply_filters( 'edd_is_discount_single_use', $this->once_per_customer, $this->ID );
 	}
 
 	/**
