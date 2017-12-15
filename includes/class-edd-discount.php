@@ -944,9 +944,11 @@ class EDD_Discount {
 	 * @access public
 	 *
 	 * @param array $args Discount details.
-	 * @return mixed bool|int false if data isn't passed and class not instantiated for creation, or post ID for the new discount.
+	 * @return bool True if update is successful, false otherwise.
 	 */
 	public function update( $args ) {
+
+		$ret = false;
 
 		/**
 		 * Filter the data being updated
@@ -994,6 +996,8 @@ class EDD_Discount {
 			$discount = $this->db->get( $this->id );
 			$this->setup_discount( $discount );
 
+			$ret = true;
+
 		}
 
 		/**
@@ -1006,7 +1010,7 @@ class EDD_Discount {
 		 */
 		do_action( 'edd_post_update_discount', $args, $this->id );
 
-		return $this->id;
+		return $ret;
 	}
 
 	/**
