@@ -1601,7 +1601,7 @@ class EDD_Discount {
 
 		$args = array( 'use_count' => $this->use_count );
 
-		if ( $this->max_uses == $this->use_count ) {
+		if ( $this->max_uses <= $this->use_count ) {
 			$args['status'] = 'inactive';
 		}
 
@@ -1618,7 +1618,7 @@ class EDD_Discount {
 		 */
 		do_action( 'edd_discount_increase_use_count', $this->use_count, $this->id, $this->code );
 
-		return $this->use_count;
+		return (int) $this->use_count;
 	}
 
 	/**
@@ -1657,7 +1657,7 @@ class EDD_Discount {
 		 */
 		do_action( 'edd_discount_decrease_use_count', $this->use_count, $this->id, $this->code );
 
-		return $this->use_count;
+		return (int) $this->use_count;
 	}
 
 	/**

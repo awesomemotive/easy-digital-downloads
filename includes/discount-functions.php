@@ -299,7 +299,7 @@ function edd_get_discount_expiration( $code_id = null ) {
  */
 function edd_get_discount_max_uses( $code_id = null ) {
 	$discount = new EDD_Discount( $code_id );
-	return $discount->max_uses;
+	return (int) $discount->max_uses;
 }
 
 /**
@@ -313,7 +313,7 @@ function edd_get_discount_max_uses( $code_id = null ) {
  */
 function edd_get_discount_uses( $code_id = null ) {
 	$discount = new EDD_Discount( $code_id );
-	return $discount->uses;
+	return (int) $discount->uses;
 }
 
 /**
@@ -588,7 +588,7 @@ function edd_increase_discount_usage( $code ) {
 	$discount = new EDD_Discount( $code, true );
 
 	if ( $discount && $discount->ID > 0 ) {
-		return $discount->increase_usage();
+		return (int) $discount->increase_usage();
 	} else {
 		return false;
 	}
@@ -607,7 +607,7 @@ function edd_decrease_discount_usage( $code ) {
 	$discount = new EDD_Discount( $code, true );
 
 	if ( $discount && $discount->ID > 0 ) {
-		return $discount->decrease_usage();
+		return (int) $discount->decrease_usage();
 	} else {
 		return false;
 	}
